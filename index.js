@@ -24,10 +24,12 @@ import { migrateState } from './src/engine/save-migration.js'
 import { campaignListForUi } from './content/registry.js'
 import { deckBuilderData } from './src/deck/deckbuilding.js'
 import {
-  createGameState, applyMove, validateMove, describeState, legalMoves, moveToText, decisionSeat, decisionSeed, moveCost, autoHubMove,
+  createGameState, applyMove, validateMove, describeState, legalMoves, moveToText, decisionSeat, actingSeats, seatLocalMove,
+  decisionSeed, moveCost, autoHubMove,
 } from './src/engine/engine.js'
 
 import { handleApi, resourceVersion } from './src/integration/web-api.js'
+import { handleDeckLibrary } from './src/integration/deck-library.js'
 import { cacheWebAsset } from './src/integration/image-cache.js'
 import { viewState, viewEvents } from './src/integration/observation.js'
 import { aiDecisionContext } from './src/ai/ai-context.js'
@@ -126,8 +128,8 @@ export default {
   agentFallback: (state, seat) => autoHubMove(state, seat, true),
   aiSlotLabel: 'AI 队友',
   aiSlotDescription: '由 AI 扮演的调查员队友（AI 会自动分配调查员并构筑卡组）',
-  cover: 'linear-gradient(135deg, #1a2438 0%, #3a2b4a 60%, #0c0f18 100%)',
-  coverEmoji: '🕯️🐙',
+  cover: 'linear-gradient(180deg, rgba(5, 13, 18, .02), rgba(4, 9, 13, .42)), url("/mods/arkhamhorror/img/cover/hall-cover.webp") center / cover no-repeat',
+  coverEmoji: '\u00a0',
   description: '克苏鲁神话合作卡牌桌游：扮演调查员，构筑卡组，与 AI 队友一起调查诡异事件、对抗古老邪神。',
   tags: ['卡牌', '合作', '克苏鲁', '策略'],
   render: { kind: 'cards' },
@@ -138,6 +140,7 @@ export default {
   web: { dir: 'web', client: 'game-ui.js', styles: 'style.css' },
   resourceVersion,
   handleApi,
+  handleLocalApi: handleDeckLibrary,
   cacheWebAsset,
 
   // Phase 6 · 前端「卡组构筑界面」与「战役选择」的静态元数据（纯 JSON，经 /api/catalog 下发）。
@@ -231,6 +234,8 @@ export default {
   chatContext: state => storyChatContext(state),
   legalMoves,
   decisionSeat,
+  actingSeats,
+  seatLocalMove,
   decisionSeed,
   moveCost,
   saveCompatibilityError: state => stateCompatibilityError(state, META.resourceVersion),

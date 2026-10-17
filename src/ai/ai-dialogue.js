@@ -6,14 +6,14 @@ const SKILL_NAMES = {
 }
 
 export const DEFAULT_AI_DIALOGUE_SETTINGS = Object.freeze({
-  routineFrequency: 60,
-  selfTestFrequency: 35,
-  otherTestFrequency: 35,
+  routineFrequency: 40,
+  selfTestFrequency: 20,
+  otherTestFrequency: 10,
   selfCriticalSuccessFrequency: 100,
-  otherCriticalSuccessFrequency: 100,
+  otherCriticalSuccessFrequency: 60,
   selfCriticalFailureFrequency: 100,
-  otherCriticalFailureFrequency: 100,
-  enemyDefeatFrequency: 50,
+  otherCriticalFailureFrequency: 60,
+  enemyDefeatFrequency: 45,
   investigatorExitDialogue: true,
   scenarioEndDialogue: true,
 })
@@ -31,11 +31,16 @@ const enabled = (value, fallback) => {
 }
 
 export function normalizeAiDialogueSettings(settings = {}) {
-  const legacyTestFrequency = percentage(settings.aiTestSpeechFrequency, DEFAULT_AI_DIALOGUE_SETTINGS.selfTestFrequency)
+  // 旧版只有一个「检定回应」频率，同时套用到自身与其他角色。只有在旧字段真的存在时才拿它兜底，
+  // 否则「自身」与「其他角色」各自回落到自己的默认值（两者默认值不一定相同）。
+  const legacyTestFrequency = settings.aiTestSpeechFrequency == null || settings.aiTestSpeechFrequency === ''
+    ? null
+    : percentage(settings.aiTestSpeechFrequency, DEFAULT_AI_DIALOGUE_SETTINGS.selfTestFrequency)
+  const testFrequency = (value, fallback) => percentage(value, legacyTestFrequency ?? fallback)
   return {
     routineFrequency: percentage(settings.aiRoutineSpeechFrequency, DEFAULT_AI_DIALOGUE_SETTINGS.routineFrequency),
-    selfTestFrequency: percentage(settings.aiSelfTestSpeechFrequency, legacyTestFrequency),
-    otherTestFrequency: percentage(settings.aiOtherTestSpeechFrequency, legacyTestFrequency),
+    selfTestFrequency: testFrequency(settings.aiSelfTestSpeechFrequency, DEFAULT_AI_DIALOGUE_SETTINGS.selfTestFrequency),
+    otherTestFrequency: testFrequency(settings.aiOtherTestSpeechFrequency, DEFAULT_AI_DIALOGUE_SETTINGS.otherTestFrequency),
     selfCriticalSuccessFrequency: percentage(
       settings.aiSelfCriticalSuccessSpeechFrequency, DEFAULT_AI_DIALOGUE_SETTINGS.selfCriticalSuccessFrequency,
     ),

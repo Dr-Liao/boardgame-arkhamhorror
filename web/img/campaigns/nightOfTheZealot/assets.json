@@ -1,0 +1,38 @@
+{
+  "campaignId": "nightOfTheZealot",
+  "generatedAt": "2026-10-18",
+  "source": "Original AI-generated artwork using OpenAI built-in image_gen; not official game art.",
+  "sharedDirection": "Moody hand-painted ink-and-gouache book illustration with engraved period texture and softly feathered irregular edges; desaturated midnight teal, blue-gray, charcoal, aged sepia, restrained amber and faint sickly yellow-green; wide 16:9 composition; no text, logos, cards, UI, modern technology or gore.",
+  "assets": [
+    {
+      "id": "theGathering",
+      "file": "scenarios/theGathering/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 569188,
+      "sha256": "b020acf087fff5d51586e1e7e9238774d9b5047b33a2e66d298ba689427a5e44",
+      "original": "artifacts/night-of-the-zealot-media/originals/theGathering.png",
+      "prompt": "A rain-darkened 1920s investigator study whose wooden floor has collapsed into cellar stones and an unnatural yellow-green depth; warped sealed doorway, desk lamp, books and scattered case notes; intimate claustrophobic dread, no visible monster."
+    },
+    {
+      "id": "theMidnightMasks",
+      "file": "scenarios/theMidnightMasks/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 663600,
+      "sha256": "da9a5650575ddee72dd40a73f33e4757649423d28a65c65d200e712b505221ea",
+      "original": "artifacts/night-of-the-zealot-media/originals/theMidnightMasks.png",
+      "prompt": "A rain-slicked 1920s Arkham city center near midnight, with clock tower, public buildings, bridge, alleys and gas lamps; scattered hooded silhouettes and a lone investigator create an urgent citywide pursuit."
+    },
+    {
+      "id": "theDevourerBelow",
+      "file": "scenarios/theDevourerBelow/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 536182,
+      "sha256": "5395ef37609a8fe103be9d95d9eb3258b195fdd868f84233317670a5bbf54bda",
+      "original": "artifacts/night-of-the-zealot-media/originals/theDevourerBelow.png",
+      "prompt": "A moonless forest clearing ringed by twisted trees and standing stones; cultists surround an ancient altar lit by a thin yellow-green fissure while investigators approach; a colossal presence is only suggested in storm clouds."
+    }
+  ]
+}

@@ -1,9 +1,10 @@
 import { totalDoom, enemyHealthValue } from '../engine/rules-state.js'
 import { campaignView } from '../campaign/campaign.js'
-import { enemyFightValue, getMaxSanity, getStat, scriptActionHints } from '../engine/engine.js'
+import { actingSeats, decisionSeat, enemyEvadeValue, enemyFightValue, getMaxSanity, getStat, legalMoves, scriptActionHints } from '../engine/engine.js'
 import { contentRegistry } from '../../content/registered.js'
 import { projectTableState, locationEntryErrors, maskHiddenLocations, publicAttachments, attachLocationCards, publicCardInstance } from './presentation-state.js'
 import { campaignStory } from '../campaign/story.js'
+import { choiceOptionsFor, choiceSeats } from '../engine/resolution.js'
 
 const PUBLIC_STATE_FIELDS = [
   'schemaVersion', 'rulesVersion', 'resourceVersion', 'rulesMode', 'revision',
@@ -70,6 +71,7 @@ export function viewState(state, observerSeat = null) {
     ...enemy,
     health: enemyHealthValue(state, state.enemies[index]),
     effectiveFight: enemyFightValue(state, state.enemies[index]),
+    effectiveEvade: enemyEvadeValue(state, state.enemies[index]),
   }))
   view.locationEntryErrors = locationEntryErrors(state)
   view.campaign = campaignView(state.campaign, observer)
@@ -107,13 +109,15 @@ export function viewState(state, observerSeat = null) {
   const choice = state.pendingChoice
   // A private test can still cause another investigator to take damage or
   // answer a mandatory effect. Keep that recipient's own decision visible.
-  view.pendingChoice = choice && (!privateTest || choice.seat === observer) ? {
-    ...pick(choice, ['id', 'kind', 'seat', 'prompt', 'canSkip', 'min', 'max', 'payment']),
+  const responder = choiceSeats(choice).includes(observer)
+  view.pendingChoice = choice && (!privateTest || responder) ? {
+    ...pick(choice, ['id', 'kind', 'seat', 'seats', 'prompt', 'canSkip', 'min', 'max', 'payment']),
     source: typeof choice.source === 'string' ? choice.source : pick(choice.source || {}, ['id', 'code', 'label', 'name', 'type']),
-    options: choice.seat === observer ? choice.options.map(option => pick(option, ['id', 'label'])) : [],
+    options: responder ? choiceOptionsFor(choice, observer).map(option => pick(option, ['id', 'label'])) : [],
   } : null
-  const seat = choice?.seat ?? state.currentSeat
-  view.legalMoves = seat === observer ? structuredClone(state.legalMoves || []) : []
+  // state.legalMoves is cached for the primary seat; simultaneous seats compute their own list.
+  view.legalMoves = observer == null || !actingSeats(state).includes(observer) ? []
+    : observer === decisionSeat(state) ? structuredClone(state.legalMoves || []) : legalMoves(state, observer)
   view.scriptActions = observer == null ? [] : scriptActionHints(state, observer)
   return view
 }

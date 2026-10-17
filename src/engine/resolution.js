@@ -26,7 +26,9 @@ export function resolutionCheckpoint(state, seat, move) {
   throw new ResolutionCheckpoint(seat, move)
 }
 
-export function requestChoice(state, { kind, source, seat, prompt, options, canSkip = false, automaticOptionId = null, payment = null }) {
+// `seats` lets several seats race to answer; `seat` stays the primary responder used for replay.
+// An option carrying `responderSeat` may only be picked by that seat.
+export function requestChoice(state, { kind, source, seat, seats = null, prompt, options, canSkip = false, automaticOptionId = null, payment = null }) {
   const context = state._resolution
   if (!context) throw new Error('选择必须在规则事务中执行')
   if (!options?.length) throw new Error('选择没有合法选项')
@@ -59,19 +61,31 @@ export function requestChoice(state, { kind, source, seat, prompt, options, canS
     context.answers.push(clone({ choiceId: id, kind, source, seat, optionId: automaticOptionId }))
     return automaticOptionId
   }
-  throw new ChoicePause(clone({ id, kind, source, seat, prompt, options, canSkip, ...(payment ? {payment} : {}) }))
+  const responders = seats?.length > 1 ? { seats: [...seats] } : {}
+  throw new ChoicePause(clone({ id, kind, source, seat, ...responders, prompt, options, canSkip, ...(payment ? {payment} : {}) }))
 }
 
-export function choiceMoves(state) {
+export function choiceSeats(choice) {
+  return choice ? choice.seats || [choice.seat] : []
+}
+
+export function choiceOptionsFor(choice, seat = choice?.seat) {
+  if (!choice || !choiceSeats(choice).includes(seat)) return []
+  return choice.options.filter(option => option.responderSeat == null || option.responderSeat === seat)
+}
+
+export function choiceMoves(state, seat) {
   const choice = state.pendingChoice
-  return choice ? choice.options.map(option => ({ action: 'choose', choiceId: choice.id, optionId: option.id, label: option.label })) : []
+  return choiceOptionsFor(choice, seat ?? choice?.seat)
+    .map(option => ({ action: 'choose', choiceId: choice.id, optionId: option.id, label: option.label }))
 }
 
 export function choiceError(state, seat, move) {
   const choice = state.pendingChoice
   if (!choice || move.action !== 'choose' || move.choiceId !== choice.id) return '必须回答当前待决选择'
-  if (choice.seat !== seat) return '不是当前选择的回答座位'
+  if (!choiceSeats(choice).includes(seat)) return '不是当前选择的回答座位'
   if (typeof move.optionId !== 'string' || !choice.options.some(option => option.id === move.optionId)) return '无效选择选项'
+  if (!choiceOptionsFor(choice, seat).some(option => option.id === move.optionId)) return '这个选项属于其他玩家'
   return null
 }
 
@@ -88,7 +102,7 @@ export function resolveTransaction(state, seat, move, execute, { initial = false
   }
   if (previous) {
     const choice = state.pendingChoice
-    transaction.answers.push({ choiceId: choice.id, kind: choice.kind, source: choice.source, seat, optionId: move.optionId })
+    transaction.answers.push({ choiceId: choice.id, kind: choice.kind, source: choice.source, seat: choice.seat, optionId: move.optionId })
   }
   const staticState = clone(Object.fromEntries(STATIC_FIELDS.map(key => [key, state[key]])))
   let draft

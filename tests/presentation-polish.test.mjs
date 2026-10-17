@@ -33,14 +33,21 @@ test('campaign presentation layers common assets with opening-campaign art and p
   assert.equal(theme.id, 'nightOfTheZealot')
   assert.match(theme.assets.hubHero, /campaigns\/nightOfTheZealot\/hub\/office-hero\.webp$/)
   assert.match(theme.assets.tableOverlay, /campaigns\/nightOfTheZealot\/table\/investigation-map\.webp$/)
-  assert.match(theme.assets.storyDefault, /campaigns\/nightOfTheZealot\/story\/default\.png$/)
+  assert.match(theme.assets.storyDefault, /campaigns\/nightOfTheZealot\/scenarios\/theGathering\/scene\.webp$/)
+  assert.match(campaignPresentation('nightOfTheZealot').assets.storyDefault, /campaigns\/nightOfTheZealot\/story\/default\.png$/)
+  assert.match(campaignPresentation('nightOfTheZealot', 'theMidnightMasks').assets.storyDefault, /scenarios\/theMidnightMasks\/scene\.webp$/)
+  assert.match(campaignPresentation('nightOfTheZealot', 'theDevourerBelow').assets.storyDefault, /scenarios\/theDevourerBelow\/scene\.webp$/)
   assert.match(theme.assets.casefile, /img\/ui\/hub-casefile\.webp$/)
   assert.equal(theme.musicPlaylist, 'nightOfTheZealot/theGathering')
   const attrs = presentationAttributes({ campaign: { id: 'nightOfTheZealot' }, scenario: { id: 'theGathering' } })
   assert.equal(attrs['data-campaign'], 'nightOfTheZealot')
   assert.equal(attrs['data-scenario'], 'theGathering')
   assert.match(attrs.style['--ah-table-overlay-image'], /nightOfTheZealot/)
-  for (const relative of ['hub/office-hero.webp','table/investigation-map.webp']) {
+  for (const relative of [
+    'hub/office-hero.webp', 'table/investigation-map.webp',
+    'scenarios/theGathering/scene.webp', 'scenarios/theMidnightMasks/scene.webp',
+    'scenarios/theDevourerBelow/scene.webp',
+  ]) {
     const file = new URL(`../web/img/campaigns/nightOfTheZealot/${relative}`, import.meta.url)
     assert.equal(readFileSync(file).subarray(0, 4).toString('ascii'), 'RIFF', relative)
   }

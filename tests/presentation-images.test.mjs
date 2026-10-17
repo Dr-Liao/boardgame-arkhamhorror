@@ -12,6 +12,8 @@ import { ALL_CARDS } from '../src/cards/cards-data.js'
 
 const ROOT = fileURLToPath(new URL('../../..', import.meta.url))
 const HOST = 'https://example.test'
+// 三个卡牌符号字体都拷自参考项目，见 web/fonts/README.txt；少登记一个就会误报成越界媒体。
+const SYMBOL_FONTS = ['arkham.ttf', 'arkhamicons.ttf', 'arkhamslim.ttf']
 const paths = face => face.candidates.map(candidate => candidate.path)
 
 test('卡图解析优先真实美术编号与关联面，而不是统一加 b 猜测', () => {
@@ -169,7 +171,7 @@ test('媒体许可登记保留，运行时图片仅在 Mod 图库；PNG 验收�
   const audio = resolve(ROOT, 'games/arkhamhorror/web/audio')
   const fonts = resolve(ROOT, 'games/arkhamhorror/web/fonts')
   assert.match(readFileSync(resolve(fonts, 'README.txt'), 'utf8'), /No new license or ownership/)
-  for (const name of ['arkham.ttf', 'arkhamicons.ttf']) {
+  for (const name of SYMBOL_FONTS) {
     assert.deepEqual(readFileSync(resolve(fonts, name)), readFileSync(resolve(ROOT, '参考资源/ArkhamHorror-main/frontend/public/fonts', name)))
   }
   assert.match(readFileSync(resolve(audio, 'License.txt'), 'utf8'), /Creative Commons Zero, CC0/)
@@ -178,7 +180,7 @@ test('媒体许可登记保留，运行时图片仅在 Mod 图库；PNG 验收�
   for (const file of walk(resolve(ROOT, 'games/arkhamhorror'))) {
     const testPng = file.endsWith('.png') && [snapshots, results].some(dir => file.startsWith(dir + sep))
     const music = file.startsWith(resolve(audio, 'music') + sep) && file.endsWith('.mp3')
-    const symbolFont = ['arkham.ttf', 'arkhamicons.ttf'].some(name=>file===resolve(fonts,name))
+    const symbolFont = SYMBOL_FONTS.some(name => file === resolve(fonts, name))
     assert.ok(file.startsWith(library + sep) || (file.startsWith(audio + sep) && file.endsWith('.ogg')) || music || testPng || symbolFont, file)
   }
 })

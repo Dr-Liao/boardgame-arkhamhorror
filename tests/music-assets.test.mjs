@@ -7,9 +7,12 @@ import { contentRegistry } from '../content/registered.js'
 import { SCENARIO_MUSIC } from '../web/scenario-music.js'
 import { campaignPlaylistId, campaignPresentation } from '../web/campaign-presentation.js'
 
-test('每个已注册关卡都有至少两首独立 BGM，所有音乐均参与关卡分配', () => {
+test('每个已开放关卡都有至少两首独立 BGM，所有音乐均参与关卡分配', () => {
   const used = new Set()
-  const registered = contentRegistry.listScenarios()
+  // Catalog-only cycles (e.g. the Forgotten Age baseline) have no playable
+  // scenarios and no presentation assets yet; BGM coverage starts at promotion.
+  const registered = contentRegistry.listScenarios().filter(scenario =>
+    ['playable', 'verified'].includes(contentRegistry.getCampaign(scenario.campaignId).status))
   const configured = Object.entries(SCENARIO_MUSIC).flatMap(([campaign, chapters]) => Object.keys(chapters).map(id => `${campaign}/${id}`))
   assert.deepEqual(configured.sort(), registered.map(sc => `${sc.campaignId}/${sc.id}`).sort())
   for (const scenario of registered) {

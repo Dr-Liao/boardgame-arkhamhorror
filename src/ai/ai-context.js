@@ -3,7 +3,7 @@ import { EFFECTS, INVESTIGATOR_ABILITIES } from '../cards/card-effects.js'
 import { playablePool, matchesDeckOptions } from '../deck/deckbuilding.js'
 import { deckRules } from '../deck/deck-rules.js'
 import { upgradeRecord } from '../campaign/campaign.js'
-import { legalMoves, actionPreview, getStat, decisionSeat, actObjectiveContext } from '../engine/engine.js'
+import { legalMoves, actionPreview, getStat, actingSeats, actObjectiveContext } from '../engine/engine.js'
 import { investigatorParticipation } from './ai-participation.js'
 import { storyDecisionContext } from './ai-story.js'
 
@@ -22,7 +22,7 @@ export function aiDecisionContext(state, seat) {
   const inv = state.investigators.find(i => i.seat === seat)
   if (!inv) return ''
   const record = state.campaign.investigators[seat]
-  const moves = decisionSeat(state) === seat ? legalMoves(state) : []
+  const moves = actingSeats(state).includes(seat) ? legalMoves(state, seat) : []
   const data = { observerSeat: seat, phase: state.phase, round: state.round,
     timing: state.skillTest && !state.skillTest.helpRequested && state.skillTest.seat !== seat ? null : state.timingWindow, investigator: { code: inv.code, ability: INVESTIGATOR_ABILITIES[inv.code] },
     team: state.investigators.map(i => ({ seat: i.seat, code: i.code, name: i.name, klass: i.klass,

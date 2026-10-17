@@ -18,7 +18,7 @@ const VERSIONED_FILES = Object.freeze([
   './image-cache.js',
   '../../presentation/art-rules.js', '../../presentation/images.js',
   '../../presentation/localized-arts.json', '../../presentation/media-registry.json',
-  '../../web/images.js', '../../web/catalog.js', '../../web/card-filters.js', '../../web/game-ui.js', '../../web/hub.js', '../../web/deck-rules.js', '../../web/arkhamdb-import.js', '../../web/hub-office.css',
+  '../../web/images.js', '../../web/catalog.js', '../../web/card-filters.js', '../../web/game-ui.js', '../../web/hub.js', '../../web/deck-rules.js', '../../web/arkhamdb-import.js', '../../web/deck-library.js', '../../web/hub-office.css',
   '../../web/card-text.js', '../../web/story-reader.js', '../../web/rulebook-data.js', '../../web/rulebook.js', '../../web/style.css',
   '../campaign/story.js', '../../content/campaigns/theDunwichLegacy/story-text.js',
   '../../content/campaigns/thePathToCarcosa/story-text.js',

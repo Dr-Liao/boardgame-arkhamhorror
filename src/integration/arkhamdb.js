@@ -39,7 +39,7 @@ function cardInfo(code) {
   }
 }
 
-function slotEntries(slots, label) {
+export function slotEntries(slots, label) {
   if (slots == null || (Array.isArray(slots) && !slots.length)) return []
   if (typeof slots !== 'object' || Array.isArray(slots)) throw new RangeError(label + '格式无效')
   const pairs = Object.entries(slots)

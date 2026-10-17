@@ -335,6 +335,13 @@
 .ah-deck-import-warn, .ah-deck-import-warn p { color: #f0c77a; }
 .ah-deck-import-note { color: #a9b69e; }
 .ah-deck-import-result > .bg-btn { margin-top: 6px; }
+.ah-deck-library-list { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; max-height: 260px; overflow: auto; }
+.ah-deck-library-list li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; padding: 8px 12px; border-left: 3px solid #ffffff1c; background: #ffffff08; }
+.ah-deck-library-list li.is-current-investigator { border-left-color: #c9ad6f; }
+.ah-deck-library-list li > div:first-child { display: grid; gap: 2px; min-width: 0; }
+.ah-deck-library-list strong { color: #f0dcaa; font-size: 14px; overflow-wrap: anywhere; }
+.ah-deck-library-list small { color: #a9b69e; font-size: 12px; }
+.ah-deck-library-list li > div:last-child { display: flex; gap: 6px; }
 @media (max-width: 900px) {
   .ah-office .ah-hub-tabs { gap: 6px; padding: 0 10px; }.ah-office .ah-hub-tabs button { font-size: 12px; padding: 15px 10px; gap: 5px; }
   .ah-office .ah-hub-pane { width: calc(100% - 32px); margin-top: 16px; padding: 18px; }

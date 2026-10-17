@@ -1,0 +1,1979 @@
+{
+  "schemaVersion": 1,
+  "milestone": "M0",
+  "campaignId": "theForgottenAge",
+  "status": "catalog-only",
+  "playable": false,
+  "launchEnabled": false,
+  "earlyAccess": false,
+  "equivalenceCertified": false,
+  "verifiedScope": "仅完成目录、身份与来源基线：361 条原版卡牌记录按 231/16/91 无重叠分区，十个剧本保留原卡号占位，战役保持 catalog-only，规则、剧情、关键词与规则书均未迁移。",
+  "catalog": {
+    "printedRecords": 361,
+    "mainCodes": 338,
+    "linkedFaces": 23,
+    "campaign": 231,
+    "investigatorsAndSignatures": 16,
+    "playerCards": 91
+  },
+  "chapters": [
+    {
+      "id": "theUntamedWilds",
+      "code": "04043",
+      "name": "荒莽密林",
+      "pack": [
+        "tfa"
+      ],
+      "status": "catalog-only",
+      "catalogReferenceOnly": true
+    },
+    {
+      "id": "theDoomOfEztli",
+      "code": "04054",
+      "name": "埃兹特里的覆灭",
+      "pack": [
+        "tfa"
+      ],
+      "status": "catalog-only",
+      "catalogReferenceOnly": true
+    },
+    {
+      "id": "threadsOfFate",
+      "code": "04113",
+      "name": "命运之线",
+      "pack": [
+        "tof"
+      ],
+      "status": "catalog-only",
+      "catalogReferenceOnly": true
+    },
+    {
+      "id": "theBoundaryBeyond",
+      "code": "04161",
+      "name": "界限彼端",
+      "pack": [
+        "tbb"
+      ],
+      "status": "catalog-only",
+      "catalogReferenceOnly": true
+    },
+    {
+      "id": "heartOfTheEldersPart1",
+      "code": "04205",
+      "name": "久远腹地（上）",
+      "pack": [
+        "hote"
+      ],
+      "status": "catalog-only",
+      "catalogReferenceOnly": true
+    },
+    {
+      "id": "heartOfTheEldersPart2",
+      "code": "04205",
+      "name": "久远腹地（下）",
+      "pack": [
+        "hote"
+      ],
+      "status": "catalog-only",
+      "catalogReferenceOnly": true
+    },
+    {
+      "id": "theCityOfArchives",
+      "code": "04237",
+      "name": "天机之城",
+      "pack": [
+        "tcoa"
+      ],
+      "status": "catalog-only",
+      "catalogReferenceOnly": true
+    },
+    {
+      "id": "theDepthsOfYoth",
+      "code": "04277",
+      "name": "幽嘶深渊",
+      "pack": [
+        "tdoy"
+      ],
+      "status": "catalog-only",
+      "catalogReferenceOnly": true
+    },
+    {
+      "id": "shatteredAeons",
+      "code": "04314",
+      "name": "破碎永世",
+      "pack": [
+        "sha"
+      ],
+      "status": "catalog-only",
+      "catalogReferenceOnly": true
+    },
+    {
+      "id": "turnBackTime",
+      "code": "04344",
+      "name": "时间倒流（尾声）",
+      "pack": [
+        "sha"
+      ],
+      "status": "catalog-only",
+      "catalogReferenceOnly": true
+    }
+  ],
+  "chaosBags": {
+    "easy": {
+      "tokens": 14,
+      "symbols": [
+        "autofail",
+        "eldersign",
+        "elderthing",
+        "skull"
+      ]
+    },
+    "standard": {
+      "tokens": 14,
+      "symbols": [
+        "autofail",
+        "eldersign",
+        "elderthing",
+        "skull"
+      ]
+    },
+    "hard": {
+      "tokens": 14,
+      "symbols": [
+        "autofail",
+        "eldersign",
+        "elderthing",
+        "skull"
+      ]
+    },
+    "expert": {
+      "tokens": 15,
+      "symbols": [
+        "autofail",
+        "eldersign",
+        "elderthing",
+        "skull"
+      ]
+    }
+  },
+  "recordSchema": {
+    "theInvestigatorsWereForcedToWaitForAdditionalSupplies": "boolean",
+    "ichtacaObservedYourProgressWithKeenInterest": "boolean",
+    "alejandroFollowedTheInvestigatorsIntoTheRuins": "boolean",
+    "ichtacaIsWaryOfTheInvestigators": "boolean",
+    "theInvestigatorsHaveEarnedIchtacasTrust": "boolean",
+    "alejandroChoseToRemainAtCamp": "boolean",
+    "theInvestigatorsClearedAPathToTheEztliRuins": "boolean",
+    "yigsFury": "number",
+    "theInvestigatorsRecoveredTheRelicOfAges": "boolean",
+    "alejandroRecoveredTheRelicOfAges": "boolean",
+    "theHarbingerIsStillAlive": "number",
+    "theInvestigatorsGaveCustodyOfTheRelicToAlejandro": "boolean",
+    "theInvestigatorsHaveEarnedAlejandrosTrust": "boolean",
+    "theInvestigatorsGaveCustodyOfTheRelicToHarlanEarnstone": "boolean",
+    "alejandroIsContinuingHisResearchOnHisOwn": "boolean",
+    "youAreForgingYourOwnWay": "boolean",
+    "theInvestigatorsFoundTheMissingRelic": "boolean",
+    "theRelicIsMissing": "boolean",
+    "theInvestigatorsRescuedAlejandro": "boolean",
+    "alejandroIsMissing": "boolean",
+    "theInvestigatorsForgedABondWithIchtaca": "boolean",
+    "ichtacaIsInTheDark": "boolean",
+    "pathsAreKnownToYou": "number",
+    "ichtacaHasConfidenceInYou": "boolean",
+    "theInvestigatorsMappedOutTheWayForward": "boolean",
+    "ichtacasFaithIsRestored": "boolean",
+    "theJungleWatches": "string[]",
+    "theInvestigatorsCooperatedWithTheYithians": "boolean",
+    "theInvestigatorsResistedCaptivity": "boolean",
+    "theInvestigatorsHadTheirMemoriesExpunged": "boolean",
+    "theProcessWasPerfected": "boolean",
+    "theProcessWasSuccessful": "boolean",
+    "theProcessBackfired": "boolean",
+    "theProcessBackfiredSpectacularly": "boolean",
+    "alejandroRemembersEverything": "boolean",
+    "alejandroIsSetAgainstYou": "boolean",
+    "ichtacaIsSetAgainstYou": "boolean",
+    "theInvestigatorsFellIntoTheDepths": "boolean",
+    "theNexusIsNear": "boolean",
+    "theBraziersAreLit": "boolean",
+    "theBraziersRemainUnlit": "boolean",
+    "theInvestigatorsMendedTheTearInTheFabricOfTime": "boolean",
+    "theInvestigatorsSavedTheCivilizationOfTheSerpents": "boolean",
+    "theInvestigatorsSavedTheCivilizationOfTheYithians": "boolean",
+    "theFabricOfTimeIsUnwoven": "boolean",
+    "theInvestigatorsTurnedBackTime": "boolean",
+    "theInvestigatorsSealedTheRelicOfAgesForever": "boolean",
+    "theInvestigatorsRecruitedTheHelpOfAnotherExpedition": "boolean"
+  },
+  "sourceRoot": "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham",
+  "sources": [
+    {
+      "path": "Act/CardDefs/TheForgottenAge/HeartOfTheElders.hs",
+      "sha256": "95f8f21aa19a8ae6f66b90a2ea9685d6cedca828f20b2cd1846e43d8b80187e4"
+    },
+    {
+      "path": "Act/CardDefs/TheForgottenAge/ShatteredAeons.hs",
+      "sha256": "9fde59410768b1220cc977629872c18a9ee34b0e461564eda1b08830cb674773"
+    },
+    {
+      "path": "Act/CardDefs/TheForgottenAge/TheBoundaryBeyond.hs",
+      "sha256": "7d13fea4ece1fa3ec26cfeed650f60c9fa5a3337a23c3ab7fcdc6653abf2c6af"
+    },
+    {
+      "path": "Act/CardDefs/TheForgottenAge/TheCityOfArchives.hs",
+      "sha256": "4dabc3b73ece2a38d98a37bd5fc04bf6dc71feee33ce42f61b498826dc33b5dd"
+    },
+    {
+      "path": "Act/CardDefs/TheForgottenAge/TheDepthsOfYoth.hs",
+      "sha256": "3ee8d0ba39a9de29ca79d8ab8df8f7b801746d60544008ad2de65970ae3cee11"
+    },
+    {
+      "path": "Act/CardDefs/TheForgottenAge/TheDoomOfEztli.hs",
+      "sha256": "bce2b00f34e94d2f65281030e740f07ce6faadda8b7d2970346c72a84341b50e"
+    },
+    {
+      "path": "Act/CardDefs/TheForgottenAge/TheUntamedWilds.hs",
+      "sha256": "5f84cd92f0fbb9ac4110070aa44af8a7acfaf6694dd7035ae1e5b2b87f830204"
+    },
+    {
+      "path": "Act/CardDefs/TheForgottenAge/ThreadsOfFate.hs",
+      "sha256": "24a25426ec7f1c73aea85a8cf6ffc1d4399c4e3e049d85442a5ceb5f4226e9bf"
+    },
+    {
+      "path": "Act/CardDefs/TheForgottenAge/TurnBackTime.hs",
+      "sha256": "37d3637ecdd03147ff13afe3ce1dad36c1aa0ae817d2da338bda29d4a3edb99d"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/HeartOfTheElders/AFamiliarPattern.hs",
+      "sha256": "2bace86bcebc8d0bc9488ae6bc8696e7b92e0c70abb7e0cbd16a5c8442ed9b3d"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/HeartOfTheElders/CavernOfTheForgottenAge.hs",
+      "sha256": "a8310f2644c17c00bb395acdbec5b19efb395f0b305dfbf6dc0734f23499184f"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/HeartOfTheElders/DescentIntoDark.hs",
+      "sha256": "a24a33a4af144a2dba90f418c298230b496f9d34546829ad90ff4f271d7b65de"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/HeartOfTheElders/OpeningTheMaw.hs",
+      "sha256": "c65f991913abccf3cb41938d9f030ba40326cc5378992ec77e1fd5ed0e7165e7"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/HeartOfTheElders/SearchForThePattern.hs",
+      "sha256": "9e56169c5323271b757f936672468118b1030250d374f4b6390a129445f427f1"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ShatteredAeons/MendTheShatter.hs",
+      "sha256": "4b2bde1af4dd004309ac73de729624f0b175f974ed75909c8d22556febe561d6"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ShatteredAeons/ParadiseLost.hs",
+      "sha256": "7080c54ef6b977bab0b602493020622a43f750faf7a5cc8bbc8d0c4e504c53a8"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ShatteredAeons/SearchForTheBrotherhood.hs",
+      "sha256": "a6802a710abd8acbefbba703867230546a7d159d344dff3249c9289669a7e4da"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ShatteredAeons/TheYithianRelic.hs",
+      "sha256": "30d335bc034892800930f97c223bfed1d0d4bc753f6a65d32a1d1d1255cf7da7"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ShatteredAeons/Timelock.hs",
+      "sha256": "962ce9c63b1b1051d6289da4cfcf79ffc4bc3e59c8a1cf7e1da8037933ed3256"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ShatteredAeons/WorldsBeyond.hs",
+      "sha256": "897f181fe4a091f66a9b98e1b2d7040155f25c07224b8539d8d7e250006c55a0"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheBoundaryBeyond/CrossingTheThreshold.hs",
+      "sha256": "f02c67cbe7005932decd47cc12d1335a38d2abf2b88edecec615fc9d2d5f3ab9"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheBoundaryBeyond/PastAndPresent.hs",
+      "sha256": "a596c9559cca64fbae64154897f396ce9e15ff4d8c5939745e216807d4e22cff"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheBoundaryBeyond/TheReturnTrip.hs",
+      "sha256": "176604d63226caef93d0b5c89d1259a14bf853f8e4f1240e4058bdd3f868ba48"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheCityOfArchives/ExploringPnakotus.hs",
+      "sha256": "ae7a9b37c8395a7dd1afed4f0842ca53a5dda3810c50445bd74e5b11451e3678"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheCityOfArchives/Repossession.hs",
+      "sha256": "3be0b2a2b0677eda21aba088ee30fb7eefc635de98329ca1d6751c074946dee8"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheCityOfArchives/RestrictedAccess.hs",
+      "sha256": "29aaa8854c64c024bf0caa04d3e115b561d0c65487e34645cbf3503239c2a7a1"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheDepthsOfYoth/JourneyToTheNexus.hs",
+      "sha256": "1a793d61a90519e0ed20bc9a94f0f84361c60dfaf10142dbc9d17f408e9b943c"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheDoomOfEztli/EscapeTheRuins.hs",
+      "sha256": "675635a91190bb50af6a7d5a19949962a3d6b237805445717fda746055e540e7"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheDoomOfEztli/IntoTheRuins.hs",
+      "sha256": "d1ffb68ceef4612e73096508da76a7dfcda5a888e3f177b74018d2bb99eaf071"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheDoomOfEztli/MagicAndScience.hs",
+      "sha256": "dc1158e0fa02555d2c27ab9d049bf635d58f5964c9f5fb1f9a17ba7c656b8186"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheUntamedWilds/ExploringTheRainforest.hs",
+      "sha256": "9b604303eb5a1905dc75c7da581a318528a48c8a09cfc82ee5c587e11490a36e"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheUntamedWilds/HuntressOfTheEztli.hs",
+      "sha256": "fff5b7384a56d45042a5180c3165ce855cda281c1f1f48d68b4221d84715e77e"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheUntamedWilds/SearchForTheRuins.hs",
+      "sha256": "5ee72083ffbc566e253aab3cc70e4e41fda3204476353a67f35d479bc66d9d88"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TheUntamedWilds/TheGuardedRuins.hs",
+      "sha256": "87635fedf57344bab79c8e254d5efaccf47afee7005efa28d149f66ae814530d"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/AlejandrosPlight.hs",
+      "sha256": "14246d9cdffe1b596279c4de1023c5cb88582fce9a7bc15fbd95e052772e3aef"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/AlejandrosPrison.hs",
+      "sha256": "be0c985caabcbdc7170e8e0466c87dbaaa0c055e61dd7d55379e97853c347688"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/AtTheExhibitTheBrotherhoodsPlot.hs",
+      "sha256": "c0f5e8b1c2e4e0d173dcee11122d9c5f10a5aed2cb24c21052e3947f46d30492"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/AtTheExhibitTheRelicsLocation.hs",
+      "sha256": "4fbd3607acb8b4f13d6396ae9ea23fabe4873b7c6ece19b40c4f10ba034afbb1"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/AtTheStationInShadowedTalons.hs",
+      "sha256": "2765a756d97b188a311c92405bfb5049b96d1d185d14e123e75ef9c8ba25871f"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/AtTheStationTrainTracks.hs",
+      "sha256": "580b3720551d54568d63c246ec9f1a69eaa367b0bea2dc223323a8a8545fb2a5"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/FindTheRelic.hs",
+      "sha256": "3050e1e549d16cb332c38a9a50f6766186e9658de419655dd97529bd6b922ebb"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/FriendsInHighPlacesHenryDeveau.hs",
+      "sha256": "fbe57fc376304c5c4a8ebaf467d0ec244453883390d6d7ab63bd3964e1174501"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/FriendsInHighPlacesHenrysInformation.hs",
+      "sha256": "d99810b96cef2ea1fda6d4c57ec08f948c6b95ed523d1d672cafcb691f26b704"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/HarlanIsInDanger.hs",
+      "sha256": "9132d7c2a42e69e5787bec3ed136ef4c6b6de9e32818b7e07ecb7512b0e4de5a"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/HarlansCurseHarlanEarnstone.hs",
+      "sha256": "b34700f722123b6777e73201c987426f5172c2308610ce59c426190e6e3ceccc"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/HarlansCurseSafekeeping.hs",
+      "sha256": "a889817d951a9a33623b5190ee9e06b0da935083bbc25ad6359862cffbd774d0"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/MissingPersons.hs",
+      "sha256": "e940ae78ca30ddb108af7a91d15699e0997ec91de987b1a3120d8c0ee28dae73"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/RecoverTheRelic.hs",
+      "sha256": "de61c3140afbb18eed6fcedd151691e03cf4e2ef6f2a23101372fcf4c158910b"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/SearchForAlejandro.hs",
+      "sha256": "a96d181435329198ba7708bccb5198d2f0393572fd4404b1e534c11a2f851da9"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/StrangeOccurences.hs",
+      "sha256": "c9724eb051c76be5839f6e37f29a7552371c51f95030b86ad5e1284b03bc9d62"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/StrangeRelicsMariaDeSilva.hs",
+      "sha256": "519d6af5b933677e24e9b42866e00aa10084c4bb8289f3a97392a1cc292fe953"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/StrangeRelicsMariasInformation.hs",
+      "sha256": "27ba0eca4cd93d3346cd7f1ea34421fd763310cdd5d58d13256e8ae024099a74"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/TheBrotherhoodIsRevealed.hs",
+      "sha256": "943bb8e13b07a5cda80ab5cb245852fa15238134876e2828a4a61666a1626325"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/TheCaveOfDarknessEmbroiledInBattle.hs",
+      "sha256": "f071eb766ff3b89486ebe74309d1bc3b8d4a52ce1dd7eea9c6b8c7c0ccf66402"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/TheCaveOfDarknessTunnelsInTheDark.hs",
+      "sha256": "2169efb31bca013f957c35e9f1c6649c2d3016cea69f975301e0518cf5ceeec3"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/TheGuardiansInquiry.hs",
+      "sha256": "eab2a89f64826f07e5a5893f308b0984686571cb0774bf3c9dbbd64a13b88c80"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/TheRelicIsMissing.hs",
+      "sha256": "5e7da8f0d17bdca83941c3bf0e122cc84bd96d70a7017c7d03ac8cc217e7ecac"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/ThreadsOfFate/TrialOfTheHuntress.hs",
+      "sha256": "034949e109acfb2e5120f962a7daae18016a29faa1159eb364c203092bbfca62"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TurnBackTime/IntoTheRuinsOnceAgain.hs",
+      "sha256": "d27eff7c604fda5b747358ddd72f1bae285792d74d517bc71eea44b8a24ee3f9"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TurnBackTime/MomentOfDoom.hs",
+      "sha256": "1c4c6a5dd88e7d8da3a197df18eb1883c336ea04aec5ec25e5a04867b3068e27"
+    },
+    {
+      "path": "Act/Cards/TheForgottenAge/TurnBackTime/TheChamberOfStillRemains.hs",
+      "sha256": "da217bccd474fa36bbe6fd8843680bc304978c559fef5802e2e9363229f10af1"
+    },
+    {
+      "path": "Agenda/CardDefs/TheForgottenAge/HeartOfTheElders.hs",
+      "sha256": "315985fe3b81d823028b3796270d02f5befede165c4f063c32ff1294ee75aa5d"
+    },
+    {
+      "path": "Agenda/CardDefs/TheForgottenAge/ShatteredAeons.hs",
+      "sha256": "415a1797a86e369aef2e761ae79d94c2efaaabef055d3726b60bd4cd425e4429"
+    },
+    {
+      "path": "Agenda/CardDefs/TheForgottenAge/TheBoundaryBeyond.hs",
+      "sha256": "10c3149cd76d347bcc0c2ef61ee1195192be78a99cf640aeee6c8fd51951fb90"
+    },
+    {
+      "path": "Agenda/CardDefs/TheForgottenAge/TheCityOfArchives.hs",
+      "sha256": "a8cfa8acd6b580b4aa3ee23662029835d038b7b7bc81f9a56655f2e6dabf7624"
+    },
+    {
+      "path": "Agenda/CardDefs/TheForgottenAge/TheDepthsOfYoth.hs",
+      "sha256": "88ccbb0bdf75483aaae038e0cf3559829f4eb29da1975aa279832ff932979803"
+    },
+    {
+      "path": "Agenda/CardDefs/TheForgottenAge/TheDoomOfEztli.hs",
+      "sha256": "6070b08bb6bde2bb4b5eb18e3a4a3e861a7ffe9103997b47b1f5b206a456f0c9"
+    },
+    {
+      "path": "Agenda/CardDefs/TheForgottenAge/TheUntamedWilds.hs",
+      "sha256": "84f9ca985b0a7af0ffaf48b58fd0d7b6f89f4c582fe078d6da5c3e17848c9c32"
+    },
+    {
+      "path": "Agenda/CardDefs/TheForgottenAge/ThreadsOfFate.hs",
+      "sha256": "a3fc47eff5d88c6067604c9f2bb355760293fc0a23a25e52ebbe391d839677a2"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/HeartOfTheElders/EyesInTheDark.hs",
+      "sha256": "39f9d1745b02bf1b8882b5f946ab64c648f05276e021a679d4f66ef239d7fa37"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/HeartOfTheElders/SettingSun.hs",
+      "sha256": "c4c608a63e081491c630b9896718cf8d2009e5c779879edd6282d0e02aa63edc"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/HeartOfTheElders/TheJunglesHeart.hs",
+      "sha256": "b478c27761221b81afafc1a28206e39f35f882e85994234b8c75a83f7af56c6b"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/HeartOfTheElders/TheLonelyCaverns.hs",
+      "sha256": "da29190d5a6f7f8e59f2ae3f876fe48fe9da178f2a07329b9b2befa58e03cbca"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/ShatteredAeons/PendulousThreads.hs",
+      "sha256": "06b5758a44ae9aa586623f081c5ca21921f98a9f1c1e5168b309c83f31006463"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/ShatteredAeons/SnappedThreads.hs",
+      "sha256": "d774ff119085dfa345e741b5ab44c2558a1d74f69c93e08c776567bf93b342f8"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/ShatteredAeons/ThreadsOfTime.hs",
+      "sha256": "b215a3f516f76adbd0729c49cd24f827b98943138fbe601ff2f21c2f54ed9fb4"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheBoundaryBeyond/TheBarrierIsThin.hs",
+      "sha256": "f423d1da130f8f92f66cd44dcaebc17ff08f4edae6b24c2ae51b7d697db6c188"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheBoundaryBeyond/TheBoundaryBroken.hs",
+      "sha256": "95e637cca6ff38dd78d0aa03aa664f6f48c045c3e69b1b4c82f9840c8d0fc8be"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheBoundaryBeyond/TimeCollapsing.hs",
+      "sha256": "b89ff06f2955665bc00ecfdf98116e3850513783f65ddc99639ec713a548c0ca"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheCityOfArchives/CityOfTheGreatRace.hs",
+      "sha256": "54a6c3313101a0a949f1d7a46251239faec65e91f75469b4f6b1bac36b3737dd"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheCityOfArchives/HumanityFading.hs",
+      "sha256": "a9a5e82d074d7a9f912550062813b9b21b7b956d407e31a36c2034fd7e64ec77"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheCityOfArchives/LostMemories.hs",
+      "sha256": "5884f4eb41868e93a22af962d79f74c7a7e50023c18f75d64e7acc935db33cb0"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheDepthsOfYoth/CityOfBlood.hs",
+      "sha256": "9c56e27e8aa47ff20d36dc16c8267a5bf66bbf514028cbe0e26e91829fbf1b6e"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheDepthsOfYoth/EndlessCaverns.hs",
+      "sha256": "79aa820bc2fbfe006820b60084bfa198276cb97c530eed9e9ccaf6899c6cc794"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheDepthsOfYoth/FuryThatShakesTheEarth.hs",
+      "sha256": "cd47bb650fad026b0bf3183e3b9ede22bc2069354b1d4bd58dda421c79a56c35"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheDepthsOfYoth/HorrificDescent.hs",
+      "sha256": "4cd955f1869bc1f9e0615cede6e9949b4fea14da4558b7bc140c9fc59e151015"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheDepthsOfYoth/TheDescentBegins.hs",
+      "sha256": "c124145561a6263ba15d96089b7e04cd826f92d7e8ec42c7c182e5e4aab30072"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheDepthsOfYoth/TheRedDepths.hs",
+      "sha256": "cca17036e60a15f2a4dc37d30afd1c7529fd19b5627e62d94a5eda95233051cd"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheDepthsOfYoth/Vengeance.hs",
+      "sha256": "2e0aa8c42ce80f587fb58f48d6b7413aa306c4a7ec8267eb18e686cb8cf4540b"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheDoomOfEztli/SomethingStirs.hs",
+      "sha256": "6414c50cba5c53ccf2f3f7379f4a3b51405411478ec20c8c36580cc68ee48432"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheDoomOfEztli/TheTempleWarden.hs",
+      "sha256": "9fddbcb356691c7d5d6c63f542e13e3d4db50de0ae734a636410452eaa418705"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheUntamedWilds/ExpeditionIntoTheWild.hs",
+      "sha256": "656940be91f38d7ef5df485bc12e58b33e20a455f09219f96d6de2c6d862dc7a"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/TheUntamedWilds/Intruders.hs",
+      "sha256": "1137b6a6d9c2ea153a6005e059be12c5e99878bd5fb1cf81c40f3ff25aacf31b"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/ThreadsOfFate/BehindTheCurtain.hs",
+      "sha256": "52019c5c6226889fd8e09ae1afbe9e986dbb23e968b1ba907acf7daa6f46e5cb"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/ThreadsOfFate/HiddenEntanglements.hs",
+      "sha256": "42b79a862a1c418ee3112e3a77779f4c9319e5189497ac3ec9b3fae5a07c4192"
+    },
+    {
+      "path": "Agenda/Cards/TheForgottenAge/ThreadsOfFate/ThreeFates.hs",
+      "sha256": "386b8d3fd1b4c3320b7ec9cebabc74121ce0f67668c5f3397ffaa17e7c0aeeaa"
+    },
+    {
+      "path": "Asset/Cards/TheForgottenAge.hs",
+      "sha256": "840f1f3bc6fe6d4a368369799718d20bfc92d466eea8a663078dd85f8b9bacfc"
+    },
+    {
+      "path": "Campaign/Campaigns/TheForgottenAge.hs",
+      "sha256": "88ccdff31b967712be1a7584f0a3605a05f309e423b826a1eb7ecd42bf652ff4"
+    },
+    {
+      "path": "Campaign/Campaigns/TheForgottenAge/Achievements.hs",
+      "sha256": "63955c2207885d2134af175e74d3bfb1e71894a26f88dabdf0739c6c72633688"
+    },
+    {
+      "path": "Campaigns/TheForgottenAge/CampaignSteps.hs",
+      "sha256": "cb0504138acb7333434fe0f73a8437e4368b2f9c03874e6db0615f2b745b4b7c"
+    },
+    {
+      "path": "Campaigns/TheForgottenAge/ChaosBag.hs",
+      "sha256": "f152f12711cfd6d1ac537baf44b29ee00e77c6c48645c1ed70326437029ca9d1"
+    },
+    {
+      "path": "Campaigns/TheForgottenAge/Helpers.hs",
+      "sha256": "6f2cfe4c0a157f3a2c89cd0bbf88fe7ee4afa142067b463da430d59c757e31fd"
+    },
+    {
+      "path": "Campaigns/TheForgottenAge/Import.hs",
+      "sha256": "e388ea42d749e15ab61f2620eddd2d67f8c2d313c978cc83e1ba66c0a0a502f9"
+    },
+    {
+      "path": "Campaigns/TheForgottenAge/Key.hs",
+      "sha256": "e861be553ce7518801e5bd208bbdde58cef357353e5402806ea5b88db4aaae64"
+    },
+    {
+      "path": "Campaigns/TheForgottenAge/Meta.hs",
+      "sha256": "9dd225ffa711245bbca16e5230a37ced87fa7f00e13da5c34337884cdbc91cb4"
+    },
+    {
+      "path": "Campaigns/TheForgottenAge/Supply.hs",
+      "sha256": "95a1cf4c056299117276b5f510d47023a29a2005178abe6c04311a41ec1d79c1"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge.hs",
+      "sha256": "86f2ee707328e001d057482be5d0f4003145fc3ce6d2b24a0df0146ba957c7a1"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge/AgentsOfYig.hs",
+      "sha256": "d92564a3bb4ddec88e62d05b0a0b44a06367ce3caa3bb9f35b4e96d3ca3f5725"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge/GuardiansOfTime.hs",
+      "sha256": "1a47580f4164b3fb014eda09c94cde13e28d400f5a1630f8bca0356f54aad504"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge/HeartOfTheElders.hs",
+      "sha256": "ca59be7a3954f2e2a6cfdc90c35399c3ca6be857cf2d89c8ea008c6ec34f0968"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge/PnakoticBrotherhood.hs",
+      "sha256": "8d5bce0096f1ec6dfe373dfc75a2dd2b56760c8a3418f588db886baa6c6c16a8"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge/Serpents.hs",
+      "sha256": "10b7ce68eb46dd49810a379eb74dfe97ce4c8c8accd448155938ff1361ec19e9"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge/ShatteredAeons.hs",
+      "sha256": "bc8213f3df5da9b14aa45b924e1e15c348611ea783097a48e4a33b13df62bd64"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge/TheBoundaryBeyond.hs",
+      "sha256": "a061734dc8d0985ea55a90643fe4a6b586080dfde387de7f3decca89612811c2"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge/TheCityOfArchives.hs",
+      "sha256": "891890473176ca2772c6664ac1c94e2d7818d68abc67fec8fd69c3a96bb9df3a"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge/TheDepthsOfYoth.hs",
+      "sha256": "8e52afb675c5c478767c8c3e1cf467c64db1887776e12081f6f9c5d78755bf6c"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge/TheDoomOfEztli.hs",
+      "sha256": "847af2af712fc6509f8c1ce0dd8b971d3953fb75905ff4d5f5e8cee6f3cad01b"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge/TheUntamedWilds.hs",
+      "sha256": "6e774f913270bb58ccc40082fbaa78141fef94b4f5080d7a18bc5ef55e844e46"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge/ThreadsOfFate.hs",
+      "sha256": "a0520e7f941a81fd984cddc4ed95f2e6d604d3b3ae737dcbcf412961dd75100d"
+    },
+    {
+      "path": "Enemy/CardDefs/TheForgottenAge/YigsVenom.hs",
+      "sha256": "9469fa4fdeee0d1948d27b7b185ce4c3a89f75ee98199d438cacb95531298d1f"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/AgentsOfYig/BroodOfYig.hs",
+      "sha256": "4786afcc117742524844651fd652636eb753a7bde0972834cd5c75a5ad420bfd"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/AgentsOfYig/SerpentFromYoth.hs",
+      "sha256": "4d08ab9b8d1d7c484855a4e6fe07edc97135376d750a84a4a181899f4e120232"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/GuardiansOfTime/EztliGuardian.hs",
+      "sha256": "8b1d1cd46bafebbe14ad33d3d55aea9e8a6ba11b6a9a142ad24cf20d3ca4cb0a"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/HeartOfTheElders/ApexStrangleweed.hs",
+      "sha256": "ac88024b478bb61d021f6e52961025b2926b726bd05f1af4803e85e82efd5cce"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/HeartOfTheElders/Basilisk.hs",
+      "sha256": "e2fc2df7f31e6c8fd1458864c7daf84a938ffbe33b138bf67377442ca4be2b85"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/HeartOfTheElders/FeatheredSerpent.hs",
+      "sha256": "7e7c4b2980774c1696ea3db55be84da4d003ce280060357c918d2ec8465926a8"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/HeartOfTheElders/TheWingedSerpent.hs",
+      "sha256": "60f70be1fc8016312ace45fdb90d8a555a9c5084315f250531f513548a67245b"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/HeartOfTheElders/TheWingedSerpentTheFuryOfYig.hs",
+      "sha256": "1652a592b1b2bcb241a21df45006d582106587eb8234f198d44df2ea036961a3"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/PnakoticBrotherhood/BrotherhoodCultist.hs",
+      "sha256": "18b6f8f38922f955d1edb636d33ca25cddb0da00830f2c8b6432cb4482ac8ce9"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/Serpents/BoaConstrictor.hs",
+      "sha256": "78f6ea7451c99113c1255944d91b16183d6648a4745de74108c28f660aa91674"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/Serpents/PitViper.hs",
+      "sha256": "79cd53947a9490d6976e635fd896c2300a5a5a8f5cf0d2bde6354e13ce6ec242"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/ShatteredAeons/AlejandroVela.hs",
+      "sha256": "b934eb454d7b507b2b7d1d598b776f6829332a4952b4cfe1739feb6f3912a243"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/ShatteredAeons/FormlessSpawn.hs",
+      "sha256": "893a6444681ebcd020effa2efa2b6a63aa1bc1d73ca64fe952d4c5446f1a0922"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/ShatteredAeons/IchtacaScionOfYig.hs",
+      "sha256": "3bddbda51fd5c6e930e2fcf0f60aed4f0c097f180b850b5add3a5ebdf9eea34f"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/ShatteredAeons/TemporalDevourer.hs",
+      "sha256": "8243277dac8d1f89b99dcacb88474d335504e94d0f73881404fe245bda51be98"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/TheBoundaryBeyond/HandOfTheBrotherhood.hs",
+      "sha256": "ddf5df36bc44588ba05742f07a05a03a858364feea23e1d48c36a27832239806"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/TheBoundaryBeyond/PadmaAmrita.hs",
+      "sha256": "a8e41ac027b952ced86bd33f4ddd42554a51372794976baf9f0fd152c8e25a70"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/TheBoundaryBeyond/SerpentOfTenochtitlan.hs",
+      "sha256": "57bfd6217efdb8bf13c1c6eb00f972011522639677145e351a5ee702e9fd9f09"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/TheCityOfArchives/KeeperOfTheGreatLibrary.hs",
+      "sha256": "c47f5703c43b0fa9d1b2d8732bc8b0122d5ad32609776ff3f5740759bf8fe614"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/TheCityOfArchives/ScholarFromYith.hs",
+      "sha256": "ed017dd3fb68df8c6ade57cab984d8ccf14c91a5210554e1da691907b190b1e7"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/TheCityOfArchives/ScientistOfYith.hs",
+      "sha256": "ffb736349fbb089bf684fd2e4c0be953ee3fa21f63671c27216e3ad6cafaa44c"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/TheDepthsOfYoth/EaterOfTheDepths.hs",
+      "sha256": "2b29de74832978426acad14a3012d8dedac93680501a3b1b2f5ec57b4ad5e284"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/TheDepthsOfYoth/PitWarden.hs",
+      "sha256": "634385c545702be47506b0d2defe29dd50f4b2834934e9f96bd747b156cd83d4"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/TheDepthsOfYoth/Yig.hs",
+      "sha256": "41f5a41a5aa24e326ca3e0adb468cff7289869147413bdaa5b193cad49723154"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/TheDoomOfEztli/HarbingerOfValusia.hs",
+      "sha256": "29ac8e2bd41c486177393efacd06d9717cf25b8776fe778960e3adb20afd5094"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/TheUntamedWilds/Ichtaca.hs",
+      "sha256": "d797afb7ad46b5ce3d4ba574c087afdfd2ee5ae2fcc581e3e71e9a561162b1ac"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/ThreadsOfFate/HarlanEarnstoneCrazedByTheCurse.hs",
+      "sha256": "27f8543beb119379312b718669697bcc851849e8ae7b0d5f4dfea0f657a2d170"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/ThreadsOfFate/HenryDeveauAlejandrosKidnapper.hs",
+      "sha256": "2ad050f5cce207d5e38041683500e51465a34d7a00a26f402435b8b92c83e9c0"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/ThreadsOfFate/MariaDeSilvaKnowsMoreThanSheLetsOn.hs",
+      "sha256": "6381686a9d8161c10632cf9c36567d7dca6a5ad72acb76f4a72de7812d9b89fa"
+    },
+    {
+      "path": "Enemy/Cards/TheForgottenAge/YigsVenom/FangOfYig.hs",
+      "sha256": "4eb119721feefe26b57cc195e6e307fe135becc34969bb0103f688fe97bcd4aa"
+    },
+    {
+      "path": "Event/Cards/TheForgottenAge.hs",
+      "sha256": "48d2dd386b0cca98d9e2c4390a313aeb2b1c2719f341241b8917ad037e121b1f"
+    },
+    {
+      "path": "Location/CardDefs/TheForgottenAge/HeartOfTheElders.hs",
+      "sha256": "e431b69121abdaf8710dbf15c7748d92294fcf7f78a5bdf13ca23bdf97f19d98"
+    },
+    {
+      "path": "Location/CardDefs/TheForgottenAge/Rainforest.hs",
+      "sha256": "a183c4af5de97258a38277871c4c2c98ac73165ff7d033f9a7f5b49266d79255"
+    },
+    {
+      "path": "Location/CardDefs/TheForgottenAge/ShatteredAeons.hs",
+      "sha256": "95101f501e53dcdef294a2b67f2d4efaa178e8a3433eb4eb7a75e048918886f9"
+    },
+    {
+      "path": "Location/CardDefs/TheForgottenAge/TheBoundaryBeyond.hs",
+      "sha256": "8009d10b6075c756789f1c02b5b6fe77ef3436cc64bc9617b0bdcaed47b6856a"
+    },
+    {
+      "path": "Location/CardDefs/TheForgottenAge/TheCityOfArchives.hs",
+      "sha256": "799b4989bffe1e842ecd1a3dd682cb8814e17e8abe67b3404d51c0cf4d560059"
+    },
+    {
+      "path": "Location/CardDefs/TheForgottenAge/TheDepthsOfYoth.hs",
+      "sha256": "88425965e379ae1eed6febba9f4946b039d6068ff36a068e85232672fbb81c3f"
+    },
+    {
+      "path": "Location/CardDefs/TheForgottenAge/TheDoomOfEztli.hs",
+      "sha256": "e3c823a70569bc1fbf64019a571be5cd8784bcedbd73c1df4a48731ea9d35ce5"
+    },
+    {
+      "path": "Location/CardDefs/TheForgottenAge/TheUntamedWilds.hs",
+      "sha256": "43e126f6d058d2f758fd758ef02ce75d607bba65f0b0bf085488918143af0502"
+    },
+    {
+      "path": "Location/CardDefs/TheForgottenAge/ThreadsOfFate.hs",
+      "sha256": "34e2eb5b92aa839b176a1e299d5f001405ee00ed3f3c3aee126060fa23939179"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/ChthonianDepths.hs",
+      "sha256": "e1bd7963aa27d95317d7bbe43d3fd85b43f229feafb664258f44ee5aa8451897"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/CrystalPillars.hs",
+      "sha256": "3e50c8228d36e1689352a9a1e6563d98a06d201608a2be825ee120cacee2c3b4"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/DarkHollow.hs",
+      "sha256": "da6662af0c016d666e327bc164ef43e2b4f864987d21f99c810df220f41f3583"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/DescentToYoth.hs",
+      "sha256": "c249713417e99943448ef82d961193ca1e4e3f77426c22ff1bc713fa8bf90500"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/HallOfIdolatry.hs",
+      "sha256": "677a15e584a068891642e0b27dbf6407a2a5e7ce4d9a4babe7950ee4d69acecd"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/MouthOfKnYanTheCavernsMaw.hs",
+      "sha256": "41e6834754b25ac216205dd83b2fb85e044e487e0fb56767ac0876019c5d97fe"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/MouthOfKnYanTheDepthsBeneath.hs",
+      "sha256": "a0d2f5352990b284a22712716481413370d33afda0a8ddc5ba6c70420de9bd14"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/PerilousGulch.hs",
+      "sha256": "95a00fbe755bd6f73092124ea10dbd49cd0acd09404515043806c1d7cdaf733a"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/RuinsOfKnYan.hs",
+      "sha256": "6de0fb28a51cd878b3a743c85d6b797ec98f6706ea9876bc401c5f8b0a43c9b2"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/StoneAltar.hs",
+      "sha256": "855aa2eabcb41ea59c45fff361f0f898e9c03b287eb49e930084d6bdfecd6092"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/SubterraneanSwamp.hs",
+      "sha256": "05efcb73d942c14d7a05725d5b9ad0d2a7a70699eefcecf684159bbe9b6a18d0"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/TimeWrackedWoods.hs",
+      "sha256": "fa2b18bdd0e3cff5304efa3545c9e49dc9dd2b2e682cc39c9da8ed7051e18c99"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/TreacherousDescent.hs",
+      "sha256": "a08c570df5b484e9b79a538059c2f1c2e164691f7394c754a049b88ffdc9f490"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/HeartOfTheElders/VastPassages.hs",
+      "sha256": "c1175d10fef5bd9fd83a2f397df77d5101beeb2e74d817a24280dcf42a068047"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/Rainforest/CircuitousTrail.hs",
+      "sha256": "5392838034331f7eecea959e1af525fd006ee0b88acce39309313a437e567417"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/Rainforest/OvergrownRuins.hs",
+      "sha256": "7fe936573960322a94f180fc4c73a4e8c8b188dbfec1b291d155018d85a3f7a9"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/Rainforest/PathOfThorns.hs",
+      "sha256": "4663582d6b8923f6a0081f70b008d82b6db27ca8ee51c86234da2c0a12d02498"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/Rainforest/RiverCanyon.hs",
+      "sha256": "0ab9b35bf60f0c08670f9d85061bec4f0f2606cdfc3096d8f1a1a5ad6ee6aa04"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/Rainforest/RopeBridge.hs",
+      "sha256": "927350f08840511ea7dcd79c5889a804362fa371653a02ccacc72a2c1609c29e"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/Rainforest/SerpentsHaven.hs",
+      "sha256": "2d0c3ab55fc271bfa45ab36abe01ff6afc22649863eace6a0c1928234770875d"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/Rainforest/TempleOfTheFang.hs",
+      "sha256": "ebbf597d01bd9bcdc9cb877efee501fa7a4ebe0445a789ec220af707a233cda2"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ShatteredAeons/APocketInTime.hs",
+      "sha256": "ec567d79c1a3ea97f2807516f7c81bbdbbcff1414097b8ff77c1cea6ccb52d9b"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ShatteredAeons/Atlantis.hs",
+      "sha256": "472542dabd068844ab990feb04c0517e3052223eb57280a9b23de57fe8f1ce36"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ShatteredAeons/BetweenWorlds.hs",
+      "sha256": "9468ed9cec27d700285f196259c240f4eae8174ca0730f725f33ac108d9b9140"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ShatteredAeons/CityOfTheUnseen.hs",
+      "sha256": "db49f64f35a34068eb826cc43ffbcff3062c5c35fbf23bb839762ccf89b9625a"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ShatteredAeons/Mu.hs",
+      "sha256": "205aa364c73abe6b71fe2eb387ecdc9ab8c267887cfe8ba0f719497f2358c70e"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ShatteredAeons/NexusOfNKai.hs",
+      "sha256": "27c1a20a160b2e9405b64bd9f4729767a19e899cf7d481d6600f833cc9424d85"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ShatteredAeons/PlateauOfLeng.hs",
+      "sha256": "be13eaf83b0145d55bd625910a4b21fe314d2d17fd0b583da511c2517ca80322"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ShatteredAeons/Pnakotus.hs",
+      "sha256": "8d1844273fa92f27af30ecf330f4b5895b7e29332bf7ebcacb4631124200a57c"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ShatteredAeons/RuinsOfNewYork.hs",
+      "sha256": "7b28284575c2abe06cc5df2b4f15660a6c16ed94124525ce8715e607621605c3"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ShatteredAeons/ShoresOfRlyeh.hs",
+      "sha256": "81b056f3ce8055b7c5b50b14c1cca663ee11e5d67262eca344b2083d4b507eba"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ShatteredAeons/Valusia.hs",
+      "sha256": "ad6cf7960cdc3a13bdb27b51ba463d17af08b59acaef6e0d12cbdabb3cccda0c"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ShatteredAeons/Yuggoth.hs",
+      "sha256": "7f639e197c7e852548ee50638f2bacc8f31796e274f43cb11c0dc4615585ee00"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/CanalsOfTenochtitlan_180.hs",
+      "sha256": "4d5227a3409895b7ba9a76e8cf75ba078d458088c8dc1fd42ec65bddc7034689"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/CanalsOfTenochtitlan_181.hs",
+      "sha256": "d1e781170446e8f6e64874f6d2ec4b40427331188938938f5c255a983fd157e4"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/ChapultepecHill_178.hs",
+      "sha256": "4dbae2ac9c9b314235cc223630e7061d66e07a254c323aa0f3a2c65517053d1a"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/ChapultepecHill_179.hs",
+      "sha256": "d6308430eec26b3705035ae33ad85b82497f92bf7125744999b984bb1ae71239"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/ChapultepecPark.hs",
+      "sha256": "cda2071693e29e2d473beb7335a63c564d64c15f95edf5a958eeaa35a99cdc4a"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/Coyoacan.hs",
+      "sha256": "5c894652ca8711e21dadc508e95e893766eaebf09f2420c6f16ba2651d6ecc58"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/LakeXochimilco_182.hs",
+      "sha256": "acf0e4ba0ac3fe697247384caff7c1bd5e3ebd96735f2c791b4b610317f9d49c"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/LakeXochimilco_183.hs",
+      "sha256": "6390d8509deb615cca9814796891f3d99f7ea2d6dad349a0bfcb177bc5c2f6b0"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/MetropolitanCathedral.hs",
+      "sha256": "fc6786d79ded0c3e4ab2f37816d75175b58790a5dbfed4839960b02406c7e02f"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/SacredWoods_184.hs",
+      "sha256": "4a192df90d09691444cbd722d365da55804cf427e7ca74217ba2caa85b15f3b5"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/SacredWoods_185.hs",
+      "sha256": "51128726d2a79d6bf243d719f2dd223dfd84ff3c2f9eed2f12d671af8100e824"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/TempleRuins.hs",
+      "sha256": "5f0408263c506ac7eae253821ddd022831eab93d27868cc3f1d01bb1604704fa"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/TemplesOfTenochtitlan_176.hs",
+      "sha256": "9c41ef9272357649a49c1557a7a6af143cb742dd9f10de523eba3d73749ea5ab"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/TemplesOfTenochtitlan_177.hs",
+      "sha256": "488902999dc9cef7830ea80898661a237dce1b1302e2fe9cea182fed2dfcf216"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/TemploMayor_174.hs",
+      "sha256": "550583523ae4b049bbf5ab3d8f6f9e09a8146345f4bb2969b82ee5ad01660c9f"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/TemploMayor_175.hs",
+      "sha256": "a4e570e441403a88a79fe5378350334d242ea16a4f67fe12236125f4d080281d"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/Xochimilco.hs",
+      "sha256": "dc0ee71e74155f9f78a89c4284f19eed836b838d06117923b864d7ff4579075a"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheBoundaryBeyond/Zocalo.hs",
+      "sha256": "749d4a313a8970567c549a34c1ac52d2456aba913b2786749db3759c85d26e60"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheCityOfArchives/DeconstructionRoom.hs",
+      "sha256": "f424dc3c060d4440f934ea9cd1a1d825e8fcbdd8cdc6c7f842124698bbef7868"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheCityOfArchives/GreatLibrary.hs",
+      "sha256": "7ea09fda6ca3e8f4319b9419e7d0c6c03937010a3c1c483b8f0de2b6225b4a33"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheCityOfArchives/HallsOfPnakotusEasternCorridors.hs",
+      "sha256": "ed7d07ade8a402321d775cae49d968913dfb0899545ec820619f8ff389d2c499"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheCityOfArchives/HallsOfPnakotusNorthernCorridors.hs",
+      "sha256": "4ff4f54f74a34a658d468917132f41ba72acd755ec78e4fb84d68869e4cf679a"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheCityOfArchives/HallsOfPnakotusWesternCorridors.hs",
+      "sha256": "d7eff733534fd1cbb7eb61ec5a783ec21f2f96b39b4492458b41f46e761c3a48"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheCityOfArchives/InterviewRoomArrivalChamber.hs",
+      "sha256": "49720bf9474b89ffa166240ab07f1d559d5548d31c7b60cf552382c39a273067"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheCityOfArchives/InterviewRoomIchorFilledChamber.hs",
+      "sha256": "b27e57a810f701027e011874e1cb77cbeaf8b0c3adadeb74f55fadc884735d66"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheCityOfArchives/InterviewRoomRestrainingChamber.hs",
+      "sha256": "efc55c3bdbd0ae1ecb902d1898f8c200504730b0a8335d6bab8f6ad5c986ce89"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheCityOfArchives/LaboratoryOfTheGreatRace.hs",
+      "sha256": "75ffa19ca8982228c57bfde6c662564ccc260230b4dccbcb2a99cc069399074d"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheCityOfArchives/TowersOfPnakotus.hs",
+      "sha256": "c2fca5642c0ce696f311c717879d9b0456162cd100e9a414dcffbba753dc4ba9"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheCityOfArchives/YithianOrrery.hs",
+      "sha256": "78cfa778c5f6b1cf65a1fb0a884174da56dc2f721f35fb7cdab575f50b095d09"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDepthsOfYoth/AbandonedSite.hs",
+      "sha256": "2491a0ae60ba2e37390cd2036210250c381308728559bb9b147c9d314babe1b0"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDepthsOfYoth/BridgeOverNKai.hs",
+      "sha256": "3eee292db4672f32bfe23b39670776cf764720655b88d21a4ac5ce028baae8a9"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDepthsOfYoth/BrightCanyon.hs",
+      "sha256": "a6fcc262892ffc19f53e82d565442ee49a4543e8889aaa2583f3920b9bb12b78"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDepthsOfYoth/BrokenPassage.hs",
+      "sha256": "2175d0101d351b02adacb8c999fdc33fbf2054fde3cc9aca0ce7af59267b5b76"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDepthsOfYoth/CavernsOfYoth.hs",
+      "sha256": "15569af7115c82de9c2d5b12814439ede81be0f53568c36ce71497a9b8a41432"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDepthsOfYoth/CityOfTheSerpents.hs",
+      "sha256": "16381453a0127eb162b3d21d4376f6843ebac241e5d943980296be8f31574ac4"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDepthsOfYoth/CrumblingPrecipice.hs",
+      "sha256": "b944f6c0a03981e1cf188b76a83234dd6f93f7f8c5b9e01d17c0bcbf477e2fb7"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDepthsOfYoth/ForkedPath.hs",
+      "sha256": "8e1c9f186d6673c269c974fcb81e5559a2bed256a199bf18165ea0fa38500314"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDepthsOfYoth/HallOfHeresy.hs",
+      "sha256": "3a1ed9c34214693ae36d11ae67e61860f135294284cdfda1accdfb04c46b0c16"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDepthsOfYoth/StepsOfYoth.hs",
+      "sha256": "23886bdb58ef80a67ea8c1b413e056be85bb27a8d14316858a2ec6e9177117a1"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDoomOfEztli/AncientHall.hs",
+      "sha256": "44022a3e5cbc4fe96bf522a4df45f369852819d6cc41ad130aaeec6c11bfad23"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDoomOfEztli/BurialPit.hs",
+      "sha256": "2215c875dfb0467fe6d5d3aa7f89bc700cc97b61dc792e8c45fe48adf2722f98"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDoomOfEztli/ChamberOfTime.hs",
+      "sha256": "d5670a1d9f8d5560132e64384b99d52144a440e5772dbefccd087306b688c09e"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDoomOfEztli/Entryway.hs",
+      "sha256": "8db05ec66e322dc2a92bc74b537ee5c53c41e7e6ed63a5301296afe549e404d5"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDoomOfEztli/GrandChamber.hs",
+      "sha256": "ece10a55e9856f14ae95321ec6fc38931056757f1c771acf3268817a321d9fb8"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDoomOfEztli/SecretPassage.hs",
+      "sha256": "80b2f74b6b5482e0262b44649ffcea2eebae32bf1c7175be83c908f7b78709e9"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheDoomOfEztli/UndergroundRuins.hs",
+      "sha256": "3ba69e5aa03f4978b405b87885eb5a1f480cc716f0962385e58ce56d5db484b8"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheUntamedWilds/ExpeditionCamp.hs",
+      "sha256": "05bfec7e646390a0360721f941a65fed03a343bfaf188022e979de88f00b79b6"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/TheUntamedWilds/RuinsOfEztli.hs",
+      "sha256": "b5ba2e69d1a328258ced3152475ae0b0b4ca01fa858ff71f26a0b0054224a07d"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ThreadsOfFate/ArkhamPoliceStation.hs",
+      "sha256": "742d94d67ed940c28ca0d93892ab71ba2c7f7bb6153d25bc4563f0613c0ed843"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ThreadsOfFate/BlackCave.hs",
+      "sha256": "ae0e7f3f702f23a0b56c3cf65d6455224e407275e3135b6a8ca77fcfbbb6c8a2"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ThreadsOfFate/CuriositieShoppe.hs",
+      "sha256": "778f4ebe6d08bac1b94f9a94c58b6f2019122eece3e5bd04c6bcf361be07774e"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ThreadsOfFate/EztliExhibit.hs",
+      "sha256": "e37f9ef6c4082ccacd75b8abf0a9948b4d799321f4537b0688b0ef84b907f4a8"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ThreadsOfFate/TownHall.hs",
+      "sha256": "00192ec6f62032cb18b0cb99293a58654c9ba4e19614de35c918b54ee78fd43a"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ThreadsOfFate/TrainTracks.hs",
+      "sha256": "bfdaebbc9ffda7ef3f9f53990a4ef4aec5163ed2d2008c408df7c9e53acceeb3"
+    },
+    {
+      "path": "Location/Cards/TheForgottenAge/ThreadsOfFate/VelmasDiner.hs",
+      "sha256": "81472986930471852d2ae9ea9874350cf4feac6eaad86b3a0bb64a1ffe0104fd"
+    },
+    {
+      "path": "Scenario/Scenarios/TheForgottenAge/HeartOfTheElders.hs",
+      "sha256": "284afe9e3e833a89f91ce82f6f77fb22fd6e88ca01d780d4e830cfa9dffb6376"
+    },
+    {
+      "path": "Scenario/Scenarios/TheForgottenAge/ShatteredAeons.hs",
+      "sha256": "1b2b1d55178fb65115127ec74d1410248edff41407970b22dc7738ff5b5b545f"
+    },
+    {
+      "path": "Scenario/Scenarios/TheForgottenAge/TheBoundaryBeyond.hs",
+      "sha256": "bf5ee8aadd05688cd11d14dba75d493d0bb409a366165df036f7503bf5787a79"
+    },
+    {
+      "path": "Scenario/Scenarios/TheForgottenAge/TheCityOfArchives.hs",
+      "sha256": "b7a173b3abe332fc7bbdfa34bcb418692d9d28cb779dae6e8e888e7c3c802fbb"
+    },
+    {
+      "path": "Scenario/Scenarios/TheForgottenAge/TheDepthsOfYoth.hs",
+      "sha256": "2f335efa2a4541e99c506c6f9bdff51d8e39e00d1ede053f90599fdad39ea0a9"
+    },
+    {
+      "path": "Scenario/Scenarios/TheForgottenAge/TheDoomOfEztli.hs",
+      "sha256": "6d944ad0e61f3a208c458939273d3c3403c568a39bbc3e6151e0a1682f903c6e"
+    },
+    {
+      "path": "Scenario/Scenarios/TheForgottenAge/TheUntamedWilds.hs",
+      "sha256": "9b49cff3774325e16bf2ac09ab44951e56c9db3c336fa809cb8906a4ae41c729"
+    },
+    {
+      "path": "Scenario/Scenarios/TheForgottenAge/ThreadsOfFate.hs",
+      "sha256": "099ace970c4635a6b3fb5ef241994e8da587ea9b586e79fd127095af82842b8e"
+    },
+    {
+      "path": "Scenario/Scenarios/TheForgottenAge/TurnBackTime.hs",
+      "sha256": "5a2520e203b74a25a7b58cd0b3942a80a21b53d145c0ecdff90979801479bf1c"
+    },
+    {
+      "path": "Scenarios/TheForgottenAge/HeartOfTheElders/Helpers.hs",
+      "sha256": "7f1eab2720ceba16794233afd38d32aeecc68c013b7efe1c54d62816a54884a3"
+    },
+    {
+      "path": "Scenarios/TheForgottenAge/ShatteredAeons/Helpers.hs",
+      "sha256": "4fa92273cf1a61233ae92d0f0d2c575f62f5de12cde01dbd1db003e9a02401db"
+    },
+    {
+      "path": "Scenarios/TheForgottenAge/TheBoundaryBeyond/Helpers.hs",
+      "sha256": "2a018fc5645ce5d9516b759f1fc5ddf840e578df9620f3a33403831ddd041cab"
+    },
+    {
+      "path": "Scenarios/TheForgottenAge/TheCityOfArchives/Helpers.hs",
+      "sha256": "4fa2d8307740b49a01ecb6ea562c0ef086a2d7c1ab96905ad9eb665c6f0eed3d"
+    },
+    {
+      "path": "Scenarios/TheForgottenAge/TheDepthsOfYoth/Helpers.hs",
+      "sha256": "9f29042e7b7efed1041f8811b732cebfdc31b2b1ac5e5952703993c6b7da498b"
+    },
+    {
+      "path": "Scenarios/TheForgottenAge/TheDoomOfEztli/Helpers.hs",
+      "sha256": "1cad8a1a445ae567418efcbba1c8f4eec0f33009a75c7ef7cbe245cbe61a41cf"
+    },
+    {
+      "path": "Scenarios/TheForgottenAge/TheUntamedWilds/Helpers.hs",
+      "sha256": "9bfba0c204bb123db89193fb3c1aba1b073d8fc8569348d360f66017515549b0"
+    },
+    {
+      "path": "Scenarios/TheForgottenAge/ThreadsOfFate/Helpers.hs",
+      "sha256": "048950753b7cb7b6d2e5a7d5d67fbb1a79c3b48f55beb3dc1fb125965b80ec3b"
+    },
+    {
+      "path": "Scenarios/TheForgottenAge/TurnBackTime/Helpers.hs",
+      "sha256": "6a00a1efb7cc57171da455a18855eea7f4016bae31a9839667c6b1afec18ec70"
+    },
+    {
+      "path": "Skill/CardDefs/TheForgottenAge.hs",
+      "sha256": "3c6f50d9fc9b477d9a8e773519f8ece6639ac526b63cc5725beee7828777a664"
+    },
+    {
+      "path": "Story/CardDefs/TheForgottenAge/ShatteredAeons.hs",
+      "sha256": "f80c3d003b054cb7e02c806234210a7b9bc32843c398dfe0ada5b3a807f4cfe5"
+    },
+    {
+      "path": "Story/Cards/TheForgottenAge/ShatteredAeons/AnotherWay.hs",
+      "sha256": "9eb5fa63660fa192e7984c54beaad33c6abd7462856b284e7bec60187a0b7d33"
+    },
+    {
+      "path": "Story/Cards/TheForgottenAge/ShatteredAeons/YigsMercy.hs",
+      "sha256": "1cb03726038d1cd9e2515df55edf440157eff8a30b03c16bfd85559456c9e4f5"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge.hs",
+      "sha256": "7100b373622958747f583cc5af3b0f635613cabc9ceb18a1d83ba29077f5f372"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/AgentsOfYig.hs",
+      "sha256": "436d26a1459641a206ddacc58009c694f16f98dda6f75315444a4c9f75c55d6a"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/DeadlyTraps.hs",
+      "sha256": "7ccb623d1001ed582ebf03cfd4b8eb219fd87a53a55ccb051c9abbe5c5b946de"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/Expedition.hs",
+      "sha256": "e0a77546eb9232cc150bafce48761b39f9b892829f02a99a998cae2feef8da65"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/ForgottenRuins.hs",
+      "sha256": "faf284b42660ceda2b0b617796b1da5f2fb8a33a90ab4e809ab18297e69bfdf7"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/GuardiansOfTime.hs",
+      "sha256": "4dc962185c3bfbc77cfaa6775df8f62f227e87d1bf2407aa0f9dd83e6daf5fe6"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/HeartOfTheElders.hs",
+      "sha256": "738976ef588f10444f1ee9e0b3565b410d0bd853db46279c01f58605d903a853"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/PnakoticBrotherhood.hs",
+      "sha256": "89953d838711c9b6fcfce1fa33d3ddb89c34235f3b2e8efee052036989bc8ba2"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/Poison.hs",
+      "sha256": "42d2c26888529779ade00a4eb1d2477b066840404194071d325309bc918cbe2e"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/Rainforest.hs",
+      "sha256": "263b4c654df83e839184a0318c0a2f5878c592af0f1d867bd7a92660b84760cc"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/Serpents.hs",
+      "sha256": "8720de32cce460d26066301eb74eac4e35834a0a76e9f5cab4f07d1b7718220c"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/ShatteredAeons.hs",
+      "sha256": "afde2ad24162d278581431eb00547c858fa0d3c3363f707c93777e615519cf73"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/TemporalFlux.hs",
+      "sha256": "a71f8b9a4b4be469a2129949815e99a77c2d0dad5be8bb0a246ee6b6beda2c29"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/TheBoundaryBeyond.hs",
+      "sha256": "8da427c5e0147d00ef5c0bb3874898e725bf7be5bb6f73606ffabbbe9332c2fb"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/TheCityOfArchives.hs",
+      "sha256": "75751b2660521cb71a27e8a739cb774c7fa9b9880428c8aa6bac64162f8b25d2"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/TheDepthsOfYoth.hs",
+      "sha256": "38499a8dab1aa367ea3483add6599009bf59cf79e4367795d0f43425fb1ec873"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/ThreadsOfFate.hs",
+      "sha256": "3fb8c2965acb3faf7446a161d6cfdf40862141f0e417a226826eea4bca68c7e6"
+    },
+    {
+      "path": "Treachery/CardDefs/TheForgottenAge/YigsVenom.hs",
+      "sha256": "f770ee9f690f5e84211b19a5dfb4fe93772ad298ed240f61974530646d60e773"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/AgentsOfYig/CurseOfYig.hs",
+      "sha256": "4171fbceffc9256a9e14b810f7b19b0a7807c2ce20f94795520d67490586724f"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/DeadlyTraps/Entombed.hs",
+      "sha256": "a454b68a700ccb58a15ccc7712ec9b8a70191077a82a390227a675c415dc4e8c"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/DeadlyTraps/FinalMistake.hs",
+      "sha256": "1d0c6ac88286181ef5712df9831012386d54d9178d9773a96225782e64fe4d99"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/Expedition/LostInTheWilds.hs",
+      "sha256": "7328bba82a09debc1d9a97eec857fab52142286e091080c263cb7df095e183f3"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/Expedition/LowOnSupplies.hs",
+      "sha256": "757a288e477c4d3ab6c17a7985a19ea7fb6dce56f8146ceca597ac1aec922797"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/ForgottenRuins/AncestralFear.hs",
+      "sha256": "9659909065bafcce5c9685c76f8688417f19e7c470429d32f1de743bd75c595d"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/ForgottenRuins/DeepDark.hs",
+      "sha256": "be90a85ca75878d82c17847a414d75b7e2c5e58043deb27adf0e1c14cb3fea8f"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/ForgottenRuins/IllOmen.hs",
+      "sha256": "4133e238a74a531561e5bacd4d5bf7f661b6143053880e0de932127bbf2865ca"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/GuardiansOfTime/ArrowsFromTheTrees.hs",
+      "sha256": "c7ffe213f680ac9d24be2baaed2d055445bd9d7dfa90eddb3a15a2002c4263f8"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/HeartOfTheElders/Ants.hs",
+      "sha256": "58c8d66a31217f8ca60cca0190457b69c66c818d0fcf4e902c586727a3f80028"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/HeartOfTheElders/NoTurningBack.hs",
+      "sha256": "a49ea267486cd583e536f694b1f463dca27f6b776e9879f5f79a8d79cedf6671"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/HeartOfTheElders/Pitfall.hs",
+      "sha256": "3e6447ee5f151eca62cca1a4a23d98c3f153c1ed78be41b940773c6f58d9ef05"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/HeartOfTheElders/PoisonousSpores.hs",
+      "sha256": "10904b40080c7db75b66f26dd75162ea1769455499341f1c1b4b1c3fd7377501"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/PnakoticBrotherhood/Shadowed.hs",
+      "sha256": "46443e04c1e9227cb76376e80dc223f00f927a8c73281878bcea5c388b1385d7"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/PnakoticBrotherhood/WordsOfPower.hs",
+      "sha256": "4759b7818830f768885acebbadf076af9c8c5ad970bae1e8df1dd03aac8e45c0"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/Poison/CreepingPoison.hs",
+      "sha256": "934d72727c9ce94a81d0f8235c40f5169eba78db39579f4e83940c7f0ce9f361"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/Poison/Poisoned.hs",
+      "sha256": "489e4826cf4684b5cfd135fbe6378145f67a6b081ea6013f03bddebbef163677"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/Rainforest/Overgrowth.hs",
+      "sha256": "c6169ed8413912679d1a7a9fa4bb5912b8eb5be14520e35da26d345d25b3e6fd"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/Rainforest/VoiceOfTheJungle.hs",
+      "sha256": "9a9d9c0856f387c5c82d82b80a2a5e8d1cccbf273cb2e1625177ba8694a4b7ac"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/Serpents/SnakeBite.hs",
+      "sha256": "86e15469bba459c4c6824bc13e58f56383d8a911dc8675ec60df52e7210b86ce"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/ShatteredAeons/BetweenWorlds.hs",
+      "sha256": "b070eda2324450754e91eaa0321facf602cb0f070acf1c18a942d209aeb3f074"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/ShatteredAeons/CreepingDarkness.hs",
+      "sha256": "cbd4143d210f8669ccf7426406ca1427af7f476f5c924f1db999f600d0525c19"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/ShatteredAeons/ShatteredAges.hs",
+      "sha256": "c824aff5f711d5cfe46d563910cfeb1c8702ba76eb890053635621593b2c9bdc"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/ShatteredAeons/WrackedByTime.hs",
+      "sha256": "d3f70d36d5318cf6e6416a2582d2420a1dc857e76699b36a3482ff1c5c919011"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/TemporalFlux/ATearInTime.hs",
+      "sha256": "2c01140017e822444d007ba7dbb476dc1544b0d4e6f1870840334b3719aedc34"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/TemporalFlux/LostInTime.hs",
+      "sha256": "cb92c63b5f0b6f49154476d89801b26fca00ad45331350ea54f2965089b5c084"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/TheBoundaryBeyond/TimelineDestabilization.hs",
+      "sha256": "93087ebdbbd1553d6104ee06ba866da62ad3d5e0a2dc3726e768b8c2ef5d547d"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/TheBoundaryBeyond/WindowToAnotherTime.hs",
+      "sha256": "0239de14641da368e406fe604d90938d18c8c909616bf371380134d55a4d528e"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/TheCityOfArchives/CaptiveMind.hs",
+      "sha256": "aa22ad5ea84ac7addd9c2ad5624b5376ba017b2adab0aa634e2e35687db5cec4"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/TheCityOfArchives/CruelInterrogations.hs",
+      "sha256": "ce9de6325647b48990e4e2a8d47ca26f54033f2858a4a0b2de85f4617bd9af43"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/TheCityOfArchives/LostHumanity.hs",
+      "sha256": "9d4a0bc48fd8be3ca36d358d8d5cd0832920c7ec9defe1f8656d070b8818f9e2"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/TheCityOfArchives/OutOfBodyExperience.hs",
+      "sha256": "de85e9f07d547e05f1b88a9a29ef645b5f4706fb1037b51d60f4f1add0b50355"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/TheCityOfArchives/YithianPresence.hs",
+      "sha256": "68f2e3e5be686b40590964ad0d2276fcc127f5f0eca815098e6f4bbe082cf46b"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/TheDepthsOfYoth/Bathophobia.hs",
+      "sha256": "77715a8bc50c9fbd95aec1a0efbb6665512de520e7ba4152a0db8a455a825a31"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/TheDepthsOfYoth/ChildrenOfValusia.hs",
+      "sha256": "e5f8eacc007457bcd528b8588376af820d0d53df25c4ee3cbac33497095885a1"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/TheDepthsOfYoth/LightlessShadow.hs",
+      "sha256": "8b045c394f7896bce8b556e8da2122d521d02fee3a5158bb844653eff291a0ee"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/TheDepthsOfYoth/SerpentsIre.hs",
+      "sha256": "d2168ccb1ea79a70df942edc44e9658e11e2a2cc084630c7e16bffe453e8d926"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/ThreadsOfFate/ConspiracyOfBlood.hs",
+      "sha256": "3cfe24341cb9d8bf7e658df74b5d8007c8d84a173e5f88ac1e805cf2099eb763"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/ThreadsOfFate/NobodysHome.hs",
+      "sha256": "a2481b3163383681a81c002bdc91ae153cef3031e61e94ce929fe06ea7d4460c"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/ThreadsOfFate/TheSecretMustBeKept.hs",
+      "sha256": "1033f138b0b498f63333499fa30cb81deedb73f3c4bc89f618eed56a1462a942"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/YigsVenom/SerpentsCall.hs",
+      "sha256": "56905afa5384711f27c182db0cc9d63777c90dadb73a7db4ab00fc5180f53f2b"
+    },
+    {
+      "path": "Treachery/Cards/TheForgottenAge/YigsVenom/Snakescourge.hs",
+      "sha256": "d1c61ff9911157a63a566ce208bba5aabbedfa43b9ba0b6244ac6b6bc547aaaa"
+    }
+  ],
+  "resources": {
+    "cardCatalog": "games/arkhamhorror/src/cards/cards-data.js (04xxx)",
+    "storySourceRoot": "参考资源/ArkhamHorror-main/frontend/src/locales/zh/theForgottenAge",
+    "storySources": [
+      {
+        "path": "base.json",
+        "sha256": "5d39be319c3ab6f3067ab0f3955c12d838a2184cd81c6209700458ec8853f0ad"
+      },
+      {
+        "path": "scenarios/theUntamedWilds.json",
+        "sha256": "cd8ce0ab28a106b4a8b1e28a812c58e879ad541314b619d025e631a7dc171ab1"
+      },
+      {
+        "path": "scenarios/theDoomOfEztli.json",
+        "sha256": "73d41362c8cb3924b5247d3b52f2eb9578c8a9fbd8797a7b5727b2fd912edfae"
+      },
+      {
+        "path": "scenarios/threadsOfFate.json",
+        "sha256": "8fceeb35790f540d6a3c7daf3992a1a1d1e58c2f4080b79f56f0360587f2664e"
+      },
+      {
+        "path": "scenarios/theBoundaryBeyond.json",
+        "sha256": "b40b5af01bd992700c6ea28110a4bd9c200e2e62d9082248f8d8abed3da14ffd"
+      },
+      {
+        "path": "scenarios/heartOfTheEldersPart1.json",
+        "sha256": "328e10178babb2760b2c5a20a78ca1762a173c574d1bd55429ce1aa5dc8db2ec"
+      },
+      {
+        "path": "scenarios/heartOfTheEldersPart2.json",
+        "sha256": "0b24b8e3da9d3824a2929f7de5a5212121e5d963171009f076f62964514edf1e"
+      },
+      {
+        "path": "scenarios/theCityOfArchives.json",
+        "sha256": "3d028741e7c2bd6e2144d9ae0b4e1a63882be590ff4a320e85ce8b132af8a0de"
+      },
+      {
+        "path": "scenarios/theDepthsOfYoth.json",
+        "sha256": "2a5ff991ce1b491b966936458126206be192434de4815f66f0afcb47753d4e9b"
+      },
+      {
+        "path": "scenarios/shatteredAeons.json",
+        "sha256": "0ac2f4e9cf327703639b59d0dc5af2a6e224ea078e3838fbbfb6144af7205997"
+      },
+      {
+        "path": "scenarios/turnBackTime.json",
+        "sha256": "687e1005870c7cd9dccd1999a5068cb37847de188d3261077361cdd9278c1ef2"
+      }
+    ],
+    "localImageRoot": "games/arkhamhorror/web/img",
+    "imagePaths": [
+      "cards/<code>.avif",
+      "zh/cards/<code>.avif"
+    ],
+    "imagePolicy": "与核心包、一循环和二循环共用卡图解析、离线库存与远程回退；不建立循环专属图片目录。",
+    "presentation": "缺少 web/img/campaigns/theForgottenAge 与音频资源，M4 前必须补齐或按缺失登记。"
+  },
+  "confirmations": {
+    "scenarios": {
+      "status": "pending",
+      "items": [
+        {
+          "id": "theUntamedWilds",
+          "code": "04043",
+          "name": "荒莽密林",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/TheUntamedWilds.hs",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theUntamedWilds/index.js"
+          ]
+        },
+        {
+          "id": "theDoomOfEztli",
+          "code": "04054",
+          "name": "埃兹特里的覆灭",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/TheDoomOfEztli.hs",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/index.js"
+          ]
+        },
+        {
+          "id": "threadsOfFate",
+          "code": "04113",
+          "name": "命运之线",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/ThreadsOfFate.hs",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/threadsOfFate/index.js"
+          ]
+        },
+        {
+          "id": "theBoundaryBeyond",
+          "code": "04161",
+          "name": "界限彼端",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/TheBoundaryBeyond.hs",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/index.js"
+          ]
+        },
+        {
+          "id": "heartOfTheEldersPart1",
+          "code": "04205",
+          "name": "久远腹地（上）",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/HeartOfTheElders.hs",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/index.js"
+          ]
+        },
+        {
+          "id": "heartOfTheEldersPart2",
+          "code": "04205",
+          "name": "久远腹地（下）",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/HeartOfTheElders.hs",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/index.js"
+          ]
+        },
+        {
+          "id": "theCityOfArchives",
+          "code": "04237",
+          "name": "天机之城",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/TheCityOfArchives.hs",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theCityOfArchives/index.js"
+          ]
+        },
+        {
+          "id": "theDepthsOfYoth",
+          "code": "04277",
+          "name": "幽嘶深渊",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/TheDepthsOfYoth.hs",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDepthsOfYoth/index.js"
+          ]
+        },
+        {
+          "id": "shatteredAeons",
+          "code": "04314",
+          "name": "破碎永世",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/ShatteredAeons.hs",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/shatteredAeons/index.js"
+          ]
+        },
+        {
+          "id": "turnBackTime",
+          "code": "04344",
+          "name": "时间倒流（尾声）",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": false,
+            "actsAndAgendas": false,
+            "locationsAndConnections": false,
+            "encounterBehaviors": false,
+            "literalCardBehavior": false,
+            "chaosEffects": false,
+            "resolutionsAndRecords": false,
+            "storyText": false,
+            "saveReplay": false,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/TurnBackTime.hs",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/turnBackTime/index.js"
+          ]
+        }
+      ]
+    },
+    "keywords": {
+      "status": "pending",
+      "items": [
+        {
+          "id": "explore",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+          ]
+        },
+        {
+          "id": "vengeance",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+          ]
+        },
+        {
+          "id": "yigsFury",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+          ]
+        },
+        {
+          "id": "supplies",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+          ]
+        },
+        {
+          "id": "poisoned",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+          ]
+        },
+        {
+          "id": "relicOfAges",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+          ]
+        },
+        {
+          "id": "expeditionLeader",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+          ]
+        },
+        {
+          "id": "elderThing",
+          "status": "pending",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": false,
+            "nodeAcceptance": false,
+            "rulebookEntry": false,
+            "cardLinks": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+          ]
+        }
+      ]
+    },
+    "rulebook": {
+      "status": "pending",
+      "checks": {
+        "campaignOverview": false,
+        "scenarioMechanics": false,
+        "keywordEntries": false,
+        "cardLinks": false,
+        "desktopBrowser": false,
+        "mobileBrowser": false
+      },
+      "evidence": [
+        "games/arkhamhorror/web/rulebook-data.js"
+      ]
+    }
+  },
+  "tests": [
+    "games/arkhamhorror/tests/tfa-migration.test.mjs"
+  ],
+  "remaining": [
+    "M1 调查员：构筑规则、主能力、旧印、专属卡与弱点，逐人验收",
+    "M2 玩家卡：91 张逐卡效果与审计账本",
+    "M3 剧本：十个注册项的布置、幕／议程、地点、遭遇、混乱标记、结局与跨章记录",
+    "M3 机制：探索牌库、复仇、Yig's Fury、补给、中毒、古代遗物、领队",
+    "M4 关键词与规则书条目、卡牌直达、桌面与移动端浏览器验收",
+    "M4 资源：战役展示图与音频目录（web/img/campaigns/theForgottenAge）",
+    "M5 大厅、联机与浏览器端到端发布验收"
+  ]
+}

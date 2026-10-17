@@ -3,6 +3,7 @@ import { scenarioPlaylistId } from './scenario-music.js'
 const ROOT = '/mods/arkhamhorror'
 const CARCOSA = `${ROOT}/img/campaigns/thePathToCarcosa`
 const DUNWICH = `${ROOT}/img/campaigns/theDunwichLegacy`
+const NOTZ = `${ROOT}/img/campaigns/nightOfTheZealot`
 
 const COMMON = Object.freeze({
   id: 'common',
@@ -63,12 +64,16 @@ const CAMPAIGNS = Object.freeze({
       accent: '#c99a54', accentStrong: '#efc878', muted: '#91a8a2', edge: '#9c754f66',
     }),
     assets: Object.freeze({
-      hubHero: `${ROOT}/img/campaigns/nightOfTheZealot/hub/office-hero.webp`,
-      tableOverlay: `${ROOT}/img/campaigns/nightOfTheZealot/table/investigation-map.webp`,
-      storyDefault: `${ROOT}/img/campaigns/nightOfTheZealot/story/default.png`,
+      hubHero: `${NOTZ}/hub/office-hero.webp`,
+      tableOverlay: `${NOTZ}/table/investigation-map.webp`,
+      storyDefault: `${NOTZ}/story/default.png`,
     }),
     musicPlaylist: 'nightOfTheZealot',
-    scenarios: Object.freeze({}),
+    scenarios: Object.freeze(Object.fromEntries([
+      'theGathering', 'theMidnightMasks', 'theDevourerBelow',
+    ].map(id => [id, Object.freeze({ assets: Object.freeze({
+      storyDefault: `${NOTZ}/scenarios/${id}/scene.webp`,
+    }) })]))),
   }),
 })
 

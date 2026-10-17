@@ -35,7 +35,7 @@ import { captureTableState } from '../integration/presentation-state.js'
 import { describeTeamParticipation, investigatorParticipation } from '../ai/ai-participation.js'
 import { narrativeLogTexts } from '../ai/ai-story.js'
 import { STATE_SCHEMA_VERSION, RULES_VERSION, randomValue, nextInstanceId, stateCompatibilityError, totalDoom, doomCards, enemyHealthValue } from './rules-state.js'
-import { requestChoice, choiceMoves, choiceError, resolveTransaction, resolutionCheckpoint } from './resolution.js'
+import { requestChoice, choiceMoves, choiceSeats, choiceError, resolveTransaction, resolutionCheckpoint } from './resolution.js'
 import { introduction, resolutionStory } from '../campaign/story.js'
 import { campaignGraph, enterCampaignNode, walkCampaign } from '../campaign/campaign-flow.js'
 import { applyCampaignEffect } from '../campaign/campaign-effects.js'
@@ -1328,16 +1328,16 @@ function chooseTurn(state) {
   const humanSeats = state.humanSeats || [0]
   const humans = candidates.filter(inv => humanSeats.includes(inv.seat))
   if (humans.length) {
-    const inv = humans[0]
-    const aiOptions = inv.seat === state.campaign.leadSeat
+    const leadSeat = state.campaign.leadSeat
+    const aiOptions = humans.some(inv => inv.seat === leadSeat)
       ? candidates.filter(candidate => !humanSeats.includes(candidate.seat))
-        .map(candidate => ({ id: String(candidate.seat), label: `让 ${candidate.name} 先行动` }))
+        .map(candidate => ({ id: String(candidate.seat), label: `让 ${candidate.name} 先行动`, responderSeat: leadSeat }))
       : []
-    return Number(requestChoice(state, { kind: 'turnOrder', source: `round:${state.round}`, seat: inv.seat,
-      prompt: aiOptions.length
-        ? '点击开始行动，或选择一名尚未行动的 AI 队友先行动。'
-        : '点击开始行动。',
-      options: [{ id: String(inv.seat), label: '开始行动' }, ...aiOptions] }))
+    const shared = humans.length > 1 ? '尚未行动的玩家谁先点击「开始行动」谁先行动。' : '点击开始行动。'
+    return Number(requestChoice(state, { kind: 'turnOrder', source: `round:${state.round}`, seat: humans[0].seat,
+      seats: humans.map(inv => inv.seat),
+      prompt: aiOptions.length ? shared + '队长也可以让一名尚未行动的 AI 队友先行动。' : shared,
+      options: [...humans.map(inv => ({ id: String(inv.seat), label: '开始行动', responderSeat: inv.seat })), ...aiOptions] }))
   }
   if (state.aiTurnOrderRound !== state.round) {
     state.aiTurnOrderRound = state.round
@@ -1485,7 +1485,7 @@ export function enemyFightValue(state, enemy, inv) {
   return value
 }
 
-function enemyEvadeValue(state, enemy, inv) {
+export function enemyEvadeValue(state, enemy, inv) {
   let value = enemy.evade + (enemyStatMods(state).enemyEvade || 0)
   value += scenarioBehavior(state).enemyStatModifier?.(state, enemy, 'evade') || 0
   if (enemy.code === 'screechingByakhee' && enemy.engagedSeat != null && getMaxSanity(state.investigators[enemy.engagedSeat]) - state.investigators[enemy.engagedSeat].horror <= 4 && !enemyTextBlanked(state, enemy)) value += 1
@@ -6053,11 +6053,40 @@ function spendAction(state, inv) {
 }
 
 export function decisionSeat(state) {
-  return state.status === 'playing' ? state.pendingChoice?.seat ?? state.currentSeat : null
+  if (state.status !== 'playing') return null
+  if (state.pendingChoice) return state.pendingChoice.seat
+  const seats = actingSeats(state)
+  return seats.includes(state.currentSeat) ? state.currentSeat : seats[0]
+}
+
+/** Seats allowed to submit now; per-seat hub preparation is simultaneous. */
+export function actingSeats(state) {
+  if (state.status !== 'playing') return []
+  if (state.pendingChoice) return choiceSeats(state.pendingChoice)
+  const pending = inHub(state) && hubConcurrentPhase(state) ? hubActingSeats(state) : []
+  return pending.length ? pending : [state.currentSeat]
+}
+
+const HUB_SEAT_ACTIONS = new Set(['hubSelectInvestigator', 'hubAutoDeck', 'hubSetDeck', 'hubPurchase',
+  'hubConfirmUpgrades', 'hubCancelUpgrades', 'hubAutoUpgrade', 'hubDoneSeat'])
+
+/** Seat preparation only touches the submitting seat, so it may follow a teammate's newer revision. */
+export function seatLocalMove(state, seat, move) {
+  return inHub(state) && !state.pendingChoice && hubConcurrentPhase(state)
+    && HUB_SEAT_ACTIONS.has(move?.action) && hubActingSeats(state).includes(seat)
 }
 
 const HUB_DIFFICULTIES = ['easy', 'standard', 'hard', 'expert']
 const inHub = state => state.hubFlow && state.uiState !== 'inScenario'
+const hubConcurrentPhase = state => (state.uiState === 'scenarioSetup' && !state.hubReady) || state.uiState === 'interlude'
+const hubPendingSeats = state => state.investigators.map(inv => inv.seat).filter(seat => !state.hubSeatDone?.[seat])
+// AI teammates prepare after every human has confirmed: they pick from what is left,
+// and their model latency never holds the session while humans are still choosing.
+function hubActingSeats(state) {
+  const pending = hubPendingSeats(state), humans = state.humanSeats || [0]
+  const humanPending = pending.filter(seat => humans.includes(seat))
+  return humanPending.length ? humanPending : pending
+}
 
 // A campaign may begin with a route choice whose exits are scenarios. Surface
 // that choice as ordinary case selection instead of a detached story prompt.
@@ -6095,6 +6124,10 @@ function selectInitialHubScenario(state, scenarioId, events) {
 function hubInvestigatorChoices(state, seat) {
   const unavailable = new Set([...Object.values(state.campaign.investigators), ...state.campaign.retired]
     .filter(record => record.seat !== seat || record.status !== 'active').map(record => record.code))
+  // Teammates preparing at the same time reserve a pick before saving a deck.
+  for (const inv of state.investigators) {
+    if (inv.seat !== seat && state.hubSeatSelected?.[inv.seat]) unavailable.add(inv.code)
+  }
   return PLAYABLE_INVESTIGATORS.filter(code => !unavailable.has(code))
 }
 
@@ -6106,10 +6139,9 @@ function hubStartingDeckReady(record) {
   return !!record?.deck?.length && record.startingDeckReady !== false
 }
 
-function hubLegalMoves(state) {
+function hubLegalMoves(state, seat = decisionSeat(state)) {
   const CAMPAIGN = campaignFor(state)
-  if (state.status !== 'playing') return []
-  const seat = state.currentSeat
+  if (state.status !== 'playing' || !actingSeats(state).includes(seat)) return []
   const record = state.campaign.investigators[seat]
   const moves = []
   const humans = state.humanSeats || [0]
@@ -6171,19 +6203,19 @@ function hubLegalMoves(state) {
 }
 
 function validateHubMove(state, seat, move) {
-  if (seat !== state.currentSeat) return '现在不是你的局外操作时机'
+  if (!actingSeats(state).includes(seat)) return '现在不是你的局外操作时机'
   if (!move || typeof move.action !== 'string') return '无效局外操作'
   if (move.action === 'hubSelectInvestigator' && state.campaign.investigators[seat]?.status === 'active' && !initialHubPreparation(state)) {
     return state.uiState === 'interlude' ? '关间只能为死亡或疯狂的调查员挑选替补，不能更换现役调查员' : '当前调查员仍在战役中，不能更换'
   }
   if (move.action === 'hubSetDeck') {
-    if (!hubLegalMoves(state).some(m => m.action === 'hubSetDeck')) return '当前不能保存牌组'
+    if (!hubLegalMoves(state, seat).some(m => m.action === 'hubSetDeck')) return '当前不能保存牌组'
     if (!Array.isArray(move.codes)) return '牌组必须是卡号数组'
     const built = buildDeckFromList(ALL_INVESTIGATORS[state.investigators[seat].code], move.codes,
       { seat, seed: 1, playerPool: corePlayerPool(), basicWeaknessPool: basicWeaknessPool(state) })
     return built.errors?.length ? `自定义卡组无效：${built.errors.join('；')}` : null
   }
-  return hubLegalMoves(state).some(legal => Object.entries(legal)
+  return hubLegalMoves(state, seat).some(legal => Object.entries(legal)
     .filter(([key]) => !['label', 'explanation'].includes(key)).every(([key, value]) => move[key] === value)) ? null : '当前不可执行该局外操作'
 }
 
@@ -6269,7 +6301,7 @@ function executeHubMove(state, seat, move, events) {
     }
     case 'hubDoneSeat': {
       state.hubSeatDone[seat] = true
-      if (seat + 1 < state.investigators.length) state.currentSeat = seat + 1
+      if (hubPendingSeats(state).length) state.currentSeat = hubActingSeats(state)[0]
       else {
         state.currentSeat = 0
         state.hubReady = true
@@ -6314,8 +6346,8 @@ function executeHubMove(state, seat, move, events) {
 }
 
 export function autoHubMove(state, seat, includeHuman = false) {
-  if (!inHub(state) || state.currentSeat !== seat || (seat === 0 && !includeHuman) || state.pendingChoice) return null
-  const moves = hubLegalMoves(state)
+  if (!inHub(state) || !actingSeats(state).includes(seat) || (seat === 0 && !includeHuman) || state.pendingChoice) return null
+  const moves = hubLegalMoves(state, seat)
   // A failed model step may leave a valid staged purchase to finish.
   const confirm = moves.find(move => move.action === 'hubConfirmUpgrades')
   if (confirm) return confirm
@@ -7571,10 +7603,10 @@ function doEndTurn(state, seat, events) {
 // 合法行动 / 校验
 // ---------------------------------------------------------------------------
 
-export function legalMoves(state) {
+export function legalMoves(state, observerSeat) {
   if (state.status !== 'playing') return []
-  if (state.pendingChoice) return choiceMoves(state)
-  if (inHub(state)) return hubLegalMoves(state)
+  if (state.pendingChoice) return choiceMoves(state, observerSeat)
+  if (inHub(state)) return hubLegalMoves(state, observerSeat ?? decisionSeat(state))
   const seat = state.currentSeat
   const inv = state.investigators[seat]
   if (!inv || inv.defeated || inv.resigned) return []
@@ -8034,7 +8066,7 @@ export function scriptActionHints(state, seat) {
   hints.push(...(behavior.scriptActions?.(state, inv) || []))
   const choice = state.pendingChoice
   return hints.map(({ reason, ...move }) => ({ ...move,
-    reason: reason || (choice ? (choice.kind === 'turnOrder' && choice.seat === seat ? '先点击「开始行动」' : '等待当前选择结算')
+    reason: reason || (choice ? (choice.kind === 'turnOrder' && choiceSeats(choice).includes(seat) ? '先点击「开始行动」' : '等待当前选择结算')
       : seat !== state.currentSeat ? '尚未轮到你行动' : validateMove(state, seat, move)) || null }))
 }
 
@@ -8042,7 +8074,7 @@ export function validateMove(state, seat, move) {
   const compatibility = stateCompatibilityError(state, META.resourceVersion)
   if (compatibility) return compatibility
   if (!move || Array.isArray(move) || typeof move.action !== 'string') return '无效行动'
-  if (!Number.isInteger(seat) || seat !== decisionSeat(state)) return '现在不是你的应答时机'
+  if (!Number.isInteger(seat) || !actingSeats(state).includes(seat)) return '现在不是你的应答时机'
   if (Object.hasOwn(move, 'revision') && (!Number.isSafeInteger(move.revision) || move.revision !== state.revision)) return '对局版本已过期'
   if (state.status !== 'playing') return '对局已结束'
   if (state.pendingChoice) return choiceError(state, seat, move)
@@ -8301,13 +8333,13 @@ export function describeState(state, observerSeat = decisionSeat(state)) {
   const CAMPAIGN = campaignFor(state)
   if (inHub(state)) {
     const lines = [...describeTeamParticipation(state), `【战役局外】${state.campaign.name} · ${state.uiState} · 难度 ${state.difficulty}`]
-    lines.push('当前席位：' + state.currentSeat + '；下一关：' + (state.hubSelectedScenarioId || '未选择'))
+    lines.push('待操作席位：' + actingSeats(state).join('、') + '；下一关：' + (state.hubSelectedScenarioId || '未选择'))
     for (const inv of state.investigators) {
       const record = state.campaign.investigators[inv.seat]
       lines.push(`${inv.seat}：${inv.name} · ${record ? `牌组 ${record.deck.length} 张 · ${record.xp} XP` : '未保存牌组'}`)
     }
     lines.push('【可执行行动】')
-    if (observerSeat === decisionSeat(state)) for (const move of legalMoves(state)) lines.push(JSON.stringify(move))
+    if (actingSeats(state).includes(observerSeat)) for (const move of legalMoves(state, observerSeat)) lines.push(JSON.stringify(move))
     return lines.join('\n')
   }
   const lines = describeTeamParticipation(state)

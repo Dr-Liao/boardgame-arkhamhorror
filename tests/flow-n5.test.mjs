@@ -116,20 +116,30 @@ test('N5 玩家点击开始后先行动，AI 随机顺序可恢复且不会重�
   assert.deepEqual(s.turnsTaken,[0,s.aiTurnOrder[0]])
 })
 
-test('N5 队长可指定尚能行动的 AI 先行动，非队长只能开始自己的行动',()=>{
-  const s=createGameState({seed:'lead-picks-ai'},[
+function mixedTable(seed) {
+  const s=createGameState({seed},[
     {seat:0,role:'human'},{seat:1,role:'ai'},{seat:2,role:'human'},{seat:3,role:'ai'},
   ])
   while(s.pendingChoice?.kind!=='turnOrder') {
     const options=s.pendingChoice.options
-    answer(s,options.find(option=>['done','skip'].includes(option.id))?.id||options[0].id)
+    const seat=s.pendingChoice.seat
+    applyMove(s,seat,{action:'choose',choiceId:s.pendingChoice.id,optionId:options.find(option=>['done','skip'].includes(option.id))?.id||options[0].id})
   }
-  assert.equal(s.pendingChoice.kind,'turnOrder')
-  assert.equal(s.pendingChoice.seat,0)
-  assert.deepEqual(s.pendingChoice.options.map(option=>option.id),['0','1','3'])
-  assert.match(s.pendingChoice.options.find(option=>option.id==='3').label,/先行动/)
+  return s
+}
+const choose=(s,seat,optionId)=>applyMove(s,seat,{action:'choose',choiceId:s.pendingChoice.id,optionId})
+const turnOptions=(s,seat)=>legalMoves(s,seat).map(m=>m.optionId)
 
-  answer(s,'1')
+test('N5 队长可指定尚能行动的 AI 先行动，其他真人只能开始自己的行动',()=>{
+  const s=mixedTable('lead-picks-ai')
+  assert.equal(s.pendingChoice.seat,0)
+  assert.deepEqual(s.pendingChoice.seats,[0,2])
+  assert.deepEqual(turnOptions(s,0),['0','1','3'])
+  assert.deepEqual(turnOptions(s,2),['2'])
+  assert.match(s.pendingChoice.options.find(option=>option.id==='3').label,/先行动/)
+  assert.match(validateMove(s,2,{action:'choose',choiceId:s.pendingChoice.id,optionId:'1'}),/其他玩家/)
+
+  choose(s,0,'1')
   assert.equal(s.currentSeat,1)
   while(s.pendingChoice?.kind==='reaction')answer(s,'skip')
   for(const inv of s.investigators)inv.hand=[]
@@ -137,15 +147,41 @@ test('N5 队长可指定尚能行动的 AI 先行动，非队长只能开始自�
   move(s,{action:'endTurn'})
 
   assert.equal(s.pendingChoice.kind,'turnOrder')
-  assert.equal(s.pendingChoice.seat,0)
-  assert.deepEqual(s.pendingChoice.options,[{id:'0',label:'开始行动'}])
-  answer(s,'0')
+  assert.deepEqual(s.pendingChoice.seats,[0,2])
+  assert.deepEqual(turnOptions(s,0),['0'])
+  choose(s,0,'0')
   while(s.pendingChoice?.kind==='reaction')answer(s,'skip')
   move(s,{action:'endTurn'})
 
   assert.equal(s.pendingChoice.kind,'turnOrder')
   assert.equal(s.pendingChoice.seat,2)
-  assert.deepEqual(s.pendingChoice.options,[{id:'2',label:'开始行动'}])
+  assert.equal(s.pendingChoice.seats,undefined)
+  assert.deepEqual(turnOptions(s,2),['2'])
+})
+
+test('N5 多名真人谁先点击开始行动谁先走，回放结果一致',()=>{
+  const s=mixedTable('human-race')
+  assert.equal(validateMove(s,1,{action:'choose',choiceId:s.pendingChoice.id,optionId:'2'}),'现在不是你的应答时机')
+  assert.match(validateMove(s,2,{action:'choose',choiceId:s.pendingChoice.id,optionId:'0'}),/其他玩家/)
+
+  const host=viewState(s,0), guest=viewState(s,2), ai=viewState(s,1)
+  assert.deepEqual(host.pendingChoice.options.map(option=>option.id),['0','1','3'])
+  assert.deepEqual(guest.pendingChoice.options,[{id:'2',label:'开始行动'}])
+  assert.deepEqual(guest.legalMoves.map(m=>m.optionId),['2'])
+  assert.deepEqual(ai.pendingChoice.options,[])
+
+  const replay=clone(s)
+  choose(s,2,'2'); choose(replay,2,'2')
+  assert.deepEqual(clone(s),replay)
+  assert.equal(s.currentSeat,2)
+  while(s.pendingChoice?.kind==='reaction')choose(s,s.pendingChoice.seat,'skip')
+  for(const inv of s.investigators)inv.hand=[]
+  applyMove(s,2,{action:'endTurn'})
+
+  assert.equal(s.pendingChoice.kind,'turnOrder')
+  assert.equal(s.pendingChoice.seat,0)
+  assert.equal(s.pendingChoice.seats,undefined)
+  assert.deepEqual(turnOptions(s,0),['0','1','3'])
 })
 
 test('N5 随机 AI 顺序不会固定为席位顺序',()=>{

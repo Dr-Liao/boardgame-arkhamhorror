@@ -112,8 +112,8 @@ export function handUnavailableReason(session, key, busy = false) {
   if (!key?.startsWith('hand:')) return ''
   if (st.status !== 'playing') return '本局已结束，仍可查看卡牌。'
   if (busy) return '正在结算，请稍候。'
-  const decisionSeat = st.pendingChoice?.seat ?? st.currentSeat
-  if (Number(seat) !== decisionSeat || session.players.find(p => p.seat === decisionSeat)?.role !== 'human') return '等待角色行动，仍可查看卡牌。'
+  const acting = session.actingSeats ?? [st.pendingChoice?.seat ?? st.currentSeat]
+  if (!acting.includes(Number(seat)) || session.players.find(p => p.seat === Number(seat))?.role !== 'human') return '等待角色行动，仍可查看卡牌。'
   if (entityMoves(st, key).length) return ''
   if (st.pendingChoice) return '当前待决选择不接受这张牌。'
   const inv = st.investigators.find(inv => inv.seat === Number(seat))
@@ -130,7 +130,8 @@ export function mountCardInteractions(root, session, { state, submit, select, in
   canInteract = () => true, beginInteraction = () => () => {} }) {
   cancelTableGesture()
   const st = session.state
-  const human = st.status === 'playing' && session.players.find(p => p.seat === (st.pendingChoice?.seat ?? st.currentSeat))?.role === 'human'
+  const acting = session.actingSeats ?? [st.pendingChoice?.seat ?? st.currentSeat]
+  const human = st.status === 'playing' && acting.some(seat => session.players.find(p => p.seat === seat)?.role === 'human')
   const allowed = () => human && canInteract() && !state.busy && state.session?.sessionId === session.sessionId && state.session.state.revision === st.revision
   const entities = [...root.querySelectorAll('[data-interaction]')]
   const choices = choicePresentation(st)
@@ -208,7 +209,7 @@ export function mountCardInteractions(root, session, { state, submit, select, in
   const hidePreview = () => { clearTimeout(previewTimer); window.removeEventListener('resize', positionPreview); preview?.remove(); preview = null }
   cleanupPreview = hidePreview
   const previewCard = event => {
-    if (event.pointerType === 'touch' || cleanupDrag || root.inert || state.busy) return
+    if (event.pointerType === 'touch' || event.altKey || cleanupDrag || root.inert || state.busy) return
     const el = event.target.closest('[data-card-code],.ah-enemy,.ah-script-card,.ah-reference-card')
     const art = el?.querySelector('.ah-table-art')
     if (!art || el.contains(event.relatedTarget)) return

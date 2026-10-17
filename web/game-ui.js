@@ -39,6 +39,11 @@ let rulebook
 let lastReactionPass = null
 const mySeat = s => s.mySeat ?? s.observerSeat ?? 0
 const canAct = (s, seat) => seat === mySeat(s) && (!s.online || (state.online?.connected && !state.online?.busy && state.online?.room?.members.some(member => member.host && member.online)))
+// Some choices (e.g. who starts next) accept several seats; answer as myself when I'm one of them.
+const decisionSeatOf = s => {
+  const st = s.state, primary = st.pendingChoice ? st.pendingChoice.seat : st.currentSeat
+  return s.actingSeats?.includes(mySeat(s)) ? mySeat(s) : primary
+}
 // 演出期间只读视图必须使用正在播放的牌桌快照，避免提前泄露尚未演出的结果。
 const viewSession = () => (presentation?.isBlocking && tableSession?.sessionId === state.session?.sessionId && tableSession) || state.session
 
@@ -311,6 +316,26 @@ function renderSkillIcons(icons) {
   return parts.length ? h('div', { className: 'ah-card-full-icons' }, parts) : null
 }
 
+function enemyStat(symbol, kind, label, base, value) {
+  const delta = typeof base === 'number' && typeof value === 'number' ? value - base : 0
+  const shown = delta ? base : (value ?? '—')
+  const sign = delta > 0 ? '+' : ''
+  const desc = delta ? `${label}：基础 ${base}，额外 ${sign}${delta}，当前 ${value}` : `${label} ${shown}`
+  return h('span', { className: 'ah-enemy-stat', 'data-enemy-stat': kind, title: desc, 'aria-label': desc },
+    cardSymbol(h, symbol), h('strong', {}, shown),
+    delta ? h('small', { className: delta > 0 ? 'is-positive' : 'is-negative' }, sign + delta) : null)
+}
+
+function enemyHealthRow(current, max) {
+  const total = max ?? 0
+  const fill = current == null ? 100 : total > 0 ? Math.min(100, current / total * 100) : 0
+  const desc = current == null ? `生命 ${total}` : `生命 ${current} / ${total}`
+  return h('div', { className: 'ah-enemy-health', 'aria-label': desc, title: desc },
+    tableIcon('health'), h('span', { className: 'ah-enemy-health-label' }, '生命'),
+    h('span', { className: 'ah-enemy-health-value' }, current == null ? h('strong', {}, total) : [h('strong', {}, current), h('small', {}, '/ ' + total)]),
+    h('span', { className: 'ah-enemy-health-track', 'aria-hidden': 'true' }, h('i', { style: { width: fill + '%' } })))
+}
+
 // 完整卡牌渲染（用于卡牌详情弹窗与卡组构筑）。
 function renderFullCard(def) {
   const d = cardDisplay(def)
@@ -340,13 +365,16 @@ function renderFullCard(def) {
     ))
   }
   if (d.isEnemy) {
+    const card = ahCardDefRaw(state.session, def.code)
+    const printed = key => card[key] ?? def[key]
+    const runtime = def.damageTaken != null
     statRows.push(h('div', { className: 'ah-card-full-stats' },
-      h('span', null, '⚔️ ' + enemyFightDisplay(d)),
-      h('span', null, '💨 ' + d.evade),
-      h('span', null, '❤️ ' + d.health),
-      h('span', null, '🗡️ ' + (d.damage || 0)),
-      h('span', null, '😱 ' + (d.horror || 0))
+      enemyStat('combat', 'fight', '战斗', enemyFightDisplay({ code: def.code, originalCode: def.originalCode, fight: printed('fight') }), enemyFightDisplay(def)),
+      enemyStat('agility', 'evade', '躲避', printed('evade'), def.effectiveEvade ?? def.evade),
+      enemyStat('health', 'damage', '伤害', printed('damage') || 0, def.damage || 0),
+      enemyStat('sanity', 'horror', '恐惧', printed('horror') || 0, def.horror || 0)
     ))
+    statRows.push(enemyHealthRow(runtime ? Math.max(0, (def.health || 0) - (def.damageTaken || 0)) : null, def.health))
     const enemyKws = []
     if (d.hunter) enemyKws.push('猎手')
     if (d.retaliate) enemyKws.push('反击')
@@ -439,7 +467,7 @@ function renderLocationDetail(detail) {
     ['shroud','eye','帷幕',loc.revealed ? (loc.shroud ?? 0) + (loc.shroudMod || 0) + (st.fogMod || 0) : '？'],
     ['clues','clue','线索',loc.clues || 0],['doom','doom','毁灭',loc.doom || 0],['resources','resource','资源',loc.resources || 0],
   ]
-  const decision = st.pendingChoice?.seat ?? st.currentSeat
+  const decision = decisionSeatOf(s)
   const moves = !state.busy && !presentation.isBlocking && canAct(s, decision) ? entityMoves(st,'location:' + loc.id) : []
   const people = st.investigators.filter(inv => inv.location === loc.id && !inv.defeated && !inv.resigned)
   const enemies = st.enemies.filter(enemy => enemy.location === loc.id)
@@ -539,7 +567,7 @@ async function cardMove(move, displayedSession) {
   if (!session || state.busy || presentation.isBlocking || session.sessionId !== displayedSession.sessionId) return
   const st = session.state
   const pending = st.pendingChoice
-  const seat = pending ? pending.seat : st.currentSeat
+  const seat = decisionSeatOf(session)
   if (st.status !== 'playing' || !canAct(session, seat)) return
   if (st.revision !== displayedSession.state.revision) return
   if (pending ? move.action !== 'choose' || move.choiceId !== pending.id : move.action === 'choose') return
@@ -952,7 +980,7 @@ function renderScriptActions(s, humanTurn) {
 function renderCardGame(s, autoPassing = false) {
   const st = s.state
   const over = st.status !== 'playing'
-  const decisionSeat = st.pendingChoice ? st.pendingChoice.seat : st.currentSeat
+  const decisionSeat = decisionSeatOf(s)
   const current = s.players[decisionSeat]
   // 演出期间牌桌保持可浏览（详情、时间线、局势），但不接受任何游戏操作。
   const humanTurn = !over && current && canAct(s, decisionSeat) && !presentation.isBlocking
@@ -969,9 +997,11 @@ function renderCardGame(s, autoPassing = false) {
     statusText = '正在继续结算…'
   } else if (st.pendingChoice) {
     const inv = st.investigators.find(item => item.seat === decisionSeat)
-    statusText = humanTurn
-      ? '请你回答待决选择（' + (inv?.name || current.name) + '）'
-      : '等待 ' + (inv?.name || current?.name || 'AI 队友') + ' 回答待决选择…'
+    statusText = st.pendingChoice.kind === 'turnOrder'
+      ? humanTurn ? '准备好后点击「开始行动」（' + (inv?.name || current.name) + '）' : '等待队友点击「开始行动」…'
+      : humanTurn
+        ? '请你回答待决选择（' + (inv?.name || current.name) + '）'
+        : '等待 ' + (inv?.name || current?.name || 'AI 队友') + ' 回答待决选择…'
   } else {
     const inv = st.investigators[st.currentSeat]
     statusText = humanTurn
@@ -1038,7 +1068,7 @@ function renderCardGame(s, autoPassing = false) {
     renderCardActionPopover(s, humanTurn)
   )
   mountCardInteractions(root, s, { state, submit: cardMove, beginInteraction,
-    canInteract: () => !presentation.isBlocking && canAct(s, st.pendingChoice?.seat ?? st.currentSeat),
+    canInteract: () => !presentation.isBlocking && canAct(s, decisionSeatOf(s)),
     selectedKey: () => currentSelection(s)?.key,
     select: key => selectEntity(s, key), inspect: key => inspectEntity(s, key),
     showActions: moves => { state.arkhamDirectActions = { sessionId: s.sessionId, revision: st.revision, moves }; render() },
@@ -1125,7 +1155,7 @@ function renderPlayerDock(s, inv, humanTurn) {
     engaged.length ? h('section', { className: 'ah-engagement-zone', 'aria-label': '交战区', 'data-engaged-count': engaged.length, 'data-interaction': 'zone:engage' },
       h('div', { className: 'ah-engagement-heading' }, tableIcon('sword'), h('span', {}, '交战中'), h('b', {}, `${engaged.length} 名敌人`)),
       h('div', { className: 'ah-engagement-cards' }, engaged.map(enemy=>h('div',{className:'ah-engaged-enemy'},renderEnemyChip(s,enemy),
-        h('div',{className:'ah-engaged-enemy-stats'},tableIcon('health'),`${Math.max(0,enemy.health-(enemy.damageTaken||0))}`,tableIcon('sword'),enemyFightDisplay(enemy),tableIcon('leaf'),enemy.evade)))),
+        h('div',{className:'ah-engaged-enemy-stats'},tableIcon('health'),`${Math.max(0,enemy.health-(enemy.damageTaken||0))}`,tableIcon('sword'),enemyFightDisplay(enemy),tableIcon('leaf'),enemy.effectiveEvade ?? enemy.evade)))),
       h('small',{className:'ah-engagement-hint'},'拖动武器或角色至敌人 · 点击选择行动')) : null)
 }
 
@@ -1677,7 +1707,7 @@ function renderEnemyChip(s, e, { map = false } = {}) {
     placedCardMarkers(h, e, { enemy: true }),
     h('div', { className: 'ah-enemy-name' }, (e.hunter ? '🐺 ' : '👹 ') + e.name + (e.doom ? ' 🌑' + e.doom : '')),
     h('div', { className: 'ah-enemy-stats' },
-      '战斗' + enemyFightDisplay(e) + ' · 躲避' + e.evade + ' · 生命 ' + (e.health - e.damageTaken) + '/' + e.health +
+      '战斗' + enemyFightDisplay(e) + ' · 躲避' + (e.effectiveEvade ?? e.evade) + ' · 生命 ' + (e.health - e.damageTaken) + '/' + e.health +
       (e.damage ? ' · 伤' + e.damage : '') + (e.horror ? ' · 惧' + e.horror : '')),
     kws.length ? h('div', { className: 'ah-enemy-kws' }, kws.map((k) => h('span', { className: 'ah-enemy-kw' }, k))) : null,
     h('div', { className: 'ah-enemy-state' },

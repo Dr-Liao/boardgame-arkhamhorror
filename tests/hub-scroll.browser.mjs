@@ -162,6 +162,25 @@ for(const width of [1440,390]) test(`升级页面复用筛选并按战役与扩�
   await page.screenshot({path:fileURLToPath(new URL(`../../../artifacts/arkham-polish/upgrade-filters-${width}.png`,import.meta.url)),animations:'disabled'})
 })
 
+test('升级页面按住 Alt 悬停卡牌显示放大图与说明',async({page})=>{
+  await upgrades(page)
+  const hub=page.locator('.ah-hub'),zoom=page.locator('.ah-card-zoom')
+  for (const card of [hub.locator('.ah-office-upgrade-gallery > button').nth(2),hub.locator('.ah-upgrade-comparison .ah-upgrade-card-art').last()]) {
+    await card.hover()
+    await page.keyboard.down('Alt')
+    await expect(zoom).toBeVisible()
+    await expect(zoom).toHaveAttribute('data-zoom-for',await card.getAttribute('data-zoom-code'))
+    await expect(zoom.locator('.ah-card-zoom-text h3')).toHaveText(await card.getAttribute('data-zoom-name'))
+    await expect(zoom.locator('.ah-card-zoom-loading')).toHaveCount(0)
+    await page.keyboard.up('Alt')
+    await expect(zoom).toHaveCount(0)
+  }
+  await hub.locator('.ah-office-upgrade-gallery > button').nth(2).hover()
+  await page.keyboard.down('Alt')
+  await page.screenshot({path:fileURLToPath(new URL('../../../artifacts/arkham-polish/upgrade-card-zoom.png',import.meta.url)),animations:'disabled'})
+  await page.keyboard.up('Alt')
+})
+
 test('构筑页面使用真实卡源筛选且不改变牌组',async({page})=>{
   await page.goto('/index.html')
   await page.locator('.bg-card').filter({hasText:'诡镇奇谈'}).click()

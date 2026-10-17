@@ -83,7 +83,11 @@ test('P2 新战役局外流程、原子存档、显式读取、删除与另存�
     assert.equal(duplicate.session.state.revision, 1)
 
     await submit({ action: 'hubGoSetup' })
-    await submit({ action: 'hubSelectInvestigator', code: '01001' })
+    // AI 席位会同时完成自己的准备，可能已经选走某个调查员；
+    // 这里从合法动作里挑一个仍可选的，而不是写死 01001（写死会让用例依赖 AI 选了谁）。
+    const pickInvestigator = session.state.legalMoves.find(move => move.action === 'hubSelectInvestigator')
+    assert.ok(pickInvestigator, '局外准备阶段应至少留一个可选调查员')
+    await submit({ action: 'hubSelectInvestigator', code: pickInvestigator.code })
     await submit({ action: 'hubAutoDeck' })
     await submit({ action: 'hubDoneSeat' })
     assert.equal(session.state.uiState, 'scenarioSetup')

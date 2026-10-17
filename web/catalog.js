@@ -241,7 +241,8 @@ export function createCatalogUI({ h, onChange, openCard }) {
           h('div', { className: 'ah-catalog-summary', role: 'status' }, state.loading ? '正在加载目录…' : state.error || ('找到 ' + (result?.total || 0) + ' 张 · 每页 ' + state.limit + ' 张')),
           state.error ? h('button', { className: 'bg-btn secondary', onclick: load }, '重新加载') : null,
           h('div', { className: 'ah-catalog-grid', 'aria-busy': String(state.loading) }, !state.error ? (result?.cards || []).map(card =>
-            h('button', { className: 'ah-catalog-card', disabled:state.loading, onclick: () => openCard(card), 'aria-label': (card.nameZh || card.name) + ' ' + card.code },
+            h('button', { className: 'ah-catalog-card', disabled:state.loading, onclick: () => openCard(card), 'aria-label': (card.nameZh || card.name) + ' ' + card.code,
+              'data-zoom-code': card.code, 'data-zoom-name': card.nameZh || card.name },
               renderImage(h, card.images, 'front', { compact: true }),
               h('span', { className: 'ah-catalog-card-name' }, card.nameZh || card.name),
               h('span', { className: 'ah-catalog-card-meta' }, card.code + ' · ' + (TYPE_LABELS[card.type] || card.type)),

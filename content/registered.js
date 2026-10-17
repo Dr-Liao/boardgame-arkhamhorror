@@ -27,15 +27,31 @@ import * as aPhantomOfTruth from './campaigns/thePathToCarcosa/scenarios/aPhanto
 import * as thePallidMask from './campaigns/thePathToCarcosa/scenarios/thePallidMask/index.js'
 import * as blackStarsRise from './campaigns/thePathToCarcosa/scenarios/blackStarsRise/index.js'
 import * as dimCarcosa from './campaigns/thePathToCarcosa/scenarios/dimCarcosa/index.js'
+import { manifest as tfaCampaignPack } from './packs/tfaCampaign/manifest.js'
+import { manifest as tfaInvestigators } from './packs/tfaInvestigators/manifest.js'
+import { manifest as tfaPlayer } from './packs/tfaPlayer/manifest.js'
+import { manifest as theForgottenAge } from './campaigns/theForgottenAge/manifest.js'
+import * as theUntamedWilds from './campaigns/theForgottenAge/scenarios/theUntamedWilds/index.js'
+import * as theDoomOfEztli from './campaigns/theForgottenAge/scenarios/theDoomOfEztli/index.js'
+import * as threadsOfFate from './campaigns/theForgottenAge/scenarios/threadsOfFate/index.js'
+import * as theBoundaryBeyond from './campaigns/theForgottenAge/scenarios/theBoundaryBeyond/index.js'
+import * as heartOfTheEldersPart1 from './campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/index.js'
+import * as heartOfTheEldersPart2 from './campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/index.js'
+import * as theCityOfArchives from './campaigns/theForgottenAge/scenarios/theCityOfArchives/index.js'
+import * as theDepthsOfYoth from './campaigns/theForgottenAge/scenarios/theDepthsOfYoth/index.js'
+import * as shatteredAeons from './campaigns/theForgottenAge/scenarios/shatteredAeons/index.js'
+import * as turnBackTime from './campaigns/theForgottenAge/scenarios/turnBackTime/index.js'
 
 let bundle = {
   packs: [...packs, ...expansionBundles.map(entry => entry.manifest), dunwichCampaignPack, dunwichInvestigators,
-    carcosaCampaignPack, carcosaInvestigators],
-  campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa],
+    carcosaCampaignPack, carcosaInvestigators, tfaCampaignPack, tfaInvestigators, tfaPlayer],
+  campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa, theForgottenAge],
   scenarios: [gathering, masks, devourer, extracurricularActivity, theHouseAlwaysWins, theMiskatonicMuseum,
     theEssexCountyExpress, bloodOnTheAltar, undimensionedAndUnseen, whereDoomAwaits, lostInTimeAndSpace,
     curtainCall, theLastKing, echoesOfThePast, theUnspeakableOath, aPhantomOfTruth, thePallidMask,
-    blackStarsRise, dimCarcosa],
+    blackStarsRise, dimCarcosa,
+    theUntamedWilds, theDoomOfEztli, threadsOfFate, theBoundaryBeyond, heartOfTheEldersPart1,
+    heartOfTheEldersPart2, theCityOfArchives, theDepthsOfYoth, shatteredAeons, turnBackTime],
 }
 export let contentRegistry = createContentRegistry(bundle)
 

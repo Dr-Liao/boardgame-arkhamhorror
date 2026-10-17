@@ -128,7 +128,7 @@ test('普通动效下局外选择保留已加载图片、面板可见性与构�
   await expect(modal).toBeVisible()
   await modal.getByRole('button', { name: '取消', exact: true }).focus()
   await page.keyboard.press('Tab')
-  await expect(modal.getByRole('textbox', { name: '搜索卡牌' })).toBeFocused()
+  await expect(modal.getByRole('button', { name: '导入 ArkhamDB' })).toBeFocused()
   await page.keyboard.press('Shift+Tab')
   await expect(modal.getByRole('button', { name: '取消', exact: true })).toBeFocused()
   await page.keyboard.press('Escape')

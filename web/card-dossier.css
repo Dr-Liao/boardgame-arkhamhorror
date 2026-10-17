@@ -35,5 +35,12 @@
 .ah-card-glyph-icons{font-family:'AHCardSymbolIcons'!important}
 .ah-card-glyph-slim{font-family:'AHCardSymbolSlim'!important}
 .ah-carddetail-modal .ah-card-full-stats .ah-rule-symbol,.ah-carddetail-modal .ah-card-full-stats .ah-card-glyph{padding:0;border:0;background:none;border-radius:0}
+.ah-enemy-stat{display:inline-flex;align-items:baseline;gap:4px}.ah-enemy-stat strong{font-size:14px}.ah-enemy-stat small{font-size:11px}
+.ah-enemy-stat .is-positive{color:#a4d697}.ah-enemy-stat .is-negative{color:#f29c84}
+.ah-enemy-stat[data-enemy-stat=damage] .ah-rule-symbol{color:#e88a74}.ah-enemy-stat[data-enemy-stat=horror] .ah-rule-symbol{color:#9fc3e4}
+.ah-enemy-health{display:grid;grid-template-columns:16px auto auto 1fr;align-items:center;gap:6px;max-width:320px;margin-top:10px;padding:6px 10px;border:1px solid #ad78634d;border-radius:4px;background:#46261b40;color:#edb09a}
+.ah-enemy-health .ah-icon{width:16px;height:16px}.ah-enemy-health-label{font-size:12px}
+.ah-enemy-health-value{display:inline-flex;align-items:baseline;gap:3px}.ah-enemy-health-value strong{font-size:17px;color:#ffd8c8}.ah-enemy-health-value small{font-size:12px;color:#c99a88}
+.ah-enemy-health-track{height:5px;border-radius:3px;background:#0005;overflow:hidden}.ah-enemy-health-track i{display:block;height:100%;background:linear-gradient(90deg,#b5452f,#e3836a)}
 .ah-log-line.is-enemy{border-left:2px solid #bb7051}.ah-log-line.is-mythos{border-left:2px solid #ad90ba}.ah-log-line.is-upkeep{border-left:2px solid #91a97c}
 @media(max-width:700px){.ah-carddetail-modal.bg-modal{padding:16px}.ah-carddetail-modal .ah-detail-layout{grid-template-columns:1fr;gap:16px}.ah-carddetail-modal .ah-card-full{padding:16px}.ah-carddetail-modal .ah-art img{max-height:45vh}.ah-carddetail-modal .ah-card-full-name{font-size:23px}}
