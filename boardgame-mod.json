@@ -1,0 +1,25 @@
+{
+  "id": "arkhamhorror",
+  "name": "诡镇奇谈：卡牌版",
+  "version": "1.0.0",
+  "hallApi": 1,
+  "exclude": [
+    "tests/",
+    "test-results/",
+    "artifacts/",
+    "tools/",
+    "docs/",
+    "develop/",
+    "audit/",
+    "playwright.config.mjs",
+    "web/img/cards/",
+    "web/img/zh/",
+    "web/img/.translation/",
+    "*.md"
+  ],
+  "prepack": "tools/prepack-release.mjs",
+  "preserve": [
+    "web/img/",
+    "audit/local-images.cards.json"
+  ]
+}

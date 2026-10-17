@@ -1,0 +1,41 @@
+# 推送 v<版本> tag 时打包本游戏、签名发布清单并发布 GitHub Release，供桌游大厅的游戏商店下载。
+# 打包脚本来自大厅仓库（tools/release/pack-mod.mjs），签名公钥以大厅仓库的 lib/update-keys.json 为准。
+# 需要的仓库 Secret：
+#   BOARDGAME_UPDATE_PRIVATE_KEY  与大厅相同的更新签名私钥
+#   HALL_REPO_TOKEN               可选；大厅仓库为私有时，提供有读取权限的 token
+name: Release
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: mod
+      - uses: actions/checkout@v4
+        with:
+          repository: Dr-Liao/boardgame-hall-ai
+          path: hall
+          token: ${{ secrets.HALL_REPO_TOKEN || github.token }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Release notes from tag
+        working-directory: mod
+        run: |
+          git fetch --depth=1 origin "+refs/tags/$GITHUB_REF_NAME:refs/tags/$GITHUB_REF_NAME"
+          git tag -l --format='%(contents)' "$GITHUB_REF_NAME" > ../notes.txt
+      - name: Pack and sign
+        env:
+          BOARDGAME_UPDATE_PRIVATE_KEY: ${{ secrets.BOARDGAME_UPDATE_PRIVATE_KEY }}
+        run: node hall/tools/release/pack-mod.mjs mod --out=dist --tag="$GITHUB_REF_NAME" --notes-file=notes.txt
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --title "诡镇奇谈 $GITHUB_REF_NAME" --notes-file notes.txt
