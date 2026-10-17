@@ -1,0 +1,172 @@
+/* Scenario card zones: compact launchers in the table header and a dossier-style card tray. */
+.ah-table .ah-card-zone-launcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.ah-table .ah-card-zone-launcher .ah-icon { width: 15px; height: 15px; color: #d8bb78; }
+.ah-table .ah-card-zone-launcher b {
+  display: grid;
+  place-items: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border: 1px solid #ae955c66;
+  border-radius: 50%;
+  background: #c3a15b17;
+  color: #f1d99f;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.ah-table .ah-victory-launcher:not(:has(b:empty)) .ah-icon { filter: drop-shadow(0 0 6px #d2ac5966); }
+
+.ah-card-zone-backdrop {
+  z-index: 36;
+  padding: 24px;
+  background: #020807d6;
+  backdrop-filter: blur(7px);
+}
+.ah-card-zone-modal {
+  box-sizing: border-box;
+  width: min(1040px, 94vw);
+  max-height: min(820px, 92dvh);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #b99e635c;
+  border-radius: 5px;
+  color: #e6dcc3;
+  background:
+    linear-gradient(145deg, #1a3027f7, #0a1814fc),
+    url('./img/ui/investigation-map.webp') center / cover;
+  box-shadow: 0 28px 90px #000d, inset 0 1px #ead5981a;
+}
+.ah-card-zone-modal > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 26px 18px;
+  border-bottom: 1px solid #b99e633d;
+  background: #0c1b17c7;
+}
+.ah-card-zone-modal > header small {
+  color: #a89975;
+  font-size: 10px;
+  letter-spacing: 3px;
+}
+.ah-card-zone-modal h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 5px 0 2px;
+  color: #ecd6a1;
+  font: 500 27px/1.25 Georgia, 'Noto Serif SC', SimSun, serif;
+  letter-spacing: 4px;
+}
+.ah-card-zone-modal h2 .ah-icon { width: 22px; height: 22px; color: #d2b36d; }
+.ah-card-zone-modal header p { margin: 0; color: #aeb7a6; font-size: 12px; }
+.ah-card-zone-close {
+  min-height: 34px;
+  padding: 7px 14px;
+  border: 1px solid #b3995c55;
+  border-radius: 3px;
+  background: #1b3027;
+  color: #dccba5;
+  cursor: pointer;
+}
+.ah-card-zone-close:hover, .ah-card-zone-close:focus-visible { border-color: #e0c582; outline: 2px solid #d5b96f; outline-offset: 2px; }
+.ah-card-zone-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 18px;
+  padding: 24px 26px;
+  overflow: auto;
+  scrollbar-color: #947b4f #102019;
+}
+.ah-card-zone-card {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #9d87543d;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #253b30ba, #10211bd9);
+  color: #e4d9be;
+  cursor: pointer;
+  text-align: left;
+  transition: transform .15s, border-color .15s, background .15s;
+}
+.ah-card-zone-card:hover {
+  transform: translateY(-3px);
+  border-color: #d7ba74;
+  background: linear-gradient(180deg, #304a39, #142820);
+}
+.ah-card-zone-card:focus-visible { outline: 2px solid #e2c67d; outline-offset: 3px; }
+.ah-card-zone-art, .ah-card-zone-art .ah-table-art { display: block; width: 100%; }
+.ah-card-zone-art .ah-table-art {
+  height: auto;
+  aspect-ratio: 5 / 7;
+  margin: 0;
+  border: 1px solid #c0aa7259;
+  border-radius: 4px;
+  box-shadow: 0 9px 18px #0009;
+}
+.ah-card-zone-art .ah-art, .ah-card-zone-art .ah-art img { width: 100%; height: 100%; }
+.ah-card-zone-art .ah-art img { object-fit: fill; }
+.ah-card-zone-caption { display: block; padding: 10px 2px 1px; }
+.ah-card-zone-caption strong {
+  display: block;
+  overflow: hidden;
+  color: #ebddb9;
+  font: 500 13px/1.35 'Noto Serif SC', SimSun, serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ah-card-zone-caption small { display: block; margin-top: 3px; color: #9fad9d; font-size: 9px; letter-spacing: 1px; }
+.ah-card-zone-empty {
+  display: flex;
+  min-height: 300px;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 36px;
+  color: #97a697;
+  text-align: center;
+}
+.ah-card-zone-empty .ah-icon { width: 42px; height: 42px; color: #a98f5755; }
+.ah-card-zone-empty strong { color: #d5c49d; font: 500 20px Georgia, 'Noto Serif SC', SimSun, serif; letter-spacing: 3px; }
+.ah-card-zone-empty span { max-width: 460px; font-size: 12px; line-height: 1.7; }
+.ah-card-zone-modal > footer {
+  padding: 10px 26px;
+  border-top: 1px solid #b99e632d;
+  background: #081510c7;
+  color: #8f9d8e;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 980px) {
+  .ah-table .bg-game-actions { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .ah-table .bg-game-actions::-webkit-scrollbar { display: none; }
+}
+@media (max-width: 700px) {
+  .ah-card-zone-backdrop { padding: 8px; }
+  .ah-card-zone-modal { width: 100%; max-height: 96dvh; }
+  .ah-card-zone-modal > header { gap: 10px; padding: 15px 14px 12px; }
+  .ah-card-zone-modal > header small { font-size: 8px; letter-spacing: 2px; }
+  .ah-card-zone-modal h2 { font-size: 21px; letter-spacing: 2px; }
+  .ah-card-zone-modal header p { font-size: 10px; }
+  .ah-card-zone-close { padding: 6px 10px; }
+  .ah-card-zone-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 12px; }
+  .ah-card-zone-card { padding: 7px; }
+  .ah-card-zone-caption { padding-top: 7px; }
+  .ah-card-zone-modal > footer { padding: 8px 14px; letter-spacing: 0; }
+  .ah-table .ah-card-zone-launcher { gap: 3px; }
+  .ah-table .ah-card-zone-launcher b { min-width: 17px; height: 17px; padding: 0 4px; font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ah-card-zone-card { transition: none; }
+  .ah-card-zone-card:hover { transform: none; }
+}

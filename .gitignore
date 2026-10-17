@@ -1,0 +1,12 @@
+node_modules/
+
+# 浏览器回归（Playwright）的临时输出
+test-results/
+playwright-report/
+
+# 本地卡图库（约 1.9 GB，按需用 tools/fetch-images.mjs 重新抓取，或由图片缓存自动下载；
+# 美术版权归 FFG，不要提交或再分发）
+web/img/cards/
+web/img/zh/
+# 卡图翻译任务的中间清单
+web/img/.translation/

@@ -1,0 +1,69 @@
+{
+  "generatedWith": "Built-in image_gen; actual transparent PNG alpha verified in Edge",
+  "date": "2026-10-12",
+  "images": [
+    {
+      "file": "img/ui/brass-token.png",
+      "prompt": "Use case: stylized-concept. Asset type: transparent PNG game UI token. Create one beautiful circular antique brass token, front-on orthographic view, centered and almost filling a square canvas with 7 percent transparent margin. 1920s occult investigation board game aesthetic, worn brushed brass rim with fine art deco engraved lines, deep dark teal enamel recessed center intentionally blank for a code-rendered icon and number. Subtle realistic bevel, soft rim lighting, tactile high-end tabletop component, restrained patina, very legible at 48 pixels. Single isolated object. No text, no symbols, no letters, no background, no floor, no checkerboard. Actual transparent alpha background."
+    },
+    {
+      "file": "img/ui/investigation-map.png",
+      "prompt": "Use case: stylized-concept. Asset type: transparent decorative game board overlay. An original antique 1920s occult investigation map vignette, wide landscape composition. Intricately drawn ink street plan and river of a fictional New England town, distressed fine bronze and gray-green cartographic lines, scattered compass and art deco surveying marks, subtle atmospheric engraved mansion silhouettes concentrated along bottom left and right corners. Huge quiet empty center for game cards, low contrast. Transparent alpha background everywhere between ink lines, no opaque paper sheet or solid backdrop. Feathered irregular edges dissolve naturally to transparency. Sophisticated tactile detective board game production art. No readable text, no letters, no numerals, no logos, no game cards, no interface screenshot. Wide 3:2 composition."
+    },
+    {
+      "file": "img/ui/chaos-bag.png",
+      "prompt": "Use case: stylized-concept. Asset type: isolated transparent PNG game UI illustration. One small antique dark teal velvet drawstring chaos token pouch, mouth slightly open showing a few worn brass token edges, with a subtle embroidered geometric diamond motif and aged brass clasp, front three-quarter view, grounded tactile premium 1920s investigation board game prop. Warm low-key rim lighting, painterly realistic detail, muted teal, warm brass and charcoal. Centered object with wide transparent padding on all four edges. Square composition. No lettering, no runes, no text, no logo, no surface, no cast shadow outside object, no background, actual transparent alpha. Clear silhouette readable at 90 pixels."
+    },
+    {
+      "file": "img/campaigns/nightOfTheZealot/hub/office-hero.png",
+      "prompt": "Use case: stylized-concept. Asset type: transparent campaign hub hero illustration for a 1920s occult investigation card game. An original rain-darkened New England investigator office at night, viewed from the street through a slightly low wide angle; narrow brick townhouse, one warm lit upstairs office window, steep roof, bare elm branches, wrought iron gate and thin ground fog. Premium painterly realistic tabletop game key art with engraved edges and tactile period detail. Wide isolated vignette, building slightly right of center, organic feathered silhouette. Midnight teal, oxidized green, charcoal, aged brass and warm amber. Genuinely transparent alpha outside the vignette. No text, letters, logos, watermark, franchise characters, tentacles, visible monster or rectangular backdrop."
+    },
+    {
+      "file": "img/campaigns/nightOfTheZealot/table/investigation-map.png",
+      "prompt": "Use case: stylized-concept. Asset type: campaign table background overlay for a 1920s occult investigation card game. An original top-down antique investigation surface: faint hand-inked street map of a fictional New England town, river bends, cellar floor-plan traces, three subtle pin-and-thread routes converging toward a wooded hill, geometric occult surveying marks, rain stains and charcoal smudges. Restrained engraved cartography and aged matte desk texture. Wide landscape composition with detail at the outer edges and a calm low-contrast center for cards. Nearly black green, faded blue-gray ink, parchment brown and sparse tarnished brass. No readable text, letters, numbers, logos, watermark, characters, cards or UI screenshot."
+    },
+    {
+      "file": "img/campaigns/nightOfTheZealot/story/default.png",
+      "prompt": "Use case: stylized-concept. Asset type: default story-page illustration for the opening campaign of a 1920s occult investigation card game. An original rain-soaked residential street at midnight leading toward a modest old house with an open cellar door emitting a thin unnatural glow; abandoned bicycle, wet leaves and a distant hooded silhouette. Moody painterly ink-and-gouache book illustration with engraved period texture. Landscape vignette with the house and cellar in the lower right and broad quiet misty upper-left space, irregular softly feathered edges. Desaturated midnight teal, charcoal, aged sepia and faint sickly yellow-green. No text, letters, logos, watermark, recognizable franchise characters, explicit monster or border."
+    }
+  ],
+  "audio": {
+    "author": "Kenney",
+    "pack": "Interface Sounds 1.0",
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "download": "https://kenney.nl/media/pages/assets/interface-sounds/fa43c1dd4d-1677589452/kenney_interface-sounds.zip",
+    "license": "CC0 1.0",
+    "licenseFile": "audio/License.txt",
+    "additionalSources": [
+      {
+        "file": "card-slide.ogg",
+        "original": "Audio/cardSlide2.ogg",
+        "author": "Kenney",
+        "pack": "Casino Audio",
+        "source": "https://kenney.nl/assets/casino-audio",
+        "license": "CC0 1.0"
+      },
+      {
+        "file": "encounter-reveal.ogg",
+        "original": "horror-reveal-shock",
+        "author": "Lavacoal123",
+        "source": "https://freesound.org/people/Lavacoal123/sounds/424423/",
+        "license": "CC0 1.0"
+      }
+    ],
+    "files": [
+      "click_003.ogg",
+      "scroll_002.ogg",
+      "card-slide.ogg",
+      "encounter-reveal.ogg",
+      "drop_003.ogg",
+      "drop_001.ogg",
+      "glass_001.ogg",
+      "error_003.ogg",
+      "pluck_001.ogg",
+      "confirmation_002.ogg",
+      "back_002.ogg",
+      "bong_001.ogg"
+    ]
+  }
+}

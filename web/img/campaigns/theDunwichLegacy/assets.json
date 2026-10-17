@@ -1,0 +1,118 @@
+{
+  "campaignId": "theDunwichLegacy",
+  "created": "2026-10-16",
+  "source": "Original AI-generated artwork using OpenAI built-in image_gen; not official game art.",
+  "palette": "charcoal teal, moss and olive green, parchment ochre, amber light, restrained turquoise",
+  "assets": [
+    {
+      "id": "extracurricularActivity",
+      "title": "课外活动 · 雨夜校园",
+      "file": "scenarios/extracurricularActivity/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 533560,
+      "sha256": "1b0359ff04665e84ba402b92a45b08d26f882315fbcde7d84136cc0b80bcd3de",
+      "original": "artifacts/dunwich-media/originals/extracurricularActivity.png",
+      "prompt": "Use case: illustration-story.\nAsset type: original cinematic chapter illustration for a 1920s cosmic horror investigation tabletop game, part of a coherent ten-image Dunwich Legacy set.\nStyle/medium: refined hand-painted oil and gouache on textured paper, realistic architecture, atmospheric depth, brushwork visible in shadows, premium illustrated book quality. Rural New England folk horror and cosmic dread.\nPalette: charcoal teal, moss and olive green, aged parchment ochre, restrained warm amber lights; subtle unnatural cold turquoise accents. Clear silhouettes and readable midtones, avoid crushed black shadows.\nComposition: wide landscape 16:9, one complete edge-to-edge scene, strong depth, no montage or panels. Important subject inside the central 80 percent for responsive cropping.\nConstraints: original illustration, no copied card composition, no words, lettering, labels, numerals, logos, watermark, border, cards, UI or modern technology. Opaque background. Suggest menace without gore.\nScene: A deserted 1920s New England university quadrangle at night after rain. Ivy-covered red brick academic halls, a tall Gothic library and a greenhouse with one eerie green lit window. A cobblestone path crosses the lawn toward a half-open faculty door, scattered abandoned books in the foreground, a very small lone investigator silhouette in a period overcoat near the entrance. Bare elm branches, low mist, amber windows reflected in wet paving. The university buildings and green-lit greenhouse are the focal point. Suspenseful academic mystery, no visible monster."
+    },
+    {
+      "id": "theHouseAlwaysWins",
+      "title": "百赌百胜 · 四叶草俱乐部",
+      "file": "scenarios/theHouseAlwaysWins/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 421580,
+      "sha256": "2734f2535d31dc764a09b9d84ff50b5f282f74a4af14054dc72d7743c334fb01",
+      "original": "artifacts/dunwich-media/originals/theHouseAlwaysWins.png",
+      "prompt": "Use case: illustration-story.\nAsset type: original cinematic chapter illustration for a 1920s cosmic horror investigation tabletop game, part of a coherent ten-image Dunwich Legacy set.\nStyle/medium: refined hand-painted oil and gouache on textured paper, realistic architecture, atmospheric depth, brushwork visible in shadows, premium illustrated book quality. Rural New England folk horror and cosmic dread.\nPalette: charcoal teal, moss and olive green, aged parchment ochre, restrained warm amber lights; subtle unnatural cold turquoise accents. Clear silhouettes and readable midtones, avoid crushed black shadows.\nComposition: wide landscape 16:9, one complete edge-to-edge scene, strong depth, no montage or panels. Important subject inside the central 80 percent for responsive cropping.\nConstraints: original illustration, no copied card composition, no words, lettering, labels, numerals, logos, watermark, border, cards, UI or modern technology. Opaque background. Suggest menace without gore.\nScene: Interior of a clandestine 1920s New England gambling club after a sudden disturbance. Emerald felt gaming tables with tiny indistinct chips, amber art deco lamps, dark mahogany bar, brass railings, velvet curtains and cigar haze. An overturned chair and spilled glass imply hurried flight. A doorway behind the bar opens onto an impossibly dark corridor, faint disturbing shadow on the wall. Strong diagonal view from the quiet front gaming table to the doorway. Luxurious amber and olive green interior, ominous, no readable card faces or signs."
+    },
+    {
+      "id": "theMiskatonicMuseum",
+      "title": "米斯卡塔尼克博物馆 · 封闭展厅",
+      "file": "scenarios/theMiskatonicMuseum/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 400996,
+      "sha256": "c7a35b2f422977438a1d3efdfb2e599cfc936340f5f9b4627c206cc4c436ecce",
+      "original": "artifacts/dunwich-media/originals/theMiskatonicMuseum.png",
+      "prompt": "Use case: illustration-story.\nAsset type: original cinematic chapter illustration for a 1920s cosmic horror investigation tabletop game, part of a coherent ten-image Dunwich Legacy set.\nStyle/medium: refined hand-painted oil and gouache on textured paper, realistic architecture, atmospheric depth, brushwork visible in shadows, premium illustrated book quality. Rural New England folk horror and cosmic dread.\nPalette: charcoal teal, moss and olive green, aged parchment ochre, restrained warm amber lights; subtle unnatural cold turquoise accents. Clear silhouettes and readable midtones, avoid crushed black shadows.\nComposition: wide landscape 16:9, one complete edge-to-edge scene, strong depth, no montage or panels. Important subject inside the central 80 percent for responsive cropping.\nConstraints: original illustration, no copied card composition, no words, lettering, labels, numerals, logos, watermark, border, cards, UI or modern technology. Opaque background. Suggest menace without gore.\nScene: A closed 1920s natural history and antiquities museum at midnight. Long vaulted stone gallery, glass specimen cabinets and towering fossil skeleton silhouette, a single illuminated open antique book secured within a central exhibition case. Moonlight from high windows, a thin serpentine distortion of black mist curls far behind the exhibits suggesting an unseen hunting presence. Eye-level wide perspective, foreground glass reflections, dust motes, cold teal stone contrasted with the book case's small amber light. No readable writing."
+    },
+    {
+      "id": "theEssexCountyExpress",
+      "title": "疯狂列车 · 断裂的高架桥",
+      "file": "scenarios/theEssexCountyExpress/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 530784,
+      "sha256": "7ec19f455668fa1fef2d115d68c2263748a436acb0331f2b561e8964924fac3e",
+      "original": "artifacts/dunwich-media/originals/theEssexCountyExpress.png",
+      "prompt": "Use case: illustration-story.\nAsset type: original cinematic chapter illustration for a 1920s cosmic horror investigation tabletop game, part of a coherent ten-image Dunwich Legacy set.\nStyle/medium: refined hand-painted oil and gouache on textured paper, realistic architecture, atmospheric depth, brushwork visible in shadows, premium illustrated book quality. Rural New England folk horror and cosmic dread.\nPalette: charcoal teal, moss and olive green, aged parchment ochre, restrained warm amber lights; subtle unnatural cold turquoise accents. Clear silhouettes and readable midtones, avoid crushed black shadows.\nComposition: wide landscape 16:9, one complete edge-to-edge scene, strong depth, no montage or panels. Important subject inside the central 80 percent for responsive cropping.\nConstraints: original illustration, no copied card composition, no words, lettering, labels, numerals, logos, watermark, border, cards, UI or modern technology. Opaque background. Suggest menace without gore.\nScene: A 1920s steam passenger train crossing an old New England railway viaduct above a forest ravine. Cinematic three-quarter exterior view: the engine and nearest intact carriages race toward the foreground, while distant rear carriages and fragments of track are being pulled upward into a colossal dark circular tear in the storm clouds. The bridge remains clearly readable, steam and rain blown diagonally, a few warm passenger windows, forest far below. Dynamic supernatural peril, emerald-black vortex with a faint pale turquoise rim, no explosion, no gore."
+    },
+    {
+      "id": "bloodOnTheAltar",
+      "title": "血色祭坛 · 村庄的秘密",
+      "file": "scenarios/bloodOnTheAltar/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 516684,
+      "sha256": "81c2e2df9c20cd037b3f322518babec616482d455c509face825916629380afa",
+      "original": "artifacts/dunwich-media/originals/bloodOnTheAltar.png",
+      "prompt": "Use case: illustration-story.\nAsset type: original cinematic chapter illustration for a 1920s cosmic horror investigation tabletop game, part of a coherent ten-image Dunwich Legacy set.\nStyle/medium: refined hand-painted oil and gouache on textured paper, realistic architecture, atmospheric depth, brushwork visible in shadows, premium illustrated book quality. Rural New England folk horror and cosmic dread.\nPalette: charcoal teal, moss and olive green, aged parchment ochre, restrained warm amber lights; subtle unnatural cold turquoise accents. Clear silhouettes and readable midtones, avoid crushed black shadows.\nComposition: wide landscape 16:9, one complete edge-to-edge scene, strong depth, no montage or panels. Important subject inside the central 80 percent for responsive cropping.\nConstraints: original illustration, no copied card composition, no words, lettering, labels, numerals, logos, watermark, border, cards, UI or modern technology. Opaque background. Suggest menace without gore.\nScene: A forgotten rural New England village at dusk. Weathered clapboard houses and a leaning white church surround an empty muddy lane. The open cellar beneath an old barn is the foreground focal point: rough steps descend toward a partly visible ancient stone altar lit by a few candles, with indistinct dark ritual stains and ropes, no victims and no gore. Beyond the cellar, crooked fences and leafless orchard trees disappear into green fog. Layers of village exterior and cellar threshold in one believable scene, ominous local secrets."
+    },
+    {
+      "id": "undimensionedAndUnseen",
+      "title": "无人知晓 · 无形之物的足迹",
+      "file": "scenarios/undimensionedAndUnseen/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 563246,
+      "sha256": "e660211db2fa7d88d8d8407e6c056902f31b137ee4e23bc60670f868dfeeaf48",
+      "original": "artifacts/dunwich-media/originals/undimensionedAndUnseen.png",
+      "prompt": "Use case: illustration-story.\nAsset type: original cinematic chapter illustration for a 1920s cosmic horror investigation tabletop game, part of a coherent ten-image Dunwich Legacy set.\nStyle/medium: refined hand-painted oil and gouache on textured paper, realistic architecture, atmospheric depth, brushwork visible in shadows, premium illustrated book quality. Rural New England folk horror and cosmic dread.\nPalette: charcoal teal, moss and olive green, aged parchment ochre, restrained warm amber lights; subtle unnatural cold turquoise accents. Clear silhouettes and readable midtones, avoid crushed black shadows.\nComposition: wide landscape 16:9, one complete edge-to-edge scene, strong depth, no montage or panels. Important subject inside the central 80 percent for responsive cropping.\nConstraints: original illustration, no copied card composition, no words, lettering, labels, numerals, logos, watermark, border, cards, UI or modern technology. Opaque background. Suggest menace without gore.\nScene: A remote New England farm and orchard under a heavy overcast sky. An invisible colossal creature is revealed ONLY through the environment: a wide trail of freshly crushed crops, snapped orchard trees, leaning fence posts, enormous muddy depressions filled with rain, and a subtle localized refraction bending the background fog. No solid visible monster, no giant human footprints. Tiny distant investigators carrying a lantern near a weathered barn establish scale. Low viewpoint along the crushed trail, eerie pale olive daylight, quiet immense danger."
+    },
+    {
+      "id": "whereDoomAwaits",
+      "title": "毁灭之地 · 哨兵山之门",
+      "file": "scenarios/whereDoomAwaits/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 465052,
+      "sha256": "0613d7ccbfec032255724af3c2274000ff81dbac43d8e86ab4beaccb8ca3166b",
+      "original": "artifacts/dunwich-media/originals/whereDoomAwaits.png",
+      "prompt": "Use case: illustration-story.\nAsset type: original cinematic chapter illustration for a 1920s cosmic horror investigation tabletop game, part of a coherent ten-image Dunwich Legacy set.\nStyle/medium: refined hand-painted oil and gouache on textured paper, realistic architecture, atmospheric depth, brushwork visible in shadows, premium illustrated book quality. Rural New England folk horror and cosmic dread.\nPalette: charcoal teal, moss and olive green, aged parchment ochre, restrained warm amber lights; subtle unnatural cold turquoise accents. Clear silhouettes and readable midtones, avoid crushed black shadows.\nComposition: wide landscape 16:9, one complete edge-to-edge scene, strong depth, no montage or panels. Important subject inside the central 80 percent for responsive cropping.\nConstraints: original illustration, no copied card composition, no words, lettering, labels, numerals, logos, watermark, border, cards, UI or modern technology. Opaque background. Suggest menace without gore.\nScene: The steep winding trail up Sentinel Hill in rural New England at night. Twisted bare trees and ancient rough standing stones flank the ascent. At the summit a monumental otherworldly doorway appears between weathered monoliths, luminous pale turquoise light outlining an impossible depth and alien stars inside, tiny distant hooded ritual silhouettes at the stones. View from the lower hillside looking upward, powerful triangular composition, wind-swept dark grass, storm clouds with subtle unnatural geometry, restrained ritual horror."
+    },
+    {
+      "id": "lostInTimeAndSpace",
+      "title": "迷失时空 · 破碎的异界",
+      "file": "scenarios/lostInTimeAndSpace/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 590158,
+      "sha256": "036f215ae5030ffb06399d79c353884222e653c4e1b5c42f494e760fb064d4dc",
+      "original": "artifacts/dunwich-media/originals/lostInTimeAndSpace.png",
+      "prompt": "Use case: illustration-story.\nAsset type: original cinematic chapter illustration for a 1920s cosmic horror investigation tabletop game, part of a coherent ten-image Dunwich Legacy set.\nStyle/medium: refined hand-painted oil and gouache on textured paper, realistic architecture, atmospheric depth, brushwork visible in shadows, premium illustrated book quality. Rural New England folk horror and cosmic dread.\nPalette: charcoal teal, moss and olive green, aged parchment ochre, restrained warm amber lights; subtle unnatural cold turquoise accents. Clear silhouettes and readable midtones, avoid crushed black shadows.\nComposition: wide landscape 16:9, one complete edge-to-edge scene, strong depth, no montage or panels. Important subject inside the central 80 percent for responsive cropping.\nConstraints: original illustration, no copied card composition, no words, lettering, labels, numerals, logos, watermark, border, cards, UI or modern technology. Opaque background. Suggest menace without gore.\nScene: An impossible cosmic space beyond the gate: broken stone staircases and fragments of old New England doorframes float between islands of ruined cyclopean architecture. A narrow fractured path leads from the foreground across a vast turquoise and deep indigo void toward a distant glowing doorway that hints at home. Stars and softly luminous nebular veils bend around non-Euclidean arches, a tiny 1920s investigator silhouette gives scale. Awe, disorientation and quiet dread; elegant painted fantasy environment, no spacecraft, no science fiction machinery, no tentacle centerpiece."
+    },
+    {
+      "id": "hub",
+      "title": "敦威治遗产 · 乡野迷雾",
+      "file": "hub/dunwich-village.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 506542,
+      "sha256": "8879cf9b274666e6d06d06582b11587d6d5a7068ea67a47f02456327d7b2bb0a",
+      "original": "artifacts/dunwich-media/originals/hub.png",
+      "prompt": "Use case: illustration-story.\nAsset type: original cinematic chapter illustration for a 1920s cosmic horror investigation tabletop game, part of a coherent ten-image Dunwich Legacy set.\nStyle/medium: refined hand-painted oil and gouache on textured paper, realistic architecture, atmospheric depth, brushwork visible in shadows, premium illustrated book quality. Rural New England folk horror and cosmic dread.\nPalette: charcoal teal, moss and olive green, aged parchment ochre, restrained warm amber lights; subtle unnatural cold turquoise accents. Clear silhouettes and readable midtones, avoid crushed black shadows.\nComposition: wide landscape 16:9, one complete edge-to-edge scene, strong depth, no montage or panels. Important subject inside the central 80 percent for responsive cropping.\nConstraints: original illustration, no copied card composition, no words, lettering, labels, numerals, logos, watermark, border, cards, UI or modern technology. Opaque background. Suggest menace without gore.\nScene: Campaign opening key art: a wide panoramic view of an isolated 1920s New England village in a misty valley, viewed from a muddy country road. Weathered clapboard farmhouses, a small leaning church steeple, dark orchards and crooked low stone walls, the ominous wooded Sentinel Hill on the horizon beneath storm clouds. One warm lit window suggests a place to begin an investigation. Architectural focal points cluster center-right, left third quiet atmospheric fog suitable behind an adjacent title. A faint unnatural glow over the hill, no overt monster, no investigator portrait."
+    },
+    {
+      "id": "table",
+      "title": "敦威治调查桌面",
+      "file": "table/investigation-desk.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 428968,
+      "sha256": "e363eea0f0d30c48a7b8873be8e9d0c3cc73e0031c2f687bc872ecdf4498e283",
+      "original": "artifacts/dunwich-media/originals/table.png",
+      "prompt": "Use case: illustration-story.\nAsset type: original cinematic chapter illustration for a 1920s cosmic horror investigation tabletop game, part of a coherent ten-image Dunwich Legacy set.\nStyle/medium: refined hand-painted oil and gouache on textured paper, realistic architecture, atmospheric depth, brushwork visible in shadows, premium illustrated book quality. Rural New England folk horror and cosmic dread.\nPalette: charcoal teal, moss and olive green, aged parchment ochre, restrained warm amber lights; subtle unnatural cold turquoise accents. Clear silhouettes and readable midtones, avoid crushed black shadows.\nComposition: wide landscape 16:9, one complete edge-to-edge scene, strong depth, no montage or panels. Important subject inside the central 80 percent for responsive cropping.\nConstraints: original illustration, no copied card composition, no words, lettering, labels, numerals, logos, watermark, border, cards, UI or modern technology. Opaque background. Suggest menace without gore.\nScene: Asset type override: subtle background texture for the play surface, top-down overhead view, NOT a scene with a horizon. An old dark olive-green investigation desk with a very faint hand-drawn rural New England survey map, a winding railway and village roads suggested in faded ink. Sparse period objects ONLY along the outermost edges: a corner of a worn leather notebook, a brass compass at upper right, a train ticket with absolutely no readable printing, a dry oak leaf, a small folded map corner. The central 70 percent is exceptionally calm, dark, nearly empty matte green with subtle paper grain, low contrast for game cards placed by code. No cards, no UI, no labels, no lettering or symbols resembling text. Gentle amber edge lighting, highly restrained detail."
+    }
+  ]
+}

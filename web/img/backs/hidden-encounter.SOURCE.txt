@@ -1,0 +1,6 @@
+Asset: hidden-encounter.png
+Created: 2026-10-15 using the built-in image_gen tool.
+Purpose: generic public artwork for Hidden encounter presentation cues without a card code.
+
+Prompt:
+Create one production-ready portrait card illustration for a cosmic horror tabletop game's generic Hidden encounter card placeholder. Use-case: stylized-concept. Aspect ratio 2:3, portrait. A single aged ivory theatrical mask, mouth sealed by an elegant antique brass clasp, floats at the center in smoky deep emerald shadows, faint whisper-like wisps encircling it. Tarnished gold fine ornamental border, subtle 1920s art nouveau geometry, aged paper and painterly oil texture, restrained antique gold highlights and dim violet accents. Eerie, secretive, mysterious, dignified rather than gory. Strong readable central silhouette at small mobile card size. Fill the entire rectangular image with the card design; straight-on flat illustration, no perspective, no external background, no mockup, no additional cards. The mask and border must be clearly visible against the dark green background. No text, no letters, no numbers, no logos, no specific card identity, no game rules. Opaque background.

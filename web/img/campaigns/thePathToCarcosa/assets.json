@@ -1,0 +1,98 @@
+{
+  "campaignId": "thePathToCarcosa",
+  "created": "2026-10-15",
+  "source": "Original AI-generated artwork using OpenAI image_gen; not official game art.",
+  "palette": "charcoal teal, aged gold, ochre yellow, desaturated burgundy",
+  "assets": [
+    {
+      "id": "curtainCall",
+      "title": "剧院黄幕",
+      "file": "hub/theatre.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 363766,
+      "sha256": "29a4d444559a685e936b1f104b0768b3230bdc85c4438b31e50f52d0d4fbf993",
+      "original": "artifacts/carcosa-media/originals/curtainCall.png"
+    },
+    {
+      "id": "theLastKing",
+      "title": "镜中晚宴",
+      "file": "scenarios/theLastKing/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 437944,
+      "sha256": "05fda9b2e5273e3f8826b99382bf9cffa3385012104638d0672c9a19b0d9cf33",
+      "original": "artifacts/carcosa-media/originals/theLastKing.png"
+    },
+    {
+      "id": "echoesOfThePast",
+      "title": "历史协会档案馆",
+      "file": "scenarios/echoesOfThePast/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 360846,
+      "sha256": "e636b009779bfdecb5f74e6260a2f721de964723260e6fca7c925369dec22a38",
+      "original": "artifacts/carcosa-media/originals/echoesOfThePast.png"
+    },
+    {
+      "id": "theUnspeakableOath",
+      "title": "疗养院长廊",
+      "file": "scenarios/theUnspeakableOath/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 293868,
+      "sha256": "7f0afac02c7e8ebc7282e863e4aad0e4564820582956898cd161da0ddb254194",
+      "original": "artifacts/carcosa-media/originals/theUnspeakableOath.png"
+    },
+    {
+      "id": "aPhantomOfTruth",
+      "title": "巴黎雨夜",
+      "file": "scenarios/aPhantomOfTruth/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 403400,
+      "sha256": "97339a2d1cbecd809aee8d8b01c2ad9a9c620e3e21a4de2768d1f366700fe19d",
+      "original": "artifacts/carcosa-media/originals/aPhantomOfTruth.png"
+    },
+    {
+      "id": "thePallidMask",
+      "title": "地下墓穴",
+      "file": "scenarios/thePallidMask/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 425796,
+      "sha256": "3469ed562dd705c66ecca41e8a43133dbfa9f5d97095703f7011adc04fdd5b3d",
+      "original": "artifacts/carcosa-media/originals/thePallidMask.png"
+    },
+    {
+      "id": "blackStarsRise",
+      "title": "黑星下的修道院",
+      "file": "scenarios/blackStarsRise/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 400044,
+      "sha256": "acea68bd8f657b317ba99a7608c8c23fed9101cbdc0029612d764a9205b676e3",
+      "original": "artifacts/carcosa-media/originals/blackStarsRise.png"
+    },
+    {
+      "id": "dimCarcosa",
+      "title": "哈利湖与失落之城",
+      "file": "scenarios/dimCarcosa/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 432814,
+      "sha256": "1d299eac96875485d093e5b8e8bf3670693a7ebfed75f8bcd40ab73d1e1d8d33",
+      "original": "artifacts/carcosa-media/originals/dimCarcosa.png"
+    },
+    {
+      "id": "table",
+      "title": "黄衣剧本调查桌",
+      "file": "table/investigation-desk.webp",
+      "width": 1672,
+      "height": 940,
+      "bytes": 506380,
+      "sha256": "9baad364d4cdb5ae081990c2cfa62a2d754723e50d6aa4298e07a1fa80dba591",
+      "original": "artifacts/carcosa-media/originals/table.png"
+    }
+  ]
+}

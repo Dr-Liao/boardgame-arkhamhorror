@@ -1,0 +1,23 @@
+/* Campaign identity changes atmosphere, never interaction geometry. */
+.ah-theme {
+  --ah-theme-bg: #101e1a;
+  --ah-theme-panel: #11251e;
+  --ah-theme-header: #09130f;
+  --ah-theme-accent: #dfc58d;
+  --ah-theme-accent-strong: #f2d99b;
+  --ah-theme-muted: #acb7a4;
+  --ah-theme-edge: #b59b604b;
+}
+.ah-office.ah-theme { color: #e8e3ce; background: radial-gradient(ellipse at 65% 15%, color-mix(in srgb,var(--ah-theme-accent) 16%,transparent), transparent 65%), var(--ah-theme-bg); }
+.ah-theme .bg-game-head { background: color-mix(in srgb,var(--ah-theme-header) 92%,transparent); border-bottom-color: var(--ah-theme-edge); }
+.ah-theme .bg-game-title,.ah-theme .ah-office-eyebrow,.ah-theme .ah-office-metric,.ah-theme .ah-hub-pane h2 { color: var(--ah-theme-accent); }
+.ah-theme .bg-game-status,.ah-theme .ah-office-muted { color: var(--ah-theme-muted); }
+.ah-theme .bg-btn { border-color: var(--ah-theme-accent); }
+.ah-theme .bg-btn:hover:not(:disabled),.ah-theme button[aria-pressed='true'] { border-color: var(--ah-theme-accent-strong); }
+.ah-theme .ah-hub-pane { background-color: color-mix(in srgb,var(--ah-theme-panel) 76%,transparent); }
+.ah-table.ah-theme .ah-table-shell { background-color: var(--ah-theme-bg); }
+
+@supports not (color: color-mix(in srgb,white,black)) {
+  .ah-office.ah-theme { background: var(--ah-theme-bg); }
+  .ah-theme .bg-game-head { background: var(--ah-theme-header); }
+}

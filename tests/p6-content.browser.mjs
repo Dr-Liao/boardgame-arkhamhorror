@@ -1,0 +1,27 @@
+import { test, expect } from '@playwright/test'
+import { fileURLToPath } from 'node:url'
+
+test('P6 注册批次、发布状态和研究机制阻断在真实局外面板可见', async ({ page, request }) => {
+  await page.setViewportSize({ width: 1440, height: 1050 })
+  await page.goto('/index.html')
+  await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
+  const setup = page.locator('.ah-hub-setup')
+  await setup.getByText('玩家人数').locator('..').locator('select').selectOption('1')
+  await setup.getByRole('button', { name: '开始新游戏' }).click()
+  const hub = page.locator('.ah-hub')
+  await expect(hub).toHaveAttribute('data-ui-state', 'campaignHub')
+  await hub.locator('.ah-content-packs summary').click()
+  const pack = hub.locator('[data-pack-id="dunwichSupport"]')
+  await expect(pack).toContainText('敦威治遗产 · 支援卡试点')
+  await expect(pack).toContainText('可玩 · 可选卡包')
+  await expect(pack).toContainText('02020 · 实验室助理 — 可构筑')
+  await expect(pack).toContainText('02030 · 澄明心智 — 可构筑')
+  await expect(pack).toContainText('02021 · 奇异溶液 — 缺少机制')
+  await expect(hub).toContainText('严格规则名称保持关闭')
+  await page.screenshot({ path: fileURLToPath(new URL('../../../artifacts/arkham-p6-acceptance.png', import.meta.url)), fullPage: true })
+  const response = await request.get('/api/catalog')
+  const data = await response.json()
+  const text = JSON.stringify(data)
+  expect(text).toContain('dunwichSupport')
+  expect(text).toContain('identifiedSolutionResearch')
+})

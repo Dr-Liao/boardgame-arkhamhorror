@@ -1,0 +1,433 @@
+// 诡镇奇谈：卡牌版（Arkham Horror LCG）· 卡牌效果 DSL 解释器
+//
+// Phase 2 · 数据驱动效果系统（对应决策 D4=A）。
+//
+// 本文件只负责「解释」效果，不负责「结算规则」：凡是需要引擎内部机制的操作
+// （技能检定 / 调查 / 战斗 / 躲避 / 生成敌人 / 击败敌人 / 抽牌并结算弱点 / 密谋/场景推进），
+// 都通过调用方注入的运行时对象 rt（runtime）转发给 engine.js，从而避免循环依赖。
+//
+// 效果原语（effect = { type, ... }）：
+//   gainResource / loseResource / draw / heal / takeDamage / takeHorror / gainAction
+//   discoverClue / addDoom / dealDamage / investigate / fight / evade / discardHand
+//   discardAsset / addFog / addTestBonus / skillTest / spawnEnemy / moveInvestigator
+//   chooseOne / exhaust / discardHandTo / reloadAmmo / defeatNonEliteEnemy
+//   removeDiscard / onTheLam / addStatPhase / rechargeAsset
+//
+// 未实现/简化的效果一律显式打点，不静默吞掉。
+
+import { requestChoice } from './resolution.js'
+
+// 效果原语清单（用于校验与文档化）。
+export const EFFECT_PRIMITIVES = [
+  'gainResource', 'loseResource', 'draw', 'heal', 'takeDamage', 'takeHorror',
+  'gainAction', 'discoverClue', 'addDoom', 'dealDamage', 'investigate', 'fight',
+  'evade', 'discardHand', 'discardAsset', 'addFog', 'addTestBonus', 'skillTest',
+  'spawnEnemy', 'moveInvestigator', 'chooseOne', 'exhaust', 'discardHandTo',
+  'reloadAmmo', 'defeatNonEliteEnemy', 'removeDiscard', 'onTheLam',
+  'addStatPhase', 'rechargeAsset', 'search',
+  'cancelEnemyAttack', 'cancelTreachery', 'substituteSkill', 'sequence',
+  'targetedEffect', 'searchTop', 'investigateForResources', 'moveTo',
+  'dealDamageAll', 'dealDamageExhausted', 'blankEnemy', 'ignoreChaos',
+  'returnAssetToHand', 'shuffleIntoEncounter', 'moveHorrorToInvestigator',
+  'searchDiscard', 'autoEvadeNonElite', 'attachBarricade', 'drawEncounter',
+  'addTestValue', 'disengageAll', 'flipTokenSign', 'scry', 'gainClues', 'targetedTest', 'aquinnahRedirect',
+  'readyAsset', 'healDamageAtLocation', 'researchSolution', 'drawPerClue', 'healHorrorNearby', 'dukeInvestigate',
+  'engageEnemies', 'teamwork', 'investigateConnectingClue', 'liquidCourage', 'bindMonster',
+  'doubleUses', 'drawEncounterAll', 'redirectFailedAttack', 'flare', 'standTogether', 'resign',
+  'hypnoticGaze', 'attachLure', 'healHorrorAtLocationByEnemy', 'exposeWeakness', 'redrawChaos',
+  'lookTopDeckAndDoom', 'cancelHarmGainResources', 'playItemFromHand', 'removeDoomControlled',
+  'temporaryAllyFromDiscard', 'decipheredReality', 'redrawEncounter', 'redGlovedManSkills', 'returnCommittedSkill',
+  'carcosaInvestigator', 'carcosaPlayer', 'cancelHarm',
+]
+
+export function effectDefinitionError(effect) {
+  if (!effect) return null
+  if (!EFFECT_PRIMITIVES.includes(effect.type)) return `未实现的效果原语：${effect.type}`
+  if (effect.type === 'chooseOne' && (!Array.isArray(effect.options) || !effect.options.length)) return '选择缺少合法选项'
+  if (effect.type === 'sequence' && (!Array.isArray(effect.effects) || !effect.effects.length)) return '顺序结算缺少子效果'
+  if (effect.type === 'substituteSkill' && (!Array.isArray(effect.from) || !effect.from.length || !effect.to)) return '属性替代缺少来源或目标'
+  if (effect.type === 'targetedEffect' && !effect.effect) return '目标效果缺少子效果'
+  for (const child of [...(effect.options || []).map(option => option.effect), ...(effect.effects || []), effect.success, effect.fail, effect.effect, effect.successEffect, effect.failEffect]) {
+    const error = effectDefinitionError(child)
+    if (error) return error
+  }
+  return null
+}
+
+// 结算单条效果。rt 由 engine.js 注入（见 engine.js buildRuntime）。
+export function resolveEffect(state, seat, effect, rt) {
+  if (!effect) return
+  const inv = state.investigators[seat]
+  if (!inv) return
+
+  switch (effect.type) {
+    case 'drawPerClue': {
+      for (const line of rt.drawCards(inv, Math.min(effect.maximum ?? 5, inv.clues))) rt.info(line)
+      break
+    }
+    case 'healHorrorNearby': {
+      rt.healHorrorNearby(seat, effect.amount || 1)
+      break
+    }
+    case 'dukeInvestigate': {
+      rt.dukeInvestigate(seat)
+      break
+    }
+    case 'engageEnemies': case 'teamwork': case 'investigateConnectingClue': case 'liquidCourage':
+    case 'bindMonster': case 'doubleUses': case 'drawEncounterAll': case 'redirectFailedAttack':
+    case 'flare': case 'standTogether': case 'resign': case 'hypnoticGaze': case 'attachLure':
+    case 'healHorrorAtLocationByEnemy': case 'exposeWeakness': case 'redrawChaos':
+    case 'lookTopDeckAndDoom': case 'cancelHarmGainResources': case 'playItemFromHand':
+    case 'removeDoomControlled': case 'temporaryAllyFromDiscard': case 'decipheredReality':
+    case 'redrawEncounter': case 'redGlovedManSkills': case 'returnCommittedSkill': {
+      rt.dunwichPlayerEffect(seat, effect)
+      break
+    }
+    case 'carcosaInvestigator': {
+      rt.carcosaInvestigatorEffect(seat, effect)
+      break
+    }
+    case 'carcosaPlayer': {
+      rt.carcosaPlayerEffect(seat, effect)
+      break
+    }
+    case 'cancelHarm': {
+      rt.dunwichPlayerEffect(seat, { ...effect, type: 'cancelHarmGainResources', noResources: true })
+      break
+    }
+    case 'researchSolution': {
+      rt.researchSolution(seat, effect.assetId)
+      break
+    }
+    case 'readyAsset': {
+      const candidates = inv.assets.filter(a => a.exhausted)
+      if (!candidates.length) break
+      const id = requestChoice(state, { kind: 'target', source: 'readyAsset', seat,
+        prompt: '选择要重整的支援。', options: candidates.map(a => ({ id: a.id, label: state.cards?.[a.code]?.name || a.code })) })
+      candidates.find(a => a.id === id).exhausted = false
+      break
+    }
+    case 'gainResource': {
+      if (rt.canGainResources?.(seat) === false) break
+      const n = effect.amount || 1
+      inv.resources += n
+      rt.info(`${inv.name} 获得 ${n} 资源（当前 ${inv.resources}）。`)
+      break
+    }
+    case 'loseResource': {
+      if (effect.all) {
+        const n = inv.resources
+        inv.resources = 0
+        rt.info(`${inv.name} 失去了全部 ${n} 资源。`)
+      } else {
+        const n = Math.min(inv.resources, effect.amount || 1)
+        inv.resources -= n
+        rt.info(`${inv.name} 失去 ${n} 资源。`)
+      }
+      break
+    }
+    case 'draw': {
+      const texts = rt.drawCards(inv, effect.amount || 1)
+      for (const t of texts) rt.info(t)
+      break
+    }
+    case 'heal': {
+      doHeal(state, inv, effect.amount || 1, effect.what || 'damage', rt)
+      break
+    }
+    case 'healDamageAtLocation': {
+      rt.healDamageAtLocation(seat, effect.amount || 1)
+      break
+    }
+    case 'takeDamage': {
+      const n = effect.amount || 1
+      rt.info(`${inv.name} 受到 ${n} 点伤害。`)
+      rt.applyDamage(seat, n, !!effect.direct)
+      break
+    }
+    case 'takeHorror': {
+      const n = effect.amount || 1
+      rt.info(`${inv.name} 受到 ${n} 点恐惧。`)
+      rt.applyHorror(seat, n, !!effect.direct)
+      break
+    }
+    case 'gainAction': {
+      inv.actionsLeft += (effect.amount || 1)
+      rt.info(`${inv.name} 获得 ${effect.amount || 1} 个额外行动。`)
+      break
+    }
+    case 'discoverClue': {
+      rt.discoverClue(inv, effect.amount || 1)
+      break
+    }
+    case 'addDoom': {
+      rt.addDoom(effect.amount || 1)
+      break
+    }
+    case 'dealDamage': {
+      const amount = effect.amount || 1
+      const enemy = rt.enemyForTarget(seat, effect.target || 'engaged')
+      if (enemy) {
+        if (rt.damageEnemy(enemy, amount, seat)) rt.info(`对「${enemy.name}」造成 ${amount} 点伤害（${enemy.damageTaken}/${enemy.health}）。`)
+      } else {
+        rt.info('没有可攻击的敌人。')
+      }
+      break
+    }
+    case 'investigate': {
+      rt.investigate(seat, { shroudMod: effect.shroudMod || 0, clueBonus: effect.clueBonus || 0,
+        skill: effect.skill, baseValue: effect.baseValue, bonus: effect.bonus || 0, symbolActionLoss: effect.symbolActionLoss })
+      break
+    }
+    case 'fight': {
+      const enemyId = effect.enemyId || rt.chooseEnemy(seat, effect).id
+      rt.fight(seat, { ...effect, enemyId })
+      break
+    }
+    case 'evade': {
+      if (effect.allAtLocation) {
+        const here = state.enemies.filter((e) => e.location === inv.location)
+        for (const e of here) rt.autoEvade(e)
+        if (!here.length) rt.info('这里没有可躲避的敌人。')
+      } else {
+        const enemy = rt.enemyForTarget(seat, effect.enemyId ? ('id:' + effect.enemyId) : 'engaged')
+        if (enemy) {
+          if (effect.auto) rt.autoEvade(enemy)
+          else rt.evade(seat, {
+            enemyId: enemy.id,
+            bonus: effect.bonus || 0,
+            skill: effect.skill,
+            baseValue: effect.baseValue,
+            evadeOthersOnSuccess: effect.evadeOthersOnSuccess,
+            damageOnSuccess: effect.damageOnSuccess,
+            moveEnemyOnSuccess: effect.moveEnemyOnSuccess,
+            symbolActionLoss: effect.symbolActionLoss,
+            onChaosSymbolHorror: effect.onChaosSymbolHorror,
+          })
+        } else {
+          rt.info('没有交战的敌人。')
+        }
+      }
+      break
+    }
+    case 'discardHand': {
+      rt.discardRandomFromHand(inv, effect.amount || 1)
+      break
+    }
+    case 'discardHandTo': {
+      rt.discardHandTo(inv, effect.keep ?? 1)
+      break
+    }
+    case 'discardAsset': {
+      rt.discardRandomAsset(inv)
+      break
+    }
+    case 'reloadAmmo': {
+      rt.reloadAmmo(inv, effect.amount || 1, effect)
+      break
+    }
+    case 'defeatNonEliteEnemy': {
+      rt.defeatNonEliteEnemy(seat, effect.target || 'here')
+      break
+    }
+    case 'removeDiscard': {
+      const n = inv.discard.length
+      rt.exileCards(inv, inv.discard)
+      inv.discard = []
+      rt.info(`${inv.name} 的 ${n} 张弃牌被移出游戏。`)
+      break
+    }
+    case 'onTheLam': {
+      inv.onTheLam = true
+      rt.info(`${inv.name} 进入逃亡状态：本轮内非精英敌人无法攻击。`)
+      break
+    }
+    case 'addStatPhase': {
+      inv.phaseStatBonuses ||= []
+      inv.phaseStatBonuses = inv.phaseStatBonuses.filter(b => b.round === state.round && b.phase === state.phase)
+      inv.phaseStatBonuses.push({ skill: effect.skill, amount: effect.amount || 1, phase: state.phase, round: state.round })
+      rt.info(`${inv.name} 本阶段${effect.skill}属性 +${effect.amount || 1}。`)
+      break
+    }
+    case 'rechargeAsset': {
+      rt.rechargeAsset(inv, effect.amount || 1, effect)
+      break
+    }
+    case 'addFog': {
+      state.fogMod = Math.max(state.fogMod, effect.amount || 2)
+      rt.info(`🌫️ 本回合调查难度 +${effect.amount || 2}。`)
+      break
+    }
+    case 'addTestBonus': {
+      inv.testBonus = Math.max(inv.testBonus || 0, effect.amount || 1)
+      rt.info(`${inv.name} 本回合下一次技能检定 +${effect.amount || 1}。`)
+      break
+    }
+    case 'skillTest': {
+      rt.performTest(seat, effect.skill, effect.difficulty, { resolve: r => {
+      if (r.success) {
+        if (effect.success) resolveEffect(state, seat, effect.success, rt)
+      } else if (effect.fail) {
+        resolveEffect(state, seat, effect.fail, rt)
+      }
+      } })
+      break
+    }
+    case 'spawnEnemy': {
+      const loc = effect.location && effect.location !== 'here' ? effect.location : inv.location
+      rt.spawnEnemy(effect.enemyCode, loc, effect.engage ? seat : null)
+      break
+    }
+    case 'moveInvestigator': {
+      const dest = effect.destination
+      if (dest && dest !== 'here') {
+        rt.moveInvestigator(seat, dest)
+      }
+      break
+    }
+    case 'search': {
+      rt.search(seat, effect)
+      break
+    }
+    case 'chooseOne': {
+      const choiceSeat = rt.choiceSeat ?? seat
+      const options = effect.options.map((option, index) => ({ id: String(index), label: option.label || `选项 ${index + 1}` }))
+        .filter(option => !rt.effectError?.(seat, effect.options[Number(option.id)].effect))
+      const id = effect.optionIndex == null ? requestChoice(state, {
+        kind: 'effect', source: effect.source || 'chooseOne', seat: choiceSeat,
+        prompt: '选择要结算的效果。', options, canSkip: false,
+      }) : String(effect.optionIndex)
+      if (!options.some(option => option.id === id)) throw new Error('效果选项非法或无法支付')
+      resolveEffect(state, seat, effect.options[Number(id)].effect, rt)
+      break
+    }
+    case 'cancelEnemyAttack': {
+      rt.cancelPending('enemyAttack')
+      rt.info(`${inv.name} 取消了这次敌人攻击。`)
+      break
+    }
+    case 'cancelTreachery': {
+      rt.cancelPending('treachery')
+      rt.info(`${inv.name} 取消了这张诡计牌的显现效果。`)
+      break
+    }
+    case 'substituteSkill': {
+      rt.substituteSkill(seat, effect.from, effect.to)
+      break
+    }
+    case 'sequence': {
+      for (const child of effect.effects) resolveEffect(state, seat, child, rt)
+      break
+    }
+    case 'exhaust': {
+      if (effect.target === 'self') rt.exhaustSelf()
+      break
+    }
+    case 'targetedEffect': {
+      const targetSeat = rt.chooseInvestigator ? rt.chooseInvestigator(seat, effect.target || 'location', effect.effect, effect) : seat
+      const targetRuntime = effect.chooseBy === 'controller' ? { ...rt, choiceSeat: seat } : rt
+      resolveEffect(state, targetSeat, effect.effect, targetRuntime)
+      break
+    }
+    case 'searchTop': {
+      rt.searchTop(seat, effect)
+      break
+    }
+    case 'investigateForResources': {
+      rt.investigateForResources(seat, effect)
+      break
+    }
+    case 'moveTo': {
+      rt.moveTo(seat, effect)
+      break
+    }
+    case 'dealDamageAll': {
+      rt.dealDamageAll(seat, effect)
+      break
+    }
+    case 'dealDamageExhausted': {
+      rt.dealDamageExhausted(seat, effect)
+      break
+    }
+    case 'blankEnemy': {
+      rt.blankEnemy(seat, effect)
+      break
+    }
+    case 'ignoreChaos': {
+      rt.ignoreChaos(seat, effect)
+      break
+    }
+    case 'returnAssetToHand': {
+      rt.returnAssetToHand(seat, effect)
+      break
+    }
+    case 'shuffleIntoEncounter': {
+      rt.shuffleIntoEncounter(seat, effect)
+      break
+    }
+    case 'moveHorrorToInvestigator': {
+      rt.moveHorrorToInvestigator(seat, effect)
+      break
+    }
+    case 'searchDiscard': {
+      rt.searchDiscard(seat, effect)
+      break
+    }
+    case 'autoEvadeNonElite': {
+      rt.autoEvadeNonElite(seat, effect)
+      break
+    }
+    case 'attachBarricade': {
+      rt.attachBarricade(seat, effect)
+      break
+    }
+    case 'drawEncounter': {
+      rt.drawEncounter(seat)
+      break
+    }
+    case 'addTestValue': {
+      rt.addTestValue(effect.amount || 1)
+      break
+    }
+    case 'disengageAll': {
+      rt.disengageAll(seat)
+      break
+    }
+    case 'flipTokenSign': {
+      rt.flipTokenSign()
+      break
+    }
+    case 'scry': {
+      rt.scry(seat, effect)
+      break
+    }
+    case 'gainClues': {
+      rt.gainClues(inv, effect.amount || 1)
+      break
+    }
+    case 'targetedTest': {
+      rt.targetedTest(seat, effect)
+      break
+    }
+    case 'aquinnahRedirect': {
+      if (rt.aquinnahRedirect) rt.aquinnahRedirect(seat, effect)
+      break
+    }
+    default: {
+      throw new Error(`未实现的效果原语：${effect.type}`)
+    }
+  }
+}
+
+function doHeal(state, inv, amount, what, rt) {
+  if (what === 'damage' || what === 'both') {
+    const h = Math.min(inv.damage, amount)
+    inv.damage -= h
+    rt.info(`${inv.name} 治疗了 ${h} 点伤害。`)
+  }
+  if (what === 'horror' || what === 'both') {
+    const h = Math.min(inv.horror, amount)
+    inv.horror -= h
+    rt.info(`${inv.name} 治疗了 ${h} 点恐惧。`)
+  }
+}

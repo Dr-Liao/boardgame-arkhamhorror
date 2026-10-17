@@ -1,0 +1,2777 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "id": "original-core-2026-10",
+    "scope": "原始 Core 基础包 183 条目录记录（01121a/01121b 分别记录），不含占位卡01000、替代调查员98004、重制包新增卡和扩展包。",
+    "basis": "原始印刷卡文、基础规则及所列回归测试；逐卡主要效果和已列边界通过，未声称穷举所有卡牌组合。",
+    "houseRules": [
+      "保留用户指定的自动奖励反应",
+      "AI仅在自己的回合反应",
+      "队友仅收到主动求助的投入请求",
+      "真人先行动，AI随后随机行动"
+    ],
+    "sources": [
+      "https://images-cdn.fantasyflightgames.com/filer_public/c4/b0/c4b0d66c-d79e-411b-bdb5-b5d8c457d4bc/ahc01_rules_reference_web.pdf",
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json"
+    ]
+  },
+  "summary": {
+    "total": 183,
+    "verified": 183,
+    "unverified": 0,
+    "unimplemented": 0,
+    "testsPassed": 370
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+      "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
+    },
+    {
+      "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+      "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
+    },
+    {
+      "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+      "sha256": "0b11ce8e6ba66051e8597102cea5149ab9d45ab14cea5f0e3d09668a5eec8841"
+    },
+    {
+      "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+      "sha256": "1fc87fca0c49dc3e8fcf3fb201639f36dd7df50092b94b82b17f4eeee62052e3"
+    },
+    {
+      "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+      "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+      "sha256": "1edf977e5278037f4e0ea6cab308a31ee690d774052ea87ab2e5122a2923e36a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
+      "sha256": "11141631e320029ee5774da6f5bb079181e0975b2fbad6da2955eaef82da38ae"
+    },
+    {
+      "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
+      "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+    },
+    {
+      "file": "games/arkhamhorror/tests/core-n4.test.mjs",
+      "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+    },
+    {
+      "file": "games/arkhamhorror/tests/core-n4b.test.mjs",
+      "sha256": "1e5a9c62f2604291e97aefb5cf6c926b42c8bbd37126fddea57c4535cafce4de"
+    },
+    {
+      "file": "games/arkhamhorror/tests/notz-n4.test.mjs",
+      "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+    },
+    {
+      "file": "games/arkhamhorror/tests/scenario-n4b.test.mjs",
+      "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/p6-content.test.mjs",
+      "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
+    }
+  ],
+  "entries": [
+    {
+      "code": "01001",
+      "name": "罗兰·班克斯",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01001 旧印效果"
+        }
+      ]
+    },
+    {
+      "code": "01002",
+      "name": "黛西·沃克",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01002 黛西旧印没有书不抽牌，有书时可选择抽取或拒绝"
+        }
+      ]
+    },
+    {
+      "code": "01003",
+      "name": "“倒霉蛋”奥图尔",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01003 奥图尔花两资源获得一次额外行动，同轮不能重复"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01003 旧印效果"
+        }
+      ]
+    },
+    {
+      "code": "01004",
+      "name": "艾格尼丝·贝克",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01004 01099 01100 盟友承受恐惧/伤害不触发调查员反应或精神弱点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01004 旧印效果"
+        }
+      ]
+    },
+    {
+      "code": "01005",
+      "name": "温蒂·亚当斯",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01005 旧印效果"
+        }
+      ]
+    },
+    {
+      "code": "01006",
+      "name": "罗兰 的.38特制手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01006 Roland's .38 Special: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01006 武器只在其攻击中生效并支付充能"
+        }
+      ]
+    },
+    {
+      "code": "01007",
+      "name": "掩盖罪证",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01007 抽取弱点进入威胁区域并初始化"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01007 掩盖罪证可替代发现线索，地点与个人线索不改变"
+        }
+      ]
+    },
+    {
+      "code": "01008",
+      "name": "黛西的手提包",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01008 Daisy's Tote Bag: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01008 书包的两个专用槽位不挤占普通手部槽位"
+        }
+      ]
+    },
+    {
+      "code": "01009",
+      "name": "死灵之书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01009 抽取弱点进入威胁区域并初始化"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01009 死灵之书占用手槽并强制替换，旧印变失败，移走恐惧不能分配给盟友"
+        }
+      ]
+    },
+    {
+      "code": "01010",
+      "name": "在逃中",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01010 在逃中只在自己回合开始打出，当轮非精英不交战或攻击"
+        }
+      ]
+    },
+    {
+      "code": "01011",
+      "name": "医院债务",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01011 抽取弱点进入威胁区域并初始化"
+        }
+      ]
+    },
+    {
+      "code": "01012",
+      "name": "希波利尔传家宝",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01012 Heirloom of Hyperborea: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01012 反应奖励与横置费用"
+        }
+      ]
+    },
+    {
+      "code": "01013",
+      "name": "黑暗回忆",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/p6-content.test.mjs",
+          "test": "P6 01013 黑暗回忆保留手中反复惩罚，可付费打出仅增加毁灭"
+        }
+      ]
+    },
+    {
+      "code": "01014",
+      "name": "温蒂的护身符",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01014 Wendy's Amulet: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01014 护身符可打出最上方事件，且反应事件遵守时机并移到牌底"
+        }
+      ]
+    },
+    {
+      "code": "01015",
+      "name": "被抛弃的孤单",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-n4.test.mjs",
+          "test": "N4 被抛弃的孤单造成直接恐惧，不能分配给资产且弃牌仅本关移除"
+        }
+      ]
+    },
+    {
+      "code": "01016",
+      "name": ".45自动手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01016 .45 Automatic: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01016 武器只在其攻击中生效并支付充能"
+        }
+      ]
+    },
+    {
+      "code": "01017",
+      "name": "体能训练",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01017 Physical Training: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01017 付费天赋 combat 可重复支付并在跳过后停止"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01017 付费天赋 willpower 可重复支付并在跳过后停止"
+        }
+      ]
+    },
+    {
+      "code": "01018",
+      "name": "巡警",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01018 Beat Cop: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01018 击败队友交战的敌人时奖励归实际伤害来源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01018 常驻属性在横置后仍有效"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01018 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01019",
+      "name": "急救",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01019 First Aid: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/p6-content.test.mjs",
+          "test": "P6 01019 急救治疗同地点队友、排除远处和未受伤者，恢复仅支付一次"
+        }
+      ]
+    },
+    {
+      "code": "01020",
+      "name": "大砍刀",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01020 Machete: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01020 武器只在其攻击中生效并支付充能"
+        }
+      ]
+    },
+    {
+      "code": "01021",
+      "name": "看门狗",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01021 Guard Dog: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01021 守卫犬旧伤不触发本次反击，调查员承受伤害时不询问"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01021 守卫犬本次被分配致命伤害仍可反击，并且恢复选择不会重复结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01021 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01022",
+      "name": "证据！",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01022 证据只在自己击败后发现线索，不在队友击败后响应"
+        }
+      ]
+    },
+    {
+      "code": "01023",
+      "name": "闪躲",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
+          "test": "N3 闪躲在敌人攻击窗口取消该次攻击，恢复后不重复支付"
+        }
+      ]
+    },
+    {
+      "code": "01024",
+      "name": "炸药爆破",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01024 炸药同时伤害地点的全部敌人与调查员"
+        }
+      ]
+    },
+    {
+      "code": "01025",
+      "name": "致命打击",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01025 技能投入成功/失败的奖励和弃牌"
+        }
+      ]
+    },
+    {
+      "code": "01026",
+      "name": "多余的弹药",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
+          "test": "N3 补弹在多个弹药武器时由持有者选择目标"
+        },
+        {
+          "file": "games/arkhamhorror/tests/p6-content.test.mjs",
+          "test": "P6 01026 多余弹药可超过初始 uses，费用与增加量准确"
+        }
+      ]
+    },
+    {
+      "code": "01027",
+      "name": "警徽",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01027 Police Badge: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01027 常驻属性在横置后仍有效"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01027 警徽只给正在进行回合的调查员增加行动"
+        }
+      ]
+    },
+    {
+      "code": "01028",
+      "name": "巡警",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01028 Beat Cop: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01028 常驻属性在横置后仍有效"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01028 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01029",
+      "name": "霰弹枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01029 Shotgun: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01029 武器只在其攻击中生效并支付充能"
+        }
+      ]
+    },
+    {
+      "code": "01030",
+      "name": "放大镜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01030 Magnifying Glass: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01030 放大镜仅在智识调查加值"
+        }
+      ]
+    },
+    {
+      "code": "01031",
+      "name": "智慧古书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01031 Old Book of Lore: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
+          "test": "N3 搜索实际查看顶三张，合法回答后只加入所选牌"
+        }
+      ]
+    },
+    {
+      "code": "01032",
+      "name": "研究馆员",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01032 Research Librarian: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01032 图书管理员只在自身入场时检索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01032 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01033",
+      "name": "米兰·克里斯托弗博士",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01033 Dr. Milan Christopher: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01033 常驻属性在横置后仍有效"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01033 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01034",
+      "name": "超感知",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01034 Hyperawareness: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01034 付费天赋 agility 可重复支付并在跳过后停止"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01034 付费天赋 intellect 可重复支付并在跳过后停止"
+        }
+      ]
+    },
+    {
+      "code": "01035",
+      "name": "医学教科书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01035 Medical Texts: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
+          "test": "Core 01035 医学教科书检定失败伤害选定队友，不伤害使用者"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-n4b.test.mjs",
+          "test": "N4.2 医学教科书由使用者检定，成功治疗目标，失败伤害目标"
+        }
+      ]
+    },
+    {
+      "code": "01036",
+      "name": "心胜于物",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
+          "test": "N3 心胜于物本轮以智识替代战斗与敏捷"
+        }
+      ]
+    },
+    {
+      "code": "01037",
+      "name": "专业的直觉",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01037 事件结算收益与弃牌"
+        }
+      ]
+    },
+    {
+      "code": "01038",
+      "name": "屏障",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01038 屏障保留每张附属实例，任何调查员离开时全部弃置"
+        }
+      ]
+    },
+    {
+      "code": "01039",
+      "name": "推理",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01039 技能投入成功/失败的奖励和弃牌"
+        }
+      ]
+    },
+    {
+      "code": "01040",
+      "name": "放大镜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01040 Magnifying Glass: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01040 放大镜仅在智识调查加值"
+        }
+      ]
+    },
+    {
+      "code": "01041",
+      "name": "伊察姆纳圆盘",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01041 Disc of Itzamna: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01041 伊察姆纳圆盘弃置新生成的非精英，不按击败触发奖励"
+        }
+      ]
+    },
+    {
+      "code": "01042",
+      "name": "百科全书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01042 Encyclopedia: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01042 百科全书不同技能加成同时保留并在阶段结束移除"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01042 百科全书对队友使用时由使用者选择技能"
+        }
+      ]
+    },
+    {
+      "code": "01043",
+      "name": "隐秘的研究",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01043 事件结算收益与弃牌"
+        }
+      ]
+    },
+    {
+      "code": "01044",
+      "name": "弹簧刀",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01044 Switchblade: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01044 武器只在其攻击中生效并支付充能"
+        }
+      ]
+    },
+    {
+      "code": "01045",
+      "name": "夜盗",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01045 Burglary: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01045 夜盗的成功给予资源而不发现线索"
+        }
+      ]
+    },
+    {
+      "code": "01046",
+      "name": "扒窃",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01046 Pickpocketing: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01046 反应奖励与横置费用"
+        }
+      ]
+    },
+    {
+      "code": "01047",
+      "name": ".41短口手枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01047 .41 Derringer: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01047 武器只在其攻击中生效并支付充能"
+        }
+      ]
+    },
+    {
+      "code": "01048",
+      "name": "里奥·德·卢卡",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01048 01054 里奥不同等级仍共享唯一限制"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01048 Leo De Luca: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01048 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01049",
+      "name": "沉重打击",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01049 Hard Knocks: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01049 付费天赋 agility 可重复支付并在跳过后停止"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01049 付费天赋 combat 可重复支付并在跳过后停止"
+        }
+      ]
+    },
+    {
+      "code": "01050",
+      "name": "逃避隐藏",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01050 01055 脱离并移动遵守目的地限制且不受借机攻击"
+        }
+      ]
+    },
+    {
+      "code": "01051",
+      "name": "背刺",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01051 fight事件不引发借机攻击"
+        }
+      ]
+    },
+    {
+      "code": "01052",
+      "name": "偷袭",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01052 偷袭对横置敌人造成两伤且不能选择准备敌人"
+        }
+      ]
+    },
+    {
+      "code": "01053",
+      "name": "机会主义者",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
+          "test": "Core 01053 投机取巧成功超出三点回手，否则弃置"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01053 机会主义者只能投入自己的检定，不能协助队友"
+        }
+      ]
+    },
+    {
+      "code": "01054",
+      "name": "里奥·德·卢卡",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01048 01054 里奥不同等级仍共享唯一限制"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01054 Leo De Luca: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01054 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01055",
+      "name": "飞贼",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01050 01055 脱离并移动遵守目的地限制且不受借机攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01055 Cat Burglar: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01055 常驻属性在横置后仍有效"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01055 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01056",
+      "name": "老千手法",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01056 孤注一掷翻转本次负数标记的修正"
+        }
+      ]
+    },
+    {
+      "code": "01057",
+      "name": "百战百胜",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01057 事件结算收益与弃牌"
+        }
+      ]
+    },
+    {
+      "code": "01058",
+      "name": "禁忌知识",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01058 Forbidden Knowledge: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01058 禁忌知识横置并支付恐惧，最后资源取走后弃置"
+        }
+      ]
+    },
+    {
+      "code": "01059",
+      "name": "圣玫瑰珠",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01059 Holy Rosary: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01059 常驻属性在横置后仍有效"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01059 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01060",
+      "name": "皱缩术",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01060 Shrivelling: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01060 武器只在其攻击中生效并支付充能"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01060 负面符号的恐惧及行动损失"
+        }
+      ]
+    },
+    {
+      "code": "01061",
+      "name": "探知术",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01061 Scrying: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01061 占卜术最后一次充能后保留在场，不能继续使用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
+          "test": "Core 01061 窥视重排队友或遭遇顶三张，保留其余牌序并支付一次"
+        }
+      ]
+    },
+    {
+      "code": "01062",
+      "name": "神秘研究",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01062 Arcane Studies: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01062 付费天赋 intellect 可重复支付并在跳过后停止"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01062 付费天赋 willpower 可重复支付并在跳过后停止"
+        }
+      ]
+    },
+    {
+      "code": "01063",
+      "name": "新晋术士",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01063 Arcane Initiate: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01063 支援按印刷承伤容量被击败"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01063 新晋术士只搜索前三张法术，横置并保留毁灭"
+        }
+      ]
+    },
+    {
+      "code": "01064",
+      "name": "飞蛾扑火",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01064 飞蛾扑火先结算遭遇再发现两个线索"
+        }
+      ]
+    },
+    {
+      "code": "01065",
+      "name": "守护结界",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
+          "test": "N3 守护结界取消诡计显现效果并承受 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-n4.test.mjs",
+          "test": "N4 守护结界只能取消本人非弱点诡计，不替他人开窗"
+        }
+      ]
+    },
+    {
+      "code": "01066",
+      "name": "眩光一闪",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01066 evade事件不引发借机攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01066 负面符号的恐惧及行动损失"
+        }
+      ]
+    },
+    {
+      "code": "01067",
+      "name": "无所畏惧",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01067 技能投入成功/失败的奖励和弃牌"
+        }
+      ]
+    },
+    {
+      "code": "01068",
+      "name": "记忆抹消",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01068 记忆抹消只能在阶段开始使用，响应后支付费用并弃牌"
+        }
+      ]
+    },
+    {
+      "code": "01069",
+      "name": "眩光一闪",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01069 evade事件不引发借机攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01069 负面符号的恐惧及行动损失"
+        }
+      ]
+    },
+    {
+      "code": "01070",
+      "name": "影之书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01070 Book of Shadows: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01070 暗影之书能给已有足额充能的法术加充能"
+        }
+      ]
+    },
+    {
+      "code": "01071",
+      "name": "诡秘石像",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01071 Grotesque Statue: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01071 石像选择其中一个标记、归还两个标记，最后充能后弃置"
+        }
+      ]
+    },
+    {
+      "code": "01072",
+      "name": "皮大衣",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01072 Leather Coat: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01072 外套仅承受自身的两点伤害，不增加调查员生命"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01072 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01073",
+      "name": "拾荒",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01073 Scavenging: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01073 反应奖励与横置费用"
+        }
+      ]
+    },
+    {
+      "code": "01074",
+      "name": "球棒",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01074 Baseball Bat: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01074 武器只在其攻击中生效并支付充能"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01074 球棒在攻击结算结束后因骷髅弃置"
+        }
+      ]
+    },
+    {
+      "code": "01075",
+      "name": "幸运兔脚",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01075 Rabbit's Foot: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-n4b.test.mjs",
+          "test": "N4.2 幸运兔脚在任意技能检定失败后触发，不只限于调查/攻击/躲避入口"
+        }
+      ]
+    },
+    {
+      "code": "01076",
+      "name": "野猫",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01076 01078 自动躲避正确横置并解除交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01076 Stray Cat: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01076 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01077",
+      "name": "深挖",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01077 Dig Deep: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01077 付费天赋 agility 可重复支付并在跳过后停止"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01077 付费天赋 willpower 可重复支付并在跳过后停止"
+        }
+      ]
+    },
+    {
+      "code": "01078",
+      "name": "调虎离山",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01076 01078 自动躲避正确横置并解除交战"
+        }
+      ]
+    },
+    {
+      "code": "01079",
+      "name": "“看看我发现了什么！”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01079 看看我发现了什么失败两点可用，失败三点不能触发"
+        }
+      ]
+    },
+    {
+      "code": "01080",
+      "name": "运气好！",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01080 运气好只改变自己的失败检定，并结算升级抽牌"
+        }
+      ]
+    },
+    {
+      "code": "01081",
+      "name": "求生本能",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01081 求生本能解除其余交战不会横置敌人，移动可拒绝"
+        }
+      ]
+    },
+    {
+      "code": "01082",
+      "name": "安奎娜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01082 Aquinnah: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01082 安奎娜承受恐惧并横置，将伤害转移给另一敌人但不转移恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01082 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01083",
+      "name": "千钧一发",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01083 千钧一发将躲避的非精英洗回遭遇牌库"
+        }
+      ]
+    },
+    {
+      "code": "01084",
+      "name": "运气好！",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01084 运气好只改变自己的失败检定，并结算升级抽牌"
+        }
+      ]
+    },
+    {
+      "code": "01085",
+      "name": "生存意志",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01085 生存意志在本回合跳过抽标记，下回合恢复"
+        }
+      ]
+    },
+    {
+      "code": "01086",
+      "name": "刀子",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01086 Knife: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01086 武器只在其攻击中生效并支付充能"
+        }
+      ]
+    },
+    {
+      "code": "01087",
+      "name": "手电筒",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01087 Flashlight: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01087 手电筒消耗补给并降低调查难度，自动失败仍失败"
+        }
+      ]
+    },
+    {
+      "code": "01088",
+      "name": "应急物品",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01088 事件结算收益与弃牌"
+        }
+      ]
+    },
+    {
+      "code": "01089",
+      "name": "胆识",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01089 技能投入成功/失败的奖励和弃牌"
+        }
+      ]
+    },
+    {
+      "code": "01090",
+      "name": "洞察力",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01090 技能投入成功/失败的奖励和弃牌"
+        }
+      ]
+    },
+    {
+      "code": "01091",
+      "name": "压制",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01091 技能投入成功/失败的奖励和弃牌"
+        }
+      ]
+    },
+    {
+      "code": "01092",
+      "name": "心灵手巧",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01092 技能投入成功/失败的奖励和弃牌"
+        }
+      ]
+    },
+    {
+      "code": "01093",
+      "name": "绝处逢生",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01093 技能投入成功/失败的奖励和弃牌"
+        }
+      ]
+    },
+    {
+      "code": "01094",
+      "name": "防弹衣",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01094 Bulletproof Vest: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01094 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01095",
+      "name": "远古印记护身符",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01095 Elder Sign Amulet: 支付费用、行动和入场计数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
+          "test": "Core 01095 支援按印刷承伤容量被击败"
+        }
+      ]
+    },
+    {
+      "code": "01096",
+      "name": "失忆",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01096 01097 失忆选择保留一张、妄想症失去全部资源"
+        }
+      ]
+    },
+    {
+      "code": "01097",
+      "name": "妄想症",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01096 01097 失忆选择保留一张、妄想症失去全部资源"
+        }
+      ]
+    },
+    {
+      "code": "01098",
+      "name": "恶灵附身",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01098 抽取弱点进入威胁区域并初始化"
+        }
+      ]
+    },
+    {
+      "code": "01099",
+      "name": "神经紊乱",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01004 01099 01100 盟友承受恐惧/伤害不触发调查员反应或精神弱点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01099 抽取弱点进入威胁区域并初始化"
+        }
+      ]
+    },
+    {
+      "code": "01100",
+      "name": "忧郁症",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01004 01099 01100 盟友承受恐惧/伤害不触发调查员反应或精神弱点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01100 抽取弱点进入威胁区域并初始化"
+        }
+      ]
+    },
+    {
+      "code": "01101",
+      "name": "黑帮打手",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01101 敌人弱点入场交战、猎物仅为持有者"
+        }
+      ]
+    },
+    {
+      "code": "01102",
+      "name": "银暮秘社僧侣",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01102 敌人弱点入场交战、猎物仅为持有者"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01102 银暮祭司每次攻击后放毁灭，但不立即推进"
+        }
+      ]
+    },
+    {
+      "code": "01103",
+      "name": "固执的侦探",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01103 敌人弱点入场交战、猎物仅为持有者"
+        }
+      ]
+    },
+    {
+      "code": "01104",
+      "name": "聚集于此",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01104 easy 异教徒失败恐惧与石板伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01104 expert 异教徒失败恐惧与石板伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01104 hard 异教徒失败恐惧与石板伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01104 standard 异教徒失败恐惧与石板伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01104 困难骷髅失败后从遭遇弃牌搜索敌人并在检定结束后抽取"
+        }
+      ]
+    },
+    {
+      "code": "01105",
+      "name": "到底发生了什么？！",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01105 议程一两个背面分支分别弃牌或队长受恐惧"
+        }
+      ]
+    },
+    {
+      "code": "01106",
+      "name": "食尸鬼崛起",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01106 议程二洗回遭遇弃牌并弃到食尸鬼由队长抽取"
+        }
+      ]
+    },
+    {
+      "code": "01107",
+      "name": "他们爬出来了！",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01107 最终议程按当前幕进入死亡或逃脱分支"
+        }
+      ]
+    },
+    {
+      "code": "01108",
+      "name": "被困于此",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01108 01111 01112 支付线索离开书房，四地点入场并删除书房"
+        },
+        {
+          "file": "games/arkhamhorror/tests/p6-content.test.mjs",
+          "test": "P6 01108 书房敌人被弃置而非击败，不产生胜利点和罗兰反应"
+        }
+      ]
+    },
+    {
+      "code": "01109",
+      "name": "灼热屏障",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01109 01115 01117 轮末走廊付线索揭示客厅、生成丽塔和祭司"
+        }
+      ]
+    },
+    {
+      "code": "01110",
+      "name": "瞧瞧你们做的好事！",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01110 击败祭司后选择房屋命运，两条结局互斥"
+        }
+      ]
+    },
+    {
+      "code": "01111",
+      "name": "书房",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01108 01111 01112 支付线索离开书房，四地点入场并删除书房"
+        }
+      ]
+    },
+    {
+      "code": "01112",
+      "name": "走廊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01108 01111 01112 支付线索离开书房，四地点入场并删除书房"
+        }
+      ]
+    },
+    {
+      "code": "01113",
+      "name": "阁楼",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01113 进入地点强制效果与揭示"
+        }
+      ]
+    },
+    {
+      "code": "01114",
+      "name": "地窖",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01114 进入地点强制效果与揭示"
+        }
+      ]
+    },
+    {
+      "code": "01115",
+      "name": "客厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01109 01115 01117 轮末走廊付线索揭示客厅、生成丽塔和祭司"
+        }
+      ]
+    },
+    {
+      "code": "01116",
+      "name": "食尸鬼祭司",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01116 ghoulPriest 实际抽取、生成、属性和在场归属"
+        }
+      ]
+    },
+    {
+      "code": "01117",
+      "name": "丽塔·钱德勒",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01109 01115 01117 轮末走廊付线索揭示客厅、生成丽塔和祭司"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
+          "test": "Core 01117 丽塔横置后仍给同地点队友战斗与怪物伤害加成，远处无加成"
+        },
+        {
+          "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
+          "test": "N3 同次伤害恐惧可分配给同一资产，全部分配后才弃置"
+        },
+        {
+          "file": "games/arkhamhorror/tests/notz-n4.test.mjs",
+          "test": "N4 幕二丽塔无人控制，谈判成功转移同一实例而非生成副本"
+        },
+        {
+          "file": "games/arkhamhorror/tests/p6-content.test.mjs",
+          "test": "P6 01117 剧情丽塔不占普通卡尺寸、不阻断升级且随牌组保留"
+        }
+      ]
+    },
+    {
+      "code": "01118",
+      "name": "食肉者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01118 fleshEater 实际抽取、生成、属性和在场归属"
+        }
+      ]
+    },
+    {
+      "code": "01119",
+      "name": "冰封食尸鬼",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01119 icyGhoul 实际抽取、生成、属性和在场归属"
+        }
+      ]
+    },
+    {
+      "code": "01120",
+      "name": "午夜假面",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01120 easy 骷髅计毁灭包含支援，异教徒放毁灭、石板归还线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01120 expert 骷髅计毁灭包含支援，异教徒放毁灭、石板归还线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01120 hard 骷髅计毁灭包含支援，异教徒放毁灭、石板归还线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01120 standard 骷髅计毁灭包含支援，异教徒放毁灭、石板归还线索"
+        }
+      ]
+    },
+    {
+      "code": "01121a",
+      "name": "猎人还是猎物？",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01121a 01122 假面议程先生成猎手，再到午夜结局"
+        }
+      ]
+    },
+    {
+      "code": "01121b",
+      "name": "假面猎手",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01121b theMaskedHunter 实际抽取、生成、属性和在场归属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
+          "test": "Core 01121b 蒙面猎手在事件结算前入场会阻止发现线索和付线索谈判"
+        }
+      ]
+    },
+    {
+      "code": "01122",
+      "name": "时间飞逝",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01121a 01122 假面议程先生成猎手，再到午夜结局"
+        }
+      ]
+    },
+    {
+      "code": "01123",
+      "name": "揭露阴谋",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01123 团队花费线索抽取异教徒，收集六人后结局一"
+        }
+      ]
+    },
+    {
+      "code": "01124",
+      "name": "你的房子",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01124 房屋每人每回合独立使用，食尸鬼祭司改在此生成"
+        }
+      ]
+    },
+    {
+      "code": "01125",
+      "name": "河岸城",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
+          "test": "Core 01125 河岸城移动揭示、线索数量和调查使用真实地点定义"
+        }
+      ]
+    },
+    {
+      "code": "01126",
+      "name": "南区",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01126 每场游戏限制按各调查员独立计算"
+        }
+      ]
+    },
+    {
+      "code": "01127",
+      "name": "南区",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
+          "test": "Core 01127 01131 午夜假面实际随机布置使用变体数值并按人数放置线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01127 地点变体主动效果"
+        }
+      ]
+    },
+    {
+      "code": "01128",
+      "name": "圣玛丽医院",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01128 每场游戏限制按各调查员独立计算"
+        }
+      ]
+    },
+    {
+      "code": "01129",
+      "name": "米斯卡塔尼克大学",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01129 大学搜索书籍或法术，01134 北区支付五资源全队仅一次"
+        }
+      ]
+    },
+    {
+      "code": "01130",
+      "name": "商业区",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01130 每场游戏限制按各调查员独立计算"
+        }
+      ]
+    },
+    {
+      "code": "01131",
+      "name": "商业区",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
+          "test": "Core 01127 01131 午夜假面实际随机布置使用变体数值并按人数放置线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01131 地点变体主动效果"
+        }
+      ]
+    },
+    {
+      "code": "01132",
+      "name": "东城区",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
+          "test": "N3 地点减费被合法列表、校验和执行共同使用"
+        }
+      ]
+    },
+    {
+      "code": "01133",
+      "name": "墓地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01133 进入地点强制效果与揭示"
+        }
+      ]
+    },
+    {
+      "code": "01134",
+      "name": "北区",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01129 大学搜索书籍或法术，01134 北区支付五资源全队仅一次"
+        }
+      ]
+    },
+    {
+      "code": "01135",
+      "name": "追猎鬼影",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01135 追猎鬼影可以付线索，假面猎手禁止支付"
+        }
+      ]
+    },
+    {
+      "code": "01136",
+      "name": "错误指示",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
+          "test": "Core 01136 错误指示失败按差值归还线索、成功不归还、无线索涌动"
+        }
+      ]
+    },
+    {
+      "code": "01137",
+      "name": "“狼人”德鲁",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01137 wolfManDrew 实际抽取、生成、属性和在场归属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01137 狼人每次借机攻击前治疗伤害"
+        }
+      ]
+    },
+    {
+      "code": "01138",
+      "name": "赫尔曼·柯林斯",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01138 hermanCollins 实际抽取、生成、属性和在场归属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01138 异教徒本地点谈判支付并进入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "01139",
+      "name": "彼得·沃伦",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01139 peterWarren 实际抽取、生成、属性和在场归属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01139 异教徒本地点谈判支付并进入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "01140",
+      "name": "维多利亚·德佛罗",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01140 victoriaDevereux 实际抽取、生成、属性和在场归属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01140 异教徒本地点谈判支付并进入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "01141",
+      "name": "露丝·特纳",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01141 ruthTurner 实际抽取、生成、属性和在场归属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01141 露丝躲避后直接进入胜利区"
+        }
+      ]
+    },
+    {
+      "code": "01142",
+      "name": "地底噬魔",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01142 easy 异教徒给最近敌人放毁灭、石板怪物惩罚"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01142 expert 异教徒给最近敌人放毁灭、石板怪物惩罚"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01142 hard 异教徒给最近敌人放毁灭、石板怪物惩罚"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01142 standard 异教徒给最近敌人放毁灭、石板怪物惩罚"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01142 困难骷髅失败后从遭遇弃牌搜索敌人并在检定结束后抽取"
+        }
+      ]
+    },
+    {
+      "code": "01143",
+      "name": "阿卡姆密林",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01143 议程一从弃牌找出怪物强制生成主道路并放毁灭"
+        }
+      ]
+    },
+    {
+      "code": "01144",
+      "name": "仪式开始",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01144 议程二增加敌人难度，背面检定失败把疯狂弱点加入手牌"
+        }
+      ]
+    },
+    {
+      "code": "01145",
+      "name": "复仇开始",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01145 最终议程背面取代幕和议程，击败乌默尔多斯进入结局二"
+        }
+      ]
+    },
+    {
+      "code": "01146",
+      "name": "顺藤摸瓜",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01146 01147 线索推进放入仪式地和逃跑异教徒，进入仪式地推进到第三幕"
+        }
+      ]
+    },
+    {
+      "code": "01147",
+      "name": "深入黑暗",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01146 01147 线索推进放入仪式地和逃跑异教徒，进入仪式地推进到第三幕"
+        }
+      ]
+    },
+    {
+      "code": "01148",
+      "name": "阻止计划",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01148 破坏仪式支付个人线索、检定成功积累并进入结局一"
+        }
+      ]
+    },
+    {
+      "code": "01149",
+      "name": "主道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01149 主道路撤退到无结局失败，不误报胜利"
+        }
+      ]
+    },
+    {
+      "code": "01150",
+      "name": "阿卡姆密林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01150 进入地点强制效果与揭示"
+        }
+      ]
+    },
+    {
+      "code": "01151",
+      "name": "阿卡姆密林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01151 扭曲的道路失败不会移动、揭示目标或弃掉屏障"
+        }
+      ]
+    },
+    {
+      "code": "01152",
+      "name": "阿卡姆密林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01152 密林替代调查属性"
+        }
+      ]
+    },
+    {
+      "code": "01153",
+      "name": "阿卡姆密林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01153 密林替代调查属性"
+        }
+      ]
+    },
+    {
+      "code": "01154",
+      "name": "阿卡姆密林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01154 密林替代调查属性"
+        }
+      ]
+    },
+    {
+      "code": "01155",
+      "name": "阿卡姆密林",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/p6-content.test.mjs",
+          "test": "P6 01155 静谧空地按调查员每回合独立限次"
+        }
+      ]
+    },
+    {
+      "code": "01156",
+      "name": "仪式地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01156 仪式地轮末补足每人两个线索但不减少已有线索"
+        }
+      ]
+    },
+    {
+      "code": "01157",
+      "name": "乌默尔多斯",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01157 umordhoth 实际抽取、生成、属性和在场归属"
+        }
+      ]
+    },
+    {
+      "code": "01158",
+      "name": "乌默尔多斯的愤怒",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01158 umordhothsWrath 失败结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01158 umordhothsWrath 成功结算"
+        }
+      ]
+    },
+    {
+      "code": "01159",
+      "name": "鼠群",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01159 swarmOfRats 实际抽取、生成、属性和在场归属"
+        }
+      ]
+    },
+    {
+      "code": "01160",
+      "name": "食尸鬼爪牙",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01160 ghoulMinion 实际抽取、生成、属性和在场归属"
+        }
+      ]
+    },
+    {
+      "code": "01161",
+      "name": "饥饿的食尸鬼",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01161 ravenousGhoul 实际抽取、生成、属性和在场归属"
+        }
+      ]
+    },
+    {
+      "code": "01162",
+      "name": "攫噬之手",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01162 graspingHands 失败结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01162 graspingHands 成功结算"
+        }
+      ]
+    },
+    {
+      "code": "01163",
+      "name": "腐烂的尸体",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01163 rottingRemains 失败结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01163 rottingRemains 成功结算"
+        }
+      ]
+    },
+    {
+      "code": "01164",
+      "name": "呆若木鸡",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
+          "test": "Core 01164 呆若木鸡在个人回合结束检定，不推迟到整备阶段"
+        }
+      ]
+    },
+    {
+      "code": "01165",
+      "name": "刺耳之声",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
+          "test": "Core 01165 不谐之声阻止支援和事件，轮末弃掉后恢复打牌"
+        }
+      ]
+    },
+    {
+      "code": "01166",
+      "name": "远古恶魔",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
+          "test": "Core 01166 远古恶魔达到阈值时立即推进议程并清除毁灭"
+        }
+      ]
+    },
+    {
+      "code": "01167",
+      "name": "地窖寒风",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01167 cryptChill 失败结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01167 cryptChill 成功结算"
+        }
+      ]
+    },
+    {
+      "code": "01168",
+      "name": "朦胧之雾",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01168 朦胧之雾不能叠加，成功夜盗也会移除并触发米兰"
+        }
+      ]
+    },
+    {
+      "code": "01169",
+      "name": "祭司",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01169 01170 无空地点则弃置，有敌人的地点不算空地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01169 acolyte 实际抽取、生成、属性和在场归属"
+        }
+      ]
+    },
+    {
+      "code": "01170",
+      "name": "密会巫师",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01169 01170 无空地点则弃置，有敌人的地点不算空地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01170 01179 密会巫师神话结束放毁灭，黑山羊幼崽轮末治疗"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01170 wizardOfTheOrder 实际抽取、生成、属性和在场归属"
+        }
+      ]
+    },
+    {
+      "code": "01171",
+      "name": "神秘咏唱",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01171 神秘咏唱按路径选择最近异教徒且不会立即推进议程"
+        }
+      ]
+    },
+    {
+      "code": "01172",
+      "name": "狩猎中的夜魇",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01172 huntingNightgaunt 实际抽取、生成、属性和在场归属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01172 夜魇使负数标记翻倍，但正数不变"
+        }
+      ]
+    },
+    {
+      "code": "01173",
+      "name": "乘着黑暗之翼",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/scenario-n4b.test.mjs",
+          "test": "N4.3 乘着黑暗之翼失败后解除非夜魇交战并移动到中心地点"
+        }
+      ]
+    },
+    {
+      "code": "01174",
+      "name": "上锁的门",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
+          "test": "Core 01174 上锁的门阻止调查，破门失败保留、成功才弃置"
+        },
+        {
+          "file": "games/arkhamhorror/tests/scenario-n4b.test.mjs",
+          "test": "N4.3 上锁的门附属到线索最多且未上锁的地点"
+        }
+      ]
+    },
+    {
+      "code": "01175",
+      "name": "尖叫的拜亚基",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01175 screechingByakhee 实际抽取、生成、属性和在场归属"
+        }
+      ]
+    },
+    {
+      "code": "01176",
+      "name": "黄色印记",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/notz-n4.test.mjs",
+          "test": "N4 黄衣之印失败受到恐惧并显式搜索抽取疯狂弱点，恢复不会重复恐惧"
+        }
+      ]
+    },
+    {
+      "code": "01177",
+      "name": "伊斯观测者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01177 yithianObserver 实际抽取、生成、属性和在场归属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01177 伊斯观察者攻击弃随机牌，无牌则增加伤害和恐惧"
+        }
+      ]
+    },
+    {
+      "code": "01178",
+      "name": "提供力量",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01178 力量交易两个分支只结算选定效果"
+        }
+      ]
+    },
+    {
+      "code": "01179",
+      "name": "坚韧的黑山羊幼崽",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01170 01179 密会巫师神话结束放毁灭，黑山羊幼崽轮末治疗"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01179 relentlessDarkYoung 实际抽取、生成、属性和在场归属"
+        }
+      ]
+    },
+    {
+      "code": "01180",
+      "name": "黑山羊眷族",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01180 goatSpawn 实际抽取、生成、属性和在场归属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01180 羊羔被击败先强制全地点恐惧，再开启击败反应"
+        }
+      ]
+    },
+    {
+      "code": "01181",
+      "name": "年幼的深潜者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
+          "test": "Core 01181 youngDeepOne 实际抽取、生成、属性和在场归属"
+        }
+      ]
+    },
+    {
+      "code": "01182",
+      "name": "拉莱耶之梦",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/notz-n4.test.mjs",
+          "test": "N4 克苏鲁梦境降低意志与神智，同地点队友可检定移除而远处队友不行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/notz-n4.test.mjs",
+          "test": "N4 梦境显现降低神智至已有恐惧时立即败退，不必再受恐惧"
+        }
+      ]
+    }
+  ]
+}

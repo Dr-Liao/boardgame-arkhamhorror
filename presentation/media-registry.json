@@ -1,0 +1,99 @@
+{
+ "exclusions": [
+  {
+   "decision": "not-copied",
+   "reason": "参考源未声明图片再分发许可，仅迁移解析规则，卡背等通用图改用文字／CSS 回退",
+   "scope": "frontend/public/img/**"
+  },
+  {
+   "decision": "not-copied",
+   "reason": "字体无许可声明，界面使用系统字体栈，不影响卡牌可读性",
+   "scope": "frontend/public/fonts/**"
+  },
+  {
+   "decision": "not-copied",
+   "licenses": [
+    {
+     "evidence": "frontend/public/audio/LICENSE-Kenney-impact-sounds.txt",
+     "path": "frontend/public/audio/impactPunch_heavy_000.ogg",
+     "status": "source-declares-CC0"
+    },
+    {
+     "evidence": "frontend/public/audio/LICENSE-Ylmir-rain.txt",
+     "path": "frontend/public/audio/rain.ogg",
+     "status": "source-declares-CC0"
+    },
+    {
+     "evidence": "frontend/public/audio/GENERATED-AUDIO.txt",
+     "path": "frontend/public/audio/turnIndicator.ogg",
+     "status": "source-declares-generated"
+    }
+   ],
+   "reason": "两份 CC0 与一份生成声明已登记，但 N2 没有音频功能需求，不为凑数量复制",
+   "scope": "frontend/public/audio/**"
+  }
+ ],
+ "generatedFrom": {
+  "directories": [
+   "frontend/public/img/arkham",
+   "frontend/public/img/icons",
+   "frontend/public/fonts",
+   "frontend/public/audio"
+  ],
+  "referenceRoot": "参考资源/ArkhamHorror-main"
+ },
+ "genericBacks": {
+  "files": [
+   "backs/back_encounter.webp",
+   "backs/back_player.webp"
+  ],
+  "handling": "remote-candidate-or-text-fallback",
+  "licenseStatus": [
+   "undeclared"
+  ],
+  "localCopy": false
+ },
+ "localCopies": [],
+ "referenceLocalFiles": {
+  "byDirectory": {
+   "frontend/public/audio": 6,
+   "frontend/public/fonts": 20,
+   "frontend/public/img/arkham": 8,
+   "frontend/public/img/arkham/backs": 6,
+   "frontend/public/img/arkham/campaigns/the-dream-eaters": 2,
+   "frontend/public/img/arkham/chaos-tokens": 22,
+   "frontend/public/img/arkham/classes": 2,
+   "frontend/public/img/arkham/connections": 15,
+   "frontend/public/img/arkham/extra/edge-of-the-earth/seals": 10,
+   "frontend/public/img/arkham/extra/fortune-and-folly": 3,
+   "frontend/public/img/arkham/extra/fortune-and-folly/playing-cards": 44,
+   "frontend/public/img/arkham/extra/the-blob-that-ate-everything": 1,
+   "frontend/public/img/arkham/extra/the-circle-undone": 2,
+   "frontend/public/img/arkham/extra/the-drowned-city": 2,
+   "frontend/public/img/arkham/extra/the-drowned-city/runes": 26,
+   "frontend/public/img/arkham/extra/the-feast-of-hemlock-vale": 2,
+   "frontend/public/img/arkham/extra/the-innsmouth-conspiracy/keys": 8,
+   "frontend/public/img/arkham/extra/the-scarlet-keys": 1,
+   "frontend/public/img/arkham/extra/war-of-the-outer-gods/arrows": 7,
+   "frontend/public/img/arkham/fleurs": 9,
+   "frontend/public/img/arkham/homebrew": 1,
+   "frontend/public/img/arkham/icons": 6,
+   "frontend/public/img/arkham/lola": 1,
+   "frontend/public/img/arkham/slots": 9,
+   "frontend/public/img/arkham/tokens": 8,
+   "frontend/public/img/arkham/ui": 1,
+   "frontend/public/img/arkham/unused": 1,
+   "frontend/public/img/icons": 7
+  },
+  "note": "仅统计上列目录；N0 的 299 个图片口径还包含自制扩展与其他位置，两者不可混用",
+  "total": 230
+ },
+ "remoteManifest": {
+  "cardArtEntries": 8174,
+  "directories": 44,
+  "entries": 30895,
+  "note": "远程清单路径不等于本地文件，也未验证可达性；不计入离线可用数",
+  "path": "frontend/image-manifest.json",
+  "sha256": "f7ec4c7e2251a7f3ddfc0b0a9114d5a98d5a3ca2e599c3f3fd05138eff8ce285"
+ }
+}

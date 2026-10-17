@@ -1,0 +1,3 @@
+Copied without modification from the bundled reference:
+参考资源/ArkhamHorror-main/frontend/public/img/arkham/chaos-tokens/
+Original Arkham Horror game token artwork; local presentation assets.

@@ -1,0 +1,244 @@
+/* 局势弹窗：调查档案风格。复用牌桌的黄铜标记、混乱袋、牌背与调查地图素材。 */
+.ah-situ-backdrop { z-index: 38; padding: 18px; background: #020806b8; backdrop-filter: blur(3px); }
+.ah-situ-modal {
+  position: relative; box-sizing: border-box; width: min(1120px,100%); max-height: calc(100dvh - 36px); overflow: auto;
+  padding: 22px 26px 26px; border: 1px solid #b09658; border-radius: 6px; color: #e7d6af;
+  background: radial-gradient(ellipse at 50% 0%,#2a4739eb 0%,#12251ef2 55%,#09140ffa 100%), url('./img/ui/investigation-map.webp') center / cover;
+  box-shadow: 0 24px 90px #000c, inset 0 0 0 4px #b0965812; font-family: Georgia,'Noto Serif SC','Microsoft YaHei',serif;
+  scrollbar-color: #a78d58 #10231d; scrollbar-width: thin;
+}
+.ah-situ-modal * { box-sizing: border-box; }
+.ah-situ-modal button { font: inherit; }
+.ah-situ-modal button:focus-visible, .ah-situ-modal summary:focus-visible { outline: 2px solid #eed38b; outline-offset: 3px; }
+.ah-situ-modal .ah-table-art .ah-art { display: block; min-height: 0; aspect-ratio: auto; }
+.ah-situ-modal .ah-table-art .ah-art img { width: 100%; height: 100%; min-height: 0; max-height: none; object-fit: cover; }
+.ah-situ-modal .ah-table-art .ah-art img[hidden] { display: none; }
+.ah-situ-modal .ah-table-art:not([data-image-state='displayable']) > .ah-table-art-fallback { z-index: 2; background: #172723; }
+
+/* 档案抬头：回合数刻在黄铜徽章上 */
+.ah-situ-head { display: flex; align-items: center; gap: 18px; padding-bottom: 16px; border-bottom: 1px solid #b59b5b44; }
+.ah-situ-round { flex: none; width: 84px; height: 84px; display: grid; place-content: center; text-align: center; background: url('./img/ui/brass-token.webp') center / contain no-repeat; filter: drop-shadow(0 6px 8px #0009); }
+.ah-situ-round small { font-size: 10px; letter-spacing: 3px; color: #c9b47e; }
+.ah-situ-round strong { font: 700 30px/1 Georgia,serif; color: #f6e2a8; text-shadow: 0 2px 6px #000; }
+.ah-situ-title { flex: 1; min-width: 0; }
+.ah-situ-title small { color: #b8a477; font-size: 10px; letter-spacing: 3px; }
+.ah-situ-title h2 { margin: 4px 0 6px; font: 500 28px/1.2 'Noto Serif SC',SimSun,serif; letter-spacing: 3px; color: #f0dcaa; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ah-situ-title p { margin: 0; font-size: 13px; color: #b5bda5; }
+.ah-situ-close { align-self: flex-start; flex: none; border: 1px solid #a58c5666; border-radius: 4px; background: #152b23; color: #e7d6af; padding: 7px 14px; cursor: pointer; }
+.ah-situ-close:hover { border-color: #ddc68d; background: #20372e; }
+.ah-situ-sync { margin: 14px 0 0; padding: 8px 12px; border-left: 3px solid #9fbf86; background: #2c4a3266; color: #cfe0bd; font: 12px 'Microsoft YaHei',sans-serif; }
+.ah-situ-alert { display: flex; align-items: center; gap: 12px; margin-top: 14px; padding: 10px 14px; border: 1px solid #d6b26a88; border-radius: 4px; background: linear-gradient(90deg,#5a4520b3,#2a2a1a66); color: #f2dba3; font-size: 13px; }
+.ah-situ-alert > .ah-icon { width: 24px; height: 24px; color: #ffd98a; }
+.ah-situ-alert > span { flex: 1; min-width: 0; }
+.ah-situ-alert strong { margin-right: 8px; letter-spacing: 2px; color: #ffe7a8; }
+.ah-situ-alert button { flex: none; padding: 6px 14px; border: 1px solid #e8c77d; border-radius: 3px; background: linear-gradient(#8b7139,#554522); color: #fff2c3; cursor: pointer; }
+
+/* 面板：内嵌细框模拟档案卡 */
+.ah-situ-modal .ah-situ-panel { position: relative; display: block; margin-top: 16px; padding: 16px 18px; border: 1px solid #b59b5b40; border-radius: 5px; background: linear-gradient(180deg,#0d1f19d9,#081611e6); box-shadow: inset 0 1px #e5ce8c14, 0 6px 18px #0006; font-size: 13px; }
+.ah-situ-modal .ah-situ-panel::before { content: ''; position: absolute; inset: 5px; border: 1px solid #b59b5b1c; border-radius: 3px; pointer-events: none; }
+.ah-situ-panel h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 14px; font: 500 15px/1.3 'Noto Serif SC',SimSun,serif; letter-spacing: 3px; color: #e6cf96; }
+.ah-situ-panel h3 > .ah-icon { width: 16px; height: 16px; color: #cfb57a; }
+.ah-situ-panel h3 small { margin-left: auto; font: 12px 'Microsoft YaHei',sans-serif; letter-spacing: 0; color: #a9b49e; }
+.ah-situ-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.15fr); gap: 16px; }
+.ah-situ-medal { display: grid; place-items: center; width: 56px; height: 56px; background: url('./img/ui/brass-token.webp') center / contain no-repeat; filter: grayscale(.7) brightness(.62) drop-shadow(0 4px 5px #0009); color: #d9caa0; transition: filter .2s, transform .2s; }
+.ah-situ-medal .ah-icon { width: 20px; height: 20px; }
+
+/* 回合流程 */
+.ah-situ-phases { position: relative; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 6px; list-style: none; margin: 0; padding: 0; }
+.ah-situ-phases::before { content: ''; position: absolute; left: 12%; right: 12%; top: 27px; height: 2px; background: linear-gradient(90deg,#b59b5b22,#b59b5b88,#b59b5b22); }
+.ah-situ-phase-step { position: relative; display: grid; justify-items: center; gap: 3px; text-align: center; color: #9aa596; }
+.ah-situ-phase-step strong { font-size: 13px; font-weight: 500; white-space: nowrap; }
+.ah-situ-phase-step small { font: 10px 'Microsoft YaHei',sans-serif; opacity: .75; white-space: nowrap; }
+.ah-situ-phase-step.is-current { color: #f6d996; }
+.ah-situ-phase-step.is-current .ah-situ-medal { filter: drop-shadow(0 0 12px #e7c46f99) drop-shadow(0 4px 6px #000a); transform: scale(1.12); color: #ffe7a8; }
+.ah-situ-phase-step.is-mythos strong { font-family: KaiTi,STKaiti,'楷体',serif; font-size: 14px; letter-spacing: 2px; }
+.ah-situ-phase-step.is-mythos.is-current { color: #d6c2f0; }
+.ah-situ-phase-step.is-mythos.is-current .ah-situ-medal { filter: drop-shadow(0 0 12px #a986d2bb) drop-shadow(0 4px 6px #000a); color: #e8d8ff; }
+.ah-situ-phase-step.is-enemy.is-current { color: #f3a594; }
+.ah-situ-phase-step.is-enemy.is-current .ah-situ-medal { filter: drop-shadow(0 0 12px #cf5849bb) drop-shadow(0 4px 6px #000a); color: #ffc0b0; }
+.ah-situ-acting { display: flex; align-items: center; gap: 12px; margin-top: 16px; padding: 10px 12px; border: 1px solid #d9bd8355; border-radius: 4px; background: linear-gradient(90deg,#3a4a35b3,#14261f66); }
+.ah-situ-acting-portrait { flex: none; width: 46px; height: 54px; overflow: hidden; border: 1px solid #d5ba7a; border-radius: 45% 45% 3px 3px; box-shadow: 0 0 12px #d4b16444; }
+.ah-situ-acting small { display: block; font-size: 10px; letter-spacing: 2px; color: #c0ad81; }
+.ah-situ-acting strong { display: block; margin: 2px 0 4px; font-size: 16px; font-weight: 500; color: #f3e0ae; }
+.ah-situ-acting-note { font-size: 12px; color: #e9c98a; }
+.ah-situ-pips { display: inline-flex; gap: 4px; }
+.ah-situ-pips i { display: grid; place-items: center; width: 24px; height: 24px; background: url('./img/ui/brass-token.webp') center / contain no-repeat; filter: grayscale(1) brightness(.42); color: #d8c9a0; }
+.ah-situ-pips i.is-filled { filter: drop-shadow(0 0 5px #e5c46f88); color: #ffe08f; }
+.ah-situ-pips .ah-icon { width: 11px; height: 11px; }
+.ah-situ-test { margin-top: 14px; }
+.ah-situ-test > small { font-size: 11px; letter-spacing: 1px; color: #c9b681; }
+.ah-situ-test ol { display: grid; grid-template-columns: repeat(8,minmax(0,1fr)); gap: 3px; list-style: none; margin: 8px 0 0; padding: 0; }
+.ah-situ-test li { display: grid; justify-items: center; gap: 2px; color: #7f8b80; font-size: 9px; }
+.ah-situ-test li span { display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid currentColor; border-radius: 50%; font: bold 11px sans-serif; }
+.ah-situ-test li.is-done { color: #a9c19b; }
+.ah-situ-test li.is-current { color: #ffe08f; }
+.ah-situ-test li.is-current span { background: #8b7139; border-color: #ffe7a2; box-shadow: 0 0 8px #ecc66a88; color: #fff6d8; }
+.ah-situ-phase .ah-rules-note { display: block; margin-top: 14px; font: 11px 'Microsoft YaHei',sans-serif; color: #8f9c8f; }
+
+/* 剧本进度：密谋 / 场景卡面与进度刻度 */
+.ah-situ-scenes { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.ah-situ-scene { display: grid; align-content: start; gap: 4px; min-width: 0; }
+.ah-situ-scene-card { display: block; width: 100%; padding: 0; border: 0; background: none; color: #a9b49e; cursor: pointer; transition: transform .2s; }
+.ah-situ-scene-card:hover:not(:disabled) { transform: translateY(-2px); }
+.ah-situ-scene-card:disabled { cursor: default; }
+.ah-situ-scene-card > span { display: grid; place-items: center; aspect-ratio: 88 / 63; border: 1px dashed #b59b5b44; font-size: 12px; }
+.ah-situ-scene-card .ah-table-art { height: auto; aspect-ratio: 88 / 63; border: 1px solid #bba77866; border-radius: 4px; background: #172723; box-shadow: 0 8px 18px #000a; }
+.ah-situ-scene.is-agenda .ah-table-art { transform: rotate(-1.5deg); }
+.ah-situ-scene.is-act .ah-table-art { transform: rotate(1.5deg); }
+.ah-situ-scene-card:hover .ah-table-art { border-color: #e5cb8a; }
+.ah-situ-scene > small { margin-top: 8px; font-size: 10px; letter-spacing: 3px; color: #ad9871; }
+.ah-situ-scene > strong { font-size: 14px; font-weight: 500; color: #eee0bc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ah-situ-progress { display: grid; gap: 5px; margin-top: 2px; font: 12px 'Microsoft YaHei',sans-serif; color: #e3d6b8; }
+.ah-situ-progress > span:first-child { display: flex; align-items: center; gap: 5px; }
+.ah-situ-progress .ah-icon { width: 15px; height: 15px; }
+.ah-situ-progress.is-doom { color: #efb2a2; }
+.ah-situ-progress.is-clue .ah-icon { color: #b2d6ad; }
+.ah-situ-progress.is-ready > span:first-child { color: #d8f0b8; }
+.ah-situ-progress-track { display: flex; flex-wrap: wrap; gap: 3px; }
+.ah-situ-progress-track i { flex: 1 1 0; min-width: 8px; max-width: 22px; height: 7px; border-radius: 2px; background: #ad907030; box-shadow: inset 0 0 0 1px #ad907044; }
+.ah-situ-progress.is-doom .is-filled { background: linear-gradient(#e08f74,#a64f3c); box-shadow: 0 0 6px #d2715a88; }
+.ah-situ-progress.is-clue .is-filled { background: linear-gradient(#bfe0a8,#5f8f55); box-shadow: 0 0 6px #8fc07a88; }
+.ah-situ-supplies { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid #b59b5b30; }
+.ah-situ-bag { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 8px 10px; border: 1px solid transparent; border-radius: 5px; background: #0a1b1666; color: inherit; text-align: left; cursor: pointer; }
+.ah-situ-bag:hover { border-color: #c9ad6166; background: #c9ad6114; }
+.ah-situ-bag > img { flex: none; width: 64px; height: 64px; object-fit: contain; filter: drop-shadow(0 5px 6px #0009); }
+.ah-situ-bag-copy { display: grid; gap: 3px; min-width: 0; }
+.ah-situ-bag-copy strong { font-size: 14px; font-weight: 500; color: #eddaad; }
+.ah-situ-bag-copy small { font: 11px 'Microsoft YaHei',sans-serif; color: #acb39e; }
+.ah-situ-bag-tokens { display: flex; flex-wrap: wrap; gap: 5px 7px; margin-top: 4px; }
+.ah-situ-bag-token { position: relative; width: 28px; height: 28px; flex: none; }
+.ah-situ-bag-token img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 2px 3px #0008); }
+.ah-situ-bag-token b { display: grid; place-items: center; width: 100%; height: 100%; border: 1px solid #bda265; border-radius: 50%; font-size: 10px; }
+.ah-situ-bag-token i { position: absolute; right: -6px; bottom: -4px; padding: 0 3px; border: 1px solid #b99b58; border-radius: 7px; background: #13251e; color: #f3dd9f; font: bold 9px/1.3 sans-serif; }
+.ah-situ-encounter { display: flex; align-items: center; gap: 12px; padding-right: 6px; font-size: 12px; color: #cfbd93; }
+.ah-situ-encounter img { width: 40px; height: 57px; object-fit: cover; border: 1px solid #a69260; border-radius: 3px; transform: rotate(-3deg); box-shadow: 2px 2px #1b2820,3px 3px #a6926080,5px 5px #1b2820,6px 6px #a6926060; }
+.ah-situ-encounter strong { display: block; font-size: 13px; font-weight: 500; }
+.ah-situ-encounter small { font: 11px 'Microsoft YaHei',sans-serif; color: #aebaa6; }
+
+/* 调查队档案 */
+.ah-situ-roster { display: grid; grid-template-columns: repeat(auto-fill,minmax(250px,1fr)); gap: 14px; }
+.ah-situ-inv { position: relative; display: grid; align-content: start; gap: 10px; padding: 12px 12px 12px 16px; overflow: hidden; border: 1px solid #b9ab7a40; border-radius: 5px; background: linear-gradient(160deg,#163026a6,#0a1814eb); transition: border-color .2s, box-shadow .2s; }
+.ah-situ-inv::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--ah-class); opacity: .85; }
+.ah-situ-inv.is-active { border-color: #e4c785; box-shadow: inset 0 2px #ebd59955, 0 0 18px #d4b16430; }
+.ah-situ-inv.is-out { filter: grayscale(.85) brightness(.75); }
+.ah-situ-inv-head { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.ah-situ-portrait { flex: none; width: 52px; height: 60px; padding: 0; overflow: hidden; border: 1px solid #b29d6199; border-radius: 45% 45% 4px 4px; background: #172723; box-shadow: 0 4px 10px #0009; cursor: pointer; }
+.ah-situ-portrait:hover { border-color: #ecd194; }
+.ah-situ-modal .ah-situ-portrait .ah-table-art, .ah-situ-modal .ah-situ-acting-portrait .ah-table-art { width: 100%; height: 100%; border: 0; border-radius: 0; }
+.ah-situ-modal .ah-situ-portrait .ah-art img, .ah-situ-modal .ah-situ-acting-portrait .ah-art img { width: 260%; max-width: none; height: 100%; object-fit: cover; object-position: left center; }
+.ah-situ-inv-id { flex: 1; display: grid; gap: 2px; min-width: 0; }
+.ah-situ-inv-id strong { font: 500 16px/1.25 'Noto Serif SC',SimSun,serif; color: #f0dfb4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ah-situ-inv-id > small { font-size: 11px; color: var(--ah-class); filter: brightness(1.45) saturate(.8); }
+.ah-situ-player { display: flex; align-items: center; gap: 5px; min-width: 0; font: 11px 'Microsoft YaHei',sans-serif; color: #aab3a2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ah-situ-avatar { display: grid; place-items: center; flex: none; width: 18px; height: 18px; overflow: hidden; border: 1px solid #aa987451; border-radius: 50%; background: #22322f; font-size: 11px; }
+.ah-situ-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.ah-situ-ribbon { align-self: flex-start; flex: none; padding: 3px 8px; border: 1px solid #b9ab7a55; border-radius: 2px; background: #0a191acc; color: #c8c9b5; font: 10px 'Microsoft YaHei',sans-serif; letter-spacing: 1px; }
+.ah-situ-inv.is-active .ah-situ-ribbon { border-color: #ffe7a2; background: linear-gradient(#f3d58c,#c79d4d); color: #2b1d08; }
+.ah-situ-inv.is-out .ah-situ-ribbon { border-color: #bf7c6288; color: #f1af94; }
+.ah-situ-inv-loc { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #b7c5b1; }
+.ah-situ-inv-loc .ah-icon { width: 13px; height: 13px; color: #d5ba7a; }
+.ah-situ-meters { display: grid; gap: 6px; }
+.ah-situ-meter { display: grid; grid-template-columns: 54px minmax(0,1fr) 40px; align-items: center; gap: 8px; font-size: 11px; }
+.ah-situ-meter-label { display: flex; align-items: center; gap: 4px; color: #cfc6a8; }
+.ah-situ-meter-label .ah-icon { width: 14px; height: 14px; }
+.ah-situ-meter.is-health .ah-icon { color: #efa895; }
+.ah-situ-meter.is-sanity .ah-icon { color: #b6d6e3; }
+.ah-situ-meter-track { display: flex; gap: 2px; }
+.ah-situ-meter-track i { flex: 1; height: 9px; border-radius: 2px; background: #ffffff10; box-shadow: inset 0 0 0 1px #ffffff14; }
+.ah-situ-meter.is-health .is-filled { background: linear-gradient(#f0a08c,#a2453a); }
+.ah-situ-meter.is-sanity .is-filled { background: linear-gradient(#b6d6e3,#3f6f8f); }
+.ah-situ-meter strong { text-align: right; font: bold 12px sans-serif; font-variant-numeric: tabular-nums; color: #eadfc0; }
+.ah-situ-meter.is-low strong { color: #ff9f8a; }
+.ah-situ-tokens { display: flex; flex-wrap: wrap; gap: 10px; }
+.ah-situ-token { display: grid; justify-items: center; gap: 3px; min-width: 46px; }
+.ah-situ-token-face { display: flex; align-items: center; justify-content: center; gap: 3px; width: 46px; height: 46px; background: url('./img/ui/brass-token.webp') center / contain no-repeat; filter: drop-shadow(0 3px 4px #0008); color: #efe0b6; }
+.ah-situ-token-face .ah-icon { width: 13px; height: 13px; }
+.ah-situ-token-face strong { font: bold 15px sans-serif; font-variant-numeric: tabular-nums; }
+.ah-situ-token small { font: 10px 'Microsoft YaHei',sans-serif; color: #b8b5a0; white-space: nowrap; }
+.ah-situ-token.is-resource .ah-icon { color: #e7c47a; }
+.ah-situ-token.is-clue .ah-icon { color: #b2d6ad; }
+.ah-situ-token.is-action .ah-icon, .ah-situ-token.is-xp .ah-icon { color: #ffe08f; }
+.ah-situ-token.is-victory .ah-icon, .ah-situ-token.is-victory-now .ah-icon { color: #cfdfa9; }
+.ah-situ-skills { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 5px; }
+.ah-situ-skill { display: grid; grid-template-columns: auto auto; justify-content: center; align-items: center; column-gap: 5px; padding: 5px 2px; border: 1px solid #b59b5b33; border-radius: 3px; background: #08161280; }
+.ah-situ-skill .ah-rule-symbol { margin: 0; font-size: 17px; color: #d8c08a; }
+.ah-situ-skill[data-skill='willpower'] .ah-rule-symbol { color: #a9b9ec; }
+.ah-situ-skill[data-skill='intellect'] .ah-rule-symbol { color: #ecc178; }
+.ah-situ-skill[data-skill='combat'] .ah-rule-symbol { color: #f09b88; }
+.ah-situ-skill[data-skill='agility'] .ah-rule-symbol { color: #9fd59a; }
+.ah-situ-skill b { font: bold 16px sans-serif; color: #f3e3b8; }
+.ah-situ-skill small { grid-column: 1 / -1; text-align: center; font-size: 9px; color: #9faa98; }
+.ah-situ-decks { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; padding-top: 9px; border-top: 1px solid #b59b5b26; }
+.ah-situ-deck, .ah-situ-hand { display: flex; align-items: center; gap: 9px; min-width: 0; font-size: 11px; }
+.ah-situ-deck > img { flex: none; width: 26px; height: 37px; object-fit: cover; border: 1px solid #b9a678; border-radius: 2px; transform: rotate(4deg); box-shadow: 2px 2px #23362c,3px 3px #baa778,5px 5px #17261e; }
+.ah-situ-decks b { display: block; font-weight: 500; color: #e5d6b6; white-space: nowrap; }
+.ah-situ-decks small { display: block; font-size: 10px; color: #98a594; }
+.ah-situ-fan { position: relative; flex: none; width: 42px; height: 38px; }
+.ah-situ-fan img { position: absolute; left: 10px; bottom: 0; width: 22px; height: 32px; object-fit: cover; border: 1px solid #b9a678; border-radius: 2px; box-shadow: 0 2px 4px #0008; transform-origin: 50% 100%; }
+.ah-situ-fan img:nth-child(1) { transform: rotate(-24deg); }
+.ah-situ-fan img:nth-child(2) { transform: rotate(-12deg); }
+.ah-situ-fan img:nth-child(4) { transform: rotate(12deg); }
+.ah-situ-fan img:nth-child(5) { transform: rotate(24deg); }
+.ah-situ-engaged { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border-left: 3px solid #c97d65; background: #5c342c55; color: #f3b5a2; font-size: 11px; }
+.ah-situ-engaged .ah-icon { width: 14px; height: 14px; }
+.ah-situ-trauma { padding: 4px 8px; border-left: 3px solid #a2453a; background: #40191855; color: #ffb3bc; font-size: 11px; }
+
+/* 战役进度 */
+.ah-situ-modal .ah-campaign-scenario { margin: -6px 0 14px; font-size: 13px; color: #cbd2bd; }
+.ah-campaign-track { display: flex; list-style: none; margin: 0 0 14px; padding: 0; }
+.ah-campaign-track li { position: relative; flex: 1; display: grid; justify-items: center; gap: 4px; color: #8f9b8c; font-size: 11px; }
+.ah-campaign-track li + li::before { content: ''; position: absolute; top: 21px; left: calc(-50% + 26px); right: calc(50% + 26px); height: 2px; background: #b59b5b40; }
+.ah-campaign-track li.is-done::before, .ah-campaign-track li.is-current::before { background: #d9bd83; }
+.ah-campaign-track .ah-situ-medal { width: 44px; height: 44px; font: bold 16px Georgia,serif; }
+.ah-campaign-track li.is-done .ah-situ-medal { filter: drop-shadow(0 3px 4px #0009); color: #f3e0ae; }
+.ah-campaign-track li.is-current .ah-situ-medal { filter: drop-shadow(0 0 10px #e7c46f99) drop-shadow(0 3px 4px #000a); color: #ffe7a8; transform: scale(1.1); }
+.ah-campaign-track li.is-done small { color: #c9d6b8; }
+.ah-campaign-track li.is-current small { color: #f2d695; }
+.ah-situ-modal .ah-campaign-panel .ah-situ-tokens { gap: 18px; }
+.ah-campaign-outcome { margin-top: 12px; padding: 8px 12px; border: 1px solid #92b27b66; background: #27453099; color: #d6e6c2; letter-spacing: 3px; text-align: center; }
+.ah-campaign-outcome.is-defeat { border-color: #bf7c6288; background: #40191899; color: #f1af94; }
+.ah-campaign-resolution { margin: 10px 0 0; color: #e6cf96; }
+.ah-campaign-note { margin: 12px 0 0; padding: 8px 12px; border-left: 3px solid #d1a56b; background: #91653325; color: #f2d09f; font-size: 12px; line-height: 1.7; }
+.ah-campaign-records { display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 8px; list-style: none; margin: 14px 0 0; padding: 0; }
+.ah-campaign-records li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding: 8px 10px; border: 1px solid #b59b5b33; border-radius: 3px; background: #08161280; font-size: 12px; }
+.ah-campaign-records strong { font-weight: 500; color: #eddaad; }
+.ah-campaign-xp { font-family: 'Microsoft YaHei',sans-serif; color: #ffe08f; }
+.ah-campaign-records small { flex-basis: 100%; order: 3; font-size: 10px; color: #ffb3bc; }
+.ah-campaign-status { margin-left: auto; padding: 1px 7px; border: 1px solid #9fbf8666; border-radius: 2px; color: #cfe0bd; font-size: 10px; }
+.ah-campaign-records .is-killed .ah-campaign-status, .ah-campaign-records .is-insane .ah-campaign-status { border-color: #bf7c6288; color: #f1af94; }
+.ah-campaign-result { margin-top: 8px; padding: 6px 10px; border: 1px solid #b59b5b26; border-radius: 3px; background: #08161266; font-size: 12px; color: #cbd2bd; }
+.ah-campaign-result summary { cursor: pointer; color: #e6cf96; }
+.ah-campaign-result div { margin-top: 4px; padding-left: 12px; font-size: 11px; color: #aebaa6; }
+
+/* 剧情卡 */
+.ah-situ-story-cards { display: flex; flex-wrap: wrap; gap: 14px; }
+.ah-situ-story-card { display: grid; gap: 5px; width: 86px; padding: 0; border: 0; background: none; color: #d8cba6; font-size: 11px; text-align: center; cursor: pointer; }
+.ah-situ-story-card .ah-table-art { height: 120px; border: 1px solid #bba77866; border-radius: 4px; box-shadow: 0 6px 12px #0009; transition: transform .2s; }
+.ah-situ-story-card:hover .ah-table-art { transform: translateY(-2px); border-color: #e5cb8a; }
+
+@media (max-width: 860px) {
+  .ah-situ-grid { grid-template-columns: minmax(0,1fr); gap: 0; }
+}
+@media (max-width: 560px) {
+  .ah-situ-backdrop { padding: 8px; }
+  .ah-situ-modal { max-height: calc(100dvh - 16px); padding: 14px; }
+  .ah-situ-head { gap: 10px; padding-bottom: 12px; }
+  .ah-situ-round { width: 58px; height: 58px; }
+  .ah-situ-round small { font-size: 8px; letter-spacing: 1px; }
+  .ah-situ-round strong { font-size: 22px; }
+  .ah-situ-title h2 { font-size: 20px; letter-spacing: 1px; }
+  .ah-situ-title p { font-size: 11px; }
+  .ah-situ-modal .ah-situ-panel { padding: 12px; }
+  .ah-situ-medal { width: 42px; height: 42px; }
+  .ah-situ-medal .ah-icon { width: 16px; height: 16px; }
+  .ah-situ-phases::before { top: 20px; }
+  .ah-situ-phase-step strong { font-size: 11px; }
+  .ah-situ-phase-step small { display: none; }
+  .ah-situ-scenes { gap: 10px; }
+  .ah-situ-supplies { grid-template-columns: minmax(0,1fr); }
+  .ah-situ-roster { grid-template-columns: minmax(0,1fr); }
+  .ah-situ-alert { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ah-situ-medal, .ah-situ-scene-card, .ah-situ-inv, .ah-situ-story-card .ah-table-art { transition: none; }
+}

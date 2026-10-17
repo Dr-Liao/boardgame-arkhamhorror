@@ -1,0 +1,5413 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "id": "original-carcosa-cycle-all-cards-2026-10",
+    "scope": "卡尔克萨之路原始循环七个卡包共383条目录记录，包含20条调查员及专属记录、95张玩家卡和268条战役卡面。",
+    "basis": "逐卡运行测试、严格卡面字面行为测试、既有C1/C2验收账本、八章确定性布置与存档回放，以及M4 Hidden专项规则验证；只有具备运行证据的卡标记已验收。",
+    "pendingPolicy": "仅登记卡文、目录、章节归属、rulesPending或源码卡号引用不构成通过；缺少完整费用、时机、目标、区位、分支或离场路径的卡保持待实现。",
+    "availability": "战役与战役卡包继续保持 catalog-only，逐卡标记不开放生产战役。",
+    "inheritedProfiles": [
+      "original-carcosa-investigators-2026-10",
+      "original-carcosa-player-cycle-2026-10"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 383,
+    "verified": 383,
+    "pending": 0,
+    "investigator": 20,
+    "player": 95,
+    "campaign": 268,
+    "testsPassed": 418
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+      "sha256": "5c94424765bd52d41620c9766e85b4e22a6078a1357dbbf82835e5afad20ae10"
+    },
+    {
+      "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+      "sha256": "22d91ecc34246bbb5c16d38fcc19c4c65d9a97661308d867179d900d938c365c"
+    },
+    {
+      "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+      "sha256": "94d9c754770f3aab26d7f40132429ba82283f6a10261bba07eea065126e14c3b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/carcosa-literal-behavior.test.mjs",
+      "sha256": "e1c0a9d00ce3725f76efcd4a14972c19a8e6d21c4896f8fcefd2c0bc5136bf34"
+    },
+    {
+      "file": "games/arkhamhorror/tests/carcosa-pending-encounters.test.mjs",
+      "sha256": "1dfcb5eda83db2843b704d30b2ab86e6d0848514ef98a8d8203ffbd664db2c7a"
+    }
+  ],
+  "entries": [
+    {
+      "code": "03001",
+      "name": "马克·哈里根",
+      "type": "investigator",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03002",
+      "name": "潘明",
+      "type": "investigator",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03003",
+      "name": "赛菲娜·卢梭",
+      "type": "investigator",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03004",
+      "name": "阿喀琦·奥耶莉",
+      "type": "investigator",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03005",
+      "name": "威廉·约里克",
+      "type": "investigator",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03006",
+      "name": "萝拉·海耶斯",
+      "type": "investigator",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03007",
+      "name": "保卫后方",
+      "type": "skill",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03008",
+      "name": "炮弹休克",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03009",
+      "name": "索菲",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03009b",
+      "name": "索菲",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03010",
+      "name": "缜密分析",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03011",
+      "name": "黄衣之王",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03012",
+      "name": "画中世界",
+      "type": "event",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03013",
+      "name": "毕宿星团",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03014",
+      "name": "灵言者",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03015",
+      "name": "怒灵",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03016",
+      "name": "挖土深埋",
+      "type": "event",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03017",
+      "name": "墓地食尸鬼",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03018",
+      "name": "即兴表演",
+      "type": "event",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03019",
+      "name": "身份危机",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+          "test": "C1 调查员、专属卡与弱点验收（original-carcosa-investigators-2026-10）"
+        }
+      ]
+    },
+    {
+      "code": "03020",
+      "name": ".32柯尔特手枪",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03020 .32柯尔特手枪 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03021",
+      "name": "勇气过人",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03021 勇气过人 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03022",
+      "name": "“放着我来！”",
+      "type": "event",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03022 “放着我来！” 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03023",
+      "name": "时刻警惕",
+      "type": "event",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03023 时刻警惕 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03024",
+      "name": "实地调查",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03024 实地调查 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03025",
+      "name": "古代雕文",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03025 古代雕文 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03026",
+      "name": "殚精竭虑",
+      "type": "event",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03026 殚精竭虑 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03027",
+      "name": "掌握内幕",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03027 掌握内幕 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03028",
+      "name": "潜行",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03028 潜行 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03029",
+      "name": "障眼戏法",
+      "type": "event",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03029 障眼戏法 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03030",
+      "name": "艺高胆大",
+      "type": "event",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03030 艺高胆大 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03031",
+      "name": "撬锁工具",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03031 撬锁工具 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03032",
+      "name": "炼金转化",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03032 炼金转化 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03033",
+      "name": "解锢灵魂",
+      "type": "event",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03033 解锢灵魂 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03034",
+      "name": "星界旅行",
+      "type": "event",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03034 星界旅行 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03035",
+      "name": "灵力祭祀刀",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03035 灵力祭祀刀 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03036",
+      "name": "提灯",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03036 提灯 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03037",
+      "name": "挖墓人的铲子",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03037 挖墓人的铲子 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03038",
+      "name": "藏身地点",
+      "type": "event",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03038 藏身地点 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03039",
+      "name": "急中生智",
+      "type": "skill",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03039 急中生智 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03040",
+      "name": "头脑发热",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03040 头脑发热 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03041",
+      "name": "涂绘印记",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03041 涂绘印记 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03042",
+      "name": "随行鬼影",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03042 随行鬼影 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03043",
+      "name": "谢幕",
+      "type": "scenario",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03043 已验收 · scenario 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03044",
+      "name": "第三幕",
+      "type": "agenda",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03044 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03045",
+      "name": "加演曲目",
+      "type": "agenda",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03045 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03046",
+      "name": "惊醒",
+      "type": "act",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03046 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03047a",
+      "name": "陌生人",
+      "type": "act",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03047a 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03047b",
+      "name": "陌生人",
+      "type": "act",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03047b 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03047c",
+      "name": "陌生人",
+      "type": "act",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03047c 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03048",
+      "name": "谢幕",
+      "type": "act",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03048 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03049",
+      "name": "剧院",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03049 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03050",
+      "name": "前厅",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03050 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03051",
+      "name": "楼座",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03051 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03052",
+      "name": "后台",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03052 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03053",
+      "name": "照明室",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03053 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03054",
+      "name": "售票处",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03054 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03055",
+      "name": "演员休息室",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03055 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03056",
+      "name": "化妆室",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03056 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03057",
+      "name": "排练厅",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03057 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03058",
+      "name": "机关室",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03058 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03059",
+      "name": "苍白面具下的男子",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03059 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03060",
+      "name": "皇家密使",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03060 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03061",
+      "name": "最后的王者",
+      "type": "scenario",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03061 已验收 · scenario 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03062",
+      "name": "礼节性迟到",
+      "type": "agenda",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03062 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03063",
+      "name": "可怕的真相",
+      "type": "agenda",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03063 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03064",
+      "name": "发掘真相",
+      "type": "act",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03064 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03065",
+      "name": "令人作呕的现实",
+      "type": "story",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03065 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03065b",
+      "name": "康斯坦丝·杜梅因",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03065b 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03066",
+      "name": "令人作呕的现实",
+      "type": "story",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03066 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03066b",
+      "name": "乔丹·佩里",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03066b 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03067",
+      "name": "令人作呕的现实",
+      "type": "story",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03067 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03067b",
+      "name": "石丸春子",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03067b 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03068",
+      "name": "令人作呕的现实",
+      "type": "story",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03068 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03068b",
+      "name": "塞巴斯蒂安·莫罗",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03068b 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03069",
+      "name": "令人作呕的现实",
+      "type": "story",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03069 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03069b",
+      "name": "阿什莉·克拉克",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03069b 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03070",
+      "name": "门厅",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03070 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03071",
+      "name": "舞厅",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03071 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03072",
+      "name": "客厅",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03072 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03073",
+      "name": "画廊",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03073 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03074",
+      "name": "庭院",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03074 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03075",
+      "name": "餐厅",
+      "type": "location",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03075 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03076a",
+      "name": "康斯坦丝·杜梅因",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03076a 已验收 · asset 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03076b",
+      "name": "英格兰姆的誓约",
+      "type": "story",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03076b 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03077",
+      "name": "乔丹·佩里",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03077 已验收 · asset 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03077b",
+      "name": "迷途羔羊",
+      "type": "story",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03077b 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03078",
+      "name": "石丸春子",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03078 已验收 · asset 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03078b",
+      "name": "奇怪图案",
+      "type": "story",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03078b 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03079",
+      "name": "塞巴斯蒂安·莫罗",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03079 已验收 · asset 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03079b",
+      "name": "首场演出",
+      "type": "story",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03079b 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03080",
+      "name": "阿什莉·克拉克",
+      "type": "asset",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03080 已验收 · asset 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03080b",
+      "name": "天开浪破",
+      "type": "story",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03080b 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03081",
+      "name": "黛安娜·迪瓦恩",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03081 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03082",
+      "name": "正式晚宴",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03082 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03083",
+      "name": "难缠的客人",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03083 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03084a",
+      "name": "脑海中的低语",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03084a 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03084b",
+      "name": "脑海中的低语",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03084b 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03084c",
+      "name": "脑海中的低语",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03084c 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03084d",
+      "name": "脑海中的低语",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03084d 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03085",
+      "name": "深陷疯狂",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03085 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03086",
+      "name": "迅捷的拜亚基",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03086 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03087",
+      "name": "拜亚基的猎杀",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03087 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03088",
+      "name": "毕宿五的野兽",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03088 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03089",
+      "name": "哈利湖水怪",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03089 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03090",
+      "name": "黑星升起",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03090 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03091",
+      "name": "卡尔克萨尖柱",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03091 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03092",
+      "name": "邪念扭曲",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03092 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03093",
+      "name": "骚灵",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03093 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03094",
+      "name": "恶灵作祟",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03094 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03095",
+      "name": "见印者",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03095 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03096",
+      "name": "哈斯塔的傀儡",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03096 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03097",
+      "name": "黄衣之王之舞",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03097 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03098",
+      "name": "狂徒",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03098 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03099",
+      "name": "王之特使",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03099 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03100",
+      "name": "王之法令",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03100 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03101",
+      "name": "淤泥与污物",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03101 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03102",
+      "name": "锈蚀",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03102 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03103",
+      "name": "蟑螂群",
+      "type": "enemy",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03103 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03104",
+      "name": "印记之痕",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03104 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03105",
+      "name": "苍白面具的呼唤",
+      "type": "treachery",
+      "pack": "ptc",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03105 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03106",
+      "name": "英勇救援",
+      "type": "event",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03106 英勇救援 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03107",
+      "name": "战斗训练",
+      "type": "asset",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03107 战斗训练 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03108",
+      "name": "解剖图表",
+      "type": "event",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03108 解剖图表 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03109",
+      "name": "科学理论",
+      "type": "asset",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03109 科学理论 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03110",
+      "name": "指节铜环",
+      "type": "asset",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03110 指节铜环 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03111",
+      "name": "刚毅果敢",
+      "type": "asset",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03111 刚毅果敢 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03112",
+      "name": "大卫·伦费尔德",
+      "type": "asset",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03112 大卫·伦费尔德 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03113",
+      "name": "情绪稳定",
+      "type": "asset",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03113 情绪稳定 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03114",
+      "name": "珍爱纪念",
+      "type": "asset",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03114 珍爱纪念 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03115",
+      "name": "有胆有识",
+      "type": "asset",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03115 有胆有识 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03116",
+      "name": "临危祷告",
+      "type": "skill",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03116 临危祷告 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03117",
+      "name": "冥思苦想",
+      "type": "skill",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03117 冥思苦想 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03118",
+      "name": "拼死出击",
+      "type": "skill",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03118 拼死出击 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03119",
+      "name": "绝命奔逃",
+      "type": "skill",
+      "pack": "eotp",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03119 绝命奔逃 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03120",
+      "name": "往事回声",
+      "type": "scenario",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03120 已验收 · scenario 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03121",
+      "name": "埋藏的真相",
+      "type": "agenda",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03121 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03122",
+      "name": "洗劫宅邸",
+      "type": "agenda",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03122 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03123",
+      "name": "不能揭开的秘密",
+      "type": "agenda",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03123 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03124",
+      "name": "追寻答案",
+      "type": "act",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03124 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03125",
+      "name": "昔日恶果",
+      "type": "act",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03125 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03126",
+      "name": "誓约",
+      "type": "act",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03126 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03127",
+      "name": "入口大厅",
+      "type": "location",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03127 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03128",
+      "name": "历史协会",
+      "type": "location",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03128 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03129",
+      "name": "历史协会",
+      "type": "location",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03129 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03130",
+      "name": "历史协会",
+      "type": "location",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03130 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03131",
+      "name": "宁静的走廊",
+      "type": "location",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03131 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03132",
+      "name": "历史协会",
+      "type": "location",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03132 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03133",
+      "name": "历史协会",
+      "type": "location",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03133 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03134",
+      "name": "历史协会",
+      "type": "location",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03134 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03135",
+      "name": "宁静的走廊",
+      "type": "location",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03135 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03136",
+      "name": "历史协会",
+      "type": "location",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03136 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03137",
+      "name": "历史协会",
+      "type": "location",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03137 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03138",
+      "name": "历史协会",
+      "type": "location",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03138 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03139",
+      "name": "隐藏的图书馆",
+      "type": "location",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03139 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03140",
+      "name": "附身宣誓者",
+      "type": "enemy",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03140 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03141",
+      "name": "皮博迪先生",
+      "type": "asset",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03141 已验收 · asset 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03142",
+      "name": "黑玛瑙扣环",
+      "type": "asset",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03142 已验收 · asset 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03143",
+      "name": "褴褛披风",
+      "type": "asset",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03143 已验收 · asset 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03144",
+      "name": "卡尔克萨探求者",
+      "type": "enemy",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03144 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03145",
+      "name": "引入歧途",
+      "type": "treachery",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03145 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03146",
+      "name": "邪教的搜查",
+      "type": "treachery",
+      "pack": "eotp",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03146 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03147",
+      "name": "双刃短刀",
+      "type": "asset",
+      "pack": "tuo",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03147 双刃短刀 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03148",
+      "name": "埋伏",
+      "type": "event",
+      "pack": "tuo",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03148 埋伏 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03149",
+      "name": "查尔斯·罗斯大人",
+      "type": "asset",
+      "pack": "tuo",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03149 查尔斯·罗斯大人 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03150",
+      "name": "预先警告",
+      "type": "event",
+      "pack": "tuo",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03150 预先警告 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03151",
+      "name": "达里奥·埃尔阿明",
+      "type": "asset",
+      "pack": "tuo",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03151 达里奥·埃尔阿明 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03152",
+      "name": "偷袭",
+      "type": "event",
+      "pack": "tuo",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03152 偷袭 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03153",
+      "name": "灵力风暴",
+      "type": "event",
+      "pack": "tuo",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03153 灵力风暴 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03154",
+      "name": "影之书",
+      "type": "asset",
+      "pack": "tuo",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03154 影之书 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03155",
+      "name": "战斗或逃跑",
+      "type": "event",
+      "pack": "tuo",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03155 战斗或逃跑 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03156",
+      "name": "意志考验",
+      "type": "event",
+      "pack": "tuo",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03156 意志考验 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03157",
+      "name": "吉人天相",
+      "type": "event",
+      "pack": "tuo",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03157 吉人天相 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03158",
+      "name": "施恩求报",
+      "type": "event",
+      "pack": "tuo",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03158 施恩求报 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03159",
+      "name": "邪秽誓约",
+      "type": "scenario",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03159 已验收 · scenario 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03160",
+      "name": "锁闭",
+      "type": "agenda",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03160 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03161",
+      "name": "精神折磨",
+      "type": "agenda",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03161 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03162",
+      "name": "他的领地",
+      "type": "agenda",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03162 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03163",
+      "name": "阿卡姆疯人院",
+      "type": "act",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03163 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03164",
+      "name": "真正可怕的人(版本一)",
+      "type": "act",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03164 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03165",
+      "name": "真正可怕的人(版本二)",
+      "type": "act",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03165 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03166",
+      "name": "出逃计划",
+      "type": "act",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03166 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03167",
+      "name": "告别疯人院",
+      "type": "act",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03167 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03168",
+      "name": "疯人院大厅",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03168 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03169",
+      "name": "疯人院大厅",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03169 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03170",
+      "name": "疯人院大厅",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03170 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03171",
+      "name": "疯人院大厅",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03171 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03172",
+      "name": "厨房",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03172 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03173",
+      "name": "食堂",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03173 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03174",
+      "name": "医务室",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03174 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03175",
+      "name": "后院",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03175 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03176",
+      "name": "花园",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03176 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03177",
+      "name": "地下室走廊",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03177 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03178",
+      "name": "病人拘禁室",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03178 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03179",
+      "name": "病人拘禁室",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03179 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03180",
+      "name": "病人拘禁室",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03180 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03181",
+      "name": "病人拘禁室",
+      "type": "location",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03181 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03182a",
+      "name": "丹尼尔·契斯特菲尔德",
+      "type": "asset",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03182a 已验收 · asset 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03182b",
+      "name": "丹尼尔·契斯特菲尔德",
+      "type": "enemy",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03182b 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03183",
+      "name": "疯人院暴食怪",
+      "type": "enemy",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03183 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03184",
+      "name": "阴魂不散的病人",
+      "type": "enemy",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03184 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03185",
+      "name": "约束衣",
+      "type": "treachery",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03185 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03186",
+      "name": "疯狂礼物",
+      "type": "treachery",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03186 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03187",
+      "name": "疯狂礼物",
+      "type": "treachery",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03187 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03188",
+      "name": "危墙迫近",
+      "type": "treachery",
+      "pack": "tuo",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03188 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03189",
+      "name": "“同归于尽！”",
+      "type": "event",
+      "pack": "apot",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03189 “同归于尽！” 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03190",
+      "name": ".45自动手枪",
+      "type": "asset",
+      "pack": "apot",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03190 .45自动手枪 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03191",
+      "name": "逻辑推理",
+      "type": "event",
+      "pack": "apot",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03191 逻辑推理 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03192",
+      "name": "古代雕文",
+      "type": "asset",
+      "pack": "apot",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03192 古代雕文 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03193",
+      "name": "古代雕文",
+      "type": "asset",
+      "pack": "apot",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03193 古代雕文 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03194",
+      "name": "暗中偷袭",
+      "type": "event",
+      "pack": "apot",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03194 暗中偷袭 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03195",
+      "name": "扒窃",
+      "type": "asset",
+      "pack": "apot",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03195 扒窃 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03196",
+      "name": "量子通量",
+      "type": "event",
+      "pack": "apot",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03196 量子通量 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03197",
+      "name": "重新充能",
+      "type": "event",
+      "pack": "apot",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03197 重新充能 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03198",
+      "name": "拉布兰奇夫人",
+      "type": "asset",
+      "pack": "apot",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03198 拉布兰奇夫人 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03199",
+      "name": "诱捕陷阱",
+      "type": "event",
+      "pack": "apot",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03199 诱捕陷阱 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03200",
+      "name": "真相幻影",
+      "type": "scenario",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03200 已验收 · scenario 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03201",
+      "name": "第一夜",
+      "type": "agenda",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03201 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03202",
+      "name": "第二夜",
+      "type": "agenda",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03202 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03203",
+      "name": "第三夜",
+      "type": "agenda",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03203 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03204",
+      "name": "巴黎阴谋(版本一)",
+      "type": "act",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03204 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03205",
+      "name": "巴黎阴谋(版本二)",
+      "type": "act",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03205 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03206",
+      "name": "闻风追影",
+      "type": "act",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03206 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03207",
+      "name": "暗影缠身",
+      "type": "act",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03207 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03208",
+      "name": "蒙巴纳斯",
+      "type": "location",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03208 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03209",
+      "name": "蒙马特尔",
+      "type": "location",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03209 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03210",
+      "name": "蒙马特尔",
+      "type": "location",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03210 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03211",
+      "name": "大木偶剧场",
+      "type": "location",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03211 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03212",
+      "name": "加尼叶歌剧院",
+      "type": "location",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03212 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03213",
+      "name": "加尼叶歌剧院",
+      "type": "location",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03213 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03214",
+      "name": "奥赛火车站",
+      "type": "location",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03214 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03215",
+      "name": "拉雪兹神父公墓",
+      "type": "location",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03215 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03216",
+      "name": "圣马丁运河",
+      "type": "location",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03216 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03217",
+      "name": "玛黑区",
+      "type": "location",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03217 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03218",
+      "name": "玛黑区",
+      "type": "location",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03218 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03219",
+      "name": "巴黎圣母院",
+      "type": "location",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03219 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03220",
+      "name": "卢森堡公园",
+      "type": "location",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03220 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03221",
+      "name": "风琴手",
+      "type": "enemy",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03221 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03221b",
+      "name": "风琴手",
+      "type": "enemy",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03221b 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03222",
+      "name": "潜行的拜亚基",
+      "type": "enemy",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03222 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03223",
+      "name": "双生太阳",
+      "type": "treachery",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03223 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03224",
+      "name": "致命运数",
+      "type": "treachery",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03224 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03225",
+      "name": "折磨和弦",
+      "type": "treachery",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03225 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03226",
+      "name": "呆若木鸡",
+      "type": "treachery",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03226 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03227",
+      "name": "失魂落魄",
+      "type": "treachery",
+      "pack": "apot",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03227 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03228",
+      "name": "身先士卒",
+      "type": "skill",
+      "pack": "tpm",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03228 身先士卒 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03229",
+      "name": "单打独斗",
+      "type": "event",
+      "pack": "tpm",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03229 单打独斗 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03230",
+      "name": "急救",
+      "type": "asset",
+      "pack": "tpm",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03230 急救 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03231",
+      "name": "重大发现",
+      "type": "skill",
+      "pack": "tpm",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03231 重大发现 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03232",
+      "name": "捷径",
+      "type": "event",
+      "pack": "tpm",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03232 捷径 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03233",
+      "name": "“吃我一招！”",
+      "type": "skill",
+      "pack": "tpm",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03233 “吃我一招！” 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03234",
+      "name": ".41短口手枪",
+      "type": "asset",
+      "pack": "tpm",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03234 .41短口手枪 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03235",
+      "name": "力量洪流",
+      "type": "skill",
+      "pack": "tpm",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03235 力量洪流 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03236",
+      "name": "探知术",
+      "type": "asset",
+      "pack": "tpm",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03236 探知术 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03237",
+      "name": "中途伏击",
+      "type": "event",
+      "pack": "tpm",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03237 中途伏击 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03238",
+      "name": "不期而遇",
+      "type": "event",
+      "pack": "tpm",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03238 不期而遇 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03239",
+      "name": "应急物品",
+      "type": "event",
+      "pack": "tpm",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03239 应急物品 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03240",
+      "name": "苍白面具",
+      "type": "scenario",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03240 已验收 · scenario 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03241",
+      "name": "亡者帝国",
+      "type": "agenda",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03241 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03241b",
+      "name": "死亡鬼灵",
+      "type": "enemy",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03241b 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03242",
+      "name": "亡灵帝国",
+      "type": "agenda",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03242 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03243",
+      "name": "穿越墓穴",
+      "type": "act",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03243 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03244",
+      "name": "前途受阻",
+      "type": "act",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03244 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03245",
+      "name": "逃出生天",
+      "type": "act",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03245 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03246",
+      "name": "引领道路",
+      "type": "act",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03246 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03247",
+      "name": "地狱之门",
+      "type": "location",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03247 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03248",
+      "name": "石铺拱道",
+      "type": "location",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03248 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03249",
+      "name": "墓灯地穴",
+      "type": "location",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03249 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03250",
+      "name": "埋骨洞窟",
+      "type": "location",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03250 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03251",
+      "name": "百魂之井",
+      "type": "location",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03251 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03252",
+      "name": "烛光隧道",
+      "type": "location",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03252 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03253",
+      "name": "白骨迷阵",
+      "type": "location",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03253 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03254",
+      "name": "狭窄竖井",
+      "type": "location",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03254 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03255",
+      "name": "颤栗水池",
+      "type": "location",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03255 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03256",
+      "name": "堵塞通道",
+      "type": "location",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03256 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03257",
+      "name": "暗影坟墓",
+      "type": "location",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03257 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03258",
+      "name": "地下墓穴讲师",
+      "type": "enemy",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03258 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03259",
+      "name": "尸体寄居者",
+      "type": "enemy",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03259 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03260",
+      "name": "墙中之眼",
+      "type": "treachery",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03260 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03261",
+      "name": "身后暗影",
+      "type": "treachery",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03261 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03262",
+      "name": "地下深坑",
+      "type": "treachery",
+      "pack": "tpm",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03262 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03263",
+      "name": "追猎行动",
+      "type": "event",
+      "pack": "bsr",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03263 追猎行动 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03264",
+      "name": "原定计划",
+      "type": "asset",
+      "pack": "bsr",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03264 原定计划 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03265",
+      "name": "指导",
+      "type": "event",
+      "pack": "bsr",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03265 指导 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03266",
+      "name": "奥术洞察",
+      "type": "asset",
+      "pack": "bsr",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03266 奥术洞察 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03267",
+      "name": "侥幸逃脱",
+      "type": "event",
+      "pack": "bsr",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03267 侥幸逃脱 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03268",
+      "name": "建议",
+      "type": "asset",
+      "pack": "bsr",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03268 建议 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03269",
+      "name": "圣胡伯的钥匙",
+      "type": "asset",
+      "pack": "bsr",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03269 圣胡伯的钥匙 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03270",
+      "name": "守护结界",
+      "type": "event",
+      "pack": "bsr",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03270 守护结界 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03271",
+      "name": "新晋术士",
+      "type": "asset",
+      "pack": "bsr",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03271 新晋术士 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03272",
+      "name": "“放马过来！”",
+      "type": "skill",
+      "pack": "bsr",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03272 “放马过来！” 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03273",
+      "name": "求生高手",
+      "type": "event",
+      "pack": "bsr",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03273 求生高手 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03274",
+      "name": "黑星升起",
+      "type": "scenario",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03274 已验收 · scenario 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03275",
+      "name": "浪潮汹涌",
+      "type": "agenda",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03275 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03276a",
+      "name": "风暴肆虐",
+      "type": "agenda",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03276a 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03276b",
+      "name": "风暴肆虐",
+      "type": "agenda",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03276b 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03277",
+      "name": "水漫金山",
+      "type": "agenda",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03277 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03278",
+      "name": "仪式开始",
+      "type": "agenda",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03278 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03279a",
+      "name": "悬空之物",
+      "type": "agenda",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03279a 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03279b",
+      "name": "悬空之物",
+      "type": "agenda",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03279b 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03280",
+      "name": "天空失陷",
+      "type": "agenda",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03280 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03281",
+      "name": "浪破路现",
+      "type": "act",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03281 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03282",
+      "name": "天开路现",
+      "type": "act",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03282 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03283",
+      "name": "晋升之门",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03283 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03284",
+      "name": "环山大道",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03284 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03285",
+      "name": "外城墙",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03285 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03286",
+      "name": "外城墙",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03286 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03287",
+      "name": "北部塔楼",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03287 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03288",
+      "name": "北部塔楼",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03288 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03289",
+      "name": "垮塌的台阶",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03289 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03290",
+      "name": "垮塌的台阶",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03290 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03291",
+      "name": "修道院教堂",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03291 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03292",
+      "name": "哥特式唱诗台",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03292 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03293",
+      "name": "哥特式唱诗台",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03293 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03294",
+      "name": "回廊",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03294 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03295",
+      "name": "骑士大厅",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03295 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03296",
+      "name": "圣奥伯特礼拜堂",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03296 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03297",
+      "name": "圣奥伯特礼拜堂",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03297 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03298",
+      "name": "修道院塔楼",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03298 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03299",
+      "name": "修道院塔楼",
+      "type": "location",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03299 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03300",
+      "name": "潮汐骇物",
+      "type": "enemy",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03300 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03301",
+      "name": "裂缝探求者",
+      "type": "enemy",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03301 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03302",
+      "name": "洪水肆虐",
+      "type": "treachery",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03302 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03303",
+      "name": "世界融合",
+      "type": "treachery",
+      "pack": "bsr",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03303 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03304",
+      "name": "“吃枪子吧！”",
+      "type": "event",
+      "pack": "dca",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03304 “吃枪子吧！” 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03305",
+      "name": "阿登护甲",
+      "type": "asset",
+      "pack": "dca",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03305 阿登护甲 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03306",
+      "name": "遗觉记忆",
+      "type": "event",
+      "pack": "dca",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03306 遗觉记忆 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03307",
+      "name": "殚精竭虑",
+      "type": "event",
+      "pack": "dca",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03307 殚精竭虑 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03308",
+      "name": "卡戎的银币",
+      "type": "asset",
+      "pack": "dca",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03308 卡戎的银币 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03309",
+      "name": "短管猎枪",
+      "type": "asset",
+      "pack": "dca",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03309 短管猎枪 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03310",
+      "name": "死里逃生",
+      "type": "event",
+      "pack": "dca",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03310 死里逃生 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03311",
+      "name": "时间曲折",
+      "type": "event",
+      "pack": "dca",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03311 时间曲折 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03312",
+      "name": "远古印记封印",
+      "type": "skill",
+      "pack": "dca",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03312 远古印记封印 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03313",
+      "name": "报纸",
+      "type": "asset",
+      "pack": "dca",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03313 报纸 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03314",
+      "name": "内讧",
+      "type": "event",
+      "pack": "dca",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03314 内讧 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03315",
+      "name": "伊苏之匙",
+      "type": "asset",
+      "pack": "dca",
+      "partition": "player",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03315 伊苏之匙 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03316",
+      "name": "卡城幽影",
+      "type": "scenario",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03316 已验收 · scenario 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03317",
+      "name": "疯狂漩涡",
+      "type": "agenda",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03317 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03318",
+      "name": "疯狂沉溺",
+      "type": "agenda",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03318 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03319",
+      "name": "疯狂灭亡",
+      "type": "agenda",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03319 已验收 · agenda 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03320",
+      "name": "失落的卡尔克萨",
+      "type": "act",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03320 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03321a",
+      "name": "搜寻陌生人(版本一)",
+      "type": "act",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03321a 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03321b",
+      "name": "苍白面具",
+      "type": "asset",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03321b 已验收 · asset 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03322a",
+      "name": "搜寻陌生人(版本二)",
+      "type": "act",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03322a 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03323a",
+      "name": "搜寻陌生人(版本三)",
+      "type": "act",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03323a 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03324",
+      "name": "褴褛之王",
+      "type": "act",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03324 已验收 · act 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03325",
+      "name": "哈利湖滨",
+      "type": "location",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03325 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03325b",
+      "name": "毕宿奇歌初响",
+      "type": "story",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03325b 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03326a",
+      "name": "荒凉平原",
+      "type": "location",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03326a 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03326b",
+      "name": "毕宿五的星辰",
+      "type": "story",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03326b 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03326c",
+      "name": "荒凉平原",
+      "type": "location",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03326c 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03326d",
+      "name": "无边的荒凉",
+      "type": "story",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03326d 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03327a",
+      "name": "卡尔克萨废墟",
+      "type": "location",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03327a 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03327b",
+      "name": "卡尔克萨的居民",
+      "type": "story",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03327b 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03327c",
+      "name": "卡尔克萨废墟",
+      "type": "location",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03327c 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03327d",
+      "name": "短暂休憩",
+      "type": "story",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03327d 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03327e",
+      "name": "卡尔克萨废墟",
+      "type": "location",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03327e 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03327f",
+      "name": "棺椁",
+      "type": "story",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03327f 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03328a",
+      "name": "幽暗街道",
+      "type": "location",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03328a 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03328b",
+      "name": "街道地图",
+      "type": "story",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03328b 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03328c",
+      "name": "幽暗街道",
+      "type": "location",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03328c 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03328d",
+      "name": "皇家游行",
+      "type": "story",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03328d 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03328e",
+      "name": "幽暗街道",
+      "type": "location",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03328e 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03328f",
+      "name": "拱门",
+      "type": "story",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03328f 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03329a",
+      "name": "迪蒙深渊",
+      "type": "location",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03329a 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03329b",
+      "name": "深渊的高度",
+      "type": "story",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03329b 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03329c",
+      "name": "迪蒙深渊",
+      "type": "location",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03329c 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03329d",
+      "name": "宫殿阶梯",
+      "type": "story",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03329d 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03330",
+      "name": "黑暗尖柱",
+      "type": "location",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03330 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03330b",
+      "name": "坠落",
+      "type": "story",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03330b 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03331",
+      "name": "王之宫殿",
+      "type": "location",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03331 已验收 · location 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03331b",
+      "name": "哈斯塔的末路",
+      "type": "story",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03331b 已验收 · story 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03332",
+      "name": "哈斯塔",
+      "type": "enemy",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03332 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03333",
+      "name": "哈斯塔",
+      "type": "enemy",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03333 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03334",
+      "name": "哈斯塔",
+      "type": "enemy",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03334 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03335",
+      "name": "迪蒙生物",
+      "type": "enemy",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03335 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03336",
+      "name": "长翼者",
+      "type": "enemy",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03336 已验收 · enemy 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03337",
+      "name": "阴郁诅咒",
+      "type": "treachery",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03337 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03338",
+      "name": "疯狂领域",
+      "type": "treachery",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03338 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03339",
+      "name": "最后一幕",
+      "type": "treachery",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03339 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03340",
+      "name": "恶灵附身",
+      "type": "treachery",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03340 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03341",
+      "name": "恶灵附身",
+      "type": "treachery",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03341 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    },
+    {
+      "code": "03342",
+      "name": "恶灵附身",
+      "type": "treachery",
+      "pack": "dca",
+      "partition": "campaign",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+          "test": "Carcosa 03342 已验收 · treachery 卡文与运行边界"
+        }
+      ]
+    }
+  ]
+}

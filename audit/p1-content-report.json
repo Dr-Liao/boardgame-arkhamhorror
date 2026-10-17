@@ -1,0 +1,462 @@
+{
+  "schemaVersion": 1,
+  "campaign": "nightOfTheZealot",
+  "packs": [
+    {
+      "id": "core",
+      "dependencies": [],
+      "cardCount": 262,
+      "encounterGroupIds": [
+        "rats",
+        "ghouls",
+        "strikingFear",
+        "ancientEvils",
+        "chillingCold",
+        "darkCult",
+        "nightgaunts",
+        "lockedDoors",
+        "agentsOfYogSothoth"
+      ]
+    },
+    {
+      "id": "notz",
+      "dependencies": [
+        "core"
+      ],
+      "cardCount": 38,
+      "encounterGroupIds": [
+        "theGathering",
+        "theMidnightMasks",
+        "theDevourerBelow"
+      ]
+    },
+    {
+      "id": "dunwichSupport",
+      "dependencies": [
+        "core"
+      ],
+      "cardCount": 3,
+      "encounterGroupIds": []
+    },
+    {
+      "id": "dunwichPlayer",
+      "dependencies": [
+        "core"
+      ],
+      "cardCount": 94,
+      "encounterGroupIds": []
+    },
+    {
+      "id": "dunwichCampaign",
+      "dependencies": [
+        "core"
+      ],
+      "cardCount": 221,
+      "encounterGroupIds": [
+        "extracurricularActivity",
+        "theHouseAlwaysWins",
+        "sorcery",
+        "theBeyond",
+        "bishopsThralls",
+        "whippoorwills",
+        "badLuck",
+        "naomisCrew",
+        "hideousAbominations",
+        "dunwich",
+        "beastThralls",
+        "theMiskatonicMuseum",
+        "theEssexCountyExpress",
+        "bloodOnTheAltar",
+        "undimensionedAndUnseen",
+        "whereDoomAwaits",
+        "lostInTimeAndSpace"
+      ]
+    },
+    {
+      "id": "dunwichInvestigators",
+      "dependencies": [
+        "core"
+      ],
+      "cardCount": 15,
+      "encounterGroupIds": []
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "theGathering",
+      "status": "playable",
+      "requiredPackIds": [
+        "core",
+        "notz"
+      ],
+      "requiredEncounterGroupIds": [
+        "theGathering",
+        "rats",
+        "ghouls",
+        "strikingFear",
+        "ancientEvils",
+        "chillingCold"
+      ],
+      "requiredInvestigatorIds": [],
+      "requiredMechanicIds": [],
+      "zones": {
+        "encounterDeck": [
+          {
+            "cardCode": "01118",
+            "count": 1
+          },
+          {
+            "cardCode": "01119",
+            "count": 1
+          },
+          {
+            "cardCode": "01159",
+            "count": 3
+          },
+          {
+            "cardCode": "01160",
+            "count": 3
+          },
+          {
+            "cardCode": "01161",
+            "count": 1
+          },
+          {
+            "cardCode": "01162",
+            "count": 3
+          },
+          {
+            "cardCode": "01163",
+            "count": 3
+          },
+          {
+            "cardCode": "01164",
+            "count": 2
+          },
+          {
+            "cardCode": "01165",
+            "count": 2
+          },
+          {
+            "cardCode": "01166",
+            "count": 3
+          },
+          {
+            "cardCode": "01167",
+            "count": 2
+          },
+          {
+            "cardCode": "01168",
+            "count": 2
+          }
+        ],
+        "setAside": [
+          {
+            "cardCode": "01112",
+            "count": 1
+          },
+          {
+            "cardCode": "01113",
+            "count": 1
+          },
+          {
+            "cardCode": "01114",
+            "count": 1
+          },
+          {
+            "cardCode": "01115",
+            "count": 1
+          },
+          {
+            "cardCode": "01116",
+            "count": 1
+          },
+          {
+            "cardCode": "01117",
+            "count": 1
+          }
+        ],
+        "removed": [],
+        "victory": []
+      },
+      "conservation": {
+        "scenarioId": "theGathering",
+        "encounterCards": 26,
+        "declaredSetAsideCards": 6,
+        "cultistDeckCards": 0,
+        "optionalSets": {},
+        "locationCount": 5,
+        "identityCount": 18,
+        "unresolvedAliases": [],
+        "duplicateActiveZoneCodes": [],
+        "optionalZoneCollisions": [],
+        "checkedCatalogCodes": 18
+      }
+    },
+    {
+      "id": "theMidnightMasks",
+      "status": "playable",
+      "requiredPackIds": [
+        "core",
+        "notz"
+      ],
+      "requiredEncounterGroupIds": [
+        "theMidnightMasks",
+        "chillingCold",
+        "darkCult",
+        "nightgaunts",
+        "lockedDoors"
+      ],
+      "requiredInvestigatorIds": [],
+      "requiredMechanicIds": [],
+      "zones": {
+        "encounterDeck": [
+          {
+            "cardCode": "01135",
+            "count": 3
+          },
+          {
+            "cardCode": "01136",
+            "count": 2
+          },
+          {
+            "cardCode": "01167",
+            "count": 2
+          },
+          {
+            "cardCode": "01168",
+            "count": 2
+          },
+          {
+            "cardCode": "01169",
+            "count": 3
+          },
+          {
+            "cardCode": "01170",
+            "count": 1
+          },
+          {
+            "cardCode": "01171",
+            "count": 2
+          },
+          {
+            "cardCode": "01172",
+            "count": 2
+          },
+          {
+            "cardCode": "01173",
+            "count": 2
+          },
+          {
+            "cardCode": "01174",
+            "count": 2
+          }
+        ],
+        "setAside": [
+          {
+            "cardCode": "01121b",
+            "count": 1
+          },
+          {
+            "cardCode": "01137",
+            "count": 1
+          },
+          {
+            "cardCode": "01138",
+            "count": 1
+          },
+          {
+            "cardCode": "01139",
+            "count": 1
+          },
+          {
+            "cardCode": "01140",
+            "count": 1
+          },
+          {
+            "cardCode": "01141",
+            "count": 1
+          }
+        ],
+        "removed": [],
+        "victory": []
+      },
+      "conservation": {
+        "scenarioId": "theMidnightMasks",
+        "encounterCards": 21,
+        "declaredSetAsideCards": 6,
+        "cultistDeckCards": 5,
+        "optionalSets": {},
+        "locationCount": 9,
+        "identityCount": 16,
+        "unresolvedAliases": [],
+        "duplicateActiveZoneCodes": [],
+        "optionalZoneCollisions": [],
+        "checkedCatalogCodes": 16
+      }
+    },
+    {
+      "id": "theDevourerBelow",
+      "status": "playable",
+      "requiredPackIds": [
+        "core",
+        "notz"
+      ],
+      "requiredEncounterGroupIds": [
+        "theDevourerBelow",
+        "ghouls",
+        "strikingFear",
+        "ancientEvils",
+        "darkCult"
+      ],
+      "requiredInvestigatorIds": [],
+      "requiredMechanicIds": [],
+      "zones": {
+        "encounterDeck": [
+          {
+            "cardCode": "01158",
+            "count": 2
+          },
+          {
+            "cardCode": "01160",
+            "count": 3
+          },
+          {
+            "cardCode": "01161",
+            "count": 1
+          },
+          {
+            "cardCode": "01162",
+            "count": 3
+          },
+          {
+            "cardCode": "01163",
+            "count": 3
+          },
+          {
+            "cardCode": "01164",
+            "count": 2
+          },
+          {
+            "cardCode": "01165",
+            "count": 2
+          },
+          {
+            "cardCode": "01166",
+            "count": 3
+          },
+          {
+            "cardCode": "01169",
+            "count": 3
+          },
+          {
+            "cardCode": "01170",
+            "count": 1
+          },
+          {
+            "cardCode": "01171",
+            "count": 2
+          }
+        ],
+        "setAside": [
+          {
+            "cardCode": "01156",
+            "count": 1
+          },
+          {
+            "cardCode": "01157",
+            "count": 1
+          },
+          {
+            "cardCode": "01175",
+            "count": 2
+          },
+          {
+            "cardCode": "01176",
+            "count": 2
+          },
+          {
+            "cardCode": "01177",
+            "count": 2
+          },
+          {
+            "cardCode": "01178",
+            "count": 2
+          },
+          {
+            "cardCode": "01179",
+            "count": 1
+          },
+          {
+            "cardCode": "01180",
+            "count": 3
+          },
+          {
+            "cardCode": "01181",
+            "count": 2
+          },
+          {
+            "cardCode": "01182",
+            "count": 2
+          }
+        ],
+        "removed": [],
+        "victory": []
+      },
+      "conservation": {
+        "scenarioId": "theDevourerBelow",
+        "encounterCards": 25,
+        "declaredSetAsideCards": 18,
+        "cultistDeckCards": 0,
+        "optionalSets": {
+          "agentsOfHastur": [
+            {
+              "cardCode": "01175",
+              "count": 2
+            },
+            {
+              "cardCode": "01176",
+              "count": 2
+            }
+          ],
+          "agentsOfYogSothoth": [
+            {
+              "cardCode": "01177",
+              "count": 2
+            },
+            {
+              "cardCode": "01178",
+              "count": 2
+            }
+          ],
+          "agentsOfShubNiggurath": [
+            {
+              "cardCode": "01179",
+              "count": 1
+            },
+            {
+              "cardCode": "01180",
+              "count": 3
+            }
+          ],
+          "agentsOfCthulhu": [
+            {
+              "cardCode": "01181",
+              "count": 2
+            },
+            {
+              "cardCode": "01182",
+              "count": 2
+            }
+          ]
+        },
+        "locationCount": 8,
+        "identityCount": 21,
+        "unresolvedAliases": [],
+        "duplicateActiveZoneCodes": [],
+        "optionalZoneCollisions": [],
+        "checkedCatalogCodes": 21
+      }
+    }
+  ]
+}

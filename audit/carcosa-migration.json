@@ -1,0 +1,2733 @@
+{
+  "schemaVersion": 1,
+  "milestone": "C4",
+  "campaignId": "thePathToCarcosa",
+  "status": "playable",
+  "playable": true,
+  "launchEnabled": true,
+  "earlyAccess": true,
+  "equivalenceCertified": false,
+  "verifiedScope": "03循环383条卡牌记录已逐卡盘点并全部通过运行验收；原版八章现已开放，Hidden 等关键词及规则目录继续使用既有专项验收；M5大厅、联机与浏览器端到端认证仍待完成。",
+  "catalog": {
+    "total": 329,
+    "campaign": 215,
+    "investigatorsAndSignatures": 19,
+    "playerCards": 95,
+    "printedRecords": 383,
+    "linkedFaces": 54,
+    "verified": 383,
+    "pending": 0
+  },
+  "investigators": [
+    "03001",
+    "03002",
+    "03003",
+    "03004",
+    "03005",
+    "03006"
+  ],
+  "chapters": [
+    {
+      "id": "curtainCall",
+      "code": "03043",
+      "name": "谢幕",
+      "status": "verified",
+      "catalogReferenceOnly": false
+    },
+    {
+      "id": "theLastKing",
+      "code": "03061",
+      "name": "最后的王者",
+      "status": "verified",
+      "catalogReferenceOnly": false
+    },
+    {
+      "id": "echoesOfThePast",
+      "code": "03120",
+      "name": "往事回声",
+      "status": "verified",
+      "catalogReferenceOnly": false
+    },
+    {
+      "id": "theUnspeakableOath",
+      "code": "03159",
+      "name": "邪秽誓约",
+      "status": "verified",
+      "catalogReferenceOnly": false
+    },
+    {
+      "id": "aPhantomOfTruth",
+      "code": "03200",
+      "name": "真相幻影",
+      "status": "verified",
+      "catalogReferenceOnly": false
+    },
+    {
+      "id": "thePallidMask",
+      "code": "03240",
+      "name": "苍白面具",
+      "status": "verified",
+      "catalogReferenceOnly": false
+    },
+    {
+      "id": "blackStarsRise",
+      "code": "03274",
+      "name": "黑星升起",
+      "status": "verified",
+      "catalogReferenceOnly": false
+    },
+    {
+      "id": "dimCarcosa",
+      "code": "03316",
+      "name": "卡城幽影",
+      "status": "verified",
+      "catalogReferenceOnly": false
+    }
+  ],
+  "sourceRoot": "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham",
+  "sources": [
+    {
+      "path": "Act/CardDefs/ThePathToCarcosa/APhantomOfTruth.hs",
+      "sha256": "ce00c43bb6d72aed53f4469384a1c42aa1012261586f1f03505896886a9c73b1"
+    },
+    {
+      "path": "Act/CardDefs/ThePathToCarcosa/BlackStarsRise.hs",
+      "sha256": "49e6fb3b18711dca7569383c8dd7a1c6f383cec5dc6e1e9d99fe8b2edde62b33"
+    },
+    {
+      "path": "Act/CardDefs/ThePathToCarcosa/CurtainCall.hs",
+      "sha256": "15a9a018c85daf30ce986d09e151ddd91e7449db584db785ea50c56b7397e468"
+    },
+    {
+      "path": "Act/CardDefs/ThePathToCarcosa/DimCarcosa.hs",
+      "sha256": "de0fd6d34ae1290c265ad4f4688854922a7c34842ee35ab00bfe8bfbc71d7b69"
+    },
+    {
+      "path": "Act/CardDefs/ThePathToCarcosa/EchoesOfThePast.hs",
+      "sha256": "8ff196518ad6ed07c8d9c7a3d9a433552b17918b7f0eb5aa083bfa1e30c7b1cc"
+    },
+    {
+      "path": "Act/CardDefs/ThePathToCarcosa/TheLastKing.hs",
+      "sha256": "892a96db1bd3269c46a54d784ce01bc03ecf940342826bd70fcaac0d6b476d9f"
+    },
+    {
+      "path": "Act/CardDefs/ThePathToCarcosa/ThePallidMask.hs",
+      "sha256": "2b8c295ccc13fd941e11f784f5a2944d3e85199a38e9979c6469cb769fd7293d"
+    },
+    {
+      "path": "Act/CardDefs/ThePathToCarcosa/TheUnspeakableOath.hs",
+      "sha256": "684d99a3a6f78a0946faf4733317d7d7d3b32227305ed56040174545e0291b52"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/APhantomOfTruth/PursuingShadows.hs",
+      "sha256": "54910971e65c79a9e0f2d67cd04b46cc57655df5748b52c27bc100826fc414b0"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/APhantomOfTruth/StalkedByShadows.hs",
+      "sha256": "ab26ec82bba15998ed3067c863dbe7e02a6dcd25b41dc852c5982f23d4bd402a"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/APhantomOfTruth/TheParisianConspiracyV1.hs",
+      "sha256": "dada6bf341b14ad9b635a04624814cd6c2e0805d95409cb7c3dd01dffbe3bbe3"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/APhantomOfTruth/TheParisianConspiracyV2.hs",
+      "sha256": "5ef10ca34c62410110108e575d6acf5e96d52ddad12267544d84da1e13e70647"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/BlackStarsRise/OpenThePathAbove.hs",
+      "sha256": "f277b8bba16d293b10bfccf2efca194b8638b381cd511f3ec224c2c557d4278d"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/BlackStarsRise/OpenThePathBelow.hs",
+      "sha256": "6b69bd27807b30bd79bb8887e9e2a26019dbf332ba0961f8e5ca930ad9ca6532"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/CurtainCall/Awakening.hs",
+      "sha256": "b0a40e49ab3a81a5088fd0c7bd74805923316f17eb2eb4d0e9399b8da8090644"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/CurtainCall/CurtainCall.hs",
+      "sha256": "70c1ebac42adda9c151a15e9f57fa77febd0c058c36412515921695fdb8ed06d"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/CurtainCall/TheStrangerACityAflame.hs",
+      "sha256": "4651017e3a23d04a1c6ef749ad3f6c5b1859191c931c4ca253ed116c49abd298"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/CurtainCall/TheStrangerThePathIsMine.hs",
+      "sha256": "0b1dda009b640bb1a1223d04309fb2b0f214faf546a03dce61967b97c9b358df"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/CurtainCall/TheStrangerTheShoresOfHali.hs",
+      "sha256": "3ee473a0f77752bd98521f50139a9aaf16e9f64a9250a8f6efc95d58e0c25de0"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/DimCarcosa/InLostCarcosa.hs",
+      "sha256": "75ffc63a9e297496ebc7aaa2c482d183cdf98182420b67a268255eaab4066925"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/DimCarcosa/SearchForTheStrangerV1.hs",
+      "sha256": "b598b87666de59eb727fb008ae40c86c561243f0e2ba1cf42870987d5d14a8e7"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/DimCarcosa/SearchForTheStrangerV2.hs",
+      "sha256": "69d1ae631b5ef95e5ea0dfb21893aadba10a942138fa0620c6c384077e24d38c"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/DimCarcosa/SearchForTheStrangerV3.hs",
+      "sha256": "fc8162d0758a2f132ecea43245f263346678e98d2bb3f67209766c2060438316"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/DimCarcosa/TheKingInTatters.hs",
+      "sha256": "6255f294ed13facff652f60d7f672063465ca0349ffe2b6b8430311198bbd2af"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/EchoesOfThePast/MistakesOfThePast.hs",
+      "sha256": "2391cee66cac0c5cc091db55e3d5de1e9a70c980aa44c1eeb8552d1969f97ddb"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/EchoesOfThePast/RaceForAnswers.hs",
+      "sha256": "6eaba32750e5f72e2e14b1442e26559c7ddd1dc885d65180ce0bc018537f36ed"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/EchoesOfThePast/TheOath.hs",
+      "sha256": "d9aee415e55954f81a4b4e125a67f5c2517b26abc1ef7be519a569b84ca526b4"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/TheLastKing/DiscoveringTheTruth.hs",
+      "sha256": "8ad89783f763352426ac8799d3449993b9ef92c9d081d77628019db3b8e372f0"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/ThePallidMask/LeadingTheWay.hs",
+      "sha256": "7095734ad43f8be0f152de86977cefc5d0126635d2a761a1641624009213e6ca"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/ThePallidMask/ThePathIsBarred.hs",
+      "sha256": "ac7742d07c24a7e0a4b417e3e305150c5af4be8fc3ab9401a03786b6e03fcc74"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/ThePallidMask/TheWayOut.hs",
+      "sha256": "787cc345ac6cd774c7971917acff24cc3b6fe87b5dc2640c3d4b54347833562f"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/ThePallidMask/ThroughTheCatacombs.hs",
+      "sha256": "d52593c202816862e4bf648d6c38d3fd5eb2d962e997ad813d642ee64c5fccc5"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/TheUnspeakableOath/ArkhamAsylum.hs",
+      "sha256": "7a6e805cc9bd41d26d6e89764abc2ca1e626ee059fa5b7b5d279de45de8b3f2a"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/TheUnspeakableOath/NoAsylum.hs",
+      "sha256": "f187c035e87fda9f73a4bcb835243fabb2d12aada6347534553ef4dea517d175"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/TheUnspeakableOath/PlanningTheEscape.hs",
+      "sha256": "9332f2a2687b6febbf471d5f2d0c67c1ccbf8554d8887475aa78ec84b0577aa3"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/TheUnspeakableOath/TheReallyBadOnesV1.hs",
+      "sha256": "21195438bb4bf6641c78768823e50ec1cddee1332e5c513cdde015df3e471f48"
+    },
+    {
+      "path": "Act/Cards/ThePathToCarcosa/TheUnspeakableOath/TheReallyBadOnesV2.hs",
+      "sha256": "798cd622c6a03e393600ed72f8255e1b39544dcfd2d45ec2bd1b8c75afc32607"
+    },
+    {
+      "path": "Agenda/CardDefs/ThePathToCarcosa/APhantomOfTruth.hs",
+      "sha256": "57a8d7e133b5a14d5302ab665f983e3a34eda89151fdc750f14f1a8171b9ad90"
+    },
+    {
+      "path": "Agenda/CardDefs/ThePathToCarcosa/BlackStarsRise.hs",
+      "sha256": "bd73c4374fb074236c93b5fe0fdf11e12c9ef2558270279608f3ef25eecfafa9"
+    },
+    {
+      "path": "Agenda/CardDefs/ThePathToCarcosa/CurtainCall.hs",
+      "sha256": "0a5ca30405d4eaeda2d056fb2987bf477c9e546643d912b445af3261bb63adbd"
+    },
+    {
+      "path": "Agenda/CardDefs/ThePathToCarcosa/DimCarcosa.hs",
+      "sha256": "ea21135589b7576b17957dfaeec29bef8fa628222add569365ef73ff510c2cf3"
+    },
+    {
+      "path": "Agenda/CardDefs/ThePathToCarcosa/EchoesOfThePast.hs",
+      "sha256": "5ea4b46780c1aa7be031a8c6236658c51143da627a74ca8d38b0b24639c0bd6a"
+    },
+    {
+      "path": "Agenda/CardDefs/ThePathToCarcosa/TheLastKing.hs",
+      "sha256": "2544a6a13a2ffcc99455a3187c1377941dfc57adf92f6820c26a8d87e5ede9de"
+    },
+    {
+      "path": "Agenda/CardDefs/ThePathToCarcosa/ThePallidMask.hs",
+      "sha256": "896e0acda1a84d0e54ef155d462141446e1120ad7ba86c74396cd91d3ba35ae7"
+    },
+    {
+      "path": "Agenda/CardDefs/ThePathToCarcosa/TheUnspeakableOath.hs",
+      "sha256": "ff516d76471eac6a012ff4a6fed40eec3ec68611de8107e931da62db868a8b7c"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/APhantomOfTruth/TheFirstNight.hs",
+      "sha256": "9e45a4e8af0d264bd86c22fca897ea78d9ab1c4e025cd05c3c3a211281b6bfdd"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/APhantomOfTruth/TheSecondNight.hs",
+      "sha256": "5b1c6f2a1050746c83fda558c397ee30587a341294fe212878594b9c35059ba4"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/APhantomOfTruth/TheThirdNight.hs",
+      "sha256": "c968897a7139b3d352e53d5f0e905df943e1a1e92c9e9b3cc61c87c7dcdcee31"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/BlackStarsRise/LetTheStormRageTheFloodBelow.hs",
+      "sha256": "648e432122a81b0ca28c79aa85b134e37767b02057d1b0a76460cba6d0a62b9a"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/BlackStarsRise/LetTheStormRageTheVortexAbove.hs",
+      "sha256": "9e60dd018bf6b34d6a418a856b7ccd59fdc17834118d4d508f02502985628833"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/BlackStarsRise/SwallowedSky.hs",
+      "sha256": "c69e62ded43fe94a3750aef67f04913dda4ef15132a1eb4fa5788240e231fa83"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/BlackStarsRise/TheCityFloods.hs",
+      "sha256": "fc7a3c79c0cef9738293107c6e8b9d202d75bd25fb6b7b54f618ca6da7f4cfc8"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/BlackStarsRise/TheEntityAboveTheFloodBelow.hs",
+      "sha256": "b3d2a1f30bd15ad3fb462f2de7521875a7f22db32601bd0e0224c6fa0ba702d1"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/BlackStarsRise/TheEntityAboveTheVortexAbove.hs",
+      "sha256": "d913bddc7827048de6727055cd9294ad61a6a90b57405ed32b6d4b5c1eeed42e"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/BlackStarsRise/TheRitualBegins.hs",
+      "sha256": "e9cab1c242e7c4ecdb338b16c47bbfacc54540c7af0f760de311bcf5bca8074f"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/BlackStarsRise/TheTideRises.hs",
+      "sha256": "5c73eca58acdb0496bb5ce02afa8d3a4c7c1b88ea91e606fa1ca181c2cda26da"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/CurtainCall/Encore.hs",
+      "sha256": "0c29a9dd800a5f990daf5d51a7a0a7c330cd16225f7979719815802abbd47207"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/CurtainCall/TheThirdAct.hs",
+      "sha256": "cc4292cfe09033cc17112ddd845aa8696895aa7d96b1bf2f0cc2125431cc5843"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/DimCarcosa/MadnessCoils.hs",
+      "sha256": "6304eb4cf6a9536fb36728694f367016636abf45e0f4f99eb54b63462886c005"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/DimCarcosa/MadnessDies.hs",
+      "sha256": "7bea480600bd9683b19741560dea61b0faa44b116dc8bb4b4e0258339f50d2b5"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/DimCarcosa/MadnessDrowns.hs",
+      "sha256": "4bb1ea69a17aecc004f7f5c84b7a0312b8ae69276f23883df13b0e16eb2912fb"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/EchoesOfThePast/RansackingTheManor.hs",
+      "sha256": "4b75d2e6f6e2baf0fc6e15fdbcea1a284f14a038c657bf27028ac2db752dd40e"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/EchoesOfThePast/SecretsBetterLeftHidden.hs",
+      "sha256": "adf308fb0ef067aa20724fa0849f2363fac0141a2d78f65e86cb9e2a9f09e089"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/EchoesOfThePast/TheTruthIsHidden.hs",
+      "sha256": "d5de6871c77f5ef5197d15f26b6abb26ef10fa7851265110bfbf1dfe92ce58d4"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/TheLastKing/FashionablyLate.hs",
+      "sha256": "2cc76a8acc539376a443aae5391b563da0a87e4d444a62e90fa66f5abbcbc567"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/TheLastKing/TheTerrifyingTruth.hs",
+      "sha256": "54919ef53c14858a9311a16bede26f95402725e0a1258366b23bec64fa53abef"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/ThePallidMask/EmpireOfTheDead.hs",
+      "sha256": "806e86b97cecc12ed61d8b651165ce25bd7e33d6cf57f125dd7b40e2186abbf9"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/ThePallidMask/EmpireOfTheUndead.hs",
+      "sha256": "db263b30a7350ee7a0e4b01ce0a6b546d41c6ec2b82b498edd249fec96038b85"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/TheUnspeakableOath/HisDomain.hs",
+      "sha256": "e991a20f8cb3ce0bc3aa2fed6aa1ae281108bca6773c8c186e8a6b4a8fa8e01d"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/TheUnspeakableOath/LockedInside.hs",
+      "sha256": "a45e921b03c4d791ed7c7749f124b713d2733e595b5ecac33c91cb3ce3d46a03"
+    },
+    {
+      "path": "Agenda/Cards/ThePathToCarcosa/TheUnspeakableOath/TorturousDescent.hs",
+      "sha256": "0758ca687c6ff5f98f5c0622e9b8c24863c3385aac0983259aaf975ef299a546"
+    },
+    {
+      "path": "Asset/Assets/AnalyticalMind.hs",
+      "sha256": "33fa12d59916064f76a2dfb6fb0f6fdf51a981f00e9b59da4dc4114c3eef1df3"
+    },
+    {
+      "path": "Asset/Assets/SophieInLovingMemory.hs",
+      "sha256": "0ffad3748acf3171118d09e63f579e7a148337dff2ff01113e372de3192dd6d4"
+    },
+    {
+      "path": "Asset/Assets/SophieItWasAllMyFault.hs",
+      "sha256": "01073aba755fcac0fb680ebb8a8fcbb27f260a6d6258f40374ee4651797b362a"
+    },
+    {
+      "path": "Asset/Assets/SpiritSpeaker.hs",
+      "sha256": "71304b979a93ff61d5b5a48f50547c7631f93ca2671342e8d2c021e4232be64e"
+    },
+    {
+      "path": "Asset/Assets/TheKingInYellow.hs",
+      "sha256": "89df19470dd09302ab8e187510bd19a046074f3e9cf0ff7bf45d1fcd7eee2e73"
+    },
+    {
+      "path": "Asset/Cards/ThePathToCarcosa.hs",
+      "sha256": "6433bcbe5072617d890d15706a73afa142dfb60f2e7ef1925c779a94640c04a0"
+    },
+    {
+      "path": "Campaign/Campaigns/ThePathToCarcosa.hs",
+      "sha256": "039df65cb72ce1dada9bfc74c48469a502d95f436c3e277f3e86e0adf01c13a4"
+    },
+    {
+      "path": "Campaign/Campaigns/ThePathToCarcosa/Achievements.hs",
+      "sha256": "2a37060e41e2139cd5bf4764ed24190e3ab8029f20007cf936b07fae7777d093"
+    },
+    {
+      "path": "Campaigns/ThePathToCarcosa/CampaignSteps.hs",
+      "sha256": "31411f572652457051e9b8347e57ff427a074d2b185e011d1a18c4ae19412612"
+    },
+    {
+      "path": "Campaigns/ThePathToCarcosa/ChaosBag.hs",
+      "sha256": "d4cdfb9b1132174b645ac6e66de10a864bed6950979152174a82c91517f6b26a"
+    },
+    {
+      "path": "Campaigns/ThePathToCarcosa/Helpers.hs",
+      "sha256": "05266a70a95b4e8c1f01d295478f5fcfd3fa2d773ae69799c17204b55dd83655"
+    },
+    {
+      "path": "Campaigns/ThePathToCarcosa/Import.hs",
+      "sha256": "63abb30c42a2c15cf0bea405eff52e46c64e03079ae21615f3f9aba0768846aa"
+    },
+    {
+      "path": "Campaigns/ThePathToCarcosa/Key.hs",
+      "sha256": "01d8f93814acd3794940661a7f9b73a879bef24463d5d734a402f8c0ea174fb2"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa.hs",
+      "sha256": "c17a33a8e7541459ba6a1322858e0d8775bebf57c4f10b44f429c3c060ba500f"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/APhantomOfTruth.hs",
+      "sha256": "b8f0a8728c81206a892af18d39f286f7c4d351081695fcf947e9fc80c74fd5c6"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/BlackStarsRise.hs",
+      "sha256": "06d55276a71b31ec2d56e48bd870d63a32463270c5e860ee8c5ec4193dcc8707"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/Byakhee.hs",
+      "sha256": "234a9e1379ee682f87f0c49a99749d2c30501b13c12959a5798a0be90efebd06"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/CultOfTheYellowSign.hs",
+      "sha256": "bf75dadcd4ee909211b34e400405825711eae0910e8c1cac3a85fef9a9c5c67f"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/CurtainCall.hs",
+      "sha256": "b2b0eef0d9bbca070f35abdc991f065ecfd6844b5dcf081d83a3bab983afc7de"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/DecayAndFilth.hs",
+      "sha256": "4b6d72175cd41936d2d22b80b4b2f144e005110ea0bfae1ecb9e155c6f9f1d12"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/DecayingReality.hs",
+      "sha256": "0beb683537967350b7153089cf661044d7d6ce82e7c46f6e1a30bdb89266de1f"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/DimCarcosa.hs",
+      "sha256": "f7da8ffe0f2be1acc9508d26b269ca8954c054a349cde3ca9ebcdfe57838ee60"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/EchoesOfThePast.hs",
+      "sha256": "f7892f629fd5bd33b3da1219271f04bed3788490fa82d51052b02944f0b12927"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/HastursEnvoys.hs",
+      "sha256": "73f6b3b78c5c731d45929c68dc69fae1e350f87e4458902e171f6b2df8b218e5"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/HastursGift.hs",
+      "sha256": "4265389a7f49959802342fa9ad7f40d4f9cffd93ffe027b8fe1cc9968ac483d2"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/Hauntings.hs",
+      "sha256": "96eeee84b251780325cfbe007b785d417dcd1537ed68036fa477334e2c21bbcb"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/InhabitantsOfCarcosa.hs",
+      "sha256": "d2e2ad790395cc2d0dad0b9302adc42383492fbe157b52471c036049a17cf961"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/TheLastKing.hs",
+      "sha256": "8d768351729ff70ef410b9dd4b13991da502071cfec34db04ca6feb9395d1064"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/ThePallidMask.hs",
+      "sha256": "29e837e302cee13dada8eed3690e1877478396f9f48634bb7f06a19c9aae7383"
+    },
+    {
+      "path": "Enemy/CardDefs/ThePathToCarcosa/TheUnspeakableOath.hs",
+      "sha256": "a7c8872199d45bb566afc45b17022495766a4cc4bde2934e042e92dd9a3b2f5c"
+    },
+    {
+      "path": "Enemy/Cards/GraveyardGhouls.hs",
+      "sha256": "d58d8af25857bb3017d6a4b43c14ce4f98281ac99d804adfe302e33b3bbf091e"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/APhantomOfTruth/StealthyByakhee.hs",
+      "sha256": "d7ade887cce732f05b2f3176dec184937cabdbaad845c19ab292a728f35eb3f5"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/APhantomOfTruth/TheOrganistDrapedInMystery.hs",
+      "sha256": "1237156da1547d792cb973a4658584d2261080f5b5454eb34e65ca3da3d5ffcf"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/APhantomOfTruth/TheOrganistHopelessIDefiedHim.hs",
+      "sha256": "e767f591a9784e0295d9de38228ecc7c45467cc6899d6ba662b44b87a5d371df"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/BlackStarsRise/RiftSeeker.hs",
+      "sha256": "6c42ff5f7f98fed6d41bc14e409c906e01e97d63df439e7697c31912473d7f81"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/BlackStarsRise/TidalTerror.hs",
+      "sha256": "7af72da802b5b370208b852da72b18c0ef3e5a584215d2d978877f2ce78e512b"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/Byakhee/SwiftByakhee.hs",
+      "sha256": "f62114ff3b1afafbea3697ce45145e94b6e4fca3d8b6237fd6b5a85a96e1d4dc"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/CultOfTheYellowSign/AgentOfTheKing.hs",
+      "sha256": "f90cd27ef004c071d09aef9ae1eb2cd2e2da6a56cf05ba3953e45570d87df812"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/CultOfTheYellowSign/Fanatic.hs",
+      "sha256": "cdaed045052fe884be477d81f16b94f1e35e38037e8cc25c3961d0df269f637a"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/CurtainCall/RoyalEmissary.hs",
+      "sha256": "62193eac412bc29d85d157e1e564d93239a8caadeaf96565024028e2e235439c"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/CurtainCall/TheManInThePallidMask.hs",
+      "sha256": "087c5f99eecf719bb16ecc9ad7d78fa475d6b730fd978e5bf4caca4b36ddfc78"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/DecayAndFilth/RoachSwarm.hs",
+      "sha256": "9c3db588a3a53e0f41f4aae8f03d9913c7c8fa809a7fd62bd431b8f7a588a6c9"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/DecayingReality/MaggotSwarm.hs",
+      "sha256": "5a8351f41fd6f890782356d9b427f0ca3f85283404790c341e6732d565e20d09"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/DimCarcosa/CreatureOutOfDemhe.hs",
+      "sha256": "0ad7de715b17c0e90402d204285ef0df3648a9a9c08a2f884fd13474ef0a582c"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/DimCarcosa/HasturLordOfCarcosa.hs",
+      "sha256": "30973dc87bbaa5ee21d34e09e08f67dc3b9e63b91d125ccaed4bc46deee20c9e"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/DimCarcosa/HasturTheKingInYellow.hs",
+      "sha256": "fc185d155c2311cf175f5fd186abb0197903b0f28d97fc9c67c1078b3d7dd0a7"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/DimCarcosa/HasturTheTatteredKing.hs",
+      "sha256": "b2353ff0b671d6eff4c94b7efdc58ba30e47dbe75a21b74c188bdc252ccba17f"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/DimCarcosa/WingedOne.hs",
+      "sha256": "72901b2b97f0ecf6d79ef8ae34233f979902a0656ac52b1d6a9f727300ea3a2b"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/EchoesOfThePast/PossessedOathspeaker.hs",
+      "sha256": "81bf37d53e47e895e81b510fa73991d0034b997a9f1ede50dbfe7021c664437b"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/EchoesOfThePast/SeekerOfCarcosa.hs",
+      "sha256": "e56ba78f64dce459eca76919bc10975808042ab8b980038c937ea63cee02a97d"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/HastursEnvoys/PreyingByakhee.hs",
+      "sha256": "35a252cc1fc782b7fd78747511d0b17e0e9166537ccc3e935b75960e17bea6d3"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/HastursGift/Maniac.hs",
+      "sha256": "49d673eea58bd2666c1087f05861554a566521b08afae57ba5332100d51d7133"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/HastursGift/YoungPsychopath.hs",
+      "sha256": "ec0d04a76180cb6b1f2550241aae265e6a6f0c00292c94460303f49f9e2b78b7"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/Hauntings/Poltergeist.hs",
+      "sha256": "d64d0241def98b7fbf062c5feb0417e17fc2641069845657533d0763e36aa259"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/InhabitantsOfCarcosa/BeastOfAldebaran.hs",
+      "sha256": "f92759c115d41ca2ab301fe8e2bdf1511fbf47e2faa5f7e880c2ff3503bce9af"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/InhabitantsOfCarcosa/SpawnOfHali.hs",
+      "sha256": "aba474cc8c79f73b152ba8f7a51b7379d7edfe7e7f54f79953adb17a6e1e9673"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/TheLastKing/AshleighClarke.hs",
+      "sha256": "274a5895f13dcfda47931872de533b79225571aa412933aed5ce801b902da8af"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/TheLastKing/ConstanceDumaine.hs",
+      "sha256": "ad1764ae8d3024e7b4038d582a23335777a30aeb1472f4b50101586feeb876ba"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/TheLastKing/DianneDevine.hs",
+      "sha256": "fc94d8426ffefcf2210ddb25ca30d546ef71781b15933eeaf8298bd198326a49"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/TheLastKing/IshimaruHaruko.hs",
+      "sha256": "aca4f3c375fbf89842515a0789e6fc0a0be284288cec1195e5afd55804188381"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/TheLastKing/JordanPerry.hs",
+      "sha256": "e51c34f85589376d22272ef11ac3edcb01c06153512e15a508c54c00b491cff3"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/TheLastKing/SebastienMoreau.hs",
+      "sha256": "21112a60ecca2daf3d0d504661cd6bc06230890361381cdddc6d05d748fd054d"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/ThePallidMask/CatacombsDocent.hs",
+      "sha256": "0c8fe12073125393efa4b37fb361d938e5328018bf4e29d86e8cad63982fea01"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/ThePallidMask/CorpseDweller.hs",
+      "sha256": "fa47d027c9b87f6bf9ef0c52c24d2b934f3195c27b0562486766341283266551"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/ThePallidMask/SpecterOfDeath.hs",
+      "sha256": "0a9f4980414695361cc0672dc3c770e2983afbf744cb87392f33db7eda9e2343"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/TheUnspeakableOath/AsylumGorger.hs",
+      "sha256": "4b134216b5673f9a29a88d43091b0c794688379c3d00c553bea48a89851aa0bd"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/TheUnspeakableOath/DanielChesterfield.hs",
+      "sha256": "37c7e0ff54557a3dbd69ba28d16db844eb733035f2575940c75b3bead940290d"
+    },
+    {
+      "path": "Enemy/Cards/ThePathToCarcosa/TheUnspeakableOath/MadPatient.hs",
+      "sha256": "648e3f429e95884e79f5188d5d20a1ce9ce9a14bd53685c780175207023c6378"
+    },
+    {
+      "path": "Event/Cards/ThePathToCarcosa.hs",
+      "sha256": "cd51de3b6ae36efe4bf598847b69834ea646608475bab12534ea571a2f05cde5"
+    },
+    {
+      "path": "Event/Events/BuryThemDeep.hs",
+      "sha256": "23bcd0ebaf4ea5d70682096ef6256a0e38fd3460e2932e9216802b04bdf3c14e"
+    },
+    {
+      "path": "Event/Events/Improvisation.hs",
+      "sha256": "37acf4c04b71f139f51ea0e3d1f1497709b58819be0f7d67f4b4af9bb6ad625c"
+    },
+    {
+      "path": "Event/Events/ThePaintedWorld.hs",
+      "sha256": "0edd88992f98dfcd39318c09c5ae8c5ef63ef572e0fd00b526622c3b51c670df"
+    },
+    {
+      "path": "Investigator/Cards/AkachiOnyele.hs",
+      "sha256": "1dbf8a1b1f80ce52ca8fdfb158729f3ad0f7f169bd40277e89a4a22058446bf5"
+    },
+    {
+      "path": "Investigator/Cards/LolaHayes.hs",
+      "sha256": "77f8af94ccd9c14f233ca02f5d6a25d01632e40dbd2c23cccfac0c44fdcaabf7"
+    },
+    {
+      "path": "Investigator/Cards/MarkHarrigan.hs",
+      "sha256": "570e949ee53e387cd701f807b41c491178f65cacb3465d121239ce770efe5782"
+    },
+    {
+      "path": "Investigator/Cards/MinhThiPhan.hs",
+      "sha256": "c7c97865a1d76c5104c9fae6e5991f5d28eb8ecc389e082206347d0a4b689d38"
+    },
+    {
+      "path": "Investigator/Cards/SefinaRousseau.hs",
+      "sha256": "9d09714f12c4fda5cd5c9732428bb9762b4448e5448361865976bf3384728dae"
+    },
+    {
+      "path": "Investigator/Cards/WilliamYorick.hs",
+      "sha256": "5e137b8a8e1c4acf878cb0e8437bafb9e6740236f59fb2ec462ca8d64f5bafd7"
+    },
+    {
+      "path": "Location/CardDefs/ThePathToCarcosa/APhantomOfTruth.hs",
+      "sha256": "530635ad444b127cb75e65dcd4d434bea5f9c57fe617665ddecdf095afd90bcd"
+    },
+    {
+      "path": "Location/CardDefs/ThePathToCarcosa/BlackStarsRise.hs",
+      "sha256": "8b3c4e576e06de4448957b6b47f9a54ce7de3500fa8b4c944d8f59364cd2f174"
+    },
+    {
+      "path": "Location/CardDefs/ThePathToCarcosa/CurtainCall.hs",
+      "sha256": "e2b273993216b3902e483a72bf178539c41a6f614f812c45226d6f6ec09aa752"
+    },
+    {
+      "path": "Location/CardDefs/ThePathToCarcosa/DimCarcosa.hs",
+      "sha256": "121cbe283d3005b33ca0c01631f695dc3f745ed382f3cb284830df4df99a179e"
+    },
+    {
+      "path": "Location/CardDefs/ThePathToCarcosa/EchoesOfThePast.hs",
+      "sha256": "aa5bd0f9aa5cb96429e46a8fe96b5ed268ed0e6854d9c4effa5b66255579c96e"
+    },
+    {
+      "path": "Location/CardDefs/ThePathToCarcosa/TheLastKing.hs",
+      "sha256": "8df788667d0fe5d76b836e26d6e3111170582a6fa7a9c70b9be20b81455c6cf2"
+    },
+    {
+      "path": "Location/CardDefs/ThePathToCarcosa/ThePallidMask.hs",
+      "sha256": "4f218f11d4cbd4c94d362c6e81461c7e5c6befd174520a03ed7fb10d3b9430be"
+    },
+    {
+      "path": "Location/CardDefs/ThePathToCarcosa/TheUnspeakableOath.hs",
+      "sha256": "a9d4a375b726d84db62cad4a82a0eccf69e80cbd873dbabf0c88a604bb59e5f3"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/APhantomOfTruth/CanalSaintMartin.hs",
+      "sha256": "64bcf811634c6bcb494e8e479f044b278f752df48320881c76b3d1d17e1ba23e"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/APhantomOfTruth/GardensOfLuxembourg.hs",
+      "sha256": "ee5302078e9d86e043acd533fa452440eda8c530d4abe9060c0d3a0582656f33"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/APhantomOfTruth/GareDOrsay.hs",
+      "sha256": "1de415fb5ed75594978dd17719fa25f7775c53f949721c6986148adbc2be60a6"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/APhantomOfTruth/GrandGuignol.hs",
+      "sha256": "6122ddfdcf5f9a8015d633570e0d1f860912f9cc749f588fd6342ef92a5f7860"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/APhantomOfTruth/LeMarais217.hs",
+      "sha256": "b7b93bc20c2f3efd481a4b6f9dff0a490ccf872a3109bf8a436f5f1456a7fcb0"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/APhantomOfTruth/LeMarais218.hs",
+      "sha256": "eb1231563adfdc461990b448f1ffc7c47e46f04fbb4d53be9802e6a9d7eb7637"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/APhantomOfTruth/Montmartre209.hs",
+      "sha256": "c6119c2824c834a4f4ddee9b05d2edcc5c1631bfd5f910a9b463fe5f40ae089d"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/APhantomOfTruth/Montmartre210.hs",
+      "sha256": "828a25290982f36cf997be5161dd4cf6766cba97ca296dead34cc2d927fb66b1"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/APhantomOfTruth/Montparnasse.hs",
+      "sha256": "673e564a04604c4cd9466d34e76a65f8dde895a30ea17d0455b3c188f1aeba01"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/APhantomOfTruth/NotreDame.hs",
+      "sha256": "216c9e032fe66076ad6369d7756a1e11947cdc96e5fba08a286f06fabe50376f"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/APhantomOfTruth/OperaGarnier212.hs",
+      "sha256": "6d40911b9915caa1726e2ced38e81562f04ef41f8a050e8e830d72c1d68c0036"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/APhantomOfTruth/OperaGarnier213.hs",
+      "sha256": "08ff67871675b483cbc8076c1d242f0d8b5ebf14d83b5e8918a2995b14822f79"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/APhantomOfTruth/PereLachaiseCemetery.hs",
+      "sha256": "9c340aafd2b31c6f5aac4636eef5114ce5d638ba4cb2f19b3f7fc49069e5296d"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/AbbeyChurch.hs",
+      "sha256": "490455a659822694673cbf3d887b72fa1ab67c357fa34ba258e9d6e8f19e3070"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/AbbeyTowerSpiresForbidden.hs",
+      "sha256": "1f7be85e45b01a21c873a43d8b7dddb2087aeefb7699f37187a05bad26162b37"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/AbbeyTowerThePathIsOpen.hs",
+      "sha256": "6e516910295268cd0774beac169b44454570de40b18896496c1868b29c307800"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/BrokenSteps_289.hs",
+      "sha256": "f358dcb2d8575d4d9ab329d0f1c4d3198130b94bdf9cf451dec0e0421da7df33"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/BrokenSteps_290.hs",
+      "sha256": "f57c574bfd648bf075d121dbdd990371ed3b8f25d39287e790c486c6f0a25344"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/ChapelOfStAubertThePathIsOpen.hs",
+      "sha256": "7f5593d258c3571432a7ae1863ac57b252d34330a8584e27dc71ac8a5f4f5c44"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/ChapelOfStAubertWatersForbidden.hs",
+      "sha256": "6f324a04772d5635637da94fdf14a1f58dce7ecc4888c82309b676c7e59236de"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/ChoeurGothique_292.hs",
+      "sha256": "00cbed6a200832ebfcd3d38264ed1d033423f8ec50d60d1bb279aa502c20477f"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/ChoeurGothique_293.hs",
+      "sha256": "7255d023316df28d13c9434460ac36c1be0030614a034f27c0bbfee8d7932ccb"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/Cloister.hs",
+      "sha256": "e1b9e9d212fbebc3173445905dfb168c43a1000e4e224e575d3deaa216d9616f"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/GrandRue.hs",
+      "sha256": "8613324abf53a43b48b918845be892e7db5f62f821530474f082d0fae21c2b85"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/KnightsHall.hs",
+      "sha256": "7ee169211fb36db2ff44b173de826cbae99c1820d864585e247e39e1c697ac23"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/NorthTower_287.hs",
+      "sha256": "71b7db9d8eaacb5161c2135df13fbfad82b0ab48fd9b6fcd1e5b5f7593719016"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/NorthTower_288.hs",
+      "sha256": "c4a7036fc3e12e6aec5ea006c55d705e35c701d8b40a15d31e935e0d1b4e349b"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/OuterWall_285.hs",
+      "sha256": "6ea54045c2a82eeab8b9b5a1e9e5264d27f1ceafd2fa9a7cd02934b83f0b0fac"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/OuterWall_286.hs",
+      "sha256": "c1c3e1bc077ff8e53b8a416a6a124f58271153e1e3be58f8d6e53f0dd35abead"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/BlackStarsRise/PorteDeLAvancee.hs",
+      "sha256": "e3f8b843b8164d7618efe006cbeb1015a11c3e22674a24376db9fd7605872770"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/CurtainCall/Backstage.hs",
+      "sha256": "1752791937abeff41374aedc9f32ab7c8c16f43f03997f350915e458f2130954"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/CurtainCall/Balcony.hs",
+      "sha256": "f15baaed1652cd1e50801bd30b128b9fbbd7721913b8f632a48f1abc6355ff98"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/CurtainCall/BoxOffice.hs",
+      "sha256": "d0c78d66b1011e1553108e99eb55f3df48d4004384effb9024937b66a7857533"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/CurtainCall/DressingRoom.hs",
+      "sha256": "696ff974fef68098e16635e4d685223c42001a0006e218cd13c6bd402b687a5e"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/CurtainCall/GreenRoom.hs",
+      "sha256": "54a5df41921fccd9b29d02d0eea65aa3d45caccaf5df24909feeccbdd93fb8da"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/CurtainCall/LightingBox.hs",
+      "sha256": "a07f1183d755c0430055ba63143171a16dec516f3e5ce5af787f56aa0437adf9"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/CurtainCall/Lobby.hs",
+      "sha256": "0a067f99dfb02724e97294001e5d6b34bf659f8b488c438571af9f9d554ac9bf"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/CurtainCall/RehearsalRoom.hs",
+      "sha256": "bb368c6c610b3431d17333828a74e901ce8500fac9bf63255946ae45826ea054"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/CurtainCall/Theatre.hs",
+      "sha256": "1d6b8dd9180fb8cb6397a05a57e6a9567cbfcefef9b8a7cacf2d7319e0fcb134"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/CurtainCall/TrapRoom.hs",
+      "sha256": "83a19958f1c85ae21c3092bcb5b6b2bd2449e5f01b7ee06faaccd7dc9715bd6b"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/DimCarcosa/BleakPlainsBleakDesolation.hs",
+      "sha256": "dfe2efe837dc4c32a4c14f3cb26540174c4e1820b5edb19dfa7dd037973e1cec"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/DimCarcosa/BleakPlainsStarsOfAldebaran.hs",
+      "sha256": "08209344c4de358b4483455b3823ac1c0457cf13f011c637b64543ee85918dae"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/DimCarcosa/DarkSpires.hs",
+      "sha256": "7af5da7fcda7da1622408177676f112d2c88819b714dea240bf015e96cb79bcd"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/DimCarcosa/DepthsOfDemheStepsOfThePalace.hs",
+      "sha256": "42eeccf4581b573128c73b776464a0434a24be1d78c13fb93e552e960c175de9"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/DimCarcosa/DepthsOfDemheTheHeightOfTheDepths.hs",
+      "sha256": "aacc4ea27c2cc4fdabef5556cf5df95c13c48407818f23f3ce95029e1b43cefe"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/DimCarcosa/DimStreetsMappingTheStreets.hs",
+      "sha256": "aa627006a6beb3f5781dcd301edeb70e027e1ca2354237b16dcbf4d19aaf9e63"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/DimCarcosa/DimStreetsTheArchway.hs",
+      "sha256": "9b98acefde3487bc1825dc9b9de5ab7ecca00a015465827f76f8d4387f0bb8fd"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/DimCarcosa/DimStreetsTheKingsParade.hs",
+      "sha256": "84c6ca22e6319e3ca1bfeec867ea369b40537e463a62d27919af0b43e8194148"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/DimCarcosa/PalaceOfTheKing.hs",
+      "sha256": "1187af2506367417345a0b10e0674c5c021621cf25bdabe46dee58d6e6899f3f"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/DimCarcosa/RuinsOfCarcosaAMomentsRest.hs",
+      "sha256": "11cdf861498a164a3972a2bfc005465a26e1c41f58bc07dfadf3c38cca1c37ba"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/DimCarcosa/RuinsOfCarcosaInhabitantOfCarcosa.hs",
+      "sha256": "1ac4781cf4101ca3faf6a1c8de6224405a7e9e9b465272041c403ce60feaad75"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/DimCarcosa/RuinsOfCarcosaTheCoffin.hs",
+      "sha256": "d50f70f2fc35bdfa983c432c3818060302c7013b53873b0241b573fc386f4cd5"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/DimCarcosa/ShoresOfHali.hs",
+      "sha256": "5e06cf2ff41c2c7ce3bad5576bcdfcaf4126eb0b77dd4a70dbdbafa8064d1845"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/EchoesOfThePast/EntryHall.hs",
+      "sha256": "03b4261a147316569deaa7c1c9cdc3b7070bdf0f4c821561b67eb956cb1c8c2f"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/EchoesOfThePast/HiddenLibrary.hs",
+      "sha256": "b32a775c4bb69740f6b5614b6278b4f10ccb3b56c5bc7c9c7eb6e5dc93512d97"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/EchoesOfThePast/HistoricalSocietyHistoricalLibrary_133.hs",
+      "sha256": "83167f9c9c58379ca73f4f6909d71e10d2f436c526383f5bdfeb9a9b4bdc97c8"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/EchoesOfThePast/HistoricalSocietyHistoricalLibrary_136.hs",
+      "sha256": "806e26bfd8106165b6ae7e712dba123ff8c7be5673432180be73198e50328c68"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/EchoesOfThePast/HistoricalSocietyHistoricalMuseum_130.hs",
+      "sha256": "022fc3811a75e1d06c48551a06dcd941e7416e26a5e9c40975b5a82782da625b"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/EchoesOfThePast/HistoricalSocietyHistoricalMuseum_132.hs",
+      "sha256": "0c2059cf344d763987ee62ab56fa430761ab3454fbd26a9ac64ac0aa32e27088"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/EchoesOfThePast/HistoricalSocietyMeetingRoom.hs",
+      "sha256": "ce3ce8a436434f0c3a7121b7855eb8f1d4dd899ef02b3ec410880f2def91494a"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/EchoesOfThePast/HistoricalSocietyPeabodysOffice.hs",
+      "sha256": "29ea0d027962939a1b994fb55f2bc7cfc47bda083ec1761f7ed59e13470d39d8"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/EchoesOfThePast/HistoricalSocietyReadingRoom.hs",
+      "sha256": "9dd7717d6f2d431fbd9227112c14cad2aff5af6072c8490085dabb0988a35064"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/EchoesOfThePast/HistoricalSocietyRecordOffice_129.hs",
+      "sha256": "af392986d1d75be22aba7a186a82fdb327de0bf9b7ab6c4d2a0a484ba631fb29"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/EchoesOfThePast/HistoricalSocietyRecordOffice_138.hs",
+      "sha256": "1c00dbc722be90afd445caa1947424297b8320f4a22e76e87964d3c89f712b8f"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/EchoesOfThePast/QuietHalls_131.hs",
+      "sha256": "f044c15907c70292486f1c3b4bece9facd482ebbae0c332313f98edff4027c2a"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/EchoesOfThePast/QuietHalls_135.hs",
+      "sha256": "fba91138581a4faa117a003cdb32077bce7f10751344a98895c25dfc4828c40b"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheLastKing/Ballroom.hs",
+      "sha256": "1cadaac3518a5d06f3793b0869d86828d5ce80dfadfa11f852c48be961695f88"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheLastKing/Courtyard.hs",
+      "sha256": "6fd77e39ace941a4e5e59e190ca2b0437f409aeda39f46bebb7bde966bd377d1"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheLastKing/DiningRoom.hs",
+      "sha256": "fedbedd2fc21cfaf2ae0dcf836a3fd4c2266cf57d88414c25b3c06ad14532d47"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheLastKing/Foyer.hs",
+      "sha256": "93b1f226d93aeb03445a7f7d352b75ead1277b0b288b5bb9328c6ee30ead5ee3"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheLastKing/Gallery.hs",
+      "sha256": "35045a85cd853ef0b1236e7df16cd0d6f889ca032bf04ce8c5036ae06434ab04"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheLastKing/LivingRoom.hs",
+      "sha256": "6ce19fdbb194e35c9cb70894efff4dcd2ec2ea5b3b38d430772aa1c6c5477a7c"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/ThePallidMask/BlockedPassage.hs",
+      "sha256": "232eb19b1e6de1a067e84e0a4393f05344472bf55c4239b0603a61d11954a8a5"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/ThePallidMask/BoneFilledCaverns.hs",
+      "sha256": "0d77a8d1f9c434d1f409b8af03bc60dc76925f2c36fceeccc3d705ed67c175e5"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/ThePallidMask/CandlelitTunnels.hs",
+      "sha256": "c953a7d0c80020c734786da630ba159b9d2b6fd4f5fc63d92532149fccf7f2bc"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/ThePallidMask/CryptOfTheSepulchralLamp.hs",
+      "sha256": "72ec464cf143ec93dc7a3e82a7624e263e3d44e255a984048ee1a9c5cb6429a3"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/ThePallidMask/LabyrinthOfBones.hs",
+      "sha256": "2e75ed4f855b47d2aa2e4b6d56ed07349d6364f36c3ea52b818bd1c979d3c72d"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/ThePallidMask/NarrowShaft.hs",
+      "sha256": "768b03ca33e937d66b8013cbc4f56161df7cafc7a12c1559fd2d20fc30d3bfa9"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/ThePallidMask/ShiveringPools.hs",
+      "sha256": "367b0331a7450e1e8c42792621ee36de4b705604753361f078c13aabcdcf1cbd"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/ThePallidMask/StoneArchways.hs",
+      "sha256": "4579204003fc05059f797ba3aab25802917d2f02018c34473458c4c1a02d1322"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/ThePallidMask/TheGateToHell.hs",
+      "sha256": "46d1ca5e0fe8979f30ce465358da40fc4f56555d4a672b1cf6bc304a7dc9438a"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/ThePallidMask/TombOfShadows.hs",
+      "sha256": "cffa4a9839cb99028c2e8d8890871be19bc538365e1248db62f7add53fb14908"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/ThePallidMask/WellOfSouls.hs",
+      "sha256": "96bfa86f59acd6b0384b359a61b8d3fd18aa9df766d5c90df019a0297367085e"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/AsylumHallsEasternPatientWing_170.hs",
+      "sha256": "7c75908cd87321a70b078738a79e3100c5f49722fde1c108f171d325719d7675"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/AsylumHallsEasternPatientWing_171.hs",
+      "sha256": "30c4a34498f685e930fcffc767262f49e62979bcdb2390140602d2cdf9167c06"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/AsylumHallsWesternPatientWing_168.hs",
+      "sha256": "c2f94f00d84b62fcb04a9444e258314756eec8d4cb0910b3d73ec6117936ff03"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/AsylumHallsWesternPatientWing_169.hs",
+      "sha256": "27e95c4f46f15d7c40e67413c5e57fcb82c065b5b4ccbe7ae10f6c61de040e88"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/BasementHall.hs",
+      "sha256": "7b0b923d0ec58b705c9f03c90a1d8f0a9d2114785478c4398e652c664231fac7"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/Garden.hs",
+      "sha256": "7372d9716e5e638ee1318a4ae972626daf4d62a5c70103f32449487902166111"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/Infirmary.hs",
+      "sha256": "6761d770bfa1ef2624a0cb119ab14590e81f551ee84ed4b95683c5870f392fe6"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/Kitchen.hs",
+      "sha256": "55ba573bb7bd29bd32b6c844417b823ac982af0a318351da02ec0ace33cdbfe0"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/MessHall.hs",
+      "sha256": "1a3ac97a7930be102233c316a1844e810f039cfb0d0b632484c1d631547a9cdf"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/PatientConfinementDanielsCell.hs",
+      "sha256": "5a7a2cd0b39c09c5724e62a4de73377c26eb74bcbfe70bbca4e89742f17811bf"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/PatientConfinementDrearyCell.hs",
+      "sha256": "2d0d26306feeab939adf9a180f0e4518a8cc74b87f0ed3fadf4d9a8eae3acb88"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/PatientConfinementFamiliarCell.hs",
+      "sha256": "28c795840ddb4b64a9d5e742e06f7aba40d53fd6f85fb23e3667095346040657"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/PatientConfinementOccupiedCell.hs",
+      "sha256": "40f50ec09fe2fd28c0f35b0385afa47f2d4693c0023e8efbb62922f1c070439a"
+    },
+    {
+      "path": "Location/Cards/ThePathToCarcosa/TheUnspeakableOath/Yard.hs",
+      "sha256": "5fe3b01303942524c8e93b694095a569b9f0f79c6effe72b19f3e3bf0eb26f15"
+    },
+    {
+      "path": "Scenario/Scenarios/ThePathToCarcosa/APhantomOfTruth.hs",
+      "sha256": "9163299acc6e384a5368e784fa22c0f5f575d8ca7bf9add8d0fc87596045bec5"
+    },
+    {
+      "path": "Scenario/Scenarios/ThePathToCarcosa/BlackStarsRise.hs",
+      "sha256": "526fecb499c0e8e324b49ec9faea2080b889ac367305da3bf6f7e9e318e538a5"
+    },
+    {
+      "path": "Scenario/Scenarios/ThePathToCarcosa/CurtainCall.hs",
+      "sha256": "0bb7a9ff9ff8a3e1e128fdabe399ac59d26d4ce0d691da88deae86703a2a427c"
+    },
+    {
+      "path": "Scenario/Scenarios/ThePathToCarcosa/DimCarcosa.hs",
+      "sha256": "652ecf461ce8b79d05cb2578da6a19cdad1002986f951bdefabe5e9a86ffb734"
+    },
+    {
+      "path": "Scenario/Scenarios/ThePathToCarcosa/EchoesOfThePast.hs",
+      "sha256": "e0437867c31a9180db0d6d63e8ae2de02bb5fa4eb4bf0d49cde0c71503186342"
+    },
+    {
+      "path": "Scenario/Scenarios/ThePathToCarcosa/TheLastKing.hs",
+      "sha256": "1022e483e20ae1e01d888dcbc9446337bc95bfb660c5dffebea6cb6295814545"
+    },
+    {
+      "path": "Scenario/Scenarios/ThePathToCarcosa/ThePallidMask.hs",
+      "sha256": "31e516de0d5853ca4416376728a61838a6a17a6b6f9370afc29919f455b81ec0"
+    },
+    {
+      "path": "Scenario/Scenarios/ThePathToCarcosa/TheUnspeakableOath.hs",
+      "sha256": "02fe4463f491f9d578470b689f7aeb9d0744e50e1cc4728aed60b23de6a3dfeb"
+    },
+    {
+      "path": "Scenarios/ThePathToCarcosa/APhantomOfTruth/Helpers.hs",
+      "sha256": "8f5a4869846d93ff3bef0dc1e40dba9267d9c2227c5ff256be9de01d40159d62"
+    },
+    {
+      "path": "Scenarios/ThePathToCarcosa/BlackStarsRise/Helpers.hs",
+      "sha256": "6d57b50bdb2d04c53433ad218304e1129f9388abf2080b27f76b501ce2fd90bc"
+    },
+    {
+      "path": "Scenarios/ThePathToCarcosa/CurtainCall/Helpers.hs",
+      "sha256": "d5e804db98fdc7510d12e327aa8c2cd8c7a0d9816cade294451025b513aa3b9d"
+    },
+    {
+      "path": "Scenarios/ThePathToCarcosa/DimCarcosa/Helpers.hs",
+      "sha256": "ae606f6976dd529f776797f7fe41d29db6c262b8197049c357e520d7325147f7"
+    },
+    {
+      "path": "Scenarios/ThePathToCarcosa/EchoesOfThePast/Helpers.hs",
+      "sha256": "306ec06c0a94276d416cd11084e2238255d7c672cc4c7d85abaf87c88c132e96"
+    },
+    {
+      "path": "Scenarios/ThePathToCarcosa/TheLastKing/Helpers.hs",
+      "sha256": "00e2e359409e2a69efa32478f38b1c86a2e8dd118aa6fe7409c86f1e892648e3"
+    },
+    {
+      "path": "Scenarios/ThePathToCarcosa/ThePallidMask/Helpers.hs",
+      "sha256": "a01cbcb3b935731443e4f1f4096a704061c2ac645ac177ad1235cb55f1a022b4"
+    },
+    {
+      "path": "Scenarios/ThePathToCarcosa/TheUnspeakableOath/Helpers.hs",
+      "sha256": "c8066dac665ed0a20d5f6a603ad6dd5c358787de6c32c984146255ab76d7af69"
+    },
+    {
+      "path": "Skill/CardDefs/ThePathToCarcosa.hs",
+      "sha256": "00e1aed4245a29bc4be03cef5b36120d59eb42bc50a5fedb09cd84fcd4777b6a"
+    },
+    {
+      "path": "Skill/Cards/TheHomeFront.hs",
+      "sha256": "6f57c53c49d81aadc235ae04719be90fe9384e4aa7241108d86506abcb33dd6b"
+    },
+    {
+      "path": "Story/CardDefs/ThePathToCarcosa/DimCarcosa.hs",
+      "sha256": "0d5f27dba1fafe6bdeb7ac876e66d7edaf4a12eb4e08274ec9bd6e8271f683d0"
+    },
+    {
+      "path": "Story/CardDefs/ThePathToCarcosa/TheLastKing.hs",
+      "sha256": "68558faeed9aef0fc1c9796d53f211c3b7f5564acbb4cfd32c1c12c33b8d1c81"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/DimCarcosa/AMomentsRest.hs",
+      "sha256": "a584a39c4e12d99443ea2887579a0768481eb71b1550818d3c7c577000a472bc"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/DimCarcosa/BleakDesolation.hs",
+      "sha256": "858c78d29584d9045eabf98332d315bc00485ff7cd8cab6ef5b9ae498a5ef085"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/DimCarcosa/HastursEnd.hs",
+      "sha256": "68877575d7a2aaea25328e8f2b07a4d2abaef1c36bb23bba493c7b4a9d124e8e"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/DimCarcosa/InhabitantOfCarcosa.hs",
+      "sha256": "7eed40acf318d83ff5899e8d5056020fae59fee0460076ad9978238a35695b7e"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/DimCarcosa/MappingTheStreets.hs",
+      "sha256": "a35152eee33f031b30dba4207cbd957b5862ae8821eb73b1cbbd06cfd0266591"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/DimCarcosa/SongsThatTheHyadesShallSing.hs",
+      "sha256": "c49d5f16c5e0a767b039180df449de362b38a4b2eb369213cc152fd5c76d456a"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/DimCarcosa/StarsOfAldebaran.hs",
+      "sha256": "dde954df84e8761ea1d7f16a7f818315c41096d56b93a474fa2ecb0c9c170a9a"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/DimCarcosa/StepsOfThePalace.hs",
+      "sha256": "8cc8c5069db72d26d4d3ba08ddd8949a68b351ba27778ae8d8f0f765fff37d9b"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/DimCarcosa/TheArchway.hs",
+      "sha256": "3f47c1076aaabc78679fe0748ce7ba38205fd0e2aea2ce93541abf7fdc52b368"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/DimCarcosa/TheCoffin.hs",
+      "sha256": "1f0bc571b4c944a9afa365eb18aad53618b4f7f117d0d5cc5bd722f46c8ae4f2"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/DimCarcosa/TheFall.hs",
+      "sha256": "a555d31e58b2839e22081602593dac92e4ec167f2caccc8c83d4c0d8df5ad32e"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/DimCarcosa/TheHeightOfTheDepths.hs",
+      "sha256": "8472ec2b3c71c52523d5d2303e8d1dcccb3322d109f94a466d53bdb94bdfbdc2"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/DimCarcosa/TheKingsParade.hs",
+      "sha256": "511e45df1b2590a96cc917209facd42f57f3013dc5a9ea421ffedc07b32d043c"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/TheLastKing/AboveAndBelow.hs",
+      "sha256": "9d4956e17126b660365bd8aa446df397d582da97166186773288072ffb871d2f"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/TheLastKing/EngramsOath.hs",
+      "sha256": "a154d665fb361c3ddadcf187545cfcdb2a1a512d0452ee05692b4b7ee37c23ed"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/TheLastKing/LagneauPerdu.hs",
+      "sha256": "69dc57d0f73d45d9c93d27b89500a61e77c59d8e2cdb1e9b9455e612f2b7312c"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/TheLastKing/SickeningReality_65.hs",
+      "sha256": "3e25726589aedb0ffeabb31cd7b892ab1670bc2cf5fd73fda7312995e53b4839"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/TheLastKing/SickeningReality_66.hs",
+      "sha256": "da3c0040d9beeba6a72cd003954389493e9e38ead08a4dfff91b0e7780e39b74"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/TheLastKing/SickeningReality_67.hs",
+      "sha256": "51c6fe15b74a4bfb2401cea8772be26ebbb46d4b5f034b5406f40ba21abccfb2"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/TheLastKing/SickeningReality_68.hs",
+      "sha256": "93a7cfa187832e5efa4d27aa4d8cb3ec6c123f5e2ace0a9f2e198fabcb2eb2ae"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/TheLastKing/SickeningReality_69.hs",
+      "sha256": "cccb0dca73fed3d1f14221e0eea32d232ac9ca33f237e632b093798340db506e"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/TheLastKing/TheFirstShow.hs",
+      "sha256": "635c53878ae7736531c8f0ad83602635679e0199d3071fc23a6c3fb90f48b08a"
+    },
+    {
+      "path": "Story/Cards/ThePathToCarcosa/TheLastKing/ThePattern.hs",
+      "sha256": "37ec2c5f785549cff389ff5f208cbfb5a1350fe62dd425e46d1a3eac3dc95a94"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa.hs",
+      "sha256": "6d500f356a28169eb3e462c8fd11b9c3b0ad75e5f5fc2a9e3d7b187d81bbdc5c"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/APhantomOfTruth.hs",
+      "sha256": "b05df8bcc8d869b16af5a38653885492aa7c4b442b5a8ec68fd901b819939555"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/BlackStarsRise.hs",
+      "sha256": "e9aa3143e97b79688dc4cf25a8095485c70583f15743ffc1443237bc58704f8e"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/Byakhee.hs",
+      "sha256": "840de5cb02523e0cf3fa94a5903726a71cd8e6e77c2af35b2317dc27784560a1"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/CultOfTheYellowSign.hs",
+      "sha256": "c6a0fc9e8f4e441babfa9026bee7ec300d8fbcd79fe1f310bccb3ec0c9282e24"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/DecayAndFilth.hs",
+      "sha256": "ffc528522b6dffe53659ab3d494f10e5cbf067075356ad32cfc6a294f90827c2"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/DecayingReality.hs",
+      "sha256": "65ef12e3520db4945180457774068a6fcf78b8e6330a197947c5b44630133c69"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/Delusions.hs",
+      "sha256": "5f6314e7ef4947ce7a55334b8041dba3218985a6b91229c1f98ca064e642e68f"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/DelusoryEvils.hs",
+      "sha256": "f30b42f197b45ca91f8b2098332b0e5c64ef2500a2923f9d51a8b4cfd6b77f31"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/DimCarcosa.hs",
+      "sha256": "c9421fb4f90c1fb01f0a411377489a6b9c596d02bc5a676af86a2efb5cb56e3d"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/EchoesOfThePast.hs",
+      "sha256": "1836ccbaa3a90783488918af6f37db5cd51887c4c106baabb3d21ca43d35992d"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/EvilPortents.hs",
+      "sha256": "02046acbfc2412c3b235b52fbc1fc984fa84aa872b0f15d4c73a2036ebe73cde"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/HastursEnvoys.hs",
+      "sha256": "1b2375ae2bd6f679111d61ae357bff67750e1b2e8c550271b18be7c87c67bf7c"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/HastursGift.hs",
+      "sha256": "143b26bacaab21461184d5a3c9c2abc0d832f2a83f3e77146f1967f53d53c0e0"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/Hauntings.hs",
+      "sha256": "5715374c844d9acb513853743ccf8c749a71eda3ad88c715a8077916c5880b05"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/MaddeningDelusions.hs",
+      "sha256": "fa751f76978fe8e56b5c214319db1b9cc79985706989a2a0b9d4109ab3fb01a5"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/NeuroticFear.hs",
+      "sha256": "301ccd304e38cecc087a12ee1d18886057dee6a1a6b773227889f8aa6ee1fe7a"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/TheLastKing.hs",
+      "sha256": "1b3458b21c58fd3e1142c8167ba18beacc69a3be3e612ce8e85976e0a2e84a50"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/ThePallidMask.hs",
+      "sha256": "459be7f0b0113e78774f6aceefcf483fb890ce479055734ef4cdfb535ee6d955"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/TheStranger.hs",
+      "sha256": "0cab96daefb6de7b49045e26389180648be5c681a5ecb514edfe71c850cea086"
+    },
+    {
+      "path": "Treachery/CardDefs/ThePathToCarcosa/TheUnspeakableOath.hs",
+      "sha256": "1ff84f8233d9c45416f06f7e5af61e98fc616998aa0437f17a448d90ddc6d554"
+    },
+    {
+      "path": "Treachery/Cards/AngeredSpirits.hs",
+      "sha256": "423e328d4ee0914e0f2b44b155feaa7282520d945c36ff6b06173c5e4a54b7f5"
+    },
+    {
+      "path": "Treachery/Cards/CrisisOfIdentity.hs",
+      "sha256": "11f2fec9cc15f308bf1fd69e5ef5da39119f646250223866cf160b6a7b030818"
+    },
+    {
+      "path": "Treachery/Cards/ShellShock.hs",
+      "sha256": "6708ec0a43df1b731d10525f3fddc55e9849b428ff010505b668d90a10019784"
+    },
+    {
+      "path": "Treachery/Cards/StarsOfHyades.hs",
+      "sha256": "f8dd235f912a1434cf7a4da625837285e368ff338c2738f824682c1f2c606884"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/APhantomOfTruth/DeadlyFate.hs",
+      "sha256": "afa18a3ace3e664408d248ecdf9138b529ff6f54f1e55af042e00ae85684040f"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/APhantomOfTruth/FrozenInFear.hs",
+      "sha256": "e909603d3d6a1298b67bd3c766d7fcf29ddc9f06a3e096c83ad7336052bdf976"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/APhantomOfTruth/LostSoul.hs",
+      "sha256": "b781862aaf76df8e8cdaad6b949485fd62e87bdc16475f622c6c341d95359734"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/APhantomOfTruth/TorturousChords.hs",
+      "sha256": "59d4f12ebd9f2258ffdf06bfbd077b7dfffdac37fbfb5bccd6c4d88fe25c9c70"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/APhantomOfTruth/TwinSuns.hs",
+      "sha256": "a842774d59df59a9fdcea1c015532e8080ab14524c2bd20456b63bbd7393ae0d"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/BlackStarsRise/CrashingFloods.hs",
+      "sha256": "8688192939bba517432ad871fa5354ece88fad3ef65603fa91c6e776664632fa"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/BlackStarsRise/WorldsMerge.hs",
+      "sha256": "f8087dbc51987ddb0a3bffcdcf71df0732fd18a8d4980fb73bc0849ff6c33e42"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/Byakhee/HuntedByByakhee.hs",
+      "sha256": "0eaa1ee147604ef7e031d8f96599cb0ed71503249d23e8b8b251264a933e340b"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/CultOfTheYellowSign/TheKingsEdict.hs",
+      "sha256": "5b69a02e8b929607b6ca42809b3c438bc72eec0289d67451496b98346d400b83"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/DecayAndFilth/Corrosion.hs",
+      "sha256": "b4855cbda6aa1033b80a533bc1546e0e07fb1506e4534e3458b98d375e02579b"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/DecayAndFilth/OozeAndFilth.hs",
+      "sha256": "85d70def06c614c8e7aa0fb2434425aacc30ce5239610d37ed88073fa8f0c5a8"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/DecayingReality/BleedingWalls.hs",
+      "sha256": "5b9d3e9de6bf0a00aa09addf7f9dc9587029e5f2cad906cc5b716ab948cb39a8"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/DecayingReality/FragileThoughts.hs",
+      "sha256": "3940ad84c0bc9b34e6f8db227401b1213ab023a3fb2de2b0fb9fae3999c290f9"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/Delusions/DescentIntoMadness.hs",
+      "sha256": "4064a51b9047955efdc59752e2510c72f75aed2a50ebef0378210eb92c8d3f6c"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/Delusions/WhispersInYourHeadAnxiety.hs",
+      "sha256": "6078730d36d20b99b54276ada65c11d649fffed6c5b0791713a7a6a4d4547705"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/Delusions/WhispersInYourHeadDismay.hs",
+      "sha256": "2cd36ec6232c9fac9d2b85d90e9da1b1da61946c82d7ccb9394c97dd2acc24ee"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/Delusions/WhispersInYourHeadDoubt.hs",
+      "sha256": "ff1cc8b5cc86050fd897bc0b6a9baa1af990fc61b0d3268bc023d04cfc500f5c"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/Delusions/WhispersInYourHeadDread.hs",
+      "sha256": "6e91f29cb7ef6a6633a44036f3e9d5729c3d9bbdd4411d37da27b75ccc09087d"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/DelusoryEvils/DelusoryEvils.hs",
+      "sha256": "10ccd1e47e07cf3897858f8faf7e8d66cd8985b7c614913bbcaa0307d9a345eb"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/DimCarcosa/DismalCurse.hs",
+      "sha256": "d009df211789173fc0b14387dd7aa4a299ad05a2641da3cb563ccf6fbf80ca41"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/DimCarcosa/PossessionMurderous.hs",
+      "sha256": "5a9e100f3fb87649d51552665e3623a357a155a55d5855fdcb02973a3cfbc66a"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/DimCarcosa/PossessionTorturous.hs",
+      "sha256": "36082dbcf8c8190458a4c2b529e327520a13044af816de8f5a23a101c0f35c44"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/DimCarcosa/PossessionTraitorous.hs",
+      "sha256": "6cb407181ab18f1e1db92475579b5a2372d024b924a748513ce240822908c03d"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/DimCarcosa/RealmOfMadness.hs",
+      "sha256": "3fd9701682aee1a1f02cbcd73dbc12fab7bac0440b0c6d4523b7bd1d42067c0e"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/DimCarcosa/TheFinalAct.hs",
+      "sha256": "362178641140d167d12985d8321af3297fbcb0cf6d56e6bc6c504b5b6ab47c45"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/EchoesOfThePast/LedAstray.hs",
+      "sha256": "6985348c25387480350f74a49dc5d5bf13683e0cc4cec7d2f0b652f7cba5c621"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/EchoesOfThePast/TheCultsSearch.hs",
+      "sha256": "ba3594e2ef83e6d4bfad92e77a899a23e9f965d01e6bfdd3e29d5e6fe7caf803"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/EvilPortents/BlackStarsRise.hs",
+      "sha256": "a0f8627a1a52948b2f38c7d53c74f8316ffbd14a060625396383f9c4a09c22d1"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/EvilPortents/SpiresOfCarcosa.hs",
+      "sha256": "cd8f080581d205ba01872c0951c5a58477c3e19118da714911f6a43fcb30b12e"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/EvilPortents/TwistedToHisWill.hs",
+      "sha256": "40d278c46f722362978a5cb97c81e773fabb9b3dde62b738e8ed01b1b8a37bbe"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/HastursEnvoys/TheSignOfHastur.hs",
+      "sha256": "e137e28d7398aec654dba9371ba5b51e6fea2c9f8b30a7a2ff74c004cd4e68c6"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/HastursGift/DanceOfTheYellowKing.hs",
+      "sha256": "ad99f6d38e50aedecc2ee304043dc9c57288fd133198a123630b625edf8f705e"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/Hauntings/SpiritsTorment.hs",
+      "sha256": "7d5b4c2d39b71d4fdebfa81b02214c9278d2d6e12d20804e3c9ed37b2424c37e"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/MaddeningDelusions/MaddeningDelusions.hs",
+      "sha256": "10134a26b20ba6fdf9fac4e610cf4a9aadecb1a86a00b7ba577e76195dff74b3"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/MaddeningDelusions/VisionsInYourMindDeath.hs",
+      "sha256": "5b315c203c56fbba9fd487bfe3aca7aa37ec4202a4d933969255aa2aad2f03dd"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/MaddeningDelusions/VisionsInYourMindFailure.hs",
+      "sha256": "bb84d0a5570002baf1c5d1b4b676338781ad01b397d122d78c1f85aa12f55ab6"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/MaddeningDelusions/VisionsInYourMindHatred.hs",
+      "sha256": "fa760edf07df133e2f62b75f7193d40df526d2331fd9e9f17d9b441a9eaa0f34"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/MaddeningDelusions/VisionsInYourMindHorrors.hs",
+      "sha256": "0a38730364c58204e376ee8eaff7484bdd377dc4c9a2346d077e7bda16361031"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/NeuroticFear/Melancholy.hs",
+      "sha256": "320bcf257144fc0512c8f7b5308a026ff089e692ad1dfd22e95c8444062b4d46"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/NeuroticFear/PainfulReflection.hs",
+      "sha256": "bc5c737735bce4b3cb695307b36e86c2d3bd665b2042752e1d3c5b8f66c5d7c8"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/NeuroticFear/VoiceOfTrunembra.hs",
+      "sha256": "45dddd9aedaf2f61cbf83b5bff04407e7ef510e6c05ac29dc02adcd25113c486"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/TheLastKing/FineDining.hs",
+      "sha256": "b1f1917969255bb8864ee093715222334f41ca185bc74da549e6f0a190e5d2e6"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/TheLastKing/ToughCrowd.hs",
+      "sha256": "6665e3286a6339c16012dfb63f2b0ffe4fd7b4700a8cfc3b26607028850bbf27"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/ThePallidMask/EyesInTheWalls.hs",
+      "sha256": "68e24476277b023cded9b89930cd1474bae3595d9b9893eeaa561ab77c793fe4"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/ThePallidMask/ThePitBelow.hs",
+      "sha256": "108b84e0926741de92c991e546b887cdf58295ada838f49cfeb18262717b285b"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/ThePallidMask/TheShadowBehindYou.hs",
+      "sha256": "916cbd73c9070d820a7ae7e2af0a2ee0946f670f66e76cfb8f31dcb97eff2c9b"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/TheStranger/MarkedByTheSign.hs",
+      "sha256": "5190a09dad509d27259f2dd044d629748172f6402618aa53756a1aa3a83e0a2a"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/TheStranger/ThePaleMaskBeckons.hs",
+      "sha256": "5737cacb947ade1d209b3ad0133aca3bee25fa3754c6b743d66a197b13424067"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/TheUnspeakableOath/GiftOfMadnessMisery.hs",
+      "sha256": "5101254d40a1ba6dd09561b611dbe197e2b9280704e6ec28ca345e597a5e6bea"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/TheUnspeakableOath/GiftOfMadnessPity.hs",
+      "sha256": "4ec07e80a07a92a54742375cb7b308f46a8569790300ba196d30eac86336e14f"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/TheUnspeakableOath/Straitjacket.hs",
+      "sha256": "b510e3846763237499821aafddd4ebc497580eddce3d4bbeaabd3ceca541e5ea"
+    },
+    {
+      "path": "Treachery/Cards/ThePathToCarcosa/TheUnspeakableOath/WallsClosingIn.hs",
+      "sha256": "abfcc1b4e781978c474b4f442bc3d0c663583c4ba2b2276afbf4b7e9064539eb"
+    }
+  ],
+  "resources": {
+    "cardCatalog": "games/arkhamhorror/src/cards/cards-data.js (03xxx)",
+    "storySourceRoot": "参考资源/ArkhamHorror-main/frontend/src/locales/zh/thePathToCarcosa",
+    "storySources": [
+      {
+        "path": "base.json",
+        "sha256": "1dca350acdfe6abdace03064d64789ae42118dac0d44f64bbb3793eaeb507a65"
+      },
+      {
+        "path": "scenarios/curtainCall.json",
+        "sha256": "c655bb97eb066dc494f59108c48bc1da7e6d67bf2790f99881a83ffb9b24b251"
+      },
+      {
+        "path": "scenarios/theLastKing.json",
+        "sha256": "c3b6a52bc8ee206213dc11a4bd60c557af5132c9f420118bcba9cb2cdfa0dcb6"
+      },
+      {
+        "path": "scenarios/echoesOfThePast.json",
+        "sha256": "336cd0711e09cee63c761a8cbf58d9fc7bb327614f8b4d3d80dc1242a709ed99"
+      },
+      {
+        "path": "scenarios/theUnspeakableOath.json",
+        "sha256": "3d2989565bc65a836cd31b383d31c3d49a1303653c00b8d073b45036797b8b39"
+      },
+      {
+        "path": "scenarios/aPhantomOfTruth.json",
+        "sha256": "00898aff691df81a4f7c4c157ccd0c1b917a3e84645c6adbe3c17293237c649c"
+      },
+      {
+        "path": "scenarios/thePallidMask.json",
+        "sha256": "14e7b78ba571b909f2aa8f73cd8d7b38ceb999a835d1466bf8d485a5d54e5984"
+      },
+      {
+        "path": "scenarios/blackStarsRise.json",
+        "sha256": "1f53137a47f5cc1beee5762edae00dde42b0a224230d9a3ab92bb0f599cada6a"
+      },
+      {
+        "path": "scenarios/dimCarcosa.json",
+        "sha256": "a302ade7c58d1b8355482be9dbba84bb75fc792125ca51f32b6a73fe8076da8e"
+      }
+    ],
+    "localImageRoot": "games/arkhamhorror/web/img/arkham",
+    "imagePaths": [
+      "cards/<art>.avif",
+      "zh/cards/<art>.avif"
+    ],
+    "imagePolicy": "与核心包和一循环共用卡图解析、离线库存与远程回退；不建立循环专属图片目录。"
+  },
+  "confirmations": {
+    "investigators": {
+      "status": "verified",
+      "items": [
+        {
+          "id": "03001",
+          "name": "马克·哈里根",
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "deckRules": true,
+            "investigatorAbility": true,
+            "elderSign": true,
+            "signatureCards": true,
+            "signatureWeaknesses": true,
+            "nodeAcceptance": true,
+            "saveReplay": true,
+            "availabilityGate": true
+          },
+          "signatureCodes": [
+            "03007",
+            "03008",
+            "03009"
+          ],
+          "runtimeDependencyCodes": [
+            "03009b"
+          ],
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Investigator/Cards/MarkHarrigan.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Skill/Cards/TheHomeFront.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Treachery/Cards/ShellShock.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Asset/Assets/SophieInLovingMemory.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Asset/Assets/SophieItWasAllMyFault.hs",
+            "games/arkhamhorror/content/packs/carcosaInvestigators/manifest.js",
+            "games/arkhamhorror/tests/carcosa-investigators.test.mjs"
+          ]
+        },
+        {
+          "id": "03002",
+          "name": "潘明",
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "deckRules": true,
+            "investigatorAbility": true,
+            "elderSign": true,
+            "signatureCards": true,
+            "signatureWeaknesses": true,
+            "nodeAcceptance": true,
+            "saveReplay": true,
+            "availabilityGate": true
+          },
+          "signatureCodes": [
+            "03010",
+            "03011"
+          ],
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Investigator/Cards/MinhThiPhan.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Asset/Assets/AnalyticalMind.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Asset/Assets/TheKingInYellow.hs",
+            "games/arkhamhorror/content/packs/carcosaInvestigators/manifest.js",
+            "games/arkhamhorror/tests/carcosa-investigators.test.mjs"
+          ]
+        },
+        {
+          "id": "03003",
+          "name": "赛菲娜·卢梭",
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "deckRules": true,
+            "investigatorAbility": true,
+            "elderSign": true,
+            "signatureCards": true,
+            "signatureWeaknesses": true,
+            "nodeAcceptance": true,
+            "saveReplay": true,
+            "availabilityGate": true
+          },
+          "signatureCodes": [
+            "03012",
+            "03013"
+          ],
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Investigator/Cards/SefinaRousseau.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Event/Events/ThePaintedWorld.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Treachery/Cards/StarsOfHyades.hs",
+            "games/arkhamhorror/content/packs/carcosaInvestigators/manifest.js",
+            "games/arkhamhorror/tests/carcosa-investigators.test.mjs"
+          ]
+        },
+        {
+          "id": "03004",
+          "name": "阿喀琦·奥耶莉",
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "deckRules": true,
+            "investigatorAbility": true,
+            "elderSign": true,
+            "signatureCards": true,
+            "signatureWeaknesses": true,
+            "nodeAcceptance": true,
+            "saveReplay": true,
+            "availabilityGate": true
+          },
+          "signatureCodes": [
+            "03014",
+            "03015"
+          ],
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Investigator/Cards/AkachiOnyele.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Asset/Assets/SpiritSpeaker.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Treachery/Cards/AngeredSpirits.hs",
+            "games/arkhamhorror/content/packs/carcosaInvestigators/manifest.js",
+            "games/arkhamhorror/tests/carcosa-investigators.test.mjs"
+          ]
+        },
+        {
+          "id": "03005",
+          "name": "威廉·约里克",
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "deckRules": true,
+            "investigatorAbility": true,
+            "elderSign": true,
+            "signatureCards": true,
+            "signatureWeaknesses": true,
+            "nodeAcceptance": true,
+            "saveReplay": true,
+            "availabilityGate": true
+          },
+          "signatureCodes": [
+            "03016",
+            "03017"
+          ],
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Investigator/Cards/WilliamYorick.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Event/Events/BuryThemDeep.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Enemy/Cards/GraveyardGhouls.hs",
+            "games/arkhamhorror/content/packs/carcosaInvestigators/manifest.js",
+            "games/arkhamhorror/tests/carcosa-investigators.test.mjs"
+          ]
+        },
+        {
+          "id": "03006",
+          "name": "萝拉·海耶斯",
+          "status": "verified",
+          "checks": {
+            "sourceLocked": true,
+            "deckRules": true,
+            "investigatorAbility": true,
+            "elderSign": true,
+            "signatureCards": true,
+            "signatureWeaknesses": true,
+            "nodeAcceptance": true,
+            "saveReplay": true,
+            "availabilityGate": true
+          },
+          "signatureCodes": [
+            "03018",
+            "03019"
+          ],
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Investigator/Cards/LolaHayes.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Event/Events/Improvisation.hs",
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Treachery/Cards/CrisisOfIdentity.hs",
+            "games/arkhamhorror/content/packs/carcosaInvestigators/manifest.js",
+            "games/arkhamhorror/tests/carcosa-investigators.test.mjs"
+          ]
+        }
+      ]
+    },
+    "playerCards": {
+      "status": "verified",
+      "total": 95,
+      "constructible": 92,
+      "basicWeaknesses": [
+        "03040",
+        "03041",
+        "03042"
+      ],
+      "ledger": "games/arkhamhorror/audit/carcosa-player-acceptance.json",
+      "checks": {
+        "printedEffects": true,
+        "engineBehavior": true,
+        "nodeAcceptance": true,
+        "saveReplay": true,
+        "availabilityGate": true
+      },
+      "evidence": [
+        "games/arkhamhorror/content/packs/carcosaPlayer/effects.js",
+        "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+        "games/arkhamhorror/audit/carcosa-player-acceptance.json"
+      ]
+    },
+    "allCards": {
+      "status": "verified",
+      "total": 383,
+      "verified": 383,
+      "pending": 0,
+      "ledger": "games/arkhamhorror/audit/carcosa-all-card-acceptance.json",
+      "runtimeGate": "games/arkhamhorror/src/cards/carcosa-campaign-acceptance.js",
+      "pendingCodes": [],
+      "evidence": [
+        "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+        "games/arkhamhorror/tests/carcosa-all-card-ledger.test.mjs",
+        "games/arkhamhorror/audit/carcosa-all-card-acceptance.json"
+      ]
+    },
+    "scenarios": {
+      "status": "pending",
+      "items": [
+        {
+          "id": "curtainCall",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/ThePathToCarcosa/CurtainCall.hs",
+            "games/arkhamhorror/audit/carcosa-scenario-acceptance.json#curtainCall",
+            "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/curtainCall/index.js",
+            "games/arkhamhorror/tests/carcosa-curtainCall.test.mjs",
+            "games/arkhamhorror/tests/carcosa-literal-behavior.test.mjs"
+          ]
+        },
+        {
+          "id": "theLastKing",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/ThePathToCarcosa/TheLastKing.hs",
+            "games/arkhamhorror/audit/carcosa-scenario-acceptance.json#theLastKing",
+            "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/theLastKing/index.js",
+            "games/arkhamhorror/tests/carcosa-theLastKing.test.mjs",
+            "games/arkhamhorror/tests/carcosa-literal-behavior.test.mjs"
+          ]
+        },
+        {
+          "id": "echoesOfThePast",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/ThePathToCarcosa/EchoesOfThePast.hs",
+            "games/arkhamhorror/audit/carcosa-scenario-acceptance.json#echoesOfThePast",
+            "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/echoesOfThePast/index.js",
+            "games/arkhamhorror/tests/carcosa-echoesOfThePast.test.mjs",
+            "games/arkhamhorror/tests/carcosa-literal-behavior.test.mjs"
+          ]
+        },
+        {
+          "id": "theUnspeakableOath",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/ThePathToCarcosa/TheUnspeakableOath.hs",
+            "games/arkhamhorror/audit/carcosa-scenario-acceptance.json#theUnspeakableOath",
+            "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/index.js",
+            "games/arkhamhorror/tests/carcosa-theUnspeakableOath.test.mjs",
+            "games/arkhamhorror/tests/carcosa-literal-behavior.test.mjs"
+          ]
+        },
+        {
+          "id": "aPhantomOfTruth",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/ThePathToCarcosa/APhantomOfTruth.hs",
+            "games/arkhamhorror/audit/carcosa-scenario-acceptance.json#aPhantomOfTruth",
+            "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/aPhantomOfTruth/index.js",
+            "games/arkhamhorror/tests/carcosa-aPhantomOfTruth.test.mjs",
+            "games/arkhamhorror/tests/carcosa-literal-behavior.test.mjs"
+          ]
+        },
+        {
+          "id": "thePallidMask",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/ThePathToCarcosa/ThePallidMask.hs",
+            "games/arkhamhorror/audit/carcosa-scenario-acceptance.json#thePallidMask",
+            "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/thePallidMask/index.js",
+            "games/arkhamhorror/tests/carcosa-thePallidMask.test.mjs",
+            "games/arkhamhorror/tests/carcosa-literal-behavior.test.mjs"
+          ]
+        },
+        {
+          "id": "blackStarsRise",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/ThePathToCarcosa/BlackStarsRise.hs",
+            "games/arkhamhorror/audit/carcosa-scenario-acceptance.json#blackStarsRise",
+            "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/blackStarsRise/index.js",
+            "games/arkhamhorror/tests/carcosa-blackStarsRise.test.mjs",
+            "games/arkhamhorror/tests/carcosa-literal-behavior.test.mjs"
+          ]
+        },
+        {
+          "id": "dimCarcosa",
+          "status": "pending",
+          "checks": {
+            "sourceLocked": true,
+            "identityRegistered": true,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": false
+          },
+          "evidence": [
+            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/ThePathToCarcosa/DimCarcosa.hs",
+            "games/arkhamhorror/audit/carcosa-scenario-acceptance.json#dimCarcosa",
+            "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/dimCarcosa/index.js",
+            "games/arkhamhorror/tests/carcosa-dimCarcosa.test.mjs",
+            "games/arkhamhorror/tests/carcosa-literal-behavior.test.mjs"
+          ]
+        }
+      ]
+    },
+    "keywords": {
+      "status": "verified",
+      "items": [
+        {
+          "id": "aloof",
+          "printed": "Aloof",
+          "ruleId": "aloof",
+          "cardCodes": [
+            "03059",
+            "03081",
+            "03144",
+            "03221b"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03059",
+            "games/arkhamhorror/src/cards/cards-data.js#03081",
+            "games/arkhamhorror/src/cards/cards-data.js#03144",
+            "games/arkhamhorror/src/cards/cards-data.js#03221b"
+          ]
+        },
+        {
+          "id": "hunter",
+          "printed": "Hunter",
+          "ruleId": "hunter",
+          "cardCodes": [
+            "03017",
+            "03042",
+            "03060",
+            "03065b",
+            "03066b",
+            "03067b",
+            "03068b",
+            "03069b",
+            "03086",
+            "03099",
+            "03140",
+            "03183",
+            "03221",
+            "03222",
+            "03241b",
+            "03259",
+            "03300",
+            "03333",
+            "03334"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03017",
+            "games/arkhamhorror/src/cards/cards-data.js#03042",
+            "games/arkhamhorror/src/cards/cards-data.js#03060",
+            "games/arkhamhorror/src/cards/cards-data.js#03065b"
+          ]
+        },
+        {
+          "id": "retaliate",
+          "printed": "Retaliate",
+          "ruleId": "retaliate",
+          "cardCodes": [
+            "03060",
+            "03068b",
+            "03086",
+            "03089",
+            "03140",
+            "03241b",
+            "03259",
+            "03336"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03060",
+            "games/arkhamhorror/src/cards/cards-data.js#03068b",
+            "games/arkhamhorror/src/cards/cards-data.js#03086",
+            "games/arkhamhorror/src/cards/cards-data.js#03089"
+          ]
+        },
+        {
+          "id": "massive",
+          "printed": "Massive",
+          "ruleId": "massive",
+          "cardCodes": [
+            "03060",
+            "03088",
+            "03333",
+            "03335"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03060",
+            "games/arkhamhorror/src/cards/cards-data.js#03088",
+            "games/arkhamhorror/src/cards/cards-data.js#03333",
+            "games/arkhamhorror/src/cards/cards-data.js#03335"
+          ]
+        },
+        {
+          "id": "peril",
+          "printed": "Peril",
+          "ruleId": "peril",
+          "cardCodes": [
+            "03082",
+            "03084a",
+            "03084b",
+            "03084c",
+            "03084d",
+            "03104",
+            "03145",
+            "03186",
+            "03187",
+            "03340",
+            "03341",
+            "03342"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03082",
+            "games/arkhamhorror/src/cards/cards-data.js#03084a",
+            "games/arkhamhorror/src/cards/cards-data.js#03084b",
+            "games/arkhamhorror/src/cards/cards-data.js#03084c"
+          ]
+        },
+        {
+          "id": "surge",
+          "printed": "Surge",
+          "ruleId": "surge",
+          "cardCodes": [
+            "03085",
+            "03339"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03085",
+            "games/arkhamhorror/src/cards/cards-data.js#03339"
+          ]
+        },
+        {
+          "id": "revelation",
+          "printed": "Revelation",
+          "ruleId": "revelation",
+          "cardCodes": [
+            "03008",
+            "03011",
+            "03013",
+            "03015",
+            "03019",
+            "03040",
+            "03041",
+            "03082",
+            "03083",
+            "03084a",
+            "03084b",
+            "03084c",
+            "03084d",
+            "03085",
+            "03087",
+            "03090",
+            "03091",
+            "03092",
+            "03094",
+            "03097",
+            "03100",
+            "03101",
+            "03102",
+            "03104",
+            "03105",
+            "03145",
+            "03146",
+            "03185",
+            "03186",
+            "03187",
+            "03188",
+            "03223",
+            "03224",
+            "03225",
+            "03226",
+            "03227",
+            "03260",
+            "03261",
+            "03262",
+            "03302",
+            "03303",
+            "03321b",
+            "03337",
+            "03338",
+            "03339",
+            "03340",
+            "03341",
+            "03342"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03008",
+            "games/arkhamhorror/src/cards/cards-data.js#03011",
+            "games/arkhamhorror/src/cards/cards-data.js#03013",
+            "games/arkhamhorror/src/cards/cards-data.js#03015"
+          ]
+        },
+        {
+          "id": "spawn",
+          "printed": "Spawn",
+          "ruleId": "spawn",
+          "cardCodes": [
+            "03042",
+            "03059",
+            "03098",
+            "03144",
+            "03183",
+            "03184",
+            "03241b",
+            "03258",
+            "03259",
+            "03300",
+            "03335",
+            "03336"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03042",
+            "games/arkhamhorror/src/cards/cards-data.js#03059",
+            "games/arkhamhorror/src/cards/cards-data.js#03098",
+            "games/arkhamhorror/src/cards/cards-data.js#03144"
+          ]
+        },
+        {
+          "id": "victory",
+          "printed": "Victory",
+          "ruleId": "victory",
+          "cardCodes": [
+            "03016",
+            "03051",
+            "03053",
+            "03055",
+            "03057",
+            "03058",
+            "03060",
+            "03065b",
+            "03066b",
+            "03067b",
+            "03068b",
+            "03069b",
+            "03088",
+            "03099",
+            "03139",
+            "03140",
+            "03173",
+            "03174",
+            "03177",
+            "03182b",
+            "03211",
+            "03215",
+            "03216",
+            "03220",
+            "03241b",
+            "03250",
+            "03251",
+            "03254",
+            "03255",
+            "03257",
+            "03285",
+            "03286",
+            "03287",
+            "03288",
+            "03291",
+            "03297",
+            "03299"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03016",
+            "games/arkhamhorror/src/cards/cards-data.js#03051",
+            "games/arkhamhorror/src/cards/cards-data.js#03053",
+            "games/arkhamhorror/src/cards/cards-data.js#03055"
+          ]
+        },
+        {
+          "id": "parley",
+          "printed": "Parley",
+          "ruleId": "parley",
+          "cardCodes": [
+            "03076a",
+            "03077",
+            "03078",
+            "03079",
+            "03080",
+            "03083",
+            "03093",
+            "03182b",
+            "03258",
+            "03294",
+            "03301"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03076a",
+            "games/arkhamhorror/src/cards/cards-data.js#03077",
+            "games/arkhamhorror/src/cards/cards-data.js#03078",
+            "games/arkhamhorror/src/cards/cards-data.js#03079"
+          ]
+        },
+        {
+          "id": "hidden",
+          "printed": "Hidden",
+          "ruleId": "hidden",
+          "cardCodes": [
+            "03084a",
+            "03084b",
+            "03084c",
+            "03084d",
+            "03186",
+            "03187",
+            "03340",
+            "03341",
+            "03342"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03084a",
+            "games/arkhamhorror/src/cards/cards-data.js#03084b",
+            "games/arkhamhorror/src/cards/cards-data.js#03084c",
+            "games/arkhamhorror/src/cards/cards-data.js#03084d"
+          ]
+        },
+        {
+          "id": "exceptional",
+          "printed": "Exceptional",
+          "ruleId": "upgrade",
+          "cardCodes": [
+            "03264",
+            "03308"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03264",
+            "games/arkhamhorror/src/cards/cards-data.js#03308"
+          ]
+        },
+        {
+          "id": "permanent",
+          "printed": "Permanent",
+          "ruleId": "permanent",
+          "cardCodes": [
+            "03264",
+            "03308"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03264",
+            "games/arkhamhorror/src/cards/cards-data.js#03308"
+          ]
+        },
+        {
+          "id": "fast",
+          "printed": "Fast",
+          "ruleId": "fast",
+          "cardCodes": [
+            "03016",
+            "03018",
+            "03022",
+            "03029",
+            "03030",
+            "03038",
+            "03106",
+            "03107",
+            "03108",
+            "03109",
+            "03111",
+            "03113",
+            "03115",
+            "03150",
+            "03155",
+            "03156",
+            "03157",
+            "03195",
+            "03232",
+            "03263",
+            "03267",
+            "03270",
+            "03304",
+            "03307",
+            "03310",
+            "03311",
+            "03314"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03016",
+            "games/arkhamhorror/src/cards/cards-data.js#03018",
+            "games/arkhamhorror/src/cards/cards-data.js#03022",
+            "games/arkhamhorror/src/cards/cards-data.js#03029"
+          ]
+        },
+        {
+          "id": "forced",
+          "printed": "Forced",
+          "ruleId": "reaction",
+          "cardCodes": [
+            "03003",
+            "03006",
+            "03009",
+            "03009b",
+            "03015",
+            "03025",
+            "03038",
+            "03042",
+            "03045",
+            "03048",
+            "03050",
+            "03051",
+            "03052",
+            "03057",
+            "03058",
+            "03060",
+            "03063",
+            "03064",
+            "03066b",
+            "03067b",
+            "03073",
+            "03074",
+            "03076a",
+            "03077",
+            "03078",
+            "03079",
+            "03080",
+            "03081",
+            "03083",
+            "03086",
+            "03089",
+            "03094",
+            "03095",
+            "03096",
+            "03098",
+            "03099",
+            "03101",
+            "03121",
+            "03122",
+            "03123",
+            "03128",
+            "03129",
+            "03130",
+            "03132",
+            "03133",
+            "03134",
+            "03136",
+            "03137",
+            "03138",
+            "03140",
+            "03144",
+            "03148",
+            "03162",
+            "03171",
+            "03173",
+            "03177",
+            "03178",
+            "03182a",
+            "03184",
+            "03199",
+            "03211",
+            "03215",
+            "03218",
+            "03221",
+            "03221b",
+            "03226",
+            "03241b",
+            "03245",
+            "03247",
+            "03248",
+            "03249",
+            "03250",
+            "03251",
+            "03252",
+            "03253",
+            "03254",
+            "03255",
+            "03256",
+            "03257",
+            "03261",
+            "03262",
+            "03271",
+            "03284",
+            "03285",
+            "03287",
+            "03289",
+            "03290",
+            "03291",
+            "03301",
+            "03315",
+            "03317",
+            "03318",
+            "03327a",
+            "03327c",
+            "03327e",
+            "03328a",
+            "03328c",
+            "03328e",
+            "03332",
+            "03335",
+            "03336"
+          ],
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "evidence": [
+            "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/cards/cards-data.js#03003",
+            "games/arkhamhorror/src/cards/cards-data.js#03006",
+            "games/arkhamhorror/src/cards/cards-data.js#03009",
+            "games/arkhamhorror/src/cards/cards-data.js#03009b"
+          ]
+        }
+      ]
+    },
+    "rulebook": {
+      "status": "verified",
+      "requiredRuleIds": [
+        "hidden",
+        "carcosaCampaign",
+        "carcosaDoubtConviction",
+        "carcosaGuests",
+        "carcosaAsylum",
+        "carcosaCatacombs",
+        "carcosaChaos",
+        "carcosaFinale"
+      ],
+      "checks": {
+        "campaignOverview": true,
+        "scenarioMechanics": true,
+        "keywordEntries": true,
+        "cardLinks": true,
+        "desktopBrowser": true,
+        "mobileBrowser": true
+      },
+      "evidence": [
+        "games/arkhamhorror/web/rulebook-data.js",
+        "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+        "games/arkhamhorror/tests/carcosa-rules.browser.mjs"
+      ]
+    }
+  },
+  "tests": [
+    "games/arkhamhorror/tests/carcosa-migration.test.mjs",
+    "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
+    "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+    "games/arkhamhorror/tests/carcosa-rules.test.mjs",
+    "games/arkhamhorror/tests/carcosa-rules.browser.mjs",
+    "games/arkhamhorror/tests/carcosa-campaign.test.mjs",
+    "games/arkhamhorror/tests/carcosa-scenario-acceptance.test.mjs",
+    "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
+    "games/arkhamhorror/tests/carcosa-all-card-ledger.test.mjs"
+  ],
+  "remaining": [
+    "完成 M5 正式大厅、联机与发布浏览器验收后再提升战役状态"
+  ]
+}

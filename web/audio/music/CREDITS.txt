@@ -1,0 +1,65 @@
+Arkham Horror background music / 诡镇奇谈背景音乐
+
+"Darkest Child", "Long note One", "Unseen Horrors", "Ritual",
+"Gathering Darkness", "The Dread", "Dark Walk"
+Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+
+Original MP3 recordings; no modifications. Local filenames normalized and grouped under common/ only.
+原始录音，未经剪辑；仅规范本地文件名并归入 common/。曲目氛围中文描述由本项目撰写。
+
+Official licensing / 官方授权：
+https://incompetech.com/music/royalty-free/licenses/
+
+Official track pages / 官方曲目：
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100783
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100418
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400043
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100466
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100849
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100048
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100468
+
+Retrieved 2026-09-29. Download URLs, catalogue metadata and SHA-256 hashes
+are recorded in sources.json alongside these files.
+Additional four tracks retrieved 2026-10-10 from the same official catalogue;
+the official Creative Commons attribution generator was rechecked on that date.
+Reuse/redistribution must retain attribution and the license link.
+This music is independently licensed; it is not an official Arkham soundtrack.
+
+The Path to Carcosa / 卡尔克萨之路 — added 2026-10-15
+"Evening of Chaos", "Danse Macabre", "Echoes of Time", "Long Note Two", "Ghost Processional", "Ossuary 6 - Air"
+Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+
+Original MP3 recordings; no modifications. Stored under campaigns/thePathToCarcosa/.
+原始录音，未经剪辑；仅规范本地文件名。氛围中文描述及关卡搭配由本项目编写。
+Danse Macabre: composition by Camille Saint-Saëns; recording by Kevin MacLeod.
+官方曲目页面：
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300041
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100546
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300029
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100420
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100219
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500048
+
+Official licence generator and catalogue rechecked on 2026-10-15:
+https://incompetech.com/music/royalty-free/licenses/
+Download URLs, sizes and SHA-256 hashes are recorded in sources.json.
+These tracks are independently licensed, not an official Arkham Horror soundtrack.
+
+Scenario music additions / 关卡风格补充 — 2026-10-15
+"Deadly Roulette", "Dances and Dames", "Chase Pulse", "Shadowlands 5 - Antechamber"
+Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+Original MP3 recordings; no modifications. Stored under common/.
+原始录音未经剪辑、转码；本项目编写关卡搭配与氛围说明。
+Official licensing: https://incompetech.com/music/royalty-free/licenses/
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600033
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100595
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100383
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700038
+Download URLs, sizes and SHA-256 hashes are recorded in sources.json.

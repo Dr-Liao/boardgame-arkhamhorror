@@ -1,0 +1,1480 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "id": "original-carcosa-player-cycle-2026-10",
+    "scope": "卡尔克萨之路原始循环玩家包95张：92张构筑卡与3张基础弱点。",
+    "basis": "原始印刷卡文、后端参考实现及所列逐卡回归测试；验收主要印刷效果和列明边界，不声称穷举所有跨循环组合。",
+    "houseRules": [
+      "沿用项目现有的自动奖励反应、协作请求及确定性选择事务",
+      "卡牌随机、搜索和选择必须通过统一存档回放路径",
+      "升级卡仅进入升级池；基础弱点只进入随机基础弱点池"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 95,
+    "constructible": 92,
+    "basicWeaknesses": 3,
+    "verified": 95,
+    "unverified": 0,
+    "testsPassed": 105
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+      "sha256": "ef2842fac745c4f39aa7415b5eaf73a07e0e2a5b083048800f4e27ce7baf28bf"
+    }
+  ],
+  "implementationFiles": [
+    {
+      "file": "games/arkhamhorror/content/packs/carcosaPlayer/effects.js",
+      "sha256": "4565d9f4affb7f9013506122744e00adfb4339aa8e50ae13c116f7102792a80e"
+    },
+    {
+      "file": "games/arkhamhorror/content/packs/carcosaPlayer/manifest.js",
+      "sha256": "6d247b3c89f13221e5e53aad7a9e522b8b216c0bdf88088616f5fa49fb92df5a"
+    },
+    {
+      "file": "games/arkhamhorror/src/deck/availability.js",
+      "sha256": "2baca9c2ec90334fc5f2638713042154d0a06c2f9ead54aca6c9455270e61527"
+    },
+    {
+      "file": "games/arkhamhorror/src/engine/effects.js",
+      "sha256": "0e1c17c59b8be868fbef89328b8932a20becb8ee881444a70672663f77a89153"
+    },
+    {
+      "file": "games/arkhamhorror/src/engine/engine.js",
+      "sha256": "3963b8d75c027b5a86666cd23b52e9e17cb3ef0ec03480a42bc173d7ce3bc805"
+    }
+  ],
+  "entries": [
+    {
+      "code": "03020",
+      "name": ".32柯尔特手枪",
+      "type": "asset",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03020 .32柯尔特手枪 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03021",
+      "name": "勇气过人",
+      "type": "asset",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03021 勇气过人 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03022",
+      "name": "“放着我来！”",
+      "type": "event",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03022 “放着我来！” 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03023",
+      "name": "时刻警惕",
+      "type": "event",
+      "class": "guardian",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03023 时刻警惕 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03024",
+      "name": "实地调查",
+      "type": "asset",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03024 实地调查 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03025",
+      "name": "古代雕文",
+      "type": "asset",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03025 古代雕文 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03026",
+      "name": "殚精竭虑",
+      "type": "event",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03026 殚精竭虑 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03027",
+      "name": "掌握内幕",
+      "type": "asset",
+      "class": "seeker",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03027 掌握内幕 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03028",
+      "name": "潜行",
+      "type": "asset",
+      "class": "rogue",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03028 潜行 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03029",
+      "name": "障眼戏法",
+      "type": "event",
+      "class": "rogue",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03029 障眼戏法 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03030",
+      "name": "艺高胆大",
+      "type": "event",
+      "class": "rogue",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03030 艺高胆大 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03031",
+      "name": "撬锁工具",
+      "type": "asset",
+      "class": "rogue",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03031 撬锁工具 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03032",
+      "name": "炼金转化",
+      "type": "asset",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03032 炼金转化 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03033",
+      "name": "解锢灵魂",
+      "type": "event",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03033 解锢灵魂 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03034",
+      "name": "星界旅行",
+      "type": "event",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03034 星界旅行 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03035",
+      "name": "灵力祭祀刀",
+      "type": "asset",
+      "class": "mystic",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03035 灵力祭祀刀 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03036",
+      "name": "提灯",
+      "type": "asset",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03036 提灯 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03037",
+      "name": "挖墓人的铲子",
+      "type": "asset",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03037 挖墓人的铲子 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03038",
+      "name": "藏身地点",
+      "type": "event",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03038 藏身地点 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03039",
+      "name": "急中生智",
+      "type": "skill",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03039 急中生智 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03040",
+      "name": "头脑发热",
+      "type": "treachery",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": true,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03040 头脑发热 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03041",
+      "name": "涂绘印记",
+      "type": "treachery",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": true,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03041 涂绘印记 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03042",
+      "name": "随行鬼影",
+      "type": "enemy",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": true,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03042 随行鬼影 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03106",
+      "name": "英勇救援",
+      "type": "event",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03106 英勇救援 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03107",
+      "name": "战斗训练",
+      "type": "asset",
+      "class": "guardian",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03107 战斗训练 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03108",
+      "name": "解剖图表",
+      "type": "event",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03108 解剖图表 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03109",
+      "name": "科学理论",
+      "type": "asset",
+      "class": "seeker",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03109 科学理论 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03110",
+      "name": "指节铜环",
+      "type": "asset",
+      "class": "rogue",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03110 指节铜环 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03111",
+      "name": "刚毅果敢",
+      "type": "asset",
+      "class": "rogue",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03111 刚毅果敢 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03112",
+      "name": "大卫·伦费尔德",
+      "type": "asset",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03112 大卫·伦费尔德 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03113",
+      "name": "情绪稳定",
+      "type": "asset",
+      "class": "mystic",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03113 情绪稳定 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03114",
+      "name": "珍爱纪念",
+      "type": "asset",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03114 珍爱纪念 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03115",
+      "name": "有胆有识",
+      "type": "asset",
+      "class": "survivor",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03115 有胆有识 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03116",
+      "name": "临危祷告",
+      "type": "skill",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03116 临危祷告 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03117",
+      "name": "冥思苦想",
+      "type": "skill",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03117 冥思苦想 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03118",
+      "name": "拼死出击",
+      "type": "skill",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03118 拼死出击 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03119",
+      "name": "绝命奔逃",
+      "type": "skill",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03119 绝命奔逃 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03147",
+      "name": "双刃短刀",
+      "type": "asset",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03147 双刃短刀 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03148",
+      "name": "埋伏",
+      "type": "event",
+      "class": "guardian",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03148 埋伏 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03149",
+      "name": "查尔斯·罗斯大人",
+      "type": "asset",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03149 查尔斯·罗斯大人 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03150",
+      "name": "预先警告",
+      "type": "event",
+      "class": "seeker",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03150 预先警告 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03151",
+      "name": "达里奥·埃尔阿明",
+      "type": "asset",
+      "class": "rogue",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03151 达里奥·埃尔阿明 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03152",
+      "name": "偷袭",
+      "type": "event",
+      "class": "rogue",
+      "level": 2,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03152 偷袭 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03153",
+      "name": "灵力风暴",
+      "type": "event",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03153 灵力风暴 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03154",
+      "name": "影之书",
+      "type": "asset",
+      "class": "mystic",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03154 影之书 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03155",
+      "name": "战斗或逃跑",
+      "type": "event",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03155 战斗或逃跑 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03156",
+      "name": "意志考验",
+      "type": "event",
+      "class": "survivor",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03156 意志考验 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03157",
+      "name": "吉人天相",
+      "type": "event",
+      "class": "survivor",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03157 吉人天相 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03158",
+      "name": "施恩求报",
+      "type": "event",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03158 施恩求报 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03189",
+      "name": "“同归于尽！”",
+      "type": "event",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03189 “同归于尽！” 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03190",
+      "name": ".45自动手枪",
+      "type": "asset",
+      "class": "guardian",
+      "level": 2,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03190 .45自动手枪 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03191",
+      "name": "逻辑推理",
+      "type": "event",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03191 逻辑推理 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03192",
+      "name": "古代雕文",
+      "type": "asset",
+      "class": "seeker",
+      "level": 3,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03192 古代雕文 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03193",
+      "name": "古代雕文",
+      "type": "asset",
+      "class": "seeker",
+      "level": 3,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03193 古代雕文 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03194",
+      "name": "暗中偷袭",
+      "type": "event",
+      "class": "rogue",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03194 暗中偷袭 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03195",
+      "name": "扒窃",
+      "type": "asset",
+      "class": "rogue",
+      "level": 2,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03195 扒窃 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03196",
+      "name": "量子通量",
+      "type": "event",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03196 量子通量 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03197",
+      "name": "重新充能",
+      "type": "event",
+      "class": "mystic",
+      "level": 2,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03197 重新充能 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03198",
+      "name": "拉布兰奇夫人",
+      "type": "asset",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03198 拉布兰奇夫人 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03199",
+      "name": "诱捕陷阱",
+      "type": "event",
+      "class": "survivor",
+      "level": 2,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03199 诱捕陷阱 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03228",
+      "name": "身先士卒",
+      "type": "skill",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03228 身先士卒 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03229",
+      "name": "单打独斗",
+      "type": "event",
+      "class": "guardian",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03229 单打独斗 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03230",
+      "name": "急救",
+      "type": "asset",
+      "class": "guardian",
+      "level": 3,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03230 急救 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03231",
+      "name": "重大发现",
+      "type": "skill",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03231 重大发现 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03232",
+      "name": "捷径",
+      "type": "event",
+      "class": "seeker",
+      "level": 2,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03232 捷径 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03233",
+      "name": "“吃我一招！”",
+      "type": "skill",
+      "class": "rogue",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03233 “吃我一招！” 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03234",
+      "name": ".41短口手枪",
+      "type": "asset",
+      "class": "rogue",
+      "level": 2,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03234 .41短口手枪 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03235",
+      "name": "力量洪流",
+      "type": "skill",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03235 力量洪流 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03236",
+      "name": "探知术",
+      "type": "asset",
+      "class": "mystic",
+      "level": 3,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03236 探知术 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03237",
+      "name": "中途伏击",
+      "type": "event",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03237 中途伏击 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03238",
+      "name": "不期而遇",
+      "type": "event",
+      "class": "survivor",
+      "level": 2,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03238 不期而遇 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03239",
+      "name": "应急物品",
+      "type": "event",
+      "class": "neutral",
+      "level": 3,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03239 应急物品 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03263",
+      "name": "追猎行动",
+      "type": "event",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03263 追猎行动 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03264",
+      "name": "原定计划",
+      "type": "asset",
+      "class": "guardian",
+      "level": 3,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03264 原定计划 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03265",
+      "name": "指导",
+      "type": "event",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03265 指导 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03266",
+      "name": "奥术洞察",
+      "type": "asset",
+      "class": "seeker",
+      "level": 4,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03266 奥术洞察 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03267",
+      "name": "侥幸逃脱",
+      "type": "event",
+      "class": "rogue",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03267 侥幸逃脱 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03268",
+      "name": "建议",
+      "type": "asset",
+      "class": "rogue",
+      "level": 4,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03268 建议 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03269",
+      "name": "圣胡伯的钥匙",
+      "type": "asset",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03269 圣胡伯的钥匙 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03270",
+      "name": "守护结界",
+      "type": "event",
+      "class": "mystic",
+      "level": 2,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03270 守护结界 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03271",
+      "name": "新晋术士",
+      "type": "asset",
+      "class": "mystic",
+      "level": 3,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03271 新晋术士 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03272",
+      "name": "“放马过来！”",
+      "type": "skill",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03272 “放马过来！” 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03273",
+      "name": "求生高手",
+      "type": "event",
+      "class": "survivor",
+      "level": 3,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03273 求生高手 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03304",
+      "name": "“吃枪子吧！”",
+      "type": "event",
+      "class": "guardian",
+      "level": 2,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03304 “吃枪子吧！” 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03305",
+      "name": "阿登护甲",
+      "type": "asset",
+      "class": "guardian",
+      "level": 5,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03305 阿登护甲 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03306",
+      "name": "遗觉记忆",
+      "type": "event",
+      "class": "seeker",
+      "level": 3,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03306 遗觉记忆 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03307",
+      "name": "殚精竭虑",
+      "type": "event",
+      "class": "seeker",
+      "level": 5,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03307 殚精竭虑 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03308",
+      "name": "卡戎的银币",
+      "type": "asset",
+      "class": "rogue",
+      "level": 1,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03308 卡戎的银币 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03309",
+      "name": "短管猎枪",
+      "type": "asset",
+      "class": "rogue",
+      "level": 3,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03309 短管猎枪 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03310",
+      "name": "死里逃生",
+      "type": "event",
+      "class": "rogue",
+      "level": 5,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03310 死里逃生 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03311",
+      "name": "时间曲折",
+      "type": "event",
+      "class": "mystic",
+      "level": 2,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03311 时间曲折 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03312",
+      "name": "远古印记封印",
+      "type": "skill",
+      "class": "mystic",
+      "level": 5,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03312 远古印记封印 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03313",
+      "name": "报纸",
+      "type": "asset",
+      "class": "survivor",
+      "level": 2,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03313 报纸 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03314",
+      "name": "内讧",
+      "type": "event",
+      "class": "survivor",
+      "level": 3,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03314 内讧 主要印刷效果契约可执行"
+        }
+      ]
+    },
+    {
+      "code": "03315",
+      "name": "伊苏之匙",
+      "type": "asset",
+      "class": "neutral",
+      "level": 5,
+      "basicWeakness": false,
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03315 伊苏之匙 主要印刷效果契约可执行"
+        }
+      ]
+    }
+  ]
+}

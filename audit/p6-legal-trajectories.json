@@ -1,0 +1,1915 @@
+{
+  "scope": "从正式局外新游戏到集结结算；没有写入线索、敌人、牌堆、混乱袋或角色属性。不是三关战役胜利声明。",
+  "trajectories": [
+    {
+      "id": "gathering-burn",
+      "branch": "r1",
+      "mode": "victory",
+      "expected": "r1",
+      "settings": {
+        "campaignHub": true,
+        "playerInvestigator": "01001",
+        "difficulty": "easy",
+        "seed": "p6-0"
+      },
+      "players": [
+        {
+          "seat": 0
+        }
+      ],
+      "commandCount": 61,
+      "commands": [
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubGoSetup",
+            "label": "配置调查员与卡组"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubSelectInvestigator",
+            "code": "01001",
+            "label": "选择调查员：罗兰·班克斯"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubSetDeck",
+            "label": "保存手动牌组",
+            "codes": [
+              "01016",
+              "01016",
+              "01017",
+              "01017",
+              "01018",
+              "01018",
+              "01020",
+              "01020",
+              "01021",
+              "01021",
+              "01022",
+              "01022",
+              "01023",
+              "01023",
+              "01030",
+              "01030",
+              "01033",
+              "01033",
+              "01037",
+              "01037",
+              "01039",
+              "01039",
+              "01087",
+              "01087",
+              "01088",
+              "01088",
+              "01089",
+              "01089",
+              "01090",
+              "01090"
+            ]
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubDoneSeat",
+            "label": "确认本席位，继续"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubBeginScenario",
+            "label": "开始当前关卡"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q5-0",
+            "optionId": "done",
+            "label": "保留起始手牌"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "play",
+            "cardId": "01018",
+            "label": "🃏 装备「巡警」(4 资源)"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「书房」（智识 vs 帷幕 2）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-0",
+            "optionId": "1",
+            "label": "投入：手电筒"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-1",
+            "optionId": "1",
+            "label": "投入：手电筒"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-2",
+            "optionId": "1",
+            "label": "投入：推理"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-3",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「书房」（智识 vs 帷幕 2）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q13-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q13-1",
+            "optionId": "skip",
+            "label": "让过"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "fight",
+            "enemyId": "e1",
+            "label": "⚔️ 攻击「鼠群」（战斗 vs 1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q16-0",
+            "optionId": "skip",
+            "label": "让过"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q16-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q16-2",
+            "optionId": "skip",
+            "label": "让过"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q16-3",
+            "optionId": "trigger",
+            "label": "触发反应"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "advanceAct",
+            "label": "共同支付线索推进幕"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q21-0",
+            "optionId": "2",
+            "label": "支付 2 个线索"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "play",
+            "cardId": "01088",
+            "label": "🃏 打出「应急物品」(0 资源)"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "move",
+            "locationId": "attic",
+            "label": "🚶 移动到「阁楼」"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q24-0",
+            "optionId": "c1",
+            "label": "巡警"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q24-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q24-2",
+            "optionId": "c1",
+            "label": "巡警"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "play",
+            "cardId": "01016",
+            "label": "🃏 装备「.45自动手枪」(4 资源)"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「阁楼」（智识 vs 帷幕 1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q29-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「阁楼」（智识 vs 帷幕 1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q31-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q31-1",
+            "optionId": "discard",
+            "label": "每位调查员随机弃掉 1 张手牌"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q31-2",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q31-3",
+            "optionId": "c1",
+            "label": "巡警"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「阁楼」（智识 vs 帷幕 1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q36-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "move",
+            "locationId": "hallway",
+            "label": "🚶 移动到「走廊」"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "move",
+            "locationId": "cellar",
+            "label": "🚶 移动到「地窖」"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "play",
+            "cardId": "01033",
+            "label": "🃏 装备「米兰·克里斯托弗博士」(4 资源)"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「地窖」（智识 vs 帷幕 6）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q41-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「地窖」（智识 vs 帷幕 6）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q43-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q43-1",
+            "optionId": "trigger",
+            "label": "触发反应"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q43-2",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "move",
+            "locationId": "hallway",
+            "label": "🚶 移动到「走廊」"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "endTurn",
+            "label": "⏭️ 结束回合"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q48-0",
+            "optionId": "advance",
+            "label": "共同支付并推进"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q48-1",
+            "optionId": "3",
+            "label": "支付 3 个线索"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "ability",
+            "assetId": "c2",
+            "abilityIndex": 0,
+            "label": "射击（战斗 +1，伤害 +1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q51-0",
+            "optionId": "e2",
+            "label": "食尸鬼祭司"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q51-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "ability",
+            "assetId": "c2",
+            "abilityIndex": 0,
+            "label": "射击（战斗 +1，伤害 +1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q54-0",
+            "optionId": "e2",
+            "label": "食尸鬼祭司"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q54-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "ability",
+            "assetId": "c2",
+            "abilityIndex": 0,
+            "label": "射击（战斗 +1，伤害 +1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q57-0",
+            "optionId": "e2",
+            "label": "食尸鬼祭司"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q57-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q57-2",
+            "optionId": "r1",
+            "label": "烧毁房屋"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q57-3",
+            "optionId": "0",
+            "label": "加入罗兰·班克斯的牌组"
+          }
+        }
+      ],
+      "result": {
+        "uiState": "scenarioResult",
+        "resolution": "r1",
+        "records": {
+          "houseBurned": true,
+          "ghoulPriestAlive": false,
+          "litaOwner": "investigator-1"
+        },
+        "trauma": {
+          "0": {
+            "physical": 0,
+            "mental": 1
+          }
+        }
+      },
+      "stateSha256": "d703f29ac26ac6628c6842e4ce0f2a4e5213cf70faa70dfeab6230a52b9eb49f"
+    },
+    {
+      "id": "gathering-preserve",
+      "branch": "r2",
+      "mode": "victory",
+      "expected": "r2",
+      "settings": {
+        "campaignHub": true,
+        "playerInvestigator": "01001",
+        "difficulty": "easy",
+        "seed": "p6-0"
+      },
+      "players": [
+        {
+          "seat": 0
+        }
+      ],
+      "commandCount": 60,
+      "commands": [
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubGoSetup",
+            "label": "配置调查员与卡组"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubSelectInvestigator",
+            "code": "01001",
+            "label": "选择调查员：罗兰·班克斯"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubSetDeck",
+            "label": "保存手动牌组",
+            "codes": [
+              "01016",
+              "01016",
+              "01017",
+              "01017",
+              "01018",
+              "01018",
+              "01020",
+              "01020",
+              "01021",
+              "01021",
+              "01022",
+              "01022",
+              "01023",
+              "01023",
+              "01030",
+              "01030",
+              "01033",
+              "01033",
+              "01037",
+              "01037",
+              "01039",
+              "01039",
+              "01087",
+              "01087",
+              "01088",
+              "01088",
+              "01089",
+              "01089",
+              "01090",
+              "01090"
+            ]
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubDoneSeat",
+            "label": "确认本席位，继续"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubBeginScenario",
+            "label": "开始当前关卡"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q5-0",
+            "optionId": "done",
+            "label": "保留起始手牌"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "play",
+            "cardId": "01018",
+            "label": "🃏 装备「巡警」(4 资源)"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「书房」（智识 vs 帷幕 2）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-0",
+            "optionId": "1",
+            "label": "投入：手电筒"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-1",
+            "optionId": "1",
+            "label": "投入：手电筒"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-2",
+            "optionId": "1",
+            "label": "投入：推理"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-3",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「书房」（智识 vs 帷幕 2）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q13-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q13-1",
+            "optionId": "skip",
+            "label": "让过"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "fight",
+            "enemyId": "e1",
+            "label": "⚔️ 攻击「鼠群」（战斗 vs 1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q16-0",
+            "optionId": "skip",
+            "label": "让过"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q16-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q16-2",
+            "optionId": "skip",
+            "label": "让过"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q16-3",
+            "optionId": "trigger",
+            "label": "触发反应"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "advanceAct",
+            "label": "共同支付线索推进幕"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q21-0",
+            "optionId": "2",
+            "label": "支付 2 个线索"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "play",
+            "cardId": "01088",
+            "label": "🃏 打出「应急物品」(0 资源)"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "move",
+            "locationId": "attic",
+            "label": "🚶 移动到「阁楼」"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q24-0",
+            "optionId": "c1",
+            "label": "巡警"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q24-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q24-2",
+            "optionId": "c1",
+            "label": "巡警"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "play",
+            "cardId": "01016",
+            "label": "🃏 装备「.45自动手枪」(4 资源)"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「阁楼」（智识 vs 帷幕 1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q29-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「阁楼」（智识 vs 帷幕 1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q31-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q31-1",
+            "optionId": "discard",
+            "label": "每位调查员随机弃掉 1 张手牌"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q31-2",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q31-3",
+            "optionId": "c1",
+            "label": "巡警"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「阁楼」（智识 vs 帷幕 1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q36-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "move",
+            "locationId": "hallway",
+            "label": "🚶 移动到「走廊」"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "move",
+            "locationId": "cellar",
+            "label": "🚶 移动到「地窖」"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "play",
+            "cardId": "01033",
+            "label": "🃏 装备「米兰·克里斯托弗博士」(4 资源)"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「地窖」（智识 vs 帷幕 6）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q41-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「地窖」（智识 vs 帷幕 6）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q43-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q43-1",
+            "optionId": "trigger",
+            "label": "触发反应"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q43-2",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "move",
+            "locationId": "hallway",
+            "label": "🚶 移动到「走廊」"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "endTurn",
+            "label": "⏭️ 结束回合"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q48-0",
+            "optionId": "advance",
+            "label": "共同支付并推进"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q48-1",
+            "optionId": "3",
+            "label": "支付 3 个线索"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "ability",
+            "assetId": "c2",
+            "abilityIndex": 0,
+            "label": "射击（战斗 +1，伤害 +1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q51-0",
+            "optionId": "e2",
+            "label": "食尸鬼祭司"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q51-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "ability",
+            "assetId": "c2",
+            "abilityIndex": 0,
+            "label": "射击（战斗 +1，伤害 +1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q54-0",
+            "optionId": "e2",
+            "label": "食尸鬼祭司"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q54-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "ability",
+            "assetId": "c2",
+            "abilityIndex": 0,
+            "label": "射击（战斗 +1，伤害 +1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q57-0",
+            "optionId": "e2",
+            "label": "食尸鬼祭司"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q57-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q57-2",
+            "optionId": "r2",
+            "label": "保留房屋"
+          }
+        }
+      ],
+      "result": {
+        "uiState": "scenarioResult",
+        "resolution": "r2",
+        "records": {
+          "houseBurned": false,
+          "ghoulPriestAlive": false
+        },
+        "trauma": {
+          "0": {
+            "physical": 0,
+            "mental": 0
+          }
+        }
+      },
+      "stateSha256": "fa415f126e9deb94348a2305c198af111dec0fc46227a7206940db519682eeb2"
+    },
+    {
+      "id": "gathering-defeat",
+      "branch": "r1",
+      "mode": "failure",
+      "expected": "noResolution",
+      "settings": {
+        "campaignHub": true,
+        "playerInvestigator": "01001",
+        "difficulty": "easy",
+        "seed": "p6-0"
+      },
+      "players": [
+        {
+          "seat": 0
+        }
+      ],
+      "commandCount": 20,
+      "commands": [
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubGoSetup",
+            "label": "配置调查员与卡组"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubSelectInvestigator",
+            "code": "01001",
+            "label": "选择调查员：罗兰·班克斯"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubSetDeck",
+            "label": "保存手动牌组",
+            "codes": [
+              "01016",
+              "01016",
+              "01017",
+              "01017",
+              "01018",
+              "01018",
+              "01020",
+              "01020",
+              "01021",
+              "01021",
+              "01022",
+              "01022",
+              "01023",
+              "01023",
+              "01030",
+              "01030",
+              "01033",
+              "01033",
+              "01037",
+              "01037",
+              "01039",
+              "01039",
+              "01087",
+              "01087",
+              "01088",
+              "01088",
+              "01089",
+              "01089",
+              "01090",
+              "01090"
+            ]
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubDoneSeat",
+            "label": "确认本席位，继续"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubBeginScenario",
+            "label": "开始当前关卡"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q5-0",
+            "optionId": "done",
+            "label": "保留起始手牌"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "endTurn",
+            "label": "⏭️ 结束回合"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "endTurn",
+            "label": "⏭️ 结束回合"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-0",
+            "optionId": "0",
+            "label": "闪躲"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "endTurn",
+            "label": "⏭️ 结束回合"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q11-0",
+            "optionId": "discard",
+            "label": "每位调查员随机弃掉 1 张手牌"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q11-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "endTurn",
+            "label": "⏭️ 结束回合"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "endTurn",
+            "label": "⏭️ 结束回合"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q15-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "endTurn",
+            "label": "⏭️ 结束回合"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q17-0",
+            "optionId": "0",
+            "label": "巡警"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "endTurn",
+            "label": "⏭️ 结束回合"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q19-0",
+            "optionId": "0",
+            "label": "加入罗兰·班克斯的牌组"
+          }
+        }
+      ],
+      "result": {
+        "uiState": "scenarioResult",
+        "resolution": "noResolution",
+        "records": {
+          "houseBurned": false,
+          "ghoulPriestAlive": true,
+          "litaOwner": "investigator-1"
+        },
+        "trauma": {
+          "0": {
+            "physical": 1,
+            "mental": 0
+          }
+        }
+      },
+      "stateSha256": "f819437e55606f0a33dded1d712cdde292cac7d59a1e2336a8c2145fceb4ca5a"
+    },
+    {
+      "id": "gathering-resign",
+      "branch": "r1",
+      "mode": "resign",
+      "expected": "noResolution",
+      "settings": {
+        "campaignHub": true,
+        "playerInvestigator": "01001",
+        "difficulty": "easy",
+        "seed": "p6-0"
+      },
+      "players": [
+        {
+          "seat": 0
+        }
+      ],
+      "commandCount": 56,
+      "commands": [
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubGoSetup",
+            "label": "配置调查员与卡组"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubSelectInvestigator",
+            "code": "01001",
+            "label": "选择调查员：罗兰·班克斯"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubSetDeck",
+            "label": "保存手动牌组",
+            "codes": [
+              "01016",
+              "01016",
+              "01017",
+              "01017",
+              "01018",
+              "01018",
+              "01020",
+              "01020",
+              "01021",
+              "01021",
+              "01022",
+              "01022",
+              "01023",
+              "01023",
+              "01030",
+              "01030",
+              "01033",
+              "01033",
+              "01037",
+              "01037",
+              "01039",
+              "01039",
+              "01087",
+              "01087",
+              "01088",
+              "01088",
+              "01089",
+              "01089",
+              "01090",
+              "01090"
+            ]
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubDoneSeat",
+            "label": "确认本席位，继续"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "hubBeginScenario",
+            "label": "开始当前关卡"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q5-0",
+            "optionId": "done",
+            "label": "保留起始手牌"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "play",
+            "cardId": "01018",
+            "label": "🃏 装备「巡警」(4 资源)"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「书房」（智识 vs 帷幕 2）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-0",
+            "optionId": "1",
+            "label": "投入：手电筒"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-1",
+            "optionId": "1",
+            "label": "投入：手电筒"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-2",
+            "optionId": "1",
+            "label": "投入：推理"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q8-3",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「书房」（智识 vs 帷幕 2）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q13-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q13-1",
+            "optionId": "skip",
+            "label": "让过"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "fight",
+            "enemyId": "e1",
+            "label": "⚔️ 攻击「鼠群」（战斗 vs 1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q16-0",
+            "optionId": "skip",
+            "label": "让过"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q16-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q16-2",
+            "optionId": "skip",
+            "label": "让过"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q16-3",
+            "optionId": "trigger",
+            "label": "触发反应"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "advanceAct",
+            "label": "共同支付线索推进幕"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q21-0",
+            "optionId": "2",
+            "label": "支付 2 个线索"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "play",
+            "cardId": "01088",
+            "label": "🃏 打出「应急物品」(0 资源)"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "move",
+            "locationId": "attic",
+            "label": "🚶 移动到「阁楼」"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q24-0",
+            "optionId": "c1",
+            "label": "巡警"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q24-1",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q24-2",
+            "optionId": "c1",
+            "label": "巡警"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "play",
+            "cardId": "01016",
+            "label": "🃏 装备「.45自动手枪」(4 资源)"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「阁楼」（智识 vs 帷幕 1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q29-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「阁楼」（智识 vs 帷幕 1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q31-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q31-1",
+            "optionId": "discard",
+            "label": "每位调查员随机弃掉 1 张手牌"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q31-2",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q31-3",
+            "optionId": "c1",
+            "label": "巡警"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「阁楼」（智识 vs 帷幕 1）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q36-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "move",
+            "locationId": "hallway",
+            "label": "🚶 移动到「走廊」"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "move",
+            "locationId": "cellar",
+            "label": "🚶 移动到「地窖」"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "play",
+            "cardId": "01033",
+            "label": "🃏 装备「米兰·克里斯托弗博士」(4 资源)"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「地窖」（智识 vs 帷幕 6）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q41-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "investigate",
+            "label": "🔍 调查「地窖」（智识 vs 帷幕 6）"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q43-0",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q43-1",
+            "optionId": "trigger",
+            "label": "触发反应"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q43-2",
+            "optionId": "done",
+            "label": "完成投入 / 不投入"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "move",
+            "locationId": "hallway",
+            "label": "🚶 移动到「走廊」"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "endTurn",
+            "label": "⏭️ 结束回合"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q48-0",
+            "optionId": "advance",
+            "label": "共同支付并推进"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q48-1",
+            "optionId": "3",
+            "label": "支付 3 个线索"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "move",
+            "locationId": "parlor",
+            "label": "🚶 移动到「客厅」"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q51-0",
+            "optionId": "c3",
+            "label": "米兰·克里斯托弗博士"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q51-1",
+            "optionId": "c3",
+            "label": "米兰·克里斯托弗博士"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q51-2",
+            "optionId": "c3",
+            "label": "米兰·克里斯托弗博士"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "resign",
+            "label": "🏳️ 撤退"
+          }
+        },
+        {
+          "seat": 0,
+          "move": {
+            "action": "choose",
+            "choiceId": "q55-0",
+            "optionId": "0",
+            "label": "加入罗兰·班克斯的牌组"
+          }
+        }
+      ],
+      "result": {
+        "uiState": "scenarioResult",
+        "resolution": "noResolution",
+        "records": {
+          "houseBurned": false,
+          "ghoulPriestAlive": true,
+          "litaOwner": "investigator-1"
+        },
+        "trauma": {
+          "0": {
+            "physical": 0,
+            "mental": 0
+          }
+        }
+      },
+      "stateSha256": "32e2f45fdaec8ca85472f7780eefe28807d0575bc57375bd629098604357450b"
+    }
+  ]
+}

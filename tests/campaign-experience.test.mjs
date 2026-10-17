@@ -1,0 +1,173 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import { createGameState, applyMove, legalMoves, validateMove, decisionSeat } from '../src/engine/engine.js'
+import { campaignStory, introduction } from '../src/campaign/story.js'
+import { contentRegistry } from '../content/registered.js'
+import { viewState } from '../src/integration/observation.js'
+import { PLAYER_CARD_CODES } from '../src/deck/availability.js'
+import { RULES, cardRuleIds, matchingRules, ruleById } from '../web/rulebook-data.js'
+import { renderRulesText } from '../web/card-text.js'
+import { STORY_TEXT } from '../content/campaigns/nightOfTheZealot/story-text.js'
+import { midnightConclusion } from './fixtures/midnight-story.mjs'
+const move=(s,m)=>{const seat=decisionSeat(s);assert.equal(validateMove(s,seat,m),null);return applyMove(s,seat,m)}
+test('完整导入包含序章和每关全部正文，午夜假面只展示实际引言分支',()=>{
+  const gathering=introduction(contentRegistry.getScenarioData('theGathering'))
+  assert.equal(gathering.paragraphs.length,4)
+  assert.deepEqual(gathering.paragraphs,[...STORY_TEXT.prologue.paragraphs,...STORY_TEXT.theGathering])
+  for(const others of [true,false]) {
+    const intro=introduction(contentRegistry.getScenarioData('theMidnightMasks'),{litaForcedOthers:others})
+    assert.deepEqual(intro.paragraphs,[...STORY_TEXT.theMidnightMasks[others?'others':'survivors'],...STORY_TEXT.theMidnightMasks.common])
+    assert.ok(!intro.paragraphs.includes(STORY_TEXT.theMidnightMasks[others?'survivors':'others'][0]))
+    assert.doesNotMatch(intro.paragraphs.join(''),/继续 _|检查剧本日志|<p/)
+  }
+  assert.deepEqual(introduction(contentRegistry.getScenarioData('theDevourerBelow')).paragraphs,STORY_TEXT.theDevourerBelow)
+})
+test('历史摘要升级为完整引言时使用当时记录，局内导入与局外一致',()=>{
+  const s=createGameState({seed:'full-intro'},[{seat:0,role:'human'}])
+  assert.equal(viewState(s,0).scenario.intro,s.scenarioIntro.paragraphs.join('\n\n'))
+  s.campaign.scenarioResults=[{scenarioId:'theMidnightMasks',scenarioIndex:1,introStory:{paragraphs:['旧摘要']},recordsBefore:{litaForcedOthers:true},resolution:'r1'}]
+  s.campaign.records.litaForcedOthers=false
+  const past=campaignStory(s,contentRegistry).entries.find(e=>e.kind==='intro'&&e.scenarioId==='theMidnightMasks')
+  assert.ok(past.paragraphs.includes(STORY_TEXT.theMidnightMasks.others[0]))
+  assert.ok(!past.paragraphs.includes(STORY_TEXT.theMidnightMasks.survivors[0]))
+})
+function settle(s,stop) {for(let n=0;s.pendingChoice&&s.pendingChoice.kind!==stop;n++){assert.ok(n<150);const c=s.pendingChoice;move(s,{action:'choose',choiceId:c.id,optionId:c.options.find(o=>['done','skip','self'].includes(o.id))?.id||c.options[0].id})}}
+test('新战役只投影当前导入，不发送未触发的结局和后续章节',()=>{
+  const s=createGameState({campaignHub:true},[{seat:0,role:'human'}])
+  const journal=viewState(s,0).campaignStory
+  assert.equal(journal.entries.length,1);assert.equal(journal.entries[0].kind,'intro')
+  assert.equal(journal.entries[0].scenarioId,'theGathering')
+  const raw=JSON.stringify(journal)
+  for(const id of ['theGathering','theMidnightMasks','theDevourerBelow']) for(const prose of Object.values(contentRegistry.getScenarioData(id).resolutions)) assert.ok(!raw.includes(prose))
+  for(const branches of Object.values(STORY_TEXT.resolutions)) for(const prose of Object.values(branches).flat()) assert.ok(!raw.includes(prose))
+})
+
+test('进入关卡依次发布故事导入与初始密谋卡演出',()=>{
+  const s=createGameState({campaignHub:true,playerInvestigator:'01001',seed:'opening-agenda'},[{seat:0,role:'human'}])
+  move(s,{action:'hubGoSetup'})
+  move(s,{action:'hubSelectInvestigator',code:'01001'})
+  move(s,{action:'hubAutoDeck'})
+  move(s,{action:'hubDoneSeat'})
+  const events=move(s,{action:'hubBeginScenario'})
+  const opening=events.map(event=>event.presentation).filter(cue=>cue?.kind==='story')
+  assert.deepEqual(opening.map(cue=>cue.title),['故事导入','密谋揭示'])
+  assert.equal(opening[1].code,s.agendas[0].originalCode||s.agendas[0].code)
+  assert.equal(opening[1].name,s.agendas[0].name)
+})
+
+test('午夜结局2完整正文进入演出与纪事，第三章导入在关间准备、恢复和开局中一致',()=>{
+  const { state:s, events }=midnightConclusion()
+  const prose=STORY_TEXT.resolutions.theMidnightMasks.r2
+  let journal=viewState(s,0).campaignStory
+  assert.deepEqual(journal.entries.at(-1).paragraphs,prose)
+  assert.equal(journal.entries.at(-1).resolutionTitle,'结局 2')
+  assert.ok(events.some(e=>e.presentation?.title==='结局 2' && e.presentation.text===prose.join('\n\n')))
+  assert.ok(!journal.entries.some(e=>e.scenarioId==='theDevourerBelow'))
+  // A summary-only old save must gain the full reached outcome without mutation.
+  s.campaign.scenarioResults.at(-1).story={paragraphs:['钟声响起，午夜已至。']}
+  const old=structuredClone(s)
+  assert.deepEqual(viewState(s,0).campaignStory.entries.at(-1).paragraphs,prose)
+  assert.deepEqual(s,old)
+  move(s,{action:'hubContinue'})
+  assert.equal(s.uiState,'interlude')
+  journal=viewState(s,0).campaignStory
+  assert.equal(journal.currentId,'current:theDevourerBelow')
+  const intro=journal.entries.at(-1)
+  for(const p of STORY_TEXT.theDevourerBelow) assert.ok(intro.paragraphs.includes(p))
+  assert.ok(intro.paragraphs.some(p=>p.includes('午夜已经过去')))
+  assert.deepEqual(viewState(JSON.parse(JSON.stringify(s)),0).campaignStory,journal)
+  for(const p of Object.values(STORY_TEXT.resolutions.theDevourerBelow).flat()) assert.ok(!JSON.stringify(journal).includes(p))
+  move(s,{action:'hubDoneSeat'})
+  assert.deepEqual(viewState(s,0).campaignStory.entries.at(-1),intro)
+  move(s,{action:'hubBeginScenario'});settle(s)
+  assert.deepEqual(viewState(s,0).campaignStory.entries.at(-1),intro)
+})
+for(const branch of ['r1','r2']) test(`真实结算 ${branch} 只保留实际故事，导入快照不随后续记录改写`,()=>{
+  const s=createGameState({playerInvestigator:'01001',seed:'story'},[{seat:0,role:'human'}]);settle(s)
+  const intro=structuredClone(s.scenarioIntro)
+  s.actIndex=2;s.chaosBag=['0'];s.investigators[0].hand=[];s.enemies=[]
+  move(s,{action:'resource'});settle(s,'story');move(s,{action:'choose',choiceId:s.pendingChoice.id,optionId:branch});settle(s)
+  const result=s.campaign.scenarioResults[0];assert.equal(result.resolution,branch)
+  const journal=campaignStory(s,contentRegistry),entry=journal.entries.find(e=>e.kind==='result')
+  assert.deepEqual(entry.paragraphs,STORY_TEXT.resolutions.theGathering[branch])
+  assert.ok(!JSON.stringify(journal).includes(STORY_TEXT.resolutions.theGathering[branch==='r1'?'r2':'r1'][0]))
+  assert.ok(entry.investigators.every(i=>!Object.hasOwn(i,'deck')))
+  s.campaign.records.houseBurned=!s.campaign.records.houseBurned
+  assert.deepEqual(campaignStory(s,contentRegistry).entries[0].paragraphs,intro.paragraphs)
+})
+test('失败故事与幕间按实际访问顺序呈现，下一关导入读取真实记录',()=>{
+  const sc=contentRegistry.getScenarioData('theGathering')
+  const s={uiState:'scenarioResult',campaign:{scenarioResults:[{scenarioId:sc.id,visitId:'first:1',resolution:'r3',investigators:[]}],flow:{history:[{nodeId:'prologue',visit:1,storyText:'已发生的前言'},{nodeId:'first',visit:1},{nodeId:'aftermath',visit:1,storyText:'已发生的后记'}]}}}
+  assert.deepEqual(campaignStory(s,contentRegistry).entries.map(e=>e.kind),['interlude','intro','result','interlude'])
+  assert.deepEqual(campaignStory(s,contentRegistry).entries[2].paragraphs,STORY_TEXT.resolutions.theGathering.r3)
+  const next=contentRegistry.getScenarioData('theMidnightMasks')
+  const burned=introduction(next,{houseBurned:true}).paragraphs.join('')
+  assert.match(burned,/大火/);assert.doesNotMatch(burned,/得以保留/)
+})
+test('起始牌组允许准备前修改，保留弱点与身份，准备后以及关间禁止重构',()=>{
+  const s=createGameState({campaignHub:true,seed:'edit-deck'},[{seat:0,role:'human'}])
+  move(s,{action:'hubGoSetup'});move(s,{action:'hubSelectInvestigator',code:'01001'});move(s,{action:'hubAutoDeck'})
+  const record=s.campaign.investigators[0], identity=record.id
+  const special=record.deck.filter(code=>!PLAYER_CARD_CODES.includes(code)), ordinary=record.deck.filter(code=>PLAYER_CARD_CODES.includes(code))
+  assert.equal(ordinary.length,30)
+  assert.ok(legalMoves(s).some(m=>m.action==='hubSetDeck'))
+  move(s,{action:'hubSetDeck',codes:ordinary})
+  assert.equal(record.id,identity);assert.deepEqual(record.deck.filter(code=>!PLAYER_CARD_CODES.includes(code)),special)
+  assert.equal(record.deck.length,30+special.length)
+  assert.deepEqual(record.deck.filter(code=>PLAYER_CARD_CODES.includes(code)).sort(),[...ordinary].sort())
+  move(s,{action:'hubSetDeck',codes:[...ordinary].reverse()})
+  assert.equal(record.deck.length,30+special.length)
+  move(s,{action:'hubDoneSeat'})
+  assert.ok(validateMove(s,0,{action:'hubSetDeck',codes:ordinary}))
+  s.uiState='interlude';s.hubReady=false
+  assert.ok(validateMove(s,0,{action:'hubSetDeck',codes:ordinary}))
+})
+test('首关开始前可以重选调查员并重新开放准备，且不会重抽基础弱点',()=>{
+  const s=createGameState({campaignHub:true,seed:'reselect-before-start'},[{seat:0,role:'human'}])
+  move(s,{action:'hubGoSetup'});move(s,{action:'hubSelectInvestigator',code:'01001'});move(s,{action:'hubAutoDeck'})
+  const record=s.campaign.investigators[0],identity=record.id
+  const weaknesses=record.deck.filter(code=>s.cards[code]?.subtype==='basicweakness')
+  assert.equal(weaknesses.length,1)
+  assert.ok(legalMoves(s).some(m=>m.action==='hubSelectInvestigator'&&m.code==='01002'))
+  move(s,{action:'hubSelectInvestigator',code:'01002'})
+  assert.equal(s.campaign.investigators[0].id,identity)
+  assert.equal(s.campaign.investigators[0].code,'01002')
+  assert.deepEqual(s.campaign.investigators[0].deck,weaknesses)
+  assert.equal(s.campaign.investigators[0].startingDeckReady,false)
+  assert.equal(legalMoves(s).some(m=>m.action==='hubDoneSeat'),false)
+  move(s,{action:'hubAutoDeck'})
+  assert.deepEqual(s.campaign.investigators[0].deck.filter(code=>s.cards[code]?.subtype==='basicweakness'),weaknesses)
+  move(s,{action:'hubDoneSeat'})
+  assert.equal(s.hubReady,true)
+  assert.ok(legalMoves(s).some(m=>m.action==='hubReopenSetup'))
+  move(s,{action:'hubReopenSetup'})
+  assert.equal(s.hubReady,false)
+  assert.deepEqual(s.hubSeatDone,{})
+  assert.ok(legalMoves(s).some(m=>m.action==='hubSelectInvestigator'))
+})
+test('规则索引无断链，卡牌关键字及行动符号可跳转，保留普通文本',()=>{
+  const ids=new Set(RULES.map(r=>r.id));assert.equal(ids.size,RULES.length)
+  for(const r of RULES)for(const id of r.related)assert.ok(ids.has(id),id)
+  const h=(tag,props,...children)=>({tag,props,children})
+  const nodes=renderRulesText(h,'行动点：战斗。猎手，冷漠，反击，涌动。显现后生成一名精英敌人；可谈判。胜利点。卓越。<b>普通文字</b>').flat(Infinity)
+  assert.ok(nodes.some(n=>n.props?.['data-rule-id']==='actions'))
+  assert.ok(nodes.some(n=>n.props?.['data-rule-id']==='hunter'))
+  assert.ok(nodes.some(n=>n.props?.['data-rule-id']==='aloof'))
+  for(const id of ['retaliate','surge','revelation','spawn','elite','parley','victory','upgrade'])
+    assert.ok(nodes.some(n=>n.props?.['data-rule-id']===id),id)
+  assert.equal(ruleById('retaliate').title,'反击')
+  assert.equal(ruleById('surge').title,'涌动')
+  assert.ok(nodes.includes('。普通文字'))
+})
+test('敦威治新机制列入规则书，剧本卡与地点卡可直达对应条目',()=>{
+  const ids=new Set(RULES.map(r=>r.id))
+  for(const id of ['dunwichCampaign','dunwichZones','clubGambling','storyGuests'])assert.ok(ids.has(id))
+  assert.deepEqual(cardRuleIds({originalCode:'02073'}),['clubGambling'])
+  assert.deepEqual(cardRuleIds({originalCode:'02080'}),['storyGuests','clubGambling'])
+  assert.deepEqual(cardRuleIds({originalCode:'01150'}),[])
+  assert.ok(matchingRules('在卡牌室赌博，营救摩尔根博士').some(rule=>rule.id==='clubGambling'))
+  assert.ok(matchingRules('在卡牌室赌博，营救摩尔根博士').some(rule=>rule.id==='storyGuests'))
+  const h=(tag,props,...children)=>({tag,props,children})
+  const nodes=renderRulesText(h,'在卡牌室赌博。放在一边的剧情资产。').flat(Infinity)
+  for(const id of ['clubGambling','dunwichZones','storyGuests'])assert.ok(nodes.some(n=>n.props?.['data-rule-id']===id),id)
+})

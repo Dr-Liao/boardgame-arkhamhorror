@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "baselineId": "arkham-n0-2026-09-18",
+  "referenceRoot": "参考资源/ArkhamHorror-main",
+  "firstStrictRelease": "Core + Night of the Zealot",
+  "runtimePolicy": "仅供离线审计，不是运行时白名单；N0 不改变构筑、选人或规则行为。",
+  "expected": {
+    "jsonUnionCodes": 5930,
+    "targetCodes": 815,
+    "missingTargetCodes": 5115,
+    "validFrontendTables": 13,
+    "emptyFrontendTables": 1,
+    "englishCodes": 5929,
+    "chineseCodes": 5929,
+    "cardTypes": 13,
+    "legacyPacks": 47,
+    "effectEntries": 96,
+    "explicitlySimplifiedEffects": 63,
+    "investigatorAbilities": 5,
+    "scenarios": 3,
+    "difficulties": 4,
+    "corePoolCodes": 58,
+    "runtimeDefinitionKeys": 851,
+    "referenceImages": 299,
+    "referenceFonts": 20,
+    "referenceAudio": 3,
+    "targetImages": 0
+  },
+  "exceptions": [
+    {
+      "id": "empty-japanese-table",
+      "path": "frontend/public/cards_ja.json",
+      "expectedStatus": "empty",
+      "reason": "源文件为零字节，不是有效日文翻译；不参与编号并集。仅该路径的空状态获准，其他解析错误必须失败。",
+      "nextPhase": "N1"
+    },
+    {
+      "id": "damaged-gathering-skeleton",
+      "path": "backend/arkham-api/data/arkham/sets/theGathering.json",
+      "expectedStatus": "damaged",
+      "reason": "第 120 行前的 reveal 数组缺少闭合方括号，严格 JSON.parse 失败；仅作历史文本证据，不自动修复参考源或作为有效数据导入。",
+      "nextPhase": "N1/N4"
+    },
+    {
+      "id": "legacy-only-60336",
+      "code": "60336",
+      "reason": "旧后端独有编号；保留来源与兼容记录，不按同名合并，也不替换成新版其他编号。",
+      "nextPhase": "N1"
+    }
+  ],
+  "boundaries": [
+    { "id": "card-tables", "selector": "backend/arkham-api/data/cards.json + frontend/public/cards*.json", "resourcePhase": "N1", "rulesPhase": "N4/N5", "reason": "所有有效卡表编号取并集，语言不累加、重印不按名合并；英文主源，简繁中按编号补展示，旧后端兼容补充。" },
+    { "id": "haskell", "selector": "backend/**/*.hs", "resourcePhase": "N0", "rulesPhase": "N4/N5", "reason": "定义、builder、注册键和编号字面引用单独计数；静态候选不是编译后全量注册，也不是已迁移玩法。" },
+    { "id": "other-json", "selector": "除卡表、图片清单外的 *.json", "resourcePhase": "N1/N2", "rulesPhase": "N4/N5", "reason": "包括战役骨架、遭遇组、locales、homebrew 和配置；按用途逐文件登记，不并入卡表编号并集。" },
+    { "id": "images", "selector": "本地图片 + frontend/image-manifest.json", "resourcePhase": "N2", "rulesPhase": null, "reason": "本地文件与远程路径分账；远程不联网验证、不下载。卡图和字体授权须另核实，不能由软件许可推导。" },
+    { "id": "audio-fonts", "selector": "字体及音频扩展名", "resourcePhase": "N2", "rulesPhase": null, "reason": "按实际展示需要选择；有音频来源声明不等于全部媒体获准再分发。" },
+    { "id": "return-to", "selector": "ReturnTo*", "resourcePhase": "N1/N2", "rulesPhase": "N5", "reason": "盘点并保留独立编号、变体与依赖；不在首个 Core + NOTZ 严格规则发布范围。" },
+    { "id": "standalone", "selector": "独立剧本及 standaloneCampaign 包装器", "resourcePhase": "N1/N2", "rulesPhase": "N5", "reason": "按剧本注册证据逐批确认；包装器不是一个额外完整战役，路径分类不推断所有模式。" },
+    { "id": "special-identifiers", "selector": "平行、重印、带前后缀、冒号命名空间编号", "resourcePhase": "N1", "rulesPhase": "N5", "reason": "保留原始字符串；内部别名、卡号、实例 ID、美术 ID 不能混用，未知关系待核查。" },
+    { "id": "homebrew", "selector": "frontend/homebrew/** + Arkham/Homebrew/**", "resourcePhase": "N0", "rulesPhase": "deferred", "reason": "登记 Dark Matter、Circus Ex Mortis 及生成注册入口；自制规则、编辑器与媒体迁移不默认纳入首批。" },
+    { "id": "service-features", "selector": "账号、真人多人同步、数据库、云部署", "resourcePhase": "excluded-first-release", "rulesPhase": null, "reason": "保留现有单人 + AI 大厅架构；需要另立范围与验收，不能声称参考项目全功能等价。" },
+    { "id": "other-source-files", "selector": "其余参考文件", "resourcePhase": "inventory-only", "rulesPhase": null, "reason": "文件摘要纳入来源快照，代码、文档、配置不是待复制的卡面或卡牌；需要时再按对应阶段复用。" }
+  ],
+  "mediaLicenses": [
+    { "path": "frontend/public/audio/impactPunch_heavy_000.ogg", "status": "source-declares-CC0", "evidence": "frontend/public/audio/LICENSE-Kenney-impact-sounds.txt" },
+    { "path": "frontend/public/audio/rain.ogg", "status": "source-declares-CC0", "evidence": "frontend/public/audio/LICENSE-Ylmir-rain.txt" },
+    { "path": "frontend/public/audio/turnIndicator.ogg", "status": "source-declares-generated", "evidence": "frontend/public/audio/GENERATED-AUDIO.txt" }
+  ],
+  "findings": [
+    { "id": "metadata-projection", "phase": "N1", "status": "open", "detail": "旧导入器仅遍历 815 条，构筑条件有损；逐字段来源、关联面和冲突尚未验收。", "evidence": ["games/arkhamhorror/tools/import-cards.mjs#normalizeCard", "games/arkhamhorror/tools/import-cards.mjs#normalizeDeckOptions"] },
+    { "id": "locale-provenance", "phase": "N1", "status": "open", "detail": "同编号中文字段匹配只能证明来源内容一致；不证明翻译质量。旧导入器可按英文名回退，不能算编号关联或中文完整。", "evidence": ["games/arkhamhorror/tools/import-cards.mjs#normalizeCard"] },
+    { "id": "image-rendering", "phase": "N2", "status": "open", "detail": "当前文字详情未消费 imagesrc，卡背与翻面未展示；远程可达性、许可和离线可用性未验。", "evidence": ["public/app.js#renderFullCard"] },
+    { "id": "skill-implicit-admission", "phase": "N1", "status": "open", "detail": "isPlayable 对带图标技能卡隐式放行，无效果键也可能进入构筑。", "evidence": ["games/arkhamhorror/deckbuilding.js#isPlayable"] },
+    { "id": "deck-pool-bypass", "phase": "N1/N3", "status": "open", "detail": "手动构筑未落实 playerPool 白名单及开局 XP 预算，UI 核心池不等于服务端许可池。", "evidence": ["games/arkhamhorror/deckbuilding.js#buildDeckFromList"] },
+    { "id": "investigator-selection", "phase": "N1", "status": "open", "detail": "UI 只列核心五人，服务端选择路径仍可接受目录中的其他调查员。", "evidence": ["games/arkhamhorror/engine.js", "games/arkhamhorror/deckbuilding.js#CORE_INVESTIGATOR_CODES"] },
+    { "id": "effect-not-acceptance", "phase": "N4", "status": "open", "detail": "效果键和 simplified 标记只是实现线索；所有效果当前均未建立严格行为验收证据。", "evidence": ["games/arkhamhorror/card-effects.js#EFFECTS"] },
+    { "id": "unmarked-core-differences", "phase": "N4", "status": "open", "codes": ["01018", "01031", "01060", "01064", "01072", "01094", "01095"], "detail": "未标 simplified 的效果仍存在巡警弃置/时机、古籍搜索与选目标、枯萎符号惩罚、飞蛾扑火抽遭遇、资产承伤等差异；逐张回归待补。", "evidence": ["games/arkhamhorror/card-effects.js#EFFECTS", "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Asset", "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Event"] },
+    { "id": "pending-choice", "phase": "N3", "status": "open", "detail": "反应、检定投入与通用待决选择未形成暂停/回答/继续协议，不能自动首选冒充规则等价。", "evidence": ["games/arkhamhorror/effects.js", "games/arkhamhorror/engine.js"] },
+    { "id": "personal-clues-doom", "phase": "N3", "status": "open", "detail": "个人线索、共同支付、卡上毁灭统一统计与清理尚需修正。", "evidence": ["games/arkhamhorror/engine.js"] },
+    { "id": "notz-identities", "phase": "N1", "status": "open", "detail": "手写地点/幕/议程缺原始编号，敌人与诡计使用别名。候选同名映射不自动确认为原卡。", "evidence": ["games/arkhamhorror/scenarios-data.js#SCENARIOS"] },
+    { "id": "gathering-flow", "phase": "N4", "status": "open", "scenarios": ["theGathering"], "detail": "幕2共同支付的地点与回合窗口、全部结局选择与个人奖励待核对，当前有固定结局处理。", "evidence": ["games/arkhamhorror/engine.js", "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/NightOfTheZealot/TheGathering.hs"] },
+    { "id": "masks-flow", "phase": "N4", "status": "open", "scenarios": ["theMidnightMasks"], "detail": "地点变体、主动能力、异教徒牌堆与午夜记录尚未完成等价验收。", "evidence": ["games/arkhamhorror/scenarios-data.js#SCENARIOS.theMidnightMasks", "games/arkhamhorror/engine.js"] },
+    { "id": "devourer-flow", "phase": "N4", "status": "open", "scenarios": ["theDevourerBelow"], "detail": "地图随机布置、代理遭遇组、仪式/首领结局与选择待验收。", "evidence": ["games/arkhamhorror/scenarios-data.js#SCENARIOS.theDevourerBelow", "games/arkhamhorror/engine.js"] },
+    { "id": "campaign-persistence", "phase": "N4", "status": "open", "detail": "个人 XP、关间升级、持续牌组/剧情卡变化、创伤、死亡/疯狂与替换调查员未闭环。", "evidence": ["games/arkhamhorror/engine.js"] },
+    { "id": "replay-and-validation", "phase": "N3/N6", "status": "open", "detail": "合法动作一致性、无副作用拒绝、随机状态、重复请求与异步状态版本尚需正式回归；旧冒烟不等于自然通关。", "evidence": ["games/arkhamhorror/engine.js", "lib/agent/orchestrator.js", "games/arkhamhorror/ACTION_PLAN.md#4.4"] }
+  ],
+  "investigatorReviews": {
+    "01001": "反应效果条目存在；可选窗口、个人线索和触发限制待逐项验证。",
+    "01002": "extraTomeAction 与旧印条目存在；书籍动作及搜索/选择流程未严格验收。",
+    "01003": "付费额外行动与旧印条目存在；支付、时机及每回合限制待严格验收。",
+    "01004": "受恐惧反应条目存在；恐惧来源、目标、可选窗口与阶段限制待严格验收。",
+    "01005": "仅有旧印能力条目；弃牌重抽混乱标记反应未实现。"
+  },
+  "scenarioCodes": {
+    "theGathering": "01104",
+    "theMidnightMasks": "01120",
+    "theDevourerBelow": "01142"
+  }
+}

@@ -1,0 +1,23 @@
+.ah-music{position:fixed;left:20px;bottom:78px;z-index:29;color:#e2d0a0;font-family:Georgia,'Noto Serif SC',serif;width:232px;max-width:calc(100vw - 32px)}
+.ah-music *{box-sizing:border-box}
+.ah-music button{font:inherit;color:inherit;cursor:pointer;border:1px solid #8d754544;background:#142b23;border-radius:5px;min-height:34px}
+.ah-music button:hover{border-color:#c4a664;background:#284337}
+.ah-music button:focus-visible,.ah-music input:focus-visible,.ah-music a:focus-visible{outline:2px solid #f2d68c;outline-offset:3px}
+.ah-music-dock{display:flex;border:1px solid #8d754575;background:#0c1c17ed;box-shadow:0 5px 20px #0006;border-radius:7px;padding:4px}
+.ah-music .ah-music-launcher{display:flex;gap:10px;align-items:center;text-align:left;flex:1;border:0;background:transparent;min-width:0;padding:4px 8px}
+.ah-music-launcher>span:last-child{min-width:0}.ah-music-launcher strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px}
+.ah-music-launcher small{display:block;color:#899b89;font-size:10px;margin-top:3px}.ah-music-note{font-size:26px;color:#c5a65f}.ah-music-mini{width:34px;flex-shrink:0}
+.ah-music-panel{position:absolute;bottom:62px;left:0;width:320px;max-width:calc(100vw - 32px);max-height:calc(100dvh - 170px);overflow:auto;padding:18px;border:1px solid #a48b58;border-radius:8px;background:radial-gradient(ellipse at 50% 20%,#294538,#0d201a 70%);box-shadow:0 14px 50px #000a}
+.ah-music-panel[hidden]{display:none}.ah-music-panel header{display:flex;justify-content:space-between;align-items:center;letter-spacing:2px;font-size:15px}.ah-music-panel header button{font-size:22px;width:32px;border:0;background:none}
+.ah-music-record{width:88px;height:88px;margin:14px auto;border:2px solid #a28952;border-radius:50%;background:repeating-radial-gradient(circle,#12221d 0 3px,#2c3b2c 4px,#0b1612 5px);display:grid;place-items:center;box-shadow:0 4px 18px #0008}
+.ah-music-record span{display:grid;place-items:center;background:#9f8247;color:#11261d;width:31px;height:31px;border-radius:50%;font-size:11px;letter-spacing:2px}
+.ah-music.is-playing .ah-music-record{animation:ah-record-spin 12s linear infinite}.ah-music-now,.ah-music-mood{display:block;text-align:center}.ah-music-now{font-size:18px}.ah-music-mood{font-size:11px;color:#a3ad93;margin:5px 0 14px}
+.ah-music-controls{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px}.ah-music-controls button{padding:0 10px}.ah-music .ah-music-play{border-radius:50%;width:42px;height:42px;background:#a58a4e;color:#0b2018;font-size:18px}
+.ah-music input[type=range]{accent-color:#cfb975;width:100%;height:14px;cursor:pointer;margin:0}.ah-music input:disabled{opacity:.4;cursor:default}.ah-music-time{display:block;text-align:right;font:10px/1.8 monospace;color:#9ba990}
+.ah-music-volume{display:flex;gap:10px;align-items:center;margin:6px 0 12px}.ah-music-volume button{width:40px;flex-shrink:0}.ah-music-volume>span{font-size:11px;min-width:30px}
+.ah-music .ah-music-track{width:100%;display:flex;align-items:center;gap:12px;text-align:left;background:transparent;border:1px solid transparent;border-top-color:#8d75452b;padding:9px 8px;border-radius:3px}
+.ah-music-track strong{font-size:12px}.ah-music-track small{display:block;font-size:10px;color:#9aab98;margin-top:3px}.ah-music-number{font:11px monospace;color:#938664}.ah-music .ah-music-track[aria-current=true]{border-color:#ad935e70;background:#a68a441b}.ah-music-track[aria-current=true] .ah-music-number{color:#e1c67a}
+.ah-music-panel footer{font:10px/1.9 sans-serif;color:#8e9e8e;margin-top:12px;text-align:center}.ah-music a{color:#c2ad76;text-decoration:underline;text-underline-offset:2px}.ah-music-feedback{font:12px/1.6 sans-serif;color:#edb79c}
+@keyframes ah-record-spin{to{transform:rotate(360deg)}}
+@media(max-width:700px){.ah-music{left:12px;bottom:76px;width:180px}.ah-music-panel{padding:14px}.ah-music-launcher strong{font-size:11px}.ah-music-record{width:64px;height:64px;margin:10px auto}}
+@media(prefers-reduced-motion:reduce){.ah-music.is-playing .ah-music-record{animation:none}}

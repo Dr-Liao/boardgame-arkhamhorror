@@ -1,0 +1,712 @@
+{
+ "catalog": {
+  "resourceVersion": "2cb66d069ca84d536068d40843e576d96eef750d261fc9844a53c2c426e74283",
+  "schemaVersion": 2,
+  "total": 5930
+ },
+ "imageResolution": {
+  "byType": {
+   "act": {
+    "cards": 374,
+    "localizedFront": 252,
+    "withBackArt": 374
+   },
+   "agenda": {
+    "cards": 324,
+    "localizedFront": 224,
+    "withBackArt": 324
+   },
+   "asset": {
+    "cards": 1257,
+    "localizedFront": 805,
+    "withBackArt": 100
+   },
+   "enemy": {
+    "cards": 685,
+    "localizedFront": 381,
+    "withBackArt": 145
+   },
+   "enemy_location": {
+    "cards": 13,
+    "localizedFront": 0,
+    "withBackArt": 12
+   },
+   "event": {
+    "cards": 571,
+    "localizedFront": 362,
+    "withBackArt": 0
+   },
+   "investigator": {
+    "cards": 111,
+    "localizedFront": 64,
+    "withBackArt": 111
+   },
+   "key": {
+    "cards": 22,
+    "localizedFront": 0,
+    "withBackArt": 22
+   },
+   "location": {
+    "cards": 1258,
+    "localizedFront": 854,
+    "withBackArt": 1142
+   },
+   "scenario": {
+    "cards": 149,
+    "localizedFront": 114,
+    "withBackArt": 149
+   },
+   "skill": {
+    "cards": 186,
+    "localizedFront": 130,
+    "withBackArt": 0
+   },
+   "story": {
+    "cards": 227,
+    "localizedFront": 80,
+    "withBackArt": 207
+   },
+   "treachery": {
+    "cards": 753,
+    "localizedFront": 512,
+    "withBackArt": 6
+   }
+  },
+  "candidateSources": {
+   "arkhamdb-backimagesrc": 1876,
+   "arkhamdb-imagesrc": 5712,
+   "bare-code-fallback": 273,
+   "card-code": 218,
+   "duplicate-of": 191,
+   "generic-back": 3338,
+   "linked-face": 697,
+   "reference-alt-front": 5335,
+   "reference-own-back": 19
+  },
+  "cards": 5930,
+  "frontCandidateCounts": {
+   "1": 433,
+   "2": 5306,
+   "3": 191
+  },
+  "genericBack": {
+   "encounter": 1635,
+   "player": 1703
+  },
+  "localizedFront": 3778,
+  "resolved": 5930,
+  "revisedCoreReprints": [],
+  "unresolved": [],
+  "withBackArt": 2592
+ },
+ "implementationFiles": [
+  {
+   "path": "games/arkhamhorror/presentation/art-rules.js",
+   "sha256": "00ad53d0597e19bfb6e72d5614425f7a94ec4120ba9caf524386b930b46dae41"
+  },
+  {
+   "path": "games/arkhamhorror/presentation/images.js",
+   "sha256": "9908f68e898feceda9ff3f511a78add6263cd11860bf828c8d7109ae6c6c0b89"
+  },
+  {
+   "path": "games/arkhamhorror/src/cards/card-catalog.js",
+   "sha256": "ad1d155e4e47e31fb5edf825b7cf28bbccf0e9c400891ec1b19c51dfda22f74f"
+  },
+  {
+   "path": "games/arkhamhorror/src/integration/web-api.js",
+   "sha256": "daea7d622a0ed1f14baddaacb210b34d50dd1be548a6c4ae209c968346db1a88"
+  },
+  {
+   "path": "games/arkhamhorror/web/images.js",
+   "sha256": "63e0f267d180167cf72fdb446fc9f6cc63d688ec4db1e9eee44ed8bf3143364c"
+  },
+  {
+   "path": "games/arkhamhorror/web/catalog.js",
+   "sha256": "6acef3b54f54ea832a82ed8960c4f117cd7fd75a50dd87d07f91f84aa0432cdd"
+  },
+  {
+   "path": "games/arkhamhorror/web/game-ui.js",
+   "sha256": "7d0a88667f80b804b40c2a7a5f600e20a4cb35e0de68502e67ec1072f8f31dea"
+  },
+  {
+   "path": "games/arkhamhorror/web/hub.js",
+   "sha256": "edbabd05f617c51a1eae35cd4f49214d73e0528d812d27737a7e5a54ed8e19f4"
+  },
+  {
+   "path": "games/arkhamhorror/web/hub-office.css",
+   "sha256": "4b2529a44932018ae77b0d83a9d51c1b32673758b929f43d97171ec27e78d517"
+  },
+  {
+   "path": "games/arkhamhorror/web/table-art.js",
+   "sha256": "de155318480cf2ac46db236b75b227a5435f4220aa62f6c7c7d762eb190d9cb0"
+  },
+  {
+   "path": "games/arkhamhorror/web/table-regions.js",
+   "sha256": "9377bfa554c19cd842b415ef84505fb0516ec7a8b1f83fc493c5f17fc121ddbd"
+  },
+  {
+   "path": "games/arkhamhorror/web/table-components.js",
+   "sha256": "5ac625b7dd287fff52526c76da6b7eb77db2dbb4729446b742bc38540be8a3d4"
+  },
+  {
+   "path": "games/arkhamhorror/web/table-presentation.js",
+   "sha256": "662e50decbddba44c86c27d0d2500590d1a796cf5fcf0d9b7462e74632d7eea5"
+  },
+  {
+   "path": "games/arkhamhorror/web/noir.css",
+   "sha256": "ef5febae25582cf529756e8ea6066d22e019ecd53eb831eb14d7a7c59459cc9b"
+  },
+  {
+   "path": "games/arkhamhorror/web/story-book.css",
+   "sha256": "6da1bb0197fa99a4b3e3da9ad0612a323618952611b9fa40feed3f02bf63397b"
+  },
+  {
+   "path": "games/arkhamhorror/web/command-deck.css",
+   "sha256": "8652b502786d019fa037d20419d0178da68dc2a84d0df7048e2a9e95a2711a69"
+  },
+  {
+   "path": "games/arkhamhorror/web/card-interactions.js",
+   "sha256": "ec7768e997f3081a37c52110deb0b8439f5314d2dad6933e75c56b12c326a02d"
+  },
+  {
+   "path": "games/arkhamhorror/web/card-interactions.css",
+   "sha256": "80b50269ff860218f9be628779279fc3675d6138039e669ab5ac9d168f8aa24e"
+  },
+  {
+   "path": "games/arkhamhorror/web/table-surface.css",
+   "sha256": "e408b2d0c531276708c303add483cbb6193d415a43b890cdbd16c04c04f687df"
+  },
+  {
+   "path": "games/arkhamhorror/web/map-layout.js",
+   "sha256": "fe8da08394be4874d1826f0ccff71162290dadfe91bb5453732dd73593e8a871"
+  }
+ ],
+ "localizedArtSource": {
+  "cardArts": 5065,
+  "entries": 5065,
+  "language": "zh",
+  "path": "frontend/src/digests/zh.json",
+  "sha256": "ed8e006012040f1ea3358977959534438b16d84f0659c3d6226d9c9af39b9353",
+  "urlPrefix": "img/arkham/zh/"
+ },
+ "media": {
+  "exclusions": [
+   {
+    "decision": "not-copied",
+    "reason": "参考源未声明图片再分发许可，仅迁移解析规则，卡背等通用图改用文字／CSS 回退",
+    "scope": "frontend/public/img/**"
+   },
+   {
+    "decision": "not-copied",
+    "reason": "字体无许可声明，界面使用系统字体栈，不影响卡牌可读性",
+    "scope": "frontend/public/fonts/**"
+   },
+   {
+    "decision": "not-copied",
+    "licenses": [
+     {
+      "evidence": "frontend/public/audio/LICENSE-Kenney-impact-sounds.txt",
+      "path": "frontend/public/audio/impactPunch_heavy_000.ogg",
+      "status": "source-declares-CC0"
+     },
+     {
+      "evidence": "frontend/public/audio/LICENSE-Ylmir-rain.txt",
+      "path": "frontend/public/audio/rain.ogg",
+      "status": "source-declares-CC0"
+     },
+     {
+      "evidence": "frontend/public/audio/GENERATED-AUDIO.txt",
+      "path": "frontend/public/audio/turnIndicator.ogg",
+      "status": "source-declares-generated"
+     }
+    ],
+    "reason": "两份 CC0 与一份生成声明已登记，但 N2 没有音频功能需求，不为凑数量复制",
+    "scope": "frontend/public/audio/**"
+   }
+  ],
+  "generatedFrom": {
+   "directories": [
+    "frontend/public/img/arkham",
+    "frontend/public/img/icons",
+    "frontend/public/fonts",
+    "frontend/public/audio"
+   ],
+   "referenceRoot": "参考资源/ArkhamHorror-main"
+  },
+  "genericBacks": {
+   "files": [
+    "backs/back_encounter.webp",
+    "backs/back_player.webp"
+   ],
+   "handling": "remote-candidate-or-text-fallback",
+   "licenseStatus": [
+    "undeclared"
+   ],
+   "localCopy": false
+  },
+  "localCopies": [],
+  "referenceLocalFiles": {
+   "byDirectory": {
+    "frontend/public/audio": 6,
+    "frontend/public/fonts": 20,
+    "frontend/public/img/arkham": 8,
+    "frontend/public/img/arkham/backs": 6,
+    "frontend/public/img/arkham/campaigns/the-dream-eaters": 2,
+    "frontend/public/img/arkham/chaos-tokens": 22,
+    "frontend/public/img/arkham/classes": 2,
+    "frontend/public/img/arkham/connections": 15,
+    "frontend/public/img/arkham/extra/edge-of-the-earth/seals": 10,
+    "frontend/public/img/arkham/extra/fortune-and-folly": 3,
+    "frontend/public/img/arkham/extra/fortune-and-folly/playing-cards": 44,
+    "frontend/public/img/arkham/extra/the-blob-that-ate-everything": 1,
+    "frontend/public/img/arkham/extra/the-circle-undone": 2,
+    "frontend/public/img/arkham/extra/the-drowned-city": 2,
+    "frontend/public/img/arkham/extra/the-drowned-city/runes": 26,
+    "frontend/public/img/arkham/extra/the-feast-of-hemlock-vale": 2,
+    "frontend/public/img/arkham/extra/the-innsmouth-conspiracy/keys": 8,
+    "frontend/public/img/arkham/extra/the-scarlet-keys": 1,
+    "frontend/public/img/arkham/extra/war-of-the-outer-gods/arrows": 7,
+    "frontend/public/img/arkham/fleurs": 9,
+    "frontend/public/img/arkham/homebrew": 1,
+    "frontend/public/img/arkham/icons": 6,
+    "frontend/public/img/arkham/lola": 1,
+    "frontend/public/img/arkham/slots": 9,
+    "frontend/public/img/arkham/tokens": 8,
+    "frontend/public/img/arkham/ui": 1,
+    "frontend/public/img/arkham/unused": 1,
+    "frontend/public/img/icons": 7
+   },
+   "note": "仅统计上列目录；N0 的 299 个图片口径还包含自制扩展与其他位置，两者不可混用",
+   "total": 230
+  },
+  "remoteManifest": {
+   "cardArtEntries": 8174,
+   "directories": 44,
+   "entries": 30895,
+   "note": "远程清单路径不等于本地文件，也未验证可达性；不计入离线可用数",
+   "path": "frontend/image-manifest.json",
+   "sha256": "f7ec4c7e2251a7f3ddfc0b0a9114d5a98d5a3ca2e599c3f3fd05138eff8ce285"
+  }
+ },
+ "phase": "N2",
+ "presentationVersion": "147380a9c47df84ed9c97a04fd5e458f42f41bf403dea260ef858545dcfa3044",
+ "samples": [
+  {
+   "code": "01001",
+   "descriptor": {
+    "art": "01001",
+    "back": {
+     "candidates": [
+      {
+       "art": "01001b",
+       "localized": true,
+       "path": "cards/01001b.avif",
+       "source": "arkhamdb-backimagesrc"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "code": "01001",
+    "doubleSided": true,
+    "front": {
+     "candidates": [
+      {
+       "art": "01001",
+       "localized": true,
+       "path": "cards/01001.avif",
+       "source": "arkhamdb-imagesrc"
+      },
+      {
+       "art": "01001a",
+       "localized": false,
+       "path": "cards/01001a.avif",
+       "source": "reference-alt-front"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "hasBackArt": true
+   }
+  },
+  {
+   "code": "01016",
+   "descriptor": {
+    "art": "01016",
+    "back": {
+     "candidates": [
+      {
+       "art": null,
+       "localized": false,
+       "path": "backs/back_player.webp",
+       "source": "generic-back"
+      }
+     ],
+     "kind": "generic-back",
+     "variants": {}
+    },
+    "code": "01016",
+    "doubleSided": false,
+    "front": {
+     "candidates": [
+      {
+       "art": "01016",
+       "localized": true,
+       "path": "cards/01016.avif",
+       "source": "arkhamdb-imagesrc"
+      },
+      {
+       "art": "01016a",
+       "localized": false,
+       "path": "cards/01016a.avif",
+       "source": "reference-alt-front"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "hasBackArt": false
+   }
+  },
+  {
+   "code": "01111",
+   "descriptor": {
+    "art": "01111",
+    "back": {
+     "candidates": [
+      {
+       "art": "01111b",
+       "localized": true,
+       "path": "cards/01111b.avif",
+       "source": "arkhamdb-backimagesrc"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "code": "01111",
+    "doubleSided": true,
+    "front": {
+     "candidates": [
+      {
+       "art": "01111",
+       "localized": true,
+       "path": "cards/01111.avif",
+       "source": "arkhamdb-imagesrc"
+      },
+      {
+       "art": "01111a",
+       "localized": false,
+       "path": "cards/01111a.avif",
+       "source": "reference-alt-front"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "hasBackArt": true
+   }
+  },
+  {
+   "code": "01119",
+   "descriptor": {
+    "art": "01119",
+    "back": {
+     "candidates": [
+      {
+       "art": null,
+       "localized": false,
+       "path": "backs/back_encounter.webp",
+       "source": "generic-back"
+      }
+     ],
+     "kind": "generic-back",
+     "variants": {}
+    },
+    "code": "01119",
+    "doubleSided": false,
+    "front": {
+     "candidates": [
+      {
+       "art": "01119",
+       "localized": true,
+       "path": "cards/01119.avif",
+       "source": "arkhamdb-imagesrc"
+      },
+      {
+       "art": "01119a",
+       "localized": false,
+       "path": "cards/01119a.avif",
+       "source": "reference-alt-front"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "hasBackArt": false
+   }
+  },
+  {
+   "code": "01121a",
+   "descriptor": {
+    "art": "01121a",
+    "back": {
+     "candidates": [
+      {
+       "art": "01121b",
+       "localized": true,
+       "path": "cards/01121b.avif",
+       "source": "linked-face"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "code": "01121a",
+    "doubleSided": false,
+    "front": {
+     "candidates": [
+      {
+       "art": "01121a",
+       "localized": true,
+       "path": "cards/01121a.avif",
+       "source": "arkhamdb-imagesrc"
+      },
+      {
+       "art": "01121",
+       "localized": false,
+       "path": "cards/01121.avif",
+       "source": "bare-code-fallback"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "hasBackArt": true
+   }
+  },
+  {
+   "code": "01121b",
+   "descriptor": {
+    "art": "01121b",
+    "back": {
+     "candidates": [
+      {
+       "art": "01121a",
+       "localized": true,
+       "path": "cards/01121a.avif",
+       "source": "linked-face"
+      },
+      {
+       "art": "01121",
+       "localized": false,
+       "path": "cards/01121.avif",
+       "source": "bare-code-fallback"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "code": "01121b",
+    "doubleSided": false,
+    "front": {
+     "candidates": [
+      {
+       "art": "01121b",
+       "localized": true,
+       "path": "cards/01121b.avif",
+       "source": "arkhamdb-imagesrc"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "hasBackArt": true
+   }
+  },
+  {
+   "code": "01149",
+   "descriptor": {
+    "art": "01149",
+    "back": {
+     "candidates": [
+      {
+       "art": "01149b",
+       "localized": true,
+       "path": "cards/01149b.avif",
+       "source": "arkhamdb-backimagesrc"
+      }
+     ],
+     "kind": "art",
+     "variants": {
+      "revised": {
+       "art": "01649b",
+       "localized": false,
+       "path": "cards/01649b.avif",
+       "source": "declared-variant-revised"
+      }
+     }
+    },
+    "code": "01149",
+    "doubleSided": true,
+    "front": {
+     "candidates": [
+      {
+       "art": "01149",
+       "localized": true,
+       "path": "cards/01149.avif",
+       "source": "arkhamdb-imagesrc"
+      },
+      {
+       "art": "01149a",
+       "localized": false,
+       "path": "cards/01149a.avif",
+       "source": "reference-alt-front"
+      }
+     ],
+     "kind": "art",
+     "variants": {
+      "revised": {
+       "art": "01649",
+       "localized": false,
+       "path": "cards/01649.avif",
+       "source": "declared-variant-revised"
+      }
+     }
+    },
+    "hasBackArt": true
+   }
+  },
+  {
+   "code": "01104",
+   "descriptor": {
+    "art": "01104",
+    "back": {
+     "candidates": [
+      {
+       "art": "01104b",
+       "localized": true,
+       "path": "cards/01104b.avif",
+       "source": "arkhamdb-backimagesrc"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "code": "01104",
+    "doubleSided": true,
+    "front": {
+     "candidates": [
+      {
+       "art": "01104",
+       "localized": true,
+       "path": "cards/01104.avif",
+       "source": "arkhamdb-imagesrc"
+      },
+      {
+       "art": "01104a",
+       "localized": false,
+       "path": "cards/01104a.avif",
+       "source": "reference-alt-front"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "hasBackArt": true
+   }
+  },
+  {
+   "code": "01145",
+   "descriptor": {
+    "art": "01145",
+    "back": {
+     "candidates": [
+      {
+       "art": "01145b",
+       "localized": true,
+       "path": "cards/01145b.avif",
+       "source": "arkhamdb-backimagesrc"
+      }
+     ],
+     "kind": "art",
+     "variants": {
+      "revised": {
+       "art": "01645b",
+       "localized": false,
+       "path": "cards/01645b.avif",
+       "source": "declared-variant-revised"
+      }
+     }
+    },
+    "code": "01145",
+    "doubleSided": true,
+    "front": {
+     "candidates": [
+      {
+       "art": "01145",
+       "localized": true,
+       "path": "cards/01145.avif",
+       "source": "arkhamdb-imagesrc"
+      },
+      {
+       "art": "01145a",
+       "localized": false,
+       "path": "cards/01145a.avif",
+       "source": "reference-alt-front"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "hasBackArt": true
+   }
+  },
+  {
+   "code": "60336",
+   "descriptor": {
+    "art": "60336",
+    "back": {
+     "candidates": [
+      {
+       "art": null,
+       "localized": false,
+       "path": "backs/back_player.webp",
+       "source": "generic-back"
+      }
+     ],
+     "kind": "generic-back",
+     "variants": {}
+    },
+    "code": "60336",
+    "doubleSided": false,
+    "front": {
+     "candidates": [
+      {
+       "art": "60336",
+       "localized": false,
+       "path": "cards/60336.avif",
+       "source": "arkhamdb-imagesrc"
+      },
+      {
+       "art": "60336a",
+       "localized": false,
+       "path": "cards/60336a.avif",
+       "source": "reference-alt-front"
+      }
+     ],
+     "kind": "art",
+     "variants": {}
+    },
+    "hasBackArt": false
+   }
+  }
+ ],
+ "schemaVersion": 1,
+ "verifiedCounts": {
+  "localImagesCopied": 0,
+  "note": "本阶段没有下载或复制媒体；可展示与缺图数量需由浏览器验收记录，不由候选数推断",
+  "remoteImagesVerified": 0
+ }
+}

@@ -1,0 +1,177 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import { encounterRules } from '../content/campaigns/thePathToCarcosa/encounter-rules.js'
+import { behavior as oathBehavior } from '../content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/behavior.js'
+import { behavior as blackStarsBehavior } from '../content/campaigns/thePathToCarcosa/scenarios/blackStarsRise/behavior.js'
+import { behavior as dimBehavior } from '../content/campaigns/thePathToCarcosa/scenarios/dimCarcosa/behavior.js'
+import { behavior as maskBehavior } from '../content/campaigns/thePathToCarcosa/scenarios/thePallidMask/behavior.js'
+
+const investigator = extra => ({
+  seat: 0, name: '调查员', location: 'hall', clues: 1, actionsLeft: 3,
+  assets: [], threat: [], hand: [], discard: [], horror: 0, ...extra,
+})
+
+test('03185 约束衣进入威胁区、占槽且提供双行动弃除能力', () => {
+  const inv = investigator({
+    assets: [{ id: 'gun', code: '01016' }, { id: 'coat', code: '01072' }],
+  })
+  const state = { investigators: [inv] }
+  const returned = []
+  let threat = null
+  const resolved = oathBehavior.resolveEncounter(state, inv, { code: '03185' }, {
+    removeAsset(_seat, id) {
+      const index = inv.assets.findIndex(asset => asset.id === id)
+      returned.push(inv.assets.splice(index, 1)[0].code)
+    },
+    threat(_seat, code, extra) {
+      threat = { id: 'straitjacket', code, ...extra }
+      inv.threat.push(threat)
+    },
+  })
+  assert.equal(resolved, true)
+  assert.deepEqual(returned.sort(), ['01016', '01072'])
+  assert.deepEqual(inv.hand.sort(), ['01016', '01072'])
+  assert.deepEqual(threat.slots, ['Body', 'Hand x2'])
+  assert.equal(threat.cannotLeavePlay, true)
+  assert.deepEqual(threat.threatEffect.discardCost, { action: 2 })
+  assert.equal(threat.threatEffect.sameLocationAction, true)
+})
+
+test('03091 与 03094 的地点附属行动和离开地点强制效果按卡面结算', () => {
+  const inv = investigator()
+  const location = {
+    id: 'hall', name: '大厅', shroud: 2, shroudMod: 0, clues: 0, doom: 1,
+    attachments: [{ id: 'spires', code: '03091', originalCode: '03091' }],
+  }
+  const state = {
+    round: 1, moveCount: 1, fogMod: 0, investigators: [inv],
+    locations: [location], enemies: [], encounterDiscard: [],
+  }
+  const spires = encounterRules.encounterActions(state, inv)
+    .find(move => move.rule === 'clearSpiresOfCarcosa')
+  assert.ok(spires)
+  encounterRules.performEncounterAction(state, inv, spires, {
+    test(_seat, skill, difficulty, resolve) {
+      assert.equal(skill, 'intellect')
+      assert.equal(difficulty, 2)
+      resolve({ success: true })
+    },
+  })
+  assert.equal(location.doom, 0)
+  assert.deepEqual(location.attachments, [])
+  assert.deepEqual(state.encounterDiscard, ['03091'])
+
+  location.attachments = [{ id: 'torment', code: '03094', originalCode: '03094' }]
+  location.haunted = true
+  const torment = encounterRules.encounterActions(state, inv)
+    .find(move => move.rule === 'discardSpiritsTorment')
+  assert.ok(torment)
+  encounterRules.performEncounterAction(state, inv, torment, {
+    spendClues(_seat, amount) { inv.clues -= amount },
+  })
+  assert.equal(inv.clues, 0)
+  assert.equal(location.clues, 1)
+  assert.deepEqual(location.attachments, [])
+  assert.equal(location.haunted, undefined)
+  assert.deepEqual(state.encounterDiscard, ['03091', '03094'])
+
+  location.attachments = [{ id: 'torment-2', code: '03094', originalCode: '03094' }]
+  encounterRules.locationLeft(state, inv, location, {
+    choose: () => 'action',
+    loseActions(_seat, amount) { inv.actionsLeft -= amount },
+    horror() { assert.fail('选择失去行动后不应受到恐惧') },
+  })
+  assert.equal(inv.actionsLeft, 2)
+})
+
+test('03059 苍白面具下的男子在共享遭遇规则中提供调查行动', () => {
+  const inv = investigator()
+  const enemy = { id: 'stranger', code: '03059', originalCode: '03059', location: 'hall', health: 3 }
+  const state = {
+    fogMod: 1, investigators: [inv],
+    locations: [{ id: 'hall', shroud: 2, shroudMod: 1 }],
+    enemies: [enemy],
+  }
+  const move = encounterRules.encounterActions(state, inv)
+    .find(candidate => candidate.rule === 'investigatePallidMask')
+  assert.ok(move)
+  let damage = null
+  encounterRules.performEncounterAction(state, inv, move, {
+    test(_seat, skill, difficulty, resolve) {
+      assert.equal(skill, 'intellect')
+      assert.equal(difficulty, 6)
+      resolve({ success: true })
+    },
+    damageEnemy(id, amount, seat, source) { damage = { id, amount, seat, source } },
+  })
+  assert.deepEqual(damage, { id: 'stranger', amount: 99, seat: 0, source: '03059' })
+  assert.equal(dimBehavior.enemyCanBeDefeated({
+    actIndex: 1, scenarioFlags: { actTwoVersion: 2 },
+  }, enemy, null), false)
+  assert.equal(dimBehavior.enemyCanBeDefeated({
+    actIndex: 1, scenarioFlags: { actTwoVersion: 2 },
+  }, enemy, '03059'), true)
+  enemy.cannotBeDefeatedByAction = true
+  assert.equal(maskBehavior.enemyCanBeDefeated({}, enemy, '03059'), false)
+})
+
+test('03301 裂缝探求者提供谈判，并在攻击后执行印刷强制效果', () => {
+  const inv = investigator({ horror: 0, damage: 0 })
+  const enemy = { id: 'rift', code: '03301', originalCode: '03301', location: 'hall' }
+  const state = {
+    doom: 0, agendaIndex: 0, numInvestigators: 1, investigators: [inv],
+    locations: [{ id: 'hall' }], enemies: [enemy], encounterDiscard: [],
+    scenarioFlags: {
+      route: 'below',
+      agendaDecks: {
+        a: { id: 'a', index: 0, doom: 0, cards: ['03275', '03276a', '03277'] },
+        c: { id: 'c', index: 0, doom: 0, cards: ['03278', '03279b', '03280'] },
+      },
+    },
+  }
+  const move = blackStarsBehavior.encounterActions(state, inv)
+    .find(candidate => candidate.rule === 'parleyRiftSeeker')
+  assert.ok(move)
+  blackStarsBehavior.performEncounterAction(state, inv, move, {
+    horror(_seat, amount) { inv.horror += amount },
+    discardEnemy(target) {
+      state.enemies.splice(state.enemies.indexOf(target), 1)
+      state.encounterDiscard.push(target.code)
+    },
+  })
+  assert.equal(inv.horror, 2)
+  assert.equal(state.scenarioFlags.agendaDecks.a.doom, 1)
+  assert.equal(state.scenarioFlags.agendaDecks.c.doom, 1)
+  assert.deepEqual(state.encounterDiscard, ['03301'])
+
+  state.enemies = [enemy]
+  blackStarsBehavior.enemyAttackResolved(state, enemy, inv, {
+    choose: () => 'harm',
+    damage(_seat, amount) { inv.damage += amount },
+    horror(_seat, amount) { inv.horror += amount },
+  })
+  assert.equal(inv.damage, 1)
+  assert.equal(inv.horror, 3)
+})
+
+test('03332 黄衣之王哈斯塔允许任意地点调查员检定意志并将其横置', () => {
+  const inv = investigator({ location: 'remote' })
+  const enemy = { id: 'hastur', code: '03332', fight: 4, exhausted: false, location: 'palace' }
+  const state = {
+    agendaIndex: 1, actIndex: 2, investigators: [inv],
+    locations: [{ id: 'remote', revealed: true, clues: 1 }],
+    enemies: [enemy], campaign: { records: {} }, scenarioFlags: {},
+  }
+  const move = dimBehavior.encounterActions(state, inv)
+    .find(candidate => candidate.rule === 'exhaustKingInYellow')
+  assert.ok(move)
+  dimBehavior.performEncounterAction(state, inv, move, {
+    enemyFight: () => 5,
+    test(_seat, skill, difficulty, resolve) {
+      assert.equal(skill, 'willpower')
+      assert.equal(difficulty, 5)
+      resolve({ success: true })
+    },
+  })
+  assert.equal(enemy.exhausted, true)
+})

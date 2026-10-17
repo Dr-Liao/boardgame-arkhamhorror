@@ -1,0 +1,4036 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "id": "original-dunwich-cycle-2026-10",
+    "scope": "敦威治遗产周期七个原始卡包共333条目录记录，包含玩家卡、调查员、弱点、遭遇卡、剧情支援及八章结构卡。",
+    "basis": "原始印刷卡文、战役规则及所列逐卡回归测试；逐卡主要效果和已列边界通过，未声称穷举所有卡牌组合。",
+    "houseRules": [
+      "保留项目既有的自动奖励反应与协作请求规则",
+      "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
+      "存档与重放沿用引擎统一事务模型"
+    ],
+    "sources": [
+      "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
+    ]
+  },
+  "summary": {
+    "total": 333,
+    "verified": 333,
+    "unverified": 0,
+    "unimplemented": 0,
+    "testsPassed": 333
+  },
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+      "sha256": "81d8a2c08640f4cc1459c3e48fbe118daf72c74f65256745e0d5d7e19682ba40"
+    },
+    {
+      "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+      "sha256": "071f58200526f47359657320846ad9806be710720fea8699e6f4a170b72efd0d"
+    },
+    {
+      "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+      "sha256": "31cebb8dab54daedabde1cc9b0616d8f612323c810f3230c418db7969174e33b"
+    }
+  ],
+  "entries": [
+    {
+      "code": "02001",
+      "name": "佐伊·萨马拉斯",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02001 佐伊·萨马拉斯 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02002",
+      "name": "雷克斯·墨菲",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02002 雷克斯·墨菲 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02003",
+      "name": "珍妮·巴恩斯",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02003 珍妮·巴恩斯 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02004",
+      "name": "吉姆·卡尔弗",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02004 吉姆·卡尔弗 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02005",
+      "name": "“灰堆”皮特",
+      "type": "investigator",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02005 “灰堆”皮特 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02006",
+      "name": "佐伊的十字架",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02006 佐伊的十字架 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02007",
+      "name": "击退邪恶",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02007 击退邪恶 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02008",
+      "name": "寻找真相",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02008 寻找真相 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02009",
+      "name": "雷克斯的诅咒",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02009 雷克斯的诅咒 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02010",
+      "name": "珍妮的.45双枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02010 珍妮的.45双枪 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02011",
+      "name": "寻找伊莎贝拉",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02011 寻找伊莎贝拉 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02012",
+      "name": "吉姆的小号",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02012 吉姆的小号 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02013",
+      "name": "最后的狂想曲",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02013 最后的狂想曲 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02014",
+      "name": "杜克",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02014 杜克 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02015",
+      "name": "噩梦来袭",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02015 噩梦来袭 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02016",
+      "name": "金属棍棒",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02016 金属棍棒 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02017",
+      "name": "嘲讽",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02017 嘲讽 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02018",
+      "name": "团队合作",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02018 团队合作 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02019",
+      "name": "嘲讽",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02019 嘲讽 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02020",
+      "name": "实验室助理",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02020 实验室助理 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02021",
+      "name": "奇怪的溶液",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02021 奇怪的溶液 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02022",
+      "name": "捷径",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02022 捷径 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02023",
+      "name": "寻找答案",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02023 寻找答案 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02024",
+      "name": "酒胆",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02024 酒胆 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02025",
+      "name": "逃跑本能",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02025 逃跑本能 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02026",
+      "name": "赌一把",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02026 赌一把 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02027",
+      "name": "雇佣打手",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02027 雇佣打手 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02028",
+      "name": "礼寻术",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02028 礼寻术 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02029",
+      "name": "仪式蜡烛",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02029 仪式蜡烛 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02030",
+      "name": "净心术",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02030 净心术 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02031",
+      "name": "困兽之笼",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02031 困兽之笼 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02032",
+      "name": "消防斧",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02032 消防斧 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02033",
+      "name": "彼得·希尔维斯特",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02033 彼得·希尔维斯特 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02034",
+      "name": "偷梁换柱",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02034 偷梁换柱 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02035",
+      "name": "彼得·希尔维斯特",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02035 彼得·希尔维斯特 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02036",
+      "name": "弯刀",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02036 弯刀 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02037",
+      "name": "负债",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02037 负债 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02038",
+      "name": "内伤",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02038 内伤 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02039",
+      "name": "时间恐惧症",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02039 时间恐惧症 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02040",
+      "name": "亨利·阿米蒂奇博士",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02040 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02041",
+      "name": "课外活动",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02041 Extracurricular Activity strictly matches its scenario contract"
+        }
+      ]
+    },
+    {
+      "code": "02042",
+      "name": "宁静的走廊",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02042 Quiet Halls strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02043",
+      "name": "死寂之夜",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02043 Dead of Night strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02044",
+      "name": "野兽出笼",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02044 The Beast Unleashed strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02045",
+      "name": "下班时间",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02045 After Hours strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02046",
+      "name": "莱斯的下落",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02046 Rice's Whereabouts strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02047",
+      "name": "校园安全",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02047 Campus Safety strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02048",
+      "name": "大学广场",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02048 Miskatonic Quad strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02049",
+      "name": "人文学大楼",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02049 Humanities Building strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02050",
+      "name": "奥恩图书馆",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02050 Orne Library strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02051",
+      "name": "学生会",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02051 Student Union strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02052",
+      "name": "宿舍",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02052 Dormitories strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02053",
+      "name": "管理大楼",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02053 Administration Building strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02054",
+      "name": "教师办公室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02054 Faculty Offices strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02055",
+      "name": "教师办公室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02055 Faculty Offices strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02056",
+      "name": "科学大楼",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02056 Science Building strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02057",
+      "name": "炼金实验室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02057 Alchemy Labs strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02058",
+      "name": "实验体",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02058 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02059",
+      "name": "炼金试剂",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02059 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02060",
+      "name": "“爵士”马利根",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02060 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02061",
+      "name": "沃伦·莱斯教授",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02061 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02062",
+      "name": "百赌百胜",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02062 The House Always Wins strictly matches its scenario contract"
+        }
+      ]
+    },
+    {
+      "code": "02063",
+      "name": "四叶草俱乐部",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02063 The Clover Club strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02064",
+      "name": "地下打手",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02064 Underground Muscle strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02065",
+      "name": "混乱俱乐部",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02065 Chaos in the Clover Club strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02066",
+      "name": "歪打正着",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02066 Beginner's Luck strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02067",
+      "name": "赌场骗局",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02067 Skin Game strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02068",
+      "name": "孤注一掷",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02068 All In strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02069",
+      "name": "收牌认输",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02069 Fold strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02070",
+      "name": "月下美人",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02070 La Bella Luna strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02071",
+      "name": "俱乐部大厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02071 Clover Club Lounge strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02072",
+      "name": "俱乐部酒吧",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02072 Clover Club Bar strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02073",
+      "name": "俱乐部卡牌室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02073 Clover Club Cardroom strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02074",
+      "name": "黑暗走廊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02074 Darkened Hall strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02075",
+      "name": "画廊",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02075 Art Gallery strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02076",
+      "name": "VIP区",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02076 VIP Area strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02077",
+      "name": "后巷",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02077 Back Alley strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02078",
+      "name": "俱乐部赌场管理员",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02078 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02079",
+      "name": "彼得·克劳佛",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02079 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02080",
+      "name": "佛朗西斯·摩尔根博士",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02080 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02081",
+      "name": "酒里有毒",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02081 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02082",
+      "name": "引起怀疑",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02082 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02083",
+      "name": "穿越时间的幻觉",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02083 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02084",
+      "name": "帷幕彼端",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02084 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02085",
+      "name": "亚弗戈蒙之光",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02085 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02086",
+      "name": "奴仆",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02086 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02087",
+      "name": "犹格·索托斯的法师",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02087 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02088",
+      "name": "不洁之地",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02088 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02089",
+      "name": "忍气吞声",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02089 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02090",
+      "name": "夜鹰",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02090 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02091",
+      "name": "渴望死亡",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02091 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02092",
+      "name": "厄运连连",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02092 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02093",
+      "name": "扭转命运",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02093 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02094",
+      "name": "鸟之奴仆",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02094 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02095",
+      "name": "狼之奴仆",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02095 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02096",
+      "name": "变异野兽",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02096 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02097",
+      "name": "欧巴尼恩暴徒",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02097 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02098",
+      "name": "匪徒",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02098 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02099",
+      "name": "紧追不舍",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02099 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02100",
+      "name": "异界放逐",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02100 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02101",
+      "name": "世外诡影",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02101 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02102",
+      "name": "奥术屏障",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02102 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02103",
+      "name": "球之群",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02103 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02104",
+      "name": "门阈潜伏者之仆",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02104 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02105",
+      "name": "紧急救援",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02105 紧急救援 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02106",
+      "name": "弟兄塞维尔",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02106 弟兄塞维尔 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02107",
+      "name": "“我有个计划！”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02107 “我有个计划！” 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02108",
+      "name": "探路者",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02108 探路者 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02109",
+      "name": "走私品",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02109 走私品 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02110",
+      "name": "适应性",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02110 适应性 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02111",
+      "name": "过度深入",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02111 过度深入 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02112",
+      "name": "死亡之歌",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02112 死亡之歌 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02113",
+      "name": "哎呀！",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02113 哎呀！ 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02114",
+      "name": "灭火器",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02114 灭火器 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02115",
+      "name": "照明弹",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02115 照明弹 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02116",
+      "name": "烟斗",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02116 烟斗 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02117",
+      "name": "止痛药",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02117 止痛药 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02118",
+      "name": "博物馆之夜",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02118 The Miskatonic Museum strictly matches its scenario contract"
+        }
+      ]
+    },
+    {
+      "code": "02119",
+      "name": "禁止通行",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02119 Restricted Access strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02120",
+      "name": "浓厚之影",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02120 Shadows Deepen strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02121",
+      "name": "无处不在",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02121 In Every Shadow strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02122",
+      "name": "寻找入口",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02122 Finding A Way Inside strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02123",
+      "name": "博物馆之夜",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02123 Night at the Museum strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02124",
+      "name": "强行闯入",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02124 Breaking and Entering strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02125",
+      "name": "查找古书",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02125 Searching for the Tome strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02126",
+      "name": "博物馆大门",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02126 Museum Entrance strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02127",
+      "name": "博物馆大厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02127 Museum Halls strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02128",
+      "name": "保安室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02128 Security Office strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02129",
+      "name": "保安室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02129 Security Office strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02130",
+      "name": "管理办公室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02130 Administration Office strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02131",
+      "name": "管理办公室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02131 Administration Office strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02132",
+      "name": "展厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02132 Exhibit Hall strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02133",
+      "name": "展厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02133 Exhibit Hall strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02134",
+      "name": "展厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02134 Exhibit Hall strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02135",
+      "name": "展厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02135 Exhibit Hall strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02136",
+      "name": "展厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02136 Exhibit Hall strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02137",
+      "name": "展厅",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02137 Exhibit Hall strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02138",
+      "name": "哈罗德·维尔斯特",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02138 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02139",
+      "name": "亚当·林奇",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02139 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02140",
+      "name": "死灵之书",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02140 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02141",
+      "name": "追猎恐魔",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02141 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02142",
+      "name": "暗影之子",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02142 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02143",
+      "name": "暗影潜随",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02143 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02144",
+      "name": "通往异界的道路",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02144 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02145",
+      "name": "短暂的展览",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02145 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02146",
+      "name": "尾随之蛇",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02146 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02147",
+      "name": "子弹袋",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02147 子弹袋 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02148",
+      "name": "团结一致",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02148 团结一致 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02149",
+      "name": "艺术生",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02149 艺术生 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02150",
+      "name": "推理",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02150 推理 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02151",
+      "name": "“我要走了！”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02151 “我要走了！” 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02152",
+      "name": "弹簧刀",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02152 弹簧刀 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02153",
+      "name": "催眠术",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02153 催眠术 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02154",
+      "name": "皱缩术",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02154 皱缩术 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02155",
+      "name": "报纸",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02155 报纸 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02156",
+      "name": "诱敌深入",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02156 诱敌深入 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02157",
+      "name": "宝物猎人",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02157 宝物猎人 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02158",
+      "name": "魅力超凡",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02158 魅力超凡 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02159",
+      "name": "疯狂列车",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02159 Essex County Express strictly matches its scenario contract"
+        }
+      ]
+    },
+    {
+      "code": "02160",
+      "name": "现实的裂口",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02160 A Tear in Reality strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02161",
+      "name": "裂缝扩张",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02161 The Maw Widens strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02162",
+      "name": "后退",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02162 Rolling Backwards strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02163",
+      "name": "淹没",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02163 Drawn In strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02164",
+      "name": "时间耗尽",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02164 Out of Time strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02165",
+      "name": "大家快跑！",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02165 Run! strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02166",
+      "name": "发动引擎！",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02166 Get the Engine Running! strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02167",
+      "name": "客车",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02167 Passenger Car strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02168",
+      "name": "客车",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02168 Passenger Car strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02169",
+      "name": "客车",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02169 Passenger Car strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02170",
+      "name": "客车",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02170 Passenger Car strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02171",
+      "name": "客车",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02171 Passenger Car strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02172",
+      "name": "卧车",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02172 Sleeping Car strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02173",
+      "name": "餐车",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02173 Dining Car strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02174",
+      "name": "特等车",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02174 Parlor Car strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02175",
+      "name": "车头",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02175 Engine Car strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02176",
+      "name": "车头",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02176 Engine Car strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02177",
+      "name": "车头",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02177 Engine Car strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02178",
+      "name": "跨越时空",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02178 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02179",
+      "name": "无助的旅客",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02179 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02180",
+      "name": "蒸汽之爪",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02180 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02181",
+      "name": "铁轨断裂",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02181 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02182",
+      "name": "粘液恐魔",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02182 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02183",
+      "name": "突然出现的巨兽",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02183 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02184",
+      "name": "最坏的打算",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02184 最坏的打算 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02185",
+      "name": "锐利目光",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02185 锐利目光 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02186",
+      "name": "荒唐的素描像",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02186 荒唐的素描像 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02187",
+      "name": "高等教育",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02187 高等教育 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02188",
+      "name": "孤狼",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02188 孤狼 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02189",
+      "name": "街头浪子",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02189 街头浪子 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02190",
+      "name": "逆反",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02190 逆反 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02191",
+      "name": "鲜血盟约",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02191 鲜血盟约 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02192",
+      "name": "随机应变",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02192 随机应变 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02193",
+      "name": "拳击家",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02193 拳击家 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02194",
+      "name": "应急物品",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02194 应急物品 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02195",
+      "name": "血色祭坛",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02195 Blood on the Altar strictly matches its scenario contract"
+        }
+      ]
+    },
+    {
+      "code": "02196",
+      "name": "奇怪的失踪案",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02196 Strange Disappearances strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02197",
+      "name": "他饿了",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02197 The Old Ones Hunger strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02198",
+      "name": "怪兽的美餐",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02198 Feed the Beast strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02199",
+      "name": "寻找答案",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02199 Searching for Answers strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02200",
+      "name": "野兽的牢笼",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02200 The Chamber of the Beast strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02201",
+      "name": "公共空地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02201 Village Commons strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02202",
+      "name": "毕晓普河",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02202 Bishop's Brook strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02203",
+      "name": "毕晓普河",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02203 Bishop's Brook strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02204",
+      "name": "火灾废墟",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02204 Burned Ruins strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02205",
+      "name": "火灾废墟",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02205 Burned Ruins strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02206",
+      "name": "奥斯本杂货店",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02206 Osborn's General Store strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02207",
+      "name": "奥斯本杂货店",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02207 Osborn's General Store strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02208",
+      "name": "自治教堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02208 Congregational Church strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02209",
+      "name": "自治教堂",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02209 Congregational Church strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02210",
+      "name": "芦苇屋",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02210 House in the Reeds strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02211",
+      "name": "芦苇屋",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02211 House in the Reeds strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02212",
+      "name": "学校",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02212 Schoolhouse strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02213",
+      "name": "学校",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02213 Schoolhouse strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02214",
+      "name": "隐藏密室",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02214 The Hidden Chamber strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02215",
+      "name": "密室的钥匙",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02215 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02216",
+      "name": "塞拉斯·毕晓普",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02216 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02217",
+      "name": "西布伦·沃特雷",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02217 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02218",
+      "name": "厄尔·索耶",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02218 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02219",
+      "name": "伊本巴奇之粉末",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02219 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02220",
+      "name": "绑架！",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02220 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02221",
+      "name": "灵魂之歌",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02221 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02222",
+      "name": "怪异标记",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02222 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02223",
+      "name": "腐烂的尸体",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02223 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02224",
+      "name": "百口之物的仆人",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02224 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02225",
+      "name": "“如果它会流血……”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02225 “如果它会流血……” 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02226",
+      "name": "春田M1903",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02226 春田M1903 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02227",
+      "name": "追根究底",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02227 追根究底 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02228",
+      "name": "暴露弱点",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02228 暴露弱点 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02229",
+      "name": "思维敏捷",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02229 思维敏捷 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02230",
+      "name": "幸运骰子",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02230 幸运骰子 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02231",
+      "name": "机会主义者",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02231 机会主义者 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02232",
+      "name": "艾丽莎·格雷厄姆",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02232 艾丽莎·格雷厄姆 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02233",
+      "name": "礼寻术",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02233 礼寻术 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02234",
+      "name": "黑马",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02234 黑马 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02235",
+      "name": "求生本能",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02235 求生本能 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02236",
+      "name": "无人知晓",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02236 Undimensioned and Unseen strictly matches its scenario contract"
+        }
+      ]
+    },
+    {
+      "code": "02237",
+      "name": "横冲直撞",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02237 Rampaging Creatures strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02238",
+      "name": "等待时机",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02238 Biding Its Time strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02239",
+      "name": "恐惧爆发",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02239 Horrors Unleashed strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02240",
+      "name": "古阿拉伯手稿",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02240 Saracenic Script strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02241",
+      "name": "消灭他们！",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02241 They Must Be Destroyed! strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02242",
+      "name": "敦威治村",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02242 Dunwich Village strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02243",
+      "name": "敦威治村",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02243 Dunwich Village strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02244",
+      "name": "冷泉幽谷",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02244 Cold Spring Glen strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02245",
+      "name": "冷泉幽谷",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02245 Cold Spring Glen strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02246",
+      "name": "十里牧场",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02246 Ten-Acre Meadow strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02247",
+      "name": "十里牧场",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02247 Ten-Acre Meadow strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02248",
+      "name": "憎恶荒野",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02248 Blasted Heath strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02249",
+      "name": "憎恶荒野",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02249 Blasted Heath strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02250",
+      "name": "沃特雷家的废墟",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02250 Whateley Ruins strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02251",
+      "name": "沃特雷家的废墟",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02251 Whateley Ruins strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02252",
+      "name": "恶魔花园",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02252 Devil's Hop Yard strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02253",
+      "name": "恶魔花园",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02253 Devil's Hop Yard strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02254",
+      "name": "深奥的咒文",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02254 剧情支援主要效果与离场边界"
+        }
+      ]
+    },
+    {
+      "code": "02255",
+      "name": "犹格·索托斯之子",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02255 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02256",
+      "name": "高耸的野兽",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02256 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02257",
+      "name": "破坏与毁灭",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02257 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02258",
+      "name": "吸引注意",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02258 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02259",
+      "name": "怪物的踪迹",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02259 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02260",
+      "name": "领导力",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02260 领导力 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02261",
+      "name": "“我见过更糟的……”",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02261 “我见过更糟的……” 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02262",
+      "name": "奇怪的溶液",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02262 奇怪的溶液 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02263",
+      "name": "奇怪的溶液",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02263 奇怪的溶液 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02264",
+      "name": "奇怪的溶液",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02264 奇怪的溶液 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02265",
+      "name": "乔伊“老鼠”弗吉尔",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02265 乔伊“老鼠”弗吉尔 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02266",
+      "name": "杀手锏",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02266 杀手锏 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02267",
+      "name": "月光仪式",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02267 月光仪式 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02268",
+      "name": "无所畏惧",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02268 无所畏惧 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02269",
+      "name": "奥鲁斯的珠宝",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02269 奥鲁斯的珠宝 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02270",
+      "name": "不期而遇",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02270 不期而遇 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02271",
+      "name": "鸿运当头",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02271 鸿运当头 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02272",
+      "name": "华服",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02272 华服 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02273",
+      "name": "喘息时间",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02273 喘息时间 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02274",
+      "name": "毁灭之地",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02274 Where Doom Awaits strictly matches its scenario contract"
+        }
+      ]
+    },
+    {
+      "code": "02275",
+      "name": "呼唤远古之神",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02275 Calling Forth the Old Ones strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02276",
+      "name": "呼唤力量",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02276 Beckoning for Power strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02277",
+      "name": "通往山顶的道路",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02277 The Path to the Hill strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02278",
+      "name": "登山路途(版本一)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02278 Ascending the Hill (v. I) strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02279",
+      "name": "登山路途(版本二)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02279 Ascending the Hill (v. II) strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02280",
+      "name": "登山路途(版本三)",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02280 Ascending the Hill (v. III) strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02281",
+      "name": "大门打开",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02281 The Gate Opens strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02282",
+      "name": "山脚",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02282 Base of the Hill strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02283",
+      "name": "上山道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02283 Ascending Path strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02284",
+      "name": "哨兵峰",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02284 Sentinel Peak strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02285",
+      "name": "屠杀之森",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02285 Slaughtered Woods strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02286",
+      "name": "诡异空地",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02286 Eerie Glade strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02287",
+      "name": "被毁的道路",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02287 Destroyed Path strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02288",
+      "name": "冷冻泉",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02288 Frozen Spring strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02289",
+      "name": "次元裂隙",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02289 Dimensional Gap strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02290",
+      "name": "道路裂口",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02290 A Tear in the Path strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02291",
+      "name": "漂浮之森",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02291 Uprooted Woods strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02292",
+      "name": "回忆迷宫",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02292 Lost Memories strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02293",
+      "name": "赛斯·毕晓普",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02293 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02294",
+      "name": "钥之虔信徒",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02294 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02295",
+      "name": "疯狂的修格斯",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02295 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02296",
+      "name": "哭嚎仪式",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02296 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02297",
+      "name": "缝隙空间",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02297 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02298",
+      "name": "时间旋涡",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02298 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02299",
+      "name": "致命打击",
+      "type": "skill",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02299 致命打击 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02300",
+      "name": "屠怪勇士",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02300 屠怪勇士 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02301",
+      "name": "闪电枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02301 闪电枪 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02302",
+      "name": "威廉·T·马尔森博士",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02302 威廉·T·马尔森博士 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02303",
+      "name": "揭开现实的面纱",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02303 揭开现实的面纱 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02304",
+      "name": "芝加哥机关枪",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02304 芝加哥机关枪 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02305",
+      "name": "黄金怀表",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02305 黄金怀表 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02306",
+      "name": "皱缩术",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02306 皱缩术 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02307",
+      "name": "守护结界",
+      "type": "event",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02307 守护结界 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02308",
+      "name": "安奎娜",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02308 安奎娜 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02309",
+      "name": "反复尝试",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02309 反复尝试 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02310",
+      "name": "戴红手套的男子",
+      "type": "asset",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
+          "test": "Dunwich 02310 戴红手套的男子 严格验收主要印刷效果"
+        }
+      ]
+    },
+    {
+      "code": "02311",
+      "name": "迷失时空",
+      "type": "scenario",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02311 Lost in Time and Space strictly matches its scenario contract"
+        }
+      ]
+    },
+    {
+      "code": "02312",
+      "name": "一生万物",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02312 All is One strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02313",
+      "name": "过去，现在 ，将来",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02313 Past, Present and Future strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02314",
+      "name": "突破",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02314 Breaking Through strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02315",
+      "name": "万物归一",
+      "type": "agenda",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02315 The End of All Things strictly matches its agenda contract"
+        }
+      ]
+    },
+    {
+      "code": "02316",
+      "name": "世界之外",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02316 Out of this World strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02317",
+      "name": "超越领域",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02317 Into the Beyond strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02318",
+      "name": "关闭裂缝",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02318 Close the Rift strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02319",
+      "name": "寻找新的道路",
+      "type": "act",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02319 Finding a New Way strictly matches its act contract"
+        }
+      ]
+    },
+    {
+      "code": "02320",
+      "name": "另一个次元",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02320 Another Dimension strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02321",
+      "name": "宇宙的边缘",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02321 The Edge of the Universe strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02322",
+      "name": "时间缝隙",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02322 Tear Through Time strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02323",
+      "name": "犹格·索托斯",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02323 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02324",
+      "name": "空间裂缝",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02324 Tear Through Space strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02325",
+      "name": "菱柱瀑布",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02325 Prismatic Cascade strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02326",
+      "name": "无尽之桥",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02326 Endless Bridge strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02327",
+      "name": "伊哈格尔的阶梯",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02327 Steps of Y'hagharl strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02328",
+      "name": "次元之门",
+      "type": "location",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
+          "test": "Dunwich 02328 Dimensional Doorway strictly matches its location contract"
+        }
+      ]
+    },
+    {
+      "code": "02329",
+      "name": "星际旅行者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02329 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02330",
+      "name": "伊斯寻星者",
+      "type": "enemy",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02330 敌人主要卡文与边界"
+        }
+      ]
+    },
+    {
+      "code": "02331",
+      "name": "现实崩塌",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02331 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02332",
+      "name": "虫洞",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02332 诡计主要卡文、目标及时机"
+        }
+      ]
+    },
+    {
+      "code": "02333",
+      "name": "辽阔无边",
+      "type": "treachery",
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
+          "test": "Dunwich 02333 诡计主要卡文、目标及时机"
+        }
+      ]
+    }
+  ]
+}

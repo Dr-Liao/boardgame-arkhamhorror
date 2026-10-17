@@ -1,0 +1,204 @@
+// 存档向下兼容与修复。
+//
+// 读取旧存档时按以下顺序处理，任一步失败都明确拒绝，不在新规则下静默续算：
+//   1. 结构／规则迁移：按 STATE_MIGRATIONS 逐级把 schemaVersion + rulesVersion 升到当前版本；
+//      没有登记迁移路径的旧版本直接拒绝。
+//   2. 资源升级：卡牌数据重新生成后，核对存档引用的卡号仍然存在，再刷新内嵌卡牌定义与 resourceVersion。
+//   3. 修复：补齐后续版本新增、旧存档缺失的空字段，重算合法行动列表。
+//   4. 冒烟校验：当前全部合法行动都能通过校验，并抽样在副本上执行，确认迁移后的存档可以续玩。
+//
+// 迁移是纯函数：不修改传入的状态，需要变更时在副本上进行。
+
+import { META } from '../cards/cards-data.js'
+import { STATE_SCHEMA_VERSION, RULES_VERSION, stateCompatibilityError } from './rules-state.js'
+import { createGameState, refreshStateResources, unknownCardCodes, legalMoves, validateMove, applyMove, decisionSeat } from './engine.js'
+
+const ECHOES_DOOM_PER_INVESTIGATOR = Object.freeze({
+  '03121': 2,
+  '03122': 2,
+  '03123': 3,
+})
+
+function fixEchoesAgendaThresholds(state) {
+  for (const agendas of [state.agendas, state.scenario?.agendas]) {
+    for (const agenda of agendas || []) {
+      const perInvestigator = ECHOES_DOOM_PER_INVESTIGATOR[agenda.originalCode || agenda.code]
+      if (perInvestigator == null) continue
+      agenda.doomThresholdPerInvestigator = perInvestigator
+      agenda.doomThreshold = perInvestigator * state.numInvestigators
+    }
+  }
+}
+
+function fixCourageCardIdentity(state) {
+  for (const inv of state.investigators || []) {
+    for (const asset of inv.assets || []) {
+      if (asset.code !== 'xcourage' || !asset.originalCode) continue
+      asset.underlyingCode = asset.originalCode
+      delete asset.originalCode
+    }
+  }
+}
+
+function fixStraitjacketZoneAndAbility(state) {
+  state.encounterDiscard ||= []
+  for (const inv of state.investigators || []) {
+    inv.assets ||= []
+    inv.threat ||= []
+    const legacy = inv.assets.filter(asset => asset.code === '03185')
+    inv.assets = inv.assets.filter(asset => asset.code !== '03185')
+    const jackets = [...inv.threat.filter(card => card.code === '03185'), ...legacy]
+    if (!jackets.length) continue
+    inv.threat = inv.threat.filter(card => card.code !== '03185')
+    const jacket = jackets[0]
+    Object.assign(jacket, {
+      slots: ['Body', 'Hand x2'],
+      cannotLeavePlay: true,
+      threatEffect: {
+        discardCost: { action: 2 },
+        sameLocationAction: true,
+      },
+    })
+    inv.threat.push(jacket)
+    for (const duplicate of jackets.slice(1)) state.encounterDiscard.push(duplicate.code)
+  }
+}
+
+// 每次提升 STATE_SCHEMA_VERSION 或 RULES_VERSION 时，在这里登记从上一版本到新版本的一步迁移。
+// up(state) 原地改写状态副本；不能安全迁移时抛出错误说明原因。
+// 示例：{ from: [6, 'n5.1'], to: [7, 'n5.2'], note: '为调查员补充 xxx 字段', up(state) { ... } }
+export const STATE_MIGRATIONS = Object.freeze([
+  {
+    from: [6, 'n5.1'],
+    to: [6, 'n5.2'],
+    note: '规则更新（存档结构不变）',
+    up() {},
+  },
+  {
+    from: [6, 'n5.2'],
+    to: [6, 'n5.3'],
+    note: '按调查员人数修正“往事回声”密谋毁灭阈值',
+    up: fixEchoesAgendaThresholds,
+  },
+  {
+    from: [6, 'n5.3'],
+    to: [6, 'n5.4'],
+    note: '修正“胆量”的卡牌身份与底牌记录',
+    up: fixCourageCardIdentity,
+  },
+  {
+    from: [6, 'n5.4'],
+    to: [6, 'n5.5'],
+    note: '将旧存档中的“约束衣”迁入威胁区并恢复双行动弃置能力',
+    up: fixStraitjacketZoneAndAbility,
+  },
+])
+
+const SMOKE_APPLY_LIMIT = 6
+const MAX_STEPS = 64
+
+const isEmptyDefault = value => value === null || value === false || value === 0 || value === ''
+  || (Array.isArray(value) && value.length === 0)
+  || (value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0)
+
+function versionLabel(schemaVersion, rulesVersion) {
+  return `结构 v${schemaVersion ?? '?'} / 规则 ${rulesVersion ?? '?'}`
+}
+
+function migrateVersions(state, migrations, changes) {
+  for (let steps = 0; state.schemaVersion !== STATE_SCHEMA_VERSION || state.rulesVersion !== RULES_VERSION; steps++) {
+    if (steps >= MAX_STEPS) throw new Error('存档迁移步骤过多，可能存在循环')
+    const step = migrations.find(item => item.from[0] === state.schemaVersion && item.from[1] === state.rulesVersion)
+    if (!step) {
+      throw new Error(`存档版本（${versionLabel(state.schemaVersion, state.rulesVersion)}）暂无迁移路径，当前为 ${versionLabel(STATE_SCHEMA_VERSION, RULES_VERSION)}，请重新开局`)
+    }
+    step.up(state)
+    const before = versionLabel(state.schemaVersion, state.rulesVersion)
+    ;[state.schemaVersion, state.rulesVersion] = step.to
+    changes.push(`${before} → ${versionLabel(state.schemaVersion, state.rulesVersion)}${step.note ? '：' + step.note : ''}`)
+  }
+}
+
+function upgradeResources(state, changes, force) {
+  const outdated = state.resourceVersion !== META.resourceVersion
+  if (!outdated && !force) return
+  const missing = unknownCardCodes(state)
+  if (missing.length) {
+    const shown = missing.slice(0, 8).join('、') + (missing.length > 8 ? ` 等 ${missing.length} 张` : '')
+    throw new Error(`存档引用的卡牌在当前资源中已不存在（${shown}），无法升级`)
+  }
+  const before = JSON.stringify([state.cards, state.investigatorDefs])
+  refreshStateResources(state)
+  if (outdated) changes.push('卡牌资源升级到当前版本')
+  else if (JSON.stringify([state.cards, state.investigatorDefs]) !== before) changes.push('刷新内嵌卡牌定义')
+}
+
+// 以同一战役新开局的状态为模板，只补齐缺失且模板值为空的字段（[]、{}、null、0、false）。
+function fillMissingFields(state, changes) {
+  const players = (state.investigators || []).map(inv => ({ seat: inv.seat, role: state.humanSeats?.includes(inv.seat) ? 'human' : 'ai' }))
+  if (!players.length) throw new Error('存档缺少调查员，无法修复')
+  const template = createGameState({ campaignId: state.campaign.id, campaignHub: !!state.hubFlow, seed: 'save-repair-template' }, players)
+  const filled = []
+  for (const [target, source, prefix] of [[state, template, ''], [state.campaign, template.campaign, 'campaign.']]) {
+    for (const [key, value] of Object.entries(source)) {
+      if (Object.hasOwn(target, key) || !isEmptyDefault(value)) continue
+      target[key] = structuredClone(value)
+      filled.push(prefix + key)
+    }
+  }
+  if (filled.length) changes.push('补齐缺失字段：' + filled.join('、'))
+}
+
+function moveKey(move) {
+  return move.action === 'choose' ? 'choose:' + move.optionId : move.action
+}
+
+// 迁移后的存档必须能续玩：当前合法行动全部可通过校验，抽样在副本上执行不报错。
+function smokeCheck(state) {
+  const compatibility = stateCompatibilityError(state, META.resourceVersion)
+  if (compatibility) throw new Error(compatibility)
+  if (state.status !== 'playing') return
+  const seat = decisionSeat(state)
+  const moves = legalMoves(state)
+  const tried = new Set()
+  for (const move of moves) {
+    const key = moveKey(move)
+    if (tried.size >= SMOKE_APPLY_LIMIT || tried.has(key)) continue
+    tried.add(key)
+    const error = validateMove(state, seat, move)
+    if (error) throw new Error(`迁移后合法行动校验失败（${move.label || move.action}）：${error}`)
+    const after = structuredClone(state)
+    try { applyMove(after, seat, move) } catch (err) {
+      throw new Error(`迁移后无法继续行动（${move.label || move.action}）：${err?.message || err}`)
+    }
+    const afterError = stateCompatibilityError(after, META.resourceVersion)
+    if (afterError) throw new Error(`迁移后执行「${move.label || move.action}」版本回退：${afterError}`)
+  }
+}
+
+/**
+ * 把存档状态迁移到当前版本。
+ * @param {object} state 读取到的存档状态（不会被修改）
+ * @param {{ force?: boolean, migrations?: Array }} options force：版本一致时也执行资源刷新与修复检查
+ * @returns {{ state: object, changes: string[] }} 无需迁移时返回原对象与空列表
+ * @throws {Error} 无法安全迁移时抛出，message 可直接展示给玩家
+ */
+export function migrateState(state, { force = false, migrations = STATE_MIGRATIONS } = {}) {
+  if (!state || typeof state !== 'object' || Array.isArray(state)) throw new Error('存档缺少合法的对局状态')
+  if (!force && !stateCompatibilityError(state, META.resourceVersion)) return { state, changes: [] }
+  if (typeof state.schemaVersion !== 'number') throw new Error('存档缺少结构版本，无法识别，请重新开局')
+  if (state.schemaVersion > STATE_SCHEMA_VERSION) throw new Error(`存档来自更新版本（结构 v${state.schemaVersion}），请升级游戏后再读取`)
+  if (!state.campaign?.id) throw new Error('存档缺少战役信息，无法修复')
+  const next = structuredClone(state)
+  const changes = []
+  migrateVersions(next, migrations, changes)
+  upgradeResources(next, changes, force)
+  fillMissingFields(next, changes)
+  const moves = legalMoves(next)
+  if (JSON.stringify(moves) !== JSON.stringify(next.legalMoves)) {
+    next.legalMoves = moves
+    changes.push('重算合法行动')
+  }
+  smokeCheck(next)
+  return changes.length ? { state: next, changes } : { state, changes }
+}

@@ -1,0 +1,1327 @@
+{
+  "schemaVersion": 1,
+  "milestone": "D11",
+  "campaignId": "theDunwichLegacy",
+  "status": "playable",
+  "playable": true,
+  "equivalenceCertified": false,
+  "verifiedScope": "D11 开放大厅战役入口；八章、五位调查员、专属卡与弱点、91 张敦威治玩家卡、遭遇与混乱标记规则均已接入。仍属于本 Mod 的简化规则实现，不声明与原版逐条等价。",
+  "newlyPlayablePlayerCards": [
+    "02016",
+    "02022",
+    "02105",
+    "02114",
+    "02116",
+    "02117",
+    "02149",
+    "02150",
+    "02152",
+    "02154",
+    "02155",
+    "02157",
+    "02158",
+    "02184",
+    "02186",
+    "02187",
+    "02189",
+    "02193",
+    "02194",
+    "02262",
+    "02263",
+    "02264",
+    "02231",
+    "02268",
+    "02271",
+    "02273",
+    "02299",
+    "02301",
+    "02306",
+    "02017",
+    "02018",
+    "02019",
+    "02023",
+    "02024",
+    "02025",
+    "02026",
+    "02027",
+    "02028",
+    "02029",
+    "02031",
+    "02032",
+    "02033",
+    "02034",
+    "02035",
+    "02036",
+    "02106",
+    "02107",
+    "02108",
+    "02109",
+    "02110",
+    "02111",
+    "02112",
+    "02113",
+    "02115",
+    "02147",
+    "02148",
+    "02151",
+    "02153",
+    "02156",
+    "02185",
+    "02188",
+    "02190",
+    "02191",
+    "02192",
+    "02225",
+    "02226",
+    "02227",
+    "02228",
+    "02229",
+    "02230",
+    "02232",
+    "02233",
+    "02234",
+    "02235",
+    "02260",
+    "02261",
+    "02265",
+    "02266",
+    "02267",
+    "02269",
+    "02270",
+    "02272",
+    "02300",
+    "02302",
+    "02303",
+    "02304",
+    "02305",
+    "02307",
+    "02308",
+    "02309",
+    "02310"
+  ],
+  "sharedEncounterHandlers": [
+    "02081",
+    "02082",
+    "02083",
+    "02084",
+    "02085",
+    "02088",
+    "02091",
+    "02092",
+    "02093",
+    "02096",
+    "02099",
+    "02100",
+    "02101",
+    "02102"
+  ],
+  "encounterRuleCoverage": {
+    "total": 47,
+    "implemented": 47,
+    "pending": []
+  },
+  "investigators": {
+    "mainAbilities": [
+      "02001",
+      "02002",
+      "02003",
+      "02004",
+      "02005"
+    ],
+    "selectable": [
+      "02001",
+      "02002",
+      "02003",
+      "02004",
+      "02005"
+    ],
+    "remaining": null
+  },
+  "sourceRoot": "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham",
+  "sources": [
+    {
+      "path": "Campaign/Campaigns/TheDunwichLegacy.hs",
+      "sha256": "6e1fac2dc1385fb0abcb2bbe1ce78347d64396391ebeb7ff7e47e0ece0174405"
+    },
+    {
+      "path": "Campaigns/TheDunwichLegacy/ChaosBag.hs",
+      "sha256": "f2b7929ee82799d3ee1ea2a9ad2e5fa941b9d1d812e90fc4c0e0de6470f0ae32"
+    },
+    {
+      "path": "Campaigns/TheDunwichLegacy/Key.hs",
+      "sha256": "afe895c9567871c62f20c7e3a7636ab6500c2e2d359b1b2ae8fdddf39dfbf6b6"
+    },
+    {
+      "path": "Scenario/Scenarios/TheDunwichLegacy/ExtracurricularActivity.hs",
+      "sha256": "857d1df8a9986bbedc859ca52c2fd376cb83e85eac699cbe8801fdd117230418"
+    },
+    {
+      "path": "Scenario/Scenarios/TheDunwichLegacy/TheHouseAlwaysWins.hs",
+      "sha256": "405e28c6ccba48c44811d16ce30ea668607b411f63182fe851b5423e2c5f97cc"
+    },
+    {
+      "path": "Location/CardDefs/TheDunwichLegacy/ExtracurricularActivity.hs",
+      "sha256": "7232a3c5aa912b3fcd9ea7dad162725a6c508284eed174dd9626e02b7b86f62d"
+    },
+    {
+      "path": "Location/CardDefs/TheDunwichLegacy/TheHouseAlwaysWins.hs",
+      "sha256": "84235d07a361c7488435888211ee2f99bf4053ac1dcc43779dfcc8b3915c4903"
+    },
+    {
+      "path": "Scenario/Scenarios/TheDunwichLegacy/TheMiskatonicMuseum.hs",
+      "sha256": "91682b2cb25afe3afe437a16dfb0e8a285b5691eec882632c5f02d9baca996c8"
+    },
+    {
+      "path": "Location/CardDefs/TheDunwichLegacy/TheMiskatonicMuseum.hs",
+      "sha256": "da4a1c3486313241ce8d5c278ff503288850014aeea98bce4c04c70a2952b4f9"
+    },
+    {
+      "path": "Scenario/Scenarios/TheDunwichLegacy/TheEssexCountyExpress.hs",
+      "sha256": "ec617f9add4bd363b7138d484a7330e26b17f45276dafa5cfd1f9c4ce506d995"
+    },
+    {
+      "path": "Location/CardDefs/TheDunwichLegacy/TheEssexCountyExpress.hs",
+      "sha256": "0b77ab6ad00f94fbdadbdc3d084e5d5d0e16939db2de744abe5d5e621e0dced7"
+    },
+    {
+      "path": "Scenario/Scenarios/TheDunwichLegacy/BloodOnTheAltar.hs",
+      "sha256": "139057e00e3136bebc8e6cfeec373c5715940c34791163fb952f437a0593a2fb"
+    },
+    {
+      "path": "Location/CardDefs/TheDunwichLegacy/BloodOnTheAltar.hs",
+      "sha256": "b1bcf8a0d566f0e386c2ddd3ca78b6ab26525bdc2e3c35e2aab94e79266996c6"
+    },
+    {
+      "path": "Scenario/Scenarios/TheDunwichLegacy/UndimensionedAndUnseen.hs",
+      "sha256": "6fe3eb151c44273b6c6360ca99660304568e13e973b045c995aa39ca7c185168"
+    },
+    {
+      "path": "Location/CardDefs/TheDunwichLegacy/UndimensionedAndUnseen.hs",
+      "sha256": "82ec3406be56483532b668690c89d18eb9653b213ece6d4995a51e5fd51b73be"
+    },
+    {
+      "path": "Scenario/Scenarios/TheDunwichLegacy/WhereDoomAwaits.hs",
+      "sha256": "e2610b79f0fb58b35a91220692ad93d5e801f30b918aedebf1e6c18044c7449f"
+    },
+    {
+      "path": "Location/CardDefs/TheDunwichLegacy/WhereDoomAwaits.hs",
+      "sha256": "a35a73f5b10f43903b3e79c07eec27b4fb66014fb9f132123be8e839e8f15846"
+    },
+    {
+      "path": "Scenario/Scenarios/TheDunwichLegacy/LostInTimeAndSpace.hs",
+      "sha256": "40156bb3798744f5aba61d28a2de846ea4fcf32d3249d1d47850d8f5caefc83f"
+    },
+    {
+      "path": "Location/CardDefs/TheDunwichLegacy/LostInTimeAndSpace.hs",
+      "sha256": "fae927a695bbb92ca960a92b424e526a1d69a587cd8db53a73fd81fdb2df791e"
+    }
+  ],
+  "tests": [
+    "games/arkhamhorror/tests/dunwich-migration.test.mjs",
+    "games/arkhamhorror/tests/dunwich-rules.test.mjs"
+  ],
+  "chapters": [
+    {
+      "id": "extracurricularActivity",
+      "code": "02041",
+      "name": "课外活动",
+      "status": "playable",
+      "catalogReferenceOnly": false,
+      "missingMechanics": [],
+      "zones": {
+        "encounterDeck": [
+          {
+            "cardCode": "01166",
+            "count": 3
+          },
+          {
+            "cardCode": "01174",
+            "count": 2
+          },
+          {
+            "cardCode": "01177",
+            "count": 2
+          },
+          {
+            "cardCode": "01178",
+            "count": 2
+          },
+          {
+            "cardCode": "02083",
+            "count": 3
+          },
+          {
+            "cardCode": "02084",
+            "count": 3
+          },
+          {
+            "cardCode": "02085",
+            "count": 2
+          },
+          {
+            "cardCode": "02086",
+            "count": 3
+          },
+          {
+            "cardCode": "02087",
+            "count": 1
+          },
+          {
+            "cardCode": "02090",
+            "count": 3
+          },
+          {
+            "cardCode": "02091",
+            "count": 2
+          },
+          {
+            "cardCode": "02100",
+            "count": 2
+          },
+          {
+            "cardCode": "02101",
+            "count": 2
+          },
+          {
+            "cardCode": "02102",
+            "count": 2
+          }
+        ],
+        "setAside": [
+          {
+            "cardCode": "02052",
+            "count": 1
+          },
+          {
+            "cardCode": "02054",
+            "count": 1
+          },
+          {
+            "cardCode": "02055",
+            "count": 1
+          },
+          {
+            "cardCode": "02057",
+            "count": 1
+          },
+          {
+            "cardCode": "02058",
+            "count": 1
+          },
+          {
+            "cardCode": "02059",
+            "count": 1
+          },
+          {
+            "cardCode": "02060",
+            "count": 1
+          },
+          {
+            "cardCode": "02061",
+            "count": 1
+          }
+        ],
+        "removed": [],
+        "victory": []
+      },
+      "conservation": {
+        "scenarioId": "extracurricularActivity",
+        "encounterCards": 32,
+        "declaredSetAsideCards": 8,
+        "cultistDeckCards": 0,
+        "optionalSets": {},
+        "locationCount": 9,
+        "identityCount": 22,
+        "unresolvedAliases": [],
+        "duplicateActiveZoneCodes": [],
+        "optionalZoneCollisions": [],
+        "checkedCatalogCodes": 22
+      },
+      "setupVariants": [
+        {
+          "order": "first",
+          "locations": [
+            "miskatonicQuad",
+            "humanitiesBuilding",
+            "orneLibrary",
+            "studentUnion",
+            "scienceBuilding",
+            "administrationBuilding"
+          ],
+          "facultyOfficeCode": "02054",
+          "setAside": [
+            "02054",
+            "02060",
+            "02059",
+            "02058",
+            "02052",
+            "02057",
+            "02061"
+          ],
+          "removed": [
+            "02055"
+          ]
+        },
+        {
+          "order": "second",
+          "locations": [
+            "miskatonicQuad",
+            "humanitiesBuilding",
+            "orneLibrary",
+            "studentUnion",
+            "scienceBuilding",
+            "administrationBuilding"
+          ],
+          "facultyOfficeCode": "02055",
+          "setAside": [
+            "02055",
+            "02060",
+            "02059",
+            "02058",
+            "02052",
+            "02057",
+            "02061"
+          ],
+          "removed": [
+            "02054"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "theHouseAlwaysWins",
+      "code": "02062",
+      "name": "百赌百胜",
+      "status": "playable",
+      "catalogReferenceOnly": false,
+      "missingMechanics": [],
+      "zones": {
+        "encounterDeck": [
+          {
+            "cardCode": "01159",
+            "count": 3
+          },
+          {
+            "cardCode": "02081",
+            "count": 2
+          },
+          {
+            "cardCode": "02082",
+            "count": 2
+          },
+          {
+            "cardCode": "02092",
+            "count": 3
+          },
+          {
+            "cardCode": "02093",
+            "count": 3
+          },
+          {
+            "cardCode": "02097",
+            "count": 2
+          },
+          {
+            "cardCode": "02098",
+            "count": 2
+          },
+          {
+            "cardCode": "02099",
+            "count": 2
+          }
+        ],
+        "setAside": [
+          {
+            "cardCode": "01163",
+            "count": 3
+          },
+          {
+            "cardCode": "01164",
+            "count": 2
+          },
+          {
+            "cardCode": "01165",
+            "count": 2
+          },
+          {
+            "cardCode": "02074",
+            "count": 1
+          },
+          {
+            "cardCode": "02075",
+            "count": 1
+          },
+          {
+            "cardCode": "02076",
+            "count": 1
+          },
+          {
+            "cardCode": "02077",
+            "count": 1
+          },
+          {
+            "cardCode": "02079",
+            "count": 1
+          },
+          {
+            "cardCode": "02080",
+            "count": 1
+          },
+          {
+            "cardCode": "02103",
+            "count": 2
+          },
+          {
+            "cardCode": "02104",
+            "count": 1
+          }
+        ],
+        "removed": [],
+        "victory": [],
+        "inPlay": [
+          {
+            "cardCode": "02078",
+            "count": 1
+          }
+        ]
+      },
+      "conservation": {
+        "scenarioId": "theHouseAlwaysWins",
+        "encounterCards": 19,
+        "declaredSetAsideCards": 16,
+        "inPlayCards": 1,
+        "cultistDeckCards": 0,
+        "optionalSets": {},
+        "locationCount": 8,
+        "identityCount": 20,
+        "unresolvedAliases": [],
+        "duplicateActiveZoneCodes": [],
+        "optionalZoneCollisions": [],
+        "checkedCatalogCodes": 20
+      },
+      "setupVariants": [
+        {
+          "order": "first",
+          "locations": [
+            "laBellaLuna",
+            "cloverClubLounge",
+            "cloverClubBar",
+            "cloverClubCardroom"
+          ],
+          "enemies": [
+            {
+              "code": "02078",
+              "location": "cloverClubLounge"
+            }
+          ],
+          "setAside": [
+            "02074",
+            "02079",
+            "02080",
+            "02075",
+            "02076",
+            "02077",
+            "rottingRemains",
+            "rottingRemains",
+            "rottingRemains",
+            "frozenInFear",
+            "frozenInFear",
+            "dissonantVoices",
+            "dissonantVoices",
+            "02103",
+            "02103",
+            "02104"
+          ],
+          "removed": []
+        },
+        {
+          "order": "second",
+          "locations": [
+            "laBellaLuna",
+            "cloverClubLounge",
+            "cloverClubBar",
+            "cloverClubCardroom"
+          ],
+          "enemies": [
+            {
+              "code": "02078",
+              "location": "cloverClubLounge"
+            }
+          ],
+          "setAside": [
+            "02074",
+            "02079",
+            "02080",
+            "02075",
+            "02076",
+            "02077",
+            "rottingRemains",
+            "rottingRemains",
+            "rottingRemains",
+            "frozenInFear",
+            "frozenInFear",
+            "dissonantVoices",
+            "dissonantVoices",
+            "02103",
+            "02103",
+            "02104"
+          ],
+          "removed": []
+        }
+      ]
+    },
+    {
+      "id": "theMiskatonicMuseum",
+      "code": "02118",
+      "name": "米斯卡塔尼克博物馆",
+      "status": "playable",
+      "catalogReferenceOnly": false,
+      "missingMechanics": [],
+      "zones": {
+        "encounterDeck": [
+          {
+            "cardCode": "01167",
+            "count": 2
+          },
+          {
+            "cardCode": "01168",
+            "count": 2
+          },
+          {
+            "cardCode": "01174",
+            "count": 2
+          },
+          {
+            "cardCode": "02083",
+            "count": 3
+          },
+          {
+            "cardCode": "02084",
+            "count": 3
+          },
+          {
+            "cardCode": "02092",
+            "count": 3
+          },
+          {
+            "cardCode": "02093",
+            "count": 3
+          },
+          {
+            "cardCode": "02100",
+            "count": 2
+          },
+          {
+            "cardCode": "02101",
+            "count": 2
+          },
+          {
+            "cardCode": "02102",
+            "count": 2
+          },
+          {
+            "cardCode": "02141",
+            "count": 1
+          },
+          {
+            "cardCode": "02143",
+            "count": 2
+          },
+          {
+            "cardCode": "02144",
+            "count": 3
+          },
+          {
+            "cardCode": "02145",
+            "count": 2
+          },
+          {
+            "cardCode": "02146",
+            "count": 2
+          }
+        ],
+        "setAside": [
+          {
+            "cardCode": "02129",
+            "count": 1
+          },
+          {
+            "cardCode": "02131",
+            "count": 1
+          },
+          {
+            "cardCode": "02132",
+            "count": 1
+          },
+          {
+            "cardCode": "02133",
+            "count": 1
+          },
+          {
+            "cardCode": "02134",
+            "count": 1
+          },
+          {
+            "cardCode": "02135",
+            "count": 1
+          },
+          {
+            "cardCode": "02136",
+            "count": 1
+          },
+          {
+            "cardCode": "02137",
+            "count": 1
+          },
+          {
+            "cardCode": "02138",
+            "count": 1
+          },
+          {
+            "cardCode": "02139",
+            "count": 1
+          },
+          {
+            "cardCode": "02140",
+            "count": 1
+          },
+          {
+            "cardCode": "02142",
+            "count": 1
+          }
+        ],
+        "removed": [],
+        "victory": []
+      },
+      "conservation": {
+        "scenarioId": "theMiskatonicMuseum",
+        "encounterCards": 34,
+        "declaredSetAsideCards": 12,
+        "cultistDeckCards": 0,
+        "optionalSets": {},
+        "locationCount": 12,
+        "identityCount": 27,
+        "unresolvedAliases": [],
+        "duplicateActiveZoneCodes": [],
+        "optionalZoneCollisions": [],
+        "checkedCatalogCodes": 27
+      }
+    },
+    {
+      "id": "theEssexCountyExpress",
+      "code": "02159",
+      "name": "疯狂列车",
+      "status": "playable",
+      "catalogReferenceOnly": false,
+      "missingMechanics": [],
+      "zones": {
+        "encounterDeck": [
+          {
+            "cardCode": "01163",
+            "count": 3
+          },
+          {
+            "cardCode": "01164",
+            "count": 2
+          },
+          {
+            "cardCode": "01165",
+            "count": 2
+          },
+          {
+            "cardCode": "01166",
+            "count": 3
+          },
+          {
+            "cardCode": "01169",
+            "count": 3
+          },
+          {
+            "cardCode": "01170",
+            "count": 1
+          },
+          {
+            "cardCode": "01171",
+            "count": 2
+          },
+          {
+            "cardCode": "02100",
+            "count": 2
+          },
+          {
+            "cardCode": "02101",
+            "count": 2
+          },
+          {
+            "cardCode": "02102",
+            "count": 2
+          },
+          {
+            "cardCode": "02179",
+            "count": 3
+          },
+          {
+            "cardCode": "02180",
+            "count": 3
+          },
+          {
+            "cardCode": "02181",
+            "count": 3
+          },
+          {
+            "cardCode": "02182",
+            "count": 2
+          },
+          {
+            "cardCode": "02183",
+            "count": 2
+          }
+        ],
+        "setAside": [
+          {
+            "cardCode": "02173",
+            "count": 1
+          },
+          {
+            "cardCode": "02174",
+            "count": 1
+          },
+          {
+            "cardCode": "02176",
+            "count": 1
+          },
+          {
+            "cardCode": "02177",
+            "count": 1
+          },
+          {
+            "cardCode": "02178",
+            "count": 4
+          }
+        ],
+        "removed": [],
+        "victory": []
+      },
+      "conservation": {
+        "scenarioId": "theEssexCountyExpress",
+        "encounterCards": 35,
+        "declaredSetAsideCards": 8,
+        "cultistDeckCards": 0,
+        "optionalSets": {},
+        "locationCount": 11,
+        "identityCount": 20,
+        "unresolvedAliases": [],
+        "duplicateActiveZoneCodes": [],
+        "optionalZoneCollisions": [],
+        "checkedCatalogCodes": 20
+      }
+    },
+    {
+      "id": "bloodOnTheAltar",
+      "code": "02195",
+      "name": "血色祭坛",
+      "status": "playable",
+      "catalogReferenceOnly": false,
+      "missingMechanics": [],
+      "zones": {
+        "encounterDeck": [
+          {
+            "cardCode": "01166",
+            "count": 3
+          },
+          {
+            "cardCode": "01172",
+            "count": 2
+          },
+          {
+            "cardCode": "01173",
+            "count": 2
+          },
+          {
+            "cardCode": "02088",
+            "count": 2
+          },
+          {
+            "cardCode": "02089",
+            "count": 2
+          },
+          {
+            "cardCode": "02090",
+            "count": 3
+          },
+          {
+            "cardCode": "02091",
+            "count": 2
+          },
+          {
+            "cardCode": "02220",
+            "count": 3
+          },
+          {
+            "cardCode": "02221",
+            "count": 2
+          },
+          {
+            "cardCode": "02222",
+            "count": 2
+          },
+          {
+            "cardCode": "02223",
+            "count": 3
+          },
+          {
+            "cardCode": "02224",
+            "count": 3
+          }
+        ],
+        "setAside": [
+          {
+            "cardCode": "02203",
+            "count": 1
+          },
+          {
+            "cardCode": "02205",
+            "count": 1
+          },
+          {
+            "cardCode": "02207",
+            "count": 1
+          },
+          {
+            "cardCode": "02209",
+            "count": 1
+          },
+          {
+            "cardCode": "02211",
+            "count": 1
+          },
+          {
+            "cardCode": "02212",
+            "count": 1
+          },
+          {
+            "cardCode": "02213",
+            "count": 1
+          },
+          {
+            "cardCode": "02214",
+            "count": 1
+          },
+          {
+            "cardCode": "02215",
+            "count": 1
+          },
+          {
+            "cardCode": "02216",
+            "count": 1
+          },
+          {
+            "cardCode": "02217",
+            "count": 1
+          },
+          {
+            "cardCode": "02218",
+            "count": 1
+          },
+          {
+            "cardCode": "02219",
+            "count": 1
+          }
+        ],
+        "removed": [],
+        "victory": []
+      },
+      "conservation": {
+        "scenarioId": "bloodOnTheAltar",
+        "encounterCards": 29,
+        "declaredSetAsideCards": 13,
+        "cultistDeckCards": 0,
+        "optionalSets": {},
+        "locationCount": 14,
+        "identityCount": 25,
+        "unresolvedAliases": [],
+        "duplicateActiveZoneCodes": [],
+        "optionalZoneCollisions": [],
+        "checkedCatalogCodes": 25
+      }
+    },
+    {
+      "id": "undimensionedAndUnseen",
+      "code": "02236",
+      "name": "无人知晓",
+      "status": "playable",
+      "catalogReferenceOnly": false,
+      "missingMechanics": [],
+      "zones": {
+        "encounterDeck": [
+          {
+            "cardCode": "01163",
+            "count": 3
+          },
+          {
+            "cardCode": "01164",
+            "count": 2
+          },
+          {
+            "cardCode": "01165",
+            "count": 2
+          },
+          {
+            "cardCode": "02088",
+            "count": 2
+          },
+          {
+            "cardCode": "02089",
+            "count": 2
+          },
+          {
+            "cardCode": "02090",
+            "count": 3
+          },
+          {
+            "cardCode": "02091",
+            "count": 2
+          },
+          {
+            "cardCode": "02094",
+            "count": 2
+          },
+          {
+            "cardCode": "02095",
+            "count": 2
+          },
+          {
+            "cardCode": "02096",
+            "count": 2
+          },
+          {
+            "cardCode": "02256",
+            "count": 4
+          },
+          {
+            "cardCode": "02257",
+            "count": 3
+          },
+          {
+            "cardCode": "02258",
+            "count": 2
+          },
+          {
+            "cardCode": "02259",
+            "count": 2
+          }
+        ],
+        "setAside": [
+          {
+            "cardCode": "02243",
+            "count": 1
+          },
+          {
+            "cardCode": "02245",
+            "count": 1
+          },
+          {
+            "cardCode": "02247",
+            "count": 1
+          },
+          {
+            "cardCode": "02249",
+            "count": 1
+          },
+          {
+            "cardCode": "02251",
+            "count": 1
+          },
+          {
+            "cardCode": "02253",
+            "count": 1
+          },
+          {
+            "cardCode": "02254",
+            "count": 4
+          },
+          {
+            "cardCode": "02255",
+            "count": 5
+          }
+        ],
+        "removed": [],
+        "victory": []
+      },
+      "conservation": {
+        "scenarioId": "undimensionedAndUnseen",
+        "encounterCards": 33,
+        "declaredSetAsideCards": 15,
+        "cultistDeckCards": 0,
+        "optionalSets": {},
+        "locationCount": 12,
+        "identityCount": 22,
+        "unresolvedAliases": [],
+        "duplicateActiveZoneCodes": [],
+        "optionalZoneCollisions": [],
+        "checkedCatalogCodes": 22
+      }
+    },
+    {
+      "id": "whereDoomAwaits",
+      "code": "02274",
+      "name": "毁灭之地",
+      "status": "playable",
+      "catalogReferenceOnly": false,
+      "missingMechanics": [],
+      "zones": {
+        "encounterDeck": [
+          {
+            "cardCode": "01163",
+            "count": 3
+          },
+          {
+            "cardCode": "01164",
+            "count": 2
+          },
+          {
+            "cardCode": "01165",
+            "count": 2
+          },
+          {
+            "cardCode": "01166",
+            "count": 3
+          },
+          {
+            "cardCode": "01167",
+            "count": 2
+          },
+          {
+            "cardCode": "01168",
+            "count": 2
+          },
+          {
+            "cardCode": "02083",
+            "count": 3
+          },
+          {
+            "cardCode": "02084",
+            "count": 3
+          },
+          {
+            "cardCode": "02085",
+            "count": 2
+          },
+          {
+            "cardCode": "02086",
+            "count": 3
+          },
+          {
+            "cardCode": "02087",
+            "count": 1
+          },
+          {
+            "cardCode": "02094",
+            "count": 2
+          },
+          {
+            "cardCode": "02095",
+            "count": 2
+          },
+          {
+            "cardCode": "02096",
+            "count": 2
+          },
+          {
+            "cardCode": "02294",
+            "count": 2
+          },
+          {
+            "cardCode": "02295",
+            "count": 1
+          },
+          {
+            "cardCode": "02296",
+            "count": 3
+          },
+          {
+            "cardCode": "02297",
+            "count": 3
+          },
+          {
+            "cardCode": "02298",
+            "count": 3
+          }
+        ],
+        "setAside": [
+          {
+            "cardCode": "02285",
+            "count": 1
+          },
+          {
+            "cardCode": "02286",
+            "count": 1
+          },
+          {
+            "cardCode": "02287",
+            "count": 1
+          },
+          {
+            "cardCode": "02288",
+            "count": 1
+          },
+          {
+            "cardCode": "02289",
+            "count": 1
+          },
+          {
+            "cardCode": "02290",
+            "count": 1
+          },
+          {
+            "cardCode": "02291",
+            "count": 1
+          },
+          {
+            "cardCode": "02292",
+            "count": 1
+          },
+          {
+            "cardCode": "02293",
+            "count": 1
+          }
+        ],
+        "removed": [],
+        "victory": []
+      },
+      "conservation": {
+        "scenarioId": "whereDoomAwaits",
+        "encounterCards": 44,
+        "declaredSetAsideCards": 9,
+        "cultistDeckCards": 0,
+        "optionalSets": {},
+        "locationCount": 11,
+        "identityCount": 28,
+        "unresolvedAliases": [],
+        "duplicateActiveZoneCodes": [],
+        "optionalZoneCollisions": [],
+        "checkedCatalogCodes": 28
+      }
+    },
+    {
+      "id": "lostInTimeAndSpace",
+      "code": "02311",
+      "name": "迷失时空",
+      "status": "playable",
+      "catalogReferenceOnly": false,
+      "missingMechanics": [],
+      "zones": {
+        "encounterDeck": [
+          {
+            "cardCode": "01177",
+            "count": 2
+          },
+          {
+            "cardCode": "01178",
+            "count": 2
+          },
+          {
+            "cardCode": "02083",
+            "count": 3
+          },
+          {
+            "cardCode": "02084",
+            "count": 3
+          },
+          {
+            "cardCode": "02100",
+            "count": 2
+          },
+          {
+            "cardCode": "02101",
+            "count": 2
+          },
+          {
+            "cardCode": "02102",
+            "count": 2
+          },
+          {
+            "cardCode": "02103",
+            "count": 2
+          },
+          {
+            "cardCode": "02104",
+            "count": 1
+          },
+          {
+            "cardCode": "02324",
+            "count": 4
+          },
+          {
+            "cardCode": "02325",
+            "count": 2
+          },
+          {
+            "cardCode": "02326",
+            "count": 2
+          },
+          {
+            "cardCode": "02327",
+            "count": 1
+          },
+          {
+            "cardCode": "02328",
+            "count": 1
+          },
+          {
+            "cardCode": "02329",
+            "count": 3
+          },
+          {
+            "cardCode": "02330",
+            "count": 2
+          },
+          {
+            "cardCode": "02331",
+            "count": 3
+          },
+          {
+            "cardCode": "02332",
+            "count": 2
+          },
+          {
+            "cardCode": "02333",
+            "count": 3
+          }
+        ],
+        "setAside": [
+          {
+            "cardCode": "02321",
+            "count": 1
+          },
+          {
+            "cardCode": "02322",
+            "count": 1
+          },
+          {
+            "cardCode": "02323",
+            "count": 1
+          }
+        ],
+        "removed": [],
+        "victory": []
+      },
+      "conservation": {
+        "scenarioId": "lostInTimeAndSpace",
+        "encounterCards": 42,
+        "declaredSetAsideCards": 3,
+        "cultistDeckCards": 0,
+        "optionalSets": {},
+        "locationCount": 8,
+        "identityCount": 22,
+        "unresolvedAliases": [],
+        "duplicateActiveZoneCodes": [],
+        "optionalZoneCollisions": [],
+        "checkedCatalogCodes": 22
+      }
+    }
+  ],
+  "remaining": [
+    "持续补充八关全路线、联机与浏览器回归；不阻塞当前简化模式入口"
+  ]
+}
