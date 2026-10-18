@@ -3,7 +3,7 @@
 # 需要的仓库 Secret：
 #   BOARDGAME_UPDATE_PRIVATE_KEY  与大厅相同的更新签名私钥
 #   HALL_REPO_TOKEN               可选；大厅仓库为私有时，提供有读取权限的 token
-# 可选的 Gitee 同步：仓库变量 GITEE_REPO（如 owner/boardgame-arkhamhorror）+ Secret GITEE_TOKEN
+# 可选的 Cloudflare R2 同步：仓库变量 R2_BUCKET、R2_ACCOUNT_ID + Secret R2_ACCESS_KEY_ID、R2_SECRET_ACCESS_KEY
 name: Release
 
 on:
@@ -39,15 +39,18 @@ jobs:
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
-        # 重跑时 Release 已存在：改用已发布的附件，保证 Gitee 与 GitHub 上的文件一致。
+        # 重跑时 Release 已存在：改用已发布的附件，保证 R2 与 GitHub 上的文件一致。
         run: |
           if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             rm -rf dist && gh release download "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" -D dist
           else
             gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --title "诡镇奇谈 $GITHUB_REF_NAME" --notes-file notes.txt
           fi
-      - name: Mirror release to Gitee
-        if: ${{ vars.GITEE_REPO != '' }}
+      - name: Mirror release to R2
+        if: ${{ vars.R2_BUCKET != '' }}
         env:
-          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
-        run: node hall/tools/release/gitee.mjs release dist --repo="${{ vars.GITEE_REPO }}" --tag="$GITHUB_REF_NAME" --title="诡镇奇谈 $GITHUB_REF_NAME" --notes-file=notes.txt
+          R2_ACCOUNT_ID: ${{ vars.R2_ACCOUNT_ID }}
+          R2_BUCKET: ${{ vars.R2_BUCKET }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: node hall/tools/release/r2.mjs release dist --dir=arkhamhorror --tag="$GITHUB_REF_NAME"
