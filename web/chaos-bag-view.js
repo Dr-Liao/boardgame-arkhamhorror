@@ -55,7 +55,7 @@ export function createChaosBagView(h, render) {
             if(event.key==='Tab'){event.preventDefault();dismiss.focus({preventScroll:true})}
           }},
           h('header',{},h('img',{src:'/mods/arkhamhorror/img/ui/chaos-bag.webp',alt:''}),
-            h('div',{},h('small',{},'调查装备 · CHAOS BAG'),h('h2',{},'当前混乱袋'),h('p',{},`袋内 ${bag.length} 枚 · ${groupedChaosTokens(bag).length} 种标记`)),dismiss),
+            h('div',{},h('small',{},'调查装备'),h('h2',{},'当前混乱袋'),h('p',{},`袋内 ${bag.length} 枚 · ${groupedChaosTokens(bag).length} 种标记`)),dismiss),
           bag.length ? tokens(bag,'bag') : h('p',{className:'ah-bag-empty'},'当前袋中没有标记。'),
           revealed.length ? h('section',{className:'ah-bag-outside'},h('h3',{},`已揭示 · ${revealed.length} 枚`),tokens(revealed,'revealed')) : null,
           sealed.length ? h('section',{className:'ah-bag-outside'},h('h3',{},`已封印 · ${sealed.length} 枚`),tokens(sealed,'sealed')) : null,

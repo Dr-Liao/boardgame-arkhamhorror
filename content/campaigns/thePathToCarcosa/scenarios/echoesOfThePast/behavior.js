@@ -187,6 +187,11 @@ export const behavior = {
       delete state.scenarioFlags.peabodyPassage
     }
   },
+  locationShroudModifier(state, location) {
+    if (original(location) !== '03137') return 0
+    return state.investigators.some(inv => inv.location === location.id
+      && inv.assets.some(asset => asset.code === '03141')) ? -2 : 0
+  },
   actReveal(state, act, api) {
     if (act.originalCode === '03124' || act.originalCode === '03125') {
       for (const location of state.locations.filter(candidate => candidate.revealed && historicalRooms.has(original(candidate)))) {

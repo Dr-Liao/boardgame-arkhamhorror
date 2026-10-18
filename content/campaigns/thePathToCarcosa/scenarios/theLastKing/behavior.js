@@ -319,6 +319,15 @@ export const behavior = {
     return moves
   },
 
+  investigatorEliminated(state, inv, clues) {
+    const amount = Number(clues || 0)
+    if (amount > 0) {
+      state.actClues = Number(state.actClues || 0) + amount
+      inv.clues = 0
+      state.clues = state.investigators.reduce((sum, investigator) => sum + (investigator.clues || 0), 0)
+    }
+    return true
+  },
   performAction(state, inv, move, api) {
     if (move.rule === 'leaveParty') {
       state.actClues = Number(state.actClues || 0) + inv.clues

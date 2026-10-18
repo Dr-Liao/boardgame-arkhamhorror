@@ -37,7 +37,7 @@ export const EFFECT_PRIMITIVES = [
   'hypnoticGaze', 'attachLure', 'healHorrorAtLocationByEnemy', 'exposeWeakness', 'redrawChaos',
   'lookTopDeckAndDoom', 'cancelHarmGainResources', 'playItemFromHand', 'removeDoomControlled',
   'temporaryAllyFromDiscard', 'decipheredReality', 'redrawEncounter', 'redGlovedManSkills', 'returnCommittedSkill',
-  'carcosaInvestigator', 'carcosaPlayer', 'cancelHarm',
+  'carcosaInvestigator', 'carcosaPlayer', 'cancelHarm', 'addCurrentTest',
 ]
 
 export function effectDefinitionError(effect) {
@@ -100,6 +100,10 @@ export function resolveEffect(state, seat, effect, rt) {
       break
     }
     case 'readyAsset': {
+      if (rt.canReadyAssets?.(seat) === false) {
+        rt.info(`${inv.name} 受「梦魇缠身」影响，其支援无法重整。`)
+        break
+      }
       const candidates = inv.assets.filter(a => a.exhausted)
       if (!candidates.length) break
       const id = requestChoice(state, { kind: 'target', source: 'readyAsset', seat,
@@ -176,7 +180,8 @@ export function resolveEffect(state, seat, effect, rt) {
     }
     case 'investigate': {
       rt.investigate(seat, { shroudMod: effect.shroudMod || 0, clueBonus: effect.clueBonus || 0,
-        skill: effect.skill, baseValue: effect.baseValue, bonus: effect.bonus || 0, symbolActionLoss: effect.symbolActionLoss })
+        skill: effect.skill, baseValue: effect.baseValue, bonus: effect.bonus || 0,
+        symbolActionLoss: effect.symbolActionLoss, symbolEndsTurn: effect.symbolEndsTurn })
       break
     }
     case 'fight': {
@@ -307,8 +312,19 @@ export function resolveEffect(state, seat, effect, rt) {
       break
     }
     case 'cancelTreachery': {
-      rt.cancelPending('treachery')
-      rt.info(`${inv.name} 取消了这张诡计牌的显现效果。`)
+      // Ward of Protection is played on the encounter-draw window (before the
+      // revelation) as well as on the treachery window itself.
+      if (state._reaction && ['encounterDrawn', 'treachery'].includes(state._reaction.when)) {
+        state._reaction.cancelled = true
+        if (state._reaction.when === 'encounterDrawn') state._reaction.redraw = false
+        rt.info(`${inv.name} 取消了这张遭遇牌的效果。`)
+      } else if (rt.cancelPending) rt.cancelPending('treachery')
+      if (effect.horror) rt.applyHorror(seat, effect.horror)
+      break
+    }
+    case 'addCurrentTest': {
+      // Ritual Candles: +N to the skill test that is currently being resolved.
+      if (state._reaction) state._reaction.testBonus = (state._reaction.testBonus || 0) + (effect.amount || 1)
       break
     }
     case 'substituteSkill': {

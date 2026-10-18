@@ -1,11 +1,14 @@
 // Presentation consumes public state only. Never sends moves or changes rules.
 import { preloadChaosTokens, showChaosToken } from './chaos-token.js'
 import { createCombatSound } from './combat-sound.js'
+import { attackChoreography, blastChoreography } from './attack-fx.js'
 import { setRulesText } from './card-text.js'
 const ROOT = '/mods/arkhamhorror/'
 const SOUNDS = { select: 'click_003', draw: 'card-slide', encounter: 'encounter-reveal', play: 'drop_003', move: 'drop_001',
   clue: 'glass_001', damage: 'error_003', reveal: 'pluck_001', success: 'confirmation_002',
-  failure: 'back_002', agenda: 'bong_001' }
+  failure: 'back_002', agenda: 'bong_001', gunshot: 'firearm-shot.wav', bladeSlash: 'blade-slash', bladeHit: 'blade-hit',
+  lightningZap: 'lightning-zap.wav', dynamiteBlast: 'dynamite-blast' }
+const VOLUMES = { select: .16, gunshot: .22, bladeSlash: .4, bladeHit: .4, lightningZap: .35, dynamiteBlast: .55 }
 const SKILLS = { intellect: '智识', willpower: '意志', combat: '战斗', agility: '敏捷' }
 const PHASES = { enemy: ['敌军阶段', '⚔', '猎手逼近，威胁降临'], upkeep: ['整备阶段', '◇', '重整装备，补充物资'], mythos: ['神话阶段', '◉', '黑暗蔓延，遭遇未知'], investigation: ['调查阶段', '⌕', '新的调查即将开始'] }
 
@@ -13,7 +16,7 @@ export function publicSequence(events) {
   const cues = []
   for (const event of events) {
     const cue = event.type === 'presentation' ? event : event.presentation
-    if (!cue || !['test', 'chaos', 'play', 'attack', 'phase', 'automatic', 'story', 'location', 'checkpoint'].includes(cue.kind)) continue
+    if (!cue || !['test', 'chaos', 'play', 'attack', 'blast', 'phase', 'automatic', 'story', 'location', 'checkpoint'].includes(cue.kind)) continue
     const presented = event.seq == null ? cue : { ...cue, eventSeq: event.seq }
     if (cue.kind === 'automatic') {
       let group = cues.at(-1)
@@ -134,8 +137,8 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
   const sound = kind => {
     if (!prefs.sound || !unlocked || !SOUNDS[kind]) return
     let sample = audio.get(kind)
-    if (!sample) { sample = new Audio(ROOT + 'audio/' + SOUNDS[kind] + '.ogg'); sample.preload = 'auto'; audio.set(kind, sample) }
-    const voice = sample.cloneNode(); voice.volume = kind === 'select' ? .16 : .3
+    if (!sample) { sample = new Audio(ROOT + 'audio/' + SOUNDS[kind] + (SOUNDS[kind].includes('.') ? '' : '.ogg')); sample.preload = 'auto'; audio.set(kind, sample) }
+    const voice = sample.cloneNode(); voice.volume = VOLUMES[kind] ?? .3
     activeAudio.add(voice)
     voice.onended = voice.onerror = () => activeAudio.delete(voice)
     voice.play().catch(() => activeAudio.delete(voice))
@@ -205,10 +208,10 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
     const caption=node('div','ah-combat-caption',incoming?`${who} 受到「${c.name||'敌人'}」攻击 · ${label}`:`${who} → ${c.name||'敌人'} · ${label}`)
     const captionMargin=Math.min(380,innerWidth-28)/2+14
     Object.assign(caption.style,{left:Math.max(captionMargin,Math.min(innerWidth-captionMargin,end.x))+'px',top:Math.max(85,Math.min(innerHeight-100,b.y-54))+'px'})
-    const slash=node('div','ah-combat-slash'),burst=node('div','ah-combat-burst')
-    Object.assign(slash.style,{left:start.x+'px',top:start.y+'px',width:length+'px',rotate:Math.atan2(dy,dx)+'rad'})
-    Object.assign(burst.style,{left:end.x+'px',top:end.y+'px'})
-    fx.append(slash,burst,caption);ensureLayer().append(fx)
+    const plan=attackChoreography(incoming?'default':c.attackStyle,{node,start,end,box:b,length,angle:Math.atan2(dy,dx),ux:dx/length,uy:dy/length,miss})
+    fx.dataset.style=plan.style
+    fx.append(...plan.elements,caption);ensureLayer().append(fx)
+    const cue=({sample,synth})=>{if(!prefs.sound||!unlocked)return;if(sample)sound(sample);else combatSound.play(synth)}
     const animations=[],timers=new Set()
     let stopped=false
     const pause=ms=>new Promise(resolve=>{const timer=setTimeout(()=>{timers.delete(timer);resolve()},prefs.fast?ms*.35:ms);timers.add(timer);timerResolvers.push(resolve)})
@@ -221,18 +224,54 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
     const stop=()=>{stopped=true;for(const animation of animations)animation.cancel();for(const timer of timers)clearTimeout(timer);for(const resolve of timerResolvers)resolve()}
     cancelScene=stop
     try {
-      if(prefs.sound&&unlocked)combatSound.play('swing')
-      await Promise.all([
-        motion(source,[{translate:'0 0'},{translate:`${-dx/length*10}px ${-dy/length*10}px`,offset:.3},{translate:`${dx/length*28}px ${dy/length*28}px`,offset:.65},{translate:'0 0'}],360),
-        motion(slash,[{scale:'0 1',opacity:0},{scale:'1 1',opacity:1,offset:.65},{scale:'1 1',opacity:0}],360)
-      ])
+      cue(plan.strikeSound)
+      await Promise.all(plan.strike(source).map(step=>motion(...step)))
       if(stopped||generation!==epoch)return
       fx.classList.add('is-impact')
-      if(prefs.sound&&unlocked){combatSound.play(miss?'miss':'hit');if(!miss&&c.horror)combatSound.play('horror')}
-      await Promise.all([
-        motion(target,miss?[{translate:'0 0'},{translate:'20px 0'},{translate:'0 0'}]:[{translate:'0 0',filter:'brightness(1)'},{translate:'-7px 0',filter:'brightness(1.8) sepia(.5)',offset:.2},{translate:'7px 0',offset:.45},{translate:'-3px 0',offset:.7},{translate:'0 0',filter:'brightness(1)'}],340),
-        motion(burst,[{scale:'.3',opacity:1},{scale:'1.5',opacity:0}],440),pause(reduced()?900:780)
-      ])
+      cue(miss?{synth:'miss'}:plan.impactSound)
+      if(!miss&&c.horror)cue({synth:'horror'})
+      await Promise.all([...plan.impact(target).map(step=>motion(...step)),pause(reduced()?900:780)])
+    } finally {
+      stop();fx.remove();if(generation===epoch)cancelScene=null
+    }
+  }
+  const blast = async c => {
+    const generation=epoch
+    const location=[...document.querySelectorAll('.ah-map-node')].find(el=>el.dataset.locationId===c.location)
+    const enemyNode=id=>{const nodes=[...document.querySelectorAll('.ah-table [data-interaction]')].filter(el=>el.dataset.interaction===`enemy:${id}`);return nodes.find(el=>el.closest('.ah-engagement-cards'))||nodes[0]}
+    const seatNode=seat=>[...document.querySelectorAll('.ah-map-investigator')].find(el=>Number(el.dataset.seat)===seat)
+    const targets=[...(c.enemyIds||[]).map(enemyNode),...(c.seats||[]).map(seatNode)].filter(Boolean).map(el=>[el,center(rect(el))])
+    const area=rect(location)||rect(targets[0]?.[0])
+    if(!area)return
+    const thrower=rect(seatNode(c.seat))||rect(interaction(`investigator:${c.seat}`))||area
+    const who=displayed?.state.investigators.find(inv=>inv.seat===c.seat)?.name||'调查员'
+    const plan=blastChoreography({node,from:center(thrower),center:center(area),radius:Math.max(area.width,area.height)/2,targets})
+    const fx=node('div','ah-combat-fx ah-blast-fx');fx.dataset.fx=c.fx||'blast';fx.setAttribute('role','status')
+    const caption=node('div','ah-combat-caption',`${who} · 炸药爆破「${c.name||'地点'}」 · 每个目标 ${c.damage||0} 伤害`)
+    const captionMargin=Math.min(380,innerWidth-28)/2+14
+    Object.assign(caption.style,{left:Math.max(captionMargin,Math.min(innerWidth-captionMargin,center(area).x))+'px',top:Math.max(85,Math.min(innerHeight-100,area.y-54))+'px'})
+    fx.append(...plan.elements,caption);ensureLayer().append(fx)
+    const cue=({sample,synth})=>{if(!prefs.sound||!unlocked)return;if(sample)sound(sample);else combatSound.play(synth)}
+    const animations=[],timers=new Set(),resolvers=[]
+    let stopped=false
+    const pause=ms=>new Promise(resolve=>{const timer=setTimeout(()=>{timers.delete(timer);resolve()},prefs.fast?ms*.35:ms);timers.add(timer);resolvers.push(resolve)})
+    const motion=async(el,frames,duration)=>{
+      if(!el||reduced()||stopped)return
+      const anim=el.animate(frames,{duration:prefs.fast?duration*.35:duration,easing:'ease-out'})
+      animations.push(anim);try{await anim.finished}catch{}
+    }
+    const stop=()=>{stopped=true;for(const animation of animations)animation.cancel();for(const timer of timers)clearTimeout(timer);for(const resolve of resolvers)resolve()}
+    cancelScene=stop
+    try {
+      cue(plan.throwSound)
+      await Promise.all(plan.throw.map(step=>motion(...step)))
+      if(stopped||generation!==epoch)return
+      fx.classList.add('is-impact')
+      cue(plan.blastSound)
+      const viewport=document.querySelector('.ah-map-viewport')
+      await Promise.all([...plan.blast.map(step=>motion(...step)),
+        motion(viewport,[{translate:'0 0'},{translate:'-6px 3px',offset:.1},{translate:'5px -4px',offset:.25},{translate:'-3px 2px',offset:.45},{translate:'0 0'}],480),
+        pause(reduced()?1100:1150)])
     } finally {
       stop();fx.remove();if(generation===epoch)cancelScene=null
     }
@@ -578,6 +617,7 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
     const { change: c, before, after } = item
     ensureLayer().dataset.lastKind = c.kind
     if (c.kind === 'attack') { await combat(c);applyStep(c);return }
+    if (c.kind === 'blast') { await blast(c);applyStep(c);return }
     if (c.kind === 'checkpoint') {
       // Explicit play cues precede their transaction's checkpoint. Do not
       // replay the same asset arrival inferred from that checkpoint's state.

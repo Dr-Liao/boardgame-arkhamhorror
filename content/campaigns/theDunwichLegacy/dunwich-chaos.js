@@ -18,7 +18,9 @@ export function dunwichChaosToken(id, state, inv, token, api) {
   if (id === 'extracurricularActivity') {
     if (token === 'skull') return fx(hard ? -2 : -1)
     if (token === 'cultist') return fx(inv.discard.length >= 10 ? hard ? -5 : -3 : -1)
-    return fx(-fromTopCost(inv, hard ? 3 : 2, api))
+    // Only the elder thing is defined for this scenario (default: no modifier).
+    if (token === 'elderthing') return fx(-fromTopCost(inv, hard ? 3 : 2, api))
+    return null
   }
   if (id === 'theHouseAlwaysWins') {
     if (token === 'skull') {
@@ -32,8 +34,12 @@ export function dunwichChaosToken(id, state, inv, token, api) {
       return fx(-cost)
     }
     if (token === 'cultist') return fx(-3)
-    if (hard && token === 'tablet') inv.resources = Math.max(0, inv.resources - 3)
-    return fx(-2)
+    if (token === 'tablet') {
+      if (hard) inv.resources = Math.max(0, inv.resources - 3)
+      return fx(-2)
+    }
+    // The elder thing is not defined for this scenario.
+    return null
   }
   if (id === 'theMiskatonicMuseum') {
     if (token === 'skull') return fx(state.enemies.some(e => e.code === '02141' && e.location === inv.location)
@@ -75,13 +81,15 @@ export function dunwichChaosToken(id, state, inv, token, api) {
     if (token === 'skull') return fx(-brood(state).length * (hard ? 2 : 1))
     if (token === 'cultist') return fx(0, { drawAnother: true })
     if (token === 'tablet') {
-      const marked = brood(state).filter(enemy => enemy.clues > 0)
-      const choice = api.choose({ kind: 'chaos', source: '02236', seat: inv.seat,
-        prompt: '石板标记：移除一只子嗣上的全部线索，或承受检定惩罚。',
-        options: [...marked.map(enemy => ({ id: enemy.id, label: `移除「${enemy.name}」上的 ${enemy.clues} 个线索` })),
-          { id: 'penalty', label: hard ? '本次检定自动失败' : '本标记修正为 -4' }] })
-      const target = marked.find(enemy => enemy.id === choice)
-      if (target) { target.clues = 0; return fx(0) }
+      const marked = brood(state)
+      if (marked.length) {
+        const choice = api.choose({ kind: 'chaos', source: '02236', seat: inv.seat,
+          prompt: '石板标记：移除一只子嗣上的全部线索（可为 0 个），否则承受检定惩罚。',
+          options: [...marked.map(enemy => ({ id: enemy.id, label: `移除「${enemy.name}」上的 ${enemy.clues || 0} 个线索` })),
+            { id: 'penalty', label: hard ? '本次检定自动失败' : '本标记修正为 -4' }] })
+        const target = marked.find(enemy => enemy.id === choice)
+        if (target) { target.clues = 0; return fx(0) }
+      }
       return hard ? fx(0, { autoFail: true }) : fx(-4)
     }
     if (state.skillTest?.source?.code === '02255'
@@ -121,19 +129,14 @@ export function dunwichChaosAfterTest(id, state, inv, result, api) {
   }
   if (id === 'theMiskatonicMuseum') {
     if (has('cultist') && !result.success) {
+      // Only search the encounter deck / discard pile / void. If the Horror is
+      // already in play, there is nothing to find ("if able").
       const horror = state.enemies.find(e => e.code === '02141')
-      if (horror) horror.location = inv.location
-      else {
+      if (!horror) {
         const pile = [state.encounterDeck, state.encounterDiscard].find(cards => cards.includes('02141'))
         if (pile) pile.splice(pile.indexOf('02141'), 1)
-        const summoned = api.spawn('02141', inv.location)
-        if (summoned && state.scenarioZones.void) {
-          const resources = state.scenarioZones.void.resources + 1
-          summoned.shadowResources = resources
-          summoned.fight += resources; summoned.evade += resources; summoned.health += resources
-          summoned.massive = resources >= 3
-          delete state.scenarioZones.void
-        }
+        // The void is modelled by zones.void; either source makes the Horror findable.
+        if (pile || state.scenarioZones.void) api.spawn('02141', inv.location)
       }
     }
     if (has('elderthing') && !result.success && inv.assets.length) {

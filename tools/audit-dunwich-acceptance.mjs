@@ -10,6 +10,7 @@ const game = 'games/arkhamhorror'
 const cyclePacks = new Set(['dwl', 'tmm', 'tece', 'bota', 'uau', 'wda', 'litas'])
 const files = [
   `${game}/tests/dunwich-player-acceptance.test.mjs`,
+  `${game}/tests/dunwich-player-gaps.test.mjs`,
   `${game}/tests/dunwich-encounter-acceptance.test.mjs`,
   `${game}/tests/dunwich-scenario-acceptance.test.mjs`,
 ]

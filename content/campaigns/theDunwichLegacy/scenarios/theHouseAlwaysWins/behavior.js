@@ -60,13 +60,11 @@ export const behavior = {
     if (act.originalCode === '02066') {
       api.place('darkenedHall')
       if (state.agendaIndex === 0) {
-        for (const pile of [state.encounterDeck, state.encounterDiscard]) {
-          const index = pile.findIndex(code => (state.scenario.enemies[code]?.traits || [])
-            .some(trait => trait.toLowerCase() === 'criminal'))
-          if (index < 0) continue
-          api.spawn(pile.splice(index, 1)[0], 'darkenedHall')
-          break
-        }
+        // Discard from the top of the encounter deck until a Criminal enemy is
+        // discarded, then spawn that enemy (the intervening cards are discarded).
+        const code = api.discardUntilEnemy(state.currentSeat ?? state.campaign.leadSeat,
+          def => (def.traits || []).some(trait => String(trait).toLowerCase() === 'criminal'))
+        if (code) api.spawn(code, 'darkenedHall')
       }
     } else if (act.originalCode === '02067') {
       if (universityFinished(state)) {
@@ -90,7 +88,7 @@ export const behavior = {
     if (agenda.originalCode === '02063') {
       for (const enemy of state.enemies) if (enemy.traits?.some(trait => trait.toLowerCase() === 'criminal')) enemy.aloof = false
       api.shuffleDiscard()
-      if (universityFinished(state)) state.agendas.splice(1, 1)
+      if (universityFinished(state)) state.scenarioFlags.advanceDirectlyToAgenda = '02064'
     } else if (agenda.originalCode === '02064') {
       const aside = state.scenarioZones.clubAside || []
       const candidates = aside.filter(code => ALL_CARDS[code]?.encounterCode === 'hideous_abominations'
@@ -106,6 +104,12 @@ export const behavior = {
       for (const enemy of state.enemies.filter(enemy => enemy.location === 'laBellaLuna')) enemy.location = 'cloverClubLounge'
       api.remove('laBellaLuna')
     } else if (agenda.originalCode === '02065') api.finish('r4')
+  },
+  agendaChain(state, agenda) {
+    const target = state.scenarioFlags.advanceDirectlyToAgenda
+    if (!target || (agenda.originalCode || agenda.code) !== target) return false
+    delete state.scenarioFlags.advanceDirectlyToAgenda
+    return true
   },
   enemyDamaged(state, enemy, api) {
     if (state.agendas[state.agendaIndex]?.originalCode === '02063'
@@ -195,9 +199,14 @@ export const behavior = {
       if (!asset || !enemy) throw new Error('没有合法的彼得·克洛弗躲避目标')
       asset.exhausted = true; api.evadeEnemy(enemy)
     } else if (move.rule === 'loungeAlly') {
-      const index = inv.hand.findIndex(code => ALL_CARDS[code]?.traits?.some(trait => trait.toLowerCase() === 'ally'))
-      if (index < 0) throw new Error('手牌中没有盟友')
-      inv.discard.push(inv.hand.splice(index, 1)[0]); state.scenarioFlags.loungeUsed = true; api.gainClues(inv.seat, 2)
+      const allies = inv.hand.map((code, index) => ({ code, index }))
+        .filter(item => ALL_CARDS[item.code]?.traits?.some(trait => trait.toLowerCase() === 'ally'))
+      if (!allies.length) throw new Error('手牌中没有盟友')
+      const chosen = allies.length === 1 ? allies[0] : allies.find(item => item.index === Number(api.choose({
+        kind: 'card', source: '02071', seat: inv.seat, prompt: '选择要弃掉以换取线索的盟友支援。',
+        options: allies.map(item => ({ id: String(item.index), cardCode: item.code, label: ALL_CARDS[item.code]?.nameZh || item.code })),
+      })))
+      inv.discard.push(inv.hand.splice(chosen.index, 1)[0]); state.scenarioFlags.loungeUsed = true; api.gainClues(inv.seat, 2)
     } else if (move.rule === 'buyDrink') {
       inv.resources -= 2; state.scenarioFlags.barUsed = true; api.gainClues(inv.seat, 2)
       state.scenarioFlags.hadDrink ||= []; state.scenarioFlags.hadDrink.push(inv.seat)

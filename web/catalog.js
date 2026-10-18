@@ -5,8 +5,8 @@ import { renderCardFilters } from './card-filters.js'
 
 export const TYPE_LABELS = { investigator: '调查员', asset: '支援', event: '事件', skill: '技能', treachery: '诡计', enemy: '敌人', location: '地点', scenario: '剧本', agenda: '密谋', act: '场景', story: '故事', key: '钥匙', enemy_location: '敌人地点' }
 // 可用性和规则验收分别展示；Core 验收不能推广到尚未验收的扩展牌。
-export const EFFECT_LABELS = { unimplemented: '未实现', unverified: '有实现·未验收', partial: '部分实现', simplified: '简化实现', implemented: '已实现·未验收', verified: '已验收', 'not-applicable': '不适用' }
-export const AVAILABILITY_LABELS = { 'catalog-only': '仅图鉴', simplified: '当前可玩', strict: '当前可玩（待规则审计）', disabled: '禁用' }
+export const EFFECT_LABELS = { unimplemented: '未实现', unverified: '有实现，未验收', partial: '部分实现', simplified: '简化实现', implemented: '已实现，未验收', verified: '已验收', 'not-applicable': '不适用' }
+export const AVAILABILITY_LABELS = { 'catalog-only': '仅图鉴', simplified: '当前可玩', strict: '当前可玩，待规则审计', disabled: '禁用' }
 const availabilityLabel = card => card.availability === 'strict' && card.effectStatus === 'verified'
   ? '当前可玩' : AVAILABILITY_LABELS[card.availability] || card.availability
 const CLASS_LABELS = { guardian: '守卫者', seeker: '探求者', rogue: '游荡者', mystic: '秘术师', survivor: '幸存者', neutral: '中立', mythos: '神话' }
@@ -86,7 +86,7 @@ export function renderImage(h, descriptor, side = 'front', { compact = false, ar
   holder.append(status)
   const fallback = () => {
     holder.dataset.imageState = 'text-fallback'
-    status.textContent = preferences.enabled ? '卡图不可用 · 文字仍可读' : '纯文字模式'
+    status.textContent = preferences.enabled ? '卡图不可用，仅显示文字' : '纯文字模式'
   }
   if (!descriptor || !preferences.enabled) { fallback(); return holder }
   let candidates
@@ -121,8 +121,8 @@ export function renderImage(h, descriptor, side = 'front', { compact = false, ar
     holder.dataset.imageState = 'displayable'
     holder.classList.toggle('ah-art-landscape', img.naturalWidth > img.naturalHeight)
     status.textContent = current.source?.startsWith('declared-variant')
-      ? '替代美术（修订版）'
-      : current.language === 'zh' ? '中文卡图' : current.language === 'en' ? '英文卡图（中文缺图时回退）' : '卡背'
+      ? '修订版替代美术'
+      : current.language === 'zh' ? '中文卡图' : current.language === 'en' ? '英文卡图' : '卡背'
   })
   const start = () => { if (!active) { active = true; attempt() } }
   if (compact && typeof IntersectionObserver !== 'undefined') {
@@ -215,20 +215,20 @@ export function renderPresentationSettings(h, onChange) {
   const host = h('input', { className: 'bg-input', value: preferences.host, placeholder: 'https://assets.arkhamhorror.app', 'aria-label': '卡图主机', autocomplete: 'off' })
   const message = h('div', { className: 'ah-resource-note', role: 'status' })
   const language = h('select', { className: 'bg-select', 'aria-label': '卡文与图片语言', onchange: event => { savePreferences({ language: event.target.value }); onChange() } },
-    h('option', { value: 'zh-cn' }, '简体中文（允许回退）'), h('option', { value: 'en' }, 'English'))
+    h('option', { value: 'zh-cn' }, '简体中文'), h('option', { value: 'en' }, 'English'))
   language.value = preferences.language
   const variant = h('select', { className: 'bg-select', 'aria-label': '美术版本', onchange: event => { savePreferences({ variant: event.target.value }); onChange() } },
-    h('option', { value: '' }, '原版美术'), h('option', { value: 'revised' }, '修订版替代美术（仅少数已声明的卡）'))
+    h('option', { value: '' }, '原版美术'), h('option', { value: 'revised' }, '修订版替代美术'))
   variant.value = preferences.variant
   return h('details', { className: 'ah-presentation-settings' },
     h('summary', null, '图片与语言设置'),
-    h('p', { className: 'ah-resource-note' }, '默认 CDN 卡图首次显示后会缓存到本地资源目录；自定义主机仍由浏览器直接加载。设置不改变规则或可用卡池。'),
+    h('p', { className: 'ah-resource-note' }, '默认 CDN 卡图首次显示后会缓存到本地资源目录；自定义主机仍由浏览器直接加载。中文缺图时显示英文卡图；修订版美术只覆盖少数卡。设置不改变规则或可用卡池。'),
     h('div', { className: 'ah-settings-row' }, host, h('button', { className: 'bg-btn secondary', onclick: () => {
       try { savePreferences({ host: normalizeImageHost(host.value) }); onChange() } catch { message.textContent = '请输入不带账号、查询参数或片段的 HTTP(S) 主机地址。' }
     } }, '应用主机')),
     language,
     variant,
-    h('label', { className: 'ah-text-mode' }, h('input', { type: 'checkbox', checked: !preferences.enabled, onchange: event => { savePreferences({ enabled: !event.target.checked }); onChange() } }), '纯文字模式（不请求远程图片）'),
+    h('label', { className: 'ah-text-mode' }, h('input', { type: 'checkbox', checked: !preferences.enabled, onchange: event => { savePreferences({ enabled: !event.target.checked }); onChange() } }), '纯文字模式，不加载远程图片'),
     message)
 }
 
@@ -247,7 +247,7 @@ export function renderDetailContent(h, detail, renderTextCard, onChange, gameSta
       h('button', { className: 'bg-btn secondary', 'aria-pressed': String(side === 'front'), onclick: () => { detail.side = 'front'; onChange() } }, '正面'),
       h('button', { className: 'bg-btn secondary', disabled: !backAllowed, 'aria-pressed': String(side === 'back'), onclick: () => { detail.side = 'back'; onChange() } }, '背面'),
       h('span', { className: 'ah-resource-note' }, '编号 ' + (card.code || detail.code || '未映射'))),
-    h('div', { className: 'ah-detail-kicker' }, detail.runtime ? '调查档案 · ' + (TYPE_LABELS[card.type] || '卡牌') : '馆藏档案 · ' + (TYPE_LABELS[card.type] || '卡牌')),
+    h('div', { className: 'ah-detail-kicker' }, TYPE_LABELS[card.type] || '卡牌'),
     h('div', { className: 'ah-detail-layout' },
       renderImage(h, entry?.images || card.images, side, { artId: detail.def.artId }),
       h('div', null, renderTextCard(face),

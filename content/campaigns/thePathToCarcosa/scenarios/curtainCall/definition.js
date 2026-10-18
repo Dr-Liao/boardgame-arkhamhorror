@@ -32,7 +32,7 @@ export const scenario = {
     lobby: location('lobby', '03050', ['theatre', 'balcony', 'lightingBox', 'boxOffice', 'greenRoom']),
     balcony: location('balcony', '03051', ['theatre', 'lobby']),
     backstage: location('backstage', '03052', ['theatre', 'dressingRoom', 'rehearsalRoom', 'trapRoom']),
-    lightingBox: location('lightingBox', '03053', ['lobby']),
+    lightingBox: location('lightingBox', '03053', ['lobby'], { playCostIncrease: 2 }),
     boxOffice: location('boxOffice', '03054', ['lobby']),
     greenRoom: location('greenRoom', '03055', ['lobby']),
     dressingRoom: location('dressingRoom', '03056', ['backstage']),

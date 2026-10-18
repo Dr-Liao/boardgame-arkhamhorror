@@ -100,9 +100,12 @@ test('AI chat and action prompts retain explicit participation and player identi
     if (['killed', 'insane'].includes(status)) session.state.campaign.investigators[0].status = status
     const before = JSON.stringify(session)
     for (const prompt of [buildChatUserPrompt(arkham, session, 1, '我该做什么？', 'table'), buildUserPrompt(arkham, session, 1)]) {
-      assert.ok(prompt.includes(`座位 0：林舟，真人玩家；调查员：${inv.name}`))
+      assert.ok(prompt.includes(`座位 0：林舟，真人玩家；扮演调查员：${inv.name}`))
       assert.ok(!prompt.includes('老师'), 'generic context must not impose a persona-specific address')
       assert.ok(prompt.includes(`座位 0／${inv.name}：${label}`))
+      const own = session.state.investigators.find(item => item.seat === 1)
+      assert.ok(prompt.includes(`你扮演的调查员是「${own.name}」`))
+      assert.ok(prompt.includes(`座位 1／${own.name}（你）：`))
       assert.ok(prompt.includes('不要给该调查员分配任务'))
       assert.ok(!prompt.includes('PRIVATE_HAND_SENTINEL') && !prompt.includes('PRIVATE_DECK_SENTINEL'))
     }

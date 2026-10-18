@@ -534,7 +534,15 @@ const treacheryChecks = {
     let engaged = 0, attacked = 0
     laterBehavior('theMiskatonicMuseum').resolveEncounter(state, state.investigators[0], { code: '02143' },
       { engage: () => engaged++, attack: () => attacked++ })
-    assert.equal(horror.location, 'a')
+    // The Horror does not teleport; away from the investigator only readies.
+    assert.equal(horror.location, 'b')
+    assert.equal(horror.exhausted, false)
+    assert.equal(engaged, 0)
+    assert.equal(attacked, 0)
+    horror.location = state.investigators[0].location
+    horror.exhausted = true
+    laterBehavior('theMiskatonicMuseum').resolveEncounter(state, state.investigators[0], { code: '02143' },
+      { engage: () => engaged++, attack: () => attacked++ })
     assert.equal(horror.exhausted, false)
     assert.equal(engaged, 1)
     assert.equal(attacked, 2)
@@ -935,7 +943,7 @@ const storyChecks = {
     let drawn = 0
     const behavior = laterBehavior('bloodOnTheAltar')
     assert.equal(behavior.statModifier(state, inv, 'agility'), 1)
-    behavior.afterEvade(state, inv, {}, { choose: () => 'yes', drawCards: (_seat, n) => { drawn += n } })
+    behavior.afterEvade(state, inv, {}, null, { choose: () => 'yes', drawCards: (_seat, n) => { drawn += n } })
     assert.equal(earl.exhausted, true)
     assert.equal(drawn, 1)
   },

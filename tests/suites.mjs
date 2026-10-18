@@ -14,6 +14,7 @@ export const FAST_TESTS = Object.freeze([
   'hall-boundary.test.mjs', // 0.2
   'card-identity.test.mjs', // 0.8
   'state-presentation.test.mjs', // 0.7
+  'attack-style.test.mjs', // 0.7
   'rules-n3.test.mjs', // 3.4
   'decision-http.test.mjs', // 1.7
   'ai-completion.test.mjs', // 1.6
@@ -42,6 +43,7 @@ export const FAST_TESTS = Object.freeze([
   'checkpoint-rewind.test.mjs', // 1.7
   'flow-n5.test.mjs', // 2.4
   'dunwich-migration.test.mjs', // 1.3
+  'dunwich-player-gaps.test.mjs', // 1.4
   'dunwich-encounter-acceptance.test.mjs', // 0.9
   'dunwich-scenario-acceptance.test.mjs', // 1.2
   'dunwich-ledger.test.mjs', // 0.3
@@ -58,6 +60,7 @@ export const FAST_TESTS = Object.freeze([
   'carcosa-all-card-ledger.test.mjs', // 0.3
   'carcosa-pending-encounters.test.mjs', // 0.6
   'carcosa-literal-behavior.test.mjs', // 0.4
+  'carcosa-implementation-gaps.test.mjs', // 0.6
   'tfa-migration.test.mjs', // 0.1
 ])
 

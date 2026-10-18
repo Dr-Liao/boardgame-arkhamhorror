@@ -198,8 +198,12 @@ export const behavior = {
     }
   },
 
-  enemyDefeated(state, enemy, api) {
-    if (enemy.code === '03060') {
+  enemyDiscarded(state, enemy, api) {
+    if ((enemy.originalCode || enemy.code) === '03059'
+      && state.acts[state.actIndex]?.originalCode === '03047c') api.advanceAct()
+  },
+
+  enemyDefeated(state, enemy, api) {    if (enemy.code === '03060') {
       api.clearDoom()
       state.agendaIndex = 0
       state.doom = 3

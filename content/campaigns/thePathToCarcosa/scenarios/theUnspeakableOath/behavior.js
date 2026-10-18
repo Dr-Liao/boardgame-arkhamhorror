@@ -282,9 +282,22 @@ export const behavior = {
     if (enemy.code === '03183' && state.phase === 'enemy') enemy.hunterMovedRound = state.round
   },
   enemyAttackModifier(state, enemy) {
-    return enemy.code === '03183' && enemy.hunterMovedRound === state.round ? {
+    const base = enemy.code === '03183' && enemy.hunterMovedRound === state.round ? {
       damage: -enemy.damage, horror: -enemy.horror,
     } : {}
+    if (enemy.location === 'westernHall169' && enemy.traits?.some(trait => String(trait).toLowerCase() === 'possessed')) {
+      return { ...base, horror: (base.horror || 0) + 1 }
+    }
+    return base
+  },
+  enemyDefeated(state, enemy, api) {
+    const shared = encounterRules.enemyDefeated?.(state, enemy, api) || false
+    if (enemy.location === 'westernHall168'
+      && enemy.traits?.some(trait => String(trait).toLowerCase() === 'possessed')
+      && enemy.defeatedBy != null) {
+      api.drawCards(enemy.defeatedBy, 1)
+    }
+    return shared
   },
   enemyDamaged(state, enemy, api) {
     if (enemy.code === '03184' && state.skillTest?.source?.enemyId === enemy.id && enemy.defeatedBy != null) {

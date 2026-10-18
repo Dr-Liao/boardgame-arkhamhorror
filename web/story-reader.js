@@ -27,5 +27,5 @@ export function renderStoryReader(h,s,state,render,action,game,checkpointAction=
             h('b',{},({killed:'阵亡',insane:'永久疯狂',active:'仍在役'})[inv.status] || inv.status)))):null,
         h('footer',{},
           checkpointAction(s,selected),
-          (s.state.legalMoves || []).filter(m=>m.action==='hubContinue').map(m=>action(s,m,'继续调查 · 进入关间准备'))))))
+          (s.state.legalMoves || []).filter(m=>m.action==='hubContinue').map(m=>action(s,m,'继续，进入关间准备'))))))
 }

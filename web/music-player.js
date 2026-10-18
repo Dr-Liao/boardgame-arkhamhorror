@@ -2,23 +2,23 @@
 import { SCENARIO_MUSIC, SCENARIO_PLAYLISTS } from './scenario-music.js'
 
 export const MUSIC_TRACKS = [
-  { id: 'darkestChild', title: 'Darkest Child', mood: '诡秘童谣 · 调查与探索', file: 'common/darkest-child.mp3', isrc: 'USUAN1100783' },
-  { id: 'longNoteOne', title: 'Long note One', mood: '阴冷低鸣 · 阅读与沉思', file: 'common/long-note-one.mp3', isrc: 'USUAN1100418' },
-  { id: 'unseenHorrors', title: 'Unseen Horrors', mood: '无形恐惧 · 危机与遭遇', file: 'common/unseen-horrors.mp3', isrc: 'USUAN1400043' },
-  { id: 'ritual', title: 'Ritual', mood: '古老仪式 · 秘密与低语', file: 'common/ritual.mp3', isrc: 'USUAN1100466' },
-  { id: 'gatheringDarkness', title: 'Gathering Darkness', mood: '暗潮聚集 · 神话与危机', file: 'common/gathering-darkness.mp3', isrc: 'USUAN1100849' },
-  { id: 'theDread', title: 'The Dread', mood: '深处低鸣 · 悬疑与探索', file: 'common/the-dread.mp3', isrc: 'USUAN1100048' },
-  { id: 'darkWalk', title: 'Dark Walk', mood: '夜行诡影 · 街巷与追踪', file: 'common/dark-walk.mp3', isrc: 'USUAN1100468' },
-  { id: 'eveningOfChaos', title: 'Evening of Chaos', mood: '失谐钢琴 · 谢幕与幻觉', file: 'campaigns/thePathToCarcosa/evening-of-chaos.mp3', isrc: 'USUAN1300041' },
-  { id: 'danseMacabre', title: 'Danse Macabre', mood: '怪诞舞曲 · 最后的王与晚宴', file: 'campaigns/thePathToCarcosa/danse-macabre.mp3', isrc: 'USUAN1100546' },
-  { id: 'echoesOfTime', title: 'Echoes of Time', mood: '幽远钟声 · 往昔回响与档案调查', file: 'campaigns/thePathToCarcosa/echoes-of-time.mp3', isrc: 'USUAN1300029' },
-  { id: 'longNoteTwo', title: 'Long Note Two', mood: '深沉低鸣 · 疗养院与漫长疑惧', file: 'campaigns/thePathToCarcosa/long-note-two.mp3', isrc: 'USUAN1100420' },
-  { id: 'ghostProcessional', title: 'Ghost Processional', mood: '幽灵行进 · 巴黎追影与苍白面具', file: 'campaigns/thePathToCarcosa/ghost-processional.mp3', isrc: 'USUAN1100219' },
-  { id: 'ossuarySixAir', title: 'Ossuary 6 - Air', mood: '异界暗潮 · 黑星升起与卡尔克萨', file: 'campaigns/thePathToCarcosa/ossuary-6-air.mp3', isrc: 'USUAN1500048' },
-  { id: 'deadlyRoulette', title: 'Deadly Roulette', mood: '暗色爵士 · 赌场与黑帮疑云', file: 'common/deadly-roulette.mp3', isrc: 'USUAN1600033' },
-  { id: 'dancesAndDames', title: 'Dances and Dames', mood: '黑色电影爵士 · 街巷调查与秘密交易', file: 'common/dances-and-dames.mp3', isrc: 'USUAN1100595' },
-  { id: 'chasePulse', title: 'Chase Pulse', mood: '低音脉动 · 列车逃生与紧迫追踪', file: 'common/chase-pulse.mp3', isrc: 'USUAN1100383' },
-  { id: 'shadowlandsAntechamber', title: 'Shadowlands 5 - Antechamber', mood: '异界悬疑 · 时空裂隙与未知门扉', file: 'common/shadowlands-5-antechamber.mp3', isrc: 'USUAN1700038' },
+  { id: 'darkestChild', title: 'Darkest Child', mood: '诡秘的童谣，伴你四处调查', file: 'common/darkest-child.mp3', isrc: 'USUAN1100783' },
+  { id: 'longNoteOne', title: 'Long note One', mood: '阴冷的长音，适合静静读故事', file: 'common/long-note-one.mp3', isrc: 'USUAN1100418' },
+  { id: 'unseenHorrors', title: 'Unseen Horrors', mood: '看不见的恐惧正在逼近', file: 'common/unseen-horrors.mp3', isrc: 'USUAN1400043' },
+  { id: 'ritual', title: 'Ritual', mood: '古老仪式里的低语', file: 'common/ritual.mp3', isrc: 'USUAN1100466' },
+  { id: 'gatheringDarkness', title: 'Gathering Darkness', mood: '黑暗正在聚集', file: 'common/gathering-darkness.mp3', isrc: 'USUAN1100849' },
+  { id: 'theDread', title: 'The Dread', mood: '从深处传来的低鸣', file: 'common/the-dread.mp3', isrc: 'USUAN1100048' },
+  { id: 'darkWalk', title: 'Dark Walk', mood: '深夜穿行在街巷里', file: 'common/dark-walk.mp3', isrc: 'USUAN1100468' },
+  { id: 'eveningOfChaos', title: 'Evening of Chaos', mood: '走调的钢琴，大幕将落', file: 'campaigns/thePathToCarcosa/evening-of-chaos.mp3', isrc: 'USUAN1300041' },
+  { id: 'danseMacabre', title: 'Danse Macabre', mood: '怪诞的舞曲，国王的晚宴', file: 'campaigns/thePathToCarcosa/danse-macabre.mp3', isrc: 'USUAN1100546' },
+  { id: 'echoesOfTime', title: 'Echoes of Time', mood: '远处的钟声，翻查旧档案', file: 'campaigns/thePathToCarcosa/echoes-of-time.mp3', isrc: 'USUAN1300029' },
+  { id: 'longNoteTwo', title: 'Long Note Two', mood: '漫长的低音，疗养院里的不安', file: 'campaigns/thePathToCarcosa/long-note-two.mp3', isrc: 'USUAN1100420' },
+  { id: 'ghostProcessional', title: 'Ghost Processional', mood: '幽灵在巴黎街头游行', file: 'campaigns/thePathToCarcosa/ghost-processional.mp3', isrc: 'USUAN1100219' },
+  { id: 'ossuarySixAir', title: 'Ossuary 6 - Air', mood: '黑星升起，异界涌动', file: 'campaigns/thePathToCarcosa/ossuary-6-air.mp3', isrc: 'USUAN1500048' },
+  { id: 'deadlyRoulette', title: 'Deadly Roulette', mood: '暗色爵士，赌场里的黑帮', file: 'common/deadly-roulette.mp3', isrc: 'USUAN1600033' },
+  { id: 'dancesAndDames', title: 'Dances and Dames', mood: '黑色电影风格的爵士', file: 'common/dances-and-dames.mp3', isrc: 'USUAN1100595' },
+  { id: 'chasePulse', title: 'Chase Pulse', mood: '急促的低音，逃离列车', file: 'common/chase-pulse.mp3', isrc: 'USUAN1100383' },
+  { id: 'shadowlandsAntechamber', title: 'Shadowlands 5 - Antechamber', mood: '时空裂隙后的未知之门', file: 'common/shadowlands-5-antechamber.mp3', isrc: 'USUAN1700038' },
 ]
 export const MUSIC_PLAYLISTS = Object.freeze({
   common: Object.freeze(MUSIC_TRACKS.filter(track => track.file.startsWith('common/')).map(track => track.id)),
@@ -103,7 +103,7 @@ export function createMusicPlayer(h) {
     launcher.setAttribute('aria-expanded', String(expanded))
     launcher.setAttribute('aria-label', expanded ? '收起音乐播放器' : '展开音乐播放器')
     title.textContent = track.title
-    status.textContent = error ? '播放失败 · 点击重试' : pending ? '正在载入…' : playing ? '正在播放' : waitingGesture ? '点击后自动播放' : '音乐已暂停'
+    status.textContent = error ? '播放失败，点击重试' : pending ? '正在载入…' : playing ? '正在播放' : waitingGesture ? '点击后自动播放' : '音乐已暂停'
     now.textContent = track.title; mood.textContent = track.mood
     for (const control of [play, miniPlay]) {
       control.textContent = playing || pending ? 'Ⅱ' : '▶'

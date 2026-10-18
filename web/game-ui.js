@@ -474,7 +474,7 @@ function renderLocationDetail(detail) {
   const enemies = st.enemies.filter(enemy => enemy.location === loc.id)
   const attachments = [...locationAttachments(s, loc), ...(st.storyAssets || []).filter(asset => asset.location === loc.id).map(asset => ({...ahCardDef(s,asset.code),...asset}))]
   return h('div', { className: 'ah-location-dossier' },
-    h('header', {}, h('small', {}, '调查档案 · 地点'),h('h2', {},loc.name),h('span', {className:'ah-location-state'},loc.revealed ? '已揭示' : '未揭示')),
+    h('header', {}, h('small', {}, '地点'),h('h2', {},loc.name),h('span', {className:'ah-location-state'},loc.revealed ? '已揭示' : '未揭示')),
     h('div',{className:'ah-location-detail-layout'},
       h('div',{className:'ah-location-detail-art'},
         renderImage(h,detail.entry?.images || detail.entry?.card?.images || detail.def.images,front ? 'front' : 'back'),
@@ -993,23 +993,23 @@ function renderCardGame(s, autoPassing = false) {
 
   let statusText
   if (over) {
-    statusText = st.outcome === 'victory' ? '调查队获胜！' : st.outcome === 'survived' ? '调查队幸存（献祭结局）' : st.outcome === 'defeat' ? '调查队失败' : '对局结束'
+    statusText = st.outcome === 'victory' ? '调查队获胜！' : st.outcome === 'survived' ? '调查队幸存' : st.outcome === 'defeat' ? '调查队失败' : '对局结束'
   } else if (autoPassing) {
     statusText = '正在继续结算…'
   } else if (st.pendingChoice) {
     const inv = st.investigators.find(item => item.seat === decisionSeat)
     statusText = st.pendingChoice.kind === 'turnOrder'
-      ? humanTurn ? '准备好后点击「开始行动」（' + (inv?.name || current.name) + '）' : '等待队友点击「开始行动」…'
+      ? humanTurn ? '轮到' + (inv?.name || current.name) + '，准备好后点击「开始行动」' : '等待队友点击「开始行动」…'
       : humanTurn
-        ? '请你回答待决选择（' + (inv?.name || current.name) + '）'
+        ? '请你替' + (inv?.name || current.name) + '回答待决选择'
         : '等待 ' + (inv?.name || current?.name || 'AI 队友') + ' 回答待决选择…'
   } else {
     const inv = st.investigators[st.currentSeat]
     statusText = humanTurn
-      ? '轮到你行动（' + (inv ? inv.name : '') + ' · 剩余 ' + (inv ? inv.actionsLeft : 0) + ' 行动）'
-      : (current ? current.name : '') + (activity.presenting ? ' · 行动演出中' : activity.processing ? ' · AI 回合 · 思考中…' : ' · 等待继续行动')
+      ? '轮到你行动：' + (inv ? inv.name + '，' : '') + '剩余 ' + (inv ? inv.actionsLeft : 0) + ' 行动'
+      : activity.presenting ? (current ? current.name : '') + '的行动演出中' : activity.processing ? (current ? current.name : 'AI') + '正在思考…' : '等待' + (current ? current.name : '') + '继续行动'
   }
-  if (!over && humanFinished && !humanTurn) statusText = '你的回合已结束 · ' + statusText
+  if (!over && humanFinished && !humanTurn) statusText = '你的回合已结束，' + statusText
   else if (!over && humanTurn && activity.processing) statusText = activity.presenting ? '正在结算你的行动…' : '正在提交你的行动…'
 
   const script = tableRegions.script(st, act, agenda, s.players, renderActAdvance(s, humanTurn), activity, renderScriptActions(s, humanTurn), {
@@ -1113,7 +1113,7 @@ function renderPlayerDock(s, inv, humanTurn) {
     h('div', { className: 'ah-player-dock' },
     h('div', { className: 'ah-dock-investigator' },
       h('span', { className: 'ah-dock-portrait', 'aria-hidden': 'true' }, tableArt(h, inv.code, inv.name)),
-      h('span', { className: 'ah-dock-kicker', title: (s.players[inv.seat]?.name || 'player') + ' · 调查员档案' }, renderPlayerAvatar(s.players[inv.seat]), (s.players[inv.seat]?.name || 'player') + ' · 调查员档案'),
+      h('span', { className: 'ah-dock-kicker', title: (s.players[inv.seat]?.name || 'player') + '的调查员' }, renderPlayerAvatar(s.players[inv.seat]), (s.players[inv.seat]?.name || 'player') + '的调查员'),
       h('button', { className: 'ah-dock-name', 'data-interaction': `investigator:${inv.seat}`, onclick: () => openCardDetailDef({ ...s.state.investigatorDefs[inv.code], ...inv, type: 'investigator' }) },
         tableIcon(classIcon(inv.klass)), ' ', inv.name),
       h('div', { className: 'ah-dock-vitals' }, [['health','生命',inv.maxHealth,inv.damage],['sanity','理智',inv.maxSanity,inv.horror]].map(([kind,label,max,loss])=>{
@@ -1193,7 +1193,7 @@ function renderMiniCard(s, reference, exhausted, opts = {}) {
   return h('div', {
     className: 'ah-minicard' + (opts.source === 'hand' ? ' ah-hand-card' : '') + (d.courage ? ' ah-minicard-courage' : '') + (exhausted ? ' ah-minicard-exhausted' : '') + (draggable ? ' ah-minicard-draggable' : '') + (isSelected ? ' is-selected' : ''),
     style: fan,
-    title: cd.name + (assetStats ? '\n' + assetStats : '') + (cd.text ? '\n\n' + cd.text : '') + '\n\n（点击选择；可在动作栏查看详情和合法操作）',
+    title: cd.name + (assetStats ? '\n' + assetStats : '') + (cd.text ? '\n\n' + cd.text : '') + '\n\n点击选中后，可在动作栏查看详情和可用操作',
     role: 'button', tabindex: 0,
     'aria-label': cd.name + (assetStats ? `，${assetStats}` : '') + (commit ? '，投入技能检定' : opts.asset ? '，查看资产能力' : opts.source === 'hand' ? '，选择手牌' : '，查看详情'),
     'aria-pressed': opts.source === 'hand' || opts.asset ? String(!!isSelected) : null,
@@ -1694,9 +1694,9 @@ function renderEnemyChip(s, e, { map = false } = {}) {
   if (e.alert) kws.push('警戒')
   if (e.elite) kws.push('精英')
   if (e.massive) kws.push('庞大')
-  if (e.prey) kws.push('猎物·' + (AH_PREY_LABEL[e.prey] || e.prey))
+  if (e.prey) kws.push('猎物：' + (AH_PREY_LABEL[e.prey] || e.prey))
   if (e.victory) kws.push('胜利点' + e.victory)
-  return h('div', { className: 'ah-enemy' + (e.massive ? ' is-massive' : '') + (victoryLevel ? ` has-victory victory-${victoryLevel}` : '') + (choiceMove ? ' ah-choice-target' : '') + (e.exhausted ? ' is-exhausted' : ''), title: choiceMove ? '选择此敌人作为目标' : `${e.name} · ${canEngage ? '拖向你的角色或交战区以主动交战（1 行动） · ' : ''}点击查看详情`, role: 'button', tabindex: 0,
+  return h('div', { className: 'ah-enemy' + (e.massive ? ' is-massive' : '') + (victoryLevel ? ` has-victory victory-${victoryLevel}` : '') + (choiceMove ? ' ah-choice-target' : '') + (e.exhausted ? ' is-exhausted' : ''), title: choiceMove ? '选择此敌人作为目标' : `${e.name}\n${canEngage ? '拖到你的角色或交战区可主动交战，消耗 1 行动。' : ''}点击查看详情`, role: 'button', tabindex: 0,
     'aria-label': `${e.name} · 生命 ${e.health - (e.damageTaken || 0)}/${e.health}${e.exhausted ? ' · 已横置' : ''}`,
     'data-inspect-default': map ? 'true' : null,
     'data-interaction': `enemy:${e.id}`,

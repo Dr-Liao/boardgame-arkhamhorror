@@ -36,7 +36,7 @@ test('调查员按职业颜色筛选、按扩展包分组并展示档案', async
   await setup.getByRole('button', { name: '开始新游戏' }).click()
   const hub = page.locator('.ah-hub')
   await hub.getByRole('button', { name: '选择调查员', exact: true }).click()
-  await expect(hub.getByText('推荐调查员 · 尚未选择')).toBeVisible()
+  await expect(hub.getByText('还没有选择调查员')).toBeVisible()
   await expect(hub.getByRole('button', { name: /选择调查员：罗兰/ })).toHaveAttribute('aria-pressed', 'false')
   await expect(hub.locator('.ah-investigator-pack')).toHaveCount(3)
   await expect(hub.getByRole('heading', { name: '核心包', exact: true })).toBeVisible()

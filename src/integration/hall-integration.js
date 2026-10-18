@@ -148,5 +148,5 @@ export function actionsRemaining(state, seat) {
 }
 
 export function participantDescription(state, seat) {
-  return '调查员：' + (state.investigators?.find(item => item.seat === seat)?.name || '尚未选择')
+  return '扮演调查员：' + (state.investigators?.find(item => item.seat === seat)?.name || '尚未选择')
 }

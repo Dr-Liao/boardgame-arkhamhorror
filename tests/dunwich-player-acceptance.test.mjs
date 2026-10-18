@@ -32,7 +32,7 @@ const contracts = {
   '02025': ['reaction.when', 'enemySpawn', 'event.type', 'moveTo'],
   '02026': ['skill', { doubleDifficultyAndRewards: true, maxPerTest: 1 }],
   '02027': ['passive.stats.combat', 1, 'forcedUpkeepPayOrDiscard', 1],
-  '02028': ['uses', 3, 'abilities.0.effect', { type: 'investigate', skill: 'willpower', clueBonus: 1, symbolActionLoss: 1 }],
+  '02028': ['uses', 3, 'abilities.0.effect', { type: 'investigate', skill: 'willpower', clueBonus: 1, symbolEndsTurn: true }],
   '02029': ['reactions.0.when', 'symbolRevealed', 'reactions.0.effect', { type: 'addCurrentTest', amount: 1 }],
   '02030': ['uses', 3, 'abilities.0.effect.effect', { type: 'heal', amount: 1, what: 'horror' }],
   '02031': ['event.type', 'bindMonster'],
@@ -67,7 +67,7 @@ const contracts = {
   '02157': ['passive.extraSlots.accessory', 1],
   '02158': ['passive.extraSlots.ally', 1],
   '02184': ['event', { type: 'searchTop', amount: 9, trait: 'Weapon', choose: 1 }],
-  '02185': ['freeTriggers', [{ skill: 'intellect', cost: { resources: 2 }, bonus: 1 }, { skill: 'combat', cost: { resources: 2 }, bonus: 1 }]],
+  '02185': ['abilities.0.effect', { type: 'addStatPhase', skill: 'intellect', amount: 1 }, 'abilities.1.effect', { type: 'addStatPhase', skill: 'combat', amount: 1 }],
   '02186': ['requiresClueAtLocation', true, 'event', { type: 'draw', amount: 3 }],
   '02187': ['minimumHandForBoost', 5, 'freeTriggers.0', { skill: 'willpower', cost: { resources: 1 }, bonus: 2 }],
   '02188': ['reactions.0', { when: 'turnBegins', requiresAlone: true, effect: { type: 'gainResource', amount: 1 } }],
@@ -85,7 +85,7 @@ const contracts = {
   '02230': ['reactions.0', { when: 'chaosTokenRevealed', cost: { resources: 2 }, effect: { type: 'redrawChaos' } }],
   '02231': ['skill', { selfTestOnly: true, returnOnSuccessBy: 2 }],
   '02232': ['passive.stats.intellect', 1, 'abilities.0.effect.type', 'lookTopDeckAndDoom'],
-  '02233': ['uses', 3, 'abilities.0.effect', { type: 'investigate', skill: 'willpower', bonus: 2, clueBonus: 2, symbolActionLoss: 1 }],
+  '02233': ['uses', 3, 'abilities.0.effect', { type: 'investigate', skill: 'willpower', bonus: 2, clueBonus: 2, symbolEndsTurn: true }],
   '02234': ['passive', { darkHorse: true, allStatsIfNoResources: 1 }],
   '02235': ['skill.onSuccess', { evadeDisengage: true, mayMoveAfterEvade: true }],
   '02260': ['skill.leadership', true],
@@ -113,7 +113,7 @@ const contracts = {
   '02307': ['reaction', { when: 'encounterDrawn', nonWeaknessOnly: true }, 'event', { type: 'cancelTreachery', horror: 1 }],
   '02308': ['reactions.0', { when: 'enemyAttack', cost: { exhaust: true, horror: 1 }, effect: { type: 'aquinnahRedirect' } }],
   '02309': ['reactions.0', { when: 'skillTestFail', cost: { exhaust: true }, effect: { type: 'returnCommittedSkill' } }],
-  '02310': ['fast', true, 'reactions.0.effect.type', 'redGlovedManSkills', 'forcedRoundEndDiscard', true],
+  '02310': ['fast', true, 'reactions.0.effect.type', 'redGlovedManSkills', 'forcedMythosEndDiscard', true],
 }
 
 function atPath(value, path) {
@@ -284,8 +284,18 @@ const runtime = {
     inv.horror = 2; inv.willpower = 8
     const a = asset(s, '02024')
     use(s, a); settle(s)
-    assert.equal(s.investigators[0].horror, 1)
+    // Heal 1 + successful willpower test heals 1 more.
+    assert.equal(s.investigators[0].horror, 0)
     assert.equal(s.investigators[0].assets.find(item => item.id === a.id).uses, 3)
+    const f = fixture(), failInv = f.investigators[0]
+    failInv.horror = 2; failInv.willpower = 1; failInv.hand = ['01088', '01089']
+    f.chaosBag = ['autofail']
+    const failAsset = asset(f, '02024')
+    use(f, failAsset); settle(f)
+    // Failure: no extra heal, discard 1 card at random from hand.
+    assert.equal(f.investigators[0].horror, 1)
+    assert.equal(f.investigators[0].hand.length, 1)
+    assert.equal(f.investigators[0].discard.length, 1)
   },
   '02026': () => {
     const s = fixture('01003'), inv = s.investigators[0]
@@ -533,10 +543,16 @@ const runtime = {
     assert.equal(s.investigators[0].assets.find(item => item.id === a.id).uses, 3)
   },
   '02310': () => {
-    const s = playAndSettle('02310', () => {}, p => p.source === 'redGlovedMan' ? 'trigger' : null), inv = s.investigators[0]
+    const s = playAndSettle('02310', () => {}, p => p.source === 'redGlovedMan' ? 'trigger' : null)
     const updated = s.investigators[0]
-    assert.equal(Math.min(...['willpower', 'intellect', 'combat', 'agility'].map(skill => getStat(s, updated, skill))), 3)
-    assert.equal(['willpower', 'intellect', 'combat', 'agility'].filter(skill => getStat(s, updated, skill) === 6).length, 2)
+    const chosen = ['willpower', 'intellect', 'combat', 'agility']
+    assert.equal(chosen.filter(skill => getStat(s, updated, skill) === 6).length, 2)
+    // The player chooses the two skills (first offered options here).
+    assert.equal(getStat(s, updated, 'willpower'), 6)
+    assert.equal(getStat(s, updated, 'intellect'), 6)
+    move(s, { action: 'endTurn' })
+    settle(s)
+    assert.ok(!s.investigators[0].assets.some(item => item.code === '02310'))
   },
 }
 

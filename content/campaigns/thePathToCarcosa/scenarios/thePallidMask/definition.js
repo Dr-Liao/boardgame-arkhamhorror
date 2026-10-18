@@ -15,7 +15,11 @@ Object.assign(definitions.enemies['03241b'], { healthPerInvestigator: 5, victory
 
 const locations = Object.fromEntries(CATACOMB_CODES.map((code, index) => [
   `catacomb${index}`,
-  location(`catacomb${index}`, code, [], { catacomb: true }),
+  location(`catacomb${index}`, code, [], {
+    catacomb: true,
+    ...(code === '03249' ? { investigateSkill: 'willpower' } : {}),
+    ...(code === '03250' ? { handSlotsPenalty: 1 } : {}),
+  }),
 ]))
 
 export const scenario = {

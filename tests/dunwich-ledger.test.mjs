@@ -22,13 +22,14 @@ test('敦威治验收账本严格对应周期333个卡号、行为证据与目�
     .sort()
   assert.equal(expected.length, 333)
   assert.deepEqual(ledger.entries.map(entry => entry.code).sort(), expected)
-  assert.deepEqual(ledger.summary, {
+  assert.deepEqual({ ...ledger.summary, testsPassed: undefined }, {
     total: 333,
     verified: 333,
     unverified: 0,
     unimplemented: 0,
-    testsPassed: 333,
+    testsPassed: undefined,
   })
+  assert.ok(ledger.summary.testsPassed >= 333)
   for (const entry of ledger.entries) {
     assert.ok(entry.evidence.length, `${entry.code} has no evidence`)
     assert.ok(entry.evidence.every(item => item.test.startsWith(`Dunwich ${entry.code} `)))

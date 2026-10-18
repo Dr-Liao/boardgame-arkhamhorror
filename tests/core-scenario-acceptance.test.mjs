@@ -37,10 +37,35 @@ for(const [scenario,code,trait,id] of [['theGathering','01104','Ghoul','ghoulMin
   assert.ok(s.enemies.some(e=>e.code===id)); assert.ok(!s.encounterDiscard.includes(id)); assert.equal(s.skillTest,null)
 })
 
-test('Core 01102 银暮祭司每次攻击后放毁灭，但不立即推进',()=>{
+test('Core 01102 银暮祭司攻击后放毁灭，达到阈值立即推进密谋',()=>{
   const s=fixture(); s.investigators[0].deck=['01102']; move(s,{action:'draw'}); settle(s)
   s.doom=2; move(s,{action:'resource'}); settle(s)
-  assert.equal(s.doom,3); assert.equal(s.agendaIndex,0)
+  assert.equal(s.agendaIndex,1); assert.equal(s.doom,0)
+})
+
+test('Core 01143 01169 场上毁灭不计入密谋阈值，推进密谋时也保留',()=>{
+  const s=fixture(); enemy(s,{code:'acolyte',engagedSeat:null,doom:5})
+  s.doom=1; play(s,'01013'); settle(s)
+  assert.equal(s.agendaIndex,0); assert.equal(s.doom,2)
+  play(s,'01013'); settle(s)
+  assert.equal(s.agendaIndex,1); assert.equal(s.doom,0)
+  assert.equal(s.enemies.find(e=>e.code==='acolyte').doom,5)
+})
+
+test('Core 01105 全员空手时仍可选择随机弃掉 1 张手牌的分支',()=>{
+  const s=fixture(); s.doom=2; for(const inv of s.investigators) inv.hand=[]
+  play(s,'01013')
+  let sawDiscard=false
+  settle(s,(c)=>{ if(c.options?.some(o=>o.id==='discard')) { sawDiscard=true; return 'discard' } return null })
+  assert.ok(sawDiscard); assert.equal(s.investigators[0].horror,0)
+})
+
+test('Core 01171 神秘咏唱无 cultist 时同时检索遭遇牌库与弃牌堆',()=>{
+  const s=fixture(); s.scenario=structuredClone(SCENARIOS.theDevourerBelow); s.enemies=[]
+  s.locations.push({ id:'emptySpot', name:'空旷地', shroud:1, clues:0, maxClues:0, revealed:false, connections:[] })
+  s.encounterDeck=['mysteriousChanting']; s.encounterDiscard=['acolyte']
+  play(s,'01064'); settle(s)
+  assert.ok(s.enemies.some(e=>e.code==='acolyte'))
 })
 
 test('Core 01170 01179 密会巫师神话结束放毁灭，黑山羊幼崽轮末治疗',()=>{

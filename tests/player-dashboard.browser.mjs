@@ -23,7 +23,7 @@ test('常显属性与正负修正、独立托盘、费用悬浮与动态交战�
   const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.setViewportSize({width:1920,height:1080})
   const f=await fixture(page)
   await f.update(s=>{s.players[0].name='星河队长'})
-  await expect(page.locator('.ah-dock-kicker')).toHaveText('星河队长 · 调查员档案')
+  await expect(page.locator('.ah-dock-kicker')).toHaveText('星河队长的调查员')
   await expect(page.getByRole('region',{name:'交战区',exact:true})).toHaveCount(0)
   await expect(page.locator('[data-skill="combat"] strong')).toHaveText('4')
   await expect(page.locator('[data-skill="combat"] .is-positive')).toHaveText('+1')

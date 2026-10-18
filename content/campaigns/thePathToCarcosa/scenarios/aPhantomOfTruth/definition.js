@@ -44,8 +44,8 @@ export const scenario = {
       location('montmartre', '03210', paris.montmartre.connections),
     ],
     operaGarnier: [
-      location('operaGarnier', '03212', paris.operaGarnier.connections),
-      location('operaGarnier', '03213', paris.operaGarnier.connections),
+      location('operaGarnier', '03212', paris.operaGarnier.connections, { commitIconMultiplier: 2, commitIconMultiplierInvestigateOnly: true }),
+      location('operaGarnier', '03213', paris.operaGarnier.connections, { doubleBaseSkill: true }),
     ],
     leMarais: [
       location('leMarais', '03217', paris.leMarais.connections),

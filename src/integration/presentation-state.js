@@ -1,5 +1,5 @@
 import { contentRegistry } from '../../content/registered.js'
-import { enemyHealthValue } from '../engine/rules-state.js'
+import { agendaDoom, totalDoom, enemyHealthValue } from '../engine/rules-state.js'
 
 // Use the same scenario gate as movement, independently of remaining actions,
 // adjacency or pending choices. Only project the resulting public restriction.
@@ -58,7 +58,8 @@ export function captureTableState(state, getStat, getMaxSanity) {
     scriptAttachments: { act: attachments.act, agenda: attachments.agenda }, enemies: state.enemies.map(enemy => ({ ...structuredClone(enemy), health: enemyHealthValue(state, enemy) })), encounterDeckSize: state.encounterDeck.length,
     locationEntryErrors: locationEntryErrors(state),
     privateTest: state.skillTest && !state.skillTest.helpRequested ? { seat: state.skillTest.seat, publicLog: [...(state.skillTest.publicLog || [])] } : null,
-    totalDoom: (state.doom || 0) + [...state.enemies, ...state.locations, ...state.investigators.flatMap(i => [...i.assets, ...i.threat])].reduce((n, c) => n + (c.doom || 0), 0),
+    agendaDoom: agendaDoom(state),
+    totalDoom: totalDoom(state),
     investigators: state.investigators.map(inv => ({ ...pick(inv, INV_FIELDS),
       assets: (inv.assets || []).map(publicCardInstance),
       threat: (inv.threat || []).map(publicCardInstance),

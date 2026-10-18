@@ -135,7 +135,7 @@ test('全部卡图失败或纯文字模式下，卡文与图鉴仍可读', async
   await expect(detail.locator('.ah-card-full')).toContainText(/\S/)
 
   await detail.getByText('图片与语言设置').click()
-  await detail.getByLabel('纯文字模式（不请求远程图片）').check()
+  await detail.getByLabel('纯文字模式，不加载远程图片').check()
   const before = requested.length
   await detail.getByRole('button', { name: '背面' }).click()
   await detail.getByRole('button', { name: '正面' }).click()

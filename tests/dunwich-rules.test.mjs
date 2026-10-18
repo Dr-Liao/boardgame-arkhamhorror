@@ -289,7 +289,9 @@ test('D3 University: first agenda applies discard horror and late arrival skips 
   move(s, { action: 'endTurn' }); settle(s)
   assert.equal(s.investigators[0].horror, 2)
   assert.equal(s.agendas[s.agendaIndex].originalCode, '02044')
-  assert.ok(!s.agendas.some(agenda => agenda.originalCode === '02043'))
+  // "Advance directly to 2b": agenda 2 is flipped, not removed from the deck.
+  assert.ok(s.agendas.some(agenda => agenda.originalCode === '02043'))
+  assert.ok(s.locations.some(loc => loc.id === 'dormitories'))
 })
 
 test('D3 University: final agenda turns doom into one step toward the dormitories', () => {
@@ -388,7 +390,7 @@ test('D2 Altar: five sealed locations contain exactly the key, chamber and three
   assert.equal(under.filter(c => c === '02214').length, 1); assert.equal(under.filter(c => c === '02215').length, 1)
   assert.equal(s.encounterDeck.length, 26)
   assert.deepEqual([...s.scenarioZones.sacrifices].sort(), ['02217', '02218'])
-  const api = {}
+  const api = { random: () => 0 }
   s.scenarioZones.sacrifices = ['02040', '02061', '02080', '02217', '02218']
   const b = laterBehavior('bloodOnTheAltar')
   b.agendaReveal(s, { originalCode: '02196' }, api)
@@ -396,6 +398,7 @@ test('D2 Altar: five sealed locations contain exactly the key, chamber and three
   assert.equal(s.scenarioZones.sacrificed.length, 2)
   assert.equal(b.resolution(s, 'noResolution', [], api).bonus, 2)
   assert.equal(s.campaign.records.sacrificedToYogSothoth.length, 5)
+  assert.ok(s.campaign.records.sacrificedToYogSothoth.every(code => ALL_CARDS[code]?.unique))
 })
 
 test('D6 Altar: revealing the chamber and key allows attaching the key and entering', () => {
@@ -1044,8 +1047,13 @@ test('D8 Museum treacheries ready and attack with Horror, lose actions on a fail
   const horror = { id: 'horror-test', code: '02141', location: s.locations.at(-1).id, exhausted: true, doom: 0 }
   s.enemies.push(horror)
   s.investigators[1].location = inv.location
+  // Stalked in the Dark readies/engages only where the Horror already is.
   b.resolveEncounter(s, inv, { code: '02143' }, api)
-  assert.equal(horror.location, inv.location)
+  assert.equal(horror.location, s.locations.at(-1).id)
+  assert.equal(horror.exhausted, false)
+  assert.deepEqual(attacked, [])
+  horror.location = inv.location
+  b.resolveEncounter(s, inv, { code: '02143' }, api)
   assert.equal(horror.exhausted, false)
   assert.deepEqual(attacked.sort(), [0, 1])
   inv.actionsLeft = 3
@@ -1103,7 +1111,7 @@ test('D6 story allies react to treachery tests and evasion; Servant grants a dis
   const api = { choose: () => 'yes', drawCards: (seat, n) => { drawn += n }, gainClues: (seat, n) => { s.investigators[seat].clues += n } }
   const treachery = Object.keys(s.scenario.treacheries)[0]
   b.afterTest(s, inv, { success: true, skill: 'willpower', drawn: [], source: { type: 'encounter', code: treachery } }, api)
-  b.afterEvade(s, inv, {}, api)
+  b.afterEvade(s, inv, {}, null, api)
   assert.equal(drawn, 2); assert.equal(zebulon.exhausted, true); assert.equal(earl.exhausted, true)
   const target = s.locations[0]; target.clues = 2
   const before = target.clues
@@ -1613,4 +1621,150 @@ test('02316–02319 的幕行动弃顶3张并选择地点结算显现', () => {
   assert.equal(discarded, 1)
   assert.deepEqual(state.encounterDeck, [])
   assert.deepEqual(state.encounterDiscard, ['02326', '02329'])
+})
+
+// --- Regression tests for the 2026 card-implementation audit fixes ---
+
+test('fix: Clover Club agenda 1b advances directly to 2b without deleting agenda 2', () => {
+  const s = clubFixture('fix-club-chain')
+  s.campaign.scenarioResults.push({ scenarioId: 'extracurricularActivity', resolution: 'r2' })
+  s.doom = s.agendas[0].doomThreshold
+  move(s, { action: 'endTurn' })
+  settle(s)
+  assert.equal(s.agendas[s.agendaIndex].originalCode, '02065')
+  assert.ok(s.agendas.some(agenda => agenda.originalCode === '02064'))
+  assert.ok(!s.locations.some(location => location.id === 'laBellaLuna'))
+})
+
+test('fix: Where Doom Awaits act 2 cannot place clues on non-Altered locations', () => {
+  const s = chapterFixture('whereDoomAwaits')
+  const behavior = laterBehavior('whereDoomAwaits')
+  s.actIndex = 1
+  const plain = { id: 'plain', originalCode: '02285', traits: ['Dunwich', 'Woods'] }
+  const altered = { id: 'altered', originalCode: '02289', traits: ['Dunwich', 'Woods', 'Altered'] }
+  assert.equal(behavior.cluesOnReveal(s, plain), 0)
+  assert.equal(behavior.cluesOnReveal(s, altered), null)
+})
+
+test('fix: Doom Awaits paths hide whether they are Altered until revealed', () => {
+  const s = chapterFixture('whereDoomAwaits')
+  const paths = Object.values(s.scenario.locations).filter(loc => ['02285', '02289'].includes(loc.originalCode))
+  assert.ok(paths.length >= 2)
+  assert.ok(paths.every(path => path.unrevealedActualName && ['分歧之路', '异变之路'].includes(path.name)))
+})
+
+test('fix: Kidnapped pools only unique characters as Yog-Sothoth sacrifices', () => {
+  const s = chapterFixture('bloodOnTheAltar')
+  s.scenarioZones.sacrifices = ['02149', '02217', '02218']
+  s.scenarioZones.sacrificed = []
+  const behavior = laterBehavior('bloodOnTheAltar')
+  const api = { random: () => 0 }
+  behavior.agendaReveal(s, { originalCode: '02196' }, api)
+  behavior.agendaReveal(s, { originalCode: '02197' }, api)
+  assert.equal(s.scenarioZones.sacrificed.length, 2)
+  behavior.resolution(s, 'noResolution', [], api)
+  assert.ok(!s.campaign.records.sacrificedToYogSothoth.includes('02149'))
+  assert.ok(s.campaign.records.sacrificedToYogSothoth.every(code => ALL_CARDS[code]?.unique))
+})
+
+test('fix: Hunting Horror attaches Shadow-spawned when drawn from the encounter deck', () => {
+  const s = chapterFixture('theMiskatonicMuseum')
+  s.scenarioZones.void = { code: '02141', resources: 2 }
+  s.encounterDeck = [...Array(5).fill('02083'), '02141']
+  move(s, { action: 'scenarioAction', rule: 'd9Encounter' })
+  settle(s)
+  const horror = s.enemies.find(enemy => enemy.code === '02141')
+  assert.ok(horror)
+  assert.equal(horror.shadowSpawned, true)
+  assert.equal(horror.shadowResources, 3)
+  assert.equal(horror.massive, true)
+})
+
+test('fix: Museum cultist token does not teleport an in-play Hunting Horror', () => {
+  const s = chapterFixture('theMiskatonicMuseum')
+  const horror = { id: 'horror-fix', code: '02141', location: s.locations.at(-1).id, shadowResources: 1 }
+  s.enemies = [horror]
+  const before = horror.location
+  dunwichChaosAfterTest('theMiskatonicMuseum', s, s.investigators[0], { success: false, drawn: ['cultist'] }, {
+    spawn: () => assert.fail('must not spawn another Horror'), info() {},
+  })
+  assert.equal(horror.location, before)
+})
+
+test('fix: Passage into the Veil damages story allies without a slot field', () => {
+  const s = chapterFixture('theMiskatonicMuseum')
+  const inv = s.investigators[0]
+  inv.assets = [{ id: 'harold', code: '02138' }, { id: 'student', code: '02149' }]
+  const damaged = []
+  laterBehavior('theMiskatonicMuseum').resolveEncounter(s, inv, { code: '02144' }, {
+    test: (_seat, _skill, _difficulty, resolve) => resolve({ success: false, value: 1 }),
+    choose: () => 'damage',
+    directDamage: () => {},
+    damageAsset: (_seat, id, n) => damaged.push([id, n]),
+  })
+  assert.ok(damaged.some(([id]) => id === 'harold'))
+})
+
+test('fix: Exhibit Hall entry ends the turn', () => {
+  const s = chapterFixture('theMiskatonicMuseum')
+  let endedSeat = null
+  laterBehavior('theMiskatonicMuseum').locationEntered(s, s.investigators[0],
+    { id: 'exhibit', originalCode: '02132', traits: ['Miskatonic'] }, { endTurn: seat => { endedSeat = seat } }, [])
+  assert.equal(endedSeat, s.investigators[0].seat)
+})
+
+test('fix: Undimensioned and Unseen records calming or warning the townsfolk', () => {
+  const s = chapterFixture('undimensionedAndUnseen')
+  assert.ok(s.campaign.records.youCalmedTheTownsfolk || s.campaign.records.youWarnedTheTownsfolk)
+})
+
+test('fix: Prismatic Cascade is discarded when its last clue is removed', () => {
+  const s = chapterFixture('lostInTimeAndSpace')
+  const loc = { id: 'prismatic', name: '菱柱瀑布', originalCode: '02325', clues: 0 }
+  s.locations.push(loc)
+  const removed = []
+  laterBehavior('lostInTimeAndSpace').cluesRemoved(s, loc, 1, { remove: id => removed.push(id), info() {} })
+  assert.deepEqual(removed, ['prismatic'])
+  assert.ok(s.encounterDiscard.includes('02325'))
+})
+
+test('fix: Wizard of Yog-Sothoth attacks when a Hex is drawn from a player deck', () => {
+  const s = fixture()
+  const inv = s.investigators[0]
+  const wizard = { id: 'wizard', code: '02087', location: inv.location, engagedSeat: 0, fight: 1, evade: 1,
+    health: 5, damage: 2, horror: 0, traits: ['Humanoid', 'Cultist'] }
+  s.enemies = [wizard]
+  inv.engaged = ['wizard']
+  inv.deck = ['01171', '01088']
+  inv.damage = 0
+  move(s, { action: 'draw' })
+  settle(s)
+  assert.equal(s.investigators[0].damage, 2)
+})
+
+test('fix: attached weaknesses are not duplicated in the discard pile on reveal', () => {
+  const s = fixture()
+  s.investigators[0].deck = ['02007', '01088', '01088']
+  s.encounterDeck = ['ghoulMinion']
+  move(s, { action: 'draw' })
+  settle(s)
+  assert.equal(s.investigators[0].discard.filter(code => code === '02007').length, 0)
+})
+
+test('fix: Beginner\'s Luck discards until a Criminal enemy is discarded', () => {
+  const s = chapterFixture('theHouseAlwaysWins')
+  s.agendaIndex = 0
+  const seen = []
+  const spawned = []
+  club.behavior.actReveal(s, { originalCode: '02066' }, {
+    place() {},
+    discardUntilEnemy: (seat, predicate) => { seen.push([seat, predicate]); return '02078' },
+    spawn: (code, location) => spawned.push([code, location]),
+    shuffleEncounterDeck() {},
+  })
+  assert.equal(seen.length, 1)
+  const criminal = { traits: ['Criminal'] }
+  assert.equal(seen[0][1](criminal), true)
+  assert.equal(seen[0][1]({ traits: ['Monster'] }), false)
+  assert.deepEqual(spawned, [['02078', 'darkenedHall']])
 })

@@ -58,10 +58,17 @@ export const encounterRules = {
   },
   cardDrawn(state, inv, code, api) {
     const armitage = inv.assets.find(asset => asset.code === '02040' && !asset.exhausted)
-    if (!armitage || inv.threat.some(item => item.code === '02088') || !this.canGainResources(state, inv)) return
-    if (api.choose({ kind: 'reaction', source: '02040', seat: inv.seat, prompt: '横置阿米蒂奇并弃掉刚抽到的牌，获得 3 资源？',
-      options: [{ id: 'skip', label: '保留卡牌' }, { id: 'trigger', label: '弃牌并获得资源' }] }) === 'trigger') {
-      inv.hand.splice(inv.hand.lastIndexOf(code), 1); inv.discard.push(code); armitage.exhausted = true; inv.resources += 3
+    if (armitage && !inv.threat.some(item => item.code === '02088') && this.canGainResources(state, inv)) {
+      if (api.choose({ kind: 'reaction', source: '02040', seat: inv.seat, prompt: '横置阿米蒂奇并弃掉刚抽到的牌，获得 3 资源？',
+        options: [{ id: 'skip', label: '保留卡牌' }, { id: 'trigger', label: '弃牌并获得资源' }] }) === 'trigger') {
+        inv.hand.splice(inv.hand.lastIndexOf(code), 1); inv.discard.push(code); armitage.exhausted = true; inv.resources += 3
+      }
+    }
+    // Wizard of Yog-Sothoth: "When the engaged investigator draws a [[Hex]] or
+    // [[Pact]] card: Wizard of Yog-Sothoth attacks that investigator."
+    if (ALL_CARDS[code]?.traits?.some(trait => ['Hex', 'Pact'].includes(trait))) {
+      for (const wizard of state.enemies.filter(enemy => enemy.code === '02087'
+        && enemy.engagedSeat === inv.seat && textActive(state, enemy))) api.attack(wizard, inv)
     }
   },
   cluesGained(state, inv, _amount, api) {

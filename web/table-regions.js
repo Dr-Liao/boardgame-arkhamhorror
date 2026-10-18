@@ -10,6 +10,15 @@ const SCENARIO_REFERENCE = {
   bloodOnTheAltar: '02195', undimensionedAndUnseen: '02236', whereDoomAwaits: '02274', lostInTimeAndSpace: '02311',
 }
 
+// Only doom on the current agenda counts toward its threshold; doom sitting on
+// enemies/locations/assets is a separate pool and is shown as a side note.
+const agendaDoomValue = state => state.agendaDoom ?? state.doom ?? 0
+const doomClockLabel = (state, agenda) => {
+  const doom = agendaDoomValue(state)
+  const extra = Math.max(0, (state.totalDoom ?? doom) - doom)
+  return `毁灭 ${doom}/${agenda?.doomThreshold ?? '?'}${extra ? ` · 场上 +${extra}` : ''}`
+}
+
 export function createTableRegions(h, { openDetail, openChaosBag }) {
   const section = (className, label, ...children) => h('section', { className, 'aria-label': label }, ...children)
   // 附着卡压在场景/密谋卡下方，只露出上沿，点击查看卡面。
@@ -50,7 +59,7 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
       const active = state.status === 'playing' && !inv.defeated && !inv.resigned && inv.seat === actingSeat
       const thinking = active && player?.role === 'ai' && activity.processing && !activity.presenting
       const status = inv.defeated ? '已倒下' : inv.resigned ? '已撤退'
-        : active && player?.role === 'ai' ? (activity.presenting ? 'AI 回合 · 行动演出中' : thinking ? 'AI 回合 · 思考中…' : 'AI 回合 · 等待继续')
+        : active && player?.role === 'ai' ? (activity.presenting ? 'AI 行动演出中' : thinking ? 'AI 思考中…' : 'AI 等待继续')
         : active ? (activity.presenting ? '行动结算中' : activity.processing ? '正在提交行动…' : state.pendingChoice ? '处理中' : '行动中')
         : (state.turnsTaken || []).includes(inv.seat) ? '回合已结束' : '待命'
       const id = player?.id || player?.aiId || `座位 ${String(inv.seat + 1).padStart(2, '0')}`
@@ -84,13 +93,13 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
         h('span', {}, '混乱袋'), h('small', {}, `${state.chaosBag?.length || 0} 个标记`)),
       h('div', { className: 'ah-script-status' },
         h('span', { className: 'ah-script-clues' }, h('span', { className: 'ah-command-token' }, tableIcon('clue')), `线索 ${state.clues || 0}`),
-        h('span', { className: 'ah-script-doom' }, h('span', { className: 'ah-command-token' }, tableIcon('doom')), `毁灭 ${state.totalDoom ?? state.doom ?? 0}/${agenda?.doomThreshold ?? '?'}`),
+        h('span', { className: 'ah-script-doom' }, h('span', { className: 'ah-command-token' }, tableIcon('doom')), doomClockLabel(state, agenda)),
         h('div', { className: 'ah-doom-track', 'aria-label': '毁灭进度' }, Array.from({ length: Math.min(12, agenda?.doomThreshold || 6) }, (_, i) =>
-          h('i', { className: i < (state.totalDoom ?? state.doom ?? 0) ? 'is-filled' : '' }))))),
+          h('i', { className: i < agendaDoomValue(state) ? 'is-filled' : '' }))))),
       h('div', { className: 'ah-command-team' }, roster(state, players, activity), advanceButton))),
     headerPhases: state => h('nav', { className: 'ah-header-phases', 'aria-label': '回合阶段' }, [
-      ['mythos', '神话阶段', '毁灭 · 遭遇', 'eye'], ['investigation', '调查阶段', '移动 · 行动', 'clue'],
-      ['enemy', '敌军阶段', '猎手 · 攻击', 'sword'], ['upkeep', '整备阶段', '重整 · 补给', 'resource'],
+      ['mythos', '神话阶段', '放毁灭，抽遭遇牌', 'eye'], ['investigation', '调查阶段', '移动和执行行动', 'clue'],
+      ['enemy', '敌军阶段', '猎手移动，敌人攻击', 'sword'], ['upkeep', '整备阶段', '重整，抽牌拿资源', 'resource'],
     ].map(([id, label, detail, icon]) => h('div', { className: `ah-header-phase ah-phase-${id}` + (state.status === 'playing' && state.phase === id ? ' is-current' : ''),
       'aria-current': state.status === 'playing' && state.phase === id ? 'step' : 'false', title: detail },
       tableIcon(icon), h('span', {}, h('strong', {}, label), h('small', {}, detail))))),

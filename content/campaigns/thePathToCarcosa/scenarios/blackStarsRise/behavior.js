@@ -138,6 +138,22 @@ export function placeAgendaDoom(state, deckId, amount, api) {
   if (!deck) throw new Error(`未知黑星升起密谋牌堆：${deckId}`)
   deck.doom += amount
   if (deckId === 'a') state.doom = deck.doom
+  if (deckId === 'a') {
+    const wall = state.locations.find(location => location.id === 'outerWall')
+    if (wall?.originalCode === '03285') {
+      for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned && item.location === 'outerWall')) {
+        api.damage?.(inv.seat, 1)
+      }
+    }
+  }
+  if (deckId === 'c') {
+    const tower = state.locations.find(location => location.id === 'northTower')
+    if (tower?.originalCode === '03287') {
+      for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned && item.location === 'northTower')) {
+        api.horror?.(inv.seat, 1)
+      }
+    }
+  }
   const definition = definitionsFor(state.scenarioFlags.route, deckId)[deck.index]
   if (definition && deck.doom >= definition.doomThreshold) advanceAgendaDeck(state, deckId, api)
 }
@@ -272,7 +288,7 @@ export const behavior = {
     if (code === '03298' && inv.hand.length) moves.push({
       action: 'scenarioAction', rule: 'discardTowerCards', label: '弃掉最多3张手牌',
     })
-    if (inv.clues >= state.numInvestigators) {
+    if (active(state).reduce((sum, investigator) => sum + (investigator.clues || 0), 0) >= state.numInvestigators) {
       for (const deckId of ['a', 'c']) moves.push({
         action: 'scenarioAction',
         rule: 'hastenAgenda',
@@ -358,8 +374,67 @@ export const behavior = {
       state.scenarioFlags.ashleighDoomUsed = true
     } else throw new Error(`未知黑星升起行动：${move.rule}`)
   },
+  encounterGainsSurge(state, code) {
+    if (code !== '01136') return false
+    const agenda = state.agendas?.[state.agendaIndex]
+    return ['03276a', '03276b', '03277'].includes(codeOf(agenda))
+  },
+  enemyStatModifier(state, enemy, stat) {
+    const base = encounterRules.enemyStatModifier(state, enemy, stat)
+    if (stat !== 'fight') return base
+    const agenda = codeOf(state.agendas?.[state.agendaIndex])
+    const monster = enemy.traits?.some(trait => String(trait).toLowerCase() === 'monster')
+    return base + (monster && ['03279a', '03279b', '03280'].includes(agenda) ? 1 : 0)
+  },
+  commitIconMultiplier(state, inv, location) {
+    if (codeOf(location) !== '03286') return 1
+    const decks = state.scenarioFlags?.agendaDecks
+    if (!decks) return 1
+    return decks.c.doom > decks.a.doom ? 2 : 1
+  },
+  locationShroudModifier(state, location) {
+    if (codeOf(location) !== '03288') return 0
+    const decks = state.scenarioFlags?.agendaDecks
+    return decks && decks.a.doom > decks.c.doom ? -1 : 0
+  },
+  locationEntered(state, inv, location, api) {
+    const code = codeOf(location)
+    if (code !== '03289' && code !== '03290') return
+    const loseAction = { id: 'action', label: '失去 1 个行动' }
+    const draw = code === '03289'
+      ? { id: 'draw', label: '抽取遭遇弃牌堆顶的预兆诡计' }
+      : { id: 'draw', label: '抽取遭遇弃牌堆顶的异教徒敌人' }
+    const options = [loseAction, draw]
+    const choice = options.length === 1 ? options[0].id : api.choose({
+      kind: 'encounter', source: code, seat: inv.seat,
+      prompt: code === '03289' ? '垮塌的台阶：失去行动或抽取预兆诡计。' : '垮塌的台阶：弃置资产或抽取异教徒敌人。',
+      options,
+    })
+    if (choice === 'action') api.loseActions(inv.seat, 1)
+    else {
+      const trait = code === '03289' ? 'omen' : 'cultist'
+      const index = state.encounterDiscard.findLastIndex(card => ALL_CARDS[codeOf(card)]?.traits
+        ?.some(value => String(value).toLowerCase() === trait))
+      if (index >= 0) {
+        const card = state.encounterDiscard.splice(index, 1)[0]
+        state.encounterDeck.push(card)
+        api.drawEncounter(inv.seat)
+      } else {
+        api.loseActions(inv.seat, 1)
+      }
+    }
+  },
   afterTest(state, inv, result, api) {
     encounterRules.afterTest?.(state, inv, result, api)
+    const here = state.locations.find(location => location.id === inv.location)
+    if (result.success && result.source?.label === '调查' && codeOf(here) === '03284'
+      && result.value - result.difficulty <= 1) {
+      const decks = state.scenarioFlags.agendaDecks
+      if (decks) {
+        const target = decks.a.doom >= decks.c.doom ? 'a' : 'c'
+        placeAgendaDoom(state, target, 1, api)
+      }
+    }
     const hard = ['hard', 'expert'].includes(state.difficulty)
     const tokens = result.drawn || []
     if (tokens.includes('tablet') && (!result.success || (hard && result.value - result.difficulty < 1))) {

@@ -1,5 +1,6 @@
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
 import { awardStoryCard } from '../../../../../src/campaign/campaign-effects.js'
+import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { dunwichChaosToken, dunwichChaosAfterTest } from '../../dunwich-chaos.js'
 
@@ -45,13 +46,19 @@ export const behavior = {
     if (location.id === 'scienceBuilding') api.place('alchemyLabs')
     if (location.id === 'facultyOffices' && location.originalCode === '02054') {
       const humanoid = code => (state.scenario.enemies[code]?.traits || []).some(trait => trait.toLowerCase() === 'humanoid')
-      for (const pile of [state.encounterDeck, state.encounterDiscard]) {
-        const index = pile.findLastIndex(humanoid)
-        if (index < 0) continue
-        api.spawn(pile.splice(index, 1)[0], location.id)
-        api.shuffleEncounterDeck()
-        break
+      const matches = []
+      for (const [pileName, pile] of [['encounterDeck', state.encounterDeck], ['encounterDiscard', state.encounterDiscard]]) {
+        pile.forEach((code, index) => { if (humanoid(code)) matches.push({ code, index, pileName }) })
       }
+      if (!matches.length) return
+      const chosen = matches.length === 1 ? matches[0] : matches.find(match => match.code === api.choose({
+        kind: 'card', source: '02054', seat: state.currentSeat ?? state.campaign.leadSeat, prompt: '选择要生成在教师办公室的类人敌人。',
+        options: matches.map(match => ({ id: match.code, cardCode: match.code, label: `${ALL_CARDS[match.code]?.nameZh || match.code}（${match.pileName === 'encounterDeck' ? '遭遇牌库' : '遭遇弃牌堆'}）` })),
+      }))
+      const pile = chosen.pileName === 'encounterDeck' ? state.encounterDeck : state.encounterDiscard
+      pile.splice(chosen.index, 1)
+      api.spawn(chosen.code, location.id)
+      api.shuffleEncounterDeck()
     }
   },
   turnEnded(state, inv, api) {
@@ -81,6 +88,11 @@ export const behavior = {
       if (completedHouseAlwaysWins(state)) {
         state.scenarioZones.underLocations ||= {}
         state.scenarioZones.underLocations.alchemyLabs = '02059'
+      } else if (!state.scenarioZones.removed?.includes('02059')) {
+        // Extracurricular Activity as the first scenario: remove the concoction.
+        state.scenarioZones.removed ||= []
+        state.scenarioZones.removed.push('02059')
+        state.scenarioZones.concoctionClaimed = true
       }
     } else if (act.originalCode === '02047') api.finish('r3')
   },
@@ -89,7 +101,9 @@ export const behavior = {
       for (const inv of state.investigators.filter(inv => !inv.defeated && !inv.resigned)) {
         if (inv.discard.length >= 5) api.horror(inv.seat, inv.discard.length >= 10 ? 2 : 1)
       }
-      if (completedHouseAlwaysWins(state)) state.agendas.splice(1, 1)
+      // "Advance directly to agenda 2b" is applied by agendaChain once agenda 2
+      // is revealed; the agenda itself must not be removed from the deck.
+      if (completedHouseAlwaysWins(state)) state.scenarioFlags.advanceDirectlyToAgenda = '02043'
     } else if (agenda.originalCode === '02043') {
       api.place('dormitories')
       const experiment = state.enemies.find(enemy => enemy.code === '02058')
@@ -99,6 +113,17 @@ export const behavior = {
       for (const inv of state.investigators.filter(inv => !inv.defeated && !inv.resigned)) api.horror(inv.seat, 3)
       api.finish('r4')
     }
+  },
+  agendaChain(state, agenda) {
+    const target = state.scenarioFlags.advanceDirectlyToAgenda
+    if (!target || (agenda.originalCode || agenda.code) !== target) return false
+    delete state.scenarioFlags.advanceDirectlyToAgenda
+    return true
+  },
+  ignoreLocationRevealText(state, inv, location) {
+    // "Jazz" Mulligan: ignore the text on each unrevealed [[Miskatonic]] location.
+    return (inv?.assets || []).some(asset => asset.code === '02060')
+      && (location.traits || []).some(trait => String(trait).toLowerCase() === 'miskatonic')
   },
   moveExperiment(state, experiment, target) {
     const queue = [[experiment.location]]
@@ -165,12 +190,7 @@ export const behavior = {
     if (move.rule === 'unionHeal') {
       inv.damage = Math.max(0, inv.damage - 1); inv.horror = Math.max(0, inv.horror - 1)
     } else if (move.rule === 'searchConcoction') {
-      const loc = state.locations.find(location => location.id === inv.location)
-      api.test(inv.seat, 'intellect', loc.shroud + (loc.shroudMod || 0) + (state.fogMod || 0), result => {
-        if (!result.success) {
-          api.info(`${inv.name} 调查炼金实验室失败，未能取得炼金试剂。`)
-          return
-        }
+      api.investigateTest(inv.seat, { onSuccess: () => {
         if (!concoctionState(state).available) {
           api.info('炼金实验室下方没有可取得的炼金试剂。')
           return
@@ -180,7 +200,7 @@ export const behavior = {
         state.scenarioZones.concoctionClaimed = true
         api.giveAsset(inv.seat, '02059')
         api.info(`${inv.name} 从炼金实验室取得了「炼金试剂」。`)
-      })
+      } })
     } else if (move.rule === 'concoctionAttack') {
       const enemy = state.enemies.find(item => item.id === move.enemyId && item.location === inv.location)
       if (!enemy || !inv.assets.some(asset => asset.code === '02059')) throw new Error('没有合法的炼金试剂目标')

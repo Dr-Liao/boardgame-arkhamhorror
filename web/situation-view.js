@@ -7,8 +7,8 @@ import { cardSymbol } from './card-text.js'
 
 const IMG = '/mods/arkhamhorror/img/'
 const PHASES = [
-  ['mythos', '神话阶段', '毁灭 · 遭遇', 'eye'], ['investigation', '调查阶段', '移动 · 行动', 'clue'],
-  ['enemy', '敌军阶段', '猎手 · 攻击', 'sword'], ['upkeep', '整备阶段', '重整 · 补给', 'resource'],
+  ['mythos', '神话阶段', '放毁灭，抽遭遇牌', 'eye'], ['investigation', '调查阶段', '移动和执行行动', 'clue'],
+  ['enemy', '敌军阶段', '猎手移动，敌人攻击', 'sword'], ['upkeep', '整备阶段', '重整，抽牌拿资源', 'resource'],
 ]
 const STAGES = [['ST.1', '开始'], ['ST.2', '投入'], ['ST.3', '揭示'], ['ST.4', '效果'], ['ST.5', '计算'], ['ST.6', '判定'], ['ST.7', '结算'], ['ST.8', '结束']]
 const SKILLS = [['willpower', '意志'], ['intellect', '智识'], ['combat', '战斗'], ['agility', '敏捷']]
@@ -50,7 +50,7 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
     return h('header', { className: 'ah-situ-head' },
       h('div', { className: 'ah-situ-round', title: '当前回合' }, h('small', {}, '回合'), h('strong', {}, String(st.round || 1))),
       h('div', { className: 'ah-situ-title' },
-        h('small', {}, '调查局势 · CASE STATUS'),
+        h('small', {}, '调查局势'),
         h('h2', {}, st.scenario?.name?.split('：').at(-1) || st.scenario?.name || '剧本'),
         h('p', {}, meta)),
       dismiss)
@@ -80,7 +80,7 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
         h('small', {}, `技能检定 · 已投入 ${st.skillTest.committed?.length || 0} 张`),
         h('ol', {}, STAGES.map(([id, label], i) => h('li', { className: i < stage ? 'is-done' : i === stage ? 'is-current' : '', title: id + ' ' + label },
           h('span', {}, String(i + 1)), h('small', {}, label))))) : null,
-      h('small', { className: 'ah-rules-note' }, '简化模式 · 当前仅开放部分 Core 卡牌与《夜之狂热》流程'))
+      h('small', { className: 'ah-rules-note' }, '简化模式：当前仅开放部分 Core 卡牌与《夜之狂热》流程'))
   }
 
   const scene = (item, type, label, extra) => h('div', { className: 'ah-situ-scene is-' + type },
@@ -91,7 +91,8 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
 
   const scenarioPanel = (st, leave) => {
     const act = st.acts?.[st.actIndex], agenda = st.agendas?.[st.agendaIndex]
-    const doom = st.totalDoom ?? st.doom ?? 0, threshold = agenda?.doomThreshold
+    const doom = st.agendaDoom ?? st.doom ?? 0, threshold = agenda?.doomThreshold
+    const extraDoom = Math.max(0, (st.totalDoom ?? doom) - doom)
     const objective = act?.objective, costsClues = ['clues', 'actClues'].includes(objective?.type)
     const required = costsClues ? (objective.perInvestigator || 0) * (st.numInvestigators || st.investigators.length) : null
     const clues = objective?.type === 'actClues' ? st.actClues || 0
@@ -102,7 +103,7 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
       h('h3', {}, tableIcon('book'), '剧本进度'),
       h('div', { className: 'ah-situ-scenes' },
         scene(agenda, 'agenda', '密谋', h('div', { className: 'ah-situ-progress is-doom' },
-          h('span', {}, tableIcon('doom'), `毁灭 ${doom}/${threshold ?? '?'}`),
+          h('span', {}, tableIcon('doom'), `毁灭 ${doom}/${threshold ?? '?'}${extraDoom ? ` · 场上 +${extraDoom}` : ''}`),
           h('span', { className: 'ah-situ-progress-track', 'aria-hidden': 'true' },
             Array.from({ length: Math.min(12, threshold || 6) }, (_, i) => h('i', { className: i < doom ? 'is-filled' : '' }))))),
         scene(act, 'act', '场景', h('div', { className: 'ah-situ-progress is-clue' + (costsClues && clues >= required ? ' is-ready' : '') },

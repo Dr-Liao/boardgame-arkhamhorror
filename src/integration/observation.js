@@ -1,4 +1,4 @@
-import { totalDoom, enemyHealthValue } from '../engine/rules-state.js'
+import { agendaDoom, totalDoom, enemyHealthValue } from '../engine/rules-state.js'
 import { campaignView } from '../campaign/campaign.js'
 import { actingSeats, decisionSeat, enemyEvadeValue, enemyFightValue, getMaxSanity, getStat, legalMoves, scriptActionHints } from '../engine/engine.js'
 import { contentRegistry } from '../../content/registered.js'
@@ -76,6 +76,7 @@ export function viewState(state, observerSeat = null) {
   view.locationEntryErrors = locationEntryErrors(state)
   view.campaign = campaignView(state.campaign, observer)
   view.campaignStory = campaignStory(state, contentRegistry, observer)
+  view.agendaDoom = agendaDoom(state)
   view.totalDoom = totalDoom(state)
   view.chaos = state.chaos ? { revealed: [...state.chaos.revealed], sealed: structuredClone(state.chaos.sealed), removed: [...state.chaos.removed] } : null
   const privateTest = state.skillTest && !state.skillTest.helpRequested && state.skillTest.seat !== observer

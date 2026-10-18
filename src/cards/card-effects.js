@@ -9,10 +9,11 @@
 //   event:  { event }
 //   skill:  { skill: { onSuccess: { draw?|damageBonus?|clueBonus?|healHorror? } } }   // 投入后检定成功的附加效果
 //   weakness:{ weakness }                       // 揭示时结算（含 threat 持续型弱点）
-//   ally:   { combatAura?, attackMonsterDamageBonus? }                                  // 丽塔·钱德勒
 //   passive: { stats?, fightDamage?, healthBonus?, sanityBonus?, handSizeBonus?, handSlotsBonus? }
 //   abilities: [{ label, cost:{action?, exhaust?, uses?, resources?, discardSelf?}, effect }]
 //   freeTriggers: [{ skill, cost:{resources}, bonus }]   // 天赋牌：检定前自动投入
+//   engine: 'xxx'   // 该卡的效果由 engine.js 按卡号硬编码，本文件只登记、参数化不了；
+//                   // 出现的取值见 engineHandledEffects()，供校验与检索使用。
 //
 // 威胁区域（threat）弱点 schema（weakness.type === 'threat'）：
 //   mods: { allSkills?:N }             —— 全技能修正
@@ -51,6 +52,10 @@ export const EFFECTS = {
   ...dunwichBasicWeaknessEffects,
   ...carcosaSignatureEffects,
   ...carcosaPlayerEffects,
+  // Story assets earned during The Path to Carcosa.
+  '03143': { passive: { sanityBonus: -1, conditionalStats: {
+    remainingSanityAtMost: 3, stats: { willpower: 1, combat: 1, agility: 1 },
+  } } },
   // =========================================================================
   // 中立 Neutral（0 级）
   // =========================================================================
@@ -84,8 +89,10 @@ export const EFFECTS = {
   '01093': { // 绝处逢生 Unexpected Courage（技能，纯野性图标）
     skill: {},
   },
-  '01094': { assetCapacity: true },
-  '01095': { assetCapacity: true },
+  // 防弹衣 / 远古印记护身符：卡面没有规则文本，只提供印刷生命/神智作为承伤容量，
+  // 承伤逻辑在 engine.assignHarm() 里按 cardDef(code).health/sanity 通用处理。
+  '01094': { engine: 'printedSoak' },
+  '01095': { engine: 'printedSoak' },
 
   // =========================================================================
   // 守卫者 Guardian（0 级 + XP）
@@ -138,7 +145,7 @@ export const EFFECTS = {
     event: { type: 'cancelEnemyAttack' },
   },
   '01024': { // 炸药爆破 Dynamite Blast
-    event: { type: 'dealDamageAll', amount: 3, location: 'choice', investigators: true },
+    event: { type: 'dealDamageAll', amount: 3, location: 'choice', investigators: true, fx: 'dynamite' },
   },
   '01025': { // 致命打击 Vicious Blow（技能）
     skill: { onSuccess: { damageBonus: 1 } },
@@ -383,8 +390,8 @@ export const EFFECTS = {
   // =========================================================================
   // 幸存者 Survivor（0 级 + XP）
   // =========================================================================
-  '01072': { // 皮大衣 Leather Coat
-    passive: { assetCapacity: true },
+  '01072': { // 皮大衣 Leather Coat（无规则文本，印刷生命 2 作为承伤容量）
+    engine: 'printedSoak',
   },
   '01073': { // 拾荒 Scavenging
     reactions: [
@@ -471,6 +478,9 @@ export const EFFECTS = {
     ],
   },
   '01014': { // 温蒂的护身符 Wendy's Amulet
+    // 两条能力都在 engine.js 里按卡号实现：弃牌堆顶事件可当手牌打出（engine.js:2021-2027、
+    // 8160、8653-8655），打出的事件改为放到牌库底（engine.js disposePlayedEvent）。
+    engine: 'wendyAmulet',
   },
 
   // =========================================================================
@@ -505,8 +515,8 @@ export const EFFECTS = {
   // =========================================================================
   // 剧情资产（丽塔·钱德勒 01117，场景 2 推进时在客厅生成）
   // =========================================================================
-  '01117': {
-    ally: { combatAura: 1, attackMonsterDamageBonus: 1 },
+  '01117': { // 剧情资产：丽塔·钱德勒（光环/谈判/献祭都由 engine.js 按卡号硬编码）
+    engine: 'litaAura',
   },
 }
 
@@ -542,6 +552,17 @@ export const INVESTIGATOR_ABILITIES = {
 // 返回所有「可玩玩家卡」的 code 列表（含纯技能牌，其图标来自 cards-data.js）。
 export function playablePlayerCardCodes() {
   return Object.keys(EFFECTS)
+}
+
+// 「数据登记 + 引擎实现」的卡：engine 标记 → 卡号列表。
+// 这些卡的卡文仍由 engine.js 按卡号硬编码，本表用于检索与一致性校验。
+export function engineHandledEffects() {
+  const out = {}
+  for (const [code, effect] of Object.entries(EFFECTS)) {
+    const marker = effect && effect.engine
+    if (typeof marker === 'string') (out[marker] ||= []).push(code)
+  }
+  return out
 }
 
 // 核心包应编码效果的卡牌 code（用于 Phase 3.5 校验：无「未实现」占位）。

@@ -4,7 +4,7 @@ import { createGameState, applyMove, validateMove, legalMoves, decisionSeat } fr
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { SCENARIOS } from '../src/cards/scenarios-data.js'
-import { totalDoom } from '../src/engine/rules-state.js'
+import { totalDoom, agendaDoom } from '../src/engine/rules-state.js'
 
 const clone = value => JSON.parse(JSON.stringify(value))
 function answer(state, optionId) {
@@ -368,18 +368,21 @@ test('N3 集结幕二限制走廊贡献和轮末窗口', () => {
   assert.equal(state.clues, 6)
 })
 
-test('N3 在场毁灭参与阈值，议程推进清除各区域毁灭', () => {
+test('N3 只有密谋上的毁灭参与阈值，议程推进保留场上毁灭', () => {
   const state = fixture()
   const threshold = state.agendas[0].doomThreshold
   enemy(state, { engagedSeat: null, exhausted: true, doom: threshold - 1 })
   asset(state, '01072', { doom: 1 })
-  assert.equal(totalDoom(state), threshold)
+  state.doom = threshold - 1
+  assert.equal(agendaDoom(state), threshold - 1)
+  assert.equal(totalDoom(state), 2 * threshold - 1)
   execute(state, { action: 'endTurn' })
   assert.equal(state.pendingChoice.kind, 'agenda')
   answer(state, 'horror')
   settle(state)
   assert.equal(state.agendaIndex, 1)
-  assert.equal(totalDoom(state), 0)
+  assert.equal(agendaDoom(state), 0)
+  assert.equal(totalDoom(state), threshold)
 })
 
 test('N3 地点进入时揭示且再次进入不重复补充线索', () => {

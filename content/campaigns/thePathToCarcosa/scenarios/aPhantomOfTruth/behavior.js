@@ -184,6 +184,83 @@ export const behavior = {
   afterTest(state, inv, result, api) {
     encounterRules.afterTest?.(state, inv, result, api)
     carcosaChaosAfterTest('aPhantomOfTruth', state, inv, result, api)
+    if (result.success && result.source?.label === '调查'
+      && state.locations.find(location => location.id === inv.location)?.originalCode === '03215') {
+      state.scenarioFlags.pereLachaiseLock = { seat: inv.seat, round: state.round }
+    }
+  },
+  movementError(state, inv) {
+    const lock = state.scenarioFlags?.pereLachaiseLock
+    if (lock && lock.seat === inv.seat && lock.round === state.round
+      && state.locations.find(location => location.id === inv.location)?.originalCode === '03215') {
+      return '拉雪兹神父公墓：本回合不能离开'
+    }
+    const marais = state.scenarioFlags?.leMaraisLock
+    if (marais && marais.seat === inv.seat && marais.round === state.round
+      && state.locations.find(location => location.id === inv.location)?.originalCode === '03218') {
+      return '玛黑区：本回合不能离开'
+    }
+    return null
+  },
+  locationEntered(state, inv, location, api) {
+    encounterRules.locationEntered?.(state, inv, location, api)
+    if (original(location) === '03218') state.scenarioFlags.leMaraisLock = { seat: inv.seat, round: state.round }
+  },
+  afterEvade(state, inv, enemy, result, api) {
+    encounterRules.afterEvade?.(state, inv, enemy, result, api)
+    if (!result?.success || original(state.locations.find(location => location.id === inv.location)) !== '03216') return
+    if (state.scenarioFlags.canalMoveRound === state.round) return
+    state.scenarioFlags.canalMoveRound = state.round
+    const here = state.locations.find(location => location.id === inv.location)
+    const destinations = (here?.connections || []).filter(id => state.locations.some(location => location.id === id))
+    if (!destinations.length) return
+    const destination = destinations.length === 1 ? destinations[0] : api.choose({
+      kind: 'location', source: '03216', seat: inv.seat, prompt: '选择把敌人移动到的连接地点。',
+      options: destinations.map(id => ({ id, label: state.locations.find(location => location.id === id)?.name || id })),
+    })
+    api.moveEnemy(enemy, destination)
+  },
+  turnBegins(state, inv, api) {
+    if (original(state.locations.find(location => location.id === inv.location)) !== '03217') return
+    if (state.scenarioFlags.leMaraisDrawRound === state.round) return
+    state.scenarioFlags.leMaraisDrawRound = state.round
+    api.drawCards(inv.seat, 1)
+  },
+  enemyConnections(state, enemy, location) {
+    if (!enemy.traits?.some(trait => String(trait).toLowerCase() === 'byakhee')) return []
+    if (location?.id === 'gardensOfLuxembourg') return []
+    if (!state.investigators.some(inv => !inv.defeated && !inv.resigned && inv.location === 'gardensOfLuxembourg')) return []
+    return ['gardensOfLuxembourg']
+  },
+  resolveEncounter(state, inv, card, api) {
+    const code = original(card)
+    if (code === '03223') {
+      api.test(inv.seat, 'intellect', 4, result => {
+        if (result.success) return
+        const failedBy = Math.max(1, result.difficulty - result.value)
+        const options = state.doom > 0
+          ? [{ id: 'doom', label: '从当前密谋移除 1 个毁灭' }, { id: 'horror', label: `承受 ${failedBy} 点恐惧` }]
+          : [{ id: 'horror', label: `承受 ${failedBy} 点恐惧` }]
+        const choice = options.length === 1 ? 'horror' : api.choose({
+          kind: 'encounter', source: code, seat: inv.seat, prompt: '双生太阳：移除毁灭或承受恐惧。', options,
+        })
+        if (choice === 'doom') state.doom = Math.max(0, state.doom - 1)
+        else api.horror(inv.seat, failedBy)
+      })
+      return false
+    }
+    if (code === '03227') {
+      const doubt = count(state, 'doubt')
+      const conviction = count(state, 'conviction')
+      const doubtRoute = doubt >= conviction
+      const skill = doubtRoute ? 'intellect' : 'willpower'
+      const difficulty = doubtRoute ? (inv.willpower || 0) : (inv.intellect || 0)
+      api.test(inv.seat, skill, difficulty, result => {
+        if (!result.success) api.damage(inv.seat, 2)
+      })
+      return false
+    }
+    return encounterRules.resolveEncounter(state, inv, card, api)
   },
   locationRevealed(state, location, api) {
     if (location.originalCode !== '03211') return
@@ -204,6 +281,10 @@ export const behavior = {
   },
   roundEnded(state, api) {
     encounterRules.roundEnded?.(state, api)
+    delete state.scenarioFlags?.pereLachaiseLock
+    delete state.scenarioFlags?.leMaraisLock
+    delete state.scenarioFlags?.canalMoveRound
+    delete state.scenarioFlags?.leMaraisDrawRound
     if (state.actIndex === 0) {
       const doom = state.doom + state.locations.reduce((sum, location) => sum + (location.doom || 0), 0)
         + state.enemies.reduce((sum, enemy) => sum + (enemy.doom || 0), 0)

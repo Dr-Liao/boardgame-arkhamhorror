@@ -116,7 +116,7 @@ for(const width of [1440,390]) test(`升级选卡、替换、暂存和详情保�
   await expect(page.getByRole('dialog',{name:'游戏规则书'})).toBeVisible()
   await page.keyboard.press('Escape')
   expect(await offset(hub)).toEqual(hubBefore)
-  await hub.getByRole('button',{name:'加入升级方案 · 1 XP'}).click()
+  await hub.getByRole('button',{name:'加入升级方案，花费 1 XP'}).click()
   await expect(hub.locator('.ah-upgrade-preview')).toContainText('已加入 1 次升级')
   await expect(hub.getByRole('button',{name:'撤销所有更改'})).toBeVisible()
   await expect(hub.getByRole('button',{name:'保存升级方案',exact:true})).toBeVisible()

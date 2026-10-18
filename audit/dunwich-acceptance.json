@@ -19,16 +19,20 @@
     "verified": 333,
     "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 333
+    "testsPassed": 384
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
-      "sha256": "81d8a2c08640f4cc1459c3e48fbe118daf72c74f65256745e0d5d7e19682ba40"
+      "sha256": "d7387897abe4aad35efaa50b9bacec706039a4acdf4280f2f6c74bd7041539f2"
+    },
+    {
+      "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+      "sha256": "5e936892e230e16dd734db265a9f9af20e6da006fcad07dc019b1c7292c56d37"
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
-      "sha256": "071f58200526f47359657320846ad9806be710720fea8699e6f4a170b72efd0d"
+      "sha256": "81f54b2c1b0fe62739a0ca9c7aac693e323b4d65b664b516def5adba4a0f93d1"
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
@@ -333,6 +337,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02025 逃跑本能 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02025 逃跑本能 印刷效果行为验收"
         }
       ]
     },
@@ -369,6 +377,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02028 礼寻术 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02028 礼寻术 印刷效果行为验收"
         }
       ]
     },
@@ -381,6 +393,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02029 仪式蜡烛 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02029 仪式蜡烛 印刷效果行为验收"
         }
       ]
     },
@@ -417,6 +433,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02032 消防斧 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02032 消防斧 印刷效果行为验收"
         }
       ]
     },
@@ -465,6 +485,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02036 弯刀 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02036 弯刀 印刷效果行为验收"
         }
       ]
     },
@@ -1305,6 +1329,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02106 弟兄塞维尔 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02106 弟兄塞维尔 印刷效果行为验收"
         }
       ]
     },
@@ -1317,6 +1345,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02107 “我有个计划！” 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02107 “我有个计划！” 印刷效果行为验收"
         }
       ]
     },
@@ -1329,6 +1361,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02108 探路者 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02108 探路者 印刷效果行为验收"
         }
       ]
     },
@@ -1353,6 +1389,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02110 适应性 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02110 适应性 印刷效果行为验收"
         }
       ]
     },
@@ -1365,6 +1405,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02111 过度深入 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02111 过度深入 印刷效果行为验收"
         }
       ]
     },
@@ -1377,6 +1421,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02112 死亡之歌 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02112 死亡之歌 印刷效果行为验收"
         }
       ]
     },
@@ -1389,6 +1437,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02113 哎呀！ 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02113 哎呀！ 印刷效果行为验收"
         }
       ]
     },
@@ -1401,6 +1453,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02114 灭火器 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02114 灭火器 印刷效果行为验收"
         }
       ]
     },
@@ -1413,6 +1469,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02115 照明弹 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02115 照明弹 印刷效果行为验收"
         }
       ]
     },
@@ -1797,6 +1857,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02147 子弹袋 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02147 子弹袋 印刷效果行为验收"
         }
       ]
     },
@@ -1833,6 +1897,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02150 推理 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02150 推理 印刷效果行为验收"
         }
       ]
     },
@@ -1845,6 +1913,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02151 “我要走了！” 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02151 “我要走了！” 印刷效果行为验收"
         }
       ]
     },
@@ -1869,6 +1941,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02153 催眠术 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02153 催眠术 印刷效果行为验收"
         }
       ]
     },
@@ -1905,6 +1981,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02156 诱敌深入 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02156 诱敌深入 印刷效果行为验收"
         }
       ]
     },
@@ -1917,6 +1997,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02157 宝物猎人 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02157 宝物猎人 印刷效果行为验收"
         }
       ]
     },
@@ -1929,6 +2013,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02158 魅力超凡 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02158 魅力超凡 印刷效果行为验收"
         }
       ]
     },
@@ -2253,6 +2341,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02185 锐利目光 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02185 锐利目光 印刷效果行为验收"
         }
       ]
     },
@@ -2277,6 +2369,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02187 高等教育 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02187 高等教育 印刷效果行为验收"
         }
       ]
     },
@@ -2289,6 +2385,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02188 孤狼 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02188 孤狼 印刷效果行为验收"
         }
       ]
     },
@@ -2301,6 +2401,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02189 街头浪子 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02189 街头浪子 印刷效果行为验收"
         }
       ]
     },
@@ -2313,6 +2417,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02190 逆反 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02190 逆反 印刷效果行为验收"
         }
       ]
     },
@@ -2325,6 +2433,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02191 鲜血盟约 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02191 鲜血盟约 印刷效果行为验收"
         }
       ]
     },
@@ -2337,6 +2449,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02192 随机应变 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02192 随机应变 印刷效果行为验收"
         }
       ]
     },
@@ -2349,6 +2465,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02193 拳击家 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02193 拳击家 印刷效果行为验收"
         }
       ]
     },
@@ -2733,6 +2853,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02225 “如果它会流血……” 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02225 “如果它会流血……” 印刷效果行为验收"
         }
       ]
     },
@@ -2745,6 +2869,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02226 春田M1903 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02226 春田M1903 印刷效果行为验收"
         }
       ]
     },
@@ -2757,6 +2885,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02227 追根究底 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02227 追根究底 印刷效果行为验收"
         }
       ]
     },
@@ -2769,6 +2901,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02228 暴露弱点 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02228 暴露弱点 印刷效果行为验收"
         }
       ]
     },
@@ -2781,6 +2917,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02229 思维敏捷 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02229 思维敏捷 印刷效果行为验收"
         }
       ]
     },
@@ -2805,6 +2945,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02231 机会主义者 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02231 机会主义者 印刷效果行为验收"
         }
       ]
     },
@@ -2817,6 +2961,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02232 艾丽莎·格雷厄姆 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02232 艾丽莎·格雷厄姆 印刷效果行为验收"
         }
       ]
     },
@@ -2829,6 +2977,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02233 礼寻术 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02233 礼寻术 印刷效果行为验收"
         }
       ]
     },
@@ -2853,6 +3005,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02235 求生本能 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02235 求生本能 印刷效果行为验收"
         }
       ]
     },
@@ -3153,6 +3309,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02260 领导力 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02260 领导力 印刷效果行为验收"
         }
       ]
     },
@@ -3213,6 +3373,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02265 乔伊“老鼠”弗吉尔 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02265 乔伊“老鼠”弗吉尔 印刷效果行为验收"
         }
       ]
     },
@@ -3249,6 +3413,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02268 无所畏惧 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02268 无所畏惧 印刷效果行为验收"
         }
       ]
     },
@@ -3261,6 +3429,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02269 奥鲁斯的珠宝 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02269 奥鲁斯的珠宝 印刷效果行为验收"
         }
       ]
     },
@@ -3273,6 +3445,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02270 不期而遇 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02270 不期而遇 印刷效果行为验收"
         }
       ]
     },
@@ -3285,6 +3461,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02271 鸿运当头 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02271 鸿运当头 印刷效果行为验收"
         }
       ]
     },
@@ -3297,6 +3477,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02272 华服 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02272 华服 印刷效果行为验收"
         }
       ]
     },
@@ -3621,6 +3805,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02299 致命打击 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02299 致命打击 印刷效果行为验收"
         }
       ]
     },
@@ -3633,6 +3821,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02300 屠怪勇士 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02300 屠怪勇士 印刷效果行为验收"
         }
       ]
     },
@@ -3657,6 +3849,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02302 威廉·T·马尔森博士 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02302 威廉·T·马尔森博士 印刷效果行为验收"
         }
       ]
     },
@@ -3717,6 +3913,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02307 守护结界 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02307 守护结界 印刷效果行为验收"
         }
       ]
     },
@@ -3729,6 +3929,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02308 安奎娜 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02308 安奎娜 印刷效果行为验收"
         }
       ]
     },
@@ -3741,6 +3945,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02309 反复尝试 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02309 反复尝试 印刷效果行为验收"
         }
       ]
     },

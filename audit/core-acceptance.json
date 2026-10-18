@@ -20,7 +20,7 @@
     "verified": 183,
     "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 370
+    "testsPassed": 373
   },
   "testFiles": [
     {
@@ -41,7 +41,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
-      "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+      "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
     },
     {
       "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
@@ -53,7 +53,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
-      "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+      "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
     },
     {
       "file": "games/arkhamhorror/tests/core-n4.test.mjs",
@@ -1649,7 +1649,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
-          "test": "Core 01102 银暮祭司每次攻击后放毁灭，但不立即推进"
+          "test": "Core 01102 银暮祭司攻击后放毁灭，达到阈值立即推进密谋"
         }
       ]
     },
@@ -1699,6 +1699,10 @@
       "type": "agenda",
       "status": "verified",
       "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01105 全员空手时仍可选择随机弃掉 1 张手牌的分支"
+        },
         {
           "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
           "test": "Core 01105 议程一两个背面分支分别弃牌或队长受恐惧"
@@ -2248,6 +2252,10 @@
       "status": "verified",
       "evidence": [
         {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01143 01169 场上毁灭不计入密谋阈值，推进密谋时也保留"
+        },
+        {
           "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
           "test": "Core 01143 议程一从弃牌找出怪物强制生成主道路并放毁灭"
         }
@@ -2576,6 +2584,10 @@
       "status": "verified",
       "evidence": [
         {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01143 01169 场上毁灭不计入密谋阈值，推进密谋时也保留"
+        },
+        {
           "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
           "test": "Core 01169 01170 无空地点则弃置，有敌人的地点不算空地点"
         },
@@ -2614,6 +2626,10 @@
         {
           "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
           "test": "Core 01171 神秘咏唱按路径选择最近异教徒且不会立即推进议程"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
+          "test": "Core 01171 神秘咏唱无 cultist 时同时检索遭遇牌库与弃牌堆"
         }
       ]
     },
