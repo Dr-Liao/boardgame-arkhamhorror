@@ -3,6 +3,7 @@
 # 需要的仓库 Secret：
 #   BOARDGAME_UPDATE_PRIVATE_KEY  与大厅相同的更新签名私钥
 #   HALL_REPO_TOKEN               可选；大厅仓库为私有时，提供有读取权限的 token
+# 可选的 Gitee 同步：仓库变量 GITEE_REPO（如 owner/boardgame-arkhamhorror）+ Secret GITEE_TOKEN
 name: Release
 
 on:
@@ -39,3 +40,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --title "诡镇奇谈 $GITHUB_REF_NAME" --notes-file notes.txt
+      - name: Mirror release to Gitee
+        if: ${{ vars.GITEE_REPO != '' }}
+        env:
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+        run: node hall/tools/release/gitee.mjs release dist --repo="${{ vars.GITEE_REPO }}" --tag="$GITHUB_REF_NAME" --title="诡镇奇谈 $GITHUB_REF_NAME" --notes-file=notes.txt

@@ -60,6 +60,7 @@
     "images:translate": "node tools/translate-images.mjs --manifest --manifest-path=web/img/.translation/full.json",
     "images:translate:direct": "node tools/translate-images.mjs --run",
     "images:translate:verify": "node tools/translate-images.mjs --verify",
+    "music:upload": "node tools/upload-music.mjs",
     "test:p7": "node tools/run-p7.mjs",
     "test:release": "node tools/run-p7.mjs --release"
   },

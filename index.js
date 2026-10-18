@@ -30,7 +30,8 @@ import {
 
 import { handleApi, resourceVersion } from './src/integration/web-api.js'
 import { handleDeckLibrary } from './src/integration/deck-library.js'
-import { cacheWebAsset } from './src/integration/image-cache.js'
+import { cacheWebAsset as cacheImageAsset } from './src/integration/image-cache.js'
+import { cacheMusicAsset } from './src/integration/music-cache.js'
 import { viewState, viewEvents } from './src/integration/observation.js'
 import { aiDecisionContext } from './src/ai/ai-context.js'
 import { storyChatContext } from './src/ai/ai-story.js'
@@ -141,7 +142,9 @@ export default {
   resourceVersion,
   handleApi,
   handleLocalApi: handleDeckLibrary,
-  cacheWebAsset,
+  async cacheWebAsset(request) {
+    return request.relative?.startsWith('audio/') ? cacheMusicAsset(request) : cacheImageAsset(request)
+  },
 
   // Phase 6 · 前端「卡组构筑界面」与「战役选择」的静态元数据（纯 JSON，经 /api/catalog 下发）。
   get clientData() { return { deckBuilder: deckBuilderData(), campaigns: campaignListForUi(contentRegistry) } },

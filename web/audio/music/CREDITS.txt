@@ -6,8 +6,8 @@ Kevin MacLeod (incompetech.com)
 Licensed under Creative Commons: By Attribution 4.0
 https://creativecommons.org/licenses/by/4.0/
 
-Original MP3 recordings; no modifications. Local filenames normalized and grouped under common/ only.
-原始录音，未经剪辑；仅规范本地文件名并归入 common/。曲目氛围中文描述由本项目撰写。
+Original recordings re-encoded to 128 kbps MP3; no edits. Local filenames normalized and grouped under common/.
+原始录音仅转码为 128 kbps MP3，未经剪辑；规范本地文件名并归入 common/。曲目氛围中文描述由本项目撰写。
 
 Official licensing / 官方授权：
 https://incompetech.com/music/royalty-free/licenses/
@@ -34,8 +34,8 @@ Kevin MacLeod (incompetech.com)
 Licensed under Creative Commons: By Attribution 4.0
 https://creativecommons.org/licenses/by/4.0/
 
-Original MP3 recordings; no modifications. Stored under campaigns/thePathToCarcosa/.
-原始录音，未经剪辑；仅规范本地文件名。氛围中文描述及关卡搭配由本项目编写。
+Original recordings re-encoded to 128 kbps MP3; no edits. Stored under campaigns/thePathToCarcosa/.
+原始录音仅转码为 128 kbps MP3，未经剪辑；规范本地文件名。氛围中文描述及关卡搭配由本项目编写。
 Danse Macabre: composition by Camille Saint-Saëns; recording by Kevin MacLeod.
 官方曲目页面：
 https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300041
@@ -55,11 +55,18 @@ Scenario music additions / 关卡风格补充 — 2026-10-15
 Kevin MacLeod (incompetech.com)
 Licensed under Creative Commons: By Attribution 4.0
 https://creativecommons.org/licenses/by/4.0/
-Original MP3 recordings; no modifications. Stored under common/.
-原始录音未经剪辑、转码；本项目编写关卡搭配与氛围说明。
+Original recordings re-encoded to 128 kbps MP3; no edits. Stored under common/.
+原始录音仅转码为 128 kbps MP3，未经剪辑；本项目编写关卡搭配与氛围说明。
 Official licensing: https://incompetech.com/music/royalty-free/licenses/
 https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600033
 https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100595
 https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100383
 https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700038
 Download URLs, sizes and SHA-256 hashes are recorded in sources.json.
+
+Distribution encoding / 分发转码 — 2026-10-18
+All tracks above were re-encoded from the official MP3 files with ffmpeg (libmp3lame,
+128 kbps CBR, 44.1 kHz) to reduce download size. No cuts, edits or mixing.
+sources.json keeps the official file hashes ("sha256"/"bytes") and the distributed
+file hashes ("encoded").
+以上全部曲目由官方 MP3 用 ffmpeg 转码为 128 kbps，以减小下载体积；未作剪辑或混音。

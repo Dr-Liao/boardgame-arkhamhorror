@@ -50,8 +50,9 @@ test('内置音乐、官方授权署名和文件校验一致', () => {
     assert.equal(source.localFile, track.file)
     assert.ok(credits.includes(track.title))
     const data = readFileSync(new URL(track.file, root))
-    assert.equal(data.length, source.bytes)
-    assert.equal(createHash('sha256').update(data).digest('hex'), source.sha256)
+    assert.equal(data.length, source.encoded.bytes)
+    assert.equal(createHash('sha256').update(data).digest('hex'), source.encoded.sha256)
+    assert.match(source.sha256, /^[0-9a-f]{64}$/)
     assert.ok(source.download.startsWith('https://incompetech.com/music/royalty-free/mp3-royaltyfree/'))
   }
 })

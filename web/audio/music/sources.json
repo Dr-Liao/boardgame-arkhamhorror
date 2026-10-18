@@ -4,7 +4,7 @@
   "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
   "source": "https://incompetech.com/music/royalty-free/licenses/",
   "retrieved": "2026-09-29",
-  "modifications": "None; original MP3 recordings.",
+  "modifications": "Re-encoded from the original MP3 to 128 kbps CBR MP3 (44.1 kHz, LAME) for smaller downloads; no edits, cuts or mixing. sha256/bytes describe the original incompetech file; encoded describes the distributed file.",
   "tracks": [
     {
       "title": "Darkest Child",
@@ -25,7 +25,11 @@
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Darkest%20Child.mp3",
       "localFile": "common/darkest-child.mp3",
       "sha256": "7591bd67ba227c2a3ffd97a6751c66e0b56d543ba91a6a2699a765191c880518",
-      "bytes": 9551329
+      "bytes": 9551329,
+      "encoded": {
+        "bytes": 3820171,
+        "sha256": "07b35b61271ffe0234791766731e91d5f976aa9d1a3f7875835c3d9b6dc56c4c"
+      }
     },
     {
       "title": "Long note One",
@@ -46,7 +50,11 @@
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Long%20Note%20One.mp3",
       "localFile": "common/long-note-one.mp3",
       "sha256": "665aef3a5eaba25a0108f632e85895516868813a764a58bc203702829ac4c6c1",
-      "bytes": 17761954
+      "bytes": 17761954,
+      "encoded": {
+        "bytes": 7042230,
+        "sha256": "d1c5970d0d1e65af412ee22030d2b75b799c63e4c0eb553b3cb7c64df41e5e74"
+      }
     },
     {
       "title": "Unseen Horrors",
@@ -67,7 +75,11 @@
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Unseen%20Horrors.mp3",
       "localFile": "common/unseen-horrors.mp3",
       "sha256": "c80c5136705b17b557e55bbb8f2fcdc49c4107bda419e5bbb1742ef313e6efb2",
-      "bytes": 8036245
+      "bytes": 8036245,
+      "encoded": {
+        "bytes": 4018348,
+        "sha256": "9a2ddd1c72a8c9be1548062f52f32342014b11d449ebcbf68ff22acf53d85c8a"
+      }
     },
     {
       "title": "Ritual",
@@ -89,7 +101,11 @@
       "localFile": "common/ritual.mp3",
       "retrieved": "2026-10-10",
       "sha256": "2dfdfede2f491f3991f8264577f250dc6abf63dd7c7dd3cd751d41b57b995283",
-      "bytes": 10705537
+      "bytes": 10705537,
+      "encoded": {
+        "bytes": 4226499,
+        "sha256": "57d4fa336a18e9faeb41edeacf7230a351fcd0f9f6c41cac4a16af30db4c9778"
+      }
     },
     {
       "title": "Gathering Darkness",
@@ -111,7 +127,11 @@
       "localFile": "common/gathering-darkness.mp3",
       "retrieved": "2026-10-10",
       "sha256": "62d9f8a01262f351a7f02c32fae217a9cb32dd5aa1fc85c0bcb8c325a2663970",
-      "bytes": 10600574
+      "bytes": 10600574,
+      "encoded": {
+        "bytes": 4240623,
+        "sha256": "3ff6db9677cb3f386c30fb58f39744ed15e906050a6a6e5bb360ec702418bd6c"
+      }
     },
     {
       "title": "The Dread",
@@ -133,7 +153,11 @@
       "localFile": "common/the-dread.mp3",
       "retrieved": "2026-10-10",
       "sha256": "b4d7678fabb4fab9c0ff867b84556fb0b26d035960cc971bc0ef9728e8194b4c",
-      "bytes": 7896741
+      "bytes": 7896741,
+      "encoded": {
+        "bytes": 3164058,
+        "sha256": "599e496fc1f467bfd7611298e740e294e926b5a710be05544b7ce4faca452b58"
+      }
     },
     {
       "title": "Dark Walk",
@@ -155,7 +179,11 @@
       "localFile": "common/dark-walk.mp3",
       "retrieved": "2026-10-10",
       "sha256": "9844d103a492b51e02cb89daeabb6da02d0d15f2568f887913690a051a3fdec6",
-      "bytes": 3538605
+      "bytes": 3538605,
+      "encoded": {
+        "bytes": 1374771,
+        "sha256": "a84a522dd72b4a34a2b6b826d17dc2dfd8fdb9c4f1a6c0a36e265fe4c0953067"
+      }
     },
     {
       "title": "Evening of Chaos",
@@ -178,7 +206,11 @@
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300041",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Evening%20of%20Chaos.mp3",
       "localFile": "campaigns/thePathToCarcosa/evening-of-chaos.mp3",
-      "retrieved": "2026-10-15"
+      "retrieved": "2026-10-15",
+      "encoded": {
+        "bytes": 4514854,
+        "sha256": "ea65730a6bc396cfd37e0b1ac43ee2f1f864b2def7079091710fe6341f1a7ab8"
+      }
     },
     {
       "title": "Danse Macabre",
@@ -201,7 +233,11 @@
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100546",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Danse%20Macabre.mp3",
       "localFile": "campaigns/thePathToCarcosa/danse-macabre.mp3",
-      "retrieved": "2026-10-15"
+      "retrieved": "2026-10-15",
+      "encoded": {
+        "bytes": 6500651,
+        "sha256": "965ec0b2e99954ca7681231d75de48c2b62c2d60f9b43ae1136e0f44cf5ea408"
+      }
     },
     {
       "title": "Echoes of Time",
@@ -224,7 +260,11 @@
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300029",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Echoes%20of%20Time.mp3",
       "localFile": "campaigns/thePathToCarcosa/echoes-of-time.mp3",
-      "retrieved": "2026-10-15"
+      "retrieved": "2026-10-15",
+      "encoded": {
+        "bytes": 4563773,
+        "sha256": "d6c6d35a304eb3fa43e635090dcc74f4895ce638053273a9739d93db881494b2"
+      }
     },
     {
       "title": "Long Note Two",
@@ -247,7 +287,11 @@
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100420",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Long%20Note%20Two.mp3",
       "localFile": "campaigns/thePathToCarcosa/long-note-two.mp3",
-      "retrieved": "2026-10-15"
+      "retrieved": "2026-10-15",
+      "encoded": {
+        "bytes": 7394152,
+        "sha256": "02b61f62ae0fac515a9aad396287716c171284c00adee0b7c362d43c868b14cd"
+      }
     },
     {
       "title": "Ghost Processional",
@@ -270,7 +314,11 @@
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100219",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ghost%20Processional.mp3",
       "localFile": "campaigns/thePathToCarcosa/ghost-processional.mp3",
-      "retrieved": "2026-10-15"
+      "retrieved": "2026-10-15",
+      "encoded": {
+        "bytes": 1665383,
+        "sha256": "fd6b838542abbad884439e88350701e5804d01beda381d63d1c3eee6c8355cbd"
+      }
     },
     {
       "title": "Ossuary 6 - Air",
@@ -293,7 +341,11 @@
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500048",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ossuary%206%20-%20Air.mp3",
       "localFile": "campaigns/thePathToCarcosa/ossuary-6-air.mp3",
-      "retrieved": "2026-10-15"
+      "retrieved": "2026-10-15",
+      "encoded": {
+        "bytes": 4002524,
+        "sha256": "20caca09601bd84626d1d8798332466d09e9a519e91365c74f5ab2aafa797711"
+      }
     },
     {
       "title": "Deadly Roulette",
@@ -316,7 +368,11 @@
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600033",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Deadly%20Roulette.mp3",
       "localFile": "common/deadly-roulette.mp3",
-      "retrieved": "2026-10-15"
+      "retrieved": "2026-10-15",
+      "encoded": {
+        "bytes": 2550062,
+        "sha256": "35e5ab975a9a58f369534a02ab9391796b349a24968dd9c3d124cbe1a37777b2"
+      }
     },
     {
       "title": "Dances and Dames",
@@ -339,7 +395,11 @@
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100595",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Dances%20and%20Dames.mp3",
       "localFile": "common/dances-and-dames.mp3",
-      "retrieved": "2026-10-15"
+      "retrieved": "2026-10-15",
+      "encoded": {
+        "bytes": 2350666,
+        "sha256": "7a427285a2a3e3ad55448b15b89b4aa749a7463667dde1b6ef3f6260eaf3f89c"
+      }
     },
     {
       "title": "Chase Pulse",
@@ -362,7 +422,11 @@
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100383",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Chase%20Pulse.mp3",
       "localFile": "common/chase-pulse.mp3",
-      "retrieved": "2026-10-15"
+      "retrieved": "2026-10-15",
+      "encoded": {
+        "bytes": 1869169,
+        "sha256": "283f67948e5bb98404971c309fdf388c70355a0d627562d1b075d8fd6e7024ce"
+      }
     },
     {
       "title": "Shadowlands 5 - Antechamber",
@@ -385,8 +449,18 @@
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700038",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Shadowlands%205%20-%20Antechamber.mp3",
       "localFile": "common/shadowlands-5-antechamber.mp3",
-      "retrieved": "2026-10-15"
+      "retrieved": "2026-10-15",
+      "encoded": {
+        "bytes": 2850574,
+        "sha256": "081d25bc3cd7f9273361afc35f41f68c1cf6871c0a7cf7bc2132205b61117986"
+      }
     }
   ],
-  "updated": "2026-10-15"
+  "updated": "2026-10-15",
+  "encoding": {
+    "codec": "mp3",
+    "encoder": "ffmpeg libmp3lame",
+    "bitrate": "128k",
+    "sampleRate": 44100
+  }
 }

@@ -16,7 +16,7 @@ const FILTER_KEYS = Object.freeze(['q', 'code', 'name', 'type', 'klass', 'packCo
 // 资源版本纳入的文件：目录数据、规则差异、展示解析与浏览器展示代码。
 const VERSIONED_FILES = Object.freeze([
   '../cards/cards-data.js', '../cards/scenarios-data.js', '../cards/card-effects.js', '../cards/card-catalog.js',
-  './image-cache.js', './scenario-images.js',
+  './image-cache.js', './music-cache.js', './scenario-images.js', '../../web/music-player.js',
   '../../presentation/art-rules.js', '../../presentation/images.js',
   '../../presentation/localized-arts.json', '../../presentation/media-registry.json',
   '../../web/images.js', '../../web/catalog.js', '../../web/card-filters.js', '../../web/game-ui.js', '../../web/hub.js', '../../web/deck-rules.js', '../../web/arkhamdb-import.js', '../../web/deck-library.js', '../../web/hub-office.css',

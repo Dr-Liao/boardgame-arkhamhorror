@@ -11,15 +11,32 @@
     "docs/",
     "develop/",
     "audit/",
+    "catalog/",
     "playwright.config.mjs",
     "web/img/cards/",
     "web/img/zh/",
     "web/img/.translation/",
+    "web/audio/music/common/",
+    "web/audio/music/campaigns/",
+    "web/img/backs/back_artifact.jpg",
+    "web/img/backs/back_cthulhu_deck.jpg",
+    "web/img/backs/back_encounter.jpg",
+    "web/img/backs/back_player.jpg",
+    "web/img/backs/back_the_longest_night.jpg",
+    "web/img/campaigns/nightOfTheZealot/hub/office-hero.png",
+    "web/img/campaigns/nightOfTheZealot/table/investigation-map.png",
+    "web/img/ui/brass-token.png",
+    "web/img/ui/chaos-bag.png",
+    "web/img/ui/hub-casefile.png",
+    "web/img/ui/hub-desk.png",
+    "web/img/ui/hub-manor.png",
+    "web/img/ui/investigation-map.png",
     "*.md"
   ],
   "prepack": "tools/prepack-release.mjs",
   "preserve": [
     "web/img/",
+    "web/audio/music/",
     "audit/local-images.cards.json"
   ],
   "assetPacks": [
@@ -36,6 +53,7 @@
   ],
   "portableNotes": [
     "诡镇存档管理分为单人和联机。房主在“联机存档”中选择“创建房间继续”，朋友按原席位加入并准备，再继续原有进度。",
-    "本包不预装诡镇奇谈卡牌图片：联网时已显示的卡图会自动缓存到 app/games/arkhamhorror/web/img/，以后可离线复用。\n   如需一次获得完整离线卡图，请下载“BoardgameHall-ArkhamCards-*.zip”卡图资源包，解压到本文件夹并合并 app 文件夹，然后重启大厅。"
+    "本包不预装诡镇奇谈卡牌图片：联网时已显示的卡图会自动缓存到 app/games/arkhamhorror/web/img/，以后可离线复用。\n   如需一次获得完整离线卡图，请下载“BoardgameHall-ArkhamCards-*.zip”卡图资源包，解压到本文件夹并合并 app 文件夹，然后重启大厅。",
+    "本包也不预装背景音乐：联网时首次播放的曲目会从 incompetech.com 下载并缓存到 app/games/arkhamhorror/web/audio/music/，以后可离线播放。"
   ]
 }

@@ -167070,9 +167070,9 @@
       "sha256": "e38b8cf3ac1f853b2a0935df661ad2103f08994e1c079d103566763891b45450"
     },
     {
-      "bytes": 17123,
+      "bytes": 17334,
       "path": "games/arkhamhorror/index.js",
-      "sha256": "2ddbd9c3005929f3fee178f705ebcc2a6c7784d6f65c5a31c72c8a14b304cc8e"
+      "sha256": "f9be21a6f19a64a08a7b434231bee7b05d40bd86b9b7fb3c2ba0aa2d2b1b81c5"
     },
     {
       "bytes": 2964,
@@ -167235,6 +167235,11 @@
       "sha256": "9570ea5719d89b10c19ff69e8166172b9a8dc3aeb91a6a4867f261e91bc3ec7e"
     },
     {
+      "bytes": 4323,
+      "path": "games/arkhamhorror/src/integration/music-cache.js",
+      "sha256": "add4d06aafe98ee7423bdeb6b38db826b443dc8dc5c7fd126738888abae00fda"
+    },
+    {
       "bytes": 7980,
       "path": "games/arkhamhorror/src/integration/observation.js",
       "sha256": "4d11006959ebccd1a9fb92cadc0718a1c36e428f74595089bf6cfa91085edb1e"
@@ -167250,9 +167255,9 @@
       "sha256": "b3730729b83e3fbb77f4a8893e853c495fab9b6243cdfd87f26409eabce5400e"
     },
     {
-      "bytes": 4766,
+      "bytes": 4815,
       "path": "games/arkhamhorror/src/integration/web-api.js",
-      "sha256": "300635d016af255254ed1dc45815dbf840f2e14b40f73df5c2bc4b0b1ee66180"
+      "sha256": "70795d153702384eb7955e0bd3575ecfe0dc51b629b939f7b6f6d0bdc5b16122"
     },
     {
       "bytes": 44057,
@@ -167285,7 +167290,7 @@
     "raw": "catalog/sources 按来源保存完整原始记录，包括 linked_card 与构筑限制；provenance 按原始字段路径定位。"
   },
   "quarantined": [],
-  "resourceVersion": "ed965ad0a757733cac3977eaf77e5091d9161e81eb460731dcda04e09d0062f9",
+  "resourceVersion": "4a181ef6a0d60a046dbf0cda80dee0c18be5cf305b298a47097ba8521e613f62",
   "schemaVersion": 1,
   "sourceManifest": [
     {

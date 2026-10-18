@@ -85,7 +85,7 @@ export function createMusicPlayer(h) {
     seek, time,
     h('div', { className: 'ah-music-volume' }, mute, volume, volumeText),
     feedback, trackList,
-    h('footer', {}, '音乐：', link('Kevin MacLeod', 'https://incompetech.com/'), ' · ', link('CC BY 4.0', 'https://creativecommons.org/licenses/by/4.0/'), h('br'), '原始录音，未作修改 · ', link('来源与署名', '/mods/arkhamhorror/audio/music/CREDITS.txt')))
+    h('footer', {}, '音乐：', link('Kevin MacLeod', 'https://incompetech.com/'), ' · ', link('CC BY 4.0', 'https://creativecommons.org/licenses/by/4.0/'), h('br'), '仅转码压缩，未作剪辑 · ', link('来源与署名', '/mods/arkhamhorror/audio/music/CREDITS.txt')))
   const root = h('aside', { className: 'ah-music', 'aria-label': '诡镇背景音乐', onkeydown: e => { if (e.key === 'Escape' && expanded) { e.stopPropagation(); expanded = false; update(); launcher.focus() } } }, panel, h('div', { className: 'ah-music-dock' }, launcher, miniPlay))
 
   function updateTime() {
@@ -122,7 +122,18 @@ export function createMusicPlayer(h) {
     trackButtons.forEach((el, n) => el.setAttribute('aria-current', String(n === index)))
     updateTime()
   }
-  function source() { return '/mods/arkhamhorror/audio/music/' + playlist[index].file }
+  // cache=cdn: the hall downloads a missing track once, then serves it as a local file.
+  const trackUrl = track => '/mods/arkhamhorror/audio/music/' + track.file + '?cache=cdn'
+  function source() { return trackUrl(playlist[index]) }
+  // The hall finishes caching the whole file before answering, so a one-byte range warms the local copy.
+  const prefetched = new Set()
+  function prefetch(track) {
+    if (!track || prefetched.has(track.file)) return
+    prefetched.add(track.file)
+    fetch(trackUrl(track), { headers: { Range: 'bytes=0-0' } })
+      .then(response => { if (!response.ok) prefetched.delete(track.file); return response.body?.cancel() })
+      .catch(() => prefetched.delete(track.file))
+  }
   function waitForGesture(enabled) {
     waitingGesture = enabled
     for (const event of ['click', 'keydown']) {
@@ -157,6 +168,8 @@ export function createMusicPlayer(h) {
     if (autoplay) start()
   }
   audio.addEventListener('ended', () => { if (active && !loopOne) select(index + 1, true) })
+  // Only after the current track is playing, so the two downloads never compete.
+  audio.addEventListener('playing', () => { if (active && !loopOne) prefetch(playlist[(index + 1) % playlist.length]) })
   audio.addEventListener('error', () => { pending = false; error = '音乐载入失败，请检查连接后重试。'; update() })
   for (const event of ['play', 'pause', 'loadedmetadata', 'durationchange', 'volumechange']) audio.addEventListener(event, update)
   audio.addEventListener('timeupdate', updateTime)
@@ -181,6 +194,7 @@ export function createMusicPlayer(h) {
       const entering = enabled && !active
       if (!enabled && active) { pause(); expanded = false; update() }
       active = enabled
+      if (enabled) prefetch(playlist[index])
       // Only start on entry. Table/hub updates must not undo a manual pause.
       if (entering || (enabled && resumeAfterSwitch)) start()
       return enabled ? root : null

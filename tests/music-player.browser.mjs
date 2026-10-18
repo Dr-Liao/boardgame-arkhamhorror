@@ -87,10 +87,10 @@ test('音乐播放器持续播放、切歌、进度、音量保存、退出暂�
   await dock.getByRole('button', { name: '展开音乐播放器', exact: true }).click()
   await expect(player.getByRole('button', { name: '暂停音乐', exact: true })).toBeVisible()
   await expect.poll(() => transport(() => window.__musicAudio.find(a => a.src.includes('/music/')).paused)).toBe(false)
-  await page.route('**/audio/music/common/darkest-child.mp3', route => route.abort())
+  await page.route('**/audio/music/common/darkest-child.mp3?cache=cdn', route => route.abort())
   await player.getByRole('button', { name: '播放 Darkest Child', exact: true }).click()
   await expect(player.locator('.ah-music-feedback')).toContainText(/失败|无法播放/)
-  await page.unroute('**/audio/music/common/darkest-child.mp3')
+  await page.unroute('**/audio/music/common/darkest-child.mp3?cache=cdn')
   await player.getByRole('button', { name: '播放音乐', exact: true }).click()
   await expect.poll(() => transport(() => window.__musicAudio.find(a => a.src.includes('/music/')).currentTime)).toBeGreaterThan(.1)
 

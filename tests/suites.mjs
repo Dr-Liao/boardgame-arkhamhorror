@@ -78,6 +78,7 @@ export const ASSET_TESTS = Object.freeze([
   'import-cards.test.mjs', // 22.1
   'presentation-images.test.mjs', // 1.6
   'image-cache.test.mjs', // 0.2
+  'music-cache.test.mjs', // 0.2
   'scenario-images.test.mjs', // 0.3
   'image-translation.test.mjs', // 0.5
   'presentation-http.test.mjs', // 0.9
