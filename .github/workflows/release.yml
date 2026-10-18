@@ -39,7 +39,13 @@ jobs:
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --title "诡镇奇谈 $GITHUB_REF_NAME" --notes-file notes.txt
+        # 重跑时 Release 已存在：改用已发布的附件，保证 Gitee 与 GitHub 上的文件一致。
+        run: |
+          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            rm -rf dist && gh release download "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" -D dist
+          else
+            gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --title "诡镇奇谈 $GITHUB_REF_NAME" --notes-file notes.txt
+          fi
       - name: Mirror release to Gitee
         if: ${{ vars.GITEE_REPO != '' }}
         env:
