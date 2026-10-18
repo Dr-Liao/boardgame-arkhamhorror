@@ -10,12 +10,13 @@ import { readFile } from 'node:fs/promises'
 import { queryCatalogView, getCatalogCardView, getLinkedCatalogCardView, getCatalogMeta } from '../cards/card-catalog.js'
 import { META } from '../cards/cards-data.js'
 import { fetchArkhamDbDeck, resolveArkhamDbDeck } from './arkhamdb.js'
+import { scenarioImageManifest } from './scenario-images.js'
 
 const FILTER_KEYS = Object.freeze(['q', 'code', 'name', 'type', 'klass', 'packCode', 'cost', 'xp', 'campaign', 'sort', 'effectStatus', 'availability', 'offset', 'limit'])
 // 资源版本纳入的文件：目录数据、规则差异、展示解析与浏览器展示代码。
 const VERSIONED_FILES = Object.freeze([
   '../cards/cards-data.js', '../cards/scenarios-data.js', '../cards/card-effects.js', '../cards/card-catalog.js',
-  './image-cache.js',
+  './image-cache.js', './scenario-images.js',
   '../../presentation/art-rules.js', '../../presentation/images.js',
   '../../presentation/localized-arts.json', '../../presentation/media-registry.json',
   '../../web/images.js', '../../web/catalog.js', '../../web/card-filters.js', '../../web/game-ui.js', '../../web/hub.js', '../../web/deck-rules.js', '../../web/arkhamdb-import.js', '../../web/deck-library.js', '../../web/hub-office.css',
@@ -78,6 +79,14 @@ export function handleApi({ path, searchParams }) {
     if (!card) return { status: 404, error: '卡牌不存在' }
     const linkedCard = getLinkedCatalogCardView(code)
     return { body: { card, ...(linkedCard ? { linkedCard } : {}) } }
+  }
+  if (path.startsWith('scenarios/') && path.endsWith('/images')) {
+    const id = path.slice('scenarios/'.length, -'/images'.length)
+    if (!/^[A-Za-z0-9_-]{1,64}$/.test(id)) return { status: 400, error: '无效关卡编号' }
+    try { return { body: scenarioImageManifest(id) } } catch (error) {
+      if (error instanceof RangeError) return { status: 404, error: '关卡不存在' }
+      throw error
+    }
   }
   return null
 }

@@ -5,7 +5,7 @@
 // 战役选择、卡组构筑、对局界面、卡牌详情与全卡图鉴。
 // 不要把这些逻辑写回大厅的 public/app.js。
 
-import { createCatalogUI, getCardPresentation, renderDetailContent, renderImage, cardFaceText } from './catalog.js'
+import { createCatalogUI, getCardPresentation, renderDetailContent, renderImage, cardFaceText, preloadScenarioImages } from './catalog.js'
 import { createHubUI } from './hub.js'
 import { createMusicPlayer } from './music-player.js'
 import { createChaosBagView } from './chaos-bag-view.js'
@@ -112,6 +112,7 @@ export function createUI(host) {
     renderSetupModal: game => hubUi.renderSetupModal(game),
     renderGame: session => {
       session = presentation.sync(session)
+      if (session.state.hubFlow && ['interlude', 'scenarioSetup'].includes(session.state.uiState)) preloadScenarioImages(session.state.hubSelectedScenarioId)
       if (session.state.hubFlow && session.state.uiState !== 'inScenario') { tableSession = null; return hubUi.renderGame(session) }
       const autoPassing = scheduleReactionPass(session)
       session = reactionView(session)

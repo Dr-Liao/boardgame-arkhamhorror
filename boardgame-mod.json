@@ -1,7 +1,7 @@
 {
   "id": "arkhamhorror",
   "name": "诡镇奇谈：卡牌版",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "hallApi": 1,
   "exclude": [
     "tests/",
@@ -21,5 +21,21 @@
   "preserve": [
     "web/img/",
     "audit/local-images.cards.json"
+  ],
+  "assetPacks": [
+    {
+      "id": "arkham-cards",
+      "title": "诡镇奇谈卡图资源包",
+      "paths": ["web/img/cards/", "web/img/zh/cards/"],
+      "readme": [
+        "诡镇奇谈优先使用本地卡图，离线也能显示卡面。",
+        "未安装本资源包时游戏照常运行：默认 CDN 图片在首次显示后也会按同一目录结构缓存到本地。",
+        "卡面美术版权归 Fantasy Flight Games，仅供本地离线使用，不得再分发。"
+      ]
+    }
+  ],
+  "portableNotes": [
+    "诡镇存档管理分为单人和联机。房主在“联机存档”中选择“创建房间继续”，朋友按原席位加入并准备，再继续原有进度。",
+    "本包不预装诡镇奇谈卡牌图片：联网时已显示的卡图会自动缓存到 app/games/arkhamhorror/web/img/，以后可离线复用。\n   如需一次获得完整离线卡图，请下载“BoardgameHall-ArkhamCards-*.zip”卡图资源包，解压到本文件夹并合并 app 文件夹，然后重启大厅。"
   ]
 }

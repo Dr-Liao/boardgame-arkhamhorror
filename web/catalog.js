@@ -135,6 +135,82 @@ export function renderImage(h, descriptor, side = 'front', { compact = false, ar
   return holder
 }
 
+const PRELOAD_CONCURRENCY = 4
+const PRELOAD_TIMEOUT_MS = 20000
+let preloadRun = null
+
+/** 该面在本地图库清单中已有可直接展示的文件时不预热；中文偏好下仅有英文本地图而中文图存在时仍预热中文。 */
+function faceIsLocal(face, wantsLocalized) {
+  const candidates = face?.candidates || []
+  if (wantsLocalized && candidates.some(candidate => candidate.localLocalized)) return true
+  if (wantsLocalized && candidates.some(candidate => candidate.localized)) return false
+  return candidates.some(candidate => candidate.local)
+}
+
+function preloadOne(candidates, signal) {
+  return new Promise(resolve => {
+    const attempt = () => {
+      const current = signal.aborted ? null : imageCache.next(candidates)
+      if (!current || imageCache.state(current.url) === 'displayable') { resolve(); return }
+      const img = new Image()
+      img.decoding = 'async'
+      img.referrerPolicy = 'no-referrer'
+      img.fetchPriority = 'low'
+      const done = ok => {
+        clearTimeout(timer)
+        signal.removeEventListener('abort', abort)
+        img.onload = img.onerror = null
+        if (ok === null) { resolve(); return }
+        if (ok) { imageCache.succeed(current.url); resolve() } else { imageCache.fail(current.url); attempt() }
+      }
+      const abort = () => { img.src = ''; done(null) }
+      // 超时不记失败：服务端可能仍在下载，交给正式渲染再试。
+      const timer = setTimeout(() => done(null), PRELOAD_TIMEOUT_MS)
+      signal.addEventListener('abort', abort, { once: true })
+      img.onload = () => done(img.naturalWidth > 0)
+      img.onerror = () => done(false)
+      img.src = current.url
+    }
+    attempt()
+  })
+}
+
+/**
+ * 局外整备时预热下一关的全部卡图（剧本、密谋、场景、地点、遭遇）。
+ * 默认 CDN 下经同源 ?cache=cdn 请求，由大厅落盘到本地图库；自定义主机则预热浏览器缓存。
+ * 同一关卡与偏好只执行一次；切换关卡会取消上一轮尚未开始的请求。
+ */
+export function preloadScenarioImages(scenarioId) {
+  if (!scenarioId || !preferences.enabled || typeof Image === 'undefined') return
+  const key = JSON.stringify([scenarioId, preferences.host, preferences.language, preferences.variant])
+  if (preloadRun?.key === key) return
+  preloadRun?.controller.abort()
+  const controller = new AbortController()
+  preloadRun = { key, controller }
+  const { signal } = controller
+  ;(async () => {
+    const meta = await getCatalogMetadata()
+    const manifest = await request('scenarios/' + encodeURIComponent(scenarioId) + '/images?v=' + encodeURIComponent(meta.resourceVersion))
+    const wantsLocalized = preferences.language !== 'en'
+    const queue = []
+    const seen = new Set()
+    for (const { images } of manifest.cards || []) {
+      for (const side of ['front', 'back']) {
+        if (faceIsLocal(images?.[side], wantsLocalized)) continue
+        let candidates
+        try { candidates = imageCandidates(images, { side, host: preferences.host, language: preferences.language, variant: preferences.variant }) } catch { continue }
+        if (!candidates.length || seen.has(candidates[0].url)) continue
+        seen.add(candidates[0].url)
+        queue.push(candidates)
+      }
+    }
+    const worker = async () => {
+      while (queue.length && !signal.aborted) await preloadOne(queue.shift(), signal)
+    }
+    await Promise.all(Array.from({ length: PRELOAD_CONCURRENCY }, worker))
+  })().catch(() => { if (preloadRun?.controller === controller) preloadRun = null })
+}
+
 export function renderPresentationSettings(h, onChange) {
   const host = h('input', { className: 'bg-input', value: preferences.host, placeholder: 'https://assets.arkhamhorror.app', 'aria-label': '卡图主机', autocomplete: 'off' })
   const message = h('div', { className: 'ah-resource-note', role: 'status' })

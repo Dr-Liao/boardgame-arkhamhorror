@@ -70,6 +70,7 @@ export const SLOW_TESTS = Object.freeze([
   'core-final-acceptance.test.mjs', // 6.0
   'notz-n4.test.mjs', // 5.8
   'save-migration.test.mjs', // 3.7
+  'hall-online.test.mjs', // 联机集成，含四人长跑；从大厅回归迁入，重新计时后再调整
 ])
 
 export const ASSET_TESTS = Object.freeze([
@@ -77,6 +78,7 @@ export const ASSET_TESTS = Object.freeze([
   'import-cards.test.mjs', // 22.1
   'presentation-images.test.mjs', // 1.6
   'image-cache.test.mjs', // 0.2
+  'scenario-images.test.mjs', // 0.3
   'image-translation.test.mjs', // 0.5
   'presentation-http.test.mjs', // 0.9
   'presentation-polish.test.mjs', // 0.6

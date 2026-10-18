@@ -1,6 +1,6 @@
 {
  "catalog": {
-  "resourceVersion": "2ffdd82e1f20e3664e2137a44df7898b2b4dc33902ac2e05d854cc65fd132024",
+  "resourceVersion": "ed965ad0a757733cac3977eaf77e5091d9161e81eb460731dcda04e09d0062f9",
   "schemaVersion": 2,
   "total": 5930
  },
@@ -114,7 +114,7 @@
   },
   {
    "path": "games/arkhamhorror/src/integration/web-api.js",
-   "sha256": "daea7d622a0ed1f14baddaacb210b34d50dd1be548a6c4ae209c968346db1a88"
+   "sha256": "300635d016af255254ed1dc45815dbf840f2e14b40f73df5c2bc4b0b1ee66180"
   },
   {
    "path": "games/arkhamhorror/web/images.js",
@@ -122,19 +122,19 @@
   },
   {
    "path": "games/arkhamhorror/web/catalog.js",
-   "sha256": "6acef3b54f54ea832a82ed8960c4f117cd7fd75a50dd87d07f91f84aa0432cdd"
+   "sha256": "7abbab714a95eebe514b56359d7f3144a4732c58b08ba5102947059af230dae2"
   },
   {
    "path": "games/arkhamhorror/web/game-ui.js",
-   "sha256": "8a958d7b8303cef16c48052dff02bc10e3445c375c32904b753fd2eb664b0817"
+   "sha256": "7509f353dc1c25c8cbe54c88941b1899914d57b0f416b5649ed40ef854950eb5"
   },
   {
    "path": "games/arkhamhorror/web/hub.js",
-   "sha256": "d5110251c2265d1c77b533d72e957c69a816b16255ea7d698620a6841c3acf7f"
+   "sha256": "0e8fa46122b331d5cfc01e4ad7f6b33d3488ef8f16ce984ccb8960d1207ae3c1"
   },
   {
    "path": "games/arkhamhorror/web/hub-office.css",
-   "sha256": "4b2529a44932018ae77b0d83a9d51c1b32673758b929f43d97171ec27e78d517"
+   "sha256": "0cd385575860f492ac3b6344bd52f4e38a96971344482f1f98c3e5e3d10aebcb"
   },
   {
    "path": "games/arkhamhorror/web/table-art.js",
@@ -166,7 +166,7 @@
   },
   {
    "path": "games/arkhamhorror/web/card-interactions.js",
-   "sha256": "b56416b3d1bbde7af0e42d2c3dc590050976db983b4775a6c947ecc54d475dfd"
+   "sha256": "203ceb1aa176ce0cee5d14ae199f26686515356335eb4189d6c23cd67d8a1c04"
   },
   {
    "path": "games/arkhamhorror/web/card-interactions.css",
@@ -289,7 +289,7 @@
   }
  },
  "phase": "N2",
- "presentationVersion": "82e2d83f2cf61e95f0165864fee5e0fc2f9dd7f4cbed9476a2cb3f8b8f5fe6c3",
+ "presentationVersion": "9164d3434157f696d7fd7312bc51583cfc8c9ebf9bae4ff7ea4d3309629f511c",
  "samples": [
   {
    "code": "01001",
