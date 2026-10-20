@@ -724,3 +724,50 @@ engine 侧仍是惰性装配，保持 `resolveWeakness(state, inv, def, events, 
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 3355 行**（12654 → 9299，−26.5%）。
+
+## 22. 6d-15：拆出 player-effects（搬到 cards 层，战役插件化第一步）
+
+### 22.1 拆的是什么
+
+`dunwichPlayerEffect`（273 行）是「数据体描述不了的玩家卡效果」的落脚点：最初只服务敦威治卡包，
+名字保留了历史，但它现在按 `effect.type` 分派**所有战役**的玩家卡复杂效果。
+搬出后放在 **`src/cards/player-effects.js`**（不是 `src/engine/`），导出 `createPlayerEffects(deps)`（31 项依赖）。
+
+### 22.2 为什么放在 cards 层
+
+第一版放在 `src/engine/player-effects.js`，立刻被 **Phase 6 门禁**（`tests/phase6-guard.test.mjs`）抓住：
+
+```
+not ok · Phase 6 门禁：引擎源码里没有战役名
+```
+
+这个函数的**名字与注释天然带 `dunwich`**，而门禁要求 `src/engine/*` 里不出现战役名。
+放到 `src/cards/` 有两个好处：
+
+1. 职责正确——玩家卡效果属于内容层，不是引擎；
+2. 满足门禁，不需要为了过关而给函数改名（改名会连带改 `api.dunwichPlayerEffect` 的调用点）。
+
+> 这正是 Phase 6 门禁的价值：它不是纸面规则，而是**逼着把内容放回内容层**。
+
+### 22.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **9065**（6d-14 后 9299） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+| `src/cards/player-effects.js` | **320** |
+
+累计迁出 **约 3589 行**（12654 → 9065，−28.4%）。
