@@ -167,3 +167,42 @@ isWeaknessCard / isWeaknessCode / enemyDef
   3. `abilityApi`（978 行，最大的一块，按域拆成若干 `create*Api(deps)`）；
   4. `performTest`（782 行，检定主流程，最后动）。
 - 每拆一块都要求：`replay --compare` 一致、fast tier 新增失败 0、外部 import 路径不变。
+
+## 9. 6d-2：拆出 describe.js（纯投影 + 依赖注入）
+
+### 9.1 拆的是什么
+
+`describeState`（133 行）搬进 `src/engine/describe.js`，导出 `createDescribeState(deps)`，
+engine 里只留一行工厂调用：
+
+```js
+export const describeState = createDescribeState({
+  campaignFor, inHub, describeTeamParticipation, actingSeats, legalMoves, actObjectiveContext,
+  totalDoom, agendaDoom, scenarioBehavior, locName, getMaxHealth, getMaxSanity, getStat, cardName,
+  assetEffect, CLASS_NAMES, investigatorParticipation, decisionSeat, aliveInvestigators, describeFreeAbilities,
+  describePrey, enemyEvadeValue, enemyFightValue, enemyHealth, narrativeLogTexts, scriptActionHints, stripLabel,
+})
+```
+
+### 9.2 为什么用依赖注入而不是 import engine
+
+1. 与 engine **没有循环依赖**（engine → describe 单向）；
+2. 依赖清单就是契约：解构里少一个名字、调用方多给/少给一个，都在首次调用时暴露；
+3. `describeState` 是纯投影（只读 state、只拼字符串、不消耗随机数），所以这层拆分对行为零影响——
+   重放指纹与拆分前逐条一致。
+
+### 9.3 坑
+
+`describeState` 原来带 `export` 关键字，整段搬进工厂后必须去掉（工厂内部是嵌套函数声明），
+否则 `describe.js` 直接语法错误。改名后由工厂 `return describeState` 暴露。
+
+### 9.4 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **12466**（6d-1 后 12589） |
+| `src/engine/card-lookup.js` | 90 |
+| `src/engine/describe.js` | 176 |
+
+下一块：`scenarioRuntime`（317 行）——同样用依赖注入，但它会**写 state**（放置地点、推进密谋），
+所以拆之前要先把它调用的副作用 helper 列全，并用重放确认。
