@@ -2444,13 +2444,13 @@ function resolveWeakness(state, inv, def, events, texts) {
   }
   if (def.type === 'enemy') {
     let location = inv.location
-    if (def.code === '03042') {
-      const distances = state.locations.map(loc => ({ id: loc.id, distance: distanceToInvestigator(state, loc.id, [inv]) }))
-      const farthest = Math.max(...distances.filter(item => Number.isFinite(item.distance)).map(item => item.distance))
-      const choices = distances.filter(item => item.distance === farthest)
-      if (choices.length) location = choices.length === 1 ? choices[0].id : requestChoice(state, {
+    // Phase 5（5a-25）：在「离你最远的地点」生成的弱点由条目级 weaknessSpawnsAtFarthestLocation 声明。
+    if (registeredEntry(def.code)?.weaknessSpawnsAtFarthestLocation) {
+      const farthest = farthestLocationsFor(state, inv)
+      if (farthest.length === 1) location = farthest[0]
+      else if (farthest.length > 1) location = requestChoice(state, {
         kind: 'location', source: def.code, seat: inv.seat, prompt: '选择距离你最远的地点生成随行鬼影。',
-        options: choices.map(item => ({ id: item.id, label: locName(state, item.id) })),
+        options: farthest.map(id => ({ id, label: locName(state, id) })),
       })
     }
     const enemy = spawnEnemy(state, def.code, location, inv.seat)
@@ -2902,6 +2902,16 @@ function reactionWindow(state, when, context, events) {
   }
   // 能力层：同一个窗口下，声明式反应/强制能力也在这里结算。
   return openAbilityWindow(state, when, context, events)
+}
+
+// Phase 5（5a-25）：「离某调查员最远的地点」——弱点生成与 api 共用一份实现。
+function farthestLocationsFor(state, inv) {
+  if (!inv) return []
+  const distances = state.locations.map(loc => ({ id: loc.id, distance: distanceToInvestigator(state, loc.id, [inv]) }))
+  const finite = distances.filter(item => Number.isFinite(item.distance))
+  if (!finite.length) return []
+  const farthest = Math.max(...finite.map(item => item.distance))
+  return finite.filter(item => item.distance === farthest).map(item => item.id)
 }
 
 function discardLocked(state, inv) {
@@ -5782,7 +5792,8 @@ function upkeepPhase(state) {
       enemy.exhausted = false
       continue
     }
-    performTest(state, owner.seat, 'willpower', 3, { source: { label: '维持绑定', name: enemy.name, code: '02031' }, resolve: result => {
+    // Phase 5（5a-25）：检定的来源卡号用「实际绑定的那张牌」，不写死 02031。
+    performTest(state, owner.seat, 'willpower', 3, { source: { label: '维持绑定', name: enemy.name, code: enemy.bindMonster.code }, resolve: result => {
       if (result.success || !enemy.bindMonster) return
       owner.discard.push(enemy.bindMonster.code)
       delete enemy.bindMonster
@@ -7384,17 +7395,17 @@ function dunwichPlayerEffect(state, seat, effect, events) {
     const candidates = state.enemies.filter(enemy => enemy.location === inv.location && !enemy.elite && !enemy.bindMonster)
     if (!candidates.length) { info(state, events, '本地点没有可绑定的非精英敌人。'); return }
     const id = candidates.length === 1 ? candidates[0].id : requestChoice(state, {
-      kind: 'target', source: '02031', seat, prompt: '选择要绑定的非精英敌人。',
+      kind: 'target', source: effect.code || 'bindMonster', seat, prompt: '选择要绑定的非精英敌人。',
       options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name })),
     })
     const enemy = candidates.find(item => item.id === id)
     return performTest(state, seat, 'willpower', enemyEvadeValue(state, enemy, inv), {
-      source: { label: '绑定怪物', name: enemy.name, code: '02031' }, resolve: result => {
+      source: { label: '绑定怪物', name: enemy.name, code: effect.code || null }, resolve: result => {
         if (!result.success || !state.enemies.includes(enemy)) return
         // Evade the enemy, then attach Bind Monster to it.
         enemy.exhausted = true
         if (enemy.engagedSeat != null) disengageEnemy(state, enemy)
-        enemy.bindMonster = { ownerSeat: seat, code: '02031' }
+        enemy.bindMonster = { ownerSeat: seat, code: effect.code || null }
         info(state, events, `「绑定怪物」附属于「${enemy.name}」；它被躲避，不能移动，并在重整阶段保持横置。`)
       },
     })
@@ -9084,8 +9095,9 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       info(state, events, `「${cardName(cardId)}」洗回 ${inv.name} 的牌库。`)
     }
     // Phase 5（5a-18）：附属到地点/敌人的事件不弃掉，由效果数据里的 keepOnPlay 标记声明。
+    // 条目声明 keepOnPlay，或这张牌正以「绑定」形态留在敌人身上时，不按普通事件弃掉。
     else if (registeredEntry(cardId)?.keepOnPlay !== true
-      && !(cardId === '02031' && state.enemies.some(enemy => enemy.bindMonster?.ownerSeat === seat))) disposePlayedEvent(inv, cardId)
+      && !state.enemies.some(enemy => enemy.bindMonster?.ownerSeat === seat && enemy.bindMonster.code === cardId)) disposePlayedEvent(inv, cardId)
   }
   const traits = (playedDef.traits || []).map(trait => String(trait).toLowerCase())
   if (traits.includes('spell')) triggerReaction(state, seat, 'spellPlayed', events, { location: inv.location, cardId })
@@ -10855,15 +10867,7 @@ function abilityApi(state, events) {
       }
       return null
     },
-    farthestLocations: seat => {
-      const owner = state.investigators[seat] || state.investigators[state.currentSeat]
-      if (!owner) return []
-      const distances = state.locations.map(loc => ({ id: loc.id, distance: distanceToInvestigator(state, loc.id, [owner]) }))
-      const finite = distances.filter(item => Number.isFinite(item.distance))
-      if (!finite.length) return []
-      const farthest = Math.max(...finite.map(item => item.distance))
-      return finite.filter(item => item.distance === farthest).map(item => item.id)
-    },
+    farthestLocations: seat => farthestLocationsFor(state, state.investigators[seat] || state.investigators[state.currentSeat]),
     spawnEnemyAt: (code, locationId) => spawnEnemy(state, code, locationId, null),
     markSmiteTheWicked: (enemy, seat) => {
       if (!enemy) return false

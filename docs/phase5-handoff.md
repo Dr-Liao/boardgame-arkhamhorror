@@ -13,8 +13,8 @@
 ## 1. 一句话现状
 
 迁移工具链已交付，**337 张卡**迁到能力层（59 个批次），`EFFECTS` 385 → **57**、
-通道 legacy 286 → **51**、descriptor 75 → **404**、**逃生卡 93 → 0（5c 完成）**、**5b 遗留清零**、**引擎卡号 166 → 56**。
-`replay` 基线逐条不变、`fast` 无新增失败。**5c 与 5b 均已完成；只剩 5a 引擎卡号分支（56 个码）。**
+通道 legacy 286 → **51**、descriptor 75 → **404**、**逃生卡 93 → 0（5c 完成）**、**5b 遗留清零**、**引擎卡号 166 → 54**。
+`replay` 基线逐条不变、`fast` 无新增失败。**5c 与 5b 均已完成；5a 引擎卡号分支还剩 54 个码（其中行为分支 26 个、`reference` 28 个归 Phase 6）。**
 
 ---
 
@@ -62,7 +62,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 | 文档 | 本文 + `phase5-migration.md`（批次证据与踩坑记录）+ `card-model.md`（加卡流程） |
 
 批次：5b-1…5b-5（机械 154）、5b-6/6b/6c/6d/7/8a/8b/9/10/11（反应/天赋/被动/规则字段/封印附属 46）、
-5c-1…5c-39（逃生卡 93 = 全部）、5b-8 / 5b-12 / 5b-13 / 5b-14（9 张）、5a-1…5a-24（引擎侧 66 个码）。
+5c-1…5c-39（逃生卡 93 = 全部）、5b-8 / 5b-12 / 5b-13 / 5b-14（9 张）、5a-1…5a-25（引擎侧 68 个码）。
 
 ---
 
@@ -93,7 +93,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 ⑤ replay --compare + 该战役验收用例
 ```
 
-### 4.2 5a 剩余 56 个码（`condition` 8 / `block` 20 / `reference` 28 / `table` 0）
+### 4.2 5a 剩余 54 个码（`condition` 7 / `block` 19 / `reference` 28 / `table` 0）
 
 - **`reference`（30）**：多数是 `requestChoice({ source: '0xxxx' })` 的来源标签——它会进状态指纹，
   改法本身会改变 replay，**归 Phase 6 与 UI 文案一起处理**，不要单独动。
@@ -151,3 +151,46 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 - `artifacts/replay-before.json` 不入库（`.gitignore`）。
 - `develop/scaffolds/`（`scaffold-card.mjs` 生成的骨架）是临时产物，已清理，需要时重新生成。
 - 本仓库是 `boardgame-hall-ai` 的子模块，提交后父仓库要更新指针。
+
+## 5. Phase 5 收尾状态（本轮自动化结束时）
+
+### 5.1 已完成
+
+| 子阶段 | 状态 | 指标 |
+| --- | --- | --- |
+| 5c 逃生卡 | ✅ 完成 | `escapeCards` 93 → **0**（39 批） |
+| 5b 尾部（反应 / 非 stats 被动 / 打出后去向） | ✅ 完成 | 9 张卡 + 4 个字段 |
+| 5a 引擎卡号分支 | 🚧 进行中 | `engineCodes` 166 → **54**（25 批） |
+
+累计 **360 张卡 / 73 个迁移批次**；`EFFECTS` 385 → 57，`legacy` 286 → 49，
+`descriptorEntries` 79 → 408，`descriptorAbilities` 343 → 345，`abilityKinds` 11 → 12（新增 `setup`），
+窗口 52 个不变。
+
+每一个批次都满足：`replay --compare` 逐条一致、白名单只收缩、fast tier 新增失败 0 条、
+三份文档同步、子模块与父指针都已提交。
+
+### 5.2 剩余（按优先级）
+
+**A. 5a 行为分支 26 个**（`cards:workorder` 的 `condition` + `block`）：
+
+- 调查员能力族 8 个：`03001 03002 03003 03006 03011`、`04004 04022 04147`
+- 弱点 / 场景族 13 个：`03010 03012 03038 03042(已迁) 03059 03148 03149 03193 03199 03232 04142 04193 04230 04231 04265`
+- 遭遇 / 地点族 5 个：`01117 02031(已迁) 02088 02305 02320`
+
+**B. 5a `reference` 28 个**：`requestChoice` 的 `source: '0xxxx'` 文案标签，
+按路线图归 **Phase 6**（与 UI 文案 / 日志一起处理，避免两处改同一段字符串）。
+
+**C. 其它阶段**：Phase 6（`reference` + 文案）、Phase 7（`legacy` 通道 49 项）见 roadmap。
+
+### 5.3 下一批的推荐做法
+
+1. 先 `node --input-type=module -e "import j from './audit/ability-workorder.json' …"` 看剩余码清单；
+2. 按「同一族一次收 2–4 个」挑，优先能复用现有规则表（`ENEMY_RULE_FLAGS` / `BLANKS_TRAITS` /
+   `LOCATION_COUNTER_TREACHERY` / `WEAKNESS_UPGRADE_CODES`）与现有 api 的；
+3. 迁移顺序固定：**写描述子/字段 → 删旧分支 → 注册 pack → 删引擎分支 → 跑门禁**；
+4. 三个高频坑（都踩过）：
+   - **重复描述子**：条目可能已存在（`card-abilities.js` / `ability-migration-batches.js`），
+     先 grep 卡号再决定「加字段」还是「新建条目」；
+   - **账本**：只有 `EFFECTS[code]` 真的删掉了才写进 `audit/migration-batches.json`；
+   - **数据表 vs 读点**：数据加到哪张表、引擎就读哪张表，否则 `replay` 抓不到静默失能。
+

@@ -876,7 +876,8 @@ export const BATCH_5B_3 = [
   {
     code: '02031',
     abilities: [
-      { kind: 'played', label: '困兽之笼', effect: { type: 'bindMonster' } },
+      // Phase 5（5a-25）：卡号随效果数据走（引擎读 effect.code）。
+      { kind: 'played', label: '困兽之笼', effect: { type: 'bindMonster', code: '02031' } },
     ],
   },
   {

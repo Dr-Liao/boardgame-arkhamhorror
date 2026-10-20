@@ -179,6 +179,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'weaknessStaysInHand',
   // Phase 5（5a-24）：附属在宿主支援上时给宿主的技能加成（值得信赖）。
   'attachedSkillBonus',
+  // Phase 5（5a-25）：弱点在离承受者最远的地点生成（随行鬼影）。
+  'weaknessSpawnsAtFarthestLocation',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -424,6 +426,7 @@ export function registerCardAbilities(entries) {
       exileForAutoSuccess: entry.exileForAutoSuccess === true,
       weaknessStaysInHand: entry.weaknessStaysInHand === true,
       attachedSkillBonus: entry.attachedSkillBonus ?? null,
+      weaknessSpawnsAtFarthestLocation: entry.weaknessSpawnsAtFarthestLocation === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

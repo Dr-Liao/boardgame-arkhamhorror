@@ -3399,6 +3399,8 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '01013', weaknessStaysInHand: true },
   // 04020 值得信赖：附属在支援上时，结算宿主能力每项技能 +1（读点在 investigate/attack 两处）。
   { code: '04020', attachedSkillBonus: 1 },
+  // 03042 随行鬼影：在离承受者最远的地点生成（读点在 resolveWeakness 的敌人弱点段）。
+  { code: '03042', weaknessSpawnsAtFarthestLocation: true },
   // 02138 / 02139 / 02179（远古遗物系列）：调查员被消除时离场并进弃牌堆。
   { code: '02138', discardOnElimination: true },
   { code: '02139', discardOnElimination: true },

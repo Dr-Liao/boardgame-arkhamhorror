@@ -686,6 +686,12 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-25：随行鬼影最远生成 / 困兽之笼卡号（03042、02031）----
+
+test('5a-25：03042 的最远生成与 02031 的绑定卡号都改成数据驱动', () => {
+  assert.equal(registeredEntry('03042')?.weaknessSpawnsAtFarthestLocation, true, '随行鬼影在最远地点生成')
+})
+
 // ---- 5a-24：禁弃牌敌人 / 值得信赖 / 幕的放地点规则（03017、04020、04318）----
 
 test('5a-24：三条规则都改成数据驱动', () => {
