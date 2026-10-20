@@ -684,6 +684,29 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-30：附属到地点并把帷幕视为 1（04270 骷髅钥匙）----
+
+test('5c-30：04270 骷髅钥匙附属到所在地点，该地点帷幕视为 1', () => {
+  const state = fixture()
+  const key = asset(state, '04270')
+  const locationId = state.investigators[0].location
+  const here = state.locations.find(location => location.id === locationId)
+  here.shroud = 5
+  here.clues = 2
+  use(state, key)
+  settle(state)
+  const attachment = (state.locations.find(location => location.id === locationId).attachments || [])
+    .find(entry => entry.code === '04270')
+  assert.ok(attachment, '作为地点附属入场')
+  assert.equal(attachment.shroudAsOne, true, '附属条目带声明式标记')
+  assert.equal(state.investigators[0].assets.some(item => item.id === key.id), false, '支援离场')
+  // 帷幕视为 1：智识 3 对难度 1，揭示 0 即成功。
+  state.chaosBag = ['0']
+  move(state, { action: 'investigate' })
+  settle(state)
+  assert.equal(state.investigators[0].clues, 1, '按帷幕 1 调查成功')
+})
+
 // ---- 5c-29：研究记录与充能类型（03025 古代雕文）----
 
 test('5c-29：03025 古代雕文第三次翻译后离场、给 5 资源并记下研究', () => {

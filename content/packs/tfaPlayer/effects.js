@@ -20,8 +20,7 @@ export const effects = {
     uses: 5, usesType: 'ammo', discardAtRoundEnd: true,
     abilities: [action('花费 1 子弹：攻击（战斗 +1，伤害 +1）', fight(1, 1), { uses: 1 })],
   },
-  '04270': { exceptional: true, fast: true, abilities: [{ label: '附属/解除到所在地点', cost: { action: true },
-    effect: tfa('skeletonKey') }] },
+  // 04270 骷髅钥匙已迁到能力层（5c-30），见 MIGRATED_ESCAPE_ENTRIES_5C30。
   // ---- 事件 ----
   '04111': { fast: true, reaction: { when: 'harmDealt', selfOnly: true },
     event: { type: 'cancelHarm', maximum: 4 } },

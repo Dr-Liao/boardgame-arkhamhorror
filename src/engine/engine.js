@@ -7510,24 +7510,6 @@ function tfaPlayerEffectCore(state, seat, effect, events) {
     info(state, events, `「背包」附属了 ${matches.length} 张卡牌。`)
     return
   }
-  // 手铐：用战斗代替敏捷躲避人形敌人，成功后附属并使其无法重整。
-  // 骷髅钥匙：在游戏区域与所在地点之间附属/解除。
-  if (effect.action === 'skeletonKey') {
-    const key = inv.assets.find(asset => asset.code === '04270')
-    const here = state.locations.find(location => location.id === inv.location)
-    const attachedHere = (here?.attachments || []).find(entry => entry.code === '04270')
-    if (attachedHere && here) {
-      here.attachments = here.attachments.filter(entry => entry.code !== '04270')
-      if (key) inv.assets.push(key)
-      info(state, events, '「骷髅钥匙」解除附属并回到游戏区域。')
-      return
-    }
-    if (!key || !here) return
-    leaveAsset(state, inv, key, events)
-    attachCardTo(state, seat, '04270', here)
-    info(state, events, `「骷髅钥匙」附属到「${here.name}」，该地点隐藏值视为 1。`)
-    return
-  }
   throw new Error(`未实现的失落玩家卡效果：${effect.action}`)
 }
 
@@ -9744,8 +9726,8 @@ function doInvestigate(state, seat, opts, events, noSpend) {
   // 剩余行动/控制支援数，失落时代 P2）。D1：地点卡自己的声明式帷幕修正也在这里叠加。
   const scenarioShroud = (scenarioBehavior(state).locationShroudModifier?.(state, loc, inv) || 0)
     + entityModifierTotal(state, loc, 'locationShroud')
-  // 「骷髅钥匙」：附属地点的帷幕设为 1。
-  const keyed = (loc.attachments || []).some(entry => entry.code === '04270')
+  // 「骷髅钥匙」：附属地点的帷幕设为 1（现在是附属条目上的声明式标记 shroudAsOne）。
+  const keyed = (loc.attachments || []).some(entry => entry.shroudAsOne === true)
   const difficulty = keyed ? 1
     : loc.shroud + (loc.shroudMod || 0) + temporaryShroud + scenarioShroud + (state.fogMod || 0) + (opts.shroudMod || 0)
   const noIntellectBoost = skill === 'intellect' && loc.noIntellectBoost
@@ -10662,6 +10644,14 @@ function abilityApi(state, events) {
       state.clues = (state.clues || 0) - amount
       location.clues = (location.clues || 0) + amount
       return amount
+    },
+    // Phase 5（5c-30）：「骷髅钥匙」把支援附属到所在地点（可带声明式字段，如 shroudAsOne）。
+    attachSelfToLocation: (card, locationId, fields = {}) => {
+      const owner = state.investigators.find(person => (person.assets || []).includes(card))
+      const location = state.locations.find(item => item.id === locationId)
+      if (!owner || !location || !card) return null
+      leaveAsset(state, owner, card, events)
+      return attachCardTo(state, owner.seat, card.code, location, fields)
     },
     // Phase 5（5c-29）：「古代雕文」这类卡要把「研究记录」写进战役账本。
     recordResearch: key => {
