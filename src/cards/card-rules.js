@@ -72,6 +72,8 @@ export const ENEMY_RULE_FLAGS = Object.freeze({
   '02094': Object.freeze({ rangedAttackDifficultyReduction: 3 }),
   // 02255：只能被 02254（深奥咒文）伤害，普通攻击/攻击行动都对它无效。
   '02255': Object.freeze({ damageOnlyFrom: '02254' }),
+  // 03017：与它交战期间不能弃牌。
+  '03017': Object.freeze({ locksDiscardWhileEngaged: true }),
   // 02182：与它交战期间不能移动。
   '02182': Object.freeze({ blocksMovementWhileEngaged: true }),
   // 02103：用近战武器攻击它时，武器被摧毁。
@@ -118,4 +120,11 @@ export const LITA_CHANDLER_CODE = '01117'
 // 卡号级规则数据：某个地点计数对应哪张遭遇卡（奥术屏障这类「计数器 + 卡」的机制）。
 export function counterTreacheryCode(field) {
   return LOCATION_COUNTER_TREACHERY[field] || null
+}
+
+// 卡号级规则数据：会在「无人生成地点为空」时翻开探索牌库放地点的议程/幕（原 engine.js 硬编码 04318）。
+export const ACTS_PLACING_LOCATION_FOR_EMPTY_SPAWN = Object.freeze(['04318'])
+
+export function actPlacesLocationForEmptySpawn(code) {
+  return ACTS_PLACING_LOCATION_FOR_EMPTY_SPAWN.includes(code)
 }

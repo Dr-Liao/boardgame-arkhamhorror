@@ -10,7 +10,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
 import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine/engine.js'
-import { blanksTraits, counterTreacheryCode, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
+import { actPlacesLocationForEmptySpawn, blanksTraits, counterTreacheryCode, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
   SMITE_THE_WICKED_CODE, SEARCHING_FOR_IZZIE_CODE, weaknessUpgradeCode, LITA_CHANDLER_CODE } from '../src/cards/card-rules.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
@@ -684,6 +684,15 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   const entry = registeredEntry('03010')
   assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
+
+// ---- 5a-24：禁弃牌敌人 / 值得信赖 / 幕的放地点规则（03017、04020、04318）----
+
+test('5a-24：三条规则都改成数据驱动', () => {
+  assert.deepEqual(enemyRuleFlags('03017'), { locksDiscardWhileEngaged: true }, '03017 禁弃牌')
+  assert.equal(registeredEntry('04020')?.attachedSkillBonus, 1, '值得信赖的附属加成')
+  assert.equal(actPlacesLocationForEmptySpawn('04318'), true, '04318 会翻探索牌库放地点')
+  assert.equal(actPlacesLocationForEmptySpawn('01001'), false)
 })
 
 // ---- 5a-23：02255 的伤害来源限制（规则表）----

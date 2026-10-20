@@ -48,6 +48,7 @@ import {
   weaknessUpgradeCode,
   LITA_CHANDLER_CODE,
   counterTreacheryCode,
+  actPlacesLocationForEmptySpawn,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -2789,7 +2790,8 @@ function drawEncounter(state, inv, events) {
       }) : null
       const act = state.acts?.[state.actIndex]
       const actCode = String(act?.originalCode || act?.code || '')
-      if (!picked && !empty.length && actCode === '04318') {
+      // Phase 5（5a-24）：哪些幕会「翻探索牌库放地点」由卡号规则数据声明。
+      if (!picked && !empty.length && actPlacesLocationForEmptySpawn(actCode)) {
         // 04318 强制：翻探索牌库直到地点，放在场上并让敌人在这里生成。
         picked = placeLocationForEmptySpawn(state)
         if (picked) info(state, events, `🌐 彼端的世界：从探索牌库翻出地点「${locName(state, picked)}」并让「${def.name}」在那里生成。`)
@@ -2903,7 +2905,8 @@ function reactionWindow(state, when, context, events) {
 }
 
 function discardLocked(state, inv) {
-  return state.enemies.some(enemy => enemy.code === '03017' && enemy.engagedSeat === inv.seat && !enemyTextBlanked(state, enemy))
+  return state.enemies.some(enemy => enemyRuleFlags(enemy.code).locksDiscardWhileEngaged
+    && enemy.engagedSeat === inv.seat && !enemyTextBlanked(state, enemy))
 }
 
 // Phase 5（5a-18）：「打出的事件进牌库顶而不是弃牌堆」由条目级 playedEventsToDeckTop 声明。
@@ -9541,7 +9544,9 @@ function doInvestigate(state, seat, opts, events, noSpend) {
 
   // 「值得信赖」：结算宿主支援的触发能力时每项技能 +1。
   const trustedHost = inv.assets.find(item => item.id === opts.assetId)
-  const trustedFreshBonus = (trustedHost?.attachments || []).some(entry => entry.code === '04020') ? 1 : 0
+  // Phase 5（5a-24）：「值得信赖」授予的每项技能 +1 由附属卡的条目字段声明。
+  const trustedFreshBonus = (trustedHost?.attachments || [])
+    .reduce((sum, entry) => sum + (registeredEntry(entry.code)?.attachedSkillBonus || 0), 0)
   return performTest(state, seat, skill, difficulty, { source: { label: '调查', name: loc.name, code: loc.originalCode || loc.code }, baseValue,
     skillBonus: (noIntellectBoost ? 0 : skill === 'intellect' ? investigateBonus(inv) : 0) + (opts.bonus || 0)
       + (opts.addSkill ? getStat(state, inv, opts.addSkill) : 0) + trustedFreshBonus, resolve: r => {
@@ -9711,7 +9716,9 @@ function doFight(state, seat, opts, events, noSpend) {
   const attackFx = { weaponCode, attackStyle: attackStyle(weaponCode && cardDef(weaponCode)) }
   // 「值得信赖」：结算宿主支援的触发能力时每项技能 +1。
   const trustedHost = inv.assets.find(item => item.id === opts.assetId)
-  const trustedBonus = (trustedHost?.attachments || []).some(entry => entry.code === '04020') ? 1 : 0
+  // Phase 5（5a-24）：同上（攻击流程里的那处）。
+  const trustedBonus = (trustedHost?.attachments || [])
+    .reduce((sum, entry) => sum + (registeredEntry(entry.code)?.attachedSkillBonus || 0), 0)
   return performTest(state, seat, skill, difficulty, { source: { label: '攻击', enemyId: enemy.id, name: enemy.name, code: enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code }, baseValue: opts.baseValue,
     extraChaosChoices: opts.extraChaosChoices || 0,
     skillBonus: (opts.combatBonus || 0) + clueCombat + (opts.addSkill ? getStat(state, inv, opts.addSkill) : 0), resolve: r => {

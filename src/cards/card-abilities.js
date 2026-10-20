@@ -3397,6 +3397,8 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '02271', exileForAutoSuccess: true },
   // 01013 黑暗回忆：抽到后留在手里（可支付费用打出），而不是立刻结算。
   { code: '01013', weaknessStaysInHand: true },
+  // 04020 值得信赖：附属在支援上时，结算宿主能力每项技能 +1（读点在 investigate/attack 两处）。
+  { code: '04020', attachedSkillBonus: 1 },
   // 02138 / 02139 / 02179（远古遗物系列）：调查员被消除时离场并进弃牌堆。
   { code: '02138', discardOnElimination: true },
   { code: '02139', discardOnElimination: true },
