@@ -70,6 +70,8 @@ export const ENEMY_RULE_FLAGS = Object.freeze({
   huntingNightgaunt: Object.freeze({ doubleNegative: true }),
   // 02094：用远程/枪械/法术武器攻击它时难度 -3。
   '02094': Object.freeze({ rangedAttackDifficultyReduction: 3 }),
+  // 02255：只能被 02254（深奥咒文）伤害，普通攻击/攻击行动都对它无效。
+  '02255': Object.freeze({ damageOnlyFrom: '02254' }),
   // 02182：与它交战期间不能移动。
   '02182': Object.freeze({ blocksMovementWhileEngaged: true }),
   // 02103：用近战武器攻击它时，武器被摧毁。

@@ -686,6 +686,13 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-23：02255 的伤害来源限制（规则表）----
+
+test('5a-23：02255 只能被 02254 伤害的规则在敌人规则表里', () => {
+  assert.deepEqual(enemyRuleFlags('02255'), { damageOnlyFrom: '02254' })
+  assert.deepEqual(enemyRuleFlags('02254'), {}, '02254 自身没有该限制')
+})
+
 // ---- 5a-22：留在手里的弱点 / 奥术屏障卡号（01013、02102）----
 
 test('5a-22：01013 的「留在手里」与 02102 的卡号都改成数据驱动', () => {

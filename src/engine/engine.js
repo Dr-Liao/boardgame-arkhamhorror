@@ -4811,7 +4811,10 @@ function defeatEnemy(state, enemy, events) {
 }
 
 function damageEnemy(state, enemy, amount, seat, events, source = null) {
-  if (!enemy || !(amount > 0) || (enemy.code === '02255' && source !== '02254' && !enemyTextBlanked(state, enemy))) return false
+  // Phase 5（5a-23）：02255 只能被特定来源伤害（规则表 damageOnlyFrom）。
+  const damageRule = enemyRuleFlags(enemy?.code)
+  if (!enemy || !(amount > 0)
+    || (damageRule.damageOnlyFrom && source !== damageRule.damageOnlyFrom && !enemyTextBlanked(state, enemy))) return false
   if (!enemyTextBlanked(state, enemy)
     && (entityRuleActive(state, enemy, 'cannot:beDamaged')
       || scenarioBehavior(state).enemyDamageAllowed?.(state, enemy, source, seat) === false)) return false
@@ -9648,7 +9651,8 @@ function doFight(state, seat, opts, events, noSpend) {
     info(state, events, `⛔ 「${enemy.name}」不能被攻击。`)
     return
   }
-  if (enemy?.code === '02255' && opts.assetId !== '02254' && !enemyTextBlanked(state, enemy)) return
+  const invulnSource = enemyRuleFlags(enemy?.code).damageOnlyFrom
+  if (invulnSource && opts.assetId !== invulnSource && !enemyTextBlanked(state, enemy)) return
   if (opts.requireNotEngagedTarget && enemy?.engagedSeat === seat) { info(state, events, '该武器不能攻击与你交战的敌人。'); return }
   if (!noSpend) payActionCost(state, inv, 'fight', events)
   if (!enemy) { info(state, events, `${inv.name} 找不到可攻击的敌人。`); return }
@@ -9783,7 +9787,7 @@ function doFight(state, seat, opts, events, noSpend) {
         info(state, events, '「特制弹药」：攻击怪物 +1 伤害。')
       }
 
-      if (enemy.code === '02255' && opts.assetId !== '02254' && !enemyTextBlanked(state, enemy)) return
+      if (enemyRuleFlags(enemy.code).damageOnlyFrom && opts.assetId !== enemyRuleFlags(enemy.code).damageOnlyFrom && !enemyTextBlanked(state, enemy)) return
       // 「职业杀手」：本回合该敌人下次受到的攻击伤害 +1（一次性）。
       if (enemy.tfaDamageBonus?.round === state.round) {
         dmg += enemy.tfaDamageBonus.amount || 0
@@ -11675,7 +11679,7 @@ export function legalMoves(state, observerSeat) {
   }
 
   for (const enemy of state.enemies.filter(enemy => enemy.location === inv.location)) {
-    if ((enemy.code !== '02255' || enemyTextBlanked(state, enemy)) && !hiddenFightBlocked(state, inv, enemy)
+    if ((!enemyRuleFlags(enemy.code).damageOnlyFrom || enemyTextBlanked(state, enemy)) && !hiddenFightBlocked(state, inv, enemy)
       && !enemyCannotBeAttacked(state, enemy))
       moves.push({ action: 'fight', enemyId: enemy.id, label: `⚔️ 攻击「${enemy.name}」（战斗 vs ${enemyFightValue(state, enemy, inv)}${enemy.retaliate ? '，反击' : ''}）` })
     if (scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) !== false)
@@ -12050,7 +12054,7 @@ function abilityTargets(state, inv, effect) {
   }
   if (effect.type === 'fight') return state.enemies.filter(enemy => enemy.location === inv.location
     && (!effect.requireNotEngagedTarget || enemy.engagedSeat !== inv.seat)
-    && (enemy.code !== '02255' || enemyTextBlanked(state, enemy))
+    && (!enemyRuleFlags(enemy.code).damageOnlyFrom || enemyTextBlanked(state, enemy))
     && !hiddenFightBlocked(state, inv, enemy))
   if (effect.type === 'evade') return enemiesEngagedWith(state, inv)
   return []
@@ -12339,7 +12343,7 @@ export function validateMove(state, seat, move) {
       if (capabilityBlocked(state, inv, 'fight')) return '当前效果禁止你攻击'
       const enemy = state.enemies.find((e) => e.id === move.enemyId)
       if (!enemy) return '未找到该敌人'
-      if (enemy.code === '02255' && !enemyTextBlanked(state, enemy)) return '子嗣只能使用深奥的咒文攻击'
+      if (enemyRuleFlags(enemy.code).damageOnlyFrom && !enemyTextBlanked(state, enemy)) return '子嗣只能使用深奥的咒文攻击'
       if (hiddenFightBlocked(state, inv, enemy)) return '隐私牌禁止你攻击该敌人'
       const canFight = enemy.location === inv.location
       if (!canFight) return '该敌人未与你交战'
