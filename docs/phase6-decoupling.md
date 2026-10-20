@@ -1050,3 +1050,46 @@ setCurrentActionKind: value => { currentActionKind = value },
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 4853 行**（12654 → 7801，−38.3%）。
+
+## 28. 6d-21：拆出 movement.js（移动与位置）
+
+### 28.1 拆的是什么
+
+八个函数（共 202 行，28 项依赖）搬进 `src/engine/movement.js`：
+
+`stepToward` / `distanceToInvestigator` / `investigatorMoveDestinations` / `moveInvestigatorTo` /
+`doShortcutMove` / `doMove` / `relocateInvestigator` / `relocateEnemy`
+
+即「谁在哪里、怎么过去」：连接图 BFS、可去地点枚举、移动执行（含进入地点代价与借机攻击）、
+把调查员/敌人挪走。被 `do*`（攻击/躲避/调查）与剧本运行时同时使用。
+
+### 28.2 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **7641**（6d-20 后 7801） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/setup.js` | 578 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/dispatch.js` | 436 |
+| `src/engine/encounter.js` | 400 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/ability-exec.js` | 369 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/campaign-flow.js` | 252 |
+| `src/engine/movement.js` | **249** |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 5013 行**（12654 → 7641，−39.6%）。
+
+`engine.js` 现在只剩下这些职责：游戏状态机（阶段循环）、各个 `do*`（攻击/躲避/调查/出牌之外的
+具体动作）、技能检定前处理、以及能力层各 api 的装配。
