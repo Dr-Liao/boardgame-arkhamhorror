@@ -577,3 +577,60 @@ function abilityApi(state, events) {
 
 累计迁出 **约 2262 行**（12654 → 10392，−17.9%）。下一步：`performTest`（782 行）→ `src/engine/tests.js`，
 然后 `scenarioRuntime`（317 行），最后进入战役插件化。
+
+## 19. 6d-12：拆出 tests.js（performTest，最大的一块）
+
+### 19.1 拆的是什么
+
+`performTest`（**782 行**）搬进 `src/engine/tests.js`，导出 `createPerformTest(deps)`。
+一次检定跨 ST.1–ST.8 八个阶段（投入 → 揭示标记 → 结算修正 → 结果回调 → 收尾），
+它调用几乎所有子系统（卡牌投入、混乱标记、隐藏卡、反应窗口），依赖 **61 项**——
+是拆分过程中依赖最多的一块，也是「engine.js 之后只剩编排」的关键一步。
+
+### 19.2 新坑：被 api 依赖表引用的函数必须惰性装配
+
+`performTest` 被多个 `apiXxxDeps` 表引用，而那些表在**模块顶层立即求值**。
+用 `export const performTest = createPerformTest({...})` 会得到：
+
+```
+ReferenceError: Cannot access 'performTest' before initialization
+```
+
+解法：保留**函数声明**（hoisted）+ 首次调用装配：
+
+```js
+let performTestImpl = null
+export function performTest(state, seat, skill, difficulty, options = {}) {
+  performTestImpl ||= createPerformTest({ /* 61 项依赖 */ })
+  return performTestImpl(state, seat, skill, difficulty, options)
+}
+```
+
+这样既保持 `import { performTest } from engine.js` 的老路径，也保证依赖在运行时才解析。
+（thunk 方案在这一例里不适用：`performTest` 需要被当作函数值直接调用几十次，包装层反而更干净。）
+
+### 19.3 另一个坑：切块尾部混进下一段的注释
+
+`performTest` 之后紧跟「检定 resolve 回调挂 WeakMap」和「学无止境失败窗口」两段注释，
+按「下一个顶层声明」扫边界会把它们吞进新模块，尾部出现孤立 `}`。
+做法：切完后**从尾部逐行回退到第一个 `}`**（函数收尾），并在新模块里显式补 `return performTest`。
+
+### 19.4 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **9684**（6d-11 后 10392） |
+| `src/engine/tests.js` | **858** |
+| `src/engine/moves.js` | 652 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 2970 行**（12654 → 9684，−23.5%）。engine.js 首次降到 1 万行以下。
