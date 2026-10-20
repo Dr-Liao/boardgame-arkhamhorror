@@ -61,9 +61,6 @@ export const EFFECTS = {
   // 中立 Neutral（0 级）
   // =========================================================================
   // 03143 焦虑（剧情资产）：理智 -1；理智不多于 3 时意志/战斗/敏捷 +1。
-  '03143': { passive: { sanityBonus: -1, conditionalStats: {
-    remainingSanityAtMost: 3, stats: { willpower: 1, combat: 1, agility: 1 },
-  } } },
   '01086': { // 刀子 Knife
     abilities: [
       { label: '战斗（战斗 +1）', cost: { action: true }, effect: { type: 'fight', combatBonus: 1 } },

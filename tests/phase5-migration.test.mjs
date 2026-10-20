@@ -9,7 +9,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
-import { actionPreview, getStat, performTest } from '../src/engine/engine.js'
+import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -682,6 +682,21 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   const entry = registeredEntry('03010')
   assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
+
+// ---- 5b-14：剧情资产的持续修正（03143 褴褛披风）----
+
+test('5b-14：03143 褴褛披风剩余理智 ≤ 3 时 +1 三项、并 -1 理智上限', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  const baseWillpower = getStat(state, inv, 'willpower')
+  asset(state, '03143')
+  assert.equal(getMaxSanity(inv), inv.maxSanity - 1, '理智上限 -1')
+  assert.equal(getStat(state, inv, 'willpower'), baseWillpower, '理智充足时没有加值')
+  inv.horror = getMaxSanity(inv) - 3
+  assert.equal(getStat(state, inv, 'willpower'), baseWillpower + 1, '意志 +1')
+  assert.equal(getStat(state, inv, 'combat'), inv.combat + 1, '战斗 +1')
+  assert.equal(getStat(state, inv, 'agility'), inv.agility + 1, '敏捷 +1')
 })
 
 // ---- 5b-13：带「弃掉自己 / 自己受伤」费用的主动能力（01018 / 01027 / 01028）----
