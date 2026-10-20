@@ -7077,12 +7077,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     else inv.itemDiscountAtLocation = { amount: 1, round: state.round, phase: state.phase }
     return
   }
-  if (effect.action === 'forewarned') {
-    const location = state.locations.find(item => item.id === inv.location)
-    if (inv.clues > 0 && location) { inv.clues--; state.clues--; location.clues = (location.clues || 0) + 1 }
-    state._reaction && (state._reaction.cancelled = true)
-    return
-  }
   if (effect.action === 'onTheHunt') {
     const top = state.encounterDeck.slice(-9)
     const candidates = top.map((code, index) => ({ code, index, def: enemyDef(code) }))
@@ -10767,6 +10761,17 @@ function abilityApi(state, events) {
       owner.deck = shuffle([...owner.deck, ...owner.discard], () => randomValue(state))
       owner.discard = []
       return owner.deck.length
+    },
+    // Phase 5（5c-22）：「预警」花 1 个线索并把它放回所在地点（这是卡的代价，不是退还费用）。
+    // 三处写入与旧 handler 逐字一致：个人线索 -N、state.clues（各人线索之和）-N、地点线索 +N。
+    spendClueToLocation: (seat, amount = 1) => {
+      const owner = state.investigators[seat]
+      const location = state.locations.find(item => item.id === owner?.location)
+      if (!owner || !location || (owner.clues || 0) < amount) return 0
+      owner.clues -= amount
+      state.clues = (state.clues || 0) - amount
+      location.clues = (location.clues || 0) + amount
+      return amount
     },
     // Phase 5（5c-21）：「以折扣打出另一张牌」的候选筛选——这张牌现在打出去有没有合法目标。
     // 与 effectError / validateMove 用的是同一份 abilityTargets；没有目标要求时恒为真

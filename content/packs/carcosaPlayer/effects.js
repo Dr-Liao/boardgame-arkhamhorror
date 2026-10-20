@@ -33,8 +33,7 @@ export const effects = {
 
   '03149': { payForItemAtLocation: true, abilities: [{ label: '下一件物品费用-1',
     cost: { action: false, exhaust: true }, effect: custom('charlesRoss') }] },
-  '03150': { fast: true, reaction: { when: 'encounterDrawn', nonWeaknessOnly: true, treacheryOnly: true },
-    event: custom('forewarned') },
+  // 03150 预警已迁到能力层（5c-22），见 MIGRATED_ESCAPE_ENTRIES_5C22。
   '03156': { fast: true, reaction: { when: 'encounterDrawn', nonWeaknessOnly: true, treacheryOnly: true },
     event: { type: 'cancelTreachery' }, exileAfterPlay: true },
   '03157': { fast: true, reaction: { when: 'harmDealt' },

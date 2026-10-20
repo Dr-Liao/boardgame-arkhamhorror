@@ -684,6 +684,34 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-22：反应窗口的快速事件（03150 预警）----
+
+test('5c-22：03150 预警在抽到诡计时快速打出，花 1 个线索取消它', () => {
+  const state = fixture()
+  const me = state.investigators[0]
+  me.hand = ['03150']
+  me.clues = 2
+  state.clues = 2
+  const hereId = me.location
+  state.locations.find(location => location.id === hereId).clues = 0
+  state.encounterDeck = ['01165', '01165', '01165'] // 刺耳之声：核心池里的诡计
+  let offered = false
+  move(state, { action: 'endTurn' })
+  settle(state, pending => {
+    const option = pending.options?.find(item => item.cardCode === '03150')
+    if (option) { offered = true; return option.id }
+    return null
+  })
+  assert.equal(offered, true, '诡计遭遇窗口里应当能打出预警')
+  const after = state.investigators[0]
+  assert.equal(after.clues, 1, '花掉 1 个个人线索')
+  assert.equal(state.clues, 1, '线索总数同步下降')
+  assert.equal(state.locations.find(location => location.id === hereId).clues, 1, '线索放回所在地点')
+  assert.deepEqual(after.threat.map(card => card.code), [], '诡计被取消，不进入威胁区')
+  assert.ok(state.encounterDiscard.includes('01165'), '被取消的诡计进弃牌堆')
+  assert.equal(after.hand.includes('03150'), false, '预警已打出')
+})
+
 test('5c-21：03033 解锢灵魂以费用 -3、不花行动打出法术，且只列有目标/无目标要求的候选', () => {
   const state = fixture()
   const me = state.investigators[0]

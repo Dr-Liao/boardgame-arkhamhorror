@@ -3,11 +3,11 @@
   "note": "由 tools/audit-abilities.mjs --write 生成，勿手改。指标只允许下降；engineCodes / effectsEntries 的每一次减少都是一次迁移证据，必须随迁移一起提交。",
   "metrics": {
     "engineCodes": 119,
-    "effectsEntries": 86,
+    "effectsEntries": 85,
     "effectsTopLevelFields": 46,
-    "escapeCards": 23,
-    "descriptorEntries": 377,
-    "descriptorAbilities": 318,
+    "escapeCards": 22,
+    "descriptorEntries": 378,
+    "descriptorAbilities": 319,
     "abilityKinds": 11,
     "windows": 52,
     "effectPrimitives": 97,
@@ -16,11 +16,11 @@
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 373,
+    "descriptor": 374,
     "legacy": 59,
     "engine": 5,
     "hybrid": 1,
-    "escape": 23
+    "escape": 22
   },
   "nonPlayer": {
     "byScope": {
@@ -1604,11 +1604,8 @@
     },
     {
       "code": "03150",
-      "channel": "escape",
-      "descriptors": 0,
-      "escapePrimitives": [
-        "carcosaPlayer"
-      ]
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "03151",
