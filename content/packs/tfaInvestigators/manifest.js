@@ -69,51 +69,12 @@ export const investigatorAbilities = {
 
 // Source: 参考资源/.../library/Arkham/Player/Cards/TheForgottenAge/*.hs
 export const signatureEffects = {
-  '04006': { // 米奇·布朗 Mitch Brown
-    passive: { allySlotsForNonUnique: 2 },
-  },
-  '04007': { // 血的代价 Bought in Blood
-    weakness: { type: 'boughtInBlood' },
-  },
-  '04008': { // 杰克·威廉斯 Jake Williams
-    passive: { noOpportunityFirstAction: true },
-    reactions: [{
-      id: 'jakeDraw', when: 'locationRevealed', cost: { exhaust: true }, limit: 'round',
-      prompt: '是否横置杰克·威廉斯抽取 1 张牌？',
-      effect: { type: 'draw', amount: 1 },
-    }],
-  },
-  '04009': { // 未知的呼唤 Call of the Unknown
-    weakness: { type: 'threat', turnForced: 'callOfTheUnknown' },
-  },
   '04010': { // 走私货物 Smuggled Goods
     playRestriction: 'noReadyEnemy',
     event: { type: 'tfaInvestigator', action: 'smuggledGoods', trait: 'Illicit', traitZh: '违法', amount: 9 },
   },
-  '04011': { // 芬恩可靠的.38手枪 Finn's Trusty .38
-    fast: true, uses: 3, usesType: 'ammo',
-    abilities: [{
-      label: '花费 1 子弹：攻击（战斗 +2，未交战敌人额外 +1 伤害）',
-      cost: { action: true, uses: 1 },
-      effect: { type: 'tfaInvestigator', action: 'finnPistol', kind: 'fight' },
-    }],
-  },
-  '04012': { // 当场抓获 Caught Red-Handed
-    weakness: { type: 'caughtRedHanded' },
-  },
-  '04013': { // 古代抄本 The Codex of Ages
-    sealOnEnter: 'eldersign',
-    substituteSealedElderSign: true,
-    passive: { statsWhileSealed: { willpower: 1 } },
-  },
   '04014': { // 伊格蛇族 Serpents of Yig
     enemyWeakness: { sealsElderSign: true, hunter: true, prey: 'bearer' },
-  },
-  '04015': { // 时间尽头 Until the End of Time
-    passive: { assignDirectHarm: true },
-  },
-  '04016': { // 信使之声 Voice of the Messenger
-    weakness: { type: 'voiceOfTheMessenger' },
   },
 }
 

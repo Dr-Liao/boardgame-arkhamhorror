@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { createGameState, applyMove, legalMoves, validateMove, decisionSeat } from '../src/engine/engine.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
+import { registeredEntry } from '../src/engine/ability.js'
 
 export function move(state, command) {
   const seat = decisionSeat(state)
@@ -32,8 +33,11 @@ export function fixture(code = '01001', count = 1, settings = {}) {
   return state
 }
 export function asset(state, code, extra = {}, seat = 0) {
+  // uses 可能来自旧效果 DSL，也可能来自能力层注册条目（src/cards/card-abilities.js）。
+  const uses = EFFECTS[code]?.uses ?? registeredEntry(code)?.uses
+  const usesType = EFFECTS[code]?.usesType ?? registeredEntry(code)?.usesType
   const card = { id: 'c' + ++state.instanceSeq.c, code, exhausted: false,
-    ...(EFFECTS[code]?.uses != null ? { uses: EFFECTS[code].uses, usesType: EFFECTS[code].usesType } : {}), ...extra }
+    ...(uses != null ? { uses, usesType } : {}), ...extra }
   state.investigators[seat].assets.push(card)
   return card
 }

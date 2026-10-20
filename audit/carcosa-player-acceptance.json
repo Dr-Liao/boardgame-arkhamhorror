@@ -20,34 +20,34 @@
     "basicWeaknesses": 3,
     "verified": 95,
     "unverified": 0,
-    "testsPassed": 105
+    "testsPassed": 106
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
-      "sha256": "ef2842fac745c4f39aa7415b5eaf73a07e0e2a5b083048800f4e27ce7baf28bf"
+      "sha256": "fe6954a289f94b8fae4c70f5d07acebb1fe94048320e9e4886c95df245b0bb21"
     }
   ],
   "implementationFiles": [
     {
       "file": "games/arkhamhorror/content/packs/carcosaPlayer/effects.js",
-      "sha256": "4565d9f4affb7f9013506122744e00adfb4339aa8e50ae13c116f7102792a80e"
+      "sha256": "57c2e0ad2a099b714c07abfaba0bcad2b87a99f7eed920c789b622bf058f665a"
     },
     {
       "file": "games/arkhamhorror/content/packs/carcosaPlayer/manifest.js",
-      "sha256": "6d247b3c89f13221e5e53aad7a9e522b8b216c0bdf88088616f5fa49fb92df5a"
+      "sha256": "3354e708212acad19d06c935feca6acd2d22c8b0c3a41c324b2a159b19529d2f"
     },
     {
       "file": "games/arkhamhorror/src/deck/availability.js",
-      "sha256": "2baca9c2ec90334fc5f2638713042154d0a06c2f9ead54aca6c9455270e61527"
+      "sha256": "e2942014dab2cb95c487ec44784845dced45a12fc069cddc0249f01e9f5135c2"
     },
     {
       "file": "games/arkhamhorror/src/engine/effects.js",
-      "sha256": "0e1c17c59b8be868fbef89328b8932a20becb8ee881444a70672663f77a89153"
+      "sha256": "17b78fffb0c21199b4b8b265d4ac478f37679d1a03ffc54ef6f87fd6d07182cd"
     },
     {
       "file": "games/arkhamhorror/src/engine/engine.js",
-      "sha256": "3963b8d75c027b5a86666cd23b52e9e17cb3ef0ec03480a42bc173d7ce3bc805"
+      "sha256": "253300b2f050f55c8c87f7747c1896d755ed95ffb7cd6eeb66387ce000c66208"
     }
   ],
   "entries": [

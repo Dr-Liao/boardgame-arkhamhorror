@@ -18,7 +18,7 @@ const paragraphsIn = value => Array.isArray(value)
     : []
 
 // 逐章尚未逐条核对的卡面分支。写入迁移审计的 remaining，并让 literalCardBehavior
-// 保持 false（规范 4.2：简化分支不得同时标为逐条实现）。
+// 保持 false（规范 5.2：简化分支不得同时标为逐条实现）。
 export const SCENARIO_GAPS = {
   theUntamedWilds: [
     '「探索」的失败判定以「抽到的是敌人/诡计」近似，未逐张核对探索地点时的成功条件',

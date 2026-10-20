@@ -2,10 +2,11 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, legalMoves, move } from './core-fixture.mjs'
 import { actionPreview } from '../src/engine/engine.js'
+import { registeredEntry } from '../src/engine/ability.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 
 // P1 玩家卡一次修：快速卡不再白花行动；攻击/躲避能力不再引发借机攻击。
-// 这些是 docs/tfa-card-audit.md §2.7 第 1、2 项的系统性偏差。
+// 这些是早期逐卡审计第 1、2 项的系统性偏差（清单已并入 audit/tfa-migration.json）。
 const me = state => state.investigators[0]
 const abilityMove = (state, code, index = 0) => {
   const card = asset(state, code)
@@ -16,7 +17,8 @@ const abilityMove = (state, code, index = 0) => {
 
 test('快速卡：打出不消耗行动点', () => {
   for (const code of ['04019', '04020', '04193', '04270']) {
-    assert.equal(EFFECTS[code]?.fast, true, `${code} 应登记 fast`)
+    // Phase 5（5b-10）：fast 可能在能力层条目上（04019/04020/04193 已迁）。
+    assert.equal(EFFECTS[code]?.fast === true || registeredEntry(code)?.fast === true, true, `${code} 应登记 fast`)
     const state = fixture('04005')
     me(state).hand.push(code)
     const play = legalMoves(state).find(move => move.action === 'play' && (move.cardId === code))
@@ -41,7 +43,11 @@ test('攻击 / 躲避能力不引发借机攻击，普通能力仍然引发', ()
     enemy(state, { engagedSeat: 0, traits: ['humanoid'] })
     const ability = abilityMove(state, code, index)
     assert.equal(actionPreview(state, 0, ability).opportunityAttacks.length, 0, `${code}（${kind}）不应引发借机攻击`)
-    assert.equal(EFFECTS[code].abilities[index].effect.kind, kind, `${code} 需要声明 kind`)
+    // 旧式能力把「按哪种行动结算」写在 effect.kind 上；Phase 5 迁移后用描述子的 countsAs。
+    const descriptor = registeredEntry(code)?.abilities
+      ?.filter(item => item.kind === 'action' || item.kind === 'free')[index]
+    const declared = EFFECTS[code]?.abilities?.[index]?.effect?.kind ?? descriptor?.countsAs
+    assert.equal(declared, kind, `${code} 需要声明行动种类（effect.kind 或 countsAs）`)
   }
   // 对照：普通支援能力（重新搭箭）仍会引发借机攻击。
   const control = fixture('01001')
@@ -56,7 +62,7 @@ test('芬恩的可靠 .38 按攻击结算，不引发借机攻击', () => {
   const card = asset(state, '04011')
   const found = legalMoves(state).find(move => move.action === 'ability' && move.assetId === card.id)
   assert.ok(found)
-  assert.equal(EFFECTS['04011'].abilities[0].effect.kind, 'fight')
+  assert.equal(registeredEntry('04011').abilities[0].countsAs, 'fight')
   assert.equal(actionPreview(state, 0, found).opportunityAttacks.length, 0)
 })
 

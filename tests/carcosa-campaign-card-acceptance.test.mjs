@@ -12,6 +12,15 @@ import {
   encounterRules, implementedEnemies, implementedTreacheries,
 } from '../content/campaigns/thePathToCarcosa/encounter-rules.js'
 import { requestChoice, resolveTransaction } from '../src/engine/resolution.js'
+// Phase 3（D1）：敌人/地点的卡面声明也是「逐卡行为证据」。
+// 本文件不 import 引擎（只做账本校验），因此在这里完成最小的装配：
+// 注册能力条目 + 把注册表注入修正管线，entityModifierTotal 才有内容可读。
+import { registerCardAbilities, registeredCodes, registeredEntry } from '../src/engine/ability.js'
+import { entityModifierTotal, setModifierRegistry } from '../src/engine/modifiers.js'
+import { CARD_ABILITY_ENTRIES } from '../src/cards/card-abilities.js'
+import { NON_PLAYER_ABILITY_ENTRIES } from '../src/cards/encounter-abilities.js'
+if (!registeredCodes().length) registerCardAbilities([...CARD_ABILITY_ENTRIES, ...NON_PLAYER_ABILITY_ENTRIES])
+setModifierRegistry(registeredEntry)
 
 const cyclePacks = new Set(['ptc', 'eotp', 'tuo', 'apot', 'tpm', 'bsr', 'dca'])
 const hiddenCodes = new Set([
@@ -38,9 +47,13 @@ const extraDefinitions = [
   ...actTwoVariants,
 ]
 const runtimeJson = JSON.stringify([...scenarioData, ...extraDefinitions])
-const behaviorSurface = scenarioIds.flatMap(id => Object.values(contentRegistry.getBehavior(id))
-  .filter(value => typeof value === 'function')
-  .map(value => Function.prototype.toString.call(value))).join('\n')
+const behaviorSurface = [
+  ...scenarioIds.flatMap(id => Object.values(contentRegistry.getBehavior(id))
+    .filter(value => typeof value === 'function')
+    .map(value => Function.prototype.toString.call(value))),
+  // 卡面声明（非玩家卡描述子）与函数体一样是行为证据，只是形式从代码变成数据。
+  JSON.stringify(NON_PLAYER_ABILITY_ENTRIES),
+].join('\n')
 
 const linkedCodes = new Map()
 for (const card of Object.values(ALL_CARDS)) {
@@ -156,7 +169,8 @@ test('C5 shared encounter rules execute every formerly pending enemy and treache
     enemies: [], encounterDeck: [], encounterDiscard: [], scenarioFlags: {}, numInvestigators: 1,
   }
   const poltergeist = { id: 'e1', code: '03103', originalCode: '03103', location: 'hall', fight: 2 }
-  assert.equal(encounterRules.enemyStatModifier(state, poltergeist, 'fight'), 3)
+  // Phase 3（D1）：03103 的战斗值修正已搬到卡面条目，读点改为实体修正。
+  assert.equal(entityModifierTotal(state, poltergeist, 'enemyFight'), 3)
   const harm = []
   encounterRules.enemyEngaged(state, { id: 'e2', code: '03095' }, state.investigators[0], {
     damage: (seat, amount) => harm.push(['investigator', seat, amount]),
@@ -279,7 +293,7 @@ test('C5 shared enemies preserve stacked timing, spawn selection and King Edict 
   encounterRules.enemyEngaged(state, puppet, state.investigators[0], api)
   state.round = 5
   state.phase = 'investigation'
-  assert.equal(encounterRules.enemyStatModifier(state, puppet, 'fight'), 6)
+  assert.equal(entityModifierTotal(state, puppet, 'enemyFight'), 6)
 
   const spawn = {
     revision: 0, rngState: 12345, round: 1,

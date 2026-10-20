@@ -64,6 +64,61 @@ function fixStraitjacketZoneAndAbility(state) {
   }
 }
 
+// 结构 v7（Phase 1 · A1）：持续效果实体落进 state.effects[]。
+// 旧存档里「本阶段/本轮 +X」是写在调查员身上的裸字段（phaseStatBonus(s) / fightOrFlight），
+// 这里把它们折算成等价的持久效果记录，避免读档后修正直接消失。
+function addEffectEntities(state) {
+  state.effects ||= []
+  for (const inv of state.investigators || []) {
+    if (inv.phaseStatBonus?.skill) {
+      state.effects.push({
+        id: 'migrated-phase-' + inv.seat,
+        sourceCode: null,
+        sourceInstanceId: null,
+        controllerSeat: inv.seat,
+        duration: 'endOfPhase',
+        label: `旧存档：本阶段${inv.phaseStatBonus.skill} +${inv.phaseStatBonus.amount || 0}`,
+        modifiers: [{ target: `skill:${inv.phaseStatBonus.skill}`, amount: inv.phaseStatBonus.amount || 0 }],
+        abilities: [],
+        createdAt: { round: state.round ?? 0, phase: state.phase ?? null, turnSerial: state.turnSerial ?? 0 },
+      })
+      inv.phaseStatBonus = null
+    }
+    for (const bonus of inv.phaseStatBonuses || []) {
+      if (!bonus?.skill) continue
+      state.effects.push({
+        id: `migrated-phase-${inv.seat}-${state.effects.length}`,
+        sourceCode: null,
+        sourceInstanceId: null,
+        controllerSeat: inv.seat,
+        duration: 'endOfPhase',
+        label: `旧存档：本阶段${bonus.skill} +${bonus.amount || 0}`,
+        modifiers: [{ target: `skill:${bonus.skill}`, amount: bonus.amount || 0 }],
+        abilities: [],
+        createdAt: { round: state.round ?? 0, phase: state.phase ?? null, turnSerial: state.turnSerial ?? 0 },
+      })
+    }
+    if (inv.phaseStatBonuses) inv.phaseStatBonuses = []
+    if (inv.fightOrFlight?.round === state.round && inv.fightOrFlight?.amount != null) {
+      state.effects.push({
+        id: `migrated-fightOrFlight-${inv.seat}`,
+        sourceCode: '03155',
+        sourceInstanceId: null,
+        controllerSeat: inv.seat,
+        duration: 'endOfRound',
+        label: '旧存档：战斗或逃跑',
+        modifiers: [
+          { target: 'skill:combat', amount: inv.fightOrFlight.amount || 0 },
+          { target: 'skill:agility', amount: inv.fightOrFlight.amount || 0 },
+        ],
+        abilities: [],
+        createdAt: { round: state.round ?? 0, phase: state.phase ?? null, turnSerial: state.turnSerial ?? 0 },
+      })
+    }
+    delete inv.fightOrFlight
+  }
+}
+
 // 每次提升 STATE_SCHEMA_VERSION 或 RULES_VERSION 时，在这里登记从上一版本到新版本的一步迁移。
 // up(state) 原地改写状态副本；不能安全迁移时抛出错误说明原因。
 // 示例：{ from: [6, 'n5.1'], to: [7, 'n5.2'], note: '为调查员补充 xxx 字段', up(state) { ... } }
@@ -91,6 +146,12 @@ export const STATE_MIGRATIONS = Object.freeze([
     to: [6, 'n5.5'],
     note: '将旧存档中的“约束衣”迁入威胁区并恢复双行动弃置能力',
     up: fixStraitjacketZoneAndAbility,
+  },
+  {
+    from: [6, 'n5.5'],
+    to: [7, 'n6.0'],
+    note: 'Phase 1：持续效果实体化（state.effects[]），旧临时修正折算为效果记录',
+    up: addEffectEntities,
   },
 ])
 

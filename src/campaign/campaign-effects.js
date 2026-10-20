@@ -653,3 +653,165 @@ export function applyCampaignEffect(state, effect, log) {
     }
   } else throw new Error('未注册的战役效果：' + effect.type)
 }
+
+// ---------------------------------------------------------------------------
+// Phase 3（D4）：战役结果声明化
+//
+// 此前 `resolution` 钩子把「结局写哪些记录、给谁创伤、多少经验」直接写在 behavior.js
+// 的函数体里（23 个关卡、122 处记录赋值）。这些结果现在可以声明成数据：
+//
+//   resolution(state, key, events, api) {
+//     return {
+//       bonus: 2, award: key !== 'r3',
+//       effects: [
+//         { record: { houseBurned: false }, when: { not: { resolution: 'r1' } } },
+//         { record: { houseBurned: true }, when: { resolution: 'r1' } },
+//         { record: { litaForcedOthers: true }, when: { resolution: 'r3' },
+//           investigatorStatus: 'killed', targets: 'notResigned' },
+//         { when: { resolution: 'r1' }, trauma: { lead: { mental: 1 } } },
+//       ],
+//     }
+//   }
+//
+// 条目字段（只允许这些，未知字段在结算时抛错，不静默忽略）：
+//   when               条件（见 matchesResultCondition）：resolution / resolutionIn /
+//                      record / recordTruthy / failed / all / any / not
+//   text               写进日志/纪事的正文
+//   record             写战役记录（按 campaign.recordSchema 校验类型与键是否存在）
+//   recordUnion        集合并入（string[]）
+//   recordRemove       集合划掉（string[]）
+//   trauma             创伤：{ <target>: { physical, mental } }
+//   xp                 经验：{ amount, targets }
+//   targets            把「作用于谁」作为条目级默认值（trauma/xp/investigatorStatus 共用）
+//   investigatorStatus 战役状态：'killed' / 'insane' / 'active'
+//   failed             把战役标记为失败
+//   storyCard          把一张剧情资产加入牌组（会询问由谁携带）
+//   chaos              混乱袋永久加入标记：{ token, amount }
+//   flag               战役规则标记：{ key, value }
+//
+// targets 取 'lead' / 'all' / 'active' / 'notResigned' / 'notDefeated' / 座位号。
+// 记录写入必须能在 recordSchema 里找到键，缺失即抛错——这项校验旧行为的直接赋值没有。
+// ---------------------------------------------------------------------------
+
+export const RESULT_EFFECT_KEYS = Object.freeze([
+  'when', 'text', 'record', 'recordUnion', 'recordRemove', 'trauma', 'xp', 'targets',
+  'investigatorStatus', 'failed', 'storyCard', 'chaos', 'flag',
+])
+
+const RESULT_EFFECT_KEY_SET = new Set(RESULT_EFFECT_KEYS)
+
+function resultTargetSeats(state, target) {
+  const investigators = state.campaign.investigators || {}
+  const all = Object.values(investigators).sort((left, right) => left.seat - right.seat)
+  const runtimeOf = seat => state.investigators?.[seat]
+  switch (target) {
+    case undefined:
+    case null:
+    case 'all': return all.map(record => record.seat)
+    case 'active': return all.filter(record => record.status === 'active').map(record => record.seat)
+    // 撤退/败退是「本场冒险」的事实，读执行中的调查员状态而不是战役记录状态。
+    case 'notResigned': return all.filter(record => !runtimeOf(record.seat)?.resigned).map(record => record.seat)
+    case 'notDefeated': return all.filter(record => !runtimeOf(record.seat)?.defeated).map(record => record.seat)
+    case 'lead': return [state.campaign.leadSeat].filter(seat => Number.isInteger(seat))
+    default:
+      if (Number.isInteger(target)) return [target]
+      throw new Error(`未知战役结果目标：${String(target)}`)
+  }
+}
+
+function resultRecord(state, key) {
+  return state.campaign.records?.[key]
+}
+
+export function matchesResultCondition(state, condition) {
+  if (condition == null) return true
+  if (typeof condition !== 'object' || Array.isArray(condition)) throw new Error('战役结果条件必须是对象')
+  if (condition.all) return condition.all.every(item => matchesResultCondition(state, item))
+  if (condition.any) return condition.any.some(item => matchesResultCondition(state, item))
+  if (condition.not) return !matchesResultCondition(state, condition.not)
+  if (condition.resolution != null && state.resolution !== condition.resolution) return false
+  if (condition.resolutionIn && !condition.resolutionIn.includes(state.resolution)) return false
+  if (condition.record != null) {
+    const expected = condition.equals === undefined ? true : condition.equals
+    if (resultRecord(state, condition.record) !== expected) return false
+  }
+  if (condition.recordTruthy != null && !resultRecord(state, condition.recordTruthy)) return false
+  if (condition.failed != null && Boolean(state.campaign.failed) !== condition.failed) return false
+  return true
+}
+
+function writeResultRecord(state, key, value, log) {
+  const campaign = state.campaign
+  if (!Object.hasOwn(campaign.recordSchema || {}, key)) throw new Error(`未声明战役记录 ${key}`)
+  const declared = campaign.recordSchema[key]
+  const actual = Array.isArray(value) ? 'string[]' : typeof value
+  if (declared !== actual) throw new Error(`战役记录 ${key} 类型应为 ${declared}`)
+  campaign.records[key] = structuredClone(value)
+  if (log) log(`📝 战役记录：${key} = ${Array.isArray(value) ? value.join('、') : String(value)}`)
+}
+
+function applyTraumaResult(state, seats, trauma, log) {
+  for (const seat of seats) {
+    for (const kind of ['physical', 'mental']) {
+      const amount = trauma[kind] || 0
+      if (!(amount > 0)) continue
+      applyTrauma(state, seat, kind, amount, log)
+    }
+  }
+}
+
+// 结算 `resolution` 返回的声明式结果（在 finishScenario 的记录快照之前调用）。
+export function applyResolutionResults(state, effects, { log = () => {}, runtime = null } = {}) {
+  if (effects == null) return 0
+  if (!Array.isArray(effects)) throw new Error('resolution.effects 必须是数组')
+  const campaign = state.campaign
+  let applied = 0
+  for (const effect of effects) {
+    if (!effect || typeof effect !== 'object' || Array.isArray(effect)) throw new Error('战役结果条目必须是对象')
+    for (const key of Object.keys(effect)) {
+      if (!RESULT_EFFECT_KEY_SET.has(key)) throw new Error(`战役结果条目未知字段 ${key}`)
+    }
+    if (!matchesResultCondition(state, effect.when)) continue
+    applied++
+    if (effect.text) log(effect.text)
+    for (const [key, value] of Object.entries(effect.record || {})) writeResultRecord(state, key, value, log)
+    for (const [key, values] of Object.entries(effect.recordUnion || {})) {
+      if (!Array.isArray(values) || values.some(value => typeof value !== 'string')) {
+        throw new Error(`战役结果集合记录 ${key} 必须是字符串数组`)
+      }
+      writeResultRecord(state, key, [...new Set([...(campaign.records[key] || []), ...values])], log)
+    }
+    for (const [key, values] of Object.entries(effect.recordRemove || {})) {
+      if (!Array.isArray(values)) throw new Error(`战役结果划掉记录 ${key} 必须是数组`)
+      const removed = new Set(values)
+      writeResultRecord(state, key, (campaign.records[key] || []).filter(value => !removed.has(value)), log)
+    }
+    const seats = resultTargetSeats(state, effect.targets)
+    if (effect.trauma) applyTraumaResult(state, seats, effect.trauma.all || effect.trauma, log)
+    if (effect.trauma?.lead) applyTraumaResult(state, resultTargetSeats(state, 'lead'), effect.trauma.lead, log)
+    if (effect.xp) {
+      const amount = typeof effect.xp === 'number' ? effect.xp : effect.xp.amount
+      if (!Number.isSafeInteger(amount) || amount < 0) throw new Error('经验奖励必须为非负整数')
+      for (const seat of resultTargetSeats(state, effect.xp?.targets ?? effect.targets ?? 'active')) {
+        awardExperience(campaign, seat, amount)
+        log(`⭐ ${recordLabelOf(campaign, seat)} 获得 ${amount} XP。`)
+      }
+    }
+    if (effect.investigatorStatus) {
+      for (const seat of seats) {
+        const record = campaign.investigators[seat]
+        if (!record) continue
+        record.status = effect.investigatorStatus
+        updateCampaignStatus(campaign, seat)
+      }
+    }
+    if (effect.failed) campaign.failed = true
+    if (effect.storyCard) awardStoryCard(state, effect.storyCard, campaign.flow?.nodeId)
+    if (effect.chaos) changeChaosBag(state, effect.chaos.token, effect.chaos.amount ?? 1, { permanent: true })
+    if (effect.flag) {
+      campaign.ruleFlags ||= {}
+      campaign.ruleFlags[effect.flag.key] = effect.flag.value ?? true
+    }
+  }
+  return applied
+}

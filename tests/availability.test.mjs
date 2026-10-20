@@ -97,12 +97,16 @@ test('缺少签名、效果或基础弱点依赖时明确失败，不静默省�
     assert.throws(() => buildDeck(roland), /签名/)
     assert.ok(buildDeckFromList(roland, cards).errors.some(error => error.includes('签名')))
   } finally { ALL_CARDS['01006'] = signature }
-  const effect = EFFECTS['01025']
+  // 两条通道各挑一张：01021 看门狗（Phase 5 起在能力层）与 01079 体能训练（仍在旧 DSL 里）。
+  const effect = EFFECTS['01079']
   try {
-    delete EFFECTS['01025']
-    assert.equal(isPlayable(ALL_CARDS['01025']), false)
+    delete EFFECTS['01079']
+    assert.equal(isPlayable(ALL_CARDS['01079']), false)
     assert.throws(() => corePlayablePool(), /效果/)
-  } finally { EFFECTS['01025'] = effect }
+  } finally { EFFECTS['01079'] = effect }
+  // 能力层的卡不再依赖 EFFECTS：删掉 EFFECTS 条目仍可打出（读点是注册表）。
+  assert.equal(isPlayable(ALL_CARDS['01021']), true)
+  assert.equal(EFFECTS['01021'], undefined)
   assert.throws(() => buildDeck(roland, { basicWeaknessPool: [] }), /基础弱点/)
   assert.throws(() => buildDeck(roland, { basicWeaknessPool: ['02001'] }), /基础弱点/)
   const incomplete = { ...roland, deckRequirements: { ...roland.deckRequirements, signatureCards: ['01006'] } }

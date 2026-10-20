@@ -1,40 +1,38 @@
-export const behavior = Object.freeze({
+import { declareScenario } from '../../../../scenario-declaration.js'
+
+// Phase 3（D3）：起始地点、随机变体、敌人与遭遇牌库组成都是声明。
+export const behavior = declareScenario({
   id: 'theMidnightMasks',
-  includeSurvivingPriest: true,
-  spawnOverrides: { ghoulPriest: 'yourHouse' },
-  startLocation: state => state.campaign.records.houseBurned ? 'rivertown' : 'yourHouse',
-  setupLocations(state, events, api) {
-    for (const [id, variants] of Object.entries(state.scenario.locationVariants || {})) {
-      if (!variants.length) continue
-      state.locationVariants[id] = variants[Math.floor(api.randomValue(state) * variants.length)]
-      api.info(state, events, `🎲 「${id}」随机变体：${state.locationVariants[id].name}。`)
-    }
-    return Object.keys(state.scenario.locations).filter(id => id !== 'yourHouse' || !state.campaign.records.houseBurned)
+  data: {
+    includeSurvivingPriest: true,
+    spawnOverrides: { ghoulPriest: 'yourHouse' },
+    drawCultistActIndex: 0,
   },
-  setupEnemies(state, events, api) {
-    const spots = ['southside', 'downtown', 'graveyard']
-    for (let i = 0; i < state.numInvestigators - 1 && i < spots.length; i++) {
-      const enemy = api.spawnEnemy(state, 'acolyte', spots[i], null)
-      if (enemy) api.info(state, events, `👹 「${enemy.name}」生成于「${api.locName(state, spots[i])}」。`)
-    }
+  setup: {
+    startLocation: { record: 'houseBurned', then: 'rivertown', else: 'yourHouse' },
+    locations: { all: true, variants: true, exceptIf: { record: 'houseBurned', ids: ['yourHouse'] } },
+    enemies: [{ code: 'acolyte', count: 'investigators-1', at: ['southside', 'downtown', 'graveyard'] }],
+    deck: { removeSpawnedEnemies: true },
   },
-  modifyDeck(state, deck, events, api) {
-    for (const enemy of state.enemies) {
-      if (!api.removeCardByCode(deck, enemy.code)) throw new Error(`开局敌人不在遭遇牌组中：${enemy.code}`)
-    }
-    return deck
-  },
-  drawCultistActIndex: 0,
-  describe(state) {
-    return [`已盘问异教徒：${state.cultistsInVictory.length}/6；异教徒牌堆剩余：${state.cultistDeck.length}。`]
-  },
-  resolution(state, key, events, api) {
-    const rec = state.campaign.records
-    rec.cultistsInterrogated = [...state.cultistsInVictory].map(api.originalCardCode)
-    const all = [...state.scenario.cultistDeck, 'theMaskedHunter'].map(api.originalCardCode)
-    rec.cultistsEscaped = all.filter(code => !rec.cultistsInterrogated.includes(code))
-    if ((state.victoryDisplay || []).some(card => card.code === 'ghoulPriest')) rec.ghoulPriestAlive = false
-    rec.pastMidnight = key === 'r2'
-    return { bonus: 0, award: true }
+  hooks: {
+    describe(state) {
+      return [`已盘问异教徒：${state.cultistsInVictory.length}/6；异教徒牌堆剩余：${state.cultistDeck.length}。`]
+    },
+    // Phase 3（D4）：已盘问/逃脱由牌桌推导，只有「是否已过午夜」是声明式结局常量。
+    resolution(state, key, events, api) {
+      const rec = state.campaign.records
+      rec.cultistsInterrogated = [...state.cultistsInVictory].map(api.originalCardCode)
+      const all = [...state.scenario.cultistDeck, 'theMaskedHunter'].map(api.originalCardCode)
+      rec.cultistsEscaped = all.filter(code => !rec.cultistsInterrogated.includes(code))
+      if ((state.victoryDisplay || []).some(card => card.code === 'ghoulPriest')) rec.ghoulPriestAlive = false
+      return {
+        bonus: 0,
+        award: true,
+        effects: [
+          { record: { pastMidnight: true }, when: { resolution: 'r2' } },
+          { record: { pastMidnight: false }, when: { not: { resolution: 'r2' } } },
+        ],
+      }
+    },
   },
 })

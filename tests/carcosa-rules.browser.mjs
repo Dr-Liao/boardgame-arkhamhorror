@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
-// 迁移规范 §2：阶段截图放在仓库根目录 artifacts/，不进入游戏运行目录。
+// 迁移规范 §3：阶段截图放在仓库根目录 artifacts/，不进入游戏运行目录。
 const output = fileURLToPath(new URL('../../../artifacts/carcosa-migration/', import.meta.url))
 mkdirSync(output, { recursive: true })
 

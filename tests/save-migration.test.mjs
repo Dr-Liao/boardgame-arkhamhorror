@@ -31,21 +31,25 @@ test('当前版本存档无需迁移，返回原对象且不复制', () => {
 
 test('结构 v6 / 规则 n5.1 存档可逐级升级到当前规则并继续行动', () => {
   const old = restore(create())
+  // 旧存档是结构 v6 + 旧规则版本；只改 rulesVersion 会造出"当前结构 + 旧规则"这种不存在的版本对。
+  old.schemaVersion = 6
   old.rulesVersion = 'n5.1'
   old.resourceVersion = 'n5.1-resources'
   const snapshot = JSON.stringify(old)
   const { state, changes } = migrateState(old)
   assert.equal(JSON.stringify(old), snapshot, '迁移不得修改入参')
-  assert.equal(state.schemaVersion, 6)
+  assert.equal(state.schemaVersion, STATE_SCHEMA_VERSION)
   assert.equal(state.rulesVersion, RULES_VERSION)
   assert.equal(state.resourceVersion, META.resourceVersion)
   assert.ok(changes.some(item => item.includes('规则更新（存档结构不变）')), changes.join())
+  assert.ok(changes.some(item => item.includes('持续效果实体')), changes.join())
   assert.ok(changes.includes('卡牌资源升级到当前版本'), changes.join())
   assertPlayable(state)
 })
 
 test('n5.2 双人存档会修正“往事回声”全部按人数计算的密谋阈值', () => {
   const old = restore(create())
+  old.schemaVersion = 6
   old.rulesVersion = 'n5.2'
   const agendas = [
     { originalCode: '03121', doomThreshold: 2 },
@@ -63,6 +67,7 @@ test('n5.2 双人存档会修正“往事回声”全部按人数计算的密谋
 
 test('n5.3 存档会分离“胆量”的显示身份与底牌记录', () => {
   const old = restore(create())
+  old.schemaVersion = 6
   old.rulesVersion = 'n5.3'
   old.investigators[0].assets.push({
     id: 'courage-0-1',
@@ -81,6 +86,7 @@ test('n5.3 存档会分离“胆量”的显示身份与底牌记录', () => {
 
 test('n5.4 存档会把旧支援区中的“约束衣”迁入威胁区并恢复弃置能力', () => {
   const old = restore(create())
+  old.schemaVersion = 6
   old.rulesVersion = 'n5.4'
   old.investigators[0].assets.push({ id: 'legacy-straitjacket', code: '03185' })
   const { state, changes } = migrateState(old)
@@ -114,6 +120,7 @@ test('升级选项很多的局间存档只按行动类型抽样校验', { timeou
     hubReady: false,
     hubUpgradedSeats: {},
     hubSeatDone: {},
+    schemaVersion: 6,
     rulesVersion: 'n5.2',
   })
   Object.assign(old.campaign, {

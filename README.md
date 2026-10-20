@@ -22,7 +22,7 @@
 
 ## 玩法
 
-- **战役**：《夜之狂热》（3 关）、《敦威治遗产》（8 章）、《卡尔克萨之路》（8 章）和《失落的时代》（10 章）都可以从大厅启动。失落的时代按 M5 入口开放（`playable`，账本仍是 `earlyAccess`）：序幕会先选远征求领队并按人数购买补给品，幕间与补给点按卡面划掉配给、药品与汽油。逐张卡面字面核对仍在 [docs/tfa-card-audit.md](docs/tfa-card-audit.md) 跟踪。各扩展的详细进度见下方「扩展包实现进度」。
+- **战役**：《夜之狂热》（3 关）、《敦威治遗产》（8 章）、《卡尔克萨之路》（8 章）和《失落的时代》（10 章）都可以从大厅启动。失落的时代按 M5 入口开放（`playable`，账本仍是 `earlyAccess`）：序幕会先选远征求领队并按人数购买补给品，幕间与补给点按卡面划掉配给、药品与汽油。逐张卡面字面核对仍在 `audit/tfa-migration.json` 的 `remaining` 清单中跟踪。各扩展的详细进度见下方「扩展包实现进度」。
 - **调查员与构筑**：从各职业调查员中选择角色，可手动构筑或自动构筑。AI 队友会自动分配调查员并按属性契合度组出合法牌组。
 - **回合循环**：神话阶段 → 调查阶段（每位调查员 3 个行动）→ 敌人阶段 → 重整阶段。
 - **核心行动**：移动、调查（收集线索推进「幕」）、攻击、躲避、打出卡牌、使用资产能力；技能检定从混乱袋抽取标记。
@@ -76,12 +76,15 @@ Windows 发布时，卡图单独打成资源包：在大厅根目录双击 `buil
 在大厅根目录运行：
 
 ```bash
-npm run test:mod -- arkhamhorror fast     # 日常回归：规则、AI、卡牌逻辑，约 8 秒
+npm run test:mod -- arkhamhorror fast     # 日常回归：规则、AI、卡牌逻辑、golden replay，约 17 秒
 npm run test:mod -- arkhamhorror assets   # 资源与生成器校验：卡池导入、展示资源、媒体许可，约 30 秒
-npm run test:mod -- arkhamhorror slow     # 长跑：整局模拟、存读档迁移与大厅联机集成，约 2 分钟以上
+npm run test:mod -- arkhamhorror slow     # 长跑：整局模拟、存读档迁移、100 局随机对局重放与大厅联机集成，约 2 分钟以上
 npm run test:mod -- arkhamhorror          # 全量：每个文件独立进程并行，约 2.5 分钟
 npm run test:mod -- arkhamhorror browser  # 浏览器回归，含大厅开局与联机界面（复用系统 Edge）
 ```
+
+改卡行为后要证明"行为零变化"：`node tools/replay-fixtures.mjs --baseline <文件>`（改动前）→ 改 → `--compare <文件>`（改动后）；
+只改了文案/卡图等非行为内容时，`npm run replay:fixtures` 应当仍然全绿。说明见 [docs/phase4-replay.md](docs/phase4-replay.md)。
 
 诡镇在大厅上的集成回归（多人联机、换牌确认、开局与存档界面）在 `tests/hall-online.test.mjs`、`tests/hall-online.browser.mjs` 与 `tests/hall-setup.browser.mjs`；大厅自身的回归不再依赖诡镇。
 
@@ -93,8 +96,12 @@ HTTP 和浏览器回归会加载大厅的 `lib/server.js`，所以需要在大�
 
 ## 文档
 
-- [ARCHITECTURE.md](ARCHITECTURE.md)：目录职责、依赖方向、运行流程、内容扩展和修改约定
-- [docs/arkham-content-migration.md](docs/arkham-content-migration.md)：扩展战役的迁移流程
+- [ARCHITECTURE.md](ARCHITECTURE.md)：目录职责、依赖方向、运行流程、内容扩展和修改约定（含演进规矩摘要）
+- [docs/architecture-refactor-roadmap.md](docs/architecture-refactor-roadmap.md)：重构路线唯一决策文档——现状基线、分层硬规矩、加卡指南、表达力缺口、阶段门禁与迁移判据
+- [docs/card-model.md](docs/card-model.md)：卡牌模型 v1——十一种能力 kind、修正与条件、目标枚举、持续效果、生命周期读点契约、迁移标准动作
+- [docs/phase2-primitives.md](docs/phase2-primitives.md)：Phase 2 语义原语的交付与门禁证据（费用/上限/检定结果/看牌/区域搬运等）
+- [docs/phase4-replay.md](docs/phase4-replay.md)：Phase 4 重放安全网——动作日志、稳定指纹、golden replay、迁移前后指纹对比、随机走子器门禁
+- [docs/arkham-content-migration.md](docs/arkham-content-migration.md)：扩展战役的迁移流程与验收门槛（含实现规矩）
 - 大厅侧的适配入口：`index.js`、`src/integration/hall-integration.js`、`src/ai/agent-plans.js`
 
 ## 版权声明

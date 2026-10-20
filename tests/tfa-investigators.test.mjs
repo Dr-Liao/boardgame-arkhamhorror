@@ -4,6 +4,7 @@ import { fixture, enemy, move, settle, legalMoves, validateMove } from './core-f
 import { createGameState, performTest, getStat } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS, INVESTIGATOR_ABILITIES } from '../src/cards/card-effects.js'
+import { registeredEntry } from '../src/engine/ability.js'
 import { canSelectInvestigator, getAvailability } from '../src/deck/availability.js'
 import { signatureAndWeaknesses } from '../src/deck/deckbuilding.js'
 import { registerCampaignInvestigator } from '../src/campaign/campaign.js'
@@ -76,10 +77,13 @@ test('M1 exposes five selectable investigators whose signatures are dependency-o
   assert.deepEqual(INVESTIGATOR_ABILITIES['04004'].autofailToElderSign, { oncePerGame: true })
   assert.deepEqual(INVESTIGATOR_ABILITIES['04005'].statsPerHarm,
     { horror: { willpower: 1, intellect: 1 }, damage: { combat: 1, agility: 1 } })
-  assert.equal(EFFECTS['04006'].passive.allySlotsForNonUnique, 2)
-  assert.equal(EFFECTS['04011'].usesType, 'ammo')
-  assert.equal(EFFECTS['04013'].sealOnEnter, 'eldersign')
-  assert.equal(EFFECTS['04015'].passive.assignDirectHarm, true)
+  // Phase 5（5b-8a）：04006 的被动搬到能力层条目（读点 registeredEntry）。
+  assert.equal(registeredEntry('04006').passive.allySlotsForNonUnique, 2)
+  // Phase 5：04011 已迁到能力层（uses/usesType 在条目上，read 点是 registeredEntry）。
+  assert.equal(registeredEntry('04011').usesType, 'ammo')
+  // Phase 5（5b-10）：封印声明搬到能力层条目。
+  assert.equal(registeredEntry('04013').sealOnEnter, 'eldersign')
+  assert.equal(registeredEntry('04015').passive.assignDirectHarm, true)
 })
 
 test('M1 keeps every deck requirement and signature quantity intact', () => {
@@ -374,8 +378,11 @@ test("M1 Finn's Trusty .38 spends ammo and deals +2 combat, +1 damage against an
   assert.equal(pistol.uses, 3)
   const far = enemy(state, { id: 'far-target', fight: 2, evade: 1, health: 6, engagedSeat: null })
   state.chaosBag = ['0']
-  move(state, { action: 'ability', assetId: pistol.id, abilityIndex: 0 })
-  settle(state, pending => pending.kind === 'target' ? far.id : null)
+  const shot = legalMoves(state).find(command => command.action === 'ability'
+    && command.assetId === pistol.id && command.targetId === far.id)
+  assert.ok(shot, '武器能力应当按 target 枚举出攻击动作')
+  move(state, shot)
+  settle(state)
   const target = state.enemies.find(item => item.id === far.id)
   assert.equal(me(state).assets.find(item => item.code === '04011').uses, 2)
   assert.equal(target.damageTaken, 2, '基础 1 伤害 + 未交战 1 伤害')

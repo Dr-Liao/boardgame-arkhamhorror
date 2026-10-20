@@ -6,15 +6,15 @@ import { interludeEffects, interludeIntro } from './interludes.js'
 import { RECORD_LABELS } from './record-labels.js'
 
 // 幕间节点：正文只放卡面的「检查清单」，具体分支由 effects 在到达时逐段写日志，
-// 因此互斥分支不会再一次性展开（见 docs/tfa-card-audit.md §3.9）。
+// 因此互斥分支不会再一次性展开（见 docs/arkham-content-migration.md §5.1）。
 const interlude = (id, next) => ({
   type: 'interlude', title: storyText[id].title, text: interludeIntro[id], next, effects: [...interludeEffects[id]],
 })
 
 // The flow mirrors Arkham/Campaigns/TheForgottenAge.hs nextStep. All ten
 // chapters are playable, so the campaign is launchable from the hall; the
-// remaining literal-card work is tracked in docs/tfa-card-audit.md and in
-// audit/tfa-migration.json (playable with earlyAccess, not verified).
+// remaining literal-card work is tracked in audit/tfa-migration.json
+// (playable with earlyAccess, not verified).
 export const manifest = {
   schemaVersion: CONTENT_SCHEMA_VERSION,
   id: 'theForgottenAge',

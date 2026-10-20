@@ -2607,7 +2607,7 @@
     "shatteredAeons：「答应伊塔卡/亚历山卓」用 enemy.aloof 近似「蛇族/异教徒不与你交战」",
     "turnBackTime：无结局把「陷入疯狂」近似为 defeated + 1 点精神创伤",
     "turnBackTime：04065「抽 2 张或放 2 点毁灭任意组合」实现为两次独立的 1 点二选一",
-    "逐章 literalCardBehavior：十个剧本尚未逐张核对卡面字面需求，按规范 4.2 保持 false",
+    "逐章 literalCardBehavior：十个剧本尚未逐张核对卡面字面需求，按规范 5.2 保持 false",
     "章节浏览器验收：browserAcceptance 仍为 false，需真实大厅流程的端到端验收",
     "发布验收：大厅、联机与浏览器端到端发布验收（earlyAccess 期间不宣称规则等价）"
   ]

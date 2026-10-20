@@ -4,17 +4,19 @@ import { fixture, move, answer, settle, asset, enemy, play, use, legalMoves, val
 import { getStat } from '../src/engine/engine.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
+import { playFlag, weaknessProfile } from '../src/engine/lifecycle.js'
 import { SCENARIOS } from '../src/cards/scenarios-data.js'
 
 // Every player asset is actually paid for and put into play. Expected costs and
 // printed counters come from the imported card, not a fabricated asset fixture.
-for (const card of Object.values(ALL_CARDS).filter(c => /^010\d\d$/.test(c.code) && c.type === 'asset' && !EFFECTS[c.code]?.weakness)) {
+// Phase 5：是不是「弱点资产」与「快速」都走生命周期读点，迁移不再影响这里的筛选。
+for (const card of Object.values(ALL_CARDS).filter(c => /^010\d\d$/.test(c.code) && c.type === 'asset' && !weaknessProfile(c.code))) {
   test(`Core ${card.code} ${card.name}: 支付费用、行动和入场计数`, () => {
     const s = fixture(); const before = s.investigators[0].resources
     play(s, card.code); settle(s)
     const inv = s.investigators[0], a = inv.assets.find(a => a.code === card.code)
     assert.ok(a); assert.equal(inv.resources, before - card.cost)
-    assert.equal(inv.actionsLeft, 20 - (EFFECTS[card.code]?.fast ? 0 : 1) + (['01048', '01054'].includes(card.code) ? 1 : 0))
+    assert.equal(inv.actionsLeft, 20 - (playFlag(card.code, 'fast') ? 0 : 1) + (['01048', '01054'].includes(card.code) ? 1 : 0))
     assert.ok(!inv.hand.includes(card.code)); assert.ok(!inv.discard.includes(card.code))
     const printedUses = /Uses \((\d+) (ammo|charges|supplies|secrets)\)/.exec(card.text)
     if (printedUses) assert.equal(a.uses, Number(printedUses[1]))

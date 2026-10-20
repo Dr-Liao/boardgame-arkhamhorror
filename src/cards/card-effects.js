@@ -57,42 +57,20 @@ export const EFFECTS = {
   ...carcosaPlayerEffects,
   ...tfaPlayerEffects,
   // Story assets earned during The Path to Carcosa.
-  '03143': { passive: { sanityBonus: -1, conditionalStats: {
-    remainingSanityAtMost: 3, stats: { willpower: 1, combat: 1, agility: 1 },
-  } } },
   // =========================================================================
   // 中立 Neutral（0 级）
   // =========================================================================
+  // 03143 焦虑（剧情资产）：理智 -1；理智不多于 3 时意志/战斗/敏捷 +1。
+  '03143': { passive: { sanityBonus: -1, conditionalStats: {
+    remainingSanityAtMost: 3, stats: { willpower: 1, combat: 1, agility: 1 },
+  } } },
   '01086': { // 刀子 Knife
     abilities: [
       { label: '战斗（战斗 +1）', cost: { action: true }, effect: { type: 'fight', combatBonus: 1 } },
       { label: '弃置刀子（战斗 +2，伤害 +1）', cost: { action: true, discardSelf: true }, effect: { type: 'fight', combatBonus: 2, damageBonus: 1 } },
     ],
   },
-  '01087': { // 手电筒 Flashlight
-    uses: 3, usesType: 'supplies',
-    abilities: [
-      { label: '照亮（调查，帷幕 -2）', cost: { action: true, uses: 1 }, effect: { type: 'investigate', shroudMod: -2 } },
-    ],
-  },
-  '01088': { // 应急物品 Emergency Cache
-    event: { type: 'gainResource', amount: 3 },
-  },
-  '01089': { // 胆识 Guts（技能）
-    skill: { onSuccess: { draw: 1 } },
-  },
-  '01090': { // 洞察力 Perception（技能）
-    skill: { onSuccess: { draw: 1 } },
-  },
-  '01091': { // 压制 Overpower（技能）
-    skill: { onSuccess: { draw: 1 } },
-  },
-  '01092': { // 心灵手巧 Manual Dexterity（技能）
-    skill: { onSuccess: { draw: 1 } },
-  },
-  '01093': { // 绝处逢生 Unexpected Courage（技能，纯野性图标）
-    skill: {},
-  },
+  // 01088 应急物品已迁到能力层（kind: 'played'，见 src/cards/card-abilities.js）。
   // 防弹衣 / 远古印记护身符：卡面没有规则文本，只提供印刷生命/神智作为承伤容量，
   // 承伤逻辑在 engine.assignHarm() 里按 cardDef(code).health/sanity 通用处理。
   '01094': { engine: 'printedSoak' },
@@ -101,41 +79,10 @@ export const EFFECTS = {
   // =========================================================================
   // 守卫者 Guardian（0 级 + XP）
   // =========================================================================
-  '01016': { // .45 自动手枪
-    uses: 4, usesType: 'ammo',
-    abilities: [
-      { label: '射击（战斗 +1，伤害 +1）', cost: { action: true, uses: 1 }, effect: { type: 'fight', combatBonus: 1, damageBonus: 1 } },
-    ],
-  },
-  '01017': { // 体能训练 Physical Training（天赋）
-    freeTriggers: [
-      { skill: 'willpower', cost: { resources: 1 }, bonus: 1 },
-      { skill: 'combat', cost: { resources: 1 }, bonus: 1 },
-    ],
-  },
   '01018': { // 巡警 Beat Cop
     passive: { stats: { combat: 1 } },
     abilities: [
       { label: '射击（对同地点敌人造成 1 伤害）', cost: { action: false, discardSelf: true }, effect: { type: 'dealDamage', amount: 1, target: 'here' } },
-    ],
-  },
-  '01019': { // 急救 First Aid
-    uses: 3, usesType: 'supplies', discardWhenEmpty: true,
-    abilities: [
-      { label: '治疗 1 伤害或 1 恐惧', cost: { action: true, uses: 1 }, effect: { type: 'targetedEffect', target: 'location', effect: { type: 'chooseOne', options: [
-        { label: '治疗 1 伤害', effect: { type: 'heal', amount: 1, what: 'damage' } },
-        { label: '治疗 1 恐惧', effect: { type: 'heal', amount: 1, what: 'horror' } },
-      ] } } },
-    ],
-  },
-  '01020': { // 大砍刀 Machete
-    abilities: [
-      { label: '战斗（战斗 +1，仅与目标交战时伤害 +1）', cost: { action: true }, effect: { type: 'fight', combatBonus: 1, onlyEngagedDamage: 1 } },
-    ],
-  },
-  '01021': { // 看门狗 Guard Dog
-    reactions: [
-      { id: 'guardDog', when: 'enemyAttackDamage', requiresAssetDamage: true, effect: { type: 'dealDamage', amount: 1 } },
     ],
   },
   '01022': { // 证据！Evidence!
@@ -147,15 +94,6 @@ export const EFFECTS = {
     fast: true,
     reaction: { when: 'enemyAttack' },
     event: { type: 'cancelEnemyAttack' },
-  },
-  '01024': { // 炸药爆破 Dynamite Blast
-    event: { type: 'dealDamageAll', amount: 3, location: 'choice', investigators: true, fx: 'dynamite' },
-  },
-  '01025': { // 致命打击 Vicious Blow（技能）
-    skill: { onSuccess: { damageBonus: 1 } },
-  },
-  '01026': { // 多余的弹药 Extra Ammo（XP1）
-    event: { type: 'reloadAmmo', amount: 3, trait: 'Firearm' },
   },
   '01027': { // 警徽 Police Badge（XP2）
     passive: { stats: { willpower: 1 } },
@@ -169,87 +107,10 @@ export const EFFECTS = {
       { label: '射击（横置并受 1 伤害，对同地点敌人造成 1 伤害）', cost: { action: false, exhaust: true, assetDamage: 1 }, effect: { type: 'dealDamage', amount: 1, target: 'here' } },
     ],
   },
-  '01029': { // 霰弹枪 Shotgun（XP4）
-    uses: 2, usesType: 'ammo',
-    abilities: [
-      { label: '开火（战斗 +3，按超过难度造成 1~5 伤害）', cost: { action: true, uses: 1 }, effect: { type: 'fight', combatBonus: 3, successDamage: 'overDifficulty', minDamage: 1, maxDamage: 5, failByAmountToEngaged: true } },
-    ],
-  },
 
   // =========================================================================
   // 探求者 Seeker（0 级 + XP）
   // =========================================================================
-  '01030': { // 放大镜 Magnifying Glass
-    fast: true,
-    passive: { investigateBonus: 1 },
-  },
-  '01031': { // 智慧古书 Old Book of Lore
-    abilities: [
-      { label: '研读（同地点调查员检索牌库顶 3 张，选择 1 张）', cost: { action: true, exhaust: true }, effect: { type: 'targetedEffect', target: 'location', effect: { type: 'searchTop', amount: 3, choose: 1 } } },
-    ],
-  },
-  '01032': { // 研究馆员 Research Librarian
-    reactions: [
-      { id: 'researchLibrarian', when: 'assetEnteredPlay', assetCode: '01032', effect: { type: 'searchTop', amount: 999, trait: 'Tome', choose: 1 } },
-    ],
-  },
-  '01033': { // 米兰·克里斯托弗博士 Dr. Milan Christopher
-    passive: { stats: { intellect: 1 } },
-    reactions: [
-      { id: 'milan', when: 'investigateSuccess', effect: { type: 'gainResource', amount: 1 } },
-    ],
-  },
-  '01034': { // 超感知 Hyperawareness（天赋）
-    freeTriggers: [
-      { skill: 'intellect', cost: { resources: 1 }, bonus: 1 },
-      { skill: 'agility', cost: { resources: 1 }, bonus: 1 },
-    ],
-  },
-  '01035': { // 医学教科书 Medical Texts
-    abilities: [
-      { label: '诊断（智识 2；同地点调查员成功治疗 1 伤害，失败受到 1 伤害）', cost: { action: true }, effect: { type: 'targetedTest', target: 'location', skill: 'intellect', difficulty: 2, successEffect: { type: 'heal', amount: 1, what: 'damage' }, failEffect: { type: 'takeDamage', amount: 1 } } },
-    ],
-  },
-  '01036': { // 心胜于物 Mind over Matter
-    fast: true,
-    event: { type: 'substituteSkill', from: ['combat', 'agility'], to: 'intellect' },
-  },
-  '01037': { // 专业的直觉 Working a Hunch
-    fast: true,
-    event: { type: 'discoverClue', amount: 1 },
-  },
-  '01038': { // 屏障 Barricade
-    event: { type: 'attachBarricade' },
-  },
-  '01039': { // 推理 Deduction（技能）
-    skill: { onSuccess: { clueBonus: 1 } },
-  },
-  '01040': { // 放大镜 Magnifying Glass（XP1）
-    fast: true,
-    passive: { investigateBonus: 1 },
-    abilities: [
-      { label: '没有线索时收回手中', requiresNoClues: true, cost: { action: false }, effect: { type: 'returnAssetToHand' } },
-    ],
-  },
-  '01041': { // 伊察姆纳圆盘 Disc of Itzamna（XP2）
-    reactions: [
-      { id: 'discOfItzamna', when: 'enemySpawn', nonElite: true, cost: { discardSelf: true }, effect: { type: 'defeatNonEliteEnemy', target: 'here' } },
-    ],
-  },
-  '01042': { // 百科全书 Encyclopedia（XP2）
-    abilities: [
-      { label: '查阅（同地点调查员任选一项技能 +2）', cost: { action: true, exhaust: true }, effect: { type: 'targetedEffect', target: 'location', chooseBy: 'controller', effect: { type: 'chooseOne', options: [
-        { label: '意志 +2', effect: { type: 'addStatPhase', skill: 'willpower', amount: 2 } },
-        { label: '智识 +2', effect: { type: 'addStatPhase', skill: 'intellect', amount: 2 } },
-        { label: '战斗 +2', effect: { type: 'addStatPhase', skill: 'combat', amount: 2 } },
-        { label: '敏捷 +2', effect: { type: 'addStatPhase', skill: 'agility', amount: 2 } },
-      ] } } },
-    ],
-  },
-  '01043': { // 隐秘的研究 Cryptic Research（XP4）
-    fast: true,
-    event: { type: 'targetedEffect', target: 'location', effect: { type: 'draw', amount: 3 } },
-  },
 
   // =========================================================================
   // 游荡者 Rogue（0 级 + XP）
@@ -260,135 +121,30 @@ export const EFFECTS = {
       { label: '战斗（成功差值至少 2 时伤害 +1）', cost: { action: true }, effect: { type: 'fight', successBy: 2, damageBonus: 1 } },
     ],
   },
-  '01045': { // 夜盗 Burglary
-    abilities: [
-      { label: '搜刮（调查；成功则获得 3 资源而不发现线索）', cost: { action: true, exhaust: true }, effect: { type: 'investigateForResources', amount: 3 } },
-    ],
-  },
-  '01046': { // 扒窃 Pickpocketing
-    reactions: [
-      { id: 'pickpocketing', when: 'evadeSuccess', cost: { exhaust: true }, effect: { type: 'draw', amount: 1 } },
-    ],
-  },
-  '01047': { // .41 短口手枪
-    uses: 3, usesType: 'ammo',
-    abilities: [
-      { label: '射击（战斗 +2，成功差值至少 2 时伤害 +1）', cost: { action: true, uses: 1 }, effect: { type: 'fight', combatBonus: 2, successBy: 2, damageBonus: 1 } },
-    ],
-  },
-  '01048': { // 里奥·德·卢卡 Leo De Luca
-    passive: { extraAction: 1 },
-  },
-  '01049': { // 沉重打击 Hard Knocks（天赋）
-    freeTriggers: [
-      { skill: 'combat', cost: { resources: 1 }, bonus: 1 },
-      { skill: 'agility', cost: { resources: 1 }, bonus: 1 },
-    ],
-  },
-  '01050': { // 逃避隐藏 Elusive
-    fast: true,
-    event: { type: 'sequence', effects: [
-      { type: 'disengageAll' },
-      { type: 'moveTo', anyRevealed: true, noEnemies: true },
-    ] },
-  },
-  '01051': { // 背刺 Backstab
-    event: { type: 'fight', skill: 'agility', damageBonus: 2 },
-  },
-  '01052': { // 偷袭 Sneak Attack
-    event: { type: 'dealDamageExhausted', amount: 2 },
-  },
-  '01053': { // 机会主义者 Opportunist（技能）
-    skill: { returnOnSuccessBy: 3, selfTestOnly: true },
-  },
-  '01054': { // 里奥·德·卢卡 Leo De Luca（XP1）
-    passive: { extraAction: 1 },
-  },
-  '01055': { // 飞贼 Cat Burglar（XP1）
-    noOpportunityAttack: true,
-    passive: { stats: { agility: 1 } },
-    abilities: [
-      { label: '脱身（与全部敌人脱离交战并移到一个连接地点）', cost: { action: true, exhaust: true }, effect: { type: 'sequence', effects: [{ type: 'disengageAll' }, { type: 'moveTo' }] } },
-    ],
-  },
   '01056': { // 老千手法 Sleight of Hand（XP3）
     fast: true,
     reaction: { when: 'negativeTokenRevealed', selfOnly: true },
     event: { type: 'flipTokenSign' },
   },
-  '01057': { // 百战百胜 Sure Gamble（XP4）
-    event: { type: 'gainResource', amount: 10 },
-  },
 
   // =========================================================================
   // 秘术师 Mystic（0 级 + XP）
   // =========================================================================
-  '01058': { // 禁忌知识 Forbidden Knowledge
-    uses: 4, usesType: 'secret', discardWhenEmpty: true,
-    abilities: [
-      { label: '禁忌知识（横置、受 1 恐惧、花 1 秘密：获得 1 资源）', cost: { action: false, exhaust: true, uses: 1, horror: 1 }, effect: { type: 'gainResource', amount: 1 } },
-    ],
-  },
-  '01059': { // 圣玫瑰珠 Holy Rosary
-    passive: { stats: { willpower: 1 } },
-  },
-  '01060': { // 皱缩术 Shrivelling
-    uses: 4, usesType: 'charges',
-    abilities: [
-      { label: '法术攻击（意志检定，伤害 +1；揭示负面符号受 1 恐惧）', cost: { action: true, uses: 1 }, effect: { type: 'fight', skill: 'willpower', damageBonus: 1, onChaosSymbolHorror: 1 } },
-    ],
-  },
-  '01061': { // 探知术 Scrying
-    uses: 3, usesType: 'charges',
-    abilities: [
-      { label: '窥视（查看任意牌库顶 3 张并重排）', cost: { action: true, exhaust: true, uses: 1 }, effect: { type: 'scry' } },
-    ],
-  },
-  '01062': { // 神秘研究 Arcane Studies（天赋）
-    freeTriggers: [
-      { skill: 'willpower', cost: { resources: 1 }, bonus: 1 },
-      { skill: 'intellect', cost: { resources: 1 }, bonus: 1 },
-    ],
-  },
   '01063': { // 新晋术士 Arcane Initiate
     onPlayDoom: 1,
     abilities: [
       { label: '召唤（检索牌库顶 3 张中的法术牌）', cost: { action: false, exhaust: true }, effect: { type: 'searchTop', amount: 3, trait: 'Spell', choose: 1 } },
     ],
   },
-  '01064': { // 飞蛾扑火 Drawn to the Flame
-    event: { type: 'sequence', effects: [
-      { type: 'drawEncounter' },
-      { type: 'discoverClue', amount: 2 },
-    ] },
-  },
   '01065': { // 守护结界 Ward of Protection
     fast: true,
     reaction: { when: 'treachery', selfOnly: true, nonWeaknessOnly: true },
     event: { type: 'sequence', effects: [{ type: 'cancelTreachery' }, { type: 'takeHorror', amount: 1 }] },
   },
-  '01066': { // 眩光一闪 Blinding Light
-    event: { type: 'evade', skill: 'willpower', damageOnSuccess: 1, symbolActionLoss: true },
-  },
-  '01067': { // 无所畏惧 Fearless（技能）
-    skill: { onSuccess: { healHorror: 1 } },
-  },
   '01068': { // 记忆抹消 Memory Wipe（XP1）
     fast: true,
     reaction: { when: 'phaseBegins' },
     event: { type: 'blankEnemy' },
-  },
-  '01069': { // 眩光一闪 Blinding Light（XP2）
-    event: { type: 'evade', skill: 'willpower', damageOnSuccess: 2, symbolActionLoss: true, onChaosSymbolHorror: 1 },
-  },
-  '01070': { // 影之书 Book of Shadows（XP3）
-    passive: { extraSlots: { arcane: 1 } },
-    abilities: [
-      { label: '灌注（横置，为一个法术支援 +1 充能）', cost: { action: true, exhaust: true }, effect: { type: 'rechargeAsset', amount: 1, trait: 'Spell' } },
-    ],
-  },
-  '01071': { // 诡秘石像 Grotesque Statue（XP4）
-    uses: 4, usesType: 'charges', discardWhenEmpty: true,
   },
 
   // =========================================================================
@@ -397,34 +153,10 @@ export const EFFECTS = {
   '01072': { // 皮大衣 Leather Coat（无规则文本，印刷生命 2 作为承伤容量）
     engine: 'printedSoak',
   },
-  '01073': { // 拾荒 Scavenging
-    reactions: [
-      { id: 'scavenging', when: 'investigateSuccess', successByAtLeast: 2, cost: { exhaust: true }, effect: { type: 'searchDiscard', trait: 'Item', choose: 1 } },
-    ],
-  },
-  '01074': { // 球棒 Baseball Bat（Hand x2）
-    abilities: [
-      { label: '挥击（战斗 +2，伤害 +1；骷髅或自动失败时弃置）', cost: { action: true }, effect: { type: 'fight', combatBonus: 2, damageBonus: 1, discardOnTokens: ['skull', 'autofail'] } },
-    ],
-  },
-  '01075': { // 幸运兔脚 Rabbit's Foot
-    reactions: [
-      { id: 'rabbitsFoot', when: 'skillTestFail', cost: { exhaust: true }, effect: { type: 'draw', amount: 1 } },
-    ],
-  },
   '01076': { // 野猫 Stray Cat
     abilities: [
       { label: '引开（弃掉野猫，自动躲避同地点非精英敌人）', cost: { action: false, discardSelf: true }, effect: { type: 'autoEvadeNonElite' } },
     ],
-  },
-  '01077': { // 深挖 Dig Deep（天赋）
-    freeTriggers: [
-      { skill: 'willpower', cost: { resources: 1 }, bonus: 1 },
-      { skill: 'agility', cost: { resources: 1 }, bonus: 1 },
-    ],
-  },
-  '01078': { // 调虎离山 Cunning Distraction
-    event: { type: 'evade', auto: true, allAtLocation: true },
   },
   '01079': { // “看看我发现了什么！”Look what I found!
     fast: true,
@@ -435,9 +167,6 @@ export const EFFECTS = {
     fast: true,
     reaction: { when: 'testWouldFail', selfOnly: true },
     event: { type: 'addTestValue', amount: 2 },
-  },
-  '01081': { // 求生本能 Survival Instinct（技能）
-    skill: { onSuccess: { evadeDisengage: true, mayMoveAfterEvade: true } },
   },
   '01082': { // 安奎娜 Aquinnah（XP1）
     reactions: [
@@ -454,32 +183,14 @@ export const EFFECTS = {
     reaction: { when: 'testWouldFail', selfOnly: true },
     event: { type: 'sequence', effects: [{ type: 'addTestValue', amount: 2 }, { type: 'draw', amount: 1 }] },
   },
-  '01085': { // 生存意志 Will to Survive（XP3）
-    fast: true,
-    event: { type: 'ignoreChaos' },
-  },
 
   // =========================================================================
   // 专属签名卡（5 张）
   // =========================================================================
-  '01006': { // 罗兰 的.38特制手枪（4 子弹）
-    uses: 4, usesType: 'ammo',
-    abilities: [
-      { label: '射击（战斗 +1；所在地点有线索时改为 +3，伤害 +1）', cost: { action: true, uses: 1 }, effect: { type: 'fight', combatBonus: 1, ifCluesAtLocationCombatBonus: 2, damageBonus: 1 } },
-    ],
-  },
-  '01008': { // 黛西的手提包（额外 2 手部槽位，仅书籍）
-    passive: { handSlotsBonus: 2, handSlotsTrait: 'Tome' },
-  },
   '01010': { // 在逃中 On the Lam
     fast: true,
     reaction: { when: 'turnBegins', selfOnly: true },
     event: { type: 'onTheLam' },
-  },
-  '01012': { // 希波利尔传家宝 Heirloom of Hyperborea
-    reactions: [
-      { id: 'heirloom', when: 'spellPlayed', effect: { type: 'draw', amount: 1 } },
-    ],
   },
   '01014': { // 温蒂的护身符 Wendy's Amulet
     // 两条能力都在 engine.js 里按卡号实现：弃牌堆顶事件可当手牌打出（engine.js:2021-2027、
@@ -490,31 +201,18 @@ export const EFFECTS = {
   // =========================================================================
   // 专属弱点（5 张，揭示时结算）
   // =========================================================================
-  '01007': { // 掩盖罪证 Cover Up（威胁区域，3 线索拦截）
-    weakness: { type: 'threat', clues: 3, redirectClues: true },
-  },
-  '01009': { // 死灵之书 The Necronomicon（威胁区域，3 恐惧，elder_sign→自动失败）
-    weakness: { type: 'threat', horror: 3, eldersignToAutofail: true, purgeAbility: true },
-  },
-  '01011': { // 医院债务 Hospital Debts（威胁区域，债务）
-    weakness: { type: 'threat', debt: true, resources: 0, xpPenalty: 2 },
-  },
   '01013': { // 黑暗回忆 Dark Memory（放置毁灭 + 恐惧）
     playableWeakness: true, endTurnInHandHorror: 2,
     event: { type: 'addDoom', amount: 1 },
-  },
-  '01015': { // 被抛弃的孤单 Abandoned and Alone（2 直接恐惧 + 移除弃牌堆）
-    weakness: { effects: [{ type: 'takeHorror', amount: 2, direct: true }, { type: 'removeDiscard' }] },
   },
 
   // =========================================================================
   // 核心包基础弱点（非敌人 5 张；敌人弱点 01101~01103 由 engine 按敌人卡直接生成）
   // =========================================================================
-  '01096': { weakness: { type: 'discardHandTo', keep: 1 } }, // 失忆 Amnesia
-  '01097': { weakness: { type: 'loseResource', all: true } }, // 妄想症 Paranoia
-  '01098': { weakness: { type: 'threat', mods: { allSkills: -1 }, discardCost: { action: 2 } } }, // 恶灵附身 Haunted
-  '01099': { weakness: { type: 'threat', forced: { onHorror: { damage: 1 } }, discardCost: { action: 2 } } }, // 神经紊乱 Psychosis
-  '01100': { weakness: { type: 'threat', forced: { onDamage: { horror: 1 } }, discardCost: { action: 2 } } }, // 忧郁症 Hypochondria
+  // 01096 失忆 / 01097 妄想症：已迁到能力层（kind: 'weakness'，见 src/cards/card-abilities.js）。
+// 恶灵附身 Haunted
+// 神经紊乱 Psychosis
+// 忧郁症 Hypochondria
 
   // =========================================================================
   // 剧情资产（丽塔·钱德勒 01117，场景 2 推进时在客厅生成）

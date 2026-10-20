@@ -13,7 +13,22 @@
 
 审计报告必须记录来源根目录、相对路径、哈希和资源策略。来源发生变化时，`--check` 必须失败，人工审阅后才能重写报告。
 
-## 2. 目标目录
+## 2. 实现规矩（迁移必须遵守）
+
+迁移不只是把卡文变成代码，还必须把行为放进正确的层。以下规矩与重构路线一致；完整条文见
+[`architecture-refactor-roadmap.md`](architecture-refactor-roadmap.md) §3、§7，稳态架构见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md)。
+
+- **行为唯一入口**：新卡行为写在 `src/cards/card-abilities.js` 的描述子（`abilities` / `modifiers` / `elderSign`）。不得向 `card-effects.js` 的 `EFFECTS` 增加新条目，不得在 `engine.js` 按卡号、关卡名或战役名新增分支。
+- **新机制先走通用层**：卡面写不下时，先扩 `ability.js` / `windows.js` / `matcher.js` / `modifiers.js` 的通用能力，再写卡。新窗口必须同时完成注册、调用点接线与测试——注册不等于接线。
+- **非玩家卡走 `encounter-abilities.js`**：敌人、地点、幕／议程、剧情支援与威胁的常驻规则写成带 `scope` 的描述子（Phase 3 · D1），引擎按场上实体枚举，读点是 `entityModifierTotal` / `entityRuleActive`；**不要**再往关卡 `behavior.js` 加按卡号的分支，也不要在引擎里加卡号判断。
+- **通道必须登记**：迁移范围内的每张卡在审计账本里记录通道状态 `descriptor | legacy | hybrid | missing` 与证据路径；`missing` 会让该章的 `literalCardBehavior` 保持 `false`。
+- **规则层不读策略**：不得引入"谁在操作这个座位"的分支（例如按 `humanSeats` 自动跳过可选反应）；这类判断由大厅注入。
+- **可重放**：迁移新增的状态字段必须进 `save-migration.js` 的版本迁移，并保证 JSON 存读档往返一致；行为改动要用 replay 基线证明"行为零变化"——迁移前 `node tools/replay-fixtures.mjs --baseline <文件>`，迁移后 `--compare <文件>`（见 [`phase4-replay.md`](phase4-replay.md) §4）。
+- **简化必须显式**：未逐条还原的卡写 `simplified: true` + `note` 并留在待实现清单，不得用"看起来一样"的实现静默通过验收。
+
+迁移完成的证据是三个指标**不增加且逐批下降**：`engine.js` 的卡号字面量、`EFFECTS` 条目数、战役逃生原语卡数。当前基线见重构路线 §1。
+
+## 3. 目标目录
 
 每个循环使用以下结构：
 
@@ -42,7 +57,7 @@ games/arkhamhorror/
 
 阶段说明、截图和执行日志放在仓库根目录 `artifacts/`；不得放入游戏运行目录。历史试点包只在确有独立行为边界时保留，不为保持目录数量而创建空包。
 
-## 3. 迁移阶段
+## 4. 迁移阶段
 
 ### M0：目录与来源基线
 
@@ -80,7 +95,7 @@ games/arkhamhorror/
 - 剧本、关键词和规则书三个确认组全部为 `verified` 后，才允许将战役及依赖包提升为 `playable`。
 - `playable` 表示本 Mod 的已声明实现范围可玩；若未逐条等价，不得标记或描述为规则等价认证。
 
-## 4. 剧本迁移确认
+## 5. 剧本迁移确认
 
 每章必须在迁移审计的 `confirmations.scenarios.items` 中独立记录以下布尔检查：
 
@@ -99,7 +114,7 @@ games/arkhamhorror/
 
 全部检查为真且附有测试或审计证据路径时，该章才能标为 `verified`。定向夹具不能替代真实大厅路线。
 
-### 4.1 完整叙事迁移规则
+### 5.1 完整叙事迁移规则
 
 - `story-text.js` 必须由锁定的中文剧情来源生成；运行时不得依赖 `参考资源/`，也不得用手写摘要替代原文。
 - 迁移范围必须覆盖战役序章、每章导入、全部结局、幕间、条件信息段和尾声。准备步骤、奖励和记录写入仍由规则引擎执行，不得混入叙事正文。
@@ -108,7 +123,7 @@ games/arkhamhorror/
 - `storyText` 审计不得只检查字符串非空。至少要验证每章存在导入正文、每个可达结局键存在正文、生成文本不含 HTML 控制标记，并由测试证明未触发分支不会出现在观察视图中。
 - 旧存档若只保存了摘要，读取时应以该次访问保存的记录重建完整正文；已经保存的完整历史正文不得被当前战役记录改写。
 
-### 4.2 卡牌字面功能严格审查
+### 5.2 卡牌字面功能严格审查
 
 事故备忘（2026-10-16）：03185《约束衣》虽然已收录卡文并在遭遇结算代码中出现，仍因未登记主动能力而无法触发；同次复核还发现 03059、03091、03094、03301、03332 和 02316–02319 存在相同类别的缺口。由此确认：卡号出现在 definition、behavior、`implemented*` 清单或测试源码中，均不能单独证明卡牌功能已实现。
 
@@ -124,7 +139,7 @@ games/arkhamhorror/
 
 `literalCardBehavior` 是通用迁移硬门槛。新增循环和重新生成的既有循环报告均必须包含该字段；缺失该字段时，`content/migration-confirmation.js` 必须拒绝报告。
 
-## 5. 关键词迁移确认
+## 6. 关键词迁移确认
 
 每个关键词或时机词必须在 `confirmations.keywords.items` 中记录：
 
@@ -138,7 +153,7 @@ games/arkhamhorror/
 
 新增关键词即使只有少量卡使用，也不能并入“卡牌特殊效果”后跳过独立确认。
 
-## 6. 规则书迁移确认
+## 7. 规则书迁移确认
 
 每个循环的 `confirmations.rulebook` 必须确认：
 
@@ -151,7 +166,7 @@ games/arkhamhorror/
 
 规则书描述必须以当前实现为准，不能把未实现的原版规则写成已经可用。规则条目、关联 ID、拼音索引和浏览器验收必须同时提交。
 
-## 7. 审计状态与发布门槛
+## 8. 审计状态与发布门槛
 
 通用校验器位于 `content/migration-confirmation.js`。审计报告必须包含：
 
@@ -161,15 +176,18 @@ games/arkhamhorror/
 
 状态只有 `pending` 和 `verified`。校验器根据检查项计算应有状态，拒绝手工把不完整项目写成 `verified`；任何确认组未完成时，拒绝 `playable: true`。
 
-## 8. 最低验证命令
+## 9. 最低验证命令
 
 每轮至少提供并执行：
 
 ```powershell
 npm run test:<cycle>
 npm run audit:<cycle>
+npm run replay:fixtures   # golden replay 基线没被无意改动（行为零变化）
 npm test
 npm run presentation:check
 ```
 
-完整发布还必须运行相关大厅、浏览器、联机和图片库存验证。若全量回归存在既有失败，迁移报告必须明确区分新增失败与可复现的既有漂移。
+批量迁移（改卡行为）时另加 `tools/replay-fixtures.mjs --baseline/--compare` 的临时基线对比，见
+[`phase4-replay.md`](phase4-replay.md) §4。完整发布还必须运行相关大厅、浏览器、联机和图片库存验证。
+若全量回归存在既有失败，迁移报告必须明确区分新增失败与可复现的既有漂移。

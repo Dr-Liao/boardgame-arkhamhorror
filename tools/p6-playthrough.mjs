@@ -1,7 +1,9 @@
 import { createGameState, legalMoves, validateMove, applyMove, decisionSeat } from '../src/engine/engine.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
+import { registeredEntry } from '../src/engine/ability.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { buildDeck } from '../src/deck/deckbuilding.js'
+import { abilityShim } from '../src/engine/ability.js'
 
 export const settings = { campaignHub: true, playerInvestigator: '01001', difficulty: 'easy' }
 const deck = ['01016','01017','01018','01020','01021','01022','01023','01030','01033','01037','01039','01087','01088','01089','01090'].flatMap(code => [code, code])
@@ -71,7 +73,15 @@ export function policy(s, branch = 'r1', mode = 'victory') {
   if (sc === 'theMidnightMasks' && action('resign') && (mode === 'rush' || s.cultistsInVictory.length >= 3 || s.round >= 8 || inv.horror >= inv.maxSanity - 2)) return action('resign')
   if (action('advanceAct')) return action('advanceAct')
   const engaged = s.enemies.filter(e => e.location === inv.location && (e.engagedSeat === inv.seat || e.massive))
-  const abilityEffect = m => EFFECTS[inv.assets.find(a => a.id === m.assetId)?.code]?.abilities?.[m.abilityIndex]?.effect
+  // 能力效果可能来自旧 DSL（EFFECTS）或能力层描述子：索引与引擎的 assetEffect 同序
+  // （旧式 abilities 在前，action/free 描述子在后），因此按同一条规则折叠。
+  const abilityEffect = m => {
+    const code = inv.assets.find(a => a.id === m.assetId)?.code
+    const legacy = EFFECTS[code]?.abilities?.[m.abilityIndex]
+    if (legacy) return legacy.effect
+    const shim = abilityShim(code)
+    return shim[m.abilityIndex - (EFFECTS[code]?.abilities?.length || 0)]?.effect ?? undefined
+  }
   if (sc === 'theDevourerBelow' && s.actIndex === 1 && s.enemies.filter(e => e.location === 'mainPath').length >= 2) {
     const blast = moves.find(m => m.action === 'play' && m.cardId === '01024')
     if (blast) return blast

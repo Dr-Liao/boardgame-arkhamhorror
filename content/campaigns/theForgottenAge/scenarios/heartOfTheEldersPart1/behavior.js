@@ -304,13 +304,8 @@ export const behavior = {
     return tfaChaosToken(CHAOS_TABLE_ID, state, inv, token, api)
   },
 
-  locationShroudModifier(state, location) {
-    // 毒牙神庙：胜利区每有 1 点复仇点数，帷幕 +1。
-    if (original(location) === '04074') {
-      return (state.victoryDisplay || []).reduce((sum, card) => sum + (card.vengeance || 0), 0)
-    }
-    return 0
-  },
+  // 毒牙神庙（04074）的「胜利区每有 1 点复仇点数，帷幕 +1」已迁到
+  // src/cards/encounter-abilities.js 的 04074 地点条目，本章不再重复实现。
 
   locationEntered(state, inv, location, api) {
     const code = original(location)
@@ -332,12 +327,8 @@ export const behavior = {
   },
 
   enemyStatModifier(state, enemy, stat) {
-    const inherited = encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
-    // 万蛇据点：此处的每个蛇族敌人 +1 攻击值。
-    if (stat === 'fight' && enemy?.location === 'serpentsHaven' && hasTrait(enemy, 'Serpent')) {
-      return inherited + 1
-    }
-    return inherited
+    // 万蛇据点（04072）的「此处每个蛇族敌人 +1 攻击」已迁到 04072 的地点条目。
+    return encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
   },
 
   enemySpawned(state, enemy, api) {
@@ -358,15 +349,12 @@ export const behavior = {
     }
   },
 
-  // 羽翼蛇族：不能被击败。
+  // 羽翼蛇族：不能被击败 / 不发动借机攻击（已迁到 04209b 的敌人条目）。
   enemyCanBeDefeated(state, enemy, source, seat) {
-    if (original(enemy) === WINGED_SERPENT) return false
     return encounterRules.enemyCanBeDefeated?.(state, enemy, source, seat) !== false
   },
 
-  // 羽翼蛇族：不能发动借机攻击。
   canOpportunityAttack(state, enemy) {
-    if (original(enemy) === WINGED_SERPENT) return false
     return encounterRules.canOpportunityAttack?.(state, enemy) !== false
   },
 

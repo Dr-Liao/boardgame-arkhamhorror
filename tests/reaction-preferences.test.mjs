@@ -1,12 +1,15 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createGameState, allCardDefs, applyMove } from '../src/engine/engine.js'
-import { EFFECTS, isAutomaticReward } from '../src/cards/card-effects.js'
+import { isAutomaticReward } from '../src/cards/card-effects.js'
+import { allDescriptors } from '../src/engine/ability.js'
 import { requestChoice, resolveTransaction } from '../src/engine/resolution.js'
 import { reactionChoices, reactionView, reactionEnabled, setReactionEnabled } from '../web/reaction-preferences.js'
 
 test('免费且不限次的资源反应自动领取，有成本、目标或次数限制的反应保留选择',()=>{
-  assert.equal(isAutomaticReward(EFFECTS['01033'].reactions[0]),true)
+  // Phase 5（5b-6）：01033 的反应搬到能力层，读点改成描述子（数据形状不变）。
+  const milan = allDescriptors('01033').find(descriptor => descriptor.kind === 'reaction')
+  assert.equal(isAutomaticReward({ effect: milan.effect, cost: milan.cost, id: milan.id }), true)
   const reward={effect:{type:'gainResource',amount:1}}
   for(const r of [{...reward,cost:{resources:1}},{...reward,cost:{exhaust:true}},
     {...reward,limit:'round'},{effect:{type:'gainResource',target:'location'}},

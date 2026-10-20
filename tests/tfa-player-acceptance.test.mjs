@@ -4,11 +4,13 @@ import { fixture, enemy, move, settle, legalMoves, validateMove } from './core-f
 import { getStat, performTest } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
+import { lifecycleChannel } from '../src/engine/lifecycle.js'
 import { getAvailability, PLAYER_CARD_CODES } from '../src/deck/availability.js'
 import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
 import { buildDeck, matchesDeckOptions } from '../src/deck/deckbuilding.js'
 import { replacementOptions, purchaseCard, shrewdAnalysisUpgrade } from '../src/campaign/campaign.js'
 import { manifest, IMPLEMENTED_PLAYER_CODES, WEAKNESS_PLAYER_CODES } from '../content/packs/tfaPlayer/manifest.js'
+import { registeredEntry } from '../src/engine/ability.js'
 
 const me = state => state.investigators[0]
 const IMPLEMENTED = [...IMPLEMENTED_PLAYER_CODES]
@@ -36,10 +38,21 @@ function sign(state, execute, choose) {
   return state.testResult
 }
 
+function hasBehaviorData(code) {
+  if (EFFECTS[code]) return true
+  // Phase 1 起，「有实现」不再等于「有 EFFECTS 条目」：生命周期钩子可以在能力层描述子里。
+  const channel = lifecycleChannel(code)
+  if (channel.played || channel.commit || channel.weakness || channel.entersPlay || channel.leavesPlay) return true
+  // Phase 2：逃生卡迁移后，主动/奖励/修正也在能力层描述子里（entry.abilities / modifiers）。
+  const entry = registeredEntry(code)
+  return Boolean(entry && (entry.abilities.length || entry.modifiers.length || entry.passive
+    || entry.freeTriggers.length))
+}
+
 test('M2 implements the announced player-card wave and keeps the rest catalog-only', () => {
   assert.equal(IMPLEMENTED.length, 91, `已实现 ${IMPLEMENTED.length} 张，应为 91 张`)
   for (const code of IMPLEMENTED) {
-    assert.ok(EFFECTS[code], `缺少效果：${code}`)
+    assert.ok(hasBehaviorData(code), `缺少效果：${code}`)
     assert.equal(getAvailability(code).availability, 'strict', code)
     assert.equal(getAvailability(code).rulesImplemented ?? true, true, code)
   }
@@ -86,7 +99,9 @@ test('M2 ornate skull charges after a defeat and converts charges into cards', (
   const victim = enemy(state, { id: 'skull-target', fight: 0, evade: 0, health: 1 })
   state.chaosBag = ['0']
   move(state, { action: 'fight', enemyId: victim.id })
-  settle(state, pending => pending.kind === 'reaction' ? 'trigger' : null)
+  // Phase 2：反应能力现在由能力层窗口枚举，选项 id 是 'desc:…' 而不是旧的 'trigger'。
+  settle(state, pending => pending.kind === 'reaction'
+    ? (pending.options.find(option => option.id !== 'skip')?.id ?? null) : null)
   assert.equal(me(state).assets.find(item => item.code === '04026').uses, 1)
   me(state).resources = 0
   me(state).deck = ['01088', '01088']
@@ -600,12 +615,11 @@ test('M2 Browning rifle spends bullets for matching damage', () => {
   const rifle = me(state).assets.find(item => item.code === '04229')
   const target = enemy(state, { id: 'browning-target', fight: 0, evade: 0, health: 10 })
   state.chaosBag = ['0']
-  move(state, { action: 'ability', assetId: rifle.id, abilityIndex: 0 })
-  settle(state, pending => {
-    if (pending.kind === 'resource' && pending.source === '04229') return '3'
-    if (pending.kind === 'target') return target.id
-    return null
-  })
+  const shot = legalMoves(state).find(command => command.action === 'ability'
+    && command.assetId === rifle.id && command.targetId === target.id)
+  assert.ok(shot, '勃朗宁应当按 target 枚举出攻击动作')
+  move(state, shot)
+  settle(state, pending => (pending.kind === 'resource' && pending.source === '04229' ? '3' : null))
   assert.equal(me(state).assets.find(item => item.code === '04229').uses, 5)
   assert.equal(state.enemies.find(item => item.id === target.id).damageTaken, 3)
 })
@@ -658,10 +672,14 @@ test('M2 rusted sword heavy slash adds willpower and triple damage', () => {
   const sword = me(state).assets.find(item => item.code === '04276')
   const target = enemy(state, { id: 'sword-target', fight: 0, evade: 1, health: 10 })
   state.chaosBag = ['0']
-  move(state, { action: 'ability', assetId: sword.id, abilityIndex: 1 })
-  settle(state, pending => pending.kind === 'target' ? target.id : null)
+  const slash = legalMoves(state).find(command => command.action === 'ability'
+    && command.assetId === sword.id && command.abilityIndex === 1 && command.targetId === target.id)
+  assert.ok(slash, '蓄力斩应当按 target 枚举出攻击动作')
+  move(state, slash)
+  settle(state)
   assert.equal(state.enemies.find(item => item.id === target.id).damageTaken, 3)
-  assert.equal(me(state).rustedSwordUsed, true)
+  // 「每局一次」现在记在 state.abilityLimits（不再有 inv.rustedSwordUsed 裸字段）。
+  assert.ok(Object.keys(state.abilityLimits || {}).some(key => key.startsWith('04276#1|')))
 })
 
 test('M2 kerosene heals horror only after a local defeat', () => {

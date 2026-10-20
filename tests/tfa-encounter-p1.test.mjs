@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createGameState, applyMove, legalMoves, getStat, getMaxHealth, actionPreview } from '../src/engine/engine.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
+import { registeredEntry } from '../src/engine/ability.js'
 import { encounterRules } from '../content/campaigns/theForgottenAge/encounter-rules.js'
 
 // P1 遭遇与威胁区修复：多技能选择、影响引擎读取点的威胁字段、禁止换牌。
@@ -61,7 +62,8 @@ test('毒蛇灾厄（04099）：非弱点道具的文字视为空白', () => {
   const before = getStat(state, me(state), 'willpower')
   me(state).threat.push({ id: 't04099', code: '04099', originalCode: '04099', blankItemAssets: true })
   assert.equal(getStat(state, me(state), 'willpower'), before - 1, '道具的 +1 意志被抹掉')
-  assert.deepEqual(EFFECTS['01059'].passive, { stats: { willpower: 1 } })
+  // Phase 5：passive.stats 已迁成声明式修正（唯一读点 modifiers.js）。
+  assert.deepEqual(registeredEntry('01059').modifiers, [{ target: 'skill:willpower', amount: 1 }])
 })
 
 test('半身入土（04089）：不能解除交战，躲避成功也不再解除', () => {
@@ -102,11 +104,18 @@ test('蟒蛇（04079）：下个补给阶段不能重整，之后恢复', () => 
 })
 
 test('会替队友触发的快速反应登记了 selfOnly', () => {
+  // Phase 5（5c-9）：04028/04034/04202 已迁到能力层，条件写在 criteria 上；旧通道的卡仍读 EFFECTS。
   for (const code of ['04028', '04034', '04202']) {
-    assert.equal(EFFECTS[code]?.reaction?.selfOnly, true, `${code} 只能在自己的时机触发`)
+    const descriptor = registeredEntry(code)?.abilities?.find(item => item.kind === 'played')
+    const selfOnly = descriptor ? descriptor.criteria?.selfOnly === true : EFFECTS[code]?.reaction?.selfOnly === true
+    assert.equal(selfOnly, true, `${code} 只能在自己的时机触发`)
   }
-  // 已有的自我限定反应保持原样。
-  for (const code of ['04111', '04200']) assert.equal(EFFECTS[code]?.reaction?.selfOnly, true, code)
+  // Phase 5（5c-11）：04200 也已迁到能力层（criteria.selfOnly），04111 仍走旧通道。
+  for (const code of ['04111', '04200']) {
+    const descriptor = registeredEntry(code)?.abilities?.find(item => item.kind === 'played')
+    const selfOnly = descriptor ? descriptor.criteria?.selfOnly === true : EFFECTS[code]?.reaction?.selfOnly === true
+    assert.equal(selfOnly, true, code)
+  }
 })
 
 test('攻击能力仍然把额外行动成本算进威胁（kind 不被覆盖）', () => {

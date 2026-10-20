@@ -141,39 +141,23 @@ export const behavior = {
   },
 
   // ---- 场景 3 的正面持续效果（P2：04048 / 04049）----
-  // 04048 搜索遗迹：埃兹特里的守卫者（04086）不能攻击，也不能被攻击；
-  // 「林中暗箭」（04087）的效果被忽略（引擎在诡计结算前读这个钩子）。
-  enemyCannotAttack(state, enemy) {
-    return state.scenarioFlags?.actThree === 'search' && original(enemy) === '04086'
-  },
-
-  enemyCannotBeAttacked(state, enemy) {
-    return state.scenarioFlags?.actThree === 'search' && original(enemy) === '04086'
-  },
-
+  // 04048 搜索遗迹：埃兹特里的守卫者（04086）不能攻击、也不能被攻击；「林中暗箭」（04087）
+  // 的效果被忽略（引擎在诡计结算前读这个钩子）。
+  // 04086 的两条规则与 04049 的 +1 战斗/躲避已迁到能力层
+  // （src/cards/encounter-abilities.js 的 04086 条目），这里只留剧本入口的诡计豁免。
   ignoreTreachery(state, code) {
     return state.scenarioFlags?.actThree === 'search' && original({ code }) === '04087'
   },
 
-  // 04049 守备森严的遗迹：守卫者 +1 战斗 +1 躲避。
-  // 04072 万蛇据点：此处的每个蛇族敌人 +1 攻击值。
+  // 04072 万蛇据点：此处的每个蛇族敌人 +1 攻击值（已迁到 04072 地点条目）。
+  // 本章只保留共享遭遇组的修正继承。
   enemyStatModifier(state, enemy, stat) {
-    const value = encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
-    if (state.scenarioFlags?.actThree === 'guarded' && original(enemy) === '04086'
-      && (stat === 'fight' || stat === 'evade')) return value + 1
-    if (stat === 'fight' && hasTrait(enemy, 'Serpent')) {
-      const location = state.locations.find(entry => entry.id === enemy.location)
-      if (original(location) === '04072') return value + 1
-    }
-    return value
+    return encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
   },
 
-  // 04074 毒牙神庙：胜利区每有一点复仇点数，帷幕 +1。
+  // 04074 毒牙神庙：胜利区每有一点复仇点数，帷幕 +1（已迁到 04074 地点条目）。
   locationShroudModifier(state, location) {
-    const base = encounterRules.locationShroudModifier?.(state, location) || 0
-    if (original(location) !== '04074') return base
-    const vengeance = (state.victoryDisplay || []).reduce((sum, card) => sum + (card.vengeance || 0), 0)
-    return base + vengeance
+    return encounterRules.locationShroudModifier?.(state, location) || 0
   },
 
   // 04049：「林中暗箭」获得涌动。

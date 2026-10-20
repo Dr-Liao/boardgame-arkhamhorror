@@ -14,14 +14,13 @@ export const manifest = Object.freeze({
   encounterGroupIds: [], behaviorIds: [],
 })
 
+// Phase 5：行为迁到能力层描述子后，effects 表里不再有这张卡；构筑许可由本清单放行
+// （与 dunwichPlayer / carcosaPlayer 的 abilityLayerCodes 同一约定）。
+export const abilityLayerCodes = Object.freeze([
+  '02020',
+  '02021',
+  '02030',
+])
+
 export const effects = {
-  '02021': { abilities: [{ label: '研究溶液（智识 4；成功则弃置并抽 2 张牌）', cost: { action: true },
-    effect: { type: 'researchSolution' } }] },
-  '02020': { passive: { handSizeBonus: 2 }, reactions: [
-    { id: 'laboratoryAssistant', when: 'assetEnteredPlay', assetCode: '02020', effect: { type: 'draw', amount: 2 } },
-  ] },
-  '02030': { uses: 3, usesType: 'charges', abilities: [
-    { label: '同地点调查员治疗 1 恐惧', cost: { action: true, uses: 1 },
-      effect: { type: 'targetedEffect', target: 'location', effect: { type: 'heal', amount: 1, what: 'horror' } } },
-  ] },
 }

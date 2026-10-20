@@ -12,6 +12,9 @@ import { deckRules, matchesCardRule, deckCardLimit, validateDeckRules } from './
 
 import { PLAYER_CARDS, ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
 import { EFFECTS } from '../cards/card-effects.js'
+import { CARD_ABILITY_CODES, PHASE5_MIGRATED_CODES } from '../cards/card-abilities.js'
+import { abilityShim, modifiersFor, registeredEntry } from '../engine/ability.js'
+import { playedEffect } from '../engine/lifecycle.js'
 import {
   CORE_INVESTIGATOR_CODES, SIMPLIFIED_PLAYER_CARD_CODES, PLAYER_CARD_CODES,
   PLAYABLE_INVESTIGATOR_CODES,
@@ -22,6 +25,8 @@ import {
 const DECK_SIZE_DEFAULT = 30
 const PLAYER_TYPES = new Set(['asset', 'event', 'skill'])
 const PLAYER_CODE_SET = new Set(PLAYER_CARD_CODES)
+// Phase 5 机械迁移的卡号：评分口径对这些卡改用能力层读点（其余卡保持旧口径）。
+const PHASE5_MIGRATED = PHASE5_MIGRATED_CODES
 
 export { CORE_INVESTIGATOR_CODES, PLAYABLE_INVESTIGATOR_CODES }
 
@@ -35,9 +40,10 @@ export function matchesDeckOptions(invDef, card) {
 }
 
 // 仅简化模式许可且有明确效果条目的卡牌；不使用技能图标隐式放行。
+// 「有行为实现」现在有两条通道：旧 DSL 的 EFFECTS，或能力层的描述子/修正。
 export function isPlayable(card) {
   return !!card && card.dataStatus !== 'quarantined' && isCardAvailable(card.code)
-    && Object.hasOwn(EFFECTS, card.code) && !!EFFECTS[card.code]
+    && (Object.hasOwn(EFFECTS, card.code) || CARD_ABILITY_CODES.has(card.code))
 }
 
 // 无效的张数元数据不能使构筑绕过数量限制。
@@ -141,32 +147,52 @@ export function scoreCard(card, invDef) {
   const boost = (sk, v) => { s += v * (4 - rank(sk)) }
 
   const eff = EFFECTS[card.code]
+  // Phase 5：自动构筑的评分口径必须与迁移前一致（牌组会被写进对局存档）。
+  // 因此只对「Phase 5 机械迁移」的卡改用新读点——把搬走的数据原样计回分数；
+  // 更早手写描述子的卡保持历史口径（它们的 abilities/played 数据历来不参与评分）。
+  const migrated = PHASE5_MIGRATED.has(card.code)
 
-  if (eff && eff.passive) {
-    const p = eff.passive
+  // Phase 5（5b-6d）：被动数据体可能已在能力层条目上（过渡方案），评分口径不变。
+  const passive = eff?.passive || registeredEntry(card.code)?.passive || null
+  if (passive) {
+    const p = passive
     if (p.stats) for (const [sk, v] of Object.entries(p.stats)) boost(sk, v * 2.5)
     if (p.fightDamage) boost('combat', p.fightDamage * 1.5)
     if (p.healthBonus) s += 2.0
     if (p.sanityBonus) s += 1.5
     if (p.handSizeBonus) s += 1.2
+  } else if (migrated) {
+    // 迁移后 passive.stats 写成声明式修正；按同一折算系数计分。
+    for (const modifier of modifiersFor(card.code)) {
+      if (modifier.condition || typeof modifier.amount !== 'number') continue
+      if (typeof modifier.target !== 'string' || !modifier.target.startsWith('skill:')) continue
+      const skill = modifier.target === 'skill:*' ? 'wild' : modifier.target.slice('skill:'.length)
+      boost(skill, modifier.amount * 2.5)
+    }
   }
 
-  if (eff && eff.abilities) {
-    for (const ab of eff.abilities) {
+  // 主动能力：旧 DSL 的 abilities，加上迁移后从描述子折叠回来的同一份形状。
+  const abilities = [...(eff?.abilities || []), ...(migrated ? abilityShim(card.code) : [])]
+  if (abilities.length) {
+    for (const ab of abilities) {
       const w = effectWeights(ab.effect)
       for (const [sk, v] of Object.entries(w.skills)) boost(sk, v)
       s += w.flat
     }
   }
 
-  if (eff && eff.event) {
-    const w = effectWeights(eff.event)
+  // 事件卡打出效果：迁移后改由 lifecycle 读点提供（数据原样）。
+  const played = migrated ? playedEffect(card.code) : (eff ? eff.event : null)
+  if (played) {
+    const w = effectWeights(played)
     for (const [sk, v] of Object.entries(w.skills)) boost(sk, v)
     s += w.flat
   }
 
-  if (eff && eff.freeTriggers) {
-    for (const ft of eff.freeTriggers) boost(ft.skill, 1.2)
+  // Phase 5（5b-7）：天赋档位搬到能力层后评分口径不变（旧 DSL 优先、条目回落）。
+  const freeTriggers = eff?.freeTriggers || registeredEntry(card.code)?.freeTriggers || []
+  if (freeTriggers.length) {
+    for (const ft of freeTriggers) boost(ft.skill, 1.2)
   }
 
   if (card.icons) {
@@ -223,7 +249,9 @@ export function signatureAndWeaknesses(invDef, rng, options = {}) {
   const signatureWeaknesses = []
   for (const code of deckRules(invDef).signatureCards) {
     const def = ALL_CARDS[code]
-    if (!def || def.code !== code || !Object.hasOwn(EFFECTS, code) || !Array.isArray(def.signatureFor)
+    if (!def || def.code !== code
+      || !(Object.hasOwn(EFFECTS, code) || CARD_ABILITY_CODES.has(code))
+      || !Array.isArray(def.signatureFor)
       || !def.signatureFor.includes(invDef.code)) {
       throw new Error('签名卡或专属弱点依赖缺失/不合法：' + code)
     }

@@ -16,7 +16,7 @@ export const manifest = {
   minRulesVersion: 'n4.2',
   status: 'playable',
   dependencies: ['core'],
-  description: '231 张战役卡按原卡号分区登记；十个剧本的布置、幕议、遭遇与结局规则在 content/campaigns/theForgottenAge 中实现。卡包为 playable：逐张卡面字面核对与浏览器发布验收仍在 docs/tfa-card-audit.md 中跟踪。',
+  description: '231 张战役卡按原卡号分区登记；十个剧本的布置、幕议、遭遇与结局规则在 content/campaigns/theForgottenAge 中实现。卡包为 playable：逐张卡面字面核对与浏览器发布验收仍在 audit/tfa-migration.json 的 remaining 清单中跟踪。',
   cardRanges: [{ from: '04001', to: '04347' }],
   cards: campaignCards.map(card => ({
     code: card.code,

@@ -1,0 +1,2598 @@
+{
+  "schemaVersion": 1,
+  "note": "由 tools/audit-abilities.mjs --write 生成，勿手改。指标只允许下降；engineCodes / effectsEntries 的每一次减少都是一次迁移证据，必须随迁移一起提交。",
+  "metrics": {
+    "engineCodes": 126,
+    "effectsEntries": 90,
+    "effectsTopLevelFields": 48,
+    "escapeCards": 32,
+    "descriptorEntries": 373,
+    "descriptorAbilities": 315,
+    "abilityKinds": 11,
+    "windows": 52,
+    "effectPrimitives": 97,
+    "nonPlayerCards": 9,
+    "behaviorLines": 14831,
+    "declaredScenarios": 3
+  },
+  "channels": {
+    "descriptor": 363,
+    "legacy": 60,
+    "engine": 5,
+    "hybrid": 1,
+    "escape": 32
+  },
+  "nonPlayer": {
+    "byScope": {
+      "enemy": 7,
+      "location": 2
+    },
+    "codes": [
+      "03096",
+      "03103",
+      "03222",
+      "04072",
+      "04074",
+      "04086",
+      "04095",
+      "04209b",
+      "screechingByakhee"
+    ],
+    "abilities": 0,
+    "modifiers": 15
+  },
+  "declaration": {
+    "abilityScopes": [
+      "card",
+      "investigator",
+      "enemy",
+      "location",
+      "act",
+      "agenda",
+      "storyAsset",
+      "treachery"
+    ],
+    "behaviorFiles": [
+      "content/campaigns/nightOfTheZealot/scenarios/theDevourerBelow/behavior.js",
+      "content/campaigns/nightOfTheZealot/scenarios/theGathering/behavior.js",
+      "content/campaigns/nightOfTheZealot/scenarios/theMidnightMasks/behavior.js",
+      "content/campaigns/theDunwichLegacy/later-behaviors.js",
+      "content/campaigns/theDunwichLegacy/scenarios/extracurricularActivity/behavior.js",
+      "content/campaigns/theDunwichLegacy/scenarios/theHouseAlwaysWins/behavior.js",
+      "content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/behavior.js",
+      "content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/behavior.js",
+      "content/campaigns/theForgottenAge/scenarios/shatteredAeons/behavior.js",
+      "content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/behavior.js",
+      "content/campaigns/theForgottenAge/scenarios/theCityOfArchives/behavior.js",
+      "content/campaigns/theForgottenAge/scenarios/theDepthsOfYoth/behavior.js",
+      "content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/behavior.js",
+      "content/campaigns/theForgottenAge/scenarios/theUntamedWilds/behavior.js",
+      "content/campaigns/theForgottenAge/scenarios/threadsOfFate/behavior.js",
+      "content/campaigns/theForgottenAge/scenarios/turnBackTime/behavior.js",
+      "content/campaigns/thePathToCarcosa/scenarios/aPhantomOfTruth/behavior.js",
+      "content/campaigns/thePathToCarcosa/scenarios/blackStarsRise/behavior.js",
+      "content/campaigns/thePathToCarcosa/scenarios/curtainCall/behavior.js",
+      "content/campaigns/thePathToCarcosa/scenarios/dimCarcosa/behavior.js",
+      "content/campaigns/thePathToCarcosa/scenarios/echoesOfThePast/behavior.js",
+      "content/campaigns/thePathToCarcosa/scenarios/theLastKing/behavior.js",
+      "content/campaigns/thePathToCarcosa/scenarios/thePallidMask/behavior.js",
+      "content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/behavior.js"
+    ],
+    "behaviorLines": 14831,
+    "declaredScenarios": 3
+  },
+  "cards": [
+    {
+      "code": "01001",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01002",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01003",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01004",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01005",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01006",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01007",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "01008",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "01009",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01010",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01011",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01012",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01013",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "01014",
+      "channel": "engine",
+      "descriptors": 0,
+      "engineMarked": true,
+      "engineReferenced": true
+    },
+    {
+      "code": "01015",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01016",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01017",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01018",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01019",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01020",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01021",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01022",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01023",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01024",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01025",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01026",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01027",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01028",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01029",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01030",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01031",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01032",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01033",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01034",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01035",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01036",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01037",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01038",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "01039",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01040",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01041",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01042",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01043",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01044",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01045",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01046",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01047",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01048",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01049",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01050",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01051",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01052",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01053",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01054",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01055",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01056",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01057",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01058",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01059",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01060",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01061",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01062",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01063",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01064",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01065",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01066",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01067",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01068",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01069",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01070",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01071",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "01072",
+      "channel": "engine",
+      "descriptors": 0,
+      "engineMarked": true
+    },
+    {
+      "code": "01073",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01074",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01075",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01076",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01077",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01078",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01079",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01080",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01081",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01082",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "01083",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01084",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01085",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01086",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "01087",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01088",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01089",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01090",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01091",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01092",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01093",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01094",
+      "channel": "engine",
+      "descriptors": 0,
+      "engineMarked": true
+    },
+    {
+      "code": "01095",
+      "channel": "engine",
+      "descriptors": 0,
+      "engineMarked": true
+    },
+    {
+      "code": "01096",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01097",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01098",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01099",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01100",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01117",
+      "channel": "engine",
+      "descriptors": 0,
+      "engineMarked": true,
+      "engineReferenced": true
+    },
+    {
+      "code": "01518",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01522",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01523",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01527",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "01533",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02001",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02002",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02003",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02004",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02005",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02006",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02007",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02008",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02009",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02010",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02011",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02012",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02013",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02014",
+      "channel": "descriptor",
+      "descriptors": 2,
+      "engineReferenced": true
+    },
+    {
+      "code": "02015",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02016",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02017",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02018",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02019",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02020",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02021",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02022",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02023",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02024",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02025",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02026",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02027",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02028",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02029",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02030",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02031",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02032",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02033",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02034",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02035",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02036",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02037",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "02038",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02039",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02040",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02061",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02080",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02105",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02106",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02107",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02108",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02109",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02110",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "02111",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "02112",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02113",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "02114",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "02115",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "02116",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02117",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02140",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02147",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02148",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02149",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02150",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02151",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02152",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "02153",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "02154",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02155",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02156",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02157",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02158",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02184",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02185",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "02186",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02187",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02188",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02189",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02190",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02191",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02192",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02193",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "02194",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02218",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02225",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "02226",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02227",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02228",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02229",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02230",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02231",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02232",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02233",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02234",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "02235",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02255",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "02260",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02261",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "02262",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02263",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02264",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02265",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02266",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02267",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02268",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02269",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02270",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02271",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02272",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "02273",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02299",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02300",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02301",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02302",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02303",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02304",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02305",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "02306",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "02307",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "02308",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02309",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "02310",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "03001",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "03002",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "03003",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "03004",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "03005",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "03006",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "03007",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "03008",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03009",
+      "channel": "hybrid",
+      "descriptors": 0
+    },
+    {
+      "code": "03009b",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "03010",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "03011",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "03012",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "03013",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03014",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaInvestigator"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03015",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaInvestigator"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03016",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaInvestigator"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03017",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "03018",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaInvestigator"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03019",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03020",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03021",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "03022",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03023",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03024",
+      "channel": "escape",
+      "descriptors": 1,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ]
+    },
+    {
+      "code": "03025",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ]
+    },
+    {
+      "code": "03026",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03027",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03028",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03029",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03030",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "03031",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03032",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03033",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03034",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03035",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03036",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "03037",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "03038",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "03039",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03040",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03041",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03042",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "03106",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03107",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "03108",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03109",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "03110",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03111",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "03112",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03113",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "03114",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "03115",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "03116",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03117",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03118",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03119",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03142",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "03143",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "03147",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03148",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "03149",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03150",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ]
+    },
+    {
+      "code": "03151",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03152",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03153",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03154",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03155",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03156",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "03157",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "03158",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03189",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ]
+    },
+    {
+      "code": "03190",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03191",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03192",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03193",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "03194",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03195",
+      "channel": "escape",
+      "descriptors": 1,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03196",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03197",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03198",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "03199",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "03228",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03229",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03230",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03231",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03232",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "03233",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03234",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03235",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03236",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03237",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03238",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "03239",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03263",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03264",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03265",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03266",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03267",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03268",
+      "channel": "escape",
+      "descriptors": 2,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ]
+    },
+    {
+      "code": "03269",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03270",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "03271",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "03272",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03273",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03304",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03305",
+      "channel": "escape",
+      "descriptors": 1,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ]
+    },
+    {
+      "code": "03306",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03307",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03308",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "03309",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03310",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03311",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "03312",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03313",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03314",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03315",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04001",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "04002",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "04003",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "04004",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "04005",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "04006",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "04007",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04008",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04009",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04010",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "tfaInvestigator"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "04011",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04012",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04013",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "04014",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "04015",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "04016",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04017",
+      "channel": "escape",
+      "descriptors": 2,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ]
+    },
+    {
+      "code": "04018",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04019",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "04020",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "04021",
+      "channel": "escape",
+      "descriptors": 1,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "04022",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "04023",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04024",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04025",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "04026",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "04027",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04028",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04029",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "04030",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "04031",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "04032",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04033",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04034",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04035",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "04036",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04037",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "04038",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "04039",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04040",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04041",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "04042",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "04051",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04103",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04104",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04105",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04106",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "04107",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04108",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "04109",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "04110",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "04111",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "04112",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04147",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "04148",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "04149",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04150",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04151",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04152",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04153",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04154",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04155",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04156",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04157",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "04158",
+      "channel": "escape",
+      "descriptors": 1,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "04159",
+      "channel": "escape",
+      "descriptors": 1,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "04160",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04191",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "04192",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04193",
+      "channel": "descriptor",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "04194",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04195",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04196",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04197",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04198",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04199",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "04200",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04201",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04202",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04203",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "04204",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "04229",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04230",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "04231",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "04232",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04233",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04234",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04235",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "04236",
+      "channel": "legacy",
+      "descriptors": 0,
+      "engineReferenced": true
+    },
+    {
+      "code": "04264",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04265",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "04266",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04267",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04268",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "04269",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04270",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "04271",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04272",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04273",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04274",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "04275",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "04276",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "04304",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04305",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "04306",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04307",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "04308",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "04309",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "04310",
+      "channel": "escape",
+      "descriptors": 0,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "engineReferenced": true
+    },
+    {
+      "code": "04311",
+      "channel": "legacy",
+      "descriptors": 0
+    },
+    {
+      "code": "04312",
+      "channel": "descriptor",
+      "descriptors": 1,
+      "engineReferenced": true
+    },
+    {
+      "code": "04313",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05023",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05025",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05028",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05112",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "05115",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "07017",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "07025",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "07027",
+      "channel": "descriptor",
+      "descriptors": 1
+    }
+  ]
+}

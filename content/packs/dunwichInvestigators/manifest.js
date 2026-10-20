@@ -13,29 +13,12 @@ export const investigatorAbilities = {
       cost: { discardHand: 1 }, effect: { type: 'readyAsset' }, limit: 'round' } },
 }
 export const signatureEffects = {
-  '02007': { weakness: { type: 'attachedEnemy' } },
-  '02009': { weakness: { type: 'threat', rexCurse: true } },
-  '02011': { weakness: { type: 'attachedLocation' } },
-  '02006': { reactions: [{ id: 'zoeysCross', when: 'enemyEngaged', cost: { exhaust: true, resources: 1 },
-    effect: { type: 'dealDamage', amount: 1 } }] },
-  '02008': { event: { type: 'drawPerClue', maximum: 5 } },
-  '02010': { uses: 0, usesType: 'ammo', abilities: [{ label: '双枪射击（战斗 +2，伤害 +1）',
-    cost: { action: true, uses: 1 }, effect: { type: 'fight', combatBonus: 2, damageBonus: 1 } }] },
-  '02012': { reactions: [{ id: 'jimsTrumpet', when: 'skullRevealed', cost: { exhaust: true },
-    effect: { type: 'healHorrorNearby', amount: 1 } }] },
-  '02014': { abilities: [
-    { label: '杜克攻击（基础战斗 4，伤害 +1）', cost: { action: true, exhaust: true },
-      effect: { type: 'fight', baseValue: 4, damageBonus: 1 } },
-    { label: '杜克调查（可先移动，基础智识 4）', cost: { action: true, exhaust: true },
-      effect: { type: 'dukeInvestigate' } },
-  ] },
-  '02015': { weakness: { type: 'threat', preventReady: true, discardCost: { action: 2 } } },
-  '02013': { weakness: { type: 'finalRhapsody' } },
+  // 02008 寻找真相已迁到能力层（kind: 'played'，见 src/cards/card-abilities.js）。
 }
 export const basicWeaknessEffects = {
   '02037': { startingResources: -2 }, // 负债 Indebted（永久）
-  '02038': { weakness: { type: 'threat', forced: { onTurnEnd: { damage: 1 } }, discardCost: { action: 2 } } }, // 内伤 Internal Injury
-  '02039': { weakness: { type: 'threat', forced: { onTurnEnd: { horror: 1 } }, discardCost: { action: 2 } } }, // 时间恐惧症 Chronophobia
+// 内伤 Internal Injury
+// 时间恐惧症 Chronophobia
 }
 export const investigatorDependencies = {
   '02001': ['zoeysCross', 'smiteTheWicked'], '02002': ['searchForTheTruth', 'rexCurse'],

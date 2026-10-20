@@ -61,20 +61,11 @@ export const implementedEnemies = new Set([
 ])
 
 export const encounterRules = {
+  // 03103 蟑螂群 / 03222 潜行的拜亚基 / 03096 哈斯塔的傀儡的战斗修正已迁到
+  // src/cards/encounter-abilities.js 的对应敌人条目；本章只保留「国王敕令」的全局规则。
   enemyStatModifier(state, enemy, stat) {
-    const code = original(enemy)
     if (stat === 'fight' && state.scenarioFlags?.kingsEdict
       && traits(enemy).includes('cultist')) return (enemy.clues || 0) + (enemy.doom || 0)
-    if (code === '03103' && stat === 'fight') {
-      const location = state.locations.find(candidate => candidate.id === enemy.location)
-      return (location?.shroud || 0) + (location?.shroudMod || 0) - (enemy.fight || 0)
-    }
-    if (code === '03222' && stat === 'fight' && enemy.exhausted) return -3
-    if (code === '03096' && stat === 'fight' && state.phase === 'investigation') {
-      return (enemy.puppetFightBonuses || [])
-        .filter(bonus => bonus.investigationRound === state.round)
-        .reduce((sum, bonus) => sum + bonus.amount, 0)
-    }
     return 0
   },
   spawnLocation(state, code, fallback, seat, api) {

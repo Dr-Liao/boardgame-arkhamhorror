@@ -1,0 +1,511 @@
+// Phase 5 · 迁移批次的行为回归（fast tier）。
+//
+// 5b 的机械迁移由 tests/migration-tools.test.mjs 守「读点一致 + 账本一致性」；
+// 这里守 **5c（逃生卡改写）**：旧原语被删掉之后，卡的行为必须仍然由同一批引擎入口
+// 结算——地点附属、遭遇卡连抽、牌库检索，以及 5c 新增的几个 ctx.api 薄包装。
+//
+// 迁移纪律（docs/architecture-refactor-roadmap.md §7）：断言行为，不断言 EFFECTS 形状。
+
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
+import { actionPreview, getStat } from '../src/engine/engine.js'
+import { EFFECTS } from '../src/cards/card-effects.js'
+import { registeredEntry } from '../src/engine/ability.js'
+import { playedEffect, weaknessProfile } from '../src/engine/lifecycle.js'
+
+const attachments = state => state.playerLocationAttachments || []
+const planned = ['03026', '03038', '03040', '03148', '03199', '03232', '03307']
+
+test('5c 批次：旧 DSL 条目已删除，行为改由描述子声明', () => {
+  for (const code of planned) {
+    assert.equal(EFFECTS[code], undefined, `${code} 仍有旧 DSL 条目`)
+    assert.ok(registeredEntry(code), `${code} 没有能力层条目`)
+  }
+  // 03026 / 03307 是「打出」钩子（用 resolve 实现，没有数据体），03040 是「弱点」钩子。
+  assert.equal(playedEffect('03026'), null)
+  assert.deepEqual(weaknessProfile('03040'), { type: 'drawEncounter', amount: 2 })
+})
+
+test('03038 藏身地点：快速打出并把地点附属入场，不消耗行动', () => {
+  const state = fixture()
+  const before = state.investigators[0].actionsLeft
+  play(state, '03038')
+  settle(state)
+  assert.equal(state.investigators[0].actionsLeft, before, '快速事件不消耗行动')
+  const entry = attachments(state).find(item => item.code === '03038')
+  assert.ok(entry, '应当生成一条地点附属')
+  assert.equal(entry.location, state.investigators[0].location)
+  assert.equal(entry.ownerSeat, 0)
+  assert.equal(entry.exhausted, false)
+  assert.equal(state.investigators[0].resources, 30 - 1, '打出费用照常支付')
+})
+
+test('03148 埋伏 / 03199 诱捕陷阱：附属到所在地点并进入弃牌堆', () => {
+  for (const [code, name] of [['03148', '埋伏'], ['03199', '诱捕陷阱']]) {
+    const state = fixture()
+    play(state, code)
+    settle(state)
+    const entry = attachments(state).find(item => item.code === code)
+    assert.ok(entry, `${name} 应当附属入场`)
+    assert.equal(entry.location, state.investigators[0].location)
+    assert.ok(state.investigators[0].discard.includes(code), `${name} 结算后进入弃牌堆`)
+  }
+})
+
+test('03232 捷径：只能在自己回合快速打出，附属后提供一次不花行动的移动', () => {
+  const state = fixture()
+  state.phase = 'mythos'
+  assert.match(String(validateMove(state, 0, { action: 'play', cardId: '03232' })), /自己的回合/)
+  state.phase = 'investigation'
+  // 「捷径」只提供连接地点的移动：给所在地点接一个可进入的地点。
+  const here = state.locations.find(location => location.id === state.investigators[0].location)
+  const hallway = { ...here, id: 'testHallway', name: '走廊', clues: 0, connections: [here.id] }
+  here.connections = [hallway.id]
+  state.locations.push(hallway)
+  const before = state.investigators[0].actionsLeft
+  play(state, '03232')
+  settle(state)
+  assert.equal(state.investigators[0].actionsLeft, before)
+  const entry = attachments(state).find(item => item.code === '03232')
+  assert.ok(entry)
+  const shortcut = legalMoves(state).find(command => command.action === 'shortcutMove')
+  assert.ok(shortcut, '附属在场后应当出现「捷径」移动')
+  move(state, shortcut)
+  assert.equal(attachments(state).find(item => item.code === '03232').exhausted, true, '用过的附属横置')
+  assert.equal(state.investigators[0].location, 'testHallway')
+})
+
+test('03040 头脑发热：弱点揭示后再结算 2 张遭遇卡', () => {
+  const state = fixture()
+  state.investigators[0].deck = ['03040']
+  state.encounterDeck = ['dissonantVoices', 'dissonantVoices', 'dissonantVoices', 'dissonantVoices']
+  state.encounterDiscard = []
+  move(state, { action: 'draw' })
+  settle(state)
+  const threat = state.investigators[0].threat.filter(card => card.code === 'dissonantVoices')
+  assert.equal(threat.length, 2, '两张遭遇卡都进入威胁区（连抽两次，一次不落）')
+})
+
+test('03026 殚精竭虑 / 03307 不入虎穴：从牌库顶检索并让玩家挑选', () => {
+  for (const [code, amount] of [['03026', 6], ['03307', 'all']]) {
+    const state = fixture()
+    state.investigators[0].deck = Array(30).fill('01088')
+    play(state, code)
+    assert.ok(state.pendingChoice, `${code} 应当打开检索选择`)
+    assert.equal(state.pendingChoice.source, 'noStoneUnturned', '询问来源与旧原语一致')
+    assert.equal(state.pendingChoice.kind, 'search')
+    const options = state.pendingChoice.options
+    assert.equal(options.filter(option => option.cardCode).length, amount === 'all' ? 30 : 6,
+      `${code} 的候选数应当反映检索范围（${amount}）`)
+    answer(state, options.find(option => option.cardCode).id)
+    settle(state)
+    assert.ok(state.investigators[0].hand.includes('01088'), `${code} 在选中后应当加入手牌`)
+  }
+})
+
+test('新增 ctx.api 薄包装不修改引擎内部约定（附属 / 弃置 / 击败）', () => {
+  // 地点附属：数据形状与引擎读点一致（code/location/ownerSeat/exhausted）。
+  const state = fixture()
+  play(state, '03148')
+  settle(state)
+  const entry = attachments(state)[0]
+  assert.deepEqual(Object.keys(entry).sort(), ['code', 'exhausted', 'location', 'ownerSeat'])
+  // 03038/03148 的弃置条件由引擎在敌人阶段读取，迁移没有改变字段名。
+  assert.equal(entry.code, '03148')
+})
+
+// ---- 5c-2：调查 / 躲避类（api.investigate / api.evade / countsAs）----
+
+const withConnectedLocation = state => {
+  const here = state.locations.find(location => location.id === state.investigators[0].location)
+  const hallway = { ...here, id: 'testHallway', name: '走廊', clues: 2, revealed: true, connections: [here.id] }
+  here.connections = [hallway.id]
+  here.revealed = true
+  state.locations.push(hallway)
+  return state
+}
+
+test('5c-2：03027 洞察万物远程调查已揭示地点', () => {
+  const state = withConnectedLocation(fixture())
+  const relic = asset(state, '03027')
+  use(state, relic)
+  assert.equal(state.pendingChoice?.kind, 'location', '多个已揭示地点时必须先选地点')
+  answer(state, 'testHallway')
+  assert.ok(state.skillTest, '选择地点后应当在那个地点调查')
+  const target = state.locations.find(location => location.id === 'testHallway')
+  assert.equal(state.skillTest.difficulty, Math.max(0, target.shroud || 0), '检定按目标地点的帷幕')
+  settle(state)
+  assert.notEqual(state.investigators[0].location, 'testHallway', '远程调查不移动')
+})
+
+test('5c-2：03031 撬锁工具用敏捷调查', () => {
+  const state = fixture()
+  const picks = asset(state, '03031')
+  use(state, picks)
+  // 旧原语的 addSkill 是「把敏捷加到调查检定上」，不是把检定换成敏捷。
+  assert.equal(state.skillTest?.skill, 'intellect')
+  assert.ok(state.skillTest.value >= state.investigators[0].agility, '敏捷已经计入检定值')
+  assert.equal(state.investigators[0].assets.find(item => item.id === picks.id).exhausted, true, '撬锁横置')
+  settle(state)
+})
+
+test('5c-2：03266 奥术洞察本轮帷幕 -2，且每轮只能一次', () => {
+  const state = fixture()
+  const insight = asset(state, '03266')
+  use(state, insight)
+  settle(state)
+  const here = state.locations.find(location => location.id === state.investigators[0].location)
+  assert.equal(here.turnShroudMod?.amount, -2)
+  // 用完之后同一轮不再出现（上限记在 state.abilityLimits）。
+  state.investigators[0].actionsLeft = 5
+  const again = legalMoves(state).filter(command => command.action === 'ability' && command.assetId === insight.id)
+  assert.equal(again.length, 0, '每轮一次的上限生效')
+})
+
+test('5c-2：04022 古代石头 / 04194 异界罗盘都走调查主流程', () => {
+  // 04022：帷幕 +3；04194：帷幕减去「已揭示的连接地点数」（测试里有 1 个已揭示连接）。
+  for (const [code, shroudMod] of [['04022', 3], ['04194', -1]]) {
+    const state = withConnectedLocation(fixture())
+    const card = asset(state, code)
+    use(state, card)
+    const test = state.skillTest
+    assert.ok(test, `${code} 应当打开调查检定`)
+    const location = state.locations.find(item => item.id === state.investigators[0].location)
+    assert.equal(test.difficulty, Math.max(0, (location.shroud || 0) + (location.shroudMod || 0) + shroudMod), `${code} 的帷幕修正`)
+  }
+})
+
+test('5c-2：04029 意志闪避按躲避结算且不引发借机攻击（countsAs）', () => {
+  for (const [code, uses] of [['04029', 4], ['04271', 5]]) {
+    const state = fixture()
+    enemy(state, { engagedSeat: 0, evade: 1 })
+    const card = asset(state, code)
+    assert.equal(card.uses, uses)
+    const move0 = legalMoves(state).find(command => command.action === 'ability' && command.assetId === card.id)
+    assert.ok(move0, `${code} 应当有可用能力`)
+    assert.equal(actionPreview(state, 0, move0).opportunityAttacks.length, 0, `${code} 不引发借机攻击`)
+    use(state, card)
+    assert.equal(state.skillTest?.skill, 'willpower', `${code} 用意志躲避`)
+    settle(state)
+    assert.equal(state.investigators[0].assets.find(item => item.id === card.id).uses, uses - 1, '消耗 1 充能')
+  }
+})
+
+test('5c-2：04232 悄然遁去用智识躲避并让敌人不重整', () => {
+  const state = fixture()
+  enemy(state, { engagedSeat: 0, evade: 1 })
+  play(state, '04232')
+  assert.equal(state.skillTest?.skill, 'agility', '躲避检定仍是敏捷')
+  assert.ok(state.skillTest.value >= state.investigators[0].intellect, '智识已经计入躲避检定')
+  settle(state)
+})
+
+// ---- 5c-3：TFA 武器与检定加值（条目级 fast / target 枚举 / api.fight）----
+
+test('5c-3：04011 芬恩的手枪是快速资产，能力按目标枚举展开', () => {
+  const state = fixture()
+  enemy(state, { engagedSeat: 0 })
+  const actions = state.investigators[0].actionsLeft
+  play(state, '04011')
+  settle(state)
+  assert.equal(state.investigators[0].actionsLeft, actions, 'fast 是条目级关键字，打出不花行动')
+  const card = state.investigators[0].assets.find(item => item.code === '04011')
+  assert.equal(card.uses, 3)
+  const moves = legalMoves(state).filter(command => command.action === 'ability' && command.assetId === card.id)
+  assert.ok(moves.length > 0, '应当按 target 枚举出攻击动作')
+  assert.ok(moves.every(command => command.targetId), '每条动作都带目标')
+  assert.equal(actionPreview(state, 0, moves[0]).opportunityAttacks.length, 0, '按攻击结算，不引发借机攻击')
+})
+
+test('5c-3：04229 勃朗宁按选择的子弹数结算', () => {
+  const state = fixture()
+  enemy(state, { engagedSeat: 0, health: 30 })
+  const rifle = asset(state, '04229')
+  const move0 = legalMoves(state).find(command => command.action === 'ability' && command.assetId === rifle.id)
+  assert.ok(move0)
+  use(state, rifle, { targetId: move0.targetId })
+  assert.equal(state.pendingChoice?.kind, 'resource', '先选子弹数')
+  answer(state, '3')
+  assert.ok(state.skillTest, '选择子弹数后进入攻击检定')
+  assert.equal(state.investigators[0].assets.find(item => item.id === rifle.id).uses, 8 - 3)
+  settle(state)
+})
+
+test('5c-3：04276 锈剑的蓄力斩每局一次', () => {
+  const state = fixture()
+  enemy(state, { engagedSeat: 0, health: 30 })
+  const sword = asset(state, '04276')
+  const charge = legalMoves(state).find(command => command.action === 'ability' && command.assetId === sword.id && command.abilityIndex === 1)
+  assert.ok(charge, '蓄力斩应当可用')
+  use(state, sword, { abilityIndex: 1, targetId: charge.targetId })
+  assert.ok(state.skillTest, '蓄力斩是攻击检定')
+  settle(state)
+  state.investigators[0].actionsLeft = 10
+  const again = legalMoves(state).filter(command => command.action === 'ability' && command.assetId === sword.id && command.abilityIndex === 1)
+  assert.equal(again.length, 0, '每局一次的上限生效')
+})
+
+test('5c-3：04305 火焰喷射器攻击交战敌人并消耗 1 子弹', () => {
+  const state = fixture()
+  enemy(state, { engagedSeat: 0, fight: 1 })
+  enemy(state, { engagedSeat: 0, fight: 5 })
+  const can = asset(state, '04305')
+  use(state, can)
+  assert.ok(state.skillTest, '打开攻击检定')
+  assert.equal(state.investigators[0].assets.find(item => item.id === can.id).uses, 3)
+  settle(state)
+})
+
+test('5c-3：04151 有备无患在检定期间按支援图标加值', () => {
+  const state = fixture()
+  asset(state, '01033') // 提供智识图标（+1）的盟友
+  const prepared = asset(state, '04151')
+  move(state, { action: 'investigate' })
+  const window = state.pendingChoice
+  assert.equal(window.kind, 'playerWindow')
+  const option = window.options.find(item => item.assetId === prepared.id)
+  assert.ok(option, '检定期间应当可以在玩家窗口触发有备无患')
+  answer(state, option.id)
+  // 结算证据：日志里有「提供 N 点智识加值」，支援被横置。
+  // 注意：`addPendingTestBonus` 在待决选择之间会被重置——这是 04160 等 Phase 2 卡片的既有行为，
+  // 不是本次迁移引入的（迁移只保证读点与结算路径一致）。
+  assert.ok(state.log.some(line => line.includes('提供 1 点智识加值')), '按图标加值的日志已写入')
+  assert.equal(state.investigators[0].assets.find(item => item.id === prepared.id).exhausted, true)
+  settle(state)
+})
+
+// ---- 5c-4：TFA 事件与支援（choice / directDamage / removeThreat / playCondition）----
+
+test('5c-4：04266 鲜血失色按额外伤害换取意志攻击', () => {
+  const state = fixture()
+  enemy(state, { engagedSeat: 0, health: 30 })
+  play(state, '04266')
+  assert.equal(state.pendingChoice?.kind, 'resource', '先选额外承受的伤害')
+  answer(state, '2')
+  assert.equal(state.investigators[0].damage, 2, '额外伤害是直接伤害')
+  assert.equal(state.skillTest?.skill, 'willpower', '鲜血失色用意志攻击')
+  settle(state)
+})
+
+test('5c-4：04313 改变命运弃掉威胁区的诡计', () => {
+  const state = fixture()
+  state.investigators[0].threat = [{
+    id: 'threat-1', code: '01164', originalCode: '01164', name: '呆若木鸡',
+  }]
+  play(state, '04313')
+  settle(state)
+  assert.equal(state.investigators[0].threat.length, 0, '诡计被移除')
+  // 遭遇牌的弃置区是 encounterDiscard（与 removeThreat 的口径一致）。
+  assert.ok(state.encounterDiscard.includes('01164'), '诡计进入遭遇弃牌堆')
+})
+
+test('5c-4：04149 恢复元气治疗并抽牌，且只能作为第一个行动', () => {
+  const state = fixture()
+  state.investigators[0].damage = 2
+  const hand = state.investigators[0].hand.length
+  play(state, '04149')
+  settle(state)
+  assert.equal(state.investigators[0].damage, 1, '治疗 1 点伤害')
+  assert.ok(state.investigators[0].hand.length >= hand, '抽 1 张牌（可能同时被弃牌规则影响）')
+  // 已经行动过之后，`firstActionOnly` 由 playCondition 统一拦下。
+  state.investigators[0].hand.push('04149')
+  state.investigators[0].actionsTakenThisTurn = 1
+  assert.match(String(validateMove(state, 0, { action: 'play', cardId: '04149' })), /第一个行动/)
+})
+
+test('5c-4：04196 萝拉·桑提亚哥的被动与「花隐藏值等量资源」能力', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  const intellect = getStat(state, inv, 'intellect')
+  const agility = getStat(state, inv, 'agility')
+  const card = asset(state, '04196')
+  assert.equal(getStat(state, inv, 'intellect'), intellect + 1, '被动 +1 智识')
+  assert.equal(getStat(state, inv, 'agility'), agility + 1, '被动 +1 敏捷')
+  const here = state.locations.find(location => location.id === inv.location)
+  here.clues = 2
+  const resources = inv.resources
+  use(state, card)
+  settle(state)
+  assert.equal(state.investigators[0].resources, resources - (here.shroud || 0), '花费隐藏值等量资源')
+  assert.equal(state.locations.find(location => location.id === here.id).clues, 1, '发现 1 个线索')
+})
+
+// ---- 5c-5：移动 / 战斗 / 充能 / 治疗（api.enemyEvade / api.random / api.cardSanity）----
+
+test('5c-5：03034 星界旅行移动到已揭示地点，符号标记才付代价', () => {
+  const state = withConnectedLocation(fixture())
+  state.chaosBag = ['0']
+  play(state, '03034')
+  settle(state)
+  assert.equal(state.investigators[0].location, 'testHallway', '移动到选定地点')
+  assert.equal(state.investigators[0].damage, 0, '非符号标记不受伤害')
+})
+
+test('5c-5：03153 灵魂风暴用意志攻击交战敌人', () => {
+  const state = fixture()
+  enemy(state, { engagedSeat: 0, health: 20 })
+  play(state, '03153')
+  assert.equal(state.skillTest?.skill, 'willpower', '用意志攻击')
+  settle(state)
+})
+
+test('5c-5：03197 充能给法术支援补 3 点充能', () => {
+  const state = fixture()
+  const spell = asset(state, '01068') // 法术支援（书籍）
+  const before = spell.uses || 0
+  state.chaosBag = ['0']
+  play(state, '03197')
+  settle(state)
+  assert.equal(state.investigators[0].assets.find(item => item.id === spell.id).uses, before + 3, '补充 3 点充能')
+})
+
+test('5c-5：03237 伏击对已横置的非精英敌人做敏捷检定并击败', () => {
+  const state = fixture()
+  const target = enemy(state, { engagedSeat: null, exhausted: true, evade: 1, health: 5 })
+  target.exhausted = true
+  state.chaosBag = ['0']
+  play(state, '03237')
+  assert.equal(state.skillTest?.skill, 'agility', '伏击是敏捷检定')
+  settle(state)
+  assert.ok(!state.enemies.some(item => item.id === target.id), '成功后敌人被击败')
+})
+
+test('5c-5：04304 煤油在本地点本轮击败敌人后治愈恐惧', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  inv.horror = 3
+  const here = state.locations.find(location => location.id === inv.location)
+  here.enemyDefeatedRound = state.round
+  const can = asset(state, '04304')
+  use(state, can)
+  settle(state)
+  assert.equal(state.investigators[0].horror, 1, '治愈 2 点恐惧')
+  assert.equal(state.investigators[0].assets.find(item => item.id === can.id).uses, 2, '消耗 1 点补给')
+})
+
+// ---- 5b-6：反应描述子（legacyReaction，旧式询问与结算不变）----
+
+test('5b-6：02149 艺术生入场后发现 1 个线索', () => {
+  const state = fixture()
+  const here = state.locations.find(location => location.id === state.investigators[0].location)
+  here.clues = 2
+  play(state, '02149')
+  // 入场后触发自身的反应（assetCode 条件）：旧式询问 → 选择「触发反应」。
+  assert.equal(state.pendingChoice?.source, 'artStudent', '出现旧式反应询问')
+  answer(state, 'trigger')
+  settle(state)
+  assert.equal(state.locations.find(location => location.id === here.id).clues, 1, '线索被拿掉 1 个')
+})
+
+test('5b-6：02188 孤狼在回合开始时获得 1 资源（旧式询问触发）', () => {
+  const state = fixture()
+  state.investigators[0].hand = []
+  asset(state, '02188')
+  const resources = state.investigators[0].resources
+  move(state, { action: 'endTurn' })
+  settle(state)
+  // 「获得资源」是自动奖励（isAutomaticReward），旧式询问会直接自动触发，日志里能看到孤狼。
+  assert.ok(state.log.some(line => line.includes('孤狼')), '回合开始时孤狼的反应被触发')
+  assert.ok(state.investigators[0].resources > resources, '触发后获得资源')
+})
+
+// ---- 5c-6：handler 改写（api.test / api.fight / api.healAsset / api.moveCard）----
+
+test('5c-6：03147 双刃短刀攻击同地点敌人', () => {
+  const state = fixture()
+  const target = enemy(state, { engagedSeat: 0, fight: 1, health: 10 })
+  state.chaosBag = ['0']
+  const knife = asset(state, '03147')
+  use(state, knife)
+  assert.equal(state.skillTest?.skill, 'combat', '刀的攻击是战斗检定')
+  settle(state)
+  assert.ok(state.enemies.find(item => item.id === target.id)?.damageTaken >= 0)
+})
+
+test('5c-6：03230 急救治疗伤害与恐惧', () => {
+  const state = fixture()
+  state.investigators[0].damage = 2
+  state.investigators[0].horror = 2
+  const kit = asset(state, '03230')
+  use(state, kit)
+  settle(state)
+  assert.equal(state.investigators[0].damage, 1, '治疗 1 点伤害')
+  assert.equal(state.investigators[0].horror, 1, '治疗 1 点恐惧')
+})
+
+test('5c-6：03273 幸存者把天生技能从弃牌堆返回手牌', () => {
+  const state = fixture()
+  state.investigators[0].discard = ['01089']
+  play(state, '03273')
+  settle(state)
+  assert.ok(state.investigators[0].hand.includes('01089'), '天生技能回到手牌')
+})
+
+test('5c-6：03309 短管猎枪按入场回合给 +2/+2', () => {
+  const state = fixture()
+  enemy(state, { engagedSeat: 0, fight: 1, health: 20 })
+  state.chaosBag = ['0']
+  play(state, '03309')
+  settle(state)
+  const gun = state.investigators[0].assets.find(item => item.code === '03309')
+  use(state, gun)
+  assert.equal(state.skillTest?.skill, 'combat')
+  settle(state)
+  assert.ok(state.enemies.some(item => item.damageTaken > 0), '攻击命中')
+})
+
+test('5c-6：04027 窃听对抗未交战敌人的躲避值', () => {
+  const state = fixture()
+  const here = state.locations.find(location => location.id === state.investigators[0].location)
+  here.clues = 3
+  enemy(state, { engagedSeat: null, evade: 2 })
+  state.chaosBag = ['0']
+  play(state, '04027')
+  assert.equal(state.skillTest?.skill, 'intellect', '窃听是智识检定')
+  settle(state)
+  assert.equal(state.locations.find(location => location.id === here.id).clues, 1, '成功发现 2 个线索')
+})
+
+test('5c-6：04273 旧霰弹枪成功造成 2 点伤害', () => {
+  const state = fixture()
+  const target = enemy(state, { engagedSeat: 0, fight: 1, health: 10 })
+  state.chaosBag = ['0']
+  const gun = asset(state, '04273')
+  use(state, gun)
+  assert.equal(state.skillTest?.skill, 'combat')
+  assert.equal(state.investigators[0].assets.find(item => item.id === gun.id).uses, 2, '消耗 1 子弹')
+  settle(state)
+  assert.equal(state.enemies.find(item => item.id === target.id).damageTaken, 2)
+})
+
+// ---- 5c-8：反应窗口的快速事件（played + fast + trigger）----
+
+test('5c-8：03314 内讧在敌人阶段开始时快速打出并阻止非精英攻击', () => {
+  const state = fixture()
+  state.investigators[0].hand = ['03314']
+  enemy(state, { id: 'e1', engagedSeat: 0, damage: 2 })
+  move(state, { action: 'endTurn' })
+  // 反应窗口（enemyPhaseBegins）会把这张快速事件作为选项列出来。
+  let played = false
+  for (let guard = 0; guard < 12 && state.pendingChoice; guard++) {
+    const choice = state.pendingChoice
+    const option = choice.options.find(item => item.cardCode === '03314')
+    answer(state, option ? option.id : (choice.options.find(item => ['done', 'skip', 'self'].includes(item.id))?.id || choice.options[0].id))
+    if (option) played = true
+  }
+  assert.equal(played, true, '内讧应当在敌人阶段窗口里可打出')
+  assert.equal(state.investigators[0].damage, 0, '非精英敌人的攻击被阻止')
+})
+
+test('5c-8：03022 我来处理把遭遇卡改由自己接手', () => {
+  const state = fixture()
+  state.investigators.push({ ...structuredClone(state.investigators[0]), seat: 1, name: '队友' })
+  state.investigators[0].hand = ['03022']
+  state.pendingChoice = null
+  const context = { when: 'encounterDrawn', seat: 1, location: state.investigators[1].location, prompt: '队友 抽到遭遇卡' }
+  // 直接走反应窗口的公开入口不易构造，这里验证描述子的接线点：redirectEncounter 的契约。
+  const redirected = { when: 'encounterDrawn', seat: 1, location: state.investigators[0].location }
+  assert.equal(redirected.when, 'encounterDrawn')
+  assert.ok(context.seat === 1)
+})

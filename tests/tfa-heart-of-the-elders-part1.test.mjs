@@ -1,9 +1,14 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+// 引擎是唯一装配点：import 它之前不会注册能力条目、注入修正读点
+// （setModifierRegistry / setModifierHooks），下面的 entityModifierTotal / entityRuleActive 会恒为 0/false。
+import '../src/engine/engine.js'
 import * as chapter from '../content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/index.js'
 import {
   scenario as definition, EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES, RUINS_CANDIDATES,
 } from '../content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/definition.js'
+// Phase 3（D1）：04209b 的「不能被击败 / 不借机攻击」与地点修正已迁到能力层。
+import { entityModifierTotal, entityRuleActive } from '../src/engine/modifiers.js'
 
 const clone = value => structuredClone(value)
 const behavior = chapter.behavior
@@ -425,12 +430,12 @@ test('石柱祭坛：进入后揭示混乱标记，符号则失去 1 行动，�
 test('地点与敌人修正：毒牙神庙帷幕 + 复仇，万蛇据点蛇族 +1 攻击', () => {
   const state = placed(stateFor(1))
   state.victoryDisplay = [{ id: 'v1', code: '04220', originalCode: '04220', vengeance: 2 }]
-  assert.equal(behavior.locationShroudModifier(state, state.locations.find(l => l.id === 'templeOfTheFang')), 2)
-  const snake = { code: '04220', originalCode: '04220', location: 'serpentsHaven' }
-  assert.equal(behavior.enemyStatModifier(state, snake, 'fight'), 1)
-  assert.equal(behavior.enemyStatModifier(state, snake, 'evade'), 0)
-  const viper = { code: '04078', originalCode: '04078', location: 'serpentsHaven' }
-  assert.equal(behavior.enemyStatModifier(state, viper, 'fight'), 1)
+  assert.equal(entityModifierTotal(state, state.locations.find(l => l.id === 'templeOfTheFang'), 'locationShroud'), 2)
+  const snake = { code: '04220', originalCode: '04220', location: 'serpentsHaven', traits: ['Serpent'] }
+  assert.equal(entityModifierTotal(state, snake, 'enemyFight'), 1)
+  assert.equal(entityModifierTotal(state, snake, 'enemyEvade'), 0)
+  const viper = { code: '04078', originalCode: '04078', location: 'serpentsHaven', traits: ['Serpent'] }
+  assert.equal(entityModifierTotal(state, viper, 'enemyFight'), 1)
 })
 
 test('杂草丛生的遗迹：中毒者进入后失去所有行动并结束回合', () => {
@@ -453,8 +458,8 @@ test('场景 1 推进：把羽翼蛇族生成在昆扬之口，且它不能被�
   const serpent = state.enemies.find(enemy => enemy.code === '04209b')
   assert.ok(serpent)
   assert.equal(serpent.location, MOUTH)
-  assert.equal(behavior.enemyCanBeDefeated(state, serpent, 'fight', 0), false)
-  assert.equal(behavior.canOpportunityAttack(state, serpent), false)
+  assert.equal(entityRuleActive(state, serpent, 'cannot:beDefeated'), true)
+  assert.equal(entityRuleActive(state, serpent, 'cannot:opportunityAttack'), true)
   behavior.actReveal(state, state.acts[0], api)
   assert.equal(state.enemies.filter(enemy => enemy.code === '04209b').length, 1, '不会重复生成')
 })

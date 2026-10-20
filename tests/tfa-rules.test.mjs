@@ -159,7 +159,7 @@ test('M4 规则条目的描述与实现边界一致', () => {
   // 战役已在大厅开放，但必须同时写明仍是 earlyAccess、还有未完成项。
   assert.match(text, /playable/)
   assert.match(text, /earlyAccess/)
-  assert.match(text, /docs\/tfa-card-audit\.md/)
+  assert.match(text, /audit\/tfa-migration\.json/)
   // 不能把未实现的内容写成已可用。
   for (const rule of TFA_RULES) {
     const body = rule.body.join('')

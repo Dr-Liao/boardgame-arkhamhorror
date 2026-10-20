@@ -1,5 +1,5 @@
 // Phase 0.1 临时脚本：盘点 cards.json（参考资源）的卡牌构成。
-// 输出纯文本统计，供 docs/port-mapping.md 引用。可重跑，只读参考资源。
+// 输出纯文本统计，供 docs/architecture-refactor-roadmap.md 与图鉴统计引用。可重跑，只读参考资源。
 import fs from 'node:fs'
 
 const src = '参考资源/ArkhamHorror-main/backend/arkham-api/data/cards.json'

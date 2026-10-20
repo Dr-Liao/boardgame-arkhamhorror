@@ -1,8 +1,13 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+// 引擎是唯一装配点：import 它之前不会注册能力条目、注入修正读点
+// （setModifierRegistry / setModifierHooks），下面的 entityModifierTotal 会恒为 0。
+import '../src/engine/engine.js'
 import * as wilds from '../content/campaigns/theForgottenAge/scenarios/theUntamedWilds/index.js'
 import { scenario as definition } from '../content/campaigns/theForgottenAge/scenarios/theUntamedWilds/definition.js'
 import { EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES } from '../content/campaigns/theForgottenAge/scenarios/theUntamedWilds/definition.js'
+// Phase 3（D1）：敌人/地点的常驻修正已迁到能力层，验收改为断言引擎的统一读点。
+import { entityModifierTotal } from '../src/engine/modifiers.js'
 
 const clone = value => structuredClone(value)
 
@@ -387,13 +392,13 @@ test('04072/04053/04074 的地点与调查修正（P2）', () => {
   wilds.behavior.afterExplore(state, inv, { kind: 'location', runtime: api })
   assert.equal(inv.damage, 1, '探索成功也受 1 点伤害')
 
-  // 04072：万蛇据点的蛇族敌人 +1 攻击值。
+  // 04072：万蛇据点的蛇族敌人 +1 攻击值（D1：断言 04072 地点条目声明的修正）。
   const serpent = { id: 'e-serpent', code: '04187', name: '蛇', location: 'serpentsHaven',
     traits: ['Serpent'], fight: 2, evade: 2, health: 3 }
-  assert.equal(wilds.behavior.enemyStatModifier(state, serpent, 'fight'), 1)
-  assert.equal(wilds.behavior.enemyStatModifier(state, serpent, 'evade'), 0)
+  assert.equal(entityModifierTotal(state, serpent, 'enemyFight'), 1)
+  assert.equal(entityModifierTotal(state, serpent, 'enemyEvade'), 0)
   serpent.location = 'riverCanyon'
-  assert.equal(wilds.behavior.enemyStatModifier(state, serpent, 'fight'), 0)
+  assert.equal(entityModifierTotal(state, serpent, 'enemyFight'), 0)
 
   // 04053：在埃兹特里的遗迹调查失败后抽 1 张遭遇卡。
   const ruins = placed(stateFor(1))
@@ -407,12 +412,12 @@ test('04072/04053/04074 的地点与调查修正（P2）', () => {
   wilds.behavior.afterTest(ruins, explorer, { success: true, source: { label: '调查' } }, ruinApi)
   assert.deepEqual(draws, [0], '成功不抽')
 
-  // 04074：胜利区每点复仇 +1 帷幕。
+  // 04074：胜利区每点复仇 +1 帷幕（D1：断言 04074 地点条目声明的修正）。
   const temple = placed(stateFor(1))
   temple.locations.push({ id: 'templeOfTheFang', originalCode: '04074', name: '毒牙神庙',
     revealed: true, clues: 1, shroud: 2, connections: [] })
   temple.victoryDisplay = [{ id: 'v1', code: '04187', vengeance: 2 }]
-  assert.equal(wilds.behavior.locationShroudModifier(temple, temple.locations.at(-1)), 2)
+  assert.equal(entityModifierTotal(temple, temple.locations.at(-1), 'locationShroud'), 2)
   temple.victoryDisplay = []
-  assert.equal(wilds.behavior.locationShroudModifier(temple, temple.locations.at(-1)), 0)
+  assert.equal(entityModifierTotal(temple, temple.locations.at(-1), 'locationShroud'), 0)
 })

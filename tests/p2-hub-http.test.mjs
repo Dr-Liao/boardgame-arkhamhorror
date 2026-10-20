@@ -9,6 +9,7 @@ import { snapshotPath } from '../../../lib/sessions.js'
 import { PLAYER_CARD_CODES } from '../src/deck/availability.js'
 import { buildDeck } from '../src/deck/deckbuilding.js'
 import { INVESTIGATORS } from '../src/cards/cards-data.js'
+import { STATE_SCHEMA_VERSION } from '../src/engine/rules-state.js'
 
 function assertPersisted(session) {
   const saved = JSON.parse(fs.readFileSync(snapshotPath(session.sessionId), 'utf8')).session.state
@@ -132,7 +133,8 @@ test('P2 新战役局外流程、原子存档、显式读取、删除与另存�
     const outdatedId = asNew.session.sessionId
     const writeOutdated = () => {
       const current = JSON.parse(fs.readFileSync(file, 'utf8'))
-      current.session.state.schemaVersion = 6
+      // 只把资源版本写旧：结构/规则版本必须与当前一致，否则这是"不兼容"而不是"需要迁移"。
+      current.session.state.schemaVersion = STATE_SCHEMA_VERSION
       current.session.state.resourceVersion = 'f'.repeat(64)
       fs.writeFileSync(file, JSON.stringify(current))
     }

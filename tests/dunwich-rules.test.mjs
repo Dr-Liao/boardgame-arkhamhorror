@@ -5,6 +5,8 @@ import { createGameState, applyMove, validateMove, legalMoves, performTest, getS
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { getAvailability, canSelectInvestigator } from '../src/deck/availability.js'
 import { effects } from '../content/packs/dunwichPlayer/effects.js'
+import { abilityLayerCodes } from '../content/packs/dunwichPlayer/manifest.js'
+import { registeredEntry } from '../src/engine/ability.js'
 import { chapterSpecs, locationId as L } from '../content/campaigns/theDunwichLegacy/chapters.js'
 import { laterBehavior, summonHorror, resolveSurvivors, chooseBroodRandomLocation } from '../content/campaigns/theDunwichLegacy/later-behaviors.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
@@ -1197,8 +1199,10 @@ test('D2 Beyond the Veil triggers only at empty deck, is discarded before damage
 })
 
 test('D10 complete Dunwich player pool and five investigators are available', () => {
-  assert.equal(Object.keys(effects).length, 91)
-  for (const code of Object.keys(effects)) assert.equal(getAvailability(code).deckbuilding, true)
+  // Phase 1 起「有实现」= 旧 DSL 条目 ∪ 能力层描述子（played/commit 等），可用性口径也如此。
+  const pool = [...new Set([...Object.keys(effects), ...abilityLayerCodes])].sort()
+  assert.equal(pool.length, 91)
+  for (const code of pool) assert.equal(getAvailability(code).deckbuilding, true, code)
   for (const code of ['02001', '02002', '02003', '02004', '02005']) assert.equal(canSelectInvestigator(code), true)
   for (const code of ['02021', '02026', '02305']) assert.equal(getAvailability(code).deckbuilding, true)
 })
@@ -1311,7 +1315,9 @@ for (const [code, bonus, damage] of [['02152', 2, 2], ['02154', 2, 2], ['02301',
   move(s, { action: 'ability', assetId: asset.id, abilityIndex: 0, targetId: 'target' }); settle(s)
   assert.equal(s.enemies[0].damageTaken, damage)
   assert.equal(s.investigators[0].resources, 20 - ALL_CARDS[code].cost)
-  if (effects[code].uses) assert.equal(s.investigators[0].assets[0].uses, effects[code].uses - 1)
+  // Phase 5：uses 已搬到注册表条目（effects 表里不再有这些卡）。
+  const profiles = effects[code] || registeredEntry(code) || {}
+  if (profiles.uses) assert.equal(s.investigators[0].assets[0].uses, profiles.uses - 1)
 })
 
 for (const [code, kind] of [['02150', 'clue'], ['02268', 'horror'], ['02299', 'damage']]) test(`D2 ${code}: success by two applies the additional skill reward`, () => {

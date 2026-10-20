@@ -1,5 +1,7 @@
 import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
 import { EFFECTS, INVESTIGATOR_ABILITIES } from '../cards/card-effects.js'
+import { abilitySummary } from '../engine/ability.js'
+import { commitProfile } from '../engine/lifecycle.js'
 import { playablePool, matchesDeckOptions } from '../deck/deckbuilding.js'
 import { deckRules } from '../deck/deck-rules.js'
 import { upgradeRecord } from '../campaign/campaign.js'
@@ -13,7 +15,7 @@ const card = code => {
   if (!c) return { code }
   return { code, name: c.nameZh || c.name, type: c.type, cost: c.cost, xp: c.xp || 0,
     icons: c.icons, slots: c.slots || c.slot, traits: c.traits, health: c.health, sanity: c.sanity,
-    printedText: c.textZh || c.text, implemented: EFFECTS[code] || null }
+    printedText: c.textZh || c.text, implemented: EFFECTS[code] || abilitySummary(code) }
 }
 
 // Only known cards and this observer's own deck composition; never deck order,
@@ -75,7 +77,9 @@ export function aiDecisionContext(state, seat) {
         ? moves.filter(m => /^\d+$/.test(m.optionId)).map(m => {
           const code = inv.hand[Number(m.optionId)], c = ALL_CARDS[code]
           const icons = (c?.icons?.[test.skill] || 0) + (c?.icons?.wild || 0)
-          return { optionId: m.optionId, code, icons, valueAfter: Number.isFinite(test.value) ? test.value + icons : null, effect: EFFECTS[code]?.skill }
+          return { optionId: m.optionId, code, icons, valueAfter: Number.isFinite(test.value) ? test.value + icons : null,
+            // Phase 5：投入档案的唯一读点（描述子优先、旧 DSL 回落）。
+            effect: commitProfile(code) }
         }) : []
     }
     data.actionCosts = state.pendingChoice ? [] : moves.map(m => ({ move: Object.fromEntries(Object.entries(m).filter(([k]) => k !== 'label')), ...actionPreview(state, seat, m) }))

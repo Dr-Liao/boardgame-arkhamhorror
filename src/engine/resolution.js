@@ -5,6 +5,12 @@ import { isDeepStrictEqual } from 'node:util'
 const STATIC_FIELDS = ['cards', 'investigatorDefs', 'classNames', 'classColors', 'skillNames', 'tokenLabels',
   'schemaVersion', 'rulesVersion', 'resourceVersion']
 const clone = value => JSON.parse(JSON.stringify(value))
+// 事务恢复凭据（continuation.move）只保留语义字段：label/explanation 是展示文案，
+// 没有规则作用，却会随日志进 state、进存档、进状态指纹——改一句卡面文案不该算行为变化。
+const cloneMove = move => {
+  const { label, explanation, ...rest } = move || {}
+  return clone(rest)
+}
 
 export class ChoicePause extends Error {
   constructor(choice) {
@@ -90,7 +96,9 @@ export function choiceError(state, seat, move) {
 }
 
 function dynamicState(state) {
-  const omitted = new Set([...STATIC_FIELDS, 'continuation', '_resolution', 'pendingChoice', 'legalMoves'])
+  // actionLog 由 applyMove 在事务外持有：它记录的是"已提交的动作"，
+  // 而事务快照是"本次动作开始前"的状态，两者混在一起会丢历史（见 src/engine/replay.js）。
+  const omitted = new Set([...STATIC_FIELDS, 'continuation', '_resolution', 'pendingChoice', 'legalMoves', 'actionLog'])
   return clone(Object.fromEntries(Object.entries(state).filter(([key]) => !omitted.has(key))))
 }
 
@@ -98,7 +106,7 @@ export function resolveTransaction(state, seat, move, execute, { initial = false
   const revision = state.revision
   const previous = state.continuation
   let transaction = previous ? clone(previous) : {
-    id: revision + 1, base: dynamicState(state), seat, move: clone(move), answers: [], emitted: 0,
+    id: revision + 1, base: dynamicState(state), seat, move: cloneMove(move), answers: [], emitted: 0,
   }
   if (previous) {
     const choice = state.pendingChoice
@@ -121,7 +129,7 @@ export function resolveTransaction(state, seat, move, execute, { initial = false
         if (draft._resolution.cursor !== transaction.answers.length) throw new Error('检查点存在未消费的选择恢复凭据')
         newEvents.push(...draft._resolution.events.slice(transaction.emitted))
         transaction = { id: `${revision + 1}c${checkpoints + 1}`, base: dynamicState(draft),
-          seat: error.seat, move: clone(error.move), answers: [], emitted: 0 }
+          seat: error.seat, move: cloneMove(error.move), answers: [], emitted: 0 }
         continue
       }
       if (!(error instanceof ChoicePause)) throw error

@@ -1,10 +1,11 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { registeredEntry } from '../src/engine/ability.js'
 import { registerContentBundle } from '../content/registered.js'
 import { manifest as tfaCampaignPack } from '../content/packs/tfaCampaign/manifest.js'
 import { manifest as campaignManifest } from '../content/campaigns/theForgottenAge/manifest.js'
 
-// P2 引擎钩子（docs/tfa-card-audit.md §2.6）：
+// P2 引擎钩子（清单见 audit/tfa-migration.json 的 remaining）：
 //   敌人生命值 / 手牌上限 / 毁灭放置 / 横置反击 / 攻击类型 / 无视卡牌效果 / 地点指示物。
 // 这里用真实引擎跑三个章节（荒莽密林、天机之城、幽嘶深渊），不注入 api 桩。
 const packId = 'tfaP2HooksPack'
@@ -50,6 +51,8 @@ const {
 } = await import('../src/engine/engine.js')
 const { viewState } = await import('../src/integration/observation.js')
 const { EFFECTS } = await import('../src/cards/card-effects.js')
+// Phase 3（D1）：敌人卡面的布尔规则读点。
+const { entityRuleActive } = await import('../src/engine/modifiers.js')
 
 const campaignFor = id => `tfaP2Hooks-${id}`
 
@@ -263,8 +266,9 @@ test('04048 搜索遗迹：守卫者不能攻击也不能被攻击；04049 守�
   assert.equal(enemyFightValue(state, guardian, state.investigators[0]), guardian.fight + 1)
   assert.equal(enemyEvadeValue(state, guardian, state.investigators[0]), guardian.evade + 1)
   state.scenarioFlags.actThree = 'search'
-  assert.equal(wilds.behavior.enemyCannotAttack(state, guardian), true)
-  assert.equal(wilds.behavior.enemyCannotBeAttacked(state, guardian), true)
+  // Phase 3（D1）：不能攻击/不能被攻击由 04086 的卡面条目声明，读点是实体规则。
+  assert.equal(entityRuleActive(state, guardian, 'cannot:attack'), true)
+  assert.equal(entityRuleActive(state, guardian, 'cannot:beAttacked'), true)
   assert.equal(wilds.behavior.ignoreTreachery(state, '04087'), true)
   assert.equal(wilds.behavior.ignoreTreachery(state, '04076'), false)
   // 不能被攻击 → 攻击按钮消失。
@@ -484,7 +488,7 @@ test('04147 伊塔卡：+1 战斗 / +1 敏捷，并在击败敌人后可横置�
   inv.assets.push({ id: 'ichtaca', code: '04147', originalCode: '04147', exhausted: false, damage: 0, horror: 1 })
   assert.equal(getStat(state, inv, 'combat'), baseCombat + 1)
   assert.equal(getStat(state, inv, 'agility'), baseAgility + 1)
-  assert.equal(EFFECTS['04147'].exhaustOnEnemyDefeatedHealHorror, 1)
+  assert.equal(registeredEntry('04147').exhaustOnEnemyDefeatedHealHorror, 1)
 })
 test('04037 背包：入场附属顶 6 张里的道具，并可从背包打出', () => {
   const state = boot('theUntamedWilds')

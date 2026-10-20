@@ -193,12 +193,12 @@ export const encounterRules = {
 
   // ---- 敌人常驻修正 ----
   // stat 可以是 'fight' / 'evade' / 'health'（P2：生命值也走这个钩子）。
+  // 04095「每个毁灭标记 +1 战斗/躲避」已迁到 src/cards/encounter-abilities.js。
   enemyStatModifier(state, enemy, stat) {
     const code = original(enemy)
     if (code === '04083' && stat === 'fight') {
       return inPlayVengeance(state)
     }
-    if (code === '04095' && (stat === 'fight' || stat === 'evade')) return enemy.doom || 0
     return 0
   },
 

@@ -38,6 +38,8 @@ export const EFFECT_PRIMITIVES = [
   'lookTopDeckAndDoom', 'cancelHarmGainResources', 'playItemFromHand', 'removeDoomControlled',
   'temporaryAllyFromDiscard', 'decipheredReality', 'redrawEncounter', 'redGlovedManSkills', 'returnCommittedSkill',
   'carcosaInvestigator', 'carcosaPlayer', 'cancelHarm', 'addCurrentTest',
+  // Phase 1：离场/效果实体相关原语
+  'mill',
   'tfaInvestigator', 'tfaPlayer', 'cancelSymbolToken', 'retryTest', 'becomeAsset',
 ]
 
@@ -207,7 +209,10 @@ export function resolveEffect(state, seat, effect, rt) {
       break
     }
     case 'fight': {
-      const enemyId = effect.enemyId || rt.chooseEnemy(seat, effect).id
+      // 没有合法敌人时按"无事发生"处理：随机走子器在"场上有需要敌人的事件卡、却没有合法目标"
+      // 时走到过这条路径，抛错会让一个合法动作直接崩掉（Phase 4 · 重放安全网）。
+      const enemyId = effect.enemyId || rt.chooseEnemy(seat, effect)?.id
+      if (!enemyId) { rt.info('这里没有可攻击的敌人。'); break }
       rt.fight(seat, { ...effect, enemyId })
       break
     }
@@ -270,10 +275,21 @@ export function resolveEffect(state, seat, effect, rt) {
       break
     }
     case 'addStatPhase': {
-      inv.phaseStatBonuses ||= []
-      inv.phaseStatBonuses = inv.phaseStatBonuses.filter(b => b.round === state.round && b.phase === state.phase)
-      inv.phaseStatBonuses.push({ skill: effect.skill, amount: effect.amount || 1, phase: state.phase, round: state.round })
-      rt.info(`${inv.name} 本阶段${effect.skill}属性 +${effect.amount || 1}。`)
+      // Phase 1（A1）：本阶段的属性加值不再是「写在调查员身上的裸字段」，
+      // 而是一条有到期时间的持续效果（duration endOfPhase），由统一过期点清理。
+      const amount = effect.amount || 1
+      rt.addEffect(seat, {
+        duration: 'endOfPhase',
+        sourceCode: effect.source || null,
+        label: `本阶段${effect.skill}属性 +${amount}`,
+        modifiers: [{ target: `skill:${effect.skill}`, amount }],
+      })
+      rt.info(`${inv.name} 本阶段${effect.skill}属性 +${amount}。`)
+      break
+    }
+    case 'mill': {
+      // 弃掉牌库顶 N 张（03315 离场钩子：「弃掉你牌库顶10张卡牌」）。
+      rt.mill(seat, effect.amount || 1)
       break
     }
     case 'rechargeAsset': {

@@ -5,6 +5,8 @@ import { createGameState, performTest, getStat } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { viewState } from '../src/integration/observation.js'
 import { EFFECTS, INVESTIGATOR_ABILITIES } from '../src/cards/card-effects.js'
+import { registeredEntry } from '../src/engine/ability.js'
+import { commitProfile, weaknessProfile } from '../src/engine/lifecycle.js'
 import { canSelectInvestigator } from '../src/deck/availability.js'
 import { validateDeckRules } from '../src/deck/deck-rules.js'
 import { matchesDeckOptions, signatureAndWeaknesses } from '../src/deck/deckbuilding.js'
@@ -66,10 +68,13 @@ test('C1 Mark is implemented inside the verified Carcosa investigator boundary',
   assert.deepEqual(INVESTIGATOR_ABILITIES['03001'].startsWith, ['03009'])
   assert.equal(INVESTIGATOR_ABILITIES['03001'].elderSign.kind, 'perDamage')
   assert.equal(INVESTIGATOR_ABILITIES['03001'].reactions[0].when, 'damagePlaced')
-  assert.equal(EFFECTS['03007'].skill.homeFront, true)
-  assert.equal(EFFECTS['03008'].weakness.type, 'shellShock')
+  // Phase 5：签名卡的行为数据已搬到能力层，断言改为读生命周期读点（描述子优先）。
+  assert.equal(commitProfile('03007').homeFront, true)
+  assert.equal(weaknessProfile('03008').type, 'shellShock')
   assert.equal(EFFECTS['03009'].cannotLeavePlay, true)
-  assert.deepEqual(EFFECTS['03009b'].passive.stats,
+  // Phase 5（5b-9）：03009b 的「不可离场」与被动搬到能力层条目。
+  assert.equal(registeredEntry('03009b').cannotLeavePlay, true)
+  assert.deepEqual(registeredEntry('03009b').passive.stats,
     { willpower: -1, intellect: -1, combat: -1, agility: -1 })
 })
 
@@ -252,7 +257,7 @@ test('C1 Akachi gives charge assets one additional starting charge and her elder
   move(state, { action: 'play', cardId: '01060' })
   settle(state)
   const spell = state.investigators[0].assets.find(card => card.code === '01060')
-  assert.equal(spell.uses, EFFECTS['01060'].uses + 1)
+  assert.equal(spell.uses, registeredEntry('01060').uses + 1)
 
   state.chaosBag = ['eldersign']
   const execute = current => performTest(current, 0, 'willpower', 6, {
@@ -260,7 +265,7 @@ test('C1 Akachi gives charge assets one additional starting charge and her elder
   })
   resolveTest(state, execute, pending => pending.source === 'akachiElderSign' ? spell.id : null)
   assert.equal(state.testResult.value, 6)
-  assert.equal(state.investigators[0].assets.find(card => card.id === spell.id).uses, EFFECTS['01060'].uses + 2)
+  assert.equal(state.investigators[0].assets.find(card => card.id === spell.id).uses, registeredEntry('01060').uses + 2)
 })
 
 test('C1 Spirit-Speaker choice survives JSON save/replay without duplicating resources or movement', () => {

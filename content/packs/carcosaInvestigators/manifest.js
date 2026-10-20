@@ -58,8 +58,6 @@ export const investigatorAbilities = {
 }
 
 export const signatureEffects = {
-  '03007': { skill: { homeFront: true } },
-  '03008': { weakness: { type: 'shellShock' } },
   '03009': {
     cannotLeavePlay: true,
     abilities: [{
@@ -70,14 +68,9 @@ export const signatureEffects = {
       effect: { type: 'addTestValue', amount: 2 },
     }],
   },
-  '03009b': {
-    cannotLeavePlay: true,
-    passive: { stats: { willpower: -1, intellect: -1, combat: -1, agility: -1 } },
-  },
   '03010': { analyticalMind: true, passive: { remoteCommit: true } },
   '03011': { weakness: { type: 'threat' }, kingInYellow: true, cannotLeavePlay: true },
   '03012': { paintedWorld: true },
-  '03013': { weakness: { type: 'starsOfHyades' } },
   '03014': {
     abilities: [{
       label: '横置：选择一个充能支援，将其返回手牌，或把全部充能转为资源并弃置',
@@ -104,7 +97,6 @@ export const signatureEffects = {
     duringOwnTurn: true,
     event: { type: 'carcosaInvestigator', action: 'improvisation' },
   },
-  '03019': { weakness: { type: 'crisisOfIdentity' } },
 }
 
 export const runtimeDependencyCodes = ['03009b']

@@ -25,7 +25,7 @@
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/core-acceptance.test.mjs",
-      "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
+      "sha256": "808747d427f65d1abfc6853dde2bb623f930260336257b47891d9b6d150d55ac"
     },
     {
       "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
@@ -53,7 +53,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
-      "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+      "sha256": "18d617e39aa7f2f72342fb0cfe105968b2b3d4acdb1aaf4e730031a1264d24a9"
     },
     {
       "file": "games/arkhamhorror/tests/core-n4.test.mjs",

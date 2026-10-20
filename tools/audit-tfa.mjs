@@ -210,7 +210,7 @@ const remaining = [
       ? [`${item.id}：遭遇卡 ${item.inventory.pendingEncounterCodes.join('、')} 仍按共享规则/待办处理`] : []),
     ...item.gaps.map(gap => `${item.id}：${gap}`),
   ]),
-  '逐章 literalCardBehavior：十个剧本尚未逐张核对卡面字面需求，按规范 4.2 保持 false',
+  '逐章 literalCardBehavior：十个剧本尚未逐张核对卡面字面需求，按规范 5.2 保持 false',
   '章节浏览器验收：browserAcceptance 仍为 false，需真实大厅流程的端到端验收',
   '发布验收：大厅、联机与浏览器端到端发布验收（earlyAccess 期间不宣称规则等价）',
 ]

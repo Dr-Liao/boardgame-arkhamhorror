@@ -1,14 +1,14 @@
-export const STATE_SCHEMA_VERSION = 6
-export const RULES_VERSION = 'n5.5'
+// Phase 1（A1）：state.effects[] 进入存档结构，schemaVersion 6 → 7；
+// 同时把规则版本推到 n6.0（临时修正的结算方式变了，旧对局必须迁移而不是续算）。
+export const STATE_SCHEMA_VERSION = 7
+export const RULES_VERSION = 'n6.0'
 
-// 印刷生命值（含「每逢调查员」印刷值）。剧本可以把常驻修正挂在
-// behavior.enemyStatModifier(state, enemy, 'health') 上（失落时代 P2 钩子），
-// 由调用方把 behavior 传进来；不传时只返回印刷值。
+// 印刷生命值（含「每逢调查员」印刷值）。剧本的常驻修正走 behavior 钩子；
+// 卡牌的声明式修正（例如 02255「文本空白时按人数减少」）由 engine 的修正管线
+// （modifiers.enemyHealthDelta）叠加，本函数只负责印刷值。
 export function enemyHealthValue(state, enemy, behavior = null) {
-  const blank = enemy.textBlanked
-  const base = enemy.health - (enemy.code === '02255' && blank?.round === state.round && blank.phase === state.phase ? state.numInvestigators : 0)
   const modifier = behavior?.enemyStatModifier?.(state, enemy, 'health') || 0
-  return Math.max(0, base + modifier)
+  return Math.max(0, (enemy.health || 0) + modifier)
 }
 
 export function randomValue(state) {

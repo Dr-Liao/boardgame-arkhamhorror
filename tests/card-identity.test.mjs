@@ -6,6 +6,8 @@ import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { allCardDefs, createGameState, applyMove, validateMove } from '../src/engine/engine.js'
 import { getScenarioCardIdentity, resolveCardIdentity, cardIdentityFields } from '../src/cards/card-identity.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
+import { registeredEntry } from '../src/engine/ability.js'
+import { weaknessProfile } from '../src/engine/lifecycle.js'
 
 const types = { scenario: 'scenario', locations: 'location', acts: 'act', agendas: 'agenda', enemies: 'enemy', treacheries: 'treachery', storyAssets: 'asset' }
 
@@ -162,7 +164,9 @@ test('抽取弱点的真实执行路径保留威胁与敌人身份、计数器�
     } else {
       const threat = state.investigators[0].threat.find(card => card.code === code)
       assertInstance(threat, code, code)
-      assert.equal(threat.counters, EFFECTS[code].weakness.clues ?? EFFECTS[code].weakness.horror)
+      // Phase 5：弱点档案的唯一读点（描述子优先、旧 DSL 回落）。
+      const profile = weaknessProfile(code)
+      assert.equal(threat.counters, profile.clues ?? profile.horror)
     }
   }
 })
@@ -185,7 +189,7 @@ test('正常打出资产保留身份、费用、使用次数及未耗竭状态',
   const asset = state.investigators[0].assets.find(card => card.code === '01016')
   assertInstance(asset, '01016', '01016')
   assert.equal(asset.exhausted, false)
-  assert.equal(asset.uses, EFFECTS['01016'].uses)
+  assert.equal(asset.uses, registeredEntry('01016').uses)
   assert.equal(state.investigators[0].resources, resources - ALL_CARDS['01016'].cost)
 })
 

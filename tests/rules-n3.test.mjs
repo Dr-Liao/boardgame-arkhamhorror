@@ -7,6 +7,10 @@ import { SCENARIOS } from '../src/cards/scenarios-data.js'
 import { totalDoom, agendaDoom } from '../src/engine/rules-state.js'
 
 const clone = value => JSON.parse(JSON.stringify(value))
+// Phase 5：01038 已迁到能力层描述子（注册后不可变），旧 DSL 的「桩替换」改用
+// 一张仍然只在 EFFECTS 里实现的事件卡。02111 带 addToVictory（描述子没有读点），
+// 在 Phase 5/6 期间会一直留在旧 DSL 上。
+const STUB_EVENT_CARD = '02111'
 function answer(state, optionId) {
   const choice = state.pendingChoice
   assert.ok(choice, '必须存在待决选择')
@@ -169,32 +173,32 @@ test('N3 求助后同地点队友投入切换回答座位，恢复后回到原�
 
 test('N3 未指定效果分支不能自动取首项，嵌套选择JSON恢复不重复支付', () => {
   const state = fixture()
-  const original = EFFECTS['01088'].event
+  const original = EFFECTS[STUB_EVENT_CARD].event
   try {
-    EFFECTS['01088'].event = { type: 'chooseOne', options: [{ label: '外层', effect: { type: 'chooseOne', options: [{ label: '内层', effect: { type: 'gainResource', amount: 3 } }] } }] }
-    state.investigators[0].hand = ['01088']
+    EFFECTS[STUB_EVENT_CARD].event = { type: 'chooseOne', options: [{ label: '外层', effect: { type: 'chooseOne', options: [{ label: '内层', effect: { type: 'gainResource', amount: 3 } }] } }] }
+    state.investigators[0].hand = [STUB_EVENT_CARD]
     const resources = state.investigators[0].resources
-    execute(state, { action: 'play', cardId: '01088' })
+    execute(state, { action: 'play', cardId: STUB_EVENT_CARD })
     assert.equal(state.pendingChoice.kind, 'effect')
     answer(state, '0')
     const restored = clone(state)
     answer(state, '0')
     answer(restored, '0')
     assert.deepEqual(clone(state), restored)
-    assert.equal(state.investigators[0].resources, resources - ALL_CARDS['01088'].cost + 3)
+    assert.equal(state.investigators[0].resources, resources - ALL_CARDS[STUB_EVENT_CARD].cost + 3)
     assert.equal(state.investigators[0].actionsLeft, 2)
-  } finally { EFFECTS['01088'].event = original }
+  } finally { EFFECTS[STUB_EVENT_CARD].event = original }
 })
 
 test('N3 未实现原语拒绝且资源手牌日志完全不变', () => {
   const state = fixture()
-  const original = EFFECTS['01088'].event
+  const original = EFFECTS[STUB_EVENT_CARD].event
   try {
-    EFFECTS['01088'].event = { type: 'unknown-effect' }
-    state.investigators[0].hand = ['01088']
-    reject(state, { action: 'play', cardId: '01088' }, /未实现/)
-    assert.ok(!legalMoves(state).some(move => move.action === 'play' && move.cardId === '01088'))
-  } finally { EFFECTS['01088'].event = original }
+    EFFECTS[STUB_EVENT_CARD].event = { type: 'unknown-effect' }
+    state.investigators[0].hand = [STUB_EVENT_CARD]
+    reject(state, { action: 'play', cardId: STUB_EVENT_CARD }, /未实现/)
+    assert.ok(!legalMoves(state).some(move => move.action === 'play' && move.cardId === STUB_EVENT_CARD))
+  } finally { EFFECTS[STUB_EVENT_CARD].event = original }
 })
 
 test('N3 借机攻击可分配给资产，恢复后行动只扣一次且上限不增加', () => {
@@ -639,20 +643,20 @@ test('N3 猎手等距路线与任意无人地点生成都要显式选择', () =>
 
 test('N3 补弹在多个弹药武器时由持有者选择目标', () => {
   const state = fixture()
-  const original = EFFECTS['01088'].event
+  const original = EFFECTS[STUB_EVENT_CARD].event
   try {
-    EFFECTS['01088'].event = { type: 'reloadAmmo', amount: 3 }
+    EFFECTS[STUB_EVENT_CARD].event = { type: 'reloadAmmo', amount: 3 }
     const pistol = asset(state, '01016', { uses: 0, usesType: 'ammo' })
     const shotgun = asset(state, '01029', { uses: 0, usesType: 'ammo' })
-    state.investigators[0].hand = ['01088']
-    execute(state, { action: 'play', cardId: '01088' })
+    state.investigators[0].hand = [STUB_EVENT_CARD]
+    execute(state, { action: 'play', cardId: STUB_EVENT_CARD })
     assert.equal(state.pendingChoice.kind, 'reload')
     assert.deepEqual(state.pendingChoice.options.map(option => option.id).sort(), [pistol.id, shotgun.id].sort())
     answer(state, shotgun.id)
     settle(state)
     assert.equal(state.investigators[0].assets.find(item => item.id === shotgun.id).uses, 3)
     assert.equal(state.investigators[0].assets.find(item => item.id === pistol.id).uses, 0)
-  } finally { EFFECTS['01088'].event = original }
+  } finally { EFFECTS[STUB_EVENT_CARD].event = original }
 })
 
 test('N3 愤怒逐点选择弃牌或伤害恐惧，无牌可弃时仍可完成', () => {

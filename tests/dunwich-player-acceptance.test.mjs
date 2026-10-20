@@ -3,13 +3,18 @@ import assert from 'node:assert/strict'
 import { fixture, move, settle, answer, asset, enemy, play, use, legalMoves, validateMove } from './core-fixture.mjs'
 import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
 import { EFFECTS, INVESTIGATOR_ABILITIES } from '../src/cards/card-effects.js'
+import { commitProfile, playedEffect, weaknessProfile } from '../src/engine/lifecycle.js'
+import { registeredEntry } from '../src/engine/ability.js'
 import { getStat, performTest } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { getAvailability, canSelectInvestigator } from '../src/deck/availability.js'
 import { effects as cycleEffects } from '../content/packs/dunwichPlayer/effects.js'
-import { effects as supportEffects } from '../content/packs/dunwichSupport/manifest.js'
+import { abilityLayerCodes } from '../content/packs/dunwichPlayer/manifest.js'
+import { effects as supportEffects, abilityLayerCodes as supportAbilityLayerCodes } from '../content/packs/dunwichSupport/manifest.js'
 
-const constructible = Object.keys({ ...cycleEffects, ...supportEffects }).sort()
+// 可构筑 = 本周期 handlers + 已迁到能力层描述子的卡（后者不再有 EFFECTS 条目）。
+const constructible = [...new Set([...Object.keys({ ...cycleEffects, ...supportEffects }),
+  ...abilityLayerCodes, ...supportAbilityLayerCodes])].sort()
 const investigators = ['02001', '02002', '02003', '02004', '02005']
 const signatures = ['02006', '02007', '02008', '02009', '02010', '02011', '02012', '02013', '02014', '02015']
 const weaknesses = ['02037', '02038', '02039']
@@ -41,8 +46,7 @@ const contracts = {
   '02034': ['event', { type: 'evade', moveEnemyOnSuccess: true }],
   '02035': ['passive.stats', { agility: 1, willpower: 1 }, 'healSelfHorrorAfterTurn', 1],
   '02036': ['abilities.0.effect', { type: 'fight', combatBonus: 1, maySpendActionForDamage: 1 }],
-  '02105': ['event', { type: 'healDamageAtLocation', amount: 2 }],
-  '02106': ['passive', { stats: { willpower: 1 }, assignHarmAtLocation: true }, 'defeatedDamage', 2],
+  '02105': ['event', { type: 'healDamageAtLocation', amount: 2 }],  '02106': ['passive', { stats: { willpower: 1 }, assignHarmAtLocation: true }, 'defeatedDamage', 2],
   '02107': ['event', { type: 'fight', skill: 'intellect', damagePerClue: true, maxDamageBonus: 3 }],
   '02108': ['abilities.0.effect', { type: 'moveTo', requiresNoEnemies: true }],
   '02109': ['event', { type: 'doubleUses', usesTypes: ['ammo', 'supplies'], target: 'location' }],
@@ -68,7 +72,7 @@ const contracts = {
   '02158': ['passive.extraSlots.ally', 1],
   '02184': ['event', { type: 'searchTop', amount: 9, trait: 'Weapon', choose: 1 }],
   '02185': ['abilities.0.effect', { type: 'addStatPhase', skill: 'intellect', amount: 1 }, 'abilities.1.effect', { type: 'addStatPhase', skill: 'combat', amount: 1 }],
-  '02186': ['requiresClueAtLocation', true, 'event', { type: 'draw', amount: 3 }],
+  '02186': ['playCondition.0', '当前地点没有线索', 'event', { type: 'draw', amount: 3 }],
   '02187': ['minimumHandForBoost', 5, 'freeTriggers.0', { skill: 'willpower', cost: { resources: 1 }, bonus: 2 }],
   '02188': ['reactions.0', { when: 'turnBegins', requiresAlone: true, effect: { type: 'gainResource', amount: 1 } }],
   '02189': ['freeTriggers', [{ skill: 'intellect', cost: { resources: 2 }, bonus: 3 }, { skill: 'agility', cost: { resources: 2 }, bonus: 3 }]],
@@ -101,7 +105,7 @@ const contracts = {
   '02270': ['event.type', 'temporaryAllyFromDiscard'],
   '02271': ['skill.selfTestOnly', true],
   '02272': ['passive.parleyDifficultyModifier', -2],
-  '02273': ['requiresNoEnemies', true, 'event.effects', [{ type: 'heal', amount: 3, what: 'horror' }, { type: 'draw', amount: 1 }]],
+  '02273': ['playCondition.0', '当前地点有敌人', 'event.effects', [{ type: 'heal', amount: 3, what: 'horror' }, { type: 'draw', amount: 1 }]],
   '02299': ['skill', { onSuccess: { damageBonus: 1 }, successBy: { threshold: 2, damageBonus: 1 } }],
   '02300': ['event', { type: 'fight', defeatNonEliteOnSuccess: true }],
   '02301': ['uses', 3, 'abilities.0.effect', { type: 'fight', combatBonus: 5, damageBonus: 2 }],
@@ -138,9 +142,97 @@ function assertContract(code) {
   assert.ok(checks, `${code} has no printed-effect contract`)
   for (let index = 0; index < checks.length; index += 2) {
     const path = checks[index]
-    assertSubset(atPath(EFFECTS[code], path), checks[index + 1], `${code}.${path}`)
+    assertSubset(atPath(behaviorOf(code), path), checks[index + 1], `${code}.${path}`)
   }
 }
+
+// 行为数据可能还在旧 DSL（EFFECTS），也可能已迁到能力层（played/commit/weakness/abilities/modifiers）。
+// 契约断言只看"这张卡声明了什么行为"，与它现在走哪条通道无关。Phase 5 起把迁移后的
+// 槽位（abilities / uses / usesType / passive.stats / weakness）也折叠回同一份形状。
+function behaviorOf(code) {
+  const legacy = EFFECTS[code]
+  const entry = registeredEntry(code)
+  const played = playedEffect(code)
+  const commit = commitProfile(code)
+  const weakness = weaknessProfile(code)
+  const playCondition = entry?.playCondition?.map(item => item.message || '条件')
+  const fromDescriptors = (entry?.abilities || [])
+    .filter(descriptor => descriptor.kind === 'action' || descriptor.kind === 'free')
+    .map(descriptor => ({ label: descriptor.label, cost: descriptor.cost, effect: descriptor.effect ?? undefined }))
+  // Phase 5（5b-6）：从旧式 reactions 搬来的反应描述子折叠回同一份形状（criteria 是旧条件字段）。
+  const fromReactions = (entry?.abilities || [])
+    .filter(descriptor => descriptor.kind === 'reaction')
+    .map(descriptor => {
+      const flags = descriptor.criteria && typeof descriptor.criteria === 'object' && !Array.isArray(descriptor.criteria)
+        ? descriptor.criteria
+        : {}
+      const limit = descriptor.limit && typeof descriptor.limit === 'object' ? descriptor.limit.scope : descriptor.limit
+      return {
+        id: descriptor.id,
+        // 描述子的 trigger 归一化成数组；契约按旧式字符串断言，单窗口时折回字符串。
+        when: Array.isArray(descriptor.trigger)
+          ? (descriptor.trigger.length === 1 ? descriptor.trigger[0] : descriptor.trigger)
+          : descriptor.trigger,
+        ...flags,
+        ...(['round', 'perRound'].includes(limit) ? { limit: 'round' }
+          : ['phase', 'perPhase'].includes(limit) ? { limit: 'phase' }
+            : ['turn', 'perTurn'].includes(limit) ? { limit: 'turn' } : {}),
+        cost: descriptor.cost,
+        effect: descriptor.effect ?? undefined,
+      }
+    })
+  const stats = {}
+  for (const modifier of entry?.modifiers || []) {
+    if (typeof modifier.target === 'string' && modifier.target.startsWith('skill:') && !modifier.condition
+      && typeof modifier.amount === 'number') stats[modifier.target.slice('skill:'.length)] = modifier.amount
+  }
+  if (!legacy && !played && !commit && !weakness && !entry?.passive
+    && !entry?.healSelfHorrorAfterTurn && !entry?.forcedUpkeepPayOrDiscard && !entry?.defeatedDamage && !entry?.freeTriggers?.length && !entry?.fast
+    && !fromDescriptors.length && !fromReactions.length && !Object.keys(stats).length
+    && !playCondition?.length) return null
+  const merged = {
+    ...(legacy || {}),
+    ...(played ? { event: played } : {}),
+    ...(commit ? { skill: commit } : {}),
+    ...(weakness ? { weakness } : {}),
+    ...(Object.keys(stats).length ? { passive: { ...(legacy?.passive || {}), stats } } : {}),
+    ...(entry?.passive ? { passive: { ...(legacy?.passive || {}), ...entry.passive } } : {}),
+    ...(entry?.healSelfHorrorAfterTurn != null ? { healSelfHorrorAfterTurn: entry.healSelfHorrorAfterTurn } : {}),
+    ...(entry?.forcedUpkeepPayOrDiscard != null ? { forcedUpkeepPayOrDiscard: entry.forcedUpkeepPayOrDiscard } : {}),
+    ...(entry?.defeatedDamage != null ? { defeatedDamage: entry.defeatedDamage } : {}),
+    ...(entry?.redirectOneHorrorToSelf ? { redirectOneHorrorToSelf: true } : {}),
+    ...(entry?.cannotLeavePlay ? { cannotLeavePlay: true } : {}),
+    ...(entry?.freeTriggers?.length ? { freeTriggers: entry.freeTriggers } : {}),
+    ...(entry?.minimumHandForBoost != null ? { minimumHandForBoost: entry.minimumHandForBoost } : {}),
+    ...(entry?.composure ? { composure: true } : {}),
+    ...(entry?.fast ? { fast: true } : {}),
+    ...(entry?.uses != null ? { uses: entry.uses } : {}),
+    ...(entry?.usesType ? { usesType: entry.usesType } : {}),
+    ...(playCondition?.length ? { playCondition } : {}),
+  }
+  if (fromDescriptors.length) merged.abilities = [...(legacy?.abilities || []), ...fromDescriptors]
+  if (fromReactions.length) merged.reactions = [...(legacy?.reactions || []), ...fromReactions]
+  // 快速反应事件迁走后：trigger → reaction.when，effect 数据体 → event（只补空缺，不覆盖已折叠的 played）。
+  const playedDescriptor = entry?.abilities?.find(item => item.kind === 'played')
+  if (playedDescriptor?.trigger?.length && !merged.reaction) merged.reaction = { when: playedDescriptor.trigger[0] }
+  if (playedDescriptor?.effect && !merged.event) merged.event = playedDescriptor.effect
+  // 旧打出条件的「字段名」在迁移后变成 playCondition 的文案；契约按字段名断言，
+  // 这里把文案确定性反查回字段名（同一份映射见 src/engine/play-condition.js）。
+  for (const item of entry?.playCondition || []) {
+    const field = LEGACY_CONDITION_BY_MESSAGE[item.message]
+    if (field) merged[field] = true
+  }
+  return merged
+}
+
+const LEGACY_CONDITION_BY_MESSAGE = Object.freeze({
+  当前地点没有线索: 'requiresClueAtLocation',
+  '需要至少 1 个线索才能打出': 'requiresClue',
+  '只能作为本回合的第一个行动打出': 'firstActionOnly',
+  当前地点有敌人: 'requiresNoEnemies',
+  '只能在自己的回合打出': 'ownTurnOnly',
+  '场上没有带「撤退」能力的剧本卡': 'requiresResign',
+})
 
 function prep(s) {
   const inv = s.investigators[0]
@@ -158,9 +250,9 @@ function prep(s) {
 
 function engineSurfaceProbe(code) {
   const card = ALL_CARDS[code]
-  const effect = EFFECTS[code]
+  const effect = behaviorOf(code) || {}
   assert.equal(getAvailability(code).deckbuilding, true)
-  assert.ok(card && effect)
+  assert.ok(card && behaviorOf(code))
   if (card.type === 'asset') {
     const s = fixture('01001', 2)
     const inv = prep(s)
@@ -658,7 +750,8 @@ function runSignature(code) {
 
 function runWeakness(code) {
   assert.equal(getAvailability(code).deckbuilding, false)
-  assert.ok(EFFECTS[code])
+  // Phase 5：基础弱点可能已经迁到能力层（weakness 描述子），两条通道都算「有实现」。
+  assert.ok(EFFECTS[code] || registeredEntry(code))
   if (code === '02037') {
     assert.equal(ALL_CARDS[code].permanent, true)
     assert.equal(ALL_CARDS[code].subtype, 'basicweakness')

@@ -1,0 +1,2555 @@
+{
+  "schemaVersion": 1,
+  "note": "由 tools/audit-workorder.mjs --write 生成，勿手改。shape=reference/table 不是规则债务（标识与数据表）；block/condition 才是要迁的行为分支。class 只按关键字判定的候选分类，逐条迁移前需人工确认。",
+  "summary": {
+    "total": 126,
+    "byShape": {
+      "condition": 31,
+      "block": 59,
+      "reference": 36
+    },
+    "byClass": {
+      "B": 46,
+      "A": 42,
+      "C": 38
+    },
+    "nonBehaviorDebt": 36
+  },
+  "batches": {
+    "A": [
+      "01008",
+      "02012",
+      "02014",
+      "02018",
+      "02023",
+      "02024",
+      "02034",
+      "02109",
+      "02115",
+      "02148",
+      "02190",
+      "02228",
+      "02232",
+      "02234",
+      "02261",
+      "02265",
+      "02267",
+      "02270",
+      "02272",
+      "02303",
+      "02309",
+      "03004",
+      "03007",
+      "03033",
+      "03106",
+      "03195",
+      "03238",
+      "03263",
+      "03304",
+      "03306",
+      "03310",
+      "04001",
+      "04010",
+      "04029",
+      "04061",
+      "04110",
+      "04157",
+      "04159",
+      "04236",
+      "04305",
+      "04308",
+      "04312"
+    ],
+    "B": [
+      "01000",
+      "01007",
+      "01071",
+      "01082",
+      "01172",
+      "01177",
+      "02007",
+      "02009",
+      "02011",
+      "02013",
+      "02015",
+      "02021",
+      "02032",
+      "02050",
+      "02089",
+      "02102",
+      "02103",
+      "02113",
+      "02156",
+      "02178",
+      "02182",
+      "02230",
+      "02271",
+      "02308",
+      "02310",
+      "03001",
+      "03006",
+      "03011",
+      "03014",
+      "03015",
+      "03017",
+      "03042",
+      "03059",
+      "03193",
+      "03308",
+      "04004",
+      "04022",
+      "04038",
+      "04041",
+      "04042",
+      "04147",
+      "04158",
+      "04191",
+      "04230",
+      "04231",
+      "04318"
+    ],
+    "C": [
+      "01013",
+      "01014",
+      "01038",
+      "01117",
+      "02010",
+      "02031",
+      "02088",
+      "02094",
+      "02138",
+      "02139",
+      "02179",
+      "02254",
+      "02255",
+      "02305",
+      "02320",
+      "03002",
+      "03003",
+      "03010",
+      "03012",
+      "03016",
+      "03018",
+      "03038",
+      "03148",
+      "03149",
+      "03158",
+      "03199",
+      "03232",
+      "03264",
+      "03311",
+      "04020",
+      "04021",
+      "04037",
+      "04142",
+      "04193",
+      "04199",
+      "04265",
+      "04270",
+      "04310"
+    ]
+  },
+  "entries": [
+    {
+      "code": "01000",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        627
+      ],
+      "inEffects": false,
+      "evidence": [
+        ".filter((c) => isCardAvailable(c.code) && c.pack === 'core' && c.code !== '01000')"
+      ]
+    },
+    {
+      "code": "01007",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        1278
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (inv.threat.some(card => card.code === '01007' && card.counters > 0)) addTrauma(state, inv.seat, 'mental', 1, events)"
+      ]
+    },
+    {
+      "code": "01008",
+      "shape": "block",
+      "class": "A",
+      "needs": [],
+      "occurrences": 2,
+      "lines": [
+        2195,
+        2278
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const restrictedHands = inv.assets.filter(a => a.code === '01008').length * 2",
+        "if (a.code === '01008') {"
+      ]
+    },
+    {
+      "code": "01013",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        2318
+      ],
+      "inEffects": true,
+      "evidence": [
+        "if (def.code === '01013') {"
+      ]
+    },
+    {
+      "code": "01014",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "C1 布尔修正",
+        "C3 费用表达式",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 4,
+      "lines": [
+        2912,
+        2917,
+        11625,
+        12196
+      ],
+      "inEffects": true,
+      "evidence": [
+        "return inv.assets.some(a => a.code === '01014') && !discardLocked(state, inv)",
+        "if (inv.assets.some(a => a.code === '01014')) inv.deck.unshift(code)"
+      ]
+    },
+    {
+      "code": "01038",
+      "shape": "condition",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属"
+      ],
+      "occurrences": 2,
+      "lines": [
+        6363,
+        9554
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const attachment = { ownerSeat: seat, code: '01038' }",
+        "else if (cardId !== '01038' && !(cardId === '02031' && state.enemies.some(enemy => enemy.bindMonster?.ownerSeat === seat"
+      ]
+    },
+    {
+      "code": "01071",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        3862
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const statue = token == null && inv.assets.find(asset => asset.code === '01071' && (asset.uses || 0) > 0)"
+      ]
+    },
+    {
+      "code": "01082",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        3088
+      ],
+      "inEffects": true,
+      "evidence": [
+        "const aquinnah = inv.assets.find(asset => ['01082', '02308'].includes(asset.code) && !asset.exhausted)"
+      ]
+    },
+    {
+      "code": "01117",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "C1 布尔修正",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 11,
+      "lines": [
+        1328,
+        1333,
+        1968,
+        4945,
+        9642,
+        9646,
+        9706,
+        12009,
+        12014,
+        12258,
+        12277
+      ],
+      "inEffects": true,
+      "evidence": [
+        "const answer = requestChoice(state, { kind: 'storyCard', source: '01117', seat: candidates[0].seat,",
+        "campaignCardChange(campaign, seat, '01117', 'add', state.scenario.id)"
+      ]
+    },
+    {
+      "code": "01172",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        10371
+      ],
+      "inEffects": false,
+      "evidence": [
+        "doubleNegative: (enemy.ruleId === 'huntingNightgaunt' || enemy.code === 'huntingNightgaunt' || enemy.code === '01172') &"
+      ]
+    },
+    {
+      "code": "01177",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        3004
+      ],
+      "inEffects": false,
+      "evidence": [
+        "&& (enemy.ruleId === 'yithianObserver' || enemy.code === 'yithianObserver' || enemy.code === '01177')) {"
+      ]
+    },
+    {
+      "code": "02007",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        2408,
+        4738
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (def.code === '02007') {",
+        "if (enemy.smiteTheWickedSeat != null) state.investigators[enemy.smiteTheWickedSeat]?.discard.push('02007')"
+      ]
+    },
+    {
+      "code": "02009",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        4098,
+        4130
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const rexCurse = inv.threat.find(item => item.code === '02009')",
+        "inv.deck = shuffle([...inv.deck, '02009'], () => randomValue(state))"
+      ]
+    },
+    {
+      "code": "02010",
+      "shape": "condition",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "C3 费用表达式"
+      ],
+      "occurrences": 2,
+      "lines": [
+        9445,
+        9474
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const cost = cardId === '02010' ? Number(requestChoice(state, { kind: 'resource', source: '02010', seat,",
+        "if (cardId === '02010') { asset.uses = cost; asset.usesType = 'ammo' }"
+      ]
+    },
+    {
+      "code": "02011",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 3,
+      "lines": [
+        2427,
+        10083,
+        10085
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (def.code === '02011') {",
+        "source: { label: '调查', name: '寻找伊兹', code: '02011' }, resolve: result => {"
+      ]
+    },
+    {
+      "code": "02012",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 1,
+      "lines": [
+        6990
+      ],
+      "inEffects": false,
+      "evidence": [
+        "kind: 'target', source: '02012', seat, prompt: '选择本地点或连接地点的一名调查员，治疗 1 点恐惧。',"
+      ]
+    },
+    {
+      "code": "02013",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        2439
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (def.code === '02013') {"
+      ]
+    },
+    {
+      "code": "02014",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7001
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const id = requestChoice(state, { kind: 'move', source: '02014', seat,"
+      ]
+    },
+    {
+      "code": "02015",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "C6 历史记录",
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        2648
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (def.code === '02015') for (const asset of inv.assets) asset.exhausted = true"
+      ]
+    },
+    {
+      "code": "02018",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 2,
+      "lines": [
+        7813,
+        7822
+      ],
+      "inEffects": false,
+      "evidence": [
+        "kind: 'target', source: '02018', seat, prompt: '选择交换物品、盟友或资源的调查员。',",
+        "const answer = requestChoice(state, { kind: 'target', source: '02018', seat, prompt: '选择要交换的内容。', options })"
+      ]
+    },
+    {
+      "code": "02021",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        6971,
+        6973
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const asset = inv.assets.find(item => item.id === assetId && item.code === '02021')",
+        "return performTest(state, seat, 'intellect', 4, { source: { label: '研究', name: cardName('02021'), code: '02021' }, resol"
+      ]
+    },
+    {
+      "code": "02023",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 2,
+      "lines": [
+        7831,
+        7833
+      ],
+      "inEffects": false,
+      "evidence": [
+        "return performTest(state, seat, 'intellect', loc.shroud + (loc.shroudMod || 0), { source: { label: '调查', name: cardName(",
+        "const targetId = targets.length === 1 ? targets[0].id : requestChoice(state, { kind: 'location', source: '02023', seat,"
+      ]
+    },
+    {
+      "code": "02024",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 2,
+      "lines": [
+        7843,
+        7847
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const targetSeat = targets.length === 1 ? String(targets[0].seat) : requestChoice(state, { kind: 'target', source: '0202",
+        "return performTest(state, target.seat, 'willpower', 2, { source: { label: '饮用烈酒', name: cardName('02024'), code: '02024'"
+      ]
+    },
+    {
+      "code": "02031",
+      "shape": "condition",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "B6 区域附属"
+      ],
+      "occurrences": 5,
+      "lines": [
+        5760,
+        7862,
+        7867,
+        7872,
+        9554
+      ],
+      "inEffects": false,
+      "evidence": [
+        "performTest(state, owner.seat, 'willpower', 3, { source: { label: '维持绑定', name: enemy.name, code: '02031' }, resolve: re",
+        "kind: 'target', source: '02031', seat, prompt: '选择要绑定的非精英敌人。',"
+      ]
+    },
+    {
+      "code": "02032",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 1,
+      "lines": [
+        10128
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const spend = max ? Number(requestChoice(state, { kind: 'resource', source: opts.assetId || '02032', seat,"
+      ]
+    },
+    {
+      "code": "02034",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 1,
+      "lines": [
+        10424
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const id = destinations.length === 1 ? destinations[0] : requestChoice(state, { kind: 'move', source: '02034', seat,"
+      ]
+    },
+    {
+      "code": "02050",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        11965
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (move.action === 'investigate' && investigateLoc?.originalCode === '02050') cost++"
+      ]
+    },
+    {
+      "code": "02088",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "C1 布尔修正",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 3,
+      "lines": [
+        1654,
+        1968,
+        3087
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (inv.threat?.some(item => item.code === '02088') && cardDef(asset?.code)?.traits?.includes('Ally')) return {}",
+        "return i.assets.some((a) => a.code === '01117') && !i.threat.some(t => t.code === '02088')"
+      ]
+    },
+    {
+      "code": "02089",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        5161
+      ],
+      "inEffects": false,
+      "evidence": [
+        "state.encounterDiscard.push(...Array(loc.arcaneBarriers || 0).fill('02102'), ...Array(loc.sordidAndSilent || 0).fill('02"
+      ]
+    },
+    {
+      "code": "02094",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        10172
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (enemy.code === '02094' && !enemyTextBlanked(state, enemy)"
+      ]
+    },
+    {
+      "code": "02102",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 4,
+      "lines": [
+        5161,
+        9898,
+        9899,
+        9900
+      ],
+      "inEffects": false,
+      "evidence": [
+        "state.encounterDiscard.push(...Array(loc.arcaneBarriers || 0).fill('02102'), ...Array(loc.sordidAndSilent || 0).fill('02",
+        "performTest(state, seat, 'willpower', 4, { source: { label: '奥术屏障', code: '02102' }, resolve: result => {"
+      ]
+    },
+    {
+      "code": "02103",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        10182
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (enemy.code === '02103' && !enemyTextBlanked(state, enemy) && weapon && cardDef(weapon.code)?.traits?.includes('Melee"
+      ]
+    },
+    {
+      "code": "02109",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7880
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const id = requestChoice(state, { kind: 'target', source: '02109', seat, prompt: '选择弹药或补给翻倍的支援。', options: targets.map(a"
+      ]
+    },
+    {
+      "code": "02113",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 2,
+      "lines": [
+        7892,
+        7897
+      ],
+      "inEffects": true,
+      "evidence": [
+        "kind: 'target', source: '02113', seat, prompt: '选择承受这次攻击伤害的另一名敌人。',",
+        "damageEnemy(state, target, Math.max(1, context.attackDamage || 1), seat, events, '02113')"
+      ]
+    },
+    {
+      "code": "02115",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 3,
+      "lines": [
+        7902,
+        7906,
+        7912
+      ],
+      "inEffects": true,
+      "evidence": [
+        "const choice = requestChoice(state, { kind: 'effect', source: '02115', seat, prompt: '选择照明弹的效果。',",
+        "const ownerSeat = owners.length === 1 ? owners[0].seat : Number(requestChoice(state, { kind: 'target', source: '02115', "
+      ]
+    },
+    {
+      "code": "02138",
+      "shape": "condition",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属"
+      ],
+      "occurrences": 1,
+      "lines": [
+        6251
+      ],
+      "inEffects": false,
+      "evidence": [
+        "for (const asset of inv.assets.filter(item => ['02138', '02139', '02179'].includes(item.code))) {"
+      ]
+    },
+    {
+      "code": "02139",
+      "shape": "condition",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属"
+      ],
+      "occurrences": 1,
+      "lines": [
+        6251
+      ],
+      "inEffects": false,
+      "evidence": [
+        "for (const asset of inv.assets.filter(item => ['02138', '02139', '02179'].includes(item.code))) {"
+      ]
+    },
+    {
+      "code": "02148",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7925
+      ],
+      "inEffects": false,
+      "evidence": [
+        "kind: 'target', source: '02148', seat, prompt: '选择与你共享卡牌与资源的调查员。',"
+      ]
+    },
+    {
+      "code": "02156",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7944
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (loc) loc.lure = { seat, round: state.round, code: '02156' }"
+      ]
+    },
+    {
+      "code": "02178",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        2407
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (def.code === '02178') { scenarioRuntime(state, events).discardTop(inv.seat, 3); return }"
+      ]
+    },
+    {
+      "code": "02179",
+      "shape": "condition",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属"
+      ],
+      "occurrences": 1,
+      "lines": [
+        6251
+      ],
+      "inEffects": false,
+      "evidence": [
+        "for (const asset of inv.assets.filter(item => ['02138', '02139', '02179'].includes(item.code))) {"
+      ]
+    },
+    {
+      "code": "02182",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        4583
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (inv && state.enemies.some(enemy => enemy.code === '02182' && enemy.engagedSeat === seat && !enemyTextBlanked(state, "
+      ]
+    },
+    {
+      "code": "02190",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 1,
+      "lines": [
+        3745
+      ],
+      "inEffects": false,
+      "evidence": [
+        "defiedToken = requestChoice(state, { kind: 'token', source: '02190', seat, prompt: '蔑视：选择本次检定要忽略的混乱符号。',"
+      ]
+    },
+    {
+      "code": "02228",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 2,
+      "lines": [
+        7958,
+        7963
+      ],
+      "inEffects": false,
+      "evidence": [
+        "kind: 'target', source: '02228', seat, prompt: '选择要暴露弱点的敌人。',",
+        "return performTest(state, seat, 'intellect', difficulty, { source: { label: '揭露弱点', name: enemy.name, code: '02228' }, r"
+      ]
+    },
+    {
+      "code": "02230",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        3932
+      ],
+      "inEffects": false,
+      "evidence": [
+        "let luckyDice = inv.assets.find(asset => asset.code === '02230')"
+      ]
+    },
+    {
+      "code": "02232",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 2,
+      "lines": [
+        7972,
+        7977
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const choice = requestChoice(state, { kind: 'deck', source: effect.assetId || '02232', seat, prompt: '选择查看的牌库。',",
+        "const bury = requestChoice(state, { kind: 'card', source: effect.assetId || '02232', seat, prompt: `顶牌是「${cardName(top)}"
+      ]
+    },
+    {
+      "code": "02234",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        5786
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const skipIncome = darkHorse && requestChoice(state, { kind: 'upkeep', source: '02234', seat: inv.seat,"
+      ]
+    },
+    {
+      "code": "02254",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "C1 布尔修正"
+      ],
+      "occurrences": 3,
+      "lines": [
+        4796,
+        10121,
+        10252
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (!enemy || !(amount > 0) || (enemy.code === '02255' && source !== '02254' && !enemyTextBlanked(state, enemy))) return",
+        "if (enemy?.code === '02255' && opts.assetId !== '02254' && !enemyTextBlanked(state, enemy)) return"
+      ]
+    },
+    {
+      "code": "02255",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "C1 布尔修正",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 6,
+      "lines": [
+        4796,
+        10121,
+        10252,
+        11681,
+        12060,
+        12349
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (!enemy || !(amount > 0) || (enemy.code === '02255' && source !== '02254' && !enemyTextBlanked(state, enemy))) return",
+        "if (enemy?.code === '02255' && opts.assetId !== '02254' && !enemyTextBlanked(state, enemy)) return"
+      ]
+    },
+    {
+      "code": "02261",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7996
+      ],
+      "inEffects": true,
+      "evidence": [
+        "kind: 'harm', source: '02261', seat, prompt: '选择“我见过更糟的”要取消的伤害与恐惧。', options,"
+      ]
+    },
+    {
+      "code": "02265",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        8036
+      ],
+      "inEffects": false,
+      "evidence": [
+        "kind: 'card', source: '02265', seat, prompt: '选择要打出的道具支援（支付其费用）。',"
+      ]
+    },
+    {
+      "code": "02267",
+      "shape": "reference",
+      "class": "A",
+      "needs": [],
+      "occurrences": 1,
+      "lines": [
+        8007
+      ],
+      "inEffects": false,
+      "evidence": [
+        "kind: 'target', source: '02267', seat, prompt: '选择要移除全部毁灭标记的卡牌。',"
+      ]
+    },
+    {
+      "code": "02270",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 1,
+      "lines": [
+        8021
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const id = requestChoice(state, { kind: 'card', source: '02270', seat, prompt: '选择任意玩家弃牌堆中的盟友支援。',"
+      ]
+    },
+    {
+      "code": "02271",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 4,
+      "lines": [
+        3767,
+        3769,
+        4149,
+        4150
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const index = owner.discard.lastIndexOf('02271')",
+        "exilePlayerCard(state, owner, '02271', events)"
+      ]
+    },
+    {
+      "code": "02272",
+      "shape": "block",
+      "class": "A",
+      "needs": [],
+      "occurrences": 1,
+      "lines": [
+        3567
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (options.source?.label?.includes('谈判') && inv.assets.some(asset => asset.code === '02272')) {"
+      ]
+    },
+    {
+      "code": "02303",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        8044
+      ],
+      "inEffects": false,
+      "evidence": [
+        "return performTest(state, seat, 'intellect', difficulty, { source: { label: '调查', name: cardName('02303'), code: '02303'"
+      ]
+    },
+    {
+      "code": "02305",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        9147,
+        9149
+      ],
+      "inEffects": true,
+      "evidence": [
+        "const holder = aliveInvestigators(state).find(inv => inv.assets.some(asset => asset.code === '02305'))",
+        "const asset = holder.assets.find(item => item.code === '02305')"
+      ]
+    },
+    {
+      "code": "02308",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        3088
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const aquinnah = inv.assets.find(asset => ['01082', '02308'].includes(asset.code) && !asset.exhausted)"
+      ]
+    },
+    {
+      "code": "02309",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 1,
+      "lines": [
+        8059
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const id = candidates.length === 1 ? '0' : requestChoice(state, { kind: 'card', source: '02309', seat,"
+      ]
+    },
+    {
+      "code": "02310",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 3,
+      "lines": [
+        8072,
+        8075,
+        8078
+      ],
+      "inEffects": true,
+      "evidence": [
+        "const asset = inv.assets.find(item => item.code === '02310')",
+        "const first = requestChoice(state, { kind: 'target', source: '02310', seat,"
+      ]
+    },
+    {
+      "code": "02320",
+      "shape": "condition",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属"
+      ],
+      "occurrences": 1,
+      "lines": [
+        5143
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const destination = state.locations.find(loc => loc.originalCode === '02320' && loc.id !== id)"
+      ]
+    },
+    {
+      "code": "03001",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        4455
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (s.homeFront && inv.code === '03001' && inv.damage > out.homeFrontDamage && state.skillTest?.source?.enemyId) {"
+      ]
+    },
+    {
+      "code": "03002",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "C1 布尔修正",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 4,
+      "lines": [
+        3535,
+        3618,
+        3660,
+        4251
+      ],
+      "inEffects": false,
+      "evidence": [
+        "for (const minh of aliveInvestigators(state).filter(owner => owner.code === '03002'",
+        "&& other.code === '03002' && other.assets.some(asset => asset.code === '03010'))"
+      ]
+    },
+    {
+      "code": "03003",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "C1 布尔修正",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 3,
+      "lines": [
+        700,
+        9003,
+        9009
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const target = inv.code === '03003' ? 13 : 5",
+        "if ((noMulligan || inv.cannotMulligan) && inv.code !== '03003') {"
+      ]
+    },
+    {
+      "code": "03004",
+      "shape": "block",
+      "class": "A",
+      "needs": [],
+      "occurrences": 1,
+      "lines": [
+        656
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (inv.code === '03004' && ['charge', 'charges'].includes(String(asset.usesType || '').toLowerCase())) {"
+      ]
+    },
+    {
+      "code": "03006",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        1713,
+        9043
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (inv.code !== '03006') return true",
+        "if (inv.code === '03006' && !inv.role) {"
+      ]
+    },
+    {
+      "code": "03007",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        10196
+      ],
+      "inEffects": false,
+      "evidence": [
+        "info(state, events, `「${cardName('03007')}」：从 ${inv.name} 身上移动 ${movedDamage} 点伤害到「${enemy.name}」。`)"
+      ]
+    },
+    {
+      "code": "03010",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "C1 布尔修正",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 3,
+      "lines": [
+        3618,
+        3724,
+        3726
+      ],
+      "inEffects": true,
+      "evidence": [
+        "&& other.code === '03002' && other.assets.some(asset => asset.code === '03010'))",
+        "const analyticalMind = owner.assets.find(asset => asset.code === '03010' && !asset.exhausted)"
+      ]
+    },
+    {
+      "code": "03011",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        3660,
+        4252
+      ],
+      "inEffects": true,
+      "evidence": [
+        "const kingInYellow = owner.code === '03002' && owner.threat.some(card => card.code === '03011')",
+        "const king = minh.threat.find(card => card.code === '03011')"
+      ]
+    },
+    {
+      "code": "03012",
+      "shape": "condition",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "C1 布尔修正",
+        "C3 费用表达式",
+        "B6 区域附属"
+      ],
+      "occurrences": 7,
+      "lines": [
+        2836,
+        2957,
+        9013,
+        9371,
+        9538,
+        11578,
+        12185
+      ],
+      "inEffects": true,
+      "evidence": [
+        "const handCandidates = inv.hand.flatMap((code, index) => code === '03012'",
+        "if (copyCode && code === '03012') {"
+      ]
+    },
+    {
+      "code": "03014",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 3,
+      "lines": [
+        7244,
+        7247,
+        7258
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaInvestigator"
+      ],
+      "evidence": [
+        "const targetId = requestChoice(state, { kind: 'target', source: '03014', seat,",
+        "const mode = requestChoice(state, { kind: 'effect', source: '03014', seat,"
+      ]
+    },
+    {
+      "code": "03015",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 3,
+      "lines": [
+        1279,
+        7266,
+        7272
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaInvestigator"
+      ],
+      "evidence": [
+        "const angeredSpirits = inv.threat.find(card => card.code === '03015')",
+        "const targetId = requestChoice(state, { kind: 'target', source: '03015', seat,"
+      ]
+    },
+    {
+      "code": "03016",
+      "shape": "condition",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "C3 费用表达式"
+      ],
+      "occurrences": 2,
+      "lines": [
+        7315,
+        7316
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaInvestigator"
+      ],
+      "evidence": [
+        "state._reaction.eventToVictory = '03016'",
+        "info(state, events, `「${cardName('03016')}」将「${enemy.name}」和自身加入胜利区。`)"
+      ]
+    },
+    {
+      "code": "03017",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        2908
+      ],
+      "inEffects": true,
+      "evidence": [
+        "return state.enemies.some(enemy => enemy.code === '03017' && enemy.engagedSeat === inv.seat && !enemyTextBlanked(state, "
+      ]
+    },
+    {
+      "code": "03018",
+      "shape": "condition",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "C3 费用表达式",
+        "B6 区域附属"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7325
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaInvestigator"
+      ],
+      "evidence": [
+        "const role = chooseLolaRole(state, inv, '03018', '选择即兴表演要切换到的角色。')"
+      ]
+    },
+    {
+      "code": "03033",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "C3 费用表达式"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7089
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "evidence": [
+        "const code = requestChoice(state, { kind: 'card', source: '03033', seat,"
+      ]
+    },
+    {
+      "code": "03038",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        4555,
+        5592
+      ],
+      "inEffects": false,
+      "evidence": [
+        "enemy.hidingSpotAloof = !enemy.elite && attachments.some(item => item.code === '03038' && item.location === enemy.locati",
+        "if (attachment.code === '03038'"
+      ]
+    },
+    {
+      "code": "03042",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        2450
+      ],
+      "inEffects": true,
+      "evidence": [
+        "if (def.code === '03042') {"
+      ]
+    },
+    {
+      "code": "03059",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 2,
+      "lines": [
+        1291,
+        4756
+      ],
+      "inEffects": false,
+      "evidence": [
+        "code: '03059',",
+        "if ((enemy.originalCode || enemy.code) === '03059') {"
+      ]
+    },
+    {
+      "code": "03106",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "C3 费用表达式"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7101
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "evidence": [
+        "enemyAttack(state, enemy, inv, events, cardName('03106'), { kind: 'effect' })"
+      ]
+    },
+    {
+      "code": "03148",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        4557,
+        5598
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const ambush = spawned && attachments.find(item => item.code === '03148' && item.location === enemy.location)",
+        "if (attachment.code === '03148'"
+      ]
+    },
+    {
+      "code": "03149",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "C3 费用表达式",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 4,
+      "lines": [
+        11916,
+        11920,
+        11927,
+        11940
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "evidence": [
+        "&& other.assets.some(asset => asset.code === '03149' && asset.itemDiscountAtLocation",
+        "const asset = holder.assets.find(item => item.code === '03149' && item.itemDiscountAtLocation"
+      ]
+    },
+    {
+      "code": "03158",
+      "shape": "condition",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "C3 费用表达式"
+      ],
+      "occurrences": 2,
+      "lines": [
+        7118,
+        7123
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "evidence": [
+        ".some(trait => String(trait).toLowerCase() === 'ally')), '03158', '选择返回手牌的盟友。')",
+        "searchTop(state, seat, { amount: 9, trait: 'Ally', source: '03158' }, events)"
+      ]
+    },
+    {
+      "code": "03193",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        10055
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const enemy = targets.length === 1 ? targets[0] : chooseEnemyFrom(state, seat, targets, '03193')"
+      ]
+    },
+    {
+      "code": "03195",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7133
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const answer = successBy >= 2 ? 'both' : requestChoice(state, { kind: 'effect', source: '03195', seat,"
+      ]
+    },
+    {
+      "code": "03199",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        4565
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const snare = attachments.find(item => item.code === '03199' && item.location === enemy.location && !enemy.elite)"
+      ]
+    },
+    {
+      "code": "03232",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "C1 布尔修正",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 3,
+      "lines": [
+        9789,
+        11548,
+        12315
+      ],
+      "inEffects": false,
+      "evidence": [
+        "item.code === '03232' && item.location === inv.location && !item.exhausted)",
+        "if (attachment.code !== '03232' || attachment.location !== inv.location || attachment.exhausted) continue"
+      ]
+    },
+    {
+      "code": "03238",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 1,
+      "lines": [
+        10956
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const answer = requestChoice(state, { kind: 'card', source: '03238', seat, prompt: '选择弃牌堆中的盟友。',"
+      ]
+    },
+    {
+      "code": "03263",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7145
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "evidence": [
+        "const id = requestChoice(state, { kind: 'enemy', source: '03263', seat,"
+      ]
+    },
+    {
+      "code": "03264",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "C6 历史记录",
+        "D1 非玩家通道",
+        "C1 布尔修正",
+        "C3 费用表达式",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 7,
+      "lines": [
+        2843,
+        2934,
+        7042,
+        8898,
+        9381,
+        11635,
+        12201
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "evidence": [
+        "const planCandidates = inv.assets.filter(asset => asset.code === '03264' && !asset.exhausted)",
+        "const plan = fromPlanAssetId && inv.assets.find(asset => asset.id === fromPlanAssetId && asset.code === '03264')"
+      ]
+    },
+    {
+      "code": "03304",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 2,
+      "lines": [
+        3853,
+        7166
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "evidence": [
+        "const chosen = requestChoice(state, { kind: 'token', source: '03304', seat,",
+        "const amount = Number(requestChoice(state, { kind: 'amount', source: '03304', seat, prompt: '选择额外花费的弹药。',"
+      ]
+    },
+    {
+      "code": "03306",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "B6 区域附属"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7186
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "evidence": [
+        "const answer = requestChoice(state, { kind: 'card', source: '03306', seat, prompt: '选择要复制的洞察事件。',"
+      ]
+    },
+    {
+      "code": "03308",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        1363
+      ],
+      "inEffects": true,
+      "evidence": [
+        "const obol = inv.assets.find(asset => asset.code === '03308')"
+      ]
+    },
+    {
+      "code": "03310",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "C6 历史记录",
+        "B6 区域附属"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7203
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "evidence": [
+        "const destination = requestChoice(state, { kind: 'location', source: '03310', seat, prompt: '选择没有敌人的已揭示地点。',"
+      ]
+    },
+    {
+      "code": "03311",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "C6 历史记录",
+        "B6 区域附属"
+      ],
+      "occurrences": 2,
+      "lines": [
+        8897,
+        8898
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "carcosaPlayer"
+      ],
+      "evidence": [
+        "&& aliveInvestigators(state).some(owner => owner.hand.includes('03311')",
+        "|| owner.assets.some(asset => asset.code === '03264' && (asset.attached || []).includes('03311')))"
+      ]
+    },
+    {
+      "code": "04001",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "C3 费用表达式"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7365
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const chosen = requestChoice(state, { kind: 'target', source: '04001', seat,"
+      ]
+    },
+    {
+      "code": "04004",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        3958,
+        3962
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const mateo = aliveInvestigators(state).find(owner => owner.code === '04004'",
+        "const answer = requestChoice(state, { kind: 'reaction', source: '04004', seat: mateo.seat, canSkip: true,"
+      ]
+    },
+    {
+      "code": "04010",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 3,
+      "lines": [
+        7387,
+        7392,
+        7400
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "tfaInvestigator"
+      ],
+      "evidence": [
+        "const zone = requestChoice(state, { kind: 'effect', source: '04010', seat,",
+        "const chosen = requestChoice(state, { kind: 'target', source: '04010', seat,"
+      ]
+    },
+    {
+      "code": "04020",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        10011,
+        10178
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const trustedFreshBonus = (trustedHost?.attachments || []).some(entry => entry.code === '04020') ? 1 : 0",
+        "const trustedBonus = (trustedHost?.attachments || []).some(entry => entry.code === '04020') ? 1 : 0"
+      ]
+    },
+    {
+      "code": "04021",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 3,
+      "lines": [
+        7737,
+        7750,
+        7757
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const host = inv.assets.find(asset => asset.code === '04021')",
+        "const chosen = relics.length === 1 ? relics[0] : requestChoice(state, { kind: 'search', source: '04021', seat,"
+      ]
+    },
+    {
+      "code": "04022",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        10046
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const stone = inv.assets.find(asset => asset.code === '04022')"
+      ]
+    },
+    {
+      "code": "04029",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        10402
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const answer = requestChoice(state, { kind: 'move', source: '04029', seat, canSkip: true,"
+      ]
+    },
+    {
+      "code": "04037",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "C1 布尔修正",
+        "C3 费用表达式",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 9,
+      "lines": [
+        7635,
+        7637,
+        7649,
+        7666,
+        7762,
+        9396,
+        9401,
+        11599,
+        12204
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "evidence": [
+        "const bag = inv.assets.find(asset => asset.code === '04037')",
+        "const spec = EFFECTS['04037']?.backpack || { search: 6, keep: 3, traits: ['Item', 'Supply'] }"
+      ]
+    },
+    {
+      "code": "04038",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        2516
+      ],
+      "inEffects": true,
+      "evidence": [
+        "inv.discard.push('04038')"
+      ]
+    },
+    {
+      "code": "04041",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        2525
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (inv.weaknessCounters.impendingDoom > 1) swapWeakness(def.code, '04041')"
+      ]
+    },
+    {
+      "code": "04042",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        2533
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (inv.weaknessCounters.cursedFate > 1) swapWeakness(def.code, '04042')"
+      ]
+    },
+    {
+      "code": "04061",
+      "shape": "condition",
+      "class": "A",
+      "needs": [],
+      "occurrences": 1,
+      "lines": [
+        1848
+      ],
+      "inEffects": false,
+      "evidence": [
+        "code: code || previous?.code || '04061',"
+      ]
+    },
+    {
+      "code": "04110",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "C1 布尔修正"
+      ],
+      "occurrences": 1,
+      "lines": [
+        3993
+      ],
+      "inEffects": true,
+      "evidence": [
+        "info(state, events, `「${cardName('04110')}」取消了 ${tokenLabel(token)}。`)"
+      ]
+    },
+    {
+      "code": "04142",
+      "shape": "condition",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "C3 费用表达式"
+      ],
+      "occurrences": 1,
+      "lines": [
+        11904
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const relicDiscount = loc && ['04142'].includes(String(loc.originalCode || loc.code))"
+      ]
+    },
+    {
+      "code": "04147",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        4764,
+        4769
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const ichtaca = holder.assets.find(asset => asset.code === '04147'",
+        "kind: 'reaction', source: '04147', seat: holder.seat, canSkip: true,"
+      ]
+    },
+    {
+      "code": "04157",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 1,
+      "lines": [
+        7626
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const chosen = candidates.length === 1 ? candidates[0].id : requestChoice(state, { kind: 'target', source: '04157', seat"
+      ]
+    },
+    {
+      "code": "04158",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        7528,
+        7534
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const asset = inv.assets.find(item => item.code === '04158' && !item.exhausted)",
+        "info(state, events, `🔮 ${inv.name} 用「${cardName('04158')}」指定了 ${tokenLabel(state.skillTest.namedToken.token)}。`)"
+      ]
+    },
+    {
+      "code": "04159",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举"
+      ],
+      "occurrences": 2,
+      "lines": [
+        7541,
+        7546
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const chosen = committed.length === 1 ? committed[0].code : requestChoice(state, { kind: 'card', source: '04159', seat,",
+        "info(state, events, `「${cardName('04159')}」把「${cardName(entry.code)}」返回 ${inv.name} 的手牌。`)"
+      ]
+    },
+    {
+      "code": "04191",
+      "shape": "block",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        7700,
+        7703
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "evidence": [
+        "const relic = inv.assets.find(asset => asset.code === '04191')",
+        "const picked = requestChoice(state, { kind: 'skill', source: '04191', seat,"
+      ]
+    },
+    {
+      "code": "04193",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 1,
+      "lines": [
+        10246
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if ((inv.assets.find(item => item.id === opts.assetId)?.attachments || []).some(entry => entry.code === '04193')"
+      ]
+    },
+    {
+      "code": "04199",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 4,
+      "lines": [
+        7421,
+        7429,
+        7555,
+        7565
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "evidence": [
+        "const premonition = inv.assets.find(asset => asset.code === '04199' && asset.tfaSealedToken)",
+        "info(state, events, `「${cardName('04199')}」改为结算封印的 ${tokenLabel(token)}，随后被弃掉。`)"
+      ]
+    },
+    {
+      "code": "04230",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 3,
+      "lines": [
+        2354,
+        2357,
+        2368
+      ],
+      "inEffects": true,
+      "evidence": [
+        "for (const code of ['04230', '04231']) {",
+        "if (code === '04230' && !state.enemies.some(enemy => enemy.location === inv.location)) continue"
+      ]
+    },
+    {
+      "code": "04231",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 2,
+      "lines": [
+        2354,
+        2358
+      ],
+      "inEffects": true,
+      "evidence": [
+        "for (const code of ['04230', '04231']) {",
+        "if (code === '04231') {"
+      ]
+    },
+    {
+      "code": "04236",
+      "shape": "block",
+      "class": "A",
+      "needs": [
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 3,
+      "lines": [
+        7488,
+        7490,
+        7495
+      ],
+      "inEffects": true,
+      "evidence": [
+        "const own = inv.assets.filter(asset => asset.code === '04236')",
+        "const ally = inv.assets.some(asset => asset.code !== '04236' && normalizedSlots(cardDef(asset.code)).includes('ally'))"
+      ]
+    },
+    {
+      "code": "04265",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 2,
+      "lines": [
+        5448,
+        5747
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const cuffed = (card.attachments || []).some(attachment => (attachment.originalCode || attachment.code) === '04265')",
+        "} else if (enemy.attachments?.some(entry => entry.code === '04265') && !enemy.elite) {"
+      ]
+    },
+    {
+      "code": "04270",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "D1 非玩家通道",
+        "B6 区域附属",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 5,
+      "lines": [
+        7783,
+        7785,
+        7787,
+        7794,
+        10002
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "evidence": [
+        "const key = inv.assets.find(asset => asset.code === '04270')",
+        "const attachedHere = (here?.attachments || []).find(entry => entry.code === '04270')"
+      ]
+    },
+    {
+      "code": "04305",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        10265
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const spread = engaged.length > 1 && requestChoice(state, { kind: 'effect', source: '04305', seat,"
+      ]
+    },
+    {
+      "code": "04308",
+      "shape": "block",
+      "class": "A",
+      "needs": [
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 4,
+      "lines": [
+        7501,
+        7505,
+        7573,
+        7577
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "evidence": [
+        "for (const asset of inv.assets.filter(item => item.code === '04308' && (item.clicks || 0) > 0)) {",
+        "info(state, events, `⏳ 「${cardName('04308')}」移除 ${clicks} 声滴答，${inv.name} 本回合获得 ${clicks} 次额外行动。`)"
+      ]
+    },
+    {
+      "code": "04310",
+      "shape": "block",
+      "class": "C",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道",
+        "C1 布尔修正",
+        "ctx.api 薄包装"
+      ],
+      "occurrences": 5,
+      "lines": [
+        7582,
+        7589,
+        7596,
+        7601,
+        10226
+      ],
+      "inEffects": true,
+      "escapePrimitives": [
+        "tfaPlayer"
+      ],
+      "evidence": [
+        "const shards = inv.assets.find(item => item.code === '04310')",
+        "info(state, events, `「${cardName('04310')}」花费 1 充能（剩 ${shards.uses}）。`)"
+      ]
+    },
+    {
+      "code": "04312",
+      "shape": "reference",
+      "class": "A",
+      "needs": [
+        "B1 目标枚举",
+        "D1 非玩家通道"
+      ],
+      "occurrences": 2,
+      "lines": [
+        10460,
+        10465
+      ],
+      "inEffects": false,
+      "evidence": [
+        "const chosen = extra.length === 1 ? extra[0].id : requestChoice(state, { kind: 'target', source: '04312', seat,",
+        "info(state, events, `💨 「${cardName('04312')}」额外躲避了「${second.name}」。`)"
+      ]
+    },
+    {
+      "code": "04318",
+      "shape": "condition",
+      "class": "B",
+      "needs": [
+        "D1 非玩家通道"
+      ],
+      "occurrences": 1,
+      "lines": [
+        2794
+      ],
+      "inEffects": false,
+      "evidence": [
+        "if (!picked && !empty.length && actCode === '04318') {"
+      ]
+    }
+  ]
+}

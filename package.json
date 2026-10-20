@@ -60,6 +60,16 @@
     "evaluate:ai": "node tools/evaluate-ai.mjs",
     "audit:p6": "node tools/audit-p6.mjs --check",
     "audit:p6:write": "node tools/audit-p6.mjs --write",
+    "cards:audit": "node tools/audit-abilities.mjs --check",
+    "cards:audit:write": "node tools/audit-abilities.mjs --write",
+    "cards:migrate": "node tools/cards-migrate.mjs",
+    "cards:migrate:list": "node tools/migrate-card.mjs --list",
+    "cards:scaffold": "node tools/scaffold-card.mjs",
+    "replay:fixtures": "node tools/replay-fixtures.mjs --check",
+    "replay:fixtures:write": "node tools/replay-fixtures.mjs --write",
+    "replay:fixtures:verify": "node tools/replay-fixtures.mjs --verify",
+    "cards:workorder": "node tools/audit-workorder.mjs --check",
+    "cards:workorder:write": "node tools/audit-workorder.mjs --write",
     "test:audit": "node --test tests/audit-resources.test.mjs",
     "test:browser": "node tools/run-p7.mjs --browser-only",
     "pretest:browser": "node ../../tools/require-playwright-browsers.mjs",
@@ -81,7 +91,8 @@
     "images:translate:verify": "node tools/translate-images.mjs --verify",
     "music:upload": "node tools/upload-music.mjs",
     "test:p7": "node tools/run-p7.mjs",
-    "test:release": "node tools/run-p7.mjs --release"
+    "test:release": "node tools/run-p7.mjs --release",
+    "cards:dead-code": "node tools/audit-dead-primitives.mjs --check"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

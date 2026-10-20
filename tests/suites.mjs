@@ -16,6 +16,17 @@ export const FAST_TESTS = Object.freeze([
   'state-presentation.test.mjs', // 0.7
   'attack-style.test.mjs', // 0.7
   'rules-n3.test.mjs', // 3.4
+  'ability-layer.test.mjs', // 0.9
+  'architecture-guard.test.mjs', // 0.1
+  'card-lifecycle.test.mjs', // 0.3
+  'phase1-state.test.mjs', // 1.2 —— A1 效果实体 / B1 目标枚举 / playCondition / schema v7
+  'phase2-primitives.test.mjs', // 1.3 —— C1-C4 语义原语 / B2-B6 / 逃生卡迁移门禁
+  'phase3-content.test.mjs', // 1.3 —— D1 非玩家卡通道 / D3 剧本声明 / D4 战役结果声明
+  'migration-tools.test.mjs', // 0.5 —— Phase 5 迁移账本 / 读点一致 / 工具纯函数
+  'card-rules.test.mjs', // 0.1 —— Phase 5（5a）卡号级规则数据读点
+  'phase5-migration.test.mjs', // 1.2 —— 5c 逃生卡改写后的行为（地点附属 / 连抽遭遇 / 检索）
+  'replay.test.mjs', // 4.2 —— 日志/指纹/重放/撤销的契约（含 4 局随机走子）
+  'replay-golden.test.mjs', // 11.2 —— golden replay 基线（4 战役 / 5 关卡 / 529 步逐步指纹）
   'decision-http.test.mjs', // 1.7
   'ai-completion.test.mjs', // 1.6
   'ai-story.test.mjs', // 0.8
@@ -92,6 +103,7 @@ export const FAST_TESTS = Object.freeze([
 
 export const SLOW_TESTS = Object.freeze([
   'campaign-n4.test.mjs', // 130.3 —— 单个文件占了整套回归的 40%
+  'replay-fuzz.test.mjs', // 71.7 —— Phase 4 门禁：100 局随机对局重放 + 5,000 步随机走子器
   'decision-invariants.test.mjs', // 13.4
   'dunwich-rules.test.mjs', // 9.0
   'p2-hub-http.test.mjs', // 7.3

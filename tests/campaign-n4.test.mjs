@@ -8,7 +8,7 @@ import { buildDeckFromList } from '../src/deck/deckbuilding.js'
 import { availablePurchases, purchaseCard, upgradeCost, campaignCardChange, updateCampaignStatus } from '../src/campaign/campaign.js'
 import { viewState } from '../src/integration/observation.js'
 import { resolveTransaction, resolutionCheckpoint } from '../src/engine/resolution.js'
-import { RULES_VERSION } from '../src/engine/rules-state.js'
+import { RULES_VERSION, STATE_SCHEMA_VERSION } from '../src/engine/rules-state.js'
 
 const clone = value => JSON.parse(JSON.stringify(value))
 function move(state, command) {
@@ -85,7 +85,7 @@ test('N4 检查点后续发生异常时整条命令仍原子回滚', () => {
 
 test('N4 开局固定持久牌组，观察者只见本人无序清单，不见他人牌组和升级明细', () => {
   const state = game('01001', 4)
-  assert.equal(state.schemaVersion, 6)
+  assert.equal(state.schemaVersion, STATE_SCHEMA_VERSION)
   assert.equal(state.rulesVersion, RULES_VERSION)
   for (const inv of state.investigators) {
     const record = state.campaign.investigators[inv.seat]

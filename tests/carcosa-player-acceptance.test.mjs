@@ -6,15 +6,19 @@ import { EFFECTS } from '../src/cards/card-effects.js'
 import { replacementOptions } from '../src/campaign/campaign.js'
 import { effectDefinitionError } from '../src/engine/effects.js'
 import { getStat } from '../src/engine/engine.js'
+import { expireEffects } from '../src/engine/effect-state.js'
 import { getAvailability } from '../src/deck/availability.js'
+import { registeredEntry } from '../src/engine/ability.js'
 import { effects, manifest } from '../content/packs/carcosaPlayer/manifest.js'
 
 const codes = manifest.cards.map(card => card.code).sort()
 const basicWeaknesses = new Set(manifest.basicWeaknessCodes)
+// Phase 2：9 张卡的行为已迁到能力层描述子，本包的 effects 表不再包含它们。
+const abilityLayer = new Set(manifest.abilityLayerCodes)
 
 assert.equal(codes.length, 95)
-assert.equal(Object.keys(effects).length, 95)
-assert.deepEqual(Object.keys(effects).sort(), codes)
+assert.equal(Object.keys(effects).length + abilityLayer.size, 95)
+assert.deepEqual([...Object.keys(effects), ...abilityLayer].sort(), codes)
 
 function effectNodes(effect) {
   return [
@@ -28,9 +32,22 @@ function effectNodes(effect) {
 for (const code of codes) {
   test(`Carcosa ${code} ${ALL_CARDS[code].nameZh || ALL_CARDS[code].name} 主要印刷效果契约可执行`, () => {
     const card = ALL_CARDS[code]
-    const effect = EFFECTS[code]
     const inventory = manifest.cards.find(item => item.code === code)
     assert.ok(card)
+    // Phase 2：这一批卡的行为在能力层（描述子）里，本包不再有 EFFECTS 条目。
+    if (abilityLayer.has(code)) {
+      const entry = registeredEntry(code)
+      assert.equal(EFFECTS[code], undefined, '迁移后不应再有旧 DSL 条目')
+      assert.ok(entry && (entry.abilities.length || entry.modifiers.length || entry.freeTriggers.length
+        || entry.passive),
+        '能力层条目必须存在（描述子 / 修正 / 天赋档位 / 被动至少一项）')
+      assert.equal(inventory.rulesImplemented, true)
+      assert.equal(getAvailability(code).availability, 'strict')
+      // 基础弱点也走能力层（迁移后不再是 effects 条目），但它们不参与构筑。
+      assert.equal(getAvailability(code).deckbuilding, !basicWeaknesses.has(code))
+      return
+    }
+    const effect = EFFECTS[code]
     assert.equal(effect, effects[code])
     assert.equal(inventory.rulesImplemented, true)
     assert.equal(getAvailability(code).availability, 'strict')
@@ -198,7 +215,8 @@ test('C2 conditional and temporary stat modifiers are applied and expire on thei
   move(state, { action: 'play', cardId: '03155' })
   settle(state)
   assert.equal(getStat(state, state.investigators[0], 'combat'), state.investigators[0].combat + 3)
-  state.round++
+  // Phase 1（A1）：临时修正到期只走统一过期点（不再靠 round 比较隐式失效）。
+  expireEffects(state, 'endOfRound')
   assert.equal(getStat(state, state.investigators[0], 'combat'), state.investigators[0].combat)
 })
 
