@@ -24,7 +24,7 @@
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
-      "sha256": "4cbe55bfd198f1ddedac3d6dca1b0b4624a6e5456bd1ae869d4a7295ef7dddc5"
+      "sha256": "7419b9020671a2417bf280031512b51e51e940498faa4d72439f8c11cb2cf2eb"
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",

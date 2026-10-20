@@ -140,6 +140,10 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'cardPlan',
   // Phase 5（5c-39）：手上有（或附属在计划里）这张牌时，动作前要留时间曲折快照。
   'rewindAction',
+  // Phase 5（5b-8）：安奎娜这类「把这次攻击转给另一个敌人」的支援；读点在 tryAquinnahRedirect。
+  'redirectAttackToAsset',
+  // Phase 5（5b-8）：神话阶段结束时弃掉这张支援（戴红手套的男子）；读点在 mythosPhase。
+  'forcedMythosEndDiscard',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -360,6 +364,9 @@ export function registerCardAbilities(entries) {
       // Phase 5（5c-39）：attached 可以当手牌打出（原定计划）与「动作前留回滚快照」。
       cardPlan: entry.cardPlan === true,
       rewindAction: entry.rewindAction === true,
+      // Phase 5（5b-8）：攻击转移支援 / 神话结束弃掉。
+      redirectAttackToAsset: entry.redirectAttackToAsset === true,
+      forcedMythosEndDiscard: entry.forcedMythosEndDiscard === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

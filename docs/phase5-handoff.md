@@ -12,8 +12,8 @@
 
 ## 1. 一句话现状
 
-迁移工具链已交付，**329 张卡**迁到能力层（55 个批次），`EFFECTS` 385 → **65**、
-通道 legacy 286 → **59**、descriptor 75 → **396**、**逃生卡 93 → 0（5c 完成）**、**引擎卡号 166 → 105**。
+迁移工具链已交付，**331 张卡**迁到能力层（56 个批次），`EFFECTS` 385 → **63**、
+通道 legacy 286 → **57**、descriptor 75 → **398**、**逃生卡 93 → 0（5c 完成）**、**引擎卡号 166 → 102**。
 `replay` 基线逐条不变、`fast` 无新增失败。**5c 已完成；5b 尾部（反应 2 / 非 stats 被动 8 / 打出后去向）与 5a 引擎卡号分支仍未完成。**
 
 ---
@@ -62,7 +62,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 | 文档 | 本文 + `phase5-migration.md`（批次证据与踩坑记录）+ `card-model.md`（加卡流程） |
 
 批次：5b-1…5b-5（机械 154）、5b-6/6b/6c/6d/7/8a/8b/9/10/11（反应/天赋/被动/规则字段/封印附属 46）、
-5c-1…5c-39（逃生卡 93 = 全部）、5a-1…5a-5（引擎侧 18 个码）。
+5c-1…5c-39（逃生卡 93 = 全部）、5b-8（3 张）、5a-1…5a-5（引擎侧 18 个码）。
 
 ---
 
@@ -93,7 +93,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 ⑤ replay --compare + 该战役验收用例
 ```
 
-### 4.2 5a 剩余 105 个码（`condition` 27 / `block` 50 / `reference` 28 / `table` 0）
+### 4.2 5a 剩余 102 个码（`condition` 25 / `block` 49 / `reference` 28 / `table` 0）
 
 - **`reference`（30）**：多数是 `requestChoice({ source: '0xxxx' })` 的来源标签——它会进状态指纹，
   改法本身会改变 replay，**归 Phase 6 与 UI 文案一起处理**，不要单独动。
@@ -108,8 +108,8 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 
 | 组 | 数量 | 卡点 |
 | --- | --- | --- |
-| `reactions` | 2 | `01082`（`cost.assetHorror` 引擎从未付费，既有 bug）、`02310`（需要 `forcedMythosEndDiscard` 钩子） |
-| 非 `stats` 的 `passive` | 8 | `02110/03264/03308`（永久卡）、`03010`（analyticalMind 特判）、`01018/01027/01028`（`discardSelf`/`assetDamage` 费用）、`03143`（剧情资产，要走非玩家通道） |
+| `reactions` | 0 ✅ | 5b-8 完成：`01082` / `02308` 的死反应删除并改成条目级 `redirectAttackToAsset`；`02310` 改 `entersPlay` + 条目级 `forcedMythosEndDiscard` |
+| 非 `stats` 的 `passive` | 5 | `02110` / `03308`（`campaign` 数据体）、`01018/01027/01028`（`discardSelf`/`assetDamage` 费用）、`03143`（剧情资产，要走非玩家通道） |
 
 ---
 

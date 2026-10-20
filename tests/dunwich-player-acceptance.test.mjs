@@ -115,9 +115,10 @@ const contracts = {
   '02305': ['phaseControl', true],
   '02306': ['uses', 4, 'abilities.0.effect', { type: 'fight', skill: 'willpower', combatBonus: 3, damageBonus: 2, onChaosSymbolHorror: 2 }],
   '02307': ['reaction', { when: 'encounterDrawn', nonWeaknessOnly: true }, 'event', { type: 'cancelTreachery', horror: 1 }],
-  '02308': ['reactions.0', { when: 'enemyAttack', cost: { exhaust: true, horror: 1 }, effect: { type: 'aquinnahRedirect' } }],
+  // Phase 5（5b-8）：02308 / 02310 已迁到能力层——攻击转移与入场自选技能不再是旧 reaction 数据。
+  '02308': ['redirectAttackToAsset', true],
+  '02310': ['fast', true, 'forcedMythosEndDiscard', true, 'entersPlay.0.label', '入场：选择两项技能，其基础值提升为 6'],
   '02309': ['reactions.0', { when: 'skillTestFail', cost: { exhaust: true }, effect: { type: 'returnCommittedSkill' } }],
-  '02310': ['fast', true, 'reactions.0.effect.type', 'redGlovedManSkills', 'forcedMythosEndDiscard', true],
 }
 
 function atPath(value, path) {
@@ -188,6 +189,7 @@ function behaviorOf(code) {
   }
   if (!legacy && !played && !commit && !weakness && !entry?.passive
     && !entry?.healSelfHorrorAfterTurn && !entry?.forcedUpkeepPayOrDiscard && !entry?.defeatedDamage && !entry?.freeTriggers?.length && !entry?.fast
+    && !entry?.redirectAttackToAsset && !entry?.forcedMythosEndDiscard
     && !fromDescriptors.length && !fromReactions.length && !Object.keys(stats).length
     && !playCondition?.length) return null
   const merged = {
@@ -206,12 +208,20 @@ function behaviorOf(code) {
     ...(entry?.minimumHandForBoost != null ? { minimumHandForBoost: entry.minimumHandForBoost } : {}),
     ...(entry?.composure ? { composure: true } : {}),
     ...(entry?.fast ? { fast: true } : {}),
+    // Phase 5（5b-8）：攻击转移支援与「神话结束弃掉」也折叠进同一份形状。
+    ...(entry?.redirectAttackToAsset ? { redirectAttackToAsset: true } : {}),
+    ...(entry?.forcedMythosEndDiscard ? { forcedMythosEndDiscard: true } : {}),
     ...(entry?.uses != null ? { uses: entry.uses } : {}),
     ...(entry?.usesType ? { usesType: entry.usesType } : {}),
     ...(playCondition?.length ? { playCondition } : {}),
   }
   if (fromDescriptors.length) merged.abilities = [...(legacy?.abilities || []), ...fromDescriptors]
   if (fromReactions.length) merged.reactions = [...(legacy?.reactions || []), ...fromReactions]
+  // Phase 5（5b-8）：入场钩子（原 reactions.when = 'assetEnteredPlay'）折叠成 entersPlay 槽位。
+  const fromEnterPlay = (entry?.abilities || [])
+    .filter(descriptor => descriptor.kind === 'entersPlay')
+    .map(descriptor => ({ label: descriptor.label }))
+  if (fromEnterPlay.length) merged.entersPlay = fromEnterPlay
   // 快速反应事件迁走后：trigger → reaction.when，effect 数据体 → event（只补空缺，不覆盖已折叠的 played）。
   const playedDescriptor = entry?.abilities?.find(item => item.kind === 'played')
   if (playedDescriptor?.trigger?.length && !merged.reaction) merged.reaction = { when: playedDescriptor.trigger[0] }

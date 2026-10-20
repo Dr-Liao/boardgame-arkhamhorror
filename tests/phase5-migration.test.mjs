@@ -684,6 +684,37 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5b-8：攻击转移 / 入场自选技能 / 神话结束弃掉（01082、02310）----
+
+test('5b-8：01082 安奎娜把敌人攻击转移给另一个敌人；02310 入场自选两项技能', () => {
+  // 01082：横置 + 1 点恐惧，攻击伤害转给另一个敌人。
+  const state = fixture()
+  const aquinnah = asset(state, '01082')
+  enemy(state, { engagedSeat: 0, damage: 2, horror: 1, health: 10 })
+  const other = enemy(state, { engagedSeat: 0, health: 10 })
+  state.chaosBag = ['0']
+  move(state, { action: 'draw' })
+  settle(state, pending => {
+    if (pending.prompt?.includes('转移')) return 'trigger'
+    if (pending.kind === 'target' && pending.options?.some(option => option.id === other.id)) return other.id
+    return null
+  })
+  const live = state.investigators[0].assets.find(item => item.id === aquinnah.id)
+  assert.equal(live?.exhausted, true, '横置支付费用')
+  assert.equal(live?.horror, 1, '放 1 点恐惧')
+  assert.equal(state.enemies.find(item => item.id === other.id)?.damageTaken, 2, '伤害转给另一个敌人')
+  assert.equal(state.investigators[0].damage, 0, '自己不受伤害')
+
+  // 02310：入场时选两项技能，基础值提升为 6。
+  const second = fixture()
+  second.investigators[0].hand = ['02310']
+  second.investigators[0].resources = 10
+  play(second, '02310')
+  settle(second, pending => (pending.kind === 'target' ? pending.options[0].id : null))
+  const gloves = second.investigators[0].assets.find(item => item.code === '02310')
+  assert.deepEqual(gloves?.statOverride, ['willpower', 'intellect'], '记下两项技能')
+})
+
 // ---- 5c-39：把事件附属到支援上并从那里打出（03264 原定计划）----
 
 test('5c-39：03264 原定计划的附属事件能像手牌一样打出（cardPlan 读点）', () => {

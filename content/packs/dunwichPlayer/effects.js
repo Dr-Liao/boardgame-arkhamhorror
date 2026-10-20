@@ -22,5 +22,5 @@ export const effects = {
   '02261': { fast: true, reaction: { when: 'harmDealt' }, event: { type: 'cancelHarmGainResources', maximum: 5 } },
   '02305': { phaseControl: true },
   '02307': { fast: true, reaction: { when: 'encounterDrawn', nonWeaknessOnly: true }, event: { type: 'cancelTreachery', horror: 1 } },
-  '02310': { fast: true, reactions: [{ id: 'redGlovedMan', when: 'assetEnteredPlay', assetCode: '02310', effect: { type: 'redGlovedManSkills' } }], forcedMythosEndDiscard: true },
+  // 02310 戴红手套的男子已迁到能力层（5b-8），见 MIGRATED_PASSIVE_ENTRIES_5B8。
 }

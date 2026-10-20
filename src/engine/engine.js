@@ -1687,6 +1687,8 @@ function assetEffect(inv, asset) {
         ...(entry.defeatedDamage != null ? { defeatedDamage: entry.defeatedDamage } : {}),
         ...(entry.redirectOneHorrorToSelf ? { redirectOneHorrorToSelf: true } : {}),
         ...(entry.cannotLeavePlay ? { cannotLeavePlay: true } : {}),
+        // Phase 5（5b-8）：神话阶段结束时弃掉这张支援（戴红手套的男子）。
+        ...(entry.forcedMythosEndDiscard ? { forcedMythosEndDiscard: true } : {}),
         // Phase 5（5b-8）：资产卡面关键字（不引发借机攻击 / 快速）也在条目上。
         ...(entry.noOpportunityAttack ? { noOpportunityAttack: true } : {}),
         ...(entry.fast ? { fast: true } : {}),
@@ -3092,7 +3094,8 @@ function playerWindow(state, timing, events, restrictedSeat = null) {
 
 function tryAquinnahRedirect(state, enemy, inv, events, extraDamage = 0, extraHorror = 0) {
   if (inv.threat.some(item => item.code === '02088')) return false
-  const aquinnah = inv.assets.find(asset => ['01082', '02308'].includes(asset.code) && !asset.exhausted)
+  // Phase 5（5b-8）：「安奎娜」这类「横置并放 1 点恐惧，把这次攻击的伤害转给另一个敌人」由条目级标记声明。
+  const aquinnah = inv.assets.find(asset => registeredEntry(asset.code)?.redirectAttackToAsset && !asset.exhausted)
   if (!aquinnah) return false
   const candidates = state.enemies.filter(item => item.location === inv.location && item.id !== enemy.id)
   if (!candidates.length) return false
@@ -7574,20 +7577,6 @@ function dunwichPlayerEffect(state, seat, effect, events) {
     info(state, events, `「再试一次」将 ${cardName(chosen.code)} 返回 ${state.investigators[chosen.seat].name} 的手牌。`)
     return
   }
-  if (effect.type === 'redGlovedManSkills') {
-    const asset = inv.assets.find(item => item.code === '02310')
-    if (!asset) return
-    const pool = ['willpower', 'intellect', 'combat', 'agility']
-    const first = requestChoice(state, { kind: 'target', source: '02310', seat,
-      prompt: '选择第一项技能（只要戴红手套的男子在场，其基础值提升为 6）。',
-      options: pool.map(skill => ({ id: skill, label: SKILL_NAMES[skill] })) })
-    const second = requestChoice(state, { kind: 'target', source: '02310', seat,
-      prompt: '选择第二项技能（基础值提升为 6）。',
-      options: pool.filter(skill => skill !== first).map(skill => ({ id: skill, label: SKILL_NAMES[skill] })) })
-    asset.statOverride = [first, second]
-    info(state, events, `${inv.name} 的${SKILL_NAMES[first]}与${SKILL_NAMES[second]}基础值提升为 6。`)
-    return
-  }
   info(state, events, `「${effect.type}」已进入敦威治专属时序。`)
 }
 
@@ -10814,6 +10803,14 @@ function abilityApi(state, events) {
     assetsCannotReady: inv => assetsCannotReady(inv),
     searchTop: (seat, options) => searchTop(state, seat, options, events),
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
+    // Phase 5（5b-8）：技能名（「戴红手套的男子」的提示与日志要用）。
+    skillName: skill => SKILL_NAMES[skill] || skill,
+    // Phase 5（5b-8）：「戴红手套的男子」把两项技能的基础值提升为 6。
+    setStatOverride: (card, skills) => {
+      if (!card) return null
+      card.statOverride = [...skills]
+      return card.statOverride
+    },
     // Phase 5（5c-39）：「原定计划」把牌放进 attached（不是 attachments），并能从那里面打出。
     attachedCodes: host => (host?.attached || []).slice(),
     attachToHostByCode: (host, code) => {

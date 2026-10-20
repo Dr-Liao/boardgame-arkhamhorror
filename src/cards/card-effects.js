@@ -168,11 +168,6 @@ export const EFFECTS = {
     reaction: { when: 'testWouldFail', selfOnly: true },
     event: { type: 'addTestValue', amount: 2 },
   },
-  '01082': { // 安奎娜 Aquinnah（XP1）
-    reactions: [
-      { id: 'aquinnah', when: 'enemyAttack', cost: { exhaust: true, assetHorror: 1 }, effect: { type: 'aquinnahRedirect' } },
-    ],
-  },
   '01083': { // 千钧一发 Close Call（XP2）
     fast: true,
     reaction: { when: 'evadeSuccess', nonElite: true, nonWeakness: true, selfOnly: true },

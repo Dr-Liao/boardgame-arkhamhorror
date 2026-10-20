@@ -2541,15 +2541,9 @@ export const MIGRATED_REACTION_ENTRIES_5B6B = [
       ] },
     }],
   },
-  // 02308 阿奎娜：敌人攻击时横置并受 1 点恐惧，把攻击转移给同地点的敌人。
-  {
-    code: '02308',
-    abilities: [{
-      kind: 'reaction', trigger: 'enemyAttack', id: 'aquinnah', legacyReaction: true,
-      label: '敌人攻击时转移攻击', cost: { exhaust: true, horror: 1 },
-      effect: { type: 'aquinnahRedirect' },
-    }],
-  },
+  // 02308 阿奎娜：攻击转移的触发点在 enemyAttack 的 tryAquinnahRedirect（反应窗口之前），
+  // 因此只声明条目级标记；旧的 aquinnahRedirect 反应是死代码（运行时没有这个原语）。
+  { code: '02308', redirectAttackToAsset: true },
   // 04107 幸运箱：调查成功且超出 2 点时横置抽 1 张（每轮一次）。
   {
     code: '04107',
@@ -3285,12 +3279,42 @@ export const MIGRATED_ESCAPE_ENTRIES_5C39 = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// 5b-8：攻击转移支援 / 入场自选技能 / 神话结束弃掉（安奎娜、戴红手套的男子）
+// ---------------------------------------------------------------------------
+
+export const MIGRATED_PASSIVE_ENTRIES_5B8 = [
+  // 01082 安奎娜：被攻击时可以横置 + 放 1 点恐惧，把这次攻击的伤害转给另一个敌人。
+  // 触发点在 enemyAttack 的 tryAquinnahRedirect（攻击窗口在反应能力之前），因此只声明标记；
+  // 旧条目里那条 aquinnahRedirect 反应是死代码（运行时没有这个原语）。
+  { code: '01082', redirectAttackToAsset: true },
+  // 02310 戴红手套的男子：入场时选两项技能，其基础值提升为 6；神话阶段结束时弃掉。
+  {
+    code: '02310', fast: true, forcedMythosEndDiscard: true,
+    abilities: [{
+      kind: 'entersPlay', label: '入场：选择两项技能，其基础值提升为 6',
+      resolve: ({ inv, source, api }) => {
+        if (!source) return
+        const pool = ['willpower', 'intellect', 'combat', 'agility']
+        const first = api.choice({ kind: 'target', source: '02310', seat: inv.seat,
+          prompt: '选择第一项技能（只要戴红手套的男子在场，其基础值提升为 6）。',
+          options: pool.map(skill => ({ id: skill, label: api.skillName(skill) })) })
+        const second = api.choice({ kind: 'target', source: '02310', seat: inv.seat,
+          prompt: '选择第二项技能（基础值提升为 6）。',
+          options: pool.filter(skill => skill !== first).map(skill => ({ id: skill, label: api.skillName(skill) })) })
+        api.setStatOverride(source, [first, second])
+        api.info(inv.name + ' 的' + api.skillName(first) + '与' + api.skillName(second) + '基础值提升为 6。')
+      },
+    }],
+  },
+]
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, ...MIGRATED_ESCAPE_ENTRIES_5C35, ...MIGRATED_ESCAPE_ENTRIES_5C36, ...MIGRATED_ESCAPE_ENTRIES_5C37, ...MIGRATED_ESCAPE_ENTRIES_5C38, ...MIGRATED_ESCAPE_ENTRIES_5C39, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, ...MIGRATED_ESCAPE_ENTRIES_5C35, ...MIGRATED_ESCAPE_ENTRIES_5C36, ...MIGRATED_ESCAPE_ENTRIES_5C37, ...MIGRATED_ESCAPE_ENTRIES_5C38, ...MIGRATED_ESCAPE_ENTRIES_5C39, ...MIGRATED_PASSIVE_ENTRIES_5B8, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -3350,4 +3374,5 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_ESCAPE_ENTRIES_5C37.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C38.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C39.map(entry => entry.code),
+  ...MIGRATED_PASSIVE_ENTRIES_5B8.map(entry => entry.code),
 ])
