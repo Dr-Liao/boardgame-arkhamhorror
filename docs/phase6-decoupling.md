@@ -634,3 +634,41 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 2970 行**（12654 → 9684，−23.5%）。engine.js 首次降到 1 万行以下。
+
+## 20. 6d-13：拆出 scenario-runtime.js（内容层 ↔ 引擎的边界）
+
+### 20.1 拆的是什么
+
+`scenarioRuntime`（297 行，实际搬出 397 行含裁剪）搬进 `src/engine/scenario-runtime.js`，
+导出 `createScenarioRuntime(deps)`，依赖 **90 项**——这是整个拆分里依赖最多的一块。
+
+为什么它值 90 个依赖：剧本内容（遭遇卡、地点、密谋、议程）拿不到引擎内部，只能拿到这个**窄接口**：
+放置地点、生成敌人、造成伤害、抽遭遇、推进密谋、检查补给……它本质是内容层与引擎之间的边界对象。
+拆成独立模块后，「内容层能做什么」第一次以一张 90 行的依赖表形式可见——这对后续战役插件化
+（按战役切分接口）是必要前提。
+
+### 20.2 做法
+
+同 `performTest`：用**函数声明 + 惰性装配**保留老调用点（`scenarioRuntime(state, events, testSource)`），
+因为它的依赖表在模块顶层被多处引用，`export const` 会 TDZ。
+
+### 20.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **9485**（6d-12 后 9684） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/scenario-runtime.js` | **398** |
+| `src/engine/actions.js` | 397 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 3169 行**（12654 → 9485，−25.0%）。
