@@ -1,0 +1,95 @@
+# Phase 6 · 引擎去卡号化与战役解耦（交付说明）
+
+> 目标（roadmap §Phase 6）：`engine.js` / `observation.js` 内不出现 `tfa|carcosa|dunwich` 字样与具体卡号；
+> 新增战役只加 `content/campaigns/<id>/`。本文件按批次记录进展与证据。
+
+## 1. 硬指
+
+
+| 指标 | Phase 5 结束 | 现在 |
+| --- | --- | --- |
+| `engineCodes`（引擎里的卡号字面量） | 28（全是 `reference` 文案标签） | **0** ✅ |
+| 行为分支（`condition` + `block`） | 0 | 0 |
+| 引擎源码里的战役名 | 2 处（`tfa` / `carcosa` 局部变量） | **0** ✅ |
+| `EFFECTS` 条目 | 57 | 57（下一步） |
+| `effectsTopLevelFields` | 33 | 33（下一步） |
+
+## 2. 批次 6a-1：`reference` 28 个码清零
+
+这 28 个码都是 `requestChoice({ source: '0xxxx' })` 的**文案标签**（外加两处 `cardName('0xxxx')` 日志）。
+处理方式分三类：
+
+### 2.1 一处注射解决 20 处
+
+```js
+// src/engine/engine.js
+// 只在结算入口注入：playedEffect 本身保持纯函数，
+// 生命周期读点的测试才能继续断言原始数据体。
+function withEffectCode(effect, code) {
+  if (!effect || !code || effect.code === code) return effect
+  return { ...effect, code }
+}
+```
+
+`doPlay` / `resolveEffect` 的入口用 `withEffectCode(playedEffect(code), code)`，
+于是效果处理器统一写 `source: effect.code`。
+
+> 最初把注入放进 `lifecycle.playedEffect()` 本身，结果两条「读点返回的数据体与描述子声明一致」
+> 的用例失败（它们 `deepEqual` 断言原始数据体）——所以注入必须留在**结算入口**，读点保持纯函数。
+
+### 2.2 借用现成对象
+
+| 码 | 数据来源 |
+| --- | --- |
+| 02014 杜克 | `dukeInvestigate(state, seat, events, code)` 由调用方传 `effect.code` |
+| 02190 蔑视 | 本次实际投入的那张牌：`commitments.find(...)?.code` |
+| 02234 黑马 | 带 `darkHorse` 被动的支援：`darkHorseAsset.code` |
+| 03007 家庭前线 | `homeFrontCode` 随技能效果一路传（`out.homeFrontCode` → `skillFx` → 日志） |
+| 04157 / 04305 / 04312 / 04029 | `opts.sourceCode`（内容层传入）→ `weaponCode` / 支援卡号 |
+
+### 2.3 新增数据通道
+
+| api / 效果 | 改动 |
+| --- | --- |
+| `api.addExtraChaosChoices(amount, source)` | 记录 `skillTest.extraChaosSource`，03304 的选择框用它 |
+| `api.recruitAllyFromDiscard(seat, source)` | 选择框 source 由内容层传入（03238） |
+| `{ type: 'cancelSymbolToken', code }` | 效果记录 `skillTest.cancelledSymbolSource`，04110 日志用它 |
+
+## 3. 批次 6b-1：战役名与旧存档卡号
+
+| 位置 | 改动 |
+| --- | --- |
+| `playCost()` 的两个局部变量 | `carcosa` / `tfa` → `cardDiscount` / `playDiscount`（state 字段名保留，属于存档兼容面） |
+| `src/engine/save-migration.js` | 03121/03122/03123 的毁灭阈值、03185 束身衣、03155 战斗或逃跑 → `card-rules.js` 的 `LEGACY_*` 常量 |
+| `src/engine/look.js` 注释 | 示例卡号 `'01234'` → `'<卡号>'` |
+
+## 4. 门禁
+
+新增 `tests/phase6-guard.test.mjs`（注册在 fast 层与 node-suite）：
+
+1. **引擎源码里没有卡号字面量**：扫 `src/engine/*.js` 的 `'0\d{4}'`（含注释，保证指标可单调下降）；
+2. **引擎源码里没有战役名**：扫 `tfa|carcosa|dunwich`（大小写不敏感，按词边界）。
+
+两个用例现在都通过，且失败时会打印「文件:行号: 内容」，方便直接定位。
+
+## 5. 验证
+
+| 项 | 结果 |
+| --- | --- |
+| `replay --check` / `--compare` | ✔ 全部基线重放出相同指纹 |
+| `audit-abilities` | `engineCodes=0 effectsEntries=57 effectsTopLevelFields=33 escapeCards=0` |
+| `audit-workorder` | 空（`A=0`） |
+| `migrate-card --verify` | ✔ 79 个批次一致 |
+| `audit-dead-primitives` | ✔ 没有死分支 |
+| `phase6-guard` / `architecture-guard` / `migration-tools` | 20/20 通过 |
+| fast tier | 2142 例 / 2135 通过 / **7 条既有基线失败**（新增 0 条） |
+| `tfa-player-acceptance`（含火焰喷射器 M2） | 86/86 通过 |
+
+## 6. 下一步
+
+1. **`EFFECTS` 57 条**：继续按 §7 的手法逐个把行为读点搬进描述子；每批 ≤10 条。
+2. **`effectsTopLevelFields` 33 项**：顶层字段收进描述子或规则表。
+3. **拆分 `engine.js`**（当前约 12.6k 行 → 目标 < 2.5k）：先按域切出
+   `combat/`、`investigate/`、`play/`、`enemy-phase/`、`upkeep/`，保持 `engine.js` 只做编排与 `abilityApi`。
+4. **战役插件化**（TFA 第一个）：`content/campaigns/tfa/` 里放 `stateSlice` / `project` / `actions+hooks` / `agentHints`，
+   引擎只保留通用阶段机；roadmap 的「新增战役只加 content/campaigns/<id>/」由 `phase6-guard` 继续守。

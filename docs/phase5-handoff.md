@@ -258,8 +258,10 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 
 ### 7.5 接下来（Phase 6）
 
-1. **28 个 `reference`**：把 `requestChoice` 的 `source` 从卡号换成事件源对象（`{ type, code }`），
-   与日志/UI 文案一起改；改完整张工作单应当归零。
+> **已完成（6a-1 / 6b-1）**：28 个 `reference` 全部数据化，`engineCodes` 归零；引擎里的战役名也清零。
+> 详见 [`phase6-decoupling.md`](phase6-decoupling.md)。
+
+1. ~~**28 个 `reference`**：把 `requestChoice` 的 `source` 从卡号换成事件源对象~~ ✅ 已完成
 2. **`legacy` 通道 44 项**：`EFFECTS` 里剩下的数据体继续按 §4 的手法迁。
 3. **`effectsTopLevelFields` 33 项**：顶层字段逐个收进描述子或规则表。
 

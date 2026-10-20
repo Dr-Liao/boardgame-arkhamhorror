@@ -103,7 +103,11 @@ export function resolveEffect(state, seat, effect, rt) {
       break
     }
     case 'cancelSymbolToken': {
-      if (state.skillTest) state.skillTest.cancelledSymbol = state.skillTest.currentToken
+      if (state.skillTest) {
+        state.skillTest.cancelledSymbol = state.skillTest.currentToken
+        // Phase 6（6a-1）：记录是哪张牌取消的，引擎日志不再写死卡号。
+        state.skillTest.cancelledSymbolSource = effect.code || null
+      }
       rt.info?.('取消当前符号标记')
       break
     }

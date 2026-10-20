@@ -141,3 +141,15 @@ export function relicDiscountLocation(code) {
 
 // 卡号级规则数据：地点被移出游戏时的「默认去向」地点（原 engine.js 硬编码 02320）。
 export const RELOCATE_DESTINATION_LOCATION_CODE = '02320'
+
+// 卡号级规则数据：旧存档迁移用到的卡号（Phase 6 从 save-migration.js 搬出来，引擎不再写死）。
+// 「回响」议程的毁灭阈值按调查员人数计。
+export const LEGACY_AGENDA_DOOM_PER_INVESTIGATOR = Object.freeze({
+  '03121': 2,
+  '03122': 2,
+  '03123': 3,
+})
+// 「束身衣」旧存档里被放在支援区，迁移时换到威胁区并补上不可离场与弃置费用。
+export const LEGACY_STRAITJACKET_CODE = '03185'
+// 「战斗或逃跑」旧存档的裸字段折算成持久效果时，用它的卡号做 sourceCode。
+export const LEGACY_FIGHT_OR_FLIGHT_CODE = '03155'

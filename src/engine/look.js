@@ -18,7 +18,7 @@
 //   filter: { trait, type, usesType },
 //   prompt: '文案',
 //   shuffleAfter: true,             // 等价于 returnStrategy: 'shuffle'
-//   source: '01234',                // 日志归属
+//   source: '<卡号>',                // 日志归属
 // }
 //
 // 「看」与「检索」的区别只在于 `choose`：choose=0 不改变牌去向（只排列/放回），

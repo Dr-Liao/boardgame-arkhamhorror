@@ -10,19 +10,16 @@
 // 迁移是纯函数：不修改传入的状态，需要变更时在副本上进行。
 
 import { META } from '../cards/cards-data.js'
+import {
+  LEGACY_AGENDA_DOOM_PER_INVESTIGATOR, LEGACY_STRAITJACKET_CODE, LEGACY_FIGHT_OR_FLIGHT_CODE,
+} from '../cards/card-rules.js'
 import { STATE_SCHEMA_VERSION, RULES_VERSION, stateCompatibilityError } from './rules-state.js'
 import { createGameState, refreshStateResources, unknownCardCodes, legalMoves, validateMove, applyMove, decisionSeat } from './engine.js'
-
-const ECHOES_DOOM_PER_INVESTIGATOR = Object.freeze({
-  '03121': 2,
-  '03122': 2,
-  '03123': 3,
-})
 
 function fixEchoesAgendaThresholds(state) {
   for (const agendas of [state.agendas, state.scenario?.agendas]) {
     for (const agenda of agendas || []) {
-      const perInvestigator = ECHOES_DOOM_PER_INVESTIGATOR[agenda.originalCode || agenda.code]
+      const perInvestigator = LEGACY_AGENDA_DOOM_PER_INVESTIGATOR[agenda.originalCode || agenda.code]
       if (perInvestigator == null) continue
       agenda.doomThresholdPerInvestigator = perInvestigator
       agenda.doomThreshold = perInvestigator * state.numInvestigators
@@ -45,11 +42,11 @@ function fixStraitjacketZoneAndAbility(state) {
   for (const inv of state.investigators || []) {
     inv.assets ||= []
     inv.threat ||= []
-    const legacy = inv.assets.filter(asset => asset.code === '03185')
-    inv.assets = inv.assets.filter(asset => asset.code !== '03185')
-    const jackets = [...inv.threat.filter(card => card.code === '03185'), ...legacy]
+    const legacy = inv.assets.filter(asset => asset.code === LEGACY_STRAITJACKET_CODE)
+    inv.assets = inv.assets.filter(asset => asset.code !== LEGACY_STRAITJACKET_CODE)
+    const jackets = [...inv.threat.filter(card => card.code === LEGACY_STRAITJACKET_CODE), ...legacy]
     if (!jackets.length) continue
-    inv.threat = inv.threat.filter(card => card.code !== '03185')
+    inv.threat = inv.threat.filter(card => card.code !== LEGACY_STRAITJACKET_CODE)
     const jacket = jackets[0]
     Object.assign(jacket, {
       slots: ['Body', 'Hand x2'],
@@ -102,7 +99,7 @@ function addEffectEntities(state) {
     if (inv.fightOrFlight?.round === state.round && inv.fightOrFlight?.amount != null) {
       state.effects.push({
         id: `migrated-fightOrFlight-${inv.seat}`,
-        sourceCode: '03155',
+        sourceCode: LEGACY_FIGHT_OR_FLIGHT_CODE,
         sourceInstanceId: null,
         controllerSeat: inv.seat,
         duration: 'endOfRound',

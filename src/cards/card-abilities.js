@@ -1236,7 +1236,7 @@ export const MIGRATED_ESCAPE_ENTRIES = [
         const engaged = state.enemies.filter(enemy => enemy.engagedSeat === inv.seat)
         if (!engaged.length) { api.info('没有与你交战的敌人。'); return }
         const highest = engaged.reduce((left, right) => (api.enemyFight(right) > api.enemyFight(left) ? right : left))
-        api.fight(inv.seat, highest.id, { combatBonus: 4, flamethrowerSpread: 4 })
+        api.fight(inv.seat, highest.id, { combatBonus: 4, flamethrowerSpread: 4, sourceCode: '04305' })
       },
     }],
   },
@@ -1890,7 +1890,7 @@ export const MIGRATED_ESCAPE_ENTRIES_5C9 = [
         if (!test) { api.info('只能在自己的技能检定期间打出。'); return }
         const base = api.stat(inv.seat, test.skill)
         const extra = Math.max(1, test.difficulty - base)
-        api.addExtraChaosChoices(extra)
+        api.addExtraChaosChoices(extra, '04202')
         api.info(`💪 「${api.cardName('04202')}」：本次检定额外揭示 ${extra} 个混乱标记并选择 1 个结算。`)
       },
     }],
@@ -2384,7 +2384,7 @@ export const MIGRATED_REACTION_ENTRIES_5B6C = [
     code: '03238',
     abilities: [{
       kind: 'played', id: 'chanceEncounter2', label: '从弃牌堆招募一名盟友',
-      resolve: ({ inv, api }) => { api.recruitAllyFromDiscard(inv.seat) },
+      resolve: ({ inv, api }) => { api.recruitAllyFromDiscard(inv.seat, '03238') },
     }],
   },
   // 04156 挥金如土：本次检定 +2；成功后返还 3 资源。

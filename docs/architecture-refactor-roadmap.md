@@ -680,6 +680,9 @@ maxHealth / cardSanity
 
 删除 `EFFECTS` 行为读点（先留一版兼容层）→ 拆分 `engine.js`（卡号分支删完后自然变小，目标单文件 < 2.5k 行）→ 战役机制插件化（TFA 作为第一个搬家对象：`stateSlice` / `project` / `actions+hooks` / `agentHints`）。
 
+**进展（6a-1 / 6b-1）**：引擎里的卡号字面量 **28 → 0**、战役名 **2 → 0**，`tests/phase6-guard.test.mjs` 把这两条变成门禁；
+交付说明与批次证据见 [`phase6-decoupling.md`](phase6-decoupling.md)。剩余：`EFFECTS` 57 条、`effectsTopLevelFields` 33 项、拆分 `engine.js`、战役插件化。
+
 **门禁**：`engine.js` / `observation.js` 内不出现 `tfa|carcosa|dunwich` 字样与具体卡号；新增战役只加 `content/campaigns/<id>/`。
 
 ### 排期（粗估，单人）
@@ -691,7 +694,8 @@ maxHealth / cardSanity
 | 2 语义原语 | 2 周 | ✅ 完成 | 4 |
 | 3 内容来源 | 2–3 周 | ✅ 完成（D1/D3 首批/D4） | 4 |
 | 4 重放安全网 | 2 周 | ✅ 完成（golden 基线 + 100 局门禁 + 撤销 API） | 1–3 |
-| 5 迁移 | 4–6 周 | ✅ 5c 三十九批（93/93）、🚧 5b 主体 235 张、🚧 5a 五批 | 5a/5b 可拆给两人 |
+| 5 迁移 | 4–6 周 | ✅ 5c 三十九批（93/93）、✅ 5b 全部、✅ 5a 行为分支清零 | — |
+| 6 收尾 | 持续 | 🚧 引擎卡号 / 战役名已清零（`engineCodes` 28 → 0），剩余 `EFFECTS` 57 条与拆分 | — |
 | **合计** | **13–17 周** | | 两人并行约 8–10 周 |
 
 ---

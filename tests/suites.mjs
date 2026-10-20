@@ -18,6 +18,7 @@ export const FAST_TESTS = Object.freeze([
   'rules-n3.test.mjs', // 3.4
   'ability-layer.test.mjs', // 0.9
   'architecture-guard.test.mjs', // 0.1
+  'phase6-guard.test.mjs', // 0.1 —— Phase 6 门禁：引擎里无卡号 / 无战役名
   'card-lifecycle.test.mjs', // 0.3
   'phase1-state.test.mjs', // 1.2 —— A1 效果实体 / B1 目标枚举 / playCondition / schema v7
   'phase2-primitives.test.mjs', // 1.3 —— C1-C4 语义原语 / B2-B6 / 逃生卡迁移门禁

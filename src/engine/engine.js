@@ -2977,7 +2977,7 @@ function playReactionCard(state, inv, index, context, events, fromDiscard = fals
         alreadyPaid: true, silent: true,
       })
     } else {
-      resolveEffect(state, inv.seat, playedEffect(copyCode || code), makeRuntime(state, events))
+      resolveEffect(state, inv.seat, withEffectCode(playedEffect(copyCode || code), copyCode || code), makeRuntime(state, events))
     }
   } finally {
     delete state._reaction
@@ -3781,8 +3781,9 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
     info(state, events, `「孤注一掷」使本次检定难度翻倍至 ${difficulty}；成功效果将结算两次。`)
   }
   let defiedToken = null
-  if (commitments.some(item => commitProfile(item.code)?.defiance)) {
-    defiedToken = requestChoice(state, { kind: 'token', source: '02190', seat, prompt: '蔑视：选择本次检定要忽略的混乱符号。',
+  const defied = commitments.find(item => commitProfile(item.code)?.defiance)
+  if (defied) {
+    defiedToken = requestChoice(state, { kind: 'token', source: defied.code, seat, prompt: '蔑视：选择本次检定要忽略的混乱符号。',
       options: ['skull', 'cultist', 'tablet', 'elderthing'].map(id => ({ id, label: tokenLabel(id) })) })
   }
   playerWindow(state, 'test.afterCommit', events, options.peril || !state.skillTest.helpRequested ? seat : null)
@@ -3891,7 +3892,7 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
     if (token == null && !extraChaosUsed && extraChoices > 0) {
       extraChaosUsed = true
       const pool = Array.from({ length: 1 + extraChoices }, () => drawChaosToken(state))
-      const chosen = requestChoice(state, { kind: 'token', source: '03304', seat,
+      const chosen = requestChoice(state, { kind: 'token', source: state.skillTest?.extraChaosSource || options.extraChaosSource || null, seat,
         prompt: `额外揭示了 ${pool.length} 个混乱标记，选择 1 个结算。`,
         options: pool.map((face, index) => ({ id: String(index), label: tokenLabel(face) })) })
       for (let index = 0; index < pool.length; index++) {
@@ -4033,7 +4034,7 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
         prompt: `${inv.name} 的检定揭示了 ${tokenLabel(token)}` }, events)
     }
     if (state.skillTest.cancelledSymbol === token) {
-      info(state, events, `「${cardName('04110')}」取消了 ${tokenLabel(token)}。`)
+      info(state, events, `「${cardName(state.skillTest.cancelledSymbolSource)}」取消了 ${tokenLabel(token)}。`)
       lastTokenDelta = 0
       break
     }
@@ -4239,6 +4240,7 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
       skillFx.evadeDisengage ||= result.evadeDisengage
       skillFx.mayMoveAfterEvade ||= result.mayMoveAfterEvade
       skillFx.homeFrontDamage += result.homeFrontDamage
+    if (result.homeFrontCode) skillFx.homeFrontCode = result.homeFrontCode
     }
   }
   if (elderOnSuccess && success) {
@@ -4504,7 +4506,7 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0) {
       const answer = requestChoice(state, { kind: 'skillEffect', source: code, seat: inv.seat,
         prompt: '是否从马克·哈里根身上移动1点伤害到正在攻击的敌人？',
         options: [{ id: 'skip', label: '不移动' }, { id: 'move', label: '移动1点伤害' }] })
-      if (answer === 'move') out.homeFrontDamage += 1
+      if (answer === 'move') { out.homeFrontDamage += 1; out.homeFrontCode = code }
     }
   }
   return out
@@ -5841,8 +5843,8 @@ function upkeepPhase(state) {
       const texts = scenarioBehavior(state).skipUpkeepDraw?.(state, inv) ? [] : drawCards(state, inv, 1, events)
       for (const t of texts) info(state, events, t, { kind: 'automatic', phase: 'upkeep', round: state.round, text: t, effect: 'draw', seat: inv.seat, location: inv.location })
       const supply = !investigatorTextBlanked(state, inv) ? INVESTIGATOR_ABILITIES[inv.code]?.upkeepResources || 1 : 1
-      const darkHorse = inv.assets.some(asset => assetEffect(inv, asset)?.passive?.darkHorse)
-      const skipIncome = darkHorse && requestChoice(state, { kind: 'upkeep', source: '02234', seat: inv.seat,
+      const darkHorseAsset = inv.assets.find(asset => assetEffect(inv, asset)?.passive?.darkHorse)
+      const skipIncome = Boolean(darkHorseAsset) && requestChoice(state, { kind: 'upkeep', source: darkHorseAsset.code, seat: inv.seat,
         prompt: '黑马：本回合是否放弃获得资源？',
         options: [{ id: 'gain', label: `获得 ${supply} 资源` }, { id: 'skip', label: '不获得资源（保持 0 资源）' }] }) === 'skip'
       if (!skipIncome && scenarioBehavior(state).canGainResources?.(state, inv) !== false) {
@@ -7050,18 +7052,18 @@ function healHorrorNearby(state, seat, amount, events) {
     && (other.location === inv.location || connections.includes(other.location)))
   if (!targets.length) return
   const id = targets.length === 1 ? String(targets[0].seat) : requestChoice(state, {
-    kind: 'target', source: '02012', seat, prompt: '选择本地点或连接地点的一名调查员，治疗 1 点恐惧。',
+    kind: 'target', source: effect.code, seat, prompt: '选择本地点或连接地点的一名调查员，治疗 1 点恐惧。',
     options: targets.map(target => ({ id: String(target.seat), label: target.name })),
   })
   const target = targets.find(item => String(item.seat) === id)
   if (target) { target.horror = Math.max(0, target.horror - amount); info(state, events, `${target.name} 治疗 ${amount} 点恐惧。`) }
 }
 
-function dukeInvestigate(state, seat, events) {
+function dukeInvestigate(state, seat, events, code = null) {
   const inv = state.investigators[seat]
   const destinations = investigatorMoveDestinations(state, seat, {})
   if (destinations.length) {
-    const id = requestChoice(state, { kind: 'move', source: '02014', seat,
+    const id = requestChoice(state, { kind: 'move', source: code, seat,
       prompt: '杜克调查前是否移动到连接地点？',
       options: [{ id: 'stay', label: '留在原地调查' }, ...destinations.map(loc => ({ id: loc, label: locName(state, loc) }))] })
     if (id !== 'stay') relocateInvestigator(state, seat, id, events)
@@ -7151,7 +7153,7 @@ function tfaInvestigatorEffect(state, seat, effect, events) {
         ? !state.investigators.some(other => other.assets.some(asset => cardDef(asset.code)?.name === cardDef(code)?.name))
         : true)
     if (!candidates.length) return
-    const chosen = requestChoice(state, { kind: 'target', source: '04001', seat,
+    const chosen = requestChoice(state, { kind: 'target', source: effect.code, seat,
       prompt: '选择要打出并减免 1 费用的盟友支援。',
       options: [{ id: 'skip', label: '跳过' },
         ...candidates.map(code => ({ id: code, cardCode: code, label: `${cardName(code)}（${costOf(code)} 资源）` }))] })
@@ -7317,7 +7319,7 @@ function tfaPlayerEffectCore(state, seat, effect, events) {
     const candidates = inv.assets.filter(asset => ['charges', 'secrets'].includes(String(asset.usesType || ''))
       || EFFECTS[asset.code]?.usesType === 'secrets' || EFFECTS[asset.code]?.usesType === 'charges')
     if (!candidates.length) return
-    const chosen = candidates.length === 1 ? candidates[0].id : requestChoice(state, { kind: 'target', source: '04157', seat,
+    const chosen = candidates.length === 1 ? candidates[0].id : requestChoice(state, { kind: 'target', source: effect.code, seat,
       prompt: '选择要放置充能/秘密的支援。', options: candidates.map(asset => ({ id: asset.id, label: cardName(asset.code) })) })
     const asset = candidates.find(item => item.id === chosen) || candidates[0]
     asset.uses = (asset.uses || 0) + 1
@@ -7369,7 +7371,7 @@ function dunwichPlayerEffect(state, seat, effect, events) {
     const others = aliveInvestigators(state).filter(other => other.seat !== seat && other.location === inv.location)
     if (!others.length) return
     const targetSeat = others.length === 1 ? String(others[0].seat) : requestChoice(state, {
-      kind: 'target', source: '02018', seat, prompt: '选择交换物品、盟友或资源的调查员。',
+      kind: 'target', source: effect.code, seat, prompt: '选择交换物品、盟友或资源的调查员。',
       options: others.map(other => ({ id: String(other.seat), label: other.name })),
     })
     const target = others.find(other => String(other.seat) === targetSeat)
@@ -7378,7 +7380,7 @@ function dunwichPlayerEffect(state, seat, effect, events) {
     for (const asset of inv.assets.filter(item => (cardDef(item.code)?.traits || []).some(t => ['item', 'ally'].includes(String(t).toLowerCase()))))
       options.push({ id: asset.id, label: `交给对方：${cardName(asset.code)}` })
     if (!options.length) return
-    const answer = requestChoice(state, { kind: 'target', source: '02018', seat, prompt: '选择要交换的内容。', options })
+    const answer = requestChoice(state, { kind: 'target', source: effect.code, seat, prompt: '选择要交换的内容。', options })
     if (answer === 'resource') { inv.resources--; target.resources++ }
     else { const asset = inv.assets.find(item => item.id === answer); if (asset) { leaveAsset(state, inv, asset); target.assets.push(asset) } }
     return
@@ -7387,9 +7389,9 @@ function dunwichPlayerEffect(state, seat, effect, events) {
     const loc = state.locations.find(item => item.id === inv.location)
     const targets = (loc?.connections || []).map(id => state.locations.find(item => item.id === id)).filter(item => item?.clues > 0)
     if (!targets.length) return doInvestigate(state, seat, {}, events, true)
-    return performTest(state, seat, 'intellect', loc.shroud + (loc.shroudMod || 0), { source: { label: '调查', name: cardName('02023'), code: '02023' }, resolve: result => {
+    return performTest(state, seat, 'intellect', loc.shroud + (loc.shroudMod || 0), { source: { label: '调查', name: cardName(effect.code), code: effect.code }, resolve: result => {
       if (!result.success) return
-      const targetId = targets.length === 1 ? targets[0].id : requestChoice(state, { kind: 'location', source: '02023', seat,
+      const targetId = targets.length === 1 ? targets[0].id : requestChoice(state, { kind: 'location', source: effect.code, seat,
         prompt: '选择一个连接地点发现线索。', options: targets.map(item => ({ id: item.id, label: item.name })) })
       const target = targets.find(item => item.id === targetId)
       target.clues--; inv.clues++; info(state, events, `${inv.name} 从「${target.name}」发现 1 条线索。`)
@@ -7399,11 +7401,11 @@ function dunwichPlayerEffect(state, seat, effect, events) {
   if (effect.type === 'liquidCourage') {
     const targets = aliveInvestigators(state).filter(other => other.location === inv.location && other.horror > 0)
     if (!targets.length) return
-    const targetSeat = targets.length === 1 ? String(targets[0].seat) : requestChoice(state, { kind: 'target', source: '02024', seat,
+    const targetSeat = targets.length === 1 ? String(targets[0].seat) : requestChoice(state, { kind: 'target', source: effect.code, seat,
       prompt: '选择治疗恐惧的调查员。', options: targets.map(other => ({ id: String(other.seat), label: other.name })) })
     const target = targets.find(other => String(other.seat) === targetSeat)
     target.horror--
-    return performTest(state, target.seat, 'willpower', 2, { source: { label: '饮用烈酒', name: cardName('02024'), code: '02024' }, resolve: result => {
+    return performTest(state, target.seat, 'willpower', 2, { source: { label: '饮用烈酒', name: cardName(effect.code), code: effect.code }, resolve: result => {
       if (result.success) {
         const healed = Math.min(target.horror, 1)
         target.horror -= healed
@@ -7436,7 +7438,7 @@ function dunwichPlayerEffect(state, seat, effect, events) {
   if (effect.type === 'doubleUses') {
     const targets = aliveInvestigators(state).filter(other => other.location === inv.location).flatMap(owner => owner.assets.filter(asset => effect.usesTypes.includes(asset.usesType)))
     if (!targets.length) return
-    const id = requestChoice(state, { kind: 'target', source: '02109', seat, prompt: '选择弹药或补给翻倍的支援。', options: targets.map(asset => ({ id: asset.id, label: cardName(asset.code) })) })
+    const id = requestChoice(state, { kind: 'target', source: effect.code, seat, prompt: '选择弹药或补给翻倍的支援。', options: targets.map(asset => ({ id: asset.id, label: cardName(asset.code) })) })
     const asset = targets.find(item => item.id === id); if (asset) asset.uses *= 2
     return
   }
@@ -7458,17 +7460,17 @@ function dunwichPlayerEffect(state, seat, effect, events) {
     return
   }
   if (effect.type === 'flare') {
-    const choice = requestChoice(state, { kind: 'effect', source: '02115', seat, prompt: '选择照明弹的效果。',
+    const choice = requestChoice(state, { kind: 'effect', source: effect.code, seat, prompt: '选择照明弹的效果。',
       options: [{ id: 'fight', label: '战斗 +3，伤害 +2' }, { id: 'ally', label: '搜索任意调查员牌库顶 9 张并使一名盟友入场' }] })
     if (choice === 'fight') return doFight(state, seat, { enemyId: chooseEnemy(state, seat, {}).id, combatBonus: 3, damageBonus: 2 }, events, true)
     const owners = aliveInvestigators(state)
-    const ownerSeat = owners.length === 1 ? owners[0].seat : Number(requestChoice(state, { kind: 'target', source: '02115', seat,
+    const ownerSeat = owners.length === 1 ? owners[0].seat : Number(requestChoice(state, { kind: 'target', source: effect.code, seat,
       prompt: '选择要搜索的牌库。', options: owners.map(owner => ({ id: String(owner.seat), label: `${owner.name} 的牌库` })) }))
     const owner = state.investigators[ownerSeat]
     const cards = owner.deck.slice(-Math.min(9, owner.deck.length))
     const allies = cards.filter(code => (cardDef(code)?.traits || []).some(t => String(t).toLowerCase() === 'ally'))
     if (allies.length) {
-      const code = allies.length === 1 ? allies[0] : allies[Number(requestChoice(state, { kind: 'card', source: '02115', seat,
+      const code = allies.length === 1 ? allies[0] : allies[Number(requestChoice(state, { kind: 'card', source: effect.code, seat,
         prompt: '选择要放置入场的盟友支援。', options: allies.map((item, index) => ({ id: String(index), cardCode: item, label: cardName(item) })) }))]
       const index = owner.deck.lastIndexOf(code)
       owner.deck.splice(index, 1)
@@ -7481,7 +7483,7 @@ function dunwichPlayerEffect(state, seat, effect, events) {
     const targets = aliveInvestigators(state).filter(other => other.seat !== seat && other.location === inv.location)
     if (!targets.length) return
     const target = targets.length === 1 ? targets[0] : targets.find(other => other.seat === Number(requestChoice(state, {
-      kind: 'target', source: '02148', seat, prompt: '选择与你共享卡牌与资源的调查员。',
+      kind: 'target', source: effect.code, seat, prompt: '选择与你共享卡牌与资源的调查员。',
       options: targets.map(other => ({ id: String(other.seat), label: other.name })),
     })))
     for (const owner of [inv, target]) { owner.resources += 2; for (const line of drawCards(state, owner, 2, events)) info(state, events, line) }
@@ -7515,12 +7517,12 @@ function dunwichPlayerEffect(state, seat, effect, events) {
     const enemies = state.enemies.filter(enemy => enemy.location === inv.location)
     if (!enemies.length) { info(state, events, '本地点没有可选择弱点的敌人。'); return }
     const enemy = enemies.length === 1 ? enemies[0] : enemies.find(item => item.id === requestChoice(state, {
-      kind: 'target', source: '02228', seat, prompt: '选择要暴露弱点的敌人。',
+      kind: 'target', source: effect.code, seat, prompt: '选择要暴露弱点的敌人。',
       options: enemies.map(item => ({ id: item.id, label: item.name })),
     }))
     if (!enemy) return
     const difficulty = enemyFightValue(state, enemy, inv)
-    return performTest(state, seat, 'intellect', difficulty, { source: { label: '揭露弱点', name: enemy.name, code: '02228' }, resolve: result => {
+    return performTest(state, seat, 'intellect', difficulty, { source: { label: '揭露弱点', name: enemy.name, code: effect.code }, resolve: result => {
       if (!result.success) return
       const margin = Math.max(1, result.value - difficulty)
       const active = enemy.fightReduction?.round === state.round && enemy.fightReduction.phase === state.phase
@@ -7529,12 +7531,12 @@ function dunwichPlayerEffect(state, seat, effect, events) {
     } })
   }
   if (effect.type === 'lookTopDeckAndDoom') {
-    const choice = requestChoice(state, { kind: 'deck', source: effect.assetId || '02232', seat, prompt: '选择查看的牌库。',
+    const choice = requestChoice(state, { kind: 'deck', source: effect.assetId || effect.code, seat, prompt: '选择查看的牌库。',
       options: [{ id: 'encounter', label: '遭遇牌库' }, ...state.investigators.map(owner => ({ id: String(owner.seat), label: `${owner.name} 的牌库` }))] })
     const deck = choice === 'encounter' ? state.encounterDeck : state.investigators[Number(choice)].deck
     const top = deck.at(-1); if (!top) return
     const asset = inv.assets.find(item => item.id === effect.assetId)
-    const bury = requestChoice(state, { kind: 'card', source: effect.assetId || '02232', seat, prompt: `顶牌是「${cardName(top)}」，是否放到牌库底并在艾丽莎上放 1 毁灭？`,
+    const bury = requestChoice(state, { kind: 'card', source: effect.assetId || effect.code, seat, prompt: `顶牌是「${cardName(top)}」，是否放到牌库底并在艾丽莎上放 1 毁灭？`,
       options: [{ id: 'keep', label: '保留在顶端' }, { id: 'bottom', label: '放到牌库底' }] })
     if (bury === 'bottom') { deck.pop(); deck.unshift(top); if (asset) placeDoomOnCard(state, asset, 1, events, { silent: true }) }
     return
@@ -7553,7 +7555,7 @@ function dunwichPlayerEffect(state, seat, effect, events) {
     }
     if (!options.length) return
     const answer = options.length === 1 ? options[0].id : requestChoice(state, {
-      kind: 'harm', source: '02261', seat, prompt: '选择“我见过更糟的”要取消的伤害与恐惧。', options,
+      kind: 'harm', source: effect.code, seat, prompt: '选择“我见过更糟的”要取消的伤害与恐惧。', options,
     })
     const [damage, horror] = answer.split(':').map(Number)
     context.damage -= damage; context.horror -= horror
@@ -7564,7 +7566,7 @@ function dunwichPlayerEffect(state, seat, effect, events) {
   if (effect.type === 'removeDoomControlled') {
     const targets = inv.assets.filter(asset => (asset.doom || 0) > 0); if (!targets.length) return
     const target = targets.length === 1 ? targets[0] : targets.find(asset => asset.id === requestChoice(state, {
-      kind: 'target', source: '02267', seat, prompt: '选择要移除全部毁灭标记的卡牌。',
+      kind: 'target', source: effect.code, seat, prompt: '选择要移除全部毁灭标记的卡牌。',
       options: targets.map(asset => ({ id: asset.id, label: `${cardName(asset.code)}（${asset.doom} 毁灭）` })),
     }))
     if (!target) return
@@ -7578,7 +7580,7 @@ function dunwichPlayerEffect(state, seat, effect, events) {
       .filter(item => (cardDef(item.code)?.traits || []).some(t => String(t).toLowerCase() === 'ally')))
     if (!candidates.length) return
     const chosen = candidates.length === 1 ? candidates[0] : (() => {
-      const id = requestChoice(state, { kind: 'card', source: '02270', seat, prompt: '选择任意玩家弃牌堆中的盟友支援。',
+      const id = requestChoice(state, { kind: 'card', source: effect.code, seat, prompt: '选择任意玩家弃牌堆中的盟友支援。',
         options: candidates.map((item, index) => ({ id: String(index), cardCode: item.code,
           label: `${cardName(item.code)}（${item.owner.name} 的弃牌堆）` })) })
       return candidates[Number(id)]
@@ -7593,7 +7595,7 @@ function dunwichPlayerEffect(state, seat, effect, events) {
       .filter(item => (cardDef(item.code)?.traits || []).some(t => String(t).toLowerCase() === 'item'))
     if (!items.length) return
     const chosen = items.length === 1 ? items[0] : items.find(item => String(item.index) === requestChoice(state, {
-      kind: 'card', source: '02265', seat, prompt: '选择要打出的道具支援（支付其费用）。',
+      kind: 'card', source: effect.code, seat, prompt: '选择要打出的道具支援（支付其费用）。',
       options: items.map(item => ({ id: String(item.index), cardCode: item.code, label: cardName(item.code) })),
     }))
     const code = chosen.code; doPlay(state, seat, code, events); return
@@ -7601,7 +7603,7 @@ function dunwichPlayerEffect(state, seat, effect, events) {
   if (effect.type === 'decipheredReality') {
     const revealed = state.locations.filter(loc => loc.revealed)
     const difficulty = Math.max(0, ...revealed.map(loc => loc.shroud + (loc.shroudMod || 0)))
-    return performTest(state, seat, 'intellect', difficulty, { source: { label: '调查', name: cardName('02303'), code: '02303' }, resolve: result => {
+    return performTest(state, seat, 'intellect', difficulty, { source: { label: '调查', name: cardName(effect.code), code: effect.code }, resolve: result => {
       if (result.success) for (const loc of revealed) if (loc.clues > 0) { loc.clues--; inv.clues++; notifyCluesRemoved(state, loc, 1, events) }
     } })
   }
@@ -7616,7 +7618,7 @@ function dunwichPlayerEffect(state, seat, effect, events) {
   if (effect.type === 'returnCommittedSkill') {
     const candidates = (state.skillTest?.committed || []).filter(item => item.seat === seat && cardDef(item.code)?.type === 'skill')
     if (!candidates.length) return
-    const id = candidates.length === 1 ? '0' : requestChoice(state, { kind: 'card', source: '02309', seat,
+    const id = candidates.length === 1 ? '0' : requestChoice(state, { kind: 'card', source: effect.code, seat,
       prompt: '选择一张已投入的技能牌返回其持有者手牌。',
       options: candidates.map((item, index) => ({ id: String(index), cardCode: item.code,
         label: `${cardName(item.code)}（${state.investigators[item.seat].name}）` })),
@@ -7694,7 +7696,7 @@ function makeRuntime(state, events) {
     chooseInvestigator: (seat, target, effect, constraints) => chooseInvestigator(state, seat, target, effect, constraints),
     healDamageAtLocation: (seat, amount) => healDamageAtLocation(state, seat, amount, events),
     healHorrorNearby: (seat, amount) => healHorrorNearby(state, seat, amount, events),
-    dukeInvestigate: seat => dukeInvestigate(state, seat, events),
+    dukeInvestigate: seat => dukeInvestigate(state, seat, events, effect.code),
     dunwichPlayerEffect: (seat, effect) => dunwichPlayerEffect(state, seat, effect, events),
     carcosaInvestigatorEffect: (seat, effect) => carcosaInvestigatorEffect(state, seat, effect, events),
     carcosaPlayerEffect: (seat, effect) => carcosaPlayerEffect(state, seat, effect, events),
@@ -8915,6 +8917,13 @@ function assetCapacityValue(asset, capacity) {
   return value
 }
 
+// Phase 6（6a-1）：把「打出它的那张牌」注入效果对象，效果处理器不再需要写死自己的卡号。
+// 只在结算入口注入（`playedEffect` 本身保持纯函数，生命周期读点的测试才能继续断言原始数据体）。
+function withEffectCode(effect, code) {
+  if (!effect || !code || effect.code === code) return effect
+  return { ...effect, code }
+}
+
 function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = false, copyCode = null, fromPlanAssetId = null, fromBackpackId = null) {
   const inv = state.investigators[seat]
   const def = cardDef(cardId)
@@ -9083,7 +9092,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       addToVictory: eff.addToVictory === true || playedFlags.addToVictory === true || entryFlags.addToVictory === true,
       becomesAsset: eff.becomesAsset === true || playedFlags.becomesAsset === true || entryFlags.becomesAsset === true,
     }
-    const played = playedEffect(copyCode || cardId)
+    const played = withEffectCode(playedEffect(copyCode || cardId), copyCode || cardId)
     // Phase 2：事件卡的「played」描述子可以直接带 resolve（数据表达不了时），
     // 与 effect 数据体共用同一个读点，因此迁移一张事件卡不需要改引擎。
     const playedDescriptor = descriptorOfKind(copyCode || cardId, 'played')
@@ -9776,7 +9785,7 @@ function doFight(state, seat, opts, events, noSpend) {
       const movedDamage = Math.min(inv.damage, r.homeFrontDamage || 0)
       if (movedDamage > 0) {
         inv.damage -= movedDamage
-        info(state, events, `「${cardName('03007')}」：从 ${inv.name} 身上移动 ${movedDamage} 点伤害到「${enemy.name}」。`)
+        info(state, events, `「${cardName(r.homeFrontCode)}」：从 ${inv.name} 身上移动 ${movedDamage} 点伤害到「${enemy.name}」。`)
         damageEnemy(state, enemy, movedDamage, inv.seat, events)
         if (!state.enemies.includes(enemy)) return
       }
@@ -9848,7 +9857,7 @@ function doFight(state, seat, opts, events, noSpend) {
       } else if (opts.flamethrowerSpread) {
         // 火焰喷射器：可选择把 4 点伤害分配给所有交战敌人（简化：轮流分配）。
         const engaged = state.enemies.filter(item => item.engagedSeat === seat && !item.defeated)
-        const spread = engaged.length > 1 && requestChoice(state, { kind: 'effect', source: '04305', seat,
+        const spread = engaged.length > 1 && requestChoice(state, { kind: 'effect', source: opts.sourceCode || weaponCode, seat,
           prompt: `是否改为向 ${engaged.length} 个交战敌人分配 ${opts.flamethrowerSpread} 点伤害？`,
           options: [{ id: 'focus', label: `只对「${enemy.name}」造成 ${dmg} 点伤害` },
             { id: 'spread', label: `向所有交战敌人分配 ${opts.flamethrowerSpread} 点伤害` }] }) === 'spread'
@@ -9952,6 +9961,7 @@ function doEvade(state, seat, opts, events, noSpend) {
   // 「战壕大衣」等支援在躲避尝试期间提供敏捷加值。
   const evadeAssetBonus = (inv.assets || []).reduce((sum, item) =>
     sum + (assetEffect(inv, item)?.passive?.evadeBonus || 0), 0)
+  const evadeSourceCode = inv.assets.find(asset => asset.id === opts.assetId)?.code || null
   return performTest(state, seat, evadeSkill, evadeBase, { source: { label: '躲避', enemyId: enemy.id, name: enemy.name, code: enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code }, baseValue: opts.baseValue,
     skillBonus: (opts.bonus || 0) + evadeAssetBonus + (opts.addSkill ? getStat(state, inv, opts.addSkill) : 0),
     doubleNegative: Boolean(enemyRuleFlags(enemy.code).doubleNegative || enemyRuleFlags(enemy.ruleId).doubleNegative) && !enemyTextBlanked(state, enemy), resolve: r => {
@@ -9985,7 +9995,7 @@ function doEvade(state, seat, opts, events, noSpend) {
       if (opts.moveAfterEvade) {
         const destinations = investigatorMoveDestinations(state, seat, {})
         if (destinations.length) {
-          const answer = requestChoice(state, { kind: 'move', source: '04029', seat, canSkip: true,
+          const answer = requestChoice(state, { kind: 'move', source: opts.sourceCode || inv.assets.find(asset => asset.id === opts.assetId)?.code || null, seat, canSkip: true,
             prompt: '是否移动到连接地点？',
             options: [{ id: 'skip', label: '留在原地' }, ...destinations.map(id => ({ id, label: locName(state, id) }))] })
           if (answer !== 'skip') relocateInvestigator(state, seat, answer, events)
@@ -10007,7 +10017,7 @@ function doEvade(state, seat, opts, events, noSpend) {
         const current = state.locations.find(loc => loc.id === enemy.location)
         const destinations = (current?.connections || []).filter(id => locationExists(state, id))
         if (destinations.length) {
-          const id = destinations.length === 1 ? destinations[0] : requestChoice(state, { kind: 'move', source: '02034', seat,
+          const id = destinations.length === 1 ? destinations[0] : requestChoice(state, { kind: 'move', source: effect.code, seat,
             prompt: '选择诱饵与换位将敌人移动到的连接地点。', options: destinations.map(id => ({ id, label: locName(state, id) })) })
           relocateEnemy(state, enemy, id, events)
         }
@@ -10043,12 +10053,12 @@ function doEvade(state, seat, opts, events, noSpend) {
       const extra = state.enemies.filter(other => other.id !== enemy.id && other.location === inv.location
         && enemyEvadeValue(state, other, inv) <= Math.min(successBy, opts.evadeSecondUpTo))
       if (extra.length) {
-        const chosen = extra.length === 1 ? extra[0].id : requestChoice(state, { kind: 'target', source: '04312', seat,
+        const chosen = extra.length === 1 ? extra[0].id : requestChoice(state, { kind: 'target', source: opts.sourceCode || evadeSourceCode, seat,
           prompt: `再躲避一个躲避值不超过 ${successBy} 的敌人。`, options: extra.map(other => ({ id: other.id, label: other.name })) })
         const second = extra.find(item => item.id === chosen)
         if (second) {
           autoEvadeEnemy(state, second, events)
-          info(state, events, `💨 「${cardName('04312')}」额外躲避了「${second.name}」。`)
+          info(state, events, `💨 「${cardName(opts.sourceCode || evadeSourceCode)}」额外躲避了「${second.name}」。`)
         }
       }
     }
@@ -10707,14 +10717,14 @@ function abilityApi(state, events) {
       addTrauma(state, seat, kind, amount, events)
       return true
     },
-    recruitAllyFromDiscard: seat => {
+    recruitAllyFromDiscard: (seat, source = null) => {
       const owner = state.investigators[seat]
       const candidates = state.investigators.flatMap(person => person.discard
         .filter(code => cardDef(code)?.type === 'asset' && (cardDef(code)?.traits || [])
           .some(trait => String(trait).toLowerCase() === 'ally'))
         .map(code => ({ code, owner: person })))
       if (!candidates.length || !owner) return false
-      const answer = requestChoice(state, { kind: 'card', source: '03238', seat, prompt: '选择弃牌堆中的盟友。',
+      const answer = requestChoice(state, { kind: 'card', source, seat, prompt: '选择弃牌堆中的盟友。',
         options: candidates.map((item, index) => ({ id: String(index), cardCode: item.code, label: cardName(item.code) })) })
       const picked = candidates[Number(answer)]
       if (!picked) return false
@@ -10759,9 +10769,10 @@ function abilityApi(state, events) {
       state.skillTest.pendingRevealPlan = { ...spec }
       return state.skillTest.pendingRevealPlan
     },
-    addExtraChaosChoices: amount => {
+    addExtraChaosChoices: (amount, source = null) => {
       if (!state.skillTest) return 0
       state.skillTest.extraChaosChoices = (state.skillTest.extraChaosChoices || 0) + amount
+      if (source) state.skillTest.extraChaosSource = source
       return state.skillTest.extraChaosChoices
     },
     // 调查员当前属性（与 getStat 同源）：判定「难度高出多少」这类卡要用。
@@ -11930,8 +11941,9 @@ function playCost(state, inv, def) {
   const factions = def.factions || [def.klass, def.klass2, def.klass3].filter(Boolean)
   const lola = inv.lolaDiscount?.round === state.round && inv.lolaDiscount?.turnSeat === state.currentSeat
     && factions.includes(inv.lolaDiscount.role) ? inv.lolaDiscount.amount : 0
-  const carcosa = inv.carcosaPlayDiscount || 0
-  const tfa = inv.playDiscount || 0
+  // Phase 6：这两项都是「打出折扣」的通用通道（名字里的战役前缀是历史遗留的 state 字段）。
+  const cardDiscount = inv.carcosaPlayDiscount || 0
+  const playDiscount = inv.playDiscount || 0
   const threatIncrease = inv.threat.reduce((sum, threat) =>
     sum + (getThreatEffect(threat)?.playCostIncrease || 0), 0)
   const loc = state.locations.find(location => location.id === inv.location)
@@ -11942,7 +11954,7 @@ function playCost(state, inv, def) {
   const charles = itemDiscountAtLocation(state, inv, def)
   // 能力层修正：例如 03142「黑玛瑙扣环」在手牌中时其他手牌 +1 费用（负数为折扣）。
   const abilityLayer = playCostDelta(state, inv, def.code)
-  return Math.max(0, (def.cost || 0) - discount - lola - carcosa - tfa + threatIncrease + locationIncrease - relicDiscount - charles + abilityLayer)
+  return Math.max(0, (def.cost || 0) - discount - lola - cardDiscount - playDiscount + threatIncrease + locationIncrease - relicDiscount - charles + abilityLayer)
 }
 
 function itemDiscountAtLocation(state, inv, def) {

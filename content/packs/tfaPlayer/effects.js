@@ -73,7 +73,8 @@ export const effects = {
   // 枪法如神：用枪械／远程支援攻击连接地点上的敌人，忽略冷漠与反击。
   // 反击法术：取消当前符号标记，不揭示替代标记。
   '04110': { fast: true, reaction: { when: 'symbolRevealed', symbols: ['skull', 'cultist', 'tablet', 'elderthing'] },
-    event: { type: 'cancelSymbolToken' } },
+    // Phase 6（6a-1）：卡号随效果数据走（引擎日志读 effect.code）。
+    event: { type: 'cancelSymbolToken', code: '04110' } },
   // 04199 危险预感已迁到能力层（5c-24），见 MIGRATED_ESCAPE_ENTRIES_5C24。
   // 学无止境：重新尝试上一次失败的检定，+2。
   // 勇斗异劫：难度高于基础值时额外揭示 X 个混乱标记并选 1 个。
