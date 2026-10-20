@@ -68,6 +68,10 @@ export const ENEMY_RULE_FLAGS = Object.freeze({
   // 猎手夜魇：负面标记双倍结算。
   '01172': Object.freeze({ doubleNegative: true }),
   huntingNightgaunt: Object.freeze({ doubleNegative: true }),
+  // 02094：用远程/枪械/法术武器攻击它时难度 -3。
+  '02094': Object.freeze({ rangedAttackDifficultyReduction: 3 }),
+  // 02182：与它交战期间不能移动。
+  '02182': Object.freeze({ blocksMovementWhileEngaged: true }),
   // 02103：用近战武器攻击它时，武器被摧毁。
   '02103': Object.freeze({ destroysMeleeWeapon: true }),
   // 伊斯观察者：攻击时随机弃 1 张手牌，无手牌则伤害与恐惧各 +1。

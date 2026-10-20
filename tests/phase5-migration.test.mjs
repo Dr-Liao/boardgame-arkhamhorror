@@ -10,7 +10,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
 import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine/engine.js'
-import { RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
+import { blanksTraits, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
   SMITE_THE_WICKED_CODE, SEARCHING_FOR_IZZIE_CODE, weaknessUpgradeCode, LITA_CHANDLER_CODE } from '../src/cards/card-rules.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
@@ -684,6 +684,14 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   const entry = registeredEntry('03010')
   assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
+
+// ---- 5a-20：敌人规则 / 清空特质（02094、02182、02088）----
+
+test('5a-20：02182 的禁移与 02094 的远程难度修正都在规则表里', () => {
+  assert.deepEqual(enemyRuleFlags('02094'), { rangedAttackDifficultyReduction: 3 }, '02094 远程难度 -3')
+  assert.deepEqual(enemyRuleFlags('02182'), { blocksMovementWhileEngaged: true }, '02182 交战时不能移动')
+  assert.deepEqual(blanksTraits('02088'), ['ally'], '02088 清空盟友文字（BLANKS_TRAITS）')
 })
 
 // ---- 5a-19：剧情盟友卡号 / 被消除时离场（01117、02138、02139、02179）----

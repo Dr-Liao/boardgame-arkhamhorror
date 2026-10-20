@@ -13,8 +13,8 @@
 ## 1. 一句话现状
 
 迁移工具链已交付，**337 张卡**迁到能力层（59 个批次），`EFFECTS` 385 → **57**、
-通道 legacy 286 → **51**、descriptor 75 → **404**、**逃生卡 93 → 0（5c 完成）**、**5b 遗留清零**、**引擎卡号 166 → 67**。
-`replay` 基线逐条不变、`fast` 无新增失败。**5c 与 5b 均已完成；只剩 5a 引擎卡号分支（67 个码）。**
+通道 legacy 286 → **51**、descriptor 75 → **404**、**逃生卡 93 → 0（5c 完成）**、**5b 遗留清零**、**引擎卡号 166 → 65**。
+`replay` 基线逐条不变、`fast` 无新增失败。**5c 与 5b 均已完成；只剩 5a 引擎卡号分支（65 个码）。**
 
 ---
 
@@ -62,7 +62,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 | 文档 | 本文 + `phase5-migration.md`（批次证据与踩坑记录）+ `card-model.md`（加卡流程） |
 
 批次：5b-1…5b-5（机械 154）、5b-6/6b/6c/6d/7/8a/8b/9/10/11（反应/天赋/被动/规则字段/封印附属 46）、
-5c-1…5c-39（逃生卡 93 = 全部）、5b-8 / 5b-12 / 5b-13 / 5b-14（9 张）、5a-1…5a-19（引擎侧 54 个码）。
+5c-1…5c-39（逃生卡 93 = 全部）、5b-8 / 5b-12 / 5b-13 / 5b-14（9 张）、5a-1…5a-20（引擎侧 57 个码）。
 
 ---
 
@@ -93,7 +93,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 ⑤ replay --compare + 该战役验收用例
 ```
 
-### 4.2 5a 剩余 67 个码（`condition` 10 / `block` 29 / `reference` 28 / `table` 0）
+### 4.2 5a 剩余 65 个码（`condition` 9 / `block` 28 / `reference` 28 / `table` 0）
 
 - **`reference`（30）**：多数是 `requestChoice({ source: '0xxxx' })` 的来源标签——它会进状态指纹，
   改法本身会改变 replay，**归 Phase 6 与 UI 文案一起处理**，不要单独动。

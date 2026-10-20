@@ -1675,7 +1675,10 @@ function chooseTurn(state) {
 // ---------------------------------------------------------------------------
 
 function assetEffect(inv, asset) {
-  if (inv.threat?.some(item => item.code === '02088') && cardDef(asset?.code)?.traits?.includes('Ally')) return {}
+  // Phase 5（5a-20）：「毒蛇灾厄」清空某类特长卡的文字——规则数据在 BLANKS_TRAITS 里。
+  const blankedTraits = (inv.threat || []).flatMap(item => blanksTraits(item.code))
+  if (blankedTraits.length
+    && (cardDef(asset?.code)?.traits || []).some(trait => blankedTraits.includes(String(trait).toLowerCase()))) return {}
   // 「毒蛇灾厄」（04099）：非弱点道具的文字视为空白。
   if (inv.threat?.some(item => item.blankItemAssets) && (cardDef(asset?.code)?.traits || []).includes('Item')) return {}
   const legacy = EFFECTS[asset?.code]
@@ -4589,7 +4592,7 @@ function investigatorEntryError(state, locationId, seat = state.currentSeat) {
   if (!location) return '目标地点未入场'
   const inv = state.investigators[seat]
   if (inv?.steamImmobileRound === state.round) return '本轮受到蒸汽之爪影响，不能移动'
-  if (inv && state.enemies.some(enemy => enemy.code === '02182' && enemy.engagedSeat === seat && !enemyTextBlanked(state, enemy))) return '与攫取恐怖交战时不能移动'
+  if (inv && state.enemies.some(enemy => enemyRuleFlags(enemy.code).blocksMovementWhileEngaged && enemy.engagedSeat === seat && !enemyTextBlanked(state, enemy))) return '与攫取恐怖交战时不能移动'
   return scenarioBehavior(state).investigatorEntryError?.(state, location, inv) || null
 }
 
@@ -9688,8 +9691,10 @@ function doFight(state, seat, opts, events, noSpend) {
     reactionWindow(state, 'activateFirearmFight', context, events)
     opts.extraChaosChoices = context.extraChaosChoices || 0
   }
-  if (enemy.code === '02094' && !enemyTextBlanked(state, enemy)
-    && cardDef(weapon?.code)?.traits?.some(trait => ['Ranged', 'Firearm', 'Spell'].includes(trait))) difficulty = Math.max(0, difficulty - 3)
+  // Phase 5（5a-20）：敌人卡面的攻击难度修正来自 ENEMY_RULE_FLAGS。
+  const rangedReduction = enemyRuleFlags(enemy.code).rangedAttackDifficultyReduction || 0
+  if (rangedReduction && !enemyTextBlanked(state, enemy)
+    && cardDef(weapon?.code)?.traits?.some(trait => ['Ranged', 'Firearm', 'Spell'].includes(trait))) difficulty = Math.max(0, difficulty - rangedReduction)
   const weaponCode = weapon?.code || (opts.assetId && cardDef(opts.assetId) ? opts.assetId : null)
   const attackFx = { weaponCode, attackStyle: attackStyle(weaponCode && cardDef(weaponCode)) }
   // 「值得信赖」：结算宿主支援的触发能力时每项技能 +1。
