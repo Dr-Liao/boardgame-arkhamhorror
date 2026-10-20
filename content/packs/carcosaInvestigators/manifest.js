@@ -68,7 +68,8 @@ export const signatureEffects = {
       effect: { type: 'addTestValue', amount: 2 },
     }],
   },
-  '03010': { analyticalMind: true, passive: { remoteCommit: true } },
+  // 03010 分析性思维已迁到能力层（5a-5）：条目 passive 上的 analyticalMind 标记，
+  // 读点是引擎 commit 段的 registeredEntry(...).passive.analyticalMind。
   '03011': { weakness: { type: 'threat' }, kingInYellow: true, cannotLeavePlay: true },
   '03012': { paintedWorld: true },
   '03014': {

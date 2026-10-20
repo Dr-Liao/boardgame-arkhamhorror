@@ -675,7 +675,14 @@ test('5c-20：04010 走私货物在没有违法卡时只提供牌库顶 9 张', 
   settle(state)
 })
 
-// ---- 5c-21：以折扣打出另一张牌（03033 解锢灵魂）----
+// ---- 5a-5：卡号分支搬成条目级被动标记（03010 缜密分析）----
+
+test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认卡号', () => {
+  assert.equal(EFFECTS['03010'], undefined, '旧条目已删除')
+  const entry = registeredEntry('03010')
+  assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
+  assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
 
 test('5c-21：03033 解锢灵魂以费用 -3、不花行动打出法术，且只列有目标/无目标要求的候选', () => {
   const state = fixture()

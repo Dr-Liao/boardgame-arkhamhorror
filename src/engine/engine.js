@@ -3614,8 +3614,12 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
   const committed = []
   const committedCodes = new Set()
   const commitments = []
+  // Phase 5（5a-5）：远程投入的判据改成「控制着带 remoteCommit 标记的支援」
+  // （原来是 `other.code === '03002' && 有 '03010'`）。卡面本来就是「缜密分析」授予、
+  // 且该卡只能出现在潘明的牌库里，因此行为等价；引擎不再认这两张卡的卡号。
+  const grantsRemoteCommit = person => person.assets.some(asset => registeredEntry(asset.code)?.passive?.remoteCommit)
   const remoteMinhs = options.peril ? [] : aliveInvestigators(state).filter(other => other.seat !== seat
-    && other.code === '03002' && other.assets.some(asset => asset.code === '03010'))
+    && grantsRemoteCommit(other))
   const helpers = options.peril ? [] : aliveInvestigators(state).filter(other => other.seat !== seat
     && other.location === inv.location && !remoteMinhs.includes(other))
   const testOwners = [inv, ...remoteMinhs]
@@ -3721,7 +3725,8 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
       count++
       info(state, null, `${owner.name} 投入「${cardName(code)}」。`)
     }
-    const analyticalMind = owner.assets.find(asset => asset.code === '03010' && !asset.exhausted)
+    const analyticalMind = owner.assets.find(asset => !asset.exhausted
+      && registeredEntry(asset.code)?.passive?.analyticalMind)
     if (count === 1 && analyticalMind) {
       const answer = requestChoice(state, { kind: 'reaction', source: '03010', seat: owner.seat, canSkip: true,
         prompt: '是否横置「分析性思维」并抽1张牌？',

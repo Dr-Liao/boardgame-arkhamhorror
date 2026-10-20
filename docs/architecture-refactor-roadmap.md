@@ -16,7 +16,7 @@
 
 本实现的定位与参考实现不同，取舍也不同：它是"大厅里的一个可搬运 Mod + LLM 队友"，约束是嵌入大厅、零构建、离线可跑、AI 只能靠"观察投影 + 合法动作"决策。因此**参考实现的 Haskell/Postgres/Docker 三件套不要照搬**，要照搬的是它的**分层**（能力 / 窗口 / 代价 / 修正 / 匹配），不是它 6 千个逐卡模块的粒度。
 
-当前状态一句话：**声明式入口通了，生命周期钩子补到五个，状态基础（持续效果 / 目标枚举 / 打出条件）与语义原语（布尔修正 / 费用表达式 / 上限归属 / 授予 / 分配策略 / 检定结果 / 看牌 / 区域搬运）都已落地（Phase 1、Phase 2 完成）；内容来源已统一（Phase 3 完成）；重放安全网完整交付（Phase 4 完成：golden replay 基线 + 100 局随机对局门禁 + 撤销 API）；Phase 5 的迁移工具、5b 机械迁移主体、**反应能力接线**与 5c 逃生卡（Carcosa → TFA，二十一批）已交付，5a 清掉了第一批死分支（累计 305 张卡：`EFFECTS` 385 → 87、通道 legacy 286 → 60、descriptor 75 → 372、逃生卡 93 → 23、引擎卡号 166 → 119），5b 尾部（剩余反应 / 天赋 / 被动 / 打出后去向）、5c 剩余 23 张、5a 引擎卡号分支仍未完成。** 冻结守卫、账本、重放安全网都已就位，后续每批仍按「replay 指纹不变 + 账本指标单调下降」验收。
+当前状态一句话：**声明式入口通了，生命周期钩子补到五个，状态基础（持续效果 / 目标枚举 / 打出条件）与语义原语（布尔修正 / 费用表达式 / 上限归属 / 授予 / 分配策略 / 检定结果 / 看牌 / 区域搬运）都已落地（Phase 1、Phase 2 完成）；内容来源已统一（Phase 3 完成）；重放安全网完整交付（Phase 4 完成：golden replay 基线 + 100 局随机对局门禁 + 撤销 API）；Phase 5 的迁移工具、5b 机械迁移主体、**反应能力接线**与 5c 逃生卡（Carcosa → TFA，二十一批）与 5a 的第五批（卡号分支 → 条目级标记）已交付（累计 306 张卡：`EFFECTS` 385 → 86、通道 legacy 286 → 59、descriptor 75 → 373、逃生卡 93 → 23、引擎卡号 166 → 119），5b 尾部（剩余反应 / 天赋 / 被动 / 打出后去向）、5c 剩余 23 张、5a 引擎卡号分支仍未完成。** 冻结守卫、账本、重放安全网都已就位，后续每批仍按「replay 指纹不变 + 账本指标单调下降」验收。
 
 ---
 
@@ -25,7 +25,7 @@
 | 项 | 当前值 | 说明 |
 | --- | --- | --- |
 | `src/engine/engine.js` | **12,600 行** | 单文件承担 dispatch、检定、战斗、阶段、战役机制（5c-18/5c-19 删了 7 段旧原语分支、补了 9 个薄包装，净增约 20 行；卡号分支删完后自然变小） |
-| `EFFECTS` 行为条目 | **87** | Phase 5 迁走 298 条（5b 机械 154 + 反应 35 + 天赋 15 + 被动 20 + 规则字段 6 + 封印附属 5 + 5c 60）；其中 32 张用战役逃生原语、5 张由引擎硬编码 `engine:`；通道分布（按卡）：legacy 60 / descriptor 372 / hybrid 1 / escape 23 / engine 5，见 `audit/ability-coverage.json` |
+| `EFFECTS` 行为条目 | **86** | Phase 5 迁走 299 条（5b 机械 154 + 反应 35 + 天赋 15 + 被动 20 + 规则字段 6 + 封印附属 5 + 5c 60）；其中 32 张用战役逃生原语、5 张由引擎硬编码 `engine:`；通道分布（按卡）：legacy 59 / descriptor 373 / hybrid 1 / escape 23 / engine 5，见 `audit/ability-coverage.json` |
 | `EFFECTS` 顶层字段 | **65** | 生命周期/metadata/条件混在一起（`event`/`skill`/`weakness` 搬空后归零） |
 | 引擎里的卡号字面量 | **119 个** | `engine.js` 中 `'0\d{4}'` 去重计数，是**技术债主指标**（5c 删分支带走 44 个、5a 四批带走 15 个，其中 5c-18…5c-21 带走 7 个） |
 | 战役逃生原语的卡 | **23 张** | carcosaPlayer 12、tfaPlayer 7、carcosaInvestigator 4（描述子里的逃生原语也计入，见 `tools/audit-abilities.mjs`；5c-1…5c-21 迁走 70 张） |
@@ -37,7 +37,7 @@
 | 非玩家卡能力条目 | **9 张**（敌人 7 / 地点 2） | `src/cards/encounter-abilities.js`，读点 `entityModifierTotal` / `entityRuleActive` |
 | `behavior.js` 总行数 | **14,831**（Phase 3 基线，只减不增） | 含 `later-behaviors.js`；守卫 `architecture-guard.test.mjs` |
 | 已声明化关卡 | **3**（NOTZ 三关） | `content/scenario-declaration.js` 的 `declareScenario` |
-| 能力层已交付 | **376 个注册条目 / 318 个描述子能力**（含 Phase 2 的 21 张逃生卡与 Phase 5 的 305 张） | `tests/ability-layer.test.mjs`、`card-lifecycle.test.mjs`、`phase2-primitives.test.mjs`、`migration-tools.test.mjs`、`phase5-migration.test.mjs` |
+| 能力层已交付 | **377 个注册条目 / 318 个描述子能力**（含 Phase 2 的 21 张逃生卡与 Phase 5 的 306 张） | `tests/ability-layer.test.mjs`、`card-lifecycle.test.mjs`、`phase2-primitives.test.mjs`、`migration-tools.test.mjs`、`phase5-migration.test.mjs` |
 | 状态基础（Phase 1） | `state.effects[]`（6 种 duration）、`target` 枚举（5 种 kind）、`playCondition` 单一读点 | `src/engine/effect-state.js`、`targets.js`、`play-condition.js` |
 | 语义原语（Phase 2） | `cost.js` / `limits.js` / `test-result.js` / `look.js` / `zones.js` + `modifiers.js` 的 `capability:*`/`ignore:*`/`add:*` | 见 [`phase2-primitives.md`](phase2-primitives.md) |
 | 规则层读座位策略 | `resolution.js:58` 读 `state.humanSeats` | 策略泄漏进规则，未修 |
@@ -558,7 +558,7 @@ maxHealth / cardSanity
 
 | 批次 | 范围 | 每批规模 | 门禁 | 状态 |
 | --- | --- | --- | --- | --- |
-| 5a | 引擎卡号分支（132 个卡号，先做出现 ≥3 次的 43 个） | 5–10 处 | replay hash 不变 + 该卡测试绿 | 🚧 四批：死分支 4 段（5a-1）、弱点敌人关键词 3 码（5a-2）、清空文本 1 码（5a-3）、议程/中毒/提示例外 3 码（5a-4）；`card-rules.test.mjs` 锁读点 |
+| 5a | 引擎卡号分支（132 个卡号，先做出现 ≥3 次的 43 个） | 5–10 处 | replay hash 不变 + 该卡测试绿 | 🚧 五批：死分支 4 段（5a-1）、弱点敌人关键词 3 码（5a-2）、清空文本 1 码（5a-3）、议程/中毒/提示例外 3 码（5a-4）、卡号分支 → 条目级被动标记 1 码（5a-5）；`card-rules.test.mjs` 锁读点 |
 | 5b | 旧 DSL 卡机械迁移（300 张，脚本生成草稿） | 20–40 张 | fast tier + 账本更新 | 🚧 235 张（机械 154 + 反应 35 + 天赋 15 + 被动 20 + 规则字段 6 + 封印附属 5） |
 | 5c | 逃生卡（93 张，按战役：Carcosa → TFA → Dunwich） | 2–15 张 | 该战役审计 + replay | 🚧 二十一批：71 张（Carcosa 33 / TFA 33 / 跨战役 5） |
 
@@ -590,8 +590,9 @@ maxHealth / cardSanity
 | 5c-19 | `entersPlay` 的 resolve 读点（`LIFECYCLE_RESOLVE_KINDS`）+ 2 张卡（求助盟友 / 爱丽·霍洛维兹）+ 4 个新 api（`topDeckCodes` / `attachCardFromDeck` / `shuffleDeck` / `returnAssetToHand`） | [`phase5-migration.md`](phase5-migration.md) §4.27 |
 | 5c-20 | 条目级 `playRestriction` / `teamLimit` 读点 + 走私货物（牌库顶/弃牌堆两区查找） | [`phase5-migration.md`](phase5-migration.md) §4.28 |
 | 5c-21 | `api.cardHasLegalTarget` + 解锢灵魂（折扣打出另一张法术） | [`phase5-migration.md`](phase5-migration.md) §4.29 |
+| 5a-5 | 卡号分支 → 条目级被动标记（03010 缜密分析：`passive.analyticalMind` / `passive.remoteCommit`），引擎不再认 03002 + 03010 的卡号组合 | [`phase5-migration.md`](phase5-migration.md) §4.30 |
 | 5a 四批 | 4 段死分支清理 + 卡号级规则数据搬到 `src/cards/card-rules.js`（敌人弱点关键词 / 清空文本 / 反应提示例外 / 中毒威胁 / 议程手牌惩罚），`tests/card-rules.test.mjs` 锁读点；守卫 `tools/audit-dead-primitives.mjs` | [`phase5-migration.md`](phase5-migration.md) §4.0 / §4.17 / §4.18 |
-| 用例 | `tests/card-rules.test.mjs`（2 条）、`tests/migration-tools.test.mjs`（8 条）、`tests/phase5-migration.test.mjs`（47 条）、`architecture-guard`（10 条，含死分支与卡包登记守卫），均在 `fast` tier | `npm run test:fast` |
+| 用例 | `tests/card-rules.test.mjs`（2 条）、`tests/migration-tools.test.mjs`（8 条）、`tests/phase5-migration.test.mjs`（48 条）、`architecture-guard`（10 条，含死分支与卡包登记守卫），均在 `fast` tier | `npm run test:fast` |
 
 **门禁结果（Phase 5 阶段性实测）**：
 
