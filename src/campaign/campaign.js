@@ -2,6 +2,7 @@ import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
 import { PLAYER_CARD_CODES, CORE_UPGRADE_CODES, TFA_PLAYER_BUILDABLE_CODES, canSelectInvestigator, isCardAvailable } from '../deck/availability.js'
 import { matchesDeckOptions, cardLimit, isPlayable, scoreCard, hashSeed } from '../deck/deckbuilding.js'
 import { validateDeckRules, upgradeQuote } from '../deck/deck-rules.js'
+import { registeredEntry } from '../engine/ability.js'
 
 const playerPool = [...PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES]
 const tfaPool = [...TFA_PLAYER_BUILDABLE_CODES]
@@ -172,7 +173,9 @@ export function replacementOptions(record, addedCode, campaignRecords = null) {
     // not ordinary deck slots. They must not block every subsequent upgrade.
     if (validateDeckRules(inv, deck.filter(ordinary), ALL_CARDS).errors.length) return []
     const adaptableUsed = (record.purchases || []).filter(purchase => purchase.scenarioIndex === record.currentScenarioIndex && purchase.adaptable).length
-    const adaptable = record.deck.includes('02110') && removed && (added.xp || 0) === 0 && (removed.xp || 0) === 0 && adaptableUsed < 2
+    // Phase 5（5b-9）：「适应性」这类「关间免费替换等级 0 卡」由条目级 adaptableSwaps 声明（次数即上限）。
+    const adaptableRule = record.deck.map(code => registeredEntry(code)?.adaptableSwaps).find(value => value > 0)
+    const adaptable = adaptableRule && removed && (added.xp || 0) === 0 && (removed.xp || 0) === 0 && adaptableUsed < adaptableRule
     const quote = adaptable
       ? { cost: 0, explanation: '随机应变：本次关间免费替换等级 0 卡牌' }
       : upgradeQuote(added, removed, { discounts: upgradeDiscountsFor(record) })

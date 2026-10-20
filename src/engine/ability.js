@@ -144,6 +144,10 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'redirectAttackToAsset',
   // Phase 5（5b-8）：神话阶段结束时弃掉这张支援（戴红手套的男子）；读点在 mythosPhase。
   'forcedMythosEndDiscard',
+  // Phase 5（5b-9）：关间免费替换（适应性，次数即上限）；读点在 campaign.js 的 upgrade 报价。
+  'adaptableSwaps',
+  // Phase 5（5b-9）：结局结算时的「卡戎的银币」契约（+2 经验、被击败即死亡）；读点在结局发经验段。
+  'obolContract',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -367,6 +371,9 @@ export function registerCardAbilities(entries) {
       // Phase 5（5b-8）：攻击转移支援 / 神话结束弃掉。
       redirectAttackToAsset: entry.redirectAttackToAsset === true,
       forcedMythosEndDiscard: entry.forcedMythosEndDiscard === true,
+      // Phase 5（5b-9）：关间免费替换次数 / 结局契约。
+      adaptableSwaps: entry.adaptableSwaps ?? null,
+      obolContract: entry.obolContract === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

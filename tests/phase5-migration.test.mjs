@@ -684,6 +684,17 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5b-9：战役规则型被动（02110 适应性、03308 卡戎的银币）----
+
+test('5b-9：02110 适应性 / 03308 卡戎的银币改用条目级战役标记', () => {
+  const adaptable = registeredEntry('02110')
+  assert.equal(adaptable?.adaptableSwaps, 2, '关间免费替换 2 次')
+  assert.equal(adaptable?.passive?.permanent, true, '永久')
+  const obol = registeredEntry('03308')
+  assert.equal(obol?.obolContract, true, '结局契约')
+  assert.equal(obol?.passive?.permanent, true, '永久')
+})
+
 // ---- 5b-8：攻击转移 / 入场自选技能 / 神话结束弃掉（01082、02310）----
 
 test('5b-8：01082 安奎娜把敌人攻击转移给另一个敌人；02310 入场自选两项技能', () => {

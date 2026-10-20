@@ -1367,7 +1367,8 @@ function applyResolutionEffects(state, resolutionKey, events) {
   }
   if (award) for (const inv of state.investigators) {
     let amount = state.victory + bonus + seatBonus(inv.seat)
-    const obol = inv.assets.find(asset => asset.code === '03308')
+    // Phase 5（5b-9）：「卡戎的银币」这类结局加成由条目级 obolContract 声明。
+    const obol = inv.assets.find(asset => registeredEntry(asset.code)?.obolContract)
     if (obol) {
       if (inv.defeated) {
         const record = campaign.investigators[inv.seat]

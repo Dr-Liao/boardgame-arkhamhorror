@@ -13,7 +13,7 @@ export const effects = {
   // 02150/02194/02268/02299 已迁到能力层（kind: 'commit' / 'played'，见 src/cards/card-abilities.js）。
   '02152': { fast: true, abilities: [action('战斗 +2；成功至少 2 点时伤害 +1', fight(2, 1, { successBy: 2 }))] },
   // 02186 已迁到能力层（kind: 'played' + playCondition，见 src/cards/card-abilities.js）。
-  '02110': { campaign: { adaptable: 2 }, passive: { permanent: true } },
+  // 02110 适应性已迁到能力层（5b-9），见 MIGRATED_PASSIVE_ENTRIES_5B9。
   '02111': { event: { type: 'drawEncounterAll' }, addToVictory: true },
   '02113': { fast: true, reaction: { when: 'attackFail', failedByAtMost: 2 }, event: { type: 'redirectFailedAttack' } },
   '02115': { event: { type: 'flare' }, exileAfterPlay: true },

@@ -45,7 +45,7 @@ export const effects = {
 
   // 03304 吃子弹已迁到能力层（5c-33），见 MIGRATED_ESCAPE_ENTRIES_5C33。
   // 03306 遗觉记忆已迁到能力层（5c-38），见 MIGRATED_ESCAPE_ENTRIES_5C38。
-  '03308': { passive: { permanent: true }, campaign: { charonsObol: true } },
+  // 03308 卡戎的银币已迁到能力层（5b-9），见 MIGRATED_PASSIVE_ENTRIES_5B9。
   // 03310 死里逃生已迁到能力层（5c-36）。
   // 03315 的离场钩子（弃掉牌库顶 10 张）已迁到能力层（kind: 'leavesPlay'）。
 }

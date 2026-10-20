@@ -9,6 +9,7 @@ const pilot = new Set(['02020', '02021', '02030'])
 // 它们不再是 effects.js 的条目，但仍算"有实现、可构筑"，由 expansions.js 一并放行。
 // Phase 1 追加：02105 / 02186 / 02271 / 02273（played / commit + playCondition）。
 export const abilityLayerCodes = Object.freeze([
+  '02110',
   '02310',
   '02016',
   '02017',
