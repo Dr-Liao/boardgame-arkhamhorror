@@ -109,9 +109,12 @@ test('03310 Cheat Death prevents defeat and heals 2 damage/horror', () => {
   state.investigators[0].hand = ['03310']
   state.investigators[0].damage = state.investigators[0].maxHealth - 1
   enemy(state, { id: 'e1', engagedSeat: 0, damage: 2 })
-  move(state, { action: 'draw' })
+  // 只用敌人阶段的攻击：draw 会先触发一次借机攻击，把这张「一局一次」的牌提前用掉，
+  // 于是敌人阶段再被打就没人救了（原用例因此一直失败）。
+  move(state, { action: 'endTurn' })
   finish(state, choice => choice.options.find(option => option.cardCode === '03310')?.id)
   assert.equal(state.investigators[0].defeated, false)
+  assert.equal(state.investigators[0].damage, state.investigators[0].maxHealth - 1, '回 2 点伤害')
 })
 
 test('03311 Time Warp restores the state before the action', () => {

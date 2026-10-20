@@ -7068,34 +7068,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     if (played) resolveEffect(state, seat, played, makeRuntime(state, events))
     return
   }
-  if (effect.action === 'cheatDeath') {
-    for (const enemy of state.enemies.filter(item => item.engagedSeat === seat)) disengageEnemy(state, enemy, events)
-    for (const threat of inv.threat.slice()) { removeOne(inv.threat, threat); inv.discard.push(threat.code) }
-    inv.damage = Math.max(0, inv.damage - 2); inv.horror = Math.max(0, inv.horror - 2)
-    const locations = state.locations.filter(location => location.revealed && !state.enemies.some(enemy => enemy.location === location.id))
-    if (locations.length) {
-      const destination = requestChoice(state, { kind: 'location', source: '03310', seat, prompt: '选择没有敌人的已揭示地点。',
-        options: locations.map(location => ({ id: location.id, label: locName(state, location.id) })) })
-      relocateInvestigator(state, seat, destination, events)
-    }
-    if (state.currentSeat === seat) { inv.actionsLeft = 0; inv.turnEnded = true }
-    return
-  }
-  if (effect.action === 'timeWarp') {
-    const snapshot = state.lastActionSnapshot
-    if (!snapshot) return
-    const preserved = { hand: inv.hand.slice(), resources: inv.resources, discard: inv.discard.slice(), removedFromGame: (state.removedFromGame || []).slice() }
-    const resolution = state._resolution
-    const revision = state.revision
-    for (const key of Object.keys(state)) delete state[key]
-    Object.assign(state, structuredClone(snapshot))
-    Object.assign(state.investigators[seat], preserved)
-    state.removedFromGame = preserved.removedFromGame
-    state._resolution = resolution
-    state.revision = revision
-    state._timeWarped = true
-    return
-  }
   throw new Error(`未实现的卡尔克萨玩家卡效果：${effect.action}`)
 }
 
@@ -10911,6 +10883,48 @@ function abilityApi(state, events) {
     assetsCannotReady: inv => assetsCannotReady(inv),
     searchTop: (seat, options) => searchTop(state, seat, options, events),
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
+    // Phase 5（5c-36）：「死里逃生」的候选地点——已揭示且没有敌人。
+    locationsWithoutEnemies: () => state.locations.filter(location => location.revealed
+      && !state.enemies.some(enemy => enemy.location === location.id)),
+    // Phase 5（5c-36）：「死里逃生」——与所有敌人解除交战、把威胁区的牌丢进弃牌堆、软结束回合。
+    disengageAll: seat => disengageAll(state, seat, events),
+    discardAllThreats: seat => {
+      const owner = state.investigators[seat]
+      if (!owner) return 0
+      let removed = 0
+      for (const threat of owner.threat.slice()) {
+        removeOne(owner.threat, threat)
+        owner.discard.push(threat.code)
+        removed++
+      }
+      return removed
+    },
+    softEndTurn: seat => {
+      const owner = state.investigators[seat]
+      if (!owner) return false
+      if (state.currentSeat === seat) { owner.actionsLeft = 0; owner.turnEnded = true }
+      return owner.turnEnded === true
+    },
+    // Phase 5（5c-36）：「时间曲折」——把整局状态回滚到上一个动作的快照，
+    // 保留该调查员的手牌/资源/弃牌堆与「移出游戏」，并保留事务层的 _resolution/revision。
+    rewindLastAction: seat => {
+      const snapshot = state.lastActionSnapshot
+      if (!snapshot) return false
+      const owner = state.investigators[seat]
+      if (!owner) return false
+      const preserved = { hand: owner.hand.slice(), resources: owner.resources,
+        discard: owner.discard.slice(), removedFromGame: (state.removedFromGame || []).slice() }
+      const resolution = state._resolution
+      const revision = state.revision
+      for (const key of Object.keys(state)) delete state[key]
+      Object.assign(state, structuredClone(snapshot))
+      Object.assign(state.investigators[seat], preserved)
+      state.removedFromGame = preserved.removedFromGame
+      state._resolution = resolution
+      state.revision = revision
+      state._timeWarped = true
+      return true
+    },
     // Phase 5（5c-35）：「同归于尽」用——列出与我交战的所有敌人（不限地点）。
     engagedEnemies: seat => state.enemies.filter(enemy => enemy.engagedSeat === seat),
     // Phase 5（5c-35）：写调查员实例上的 physicalTrauma/mentalTrauma（**不是**战役账本）。

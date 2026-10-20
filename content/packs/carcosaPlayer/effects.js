@@ -46,7 +46,6 @@ export const effects = {
   // 03304 吃子弹已迁到能力层（5c-33），见 MIGRATED_ESCAPE_ENTRIES_5C33。
   '03306': { fast: true, event: custom('eideticMemory'), removeAfterPlay: true },
   '03308': { passive: { permanent: true }, campaign: { charonsObol: true } },
-  '03310': { fast: true, reaction: { when: 'wouldDefeat', selfOnly: true }, event: custom('cheatDeath'), removeAfterPlay: true },
-  '03311': { fast: true, reaction: { when: 'actionResolvedAtLocation' }, event: custom('timeWarp') },
+  // 03310 死里逃生已迁到能力层（5c-36）。
   // 03315 的离场钩子（弃掉牌库顶 10 张）已迁到能力层（kind: 'leavesPlay'）。
 }

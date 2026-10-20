@@ -684,6 +684,38 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-36：死里逃生 / 时间曲折（03310 / 03311）----
+
+test('5c-36：03310 死里逃生在致命伤害窗口免于一死并回 2 点伤害', () => {
+  const state = fixture()
+  state.investigators[0].hand = ['03310']
+  state.investigators[0].damage = state.investigators[0].maxHealth - 1
+  enemy(state, { engagedSeat: 0, damage: 2 })
+  state.chaosBag = ['0', '0', '0']
+  move(state, { action: 'endTurn' })
+  let played = false
+  settle(state, pending => {
+    const option = pending.options?.find(item => item.cardCode === '03310')
+    if (option) { played = true; return option.id }
+    return null
+  })
+  assert.equal(played, true, '致命的敌人攻击窗口里可以打出')
+  assert.equal(state.investigators[0].defeated, false, '免于一死')
+  assert.equal(state.investigators[0].damage, state.investigators[0].maxHealth - 1, '回 2 点伤害')
+})
+
+test('5c-36：03311 时间曲折把上一个动作整段回滚', () => {
+  const state = fixture()
+  state.investigators[0].hand = ['03311']
+  const here = state.locations.find(location => location.id === state.investigators[0].location)
+  state.locations.push({ ...structuredClone(here), id: 'next', name: '邻室', clues: 1, connections: ['study'] })
+  here.connections = ['next']
+  move(state, { action: 'move', locationId: 'next' })
+  settle(state, pending => (pending.kind === 'reaction' && pending.options?.some(item => item.cardCode === '03311')
+    ? pending.options.find(item => item.cardCode === '03311').id : null))
+  assert.equal(state.investigators[0].location, 'study', '移动被回滚')
+})
+
 // ---- 5c-35：地点物品折扣 / 同归于尽（03149 查尔斯·罗斯、03189）----
 
 test('5c-35：03149 查尔斯·罗斯横置后本地点下一件物品 -1；03189 同归于尽击败交战敌人并拉满伤害', () => {

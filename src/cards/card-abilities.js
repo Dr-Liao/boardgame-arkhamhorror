@@ -3120,12 +3120,52 @@ export const MIGRATED_ESCAPE_ENTRIES_5C35 = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// 5c-36：死里逃生 / 时间曲折（回滚与「免于一死」）
+// ---------------------------------------------------------------------------
+
+export const MIGRATED_ESCAPE_ENTRIES_5C36 = [
+  // 03310 死里逃生：将要被击败时快速打出——解除所有交战、丢掉威胁区、回 2 伤害 2 恐惧、
+  // 移动到没有敌人的已揭示地点、结束本回合；这张牌移出游戏。
+  {
+    code: '03310', removeAfterPlay: true,
+    abilities: [{
+      kind: 'played', fast: true, trigger: 'wouldDefeat',
+      criteria: { selfOnly: true },
+      label: '免于一死：解除交战、丢掉威胁、回 2/2、转移到安全地点并结束回合',
+      resolve: ({ inv, api }) => {
+        api.disengageAll(inv.seat)
+        api.discardAllThreats(inv.seat)
+        api.healDamage(inv.seat, 2)
+        api.healHorror(inv.seat, 2)
+        const safe = api.locationsWithoutEnemies()
+        if (safe.length) {
+          const destination = api.choice({ kind: 'location', source: '03310', seat: inv.seat,
+            prompt: '选择没有敌人的已揭示地点。',
+            options: safe.map(location => ({ id: location.id, label: api.locName(location.id) })) })
+          if (destination) api.moveInvestigator(inv.seat, destination)
+        }
+        api.softEndTurn(inv.seat)
+      },
+    }],
+  },
+  // 03311 时间曲折：把一个动作的结算完全回滚（保留自己的手牌/资源/弃牌堆）。
+  {
+    code: '03311',
+    abilities: [{
+      kind: 'played', fast: true, trigger: 'actionResolvedAtLocation',
+      label: '回滚上一个动作',
+      resolve: ({ inv, api }) => { api.rewindLastAction(inv.seat) },
+    }],
+  },
+]
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, ...MIGRATED_ESCAPE_ENTRIES_5C35, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, ...MIGRATED_ESCAPE_ENTRIES_5C35, ...MIGRATED_ESCAPE_ENTRIES_5C36, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -3181,4 +3221,5 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_ESCAPE_ENTRIES_5C33.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C34.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C35.map(entry => entry.code),
+  ...MIGRATED_ESCAPE_ENTRIES_5C36.map(entry => entry.code),
 ])
