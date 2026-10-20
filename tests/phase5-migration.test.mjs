@@ -10,6 +10,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
 import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine/engine.js'
+import { RANDOM_BASIC_WEAKNESS_CODE } from '../src/cards/card-rules.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -682,6 +683,13 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   const entry = registeredEntry('03010')
   assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
+
+// ---- 5a-10：随机基础弱点卡号 / 古代雕像（01000、01071）----
+
+test('5a-10：01000 与 01071 都不再按卡号判断', () => {
+  assert.equal(RANDOM_BASIC_WEAKNESS_CODE, '01000', '随机基础弱点的卡号在规则数据里')
+  assert.equal(registeredEntry('01071')?.chaosTokenExtraReveal, true, '雕像由条目声明')
 })
 
 // ---- 5a-9：雷克斯的诅咒 / 奇异溶液（02009、02021）----

@@ -39,6 +39,7 @@ import {
   agendaHandSizePenalty, blanksTraits, enemyWeaknessExtra, hasExplicitReactionPrompt,
   isPoisonThreat, isTextBlankEnemy, poisonThreatCode,
   RELIC_OF_AGES_CODE,
+  RANDOM_BASIC_WEAKNESS_CODE,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -625,7 +626,8 @@ function corePlayerPool() {
 
 function basicWeaknessPool(state = null) {
   const core = Object.values(BASIC_WEAKNESSES)
-    .filter((c) => isCardAvailable(c.code) && c.pack === 'core' && c.code !== '01000')
+    // Phase 5（5a-10）：「随机基础弱点」自身的卡号在卡号规则数据里，不再写进引擎。
+    .filter((c) => isCardAvailable(c.code) && c.pack === 'core' && c.code !== RANDOM_BASIC_WEAKNESS_CODE)
     .map((c) => c.code)
   const packs = state?.campaign ? campaignManifestFor(state).requiredPackIds.map(id => contentRegistry.getPack(id)) : []
   const extra = packs.flatMap(pack => pack?.basicWeaknessCodes || []).filter(code => isCardAvailable(code))
@@ -3884,7 +3886,8 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
       token = pool[Number(chosen)]
       info(state, events, `${inv.name} 结算额外混乱标记 ${tokenLabel(token)}，其余标记归还。`)
     }
-    const statue = token == null && inv.assets.find(asset => asset.code === '01071' && (asset.uses || 0) > 0)
+    // Phase 5（5a-10）：「花 1 充能改揭示 2 枚标记」由条目级 chaosTokenExtraReveal 声明。
+    const statue = token == null && inv.assets.find(asset => registeredEntry(asset.code)?.chaosTokenExtraReveal && (asset.uses || 0) > 0)
     if (statue) {
       const answer = requestChoice(state, { kind: 'reaction', source: statue.id, seat, canSkip: true, prompt: '是否花费 1 充能，改为揭示 2 个混乱标记并选择 1 个？', options: [{ id: 'skip', label: '不花费充能' }, { id: 'trigger', label: '花费 1 充能' }] })
       if (answer === 'trigger') {

@@ -3387,6 +3387,8 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '02272', negotiationDifficultyReduction: 2 },
   // 02009 雷克斯的诅咒（威胁）：检定本该成功时改为再揭示一枚标记（读点在 performTest 的 ST.5）。
   { code: '02009', rerollRevealedTokenOnSuccess: true },
+  // 01071 古代雕像：揭示混乱标记时花 1 充能改揭示 2 枚并选 1 枚（读点在 performTest 的标记段）。
+  { code: '01071', chaosTokenExtraReveal: true },
 ]
 
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。

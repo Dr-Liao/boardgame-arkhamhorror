@@ -52,3 +52,6 @@ export function agendaHandSizePenalty(code) {
 
 // 卡号级规则数据：剧情资产「古代遗物」的默认卡号（原 engine.js 硬编码 04061）。
 export const RELIC_OF_AGES_CODE = '04061'
+
+// 卡号级规则数据：「随机基础弱点」自身的卡号（原 engine.js 硬编码 01000）。
+export const RANDOM_BASIC_WEAKNESS_CODE = '01000'

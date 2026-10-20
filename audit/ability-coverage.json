@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "note": "由 tools/audit-abilities.mjs --write 生成，勿手改。指标只允许下降；engineCodes / effectsEntries 的每一次减少都是一次迁移证据，必须随迁移一起提交。",
   "metrics": {
-    "engineCodes": 91,
+    "engineCodes": 89,
     "effectsEntries": 57,
     "effectsTopLevelFields": 33,
     "escapeCards": 0,
@@ -438,8 +438,7 @@
     {
       "code": "01071",
       "channel": "descriptor",
-      "descriptors": 0,
-      "engineReferenced": true
+      "descriptors": 0
     },
     {
       "code": "01072",

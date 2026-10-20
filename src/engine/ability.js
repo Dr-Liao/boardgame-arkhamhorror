@@ -161,6 +161,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'negotiationDifficultyReduction',
   // Phase 5（5a-9）：本该成功时改为再揭示一枚标记（雷克斯的诅咒）。
   'rerollRevealedTokenOnSuccess',
+  // Phase 5（5a-10）：花 1 充能改揭示 2 枚标记并选 1（古代雕像）。
+  'chaosTokenExtraReveal',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -396,6 +398,7 @@ export function registerCardAbilities(entries) {
       physicalTraumaIfUsesBelow: entry.physicalTraumaIfUsesBelow ?? null,
       negotiationDifficultyReduction: entry.negotiationDifficultyReduction ?? null,
       rerollRevealedTokenOnSuccess: entry.rerollRevealedTokenOnSuccess === true,
+      chaosTokenExtraReveal: entry.chaosTokenExtraReveal === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,
