@@ -7547,32 +7547,6 @@ function tfaPlayerEffectCore(state, seat, effect, events) {
   // 挥金如土：本次检定 +2；成功返还 3 资源。
   // 萝拉·桑提亚哥：花费隐藏值等量资源发现 1 个线索。
   // 华饰弓：重新搭箭（1 子弹）。
-  // 古代遗物（04191 阻断未来）：横置，检定意志或智识(4)。成功移除密谋 1 毁灭，
-  // 失败在遗物上放 1 毁灭；每场游戏最多成功一次。
-  if (effect.action === 'relicDoom') {
-    const relic = inv.assets.find(asset => asset.code === '04191')
-    if (!relic) { info(state, events, '你没有控制古代遗物。'); return }
-    if (inv.tfaRelicDoomSuccess) { info(state, events, '本场游戏已经成功使用过一次「古代遗物」。'); return }
-    const picked = requestChoice(state, { kind: 'skill', source: '04191', seat,
-      prompt: '选择意志还是智识检定。',
-      options: [{ id: 'willpower', label: '意志(4)' }, { id: 'intellect', label: '智识(4)' }] })
-    const skill = picked === 'intellect' ? 'intellect' : 'willpower'
-    performTest(state, seat, skill, 4, { resolve: result => {
-      if (result.success) {
-        inv.tfaRelicDoomSuccess = true
-        if ((state.doom || 0) > 0) {
-          state.doom -= 1
-          info(state, events, `🏺 古代遗物：移除当前密谋上的 1 个毁灭（当前 ${state.doom}）。`)
-        } else {
-          info(state, events, '🏺 古代遗物：当前密谋上没有毁灭可移除。')
-        }
-        return
-      }
-      relic.doom = (relic.doom || 0) + 1
-      info(state, events, `🏺 古代遗物：检定失败，在遗物上放置 1 个毁灭（当前 ${relic.doom}）。`)
-    } })
-    return
-  }
   // 勃朗宁自动步枪：花 1–5 子弹，+X 战斗并造成 X 点伤害。
   // 悄然遁去：躲避加入智识；成功超过 2 点且非精英时下个补给阶段不重整。
   // 鲜血失色：可额外受到最多 3 点伤害，换取意志攻击加成。
@@ -10757,6 +10731,23 @@ function abilityApi(state, events) {
       state.clues = (state.clues || 0) - amount
       location.clues = (location.clues || 0) + amount
       return amount
+    },
+    // Phase 5（5c-25）：调查员级的「本局一次」标记（读点就是 inv.gameFlags，随存档往返）。
+    gameFlag: (seat, key) => Boolean(state.investigators[seat]?.gameFlags?.[key]),
+    setGameFlag: (seat, key, value = true) => {
+      const owner = state.investigators[seat]
+      if (!owner) return false
+      owner.gameFlags ||= {}
+      if (value) owner.gameFlags[key] = true
+      else delete owner.gameFlags[key]
+      return Boolean(value)
+    },
+    // Phase 5（5c-25）：当前密谋上的毁灭数与移除（「古代遗物」这类卡要读它再写日志）。
+    doom: () => state.doom || 0,
+    removeDoom: (amount = 1) => {
+      const removed = Math.min(amount, state.doom || 0)
+      state.doom = (state.doom || 0) - removed
+      return removed
     },
     // Phase 5（5c-24）：把正在结算的这张牌**自身**放置入场（「危险预感」这类打出后变成场上卡的事件）。
     putSelfIntoPlay: (seat, code) => {

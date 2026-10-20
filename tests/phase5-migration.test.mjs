@@ -684,6 +684,26 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-25：检定 + 「本局一次」标记（04191 古代遗物）----
+
+test('5c-25：04191 古代遗物成功移除密谋毁灭，且每局只生效一次', () => {
+  const state = fixture()
+  state.chaosBag = ['0']
+  state.doom = 2
+  state.investigators[0].willpower = 10
+  const relic = asset(state, '04191')
+  use(state, relic)
+  settle(state)
+  assert.equal(state.doom, 1, '成功移除 1 点密谋毁灭')
+  assert.equal(state.investigators[0].gameFlags?.relicDoomSuccess, true, '记下「本局成功过一次」')
+  assert.equal(state.investigators[0].tfaRelicDoomSuccess, undefined, '不再写卡号化的裸字段')
+  // 第二次：横置已解除，但仍不应再移除。
+  state.investigators[0].assets.find(item => item.id === relic.id).exhausted = false
+  use(state, relic)
+  settle(state)
+  assert.equal(state.doom, 1, '本场游戏已经成功过一次，不再移除')
+})
+
 // ---- 5c-24：打出后变成场上卡 + 封印标记（04199 危险预感）----
 
 test('5c-24：04199 危险预感由条目声明「变成场上卡 + 替代结算的封印标记」', () => {

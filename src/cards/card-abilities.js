@@ -2784,12 +2784,55 @@ export const MIGRATED_ESCAPE_ENTRIES_5C24 = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// 5c-25：检定 + 「本局一次」标记（古代遗物）
+// ---------------------------------------------------------------------------
+
+export const MIGRATED_ESCAPE_ENTRIES_5C25 = [
+  // 04191 古代遗物：横置，检定意志或智识(4)。成功移除当前密谋 1 个毁灭（每局最多成功一次），
+  // 失败在遗物上放 1 个毁灭。旧实现把「成功过一次」记在 inv.tfaRelicDoomSuccess，
+  // 现在换成调查员级的通用标记 inv.gameFlags。
+  {
+    code: '04191',
+    abilities: [{
+      kind: 'action', label: '横置：检定意志或智识(4)，成功移除密谋 1 毁灭',
+      cost: { action: false, exhaust: true },
+      resolve: ({ inv, source, api }) => {
+        if (api.gameFlag(inv.seat, 'relicDoomSuccess')) {
+          api.info('本场游戏已经成功使用过一次「古代遗物」。')
+          return
+        }
+        const picked = api.choice({ kind: 'skill', source: '04191', seat: inv.seat,
+          prompt: '选择意志还是智识检定。',
+          options: [{ id: 'willpower', label: '意志(4)' }, { id: 'intellect', label: '智识(4)' }] })
+        const skill = picked === 'intellect' ? 'intellect' : 'willpower'
+        api.startTest({
+          seat: inv.seat, skill, difficulty: 4,
+          resolve: result => {
+            if (result.success) {
+              api.setGameFlag(inv.seat, 'relicDoomSuccess')
+              if (api.removeDoom(1) > 0) {
+                api.info(`🏺 古代遗物：移除当前密谋上的 1 个毁灭（当前 ${api.doom()}）。`)
+              } else {
+                api.info('🏺 古代遗物：当前密谋上没有毁灭可移除。')
+              }
+              return
+            }
+            api.placeDoomOnCard(source, 1)
+            api.info(`🏺 古代遗物：检定失败，在遗物上放置 1 个毁灭（当前 ${source?.doom || 0}）。`)
+          },
+        })
+      },
+    }],
+  },
+]
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -2836,4 +2879,5 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_ESCAPE_ENTRIES_5C22.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C23.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C24.map(entry => entry.code),
+  ...MIGRATED_ESCAPE_ENTRIES_5C25.map(entry => entry.code),
 ])

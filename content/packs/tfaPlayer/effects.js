@@ -37,12 +37,7 @@ export const effects = {
     event: { type: 'targetedEffect', target: 'location', effect: { type: 'takeDamage', amount: 2 } } },
 
   // ---- 剧本资产 ----
-  // 古代遗物（04191 阻断未来）：[free] 横置，检定意志或智识(4)。成功移除当前密谋上的
-  // 1 个毁灭，失败在遗物上放 1 个毁灭；每场游戏最多成功一次。不是可构筑卡。
-  '04191': {
-    abilities: [{ label: '横置：检定意志或智识(4)，成功移除密谋 1 毁灭',
-      cost: { action: false, exhaust: true }, effect: tfa('relicDoom') }],
-  },
+  // 04191 古代遗物已迁到能力层（5c-25），见 MIGRATED_ESCAPE_ENTRIES_5C25。
 
   // 伊塔卡（04147）：+1 战斗 / +1 敏捷；把敌人加入胜利区后可横置治愈自己与伊塔卡各 1 点恐惧。
 

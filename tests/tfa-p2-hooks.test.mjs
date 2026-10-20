@@ -239,7 +239,8 @@ test('04191 古代遗物：意志/智识(4) 检定成功移除密谋毁灭，每
   move(state, { action: 'ability', assetId: relic.id, abilityIndex: 0 })
   settle(state)
   assert.equal(state.doom, 1, '成功后移除 1 点密谋毁灭')
-  assert.equal(state.investigators[0].tfaRelicDoomSuccess, true)
+  // Phase 5（5c-25）：卡号化的裸字段改成调查员级的通用标记 gameFlags（读点 api.gameFlag）。
+  assert.equal(state.investigators[0].gameFlags?.relicDoomSuccess, true)
   // 第二次成功不再生效（一局一次）。
   state.investigators[0].assets.find(item => item.id === relic.id).exhausted = false
   assert.ok(moves(state).some(candidate => candidate.action === 'ability' && candidate.assetId === relic.id))
