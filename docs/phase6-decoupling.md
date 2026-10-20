@@ -1137,3 +1137,45 @@ setCurrentActionKind: value => { currentActionKind = value },
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 5301 行**（12654 → 7353，−41.9%）。
+
+## 30. 6d-23：拆出 locations.js（地点与线索）
+
+### 30.1 拆的是什么
+
+十个函数（共 168 行，22 项依赖）搬进 `src/engine/locations.js`：
+
+`locName` / `placeLocation` / `flipScenarioLocation` / `revealLocation` / `removeLocation` /
+`syncClues` / `placeCluesOnLocation` / `notifyCluesRemoved` / `discoverClueAt` / `awardLocationVictory`
+
+即「地图怎么变」：从探索牌库放出地点、翻开、移出（含离开时的结算），以及线索的发现/归还/同步。
+地点相关的反应窗口（`locationRevealed` 等）通过 `triggerReaction` 触发，所以本模块依赖它。
+
+### 30.2 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **7224**（6d-22 后 7353） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/setup.js` | 578 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/dispatch.js` | 436 |
+| `src/engine/enemies.js` | 434 |
+| `src/engine/encounter.js` | 400 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/ability-exec.js` | 369 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/campaign-flow.js` | 252 |
+| `src/engine/movement.js` | 249 |
+| `src/engine/locations.js` | **212** |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 5430 行**（12654 → 7224，−42.9%）。
