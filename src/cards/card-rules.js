@@ -62,3 +62,17 @@ export const INVESTIGATE_EXTRA_ACTIONS = Object.freeze({ '02050': 1 })
 export function investigateExtraActionsFor(code) {
   return INVESTIGATE_EXTRA_ACTIONS[code] || 0
 }
+
+// 卡号级规则数据：敌人卡面的特殊规则（原 engine.js 硬编码 01172 / 01177 与对应的 ruleId）。
+export const ENEMY_RULE_FLAGS = Object.freeze({
+  // 猎手夜魇：负面标记双倍结算。
+  '01172': Object.freeze({ doubleNegative: true }),
+  huntingNightgaunt: Object.freeze({ doubleNegative: true }),
+  // 伊斯观察者：攻击时随机弃 1 张手牌，无手牌则伤害与恐惧各 +1。
+  '01177': Object.freeze({ discardRandomOnAttack: true }),
+  yithianObserver: Object.freeze({ discardRandomOnAttack: true }),
+})
+
+export function enemyRuleFlags(code) {
+  return (code && ENEMY_RULE_FLAGS[code]) || {}
+}

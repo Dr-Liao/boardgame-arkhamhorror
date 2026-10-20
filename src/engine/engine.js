@@ -41,6 +41,7 @@ import {
   RELIC_OF_AGES_CODE,
   RANDOM_BASIC_WEAKNESS_CODE,
   investigateExtraActionsFor,
+  enemyRuleFlags,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -3018,8 +3019,9 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
   const attackBonus = scenarioBehavior(state).enemyAttackModifier?.(state, enemy, inv) || {}
   extraDamage += attackBonus.damage || 0
   extraHorror += attackBonus.horror || 0
+  // Phase 5（5a-13）：敌人卡面的特殊攻击规则在 card-rules.js 的 ENEMY_RULE_FLAGS 里。
   if (!enemyTextBlanked(state, enemy)
-    && (enemy.ruleId === 'yithianObserver' || enemy.code === 'yithianObserver' || enemy.code === '01177')) {
+    && (enemyRuleFlags(enemy.code).discardRandomOnAttack || enemyRuleFlags(enemy.ruleId).discardRandomOnAttack)) {
     if (inv.hand.length) discardRandomFromHand(state, inv, 1, events)
     else { extraDamage = 1; extraHorror = 1; info(state, events, `🧠 ${inv.name} 无手牌可弃，「${enemy.name}」的伤害和恐惧各 +1。`) }
   }
@@ -9898,7 +9900,7 @@ function doEvade(state, seat, opts, events, noSpend) {
     sum + (assetEffect(inv, item)?.passive?.evadeBonus || 0), 0)
   return performTest(state, seat, evadeSkill, evadeBase, { source: { label: '躲避', enemyId: enemy.id, name: enemy.name, code: enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code }, baseValue: opts.baseValue,
     skillBonus: (opts.bonus || 0) + evadeAssetBonus + (opts.addSkill ? getStat(state, inv, opts.addSkill) : 0),
-    doubleNegative: (enemy.ruleId === 'huntingNightgaunt' || enemy.code === 'huntingNightgaunt' || enemy.code === '01172') && !enemyTextBlanked(state, enemy), resolve: r => {
+    doubleNegative: Boolean(enemyRuleFlags(enemy.code).doubleNegative || enemyRuleFlags(enemy.ruleId).doubleNegative) && !enemyTextBlanked(state, enemy), resolve: r => {
     if (opts.symbolActionLoss && r.drawn.some(token => ['skull', 'cultist', 'tablet', 'elderthing', 'autofail'].includes(token))) {
       inv.actionsLeft = Math.max(0, inv.actionsLeft - 1)
       info(state, events, `🌀 ${inv.name} 在躲避中揭示负面符号，本回合失去 1 个行动。`)

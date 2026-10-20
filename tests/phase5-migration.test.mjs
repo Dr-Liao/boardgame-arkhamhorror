@@ -10,7 +10,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
 import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine/engine.js'
-import { RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor } from '../src/cards/card-rules.js'
+import { RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags } from '../src/cards/card-rules.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -683,6 +683,15 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   const entry = registeredEntry('03010')
   assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
+
+// ---- 5a-13：敌人卡面特殊规则数据化（01172、01177）----
+
+test('5a-13：猎手夜魇的双倍负面与伊斯观察者的弃牌规则都在卡号数据里', () => {
+  assert.deepEqual(enemyRuleFlags('01172'), { doubleNegative: true }, '01172 双倍负面')
+  assert.deepEqual(enemyRuleFlags('huntingNightgaunt'), { doubleNegative: true }, 'ruleId 同样命中')
+  assert.deepEqual(enemyRuleFlags('01177'), { discardRandomOnAttack: true }, '01177 攻击弃牌')
+  assert.deepEqual(enemyRuleFlags('01101'), {}, '普通敌人没有特殊规则')
 })
 
 // ---- 5a-12：弱点结算迁到能力层（02013 最终狂想曲、02015 噩梦来袭）----
