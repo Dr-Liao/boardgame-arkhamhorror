@@ -445,3 +445,45 @@ function abilityApi(state, events) {
 
 累计迁出 **约 1770 行**（12654 → 10884）。`abilityApi` 还剩约 580 行，
 下一批挑 `clue/doom 段`（126 行 / 15 依赖），然后 `test 段`。
+
+## 16. 6d-9：abilityApi 第三批（`api-clue.js`）
+
+### 16.1 拆的是什么
+
+`abilityApi` 再切 **112 行**（`returnClueToLocation` … `defeatEnemy`）：线索归还与搬运、
+毁灭放置与移除、威胁区操作、抽取遭遇、结束回合、资产恐惧/使用次数、牌库顶弃置、
+帷幕临时修正、附属到地点。依赖 13 个（比上一批还少）。
+
+### 16.2 新坑：被 `const` 解构的工厂产物不在扫描候选集里
+
+`doInvestigate` / `doEvade` / `doPlay` 已经不是顶层 `function`，而是
+`const { doPlay, doInvestigate } = createActions({…})` 解构出来的绑定。
+「engine 顶层声明」的正则是 `^(function|const|let|class) NAME`，遇到 `const {` 开头的行**捕获不到**，
+于是：
+
+1. 它们没进候选集 → 依赖表漏掉 → 运行期 `doInvestigate is not defined`；
+2. 即使补上，`apiClueDeps` 是在模块顶层**立即求值**的，而这三个绑定要到文件末尾才初始化 → TDZ。
+
+**正确做法**：用**惰性 thunk** 注入 —— `doInvestigate: (...args) => doInvestigate(...args)`。
+箭头函数体在调用时才解析绑定，既避开 TDZ，也不影响 `abilityApi` 每次调用拿到最新实例。
+
+> 验收信号：`replay --compare` 仍然一致（因为重放没走到这些 api），但
+> `5c-2 / 5c-19 / 5c-21 / M2 lure of leylines …` 等 13 条用例红——这正是「重放不是万能门禁」的例子，
+> 拆 api 层必须同时跑战斗/调查/躲避相关用例。
+
+### 16.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **10790**（6d-8 后 10884） |
+| `src/engine/moves.js` | 652 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | **139** |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 1864 行**（12654 → 10790）。`abilityApi` 还剩约 470 行；下一批 `test 段`（82 行 / 16 依赖）。
