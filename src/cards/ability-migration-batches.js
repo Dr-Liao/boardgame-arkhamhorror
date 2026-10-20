@@ -457,7 +457,25 @@ export const BATCH_5B_2 = [
   {
     code: '02007',
     abilities: [
-      { kind: 'weakness', label: '击退邪恶', weakness: { type: 'attachedEnemy' } },
+      {
+        kind: 'weakness', label: '击退邪恶', weakness: { type: 'attachedEnemy' },
+        // Phase 5（5a-15）：结算迁到能力层——遭遇牌库顶的敌人生成在离你最远的地点并附着。
+        resolve: ({ inv, api }) => {
+          const enemyCode = api.encounterTopEnemy()
+          if (!enemyCode) { api.putIntoDiscard(inv.seat, '02007'); return }
+          const farthest = api.farthestLocations(inv.seat)
+          if (!farthest.length) { api.putIntoDiscard(inv.seat, '02007'); return }
+          const locationId = farthest.length === 1 ? farthest[0] : api.choice({ kind: 'location', source: '02007', seat: inv.seat,
+            prompt: '选择距离你最远的地点，生成被惩戒敌人。',
+            options: farthest.map(id => ({ id, label: api.locName(id) })) })
+          if (!locationId) return
+          const enemy = api.spawnEnemyAt(enemyCode, locationId)
+          if (enemy) {
+            api.markSmiteTheWicked(enemy, inv.seat)
+            api.info('「惩戒邪恶」附着于 ' + enemy.name + '。')
+          }
+        },
+      },
     ],
   },
   {
@@ -473,7 +491,22 @@ export const BATCH_5B_2 = [
   {
     code: '02011',
     abilities: [
-      { kind: 'weakness', label: '寻找伊莎贝拉', weakness: { type: 'attachedLocation' } },
+      {
+        kind: 'weakness', label: '寻找伊莎贝拉', weakness: { type: 'attachedLocation' },
+        // Phase 5（5a-15）：附着到离你最远的地点。
+        resolve: ({ inv, api }) => {
+          const farthest = api.farthestLocations(inv.seat)
+          if (!farthest.length) return
+          const locationId = farthest.length === 1 ? farthest[0] : api.choice({ kind: 'location', source: '02011', seat: inv.seat,
+            prompt: '选择距离你最远的地点，放置「寻找伊兹」。',
+            options: farthest.map(id => ({ id, label: api.locName(id) })) })
+          if (!locationId) return
+          const location = api.locationById(locationId)
+          if (!location) return
+          api.markSearchingForIzzie(location, inv.seat)
+          api.info('「寻找伊兹」附着于 ' + location.name + '。')
+        },
+      },
     ],
   },
   {

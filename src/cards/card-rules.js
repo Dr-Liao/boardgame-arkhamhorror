@@ -88,3 +88,7 @@ export function locationCounterTreacheries(location) {
   return Object.entries(LOCATION_COUNTER_TREACHERY)
     .flatMap(([field, code]) => Array(location?.[field] || 0).fill(code))
 }
+
+// 卡号级规则数据：两张「附着型」弱点自身的卡号（原 engine.js 硬编码）。
+export const SMITE_THE_WICKED_CODE = '02007'
+export const SEARCHING_FOR_IZZIE_CODE = '02011'

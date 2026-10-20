@@ -43,6 +43,8 @@ import {
   investigateExtraActionsFor,
   enemyRuleFlags,
   locationCounterTreacheries,
+  SMITE_THE_WICKED_CODE,
+  SEARCHING_FOR_IZZIE_CODE,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -2432,37 +2434,6 @@ function resolveWeakness(state, inv, def, events, texts) {
     executeDescriptor(state, { inv, source: { code: def.code, id: def.code }, descriptor: weakDescriptor, events, silent: true })
     return
   }
-  if (def.code === '02007') {
-    let enemyCode = null
-    while (state.encounterDeck.length && !enemyCode) {
-      const code = state.encounterDeck.pop()
-      if (enemyDef(code)) enemyCode = code
-      else state.encounterDiscard.push(code)
-    }
-    if (!enemyCode) { inv.discard.push(def.code); return }
-    const distances = state.locations.map(loc => ({ id: loc.id, distance: distanceToInvestigator(state, loc.id, [inv]) }))
-    const farthest = Math.max(...distances.filter(item => Number.isFinite(item.distance)).map(item => item.distance))
-    const choices = distances.filter(item => item.distance === farthest)
-    const location = choices.length === 1 ? choices[0].id : requestChoice(state, {
-      kind: 'location', source: def.code, seat: inv.seat, prompt: '选择距离你最远的地点，生成被惩戒敌人。',
-      options: choices.map(item => ({ id: item.id, label: locName(state, item.id) })),
-    })
-    const enemy = spawnEnemy(state, enemyCode, location, null)
-    if (enemy) { enemy.smiteTheWickedSeat = inv.seat; info(state, events, `「惩戒邪恶」附着于 ${enemy.name}。`) }
-    return
-  }
-  if (def.code === '02011') {
-    const distances = state.locations.map(loc => ({ id: loc.id, distance: distanceToInvestigator(state, loc.id, [inv]) }))
-    const farthest = Math.max(...distances.filter(item => Number.isFinite(item.distance)).map(item => item.distance))
-    const choices = distances.filter(item => item.distance === farthest)
-    const location = choices.length === 1 ? choices[0].id : requestChoice(state, {
-      kind: 'location', source: def.code, seat: inv.seat, prompt: '选择距离你最远的地点，放置「寻找伊兹」。',
-      options: choices.map(item => ({ id: item.id, label: locName(state, item.id) })),
-    })
-    const loc = state.locations.find(item => item.id === location)
-    if (loc) { loc.searchingForIzzieSeat = inv.seat; info(state, events, `「寻找伊兹」附着于 ${loc.name}。`) }
-    return
-  }
   if (def.type === 'enemy') {
     let location = inv.location
     if (def.code === '03042') {
@@ -4765,7 +4736,7 @@ function defeatEnemy(state, enemy, events) {
     delete enemy.bindMonster
   }
   removeOne(state.enemies, enemy)
-  if (enemy.smiteTheWickedSeat != null) state.investigators[enemy.smiteTheWickedSeat]?.discard.push('02007')
+  if (enemy.smiteTheWickedSeat != null) state.investigators[enemy.smiteTheWickedSeat]?.discard.push(SMITE_THE_WICKED_CODE)
   if (enemy.engagedSeat != null) {
     const inv = state.investigators[enemy.engagedSeat]
     if (inv) removeOne(inv.engaged, enemy.id)
@@ -9613,9 +9584,9 @@ function doSearchIzzie(state, seat, events) {
   const loc = state.locations.find(item => item.id === inv.location)
   if (!loc || loc.searchingForIzzieSeat == null) return
   performTest(state, seat, 'intellect', loc.shroud + (loc.shroudMod || 0) + (state.fogMod || 0), {
-    source: { label: '调查', name: '寻找伊兹', code: '02011' }, resolve: result => {
+    source: { label: '调查', name: '寻找伊兹', code: SEARCHING_FOR_IZZIE_CODE }, resolve: result => {
       if (!result.success) return
-      state.investigators[loc.searchingForIzzieSeat]?.discard.push('02011')
+      state.investigators[loc.searchingForIzzieSeat]?.discard.push(SEARCHING_FOR_IZZIE_CODE)
       delete loc.searchingForIzzieSeat
       info(state, events, `${inv.name} 成功寻找伊兹，弃掉这张弱点。`)
     },
@@ -10826,6 +10797,44 @@ function abilityApi(state, events) {
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
     // Phase 5（5b-8）：技能名（「戴红手套的男子」的提示与日志要用）。
     skillName: skill => SKILL_NAMES[skill] || skill,
+    // Phase 5（5a-15）：按 id 取地点（弱点附着用）。
+    locationById: id => state.locations.find(location => location.id === id) || null,
+    // Phase 5（5a-15）：把一张牌直接放进弃牌堆（附着型弱点没找到目标时用）。
+    putIntoDiscard: (seat, code) => {
+      const owner = state.investigators[seat]
+      if (!owner || !code) return false
+      owner.discard.push(code)
+      return true
+    },
+    // Phase 5（5a-15）：「惩戒邪恶 / 寻找伊兹」共用——遭遇牌库顶的敌人、最远地点、生成敌人与两个标记。
+    encounterTopEnemy: () => {
+      while (state.encounterDeck.length) {
+        const code = state.encounterDeck.pop()
+        if (enemyDef(code)) return code
+        state.encounterDiscard.push(code)
+      }
+      return null
+    },
+    farthestLocations: seat => {
+      const owner = state.investigators[seat] || state.investigators[state.currentSeat]
+      if (!owner) return []
+      const distances = state.locations.map(loc => ({ id: loc.id, distance: distanceToInvestigator(state, loc.id, [owner]) }))
+      const finite = distances.filter(item => Number.isFinite(item.distance))
+      if (!finite.length) return []
+      const farthest = Math.max(...finite.map(item => item.distance))
+      return finite.filter(item => item.distance === farthest).map(item => item.id)
+    },
+    spawnEnemyAt: (code, locationId) => spawnEnemy(state, code, locationId, null),
+    markSmiteTheWicked: (enemy, seat) => {
+      if (!enemy) return false
+      enemy.smiteTheWickedSeat = seat
+      return true
+    },
+    markSearchingForIzzie: (location, seat) => {
+      if (!location) return false
+      location.searchingForIzzieSeat = seat
+      return true
+    },
     // Phase 5（5a-14）：「梦魇」这类弱点让玩家弃掉牌库顶 N 张（走剧本运行时）。
     scenarioDiscardTop: (seat, count = 3) => scenarioRuntime(state, events).discardTop(seat, count),
     // Phase 5（5a-12）：「最终狂想曲」这类「一次性揭示 N 枚标记（不生成检定）」。
