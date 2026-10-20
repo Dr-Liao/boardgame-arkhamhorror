@@ -5,9 +5,9 @@
 > 不重复路线里的规矩。
 > 接手请先读 [`phase5-handoff.md`](phase5-handoff.md)（现状 / 验收命令 / 下一步 / 已知坑）。
 >
-> 一句话结论：**迁移工具链已交付，321 张卡迁完（`EFFECTS` 385 → 73、legacy 286 → 59、descriptor 75 → 388、
-> 逃生卡 93 → 8、引擎卡号 166 → 110），批次累计 50 个**；5b 尾部（剩余 reactions / 非 stats 被动）、
-> 5c 剩余 8 张、5a 的卡号分支迁移仍在进行——清单见 §6。
+> 一句话结论：**迁移工具链已交付，323 张卡迁完（`EFFECTS` 385 → 71、legacy 286 → 59、descriptor 75 → 390、
+> 逃生卡 93 → 6、引擎卡号 166 → 110），批次累计 51 个**；5b 尾部（剩余 reactions / 非 stats 被动）、
+> 5c 剩余 6 张、5a 的卡号分支迁移仍在进行——清单见 §6。
 
 ---
 
@@ -22,7 +22,7 @@
 | 迁移目标文件 | `src/cards/ability-migration-batches.js` | 按批次分组的生成描述子（标记块 `// >>> batch: <名>`），由 `CARD_ABILITY_ENTRIES` 一并注册 |
 | 批次账本 | `audit/migration-batches.json` | 每个批次的卡号清单；`manual` 里是手写批次（5b-6 / 5c） |
 | 用例 | `tests/migration-tools.test.mjs` | 账本/读点/工具纯函数/批次文件格式（8 条） |
-| 用例 | `tests/phase5-migration.test.mjs` | 5c 改写后的行为（地点附属、连抽遭遇、牌库检索、捷径、调查/躲避、武器、治疗、5c-18 的五个新 api）（62 条） |
+| 用例 | `tests/phase5-migration.test.mjs` | 5c 改写后的行为（地点附属、连抽遭遇、牌库检索、捷径、调查/躲避、武器、治疗、5c-18 的五个新 api）（63 条） |
 | 用例 | `tests/architecture-guard.test.mjs` | 9 条冻结守卫，含 5a-1 新增的「引擎里没有已无数据引用的旧原语分支」 |
 | npm 脚本 | `cards:migrate` / `cards:migrate:list` / `cards:scaffold` | 见 `package.json` |
 
@@ -101,18 +101,19 @@ npm run test:fast                                   # 全量快测
 | `5c-32` | 角色切换 / 替人挨打：即兴表演、英勇救援（`api.switchRole` / `setRoleDiscount` / `className` / `enemyAttackByCard`） | 2 | 手写 + 4 个 api + 删 2 段引擎分支 |
 | `5c-33` | 额外弹药换额外揭示：吃子弹（`api.addExtraChaosChoicesToTest`） | 1 | 手写 + 1 个 api + 删 1 段引擎分支 |
 | `5c-34` | 附属区当手牌打出：背包（条目级 `cardBackpack` + 3 个 api + 4 处读点） | 1 | 手写 + 3 个 api + 4 处读点数据化 |
-| **合计** | | **321 张卡 + 63 段引擎分支** | |
+| `5c-35` | 地点物品折扣 / 同归于尽：查尔斯·罗斯、同归于尽！（`setLocationItemDiscount` / `engagedEnemies` / `setDamageToMax` / `bumpInstanceTrauma`，+ 条目级 `quietPlay`） | 2 | 手写 + 4 个 api + 1 个条目字段 + 删 2 段引擎分支 |
+| **合计** | | **323 张卡 + 65 段引擎分支** | |
 
 指标（`npm run cards:audit`）：
 
 | 指标 | Phase 4 收尾 | Phase 5 现在 | 变化 |
 | --- | --- | --- | --- |
-| `effectsEntries` | 385 | **73** | −312 |
+| `effectsEntries` | 385 | **71** | −314 |
 | 通道 `legacy` | 286 | **59** | −227 |
-| 通道 `descriptor` | 75 | **388** | +313 |
-| 通道 `escape` | 93 | **8** | −85 |
-| `descriptorEntries` / `descriptorAbilities` | 79 / 59 | **390 / 332** | +311 / +273 |
-| `effectsTopLevelFields` | 69 | **42** | −27（`event`/`skill`/`weakness`/`freeTriggers`/`composure` 等旧字段搬空后不再出现） |
+| 通道 `descriptor` | 75 | **390** | +315 |
+| 通道 `escape` | 93 | **6** | −87 |
+| `descriptorEntries` / `descriptorAbilities` | 79 / 59 | **392 / 334** | +313 / +275 |
+| `effectsTopLevelFields` | 69 | **40** | −29（`event`/`skill`/`weakness`/`freeTriggers`/`composure` 等旧字段搬空后不再出现） |
 | `engineCodes` | 166 | **110** | −56 |（5c 删掉的逃生原语分支为主，含 5c-18 的 3 个码；另 5a 四批把 15 个卡号的数据搬去 `card-rules.js`） |
 
 `effectsEntries` 的下降是 285 张卡的迁移结果（154 张来自工具的 5b 机械迁移，35 张来自反应接线，15 张来自天赋档位，31 张来自被动/规则字段/封印附属，50 张来自 5c 手写改写）；
@@ -322,6 +323,29 @@ handler 只覆盖结算部分。
 **5a 仍然剩什么**：`requestChoice({ source: '0xxxx' })` 的来源标签（改动会进状态指纹）与
 `def.code === '0xxxx'` 形式的**行为分支**（例如 01007 的创伤、01071 的雕像充能、01082/02308 的安奎娜转移）——
 后者要等对应的 `ctx.api` 与描述子写法，归入 5a-5 起的批次。
+
+### 4.44 5c-35：地点物品折扣与「同归于尽」（2 张）
+
+| 卡 | 旧原语 | 新写法 |
+| --- | --- | --- |
+| 03149 查尔斯·罗斯大人 | `carcosaPlayer.charlesRoss` | `action`（横置）→ `api.setLocationItemDiscount(seat, source, 1)`（记在支援上；旧原语还会退回记在人身上，这里保留 asset 分支） |
+| 03189 「同归于尽！」 | `carcosaPlayer.illSeeYouInHell` | `played` + 条目级 `noOpportunityAttack` + `quietPlay`：`api.engagedEnemies(seat)` 过滤非精英 → `api.defeatEnemy` → `api.bumpInstanceTrauma(seat, 'physical', 1)` → `api.setDamageToMax(seat)` |
+
+四个新 api：`setLocationItemDiscount`、`engagedEnemies`、`setDamageToMax`（赋值 + `checkDefeated`，顺序同旧）、
+`bumpInstanceTrauma`。
+
+> **两个必须记住的坑（都被 `replay --compare` 当场抓住）**
+> 1. 旧条目顶层的 `noOpportunityAttack` 是「打出时不吃借机攻击」，**条目级有同名读点**，必须搬到条目上；
+>    只搬 handler 会让这张牌在 golden 局里多吃一次借机攻击。
+> 2. 迁移成 `played` 描述子后，引擎会多写一行 `✨ 使用「X」：<label>`。旧「数据体事件卡」没有这一行，
+>    而 golden 局里恰好会打出这张牌（3 局）→ 指纹立刻不一致。为此新增条目级 `quietPlay`，
+>    `doPlay` 据此给 `executeDescriptor` 传 `silent: true`。
+> 3. 03189 的旧实现写的是调查员实例上的 `physicalTrauma`（**不写战役账本、不写日志**，引擎里也没有别的读点）。
+>    这其实是卡面缺陷（「受 1 点物理创伤」应当进战役账本）。为了守住「指纹不变」，`bumpInstanceTrauma`
+>    原样复刻了这个行为，并在此登记为已知缺陷，修它要单独一批 + 重采基线。
+
+验收：`tests/phase5-migration.test.mjs` 一条（折扣记录 / 击败交战敌人 / 创伤 / 伤害拉满）；
+`replay --compare` 逐条一致；`engineCodes` 不变、`effectsEntries` 73 → 71、`effectsTopLevelFields` 42 → 40、逃生卡 8 → 6。
 
 ### 4.43 5c-34：附属区当手牌打出（1 张）
 
@@ -922,10 +946,10 @@ doEvade(state, seat, { enemyId: chooseEnemy(state, seat, {}).id, addSkill: 'will
 | 门禁 | 结果 |
 | --- | --- |
 | `node tools/replay-fixtures.mjs --check` | ✔ 10 局 / 529 步 / 530 个逐步指纹全部一致（迁移前基线见 §5.1） |
-| `node tools/replay-fixtures.mjs --compare artifacts/replay-before.json` | ✔ 每批都跑过：与迁移前基线逐条一致（5b-1…5b-7、5c-1…5c-34、5a-1…5a-5） |
-| `node tools/audit-abilities.mjs --check` | ✔ 两份账本 + 两份白名单与实现一致（白名单只收缩：EFFECTS 73 项、engine 码 110 项） |
+| `node tools/replay-fixtures.mjs --compare artifacts/replay-before.json` | ✔ 每批都跑过：与迁移前基线逐条一致（5b-1…5b-7、5c-1…5c-35、5a-1…5a-5） |
+| `node tools/audit-abilities.mjs --check` | ✔ 两份账本 + 两份白名单与实现一致（白名单只收缩：EFFECTS 71 项、engine 码 110 项） |
 | `node --test tests/architecture-guard.test.mjs` | ✔ 10/10（含死分支守卫与「卡包登记完备」两条） |
-| `node tools/migrate-card.mjs --verify` | ✔ 50 个批次全部「旧条目已删 + 能力层有条目」 |
+| `node tools/migrate-card.mjs --verify` | ✔ 51 个批次全部「旧条目已删 + 能力层有条目」 |
 | `node tools/audit-dead-primitives.mjs --check` | ✔ 35 个旧原语分派点，0 个死分支（架构守卫同时校验） |
 | `npm run test:fast` | 8 条既有失败（Phase 0 记账：`rules-n3` 5、`campaign-http-n4` 1、`checkpoint-rewind` 1、`carcosa-implementation-gaps` 1）；**新增 0 条** |
 | `npm run test:slow` | 11 条既有失败（Phase 4 记账：`campaign-n4` 8、`notz-n4` 1、`dunwich-rules` D9 1、`p2-hub-http` 1）；新增 0 条 |
@@ -982,7 +1006,7 @@ node tools/replay-fixtures.mjs --compare  ..\..\artifacts\replay-before.json   #
 | 非 `stats` 的 `passive` | **8 张**（02110/03264/03308 永久卡、03010、01018/01027/01028、03143 剧情资产） | | 30 种键：`extraSlots`/`sanityBonus`/`handSizeBonus`/`evadeBonus`/`hostHealth`… 前四个有现成或近成的修正目标 | 5b-8 |
 | 打出后去向字段（`attachTo`/`exileAfterPlay`/`removeAfterPlay`/`shuffleBackAfterPlay`/`becomesAsset`） | **~15 张** | `played` 描述子的「打出后去向」字段 + 读点（B6 已能表达） | 5b-9 |
 | `engine:` 标记卡（行为全在引擎里） | **5 张** | 01014 / 01072 / 01094 / 01095 / 01117 逐张改写成描述子 | 5a-1（续） |
-| 5c 剩余逃生卡 | **8 张**（其中 4 张在引擎里仍有逃生原语实现；`escape` 通道台账见 `audit/ability-coverage.json`） | 逐张 handler → `resolve`；剩大头是需要新包装的交互卡（附魔/封印/自定义计数器/from-discard 系列） | 5c-35…（Carcosa → TFA → Dunwich） |
+| 5c 剩余逃生卡 | **6 张**（其中 4 张在引擎里仍有逃生原语实现；`escape` 通道台账见 `audit/ability-coverage.json`） | 逐张 handler → `resolve`；剩大头是需要新包装的交互卡（附魔/封印/自定义计数器/from-discard 系列） | 5c-36…（Carcosa → TFA → Dunwich） |
 | 5a 引擎卡号分支 | **110 个码**（`condition` 27 / `block` 53 / `reference` 30 / `table` 0） | `reference` 是「搬家即可」（但要等文案 i18n）；`condition`/`block`（80 个行为分支）要逐卡迁移。死分支清理已成套路 | 5a-5… |
 
 已完成的能力接线（不再列进上表）：`reactions`（`legacyReaction`，5b-6）、`freeTriggers`/`composure`（5b-7）、

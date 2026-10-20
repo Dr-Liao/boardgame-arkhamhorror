@@ -29,8 +29,6 @@ export const effects = {
   // 03106 英勇救援已迁到能力层（5c-32），见 MIGRATED_ESCAPE_ENTRIES_5C32。
   '03114': {},
 
-  '03149': { payForItemAtLocation: true, abilities: [{ label: '下一件物品费用-1',
-    cost: { action: false, exhaust: true }, effect: custom('charlesRoss') }] },
   // 03150 预警已迁到能力层（5c-22），见 MIGRATED_ESCAPE_ENTRIES_5C22。
   '03156': { fast: true, reaction: { when: 'encounterDrawn', nonWeaknessOnly: true, treacheryOnly: true },
     event: { type: 'cancelTreachery' }, exileAfterPlay: true },
@@ -38,7 +36,6 @@ export const effects = {
     event: { type: 'cancelHarm', maximum: 10 }, exileAfterPlay: true },
   // 03158 求助盟友已迁到能力层（5c-19），见 src/cards/card-abilities.js 的 MIGRATED_ESCAPE_ENTRIES_5C19。
 
-  '03189': { event: custom('illSeeYouInHell'), noOpportunityAttack: true },
 
 
   // 03263 追猎已迁到能力层（5c-23），见 MIGRATED_ESCAPE_ENTRIES_5C23。

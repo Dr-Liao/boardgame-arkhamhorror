@@ -684,6 +684,29 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-35：地点物品折扣 / 同归于尽（03149 查尔斯·罗斯、03189）----
+
+test('5c-35：03149 查尔斯·罗斯横置后本地点下一件物品 -1；03189 同归于尽击败交战敌人并拉满伤害', () => {
+  // 03149：折扣记录写在自己身上（旧原语写 asset.itemDiscountAtLocation）。
+  const state = fixture()
+  const charles = asset(state, '03149')
+  use(state, charles)
+  settle(state)
+  const record = state.investigators[0].assets.find(item => item.id === charles.id)?.itemDiscountAtLocation
+  assert.equal(record?.amount, 1, '记下 1 点折扣')
+  assert.equal(record?.round, state.round, '限定本轮')
+
+  // 03189：击败交战中的非精英敌人，然后受 1 创伤并把伤害拉满。
+  const second = fixture()
+  const foe = enemy(second, { engagedSeat: 0, fight: 1, health: 1, damage: 0 })
+  second.investigators[0].hand = ['03189']
+  play(second, '03189')
+  settle(second)
+  assert.equal(second.enemies.some(item => item.id === foe.id), false, '交战的非精英敌人被击败')
+  assert.equal(second.investigators[0].physicalTrauma, 1, '受 1 点（实例）物理创伤')
+  assert.equal(second.investigators[0].damage, second.investigators[0].maxHealth, '伤害拉满')
+})
+
 // ---- 5c-34：附属区当手牌打出（04037 背包）----
 
 test('5c-34：04037 背包把道具放进附属区，并能当作手牌打出', () => {

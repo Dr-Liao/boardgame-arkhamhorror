@@ -131,6 +131,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'substituteSealedToken',
   // Phase 5（5c-34）：这张支援的 attachedCards 可以当作手牌打出（背包）。读点见 doPlay / legalMoves / validateMove。
   'cardBackpack',
+  // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
+  'quietPlay',
   'fast', 'noOpportunityAttack'])
 
 // 条目级「能不能打出」条件：函数式 predicate，或 { when, message }（message 直接展示给玩家）。
@@ -344,6 +346,8 @@ export function registerCardAbilities(entries) {
       substituteSealedToken: entry.substituteSealedToken === true,
       // Phase 5（5c-34）：attachedCards 可以当手牌打出（背包）。
       cardBackpack: entry.cardBackpack === true,
+      // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
+      quietPlay: entry.quietPlay === true,
       source: entry.source || null,
       registered: true,
     }

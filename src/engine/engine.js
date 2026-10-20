@@ -7052,11 +7052,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     info(state, events, `${inv.name} 将 ${asset.attached.length} 张事件附属到「原定计划」。`)
     return
   }
-  if (effect.action === 'charlesRoss') {
-    if (asset) asset.itemDiscountAtLocation = { amount: 1, round: state.round, phase: state.phase }
-    else inv.itemDiscountAtLocation = { amount: 1, round: state.round, phase: state.phase }
-    return
-  }
   if (effect.action === 'eideticMemory') {
     const candidates = state.investigators.flatMap(owner => owner.discard.filter(code => cardDef(code)?.type === 'event'
       && (cardDef(code)?.traits || []).some(trait => String(trait).toLowerCase() === 'insight')).map(code => ({ code, owner })))
@@ -7099,16 +7094,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     state._resolution = resolution
     state.revision = revision
     state._timeWarped = true
-    return
-  }
-  if (effect.action === 'illSeeYouInHell') {
-    for (const enemy of state.enemies.filter(item => item.engagedSeat === seat && !item.elite).slice()) {
-      enemy.defeatedBy = seat
-      defeatEnemy(state, enemy, events)
-    }
-    inv.physicalTrauma = (inv.physicalTrauma || 0) + 1
-    inv.damage = getMaxHealth(inv)
-    checkDefeated(state, seat, events)
     return
   }
   throw new Error(`未实现的卡尔克萨玩家卡效果：${effect.action}`)
@@ -9161,8 +9146,11 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     state._fromDiscardCode = fromDiscard ? cardId : null
     try {
       if (playedDescriptor?.resolve) {
+        // Phase 5（5c-35）：quietPlay 的条目复刻「数据体事件卡」的日志——旧数据体不写
+        // 「使用「X」：…」这一行，迁移后若照写会改玩家可见日志、重放指纹立刻对不上（03189）。
         executeDescriptor(state, { inv, source: { code: cardId, id: cardId }, descriptor: playedDescriptor,
-          context: { fromDiscard, copyCode: copyCode || null, cardId }, events })
+          context: { fromDiscard, copyCode: copyCode || null, cardId }, events,
+          silent: registeredEntry(cardId)?.quietPlay === true })
       } else if (played) resolveEffect(state, seat, played, makeRuntime(state, events))
     } finally {
       if (previousFromDiscard === undefined) delete state._fromDiscardCode
@@ -10923,6 +10911,33 @@ function abilityApi(state, events) {
     assetsCannotReady: inv => assetsCannotReady(inv),
     searchTop: (seat, options) => searchTop(state, seat, options, events),
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
+    // Phase 5（5c-35）：「同归于尽」用——列出与我交战的所有敌人（不限地点）。
+    engagedEnemies: seat => state.enemies.filter(enemy => enemy.engagedSeat === seat),
+    // Phase 5（5c-35）：写调查员实例上的 physicalTrauma/mentalTrauma（**不是**战役账本）。
+    // 「同归于尽」的旧实现只写了这个实例字段：引擎里没有读点、也不写日志——见 §4.44 的已知缺陷记录。
+    bumpInstanceTrauma: (seat, kind, amount = 1) => {
+      const owner = state.investigators[seat]
+      if (!owner) return 0
+      const key = kind === 'physical' ? 'physicalTrauma' : 'mentalTrauma'
+      owner[key] = (owner[key] || 0) + amount
+      return owner[key]
+    },
+    // Phase 5（5c-35）：「同归于尽」把伤害直接拉到最大生命值，再走一次击败检查（与旧原语同序）。
+    setDamageToMax: seat => {
+      const owner = state.investigators[seat]
+      if (!owner) return 0
+      owner.damage = getMaxHealth(owner)
+      checkDefeated(state, seat, events)
+      return owner.damage
+    },
+    // Phase 5（5c-35）：「查尔斯·罗斯」这类「本地点下一件物品 -N」，记在支援或玩家身上。
+    setLocationItemDiscount: (seat, card, amount = 1) => {
+      const owner = state.investigators[seat ?? state.currentSeat]
+      const record = { amount, round: state.round, phase: state.phase }
+      if (card) card.itemDiscountAtLocation = record
+      else if (owner) owner.itemDiscountAtLocation = record
+      return record
+    },
     // Phase 5（5c-34）：「背包」把牌放在 attachedCards 上（能从那里当手牌打出）与从牌库取走若干张。
     setAttachedCards: (host, codes) => {
       if (!host) return null

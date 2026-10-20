@@ -3087,12 +3087,45 @@ export const MIGRATED_ESCAPE_ENTRIES_5C34 = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// 5c-35：地点物品折扣 / 与敌人同归于尽（查尔斯·罗斯、同归于尽！）
+// ---------------------------------------------------------------------------
+
+export const MIGRATED_ESCAPE_ENTRIES_5C35 = [
+  // 03149 查尔斯·罗斯大人：横置，本地点下一件物品费用 -1。
+  {
+    code: '03149',
+    abilities: [{
+      kind: 'action', label: '横置：本地点下一件物品费用 -1', cost: { action: false, exhaust: true },
+      resolve: ({ inv, source, api }) => {
+        api.setLocationItemDiscount(inv.seat, source, 1)
+      },
+    }],
+  },
+  // 03189 「同归于尽！」：击败所有与我交战的非精英敌人，然后受 1 点物理创伤并把伤害拉满。
+  {
+    code: '03189',
+    // 旧条目的顶层 noOpportunityAttack 是「打出时不吃借机攻击」，条目级已有同名读点。
+    noOpportunityAttack: true,
+    // 旧数据体事件卡不写 `使用「X」：…` 日志；迁移后照写会改指纹（golden 局会打出这张）。
+    quietPlay: true,
+    abilities: [{
+      kind: 'played', label: '击败所有交战的非精英敌人，受 1 创伤并把伤害拉满',
+      resolve: ({ inv, api }) => {
+        for (const enemy of api.engagedEnemies(inv.seat).filter(foe => !foe.elite)) api.defeatEnemy(enemy, inv.seat)
+        api.bumpInstanceTrauma(inv.seat, 'physical', 1)
+        api.setDamageToMax(inv.seat)
+      },
+    }],
+  },
+]
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, ...MIGRATED_ESCAPE_ENTRIES_5C35, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -3147,4 +3180,5 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_ESCAPE_ENTRIES_5C32.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C33.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C34.map(entry => entry.code),
+  ...MIGRATED_ESCAPE_ENTRIES_5C35.map(entry => entry.code),
 ])
