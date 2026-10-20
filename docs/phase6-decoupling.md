@@ -134,3 +134,36 @@ return { code, name: ..., implemented: EFFECTS[code] || abilitySummary(code) }
 
 > 这条纪律和 roadmap §7 的「不要同批混做两件事」是同一个道理：
 > **删除数据来源**与**改变观测面**必须分开验收，否则分不清是迁移错还是提示词变了。
+
+## 8. 6d-1：engine.js 拆分第一步 —— card-lookup.js
+
+### 8.1 拆的是什么
+
+「卡号 → 定义」的七个纯查询函数搬进 `src/engine/card-lookup.js`：
+
+```
+cardDef / cardName / originalCardCode / ruleCodeForOriginal /
+isWeaknessCard / isWeaknessCode / enemyDef
+```
+
+它们不写 state、不触发事件，依赖只有几张数据表；合并剧本注册表（`ALL_ENEMIES` /
+`ALL_TREACHERIES` / `ALL_STORY_ASSETS`）也跟着搬过去，engine 改成 import。
+
+### 8.2 拆分纪律（本轮踩到的两个坑）
+
+1. **转出 ≠ 导入**：只写 `export { cardDef } from './card-lookup.js'` 不会在 engine.js 里
+   建立本地绑定，engine 内部调用 `cardDef()` 会直接 `ReferenceError`（10 局重放全红）。
+   正确写法是 `import { … } from './card-lookup.js'` **再加**一行 `export { … }`，
+   外部调用方的 import 路径才保持不变。
+2. **注册表构建要跟着走**：`ALL_ENEMIES` 原来在 engine.js 顶部由 `contentRegistry` 拼出来；
+   搬走时必须在 `card-lookup.js` 里重建同一份（同过滤条件、同合并顺序），否则遭遇牌查不到。
+
+### 8.3 现状与后续顺序
+
+- `engine.js`：**12589 行**（拆分前 12654；`card-lookup.js` 90 行）；
+- 下一步按「依赖少 → 依赖多」的顺序拆：
+  1. `describeState`（132 行，纯投影）；
+  2. `scenarioRuntime`（317 行，依赖 runtime 接口，需要把被调用的 helper 作为依赖注入）；
+  3. `abilityApi`（978 行，最大的一块，按域拆成若干 `create*Api(deps)`）；
+  4. `performTest`（782 行，检定主流程，最后动）。
+- 每拆一块都要求：`replay --compare` 一致、fast tier 新增失败 0、外部 import 路径不变。
