@@ -893,7 +893,8 @@ export const BATCH_5B_3 = [
   {
     code: '02156',
     abilities: [
-      { kind: 'played', label: '诱敌深入', effect: { type: 'attachLure' } },
+      // Phase 5（5a-14）：标记用的卡号随效果数据一起走（引擎读 effect.code）。
+      { kind: 'played', label: '诱敌深入', effect: { type: 'attachLure', code: '02156' } },
     ],
   },
   {

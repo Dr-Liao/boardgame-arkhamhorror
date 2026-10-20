@@ -76,3 +76,15 @@ export const ENEMY_RULE_FLAGS = Object.freeze({
 export function enemyRuleFlags(code) {
   return (code && ENEMY_RULE_FLAGS[code]) || {}
 }
+
+// 卡号级规则数据：地点离场时，按地点上的计数把对应遭遇卡放回遭遇弃牌堆
+// （奥术屏障 02102 / 肮脏而寂静 02089，原 engine.js 硬编码）。
+export const LOCATION_COUNTER_TREACHERY = Object.freeze({
+  arcaneBarriers: '02102',
+  sordidAndSilent: '02089',
+})
+
+export function locationCounterTreacheries(location) {
+  return Object.entries(LOCATION_COUNTER_TREACHERY)
+    .flatMap(([field, code]) => Array(location?.[field] || 0).fill(code))
+}

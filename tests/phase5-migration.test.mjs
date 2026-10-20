@@ -10,7 +10,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
 import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine/engine.js'
-import { RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags } from '../src/cards/card-rules.js'
+import { RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries } from '../src/cards/card-rules.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -683,6 +683,16 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   const entry = registeredEntry('03010')
   assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
+
+// ---- 5a-14：地点计数遭遇卡 / 诱饵数据 / 梦魇弱点（02089、02102、02156、02178）----
+
+test('5a-14：地点计数对应的遭遇卡、诱饵卡号与梦魇弱点都改成数据驱动', () => {
+  assert.deepEqual(locationCounterTreacheries({ arcaneBarriers: 2, sordidAndSilent: 1 }),
+    ['02102', '02102', '02089'], '计数 → 遭遇卡')
+  assert.deepEqual(locationCounterTreacheries({}), [], '没有计数就没有卡')
+  const nightmare = registeredEntry('02178')?.abilities?.find(ability => ability.kind === 'weakness')
+  assert.equal(typeof nightmare?.resolve, 'function', '梦魇用弱点描述子的 resolve')
 })
 
 // ---- 5a-13：敌人卡面特殊规则数据化（01172、01177）----

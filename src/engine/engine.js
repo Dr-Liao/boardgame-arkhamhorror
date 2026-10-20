@@ -42,6 +42,7 @@ import {
   RANDOM_BASIC_WEAKNESS_CODE,
   investigateExtraActionsFor,
   enemyRuleFlags,
+  locationCounterTreacheries,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -2431,7 +2432,6 @@ function resolveWeakness(state, inv, def, events, texts) {
     executeDescriptor(state, { inv, source: { code: def.code, id: def.code }, descriptor: weakDescriptor, events, silent: true })
     return
   }
-  if (def.code === '02178') { scenarioRuntime(state, events).discardTop(inv.seat, 3); return }
   if (def.code === '02007') {
     let enemyCode = null
     while (state.encounterDeck.length && !enemyCode) {
@@ -5188,7 +5188,8 @@ function removeLocation(state, id, events) {
       if (code && ALL_TREACHERIES[code]) state.encounterDiscard.push(code)
     }
     discardBarricades(state, loc)
-    state.encounterDiscard.push(...Array(loc.arcaneBarriers || 0).fill('02102'), ...Array(loc.sordidAndSilent || 0).fill('02089'))
+    // Phase 5（5a-14）：地点上的计数对应哪张遭遇卡在卡号规则数据里。
+    state.encounterDiscard.push(...locationCounterTreacheries(loc))
     info(state, events, `📍 「${loc.name}」被移出游戏。`)
     for (const inv of departing) scenarioBehavior(state).investigatorMovedByEncounterCard?.(state, inv, scenarioRuntime(state, events))
   }
@@ -7469,7 +7470,8 @@ function dunwichPlayerEffect(state, seat, effect, events) {
   }
   if (effect.type === 'attachLure') {
     const loc = state.locations.find(item => item.id === inv.location)
-    if (loc) loc.lure = { seat, round: state.round, code: '02156' }
+    // Phase 5（5a-14）：标记卡号来自效果数据（effect.code），引擎不再写死。
+    if (loc) loc.lure = { seat, round: state.round, code: effect.code || null }
     return
   }
   if (effect.type === 'healHorrorAtLocationByEnemy') {
@@ -10824,6 +10826,8 @@ function abilityApi(state, events) {
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
     // Phase 5（5b-8）：技能名（「戴红手套的男子」的提示与日志要用）。
     skillName: skill => SKILL_NAMES[skill] || skill,
+    // Phase 5（5a-14）：「梦魇」这类弱点让玩家弃掉牌库顶 N 张（走剧本运行时）。
+    scenarioDiscardTop: (seat, count = 3) => scenarioRuntime(state, events).discardTop(seat, count),
     // Phase 5（5a-12）：「最终狂想曲」这类「一次性揭示 N 枚标记（不生成检定）」。
     revealChaosTokens: count => {
       beginChaosTest(state)
