@@ -93,3 +93,44 @@ function withEffectCode(effect, code) {
    `combat/`、`investigate/`、`play/`、`enemy-phase/`、`upkeep/`，保持 `engine.js` 只做编排与 `abilityApi`。
 4. **战役插件化**（TFA 第一个）：`content/campaigns/tfa/` 里放 `stateSlice` / `project` / `actions+hooks` / `agentHints`，
    引擎只保留通用阶段机；roadmap 的「新增战役只加 content/campaigns/<id>/」由 `phase6-guard` 继续守。
+
+## 7. 6c 的前置条件：`EFFECTS` 还兼着「这张卡已实现」的语义
+
+### 7.1 实验
+
+试着把 5 条**纯登记**条目（`{ engine: 'printedSoak' }` ×3、`{ engine: 'wendyAmulet' }`、`{ engine: 'litaAura' }`）
+从 `EFFECTS` 删掉——这三类行为在 Phase 5 已经数据化（soak 走卡面数据、护身符走 `playedEventsToDeckTop`、
+光环走 `auraWhileInPlay`），条目本身没有任何读点。
+
+结果：`effectsEntries` 57 → 55，但 **`replay --compare` 报了 1 局不一致**（行为变化），已整体回滚。
+
+### 7.2 原因
+
+`src/ai/ai-context.js` 的 `card(code)` 里：
+
+```js
+return { code, name: ..., implemented: EFFECTS[code] || abilitySummary(code) }
+```
+
+`implemented` 会把 `EFFECTS[code]` **整个对象**塞进 AI 上下文。条目一删，AI 看到的
+`implemented` 从 `{"engine":"printedSoak"}` 变成 `undefined`（或大纲摘要），
+提示词随之变化，AI 的决策就会不同——**这不是规则行为变化，而是观测面变化**，
+但它同样会让重放指纹变红。
+
+同一类耦合还有两处：
+
+- `src/deck/deckbuilding.js:149`：`const eff = EFFECTS[card.code]` 参与构筑评分；
+- `src/cards/card-catalog.js:158`：`Object.hasOwn(EFFECTS, code)` 决定图鉴的 `effectNote`。
+
+### 7.3 下一步（6c-1 的正确顺序）
+
+1. 先把 `implemented` 改成**稳定摘要**：`{ kinds: [...], summary: string }`，
+   来源是「描述子 + 条目」而不是原始对象；这一步会**改变 AI 提示词**，需要显式重采基线
+   （`replay-fixtures --baseline` + 在 diff 里写明「观测面变化」）。
+2. 再逐个删「纯登记」条目，并按 `content/schema.js` 的约定在对应包 `abilityLayerCodes` 里登记
+   （core 包的可用性来自 `src/deck/availability.js` 的显式列表，不受 `EFFECTS` 影响，已确认）。
+3. 每批仍然要 `replay --compare` 一致 + fast tier 新增失败 0 条；如果这批必须先动观测面，
+   就把「基线重采」作为独立批次提交，别和删条目混在一起。
+
+> 这条纪律和 roadmap §7 的「不要同批混做两件事」是同一个道理：
+> **删除数据来源**与**改变观测面**必须分开验收，否则分不清是迁移错还是提示词变了。

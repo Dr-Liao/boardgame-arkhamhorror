@@ -683,6 +683,10 @@ maxHealth / cardSanity
 **进展（6a-1 / 6b-1）**：引擎里的卡号字面量 **28 → 0**、战役名 **2 → 0**，`tests/phase6-guard.test.mjs` 把这两条变成门禁；
 交付说明与批次证据见 [`phase6-decoupling.md`](phase6-decoupling.md)。剩余：`EFFECTS` 57 条、`effectsTopLevelFields` 33 项、拆分 `engine.js`、战役插件化。
 
+**6c 的前置条件**（见 [`phase6-decoupling.md`](phase6-decoupling.md) §7）：`EFFECTS[code]` 还兼着「这张卡已实现」的语义——
+`ai-context.js` 把整个对象塞进 AI 上下文，删条目会改变提示词并让重放指纹变红。
+正确顺序：先把 `implemented` 换成稳定摘要并**显式重采基线**，再删纯登记条目。
+
 **门禁**：`engine.js` / `observation.js` 内不出现 `tfa|carcosa|dunwich` 字样与具体卡号；新增战役只加 `content/campaigns/<id>/`。
 
 ### 排期（粗估，单人）
