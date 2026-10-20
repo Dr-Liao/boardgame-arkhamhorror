@@ -7385,47 +7385,6 @@ function tfaPlayerEffectCore(state, seat, effect, events) {
     info(state, events, `「${cardName(asset.code)}」获得 1 点${asset.usesType === 'secrets' ? '秘密' : '充能'}。`)
     return
   }
-  // 背包（04037）：搜索牌库顶 6 张，最多 3 张非弱点道具/补给附属到背包上；没有则弃掉。
-  if (effect.action === 'backpackSearch') {
-    const bag = inv.assets.find(asset => asset.code === '04037')
-    if (!bag) return
-    const spec = EFFECTS['04037']?.backpack || { search: 6, keep: 3, traits: ['Item', 'Supply'] }
-    const wanted = (spec.traits || []).map(trait => String(trait).toLowerCase())
-    const eligible = code => {
-      const def = cardDef(code)
-      if (!def || isWeaknessCard(def)) return false
-      return (def.traits || []).some(trait => wanted.includes(String(trait).toLowerCase()))
-    }
-    const top = (inv.deck || []).slice(-(spec.search || 6)).reverse()
-    const remaining = top.filter(eligible)
-    const chosen = []
-    while (chosen.length < (spec.keep || 3) && remaining.length) {
-      const answer = requestChoice(state, {
-        kind: 'card', source: '04037', seat, canSkip: true,
-        prompt: `背包：选择要附属的卡（已选 ${chosen.length}/${spec.keep || 3}）。`,
-        options: [{ id: 'done', label: '完成附属' },
-          ...remaining.map((code, index) => ({ id: String(index), cardCode: code, label: cardName(code) }))],
-      })
-      if (answer === 'done') break
-      const picked = remaining.splice(Number(answer), 1)[0]
-      if (picked) chosen.push(picked)
-    }
-    const rest = [...(inv.deck || [])]
-    for (const code of chosen) {
-      const index = rest.lastIndexOf(code)
-      if (index >= 0) rest.splice(index, 1)
-    }
-    inv.deck = shuffle(rest, () => randomValue(state))
-    bag.attachedCards = chosen
-    if (!chosen.length) {
-      inv.discard.push('04037')
-      leaveAsset(state, inv, bag, events)
-      info(state, events, '🎒 背包里没有可附属的道具/补给，弃掉背包。')
-      return
-    }
-    info(state, events, `🎒 背包附属了 ${chosen.length} 张牌：${chosen.map(cardName).join('、')}。`)
-    return
-  }
   // 彩饰骷髅：地点上的敌人被击败后放 1 充能。
   // 犯罪现场：发现 1 个线索，地点有敌人时改为 2 个。
   // 收获日：本回合每个行动换 1 资源；若是自己的回合则结束回合。
@@ -7456,25 +7415,6 @@ function tfaPlayerEffectCore(state, seat, effect, events) {
   // 改变命运：弃掉一张未附属精英敌人的非弱点诡计。
 
   // 背包：从牌库顶 6 张找出最多 3 张非弱点道具/供给卡，正面朝下附属。
-  if (effect.action === 'backpackSearch') {
-    const host = inv.assets.find(asset => asset.code === '04037')
-    if (!host) return
-    const top = inv.deck.slice(-Math.min(6, inv.deck.length))
-    const matches = top.filter(code => {
-      const def = cardDef(code)
-      if (!def || def.type !== 'asset' || isWeaknessCode(code)) return false
-      const traits = (def.traits || []).map(trait => String(trait).toLowerCase())
-      return traits.includes('item') || traits.includes('supply')
-    }).slice(0, 3)
-    for (const code of matches) {
-      const index = inv.deck.lastIndexOf(code)
-      if (index >= 0) inv.deck.splice(index, 1)
-      attachCardTo(state, seat, code, host)
-    }
-    inv.deck = shuffle(inv.deck, () => randomValue(state))
-    info(state, events, `「背包」附属了 ${matches.length} 张卡牌。`)
-    return
-  }
   throw new Error(`未实现的失落玩家卡效果：${effect.action}`)
 }
 
@@ -9075,12 +9015,12 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     }
   } else if (fromBackpackId) {
     // 04037 背包：从附属区当作手牌打出；最后一张打完后弃掉背包。
-    const bag = inv.assets.find(asset => asset.id === fromBackpackId && asset.code === '04037')
+    const bag = inv.assets.find(asset => asset.id === fromBackpackId && registeredEntry(asset.code)?.cardBackpack)
     const index = bag?.attachedCards?.indexOf(cardId) ?? -1
     if (index < 0) return
     bag.attachedCards.splice(index, 1)
     if (!bag.attachedCards.length) {
-      inv.discard.push('04037')
+      inv.discard.push(bag.code)
       leaveAsset(state, inv, bag, events)
       info(state, events, '🎒 背包里的最后一张牌被打出，弃掉背包。')
     }
@@ -10983,6 +10923,22 @@ function abilityApi(state, events) {
     assetsCannotReady: inv => assetsCannotReady(inv),
     searchTop: (seat, options) => searchTop(state, seat, options, events),
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
+    // Phase 5（5c-34）：「背包」把牌放在 attachedCards 上（能从那里当手牌打出）与从牌库取走若干张。
+    setAttachedCards: (host, codes) => {
+      if (!host) return null
+      host.attachedCards = [...codes]
+      return host.attachedCards
+    },
+    takeFromDeck: (seat, codes) => {
+      const owner = state.investigators[seat]
+      if (!owner) return 0
+      let taken = 0
+      for (const code of codes || []) {
+        const index = owner.deck.lastIndexOf(code)
+        if (index >= 0) { owner.deck.splice(index, 1); taken++ }
+      }
+      return taken
+    },
     // Phase 5（5c-33）：「吃子弹」这类在反应窗口里给本次检定加「额外揭示数」的卡。
     // 反应窗口里写反应上下文（战斗流程在窗口后读 context.extraChaosChoices），否则写 skillTest。
     addExtraChaosChoicesToTest: amount => {
@@ -11545,7 +11501,7 @@ export function legalMoves(state, observerSeat) {
   }
 
   // 04037 背包：附属的牌可以当作手牌打出。
-  for (const bag of inv.assets.filter(asset => asset.code === '04037')) {
+  for (const bag of inv.assets.filter(asset => registeredEntry(asset.code)?.cardBackpack)) {
     for (const code of unique(bag.attachedCards || [])) {
       const def = cardDef(code)
       if (!def || def.type === 'skill'
@@ -12145,7 +12101,7 @@ export function validateMove(state, seat, move) {
         const plan = inv.assets.find(asset => asset.id === move.fromPlanAssetId && asset.code === '03264')
         if (!plan || plan.exhausted || !plan.attached?.includes(move.cardId) || def.type !== 'event') return '原定计划下没有可打出的这张事件'
       } else if (move.fromBackpackId) {
-        const bag = inv.assets.find(asset => asset.id === move.fromBackpackId && asset.code === '04037')
+        const bag = inv.assets.find(asset => asset.id === move.fromBackpackId && registeredEntry(asset.code)?.cardBackpack)
         if (!bag || !(bag.attachedCards || []).includes(move.cardId)) return '背包里没有这张牌'
       } else if (!inv.hand.includes(move.cardId)) return '手牌中没有这张牌'
       if (playAccess(move.cardId).reactionOnly) return '该牌只能在对应的反应窗口打出'

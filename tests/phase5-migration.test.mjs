@@ -684,6 +684,24 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-34：附属区当手牌打出（04037 背包）----
+
+test('5c-34：04037 背包把道具放进附属区，并能当作手牌打出', () => {
+  const state = fixture()
+  const me = state.investigators[0]
+  me.deck = [...me.deck.slice(0, -2), '01044', '01046'] // 弹簧刀 / 扒窃：都是道具支援
+  play(state, '04037')
+  settle(state, pending => (pending.kind === 'card' ? (pending.options.find(option => option.cardCode)?.id ?? 'done') : null))
+  const bag = state.investigators[0].assets.find(item => item.code === '04037')
+  assert.ok(bag?.attachedCards?.length, '背包里放进了道具')
+  const choice = legalMoves(state).find(command => command.action === 'play' && command.fromBackpackId)
+  assert.ok(choice, '背包里的牌出现在合法动作里')
+  move(state, choice)
+  settle(state)
+  const after = state.investigators[0].assets.find(item => item.code === '04037')
+  assert.equal(after?.attachedCards?.includes(choice.cardId) ?? false, false, '打出的牌离开背包')
+})
+
 // ---- 5c-33：额外花费弹药换额外揭示（03304 吃子弹）----
 
 test('5c-33：03304 吃子弹多花 1 发弹药，本次检定额外揭示 1 个混乱标记', () => {

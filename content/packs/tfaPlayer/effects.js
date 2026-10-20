@@ -15,7 +15,7 @@ const action = (label, effect, cost = {}) => ({ label, cost: { action: true, ...
 export const effects = {
   // ---- 支援 ----
   // 04021 已迁到能力层（kind: 'entersPlay'，见 src/cards/card-abilities.js）。
-  '04037': { onEnter: tfa('backpackSearch'), backpack: { search: 6, keep: 3, traits: ['Item', 'Supply'] } },
+  // 04037 背包已迁到能力层（5c-34），见 MIGRATED_ESCAPE_ENTRIES_5C34。
   '04268': {
     uses: 5, usesType: 'ammo', discardAtRoundEnd: true,
     abilities: [action('花费 1 子弹：攻击（战斗 +1，伤害 +1）', fight(1, 1), { uses: 1 })],

@@ -3047,12 +3047,52 @@ export const MIGRATED_ESCAPE_ENTRIES_5C33 = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// 5c-34：把牌放进附属区并能当手牌打出（背包）
+// ---------------------------------------------------------------------------
+
+export const MIGRATED_ESCAPE_ENTRIES_5C34 = [
+  // 04037 背包：入场时从牌库顶 6 张挑最多 3 张道具/补给放进 attachedCards；
+  // 其中的牌可以像手牌一样打出（读点见 doPlay / legalMoves / validateMove 的 cardBackpack）。
+  {
+    code: '04037', cardBackpack: true,
+    abilities: [{
+      kind: 'entersPlay', label: '入场：从牌库顶 6 张挑最多 3 张道具/补给放进背包',
+      resolve: ({ inv, source, api }) => {
+        if (!source) return
+        const top = api.topDeckCodes(inv.seat, 6).reverse()
+        const remaining = top.filter(code => api.cardType(code) && api.isNonWeakness(code)
+          && api.cardTraits(code).some(trait => trait === 'item' || trait === 'supply'))
+        const chosen = []
+        while (chosen.length < 3 && remaining.length) {
+          const answer = api.choice({ kind: 'card', source: '04037', seat: inv.seat, canSkip: true,
+            prompt: `背包：选择要附属的卡（已选 ${chosen.length}/3）。`,
+            options: [{ id: 'done', label: '完成附属' },
+              ...remaining.map((code, index) => ({ id: String(index), cardCode: code, label: api.cardName(code) }))] })
+          if (answer === 'done') break
+          const picked = remaining.splice(Number(answer), 1)[0]
+          if (picked) chosen.push(picked)
+        }
+        api.takeFromDeck(inv.seat, chosen)
+        api.shuffleDeck(inv.seat)
+        api.setAttachedCards(source, chosen)
+        if (!chosen.length) {
+          api.discardAsset(inv.seat, source)
+          api.info('🎒 背包里没有可附属的道具/补给，弃掉背包。')
+          return
+        }
+        api.info(`🎒 背包附属了 ${chosen.length} 张牌：${chosen.map(code => api.cardName(code)).join('、')}。`)
+      },
+    }],
+  },
+]
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -3106,4 +3146,5 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_ESCAPE_ENTRIES_5C30.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C32.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C33.map(entry => entry.code),
+  ...MIGRATED_ESCAPE_ENTRIES_5C34.map(entry => entry.code),
 ])

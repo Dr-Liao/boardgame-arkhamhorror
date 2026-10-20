@@ -129,6 +129,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'becomesAsset', 'exileAfterPlay', 'addToVictory',
   // Phase 5（5c-24）：这张支援会把封印其上的混乱标记当成本次检定的结算结果（危险预感）。
   'substituteSealedToken',
+  // Phase 5（5c-34）：这张支援的 attachedCards 可以当作手牌打出（背包）。读点见 doPlay / legalMoves / validateMove。
+  'cardBackpack',
   'fast', 'noOpportunityAttack'])
 
 // 条目级「能不能打出」条件：函数式 predicate，或 { when, message }（message 直接展示给玩家）。
@@ -340,6 +342,8 @@ export function registerCardAbilities(entries) {
       exileAfterPlay: entry.exileAfterPlay === true,
       addToVictory: entry.addToVictory === true,
       substituteSealedToken: entry.substituteSealedToken === true,
+      // Phase 5（5c-34）：attachedCards 可以当手牌打出（背包）。
+      cardBackpack: entry.cardBackpack === true,
       source: entry.source || null,
       registered: true,
     }
