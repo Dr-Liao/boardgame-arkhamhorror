@@ -879,3 +879,64 @@ function addTrauma(...args) { return campaignFlowApi().addTrauma(...args) }
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 3983 行**（12654 → 8671，−31.5%）。
+
+## 25. 6d-18：拆出 setup.js（建局流程）
+
+### 25.1 拆的是什么
+
+14 个函数（共 485 行，62 项依赖）搬进 `src/engine/setup.js`：
+
+`makeInvestigator` / `drawOpeningHand` / `buildInvestigatorsDeck` / `prepareInvestigator` /
+`refreshStateResources` / `unknownCardCodes` / `createGameState` / `pickAiInvestigator` /
+`startScenario` / `scenarioStartLocation` / `setupScenarioLocations` / `setupScenarioEnemies` /
+`setupScenarioDecks` / `setupChaosBag`
+
+即「一局怎么开始」的全部步骤。拆完后 `engine.js`（8281 行）只剩运行时：动作、检定、阶段、API。
+`createGameState` / `refreshStateResources` / `unknownCardCodes` 在 engine 里用**函数声明**再导出，
+外部 import 路径与调用点不变。
+
+### 25.2 关键坑：**模块级 `let` 绑定不能进依赖表**
+
+拆完立刻红了 3 条：
+
+```
+D1 extracurricularActivity uses the existing engine setup …
+N5 第二战役由注册表驱动 …
+  campaignId: 未知战役 dunwichContract0        ← content/schema.js 的 assertLaunchableCampaign
+```
+
+原因：`content/registered.js` 的 `contentRegistry` 是 **`let`**，`registerContentBundle()` 会**重新赋值**它。
+engine.js 里 `import { contentRegistry }` 是 ESM **live binding**，永远看到最新值；
+但把它塞进 `deps` 对象后，就变成了**首次调用时的快照**——测试先建局、再注册战役，第二个战役就查不到。
+
+修法：`setup.js` 直接 `import { contentRegistry } from '../../content/registered.js'`（live binding），
+**不**从 deps 传。
+
+> 通用规律（已写进本文档 §25.2）：
+> **`let`/可重新赋值的模块绑定（如 `contentRegistry`）必须用 `import` 走 live binding，不能进依赖注入表。**
+> 常量对象（`EFFECTS`、`ALL_CARDS` 等）可以放心注入——它们是同一对象、原地修改。
+
+### 25.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **8281**（6d-17 后 8671） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/setup.js` | **578** |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/ability-exec.js` | 369 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/campaign-flow.js` | 252 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 4373 行**（12654 → 8281，−34.6%）。
