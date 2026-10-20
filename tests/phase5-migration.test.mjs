@@ -684,6 +684,40 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5b-13：带「弃掉自己 / 自己受伤」费用的主动能力（01018 / 01027 / 01028）----
+
+test('5b-13：01018 弃掉自己造成 1 伤害；01028 横置并受伤；01027 弃掉自己 +2 行动', () => {
+  const state = fixture()
+  const guard = asset(state, '01018')
+  const foe = enemy(state, { engagedSeat: 0, health: 10 })
+  const shoot = legalMoves(state).find(command => command.action === 'ability' && command.assetId === guard.id)
+  assert.ok(shoot, '免费能力出现在合法动作里')
+  assert.equal(validateMove(state, 0, shoot), null, '动作校验通过')
+  move(state, shoot)
+  settle(state)
+  assert.equal(state.enemies.find(item => item.id === foe.id)?.damageTaken, 1, '对同地点敌人造成 1 伤害')
+  assert.ok(state.investigators[0].discard.includes('01018'), '弃掉自己作为费用')
+
+  const second = fixture()
+  const secondGuard = asset(second, '01028')
+  enemy(second, { engagedSeat: 0, health: 10 })
+  const fire = legalMoves(second).find(command => command.action === 'ability' && command.assetId === secondGuard.id)
+  move(second, fire)
+  settle(second)
+  const live = second.investigators[0].assets.find(item => item.id === secondGuard.id)
+  assert.equal(live?.damage, 1, '自己受 1 伤害作为费用')
+  assert.equal(live?.exhausted, true, '横置作为费用')
+
+  const third = fixture()
+  third.investigators[0].actionsLeft = 1
+  const badge = asset(third, '01027')
+  const show = legalMoves(third).find(command => command.action === 'ability' && command.assetId === badge.id)
+  move(third, show)
+  settle(third)
+  assert.equal(third.investigators[0].actionsLeft, 3, '获得 2 行动')
+  assert.ok(third.investigators[0].discard.includes('01027'), '弃掉警徽作为费用')
+})
+
 // ---- 5b-9：战役规则型被动（02110 适应性、03308 卡戎的银币）----
 
 test('5b-9：02110 适应性 / 03308 卡戎的银币改用条目级战役标记', () => {

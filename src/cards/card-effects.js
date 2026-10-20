@@ -79,12 +79,7 @@ export const EFFECTS = {
   // =========================================================================
   // 守卫者 Guardian（0 级 + XP）
   // =========================================================================
-  '01018': { // 巡警 Beat Cop
-    passive: { stats: { combat: 1 } },
-    abilities: [
-      { label: '射击（对同地点敌人造成 1 伤害）', cost: { action: false, discardSelf: true }, effect: { type: 'dealDamage', amount: 1, target: 'here' } },
-    ],
-  },
+
   '01022': { // 证据！Evidence!
     fast: true,
     reaction: { when: 'defeatEnemy', selfOnly: true },
@@ -95,18 +90,8 @@ export const EFFECTS = {
     reaction: { when: 'enemyAttack' },
     event: { type: 'cancelEnemyAttack' },
   },
-  '01027': { // 警徽 Police Badge（XP2）
-    passive: { stats: { willpower: 1 } },
-    abilities: [
-      { label: '亮出警徽（弃掉警徽，正在行动的同地点调查员 +2 行动）', cost: { action: false, discardSelf: true }, effect: { type: 'targetedEffect', target: 'location', activeTurnOnly: true, effect: { type: 'gainAction', amount: 2 } } },
-    ],
-  },
-  '01028': { // 巡警 Beat Cop（XP2）
-    passive: { stats: { combat: 1 } },
-    abilities: [
-      { label: '射击（横置并受 1 伤害，对同地点敌人造成 1 伤害）', cost: { action: false, exhaust: true, assetDamage: 1 }, effect: { type: 'dealDamage', amount: 1, target: 'here' } },
-    ],
-  },
+
+
 
   // =========================================================================
   // 探求者 Seeker（0 级 + XP）
