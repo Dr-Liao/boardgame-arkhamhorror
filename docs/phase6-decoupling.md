@@ -399,3 +399,49 @@ function abilityApi(state, events) {
 
 累计迁出 **约 1690 行**（12654 → 10966）。下一批继续拆 `abilityApi` 的其余分组：
 `play`（出牌/费用）、`test`（检定/标记）、`enemy`（敌人/攻击）、`card`（已拆）。
+
+## 15. 6d-8：abilityApi 第二批（`api-enemy.js`）
+
+### 15.1 拆的是什么
+
+从 `abilityApi` 再切出 **134 行**（`enemyTestModifier` … `putSelfIntoPlay`）：
+敌人与威胁区的写入——测试修正、阻止非精英攻击、移除/生成敌人、遭遇牌库交互、
+线索与毁灭的搬运、绑定标记、销毁与放逐。依赖只有 14 个，是这批里最干净的切分。
+
+```js
+// api-enemy.js
+export function createEnemyApi(state, events, deps) { … }
+
+// engine.js
+const apiEnemyDeps = { /* 14 个 helper */ }
+function abilityApi(state, events) {
+  return { … , ...createEnemyApi(state, events, apiEnemyDeps), … }
+}
+```
+
+### 15.2 挑块的判据
+
+`abilityApi` 的方法在文件里大致按域聚集，但边界不严格。挑块时用两条判据：
+
+1. **连续**：从某个方法名到另一个方法名，保证不在方法体中间切断；
+2. **依赖少**：用「engine 顶层声明 ∪ import 绑定 − 块内局部」扫一遍，优先选 ≤20 个依赖的块。
+
+本轮比较了三个候选：`test 段`（178 行 / 24 依赖）、`clue/doom 段`（126 行 / 15 依赖）、
+`enemy+card 表现`（134 行 / 14 依赖），选了依赖最少的那个。
+
+### 15.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **10884**（6d-7 后 10966） |
+| `src/engine/moves.js` | 652 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | **163** |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 1770 行**（12654 → 10884）。`abilityApi` 还剩约 580 行，
+下一批挑 `clue/doom 段`（126 行 / 15 依赖），然后 `test 段`。
