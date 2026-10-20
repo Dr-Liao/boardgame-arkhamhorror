@@ -55,3 +55,10 @@ export const RELIC_OF_AGES_CODE = '04061'
 
 // 卡号级规则数据：「随机基础弱点」自身的卡号（原 engine.js 硬编码 01000）。
 export const RANDOM_BASIC_WEAKNESS_CODE = '01000'
+
+// 卡号级规则数据：调查某些地点要额外花行动（原 engine.js 硬编码 02050）。
+export const INVESTIGATE_EXTRA_ACTIONS = Object.freeze({ '02050': 1 })
+
+export function investigateExtraActionsFor(code) {
+  return INVESTIGATE_EXTRA_ACTIONS[code] || 0
+}

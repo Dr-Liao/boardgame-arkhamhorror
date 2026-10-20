@@ -40,6 +40,7 @@ import {
   isPoisonThreat, isTextBlankEnemy, poisonThreatCode,
   RELIC_OF_AGES_CODE,
   RANDOM_BASIC_WEAKNESS_CODE,
+  investigateExtraActionsFor,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -9655,7 +9656,7 @@ function doFight(state, seat, opts, events, noSpend) {
   if (opts.fireAxe) {
     // "Limit three times per attack" -> at most 3 resources, +2 combat each.
     const max = Math.min(inv.resources, 3)
-    const spend = max ? Number(requestChoice(state, { kind: 'resource', source: opts.assetId || '02032', seat,
+    const spend = max ? Number(requestChoice(state, { kind: 'resource', source: opts.assetId || 'fireAxe', seat,
       prompt: '消防斧：选择为本次攻击花费的资源（每次攻击最多 3 点）。', options: Array.from({ length: max + 1 }, (_, i) => ({ id: String(i), label: `${i} 资源（战斗 +${i * 2}）` })) })) : 0
     inv.resources -= spend; opts.combatBonus = (opts.combatBonus || 0) + spend * 2
     if (inv.resources === 0) opts.damageBonus = (opts.damageBonus || 0) + 1
@@ -11904,7 +11905,8 @@ function actionCost(state, inv, move, applyTome = true) {
   if (move.action === 'freeAction') return INVESTIGATOR_ABILITIES[inv.code]?.freeAction?.actionCost || 0
   let cost = 1
   const investigateLoc = state.locations.find(loc => loc.id === (move.locationId || inv.location))
-  if (move.action === 'investigate' && investigateLoc?.originalCode === '02050') cost++
+  // Phase 5（5a-11）：某些地点调查要多花行动，映射在卡号规则数据里。
+  if (move.action === 'investigate') cost += investigateExtraActionsFor(investigateLoc?.originalCode || investigateLoc?.code)
   // 04145「屋中无人」：附属地点调查额外 +1 行动（剧本往地点上写计数）。
   if (move.action === 'investigate' && investigateLoc?.investigateExtraActions) {
     cost += investigateLoc.investigateExtraActions

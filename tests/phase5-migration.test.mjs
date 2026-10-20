@@ -10,7 +10,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
 import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine/engine.js'
-import { RANDOM_BASIC_WEAKNESS_CODE } from '../src/cards/card-rules.js'
+import { RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor } from '../src/cards/card-rules.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -683,6 +683,13 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   const entry = registeredEntry('03010')
   assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
+
+// ---- 5a-11：消防斧的提示来源 / 勘查额外行动（02032、02050）----
+
+test('5a-11：02032 与 02050 的卡号规则搬到 card-rules', () => {
+  assert.equal(investigateExtraActionsFor('02050'), 1, '02050 地点调查多花 1 行动')
+  assert.equal(investigateExtraActionsFor('01001'), 0, '其它地点没有额外行动')
 })
 
 // ---- 5a-10：随机基础弱点卡号 / 古代雕像（01000、01071）----
