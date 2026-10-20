@@ -68,7 +68,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 
 ## 4. 下一步（按性价比排序）
 
-### 4.1 5c 剩余 20 张（其中 15 张引擎里仍有逃生原语实现）
+### 4.1 5c 剩余 20 张（其中 16 张引擎里仍有逃生原语实现）
 
 顺序（每批 2–3 张，逐张验证）：
 

@@ -771,7 +771,7 @@ node tools/replay-fixtures.mjs --compare  ..\..\artifacts\replay-before.json   #
 | 非 `stats` 的 `passive` | **8 张**（02110/03264/03308 永久卡、03010、01018/01027/01028、03143 剧情资产） | | 30 种键：`extraSlots`/`sanityBonus`/`handSizeBonus`/`evadeBonus`/`hostHealth`… 前四个有现成或近成的修正目标 | 5b-8 |
 | 打出后去向字段（`attachTo`/`exileAfterPlay`/`removeAfterPlay`/`shuffleBackAfterPlay`/`becomesAsset`） | **~15 张** | `played` 描述子的「打出后去向」字段 + 读点（B6 已能表达） | 5b-9 |
 | `engine:` 标记卡（行为全在引擎里） | **5 张** | 01014 / 01072 / 01094 / 01095 / 01117 逐张改写成描述子 | 5a-1（续） |
-| 5c 剩余逃生卡 | **20 张**（其中 15 张在引擎里仍有逃生原语实现；`escape` 通道台账见 `audit/ability-coverage.json`） | 逐张 handler → `resolve`；剩大头是需要新包装的交互卡（附魔/封印/自定义计数器/from-discard 系列） | 5c-19…（Carcosa → TFA → Dunwich） |
+| 5c 剩余逃生卡 | **20 张**（其中 16 张在引擎里仍有逃生原语实现；`escape` 通道台账见 `audit/ability-coverage.json`） | 逐张 handler → `resolve`；剩大头是需要新包装的交互卡（附魔/封印/自定义计数器/from-discard 系列） | 5c-25…（Carcosa → TFA → Dunwich） |
 | 5a 引擎卡号分支 | **117 个码**（`condition` 30 / `block` 56 / `reference` 31 / `table` 0） | `reference` 是「搬家即可」（但要等文案 i18n）；`condition`/`block`（86 个行为分支）要逐卡迁移。死分支清理已成套路 | 5a-5… |
 
 已完成的能力接线（不再列进上表）：`reactions`（`legacyReaction`，5b-6）、`freeTriggers`/`composure`（5b-7）、
