@@ -7054,10 +7054,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     info(state, events, `${inv.name} 将 ${asset.attached.length} 张事件附属到「原定计划」。`)
     return
   }
-  if (effect.action === 'fieldwork') {
-    inv.fieldwork = { round: state.round, phase: state.phase, amount: 2 }
-    return
-  }
   if (effect.action === 'archaicGlyphs') {
     if (!asset) return
     asset.uses = (asset.uses || 0) + 1
@@ -7128,14 +7124,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     }
     return
   }
-  if (effect.action === 'pickpocketing') {
-    const successBy = state._reaction?.successBy || 0
-    const answer = successBy >= 2 ? 'both' : requestChoice(state, { kind: 'effect', source: '03195', seat,
-      prompt: '选择抽1张牌或获得1资源。', options: [{ id: 'draw', label: '抽1张牌' }, { id: 'resource', label: '获得1资源' }] })
-    if (answer === 'draw' || answer === 'both') for (const line of drawCards(state, inv, 1, events)) info(state, events, line)
-    if (answer === 'resource' || answer === 'both') inv.resources++
-    return
-  }
   if (effect.action === 'onTheHunt') {
     const top = state.encounterDeck.slice(-9)
     const candidates = top.map((code, index) => ({ code, index, def: enemyDef(code) }))
@@ -7170,12 +7158,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
       context.extraChaosChoices = (context.extraChaosChoices || 0) + amount
       context.assetId = firearm.id
     } else if (state.skillTest) state.skillTest.extraChaosChoices = (state.skillTest.extraChaosChoices || 0) + amount
-    return
-  }
-  if (effect.action === 'armorArdennes') {
-    if (state._reaction?.context) state._reaction.context.cancelDamage =
-      (state._reaction.context.cancelDamage || 0) + 1
-    else if (state._reaction) state._reaction.damage = Math.max(0, (state._reaction.damage || 0) - 1)
     return
   }
   if (effect.action === 'eideticMemory') {
@@ -7509,7 +7491,7 @@ function tfaBorrowedTimeTurnStart(state, inv, events) {
 // 失落时代第三批卡牌的调度器。
 const TFA_PLAYER_WAVE3_ACTIONS = new Set([
   'youHandleThisOne', 'darkProphecy', 'dumbLuck', 'yaotlIcons', 'yaotlDiscardTop', 'marksmanship',
-  'wellPrepared', 'recallTheFuture', 'tryAndTryAgain',
+  'wellPrepared',
   'premonition', 'againstAllOdds', 'pnakoticSkipTest', 'pnakoticNextTest',
   'borrowedTimeClick', 'shardsOfTheVoid',
 ])
@@ -7523,29 +7505,6 @@ function tfaPlayerEffect3(state, seat, effect, events) {
   // 「雅沃托」：弃掉牌库顶。
   // 「枪法如神」：用枪械/远程支援攻击连接地点上的敌人。
   // 「准备万全」：按所选支援上的匹配图标提升本次检定。
-  // 「追忆未来」：指定一个混乱标记名称。
-  if (effect.action === 'recallTheFuture') {
-    const asset = inv.assets.find(item => item.code === '04158' && !item.exhausted)
-    if (!asset || !state.skillTest) { info(state, events, '现在不能指定混乱标记。'); return }
-    const faces = unique(state.chaosBag)
-    const chosen = faces.length === 1 ? faces[0] : requestChoice(state, { kind: 'token', source: asset.id, seat,
-      prompt: '指定一个混乱标记；本次检定揭示它时本次检定 +2。', options: faces.map(face => ({ id: face, label: tokenLabel(face) })) })
-    state.skillTest.namedToken = { token: faces.includes(chosen) ? chosen : faces[0], assetId: asset.id }
-    info(state, events, `🔮 ${inv.name} 用「${cardName('04158')}」指定了 ${tokenLabel(state.skillTest.namedToken.token)}。`)
-    return
-  }
-  // 「反复尝试」：把本次检定投入的一张自己的技能牌收回手牌。
-  if (effect.action === 'tryAndTryAgain') {
-    const committed = (state.skillTest?.committed || []).filter(item => item.seat === seat && cardDef(item.code)?.type === 'skill')
-    if (!committed.length) { info(state, events, '本次检定没有可收回的技能牌。'); return }
-    const chosen = committed.length === 1 ? committed[0].code : requestChoice(state, { kind: 'card', source: '04159', seat,
-      prompt: '选择要返回手牌的一张技能牌。', options: committed.map(item => ({ id: item.code, cardCode: item.code, label: cardName(item.code) })) })
-    const entry = committed.find(item => item.code === chosen) || committed[0]
-    removeOne(state.skillTest.committed, entry)
-    inv.hand.push(entry.code)
-    info(state, events, `「${cardName('04159')}」把「${cardName(entry.code)}」返回 ${inv.name} 的手牌。`)
-    return
-  }
   // 「危险预感」：将本卡放入场上并封印一个随机标记。
   if (effect.action === 'premonition') {
     let token
@@ -10602,6 +10561,14 @@ function abilityApi(state, events) {
       if (inv) inv.resources = Math.max(0, inv.resources - amount)
     },
     drawCards: (seat, amount) => drawCards(state, state.investigators[seat], amount, events),
+    // Phase 5（5c-18）：抽牌并把引擎的抽牌日志写进事件流。
+    // 「扒手」这类旧 handler 自己遍历 drawCards 的返回值打日志，走 api.drawCards 会丢掉
+    // 「抽取了 1 张牌」这行——它进 state.log 也进重放指纹，因此需要一个同源的带日志版本。
+    drawCardsLogged: (seat, amount) => {
+      const texts = drawCards(state, state.investigators[seat], amount, events)
+      for (const text of texts) info(state, events, text)
+      return texts.length
+    },
     discardFromHand: (seat, code) => {
       const inv = state.investigators[seat]
       const index = inv?.hand.indexOf(code)
@@ -10691,6 +10658,14 @@ function abilityApi(state, events) {
       if (!state.skillTest) return 0
       state.skillTest.pendingBonus = (state.skillTest.pendingBonus || 0) + amount
       return state.skillTest.pendingBonus
+    },
+    // Phase 5（5c-18）：「田野调查」这类「本阶段下一次技能检定 +N」。读点仍在 performTest 里
+    // （inv.fieldwork 的字段名沿用旧原语，避免改读点形状；行为与迁移前逐字一致）。
+    phaseTestBonus: (seat, amount = 2) => {
+      const owner = state.investigators[seat]
+      if (!owner) return 0
+      owner.fieldwork = { round: state.round, phase: state.phase, amount }
+      return amount
     },
     returnClueToLocation: (seat, amount = 1) => {
       const owner = state.investigators[seat]
@@ -11038,6 +11013,51 @@ function abilityApi(state, events) {
       if (!owner) return null
       owner.narrowEscape = { amount, round: state.round, turnSeat: state.currentSeat }
       return owner.narrowEscape
+    },
+    // 「阿登森林护甲」：取消正在分配的 N 点伤害（反应窗口里的唯一接线点）。
+    cancelDamage: (amount = 1) => {
+      const reaction = state._reaction
+      if (!reaction) return 0
+      if (reaction.context) reaction.context.cancelDamage = (reaction.context.cancelDamage || 0) + amount
+      else reaction.damage = Math.max(0, (reaction.damage || 0) - amount)
+      return amount
+    },
+    // Phase 5（5c-18）：「追忆未来」在检定开始时指定一个混乱标记。
+    // 命中时横置与 +2 仍由引擎的标记揭示段处理（读点 state.skillTest.namedToken 不变）。
+    nameChaosToken: (seat, options = {}) => {
+      const owner = state.investigators[seat]
+      const asset = options.asset || null
+      if (!asset || asset.exhausted || !state.skillTest || !owner) {
+        info(state, events, options.unavailableText || '现在不能指定混乱标记。')
+        return null
+      }
+      const faces = unique(state.chaosBag)
+      const chosen = faces.length === 1 ? faces[0] : requestChoice(state, { kind: 'token', source: asset.id, seat,
+        prompt: options.prompt || '指定一个混乱标记；本次检定揭示它时本次检定 +2。',
+        options: faces.map(face => ({ id: face, label: tokenLabel(face) })) })
+      state.skillTest.namedToken = { token: faces.includes(chosen) ? chosen : faces[0], assetId: asset.id }
+      info(state, events, `🔮 ${owner.name} 用「${cardName(asset.code)}」指定了 ${tokenLabel(state.skillTest.namedToken.token)}。`)
+      return state.skillTest.namedToken.token
+    },
+    // Phase 5（5c-18）：「再试一次」把本次检定投入的一张自己的技能牌收回手牌。
+    recallCommittedSkill: (seat, options = {}) => {
+      const owner = state.investigators[seat]
+      if (!owner) return null
+      const committed = (state.skillTest?.committed || [])
+        .filter(item => item.seat === seat && cardDef(item.code)?.type === 'skill')
+      if (!committed.length) {
+        info(state, events, options.emptyText || '本次检定没有可收回的技能牌。')
+        return null
+      }
+      const chosen = committed.length === 1 ? committed[0].code : requestChoice(state, { kind: 'card',
+        source: options.source || committed[0].code, seat,
+        prompt: options.prompt || '选择要返回手牌的一张技能牌。',
+        options: committed.map(item => ({ id: item.code, cardCode: item.code, label: cardName(item.code) })) })
+      const entry = committed.find(item => item.code === chosen) || committed[0]
+      removeOne(state.skillTest.committed, entry)
+      owner.hand.push(entry.code)
+      info(state, events, `「${cardName(options.source || entry.code)}」把「${cardName(entry.code)}」返回 ${owner.name} 的手牌。`)
+      return entry.code
     },
     // 「我來处理」：把当前遭遇卡改由该座位接手结算（反应窗口里唯一的接线点）。
     redirectEncounter: seat => {

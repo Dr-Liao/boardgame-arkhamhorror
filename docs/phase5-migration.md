@@ -5,9 +5,9 @@
 > 不重复路线里的规矩。
 > 接手请先读 [`phase5-handoff.md`](phase5-handoff.md)（现状 / 验收命令 / 下一步 / 已知坑）。
 >
-> 一句话结论：**迁移工具链已交付，296 张卡迁完（`EFFECTS` 385 → 90、legacy 286 → 60、descriptor 75 → 363、
-> 逃生卡 93 → 32、引擎卡号 166 → 126），批次累计 32 个**；5b 尾部（剩余 reactions / 非 stats 被动）、
-> 5c 剩余 32 张、5a 的卡号分支迁移仍在进行——清单见 §6。
+> 一句话结论：**迁移工具链已交付，301 张卡迁完（`EFFECTS` 385 → 90、legacy 286 → 60、descriptor 75 → 368、
+> 逃生卡 93 → 27、引擎卡号 166 → 123），批次累计 33 个**；5b 尾部（剩余 reactions / 非 stats 被动）、
+> 5c 剩余 27 张、5a 的卡号分支迁移仍在进行——清单见 §6。
 
 ---
 
@@ -22,7 +22,7 @@
 | 迁移目标文件 | `src/cards/ability-migration-batches.js` | 按批次分组的生成描述子（标记块 `// >>> batch: <名>`），由 `CARD_ABILITY_ENTRIES` 一并注册 |
 | 批次账本 | `audit/migration-batches.json` | 每个批次的卡号清单；`manual` 里是手写批次（5b-6 / 5c） |
 | 用例 | `tests/migration-tools.test.mjs` | 账本/读点/工具纯函数/批次文件格式（8 条） |
-| 用例 | `tests/phase5-migration.test.mjs` | 5c 改写后的行为（地点附属、连抽遭遇、牌库检索、捷径、调查/躲避、武器、治疗）（27 条） |
+| 用例 | `tests/phase5-migration.test.mjs` | 5c 改写后的行为（地点附属、连抽遭遇、牌库检索、捷径、调查/躲避、武器、治疗、5c-18 的五个新 api）（41 条） |
 | 用例 | `tests/architecture-guard.test.mjs` | 9 条冻结守卫，含 5a-1 新增的「引擎里没有已无数据引用的旧原语分支」 |
 | npm 脚本 | `cards:migrate` / `cards:migrate:list` / `cards:scaffold` | 见 `package.json` |
 
@@ -83,7 +83,8 @@ npm run test:fast                                   # 全量快测
 | `5c-15` | 逃生原语 → `resolve`：幸运邂逅（弃牌堆招募）/ 挥金如土（检定加成 + 返还） | 2 | 手写 + 删引擎分支（03189 回退） |
 | `5c-16` | 逃生原语 → `resolve`：发掘古物（检定后直接放置入场） | 1 | 手写 + 2 个 api + 删引擎分支 |
 | `5c-17` | 逃生原语 → `resolve`：手铐（人形敌人检定 + 附属） | 1 | 手写 + 1 个 api + 删引擎分支 |
-| **合计** | | **296 张卡 + 38 段引擎分支** | |
+| `5c-18` | 逃生原语 → `resolve`：田野调查 / 扒手 / 阿登森林护甲 / 追忆未来 / 再试一次 | 5 | 手写 + 5 个 api + 删 5 段引擎分支 |
+| **合计** | | **301 张卡 + 43 段引擎分支** | |
 
 指标（`npm run cards:audit`）：
 
@@ -91,11 +92,11 @@ npm run test:fast                                   # 全量快测
 | --- | --- | --- | --- |
 | `effectsEntries` | 385 | **90** | −295 |
 | 通道 `legacy` | 286 | **60** | −226 |
-| 通道 `descriptor` | 75 | **363** | +288 |
-| 通道 `escape` | 93 | **32** | −61 |
+| 通道 `descriptor` | 75 | **368** | +293 |
+| 通道 `escape` | 93 | **27** | −66 |
 | `descriptorEntries` / `descriptorAbilities` | 79 / 59 | **373 / 315** | +294 / +256 |
 | `effectsTopLevelFields` | 69 | **48** | −21（`event`/`skill`/`weakness`/`freeTriggers`/`composure` 等旧字段搬空后不再出现） |
-| `engineCodes` | 166 | **126** | −40（5c 删旧原语分支 25 个码 + 5a 四批 10 个码） |
+| `engineCodes` | 166 | **123** | −43（5c 删掉的逃生原语分支为主，含 5c-18 的 3 个码；另 5a 四批把 15 个卡号的数据搬去 `card-rules.js`） |
 
 `effectsEntries` 的下降是 285 张卡的迁移结果（154 张来自工具的 5b 机械迁移，35 张来自反应接线，15 张来自天赋档位，31 张来自被动/规则字段/封印附属，50 张来自 5c 手写改写）；
 `engineCodes` 的 35 个下降来自被删掉的旧原语分支（5c 25 个）与搬到内容层的卡号数据（5a 四批 10 个）；
@@ -304,6 +305,35 @@ handler 只覆盖结算部分。
 **5a 仍然剩什么**：`requestChoice({ source: '0xxxx' })` 的来源标签（改动会进状态指纹）与
 `def.code === '0xxxx'` 形式的**行为分支**（例如 01007 的创伤、01071 的雕像充能、01082/02308 的安奎娜转移）——
 后者要等对应的 `ctx.api` 与描述子写法，归入 5a-5 起的批次。
+
+### 4.26 5c-18：最后一批「纯 handler」逃生原语（5 张）
+
+这五张卡在 5b/5c 早期就把**数据**搬到了描述子，但效果体仍是
+`{ type: 'carcosaPlayer'|'tfaPlayer', action: '…' }`——引擎里那段 `effect.action === '…'` 就是它的实现
+（handoff §5 第 5 条：这类分支不是死代码）。5c-18 按正确顺序做：**先写 `resolve`，再删分支**。
+
+| 卡 | 旧原语 | 新写法 | 删掉的引擎分支 |
+| --- | --- | --- | --- |
+| 03024 田野调查 | `carcosaPlayer.fieldwork` | `api.phaseTestBonus(inv.seat, 2)` | `fieldwork` |
+| 03195 扒手 | `carcosaPlayer.pickpocketing` | `api.reactionContext()` + `api.choice` + `api.drawCardsLogged` / `api.gainResources` | `pickpocketing` |
+| 03305 阿登森林护甲 | `carcosaPlayer.armorArdennes` | `api.cancelDamage(1)` | `armorArdennes` |
+| 04158 追忆未来 | `tfaPlayer.recallTheFuture` | `api.nameChaosToken(inv.seat, { asset: source })` | `recallTheFuture`（同时从 `TFA_PLAYER_WAVE3_ACTIONS` 摘除） |
+| 04159 再试一次 | `tfaPlayer.tryAndTryAgain` | `api.recallCommittedSkill(inv.seat, { source: '04159' })` | `tryAndTryAgain`（同上） |
+
+五个新包装都只是「已有引擎入口的别名」，内容层仍然不碰 state：
+
+| 新增 api | 说明 |
+| --- | --- |
+| `api.phaseTestBonus(seat, amount)` | 本阶段下一次技能检定 +N（读点仍是 `performTest` 的 `inv.fieldwork`，字段名沿用旧原语） |
+| `api.drawCardsLogged(seat, amount)` | 「抽 N 张」并把引擎的抽牌日志写进事件流——`api.drawCards` 会丢掉那几行，而它们进 `state.log`（= 进指纹） |
+| `api.cancelDamage(amount)` | 取消正在分配的伤害（优先写 `reaction.context.cancelDamage`，与旧分支同一接线点） |
+| `api.nameChaosToken(seat, { asset })` | 检定开始时指定一个混乱标记；命中后横置 +2 仍由引擎的标记揭示段处理 |
+| `api.recallCommittedSkill(seat, { source })` | 把本次检定投入的一张自己的技能牌收回手牌（询问来源与文案与旧 handler 逐字一致） |
+
+验收：`tests/phase5-migration.test.mjs` 的 5c-18 四条（逃生前缀消失 + 田野调查 +2 + 扒手二选一/日志）；
+04158 / 04159 的完整流程在 `tests/tfa-player-acceptance.test.mjs`，03305 在
+`tests/carcosa-implementation-gaps.test.mjs`（都已在 `fast` tier）。
+`replay --compare` 逐条一致；`engineCodes` 126 → 123、逃生卡 32 → 27、descriptor 363 → 368。
 
 ### 4.25 5c-17：手铐（1 张）
 
@@ -540,11 +570,11 @@ handler 只覆盖结算部分。
 | 门禁 | 结果 |
 | --- | --- |
 | `node tools/replay-fixtures.mjs --check` | ✔ 10 局 / 529 步 / 530 个逐步指纹全部一致（迁移前基线见 §5.1） |
-| `node tools/replay-fixtures.mjs --compare artifacts/replay-before.json` | ✔ 每批都跑过：与迁移前基线逐条一致（5b-1…5b-7、5c-1…5c-9、5a-1） |
-| `node tools/audit-abilities.mjs --check` | ✔ 两份账本 + 两份白名单与实现一致（白名单只收缩：EFFECTS 90 项、engine 码 126 项） |
+| `node tools/replay-fixtures.mjs --compare artifacts/replay-before.json` | ✔ 每批都跑过：与迁移前基线逐条一致（5b-1…5b-7、5c-1…5c-18、5a-1…5a-4） |
+| `node tools/audit-abilities.mjs --check` | ✔ 两份账本 + 两份白名单与实现一致（白名单只收缩：EFFECTS 90 项、engine 码 123 项） |
 | `node --test tests/architecture-guard.test.mjs` | ✔ 10/10（含死分支守卫与「卡包登记完备」两条） |
-| `node tools/migrate-card.mjs --verify` | ✔ 32 个批次全部「旧条目已删 + 能力层有条目」 |
-| `node tools/audit-dead-primitives.mjs --check` | ✔ 73 个旧原语分派点，0 个死分支（架构守卫同时校验） |
+| `node tools/migrate-card.mjs --verify` | ✔ 33 个批次全部「旧条目已删 + 能力层有条目」 |
+| `node tools/audit-dead-primitives.mjs --check` | ✔ 35 个旧原语分派点，0 个死分支（架构守卫同时校验） |
 | `npm run test:fast` | 8 条既有失败（Phase 0 记账：`rules-n3` 5、`campaign-http-n4` 1、`checkpoint-rewind` 1、`carcosa-implementation-gaps` 1）；**新增 0 条** |
 | `npm run test:slow` | 11 条既有失败（Phase 4 记账：`campaign-n4` 8、`notz-n4` 1、`dunwich-rules` D9 1、`p2-hub-http` 1）；新增 0 条 |
 | `npm run test:assets` | 4 条既有失败（`import-cards` 的 N1 输出稳定性与只读导入 2 条、`presentation-http` 的「胆量」卡背 1 条、`p6-content` 的失败/撤退轨迹 1 条——后者的 `campaignResult` 结局与 Phase 4 golden 基线一致，是记账中的既有漂移）；新增 0 条 |
@@ -600,19 +630,24 @@ node tools/replay-fixtures.mjs --compare  ..\..\artifacts\replay-before.json   #
 | 非 `stats` 的 `passive` | **8 张**（02110/03264/03308 永久卡、03010、01018/01027/01028、03143 剧情资产） | | 30 种键：`extraSlots`/`sanityBonus`/`handSizeBonus`/`evadeBonus`/`hostHealth`… 前四个有现成或近成的修正目标 | 5b-8 |
 | 打出后去向字段（`attachTo`/`exileAfterPlay`/`removeAfterPlay`/`shuffleBackAfterPlay`/`becomesAsset`） | **~15 张** | `played` 描述子的「打出后去向」字段 + 读点（B6 已能表达） | 5b-9 |
 | `engine:` 标记卡（行为全在引擎里） | **5 张** | 01014 / 01072 / 01094 / 01095 / 01117 逐张改写成描述子 | 5a-1（续） |
-| 5c 剩余逃生卡 | **32 张**（其中 24 张在引擎里仍有逃生原语实现；`escape` 通道台账见 `audit/ability-coverage.json`） | 逐张 handler → `resolve`；剩大头是需要新包装的交互卡（附魔/封印/自定义计数器/from-discard 系列） | 5c-10…（Carcosa → TFA → Dunwich） |
-| 5a 引擎卡号分支 | **139 个码**（`condition` 35 / `block` 60 / `reference` 41 / `table` 3） | `reference`/`table` 是「搬家即可」；`condition`/`block` 要逐卡迁移。死分支清理已成套路 | 5a-2… |
+| 5c 剩余逃生卡 | **27 张**（其中 22 张在引擎里仍有逃生原语实现；`escape` 通道台账见 `audit/ability-coverage.json`） | 逐张 handler → `resolve`；剩大头是需要新包装的交互卡（附魔/封印/自定义计数器/from-discard 系列） | 5c-19…（Carcosa → TFA → Dunwich） |
+| 5a 引擎卡号分支 | **123 个码**（`condition` 31 / `block` 58 / `reference` 34 / `table` 0） | `reference` 是「搬家即可」（但要等文案 i18n）；`condition`/`block`（89 个行为分支）要逐卡迁移。死分支清理已成套路 | 5a-5… |
 
 已完成的能力接线（不再列进上表）：`reactions`（`legacyReaction`，5b-6）、`freeTriggers`/`composure`（5b-7）、
 「事件在反应窗口打出」（5c-8）。
 
-同时记三笔容易忘的账：
+同时记四笔容易忘的账：
 
 - **E1（文案 i18n）**：本次没有触碰 `engine.js` 的 868 处中文字面量；一旦做，`state.log` 会变，
   必须重采 golden 基线（见 [`phase4-replay.md`](phase4-replay.md) §7）。
 - **`addPendingTestBonus` 丢失（既有问题）**：窗口内写入的 `pendingBonus` 在下一个待决选择后归零，
   04160（Phase 2 卡）同样复现。做「检定加值」类卡（04151/04154/04160 等）之前应先修它，
   否则加值只能靠日志观测。
+- **`evadeSuccess` 窗口没有 `successBy`（5c-18 记录，未修）**：`doEvade` 触发窗口时只传
+  `{ enemy, location }`，所以 03195「检定成功且超过难度 2 点改为两项都做」这句自始不可达
+  （旧 handler 读 `state._reaction?.successBy` 恒为 0）。5c-18 按原样搬运；补上这个上下文字段
+  属于**规则改动**（会改变该卡的提示与结算），要单独一批，并同步更新
+  `tests/phase5-migration.test.mjs` 里那条「按原样保留」的用例。
 - **冻结守卫只在 `fast` tier 跑**：迁移批次仍应执行 `npm run test:fast`；涉及战役的批次再加跑对应验收文件
   （`npm run test:carcosa:player`、`npm run test:tfa:player`、`npm run test:dunwich:acceptance`）。
 

@@ -2162,22 +2162,33 @@ export const MIGRATED_REACTION_ENTRIES_5B6C = [
       label: '检定失败后抽 1 张', cost: { exhaust: true }, effect: { type: 'draw', amount: 1 },
     }],
   },
-  // 03024 田野调查：移动后（本地点有线索）横置，发现 1 个线索。
+  // 03024 田野调查：移动后（本地点有线索）横置，本阶段下一次技能检定 +2。
+  // 5c-18：不再走 carcosaPlayer 逃生原语，改成 api.phaseTestBonus（读点仍是 performTest 的
+  // inv.fieldwork，行为与迁移前一致）。
   {
     code: '03024',
     abilities: [{
       kind: 'reaction', trigger: 'move', id: 'fieldwork', legacyReaction: true,
-      criteria: { requiresClue: true }, label: '移动后发现 1 个线索',
-      cost: { exhaust: true }, effect: { type: 'carcosaPlayer', action: 'fieldwork' },
+      criteria: { requiresClue: true }, label: '移动后本阶段下一次技能检定 +2',
+      cost: { exhaust: true },
+      resolve: ({ inv, api }) => { api.phaseTestBonus(inv.seat, 2) },
     }],
   },
-  // 03195 扒手（Carcosa 版）：快速；躲避成功后横置并获得 1 资源。
+  // 03195 扒手（Carcosa 版）：快速；躲避成功后横置，抽 1 张或获得 1 资源（超出 2 点时两者都做）。
+  // 5c-18：抽屉选择、抽牌日志与资源都由 ctx.api 结算，引擎不再认识这张卡。
   {
     code: '03195', fast: true,
     abilities: [{
       kind: 'reaction', trigger: 'evadeSuccess', id: 'pickpocketing', legacyReaction: true,
-      label: '躲避成功后获得资源', cost: { exhaust: true },
-      effect: { type: 'carcosaPlayer', action: 'pickpocketing' },
+      label: '躲避成功后抽 1 张或获得 1 资源', cost: { exhaust: true },
+      resolve: ({ inv, api }) => {
+        const successBy = api.reactionContext()?.successBy || 0
+        const answer = successBy >= 2 ? 'both' : api.choice({ kind: 'effect', source: '03195', seat: inv.seat,
+          prompt: '选择抽1张牌或获得1资源。',
+          options: [{ id: 'draw', label: '抽1张牌' }, { id: 'resource', label: '获得1资源' }] })
+        if (answer === 'draw' || answer === 'both') api.drawCardsLogged(inv.seat, 1)
+        if (answer === 'resource' || answer === 'both') api.gainResources(inv.seat, 1)
+      },
     }],
   },
   // 03268 暗示：主动躲避能力 + 取消非精英敌人攻击的反应（消耗充能）。
@@ -2196,12 +2207,13 @@ export const MIGRATED_REACTION_ENTRIES_5B6C = [
     ],
   },
   // 03305 阿登森林护甲：伤害分配到自身时横置，抵消 1 点伤害。
+  // 5c-18：抵消走 api.cancelDamage（与旧原语的接线点相同：优先写 reaction.context.cancelDamage）。
   {
     code: '03305',
     abilities: [{
       kind: 'reaction', trigger: 'damageAssignedToSelf', id: 'armorArdennes', legacyReaction: true,
       label: '抵消 1 点伤害', cost: { exhaust: true },
-      effect: { type: 'carcosaPlayer', action: 'armorArdennes' },
+      resolve: ({ api }) => { api.cancelDamage(1) },
     }],
   },
   // 04017 求生刀：主动攻击（战斗 +1）+ 敌人攻击造成伤害时反击。
@@ -2219,22 +2231,25 @@ export const MIGRATED_REACTION_ENTRIES_5B6C = [
       },
     ],
   },
-  // 04158 追忆未来：检定开始时指定一个混乱标记（不横置）。
+  // 04158 追忆未来：检定开始时指定一个混乱标记（命中时横置并 +2）。
+  // 5c-18：指定标记走 api.nameChaosToken；「命中后横置 +2」的读点仍在引擎的标记揭示段。
   {
     code: '04158',
     abilities: [{
       kind: 'reaction', trigger: 'testBegins', id: 'recallTheFuture', legacyReaction: true,
       criteria: { selfOnly: true }, label: '检定开始时指定混乱标记',
-      effect: { type: 'tfaPlayer', action: 'recallTheFuture' },
+      resolve: ({ inv, source, api }) => { api.nameChaosToken(inv.seat, { asset: source }) },
     }],
   },
   // 04159 再试一次：检定失败后横置并消耗 1 次，取回投入的技能卡。
+  // 5c-18：候选与归还走 api.recallCommittedSkill（提示文案与询问来源沿用旧原语）。
   {
     code: '04159', uses: 3, usesType: 'tries', discardWhenEmpty: true,
     abilities: [{
       kind: 'reaction', trigger: 'skillTestFail', id: 'tryAndTryAgain', legacyReaction: true,
       criteria: { selfOnly: true }, label: '检定失败后取回投入的技能卡',
-      cost: { exhaust: true, uses: 1 }, effect: { type: 'tfaPlayer', action: 'tryAndTryAgain' },
+      cost: { exhaust: true, uses: 1 },
+      resolve: ({ inv, api }) => { api.recallCommittedSkill(inv.seat, { source: '04159' }) },
     }],
   },
   // 04200 学无止境：快速；检定失败后重试（+2）。

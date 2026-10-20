@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "note": "由 tools/audit-abilities.mjs --write 生成，勿手改。指标只允许下降；engineCodes / effectsEntries 的每一次减少都是一次迁移证据，必须随迁移一起提交。",
   "metrics": {
-    "engineCodes": 126,
+    "engineCodes": 123,
     "effectsEntries": 90,
     "effectsTopLevelFields": 48,
-    "escapeCards": 32,
+    "escapeCards": 27,
     "descriptorEntries": 373,
     "descriptorAbilities": 315,
     "abilityKinds": 11,
@@ -16,11 +16,11 @@
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 363,
+    "descriptor": 368,
     "legacy": 60,
     "engine": 5,
     "hybrid": 1,
-    "escape": 32
+    "escape": 27
   },
   "nonPlayer": {
     "byScope": {
@@ -1400,11 +1400,8 @@
     },
     {
       "code": "03024",
-      "channel": "escape",
-      "descriptors": 1,
-      "escapePrimitives": [
-        "carcosaPlayer"
-      ]
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "03025",
@@ -1697,12 +1694,8 @@
     },
     {
       "code": "03195",
-      "channel": "escape",
-      "descriptors": 1,
-      "escapePrimitives": [
-        "carcosaPlayer"
-      ],
-      "engineReferenced": true
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "03196",
@@ -1864,11 +1857,8 @@
     },
     {
       "code": "03305",
-      "channel": "escape",
-      "descriptors": 1,
-      "escapePrimitives": [
-        "carcosaPlayer"
-      ]
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "03306",
@@ -2281,21 +2271,13 @@
     },
     {
       "code": "04158",
-      "channel": "escape",
-      "descriptors": 1,
-      "escapePrimitives": [
-        "tfaPlayer"
-      ],
-      "engineReferenced": true
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "04159",
-      "channel": "escape",
-      "descriptors": 1,
-      "escapePrimitives": [
-        "tfaPlayer"
-      ],
-      "engineReferenced": true
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "04160",

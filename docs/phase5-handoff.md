@@ -12,9 +12,9 @@
 
 ## 1. 一句话现状
 
-迁移工具链已交付，**296 张卡**迁到能力层（32 个批次），`EFFECTS` 385 → **90**、
-通道 legacy 286 → **60**、descriptor 75 → **363**、**逃生卡 93 → 32**、**引擎卡号 166 → 126**。
-`replay` 基线逐条不变、`fast` 无新增失败。**5a 引擎卡号分支、5c 剩余 32 张、5b 尾部（反应 2 / 非 stats 被动 8）仍未完成。**
+迁移工具链已交付，**301 张卡**迁到能力层（33 个批次），`EFFECTS` 385 → **90**、
+通道 legacy 286 → **60**、descriptor 75 → **368**、**逃生卡 93 → 27**、**引擎卡号 166 → 123**。
+`replay` 基线逐条不变、`fast` 无新增失败。**5a 引擎卡号分支、5c 剩余 27 张、5b 尾部（反应 2 / 非 stats 被动 8）仍未完成。**
 
 ---
 
@@ -62,20 +62,25 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 | 文档 | 本文 + `phase5-migration.md`（批次证据与踩坑记录）+ `card-model.md`（加卡流程） |
 
 批次：5b-1…5b-5（机械 154）、5b-6/6b/6c/6d/7/8a/8b/9/10/11（反应/天赋/被动/规则字段/封印附属 46）、
-5c-1…5c-17（逃生卡 60）、5a-1…5a-4（引擎侧 10 个码）。
+5c-1…5c-18（逃生卡 65）、5a-1…5a-4（引擎侧 10 个码）。
 
 ---
 
 ## 4. 下一步（按性价比排序）
 
-### 4.1 5c 剩余 32 张（其中 24 张引擎里仍有逃生原语实现）
+### 4.1 5c 剩余 27 张（其中 22 张引擎里仍有逃生原语实现）
 
 顺序（每批 2–3 张，逐张验证）：
 
-1. `04010` 走私货物（牌库顶 9 / 弃牌堆两区查找）
-2. `04021` 艾丽·霍洛维兹（顶 9 张找遗物支援并附属；需要 `searchTop` + `attachCardTo` 的 api 化）
-3. `04158` 水晶摆锤 / `04159` 预兆钟（都有 2 处引擎引用）
-4. `04270` 骷髅钥匙（附属到地点 + 隐藏值视为 1）
+1. `04010` 走私货物（牌库顶 9 / 弃牌堆两区查找）——注意它的 `playRestriction: 'noReadyEnemy'`
+   目前只能经 `EFFECTS` 读（`cardPlayBlockedReason`），而 `legalMoves` **不检查** `playCondition`，
+   所以把它改成 `playCondition` 会让"有未横置敌人时"多出一条非法但可见的动作，**不能顺手改**。
+2. `04021` 艾丽·霍洛维兹（`entersPlay` 钩子仍带逃生原语；需要「读牌库顶 N 张 + 附属」的 api
+   与 `entersPlay` 的 resolve 读点）
+3. `04158` / `04159` 已迁（5c-18），`04191` 古代遗物需要「每局一次」的通用标记与 `removeDoom`
+4. `04270` 骷髅钥匙（附属到地点 + 隐藏值视为 1）——**原有的解除附属分支有 bug**：
+   它从 `inv.assets` 里找不到已附属的钥匙，所以"解除"只会删掉地点附属而不会把钥匙放回场上；
+   迁移时要么按原样保留、要么单开一批修
 5. `04308` 借来的时间（`maxClicks` 门要等价表达）、`04310` 虚空碎片（"充能或释放封印"二选一付费）
 6. `03189` 我会在地狱里见你（**已尝试并回退**，见 §5 第 6 条）
 
@@ -89,16 +94,16 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 ⑤ replay --compare + 该战役验收用例
 ```
 
-### 4.2 5a 剩余 126 个码（`condition` 25 / `block` 58 / `reference` 38 / `table` 0）
+### 4.2 5a 剩余 123 个码（`condition` 31 / `block` 58 / `reference` 34 / `table` 0）
 
-- **`reference`（38）**：多数是 `requestChoice({ source: '0xxxx' })` 的来源标签——它会进状态指纹，
+- **`reference`（34）**：多数是 `requestChoice({ source: '0xxxx' })` 的来源标签——它会进状态指纹，
   改法本身会改变 replay，**归 Phase 6 与 UI 文案一起处理**，不要单独动。
-- **`condition` / `block`（83）**：`def.code === '0xxxx'` 形式的真实行为分支。
+- **`condition` / `block`（89）**：`def.code === '0xxxx'` 形式的真实行为分支。
   做法：先补 `ctx.api`（`engine.js` 的 `abilityApi`），把分支搬成描述子，再删分支。
   候选小分支：`02007/02011/02013/02015`（入场钩子）、`02178`（弃牌堆顶 3 张）、
   `01007/01071/01082/02308`（创伤 / 雕像充能 / 安奎娜转移）。
 - 已做过的样板：把"卡号 → 数据"搬进 `src/cards/card-rules.js`（5a-2/3/4，共 7 个码），
-  以及"逃生原语 → 描述子"（5c，共 30 个码）。
+  以及"逃生原语 → 描述子"（5c，共 35 个码）。
 
 ### 4.3 5b 尾部
 
@@ -130,6 +135,12 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
    遇到这种，直接回退、保留原实现，不要为了指标去改语义。
 8. **PowerShell 里不要用内联 `node -e` 写含引号/反引号的脚本**：会被转义吃掉。
    一律写临时 `.mjs` 文件（`develop/` 或 `tools/`）再删。
+9. **`api.drawCards` 不写日志**：它把 `drawCards()` 的返回值丢掉了，而旧 handler 常常
+   `for (const line of drawCards(...)) info(...)`。日志进 `state.log`（= 进指纹），所以
+   搬「抽 N 张」类结算时要用 `api.drawCardsLogged`（5c-18 的 `03195` 就是靠它对上基线的）。
+10. **窗口上下文可能缺字段**：`evadeSuccess` 只传 `{ enemy, location }`，没有 `successBy`，
+   于是旧 handler 里「超出 2 点两项都做」的分支从来不会命中。迁移时先看 `triggerReaction`
+    的 context 到底传了什么，不要照卡片文字想当然（5c-18 把这条记成了待修缺口）。
 
 ---
 

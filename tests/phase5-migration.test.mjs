@@ -9,13 +9,31 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
-import { actionPreview, getStat } from '../src/engine/engine.js'
+import { actionPreview, getStat, performTest } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { registeredEntry } from '../src/engine/ability.js'
 import { playedEffect, weaknessProfile } from '../src/engine/lifecycle.js'
 
 const attachments = state => state.playerLocationAttachments || []
 const planned = ['03026', '03038', '03040', '03148', '03199', '03232', '03307']
+
+// 5c-18：直接发起一次技能检定。performTest 必须在规则事务里执行（与 tfa 验收用例的
+// sign() 同一个套路：事务会在每次待决选择处暂停，下一轮从快照重放同一段逻辑）。
+function runTest(state, seat, skill, difficulty, choose) {
+  let result = null
+  const execute = current => performTest(current, seat, skill, difficulty, { resolve: value => { result = value } })
+  resolveTransaction(state, seat, { action: 'phase5Test' }, execute)
+  for (let guard = 0; state.pendingChoice; guard++) {
+    assert.ok(guard < 80, `Choice loop: ${state.pendingChoice.kind}`)
+    const pending = state.pendingChoice
+    const optionId = choose?.(pending, state)
+      ?? pending.options.find(option => ['done', 'skip', 'self'].includes(option.id))?.id
+      ?? pending.options[0].id
+    resolveTransaction(state, pending.seat, { action: 'choose', choiceId: pending.id, optionId }, execute)
+  }
+  return result
+}
 
 test('5c 批次：旧 DSL 条目已删除，行为改由描述子声明', () => {
   for (const code of planned) {
@@ -508,4 +526,82 @@ test('5c-8：03022 我来处理把遭遇卡改由自己接手', () => {
   const redirected = { when: 'encounterDrawn', seat: 1, location: state.investigators[0].location }
   assert.equal(redirected.when, 'encounterDrawn')
   assert.ok(context.seat === 1)
+})
+
+// ---- 5c-18：最后一批「纯 handler」逃生原语改成 resolve ----
+//
+// 这五张卡在 5b/5c 早期就已经把数据搬到描述子了，但效果体仍是 `{ type: 'tfaPlayer',
+// action: '…' }` —— 引擎里那段 `effect.action === '…'` 就是它的实现（见 handoff §5 第 5 条）。
+// 5c-18 把它们逐张改写成 resolve，然后才删引擎分支：
+//   · 03024 田野调查 → api.phaseTestBonus（本阶段下一次技能检定 +2）
+//   · 03195 扒手     → api.drawCardsLogged / api.gainResources / api.reactionContext
+//   · 03305 阿登森林护甲 → api.cancelDamage
+//   · 04158 追忆未来 → api.nameChaosToken
+//   · 04159 再试一次 → api.recallCommittedSkill
+// 后两张的完整行为在 tests/tfa-player-acceptance.test.mjs，03305 在
+// tests/carcosa-implementation-gaps.test.mjs；这里守「逃生原语已消失 + 新增 api 的接线」。
+
+test('5c-18：五张卡的逃生原语已改成 resolve（效果体与引擎分支都不在了）', () => {
+  for (const code of ['03024', '03195', '03305', '04158', '04159']) {
+    assert.equal(EFFECTS[code], undefined, `${code} 仍有旧 DSL 条目`)
+    const entry = registeredEntry(code)
+    assert.ok(entry?.abilities?.length, `${code} 没有能力层条目`)
+    for (const ability of entry.abilities) {
+      assert.equal(ability.effect, null, `${code} 的能力仍带着效果数据体`)
+      assert.equal(typeof ability.resolve, 'function', `${code} 的能力没有 resolve`)
+    }
+  }
+})
+
+test('5c-18：03024 田野调查让本阶段下一次技能检定 +2', () => {
+  const state = fixture()
+  const here = state.locations[0]
+  state.locations.push({ ...structuredClone(here), id: 'next', name: '邻室', clues: 1, connections: [here.id] })
+  here.connections = ['next']
+  asset(state, '03024')
+  move(state, { action: 'move', locationId: 'next' })
+  assert.equal(state.pendingChoice?.source, 'fieldwork', '移动后出现反应询问')
+  settle(state, pending => (pending.kind === 'reaction' && pending.source === 'fieldwork' ? 'trigger' : null))
+  assert.equal(state.investigators[0].fieldwork?.amount, 2, '写入本阶段检定加值')
+  const result = runTest(state, 0, 'willpower', 0)
+  assert.equal(result.value, 3 + 2, '下一次技能检定 +2')
+  assert.equal(state.investigators[0].fieldwork, undefined, '加值用掉即清除')
+})
+
+test('5c-18：03195 扒手躲避成功后抽 1 张或获得 1 资源', () => {
+  const state = fixture()
+  const card = asset(state, '03195')
+  enemy(state, { engagedSeat: 0, fight: 1, evade: 1, health: 10 })
+  state.chaosBag = ['0']
+  const handBefore = state.investigators[0].hand.length
+  move(state, legalMoves(state).find(command => command.action === 'evade'))
+  settle(state, pending => {
+    if (pending.kind === 'reaction' && pending.source === 'pickpocketing') return 'trigger'
+    if (pending.kind === 'effect') return 'resource'
+    return null
+  })
+  assert.equal(state.investigators[0].assets.find(item => item.id === card.id).exhausted, true, '横置支付费用')
+  assert.equal(state.investigators[0].resources, 30 + 1, '选择「获得 1 资源」')
+  assert.equal(state.investigators[0].hand.length, handBefore, '没有抽牌')
+})
+
+test('5c-18：03195 扒手「超出 2 点两项都做」仍是既有缺口（迁移按原样保留）', () => {
+  // 已知缺口（记在 docs/phase5-migration.md §6）：evadeSuccess 的窗口上下文里没有
+  // successBy，旧 handler 的 `state._reaction?.successBy` 恒为 0，因此卡面「检定成功且
+  // 超过难度至少 2 点改为两项都做」这一句自始不可达。5c-18 只搬运实现、不改规则：
+  // 即使超出 2 点，仍然出现「抽牌 / 资源」二选一；补上下文属于 A 类能力改动，另开一批。
+  const state = fixture()
+  asset(state, '03195')
+  enemy(state, { engagedSeat: 0, fight: 1, evade: 0, health: 10 })
+  state.chaosBag = ['0']
+  let sawEffectChoice = false
+  move(state, legalMoves(state).find(command => command.action === 'evade'))
+  settle(state, pending => {
+    if (pending.kind === 'reaction' && pending.source === 'pickpocketing') return 'trigger'
+    if (pending.kind === 'effect') { sawEffectChoice = true; return 'draw' }
+    return null
+  })
+  assert.equal(sawEffectChoice, true, '仍然要求二选一（与旧实现一致）')
+  assert.ok(state.investigators[0].hand.length >= 1, '选择抽牌')
+  assert.ok(state.log.some(line => line.includes('抽取了 1 张牌')), '抽牌日志由 api.drawCardsLogged 写出')
 })
