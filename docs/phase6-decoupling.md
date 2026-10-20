@@ -1486,3 +1486,73 @@ ReferenceError: Cannot access 'doFight' before initialization
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 6831 行**（12654 → 5823，−54.0%）。
+
+## 36. 6d-29：拆出 hub.js（战役台面与幕间）
+
+### 36.1 拆的是什么
+
+11 个函数（共 228 行，37 项依赖）搬进 `src/engine/hub.js`——「一关结束到下一关开始之间」的调度：
+
+| 分组 | 函数 |
+| --- | --- |
+| 台面动作 | `selectInitialHubScenario`、`hubLegalMoves` |
+| 座位与决策顺序 | `chooseTurn`、`firstAliveSeat`、`leadDecisionSeat`、`nextSeat`、`expeditionLeaderSeat` |
+| 幕间与收尾 | `runInterlude`、`addLitaToCampaign`、`registerCampaignScenarios`、`endCampaign` |
+
+与 `campaign-flow.js` 分工：那边是「一关的结算」，这边是「关卡之间的台面」。
+
+### 36.2 三个坑（都属于「拆出去之后共享状态断了」）
+
+1. **同名导出重复**：`expeditionLeaderSeat` 本来就在文件中的 `export { … }` 机制接口清单里
+   （第 801 行那段），拆走后我又生成了 `export function expeditionLeaderSeat` → `Duplicate export`。
+   修法：从清单里删掉该名字。
+2. **切块边界要停在 `import`**：上一轮 `hub.js` 里混进了 `import { createDescribeState }`，
+   原因是「下一个顶层声明」的判断不认识 `import` 行。已把 `import` / `export {` 一并当作边界。
+3. **`contentRegistry` 与 `SCENARIOS` 的关系**（本轮最值得记的）：
+   - `contentRegistry` 是 `let`（会被 `registerContentBundle` 重新赋值）→ **必须 import live binding**；
+   - 但 `SCENARIOS` 是**引擎里的同一个对象**，`registerCampaignScenarios()` 会往里写，
+     `setup.js` 的 `startScenario` 要读到同一份 → **必须走依赖注入**（同一引用）。
+   我第一版在 hub.js 里自己重建了一份 `SCENARIOS`，结果测试红了：
+
+   ```
+   D1 extracurricularActivity … Cannot read properties of undefined (reading 'agendas')
+     at startScenario (setup.js:443)
+   ```
+
+   —— hub 写进自己那份，setup 读的是引擎那份。
+   **结论：可变绑定走 `import`，共享可变对象走注入；两者不是一回事。**
+
+### 36.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **5652**（6d-28 后 5823） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/setup.js` | 578 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/dispatch.js` | 436 |
+| `src/engine/enemies.js` | 434 |
+| `src/engine/deck-ops.js` | 429 |
+| `src/engine/encounter.js` | 400 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/turn.js` | 381 |
+| `src/engine/ability-exec.js` | 369 |
+| `src/engine/reveal.js` | 314 |
+| `src/engine/skill-effects.js` | 313 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/hub.js` | **291** |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/campaign-flow.js` | 252 |
+| `src/engine/movement.js` | 249 |
+| `src/engine/locations.js` | 212 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 7002 行**（12654 → 5652，−55.3%）。

@@ -313,15 +313,6 @@ function newEnemyId(state) { return nextInstanceId(state, 'e') }
 
 
 
-function registerCampaignScenarios(campaignId) {
-  for (const entry of contentRegistry.listScenarios(campaignId)) {
-    const scenario = contentRegistry.getScenarioData(entry.id)
-    SCENARIOS[entry.id] = scenario
-    Object.assign(ALL_ENEMIES, scenario.enemies || {})
-    Object.assign(ALL_TREACHERIES, scenario.treacheries || {})
-    Object.assign(ALL_STORY_ASSETS, scenario.storyAssets || {})
-  }
-}
 
 // 存档迁移用：把状态里内嵌的资源副本（卡牌定义、调查员定义、展示常量）刷新为当前版本。
 // 只替换派生数据，不改变牌序、随机状态、实例编号或战役进度。
@@ -364,111 +355,11 @@ class ScenarioRestarted extends Error {
 // ScenarioRestarted 后调用 startScenario 完成。返回 false 表示当前局面不能重开。
 
 
-function addLitaToCampaign(state) {
-  const campaign = state.campaign
-  const lead = state.investigators[campaign.leadSeat]
-  const candidates = campaign.investigators[lead.seat].status === 'active' ? [lead]
-    : state.investigators.filter(inv => inv.resigned && campaign.investigators[inv.seat].status === 'active')
-  if (!candidates.length) return
-  const answer = requestChoice(state, { kind: 'storyCard', source: LITA_CHANDLER_CODE, seat: candidates[0].seat,
-    prompt: '是否将丽塔·钱德勒加入战役牌组？不计入牌组张数。', canSkip: true,
-    options: [{ id: 'skip', label: '不加入丽塔' }, ...candidates.map(inv => ({ id: String(inv.seat), label: `加入${inv.name}的牌组` }))] })
-  if (answer !== 'skip') {
-    const seat = Number(answer)
-    campaignCardChange(campaign, seat, LITA_CHANDLER_CODE, 'add', state.scenario.id)
-    campaign.records.litaOwner = campaign.investigators[seat].id
-  }
-}
 
 
 
 
-function runInterlude(state, nextIndex, events) {
-  const campaign = state.campaign
-  campaign.phase = 'interlude'
-  state.phase = 'interlude'
-  const eliminated = state.investigators.filter(inv => campaign.investigators[inv.seat].status !== 'active')
-  if (replacementCandidates(campaign).length < eliminated.length) {
-    campaign.failed = true
-    info(state, events, '已开放的调查员不足以替换所有死亡或疯狂的人物，战役无法继续。')
-    endCampaign(state, events)
-    return
-  }
-  for (const inv of eliminated) {
-    const code = requestChoice(state, { kind: 'replacement', source: campaign.investigators[inv.seat].id,
-      seat: inv.seat, prompt: '选择新的调查员，以全新 0 XP 牌组加入；不继承旧人物创伤与卡牌。',
-      options: replacementCandidates(campaign).map(code => ({ id: code, label: cardName(code) })),
-    })
-    campaign.retired.push(structuredClone(campaign.investigators[inv.seat]))
-    const replacement = makeInvestigator(ALL_INVESTIGATORS[code], inv.seat)
-    const built = buildDeck(ALL_INVESTIGATORS[code], { seat: inv.seat, seed: Math.floor(randomValue(state) * 4294967296) })
-    registerCampaignInvestigator(campaign, replacement, built.deck)
-    state.investigators[inv.seat] = replacement
-    info(state, events, `${replacement.name} 替换 ${inv.name} 加入战役。`)
-  }
-  campaign.interlude ||= { seatIndex: 0 }
-  const inv = state.investigators[campaign.interlude.seatIndex]
-  if (!inv) {
-    delete campaign.interlude
-    progressCampaign(state, events, true, true)
-    return
-  }
-  const resume = () => resolutionCheckpoint(state, inv.seat, { action: 'interlude', nextIndex })
-  const record = campaign.investigators[inv.seat]
-  const cards = campaign.upgradesAllowed === false ? [] : availablePurchases(record, campaign.records)
-  const answer = requestChoice(state, { kind: 'interlude', source: record.id, seat: inv.seat,
-    prompt: `${inv.name}：未花费 ${record.xp} XP。可调整牌组，或保留经验进入下一关。候选卡按构筑限制、经验和替换后的完整牌组筛选。`,
-    options: [{ id: 'done', label: '完成关间准备，保留剩余 XP' }, ...(cards.length ? [{ id: 'upgrade', label: '购买或替换一张卡牌' }] : [])],
-  })
-  if (answer === 'done') { campaign.interlude.seatIndex++; resume() }
-  const added = requestChoice(state, { kind: 'upgradeCard', source: record.id, seat: inv.seat,
-    prompt: '选择购入卡牌；0 级新卡至少支付 1 XP。', canSkip: true,
-    options: [{ id: 'cancel', label: '返回关间准备' }, ...cards.map(code => ({ id: code, label: `${cardName(code)}（${ALL_CARDS[code].xp || 0} 级）` }))],
-  })
-  if (added === 'cancel') resume()
-  const removed = requestChoice(state, { kind: 'upgradeRemove', source: { type: 'upgrade', cardCode: added, id: record.id }, seat: inv.seat,
-    prompt: '选择被替换的普通玩家卡；签名、弱点与剧情卡不能以此方式移除。', canSkip: true,
-    options: [{ id: 'cancel', label: '取消购买' }, ...replacementOptions(record, added, campaign.records).map(item => ({ id: item.code, label: `替换${cardName(item.code)}，支付 ${item.cost} XP` }))],
-  })
-  if (removed === 'cancel') resume()
-  const purchase = purchaseCard(campaign, inv.seat, added, removed)
-  info(state, events, `${inv.name} 完成一次牌组调整，支付 ${purchase.cost} XP。`)
-  resume()
-}
 
-function endCampaign(state, events) {
-  const CAMPAIGN = campaignFor(state)
-  state.status = 'over'
-  if (state.hubFlow) { state.uiState = 'campaignResult'; state.phase = 'campaignResult' }
-  state.campaign.phase = 'finished'
-  state.campaign.finished = true
-  // 地底噬魔 noResolution → 失败；其余剧本推进到底 → 胜利。
-  // 没有任何幸存者（时间线崩解、全灭）同样按失败收尾。
-  const noSurvivors = !(state.investigators || []).some(inv => !inv.defeated && !inv.resigned)
-  // 战役结局编号：按 manifest.endings 匹配剧本日志，映射到具体结局（结局 1–5）。
-  const ending = campaignEnding(CAMPAIGN, state.campaign.records || {})
-  if (ending) {
-    state.campaign.ending = ending.id
-    state.campaign.endingLabel = ending.label
-    info(state, events, `📖 战役结局：${ending.label}。`)
-  }
-  if (state.campaign.failed || state.campaign.flowOutcome === 'defeat' || noSurvivors) {
-    state.outcome = 'defeat'
-    state.campaign.result = 'defeat'
-    info(state, events, '调查失败，战役结束。')
-  } else if (state.campaign.records.sacrificedLita || state.campaign.flowOutcome === 'survived') {
-    state.outcome = 'survived'
-    state.campaign.result = 'survived'
-    state.winnerSeat = null
-    info(state, events, state.campaign.records.sacrificedLita ? '调查队以牺牲丽塔为代价幸存；这不是胜利结局。' : '调查队幸存，战役结束。')
-  } else {
-    state.outcome = 'victory'
-    state.campaign.result = 'victory'
-    state.winnerSeat = 0
-    info(state, events, `🏆 战役完成！《${CAMPAIGN.name}》结束。累计胜利点 ${state.campaign.victory}，经验 ${state.campaign.xp}。`)
-  }
-  state.legalMoves = []
-}
 
 // ---------------------------------------------------------------------------
 // 通用小工具
@@ -579,47 +470,10 @@ function aliveInvestigators(state) {
   return state.investigators.filter((i) => !i.defeated && !i.resigned)
 }
 
-function firstAliveSeat(state) {
-  const a = aliveInvestigators(state)
-  return a.length ? a[0].seat : null
-}
 
 // Team decisions stay with a human player even if their investigator is out.
-function leadDecisionSeat(state) {
-  const humans = state.humanSeats || [0]
-  return humans.includes(state.campaign.leadSeat) ? state.campaign.leadSeat : humans[0] ?? null
-}
 
-function nextSeat(state, seat) {
-  state.turnsTaken ||= []
-  if (!state.turnsTaken.includes(seat)) state.turnsTaken.push(seat)
-  return chooseTurn(state)
-}
 
-function chooseTurn(state) {
-  const candidates = aliveInvestigators(state).filter(inv => !(state.turnsTaken || []).includes(inv.seat))
-  if (!candidates.length) return null
-  if (state.numInvestigators === 1) return candidates[0].seat
-  const humanSeats = state.humanSeats || [0]
-  const humans = candidates.filter(inv => humanSeats.includes(inv.seat))
-  if (humans.length) {
-    const leadSeat = state.campaign.leadSeat
-    const aiOptions = humans.some(inv => inv.seat === leadSeat)
-      ? candidates.filter(candidate => !humanSeats.includes(candidate.seat))
-        .map(candidate => ({ id: String(candidate.seat), label: `让 ${candidate.name} 先行动`, responderSeat: leadSeat }))
-      : []
-    const shared = humans.length > 1 ? '尚未行动的玩家谁先点击「开始行动」谁先行动。' : '点击开始行动。'
-    return Number(requestChoice(state, { kind: 'turnOrder', source: `round:${state.round}`, seat: humans[0].seat,
-      seats: humans.map(inv => inv.seat),
-      prompt: aiOptions.length ? shared + '队长也可以让一名尚未行动的 AI 队友先行动。' : shared,
-      options: [...humans.map(inv => ({ id: String(inv.seat), label: '开始行动', responderSeat: inv.seat })), ...aiOptions] }))
-  }
-  if (state.aiTurnOrderRound !== state.round) {
-    state.aiTurnOrderRound = state.round
-    state.aiTurnOrder = shuffle(candidates.map(inv => inv.seat), () => randomValue(state))
-  }
-  return state.aiTurnOrder.find(seat => candidates.some(inv => inv.seat === seat)) ?? candidates[0].seat
-}
 
 import { createDescribeState } from './describe.js'
 import { createCombat } from './combat.js'
@@ -647,6 +501,7 @@ import { createSkillEffects } from './skill-effects.js'
 import { createTurn } from './turn.js'
 import { createReveal } from './reveal.js'
 import { createDeckOps } from './deck-ops.js'
+import { createHub } from './hub.js'
 
 // Phase 6（6d-1）：卡牌 / 敌人定义查找搬进 card-lookup.js；这里既 import 自用，也转出给外部调用方，
 // 外部模块的 import 路径保持不变。
@@ -840,11 +695,6 @@ function addYigsFury(state, amount, events) {
 }
 
 // 领队：战役记录中的远征求领队，默认由队长担任。
-function expeditionLeaderSeat(state) {
-  const seat = state.expeditionLeaderSeat ?? state.campaign.expeditionLeader
-  if (Number.isInteger(seat) && state.investigators?.[seat]) return seat
-  return state.campaign.leadSeat ?? state.currentSeat ?? 0
-}
 
 function setExpeditionLeader(state, seat, events) {
   if (!Number.isInteger(seat) || !state.investigators?.[seat]) return null
@@ -953,7 +803,7 @@ export {
   vengeancePoints, recordVengeance,
   isPoisoned, poisonInvestigator,
   yigsFury, addYigsFury,
-  expeditionLeaderSeat, setExpeditionLeader,
+  setExpeditionLeader,
   moveRelicOfAges, relicOfAges, relicOfAgesLocation,
   buildExplorationDeck, addToExplorationDeck, doExplore,
 }
@@ -3585,21 +3435,6 @@ function initialHubScenarioMoves(state) {
   })
 }
 
-function selectInitialHubScenario(state, scenarioId, events) {
-  const choices = initialHubScenarioMoves(state)
-  const selected = choices.find(choice => choice.scenarioId === scenarioId)
-  if (!selected) return false
-  const campaign = state.campaign
-  const manifest = campaignManifestFor(state)
-  delete campaign.flow
-  const node = walkCampaign(campaign, manifest, () => selected.optionId,
-    effect => { if (effect.type !== 'log') applyCampaignEffect(state, effect, text => info(state, events, text)) })
-  if (node.type !== 'scenario' || node.scenarioId !== scenarioId) throw new Error('初始路线没有到达所选关卡')
-  campaign.flowStage = node.type
-  campaign.scenarioIndex = manifest.scenarioIds.indexOf(scenarioId)
-  state.hubSelectedScenarioId = scenarioId
-  return true
-}
 
 function hubInvestigatorChoices(state, seat) {
   const unavailable = new Set([...Object.values(state.campaign.investigators), ...state.campaign.retired]
@@ -3619,68 +3454,6 @@ function hubStartingDeckReady(record) {
   return !!record?.deck?.length && record.startingDeckReady !== false
 }
 
-function hubLegalMoves(state, seat = decisionSeat(state)) {
-  const CAMPAIGN = campaignFor(state)
-  if (state.status !== 'playing' || !actingSeats(state).includes(seat)) return []
-  const record = state.campaign.investigators[seat]
-  const moves = []
-  const humans = state.humanSeats || [0]
-  const leaderMoves = humans.includes(seat) ? humans.map(leadSeat => ({ action: 'hubSetLeader', leadSeat,
-    label: `队长：${state.investigators[leadSeat].name}` })) : []
-  if (state.uiState === 'campaignHub') {
-    if (seat !== 0) return []
-    moves.push(...HUB_DIFFICULTIES.map(difficulty => ({ action: 'hubSetDifficulty', difficulty,
-      label: `难度：${difficulty}` })))
-    const opening = initialHubScenarioMoves(state)
-    moves.push(...(opening.length ? opening.map(({ optionId, ...move }) => move)
-      : [{ action: 'hubSelectScenario', scenarioId: CAMPAIGN.scenarioOrder[0], label: '选择第一关' }]))
-    if (!opening.length || state.hubSelectedScenarioId) moves.push({ action: 'hubGoSetup', label: '配置调查员与卡组' })
-    moves.push(...leaderMoves)
-    return moves
-  }
-  if (state.uiState === 'scenarioResult') return seat === 0
-    ? [{ action: 'hubContinue', label: '查看结算并进入关间准备' }] : []
-  if (state.uiState === 'scenarioSetup' && state.hubReady) {
-    return seat === 0 ? [
-      ...leaderMoves,
-      { action: 'hubSelectScenario', scenarioId: CAMPAIGN.scenarioOrder[state.campaign.scenarioIndex], label: '选择当前关卡' },
-      ...(!state.campaign.scenarioResults.length
-        ? [{ action: 'hubReopenSetup', label: '重新准备调查员与牌组' }] : []),
-      ...(state.campaign.leadConfirmed && humans.includes(state.campaign.leadSeat) ? [{ action: 'hubBeginScenario', label: '开始当前关卡' }] : []),
-    ] : []
-  }
-  if (state.uiState !== 'scenarioSetup' && state.uiState !== 'interlude') return []
-  moves.push(...leaderMoves)
-  if (!record || record.status !== 'active' || initialHubPreparation(state)) {
-    moves.push(...hubInvestigatorChoices(state, seat).map(code => ({
-      action: 'hubSelectInvestigator', code, label: `选择调查员：${ALL_INVESTIGATORS[code].nameZh || ALL_INVESTIGATORS[code].name}`,
-    })))
-    if (state.hubSeatSelected?.[seat] && (!record || !hubStartingDeckReady(record))) {
-      moves.push({ action: 'hubAutoDeck', label: '自动构筑合法牌组' })
-      moves.push({ action: 'hubSetDeck', label: '保存手动牌组' })
-    }
-  }
-  if (state.uiState === 'interlude' && record?.status === 'active' && state.campaign.upgradesAllowed !== false) {
-    const effective = upgradeRecord(record)
-    for (const added of availablePurchases(effective, state.campaign.records)) {
-      for (const option of replacementOptions(effective, added, state.campaign.records)) moves.push({ action: 'hubPurchase', added, removed: option.code,
-        label: `购入 ${cardName(added)}，${option.code ? '替换 ' + cardName(option.code) : '加入永久卡'}（${option.cost} XP）`, explanation: option.explanation })
-    }
-    if (!state.hubUpgradedSeats?.[seat] && moves.some(move => move.action === 'hubPurchase')) {
-      moves.push({ action: 'hubAutoUpgrade', label: '自动选择一次合法升级' })
-    }
-  }
-  if (record?.upgradeDraft) {
-    moves.push({ action: 'hubConfirmUpgrades', label: '保存升级方案' }, { action: 'hubCancelUpgrades', label: '撤销本轮升级' })
-  }
-  if (record?.status === 'active' && !record.upgradeDraft && hubStartingDeckReady(record)) {
-    moves.push({ action: 'hubDoneSeat', label: state.uiState === 'interlude' ? '完成升级，准备下一关' : '确认准备' })
-  }
-  if (state.uiState === 'scenarioSetup' && !state.campaign.scenarioResults.length && !state.hubSeatDone?.[seat] && record?.status === 'active') {
-    moves.push({ action: 'hubSetDeck', label: '调整起始牌组' })
-  }
-  return moves
-}
 
 function validateHubMove(state, seat, move) {
   if (!actingSeats(state).includes(seat)) return '现在不是你的局外操作时机'
@@ -5820,3 +5593,59 @@ export function drawCards(...args) { return deckOpsApi().drawCards(...args) }
 export function discardRandomFromHand(...args) { return deckOpsApi().discardRandomFromHand(...args) }
 export function removeOne(...args) { return deckOpsApi().removeOne(...args) }
 export function removeCardByCode(...args) { return deckOpsApi().removeCardByCode(...args) }
+
+// Phase 6（6d-29）：战役台面与幕间搬进 hub.js；惰性装配保持导出与调用点。
+let hubImpl = null
+function hubApi() {
+  hubImpl ||= createHub({
+    ALL_CARDS,
+    ALL_ENEMIES,
+    ALL_INVESTIGATORS,
+    ALL_STORY_ASSETS,
+    ALL_TREACHERIES,
+    HUB_DIFFICULTIES,
+    LITA_CHANDLER_CODE,
+    SCENARIOS,
+    actingSeats,
+    aliveInvestigators,
+    applyCampaignEffect,
+    availablePurchases,
+    buildDeck,
+    campaignCardChange,
+    campaignEnding,
+    campaignFor,
+    campaignManifestFor,
+    cardName,
+    contentRegistry,
+    decisionSeat,
+    hubInvestigatorChoices,
+    hubStartingDeckReady,
+    info,
+    initialHubPreparation,
+    initialHubScenarioMoves,
+    makeInvestigator,
+    progressCampaign,
+    purchaseCard,
+    randomValue,
+    registerCampaignInvestigator,
+    replacementCandidates,
+    replacementOptions,
+    requestChoice,
+    resolutionCheckpoint,
+    shuffle,
+    upgradeRecord,
+    walkCampaign,
+  })
+  return hubImpl
+}
+export function registerCampaignScenarios(...args) { return hubApi().registerCampaignScenarios(...args) }
+export function addLitaToCampaign(...args) { return hubApi().addLitaToCampaign(...args) }
+export function runInterlude(...args) { return hubApi().runInterlude(...args) }
+export function endCampaign(...args) { return hubApi().endCampaign(...args) }
+export function firstAliveSeat(...args) { return hubApi().firstAliveSeat(...args) }
+export function leadDecisionSeat(...args) { return hubApi().leadDecisionSeat(...args) }
+export function nextSeat(...args) { return hubApi().nextSeat(...args) }
+export function chooseTurn(...args) { return hubApi().chooseTurn(...args) }
+export function expeditionLeaderSeat(...args) { return hubApi().expeditionLeaderSeat(...args) }
+export function selectInitialHubScenario(...args) { return hubApi().selectInitialHubScenario(...args) }
+export function hubLegalMoves(...args) { return hubApi().hubLegalMoves(...args) }
