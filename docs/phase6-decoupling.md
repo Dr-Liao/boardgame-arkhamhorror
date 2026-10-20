@@ -283,3 +283,37 @@ export const describeState = createDescribeState({
 
 累计从 engine.js 迁出 **约 670 行**（12654 → 11883）。下一块：`doUpkeep` / 敌人阶段等
 阶段机（`upkeepPhase` 105、`runAgendaReveal` 142），然后才是 `abilityApi`。
+
+## 12. 6d-5：拆出 phases.js（补给阶段 / 密谋揭示）
+
+### 12.1 拆的是什么
+
+`upkeepPhase`（105 行）+ `runAgendaReveal`（142 行）搬进 `src/engine/phases.js`，
+导出 `createPhases(deps)`；engine 末尾注入 49 个依赖。
+
+这是 roadmap「按域拆分」的第三块——**阶段机**。拆完后引擎主循环的职责变成
+「按序调用各阶段 + 处理关间/结局」，阶段内部的固定流程（补充给养、重整、密谋揭示、抽取遭遇）
+都收在 `phases.js` 里。
+
+### 12.2 坑：函数在文件里的顺序不等于调用顺序
+
+`runAgendaReveal` 在文件中位于 `upkeepPhase` **之前**（5209 vs 5718）。第一版按
+`[0, s1) + [e1, s2) + [e2, …]` 切片，等于假设「先出现的函数先切」，结果把中间整段复制了一遍，
+`engine.js` 从 11883 涨到 12306，并报 `maskedHunterPrey has already been declared`。
+
+**正确做法**：先把要删的区间按起始行**从大到小排序再 splice**（后面的先删，前面索引不位移）；
+写模块时再按「逻辑顺序」排（`upkeepPhase` 在前）。两件事分开做，互不影响。
+
+### 12.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **11692**（6d-4 后 11883） |
+| `src/engine/combat.js` | 446 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/phases.js` | **311** |
+| `src/engine/describe.js` | 176 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 962 行**（12654 → 11692）。下一块：`legalMoves` + `validateMove`（各约 270 行、
+60 个依赖）→ `src/engine/moves.js`，然后才是 `abilityApi`。
