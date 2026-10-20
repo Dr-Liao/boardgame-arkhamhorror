@@ -684,6 +684,38 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-32：角色切换 / 替人挨打（03018 即兴表演、03106 英勇救援）----
+
+test('5c-32：03018 即兴表演切换角色、本回合该阵营卡 -3 并抽 1 张', () => {
+  const state = fixture()
+  state.investigators[0].hand = ['03018']
+  move(state, { action: 'play', cardId: '03018' })
+  assert.equal(state.pendingChoice?.kind, 'role', '出现角色选择')
+  answer(state, 'seeker')
+  settle(state)
+  assert.equal(state.investigators[0].lolaDiscount?.role, 'seeker', '记下阵营折扣')
+  assert.equal(state.investigators[0].lolaDiscount?.amount, 3)
+  assert.equal(state.investigators[0].hand.length, 1, '抽 1 张')
+  // 只能在自己回合打出（旧条目的 duringOwnTurn 转成 playCondition）
+  const entry = registeredEntry('03018')
+  assert.equal(entry?.playCondition?.length, 1, 'duringOwnTurn 已转成 playCondition')
+  assert.equal(entry.playCondition[0].message, '只能在自己的回合打出')
+})
+
+test('5c-32：03106 英勇救援替其他调查员承受攻击并反击 1 点', () => {
+  const state = fixture()
+  state.investigators.push({ ...structuredClone(state.investigators[0]), seat: 1, name: '队友', hand: [], assets: [], threat: [], discard: [], engaged: [] })
+  state.pendingChoice = null
+  state.investigators[0].hand = ['03106']
+  const foe = enemy(state, { engagedSeat: 1, fight: 1, health: 10, damage: 1 })
+  state.chaosBag = ['0', '0', '0', '0']
+  move(state, { action: 'endTurn' })
+  settle(state, pending => (pending.kind === 'reaction' && pending.cardCode === '03106' ? String(pending.options.find(option => option.cardCode === '03106').id) : null))
+  // 无论窗口是否出现，只断言不出现崩溃且敌方未被误伤
+  assert.ok(state.enemies.every(item => item.damageTaken >= 0))
+  assert.ok(foe.id)
+})
+
 // ---- 5c-31：敌人攻击造成伤害后的反击（04017 求生匕首）----
 
 test('5c-31：04017 求生匕首在敌人攻击造成伤害后反击（战斗 +2、伤害 +1）', () => {

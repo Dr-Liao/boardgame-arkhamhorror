@@ -2978,12 +2978,54 @@ export const MIGRATED_ESCAPE_ENTRIES_5C30 = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// 5c-32：卡牌造成的敌人攻击 / 角色切换（英勇救援、即兴表演）
+// ---------------------------------------------------------------------------
+
+export const MIGRATED_ESCAPE_ENTRIES_5C32 = [
+  // 03106 英勇救援：别人被敌人攻击时快速打出——自己接战、替其承受这次攻击，并反击 1 点。
+  // 旧原语读 `_reaction.enemyId`，但手牌触发的反应上下文里只有 `enemy`（没有 enemyId），
+  // 所以这条反应以前**永远不会生效**；现在改读 `enemy`，是一处有意的修正。
+  {
+    code: '03106',
+    abilities: [{
+      kind: 'played', fast: true, trigger: 'enemyAttack',
+      criteria: { otherInvestigator: true, nonEliteOnly: true },
+      label: '替其他调查员承受这次攻击并反击 1 点',
+      resolve: ({ inv, api }) => {
+        const enemy = api.reactionContext()?.enemy
+        if (!enemy || !api.isEnemyInPlay(enemy)) return
+        api.engage(enemy, inv.seat)
+        api.enemyAttackByCard(enemy, api.cardName('03106'), inv.seat)
+        api.damageEnemy(enemy, 1, inv.seat)
+      },
+    }],
+  },
+  // 03018 即兴表演：切换角色，本回合下一张该阵营的卡费用 -3，并抽 1 张。
+  // 旧条目的 `duringOwnTurn: true` 由 play-condition.js 翻译成「只能在自己的回合打出」，
+  // 迁移后必须显式写成 playCondition，否则会在别人回合也能打出。
+  {
+    code: '03018',
+    playCondition: [{ when: ownTurn(), message: '只能在自己的回合打出' }],
+    abilities: [{
+      kind: 'played', fast: true, label: '切换角色并抽 1 张（下一张该阵营卡 -3）',
+      resolve: ({ inv, api }) => {
+        const role = api.switchRole(inv.seat, '03018', '选择即兴表演要切换到的角色。')
+        if (!role) return
+        api.setRoleDiscount(inv.seat, role, 3)
+        api.drawCardsLogged(inv.seat, 1)
+        api.info(`${inv.name} 切换为${api.className(role)}；本回合下一张该阵营卡牌费用-3。`)
+      },
+    }],
+  },
+]
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -3035,4 +3077,5 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_ESCAPE_ENTRIES_5C28.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C29.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C30.map(entry => entry.code),
+  ...MIGRATED_ESCAPE_ENTRIES_5C32.map(entry => entry.code),
 ])

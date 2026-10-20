@@ -75,12 +75,8 @@ export const signatureEffects = {
   // 03014 灵语人 / 03015 愤怒之灵已迁到能力层（5c-28），见 MIGRATED_ESCAPE_ENTRIES_5C28。
   // 03015 的威胁区弱点数据体也随同一条目搬走（弱点读点仍是 weaknessProfile）。
   // 03016 掩埋已迁到能力层（5c-27），见 MIGRATED_ESCAPE_ENTRIES_5C27。
+  // 03018 即兴表演 / 03106 英勇救援已迁到能力层（5c-32），见 MIGRATED_ESCAPE_ENTRIES_5C32。
   '03017': { enemyWeakness: { hunter: true, prey: 'bearer', lockDiscardWhileEngaged: true } },
-  '03018': {
-    fast: true,
-    duringOwnTurn: true,
-    event: { type: 'carcosaInvestigator', action: 'improvisation' },
-  },
 }
 
 export const runtimeDependencyCodes = ['03009b']

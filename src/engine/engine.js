@@ -7052,15 +7052,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     info(state, events, `${inv.name} 将 ${asset.attached.length} 张事件附属到「原定计划」。`)
     return
   }
-  if (effect.action === 'heroicRescue') {
-    const context = state._reaction
-    const enemy = context?.enemyId && state.enemies.find(item => item.id === context.enemyId)
-    if (!enemy) return
-    engageEnemy(state, enemy, seat, events)
-    enemyAttack(state, enemy, inv, events, cardName('03106'), { kind: 'effect' })
-    damageEnemy(state, enemy, 1, seat, events)
-    return
-  }
   if (effect.action === 'charlesRoss') {
     if (asset) asset.itemDiscountAtLocation = { amount: 1, round: state.round, phase: state.phase }
     else inv.itemDiscountAtLocation = { amount: 1, round: state.round, phase: state.phase }
@@ -7169,13 +7160,6 @@ function carcosaInvestigatorEffect(state, seat, effect, events) {
   if (effect.action === 'lolaSwitchRole') {
     const role = chooseLolaRole(state, inv, effect.action, '选择罗拉要切换到的角色。')
     info(state, events, `${inv.name} 切换为${CLASS_NAMES[role] || role}角色。`)
-    return
-  }
-  if (effect.action === 'improvisation') {
-    const role = chooseLolaRole(state, inv, '03018', '选择即兴表演要切换到的角色。')
-    inv.lolaDiscount = { role, amount: 3, round: state.round, turnSeat: state.currentSeat }
-    for (const line of drawCards(state, inv, 1, events)) info(state, events, line)
-    info(state, events, `${inv.name} 切换为${CLASS_NAMES[role] || role}；本回合下一张该阵营卡牌费用-3。`)
     return
   }
   if (effect.action === 'sefinaDrawBeneath' || effect.action === 'sefinaElderSign') {
@@ -11013,6 +10997,25 @@ function abilityApi(state, events) {
     assetsCannotReady: inv => assetsCannotReady(inv),
     searchTop: (seat, options) => searchTop(state, seat, options, events),
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
+    // Phase 5（5c-32）：「英勇救援」这类由卡牌造成的敌人攻击（不计入「不能攻击」开关）。
+    enemyAttackByCard: (enemy, label, seat = state.currentSeat) => {
+      const target = state.investigators[seat] || state.investigators[state.currentSeat]
+      if (!enemy || !target) return false
+      return enemyAttack(state, enemy, target, events, label, { kind: 'effect' })
+    },
+    // Phase 5（5c-32）：「即兴表演」这类切换角色（会写 inv.role）与「本回合下一张该阵营卡 -N」。
+    switchRole: (seat, source, prompt) => {
+      const owner = state.investigators[seat]
+      if (!owner) return null
+      return chooseLolaRole(state, owner, source, prompt)
+    },
+    setRoleDiscount: (seat, role, amount = 3) => {
+      const owner = state.investigators[seat]
+      if (!owner || !role) return null
+      owner.lolaDiscount = { role, amount, round: state.round, turnSeat: state.currentSeat }
+      return owner.lolaDiscount
+    },
+    className: role => CLASS_NAMES[role] || role,
     // Phase 5（5c-31）：这个敌人是否还在场上（反击类能力要先确认目标没被同窗口的效果清掉）。
     isEnemyInPlay: enemy => Boolean(enemy) && state.enemies.includes(enemy),
     discoverAt: (seat, locationId, amount = 1) => {

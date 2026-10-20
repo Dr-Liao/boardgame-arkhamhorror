@@ -26,8 +26,7 @@ export const effects = {
   ] },
   '03042': { enemyWeakness: { hunter: true, prey: 'bearer', shuffleIntoDeckOnDefeat: true } },
 
-  '03106': { fast: true, reaction: { when: 'enemyAttack', otherInvestigator: true, nonEliteOnly: true },
-    event: custom('heroicRescue') },
+  // 03106 英勇救援已迁到能力层（5c-32），见 MIGRATED_ESCAPE_ENTRIES_5C32。
   '03114': {},
 
   '03149': { payForItemAtLocation: true, abilities: [{ label: '下一件物品费用-1',
