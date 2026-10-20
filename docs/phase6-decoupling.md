@@ -1435,3 +1435,54 @@ ReferenceError: Cannot access 'doFight' before initialization
 1. 继续拆剩余中等函数（`afterEvade` 143、`lookAt` 85、`advanceInvestigator` 71、`moveCardTo` 69 等）
 2. 战役插件化（TFA 先行）
 3. `EFFECTS` 57 条迁移（阻塞在 §7 的观测面解耦，需重采 AI 提示词基线）
+
+## 35. 6d-28：拆出 deck-ops.js（牌堆操作，371 行批量）
+
+### 35.1 拆的是什么
+
+九个函数（共 371 行，31 项依赖）搬进 `src/engine/deck-ops.js`——「牌怎么在区域之间移动」：
+
+| 分组 | 函数 |
+| --- | --- |
+| 查看牌堆顶 | `lookZoneAdapter`、`lookAt`、`scryDeck` |
+| 检索 | `searchDeck`（洗牌、展示、选择） |
+| 区域搬运 | `moveCardTo`（手牌/牌库/弃牌/放逐/场上） |
+| 抽牌与弃牌 | `drawCards`、`discardRandomFromHand` |
+| 按码移除 | `removeOne`、`removeCardByCode` |
+
+被卡牌效果、剧本运行时与 API 同时使用。本轮是「一批多个中等函数」的拆法：
+单轮 **−322 行**，是除 `commonDeps` 之外单轮收益最大的一次。
+
+### 35.2 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **5823**（6d-27 后 6145） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/setup.js` | 578 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/dispatch.js` | 436 |
+| `src/engine/enemies.js` | 434 |
+| `src/engine/deck-ops.js` | **429** |
+| `src/engine/encounter.js` | 400 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/turn.js` | 381 |
+| `src/engine/ability-exec.js` | 369 |
+| `src/engine/reveal.js` | 314 |
+| `src/engine/skill-effects.js` | 313 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/campaign-flow.js` | 252 |
+| `src/engine/movement.js` | 249 |
+| `src/engine/locations.js` | 212 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 6831 行**（12654 → 5823，−54.0%）。
