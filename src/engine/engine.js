@@ -3772,11 +3772,11 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
         state.encounterDiscard.push(item.code)
       } else state.investigators[item.seat].discard.push(item.code)
     }
-    if (strokeOfLuckExiled) {
+    if (strokeOfLuckExiled && exilableCode) {
       const owner = state.investigators[seat]
-      const index = owner.discard.lastIndexOf('02271')
+      const index = owner.discard.lastIndexOf(exilableCode)
       if (index >= 0) owner.discard.splice(index, 1)
-      exilePlayerCard(state, owner, '02271', events)
+      exilePlayerCard(state, owner, exilableCode, events)
     }
     endChaosTest(state, resolved)
     state.skillTest = previousTest
@@ -3842,6 +3842,7 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
   const pendingOnFail = []
   let wendyRedrawUsed = false
   let strokeOfLuckExiled = false
+  let exilableCode = null
   let extraChaosUsed = false
   const pendingTokens = []
   let guard = 0
@@ -3940,7 +3941,8 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
         }
       }
     }
-    let luckyDice = inv.assets.find(asset => asset.code === '02230')
+    // Phase 5（5a-21）：幸运骰由条目级 rerollTokenCost 声明（花 N 资源重抽）。
+    let luckyDice = inv.assets.find(asset => registeredEntry(asset.code)?.rerollTokenCost)
     let luckyGuard = 0
     while (luckyDice && inv.resources >= 2 && luckyGuard++ < 20) {
       const answer = requestChoice(state, { kind: 'reaction', source: luckyDice.id, seat, canSkip: true,
@@ -4158,11 +4160,13 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
     return result
   }
   value += delta
-  if (!autoFail && commitments.some(item => item.seat === seat && item.code === '02271')) {
-    const answer = requestChoice(state, { kind: 'reaction', source: '02271', seat, canSkip: true,
-      prompt: '是否流放「天赐良机」，使本次检定自动成功？',
+  // Phase 5（5a-21）：「天赐良机」这类「投入后可以流放换自动成功」由条目级 exileForAutoSuccess 声明。
+  const strokeOfLuck = commitments.find(item => item.seat === seat && registeredEntry(item.code)?.exileForAutoSuccess)
+  if (!autoFail && strokeOfLuck) {
+    const answer = requestChoice(state, { kind: 'reaction', source: strokeOfLuck.code, seat, canSkip: true,
+      prompt: '是否流放「' + cardName(strokeOfLuck.code) + '」，使本次检定自动成功？',
       options: [{ id: 'skip', label: '保留卡牌，正常结算' }, { id: 'exile', label: '流放并自动成功' }] })
-    if (answer === 'exile') { strokeOfLuckExiled = true; elderAutoSuccess = true }
+    if (answer === 'exile') { strokeOfLuckExiled = true; exilableCode = strokeOfLuck.code; elderAutoSuccess = true }
   }
   if (!elderAutoSuccess && value < difficulty) {
     // Phase 2（B3）：窗口上下文带上标准化的当前结果（ctx.result），

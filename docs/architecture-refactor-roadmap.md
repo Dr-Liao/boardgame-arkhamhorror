@@ -16,7 +16,7 @@
 
 本实现的定位与参考实现不同，取舍也不同：它是"大厅里的一个可搬运 Mod + LLM 队友"，约束是嵌入大厅、零构建、离线可跑、AI 只能靠"观察投影 + 合法动作"决策。因此**参考实现的 Haskell/Postgres/Docker 三件套不要照搬**，要照搬的是它的**分层**（能力 / 窗口 / 代价 / 修正 / 匹配），不是它 6 千个逐卡模块的粒度。
 
-当前状态一句话：**声明式入口通了，生命周期钩子补到五个，状态基础（持续效果 / 目标枚举 / 打出条件）与语义原语（布尔修正 / 费用表达式 / 上限归属 / 授予 / 分配策略 / 检定结果 / 看牌 / 区域搬运）都已落地（Phase 1、Phase 2 完成）；内容来源已统一（Phase 3 完成）；重放安全网完整交付（Phase 4 完成：golden replay 基线 + 100 局随机对局门禁 + 撤销 API）；Phase 5 的迁移工具、5b 机械迁移主体、**反应能力接线**与 5c 逃生卡（Carcosa → TFA，三十九批，**93 → 0 完成**）与 **5b 全部遗留（反应 / 战役规则 / 费用能力 / 剧情资产）已交付**（累计 341 张卡：`EFFECTS` 385 → 57、通道 legacy 286 → 50、descriptor 75 → 404、逃生卡 93 → 0、引擎卡号 166 → 65），只剩 5a 引擎卡号分支。** 冻结守卫、账本、重放安全网都已就位，后续每批仍按「replay 指纹不变 + 账本指标单调下降」验收。
+当前状态一句话：**声明式入口通了，生命周期钩子补到五个，状态基础（持续效果 / 目标枚举 / 打出条件）与语义原语（布尔修正 / 费用表达式 / 上限归属 / 授予 / 分配策略 / 检定结果 / 看牌 / 区域搬运）都已落地（Phase 1、Phase 2 完成）；内容来源已统一（Phase 3 完成）；重放安全网完整交付（Phase 4 完成：golden replay 基线 + 100 局随机对局门禁 + 撤销 API）；Phase 5 的迁移工具、5b 机械迁移主体、**反应能力接线**与 5c 逃生卡（Carcosa → TFA，三十九批，**93 → 0 完成**）与 **5b 全部遗留（反应 / 战役规则 / 费用能力 / 剧情资产）已交付**（累计 341 张卡：`EFFECTS` 385 → 57、通道 legacy 286 → 50、descriptor 75 → 404、逃生卡 93 → 0、引擎卡号 166 → 63），只剩 5a 引擎卡号分支。** 冻结守卫、账本、重放安全网都已就位，后续每批仍按「replay 指纹不变 + 账本指标单调下降」验收。
 
 ---
 
@@ -27,7 +27,7 @@
 | `src/engine/engine.js` | **12,600 行** | 单文件承担 dispatch、检定、战斗、阶段、战役机制（5c-18/5c-19 删了 7 段旧原语分支、补了 9 个薄包装，净增约 20 行；卡号分支删完后自然变小） |
 | `EFFECTS` 行为条目 | **57** | Phase 5 迁走 328 条（5b 机械 154 + 反应 35 + 天赋 15 + 被动 20 + 规则字段 6 + 封印附属 5 + 5c 60）；其中 32 张用战役逃生原语、5 张由引擎硬编码 `engine:`；通道分布（按卡）：legacy 50 / descriptor 404 / hybrid 2 / escape 0 / engine 5，见 `audit/ability-coverage.json` |
 | `EFFECTS` 顶层字段 | **65** | 生命周期/metadata/条件混在一起（`event`/`skill`/`weakness` 搬空后归零；`cards:audit` 现算 **37** 个键） |
-| 引擎里的卡号字面量 | **65 个** | `engine.js` 中 `'0\d{4}'` 去重计数，是**技术债主指标**（5c 带走 58 个、5b 带走 4 个、5a 二十批带走 51 个，其中 5c-18…5c-39 带走 23 个） |
+| 引擎里的卡号字面量 | **63 个** | `engine.js` 中 `'0\d{4}'` 去重计数，是**技术债主指标**（5c 带走 58 个、5b 带走 4 个、5a 二十一批带走 53 个，其中 5c-18…5c-39 带走 23 个） |
 | 战役逃生原语的卡 | **0 张** ✅ | 93 → 0，5c 三十九批全部走描述子通道 |
 | `engine: 'xxx'` 标记卡 | **5 张** | 行为完全由引擎硬编码 |
 | 引擎里的战役字样 | tfa 64 / carcosa 36 / dunwich 3 | 违反"引擎不按关卡分支"的约定 |
@@ -114,13 +114,13 @@ B4 多人同时决定、C6 记录与历史、C5 计算表达式、E1 文案 i18n
 
 ### 1.2 引擎码工作单（§10 第 1 项）
 
-`npm run cards:workorder` 把 65 个引擎码按**形态**拆开，产物在 `audit/ability-workorder.json`：
+`npm run cards:workorder` 把 63 个引擎码按**形态**拆开，产物在 `audit/ability-workorder.json`：
 
 | 形态 | 数量 | 含义 | 是否规则债务 |
 | --- | --- | --- | --- |
 | `reference` | 28 | `requestChoice` 的 source 标签、`cardName('…')` 文案 | 否 |
 | `table` | 0 | 静态数据表（如 `'01101': { hunter: true, … }`） | 否（搬家即可，已清零） |
-| `condition` | 10 | 共享规则里的卡号条件 | 是 |
+| `condition` | 8 | 共享规则里的卡号条件 | 是 |
 | `block` | 27 | 按卡号写死的实现块（`if (def.code === …)` / `case`） | 是 |
 
 按能力缺口分类（关键字保守判定，逐条迁移前仍需人工确认）：
@@ -191,7 +191,7 @@ golden replay 已固化成用例（`tests/replay-golden.test.mjs` + `tests/fixtu
 
 | 指标 | 现在（Phase 5 之后） | 目标 |
 | --- | --- | --- |
-| `engine.js` 卡号字面量 | **65**（其中行为分支 37 个：condition 10 + block 27；reference 28 / table 0） | **0** |
+| `engine.js` 卡号字面量 | **63**（其中行为分支 35 个：condition 8 + block 27；reference 28 / table 0） | **0** |
 | `EFFECTS` 行为条目 | **57**（385 → 57，Phase 5 迁走 328 条） | **0**（静态卡面数据留在 `cards-data.js`） |
 | 卡牌顶层字段 | **65** | **≤10 组** |
 | 逃生原语卡 | **0** ✅（93 → 0，5c 三十九批全部迁完） | **0** |
@@ -628,16 +628,17 @@ maxHealth / cardSanity
 | 5a-18 | 事件去向 / 附属事件 / 自选花费（`playedEventsToDeckTop` / `keepOnPlay` / `chooseResourceCostOnPlay`） | [`phase5-migration.md`](phase5-migration.md) §4.65 |
 | 5a-19 | 剧情盟友卡号 / 被消除时离场（`LITA_CHANDLER_CODE` / `discardOnElimination`） | [`phase5-migration.md`](phase5-migration.md) §4.66 |
 | 5a-20 | 敌人规则 / 清空特质（`ENEMY_RULE_FLAGS` + `BLANKS_TRAITS` 读点） | [`phase5-migration.md`](phase5-migration.md) §4.67 |
+| 5a-21 | 幸运骰 / 天赐良机（`rerollTokenCost` / `exileForAutoSuccess`） | [`phase5-migration.md`](phase5-migration.md) §4.68 |
 | 5a 四批 | 4 段死分支清理 + 卡号级规则数据搬到 `src/cards/card-rules.js`（敌人弱点关键词 / 清空文本 / 反应提示例外 / 中毒威胁 / 议程手牌惩罚），`tests/card-rules.test.mjs` 锁读点；守卫 `tools/audit-dead-primitives.mjs` | [`phase5-migration.md`](phase5-migration.md) §4.0 / §4.17 / §4.18 |
-| 用例 | `tests/card-rules.test.mjs`（2 条）、`tests/migration-tools.test.mjs`（8 条）、`tests/phase5-migration.test.mjs`（87 条）、`architecture-guard`（10 条，含死分支与卡包登记守卫），均在 `fast` tier | `npm run test:fast` |
+| 用例 | `tests/card-rules.test.mjs`（2 条）、`tests/migration-tools.test.mjs`（8 条）、`tests/phase5-migration.test.mjs`（88 条）、`architecture-guard`（10 条，含死分支与卡包登记守卫），均在 `fast` tier | `npm run test:fast` |
 
 **门禁结果（Phase 5 阶段性实测）**：
 
 - **每批 replay 指纹不变**：`--baseline`（Phase 5 开工前，10 局 / 529 步）与 `--compare` 逐批执行，
   5b-1…5b-7、5b-6/6b/6c/6d、5c-1…5c-18、5a-1…5a-4 全部输出「与基线逐条一致（行为零变化）」；`npm run replay:fixtures` 仍是 530 个逐步指纹全绿。
 - **指标单调下降**：`EFFECTS` 385 → **57**、通道 legacy 286 → **51**、descriptor 75 → **404**、逃生卡 93 → **0** ✅、
-  `effectsTopLevelFields` 69 → **33**、`engineCodes` 166 → **65**（5c 带走 58 个、5b 带走 4 个、5a 二十批 51 个）。
-- **白名单只收缩**：EFFECTS 白名单 385 → 57 项，engine 码白名单 166 → 65 项（`--write` 无新增；03143 与 03195/04197 回退时各用过一次 `--allow-growth`）。
+  `effectsTopLevelFields` 69 → **33**、`engineCodes` 166 → **63**（5c 带走 58 个、5b 带走 4 个、5a 二十一批 53 个）。
+- **白名单只收缩**：EFFECTS 白名单 385 → 57 项，engine 码白名单 166 → 63 项（`--write` 无新增；03143 与 03195/04197 回退时各用过一次 `--allow-growth`）。
 - **新增失败 0 条**：`fast` 8 条既有失败、`slow` 11 条既有失败（与 Phase 0/4 记账一致）、`assets` 4 条既有失败。
 - **被门禁抓住并修掉的漂移**（详见 [`phase5-migration.md`](phase5-migration.md) §5.2）：
   ① `dunwichSupport` 迁卡后包清单的「有行为实现」判定失效 → 自动牌组牌池少 1 张 → 弱点随机数错位；
@@ -828,7 +829,7 @@ Phase 4 之后，路线里要求的"最低补充"已经落地：
 | 9 | 迁移提效工具（`migrate-card` / `scaffold-card` / 批次编排） | ✅ 完成（Phase 5） | 见 §8；5b 机械五批 + 5c 十批用它跑完，共 204 张卡（手写批次覆盖反应/天赋/被动/规则字段迁移） |
 | 10 | 5b 机械迁移主体 | 🚧 182 张（机械 154 + 反应 28） | `EFFECTS` 385 → 174；遗留 5b 尾部见下 |
 | 11 | 5c 逃生卡 | ✅ 三十九批 93 张（Carcosa 48 / TFA 40 / 跨战役 5） | — |
-| 12 | 5a 引擎卡号分支 | 🚧 二十批：死分支 4 段 + 卡号数据 46 个码（+ 敌人规则 / 清空特质） | 65 个码（`condition` 10 / `block` 27 / `reference` 28 / `table` 0） |
+| 12 | 5a 引擎卡号分支 | 🚧 二十一批：死分支 4 段 + 卡号数据 48 个码（+ 幸运骰 / 天赐良机） | 63 个码（`condition` 8 / `block` 27 / `reference` 28 / `table` 0） |
 
 D1/D3/D4 已在 Phase 3 交付，Phase 4 补上了重放安全网，Phase 5 补上了迁移工具与 5b 主体，**"补能力"这条线只剩 A2/A3**：
 

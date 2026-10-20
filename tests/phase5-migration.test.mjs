@@ -686,6 +686,13 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-21：幸运骰 / 天赐良机（02230、02271）----
+
+test('5a-21：02230 的重抽费用与 02271 的流放换成功都由条目声明', () => {
+  assert.equal(registeredEntry('02230')?.rerollTokenCost, 2, '幸运骰花 2 资源重抽')
+  assert.equal(registeredEntry('02271')?.exileForAutoSuccess, true, '天赐良机可流放换自动成功')
+})
+
 // ---- 5a-20：敌人规则 / 清空特质（02094、02182、02088）----
 
 test('5a-20：02182 的禁移与 02094 的远程难度修正都在规则表里', () => {
