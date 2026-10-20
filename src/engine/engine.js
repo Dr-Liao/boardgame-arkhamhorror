@@ -7051,18 +7051,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     info(state, events, `${inv.name} 将 ${asset.attached.length} 张事件附属到「原定计划」。`)
     return
   }
-  if (effect.action === 'archaicGlyphs') {
-    if (!asset) return
-    asset.uses = (asset.uses || 0) + 1
-    asset.usesType = 'secrets'
-    if (asset.uses >= 3) {
-      leaveAsset(state, inv, asset, events)
-      inv.discard.push(asset.code)
-      inv.resources += 5
-      recordResearch(state, 'translatedGlyphs')
-    }
-    return
-  }
   if (effect.action === 'heroicRescue') {
     const context = state._reaction
     const enemy = context?.enemyId && state.enemies.find(item => item.id === context.enemyId)
@@ -10674,6 +10662,18 @@ function abilityApi(state, events) {
       state.clues = (state.clues || 0) - amount
       location.clues = (location.clues || 0) + amount
       return amount
+    },
+    // Phase 5（5c-29）：「古代雕文」这类卡要把「研究记录」写进战役账本。
+    recordResearch: key => {
+      if (!key) return false
+      recordResearch(state, key)
+      return true
+    },
+    // Phase 5（5c-29）：支援的充能类型（`usesType`）也要能由内容层声明。
+    setUsesType: (card, type) => {
+      if (!card || !type) return null
+      card.usesType = type
+      return card.usesType
     },
     // Phase 5（5c-28）：充能支援的判定与「能不能离场」——「灵语人 / 愤怒之灵」这类卡的候选筛选。
     isChargeAsset: card => isChargeAsset(card),

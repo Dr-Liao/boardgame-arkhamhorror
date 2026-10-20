@@ -684,6 +684,26 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-29：研究记录与充能类型（03025 古代雕文）----
+
+test('5c-29：03025 古代雕文第三次翻译后离场、给 5 资源并记下研究', () => {
+  const state = fixture()
+  const me = state.investigators[0]
+  me.hand = ['01039', '01039', '01039'] // 带智识图标的填充牌
+  me.resources = 10
+  asset(state, '03025')
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const live = state.investigators[0].assets.find(item => item.code === '03025')
+    if (!live) break
+    use(state, live)
+    settle(state)
+  }
+  assert.equal(state.investigators[0].resources, 15, '第三次翻译给 5 资源')
+  assert.equal(state.investigators[0].assets.some(item => item.code === '03025'), false, '卡牌离场')
+  assert.ok(state.investigators[0].discard.includes('03025'), '进入弃牌堆')
+  assert.equal(state.campaign.records?.translatedGlyphs, true, '记下「翻译雕文」研究')
+})
+
 // ---- 5c-28：充能支援的转移与回收（03014 灵语人 / 03015 愤怒之灵）----
 
 test('5c-28：03014 灵语人把充能支援返回手牌 / 03015 愤怒之灵转移 1 个充能', () => {

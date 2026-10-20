@@ -13,8 +13,7 @@ const custom = (action, extra = {}) => ({ type: 'carcosaPlayer', action, ...extr
 //
 // Phase 5（5c 首批）再迁出 6 张：03026 / 03038 / 03040 / 03148 / 03199 / 03232。
 export const effects = {
-  '03025': { abilities: [action('翻译古代雕文', custom('archaicGlyphs'),
-    { discardHand: 1, discardHandIcon: 'intellect' })] },
+  // 03025 古代雕文已迁到能力层（5c-29），见 MIGRATED_ESCAPE_ENTRIES_5C29。
   '03030': { fast: true, reaction: { when: 'wouldSucceedTest' }, event: { type: 'addTestValue', amount: 2 } },
   // 03033 解锢灵魂已迁到能力层（5c-21），见 MIGRATED_ESCAPE_ENTRIES_5C21。
   '03036': { abilities: [

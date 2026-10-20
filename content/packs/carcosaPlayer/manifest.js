@@ -14,6 +14,7 @@ export const abilityLayerCodes = Object.freeze([
   '03022',
   '03023',
   '03024',
+  '03025',
   '03026',
   '03027',
   '03028',
