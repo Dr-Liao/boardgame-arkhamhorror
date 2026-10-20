@@ -146,15 +146,15 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 
 ---
 
-## 6. 未提交/环境说明
+## 5.1 未提交/环境说明
 
 - `artifacts/replay-before.json` 不入库（`.gitignore`）。
 - `develop/scaffolds/`（`scaffold-card.mjs` 生成的骨架）是临时产物，已清理，需要时重新生成。
 - 本仓库是 `boardgame-hall-ai` 的子模块，提交后父仓库要更新指针。
 
-## 5. Phase 5 收尾状态（本轮自动化结束时）
+## 6. 阶段中点快照（历史，最终结论见 §7）
 
-### 5.1 已完成
+### 6.1 当时已完成
 
 | 子阶段 | 状态 | 指标 |
 | --- | --- | --- |
@@ -169,7 +169,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 每一个批次都满足：`replay --compare` 逐条一致、白名单只收缩、fast tier 新增失败 0 条、
 三份文档同步、子模块与父指针都已提交。
 
-### 5.2 剩余（按优先级）
+### 6.2 当时剩余（按优先级）
 
 **A. 5a 行为分支 0 个（已清零）**（`cards:workorder` 的 `condition` + `block`）：
 
@@ -182,7 +182,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 
 **C. 其它阶段**：Phase 6（`reference` + 文案）、Phase 7（`legacy` 通道 49 项）见 roadmap。
 
-### 5.3 下一批的推荐做法
+### 6.3 下一批的推荐做法（仍然适用）
 
 1. 先 `node --input-type=module -e "import j from './audit/ability-workorder.json' …"` 看剩余码清单；
 2. 按「同一族一次收 2–4 个」挑，优先能复用现有规则表（`ENEMY_RULE_FLAGS` / `BLANKS_TRAITS` /
@@ -194,9 +194,9 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
    - **账本**：只有 `EFFECTS[code]` 真的删掉了才写进 `audit/migration-batches.json`；
    - **数据表 vs 读点**：数据加到哪张表、引擎就读哪张表，否则 `replay` 抓不到静默失能。
 
-## 6. Phase 5 完成声明（行为分支清零）
+## 7. Phase 5 完成声明（行为分支清零）
 
-### 6.1 目标与达成情况
+### 7.1 目标与达成情况
 
 本次目标的三段，全部达成：
 
@@ -215,7 +215,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 这 28 个是 `requestChoice({ source: '0xxxx' })` 的**文案标签**，按路线图归 **Phase 6**
 （与 UI 文案、日志一起改，避免两处动同一段字符串；它们也进入重放指纹，单独改容易与 Phase 6 重复劳动）。
 
-### 6.2 硬指标
+### 7.2 硬指标
 
 | 指标 | Phase 5 起点 | 现在 |
 | --- | --- | --- |
@@ -232,7 +232,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 门禁常年保持：`replay --check/--compare` 逐条一致、白名单只收缩、fast tier 新增失败 0 条
 （既有 7 条基线失败与迁移无关）、`migrate-card --verify` 79 批一致、`audit-dead-primitives` 无死分支。
 
-### 6.3 这一阶段的产出（可复用的机制）
+### 7.3 这一阶段的产出（可复用的机制）
 
 - **12 种 `kind`**：`played` / `commit` / `reaction` / `forced` / `action` / `free` / `constant` /
   `elderSign` / `weakness` / `entersPlay` / `leavesPlay` / `setup`。
@@ -245,7 +245,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
   5. **调查员能力字段**（`INVESTIGATOR_ABILITIES` 的 `homeFrontMoveDamage` / `openingHandSize` / …）
 - **弱点 `resolve` 通道**：`resolveWeakness` 先查弱点描述子，旧的 data-body 分支作为回退。
 
-### 6.4 三年踩过的坑（都在 §4 各小节里）
+### 7.4 这一阶段踩过的坑（都在 §4 各小节里）
 
 1. **重复描述子**：条目可能已存在于 `card-abilities.js` / `ability-migration-batches.js`，
    先 `grep` 卡号再决定「加字段」还是「新建条目」。
@@ -256,7 +256,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 5. **数值型标记**：`exhaustOnEnemyDefeatedHealHorror: 1` 这类断言不要写 `=== true`。
 6. **并发偶发**：`campaign-experience.test.mjs` 偶发文件级失败，单跑通过即判定 flake。
 
-### 6.5 接下来（Phase 6）
+### 7.5 接下来（Phase 6）
 
 1. **28 个 `reference`**：把 `requestChoice` 的 `source` 从卡号换成事件源对象（`{ type, code }`），
    与日志/UI 文案一起改；改完整张工作单应当归零。
