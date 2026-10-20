@@ -684,6 +684,37 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-28：充能支援的转移与回收（03014 灵语人 / 03015 愤怒之灵）----
+
+test('5c-28：03014 灵语人把充能支援返回手牌 / 03015 愤怒之灵转移 1 个充能', () => {
+  // 03014：选一个有充能的支援 → 「转化为资源并弃置」。
+  const state = fixture()
+  const spell = asset(state, '01060', { uses: 2, usesType: 'charges' }) // 皱缩术：有充能的法术支援
+  const speaker = asset(state, '03014')
+  const resources = state.investigators[0].resources
+  use(state, speaker)
+  settle(state, pending => {
+    if (pending.kind === 'target') return spell.id
+    if (pending.source === '03014') return 'resources'
+    return null
+  })
+  assert.equal(state.investigators[0].resources, resources + 2, '按充能数获得资源')
+  assert.ok(state.investigators[0].discard.includes('01060'), '支援被弃置')
+  assert.equal(state.investigators[0].assets.some(item => item.id === spell.id), false, '支援离场')
+
+  // 03015：把法术支援的 1 个充能移到自己身上。
+  const second = fixture()
+  const wand = asset(second, '01060', { uses: 2, usesType: 'charges' })
+  const angered = { id: 'angered', code: '03015', uses: 0, usesType: 'charges', exhausted: false }
+  second.investigators[0].threat.push(angered)
+  use(second, angered)
+  settle(second, pending => (pending.kind === 'target' ? wand.id : null))
+  const angeredAfter = second.investigators[0].threat.find(item => item.id === 'angered')
+  assert.equal(angeredAfter.uses, 1, '愤怒之灵获得 1 个充能')
+  assert.equal(second.investigators[0].assets.find(item => item.id === wand.id)?.uses, 1, '法术支援少 1 个充能')
+  assert.equal(second.investigators[0].assets.find(item => item.id === wand.id)?.exhausted, true, '法术支援被横置')
+})
+
 // ---- 5c-27：击败敌人后的反应 —— 敌人与事件卡一起进胜利区（03016 掩埋）----
 
 test('5c-27：03016 掩埋把被击败的非精英敌人与自身放进胜利区', () => {

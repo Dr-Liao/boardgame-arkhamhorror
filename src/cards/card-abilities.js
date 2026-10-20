@@ -2857,12 +2857,78 @@ export const MIGRATED_ESCAPE_ENTRIES_5C27 = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// 5c-28：充能支援的转移与回收（灵语人 / 愤怒之灵）
+// ---------------------------------------------------------------------------
+
+export const MIGRATED_ESCAPE_ENTRIES_5C28 = [
+  // 03014 灵语人：横置，选一个自己控制的充能支援——返回手牌，或把全部充能换成资源后弃置。
+  {
+    code: '03014',
+    abilities: [{
+      kind: 'action', label: '横置：选择一个充能支援，将其返回手牌，或把全部充能转为资源并弃置',
+      cost: { action: false, exhaust: true },
+      resolve: ({ inv, source, api }) => {
+        const candidates = inv.assets.filter(card => card.id !== source?.id
+          && api.isChargeAsset(card) && api.canLeavePlay(card))
+        if (!candidates.length) return
+        const targetId = api.choice({ kind: 'target', source: '03014', seat: inv.seat,
+          prompt: '选择一个由你控制的充能支援。',
+          options: candidates.map(card => ({ id: card.id, label: api.cardName(card.code) })) })
+        const card = candidates.find(item => item.id === targetId)
+        if (!card) return
+        const mode = api.choice({ kind: 'effect', source: '03014', seat: inv.seat,
+          prompt: '选择灵语人的结算方式。', options: [
+            { id: 'return', label: '将支援返回手牌' },
+            { id: 'resources', label: `获得 ${card.uses || 0} 资源并弃置支援` },
+          ] })
+        if (mode === 'return') {
+          api.returnAssetToHand(inv.seat, card)
+        } else {
+          api.gainResources(inv.seat, card.uses || 0)
+          api.discardAsset(inv.seat, card)
+        }
+        api.info(`「${api.cardName('03014')}」将「${api.cardName(card.code)}」${mode === 'return' ? '返回手牌' : '转化充能并弃置'}。`)
+      },
+    }],
+  },
+  // 03015 愤怒之灵：作为威胁区的弱点牌（有充能），横置一个「未横置、有充能、法术特性」的支援，
+  // 移动 1 个充能到自身。弱点数据体与主动能力放在同一个条目里（弱点读点仍是 weaknessProfile）。
+  {
+    code: '03015',
+    abilities: [
+      {
+        kind: 'weakness', label: '愤怒之灵（威胁区弱点）',
+        weakness: { type: 'threat', initialUses: 0, usesType: 'charges' },
+      },
+      {
+        kind: 'action', label: '横置一个法术支援并移动其 1 个充能到愤怒之灵',
+        cost: { action: false },
+        resolve: ({ inv, source, api }) => {
+          const candidates = inv.assets.filter(card => !card.exhausted && api.isChargeAsset(card)
+            && (card.uses || 0) > 0 && api.cardTraits(card.code).includes('spell'))
+          if (!candidates.length) return
+          const targetId = api.choice({ kind: 'target', source: '03015', seat: inv.seat,
+            prompt: '选择并横置一个有充能的法术支援。',
+            options: candidates.map(card => ({ id: card.id, label: api.cardName(card.code) })) })
+          const card = candidates.find(item => item.id === targetId)
+          if (!card) return
+          api.exhaust(card)
+          api.addUses(card, -1)
+          api.addUses(source, 1)
+          api.info(`「${api.cardName('03015')}」从「${api.cardName(card.code)}」移动了1个充能（${source?.uses || 0}/4）。`)
+        },
+      },
+    ],
+  },
+]
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -2911,4 +2977,5 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_ESCAPE_ENTRIES_5C24.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C25.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C27.map(entry => entry.code),
+  ...MIGRATED_ESCAPE_ENTRIES_5C28.map(entry => entry.code),
 ])

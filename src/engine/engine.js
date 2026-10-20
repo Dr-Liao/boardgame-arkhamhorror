@@ -7150,41 +7150,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
 
 function carcosaInvestigatorEffect(state, seat, effect, events) {
   const inv = state.investigators[seat]
-  if (effect.action === 'spiritSpeaker') {
-    const candidates = inv.assets.filter(asset => asset.id !== effect.assetId && isChargeAsset(asset)
-      && !assetCannotLeavePlay(asset))
-    if (!candidates.length) return
-    const targetId = requestChoice(state, { kind: 'target', source: '03014', seat,
-      prompt: '选择一个由你控制的充能支援。', options: candidates.map(asset => ({ id: asset.id, label: cardName(asset.code) })) })
-    const asset = candidates.find(item => item.id === targetId)
-    const mode = requestChoice(state, { kind: 'effect', source: '03014', seat,
-      prompt: '选择灵语人的结算方式。', options: [
-        { id: 'return', label: '将支援返回手牌' },
-        { id: 'resources', label: `获得 ${asset.uses || 0} 资源并弃置支援` },
-      ] })
-    leaveAsset(state, inv, asset, events)
-    if (mode === 'return') inv.hand.push(asset.code)
-    else {
-      inv.resources += asset.uses || 0
-      inv.discard.push(asset.code)
-    }
-    info(state, events, `「${cardName('03014')}」将「${cardName(asset.code)}」${mode === 'return' ? '返回手牌' : '转化充能并弃置'}。`)
-    return
-  }
-  if (effect.action === 'angeredSpirits') {
-    const source = controlledAbilityCard(inv, effect.assetId)
-    const candidates = inv.assets.filter(asset => !asset.exhausted && isChargeAsset(asset) && (asset.uses || 0) > 0
-      && (cardDef(asset.code)?.traits || []).some(trait => String(trait).toLowerCase() === 'spell'))
-    if (!source || !candidates.length) return
-    const targetId = requestChoice(state, { kind: 'target', source: '03015', seat,
-      prompt: '选择并横置一个有充能的法术支援。', options: candidates.map(asset => ({ id: asset.id, label: cardName(asset.code) })) })
-    const asset = candidates.find(item => item.id === targetId)
-    asset.exhausted = true
-    asset.uses -= 1
-    source.uses = (source.uses || 0) + 1
-    info(state, events, `「${cardName('03015')}」从「${cardName(asset.code)}」移动了1个充能（${source.uses}/4）。`)
-    return
-  }
   if (effect.action === 'yorickPlayAsset') {
     if (discardLocked(state, inv)) return
     const candidates = inv.discard.filter(code => {
@@ -10710,6 +10675,9 @@ function abilityApi(state, events) {
       location.clues = (location.clues || 0) + amount
       return amount
     },
+    // Phase 5（5c-28）：充能支援的判定与「能不能离场」——「灵语人 / 愤怒之灵」这类卡的候选筛选。
+    isChargeAsset: card => isChargeAsset(card),
+    canLeavePlay: card => !assetCannotLeavePlay(card),
     // Phase 5（5c-27）：「掩埋」——把刚击败的非精英敌人与这张事件卡一起放进胜利区。
     buryEnemyInVictory: (enemy, eventCode) => {
       if (!enemy || enemy.elite) return false
@@ -11859,11 +11827,6 @@ function effectError(state, inv, effect) {
   if (effect.type === 'autoEvadeNonElite' && !state.enemies.some(enemy => enemy.location === inv.location && !enemy.elite)) return '这里没有非精英敌人'
   if (effect.type === 'shuffleIntoEncounter' && !state.enemies.some(enemy => enemy.location === inv.location && !enemy.elite && !isWeaknessCode(enemy.code))) return '这里没有可洗回遭遇牌库的敌人'
   if (effect.type === 'returnAssetToHand' && effect.assetId && !inv.assets.some(asset => asset.id === effect.assetId)) return '未找到要返回手牌的资产'
-  if (effect.type === 'carcosaInvestigator' && effect.action === 'spiritSpeaker'
-    && !inv.assets.some(asset => isChargeAsset(asset) && !assetCannotLeavePlay(asset))) return '没有可选择的充能支援'
-  if (effect.type === 'carcosaInvestigator' && effect.action === 'angeredSpirits'
-    && !inv.assets.some(asset => !asset.exhausted && isChargeAsset(asset) && (asset.uses || 0) > 0
-      && (cardDef(asset.code)?.traits || []).some(trait => String(trait).toLowerCase() === 'spell'))) return '没有可移动充能的法术支援'
   if (effect.type === 'carcosaInvestigator' && effect.action === 'yorickPlayAsset'
     && (discardLocked(state, inv) || !inv.discard.some(code => {
       const def = cardDef(code)

@@ -72,21 +72,8 @@ export const signatureEffects = {
   // 读点是引擎 commit 段的 registeredEntry(...).passive.analyticalMind。
   '03011': { weakness: { type: 'threat' }, kingInYellow: true, cannotLeavePlay: true },
   '03012': { paintedWorld: true },
-  '03014': {
-    abilities: [{
-      label: '横置：选择一个充能支援，将其返回手牌，或把全部充能转为资源并弃置',
-      cost: { action: false, exhaust: true },
-      effect: { type: 'carcosaInvestigator', action: 'spiritSpeaker' },
-    }],
-  },
-  '03015': {
-    weakness: { type: 'threat', initialUses: 0, usesType: 'charges' },
-    abilities: [{
-      label: '横置一个法术支援并移动其1个充能到愤怒的灵魂',
-      cost: { action: false },
-      effect: { type: 'carcosaInvestigator', action: 'angeredSpirits' },
-    }],
-  },
+  // 03014 灵语人 / 03015 愤怒之灵已迁到能力层（5c-28），见 MIGRATED_ESCAPE_ENTRIES_5C28。
+  // 03015 的威胁区弱点数据体也随同一条目搬走（弱点读点仍是 weaknessProfile）。
   // 03016 掩埋已迁到能力层（5c-27），见 MIGRATED_ESCAPE_ENTRIES_5C27。
   '03017': { enemyWeakness: { hunter: true, prey: 'bearer', lockDiscardWhileEngaged: true } },
   '03018': {
