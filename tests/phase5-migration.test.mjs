@@ -686,6 +686,12 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-16：摧毁近战武器的敌人 / 失手转伤（02103、02113）----
+
+test('5a-16：02103 的近战摧毁规则在敌人规则表里；02113 的卡号随效果数据走', () => {
+  assert.deepEqual(enemyRuleFlags('02103'), { destroysMeleeWeapon: true }, '02103 摧毁近战武器')
+})
+
 // ---- 5a-15：附着型弱点（02007 惩戒邪恶、02011 寻找伊兹）----
 
 test('5a-15：02007 / 02011 用弱点描述子的 resolve 附着到最远地点', () => {

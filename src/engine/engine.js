@@ -7389,12 +7389,12 @@ function dunwichPlayerEffect(state, seat, effect, events) {
     const targets = state.enemies.filter(enemy => enemy.location === inv.location && enemy.id !== original?.id)
     if (!targets.length) return
     const id = targets.length === 1 ? targets[0].id : requestChoice(state, {
-      kind: 'target', source: '02113', seat, prompt: '选择承受这次攻击伤害的另一名敌人。',
+      kind: 'target', source: effect.code || 'redirectFailedAttack', seat, prompt: '选择承受这次攻击伤害的另一名敌人。',
       options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })),
     })
     const target = targets.find(enemy => enemy.id === id)
     context.redirected = true
-    damageEnemy(state, target, Math.max(1, context.attackDamage || 1), seat, events, '02113')
+    damageEnemy(state, target, Math.max(1, context.attackDamage || 1), seat, events, effect.code || null)
     info(state, events, `${inv.name} 的攻击落空后改为对「${target.name}」造成 ${Math.max(1, context.attackDamage || 1)} 点伤害。`)
     return
   }
@@ -9683,7 +9683,8 @@ function doFight(state, seat, opts, events, noSpend) {
   return performTest(state, seat, skill, difficulty, { source: { label: '攻击', enemyId: enemy.id, name: enemy.name, code: enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code }, baseValue: opts.baseValue,
     extraChaosChoices: opts.extraChaosChoices || 0,
     skillBonus: (opts.combatBonus || 0) + clueCombat + (opts.addSkill ? getStat(state, inv, opts.addSkill) : 0), resolve: r => {
-    if (enemy.code === '02103' && !enemyTextBlanked(state, enemy) && weapon && cardDef(weapon.code)?.traits?.includes('Melee')) {
+    // Phase 5（5a-16）：敌人卡面的特殊攻击规则在 ENEMY_RULE_FLAGS 里。
+    if (enemyRuleFlags(enemy.code).destroysMeleeWeapon && !enemyTextBlanked(state, enemy) && weapon && cardDef(weapon.code)?.traits?.includes('Melee')) {
       leaveAsset(state, inv, weapon, events); inv.discard.push(weapon.code)
     }
     if (opts.onChaosSymbolHorror && r.drawn.some(token => ['skull', 'cultist', 'tablet', 'elderthing', 'autofail'].includes(token))) {

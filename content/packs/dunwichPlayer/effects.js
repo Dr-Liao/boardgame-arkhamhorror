@@ -15,7 +15,9 @@ export const effects = {
   // 02186 已迁到能力层（kind: 'played' + playCondition，见 src/cards/card-abilities.js）。
   // 02110 适应性已迁到能力层（5b-9），见 MIGRATED_PASSIVE_ENTRIES_5B9。
   '02111': { event: { type: 'drawEncounterAll' }, addToVictory: true },
-  '02113': { fast: true, reaction: { when: 'attackFail', failedByAtMost: 2 }, event: { type: 'redirectFailedAttack' } },
+  // Phase 5（5a-16）：卡号随效果数据走（引擎读 effect.code）。
+  '02113': { fast: true, reaction: { when: 'attackFail', failedByAtMost: 2 },
+    event: { type: 'redirectFailedAttack', code: '02113' } },
   '02115': { event: { type: 'flare' }, exileAfterPlay: true },
   '02153': { fast: true, reaction: { when: 'enemyAttack' }, event: { type: 'hypnoticGaze' } },
   '02225': { fast: true, reaction: { when: 'defeatEnemy' }, event: { type: 'healHorrorAtLocationByEnemy' } },

@@ -2,16 +2,16 @@
   "schemaVersion": 1,
   "note": "由 tools/audit-workorder.mjs --write 生成，勿手改。shape=reference/table 不是规则债务（标识与数据表）；block/condition 才是要迁的行为分支。class 只按关键字判定的候选分类，逐条迁移前需人工确认。",
   "summary": {
-    "total": 78,
+    "total": 76,
     "byShape": {
-      "block": 31,
-      "condition": 19,
+      "block": 30,
+      "condition": 18,
       "reference": 28
     },
     "byClass": {
       "C": 28,
       "A": 28,
-      "B": 22
+      "B": 20
     },
     "nonBehaviorDebt": 28
   },
@@ -48,8 +48,6 @@
     ],
     "B": [
       "02102",
-      "02103",
-      "02113",
       "02182",
       "02230",
       "02271",
@@ -135,8 +133,8 @@
       "lines": [
         2902,
         2907,
-        11593,
-        12160
+        11594,
+        12161
       ],
       "inEffects": true,
       "evidence": [
@@ -182,10 +180,10 @@
         9146,
         9150,
         9210,
-        11973,
-        11978,
-        12222,
-        12241
+        11974,
+        11979,
+        12223,
+        12242
       ],
       "inEffects": true,
       "evidence": [
@@ -334,7 +332,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        9929
+        9930
       ],
       "inEffects": false,
       "evidence": [
@@ -402,23 +400,6 @@
       ]
     },
     {
-      "code": "02103",
-      "shape": "block",
-      "class": "B",
-      "needs": [
-        "D1 非玩家通道",
-        "ctx.api 薄包装"
-      ],
-      "occurrences": 1,
-      "lines": [
-        9686
-      ],
-      "inEffects": false,
-      "evidence": [
-        "if (enemy.code === '02103' && !enemyTextBlanked(state, enemy) && weapon && cardDef(weapon.code)?.traits?.includes('Melee"
-      ]
-    },
-    {
       "code": "02109",
       "shape": "reference",
       "class": "A",
@@ -433,25 +414,6 @@
       "inEffects": false,
       "evidence": [
         "const id = requestChoice(state, { kind: 'target', source: '02109', seat, prompt: '选择弹药或补给翻倍的支援。', options: targets.map(a"
-      ]
-    },
-    {
-      "code": "02113",
-      "shape": "condition",
-      "class": "B",
-      "needs": [
-        "B1 目标枚举",
-        "D1 非玩家通道"
-      ],
-      "occurrences": 2,
-      "lines": [
-        7392,
-        7397
-      ],
-      "inEffects": true,
-      "evidence": [
-        "kind: 'target', source: '02113', seat, prompt: '选择承受这次攻击伤害的另一名敌人。',",
-        "damageEnemy(state, target, Math.max(1, context.attackDamage || 1), seat, events, '02113')"
       ]
     },
     {
@@ -657,7 +619,7 @@
       "lines": [
         4797,
         9625,
-        9757
+        9758
       ],
       "inEffects": false,
       "evidence": [
@@ -679,10 +641,10 @@
       "lines": [
         4797,
         9625,
-        9757,
-        11649,
-        12024,
-        12313
+        9758,
+        11650,
+        12025,
+        12314
       ],
       "inEffects": false,
       "evidence": [
@@ -934,7 +896,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        9700
+        9701
       ],
       "inEffects": false,
       "evidence": [
@@ -998,8 +960,8 @@
         8503,
         8861,
         9042,
-        11546,
-        12149
+        11547,
+        12150
       ],
       "inEffects": true,
       "evidence": [
@@ -1110,10 +1072,10 @@
       ],
       "occurrences": 4,
       "lines": [
-        11879,
-        11883,
-        11890,
-        11903
+        11880,
+        11884,
+        11891,
+        11904
       ],
       "inEffects": false,
       "evidence": [
@@ -1169,8 +1131,8 @@
       "occurrences": 3,
       "lines": [
         9293,
-        11516,
-        12279
+        11517,
+        12280
       ],
       "inEffects": false,
       "evidence": [
@@ -1187,7 +1149,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        10636
+        10637
       ],
       "inEffects": false,
       "evidence": [
@@ -1294,7 +1256,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        9907
+        9908
       ],
       "inEffects": false,
       "evidence": [
@@ -1375,7 +1337,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        11867
+        11868
       ],
       "inEffects": false,
       "evidence": [
@@ -1429,7 +1391,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        9751
+        9752
       ],
       "inEffects": false,
       "evidence": [
@@ -1505,7 +1467,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        9770
+        9771
       ],
       "inEffects": false,
       "evidence": [
@@ -1522,8 +1484,8 @@
       ],
       "occurrences": 2,
       "lines": [
-        9965,
-        9970
+        9966,
+        9971
       ],
       "inEffects": false,
       "evidence": [

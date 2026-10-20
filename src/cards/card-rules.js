@@ -68,6 +68,8 @@ export const ENEMY_RULE_FLAGS = Object.freeze({
   // 猎手夜魇：负面标记双倍结算。
   '01172': Object.freeze({ doubleNegative: true }),
   huntingNightgaunt: Object.freeze({ doubleNegative: true }),
+  // 02103：用近战武器攻击它时，武器被摧毁。
+  '02103': Object.freeze({ destroysMeleeWeapon: true }),
   // 伊斯观察者：攻击时随机弃 1 张手牌，无手牌则伤害与恐惧各 +1。
   '01177': Object.freeze({ discardRandomOnAttack: true }),
   yithianObserver: Object.freeze({ discardRandomOnAttack: true }),
