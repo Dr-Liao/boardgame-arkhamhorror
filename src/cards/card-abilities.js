@@ -3378,6 +3378,8 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '01008', tomeHandSlotsPerCopy: 2 },
   // 04308 时间借取：回合开始时把卡上的滴答全部换成额外行动（5c-37 已把滴答计数迁到描述子）。
   { code: '04308', clicksToActions: true },
+  // 04236 「自食其力」：控制占用盟友槽位的支援时自我弃掉（读点在 tfaDiscardOnYourOwn）。
+  { code: '04236', discardIfControllingAlly: true },
 ]
 
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。

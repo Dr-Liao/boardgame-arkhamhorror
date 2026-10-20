@@ -152,6 +152,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'tomeHandSlotsPerCopy',
   // Phase 5（5a-6）：回合开始把卡上的 clicks 换成额外行动（时间借取）。
   'clicksToActions',
+  // Phase 5（5a-7）：控制占用盟友槽位的支援时自我弃掉（自食其力）。
+  'discardIfControllingAlly',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -381,6 +383,7 @@ export function registerCardAbilities(entries) {
       // Phase 5（5a-6）：书位与「滴答换行动」。
       tomeHandSlotsPerCopy: entry.tomeHandSlotsPerCopy ?? null,
       clicksToActions: entry.clicksToActions === true,
+      discardIfControllingAlly: entry.discardIfControllingAlly === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

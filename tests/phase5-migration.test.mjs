@@ -684,6 +684,22 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-7：又三处卡号分支 → 条目级标记 / 能力数据（01008、04236、03004）----
+
+test('5a-7：01008 书位不平移、04236 自我弃掉、03004 入场额外充能都改成数据驱动', () => {
+  assert.equal(registeredEntry('01008')?.tomeHandSlotsPerCopy, 2, '书位仍由条目声明')
+  assert.equal(registeredEntry('04236')?.discardIfControllingAlly, true, '自食其力的自我弃掉标记')
+
+  // 04236：控制一个占盟友槽位的支援后，在 upkeep 末自我弃掉。
+  const state = fixture()
+  const own = asset(state, '04236')
+  asset(state, '01018') // 巡警占用盟友槽位
+  move(state, { action: 'endTurn' })
+  settle(state)
+  assert.equal(state.investigators[0].assets.some(item => item.id === own.id), false, '04236 被弃掉')
+  assert.ok(state.investigators[0].discard.includes('04236'), '进入弃牌堆')
+})
+
 // ---- 5a-6：卡号分支 → 条目级规则标记（01008 书位、04308 滴答换行动）----
 
 test('5a-6：01008 书虫的书位与 04308 的「滴答换行动」改用条目级标记', () => {

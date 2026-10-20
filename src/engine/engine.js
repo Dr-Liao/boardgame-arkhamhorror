@@ -653,8 +653,10 @@ function newPlayerAssetInstance(state, inv, code, fields = {}) {
     asset.uses = Math.max(0, Number(state.campaign?.records?.identifiedTheAncientStone) || 0)
     asset.usesType = effect.usesType || 'secrets'
   }
-  if (inv.code === '03004' && ['charge', 'charges'].includes(String(asset.usesType || '').toLowerCase())) {
-    asset.uses = (asset.uses || 0) + (INVESTIGATOR_ABILITIES[inv.code]?.additionalChargeOnEnter || 0)
+  // Phase 5（5a-7）：入场额外充能完全由调查员能力的 additionalChargeOnEnter 决定（不再写卡号）。
+  const extraCharges = INVESTIGATOR_ABILITIES[inv.code]?.additionalChargeOnEnter || 0
+  if (extraCharges && ['charge', 'charges'].includes(String(asset.usesType || '').toLowerCase())) {
+    asset.uses = (asset.uses || 0) + extraCharges
   }
   return asset
 }
@@ -2286,9 +2288,8 @@ function handSlotsBonusFor(inv, card) {
   let v = -(inv.handSlotsPenalty || 0)
   for (const a of inv.assets) {
     const eff = assetEffect(inv, a)
-    if (a.code === '01008') {
-      continue
-    }
+    // Phase 5（5a-7）：带「书位」的支援（书虫）不参与普通手部加成，书位单独结算。
+    if (registeredEntry(a.code)?.tomeHandSlotsPerCopy) continue
     if (eff && eff.passive && eff.passive.handSlotsBonus) v += eff.passive.handSlotsBonus
   }
   return v
@@ -7209,14 +7210,16 @@ function tfaApplyPlayCost(state, inv, preview, events) {
 
 // 「自食其力」：控制占用盟友槽位的支援时强制弃掉。
 function tfaDiscardOnYourOwn(state, inv, events) {
-  const own = inv.assets.filter(asset => asset.code === '04236')
+  // Phase 5（5a-7）：「自食其力」这类「控制盟友槽位支援就自我弃掉」由条目级 discardIfControllingAlly 声明。
+  const own = inv.assets.filter(asset => registeredEntry(asset.code)?.discardIfControllingAlly)
   if (!own.length) return
-  const ally = inv.assets.some(asset => asset.code !== '04236' && normalizedSlots(cardDef(asset.code)).includes('ally'))
+  const ownIds = new Set(own.map(asset => asset.id))
+  const ally = inv.assets.some(asset => !ownIds.has(asset.id) && normalizedSlots(cardDef(asset.code)).includes('ally'))
   if (!ally) return
   for (const asset of own) {
     leaveAsset(state, inv, asset, events)
     inv.discard.push(asset.code)
-    info(state, events, `「${cardName('04236')}」因 ${inv.name} 控制了占用盟友槽位的支援而被弃掉。`)
+    info(state, events, `「${cardName(asset.code)}」因 ${inv.name} 控制了占用盟友槽位的支援而被弃掉。`)
   }
 }
 
