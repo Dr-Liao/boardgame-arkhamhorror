@@ -1310,7 +1310,7 @@ node tools/replay-fixtures.mjs --compare  ..\..\artifacts\replay-before.json   #
 | 打出后去向字段（`attachTo`/`exileAfterPlay`/`removeAfterPlay`/`shuffleBackAfterPlay`/`becomesAsset`） | **~15 张** | `played` 描述子的「打出后去向」字段 + 读点（B6 已能表达） | 5b-9 |
 | `engine:` 标记卡（行为全在引擎里） | **5 张** | 01014 / 01072 / 01094 / 01095 / 01117 逐张改写成描述子 | 5a-1（续） |
 | 5c 剩余逃生卡 | **0 张** ✅ | 5c 阶段完成（93 → 0，全部走描述子通道） | — |
-| 5a 引擎卡号分支 | **80 个码**（`condition` 21 / `block` 31 / `reference` 28 / `table` 0） | `reference` 是「搬家即可」（但要等文案 i18n）；`condition`/`block`（52 个行为分支）要逐卡迁移。死分支清理已成套路 | 5a-5… |
+| 5a 引擎卡号分支 | **80 个码**（`condition` 19 / `block` 33 / `reference` 28 / `table` 0） | `reference` 是「搬家即可」（但要等文案 i18n）；`condition`/`block`（52 个行为分支）要逐卡迁移。死分支清理已成套路 | 5a-5… |
 
 已完成的能力接线（不再列进上表）：`reactions`（`legacyReaction`，5b-6）、`freeTriggers`/`composure`（5b-7）、
 「事件在反应窗口打出」（5c-8）。
