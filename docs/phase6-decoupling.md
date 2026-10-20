@@ -1261,3 +1261,51 @@ skill: { onSuccess: { placeChargeOrSecret: true } },
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 5563 行**（12654 → 7091，−43.9%）。
+
+## 32. 6d-25：拆出 turn.js（回合与阶段推进）
+
+### 32.1 拆的是什么
+
+11 个函数（共 307 行，45 项依赖）搬进 `src/engine/turn.js`：
+
+| 分组 | 函数 |
+| --- | --- |
+| 神话与敌人阶段 | `runMythos`、`enemyPhase`、`hunterStep`（含猎人移动） |
+| 轮末与到期 | `runLocationRoundEnd`、`runEnemyRoundEnd`、`runThreatEndTurn` |
+| 阶段/回合窗口 | `phaseBeginningWindow`、`turnBeginningWindow`、`beginInvestigationPhase`、`runBetweenInvestigationPhases` |
+| 结束回合 | `doEndTurn` |
+
+`upkeepPhase` 与密谋揭示已在 `phases.js`，这里补齐另一半。拆完后 engine.js 里的「状态机」
+只剩一个顶层循环（`startScenario` → 各阶段 → 结局）。
+
+### 32.2 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **6855**（6d-24 后 7091） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/setup.js` | 578 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/dispatch.js` | 436 |
+| `src/engine/enemies.js` | 434 |
+| `src/engine/encounter.js` | 400 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/turn.js` | **381** |
+| `src/engine/ability-exec.js` | 369 |
+| `src/engine/skill-effects.js` | 313 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/campaign-flow.js` | 252 |
+| `src/engine/movement.js` | 249 |
+| `src/engine/locations.js` | 212 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 5799 行**（12654 → 6855，−45.8%）。
