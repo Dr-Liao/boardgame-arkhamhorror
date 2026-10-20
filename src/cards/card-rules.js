@@ -94,3 +94,14 @@ export function locationCounterTreacheries(location) {
 // 卡号级规则数据：两张「附着型」弱点自身的卡号（原 engine.js 硬编码）。
 export const SMITE_THE_WICKED_CODE = '02007'
 export const SEARCHING_FOR_IZZIE_CODE = '02011'
+
+// 卡号级规则数据：「弱点升级」后的替换卡号（原 engine.js 硬编码 04038 / 04041 / 04042）。
+export const WEAKNESS_UPGRADE_CODES = Object.freeze({
+  priceOfFailure: '04038',
+  impendingDoom: '04041',
+  cursedFate: '04042',
+})
+
+export function weaknessUpgradeCode(type) {
+  return WEAKNESS_UPGRADE_CODES[type] || null
+}

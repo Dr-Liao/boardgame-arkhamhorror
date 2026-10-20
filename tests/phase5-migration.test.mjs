@@ -11,7 +11,7 @@ import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
 import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine/engine.js'
 import { RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
-  SMITE_THE_WICKED_CODE, SEARCHING_FOR_IZZIE_CODE } from '../src/cards/card-rules.js'
+  SMITE_THE_WICKED_CODE, SEARCHING_FOR_IZZIE_CODE, weaknessUpgradeCode } from '../src/cards/card-rules.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -684,6 +684,15 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   const entry = registeredEntry('03010')
   assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
+
+// ---- 5a-17：弱点升级替换卡号（04038、04041、04042）----
+
+test('5a-17：弱点升级后的替换卡号在卡号规则数据里', () => {
+  assert.equal(weaknessUpgradeCode('priceOfFailure'), '04038')
+  assert.equal(weaknessUpgradeCode('impendingDoom'), '04041')
+  assert.equal(weaknessUpgradeCode('cursedFate'), '04042')
+  assert.equal(weaknessUpgradeCode('unknownType'), null)
 })
 
 // ---- 5a-16：摧毁近战武器的敌人 / 失手转伤（02103、02113）----

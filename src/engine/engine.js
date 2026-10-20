@@ -45,6 +45,7 @@ import {
   locationCounterTreacheries,
   SMITE_THE_WICKED_CODE,
   SEARCHING_FOR_IZZIE_CODE,
+  weaknessUpgradeCode,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -2502,7 +2503,8 @@ function resolveWeakness(state, inv, def, events, texts) {
     // 卡面：把 04039 从牌库移除，并把 04038 放入弃牌堆（不是牌库）。
     const index = inv.deck.indexOf(def.code)
     if (index >= 0) inv.deck.splice(index, 1)
-    inv.discard.push('04038')
+    // Phase 5（5a-17）：弱点升级后的替换卡号在卡号规则数据里。
+    inv.discard.push(weaknessUpgradeCode('priceOfFailure'))
     info(state, events, `「${cardName(def.code)}」：伤害与恐惧各 2 点，密谋 +1 毁灭；「黑暗契约」进入弃牌堆。`)
     return
   }
@@ -2511,7 +2513,7 @@ function resolveWeakness(state, inv, def, events, texts) {
     // 记录按调查员各算一份（不再写进共享的 campaign.records）。
     inv.weaknessCounters ||= {}
     inv.weaknessCounters.impendingDoom = (inv.weaknessCounters.impendingDoom || 0) + 1
-    if (inv.weaknessCounters.impendingDoom > 1) swapWeakness(def.code, '04041')
+    if (inv.weaknessCounters.impendingDoom > 1) swapWeakness(def.code, weaknessUpgradeCode('impendingDoom'))
     info(state, events, `「${cardName(def.code)}」：1 点恐惧并记录（第 ${inv.weaknessCounters.impendingDoom} 次）。`)
     return
   }
@@ -2519,7 +2521,7 @@ function resolveWeakness(state, inv, def, events, texts) {
     applyHorror(state, inv, 2, events)
     inv.weaknessCounters ||= {}
     inv.weaknessCounters.cursedFate = (inv.weaknessCounters.cursedFate || 0) + 1
-    if (inv.weaknessCounters.cursedFate > 1) swapWeakness(def.code, '04042')
+    if (inv.weaknessCounters.cursedFate > 1) swapWeakness(def.code, weaknessUpgradeCode('cursedFate'))
     info(state, events, `「${cardName(def.code)}」：2 点恐惧并记录（第 ${inv.weaknessCounters.cursedFate} 次）。`)
     return
   }
