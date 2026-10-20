@@ -148,6 +148,10 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'adaptableSwaps',
   // Phase 5（5b-9）：结局结算时的「卡戎的银币」契约（+2 经验、被击败即死亡）；读点在结局发经验段。
   'obolContract',
+  // Phase 5（5a-6）：书虫每份占用的书位（手部槽位分配）。
+  'tomeHandSlotsPerCopy',
+  // Phase 5（5a-6）：回合开始把卡上的 clicks 换成额外行动（时间借取）。
+  'clicksToActions',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -374,6 +378,9 @@ export function registerCardAbilities(entries) {
       // Phase 5（5b-9）：关间免费替换次数 / 结局契约。
       adaptableSwaps: entry.adaptableSwaps ?? null,
       obolContract: entry.obolContract === true,
+      // Phase 5（5a-6）：书位与「滴答换行动」。
+      tomeHandSlotsPerCopy: entry.tomeHandSlotsPerCopy ?? null,
+      clicksToActions: entry.clicksToActions === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

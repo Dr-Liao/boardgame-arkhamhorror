@@ -684,6 +684,21 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-6：卡号分支 → 条目级规则标记（01008 书位、04308 滴答换行动）----
+
+test('5a-6：01008 书虫的书位与 04308 的「滴答换行动」改用条目级标记', () => {
+  assert.equal(registeredEntry('01008')?.tomeHandSlotsPerCopy, 2, '每份书虫占 2 个书位')
+  assert.equal(registeredEntry('04308')?.clicksToActions, true, '回合开始把滴答换成额外行动')
+
+  // 04308 的行为：卡上有 3 声滴答，回合结束再开始时应拿到 3 次额外行动。
+  const state = fixture()
+  const borrowed = asset(state, '04308', { clicks: 3 })
+  move(state, { action: 'endTurn' })
+  settle(state)
+  assert.equal(state.investigators[0].assets.find(item => item.id === borrowed.id)?.clicks, 0, '滴答被清空')
+  assert.equal(state.investigators[0].actionsLeft, 6, '常规 3 次 + 滴答换来的 3 次')
+})
+
 // ---- 5b-14：剧情资产的持续修正（03143 褴褛披风）----
 
 test('5b-14：03143 褴褛披风剩余理智 ≤ 3 时 +1 三项、并 -1 理智上限', () => {

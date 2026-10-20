@@ -2202,7 +2202,8 @@ function canEquip(inv, card) {
       const def = cardDef(item.code)
       return n + (isTomeCard(def) ? normalizedSlots(def).reduce((v, slot) => v + (slot === 'handx2' ? 2 : slot === 'hand' ? 1 : 0), 0) : 0)
     }, 0)
-  const restrictedHands = inv.assets.filter(a => a.code === '01008').length * 2
+  // Phase 5（5a-6）：「书虫」这类「每份占用 2 个书位」的规则由条目级 tomeHandSlotsPerCopy 声明。
+  const restrictedHands = inv.assets.reduce((sum, asset) => sum + (registeredEntry(asset.code)?.tomeHandSlotsPerCopy || 0), 0)
   for (const [s, n] of Object.entries(need)) {
     if (s === 'ally' && allyExtra) continue
     let cap = SLOT_CAPACITY[s] ?? 0
@@ -7221,11 +7222,12 @@ function tfaDiscardOnYourOwn(state, inv, events) {
 
 // 「时间借取」（04308）：回合开始时移除所有滴答，换成额外行动。
 function tfaBorrowedTimeTurnStart(state, inv, events) {
-  for (const asset of inv.assets.filter(item => item.code === '04308' && (item.clicks || 0) > 0)) {
+  // Phase 5（5a-6）：「时间借取」这类「回合开始把滴答换成额外行动」由条目级 clicksToActions 声明。
+  for (const asset of inv.assets.filter(item => registeredEntry(item.code)?.clicksToActions && (item.clicks || 0) > 0)) {
     const clicks = asset.clicks
     asset.clicks = 0
     inv.actionsLeft += clicks
-    info(state, events, `⏳ 「${cardName('04308')}」移除 ${clicks} 声滴答，${inv.name} 本回合获得 ${clicks} 次额外行动。`)
+    info(state, events, `⏳ 「${cardName(asset.code)}」移除 ${clicks} 声滴答，${inv.name} 本回合获得 ${clicks} 次额外行动。`)
   }
 }
 
