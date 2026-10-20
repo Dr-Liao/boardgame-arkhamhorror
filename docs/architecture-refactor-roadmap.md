@@ -680,8 +680,13 @@ maxHealth / cardSanity
 
 删除 `EFFECTS` 行为读点（先留一版兼容层）→ 拆分 `engine.js`（卡号分支删完后自然变小，目标单文件 < 2.5k 行）→ 战役机制插件化（TFA 作为第一个搬家对象：`stateSlice` / `project` / `actions+hooks` / `agentHints`）。
 
-**进展（6a-1 / 6b-1）**：引擎里的卡号字面量 **28 → 0**、战役名 **2 → 0**，`tests/phase6-guard.test.mjs` 把这两条变成门禁；
-交付说明与批次证据见 [`phase6-decoupling.md`](phase6-decoupling.md)。剩余：`EFFECTS` 57 条、`effectsTopLevelFields` 33 项、拆分 `engine.js`、战役插件化。
+**进展（截至 6d-29）**：引擎里的卡号字面量 **28 → 0**、战役名 **2 → 0**，`tests/phase6-guard.test.mjs` 把这两条变成门禁；
+`engine.js` **12654 → 5652 行（−55.3%）**，已拆出 **28 个模块**（`tests` / `moves` / `setup` / `combat` / `dispatch` /
+`enemies` / `deck-ops` / `encounter` / `actions` / `scenario-runtime` / `turn` / `ability-exec` / `skill-effects` /
+`reveal` / `phases` / `api-*` / `hub` / `weakness` / `campaign-flow` / `movement` / `locations` / `describe` /
+`card-lookup` 等），另把 `player-effects` 搬到内容层。
+逐批证据见 [`phase6-decoupling.md`](phase6-decoupling.md)（36 节），交接与下一步见 [`phase6-handoff.md`](phase6-handoff.md)。
+剩余：`EFFECTS` 57 条（阻塞于观测面，见下）、`effectsTopLevelFields` 33 项、继续拆 `engine.js` 到 < 2.5k、战役插件化。
 
 **6c 的前置条件**（见 [`phase6-decoupling.md`](phase6-decoupling.md) §7）：`EFFECTS[code]` 还兼着「这张卡已实现」的语义——
 `ai-context.js` 把整个对象塞进 AI 上下文，删条目会改变提示词并让重放指纹变红。
@@ -699,7 +704,7 @@ maxHealth / cardSanity
 | 3 内容来源 | 2–3 周 | ✅ 完成（D1/D3 首批/D4） | 4 |
 | 4 重放安全网 | 2 周 | ✅ 完成（golden 基线 + 100 局门禁 + 撤销 API） | 1–3 |
 | 5 迁移 | 4–6 周 | ✅ 5c 三十九批（93/93）、✅ 5b 全部、✅ 5a 行为分支清零 | — |
-| 6 收尾 | 持续 | 🚧 引擎卡号 / 战役名已清零（`engineCodes` 28 → 0），剩余 `EFFECTS` 57 条与拆分 | — |
+| 6 收尾 | 持续 | 🚧 ①② 完成（卡号 0 / 战役名 0）；④ 拆到 −55.3%（5652 行）；③ `EFFECTS` 57 条待拍板观测面 | — |
 | **合计** | **13–17 周** | | 两人并行约 8–10 周 |
 
 ---

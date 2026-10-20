@@ -1556,3 +1556,20 @@ ReferenceError: Cannot access 'doFight' before initialization
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 7002 行**（12654 → 5652，−55.3%）。
+
+---
+
+## 37. 交接（Phase 6 阶段小结）
+
+Phase 6 走到这里，①② 完成、④ 拆到 −55.3%，③ 需要一个决定。完整交接文档见
+[`phase6-handoff.md`](phase6-handoff.md)：包含
+
+- 28 个模块的清单与职责；
+- 拆分方法论（依赖注入工厂 / 依赖的四种类型 / 切块的机械注意点）；
+- 当前全部门禁状态与 7 条既有失败；
+- 下一步建议（继续拆、战役插件化、`EFFECTS` 三条路）。
+
+一句话总结这一阶段最贵的经验：**`replay --compare` 绿不等于没坏**——有 4 次是全绿但用例红
+（漏注入 `doInvestigate` / `doEvade`、`contentRegistry` 快照、`SCENARIOS` 副本）。
+拆 api 与动作层时，必须额外跑对应的验收用例。
+
