@@ -685,6 +685,19 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-12：弱点结算迁到能力层（02013 最终狂想曲、02015 噩梦来袭）----
+
+test('5a-12：02013 用弱点描述子的 resolve 揭示标记；02015 用条目标记横置支援', () => {
+  const entry = registeredEntry('02013')
+  const weakness = entry?.abilities?.find(ability => ability.kind === 'weakness')
+  assert.ok(weakness?.resolve, '弱点描述子带 resolve')
+  assert.equal(registeredEntry('02015')?.weaknessExhaustsAssets, true, '噩梦来袭的横置标记')
+
+  // 02013 的结算路径：引擎在 resolveWeakness 里优先走描述子 resolve（见 §4.59），
+  // 这里只验证描述子与标记都已注册（结算本身由 dunwich 验收用例守着）。
+  assert.equal(typeof weakness.resolve, 'function', 'resolve 是函数')
+})
+
 // ---- 5a-11：消防斧的提示来源 / 勘查额外行动（02032、02050）----
 
 test('5a-11：02032 与 02050 的卡号规则搬到 card-rules', () => {

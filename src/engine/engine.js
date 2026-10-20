@@ -2424,6 +2424,12 @@ function isThreatWeakness(code) {
 }
 
 function resolveWeakness(state, inv, def, events, texts) {
+  // Phase 5（5a-12）：弱点描述子可以带 resolve，优先走能力层；旧的数据体分支仍作为回退。
+  const weakDescriptor = descriptorOfKind(def.code, 'weakness')
+  if (weakDescriptor?.resolve) {
+    executeDescriptor(state, { inv, source: { code: def.code, id: def.code }, descriptor: weakDescriptor, events, silent: true })
+    return
+  }
   if (def.code === '02178') { scenarioRuntime(state, events).discardTop(inv.seat, 3); return }
   if (def.code === '02007') {
     let enemyCode = null
@@ -2454,15 +2460,6 @@ function resolveWeakness(state, inv, def, events, texts) {
     })
     const loc = state.locations.find(item => item.id === location)
     if (loc) { loc.searchingForIzzieSeat = inv.seat; info(state, events, `「寻找伊兹」附着于 ${loc.name}。`) }
-    return
-  }
-  if (def.code === '02013') {
-    beginChaosTest(state)
-    const tokens = Array.from({ length: Math.min(5, state.chaosBag.length) }, () => drawChaosToken(state))
-    endChaosTest(state, tokens)
-    const harm = tokens.filter(token => token === 'skull' || token === 'autofail').length
-    if (harm) applyHarm(state, inv, harm, harm, events)
-    info(state, events, `最终狂想曲揭示 ${tokens.map(tokenLabel).join('、')}；${inv.name} 受到 ${harm} 点伤害和 ${harm} 点恐惧。`)
     return
   }
   if (def.type === 'enemy') {
@@ -2665,7 +2662,8 @@ function resolveWeakness(state, inv, def, events, texts) {
     return
   }
   if (eff.weakness.type === 'threat') {
-    if (def.code === '02015') for (const asset of inv.assets) asset.exhausted = true
+    // Phase 5（5a-12）：「噩梦来袭」这类「入场时横置你所有支援」由条目级标记声明。
+    if (registeredEntry(def.code)?.weaknessExhaustsAssets) for (const asset of inv.assets) asset.exhausted = true
     if (def.type === 'asset') replaceAssets(state, inv, def, events)
     if (eff.weakness.clues != null) {
       inv.threat.push(newCardInstance(state, def.code, { counters: eff.weakness.clues }))
@@ -10824,6 +10822,13 @@ function abilityApi(state, events) {
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
     // Phase 5（5b-8）：技能名（「戴红手套的男子」的提示与日志要用）。
     skillName: skill => SKILL_NAMES[skill] || skill,
+    // Phase 5（5a-12）：「最终狂想曲」这类「一次性揭示 N 枚标记（不生成检定）」。
+    revealChaosTokens: count => {
+      beginChaosTest(state)
+      const tokens = Array.from({ length: Math.min(count, state.chaosBag.length) }, () => drawChaosToken(state))
+      endChaosTest(state, tokens)
+      return tokens
+    },
     // Phase 5（5b-8）：「戴红手套的男子」把两项技能的基础值提升为 6。
     setStatOverride: (card, skills) => {
       if (!card) return null
