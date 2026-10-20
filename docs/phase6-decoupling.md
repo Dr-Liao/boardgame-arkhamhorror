@@ -525,3 +525,55 @@ function abilityApi(state, events) {
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 1909 行**（12654 → 10745）。`abilityApi` 还剩约 400 行（表现层与杂项）。
+
+## 18. 6d-11：abilityApi 收尾（`api-misc.js`）· 装配函数成型
+
+### 18.1 本轮结果
+
+`abilityApi` 的**最后 409 行**全部搬进 `src/engine/api-misc.js`（通用动作、卡牌与地点信息、
+牌堆操作、若干状态标记）。`engine.js` 里的 `abilityApi` 现在只剩装配：
+
+```js
+function abilityApi(state, events) {
+  return {
+    ...createMiscApi(state, events, apiMiscDeps),
+    ...createTestApi(state, events, apiTestDeps),
+    ...createClueApi(state, events, apiClueDeps),
+    ...createEnemyApi(state, events, apiEnemyDeps),
+    ...createCardApi(state, events, apiDeps),
+  }
+}
+```
+
+从 979 行 / 179 个方法，变成了 **5 个域模块 + 5 行装配**。
+
+### 18.2 三个坑（都是本轮实际踩到的）
+
+1. **解构里不能写 thunk**：`const { doFight: (...args) => doFight(...args) } = deps` 是非法语法。
+   正确写法是先解构 `doFightRaw`，再在工厂体里包一层 `const doFight = (...args) => doFightRaw(...args)`。
+2. **切块边界不能按「下一个顶层声明」找**：`abilityApi` 之后紧跟的是 `payAbilityCost` 的**前导注释**，
+   按「下一个 function/const」扫描会把注释和残片一起吞进新模块，尾部出现孤立 `}`。
+   正确做法：显式以 `  }` + `}`（对象与函数的收尾）为边界，或切完后按行尾裁剪。
+3. **重复键要在同一个模块里保持相对顺序**：本轮搬走的 88 个方法里有 `cardName` / `cardTraits`
+   各出现两次（后写覆盖先写）。它们都在同一批，顺序天然保留；跨模块没有重复键（已程序化核对），
+   所以 spread 的先后不影响语义。
+
+### 18.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **10392**（6d-10 后 10745） |
+| `src/engine/moves.js` | 652 |
+| `src/engine/api-misc.js` | **470** |
+| `src/engine/combat.js` | 446 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 2262 行**（12654 → 10392，−17.9%）。下一步：`performTest`（782 行）→ `src/engine/tests.js`，
+然后 `scenarioRuntime`（317 行），最后进入战役插件化。
