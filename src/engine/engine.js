@@ -1995,10 +1995,14 @@ export function getStat(state, inv, skill, skipSubstitute) {
   return v
 }
 
+// Phase 5（5a-31）：丽塔的光环由条目级 auraWhileInPlay 声明；会让盟友文字空白化的威胁
+// 通过 BLANKS_TRAITS 判断（02088 就是「清除盟友文字」的那种）。
 function litaAuraAt(state, inv) {
   return state.investigators.some((i) => {
     if (i.location !== inv.location || i.defeated || i.resigned) return false
-    return i.assets.some((a) => a.code === '01117') && !i.threat.some(t => t.code === '02088')
+    const hasAura = i.assets.some((a) => registeredEntry(a.code)?.auraWhileInPlay)
+    const auraBlanked = i.threat.some((t) => blanksTraits(t.code).includes('ally'))
+    return hasAura && !auraBlanked
   })
 }
 
@@ -3106,7 +3110,8 @@ function playerWindow(state, timing, events, restrictedSeat = null) {
 }
 
 function tryAquinnahRedirect(state, enemy, inv, events, extraDamage = 0, extraHorror = 0) {
-  if (inv.threat.some(item => item.code === '02088')) return false
+  // Phase 5（5a-31）：会让盟友文字空白化的威胁用 BLANKS_TRAITS 判断。
+  if (inv.threat.some(item => blanksTraits(item.code).includes('ally'))) return false
   // Phase 5（5b-8）：「安奎娜」这类「横置并放 1 点恐惧，把这次攻击的伤害转给另一个敌人」由条目级标记声明。
   const aquinnah = inv.assets.find(asset => registeredEntry(asset.code)?.redirectAttackToAsset && !asset.exhausted)
   if (!aquinnah) return false
@@ -4985,7 +4990,7 @@ function runActReveal(state, act, events) {
     case 'revealParlor': {
       placeLocation(state, 'parlor', events)
       revealLocation(state, 'parlor', events)
-      spawnStoryAsset(state, '01117', 'parlor', events)
+      spawnStoryAsset(state, LITA_CHANDLER_CODE, 'parlor', events)
       const boss = spawnEnemy(state, 'ghoulPriest', 'hallway', null)
       if (boss) info(state, events, `👹 首领「${boss.name}」出现在「走廊」！`)
       break
@@ -9195,11 +9200,11 @@ function doParleyCultist(state, seat, enemyId, events) {
 
 function doParleyLita(state, seat, events) {
   const inv = state.investigators[seat]
-  const asset = state.storyAssets?.find(item => item.code === '01117'
+  const asset = state.storyAssets?.find(item => item.code === LITA_CHANDLER_CODE
     && item.controllerSeat == null && item.location === inv.location)
   if (!asset || scenarioBehavior(state).litaParleyActIndex !== state.actIndex) throw new Error('此处没有可谈判的丽塔')
   spendAction(state, inv)
-  return performTest(state, seat, 'intellect', 4, { source: { label: '谈判', name: '丽塔·钱德勒', code: '01117' }, resolve: r => {
+  return performTest(state, seat, 'intellect', 4, { source: { label: '谈判', name: '丽塔·钱德勒', code: LITA_CHANDLER_CODE }, resolve: r => {
     if (r.success) {
       while (!canEquip(inv, cardDef(asset.code))) {
         const allies = inv.assets.filter(item => normalizedSlots(cardDef(item.code)).includes('ally'))
@@ -9259,7 +9264,7 @@ function doInterruptRitual(state, seat, skill, events) {
 // 献祭丽塔（地底噬魔，结局 3）。
 function doSacrificeLita(state, seat, events) {
   const inv = state.investigators[seat]
-  const asset = inv.assets.find(item => item.code === '01117')
+  const asset = inv.assets.find(item => item.code === LITA_CHANDLER_CODE)
   if (!scenarioBehavior(state).sacrificeLita || !asset
       || !state.enemies.some(enemy => enemy.code === 'umordhoth' && enemy.location === inv.location)) {
     throw new Error('献祭需要本人控制丽塔并与乌默尔多斯位于同一地点')
@@ -9604,7 +9609,8 @@ function doInvestigate(state, seat, opts, events, noSpend) {
       // 「古代巨石」：成功时额外发现 1 个线索、弃置自身并记录鉴定难度。
       if (opts.ancientStone) {
         discoverClueAt(state, inv, 1, events)
-        const stone = inv.assets.find(asset => asset.code === '04022')
+        // Phase 5（5a-31）：「鉴定后弃置自身」的支援由条目级 identifiedStoneOnInvestigateSuccess 声明。
+        const stone = inv.assets.find(asset => registeredEntry(asset.code)?.identifiedStoneOnInvestigateSuccess)
         if (stone) { leaveAsset(state, inv, stone, events); inv.discard.push(stone.code) }
         state.campaign.records ||= {}
         state.campaign.records.identifiedTheAncientStone = r.value
@@ -12028,12 +12034,12 @@ function canParleyCultist(state, inv, cost) {
 
 function litaControlled(state, seat = null) {
   return state.investigators.some(inv => !inv.defeated && !inv.resigned
-    && (seat == null || inv.seat === seat) && inv.assets.some(asset => asset.code === '01117'))
+    && (seat == null || inv.seat === seat) && inv.assets.some(asset => asset.code === LITA_CHANDLER_CODE))
 }
 
 function litaUncontrolled(state, locationId = null) {
   return state.actIndex === scenarioBehavior(state).litaParleyActIndex && !litaControlled(state)
-    && (state.storyAssets || []).some(asset => asset.code === '01117' && asset.controllerSeat == null
+    && (state.storyAssets || []).some(asset => asset.code === LITA_CHANDLER_CODE && asset.controllerSeat == null
       && (locationId == null || asset.location === locationId))
 }
 
@@ -12277,7 +12283,7 @@ export function validateMove(state, seat, move) {
       const loc = state.locations.find((l) => l.id === inv.location)
       if (!loc || !loc.parley) return '这里不能谈判'
       if (!litaUncontrolled(state)) return '丽塔尚未入场或已被控制'
-      if (!(state.storyAssets || []).some(asset => asset.code === '01117' && asset.location === inv.location)) return '丽塔不在你所在的地点'
+      if (!(state.storyAssets || []).some(asset => asset.code === LITA_CHANDLER_CODE && asset.location === inv.location)) return '丽塔不在你所在的地点'
       return null
     }
     case 'drawCultist': {
@@ -12296,7 +12302,7 @@ export function validateMove(state, seat, move) {
       const boss = state.enemies.find(e => e.code === 'umordhoth')
       if (!boss) return '乌默尔多斯尚未降临'
       if (boss.location !== inv.location) return '乌默尔多斯不在你所在的地点'
-      if (!inv.assets.some(asset => asset.code === '01117')) return '你没有控制丽塔·钱德勒'
+      if (!inv.assets.some(asset => asset.code === LITA_CHANDLER_CODE)) return '你没有控制丽塔·钱德勒'
       return null
     }
     case 'breakDoor': {

@@ -686,6 +686,14 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-31：丽塔光环 / 古代巨石鉴定（01117、02088、04022）----
+
+test('5a-31：丽塔与古代巨石的判断都改成条目字段 / 规则数据', () => {
+  assert.equal(registeredEntry('01117')?.auraWhileInPlay, true, '丽塔的光环标记')
+  assert.equal(registeredEntry('04022')?.identifiedStoneOnInvestigateSuccess, true, '鉴定后弃置自身')
+  assert.deepEqual(blanksTraits('02088'), ['ally'], '02088 清空盟友文字（用于压制光环）')
+})
+
 // ---- 5a-30：古代巨石对（04230 / 04231）----
 
 test('5a-30：04230 / 04231 的抽牌后秘密行动在条目上', () => {
