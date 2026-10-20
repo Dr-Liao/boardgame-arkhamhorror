@@ -487,3 +487,41 @@ function abilityApi(state, events) {
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 1864 行**（12654 → 10790）。`abilityApi` 还剩约 470 行；下一批 `test 段`（82 行 / 16 依赖）。
+
+## 17. 6d-10：abilityApi 第四批（`api-test.js`）
+
+### 17.1 拆的是什么
+
+`abilityApi` 再切 **66 行**（`addTestValue` … `phaseTestBonus`）：一次技能检定期间的读取与修正——
+加值、重试、投入技能牌、查看/检索牌堆、描述限制与检定结果、成功后结算、阶段/待决加值。
+依赖 13 个。
+
+### 17.2 坑：切块时把「上一批的 spread 行」也包进来了
+
+上一批（6d-9）把 `...createClueApi(state, events, apiClueDeps),` 留在了 `abilityApi` 里，
+位置正好在本次要切的区间末尾。直接按行号切，这一行会被搬进 `api-test.js`，导致：
+
+- 新的模块里出现 `...createClueApi(...)`（未定义）；
+- `abilityApi` 少了这一行，上一批的方法整体消失。
+
+**做法**：切块前先 `indexOf("...createXxxApi(state, events, …),")` 找到既有 spread 行作为右边界，
+只切它**之前**的方法；spread 行留在原地，再加本批的新 spread。命名上让每批的 spread 行带自己的
+`apiXxxDeps`，用 `indexOf` 精确定位，比按行号靠谱。
+
+### 17.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **10745**（6d-9 后 10790） |
+| `src/engine/moves.js` | 652 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | **93** |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 1909 行**（12654 → 10745）。`abilityApi` 还剩约 400 行（表现层与杂项）。
