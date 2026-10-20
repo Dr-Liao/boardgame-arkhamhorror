@@ -3406,6 +3406,10 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   // 03148 埋伏 / 03199 陷阱：附属到地点，敌人入场时触发（读点在敌人入场与阶段收尾）。
   { code: '03148', ambushAttachment: true },
   { code: '03199', snareAttachment: true },
+  // 03232 捷径：附属到地点，提供「移动到相连地点」的行动（读点 3 处）。
+  { code: '03232', grantsShortcutMove: true },
+  // 04265 手铐：附属到非精英敌人，禁止放毁灭与重整（读点 2 处）。
+  { code: '04265', restrainsDoom: true, restrainsReady: true },
   // 03042 随行鬼影：在离承受者最远的地点生成（读点在 resolveWeakness 的敌人弱点段）。
   { code: '03042', weaknessSpawnsAtFarthestLocation: true },
   // 02138 / 02139 / 02179（远古遗物系列）：调查员被消除时离场并进弃牌堆。

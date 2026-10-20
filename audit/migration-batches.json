@@ -513,6 +513,10 @@
     "5a-27": [
       "03148",
       "03199"
+    ],
+    "5a-28": [
+      "03232",
+      "04265"
     ]
   },
   "note": "迁移批次账本：由 tools/migrate-card.mjs --write 追加机械迁移批次；manual 里是手写批次（5c 逃生卡改写，条目直接写在 src/cards/card-abilities.js 的 MIGRATED_ESCAPE_ENTRIES）。tools/migrate-card.mjs --verify 会校验每个批次的卡都离开旧 DSL 且已在能力层注册。",
@@ -586,6 +590,7 @@
     "5a-24",
     "5a-25",
     "5a-26",
-    "5a-27"
+    "5a-27",
+    "5a-28"
   ]
 }

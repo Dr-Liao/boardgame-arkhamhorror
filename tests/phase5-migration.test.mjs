@@ -10,7 +10,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
 import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine/engine.js'
-import { actPlacesLocationForEmptySpawn, blanksTraits, counterTreacheryCode, PALLID_MASK_CODE, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
+import { actPlacesLocationForEmptySpawn, blanksTraits, counterTreacheryCode, PALLID_MASK_CODE, relicDiscountLocation, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
   SMITE_THE_WICKED_CODE, SEARCHING_FOR_IZZIE_CODE, weaknessUpgradeCode, LITA_CHANDLER_CODE } from '../src/cards/card-rules.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
@@ -684,6 +684,16 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   const entry = registeredEntry('03010')
   assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
+
+// ---- 5a-28：捷径 / 手铐 / 地点遗物折扣（03232、04142、04265）----
+
+test('5a-28：三个码都改成条目字段或规则表', () => {
+  assert.equal(registeredEntry('03232')?.grantsShortcutMove, true, '捷径提供地点行动')
+  assert.equal(registeredEntry('04265')?.restrainsDoom, true, '手铐禁放毁灭')
+  assert.equal(registeredEntry('04265')?.restrainsReady, true, '手铐禁重整')
+  assert.equal(relicDiscountLocation('04142'), true, '04142 有遗物折扣')
+  assert.equal(relicDiscountLocation('01101'), false)
 })
 
 // ---- 5a-27：埋伏 / 陷阱 / 苍白面具 / 物品折扣 / 自动躲避（03059、03148、03149、03193、03199）----

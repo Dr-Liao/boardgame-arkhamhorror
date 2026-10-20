@@ -50,6 +50,7 @@ import {
   counterTreacheryCode,
   actPlacesLocationForEmptySpawn,
   PALLID_MASK_CODE,
+  relicDiscountLocation,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -5485,7 +5486,8 @@ function checkAgendaForcedEnemyDefeated(state, enemy, events) {
 // 「手铐」（04265）在这里拦住非精英敌人的毁灭。
 function placeDoomOnCard(state, card, amount, events, options = {}) {
   if (!card || !(amount > 0)) return 0
-  const cuffed = (card.attachments || []).some(attachment => (attachment.originalCode || attachment.code) === '04265')
+  // Phase 5（5a-28）：「手铐」这类禁止放毁灭的附属由条目级 restrainsDoom 声明。
+  const cuffed = (card.attachments || []).some(attachment => registeredEntry(attachment.originalCode || attachment.code)?.restrainsDoom)
   if (cuffed && !card.elite) {
     if (options.silent !== true) {
       info(state, events, `🔒 「${card.name || cardName(card.code)}」被手铐铐住，不能在其上放置毁灭。`)
@@ -5784,7 +5786,7 @@ function upkeepPhase(state) {
     } else if (enemy.preventReady && enemy.preventReady.from + enemy.preventReady.rounds > state.round) {
       // 「悄然遁去」等：下个补给阶段不重整。
       continue
-    } else if (enemy.attachments?.some(entry => entry.code === '04265') && !enemy.elite) {
+    } else if (enemy.attachments?.some(entry => registeredEntry(entry.code)?.restrainsReady) && !enemy.elite) {
       // 「手铐」：附属的非精英敌人不能重整。
       continue
     } else enemy.exhausted = false
@@ -9336,8 +9338,9 @@ function doPurgeThreat(state, seat, threatId, events) {
 
 function doShortcutMove(state, seat, move, events) {
   const inv = state.investigators[seat]
+  // Phase 5（5a-28）：「捷径」这类提供地点行动的附属由条目级 grantsShortcutMove 声明。
   const attachment = (state.playerLocationAttachments || []).find(item =>
-    item.code === '03232' && item.location === inv.location && !item.exhausted)
+    registeredEntry(item.code)?.grantsShortcutMove && item.location === inv.location && !item.exhausted)
   if (!attachment) return
   attachment.exhausted = true
   relocateInvestigator(state, seat, move.locationId, events,
@@ -11563,7 +11566,7 @@ export function legalMoves(state, observerSeat) {
     move.locationId || move.scriptCard ? move : { ...move, locationId: inv.location }))
   moves.push(...(scenarioBehavior(state).encounterActions?.(state, inv) || []).filter(move => !move.reason))
   for (const attachment of state.playerLocationAttachments || []) {
-    if (attachment.code !== '03232' || attachment.location !== inv.location || attachment.exhausted) continue
+    if (!registeredEntry(attachment.code)?.grantsShortcutMove || attachment.location !== inv.location || attachment.exhausted) continue
     for (const destination of new Set(loc?.connections || [])) {
       if (!locationExists(state, destination) || investigatorEntryError(state, destination)) continue
       moves.push({ action: 'shortcutMove', locationId: destination,
@@ -11914,7 +11917,7 @@ function playCost(state, inv, def) {
   const loc = state.locations.find(location => location.id === inv.location)
   const locationIncrease = loc?.playCostIncrease || 0
   // 04142 珍品店：位于此处时打出每个 [[遗物]] 支援的费用 -2。
-  const relicDiscount = loc && ['04142'].includes(String(loc.originalCode || loc.code))
+  const relicDiscount = loc && relicDiscountLocation(loc.originalCode || loc.code)
     && def.type === 'asset' && (def.traits || []).some(trait => String(trait).toLowerCase() === 'relic') ? 2 : 0
   const charles = itemDiscountAtLocation(state, inv, def)
   // 能力层修正：例如 03142「黑玛瑙扣环」在手牌中时其他手牌 +1 费用（负数为折扣）。
@@ -12326,7 +12329,7 @@ export function validateMove(state, seat, move) {
     case 'shortcutMove': {
       const loc = state.locations.find((l) => l.id === inv.location)
       const attachment = (state.playerLocationAttachments || []).find(item =>
-        item.code === '03232' && item.location === inv.location && !item.exhausted)
+        registeredEntry(item.code)?.grantsShortcutMove && item.location === inv.location && !item.exhausted)
       if (!attachment) return '这里没有可用的「捷径」'
       if (!loc || !loc.connections.includes(move.locationId)) return '不能移动到该地点'
       return movementError(state, inv) || investigatorEntryError(state, move.locationId)

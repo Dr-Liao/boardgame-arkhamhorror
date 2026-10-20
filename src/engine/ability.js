@@ -187,6 +187,10 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // Phase 5（5a-27）：附属触发型（埋伏 / 陷阱）。
   'ambushAttachment',
   'snareAttachment',
+  // Phase 5（5a-28）：附属提供地点行动（捷径）/ 禁放毁灭 / 禁重整（手铐）。
+  'grantsShortcutMove',
+  'restrainsDoom',
+  'restrainsReady',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -437,6 +441,9 @@ export function registerCardAbilities(entries) {
       grantsHidingSpot: entry.grantsHidingSpot === true,
       ambushAttachment: entry.ambushAttachment === true,
       snareAttachment: entry.snareAttachment === true,
+      grantsShortcutMove: entry.grantsShortcutMove === true,
+      restrainsDoom: entry.restrainsDoom === true,
+      restrainsReady: entry.restrainsReady === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,
