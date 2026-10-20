@@ -810,3 +810,72 @@ engine 侧用惰性装配保留原调用点（这三个函数被多个依赖表�
 | `src/cards/player-effects.js` | 320 |
 
 累计迁出 **约 3823 行**（12654 → 8831，−30.2%）。
+
+## 24. 6d-17：拆出 campaign-flow.js（关间 / 重开 / 结局 / 创伤）
+
+### 24.1 拆的是什么
+
+六个函数（共 199 行，32 项依赖）搬进 `src/engine/campaign-flow.js`：
+
+| 函数 | 行数 | 职责 |
+| --- | --- | --- |
+| `progressCampaign` | 39 | 按战役图推进到下一关 |
+| `restartScenario` | 16 | 重开当前关卡 |
+| `finishScenario` | 77 | 结算一关（胜利/失败、记录、经验） |
+| `applyResolutionEffects` | 48 | 结算结局条目（含剧情盟友、创伤） |
+| `addTrauma` / `applyDefeatTrauma` | 7 / 12 | 创伤簿记（败退、撤退、弱点） |
+
+与 `scenario-runtime` 的分工：那边是剧本**进行中**的接口，这边是剧本**之间**的簿记。
+
+### 24.2 坑：const 解构会 TDZ
+
+第一版在文件末尾写：
+
+```js
+const campaignFlow = createCampaignFlow({ … })
+const { progressCampaign, finishScenario, addTrauma, … } = campaignFlow
+```
+
+结果 `ReferenceError: Cannot access 'addTrauma' before initialization`——因为 `addTrauma` 被更早的
+依赖表（`ability-exec` 等）在模块顶层引用。
+
+解法：同 `performTest` —— 函数声明 + 惰性装配：
+
+```js
+let campaignFlowImpl = null
+function campaignFlowApi() { campaignFlowImpl ||= createCampaignFlow({ … }); return campaignFlowImpl }
+function addTrauma(...args) { return campaignFlowApi().addTrauma(...args) }
+```
+
+**规律**：只要一个函数可能出现在「模块顶层立即求值的依赖表」里，就必须用函数声明（hoisted）而不是
+`const` 解构。
+
+### 24.3 顺带发现：`campaign-n4` 有一批**存量失败**（与本轮无关）
+
+跑 `tests/campaign-n4.test.mjs` 有 8 条红（`N4 合法战役失败流程 1人/easy…`、`N4 同次伤害恐惧…`）。
+`git stash` 验证：**改动前同样红**。它们不在 fast tier 里，所以一直没暴露。
+本轮不处理（属于 N4 战役流程的独立问题），已在此记录，避免下次误判为本轮引入。
+
+### 24.4 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **8671**（6d-16 后 8831） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/ability-exec.js` | 369 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/campaign-flow.js` | **252** |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 3983 行**（12654 → 8671，−31.5%）。
