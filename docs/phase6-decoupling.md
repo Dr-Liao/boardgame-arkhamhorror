@@ -940,3 +940,70 @@ engine.js 里 `import { contentRegistry }` 是 ESM **live binding**，永远看�
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 4373 行**（12654 → 8281，−34.6%）。
+
+## 26. 6d-19：拆出 dispatch.js（行动分派层）
+
+### 26.1 拆的是什么
+
+五个函数（共 326 行，93 项依赖——依赖最多的一块）：
+
+```
+applyMove → executeCommand →（关间？executeHubMove ：applyAction）
+                             ↓
+                        executeAction → 具体 do*（doPlay / doFight / doInvestigate …）
+applyMoveUnchecked（绕过校验的执行入口，供测试与回放）
+```
+
+它本身不含规则，只做「校验通过后分发」与「动作级事件的统一记录」。
+拆开后 engine.js 顶层只剩：状态机（阶段）、各个 `do*`、能力层 api。
+
+### 26.2 坑：模块级可变状态不能用依赖注入
+
+第一版把 `currentActionKind`（engine 里是 `let currentActionKind = null`）当普通依赖传进去，
+运行时报：
+
+```
+Assignment to constant variable.
+```
+
+原因：解构出来的是 `const`，而分派层需要**写**这个变量（借机攻击判定用）。而且即便改成 `let`，
+写入的也是本地副本，engine 看不到——**行为会静默错**。
+
+修法：注入**取值/赋值函数**：
+
+```js
+// engine.js → createDispatch deps
+getCurrentActionKind: () => currentActionKind,
+setCurrentActionKind: value => { currentActionKind = value },
+```
+
+> 通用规律（§26.2 与 §25.2 是同一族问题）：
+> - **可重新赋值的模块绑定**（`contentRegistry`）→ 用 `import` live binding，不注入；
+> - **可变的模块级 `let` 状态**（`currentActionKind`）→ 注入 getter/setter，不注入值；
+> - **常量对象**（`EFFECTS` / `ALL_CARDS`）→ 可安全注入。
+
+### 26.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **8059**（6d-18 后 8281） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/setup.js` | 578 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/dispatch.js` | **436** |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/ability-exec.js` | 369 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/campaign-flow.js` | 252 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 4595 行**（12654 → 8059，−36.3%）。
