@@ -3152,6 +3152,8 @@ export const MIGRATED_ESCAPE_ENTRIES_5C36 = [
   // 03311 时间曲折：把一个动作的结算完全回滚（保留自己的手牌/资源/弃牌堆）。
   {
     code: '03311',
+    // 手上或附属在计划里时，动作前要留一份回滚快照（读点在 executeAction）。
+    rewindAction: true,
     abilities: [{
       kind: 'played', fast: true, trigger: 'actionResolvedAtLocation',
       label: '回滚上一个动作',
@@ -3245,12 +3247,50 @@ export const MIGRATED_ESCAPE_ENTRIES_5C38 = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// 5c-39：把事件附属到支援上并从那里打出（原定计划）
+// ---------------------------------------------------------------------------
+
+export const MIGRATED_ESCAPE_ENTRIES_5C39 = [
+  // 03264 原定计划：永久支援；开局从牌库挑最多 3 张「战术/补给」事件附属到它上面，
+  // 之后这些牌可以像手牌一样打出（读点见 doPlay / legalMoves / validateMove 的 cardPlan）。
+  {
+    code: '03264', cardPlan: true, passive: { permanent: true },
+    abilities: [{
+      kind: 'setup', label: '开局：从牌库附属最多 3 张战术/补给事件',
+      resolve: ({ inv, source, api }) => {
+        if (!source) return
+        source.attached ||= []
+        const selectedNames = new Set()
+        while ((source.attached || []).length < 3) {
+          const candidates = inv.deck.map((code, index) => ({ code, index }))
+            .filter(item => api.cardType(item.code) === 'event'
+              && api.cardTraits(item.code).some(trait => trait === 'tactic' || trait === 'supply')
+              && !selectedNames.has(api.cardName(item.code)))
+          if (!candidates.length) break
+          const answer = api.choice({ kind: 'card', source: '03264', seat: inv.seat, canSkip: true,
+            prompt: `选择附属到「原定计划」的事件（还可选择 ${3 - (source.attached || []).length} 张）。`,
+            options: [{ id: 'done', label: '完成' },
+              ...candidates.map(item => ({ id: String(item.index), cardCode: item.code, label: api.cardName(item.code) }))] })
+          if (answer === 'done') break
+          const picked = candidates.find(item => item.index === Number(answer))
+          if (!picked) break
+          api.attachToHostByCode(source, picked.code)
+          selectedNames.add(api.cardName(picked.code))
+        }
+        api.shuffleDeck(inv.seat)
+        api.info(`${inv.name} 将 ${(source.attached || []).length} 张事件附属到「原定计划」。`)
+      },
+    }],
+  },
+]
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, ...MIGRATED_ESCAPE_ENTRIES_5C35, ...MIGRATED_ESCAPE_ENTRIES_5C36, ...MIGRATED_ESCAPE_ENTRIES_5C37, ...MIGRATED_ESCAPE_ENTRIES_5C38, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, ...MIGRATED_ESCAPE_ENTRIES_5C35, ...MIGRATED_ESCAPE_ENTRIES_5C36, ...MIGRATED_ESCAPE_ENTRIES_5C37, ...MIGRATED_ESCAPE_ENTRIES_5C38, ...MIGRATED_ESCAPE_ENTRIES_5C39, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -3309,4 +3349,5 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_ESCAPE_ENTRIES_5C36.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C37.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C38.map(entry => entry.code),
+  ...MIGRATED_ESCAPE_ENTRIES_5C39.map(entry => entry.code),
 ])

@@ -28,6 +28,8 @@ const sorted = values => [...values].sort()
 // 描述子的 kind 是规则模型的一部分：加新 kind 必须同时改文档与这里。
 // Phase 1 在 played / commit 之外补齐了三个生命周期钩子：weakness / entersPlay / leavesPlay。
 const FROZEN_KINDS = ['action', 'free', 'reaction', 'forced', 'constant', 'elderSign',
+  // Phase 5（5c-39）：开局效果（「原定计划」）——新增 kind 需要同步更新文档与本用例。
+  'setup',
   'played', 'commit', 'weakness', 'entersPlay', 'leavesPlay']
 
 const data = await collect()
@@ -57,7 +59,7 @@ test('EFFECTS 键集合与白名单一致（只减不增）', () => {
     `白名单里有 ${removed.length} 个 EFFECTS 条目已被删除：请重跑 node tools/audit-abilities.mjs --write。`)
 })
 
-test('描述子 kind 冻结在 11 种', () => {
+test('描述子 kind 冻结在 12 种', () => {
   assert.deepEqual(data.abilityKinds, FROZEN_KINDS,
     'ABILITY_KINDS 变了：新增 kind 需要先更新 docs/architecture-refactor-roadmap.md §4、'
     + 'docs/card-model.md §3 与本用例')

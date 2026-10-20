@@ -5,7 +5,7 @@
     "engineCodes": {
       "batch": "5a",
       "reason": "engine.js 里出现的 5 位码（分支、特判或注释引用），迁一个删一个白名单条目",
-      "count": 107,
+      "count": 105,
       "codes": [
         "01000",
         "01007",
@@ -88,10 +88,8 @@
         "03199",
         "03232",
         "03238",
-        "03264",
         "03304",
         "03308",
-        "03311",
         "04001",
         "04004",
         "04020",
@@ -131,13 +129,9 @@
     "escapeCards": {
       "batch": "5c",
       "reason": "用战役逃生原语表达的卡，需要先补表达力再改写",
-      "count": 1,
-      "byPrimitive": {
-        "carcosaPlayer": 1
-      },
-      "codes": [
-        "03264"
-      ]
+      "count": 0,
+      "byPrimitive": {},
+      "codes": []
     },
     "hybridCards": {
       "batch": "5b",

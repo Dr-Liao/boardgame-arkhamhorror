@@ -684,6 +684,28 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-39：把事件附属到支援上并从那里打出（03264 原定计划）----
+
+test('5c-39：03264 原定计划的附属事件能像手牌一样打出（cardPlan 读点）', () => {
+  const entry = registeredEntry('03264')
+  assert.equal(entry?.cardPlan, true, '条目声明「附属区的牌可以打出」')
+  assert.equal(entry?.passive?.permanent, true, '永久支援')
+  assert.ok(entry?.abilities?.some(ability => ability.kind === 'setup' && typeof ability.resolve === 'function'),
+    '开局效果是 setup 描述子')
+
+  const state = fixture()
+  state.investigators[0].resources = 30
+  const plan = asset(state, '03264', { attached: ['01013'] })
+  const choice = legalMoves(state).find(command => command.action === 'play' && command.fromPlanAssetId === plan.id)
+  assert.ok(choice, '附属区的事件出现在合法动作里')
+  assert.equal(validateMove(state, 0, choice), null, '动作校验通过')
+  move(state, choice)
+  settle(state)
+  const live = state.investigators[0].assets.find(item => item.id === plan.id)
+  assert.deepEqual(live?.attached ?? [], [], '打出的牌离开附属区')
+  assert.ok(state.investigators[0].discard.includes('01013'), '进入弃牌堆')
+})
+
 // ---- 5c-38：复制弃牌堆的洞察事件（03306 遗觉记忆）----
 
 test('5c-38：03306 遗觉记忆复制弃牌堆的洞察事件（付费用、移出游戏、重放）', () => {

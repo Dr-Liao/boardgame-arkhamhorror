@@ -48,6 +48,8 @@ import { NUMERIC_COST_KEYS, validateCostValue } from './cost.js'
 export { describeLimit, limitKey, limitUsed, markLimitUsed } from './limits.js'
 
 export const ABILITY_KINDS = Object.freeze(['action', 'free', 'reaction', 'forced', 'constant', 'elderSign',
+  // Phase 5（5c-39）：开局效果（「原定计划」），只在 setup 阶段跑一次。
+  'setup',
   'played', 'commit', 'weakness', 'entersPlay', 'leavesPlay'])
 
 // Phase 3（D1）：条目的作用域。'card' / 'investigator' 是玩家侧通道（叙述见文件头）；
@@ -75,7 +77,7 @@ const KINDS_NEEDING_PAYLOAD = Object.freeze({
 const LIFECYCLE_KINDS = new Set(Object.keys(KINDS_NEEDING_PAYLOAD))
 // Phase 5（5c-19）：这两个生命周期钩子允许「只带 resolve」——效果 DSL 表达不了时由 resolve 接管，
 // 读点仍是 lifecycle 的 playedEffect / entersPlayEffect，引擎侧没有第二条路径。
-const LIFECYCLE_RESOLVE_KINDS = new Set(['played', 'entersPlay'])
+const LIFECYCLE_RESOLVE_KINDS = new Set(['played', 'entersPlay', 'setup'])
 const COST_KEYS = new Set(['action', 'exhaust', 'uses', 'resources', 'clues', 'discardSelf',
   'exileSelf', 'horror', 'damageSelf', 'assetDamage', 'discardHand', 'discardHandIcon',
   // Phase 5（5b-6）：旧式反应的「花 1 线索但放回地点」费用（02302 马莱森博士）。
@@ -134,6 +136,10 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'substituteSealedToken',
   // Phase 5（5c-34）：这张支援的 attachedCards 可以当作手牌打出（背包）。读点见 doPlay / legalMoves / validateMove。
   'cardBackpack',
+  // Phase 5（5c-39）：这张支援的 attached 可以当作手牌打出（原定计划）；读点同 cardBackpack。
+  'cardPlan',
+  // Phase 5（5c-39）：手上有（或附属在计划里）这张牌时，动作前要留时间曲折快照。
+  'rewindAction',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -351,6 +357,9 @@ export function registerCardAbilities(entries) {
       substituteSealedToken: entry.substituteSealedToken === true,
       // Phase 5（5c-34）：attachedCards 可以当手牌打出（背包）。
       cardBackpack: entry.cardBackpack === true,
+      // Phase 5（5c-39）：attached 可以当手牌打出（原定计划）与「动作前留回滚快照」。
+      cardPlan: entry.cardPlan === true,
+      rewindAction: entry.rewindAction === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

@@ -781,8 +781,15 @@ function prepareInvestigator(state, inv, events, startLocation) {
     if (cardDef(code)?.type === 'treachery') inv.threat.push(card)
     else inv.assets.push(card)
     inv.resources = Math.max(0, inv.resources + (EFFECTS[code]?.startingResources || 0))
-    const setup = EFFECTS[code]?.setup
-    if (setup) carcosaPlayerEffect(state, inv.seat, { ...setup, assetId: card.id }, events)
+    // Phase 5（5c-39）：「原定计划」这类开局效果改成描述子（kind: 'setup'）；
+    // 旧的数据体 setup 仍是回退路径，保证未迁移的卡不受影响。
+    const setupDescriptor = descriptorOfKind(code, 'setup')
+    if (setupDescriptor?.resolve) {
+      executeDescriptor(state, { inv, source: card, descriptor: setupDescriptor, events, silent: true })
+    } else {
+      const setup = EFFECTS[code]?.setup
+      if (setup) carcosaPlayerEffect(state, inv.seat, { ...setup, assetId: card.id }, events)
+    }
   }
   drawOpeningHand(state, inv)
   // 幕间留下的下一场修正（原卡：配给不足 → 起始资源 -3，水壶 → 起始线索 +1）。
@@ -2840,7 +2847,7 @@ function reactionWindow(state, when, context, events) {
             ? [{ code, copyCode, index, id: `${index}:${copyCode}` }] : []
         })
         : [{ code, index, id: String(index) }])
-      const planCandidates = inv.assets.filter(asset => asset.code === '03264' && !asset.exhausted)
+      const planCandidates = inv.assets.filter(asset => registeredEntry(asset.code)?.cardPlan && !asset.exhausted)
         .flatMap(asset => (asset.attached || []).map((code, index) =>
           ({ code, index, fromPlanAssetId: asset.id, id: `plan:${asset.id}:${index}` })))
       const candidates = [...handCandidates,
@@ -2931,7 +2938,7 @@ function consumePlayThreatResources(state, inv, events) {
 }
 
 function playReactionCard(state, inv, index, context, events, fromDiscard = false, copyCode = null, fromPlanAssetId = null) {
-  const plan = fromPlanAssetId && inv.assets.find(asset => asset.id === fromPlanAssetId && asset.code === '03264')
+  const plan = fromPlanAssetId && inv.assets.find(asset => asset.id === fromPlanAssetId && registeredEntry(asset.code)?.cardPlan)
   const code = plan ? plan.attached.splice(index, 1)[0]
     : fromDiscard ? inv.discard.splice(inv.discard.lastIndexOf(topDiscardEvent(state, inv)), 1)[0] : inv.hand.splice(index, 1)[0]
   if (plan) plan.exhausted = true
@@ -7026,32 +7033,6 @@ function chooseEnemyFrom(state, seat, candidates, source) {
 function carcosaPlayerEffect(state, seat, effect, events) {
   const inv = state.investigators[seat]
   const asset = effect.assetId && inv.assets.find(item => item.id === effect.assetId)
-  if (effect.action === 'stickToThePlan') {
-    if (!asset) return
-    asset.attached ||= []
-    const selectedNames = new Set()
-    while (asset.attached.length < 3) {
-      const candidates = inv.deck.map((code, index) => ({ code, index, def: cardDef(code) }))
-        .filter(({ def }) => def?.type === 'event'
-          && (def.traits || []).some(trait => ['tactic', 'supply'].includes(String(trait).toLowerCase()))
-          && !selectedNames.has(def.name))
-      if (!candidates.length) break
-      const answer = requestChoice(state, {
-        kind: 'card', source: '03264', seat, canSkip: true,
-        prompt: `选择附属到「原定计划」的事件（还可选择 ${3 - asset.attached.length} 张）。`,
-        options: [{ id: 'done', label: '完成' },
-          ...candidates.map(item => ({ id: String(item.index), cardCode: item.code, label: cardName(item.code) }))],
-      })
-      if (answer === 'done') break
-      const picked = candidates.find(item => item.index === Number(answer))
-      if (!picked) break
-      asset.attached.push(inv.deck.splice(picked.index, 1)[0])
-      selectedNames.add(picked.def.name)
-    }
-    inv.deck = shuffle(inv.deck, () => randomValue(state))
-    info(state, events, `${inv.name} 将 ${asset.attached.length} 张事件附属到「原定计划」。`)
-    return
-  }
   throw new Error(`未实现的卡尔克萨玩家卡效果：${effect.action}`)
 }
 
@@ -8420,9 +8401,10 @@ function executeAction(state, seat, move, events) {
     return
   }
   const inv = state.investigators[seat]
+  // Phase 5（5c-39）：谁能回滚这个动作由条目级 rewindAction 决定（手上或附属区里都算）。
   const needsTimeWarpSnapshot = !['endTurn', 'setup', 'interlude'].includes(move.action)
-    && aliveInvestigators(state).some(owner => owner.hand.includes('03311')
-      || owner.assets.some(asset => asset.code === '03264' && (asset.attached || []).includes('03311')))
+    && aliveInvestigators(state).some(owner => owner.hand.some(code => registeredEntry(code)?.rewindAction === true)
+      || owner.assets.some(asset => (asset.attached || []).some(code => registeredEntry(code)?.rewindAction === true)))
   const actionSnapshot = needsTimeWarpSnapshot
     ? structuredClone({ ...state, _resolution: null, pendingChoice: null, legalMoves: [], lastActionSnapshot: null }) : null
   const totalCost = actionCost(state, inv, move, false)
@@ -8905,7 +8887,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     return
   }
   const plan = fromPlanAssetId && inv.assets.find(asset =>
-    asset.id === fromPlanAssetId && asset.code === '03264' && !asset.exhausted && asset.attached?.includes(cardId))
+    asset.id === fromPlanAssetId && registeredEntry(asset.code)?.cardPlan && !asset.exhausted && asset.attached?.includes(cardId))
   if (plan) {
     plan.attached.splice(plan.attached.indexOf(cardId), 1)
     plan.exhausted = true
@@ -10832,6 +10814,19 @@ function abilityApi(state, events) {
     assetsCannotReady: inv => assetsCannotReady(inv),
     searchTop: (seat, options) => searchTop(state, seat, options, events),
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
+    // Phase 5（5c-39）：「原定计划」把牌放进 attached（不是 attachments），并能从那里面打出。
+    attachedCodes: host => (host?.attached || []).slice(),
+    attachToHostByCode: (host, code) => {
+      if (!host) return false
+      const owner = state.investigators.find(person => (person.deck || []).includes(code))
+      if (!owner) return false
+      const index = owner.deck.indexOf(code)
+      if (index < 0) return false
+      owner.deck.splice(index, 1)
+      host.attached ||= []
+      host.attached.push(code)
+      return true
+    },
     // Phase 5（5c-38）：「遗觉记忆」——所有弃牌堆里的候选、复制的费用、移出游戏、重放被复制的事件。
     discardPiles: () => state.investigators.flatMap(owner => (owner.discard || [])
       .map(code => ({ code, seat: owner.seat }))),
@@ -11569,7 +11564,7 @@ export function legalMoves(state, observerSeat) {
     }
   }
 
-  for (const plan of inv.assets.filter(asset => asset.code === '03264' && !asset.exhausted)) {
+  for (const plan of inv.assets.filter(asset => registeredEntry(asset.code)?.cardPlan && !asset.exhausted)) {
     for (const code of unique(plan.attached || [])) {
       const def = cardDef(code)
       if (!def || def.type !== 'event' || playAccess(code).reactionOnly || blocked.has(def.type)
@@ -12130,7 +12125,7 @@ export function validateMove(state, seat, move) {
         if (!playAccess(move.cardId).fromDiscard
           && (def.type !== 'event' || topDiscardEvent(state, inv) !== move.cardId)) return '不是弃牌堆中最上方的事件'
       } else if (move.fromPlanAssetId) {
-        const plan = inv.assets.find(asset => asset.id === move.fromPlanAssetId && asset.code === '03264')
+        const plan = inv.assets.find(asset => asset.id === move.fromPlanAssetId && registeredEntry(asset.code)?.cardPlan)
         if (!plan || plan.exhausted || !plan.attached?.includes(move.cardId) || def.type !== 'event') return '原定计划下没有可打出的这张事件'
       } else if (move.fromBackpackId) {
         const bag = inv.assets.find(asset => asset.id === move.fromBackpackId && registeredEntry(asset.code)?.cardBackpack)

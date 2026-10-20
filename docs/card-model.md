@@ -73,6 +73,7 @@
 | **`weakness`** | 弱点揭示 | — | `lifecycle.weaknessProfile(code)` | `weakness`；可加 `resolve` 自定义结算 |
 | **`entersPlay`** | 支援放置入场 | — | `lifecycle.entersPlayEffect(code)` | `entersPlay`（效果 DSL） |
 | **`leavesPlay`** | 支援离开场上 | — | `lifecycle.leavesPlayEffect(code)` | `leavesPlay`（效果 DSL） |
+| **`setup`** | 开局效果（永久卡，如「原定计划」） | — | 引擎开局循环的 `descriptorOfKind(code, 'setup')` | `EFFECTS[code].setup`（效果 DSL，回退路径） |
 
 **五个生命周期钩子**替代旧的 `EFFECTS[code].event` / `.skill` / `.weakness` / `.onEnter` 与引擎内联的
 离场特判。它们不带 `trigger`，也不产生牌桌按钮；读点函数在描述子缺失时回落到 `EFFECTS`，因此
