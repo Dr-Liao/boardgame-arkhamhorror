@@ -684,6 +684,21 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-26：先选敌人再按指定技能躲避（03268 暗示）----
+
+test('5c-26：03268 暗示用意志躲避交战敌人（旧原语一用就抛错的路径）', () => {
+  const state = fixture()
+  const card = asset(state, '03268')
+  const target = enemy(state, { engagedSeat: 0, fight: 1, evade: 1, health: 10 })
+  state.chaosBag = ['0']
+  use(state, card)
+  assert.equal(state.pendingChoice?.kind, 'target', '先选敌人（与 effectError 同一份 abilityTargets）')
+  answer(state, target.id)
+  settle(state)
+  assert.equal(state.enemies.find(item => item.id === target.id)?.exhausted, true, '躲避成功横置敌人')
+  assert.equal(state.investigators[0].assets.find(item => item.id === card.id)?.exhausted, true, '横置支付费用')
+})
+
 // ---- 5c-25：检定 + 「本局一次」标记（04191 古代遗物）----
 
 test('5c-25：04191 古代遗物成功移除密谋毁灭，且每局只生效一次', () => {

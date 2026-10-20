@@ -5,7 +5,7 @@
     "engineCodes": 116,
     "effectsEntries": 82,
     "effectsTopLevelFields": 45,
-    "escapeCards": 19,
+    "escapeCards": 18,
     "descriptorEntries": 381,
     "descriptorAbilities": 322,
     "abilityKinds": 11,
@@ -16,11 +16,11 @@
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 377,
+    "descriptor": 378,
     "legacy": 59,
     "engine": 5,
     "hybrid": 1,
-    "escape": 19
+    "escape": 18
   },
   "nonPlayer": {
     "byScope": {
@@ -1800,11 +1800,8 @@
     },
     {
       "code": "03268",
-      "channel": "escape",
-      "descriptors": 2,
-      "escapePrimitives": [
-        "carcosaPlayer"
-      ]
+      "channel": "descriptor",
+      "descriptors": 2
     },
     {
       "code": "03269",

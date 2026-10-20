@@ -140,10 +140,10 @@
     "escapeCards": {
       "batch": "5c",
       "reason": "用战役逃生原语表达的卡，需要先补表达力再改写",
-      "count": 19,
+      "count": 18,
       "byPrimitive": {
         "carcosaInvestigator": 4,
-        "carcosaPlayer": 10,
+        "carcosaPlayer": 9,
         "tfaPlayer": 5
       },
       "codes": [
@@ -156,7 +156,6 @@
         "03149",
         "03189",
         "03264",
-        "03268",
         "03304",
         "03306",
         "03310",

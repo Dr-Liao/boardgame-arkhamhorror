@@ -7077,11 +7077,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     else inv.itemDiscountAtLocation = { amount: 1, round: state.round, phase: state.phase }
     return
   }
-  if (effect.action === 'suggestionEvade') {
-    doEvade(state, seat, { enemyId: chooseEnemy(state, seat, {}).id,
-      addSkill: 'willpower', suggestionAssetId: asset?.id }, events, true)
-    return
-  }
   if (effect.action === 'eatLead') {
     const context = state._reaction?.context || state._reaction || null
     const firearm = (context?.assetId && inv.assets.find(item => item.id === context.assetId))
@@ -10732,6 +10727,9 @@ function abilityApi(state, events) {
       location.clues = (location.clues || 0) + amount
       return amount
     },
+    // Phase 5（5c-26）：「暗示」这类「先选敌人、再按某个技能躲避」的能力。
+    // 与 effectError / validateMove 共用同一份 abilityTargets（旧实现就是 chooseEnemy）。
+    chooseEnemy: (seat, effect = {}) => chooseEnemy(state, seat, effect),
     // Phase 5（5c-25）：调查员级的「本局一次」标记（读点就是 inv.gameFlags，随存档往返）。
     gameFlag: (seat, key) => Boolean(state.investigators[seat]?.gameFlags?.[key]),
     setGameFlag: (seat, key, value = true) => {
