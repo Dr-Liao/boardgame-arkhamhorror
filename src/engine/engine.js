@@ -4120,7 +4120,7 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
 
   state.skillTest.stage = 'ST.5'
   if (typeof options.skillBonus === 'function') value += options.skillBonus() - initialBonus
-  const rexCurse = inv.threat.find(item => item.code === '02009')
+  const rexCurse = inv.threat.find(item => registeredEntry(item.code)?.rerollRevealedTokenOnSuccess)
   if (rexCurse && !autoFail && (elderAutoSuccess || value + delta >= difficulty) && drawn.length) {
     const oldToken = drawn.pop()
     returnChaosToken(state, state.chaos.revealed.includes(oldToken) ? oldToken : state.chaos.revealed.at(-1))
@@ -4152,7 +4152,8 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
     }
     if (autoFail || (!elderAutoSuccess && value + delta < difficulty)) {
       removeOne(inv.threat, rexCurse)
-      inv.deck = shuffle([...inv.deck, '02009'], () => randomValue(state))
+      // Phase 5（5a-9）：卡号来自正在结算的那张威胁卡本身。
+      inv.deck = shuffle([...inv.deck, rexCurse.code], () => randomValue(state))
       info(state, events, `「雷克斯的诅咒」令检定失败，洗回 ${inv.name} 的牌库。`)
     } else info(state, events, `「雷克斯的诅咒」归还 ${tokenLabel(oldToken)} 并揭示 ${tokenLabel(replacement)}；检定仍然成功。`)
   }
@@ -6994,9 +6995,10 @@ function recordResearch(state, key) {
 
 function researchSolution(state, seat, assetId, events) {
   const inv = state.investigators[seat]
-  const asset = inv.assets.find(item => item.id === assetId && item.code === '02021')
+  // Phase 5（5a-9）：研究能力只按实例 id 找支援（调用方就是这张卡的能力），不再写死卡号。
+  const asset = inv.assets.find(item => item.id === assetId)
   if (!asset) throw new Error('奇异溶液必须在场才能研究')
-  return performTest(state, seat, 'intellect', 4, { source: { label: '研究', name: cardName('02021'), code: '02021' }, resolve: result => {
+  return performTest(state, seat, 'intellect', 4, { source: { label: '研究', name: cardName(asset.code), code: asset.code }, resolve: result => {
     if (!result.success) return
     recordResearch(state, 'identifiedStrangeSolution')
     leaveAsset(state, inv, asset, events)

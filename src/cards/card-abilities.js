@@ -3385,6 +3385,8 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '01007', mentalTraumaIfCounters: true },
   // 02272 「谈判」检定难度 -2（读点在 performTest）。
   { code: '02272', negotiationDifficultyReduction: 2 },
+  // 02009 雷克斯的诅咒（威胁）：检定本该成功时改为再揭示一枚标记（读点在 performTest 的 ST.5）。
+  { code: '02009', rerollRevealedTokenOnSuccess: true },
 ]
 
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。

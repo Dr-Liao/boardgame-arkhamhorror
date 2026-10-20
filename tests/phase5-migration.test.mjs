@@ -684,6 +684,23 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-9：雷克斯的诅咒 / 奇异溶液（02009、02021）----
+
+test('5a-9：02009 诅咒与 02021 研究能力不再按卡号判断', () => {
+  assert.equal(registeredEntry('02009')?.rerollRevealedTokenOnSuccess, true, '诅咒由条目声明')
+
+  // 02021 的研究能力仍能从描述子触发（只按实例 id 找支援）。
+  const research = registeredEntry('02021')?.abilities?.find(ability => ability.effect?.type === 'researchSolution')
+  assert.ok(research, '研究能力仍在描述子上')
+
+  // 02009 在场时检定流程不崩（诅咒路径走条目标记）。
+  const state = fixture()
+  state.investigators[0].threat.push({ id: 'curse', code: '02009' })
+  state.chaosBag = ['0', '+1']
+  runTest(state, 0, 'willpower', 1, () => 'done')
+  assert.ok(state.investigators[0].threat.some(card => card.code === '02009'), '诅咒仍在威胁区')
+})
+
 // ---- 5a-8：结局创伤 / 谈判降难度 / 遗物默认码（01007、03015、02272、04061）----
 
 test('5a-8：结局创伤与谈判降难度由条目声明，古代遗物默认码搬到 card-rules', () => {
