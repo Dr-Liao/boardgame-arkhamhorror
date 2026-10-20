@@ -355,3 +355,47 @@ export const describeState = createDescribeState({
 
 累计迁出 **约 1430 行**（12654 → 11220）。剩下最大的两块：`abilityApi`（978）与 `performTest`（782），
 下一批从 `abilityApi` 开始按域拆（`play` / `test` / `enemy` / `card` 四组）。
+
+## 14. 6d-7：abilityApi 按域拆（第一批：`api-card.js`）
+
+### 14.1 为什么先拆这一批
+
+`abilityApi(state, events)` 是 179 个方法的巨型对象（979 行），一次搬完风险太大。
+先挑**尾部的 256 行薄封装**：它们是 Phase 5 期间为卡牌内容补齐的「按 id 查/取、放牌进弃牌堆、
+遭遇牌库顶敌人、最远地点、生成敌人、标记弱点、揭示混乱标记、封印、驱逐、复制打出……」，
+每个方法都只闭包 `state` / `events` 和少量 helper，依赖只有 29 个。
+
+### 14.2 做法
+
+```js
+// src/engine/api-card.js
+export function createCardApi(state, events, deps) { const { … } = deps; return { …256 行方法… } }
+
+// src/engine/engine.js
+const apiDeps = { /* 29 个 helper */ }
+function abilityApi(state, events) {
+  return {
+    …,
+    ...createCardApi(state, events, apiDeps),
+  }
+}
+```
+
+关键点：**api 方法必须继续闭包 `state` / `events`**——能力层只拿得到 api，拿不到引擎内部，
+所以工厂签名是 `(state, events, deps)`，不是无参的 `createCardApi(deps)`。
+
+### 14.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **10966**（6d-6 后 11220） |
+| `src/engine/api-card.js` | **302** |
+| `src/engine/moves.js` | 652 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 1690 行**（12654 → 10966）。下一批继续拆 `abilityApi` 的其余分组：
+`play`（出牌/费用）、`test`（检定/标记）、`enemy`（敌人/攻击）、`card`（已拆）。
