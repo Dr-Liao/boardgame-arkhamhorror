@@ -83,7 +83,10 @@ const COST_KEYS = new Set(['action', 'exhaust', 'uses', 'resources', 'clues', 'd
   'returnClue'])
 const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'criteria', 'target', 'cost',
   'limit', 'fromHand', 'noPlayCost', 'duringOwnSkillTest', 'oncePerTest', 'oncePerPhase', 'requiresNoClues',
-  'maximumInvestigatorDamage', 'resolve', 'effect', 'skill', 'weakness', 'entersPlay', 'leavesPlay',
+  'maximumInvestigatorDamage',
+  // Phase 5（5c-37）：支援能力上的计数器上限（「时间借取」最多 3 声滴答）；读点在 canAffordAbility。
+  'maxClicks',
+  'resolve', 'effect', 'skill', 'weakness', 'entersPlay', 'leavesPlay',
   'source', 'simplified', 'note',
   // Phase 2：事件卡的打出关键字从 EFFECTS 顶层字段搬进描述子（迁移逃生卡的前提）。
   'fast', 'noOpportunityAttack',
@@ -239,6 +242,8 @@ export function normalizeDescriptor(raw, { code, index }) {
     duringOwnSkillTest: raw.duringOwnSkillTest === true,
     requiresNoClues: raw.requiresNoClues === true,
     maximumInvestigatorDamage: raw.maximumInvestigatorDamage ?? null,
+    // Phase 5（5c-37）：支援能力的计数器上限（「时间借取」最多 3 声滴答）。
+    maxClicks: raw.maxClicks ?? null,
     // 兼容旧 DSL：effect 描述子走效果解释器，resolve 描述子走自己的函数。
     effect: raw.effect ?? null,
     // 生命周期钩子的数据体（见 lifecycle.js）。
@@ -437,6 +442,8 @@ export function abilityShim(code) {
     duringOwnSkillTest: descriptor.duringOwnSkillTest || undefined,
     requiresNoClues: descriptor.requiresNoClues || undefined,
     maximumInvestigatorDamage: descriptor.maximumInvestigatorDamage ?? undefined,
+    // Phase 5（5c-37）：计数器上限（「时间借取」最多 3 声滴答），读点在 canAffordAbility。
+    maxClicks: descriptor.maxClicks ?? undefined,
     fromAbilityLayer: true,
   }))
 }

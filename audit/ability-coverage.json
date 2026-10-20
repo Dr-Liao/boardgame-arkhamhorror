@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "note": "由 tools/audit-abilities.mjs --write 生成，勿手改。指标只允许下降；engineCodes / effectsEntries 的每一次减少都是一次迁移证据，必须随迁移一起提交。",
   "metrics": {
-    "engineCodes": 109,
-    "effectsEntries": 69,
-    "effectsTopLevelFields": 40,
-    "escapeCards": 4,
-    "descriptorEntries": 394,
-    "descriptorAbilities": 336,
+    "engineCodes": 108,
+    "effectsEntries": 67,
+    "effectsTopLevelFields": 39,
+    "escapeCards": 2,
+    "descriptorEntries": 396,
+    "descriptorAbilities": 338,
     "abilityKinds": 11,
     "windows": 52,
     "effectPrimitives": 97,
@@ -16,11 +16,11 @@
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 392,
+    "descriptor": 394,
     "legacy": 59,
     "engine": 5,
     "hybrid": 1,
-    "escape": 4
+    "escape": 2
   },
   "nonPlayer": {
     "byScope": {
@@ -2416,11 +2416,8 @@
     },
     {
       "code": "04308",
-      "channel": "escape",
-      "descriptors": 0,
-      "escapePrimitives": [
-        "tfaPlayer"
-      ],
+      "channel": "descriptor",
+      "descriptors": 1,
       "engineReferenced": true
     },
     {
@@ -2430,12 +2427,8 @@
     },
     {
       "code": "04310",
-      "channel": "escape",
-      "descriptors": 0,
-      "escapePrimitives": [
-        "tfaPlayer"
-      ],
-      "engineReferenced": true
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "04311",

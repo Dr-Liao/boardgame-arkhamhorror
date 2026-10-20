@@ -684,6 +684,32 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-37：滴答计数 / 封印 0 的攻击（04308 时间借取、04310 虚空碎裂）----
+
+test('5c-37：04308 时间借取最多 3 声滴答；04310 虚空碎裂花充能用意志攻击', () => {
+  // 04308：连点 3 次后能力不可用（maxClicks 走 canAffordAbility）。
+  const state = fixture()
+  const borrowed = asset(state, '04308')
+  for (let index = 0; index < 3; index++) {
+    move(state, { action: 'ability', assetId: borrowed.id, abilityIndex: 0 })
+    settle(state)
+  }
+  assert.equal(state.investigators[0].assets.find(item => item.code === '04308')?.clicks, 3, '3 声滴答')
+  assert.notEqual(validateMove(state, 0, { action: 'ability', assetId: borrowed.id, abilityIndex: 0 }), null,
+    '第 4 次不再可用')
+
+  // 04310：花 1 充能 → 意志攻击（+1 伤害）。
+  const second = fixture()
+  second.chaosBag = ['0', '0', '0']
+  const shards = asset(second, '04310', { uses: 3, usesType: 'charges' })
+  const foe = enemy(second, { engagedSeat: 0, fight: 1, health: 10 })
+  use(second, shards)
+  settle(second)
+  assert.equal(second.investigators[0].assets.find(item => item.id === shards.id)?.uses, 2, '花掉 1 充能')
+  // 基础 1 + damageBonus 1 + 每个被封印的「0」再 +1（这里 chaosBag 全是 0）。
+  assert.equal(second.enemies.find(item => item.id === foe.id)?.damageTaken, 3, '伤害 = 基础 1 + 加成 1 + 封印的 0')
+})
+
 // ---- 5c-36：死里逃生 / 时间曲折（03310 / 03311）----
 
 test('5c-36：03310 死里逃生在致命伤害窗口免于一死并回 2 点伤害', () => {

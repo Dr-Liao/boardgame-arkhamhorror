@@ -7265,7 +7265,6 @@ const TFA_PLAYER_WAVE3_ACTIONS = new Set([
   'youHandleThisOne', 'darkProphecy', 'dumbLuck', 'yaotlIcons', 'yaotlDiscardTop', 'marksmanship',
   'wellPrepared',
   'againstAllOdds', 'pnakoticSkipTest', 'pnakoticNextTest',
-  'borrowedTimeClick', 'shardsOfTheVoid',
 ])
 
 function tfaPlayerEffect3(state, seat, effect, events) {
@@ -7281,42 +7280,7 @@ function tfaPlayerEffect3(state, seat, effect, events) {
   // 「纳克特手稿」：本次检定不揭示混乱标记。
   // 「纳克特手稿」：让某位调查员本轮下一次检定不揭示混乱标记。
   // 「时间借取」：在支援上放置 1 声滴答。
-  if (effect.action === 'borrowedTimeClick') {
-    const asset = inv.assets.find(item => item.code === '04308')
-    if (!asset) return
-    if ((asset.clicks || 0) >= 3) { info(state, events, '「时间借取」上已有 3 声滴答。'); return }
-    asset.clicks = (asset.clicks || 0) + 1
-    info(state, events, `⏳ 「${cardName('04308')}」放置第 ${asset.clicks} 声滴答。`)
-    return
-  }
   // 「虚空碎裂」：用意志攻击，并按封印的「0」标记增加意志与伤害。
-  if (effect.action === 'shardsOfTheVoid') {
-    const shards = inv.assets.find(item => item.code === '04310')
-    if (!shards) return
-    const sealedZeros = (state.chaos?.sealed || []).filter(entry => entry.source === shards.id && entry.token === '0')
-    let paid = false
-    if ((shards.uses || 0) > 0) {
-      shards.uses -= 1
-      paid = true
-      info(state, events, `「${cardName('04310')}」花费 1 充能（剩 ${shards.uses}）。`)
-    } else if (sealedZeros.length) {
-      const released = sealedZeros[0].token
-      state.chaos.sealed = state.chaos.sealed.filter(entry => entry !== sealedZeros[0])
-      state.sealedTokens = state.chaos.sealed.map(entry => entry.token)
-      state.chaosBag.push(released)
-      paid = true
-      info(state, events, `「${cardName('04310')}」释放封印的 ${tokenLabel(released)} 作为费用。`)
-    }
-    if (!paid) { info(state, events, '「虚空碎裂」没有充能或封印标记可支付。'); return }
-    const targets = state.enemies.filter(enemy => enemy.location === inv.location)
-    if (!targets.length) { info(state, events, '这里没有可攻击的敌人。'); return }
-    const chosen = targets.length === 1 ? targets[0].id : requestChoice(state, { kind: 'target', source: '04310', seat,
-      prompt: '选择攻击目标。', options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })) })
-    const sealedNow = (state.chaos?.sealed || []).filter(entry => entry.source === shards.id && entry.token === '0').length
-    doFight(state, seat, { enemyId: chosen, skill: 'willpower', combatBonus: sealedNow * 2, damageBonus: 1,
-      shardsOfTheVoid: shards.id }, events, true)
-    return
-  }
   // 「临时路障」：躲避；从弃牌堆打出时还能多躲一个敌人。
   throw new Error(`未实现的失落玩家卡效果：${effect.action}`)
 }
@@ -9808,15 +9772,16 @@ function doFight(state, seat, opts, events, noSpend) {
         : 1 + weaponBonus + conditional + (r.damageBonus || 0)
       dmg *= r.rewardMultiplier || 1
       // 「虚空碎裂」：本次攻击每揭示一个「0」标记，把它封印在卡上并额外 +1 伤害。
-      if (opts.shardsOfTheVoid) {
+      // Phase 5（5c-37）：「虚空碎裂」这类「攻击时封印揭示的 0 并加伤害」由内容层声明。
+      if (opts.sealZerosTo) {
         let zeros = 0
         for (const face of r.drawn || []) {
           if (face !== '0') continue
-          if (sealRevealedChaosToken(state, '0', opts.shardsOfTheVoid)) zeros += 1
+          if (sealRevealedChaosToken(state, '0', opts.sealZerosTo)) zeros += 1
         }
         if (zeros) {
           dmg += zeros
-          info(state, events, `「${cardName('04310')}」封印了 ${zeros} 个「0」标记，本次攻击额外造成 ${zeros} 点伤害。`)
+          info(state, events, `「${opts.sealZerosLabel || '虚空碎裂'}」封印了 ${zeros} 个「0」标记，本次攻击额外造成 ${zeros} 点伤害。`)
         }
       }
       const isMonster = (enemy.traits || []).some((t) => t.toLowerCase() === 'monster')
@@ -10883,6 +10848,23 @@ function abilityApi(state, events) {
     assetsCannotReady: inv => assetsCannotReady(inv),
     searchTop: (seat, options) => searchTop(state, seat, options, events),
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
+    // Phase 5（5c-37）：「时间借取」的滴答计数（上限 3）与「虚空碎裂」的封印「0」标记支付。
+    addClicks: (card, max = 3) => {
+      if (!card) return null
+      if ((card.clicks || 0) >= max) return card.clicks
+      card.clicks = (card.clicks || 0) + 1
+      return card.clicks
+    },
+    sealedTokensFrom: (card, token = '0') => (state.chaos?.sealed || [])
+      .filter(entry => entry.source === card?.id && entry.token === token).length,
+    releaseSealedToken: (card, token = '0') => {
+      const entry = (state.chaos?.sealed || []).find(item => item.source === card?.id && item.token === token)
+      if (!entry) return null
+      state.chaos.sealed = state.chaos.sealed.filter(item => item !== entry)
+      state.sealedTokens = state.chaos.sealed.map(item => item.token)
+      state.chaosBag.push(entry.token)
+      return entry.token
+    },
     // Phase 5（5c-36）：「死里逃生」的候选地点——已揭示且没有敌人。
     locationsWithoutEnemies: () => state.locations.filter(location => location.revealed
       && !state.enemies.some(enemy => enemy.location === location.id)),

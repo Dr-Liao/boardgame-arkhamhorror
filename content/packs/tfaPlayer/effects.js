@@ -63,12 +63,7 @@ export const effects = {
   // 自食其力：幸存者事件减 2 费用；出现盟友支援时弃掉；每位调查员限 1 张。
   '04236': { survivorEventDiscount: true, limitPerInvestigator: true },
   // 纳克特手稿：显现检定或本回合下一场检定不揭示混乱标记。
-  // 时间借取：放置滴答，回合开始时换成额外行动。
-  '04308': { exceptional: true, abilities: [{ label: '放置 1 声滴答（最多 3）',
-    cost: { action: true }, maxClicks: 3, effect: tfa('borrowedTimeClick', { noOpportunityAttack: true }) }] },
-  // 虚空碎裂：封印「0」；花充能或释放标记发动意志攻击。
-  '04310': { uses: 3, usesType: 'charges', sealOnEnter: '0',
-    abilities: [action('花费 1 充能或释放标记：意志攻击（+1 伤害）', tfa('shardsOfTheVoid', { kind: 'fight' }))] },
+  // 04308 时间借取 / 04310 虚空碎裂已迁到能力层（5c-37），见 MIGRATED_ESCAPE_ENTRIES_5C37。
 
   // ---- 第三批：事件 ----
   // “交给你了！”：把刚抽到的非险境遭遇卡转给另一位调查员，并获得 1 资源。

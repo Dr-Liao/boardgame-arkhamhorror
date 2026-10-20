@@ -3160,12 +3160,64 @@ export const MIGRATED_ESCAPE_ENTRIES_5C36 = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// 5c-37：滴答计数 / 封印「0」标记的攻击（时间借取、虚空碎裂）
+// ---------------------------------------------------------------------------
+
+export const MIGRATED_ESCAPE_ENTRIES_5C37 = [
+  // 04308 时间借取：动作在卡上放一声滴答（最多 3 声）。
+  {
+    code: '04308',
+    abilities: [{
+      kind: 'action', label: '放置 1 声滴答（最多 3）', cost: { action: true }, maxClicks: 3,
+      resolve: ({ source, api }) => {
+        if (!source || (source.clicks || 0) >= 3) {
+          api.info('「时间借取」上已有 3 声滴答。')
+          return
+        }
+        const clicks = api.addClicks(source, 3)
+        api.info(`⏳ 「${api.cardName('04308')}」放置第 ${clicks} 声滴答。`)
+      },
+    }],
+  },
+  // 04310 虚空碎裂：花 1 充能或释放封印的「0」作为费用，用意志攻击（封印的 0 各 +2 意志、+1 伤害）。
+  {
+    code: '04310', uses: 3, usesType: 'charges', sealOnEnter: '0',
+    abilities: [{
+      kind: 'action', label: '花费 1 充能或释放标记：意志攻击（+1 伤害）', cost: { action: true },
+      // 旧写法是 effect.kind = 'fight'：这次「攻击」不引发借机攻击。
+      countsAs: 'fight',
+      resolve: ({ inv, source, api }) => {
+        if (!source) return
+        let paid = false
+        if ((source.uses || 0) > 0) {
+          api.addUses(source, -1)
+          paid = true
+          api.info(`「${api.cardName('04310')}」花费 1 充能（剩 ${source.uses}）。`)
+        } else if (api.sealedTokensFrom(source, '0') > 0) {
+          const released = api.releaseSealedToken(source, '0')
+          paid = true
+          api.info(`「${api.cardName('04310')}」释放封印的 ${api.tokenLabel(released)} 作为费用。`)
+        }
+        if (!paid) { api.info('「虚空碎裂」没有充能或封印标记可支付。'); return }
+        const targets = api.enemiesAt(inv.location)
+        if (!targets.length) { api.info('这里没有可攻击的敌人。'); return }
+        const enemy = targets.length === 1 ? targets[0] : api.chooseEnemy(inv.seat, { type: 'fight' })
+        if (!enemy) return
+        const sealedNow = api.sealedTokensFrom(source, '0')
+        api.fight(inv.seat, enemy.id, { skill: 'willpower', combatBonus: sealedNow * 2, damageBonus: 1,
+          noSpend: true, sealZerosTo: source.id, sealZerosLabel: api.cardName('04310') })
+      },
+    }],
+  },
+]
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, ...MIGRATED_ESCAPE_ENTRIES_5C35, ...MIGRATED_ESCAPE_ENTRIES_5C36, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, ...MIGRATED_ESCAPE_ENTRIES_5C35, ...MIGRATED_ESCAPE_ENTRIES_5C36, ...MIGRATED_ESCAPE_ENTRIES_5C37, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -3222,4 +3274,5 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_ESCAPE_ENTRIES_5C34.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C35.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C36.map(entry => entry.code),
+  ...MIGRATED_ESCAPE_ENTRIES_5C37.map(entry => entry.code),
 ])
