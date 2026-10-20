@@ -443,79 +443,9 @@ const HAND_SIZE_BASE = 8
 // 合并剧本注册表（遭遇牌 code 全局唯一，跨剧本合并后可按 code 直查）
 // ---------------------------------------------------------------------------
 
-const ALL_ENEMIES = {}
-const ALL_TREACHERIES = {}
-const ALL_STORY_ASSETS = {}
-for (const sc of Object.values(SCENARIOS)) {
-  Object.assign(ALL_ENEMIES, sc.enemies || {})
-  Object.assign(ALL_TREACHERIES, sc.treacheries || {})
-  Object.assign(ALL_STORY_ASSETS, sc.storyAssets || {})
-}
+import { ALL_ENEMIES, ALL_STORY_ASSETS, ALL_TREACHERIES } from './card-lookup.js'
 
 // ---------------------------------------------------------------------------
-// 卡牌 / 敌人定义查找（统一入口：cards-data.js ∪ 所有剧本遭遇牌）
-// ---------------------------------------------------------------------------
-
-function cardDef(code) {
-  const rule = ALL_ENEMIES[code] || ALL_TREACHERIES[code] || ALL_STORY_ASSETS[code]
-  if (rule) {
-    const metadata = ALL_CARDS[rule.originalCode || code]
-    return { ...metadata, ...rule, code, type: ALL_STORY_ASSETS[code] ? 'asset' : metadata?.type || rule.type }
-  }
-  return Object.hasOwn(ALL_CARDS, code) ? ALL_CARDS[code] : null
-}
-
-function cardName(code) {
-  const c = cardDef(code)
-  if (!c) return code
-  return c.nameZh || c.name || code
-}
-
-function originalCardCode(ruleCode) {
-  return ALL_ENEMIES[ruleCode]?.originalCode || ruleCode
-}
-
-function ruleCodeForOriginal(originalCode) {
-  return Object.keys(ALL_ENEMIES).find((ruleCode) => originalCardCode(ruleCode) === originalCode) || originalCode
-}
-
-function isWeaknessCard(c) {
-  return !!(c && (c.subtype === 'weakness' || c.subtype === 'basicweakness'))
-}
-
-function isWeaknessCode(code) {
-  return isWeaknessCard(cardDef(code))
-}
-
-// 敌人定义：优先剧本敌人（合并注册表），其次 cards-data.js 的敌人型卡（弱化敌人）。
-function enemyDef(code) {
-  if (ALL_ENEMIES[code]) return ALL_ENEMIES[code]
-  const c = ALL_CARDS[code]
-  if (c && c.type === 'enemy') {
-    const extra = { ...enemyWeaknessExtra(code), ...(EFFECTS[code]?.enemyWeakness || {}) }
-    return {
-      code,
-      name: c.nameZh || c.name,
-      fight: c.fight ?? 0,
-      evade: c.evade ?? 0,
-      health: c.health ?? 1,
-      damage: c.damage ?? 0,
-      horror: c.horror ?? 0,
-      hunter: !!extra.hunter,
-      retaliate: !!extra.retaliate,
-      alert: !!extra.alert,
-      elite: !!extra.elite,
-      prey: extra.prey ? 'bearer' : null,
-      forcedDoom: !!extra.forcedDoom,
-      parleyCost: extra.parleyCost ?? 0,
-      victory: c.victory ?? 0,
-      vengeance: c.vengeance ?? 0,
-      traits: c.traits || [],
-      text: c.textZh || '',
-    }
-  }
-  return null
-}
 
 // 所有卡牌定义（供前端渲染）。cards-data.js 的卡以「中文名」作为 name 暴露给前端，
 // 并附上由 card-effects.js 反推的 statBonus/fightDamageBonus（兼容现有前端 ahEffStat）。
@@ -1675,6 +1605,11 @@ function chooseTurn(state) {
   }
   return state.aiTurnOrder.find(seat => candidates.some(inv => inv.seat === seat)) ?? candidates[0].seat
 }
+
+// Phase 6（6d-1）：卡牌 / 敌人定义查找搬进 card-lookup.js；这里既 import 自用，也转出给外部调用方，
+// 外部模块的 import 路径保持不变。
+import { cardDef, cardName, originalCardCode, ruleCodeForOriginal, isWeaknessCard, isWeaknessCode, enemyDef } from './card-lookup.js'
+export { cardDef, cardName, originalCardCode, ruleCodeForOriginal, isWeaknessCard, isWeaknessCode, enemyDef }
 
 // ---------------------------------------------------------------------------
 // 属性 / 被动加成（来自 card-effects.js 的 passive）
