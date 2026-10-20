@@ -1007,3 +1007,46 @@ setCurrentActionKind: value => { currentActionKind = value },
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 4595 行**（12654 → 8059，−36.3%）。
+
+## 27. 6d-20：拆出 encounter.js（遭遇牌与窗口）
+
+### 27.1 拆的是什么
+
+四个函数（共 324 行，60 项依赖）搬进 `src/engine/encounter.js`：
+
+| 函数 | 行数 | 职责 |
+| --- | --- | --- |
+| `drawEncounter` | 95 | 抽遭遇并推进（地点遭遇、遭遇行动） |
+| `reactionWindow` | 79 | 开一个反应/强制窗口 |
+| `triggerReaction` | 110 | 旧式 `reactions` 数据体的入口 |
+| `playerWindow` | 40 | 玩家可交互窗口 |
+
+与 `ability-exec.js` 的分工：**那边结算单个能力，这边决定「什么时候问」**。
+拆完后 engine.js **首次降到 8000 行以下**（7801）。
+
+### 27.2 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **7801**（6d-19 后 8059） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/setup.js` | 578 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/dispatch.js` | 436 |
+| `src/engine/encounter.js` | **400** |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/ability-exec.js` | 369 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/campaign-flow.js` | 252 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 4853 行**（12654 → 7801，−38.3%）。
