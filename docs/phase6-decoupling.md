@@ -1309,3 +1309,52 @@ skill: { onSuccess: { placeChargeOrSecret: true } },
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 5799 行**（12654 → 6855，−45.8%）。
+
+## 33. 6d-26：拆出 reveal.js（揭示与描述子执行）
+
+### 33.1 拆的是什么
+
+四个函数（共 244 行，50 项依赖）搬进 `src/engine/reveal.js`——「翻开的牌如何结算」的三条路：
+
+| 函数 | 行数 | 职责 |
+| --- | --- | --- |
+| `runActReveal` | 72 | 幕翻开时的印刷效果（走剧本声明） |
+| `runAgendaForced` | 25 | 密谋的强制效果 |
+| `resolveTreacheryEffect` | 74 | 遭遇诡计的印刷效果（目标与检定） |
+| `executeDescriptor` | 72 | **声明式能力的统一执行入口**（描述子 → 效果/回调） |
+
+`executeDescriptor` 是能力层的核心读点之一——`phase5-migration.md` §4 里大量
+「读点在 `executeDescriptor`」的条目指的就是它。
+
+### 33.2 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **6675**（6d-25 后 6855） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/setup.js` | 578 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/dispatch.js` | 436 |
+| `src/engine/enemies.js` | 434 |
+| `src/engine/encounter.js` | 400 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/turn.js` | 381 |
+| `src/engine/ability-exec.js` | 369 |
+| `src/engine/reveal.js` | **314** |
+| `src/engine/skill-effects.js` | 313 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/campaign-flow.js` | 252 |
+| `src/engine/movement.js` | 249 |
+| `src/engine/locations.js` | 212 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 5979 行**（12654 → 6675，−47.2%）。
