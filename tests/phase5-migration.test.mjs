@@ -686,6 +686,14 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-18：事件去向 / 附属事件 / 自选花费（01014、01038、02010）----
+
+test('5a-18：01014 / 01038 / 02010 都改用条目级标记', () => {
+  assert.equal(registeredEntry('01014')?.playedEventsToDeckTop, true, '打出的事件进牌库顶')
+  assert.equal(registeredEntry('01038')?.keepOnPlay, true, '屏障打出后留在场上')
+  assert.equal(registeredEntry('02010')?.chooseResourceCostOnPlay, true, '打出时自选花费')
+})
+
 // ---- 5a-17：弱点升级替换卡号（04038、04041、04042）----
 
 test('5a-17：弱点升级后的替换卡号在卡号规则数据里', () => {

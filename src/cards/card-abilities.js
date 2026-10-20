@@ -3385,6 +3385,12 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '01007', mentalTraumaIfCounters: true },
   // 02272 「谈判」检定难度 -2（读点在 performTest）。
   { code: '02272', negotiationDifficultyReduction: 2 },
+  // 01014 温蒂的护身符：打出的事件进牌库顶而不是弃牌堆（读点 topDiscardEvent / disposePlayedEvent）。
+  { code: '01014', playedEventsToDeckTop: true },
+  // 02010 珍妮的双枪：打出时自选花费若干资源（读点在 doPlay 的费用段）。
+  { code: '02010', chooseResourceCostOnPlay: true },
+  // 01038 屏障：打出后留在场上（附属到地点），不按普通事件弃掉。
+  { code: '01038', keepOnPlay: true },
   // 02009 雷克斯的诅咒（威胁）：检定本该成功时改为再揭示一枚标记（读点在 performTest 的 ST.5）。
   { code: '02009', rerollRevealedTokenOnSuccess: true },
   // 01071 古代雕像：揭示混乱标记时花 1 充能改揭示 2 枚并选 1 枚（读点在 performTest 的标记段）。

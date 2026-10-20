@@ -165,6 +165,11 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'chaosTokenExtraReveal',
   // Phase 5（5a-12）：弱点入场时横置你所有支援（噩梦来袭）。
   'weaknessExhaustsAssets',
+  // Phase 5（5a-18）：打出的事件进牌库顶（温蒂的护身符）/ 打出时自选花费（珍妮的双枪）。
+  'playedEventsToDeckTop',
+  'chooseResourceCostOnPlay',
+  // Phase 5（5a-18）：打出后留在场上（屏障这类附属事件）。
+  'keepOnPlay',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -402,6 +407,9 @@ export function registerCardAbilities(entries) {
       rerollRevealedTokenOnSuccess: entry.rerollRevealedTokenOnSuccess === true,
       chaosTokenExtraReveal: entry.chaosTokenExtraReveal === true,
       weaknessExhaustsAssets: entry.weaknessExhaustsAssets === true,
+      playedEventsToDeckTop: entry.playedEventsToDeckTop === true,
+      chooseResourceCostOnPlay: entry.chooseResourceCostOnPlay === true,
+      keepOnPlay: entry.keepOnPlay === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

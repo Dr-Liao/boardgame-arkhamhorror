@@ -705,7 +705,8 @@ export const BATCH_5B_3 = [
   {
     code: '01038',
     abilities: [
-      { kind: 'played', label: '屏障', effect: { type: 'attachBarricade' } },
+      // Phase 5（5a-18）：附属卡号随效果数据走（引擎读 effect.code）。
+      { kind: 'played', label: '屏障', effect: { type: 'attachBarricade', code: '01038' } },
     ],
   },
   {

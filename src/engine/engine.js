@@ -2900,13 +2900,18 @@ function discardLocked(state, inv) {
   return state.enemies.some(enemy => enemy.code === '03017' && enemy.engagedSeat === inv.seat && !enemyTextBlanked(state, enemy))
 }
 
+// Phase 5（5a-18）：「打出的事件进牌库顶而不是弃牌堆」由条目级 playedEventsToDeckTop 声明。
+function hasPlayedEventsToDeckTop(inv) {
+  return (inv.assets || []).some(asset => registeredEntry(asset.code)?.playedEventsToDeckTop)
+}
+
 function topDiscardEvent(state, inv) {
-  return inv.assets.some(a => a.code === '01014') && !discardLocked(state, inv)
+  return hasPlayedEventsToDeckTop(inv) && !discardLocked(state, inv)
     ? inv.discard.findLast(code => cardDef(code)?.type === 'event') : null
 }
 
 function disposePlayedEvent(inv, code) {
-  if (inv.assets.some(a => a.code === '01014')) inv.deck.unshift(code)
+  if (hasPlayedEventsToDeckTop(inv)) inv.deck.unshift(code)
   else inv.discard.push(code)
 }
 
@@ -6365,7 +6370,8 @@ function attachBarricade(state, seat, effect, events) {
   const inv = state.investigators[seat]
   const loc = state.locations.find(item => item.id === inv.location)
   if (!loc) return
-  const attachment = { ownerSeat: seat, code: '01038' }
+  // Phase 5（5a-18）：附属卡号随效果数据走（effect.code）。
+  const attachment = { ownerSeat: seat, code: effect.code || null }
   loc.barricades ||= loc.barricade ? [loc.barricade] : []
   loc.barricades.push(attachment)
   loc.barricade = attachment
@@ -8934,10 +8940,12 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
 
   const usesLolaDiscount = inv.lolaDiscount?.round === state.round && inv.lolaDiscount?.turnSeat === state.currentSeat
     && (playedDef.factions || [playedDef.klass, playedDef.klass2, playedDef.klass3].filter(Boolean)).includes(inv.lolaDiscount.role)
-  const cost = cardId === '02010' ? Number(requestChoice(state, { kind: 'resource', source: '02010', seat,
-    prompt: '选择花费多少资源，为珍妮的双枪装填等量弹药。',
-    options: Array.from({ length: inv.resources + 1 }, (_, i) => ({ id: String(i), label: `${i} 资源／${i} 弹药` })),
-  })) : playCost(state, inv, playedDef)
+  // Phase 5（5a-18）：「打出时自选花费若干资源」由条目级 chooseResourceCostOnPlay 声明。
+  const cost = registeredEntry(cardId)?.chooseResourceCostOnPlay
+    ? Number(requestChoice(state, { kind: 'resource', source: cardId, seat,
+      prompt: `选择花费多少资源，为「${cardName(cardId)}」装填等量弹药。`,
+      options: Array.from({ length: inv.resources + 1 }, (_, i) => ({ id: String(i), label: `${i} 资源／${i} 弹药` })),
+    })) : playCost(state, inv, playedDef)
   delete inv.carcosaPlayDiscount
   delete inv.playDiscount
   const payer = inv.resources >= cost ? inv : (charlesPayCandidate(state, inv, cost) || inv)
@@ -8963,7 +8971,8 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       ...(entryFlags.sealOnEnter ? { sealOnEnter: entryFlags.sealOnEnter } : {}),
     }
     const asset = newPlayerAssetInstance(state, inv, cardId)
-    if (cardId === '02010') { asset.uses = cost; asset.usesType = 'ammo' }
+    // Phase 5（5a-18）：「打出时自选花费并转成弹药」也由条目级 chooseResourceCostOnPlay 声明。
+    if (registeredEntry(cardId)?.chooseResourceCostOnPlay) { asset.uses = cost; asset.usesType = 'ammo' }
     if (eff.onPlayDoom) asset.doom = eff.onPlayDoom
     if (eff.passive && eff.passive.extraAction && state.currentSeat === seat) inv.actionsLeft += eff.passive.extraAction
     inv.assets.push(asset)
@@ -9057,7 +9066,9 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       inv.deck = shuffle([...inv.deck, cardId], () => randomValue(state))
       info(state, events, `「${cardName(cardId)}」洗回 ${inv.name} 的牌库。`)
     }
-    else if (cardId !== '01038' && !(cardId === '02031' && state.enemies.some(enemy => enemy.bindMonster?.ownerSeat === seat))) disposePlayedEvent(inv, cardId)
+    // Phase 5（5a-18）：附属到地点/敌人的事件不弃掉，由效果数据里的 keepOnPlay 标记声明。
+    else if (registeredEntry(cardId)?.keepOnPlay !== true
+      && !(cardId === '02031' && state.enemies.some(enemy => enemy.bindMonster?.ownerSeat === seat))) disposePlayedEvent(inv, cardId)
   }
   const traits = (playedDef.traits || []).map(trait => String(trait).toLowerCase())
   if (traits.includes('spell')) triggerReaction(state, seat, 'spellPlayed', events, { location: inv.location, cardId })
@@ -11593,7 +11604,7 @@ export function legalMoves(state, observerSeat) {
       label: `🃏 从弃牌堆打出「${cardName(code)}」(${playCost(state, inv, def)} 资源)` })
   }
 
-  if (inv.assets.some(asset => asset.code === '01014') && inv.discard.length) {
+  if (hasPlayedEventsToDeckTop(inv) && inv.discard.length) {
     const code = topDiscardEvent(state, inv)
     const def = cardDef(code)
     if (def && def.type === 'event' && isCardAvailable(code) && !isWeaknessCard(def)
@@ -12160,7 +12171,7 @@ export function validateMove(state, seat, move) {
       }
       if (def.type === 'skill' || (isWeaknessCard(def) && !playAccess(move.cardId).playableWeakness)) return '该牌不能作为行动打出'
       if (move.fromDiscard) {
-        if (!playAccess(move.cardId).fromDiscard && !inv.assets.some(asset => asset.code === '01014')) return '你没有温蒂的护身符'
+        if (!playAccess(move.cardId).fromDiscard && !hasPlayedEventsToDeckTop(inv)) return '你没有温蒂的护身符'
         // 卡面允许从弃牌堆任意位置打出的卡（「临时武器」等）不受牌库顶限制。
         if (!playAccess(move.cardId).fromDiscard
           && (def.type !== 'event' || topDiscardEvent(state, inv) !== move.cardId)) return '不是弃牌堆中最上方的事件'
