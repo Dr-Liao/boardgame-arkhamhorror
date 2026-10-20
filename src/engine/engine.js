@@ -7057,20 +7057,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     else inv.itemDiscountAtLocation = { amount: 1, round: state.round, phase: state.phase }
     return
   }
-  if (effect.action === 'eatLead') {
-    const context = state._reaction?.context || state._reaction || null
-    const firearm = (context?.assetId && inv.assets.find(item => item.id === context.assetId))
-      || inv.assets.find(item => (cardDef(item.code)?.traits || []).some(trait => String(trait).toLowerCase() === 'firearm') && (item.uses || 0) > 0)
-    if (!firearm) return
-    const amount = Number(requestChoice(state, { kind: 'amount', source: '03304', seat, prompt: '选择额外花费的弹药。',
-      options: Array.from({ length: firearm.uses + 1 }, (_, value) => ({ id: String(value), label: `${value}弹药` })) }))
-    firearm.uses -= amount
-    if (context) {
-      context.extraChaosChoices = (context.extraChaosChoices || 0) + amount
-      context.assetId = firearm.id
-    } else if (state.skillTest) state.skillTest.extraChaosChoices = (state.skillTest.extraChaosChoices || 0) + amount
-    return
-  }
   if (effect.action === 'eideticMemory') {
     const candidates = state.investigators.flatMap(owner => owner.discard.filter(code => cardDef(code)?.type === 'event'
       && (cardDef(code)?.traits || []).some(trait => String(trait).toLowerCase() === 'insight')).map(code => ({ code, owner })))
@@ -10997,6 +10983,21 @@ function abilityApi(state, events) {
     assetsCannotReady: inv => assetsCannotReady(inv),
     searchTop: (seat, options) => searchTop(state, seat, options, events),
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
+    // Phase 5（5c-33）：「吃子弹」这类在反应窗口里给本次检定加「额外揭示数」的卡。
+    // 反应窗口里写反应上下文（战斗流程在窗口后读 context.extraChaosChoices），否则写 skillTest。
+    addExtraChaosChoicesToTest: amount => {
+      const reaction = state._reaction
+      const target = reaction && (reaction.context || reaction)
+      if (target) {
+        target.extraChaosChoices = (target.extraChaosChoices || 0) + amount
+        return target.extraChaosChoices
+      }
+      if (state.skillTest) {
+        state.skillTest.extraChaosChoices = (state.skillTest.extraChaosChoices || 0) + amount
+        return state.skillTest.extraChaosChoices
+      }
+      return 0
+    },
     // Phase 5（5c-32）：「英勇救援」这类由卡牌造成的敌人攻击（不计入「不能攻击」开关）。
     enemyAttackByCard: (enemy, label, seat = state.currentSeat) => {
       const target = state.investigators[seat] || state.investigators[state.currentSeat]

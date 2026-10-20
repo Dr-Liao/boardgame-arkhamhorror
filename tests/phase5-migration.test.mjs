@@ -684,6 +684,30 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-33：额外花费弹药换额外揭示（03304 吃子弹）----
+
+test('5c-33：03304 吃子弹多花 1 发弹药，本次检定额外揭示 1 个混乱标记', () => {
+  const state = fixture()
+  state.investigators[0].hand = ['03304']
+  const gun = asset(state, '01047', { uses: 3 })
+  enemy(state, { engagedSeat: 0, fight: 1, health: 10 })
+  state.chaosBag = ['0', '0', '0', '0', '0']
+  use(state, gun)
+  let extra = 0
+  settle(state, pending => {
+    const option = pending.options?.find(item => item.cardCode === '03304')
+    if (option) return option.id
+    if (pending.kind === 'amount') {
+      extra = Number(pending.options[1]?.id ?? 0)
+      return pending.options[1]?.id ?? '0'
+    }
+    return null
+  })
+  assert.equal(extra, 1, '选择额外 1 发弹药')
+  assert.equal(state.investigators[0].assets.find(item => item.id === gun.id)?.uses, 1, '共花 2 发（能力 1 + 额外 1）')
+  assert.ok(state.log.some(line => line.includes('额外混乱标记')), '本次检定额外揭示')
+})
+
 // ---- 5c-32：角色切换 / 替人挨打（03018 即兴表演、03106 英勇救援）----
 
 test('5c-32：03018 即兴表演切换角色、本回合该阵营卡 -3 并抽 1 张', () => {

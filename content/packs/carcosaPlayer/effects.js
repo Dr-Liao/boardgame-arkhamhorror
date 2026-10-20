@@ -46,7 +46,7 @@ export const effects = {
   '03270': { fast: true, reaction: { when: 'encounterDrawn', nonWeaknessOnly: true, anyLocation: true, treacheryOnly: true },
     event: { type: 'sequence', effects: [{ type: 'cancelTreachery' }, { type: 'takeHorror', amount: 1 }] } },
 
-  '03304': { fast: true, reaction: { when: 'activateFirearmFight' }, event: custom('eatLead') },
+  // 03304 吃子弹已迁到能力层（5c-33），见 MIGRATED_ESCAPE_ENTRIES_5C33。
   '03306': { fast: true, event: custom('eideticMemory'), removeAfterPlay: true },
   '03308': { passive: { permanent: true }, campaign: { charonsObol: true } },
   '03310': { fast: true, reaction: { when: 'wouldDefeat', selfOnly: true }, event: custom('cheatDeath'), removeAfterPlay: true },
