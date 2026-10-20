@@ -686,6 +686,13 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-30：古代巨石对（04230 / 04231）----
+
+test('5a-30：04230 / 04231 的抽牌后秘密行动在条目上', () => {
+  assert.equal(registeredEntry('04230')?.cardDrawSecretAction, 'damageEnemy')
+  assert.equal(registeredEntry('04231')?.cardDrawSecretAction, 'healHorror')
+})
+
 // ---- 5a-29：伊塔卡治愈 / 特制弹药（04147、04193）----
 
 test('5a-29：04147 用已有条目标记、04193 的怪物加成在条目上', () => {

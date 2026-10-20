@@ -3412,6 +3412,9 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '04265', restrainsDoom: true, restrainsReady: true },
   // 04193 特制弹药：附属在枪械上，攻击怪物时 +1 伤害（读点在攻击结算）。
   { code: '04193', monsterAttackDamageBonus: 1 },
+  // 04230 / 04231 古代巨石（研究完成）：抽牌后花等量秘密，造成伤害 / 治愈恐惧（读点在 tfaCardDrawReaction）。
+  { code: '04230', cardDrawSecretAction: 'damageEnemy' },
+  { code: '04231', cardDrawSecretAction: 'healHorror' },
   // 03042 随行鬼影：在离承受者最远的地点生成（读点在 resolveWeakness 的敌人弱点段）。
   { code: '03042', weaknessSpawnsAtFarthestLocation: true },
   // 02138 / 02139 / 02179（远古遗物系列）：调查员被消除时离场并进弃牌堆。

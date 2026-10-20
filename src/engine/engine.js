@@ -2383,13 +2383,15 @@ function drawCards(state, inv, n, events) {
   return texts
 }
 
-// 古代巨石（研究完成）：04230 造成伤害 / 04231 治愈恐惧。
+// 古代巨石（研究完成）：条目上的 cardDrawSecretAction 声明「抽牌后花秘密」做什么
+// （Phase 5（5a-30）：原来按 04230 / 04231 两个卡号分支）。
 function tfaCardDrawReaction(state, inv, events, count) {
-  for (const code of ['04230', '04231']) {
-    const stone = inv.assets.find(asset => asset.code === code)
-    if (!stone || (stone.uses || 0) < count) continue
-    if (code === '04230' && !state.enemies.some(enemy => enemy.location === inv.location)) continue
-    if (code === '04231') {
+  for (const stone of inv.assets) {
+    const mode = registeredEntry(stone.code)?.cardDrawSecretAction
+    if (!mode || (stone.uses || 0) < count) continue
+    const code = stone.code
+    if (mode === 'damageEnemy' && !state.enemies.some(enemy => enemy.location === inv.location)) continue
+    if (mode === 'healHorror') {
       const healable = aliveInvestigators(state).some(other => other.location === inv.location
         && (other.horror > 0 || other.assets.some(asset => (asset.horror || 0) > 0)))
       if (!healable) continue
@@ -2399,7 +2401,7 @@ function tfaCardDrawReaction(state, inv, events, count) {
       options: [{ id: 'skip', label: '不花费秘密' }, { id: 'trigger', label: `花费 ${count} 秘密` }] })
     if (answer !== 'trigger') continue
     stone.uses -= count
-    if (code === '04230') {
+    if (mode === 'damageEnemy') {
       const targets = state.enemies.filter(enemy => enemy.location === inv.location)
       const chosen = targets.length === 1 ? targets[0].id : requestChoice(state, { kind: 'target', source: code, seat: inv.seat,
         prompt: '选择要造成伤害的敌人。', options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })) })

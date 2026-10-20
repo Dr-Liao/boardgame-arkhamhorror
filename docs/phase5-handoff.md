@@ -13,8 +13,8 @@
 ## 1. 一句话现状
 
 迁移工具链已交付，**337 张卡**迁到能力层（59 个批次），`EFFECTS` 385 → **57**、
-通道 legacy 286 → **51**、descriptor 75 → **404**、**逃生卡 93 → 0（5c 完成）**、**5b 遗留清零**、**引擎卡号 166 → 41**。
-`replay` 基线逐条不变、`fast` 无新增失败。**5c 与 5b 均已完成；5a 引擎卡号分支还剩 41 个码（其中行为分支 13 个、`reference` 28 个归 Phase 6）。**
+通道 legacy 286 → **51**、descriptor 75 → **404**、**逃生卡 93 → 0（5c 完成）**、**5b 遗留清零**、**引擎卡号 166 → 39**。
+`replay` 基线逐条不变、`fast` 无新增失败。**5c 与 5b 均已完成；5a 引擎卡号分支还剩 39 个码（其中行为分支 11 个、`reference` 28 个归 Phase 6）。**
 
 ---
 
@@ -62,7 +62,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 | 文档 | 本文 + `phase5-migration.md`（批次证据与踩坑记录）+ `card-model.md`（加卡流程） |
 
 批次：5b-1…5b-5（机械 154）、5b-6/6b/6c/6d/7/8a/8b/9/10/11（反应/天赋/被动/规则字段/封印附属 46）、
-5c-1…5c-39（逃生卡 93 = 全部）、5b-8 / 5b-12 / 5b-13 / 5b-14（9 张）、5a-1…5a-29（引擎侧 81 个码）。
+5c-1…5c-39（逃生卡 93 = 全部）、5b-8 / 5b-12 / 5b-13 / 5b-14（9 张）、5a-1…5a-30（引擎侧 83 个码）。
 
 ---
 
@@ -93,7 +93,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 ⑤ replay --compare + 该战役验收用例
 ```
 
-### 4.2 5a 剩余 41 个码（`condition` 3 / `block` 10 / `reference` 28 / `table` 0）
+### 4.2 5a 剩余 39 个码（`condition` 2 / `block` 9 / `reference` 28 / `table` 0）
 
 - **`reference`（30）**：多数是 `requestChoice({ source: '0xxxx' })` 的来源标签——它会进状态指纹，
   改法本身会改变 replay，**归 Phase 6 与 UI 文案一起处理**，不要单独动。
@@ -160,7 +160,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 | --- | --- | --- |
 | 5c 逃生卡 | ✅ 完成 | `escapeCards` 93 → **0**（39 批） |
 | 5b 尾部（反应 / 非 stats 被动 / 打出后去向） | ✅ 完成 | 9 张卡 + 4 个字段 |
-| 5a 引擎卡号分支 | 🚧 进行中 | `engineCodes` 166 → **41**（29 批） |
+| 5a 引擎卡号分支 | 🚧 进行中 | `engineCodes` 166 → **39**（30 批） |
 
 累计 **360 张卡 / 73 个迁移批次**；`EFFECTS` 385 → 57，`legacy` 286 → 49，
 `descriptorEntries` 79 → 408，`descriptorAbilities` 343 → 345，`abilityKinds` 11 → 12（新增 `setup`），
@@ -171,7 +171,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 
 ### 5.2 剩余（按优先级）
 
-**A. 5a 行为分支 13 个**（`cards:workorder` 的 `condition` + `block`）：
+**A. 5a 行为分支 11 个**（`cards:workorder` 的 `condition` + `block`）：
 
 - 调查员能力族 8 个：`03001 03002 03003 03006 03011`、`04004 04022 04147`
 - 弱点 / 场景族 13 个：`03010 03012 03038 03042(已迁) 03059 03148 03149 03193 03199 03232 04142 04193 04230 04231 04265`
