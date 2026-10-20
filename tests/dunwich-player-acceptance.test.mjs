@@ -50,7 +50,8 @@ const contracts = {
   '02107': ['event', { type: 'fight', skill: 'intellect', damagePerClue: true, maxDamageBonus: 3 }],
   '02108': ['abilities.0.effect', { type: 'moveTo', requiresNoEnemies: true }],
   '02109': ['event', { type: 'doubleUses', usesTypes: ['ammo', 'supplies'], target: 'location' }],
-  '02110': ['campaign.adaptable', 2, 'passive.permanent', true],
+  // Phase 5（5b-9）起「适应性」用条目级 adaptableSwaps 声明；Phase 6 把契约对齐到新形状。
+  '02110': ['adaptableSwaps', 2, 'passive.permanent', true],
   '02111': ['event.type', 'drawEncounterAll', 'addToVictory', true],
   '02112': ['uses', 5, 'abilities.0.effect', { type: 'fight', skill: 'willpower', combatBonus: 1, skullDamageBonus: 2 }],
   '02113': ['reaction', { when: 'attackFail', failedByAtMost: 2 }, 'event.type', 'redirectFailedAttack'],
@@ -211,6 +212,7 @@ function behaviorOf(code) {
     // Phase 5（5b-8）：攻击转移支援与「神话结束弃掉」也折叠进同一份形状。
     ...(entry?.redirectAttackToAsset ? { redirectAttackToAsset: true } : {}),
     ...(entry?.forcedMythosEndDiscard ? { forcedMythosEndDiscard: true } : {}),
+    ...(entry?.adaptableSwaps ? { adaptableSwaps: entry.adaptableSwaps } : {}),
     ...(entry?.uses != null ? { uses: entry.uses } : {}),
     ...(entry?.usesType ? { usesType: entry.usesType } : {}),
     ...(playCondition?.length ? { playCondition } : {}),

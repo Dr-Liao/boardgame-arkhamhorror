@@ -672,3 +672,55 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 3169 行**（12654 → 9485，−25.0%）。
+
+## 21. 6d-14：拆出 weakness.js（弱点结算）+ 修掉一条存量失败
+
+### 21.1 拆的是什么
+
+`resolveWeakness`（231 行）搬进 `src/engine/weakness.js`，导出 `createWeakness(deps)`（36 项依赖）。
+弱点是这套引擎里规则最碎的一块（敌人型、威胁型、附着型、可打出、会升级、会洗回牌库），
+Phase 5 补齐「弱点描述子 + resolve 通道」之后这里已经是「数据驱动 + 少量兜底分支」，
+拆出来便于继续按 roadmap §7 的判据收。
+
+engine 侧仍是惰性装配，保持 `resolveWeakness(state, inv, def, events, texts)` 调用点不变。
+
+### 21.2 顺手发现并修掉一条**存量失败**
+
+跑 `dunwich-player-acceptance` 时红了：
+
+```
+02110.campaign.adaptable   undefined !== 2
+```
+
+用 `git stash` 验证后确认：**这条失败在本次改动之前就存在**（`dunwich-player-acceptance`
+不在 fast tier 里，所以一直没被看见）。原因是 Phase 5（5b-9）把「适应性」迁成了条目级
+`adaptableSwaps`，但验收契约还写着旧字段名 `campaign.adaptable`，而 `behaviorOf()` 也没有折叠这个字段。
+
+修法（两处，都是把契约对齐到新形状）：
+1. `behaviorOf()` 增加 `...(entry?.adaptableSwaps ? { adaptableSwaps: entry.adaptableSwaps } : {})`；
+2. 契约从 `['campaign.adaptable', 2]` 改成 `['adaptableSwaps', 2]`。
+
+另外 `tools/audit-dunwich-acceptance.mjs` 因断言数据变化报 `Acceptance artifact stale`，
+用 `--write` 重采（333/333 verified，384 testsPassed）。
+
+### 21.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **9299**（6d-13 后 9485） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/weakness.js` | **283** |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 3355 行**（12654 → 9299，−26.5%）。
