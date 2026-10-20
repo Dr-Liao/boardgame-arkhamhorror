@@ -242,3 +242,44 @@ export const describeState = createDescribeState({
 
 下一块按同样流程拆 `doPlay`（212 行）与 `doInvestigate`（114 行），然后才是 `abilityApi`；
 `scenarioRuntime`（317 行）因为依赖 90+ 个副作用 helper，放到 `abilityApi` 之后。
+
+## 11. 6d-4：拆出 actions.js（doPlay / doInvestigate）
+
+### 11.1 拆的是什么
+
+`doPlay`（212 行）+ `doInvestigate`（114 行）搬进 `src/engine/actions.js`，
+导出 `createActions(deps)`；engine 末尾一次性注入 57 个依赖。
+
+这是 roadmap「按域拆分」的第二个域：出牌与调查。两者都会写 state
+（资源、手牌、支援入场、地点线索、事件弃置），依赖清单比 combat 略长。
+
+### 11.2 坑一：注释会被当成标识符
+
+用「engine 顶层声明 ∪ import 绑定」生成依赖表时，**必须先剥注释**。
+第一版没剥，注释里的 \`Phase 5\`、\`C1\`、\`D1\`、行号 \`2\`/\`3\` 都被算成候选，
+依赖表里混进一堆不存在的名字。剥掉 \`//…\` 与 \`/*…*/\` 后干净了（55 → 57 个真实依赖）。
+
+### 11.3 坑二：`String.replace` 只换第一个
+
+补两个漏掉的依赖（\`capabilityBlocked\` / \`entityModifierTotal\`）时，我用
+\`text.replace("  cardDef,", …)\` 插入——它换的是**文件里第一处** \`  cardDef,\`，
+也就是 \`createCombat\` 的注入块，结果：
+
+- \`createCombat\` 块里多了一行重复键（对象字面量里合法，但脏）；
+- \`createActions\` 块仍然缺依赖，重放报 `capabilityBlocked is not a function`。
+
+**教训**：往两个相似的注入块里插东西，必须先用 \`indexOf("createXxx({")\` 定位到块再改，
+不能用全局 \`replace\`；重复键不报错，会让问题延后到运行期才暴露。
+
+### 11.4 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **11883**（6d-3 后 12149） |
+| `src/engine/combat.js` | 446 |
+| `src/engine/actions.js` | **397** |
+| `src/engine/describe.js` | 176 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计从 engine.js 迁出 **约 670 行**（12654 → 11883）。下一块：`doUpkeep` / 敌人阶段等
+阶段机（`upkeepPhase` 105、`runAgendaReveal` 142），然后才是 `abilityApi`。
