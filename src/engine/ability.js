@@ -118,6 +118,10 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // Phase 5（5b-6d）：被动数据体（stats / handSizeBonus / sanityBonus …）。
   // 过渡方案：整块搬到条目上，读点仍是 assetEffect 的合并结果；5b-8 再逐键换成 modifiers。
   'passive',
+  // Phase 5（5c-20）：卡面自带的「打出限制」与「团队仅限 N 张」。
+  // 旧 DSL 写在 EFFECTS 顶层、由引擎的 cardPlayBlockedReason 读；搬到条目上之后读点不变
+  // （先读条目、再回落 EFFECTS），这样迁移不影响 legalMoves 的可见性。
+  'playRestriction', 'teamLimit',
   'fast', 'noOpportunityAttack'])
 
 // 条目级「能不能打出」条件：函数式 predicate，或 { when, message }（message 直接展示给玩家）。
@@ -317,6 +321,9 @@ export function registerCardAbilities(entries) {
       attachTo: entry.attachTo ? Object.freeze({ ...entry.attachTo }) : null,
       onAttach: entry.onAttach ? Object.freeze({ ...entry.onAttach }) : null,
       exhaustOnEnemyDefeatedHealHorror: entry.exhaustOnEnemyDefeatedHealHorror ?? null,
+      // Phase 5（5c-20）：卡面自带的打出限制 / 团队张数上限（读点 cardPlayBlockedReason）。
+      playRestriction: entry.playRestriction ?? null,
+      teamLimit: entry.teamLimit ?? null,
       source: entry.source || null,
       registered: true,
     }

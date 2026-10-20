@@ -12,9 +12,9 @@
 
 ## 1. 一句话现状
 
-迁移工具链已交付，**303 张卡**迁到能力层（34 个批次），`EFFECTS` 385 → **89**、
-通道 legacy 286 → **60**、descriptor 75 → **370**、**逃生卡 93 → 25**、**引擎卡号 166 → 121**。
-`replay` 基线逐条不变、`fast` 无新增失败。**5a 引擎卡号分支、5c 剩余 25 张、5b 尾部（反应 2 / 非 stats 被动 8）仍未完成。**
+迁移工具链已交付，**304 张卡**迁到能力层（35 个批次），`EFFECTS` 385 → **88**、
+通道 legacy 286 → **60**、descriptor 75 → **371**、**逃生卡 93 → 24**、**引擎卡号 166 → 120**。
+`replay` 基线逐条不变、`fast` 无新增失败。**5a 引擎卡号分支、5c 剩余 24 张、5b 尾部（反应 2 / 非 stats 被动 8）仍未完成。**
 
 ---
 
@@ -62,19 +62,19 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 | 文档 | 本文 + `phase5-migration.md`（批次证据与踩坑记录）+ `card-model.md`（加卡流程） |
 
 批次：5b-1…5b-5（机械 154）、5b-6/6b/6c/6d/7/8a/8b/9/10/11（反应/天赋/被动/规则字段/封印附属 46）、
-5c-1…5c-19（逃生卡 67）、5a-1…5a-4（引擎侧 10 个码）。
+5c-1…5c-20（逃生卡 68）、5a-1…5a-4（引擎侧 10 个码）。
 
 ---
 
 ## 4. 下一步（按性价比排序）
 
-### 4.1 5c 剩余 25 张（其中 20 张引擎里仍有逃生原语实现）
+### 4.1 5c 剩余 24 张（其中 19 张引擎里仍有逃生原语实现）
 
 顺序（每批 2–3 张，逐张验证）：
 
-1. `04010` 走私货物（牌库顶 9 / 弃牌堆两区查找）——注意它的 `playRestriction: 'noReadyEnemy'`
-   目前只能经 `EFFECTS` 读（`cardPlayBlockedReason`），而 `legalMoves` **不检查** `playCondition`，
-   所以把它改成 `playCondition` 会让"有未横置敌人时"多出一条非法但可见的动作，**不能顺手改**。
+1. `04010` 走私货物已迁（5c-20）：它的 `playRestriction` 现在有**条目级读点**
+   （`cardPlayBlockedReason` 先读条目、再回落 `EFFECTS`）。**不要**把它改成 `playCondition`——
+   `legalMoves` 不检查 `playCondition`，那样会让"有未横置敌人时"多出一条非法但可见的动作。
 2. `04270` 骷髅钥匙（附属到地点 + 隐藏值视为 1）——**原有的解除附属分支有 bug**：
    它从 `inv.assets` 里找不到已附属的钥匙，所以"解除"只会删掉地点附属而不会把钥匙放回场上；
    迁移时要么按原样保留、要么单开一批修。
@@ -94,9 +94,9 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 ⑤ replay --compare + 该战役验收用例
 ```
 
-### 4.2 5a 剩余 121 个码（`condition` 30 / `block` 57 / `reference` 34 / `table` 0）
+### 4.2 5a 剩余 120 个码（`condition` 30 / `block` 57 / `reference` 33 / `table` 0）
 
-- **`reference`（34）**：多数是 `requestChoice({ source: '0xxxx' })` 的来源标签——它会进状态指纹，
+- **`reference`（33）**：多数是 `requestChoice({ source: '0xxxx' })` 的来源标签——它会进状态指纹，
   改法本身会改变 replay，**归 Phase 6 与 UI 文案一起处理**，不要单独动。
 - **`condition` / `block`（87）**：`def.code === '0xxxx'` 形式的真实行为分支。
   做法：先补 `ctx.api`（`engine.js` 的 `abilityApi`），把分支搬成描述子，再删分支。

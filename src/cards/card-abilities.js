@@ -2637,12 +2637,49 @@ export const MIGRATED_ESCAPE_ENTRIES_5C19 = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// 5c-20：牌库顶/弃牌堆两区查找（走私货物）+ 条目级打出限制
+// ---------------------------------------------------------------------------
+//
+// 04010 的旧条目还带 `playRestriction: 'noReadyEnemy'`——它由引擎的 cardPlayBlockedReason 读，
+// **不走 playCondition**（legalMoves 不检查 playCondition，改成后者会让卡片在有敌人时也出现在
+// 合法动作里）。所以先给条目加同名字段与读点回落，再迁这张卡。
+
+export const MIGRATED_ESCAPE_ENTRIES_5C20 = [
+  // 04010 走私货物：查找牌库顶 9 张或弃牌堆中的[[违法]]卡，加入手牌。
+  {
+    code: '04010',
+    playRestriction: 'noReadyEnemy',
+    abilities: [{
+      kind: 'played', label: '查找牌库顶 9 张或弃牌堆中的违法卡',
+      resolve: ({ inv, api }) => {
+        const illicit = code => api.cardTraits(code).some(trait => ['illicit', '违法'].includes(trait))
+        const options = [{ id: 'deck', label: '查看牌库顶 9 张' }]
+        if (inv.discard.some(illicit)) options.push({ id: 'discard', label: '查看弃牌堆' })
+        const zone = api.choice({ kind: 'effect', source: '04010', seat: inv.seat,
+          prompt: '走私货物：选择查找的区域。', options })
+        if (zone === 'discard') {
+          const matches = [...new Set(inv.discard.filter(illicit))]
+          if (!matches.length) return
+          const chosen = api.choice({ kind: 'target', source: '04010', seat: inv.seat,
+            prompt: '选择加入手牌的违法卡。',
+            options: matches.map(code => ({ id: code, cardCode: code, label: api.cardName(code) })) })
+          api.moveCard({ code: chosen, from: 'discard', to: 'hand' })
+          api.info(`${inv.name} 从弃牌堆找回了「${api.cardName(chosen)}」。`)
+          return
+        }
+        api.searchTop(inv.seat, { amount: 9, trait: 'Illicit', traitZh: '违法', source: '04010', mandatory: true })
+      },
+    }],
+  },
+]
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -2683,4 +2720,5 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_SEAL_ATTACH_ENTRIES.map(entry => entry.code),
   ...MIGRATED_MIXED_ENTRIES_5B11.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C19.map(entry => entry.code),
+  ...MIGRATED_ESCAPE_ENTRIES_5C20.map(entry => entry.code),
 ])

@@ -7305,9 +7305,6 @@ function carcosaInvestigatorEffect(state, seat, effect, events) {
 // 失落的时代（三循环）调查员与专属卡效果（M1）
 // ---------------------------------------------------------------------------
 
-const illicitTrait = code => (cardDef(code)?.traits || [])
-  .some(trait => ['illicit', '违法'].includes(String(trait).toLowerCase()))
-
 function tfaInvestigatorEffect(state, seat, effect, events) {
   const inv = state.investigators[seat]
   // 里奥·安德森：回合开始后打出 1 张盟友支援，费用减 1。
@@ -7337,28 +7334,6 @@ function tfaInvestigatorEffect(state, seat, effect, events) {
     return
   }
   // 芬恩·爱德华兹：手枪攻击，未交战时额外 +1 伤害。
-  // 走私货物：查找弃牌堆或牌库顶 9 张中的违法卡。
-  if (effect.action === 'smuggledGoods') {
-    const trait = effect.trait || 'Illicit'
-    const inDiscard = inv.discard.some(illicitTrait)
-    const options = [{ id: 'deck', label: `查看牌库顶 ${effect.amount || 9} 张` }]
-    if (inDiscard) options.push({ id: 'discard', label: '查看弃牌堆' })
-    const zone = requestChoice(state, { kind: 'effect', source: '04010', seat,
-      prompt: '走私货物：选择查找的区域。', options })
-    if (zone === 'discard') {
-      const matches = [...new Set(inv.discard.filter(illicitTrait))]
-      if (!matches.length) return
-      const chosen = requestChoice(state, { kind: 'target', source: '04010', seat,
-        prompt: '选择加入手牌的违法卡。',
-        options: matches.map(code => ({ id: code, cardCode: code, label: cardName(code) })) })
-      const index = inv.discard.lastIndexOf(chosen)
-      if (index >= 0) inv.hand.push(inv.discard.splice(index, 1)[0])
-      info(state, events, `${inv.name} 从弃牌堆找回了「${cardName(chosen)}」。`)
-      return
-    }
-    searchTop(state, seat, { amount: effect.amount || 9, trait, traitZh: effect.traitZh, source: '04010', mandatory: true }, events)
-    return
-  }
   throw new Error(`未实现的失落调查员效果：${effect.action}`)
 }
 
@@ -8655,13 +8630,15 @@ export function moveCost(state, seat, move) {
 function cardPlayBlockedReason(state, inv, def) {
   // Phase 2（C1）：capability:play —— 声明式「不能打出卡牌」。
   if (capabilityBlocked(state, inv, 'play')) return '当前效果禁止你打出卡牌'
-  const restriction = EFFECTS[def?.code]?.playRestriction
+  // Phase 5（5c-20）：条目的同名字段优先（迁移后可删旧 DSL 条目），读点只有一个。
+  const entry = def?.code ? registeredEntry(def.code) : null
+  const restriction = entry?.playRestriction ?? EFFECTS[def?.code]?.playRestriction
   if (restriction === 'noReadyEnemy'
     && state.enemies.some(enemy => enemy.location === inv.location && !enemy.exhausted && !enemy.defeated)) {
     return '你所在地点有处于重整状态的敌人'
   }
   // 「团队仅限 N 张」的支援（04031 保护咒语）：场上所有调查员的副本合计不能超过 N。
-  const teamLimit = EFFECTS[def?.code]?.teamLimit
+  const teamLimit = entry?.teamLimit ?? EFFECTS[def?.code]?.teamLimit
   if (teamLimit) {
     const inPlay = state.investigators.reduce((sum, owner) =>
       sum + owner.assets.filter(asset => asset.code === def.code).length, 0)

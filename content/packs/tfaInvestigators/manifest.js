@@ -69,10 +69,8 @@ export const investigatorAbilities = {
 
 // Source: 参考资源/.../library/Arkham/Player/Cards/TheForgottenAge/*.hs
 export const signatureEffects = {
-  '04010': { // 走私货物 Smuggled Goods
-    playRestriction: 'noReadyEnemy',
-    event: { type: 'tfaInvestigator', action: 'smuggledGoods', trait: 'Illicit', traitZh: '违法', amount: 9 },
-  },
+  // 04010 走私货物已迁到能力层（5c-20），见 src/cards/card-abilities.js 的
+  // MIGRATED_ESCAPE_ENTRIES_5C20（含条目级 playRestriction）。
   '04014': { // 伊格蛇族 Serpents of Yig
     enemyWeakness: { sealsElderSign: true, hunter: true, prey: 'bearer' },
   },

@@ -640,3 +640,37 @@ test('5c-19：03158 求助盟友把盟友返回手牌并从牌库顶免费打出
   assert.ok(played, '牌库顶的盟友被直接放置入场')
   assert.equal(state.investigators[0].resources, resources - 1, '只付 03158 自己的 1 资源')
 })
+
+// ---- 5c-20：条目级 playRestriction + 牌库顶/弃牌堆两区查找（04010）----
+
+test('5c-20：04010 走私货物的条目级 playRestriction 仍挡在有未横置敌人的地点外', () => {
+  const state = fixture()
+  enemy(state, { engagedSeat: 0, exhausted: false })
+  state.investigators[0].hand.push('04010')
+  assert.match(String(validateMove(state, 0, { action: 'play', cardId: '04010' })), /重整状态的敌人/)
+  assert.equal(legalMoves(state).some(command => command.action === 'play' && command.cardId === '04010'),
+    false, '合法动作列表里也不该出现')
+})
+
+test('5c-20：04010 走私货物可从弃牌堆找回违法卡', () => {
+  const state = fixture()
+  state.investigators[0].discard = ['01044'] // 弹簧刀：[[违法]]支援
+  play(state, '04010')
+  answer(state, 'discard')
+  answer(state, '01044')
+  settle(state)
+  assert.ok(state.investigators[0].hand.includes('01044'), '违法卡回到手牌')
+  assert.equal(state.investigators[0].discard.includes('01044'), false, '离开弃牌堆')
+})
+
+test('5c-20：04010 走私货物在没有违法卡时只提供牌库顶 9 张', () => {
+  const state = fixture()
+  state.investigators[0].deck = [...state.investigators[0].deck.slice(0, -1), '01044']
+  play(state, '04010')
+  assert.equal(state.pendingChoice?.kind, 'effect', '区域选择')
+  assert.deepEqual(state.pendingChoice.options.map(option => option.id), ['deck'], '弃牌堆没有违法卡时不提供该选项')
+  answer(state, 'deck')
+  assert.equal(state.pendingChoice?.kind, 'search', '进入牌库顶检索询问')
+  assert.ok(state.pendingChoice.options.some(option => option.cardCode === '01044'))
+  settle(state)
+})
