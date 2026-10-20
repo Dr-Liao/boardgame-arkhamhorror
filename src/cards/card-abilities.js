@@ -2836,12 +2836,33 @@ export const MIGRATED_ESCAPE_ENTRIES_5C25 = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// 5c-27：击败敌人后的反应 —— 敌人与事件卡一起进胜利区（掩埋）
+// ---------------------------------------------------------------------------
+
+export const MIGRATED_ESCAPE_ENTRIES_5C27 = [
+  // 03016 掩埋：击败非精英敌人后快速打出——把那名敌人和这张牌一起放进胜利区。
+  {
+    code: '03016',
+    abilities: [{
+      kind: 'played', fast: true, trigger: 'defeatEnemy',
+      criteria: { nonElite: true },
+      label: '把击败的非精英敌人与自身加入胜利区',
+      resolve: ({ api }) => {
+        const enemy = api.reactionContext()?.enemy
+        if (!enemy) return
+        api.buryEnemyInVictory(enemy, '03016')
+      },
+    }],
+  },
+]
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -2889,4 +2910,5 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_ESCAPE_ENTRIES_5C23.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C24.map(entry => entry.code),
   ...MIGRATED_ESCAPE_ENTRIES_5C25.map(entry => entry.code),
+  ...MIGRATED_ESCAPE_ENTRIES_5C27.map(entry => entry.code),
 ])

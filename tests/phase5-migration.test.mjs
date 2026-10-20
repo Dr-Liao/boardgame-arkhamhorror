@@ -684,6 +684,27 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-27：击败敌人后的反应 —— 敌人与事件卡一起进胜利区（03016 掩埋）----
+
+test('5c-27：03016 掩埋把被击败的非精英敌人与自身放进胜利区', () => {
+  const state = fixture()
+  state.investigators[0].hand = ['03016']
+  enemy(state, { engagedSeat: 0, fight: 1, health: 1, victory: 1 })
+  state.chaosBag = ['0', '0', '0']
+  move(state, legalMoves(state).find(command => command.action === 'fight'))
+  let played = false
+  settle(state, pending => {
+    const option = pending.options?.find(item => item.cardCode === '03016')
+    if (option) { played = true; return option.id }
+    return null
+  })
+  assert.equal(played, true, '击败敌人的反应窗口里可以打出掩埋')
+  const codes = state.victoryDisplay.map(card => card.code)
+  assert.ok(codes.includes('ghoulMinion'), '敌人进入胜利区')
+  assert.ok(codes.includes('03016'), '事件卡本身也进入胜利区')
+  assert.equal(state.investigators[0].discard.includes('03016'), false, '没有进弃牌堆')
+})
+
 // ---- 5c-26：先选敌人再按指定技能躲避（03268 暗示）----
 
 test('5c-26：03268 暗示用意志躲避交战敌人（旧原语一用就抛错的路径）', () => {

@@ -7212,23 +7212,6 @@ function carcosaInvestigatorEffect(state, seat, effect, events) {
     if (choice !== 'skip') inv.hand.push(...inv.discard.splice(Number(choice), 1))
     return
   }
-  if (effect.action === 'buryThemDeep') {
-    const enemy = state._reaction?.enemy
-    if (!enemy || enemy.elite) return
-    const originalCode = enemy.originalCode || enemy.code
-    const owner = state.investigators[enemy.bearerSeat]
-    const piles = owner ? [owner.discard, state.encounterDiscard] : [state.encounterDiscard]
-    for (const pile of piles) {
-      const index = pile.lastIndexOf(enemy.code)
-      if (index >= 0) { pile.splice(index, 1); break }
-    }
-    if (!state.victoryDisplay.some(card => card.id === enemy.id)) {
-      state.victoryDisplay.push({ id: enemy.id, code: enemy.code, originalCode, victory: enemy.victory || 0 })
-    }
-    state._reaction.eventToVictory = '03016'
-    info(state, events, `「${cardName('03016')}」将「${enemy.name}」和自身加入胜利区。`)
-    return
-  }
   if (effect.action === 'lolaSwitchRole') {
     const role = chooseLolaRole(state, inv, effect.action, '选择罗拉要切换到的角色。')
     info(state, events, `${inv.name} 切换为${CLASS_NAMES[role] || role}角色。`)
@@ -10726,6 +10709,24 @@ function abilityApi(state, events) {
       state.clues = (state.clues || 0) - amount
       location.clues = (location.clues || 0) + amount
       return amount
+    },
+    // Phase 5（5c-27）：「掩埋」——把刚击败的非精英敌人与这张事件卡一起放进胜利区。
+    buryEnemyInVictory: (enemy, eventCode) => {
+      if (!enemy || enemy.elite) return false
+      const originalCode = enemy.originalCode || enemy.code
+      const owner = state.investigators[enemy.bearerSeat]
+      const piles = owner ? [owner.discard, state.encounterDiscard] : [state.encounterDiscard]
+      for (const pile of piles) {
+        const index = pile.lastIndexOf(enemy.code)
+        if (index >= 0) { pile.splice(index, 1); break }
+      }
+      if (!state.victoryDisplay.some(card => card.id === enemy.id)) {
+        state.victoryDisplay.push({ id: enemy.id, code: enemy.code, originalCode, victory: enemy.victory || 0 })
+      }
+      // 事件卡本身也进胜利区：处置段读的是反应上下文里的 eventToVictory。
+      if (state._reaction) state._reaction.eventToVictory = eventCode
+      if (eventCode) info(state, events, `「${cardName(eventCode)}」将「${enemy.name}」和自身加入胜利区。`)
+      return true
     },
     // Phase 5（5c-26）：「暗示」这类「先选敌人、再按某个技能躲避」的能力。
     // 与 effectError / validateMove 共用同一份 abilityTargets（旧实现就是 chooseEnemy）。

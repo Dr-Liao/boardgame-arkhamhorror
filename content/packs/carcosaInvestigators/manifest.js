@@ -87,11 +87,7 @@ export const signatureEffects = {
       effect: { type: 'carcosaInvestigator', action: 'angeredSpirits' },
     }],
   },
-  '03016': {
-    fast: true,
-    reaction: { when: 'defeatEnemy', nonElite: true },
-    event: { type: 'carcosaInvestigator', action: 'buryThemDeep' },
-  },
+  // 03016 掩埋已迁到能力层（5c-27），见 MIGRATED_ESCAPE_ENTRIES_5C27。
   '03017': { enemyWeakness: { hunter: true, prey: 'bearer', lockDiscardWhileEngaged: true } },
   '03018': {
     fast: true,
