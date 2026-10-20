@@ -56,7 +56,12 @@ export function collectDeadPrimitives() {
     if (!value || typeof value !== 'object') return
     if (Array.isArray(value)) { for (const item of value) walk(item); return }
     if (typeof value.action === 'string') dataReference.add(value.action)
-    for (const child of Object.values(value)) walk(child)
+    // Phase 6：迁移后的数据体常把原语写成「布尔标记」（skill.onSuccess.placeChargeOrSecret: true），
+    // 不是 action 字段；这里一并算作数据引用。
+    for (const [key, child] of Object.entries(value)) {
+      if (child === true) dataReference.add(key)
+      walk(child)
+    }
   }
   for (const entry of Object.values(EFFECTS)) walk(entry)
   for (const ability of Object.values(INVESTIGATOR_ABILITIES)) walk(ability)
@@ -74,7 +79,8 @@ export function collectDeadPrimitives() {
     const engineOccurrences = countOccurrences(source, `'${name}'`)
     const reasons = []
     if (dataReference.has(name)) reasons.push('数据体仍在引用')
-    if (contentText.includes(`'${name}'`)) reasons.push('内容层源码仍在引用')
+    const identifierPattern = new RegExp(`\\b${name}\\b`)
+    if (contentText.includes(`'${name}'`) || identifierPattern.test(contentText)) reasons.push('内容层源码仍在引用')
     if (engineOccurrences > lines.length) reasons.push(`引擎里另有 ${engineOccurrences - lines.length} 处引用`)
     return { name, lines, dead: reasons.length === 0, reasons }
   }).sort((left, right) => Number(right.dead) - Number(left.dead) || left.name.localeCompare(right.name))

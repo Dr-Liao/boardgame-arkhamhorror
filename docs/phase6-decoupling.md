@@ -1179,3 +1179,85 @@ setCurrentActionKind: value => { currentActionKind = value },
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 5430 行**（12654 → 7224，−42.9%）。
+
+## 31. 6d-24：拆出 skill-effects.js（检定的效果侧）+ 修审计工具的盲区
+
+### 31.1 拆的是什么
+
+三个函数（共 220 行，74 项依赖）搬进 `src/engine/skill-effects.js`：
+
+| 函数 | 行数 | 职责 |
+| --- | --- | --- |
+| `applyTokenFx` | 28 | 混乱标记上的 onFail/onSuccess 效果 |
+| `applySkillOnSuccess` | 102 | 投入技能牌的成功结算（clueBonus / damageBonus / 自动躲避…） |
+| `makeRuntime` | 90 | 效果 DSL 的运行时注入对象（`resolveEffect` 需要 `rt`） |
+
+与 `tests.js`（检定主流程）分工：**那边管 ST.1–ST.8 的流程，这边管「结果怎么落到状态上」**。
+
+### 31.2 坑一：工厂产物依赖漏了两处
+
+`skill-effects.js` 里 `makeRuntime` 的 `rt` 对象会回调 `doFight` / `doEvade` / `doInvestigate` / `doPlay` 等
+（效果 DSL 需要引擎动作），第一版依赖表只补了 `doFight`，`01066 evade事件` 等 6 条用例红：
+
+```
+doEvade is not defined
+    at Object.evade (src/engine/skill-effects.js:249)
+```
+
+用「跑用例 → 从报错取名 → 补两边」的循环补齐 `doEvade` / `doInvestigate` / `doPlay` / `upkeepPhase` / `legalMoves`。
+
+### 31.3 坑二：`audit-dead-primitives` 看不到「布尔标记」形式的数据引用
+
+拆完后 `audit-dead-primitives --check` 报：
+
+```
+旧原语分派点 8 个：已无数据引用 1 个
+  ☠ placeChargeOrSecret  (L4060)
+```
+
+但数据其实还在——`src/cards/ability-migration-batches.js` 里是：
+
+```js
+skill: { onSuccess: { placeChargeOrSecret: true } },
+```
+
+两个盲区：
+1. 审计的 `walk()` 只收集 `typeof value.action === 'string'`，**布尔标记**（`onSuccess.placeChargeOrSecret: true`）不算引用；
+2. 内容层源码检查只找带引号的 `'placeChargeOrSecret'`，而数据里是**裸标识符加冒号**。
+
+修法（工具随迁移形态演进的正常更新）：
+1. `walk()` 额外把 `child === true` 的**键名**记为数据引用；
+2. 内容层检查再加一条 `\bNAME\b` 的正则匹配。
+
+修完 `✔ 没有死分支`。
+
+### 31.4 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **7091**（6d-23 后 7224） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/setup.js` | 578 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/dispatch.js` | 436 |
+| `src/engine/enemies.js` | 434 |
+| `src/engine/encounter.js` | 400 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/ability-exec.js` | 369 |
+| `src/engine/skill-effects.js` | **313** |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/campaign-flow.js` | 252 |
+| `src/engine/movement.js` | 249 |
+| `src/engine/locations.js` | 212 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 5563 行**（12654 → 7091，−43.9%）。
