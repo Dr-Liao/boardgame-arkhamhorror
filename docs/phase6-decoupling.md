@@ -1093,3 +1093,47 @@ setCurrentActionKind: value => { currentActionKind = value },
 
 `engine.js` 现在只剩下这些职责：游戏状态机（阶段循环）、各个 `do*`（攻击/躲避/调查/出牌之外的
 具体动作）、技能检定前处理、以及能力层各 api 的装配。
+
+## 29. 6d-22：拆出 enemies.js（敌人与伤害原语）
+
+### 29.1 拆的是什么
+
+15 个函数（共 356 行，46 项依赖）搬进 `src/engine/enemies.js`——规则最「热」的底层原语：
+
+| 分组 | 函数 |
+| --- | --- |
+| 伤害与恐惧 | `applyHarm`（67，唯一入口：soaking / 直接伤害 / 反伤 / 击败资产）、`applyDamage`、`applyHorror`、`defeatedAssetRetaliation` |
+| 敌人数值 | `enemyHealth`、`enemyFightValue`、`enemyEvadeValue` |
+| 攻击流程 | `enemyAttack`（65：反应窗口 → 修正 → 结算） |
+| 生死与交战 | `spawnEnemy`（55）、`engageEnemy`、`disengageEnemy`、`enableEvade`… `defeatEnemy`（67）、`damageEnemy`、`autoEvadeEnemy`、`enemiesEngagedWith` |
+
+它们被几乎所有 `do*` 与剧本运行时调用。拆完后 engine.js 只剩**状态机与动作编排**。
+
+### 29.2 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **7353**（6d-21 后 7641） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/setup.js` | 578 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/dispatch.js` | 436 |
+| `src/engine/enemies.js` | **434** |
+| `src/engine/encounter.js` | 400 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/ability-exec.js` | 369 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/campaign-flow.js` | 252 |
+| `src/engine/movement.js` | 249 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 5301 行**（12654 → 7353，−41.9%）。
