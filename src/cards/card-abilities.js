@@ -2252,9 +2252,15 @@ export const MIGRATED_REACTION_ENTRIES_5B6C = [
         effect: { type: 'fight', combatBonus: 1, damageBonus: 0 },
       },
       {
+        // 5c-31：不再走 tfaPlayer 逃生原语；攻击者从反应上下文的 `enemy` 取（与旧原语同一个字段）。
         kind: 'reaction', trigger: 'enemyAttackDamage', id: 'survivalKnife', legacyReaction: true,
         criteria: { selfOnly: true }, label: '敌人攻击造成伤害时反击',
-        cost: { exhaust: true }, effect: { type: 'tfaPlayer', action: 'survivalKnife' },
+        cost: { exhaust: true },
+        resolve: ({ inv, api }) => {
+          const attacker = api.reactionContext()?.enemy
+          if (!attacker || !api.isEnemyInPlay(attacker)) return
+          api.fight(inv.seat, attacker.id, { combatBonus: 2, damageBonus: 1, noSpend: true })
+        },
       },
     ],
   },

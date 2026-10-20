@@ -684,6 +684,23 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-31：敌人攻击造成伤害后的反击（04017 求生匕首）----
+
+test('5c-31：04017 求生匕首在敌人攻击造成伤害后反击（战斗 +2、伤害 +1）', () => {
+  const state = fixture()
+  asset(state, '04017')
+  const foe = enemy(state, { engagedSeat: 0, fight: 1, health: 10, damage: 1 })
+  state.chaosBag = ['0', '0', '0']
+  move(state, { action: 'endTurn' })
+  let triggered = false
+  settle(state, pending => {
+    if (pending.kind === 'reaction' && pending.source === 'survivalKnife') { triggered = true; return 'trigger' }
+    return null
+  })
+  assert.equal(triggered, true, '敌人攻击造成伤害后出现反击反应')
+  assert.equal(state.enemies.find(item => item.id === foe.id)?.damageTaken, 2, '战斗 +2、伤害 +1 打中')
+})
+
 // ---- 5c-30：附属到地点并把帷幕视为 1（04270 骷髅钥匙）----
 
 test('5c-30：04270 骷髅钥匙附属到所在地点，该地点帷幕视为 1', () => {

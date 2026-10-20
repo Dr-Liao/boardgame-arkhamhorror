@@ -5,7 +5,7 @@
     "engineCodes": 113,
     "effectsEntries": 77,
     "effectsTopLevelFields": 45,
-    "escapeCards": 13,
+    "escapeCards": 12,
     "descriptorEntries": 386,
     "descriptorAbilities": 328,
     "abilityKinds": 11,
@@ -16,11 +16,11 @@
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 383,
+    "descriptor": 384,
     "legacy": 59,
     "engine": 5,
     "hybrid": 1,
-    "escape": 13
+    "escape": 12
   },
   "nonPlayer": {
     "byScope": {
@@ -1975,11 +1975,8 @@
     },
     {
       "code": "04017",
-      "channel": "escape",
-      "descriptors": 2,
-      "escapePrimitives": [
-        "tfaPlayer"
-      ]
+      "channel": "descriptor",
+      "descriptors": 2
     },
     {
       "code": "04018",

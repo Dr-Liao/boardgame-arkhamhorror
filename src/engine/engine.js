@@ -5986,7 +5986,8 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
   // "When dealt damage" reactions occur after assignment, before placement and
   // defeat. A Guard Dog can retaliate even when this attack will defeat it.
   if (attack) triggerReaction(state, inv.seat, 'enemyAttackDamage', events, {
-    ...attack, damagedAssetIds: [...assignedDamage.keys()].filter(a => a !== inv).map(a => a.id),
+    ...attack,
+    damagedAssetIds: [...assignedDamage.keys()].filter(a => a !== inv).map(a => a.id),
   })
   for (const [kind, assignments] of [['damage', assignedDamage], ['horror', assignedHorror]]) {
     for (const [recipient, amount] of assignments) {
@@ -7463,12 +7464,6 @@ function tfaPlayerEffectCore(state, seat, effect, events) {
   // 陈旧猎枪：攻击；揭示骷髅或自动失败时卡膛（本次攻击不造成伤害）。
   // 如痴如醉：在控制的一张支援上放置 1 充能或秘密。
   // 求生匕首：被敌人攻击造成伤害后横置反击。
-  if (effect.action === 'survivalKnife') {
-    const enemy = state._reaction?.enemy
-    if (!enemy || !state.enemies.includes(enemy)) return
-    doFight(state, seat, { enemyId: enemy.id, combatBonus: 2, damageBonus: 1 }, events, true)
-    return
-  }
   // 冒险家：在自己地点的一个支援上放置 1 补给或子弹。
   // 窃听：对未交战敌人检定智识（难度为躲避值），成功发现 2 个线索。
   // 临时武器：攻击，敌人攻击值 -1；从弃牌堆打出时 +1 伤害。
@@ -11017,7 +11012,9 @@ function abilityApi(state, events) {
     },
     assetsCannotReady: inv => assetsCannotReady(inv),
     searchTop: (seat, options) => searchTop(state, seat, options, events),
-    fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events),
+    fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
+    // Phase 5（5c-31）：这个敌人是否还在场上（反击类能力要先确认目标没被同窗口的效果清掉）。
+    isEnemyInPlay: enemy => Boolean(enemy) && state.enemies.includes(enemy),
     discoverAt: (seat, locationId, amount = 1) => {
       const inv = state.investigators[seat]
       const location = state.locations.find(entry => entry.id === locationId)
