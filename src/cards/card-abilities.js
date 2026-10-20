@@ -3391,6 +3391,10 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '02010', chooseResourceCostOnPlay: true },
   // 01038 屏障：打出后留在场上（附属到地点），不按普通事件弃掉。
   { code: '01038', keepOnPlay: true },
+  // 02138 / 02139 / 02179（远古遗物系列）：调查员被消除时离场并进弃牌堆。
+  { code: '02138', discardOnElimination: true },
+  { code: '02139', discardOnElimination: true },
+  { code: '02179', discardOnElimination: true },
   // 02009 雷克斯的诅咒（威胁）：检定本该成功时改为再揭示一枚标记（读点在 performTest 的 ST.5）。
   { code: '02009', rerollRevealedTokenOnSuccess: true },
   // 01071 古代雕像：揭示混乱标记时花 1 充能改揭示 2 枚并选 1 枚（读点在 performTest 的标记段）。

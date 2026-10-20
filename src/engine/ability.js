@@ -170,6 +170,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'chooseResourceCostOnPlay',
   // Phase 5（5a-18）：打出后留在场上（屏障这类附属事件）。
   'keepOnPlay',
+  // Phase 5（5a-19）：调查员被消除时离场（远古遗物这类支援）。
+  'discardOnElimination',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -410,6 +412,7 @@ export function registerCardAbilities(entries) {
       playedEventsToDeckTop: entry.playedEventsToDeckTop === true,
       chooseResourceCostOnPlay: entry.chooseResourceCostOnPlay === true,
       keepOnPlay: entry.keepOnPlay === true,
+      discardOnElimination: entry.discardOnElimination === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

@@ -46,6 +46,7 @@ import {
   SMITE_THE_WICKED_CODE,
   SEARCHING_FOR_IZZIE_CODE,
   weaknessUpgradeCode,
+  LITA_CHANDLER_CODE,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -1347,12 +1348,12 @@ function addLitaToCampaign(state) {
   const candidates = campaign.investigators[lead.seat].status === 'active' ? [lead]
     : state.investigators.filter(inv => inv.resigned && campaign.investigators[inv.seat].status === 'active')
   if (!candidates.length) return
-  const answer = requestChoice(state, { kind: 'storyCard', source: '01117', seat: candidates[0].seat,
+  const answer = requestChoice(state, { kind: 'storyCard', source: LITA_CHANDLER_CODE, seat: candidates[0].seat,
     prompt: '是否将丽塔·钱德勒加入战役牌组？不计入牌组张数。', canSkip: true,
     options: [{ id: 'skip', label: '不加入丽塔' }, ...candidates.map(inv => ({ id: String(inv.seat), label: `加入${inv.name}的牌组` }))] })
   if (answer !== 'skip') {
     const seat = Number(answer)
-    campaignCardChange(campaign, seat, '01117', 'add', state.scenario.id)
+    campaignCardChange(campaign, seat, LITA_CHANDLER_CODE, 'add', state.scenario.id)
     campaign.records.litaOwner = campaign.investigators[seat].id
   }
 }
@@ -6258,7 +6259,8 @@ function defeatAll(state, events) {
 // 调查员被消除（败退或撤退）：解除交战，并按参考规则把线索放回所在地点。
 function eliminateInvestigator(state, inv, events) {
   for (const code of [...(inv.hiddenCards || [])]) discardHiddenCard(state, inv, code, events)
-  for (const asset of inv.assets.filter(item => ['02138', '02139', '02179'].includes(item.code))) {
+  // Phase 5（5a-19）：「被消除时离场」的支援由条目级 discardOnElimination 声明。
+  for (const asset of inv.assets.filter(item => registeredEntry(item.code)?.discardOnElimination)) {
     leaveAsset(state, inv, asset, events)
     if (!asset.removedFromGame) inv.discard.push(asset.code)
   }

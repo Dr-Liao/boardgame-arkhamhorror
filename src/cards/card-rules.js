@@ -105,3 +105,6 @@ export const WEAKNESS_UPGRADE_CODES = Object.freeze({
 export function weaknessUpgradeCode(type) {
   return WEAKNESS_UPGRADE_CODES[type] || null
 }
+
+// 卡号级规则数据：结局时加入战役牌组的剧情盟友（丽塔·钱德勒，原 engine.js 硬编码 01117）。
+export const LITA_CHANDLER_CODE = '01117'
