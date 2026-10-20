@@ -684,6 +684,27 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-38：复制弃牌堆的洞察事件（03306 遗觉记忆）----
+
+test('5c-38：03306 遗觉记忆复制弃牌堆的洞察事件（付费用、移出游戏、重放）', () => {
+  const state = fixture()
+  const me = state.investigators[0]
+  me.hand = ['03306']
+  me.discard = ['10028'] // 修修补补：洞察事件，费用 1
+  me.resources = 10
+  play(state, '03306')
+  let copied = false
+  settle(state, pending => {
+    const option = pending.options?.find(item => item.cardCode === '10028')
+    if (option) { copied = true; return option.id }
+    return null
+  })
+  assert.equal(copied, true, '列出弃牌堆里的洞察事件')
+  assert.equal(state.investigators[0].resources, 9, '付出被复制事件的费用')
+  assert.ok(state.removedFromGame?.includes('10028'), '被复制的牌移出游戏')
+  assert.ok(state.removedFromGame?.includes('03306'), '这张牌自己移出游戏')
+})
+
 // ---- 5c-37：滴答计数 / 封印 0 的攻击（04308 时间借取、04310 虚空碎裂）----
 
 test('5c-37：04308 时间借取最多 3 声滴答；04310 虚空碎裂花充能用意志攻击', () => {

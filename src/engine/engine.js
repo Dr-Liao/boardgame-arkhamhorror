@@ -7052,22 +7052,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     info(state, events, `${inv.name} 将 ${asset.attached.length} 张事件附属到「原定计划」。`)
     return
   }
-  if (effect.action === 'eideticMemory') {
-    const candidates = state.investigators.flatMap(owner => owner.discard.filter(code => cardDef(code)?.type === 'event'
-      && (cardDef(code)?.traits || []).some(trait => String(trait).toLowerCase() === 'insight')).map(code => ({ code, owner })))
-      .filter(item => inv.resources >= playCost(state, inv, cardDef(item.code)))
-    if (!candidates.length) return
-    const answer = requestChoice(state, { kind: 'card', source: '03306', seat, prompt: '选择要复制的洞察事件。',
-      options: candidates.map((item, index) => ({ id: String(index), cardCode: item.code,
-        label: `${cardName(item.code)}（${playCost(state, inv, cardDef(item.code))}资源）` })) })
-    const picked = candidates[Number(answer)]
-    const copyCost = playCost(state, inv, cardDef(picked.code))
-    inv.resources -= copyCost
-    removeOne(picked.owner.discard, picked.code); state.removedFromGame ||= []; state.removedFromGame.push(picked.code)
-    const played = playedEffect(picked.code)
-    if (played) resolveEffect(state, seat, played, makeRuntime(state, events))
-    return
-  }
   throw new Error(`未实现的卡尔克萨玩家卡效果：${effect.action}`)
 }
 
@@ -10848,6 +10832,43 @@ function abilityApi(state, events) {
     assetsCannotReady: inv => assetsCannotReady(inv),
     searchTop: (seat, options) => searchTop(state, seat, options, events),
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
+    // Phase 5（5c-38）：「遗觉记忆」——所有弃牌堆里的候选、复制的费用、移出游戏、重放被复制的事件。
+    discardPiles: () => state.investigators.flatMap(owner => (owner.discard || [])
+      .map(code => ({ code, seat: owner.seat }))),
+    playCostOf: (seat, code) => {
+      const owner = state.investigators[seat]
+      const def = cardDef(code)
+      return owner && def ? playCost(state, owner, def) : 0
+    },
+    exileFromDiscard: (seat, code) => {
+      const owner = state.investigators[seat]
+      if (!owner) return false
+      const index = (owner.discard || []).lastIndexOf(code)
+      if (index < 0) return false
+      owner.discard.splice(index, 1)
+      state.removedFromGame ||= []
+      state.removedFromGame.push(code)
+      return true
+    },
+    // 重放「被复制的事件卡」的打出效果：数据体与描述子两条读点都走这里。
+    replayPlayedCode: (seat, code) => {
+      const played = playedEffect(code)
+      const descriptor = descriptorOfKind(code, 'played')
+      const previousFromDiscard = state._fromDiscardCode
+      state._fromDiscardCode = null
+      try {
+        if (descriptor?.resolve) {
+          executeDescriptor(state, { inv: state.investigators[seat], source: { code, id: code }, descriptor,
+            context: { fromDiscard: false, copyCode: null, cardId: code }, events })
+          return true
+        }
+        if (played) { resolveEffect(state, seat, played, makeRuntime(state, events)); return true }
+        return false
+      } finally {
+        if (previousFromDiscard === undefined) delete state._fromDiscardCode
+        else state._fromDiscardCode = previousFromDiscard
+      }
+    },
     // Phase 5（5c-37）：「时间借取」的滴答计数（上限 3）与「虚空碎裂」的封印「0」标记支付。
     addClicks: (card, max = 3) => {
       if (!card) return null
