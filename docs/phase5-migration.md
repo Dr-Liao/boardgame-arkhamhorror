@@ -1,5 +1,10 @@
 # Phase 5 · 迁移（交付说明与批次证据）
 
+> **Phase 5 状态：完成 ✅**（5c 逃生卡 0 张、5b 尾部全部迁完、5a 行为分支清零）。
+> 剩下的 28 个 `engineCodes` 全是 `requestChoice` 的 `reference` 文案标签，按路线图归 **Phase 6**；
+> 完成声明与硬指标见 [`phase5-handoff.md`](phase5-handoff.md) §6。
+
+
 > 日期：2026-02。上游决策文档：[`architecture-refactor-roadmap.md`](architecture-refactor-roadmap.md) §6 Phase 5、
 > §7 迁移判据与纪律、§8 守卫与工具。本文只记录 **Phase 5 实际交付了什么、怎么验收、还剩什么**，
 > 不重复路线里的规矩。

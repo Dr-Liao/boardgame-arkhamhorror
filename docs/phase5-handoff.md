@@ -194,3 +194,72 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
    - **账本**：只有 `EFFECTS[code]` 真的删掉了才写进 `audit/migration-batches.json`；
    - **数据表 vs 读点**：数据加到哪张表、引擎就读哪张表，否则 `replay` 抓不到静默失能。
 
+## 6. Phase 5 完成声明（行为分支清零）
+
+### 6.1 目标与达成情况
+
+本次目标的三段，全部达成：
+
+| 段 | 目标 | 结果 |
+| --- | --- | --- |
+| 5c | 剩余逃生卡全部迁到能力层 | ✅ `escapeCards` 93 → **0**（三十九批） |
+| 5b | 2 张反应 + 8 张非 stats 被动 + 打出后去向字段 | ✅ 全部完成（含 `becomesAsset` / `exileAfterPlay` / `addToVictory` 等字段） |
+| 5a | 引擎卡号分支（先 `condition` / `block` 的行为分支） | ✅ **行为分支清零**（`condition` 0 / `block` 0），三十三批 |
+
+`cards:workorder` 现在的输出只有一类：
+
+```
+{"total":28,"byShape":{"reference":28},"byClass":{"A":28},"nonBehaviorDebt":28}
+```
+
+这 28 个是 `requestChoice({ source: '0xxxx' })` 的**文案标签**，按路线图归 **Phase 6**
+（与 UI 文案、日志一起改，避免两处动同一段字符串；它们也进入重放指纹，单独改容易与 Phase 6 重复劳动）。
+
+### 6.2 硬指标
+
+| 指标 | Phase 5 起点 | 现在 |
+| --- | --- | --- |
+| `engineCodes`（引擎里的卡号字面量） | 166 | **28**（全 `reference`） |
+| `escapeCards` | 93 | **0** |
+| `EFFECTS`（旧 DSL 条目） | 385 | **57** |
+| `effectsTopLevelFields` | 69 | **33** |
+| `legacy` 通道 | 286 | **44** |
+| `descriptor` 通道 | 75 | **408** |
+| `descriptorEntries` / `descriptorAbilities` | 79 / — | **419 / 344** |
+| `abilityKinds` | 11 | **12**（新增 `setup`） |
+| 迁移批次 | 0 | **79**（覆盖 373 张卡 + 94 段引擎分支） |
+
+门禁常年保持：`replay --check/--compare` 逐条一致、白名单只收缩、fast tier 新增失败 0 条
+（既有 7 条基线失败与迁移无关）、`migrate-card --verify` 79 批一致、`audit-dead-primitives` 无死分支。
+
+### 6.3 这一阶段的产出（可复用的机制）
+
+- **12 种 `kind`**：`played` / `commit` / `reaction` / `forced` / `action` / `free` / `constant` /
+  `elderSign` / `weakness` / `entersPlay` / `leavesPlay` / `setup`。
+- **五类数据化手法**（反复用到，后面接手直接套）：
+  1. **条目级标记**（`quietPlay`、`keepOnPlay`、`playedEventsToDeckTop`、`grantsShortcutMove`…）
+  2. **规则表**（`ENEMY_RULE_FLAGS`、`BLANKS_TRAITS`、`LOCATION_COUNTER_TREACHERY`、
+     `WEAKNESS_UPGRADE_CODES`、`RELIC_DISCOUNT_LOCATION_CODES`…）
+  3. **效果自带数据**（`effect.code` / `event.code` / `attachLure` / `bindMonster`）
+  4. **状态字段即标记**（`itemDiscountAtLocation`——谁写谁的，引擎不认识卡号）
+  5. **调查员能力字段**（`INVESTIGATOR_ABILITIES` 的 `homeFrontMoveDamage` / `openingHandSize` / …）
+- **弱点 `resolve` 通道**：`resolveWeakness` 先查弱点描述子，旧的 data-body 分支作为回退。
+
+### 6.4 三年踩过的坑（都在 §4 各小节里）
+
+1. **重复描述子**：条目可能已存在于 `card-abilities.js` / `ability-migration-batches.js`，
+   先 `grep` 卡号再决定「加字段」还是「新建条目」。
+2. **账本口径**：`migration-batches.json` 只登记「玩家/调查员卡且 `EFFECTS[code]` 已空」；
+   地点、敌人、密谋、故事卡与只数据化规则分支的卡一律不写。
+3. **数据表 vs 读点**：数据加到哪张表、引擎就读哪张表，否则 `replay` 抓不到静默失能。
+4. **新增导出要同时改 import**：漏了会让对应验收用例 `ReferenceError`（`replay` 抓不到）。
+5. **数值型标记**：`exhaustOnEnemyDefeatedHealHorror: 1` 这类断言不要写 `=== true`。
+6. **并发偶发**：`campaign-experience.test.mjs` 偶发文件级失败，单跑通过即判定 flake。
+
+### 6.5 接下来（Phase 6）
+
+1. **28 个 `reference`**：把 `requestChoice` 的 `source` 从卡号换成事件源对象（`{ type, code }`），
+   与日志/UI 文案一起改；改完整张工作单应当归零。
+2. **`legacy` 通道 44 项**：`EFFECTS` 里剩下的数据体继续按 §4 的手法迁。
+3. **`effectsTopLevelFields` 33 项**：顶层字段逐个收进描述子或规则表。
+
