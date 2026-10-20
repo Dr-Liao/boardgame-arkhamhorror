@@ -317,3 +317,41 @@ export const describeState = createDescribeState({
 
 累计迁出 **约 962 行**（12654 → 11692）。下一块：`legalMoves` + `validateMove`（各约 270 行、
 60 个依赖）→ `src/engine/moves.js`，然后才是 `abilityApi`。
+
+## 13. 6d-6：拆出 moves.js（legalMoves / validateMove）
+
+### 13.1 拆的是什么
+
+`legalMoves`（269 行）+ `validateMove`（287 行）搬进 `src/engine/moves.js`，
+导出 `createMoves(deps)`；engine 末尾 `export const { legalMoves, validateMove } = createMoves({...})`
+（77 个依赖），外部 import 路径不变。
+
+两者必须同模块：它们共用同一批判定函数（`abilityTargets`、`canAffordAbility`、`actionCost`、
+`actionKind` 等），拆开就会出现「能列出但不能执行」的漂移——这正是 Phase 2 立 `validateMove` 的原因。
+
+### 13.2 三个坑（都在这一批里踩到）
+
+1. **TDZ：工厂调用顺序**。`createDescribeState` 在 `createMoves` **之前**执行，而它的依赖里有
+   `legalMoves` → `Cannot access 'legalMoves' before initialization`。
+   解法：把依赖别人的工厂调用块挪到**后面**（本轮把 describe 块移到文件末尾）。
+2. **内联依赖行不匹配逐行正则**。`createDescribeState` 的依赖是「一行多个名字」
+   （`campaignFor, inHub, …, legalMoves, …`），按 `^  name,$` 写的 thunk 替换一处都没命中；
+   改成整块搬移才解决。
+3. **漏依赖只能靠运行期发现**。`capabilityBlocked` / `entityModifierTotal` / `scriptActionHints`
+   都是**不带括号**的引用（作为值传递给 `captureTableState`、参与运算、拼提示），
+   静态扫描的候选集漏了它们，最终用「跑重放 → 从报错里取名 → 自动补进两边」的循环收敛（1 轮结束）。
+
+### 13.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **11220**（6d-5 后 11692） |
+| `src/engine/moves.js` | **652** |
+| `src/engine/combat.js` | 446 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 1430 行**（12654 → 11220）。剩下最大的两块：`abilityApi`（978）与 `performTest`（782），
+下一批从 `abilityApi` 开始按域拆（`play` / `test` / `enemy` / `card` 四组）。
