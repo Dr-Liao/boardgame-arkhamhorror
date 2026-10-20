@@ -686,6 +686,13 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-29：伊塔卡治愈 / 特制弹药（04147、04193）----
+
+test('5a-29：04147 用已有条目标记、04193 的怪物加成在条目上', () => {
+  assert.equal(registeredEntry('04147')?.exhaustOnEnemyDefeatedHealHorror, 1, '伊塔卡的治愈标记（数值型）')
+  assert.equal(registeredEntry('04193')?.monsterAttackDamageBonus, 1, '特制弹药的怪物加成')
+})
+
 // ---- 5a-28：捷径 / 手铐 / 地点遗物折扣（03232、04142、04265）----
 
 test('5a-28：三个码都改成条目字段或规则表', () => {

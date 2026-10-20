@@ -191,6 +191,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'grantsShortcutMove',
   'restrainsDoom',
   'restrainsReady',
+  // Phase 5（5a-29）：附属给宿主的「攻击怪物 +N 伤害」。
+  'monsterAttackDamageBonus',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -444,6 +446,7 @@ export function registerCardAbilities(entries) {
       grantsShortcutMove: entry.grantsShortcutMove === true,
       restrainsDoom: entry.restrainsDoom === true,
       restrainsReady: entry.restrainsReady === true,
+      monsterAttackDamageBonus: entry.monsterAttackDamageBonus ?? null,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

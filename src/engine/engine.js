@@ -4798,12 +4798,13 @@ function defeatEnemy(state, enemy, events) {
   if (!replaced) addVictory(state, enemy, events)
   // 04147 伊塔卡：敌人加入胜利区后，可横置伊塔卡治愈自己与它各 1 点恐惧。
   for (const holder of aliveInvestigators(state)) {
-    const ichtaca = holder.assets.find(asset => asset.code === '04147'
-      && !asset.exhausted && (EFFECTS[asset.code]?.exhaustOnEnemyDefeatedHealHorror
+    // Phase 5（5a-29）：条目上的 exhaustOnEnemyDefeatedHealHorror 本身就是标记，不再写死卡号。
+    const ichtaca = holder.assets.find(asset => !asset.exhausted
+      && (EFFECTS[asset.code]?.exhaustOnEnemyDefeatedHealHorror
         ?? registeredEntry(asset.code)?.exhaustOnEnemyDefeatedHealHorror))
     if (!ichtaca) continue
     const answer = requestChoice(state, {
-      kind: 'reaction', source: '04147', seat: holder.seat, canSkip: true,
+      kind: 'reaction', source: ichtaca.code, seat: holder.seat, canSkip: true,
       prompt: '伊塔卡：横置她，治愈你与伊塔卡各 1 点恐惧？',
       options: [{ id: 'heal', label: '横置伊塔卡并各治愈 1 点恐惧' }, { id: 'skip', label: '不发动' }],
     })
@@ -9809,10 +9810,12 @@ function doFight(state, seat, opts, events, noSpend) {
           && enemyCanBeDefeated(state, enemy, opts.assetId || null, seat),
         tableState: captureTableState(state, getStat, getMaxSanity) })
       // 「特制弹药」：附属的枪械攻击怪物时 +1 伤害。
-      if ((inv.assets.find(item => item.id === opts.assetId)?.attachments || []).some(entry => entry.code === '04193')
-        && (enemy.traits || []).some(trait => String(trait).toLowerCase() === 'monster')) {
-        dmg += 1
-        info(state, events, '「特制弹药」：攻击怪物 +1 伤害。')
+      // Phase 5（5a-29）：「特制弹药」这类附属给宿主的攻击加成由条目字段 monsterAttackDamageBonus 声明。
+      const monsterBonus = (inv.assets.find(item => item.id === opts.assetId)?.attachments || [])
+        .reduce((sum, entry) => sum + (registeredEntry(entry.code)?.monsterAttackDamageBonus || 0), 0)
+      if (monsterBonus && (enemy.traits || []).some(trait => String(trait).toLowerCase() === 'monster')) {
+        dmg += monsterBonus
+        info(state, events, `「特制弹药」：攻击怪物 +${monsterBonus} 伤害。`)
       }
 
       if (enemyRuleFlags(enemy.code).damageOnlyFrom && opts.assetId !== enemyRuleFlags(enemy.code).damageOnlyFrom && !enemyTextBlanked(state, enemy)) return
