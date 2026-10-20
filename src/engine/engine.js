@@ -7077,23 +7077,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     else inv.itemDiscountAtLocation = { amount: 1, round: state.round, phase: state.phase }
     return
   }
-  if (effect.action === 'onTheHunt') {
-    const top = state.encounterDeck.slice(-9)
-    const candidates = top.map((code, index) => ({ code, index, def: enemyDef(code) }))
-      .filter(item => item.def)
-    if (!candidates.length) { drawEncounter(state, inv, events); return }
-    const pick = candidates.length === 1 ? candidates[0] : (() => {
-      const id = requestChoice(state, { kind: 'enemy', source: '03263', seat,
-        prompt: '从遭遇牌库顶 9 张中选择 1 名敌人生成。',
-        options: candidates.map((item, index) => ({ id: String(index), cardCode: item.code, label: cardName(item.code) })) })
-      return candidates[Number(id)] || candidates[0]
-    })()
-    state.encounterDeck.splice(state.encounterDeck.lastIndexOf(pick.code), 1)
-    state.encounterDeck = shuffle(state.encounterDeck, () => randomValue(state))
-    const spawned = spawnEnemy(state, pick.code, inv.location, seat)
-    if (spawned) engageEnemy(state, spawned, seat, events)
-    return
-  }
   if (effect.action === 'suggestionEvade') {
     doEvade(state, seat, { enemyId: chooseEnemy(state, seat, {}).id,
       addSkill: 'willpower', suggestionAssetId: asset?.id }, events, true)
@@ -10761,6 +10744,24 @@ function abilityApi(state, events) {
       owner.deck = shuffle([...owner.deck, ...owner.discard], () => randomValue(state))
       owner.discard = []
       return owner.deck.length
+    },
+    // Phase 5（5c-23）：「追猎」——遭遇牌库顶 N 张里的敌人候选（只读，顺序按牌库顶在数组末位）。
+    encounterEnemies: (count = 9) => {
+      const deck = state.encounterDeck || []
+      const top = deck.slice(-Math.min(count, deck.length))
+      return top.filter(code => Boolean(enemyDef(code)))
+    },
+    // Phase 5（5c-23）：从遭遇牌库取一张敌人放到该座位所在地点、洗回牌库并交战。
+    spawnEncounterEnemy: (seat, code) => {
+      const owner = state.investigators[seat]
+      if (!owner || !code) return null
+      const index = state.encounterDeck.lastIndexOf(code)
+      if (index < 0) return null
+      state.encounterDeck.splice(index, 1)
+      state.encounterDeck = shuffle(state.encounterDeck, () => randomValue(state))
+      const spawned = spawnEnemy(state, code, owner.location, seat)
+      if (spawned) engageEnemy(state, spawned, seat, events)
+      return spawned
     },
     // Phase 5（5c-22）：「预警」花 1 个线索并把它放回所在地点（这是卡的代价，不是退还费用）。
     // 三处写入与旧 handler 逐字一致：个人线索 -N、state.clues（各人线索之和）-N、地点线索 +N。

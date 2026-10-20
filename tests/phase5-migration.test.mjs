@@ -684,6 +684,36 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-23：遭遇牌库检索（03263 追猎）----
+
+test('5c-23：03263 追猎从遭遇牌库顶找一名敌人在所在地点生成并交战', () => {
+  const state = fixture()
+  const me = state.investigators[0]
+  me.hand = ['03263']
+  // 牌库顶是诡计（正常抽遭遇），下面三张是敌人（追猎的候选）。
+  state.encounterDeck = ['ghoulMinion', 'ghoulMinion', 'ghoulMinion', 'dissonantVoices']
+  let offered = false
+  let candidates = null
+  move(state, { action: 'endTurn' })
+  settle(state, pending => {
+    const option = pending.options?.find(item => item.cardCode === '03263')
+    if (option) { offered = true; return option.id }
+    if (pending.kind === 'enemy') {
+      candidates = pending.options.map(item => item.cardCode)
+      return pending.options[0].id
+    }
+    return null
+  })
+  assert.equal(offered, true, '遭遇窗口里可以打出追猎')
+  assert.deepEqual(candidates, ['ghoulMinion', 'ghoulMinion', 'ghoulMinion'], '候选只列遭遇牌库顶的敌人')
+  const spawned = state.enemies.filter(item => item.code === 'ghoulMinion')
+  assert.equal(spawned.length, 1, '只生成一名敌人')
+  assert.equal(spawned[0].location, state.investigators[0].location, '生成在所在地点')
+  assert.equal(spawned[0].engagedSeat, 0, '与打出者交战')
+  assert.equal(state.encounterDeck.filter(code => code === 'ghoulMinion').length, 2, '牌库里少一张敌人')
+  assert.equal(state.investigators[0].hand.includes('03263'), false, '追猎已打出')
+})
+
 // ---- 5c-22：反应窗口的快速事件（03150 预警）----
 
 test('5c-22：03150 预警在抽到诡计时快速打出，花 1 个线索取消它', () => {

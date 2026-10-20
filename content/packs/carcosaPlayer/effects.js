@@ -43,8 +43,7 @@ export const effects = {
   '03189': { event: custom('illSeeYouInHell'), noOpportunityAttack: true },
 
 
-  '03263': { fast: true, reaction: { when: 'encounterDrawn', ownMythosOnly: true },
-    event: custom('onTheHunt') },
+  // 03263 追猎已迁到能力层（5c-23），见 MIGRATED_ESCAPE_ENTRIES_5C23。
   '03264': { passive: { permanent: true }, setup: custom('stickToThePlan') },
   '03270': { fast: true, reaction: { when: 'encounterDrawn', nonWeaknessOnly: true, anyLocation: true, treacheryOnly: true },
     event: { type: 'sequence', effects: [{ type: 'cancelTreachery' }, { type: 'takeHorror', amount: 1 }] } },
