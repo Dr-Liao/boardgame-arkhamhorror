@@ -383,40 +383,46 @@ export const behavior = {
     const location = state.locations.find(candidate => candidate.id === inv.location)
     const code = original(location)
     const perRoundKey = `${code}:${inv.seat}`
-    if (code === '03208' && state.scenarioFlags[perRoundKey] !== state.round
-      && inv.hand.some(card => !inv.hiddenCards?.includes(card))) {
+    if (code === '03208' && state.scenarioFlags[perRoundKey] !== state.round) {
+      const discardable = inv.hand.some(card => !inv.hiddenCards?.includes(card))
       moves.push({ action: 'scenarioAction', rule: 'montparnasseDiscard', actions: 0,
-        label: '弃掉1张手牌，获得等同其意志图标数量的资源' })
+        label: '弃掉1张手牌，获得等同其意志图标数量的资源',
+        reason: discardable ? null : '需要 1 张可弃的手牌（隐藏的疯狂牌不能弃）' })
     }
     if (code === '03209' && state.scenarioFlags.montmartrePlayRound !== state.round) {
       moves.push({ action: 'scenarioAction', rule: 'montmartrePlay',
         label: '揭示每位调查员牌库顶牌并可打出一张支援' })
     }
-    if (code === '03210' && state.scenarioFlags[perRoundKey] !== state.round && inv.resources >= 1
-      && inv.assets.some(asset => ['ammo', 'supply', 'supplies'].includes(String(asset.usesType || '').toLowerCase()))) {
+    if (code === '03210' && state.scenarioFlags[perRoundKey] !== state.round) {
+      const reloadable = inv.assets.some(asset =>
+        ['ammo', 'supply', 'supplies'].includes(String(asset.usesType || '').toLowerCase()))
       moves.push({ action: 'scenarioAction', rule: 'montmartreReload',
-        label: '花费1资源，为一张卡牌补充1补给或子弹' })
+        label: '花费1资源，为一张卡牌补充1补给或子弹',
+        reason: inv.resources < 1 ? `需要 1 个资源（当前 ${inv.resources}）`
+          : reloadable ? null : '需要一张带弹药或补给的支援' })
     }
-    if (code === '03214' && inv.resources >= 1 && state.locations.some(candidate =>
+    if (code === '03214' && state.locations.some(candidate =>
       candidate.id !== inv.location && ALL_CARDS[original(candidate)]?.traits?.includes('Rail'))) {
       moves.push({ action: 'scenarioAction', rule: 'gareRailMove',
-        actionKind: 'move', label: '花费1资源，移动到任意轨道沿线地点' })
+        actionKind: 'move', label: '花费1资源，移动到任意轨道沿线地点',
+        reason: inv.resources < 1 ? `需要 1 个资源（当前 ${inv.resources}）` : null })
     }
     if (code === '03219' && !state.scenarioFlags.notreDameUsed) {
       moves.push({ action: 'scenarioAction', rule: 'notreDameDoom',
         label: '检定意志（6），放置或移除1个毁灭' })
     }
-    if (state.acts[state.actIndex]?.originalCode === '03207') {
+    if (state.acts[state.actIndex]?.originalCode === '03207'
+      && state.scenarioFlags.shadowActionRound !== state.round) {
       const teamClues = active(state).reduce((sum, candidate) => sum + candidate.clues, 0)
-      if (teamClues >= state.numInvestigators && state.scenarioFlags.shadowActionRound !== state.round) {
-        moves.push({
-          action: 'scenarioAction',
-          rule: 'stalkedByShadows',
-          actions: 0,
-          scriptCard: 'act',
-          label: `共同花费${state.numInvestigators}个线索，放置毁灭或自动躲避风琴手`,
-        })
-      }
+      moves.push({
+        action: 'scenarioAction',
+        rule: 'stalkedByShadows',
+        actions: 0,
+        scriptCard: 'act',
+        label: `共同花费${state.numInvestigators}个线索，放置毁灭或自动躲避风琴手`,
+        reason: teamClues >= state.numInvestigators ? null
+          : `需要调查员共同花费 ${state.numInvestigators} 个线索（当前 ${teamClues}）`,
+      })
     }
     return moves
   },

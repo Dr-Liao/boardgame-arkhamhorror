@@ -1,9 +1,14 @@
 export const STATE_SCHEMA_VERSION = 6
 export const RULES_VERSION = 'n5.5'
 
-export function enemyHealthValue(state, enemy) {
+// 印刷生命值（含「每逢调查员」印刷值）。剧本可以把常驻修正挂在
+// behavior.enemyStatModifier(state, enemy, 'health') 上（失落时代 P2 钩子），
+// 由调用方把 behavior 传进来；不传时只返回印刷值。
+export function enemyHealthValue(state, enemy, behavior = null) {
   const blank = enemy.textBlanked
-  return enemy.health - (enemy.code === '02255' && blank?.round === state.round && blank.phase === state.phase ? state.numInvestigators : 0)
+  const base = enemy.health - (enemy.code === '02255' && blank?.round === state.round && blank.phase === state.phase ? state.numInvestigators : 0)
+  const modifier = behavior?.enemyStatModifier?.(state, enemy, 'health') || 0
+  return Math.max(0, base + modifier)
 }
 
 export function randomValue(state) {

@@ -79,9 +79,9 @@ test('中文清单决定语言候选顺序，缺图回退英文', () => {
   const localized = imageCandidates(imageDescriptor('01001'), { host: HOST, language: 'zh-cn' })
   assert.deepEqual(localized.map(candidate => candidate.language), ['zh', 'zh', 'en', 'en', 'en', 'en'])
   assert.deepEqual(localized.filter(candidate => candidate.origin === 'remote').map(candidate => candidate.url), [
-    HOST + '/img/arkham/zh/cards/01001.avif',
-    HOST + '/img/arkham/cards/01001.avif',
-    HOST + '/img/arkham/cards/01001a.avif',
+    HOST + '/zh/01001.avif',
+    HOST + '/01001.avif',
+    HOST + '/01001a.avif',
   ])
   const english = imageCandidates(imageDescriptor('01001'), { host: HOST, language: 'en' })
   assert.ok(english.every(candidate => !candidate.url.includes('/zh/')))
@@ -98,14 +98,14 @@ test('主机可配置、可禁用；非法主机显式报错而不静默拼接',
   assert.equal(normalizeImageHost('https://cdn.test/assets/'), 'https://cdn.test/assets')
   assert.equal(normalizeImageHost(''), '')
   assert.equal(normalizeImageHost(null), '')
-  assert.equal(DEFAULT_IMAGE_HOST, 'https://assets.arkhamhorror.app')
+  assert.equal(DEFAULT_IMAGE_HOST, 'https://drliao1.com/arkhamhorror/cards')
   for (const value of ['not a host', 'javascript:alert(1)', 'ftp://cdn.test', 'https://u:p@cdn.test', 'https://cdn.test/?a=1', 'https://cdn.test/#x']) {
     assert.throws(() => normalizeImageHost(value), RangeError, value)
   }
   assert.ok(imageCandidates(imageDescriptor('01001'), { host: '', language: 'zh-cn' }).every(candidate => candidate.origin === 'local'))
   const cached = imageCandidates(imageDescriptor('01001'), { host: DEFAULT_IMAGE_HOST, language: 'zh-cn' })
   assert.equal(cached[0].url, '/mods/arkhamhorror/img/zh/cards/01001.avif?cache=cdn')
-  assert.equal(cached[1].url, DEFAULT_IMAGE_HOST + '/img/arkham/zh/cards/01001.avif')
+  assert.equal(cached[1].url, DEFAULT_IMAGE_HOST + '/zh/01001.avif')
   assert.deepEqual(imageCandidates(null, { host: HOST }), [])
 })
 
@@ -177,11 +177,13 @@ test('媒体许可登记保留，运行时图片仅在 Mod 图库；PNG 验收�
   assert.match(readFileSync(resolve(audio, 'License.txt'), 'utf8'), /Creative Commons Zero, CC0/)
   const snapshots = resolve(ROOT, 'games/arkhamhorror/tests/p7-release.browser.mjs-snapshots')
   const results = resolve(ROOT, 'games/arkhamhorror/test-results')
+  // README 的牌桌插图属于文档，不参与运行时资源；单独登记在 docs/images 下。
+  const docsMedia = resolve(ROOT, 'games/arkhamhorror/docs/images') + sep
   for (const file of walk(resolve(ROOT, 'games/arkhamhorror'))) {
     const testPng = file.endsWith('.png') && [snapshots, results].some(dir => file.startsWith(dir + sep))
     const music = file.startsWith(resolve(audio, 'music') + sep) && file.endsWith('.mp3')
     const symbolFont = SYMBOL_FONTS.some(name => file === resolve(fonts, name))
-    assert.ok(file.startsWith(library + sep) || (file.startsWith(audio + sep) && file.endsWith('.ogg')) || music || testPng || symbolFont, file)
+    assert.ok(file.startsWith(library + sep) || (file.startsWith(audio + sep) && file.endsWith('.ogg')) || music || testPng || symbolFont || file.startsWith(docsMedia), file)
   }
 })
 
@@ -252,8 +254,9 @@ test('特殊打印面与关联面编号取自数据，不按卡号加 b', () => 
 test('实现状态与可用性取值与目录一致，展示层有对应中文标签', () => {
   const effects = new Set(), availabilities = new Set()
   for (const card of Object.values(ALL_CARDS)) { effects.add(card.effectStatus); availabilities.add(card.availability) }
-    assert.deepEqual([...effects].sort(), ['unimplemented', 'verified'])
-    assert.deepEqual([...availabilities].sort(), ['catalog-only', 'strict'])
+  // unverified：遗忘时代有实现但还没进入验收清单的遭遇牌（04147 等），仍要有中文标签。
+  assert.deepEqual([...effects].sort(), ['unimplemented', 'unverified', 'verified'])
+  assert.deepEqual([...availabilities].sort(), ['catalog-only', 'strict'])
   for (const value of effects) assert.ok(EFFECT_LABELS[value], value)
   for (const value of availabilities) assert.ok(AVAILABILITY_LABELS[value], value)
 })

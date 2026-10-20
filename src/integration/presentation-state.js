@@ -53,9 +53,11 @@ export function maskHiddenLocations(locations) {
 }
 export function captureTableState(state, getStat, getMaxSanity) {
   const attachments = publicAttachments(state)
+  // 敌人生命值要走剧本钩子（失落时代 P2：04124/04132/04140 等常驻 +生命）。
+  const behavior = state.scenario ? contentRegistry.getBehavior(state.scenario.id) : null
   return {
     ...pick(state, FIELDS), locations: attachLocationCards(structuredClone(state.locations || []), attachments.locations),
-    scriptAttachments: { act: attachments.act, agenda: attachments.agenda }, enemies: state.enemies.map(enemy => ({ ...structuredClone(enemy), health: enemyHealthValue(state, enemy) })), encounterDeckSize: state.encounterDeck.length,
+    scriptAttachments: { act: attachments.act, agenda: attachments.agenda }, enemies: state.enemies.map(enemy => ({ ...structuredClone(enemy), health: enemyHealthValue(state, enemy, behavior) })), encounterDeckSize: state.encounterDeck.length,
     locationEntryErrors: locationEntryErrors(state),
     privateTest: state.skillTest && !state.skillTest.helpRequested ? { seat: state.skillTest.seat, publicLog: [...(state.skillTest.publicLog || [])] } : null,
     agendaDoom: agendaDoom(state),

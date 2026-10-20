@@ -381,3 +381,72 @@
 .ah-leader-candidate { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid #9b89584d; background: #10271f; color: #d8c492; cursor: pointer; text-align: left; }
 .ah-leader-candidate.is-selected { border-color: #d6bd75; background: #304233; box-shadow: inset 0 0 18px #d6bd7515; }
 .ah-leader-candidate .ah-office-portrait { width: 42px; height: 54px; min-width: 42px; margin: 0; }.ah-leader-candidate > span { display: grid; gap: 5px; }.ah-leader-candidate b { font-size: 12px; color: #ead18d; }.ah-leader-candidate:disabled { opacity: 1; cursor: default; }
+
+/* 远征补给品面板：调查员个人清单 + 剩余补给品点数。 */
+.ah-office .ah-office-supplies .ah-supply-note { margin: 10px 0 18px; font-size: 12px; line-height: 1.8; color: var(--office-muted, #acb7a4); letter-spacing: .4px; }
+.ah-office .ah-supply-leader { display: flex; align-items: center; gap: 8px; margin: 0 0 16px; font-size: 13px; color: var(--office-gold, #dfc58d); }
+.ah-office .ah-supply-leader .ah-icon { width: 18px; height: 18px; }
+.ah-office .ah-supply-card { display: grid; gap: 8px; padding: 16px 18px; margin-bottom: 12px; border: 1px solid var(--office-edge, #b59b604b); background: #10271f; }
+.ah-office .ah-supply-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.ah-office .ah-supply-head strong { font-size: 15px; color: var(--office-gold, #dfc58d); letter-spacing: 1px; }
+.ah-office .ah-supply-points { font-size: 12px; color: #d6bd75; letter-spacing: .5px; }
+.ah-office .ah-supply-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.ah-office .ah-supply-list li { padding: 4px 10px; border: 1px solid var(--office-edge, #b59b604b); background: #0e221b; font-size: 12px; color: #cdd6b6; }
+.ah-office .ah-supply-card > p { margin: 0; font-size: 12px; color: #8f9880; }
+@media (max-width: 900px) { .ah-office .ah-supply-card { padding: 13px 14px; } }
+
+/* 补给品选购（序幕 / 补给点）：补给是卡牌网格，「完成购买」独立在完成栏。
+   卡牌只读服务端投影：买不起的卡仍然显示，置灰并写明「点数不足」。 */
+.ah-office .ah-hub-supply-market { display: grid; gap: 16px; }
+.ah-supply-market { display: grid; gap: 16px; min-width: 0; scroll-margin-top: 108px; }
+.ah-supply-market-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 24px; }
+.ah-supply-market-title { min-width: 0; }
+.ah-supply-market-title h2 { margin: 6px 0 10px; }
+.ah-supply-market-lead { display: flex; align-items: flex-start; gap: 8px; margin: 0; max-width: 720px; color: #cfd9c4; font-size: 13px; line-height: 1.7; }
+.ah-supply-market-lead .ah-icon { flex: none; width: 18px; height: 18px; margin-top: 2px; color: #d9c185; }
+.ah-supply-market-purse { display: grid; justify-items: center; gap: 1px; min-width: 116px; padding: 10px 18px; border: 1px solid #c2a76a80; border-radius: 4px; background: radial-gradient(ellipse at 50% 0, #2b4438, #0b1b15 72%); box-shadow: inset 0 0 0 2px #ffffff05; }
+.ah-supply-market-purse span { color: #b3bfa4; font-size: 10px; letter-spacing: 2px; white-space: nowrap; }
+.ah-supply-market-purse b { color: #f0d38f; font: 500 28px/1.15 "Noto Serif SC", "Songti SC", SimSun, serif; }
+.ah-supply-market-cart { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 0; border-block: 1px solid #b59b6033; }
+.ah-supply-market-cart > small { color: #a8b49c; font-size: 10px; letter-spacing: 2px; }
+.ah-supply-market-chip { padding: 3px 9px; border: 1px solid #93ac7055; border-radius: 2px; background: #2c3f2b66; color: #cfe0ab; font-size: 11px; }
+.ah-supply-market-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(190px, 240px); align-items: start; gap: 16px; }
+.ah-supply-market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.ah-supply-market-cell { display: flex; min-width: 0; }
+.ah-supply-market-card { display: grid; grid-template-rows: auto auto 1fr auto; gap: 7px; width: 100%; min-height: 158px; padding: 13px; border: 1px solid #b59b6080; border-radius: 4px; background: linear-gradient(158deg, #1b342a, #0c1f18 72%); color: #e8dcc0; text-align: left; cursor: pointer; box-shadow: inset 0 1px #ffffff0a, 0 6px 16px #0006; }
+.ah-supply-market-card:hover:not(:disabled), .ah-supply-market-card:focus-visible { transform: translateY(-3px); border-color: #e6c982; background: linear-gradient(158deg, #264638, #102a20 72%); box-shadow: inset 0 1px #ffffff12, 0 0 0 1px #e6c98244, 0 12px 24px #0008; }
+.ah-supply-market-card:active:not(:disabled) { transform: translateY(-1px); }
+.ah-supply-market-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.ah-supply-market-seal { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border: 1px solid #b39a5c66; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #4e6749, #172a20); color: #ecd9a6; font: 500 17px "Noto Serif SC", "Songti SC", SimSun, serif; }
+.ah-supply-market-cost { display: inline-flex; align-items: baseline; gap: 1px; padding: 2px 8px; border: 1px solid #c7ab6966; border-radius: 999px; background: #0a1a13; color: #f0d38f; font-size: 13px; line-height: 1.5; white-space: nowrap; }
+.ah-supply-market-cost small { color: #b3bfa4; font-size: 9px; }
+.ah-supply-market-name { color: #f2e4bc; font: 500 16px/1.35 "Noto Serif SC", "Songti SC", SimSun, serif; letter-spacing: .5px; }
+.ah-supply-market-hint { color: #a7b49a; font-size: 11px; line-height: 1.6; }
+.ah-supply-market-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; align-self: end; }
+.ah-supply-market-owned { padding: 2px 7px; border: 1px solid #94b17066; border-radius: 2px; background: #45592f4a; color: #d4e5b3; font-size: 10px; }
+.ah-supply-market-locked { color: #d8a08c; font-size: 10px; }
+.ah-office .ah-supply-market-card:disabled { opacity: 1; cursor: not-allowed; }
+.ah-supply-market-card.is-unaffordable { border-color: #8a4f4060; background: linear-gradient(158deg, #251f1a, #12100f 72%); box-shadow: none; }
+.ah-supply-market-card.is-unaffordable .ah-supply-market-seal { filter: saturate(.35); }
+.ah-supply-market-card.is-unaffordable .ah-supply-market-name { color: #cdb8a0; }
+.ah-supply-market-card.is-unavailable:not(.is-unaffordable) { opacity: .7; }
+.ah-supply-market-summary { display: grid; gap: 12px; align-content: start; padding: 14px; border: 1px solid #b59b6070; border-radius: 4px; background: #0d2019f2; box-shadow: inset 0 1px #ffffff08; }
+.ah-supply-market-note { margin: 0; color: #b3bda6; font-size: 12px; line-height: 1.7; }
+.ah-supply-market-done { width: 100%; min-width: 0; }
+@media (max-width: 900px) {
+  .ah-supply-market { scroll-margin-top: 196px; }
+  .ah-supply-market-body { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .ah-supply-market-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .ah-supply-market-card { min-height: 140px; padding: 10px; gap: 6px; }
+  .ah-supply-market-name { font-size: 14px; }
+  .ah-supply-market-hint { font-size: 10px; }
+  .ah-supply-market-summary { grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding: 12px; }
+  .ah-supply-market-done { width: auto; min-width: 150px; }
+}
+@media (max-width: 600px) {
+  .ah-supply-market-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ah-supply-market-purse { justify-items: start; min-width: 0; padding: 8px 12px; }
+  .ah-supply-market-purse b { font-size: 22px; }
+  .ah-supply-market-summary { grid-template-columns: minmax(0, 1fr); }
+  .ah-supply-market-done { width: 100%; }
+}

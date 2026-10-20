@@ -10,6 +10,8 @@ import { dunwichCardVerified, DUNWICH_ACCEPTANCE_PROFILE } from '../src/cards/du
 import { carcosaPlayerCardVerified, CARCOSA_PLAYER_ACCEPTANCE_PROFILE } from '../src/cards/carcosa-player-acceptance.js'
 import { carcosaCampaignCardVerified, CARCOSA_CAMPAIGN_ACCEPTANCE_PROFILE } from '../src/cards/carcosa-campaign-acceptance.js'
 import { carcosaInvestigatorCardVerified, CARCOSA_INVESTIGATOR_ACCEPTANCE_PROFILE } from '../content/packs/carcosaInvestigators/manifest.js'
+import { tfaInvestigatorCardVerified, TFA_INVESTIGATOR_ACCEPTANCE_PROFILE } from '../content/packs/tfaInvestigators/manifest.js'
+import { tfaPlayerCardVerified, TFA_PLAYER_ACCEPTANCE_PROFILE } from '../content/packs/tfaPlayer/manifest.js'
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
 const GAME = 'games/arkhamhorror'
@@ -227,7 +229,9 @@ export function buildImport(root = ROOT) {
   for (const card of Object.values(merged.cards)) {
     const profile = carcosaPlayerCardVerified(card.code) ? CARCOSA_PLAYER_ACCEPTANCE_PROFILE
       : carcosaInvestigatorCardVerified(card.code) ? CARCOSA_INVESTIGATOR_ACCEPTANCE_PROFILE
-        : carcosaCampaignCardVerified(card.code) ? CARCOSA_CAMPAIGN_ACCEPTANCE_PROFILE : null
+        : carcosaCampaignCardVerified(card.code) ? CARCOSA_CAMPAIGN_ACCEPTANCE_PROFILE
+          : tfaInvestigatorCardVerified(card.code) ? TFA_INVESTIGATOR_ACCEPTANCE_PROFILE
+            : tfaPlayerCardVerified(card.code) ? TFA_PLAYER_ACCEPTANCE_PROFILE : null
     if (!profile) continue
     card.effectStatus = 'verified'
     card.acceptanceProfile = profile.id

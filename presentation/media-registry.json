@@ -44,8 +44,8 @@
  },
  "genericBacks": {
   "files": [
-   "backs/back_encounter.webp",
-   "backs/back_player.webp"
+   "backs/back_encounter.jpg",
+   "backs/back_player.jpg"
   ],
   "handling": "remote-candidate-or-text-fallback",
   "licenseStatus": [

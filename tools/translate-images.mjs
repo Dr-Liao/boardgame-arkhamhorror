@@ -26,10 +26,11 @@ import sharp from 'sharp'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { imageDescriptor, imageResolution } from '../presentation/images.js'
 import { inspectImage } from './image-integrity.mjs'
+import { DEFAULT_IMAGE_HOST, remoteImagePath } from '../web/images.js'
 
 const MODEL = 'qwen-mt-image-2.0'
 const DEFAULT_API_BASE = 'https://dashscope.aliyuncs.com/api/v1'
-const DEFAULT_ASSET_HOST = 'https://assets.arkhamhorror.app'
+const DEFAULT_ASSET_HOST = DEFAULT_IMAGE_HOST
 const DEFAULT_ARKHAMDB_HOST = 'https://arkhamdb.com'
 const GAME = fileURLToPath(new URL('../', import.meta.url))
 const PUBLIC_IMG = path.join(GAME, 'web', 'img')
@@ -132,7 +133,7 @@ function sourceUrl(raw, fallbackPath, options) {
     if (/^https?:\/\//i.test(value)) return value
     return `${options.arkhamdbHost}/${value.replace(/^\/+/, '')}`
   }
-  return `${options.assetHost}/img/arkham/${fallbackPath}`
+  return `${options.assetHost}/${remoteImagePath(fallbackPath)}`
 }
 
 export function buildTerminologies(card) {

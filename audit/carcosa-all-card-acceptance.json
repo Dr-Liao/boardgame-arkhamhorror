@@ -27,7 +27,7 @@
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
-      "sha256": "5c94424765bd52d41620c9766e85b4e22a6078a1357dbbf82835e5afad20ae10"
+      "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",

@@ -51,7 +51,7 @@ test('缺图任务按首选美术编号生成，支持 ArkhamDB 原图和 CDN �
   assert.deepEqual(jobs.map(job => job.art), ['10001', '10002a'])
   assert.equal(jobs[0].sourceUrl, 'https://arkhamdb.com/bundles/cards/10001.png')
   assert.equal(jobs[0].directSource, true)
-  assert.equal(jobs[1].sourceUrl, 'https://assets.arkhamhorror.app/img/arkham/cards/10002a.avif')
+  assert.equal(jobs[1].sourceUrl, 'https://drliao1.com/arkhamhorror/cards/10002a.avif')
   assert.equal(jobs[1].directSource, false)
   assert.ok(jobs[0].terminologies.some(pair => pair.src === 'Card A' && pair.tgt === '卡牌甲'))
 })

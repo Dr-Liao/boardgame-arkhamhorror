@@ -184,7 +184,7 @@ test('对局内可查阅卡牌与图鉴，翻面不改变对局状态', async ({
 
 test('本地图库同源直出，第三方主机不可达也照常显示卡图', async ({ page }) => {
   // 只阻断外部资产主机；本机服务器保持可用，模拟"没有外网"的真实使用场景。
-  await page.route('**://assets.arkhamhorror.app/**', route => route.abort())
+  await page.route('**://drliao1.com/arkhamhorror/cards/**', route => route.abort())
   const requested = []
   page.on('request', request => { if (/\.(avif|jpe?g|png|webp)$/i.test(new URL(request.url()).pathname)) requested.push(request.url()) })
   const modal = await openCatalog(page)

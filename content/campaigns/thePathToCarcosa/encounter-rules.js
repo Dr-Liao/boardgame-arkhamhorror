@@ -211,15 +211,18 @@ export const encounterRules = {
     const location = here(state, inv)
     for (const [attachmentIndex, attachment] of (location?.attachments || []).entries()) {
       const code = attachmentCode(attachment)
-      if (code === '03091' && (location.doom || 0) > 0) actions.push({
+      // 尖柱/恶灵作祟已经附属在此地点上，只差"地点上还有毁灭""手里还有线索"这两个可改变的条件。
+      if (code === '03091') actions.push({
         action: 'encounterAction', actionKind: 'investigate', rule: 'clearSpiresOfCarcosa',
         locationId: location.id, attachmentIndex, actions: 1,
         label: '调查卡尔克萨尖柱：成功后移除地点上的1个毁灭',
+        reason: (location.doom || 0) > 0 ? null : '此地点上没有毁灭',
       })
-      if (code === '03094' && inv.clues > 0) actions.push({
+      if (code === '03094') actions.push({
         action: 'encounterAction', rule: 'discardSpiritsTorment',
         locationId: location.id, attachmentIndex, actions: 1,
         label: '将1个线索放回地点，弃掉恶灵作祟',
+        reason: inv.clues > 0 ? null : '需要花费 1 个线索',
       })
     }
     for (const enemy of state.enemies.filter(candidate => candidate.location === inv.location)) {

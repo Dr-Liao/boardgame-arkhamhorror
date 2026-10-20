@@ -259,12 +259,16 @@ export const behavior = {
     if (location.originalCode === '03055') {
       moves.push({ action: 'scenarioAction', rule: 'greenRoomInvestigate', label: '调查演员休息室（本次智识+3，之后弃掉全部手牌）' })
     }
-    if (location.originalCode === '03056' && inv.horror > 0) {
-      moves.push({ action: 'scenarioAction', rule: 'dressingRoomHeal', actions: 3, label: '花费3行动，治愈3点恐惧' })
+    if (location.originalCode === '03056') {
+      // 化妆间能力一直登记，只差"身上还有恐惧"这个能被治愈改变的条件。
+      moves.push({ action: 'scenarioAction', rule: 'dressingRoomHeal', actions: 3,
+        label: '花费3行动，治愈3点恐惧',
+        reason: inv.horror > 0 ? null : '没有需要治愈的恐惧' })
     }
-    if (state.acts[state.actIndex]?.originalCode === '03048' && location.id === 'lobby'
-      && !state.enemies.some(enemy => enemy.code === '03059')) {
-      moves.push({ action: 'scenarioAction', rule: 'escapeTheatre', label: '撤退：逃离剧院' })
+    if (state.acts[state.actIndex]?.originalCode === '03048' && location.id === 'lobby') {
+      const stranger = state.enemies.some(enemy => enemy.code === '03059')
+      moves.push({ action: 'scenarioAction', rule: 'escapeTheatre', label: '撤退：逃离剧院',
+        reason: stranger ? '「苍白面具下的男子」还在场上，需要先解决他' : null })
     }
     return moves
   },

@@ -1,8 +1,8 @@
 import { CONTENT_SCHEMA_VERSION } from '../../schema.js'
 import { chapters } from './shared.js'
 
-// M0 keeps every chapter as a reference-only catalogue entry. Each scenario
-// index is the stable promotion point for later rules work.
+// M0 的占位工厂。M3 之后十个章节都有真实的 definition/layout/behavior，
+// 这个工厂只保留给「尚未迁移的章节索引」作稳定提升点；当前没有章节再使用它。
 export function buildCatalogChapter(id) {
   const chapter = chapters.find(candidate => candidate.id === id)
   if (!chapter) throw new RangeError(`未知失落的时代章节：${id}`)

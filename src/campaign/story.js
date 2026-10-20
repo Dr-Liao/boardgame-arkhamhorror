@@ -1,8 +1,10 @@
 import { STORY_TEXT } from '../../content/campaigns/nightOfTheZealot/story-text.js'
 import { DUNWICH_STORY_TEXT } from '../../content/campaigns/theDunwichLegacy/story-text.js'
 import { CARCOSA_STORY_TEXT } from '../../content/campaigns/thePathToCarcosa/story-text.js'
+import { TFA_STORY_TEXT } from '../../content/campaigns/theForgottenAge/story-text.js'
 
 const CARCOSA_IDS = new Set(Object.keys(CARCOSA_STORY_TEXT.introductions))
+const TFA_IDS = new Set(Object.keys(TFA_STORY_TEXT.introductions))
 
 function campaignHasInvestigator(context, code) {
   const records = Object.values(context?.campaign?.investigators || context?.investigators || {})
@@ -89,6 +91,109 @@ function carcosaFlowStory(visit, campaign) {
   return null
 }
 
+// 失落的时代：导入正文按该次进入时的战役记录选择分支；未触发的分支不投影。
+function tfaIntroduction(sc, records = {}, context = null) {
+  const source = TFA_STORY_TEXT.introductions[sc.id]
+  if (!source) return null
+  const sections = []
+  const has = key => Boolean((source.sections[key] || []).length)
+  const add = (title, keys) => {
+    const paragraphs = [keys].flat().flatMap(key => source.sections[key] || [])
+    if (paragraphs.length) sections.push({ title: title ?? source.title, paragraphs })
+  }
+  const supplies = () => Object.values(context?.campaign?.supplies || context?.supplies || {})
+    .flat().filter(Boolean)
+  if (sc.id === 'theUntamedWilds') {
+    add(source.title, ['body'])
+  } else if (sc.id === 'theDoomOfEztli') {
+    if (records.theInvestigatorsWereForcedToWaitForAdditionalSupplies) add(source.title, ['intro1'])
+    else if (records.theInvestigatorsClearedAPathToTheEztliRuins) add(source.title, ['intro2'])
+  } else if (sc.id === 'threadsOfFate') {
+    add(source.title, ['intro1'])
+    const alejandro = records.theInvestigatorsGaveCustodyOfTheRelicToAlejandro
+      || records.alejandroRecoveredTheRelicOfAges
+    const harlan = records.theInvestigatorsGaveCustodyOfTheRelicToHarlanEarnstone
+    if (alejandro) add(null, ['intro2'])
+    else if (harlan) add(null, ['intro3'])
+    add(null, ['intro4'])
+    if (harlan) add(null, ['intro5'])
+    else if (!alejandro) add(null, ['intro6'])
+    add(null, ['intro7'])
+  } else if (sc.id === 'theBoundaryBeyond') {
+    add(source.title, ['part1'])
+    if (records.theInvestigatorsForgedABondWithIchtaca) add(null, ['ichtaca.ichtacasQuest'])
+    else if (records.ichtacaIsInTheDark) add(null, ['ichtaca.silentJourney'])
+    if (records.theInvestigatorsFoundTheMissingRelic) add(null, ['missingRelic.arcaneThrumming'])
+    else if (records.theRelicIsMissing) add(null, ['missingRelic.growingConcern'])
+    if (records.theInvestigatorsRescuedAlejandro) add(null, ['alejandro.alejandrosThoughts'])
+    else if (records.alejandroIsMissing) add(null, ['alejandro.anEmptySeat'])
+    if (!supplies().includes('gasoline')) add(null, ['gas.outOfGas'])
+    add(null, ['part2'])
+  } else if (sc.id === 'heartOfTheEldersPart1') {
+    // 序盘导入：intro1 必有；intro2/3/4 分别只在伊塔卡、亚历山卓、探险日志随行时读。
+    add(source.title, ['intro1'])
+    const flags = context?.scenarioFlags || {}
+    const hasCampaignCard = code => Object.values(context?.campaign?.investigators || {})
+      .some(record => (record?.deck || []).includes(code))
+    const ichtaca = flags.ichtacaPresent ?? hasCampaignCard('04147')
+    const alejandro = flags.alejandroPresent ?? hasCampaignCard('04051')
+    const journal = flags.journalPresent ?? hasCampaignCard('04148')
+    if (ichtaca) add(null, ['intro2'])
+    if (alejandro) add(null, ['intro3'])
+    if (journal) add(null, ['intro4'])
+  } else if (sc.id === 'theCityOfArchives') {
+    add(source.title, ['intro1'])
+    if (records.theInvestigatorsCooperatedWithTheYithians) add(null, ['intro2'])
+    else if (records.theInvestigatorsResistedCaptivity) add(null, ['intro3'])
+  } else if (sc.id === 'theDepthsOfYoth') {
+    add(source.title, ['intro1.body'])
+    if (records.youAreForgingYourOwnWay) add(null, ['intro1.forgingYourOwnPath'])
+    else if (records.ichtacasFaithIsRestored) add(null, ['intro1.faithIsRestored'])
+    else if (has('intro1.otherwise')) add(null, ['intro1.otherwise'])
+    if (records.youAreForgingYourOwnWay) add(null, ['intro2'])
+    else if (records.ichtacasFaithIsRestored) add(null, ['intro3', 'intro5'])
+    else if (records.theRelicIsMissing) add(null, ['intro6', 'intro8'])
+    if (has('intro4.body')) add(null, ['intro4.body'])
+    if (records.theInvestigatorsFoundTheMissingRelic) add(null, ['intro4.foundTheMissingRelic'])
+    else if (records.theRelicIsMissing) add(null, ['intro4.theRelicIsMissing'])
+    if (!records.youAreForgingYourOwnWay && !records.ichtacasFaithIsRestored) add(null, ['intro7'])
+  } else if (sc.id === 'shatteredAeons') {
+    if (records.theBraziersAreLit) add(source.title, ['theBraziersAreLit', 'intro1'])
+    else if (records.theBraziersRemainUnlit) add(source.title, ['theBraziersRemainUnlit', 'intro2'])
+    else add(source.title, ['intro1'])
+    add(null, ['intro3.body'])
+    if (records.theInvestigatorsFoundTheMissingRelic) add(null, ['intro3.foundTheMissingRelic'])
+    else if (records.theRelicIsMissing) add(null, ['intro3.theRelicIsMissing'])
+    add(null, [records.theRelicIsMissing ? 'intro5' : 'intro4'])
+  } else if (sc.id === 'turnBackTime') {
+    if (records.theInvestigatorsWereForcedToWaitForAdditionalSupplies) add(source.title, ['intro1'])
+    else if (records.theInvestigatorsClearedAPathToTheEztliRuins) add(source.title, ['intro2'])
+  }
+  return sections.length ? sections : null
+}
+
+function tfaFlowStory(visit, campaign) {
+  if (campaign.id !== 'theForgottenAge') return null
+  const nodes = {
+    prologue: TFA_STORY_TEXT.prologue,
+    interludeOne: TFA_STORY_TEXT.interludes.interludeOne,
+    interludeTwo: TFA_STORY_TEXT.interludes.interludeTwo,
+    interludeThree: TFA_STORY_TEXT.interludes.interludeThree,
+    interludeFour: TFA_STORY_TEXT.interludes.interludeFour,
+    interludeFive: TFA_STORY_TEXT.interludes.interludeFive,
+    resupplyPoint: TFA_STORY_TEXT.interludes.resupplyPoint,
+    epilogue: TFA_STORY_TEXT.epilogue,
+  }
+  const source = nodes[visit.nodeId]
+  if (!source) return null
+  // 幕间的分支由结算过程逐段写入 storySections，纪事只展示实际到达的段落，
+  // 不再把互斥分支一次性展开（审计 §3.9 C 第 4 项）。
+  const reached = campaign.storySections?.[visit.nodeId]
+  if (Array.isArray(reached) && reached.length) return { title: source.title, paragraphs: [...reached] }
+  const paragraphs = Object.values(source.sections).flat()
+  return paragraphs.length ? { title: source.title, paragraphs } : null
+}
+
 function dunwichIntroduction(sc, records) {
   const source = DUNWICH_STORY_TEXT.introductions[sc.id]
   if (!source) return null
@@ -130,8 +235,10 @@ export function introduction(sc, records = {}, context = null) {
   if (sc.id === 'theGathering') sections.push({ title: '战役序章 · ' + STORY_TEXT.prologue.title, paragraphs: [...STORY_TEXT.prologue.paragraphs] })
   const dunwich = dunwichIntroduction(sc, records)
   const carcosa = carcosaIntroduction(sc, records, context)
+  const tfa = tfaIntroduction(sc, records, context)
   if (dunwich) sections.push(...dunwich)
   else if (carcosa) sections.push(...carcosa)
+  else if (tfa) sections.push(...tfa)
   else {
     const narrative = sc.id === 'theMidnightMasks'
       ? [...STORY_TEXT.theMidnightMasks[records.litaForcedOthers ? 'others' : 'survivors'], ...STORY_TEXT.theMidnightMasks.common]
@@ -167,6 +274,10 @@ function savedIntroduction(snapshot, sc, records, context = null) {
     if (prose.length <= String(sc.intro || '').trim().length + 20) return introduction(sc, records, context)
   }
   if (CARCOSA_IDS.has(sc.id)) {
+    const prose = Array.isArray(snapshot.paragraphs) ? snapshot.paragraphs.join('').trim() : ''
+    if (prose.length <= String(sc.intro || '').trim().length + 20) return introduction(sc, records, context)
+  }
+  if (TFA_IDS.has(sc.id)) {
     const prose = Array.isArray(snapshot.paragraphs) ? snapshot.paragraphs.join('').trim() : ''
     if (prose.length <= String(sc.intro || '').trim().length + 20) return introduction(sc, records, context)
   }
@@ -224,6 +335,7 @@ export function resolutionStory(sc, key, snapshot = null, context = null) {
   let paragraphs = DUNWICH_STORY_TEXT.resolutions?.[sc.id]?.[branch]
     || STORY_TEXT.resolutions?.[sc.id]?.[branch]
     || CARCOSA_STORY_TEXT.resolutions?.[sc.id]?.[branch]
+    || TFA_STORY_TEXT.resolutions?.[sc.id]?.[branch]
     || snapshot?.paragraphs || [sc.resolutions?.[key]].filter(Boolean)
   if (prelude.length) paragraphs = [...prelude, ...paragraphs]
   if (sc.id === 'theUnspeakableOath') {
@@ -263,7 +375,9 @@ export function campaignStory(state, registry, observerSeat = null) {
     if (campaign.id === 'theDunwichLegacy' && visit.nodeId === 'prologue') continue
     if (campaign.id === 'thePathToCarcosa' && ['prologue', 'possessedEpilogue'].includes(visit.nodeId)) continue
     const expanded = dunwichFlowStory(visit.nodeId, campaign) || carcosaFlowStory(visit, campaign)
+      || tfaFlowStory(visit, campaign)
     if (expanded || visit.storyText) entries.push({ _order:index*3-1, id: `flow:${index}`, kind: 'interlude',
+      nodeId: visit.nodeId,
       title: expanded?.title || visit.storyTitle || '调查纪事', paragraphs: expanded?.paragraphs || [visit.storyText] })
   }
   const observerId = Number.isInteger(observerSeat)

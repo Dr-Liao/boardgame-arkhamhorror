@@ -235,23 +235,30 @@ export const behavior = {
     const location = state.locations.find(candidate => candidate.id === inv.location)
     const code = original(location)
     const meetingRoomKey = `meetingRoom:${inv.seat}`
-    if (code === '03128' && location.clues > 0
-      && state.scenarioFlags[meetingRoomKey] !== state.round
-      && inv.assets.some(asset => !asset.exhausted
-        && ALL_CARDS[asset.code]?.traits?.some(trait => trait.toLowerCase() === 'ally'))) {
+    // 会议室能力（每轮每人一次）已经就位，只差"地点还有线索""还有一名未横置的盟友"。
+    if (code === '03128' && state.scenarioFlags[meetingRoomKey] !== state.round) {
+      const readyAlly = inv.assets.some(asset => !asset.exhausted
+        && ALL_CARDS[asset.code]?.traits?.some(trait => trait.toLowerCase() === 'ally'))
       moves.push({ action: 'scenarioAction', rule: 'meetingRoomAlly',
-        label: '横置一名盟友，在会议室发现1个线索' })
+        label: '横置一名盟友，在会议室发现1个线索',
+        reason: location.clues > 0
+          ? readyAlly ? null : '需要一名未横置的[[盟友]]支援'
+          : '会议室已经没有线索' })
     }
-    if (['03131', '03135'].includes(code)
-      && state.locations.every(candidate => candidate.revealed)
-      && state.locations.every(candidate => (candidate.clues || 0) === 0)) {
-      moves.push({ action: 'scenarioAction', rule: 'restoreClues', label: '在宁静的走廊放置线索' })
+    if (['03131', '03135'].includes(code)) {
+      const unrevealed = state.locations.filter(candidate => !candidate.revealed).length
+      const withClues = state.locations.filter(candidate => (candidate.clues || 0) > 0).length
+      moves.push({ action: 'scenarioAction', rule: 'restoreClues', label: '在宁静的走廊放置线索',
+        reason: unrevealed ? '还有地点尚未揭示' : withClues ? '还有地点留着线索' : null })
     }
-    if (code === '03134' && state.enemies.some(enemy => (enemy.doom || 0) > 0)) {
-      moves.push({ action: 'scenarioAction', rule: 'readingRoom', label: '调查阅览室，将敌人上的毁灭转为线索' })
+    if (code === '03134') {
+      moves.push({ action: 'scenarioAction', rule: 'readingRoom', label: '调查阅览室，将敌人上的毁灭转为线索',
+        reason: state.enemies.some(enemy => (enemy.doom || 0) > 0) ? null : '场上没有带毁灭的敌人' })
     }
-    const peabody = inv.assets.find(asset => asset.code === '03141' && !asset.exhausted)
-    if (peabody) moves.push({ action: 'scenarioAction', rule: 'peabodyPassage', label: '横置皮博迪先生，选择一个地点作为通道' })
+    // 皮博迪先生在场时，只差他是否已重整。
+    const peabody = inv.assets.find(asset => asset.code === '03141')
+    if (peabody) moves.push({ action: 'scenarioAction', rule: 'peabodyPassage', label: '横置皮博迪先生，选择一个地点作为通道',
+      reason: peabody.exhausted ? '需要先重整“皮博迪先生”' : null })
     return moves
   },
   performAction(state, inv, move, api) {

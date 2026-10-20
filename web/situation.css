@@ -242,3 +242,25 @@
 @media (prefers-reduced-motion: reduce) {
   .ah-situ-medal, .ah-situ-scene-card, .ah-situ-inv, .ah-situ-story-card .ah-table-art { transition: none; }
 }
+
+/* 补给品：战役面板里的公开清单。 */
+.ah-campaign-supplies { display: grid; gap: 8px; margin-top: 12px; }
+.ah-campaign-supplies h4 { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; letter-spacing: 1px; color: #cdd6b6; }
+.ah-campaign-supplies h4 .ah-icon { width: 14px; height: 14px; }
+.ah-campaign-supplies ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.ah-campaign-supplies li { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12px; }
+.ah-campaign-supplies li strong { color: #e4cea0; }
+.ah-campaign-supplies li span { color: var(--office-muted, #aeb59c); }
+
+/* 失落的时代剧本状态：复仇、伊格之怒、深度、石柱、漆黑、探索牌库与遗物位置。 */
+.ah-campaign-tfa { display: grid; gap: 8px; margin-top: 12px; }
+.ah-campaign-tfa h4 { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; letter-spacing: 1px; color: #cdd6b6; }
+.ah-campaign-tfa h4 .ah-icon { width: 14px; height: 14px; }
+.ah-campaign-tfa ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.ah-campaign-tfa li { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; }
+.ah-campaign-tfa li span { display: inline-flex; align-items: center; gap: 5px; color: var(--office-muted, #aeb59c); }
+.ah-campaign-tfa li .ah-icon { width: 13px; height: 13px; }
+.ah-campaign-tfa li strong { color: #e4cea0; font-weight: 600; text-align: right; }
+@media (max-width: 640px) {
+  .ah-campaign-tfa li { font-size: 11px; }
+}

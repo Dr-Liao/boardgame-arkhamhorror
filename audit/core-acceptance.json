@@ -57,19 +57,19 @@
     },
     {
       "file": "games/arkhamhorror/tests/core-n4.test.mjs",
-      "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+      "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
     },
     {
       "file": "games/arkhamhorror/tests/core-n4b.test.mjs",
-      "sha256": "1e5a9c62f2604291e97aefb5cf6c926b42c8bbd37126fddea57c4535cafce4de"
+      "sha256": "f63b0201d2044adfc744de51ae3ce6d888b0b14596de00bd2ca59eeb9c4684f1"
     },
     {
       "file": "games/arkhamhorror/tests/notz-n4.test.mjs",
-      "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+      "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
     },
     {
       "file": "games/arkhamhorror/tests/scenario-n4b.test.mjs",
-      "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+      "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
     },
     {
       "file": "games/arkhamhorror/tests/p6-content.test.mjs",

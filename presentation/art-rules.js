@@ -9,8 +9,8 @@
 // 候选有序且有限；任何候选都只代表「可拼出的路径」，不代表远程实际存在。
 
 export const GENERIC_BACKS = Object.freeze({
-  encounter: 'backs/back_encounter.webp',
-  player: 'backs/back_player.webp',
+  encounter: 'backs/back_encounter.jpg',
+  player: 'backs/back_player.jpg',
 })
 
 // 修订核心版遭遇卡重印号（1604–1682）沿用原版美术，除非该卡显式声明了替代美术。

@@ -7,6 +7,7 @@ import { tableIcon, classIcon } from './table-components.js'
 import { renderStoryReader } from './story-reader.js'
 import { filterCards, renderCardFilters } from './card-filters.js'
 import { campaignPresentation, presentationAttributes } from './campaign-presentation.js'
+import { renderSupplyPicker, supplyPickerModel } from './supply-picker.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
 import { installCardZoom } from './card-zoom.js'
 const STAGES = { campaignHub: '战役准备', scenarioSetup: '调查准备', inScenario: '调查进行中', scenario: '调查进行中', scenarioResult: '调查报告', interlude: '关间休整', campaignResult: '战役终章' }
@@ -21,9 +22,13 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   const tabs = [
     ['departure', '开始关卡'],
     ['overview', '战役总览'], ['scenarios', '关卡选择'], ['investigators', '调查员与席位'],
-    ['deck', '卡组构筑'], ['upgrades', '升级'], ['records', '战役记录'],
+    ['deck', '卡组构筑'], ['upgrades', '升级'], ['supplies', '补给品'], ['records', '战役记录'],
     ['story', '调查纪事'],
   ]
+  const TAB_ICONS = { departure: 'action', overview: 'clue', scenarios: 'eye', investigators: 'shield',
+    deck: 'book', upgrades: 'star', supplies: 'supply', records: 'leaf', story: 'book' }
+  // 补给品是失落的时代的战役机制；标了 supplyLabels 的战役才会多出这一页。
+  const supportsSupplies = campaign => Object.keys(campaign?.supplyLabels || {}).length > 0
   const game = () => state.catalog.find(item => item.id === 'arkhamhorror')
   const legal = (s, action) => (s.state.legalMoves || []).filter(move => move.action === action)
   // Seat preparation is simultaneous: the server lists every seat that may act now.
@@ -61,6 +66,21 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   const canDepart = s => s.state.uiState === 'scenarioSetup' && s.state.hubReady && !s.state.pendingChoice
     && s.state.campaign.leadConfirmed !== false && s.players.some(p => p.seat === s.state.campaign.leadSeat && p.role === 'human')
     && s.state.investigators.every(inv => seatPrepared(s, inv)) && legal(s, 'hubBeginScenario').length > 0
+  // 幕间叙事：当前剧情节点的纪事条目（含结算过程中已经到达的段落）。
+  const currentFlowStory = s => {
+    const nodeId = s.state.campaign?.flow?.nodeId
+    if (!nodeId) return null
+    return (s.state.campaignStory?.entries || []).filter(entry => entry.nodeId === nodeId).at(-1) || null
+  }
+  const interludeBriefing = (s, compact = false) => {
+    const entry = currentFlowStory(s)
+    if (!entry) return null
+    return h('section', { className: 'ah-hub-interlude' + (compact ? ' is-compact' : ''), 'aria-label': '幕间纪事' },
+      h('small', {}, '幕间纪事'),
+      h('h2', {}, entry.title),
+      ...(entry.paragraphs || []).map(paragraph =>
+        h('p', { className: 'ah-hub-interlude-prose' }, renderRulesText(h, paragraph, { links: false }))))
+  }
   const metric = (icon, value, label) => h('span', { className: 'ah-office-metric', title: label }, tableIcon(icon), h('b', {}, String(value ?? 0)), h('small', {}, label))
   const investigatorInfo = inv => {
     const optionText = option => {
@@ -861,6 +881,56 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
                   upgraded ? 'bg-btn' : 'bg-btn secondary'))))) : null)))
   }
 
+  function supplies(s) {
+    const cp = s.state.campaign
+    const labels = cp.supplyLabels || {}
+    const label = name => labels[name] || name
+    const grouped = names => {
+      const counts = new Map()
+      for (const name of names) counts.set(name, (counts.get(name) || 0) + 1)
+      return [...counts]
+    }
+    const points = cp.supplyPoints || {}
+    const leader = s.state.investigators.find(inv => inv.seat === cp.expeditionLeader)
+    const hasSupply = s.state.investigators.some(inv => (cp.supplies?.[inv.seat] || []).length)
+    return h('section', { className: 'ah-hub-pane ah-office-supplies' },
+      h('small', { className: 'ah-office-eyebrow' }, '远征装备'),
+      h('h2', {}, '补给品'),
+      h('p', { className: 'ah-supply-note' },
+        '补给品属于调查员个人；配给、药品与汽油可以重复携带。地点与诡计的「检查你们的补给品」核对同一地点的全队清单：任意一人持有即算通过。'),
+      leader ? h('p', { className: 'ah-supply-leader' }, tableIcon('supply'), `远征求领队：${leader.name}`) : null,
+      !hasSupply && !s.state.investigators.some(inv => Number.isFinite(points[inv.seat]))
+        ? h('div', { className: 'ah-office-empty' }, tableIcon('supply'), h('p', {}, '序幕尚未购买补给品')) : null,
+      s.state.investigators.map(inv => {
+        const list = cp.supplies?.[inv.seat] || []
+        const remaining = points[inv.seat]
+        return h('article', { className: 'ah-supply-card', 'data-supply-seat': inv.seat },
+          h('div', { className: 'ah-supply-head' }, h('strong', {}, inv.name),
+            Number.isFinite(remaining) && remaining > 0
+              ? h('span', { className: 'ah-supply-points' }, `剩余补给品点数 ${remaining}`) : null),
+          list.length
+            ? h('ul', { className: 'ah-supply-list' }, grouped(list).map(([name, count]) =>
+              h('li', {}, `${label(name)}${count > 1 ? ` ×${count}` : ''}`)))
+            : h('p', {}, '尚未携带补给品。'))
+      }))
+  }
+
+  // 待决的战役选择。补给选购走卡牌面板（完成按钮在独立的完成栏）；
+  // 其余选择（领队、幕间核对、补给点治疗）仍保持一列按钮。
+  function pendingChoicePane(s) {
+    const market = supplyPickerModel(s)
+    if (market) return h('div', { className: 'ah-hub-pane ah-hub-supply-market' },
+      interludeBriefing(s, true),
+      renderSupplyPicker(h, market, {
+        disabled: locked(s), busy: state.busy,
+        onSubmit: move => { if (move && !state.busy) submitMove(move, s) },
+      }))
+    return h('section', { className: 'ah-hub-pane', role: 'dialog', 'aria-label': '战役选择' },
+      interludeBriefing(s, true),
+      h('h2', {}, renderRulesText(h, s.state.pendingChoice.prompt, { links: false })),
+      legal(s, 'choose').map(move => action(s, move)))
+  }
+
   function records(s) {
     const cp = s.state.campaign
     const manifest = game()?.clientData?.campaigns?.find(item => item.id === cp.id)
@@ -900,8 +970,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     }
     if (canDepart(s) && state.arkhamDepartureReady !== `${s.sessionId}:${s.state.campaign.scenarioIndex}`) state.arkhamHubTab = 'departure'
     state.arkhamDepartureReady = canDepart(s) ? `${s.sessionId}:${s.state.campaign.scenarioIndex}` : null
-    const activeTab = state.arkhamHubTab || 'overview'
-    const panes = { departure, overview, scenarios, investigators, deck, upgrades, records,
+    const campaignTabs = supportsSupplies(s.state.campaign) ? tabs : tabs.filter(([id]) => id !== 'supplies')
+    const activeTab = campaignTabs.some(([id]) => id === state.arkhamHubTab) ? state.arkhamHubTab : 'overview'
+    const panes = { departure, overview, scenarios, investigators, deck, upgrades, supplies, records,
       story:s=>renderStoryReader(h,s,state,render,action,g,checkpointAction) }
     const saveNotice = s.saveDetached ? '当前存档已删除。另存为新存档后才能继续。'
       : s.saveError ? '自动保存失败：' + s.saveError : null
@@ -920,14 +991,14 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           : h('button', { className: 'bg-btn', onclick: () => retrySave(s, !!s.saveDetached) }, s.saveDetached ? '另存为新存档' : '重试保存')) : null,
       state.error ? h('div', { className: 'ah-hub-save-alert', role: 'alert' }, state.error) : null,
       h('nav', { className: 'ah-hub-tabs', 'aria-label': '战役局外页面' },
-        tabs.map(([id, label], index) => h('button', { className: (activeTab === id ? 'active ' : '') + (id === 'departure' ? 'ah-departure-tab' + (canDepart(s) ? ' is-ready' : '') : ''),
+        campaignTabs.map(([id, label]) => h('button', { className: (activeTab === id ? 'active ' : '') + (id === 'departure' ? 'ah-departure-tab' + (canDepart(s) ? ' is-ready' : '') : ''),
           'aria-label': label, 'aria-current': activeTab === id ? 'page' : null, onclick: () => changeTab(id) },
-          tableIcon(['action', 'clue', 'eye', 'shield', 'book', 'star', 'leaf','book'][index]), label,
+          tableIcon(TAB_ICONS[id] || 'star'), label,
           id === 'departure' ? h('small', {}, canDepart(s) ? '已就绪' : '待准备') : null))),
       workflowGuide(s, activeTab),
       preparationProgress(s),
-      s.state.pendingChoice ? h('section', { className: 'ah-hub-pane', role: 'dialog', 'aria-label': '战役选择' },
-        h('h2', {}, renderRulesText(h,s.state.pendingChoice.prompt,{links:false})), legal(s, 'choose').map(move => action(s, move)))
+      s.state.uiState === 'interlude' && !s.state.pendingChoice ? interludeBriefing(s) : null,
+      s.state.pendingChoice ? pendingChoicePane(s)
         : panes[activeTab](s, g || { clientData: { campaigns: [], deckBuilder: null } }),
       renderCheckpointForkModal(s))
   }

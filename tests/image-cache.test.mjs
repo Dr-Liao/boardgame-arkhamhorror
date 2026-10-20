@@ -23,7 +23,7 @@ test('默认 CDN 卡图按资源包目录原子写入并可重复复用', async 
   const input = { relative: 'img/zh/cards/01001.avif', searchParams: query('cache=cdn') }
   assert.equal(await cache(input), true)
   assert.deepEqual(await readFile(path.join(webRoot, 'img/zh/cards/01001.avif')), AVIF)
-  assert.deepEqual(requests, [DEFAULT_IMAGE_HOST + '/img/arkham/zh/cards/01001.avif'])
+  assert.deepEqual(requests, [DEFAULT_IMAGE_HOST + '/zh/01001.avif'])
   assert.equal(await cache(input), true)
   assert.equal(requests.length, 1)
 })
@@ -56,7 +56,7 @@ test('并发请求只下载一次，非法路径、非 CDN 请求与伪图片不
 
 test('服务端缓存器拒绝被改造成任意远程代理', () => {
   assert.throws(() => createImageAssetCache({ host: 'https://example.test' }), /默认 HTTPS CDN/)
-  assert.throws(() => createImageAssetCache({ host: 'http://assets.arkhamhorror.app' }), /默认 HTTPS CDN/)
+  assert.throws(() => createImageAssetCache({ host: 'http://drliao1.com/arkhamhorror/cards' }), /默认 HTTPS CDN/)
 })
 
 test('大厅在静态文件缺失时调用 Mod 缓存钩子并返回新文件', async t => {

@@ -62,6 +62,32 @@ export const FAST_TESTS = Object.freeze([
   'carcosa-literal-behavior.test.mjs', // 0.4
   'carcosa-implementation-gaps.test.mjs', // 0.6
   'tfa-migration.test.mjs', // 0.1
+  'tfa-launch-supplies.test.mjs', // 1.0
+  'tfa-interludes.test.mjs', // 2.4
+  'tfa-visibility.test.mjs', // 0.4
+  'tfa-p2-hooks.test.mjs', // 0.3
+  'tfa-p2-restart.test.mjs', // 0.1
+  'tfa-player-p1.test.mjs', // 0.4
+  'tfa-encounter-p1.test.mjs', // 2.8
+  'tfa-investigators.test.mjs', // 4.1
+  'tfa-mechanics.test.mjs', // 0.6
+  'tfa-player-acceptance.test.mjs', // 0.4
+  'tfa-scenario-acceptance.test.mjs', // 0.1
+  'tfa-engine-integration.test.mjs', // 0.2
+  'tfa-engine-setups.test.mjs', // 0.6
+  'tfa-untamed-wilds.test.mjs', // 0.2
+  'tfa-doom-of-eztli.test.mjs', // 0.2
+  'tfa-threads-of-fate.test.mjs', // 0.2
+  'tfa-boundary-beyond.test.mjs', // 0.2
+  'tfa-heart-of-the-elders-part1.test.mjs', // 0.2
+  'tfa-heart-of-the-elders-part2.test.mjs', // 0.2
+  'tfa-city-of-archives.test.mjs', // 0.2
+  'tfa-depths-of-yoth.test.mjs', // 0.2
+  'tfa-shattered-aeons.test.mjs', // 0.2
+  'tfa-turn-back-time.test.mjs', // 0.2
+  'tfa-story.test.mjs', // 0.2
+  'tfa-rules.test.mjs', // 0.3
+  'tfa-supply-picker.test.mjs', // 0.1
 ])
 
 export const SLOW_TESTS = Object.freeze([

@@ -62,6 +62,15 @@ export const RULES = [
   entry('dunwichEncounters','敦威治专属遭遇','敦威治遗产',['暗影潜随','短暂的展览','尾随之蛇','世外诡影','怪异标记','腐烂的尸体','时间旋涡','辽阔无边','奥术屏障','绑架','变异野兽','蒸汽之爪','虫洞','空间间隙','亚弗戈蒙之光','污秽与寂静','不洁之地'],['部分专属诡计会立即要求检定或弃牌。世外诡影由抽牌者选择牌型；同一阶段再次抽到时改选两种，全体在场调查员弃掉相应手牌。','博物馆的暗影潜随令恐惧猎手重整、交战并攻击同地点调查员；尾随之蛇令它增加毁灭，或从遭遇牌堆、弃牌区或虚空返回。','山路的哭嚎仪式使每位调查员弃掉牌库顶三张，位于异变地点者再把弃牌区的弱点洗回牌库。异次元地点被现实崩塌弃掉时，其上的角色先移往另一维度。','奥术屏障在进入或离开附属地点前要求意志检定，失败可取消移动或弃掉牌库顶五张。蒸汽之爪优先让支援承伤，并禁止本轮移动。绑架附属到当前密谋，绑架的随机献祭在密谋背面结算前发生。亚弗戈蒙之光显现时附属到当前密谋或当前场景（每张限 1 张），在场期间所有伤害和恐惧都视为直接伤害、直接恐惧，只能分配给调查员；附属的密谋或场景离场时一并弃掉。不洁之地禁止打出盟友并使盟友印刷文字失效；污秽与寂静在回合结束伤害同地点调查员的精神，密谋推进后弃掉。变异野兽治疗憎恶，并在调查员与该敌人进入彼此地点时造成恐惧。'],['encounter','dunwichZones','test','script','damage']),
   entry('dunwichChaos','敦威治剧本混乱符号','敦威治遗产',['敦威治混乱符号','四难度','剧本提示卡'],['八关分别依据各自剧本提示卡结算骷髅、异教徒、石板和古神标记。简单与标准共用一面；困难与专家共用另一面。','修正值可能依牌库、弃牌区、地点、敌人和当前密谋改变。部分效果会在标记揭示时立即发生，另一些效果在检定成功或失败后结算。山路异教徒仅取消投入的技能牌效果与图标，支援和事件的投入图标保留；所有投入牌仍在检定结束后弃掉。'],['chaos','dunwichCampaign']),
   entry('dunwichBeyond','异次元地点与离场','敦威治遗产',['迷失时空','异次元地点','另一维度','次元门','犹格·索托斯'],['《迷失时空》会从遭遇牌库抽出地点，令其作为独立地点实例入场；地图连接由地点符号决定。虫洞先弃遭遇牌直到找到地点，结算其显现后再移动。山路的空间间隙会翻回非哨兵山地点、清除线索并洗混身份，角色移往最近的哨兵山地点。','部分异次元地点在回合结束、线索耗尽或调查员离开时会放置毁灭、弃掉或洗回牌库。地点离场时，其上的调查员和未交战敌人移动到另一维度。','犹格·索托斯不能被躲避，也不发动借机攻击；受其攻击时可选择弃牌抵消恐惧，若牌库因此耗尽则陷入疯狂。'],['dunwichZones','doom','dunwichChaos']),
+  entry('tfaCampaign','失落的时代战役与记录','失落的时代',['失落的时代','十章战役','失落战役记录','TFA'],['《失落的时代》按《荒莽密林》《埃兹特里的覆灭》《命运之线》《界限彼端》《久远腹地（上／下）》《天机之城》《幽嘶深渊》《破碎永世》《时间倒流》推进，章节之间插入五个幕间、一个补给点与尾声。每一章的导入与结局都按当时的战役记录选择，只有实际到达的分支显示正文。','战役记录共 48 个字段：布尔记录（是否被迫等候补给、是否清出通往遗迹的道路、遗物由谁保管、伊塔卡与亚历山卓的信任或敌意等）、数值记录（伊格之怒、已知道路数、预示者身上的伤害）与「丛林在注视」的卡号清单。','每位调查员的补给品是独立清单；古代遗物、远征领队与中毒状态同样是战役层状态，随存档恢复。','五个幕间与补给点按卡面顺序逐项结算：毛毯决定睡眠与创伤，队长选择放哨者（有双筒望远镜者可看到树林中的身影并获得 2 XP），共同划掉等于人数的配给（不足者有下一场起始资源 -3），药品移除牌组里的中毒弱点（仍在中毒者承受 1 点肉体创伤），汽油与粉笔决定下一场能否换起始手牌，地图、水壶、火把分别记下道路、额外线索与火盆，最后在补给点用 3 XP 治中毒、5 XP 治 1 点创伤。','幕间正文分段写进「调查纪事」：只有实际到达的分支会出现，互斥段落不再一次性展开；48 条战役记录都带中文名，因此在档案页与结算页直接可读。','本 Mod 的十章都已实现主要规则，并已在大厅开放（playable）：序幕先进行远征求领队选择与补给品购买。逐张卡面字面核对与发布浏览器验收仍未完成，差异记录在 docs/tfa-card-audit.md 与 audit/tfa-migration.json 的 earlyAccess 标记下。'],['tfaExploration','tfaSupplies','tfaVengeance','tfaRelic','tfaChaos']),
+  entry('tfaExploration','探索牌库与探索行动','失落的时代',['探索','探索牌库','探索行动','Explore','explore'],['探索牌库是与遭遇牌库分离的牌堆，由章节准备时建立（地点与诡计混洗），顺序写入存档，恢复后不会改变。','探索花费一个行动：抽取牌库顶一张。抽到地点时把它放入游戏，与出发地点相连并让探索者移动过去；符号地图会按印刷符号重新计算连线。抽到敌人或诡计时按遭遇结算，这次探索视为失败。','章节可以用「此处不能探索」「探索前先检定」等规则限制或取消探索，例如索桥、杂草丛生的遗迹、疯狂生长与迷失荒野。','探索牌库为空时不再提供探索行动；把新地点洗进去（遗迹、时间之窗、破碎地点）会重新打乱牌库。'],['actions','test','encounter','tfaCampaign']),
+  entry('tfaSupplies','补给品与检查补给','失落的时代',['补给','补给品','检查补给','Supplies','supply','补给点'],['补给品属于调查员个人：19 种印刷补给可以被勾选，也可以被划掉（失去）。','「检查你的补给品」会查看同地点的所有调查员：任意一人持有指定补给即视为通过；单独行动时只看自己。许多地点与诡计因此改变：有地图可查看探索牌库顶，有水壶可额外治疗，没有指南针要额外支付资源，没有绳索会受伤。','序幕与补给点都会逐位询问补给品点数（序幕：1 人 10 点、2 人各 7 点、3 人各 5 点、4 人各 4 点；补给点：1 人 8 点、2 人各 5 点、3 人各 4 点、4 人各 3 点）。购买的补给写入该调查员的个人清单，在大厅的「补给品」页签与牌桌战役面板可见；配给、药品、汽油可以重复购买，剩余点数作废。','玩家卡上的 Uses (N supplies) 是卡牌使用次数，与本战役层补给不是同一机制。'],['uses','tfaCampaign','tfaExploration']),
+  entry('tfaVengeance','复仇与伊格之怒','失落的时代',['复仇','复仇点数','Vengeance','伊格之怒',"Yig's Fury"],['复仇点数来自胜利区：带复仇点数的敌人被击败后进入胜利区，视同进入胜利区的地点也会累计，点数供卡面与混乱标记读取。','伊格之怒是数值型战役记录，只增不减、不会为负，由复仇、章节结局与特定事件累积。','后续章节在准备与结局时直接读取伊格之怒：幽嘶深渊按它裁剪初始密谋、决定敌人是否已在追击区，久远腹地用它决定预示者出现的位置。'],['victory','tfaCampaign','tfaChaos']),
+  entry('tfaPoison','中毒与毒素','失落的时代',['中毒','毒素','Poisoned','中毒状态'],['「中毒」是永久弱点 04102：一旦中毒，它在威胁区域常驻，本身没有效果，但其他卡面会因此变强。','中毒状态存入调查员状态并随存档恢复，同一调查员不会重复中毒。部分章节的混乱标记在中毒时改为自动失败或加重后果，例如荒莽密林与久远腹地的旧神标记。','章节效果会在需要时把放在一边的中毒弱点放进威胁区域。'],['weakness','tfaChaos','tfaCampaign']),
+  entry('tfaRelic','古代遗物与远征领队','失落的时代',['古代遗物','遗物','Relic of Ages','远征领队','领队','Expedition Leader'],['古代遗物是剧情资产：它可能由某位调查员携带、固定在某处地点，或在章节之间改变版本（埃兹特里的遗物、时光涌流、重拾往昔等）。携带者移动时遗物跟随。','遗物的状态（持有座位或地点、版本卡号）写入对局状态并随存档恢复；卡牌效果可以把它移交给亚历山卓、放进胜利区、附属到地点或洗回探索牌库。','远征领队是战役元数据里的一个座位指针：序幕会在厄休拉·唐斯与里奥·安德森之间询问人选（蒙特雷·杰克尚未加入本 Mod 的调查员名单），选择结果写入领队座位并随存档恢复；本次实现没有幕间改派入口。'],['tfaCampaign','victory','tfaTimeline']),
+  entry('tfaTimeline','时间线与年代','失落的时代',['时间线','年代','时间之窗','破碎永世','Timeline'],['《破碎永世》把调查员带到不同年代的地点（犹格斯星、拉莱耶海岸、姆大陆、亚特兰蒂斯、纳克特、瓦卢西亚、冷原），并用「时间之窗」把它们连接起来。','火盆是否点燃、遗物是哪一个版本、遗失的遗物是否找回等记录会决定导入分支、替代场景与最终结局；只有实际到达的分支显示正文。','古代遗物会改变时间之窗附近的地图：破碎地点被附属到遗物，凑够人数+1 处后进入结局；遗物离场时会把附属地点洗回探索牌库并重置场景。'],['tfaRelic','tfaChaos','tfaExploration']),
+  entry('tfaDescent','深度等级与下降','失落的时代',['深度','深度等级','下降','幽嘶深渊','Depth'],['《幽嘶深渊》用「当前深度等级」记录下降层数，从 1 开始，每推进一次场景增加 1；混乱袋的骷髅标记按当前深度取负值。','每下降一层会重建探索牌库、把没有跟上的人留在上一层、把追击区的敌人放到本层起点，并清理上一层的卡牌。','深度到 5 时直接进入结局；伊格之怒至少 18 会从较深的密谋开始，至少 21 时伊格已经在追击区。深度等级写入状态并随存档恢复。'],['tfaExploration','tfaChaos','tfaVengeance']),
+  entry('tfaChaos','失落时代的混乱符号','失落的时代',['失落时代的混乱符号','旧神标记','古神标记','剧本提示卡','elder_thing','Elder Thing'],['每一章都有自己的提示卡：骷髅、异教徒、石板与旧神标记按当前章节、难度面与场上状态取值。战役初始混乱袋没有异教徒与石板标记，部分章节会在结局后把符号永久加入（例如荒莽密林的女猎手结局）。','旧神标记通常为 -2／-3；在荒莽密林与久远腹地，中毒时改为自动失败；在幽嘶深渊，胜利区复仇点数达到 3 时也改为自动失败。','骷髅常读取复仇点数、带有毁灭的地点数量或当前深度；石板在部分章节读取探索牌库张数或手牌数。符号的额外后果在检定结算后执行，例如在所在地点放置毁灭或让一张中毒弱点进入威胁区域。'],['chaos','tfaCampaign','tfaVengeance']),
 ]
 export const ruleById = id => RULES.find(r => r.id === id) || RULES[0]
 // Explicit readings keep polyphonic headings (for example 重整 / chongzheng)
@@ -85,6 +94,9 @@ const RULE_PINYIN = {
   carcosaCampaign:'kaerkesazhilu', carcosaDoubtConviction:'yihuoyuxinxin',
   carcosaGuests:'guibincaifang', carcosaAsylum:'xiehuishiyue', carcosaCatacombs:'balizhuizongyumuxue',
   carcosaChaos:'kaerkesahunluan', carcosaFinale:'heixingyukacheng',
+  tfaCampaign:'shiluodeshidai', tfaExploration:'tansuopaiku', tfaSupplies:'bujipinyujianchabuji',
+  tfaVengeance:'fuchouyuyigezhinu', tfaPoison:'zhongduyudusu', tfaRelic:'gudaiyiwuyuyuanzhenglingdui',
+  tfaTimeline:'shijianxianyuniandai', tfaDescent:'shendudengjiyuxiajiang', tfaChaos:'shiluodeshidaihunluanfuhao',
 }
 export const RULE_INDEX = RULES.map(rule => ({...rule, sortKey:RULE_PINYIN[rule.id], initial:RULE_PINYIN[rule.id][0].toUpperCase()}))
   .sort((a,b)=>a.sortKey.localeCompare(b.sortKey,'en'))
@@ -99,6 +111,22 @@ export function cardRuleIds(card) {
 }
 function scenarioCardRuleIds(card) {
   const code = String(card?.originalCode || card?.code || '')
+  if (/^04\d{3}[a-z]?$/.test(code)) {
+    const text = [card?.text, card?.textZh].filter(Boolean).join('\n')
+    const ids = ['tfaCampaign']
+    if (/Explore|探索/i.test(text)) ids.push('tfaExploration')
+    if (/check your supplies|检查(你的)?补给|补给品/i.test(text)) ids.push('tfaSupplies')
+    if (/Vengeance|复仇|Yig.s Fury|伊格之怒/i.test(text)) ids.push('tfaVengeance')
+    if (/Poisoned|中毒/i.test(text)) ids.push('tfaPoison')
+    if (/Relic of Ages|古代遗物|expedition leader|领队|队长/i.test(text)) ids.push('tfaRelic')
+    if (/timeline|时间线|时间之窗|年代/i.test(text)) ids.push('tfaTimeline')
+    if (/depth level|深度等级|深度/i.test(text)) ids.push('tfaDescent')
+    if (card?.encounterCode === 'shattered_aeons') ids.push('tfaTimeline')
+    if (card?.encounterCode === 'the_depths_of_yoth') ids.push('tfaDescent')
+    // 章节卡与遭遇卡都受该章混乱符号表约束。
+    if (['scenario', 'act', 'agenda', 'location', 'enemy', 'treachery'].includes(card?.type)) ids.push('tfaChaos')
+    return [...new Set(ids)]
+  }
   if (/^03\d{3}[a-z]?$/.test(code)) {
     const ids = ['carcosaCampaign']
     const encounter = card?.encounterCode

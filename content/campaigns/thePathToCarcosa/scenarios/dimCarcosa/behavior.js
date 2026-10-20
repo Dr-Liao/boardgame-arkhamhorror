@@ -351,11 +351,13 @@ export const behavior = {
   actions(state, inv) {
     const moves = []
     if (state.actIndex === 1 && state.scenarioFlags.actTwoVersion === 1
-      && inv.seat === state.campaign.leadSeat && inv.actionsLeft >= 3) {
+      && inv.seat === state.campaign.leadSeat) {
+      // 只有领队能与男子对话；男子就在此处时，唯一可变的缺口是本回合的行动点。
       const man = state.enemies.find(enemy => enemy.code === '03059' && enemy.location === inv.location)
       if (man) moves.push({
         action: 'scenarioAction', rule: 'confrontStranger', actions: 3,
         label: '花费3行动，直面苍白面具下的男子',
+        reason: inv.actionsLeft >= 3 ? null : `需要 3 个行动点（当前 ${inv.actionsLeft}）`,
       })
     }
     return moves
@@ -364,18 +366,24 @@ export const behavior = {
     const moves = encounterRules.encounterActions?.(state, inv) || []
     const location = state.locations.find(candidate => candidate.id === inv.location)
     const enemy = hastur(state)
-    if (enemy?.code === '03332' && !enemy.exhausted) {
+    if (enemy?.code === '03332') {
       moves.push({
         action: 'encounterAction', rule: 'exhaustKingInYellow', enemyId: enemy.id,
         actions: 1, label: `检定意志（${enemy.fight + Math.min(2, state.agendaIndex)}），横置哈斯塔`,
+        reason: enemy.exhausted ? '哈斯塔已经横置，需要等他重整后才能再次检定' : null,
       })
     }
+    const palaceDamage = 5 * state.numInvestigators
     const palaceLocked = location?.originalCode === '03331'
-      && (!enemy || (enemy.damageTaken || 0) < 5 * state.numInvestigators)
-    if (location?.revealed && !location.cannotFlipAgain && !location.clues && !palaceLocked) {
+      && (!enemy || (enemy.damageTaken || 0) < palaceDamage)
+    if (location?.revealed && !location.cannotFlipAgain) {
       moves.push({
         action: 'encounterAction', rule: 'flipCarcosaLocation', locationId: location.id,
         actions: 0, label: `翻面「${location.name}」（移除所有调查员控制的线索）`,
+        reason: location.clues ? `需要先取走此地的线索（还剩 ${location.clues} 个）`
+          : !palaceLocked ? null
+            : !enemy ? '哈斯塔不在场上，此处暂时无法翻面'
+              : `需要先在哈斯塔上放置 ${palaceDamage} 点伤害（当前 ${Math.min(enemy.damageTaken || 0, palaceDamage)}）`,
       })
     }
     return moves

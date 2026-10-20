@@ -37,6 +37,8 @@ import { expansionEffects } from '../../content/expansions.js'
 import { investigatorAbilities as dunwichInvestigatorAbilities, signatureEffects as dunwichSignatureEffects, basicWeaknessEffects as dunwichBasicWeaknessEffects } from '../../content/packs/dunwichInvestigators/manifest.js'
 import { investigatorAbilities as carcosaInvestigatorAbilities, signatureEffects as carcosaSignatureEffects } from '../../content/packs/carcosaInvestigators/manifest.js'
 import { effects as carcosaPlayerEffects } from '../../content/packs/carcosaPlayer/effects.js'
+import { investigatorAbilities as tfaInvestigatorAbilities, signatureEffects as tfaSignatureEffects } from '../../content/packs/tfaInvestigators/manifest.js'
+import { effects as tfaPlayerEffects } from '../../content/packs/tfaPlayer/effects.js'
 
 // Only unconditional resource rewards are safe to accept without a decision.
 // Draws can reveal weaknesses; limited triggers and costs remain discretionary.
@@ -51,7 +53,9 @@ export const EFFECTS = {
   ...dunwichSignatureEffects,
   ...dunwichBasicWeaknessEffects,
   ...carcosaSignatureEffects,
+  ...tfaSignatureEffects,
   ...carcosaPlayerEffects,
+  ...tfaPlayerEffects,
   // Story assets earned during The Path to Carcosa.
   '03143': { passive: { sanityBonus: -1, conditionalStats: {
     remainingSanityAtMost: 3, stats: { willpower: 1, combat: 1, agility: 1 },
@@ -527,6 +531,7 @@ export const EFFECTS = {
 export const INVESTIGATOR_ABILITIES = {
   ...dunwichInvestigatorAbilities,
   ...carcosaInvestigatorAbilities,
+  ...tfaInvestigatorAbilities,
   '01001': { // 罗兰·班克斯 Roland Banks
     elderSign: { kind: 'perClueAtLocation', bonus: 1 },
     reactions: [{ id: 'rolandClue', when: 'defeatEnemy', limit: 'round', effect: { type: 'discoverClue', amount: 1 } }],

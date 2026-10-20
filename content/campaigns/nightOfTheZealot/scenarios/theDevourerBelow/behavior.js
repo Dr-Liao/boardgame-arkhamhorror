@@ -28,6 +28,16 @@ export const behavior = Object.freeze({
   },
   interruptRitualActIndex: 2,
   sacrificeLita: true,
+  // 乌默尔多斯卡面上的 [action]（献祭丽塔 → 结局 3）：条件不满足时也返回，让 AI 知道这条路存在。
+  actions(state, inv) {
+    const boss = state.enemies.find(enemy => enemy.code === 'umordhoth')
+    const controlled = inv.assets.some(asset => asset.code === '01117')
+    const bossAt = boss && (state.locations.find(location => location.id === boss.location)?.name || boss.location)
+    return [{ action: 'sacrificeLita', enemyId: boss?.id, scriptCard: 'enemy', label: '😱 献祭丽塔·钱德勒（→ 结局 3）',
+      reason: !controlled ? '需要先控制丽塔·钱德勒'
+        : !boss ? '乌默尔多斯尚未降临'
+        : boss.location === inv.location ? null : `需要与乌默尔多斯位于同一地点（它在「${bossAt}」）` }]
+  },
   describe(state) {
     return state.actIndex === 2 ? [`破坏仪式进度：${state.actClues}/${state.numInvestigators * 2}。`] : []
   },

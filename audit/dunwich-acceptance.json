@@ -32,7 +32,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
-      "sha256": "81f54b2c1b0fe62739a0ca9c7aac693e323b4d65b664b516def5adba4a0f93d1"
+      "sha256": "65a61aca2aab1cfeb3f63a2accb376da0f7d7aa2d147677a62a25ff133efa9e1"
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",

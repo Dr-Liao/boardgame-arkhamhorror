@@ -1,10 +1,16 @@
 import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
-import { PLAYER_CARD_CODES, CORE_UPGRADE_CODES, canSelectInvestigator, isCardAvailable } from '../deck/availability.js'
-import { matchesDeckOptions, cardLimit, isPlayable, scoreCard } from '../deck/deckbuilding.js'
+import { PLAYER_CARD_CODES, CORE_UPGRADE_CODES, TFA_PLAYER_BUILDABLE_CODES, canSelectInvestigator, isCardAvailable } from '../deck/availability.js'
+import { matchesDeckOptions, cardLimit, isPlayable, scoreCard, hashSeed } from '../deck/deckbuilding.js'
 import { validateDeckRules, upgradeQuote } from '../deck/deck-rules.js'
 
 const playerPool = [...PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES]
-const ordinary = code => playerPool.includes(code)
+const tfaPool = [...TFA_PLAYER_BUILDABLE_CODES]
+const tfaPoolSet = new Set(tfaPool)
+// 失落的时代玩家卡只有在失落的时代调查员的记录里才是合法升级目标，
+// 这样新卡池不会改变既有循环的升级候选与 AI 推荐结果。
+const poolFor = record => record && /^04\d{3}$/.test(String(record.code || ''))
+  ? [...playerPool, ...tfaPool] : playerPool
+const ordinary = code => playerPool.includes(code) || tfaPoolSet.has(code)
 const researchRequirement = Object.freeze({
   '02262': 'identifiedStrangeSolution',
   '02263': 'identifiedStrangeSolution',
@@ -13,12 +19,77 @@ const researchRequirement = Object.freeze({
   '03193': 'translatedGlyphs',
 })
 
+// 个别调查员在战役开始时带有额外经验（马泰奥神父：+5）。
+const STARTING_XP = Object.freeze({ '04004': 5 })
+
+// 「老练分析」（04106）：带（未鉴定）/（未翻译）副标题的卡牌升级时，
+// 可以用 0 经验再升级一张同名副本，两张升级版本从合法选项中确定性地伪随机挑选。
+const UNRESOLVED_SUBTITLE = /(未鉴定|未翻译|Unidentified|Untranslated)/
+const shrewdAnalysisEligible = (record, removedCode) => {
+  const removedDef = ALL_CARDS[removedCode]
+  if (!removedDef || !UNRESOLVED_SUBTITLE.test(String(removedDef.subnameZh || removedDef.subname || ''))) return []
+  const inv = INVESTIGATORS[record.code]
+  if (!record.deck.includes('04106')) return []
+  return [...playerPool, ...tfaPool].filter(code => {
+    const def = ALL_CARDS[code]
+    if (!def || def.name !== removedDef.name || (def.xp || 0) === 0) return false
+    if (!isCardAvailable(code) || !isPlayable(def) || !matchesDeckOptions(inv, def)) return false
+    return !validateDeckRules(inv, [...record.deck.filter(item => item !== removedCode), code].filter(ordinary), ALL_CARDS).errors.length
+  }).sort((left, right) => left.localeCompare(right))
+}
+
+// 确定性伪随机：同一牌组记录总是得到同一结果，保证存档回放一致。
+const shrewdPick = (record, campaign, eligible) =>
+  eligible[hashSeed(`${record.id}:${campaign.scenarioIndex}:${record.purchases.length}:${eligible.length}`) % eligible.length]
+
+export function shrewdAnalysisUpgrade(campaign, seat, removedCode) {
+  const record = campaign.investigators[seat]
+  if (!record) return null
+  const eligible = shrewdAnalysisEligible(record, removedCode)
+  if (eligible.length < 1) return null
+  // 需要牌组里还有另一张同名副本可以升级。
+  if (!record.deck.includes(removedCode)) return null
+  const picked = shrewdPick(record, campaign, eligible)
+  record.deck.splice(record.deck.indexOf(removedCode), 1, picked)
+  record.deck.sort()
+  const change = { added: picked, removed: removedCode, cost: 0, scenarioIndex: campaign.scenarioIndex,
+    adaptable: false, shrewdAnalysis: true }
+  record.purchases.push(change)
+  return change
+}
+
+// 「奥术研究」（04109）：购买时承受 1 点精神创伤；每场冒险后重置法术升级优惠。
+export function applyPermanentPurchaseEffects(campaign, seat, addedCode) {
+  const record = campaign.investigators[seat]
+  if (!record) return null
+  if (addedCode !== '04109') return null
+  campaign.trauma ||= {}
+  campaign.trauma[seat] ||= { physical: 0, mental: 0 }
+  campaign.trauma[seat].mental += 1
+  record.trauma ||= { physical: 0, mental: 0 }
+  record.trauma.mental += 1
+  record.arcaneResearchDiscount = true
+  updateCampaignStatus(campaign, seat)
+  return { code: addedCode, mentalTrauma: 1 }
+}
+
+export function refreshArcaneResearch(campaign) {
+  const refreshed = []
+  for (const record of Object.values(campaign.investigators || {})) {
+    if (!record.deck?.includes('04109')) continue
+    record.arcaneResearchDiscount = true
+    refreshed.push(record.seat)
+  }
+  return refreshed
+}
+
 export function registerCampaignInvestigator(campaign, inv, deck) {
   const id = `investigator-${++campaign.investigatorSeq}`
+  const startingXp = STARTING_XP[inv.code] || 0
   const record = {
     id, seat: inv.seat, code: inv.code, name: inv.name, deck: [...deck].sort(),
     currentScenarioIndex: campaign.scenarioIndex || 0,
-    xp: 0, earnedXp: 0, spentXp: 0, trauma: { physical: 0, mental: 0 },
+    xp: startingXp, earnedXp: startingXp, spentXp: 0, trauma: { physical: 0, mental: 0 },
     status: 'active', purchases: [], removedCards: [],
   }
   campaign.investigators[inv.seat] = record
@@ -70,10 +141,17 @@ export function upgradeCost(added, removed) {
   return upgradeQuote(added, removed).cost
 }
 
+// 升级优惠：记录上的通用优惠 + 「奥术研究」每场冒险后的第一张法术减 1。
+function upgradeDiscountsFor(record) {
+  const discounts = [...(record.upgradeDiscounts || [])]
+  if (record.arcaneResearchDiscount) discounts.push({ amount: 1, match: { traits: ['Spell'] }, source: '04109' })
+  return discounts
+}
+
 export function replacementOptions(record, addedCode, campaignRecords = null) {
   const added = ALL_CARDS[addedCode]
   const inv = INVESTIGATORS[record.code]
-  if (record.status !== 'active' || !ordinary(addedCode) || !isCardAvailable(addedCode)
+  if (record.status !== 'active' || !poolFor(record).includes(addedCode) || !isCardAvailable(addedCode)
     || !isPlayable(added) || !matchesDeckOptions(inv, added) || added.signatureFor || added.subtype) return []
   const requiredResearch = researchRequirement[addedCode]
   if (requiredResearch && !campaignRecords?.[requiredResearch] && !record.research?.[requiredResearch]) return []
@@ -97,7 +175,7 @@ export function replacementOptions(record, addedCode, campaignRecords = null) {
     const adaptable = record.deck.includes('02110') && removed && (added.xp || 0) === 0 && (removed.xp || 0) === 0 && adaptableUsed < 2
     const quote = adaptable
       ? { cost: 0, explanation: '随机应变：本次关间免费替换等级 0 卡牌' }
-      : upgradeQuote(added, removed, { discounts: record.upgradeDiscounts || [] })
+      : upgradeQuote(added, removed, { discounts: upgradeDiscountsFor(record) })
     return quote.cost <= record.xp ? [{ code: removedCode, ...quote, adaptable }] : []
   })
 }
@@ -114,7 +192,7 @@ export function settleExiledCards(campaign, entries = []) {
 }
 
 export function availablePurchases(record, campaignRecords = null) {
-  return playerPool.filter(code => replacementOptions(record, code, campaignRecords).length)
+  return poolFor(record).filter(code => replacementOptions(record, code, campaignRecords).length)
 }
 
 export function purchaseCard(campaign, seat, addedCode, removedCode) {
@@ -130,6 +208,13 @@ export function purchaseCard(campaign, seat, addedCode, removedCode) {
   record.spentXp += option.cost
   const purchase = { added: addedCode, removed: removedCode, cost: option.cost, scenarioIndex: campaign.scenarioIndex, adaptable: !!option.adaptable }
   record.purchases.push(purchase)
+  // 「奥术研究」：优惠只对下一张法术升级生效一次。
+  if (record.arcaneResearchDiscount
+    && (ALL_CARDS[addedCode]?.traits || []).some(trait => String(trait).toLowerCase() === 'spell')) {
+    delete record.arcaneResearchDiscount
+  }
+  // 永久卡购买的战役层效果（如「奥术研究」的精神创伤）。
+  applyPermanentPurchaseEffects(campaign, seat, addedCode)
   campaign.xp = Object.values(campaign.investigators).reduce((sum, item) => sum + item.xp, 0)
   return purchase
 }
@@ -169,6 +254,14 @@ export function recommendUpgrade(record, campaignRecords = null) {
     })).filter(item => item.score > 0)
   candidates.sort((a, b) => b.score - a.score || a.cost - b.cost || a.added.localeCompare(b.added) || String(a.removed).localeCompare(String(b.removed)))
   return candidates[0] || { reason: '当前没有收益足够明确且能支付的升级，建议保留经验。' }
+}
+
+// 战役结局：按 manifest.endings 的顺序匹配剧本日志，取第一个命中的结局。
+export function campaignEnding(manifest, records = {}) {
+  for (const ending of manifest?.endings || []) {
+    if (ending.record && records[ending.record]) return { id: ending.id, label: ending.label }
+  }
+  return null
 }
 
 export function campaignView(campaign, observerSeat) {

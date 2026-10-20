@@ -200,6 +200,8 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
       st.resolution ? h('p', { className: 'ah-campaign-resolution' },
         results.length ? resultTitle(st, results.at(-1)) : String(st.resolution).replace(/^r(\d+)$/, '结局 $1')) : null,
       cp.phase === 'interlude' ? h('p', { className: 'ah-campaign-note' }, '关间准备：逐位确认牌组、保留经验或购买已开放卡牌；完成后开始下一关。') : null,
+      suppliesPanel(cp),
+      tfaStatusPanel(st),
       h('ul', { className: 'ah-campaign-records' }, Object.values(cp.investigators || {}).map(record => {
         const trauma = cp.trauma?.[record.seat] || {}
         const status = record.status === 'killed' ? '死亡' : record.status === 'insane' ? '疯狂' : '在役'
@@ -215,6 +217,74 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
           `${st.investigatorDefs?.[record.code]?.nameZh || record.code}：本关 +${record.xpAwarded} XP；肉体创伤 ${record.traumaAfter.physical}，精神创伤 ${record.traumaAfter.mental}`)))))
   }
 
+  // 补给品是公开信息：直接读战役投影里的 supplies，标签随 campaign.supplyLabels 下发。
+  const suppliesPanel = cp => {
+    const supplies = cp.supplies || {}
+    const labels = cp.supplyLabels || {}
+    const entries = Object.entries(supplies).filter(([, list]) => Array.isArray(list) && list.length)
+    if (!entries.length) return null
+    const grouped = list => {
+      const counts = new Map()
+      for (const name of list) counts.set(name, (counts.get(name) || 0) + 1)
+      return [...counts]
+    }
+    return h('div', { className: 'ah-campaign-supplies', role: 'group', 'aria-label': '补给品' },
+      h('h4', {}, tableIcon('supply'), '补给品'),
+      h('ul', {}, entries.sort(([left], [right]) => Number(left) - Number(right)).map(([seat, list]) => {
+        const record = cp.investigators?.[seat]
+        return h('li', { 'data-supply-seat': seat },
+          h('strong', {}, record?.name || `座位 ${Number(seat) + 1}`),
+          h('span', {}, grouped(list).map(([name, count]) =>
+            `${labels[name] || name}${count > 1 ? `×${count}` : ''}`).join('、')))
+      })))
+  }
+
+  // 失落的时代独有的公开剧本状态：复仇合计、伊格之怒、深度、石柱、漆黑、探索牌库与遗物位置。
+  const tfaStatusPanel = st => {
+    const cp = st.campaign
+    if (cp?.id !== 'theForgottenAge') return null
+    const flags = st.scenarioFlagsPublic || {}
+    const exploration = st.exploration || { deck: 0, discard: [] }
+    const relic = st.relicOfAges
+    const holder = relic?.seat != null
+      ? (st.investigators || []).find(inv => inv.seat === relic.seat)?.name : null
+    const place = relic?.location != null
+      ? (st.locations || []).find(location => location.id === relic.location)?.name : null
+    const threads = st.threadsOfFate
+    const alejandro = threads?.alejandro
+    const alejandroPlace = alejandro?.location != null
+      ? (st.locations || []).find(location => location.id === alejandro.location)?.name : null
+    const preyNames = (threads?.prey || []).map(id => (st.enemies || []).find(enemy => enemy.id === id)?.name).filter(Boolean)
+    const destinationNames = (threads?.destinations || [])
+      .map(id => (st.locations || []).find(location => location.id === id)?.name || id)
+    const depths = st.depths
+    const rows = [
+      ['复仇合计', String(st.vengeance ?? 0), 'sword'],
+      ['伊格之怒', String(st.yigsFury ?? 0), 'doom'],
+      ...(flags.depthLevel != null ? [['当前深度', `第 ${flags.depthLevel} 层`, 'action']] : []),
+      ...(depths ? [['追击区', `${depths.pursuit.length} 张`, 'sword']] : []),
+      ...(depths && depths.childrenOfValusia.length
+        ? [['瓦卢西亚之子', `${depths.childrenOfValusia.length} 张`, 'sword']] : []),
+      ...(depths && depths.agendaAttachments.length
+        ? [['密谋附属', `${depths.agendaAttachments.length} 张`, 'doom']] : []),
+      ...(flags.pillars != null ? [['石柱标记', `${flags.pillars} 个`, 'star']] : []),
+      ...(st.timeline && (st.timeline.ancient || st.timeline.modern)
+        ? [['时间线', `古代 ${st.timeline.ancient} · 现代 ${st.timeline.modern}`, 'action']] : []),
+      ...(flags.deepDark ? [['漆黑', `${flags.deepDark} 处`, 'eye']] : []),
+      ['探索牌库', `${exploration.deck} 张 · 弃牌 ${exploration.discard.length} 张`, 'clue'],
+      ...(relic ? [['古代遗物', holder ? `${holder} 携带` : place ? `位于「${place}」` : '暂时不在场', 'book']] : []),
+      ...(alejandro
+        ? [['亚历山卓', alejandro.enemyId ? '被敌人带走' : alejandroPlace ? `位于「${alejandroPlace}」` : '位置未知', 'book']]
+        : []),
+      ...(preyNames.length ? [['伊塔卡的猎物', preyNames.join('、'), 'sword']] : []),
+      ...(destinationNames.length ? [['伊塔卡的目的地', destinationNames.join('、'), 'action']] : []),
+    ]
+    return h('div', { className: 'ah-campaign-tfa', role: 'group', 'aria-label': '失落的时代剧本状态' },
+      h('h4', {}, tableIcon('tarot'), '剧本状态'),
+      h('ul', {}, rows.map(([label, value, icon]) => h('li', {},
+        h('span', {}, tableIcon(icon), label), h('strong', {}, value)))))
+  }
+
   const storyPanel = s => {
     const assets = s.state.storyAssets || []
     if (!assets.length) return null
@@ -223,8 +293,10 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
       h('div', { className: 'ah-situ-story-cards' }, assets.map(asset => {
         const code = typeof asset === 'string' ? asset : asset.code
         const name = (typeof asset === 'object' && asset.name) || cardName(s, code) || code
-        return h('button', { type: 'button', className: 'ah-situ-story-card', 'aria-label': '查看剧情卡 ' + name, onclick: () => openCard(s, asset) },
-          tableArt(h, code, name), h('small', {}, name))
+        const clues = Number(asset?.clues || 0)
+        return h('button', { type: 'button', className: 'ah-situ-story-card', 'aria-label': '查看剧情卡 ' + name + (clues ? `（${clues} 个线索）` : ''), onclick: () => openCard(s, asset) },
+          tableArt(h, code, name), h('small', {}, name),
+          ...(clues ? [h('small', { className: 'ah-situ-story-clues' }, `🔍 ${clues}`)] : []))
       })))
   }
 

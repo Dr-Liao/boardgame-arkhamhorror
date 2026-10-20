@@ -198,6 +198,21 @@
 - Phase 6 扩展 `moveFormat`（多重行动/free trigger/choose 分支/目标选择）、`legalMoves`、`describeState` 时，**只需改 Mod 内部**，`lib/agent/*` 的消费逻辑不变（它只是原样把 `moveFormat`/`describeState`/`legalMoves` 喂给模型）。
 - 唯一需要保持的硬约束：`validateMove` 仍是硬边界，模型产出必须能过校验。
 
+### 3.4 卡面行动的可用性与 AI 提示（content 作者约定）
+
+剧本行为（`content/campaigns/**/behavior.js`）用 `actions(state, inv)` / `encounterActions(state, inv)`
+声明场景/密谋/遭遇卡赋予的行动。每一项都可以带 `reason`：
+
+- `reason` 为空（`null`/`undefined`）= 此刻可执行 → 进 `legalMoves`，牌桌可点，`validateMove` 认。
+- `reason` 非空 = 此刻不可执行，`reason` 就是"还缺什么" → 不进 `legalMoves`/`validateMove`，
+  只出现在 `describeState` 的【暂时不可执行的卡面行动】段，供 AI 反推该去准备什么。
+  `scriptCard` 为 `'act'/'agenda'` 时牌桌剧本区会显示为禁用按钮，`'enemy'/'location'/缺省` 只喂 AI。
+
+因此"一条 rule 什么时候能用"只在行为文件里写一遍，不要在引擎里再内联一条同义判断（会漂移）。
+登记标准：只有当地点/敌人/卡牌已经就位、缺的是**能通过游戏行动改变**的条件（线索/资源/手牌/横置/
+控制权/牌堆余量/共同支付）时才写 `reason`；纯距离（不在那张地点）、永久关门（`used` 标志、本场已用、
+已被控制）、以及需要泄露隐藏信息的条件保持整条不列。
+
 ---
 
 ## 4. 现有卡牌 ↔ cards.json code 对照表（0.4）

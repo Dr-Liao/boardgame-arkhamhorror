@@ -157,34 +157,44 @@ export const behavior = {
     const groupClues = state.investigators.filter(other => !other.defeated && !other.resigned && other.location === inv.location)
       .reduce((total, other) => total + other.clues, 0)
     const here = state.locations.find(loc => loc.id === inv.location)
-    if (here?.originalCode === '02051' && (inv.damage > 0 || inv.horror > 0))
-      moves.push({ action: 'scenarioAction', rule: 'unionHeal', actions: 2, label: '花费 2 行动，治愈 1 伤害和 1 恐惧' })
+    if (here?.originalCode === '02051')
+      moves.push({ action: 'scenarioAction', rule: 'unionHeal', actions: 2, label: '花费 2 行动，治愈 1 伤害和 1 恐惧',
+        reason: inv.damage > 0 || inv.horror > 0 ? null : '没有伤害或恐惧需要治愈' })
     if (here?.originalCode === '02057') {
       const available = concoctionState(state).available
       moves.push({ action: 'scenarioAction', rule: 'searchConcoction',
         label: available ? '调查炼金实验室，取得炼金试剂' : '调查炼金实验室（下方没有炼金试剂）' })
     }
-    if (inv.assets.some(asset => asset.code === '02059')) for (const enemy of state.enemies.filter(enemy => enemy.location === inv.location))
-      moves.push({ action: 'scenarioAction', rule: 'concoctionAttack', enemyId: enemy.id, label: `使用炼金试剂攻击「${enemy.name}」（智识）` })
-    if (here?.id === 'dormitories' && groupClues >= 3 * state.numInvestigators) {
-      moves.push({ action: 'scenarioAction', rule: 'rescueStudents', label: '共同支付线索，救出学生' })
+    if (inv.assets.some(asset => asset.code === '02059')) {
+      const targets = state.enemies.filter(enemy => enemy.location === inv.location)
+      if (targets.length) for (const enemy of targets)
+        moves.push({ action: 'scenarioAction', rule: 'concoctionAttack', enemyId: enemy.id, label: `使用炼金试剂攻击「${enemy.name}」（智识）` })
+      else moves.push({ action: 'scenarioAction', rule: 'concoctionAttack', label: '使用炼金试剂攻击敌人（智识）',
+        reason: '所在地点没有敌人' })
     }
-    if (here?.id === 'facultyOffices' && here.originalCode === '02054' && groupClues >= 2 * state.numInvestigators) {
-      moves.push({ action: 'scenarioAction', rule: 'rescueRice', label: '共同支付线索，救出莱斯教授' })
+    if (here?.id === 'dormitories') {
+      const needed = 3 * state.numInvestigators
+      moves.push({ action: 'scenarioAction', rule: 'rescueStudents', label: '共同支付线索，救出学生',
+        reason: groupClues >= needed ? null : `需要共同支付 ${needed} 个线索（当前 ${groupClues}）` })
+    }
+    if (here?.id === 'facultyOffices' && here.originalCode === '02054') {
+      const needed = 2 * state.numInvestigators
+      moves.push({ action: 'scenarioAction', rule: 'rescueRice', label: '共同支付线索，救出莱斯教授',
+        reason: groupClues >= needed ? null : `需要共同支付 ${needed} 个线索（当前 ${groupClues}）` })
     }
     if (state.actIndex === 1) {
-      if (state.storyAssets.some(asset => asset.code === '02060' && asset.location === inv.location && asset.controllerSeat == null)) {
-        moves.push({ action: 'scenarioAction', rule: 'parleyJazz', label: '谈判“爵士”马利根（智识 3）' })
+      // 02046 莱斯的下落：[action] 花费 1 线索，弃遭遇牌库顶 5（单人 10）张。
+      // 爵士在场但不同地点时给出他的位置；已被控制则整条不列，免得每回合刷同一个死提示。
+      const jazz = state.storyAssets.find(asset => asset.code === '02060' && asset.controllerSeat == null)
+      if (jazz) {
+        const jazzAt = state.locations.find(loc => loc.id === jazz.location)?.name || jazz.location
+        moves.push({ action: 'scenarioAction', rule: 'parleyJazz', label: '谈判“爵士”马利根（智识 3）',
+          reason: jazz.location === inv.location ? null : `需要与爵士位于同一地点（他在「${jazzAt}」）` })
       }
-      if (inv.clues > 0 && state.encounterDeck.length) moves.push({ action: 'scenarioAction', rule: 'searchJazz', scriptCard: 'act', label: '花费 1 线索，搜索遭遇牌库中的爵士' })
+      moves.push({ action: 'scenarioAction', rule: 'searchJazz', scriptCard: 'act', label: '花费 1 线索，搜索遭遇牌库中的爵士',
+        reason: inv.clues < 1 ? '需要花费 1 个线索' : !state.encounterDeck.length ? '遭遇牌库已空' : null })
     }
     return moves
-  },
-  // 02046 莱斯的下落：[action] 花费 1 线索，弃遭遇牌库顶 5（单人 10）张。不可执行时也提示原因。
-  scriptActions(state, inv) {
-    if (state.actIndex !== 1) return []
-    return [{ action: 'scenarioAction', rule: 'searchJazz', scriptCard: 'act', label: '花费 1 线索，搜索遭遇牌库中的爵士',
-      reason: inv.clues < 1 ? '需要花费 1 个线索' : !state.encounterDeck.length ? '遭遇牌库已空' : null }]
   },
   performAction(state, inv, move, api) {
     if (move.rule === 'unionHeal') {

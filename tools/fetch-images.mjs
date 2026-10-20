@@ -23,13 +23,14 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { imageDescriptor } from '../presentation/images.js'
+import { DEFAULT_IMAGE_HOST, remoteImagePath } from '../web/images.js'
 import { verifyImages } from './image-integrity.mjs'
 
 const GAME = new URL('../', import.meta.url)
 // 卡图属于本 Mod 自带资源，放在 games/arkhamhorror/web/img/，由大厅挂载到 /mods/<id>/img/。
 const PUBLIC_IMG = fileURLToPath(new URL('../web/img', import.meta.url))
 const MANIFEST = new URL('../../../参考资源/ArkhamHorror-main/frontend/image-manifest.json', import.meta.url)
-const DEFAULT_HOST = 'https://assets.arkhamhorror.app'
+const DEFAULT_HOST = DEFAULT_IMAGE_HOST
 const LOCALIZED_PREFIX = 'zh'
 // 实际文件名含大写与下划线（如 cards/01033_Mutated15.avif），逐段校验而不是整串匹配。
 const SAFE_SEGMENT = /^[A-Za-z0-9][A-Za-z0-9_.-]*$/
@@ -100,13 +101,13 @@ function buildJobs(options) {
   const wantsEnglish = options.languages.some(language => language === 'en')
   const wantsLocalized = options.languages.some(language => language === 'zh' || language === 'zh-cn')
   if (wantsEnglish) {
-    for (const relative of [...english].sort()) jobs.push({ relative, url: `${options.host}/img/arkham/${relative}`, language: 'en' })
+    for (const relative of [...english].sort()) jobs.push({ relative, url: `${options.host}/${remoteImagePath(relative)}`, language: 'en' })
   }
   if (wantsLocalized) {
     // 中文清单独立成账：即使英文清单没有同名条目，也要把已发布的中文图取回。
     for (const relative of [...localized].sort()) {
       const localizedRelative = `${LOCALIZED_PREFIX}/${relative}`
-      jobs.push({ relative: localizedRelative, url: `${options.host}/img/arkham/${localizedRelative}`, language: 'zh' })
+      jobs.push({ relative: localizedRelative, url: `${options.host}/${remoteImagePath(localizedRelative)}`, language: 'zh' })
     }
   }
   return options.limit ? jobs.slice(0, options.limit) : jobs

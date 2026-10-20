@@ -14,9 +14,9 @@ export const manifest = {
   name: '失落的时代 · 战役内容',
   contentVersion: '0.1.0',
   minRulesVersion: 'n4.2',
-  status: 'catalog-only',
+  status: 'playable',
   dependencies: ['core'],
-  description: 'M0 目录基线：原版失落的时代战役卡已按原卡号分区登记，规则尚未实现。',
+  description: '231 张战役卡按原卡号分区登记；十个剧本的布置、幕议、遭遇与结局规则在 content/campaigns/theForgottenAge 中实现。卡包为 playable：逐张卡面字面核对与浏览器发布验收仍在 docs/tfa-card-audit.md 中跟踪。',
   cardRanges: [{ from: '04001', to: '04347' }],
   cards: campaignCards.map(card => ({
     code: card.code,
@@ -27,6 +27,10 @@ export const manifest = {
     rulesImplemented: false,
     deckbuilding: false,
   })),
+  // M3：遭遇组对照表。目录里实际只有 22 个 encounterCode，卡包 ID 用 camelCase
+  // 别名登记同一组（wilds ↔ TheUntamedWilds、eztli ↔ theDoomOfEztli、
+  // heart_of_the_elders ↔ sharedHeartOfTheElders + Part1/2），剧本的
+  // requiredEncounterGroupIds 只引用这里出现过的 ID，注册表会强制校验。
   encounterGroupIds: [
     'theUntamedWilds', 'theDoomOfEztli', 'threadsOfFate', 'theBoundaryBeyond',
     'heartOfTheEldersPart1', 'heartOfTheEldersPart2', 'theCityOfArchives',

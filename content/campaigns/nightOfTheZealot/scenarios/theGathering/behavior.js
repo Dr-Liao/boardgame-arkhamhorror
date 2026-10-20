@@ -11,6 +11,16 @@ export const behavior = Object.freeze({
     }
     return null
   },
+  // 客厅谈判（取得丽塔控制权）：条件不满足时也返回，带上缺什么，AI 才知道她在哪个地点。
+  actions(state, inv) {
+    const parlorId = state.locations.find(location => location.parley)?.id
+    const lita = (state.storyAssets || []).find(asset => asset.code === '01117' && asset.controllerSeat == null)
+    if (!parlorId || !lita) return []
+    const litaAt = state.locations.find(location => location.id === lita.location)?.name || lita.location
+    const here = inv.location === parlorId && lita.location === inv.location
+    return [{ action: 'parleyLita', label: '🤝 谈判丽塔·钱德勒（智识 4，取得控制权）',
+      reason: state.actIndex !== 2 ? '需要推进到幕三' : here ? null : `需要与丽塔位于同一地点（她在「${litaAt}」）` }]
+  },
   resolution(state, key, events, api) {
     const { campaign } = state
     const rec = campaign.records

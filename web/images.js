@@ -4,8 +4,13 @@
 // 可以留空表示纯文字模式。候选代表「可以拼出的地址」，不代表远程图片已存在或可达，
 // 因此加载结果必须由调用方的 load/error 记录，并通过缓存避免重复渲染时无限重试。
 
-export const DEFAULT_IMAGE_HOST = 'https://assets.arkhamhorror.app'
-export const IMAGE_ROOT = 'img/arkham'
+// 公开目录是 https://drliao1.com/arkhamhorror/cards/01001.avif ；中文在 zh/，卡背在 backs/。
+export const DEFAULT_IMAGE_HOST = 'https://drliao1.com/arkhamhorror/cards'
+
+/** 主机已经以 /cards 结尾，清单里的 cards/ 目录不再重复。本地缓存路径保持原样。 */
+export function remoteImagePath(relative) {
+  return String(relative).replace(/(^|\/)cards\//, '$1')
+}
 // 本地图库由本 Mod 自带，经大厅挂载在 /mods/<id>/ 下；不占用大厅 public/ 的命名空间。
 export const LOCAL_ROOT = '/mods/arkhamhorror/img'
 export const LOCALIZED_PREFIX = 'zh' // 参考项目的中文图片目录是 /zh/，不是 /zh-cn/
@@ -61,11 +66,11 @@ export function imageCandidates(descriptor, { side = 'front', host = DEFAULT_IMA
     if (wantsLocalized && (candidate.localized || candidate.localLocalized)) {
       const localUrl = `${LOCAL_ROOT}/${LOCALIZED_PREFIX}/${candidate.path}` + (cacheThroughServer ? '?cache=cdn' : '')
       add({ url: localUrl, language: 'zh', origin: 'local', path: candidate.path, source: candidate.source })
-      if (base) add({ url: `${base}/${IMAGE_ROOT}/${LOCALIZED_PREFIX}/${candidate.path}`, language: 'zh', origin: 'remote', path: candidate.path, source: candidate.source })
+      if (base) add({ url: `${base}/${remoteImagePath(`${LOCALIZED_PREFIX}/${candidate.path}`)}`, language: 'zh', origin: 'remote', path: candidate.path, source: candidate.source })
     }
     const localUrl = `${LOCAL_ROOT}/${candidate.path}` + (cacheThroughServer ? '?cache=cdn' : '')
     add({ url: localUrl, language: generic ? 'back' : 'en', origin: 'local', path: candidate.path, source: candidate.source })
-    if (base) add({ url: `${base}/${IMAGE_ROOT}/${candidate.path}`, language: generic ? 'back' : 'en', origin: 'remote', path: candidate.path, source: candidate.source })
+    if (base) add({ url: `${base}/${remoteImagePath(candidate.path)}`, language: generic ? 'back' : 'en', origin: 'remote', path: candidate.path, source: candidate.source })
     if (candidates.length >= MAX_CANDIDATES) break
   }
   return candidates.slice(0, MAX_CANDIDATES)

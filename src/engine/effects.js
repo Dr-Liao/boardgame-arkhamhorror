@@ -38,6 +38,7 @@ export const EFFECT_PRIMITIVES = [
   'lookTopDeckAndDoom', 'cancelHarmGainResources', 'playItemFromHand', 'removeDoomControlled',
   'temporaryAllyFromDiscard', 'decipheredReality', 'redrawEncounter', 'redGlovedManSkills', 'returnCommittedSkill',
   'carcosaInvestigator', 'carcosaPlayer', 'cancelHarm', 'addCurrentTest',
+  'tfaInvestigator', 'tfaPlayer', 'cancelSymbolToken', 'retryTest', 'becomeAsset',
 ]
 
 export function effectDefinitionError(effect) {
@@ -89,6 +90,27 @@ export function resolveEffect(state, seat, effect, rt) {
     }
     case 'carcosaPlayer': {
       rt.carcosaPlayerEffect(seat, effect)
+      break
+    }
+    case 'tfaInvestigator': {
+      rt.tfaInvestigatorEffect(seat, effect)
+      break
+    }
+    case 'tfaPlayer': {
+      rt.tfaPlayerEffect(seat, effect)
+      break
+    }
+    case 'cancelSymbolToken': {
+      if (state.skillTest) state.skillTest.cancelledSymbol = state.skillTest.currentToken
+      rt.info?.('取消当前符号标记')
+      break
+    }
+    case 'retryTest': {
+      rt.retryTest?.(seat, effect)
+      break
+    }
+    case 'becomeAsset': {
+      rt.becomeAsset?.(seat, effect)
       break
     }
     case 'cancelHarm': {

@@ -6,8 +6,9 @@ import { existsSync } from 'node:fs'
 import { mkdir, rename, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { DEFAULT_IMAGE_HOST, remoteImagePath } from '../../web/images.js'
 
-export const DEFAULT_IMAGE_HOST = 'https://assets.arkhamhorror.app'
+export { DEFAULT_IMAGE_HOST }
 const DEFAULT_WEB_ROOT = fileURLToPath(new URL('../../web/', import.meta.url))
 const MAX_IMAGE_BYTES = 20 * 1024 * 1024
 const SAFE_IMAGE_PATH = /^img\/(?:zh\/)?(?:cards|backs)\/[A-Za-z0-9][A-Za-z0-9_.-]*\.(?:avif|webp|png|jpe?g|gif)$/
@@ -51,8 +52,8 @@ export function createImageAssetCache({
     const job = (async () => {
       const temporary = target + '.part-' + randomBytes(6).toString('hex')
       try {
-        const remotePath = relative.slice('img/'.length)
-        const response = await fetchImpl(`${sourceBase}/img/arkham/${remotePath}`, {
+        const remotePath = remoteImagePath(relative.slice('img/'.length))
+        const response = await fetchImpl(`${sourceBase}/${remotePath}`, {
           redirect: 'error',
           signal: AbortSignal.timeout(timeoutMs),
           headers: { accept: 'image/avif,image/webp,image/png,image/jpeg,image/gif' },

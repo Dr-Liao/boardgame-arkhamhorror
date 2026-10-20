@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theForgottenAge",
+  "command": "npm run test:tfa:rules:browser",
+  "runner": "playwright",
+  "tests": 4,
+  "passed": 4,
+  "failed": 0,
+  "platforms": [
+    "desktop",
+    "mobile"
+  ],
+  "runAt": "2026-10-20T02:45:50.888Z",
+  "notes": "tfa-rules.browser.mjs: 规则目录搜索/返回与卡牌规则链接在 desktop/mobile 各 2 条"
+}

@@ -59,7 +59,7 @@ test('简洁牌桌在桌面、平板和窄屏保持主操作可见，详情按�
 
 test('P3 卡图不可用时保留卡名与点击详情', async ({ page }) => {
   await page.route('**/mods/arkhamhorror/img/**', route => route.abort())
-  await page.route('**://assets.arkhamhorror.app/**', route => route.abort())
+  await page.route('**://drliao1.com/arkhamhorror/cards/**', route => route.abort())
   await openTable(page)
   const card = page.locator('.ah-table-player .ah-minicard').first()
   await expect(card).toBeVisible()

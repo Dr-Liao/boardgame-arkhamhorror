@@ -159,6 +159,7 @@ const PRESENTATION_FILES = Object.freeze([
   'games/arkhamhorror/web/command-deck.css',
   'games/arkhamhorror/web/card-interactions.js',
   'games/arkhamhorror/web/card-interactions.css',
+  'games/arkhamhorror/web/supply-picker.js',
   'games/arkhamhorror/web/table-surface.css',
   'games/arkhamhorror/web/map-layout.js',
 ])

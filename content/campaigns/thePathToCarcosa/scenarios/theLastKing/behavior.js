@@ -298,10 +298,12 @@ export const behavior = {
     if (location.originalCode === '03070') {
       moves.push({ action: 'scenarioAction', rule: 'leaveParty', label: '撤退：带着已找到的情报离开庄园' })
     }
-    if (location.originalCode === '03075' && inv.horror > 0) {
-      moves.push({ action: 'scenarioAction', rule: 'diningRoomHeal', label: '治愈1点恐惧并揭示一个混乱标记' })
+    if (location.originalCode === '03075') {
+      moves.push({ action: 'scenarioAction', rule: 'diningRoomHeal', label: '治愈1点恐惧并揭示一个混乱标记',
+        reason: inv.horror > 0 ? null : '没有需要治愈的恐惧' })
     }
-    if (state.enemies.some(enemy => enemy.code === '03081' && enemy.location === inv.location)) return moves
+    // 黛安娜在场会打断一切会谈：贵宾仍留在桌上，只是此刻谈不了。
+    const dianne = state.enemies.some(enemy => enemy.code === '03081' && enemy.location === inv.location)
     for (const guest of state.storyAssets.filter(asset => asset.location === inv.location && (asset.clues || 0) > 0)) {
       const common = {
         action: 'scenarioAction',
@@ -310,11 +312,17 @@ export const behavior = {
         guestId: guest.id,
         actions: (guest.code === '03080' ? 2 : 1) + extra,
       }
-      if (guest.code === '03076a') moves.push({ ...common, skill: 'intellect', difficulty: 3, label: '与康斯坦丝谈判（智识3）' })
-      else if (guest.code === '03077' && inv.resources >= 10) moves.push({ ...common, skill: 'intellect', difficulty: 2, label: '与乔丹谈判（需10资源，智识2）' })
-      else if (guest.code === '03078' && inv.hand.length >= 6) moves.push({ ...common, skill: 'willpower', difficulty: 2, label: '与春子谈判（需6张手牌，意志2）' })
-      else if (guest.code === '03079') moves.push({ ...common, skill: 'willpower', difficulty: 3, label: '与塞巴斯蒂安谈判（意志3）' })
-      else if (guest.code === '03080') moves.push({ ...common, label: '聆听阿什莉演唱，取得1个线索' })
+      const shortfall = guest.code === '03077'
+        ? inv.resources < 10 ? `需要 10 个资源（当前 ${inv.resources}）` : null
+        : guest.code === '03078'
+          ? inv.hand.length < 6 ? `需要 6 张手牌（当前 ${inv.hand.length}）` : null
+          : null
+      const reason = dianne ? '同地点有「黛安娜·迪瓦恩」，需要先摆脱她' : shortfall
+      if (guest.code === '03076a') moves.push({ ...common, skill: 'intellect', difficulty: 3, label: '与康斯坦丝谈判（智识3）', reason })
+      else if (guest.code === '03077') moves.push({ ...common, skill: 'intellect', difficulty: 2, label: '与乔丹谈判（需10资源，智识2）', reason })
+      else if (guest.code === '03078') moves.push({ ...common, skill: 'willpower', difficulty: 2, label: '与春子谈判（需6张手牌，意志2）', reason })
+      else if (guest.code === '03079') moves.push({ ...common, skill: 'willpower', difficulty: 3, label: '与塞巴斯蒂安谈判（意志3）', reason })
+      else if (guest.code === '03080') moves.push({ ...common, label: '聆听阿什莉演唱，取得1个线索', reason })
     }
     return moves
   },

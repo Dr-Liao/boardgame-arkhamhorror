@@ -340,12 +340,16 @@ export const behavior = {
     const code = original(location)
     const noClues = (location?.clues || 0) === 0
     const facts = state.scenarioFlags.remembered || []
-    if (code === '03172' && noClues && !facts.includes('setAFireInTheKitchen'))
-      moves.push({ action: 'scenarioAction', rule: 'kitchenFire', label: '检定意志（2），在厨房放火' })
-    if (code === '03175' && noClues && inv.damage < inv.maxHealth && !facts.includes('incitedAFightAmongstThePatients'))
-      moves.push({ action: 'scenarioAction', rule: 'yardFight', label: '受到 1 点伤害，煽动病人互相攻击' })
-    if (code === '03176' && noClues && !facts.includes('distractedTheGuards'))
-      moves.push({ action: 'scenarioAction', rule: 'gardenGuards', label: '检定敏捷（2），分散守卫注意力' })
+    if (code === '03172' && !facts.includes('setAFireInTheKitchen'))
+      moves.push({ action: 'scenarioAction', rule: 'kitchenFire', label: '检定意志（2），在厨房放火',
+        reason: noClues ? null : `需要先取走厨房的线索（还剩 ${location.clues || 0} 个）` })
+    if (code === '03175' && !facts.includes('incitedAFightAmongstThePatients'))
+      moves.push({ action: 'scenarioAction', rule: 'yardFight', label: '受到 1 点伤害，煽动病人互相攻击',
+        reason: !noClues ? `需要先取走院子的线索（还剩 ${location.clues || 0} 个）`
+          : inv.damage < inv.maxHealth ? null : '伤害已满，无法再承受 1 点伤害' })
+    if (code === '03176' && !facts.includes('distractedTheGuards'))
+      moves.push({ action: 'scenarioAction', rule: 'gardenGuards', label: '检定敏捷（2），分散守卫注意力',
+        reason: noClues ? null : `需要先取走花园的线索（还剩 ${location.clues || 0} 个）` })
     if (code === '03179' && !facts.includes('releasedADangerousPatient'))
       moves.push({ action: 'scenarioAction', rule: 'occupiedCell', label: '检定战斗（2），释放危险病人' })
     if (code === '03180' && !facts.includes('knowTheGuardsPatrols'))
@@ -357,9 +361,10 @@ export const behavior = {
       candidate.location === inv.location && isLunatic(candidate))) {
       moves.push({ action: 'scenarioAction', rule: 'eastHallEvade', enemyId: enemy.id, label: `承受 1 恐惧，自动躲避${enemy.name}` })
     }
-    if (code === '03176' && original(state.acts[state.actIndex]) === '03167'
-      && !state.enemies.some(enemy => enemy.location === inv.location && !enemy.exhausted)) {
-      moves.push({ action: 'scenarioAction', rule: 'escapeGarden', label: '从花园撤退' })
+    if (code === '03176' && original(state.acts[state.actIndex]) === '03167') {
+      moves.push({ action: 'scenarioAction', rule: 'escapeGarden', label: '从花园撤退',
+        reason: state.enemies.some(enemy => enemy.location === inv.location && !enemy.exhausted)
+          ? '同地点还有未横置的敌人，需要先躲避或击败' : null })
     }
     if (inv.hiddenCards?.some(hidden => ['03186', '03187'].includes(hidden))) {
       for (const hidden of inv.hiddenCards.filter(card => ['03186', '03187'].includes(card))) {
@@ -368,14 +373,16 @@ export const behavior = {
     }
     for (const enemy of state.enemies.filter(candidate => candidate.code === '03182b'
       && candidate.location === inv.location)) {
-      if (inv.assets.some(asset => asset.code === '03142')) {
-        moves.push({ action: 'scenarioAction', actionKind: 'parley', rule: 'onyxParley',
-          enemyId: enemy.id, label: '展示黑玛瑙扣环，与丹尼尔谈判' })
-      }
+      moves.push({ action: 'scenarioAction', actionKind: 'parley', rule: 'onyxParley',
+        enemyId: enemy.id, label: '展示黑玛瑙扣环，与丹尼尔谈判',
+        reason: inv.assets.some(asset => asset.code === '03142') ? null : '需要控制“黑玛瑙扣环”' })
     }
-    const daniel = inv.assets.find(asset => asset.code === '03182a' && !asset.exhausted)
-    if (daniel && active(state).some(other => other.seat !== inv.seat && other.location === inv.location)) {
-      moves.push({ action: 'scenarioAction', rule: 'transferDaniel', actions: 0, label: '横置丹尼尔，将其交给同地点调查员' })
+    const daniel = inv.assets.find(asset => asset.code === '03182a')
+    if (daniel) {
+      moves.push({ action: 'scenarioAction', rule: 'transferDaniel', actions: 0, label: '横置丹尼尔，将其交给同地点调查员',
+        reason: daniel.exhausted ? '需要先重整“丹尼尔”先生'
+          : active(state).some(other => other.seat !== inv.seat && other.location === inv.location) ? null
+            : '需要同地点有另一名调查员' })
     }
     return moves.filter(move => !(inv.hiddenCards || []).includes('03187')
       || !['kitchenFire', 'yardFight', 'gardenGuards', 'occupiedCell', 'drearyCell', 'familiarCell', 'infirmary', 'eastHallEvade'].includes(move.rule))

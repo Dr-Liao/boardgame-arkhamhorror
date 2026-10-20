@@ -975,59 +975,82 @@ export function laterBehavior(id) {
         && ALL_CARDS[code]?.type === 'skill')
     },
     actions(state, inv) {
-      const moves = [], add = (rule, label) => moves.push({ action: 'scenarioAction', rule, label })
+      const moves = []
+      // reason 说明"此刻还差什么"。带 reason 的条目不会进 legalMoves，只作为 AI 提示，
+      // 所以条件判断只需要在 actions() 里写一遍。
+      const add = (rule, label, reason) => moves.push({ action: 'scenarioAction', rule, label, reason })
       const zones = state.scenarioZones
-      if (inv.assets.some(asset => asset.code === '02140') && this.canGainResources(state, inv))
-        add('necronomiconResource', '死灵之书：获得 2 资源')
+      if (inv.assets.some(asset => asset.code === '02140'))
+        add('necronomiconResource', '死灵之书：获得 2 资源',
+          this.canGainResources(state, inv) ? null : '此地不能获得资源')
       if (id === 'theMiskatonicMuseum') {
         if (original(state.locations.find(loc => loc.id === inv.location)) === '02128'
           && state.scenarioFlags[`security:${inv.seat}`] !== state.round) moves.push({ action: 'scenarioAction', rule: 'searchSecurityOffice', actions: inv.assets.some(asset => asset.code === '02139') ? 1 : 2,
             label: '保安办公室：搜索牌库顶 6 张牌' })
         if (original(state.locations.find(loc => loc.id === inv.location)) === '02129'
-          && state.scenarioFlags[`security:${inv.seat}`] !== state.round
-          && (zones.exhibits.length || state.locations.some(loc => loc.traits?.includes('Exhibit'))))
+          && state.scenarioFlags[`security:${inv.seat}`] !== state.round)
           moves.push({ action: 'scenarioAction', rule: 'inspectSecurityOffice', actions: inv.assets.some(asset => asset.code === '02139') ? 1 : 2,
-            label: '保安办公室：查看展厅正面或展厅牌库顶牌' })
+            label: '保安办公室：查看展厅正面或展厅牌库顶牌',
+            reason: zones.exhibits.length || state.locations.some(loc => loc.traits?.includes('Exhibit')) ? null
+              : '展厅牌库已空且场上没有展厅' })
         if (state.actIndex === 0 && inv.location === L('02126')) add('breakMuseumDoor', '破开博物馆大门（战斗 5）')
-        if (inv.location === L('02127') && zones.exhibits.length && active(state).filter(i => i.location === inv.location).reduce((n, i) => n + i.clues, 0) >= state.numInvestigators) add('openExhibit', '共同支付每人 1 线索，打开下一间展厅')
+        if (inv.location === L('02127') && zones.exhibits.length) {
+          const pooled = active(state).filter(i => i.location === inv.location).reduce((n, i) => n + i.clues, 0)
+          add('openExhibit', '共同支付每人 1 线索，打开下一间展厅',
+            pooled >= state.numInvestigators ? null : `需要共同支付 ${state.numInvestigators} 个线索（当前 ${pooled}）`)
+        }
       }
       if (id === 'theEssexCountyExpress') {
-        const code = original(state.locations.find(loc => loc.id === inv.location))
+        const here = state.locations.find(loc => loc.id === inv.location)
+        const code = original(here)
         if (code === '02172' && !state.scenarioFlags.stolePassengersLuggage)
           add('stealLuggage', '拿走旅客行李：获得 3 资源')
-        if (code === '02174' && inv.resources >= 3 && state.locations.find(loc => loc.id === inv.location)?.clues > 0)
-          add('parlorClue', '支付 3 资源，发现会客车厢 1 个线索')
+        if (code === '02174') add('parlorClue', '支付 3 资源，发现会客车厢 1 个线索',
+          inv.resources < 3 ? `需要 3 资源（当前 ${inv.resources}）`
+            : !(here?.clues > 0) ? '会客车厢已经没有线索' : null)
         const passenger = (state.storyAssets || []).find(asset => asset.code === '02179' && asset.location === inv.location && asset.controllerSeat == null)
         if (passenger) moves.push({ action: 'scenarioAction', rule: 'parleyPassenger', assetId: passenger.id, label: '谈判：控制无助的旅客' })
       }
       if (id === 'bloodOnTheAltar') {
         const here = state.locations.find(loc => loc.id === inv.location)
-        if (original(here) === '02207' && inv.resources >= 1)
-          add('searchGeneralStore', '支付 1 资源，搜索牌库顶 3 张物品牌')
-        if (original(here) === '02209' && inv.hand.length)
-          add('tradeChurchCard', '弃掉 1 张手牌，获得 2 资源')
-        if (here?.clues === 0 && zones.underLocations[inv.location]
-          && !state.scenarioFlags[`searched:${inv.location}`])
+        if (original(here) === '02207') add('searchGeneralStore', '支付 1 资源，搜索牌库顶 3 张物品牌',
+          inv.resources >= 1 ? null : `需要 1 资源（当前 ${inv.resources}）`)
+        if (original(here) === '02209') add('tradeChurchCard', '弃掉 1 张手牌，获得 2 资源',
+          inv.hand.length ? null : '手牌为空')
+        if (zones.underLocations[inv.location] && !state.scenarioFlags[`searched:${inv.location}`])
           moves.push({ action: 'scenarioAction', rule: 'searchUnderLocation', actions: 0,
-            label: '揭示此地点底下的卡牌' })
+            label: '揭示此地点底下的卡牌',
+            reason: here?.clues === 0 ? null : `需要先取走此地点的线索（还剩 ${here?.clues ?? 0} 个）` })
         const chamber = state.locations.find(loc => loc.id === L('02214'))
-        if (chamber && !state.scenarioFlags.chamberUnlocked && here?.connections.includes(chamber.id)
-          && inv.assets.some(asset => asset.code === '02215'))
+        if (chamber && !state.scenarioFlags.chamberUnlocked && here?.connections.includes(chamber.id))
           moves.push({ action: 'scenarioAction', rule: 'attachChamberKey', actions: 0,
-            label: '将密室钥匙附属到隐藏密室' })
+            label: '将密室钥匙附属到隐藏密室',
+            reason: inv.assets.some(asset => asset.code === '02215') ? null : '需要控制密室钥匙' })
       }
       if (id === 'undimensionedAndUnseen') {
         const here = state.locations.find(loc => loc.id === inv.location)
         const brood = state.enemies.filter(enemy => enemy.code === '02255' && enemy.location === inv.location)
         const powder = inv.assets.find(asset => asset.code === '02219')
-        if (powder && (powder.clues ?? survivors.filter(([code]) =>
-          !(state.campaign.records.sacrificedToYogSothoth || []).includes(code)).length) > 0)
-          for (const enemy of brood.filter(item => item.exhausted))
-          moves.push({ action: 'scenarioAction', rule: 'powderBrood', actions: 0, enemyId: enemy.id,
-            label: `伊本·加齐之粉：将 1 个线索放到「${enemy.name}」上` })
-        if (inv.assets.some(asset => asset.code === '02254')) for (const enemy of state.enemies.filter(enemy => enemy.location === inv.location && enemy.traits?.includes('Abomination')))
-          moves.push({ action: 'scenarioAction', rule: 'castFormula', enemyId: enemy.id,
-            label: `深奥的咒文：攻击「${enemy.name}」` })
+        const powderClues = powder
+          ? (powder.clues ?? survivors.filter(([code]) => !(state.campaign.records.sacrificedToYogSothoth || []).includes(code)).length)
+          : 0
+        if (powder && powderClues > 0) {
+          const ready = brood.filter(item => item.exhausted)
+          if (ready.length) for (const enemy of ready)
+            moves.push({ action: 'scenarioAction', rule: 'powderBrood', actions: 0, enemyId: enemy.id,
+              label: `伊本·加齐之粉：将 1 个线索放到「${enemy.name}」上` })
+          else moves.push({ action: 'scenarioAction', rule: 'powderBrood', actions: 0,
+            label: '伊本·加齐之粉：将 1 个线索放到一只子嗣上',
+            reason: brood.length ? '需要先横置一只子嗣' : '所在地点没有子嗣' })
+        }
+        if (inv.assets.some(asset => asset.code === '02254')) {
+          const abominations = state.enemies.filter(enemy => enemy.location === inv.location && enemy.traits?.includes('Abomination'))
+          if (abominations.length) for (const enemy of abominations)
+            moves.push({ action: 'scenarioAction', rule: 'castFormula', enemyId: enemy.id,
+              label: `深奥的咒文：攻击「${enemy.name}」` })
+          else moves.push({ action: 'scenarioAction', rule: 'castFormula', label: '深奥的咒文：攻击异形敌人',
+            reason: '所在地点没有[[异形]]敌人' })
+        }
         const markLimits = { '02242': 1, '02244': 2, '02246': 1, '02247': state.numInvestigators,
           '02248': 2, '02250': 3, '02252': 2, '02253': state.numInvestigators }
         const site = original(here || {}), limit = markLimits[site]
@@ -1035,28 +1058,38 @@ export function laterBehavior(id) {
         const group = ['02244', '02247', '02248', '02253'].includes(site)
         const available = group ? active(state).filter(other => other.location === inv.location).reduce((n, other) => n + (site === '02247' || site === '02253' ? Number(other.clues > 0) : other.clues), 0)
           : Math.max(0, ...active(state).filter(other => other.location === inv.location).map(other => other.clues))
-        if (limit && !state.scenarioFlags[`marked:${inv.location}`] && targets.length
-          && (site === '02246' || available > 0))
-          for (const enemy of targets) for (let amount = 1; amount <= Math.min(limit, site === '02246' ? 1 : available); amount++)
-            moves.push({ action: 'scenarioAction', rule: 'markBrood', actions: 0,
-              enemyId: enemy.id, amount, label: `将 ${amount} 个线索放在「${enemy.name}」上` })
-        if (original(here || {}) === '02243' && state.enemies.some(enemy => enemy.code === '02255' && enemy.location !== inv.location))
-          moves.push({ action: 'scenarioAction', rule: 'lureBrood', label: '引导一只子嗣朝敦威治村移动' })
-        if (original(here || {}) === '02251' && state.enemies.some(enemy => enemy.code === '02255'))
-          moves.push({ action: 'scenarioAction', rule: 'redirectBrood', label: '检定智识 4，引导子嗣移动' })
+        if (limit && !state.scenarioFlags[`marked:${inv.location}`]) {
+          if (targets.length && (site === '02246' || available > 0)) {
+            for (const enemy of targets) for (let amount = 1; amount <= Math.min(limit, site === '02246' ? 1 : available); amount++)
+              moves.push({ action: 'scenarioAction', rule: 'markBrood', actions: 0,
+                enemyId: enemy.id, amount, label: `将 ${amount} 个线索放在「${enemy.name}」上` })
+          } else moves.push({ action: 'scenarioAction', rule: 'markBrood', actions: 0,
+            label: '将线索放在子嗣上',
+            reason: !targets.length ? (site === '02242' ? '场上没有子嗣' : '所在地点没有子嗣')
+              : `需要所在地点有线索（当前 ${available}）` })
+        }
+        if (original(here || {}) === '02243') moves.push({ action: 'scenarioAction', rule: 'lureBrood',
+          label: '引导一只子嗣朝敦威治村移动',
+          reason: state.enemies.some(enemy => enemy.code === '02255' && enemy.location !== inv.location) ? null
+            : '没有在别处的子嗣' })
+        if (original(here || {}) === '02251') moves.push({ action: 'scenarioAction', rule: 'redirectBrood',
+          label: '检定智识 4，引导子嗣移动',
+          reason: state.enemies.some(enemy => enemy.code === '02255') ? null : '场上没有子嗣' })
       }
       if (id === 'whereDoomAwaits') for (const [code, deck] of [['02282', 'divergingPaths'], ['02283', 'alteredPaths']]) {
-        if (inv.location === L(code) && zones[deck].length && state.scenarioFlags[`${inv.seat}:${deck}`] !== state.round) add(deck, '调查：发现一条未知小径（每轮一次）')
+        if (inv.location === L(code) && state.scenarioFlags[`${inv.seat}:${deck}`] !== state.round)
+          add(deck, '调查：发现一条未知小径（每轮一次）', zones[deck].length ? null : '小径牌库已空')
       }
       if (id === 'whereDoomAwaits' && original(state.locations.find(loc => loc.id === inv.location)) === '02287'
         && state.locations.find(loc => loc.id === inv.location)?.doom > 0) add('clearDestroyedPathDoom', '调查：移除被毁小径上的 1 个毁灭')
       if (id === 'lostInTimeAndSpace'
-        && ['02316', '02317', '02318', '02319'].includes(original(state.acts[state.actIndex] || {}))
-        && state.encounterDeck.length) {
-        add('searchEncounterLocations', '弃掉遭遇牌库顶3张，选择其中一个地点并结算其显现')
+        && ['02316', '02317', '02318', '02319'].includes(original(state.acts[state.actIndex] || {}))) {
+        add('searchEncounterLocations', '弃掉遭遇牌库顶3张，选择其中一个地点并结算其显现',
+          state.encounterDeck.length ? null : '遭遇牌库已空')
       }
-      if (id === 'lostInTimeAndSpace' && original(state.locations.find(loc => loc.id === inv.location)) === '02322' && inv.clues >= 2)
-        add('resignBeyond', '支付 2 个线索，撤退')
+      if (id === 'lostInTimeAndSpace' && original(state.locations.find(loc => loc.id === inv.location)) === '02322')
+        add('resignBeyond', '支付 2 个线索，撤退',
+          inv.clues >= 2 ? null : `需要 2 个线索（当前 ${inv.clues}）`)
       return moves
     },
     payScenarioActionCost(state, inv, move, api) {

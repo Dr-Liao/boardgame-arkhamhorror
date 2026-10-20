@@ -2,6 +2,7 @@ import { scenarioPlaylistId } from './scenario-music.js'
 
 const ROOT = '/mods/arkhamhorror'
 const CARCOSA = `${ROOT}/img/campaigns/thePathToCarcosa`
+const FORGOTTEN_AGE = `${ROOT}/img/campaigns/theForgottenAge`
 const DUNWICH = `${ROOT}/img/campaigns/theDunwichLegacy`
 const NOTZ = `${ROOT}/img/campaigns/nightOfTheZealot`
 
@@ -23,6 +24,25 @@ const COMMON = Object.freeze({
 })
 
 const CAMPAIGNS = Object.freeze({
+  theForgottenAge: Object.freeze({
+    id: 'theForgottenAge',
+    palette: Object.freeze({
+      background: '#101b18', panel: '#172720', header: '#0b1511',
+      accent: '#bdad72', accentStrong: '#e8d38d', muted: '#a5b3a1', edge: '#9e925a66',
+    }),
+    assets: Object.freeze({
+      hubHero: `${FORGOTTEN_AGE}/hub/jungle-temple.webp`,
+      tableOverlay: `${FORGOTTEN_AGE}/table/investigation-desk.webp`,
+      storyDefault: `${FORGOTTEN_AGE}/hub/jungle-temple.webp`,
+    }),
+    scenarios: Object.freeze(Object.fromEntries([
+      'theUntamedWilds', 'theDoomOfEztli', 'threadsOfFate', 'theBoundaryBeyond',
+      'heartOfTheEldersPart1', 'heartOfTheEldersPart2', 'theCityOfArchives',
+      'theDepthsOfYoth', 'shatteredAeons', 'turnBackTime',
+    ].map(id => [id, Object.freeze({ assets: Object.freeze({
+      storyDefault: `${FORGOTTEN_AGE}/scenarios/${id}/scene.webp`,
+    }) })]))),
+  }),
   theDunwichLegacy: Object.freeze({
     id: 'theDunwichLegacy',
     assets: Object.freeze({

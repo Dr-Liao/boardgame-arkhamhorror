@@ -14,14 +14,17 @@ const imageCache = createImageCache()
 const responseCache = new Map()
 let metadata = null
 let metadataPending = null
+const LEGACY_IMAGE_HOST = 'https://assets.arkhamhorror.app'
 const preferences = { host: DEFAULT_IMAGE_HOST, language: 'zh-cn', enabled: true, variant: '' }
 try {
   const saved = JSON.parse(localStorage.getItem('arkham.presentation') || 'null')
   if (saved) {
-    preferences.host = normalizeImageHost(saved.host)
+    const host = normalizeImageHost(saved.host)
+    preferences.host = !host || host === LEGACY_IMAGE_HOST ? DEFAULT_IMAGE_HOST : host
     preferences.language = saved.language === 'en' ? 'en' : 'zh-cn'
     preferences.enabled = saved.enabled !== false
     preferences.variant = saved.variant === 'revised' ? 'revised' : ''
+    if (host === LEGACY_IMAGE_HOST) savePreferences({})
   }
 } catch {}
 
@@ -212,7 +215,7 @@ export function preloadScenarioImages(scenarioId) {
 }
 
 export function renderPresentationSettings(h, onChange) {
-  const host = h('input', { className: 'bg-input', value: preferences.host, placeholder: 'https://assets.arkhamhorror.app', 'aria-label': '卡图主机', autocomplete: 'off' })
+  const host = h('input', { className: 'bg-input', value: preferences.host, placeholder: DEFAULT_IMAGE_HOST, 'aria-label': '卡图主机', autocomplete: 'off' })
   const message = h('div', { className: 'ah-resource-note', role: 'status' })
   const language = h('select', { className: 'bg-select', 'aria-label': '卡文与图片语言', onchange: event => { savePreferences({ language: event.target.value }); onChange() } },
     h('option', { value: 'zh-cn' }, '简体中文'), h('option', { value: 'en' }, 'English'))

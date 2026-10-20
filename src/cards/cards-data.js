@@ -8,7 +8,7 @@ export const META = {
     "playerCards": 1683,
     "weaknesses": 147
   },
-  "resourceVersion": "4a181ef6a0d60a046dbf0cda80dee0c18be5cf305b298a47097ba8521e613f62",
+  "resourceVersion": "a4c52da3810a26b2ed9980d22bf5c7c4f2512d3d1b545d548475794a7eb6df99",
   "schemaVersion": 2,
   "source": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
   "sources": [
@@ -118,7 +118,7 @@ export const META = {
       "status": "valid"
     }
   ],
-  "strictAccepted": 331,
+  "strictAccepted": 438,
   "total": 5930,
   "types": {
     "act": 374,
@@ -198030,8 +198030,9 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/03342"
   },
   "04001": {
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
     "agility": 1,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Leo Anderson has spent his whole life getting into the deadliest and most obscure corners of the globe. Along the way, he's lost good people. He often questions whether such academic pursuits have been worth the lives lost. His most recent expedition, an ill-fated voyage to Nan Madol to recover <u>Olosopha's Almanac</u>, ended in complete disaster. Mitch was the only one of his people to survive, or at the very least, to remain human. Leo is sick of burying people who trusted him. But now he knows these expeditions aren't purely academic in nature - and he won't quit until the job is done.",
     "backFlavorZh": "里奥·安德森穷其一生，出入于地球上最为凶险、隐蔽之地。在这一路上，他曾失去伙伴。他常常质疑自己，这样的学术追求是否值得付出生命的代价。他最近一次探险是前往南马都尔寻找奥卢索尔历书，那是一场不幸的探险，结局简直是场灾难。他的探险小队只有米奇活了下来，或者换句话说，只有他仍保有人性。里奥再也不愿理葬伙伴的尸身，他们生前是那么信任里奥。但现在他知道探险并不仅是出于学术目的一一在完成使命之前，他绝不却步。",
     "backNameZh": "",
@@ -198096,7 +198097,7 @@ export const ALL_CARDS = {
       "size": 30
     },
     "doubleSided": true,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -198141,8 +198142,9 @@ export const ALL_CARDS = {
     "willpower": 4
   },
   "04002": {
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
     "agility": 4,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Not many people can say that they've climbed a mountain on every continent. Fewer still can say they've stolen a golden idol from a tribe of cannibals. Among women in a male-dominated society, Ursula is unique in being able to make these sorts of claims. Ever since she was a small girl, Ursula has broken the rules set down for her, climbing trees, playing in the mud, exploring the woods, and doing plenty of other things that a \"proper young lady shouldn't be doing.\" Since getting a degree in archaeology in Boston, she has been traveling the world searching for forgotten civilizations.",
     "backFlavorZh": "没多少人能说自己攀登过每一块大陆的高山，能说自己曾从食人族部落里偷走黄金神像的人就更少了。在男性占主导地位的社会中，厄休拉是唯一能够发出如此豪言的女性。当她还是个小女孩的时候，厄休拉就已打破了规限自己的条条框框，她爬树、在泥地里玩要、到森林里探索，做许多“年轻女孩不该做”的事情。在波士顿取得考古学学位后，她一直在世界各地找寻失落的文明。",
     "backNameZh": "",
@@ -198205,7 +198207,7 @@ export const ALL_CARDS = {
       "size": 30
     },
     "doubleSided": true,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -198248,8 +198250,9 @@ export const ALL_CARDS = {
     "willpower": 3
   },
   "04003": {
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
     "agility": 4,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Prohibition was the best thing that ever happened to Finn Edwards. Until they banned alcohol, he was just drifting through life, doing odd jobs here and there. But afterward, the demand for alcohol rose to such a fever pitch that he was able to make a living evading the law and giving people what they wanted. His new lifestyle particularly suited his personality, providing him with a taste of danger and plenty of cash. He never got caught and never lost a delivery. Now he's wrapped up in some kind of supernatural conspiracy, but in the end, he adheres to the same principles: Deliver the goods. Don't get caught.",
     "backFlavorZh": "对于芬思·爱德华兹而言，禁酒令简直就是天赐良机。在实施禁酒之前，他的生活漂泊无定，到处打些零工。但在那以后，人们对酒精的渴望臻至狂热，他便通过规避法律来满足人们的需求，赖以为生。他崭新的活法恰恰与他的个性不谋而合，在刀尖上过活，赚得盆满钵满。他从来不会被抓，也不会弄丢一趟货。现在他被卷入了某种超自然的阴谋之中，但最终他还是坚守着一贯的原则：安全走货，免遭逮捕。",
     "backNameZh": "",
@@ -198342,7 +198345,7 @@ export const ALL_CARDS = {
       "size": 30
     },
     "doubleSided": true,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -198385,11 +198388,12 @@ export const ALL_CARDS = {
     "willpower": 1
   },
   "04004": {
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
     "agility": 3,
     "alternatedBy": [
       "90081"
     ],
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Mateo Castile's life has not been easy since he became a priest. Recent decades in Mexico have been wracked with instability and conflict. Father Mateo struggled to balance his faith with the pragmatic concerns of preaching when the law told him he must not. But this is not what has assaulted Mateo's faith at its core. The nearby murders and kidnappings were not politically motivated, as he had suspected. A gruesome and horrid cult thrives at the heart of the brewing war. How, Mateo wonders, could a kind and loving God allow what he saw that night to exist?",
     "backFlavorZh": "马泰奥·卡斯提尔自从成为神父后，日子一直不好过。近十年来，墨西哥深受动乱与冲突之苦。马泰奥神父一面希望守住自己的信仰，一面为了布道，有时不得不忽视法律，但这并不是马泰奥信仰动摇的主要原因。如他所料，周围发生的凶杀案和绑架案，其动机与政治因素无关。在这场精心酝酿的纷争背后，一个可怕而恐怖的邪教逐渐壮大。马泰奥想知道，仁慈而可亲的上帝怎能容许他那晚所见的事情发生呢？",
     "backNameZh": "",
@@ -198454,7 +198458,7 @@ export const ALL_CARDS = {
       "size": 30
     },
     "doubleSided": true,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -198498,8 +198502,9 @@ export const ALL_CARDS = {
     "willpower": 4
   },
   "04005": {
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
     "agility": 0,
-    "availability": "catalog-only",
+    "availability": "strict",
     "backFlavor": "Sometimes, life gives you a choice: accept the lot that is given to you or stand up for who you are and what you believe. Calvin chose the latter. On the edge of death, bleeding out on the side of a dirt road, he received a vision - a terrifying vision of the Earth, sundered, and João, the love of his life, turning to ash in the vortex of a blazing inferno. Then, Calvin made another choice. He reached out to the darkness and pulled it within him. He would not die, not today. The world needed him. João needed him.",
     "backFlavorZh": "有的时候，生活会让你做选择：接受被安排的命运，或者为自我和信仰而坚持。加尔文选择后者。当他倒在泥路边上，血流不止，濒临死亡时，他看见了幻象一一地球变得四分五裂，令人胆颤，而他的毕生挚爱一一乔亚在熊熊烈火的旋涡之中化为灰烬。随后，加尔文做了另一个决定。他伸手触及黑暗，将其引入自己体内。他不会死，至少今天不会。世界需要他，乔亚也是。",
     "backNameZh": "",
@@ -198562,7 +198567,7 @@ export const ALL_CARDS = {
       "size": 30
     },
     "doubleSided": true,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -198607,7 +198612,8 @@ export const ALL_CARDS = {
     "willpower": 0
   },
   "04006": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -198621,7 +198627,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -198679,7 +198685,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04006"
   },
   "04007": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -198692,7 +198699,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -198740,7 +198747,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04007"
   },
   "04008": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -198754,7 +198762,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -198812,7 +198820,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04008"
   },
   "04009": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -198825,7 +198834,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -198872,7 +198881,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04009"
   },
   "04010": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -198886,7 +198896,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -198936,7 +198946,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04010"
   },
   "04011": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -198950,7 +198961,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -199011,7 +199022,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04011"
   },
   "04012": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199024,7 +199036,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -199071,7 +199083,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04012"
   },
   "04013": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199085,7 +199098,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -199145,7 +199158,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04013"
   },
   "04014": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199159,7 +199173,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "evade": 2,
     "exceptional": false,
     "exile": false,
@@ -199215,7 +199229,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04014"
   },
   "04015": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199229,7 +199244,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -199281,7 +199296,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04015"
   },
   "04016": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-investigators-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199294,7 +199310,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -199343,7 +199359,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04016"
   },
   "04017": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199357,7 +199374,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -199406,7 +199423,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04018": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199420,7 +199438,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -199469,7 +199487,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04019": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199483,7 +199502,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -199524,7 +199543,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04020": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199538,7 +199558,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -199579,7 +199599,8 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "04021": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199593,7 +199614,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -199643,7 +199664,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04022": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199657,7 +199679,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -199705,7 +199727,8 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "04023": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199719,7 +199742,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -199767,7 +199790,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04024": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199781,7 +199805,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -199822,7 +199846,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04025": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199836,7 +199861,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -199885,7 +199910,8 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "04026": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199899,7 +199925,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -199949,7 +199975,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04027": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -199963,7 +199990,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -200007,7 +200034,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04028": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200021,7 +200049,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -200063,7 +200091,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04029": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200077,7 +200106,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -200122,7 +200151,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04030": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200136,7 +200166,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -200187,7 +200217,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04031": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200201,7 +200232,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -200248,7 +200279,8 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "04032": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200265,7 +200297,7 @@ export const ALL_CARDS = {
     "duplicatedBy": [
       "60417"
     ],
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -200308,7 +200340,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04033": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200322,7 +200355,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -200363,7 +200396,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04034": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200380,7 +200414,7 @@ export const ALL_CARDS = {
     "duplicatedBy": [
       "60514"
     ],
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -200422,7 +200456,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04035": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200436,7 +200471,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -200486,7 +200521,8 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "04036": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200499,7 +200535,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -200540,7 +200576,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04037": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200554,7 +200591,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -200599,7 +200636,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04038": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200613,7 +200651,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -200652,7 +200690,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04038"
   },
   "04039": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200665,7 +200704,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -200704,7 +200743,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04039"
   },
   "04040": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200717,7 +200757,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -200756,7 +200796,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04040"
   },
   "04041": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200769,7 +200810,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -200808,7 +200849,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04041"
   },
   "04042": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -200821,7 +200863,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -204254,7 +204296,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04102"
   },
   "04103": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -204271,7 +204314,7 @@ export const ALL_CARDS = {
     "duplicatedBy": [
       "12024"
     ],
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -204315,7 +204358,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04104": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -204329,7 +204373,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -204371,7 +204415,8 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "04105": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -204385,7 +204430,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -204429,7 +204474,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04106": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -204442,7 +204488,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -204481,7 +204527,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04107": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -204499,7 +204546,7 @@ export const ALL_CARDS = {
       "12044",
       "60308"
     ],
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -204547,7 +204594,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04108": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -204561,7 +204609,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -204605,7 +204653,8 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "04109": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -204618,7 +204667,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -204657,7 +204706,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04110": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -204671,7 +204721,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -204716,7 +204766,8 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "04111": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -204730,7 +204781,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -204772,7 +204823,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04112": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -204785,7 +204837,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -207282,7 +207334,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "unverified",
     "encounterCode": "threads_of_fate",
     "encounterName": "Threads of Fate",
     "encounterPosition": 39,
@@ -207352,7 +207404,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "unverified",
     "encounterCode": "threads_of_fate",
     "encounterName": "Threads of Fate",
     "encounterPosition": 40,
@@ -207398,7 +207450,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04148"
   },
   "04149": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -207412,7 +207465,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -207455,7 +207508,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04150": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -207468,7 +207522,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -207511,7 +207565,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04151": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -207525,7 +207580,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -207564,7 +207619,8 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "04152": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -207578,7 +207634,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -207620,7 +207676,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04153": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -207633,7 +207690,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -207674,7 +207731,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04154": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -207688,7 +207746,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -207730,7 +207788,8 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "04155": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -207743,7 +207802,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -207785,7 +207844,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04156": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -207799,7 +207859,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -207842,7 +207902,8 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "04157": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -207855,7 +207916,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -207897,7 +207958,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04158": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -207911,7 +207973,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -207955,7 +208017,8 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "04159": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -207969,7 +208032,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -208010,7 +208073,8 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "04160": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -208024,7 +208088,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -209792,7 +209856,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "unverified",
     "encounterCode": "the_boundary_beyond",
     "encounterName": "The Boundary Beyond",
     "encounterPosition": 36,
@@ -209839,7 +209903,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04191"
   },
   "04192": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -209852,7 +209917,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -209893,7 +209958,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04193": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -209907,7 +209973,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -209954,7 +210020,8 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "04194": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -209968,7 +210035,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -210016,7 +210083,8 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "04195": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -210030,7 +210098,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -210073,7 +210141,8 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "04196": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -210087,7 +210156,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -210138,7 +210207,8 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "04197": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -210152,7 +210222,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -210203,7 +210273,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04198": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -210216,7 +210287,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -210260,7 +210331,8 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "04199": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -210277,7 +210349,7 @@ export const ALL_CARDS = {
     "duplicatedBy": [
       "12064"
     ],
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -210319,7 +210391,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04200": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -210336,7 +210409,7 @@ export const ALL_CARDS = {
     "duplicatedBy": [
       "60516"
     ],
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -210377,7 +210450,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04201": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -210393,7 +210467,7 @@ export const ALL_CARDS = {
     "duplicatedBy": [
       "60519"
     ],
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -210432,7 +210506,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04202": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -210446,7 +210521,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -210489,7 +210564,8 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "04203": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -210503,7 +210579,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -210552,7 +210628,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04204": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -210566,7 +210643,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -212087,7 +212164,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04228"
   },
   "04229": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -212101,7 +212179,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -212150,7 +212228,8 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "04230": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -212164,7 +212243,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -212212,7 +212291,8 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "04231": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -212226,7 +212306,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -212274,7 +212354,8 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "04232": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -212291,7 +212372,7 @@ export const ALL_CARDS = {
     "duplicatedBy": [
       "60314"
     ],
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -212333,7 +212414,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04233": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -212347,7 +212429,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -212388,7 +212470,8 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "04234": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -212402,7 +212485,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -212444,7 +212527,8 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "04235": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -212458,7 +212542,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -212508,7 +212592,8 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "04236": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -212522,7 +212607,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -214139,7 +214224,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "unverified",
     "encounterCode": "the_city_of_archives",
     "encounterName": "The City of Archives",
     "encounterPosition": 41,
@@ -214184,7 +214269,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04264"
   },
   "04265": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -214198,7 +214284,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -214241,7 +214327,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04266": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -214255,7 +214342,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -214299,7 +214386,8 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "04267": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -214313,7 +214401,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -214358,7 +214446,8 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "04268": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -214372,7 +214461,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -214423,7 +214512,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04269": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -214437,7 +214527,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -214481,7 +214571,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04270": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -214495,7 +214586,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": true,
     "exile": false,
     "factionName": "Rogue",
@@ -214540,7 +214631,8 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "04271": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -214554,7 +214646,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -214600,7 +214692,8 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "04272": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -214614,7 +214707,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -214655,7 +214748,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04273": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -214669,7 +214763,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -214719,7 +214813,8 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "04274": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -214733,7 +214828,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -214774,7 +214869,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04275": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -214788,7 +214884,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -214836,7 +214932,8 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "04276": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -214850,7 +214947,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -216448,7 +216545,8 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04303"
   },
   "04304": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -216462,7 +216560,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -216503,7 +216601,8 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "04305": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -216517,7 +216616,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -216568,7 +216667,8 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "04306": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -216582,7 +216682,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -216624,7 +216724,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04307": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -216638,7 +216739,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -216689,7 +216790,8 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "04308": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -216703,7 +216805,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": true,
     "exile": false,
     "factionName": "Rogue",
@@ -216749,7 +216851,8 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "04309": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -216762,7 +216865,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -216803,7 +216906,8 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "04310": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -216817,7 +216921,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -216863,7 +216967,8 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "04311": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -216877,7 +216982,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -216926,7 +217031,8 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "04312": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -216940,7 +217046,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -216981,7 +217087,8 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "04313": {
-    "availability": "catalog-only",
+    "acceptanceProfile": "original-forgotten-age-player-2026-10",
+    "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
     "backText": "",
@@ -216995,7 +217102,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unimplemented",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",

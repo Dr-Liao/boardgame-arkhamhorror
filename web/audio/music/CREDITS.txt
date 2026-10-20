@@ -70,3 +70,74 @@ All tracks above were re-encoded from the official MP3 files with ffmpeg (libmp3
 sources.json keeps the official file hashes ("sha256"/"bytes") and the distributed
 file hashes ("encoded").
 以上全部曲目由官方 MP3 用 ffmpeg 转码为 128 kbps，以减小下载体积；未作剪辑或混音。
+
+The Forgotten Age / 失落的时代 — added 2026-10-19
+
+"Magic Forest", "Shamanistic", "Invariance", "Ancient Rite", "Rites",
+"Lost Frontier", "Gloom Horizon", "Enter the Maze", "Penumbra",
+"Static Motion", "Controlled Chaos", "Orion 300XB", "Digital Bark",
+"It is Lost", "Interloper", "Truth in the Stones", "Thunder Dreams"
+Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+
+Official track pages / 官方曲目页面（按以上曲目顺序）：
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600044
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100353
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100847
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1900048
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100722
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300039
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100813
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100782
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200105
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200062
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200059
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100697
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100260
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100190
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100401
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700059
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200063
+
+Official licensing / 官方授权：https://incompetech.com/music/royalty-free/licenses/
+Official MP3 files re-encoded to 128 kbps CBR MP3 at 44.1 kHz with ffmpeg
+(libmp3lame). No cuts, edits, or mixing. Local tracks are stored under
+campaigns/theForgottenAge/; originals are kept in artifacts/tfa-music-originals/.
+The original and encoded bytes and SHA-256 hashes are recorded in sources.json.
+These tracks are independently licensed and are not an official soundtrack.
+
+Earlier campaign playlist refresh / 前三个战役歌单扩充 — added 2026-10-19
+
+"Come Play with Me", "I Knew a Guy", "On the Ground", "Decay",
+"Lightless Dawn", "Right Behind You", "Long Note Three", "Night Break",
+"The Voices", "Shadowlands 7 - Codex", "Shadowlands 4 - Breath",
+"Wretched Destroyer", "Ossuary 1 - A Beginning", "Ossuary 7 - Resolve",
+"Ossuary 2 - Turn"
+Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+
+Official track pages / 官方曲目页面（按以上曲目顺序）：
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400042
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100199
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400030
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100512
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100655
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100713
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100424
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100380
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100046
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700040
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700037
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700041
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500043
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500049
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500044
+
+Official licensing / 官方授权：https://incompetech.com/music/royalty-free/licenses/
+Official MP3 files re-encoded to 128 kbps CBR MP3 at 44.1 kHz with ffmpeg
+(libmp3lame). No cuts, edits, or mixing. Local tracks are stored under common/;
+originals are kept in artifacts/legacy-music-originals/.
+The original and encoded bytes and SHA-256 hashes are recorded in sources.json.
+These tracks are independently licensed and are not an official soundtrack.

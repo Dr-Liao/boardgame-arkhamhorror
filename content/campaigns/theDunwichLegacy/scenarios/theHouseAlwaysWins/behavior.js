@@ -162,34 +162,37 @@ export const behavior = {
   },
   actions(state, inv) {
     const moves = []
-    if (inv.assets.some(asset => asset.code === '02079' && !asset.exhausted))
-      for (const enemy of state.enemies.filter(enemy => enemy.location === inv.location
-        && enemy.traits?.some(trait => trait.toLowerCase() === 'criminal')))
+    const peter = inv.assets.find(asset => asset.code === '02079')
+    if (peter) {
+      const criminals = state.enemies.filter(enemy => enemy.location === inv.location
+        && enemy.traits?.some(trait => trait.toLowerCase() === 'criminal'))
+      if (peter.exhausted) moves.push({ action: 'scenarioAction', rule: 'peterEvade', actions: 0,
+        label: '横置彼得·克洛弗，自动躲避「罪犯」', reason: '需要先重整彼得·克洛弗' })
+      else if (!criminals.length) moves.push({ action: 'scenarioAction', rule: 'peterEvade', actions: 0,
+        label: '横置彼得·克洛弗，自动躲避「罪犯」', reason: '所在地点没有[[罪犯]]敌人' })
+      else for (const enemy of criminals)
         moves.push({ action: 'scenarioAction', rule: 'peterEvade', enemyId: enemy.id, actions: 0,
           label: `横置彼得·克洛弗，自动躲避「${enemy.name}」` })
-    if (state.actIndex === 0 && inv.location === 'cloverClubLounge' && !state.scenarioFlags.loungeUsed
-      && inv.hand.some(code => ALL_CARDS[code]?.traits?.some(trait => trait.toLowerCase() === 'ally')))
-      moves.push({ action: 'scenarioAction', rule: 'loungeAlly', label: '弃掉一张盟友，获得 2 线索' })
-    if (state.actIndex === 0 && inv.location === 'cloverClubBar' && !state.scenarioFlags.barUsed && inv.resources >= 2)
-      moves.push({ action: 'scenarioAction', rule: 'buyDrink', label: '支付 2 资源，获得 2 线索并抽 2 张牌' })
-    if (state.actIndex === 0 && inv.location === 'cloverClubCardroom' && inv.resources >= 2)
-      moves.push({ action: 'scenarioAction', rule: 'gamble', label: '支付 2 资源，在牌室赌博' })
+    }
+    if (state.actIndex === 0 && inv.location === 'cloverClubLounge' && !state.scenarioFlags.loungeUsed)
+      moves.push({ action: 'scenarioAction', rule: 'loungeAlly', label: '弃掉一张盟友，获得 2 线索',
+        reason: inv.hand.some(code => ALL_CARDS[code]?.traits?.some(trait => trait.toLowerCase() === 'ally')) ? null
+          : '手牌里没有[[盟友]]支援' })
+    if (state.actIndex === 0 && inv.location === 'cloverClubBar' && !state.scenarioFlags.barUsed)
+      moves.push({ action: 'scenarioAction', rule: 'buyDrink', label: '支付 2 资源，获得 2 线索并抽 2 张牌',
+        reason: inv.resources >= 2 ? null : `需要 2 资源（当前 ${inv.resources}）` })
+    if (state.actIndex === 0 && inv.location === 'cloverClubCardroom')
+      moves.push({ action: 'scenarioAction', rule: 'gamble', label: '支付 2 资源，在牌室赌博',
+        reason: inv.resources >= 2 ? null : `需要 2 资源（当前 ${inv.resources}）` })
     if ([2, 3].includes(state.actIndex)) {
+      // 02068/02069：剧情角色无人控制时，场景赋予谈判行动。角色已被控制则不列。
       const code = state.acts[state.actIndex]?.originalCode === '02068' ? '02080' : '02079'
-      if (state.storyAssets.some(asset => asset.code === code && asset.location === inv.location && asset.controllerSeat == null))
-        moves.push({ action: 'scenarioAction', rule: 'parleyGuest', scriptCard: 'act', label: '谈判剧情角色（意志 3）' })
+      const guest = state.storyAssets.find(asset => asset.code === code && asset.controllerSeat == null)
+      const name = code === '02080' ? '佛朗西斯·摩尔根博士' : '彼得·克劳佛'
+      if (guest) moves.push({ action: 'scenarioAction', rule: 'parleyGuest', scriptCard: 'act', label: `谈判${name}（意志 3）`,
+        reason: guest.location === inv.location ? null : `需要与${name}位于同一地点` })
     }
     return moves
-  },
-  // 02068/02069：剧情角色无人控制时，场景赋予谈判行动。角色已被控制后行动消失。
-  scriptActions(state, inv) {
-    if (![2, 3].includes(state.actIndex)) return []
-    const code = state.acts[state.actIndex]?.originalCode === '02068' ? '02080' : '02079'
-    const guest = state.storyAssets.find(asset => asset.code === code && asset.controllerSeat == null)
-    if (!guest) return []
-    const name = code === '02080' ? '佛朗西斯·摩尔根博士' : '彼得·克劳佛'
-    return [{ action: 'scenarioAction', rule: 'parleyGuest', scriptCard: 'act', label: `谈判${name}（意志 3）`,
-      reason: guest.location !== inv.location ? `需要与${name}位于同一地点` : null }]
   },
   performAction(state, inv, move, api) {
     if (move.rule === 'peterEvade') {

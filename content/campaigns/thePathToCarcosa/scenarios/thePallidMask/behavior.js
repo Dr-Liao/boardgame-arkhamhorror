@@ -319,11 +319,13 @@ export const behavior = {
     if (state.actIndex === 1 && inv.location === state.scenarioFlags.tombLocationId) {
       const clues = active(state).filter(candidate => candidate.location === inv.location)
         .reduce((sum, candidate) => sum + candidate.clues, 0)
-      if (clues >= 2 * state.numInvestigators) moves.push({
+      const needed = 2 * state.numInvestigators
+      moves.push({
         action: 'scenarioAction',
         rule: 'studyTomb',
         scriptCard: 'act',
         label: `共同花费${2 * state.numInvestigators}个线索，研究暗影坟墓`,
+        reason: clues >= needed ? null : `需要共同花费 ${needed} 个线索（当前 ${clues}）`,
       })
     }
     return moves

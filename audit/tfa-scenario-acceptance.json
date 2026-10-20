@@ -1,0 +1,463 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theForgottenAge",
+  "milestone": "M3",
+  "generatedFrom": "original-campaign-only",
+  "status": "pending",
+  "productionGate": "playable",
+  "items": [
+    {
+      "id": "theUntamedWilds",
+      "code": "04043",
+      "name": "荒莽密林",
+      "status": "pending",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "inventory": {
+        "locations": 9,
+        "acts": 4,
+        "agendas": 2,
+        "enemies": 6,
+        "treacheries": 10,
+        "encounterCards": 25,
+        "setAsideCards": 12,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2"
+        ],
+        "pendingEncounterCodes": []
+      },
+      "gaps": [
+        "「探索」的失败判定以「抽到的是敌人/诡计」近似，未逐张核对探索地点时的成功条件"
+      ],
+      "testFile": "tests/tfa-untamed-wilds.test.mjs",
+      "fileHashes": {
+        "definition.js": "584602611e35408baa4050f90495a63985ef7b472072a745665799565f4e6788",
+        "layout.js": "105a8ad0b2e21650ba10fd1e8e4ca12ef791e542a832686f57805707f0f35974",
+        "behavior.js": "0d18c7b1125a997ef56b1ffcd9fe744880b0da4015b24a3782aeb35103c96074",
+        "index.js": "0731d736c8926fb865f1158b21717a03cd1c522166df077203d00bd6a99c7d0a"
+      }
+    },
+    {
+      "id": "theDoomOfEztli",
+      "code": "04054",
+      "name": "埃兹特里的覆灭",
+      "status": "verified",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": true,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "inventory": {
+        "locations": 7,
+        "acts": 3,
+        "agendas": 2,
+        "enemies": 4,
+        "treacheries": 14,
+        "encounterCards": 34,
+        "setAsideCards": 7,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2",
+          "r3",
+          "r4",
+          "r5"
+        ],
+        "pendingEncounterCodes": []
+      },
+      "gaps": [],
+      "testFile": "tests/tfa-doom-of-eztli.test.mjs",
+      "fileHashes": {
+        "definition.js": "10e12a64385a873ec1afbcc3d24cf06eb4d92155113104d25c122e235a9b7fd1",
+        "layout.js": "0601569a7e8cd4cf334dbf2d20523ac8969892f0b5c3a347d132ff6ca8869106",
+        "behavior.js": "d7436635eae0e657d8e86d177e0f662103b9a866ad1c148f564d51ce23adb953",
+        "index.js": "9bafbf15f4a6c3df9a69432bdbc77fb2454f8957f74517acce366340e7c15a36"
+      }
+    },
+    {
+      "id": "threadsOfFate",
+      "code": "04113",
+      "name": "命运之线",
+      "status": "pending",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "inventory": {
+        "locations": 12,
+        "acts": 24,
+        "agendas": 3,
+        "enemies": 7,
+        "treacheries": 10,
+        "encounterCards": 27,
+        "setAsideCards": 5,
+        "resolutions": [
+          "noResolution",
+          "r1"
+        ],
+        "pendingEncounterCodes": []
+      },
+      "gaps": [
+        "04124/04132 的目标以「附属敌人是否仍在场」近似，未区分进胜利区与被弃掉",
+        "04122b/04130b/04137b 的「与旁人资产互换」用移除剧情资产 + 生成敌人近似"
+      ],
+      "testFile": "tests/tfa-threads-of-fate.test.mjs",
+      "fileHashes": {
+        "definition.js": "eaa10fc39a57911a6a1f93ff3bc19765ce02cd1a88103e72a82bb6da42ff0042",
+        "layout.js": "8b340c7a0418e8aa215feb685ad2a4e26ac846e4b18f4c284822a150c80e1583",
+        "behavior.js": "a0d8a05bee8d896672396655948bae6ff04664063d20bbd8de8f1d1f3bc36575",
+        "index.js": "ea2f400771d7c56487a3bf31c82bc988cbb2d1564934e62718e0b461ab7fcf9d"
+      }
+    },
+    {
+      "id": "theBoundaryBeyond",
+      "code": "04161",
+      "name": "界限彼端",
+      "status": "pending",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "inventory": {
+        "locations": 18,
+        "acts": 3,
+        "agendas": 3,
+        "enemies": 6,
+        "treacheries": 11,
+        "encounterCards": 12,
+        "setAsideCards": 8,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2"
+        ],
+        "pendingEncounterCodes": []
+      },
+      "gaps": [
+        "古代地点与现代格位共用桌面坐标，静态地图上会重叠"
+      ],
+      "testFile": "tests/tfa-boundary-beyond.test.mjs",
+      "fileHashes": {
+        "definition.js": "e8bcfb93fa071244d57af34a2b4b7f00df1bf639b8e9731a7744333fdbf0137c",
+        "layout.js": "bcd3de4e6b994fce9aaabbf098237ceba11ea4d6bda9b7ab7a4add17f23de082",
+        "behavior.js": "b6a02640b9be1c3404730ed0112530442b61bf07a1162f8536b44f71ce80a008",
+        "index.js": "901dccd0a53428c8152cbd56b2ef3bc9a8050f12707de7802c2f375c6a948288"
+      }
+    },
+    {
+      "id": "heartOfTheEldersPart1",
+      "code": "04205",
+      "name": "久远腹地（上）",
+      "status": "pending",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "inventory": {
+        "locations": 10,
+        "acts": 2,
+        "agendas": 2,
+        "enemies": 5,
+        "treacheries": 10,
+        "encounterCards": 27,
+        "setAsideCards": 8,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2"
+        ],
+        "pendingEncounterCodes": []
+      },
+      "gaps": [
+        "r2 是忠实移植但原版基础流程不可达（仅 ReturnTo 触发）"
+      ],
+      "testFile": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+      "fileHashes": {
+        "definition.js": "b6fbbde3bba54b1384736371ceee0cfd08359a0ebd0958d238b721126f3a50d5",
+        "layout.js": "07bc6bcbbb4c03013b1fcc3bf62f0e6d68af801d0fdc2f4ab9c6fd02773b86a4",
+        "behavior.js": "61fb7499d2d31fae8e3ad7c499103baedbcc7bdb11265e25c96b36c6509987f8",
+        "index.js": "9d79ecaaee4dd103bc2d824dcba78e7b5082d3db31d143e7ad57bb8fc6763e26"
+      }
+    },
+    {
+      "id": "heartOfTheEldersPart2",
+      "code": "04205",
+      "name": "久远腹地（下）",
+      "status": "pending",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "inventory": {
+        "locations": 7,
+        "acts": 2,
+        "agendas": 2,
+        "enemies": 4,
+        "treacheries": 13,
+        "encounterCards": 30,
+        "setAsideCards": 6,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2"
+        ],
+        "pendingEncounterCodes": []
+      },
+      "gaps": [
+        "地点强制效果只覆盖「探索放置/进入」路径，卡牌直接放入场不触发"
+      ],
+      "testFile": "tests/tfa-heart-of-the-elders-part2.test.mjs",
+      "fileHashes": {
+        "definition.js": "a825331e1c7dd5ae1c363e4cabe7bcc2a466edde65847cad16c73df26638a9fe",
+        "layout.js": "303a6681b6de49077068aebb1f8fad4e8fb3c7b170ca9943b5658d3b7dbac3b7",
+        "behavior.js": "241b40b1cfda0bb603822a1a0be599b70e1bdb8990e86ac1ff99e5a07cb5c2d5",
+        "index.js": "5a17d4336c601279c39123927a2301ae672a4d20d97032d425458abb2b412491"
+      }
+    },
+    {
+      "id": "theCityOfArchives",
+      "code": "04237",
+      "name": "天机之城",
+      "status": "pending",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "inventory": {
+        "locations": 11,
+        "acts": 3,
+        "agendas": 3,
+        "enemies": 4,
+        "treacheries": 11,
+        "encounterCards": 34,
+        "setAsideCards": 10,
+        "resolutions": [
+          "noResolution",
+          "r1"
+        ],
+        "pendingEncounterCodes": []
+      },
+      "gaps": [
+        "会谈间槽位的 frontCode 固定，运行期用 locationVariants 换位，身份与卡面可能错位"
+      ],
+      "testFile": "tests/tfa-city-of-archives.test.mjs",
+      "fileHashes": {
+        "definition.js": "2fd2e5286aadc55cd59490e1956baeefff962b01750d98fe93300fc03899d65d",
+        "layout.js": "d5128836088a4f385fb9e46921225477cf41dce8cad82eb63829543c612a5902",
+        "behavior.js": "30089fca365bbf9e07eae92eb799cea589e108a2c880352890284bc27e54b128",
+        "index.js": "f9ae3cc50189aedebd1b1dca605a277fcad941f3b0e3ad4dd697834b2ff206ff"
+      }
+    },
+    {
+      "id": "theDepthsOfYoth",
+      "code": "04277",
+      "name": "幽嘶深渊",
+      "status": "pending",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "inventory": {
+        "locations": 10,
+        "acts": 1,
+        "agendas": 7,
+        "enemies": 7,
+        "treacheries": 13,
+        "encounterCards": 40,
+        "setAsideCards": 7,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2"
+        ],
+        "pendingEncounterCodes": []
+      },
+      "gaps": [
+        "「收集了一种奇怪的液体」存 scenarioFlags 而非战役记录，粘稠物→钥匙只在本章内生效"
+      ],
+      "testFile": "tests/tfa-depths-of-yoth.test.mjs",
+      "fileHashes": {
+        "definition.js": "a7fbae5b7b18e39a710d34dbc8ae57d8b4a71bfc47ef19f99461fc726f7536ff",
+        "layout.js": "e866c29f92658f93fc2063b1fa11d7c76bb824cae20bbc6385fd9d934371b1e4",
+        "behavior.js": "d4174598d7de8685e34ef0bb4a6ec2fd45688797852dc84a3d474bd10b9f3ad4",
+        "index.js": "5dd3dc6f349d39f645bb15b0cafa88fdadab5936222892742ddc76f7c551d415"
+      }
+    },
+    {
+      "id": "shatteredAeons",
+      "code": "04314",
+      "name": "破碎永世",
+      "status": "pending",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "inventory": {
+        "locations": 11,
+        "acts": 4,
+        "agendas": 3,
+        "enemies": 7,
+        "treacheries": 10,
+        "encounterCards": 28,
+        "setAsideCards": 17,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2",
+          "r3",
+          "r4",
+          "r5"
+        ],
+        "pendingEncounterCodes": []
+      },
+      "gaps": [
+        "「答应伊塔卡/亚历山卓」用 enemy.aloof 近似「蛇族/异教徒不与你交战」"
+      ],
+      "testFile": "tests/tfa-shattered-aeons.test.mjs",
+      "fileHashes": {
+        "definition.js": "602c154c5c42160e1e4164ce73feff147034043171c866d761d25962bebddf75",
+        "layout.js": "0bac4ad58d0ac21958e6953ea4285912b05d16040dd1ea639e3f49922d70c01b",
+        "behavior.js": "445f75e5f874b0a90fdf425d9da60d47cdad55db86363e750c90b0e6e683bc2c",
+        "index.js": "b83cd0a0f58066e8eee3bdec6bb3313992dc91674229c1b91182d5d08454e037"
+      }
+    },
+    {
+      "id": "turnBackTime",
+      "code": "04344",
+      "name": "时间倒流（尾声）",
+      "status": "pending",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "inventory": {
+        "locations": 7,
+        "acts": 3,
+        "agendas": 2,
+        "enemies": 5,
+        "treacheries": 13,
+        "encounterCards": 29,
+        "setAsideCards": 8,
+        "resolutions": [
+          "noResolution",
+          "r1"
+        ],
+        "pendingEncounterCodes": []
+      },
+      "gaps": [
+        "无结局把「陷入疯狂」近似为 defeated + 1 点精神创伤",
+        "04065「抽 2 张或放 2 点毁灭任意组合」实现为两次独立的 1 点二选一"
+      ],
+      "testFile": "tests/tfa-turn-back-time.test.mjs",
+      "fileHashes": {
+        "definition.js": "dc95977acf826b3a0d1fd1d34980bde33f6ad07f391446329f748a0f5baa72bf",
+        "layout.js": "9356d9faed24051c0d17ec21c620e1fa84b2eedcc4e70fcb4cd6b27120f47a7a",
+        "behavior.js": "6871d3a5e5b8ea69bf3d63e2cfe427a0285e4fb348158d2015b65b05b5c1419d",
+        "index.js": "3aa17102dcfe2573945126f7c0d18a253fda56adbd726146c01d530bb8ce711c"
+      }
+    }
+  ]
+}

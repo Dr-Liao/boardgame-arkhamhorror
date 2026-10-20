@@ -7,6 +7,7 @@ import { CARD_TYPES, ROOT, buildImport, mergeCatalog, renderArtifacts, localeFie
 import { ALL_CARDS, CARDS_BY_TYPE, META } from '../src/cards/cards-data.js'
 import { getCatalogCard, queryCatalog } from '../src/cards/card-catalog.js'
 import { createGameState, allCardDefs, legalMoves, validateMove, applyMove } from '../src/engine/engine.js'
+import { PLAYABLE_INVESTIGATOR_CODES } from '../src/deck/availability.js'
 
 const row = (code, extra = {}) => ({ code, name: 'Card', type_code: 'asset', pack_code: 'test', faction_code: 'neutral', ...extra })
 
@@ -121,9 +122,9 @@ test('意外进入手牌的目录卡不能成为合法动作，拒绝时状态�
   assert.equal(JSON.stringify(state), before)
 })
 
-test('Core、敦威治与卡尔克萨调查员和 1–4 人开局正常，状态只携带本局卡牌定义', () => {
+test('Core、敦威治、卡尔克萨与失落调查员和 1–4 人开局正常，状态只携带本局卡牌定义', () => {
   for (const code of ['01001', '01002', '01003', '01004', '01005', '02001', '02002', '02003', '02004', '02005',
-    '03001', '03002', '03003', '03004', '03005', '03006']) {
+    '03001', '03002', '03003', '03004', '03005', '03006', '04001', '04002', '04003', '04004', '04005']) {
     for (const count of [1, 2, 3, 4]) {
       const state = createGameState({ playerInvestigator: code }, Array.from({ length: count }, (_, seat) => ({ seat, name: `P${seat}` })))
       assert.equal(state.investigators[0].code, code)
@@ -131,8 +132,10 @@ test('Core、敦威治与卡尔克萨调查员和 1–4 人开局正常，状态
       assert.equal(new Set(state.investigators.map(inv => inv.code)).size, count)
       assert.equal(state.resourceVersion, META.resourceVersion)
       assert.equal(state.rulesMode, 'simplified')
-      assert.ok(Object.keys(state.cards).length <= 253)
-      assert.equal(Object.keys(state.investigatorDefs).length, 16)
+      // 只嵌入本局可用的运行时定义，远小于全部 5 930 张目录卡。
+      assert.ok(Object.keys(state.cards).length <= 420)
+      assert.equal(Object.keys(state.investigatorDefs).length, PLAYABLE_INVESTIGATOR_CODES.length)
+      assert.equal(Object.keys(state.investigatorDefs).length, 21)
       assert.equal(state.cards['09001'], undefined)
       assert.ok(!JSON.stringify(state).includes('canonicalSource'))
       for (const inv of state.investigators) {

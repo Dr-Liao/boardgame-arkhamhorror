@@ -889,7 +889,10 @@ const storyChecks = {
     behavior.performAction(state, inv, { rule: 'necronomiconResource' }, {})
     assert.equal(inv.resources, 7)
     state.enemies = [{ code: '02097', engagedSeat: 0 }]
-    assert.ok(!behavior.actions(state, inv).some(action => action.rule === 'necronomiconResource'))
+    // 空无之地不能获得资源：条目仍在 actions() 里，但带 reason，因而不进 legalMoves。
+    const blocked = behavior.actions(state, inv).find(action => action.rule === 'necronomiconResource')
+    assert.ok(blocked?.reason, '不可执行时必须给出 reason')
+    assert.ok(!legalMoves(state).some(action => action.rule === 'necronomiconResource'))
   },
   '02179'() {
     const state = simpleState(2)

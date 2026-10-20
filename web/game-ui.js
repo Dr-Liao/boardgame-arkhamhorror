@@ -526,7 +526,12 @@ function renderCardDetailModal(detail) {
 }
 
 function zoneCards(s, kind) {
-  if (kind === 'victory') return (s.state.victoryDisplay || []).map(card => typeof card === 'string' ? { code: card } : card)
+  // 复仇点数用虚拟卡记在胜利区；弹窗只列真实卡牌，复仇合计单独显示。
+  if (kind === 'victory') {
+    return (s.state.victoryDisplay || [])
+      .map(card => typeof card === 'string' ? { code: card } : card)
+      .filter(card => !card.virtual)
+  }
   return (s.state.setAsideCards || []).flatMap(card =>
     Array.from({ length: Math.max(0, card.count || 1) }, () => ({ ...card, count: undefined })))
 }
@@ -539,13 +544,18 @@ function renderCardZoneModal(s) {
   const title = victory ? '胜利区' : '放在一边的卡牌'
   const close = () => { state.arkhamZoneOpen = null; render() }
   const points = victory ? cards.reduce((sum, card) => sum + (card.victory ?? ahCardDefRaw(s, card.code).victory ?? 0), 0) : 0
+  const vengeance = victory
+    ? (s.state.victoryDisplay || []).reduce((sum, card) => sum + (card.vengeance || 0), 0)
+    : 0
   return h('div', { className: 'bg-backdrop ah-card-zone-backdrop', onclick: close },
     h('section', { className: 'ah-card-zone-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': title,
       onclick: event => event.stopPropagation(), onkeydown: event => { if (event.key === 'Escape') close() } },
       h('header', {},
         h('div', {}, h('small', {}, victory ? 'SCENARIO / VICTORY DISPLAY' : 'SCENARIO / SET ASIDE'),
           h('h2', {}, tableIcon(victory ? 'star' : 'supply'), title),
-          h('p', {}, victory ? `${cards.length} 张卡牌 · 共 ${points} 胜利点` : `${cards.length} 张卡牌仍在场外等待`)),
+          h('p', {}, victory
+            ? `${cards.length} 张卡牌 · 共 ${points} 胜利点${vengeance ? ` · 复仇 ${vengeance}` : ''}`
+            : `${cards.length} 张卡牌仍在场外等待`)),
         h('button', { className: 'ah-card-zone-close', 'aria-label': `关闭${title}`, onclick: close }, '关闭')),
       cards.length ? h('div', { className: 'ah-card-zone-grid', role: 'group', 'aria-label': `${title}中的卡牌` },
         cards.map((card, index) => {
@@ -960,7 +970,7 @@ function renderScriptActions(s, humanTurn) {
   if (st.status !== 'playing') return null
   const same = (a, b) => a.action === b.action && (a.rule ?? null) === (b.rule ?? null) && (a.skill ?? null) === (b.skill ?? null)
   const legal = (st.legalMoves || []).filter(m => ['act', 'agenda'].includes(m.scriptCard) && m.action !== 'advanceAct')
-  const hints = st.scriptActions || []
+  const hints = (st.scriptActions || []).filter(hint => ['act', 'agenda'].includes(hint.scriptCard))
   const items = [...hints.map(hint => ({ hint, move: hint.reason ? null : legal.find(m => same(m, hint)) })),
     ...legal.filter(m => !hints.some(hint => same(m, hint))).map(move => ({ hint: move, move }))]
     .sort((a, b) => (a.hint.scriptCard === 'act' ? 0 : 1) - (b.hint.scriptCard === 'act' ? 0 : 1))

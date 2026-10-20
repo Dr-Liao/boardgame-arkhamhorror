@@ -1,13 +1,16 @@
 import { SCENARIO_CARD_IDENTITIES, SCENARIOS } from '../cards/scenarios-data.js'
 import { expansionPlayerCodes } from '../../content/expansions.js'
 import { coreCardVerified, CORE_ACCEPTANCE_PROFILE } from '../cards/core-acceptance.js'
+import { tfaPlayerCardVerified, tfaPlayerBuildable, IMPLEMENTED_PLAYER_CODES } from '../../content/packs/tfaPlayer/manifest.js'
 export const CORE_INVESTIGATOR_CODES = Object.freeze(['01001', '01002', '01003', '01004', '01005'])
 export const DUNWICH_INVESTIGATOR_CODES = Object.freeze(['02001', '02002', '02003', '02004', '02005'])
 export const CARCOSA_INVESTIGATOR_CODES = Object.freeze(['03001', '03002', '03003', '03004', '03005', '03006'])
+export const TFA_INVESTIGATOR_CODES = Object.freeze(['04001', '04002', '04003', '04004', '04005'])
 export const PLAYABLE_INVESTIGATOR_CODES = Object.freeze([
   ...CORE_INVESTIGATOR_CODES,
   ...DUNWICH_INVESTIGATOR_CODES,
   ...CARCOSA_INVESTIGATOR_CODES,
+  ...TFA_INVESTIGATOR_CODES,
 ])
 
 export const CORE_PLAYER_CODES = Object.freeze([
@@ -53,6 +56,11 @@ export const SIGNATURES_BY_INVESTIGATOR = Object.freeze({
   '03004': Object.freeze(['03014', '03015']),
   '03005': Object.freeze(['03016', '03017']),
   '03006': Object.freeze(['03018', '03019']),
+  '04001': Object.freeze(['04006', '04007']),
+  '04002': Object.freeze(['04008', '04009']),
+  '04003': Object.freeze(['04010', '04011', '04012']),
+  '04004': Object.freeze(['04013', '04014']),
+  '04005': Object.freeze(['04015', '04016']),
 })
 export const SIMPLIFIED_CARD_CODES = Object.freeze([...CORE_PLAYER_CODES, ...CORE_SIGNATURE_CODES, ...CORE_BASIC_WEAKNESS_CODES, ...CORE_STORY_CODES])
 export {
@@ -63,10 +71,19 @@ export {
 
 const investigators = new Set(PLAYABLE_INVESTIGATOR_CODES)
 const dunwichSignatures = Object.values(SIGNATURES_BY_INVESTIGATOR).slice(5, 10).flat()
-const carcosaSignatures = [...Object.values(SIGNATURES_BY_INVESTIGATOR).slice(10).flat(), '03009b']
-export const PLAYER_CARD_CODES = Object.freeze([...CORE_PLAYER_CODES, ...expansionPlayerCodes])
+const carcosaSignatures = [...Object.values(SIGNATURES_BY_INVESTIGATOR).slice(10, 16).flat(), '03009b']
+const tfaSignatures = Object.values(SIGNATURES_BY_INVESTIGATOR).slice(16).flat()
+const tfaPlayerCodes = [...IMPLEMENTED_PLAYER_CODES]
+export const TFA_PLAYER_BUILDABLE_CODES = Object.freeze(tfaPlayerCodes.filter(code => tfaPlayerBuildable(code)))
+export const PLAYER_CARD_CODES = Object.freeze([
+  ...CORE_PLAYER_CODES, ...expansionPlayerCodes,
+])
+// 失落的时代玩家卡可用于手动牌组与升级，但不进入默认自动构筑池：
+// 新增卡池不应改变既有循环自动牌组的产出。
+export const ALL_BUILDABLE_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TFA_PLAYER_BUILDABLE_CODES])
 const cards = new Set([...SIMPLIFIED_CARD_CODES, ...CORE_UPGRADE_CODES, ...expansionPlayerCodes,
-  ...dunwichSignatures, ...carcosaSignatures, ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES])
+  ...dunwichSignatures, ...carcosaSignatures, ...tfaSignatures, ...tfaPlayerCodes,
+  ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES])
 const strictAcceptedCodes = new Set([...investigators, ...cards])
 const strictScenarioCodes = new Set(Object.values(SCENARIO_CARD_IDENTITIES).flatMap(categories =>
   Object.values(categories).flatMap(entries => Object.values(entries).map(entry => entry.originalCode))))
@@ -89,13 +106,17 @@ export function getAvailability(code) {
     availability: isStrictAccepted(code) ? 'strict' : 'catalog-only',
     strictAccepted: isStrictAccepted(code),
     selectable: investigators.has(code),
-    deckbuilding: PLAYER_CARD_CODES.includes(code),
+    deckbuilding: ALL_BUILDABLE_CODES.includes(code),
     upgradeOnly: CORE_UPGRADE_CODES.includes(code),
     dependencyOnly: CORE_SIGNATURE_CODES.includes(code) || dunwichSignatures.includes(code)
-      || carcosaSignatures.includes(code) || ALL_BASIC_WEAKNESS_CODES.includes(code),
+      || carcosaSignatures.includes(code) || tfaSignatures.includes(code) || ALL_BASIC_WEAKNESS_CODES.includes(code),
     scenarioOnly: CORE_STORY_CODES.includes(code),
     acceptanceProfile: coreCardVerified(code) ? CORE_ACCEPTANCE_PROFILE.id : null,
     reason: coreCardVerified(code) ? '初始包已通过逐卡行为验收；范围与测试见 audit/core-acceptance.json。'
+      : tfaPlayerCardVerified(code)
+        ? 'M2 失落的时代玩家卡已全部通过逐卡主要印刷效果验收（含战役层永久卡）。'
+      : TFA_INVESTIGATOR_CODES.includes(code) || tfaSignatures.includes(code)
+        ? 'M1 失落的时代五位调查员及其 11 张专属依赖已通过逐人行为与存档回放验收；玩家卡与剧本仍未开放。'
       : CARCOSA_INVESTIGATOR_CODES.includes(code) || carcosaSignatures.includes(code)
         ? 'C1 卡尔克萨六位调查员及其专属依赖已通过逐人行为与存档回放验收；普通玩家卡、基础弱点和剧本仍未开放。'
       : (code.startsWith('03') && expansionPlayerCodes.includes(code)) || CARCOSA_BASIC_WEAKNESS_CODES.includes(code)

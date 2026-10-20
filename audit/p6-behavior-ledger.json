@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "strictModeRestored": false,
   "implementationHashes": {
-    "src/engine/engine.js": "020a00986197b157fa2a176a093bf69836fa0cd3f7c22e2e5dcb7b90cac0bf4c",
-    "src/engine/resolution.js": "b0ba44ba4fc808a8cbed6035832d8ecaa4464f664723b1b31075770fe3525f6c",
-    "src/engine/rules-state.js": "b39b25c6d19efa60f149c9f4387e9fc4661f7486d97a4242d0ee36cd55f42395",
-    "src/engine/effects.js": "f9f7c0614cb5a3bc80ab8ed0f90df769ab1dd6d97cdb551a2b9c9d156288c162",
-    "src/cards/card-effects.js": "7ad03114194682f7958de1f85802207843aa99e4a4ff412fed935ae22ad9f1aa",
-    "src/campaign/campaign.js": "0bb4f9dc4eb2dbd32fbce3a08afd9f22f14ac0b90e271adca70954730ccd210d",
-    "src/deck/deckbuilding.js": "4ccd4d3923152d05cd2ddde79413412847b2a262dc653cd59d9f9a90c003303e",
-    "src/deck/availability.js": "8e1228ac67ea98a6502abff9b59a8b0f907988ac6938ff6ac4b21252954c91a3",
-    "web/deck-rules.js": "6ef683bf73ac9a1b298cd1901c9a4b225738ceebf7a3d0c4574c424c7843e398",
+    "src/engine/engine.js": "ed34a01a1e672e596f077125a20b63d365259cdfb53b8a33bb02e430ba7b6d6b",
+    "src/engine/resolution.js": "af7dc17ffc012a1fca6dfa64cf51f9124cc678f308784b35b0f85e4f6531fa71",
+    "src/engine/rules-state.js": "4e99ce3d9976e7810b73682355b50851a01e83fc34238c522bba75cf14c130cf",
+    "src/engine/effects.js": "0541dc28ec06ebf30c56ef83070d49b82d1f5ab07f1019db5822582552190d9d",
+    "src/cards/card-effects.js": "3d26507deb9fb1a8be6fdd87f4302649c3bdb0f6137aa0a7ce9974e395422d51",
+    "src/campaign/campaign.js": "4115247378959f5ecb5575aaae8a4090e20d5d594908d61f0a6bfee4976c3373",
+    "src/deck/deckbuilding.js": "0e0d4ca57605904f51ae21f5eec80a69c4d06f994a53be91f5173fb652554c33",
+    "src/deck/availability.js": "e2942014dab2cb95c487ec44784845dced45a12fc069cddc0249f01e9f5135c2",
+    "web/deck-rules.js": "8a031d1debc1090f2accf87e0442588956e62f37d5f189a776c087210861e21f",
     "tools/p6-playthrough.mjs": "d108ae67424d2fbcc1f55fbcdbad6f6e0efdc25eb163cd1009c0bc3aee9757ca"
   },
   "policy": "逐卡保留原文条款、精确卡号和可复查证据；修复结论仅覆盖明确断言的行为，其余仍待审计。",
@@ -45,7 +45,7 @@
       "testMentions": [
         {
           "path": "tests/arkhamdb-import.test.mjs",
-          "sha256": "ec5b2ca3cf7957be17cd8695720e475bb0361d28aa042933cd37335ee50e5196"
+          "sha256": "8b1980a900092864914903237afef94716878a760bcde33c35e2a6280e9c5f00"
         },
         {
           "path": "tests/content-schema.test.mjs",
@@ -102,43 +102,75 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "6bfb86aaf740c013a6ad2e1416c224bf4890fd4ece183bccf6a795b9bd3f3084"
+          "sha256": "bba4eff0c9decd46ed469d586fbf71ea39a4eda6ea1e09ee93210ae29143d1dd"
         },
         {
           "path": "tests/ai-story.test.mjs",
-          "sha256": "ec9835eb9f6d10e0d410b09f13f1cb5856ba1ddbc369f712f8ba7c5250af904f"
+          "sha256": "ca525fe259a32bc2479292c44b268c1a4f08abb6a8cb79e93e1869d692f455d0"
         },
         {
           "path": "tests/arkhamdb-import.test.mjs",
-          "sha256": "ec5b2ca3cf7957be17cd8695720e475bb0361d28aa042933cd37335ee50e5196"
+          "sha256": "8b1980a900092864914903237afef94716878a760bcde33c35e2a6280e9c5f00"
+        },
+        {
+          "path": "tests/attack-style.test.mjs",
+          "sha256": "b5d17575bd5ab1a96e371322bdf214c7ea6a532b34b7dad8e65d8d0883b89d26"
         },
         {
           "path": "tests/audit-resources.test.mjs",
-          "sha256": "9503151a6b04777af9b77d6f957ff1bfe233f90a50276869dc48f7bdbe4868b5"
+          "sha256": "bc6eeb45ee2cc0265f4bad49538a87cb8d514df8902f842c82087b5e142c2742"
         },
         {
           "path": "tests/availability.test.mjs",
-          "sha256": "5ad76f9f3d82076513f902163e685488f9fc1efa70b2aeb8e150c4b6a6d9c2ec"
+          "sha256": "0e63e31167e694198b85fc139c6f8be7df79bb7bf02ddde62ee40a6ae26790cd"
         },
         {
           "path": "tests/campaign-experience.test.mjs",
-          "sha256": "3332d99aa832ba0577dddda91426ea1faae61cb44d9a2cb5f1f12269f0017643"
+          "sha256": "c302efd87997cc5add8ba8bd25b238ad8a900ec83c6d83947da252755e07a470"
         },
         {
           "path": "tests/campaign-http-n4.test.mjs",
-          "sha256": "96f54fa63af19389727a04f0167562468254b5d4e9ef9a743643e498db73f7a4"
+          "sha256": "3d25009a65b12e6aa78f991fc3e4e01167e62e96c4b570d5f47c015529a4b1aa"
         },
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
+        },
+        {
+          "path": "tests/carcosa-final.test.mjs",
+          "sha256": "e0010dadfdd729cd8c3d702e0e4042925454c034acb710922ce4473c457379f1"
+        },
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
+          "path": "tests/carcosa-opening.test.mjs",
+          "sha256": "6fbac1569b869316783adbf9a663bd5050082b797c78777943288b18cf91ab98"
+        },
+        {
+          "path": "tests/carcosa-pending-encounters.test.mjs",
+          "sha256": "1dfcb5eda83db2843b704d30b2ab86e6d0848514ef98a8d8203ffbd664db2c7a"
+        },
+        {
+          "path": "tests/carcosa-rules.test.mjs",
+          "sha256": "7f28019109b2e5fe4ff7a930b98b172f54515046d1d520ff5091bb9c9a6669e8"
+        },
+        {
+          "path": "tests/carcosa-story.test.mjs",
+          "sha256": "265a6ae531e331a08b6f3277dbaec060fbeca79ae8f2eafb79a33638ad96bfaa"
         },
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/card-interactions.test.mjs",
           "sha256": "3d358aac1fe85d0731674d8ece3ba4ee9d1e3f9dfb931b5b2413a3493cb62174"
+        },
+        {
+          "path": "tests/checkpoint-rewind.test.mjs",
+          "sha256": "166966510f62c7b97abbfd9fa8cfbd52c608d9442a2627d70e96ef8b4153e869"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -150,19 +182,19 @@
         },
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
         },
         {
           "path": "tests/core-n4b.test.mjs",
-          "sha256": "1e5a9c62f2604291e97aefb5cf6c926b42c8bbd37126fddea57c4535cafce4de"
+          "sha256": "f63b0201d2044adfc744de51ae3ce6d888b0b14596de00bd2ca59eeb9c4684f1"
         },
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -170,19 +202,43 @@
         },
         {
           "path": "tests/decision-http.test.mjs",
-          "sha256": "79c4895c5797aa07159086da83348e3e62e4357eb28178d3fefe88c6ac01e4f2"
+          "sha256": "2cb439f04347047a284b1ad7963f681178c0887d2d3aac3c83fa298985fe1c24"
         },
         {
           "path": "tests/decision-invariants.test.mjs",
-          "sha256": "d7f7541a66a266ae096e75713d6a02146b2e927b5d152ae138fde25d73f874a6"
+          "sha256": "31a9496cb7027bc1d455010f55330f38dce8a61e0d219bd94e9c909ece38e8ec"
+        },
+        {
+          "path": "tests/deck-library.test.mjs",
+          "sha256": "7d66bdb7bfbe16d71ef284ce7ad8a64f4c87809c87865538d0667cda6f511122"
+        },
+        {
+          "path": "tests/dunwich-encounter-acceptance.test.mjs",
+          "sha256": "65a61aca2aab1cfeb3f63a2accb376da0f7d7aa2d147677a62a25ff133efa9e1"
+        },
+        {
+          "path": "tests/dunwich-ledger.test.mjs",
+          "sha256": "247f5134a63834b7976be07a116d6a5f402104d15edd7936dbf9009ac1aefd74"
         },
         {
           "path": "tests/dunwich-migration.test.mjs",
-          "sha256": "a1a120ede3d0c591f9fc2a451ebe9bad75be90c4dad5d21409b8e2c998bb6596"
+          "sha256": "663d87cd4441e75073f6bc99b6c1ca581803595627f7a2b32ca1b6d065b5dc50"
+        },
+        {
+          "path": "tests/dunwich-player-acceptance.test.mjs",
+          "sha256": "d7387897abe4aad35efaa50b9bacec706039a4acdf4280f2f6c74bd7041539f2"
+        },
+        {
+          "path": "tests/dunwich-player-gaps.test.mjs",
+          "sha256": "5e936892e230e16dd734db265a9f9af20e6da006fcad07dc019b1c7292c56d37"
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
+        },
+        {
+          "path": "tests/dunwich-scenario-acceptance.test.mjs",
+          "sha256": "31cebb8dab54daedabde1cc9b0616d8f612323c810f3230c418db7969174e33b"
         },
         {
           "path": "tests/engagement-flow.test.mjs",
@@ -190,55 +246,135 @@
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/import-cards.test.mjs",
-          "sha256": "6c88c2d5c6fa6f608762a758d48ad67060f85bfd6c24c206ec841dfaa2002937"
+          "sha256": "e3a9eaea6d74cc14e8ac950de72964dd47491c4e1cefa02b810a3a69c6064983"
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/p2-hub-http.test.mjs",
-          "sha256": "7791c1f4efb45c39058b4d0e7d30a4af2774d4ac983525241baaad50f96dffc7"
+          "sha256": "df9dbe06eafae33ae8e6aa661fa24c72bb64177b45230f93bd30790988b09e52"
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         },
         {
           "path": "tests/presentation-http.test.mjs",
-          "sha256": "56eb0479fd65c62a51f424860eac1138c5441b3a6d1cb721874e79cfe7ae5ae0"
+          "sha256": "a4b58ab3f6aa1bf753515c56d82acf54fbb37c00f6e1a13b0377dbba88b6f3a7"
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
         },
         {
           "path": "tests/presentation-polish.test.mjs",
-          "sha256": "e5d1f8a2ff62b9f65e7b8303c359ecbb1fabc90026dd2bd4817b965b23010a12"
+          "sha256": "283c005195717734c4e04f6c6b9123ae013ea676ef43a11064510554c67a3475"
         },
         {
           "path": "tests/reaction-preferences.test.mjs",
-          "sha256": "354d0e128cd217a093e1465944e79eaa67be73f156d915d927fd5f8586b93ab4"
+          "sha256": "e19eac515ef9097cbdeed3c2f5bdf4cb17c8b26c42b4ceba0a0c181eb2163d37"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         },
         {
           "path": "tests/save-migration.test.mjs",
-          "sha256": "dc9f591b480da3224ffd86f596257ca9ed9232f89d0855b46f9c35e9e220972b"
+          "sha256": "582df972543d54106ec033e56cd79751022c5966673f460458d18d4f3f5ca5eb"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "e534ae97cec6d169f5f80ee7715c91cf1997a6c520b71df7f570993d52d59896"
+          "sha256": "014ec6cf1194c51cfa1a6dc4a3ffdb731cb1b742e1c828b828a0a40ccc241702"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
+        },
+        {
+          "path": "tests/tfa-depths-of-yoth.test.mjs",
+          "sha256": "73b51ac0c8d8060459a025ee9814b371b10374a0edcc2c4c37b37fc3d167ee31"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-engine-integration.test.mjs",
+          "sha256": "af7dc70e5f711b5a71fb888860e7789d45ac88a8265357ad3e8c2923659b7836"
+        },
+        {
+          "path": "tests/tfa-engine-setups.test.mjs",
+          "sha256": "754fde02bcc97bdd72dae2cc0caff7e6a255f47cb86585ac88fe1150b8328a60"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "sha256": "a8bf8f1c4bf65d4853a6d3262479951f65aa637d88c660cd5fd7bb95b3561b9d"
+        },
+        {
+          "path": "tests/tfa-launch-supplies.test.mjs",
+          "sha256": "caa83a83f6ab24aba7e84565f535e14a2ed68a9b8dfc2af9caf6f225a471990a"
+        },
+        {
+          "path": "tests/tfa-mechanics.test.mjs",
+          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
+        },
+        {
+          "path": "tests/tfa-p2-hooks.test.mjs",
+          "sha256": "6ee2d18982a24e8b318f09c52c5f0145d652ede2f20316f071018b1c3f926415"
+        },
+        {
+          "path": "tests/tfa-p2-restart.test.mjs",
+          "sha256": "8187c3cda45375eb1ff7ea6d68bb9074b28f468c1ecfc27c02d20ec06d307d66"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
+        },
+        {
+          "path": "tests/tfa-player-p1.test.mjs",
+          "sha256": "5d1e77edbdd88eab42c349b82472f6659cb575209861f041fbe8f0477b9d5806"
+        },
+        {
+          "path": "tests/tfa-rules.test.mjs",
+          "sha256": "40b83bcbd5fd30feac67afd515b9050a505f8b33d3a325f3dd49e1963bb17b1b"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-story.test.mjs",
+          "sha256": "72096ddfacfa64b1a89147422476c9eacb8651659ef9c5669f309590e8fab929"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
+        },
+        {
+          "path": "tests/tfa-untamed-wilds.test.mjs",
+          "sha256": "03d61a814575c0f3653a5dce4dcef974cd7f0e939416c7744602d006b799f4c9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -276,15 +412,27 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "6bfb86aaf740c013a6ad2e1416c224bf4890fd4ece183bccf6a795b9bd3f3084"
+          "sha256": "bba4eff0c9decd46ed469d586fbf71ea39a4eda6ea1e09ee93210ae29143d1dd"
         },
         {
           "path": "tests/arkhamdb-import.test.mjs",
-          "sha256": "ec5b2ca3cf7957be17cd8695720e475bb0361d28aa042933cd37335ee50e5196"
+          "sha256": "8b1980a900092864914903237afef94716878a760bcde33c35e2a6280e9c5f00"
+        },
+        {
+          "path": "tests/campaign-experience.test.mjs",
+          "sha256": "c302efd87997cc5add8ba8bd25b238ad8a900ec83c6d83947da252755e07a470"
         },
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
+        },
+        {
+          "path": "tests/carcosa-final.test.mjs",
+          "sha256": "e0010dadfdd729cd8c3d702e0e4042925454c034acb710922ce4473c457379f1"
+        },
+        {
+          "path": "tests/carcosa-player-acceptance.test.mjs",
+          "sha256": "22d91ecc34246bbb5c16d38fcc19c4c65d9a97661308d867179d900d938c365c"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -292,7 +440,11 @@
         },
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
+        },
+        {
+          "path": "tests/core-special-acceptance.test.mjs",
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -300,19 +452,39 @@
         },
         {
           "path": "tests/decision-invariants.test.mjs",
-          "sha256": "d7f7541a66a266ae096e75713d6a02146b2e927b5d152ae138fde25d73f874a6"
+          "sha256": "31a9496cb7027bc1d455010f55330f38dce8a61e0d219bd94e9c909ece38e8ec"
+        },
+        {
+          "path": "tests/dunwich-player-acceptance.test.mjs",
+          "sha256": "d7387897abe4aad35efaa50b9bacec706039a4acdf4280f2f6c74bd7041539f2"
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/import-cards.test.mjs",
-          "sha256": "6c88c2d5c6fa6f608762a758d48ad67060f85bfd6c24c206ec841dfaa2002937"
+          "sha256": "e3a9eaea6d74cc14e8ac950de72964dd47491c4e1cefa02b810a3a69c6064983"
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
+        },
+        {
+          "path": "tests/tfa-p2-hooks.test.mjs",
+          "sha256": "6ee2d18982a24e8b318f09c52c5f0145d652ede2f20316f071018b1c3f926415"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -373,11 +545,27 @@
         },
         {
           "path": "tests/decision-invariants.test.mjs",
-          "sha256": "d7f7541a66a266ae096e75713d6a02146b2e927b5d152ae138fde25d73f874a6"
+          "sha256": "31a9496cb7027bc1d455010f55330f38dce8a61e0d219bd94e9c909ece38e8ec"
+        },
+        {
+          "path": "tests/dunwich-player-acceptance.test.mjs",
+          "sha256": "d7387897abe4aad35efaa50b9bacec706039a4acdf4280f2f6c74bd7041539f2"
         },
         {
           "path": "tests/import-cards.test.mjs",
-          "sha256": "6c88c2d5c6fa6f608762a758d48ad67060f85bfd6c24c206ec841dfaa2002937"
+          "sha256": "e3a9eaea6d74cc14e8ac950de72964dd47491c4e1cefa02b810a3a69c6064983"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -431,7 +619,7 @@
         },
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -439,19 +627,27 @@
         },
         {
           "path": "tests/decision-invariants.test.mjs",
-          "sha256": "d7f7541a66a266ae096e75713d6a02146b2e927b5d152ae138fde25d73f874a6"
+          "sha256": "31a9496cb7027bc1d455010f55330f38dce8a61e0d219bd94e9c909ece38e8ec"
+        },
+        {
+          "path": "tests/dunwich-player-acceptance.test.mjs",
+          "sha256": "d7387897abe4aad35efaa50b9bacec706039a4acdf4280f2f6c74bd7041539f2"
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/import-cards.test.mjs",
-          "sha256": "6c88c2d5c6fa6f608762a758d48ad67060f85bfd6c24c206ec841dfaa2002937"
+          "sha256": "e3a9eaea6d74cc14e8ac950de72964dd47491c4e1cefa02b810a3a69c6064983"
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -497,11 +693,11 @@
         },
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
         },
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -513,15 +709,23 @@
         },
         {
           "path": "tests/decision-invariants.test.mjs",
-          "sha256": "d7f7541a66a266ae096e75713d6a02146b2e927b5d152ae138fde25d73f874a6"
+          "sha256": "31a9496cb7027bc1d455010f55330f38dce8a61e0d219bd94e9c909ece38e8ec"
+        },
+        {
+          "path": "tests/dunwich-player-acceptance.test.mjs",
+          "sha256": "d7387897abe4aad35efaa50b9bacec706039a4acdf4280f2f6c74bd7041539f2"
         },
         {
           "path": "tests/import-cards.test.mjs",
-          "sha256": "6c88c2d5c6fa6f608762a758d48ad67060f85bfd6c24c206ec841dfaa2002937"
+          "sha256": "e3a9eaea6d74cc14e8ac950de72964dd47491c4e1cefa02b810a3a69c6064983"
         },
         {
           "path": "tests/script-actions.test.mjs",
-          "sha256": "c5d88f23bfc95f0c1b7f68f9004835bcbe0ee89edc7d35c391018fe664bf4441"
+          "sha256": "e75c471ade4d65e2e319d174a44f071d430f99c976bca49fe3b6d3ca2329cf84"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -570,19 +774,35 @@
       "testMentions": [
         {
           "path": "tests/arkhamdb-import.test.mjs",
-          "sha256": "ec5b2ca3cf7957be17cd8695720e475bb0361d28aa042933cd37335ee50e5196"
+          "sha256": "8b1980a900092864914903237afef94716878a760bcde33c35e2a6280e9c5f00"
+        },
+        {
+          "path": "tests/attack-style.test.mjs",
+          "sha256": "b5d17575bd5ab1a96e371322bdf214c7ea6a532b34b7dad8e65d8d0883b89d26"
         },
         {
           "path": "tests/availability.test.mjs",
-          "sha256": "5ad76f9f3d82076513f902163e685488f9fc1efa70b2aeb8e150c4b6a6d9c2ec"
+          "sha256": "0e63e31167e694198b85fc139c6f8be7df79bb7bf02ddde62ee40a6ae26790cd"
         },
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -619,15 +839,15 @@
       "testMentions": [
         {
           "path": "tests/arkhamdb-import.test.mjs",
-          "sha256": "ec5b2ca3cf7957be17cd8695720e475bb0361d28aa042933cd37335ee50e5196"
+          "sha256": "8b1980a900092864914903237afef94716878a760bcde33c35e2a6280e9c5f00"
         },
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -636,6 +856,10 @@
         {
           "path": "tests/core-timing-acceptance.test.mjs",
           "sha256": "1fc87fca0c49dc3e8fcf3fb201639f36dd7df50092b94b82b17f4eeee62052e3"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -670,15 +894,19 @@
       "testMentions": [
         {
           "path": "tests/arkhamdb-import.test.mjs",
-          "sha256": "ec5b2ca3cf7957be17cd8695720e475bb0361d28aa042933cd37335ee50e5196"
+          "sha256": "8b1980a900092864914903237afef94716878a760bcde33c35e2a6280e9c5f00"
         },
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -716,7 +944,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -724,7 +952,7 @@
         },
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -806,7 +1034,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -814,7 +1042,7 @@
         },
         {
           "path": "tests/core-n4b.test.mjs",
-          "sha256": "1e5a9c62f2604291e97aefb5cf6c926b42c8bbd37126fddea57c4535cafce4de"
+          "sha256": "f63b0201d2044adfc744de51ae3ce6d888b0b14596de00bd2ca59eeb9c4684f1"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -891,8 +1119,12 @@
       },
       "testMentions": [
         {
+          "path": "tests/core-scenario-acceptance.test.mjs",
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
+        },
+        {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         }
       ],
       "verdict": "fixed-scoped-regression",
@@ -923,7 +1155,9 @@
       "runtimeOpen": true,
       "scenarioScopes": [],
       "runtimeBehavior": {
-        "cardEffect": {},
+        "cardEffect": {
+          "engine": "wendyAmulet"
+        },
         "investigatorAbility": null,
         "scenarioRules": []
       },
@@ -976,7 +1210,15 @@
       "testMentions": [
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
+        },
+        {
+          "path": "tests/tfa-investigators.test.mjs",
+          "sha256": "147908a55a0ac446205ef6d66e44ba0ecde5ccab89a0a985ff0cbfb0079e4401"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1023,15 +1265,35 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "6bfb86aaf740c013a6ad2e1416c224bf4890fd4ece183bccf6a795b9bd3f3084"
+          "sha256": "bba4eff0c9decd46ed469d586fbf71ea39a4eda6ea1e09ee93210ae29143d1dd"
+        },
+        {
+          "path": "tests/attack-style.test.mjs",
+          "sha256": "b5d17575bd5ab1a96e371322bdf214c7ea6a532b34b7dad8e65d8d0883b89d26"
         },
         {
           "path": "tests/availability.test.mjs",
-          "sha256": "5ad76f9f3d82076513f902163e685488f9fc1efa70b2aeb8e150c4b6a6d9c2ec"
+          "sha256": "0e63e31167e694198b85fc139c6f8be7df79bb7bf02ddde62ee40a6ae26790cd"
+        },
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
+          "path": "tests/carcosa-literal-behavior.test.mjs",
+          "sha256": "e1c0a9d00ce3725f76efcd4a14972c19a8e6d21c4896f8fcefd2c0bc5136bf34"
+        },
+        {
+          "path": "tests/carcosa-middle-b.test.mjs",
+          "sha256": "037e9452cd07db174e5ea786013a80dc7964f7b2ba2c3c6ea25990d7c4cffb38"
+        },
+        {
+          "path": "tests/carcosa-pending-encounters.test.mjs",
+          "sha256": "1dfcb5eda83db2843b704d30b2ab86e6d0848514ef98a8d8203ffbd664db2c7a"
         },
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/card-interactions.test.mjs",
@@ -1047,27 +1309,51 @@
         },
         {
           "path": "tests/decision-invariants.test.mjs",
-          "sha256": "d7f7541a66a266ae096e75713d6a02146b2e927b5d152ae138fde25d73f874a6"
+          "sha256": "31a9496cb7027bc1d455010f55330f38dce8a61e0d219bd94e9c909ece38e8ec"
+        },
+        {
+          "path": "tests/dunwich-encounter-acceptance.test.mjs",
+          "sha256": "65a61aca2aab1cfeb3f63a2accb376da0f7d7aa2d147677a62a25ff133efa9e1"
+        },
+        {
+          "path": "tests/dunwich-player-acceptance.test.mjs",
+          "sha256": "d7387897abe4aad35efaa50b9bacec706039a4acdf4280f2f6c74bd7041539f2"
+        },
+        {
+          "path": "tests/dunwich-player-gaps.test.mjs",
+          "sha256": "5e936892e230e16dd734db265a9f9af20e6da006fcad07dc019b1c7292c56d37"
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-investigators.test.mjs",
+          "sha256": "147908a55a0ac446205ef6d66e44ba0ecde5ccab89a0a985ff0cbfb0079e4401"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1114,7 +1400,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1163,6 +1449,14 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-middle-a.test.mjs",
+          "sha256": "ca2e4ec1b0bac112424100a9e2eafc49deaee9b6eb41cc22b15e152e9468de2f"
+        },
+        {
+          "path": "tests/carcosa-middle-b.test.mjs",
+          "sha256": "037e9452cd07db174e5ea786013a80dc7964f7b2ba2c3c6ea25990d7c4cffb38"
+        },
+        {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
         },
@@ -1172,15 +1466,27 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
+        },
+        {
+          "path": "tests/dunwich-encounter-acceptance.test.mjs",
+          "sha256": "65a61aca2aab1cfeb3f63a2accb376da0f7d7aa2d147677a62a25ff133efa9e1"
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/tfa-investigators.test.mjs",
+          "sha256": "147908a55a0ac446205ef6d66e44ba0ecde5ccab89a0a985ff0cbfb0079e4401"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1248,7 +1554,7 @@
       "testMentions": [
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         }
       ],
       "verdict": "fixed-scoped-regression",
@@ -1297,16 +1603,52 @@
       },
       "testMentions": [
         {
+          "path": "tests/attack-style.test.mjs",
+          "sha256": "b5d17575bd5ab1a96e371322bdf214c7ea6a532b34b7dad8e65d8d0883b89d26"
+        },
+        {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
         },
         {
           "path": "tests/decision-invariants.test.mjs",
-          "sha256": "d7f7541a66a266ae096e75713d6a02146b2e927b5d152ae138fde25d73f874a6"
+          "sha256": "31a9496cb7027bc1d455010f55330f38dce8a61e0d219bd94e9c909ece38e8ec"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-p2-hooks.test.mjs",
+          "sha256": "6ee2d18982a24e8b318f09c52c5f0145d652ede2f20316f071018b1c3f926415"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1351,7 +1693,31 @@
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-investigators.test.mjs",
+          "sha256": "147908a55a0ac446205ef6d66e44ba0ecde5ccab89a0a985ff0cbfb0079e4401"
+        },
+        {
+          "path": "tests/tfa-p2-hooks.test.mjs",
+          "sha256": "6ee2d18982a24e8b318f09c52c5f0145d652ede2f20316f071018b1c3f926415"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1390,8 +1756,24 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
           "path": "tests/core-story-acceptance.test.mjs",
           "sha256": "1edf977e5278037f4e0ea6cab308a31ee690d774052ea87ab2e5122a2923e36a"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1429,11 +1811,15 @@
       "testMentions": [
         {
           "path": "tests/reaction-preferences.test.mjs",
-          "sha256": "354d0e128cd217a093e1465944e79eaa67be73f156d915d927fd5f8586b93ab4"
+          "sha256": "e19eac515ef9097cbdeed3c2f5bdf4cb17c8b26c42b4ceba0a0c181eb2163d37"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1460,7 +1846,8 @@
             "type": "dealDamageAll",
             "amount": 3,
             "location": "choice",
-            "investigators": true
+            "investigators": true,
+            "fx": "dynamite"
           }
         },
         "investigatorAbility": null,
@@ -1468,12 +1855,36 @@
       },
       "testMentions": [
         {
+          "path": "tests/attack-style.test.mjs",
+          "sha256": "b5d17575bd5ab1a96e371322bdf214c7ea6a532b34b7dad8e65d8d0883b89d26"
+        },
+        {
+          "path": "tests/carcosa-middle-a.test.mjs",
+          "sha256": "ca2e4ec1b0bac112424100a9e2eafc49deaee9b6eb41cc22b15e152e9468de2f"
+        },
+        {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
+        },
+        {
+          "path": "tests/dunwich-encounter-acceptance.test.mjs",
+          "sha256": "65a61aca2aab1cfeb3f63a2accb376da0f7d7aa2d147677a62a25ff133efa9e1"
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
+        },
+        {
+          "path": "tests/save-migration.test.mjs",
+          "sha256": "582df972543d54106ec033e56cd79751022c5966673f460458d18d4f3f5ca5eb"
+        },
+        {
+          "path": "tests/state-presentation.test.mjs",
+          "sha256": "014ec6cf1194c51cfa1a6dc4a3ffdb731cb1b742e1c828b828a0a40ccc241702"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1508,7 +1919,7 @@
       "testMentions": [
         {
           "path": "tests/availability.test.mjs",
-          "sha256": "5ad76f9f3d82076513f902163e685488f9fc1efa70b2aeb8e150c4b6a6d9c2ec"
+          "sha256": "0e63e31167e694198b85fc139c6f8be7df79bb7bf02ddde62ee40a6ae26790cd"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -1547,15 +1958,15 @@
       "testMentions": [
         {
           "path": "tests/availability.test.mjs",
-          "sha256": "5ad76f9f3d82076513f902163e685488f9fc1efa70b2aeb8e150c4b6a6d9c2ec"
+          "sha256": "0e63e31167e694198b85fc139c6f8be7df79bb7bf02ddde62ee40a6ae26790cd"
         },
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         }
       ],
       "verdict": "fixed-scoped-regression",
@@ -1616,7 +2027,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -1671,11 +2082,15 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
+        },
+        {
+          "path": "tests/tfa-investigators.test.mjs",
+          "sha256": "147908a55a0ac446205ef6d66e44ba0ecde5ccab89a0a985ff0cbfb0079e4401"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1724,8 +2139,12 @@
       },
       "testMentions": [
         {
+          "path": "tests/attack-style.test.mjs",
+          "sha256": "b5d17575bd5ab1a96e371322bdf214c7ea6a532b34b7dad8e65d8d0883b89d26"
+        },
+        {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -1733,11 +2152,15 @@
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1772,15 +2195,27 @@
       "testMentions": [
         {
           "path": "tests/arkhamdb-import.test.mjs",
-          "sha256": "ec5b2ca3cf7957be17cd8695720e475bb0361d28aa042933cd37335ee50e5196"
+          "sha256": "8b1980a900092864914903237afef94716878a760bcde33c35e2a6280e9c5f00"
+        },
+        {
+          "path": "tests/carcosa-player-acceptance.test.mjs",
+          "sha256": "22d91ecc34246bbb5c16d38fcc19c4c65d9a97661308d867179d900d938c365c"
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
+        },
+        {
+          "path": "tests/deck-library.test.mjs",
+          "sha256": "7d66bdb7bfbe16d71ef284ce7ad8a64f4c87809c87865538d0667cda6f511122"
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1832,7 +2267,7 @@
         },
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -1840,7 +2275,11 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1888,6 +2327,10 @@
         {
           "path": "tests/core-timing-acceptance.test.mjs",
           "sha256": "1fc87fca0c49dc3e8fcf3fb201639f36dd7df50092b94b82b17f4eeee62052e3"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1932,6 +2375,10 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-implementation-gaps.test.mjs",
+          "sha256": "3e6184e8a7f1a72693bd53a1013cef6c7ab3aace4b8b5977881e7e083dd2cbb7"
+        },
+        {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
         },
@@ -1941,7 +2388,7 @@
         },
         {
           "path": "tests/reaction-preferences.test.mjs",
-          "sha256": "354d0e128cd217a093e1465944e79eaa67be73f156d915d927fd5f8586b93ab4"
+          "sha256": "e19eac515ef9097cbdeed3c2f5bdf4cb17c8b26c42b4ceba0a0c181eb2163d37"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -1988,15 +2435,15 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2057,7 +2504,7 @@
         },
         {
           "path": "tests/core-n4b.test.mjs",
-          "sha256": "1e5a9c62f2604291e97aefb5cf6c926b42c8bbd37126fddea57c4535cafce4de"
+          "sha256": "f63b0201d2044adfc744de51ae3ce6d888b0b14596de00bd2ca59eeb9c4684f1"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -2101,7 +2548,7 @@
       "testMentions": [
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2136,8 +2583,16 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-implementation-gaps.test.mjs",
+          "sha256": "3e6184e8a7f1a72693bd53a1013cef6c7ab3aace4b8b5977881e7e083dd2cbb7"
+        },
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2176,7 +2631,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2209,6 +2664,10 @@
         "scenarioRules": []
       },
       "testMentions": [
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
         {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
@@ -2259,11 +2718,11 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2307,11 +2766,15 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
           "sha256": "1fc87fca0c49dc3e8fcf3fb201639f36dd7df50092b94b82b17f4eeee62052e3"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2344,6 +2807,7 @@
               "effect": {
                 "type": "targetedEffect",
                 "target": "location",
+                "chooseBy": "controller",
                 "effect": {
                   "type": "chooseOne",
                   "options": [
@@ -2391,11 +2855,11 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2435,11 +2899,11 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2483,8 +2947,20 @@
       },
       "testMentions": [
         {
+          "path": "tests/attack-style.test.mjs",
+          "sha256": "b5d17575bd5ab1a96e371322bdf214c7ea6a532b34b7dad8e65d8d0883b89d26"
+        },
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
+        },
+        {
+          "path": "tests/tfa-investigators.test.mjs",
+          "sha256": "147908a55a0ac446205ef6d66e44ba0ecde5ccab89a0a985ff0cbfb0079e4401"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2531,7 +3007,11 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2578,7 +3058,7 @@
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "e534ae97cec6d169f5f80ee7715c91cf1997a6c520b71df7f570993d52d59896"
+          "sha256": "014ec6cf1194c51cfa1a6dc4a3ffdb731cb1b742e1c828b828a0a40ccc241702"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2663,11 +3143,11 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2714,7 +3194,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2828,7 +3308,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2900,7 +3380,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -2908,7 +3388,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -2965,7 +3445,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -2977,11 +3457,15 @@
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/tfa-investigators.test.mjs",
+          "sha256": "147908a55a0ac446205ef6d66e44ba0ecde5ccab89a0a985ff0cbfb0079e4401"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3020,7 +3504,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -3058,11 +3542,11 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3111,11 +3595,11 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "e534ae97cec6d169f5f80ee7715c91cf1997a6c520b71df7f570993d52d59896"
+          "sha256": "014ec6cf1194c51cfa1a6dc4a3ffdb731cb1b742e1c828b828a0a40ccc241702"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3149,8 +3633,16 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
+        },
+        {
+          "path": "tests/tfa-encounter-p1.test.mjs",
+          "sha256": "d788c301b912bb989076d945160a98518f887ed683660cf3be0412e7f9840ddd"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3197,6 +3689,14 @@
       },
       "testMentions": [
         {
+          "path": "tests/attack-style.test.mjs",
+          "sha256": "b5d17575bd5ab1a96e371322bdf214c7ea6a532b34b7dad8e65d8d0883b89d26"
+        },
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
         },
@@ -3210,7 +3710,11 @@
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3264,7 +3768,7 @@
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3311,7 +3815,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3362,7 +3866,7 @@
         },
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -3416,11 +3920,11 @@
         },
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -3473,7 +3977,7 @@
       "testMentions": [
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -3481,15 +3985,15 @@
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/reaction-preferences.test.mjs",
-          "sha256": "354d0e128cd217a093e1465944e79eaa67be73f156d915d927fd5f8586b93ab4"
+          "sha256": "e19eac515ef9097cbdeed3c2f5bdf4cb17c8b26c42b4ceba0a0c181eb2163d37"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3602,7 +4106,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -3610,7 +4114,7 @@
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3647,7 +4151,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -3705,7 +4209,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -3743,7 +4247,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -3768,21 +4272,23 @@
       "scenarioScopes": [],
       "runtimeBehavior": {
         "cardEffect": {
-          "passive": {
-            "assetCapacity": true
-          }
+          "engine": "printedSoak"
         },
         "investigatorAbility": null,
         "scenarioRules": []
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-literal-behavior.test.mjs",
+          "sha256": "e1c0a9d00ce3725f76efcd4a14972c19a8e6d21c4896f8fcefd2c0bc5136bf34"
+        },
+        {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3831,7 +4337,7 @@
         },
         {
           "path": "tests/reaction-preferences.test.mjs",
-          "sha256": "354d0e128cd217a093e1465944e79eaa67be73f156d915d927fd5f8586b93ab4"
+          "sha256": "e19eac515ef9097cbdeed3c2f5bdf4cb17c8b26c42b4ceba0a0c181eb2163d37"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3876,6 +4382,10 @@
         "scenarioRules": []
       },
       "testMentions": [
+        {
+          "path": "tests/attack-style.test.mjs",
+          "sha256": "b5d17575bd5ab1a96e371322bdf214c7ea6a532b34b7dad8e65d8d0883b89d26"
+        },
         {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
@@ -3925,11 +4435,11 @@
       "testMentions": [
         {
           "path": "tests/core-n4b.test.mjs",
-          "sha256": "1e5a9c62f2604291e97aefb5cf6c926b42c8bbd37126fddea57c4535cafce4de"
+          "sha256": "f63b0201d2044adfc744de51ae3ce6d888b0b14596de00bd2ca59eeb9c4684f1"
         },
         {
           "path": "tests/reaction-preferences.test.mjs",
-          "sha256": "354d0e128cd217a093e1465944e79eaa67be73f156d915d927fd5f8586b93ab4"
+          "sha256": "e19eac515ef9097cbdeed3c2f5bdf4cb17c8b26c42b4ceba0a0c181eb2163d37"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -3971,7 +4481,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4018,7 +4528,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4053,7 +4563,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4092,6 +4602,10 @@
         "scenarioRules": []
       },
       "testMentions": [
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
           "sha256": "1fc87fca0c49dc3e8fcf3fb201639f36dd7df50092b94b82b17f4eeee62052e3"
@@ -4132,6 +4646,10 @@
         "scenarioRules": []
       },
       "testMentions": [
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
         {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
@@ -4174,7 +4692,7 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4217,7 +4735,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -4262,7 +4780,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -4315,7 +4833,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -4354,7 +4872,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -4412,6 +4930,10 @@
       },
       "testMentions": [
         {
+          "path": "tests/attack-style.test.mjs",
+          "sha256": "b5d17575bd5ab1a96e371322bdf214c7ea6a532b34b7dad8e65d8d0883b89d26"
+        },
+        {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
         },
@@ -4428,12 +4950,20 @@
           "sha256": "1fc87fca0c49dc3e8fcf3fb201639f36dd7df50092b94b82b17f4eeee62052e3"
         },
         {
+          "path": "tests/dunwich-encounter-acceptance.test.mjs",
+          "sha256": "65a61aca2aab1cfeb3f63a2accb376da0f7d7aa2d147677a62a25ff133efa9e1"
+        },
+        {
+          "path": "tests/dunwich-player-acceptance.test.mjs",
+          "sha256": "d7387897abe4aad35efaa50b9bacec706039a4acdf4280f2f6c74bd7041539f2"
+        },
+        {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4478,6 +5008,14 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-player-acceptance.test.mjs",
+          "sha256": "22d91ecc34246bbb5c16d38fcc19c4c65d9a97661308d867179d900d938c365c"
+        },
+        {
+          "path": "tests/carcosa-rules.test.mjs",
+          "sha256": "7f28019109b2e5fe4ff7a930b98b172f54515046d1d520ff5091bb9c9a6669e8"
+        },
+        {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
         },
@@ -4491,27 +5029,31 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
           "sha256": "1fc87fca0c49dc3e8fcf3fb201639f36dd7df50092b94b82b17f4eeee62052e3"
         },
         {
+          "path": "tests/dunwich-player-gaps.test.mjs",
+          "sha256": "5e936892e230e16dd734db265a9f9af20e6da006fcad07dc019b1c7292c56d37"
+        },
+        {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         },
         {
           "path": "tests/reaction-preferences.test.mjs",
-          "sha256": "354d0e128cd217a093e1465944e79eaa67be73f156d915d927fd5f8586b93ab4"
+          "sha256": "e19eac515ef9097cbdeed3c2f5bdf4cb17c8b26c42b4ceba0a0c181eb2163d37"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4545,7 +5087,31 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
+        },
+        {
+          "path": "tests/carcosa-campaign-card-acceptance.test.mjs",
+          "sha256": "94d9c754770f3aab26d7f40132429ba82283f6a10261bba07eea065126e14c3b"
+        },
+        {
+          "path": "tests/carcosa-final.test.mjs",
+          "sha256": "e0010dadfdd729cd8c3d702e0e4042925454c034acb710922ce4473c457379f1"
+        },
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
+          "path": "tests/carcosa-middle-b.test.mjs",
+          "sha256": "037e9452cd07db174e5ea786013a80dc7964f7b2ba2c3c6ea25990d7c4cffb38"
+        },
+        {
+          "path": "tests/carcosa-player-acceptance.test.mjs",
+          "sha256": "22d91ecc34246bbb5c16d38fcc19c4c65d9a97661308d867179d900d938c365c"
+        },
+        {
+          "path": "tests/carcosa-rules.test.mjs",
+          "sha256": "7f28019109b2e5fe4ff7a930b98b172f54515046d1d520ff5091bb9c9a6669e8"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -4561,19 +5127,19 @@
         },
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
         },
         {
           "path": "tests/core-n4b.test.mjs",
-          "sha256": "1e5a9c62f2604291e97aefb5cf6c926b42c8bbd37126fddea57c4535cafce4de"
+          "sha256": "f63b0201d2044adfc744de51ae3ce6d888b0b14596de00bd2ca59eeb9c4684f1"
         },
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -4584,28 +5150,48 @@
           "sha256": "1fc87fca0c49dc3e8fcf3fb201639f36dd7df50092b94b82b17f4eeee62052e3"
         },
         {
+          "path": "tests/dunwich-encounter-acceptance.test.mjs",
+          "sha256": "65a61aca2aab1cfeb3f63a2accb376da0f7d7aa2d147677a62a25ff133efa9e1"
+        },
+        {
+          "path": "tests/dunwich-player-acceptance.test.mjs",
+          "sha256": "d7387897abe4aad35efaa50b9bacec706039a4acdf4280f2f6c74bd7041539f2"
+        },
+        {
+          "path": "tests/dunwich-player-gaps.test.mjs",
+          "sha256": "5e936892e230e16dd734db265a9f9af20e6da006fcad07dc019b1c7292c56d37"
+        },
+        {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
+        },
+        {
+          "path": "tests/tfa-investigators.test.mjs",
+          "sha256": "147908a55a0ac446205ef6d66e44ba0ecde5ccab89a0a985ff0cbfb0079e4401"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4640,20 +5226,44 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-final.test.mjs",
+          "sha256": "e0010dadfdd729cd8c3d702e0e4042925454c034acb710922ce4473c457379f1"
+        },
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
+          "path": "tests/carcosa-middle-b.test.mjs",
+          "sha256": "037e9452cd07db174e5ea786013a80dc7964f7b2ba2c3c6ea25990d7c4cffb38"
+        },
+        {
+          "path": "tests/carcosa-player-acceptance.test.mjs",
+          "sha256": "22d91ecc34246bbb5c16d38fcc19c4c65d9a97661308d867179d900d938c365c"
+        },
+        {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
         },
         {
+          "path": "tests/dunwich-player-acceptance.test.mjs",
+          "sha256": "d7387897abe4aad35efaa50b9bacec706039a4acdf4280f2f6c74bd7041539f2"
+        },
+        {
+          "path": "tests/dunwich-player-gaps.test.mjs",
+          "sha256": "5e936892e230e16dd734db265a9f9af20e6da006fcad07dc019b1c7292c56d37"
+        },
+        {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4689,7 +5299,23 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "6bfb86aaf740c013a6ad2e1416c224bf4890fd4ece183bccf6a795b9bd3f3084"
+          "sha256": "bba4eff0c9decd46ed469d586fbf71ea39a4eda6ea1e09ee93210ae29143d1dd"
+        },
+        {
+          "path": "tests/carcosa-final.test.mjs",
+          "sha256": "e0010dadfdd729cd8c3d702e0e4042925454c034acb710922ce4473c457379f1"
+        },
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
+          "path": "tests/carcosa-player-acceptance.test.mjs",
+          "sha256": "22d91ecc34246bbb5c16d38fcc19c4c65d9a97661308d867179d900d938c365c"
+        },
+        {
+          "path": "tests/carcosa-rules.test.mjs",
+          "sha256": "7f28019109b2e5fe4ff7a930b98b172f54515046d1d520ff5091bb9c9a6669e8"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -4700,20 +5326,24 @@
           "sha256": "11141631e320029ee5774da6f5bb079181e0975b2fbad6da2955eaef82da38ae"
         },
         {
+          "path": "tests/dunwich-player-gaps.test.mjs",
+          "sha256": "5e936892e230e16dd734db265a9f9af20e6da006fcad07dc019b1c7292c56d37"
+        },
+        {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "e534ae97cec6d169f5f80ee7715c91cf1997a6c520b71df7f570993d52d59896"
+          "sha256": "014ec6cf1194c51cfa1a6dc4a3ffdb731cb1b742e1c828b828a0a40ccc241702"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4748,16 +5378,20 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4792,12 +5426,20 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
         },
         {
+          "path": "tests/dunwich-encounter-acceptance.test.mjs",
+          "sha256": "65a61aca2aab1cfeb3f63a2accb376da0f7d7aa2d147677a62a25ff133efa9e1"
+        },
+        {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4827,12 +5469,16 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
           "path": "tests/core-acceptance.test.mjs",
           "sha256": "d6d57eaa3e26b0304c171855b0ad3a6e5c4ca983288d46f443f062f2de1a7a4e"
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4853,7 +5499,7 @@
       "scenarioScopes": [],
       "runtimeBehavior": {
         "cardEffect": {
-          "assetCapacity": true
+          "engine": "printedSoak"
         },
         "investigatorAbility": null,
         "scenarioRules": []
@@ -4861,7 +5507,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4882,7 +5528,7 @@
       "scenarioScopes": [],
       "runtimeBehavior": {
         "cardEffect": {
-          "assetCapacity": true
+          "engine": "printedSoak"
         },
         "investigatorAbility": null,
         "scenarioRules": []
@@ -4890,15 +5536,15 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -4932,11 +5578,19 @@
       "testMentions": [
         {
           "path": "tests/availability.test.mjs",
-          "sha256": "5ad76f9f3d82076513f902163e685488f9fc1efa70b2aeb8e150c4b6a6d9c2ec"
+          "sha256": "0e63e31167e694198b85fc139c6f8be7df79bb7bf02ddde62ee40a6ae26790cd"
         },
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
+        },
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
+        },
+        {
+          "path": "tests/carcosa-rules.test.mjs",
+          "sha256": "7f28019109b2e5fe4ff7a930b98b172f54515046d1d520ff5091bb9c9a6669e8"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -4947,12 +5601,24 @@
           "sha256": "1edf977e5278037f4e0ea6cab308a31ee690d774052ea87ab2e5122a2923e36a"
         },
         {
+          "path": "tests/dunwich-encounter-acceptance.test.mjs",
+          "sha256": "65a61aca2aab1cfeb3f63a2accb376da0f7d7aa2d147677a62a25ff133efa9e1"
+        },
+        {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
+        },
+        {
+          "path": "tests/tfa-investigators.test.mjs",
+          "sha256": "147908a55a0ac446205ef6d66e44ba0ecde5ccab89a0a985ff0cbfb0079e4401"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -5031,7 +5697,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -5039,11 +5705,11 @@
         },
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -5086,7 +5752,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -5141,7 +5807,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -5184,7 +5850,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -5219,7 +5885,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -5227,7 +5893,7 @@
         },
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -5258,7 +5924,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -5321,20 +5987,28 @@
       },
       "testMentions": [
         {
+          "path": "tests/ai-dialogue.test.mjs",
+          "sha256": "b1889934d4fd0ba4fa3f757b4bf2b3b760b82fa5fd92b44de3b54a8435b407f0"
+        },
+        {
           "path": "tests/audit-resources.test.mjs",
-          "sha256": "9503151a6b04777af9b77d6f957ff1bfe233f90a50276869dc48f7bdbe4868b5"
+          "sha256": "bc6eeb45ee2cc0265f4bad49538a87cb8d514df8902f842c82087b5e142c2742"
         },
         {
           "path": "tests/campaign-experience.test.mjs",
-          "sha256": "3332d99aa832ba0577dddda91426ea1faae61cb44d9a2cb5f1f12269f0017643"
+          "sha256": "c302efd87997cc5add8ba8bd25b238ad8a900ec83c6d83947da252755e07a470"
         },
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
+        },
+        {
+          "path": "tests/checkpoint-rewind.test.mjs",
+          "sha256": "166966510f62c7b97abbfd9fa8cfbd52c608d9442a2627d70e96ef8b4153e869"
         },
         {
           "path": "tests/content-registry.test.mjs",
@@ -5342,7 +6016,7 @@
         },
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -5350,27 +6024,31 @@
         },
         {
           "path": "tests/import-cards.test.mjs",
-          "sha256": "6c88c2d5c6fa6f608762a758d48ad67060f85bfd6c24c206ec841dfaa2002937"
+          "sha256": "e3a9eaea6d74cc14e8ac950de72964dd47491c4e1cefa02b810a3a69c6064983"
         },
         {
           "path": "tests/p2-hub-http.test.mjs",
-          "sha256": "7791c1f4efb45c39058b4d0e7d30a4af2774d4ac983525241baaad50f96dffc7"
+          "sha256": "df9dbe06eafae33ae8e6aa661fa24c72bb64177b45230f93bd30790988b09e52"
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         },
         {
           "path": "tests/presentation-polish.test.mjs",
-          "sha256": "e5d1f8a2ff62b9f65e7b8303c359ecbb1fabc90026dd2bd4817b965b23010a12"
+          "sha256": "283c005195717734c4e04f6c6b9123ae013ea676ef43a11064510554c67a3475"
+        },
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
         },
         {
           "path": "tests/script-actions.test.mjs",
-          "sha256": "c5d88f23bfc95f0c1b7f68f9004835bcbe0ee89edc7d35c391018fe664bf4441"
+          "sha256": "e75c471ade4d65e2e319d174a44f071d430f99c976bca49fe3b6d3ca2329cf84"
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "e534ae97cec6d169f5f80ee7715c91cf1997a6c520b71df7f570993d52d59896"
+          "sha256": "014ec6cf1194c51cfa1a6dc4a3ffdb731cb1b742e1c828b828a0a40ccc241702"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -5436,7 +6114,43 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
+        },
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "sha256": "a8bf8f1c4bf65d4853a6d3262479951f65aa637d88c660cd5fd7bb95b3561b9d"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
+        },
+        {
+          "path": "tests/tfa-untamed-wilds.test.mjs",
+          "sha256": "03d61a814575c0f3653a5dce4dcef974cd7f0e939416c7744602d006b799f4c9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -5499,7 +6213,44 @@
           }
         ]
       },
-      "testMentions": [],
+      "testMentions": [
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "sha256": "a8bf8f1c4bf65d4853a6d3262479951f65aa637d88c660cd5fd7bb95b3561b9d"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
+        },
+        {
+          "path": "tests/tfa-untamed-wilds.test.mjs",
+          "sha256": "03d61a814575c0f3653a5dce4dcef974cd7f0e939416c7744602d006b799f4c9"
+        }
+      ],
       "verdict": "needs-behavior-review",
       "finding": null,
       "limitation": "测试引用仅供定位；效果键、卡图、白名单和测试中的卡号出现均不证明整张卡规则等价。"
@@ -5574,7 +6325,23 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
+        },
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -5646,7 +6413,39 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
+        },
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-depths-of-yoth.test.mjs",
+          "sha256": "73b51ac0c8d8060459a025ee9814b371b10374a0edcc2c4c37b37fc3d167ee31"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "sha256": "a8bf8f1c4bf65d4853a6d3262479951f65aa637d88c660cd5fd7bb95b3561b9d"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
         }
       ],
       "verdict": "fixed-scoped-regression",
@@ -5723,7 +6522,36 @@
           }
         ]
       },
-      "testMentions": [],
+      "testMentions": [
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "sha256": "a8bf8f1c4bf65d4853a6d3262479951f65aa637d88c660cd5fd7bb95b3561b9d"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
+        }
+      ],
       "verdict": "needs-behavior-review",
       "finding": null,
       "limitation": "测试引用仅供定位；效果键、卡图、白名单和测试中的卡号出现均不证明整张卡规则等价。"
@@ -5793,7 +6621,27 @@
       "testMentions": [
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
+        },
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -5854,6 +6702,10 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-implementation-gaps.test.mjs",
+          "sha256": "3e6184e8a7f1a72693bd53a1013cef6c7ab3aace4b8b5977881e7e083dd2cbb7"
+        },
+        {
           "path": "tests/content-schema.test.mjs",
           "sha256": "6053c43fcf89be16dad61a37030a6c3f50d332b5e48bc6d7a08d0485bfda55ed"
         },
@@ -5867,11 +6719,11 @@
         },
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -5879,27 +6731,39 @@
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
         },
         {
           "path": "tests/presentation-polish.test.mjs",
-          "sha256": "e5d1f8a2ff62b9f65e7b8303c359ecbb1fabc90026dd2bd4817b965b23010a12"
+          "sha256": "283c005195717734c4e04f6c6b9123ae013ea676ef43a11064510554c67a3475"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
+        },
+        {
+          "path": "tests/script-actions.test.mjs",
+          "sha256": "e75c471ade4d65e2e319d174a44f071d430f99c976bca49fe3b6d3ca2329cf84"
+        },
+        {
+          "path": "tests/tfa-mechanics.test.mjs",
+          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -5965,11 +6829,11 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "6bfb86aaf740c013a6ad2e1416c224bf4890fd4ece183bccf6a795b9bd3f3084"
+          "sha256": "bba4eff0c9decd46ed469d586fbf71ea39a4eda6ea1e09ee93210ae29143d1dd"
         },
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/content-schema.test.mjs",
@@ -5985,7 +6849,7 @@
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         },
         {
           "path": "tests/engagement-flow.test.mjs",
@@ -5993,19 +6857,31 @@
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/script-actions.test.mjs",
+          "sha256": "e75c471ade4d65e2e319d174a44f071d430f99c976bca49fe3b6d3ca2329cf84"
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "e534ae97cec6d169f5f80ee7715c91cf1997a6c520b71df7f570993d52d59896"
+          "sha256": "014ec6cf1194c51cfa1a6dc4a3ffdb731cb1b742e1c828b828a0a40ccc241702"
+        },
+        {
+          "path": "tests/tfa-mechanics.test.mjs",
+          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
+        },
+        {
+          "path": "tests/tfa-rules.test.mjs",
+          "sha256": "40b83bcbd5fd30feac67afd515b9050a505f8b33d3a325f3dd49e1963bb17b1b"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -6074,7 +6950,7 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "6bfb86aaf740c013a6ad2e1416c224bf4890fd4ece183bccf6a795b9bd3f3084"
+          "sha256": "bba4eff0c9decd46ed469d586fbf71ea39a4eda6ea1e09ee93210ae29143d1dd"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -6090,15 +6966,19 @@
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "e534ae97cec6d169f5f80ee7715c91cf1997a6c520b71df7f570993d52d59896"
+          "sha256": "014ec6cf1194c51cfa1a6dc4a3ffdb731cb1b742e1c828b828a0a40ccc241702"
+        },
+        {
+          "path": "tests/tfa-mechanics.test.mjs",
+          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -6167,7 +7047,7 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "6bfb86aaf740c013a6ad2e1416c224bf4890fd4ece183bccf6a795b9bd3f3084"
+          "sha256": "bba4eff0c9decd46ed469d586fbf71ea39a4eda6ea1e09ee93210ae29143d1dd"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -6183,19 +7063,31 @@
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
+        },
+        {
+          "path": "tests/presentation-polish.test.mjs",
+          "sha256": "283c005195717734c4e04f6c6b9123ae013ea676ef43a11064510554c67a3475"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "e534ae97cec6d169f5f80ee7715c91cf1997a6c520b71df7f570993d52d59896"
+          "sha256": "014ec6cf1194c51cfa1a6dc4a3ffdb731cb1b742e1c828b828a0a40ccc241702"
+        },
+        {
+          "path": "tests/tfa-mechanics.test.mjs",
+          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
+        },
+        {
+          "path": "tests/tfa-rules.test.mjs",
+          "sha256": "40b83bcbd5fd30feac67afd515b9050a505f8b33d3a325f3dd49e1963bb17b1b"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -6265,11 +7157,11 @@
       "testMentions": [
         {
           "path": "tests/ai-completion.test.mjs",
-          "sha256": "6bfb86aaf740c013a6ad2e1416c224bf4890fd4ece183bccf6a795b9bd3f3084"
+          "sha256": "bba4eff0c9decd46ed469d586fbf71ea39a4eda6ea1e09ee93210ae29143d1dd"
         },
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -6277,15 +7169,27 @@
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
+        },
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
+        },
+        {
+          "path": "tests/script-actions.test.mjs",
+          "sha256": "e75c471ade4d65e2e319d174a44f071d430f99c976bca49fe3b6d3ca2329cf84"
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "e534ae97cec6d169f5f80ee7715c91cf1997a6c520b71df7f570993d52d59896"
+          "sha256": "014ec6cf1194c51cfa1a6dc4a3ffdb731cb1b742e1c828b828a0a40ccc241702"
+        },
+        {
+          "path": "tests/tfa-mechanics.test.mjs",
+          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -6362,7 +7266,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/content-registry.test.mjs",
@@ -6370,7 +7274,7 @@
         },
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -6378,15 +7282,19 @@
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
         },
         {
           "path": "tests/state-presentation.test.mjs",
-          "sha256": "e534ae97cec6d169f5f80ee7715c91cf1997a6c520b71df7f570993d52d59896"
+          "sha256": "014ec6cf1194c51cfa1a6dc4a3ffdb731cb1b742e1c828b828a0a40ccc241702"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -6428,10 +7336,7 @@
       ],
       "runtimeBehavior": {
         "cardEffect": {
-          "ally": {
-            "combatAura": 1,
-            "attackMonsterDamageBonus": 1
-          }
+          "engine": "litaAura"
         },
         "investigatorAbility": null,
         "scenarioRules": [
@@ -6457,15 +7362,19 @@
       "testMentions": [
         {
           "path": "tests/availability.test.mjs",
-          "sha256": "5ad76f9f3d82076513f902163e685488f9fc1efa70b2aeb8e150c4b6a6d9c2ec"
+          "sha256": "0e63e31167e694198b85fc139c6f8be7df79bb7bf02ddde62ee40a6ae26790cd"
         },
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
+        },
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
         },
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/content-registry.test.mjs",
@@ -6489,23 +7398,31 @@
         },
         {
           "path": "tests/import-cards.test.mjs",
-          "sha256": "6c88c2d5c6fa6f608762a758d48ad67060f85bfd6c24c206ec841dfaa2002937"
+          "sha256": "e3a9eaea6d74cc14e8ac950de72964dd47491c4e1cefa02b810a3a69c6064983"
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
         },
         {
           "path": "tests/script-actions.test.mjs",
-          "sha256": "c5d88f23bfc95f0c1b7f68f9004835bcbe0ee89edc7d35c391018fe664bf4441"
+          "sha256": "e75c471ade4d65e2e319d174a44f071d430f99c976bca49fe3b6d3ca2329cf84"
+        },
+        {
+          "path": "tests/state-presentation.test.mjs",
+          "sha256": "014ec6cf1194c51cfa1a6dc4a3ffdb731cb1b742e1c828b828a0a40ccc241702"
         }
       ],
       "verdict": "fixed-scoped-regression",
@@ -6656,19 +7573,19 @@
       "testMentions": [
         {
           "path": "tests/availability.test.mjs",
-          "sha256": "5ad76f9f3d82076513f902163e685488f9fc1efa70b2aeb8e150c4b6a6d9c2ec"
+          "sha256": "0e63e31167e694198b85fc139c6f8be7df79bb7bf02ddde62ee40a6ae26790cd"
         },
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/presentation-http.test.mjs",
-          "sha256": "56eb0479fd65c62a51f424860eac1138c5441b3a6d1cb721874e79cfe7ae5ae0"
+          "sha256": "a4b58ab3f6aa1bf753515c56d82acf54fbb37c00f6e1a13b0377dbba88b6f3a7"
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -6730,19 +7647,19 @@
       "testMentions": [
         {
           "path": "tests/campaign-experience.test.mjs",
-          "sha256": "3332d99aa832ba0577dddda91426ea1faae61cb44d9a2cb5f1f12269f0017643"
+          "sha256": "c302efd87997cc5add8ba8bd25b238ad8a900ec83c6d83947da252755e07a470"
         },
         {
           "path": "tests/campaign-http-n4.test.mjs",
-          "sha256": "96f54fa63af19389727a04f0167562468254b5d4e9ef9a743643e498db73f7a4"
+          "sha256": "3d25009a65b12e6aa78f991fc3e4e01167e62e96c4b570d5f47c015529a4b1aa"
         },
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/content-registry.test.mjs",
@@ -6762,23 +7679,31 @@
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/p2-hub-http.test.mjs",
-          "sha256": "7791c1f4efb45c39058b4d0e7d30a4af2774d4ac983525241baaad50f96dffc7"
+          "sha256": "df9dbe06eafae33ae8e6aa661fa24c72bb64177b45230f93bd30790988b09e52"
+        },
+        {
+          "path": "tests/presentation-polish.test.mjs",
+          "sha256": "283c005195717734c4e04f6c6b9123ae013ea676ef43a11064510554c67a3475"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
         },
         {
           "path": "tests/script-actions.test.mjs",
-          "sha256": "c5d88f23bfc95f0c1b7f68f9004835bcbe0ee89edc7d35c391018fe664bf4441"
+          "sha256": "e75c471ade4d65e2e319d174a44f071d430f99c976bca49fe3b6d3ca2329cf84"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -6849,15 +7774,47 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/import-cards.test.mjs",
-          "sha256": "6c88c2d5c6fa6f608762a758d48ad67060f85bfd6c24c206ec841dfaa2002937"
+          "sha256": "e3a9eaea6d74cc14e8ac950de72964dd47491c4e1cefa02b810a3a69c6064983"
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "sha256": "a8bf8f1c4bf65d4853a6d3262479951f65aa637d88c660cd5fd7bb95b3561b9d"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
+        },
+        {
+          "path": "tests/tfa-untamed-wilds.test.mjs",
+          "sha256": "03d61a814575c0f3653a5dce4dcef974cd7f0e939416c7744602d006b799f4c9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -6942,7 +7899,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -6962,23 +7919,23 @@
         },
         {
           "path": "tests/decision-invariants.test.mjs",
-          "sha256": "d7f7541a66a266ae096e75713d6a02146b2e927b5d152ae138fde25d73f874a6"
+          "sha256": "31a9496cb7027bc1d455010f55330f38dce8a61e0d219bd94e9c909ece38e8ec"
         },
         {
           "path": "tests/import-cards.test.mjs",
-          "sha256": "6c88c2d5c6fa6f608762a758d48ad67060f85bfd6c24c206ec841dfaa2002937"
+          "sha256": "e3a9eaea6d74cc14e8ac950de72964dd47491c4e1cefa02b810a3a69c6064983"
         },
         {
           "path": "tests/presentation-http.test.mjs",
-          "sha256": "56eb0479fd65c62a51f424860eac1138c5441b3a6d1cb721874e79cfe7ae5ae0"
+          "sha256": "a4b58ab3f6aa1bf753515c56d82acf54fbb37c00f6e1a13b0377dbba88b6f3a7"
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -7044,7 +8001,40 @@
           }
         ]
       },
-      "testMentions": [],
+      "testMentions": [
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "sha256": "a8bf8f1c4bf65d4853a6d3262479951f65aa637d88c660cd5fd7bb95b3561b9d"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
+        },
+        {
+          "path": "tests/tfa-untamed-wilds.test.mjs",
+          "sha256": "03d61a814575c0f3653a5dce4dcef974cd7f0e939416c7744602d006b799f4c9"
+        }
+      ],
       "verdict": "needs-behavior-review",
       "finding": null,
       "limitation": "测试引用仅供定位；效果键、卡图、白名单和测试中的卡号出现均不证明整张卡规则等价。"
@@ -7115,7 +8105,35 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-depths-of-yoth.test.mjs",
+          "sha256": "73b51ac0c8d8060459a025ee9814b371b10374a0edcc2c4c37b37fc3d167ee31"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "sha256": "a8bf8f1c4bf65d4853a6d3262479951f65aa637d88c660cd5fd7bb95b3561b9d"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -7206,11 +8224,11 @@
       "testMentions": [
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -7284,7 +8302,7 @@
       "testMentions": [
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/core-final-acceptance.test.mjs",
@@ -7292,7 +8310,11 @@
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -7377,7 +8399,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -7393,11 +8415,11 @@
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -7498,11 +8520,11 @@
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -7674,6 +8696,10 @@
         {
           "path": "tests/core-story-acceptance.test.mjs",
           "sha256": "1edf977e5278037f4e0ea6cab308a31ee690d774052ea87ab2e5122a2923e36a"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -7755,7 +8781,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -7771,11 +8797,19 @@
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
+        },
+        {
+          "path": "tests/tfa-visibility.test.mjs",
+          "sha256": "2bee13673aadbeb2623e9adc242b2e832bc410d586dd412d736fce5e435a0940"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -7873,11 +8907,19 @@
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
+        },
+        {
+          "path": "tests/tfa-visibility.test.mjs",
+          "sha256": "2bee13673aadbeb2623e9adc242b2e832bc410d586dd412d736fce5e435a0940"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -7951,7 +8993,15 @@
       "testMentions": [
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
+        },
+        {
+          "path": "tests/tfa-visibility.test.mjs",
+          "sha256": "2bee13673aadbeb2623e9adc242b2e832bc410d586dd412d736fce5e435a0940"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -8037,7 +9087,7 @@
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -8127,7 +9177,11 @@
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -8198,8 +9252,16 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-middle-b.test.mjs",
+          "sha256": "037e9452cd07db174e5ea786013a80dc7964f7b2ba2c3c6ea25990d7c4cffb38"
+        },
+        {
           "path": "tests/core-encounter-acceptance.test.mjs",
           "sha256": "0b11ce8e6ba66051e8597102cea5149ab9d45ab14cea5f0e3d09668a5eec8841"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -8267,12 +9329,20 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-implementation-gaps.test.mjs",
+          "sha256": "3e6184e8a7f1a72693bd53a1013cef6c7ab3aace4b8b5977881e7e083dd2cbb7"
+        },
+        {
           "path": "tests/core-final-acceptance.test.mjs",
           "sha256": "11141631e320029ee5774da6f5bb079181e0975b2fbad6da2955eaef82da38ae"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -8440,7 +9510,7 @@
       "testMentions": [
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -8527,7 +9597,7 @@
       "testMentions": [
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -8614,7 +9684,7 @@
       "testMentions": [
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -8696,7 +9766,7 @@
       "testMentions": [
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -8704,7 +9774,7 @@
         },
         {
           "path": "tests/script-actions.test.mjs",
-          "sha256": "c5d88f23bfc95f0c1b7f68f9004835bcbe0ee89edc7d35c391018fe664bf4441"
+          "sha256": "e75c471ade4d65e2e319d174a44f071d430f99c976bca49fe3b6d3ca2329cf84"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -8771,15 +9841,15 @@
       "testMentions": [
         {
           "path": "tests/campaign-experience.test.mjs",
-          "sha256": "3332d99aa832ba0577dddda91426ea1faae61cb44d9a2cb5f1f12269f0017643"
+          "sha256": "c302efd87997cc5add8ba8bd25b238ad8a900ec83c6d83947da252755e07a470"
         },
         {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
         },
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/content-registry.test.mjs",
@@ -8787,7 +9857,7 @@
         },
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -8795,11 +9865,15 @@
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
+        },
+        {
+          "path": "tests/presentation-polish.test.mjs",
+          "sha256": "283c005195717734c4e04f6c6b9123ae013ea676ef43a11064510554c67a3475"
         },
         {
           "path": "tests/script-actions.test.mjs",
-          "sha256": "c5d88f23bfc95f0c1b7f68f9004835bcbe0ee89edc7d35c391018fe664bf4441"
+          "sha256": "e75c471ade4d65e2e319d174a44f071d430f99c976bca49fe3b6d3ca2329cf84"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -8870,7 +9944,39 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "sha256": "a8bf8f1c4bf65d4853a6d3262479951f65aa637d88c660cd5fd7bb95b3561b9d"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
+        },
+        {
+          "path": "tests/tfa-untamed-wilds.test.mjs",
+          "sha256": "03d61a814575c0f3653a5dce4dcef974cd7f0e939416c7744602d006b799f4c9"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -8943,7 +10049,40 @@
           }
         ]
       },
-      "testMentions": [],
+      "testMentions": [
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "sha256": "a8bf8f1c4bf65d4853a6d3262479951f65aa637d88c660cd5fd7bb95b3561b9d"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
+        },
+        {
+          "path": "tests/tfa-untamed-wilds.test.mjs",
+          "sha256": "03d61a814575c0f3653a5dce4dcef974cd7f0e939416c7744602d006b799f4c9"
+        }
+      ],
       "verdict": "needs-behavior-review",
       "finding": null,
       "limitation": "测试引用仅供定位；效果键、卡图、白名单和测试中的卡号出现均不证明整张卡规则等价。"
@@ -9022,11 +10161,23 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -9101,7 +10252,35 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
+        },
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-depths-of-yoth.test.mjs",
+          "sha256": "73b51ac0c8d8060459a025ee9814b371b10374a0edcc2c4c37b37fc3d167ee31"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "sha256": "a8bf8f1c4bf65d4853a6d3262479951f65aa637d88c660cd5fd7bb95b3561b9d"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -9173,7 +10352,32 @@
           }
         ]
       },
-      "testMentions": [],
+      "testMentions": [
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part1.test.mjs",
+          "sha256": "467b37c88f00756b79b14a2e627f18c7a03fa22a3190d4667fffb7a2945c1637"
+        },
+        {
+          "path": "tests/tfa-heart-of-the-elders-part2.test.mjs",
+          "sha256": "a8bf8f1c4bf65d4853a6d3262479951f65aa637d88c660cd5fd7bb95b3561b9d"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
+        }
+      ],
       "verdict": "needs-behavior-review",
       "finding": null,
       "limitation": "测试引用仅供定位；效果键、卡图、白名单和测试中的卡号出现均不证明整张卡规则等价。"
@@ -9244,7 +10448,24 @@
           }
         ]
       },
-      "testMentions": [],
+      "testMentions": [
+        {
+          "path": "tests/tfa-boundary-beyond.test.mjs",
+          "sha256": "83489f29b93c493ba77485c60e46edceb99f6fb1967e713504347bd24c7afebf"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
+        }
+      ],
       "verdict": "needs-behavior-review",
       "finding": null,
       "limitation": "测试引用仅供定位；效果键、卡图、白名单和测试中的卡号出现均不证明整张卡规则等价。"
@@ -9326,7 +10547,7 @@
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -9334,11 +10555,11 @@
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -9424,11 +10645,11 @@
       "testMentions": [
         {
           "path": "tests/campaign-experience.test.mjs",
-          "sha256": "3332d99aa832ba0577dddda91426ea1faae61cb44d9a2cb5f1f12269f0017643"
+          "sha256": "c302efd87997cc5add8ba8bd25b238ad8a900ec83c6d83947da252755e07a470"
         },
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -9507,7 +10728,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -9583,7 +10804,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -9663,7 +10884,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -9671,7 +10892,7 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -9747,7 +10968,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
@@ -9852,11 +11073,11 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         }
       ],
       "verdict": "fixed-scoped-regression",
@@ -9937,7 +11158,7 @@
       "testMentions": [
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -10024,19 +11245,19 @@
       "testMentions": [
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
         },
         {
           "path": "tests/script-actions.test.mjs",
-          "sha256": "c5d88f23bfc95f0c1b7f68f9004835bcbe0ee89edc7d35c391018fe664bf4441"
+          "sha256": "e75c471ade4d65e2e319d174a44f071d430f99c976bca49fe3b6d3ca2329cf84"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -10115,15 +11336,15 @@
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -10196,11 +11417,15 @@
         },
         {
           "path": "tests/dunwich-rules.test.mjs",
-          "sha256": "6fdbbde2fffd5b7f4e4c962209f51fee9cff2c19723c9c6fe26b5b5de9c9c43e"
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
+        },
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -10288,8 +11513,20 @@
       },
       "testMentions": [
         {
+          "path": "tests/attack-style.test.mjs",
+          "sha256": "b5d17575bd5ab1a96e371322bdf214c7ea6a532b34b7dad8e65d8d0883b89d26"
+        },
+        {
           "path": "tests/campaign-n4.test.mjs",
-          "sha256": "cd9b1d8e6e2ce73fdf480e1954ed4f298b94b9d23e4ffb2573c5e5be7b929192"
+          "sha256": "8b3e66827b61ca0f71498e2b73ba1e3500761e9b3e9dfb0a5f85a241094c1ae9"
+        },
+        {
+          "path": "tests/carcosa-implementation-gaps.test.mjs",
+          "sha256": "3e6184e8a7f1a72693bd53a1013cef6c7ab3aace4b8b5977881e7e083dd2cbb7"
+        },
+        {
+          "path": "tests/carcosa-investigators.test.mjs",
+          "sha256": "f28cbdc439a56e796e99f89348c51678c646214cd96e810dfc34796b6d920b2b"
         },
         {
           "path": "tests/card-interactions.test.mjs",
@@ -10301,11 +11538,11 @@
         },
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
         },
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
@@ -10316,16 +11553,36 @@
           "sha256": "1fc87fca0c49dc3e8fcf3fb201639f36dd7df50092b94b82b17f4eeee62052e3"
         },
         {
+          "path": "tests/dunwich-player-acceptance.test.mjs",
+          "sha256": "d7387897abe4aad35efaa50b9bacec706039a4acdf4280f2f6c74bd7041539f2"
+        },
+        {
+          "path": "tests/dunwich-player-gaps.test.mjs",
+          "sha256": "5e936892e230e16dd734db265a9f9af20e6da006fcad07dc019b1c7292c56d37"
+        },
+        {
+          "path": "tests/dunwich-rules.test.mjs",
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
+        },
+        {
           "path": "tests/engagement-flow.test.mjs",
           "sha256": "3ef8ed1092e23474ea4be4ab2bb16daf280441997b42a58f2bdc6face111c975"
         },
         {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/tfa-mechanics.test.mjs",
+          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -10596,19 +11853,27 @@
         },
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
         },
         {
           "path": "tests/core-n4b.test.mjs",
-          "sha256": "1e5a9c62f2604291e97aefb5cf6c926b42c8bbd37126fddea57c4535cafce4de"
+          "sha256": "f63b0201d2044adfc744de51ae3ce6d888b0b14596de00bd2ca59eeb9c4684f1"
         },
         {
           "path": "tests/core-special-acceptance.test.mjs",
-          "sha256": "854b63d9811bbc03e64c11c10b4898d4e2076992b686799f60216a0ba4ffe300"
+          "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
+        },
+        {
+          "path": "tests/tfa-encounter-p1.test.mjs",
+          "sha256": "d788c301b912bb989076d945160a98518f887ed683660cf3be0412e7f9840ddd"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -10702,7 +11967,7 @@
       "testMentions": [
         {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-acceptance.test.mjs",
@@ -10710,7 +11975,19 @@
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
+        },
+        {
+          "path": "tests/tfa-encounter-p1.test.mjs",
+          "sha256": "d788c301b912bb989076d945160a98518f887ed683660cf3be0412e7f9840ddd"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -10799,8 +12076,12 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-implementation-gaps.test.mjs",
+          "sha256": "3e6184e8a7f1a72693bd53a1013cef6c7ab3aace4b8b5977881e7e083dd2cbb7"
+        },
+        {
           "path": "tests/card-identity.test.mjs",
-          "sha256": "c31664015588feed9570e39331cec402cdb32d6e7ef1bedb30787dcac8822d57"
+          "sha256": "05ebc9a4d8f02bd87845d19962791e9ba80c070e3567a71f09a94f69a236eef6"
         },
         {
           "path": "tests/core-final-acceptance.test.mjs",
@@ -10808,39 +12089,59 @@
         },
         {
           "path": "tests/core-n4.test.mjs",
-          "sha256": "c9054c1439aaa2a34a8cbb2b346c4de58a4a39389965a8b1acbc7926bc07613c"
+          "sha256": "017936bbf31f8978a0592fac1dbb80f167c9df2c545c4ab67007da72bfa2a110"
         },
         {
           "path": "tests/core-n4b.test.mjs",
-          "sha256": "1e5a9c62f2604291e97aefb5cf6c926b42c8bbd37126fddea57c4535cafce4de"
+          "sha256": "f63b0201d2044adfc744de51ae3ce6d888b0b14596de00bd2ca59eeb9c4684f1"
         },
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-story-acceptance.test.mjs",
           "sha256": "1edf977e5278037f4e0ea6cab308a31ee690d774052ea87ab2e5122a2923e36a"
         },
         {
+          "path": "tests/dunwich-player-gaps.test.mjs",
+          "sha256": "5e936892e230e16dd734db265a9f9af20e6da006fcad07dc019b1c7292c56d37"
+        },
+        {
           "path": "tests/flow-n5.test.mjs",
-          "sha256": "bd9b1ba5cd9a673ef5b10133d4167ed4c685298b501d02442b9b429654561656"
+          "sha256": "8f42c1a88c0d08a9a537aa03b477f0b5e11f04b4cfab44bd9c435d0b6f929a00"
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/p6-content.test.mjs",
-          "sha256": "549c1dabf43d16c625b119b52ce15e91eea908794089e50dafec81f314cf5ba1"
+          "sha256": "9bd406634af0c070027ffadfacbd4328d0a21ed547fcdb06ab2fb8aafe33b3e8"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
+        },
+        {
+          "path": "tests/tfa-encounter-p1.test.mjs",
+          "sha256": "d788c301b912bb989076d945160a98518f887ed683660cf3be0412e7f9840ddd"
+        },
+        {
+          "path": "tests/tfa-mechanics.test.mjs",
+          "sha256": "fc574be269d16779d4248014b0f667e9bd25ffade510952e88f18d637a1294e9"
+        },
+        {
+          "path": "tests/tfa-player-acceptance.test.mjs",
+          "sha256": "5b9da13aea9d230c9c25be7db6e4a41c5dcaf812fd2e7ad3fa3cb259fd3db2fe"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -10929,7 +12230,15 @@
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
+        },
+        {
+          "path": "tests/tfa-encounter-p1.test.mjs",
+          "sha256": "d788c301b912bb989076d945160a98518f887ed683660cf3be0412e7f9840ddd"
+        },
+        {
+          "path": "tests/tfa-shattered-aeons.test.mjs",
+          "sha256": "d6add916c3dd7e4db9b3e8f551408beae2f7f2a0ce33d21ec1fef6fc183fc42b"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -11016,6 +12325,22 @@
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
           "sha256": "0b11ce8e6ba66051e8597102cea5149ab9d45ab14cea5f0e3d09668a5eec8841"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-encounter-p1.test.mjs",
+          "sha256": "d788c301b912bb989076d945160a98518f887ed683660cf3be0412e7f9840ddd"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -11108,6 +12433,26 @@
         {
           "path": "tests/core-story-acceptance.test.mjs",
           "sha256": "1edf977e5278037f4e0ea6cab308a31ee690d774052ea87ab2e5122a2923e36a"
+        },
+        {
+          "path": "tests/scenario-images.test.mjs",
+          "sha256": "8a8bc954bab224263545bd594053f6b79057605d01f920b7b89dd009508c60df"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
+        },
+        {
+          "path": "tests/tfa-doom-of-eztli.test.mjs",
+          "sha256": "abca0181a0246f2c933e4436a7eb9551672183a8a4dab122a4f1ea302e216ccb"
+        },
+        {
+          "path": "tests/tfa-encounter-p1.test.mjs",
+          "sha256": "d788c301b912bb989076d945160a98518f887ed683660cf3be0412e7f9840ddd"
+        },
+        {
+          "path": "tests/tfa-turn-back-time.test.mjs",
+          "sha256": "de32d6db6e1fe479163d33b7a64fb76f6103720992932cfb6e28b284e6942d2d"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -11229,16 +12574,24 @@
           "sha256": "0b11ce8e6ba66051e8597102cea5149ab9d45ab14cea5f0e3d09668a5eec8841"
         },
         {
+          "path": "tests/core-scenario-acceptance.test.mjs",
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
+        },
+        {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         },
         {
           "path": "tests/rules-n3.test.mjs",
-          "sha256": "a794335764dfd0f3b93efa667cdc35076d5da4b84775cee41579e74bbf72892a"
+          "sha256": "6ab2e9458c09cb5b1a1e60256bea3646b0d1ebbe22a0569b2bdc5fa152765ff1"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -11364,7 +12717,15 @@
         },
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
+        },
+        {
+          "path": "tests/tfa-encounter-p1.test.mjs",
+          "sha256": "d788c301b912bb989076d945160a98518f887ed683660cf3be0412e7f9840ddd"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -11455,6 +12816,22 @@
         {
           "path": "tests/core-encounter-acceptance.test.mjs",
           "sha256": "0b11ce8e6ba66051e8597102cea5149ab9d45ab14cea5f0e3d09668a5eec8841"
+        },
+        {
+          "path": "tests/core-scenario-acceptance.test.mjs",
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
+        },
+        {
+          "path": "tests/dunwich-rules.test.mjs",
+          "sha256": "0cc58a910bc6440810d50bdc004809c25123f5b2eb66e9eba83f0174faf4719c"
+        },
+        {
+          "path": "tests/tfa-encounter-p1.test.mjs",
+          "sha256": "d788c301b912bb989076d945160a98518f887ed683660cf3be0412e7f9840ddd"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -11527,11 +12904,19 @@
       "testMentions": [
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
+        },
+        {
+          "path": "tests/tfa-visibility.test.mjs",
+          "sha256": "2bee13673aadbeb2623e9adc242b2e832bc410d586dd412d736fce5e435a0940"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -11602,7 +12987,15 @@
       "testMentions": [
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
+        },
+        {
+          "path": "tests/tfa-encounter-p1.test.mjs",
+          "sha256": "d788c301b912bb989076d945160a98518f887ed683660cf3be0412e7f9840ddd"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -11676,11 +13069,23 @@
         },
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
         },
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
+        },
+        {
+          "path": "tests/tfa-encounter-p1.test.mjs",
+          "sha256": "d788c301b912bb989076d945160a98518f887ed683660cf3be0412e7f9840ddd"
+        },
+        {
+          "path": "tests/tfa-threads-of-fate.test.mjs",
+          "sha256": "52a9fa2bb079b1bc4877561fa7cacb2e44b83d7444b8117da7f3c1d5008e75ba"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -11759,7 +13164,7 @@
       "testMentions": [
         {
           "path": "tests/scenario-n4b.test.mjs",
-          "sha256": "88a4a716d6edd52df1bd5c0a36d9f09c27540194d340fda829cd67bd7f6d38b2"
+          "sha256": "7545ccc8e4a117d24fc48dca95f3920fd8365fc198bbe4b6be7d1bb5c59dd640"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -11834,8 +13239,12 @@
       },
       "testMentions": [
         {
+          "path": "tests/carcosa-rules.test.mjs",
+          "sha256": "7f28019109b2e5fe4ff7a930b98b172f54515046d1d520ff5091bb9c9a6669e8"
+        },
+        {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -11912,7 +13321,11 @@
       "testMentions": [
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -11988,7 +13401,15 @@
       "testMentions": [
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
+        },
+        {
+          "path": "tests/tfa-city-of-archives.test.mjs",
+          "sha256": "b86c02535f1befd3db8bc27d81b975218f37b79feddb41a4806dec1ea3b0d735"
+        },
+        {
+          "path": "tests/tfa-encounter-p1.test.mjs",
+          "sha256": "d788c301b912bb989076d945160a98518f887ed683660cf3be0412e7f9840ddd"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -12065,7 +13486,7 @@
       "testMentions": [
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -12142,7 +13563,7 @@
       "testMentions": [
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -12225,7 +13646,7 @@
         },
         {
           "path": "tests/core-scenario-acceptance.test.mjs",
-          "sha256": "c2838e56ca013d535e239abd379c9c6dd3e2a14bcaa29760887532fb9bda73f8"
+          "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
         },
         {
           "path": "tests/core-timing-acceptance.test.mjs",
@@ -12317,7 +13738,7 @@
         },
         {
           "path": "tests/notz-n4.test.mjs",
-          "sha256": "1b03844d70bdfc085f613b0ce37fe8c2924c35994a8bcc3006b427f00298e9d5"
+          "sha256": "9b684904c3bb868c6c64bbcc47b762b1113efc79e1f4a6bf58f5544eb604a1d6"
         }
       ],
       "verdict": "needs-behavior-review",
@@ -14882,7 +16303,7 @@
       "testMentions": [
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
         }
       ],
       "verdict": "catalog-only-not-enabled",
@@ -14912,7 +16333,7 @@
       "testMentions": [
         {
           "path": "tests/presentation-images.test.mjs",
-          "sha256": "9077826645657748cbb0ce8652b6c4cd0476ebf4b827c666d64b15f7d1c83765"
+          "sha256": "02bcc850b3744dce73cb4b647d1ca59b032fee37c3b495b8d91070d860d0ad27"
         }
       ],
       "verdict": "catalog-only-not-enabled",

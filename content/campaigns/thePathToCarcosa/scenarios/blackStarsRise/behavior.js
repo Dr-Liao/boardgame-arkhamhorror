@@ -266,40 +266,45 @@ export const behavior = {
     const location = state.locations.find(item => item.id === inv.location)
     const code = codeOf(location)
     const decks = state.scenarioFlags.agendaDecks || {}
-    if (code === '03283' && Object.values(decks).some(deck => deck.doom > 0)) {
-      moves.push({ action: 'scenarioAction', rule: 'shiftAgendaDoom', actions: 2,
-        label: '花费2行动，将1个毁灭移到另一密谋并放置2个线索' })
-    }
+    const agendaDoom = Object.values(decks).some(deck => deck.doom > 0)
+    // 地点能力已经就位，只差"密谋上有毁灭""本地点线索已取空""手牌还有"这类能改变的条件。
+    if (code === '03283') moves.push({ action: 'scenarioAction', rule: 'shiftAgendaDoom', actions: 2,
+      label: '花费2行动，将1个毁灭移到另一密谋并放置2个线索',
+      reason: agendaDoom ? null : '“a”“c”两张密谋上都没有毁灭' })
     if (['03292', '03293'].includes(code) && !state.scenarioFlags.choeurGothiqueUsed) {
       moves.push({ action: 'scenarioAction', rule: 'choeurGothiqueHeal',
         label: code === '03292' ? '在“a”密谋放置1毁灭，治愈2点伤害' : '在“c”密谋放置1毁灭，治愈2点恐惧' })
     }
-    if (code === '03294' && location.clues === 0 && !state.scenarioFlags.foundGuide) {
+    if (code === '03294' && !state.scenarioFlags.foundGuide) {
       moves.push({ action: 'scenarioAction', actionKind: 'parley', rule: 'findGuide',
-        label: '谈判：检定意志（3），寻找向导' })
+        label: '谈判：检定意志（3），寻找向导',
+        reason: location.clues === 0 ? null : `需要先取走回廊的全部线索（还剩 ${location.clues} 个）` })
     }
-    if (code === '03295' && location.clues === 0 && !state.scenarioFlags.foundTowerKey) {
+    if (code === '03295' && !state.scenarioFlags.foundTowerKey) {
       moves.push({ action: 'scenarioAction', actionKind: 'investigate', rule: 'findTowerKey',
-        label: '使用敏捷调查骑士大厅，寻找塔楼钥匙' })
+        label: '使用敏捷调查骑士大厅，寻找塔楼钥匙',
+        reason: location.clues === 0 ? null : `需要先取走骑士大厅的全部线索（还剩 ${location.clues} 个）` })
     }
     if (code === '03296') moves.push({
       action: 'scenarioAction', rule: 'takeChapelHorror', label: '受到最多3点恐惧',
     })
-    if (code === '03298' && inv.hand.length) moves.push({
+    if (code === '03298') moves.push({
       action: 'scenarioAction', rule: 'discardTowerCards', label: '弃掉最多3张手牌',
+      reason: inv.hand.length ? null : '需要至少 1 张手牌',
     })
-    if (active(state).reduce((sum, investigator) => sum + (investigator.clues || 0), 0) >= state.numInvestigators) {
-      for (const deckId of ['a', 'c']) moves.push({
-        action: 'scenarioAction',
-        rule: 'hastenAgenda',
-        deckId,
-        actions: 0,
-        label: `共同花费 ${state.numInvestigators} 线索，在“${deckId}”密谋上放置1毁灭`,
-      })
-    }
-    if (state.scenarioFlags.ashleighDoomAbility && !state.scenarioFlags.ashleighDoomUsed
-      && Object.values(state.scenarioFlags.agendaDecks || {}).some(deck => deck.doom > 0)) {
-      moves.push({ action: 'scenarioAction', rule: 'ashleighDoom', actions: 0, label: '阿什莉提供的信息：移除1毁灭' })
+    const teamClues = active(state).reduce((sum, investigator) => sum + (investigator.clues || 0), 0)
+    for (const deckId of ['a', 'c']) moves.push({
+      action: 'scenarioAction',
+      rule: 'hastenAgenda',
+      deckId,
+      actions: 0,
+      label: `共同花费 ${state.numInvestigators} 线索，在“${deckId}”密谋上放置1毁灭`,
+      reason: teamClues >= state.numInvestigators ? null
+        : `需要共同花费 ${state.numInvestigators} 个线索（当前 ${teamClues}）`,
+    })
+    if (state.scenarioFlags.ashleighDoomAbility && !state.scenarioFlags.ashleighDoomUsed) {
+      moves.push({ action: 'scenarioAction', rule: 'ashleighDoom', actions: 0, label: '阿什莉提供的信息：移除1毁灭',
+        reason: agendaDoom ? null : '“a”“c”两张密谋上都没有毁灭' })
     }
     return moves
   },

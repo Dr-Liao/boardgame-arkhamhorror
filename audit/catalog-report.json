@@ -166510,9 +166510,9 @@
       "sha256": "2948e9ebefe8de1a1391891085f6e54f03afdf3f08c7a95090fb23eac58f5668"
     },
     {
-      "bytes": 2531,
+      "bytes": 3330,
       "path": "games/arkhamhorror/content/campaigns/nightOfTheZealot/scenarios/theDevourerBelow/behavior.js",
-      "sha256": "64f7d847e5060a7af8072de8a01b0487c87f20840de330e3b4d8049af1f9fc9d"
+      "sha256": "d298e70655faea3e2394230569ef3856b4d4afb4633e740ef697f7129c5b4a8b"
     },
     {
       "bytes": 16090,
@@ -166530,9 +166530,9 @@
       "sha256": "146d67768eec5043f69e5b0e6a117aa9d124b7f2743d806a31046bf0e17d2e8c"
     },
     {
-      "bytes": 1138,
+      "bytes": 1955,
       "path": "games/arkhamhorror/content/campaigns/nightOfTheZealot/scenarios/theGathering/behavior.js",
-      "sha256": "4a969161240248876ac7b43d74aea92320d22d4aeb64a068df3be43149c71a98"
+      "sha256": "0221331b408cc710f4928e849c4d57947b14ac39d8a239a9cccd2e3e8d3e5ed8"
     },
     {
       "bytes": 11959,
@@ -166595,19 +166595,19 @@
       "sha256": "a2ce5188e2cb346948609858b8b565cc55f4defd6b339d311f930848bd600974"
     },
     {
-      "bytes": 9891,
+      "bytes": 10000,
       "path": "games/arkhamhorror/content/campaigns/theDunwichLegacy/dunwich-chaos.js",
-      "sha256": "bc1c0de14bacedb88a5c34e5e7b37c6bd7c680bb0e61a3e62ec4132416f95a47"
+      "sha256": "19d7c1ebdb22becef17ee0c75b498fce047a5f5259a9fb00729eee370604e6b9"
     },
     {
-      "bytes": 15635,
+      "bytes": 16060,
       "path": "games/arkhamhorror/content/campaigns/theDunwichLegacy/encounter-rules.js",
-      "sha256": "89a1d310d1e0e408e847f67c0c68e36c060070a46af857b49250ddfae03d95a8"
+      "sha256": "ea70076d4b7c8ba3ef21a05c886bcc694069c27e234899f8a08c604e915c75c6"
     },
     {
-      "bytes": 84676,
+      "bytes": 91317,
       "path": "games/arkhamhorror/content/campaigns/theDunwichLegacy/later-behaviors.js",
-      "sha256": "e18483004223ce6f94c2032ffc8b6481de75095dcf7f7e97fb38b84a9abeafe5"
+      "sha256": "ea281075b82bc76c64ecf60d9bc91491b425b13bf342c89cd570cefdb4b37b06"
     },
     {
       "bytes": 15209,
@@ -166625,9 +166625,9 @@
       "sha256": "57fcc3c4a85391c71c361ab413c061de70fbb06e166ea045968a6f8cfadc62a9"
     },
     {
-      "bytes": 12931,
+      "bytes": 15064,
       "path": "games/arkhamhorror/content/campaigns/theDunwichLegacy/scenarios/extracurricularActivity/behavior.js",
-      "sha256": "38474cdf4bcd34d37bb3d84ad6cdce5cb87185f7a6bb98bb578a54b4d03df927"
+      "sha256": "7ca29b7d78304357bfe19f9f03fa00c89b2c897ce4689601c12dabcfccdc8dc1"
     },
     {
       "bytes": 3532,
@@ -166655,9 +166655,9 @@
       "sha256": "0ee2aca591541dfb0f3c49d613beefdcc7e1fb180cec1beee913fe5e5907eaff"
     },
     {
-      "bytes": 14396,
+      "bytes": 15396,
       "path": "games/arkhamhorror/content/campaigns/theDunwichLegacy/scenarios/theHouseAlwaysWins/behavior.js",
-      "sha256": "5e78b2b81541fdb8603391773d7aafe5ef7e929b91e0750f830120a039b156b2"
+      "sha256": "0ee48ddaab98f0b9d37c8178b900740d14ac4d68ca378781a9aeddc6443d9495"
     },
     {
       "bytes": 3615,
@@ -166700,69 +166700,259 @@
       "sha256": "41c0e955a3b61761bed683d28b1f4b18fde9fae368f6616aa49d3a3c2a46fbee"
     },
     {
-      "bytes": 1370,
+      "bytes": 12779,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/card-data.js",
+      "sha256": "8a3eed9ad147f72bc8d3188d12188291dcd528507168e4e074902f7e6ba83931"
+    },
+    {
+      "bytes": 1438,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/chapters.js",
-      "sha256": "e7dcfeefaebeaa00d96c341a1948e84723cec632f3cad2d6e67d5c4353be4a14"
+      "sha256": "7dd705cb51bb935bf3652c3e002721c701fe265e0aac84969c651f2c234e5fee"
     },
     {
-      "bytes": 2774,
+      "bytes": 37463,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/encounter-rules.js",
+      "sha256": "6b8e9847cb2d8cf86b10fd4ebb8749b576ee3768fb8fd703625e9bbcc1b397b9"
+    },
+    {
+      "bytes": 8669,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/interludes.js",
+      "sha256": "a09699606d581998d8e7816162867a7b49df8f842f002aaf9186ff495d9eff3c"
+    },
+    {
+      "bytes": 3240,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/keywords.js",
+      "sha256": "1f995dad353d6c9998ccbbd402f0a28edb94fc84df1ac0ac673ba41d934a81b8"
+    },
+    {
+      "bytes": 6154,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/manifest.js",
-      "sha256": "20c234ca94c146dd59754d1a565e0ac7addf8e29346c72138a33789ebfbaf8a6"
+      "sha256": "fa349e36818a0838b04dcc9552b82d353c991849f12d771593f7cde263e7901f"
     },
     {
-      "bytes": 297,
+      "bytes": 3460,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/record-labels.js",
+      "sha256": "c9d2a8ed141d600f1d84611b87b9e803ff9aae87e9dde6e41aad073e42537096"
+    },
+    {
+      "bytes": 33034,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/behavior.js",
+      "sha256": "61fb7499d2d31fae8e3ad7c499103baedbcc7bdb11265e25c96b36c6509987f8"
+    },
+    {
+      "bytes": 6588,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/definition.js",
+      "sha256": "b6fbbde3bba54b1384736371ceee0cfd08359a0ebd0958d238b721126f3a50d5"
+    },
+    {
+      "bytes": 1232,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/index.js",
-      "sha256": "1f96af8987544323c31ba9e9c5607383edce439f0eaa25ad98a3bd37d06c0230"
+      "sha256": "9d79ecaaee4dd103bc2d824dcba78e7b5082d3db31d143e7ad57bb8fc6763e26"
     },
     {
-      "bytes": 297,
+      "bytes": 732,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/layout.js",
+      "sha256": "07bc6bcbbb4c03013b1fcc3bf62f0e6d68af801d0fdc2f4ab9c6fd02773b86a4"
+    },
+    {
+      "bytes": 31284,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/behavior.js",
+      "sha256": "241b40b1cfda0bb603822a1a0be599b70e1bdb8990e86ac1ff99e5a07cb5c2d5"
+    },
+    {
+      "bytes": 6488,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/definition.js",
+      "sha256": "a825331e1c7dd5ae1c363e4cabe7bcc2a466edde65847cad16c73df26638a9fe"
+    },
+    {
+      "bytes": 1204,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/index.js",
-      "sha256": "859656fcc408541bcf597606677085117baa4435403ff2afd81388354abba4d2"
+      "sha256": "5a17d4336c601279c39123927a2301ae672a4d20d97032d425458abb2b412491"
     },
     {
-      "bytes": 290,
+      "bytes": 662,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/layout.js",
+      "sha256": "303a6681b6de49077068aebb1f8fad4e8fb3c7b170ca9943b5658d3b7dbac3b7"
+    },
+    {
+      "bytes": 61895,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/shatteredAeons/behavior.js",
+      "sha256": "445f75e5f874b0a90fdf425d9da60d47cdad55db86363e750c90b0e6e683bc2c"
+    },
+    {
+      "bytes": 8861,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/shatteredAeons/definition.js",
+      "sha256": "602c154c5c42160e1e4164ce73feff147034043171c866d761d25962bebddf75"
+    },
+    {
+      "bytes": 1463,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/shatteredAeons/index.js",
-      "sha256": "b92fac25e20a9acce21efc9fa5bab322f735b17bb1bcfdad23c4000b6551febc"
+      "sha256": "b83cd0a0f58066e8eee3bdec6bb3313992dc91674229c1b91182d5d08454e037"
     },
     {
-      "bytes": 293,
+      "bytes": 697,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/shatteredAeons/layout.js",
+      "sha256": "0bac4ad58d0ac21958e6953ea4285912b05d16040dd1ea639e3f49922d70c01b"
+    },
+    {
+      "bytes": 54652,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/behavior.js",
+      "sha256": "b6a02640b9be1c3404730ed0112530442b61bf07a1162f8536b44f71ce80a008"
+    },
+    {
+      "bytes": 8708,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/definition.js",
+      "sha256": "e8bcfb93fa071244d57af34a2b4b7f00df1bf639b8e9731a7744333fdbf0137c"
+    },
+    {
+      "bytes": 1733,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/index.js",
-      "sha256": "a98c3d032beddce11a5a30fe0ba7ce33d0febb5b3d230b1b3a22e0eff5d6b1fa"
+      "sha256": "901dccd0a53428c8152cbd56b2ef3bc9a8050f12707de7802c2f375c6a948288"
     },
     {
-      "bytes": 293,
+      "bytes": 1234,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/layout.js",
+      "sha256": "bcd3de4e6b994fce9aaabbf098237ceba11ea4d6bda9b7ab7a4add17f23de082"
+    },
+    {
+      "bytes": 39975,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theCityOfArchives/behavior.js",
+      "sha256": "30089fca365bbf9e07eae92eb799cea589e108a2c880352890284bc27e54b128"
+    },
+    {
+      "bytes": 6761,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theCityOfArchives/definition.js",
+      "sha256": "2fd2e5286aadc55cd59490e1956baeefff962b01750d98fe93300fc03899d65d"
+    },
+    {
+      "bytes": 1359,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theCityOfArchives/index.js",
-      "sha256": "aa3aadbad316f408abb2ebc916518725238011e4faeeaec60a710b126113fe3a"
+      "sha256": "f9ae3cc50189aedebd1b1dca605a277fcad941f3b0e3ad4dd697834b2ff206ff"
     },
     {
-      "bytes": 291,
+      "bytes": 779,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theCityOfArchives/layout.js",
+      "sha256": "d5128836088a4f385fb9e46921225477cf41dce8cad82eb63829543c612a5902"
+    },
+    {
+      "bytes": 46169,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDepthsOfYoth/behavior.js",
+      "sha256": "d4174598d7de8685e34ef0bb4a6ec2fd45688797852dc84a3d474bd10b9f3ad4"
+    },
+    {
+      "bytes": 8012,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDepthsOfYoth/definition.js",
+      "sha256": "a7fbae5b7b18e39a710d34dbc8ae57d8b4a71bfc47ef19f99461fc726f7536ff"
+    },
+    {
+      "bytes": 1414,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDepthsOfYoth/index.js",
-      "sha256": "3165c7f232976c1dd029309e8a28aac358f56a245c1cbeac527103f6c67838ef"
+      "sha256": "5dd3dc6f349d39f645bb15b0cafa88fdadab5936222892742ddc76f7c551d415"
     },
     {
-      "bytes": 290,
+      "bytes": 798,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDepthsOfYoth/layout.js",
+      "sha256": "e866c29f92658f93fc2063b1fa11d7c76bb824cae20bbc6385fd9d934371b1e4"
+    },
+    {
+      "bytes": 30186,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/behavior.js",
+      "sha256": "d7436635eae0e657d8e86d177e0f662103b9a866ad1c148f564d51ce23adb953"
+    },
+    {
+      "bytes": 5899,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/definition.js",
+      "sha256": "10e12a64385a873ec1afbcc3d24cf06eb4d92155113104d25c122e235a9b7fd1"
+    },
+    {
+      "bytes": 1231,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/index.js",
-      "sha256": "5cab484405b450e2428b0f564a26910adadebbb7cc2d3539f1b3ac8c4e455e8e"
+      "sha256": "9bafbf15f4a6c3df9a69432bdbc77fb2454f8957f74517acce366340e7c15a36"
     },
     {
-      "bytes": 291,
+      "bytes": 880,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/layout.js",
+      "sha256": "0601569a7e8cd4cf334dbf2d20523ac8969892f0b5c3a347d132ff6ca8869106"
+    },
+    {
+      "bytes": 19531,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theUntamedWilds/behavior.js",
+      "sha256": "0d18c7b1125a997ef56b1ffcd9fe744880b0da4015b24a3782aeb35103c96074"
+    },
+    {
+      "bytes": 4489,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theUntamedWilds/definition.js",
+      "sha256": "584602611e35408baa4050f90495a63985ef7b472072a745665799565f4e6788"
+    },
+    {
+      "bytes": 1640,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theUntamedWilds/index.js",
-      "sha256": "6cfbcf89f81adb52648240a014c0b147ba2edec720bac8e46b774f5544611777"
+      "sha256": "0731d736c8926fb865f1158b21717a03cd1c522166df077203d00bd6a99c7d0a"
     },
     {
-      "bytes": 289,
+      "bytes": 585,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theUntamedWilds/layout.js",
+      "sha256": "105a8ad0b2e21650ba10fd1e8e4ca12ef791e542a832686f57805707f0f35974"
+    },
+    {
+      "bytes": 51898,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/threadsOfFate/behavior.js",
+      "sha256": "a0d8a05bee8d896672396655948bae6ff04664063d20bbd8de8f1d1f3bc36575"
+    },
+    {
+      "bytes": 9860,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/threadsOfFate/definition.js",
+      "sha256": "eaa10fc39a57911a6a1f93ff3bc19765ce02cd1a88103e72a82bb6da42ff0042"
+    },
+    {
+      "bytes": 1454,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/threadsOfFate/index.js",
-      "sha256": "44daade7cbcd15160d7edebb31b080dd99bfc57e6b2a69fc07d2410854af4fc3"
+      "sha256": "ea2f400771d7c56487a3bf31c82bc988cbb2d1564934e62718e0b461ab7fcf9d"
     },
     {
-      "bytes": 288,
+      "bytes": 805,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/threadsOfFate/layout.js",
+      "sha256": "8b340c7a0418e8aa215feb685ad2a4e26ac846e4b18f4c284822a150c80e1583"
+    },
+    {
+      "bytes": 23075,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/turnBackTime/behavior.js",
+      "sha256": "6871d3a5e5b8ea69bf3d63e2cfe427a0285e4fb348158d2015b65b05b5c1419d"
+    },
+    {
+      "bytes": 5431,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/turnBackTime/definition.js",
+      "sha256": "dc95977acf826b3a0d1fd1d34980bde33f6ad07f391446329f748a0f5baa72bf"
+    },
+    {
+      "bytes": 1595,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/turnBackTime/index.js",
-      "sha256": "e2c8a06745400fc0a5110f2a3dd6614e01c4a2488fb0e041724d80478ef32183"
+      "sha256": "3aa17102dcfe2573945126f7c0d18a253fda56adbd726146c01d530bb8ce711c"
+    },
+    {
+      "bytes": 605,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/turnBackTime/layout.js",
+      "sha256": "9356d9faed24051c0d17ec21c620e1fa84b2eedcc4e70fcb4cd6b27120f47a7a"
     },
     {
       "bytes": 4989,
       "path": "games/arkhamhorror/content/campaigns/theForgottenAge/shared.js",
       "sha256": "e05301ef9c166bbddf3b448718a290a1c934bf3a036ee7bc0c3697306e632da2"
+    },
+    {
+      "bytes": 124886,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/story-text.js",
+      "sha256": "d6f21d009626c5e18e221558aaeb89e0cd4627bb6807143c5a39a578f3fcdae4"
+    },
+    {
+      "bytes": 2870,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/supplies.js",
+      "sha256": "d48313f023a749452b738d2d117f3fd8cd726cd261cd75c2633eedaac8c5788d"
+    },
+    {
+      "bytes": 13619,
+      "path": "games/arkhamhorror/content/campaigns/theForgottenAge/tfa-chaos.js",
+      "sha256": "98dae0458d31d2d647a2fa9ffb47000a55c1f40d566e7f00f6ccde10dd44d52e"
     },
     {
       "bytes": 4766,
@@ -166780,9 +166970,9 @@
       "sha256": "52a6a88c34727603f04bc843605542121081707c593563b240eb1f6361a2c723"
     },
     {
-      "bytes": 30708,
+      "bytes": 30946,
       "path": "games/arkhamhorror/content/campaigns/thePathToCarcosa/encounter-rules.js",
-      "sha256": "2102280dc5d5d9e5835259ba8b6d096091dbb81eacbf02756f9a30ffa31142a2"
+      "sha256": "11aef841c82a497f8177dd11cebb5992f1b37375a85f0921e056dca06a2de1a2"
     },
     {
       "bytes": 6554,
@@ -166790,14 +166980,14 @@
       "sha256": "7565b1a20db905f90b139d77b50dc7cc74a9b504bc623d1d7b4929ca94656bf2"
     },
     {
-      "bytes": 22231,
+      "bytes": 26969,
       "path": "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/aPhantomOfTruth/behavior.js",
-      "sha256": "9324c2cc36c48e4cfe3d16bc82c3bf9e7b540c57cfacbf641180d398f8a56cbb"
+      "sha256": "e12f5ec6b94722138f40c522307fead8cfe52cefb3c95178a6a267d82df70f62"
     },
     {
-      "bytes": 3794,
+      "bytes": 3893,
       "path": "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/aPhantomOfTruth/definition.js",
-      "sha256": "7c1115760d5e45e6127cc0ecd9be05f5571af93ac283e997f2e7a711714a7845"
+      "sha256": "18d152893b444988b31b0f3e2645e9424672250bc92f631545559ddb0a5f0584"
     },
     {
       "bytes": 1174,
@@ -166810,9 +167000,9 @@
       "sha256": "ae69e7f5caf3193db9c84e6f7dc5fd1ba6b62751f27e8df23f2b15026ae8d152"
     },
     {
-      "bytes": 18722,
+      "bytes": 22700,
       "path": "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/blackStarsRise/behavior.js",
-      "sha256": "1104c535573865130881bbf62a51cadc56fcb9da374228fe933786041df63b5d"
+      "sha256": "1bd4400dc2920b1bbb103e88f50cd61eb05741274833f003a4c08918ae37b6b1"
     },
     {
       "bytes": 4442,
@@ -166830,14 +167020,14 @@
       "sha256": "6deb6f0973cb65c2ba0fe67b7179332e1fa5691dee089f7bc2a77d138e9c708a"
     },
     {
-      "bytes": 13160,
+      "bytes": 13616,
       "path": "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/curtainCall/behavior.js",
-      "sha256": "f40f93346fac2d2963a186410d85cd965a19aaf03b8952b739e11747404b7a0e"
+      "sha256": "111ac27c81b75a40e2e04a577af8eb4d149bb80d4cf27ccfe008d7fc1dbadb42"
     },
     {
-      "bytes": 3340,
+      "bytes": 3365,
       "path": "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/curtainCall/definition.js",
-      "sha256": "0a7a5b609db60a5211a1331d67d9685cfc206687e01eaf4525a696c48da62585"
+      "sha256": "e0ba261b7ac4e99e3c1271d1523f96e9da4203c5d0446979bff775a29e7ef7e6"
     },
     {
       "bytes": 994,
@@ -166850,9 +167040,9 @@
       "sha256": "d1d62e7a98d2fbf9ce33f3d9d8d18e4001a7203125f67c3cd6ed2b865a2e6af3"
     },
     {
-      "bytes": 21648,
+      "bytes": 22276,
       "path": "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/dimCarcosa/behavior.js",
-      "sha256": "535efad67547d9b747e543f5a043e3ffdf9bb6effa5877dc495e4731e4288fd4"
+      "sha256": "1e5c8e0d02f50a7ae9e96549745d503513ea3945f51a3c4f357124ecc6f37957"
     },
     {
       "bytes": 3638,
@@ -166870,14 +167060,14 @@
       "sha256": "756305dbe9a4a4afb26d3081409584504b2a7e21d651e3a75005341fbd119361"
     },
     {
-      "bytes": 20031,
+      "bytes": 20861,
       "path": "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/echoesOfThePast/behavior.js",
-      "sha256": "4bd70c9e79d862972c47921557364f002e02fa6058c6b195ac60d0fca9d5c88a"
+      "sha256": "fa33083015b2d99f6614d11bc76a27ec7bf66828aad7a969e27005f282645e0b"
     },
     {
-      "bytes": 4262,
+      "bytes": 4318,
       "path": "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/echoesOfThePast/definition.js",
-      "sha256": "7d247a2f7dccefcfcc84a890e08c98edc29a0875b998ebc9fd05f1caa2c0453e"
+      "sha256": "409b72848a44b4c6472be5af5d01dc8d61cf288279111c8a456b738e3dadbc5d"
     },
     {
       "bytes": 983,
@@ -166890,9 +167080,9 @@
       "sha256": "7da13af26bdd469b00a8af0d880604dcc2b50987b725b6d348fd15d8893f21fd"
     },
     {
-      "bytes": 15966,
+      "bytes": 16806,
       "path": "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/theLastKing/behavior.js",
-      "sha256": "cbbc668901a6d1c73dcbbd35c0248c6197811c140264e6884dd0fa3fb0de71e5"
+      "sha256": "3d4283d3869b59fdd80c992b692184a30aa2273d9a38201d6dfab381eeda533b"
     },
     {
       "bytes": 3461,
@@ -166910,14 +167100,14 @@
       "sha256": "05d0bdbd8ced9bed59adeab5decd665d95d5d5cdecddac39e51c02a728026bb9"
     },
     {
-      "bytes": 19964,
+      "bytes": 20075,
       "path": "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/thePallidMask/behavior.js",
-      "sha256": "757c31c60b6af12760d6abc92283424e99a382f23e19097d170dafbcb202ebec"
+      "sha256": "3da6843097faf4a8144c0ec699529672f8635fa5caf8a0cba06efdfef460869a"
     },
     {
-      "bytes": 2116,
+      "bytes": 2249,
       "path": "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/thePallidMask/definition.js",
-      "sha256": "08db9b14f380e26843ca1dd2f676f701d1a6d2940483c65b08c54ec073386be8"
+      "sha256": "878ebb3ee546b8e049fe68d5768b4d36952b0757044a759bd7a552554924aa06"
     },
     {
       "bytes": 1077,
@@ -166930,9 +167120,9 @@
       "sha256": "2e790394740fae8bbe15cb10488d5e45073174e24819be905506f89cda522e6f"
     },
     {
-      "bytes": 24609,
+      "bytes": 25757,
       "path": "games/arkhamhorror/content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/behavior.js",
-      "sha256": "9fc0be75d6d82f206aeb45ac5612f242da66e01ea7c5ec2fde1db5225572a51d"
+      "sha256": "489b163576be68087f5bdfcc5201de73c30b20ce96c90f6cf247f8498001d556"
     },
     {
       "bytes": 4689,
@@ -166970,9 +167160,9 @@
       "sha256": "d1b7d0355d90af603b0029e8afe42058277b620941ecba786855137f968648ba"
     },
     {
-      "bytes": 893,
+      "bytes": 1112,
       "path": "games/arkhamhorror/content/mechanics.js",
-      "sha256": "756bd6741791e005eeea3299a16dcadb3df2edd3c443a3181330422ef8837be3"
+      "sha256": "5b1075983fee0cd0932abf191288fe8febc5d0da92b82852da638267f9f9d2cc"
     },
     {
       "bytes": 3818,
@@ -166990,9 +167180,9 @@
       "sha256": "84be285ddb8100493724478baae64a606b67f44ca1c6b0241dd9431caf999199"
     },
     {
-      "bytes": 11296,
+      "bytes": 11446,
       "path": "games/arkhamhorror/content/packs/carcosaPlayer/effects.js",
-      "sha256": "a6419552d86d7f75a942bb6f382bd0e381fa9cc0b2c1143b7d7d72486163f349"
+      "sha256": "13a796888ba497c099059648d4dd19a49e3325e3b985ab842402c0dff40a6f7e"
     },
     {
       "bytes": 1441,
@@ -167010,9 +167200,9 @@
       "sha256": "0e87035607a0682603f0ad11593e1faa11e4d81d7c498e7294d76a99df3c6bb0"
     },
     {
-      "bytes": 10421,
+      "bytes": 10760,
       "path": "games/arkhamhorror/content/packs/dunwichPlayer/effects.js",
-      "sha256": "cf8a4926a2a64576fdacc19a0b629a6d7d75e7e73d18f6577c25bdd78d207153"
+      "sha256": "17aa59244a3b73cfbb90446edc980722d64b5dc6035921995af556a76883f987"
     },
     {
       "bytes": 1198,
@@ -167035,19 +167225,24 @@
       "sha256": "74cafc5ddc3b1aa5a2cfe84e25813b5ed06363b8a2fa1c72a2c8126181743719"
     },
     {
-      "bytes": 1672,
+      "bytes": 2181,
       "path": "games/arkhamhorror/content/packs/tfaCampaign/manifest.js",
-      "sha256": "7e418a098605288719ff610901c06dc9b8d8b2ff0f8499db78c4a74da80c95df"
+      "sha256": "9476d8a90680c334e849f74325cea72853a02e36a63eaf36efa8f7bf88089322"
     },
     {
-      "bytes": 1275,
+      "bytes": 6213,
       "path": "games/arkhamhorror/content/packs/tfaInvestigators/manifest.js",
-      "sha256": "591ea9e965202b5fd387bbe6e7cd3eb28da5c48c1153b144c0763f7f595dd062"
+      "sha256": "597d482f8147300de183f9baadff848c057f727965659823ae641fb72ebdf306"
     },
     {
-      "bytes": 1375,
+      "bytes": 16133,
+      "path": "games/arkhamhorror/content/packs/tfaPlayer/effects.js",
+      "sha256": "76ef0bfab0f0566af5fe630dbb53ffcb75a24153ea8d094d5ad14d2eb2f8eede"
+    },
+    {
+      "bytes": 3353,
       "path": "games/arkhamhorror/content/packs/tfaPlayer/manifest.js",
-      "sha256": "e0bdfc6ca4e8c945eb0a5d953def5654e5338b0e7f4e4e27db10ab735e5338e3"
+      "sha256": "bd8c89a0f88bba047b6e89e7441f2bf86e9f13df414ea33bf2fc3fe9c5a102d7"
     },
     {
       "bytes": 5240,
@@ -167090,19 +167285,19 @@
       "sha256": "12df2288177ac375b59cf9706f5ffe2ed32967564dbfa81a031be9e99e206151"
     },
     {
-      "bytes": 1748,
+      "bytes": 2127,
       "path": "games/arkhamhorror/src/ai/ai-participation.js",
-      "sha256": "82e206a03b5e86c9fbcf4fc22165140f61bf97d789274cc4da758ba03aea03b4"
+      "sha256": "7de3d84e75b1f47a57b11b42e67e301e542ba3e17ba81b8bf6a5238a5b9c065f"
     },
     {
-      "bytes": 5597,
+      "bytes": 5473,
       "path": "games/arkhamhorror/src/ai/ai-story.js",
-      "sha256": "1ff233734981ac1a54cc279a0b198488333037196305edc2797d676e2087d705"
+      "sha256": "4881f7d42a4de91516a56a8b1ed9a4a3c001440f8473def61f07f97a6c2c51d6"
     },
     {
-      "bytes": 5592,
+      "bytes": 33523,
       "path": "games/arkhamhorror/src/campaign/campaign-effects.js",
-      "sha256": "ddb6fbe6d98b31387bced7e375217d864354b0fee62d041433a6c6b3c0008e0a"
+      "sha256": "fe03d3537cc3167a98804a70a4f2e6f3284f27d5812022fb99c362dc818ee134"
     },
     {
       "bytes": 6298,
@@ -167110,19 +167305,19 @@
       "sha256": "6f18ab2516b916e5a3e524a8870f0d86bd1a646ef214994f73d3526bdecb0e00"
     },
     {
-      "bytes": 10693,
+      "bytes": 15169,
       "path": "games/arkhamhorror/src/campaign/campaign.js",
-      "sha256": "274791cfeebfd36979126e0e26918c50613bdc6a2b66e4e49ddd3828ffd9f57c"
+      "sha256": "4115247378959f5ecb5575aaae8a4090e20d5d594908d61f0a6bfee4976c3373"
     },
     {
-      "bytes": 17311,
+      "bytes": 23845,
       "path": "games/arkhamhorror/src/campaign/story.js",
-      "sha256": "928b67be62690fe22e343898ac9d6b12066ddb7339d730b9db09c83adb7abcef"
+      "sha256": "31dc2fbaf1f9cecbacdccebab86a6f6ca40f941b712838ccf7459f2d1c794c05"
     },
     {
       "bytes": 3736,
       "path": "games/arkhamhorror/src/cards/carcosa-campaign-acceptance.js",
-      "sha256": "8cec02e9cd0c3c2f3810e1eab10f1693e28f62d79a564c811bc2fc237f15ce77"
+      "sha256": "421ab4a64fa264f7f14fa34832ec2bd0fcd87868d5973509472f671cf8d89a54"
     },
     {
       "bytes": 1900,
@@ -167130,29 +167325,29 @@
       "sha256": "36df36a2ec3b41ca5a6203b6a4abc0a574dba23506b26be132f827c57186bde7"
     },
     {
-      "bytes": 9964,
+      "bytes": 9768,
       "path": "games/arkhamhorror/src/cards/card-catalog.js",
-      "sha256": "c4562ddfb630c4f8313e9c5f888ca5f80bbedd7d6636d2b15899367734aacaac"
+      "sha256": "2ca8120c2df1a0a023f9dd3caaf642345b29fe2cc8e9a4ac78ed85e854b6ab0d"
     },
     {
-      "bytes": 27097,
+      "bytes": 28736,
       "path": "games/arkhamhorror/src/cards/card-effects.js",
-      "sha256": "8dada86a8e18e83ae7d1fe7ea23917df8ec44a92091fd3fe409b8970dcbf5913"
+      "sha256": "3d26507deb9fb1a8be6fdd87f4302649c3bdb0f6137aa0a7ce9974e395422d51"
     },
     {
-      "bytes": 2623,
+      "bytes": 2576,
       "path": "games/arkhamhorror/src/cards/card-identity.js",
-      "sha256": "0830d82bf86204a17509903926497dab267b8865190a31a9ec8adcc2cff7020e"
+      "sha256": "694e4af9fc3ea683d017b90771de9d3f4fc174da9c445beba6182ab49afbbdff"
     },
     {
       "bytes": 2655,
       "path": "games/arkhamhorror/src/cards/core-acceptance.js",
-      "sha256": "7274ed528992da362faf99319cb8dd52eb6b870392f17fa856615252faa19880"
+      "sha256": "371df3c981327ec41fe893ce56560a95067b6de9d4f24961904a26a746ddbfe4"
     },
     {
       "bytes": 3854,
       "path": "games/arkhamhorror/src/cards/dunwich-acceptance.js",
-      "sha256": "f07f6b19a9d483640c7a3e4bc2115eec4e0057723a0fd35dfad1c3258d4390ff"
+      "sha256": "15008c0bcb9afbb03ceb3c594e54aaa25050b59dce40dbc5777f6cddce6b30e3"
     },
     {
       "bytes": 1065,
@@ -167160,9 +167355,9 @@
       "sha256": "5f8a3c918e49998f2ec65eb3d5da3df2e04cc75dae49498bbf8a131dbbc74895"
     },
     {
-      "bytes": 6516,
+      "bytes": 7877,
       "path": "games/arkhamhorror/src/deck/availability.js",
-      "sha256": "2baca9c2ec90334fc5f2638713042154d0a06c2f9ead54aca6c9455270e61527"
+      "sha256": "e2942014dab2cb95c487ec44784845dced45a12fc069cddc0249f01e9f5135c2"
     },
     {
       "bytes": 40,
@@ -167180,14 +167375,14 @@
       "sha256": "cbb95a64de156a7d2b54293e457dc44914b255e5191677999eb664eab52533c2"
     },
     {
-      "bytes": 15796,
+      "bytes": 17306,
       "path": "games/arkhamhorror/src/engine/effects.js",
-      "sha256": "4b5e393dd22fe2c120247d3dc592362a531bd0ba6debb2dad7c22b1b05bc1491"
+      "sha256": "0541dc28ec06ebf30c56ef83070d49b82d1f5ab07f1019db5822582552190d9d"
     },
     {
-      "bytes": 446846,
+      "bytes": 634316,
       "path": "games/arkhamhorror/src/engine/engine.js",
-      "sha256": "8450cd7b3c0edbdd4cbef6fcdaea0905c134a407ecc67c9efec053f0e35348c6"
+      "sha256": "ed34a01a1e672e596f077125a20b63d365259cdfb53b8a33bb02e430ba7b6d6b"
     },
     {
       "bytes": 1936,
@@ -167195,24 +167390,29 @@
       "sha256": "313be4c2bb5ae36e5ece8de364e87165d8434be52126d06f03a8a9cf4fd462a8"
     },
     {
-      "bytes": 7172,
+      "bytes": 7030,
       "path": "games/arkhamhorror/src/engine/resolution.js",
-      "sha256": "2d62609caf08550fb996578e54a5a2f1cd0e74b43303d914cf6fd466d36e0ceb"
+      "sha256": "af7dc17ffc012a1fca6dfa64cf51f9124cc678f308784b35b0f85e4f6531fa71"
     },
     {
-      "bytes": 1497,
+      "bytes": 2454,
       "path": "games/arkhamhorror/src/engine/rules-state.js",
-      "sha256": "3c0d05c68054cf065cd38f175af0e49284860b8e5606d224b4aad76bc0484cc4"
+      "sha256": "4e99ce3d9976e7810b73682355b50851a01e83fc34238c522bba75cf14c130cf"
     },
     {
-      "bytes": 9745,
+      "bytes": 9541,
       "path": "games/arkhamhorror/src/engine/save-migration.js",
-      "sha256": "c2f2d5f578e4fe950bff7cc10c8ce1b06c12b505e3f79569b3fa809d9e749424"
+      "sha256": "e7411ee0a90404525ff2fdc7e00f605b655ff6e99bfbb0e1e09e8f6f5753c926"
     },
     {
-      "bytes": 8520,
+      "bytes": 8338,
       "path": "games/arkhamhorror/src/integration/arkhamdb.js",
-      "sha256": "13470f38dcf76a3581bf958c453e3cbef1ac869cf6c1cb03c4fdcdf0e146c69a"
+      "sha256": "664cbedb68517e55aaf4ff25bf13eceb79060053ca4ba125d721816c774db1cc"
+    },
+    {
+      "bytes": 1446,
+      "path": "games/arkhamhorror/src/integration/attack-style.js",
+      "sha256": "3f9ea63bfb16db81883575a7826fa01875a55a6eb1a2abf5319ee88ec5d638b6"
     },
     {
       "bytes": 3475,
@@ -167225,14 +167425,14 @@
       "sha256": "05dc3081af7a565f36a79d0f8840d2bf39298dfabcfc3159e75218743764125b"
     },
     {
-      "bytes": 6171,
+      "bytes": 6177,
       "path": "games/arkhamhorror/src/integration/hall-integration.js",
-      "sha256": "3f1834171f6737cd824c52db303ef97976f012e0c72d752a209d1308c1741548"
+      "sha256": "1cc06b8492bc1cc6742c5ead6c504548f96e576f3c3971f882469ca35656cb5e"
     },
     {
-      "bytes": 3950,
+      "bytes": 3992,
       "path": "games/arkhamhorror/src/integration/image-cache.js",
-      "sha256": "9570ea5719d89b10c19ff69e8166172b9a8dc3aeb91a6a4867f261e91bc3ec7e"
+      "sha256": "7b078902608c976a7b19ddb057505f15fb7e015c3bedc51c6d719b1368e7d8ff"
     },
     {
       "bytes": 4323,
@@ -167240,14 +167440,14 @@
       "sha256": "add4d06aafe98ee7423bdeb6b38db826b443dc8dc5c7fd126738888abae00fda"
     },
     {
-      "bytes": 7980,
+      "bytes": 12835,
       "path": "games/arkhamhorror/src/integration/observation.js",
-      "sha256": "4d11006959ebccd1a9fb92cadc0718a1c36e428f74595089bf6cfa91085edb1e"
+      "sha256": "d43de58ca54e210bf23001f42a6ec05dd6bcf0252466740ae91b7e4885177579"
     },
     {
-      "bytes": 4939,
+      "bytes": 5052,
       "path": "games/arkhamhorror/src/integration/presentation-state.js",
-      "sha256": "ad8f03df89d03721ed25c011762a5d3035fb11352eb571138bcd4f307f219bcb"
+      "sha256": "d80109e3905772f9e6cb5755da8f9c06e931fc8de58906adde67b827dbbfcd77"
     },
     {
       "bytes": 2036,
@@ -167260,9 +167460,9 @@
       "sha256": "70795d153702384eb7955e0bd3575ecfe0dc51b629b939f7b6f6d0bdc5b16122"
     },
     {
-      "bytes": 44057,
+      "bytes": 43476,
       "path": "games/arkhamhorror/tools/audit-resources.mjs",
-      "sha256": "099183187eb822f48841923268e4166b07603cc2915434f0806a904224219e0f"
+      "sha256": "1a559c3c07587334aa022620e949b433f971437945f83fc2898b0659d44d047c"
     },
     {
       "bytes": 7629,
@@ -167270,7 +167470,7 @@
       "sha256": "8a031d1debc1090f2accf87e0442588956e62f37d5f189a776c087210861e21f"
     }
   ],
-  "implementationSha256": "6bd090c643cefe8120fefd272075b61fd093e84a672bfc10e02155f32369bfb2",
+  "implementationSha256": "8753502c6cc21122602792a241ed1aec2f6eea78a4e59d22ef9b5aa896628609",
   "isolatedSources": [
     {
       "path": "frontend/public/cards_ja.json",
@@ -167290,7 +167490,7 @@
     "raw": "catalog/sources 按来源保存完整原始记录，包括 linked_card 与构筑限制；provenance 按原始字段路径定位。"
   },
   "quarantined": [],
-  "resourceVersion": "4a181ef6a0d60a046dbf0cda80dee0c18be5cf305b298a47097ba8521e613f62",
+  "resourceVersion": "a4c52da3810a26b2ed9980d22bf5c7c4f2512d3d1b545d548475794a7eb6df99",
   "schemaVersion": 1,
   "sourceManifest": [
     {
@@ -196337,7 +196537,7 @@
     },
     "quarantined": 0,
     "remainingMissingCodes": 0,
-    "strictAccepted": 331,
+    "strictAccepted": 438,
     "structuralConflicts": 169,
     "total": 5930,
     "types": {

@@ -1,0 +1,128 @@
+{
+  "campaignId": "theForgottenAge",
+  "created": "2026-10-19",
+  "source": "Original AI-generated artwork using OpenAI image_gen; not official game art.",
+  "palette": "deep jade, charcoal, moss, antique bronze, muted amber",
+  "assets": [
+    {
+      "id": "hub",
+      "title": "失落的时代 · 丛林神庙",
+      "file": "hub/jungle-temple.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 595664,
+      "sha256": "95694c079d29d9b960e62e71622e0e735e8e9e32a83e5ec0d506dc44b9467526",
+      "original": "artifacts/tfa-media/originals/hub.png"
+    },
+    {
+      "id": "table",
+      "title": "丛林远征调查桌",
+      "file": "table/investigation-desk.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 573850,
+      "sha256": "f4092090ac46b8b432356e2be2576ba8ac7e0da43c347e837f6b573c722695cb",
+      "original": "artifacts/tfa-media/originals/table.png"
+    },
+    {
+      "id": "theUntamedWilds",
+      "title": "荒莽密林",
+      "file": "scenarios/theUntamedWilds/scene.webp",
+      "width": 1672,
+      "height": 940,
+      "bytes": 541250,
+      "sha256": "45fca3457e0a97818b7d3b33ff7a8367b6c5145f760cd7ae6e7f3a3060b72507",
+      "original": "artifacts/tfa-media/originals/theUntamedWilds.png"
+    },
+    {
+      "id": "theDoomOfEztli",
+      "title": "埃兹特里的覆灭",
+      "file": "scenarios/theDoomOfEztli/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 529920,
+      "sha256": "afb8599785487be94e7e24c5ff9d009875024a7d4ec8ac1aae225d09892a0f7e",
+      "original": "artifacts/tfa-media/originals/theDoomOfEztli.png"
+    },
+    {
+      "id": "threadsOfFate",
+      "title": "命运之线",
+      "file": "scenarios/threadsOfFate/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 417118,
+      "sha256": "40fefb2c4f9a51a8925349a758d3dad1c11f3d52f7f734b0eb28193795755517",
+      "original": "artifacts/tfa-media/originals/threadsOfFate.png"
+    },
+    {
+      "id": "theBoundaryBeyond",
+      "title": "界限彼端",
+      "file": "scenarios/theBoundaryBeyond/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 642426,
+      "sha256": "b788fba4821e28bb3a3eee530b5430907e0c2ca6ebae47c3851f505638922c52",
+      "original": "artifacts/tfa-media/originals/theBoundaryBeyond.png"
+    },
+    {
+      "id": "heartOfTheEldersPart1",
+      "title": "久远腹地（上）",
+      "file": "scenarios/heartOfTheEldersPart1/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 563472,
+      "sha256": "346ed67315790b687739830b81c1b288bbe462380ba9d4651a6feab28a4f16bb",
+      "original": "artifacts/tfa-media/originals/heartOfTheEldersPart1.png"
+    },
+    {
+      "id": "heartOfTheEldersPart2",
+      "title": "久远腹地（下）",
+      "file": "scenarios/heartOfTheEldersPart2/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 508942,
+      "sha256": "7a9d9120dd5a3e00727db2892a9120e8040194cb75beeff0b395d84c4f5b9e06",
+      "original": "artifacts/tfa-media/originals/heartOfTheEldersPart2.png"
+    },
+    {
+      "id": "theCityOfArchives",
+      "title": "天机之城",
+      "file": "scenarios/theCityOfArchives/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 481842,
+      "sha256": "da7143dd71d077b027ebf62ce74acf55ed34d306a25b6c6cc3bdaa293980507e",
+      "original": "artifacts/tfa-media/originals/theCityOfArchives.png"
+    },
+    {
+      "id": "theDepthsOfYoth",
+      "title": "幽嘶深渊",
+      "file": "scenarios/theDepthsOfYoth/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 511304,
+      "sha256": "d08aa5c56de41167e5bb3a6d265151ee4e6225bbbf6bfd012e41ec4d18bee30d",
+      "original": "artifacts/tfa-media/originals/theDepthsOfYoth.png"
+    },
+    {
+      "id": "shatteredAeons",
+      "title": "破碎永世",
+      "file": "scenarios/shatteredAeons/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 625212,
+      "sha256": "22a8e2d429d274df97e9fb46763a4c41ecb1faa992c6c0c24edb9d9f945680b2",
+      "original": "artifacts/tfa-media/originals/shatteredAeons.png"
+    },
+    {
+      "id": "turnBackTime",
+      "title": "时间倒流",
+      "file": "scenarios/turnBackTime/scene.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 603996,
+      "sha256": "efdb57a3d2c0203997386fdf14eb2c223a91e1d2ba4386b64d447a648b9fca04",
+      "original": "artifacts/tfa-media/originals/turnBackTime.png"
+    }
+  ]
+}

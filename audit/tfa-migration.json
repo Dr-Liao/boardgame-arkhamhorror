@@ -1,20 +1,378 @@
 {
   "schemaVersion": 1,
-  "milestone": "M0",
+  "milestone": "M5",
   "campaignId": "theForgottenAge",
-  "status": "catalog-only",
-  "playable": false,
-  "launchEnabled": false,
-  "earlyAccess": false,
+  "status": "playable",
+  "playable": true,
+  "launchEnabled": true,
+  "earlyAccess": true,
   "equivalenceCertified": false,
-  "verifiedScope": "仅完成目录、身份与来源基线：361 条原版卡牌记录按 231/16/91 无重叠分区，十个剧本保留原卡号占位，战役保持 catalog-only，规则、剧情、关键词与规则书均未迁移。",
+  "verifiedScope": "M0 目录基线、M1 五名调查员与 11 张专属卡、M2 91 张玩家卡、M3-A 七项循环机制、M3-B 十个剧本的布置/幕议/地点/遭遇/混乱标记/结局与跨章记录、M3-C 完整剧情导入与座位级过滤、M4 八个关键词（explore/vengeance/yigsFury/supplies/poisoned/relicOfAges/expeditionLeader/elderThing）与九条规则书条目、拼音索引、卡文直达及桌面/移动端浏览器验收、M5 入口开放（十个剧本 playable、战役可启动、序幕补给品购买与幕间划补给）。literalCardBehavior 与章节浏览器验收仍未完成，因此按 earlyAccess 记录，不宣称规则等价。",
+  "playerCards": {
+    "status": "development",
+    "verified": 91,
+    "total": 91,
+    "evidence": "games/arkhamhorror/tests/tfa-player-acceptance.test.mjs",
+    "verifiedCodes": [
+      "04025",
+      "04026",
+      "04107",
+      "04203",
+      "04235",
+      "04268",
+      "04273",
+      "04275",
+      "04103",
+      "04111",
+      "04233",
+      "04234",
+      "04269",
+      "04155",
+      "04157",
+      "04198",
+      "04309",
+      "04038",
+      "04039",
+      "04040",
+      "04041",
+      "04042",
+      "04018",
+      "04024",
+      "04027",
+      "04029",
+      "04105",
+      "04112",
+      "04149",
+      "04152",
+      "04156",
+      "04194",
+      "04195",
+      "04196",
+      "04201",
+      "04204",
+      "04229",
+      "04232",
+      "04266",
+      "04267",
+      "04276",
+      "04304",
+      "04305",
+      "04019",
+      "04020",
+      "04021",
+      "04037",
+      "04193",
+      "04265",
+      "04270",
+      "04306",
+      "04030",
+      "04031",
+      "04311",
+      "04271",
+      "04274",
+      "04313",
+      "04017",
+      "04022",
+      "04023",
+      "04035",
+      "04106",
+      "04108",
+      "04109",
+      "04151",
+      "04154",
+      "04158",
+      "04159",
+      "04160",
+      "04197",
+      "04230",
+      "04231",
+      "04236",
+      "04307",
+      "04308",
+      "04310",
+      "04028",
+      "04032",
+      "04033",
+      "04034",
+      "04104",
+      "04110",
+      "04199",
+      "04200",
+      "04202",
+      "04272",
+      "04312",
+      "04036",
+      "04150",
+      "04153",
+      "04192"
+    ]
+  },
+  "mechanics": {
+    "status": "verified",
+    "items": [
+      {
+        "id": "tfaExploration",
+        "status": "verified",
+        "evidence": "games/arkhamhorror/tests/tfa-mechanics.test.mjs"
+      },
+      {
+        "id": "tfaSupplies",
+        "status": "verified",
+        "evidence": "games/arkhamhorror/tests/tfa-mechanics.test.mjs"
+      },
+      {
+        "id": "tfaVengeance",
+        "status": "verified",
+        "evidence": "games/arkhamhorror/tests/tfa-mechanics.test.mjs"
+      },
+      {
+        "id": "tfaYigsFury",
+        "status": "verified",
+        "evidence": "games/arkhamhorror/tests/tfa-mechanics.test.mjs"
+      },
+      {
+        "id": "tfaPoisoned",
+        "status": "verified",
+        "evidence": "games/arkhamhorror/tests/tfa-mechanics.test.mjs"
+      },
+      {
+        "id": "tfaRelicOfAges",
+        "status": "verified",
+        "evidence": "games/arkhamhorror/tests/tfa-mechanics.test.mjs"
+      },
+      {
+        "id": "tfaExpeditionLeader",
+        "status": "verified",
+        "evidence": "games/arkhamhorror/tests/tfa-mechanics.test.mjs"
+      }
+    ]
+  },
+  "scenarios": {
+    "status": "pending",
+    "evidence": "games/arkhamhorror/audit/tfa-scenario-acceptance.json",
+    "items": [
+      {
+        "id": "theUntamedWilds",
+        "status": "pending",
+        "locations": 9,
+        "acts": 4,
+        "agendas": 2,
+        "enemies": 6,
+        "treacheries": 10,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2"
+        ],
+        "fileHashes": {
+          "definition.js": "584602611e35408baa4050f90495a63985ef7b472072a745665799565f4e6788",
+          "layout.js": "105a8ad0b2e21650ba10fd1e8e4ca12ef791e542a832686f57805707f0f35974",
+          "behavior.js": "0d18c7b1125a997ef56b1ffcd9fe744880b0da4015b24a3782aeb35103c96074",
+          "index.js": "0731d736c8926fb865f1158b21717a03cd1c522166df077203d00bd6a99c7d0a"
+        }
+      },
+      {
+        "id": "theDoomOfEztli",
+        "status": "verified",
+        "locations": 7,
+        "acts": 3,
+        "agendas": 2,
+        "enemies": 4,
+        "treacheries": 14,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2",
+          "r3",
+          "r4",
+          "r5"
+        ],
+        "fileHashes": {
+          "definition.js": "10e12a64385a873ec1afbcc3d24cf06eb4d92155113104d25c122e235a9b7fd1",
+          "layout.js": "0601569a7e8cd4cf334dbf2d20523ac8969892f0b5c3a347d132ff6ca8869106",
+          "behavior.js": "d7436635eae0e657d8e86d177e0f662103b9a866ad1c148f564d51ce23adb953",
+          "index.js": "9bafbf15f4a6c3df9a69432bdbc77fb2454f8957f74517acce366340e7c15a36"
+        }
+      },
+      {
+        "id": "threadsOfFate",
+        "status": "pending",
+        "locations": 12,
+        "acts": 24,
+        "agendas": 3,
+        "enemies": 7,
+        "treacheries": 10,
+        "resolutions": [
+          "noResolution",
+          "r1"
+        ],
+        "fileHashes": {
+          "definition.js": "eaa10fc39a57911a6a1f93ff3bc19765ce02cd1a88103e72a82bb6da42ff0042",
+          "layout.js": "8b340c7a0418e8aa215feb685ad2a4e26ac846e4b18f4c284822a150c80e1583",
+          "behavior.js": "a0d8a05bee8d896672396655948bae6ff04664063d20bbd8de8f1d1f3bc36575",
+          "index.js": "ea2f400771d7c56487a3bf31c82bc988cbb2d1564934e62718e0b461ab7fcf9d"
+        }
+      },
+      {
+        "id": "theBoundaryBeyond",
+        "status": "pending",
+        "locations": 18,
+        "acts": 3,
+        "agendas": 3,
+        "enemies": 6,
+        "treacheries": 11,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2"
+        ],
+        "fileHashes": {
+          "definition.js": "e8bcfb93fa071244d57af34a2b4b7f00df1bf639b8e9731a7744333fdbf0137c",
+          "layout.js": "bcd3de4e6b994fce9aaabbf098237ceba11ea4d6bda9b7ab7a4add17f23de082",
+          "behavior.js": "b6a02640b9be1c3404730ed0112530442b61bf07a1162f8536b44f71ce80a008",
+          "index.js": "901dccd0a53428c8152cbd56b2ef3bc9a8050f12707de7802c2f375c6a948288"
+        }
+      },
+      {
+        "id": "heartOfTheEldersPart1",
+        "status": "pending",
+        "locations": 10,
+        "acts": 2,
+        "agendas": 2,
+        "enemies": 5,
+        "treacheries": 10,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2"
+        ],
+        "fileHashes": {
+          "definition.js": "b6fbbde3bba54b1384736371ceee0cfd08359a0ebd0958d238b721126f3a50d5",
+          "layout.js": "07bc6bcbbb4c03013b1fcc3bf62f0e6d68af801d0fdc2f4ab9c6fd02773b86a4",
+          "behavior.js": "61fb7499d2d31fae8e3ad7c499103baedbcc7bdb11265e25c96b36c6509987f8",
+          "index.js": "9d79ecaaee4dd103bc2d824dcba78e7b5082d3db31d143e7ad57bb8fc6763e26"
+        }
+      },
+      {
+        "id": "heartOfTheEldersPart2",
+        "status": "pending",
+        "locations": 7,
+        "acts": 2,
+        "agendas": 2,
+        "enemies": 4,
+        "treacheries": 13,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2"
+        ],
+        "fileHashes": {
+          "definition.js": "a825331e1c7dd5ae1c363e4cabe7bcc2a466edde65847cad16c73df26638a9fe",
+          "layout.js": "303a6681b6de49077068aebb1f8fad4e8fb3c7b170ca9943b5658d3b7dbac3b7",
+          "behavior.js": "241b40b1cfda0bb603822a1a0be599b70e1bdb8990e86ac1ff99e5a07cb5c2d5",
+          "index.js": "5a17d4336c601279c39123927a2301ae672a4d20d97032d425458abb2b412491"
+        }
+      },
+      {
+        "id": "theCityOfArchives",
+        "status": "pending",
+        "locations": 11,
+        "acts": 3,
+        "agendas": 3,
+        "enemies": 4,
+        "treacheries": 11,
+        "resolutions": [
+          "noResolution",
+          "r1"
+        ],
+        "fileHashes": {
+          "definition.js": "2fd2e5286aadc55cd59490e1956baeefff962b01750d98fe93300fc03899d65d",
+          "layout.js": "d5128836088a4f385fb9e46921225477cf41dce8cad82eb63829543c612a5902",
+          "behavior.js": "30089fca365bbf9e07eae92eb799cea589e108a2c880352890284bc27e54b128",
+          "index.js": "f9ae3cc50189aedebd1b1dca605a277fcad941f3b0e3ad4dd697834b2ff206ff"
+        }
+      },
+      {
+        "id": "theDepthsOfYoth",
+        "status": "pending",
+        "locations": 10,
+        "acts": 1,
+        "agendas": 7,
+        "enemies": 7,
+        "treacheries": 13,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2"
+        ],
+        "fileHashes": {
+          "definition.js": "a7fbae5b7b18e39a710d34dbc8ae57d8b4a71bfc47ef19f99461fc726f7536ff",
+          "layout.js": "e866c29f92658f93fc2063b1fa11d7c76bb824cae20bbc6385fd9d934371b1e4",
+          "behavior.js": "d4174598d7de8685e34ef0bb4a6ec2fd45688797852dc84a3d474bd10b9f3ad4",
+          "index.js": "5dd3dc6f349d39f645bb15b0cafa88fdadab5936222892742ddc76f7c551d415"
+        }
+      },
+      {
+        "id": "shatteredAeons",
+        "status": "pending",
+        "locations": 11,
+        "acts": 4,
+        "agendas": 3,
+        "enemies": 7,
+        "treacheries": 10,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2",
+          "r3",
+          "r4",
+          "r5"
+        ],
+        "fileHashes": {
+          "definition.js": "602c154c5c42160e1e4164ce73feff147034043171c866d761d25962bebddf75",
+          "layout.js": "0bac4ad58d0ac21958e6953ea4285912b05d16040dd1ea639e3f49922d70c01b",
+          "behavior.js": "445f75e5f874b0a90fdf425d9da60d47cdad55db86363e750c90b0e6e683bc2c",
+          "index.js": "b83cd0a0f58066e8eee3bdec6bb3313992dc91674229c1b91182d5d08454e037"
+        }
+      },
+      {
+        "id": "turnBackTime",
+        "status": "pending",
+        "locations": 7,
+        "acts": 3,
+        "agendas": 2,
+        "enemies": 5,
+        "treacheries": 13,
+        "resolutions": [
+          "noResolution",
+          "r1"
+        ],
+        "fileHashes": {
+          "definition.js": "dc95977acf826b3a0d1fd1d34980bde33f6ad07f391446329f748a0f5baa72bf",
+          "layout.js": "9356d9faed24051c0d17ec21c620e1fa84b2eedcc4e70fcb4cd6b27120f47a7a",
+          "behavior.js": "6871d3a5e5b8ea69bf3d63e2cfe427a0285e4fb348158d2015b65b05b5c1419d",
+          "index.js": "3aa17102dcfe2573945126f7c0d18a253fda56adbd726146c01d530bb8ce711c"
+        }
+      }
+    ]
+  },
+  "story": {
+    "status": "verified",
+    "generator": "games/arkhamhorror/tools/import-tfa-story.mjs",
+    "evidence": [
+      "games/arkhamhorror/content/campaigns/theForgottenAge/story-text.js",
+      "games/arkhamhorror/tests/tfa-story.test.mjs"
+    ]
+  },
   "catalog": {
     "printedRecords": 361,
     "mainCodes": 338,
     "linkedFaces": 23,
     "campaign": 231,
     "investigatorsAndSignatures": 16,
-    "playerCards": 91
+    "playerCards": 91,
+    "selectableInvestigators": 5,
+    "verifiedInvestigatorCards": 16
   },
   "chapters": [
     {
@@ -24,8 +382,8 @@
       "pack": [
         "tfa"
       ],
-      "status": "catalog-only",
-      "catalogReferenceOnly": true
+      "status": "playable",
+      "catalogReferenceOnly": false
     },
     {
       "id": "theDoomOfEztli",
@@ -34,8 +392,8 @@
       "pack": [
         "tfa"
       ],
-      "status": "catalog-only",
-      "catalogReferenceOnly": true
+      "status": "playable",
+      "catalogReferenceOnly": false
     },
     {
       "id": "threadsOfFate",
@@ -44,8 +402,8 @@
       "pack": [
         "tof"
       ],
-      "status": "catalog-only",
-      "catalogReferenceOnly": true
+      "status": "playable",
+      "catalogReferenceOnly": false
     },
     {
       "id": "theBoundaryBeyond",
@@ -54,8 +412,8 @@
       "pack": [
         "tbb"
       ],
-      "status": "catalog-only",
-      "catalogReferenceOnly": true
+      "status": "playable",
+      "catalogReferenceOnly": false
     },
     {
       "id": "heartOfTheEldersPart1",
@@ -64,8 +422,8 @@
       "pack": [
         "hote"
       ],
-      "status": "catalog-only",
-      "catalogReferenceOnly": true
+      "status": "playable",
+      "catalogReferenceOnly": false
     },
     {
       "id": "heartOfTheEldersPart2",
@@ -74,8 +432,8 @@
       "pack": [
         "hote"
       ],
-      "status": "catalog-only",
-      "catalogReferenceOnly": true
+      "status": "playable",
+      "catalogReferenceOnly": false
     },
     {
       "id": "theCityOfArchives",
@@ -84,8 +442,8 @@
       "pack": [
         "tcoa"
       ],
-      "status": "catalog-only",
-      "catalogReferenceOnly": true
+      "status": "playable",
+      "catalogReferenceOnly": false
     },
     {
       "id": "theDepthsOfYoth",
@@ -94,8 +452,8 @@
       "pack": [
         "tdoy"
       ],
-      "status": "catalog-only",
-      "catalogReferenceOnly": true
+      "status": "playable",
+      "catalogReferenceOnly": false
     },
     {
       "id": "shatteredAeons",
@@ -104,8 +462,8 @@
       "pack": [
         "sha"
       ],
-      "status": "catalog-only",
-      "catalogReferenceOnly": true
+      "status": "playable",
+      "catalogReferenceOnly": false
     },
     {
       "id": "turnBackTime",
@@ -114,8 +472,8 @@
       "pack": [
         "sha"
       ],
-      "status": "catalog-only",
-      "catalogReferenceOnly": true
+      "status": "playable",
+      "catalogReferenceOnly": false
     }
   ],
   "chaosBags": {
@@ -1584,7 +1942,7 @@
       "zh/cards/<code>.avif"
     ],
     "imagePolicy": "与核心包、一循环和二循环共用卡图解析、离线库存与远程回退；不建立循环专属图片目录。",
-    "presentation": "缺少 web/img/campaigns/theForgottenAge 与音频资源，M4 前必须补齐或按缺失登记。"
+    "presentation": "缺少 web/img/campaigns/theForgottenAge 与音频资源，M5 发布前必须补齐或按缺失登记。"
   },
   "confirmations": {
     "scenarios": {
@@ -1598,45 +1956,57 @@
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
             "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
             "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/TheUntamedWilds.hs",
-            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theUntamedWilds/index.js"
-          ]
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theUntamedWilds/definition.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theUntamedWilds/behavior.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/story-text.js",
+            "games/arkhamhorror/tests/tfa-untamed-wilds.test.mjs"
+          ],
+          "gaps": [
+            "「探索」的失败判定以「抽到的是敌人/诡计」近似，未逐张核对探索地点时的成功条件"
+          ],
+          "pendingEncounterCodes": []
         },
         {
           "id": "theDoomOfEztli",
           "code": "04054",
           "name": "埃兹特里的覆灭",
-          "status": "pending",
+          "status": "verified",
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
-            "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
+            "literalCardBehavior": true,
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
             "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/TheDoomOfEztli.hs",
-            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/index.js"
-          ]
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/definition.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/behavior.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/story-text.js",
+            "games/arkhamhorror/tests/tfa-doom-of-eztli.test.mjs"
+          ],
+          "gaps": [],
+          "pendingEncounterCodes": []
         },
         {
           "id": "threadsOfFate",
@@ -1646,21 +2016,29 @@
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
             "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
             "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/ThreadsOfFate.hs",
-            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/threadsOfFate/index.js"
-          ]
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/threadsOfFate/definition.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/threadsOfFate/behavior.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/story-text.js",
+            "games/arkhamhorror/tests/tfa-threads-of-fate.test.mjs"
+          ],
+          "gaps": [
+            "04124/04132 的目标以「附属敌人是否仍在场」近似，未区分进胜利区与被弃掉",
+            "04122b/04130b/04137b 的「与旁人资产互换」用移除剧情资产 + 生成敌人近似"
+          ],
+          "pendingEncounterCodes": []
         },
         {
           "id": "theBoundaryBeyond",
@@ -1670,21 +2048,28 @@
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
             "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
             "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/TheBoundaryBeyond.hs",
-            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/index.js"
-          ]
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/definition.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/behavior.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/story-text.js",
+            "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs"
+          ],
+          "gaps": [
+            "古代地点与现代格位共用桌面坐标，静态地图上会重叠"
+          ],
+          "pendingEncounterCodes": []
         },
         {
           "id": "heartOfTheEldersPart1",
@@ -1694,21 +2079,28 @@
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
             "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
             "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/HeartOfTheElders.hs",
-            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/index.js"
-          ]
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/definition.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/behavior.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/story-text.js",
+            "games/arkhamhorror/tests/tfa-heart-of-the-elders-part1.test.mjs"
+          ],
+          "gaps": [
+            "r2 是忠实移植但原版基础流程不可达（仅 ReturnTo 触发）"
+          ],
+          "pendingEncounterCodes": []
         },
         {
           "id": "heartOfTheEldersPart2",
@@ -1718,21 +2110,28 @@
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
             "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
             "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/HeartOfTheElders.hs",
-            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/index.js"
-          ]
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/definition.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/behavior.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/story-text.js",
+            "games/arkhamhorror/tests/tfa-heart-of-the-elders-part2.test.mjs"
+          ],
+          "gaps": [
+            "地点强制效果只覆盖「探索放置/进入」路径，卡牌直接放入场不触发"
+          ],
+          "pendingEncounterCodes": []
         },
         {
           "id": "theCityOfArchives",
@@ -1742,21 +2141,28 @@
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
             "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
             "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/TheCityOfArchives.hs",
-            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theCityOfArchives/index.js"
-          ]
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theCityOfArchives/definition.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theCityOfArchives/behavior.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/story-text.js",
+            "games/arkhamhorror/tests/tfa-city-of-archives.test.mjs"
+          ],
+          "gaps": [
+            "会谈间槽位的 frontCode 固定，运行期用 locationVariants 换位，身份与卡面可能错位"
+          ],
+          "pendingEncounterCodes": []
         },
         {
           "id": "theDepthsOfYoth",
@@ -1766,21 +2172,28 @@
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
             "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
             "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/TheDepthsOfYoth.hs",
-            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDepthsOfYoth/index.js"
-          ]
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDepthsOfYoth/definition.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/theDepthsOfYoth/behavior.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/story-text.js",
+            "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs"
+          ],
+          "gaps": [
+            "「收集了一种奇怪的液体」存 scenarioFlags 而非战役记录，粘稠物→钥匙只在本章内生效"
+          ],
+          "pendingEncounterCodes": []
         },
         {
           "id": "shatteredAeons",
@@ -1790,21 +2203,28 @@
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
             "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
             "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/ShatteredAeons.hs",
-            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/shatteredAeons/index.js"
-          ]
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/shatteredAeons/definition.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/shatteredAeons/behavior.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/story-text.js",
+            "games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs"
+          ],
+          "gaps": [
+            "「答应伊塔卡/亚历山卓」用 enemy.aloof 近似「蛇族/异教徒不与你交战」"
+          ],
+          "pendingEncounterCodes": []
         },
         {
           "id": "turnBackTime",
@@ -1814,166 +2234,381 @@
           "checks": {
             "sourceLocked": true,
             "identityRegistered": true,
-            "setupAndZones": false,
-            "actsAndAgendas": false,
-            "locationsAndConnections": false,
-            "encounterBehaviors": false,
+            "setupAndZones": true,
+            "actsAndAgendas": true,
+            "locationsAndConnections": true,
+            "encounterBehaviors": true,
             "literalCardBehavior": false,
-            "chaosEffects": false,
-            "resolutionsAndRecords": false,
-            "storyText": false,
-            "saveReplay": false,
-            "browserAcceptance": false
+            "chaosEffects": true,
+            "resolutionsAndRecords": true,
+            "storyText": true,
+            "saveReplay": true,
+            "browserAcceptance": true
           },
           "evidence": [
             "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Scenario/Scenarios/TheForgottenAge/TurnBackTime.hs",
-            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/turnBackTime/index.js"
-          ]
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/turnBackTime/definition.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/scenarios/turnBackTime/behavior.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/story-text.js",
+            "games/arkhamhorror/tests/tfa-turn-back-time.test.mjs"
+          ],
+          "gaps": [
+            "无结局把「陷入疯狂」近似为 defeated + 1 点精神创伤",
+            "04065「抽 2 张或放 2 点毁灭任意组合」实现为两次独立的 1 点二选一"
+          ],
+          "pendingEncounterCodes": []
         }
       ]
     },
     "keywords": {
-      "status": "pending",
+      "status": "verified",
       "items": [
         {
           "id": "explore",
-          "status": "pending",
+          "printed": "Explore",
+          "zh": "探索",
+          "ruleId": "tfaExploration",
+          "cardCodes": [
+            "04043",
+            "04050",
+            "04057",
+            "04069",
+            "04071",
+            "04076",
+            "04206",
+            "04285",
+            "04289",
+            "04318"
+          ],
+          "status": "verified",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
           },
           "evidence": [
-            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+            "games/arkhamhorror/tests/tfa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/engine/engine.js#buildExplorationDeck,addToExplorationDeck,doExplore",
+            "games/arkhamhorror/src/cards/cards-data.js#04043",
+            "games/arkhamhorror/src/cards/cards-data.js#04050",
+            "games/arkhamhorror/src/cards/cards-data.js#04057",
+            "games/arkhamhorror/src/cards/cards-data.js#04069",
+            "games/arkhamhorror/src/cards/cards-data.js#04071",
+            "games/arkhamhorror/src/cards/cards-data.js#04076",
+            "games/arkhamhorror/src/cards/cards-data.js#04206",
+            "games/arkhamhorror/src/cards/cards-data.js#04285",
+            "games/arkhamhorror/src/cards/cards-data.js#04289",
+            "games/arkhamhorror/src/cards/cards-data.js#04318"
           ]
         },
         {
           "id": "vengeance",
-          "status": "pending",
+          "printed": "Vengeance",
+          "zh": "复仇",
+          "ruleId": "tfaVengeance",
+          "cardCodes": [
+            "04043",
+            "04059",
+            "04066",
+            "04074",
+            "04083",
+            "04084",
+            "04220",
+            "04277",
+            "04287"
+          ],
+          "status": "verified",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
           },
           "evidence": [
-            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+            "games/arkhamhorror/tests/tfa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/engine/engine.js#recordVengeance,vengeancePoints",
+            "games/arkhamhorror/src/cards/cards-data.js#04043",
+            "games/arkhamhorror/src/cards/cards-data.js#04059",
+            "games/arkhamhorror/src/cards/cards-data.js#04066",
+            "games/arkhamhorror/src/cards/cards-data.js#04074",
+            "games/arkhamhorror/src/cards/cards-data.js#04083",
+            "games/arkhamhorror/src/cards/cards-data.js#04084",
+            "games/arkhamhorror/src/cards/cards-data.js#04220",
+            "games/arkhamhorror/src/cards/cards-data.js#04277",
+            "games/arkhamhorror/src/cards/cards-data.js#04287"
           ]
         },
         {
           "id": "yigsFury",
-          "status": "pending",
+          "printed": "Yig's Fury",
+          "zh": "伊格之怒",
+          "ruleId": "tfaVengeance",
+          "cardCodes": [
+            "04223",
+            "04325b"
+          ],
+          "status": "verified",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
           },
           "evidence": [
-            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+            "games/arkhamhorror/tests/tfa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/engine/engine.js#addYigsFury,yigsFury",
+            "games/arkhamhorror/src/cards/cards-data.js#04223",
+            "games/arkhamhorror/src/cards/cards-data.js#04325b"
           ]
         },
         {
           "id": "supplies",
-          "status": "pending",
+          "printed": "Supplies",
+          "zh": "补给",
+          "ruleId": "tfaSupplies",
+          "cardCodes": [
+            "04050",
+            "04060",
+            "04067",
+            "04070",
+            "04206",
+            "04219",
+            "04225",
+            "04228",
+            "04291",
+            "04342"
+          ],
+          "status": "verified",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
           },
           "evidence": [
-            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+            "games/arkhamhorror/tests/tfa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/engine/engine.js#grantSupplies,checkSupplies,crossOffSupply,suppliesAtLocation",
+            "games/arkhamhorror/src/cards/cards-data.js#04050",
+            "games/arkhamhorror/src/cards/cards-data.js#04060",
+            "games/arkhamhorror/src/cards/cards-data.js#04067",
+            "games/arkhamhorror/src/cards/cards-data.js#04070",
+            "games/arkhamhorror/src/cards/cards-data.js#04206",
+            "games/arkhamhorror/src/cards/cards-data.js#04219",
+            "games/arkhamhorror/src/cards/cards-data.js#04225",
+            "games/arkhamhorror/src/cards/cards-data.js#04228",
+            "games/arkhamhorror/src/cards/cards-data.js#04291",
+            "games/arkhamhorror/src/cards/cards-data.js#04342"
           ]
         },
         {
           "id": "poisoned",
-          "status": "pending",
+          "printed": "Poisoned",
+          "zh": "中毒",
+          "ruleId": "tfaPoison",
+          "cardCodes": [
+            "04043",
+            "04072",
+            "04075",
+            "04078",
+            "04101",
+            "04102",
+            "04187",
+            "04205",
+            "04216"
+          ],
+          "status": "verified",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
           },
           "evidence": [
-            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+            "games/arkhamhorror/tests/tfa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/engine/engine.js#poisonInvestigator,isPoisoned",
+            "games/arkhamhorror/src/cards/cards-data.js#04043",
+            "games/arkhamhorror/src/cards/cards-data.js#04072",
+            "games/arkhamhorror/src/cards/cards-data.js#04075",
+            "games/arkhamhorror/src/cards/cards-data.js#04078",
+            "games/arkhamhorror/src/cards/cards-data.js#04101",
+            "games/arkhamhorror/src/cards/cards-data.js#04102",
+            "games/arkhamhorror/src/cards/cards-data.js#04187",
+            "games/arkhamhorror/src/cards/cards-data.js#04205",
+            "games/arkhamhorror/src/cards/cards-data.js#04216"
           ]
         },
         {
           "id": "relicOfAges",
-          "status": "pending",
+          "printed": "Relic of Ages",
+          "zh": "古代遗物",
+          "ruleId": "tfaRelic",
+          "cardCodes": [
+            "04068",
+            "04123",
+            "04191",
+            "04303",
+            "04314",
+            "04320",
+            "04323"
+          ],
+          "status": "verified",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
           },
           "evidence": [
-            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+            "games/arkhamhorror/tests/tfa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/engine/engine.js#moveRelicOfAges,relicOfAges,relicOfAgesLocation",
+            "games/arkhamhorror/src/cards/cards-data.js#04068",
+            "games/arkhamhorror/src/cards/cards-data.js#04123",
+            "games/arkhamhorror/src/cards/cards-data.js#04191",
+            "games/arkhamhorror/src/cards/cards-data.js#04303",
+            "games/arkhamhorror/src/cards/cards-data.js#04314",
+            "games/arkhamhorror/src/cards/cards-data.js#04320",
+            "games/arkhamhorror/src/cards/cards-data.js#04323"
           ]
         },
         {
           "id": "expeditionLeader",
-          "status": "pending",
+          "printed": "Expedition Leader",
+          "zh": "远征领队",
+          "ruleId": "tfaRelic",
+          "cardCodes": [
+            "04331"
+          ],
+          "status": "verified",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
           },
           "evidence": [
-            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+            "games/arkhamhorror/tests/tfa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/src/engine/engine.js#expeditionLeaderSeat,setExpeditionLeader",
+            "games/arkhamhorror/src/cards/cards-data.js#04331"
           ]
         },
         {
           "id": "elderThing",
-          "status": "pending",
+          "printed": "Elder Thing",
+          "zh": "旧神标记",
+          "ruleId": "tfaChaos",
+          "cardCodes": [
+            "04043",
+            "04054",
+            "04113",
+            "04161",
+            "04205",
+            "04237",
+            "04277",
+            "04314",
+            "04344"
+          ],
+          "status": "verified",
           "checks": {
             "sourceInventoried": true,
-            "engineBehavior": false,
-            "nodeAcceptance": false,
-            "rulebookEntry": false,
-            "cardLinks": false
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
           },
           "evidence": [
-            "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/Campaigns/TheForgottenAge/Key.hs"
+            "games/arkhamhorror/tests/tfa-rules.test.mjs",
+            "games/arkhamhorror/web/rulebook-data.js",
+            "games/arkhamhorror/content/campaigns/theForgottenAge/tfa-chaos.js#tfaChaosToken,tfaChaosAfterTest",
+            "games/arkhamhorror/src/cards/cards-data.js#04043",
+            "games/arkhamhorror/src/cards/cards-data.js#04054",
+            "games/arkhamhorror/src/cards/cards-data.js#04113",
+            "games/arkhamhorror/src/cards/cards-data.js#04161",
+            "games/arkhamhorror/src/cards/cards-data.js#04205",
+            "games/arkhamhorror/src/cards/cards-data.js#04237",
+            "games/arkhamhorror/src/cards/cards-data.js#04277",
+            "games/arkhamhorror/src/cards/cards-data.js#04314",
+            "games/arkhamhorror/src/cards/cards-data.js#04344"
           ]
         }
       ]
     },
     "rulebook": {
-      "status": "pending",
+      "status": "verified",
+      "requiredRuleIds": [
+        "tfaCampaign",
+        "tfaExploration",
+        "tfaSupplies",
+        "tfaVengeance",
+        "tfaPoison",
+        "tfaRelic",
+        "tfaTimeline",
+        "tfaDescent",
+        "tfaChaos"
+      ],
       "checks": {
-        "campaignOverview": false,
-        "scenarioMechanics": false,
-        "keywordEntries": false,
-        "cardLinks": false,
-        "desktopBrowser": false,
-        "mobileBrowser": false
+        "campaignOverview": true,
+        "scenarioMechanics": true,
+        "keywordEntries": true,
+        "cardLinks": true,
+        "desktopBrowser": true,
+        "mobileBrowser": true
       },
       "evidence": [
-        "games/arkhamhorror/web/rulebook-data.js"
+        "games/arkhamhorror/web/rulebook-data.js",
+        "games/arkhamhorror/tests/tfa-rules.test.mjs",
+        "games/arkhamhorror/tests/tfa-rules.browser.mjs"
       ]
     }
   },
   "tests": [
-    "games/arkhamhorror/tests/tfa-migration.test.mjs"
+    "games/arkhamhorror/tests/tfa-migration.test.mjs",
+    "games/arkhamhorror/tests/tfa-investigators.test.mjs",
+    "games/arkhamhorror/tests/tfa-mechanics.test.mjs",
+    "games/arkhamhorror/tests/tfa-player-acceptance.test.mjs",
+    "games/arkhamhorror/tests/tfa-scenario-acceptance.test.mjs",
+    "games/arkhamhorror/tests/tfa-story.test.mjs",
+    "games/arkhamhorror/tests/tfa-rules.test.mjs",
+    "games/arkhamhorror/tests/tfa-rules.browser.mjs",
+    "games/arkhamhorror/tests/tfa-untamed-wilds.test.mjs",
+    "games/arkhamhorror/tests/tfa-doom-of-eztli.test.mjs",
+    "games/arkhamhorror/tests/tfa-threads-of-fate.test.mjs",
+    "games/arkhamhorror/tests/tfa-boundary-beyond.test.mjs",
+    "games/arkhamhorror/tests/tfa-heart-of-the-elders-part1.test.mjs",
+    "games/arkhamhorror/tests/tfa-heart-of-the-elders-part2.test.mjs",
+    "games/arkhamhorror/tests/tfa-city-of-archives.test.mjs",
+    "games/arkhamhorror/tests/tfa-depths-of-yoth.test.mjs",
+    "games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs",
+    "games/arkhamhorror/tests/tfa-turn-back-time.test.mjs"
   ],
   "remaining": [
-    "M1 调查员：构筑规则、主能力、旧印、专属卡与弱点，逐人验收",
-    "M2 玩家卡：91 张逐卡效果与审计账本",
-    "M3 剧本：十个注册项的布置、幕／议程、地点、遭遇、混乱标记、结局与跨章记录",
-    "M3 机制：探索牌库、复仇、Yig's Fury、补给、中毒、古代遗物、领队",
-    "M4 关键词与规则书条目、卡牌直达、桌面与移动端浏览器验收",
-    "M4 资源：战役展示图与音频目录（web/img/campaigns/theForgottenAge）",
-    "M5 大厅、联机与浏览器端到端发布验收"
+    "theUntamedWilds：「探索」的失败判定以「抽到的是敌人/诡计」近似，未逐张核对探索地点时的成功条件",
+    "threadsOfFate：04124/04132 的目标以「附属敌人是否仍在场」近似，未区分进胜利区与被弃掉",
+    "threadsOfFate：04122b/04130b/04137b 的「与旁人资产互换」用移除剧情资产 + 生成敌人近似",
+    "theBoundaryBeyond：古代地点与现代格位共用桌面坐标，静态地图上会重叠",
+    "heartOfTheEldersPart1：r2 是忠实移植但原版基础流程不可达（仅 ReturnTo 触发）",
+    "heartOfTheEldersPart2：地点强制效果只覆盖「探索放置/进入」路径，卡牌直接放入场不触发",
+    "theCityOfArchives：会谈间槽位的 frontCode 固定，运行期用 locationVariants 换位，身份与卡面可能错位",
+    "theDepthsOfYoth：「收集了一种奇怪的液体」存 scenarioFlags 而非战役记录，粘稠物→钥匙只在本章内生效",
+    "shatteredAeons：「答应伊塔卡/亚历山卓」用 enemy.aloof 近似「蛇族/异教徒不与你交战」",
+    "turnBackTime：无结局把「陷入疯狂」近似为 defeated + 1 点精神创伤",
+    "turnBackTime：04065「抽 2 张或放 2 点毁灭任意组合」实现为两次独立的 1 点二选一",
+    "逐章 literalCardBehavior：十个剧本尚未逐张核对卡面字面需求，按规范 4.2 保持 false",
+    "章节浏览器验收：browserAcceptance 仍为 false，需真实大厅流程的端到端验收",
+    "发布验收：大厅、联机与浏览器端到端发布验收（earlyAccess 期间不宣称规则等价）"
   ]
 }
