@@ -3403,6 +3403,9 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '04020', attachedSkillBonus: 1 },
   // 03012 彩绘世界：可以从牌库下方「复制」事件打出（读点散在 reaction/play 流程，共 7 处）。
   { code: '03012', copiesBeneathEvents: true },
+  // 03148 埋伏 / 03199 陷阱：附属到地点，敌人入场时触发（读点在敌人入场与阶段收尾）。
+  { code: '03148', ambushAttachment: true },
+  { code: '03199', snareAttachment: true },
   // 03042 随行鬼影：在离承受者最远的地点生成（读点在 resolveWeakness 的敌人弱点段）。
   { code: '03042', weaknessSpawnsAtFarthestLocation: true },
   // 02138 / 02139 / 02179（远古遗物系列）：调查员被消除时离场并进弃牌堆。

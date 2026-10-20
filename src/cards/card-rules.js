@@ -128,3 +128,6 @@ export const ACTS_PLACING_LOCATION_FOR_EMPTY_SPAWN = Object.freeze(['04318'])
 export function actPlacesLocationForEmptySpawn(code) {
   return ACTS_PLACING_LOCATION_FOR_EMPTY_SPAWN.includes(code)
 }
+
+// 卡号级规则数据：剧情关键敌人 / 弱点（原 engine.js 硬编码 03059）。
+export const PALLID_MASK_CODE = '03059'

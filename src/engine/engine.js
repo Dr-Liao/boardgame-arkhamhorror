@@ -49,6 +49,7 @@ import {
   LITA_CHANDLER_CODE,
   counterTreacheryCode,
   actPlacesLocationForEmptySpawn,
+  PALLID_MASK_CODE,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -1313,7 +1314,7 @@ function finishScenario(state, resolutionKey, events) {
   if (campaign.id === 'thePathToCarcosa' && campaign.records.pallidMaskBearer) {
     applyCampaignEffect(state, {
       type: 'transferCampaignWeakness',
-      code: '03059',
+      code: PALLID_MASK_CODE,
       bearerRecord: 'pallidMaskBearer',
     }, text => info(state, events, text))
   }
@@ -4588,7 +4589,8 @@ function processPlayerEnemyEntry(state, enemy, events, spawned = false) {  const
   enemy.hidingSpotAloof = !enemy.elite
     && attachments.some(item => registeredEntry(item.code)?.grantsHidingSpot && item.location === enemy.location)
   enemy.aloof = !!enemy.printedAloof || enemy.hidingSpotAloof
-  const ambush = spawned && attachments.find(item => item.code === '03148' && item.location === enemy.location)
+  // Phase 5（5a-27）：「伏击」这类敌人入场即触发伤害的附属由条目级 ambushAttachment 声明。
+  const ambush = spawned && attachments.find(item => registeredEntry(item.code)?.ambushAttachment && item.location === enemy.location)
   if (ambush) {
     removeOne(attachments, ambush)
     state.investigators[ambush.ownerSeat]?.discard.push(ambush.code)
@@ -4596,7 +4598,7 @@ function processPlayerEnemyEntry(state, enemy, events, spawned = false) {  const
     damageEnemy(state, enemy, 2, ambush.ownerSeat, events)
   }
   if (!state.enemies.includes(enemy)) return
-  const snare = attachments.find(item => item.code === '03199' && item.location === enemy.location && !enemy.elite)
+  const snare = attachments.find(item => registeredEntry(item.code)?.snareAttachment && item.location === enemy.location && !enemy.elite)
   if (snare) {
     removeOne(attachments, snare)
     enemy.exhausted = true
@@ -4787,7 +4789,7 @@ function defeatEnemy(state, enemy, events) {
       applyHorror(state, inv, 1, events)
     }
   }
-  if ((enemy.originalCode || enemy.code) === '03059') {
+  if ((enemy.originalCode || enemy.code) === PALLID_MASK_CODE) {
     state.campaign.records.chasingTheStranger =
       Number(state.campaign.records.chasingTheStranger || 0) + 1
   }
@@ -5633,7 +5635,7 @@ function enemyPhase(state) {
       owner?.discard.push(attachment.code)
       info(state, events, `「藏身地点」在敌人阶段结束时被弃置。`)
     }
-    if (attachment.code === '03148'
+    if (registeredEntry(attachment.code)?.ambushAttachment
       && !aliveInvestigators(state).some(inv => inv.location === location)) {
       removeOne(state.playerLocationAttachments, attachment)
       owner?.discard.push(attachment.code)
@@ -9605,7 +9607,8 @@ function doInvestigate(state, seat, opts, events, noSpend) {
       if (opts.autoEvadeOnSuccess) {
         const targets = enemiesEngagedWith(state, inv)
         if (targets.length) {
-          const enemy = targets.length === 1 ? targets[0] : chooseEnemyFrom(state, seat, targets, '03193')
+          const enemy = targets.length === 1 ? targets[0]
+            : chooseEnemyFrom(state, seat, targets, loc.originalCode || loc.code)
           enemy.exhausted = true; disengageEnemy(state, enemy); afterEvade(state, inv, enemy, events)
         }
       }
@@ -11923,18 +11926,18 @@ function itemDiscountAtLocation(state, inv, def) {
   if (!def || def.type !== 'asset') return 0
   if (!(def.traits || []).some(trait => String(trait).toLowerCase() === 'item')) return 0
   const holder = state.investigators.find(other => other.location === inv.location
-    && other.assets.some(asset => asset.code === '03149' && asset.itemDiscountAtLocation
+    && other.assets.some(asset => asset.itemDiscountAtLocation
       && asset.itemDiscountAtLocation.round === state.round
       && asset.itemDiscountAtLocation.phase === state.phase))
   if (!holder) return 0
-  const asset = holder.assets.find(item => item.code === '03149' && item.itemDiscountAtLocation
+  const asset = holder.assets.find(item => item.itemDiscountAtLocation
     && item.itemDiscountAtLocation.round === state.round && item.itemDiscountAtLocation.phase === state.phase)
   return asset?.itemDiscountAtLocation?.amount || 1
 }
 
 function consumeItemDiscountAtLocation(state, inv) {
   for (const other of state.investigators.filter(item => item.location === inv.location)) {
-    for (const asset of other.assets.filter(item => item.code === '03149' && item.itemDiscountAtLocation)) {
+    for (const asset of other.assets.filter(item => item.itemDiscountAtLocation)) {
       if (asset.itemDiscountAtLocation.round === state.round && asset.itemDiscountAtLocation.phase === state.phase) {
         delete asset.itemDiscountAtLocation
         return true
@@ -11947,7 +11950,7 @@ function consumeItemDiscountAtLocation(state, inv) {
 function charlesPayCandidate(state, inv, cost) {
   return state.investigators.find(other => other !== inv && other.location === inv.location
     && !other.defeated && !other.resigned && other.resources >= cost
-    && other.assets.some(asset => asset.code === '03149')) || null
+    && other.assets.some(asset => asset.itemDiscountAtLocation)) || null
 }
 
 function tomeActionEligible(state, inv, move) {

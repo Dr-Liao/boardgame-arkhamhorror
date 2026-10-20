@@ -184,6 +184,9 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // Phase 5（5a-26）：复制牌库下方的事件（彩绘世界）/ 附属期间让敌人 aloof（藏身地点）。
   'copiesBeneathEvents',
   'grantsHidingSpot',
+  // Phase 5（5a-27）：附属触发型（埋伏 / 陷阱）。
+  'ambushAttachment',
+  'snareAttachment',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -432,6 +435,8 @@ export function registerCardAbilities(entries) {
       weaknessSpawnsAtFarthestLocation: entry.weaknessSpawnsAtFarthestLocation === true,
       copiesBeneathEvents: entry.copiesBeneathEvents === true,
       grantsHidingSpot: entry.grantsHidingSpot === true,
+      ambushAttachment: entry.ambushAttachment === true,
+      snareAttachment: entry.snareAttachment === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

@@ -10,7 +10,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
 import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine/engine.js'
-import { actPlacesLocationForEmptySpawn, blanksTraits, counterTreacheryCode, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
+import { actPlacesLocationForEmptySpawn, blanksTraits, counterTreacheryCode, PALLID_MASK_CODE, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
   SMITE_THE_WICKED_CODE, SEARCHING_FOR_IZZIE_CODE, weaknessUpgradeCode, LITA_CHANDLER_CODE } from '../src/cards/card-rules.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
@@ -684,6 +684,14 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   const entry = registeredEntry('03010')
   assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
+
+// ---- 5a-27：埋伏 / 陷阱 / 苍白面具 / 物品折扣 / 自动躲避（03059、03148、03149、03193、03199）----
+
+test('5a-27：五个卡号都改成条目字段 / 规则常量 / 状态字段', () => {
+  assert.equal(registeredEntry('03148')?.ambushAttachment, true, '埋伏是附属触发的')
+  assert.equal(registeredEntry('03199')?.snareAttachment, true, '陷阱是附属触发的')
+  assert.equal(PALLID_MASK_CODE, '03059')
 })
 
 // ---- 5a-26：彩绘世界的下方复制 / 藏身地点 / 分析性思维（03010、03012、03038）----
