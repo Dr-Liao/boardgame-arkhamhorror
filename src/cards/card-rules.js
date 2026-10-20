@@ -138,3 +138,6 @@ export const RELIC_DISCOUNT_LOCATION_CODES = Object.freeze(['04142'])
 export function relicDiscountLocation(code) {
   return RELIC_DISCOUNT_LOCATION_CODES.includes(String(code ?? ''))
 }
+
+// 卡号级规则数据：地点被移出游戏时的「默认去向」地点（原 engine.js 硬编码 02320）。
+export const RELOCATE_DESTINATION_LOCATION_CODE = '02320'

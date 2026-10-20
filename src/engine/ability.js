@@ -198,6 +198,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // Phase 5（5a-31）：光环（丽塔）/ 鉴定后弃置自身（古代巨石）。
   'auraWhileInPlay',
   'identifiedStoneOnInvestigateSuccess',
+  // Phase 5（5a-32）：移除自身来跳过/重复阶段（黄金怀表）。
+  'skipOrRepeatPhase',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -455,6 +457,7 @@ export function registerCardAbilities(entries) {
       cardDrawSecretAction: entry.cardDrawSecretAction || null,
       auraWhileInPlay: entry.auraWhileInPlay === true,
       identifiedStoneOnInvestigateSuccess: entry.identifiedStoneOnInvestigateSuccess === true,
+      skipOrRepeatPhase: entry.skipOrRepeatPhase === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

@@ -51,6 +51,7 @@ import {
   actPlacesLocationForEmptySpawn,
   PALLID_MASK_CODE,
   relicDiscountLocation,
+  RELOCATE_DESTINATION_LOCATION_CODE,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -5188,7 +5189,8 @@ function locationRevealCue(loc, entered = false, seat = null) {
 function removeLocation(state, id, events) {
   const i = state.locations.findIndex((l) => l.id === id)
   if (i >= 0) {
-    const destination = state.locations.find(loc => loc.originalCode === '02320' && loc.id !== id)
+    // Phase 5（5a-32）：移出地点时的默认去向在卡号规则数据里。
+    const destination = state.locations.find(loc => (loc.originalCode || loc.code) === RELOCATE_DESTINATION_LOCATION_CODE && loc.id !== id)
     const departing = destination ? aliveInvestigators(state).filter(inv => inv.location === id) : []
     if (destination) {
       const companions = state.enemies.filter(enemy => enemy.location === id && departing.some(inv => inv.seat === enemy.engagedSeat))
@@ -8685,9 +8687,10 @@ function turnBeginningWindow(state, events) {
 }
 
 function useGoldPocketWatch(state, timing, phase, events) {
-  const holder = aliveInvestigators(state).find(inv => inv.assets.some(asset => asset.code === '02305'))
+  // Phase 5（5a-32）：「黄金怀表」这类「移除自身来跳过/重复阶段」的支援由条目级 skipOrRepeatPhase 声明。
+  const holder = aliveInvestigators(state).find(inv => inv.assets.some(asset => registeredEntry(asset.code)?.skipOrRepeatPhase))
   if (!holder) return false
-  const asset = holder.assets.find(item => item.code === '02305')
+  const asset = holder.assets.find(item => registeredEntry(item.code)?.skipOrRepeatPhase)
   const verb = timing === 'begin' ? '跳过' : '重复'
   const answer = requestChoice(state, { kind: 'reaction', source: asset.id, seat: holder.seat, canSkip: true,
     prompt: `黄金怀表：是否从游戏中移除它，${verb}${phase === 'investigation' ? '调查' : phase === 'enemy' ? '敌人' : phase === 'upkeep' ? '重整' : '神话'}阶段？`,

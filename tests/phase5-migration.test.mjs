@@ -10,7 +10,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
 import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine/engine.js'
-import { actPlacesLocationForEmptySpawn, blanksTraits, counterTreacheryCode, PALLID_MASK_CODE, relicDiscountLocation, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
+import { actPlacesLocationForEmptySpawn, blanksTraits, counterTreacheryCode, PALLID_MASK_CODE, relicDiscountLocation, RELOCATE_DESTINATION_LOCATION_CODE, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
   SMITE_THE_WICKED_CODE, SEARCHING_FOR_IZZIE_CODE, weaknessUpgradeCode, LITA_CHANDLER_CODE } from '../src/cards/card-rules.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
@@ -684,6 +684,13 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   const entry = registeredEntry('03010')
   assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
+
+// ---- 5a-32：黄金怀表 / 地点移出后的去向（02305、02320）----
+
+test('5a-32：怀表的阶段跳过标记与移出地点的默认去向都是数据', () => {
+  assert.equal(registeredEntry('02305')?.skipOrRepeatPhase, true, '黄金怀表可跳过/重复阶段')
+  assert.equal(RELOCATE_DESTINATION_LOCATION_CODE, '02320')
 })
 
 // ---- 5a-31：丽塔光环 / 古代巨石鉴定（01117、02088、04022）----

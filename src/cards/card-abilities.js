@@ -3419,6 +3419,8 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '01117', auraWhileInPlay: true },
   // 04022 古代巨石：调查成功鉴定后弃置自身（读点在 investigate 的成功段）。
   { code: '04022', identifiedStoneOnInvestigateSuccess: true },
+  // 02305 黄金怀表：从游戏中移除它，跳过或重复当前阶段（读点在 useGoldPocketWatch）。
+  { code: '02305', skipOrRepeatPhase: true },
   // 03042 随行鬼影：在离承受者最远的地点生成（读点在 resolveWeakness 的敌人弱点段）。
   { code: '03042', weaknessSpawnsAtFarthestLocation: true },
   // 02138 / 02139 / 02179（远古遗物系列）：调查员被消除时离场并进弃牌堆。
