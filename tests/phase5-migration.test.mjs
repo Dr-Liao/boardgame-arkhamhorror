@@ -605,3 +605,38 @@ test('5c-18：03195 扒手「超出 2 点两项都做」仍是既有缺口（迁
   assert.ok(state.investigators[0].hand.length >= 1, '选择抽牌')
   assert.ok(state.log.some(line => line.includes('抽取了 1 张牌')), '抽牌日志由 api.drawCardsLogged 写出')
 })
+
+// ---- 5c-19：entersPlay 的 resolve 读点 + 牌库顶检索附属（04021 / 03158）----
+
+test('5c-19：04021 爱丽·霍洛维兹入场时从牌库顶 9 张找出遗物支援并附属', () => {
+  const state = fixture()
+  const me = state.investigators[0]
+  // 01041 伊察姆纳圆盘：核心池里的[[遗物]]支援，放在牌库顶（deck 末位是顶）。
+  me.deck = [...me.deck.slice(0, -1), '01041']
+  const deckSize = me.deck.length
+  play(state, '04021')
+  settle(state)
+  const host = state.investigators[0].assets.find(item => item.code === '04021')
+  assert.ok(host, '爱丽入场')
+  assert.equal(host.attachments?.[0]?.code, '01041', '牌库顶的遗物被附属到爱丽身上')
+  assert.equal(state.investigators[0].deck.length, deckSize - 1, '遗物离开牌库')
+  assert.equal(state.investigators[0].hand.includes('01041'), false, '不进入手牌')
+})
+
+test('5c-19：03158 求助盟友把盟友返回手牌并从牌库顶免费打出 1 张盟友', () => {
+  const state = fixture()
+  const oldAlly = asset(state, '01018') // 巡警：核心池[[盟友]]支援，费用 4
+  const me = state.investigators[0]
+  me.deck = [...me.deck.slice(0, -1), '01021'] // 看门狗：牌库顶的另一张盟友
+  const resources = me.resources
+  play(state, '03158')
+  // 检索询问（旧式 searchTop）里挑那张牌：与玩家实际选择一致。
+  settle(state, pending => (pending.kind === 'search'
+    ? pending.options.find(option => option.cardCode)?.id ?? null
+    : null))
+  assert.ok(state.investigators[0].hand.includes('01018'), '被返回的盟友回到手牌')
+  assert.equal(state.investigators[0].assets.some(item => item.id === oldAlly.id), false, '它已离场')
+  const played = state.investigators[0].assets.find(item => item.code === '01021')
+  assert.ok(played, '牌库顶的盟友被直接放置入场')
+  assert.equal(state.investigators[0].resources, resources - 1, '只付 03158 自己的 1 资源')
+})

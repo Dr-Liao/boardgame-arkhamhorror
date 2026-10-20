@@ -39,7 +39,7 @@ export const effects = {
     event: { type: 'cancelTreachery' }, exileAfterPlay: true },
   '03157': { fast: true, reaction: { when: 'harmDealt' },
     event: { type: 'cancelHarm', maximum: 10 }, exileAfterPlay: true },
-  '03158': { event: custom('callingInFavors') },
+  // 03158 求助盟友已迁到能力层（5c-19），见 src/cards/card-abilities.js 的 MIGRATED_ESCAPE_ENTRIES_5C19。
 
   '03189': { event: custom('illSeeYouInHell'), noOpportunityAttack: true },
 

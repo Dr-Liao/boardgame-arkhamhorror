@@ -73,6 +73,9 @@ const KINDS_NEEDING_PAYLOAD = Object.freeze({
   leavesPlay: { field: 'leavesPlay', hint: '离场时结算的效果数据' },
 })
 const LIFECYCLE_KINDS = new Set(Object.keys(KINDS_NEEDING_PAYLOAD))
+// Phase 5（5c-19）：这两个生命周期钩子允许「只带 resolve」——效果 DSL 表达不了时由 resolve 接管，
+// 读点仍是 lifecycle 的 playedEffect / entersPlayEffect，引擎侧没有第二条路径。
+const LIFECYCLE_RESOLVE_KINDS = new Set(['played', 'entersPlay'])
 const COST_KEYS = new Set(['action', 'exhaust', 'uses', 'resources', 'clues', 'discardSelf',
   'exileSelf', 'horror', 'damageSelf', 'assetDamage', 'discardHand', 'discardHandIcon',
   // Phase 5（5b-6）：旧式反应的「花 1 线索但放回地点」费用（02302 马莱森博士）。
@@ -177,7 +180,8 @@ export function normalizeDescriptor(raw, { code, index }) {
   if (payload && (!raw[payload.field] || typeof raw[payload.field] !== 'object')) {
     // Phase 2：事件卡的 played 钩子允许只带 resolve（当效果 DSL 表达不了时）——
     // 读点仍是 lifecycle.playedEffect()，引擎侧没有第二条路径。
-    if (!(kind === 'played' && typeof raw.resolve === 'function')) {
+    // Phase 5（5c-19）：entersPlay 同理（04021 的「牌库顶 9 张找遗物并附属」）。
+    if (!(LIFECYCLE_RESOLVE_KINDS.has(kind) && typeof raw.resolve === 'function')) {
       throw new Error(`${origin}: ${kind} 必须提供 ${payload.field}（${payload.hint}）`)
     }
   }

@@ -578,11 +578,29 @@ export const TRANSITION_ENTRIES = [
     }],
   },
   // 04021 爱丽·霍洛维兹博士：入场后查找牌库顶 9 张，找出一张[[遗物]]支援并附属到自身。
+  // 5c-19：不再走 tfaPlayer 逃生原语；读牌库顶/筛选/选择/附属/洗回都在 resolve 里，
+  // 由 api.topDeckCodes / attachCardFromDeck / shuffleDeck 结算（读点仍是 entersPlay）。
   {
     code: '04021',
     abilities: [{
       kind: 'entersPlay', label: '入场：查找牌库顶 9 张中的[[遗物]]支援并附属',
-      entersPlay: { type: 'tfaPlayer', action: 'horowitzSearch' },
+      resolve: ({ inv, source, api }) => {
+        const top = api.topDeckCodes(inv.seat, 9)
+        const relics = top.filter(code => api.cardType(code) === 'asset'
+          && api.cardTraits(code).includes('relic') && api.isNonWeakness(code))
+        if (!relics.length) {
+          api.shuffleDeck(inv.seat)
+          api.info('牌库顶 9 张里没有遗物支援，洗回牌库。')
+          return
+        }
+        const chosen = relics.length === 1 ? relics[0] : api.choice({ kind: 'search', source: '04021', seat: inv.seat,
+          prompt: '从牌库顶 9 张里选择 1 张遗物支援附属到爱丽·霍洛维兹博士。',
+          options: relics.map(code => ({ id: code, cardCode: code, label: api.cardName(code) })) })
+        const picked = relics.includes(chosen) ? chosen : relics[0]
+        api.attachCardFromDeck(source, picked)
+        api.shuffleDeck(inv.seat)
+        api.info(`「${api.cardName(picked)}」被附属到「${api.cardName('04021')}」，不占用槽位。`)
+      },
     }],
   },
   // 03315 伊苏之匙：离场时弃掉你牌库顶 10 张卡牌。
@@ -2586,12 +2604,45 @@ const CALVIN_ENTRY = {
   })),
 }
 
+// ---------------------------------------------------------------------------
+// 5c-19：Carcosa 事件卡的逃生原语改写（求助盟友）
+// ---------------------------------------------------------------------------
+//
+// 与 5c-18 同一个套路：先把 effect 数据体换成 resolve，再删引擎里那段
+// `effect.action === 'callingInFavors'`（它对 `carcosaPlayer` 逃生通道的实现）。
+
+export const MIGRATED_ESCAPE_ENTRIES_5C19 = [
+  // 03158 求助盟友：把一个盟友拿回手牌，再从牌库顶 9 张找一张盟友（费用按返回那张减免）。
+  {
+    code: '03158',
+    abilities: [{
+      kind: 'played', label: '把盟友返回手牌，再从牌库顶 9 张免费打出 1 张盟友',
+      resolve: ({ inv, api }) => {
+        const allies = inv.assets.filter(card => api.cardTraits(card.code).includes('ally'))
+        if (!allies.length) return
+        const chosenId = allies.length === 1 ? allies[0].id : api.choice({ kind: 'target', source: '03158',
+          seat: inv.seat, prompt: '选择返回手牌的盟友。',
+          options: allies.map(card => ({ id: card.id, cardCode: card.code, label: api.cardName(card.code) })) })
+        const ally = allies.find(card => card.id === chosenId)
+        if (!ally) return
+        const discount = api.cardCost(ally.code)
+        api.returnAssetToHand(inv.seat, ally)
+        const before = inv.hand.length
+        api.searchTop(inv.seat, { amount: 9, trait: 'Ally', source: '03158' })
+        if (inv.hand.length > before) {
+          api.playCard(inv.seat, inv.hand.at(-1), { discount, noAction: true })
+        }
+      },
+    }],
+  },
+]
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -2631,4 +2682,5 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_RULE_FIELD_ENTRIES.map(entry => entry.code),
   ...MIGRATED_SEAL_ATTACH_ENTRIES.map(entry => entry.code),
   ...MIGRATED_MIXED_ENTRIES_5B11.map(entry => entry.code),
+  ...MIGRATED_ESCAPE_ENTRIES_5C19.map(entry => entry.code),
 ])

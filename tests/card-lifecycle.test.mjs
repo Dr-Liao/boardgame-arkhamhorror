@@ -101,10 +101,15 @@ test('三个新生命周期钩子：数据已离开旧 DSL，读点可用', () =
   assert.deepEqual(weaknessProfile('01096'), { type: 'discardHandTo', keep: 1 })
   assert.deepEqual(weaknessProfile('01097'), { type: 'loseResource', all: true })
 
-  // 04021：原 EFFECTS.onEnter 已搬进 entersPlay 描述子（数据体是同一个 tfaPlayer 原语）。
+  // 04021：原 EFFECTS.onEnter 已搬进 entersPlay 描述子。
+  // 5c-19 起描述子只带 resolve（牌库顶检索 + 附属的整套结算），读点仍是 lifecycle 的
+  // entersPlay——`entersPlayEffect` 对 resolve 型返回 null，引擎在 doPlay 的入场段
+  // 优先用 resolve、否则回落数据体（与弱点 resolve 同形）。
   assert.equal(EFFECTS['04021'], undefined)
   assert.equal(lifecycleChannel('04021').entersPlay, 'descriptor')
-  assert.deepEqual(entersPlayEffect('04021'), { type: 'tfaPlayer', action: 'horowitzSearch' })
+  assert.equal(entersPlayEffect('04021'), null)
+  const horowitz = normalizeDescriptor({ kind: 'entersPlay', resolve: () => {} }, { code: '99009', index: 0 })
+  assert.equal(typeof horowitz.resolve, 'function')
 
   // 03315：原引擎内联的 millOnLeave 特判改成 leavesPlay 数据（旧条目只剩被动修正）。
   // Phase 5（5b-9）：03315 的旧条目已整体迁走（条目在能力层）。

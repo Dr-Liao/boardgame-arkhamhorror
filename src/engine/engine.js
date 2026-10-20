@@ -7020,14 +7020,6 @@ function chooseEnemyFrom(state, seat, candidates, source) {
 function carcosaPlayerEffect(state, seat, effect, events) {
   const inv = state.investigators[seat]
   const asset = effect.assetId && inv.assets.find(item => item.id === effect.assetId)
-  const chooseAsset = (items, source = effect.action, prompt = '选择一张支援。') => {
-    if (!items.length) return null
-    const id = items.length === 1 ? items[0].id : requestChoice(state, {
-      kind: 'target', source, seat, prompt,
-      options: items.map(item => ({ id: item.id, cardCode: item.code, label: cardName(item.code) })),
-    })
-    return items.find(item => item.id === id)
-  }
   if (effect.action === 'stickToThePlan') {
     if (!asset) return
     asset.attached ||= []
@@ -7107,21 +7099,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     const location = state.locations.find(item => item.id === inv.location)
     if (inv.clues > 0 && location) { inv.clues--; state.clues--; location.clues = (location.clues || 0) + 1 }
     state._reaction && (state._reaction.cancelled = true)
-    return
-  }
-  if (effect.action === 'callingInFavors') {
-    const ally = chooseAsset(inv.assets.filter(item => (cardDef(item.code)?.traits || [])
-      .some(trait => String(trait).toLowerCase() === 'ally')), '03158', '选择返回手牌的盟友。')
-    if (!ally) return
-    const discount = cardDef(ally.code)?.cost || 0
-    leaveAsset(state, inv, ally, events); inv.hand.push(ally.code)
-    const before = inv.hand.length
-    searchTop(state, seat, { amount: 9, trait: 'Ally', source: '03158' }, events)
-    if (inv.hand.length > before) {
-      const code = inv.hand.at(-1)
-      inv.carcosaPlayDiscount = discount
-      doPlay(state, seat, code, events, false, true)
-    }
     return
   }
   if (effect.action === 'onTheHunt') {
@@ -7691,31 +7668,6 @@ function tfaPlayerEffectCore(state, seat, effect, events) {
   // 有利位置：本回合地点帷幕 -1，并可以把别处 1 个线索移过来。
   // 改变命运：弃掉一张未附属精英敌人的非弱点诡计。
 
-  // 爱丽·霍洛维兹博士：入场后从牌库顶 9 张找出 1 张遗物支援并附属到自身。
-  if (effect.action === 'horowitzSearch') {
-    const host = inv.assets.find(asset => asset.code === '04021')
-    if (!host) return
-    const top = inv.deck.slice(-Math.min(9, inv.deck.length))
-    const relics = top.filter(code => {
-      const def = cardDef(code)
-      return def?.type === 'asset' && (def.traits || []).some(trait => String(trait).toLowerCase() === 'relic')
-        && !isWeaknessCode(code)
-    })
-    if (!relics.length) {
-      inv.deck = shuffle(inv.deck, () => randomValue(state))
-      info(state, events, '牌库顶 9 张里没有遗物支援，洗回牌库。')
-      return
-    }
-    const chosen = relics.length === 1 ? relics[0] : requestChoice(state, { kind: 'search', source: '04021', seat,
-      prompt: '从牌库顶 9 张里选择 1 张遗物支援附属到爱丽·霍洛维兹博士。',
-      options: relics.map(code => ({ id: code, cardCode: code, label: cardName(code) })) })
-    const picked = relics.includes(chosen) ? chosen : relics[0]
-    inv.deck.splice(inv.deck.lastIndexOf(picked), 1)
-    attachCardTo(state, seat, picked, host)
-    inv.deck = shuffle(inv.deck, () => randomValue(state))
-    info(state, events, `「${cardName(picked)}」被附属到「${cardName('04021')}」，不占用槽位。`)
-    return
-  }
   // 背包：从牌库顶 6 张找出最多 3 张非弱点道具/供给卡，正面朝下附属。
   if (effect.action === 'backpackSearch') {
     const host = inv.assets.find(asset => asset.code === '04037')
@@ -9461,9 +9413,19 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     info(state, events, `✔️ 「${cardName(cardId)}」已装备（${def.textZh || def.text || ''}）。`)
     // 入场即生效的支援（如「背包」「爱丽·霍洛维兹博士」）：
     // Phase 1 起走进入场钩子的唯一读点（描述子 kind: 'entersPlay'，回落旧 onEnter）。
-    const enterEffect = entersPlayEffect(copyCode || cardId)
-    if (enterEffect) {
-      resolveEffect(state, seat, enterEffect, makeRuntime(state, events))
+    // Phase 5（5c-19）：描述子可以只带 resolve（效果 DSL 表达不了时），由它接管结算；
+    // 读点仍是 lifecycle 的 entersPlay，引擎侧没有第二条路径（与弱点 resolve 同形）。
+    const enterDescriptor = descriptorOfKind(copyCode || cardId, 'entersPlay')
+    if (enterDescriptor?.resolve) {
+      enterDescriptor.resolve({
+        state, inv, seat, source: asset, descriptor: enterDescriptor, events, context: {},
+        api: abilityApi(state, events),
+      })
+    } else {
+      const enterEffect = entersPlayEffect(copyCode || cardId)
+      if (enterEffect) {
+        resolveEffect(state, seat, enterEffect, makeRuntime(state, events))
+      }
     }
     triggerReaction(state, seat, 'assetEnteredPlay', events, { assetCode: cardId, assetId: asset.id, location: inv.location })
   } else if (def.type === 'event') {
@@ -10845,6 +10807,38 @@ function abilityApi(state, events) {
       if (!owner) return 0
       owner.deck = shuffle([...owner.deck, ...owner.discard], () => randomValue(state))
       owner.discard = []
+      return owner.deck.length
+    },
+    // Phase 5（5c-19）：把控制的一张支援拿回手牌（「求助盟友」）。
+    // 离场钩子照常结算（leaveAsset），与旧 handler 的写法一致。
+    returnAssetToHand: (seat, card) => {
+      const owner = state.investigators[seat]
+      if (!owner || !card) return false
+      leaveAsset(state, owner, card, events)
+      owner.hand.push(card.code)
+      return true
+    },
+    // Phase 5（5c-19）：读牌库顶 N 张的卡号（**只读**，不移动也不洗牌）。
+    // 顺序与 `inv.deck.slice(-N)` 相同（末位是牌库顶），筛选逻辑留在内容层。
+    topDeckCodes: (seat, count = 1) => {
+      const owner = state.investigators[seat]
+      if (!owner) return []
+      const n = Math.min(Math.max(0, count), owner.deck.length)
+      return n > 0 ? owner.deck.slice(-n) : []
+    },
+    // Phase 5（5c-19）：把牌库里的一张牌附属到场上的一张支援（不占用槽位）。
+    attachCardFromDeck: (host, code) => {
+      const owner = state.investigators.find(person => (person.assets || []).includes(host))
+      if (!owner || !code) return null
+      const index = owner.deck.lastIndexOf(code)
+      if (index < 0) return null
+      owner.deck.splice(index, 1)
+      return attachCardTo(state, owner.seat, code, host)
+    },
+    shuffleDeck: seat => {
+      const owner = state.investigators[seat]
+      if (!owner) return 0
+      owner.deck = shuffle(owner.deck, () => randomValue(state))
       return owner.deck.length
     },
     // Phase 5（5c-9）：检定的「揭示计划」与额外标记数（黑暗预言 / 勇斗异劫）。
