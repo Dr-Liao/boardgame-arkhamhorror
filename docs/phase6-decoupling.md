@@ -1358,3 +1358,80 @@ skill: { onSuccess: { placeChargeOrSecret: true } },
 | `src/engine/card-lookup.js` | 90 |
 
 累计迁出 **约 5979 行**（12654 → 6675，−47.2%）。
+
+## 34. 6d-27：合并重复的依赖表（`commonDeps`）
+
+### 34.1 做了什么
+
+拆到 25 个模块之后，engine.js 里留下了 **25 张依赖注入表**，总条目 **1128 行**。
+统计显示大量条目在每张表里被反复复制：
+
+| 条目 | 出现在多少张表 |
+| --- | --- |
+| `info` | 23 |
+| `cardName` | 19 |
+| `aliveInvestigators` / `requestChoice` / `scenarioBehavior` | 17 |
+| `cardDef` / `leaveAsset` / `randomValue` | 15 |
+| `registeredEntry` | 14 |
+| `locName` / `scenarioRuntime` / `shuffle` | 13 |
+| `applyHorror` / `performTest` / `EFFECTS` | 10 |
+
+把「**3 张以上表都要、且不是工厂产物**」的 **114 个条目**提成一个 `commonDeps` 对象，
+各表改为 `{ ...commonDeps, <自己的专属依赖> }`。
+
+**效果**：engine.js **6675 → 6145 行**（−530），25 张表的总条目从 1128 降到约 600，
+每张表现在读起来是「这个域额外需要什么」，而不是复制粘贴出来的长名单。
+
+### 34.2 关键约束：工厂产物不能进 `commonDeps`
+
+第一次尝试把 118 个条目（含 `doFight` / `doEvade` / `doPlay` / `doInvestigate` / `upkeepPhase` /
+`runAgendaReveal` / `legalMoves` / `validateMove` / `describeState`）全提出来，运行时报：
+
+```
+ReferenceError: Cannot access 'doFight' before initialization
+```
+
+原因：这 9 个名字是 `const { doFight, doEvade } = createCombat({ … })` 解构出来的，
+**要到模块末尾才初始化**；而 `commonDeps` 是模块顶层的 `const` 对象，初始化时就要读它们 → TDZ。
+
+所以本轮只提「函数声明 / import 绑定」这类**已提升**的条目，工厂产物仍逐表内联。
+（一条更彻底的路是把所有工厂改成接收 `deps()` 惰性函数，但那要动 25 个模块文件，
+收益只是再省约 60 行，本轮不做，已记在 §34.3。）
+
+### 34.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **6145**（6d-26 后 6675） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/setup.js` | 578 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/dispatch.js` | 436 |
+| `src/engine/enemies.js` | 434 |
+| `src/engine/encounter.js` | 400 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/turn.js` | 381 |
+| `src/engine/ability-exec.js` | 369 |
+| `src/engine/reveal.js` | 314 |
+| `src/engine/skill-effects.js` | 313 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/campaign-flow.js` | 252 |
+| `src/engine/movement.js` | 249 |
+| `src/engine/locations.js` | 212 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+
+累计迁出 **约 6509 行**（12654 → 6145，−51.4%）。
+
+**剩余待做**（按 roadmap）：
+1. 继续拆剩余中等函数（`afterEvade` 143、`lookAt` 85、`advanceInvestigator` 71、`moveCardTo` 69 等）
+2. 战役插件化（TFA 先行）
+3. `EFFECTS` 57 条迁移（阻塞在 §7 的观测面解耦，需重采 AI 提示词基线）
