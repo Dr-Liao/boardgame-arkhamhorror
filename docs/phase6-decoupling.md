@@ -771,3 +771,42 @@ not ok · Phase 6 门禁：引擎源码里没有战役名
 | `src/cards/player-effects.js` | **320** |
 
 累计迁出 **约 3589 行**（12654 → 9065，−28.4%）。
+
+## 23. 6d-16：拆出 ability-exec.js（能力的执行层）
+
+### 23.1 拆的是什么
+
+三个函数一起搬进 `src/engine/ability-exec.js`（共 300 行，48 项依赖）：
+
+| 函数 | 行数 | 职责 |
+| --- | --- | --- |
+| `doAbility` | 99 | 结算一次已选定的能力（费用、目标、描述子/旧式效果） |
+| `openAbilityWindow` | 115 | 在反应窗口里枚举可用的声明式能力并询问 |
+| `effectError` | 86 | 判定一条效果当前是否可执行（`legalMoves` 与提示共用） |
+
+它们与 `src/engine/ability.js`（注册表、校验）分工不同：那边是**声明**，这边是**执行**。
+engine 侧用惰性装配保留原调用点（这三个函数被多个依赖表在顶层引用）。
+
+### 23.2 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **8831**（6d-15 后 9065） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/api-misc.js` | 470 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/actions.js` | 397 |
+| `src/engine/ability-exec.js` | **369** |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/describe.js` | 176 |
+| `src/engine/api-enemy.js` | 163 |
+| `src/engine/api-clue.js` | 139 |
+| `src/engine/api-test.js` | 93 |
+| `src/engine/card-lookup.js` | 90 |
+| `src/cards/player-effects.js` | 320 |
+
+累计迁出 **约 3823 行**（12654 → 8831，−30.2%）。
