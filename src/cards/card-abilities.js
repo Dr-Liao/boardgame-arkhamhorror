@@ -3421,6 +3421,8 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '04022', identifiedStoneOnInvestigateSuccess: true },
   // 02305 黄金怀表：从游戏中移除它，跳过或重复当前阶段（读点在 useGoldPocketWatch）。
   { code: '02305', skipOrRepeatPhase: true },
+  // 03011 黄衣之王（威胁）：携带它的人会让敏的投入规则改为「必须 3 张或 0 张」（读点见 commit 段）。
+  { code: '03011', kingInYellowThreat: true },
   // 03042 随行鬼影：在离承受者最远的地点生成（读点在 resolveWeakness 的敌人弱点段）。
   { code: '03042', weaknessSpawnsAtFarthestLocation: true },
   // 02138 / 02139 / 02179（远古遗物系列）：调查员被消除时离场并进弃牌堆。

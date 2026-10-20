@@ -200,6 +200,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'identifiedStoneOnInvestigateSuccess',
   // Phase 5（5a-32）：移除自身来跳过/重复阶段（黄金怀表）。
   'skipOrRepeatPhase',
+  // Phase 5（5a-33）：黄衣之王威胁（改变敏的投入规则）。
+  'kingInYellowThreat',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -458,6 +460,7 @@ export function registerCardAbilities(entries) {
       auraWhileInPlay: entry.auraWhileInPlay === true,
       identifiedStoneOnInvestigateSuccess: entry.identifiedStoneOnInvestigateSuccess === true,
       skipOrRepeatPhase: entry.skipOrRepeatPhase === true,
+      kingInYellowThreat: entry.kingInYellowThreat === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

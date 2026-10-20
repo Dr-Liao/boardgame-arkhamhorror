@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "note": "由 tools/audit-abilities.mjs --write 生成，勿手改。指标只允许下降；engineCodes / effectsEntries 的每一次减少都是一次迁移证据，必须随迁移一起提交。",
   "metrics": {
-    "engineCodes": 34,
+    "engineCodes": 28,
     "effectsEntries": 57,
     "effectsTopLevelFields": 33,
     "escapeCards": 0,
-    "descriptorEntries": 418,
+    "descriptorEntries": 419,
     "descriptorAbilities": 344,
     "abilityKinds": 12,
     "windows": 52,
@@ -17,8 +17,8 @@
   },
   "channels": {
     "descriptor": 408,
-    "legacy": 44,
-    "hybrid": 8,
+    "legacy": 43,
+    "hybrid": 9,
     "engine": 5
   },
   "nonPlayer": {
@@ -1248,20 +1248,17 @@
     {
       "code": "03001",
       "channel": "descriptor",
-      "descriptors": 0,
-      "engineReferenced": true
+      "descriptors": 0
     },
     {
       "code": "03002",
       "channel": "descriptor",
-      "descriptors": 0,
-      "engineReferenced": true
+      "descriptors": 0
     },
     {
       "code": "03003",
       "channel": "descriptor",
-      "descriptors": 0,
-      "engineReferenced": true
+      "descriptors": 0
     },
     {
       "code": "03004",
@@ -1276,8 +1273,7 @@
     {
       "code": "03006",
       "channel": "descriptor",
-      "descriptors": 0,
-      "engineReferenced": true
+      "descriptors": 0
     },
     {
       "code": "03007",
@@ -1307,9 +1303,8 @@
     },
     {
       "code": "03011",
-      "channel": "legacy",
-      "descriptors": 0,
-      "engineReferenced": true
+      "channel": "hybrid",
+      "descriptors": 0
     },
     {
       "code": "03012",
@@ -1857,8 +1852,7 @@
     {
       "code": "04004",
       "channel": "descriptor",
-      "descriptors": 0,
-      "engineReferenced": true
+      "descriptors": 0
     },
     {
       "code": "04005",

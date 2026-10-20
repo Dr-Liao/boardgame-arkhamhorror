@@ -13,8 +13,8 @@
 ## 1. 一句话现状
 
 迁移工具链已交付，**337 张卡**迁到能力层（59 个批次），`EFFECTS` 385 → **57**、
-通道 legacy 286 → **51**、descriptor 75 → **404**、**逃生卡 93 → 0（5c 完成）**、**5b 遗留清零**、**引擎卡号 166 → 34**。
-`replay` 基线逐条不变、`fast` 无新增失败。**5c 与 5b 均已完成；5a 引擎卡号分支还剩 34 个码（其中行为分支 6 个、`reference` 28 个归 Phase 6）。**
+通道 legacy 286 → **51**、descriptor 75 → **404**、**逃生卡 93 → 0（5c 完成）**、**5b 遗留清零**、**引擎卡号 166 → 28**。
+`replay` 基线逐条不变、`fast` 无新增失败。**5c 与 5b 均已完成；**5a 行为分支已清零**：剩下的 28 个码全是 `reference`（`requestChoice` 的文案标签），归 Phase 6。**
 
 ---
 
@@ -62,7 +62,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 | 文档 | 本文 + `phase5-migration.md`（批次证据与踩坑记录）+ `card-model.md`（加卡流程） |
 
 批次：5b-1…5b-5（机械 154）、5b-6/6b/6c/6d/7/8a/8b/9/10/11（反应/天赋/被动/规则字段/封印附属 46）、
-5c-1…5c-39（逃生卡 93 = 全部）、5b-8 / 5b-12 / 5b-13 / 5b-14（9 张）、5a-1…5a-32（引擎侧 88 个码）。
+5c-1…5c-39（逃生卡 93 = 全部）、5b-8 / 5b-12 / 5b-13 / 5b-14（9 张）、5a-1…5a-33（引擎侧 94 个码，行为分支全部迁完）。
 
 ---
 
@@ -93,7 +93,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 ⑤ replay --compare + 该战役验收用例
 ```
 
-### 4.2 5a 剩余 34 个码（`condition` 0 / `block` 6 / `reference` 28 / `table` 0）
+### 4.2 5a 剩余 28 个码（全部为 `reference`，归 Phase 6）
 
 - **`reference`（30）**：多数是 `requestChoice({ source: '0xxxx' })` 的来源标签——它会进状态指纹，
   改法本身会改变 replay，**归 Phase 6 与 UI 文案一起处理**，不要单独动。
@@ -160,7 +160,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 | --- | --- | --- |
 | 5c 逃生卡 | ✅ 完成 | `escapeCards` 93 → **0**（39 批） |
 | 5b 尾部（反应 / 非 stats 被动 / 打出后去向） | ✅ 完成 | 9 张卡 + 4 个字段 |
-| 5a 引擎卡号分支 | 🚧 进行中 | `engineCodes` 166 → **34**（32 批） |
+| 5a 引擎卡号分支 | ✅ 行为分支清零 | `engineCodes` 166 → **28**（33 批，剩余全是 `reference`） |
 
 累计 **360 张卡 / 73 个迁移批次**；`EFFECTS` 385 → 57，`legacy` 286 → 49，
 `descriptorEntries` 79 → 408，`descriptorAbilities` 343 → 345，`abilityKinds` 11 → 12（新增 `setup`），
@@ -171,11 +171,11 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 
 ### 5.2 剩余（按优先级）
 
-**A. 5a 行为分支 6 个**（`cards:workorder` 的 `condition` + `block`）：
+**A. 5a 行为分支 0 个（已清零）**（`cards:workorder` 的 `condition` + `block`）：
 
-- 调查员能力族 8 个：`03001 03002 03003 03006 03011`、`04004 04022 04147`
-- 弱点 / 场景族 13 个：`03010 03012 03038 03042(已迁) 03059 03148 03149 03193 03199 03232 04142 04193 04230 04231 04265`
-- 遭遇 / 地点族 5 个：`01117 02031(已迁) 02088 02305 02320`
+- ✅ 调查员能力族已全部迁完
+- ✅ 弱点 / 场景族已全部迁完
+- ✅ 遭遇 / 地点族已全部迁完
 
 **B. 5a `reference` 28 个**：`requestChoice` 的 `source: '0xxxx'` 文案标签，
 按路线图归 **Phase 6**（与 UI 文案 / 日志一起处理，避免两处改同一段字符串）。

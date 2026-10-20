@@ -13,7 +13,7 @@ import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine
 import { actPlacesLocationForEmptySpawn, blanksTraits, counterTreacheryCode, PALLID_MASK_CODE, relicDiscountLocation, RELOCATE_DESTINATION_LOCATION_CODE, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
   SMITE_THE_WICKED_CODE, SEARCHING_FOR_IZZIE_CODE, weaknessUpgradeCode, LITA_CHANDLER_CODE } from '../src/cards/card-rules.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
-import { EFFECTS } from '../src/cards/card-effects.js'
+import { EFFECTS, INVESTIGATOR_ABILITIES } from '../src/cards/card-effects.js'
 import { registeredEntry } from '../src/engine/ability.js'
 import { playedEffect, weaknessProfile } from '../src/engine/lifecycle.js'
 
@@ -684,6 +684,18 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   const entry = registeredEntry('03010')
   assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
+
+// ---- 5a-33：调查员能力数据化（03001、03002、03003、03006、03011、04004）----
+
+test('5a-33：六位调查员的能力判断都读 INVESTIGATOR_ABILITIES / 条目标记', () => {
+  assert.equal(INVESTIGATOR_ABILITIES['03001']?.homeFrontMoveDamage, true, '马克的家庭前线')
+  assert.equal(INVESTIGATOR_ABILITIES['03002']?.wildCommitCompanionBonus, 1, '敏的同地点万能 +1')
+  assert.equal(INVESTIGATOR_ABILITIES['03003']?.openingHandSize, 13, '赛菲娜起手 13')
+  assert.equal(INVESTIGATOR_ABILITIES['03006']?.deckbuildingRoles, true, '罗拉按角色限制卡牌')
+  assert.deepEqual(INVESTIGATOR_ABILITIES['04004']?.autofailToElderSign, { oncePerGame: true }, '马泰奥改签旧印（每局一次）')
+  assert.equal(registeredEntry('03011')?.kingInYellowThreat, true, '黄衣之王威胁标记')
+  assert.equal(INVESTIGATOR_ABILITIES['01001']?.homeFrontMoveDamage, undefined, '其它调查员没有这些字段')
 })
 
 // ---- 5a-32：黄金怀表 / 地点移出后的去向（02305、02320）----

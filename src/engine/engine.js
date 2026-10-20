@@ -714,7 +714,8 @@ function makeInvestigator(invDef, seat) {
 
 function drawOpeningHand(state, inv) {
   const weaknesses = []
-  const target = inv.code === '03003' ? 13 : 5
+  // Phase 5（5a-33）：起手张数由调查员能力数据声明（默认 5）。
+  const target = INVESTIGATOR_ABILITIES[inv.code]?.openingHandSize || 5
   while (inv.hand.length < target && inv.deck.length) {
     const code = inv.deck.pop()
     if (isWeaknessCode(code)) weaknesses.push(code)
@@ -1744,7 +1745,8 @@ function controlledAbilityCards(inv) { return [...inv.assets, ...(inv.threat || 
 function controlledAbilityCard(inv, id) { return controlledAbilityCards(inv).find(card => card.id === id) }
 const LOLA_ROLES = ['guardian', 'seeker', 'rogue', 'mystic', 'survivor', 'neutral']
 function lolaCanUseCard(inv, code) {
-  if (inv.code !== '03006') return true
+  // Phase 5（5a-33）：只有「用角色限制卡牌」的调查员走这套校验。
+  if (!INVESTIGATOR_ABILITIES[inv.code]?.deckbuildingRoles) return true
   const def = cardDef(code)
   const factions = def?.factions || [def?.klass, def?.klass2, def?.klass3].filter(Boolean)
   return factions.includes('neutral') || factions.includes(inv.role)
@@ -3561,7 +3563,8 @@ function drawEnemyByTrait(state, inv, trait, events, includeDiscard = false) {
 
 function minhCommitWildBonus(state, committer, events) {
   let bonus = 0
-  for (const minh of aliveInvestigators(state).filter(owner => owner.code === '03002'
+  // Phase 5（5a-33）：敏的同地点万能加成由调查员能力数据声明。
+  for (const minh of aliveInvestigators(state).filter(owner => INVESTIGATOR_ABILITIES[owner.code]?.wildCommitCompanionBonus
     && owner.location === committer.location && !investigatorTextBlanked(state, owner))) {
     const key = `minhWild:${committer.seat}:${state.round}`
     if (minh.usedReactions?.[key]) continue
@@ -3692,7 +3695,8 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
         .filter(item => hasHiddenCard(owner, item.code) || !commitProfile(item.code)?.scenarioAbilityOnly
           || options.source?.scenarioAbility === true)
         .filter(item => !committedCodes.has(item.code) || !String(cardDef(item.code)?.textZh || '').includes('最多投入1张'))
-      const kingInYellow = owner.code === '03002' && owner.threat.some(card => card.code === '03011')
+      const kingInYellow = INVESTIGATOR_ABILITIES[owner.code]?.wildCommitCompanionBonus
+        && owner.threat.some(card => registeredEntry(card.code)?.kingInYellowThreat)
       if (kingInYellow && count === 0 && candidates.length < 3) candidates.length = 0
       if (owner !== inv && (!candidates.length || (!kingInYellow && count >= 1))) break
       const canFinish = !kingInYellow || count === 0 || count >= 3
@@ -3994,11 +3998,11 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
       : scenarioBehavior(state).chaosTokenRevealed?.(state, inv, token, scenarioRuntime(state, events)) || token
     // 马泰奥神父：任何调查员揭示 autofail 时，改为 elder_sign（每局一次）。
     if (token === 'autofail') {
-      const mateo = aliveInvestigators(state).find(owner => owner.code === '04004'
-        && INVESTIGATOR_ABILITIES[owner.code]?.autofailToElderSign && !owner.mateoSignUsed
+      const mateo = aliveInvestigators(state).find(owner =>
+        INVESTIGATOR_ABILITIES[owner.code]?.autofailToElderSign && !owner.mateoSignUsed
         && !investigatorTextBlanked(state, owner))
       if (mateo) {
-        const answer = requestChoice(state, { kind: 'reaction', source: '04004', seat: mateo.seat, canSkip: true,
+        const answer = requestChoice(state, { kind: 'reaction', source: mateo.code, seat: mateo.seat, canSkip: true,
           prompt: `揭示了 ${tokenLabel(token)}，是否取消它并改为 ${tokenLabel('eldersign')}（每局一次）？`,
           options: [{ id: 'skip', label: '保留自动失败' }, { id: 'trigger', label: '改为旧印' }] })
         if (answer === 'trigger') {
@@ -4290,8 +4294,8 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
       }
     }
   }
-  if (success) for (const minh of state.investigators.filter(owner => owner.code === '03002')) {
-    const king = minh.threat.find(card => card.code === '03011')
+  if (success) for (const minh of state.investigators.filter(owner => INVESTIGATOR_ABILITIES[owner.code]?.wildCommitCompanionBonus)) {
+    const king = minh.threat.find(card => registeredEntry(card.code)?.kingInYellowThreat)
     const matchingIcons = commitments.filter(item => item.seat === minh.seat).reduce((sum, item) => sum + item.icons, 0)
     if (king && matchingIcons >= 6) {
       removeOne(minh.threat, king)
@@ -4494,7 +4498,9 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0) {
       triggerReaction(state, inv.seat, 'assetEnteredPlay', [], { assetCode: code, assetId: asset.id, location: inv.location })
     }
     if (o.searchTop) searchTop(state, inv.seat, { amount: o.searchTop, source: code }, [])
-    if (s.homeFront && inv.code === '03001' && inv.damage > out.homeFrontDamage && state.skillTest?.source?.enemyId) {
+    // Phase 5（5a-33）：「家庭前线」的伤害转移由调查员能力数据声明。
+    if (s.homeFront && INVESTIGATOR_ABILITIES[inv.code]?.homeFrontMoveDamage
+      && inv.damage > out.homeFrontDamage && state.skillTest?.source?.enemyId) {
       const answer = requestChoice(state, { kind: 'skillEffect', source: code, seat: inv.seat,
         prompt: '是否从马克·哈里根身上移动1点伤害到正在攻击的敌人？',
         options: [{ id: 'skip', label: '不移动' }, { id: 'move', label: '移动1点伤害' }] })
@@ -8543,13 +8549,13 @@ function runMulligans(state, events) {
   // 幕间可能禁止下一场冒险换起始手牌（例如没有汽油 / 没有粉笔）。
   const noMulligan = consumeMulliganBlock(state)
   for (const inv of state.investigators) {
-    if ((noMulligan || inv.cannotMulligan) && inv.code !== '03003') {
+    if ((noMulligan || inv.cannotMulligan) && !INVESTIGATOR_ABILITIES[inv.code]?.openingHandSize) {
       info(state, events, `${inv.name} 必须保留起始手牌（幕间效果禁止换牌）。`)
       delete inv.cannotMulligan
       continue
     }
     delete inv.cannotMulligan
-    if (inv.code === '03003') {
+    if (INVESTIGATOR_ABILITIES[inv.code]?.openingHandSize) {
       inv.beneath ||= []
       while (inv.beneath.length < 5) {
         const eligible = inv.hand.map((code, index) => ({ code, index })).filter(item =>
@@ -8583,7 +8589,7 @@ function runMulligans(state, events) {
     drawOpeningHand(state, inv)
     inv.deck = shuffle([...inv.deck, ...held], () => randomValue(state))
     info(state, events, `${inv.name} 完成起始换牌（更换 ${held.length} 张）。`)
-    if (inv.code === '03006' && !inv.role) {
+    if (INVESTIGATOR_ABILITIES[inv.code]?.deckbuildingRoles && !inv.role) {
       chooseLolaRole(state, inv, 'lolaOpeningRole', '选择罗拉·海斯的初始角色。', true)
       info(state, events, `${inv.name} 选择了${CLASS_NAMES[inv.role] || inv.role}角色。`)
     }

@@ -17,10 +17,15 @@ export const investigatorAbilities = {
   '03001': {
     startsWith: ['03009'],
     elderSign: { kind: 'perDamage', base: 0 },
+    // Phase 5（5a-33）：「家庭前线」的移动伤害选项由数据声明，不再按卡号判断。
+    homeFrontMoveDamage: true,
     reactions: [{ id: 'markDraw', when: 'damagePlaced', limit: 'phase', effect: { type: 'draw', amount: 1 } }],
   },
-  '03002': { elderSign: { kind: 'minh', bonus: 1 }, commitWildPerInvestigator: true },
+  // Phase 5（5a-33）：敏的「同地点投入时 +1 万能」也写在数据上。
+  '03002': { elderSign: { kind: 'minh', bonus: 1 }, commitWildPerInvestigator: true, wildCommitCompanionBonus: 1 },
   '03003': {
+    // Phase 5（5a-33）：起手张数（13）由数据声明，不再按卡号判断。
+    openingHandSize: 13,
     elderSign: { kind: 'static', bonus: 3, onSuccess: { type: 'carcosaInvestigator', action: 'sefinaElderSign' } },
     freeAction: {
       id: 'sefinaBeneath',
@@ -46,6 +51,8 @@ export const investigatorAbilities = {
     }],
   },
   '03006': {
+    // Phase 5（5a-33）：罗拉用「角色」限制卡牌可用性，标记在数据上。
+    deckbuildingRoles: true,
     elderSign: { kind: 'static', bonus: 2, onSuccess: { type: 'carcosaInvestigator', action: 'lolaSwitchRole' } },
     freeAction: {
       id: 'lolaRole',
