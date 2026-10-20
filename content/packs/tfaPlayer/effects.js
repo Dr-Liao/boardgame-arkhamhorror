@@ -85,8 +85,7 @@ export const effects = {
   // 反击法术：取消当前符号标记，不揭示替代标记。
   '04110': { fast: true, reaction: { when: 'symbolRevealed', symbols: ['skull', 'cultist', 'tablet', 'elderthing'] },
     event: { type: 'cancelSymbolToken' } },
-  // 危险预感：放入场上并封印一个随机标记，下次揭示改结算它。
-  '04199': { fast: true, becomesAsset: true, event: tfa('premonition') },
+  // 04199 危险预感已迁到能力层（5c-24），见 MIGRATED_ESCAPE_ENTRIES_5C24。
   // 学无止境：重新尝试上一次失败的检定，+2。
   // 勇斗异劫：难度高于基础值时额外揭示 X 个混乱标记并选 1 个。
   // 将就一下：可从弃牌堆打出；调查帷幕 -1，来自弃牌堆时成功额外 1 线索。

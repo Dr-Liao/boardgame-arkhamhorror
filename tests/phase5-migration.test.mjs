@@ -684,6 +684,24 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5c-24：打出后变成场上卡 + 封印标记（04199 危险预感）----
+
+test('5c-24：04199 危险预感由条目声明「变成场上卡 + 替代结算的封印标记」', () => {
+  assert.equal(EFFECTS['04199'], undefined, '旧条目已删除')
+  const entry = registeredEntry('04199')
+  assert.equal(entry?.substituteSealedToken, true, '替代结算的声明')
+  assert.equal(entry?.abilities[0]?.becomesAsset, true, 'played 描述子声明了变为场上卡')
+  const state = fixture()
+  state.investigators[0].hand = ['04199']
+  state.chaosBag = ['-2', '0']
+  play(state, '04199')
+  settle(state)
+  const asset = state.investigators[0].assets.find(item => item.code === '04199')
+  assert.ok(asset, '进入场上')
+  assert.ok(asset.sealedToken, '封印了一个标记')
+  assert.equal(state.investigators[0].discard.includes('04199'), false, '事件本身没有进弃牌堆')
+})
+
 // ---- 5c-23：遭遇牌库检索（03263 追猎）----
 
 test('5c-23：03263 追猎从遭遇牌库顶找一名敌人在所在地点生成并交战', () => {

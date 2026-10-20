@@ -7311,15 +7311,17 @@ function tfaInvestigatorEffect(state, seat, effect, events) {
 function tfaBeforeChaosReveal(state, seat, inv, events) {
   const test = state.skillTest
   if (!test) return null
-  const premonition = inv.assets.find(asset => asset.code === '04199' && asset.tfaSealedToken)
+  // Phase 5（5c-24）：判据改成「封印标记 + 条目声明 substituteSealedToken」，引擎不再认卡号。
+  const premonition = inv.assets.find(asset => asset.sealedToken
+    && registeredEntry(asset.code)?.substituteSealedToken)
   if (premonition) {
-    const token = premonition.tfaSealedToken
+    const token = premonition.sealedToken
     leaveAsset(state, inv, premonition, events)
     if (!premonition.removedFromGame) inv.discard.push(premonition.code)
     state.chaos.sealed = (state.chaos.sealed || []).filter(entry => entry.source !== premonition.id)
     state.sealedTokens = (state.chaos.sealed || []).map(entry => entry.token)
     state.chaosBag.push(token)
-    info(state, events, `「${cardName('04199')}」改为结算封印的 ${tokenLabel(token)}，随后被弃掉。`)
+    info(state, events, `「${cardName(premonition.code)}」改为结算封印的 ${tokenLabel(token)}，随后被弃掉。`)
     return { token }
   }
   triggerReaction(state, seat, 'tokenReveal', events, { when: 'tokenReveal', seat, location: inv.location, skill: test.skill })
@@ -7403,7 +7405,7 @@ function tfaBorrowedTimeTurnStart(state, inv, events) {
 const TFA_PLAYER_WAVE3_ACTIONS = new Set([
   'youHandleThisOne', 'darkProphecy', 'dumbLuck', 'yaotlIcons', 'yaotlDiscardTop', 'marksmanship',
   'wellPrepared',
-  'premonition', 'againstAllOdds', 'pnakoticSkipTest', 'pnakoticNextTest',
+  'againstAllOdds', 'pnakoticSkipTest', 'pnakoticNextTest',
   'borrowedTimeClick', 'shardsOfTheVoid',
 ])
 
@@ -7416,25 +7418,6 @@ function tfaPlayerEffect3(state, seat, effect, events) {
   // 「雅沃托」：弃掉牌库顶。
   // 「枪法如神」：用枪械/远程支援攻击连接地点上的敌人。
   // 「准备万全」：按所选支援上的匹配图标提升本次检定。
-  // 「危险预感」：将本卡放入场上并封印一个随机标记。
-  if (effect.action === 'premonition') {
-    let token
-    if (state.chaosBag.length) {
-      token = state.chaosBag.splice(Math.floor(randomValue(state) * state.chaosBag.length), 1)[0]
-    }
-    const asset = newCardInstance(state, '04199', { exhausted: false, enteredRound: state.round })
-    if (token) {
-      asset.tfaSealedToken = token
-      state.chaos.sealed ||= []
-      state.chaos.sealed.push({ token, source: asset.id })
-      state.sealedTokens = state.chaos.sealed.map(entry => entry.token)
-    } else {
-      state.chaosBag.push(token)
-    }
-    inv.assets.push(asset)
-    info(state, events, `🔮 ${inv.name} 把「${cardName('04199')}」放入场${token ? `并封印了 ${tokenLabel(token)}` : ''}。`)
-    return
-  }
   // 「勇斗异劫」：额外揭示 X 个混乱标记并选 1 个结算。
   // 「纳克特手稿」：本次检定不揭示混乱标记。
   // 「纳克特手稿」：让某位调查员本轮下一次检定不揭示混乱标记。
@@ -9372,9 +9355,10 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     const disposal = {
       removeAfterPlay: eff.removeAfterPlay === true || playedFlags.removeAfterPlay === true || entryFlags.removeAfterPlay === true,
       shuffleBackAfterPlay: eff.shuffleBackAfterPlay === true || playedFlags.shuffleBackAfterPlay === true || entryFlags.shuffleBackAfterPlay === true,
-      exileAfterPlay: eff.exileAfterPlay === true,
-      addToVictory: eff.addToVictory === true,
-      becomesAsset: eff.becomesAsset === true,
+      // Phase 5（5c-24）：打出后去向的另外三项也认 played 描述子与条目级字段（旧 DSL 仍然优先）。
+      exileAfterPlay: eff.exileAfterPlay === true || playedFlags.exileAfterPlay === true || entryFlags.exileAfterPlay === true,
+      addToVictory: eff.addToVictory === true || playedFlags.addToVictory === true || entryFlags.addToVictory === true,
+      becomesAsset: eff.becomesAsset === true || playedFlags.becomesAsset === true || entryFlags.becomesAsset === true,
     }
     const played = playedEffect(copyCode || cardId)
     // Phase 2：事件卡的「played」描述子可以直接带 resolve（数据表达不了时），
@@ -10774,6 +10758,31 @@ function abilityApi(state, events) {
       location.clues = (location.clues || 0) + amount
       return amount
     },
+    // Phase 5（5c-24）：把正在结算的这张牌**自身**放置入场（「危险预感」这类打出后变成场上卡的事件）。
+    putSelfIntoPlay: (seat, code) => {
+      const owner = state.investigators[seat]
+      if (!owner || !code) return null
+      const asset = newCardInstance(state, code, { exhausted: false, enteredRound: state.round })
+      owner.assets.push(asset)
+      return asset
+    },
+    // Phase 5（5c-24）：从混乱袋随机抽一个标记并封印到这张卡上（随机数走 randomValue，可重放）。
+    // 空袋时的兜底与旧实现逐字一致（把 undefined 塞回袋子，等价于无事发生）。
+    sealRandomChaosToken: card => {
+      if (!card) return null
+      let token
+      if (state.chaosBag.length) {
+        token = state.chaosBag.splice(Math.floor(randomValue(state) * state.chaosBag.length), 1)[0]
+      }
+      if (!token) { state.chaosBag.push(token); return null }
+      card.sealedToken = token
+      state.chaos.sealed ||= []
+      state.chaos.sealed.push({ token, source: card.id })
+      state.sealedTokens = state.chaos.sealed.map(entry => entry.token)
+      return token
+    },
+    // Phase 5（5c-24）：混乱标记的展示文案（内容层写日志时用）。
+    tokenLabel: token => tokenLabel(token),
     // Phase 5（5c-21）：「以折扣打出另一张牌」的候选筛选——这张牌现在打出去有没有合法目标。
     // 与 effectError / validateMove 用的是同一份 abilityTargets；没有目标要求时恒为真
     // （与旧 handler 的判定一致：`played` 为空也算"可以打"）。

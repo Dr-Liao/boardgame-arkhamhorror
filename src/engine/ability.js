@@ -87,6 +87,8 @@ const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'crit
   'source', 'simplified', 'note',
   // Phase 2：事件卡的打出关键字从 EFFECTS 顶层字段搬进描述子（迁移逃生卡的前提）。
   'fast', 'noOpportunityAttack',
+  // Phase 5（5c-24）：`played` 描述子也能声明「打出后去向」——移出游戏 / 加入胜利区 / 变成场上卡。
+  'becomesAsset', 'exileAfterPlay', 'addToVictory',
   // Phase 5（5c）：能力"按哪种行动结算"。旧式能力把这件事写在 `effect.kind`（`fight`/`evade`），
   // 描述子用 resolve 实现时没有 effect 数据体，需要显式声明，否则借机攻击判定会把它当成普通行动。
   'countsAs',
@@ -122,6 +124,11 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // 旧 DSL 写在 EFFECTS 顶层、由引擎的 cardPlayBlockedReason 读；搬到条目上之后读点不变
   // （先读条目、再回落 EFFECTS），这样迁移不影响 legalMoves 的可见性。
   'playRestriction', 'teamLimit',
+  // Phase 5（5c-24）：「打出后去向」的三个字段也允许写在条目上（与 played 描述子同层），
+  // 读点在 doPlay 的收尾段（移出游戏 / 加胜利区 / 卡牌本身留在场上）。
+  'becomesAsset', 'exileAfterPlay', 'addToVictory',
+  // Phase 5（5c-24）：这张支援会把封印其上的混乱标记当成本次检定的结算结果（危险预感）。
+  'substituteSealedToken',
   'fast', 'noOpportunityAttack'])
 
 // 条目级「能不能打出」条件：函数式 predicate，或 { when, message }（message 直接展示给玩家）。
@@ -217,6 +224,10 @@ export function normalizeDescriptor(raw, { code, index }) {
     // Phase 2：事件卡的"快速"/"不引发借机攻击"是卡面关键字，跟着描述子走。
     fast: raw.fast === true,
     noOpportunityAttack: raw.noOpportunityAttack === true,
+    // Phase 5（5c-24）：`played` 描述子的「打出后去向」（读点在 doPlay 的收尾段）。
+    becomesAsset: raw.becomesAsset === true,
+    exileAfterPlay: raw.exileAfterPlay === true,
+    addToVictory: raw.addToVictory === true,
     // Phase 5：这条能力"按哪种行动结算"（借机攻击判定用）。
     countsAs: raw.countsAs || null,
     // Phase 5（5b-6）：从旧式 reactions 搬来的反应，沿用旧式询问（见 DESCRIPTOR_KEYS 注释）。
@@ -324,6 +335,11 @@ export function registerCardAbilities(entries) {
       // Phase 5（5c-20）：卡面自带的打出限制 / 团队张数上限（读点 cardPlayBlockedReason）。
       playRestriction: entry.playRestriction ?? null,
       teamLimit: entry.teamLimit ?? null,
+      // Phase 5（5c-24）：打出后去向与「封印标记当结算结果」的声明。
+      becomesAsset: entry.becomesAsset === true,
+      exileAfterPlay: entry.exileAfterPlay === true,
+      addToVictory: entry.addToVictory === true,
+      substituteSealedToken: entry.substituteSealedToken === true,
       source: entry.source || null,
       registered: true,
     }

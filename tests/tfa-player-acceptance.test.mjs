@@ -1292,7 +1292,9 @@ test('M2-B premonition enters play with a sealed token and substitutes it', () =
   settle(state)
   const premonition = me(state).assets.find(item => item.code === '04199')
   assert.ok(premonition, '进入场上')
-  const sealed = premonition.tfaSealedToken
+  // Phase 5（5c-24）：字段从卡号化的 `tfaSealedToken` 改成通用的 `sealedToken`
+  // （读点由条目的 substituteSealedToken 声明，引擎不再认卡号）。
+  const sealed = premonition.sealedToken
   assert.ok(sealed, '封印了一个随机标记')
   const execute = current => performTest(current, 0, 'willpower', 0, {
     resolve: value => { current.testResult = value } })
