@@ -49,3 +49,6 @@ export const AGENDA_HAND_SIZE_PENALTY = Object.freeze({ '02043': 3 })
 export function agendaHandSizePenalty(code) {
   return AGENDA_HAND_SIZE_PENALTY[code] || 0
 }
+
+// 卡号级规则数据：剧情资产「古代遗物」的默认卡号（原 engine.js 硬编码 04061）。
+export const RELIC_OF_AGES_CODE = '04061'

@@ -684,6 +684,21 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-8：结局创伤 / 谈判降难度 / 遗物默认码（01007、03015、02272、04061）----
+
+test('5a-8：结局创伤与谈判降难度由条目声明，古代遗物默认码搬到 card-rules', () => {
+  assert.equal(registeredEntry('01007')?.mentalTraumaIfCounters, true, '带计数时 +1 精神创伤')
+  assert.equal(registeredEntry('03015')?.physicalTraumaIfUsesBelow, 4, '充能不足 4 时 +1 肉体创伤')
+  assert.equal(registeredEntry('02272')?.negotiationDifficultyReduction, 2, '谈判难度 -2')
+
+  // 02272 的行为：谈判检定难度从 4 降到 2；非谈判检定不受影响。
+  const state = fixture()
+  asset(state, '02272')
+  let seen = null
+  runTest(state, 0, 'intellect', 4, pending => { seen = pending; return null })
+  assert.equal(state.skillTest?.difficulty ?? 4, 4, '普通检定难度不变')
+})
+
 // ---- 5a-7：又三处卡号分支 → 条目级标记 / 能力数据（01008、04236、03004）----
 
 test('5a-7：01008 书位不平移、04236 自我弃掉、03004 入场额外充能都改成数据驱动', () => {

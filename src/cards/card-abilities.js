@@ -2895,7 +2895,8 @@ export const MIGRATED_ESCAPE_ENTRIES_5C28 = [
   // 03015 愤怒之灵：作为威胁区的弱点牌（有充能），横置一个「未横置、有充能、法术特性」的支援，
   // 移动 1 个充能到自身。弱点数据体与主动能力放在同一个条目里（弱点读点仍是 weaknessProfile）。
   {
-    code: '03015',
+    // 剧本结束时仍少于 4 个充能 → +1 肉体创伤（读点在结局结算段）。
+    code: '03015', physicalTraumaIfUsesBelow: 4,
     abilities: [
       {
         kind: 'weakness', label: '愤怒之灵（威胁区弱点）',
@@ -3380,6 +3381,10 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '04308', clicksToActions: true },
   // 04236 「自食其力」：控制占用盟友槽位的支援时自我弃掉（读点在 tfaDiscardOnYourOwn）。
   { code: '04236', discardIfControllingAlly: true },
+  // 01007 疯狂之石（威胁）：带计数时剧本结束 +1 精神创伤（读点在结局结算段）。
+  { code: '01007', mentalTraumaIfCounters: true },
+  // 02272 「谈判」检定难度 -2（读点在 performTest）。
+  { code: '02272', negotiationDifficultyReduction: 2 },
 ]
 
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。

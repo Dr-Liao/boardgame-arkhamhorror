@@ -154,6 +154,11 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'clicksToActions',
   // Phase 5（5a-7）：控制占用盟友槽位的支援时自我弃掉（自食其力）。
   'discardIfControllingAlly',
+  // Phase 5（5a-8）：威胁卡在结局带来的创伤（计数 / 充能阈值）。
+  'mentalTraumaIfCounters',
+  'physicalTraumaIfUsesBelow',
+  // Phase 5（5a-8）：「谈判」检定的难度降低（02272）。
+  'negotiationDifficultyReduction',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -384,6 +389,10 @@ export function registerCardAbilities(entries) {
       tomeHandSlotsPerCopy: entry.tomeHandSlotsPerCopy ?? null,
       clicksToActions: entry.clicksToActions === true,
       discardIfControllingAlly: entry.discardIfControllingAlly === true,
+      // Phase 5（5a-8）：结局创伤与谈判降难度。
+      mentalTraumaIfCounters: entry.mentalTraumaIfCounters === true,
+      physicalTraumaIfUsesBelow: entry.physicalTraumaIfUsesBelow ?? null,
+      negotiationDifficultyReduction: entry.negotiationDifficultyReduction ?? null,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

@@ -38,6 +38,7 @@ import { EFFECTS, INVESTIGATOR_ABILITIES, isAutomaticReward } from '../cards/car
 import {
   agendaHandSizePenalty, blanksTraits, enemyWeaknessExtra, hasExplicitReactionPrompt,
   isPoisonThreat, isTextBlankEnemy, poisonThreatCode,
+  RELIC_OF_AGES_CODE,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -1284,10 +1285,14 @@ function finishScenario(state, resolutionKey, events) {
   applyResolutionEffects(state, resolutionKey, events)
   settleExiledCards(campaign, state.exiledBySeat)
   for (const inv of state.investigators) {
-    if (inv.threat.some(card => card.code === '01007' && card.counters > 0)) addTrauma(state, inv.seat, 'mental', 1, events)
-    const angeredSpirits = inv.threat.find(card => card.code === '03015')
-    if (angeredSpirits && (angeredSpirits.uses || 0) < 4 && !angeredSpirits.traumaApplied) {
-      angeredSpirits.traumaApplied = true
+    // Phase 5（5a-8）：威胁卡带来的创伤由条目级标记声明（计数 / 充能阈值）。
+    if (inv.threat.some(card => registeredEntry(card.code)?.mentalTraumaIfCounters && card.counters > 0)) {
+      addTrauma(state, inv.seat, 'mental', 1, events)
+    }
+    for (const threat of inv.threat) {
+      const threshold = registeredEntry(threat.code)?.physicalTraumaIfUsesBelow
+      if (threshold == null || (threat.uses || 0) >= threshold || threat.traumaApplied) continue
+      threat.traumaApplied = true
       addTrauma(state, inv.seat, 'physical', 1, events)
     }
     if (state.enemies.some(enemy => enemy.smiteTheWickedSeat === inv.seat)
@@ -1857,7 +1862,7 @@ function setExpeditionLeader(state, seat, events) {
 function moveRelicOfAges(state, { code = null, location = null, seat = null } = {}, events) {
   const previous = state.relicOfAges
   state.relicOfAges = {
-    code: code || previous?.code || '04061',
+    code: code || previous?.code || RELIC_OF_AGES_CODE,
     location: seat != null ? state.investigators[seat]?.location ?? null : location,
     seat: seat ?? null,
   }
@@ -3577,8 +3582,10 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
   }
   const statReference = getStat(state, inv, skill)
   const startingStat = options.baseValue ?? statReference
-  if (options.source?.label?.includes('谈判') && inv.assets.some(asset => asset.code === '02272')) {
-    difficulty = Math.max(0, difficulty - 2)
+  // Phase 5（5a-8）：「谈判」检定难度降低由条目级 negotiationDifficultyReduction 声明。
+  const negotiationReduction = inv.assets.reduce((sum, asset) => sum + (registeredEntry(asset.code)?.negotiationDifficultyReduction || 0), 0)
+  if (negotiationReduction && options.source?.label?.includes('谈判')) {
+    difficulty = Math.max(0, difficulty - negotiationReduction)
     state.skillTest.difficulty = difficulty
   }
   const initialBonus = typeof options.skillBonus === 'function' ? options.skillBonus() : options.skillBonus || 0
