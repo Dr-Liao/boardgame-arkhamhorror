@@ -206,3 +206,39 @@ export const describeState = createDescribeState({
 
 下一块：`scenarioRuntime`（317 行）——同样用依赖注入，但它会**写 state**（放置地点、推进密谋），
 所以拆之前要先把它调用的副作用 helper 列全，并用重放确认。
+
+## 10. 6d-3：拆出 combat.js（按域拆分第一个示例）
+
+### 10.1 拆的是什么
+
+`doFight`（245 行）+ `doEvade`（131 行）搬进 `src/engine/combat.js`，
+导出 `createCombat(deps)` 返回 `{ doFight, doEvade }`；engine 末尾一次性注入 53 个依赖。
+
+这一对是 roadmap「按域拆分」的第一个示例（`combat/` 域）。与 `describeState` 不同，
+它们**会写 state**（伤害、交战、击败、移动、行动成本），所以依赖清单长得多，
+拆分的验收标准也更硬：重放逐条一致 + 战斗/躲避相关用例全绿。
+
+### 10.2 坑：依赖清单不能只靠「函数调用」扫
+
+第一版依赖表是用正则扫 `name(` 生成的，漏了两类**不带括号**的引用：
+
+| 漏掉的 | 出现方式 |
+| --- | --- |
+| `getMaxSanity` | `captureTableState(state, getStat, getMaxSanity)` —— 作为值传递 |
+| `SKILL_NAMES` | 拼日志文案时直接用（import 绑定，不是 engine 顶层函数） |
+
+结果：重放第 43 步 `getMaxSanity is not defined`、随后 `SKILL_NAMES is not defined`。
+**正确做法**：把「engine 顶层声明 + 全部 import 绑定」都纳入候选集，再与工厂解构对比，
+一次找齐缺失项（脚本见本轮提交记录）。只扫调用会在这种「把函数当值传」的代码里翻车。
+
+### 10.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **12149**（6d-2 后 12466） |
+| `src/engine/combat.js` | **446** |
+| `src/engine/describe.js` | 176 |
+| `src/engine/card-lookup.js` | 90 |
+
+下一块按同样流程拆 `doPlay`（212 行）与 `doInvestigate`（114 行），然后才是 `abilityApi`；
+`scenarioRuntime`（317 行）因为依赖 90+ 个副作用 helper，放到 `abilityApi` 之后。
