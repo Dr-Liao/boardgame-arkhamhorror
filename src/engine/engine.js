@@ -7058,29 +7058,6 @@ function carcosaPlayerEffect(state, seat, effect, events) {
     }
     return
   }
-  if (effect.action === 'uncageTheSoul') {
-    // 只能选"能以费用-3真正打完"的法术/仪式：需要敌人目标的事件卡在没有合法目标时不能当候选，
-    // 否则选中它会在结算时白弃一张牌（也会让随机走子器走到无目标的结算路径）。
-    const candidates = inv.hand.filter(code => {
-      const def = cardDef(code)
-      if (!def || !(def.traits || []).some(trait => ['spell', 'ritual'].includes(String(trait).toLowerCase()))) return false
-      const played = playedEffect(code)
-      if (played?.target === 'enemy' || ['fight', 'evade'].includes(played?.type)) {
-        return abilityTargets(state, inv, played).length > 0
-      }
-      return true
-    })
-    if (!candidates.length) {
-      info(state, events, '没有可折扣打出的法术或仪式。')
-      return
-    }
-    const code = requestChoice(state, { kind: 'card', source: '03033', seat,
-      prompt: '选择要以费用-3打出的法术或仪式。',
-      options: candidates.map(item => ({ id: item, cardCode: item, label: cardName(item) })) })
-    inv.carcosaPlayDiscount = 3
-    doPlay(state, seat, code, events, false, true)
-    return
-  }
   if (effect.action === 'heroicRescue') {
     const context = state._reaction
     const enemy = context?.enemyId && state.enemies.find(item => item.id === context.enemyId)
@@ -10785,6 +10762,18 @@ function abilityApi(state, events) {
       owner.deck = shuffle([...owner.deck, ...owner.discard], () => randomValue(state))
       owner.discard = []
       return owner.deck.length
+    },
+    // Phase 5（5c-21）：「以折扣打出另一张牌」的候选筛选——这张牌现在打出去有没有合法目标。
+    // 与 effectError / validateMove 用的是同一份 abilityTargets；没有目标要求时恒为真
+    // （与旧 handler 的判定一致：`played` 为空也算"可以打"）。
+    cardHasLegalTarget: (seat, code) => {
+      const owner = state.investigators[seat]
+      const played = playedEffect(code)
+      if (!owner || !played) return true
+      if (played.target === 'enemy' || ['fight', 'evade'].includes(played.type)) {
+        return abilityTargets(state, owner, played).length > 0
+      }
+      return true
     },
     // Phase 5（5c-19）：把控制的一张支援拿回手牌（「求助盟友」）。
     // 离场钩子照常结算（leaveAsset），与旧 handler 的写法一致。

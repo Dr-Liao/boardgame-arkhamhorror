@@ -12,9 +12,9 @@
 
 ## 1. 一句话现状
 
-迁移工具链已交付，**304 张卡**迁到能力层（35 个批次），`EFFECTS` 385 → **88**、
-通道 legacy 286 → **60**、descriptor 75 → **371**、**逃生卡 93 → 24**、**引擎卡号 166 → 120**。
-`replay` 基线逐条不变、`fast` 无新增失败。**5a 引擎卡号分支、5c 剩余 24 张、5b 尾部（反应 2 / 非 stats 被动 8）仍未完成。**
+迁移工具链已交付，**305 张卡**迁到能力层（36 个批次），`EFFECTS` 385 → **87**、
+通道 legacy 286 → **60**、descriptor 75 → **372**、**逃生卡 93 → 23**、**引擎卡号 166 → 119**。
+`replay` 基线逐条不变、`fast` 无新增失败。**5a 引擎卡号分支、5c 剩余 23 张、5b 尾部（反应 2 / 非 stats 被动 8）仍未完成。**
 
 ---
 
@@ -62,13 +62,13 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 | 文档 | 本文 + `phase5-migration.md`（批次证据与踩坑记录）+ `card-model.md`（加卡流程） |
 
 批次：5b-1…5b-5（机械 154）、5b-6/6b/6c/6d/7/8a/8b/9/10/11（反应/天赋/被动/规则字段/封印附属 46）、
-5c-1…5c-20（逃生卡 68）、5a-1…5a-4（引擎侧 10 个码）。
+5c-1…5c-21（逃生卡 69）、5a-1…5a-4（引擎侧 10 个码）。
 
 ---
 
 ## 4. 下一步（按性价比排序）
 
-### 4.1 5c 剩余 24 张（其中 19 张引擎里仍有逃生原语实现）
+### 4.1 5c 剩余 23 张（其中 18 张引擎里仍有逃生原语实现）
 
 顺序（每批 2–3 张，逐张验证）：
 
@@ -94,9 +94,9 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 ⑤ replay --compare + 该战役验收用例
 ```
 
-### 4.2 5a 剩余 120 个码（`condition` 30 / `block` 57 / `reference` 33 / `table` 0）
+### 4.2 5a 剩余 119 个码（`condition` 30 / `block` 57 / `reference` 32 / `table` 0）
 
-- **`reference`（33）**：多数是 `requestChoice({ source: '0xxxx' })` 的来源标签——它会进状态指纹，
+- **`reference`（32）**：多数是 `requestChoice({ source: '0xxxx' })` 的来源标签——它会进状态指纹，
   改法本身会改变 replay，**归 Phase 6 与 UI 文案一起处理**，不要单独动。
 - **`condition` / `block`（87）**：`def.code === '0xxxx'` 形式的真实行为分支。
   做法：先补 `ctx.api`（`engine.js` 的 `abilityApi`），把分支搬成描述子，再删分支。

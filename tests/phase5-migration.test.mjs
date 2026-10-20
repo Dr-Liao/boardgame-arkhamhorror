@@ -674,3 +674,23 @@ test('5c-20：04010 走私货物在没有违法卡时只提供牌库顶 9 张', 
   assert.ok(state.pendingChoice.options.some(option => option.cardCode === '01044'))
   settle(state)
 })
+
+// ---- 5c-21：以折扣打出另一张牌（03033 解锢灵魂）----
+
+test('5c-21：03033 解锢灵魂以费用 -3、不花行动打出法术，且只列有目标/无目标要求的候选', () => {
+  const state = fixture()
+  const me = state.investigators[0]
+  enemy(state, { engagedSeat: 0 })
+  me.hand = ['03033', '01068', '01044'] // 记忆抹消（Spell，费用 1）；弹簧刀不是法术，不该出现
+  const actions = me.actionsLeft
+  const resources = me.resources
+  move(state, { action: 'play', cardId: '03033' })
+  assert.equal(state.pendingChoice?.kind, 'card', '出现「选择要折扣打出的法术」询问')
+  const optionIds = state.pendingChoice.options.map(option => option.id)
+  assert.deepEqual(optionIds, ['01068'], '只有法术/仪式进入候选')
+  answer(state, '01068')
+  settle(state)
+  assert.equal(state.investigators[0].hand.includes('01068'), false, '被折扣打出的牌已离手')
+  assert.equal(state.investigators[0].resources, resources, '费用 -3 把 1 费法术压到 0，且 03033 自身 0 费')
+  assert.equal(state.investigators[0].actionsLeft, actions - 1, '只花「打出解锢灵魂」这一次行动')
+})

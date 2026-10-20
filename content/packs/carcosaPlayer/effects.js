@@ -16,7 +16,7 @@ export const effects = {
   '03025': { abilities: [action('翻译古代雕文', custom('archaicGlyphs'),
     { discardHand: 1, discardHandIcon: 'intellect' })] },
   '03030': { fast: true, reaction: { when: 'wouldSucceedTest' }, event: { type: 'addTestValue', amount: 2 } },
-  '03033': { event: custom('uncageTheSoul') },
+  // 03033 解锢灵魂已迁到能力层（5c-21），见 MIGRATED_ESCAPE_ENTRIES_5C21。
   '03036': { abilities: [
     action('提灯调查', { type: 'investigate', shroudMod: -1 }),
     action('弃置提灯造成1点伤害', { type: 'dealDamage', amount: 1, target: 'here', noOpportunityAttack: true }, { discardSelf: true }),
