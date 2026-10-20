@@ -1023,8 +1023,10 @@ export const MIGRATED_ESCAPE_ENTRIES = [
     }],
   },
   // 03038 藏身地点：快速事件；附属到任一已揭示的地点（敌人阶段结束时有未横置敌人则弃置）。
+  // grantsHidingSpot：附属期间让该地点的敌人 aloof（读点在 processPlayerEnemyEntry）。
   {
     code: '03038',
+    grantsHidingSpot: true,
     abilities: [{
       kind: 'played', fast: true, label: '附属到一个已揭示的地点',
       resolve: ({ state, inv, api }) => attachToChosenLocation(state, inv, api, {
@@ -3399,6 +3401,8 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '01013', weaknessStaysInHand: true },
   // 04020 值得信赖：附属在支援上时，结算宿主能力每项技能 +1（读点在 investigate/attack 两处）。
   { code: '04020', attachedSkillBonus: 1 },
+  // 03012 彩绘世界：可以从牌库下方「复制」事件打出（读点散在 reaction/play 流程，共 7 处）。
+  { code: '03012', copiesBeneathEvents: true },
   // 03042 随行鬼影：在离承受者最远的地点生成（读点在 resolveWeakness 的敌人弱点段）。
   { code: '03042', weaknessSpawnsAtFarthestLocation: true },
   // 02138 / 02139 / 02179（远古遗物系列）：调查员被消除时离场并进弃牌堆。

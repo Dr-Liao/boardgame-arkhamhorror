@@ -686,6 +686,13 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
 })
 
+// ---- 5a-26：彩绘世界的下方复制 / 藏身地点 / 分析性思维（03010、03012、03038）----
+
+test('5a-26：03012 与 03038 都改用条目级标记', () => {
+  assert.equal(registeredEntry('03012')?.copiesBeneathEvents, true, '彩绘世界可以复制下方事件')
+  assert.equal(registeredEntry('03038')?.grantsHidingSpot, true, '藏身地点让敌人 aloof')
+})
+
 // ---- 5a-25：随行鬼影最远生成 / 困兽之笼卡号（03042、02031）----
 
 test('5a-25：03042 的最远生成与 02031 的绑定卡号都改成数据驱动', () => {

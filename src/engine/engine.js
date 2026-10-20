@@ -2833,7 +2833,8 @@ function reactionWindow(state, when, context, events) {
     if (context.peril && inv.seat !== context.seat) continue
     while (!context.cancelled) {
       const discardEvent = topDiscardEvent(state, inv)
-      const handCandidates = inv.hand.flatMap((code, index) => code === '03012'
+      // Phase 5（5a-26）：「彩绘世界」这类能复制牌库下方事件的卡由条目级 copiesBeneathEvents 声明。
+      const handCandidates = inv.hand.flatMap((code, index) => registeredEntry(code)?.copiesBeneathEvents
         ? (inv.beneath || []).flatMap(copyCode => {
           const copied = cardDef(copyCode)
           return copied?.type === 'event' && !copied.exceptional && EFFECTS[copyCode]?.reaction
@@ -2970,7 +2971,7 @@ function playReactionCard(state, inv, index, context, events, fromDiscard = fals
   } finally {
     delete state._reaction
   }
-  if (copyCode && code === '03012') {
+  if (copyCode && registeredEntry(code)?.copiesBeneathEvents) {
     state.removedFromGame ||= []
     state.removedFromGame.push(code)
   } else if (context.eventToVictory === code) {
@@ -3634,9 +3635,9 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
   const committed = []
   const committedCodes = new Set()
   const commitments = []
-  // Phase 5（5a-5）：远程投入的判据改成「控制着带 remoteCommit 标记的支援」
-  // （原来是 `other.code === '03002' && 有 '03010'`）。卡面本来就是「缜密分析」授予、
-  // 且该卡只能出现在潘明的牌库里，因此行为等价；引擎不再认这两张卡的卡号。
+  // Phase 5（5a-5）：远程投入的判据是「控制着带 remoteCommit 标记的支援」
+  // （原来是两张卡的卡号组合判断）。卡面本来就是「缜密分析」授予、且只能出现在潘明的牌库里，
+  // 因此行为等价；引擎不再认这两张卡的卡号（连注释里也不再写，便于 cards:workorder 收缩）。
   const grantsRemoteCommit = person => person.assets.some(asset => registeredEntry(asset.code)?.passive?.remoteCommit)
   const remoteMinhs = options.peril ? [] : aliveInvestigators(state).filter(other => other.seat !== seat
     && grantsRemoteCommit(other))
@@ -3748,7 +3749,7 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
     const analyticalMind = owner.assets.find(asset => !asset.exhausted
       && registeredEntry(asset.code)?.passive?.analyticalMind)
     if (count === 1 && analyticalMind) {
-      const answer = requestChoice(state, { kind: 'reaction', source: '03010', seat: owner.seat, canSkip: true,
+      const answer = requestChoice(state, { kind: 'reaction', source: analyticalMind.code, seat: owner.seat, canSkip: true,
         prompt: '是否横置「分析性思维」并抽1张牌？',
         options: [{ id: 'skip', label: '不触发' }, { id: 'trigger', label: '横置并抽1张牌' }] })
       if (answer === 'trigger') {
@@ -4583,7 +4584,9 @@ function spawnStoryEnemy(state, code, locationId, stats = {}, extra = {}, events
 }
 
 function processPlayerEnemyEntry(state, enemy, events, spawned = false) {  const attachments = state.playerLocationAttachments || []
-  enemy.hidingSpotAloof = !enemy.elite && attachments.some(item => item.code === '03038' && item.location === enemy.location)
+  // Phase 5（5a-26）：「藏身处」这类给敌人 aloof 的附属由条目级 grantsHidingSpot 声明。
+  enemy.hidingSpotAloof = !enemy.elite
+    && attachments.some(item => registeredEntry(item.code)?.grantsHidingSpot && item.location === enemy.location)
   enemy.aloof = !!enemy.printedAloof || enemy.hidingSpotAloof
   const ambush = spawned && attachments.find(item => item.code === '03148' && item.location === enemy.location)
   if (ambush) {
@@ -5624,7 +5627,7 @@ function enemyPhase(state) {
   for (const attachment of (state.playerLocationAttachments || []).slice()) {
     const location = attachment.location
     const owner = state.investigators[attachment.ownerSeat]
-    if (attachment.code === '03038'
+    if (registeredEntry(attachment.code)?.grantsHidingSpot
       && state.enemies.some(enemy => enemy.location === location && !enemy.exhausted)) {
       removeOne(state.playerLocationAttachments, attachment)
       owner?.discard.push(attachment.code)
@@ -8536,7 +8539,7 @@ function runMulligans(state, events) {
       inv.beneath ||= []
       while (inv.beneath.length < 5) {
         const eligible = inv.hand.map((code, index) => ({ code, index })).filter(item =>
-          item.code !== '03012' && cardDef(item.code)?.type === 'event')
+          !registeredEntry(item.code)?.copiesBeneathEvents && cardDef(item.code)?.type === 'event')
         if (!eligible.length) break
         const answer = requestChoice(state, { kind: 'openingHand', source: 'sefinaBeneath', seat: inv.seat, canSkip: true,
           prompt: '选择至多5张非「彩绘世界」事件放在赛菲娜下方，或完成选择。',
@@ -8894,7 +8897,7 @@ function assetCapacityValue(asset, capacity) {
 function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = false, copyCode = null, fromPlanAssetId = null, fromBackpackId = null) {
   const inv = state.investigators[seat]
   const def = cardDef(cardId)
-  const copiedDef = copyCode && cardId === '03012' ? cardDef(copyCode) : null
+  const copiedDef = copyCode && registeredEntry(cardId)?.copiesBeneathEvents ? cardDef(copyCode) : null
   const playedDef = copiedDef || def
   if (!def) return
   if (!lolaCanUseCard(inv, cardId)) return
@@ -9078,7 +9081,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       if (previousFromDiscard === undefined) delete state._fromDiscardCode
       else state._fromDiscardCode = previousFromDiscard
     }
-    if (copyCode && cardId === '03012') {
+    if (copyCode && registeredEntry(cardId)?.copiesBeneathEvents) {
       state.removedFromGame ||= []
       state.removedFromGame.push(cardId)
     } else if (disposal.removeAfterPlay) {
@@ -11587,7 +11590,7 @@ export function legalMoves(state, observerSeat) {
     if (activeHiddenRules(state, inv).some(hidden => hidden.rule.cannotPlayTypes?.includes(def.type))) continue
     if (blocked.has(def.type)) continue
     if (cardPlayBlockedReason(state, inv, def)) continue
-    if (code === '03012') {
+    if (registeredEntry(code)?.copiesBeneathEvents) {
       for (const copyCode of inv.beneath || []) {
         const copy = cardDef(copyCode)
         const copyPlayed = playedEffect(copyCode)
@@ -12190,7 +12193,7 @@ export function validateMove(state, seat, move) {
       const conditionError = playConditionError(state, inv, move.cardId, playConditionHelpers(state))
       if (conditionError) return conditionError
       if (!runtimeCardAvailable(state, inv, move.cardId) || def.dataStatus === 'quarantined') return '该卡牌未获运行时许可'
-      if (move.cardId === '03012') {
+      if (registeredEntry(move.cardId)?.copiesBeneathEvents) {
         const copied = cardDef(move.copyCode)
         const copiedPlayed = playedEffect(move.copyCode)
         if (!inv.beneath?.includes(move.copyCode) || !copied || copied.type !== 'event' || copied.exceptional

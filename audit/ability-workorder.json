@@ -2,16 +2,16 @@
   "schemaVersion": 1,
   "note": "由 tools/audit-workorder.mjs --write 生成，勿手改。shape=reference/table 不是规则债务（标识与数据表）；block/condition 才是要迁的行为分支。class 只按关键字判定的候选分类，逐条迁移前需人工确认。",
   "summary": {
-    "total": 54,
+    "total": 51,
     "byShape": {
-      "block": 19,
+      "block": 17,
       "reference": 28,
-      "condition": 7
+      "condition": 6
     },
     "byClass": {
-      "C": 16,
+      "C": 12,
       "A": 28,
-      "B": 10
+      "B": 11
     },
     "nonBehaviorDebt": 28
   },
@@ -48,6 +48,7 @@
     ],
     "B": [
       "03001",
+      "03002",
       "03006",
       "03011",
       "03059",
@@ -63,11 +64,7 @@
       "02088",
       "02305",
       "02320",
-      "03002",
       "03003",
-      "03010",
-      "03012",
-      "03038",
       "03148",
       "03149",
       "03199",
@@ -91,14 +88,14 @@
       "occurrences": 9,
       "lines": [
         1999,
-        4979,
-        9188,
-        9192,
-        9252,
-        12017,
-        12022,
-        12266,
-        12285
+        4982,
+        9191,
+        9195,
+        9255,
+        12020,
+        12025,
+        12269,
+        12288
       ],
       "inEffects": true,
       "evidence": [
@@ -115,7 +112,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        7030
+        7033
       ],
       "inEffects": false,
       "evidence": [
@@ -131,7 +128,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        7041
+        7044
       ],
       "inEffects": false,
       "evidence": [
@@ -148,8 +145,8 @@
       ],
       "occurrences": 2,
       "lines": [
-        7349,
-        7358
+        7352,
+        7361
       ],
       "inEffects": false,
       "evidence": [
@@ -167,8 +164,8 @@
       ],
       "occurrences": 2,
       "lines": [
-        7367,
-        7369
+        7370,
+        7372
       ],
       "inEffects": false,
       "evidence": [
@@ -186,8 +183,8 @@
       ],
       "occurrences": 2,
       "lines": [
-        7379,
-        7383
+        7382,
+        7386
       ],
       "inEffects": false,
       "evidence": [
@@ -204,7 +201,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        9981
+        9984
       ],
       "inEffects": false,
       "evidence": [
@@ -224,7 +221,7 @@
       "occurrences": 2,
       "lines": [
         1999,
-        3104
+        3105
       ],
       "inEffects": false,
       "evidence": [
@@ -242,7 +239,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        7416
+        7419
       ],
       "inEffects": false,
       "evidence": [
@@ -258,9 +255,9 @@
       ],
       "occurrences": 3,
       "lines": [
-        7438,
-        7442,
-        7448
+        7441,
+        7445,
+        7451
       ],
       "inEffects": true,
       "evidence": [
@@ -277,7 +274,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        7461
+        7464
       ],
       "inEffects": false,
       "evidence": [
@@ -293,7 +290,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        3770
+        3771
       ],
       "inEffects": false,
       "evidence": [
@@ -310,8 +307,8 @@
       ],
       "occurrences": 2,
       "lines": [
-        7495,
-        7500
+        7498,
+        7503
       ],
       "inEffects": false,
       "evidence": [
@@ -329,8 +326,8 @@
       ],
       "occurrences": 2,
       "lines": [
-        7509,
-        7514
+        7512,
+        7517
       ],
       "inEffects": false,
       "evidence": [
@@ -348,7 +345,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        5822
+        5825
       ],
       "inEffects": false,
       "evidence": [
@@ -364,7 +361,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        7533
+        7536
       ],
       "inEffects": true,
       "evidence": [
@@ -380,7 +377,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        7573
+        7576
       ],
       "inEffects": false,
       "evidence": [
@@ -394,7 +391,7 @@
       "needs": [],
       "occurrences": 1,
       "lines": [
-        7544
+        7547
       ],
       "inEffects": false,
       "evidence": [
@@ -410,7 +407,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        7558
+        7561
       ],
       "inEffects": false,
       "evidence": [
@@ -426,7 +423,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        7581
+        7584
       ],
       "inEffects": false,
       "evidence": [
@@ -444,8 +441,8 @@
       ],
       "occurrences": 2,
       "lines": [
-        8673,
-        8675
+        8676,
+        8678
       ],
       "inEffects": true,
       "evidence": [
@@ -462,7 +459,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        7596
+        7599
       ],
       "inEffects": false,
       "evidence": [
@@ -479,7 +476,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        5177
+        5180
       ],
       "inEffects": false,
       "evidence": [
@@ -496,7 +493,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        4486
+        4487
       ],
       "inEffects": false,
       "evidence": [
@@ -506,24 +503,22 @@
     {
       "code": "03002",
       "shape": "block",
-      "class": "C",
+      "class": "B",
       "needs": [
         "B1 目标枚举",
         "D1 非玩家通道",
-        "C1 布尔修正",
         "ctx.api 薄包装"
       ],
-      "occurrences": 4,
+      "occurrences": 3,
       "lines": [
-        3553,
-        3638,
-        3684,
-        4282
+        3554,
+        3685,
+        4283
       ],
       "inEffects": false,
       "evidence": [
         "for (const minh of aliveInvestigators(state).filter(owner => owner.code === '03002'",
-        "// （原来是 `other.code === '03002' && 有 '03010'`）。卡面本来就是「缜密分析」授予、"
+        "const kingInYellow = owner.code === '03002' && owner.threat.some(card => card.code === '03011')"
       ]
     },
     {
@@ -540,8 +535,8 @@
       "occurrences": 3,
       "lines": [
         714,
-        8529,
-        8535
+        8532,
+        8538
       ],
       "inEffects": false,
       "evidence": [
@@ -561,7 +556,7 @@
       "occurrences": 2,
       "lines": [
         1744,
-        8569
+        8572
       ],
       "inEffects": false,
       "evidence": [
@@ -578,30 +573,11 @@
       ],
       "occurrences": 1,
       "lines": [
-        9752
+        9755
       ],
       "inEffects": false,
       "evidence": [
         "info(state, events, `「${cardName('03007')}」：从 ${inv.name} 身上移动 ${movedDamage} 点伤害到「${enemy.name}」。`)"
-      ]
-    },
-    {
-      "code": "03010",
-      "shape": "block",
-      "class": "C",
-      "needs": [
-        "B1 目标枚举",
-        "C1 布尔修正"
-      ],
-      "occurrences": 2,
-      "lines": [
-        3638,
-        3751
-      ],
-      "inEffects": false,
-      "evidence": [
-        "// （原来是 `other.code === '03002' && 有 '03010'`）。卡面本来就是「缜密分析」授予、",
-        "const answer = requestChoice(state, { kind: 'reaction', source: '03010', seat: owner.seat, canSkip: true,"
       ]
     },
     {
@@ -615,60 +591,13 @@
       ],
       "occurrences": 2,
       "lines": [
-        3684,
-        4283
+        3685,
+        4284
       ],
       "inEffects": true,
       "evidence": [
         "const kingInYellow = owner.code === '03002' && owner.threat.some(card => card.code === '03011')",
         "const king = minh.threat.find(card => card.code === '03011')"
-      ]
-    },
-    {
-      "code": "03012",
-      "shape": "condition",
-      "class": "C",
-      "needs": [
-        "B1 目标枚举",
-        "D1 非玩家通道",
-        "C1 布尔修正",
-        "C3 费用表达式",
-        "B6 区域附属"
-      ],
-      "occurrences": 7,
-      "lines": [
-        2836,
-        2973,
-        8539,
-        8897,
-        9081,
-        11590,
-        12193
-      ],
-      "inEffects": true,
-      "evidence": [
-        "const handCandidates = inv.hand.flatMap((code, index) => code === '03012'",
-        "if (copyCode && code === '03012') {"
-      ]
-    },
-    {
-      "code": "03038",
-      "shape": "block",
-      "class": "C",
-      "needs": [
-        "D1 非玩家通道",
-        "B6 区域附属",
-        "ctx.api 薄包装"
-      ],
-      "occurrences": 2,
-      "lines": [
-        4586,
-        5627
-      ],
-      "inEffects": false,
-      "evidence": [
-        "enemy.hidingSpotAloof = !enemy.elite && attachments.some(item => item.code === '03038' && item.location === enemy.locati",
-        "if (attachment.code === '03038'"
       ]
     },
     {
@@ -682,7 +611,7 @@
       "occurrences": 2,
       "lines": [
         1316,
-        4787
+        4790
       ],
       "inEffects": false,
       "evidence": [
@@ -701,8 +630,8 @@
       ],
       "occurrences": 2,
       "lines": [
-        4588,
-        5633
+        4591,
+        5636
       ],
       "inEffects": false,
       "evidence": [
@@ -720,10 +649,10 @@
       ],
       "occurrences": 4,
       "lines": [
-        11923,
-        11927,
-        11934,
-        11947
+        11926,
+        11930,
+        11937,
+        11950
       ],
       "inEffects": false,
       "evidence": [
@@ -741,7 +670,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        9605
+        9608
       ],
       "inEffects": false,
       "evidence": [
@@ -759,7 +688,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        4596
+        4599
       ],
       "inEffects": false,
       "evidence": [
@@ -778,9 +707,9 @@
       ],
       "occurrences": 3,
       "lines": [
-        9335,
-        11560,
-        12323
+        9338,
+        11563,
+        12326
       ],
       "inEffects": false,
       "evidence": [
@@ -797,7 +726,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        10688
+        10691
       ],
       "inEffects": false,
       "evidence": [
@@ -813,7 +742,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        3879
+        3880
       ],
       "inEffects": false,
       "evidence": [
@@ -830,7 +759,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        7131
+        7134
       ],
       "inEffects": false,
       "evidence": [
@@ -847,8 +776,8 @@
       ],
       "occurrences": 2,
       "lines": [
-        3986,
-        3990
+        3987,
+        3991
       ],
       "inEffects": false,
       "evidence": [
@@ -867,7 +796,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        9596
+        9599
       ],
       "inEffects": false,
       "evidence": [
@@ -884,7 +813,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        9959
+        9962
       ],
       "inEffects": false,
       "evidence": [
@@ -900,7 +829,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        4021
+        4022
       ],
       "inEffects": true,
       "evidence": [
@@ -917,7 +846,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        11911
+        11914
       ],
       "inEffects": false,
       "evidence": [
@@ -935,8 +864,8 @@
       ],
       "occurrences": 2,
       "lines": [
-        4795,
-        4800
+        4798,
+        4803
       ],
       "inEffects": false,
       "evidence": [
@@ -953,7 +882,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        7297
+        7300
       ],
       "inEffects": false,
       "evidence": [
@@ -971,7 +900,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        9803
+        9806
       ],
       "inEffects": false,
       "evidence": [
@@ -1028,8 +957,8 @@
       ],
       "occurrences": 2,
       "lines": [
-        5483,
-        5782
+        5486,
+        5785
       ],
       "inEffects": false,
       "evidence": [
@@ -1047,7 +976,7 @@
       ],
       "occurrences": 1,
       "lines": [
-        9822
+        9825
       ],
       "inEffects": false,
       "evidence": [
@@ -1064,8 +993,8 @@
       ],
       "occurrences": 2,
       "lines": [
-        10017,
-        10022
+        10020,
+        10025
       ],
       "inEffects": false,
       "evidence": [

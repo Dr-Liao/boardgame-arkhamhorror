@@ -181,6 +181,9 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'attachedSkillBonus',
   // Phase 5（5a-25）：弱点在离承受者最远的地点生成（随行鬼影）。
   'weaknessSpawnsAtFarthestLocation',
+  // Phase 5（5a-26）：复制牌库下方的事件（彩绘世界）/ 附属期间让敌人 aloof（藏身地点）。
+  'copiesBeneathEvents',
+  'grantsHidingSpot',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -427,6 +430,8 @@ export function registerCardAbilities(entries) {
       weaknessStaysInHand: entry.weaknessStaysInHand === true,
       attachedSkillBonus: entry.attachedSkillBonus ?? null,
       weaknessSpawnsAtFarthestLocation: entry.weaknessSpawnsAtFarthestLocation === true,
+      copiesBeneathEvents: entry.copiesBeneathEvents === true,
+      grantsHidingSpot: entry.grantsHidingSpot === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,
