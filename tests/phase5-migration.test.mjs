@@ -10,7 +10,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
 import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine/engine.js'
-import { blanksTraits, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
+import { blanksTraits, counterTreacheryCode, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
   SMITE_THE_WICKED_CODE, SEARCHING_FOR_IZZIE_CODE, weaknessUpgradeCode, LITA_CHANDLER_CODE } from '../src/cards/card-rules.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
@@ -684,6 +684,14 @@ test('5a-5：03010 缜密分析的数据搬到条目 passive，引擎不再认�
   const entry = registeredEntry('03010')
   assert.equal(entry?.passive?.analyticalMind, true, '横置抽牌的标记')
   assert.equal(entry?.passive?.remoteCommit, true, '远程投入的标记')
+})
+
+// ---- 5a-22：留在手里的弱点 / 奥术屏障卡号（01013、02102）----
+
+test('5a-22：01013 的「留在手里」与 02102 的卡号都改成数据驱动', () => {
+  assert.equal(registeredEntry('01013')?.weaknessStaysInHand, true, '黑暗回忆留在手里')
+  assert.equal(counterTreacheryCode('arcaneBarriers'), '02102', '奥术屏障计数 → 卡号')
+  assert.equal(counterTreacheryCode('nonexistent'), null, '未知计数返回 null')
 })
 
 // ---- 5a-21：幸运骰 / 天赐良机（02230、02271）----

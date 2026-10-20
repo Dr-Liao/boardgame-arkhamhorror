@@ -112,3 +112,8 @@ export function weaknessUpgradeCode(type) {
 
 // 卡号级规则数据：结局时加入战役牌组的剧情盟友（丽塔·钱德勒，原 engine.js 硬编码 01117）。
 export const LITA_CHANDLER_CODE = '01117'
+
+// 卡号级规则数据：某个地点计数对应哪张遭遇卡（奥术屏障这类「计数器 + 卡」的机制）。
+export function counterTreacheryCode(field) {
+  return LOCATION_COUNTER_TREACHERY[field] || null
+}

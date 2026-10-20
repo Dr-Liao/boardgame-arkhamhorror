@@ -175,6 +175,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // Phase 5（5a-21）：花资源取消并重抽标记（幸运骰）/ 投入后流放换自动成功（天赐良机）。
   'rerollTokenCost',
   'exileForAutoSuccess',
+  // Phase 5（5a-22）：抽到后留在手里的弱点（黑暗回忆）。
+  'weaknessStaysInHand',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
   'fast', 'noOpportunityAttack'])
@@ -418,6 +420,7 @@ export function registerCardAbilities(entries) {
       discardOnElimination: entry.discardOnElimination === true,
       rerollTokenCost: entry.rerollTokenCost ?? null,
       exileForAutoSuccess: entry.exileForAutoSuccess === true,
+      weaknessStaysInHand: entry.weaknessStaysInHand === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       source: entry.source || null,

@@ -47,6 +47,7 @@ import {
   SEARCHING_FOR_IZZIE_CODE,
   weaknessUpgradeCode,
   LITA_CHANDLER_CODE,
+  counterTreacheryCode,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -2344,9 +2345,10 @@ function drawCards(state, inv, n, events) {
     const def = cardDef(code)
     if (isWeaknessCard(def)) {
       texts.push(`⚠️ ${inv.name} 抽到了弱点「${cardName(code)}」：${def.textZh || def.text || ''}`)
-      if (def.code === '01013') {
+      // Phase 5（5a-22）：「黑暗回忆」这类抽到后留在手里的弱点由条目级 weaknessStaysInHand 声明。
+      if (registeredEntry(def.code)?.weaknessStaysInHand) {
         inv.hand.push(code)
-        texts.push('黑暗回忆留在手中；可支付费用打出，否则每回合结束受到 2 恐惧。')
+        texts.push(cardName(code) + '留在手中；可支付费用打出，否则每回合结束受到 2 恐惧。')
       } else {
         resolveWeakness(state, inv, def, events, texts)
         if (inv.shuffleWeaknessAfterResolution === code) {
@@ -9421,9 +9423,11 @@ function relocateInvestigator(state, seat, locationId, events, message = null) {
   const payBarrier = index => {
     if (index >= barriers.length) return moveAfterCosts()
     const loc = barriers[index]
-    performTest(state, seat, 'willpower', 4, { source: { label: '奥术屏障', code: '02102' }, resolve: result => {
-      if (result.success) { loc.arcaneBarriers--; state.encounterDiscard.push('02102'); payBarrier(index + 1) }
-      else if (requestChoice(state, { kind: 'encounter', source: '02102', seat,
+    // Phase 5（5a-22）：奥术屏障的卡号来自「地点计数 → 遭遇卡」那张规则表。
+    const barrierCode = counterTreacheryCode('arcaneBarriers')
+    performTest(state, seat, 'willpower', 4, { source: { label: '奥术屏障', code: barrierCode }, resolve: result => {
+      if (result.success) { loc.arcaneBarriers--; state.encounterDiscard.push(barrierCode); payBarrier(index + 1) }
+      else if (requestChoice(state, { kind: 'encounter', source: barrierCode, seat,
         prompt: '奥术屏障：取消移动，或弃掉牌库顶 5 张牌继续移动。',
         options: [{ id: 'cancel', label: '取消移动' }, { id: 'mill', label: '弃掉 5 张牌继续移动' }] }) === 'mill') {
         scenarioRuntime(state, events).discardTop(seat, 5)
