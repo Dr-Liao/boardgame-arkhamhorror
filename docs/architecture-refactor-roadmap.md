@@ -24,13 +24,13 @@
 
 | 项 | 当前值 | 说明 |
 | --- | --- | --- |
-| `src/engine/engine.js` | **12,600 行** | 单文件承担 dispatch、检定、战斗、阶段、战役机制（5c-18/5c-19 删了 7 段旧原语分支、补了 9 个薄包装，净增约 20 行；卡号分支删完后自然变小） |
-| `EFFECTS` 行为条目 | **57** | Phase 5 迁走 328 条（5b 机械 154 + 反应 35 + 天赋 15 + 被动 20 + 规则字段 6 + 封印附属 5 + 5c 60）；其中 32 张用战役逃生原语、5 张由引擎硬编码 `engine:`；通道分布（按卡）：legacy 50 / descriptor 404 / hybrid 2 / escape 0 / engine 5，见 `audit/ability-coverage.json` |
-| `EFFECTS` 顶层字段 | **65** | 生命周期/metadata/条件混在一起（`event`/`skill`/`weakness` 搬空后归零；`cards:audit` 现算 **37** 个键） |
-| 引擎里的卡号字面量 | **28 个** | `engine.js` 中 `'0\d{4}'` 去重计数，是**技术债主指标**（5c 带走 58 个、5b 带走 4 个、5a 三十三批带走 88 个；剩下 28 个全是 `reference` 文案标签） |
+| `src/engine/engine.js` | **4,398 行**（Phase 6 `6e` 之后；原 12,600） | 只剩顶层状态机、约 300 个小函数与 25 张依赖表的装配；拆出的模块见 [`phase6-handoff.md`](phase6-handoff.md) §2 与 [`phase6-decoupling.md`](phase6-decoupling.md) §38–§44 |
+| `EFFECTS` 行为条目 | **52** | Phase 5 迁走 328 条；Phase 6 的 6e-2 删掉 5 条纯登记条目（printedSoak ×3 / wendyAmulet / litaAura）。通道分布（按卡）：descriptor 410 / legacy 42 / hybrid 9 / data 4 / escape 0 / engine 0，见 `audit/ability-coverage.json` |
+| `EFFECTS` 顶层字段 | **32** | 生命周期/metadata/条件混在一起（`engine` 字段已随 6e-2 归零；`cards:audit` 现算 **32** 个键） |
+| 引擎里的卡号字面量 | **0 个** ✅ | `tests/phase6-guard.test.mjs` 把「引擎内无卡号」变成门禁（6a 清零，`reference` 28 个也数据化） |
 | 战役逃生原语的卡 | **0 张** ✅ | 93 → 0，5c 三十九批全部走描述子通道 |
-| `engine: 'xxx'` 标记卡 | **5 张** | 行为完全由引擎硬编码 |
-| 引擎里的战役字样 | tfa 64 / carcosa 36 / dunwich 3 | 违反"引擎不按关卡分支"的约定 |
+| `engine: 'xxx'` 标记卡 | **0 张** ✅ | 6e-2 删掉最后 5 条纯登记条目，行为由条目级字段（`playedEventsToDeckTop` / `auraWhileInPlay`）与卡面数据承担 |
+| 引擎里的战役字样 | **0 处** ✅（含 camelCase） | `tests/phase6-guard.test.mjs` 守住；战役机制搬到 `src/cards/campaign-plugin.js`（6e-7） |
 | 时机窗口 | **52**（reaction 35 / interrupt 9 / player 7 + `chaosTokenRevealed` 1） | `src/engine/windows.js` |
 | 描述子 `kind` | **11** | 六种触发/修正 + 五种生命周期钩子（`played`/`commit`/`weakness`/`entersPlay`/`leavesPlay`） |
 | 描述子 `scope` | **8**（`card`/`investigator` + 6 种非玩家） | Phase 3 · D1：敌人/地点/幕/议程/剧情支援/威胁 |
@@ -106,19 +106,22 @@ Phase 5 的两个新用例文件（`migration-tools`、`phase5-migration`）已�
 
 交付说明与门禁证据：[`phase4-replay.md`](phase4-replay.md)。
 
-**未交付**：`engine.js` 拆分、战役插件化、A2 替换与防止、A3 视为、A4 强制顺序、
+**未交付**：A2 替换与防止、A3 视为、A4 强制顺序、
 B4 多人同时决定、C6 记录与历史、C5 计算表达式、E1 文案 i18n、E2 覆盖度报告。
 （D1 非玩家卡通道、D3 剧本声明化首批、D4 战役结果声明化已随 Phase 3 交付；D2 使用次数元数据已随 Phase 5 交付；
 重放/撤销的**引擎能力**已随 Phase 4 交付，但撤销 UI 与 `action_diff` 增量存档仍未做；
-迁移提效工具已随 Phase 5 交付，**5b / 5c 均已收尾**，只剩 5a 引擎分支。）
+迁移提效工具已随 Phase 5 交付，**5b / 5c 均已收尾**，5a 引擎分支已清零；
+Phase 6 已交付 ①②（卡号 0 / 战役名 0）、③ 的观测面解耦与首批清零（57 → 52）、
+④ 的 engine.js 拆分（12,600 → 4,610 行）与战役插件化第一批；
+`EFFECTS` 清到 0 与 engine.js < 2.5k 仍在进行，交接见 [`phase6-handoff.md`](phase6-handoff.md) §5。）
 
 ### 1.2 引擎码工作单（§10 第 1 项）
 
-`npm run cards:workorder` 把 28 个引擎码按**形态**拆开，产物在 `audit/ability-workorder.json`：
+`npm run cards:workorder` 把引擎码按**形态**拆开，产物在 `audit/ability-workorder.json`（当前 **0 个**）：
 
 | 形态 | 数量 | 含义 | 是否规则债务 |
 | --- | --- | --- | --- |
-| `reference` | 28 | `requestChoice` 的 source 标签、`cardName('…')` 文案 | 否 |
+| `reference` | 0 ✅ | `requestChoice` 的 source 标签、`cardName('…')` 文案 | 否（6a 已数据化） |
 | `table` | 0 | 静态数据表（如 `'01101': { hunter: true, … }`） | 否（搬家即可，已清零） |
 | `condition` | 0 | 共享规则里的卡号条件 | 是 |
 | `block` | **0** | 按卡号写死的实现块（`if (def.code === …)` / `case`） | ✅ 已清零 |
@@ -680,17 +683,24 @@ maxHealth / cardSanity
 
 删除 `EFFECTS` 行为读点（先留一版兼容层）→ 拆分 `engine.js`（卡号分支删完后自然变小，目标单文件 < 2.5k 行）→ 战役机制插件化（TFA 作为第一个搬家对象：`stateSlice` / `project` / `actions+hooks` / `agentHints`）。
 
-**进展（截至 6d-29）**：引擎里的卡号字面量 **28 → 0**、战役名 **2 → 0**，`tests/phase6-guard.test.mjs` 把这两条变成门禁；
-`engine.js` **12654 → 5652 行（−55.3%）**，已拆出 **28 个模块**（`tests` / `moves` / `setup` / `combat` / `dispatch` /
-`enemies` / `deck-ops` / `encounter` / `actions` / `scenario-runtime` / `turn` / `ability-exec` / `skill-effects` /
-`reveal` / `phases` / `api-*` / `hub` / `weakness` / `campaign-flow` / `movement` / `locations` / `describe` /
-`card-lookup` 等），另把 `player-effects` 搬到内容层。
-逐批证据见 [`phase6-decoupling.md`](phase6-decoupling.md)（36 节），交接与下一步见 [`phase6-handoff.md`](phase6-handoff.md)。
-剩余：`EFFECTS` 57 条（阻塞于观测面，见下）、`effectsTopLevelFields` 33 项、继续拆 `engine.js` 到 < 2.5k、战役插件化。
+**进展（截至 6e）**：引擎里的卡号字面量 **28 → 0**、战役名 **2 → 0**，`tests/phase6-guard.test.mjs` 把这两条变成门禁；
+`engine.js` **12654 → 4398 行（−65.2%）**，已拆出 **33 个模块**
+（`tests` / `moves` / `setup` / `combat` / `dispatch` / `enemies` / `deck-ops` / `encounter` / `actions` /
+`actions-extra` / `scenario-runtime` / `turn` / `ability-exec` / `ability-rules` / `skill-effects` /
+`reveal` / `phases` / `api-*` / `hub` / `table-decisions` / `weakness` / `campaign-flow` / `movement` /
+`locations` / `describe` / `describe-ai` / `treachery-tokens` / `card-lookup` 等），另把
+`player-effects` 与 `campaign-plugin`（战役规则 + 玩家卡调度）搬到内容层。
+逐批证据见 [`phase6-decoupling.md`](phase6-decoupling.md)（44 节），交接与下一步见 [`phase6-handoff.md`](phase6-handoff.md)。
 
-**6c 的前置条件**（见 [`phase6-decoupling.md`](phase6-decoupling.md) §7）：`EFFECTS[code]` 还兼着「这张卡已实现」的语义——
-`ai-context.js` 把整个对象塞进 AI 上下文，删条目会改变提示词并让重放指纹变红。
-正确顺序：先把 `implemented` 换成稳定摘要并**显式重采基线**，再删纯登记条目。
+**③ 的阻塞已解开（6e-1）**：`EFFECTS[code]` 不再兼「这张卡已实现」的语义——
+`src/cards/card-implementation.js` 成为唯一读点（`implementationChannel` / `implementationSummary` /
+`legacyEntry` / `DATA_IMPLEMENTED_CODES`），`ai-context`、`deckbuilding`、`card-catalog` 都改读它。
+实测结论修正了 6c 的假设：**`implemented` 只是提示词，不参与状态指纹**——换摘要后 `replay --compare`
+逐条一致，无需重采基线；6c 实验里那次「重放变红」其实是构筑校验（`isPlayable`）把卡判成未实现。
+于是 ③ 可以一路清零：6e-2 删掉最后 5 条纯登记条目（57 → 52），剩下 52 条是真正待迁的旧 DSL 行为/规则字段。
+
+剩余：`EFFECTS` 52 条（其中 42 legacy + 9 hybrid + 1 data 占位）、`effectsTopLevelFields` 32 项、
+继续拆 `engine.js` 到 < 2.5k、战役插件化第二批（`stateSlice` / 观察投影 / `agentHints`）。
 
 **门禁**：`engine.js` / `observation.js` 内不出现 `tfa|carcosa|dunwich` 字样与具体卡号；新增战役只加 `content/campaigns/<id>/`。
 
@@ -704,7 +714,7 @@ maxHealth / cardSanity
 | 3 内容来源 | 2–3 周 | ✅ 完成（D1/D3 首批/D4） | 4 |
 | 4 重放安全网 | 2 周 | ✅ 完成（golden 基线 + 100 局门禁 + 撤销 API） | 1–3 |
 | 5 迁移 | 4–6 周 | ✅ 5c 三十九批（93/93）、✅ 5b 全部、✅ 5a 行为分支清零 | — |
-| 6 收尾 | 持续 | 🚧 ①② 完成（卡号 0 / 战役名 0）；④ 拆到 −55.3%（5652 行）；③ `EFFECTS` 57 条待拍板观测面 | — |
+| 6 收尾 | 持续 | 🚧 ①② 完成（卡号 0 / 战役名 0）；③ 观测面已解耦、`EFFECTS` 57 → 52；④ engine.js 拆到 −65.2%（4398 行）+ 战役插件化第一批 | — |
 | **合计** | **13–17 周** | | 两人并行约 8–10 周 |
 
 ---

@@ -1573,3 +1573,129 @@ Phase 6 走到这里，①② 完成、④ 拆到 −55.3%，③ 需要一个决
 （漏注入 `doInvestigate` / `doEvade`、`contentRegistry` 快照、`SCENARIOS` 副本）。
 拆 api 与动作层时，必须额外跑对应的验收用例。
 
+---
+
+## 38. 6e-1 / 6e-2：观测面解耦（实现账本）+ 删最后 5 条纯登记条目
+
+### 38.1 为什么先做这一批
+
+Phase 6 的 ③ 卡在「`EFFECTS[code]` 兼着这张卡已实现的语义」上：`ai-context.js` 把整个条目塞进
+AI 上下文，`deckbuilding.js` 与 `card-catalog.js` 也直接读它。交接文档留了 A/B/C 三条路，
+本轮按 **A（观测面解耦 + 显式重采基线）** 执行。
+
+### 38.2 交付
+
+| 产物 | 作用 |
+| --- | --- |
+| `src/cards/card-implementation.js` | 实现账本的唯一读点：`implementationChannel` / `implementation` / `implementationSummary` / `legacyEntry` / `legacyEffectFor` / `isRegistrationOnly` / `DATA_IMPLEMENTED_CODES` |
+| `tests/phase6-implementation.test.mjs` | 6 条：通道分类 / 纯登记仍算已实现 / 摘要形状固定且纯 JSON / 不泄漏 engine 标记 / `isPlayable` 与账本一致（玩家卡全量）/ 混合通道规则字段 |
+| 读点收口 | `ai-context`：`implemented` → `implementationSummary`；`deckbuilding`：`isPlayable` 与签名卡校验 → `implementation()`，`scoreCard` → `legacyEntry()`；`card-catalog`：`effectNote` → 摘要的 `note` |
+| 6e-2 删除 | 01014 wendyAmulet / 01072+01094+01095 printedSoak / 01117 litaAura（行为早已在条目级 `playedEventsToDeckTop` / `auraWhileInPlay` 与卡面数据里） |
+
+摘要按「能力 / 修正 / 规则字段」重建，键序固定，不暴露原始条目；旧 DSL 的 `engine` 登记标记
+**不进摘要**——这让「删掉登记条目」对 AI 观测面完全无感。`data` 通道（卡面数据即实现）用
+`DATA_IMPLEMENTED_CODES` 显式登记，构筑判定不再依赖 `Object.hasOwn(EFFECTS, code)`。
+
+### 38.3 修正 6c 的因果判断（重要）
+
+6c 的实验结论是「删条目 → `implemented` 变 → 重放指纹变红」。本轮实测否掉了后半句：
+
+- 换掉 `implemented` 的形状后，`replay --compare` **逐条一致**——AI 提示词根本不参与状态指纹；
+- 6c 那次重放变红的真实原因，是构筑校验 `isPlayable()` 把删了条目的卡判成「未实现」
+  （报错原文：`玩家卡效果依赖缺失：01072`），而构筑结果会写进对局存档。
+
+结论：**观测面变更不需要重采基线；只有「构筑 / 规则行为」变化才需要**。这条修正让 ③ 的剩余
+52 条可以继续按普通迁移批次推进（每批仍要 replay 一致 + fast tier 新增失败 0）。
+
+### 38.4 账本口径
+
+`tools/audit-abilities.mjs` 的逐卡通道改读同一份账本语义，并新增 `data` 通道：
+
+```
+指标：engineCodes=0 effectsEntries=52 effectsTopLevelFields=32 escapeCards=0
+通道：descriptor=410 legacy=42 hybrid=9 data=4     （合计 465 张）
+```
+
+### 38.5 门禁
+
+replay --compare 与基线逐条一致；fast 2148 例 2141 通过、失败 7 条＝既有 7 条；
+`cards:audit --check` / `cards:workorder --check` / `cards:migrate --verify` /
+`audit-dead-primitives --check` / `replay:fixtures` 全绿。
+
+## 39. 6e-3…6e-7：engine.js 再拆 5 个模块 + 战役插件化第一批
+
+### 39.1 新模块
+
+| 模块 | 行数 | 职责 |
+| --- | --- | --- |
+| `src/engine/ability-rules.js` | 259 | 描述子的可用性 / 费用 / 目标枚举 / 修正来源：`payAbilityCost`、`descriptorUsable`、`descriptorSources`、`nonPlayerAbilitySources`、`canAffordAbility`、`abilityTargets`、`applyAbilityTarget` |
+| `src/engine/table-decisions.js` | 369 | 台面决策层：谁在操作（`decisionSeat` / `actingSeats` / `hubActingSeats`）、能不能行动（`cardPlayBlockedReason` / `actionKind` / `actionPreview` / `moveCost`）、开局调度（`runMulligans` / 起始调整 / 金牌怀表）、hub 移动校验 |
+| `src/engine/actions-extra.js` | 420 | 场景侧额外行动：谈判（parley / 邪教徒 / 丽塔）、剧情资产、地点能力、威胁与债务、搜索伊兹、躲避后结算 |
+| `src/engine/describe-ai.js` | 124 | 给 AI / 界面的描述层：`stripLabel`、`moveToText`、`describePrey`、`describeFreeAbilities`、`scriptActionHints`（纯读） |
+| `src/engine/treachery-tokens.js` | 372 | 混乱标记与诡计结算：`resolveTreachery` / `resolveTreacheryBody` / `applyPenalty` / `resolveSpecialToken` / `applyFreeTriggers` / 标记统计与敌人按特性抽取 |
+| `src/cards/campaign-plugin.js` | 542 | **战役插件化第一批（内容层）**：A 战役规则原语（补给 / 复仇 / 中毒 / 伊格之怒 / 领队 / 古代遗物 / 探索牌库）；B 数据体表达不了的玩家卡效果调度（carcosa/tfa investigator+player、开局揭示、打出折扣、弃置自身、回合开始、抽牌反应、失败检定窗口） |
+
+`campaign-plugin.js` 放在 `src/cards/` 而不是 `src/engine/`：`phase6-guard` 禁止引擎内出现战役名，
+这条门禁把「战役机制必须在内容层」变成机械约束（与 6d-15 的 `player-effects` 同一手法）。
+
+### 39.2 方法：把「切块」脚本化
+
+本轮写了临时脚本 `develop/tmp-cut.mjs`（不入库）：按顶层声明的大括号配平切块 → 自动推导依赖
+（顶层声明 + 全部 import 绑定）→ 生成 `createXxx(deps)` 工厂 → 在 `engine.js` 末尾追加惰性装配 +
+同名 export 包装。配套 `develop/tmp-fixdeps.mjs` 做漏项校验（引擎绑定 × 模块标识符差分）。
+
+三个坑都值得记：
+
+1. **跨行 import 里夹着行注释**（`// Phase 3（D1）：…` 写在 `{` 中间）—— 第一版解析把它和后面的
+   `hasNonPlayerBehavior` 粘成一个假名字，于是漏注入，`replay` 第 9 步才炸。
+2. **解构式顶层声明**（`export const { legalMoves, validateMove } = createMoves(…)`）不在
+   「function/const NAME」的形式里，也被漏掉——这次是 `describe-ai.js` 里的 `validateMove`：
+   `replay` 全绿但 21 条 fast 用例红。**这是「replay 绿不等于没坏」的第五次复现。**
+3. **包装必须覆盖被搬走的每个声明**：只给「外部用到的」生成包装，会让引擎 `deps` 表里的名字变成
+   ReferenceError（`canUseExtraEvade`）；另外内容层模块的相对路径是 `../cards/…`，脚本默认同目录。
+
+### 39.3 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **4398**（6d-29 后 5652） |
+| `src/engine/tests.js` | 858 |
+| `src/engine/ability.js` | 663 |
+| `src/engine/moves.js` | 652 |
+| `src/engine/modifiers.js` | 622 |
+| `src/engine/setup.js` | 578 |
+| `src/cards/campaign-plugin.js` | **542**（内容层） |
+| `src/engine/effects.js` | 492 |
+| `src/engine/api-misc.js` | 471 |
+| `src/engine/combat.js` | 446 |
+| `src/engine/dispatch.js` | 437 |
+| `src/engine/enemies.js` | 434 |
+| `src/engine/deck-ops.js` | 429 |
+| `src/engine/actions-extra.js` | **420** |
+| `src/engine/actions.js` | 399 |
+| `src/engine/scenario-runtime.js` | 398 |
+| `src/engine/turn.js` | 382 |
+| `src/engine/treachery-tokens.js` | **372** |
+| `src/engine/ability-exec.js` | 370 |
+| `src/engine/table-decisions.js` | **369** |
+| `src/engine/skill-effects.js` | 319 |
+| `src/engine/reveal.js` | 314 |
+| `src/engine/phases.js` | 311 |
+| `src/engine/api-card.js` | 302 |
+| `src/engine/hub.js` | 299 |
+| `src/engine/weakness.js` | 283 |
+| `src/engine/ability-rules.js` | **259** |
+| `src/engine/describe-ai.js` | **124** |
+| 其余（`campaign-flow` / `movement` / `locations` / `describe` / `api-*` / `card-lookup` 等） | ≤ 252 |
+
+累计迁出约 **8256 行**（12654 → 4398，**−65.2%**）；模块数 28 → 33。
+
+### 39.4 门禁
+
+每批均 `replay --compare` 逐条一致；6e-3…6e-7 合并后 `fast` 2148 例 2141 通过、
+失败 7 条＝既有 7 条；`phase6-guard` / `architecture-guard` / `cards:audit --check` 全绿。
+
+## 40. 交接更新
+
+剩余工作与顺序见 [`phase6-handoff.md`](phase6-handoff.md) §5：继续拆 `engine.js`（当前 4398 → 目标 < 2500）、
+`EFFECTS` 52 条逐批清零、战役插件化第二批（`stateSlice` / 观察投影 / `agentHints`）。
