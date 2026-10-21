@@ -90,6 +90,13 @@ export const abilityLayerCodes = Object.freeze([
   '02306',
   '02308',
   '02309',
+  // Phase 6（6e-8）：快速反应事件搬到 played 描述子。
+  '02113',
+  '02115',
+  '02153',
+  '02225',
+  '02261',
+  '02307',
 ])
 export const manifest = {
   schemaVersion: CONTENT_SCHEMA_VERSION, id: 'dunwichPlayer', name: '敦威治遗产 · 玩家卡',

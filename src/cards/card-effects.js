@@ -77,16 +77,8 @@ export const EFFECTS = {
   // 守卫者 Guardian（0 级 + XP）
   // =========================================================================
 
-  '01022': { // 证据！Evidence!
-    fast: true,
-    reaction: { when: 'defeatEnemy', selfOnly: true },
-    event: { type: 'discoverClue', amount: 1 },
-  },
-  '01023': { // 闪躲 Dodge
-    fast: true,
-    reaction: { when: 'enemyAttack' },
-    event: { type: 'cancelEnemyAttack' },
-  },
+  // 01022 证据！已迁到能力层（kind: 'played' + fast + trigger，见 6e-8）。
+  // 01023 已迁到能力层（kind:'played'，见 6e-8）。
 
 
 
@@ -103,11 +95,7 @@ export const EFFECTS = {
       { label: '战斗（成功差值至少 2 时伤害 +1）', cost: { action: true }, effect: { type: 'fight', successBy: 2, damageBonus: 1 } },
     ],
   },
-  '01056': { // 老千手法 Sleight of Hand（XP3）
-    fast: true,
-    reaction: { when: 'negativeTokenRevealed', selfOnly: true },
-    event: { type: 'flipTokenSign' },
-  },
+  // 01056 已迁到能力层（kind:'played'，见 6e-8）。
 
   // =========================================================================
   // 秘术师 Mystic（0 级 + XP）
@@ -118,16 +106,8 @@ export const EFFECTS = {
       { label: '召唤（检索牌库顶 3 张中的法术牌）', cost: { action: false, exhaust: true }, effect: { type: 'searchTop', amount: 3, trait: 'Spell', choose: 1 } },
     ],
   },
-  '01065': { // 守护结界 Ward of Protection
-    fast: true,
-    reaction: { when: 'treachery', selfOnly: true, nonWeaknessOnly: true },
-    event: { type: 'sequence', effects: [{ type: 'cancelTreachery' }, { type: 'takeHorror', amount: 1 }] },
-  },
-  '01068': { // 记忆抹消 Memory Wipe（XP1）
-    fast: true,
-    reaction: { when: 'phaseBegins' },
-    event: { type: 'blankEnemy' },
-  },
+  // 01065 已迁到能力层（kind:'played'，见 6e-8）。
+  // 01068 已迁到能力层（kind:'played'，见 6e-8）。
 
   // =========================================================================
   // 幸存者 Survivor（0 级 + XP）
@@ -138,35 +118,15 @@ export const EFFECTS = {
       { label: '引开（弃掉野猫，自动躲避同地点非精英敌人）', cost: { action: false, discardSelf: true }, effect: { type: 'autoEvadeNonElite' } },
     ],
   },
-  '01079': { // “看看我发现了什么！”Look what I found!
-    fast: true,
-    reaction: { when: 'investigateFail', failedByAtMost: 2, selfOnly: true },
-    event: { type: 'discoverClue', amount: 2 },
-  },
-  '01080': { // 运气好！Lucky!
-    fast: true,
-    reaction: { when: 'testWouldFail', selfOnly: true },
-    event: { type: 'addTestValue', amount: 2 },
-  },
-  '01083': { // 千钧一发 Close Call（XP2）
-    fast: true,
-    reaction: { when: 'evadeSuccess', nonElite: true, nonWeakness: true, selfOnly: true },
-    event: { type: 'shuffleIntoEncounter' },
-  },
-  '01084': { // 运气好！Lucky!（XP2）
-    fast: true,
-    reaction: { when: 'testWouldFail', selfOnly: true },
-    event: { type: 'sequence', effects: [{ type: 'addTestValue', amount: 2 }, { type: 'draw', amount: 1 }] },
-  },
+  // 01079 已迁到能力层（kind:'played'，见 6e-8）。
+  // 01080 已迁到能力层（kind:'played'，见 6e-8）。
+  // 01083 已迁到能力层（kind:'played'，见 6e-8）。
+  // 01084 已迁到能力层（kind:'played'，见 6e-8）。
 
   // =========================================================================
   // 专属签名卡（5 张）
   // =========================================================================
-  '01010': { // 在逃中 On the Lam
-    fast: true,
-    reaction: { when: 'turnBegins', selfOnly: true },
-    event: { type: 'onTheLam' },
-  },
+  // 01010 已迁到能力层（kind:'played'，见 6e-8）。
   // 01014 温蒂的护身符：两条能力都已在能力层（条目级 playedEventsToDeckTop，见 5a-18）。
   // 纯登记条目 `engine: 'wendyAmulet'` 已在 6e-2 删除。
 

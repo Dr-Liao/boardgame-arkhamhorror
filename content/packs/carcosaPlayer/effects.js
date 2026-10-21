@@ -14,7 +14,8 @@ const custom = (action, extra = {}) => ({ type: 'carcosaPlayer', action, ...extr
 // Phase 5（5c 首批）再迁出 6 张：03026 / 03038 / 03040 / 03148 / 03199 / 03232。
 export const effects = {
   // 03025 古代雕文已迁到能力层（5c-29），见 MIGRATED_ESCAPE_ENTRIES_5C29。
-  '03030': { fast: true, reaction: { when: 'wouldSucceedTest' }, event: { type: 'addTestValue', amount: 2 } },
+  // 03030 / 03156 / 03157 / 03270 已迁到能力层（6e-8：快速反应事件 →
+  // kind: 'played' + fast + trigger），见 src/cards/card-abilities.js。
   // 03033 解锢灵魂已迁到能力层（5c-21），见 MIGRATED_ESCAPE_ENTRIES_5C21。
   '03036': { abilities: [
     action('提灯调查', { type: 'investigate', shroudMod: -1 }),
@@ -30,18 +31,10 @@ export const effects = {
   '03114': {},
 
   // 03150 预警已迁到能力层（5c-22），见 MIGRATED_ESCAPE_ENTRIES_5C22。
-  '03156': { fast: true, reaction: { when: 'encounterDrawn', nonWeaknessOnly: true, treacheryOnly: true },
-    event: { type: 'cancelTreachery' }, exileAfterPlay: true },
-  '03157': { fast: true, reaction: { when: 'harmDealt' },
-    event: { type: 'cancelHarm', maximum: 10 }, exileAfterPlay: true },
   // 03158 求助盟友已迁到能力层（5c-19），见 src/cards/card-abilities.js 的 MIGRATED_ESCAPE_ENTRIES_5C19。
-
-
 
   // 03263 追猎已迁到能力层（5c-23），见 MIGRATED_ESCAPE_ENTRIES_5C23。
   // 03264 原定计划已迁到能力层（5c-39），见 MIGRATED_ESCAPE_ENTRIES_5C39。
-  '03270': { fast: true, reaction: { when: 'encounterDrawn', nonWeaknessOnly: true, anyLocation: true, treacheryOnly: true },
-    event: { type: 'sequence', effects: [{ type: 'cancelTreachery' }, { type: 'takeHorror', amount: 1 }] } },
 
   // 03304 吃子弹已迁到能力层（5c-33），见 MIGRATED_ESCAPE_ENTRIES_5C33。
   // 03306 遗觉记忆已迁到能力层（5c-38），见 MIGRATED_ESCAPE_ENTRIES_5C38。

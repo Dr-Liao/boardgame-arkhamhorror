@@ -1699,3 +1699,70 @@ replay --compare 与基线逐条一致；fast 2148 例 2141 通过、失败 7 �
 
 剩余工作与顺序见 [`phase6-handoff.md`](phase6-handoff.md) §5：继续拆 `engine.js`（当前 4398 → 目标 < 2500）、
 `EFFECTS` 52 条逐批清零、战役插件化第二批（`stateSlice` / 观察投影 / `agentHints`）。
+
+---
+
+## 41. 6e-8：22 张「快速反应事件」搬进 played 描述子（EFFECTS 52 → 30）
+
+### 41.1 形状映射
+
+旧 DSL 里这类卡是四个顶格字段：
+
+```js
+'01022': { fast: true, reaction: { when: 'defeatEnemy', selfOnly: true }, event: { type: 'discoverClue', amount: 1 } }
+```
+
+新写法把三者合成一条 `kind: 'played'` 描述子（5c-8 已经把读点接好）：
+
+```js
+{ code: '01022', abilities: [{ kind: 'played', fast: true, trigger: 'defeatEnemy',
+  criteria: { selfOnly: true }, label: '证据！', effect: { type: 'discoverClue', amount: 1 } }] }
+```
+
+- `reaction.when` → `trigger`；`reaction` 的其余旧条件**原样**放 `criteria` 对象（`reactionWindow`
+  认这套字段：`selfOnly` / `nonElite` / `nonWeaknessOnly` / `failedByAtMost` / `symbols` / `anyLocation` / `treacheryOnly` …）；
+- `event` 数据体 → `effect`（`playedEffect` 读描述子，效果解释器不变）；
+- `fast` 进描述子；`exileAfterPlay` 也进描述子（`doPlay` 收尾段读它）。
+
+### 41.2 22 张的清单与两处读点修正
+
+迁走：01010 / 01022 / 01023 / 01056 / 01065 / 01068 / 01079 / 01080 / 01083 / 01084 / 02113 /
+02115 / 02153 / 02225 / 02261 / 02307 / 03030 / 03156 / 03157 / 03270 / 04110 / 04111
+（其中 02115 不是反应窗口，只是普通事件 + `exileAfterPlay`）。
+
+两处曾按 `EFFECTS[code].reaction` 判断「这张卡能不能在窗口打出」，迁移后必须同时认描述子：
+
+| 读点 | 改法 |
+| --- | --- |
+| `allCardDefs` 的 `hasReactionPrompt` | 增加 `descriptor.kind === 'played' && descriptor.fast && descriptor.trigger.length` |
+| `encounter.js` 的「彩绘世界」复制候选 | 增加 `descriptorOfKind(copyCode, 'played')?.fast` |
+
+### 41.3 连带的三件事（都是迁移纪律里写过的）
+
+1. **包清单登记**：`content/schema.js` 要求「构筑开放需要规则实现」= `effects[code] || abilityLayerCodes.includes(code)`，
+   所以 12 个卡号补进 dunwichPlayer / carcosaPlayer 的 `abilityLayerCodes`（tfaPlayer 的两个本来就在
+   `IMPLEMENTED_PLAYER_CODES` 里，重复登记会被 `behaviorIds` 去重守卫抓住）。
+2. **断言旧形状的用例改成断言行为**：`tests/core-n4.test.mjs` 的守护结界从 `EFFECTS['01065'].reaction.*`
+   改成读描述子的 `trigger` / `criteria`；`tests/availability.test.mjs` 的「效果缺失」用例换
+   `01086 刀子`（01079 已迁走）。
+3. **验收账本重算**：改了 `core-n4.test.mjs` → `audit/core-acceptance.json` 的证据哈希过期，
+   `node tools/rehash-acceptance.mjs --write` 重算（条目与证据映射未改动）。
+
+### 41.4 顺手修掉的审计盲区
+
+`tools/audit-dead-primitives.mjs` 原来只扫 `src/engine/engine.js` 里的 `effect.action === 'X'`。
+6e-7 把战役/玩家卡调度搬到内容层之后，engine.js 里这类分派点归零，工具于是报「旧原语分派点 0 个」——
+指标假性归零。已改成扫描**引擎全部模块 + `src/cards/player-effects.js` + `src/cards/campaign-plugin.js`**，
+现在报 8 个分派点、死分支 0。
+
+### 41.5 指标与门禁
+
+```
+effectsEntries 52 → 30        effectsTopLevelFields 32 → 30
+descriptorEntries 419 → 441   descriptorAbilities 344 → 366
+通道：descriptor 432 / legacy 20 / hybrid 9 / data 4（合计 465 张）
+```
+
+`replay --compare` 每张卡迁移后逐条一致；`fast` 2148 例 2141 通过、失败 7 条＝既有 7 条；
+`cards:audit --check` / `cards:workorder --check` / `audit-dead-primitives --check` /
+`replay:fixtures` / `core-ledger` 全绿。

@@ -16,7 +16,8 @@ import { isPlayable } from '../src/deck/deckbuilding.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 
 test('实现账本：通道分类覆盖描述子 / 旧 DSL / 混合 / 数据 / 未实现', () => {
-  assert.equal(implementationChannel('01022'), 'legacy') // 旧 DSL 的快速反应事件
+  assert.equal(implementationChannel('01022'), 'descriptor') // 6e-8 起快速反应事件走 played 描述子
+  assert.equal(implementationChannel('01086'), 'legacy') // 仍是旧 DSL 的 abilities 条目
   assert.equal(implementationChannel('01001'), 'descriptor') // 调查员旧印（描述子）
   assert.equal(implementationChannel('03009'), 'hybrid') // 已迁走的被动 + 旧 DSL 残留字段
   assert.equal(implementationChannel('01094'), 'data') // 印刷承伤：卡面数据即实现
@@ -51,12 +52,15 @@ test('实现账本：摘要形状固定、纯 JSON、不含原始条目引用', 
 })
 
 test('实现账本：旧 DSL 摘要按能力规则重建，不泄漏 engine 登记标记', () => {
-  const summary = implementationSummary('01022')
-  assert.equal(summary.channel, 'legacy')
-  assert.deepEqual(summary.abilities.map(ability => ability.effects), [['discoverClue']])
-  assert.deepEqual(summary.abilities[0].trigger, ['defeatEnemy'])
-  assert.deepEqual(summary.abilities[0].rules, ['selfOnly:true'])
-  assert.deepEqual(summary.rules, { fast: true })
+  // 6e-8 之后 01022 是描述子通道；旧 DSL 的摘要仍按同形状重建（01086 刀子）。
+  const migrated = implementationSummary('01022')
+  assert.equal(migrated.channel, 'descriptor')
+  assert.deepEqual(migrated.abilities.map(ability => ability.effects), [['discoverClue']])
+  assert.deepEqual(migrated.abilities[0].trigger, ['defeatEnemy'])
+  assert.equal(migrated.abilities[0].rules.includes('fast'), true)
+  const legacy = implementationSummary('01086')
+  assert.equal(legacy.channel, 'legacy')
+  assert.deepEqual(legacy.abilities.map(ability => ability.effects), [['fight'], ['fight']])
   for (const code of ['01014', '01094', '01117']) {
     const value = implementationSummary(code)
     assert.equal(Object.prototype.hasOwnProperty.call(value.rules || {}, 'engine'), false,

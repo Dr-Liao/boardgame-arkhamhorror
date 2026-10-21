@@ -3,11 +3,11 @@
   "note": "由 tools/audit-abilities.mjs --write 生成，勿手改。指标只允许下降；engineCodes / effectsEntries 的每一次减少都是一次迁移证据，必须随迁移一起提交。",
   "metrics": {
     "engineCodes": 0,
-    "effectsEntries": 52,
-    "effectsTopLevelFields": 32,
+    "effectsEntries": 30,
+    "effectsTopLevelFields": 30,
     "escapeCards": 0,
-    "descriptorEntries": 419,
-    "descriptorAbilities": 344,
+    "descriptorEntries": 441,
+    "descriptorAbilities": 366,
     "abilityKinds": 12,
     "windows": 52,
     "effectPrimitives": 97,
@@ -16,9 +16,9 @@
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 410,
-    "legacy": 42,
+    "descriptor": 432,
     "hybrid": 9,
+    "legacy": 20,
     "data": 4
   },
   "nonPlayer": {
@@ -128,8 +128,8 @@
     },
     {
       "code": "01010",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "01011",
@@ -188,13 +188,13 @@
     },
     {
       "code": "01022",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "01023",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "01024",
@@ -358,8 +358,8 @@
     },
     {
       "code": "01056",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "01057",
@@ -403,8 +403,8 @@
     },
     {
       "code": "01065",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "01066",
@@ -418,8 +418,8 @@
     },
     {
       "code": "01068",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "01069",
@@ -474,13 +474,13 @@
     },
     {
       "code": "01079",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "01080",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "01081",
@@ -494,13 +494,13 @@
     },
     {
       "code": "01083",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "01084",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "01085",
@@ -866,8 +866,8 @@
     },
     {
       "code": "02113",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "02114",
@@ -876,8 +876,8 @@
     },
     {
       "code": "02115",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "02116",
@@ -936,8 +936,8 @@
     },
     {
       "code": "02153",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "02154",
@@ -1036,8 +1036,8 @@
     },
     {
       "code": "02225",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "02226",
@@ -1101,8 +1101,8 @@
     },
     {
       "code": "02261",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "02262",
@@ -1206,8 +1206,8 @@
     },
     {
       "code": "02307",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "02308",
@@ -1376,8 +1376,8 @@
     },
     {
       "code": "03030",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "03031",
@@ -1567,13 +1567,13 @@
     },
     {
       "code": "03156",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "03157",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "03158",
@@ -1732,8 +1732,8 @@
     },
     {
       "code": "03270",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "03271",
@@ -2062,13 +2062,13 @@
     },
     {
       "code": "04110",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "04111",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "04112",

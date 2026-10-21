@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { createGameState, applyMove, legalMoves, validateMove, decisionSeat } from '../src/engine/engine.js'
 import { randomValue } from '../src/engine/rules-state.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
+import { registeredEntry } from '../src/engine/ability.js'
 
 const clone = value => JSON.parse(JSON.stringify(value))
 function move(state, command) {
@@ -157,8 +158,12 @@ test('N4 艾格尼丝每阶段一次，但下一轮同名阶段可以再次触�
 })
 
 test('N4 守护结界只能取消本人非弱点诡计，不替他人开窗', () => {
-  assert.equal(EFFECTS['01065'].reaction.selfOnly, true)
-  assert.equal(EFFECTS['01065'].reaction.nonWeaknessOnly, true)
+  // Phase 6（6e-8）：守护结界搬到 played 描述子，断言改为读描述子的反应条件。
+  const ward = registeredEntry('01065').abilities.find(descriptor => descriptor.kind === 'played')
+  assert.equal(ward.fast, true)
+  assert.deepEqual(ward.trigger, ['treachery'])
+  assert.equal(ward.criteria.selfOnly, true)
+  assert.equal(ward.criteria.nonWeaknessOnly, true)
   const state = fixture('01001', 2)
   state.investigators[1].hand = ['01065']
   state.encounterDeck = ['dissonantVoices', 'rottingRemains']

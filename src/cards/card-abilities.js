@@ -3459,12 +3459,66 @@ export const MIGRATED_WEAKNESS_ENTRIES_5A14 = [
   },
 ]
 
+// ---------------------------------------------------------------------------
+// Phase 6（6e-8）：旧 DSL「快速反应事件」搬到 played 描述子
+// ---------------------------------------------------------------------------
+// 旧写法是 EFFECTS 顶层的 `fast: true, reaction: { when, ...条件 }, event: { ...数据体 }`；
+// 新写法把三者合成一条 `kind: 'played'` 描述子：`fast` 进描述子、`reaction.when` 进
+// `trigger`、反应条件原样放 `criteria` 对象（引擎的 reactionWindow 认这套旧字段）、
+// `event` 数据体原样搬成 `effect`。读点不变（reactionWindow / playedEffect / playAccess），
+// 因此日志与指纹都不变。`exileAfterPlay` 这类"打出后去向"写在描述子上（doPlay 收尾段读它）。
+const eventEntries6e8 = [
+  ['01010', '在逃中', 'turnBegins', { selfOnly: true }, { type: 'onTheLam' }],
+  ['01022', '证据！', 'defeatEnemy', { selfOnly: true }, { type: 'discoverClue', amount: 1 }],
+  ['01023', '闪躲', 'enemyAttack', null, { type: 'cancelEnemyAttack' }],
+  ['01056', '老千手法', 'negativeTokenRevealed', { selfOnly: true }, { type: 'flipTokenSign' }],
+  ['01065', '守护结界', 'treachery', { selfOnly: true, nonWeaknessOnly: true },
+    { type: 'sequence', effects: [{ type: 'cancelTreachery' }, { type: 'takeHorror', amount: 1 }] }],
+  ['01068', '记忆抹消', 'phaseBegins', null, { type: 'blankEnemy' }],
+  ['01079', '“看看我发现了什么！”', 'investigateFail', { failedByAtMost: 2, selfOnly: true },
+    { type: 'discoverClue', amount: 2 }],
+  ['01080', '运气好！', 'testWouldFail', { selfOnly: true }, { type: 'addTestValue', amount: 2 }],
+  ['01083', '千钧一发', 'evadeSuccess', { nonElite: true, nonWeakness: true, selfOnly: true },
+    { type: 'shuffleIntoEncounter' }],
+  ['01084', '运气好！（XP2）', 'testWouldFail', { selfOnly: true },
+    { type: 'sequence', effects: [{ type: 'addTestValue', amount: 2 }, { type: 'draw', amount: 1 }] }],
+  ['02113', '哎呀！', 'attackFail', { failedByAtMost: 2 },
+    { type: 'redirectFailedAttack', code: '02113' }],
+  ['02115', '照明弹', null, null, { type: 'flare' }, { exileAfterPlay: true }],
+  ['02153', '催眠术', 'enemyAttack', null, { type: 'hypnoticGaze' }],
+  ['02225', '“如果它会流血……”', 'defeatEnemy', null, { type: 'healHorrorAtLocationByEnemy' }],
+  ['02261', '“我见过更糟的……”', 'harmDealt', null, { type: 'cancelHarmGainResources', maximum: 5 }],
+  ['02307', '守护结界', 'encounterDrawn', { nonWeaknessOnly: true },
+    { type: 'cancelTreachery', horror: 1 }],
+  ['03030', '艺高胆大', 'wouldSucceedTest', null, { type: 'addTestValue', amount: 2 }],
+  ['03156', '意志考验', 'encounterDrawn', { nonWeaknessOnly: true, treacheryOnly: true },
+    { type: 'cancelTreachery' }, { exileAfterPlay: true }],
+  ['03157', '吉人天相', 'harmDealt', null, { type: 'cancelHarm', maximum: 10 }, { exileAfterPlay: true }],
+  ['03270', '守护结界（XP4）', 'encounterDrawn', { nonWeaknessOnly: true, anyLocation: true, treacheryOnly: true },
+    { type: 'sequence', effects: [{ type: 'cancelTreachery' }, { type: 'takeHorror', amount: 1 }] }],
+  ['04110', '反击法术', 'symbolRevealed', { symbols: ['skull', 'cultist', 'tablet', 'elderthing'] },
+    { type: 'cancelSymbolToken', code: '04110' }],
+  ['04111', '坚韧不拔', 'harmDealt', { selfOnly: true }, { type: 'cancelHarm', maximum: 4 }],
+]
+
+export const MIGRATED_EVENT_ENTRIES_6E8 = eventEntries6e8.map(([code, label, when, criteria, effect, extra = {}]) => ({
+  code,
+  abilities: [{
+    kind: 'played',
+    ...(when ? { fast: true, trigger: when } : {}),
+    ...(criteria ? { criteria } : {}),
+    label,
+    effect,
+    ...extra,
+  }],
+}))
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, ...MIGRATED_ESCAPE_ENTRIES_5C35, ...MIGRATED_ESCAPE_ENTRIES_5C36, ...MIGRATED_ESCAPE_ENTRIES_5C37, ...MIGRATED_ESCAPE_ENTRIES_5C38, ...MIGRATED_ESCAPE_ENTRIES_5C39, ...MIGRATED_PASSIVE_ENTRIES_5B8, ...MIGRATED_PASSIVE_ENTRIES_5B9, ...MIGRATED_PASSIVE_ENTRIES_5B13, ...MIGRATED_PASSIVE_ENTRIES_5B14, ...MIGRATED_RULE_ENTRIES_5A6, ...MIGRATED_WEAKNESS_ENTRIES_5A12, ...MIGRATED_WEAKNESS_ENTRIES_5A14, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, ...MIGRATED_ESCAPE_ENTRIES_5C35, ...MIGRATED_ESCAPE_ENTRIES_5C36, ...MIGRATED_ESCAPE_ENTRIES_5C37, ...MIGRATED_ESCAPE_ENTRIES_5C38, ...MIGRATED_ESCAPE_ENTRIES_5C39, ...MIGRATED_PASSIVE_ENTRIES_5B8, ...MIGRATED_PASSIVE_ENTRIES_5B9, ...MIGRATED_PASSIVE_ENTRIES_5B13, ...MIGRATED_PASSIVE_ENTRIES_5B14, ...MIGRATED_RULE_ENTRIES_5A6, ...MIGRATED_WEAKNESS_ENTRIES_5A12, ...MIGRATED_WEAKNESS_ENTRIES_5A14, ...MIGRATED_EVENT_ENTRIES_6E8, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -3531,4 +3585,5 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_RULE_ENTRIES_5A6.map(entry => entry.code),
   ...MIGRATED_WEAKNESS_ENTRIES_5A12.map(entry => entry.code),
   ...MIGRATED_WEAKNESS_ENTRIES_5A14.map(entry => entry.code),
+  ...MIGRATED_EVENT_ENTRIES_6E8.map(entry => entry.code),
 ])

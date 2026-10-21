@@ -210,7 +210,9 @@ export function allCardDefs({ runtimeOnly = false, campaignId = null, playerCode
     copy.hasReactionPrompt = !!(eff?.reaction || reactions.some(r => !isAutomaticReward(r)) || investigatorAbility?.chaosTokenRedraw || eff?.freeTriggers?.length
       || eff?.abilities?.some(ability => ability.cost?.action === false) || hasExplicitReactionPrompt(code)
       // Phase 5（5b-6）：迁移来的反应描述子按同一口径判断——自动奖励（无费用/无目标/无上限）不算询问。
+      // Phase 6（6e-8）：快速反应事件搬成 `played` + `fast` + `trigger`，同样算「有反应提示」。
       || descriptorEntry?.abilities?.some(descriptor => descriptor.kind === 'free'
+        || (descriptor.kind === 'played' && descriptor.fast && descriptor.trigger.length > 0)
         || (descriptor.kind === 'reaction'
           && !(descriptor.legacyReaction && isAutomaticReward({ effect: descriptor.effect, cost: descriptor.cost, id: descriptor.id })))))
     const entryPassive = !eff?.passive ? registeredEntry(code)?.passive : null

@@ -1,6 +1,6 @@
 # Phase 6 交接文档（engine 拆分 · 战役解耦）
 
-> 最后更新：Phase 6 `6e-7` 之后（观测面解耦 + engine.js 再拆 5 个模块 + 战役插件化第一批）。
+> 最后更新：Phase 6 `6e-8` 之后（观测面解耦 + engine.js 再拆 5 个模块 + 战役插件化第一批 + 22 张快速反应事件迁移）。
 > 配套阅读：`docs/architecture-refactor-roadmap.md`（Phase 6 目标与判据）、
 > `docs/phase6-decoupling.md`（40 节逐批证据）、`docs/phase5-handoff.md`（能力层迁移交接）。
 
@@ -8,14 +8,14 @@
 
 ## 1. 一句话现状
 
-Phase 6 的四件事里，**①② 已完成**、**③ 的阻塞已解开并开始清零（57 → 52）**、
+Phase 6 的四件事里，**①② 已完成**、**③ 的阻塞已解开并开始清零（57 → 30）**、
 **④ 拆到 −65.2%（4398 行）且战役插件化第一批已落地**。
 
 | 目标 | 状态 | 证据 |
 | --- | --- | --- |
 | ① `engineCodes` 28 → 0（卡号文案标签数据驱动） | ✅ 完成 | `audit-abilities`：`engineCodes=0` |
 | ② 引擎里清掉战役字样与残留卡号 | ✅ 完成 | `tests/phase6-guard.test.mjs` 通过；`src/engine/*.js` 无 `tfa/carcosa/dunwich`、无 `0\d{4}` 字面量 |
-| ③ 迁移剩余 `EFFECTS` 52 条 / `effectsTopLevelFields` 32 项 | 🚧 已开工 | 6e-1 观测面解耦（`src/cards/card-implementation.js`）、6e-2 删 5 条纯登记条目 |
+| ③ 迁移剩余 `EFFECTS` 30 条 / `effectsTopLevelFields` 30 项 | 🚧 已开工 | 6e-1 观测面解耦（`src/cards/card-implementation.js`）、6e-2 删 5 条纯登记条目、6e-8 迁 22 张快速反应事件 |
 | ④ 拆分 engine.js + 战役插件化 | 🚧 拆分 −65.2%；插件化第一批已落地 | 本文 §2–§5 |
 
 ---
@@ -129,7 +129,7 @@ node tools/run-tests.mjs fast                                                 # 
 | 门禁 | 结果 |
 | --- | --- |
 | `replay --check` / `--compare` | ✔ 全部基线逐条一致 |
-| `audit-abilities` | `engineCodes=0` `effectsEntries=52` `effectsTopLevelFields=32` `escapeCards=0`；`descriptorEntries=419` `descriptorAbilities=344` `abilityKinds=12` `windows=52`；通道 descriptor 410 / legacy 42 / hybrid 9 / data 4 |
+| `audit-abilities` | `engineCodes=0` `effectsEntries=30` `effectsTopLevelFields=30` `escapeCards=0`；`descriptorEntries=441` `descriptorAbilities=366` `abilityKinds=12` `windows=52`；通道 descriptor 432 / legacy 20 / hybrid 9 / data 4 |
 | `audit-workorder --check` | ✔ 非行为债务 0 |
 | `migrate-card --verify` | ✔ 79 个批次与实现一致 |
 | `audit-dead-primitives --check` | ✔ 没有死分支 |
@@ -176,23 +176,27 @@ node tools/run-tests.mjs fast                                                 # 
 3. `agentHints`：AI 上下文里的战役提示（目前 `ai-story.js` + `ai-context.js` 各自拼）；
 4. `actions+hooks`：`content/campaigns/<id>/behavior.js` 已有钩子，补上「新增战役只加目录」的登记校验。
 
-### 5.3 `EFFECTS` 52 条清零（③ 剩余）
+### 5.3 `EFFECTS` 30 条清零（③ 剩余）
 
-顺序（每批 ≤10 张，`replay --compare` + `fast` 新增失败 0）：
+6e-8 已把「快速反应事件」整批迁完（22 张：01010/01022/01023/01056/01065/01068/01079/01080/
+01083/01084/02113/02115/02153/02225/02261/02307/03030/03156/03157/03270/04110/04111，形状映射与
+两处读点修正见 `phase6-decoupling.md` §41）。剩余 30 条按下面的顺序推进（每批 ≤10 张，
+`replay --compare` + `fast` 新增失败 0）：
 
-1. **19 张 `event,fast,reaction`**（01010/01022/01023/01056/01065/01068/01079/01080/01083/01084/
-   02113/02153/02225/02261/02307/03030/03270/04110/04111）：改成 `kind:'played'` + `fast` + `trigger`
-   + `criteria`（旧反应字段原样放 criteria 对象里），`event` 数据体原样搬成 `effect`；
-   读点已在 `encounter.js` 的 `reactionWindow`（5c-8 接线），`playAccess()` 的 `reactionOnly` 也认这个形状；
+1. **`abilities` 条目**（01044/01063/01076/01086/02114/02152/03036/03037/04268 等）：
+   `discardSelf`/`exileSelf` 会改变日志顺序，必须逐张对照 replay，不能机械搬；
 2. **规则字段**（`paintedWorld` / `phaseControl` / `startingResources` / `enemyWeakness` /
    `sealOnEnterChoice` / `usesFromStoneRecord` / `discardAtRoundEnd` / `returnToHandOnAutoFail` /
    `forcedTurnEndPayOrDiscard` / `chargesOnSymbolReveal` / `removeFromGameWhenEmpty` / `fastForIllicit` /
    `survivorEventDiscount` / `limitPerInvestigator` / `onPlayDoom` / `endTurnInHandHorror` /
-   `deckbuildingOnly` / `permanentRule` / `kingInYellow` / `addToVictory`）+ 2 张 `weakness` 条目：
+   `deckbuildingOnly` / `permanentRule` / `kingInYellow` / `addToVictory`）：
    先扩 `ability.js` 的 `ENTRY_KEYS` 与引擎读点（`registeredEntry(code)?.xxx`，回落 `legacyEntry`），
    再逐张搬；
-3. `abilities` 条目（01044/01063/01076/01086/02114/02152/03036/03037/03069 等）：
-   `discardSelf`/`exileSelf` 会改变日志顺序，必须逐张对照 replay，不能机械搬。
+3. **`weakness` 条目**（03011 / 04038）：走 `kind: 'weakness'` 数据体 + 需要的条目级字段。
+
+> 迁移任何一批时都要顺手做三件事（6e-8 的经验）：包清单登记（`abilityLayerCodes` /
+> `IMPLEMENTED_PLAYER_CODES`）、把断言旧形状的用例改成断言行为、跑
+> `node tools/rehash-acceptance.mjs --write` 重算验收账本。
 
 ### 5.4 观测面与文档
 

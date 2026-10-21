@@ -20,7 +20,25 @@ import { CARD_ABILITY_ENTRIES } from '../src/cards/card-abilities.js'
 import { NON_PLAYER_ABILITY_ENTRIES } from '../src/cards/encounter-abilities.js'
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
-const ENGINE = path.join(ROOT, 'src/engine/engine.js')
+// Phase 6：分派点不再只在 engine.js —— 6d-6e 把战役/玩家卡效果调度搬到内容层
+// （src/cards/player-effects.js、src/cards/campaign-plugin.js），6e-7 之后 engine.js 里
+// 一个 `effect.action === 'X'` 都不剩。扫描范围必须跟着覆盖「引擎全部模块 + 内容层调度器」，
+// 否则指标会假性归零（本轮实测：旧口径 8 → 0，实际分派点没消失）。
+const ENGINE_DIR = path.join(ROOT, 'src/engine')
+const DISPATCH_FILES = [
+  path.join(ENGINE_DIR, 'engine.js'),
+  path.join(ROOT, 'src', 'cards', 'player-effects.js'),
+  path.join(ROOT, 'src', 'cards', 'campaign-plugin.js'),
+]
+
+function dispatchSources() {
+  const files = []
+  for (const name of readdirSync(ENGINE_DIR)) {
+    if (name.endsWith('.js')) files.push(path.join(ENGINE_DIR, name))
+  }
+  for (const file of DISPATCH_FILES) if (!files.includes(file)) files.push(file)
+  return files.map(file => ({ file, text: readFileSync(file, 'utf8') }))
+}
 
 function collectContentText(dir, acc = []) {
   for (const name of readdirSync(dir)) {
@@ -39,16 +57,20 @@ const countOccurrences = (text, needle) => text.split(needle).length - 1
  * 纯函数：读引擎源码 + 内容层导出，不做任何写操作。
  */
 export function collectDeadPrimitives() {
-  const source = readFileSync(ENGINE, 'utf8')
+  const sources = dispatchSources()
+  const source = sources.map(item => item.text).join('\n')
   const contentText = [...collectContentText(path.join(ROOT, 'content')),
     ...collectContentText(path.join(ROOT, 'src/cards'))].join('\n')
 
   const dispatch = new Map()
-  for (const match of source.matchAll(/effect\.action === '([A-Za-z0-9_]+)'/g)) {
-    const name = match[1]
-    const line = source.slice(0, match.index).split('\n').length
-    if (!dispatch.has(name)) dispatch.set(name, [])
-    dispatch.get(name).push(line)
+  for (const { file, text } of sources) {
+    const relative = path.relative(ROOT, file).replace(/\\/g, '/')
+    for (const match of text.matchAll(/effect\.action === '([A-Za-z0-9_]+)'/g)) {
+      const name = match[1]
+      const line = text.slice(0, match.index).split('\n').length
+      if (!dispatch.has(name)) dispatch.set(name, [])
+      dispatch.get(name).push(`${relative}:${line}`)
+    }
   }
 
   const dataReference = new Set()

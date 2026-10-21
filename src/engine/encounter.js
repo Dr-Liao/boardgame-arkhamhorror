@@ -173,7 +173,10 @@ function reactionWindow(state, when, context, events) {
       const handCandidates = inv.hand.flatMap((code, index) => registeredEntry(code)?.copiesBeneathEvents
         ? (inv.beneath || []).flatMap(copyCode => {
           const copied = cardDef(copyCode)
-          return copied?.type === 'event' && !copied.exceptional && EFFECTS[copyCode]?.reaction
+          // Phase 6（6e-8）：快速反应事件搬成 `played` + `fast` + `trigger`，复制时同样算可打出。
+          const copyReactive = Boolean(EFFECTS[copyCode]?.reaction)
+            || descriptorOfKind(copyCode, 'played')?.fast === true
+          return copied?.type === 'event' && !copied.exceptional && copyReactive
             ? [{ code, copyCode, index, id: `${index}:${copyCode}` }] : []
         })
         : [{ code, index, id: String(index) }])

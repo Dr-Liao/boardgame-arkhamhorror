@@ -15,14 +15,8 @@ export const effects = {
   // 02186 已迁到能力层（kind: 'played' + playCondition，见 src/cards/card-abilities.js）。
   // 02110 适应性已迁到能力层（5b-9），见 MIGRATED_PASSIVE_ENTRIES_5B9。
   '02111': { event: { type: 'drawEncounterAll' }, addToVictory: true },
-  // Phase 5（5a-16）：卡号随效果数据走（引擎读 effect.code）。
-  '02113': { fast: true, reaction: { when: 'attackFail', failedByAtMost: 2 },
-    event: { type: 'redirectFailedAttack', code: '02113' } },
-  '02115': { event: { type: 'flare' }, exileAfterPlay: true },
-  '02153': { fast: true, reaction: { when: 'enemyAttack' }, event: { type: 'hypnoticGaze' } },
-  '02225': { fast: true, reaction: { when: 'defeatEnemy' }, event: { type: 'healHorrorAtLocationByEnemy' } },
-  '02261': { fast: true, reaction: { when: 'harmDealt' }, event: { type: 'cancelHarmGainResources', maximum: 5 } },
+  // 02113 / 02115 / 02153 / 02225 / 02261 / 02307 已迁到能力层（6e-8：快速反应事件 →
+  // kind: 'played' + fast + trigger），见 src/cards/card-abilities.js。
   '02305': { phaseControl: true },
-  '02307': { fast: true, reaction: { when: 'encounterDrawn', nonWeaknessOnly: true }, event: { type: 'cancelTreachery', horror: 1 } },
   // 02310 戴红手套的男子已迁到能力层（5b-8），见 MIGRATED_PASSIVE_ENTRIES_5B8。
 }

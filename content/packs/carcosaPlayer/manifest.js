@@ -96,6 +96,11 @@ export const abilityLayerCodes = Object.freeze([
   '03313',
   '03314',
   '03315',
+  // Phase 6（6e-8）：快速反应事件搬到 played 描述子。
+  '03030',
+  '03156',
+  '03157',
+  '03270',
 ])
 
 const playerTypes = new Set(['asset', 'event', 'skill', 'treachery', 'enemy'])
