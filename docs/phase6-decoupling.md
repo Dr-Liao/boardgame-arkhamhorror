@@ -1796,3 +1796,62 @@ descriptorEntries 419 → 441   descriptorAbilities 344 → 366
 
 `replay --compare` 逐条一致（行为零变化）；`fast` 2148 例 2141 通过、失败 7 条＝既有 7 条；
 `cards:audit --check` / `audit-dead-primitives --check` / `replay:fixtures` 全绿。
+
+---
+
+## 43. 6e-10…6e-13：engine.js 再拆 7 个模块，达到 < 2.5k 目标（2403 行）
+
+### 43.1 新模块
+
+| 模块 | 行数 | 职责 |
+| --- | --- | --- |
+| `src/engine/turn-flow.js` | 508 | `advanceInvestigator`（回合推进）、打出费用与折扣、旧印结算、反应规格与条件评估 |
+| `src/engine/assets.js` | 333 | 支援生命周期与槽位：装备/替换/离场、手牌位与武器位、被动加成、事件去向、反应卡收尾 |
+| `src/engine/card-ops.js` | 354 | 卡与目标操作：补充使用次数、装弹、按特性检索、选择调查员/敌人/猎物 |
+| `src/engine/act-agenda.js` | 310 | 幕与议程推进：目标判定、花线索推进、密谋揭示、毁灭累积 |
+| `src/engine/stats.js` | 224 | 属性读点：技能值/图标/特质/关键词/手牌位/行动数/上限，`assetEffect` 合并结果 |
+| `src/engine/card-defs.js` | 182 | 卡定义与实例构造：卡面视图、剧本常量表、卡池、实例 id |
+| `src/engine/hidden-rules.js` | 125 | 隐私卡、文本空白、敌人布尔规则（能否攻击/被攻击/引发借机）与移动禁止 |
+
+### 43.2 两个「指标会骗人」的地方
+
+1. **装配去重必须区分「有没有 spread commonDeps」**：6d 手写的装配（`dispatch` / `deck-ops` / `hub`）
+   是逐项列依赖的，去重脚本按「键在 commonDeps 里」删行时把它们也删了 → 运行时 `campaignFor is not a function`。
+   修法：装配块要么 `...commonDeps`，要么逐项列全；临时脚本用
+   「模块 deps 解构 × 装配已传名字」差分把漏项补回（`dispatch` +2 个 getter/setter、`deck-ops` +18、`hub` +7）。
+   顺带修掉一处误删导致的 `return performTestImpl` 串行。
+2. **`contentRegistry` 是 `export let`（registerContentBundle 会重新赋值）**：`card-defs.js` 里必须
+   `import { contentRegistry } from '../../content/registered.js'` 走 live binding，不能从 deps 注入快照
+   —— 这正是交接文档「依赖的四种类型」第 1 条，本轮第二次踩到。
+
+### 43.3 导出包装压缩（−219 行）
+
+`engine.js` 末尾原本是 377 行「一个函数一行」的 `export function xxx(...args) { return xxxApi().xxx(...args) }`。
+改成**每行 3 个、按装配模块分组加注释**：仍然保持 `function` 声明（不能改成
+`export const { … } = api`，否则 `commonDeps` 在模块初始化时提前引用会撞 TDZ）。
+377 行 → 133 行，净省 219 行。
+
+### 43.4 现状：达到 roadmap 的 < 2.5k 目标
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **2403**（本轮起点 4097；拆分前 12654） |
+| `src/cards/campaign-plugin.js` | 542（内容层） |
+| `src/engine/turn-flow.js` | 508 |
+| `src/engine/harm-threat.js` | 480 |
+| `src/engine/actions-extra.js` | 420 |
+| `src/engine/treachery-tokens.js` | 372 |
+| `src/engine/card-ops.js` | 354 |
+| `src/engine/assets.js` | 333 |
+| `src/engine/act-agenda.js` | 310 |
+| `src/engine/card-defs.js` | 182 |
+| `src/engine/hidden-rules.js` | 125 |
+| 其余（含前几批） | … |
+
+`src/engine/` 共 **61 个模块、20,323 行**；`engine.js` 从 12,654 行降到 **2,403 行（−81.0%）**。
+
+### 43.5 门禁
+
+`replay --compare` 全程逐条一致（行为零变化）；`fast` 2148 例 2141 通过、失败 7 条＝既有 7 条；
+`cards:audit --check` / `audit-workorder --check` / `audit-dead-primitives --check` /
+`phase6-guard` / `architecture-guard` / `replay:fixtures` 全绿。

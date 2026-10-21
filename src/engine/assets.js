@@ -1,0 +1,332 @@
+// assets.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
+// 支援的生命周期与槽位：装备/替换/离场、手牌位与武器位、被动加成、
+// 以及「打出的事件去哪」（牌库顶 / 弃牌堆）与反应卡打出的收尾。
+export function createAssets(deps) {
+  const {
+    EFFECTS,
+    SLOT_CAPACITY,
+    assetEffect,
+    blanksTraits,
+    cardDef,
+    cardName,
+    descriptorOfKind,
+    distanceToInvestigator,
+    enemyRuleFlags,
+    enemyTextBlanked,
+    executeDescriptor,
+    getThreatEffect,
+    info,
+    leavesPlayEffect,
+    makeRuntime,
+    nextInstanceId,
+    placeLocation,
+    playCost,
+    playedEffect,
+    randomValue,
+    registeredEntry,
+    releaseChaosTokens,
+    removeEffectsFromSource,
+    removeOne,
+    requestChoice,
+    resolveEffect,
+    scenarioBehavior,
+    scenarioRuntime,
+    shuffle,
+    slotBonus,
+    weaknessProfile,
+    withEffectCode,
+  } = deps
+
+  function litaAuraAt(state, inv) {
+    return state.investigators.some((i) => {
+      if (i.location !== inv.location || i.defeated || i.resigned) return false
+      const hasAura = i.assets.some((a) => registeredEntry(a.code)?.auraWhileInPlay)
+      const auraBlanked = i.threat.some((t) => blanksTraits(t.code).includes('ally'))
+      return hasAura && !auraBlanked
+    })
+  }
+
+  function assetPassiveBonus(inv, key) {
+    return (inv.assets || []).reduce((sum, asset) => sum + (assetEffect(inv, asset)?.passive?.[key] || 0), 0)
+  }
+
+  function assetPassiveData(code) {
+    return EFFECTS[code]?.passive || registeredEntry(code)?.passive || null
+  }
+
+  function assetCannotLeavePlay(asset) {
+    return Boolean(asset?.cannotLeavePlay || EFFECTS[asset?.code]?.cannotLeavePlay
+      || registeredEntry(asset?.code)?.cannotLeavePlay)
+  }
+
+  function normalizedSlots(card) {
+    if (!card || !Array.isArray(card.slots) || !card.slots.length) return []
+    return card.slots.map((s) => {
+      const key = String(s).trim().toLowerCase()
+      if (key === 'hand x2') return 'handx2'
+      if (key === 'arcane x2') return 'arcanex2'
+      return key
+    })
+  }
+
+  function slotUsage(inv) {
+    const usage = {}
+    for (const a of [...inv.assets, ...(inv.threat || [])]) {
+      const def = cardDef(a.code)
+      for (const s of normalizedSlots(Array.isArray(a.slots) && a.slots.length ? a : def)) {
+        if (s === 'handx2') usage.hand = (usage.hand || 0) + 2
+        else if (s === 'arcanex2') usage.arcane = (usage.arcane || 0) + 2
+        else usage[s] = (usage[s] || 0) + 1
+      }
+    }
+    return usage
+  }
+
+  function canEquip(inv, card) {
+    const need = {}
+    for (const s of normalizedSlots(card)) {
+      if (s === 'handx2') need.hand = (need.hand || 0) + 2
+      else if (s === 'arcanex2') need.arcane = (need.arcane || 0) + 2
+      else need[s] = (need[s] || 0) + 1
+    }
+    // 米奇·布朗：额外 2 个只能携带非独特盟友的盟友槽位。
+    const allyExtra = nonUniqueAllySlotsFor(inv)
+    if (need.ally && allyExtra && !allySlotsOk(inv, card, allyExtra)) return false
+    const usage = slotUsage(inv)
+    // Allocate Tomes to Daisy's restricted slots before counting ordinary hands.
+    // Otherwise playing a non-Tome after two books incorrectly forces a discard.
+    const tomeHands = [...inv.assets, ...(inv.threat || []), { code: card.code }]
+      .reduce((n, item) => {
+        const def = cardDef(item.code)
+        return n + (isTomeCard(def) ? normalizedSlots(def).reduce((v, slot) => v + (slot === 'handx2' ? 2 : slot === 'hand' ? 1 : 0), 0) : 0)
+      }, 0)
+    // Phase 5（5a-6）：「书虫」这类「每份占用 2 个书位」的规则由条目级 tomeHandSlotsPerCopy 声明。
+    const restrictedHands = inv.assets.reduce((sum, asset) => sum + (registeredEntry(asset.code)?.tomeHandSlotsPerCopy || 0), 0)
+    for (const [s, n] of Object.entries(need)) {
+      if (s === 'ally' && allyExtra) continue
+      let cap = SLOT_CAPACITY[s] ?? 0
+      if (s === 'hand') {
+        cap += handSlotsBonusFor(inv, card) + Math.min(tomeHands, restrictedHands)
+        // Bandolier: an extra hand slot that may only hold a [[Weapon]] asset.
+        if (isWeaponCard(card)) cap += weaponHandSlotsFor(inv)
+      }
+      cap += (inv.assets || []).reduce((sum, asset) => sum + (assetEffect(inv, asset)?.passive?.extraSlots?.[s] || 0), 0)
+      // 能力层槽位修正（如 05112 魔法手势的额外法术槽位）。
+      cap += slotBonus(inv, s)
+      if ((usage[s] || 0) + n > cap) return false
+    }
+    return true
+  }
+
+  function assetReplacementPlans(inv, card) {
+    if (canEquip(inv, card)) return [[]]
+    const assets = inv.assets.filter(asset => !cardDef(asset.code)?.permanent && !assetEffect(inv, asset)?.cannotDiscard)
+    const plans = []
+    const visit = (index, removed) => {
+      if (plans.some(plan => plan.every(id => removed.includes(id)))) return
+      if (canEquip({ ...inv, assets: inv.assets.filter(a => !removed.includes(a.id)) }, card)) {
+        plans.push(removed); return
+      }
+      for (let i = index; i < assets.length; i++) visit(i + 1, [...removed, assets[i].id])
+    }
+    visit(0, [])
+    return plans
+  }
+
+  function replaceAssets(state, inv, card, events) {
+    let plans = assetReplacementPlans(inv, card)
+    if (!plans.length) throw new Error('没有合法的槽位替换方案')
+    const removed = []
+    while (!plans.some(plan => plan.length === removed.length)) {
+      const ids = [...new Set(plans.flat())].filter(id => !removed.includes(id))
+      const id = requestChoice(state, { kind: 'assetReplacement', source: card.code, seat: inv.seat,
+        prompt: `为「${cardName(card.code)}」腾出槽位，选择弃置资产。`,
+        options: ids.map(id => ({ id, label: `弃置 ${cardName(inv.assets.find(a => a.id === id).code)}` })) })
+      removed.push(id)
+      plans = plans.filter(plan => removed.every(id => plan.includes(id)))
+    }
+    for (const asset of inv.assets.filter(a => removed.includes(a.id))) {
+      leaveAsset(state, inv, asset, events)
+      if (!asset.removedFromGame) inv.discard.push(asset.code)
+      releaseChaosTokens(state, asset.id)
+      info(state, events, `${inv.name} 弃置「${cardName(asset.code)}」腾出槽位。`)
+    }
+    inv.assets = inv.assets.filter(a => !removed.includes(a.id))
+  }
+
+  function nonUniqueAllySlotsFor(inv) {
+    return (inv.assets || []).reduce((sum, asset) =>
+      sum + (assetEffect(inv, asset)?.passive?.allySlotsForNonUnique || 0), 0)
+  }
+
+  function allySlotsOk(inv, card, extra) {
+    const base = SLOT_CAPACITY.ally ?? 1
+    const entries = [...inv.assets, ...(inv.threat || []), { code: card.code }]
+      .filter(item => normalizedSlots(cardDef(item.code)).includes('ally'))
+    let unique = 0
+    let nonUnique = 0
+    for (const item of entries) {
+      if (cardDef(item.code)?.unique) unique++
+      else nonUnique++
+    }
+    return unique <= base && nonUnique <= base + extra
+  }
+
+  function isTomeCard(card) {
+    return (card?.traits || []).some(trait => {
+      const key = String(trait).toLowerCase()
+      return key === 'tome' || String(trait) === '书籍'
+    })
+  }
+
+  function handSlotsBonusFor(inv, card) {
+    let v = -(inv.handSlotsPenalty || 0)
+    for (const a of inv.assets) {
+      const eff = assetEffect(inv, a)
+      // Phase 5（5a-7）：带「书位」的支援（书虫）不参与普通手部加成，书位单独结算。
+      if (registeredEntry(a.code)?.tomeHandSlotsPerCopy) continue
+      if (eff && eff.passive && eff.passive.handSlotsBonus) v += eff.passive.handSlotsBonus
+    }
+    return v
+  }
+
+  function isWeaponCard(card) {
+    return (card?.traits || []).some(trait => {
+      const key = String(trait).toLowerCase()
+      return key === 'weapon' || String(trait) === '武器'
+    })
+  }
+
+  function weaponHandSlotsFor(inv) {
+    return (inv.assets || []).reduce((sum, asset) => sum + (assetEffect(inv, asset)?.passive?.extraSlots?.handWeapon || 0), 0)
+  }
+
+  function isThreatWeakness(code) {
+    return weaknessProfile(code)?.type === 'threat'
+  }
+
+  function leaveAsset(state, inv, asset, events = []) {
+    if (!inv.assets.includes(asset)) return
+    removeOne(inv.assets, asset)
+    releaseChaosTokens(state, asset.id)
+    // 来源离场：绑定在这张卡上的持续效果一起消失（Phase 1 A1）。
+    for (const effect of removeEffectsFromSource(state, asset.id)) {
+      if (effect.label) info(state, events, `「${effect.label}」随「${cardName(asset.code)}」离场而结束。`)
+    }
+    // 「如果其离场，将其从游戏中移除」（04311 第七印记的封印）。
+    if (EFFECTS[asset.code]?.removeFromGameWhenEmpty) {
+      asset.removedFromGame = true
+      state.removedFromGame ||= []
+      if (!state.removedFromGame.includes(asset.code)) state.removedFromGame.push(asset.code)
+    }
+    // 离场钩子（Phase 1 的 leavesPlay kind）：数据驱动，引擎不再认识具体卡面字段。
+    const leaveEffect = leavesPlayEffect(asset.code)
+    if (leaveEffect) {
+      resolveEffect(state, inv.seat, { ...leaveEffect, assetId: asset.id }, makeRuntime(state, events))
+    }
+    scenarioBehavior(state).assetLeftPlay?.(state, inv, asset, scenarioRuntime(state, events))
+  }
+
+  function discardRandomAsset(state, inv, events) {
+    const candidates = inv.assets.filter(asset => !assetCannotLeavePlay(asset))
+    if (!candidates.length) { info(state, events, `${inv.name} 没有可弃置的资产。`); return }
+    const id = requestChoice(state, { kind: 'discard-asset', source: 'discard-asset', seat: inv.seat,
+      prompt: '选择一件要弃置的资产。', options: candidates.map(asset => ({ id: asset.id, label: cardName(asset.code) })) })
+    const a = candidates.find(asset => asset.id === id)
+    leaveAsset(state, inv, a, events)
+    if (!a.removedFromGame) inv.discard.push(a.code)
+    info(state, events, `${inv.name} 弃掉了资产「${cardName(a.code)}」。`)
+  }
+
+  function placeLocationForEmptySpawn(state) {
+    const deck = [...(state.explorationDeck || [])]
+    const revealed = []
+    let found = null
+    while (deck.length) {
+      const code = deck.shift()
+      if (state.scenario?.locations?.[code]) { found = code; break }
+      revealed.push(code)
+    }
+    if (!found) {
+      state.explorationDeck = shuffle([...deck, ...revealed], () => randomValue(state))
+      return null
+    }
+    placeLocation(state, found, [])
+    state.explorationDeck = shuffle([...deck, ...revealed], () => randomValue(state))
+    return found
+  }
+
+  function farthestLocationsFor(state, inv) {
+    if (!inv) return []
+    const distances = state.locations.map(loc => ({ id: loc.id, distance: distanceToInvestigator(state, loc.id, [inv]) }))
+    const finite = distances.filter(item => Number.isFinite(item.distance))
+    if (!finite.length) return []
+    const farthest = Math.max(...finite.map(item => item.distance))
+    return finite.filter(item => item.distance === farthest).map(item => item.id)
+  }
+
+  function discardLocked(state, inv) {
+    return state.enemies.some(enemy => enemyRuleFlags(enemy.code).locksDiscardWhileEngaged
+      && enemy.engagedSeat === inv.seat && !enemyTextBlanked(state, enemy))
+  }
+
+  function hasPlayedEventsToDeckTop(inv) {
+    return (inv.assets || []).some(asset => registeredEntry(asset.code)?.playedEventsToDeckTop)
+  }
+
+  function topDiscardEvent(state, inv) {
+    return hasPlayedEventsToDeckTop(inv) && !discardLocked(state, inv)
+      ? inv.discard.findLast(code => cardDef(code)?.type === 'event') : null
+  }
+
+  function disposePlayedEvent(inv, code) {
+    if (hasPlayedEventsToDeckTop(inv)) inv.deck.unshift(code)
+    else inv.discard.push(code)
+  }
+
+  function consumePlayThreatResources(state, inv, events) {
+    for (const threat of inv.threat.slice()) {
+      if (!getThreatEffect(threat)?.consumeResourceAfterPlay) continue
+      threat.resources = Math.max(0, (threat.resources || 0) - 1)
+      if (threat.resources === 0) {
+        removeOne(inv.threat, threat)
+        state.encounterDiscard.push(threat.code)
+        info(state, events, `「${cardName(threat.code)}」上的资源耗尽并被弃掉。`)
+      }
+    }
+  }
+
+  function playReactionCard(state, inv, index, context, events, fromDiscard = false, copyCode = null, fromPlanAssetId = null) {
+    const plan = fromPlanAssetId && inv.assets.find(asset => asset.id === fromPlanAssetId && registeredEntry(asset.code)?.cardPlan)
+    const code = plan ? plan.attached.splice(index, 1)[0]
+      : fromDiscard ? inv.discard.splice(inv.discard.lastIndexOf(topDiscardEvent(state, inv)), 1)[0] : inv.hand.splice(index, 1)[0]
+    if (plan) plan.exhausted = true
+    const def = cardDef(copyCode || code)
+    inv.resources -= playCost(state, inv, def)
+    consumePlayThreatResources(state, inv, events)
+    info(state, events, `⚡ ${inv.name} 快速打出「${copyCode ? `彩绘世界／${cardName(copyCode)}` : cardName(code)}」。`, { kind: 'play', seat: inv.seat, code })
+    state._reaction = context
+    try {
+      // Phase 5（5c-8）：能力层的快速事件由描述子结算（alreadyPaid：费用与「快速打出」日志已在上面付过/写过）。
+      const descriptor = descriptorOfKind(copyCode || code, 'played')
+      if (descriptor) {
+        executeDescriptor(state, {
+          inv, source: { code }, descriptor, context, events, windowId: context.when ?? null,
+          alreadyPaid: true, silent: true,
+        })
+      } else {
+        resolveEffect(state, inv.seat, withEffectCode(playedEffect(copyCode || code), copyCode || code), makeRuntime(state, events))
+      }
+    } finally {
+      delete state._reaction
+    }
+    if (copyCode && registeredEntry(code)?.copiesBeneathEvents) {
+      state.removedFromGame ||= []
+      state.removedFromGame.push(code)
+    } else if (context.eventToVictory === code) {
+      state.victoryDisplay.push({ id: nextInstanceId(state, 'c'), code, originalCode: code, victory: cardDef(code)?.victory || 0 })
+    } else disposePlayedEvent(inv, code)
+  }
+
+  return { litaAuraAt, assetPassiveBonus, assetPassiveData, assetCannotLeavePlay, normalizedSlots, slotUsage, canEquip, assetReplacementPlans, replaceAssets, nonUniqueAllySlotsFor, allySlotsOk, isTomeCard, handSlotsBonusFor, isWeaponCard, weaponHandSlotsFor, isThreatWeakness, leaveAsset, discardRandomAsset, placeLocationForEmptySpawn, farthestLocationsFor, discardLocked, hasPlayedEventsToDeckTop, topDiscardEvent, disposePlayedEvent, consumePlayThreatResources, playReactionCard }
+}
