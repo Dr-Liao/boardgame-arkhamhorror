@@ -199,6 +199,20 @@ node tools/run-tests.mjs fast                                                 # 
 > `IMPLEMENTED_PLAYER_CODES`）、把断言旧形状的用例改成断言行为、跑
 > `node tools/rehash-acceptance.mjs --write` 重算验收账本。
 
+### 5.3.1 读点回落分支清理（实测结论：不能机械替换）
+
+6e-16 之后 `registeredEntry(code)?.x ?? EFFECTS[code]?.x` 的右半边永远取不到值，
+但**不能**用「把 `EFFECTS[x]` 全量替换成 `registeredEntry(x)`」的脚本一把清掉：
+本轮试过一次（26 个文件），4 局 golden replay 立刻不一致。原因是 `registeredEntry()`
+返回的是**规范化后**的条目——`modifiers` 已展开、`weakness` 已冻结、布尔字段变成 true/false；
+而旧读点里 `EFFECTS[x].modifiers` 期望的是**原始声明**（`modifiers.js` 会再规范化一次）。
+替换后同一份修正被处理两遍、形状也变了。
+
+正确做法是**逐读点判断**：
+1. 数值/布尔字段（`uses` / `fast` / `startingResources` / `enemyWeakness` …）——可直接删回落；
+2. 数据体（`modifiers` / `weakness` / `event` / `passive`）——要确认读点期望原始声明还是规范化结果；
+3. 每次改完跑 `replay --compare`，不一致就单点回退（别批量回退）。
+
 ### 5.4 观测面与文档
 
 - 新增 `EFFECTS` 条目时**必须**改用描述子（守卫已挡）；新增 `kind` 要同时改 `card-model.md` 与守卫；
