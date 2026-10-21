@@ -28,12 +28,17 @@ async function enterUntamedWilds(page) {
   await expect(market).toBeVisible()
   await market.locator('[data-supply-done]').click()
   await expect(page.locator('.ah-table')).toBeVisible()
-  // 换牌是关卡第一步；保留起手牌并结束换牌。
+  // 开场「故事导入 → 密谋揭示」先于换牌到达：先跳过演出，再结束换牌。
+  const opening = page.getByRole('button', { name: '跳过演出' })
+  for (let guard = 0; guard < 6 && await opening.count(); guard++) {
+    await opening.first().click()
+    await page.waitForTimeout(300)
+  }
   const choice = page.getByRole('region', { name: '待决选择' })
   await expect(choice).toHaveAttribute('data-choice-kind', 'mulligan', { timeout: 15_000 })
   await choice.locator('[data-option-id="done"]').first().click()
   await expect(page.locator('[data-choice-kind="mulligan"]')).toHaveCount(0)
-  // 开场演出与开局反应窗口都是异步到达的：按出现顺序跳过/回答，直到桌面上没有
+  // 开局反应窗口与后续演出都是异步到达的：按出现顺序跳过/回答，直到桌面上没有
   // 新的演出或待决选择。反应（如里奥的免费盟友）不影响本用例，一律「跳过反应」；
   // 若神话阶段拉出检定，按默认「开始检定」结算。
   let idle = 0

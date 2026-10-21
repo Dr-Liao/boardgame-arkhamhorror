@@ -71,6 +71,12 @@ export function buildChapter(id) {
     setAsideLocations: spec.locations.filter(code => !spec.initial.includes(code)).map(locationId),
     resolutions: Object.fromEntries(spec.resolutions.map(key => [key, `${chapter.name} · ${key === 'noResolution' ? '未达成结局' : `结局 ${key.slice(1)}`}`])),
   }
+  if (id === 'theMiskatonicMuseum') {
+    // 进入即结算的展厅；放在场景定义里，未揭示时不会被观察投影带出去。
+    scenario.locationNotices = { [locationId('02132')]: '失去所有剩余行动并立即结束回合', [locationId('02134')]: '随机弃掉 2 张手牌' }
+    // 幕 2 目标是「展厅（禁止入内）」（02137），不是任意同名展厅；推进仍由关卡 checkObjectives 结算。
+    for (const act of scenario.acts) if (['02123', '02124'].includes(act.originalCode)) act.objective = { type: 'enterLocation', location: locationId('02137'), scenarioAdvance: true }
+  }
   if (id === 'theEssexCountyExpress') {
     scenario.storyAssets['02179'] = printed('02179')
     scenario.encounterDeck.push(...Array(ALL_CARDS['02179'].quantity).fill('02179'))

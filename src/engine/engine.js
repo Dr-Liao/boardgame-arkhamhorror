@@ -982,6 +982,7 @@ const commonDeps = {
   isWeaknessCode,
   leadDecisionSeat,
   leaveAsset,
+  locLabel,
   locName,
   locationExists,
   lolaCanUseCard,
@@ -1291,6 +1292,8 @@ export const describeState = createDescribeState({
   narrativeLogTexts,
   scriptActionHints,
   stripLabel,
+  actionPreview,
+  enemyCanOpportunityAttack,
 })
 
 // Phase 6（6d-12）：技能检定主流程搬进 tests.js。
@@ -1705,7 +1708,7 @@ function locationsApi() {
   return locationsImpl
 }
 // locationsApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
-export function locName(...args) { return locationsApi().locName(...args) } export function placeLocation(...args) { return locationsApi().placeLocation(...args) } export function flipScenarioLocation(...args) { return locationsApi().flipScenarioLocation(...args) }
+export function locName(...args) { return locationsApi().locName(...args) } export function locLabel(...args) { return locationsApi().locLabel(...args) } export function placeLocation(...args) { return locationsApi().placeLocation(...args) } export function flipScenarioLocation(...args) { return locationsApi().flipScenarioLocation(...args) }
 export function revealLocation(...args) { return locationsApi().revealLocation(...args) } export function removeLocation(...args) { return locationsApi().removeLocation(...args) } export function syncClues(...args) { return locationsApi().syncClues(...args) }
 export function placeCluesOnLocation(...args) { return locationsApi().placeCluesOnLocation(...args) } export function notifyCluesRemoved(...args) { return locationsApi().notifyCluesRemoved(...args) } export function discoverClueAt(...args) { return locationsApi().discoverClueAt(...args) }
 export function awardLocationVictory(...args) { return locationsApi().awardLocationVictory(...args) }

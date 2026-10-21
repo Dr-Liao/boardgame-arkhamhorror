@@ -50,6 +50,12 @@ export function choicePresentation(st) {
       const location = st.locations?.find(l => l.id === id)
       if (location) return { ...item, key: `location:${id}`, code: location.originalCode || location.code }
     }
+    // 通用「选一张牌」选项：候选卡面由服务端随选项下发 cardCode，
+    // 数字下标只属于结算数组，不能当作手牌或场上实体。
+    if (choice.kind === 'card') {
+      const code = option?.cardCode || (st.cards?.[id] ? id : null)
+      if (code) return { ...item, code, cards: [{ ...(st.cards?.[code] || { name: item.label }), code }] }
+    }
     return item
   })
 }

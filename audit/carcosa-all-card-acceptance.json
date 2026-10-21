@@ -22,16 +22,16 @@
     "investigator": 20,
     "player": 95,
     "campaign": 268,
-    "testsPassed": 418
+    "testsPassed": 421
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
-      "sha256": "0a175f60bdb44799949e3484b40948614edb0dc2a71be330604b5fcf870c3ce3"
+      "sha256": "570cdd0d3a004176ca16d447b28e765e618124ae1654717aaf9048701ea00f61"
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
-      "sha256": "a9aa1dae8979a41ea05b2f368e219b12214a5eb1d0f77973830e5f9c5a028d2d"
+      "sha256": "e233954205acef9ecf9533b64469abfe874cb54cb96762d911ca993d54679a7c"
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",

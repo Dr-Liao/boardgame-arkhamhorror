@@ -684,7 +684,7 @@ export function laterBehavior(id) {
       if (result.success && result.skill === 'willpower'
         && !inv.threat.some(item => item.code === '02088') && result.source?.type === 'encounter' && state.scenario.treacheries[result.source.code]) {
         const ally = inv.assets.find(asset => asset.code === '02217' && !asset.exhausted)
-        if (ally && api.choose({ kind: 'reaction', source: '02217', seat: inv.seat,
+        if (ally && api.choose({ kind: 'reaction', source: '02217', seat: inv.seat, canSkip: true,
           prompt: '横置泽布伦·沃特雷，抽 1 张牌？',
           options: [{ id: 'yes', label: '横置并抽牌' }, { id: 'no', label: '不触发' }] }) === 'yes') {
           ally.exhausted = true; api.drawCards(inv.seat, 1)
@@ -709,7 +709,7 @@ export function laterBehavior(id) {
     afterEvade(state, inv, enemy, result, api) {
       if (inv.threat.some(item => item.code === '02088')) return
       const ally = inv.assets.find(asset => asset.code === '02218' && !asset.exhausted)
-      if (ally && api.choose({ kind: 'reaction', source: '02218', seat: inv.seat,
+      if (ally && api.choose({ kind: 'reaction', source: '02218', seat: inv.seat, canSkip: true,
         prompt: '横置厄尔·索耶，抽 1 张牌？',
         options: [{ id: 'yes', label: '横置并抽牌' }, { id: 'no', label: '不触发' }] }) === 'yes') {
         ally.exhausted = true; api.drawCards(inv.seat, 1)

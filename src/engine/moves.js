@@ -66,6 +66,7 @@ export function createMoves(deps) {
     isWeaknessCode,
     limitUsed,
     litaUncontrolled,
+    locLabel,
     locName,
     locationAbilityAvailable,
     locationExists,
@@ -99,6 +100,13 @@ export function createMoves(deps) {
     if (move.scriptCard) return move
     const owner = scriptCardOwner(state, move)
     return owner ? { ...move, scriptCard: owner } : move
+  }
+
+  // 卡面条件「如果你未与任何敌人交战」（02108 探路者）：效果体用 requiresNoEnemies 声明。
+  // legalMoves 与 validateMove 共用这一份判定，避免"列表里没有、提交却能过"。
+  function moveToBlocked(state, inv, effect) {
+    return effect?.type === 'moveTo' && effect.requiresNoEnemies === true
+      && state.enemies.some(enemy => enemy.engagedSeat === inv.seat && !enemy.defeated)
   }
 
   function legalMoves(state, observerSeat) {
@@ -241,7 +249,9 @@ export function createMoves(deps) {
     const target = state.locations.find((l) => l.id === nb)
     // P0：内容层可以声明「这次移动现在不能做」的理由（如《苍白面具》线索不足）。
     if (!target || investigatorEntryError(state, nb) || scenarioBehavior(state).moveError?.(state, inv, target, nb)) continue
-    moves.push({ action: 'move', locationId: nb, label: `🚶 移动到「${target.name}」（线索 ${target.clues}${target.locked ? '，上锁' : ''}）` })
+    // 进入地点的强制效果由地点数据声明；只在已揭示时给出，避免泄露未翻开的背面。
+    const entryNotice = target.revealed ? state.scenario?.locationNotices?.[nb] : null
+    moves.push({ action: 'move', locationId: nb, label: `🚶 移动到「${locLabel(state, nb)}」（线索 ${target.clues}${target.locked ? '，上锁' : ''}${entryNotice ? `；进入后：${entryNotice}` : ''}）` })
   }
 
   if (loc && loc.clues > 0 && !loc.locked && !scenarioBehavior(state).investigationError?.(state, inv, loc)) {
@@ -312,11 +322,17 @@ export function createMoves(deps) {
       if (ab.oncePerTest && state.skillTest?.usedAbilities?.[`${a.id}:${i}`]) return
       if (ab.oncePerPhase && inv.usedAbilities?.[`${a.id}:${i}:${state.round}:${state.phase}`]) return
       if (ab.requiresNoClues && loc && loc.clues > 0) return
+      if (moveToBlocked(state, inv, ab.effect)) return
       const free = ab.cost && ab.cost.action === false
       if (free && cannotTriggerFreeAbility(state, inv)) return
       const prefix = free ? '⚡免费 ' : tomeActionEligible(state, inv, { action: 'ability', assetId: a.id, abilityIndex: i }) ? '[书籍额外行动] ' : ''
       // Phase 2（C3）：动态费用在行动文案里给出当前数值（"预览 = 校验 = 扣费"同一份求值）。
       const suffix = costPreviewSuffix(state, inv, a, ab) || ''
+      // 威胁区弱点的「当前 / 目标」计数也写进文案（例如怒灵 2/4）：这张免费能力每次只加 1，
+      // 达标后继续用只会白耗支援充能，AI 需要每一眼都能看到进度。
+      const requiredUses = inv.threat.includes(a) ? registeredEntry(a.code)?.physicalTraumaIfUsesBelow : null
+      const progress = Number.isFinite(requiredUses) && a.uses != null
+        ? `（${a.usesType === 'charges' ? '充能' : '标记'} ${a.uses}/${requiredUses}）` : ''
       const base = { action: 'ability', assetId: a.id, abilityIndex: i }
       // 目标枚举（B1）：描述子声明 target 时，每个合法目标拆成一条独立行动，
       // 牌桌可以先选目标、AI 不用再多问一轮。没有目标且非 optional 就不出现。
@@ -324,11 +340,11 @@ export function createMoves(deps) {
         const candidates = enumerateTargets(state, inv, ab.descriptor.target, { source: a })
         if (!candidates.length) {
           if (!ab.descriptor.target.optional) return
-          moves.push({ ...base, label: `${prefix}${ab.label}${suffix}` })
+          moves.push({ ...base, label: `${prefix}${ab.label}${suffix}${progress}` })
           return
         }
         for (const candidate of candidates) {
-          moves.push({ ...base, targetId: candidate.id, label: `${prefix}${ab.label} → ${candidate.label}${suffix}` })
+          moves.push({ ...base, targetId: candidate.id, label: `${prefix}${ab.label} → ${candidate.label}${suffix}${progress}` })
         }
         return
       }
@@ -338,7 +354,7 @@ export function createMoves(deps) {
       // choose 分支：每个选项拆成一条独立行动（optionIndex 从 0 起）。
       if (ab.effect && ab.effect.type === 'chooseOne' && Array.isArray(ab.effect.options)) {
         ab.effect.options.forEach((opt, oi) => {
-          moves.push({ ...base, optionIndex: oi, label: `${prefix}${opt.label || ab.label}（选项 ${oi + 1}）` })
+          moves.push({ ...base, optionIndex: oi, label: `${prefix}${opt.label || ab.label}（选项 ${oi + 1}）${progress}` })
         })
         return
       }
@@ -346,11 +362,11 @@ export function createMoves(deps) {
       const targets = abilityTargets(state, inv, ab.effect)
       if (targets.length > 0) {
         for (const t of targets) {
-          moves.push({ ...base, targetId: t.id, label: `${prefix}${ab.label} → ${t.name}${suffix}` })
+          moves.push({ ...base, targetId: t.id, label: `${prefix}${ab.label} → ${t.name}${suffix}${progress}` })
         }
         return
       }
-      moves.push({ ...base, label: `${prefix}${ab.label}${suffix}` })
+      moves.push({ ...base, label: `${prefix}${ab.label}${suffix}${progress}` })
     })
   }
 
@@ -624,6 +640,7 @@ export function createMoves(deps) {
       if (ability.oncePerPhase
         && inv.usedAbilities?.[`${asset.id}:${move.abilityIndex}:${state.round}:${state.phase}`]) return '每阶段仅限一次'
       if (ability.requiresNoClues) { const loc = state.locations.find(item => item.id === inv.location); if (loc && loc.clues > 0) return '所在地点仍有线索' }
+      if (moveToBlocked(state, inv, ability.effect)) return '与敌人交战时不能使用这项移动'
       const effectInvalid = effectError(state, inv, ability.effect)
       if (effectInvalid) return effectInvalid
       if (move.optionIndex != null) {

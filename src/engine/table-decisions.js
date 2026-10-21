@@ -244,6 +244,9 @@ export function createTableDecisions(deps) {
     const attacks = provoking ? enemiesEngagedWith(state, inv).filter(e => !e.exhausted && !(inv.onTheLam && !e.elite)
       && enemyCanOpportunityAttack(state, e)) : []
     const enemy = state.enemies.find(e => e.id === move.enemyId)
+    // 进入地点的强制效果是移动的真实代价之一；只在已揭示时给出，未揭示的背面不进预览。
+    const destination = move.action === 'move' ? state.locations.find(l => l.id === move.locationId) : null
+    const entryNotice = destination?.revealed ? state.scenario?.locationNotices?.[move.locationId] : null
     const extraCost = move.action === 'parleyCultist' ? enemyDef(enemy?.code)?.parley?.cost || {}
       : move.action === 'freeAction' ? INVESTIGATOR_ABILITIES[inv.code]?.freeAction?.cost || {}
       : move.action === 'locationAbility' ? state.locations.find(l => l.id === move.locationId)?.ability?.cost || {}
@@ -254,6 +257,7 @@ export function createTableDecisions(deps) {
       groupClues: move.action === 'drawCultist' ? 2 * state.numInvestigators : move.action === 'advanceAct' ? (state.acts[state.actIndex]?.objective?.perInvestigator || 0) * state.numInvestigators : 0,
       uses: ability?.cost?.uses || 0, exhaust: !!ability?.cost?.exhaust,
       opportunityAttacks: attacks.map(e => ({ id: e.id, name: e.name, damage: e.damage, horror: e.horror })),
+      entryNotice: entryNotice || undefined,
       note: attacks.length ? '借机攻击发生在行动效果之前；伤害数值为当前基础值，反应或强制效果可能改变结果。' : undefined }
   }
 

@@ -309,7 +309,10 @@ function doInvestigate(state, seat, opts, events, noSpend) {
     info(state, events, `🎭 ${inv.name} 与假面猎手交战时不能发现线索。`)
     return
   }
-  const skill = loc.investigateSkill || 'intellect'
+  // 卡面可以改写「这次调查用哪项技能」：礼寻术（02028 / 02233）的
+  // 「不使用智力，改为使用意志」通过能力效果的 `skill` 传进来，这里优先于地点的
+  // 调查技能声明（地点 investigateSkill 用于「用敏捷调查」这类地点规则）。
+  const skill = opts.skill || loc.investigateSkill || 'intellect'
   const temporaryShroud = campaignState.turnShroudModifier(loc, state)
     + (loc.turnShroudMod?.round === state.round && loc.turnShroudMod.turnSeat === state.currentSeat
       ? loc.turnShroudMod.amount : 0)

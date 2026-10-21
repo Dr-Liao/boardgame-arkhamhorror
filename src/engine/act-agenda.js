@@ -18,6 +18,7 @@ export function createActAgenda(deps) {
     info,
     investigateBonus,
     leadDecisionSeat,
+    locLabel,
     locName,
     locationExists,
     newCardInstance,
@@ -104,8 +105,13 @@ export function createActAgenda(deps) {
     }
     if (obj.type === 'actClues') return { type: obj.type, required: obj.perInvestigator * state.numInvestigators,
       current: state.actClues, instruction: '通过当前合法的破坏仪式行动增加场景上线索；手持线索不等于场景上线索。' }
-    if (obj.type === 'enterLocation') return { type: obj.type, locationId: obj.location,
-      instruction: `进入「${locName(state, obj.location)}」推进场景；路线以已提供的地图和合法行动为准。` }
+    if (obj.type === 'enterLocation') {
+      const locationId = obj.location
+      const onMap = state.locations.some(loc => loc.id === locationId)
+      const locationName = locLabel(state, locationId, { includeHidden: true })
+      return { type: obj.type, locationId, locationName, onMap,
+        instruction: `进入「${locationName}」推进场景；该地点${onMap ? '已在地图上' : '尚未入场，需先探索或翻开'}。` }
+    }
     if (obj.type === 'defeatEnemy') return { type: obj.type, enemyCode: obj.enemy,
       instruction: `击败目标敌人：${enemyDef(obj.enemy)?.name || obj.enemy}。` }
     if (obj.type === 'uniqueCultists') return { type: obj.type, required: obj.amount,

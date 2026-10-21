@@ -19,6 +19,10 @@ async function startGame(page, rewrite = session => session) {
   await page.getByRole('button', { name: '开始新游戏' }).click()
   const payload = await (await response).json()
   expect(payload.ok).toBe(true)
+  // 进入关卡先播「故事导入 → 密谋揭示」，演完才轮到换牌；本文件只关心换牌面板，先跳过开场。
+  await expect(page.locator('.ah-cinematic, .ah-choice').first()).toBeVisible()
+  const opening = page.getByRole('button', { name: '跳过演出' })
+  if (await opening.count()) await opening.click()
   await expect(page.getByRole('region', { name: '待决选择' })).toBeVisible()
   return payload.session
 }
@@ -189,7 +193,7 @@ test('UI 响应夹具：答题权限随人类与 AI 待决座位切换而非回�
   }
   ai.state.legalMoves = []
   ai.actingSeats = [1]
-  // 这是一份 UI 回放夹具：把 round 置 2，避免换牌后触发开场故事导入遮住面板。
+  // 这是一份 UI 回放夹具：把 round 置 2，确保刷新后的补播条件不再成立，开场故事不会遮住面板。
   ai.state.round = 2
   await page.route('**/api/move', route => route.fulfill({ json: { ok: true, session: ai } }), { times: 1 })
   await panel.locator('.ah-choice-option').first().click()

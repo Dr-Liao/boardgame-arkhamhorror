@@ -39,6 +39,8 @@
 .ah-enemy-stat .is-positive{color:#a4d697}.ah-enemy-stat .is-negative{color:#f29c84}
 .ah-enemy-stat[data-enemy-stat=damage] .ah-rule-symbol{color:#e88a74}.ah-enemy-stat[data-enemy-stat=horror] .ah-rule-symbol{color:#9fc3e4}
 .ah-enemy-health{display:grid;grid-template-columns:16px auto auto 1fr;align-items:center;gap:6px;max-width:320px;margin-top:10px;padding:6px 10px;border:1px solid #ad78634d;border-radius:4px;background:#46261b40;color:#edb09a}
+.ah-enemy-health.has-hint{grid-template-columns:16px auto auto auto 1fr;max-width:360px}
+.ah-enemy-health-hint{font-size:11px;color:#c99a88;white-space:nowrap}
 .ah-enemy-health .ah-icon{width:16px;height:16px}.ah-enemy-health-label{font-size:12px}
 .ah-enemy-health-value{display:inline-flex;align-items:baseline;gap:3px}.ah-enemy-health-value strong{font-size:17px;color:#ffd8c8}.ah-enemy-health-value small{font-size:12px;color:#c99a88}
 .ah-enemy-health-track{height:5px;border-radius:3px;background:#0005;overflow:hidden}.ah-enemy-health-track i{display:block;height:100%;background:linear-gradient(90deg,#b5452f,#e3836a)}

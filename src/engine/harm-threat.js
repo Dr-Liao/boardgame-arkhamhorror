@@ -270,7 +270,11 @@ export function createHarmThreat(deps) {
 
   function targetedTest(state, seat, effect, events) {
     const targetSeat = chooseInvestigator(state, seat, effect.target || 'location')
-    return performTest(state, seat, effect.skill || 'intellect', effect.difficulty ?? 2, { source: { label: '卡牌能力', name: effect.source ? cardName(effect.source) : '目标调查员：' + state.investigators[targetSeat].name, code: effect.source }, resolve: result => {
+    const inv = state.investigators[seat]
+    // 「值得信赖」：结算宿主支援的触发能力时每项技能 +1。
+    const trustedBonus = (inv.assets.find(item => item.id === effect.assetId)?.attachments || [])
+      .reduce((sum, entry) => sum + (registeredEntry(entry.code)?.attachedSkillBonus || 0), 0)
+    return performTest(state, seat, effect.skill || 'intellect', effect.difficulty ?? 2, { source: { label: '卡牌能力', name: effect.source ? cardName(effect.source) : '目标调查员：' + state.investigators[targetSeat].name, code: effect.source }, skillBonus: trustedBonus, resolve: result => {
       const rt = makeRuntime(state, events)
       if (result.success) {
         if (effect.successEffect) resolveEffect(state, targetSeat, effect.successEffect, rt)
@@ -442,7 +446,10 @@ export function createHarmThreat(deps) {
     // Phase 5（5a-9）：研究能力只按实例 id 找支援（调用方就是这张卡的能力），不再写死卡号。
     const asset = inv.assets.find(item => item.id === assetId)
     if (!asset) throw new Error('奇异溶液必须在场才能研究')
-    return performTest(state, seat, 'intellect', 4, { source: { label: '研究', name: cardName(asset.code), code: asset.code }, resolve: result => {
+    // 「值得信赖」：结算宿主支援的触发能力时每项技能 +1。
+    const trustedBonus = (asset.attachments || [])
+      .reduce((sum, entry) => sum + (registeredEntry(entry.code)?.attachedSkillBonus || 0), 0)
+    return performTest(state, seat, 'intellect', 4, { source: { label: '研究', name: cardName(asset.code), code: asset.code }, skillBonus: trustedBonus, resolve: result => {
       if (!result.success) return
       recordResearch(state, 'identifiedStrangeSolution')
       leaveAsset(state, inv, asset, events)

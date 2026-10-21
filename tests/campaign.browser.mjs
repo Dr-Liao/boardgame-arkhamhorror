@@ -13,14 +13,35 @@ test('N4 真实关间界面：合法动作败退后显示个人XP，购买并继
   const initial = await (await startResponse).json()
   expect(initial.ok).toBe(true)
   let session = initial.session
-  // 测试绕过页面直接调 API 推进了多步；刷新后必须先消费演示队列，否则面板仍是初始换牌。
-  const drainPresentation = async () => {
-    await expect.poll(async () => {
+  // 测试绕过页面直接调接口推进，客户端会把中间每一步都排进演出队列；这里逐幕跳过，
+  // 直到牌桌不再处于演出状态。expectedRevision 用来先等客户端追上服务端版本。
+  const drainPresentation = async expectedRevision => {
+    if (expectedRevision != null) {
+      await expect(page.locator('.ah-table')).toHaveAttribute('data-revision', String(expectedRevision), { timeout: 20000 })
+      await page.waitForTimeout(250)
+    }
+    for (let guard = 0; guard < 80; guard++) {
       const skip = page.getByRole('button', { name: '跳过演出' })
-      if (await skip.count()) { await skip.first().click(); return false }
-      return !(await page.locator('.ah-table').evaluate(el => el.classList.contains('ah-presenting')))
-    }, { timeout: 15000 }).toBe(true)
+      if (await skip.count()) {
+        await skip.first().click({ timeout: 5000 }).catch(() => {})
+        await page.waitForTimeout(150)
+        continue
+      }
+      const presenting = await page.locator('.ah-table').evaluate(el => el.classList.contains('ah-presenting'))
+      if (!presenting) {
+        // 刷新后的演出可能还没排队：再确认一次，避免提前放行后又弹出全屏演出。
+        await page.waitForTimeout(250)
+        if (!(await page.locator('.ah-table').evaluate(el => el.classList.contains('ah-presenting')))) return
+        continue
+      }
+      await page.waitForTimeout(250)
+    }
+    await expect(page.locator('.ah-table')).not.toHaveClass(/ah-presenting/, { timeout: 10000 })
   }
+  // 进入关卡先播「故事导入 → 密谋揭示」，演完才轮到换牌；先跳过它，后面的接口推进才点得到「刷新局势」。
+  await expect(page.locator('.ah-cinematic, [data-choice-kind="mulligan"]').first()).toBeVisible()
+  await drainPresentation()
+  // 测试绕过页面直接调 API 推进了多步；刷新后必须先消费演示队列，否则面板仍是初始换牌。
   for (let i = 0; session.state.pendingChoice?.kind !== 'interlude'; i++) {
     expect(i).toBeLessThan(150)
     const moves = session.state.legalMoves
@@ -36,7 +57,7 @@ test('N4 真实关间界面：合法动作败退后显示个人XP，购买并继
     session = body.session
   }
   await page.getByRole('button', { name: '刷新局势' }).click()
-  await drainPresentation()
+  await drainPresentation(session.state.revision)
   const situation = page.getByRole('dialog', { name: '调查局势' })
   const openSituation = async () => { await page.getByRole('button', { name: '局势', exact: true }).click(); await expect(situation).toBeVisible() }
   const closeSituation = async () => { await page.getByRole('button', { name: '关闭局势详情' }).click(); await expect(situation).toHaveCount(0) }
@@ -57,11 +78,12 @@ test('N4 真实关间界面：合法动作败退后显示个人XP，购买并继
   await expect(situation.locator('[data-campaign-seat="0"]')).toContainText('1 XP（已花费 1）')
   await closeSituation()
   await panel.locator('[data-option-id="done"]').click()
-  await page.waitForTimeout(500)
-  const skipScene = page.getByRole('button', { name: '跳过演出' })
-  if (await skipScene.count()) await skipScene.first().click()
-  await expect(page.locator('.ah-table')).not.toHaveClass(/ah-presenting/, { timeout: 30000 })
-  await expect(panel).toHaveAttribute('data-choice-kind', 'mulligan', { timeout: 10000 })
+  // 下一关同样先播开场故事，演完才弹换牌面板：跳过演出直到换牌出现。
+  await expect.poll(async () => {
+    const skip = page.getByRole('button', { name: '跳过演出' })
+    if (await skip.count()) { await skip.first().click(); return false }
+    return (await page.locator('[data-choice-kind="mulligan"]').count()) > 0
+  }, { timeout: 30000 }).toBe(true)
   await expect(panel).toHaveAttribute('data-choice-kind', 'mulligan')
   await openSituation()
   await expect(situation.locator('.ah-campaign-scenario')).toContainText('午夜假面')

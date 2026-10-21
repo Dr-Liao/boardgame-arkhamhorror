@@ -235,10 +235,23 @@ export function renderPresentationSettings(h, onChange) {
     message)
 }
 
+// 详情面板用目录卡文排版，但生命／伤害／有效战斗等结算值必须取场上实例：
+// 否则「实验体」这类带每调查员加值的敌人会一直显示印刷的 7 点，和桌面上的 10 点对不上。
+const RUNTIME_CARD_FIELDS = ['health', 'sanity', 'damageTaken', 'damage', 'horror', 'fight', 'evade', 'effectiveFight', 'effectiveEvade', 'exhausted']
+function runtimeCardStats(def) {
+  if (!def) return null
+  const stats = Object.fromEntries(RUNTIME_CARD_FIELDS
+    .filter(field => def[field] !== undefined)
+    .map(field => [field, def[field]]))
+  return Object.keys(stats).length ? stats : null
+}
+
 export function renderDetailContent(h, detail, renderTextCard, onChange, gameState) {
   const entry = detail.entry
-  const card = entry?.card || detail.def
   const side = detail.side || 'front'
+  const base = entry?.card || detail.def
+  const runtime = detail.runtime && side === 'front' ? runtimeCardStats(detail.def) : null
+  const card = runtime ? { ...base, ...runtime } : base
   const linked = entry?.linkedCard
   const labels = [availabilityLabel(card), EFFECT_LABELS[card.effectStatus] || card.effectStatus].filter(Boolean)
   const notes = [...new Set([...(entry?.differenceNotes || card.differenceNotes || []), detail.def.identityReason].filter(Boolean))]

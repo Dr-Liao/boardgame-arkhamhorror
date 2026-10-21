@@ -5,7 +5,7 @@ import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { replacementOptions } from '../src/campaign/campaign.js'
 import { effectDefinitionError } from '../src/engine/effects.js'
-import { getStat } from '../src/engine/engine.js'
+import { getStat, engageEnemy } from '../src/engine/engine.js'
 import { expireEffects } from '../src/engine/effect-state.js'
 import { getAvailability } from '../src/deck/availability.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -286,4 +286,53 @@ test('C2 runtime gate contains exactly 92 constructible cards and three dependen
   for (const code of codes.filter(code => !basicWeaknesses.has(code))) {
     assert.equal(getAvailability(code).deckbuilding, true)
   }
+})
+
+// ---- 回归：效果解释器的「转发层」漏字段（同类问题：卡面写了、引擎没读） ----
+
+test('Carcosa 03028 潜行 躲避值 -2、成功不横置且本回合不能与你交战', () => {
+  const s = fixture()
+  s.investigators[0].agility = 1
+  const card = asset(s, '03028')
+  const target = enemy(s, { evade: 2, engagedSeat: 0 })
+  s.chaosBag = ['0']
+  move(s, { action: 'ability', assetId: card.id, abilityIndex: 0 })
+  settle(s)
+  const after = s.enemies.find(item => item.id === target.id)
+  // 躲避值 2 - 2 = 0：敏捷 1 也能成功。
+  assert.ok(s.log.some(line => String(line).includes('躲避成功')), '躲避值修正应生效')
+  assert.equal(after.exhausted, false, '成功也不横置敌人')
+  assert.equal(after.engagedSeat, null, '成功解除交战')
+  assert.equal(after.preventEngageSeat?.seat, 0)
+  // 本回合该敌人不能与你重新交战。
+  engageEnemy(s, s.enemies.find(item => item.id === target.id), 0)
+  assert.equal(s.enemies.find(item => item.id === target.id).engagedSeat, null)
+})
+
+test('Carcosa 03192 古代雕文 每超过难度 2 点额外发现 1 条线索', () => {
+  const s = fixture()
+  s.investigators[0].intellect = 6
+  s.locations[0].shroud = 1
+  s.locations[0].clues = 6
+  const card = asset(s, '03192')
+  s.chaosBag = ['0']
+  move(s, { action: 'ability', assetId: card.id, abilityIndex: 0 })
+  settle(s)
+  // 成功 5 点：1 + floor(5 / 2) = 3 条线索。
+  assert.equal(s.investigators[0].clues, 3)
+})
+
+test('Carcosa 03193 古代雕文 成功后自动躲避一个交战敌人', () => {
+  const s = fixture()
+  s.investigators[0].intellect = 6
+  s.locations[0].shroud = 1
+  s.locations[0].clues = 2
+  const card = asset(s, '03193')
+  const target = enemy(s, { evade: 1, engagedSeat: 0 })
+  s.chaosBag = ['0']
+  move(s, { action: 'ability', assetId: card.id, abilityIndex: 0 })
+  settle(s)
+  const after = s.enemies.find(item => item.id === target.id)
+  assert.equal(after.exhausted, true)
+  assert.equal(after.engagedSeat, null)
 })

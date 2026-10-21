@@ -81,8 +81,10 @@ export function createCardDefs(deps) {
     const out = {}
     const selected = playerCodes && new Set(playerCodes)
     for (const [code, c] of Object.entries(ALL_CARDS)) {
-      if (runtimeOnly && !canSelectInvestigator(code) && !isCardAvailable(code)) continue
-      if (selected && !selected.has(code)) continue
+      // 传入具体卡号集合时，它就是「本局嵌入了哪些卡」的唯一口径：这些卡已经在手牌、牌组或场上，
+      // 即使目录可用性是 catalog-only（如 02040 亨利·阿米蒂奇博士这类剧情奖赏卡），也必须带
+      // hasReactionPrompt / reactionIds 进 state.cards；否则卡面的「快速反应」开关会凭空消失。
+      if (selected ? !selected.has(code) : runtimeOnly && !canSelectInvestigator(code) && !isCardAvailable(code)) continue
       const eff = EFFECTS[code]
       const availability = getAvailability(code)
       const copy = { ...c, name: c.nameZh || c.name, nameEn: c.name,
@@ -152,6 +154,9 @@ export function createCardDefs(deps) {
       for (const code of record.deck || []) codes.add(code)
     }
     for (const card of state.victoryDisplay || []) codes.add(card.code)
+    // 剧情资产不一定写在关卡 storyAssets 里（可能是战役奖赏或行为动态放入），
+    // 但已经在场就同样需要卡定义（名称、反应开关、reactionIds 等）。
+    for (const card of state.storyAssets || []) codes.add(card.code)
     for (const code of [...(state.removedFromGame || []), ...(state.exiled || [])]) codes.add(code)
     return allCardDefs({ runtimeOnly: true, campaignId, playerCodes: codes })
   }

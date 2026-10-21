@@ -1,7 +1,7 @@
 import { agendaDoom, totalDoom } from '../engine/rules-state.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { campaignView } from '../campaign/campaign.js'
-import { actingSeats, decisionSeat, enemyEvadeValue, enemyFightValue, enemyHealth, getMaxHealth, getMaxSanity, getStat, handSize, legalMoves, scriptActionHints } from '../engine/engine.js'
+import { actingSeats, decisionSeat, embeddedCardDefs, enemyEvadeValue, enemyFightValue, enemyHealth, getMaxHealth, getMaxSanity, getStat, handSize, legalMoves, scriptActionHints } from '../engine/engine.js'
 import { contentRegistry } from '../../content/registered.js'
 import { projectTableState, locationEntryErrors, maskHiddenLocations, publicAttachments, attachLocationCards, publicCardInstance } from './presentation-state.js'
 import { campaignStory } from '../campaign/story.js'
@@ -157,6 +157,22 @@ export function viewState(state, observerSeat = null) {
     deck: [],
     deckSize: inv.deck.length,
   }))
+  // 展示表 cards 是开局/读档时的派生快照：幕间奖励、剧本效果中途加入的卡可能不在里面。
+  // 只要场上或自己的手牌里有前端拿不到定义的卡，就补一份——否则前端读不到它的 slots，
+  // 会把占着槽位的支援画进「其他资产」（典型：02040 亨利·阿米蒂奇博士占了盟友槽）。
+  const visibleCodes = new Set()
+  for (const inv of state.investigators || []) {
+    for (const card of [...(inv.assets || []), ...(inv.threat || [])]) visibleCodes.add(card.code)
+    if (inv.seat === observer) for (const code of inv.hand || []) visibleCodes.add(code)
+  }
+  for (const card of [...(state.storyAssets || []), ...(state.victoryDisplay || [])]) visibleCodes.add(card.code)
+  if ([...visibleCodes].some(code => code && !view.cards?.[code])) {
+    const defs = embeddedCardDefs(state, state.campaign?.id)
+    // cards 是派生展示表（见 replay.js 的 DERIVED_KEYS，不进重放指纹）：顺手补回权威状态算自愈，
+    // 旧存档与中途加入的卡只补这一次；视图侧再克隆一份，避免与权威状态共享实例。
+    Object.assign(state.cards ||= {}, defs)
+    Object.assign(view.cards ||= {}, structuredClone(defs))
+  }
   view.encounterDeck = []
   view.encounterDeckSize = state.encounterDeck.length
   view.cultistDeck = []
@@ -172,7 +188,9 @@ export function viewState(state, observerSeat = null) {
       // 补给选购要区分序幕与补给点：两处的清单和点数不同，前端据此列出完整卡面。
       ...(choice.kind === 'pickSupplies' ? ['context'] : []),
     ]),
-    options: responder ? choiceOptionsFor(choice, observer).map(option => pick(option, ['id', 'label'])) : [],
+    // cardCode 只下发给该选择的应答者（非应答者 options 为空），供界面显示候选卡面；
+    // 它不包含牌库顺序等隐藏信息，且卡名此前已通过 label 公开给应答者。
+    options: responder ? choiceOptionsFor(choice, observer).map(option => pick(option, ['id', 'label', 'cardCode'])) : [],
   } : null
   // state.legalMoves is cached for the primary seat; simultaneous seats compute their own list.
   view.legalMoves = observer == null || !actingSeats(state).includes(observer) ? []

@@ -302,26 +302,31 @@ export function createCampaignPlugin(deps) {
     const inv = state.investigators[seat]
     if (effect.action === 'yorickPlayAsset') {
       if (discardLocked(state, inv)) return
-      const candidates = inv.discard.filter(code => {
-        const def = cardDef(code)
-        if (!def || def.type !== 'asset' || isWeaknessCard(def) || inv.resources < playCost(state, inv, def)) return false
-        if (def.unique && state.investigators.some(owner => owner.assets.some(asset => cardDef(asset.code)?.name === def.name))) return false
-        return assetReplacementPlans(inv, def).length > 0
-      })
+      // 选项 id 用弃牌堆里的真实下标；kind:'card' 是通用“选一张牌”，
+      // 不能复用 kind:'discard'（手牌弃牌）的界面绑定。
+      const candidates = inv.discard
+        .map((code, index) => ({ code, index }))
+        .filter(({ code }) => {
+          const def = cardDef(code)
+          if (!def || def.type !== 'asset' || isWeaknessCard(def) || inv.resources < playCost(state, inv, def)) return false
+          if (def.unique && state.investigators.some(owner => owner.assets.some(asset => cardDef(asset.code)?.name === def.name))) return false
+          return assetReplacementPlans(inv, def).length > 0
+        })
       if (!candidates.length) return
-      const choice = requestChoice(state, { kind: 'discard', source: 'yorickAsset', seat, canSkip: true,
+      const choice = requestChoice(state, { kind: 'card', source: 'yorickAsset', seat, canSkip: true,
         prompt: '选择弃牌堆中的一个支援，支付费用并打出。', options: [{ id: 'skip', label: '不打出支援' },
-          ...candidates.map((code, index) => ({ id: String(index), cardCode: code, label: `${cardName(code)}（${playCost(state, inv, cardDef(code))}资源）` }))] })
+          ...candidates.map(({ code, index }) => ({ id: String(index), cardCode: code, label: `${cardName(code)}（${playCost(state, inv, cardDef(code))}资源）` }))] })
       if (choice === 'skip') return
-      const code = candidates[Number(choice)]
-      inv.discard.splice(inv.discard.indexOf(code), 1)
-      inv.hand.push(code)
-      doPlay(state, seat, code, events, false, true)
+      const chosen = candidates.find(item => String(item.index) === choice)
+      if (!chosen) return
+      inv.discard.splice(chosen.index, 1)
+      inv.hand.push(chosen.code)
+      doPlay(state, seat, chosen.code, events, false, true)
       return
     }
     if (effect.action === 'yorickElderSign') {
       if (discardLocked(state, inv) || !inv.discard.length) return
-      const choice = requestChoice(state, { kind: 'discard', source: 'yorickElderSign', seat, canSkip: true,
+      const choice = requestChoice(state, { kind: 'card', source: 'yorickElderSign', seat, canSkip: true,
         prompt: '旧印成功：可以将弃牌堆中的一张牌返回手牌。', options: [{ id: 'skip', label: '不返回' },
           ...inv.discard.map((code, index) => ({ id: String(index), cardCode: code, label: cardName(code) }))] })
       if (choice !== 'skip') inv.hand.push(...inv.discard.splice(Number(choice), 1))

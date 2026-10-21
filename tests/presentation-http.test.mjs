@@ -113,6 +113,16 @@ test('卡牌详情给出双面文本、状态与关联面，且不下发原始�
   assert.ok(weakness.body.card.differenceNotes.length >= 0)
 })
 
+test('敌人卡详情下发每名调查员生命加值，图鉴才能算有效生命', async () => {
+  const { status, body } = await get('/api/mods/arkhamhorror/cards/02058')
+  assert.equal(status, 200)
+  assert.equal(body.card.health, 7)
+  assert.equal(body.card.healthPerPlayerBonus, 3)
+  // 没有每人加值的敌人不受影响，也不凭空多出字段。
+  const plain = await get('/api/mods/arkhamhorror/cards/01116')
+  assert.equal(plain.body.card.healthPerPlayerBonus, undefined)
+})
+
 test('胆量使用玩家卡背并公开剧本指定属性', async () => {
   const { status, body } = await get('/api/mods/arkhamhorror/cards/xcourage')
   assert.equal(status, 200)

@@ -8,11 +8,24 @@
 import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import { queryCatalogView, getCatalogCardView, getLinkedCatalogCardView, getCatalogMeta } from '../cards/card-catalog.js'
+import { ALL_ENEMIES } from '../engine/card-lookup.js'
 import { META } from '../cards/cards-data.js'
 import { fetchArkhamDbDeck, resolveArkhamDbDeck } from './arkhamdb.js'
 import { scenarioImageManifest } from './scenario-images.js'
 
 const FILTER_KEYS = Object.freeze(['q', 'code', 'name', 'type', 'klass', 'packCode', 'cost', 'xp', 'campaign', 'sort', 'effectStatus', 'availability', 'offset', 'limit'])
+// 目录卡面只含印刷值；「每名调查员 +X 生命」这类剧本常驻修正写在 content 里。
+// 图鉴详情补上它，浏览器才能按调查员人数算出有效生命（例如 02058：印刷 7 + 每人 3）。
+const ENEMY_RULES_BY_ORIGINAL = new Map()
+for (const [ruleCode, rule] of Object.entries(ALL_ENEMIES)) {
+  const code = rule.originalCode || ruleCode
+  if (!ENEMY_RULES_BY_ORIGINAL.has(code)) ENEMY_RULES_BY_ORIGINAL.set(code, rule)
+}
+function attachEnemyHealthBonus(card, code) {
+  const rule = ALL_ENEMIES[code] || ENEMY_RULES_BY_ORIGINAL.get(card.originalCode || code)
+  if (rule?.healthPerPlayerBonus) card.healthPerPlayerBonus = rule.healthPerPlayerBonus
+  return card
+}
 // 资源版本纳入的文件：目录数据、规则差异、展示解析与浏览器展示代码。
 const VERSIONED_FILES = Object.freeze([
   '../cards/cards-data.js', '../cards/scenarios-data.js', '../cards/card-effects.js', '../cards/card-catalog.js',
@@ -77,6 +90,7 @@ export function handleApi({ path, searchParams }) {
     if (!/^[a-zA-Z0-9_-]{1,64}$/.test(code)) return { status: 400, error: '无效卡牌编号' }
     const card = getCatalogCardView(code)
     if (!card) return { status: 404, error: '卡牌不存在' }
+    attachEnemyHealthBonus(card, code)
     const linkedCard = getLinkedCatalogCardView(code)
     return { body: { card, ...(linkedCard ? { linkedCard } : {}) } }
   }

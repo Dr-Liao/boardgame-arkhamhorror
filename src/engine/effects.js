@@ -207,9 +207,10 @@ export function resolveEffect(state, seat, effect, rt) {
       break
     }
     case 'investigate': {
-      rt.investigate(seat, { shroudMod: effect.shroudMod || 0, clueBonus: effect.clueBonus || 0,
-        skill: effect.skill, baseValue: effect.baseValue, bonus: effect.bonus || 0,
-        symbolActionLoss: effect.symbolActionLoss, symbolEndsTurn: effect.symbolEndsTurn })
+      // 整份效果体透传：调查是"可配置的核心流程"（改写技能、额外线索、成功点数换线索、
+      // 成功后自动躲避、消耗式支援…）。逐字段列举会把新字段静默丢掉——礼寻术的
+      // `skill: 'willpower'` 就是这么被丢掉的，这里不再维护第二份字段清单。
+      rt.investigate(seat, { ...effect })
       break
     }
     case 'fight': {
@@ -229,17 +230,9 @@ export function resolveEffect(state, seat, effect, rt) {
         const enemy = rt.enemyForTarget(seat, effect.enemyId ? ('id:' + effect.enemyId) : 'engaged')
         if (enemy) {
           if (effect.auto) rt.autoEvade(enemy)
-          else rt.evade(seat, {
-            enemyId: enemy.id,
-            bonus: effect.bonus || 0,
-            skill: effect.skill,
-            baseValue: effect.baseValue,
-            evadeOthersOnSuccess: effect.evadeOthersOnSuccess,
-            damageOnSuccess: effect.damageOnSuccess,
-            moveEnemyOnSuccess: effect.moveEnemyOnSuccess,
-            symbolActionLoss: effect.symbolActionLoss,
-            onChaosSymbolHorror: effect.onChaosSymbolHorror,
-          })
+          // 同上：整份效果体透传（躲避值修正、成功不横置、本回合不能交战等都在 doEvade 里读），
+          // 只额外补上已解析的敌人与来源卡号。
+          else rt.evade(seat, { ...effect, enemyId: enemy.id, sourceCode: effect.code })
         } else {
           rt.info('没有交战的敌人。')
         }

@@ -169,7 +169,9 @@ function prepareInvestigator(state, inv, events, startLocation) {
   inv.horror = trauma.mental
   inv.resources = 5
   inv.clues = 0
-  inv.actionsLeft = 3 + extraActionBonus(inv)
+  // 这里只放基础行动点；额外行动要等下面清掉上一关的资产、重新摆好本关开局阵容后再算。
+  // 否则上一关场上的「里奥·德·卢卡」会把 +1 行动带进新关卡，再打出第二张就变成 +2。
+  inv.actionsLeft = 3
   inv.exploreOnlyActions = 0
   inv.tomeActionUsed = false
   inv.hand = []
@@ -211,6 +213,9 @@ function prepareInvestigator(state, inv, events, startLocation) {
       const setup = EFFECTS[code]?.setup
     }
   }
+  // 开局就带在身上的支援（签名卡 / 永久卡）也计入额外行动；上一关的资产已在上面清空，
+  // 因此这里只会读到本关真实在场的卡。
+  inv.actionsLeft = 3 + extraActionBonus(inv)
   drawOpeningHand(state, inv)
   // 幕间留下的下一场修正（原卡：配给不足 → 起始资源 -3，水壶 → 起始线索 +1）。
   consumeStartingAdjustments(state, inv, events)
@@ -509,6 +514,12 @@ function startScenario(state, index, events) {
   for (const inv of state.investigators) {
     prepareInvestigator(state, inv, events, startLoc)
   }
+
+  // state.cards 是给前端的派生展示表（不进重放指纹），只在开局/读档时重建；而幕间奖励的
+  // 剧情卡（如 02040 亨利·阿米蒂奇博士）是在开局之后才进牌组的。这里不补的话，前端拿不到
+  // 它的 slots，会把占着盟友槽的支援画进「其他资产」，槽位判定和界面就对不上了。
+  // 只补不删：开局那份卡池定义（幕间牌组界面要用）保留，只并入本关实际带入的卡。
+  Object.assign(state.cards ||= {}, embeddedCardDefs(state, CAMPAIGN.id))
 
   scenarioBehavior(state).preScenarioSetup?.(state, events, scenarioRuntime(state, events))
 

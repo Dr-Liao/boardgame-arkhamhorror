@@ -19,7 +19,7 @@ export function createDescribeState(deps) {
     totalDoom,
     agendaDoom,
     scenarioBehavior,
-    locName,
+    locLabel,
     getMaxHealth,
     getMaxSanity,
     getStat,
@@ -37,7 +37,26 @@ export function createDescribeState(deps) {
     narrativeLogTexts,
     scriptActionHints,
     stripLabel,
+    registeredEntry,
+    actionPreview,
+    enemyCanOpportunityAttack,
+    enemiesEngagedWith,
   } = deps
+
+  // 当前会真正发动借机攻击的敌人：已横置、被规则/剧本禁止、以及「声东击西」
+  // 已生效的敌人都不算。行动预览与这段提示读同一个判定，避免两处口径不一。
+  function opportunityAttackers(state, inv) {
+    if (!inv || inv.defeated || inv.resigned) return []
+    return enemiesEngagedWith(state, inv).filter(enemy => !enemy.defeated && !enemy.exhausted
+      && !(inv.onTheLam && !enemy.elite) && enemyCanOpportunityAttack(state, enemy))
+  }
+
+  function opportunityTotals(attackers) {
+    return attackers.reduce((sum, enemy) => ({
+      damage: sum.damage + (enemy.damage || 0),
+      horror: sum.horror + (enemy.horror || 0),
+    }), { damage: 0, horror: 0 })
+  }
 
   function describeState(state, observerSeat = decisionSeat(state)) {
   const CAMPAIGN = campaignFor(state)
@@ -90,7 +109,7 @@ export function createDescribeState(deps) {
     const participation = investigatorParticipation(state, inv)
     const alive = participation.status === 'active'
     const mark = alive && inv.seat === state.currentSeat ? ' ◀ 当前行动' : ''
-    lines.push(`- ${inv.name}（${CLASS_NAMES[inv.klass] || inv.klass}，位置「${locName(state, inv.location)}」）` +
+    lines.push(`- ${inv.name}（${CLASS_NAMES[inv.klass] || inv.klass}，位置「${locLabel(state, inv.location)}」）` +
       ` 生命 ${getMaxHealth(inv) - inv.damage}/${getMaxHealth(inv)} 理智 ${getMaxSanity(inv) - inv.horror}/${getMaxSanity(inv)}` +
       ` 资源 ${inv.resources} 行动 ${inv.actionsLeft}${alive ? '' : '（' + participation.statusLabel + '）'}${mark}`)
     lines.push(`  属性：意志${getStat(state, inv, 'willpower')} 智识${getStat(state, inv, 'intellect')} 战斗${getStat(state, inv, 'combat')} 敏捷${getStat(state, inv, 'agility')}`)
@@ -103,11 +122,23 @@ export function createDescribeState(deps) {
       }).join('、')}`)
     }
     if (inv.engaged.length) {
-      const es = inv.engaged.map((eid) => { const e = state.enemies.find((x) => x.id === eid); return e ? e.name : eid }).join('、')
+      const es = inv.engaged.map((eid) => {
+        const e = state.enemies.find((x) => x.id === eid)
+        return e ? `${e.name}（伤害 ${e.damage ?? 0}／恐惧 ${e.horror ?? 0}）` : eid
+      }).join('、')
       lines.push(`  交战：${es}`)
     }
     if (inv.threat.length) {
-      lines.push(`  威胁区域：${inv.threat.map((t) => cardName(t.code) + ((t.counters != null) ? `(${t.counters})` : '')).join('、')}`)
+      lines.push(`  威胁区域：${inv.threat.map((t) => {
+        const counters = t.counters != null ? `(${t.counters})` : ''
+        // 弱点上的充能要连同目标值一起给出（「怒灵」4 充能以下会在关卡结束受创伤），
+        // 否则 AI 只知道卡面写了 4，不知道现在已经有几个。
+        const requiredUses = registeredEntry(t.code)?.physicalTraumaIfUsesBelow
+        const uses = t.uses != null
+          ? `(${t.usesType === 'charges' ? '充能' : '标记'} ${t.uses}${Number.isFinite(requiredUses) ? '/' + requiredUses : ''})`
+          : ''
+        return cardName(t.code) + counters + uses
+      }).join('、')}`)
     }
     const freeAbilities = alive ? describeFreeAbilities(state, inv) : []
     if (freeAbilities.length) {
@@ -120,8 +151,8 @@ export function createDescribeState(deps) {
   for (const loc of state.locations) {
     const here = aliveInvestigators(state).filter((i) => i.location === loc.id).map((i) => i.name).join('、')
     const enemiesHere = state.enemies.filter((e) => e.location === loc.id && e.engagedSeat == null).map((e) => e.name).join('、')
-    const conns = loc.connections.map((c) => locName(state, c)).join('、')
-    lines.push(`- ${loc.name}（${loc.id}）：帷幕 ${loc.shroud}，线索 ${loc.clues}${loc.locked ? '，🔒上锁' : ''}；连接「${conns || '无'}」${here ? '；调查员：' + here : ''}${enemiesHere ? '；敌人：' + enemiesHere : ''}`)
+    const conns = loc.connections.map((c) => locLabel(state, c)).join('、')
+    lines.push(`- ${locLabel(state, loc.id)}（${loc.id}）：帷幕 ${loc.shroud}，线索 ${loc.clues}${loc.locked ? '，🔒上锁' : ''}；连接「${conns || '无'}」${here ? '；调查员：' + here : ''}${enemiesHere ? '；敌人：' + enemiesHere : ''}`)
   }
 
   if (state.enemies.length) {
@@ -138,8 +169,27 @@ export function createDescribeState(deps) {
       const healthText = enemyHealth(state, e) > 0
         ? `生命 ${enemyHealth(state, e) - e.damageTaken}/${enemyHealth(state, e)}`
         : '生命 无'
-      lines.push(`- ${e.name}：战斗${enemyFightValue(state, e, state.investigators[observerSeat])} 躲避${enemyEvadeValue(state, e, state.investigators[observerSeat])} ${healthText}${e.doom ? ` 毁灭${e.doom}` : ''}${kw ? '（' + kw + '）' : ''}，交战「${eng}」${e.exhausted ? '（已横置）' : ''}${intent ? '；意图：' + intent : ''}`)
+      lines.push(`- ${e.name}：战斗${enemyFightValue(state, e, state.investigators[observerSeat])} 躲避${enemyEvadeValue(state, e, state.investigators[observerSeat])} 伤害${e.damage ?? 0} 恐惧${e.horror ?? 0} ${healthText}${e.doom ? ` 毁灭${e.doom}` : ''}${kw ? '（' + kw + '）' : ''}，交战「${eng}」${e.exhausted ? '（已横置）' : ''}${intent ? '；意图：' + intent : ''}`)
     }
+  }
+
+  const me = state.investigators[observerSeat]
+  const opportunityAttackersNow = opportunityAttackers(state, me)
+  if (opportunityAttackersNow.length) {
+    const totals = opportunityTotals(opportunityAttackersNow)
+    const names = opportunityAttackersNow.map(e => `${e.name}（伤害 ${e.damage ?? 0}／恐惧 ${e.horror ?? 0}）`).join('、')
+    lines.push('')
+    lines.push(`【借机攻击】你正与「${names}」交战：每次非攻击行动结算前，会先被每个未横置的敌人各攻击一次（合计 ${totals.damage} 伤害／${totals.horror} 恐惧）。`)
+    lines.push('会引发：抽牌、获得资源、移动、调查、打出卡牌、使用普通资产能力等花费行动点的行动。不会引发：攻击、躲避、谈判、撤退、结束回合、免费行动，以及卡面写明「不引发借机攻击」的效果。行动列表中标 ⚠ 的选项都会先受到上述攻击。')
+    const remainingHealth = getMaxHealth(me) - (me.damage || 0)
+    const remainingSanity = getMaxSanity(me) - (me.horror || 0)
+    if (totals.damage >= remainingHealth || totals.horror >= remainingSanity) {
+      lines.push(`按基础值计算，这次借机攻击足以击败你（剩余生命 ${remainingHealth}／理智 ${remainingSanity}）。除非能取消或转移这次攻击，否则不要执行标 ⚠ 的行动。`)
+    }
+  } else if (me && !me.defeated && !me.resigned
+    && (me.engaged?.length || state.enemies.some(e => e.massive && e.location === me.location))) {
+    lines.push('')
+    lines.push('【借机攻击】当前与你交战的敌人不会发动借机攻击。')
   }
 
   if (state.pendingChoice && (state.pendingChoice.seat === observerSeat || !state.skillTest || state.skillTest.helpRequested || state.skillTest.seat === observerSeat)) lines.push(`待决选择：${state.pendingChoice.prompt}；回答座位 ${state.pendingChoice.seat}。`)
@@ -147,7 +197,16 @@ export function createDescribeState(deps) {
   if (legal.length) {
     lines.push('')
     lines.push('【可执行行动】（从下列选择一项，用其 JSON 表示）')
-    legal.forEach((m, i) => { lines.push(`${i + 1}. ${m.label}  →  ${JSON.stringify(stripLabel(m))}`) })
+    legal.forEach((m, i) => {
+      // 风险直接贴在行动旁，避免 AI 只在末尾 actionCosts 里自己推算。
+      // actionPreview 只读，且与 dispatch 共用 actionKind/actionCost 的判定。
+      const preview = actionPreview ? actionPreview(state, observerSeat, m) : null
+      const attacks = preview?.opportunityAttacks || []
+      const risk = attacks.length
+        ? `  ⚠借机 ${attacks.reduce((n, a) => n + (a.damage || 0), 0)}/${attacks.reduce((n, a) => n + (a.horror || 0), 0)}`
+        : ''
+      lines.push(`${i + 1}. ${m.label}${risk}  →  ${JSON.stringify(stripLabel(m))}`)
+    })
   }
 
   // 卡面赋予却暂时走不通的行动：只讲清缺哪个条件，让 AI 能反过来做准备。

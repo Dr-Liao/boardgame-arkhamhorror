@@ -59,7 +59,8 @@ export const encounterRules = {
   cardDrawn(state, inv, code, api) {
     const armitage = inv.assets.find(asset => asset.code === '02040' && !asset.exhausted)
     if (armitage && !inv.threat.some(item => item.code === '02088') && this.canGainResources(state, inv)) {
-      if (api.choose({ kind: 'reaction', source: '02040', seat: inv.seat, prompt: '横置阿米蒂奇并弃掉刚抽到的牌，获得 3 资源？',
+      if (api.choose({ kind: 'reaction', source: '02040', seat: inv.seat, canSkip: true,
+        prompt: '横置阿米蒂奇并弃掉刚抽到的牌，获得 3 资源？',
         options: [{ id: 'skip', label: '保留卡牌' }, { id: 'trigger', label: '弃牌并获得资源' }] }) === 'trigger') {
         inv.hand.splice(inv.hand.lastIndexOf(code), 1); inv.discard.push(code); armitage.exhausted = true; inv.resources += 3
       }
@@ -74,13 +75,14 @@ export const encounterRules = {
   cluesGained(state, inv, _amount, api) {
     const ally = inv.assets.find(asset => asset.code === '02061' && !asset.exhausted)
     if (!ally || inv.threat.some(item => item.code === '02088') || state.locations.find(loc => loc.id === inv.location)?.clues !== 0) return
-    if (api.choose({ kind: 'reaction', source: '02061', seat: inv.seat, prompt: '横置赖斯教授，抽 1 张牌？',
+    if (api.choose({ kind: 'reaction', source: '02061', seat: inv.seat, canSkip: true,
+      prompt: '横置赖斯教授，抽 1 张牌？',
       options: [{ id: 'skip', label: '不触发' }, { id: 'trigger', label: '横置并抽牌' }] }) === 'trigger') { ally.exhausted = true; api.drawCards(inv.seat, 1) }
   },
   enemyDefeated(state, enemy, api) {
     const inv = state.investigators[enemy.defeatedBy]
     const ally = inv?.assets.find(asset => asset.code === '02080' && !asset.exhausted)
-    if (ally && !inv.threat.some(item => item.code === '02088') && api.choose({ kind: 'reaction', source: '02080', seat: inv.seat,
+    if (ally && !inv.threat.some(item => item.code === '02088') && api.choose({ kind: 'reaction', source: '02080', seat: inv.seat, canSkip: true,
       prompt: '横置摩尔根博士，抽 1 张牌？', options: [{ id: 'skip', label: '不触发' }, { id: 'trigger', label: '横置并抽牌' }] }) === 'trigger') {
       ally.exhausted = true; api.drawCards(inv.seat, 1)
     }

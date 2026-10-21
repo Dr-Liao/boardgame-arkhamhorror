@@ -754,7 +754,105 @@ test('M2 trusted attaches to an item and boosts its ability test', () => {
   const before = state.investigators[0].combat
   move(state, { action: 'ability', assetId: 'item', abilityIndex: 0 })
   settle(state, pending => pending.kind === 'target' ? target.id : null)
-  assert.equal(state.testResult?.value ?? before, before, '检定值包含宿主能力 +1')
+  assert.equal(state.lastTestResult?.value, before + 2, '大砍刀的 +1 与值得信赖的 +1 都计入检定值')
+})
+
+test('M2 trusted boosts investigate, evade and intellect abilities of the attached item', () => {
+  const flashlight = fixture('01001')
+  dropHand(flashlight, ['04020'])
+  me(flashlight).assets.push({ id: 'flashlight', code: '01087', exhausted: false, uses: 3, usesType: 'supplies' })
+  move(flashlight, { action: 'play', cardId: '04020' })
+  settle(flashlight)
+  flashlight.chaosBag = ['0']
+  flashlight.locations.find(item => item.id === me(flashlight).location).clues = 1
+  const intellect = me(flashlight).intellect
+  move(flashlight, { action: 'ability', assetId: 'flashlight', abilityIndex: 0 })
+  settle(flashlight)
+  assert.equal(flashlight.lastTestResult?.value, intellect + 1, '调查能力也得到每项技能 +1')
+
+  const solution = fixture('01001')
+  dropHand(solution, ['04020'])
+  me(solution).assets.push({ id: 'solution', code: '02264', exhausted: false, uses: 4, usesType: 'supplies' })
+  move(solution, { action: 'play', cardId: '04020' })
+  settle(solution)
+  enemy(solution, { id: 'trusted-evade', fight: 0, evade: 0, health: 6 })
+  solution.chaosBag = ['0']
+  move(solution, { action: 'ability', assetId: 'solution', abilityIndex: 0 })
+  settle(solution)
+  assert.equal(solution.lastTestResult?.value, 6 + 1, '躲避能力也得到每项技能 +1')
+
+  const texts = fixture('01001')
+  dropHand(texts, ['04020'])
+  me(texts).assets.push({ id: 'texts', code: '01035', exhausted: false })
+  move(texts, { action: 'play', cardId: '04020' })
+  settle(texts)
+  texts.chaosBag = ['0']
+  const textsIntellect = me(texts).intellect
+  move(texts, { action: 'ability', assetId: 'texts', abilityIndex: 0 })
+  settle(texts)
+  assert.equal(texts.lastTestResult?.value, textsIntellect + 1, '目标检定也得到每项技能 +1')
+})
+
+test('M2 trusted boosts descriptor-resolved fight and test abilities', () => {
+  const knife = fixture('01001')
+  dropHand(knife, ['04020'])
+  me(knife).assets.push({ id: 'knife', code: '03147', exhausted: false })
+  move(knife, { action: 'play', cardId: '04020' })
+  settle(knife)
+  enemy(knife, { id: 'trusted-knife', fight: 0, evade: 0, health: 9 })
+  knife.chaosBag = ['0']
+  const knifeCombat = me(knife).combat
+  move(knife, { action: 'ability', assetId: 'knife', abilityIndex: 0 })
+  settle(knife)
+  assert.equal(knife.lastTestResult?.value, knifeCombat + 2, '描述子里的 api.fight 也得到 +1')
+
+  const shotgun = fixture('01001')
+  dropHand(shotgun, ['04020'])
+  me(shotgun).assets.push({ id: 'shotgun', code: '04273', exhausted: false, uses: 3, usesType: 'ammo' })
+  move(shotgun, { action: 'play', cardId: '04020' })
+  settle(shotgun)
+  enemy(shotgun, { id: 'trusted-shotgun', fight: 0, evade: 0, health: 9 })
+  shotgun.chaosBag = ['0']
+  const shotgunCombat = me(shotgun).combat
+  move(shotgun, { action: 'ability', assetId: 'shotgun', abilityIndex: 0 })
+  settle(shotgun)
+  assert.equal(shotgun.lastTestResult?.value, shotgunCombat + 4, '描述子里的 api.test 也得到 +1')
+
+  const relic = fixture('01001')
+  dropHand(relic, ['04020'])
+  me(relic).assets.push({ id: 'relic', code: '04191', exhausted: false })
+  move(relic, { action: 'play', cardId: '04020' })
+  settle(relic)
+  relic.chaosBag = ['0']
+  const relicWillpower = me(relic).willpower
+  move(relic, { action: 'ability', assetId: 'relic', abilityIndex: 0 })
+  settle(relic)
+  assert.equal(relic.lastTestResult?.value, relicWillpower + 1, '描述子里的 api.startTest 也得到 +1')
+
+  const research = fixture('01001')
+  dropHand(research, ['04020'])
+  me(research).assets.push({ id: 'research', code: '02021', exhausted: false })
+  move(research, { action: 'play', cardId: '04020' })
+  settle(research)
+  research.chaosBag = ['0']
+  const researchIntellect = me(research).intellect
+  move(research, { action: 'ability', assetId: 'research', abilityIndex: 0 })
+  settle(research)
+  assert.equal(research.lastTestResult?.value, researchIntellect + 1, '研究能力也得到 +1')
+
+  const pistol = fixture('01001')
+  dropHand(pistol, ['04020'])
+  me(pistol).assets.push({ id: 'pistol', code: '07025', exhausted: false, uses: 4, usesType: 'ammo' })
+  move(pistol, { action: 'play', cardId: '04020' })
+  settle(pistol)
+  enemy(pistol, { id: 'trusted-pistol', fight: 0, evade: 0, health: 9 })
+  pistol.chaosBag = ['0']
+  const pistolCombat = me(pistol).combat
+  const pistolMove = legalMoves(pistol).find(move => move.action === 'ability' && move.assetId === 'pistol')
+  assert.ok(pistolMove, '手枪攻击应出现在合法动作里')
+  move(pistol, pistolMove)
+  settle(pistol)
+  assert.equal(pistol.lastTestResult?.value, pistolCombat + 1, '显式 assetId 为实例 id 时也得到 +1')
 })
 
 test('M2 dr horowitz attaches a relic from the top nine cards', () => {

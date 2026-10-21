@@ -27,6 +27,8 @@ import {
 } from '../src/engine/engine.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
+import { CARD_ENTRY_LIST } from '../src/cards/entries/index.js'
+import { resolveEffect } from '../src/engine/effects.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import {
   GRANT_TARGETS, BLOCKABLE_CAPABILITIES, IGNORABLE_RULES,
@@ -497,4 +499,62 @@ test('Phase 2 门禁：迁移后的卡保留原行为（抽样三张）', () => 
 test('Phase 2 门禁：32 张旧卡位没有新增引擎卡号分支（engineCodes 只减不增）', () => {
   // 白名单由 tools/audit-abilities.mjs 维护；架构守卫会逐码比对，这里只锁住方向。
   assert.ok(Object.keys(EFFECTS).length < 406, 'EFFECTS 条目数必须比 Phase 1 结束时更少')
+})
+
+// ---- 效果解释器的转发契约 ----
+// 回归背景：effects.js 曾经逐字段重新构造 investigate / evade 的选项对象，
+// 卡面数据里新写的字段会被静默丢掉（礼寻术的 skill、潜行的 evadeModifier /
+// noExhaustOnSuccess / preventEngageThisTurn、古代雕文的 successByClueEvery /
+// autoEvadeOnSuccess 都因此"看着实现了，实际不生效"）。
+// 这条用例把「数据里出现过的全部字段」逐个放进效果体，断言规则实现原样收到。
+
+const DISPATCH_ONLY_KEYS = {
+  investigate: new Set(['type', 'locationId', 'assetId']),
+  fight: new Set(['type', 'enemyId', 'assetId']),
+  evade: new Set(['type', 'enemyId', 'auto', 'allAtLocation', 'assetId']),
+}
+
+function effectKeysInData(type) {
+  const keys = new Set()
+  const seen = new WeakSet()
+  const walk = node => {
+    if (!node || typeof node !== 'object' || seen.has(node)) return
+    seen.add(node)
+    if (Array.isArray(node)) { node.forEach(walk); return }
+    if (node.type === type) for (const key of Object.keys(node)) keys.add(key)
+    for (const [key, value] of Object.entries(node)) {
+      if (key === 'resolve' || typeof value === 'function') continue
+      if (value && typeof value === 'object') walk(value)
+    }
+  }
+  for (const entry of CARD_ENTRY_LIST) walk(entry)
+  for (const effect of Object.values(EFFECTS)) walk(effect)
+  return keys
+}
+
+test('Phase 2 转发：investigate / fight / evade 的每个数据字段都会送到规则实现', () => {
+  for (const type of ['investigate', 'fight', 'evade']) {
+    const skip = DISPATCH_ONLY_KEYS[type]
+    const effect = { type }
+    let index = 0
+    for (const key of effectKeysInData(type)) if (!skip.has(key)) effect[key] = `probe-${++index}`
+    let received = null
+    const probeEnemy = { id: 'probe-enemy', name: '探针敌人', location: 'probe-loc', engagedSeat: 0 }
+    const runtime = {
+      info() {},
+      investigate: (seat, options) => { received = options },
+      fight: (seat, options) => { received = options },
+      evade: (seat, options) => { received = options },
+      enemyForTarget: () => probeEnemy,
+      chooseEnemy: () => probeEnemy,
+    }
+    const state = { investigators: [{ seat: 0, location: 'probe-loc', engaged: [probeEnemy.id], assets: [] }],
+      enemies: [probeEnemy] }
+    resolveEffect(state, 0, effect, runtime)
+    assert.ok(received, `${type} 没有走到规则实现`)
+    for (const [key, value] of Object.entries(effect)) {
+      if (skip.has(key)) continue
+      assert.equal(received[key], value, `${type}.${key} 在 effects.js 的转发中被丢掉了`)
+    }
+  }
 })

@@ -11,9 +11,6 @@ const SOUNDS = { select: 'click_003', draw: 'card-slide', encounter: 'encounter-
 const VOLUMES = { select: .16, gunshot: .22, bladeSlash: .4, bladeHit: .4, lightningZap: .35, dynamiteBlast: .55 }
 const SKILLS = { intellect: '智识', willpower: '意志', combat: '战斗', agility: '敏捷' }
 const PHASES = { enemy: ['敌军阶段', '⚔', '猎手逼近，威胁降临'], upkeep: ['整备阶段', '◇', '重整装备，补充物资'], mythos: ['神话阶段', '◉', '黑暗蔓延，遭遇未知'], investigation: ['调查阶段', '⌕', '新的调查即将开始'] }
-// 剧本开局的两幕：故事导入与初始密谋。它们必须等换牌结束后再播，且只播一次。
-const isOpeningStory = change => change.kind === 'story' && !!(change.intro || change.initialAgenda)
-
 export function publicSequence(events) {
   const cues = []
   for (const event of events) {
@@ -95,9 +92,6 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
   let anchors = new Map(), queue = [], unlocked = false
   let presentedPlays = []
   let blocking = false, cancelScene = null
-  // 开场故事（故事导入 + 初始密谋）只播一次。开局换牌期间先按住：
-  // introDeferred 表示「首次进入关卡时还在换牌」，deferredOpening 暂存事件流里被按住的两幕。
-  let introPlayed = false, introDeferred = false, deferredOpening = null, mulliganChoiceId = null
   let latest = null, displayed = null
   let cardTransits = [], maskedCards = new Set()
   const interaction = key => [...document.querySelectorAll('.ah-table [data-interaction]')].find(el => el.dataset.interaction === key)
@@ -179,7 +173,6 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
   const clear = () => {
     cancelScene?.(); cancelScene = null; block(false)
     epoch++; queue = []; presentedPlays = []; running = false; stopAudio(); cancelAnimationFrame(frame)
-    introPlayed = false; introDeferred = false; deferredOpening = null; mulliganChoiceId = null
     for(const key of maskedCards) { const el=interaction(key);if(el)el.style.visibility='' }
     for(const transit of cardTransits) { const target=transitTarget(transit);if(target)target.style.visibility='' }
     maskedCards.clear();cardTransits=[]
@@ -748,14 +741,8 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
           clear(); last = null; sessionId = session.sessionId; lastSeq = seq
           displayed = session
         }
-        // 换牌是开局第一步：进入关卡时若还在换牌，先按住开场故事，
-        // 等换牌结束（pendingChoice 不再是 mulligan）再补播，否则会挡住待决选择面板。
-        // 每次新的换牌（新关卡 / 重新开始）都重新计一次，换牌中途的重复快照不重置。
-        const mulligan = session.state.pendingChoice?.kind === 'mulligan' ? session.state.pendingChoice : null
-        if (mulligan && mulligan.id !== mulliganChoiceId) {
-          mulliganChoiceId = mulligan.id
-          introPlayed = false; introDeferred = true; deferredOpening = null
-        }
+        // 进入关卡的第一件事是听故事，不是换牌：开场「故事导入 → 密谋揭示」随事件流
+        // 立即排队，演完之前牌桌保持锁定，换牌面板在演出结束后才出现。
         // Enter the table shell before playing its introduction. A hub snapshot
         // has no map, cards or act data for the scenario's queued animations.
         const enteringScenario = last && last.uiState !== 'inScenario' && session.state.uiState === 'inScenario'
@@ -765,36 +752,20 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
           const changes=presentationChanges(last, session.state, events)
           // State-only updates use the same handoff as explicit checkpoints,
           // so new hand cards cannot appear before their draw finishes.
-          let cues=!changes.length ? [] : changes.some(c=>['checkpoint','phase','story'].includes(c.kind)) ? changes
+          const cues=!changes.length ? [] : changes.some(c=>['checkpoint','phase','story'].includes(c.kind)) ? changes
             : [...publicSequence(events),{kind:'checkpoint',tableState:session.state,inferReveals:!events.some(e=>e.presentation?.kind==='location'||e.kind==='location')}]
-          // 事件流里的开场故事先摘出来，换牌结束后连同补播一起只播一次。
-          if (mulligan) {
-            const opening = cues.filter(isOpeningStory)
-            if (opening.length) deferredOpening = opening
-            cues = cues.filter(change => !isOpeningStory(change))
-          } else if (cues.some(isOpeningStory)) introPlayed = true
           for (const change of cues) queue.push({ change, before: anchors, after: nextAnchors })
         }
-        // 补播开场故事：只有「进入时还在换牌」（introDeferred）或「直接开局、状态还没走过一步」
-        // 才需要。刷新页面、读档、换牌结束后的普通渲染都不会重播。
-        if (session.state.scenario && session.state.round === 1 && !introPlayed && !mulligan
-          && (introDeferred || (!last && session.state.revision === 0))) {
-          introPlayed = true; introDeferred = false
+        // 旧版直接开局（revision 仍为 0）没有可消费的事件增量：按当前状态补两幕，
+        // 同样先演故事、再轮到换牌面板。
+        if (!last && session.state.scenario && session.state.round === 1 && session.state.revision === 0) {
           const act = session.state.acts?.[session.state.actIndex]
-          const opening = deferredOpening || [{ kind: 'story', title: '故事导入', name: act?.name || session.state.scenario.name,
-            code: act?.originalCode || act?.code, text: session.state.scenario.intro, intro: true }]
-          if (!deferredOpening) {
-            const agenda = session.state.agendas?.[session.state.agendaIndex]
-            if (agenda) opening.push({ kind: 'story', title: '密谋揭示', name: agenda.name,
-              code: agenda.originalCode || agenda.code, text: agenda.text || '新的威胁正在逼近。',
-              initialAgenda: true })
-          }
-          deferredOpening = null
-          // 事件流里暂存的两幕带着开局时的桌面快照，补播时沿用当前桌面（换牌后）而不是回退。
-          for (const change of opening) {
-            const { tableState, eventSeq, ...replay } = change
-            queue.push({ change: replay, before: anchors, after: nextAnchors })
-          }
+          queue.push({ change: { kind: 'story', title: '故事导入', name: act?.name || session.state.scenario.name,
+            code: act?.originalCode || act?.code, text: session.state.scenario.intro, intro: true }, before: anchors, after: nextAnchors })
+          const agenda = session.state.agendas?.[session.state.agendaIndex]
+          if (agenda) queue.push({ change: { kind: 'story', title: '密谋揭示', name: agenda.name,
+            code: agenda.originalCode || agenda.code, text: agenda.text || '新的威胁正在逼近。',
+            initialAgenda: true }, before: anchors, after: nextAnchors })
         }
         lastSeq = Math.max(lastSeq, seq)
         // Retain only dynamic public fields needed by the presentation diff.

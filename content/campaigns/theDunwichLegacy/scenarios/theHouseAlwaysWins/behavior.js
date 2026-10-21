@@ -150,8 +150,8 @@ export const behavior = {
     if (state.acts[state.actIndex]?.originalCode !== '02066'
       || state.scenarioFlags.cheatedRound === state.round || !state.chaosBag.length) return token
     const answer = api.choose({ kind: 'reaction', source: 'clubCheat', seat: inv.seat, canSkip: true,
-      prompt: '新手的运气：是否将刚揭示的混乱标记视为袋中另一标记的正面？每轮全队限一次。',
-      options: [{ id: 'skip', label: '不作弊' }, { id: 'trigger', label: '选择袋中的标记正面' }] })
+      prompt: '新手的运气（作弊）：是否将刚揭示的混乱标记视为袋中另一标记的正面？每轮全队限一次。代价：本关结算时只要有调查员作弊，混乱袋就永久加入 1 个古神标记。',
+      options: [{ id: 'skip', label: '不作弊（按原标记结算）' }, { id: 'trigger', label: '作弊：改为袋中另一标记的正面（本关结算时混乱袋永久 +1 古神标记）' }] })
     if (answer !== 'trigger') return token
     const faces = [...new Set(state.chaosBag)]
     const face = api.choose({ kind: 'token', source: 'clubCheatFace', seat: inv.seat,

@@ -334,13 +334,40 @@ function enemyStat(symbol, kind, label, base, value) {
     delta ? h('small', { className: delta > 0 ? 'is-positive' : 'is-negative' }, sign + delta) : null)
 }
 
-function enemyHealthRow(current, max) {
-  const total = max ?? 0
+// 敌人生命上限：场上实例由服务端算好（含剧本修正与每名调查员的加值）；
+// 只拿到卡面时（放在一边、图鉴）按「印刷值 + 每人加值 × 调查员数」重算，
+// 否则「实验体」（印刷 7、每人 +3）会显示成 7，与桌面的 10 对不上。
+function enemyHealthInfo(card, def) {
+  const printed = Number(card.health ?? def.health ?? 0) || 0
+  const players = Number(state.session?.state?.numInvestigators) || 0
+  const perInvestigator = !!(card.healthPerInvestigator ?? def.healthPerInvestigator)
+  const perPlayer = Number(card.healthPerPlayerBonus ?? def.healthPerPlayerBonus) || 0
+  const live = def.damageTaken != null && def.health != null
+  const total = live ? Number(def.health)
+    : players > 0 ? (perInvestigator ? printed * players : printed + perPlayer * players)
+    : printed
+  const current = live ? Math.max(0, total - (def.damageTaken || 0)) : null
+  const hint = perInvestigator ? '每人 ' + printed : perPlayer > 0 ? '每人 +' + perPlayer : ''
+  // 只有「印刷值 + 加值」正好等于当前上限时才把算式写进提示；
+  // 剧本另有修正时（如 02255 失去 +1/人），只保留数值，避免算式和总数对不上。
+  const expected = players > 0 ? (perInvestigator ? printed * players : printed + perPlayer * players) : printed
+  const parts = []
+  if (expected === total) {
+    if (perInvestigator) parts.push(`印刷 ${printed} 点 / 每名调查员`)
+    else if (perPlayer) parts.push(`印刷 ${printed} 点，每名调查员 +${perPlayer}`)
+    if (players > 0 && (perInvestigator || perPlayer)) parts.push(`共 ${players} 名调查员`)
+  }
+  return { total, current, hint, breakdown: parts.join('，') }
+}
+
+function enemyHealthRow(info) {
+  const { total, current, hint, breakdown } = info
   const fill = current == null ? 100 : total > 0 ? Math.min(100, current / total * 100) : 0
-  const desc = current == null ? `生命 ${total}` : `生命 ${current} / ${total}`
-  return h('div', { className: 'ah-enemy-health', 'aria-label': desc, title: desc },
+  const desc = (current == null ? `生命 ${total}` : `生命 ${current} / ${total}`) + (breakdown ? `（${breakdown}）` : '')
+  return h('div', { className: 'ah-enemy-health' + (hint ? ' has-hint' : ''), 'aria-label': desc, title: desc },
     tableIcon('health'), h('span', { className: 'ah-enemy-health-label' }, '生命'),
     h('span', { className: 'ah-enemy-health-value' }, current == null ? h('strong', {}, total) : [h('strong', {}, current), h('small', {}, '/ ' + total)]),
+    hint ? h('small', { className: 'ah-enemy-health-hint' }, hint) : null,
     h('span', { className: 'ah-enemy-health-track', 'aria-hidden': 'true' }, h('i', { style: { width: fill + '%' } })))
 }
 
@@ -375,14 +402,13 @@ function renderFullCard(def) {
   if (d.isEnemy) {
     const card = ahCardDefRaw(state.session, def.code)
     const printed = key => card[key] ?? def[key]
-    const runtime = def.damageTaken != null
     statRows.push(h('div', { className: 'ah-card-full-stats' },
       enemyStat('combat', 'fight', '战斗', enemyFightDisplay({ code: def.code, originalCode: def.originalCode, fight: printed('fight') }), enemyFightDisplay(def)),
       enemyStat('agility', 'evade', '躲避', printed('evade'), def.effectiveEvade ?? def.evade),
       enemyStat('health', 'damage', '伤害', printed('damage') || 0, def.damage || 0),
       enemyStat('sanity', 'horror', '恐惧', printed('horror') || 0, def.horror || 0)
     ))
-    statRows.push(enemyHealthRow(runtime ? Math.max(0, (def.health || 0) - (def.damageTaken || 0)) : null, def.health))
+    statRows.push(enemyHealthRow(enemyHealthInfo(card, def)))
     const enemyKws = []
     if (d.hunter) enemyKws.push('猎手')
     if (d.retaliate) enemyKws.push('反击')
@@ -812,7 +838,8 @@ function renderPendingChoice(s, humanTurn) {
   const items = choicePresentation(s.state)
   const reactions = reactionChoices(s.state)
   const names = { turnOrder: '准备开始行动', mulligan: '点选手牌换牌', commit: '拖入卡牌以投入检定',
-    discard: '点选或拖出要弃掉的牌', 'discard-hand': '选择弃牌', assetReplacement: '点选装备腾出槽位',
+    discard: '点选或拖出要弃掉的牌', 'discard-hand': '选择弃牌', card: '选择一张牌',
+    assetReplacement: '点选装备腾出槽位',
     'assign-damage': '点选角色或装备承受伤害', 'assign-horror': '点选角色或装备承受恐惧',
     prey: '选择交战角色 · 点击头像或将怪物拖向角色', target: '点选发光的目标', investigator: '点选角色', playerWindow: '点选装备使用能力', reaction: '点选卡牌发动反应' }
   const ordering = choice.kind === 'scry' && choice.options?.some(option => option.cardCodes?.length)

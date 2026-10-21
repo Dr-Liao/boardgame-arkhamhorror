@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createGameState, allCardDefs, applyMove } from '../src/engine/engine.js'
+import { createGameState, allCardDefs, applyMove, embeddedCardDefs, legalMoves } from '../src/engine/engine.js'
 import { isAutomaticReward } from '../src/cards/card-effects.js'
 import { allDescriptors, registeredCodes, registeredEntry } from '../src/engine/ability.js'
 import { requestChoice, resolveTransaction } from '../src/engine/resolution.js'
@@ -45,6 +45,46 @@ test('凡声明了天赋或免费能力的条目都带快速反应开关',()=>{
     if(wants&&def.hasReactionPrompt!==true) missing.push(code)
   }
   assert.deepEqual(missing,[])
+})
+
+test('剧情奖赏卡进牌组或场上后仍带快速反应开关',()=>{
+  // 02040 亨利·阿米蒂奇博士由敦威治幕间奖励加入牌组，目录可用性是 catalog-only；
+  // 但本局确实会抽到/打出它，state.cards 必须保留 hasReactionPrompt 与 reactionIds。
+  const st=createGameState({seed:'story-card-reaction',campaignId:'theDunwichLegacy',playerInvestigator:'02001'},[{seat:0,role:'human'}])
+  st.investigators[0].assets.push({id:'armitage',code:'02040'})
+  st.storyAssets=[{id:'story-armitage',code:'02040'}]
+  const defs=embeddedCardDefs(st,'theDunwichLegacy')
+  assert.equal(defs['02040']?.hasReactionPrompt,true)
+  assert.ok(defs['02040'].reactionIds.length)
+  // 没有在本局出现的 catalog-only 卡仍然不进入 state.cards，避免存档膨胀。
+  assert.equal(defs['05023'],undefined)
+  // 02217 的反应写在敦威治战役规则里、没有单卡描述子：显式开关清单要补上它。
+  assert.equal(allCardDefs({runtimeOnly:true,campaignId:'theDunwichLegacy'})['02217'].hasReactionPrompt,true)
+})
+
+test('剧情支援的抽牌反应提示同样受快速反应开关控制',()=>{
+  // 02040 的抽牌询问可能来自敦威治战役规则，也可能来自能力层窗口；两条路径都必须
+  // 声明 canSkip，并把选项映射回卡号，否则前端开关虽然显示，却既过滤不掉也不会自动跳过。
+  const st=createGameState({seed:'story-asset-skip',campaignId:'theDunwichLegacy',playerInvestigator:'02001',campaignHub:false},[{seat:0,role:'human'}])
+  for(let guard=0;st.pendingChoice;guard++){
+    assert.ok(guard<30)
+    const choice=st.pendingChoice
+    const optionId=['done','skip','0'].find(id=>choice.options.some(option=>option.id===id))||choice.options[0].id
+    applyMove(st,choice.seat,{action:'choose',choiceId:choice.id,optionId})
+  }
+  const inv=st.investigators[0]
+  inv.assets.push({id:'armitage',code:'02040',exhausted:false})
+  inv.hand=[];inv.deck=['01088','01088']
+  st.currentSeat=0;st.phase='investigation';st.legalMoves=legalMoves(st)
+  applyMove(st,0,{action:'draw'})
+  assert.ok(st.pendingChoice)
+  assert.equal(st.pendingChoice.canSkip,true)
+  const s={sessionId:'story-asset-skip',state:st}
+  assert.ok(reactionChoices(st).some(item=>item.code==='02040'))
+  setReactionEnabled(s.sessionId,0,['02040'],false)
+  assert.deepEqual(reactionView(s).state.legalMoves.map(move=>move.optionId),['skip'])
+  setReactionEnabled(s.sessionId,0,['02040'],true)
+  assert.equal(reactionView(s),s)
 })
 
 test('搬进描述子的反应仍能把窗口映射回卡号，开关才对它有作用',()=>{

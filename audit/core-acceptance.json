@@ -20,7 +20,7 @@
     "verified": 183,
     "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 373
+    "testsPassed": 374
   },
   "testFiles": [
     {
@@ -29,7 +29,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
-      "sha256": "cdef0454e8b07bf2d3bf93aca600974ca0f2fc54fe114e51c13d2da2ee0df5f9"
+      "sha256": "26963dc0fdefefa9fe2d761a12a41ba084b96c276115a22ad81ee05538e31f01"
     },
     {
       "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",
@@ -830,6 +830,10 @@
         {
           "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
           "test": "Core 01048 支援按印刷承伤容量被击败"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-special-acceptance.test.mjs",
+          "test": "Core 01048 里奥的行动加成不跨关卡残留，新关卡按本关阵容重算"
         }
       ]
     },

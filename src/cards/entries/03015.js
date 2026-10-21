@@ -26,7 +26,8 @@ export default {
         if (!candidates.length) return
         const targetId = api.choice({ kind: 'target', source: '03015', seat: inv.seat,
           prompt: '选择并横置一个有充能的法术支援。',
-          options: candidates.map(card => ({ id: card.id, label: api.cardName(card.code) })) })
+          // 同名支援可能有多张：标签带上各自剩余充能，AI/玩家才能挑最不心疼的那张。
+          options: candidates.map(card => ({ id: card.id, label: `${api.cardName(card.code)}（剩余 ${card.uses || 0} 充能）` })) })
         const card = candidates.find(item => item.id === targetId)
         if (!card) return
         api.exhaust(card)

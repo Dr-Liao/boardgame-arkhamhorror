@@ -1,7 +1,8 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { contentRegistry, registerContentBundle } from '../content/registered.js'
-import { createGameState, applyMove, validateMove, legalMoves, performTest, getStat } from '../src/engine/engine.js'
+import { createGameState, applyMove, validateMove, legalMoves, performTest, getStat, placeLocation, actionPreview, describeState, actObjectiveContext } from '../src/engine/engine.js'
+import { aiDecisionContext } from '../src/ai/ai-context.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { getAvailability, canSelectInvestigator } from '../src/deck/availability.js'
 import { effects } from '../content/packs/dunwichPlayer/effects.js'
@@ -223,6 +224,27 @@ test('D4 Club: bar and even-token gambling produce clues and record the drink', 
   assert.equal(s.scenarioFlags.cheated.length, 0)
 })
 
+test('D5 Club: the cheat reaction states its permanent elder-thing cost before choosing', () => {
+  const s = clubFixture('d5-cheat-cost')
+  s.chaosBag = ['0', '-2']
+  const execute = state => performTest(state, 0, 'intellect', 1)
+  resolveTransaction(s, 0, { action: 'clubTest' }, execute)
+  // 先过技能投入窗口，停在「是否作弊」这个反应上。
+  while (s.pendingChoice && s.pendingChoice.source !== 'clubCheat') {
+    const p = s.pendingChoice
+    const id = p.options.find(option => ['done', 'skip'].includes(option.id))?.id || p.options[0].id
+    resolveTransaction(s, p.seat, { action: 'choose', choiceId: p.id, optionId: id }, execute)
+  }
+  const choice = s.pendingChoice
+  assert.equal(choice?.source, 'clubCheat')
+  assert.match(choice.prompt, /永久加入 1 个古神标记/)
+  assert.match(choice.options.find(option => option.id === 'trigger').label, /永久 \+1 古神标记/)
+  // AI 的决策提示同时给出待决选择与合法选项，代价必须在两处都看得到。
+  const described = describeState(s, 0)
+  assert.match(described, /作弊：改为袋中另一标记的正面/)
+  assert.match(described, /永久 \+1 古神标记/)
+})
+
 test('D5 Club: cheating changes one token face per round and adds elder thing on resolution', () => {
   const s = clubFixture('d5-cheat')
   s.chaosBag = ['0', '-2']
@@ -358,6 +380,56 @@ test('D2 Museum: restricted hall is in bottom three; a paid exhibit action survi
   assert.equal(s.scenarioZones.exhibits.length, 5)
   assert.deepEqual(s.investigators.map(i => i.clues), [0, 0])
   assert.equal(s.investigators[0].actionsLeft, 2)
+})
+
+test('D2 Museum: act 2 targets the Restricted Hall and the AI sees Exhibit Hall subtitles plus entry costs', () => {
+  const s = chapterFixture('theMiskatonicMuseum')
+  assert.deepEqual(s.acts[1].objective, { type: 'enterLocation', location: L('02137'), scenarioAdvance: true })
+  s.actIndex = 1
+  placeLocation(s, L('02132'), [])
+  const exhibit = s.locations.find(loc => loc.id === L('02132'))
+  const hub = s.locations.find(loc => loc.id === L('02127'))
+  if (!hub.connections.includes(L('02132'))) hub.connections.push(L('02132'))
+  const inv = s.investigators[0]
+  inv.location = L('02127'); inv.actionsLeft = 3
+  s.currentSeat = 0
+  const hiddenMove = legalMoves(s, 0).find(item => item.action === 'move' && item.locationId === L('02132'))
+  assert.ok(hiddenMove)
+  assert.ok(!hiddenMove.label.includes('进入后'), '未揭示的展厅不能泄露背面强制效果')
+  assert.ok(!hiddenMove.label.includes('阿萨帕斯卡尔展区'), '未揭示的展厅不能泄露副标题')
+  exhibit.revealed = true; exhibit.clues = 0
+  const data = JSON.parse(aiDecisionContext(s, 0).split('\n')[2])
+  assert.equal(data.locations.find(loc => loc.id === L('02132')).subname, '阿萨帕斯卡尔展区')
+  assert.deepEqual(data.actObjective, {
+    type: 'enterLocation', locationId: L('02137'), locationName: '展厅（禁止入内）', onMap: false,
+    instruction: '进入「展厅（禁止入内）」推进场景；该地点尚未入场，需先探索或翻开。',
+  })
+  assert.match(describeState(s, 0), /展厅（阿萨帕斯卡尔展区）/)
+  const move = legalMoves(s, 0).find(item => item.action === 'move' && item.locationId === L('02132'))
+  assert.ok(move)
+  assert.match(move.label, /移动到「展厅（阿萨帕斯卡尔展区）」/)
+  assert.match(move.label, /进入后：失去所有剩余行动并立即结束回合/)
+  assert.equal(actionPreview(s, 0, move).entryNotice, '失去所有剩余行动并立即结束回合')
+  assert.equal(actObjectiveContext(s).onMap, false)
+  placeLocation(s, L('02137'), [])
+  assert.equal(actObjectiveContext(s).onMap, true)
+})
+
+test('D2 Museum: entering the Restricted Hall advances act 2 exactly once', () => {
+  const s = chapterFixture('theMiskatonicMuseum')
+  s.actIndex = 1
+  placeLocation(s, L('02137'), [])
+  const hall = s.locations.find(loc => loc.id === L('02137'))
+  hall.revealed = false; hall.clues = 0; hall.maxClues = 2 * s.numInvestigators
+  const hub = s.locations.find(loc => loc.id === L('02127'))
+  if (!hub.connections.includes(L('02137'))) hub.connections.push(L('02137'))
+  const inv = s.investigators[0]
+  inv.location = L('02127'); inv.actionsLeft = 3
+  s.currentSeat = 0
+  move(s, { action: 'move', locationId: L('02137') })
+  settle(s)
+  assert.equal(s.actIndex, 2)
+  assert.equal(s.locations.find(loc => loc.id === L('02137')).clues, 2 * s.numInvestigators)
 })
 
 test('D2 Hunting Horror returns from the void with growing stats and becomes massive after third return', () => {

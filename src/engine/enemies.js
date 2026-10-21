@@ -216,6 +216,11 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
 
 function engageEnemy(state, enemy, seat, events = []) {
   if (enemy.engagedSeat === seat) return
+  // 「潜行」等：直到你的回合结束，该敌人不能与你交战（效果体 preventEngageThisTurn 写入的标记）。
+  // 到期判定沿用引擎「本回合」的统一写法：同一 round 且轮到的还是同一个座位。
+  const prevented = enemy.preventEngageSeat
+  if (prevented && prevented.seat === seat && prevented.round === state.round
+    && prevented.turnSeat === state.currentSeat) return
   if (enemy.engagedSeat != null) {
     const old = state.investigators[enemy.engagedSeat]
     if (old) removeOne(old.engaged, enemy.id)

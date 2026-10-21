@@ -1,6 +1,7 @@
 import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
 import { INVESTIGATOR_ABILITIES } from '../cards/card-effects.js'
 import { implementationSummary } from '../cards/card-implementation.js'
+import { registeredEntry } from '../engine/ability.js'
 import { commitProfile } from '../engine/lifecycle.js'
 import { playablePool, matchesDeckOptions } from '../deck/deckbuilding.js'
 import { deckRules } from '../deck/deck-rules.js'
@@ -11,6 +12,8 @@ import { storyDecisionContext } from './ai-story.js'
 import { campaignAgentHints } from '../cards/campaign-view.js'
 
 const counts = codes => Object.fromEntries([...new Set(codes)].sort().map(code => [code, codes.filter(c => c === code).length]))
+const locationSubname = loc => loc.revealed === false ? ''
+  : String(loc.subname || ALL_CARDS[loc.code]?.subnameZh || ALL_CARDS[loc.originalCode]?.subnameZh || '').trim()
 const card = code => {
   const c = ALL_CARDS[code]
   if (!c) return { code }
@@ -61,8 +64,11 @@ export function aiDecisionContext(state, seat) {
     }
   } else {
     data.actObjective = actObjectiveContext(state)
-    data.locations = state.locations.map(loc => ({ id: loc.id, name: loc.name, clues: loc.clues,
-      revealed: Boolean(loc.revealed), locked: Boolean(loc.locked), connections: [...loc.connections] }))
+    data.locations = state.locations.map(loc => {
+      const subname = locationSubname(loc)
+      return { id: loc.id, name: loc.name, ...(subname ? { subname } : {}), clues: loc.clues,
+        revealed: Boolean(loc.revealed), locked: Boolean(loc.locked), connections: [...loc.connections] }
+    })
     data.hand = counts(inv.hand)
     if (record) {
       data.campaignDeck = counts(record.deck)
@@ -71,6 +77,18 @@ export function aiDecisionContext(state, seat) {
     data.remainingDeck = counts(inv.deck)
     data.discard = counts(inv.discard)
     data.assets = inv.assets.map(a => ({ ...a }))
+    // 威胁区域也摆在自己面前，属于公开状态。旧版只给 assets，AI 因此看不见弱点上的
+    // 充能/标记（例如「怒灵」03015）：卡面写着「少于 4 个充能」却无法判断当前数量，
+    // 于是会把所有法术支援的充能都移过去。requiredUses 取自条目级阈值（物理创伤线）。
+    data.threat = inv.threat.map(card => {
+      const row = { id: card.id, code: card.code }
+      if (card.uses != null) { row.uses = card.uses; row.usesType = card.usesType || 'charges' }
+      if (card.counters != null) row.counters = card.counters
+      if (card.exhausted) row.exhausted = true
+      const requiredUses = registeredEntry(card.code)?.physicalTraumaIfUsesBelow
+      if (Number.isFinite(requiredUses)) row.requiredUses = requiredUses
+      return row
+    })
     data.chaosBag = counts(state.chaosBag)
     data.revealedTokens = state.chaos?.revealed || []
     data.tokenMeanings = state.scenario?.tokenMeanings?.[state.difficulty]

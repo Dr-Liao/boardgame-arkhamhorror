@@ -144,7 +144,7 @@ function doFight(state, seat, opts, events, noSpend) {
     .reduce((sum, entry) => sum + (registeredEntry(entry.code)?.attachedSkillBonus || 0), 0)
   return performTest(state, seat, skill, difficulty, { source: { label: '攻击', enemyId: enemy.id, name: enemy.name, code: enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code }, baseValue: opts.baseValue,
     extraChaosChoices: opts.extraChaosChoices || 0,
-    skillBonus: (opts.combatBonus || 0) + clueCombat + (opts.addSkill ? getStat(state, inv, opts.addSkill) : 0), resolve: r => {
+    skillBonus: (opts.combatBonus || 0) + clueCombat + (opts.addSkill ? getStat(state, inv, opts.addSkill) : 0) + trustedBonus, resolve: r => {
     // Phase 5（5a-16）：敌人卡面的特殊攻击规则在 ENEMY_RULE_FLAGS 里。
     if (enemyRuleFlags(enemy.code).destroysMeleeWeapon && !enemyTextBlanked(state, enemy) && weapon && cardDef(weapon.code)?.traits?.includes('Melee')) {
       leaveAsset(state, inv, weapon, events); inv.discard.push(weapon.code)
@@ -331,9 +331,13 @@ function doEvade(state, seat, opts, events, noSpend) {
   // 「战壕大衣」等支援在躲避尝试期间提供敏捷加值。
   const evadeAssetBonus = (inv.assets || []).reduce((sum, item) =>
     sum + (assetEffect(inv, item)?.passive?.evadeBonus || 0), 0)
-  const evadeSourceCode = inv.assets.find(asset => asset.id === opts.assetId)?.code || null
+  // 「值得信赖」：结算宿主支援的触发能力时每项技能 +1。
+  const trustedBonus = (inv.assets.find(item => item.id === opts.assetId)?.attachments || [])
+    .reduce((sum, entry) => sum + (registeredEntry(entry.code)?.attachedSkillBonus || 0), 0)
+  // 效果来源卡号：支援能力（assetId）或事件/卡面传入的 sourceCode（effects.js 透传 effect.code）。
+  const evadeSourceCode = inv.assets.find(asset => asset.id === opts.assetId)?.code || opts.sourceCode || null
   return performTest(state, seat, evadeSkill, evadeBase, { source: { label: '躲避', enemyId: enemy.id, name: enemy.name, code: enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code }, baseValue: opts.baseValue,
-    skillBonus: (opts.bonus || 0) + evadeAssetBonus + (opts.addSkill ? getStat(state, inv, opts.addSkill) : 0),
+    skillBonus: (opts.bonus || 0) + evadeAssetBonus + trustedBonus + (opts.addSkill ? getStat(state, inv, opts.addSkill) : 0),
     doubleNegative: Boolean(enemyRuleFlags(enemy.code).doubleNegative || enemyRuleFlags(enemy.ruleId).doubleNegative) && !enemyTextBlanked(state, enemy), resolve: r => {
     if (opts.symbolActionLoss && r.drawn.some(token => ['skull', 'cultist', 'tablet', 'elderthing', 'autofail'].includes(token))) {
       inv.actionsLeft = Math.max(0, inv.actionsLeft - 1)
@@ -365,13 +369,15 @@ function doEvade(state, seat, opts, events, noSpend) {
       if (opts.moveAfterEvade) {
         const destinations = investigatorMoveDestinations(state, seat, {})
         if (destinations.length) {
-          const answer = requestChoice(state, { kind: 'move', source: opts.sourceCode || inv.assets.find(asset => asset.id === opts.assetId)?.code || null, seat, canSkip: true,
+          const answer = requestChoice(state, { kind: 'move', source: evadeSourceCode, seat, canSkip: true,
             prompt: '是否移动到连接地点？',
             options: [{ id: 'skip', label: '留在原地' }, ...destinations.map(id => ({ id, label: locName(state, id) }))] })
           if (answer !== 'skip') relocateInvestigator(state, seat, answer, events)
         }
       }
-      info(state, events, `💨 ${inv.name} 躲避成功（${SKILL_NAMES[evadeSkill]} ${r.value} vs ${evadeBase}），「${enemy.name}」被横置并脱离交战。`)
+      // 「潜行」等：成功但不横置敌人时，日志不能写成"被横置"。
+      const exhaustText = opts.noExhaustOnSuccess ? '' : '被横置并'
+      info(state, events, `💨 ${inv.name} 躲避成功（${SKILL_NAMES[evadeSkill]} ${r.value} vs ${evadeBase}），「${enemy.name}」${exhaustText}脱离交战。`)
       triggerReaction(state, seat, 'evadeSuccess', events, { enemy, location: inv.location })
       reactionWindow(state, 'evadeSuccess', {
         when: 'evadeSuccess', seat, location: inv.location, enemy,
@@ -387,7 +393,7 @@ function doEvade(state, seat, opts, events, noSpend) {
         const current = state.locations.find(loc => loc.id === enemy.location)
         const destinations = (current?.connections || []).filter(id => locationExists(state, id))
         if (destinations.length) {
-          const id = destinations.length === 1 ? destinations[0] : requestChoice(state, { kind: 'move', source: effect.code, seat,
+          const id = destinations.length === 1 ? destinations[0] : requestChoice(state, { kind: 'move', source: evadeSourceCode, seat,
             prompt: '选择诱饵与换位将敌人移动到的连接地点。', options: destinations.map(id => ({ id, label: locName(state, id) })) })
           relocateEnemy(state, enemy, id, events)
         }
@@ -423,7 +429,7 @@ function doEvade(state, seat, opts, events, noSpend) {
       const extra = state.enemies.filter(other => other.id !== enemy.id && other.location === inv.location
         && enemyEvadeValue(state, other, inv) <= Math.min(successBy, opts.evadeSecondUpTo))
       if (extra.length) {
-        const chosen = extra.length === 1 ? extra[0].id : requestChoice(state, { kind: 'target', source: opts.sourceCode || evadeSourceCode, seat,
+        const chosen = extra.length === 1 ? extra[0].id : requestChoice(state, { kind: 'target', source: evadeSourceCode, seat,
           prompt: `再躲避一个躲避值不超过 ${successBy} 的敌人。`, options: extra.map(other => ({ id: other.id, label: other.name })) })
         const second = extra.find(item => item.id === chosen)
         if (second) {

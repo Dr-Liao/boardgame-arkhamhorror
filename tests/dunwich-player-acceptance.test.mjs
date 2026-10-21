@@ -281,6 +281,12 @@ function engineSurfaceProbe(code) {
       s.enemies[0].engagedSeat = null
       inv.engaged = []
     }
+    // 02108 探路者：卡面要求「未与任何敌人交战」，探针默认塞了一个交战敌人，
+    // 先让它横置脱离（否则能力本就不该出现在合法行动里）。
+    if (effect.abilities?.[0]?.effect?.requiresNoEnemies) {
+      for (const probeEnemy of s.enemies) { probeEnemy.engagedSeat = null; probeEnemy.exhausted = true }
+      inv.engaged = []
+    }
     if (effect.uses != null) assert.equal(a.uses, effect.uses)
     if (effect.passive?.stats) {
       for (const [skill, amount] of Object.entries(effect.passive.stats)) {

@@ -35,6 +35,22 @@ function locName(state, id) {
   return l ? l.name : id
 }
 
+// 副标题是地点名的一部分（「展厅」+「禁止入内」/「阿萨帕斯卡尔展区」）。
+// 只给 AI/描述层用；日志里的 locName 保持原名，避免所有旧文案一起变长。
+function locSubname(loc, includeHidden = false) {
+  if (!loc || (!includeHidden && loc.revealed === false)) return ''
+  const card = ALL_CARDS[loc.code] || ALL_CARDS[loc.originalCode]
+  return String(loc.subname || card?.subnameZh || card?.subname || '').trim()
+}
+
+function locLabel(state, id, options = {}) {
+  const loc = state.locations.find((x) => x.id === id) || state.scenario?.locations?.[id]
+  if (!loc) return id
+  const name = loc.name || id
+  const subname = locSubname(loc, options.includeHidden)
+  return subname && !name.includes(subname) ? `${name}（${subname}）` : name
+}
+
 function placeLocation(state, id, events, seat = null) {
   if (locationExists(state, id)) return
   const base = state.scenario.locations[id]
@@ -208,5 +224,5 @@ function awardLocationVictory(state, loc, events) {
   }
 }
 
-  return { locName, placeLocation, flipScenarioLocation, revealLocation, removeLocation, syncClues, placeCluesOnLocation, notifyCluesRemoved, discoverClueAt, awardLocationVictory }
+  return { locName, locLabel, placeLocation, flipScenarioLocation, revealLocation, removeLocation, syncClues, placeCluesOnLocation, notifyCluesRemoved, discoverClueAt, awardLocationVictory }
 }

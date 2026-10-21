@@ -19,11 +19,11 @@ export default {
       kind: 'action', label: '花 1 子弹攻击（目标横置时战斗 +2、伤害 +1）',
       cost: { uses: 1 },
       target: { kind: 'enemy' },
-      resolve: ({ inv, target, api }) => {
+      resolve: ({ inv, target, api, source }) => {
         const enemy = target?.entity
         if (!enemy) return api.info('这里没有可攻击的敌人。')
         const bonus = enemy.exhausted ? { combatBonus: 2, damageBonus: 1 } : {}
-        api.fight(inv.seat, enemy.id, { ...bonus, assetId: '07025' })
+        api.fight(inv.seat, enemy.id, { ...bonus, assetId: source?.id })
       },
     },
   ],

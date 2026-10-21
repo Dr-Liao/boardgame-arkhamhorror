@@ -327,18 +327,29 @@ test('C1 Yorick plays an asset from discard after defeating an enemy and the cho
   })
   const investigator = state.investigators[0]
   investigator.combat = 8
-  investigator.discard = ['01016']
+  // 第一张不是可打出的支援：选项 id 必须是弃牌堆真实下标（1），不能按候选数组下标（0）。
+  investigator.discard = ['01088', '01016']
   state.chaosBag = ['0']
   const target = enemy(state, { id: 'yorick-target', fight: 1, health: 1 })
   move(state, { action: 'fight', enemyId: target.id })
   const restored = JSON.parse(JSON.stringify(state))
-  const choose = pending => pending.source === 'yorickAsset'
-    ? (pending.kind === 'reaction' ? 'trigger' : '0') : null
+  let projected = null
+  const choose = (pending, current) => {
+    if (pending.source !== 'yorickAsset') return null
+    if (pending.kind === 'reaction') return 'trigger'
+    projected ??= viewState(current, 0)
+    return pending.options.find(option => option.cardCode === '01016')?.id ?? null
+  }
   settle(state, choose)
   settle(restored, choose)
   assert.deepEqual(restored, state)
+  assert.equal(projected.pendingChoice.kind, 'card')
+  assert.equal(projected.pendingChoice.options.find(option => option.cardCode === '01016')?.id, '1')
+  assert.equal(projected.pendingChoice.options.find(option => option.id === '1')?.cardCode, '01016')
   assert.equal(state.investigators[0].assets.some(card => card.code === '01016'), true)
   assert.equal(state.investigators[0].discard.includes('01016'), false)
+  assert.equal(state.investigators[0].discard.includes('01088'), true)
+  assert.equal(state.investigators[0].hand.includes('01016'), false)
 })
 
 test('C1 Yorick elder sign returns any discard card only on success', () => {
@@ -350,7 +361,14 @@ test('C1 Yorick elder sign returns any discard card only on success', () => {
   const execute = current => performTest(current, 0, 'combat', 6, {
     resolve: result => { current.testResult = result },
   })
-  resolveTest(state, execute, pending => pending.source === 'yorickElderSign' ? '0' : null)
+  let projected = null
+  resolveTest(state, execute, pending => {
+    if (pending.source !== 'yorickElderSign') return null
+    projected ??= viewState(state, 0)
+    return '0'
+  })
+  assert.equal(projected.pendingChoice.kind, 'card')
+  assert.equal(projected.pendingChoice.options.find(option => option.id === '0')?.cardCode, '01088')
   assert.equal(state.testResult.success, true)
   assert.equal(state.testResult.value, 6)
   assert.equal(state.investigators[0].hand.includes('01088'), true)

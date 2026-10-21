@@ -20,22 +20,22 @@
     "basicWeaknesses": 3,
     "verified": 95,
     "unverified": 0,
-    "testsPassed": 106
+    "testsPassed": 109
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
-      "sha256": "a9aa1dae8979a41ea05b2f368e219b12214a5eb1d0f77973830e5f9c5a028d2d"
+      "sha256": "e233954205acef9ecf9533b64469abfe874cb54cb96762d911ca993d54679a7c"
     }
   ],
   "implementationFiles": [
     {
       "file": "games/arkhamhorror/content/packs/carcosaPlayer/effects.js",
-      "sha256": "57c2e0ad2a099b714c07abfaba0bcad2b87a99f7eed920c789b622bf058f665a"
+      "sha256": "b0251ccffdd366ac59eeefa033534e64f089a0ce3bfa7fe1500f5cabfe7c1c60"
     },
     {
       "file": "games/arkhamhorror/content/packs/carcosaPlayer/manifest.js",
-      "sha256": "3354e708212acad19d06c935feca6acd2d22c8b0c3a41c324b2a159b19529d2f"
+      "sha256": "208ffb453772c450978bb7d4769341a5475494c75641d56ab9032e92455c8de9"
     },
     {
       "file": "games/arkhamhorror/src/deck/availability.js",
@@ -43,11 +43,11 @@
     },
     {
       "file": "games/arkhamhorror/src/engine/effects.js",
-      "sha256": "17b78fffb0c21199b4b8b265d4ac478f37679d1a03ffc54ef6f87fd6d07182cd"
+      "sha256": "83888e0ce85d5c844dc336aedb0475b3fc89401eb36d477a4685686a2e3d8889"
     },
     {
       "file": "games/arkhamhorror/src/engine/engine.js",
-      "sha256": "253300b2f050f55c8c87f7747c1896d755ed95ffb7cd6eeb66387ce000c66208"
+      "sha256": "56e4725b4567f4877400af2e6b5ee86e36ab9b438ec738af89efdeca0fb75d94"
     }
   ],
   "entries": [
@@ -183,6 +183,10 @@
         {
           "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
           "test": "Carcosa 03028 潜行 主要印刷效果契约可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03028 潜行 躲避值 -2、成功不横置且本回合不能与你交战"
         }
       ]
     },
@@ -843,6 +847,10 @@
         {
           "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
           "test": "Carcosa 03192 古代雕文 主要印刷效果契约可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03192 古代雕文 每超过难度 2 点额外发现 1 条线索"
         }
       ]
     },
@@ -858,6 +866,10 @@
         {
           "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
           "test": "Carcosa 03193 古代雕文 主要印刷效果契约可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
+          "test": "Carcosa 03193 古代雕文 成功后自动躲避一个交战敌人"
         }
       ]
     },

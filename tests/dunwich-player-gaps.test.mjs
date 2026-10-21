@@ -1,11 +1,12 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { fixture, move, settle, answer, asset, enemy, play, use, validateMove, decisionSeat } from './core-fixture.mjs'
+import { fixture, move, settle, answer, asset, enemy, play, use, validateMove, legalMoves, decisionSeat } from './core-fixture.mjs'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { performTest, getStat, createGameState } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { campaignCardChange } from '../src/campaign/campaign.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
+import { viewState } from '../src/integration/observation.js'
 
 // Behavioral acceptance for the Dunwich player cards that previously had only a
 // structural contract. Every test drives the public move/test pipeline so the
@@ -58,6 +59,8 @@ test(title('02025'), () => {
 test(title('02028'), () => {
   const s = fixture()
   s.investigators[0].willpower = 8
+  // 卡面「本次调查不使用智力，改为使用意志」：智力压到 0 也必须检定成功。
+  s.investigators[0].intellect = 0
   s.locations[0].shroud = 1
   s.locations[0].clues = 3
   const a = asset(s, '02028')
@@ -65,6 +68,7 @@ test(title('02028'), () => {
   use(s, a)
   settle(s)
   assert.equal(s.investigators[0].clues, 2)
+  assert.ok(s.log.some(line => String(line).includes('意志')), '本次调查应使用意志检定')
   // Losing all remaining actions ends the turn (the next turn starts with 3).
   assert.equal(s.investigators[0].actionsLeft, 3)
 })
@@ -94,6 +98,22 @@ test(title('02032'), () => {
   settle(s, p => p.kind === 'resource' ? '3' : null)
   assert.equal(s.investigators[0].resources, 7)
   assert.equal(s.investigators[0].assets.find(item => item.id === a.id).code, '02032')
+})
+
+test(title('02034') + '（目的地不止一个时仍可选择移动）', () => {
+  const s = fixture()
+  const inv = s.investigators[0]
+  inv.agility = 8
+  const here = s.locations.find(item => item.id === inv.location)
+  s.locations.push({ id: 'gap-a', name: '岔路 A', revealed: true, clues: 0, connections: [here.id] })
+  s.locations.push({ id: 'gap-b', name: '岔路 B', revealed: true, clues: 0, connections: [here.id] })
+  here.connections = ['gap-a', 'gap-b']
+  const target = enemy(s, { evade: 1, engagedSeat: 0 })
+  s.chaosBag = ['0']
+  play(s, '02034')
+  settle(s, p => p.kind === 'move' ? 'gap-b' : null)
+  // 以前这里会抛 "effect is not defined"，整次出牌直接崩掉。
+  assert.equal(s.enemies.find(item => item.id === target.id).location, 'gap-b')
 })
 
 test(title('02036'), () => {
@@ -147,6 +167,17 @@ test(title('02108'), () => {
   settle(s, p => p.kind === 'location' ? 'next' : null)
   assert.equal(s.investigators[0].location, 'next')
   assert.equal(s.investigators[0].assets.find(item => item.id === a.id).exhausted, true)
+})
+
+test(title('02108') + '（与敌人交战时不能用）', () => {
+  const s = fixture()
+  const a = asset(s, '02108')
+  s.locations[0].connections = ['next']
+  s.locations.push({ id: 'next', name: '相邻', revealed: true, clues: 0, connections: [s.locations[0].id] })
+  enemy(s, { engagedSeat: 0 })
+  // 卡面条件：未与任何敌人交战才能这样移动。
+  assert.ok(validateMove(s, 0, { action: 'ability', assetId: a.id, abilityIndex: 0 }))
+  assert.ok(!legalMoves(s).some(item => item.action === 'ability' && item.assetId === a.id))
 })
 
 test(title('02110'), () => {
@@ -485,6 +516,8 @@ test(title('02232'), () => {
 test(title('02233'), () => {
   const s = fixture()
   s.investigators[0].willpower = 8
+  // 同样改用意志检定；+2 意志也应加在意志上而不是智力上。
+  s.investigators[0].intellect = 0
   s.locations[0].shroud = 1
   s.locations[0].clues = 4
   const a = asset(s, '02233')
@@ -492,6 +525,7 @@ test(title('02233'), () => {
   use(s, a)
   settle(s)
   assert.equal(s.investigators[0].clues, 3)
+  assert.ok(s.log.some(line => /意志 10 /.test(String(line))), '本次调查应使用意志检定并获得 +2')
   assert.equal(s.investigators[0].actionsLeft, 3)
 })
 
@@ -685,4 +719,27 @@ test(title('02309'), () => {
     return null
   })
   assert.ok(s.investigators[0].hand.includes('01090'))
+})
+
+test('幕间奖励的剧情支援在关卡开始时带上槽位定义（02040 画在盟友槽，而不是其他资产）', () => {
+  // 复现：敦威治幕间把 02040 加入持久牌组后，state.cards 是开局时的快照，里面没有这张卡；
+  // 前端读不到 slots 就把占着盟友槽的支援画进「其他资产」，再打盟友却被要求弃牌。
+  const s = createGameState({ campaignHub: true, campaignId: 'theDunwichLegacy', seed: 'story-card-slot-defs' }, [{ seat: 0, role: 'human' }])
+  move(s, { action: 'hubSelectScenario', scenarioId: 'extracurricularActivity' })
+  move(s, { action: 'hubGoSetup' })
+  move(s, { action: 'hubSelectInvestigator', code: '01001' })
+  move(s, { action: 'hubAutoDeck' })
+  campaignCardChange(s.campaign, 0, '02040', 'add', 'gap-test')
+  move(s, { action: 'hubDoneSeat' })
+  move(s, { action: 'hubBeginScenario' })
+  settle(s)
+  assert.ok([...s.investigators[0].deck, ...s.investigators[0].hand].includes('02040'))
+  assert.deepEqual(s.cards['02040']?.slots, ['Ally'])
+  // 旧对局（存档里还没有这张卡的定义）经视图投影也要补上；补回的是派生展示表，不是视图私有。
+  delete s.cards['02040']
+  s.investigators[0].assets.push({ id: 'armitage', code: '02040', exhausted: false })
+  const view = viewState(s, 0)
+  assert.deepEqual(view.cards['02040']?.slots, ['Ally'])
+  assert.deepEqual(s.cards['02040']?.slots, ['Ally'])
+  assert.notEqual(view.cards['02040'], s.cards['02040'])
 })

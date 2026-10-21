@@ -86,6 +86,11 @@ function investigatorMoveDestinations(state, seat, effect) {
 
 function moveInvestigatorTo(state, seat, effect, events) {
   const inv = state.investigators[seat]
+  // 卡面条件「如果你未与任何敌人交战」（02108 探路者）：由效果体的 requiresNoEnemies 声明。
+  if (effect.requiresNoEnemies && state.enemies.some(enemy => enemy.engagedSeat === seat && !enemy.defeated)) {
+    info(state, events, `${inv.name} 正与敌人交战，不能使用这项移动。`)
+    return
+  }
   const destinations = investigatorMoveDestinations(state, seat, effect)
   if (!destinations.length) { info(state, events, '没有可移动的连接地点。'); return }
   const id = effect.destination || (destinations.length === 1 ? destinations[0] : requestChoice(state, {
@@ -184,9 +189,11 @@ function relocateInvestigator(state, seat, locationId, events, message = null) {
   if (!inv.defeated && !inv.resigned && inv.location === locationId) {
     triggerReaction(state, seat, 'move', events, { when: 'move', seat, location: locationId })
   }
-  // 地底噬魔场景 2 目标：进入仪式地。
+  // 地底噬魔场景 2 目标：进入仪式地。关卡自带 checkObjectives 的剧本用 scenarioAdvance
+  // 标记「推进由剧本结算」，避免在移动结算中途提前触发 actReveal。
   const act = state.acts[state.actIndex]
-  if (act && act.objective && act.objective.type === 'enterLocation' && locationId === act.objective.location) {
+  if (act && act.objective && act.objective.type === 'enterLocation'
+    && !act.objective.scenarioAdvance && locationId === act.objective.location) {
     advanceAct(state, events)
   }
   }

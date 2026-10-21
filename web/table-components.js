@@ -44,6 +44,12 @@ export function cardAttachmentReferences(card = {}) {
   if (card.searchingForIzzieSeat != null && !hasCode('02011')) references.push({ code: '02011', ownerSeat: card.searchingForIzzieSeat })
   if (card.bindMonster?.code && !hasCode(card.bindMonster.code)) references.push(card.bindMonster)
   if (card.snareTrap?.code && !hasCode(card.snareTrap.code)) references.push(card.snareTrap)
+  // The Miskatonic Museum tracks Shadow-spawned as a flag plus a resource
+  // count instead of an attachment array; derive the card so it and its
+  // resource tokens stay visible.
+  if (card.shadowSpawned && !hasCode('02142')) {
+    references.push({ code: '02142', originalCode: '02142', resources: card.shadowResources || 0 })
+  }
   return references
 }
 

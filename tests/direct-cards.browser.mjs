@@ -911,6 +911,10 @@ test('真实规则：拖动支援牌到槽位后才扣费、入场，右键仍�
   await page.goto('/index.html'); await page.locator('.bg-card').filter({hasText:'诡镇奇谈'}).click()
   let response=page.waitForResponse('**/api/start'); await page.getByRole('button',{name:'开始新游戏'}).click()
   let session=(await (await response).json()).session
+  // 开场「故事导入 → 密谋揭示」先于换牌：先跳过故事幕，再逐项回答换牌。
+  const skipScene=page.getByRole('button',{name:'跳过演出'})
+  await expect(skipScene).toBeVisible({timeout:10000})
+  await skipScene.click()
   for(let i=0;session.state.pendingChoice;i++) {
     expect(i).toBeLessThan(15)
     const m=session.state.legalMoves.find(m=>['done','skip'].includes(m.optionId))||session.state.legalMoves[0]
@@ -918,10 +922,6 @@ test('真实规则：拖动支援牌到槽位后才扣费、入场，右键仍�
     await page.locator(`[data-option-id="${m.optionId}"]:visible`).first().click()
     session=(await (await response).json()).session
   }
-  // P1 起开场故事要等换牌结束；换牌走完后再关故事幕。
-  const skipScene=page.getByRole('button',{name:'跳过演出'})
-  await expect(skipScene).toBeVisible({timeout:10000})
-  await skipScene.click()
   const m=session.state.legalMoves.find(m=>m.action==='play'&&session.state.cards[m.cardId]?.type==='asset')
   expect(m).toBeTruthy()
   const card=page.locator(`.ah-hand-card[data-card-code="${m.cardId}"]`).first()
@@ -937,6 +937,45 @@ test('真实规则：拖动支援牌到槽位后才扣费、入场，右键仍�
   expect(after.assets.some(a=>a.code===m.cardId)).toBe(true)
   expect(after.resources).toBeLessThanOrEqual(before.resources)
   await expect(page.locator(`.ah-equipment-battlefield [data-card-code="${m.cardId}"]`)).toBeVisible()
+})
+test('从弃牌堆选牌显示真实候选卡面，不误选手牌，并在桌面与移动端可用', async ({ page }) => {
+  const f = await fixture(page, { players: 1 })
+  const setCardChoice = st => {
+    st.investigators[0].discard = ['01088', '01016']
+    st.investigators[0].hand = ['01087', '01088', '01025', '01087']
+    st.pendingChoice = { id: `yorick-card-${st.revision}`, kind: 'card', seat: 0, source: 'yorickAsset',
+      prompt: '选择弃牌堆中的一个支援，支付费用并打出。', canSkip: true, options: [
+        { id: 'skip', label: '不打出支援' },
+        { id: '1', cardCode: '01016', label: '.45自动手枪（4资源）' },
+      ] }
+    st.legalMoves = [{ action: 'choose', choiceId: st.pendingChoice.id, optionId: 'skip', label: '不打出支援' },
+      { action: 'choose', choiceId: st.pendingChoice.id, optionId: '1', label: '.45自动手枪（4资源）' }]
+  }
+  const offer = page.locator('.ah-visual-choices .ah-visual-option[data-option-id="1"]')
+  setCardChoice(f.session.state)
+  await f.update(() => {})
+  await expect(page.locator('.ah-direct-instruction')).toContainText('选择一张牌')
+  await expect(page.locator('.ah-direct-instruction')).toContainText('选择弃牌堆中的一个支援')
+  await expect(offer).toHaveClass(/has-art/)
+  await expect(offer.locator('.ah-table-art')).toHaveAttribute('data-art-code', '01016')
+  expect(await page.locator('.ah-hand-card[data-option-id]').count()).toBe(0)
+  expect(await page.locator('.ah-hand-card.ah-direct-choice').count()).toBe(0)
+  mkdirSync(output, { recursive: true })
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  await page.screenshot({ path: output + '/discard-pile-1440.png', animations: 'disabled' })
+  await offer.click()
+  await expect.poll(() => f.submitted.length).toBe(1)
+  expect(f.submitted[0].move).toMatchObject({ action: 'choose', optionId: '1' })
+
+  setCardChoice(f.session.state)
+  await f.update(() => {})
+  await page.setViewportSize({ width: 390, height: 844 })
+  await expect(offer).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  await page.screenshot({ path: output + '/discard-pile-390.png', animations: 'disabled' })
+  await offer.click()
+  await expect.poll(() => f.submitted.length).toBe(2)
+  expect(f.submitted[1].move).toMatchObject({ action: 'choose', optionId: '1' })
 })
 test('主动拖入怪物交战，猎物并列时角色选项常显且支持拖向队友',async({page})=>{
   await page.setViewportSize({width:1440,height:1000})

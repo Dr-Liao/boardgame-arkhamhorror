@@ -26,7 +26,7 @@ export function blanksTraits(code) {
 }
 
 // 卡号级规则数据：即使没有 reactions 数据也需要前端「有反应提示」的卡（原 engine.js 数组）。
-export const EXPLICIT_REACTION_PROMPT = Object.freeze(['01007', '01071', '01082'])
+export const EXPLICIT_REACTION_PROMPT = Object.freeze(['01007', '01071', '01082', '02217'])
 
 export function hasExplicitReactionPrompt(code) {
   return EXPLICIT_REACTION_PROMPT.includes(code)

@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, move, answer, settle, asset, enemy, play, use, validateMove } from './core-fixture.mjs'
-import { getStat } from '../src/engine/engine.js'
+import { getStat, prepareInvestigator } from '../src/engine/engine.js'
 import { SCENARIOS } from '../src/cards/scenarios-data.js'
 
 for (const [code, skills] of [['01017',['willpower','combat']],['01034',['intellect','agility']],['01049',['combat','agility']],['01062',['willpower','intellect']],['01077',['willpower','agility']]]) {
@@ -59,6 +59,19 @@ test('Core 01038 屏障保留每张附属实例，任何调查员离开时全部
 test('Core 01048 01054 里奥不同等级仍共享唯一限制',()=>{
   const s=fixture(); asset(s,'01048'); s.investigators[0].hand=['01054']
   assert.ok(validateMove(s,0,{action:'play',cardId:'01054'}))
+})
+
+test('Core 01048 里奥的行动加成不跨关卡残留，新关卡按本关阵容重算',()=>{
+  // 上一关带着里奥·德·卢卡结束：新关卡准备调查员时资产会被清空，
+  // 额外行动必须随之消失，否则本关再打出第二张就会变成 +2（实际 5 次行动）。
+  const s=fixture('04001')
+  const inv=s.investigators[0]
+  inv.assets.push({id:'leo-de-luca',code:'01048',exhausted:false})
+  inv.actionsLeft=4
+  prepareInvestigator(s,inv,[],s.locations[0].id)
+  const after=s.investigators[0]
+  assert.equal(after.assets.some(a=>a.code==='01048'),false,'旧关卡资产应当已清空')
+  assert.equal(after.actionsLeft,3,'上一关的额外行动不能带进新关卡')
 })
 
 for (const [code,resources,cards,clues] of [['01088',3,0,0],['01057',10,0,0],['01043',0,3,0],['01037',0,0,1]]) {

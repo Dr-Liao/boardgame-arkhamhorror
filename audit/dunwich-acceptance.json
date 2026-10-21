@@ -19,16 +19,16 @@
     "verified": 333,
     "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 384
+    "testsPassed": 387
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
-      "sha256": "7667d0cc09d6065d2250968b8bbf9343e9d6c3e237bb899950b8e5a010bb8527"
+      "sha256": "fa22638a9cb345a70033e7e25befe72028574945dc8e97a0d380102519170123"
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
-      "sha256": "5e936892e230e16dd734db265a9f9af20e6da006fcad07dc019b1c7292c56d37"
+      "sha256": "570d74fef27a2317f8d9b290a07e700fa081a8904356a3e18170fae44d53baa6"
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
@@ -461,6 +461,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
           "test": "Dunwich 02034 偷梁换柱 严格验收主要印刷效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02034 偷梁换柱 印刷效果行为验收（目的地不止一个时仍可选择移动）"
         }
       ]
     },
@@ -1365,6 +1369,10 @@
         {
           "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
           "test": "Dunwich 02108 探路者 印刷效果行为验收"
+        },
+        {
+          "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
+          "test": "Dunwich 02108 探路者 印刷效果行为验收（与敌人交战时不能用）"
         }
       ]
     },

@@ -267,6 +267,40 @@ function executeDescriptor(state, { inv, source, descriptor, context = {}, event
   // 事件卡（fromHand）与窗口触发的描述子沿用 Phase 2 起的短文案；
   // Phase 5（5c-8）：反应窗口打出的快速事件已有「快速打出」日志，这里静默。
   if (!silent) info(state, events, `✨ ${inv.name} 使用「${cardName(descriptor.code)}」${legacyAbilityLog ? '的能力' : ''}：${descriptor.label}。`)
+  const baseApi = abilityApi(state, events)
+  const sourceAsset = source && (inv.assets || []).find(item => item.id === source.id)
+  // 「值得信赖」等：描述子 resolve 里直接发起的检定也要算上宿主附属的技能加成。
+  const attachedSkillBonus = sourceAsset
+    ? (sourceAsset.attachments || []).reduce((sum, attachment) =>
+      sum + (registeredEntry(attachment.code)?.attachedSkillBonus || 0), 0)
+    : 0
+  const api = sourceAsset ? {
+    ...baseApi,
+    // 检定类 API：宿主附属的 +1 直接加到本次检定上。
+    ...(attachedSkillBonus ? {
+      test: (seat, skill, difficulty, options = {}) => baseApi.test(seat, skill, difficulty, {
+        ...options,
+        skillBonus: (options.skillBonus || 0) + (seat === inv.seat ? attachedSkillBonus : 0),
+      }),
+      startTest: spec => {
+        const seat = spec.seat ?? state.currentSeat
+        return baseApi.startTest({
+          ...spec,
+          skillBonus: (spec.skillBonus || 0) + (seat === inv.seat ? attachedSkillBonus : 0),
+        })
+      },
+    } : {}),
+    // 动作类 API：把来源支援实例交给主流程，武器特性、附属加成与攻击展示都读同一份 assetId。
+    fight: (seat, enemyId, options = {}) => baseApi.fight(seat, enemyId, options.assetId != null
+      ? options
+      : { ...options, assetId: sourceAsset.id }),
+    investigate: (seat, options = {}) => baseApi.investigate(seat, options.assetId != null
+      ? options
+      : { ...options, assetId: sourceAsset.id }),
+    evade: (seat, options = {}) => baseApi.evade(seat, options.assetId != null
+      ? options
+      : { ...options, assetId: sourceAsset.id }),
+  } : baseApi
   const ctx = {
     state, seat: inv.seat, inv,
     source: source || { code: descriptor.code },
@@ -280,7 +314,7 @@ function executeDescriptor(state, { inv, source, descriptor, context = {}, event
     // 这里还原成实体（enemy / investigator / location / asset / cardInHand）。
     targetId: context?.targetId ?? null,
     target: resolveTarget(state, inv, descriptor.target, context?.targetId, { source, windowId, context }),
-    api: abilityApi(state, events),
+    api,
   }
   descriptor.resolve?.(ctx)
   // 描述子也可以只声明旧式 effect（例如「花 1 子弹攻击」），由效果解释器结算。

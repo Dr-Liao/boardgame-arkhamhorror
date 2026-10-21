@@ -7,6 +7,7 @@ import { aiDecisionContext } from '../src/ai/ai-context.js'
 import { captureTableState, locationEntryErrors } from '../src/integration/presentation-state.js'
 import { timelineEntries, timelineCardIndex, timelineCardParts } from '../web/table-timeline.js'
 import { objectiveText } from '../web/card-text.js'
+import { cardAttachmentReferences } from '../web/table-components.js'
 import { contentRegistry } from '../content/registered.js'
 
 test('地图禁入提示与烈焰屏障规则一致，演出快照保留当时状态', () => {
@@ -149,4 +150,12 @@ test('幕目标结构转换为中文条件', () => {
   assert.match(objectiveText({type:'clues',perInvestigator:2}),/2 × 调查员人数.*线索/)
   assert.match(objectiveText({type:'defeatEnemy',enemy:'ghoulPriest'}),/食尸鬼祭司/)
   assert.equal(objectiveText(null),'')
+})
+
+test('追猎恐魔的暗影之子由剧本标记派生为可查看的附属卡', () => {
+  assert.deepEqual(cardAttachmentReferences({ shadowSpawned: true, shadowResources: 2 }),
+    [{ code: '02142', originalCode: '02142', resources: 2 }])
+  assert.equal(cardAttachmentReferences({ shadowSpawned: true, shadowResources: 2,
+    attachments: [{ code: '02142', originalCode: '02142', resources: 2 }] }).length, 1)
+  assert.deepEqual(cardAttachmentReferences({ shadowSpawned: false }), [])
 })

@@ -188,10 +188,67 @@ test('AI context: implemented cards, costs, attack risk, private hands and order
   assert.equal(actionPreview(s,0,{action:'parley',enemyId:'enemy'}).resources,3)
   delete s.enemies[0].parleyCost
   assert.ok(!text.includes('PRIVATE_HAND_SENTINEL')&&!text.includes('PRIVATE_DECK_SENTINEL'))
+  // 被交战时，AI 必须一眼看到借机攻击的风险与伤害数值，而不是只在 JSON 的 actionCosts 里推算。
+  assert.match(text,/【借机攻击】/)
+  assert.match(text,/伤害2 恐惧1/)
+  assert.match(text,/⚠借机 2\/1/)
+  const fightLine=text.split('\n').find(line=>line.includes('攻击「测试敌人」'))
+  assert.ok(fightLine&&!fightLine.includes('借机'),'攻击本身不引发借机攻击，不应带 ⚠ 标记')
   assert.equal(JSON.stringify(s),before)
   const original=aiDecisionContext(s,0);s.investigators[0].deck.reverse()
   assert.equal(aiDecisionContext(s,0),original)
   assert.ok(!original.includes('rngState')&&!original.includes('continuation'))
+})
+
+test('AI borrow-attack hint counts only ready enemies and includes massive ones',()=>{
+  const s=fixture(2);s.currentSeat=0
+  const inv=s.investigators[0]
+  inv.engaged=['e1','e2']
+  s.enemies=[
+    {id:'e1',name:'横置敌人',location:inv.location,engagedSeat:0,damage:1,horror:2,exhausted:true},
+    {id:'e2',name:'庞大敌人',location:inv.location,engagedSeat:null,damage:2,horror:0,massive:true},
+  ]
+  const text=arkham.describeState(s,0)
+  const hint=text.split('【借机攻击】')[1].split('\n')[0]
+  assert.match(hint,/庞大敌人（伤害 2／恐惧 0）/)
+  assert.doesNotMatch(hint,/横置敌人/,'已横置的敌人不会发动借机攻击')
+  assert.match(hint,/合计 2 伤害／0 恐惧/)
+  assert.match(text,/⚠借机 2\/0/)
+})
+
+test('AI borrow-attack hint marks lethal hits and leaves no-AoO cards unmarked',()=>{
+  const s=fixture();s.currentSeat=0
+  const inv=s.investigators[0]
+  inv.hand=['03189'];inv.engaged=['e1'];inv.damage=8
+  s.enemies=[{id:'e1',name:'食尸鬼',location:inv.location,engagedSeat:0,damage:2,horror:1,health:3}]
+  const text=arkham.describeState(s,0)
+  assert.match(text,/足以击败你（剩余生命 1／理智 5）/)
+  const safe=text.split('\n').find(line=>line.includes('同归于尽'))
+  assert.ok(safe&&!safe.includes('⚠借机'),'写明不引发借机攻击的卡不应带风险标记')
+})
+
+test('AI sees threat-area charges and the scenario-end requirement (Angered Spirits)',()=>{
+  const s=fixture()
+  s.investigators[0].assets.push({id:'spell',code:'01060',uses:2,usesType:'charges',exhausted:false})
+  s.investigators[0].threat.push({id:'angered',code:'03015',uses:2,usesType:'charges'})
+  const data=context(s)
+  assert.deepEqual(data.threat.find(row=>row.id==='angered'),
+    {id:'angered',code:'03015',uses:2,usesType:'charges',requiredUses:4})
+  assert.match(arkham.describeState(s,0),/威胁区域：怒灵\(充能 2\/4\)/)
+  const ability=arkham.legalMoves(s).find(move=>move.assetId==='angered')
+  assert.ok(ability,'怒灵的法术支援充能能力出现在合法行动里')
+  assert.match(ability.label,/充能 2\/4/,'行动文案带上当前进度，达标后不再重复投入')
+})
+
+test('Angered Spirits target choice lists each Spell asset with its remaining charges',()=>{
+  const s=fixture()
+  s.investigators[0].assets.push(
+    {id:'spell-a',code:'01060',uses:2,usesType:'charges',exhausted:false},
+    {id:'spell-b',code:'01060',uses:1,usesType:'charges',exhausted:false})
+  s.investigators[0].threat.push({id:'angered',code:'03015',uses:0,usesType:'charges'})
+  applyMove(s,decisionSeat(s),{action:'ability',assetId:'angered',abilityIndex:0})
+  assert.deepEqual(s.pendingChoice.options.map(option=>option.label),
+    ['皱缩术（剩余 2 充能）','皱缩术（剩余 1 充能）'])
 })
 
 test('AI turn boundaries distinguish the next round even for the same solo seat',()=>{

@@ -20,6 +20,22 @@ test('card bindings distinguish duplicate hand positions, candidate indices, and
   assert.equal(targetMoves(st,'asset:ally-asset','enemy:e2').length,0)
 })
 
+test('card choices bind candidate art by cardCode and never to hand positions', () => {
+  const st = { investigators: [{ seat: 0, hand: ['a', 'b'], discard: ['x', 'y'], assets: [] }],
+    cards: { a: { code: 'a', name: '手牌 A' }, b: { code: 'b', name: '手牌 B' },
+      x: { code: 'x', name: '弃牌 X' }, y: { code: 'y', name: '弃牌 Y' } },
+    pendingChoice: { id: 'q', kind: 'card', seat: 0, canSkip: true, options: [
+      { id: 'skip', label: '不选择' }, { id: '0', cardCode: 'x', label: '弃牌 X' }, { id: '1', cardCode: 'y', label: '弃牌 Y' }] },
+    legalMoves: [{ action: 'choose', choiceId: 'q', optionId: 'skip' }, { action: 'choose', choiceId: 'q', optionId: '0' },
+      { action: 'choose', choiceId: 'q', optionId: '1' }] }
+  const picked = choicePresentation(st).find(item => item.move.optionId === '1')
+  assert.equal(picked.key, null)
+  assert.equal(picked.code, 'y')
+  assert.deepEqual(picked.cards.map(card => card.code), ['y'])
+  assert.equal(entityMoves(st, 'hand:0:0').length, 0)
+  assert.deepEqual(choicePresentation(st).map(item => item.move.optionId), ['skip', '0', '1'])
+})
+
 test('drop targets obey legal actions and slot requirements; skills never become play actions', () => {
   const st={currentSeat:0,investigators:[{seat:0,hand:['gun','event','skill']}],cards:{gun:{type:'asset',slots:['hand x2']},event:{type:'event'},skill:{type:'skill'}},
     legalMoves:[{action:'play',cardId:'gun'},{action:'play',cardId:'event'},{action:'move',locationId:'hall'}]}
