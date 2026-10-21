@@ -679,20 +679,32 @@ maxHealth / cardSanity
 3. 5a：`table` 已清零、`reference` 剩 31 个码（多为 `requestChoice` 的 source 标签，要等文案 i18n）；`condition`/`block`（87 个码）要逐卡迁成描述子；
    `engine:` 标记的 5 张（01014 / 01072 / 01094 / 01095 / 01117）优先。
 
-### Phase 6 · 收尾（持续）
+### Phase 6 · 收尾 ✅ 完成（6e-1…6e-19）
 
 删除 `EFFECTS` 行为读点（先留一版兼容层）→ 拆分 `engine.js`（卡号分支删完后自然变小，目标单文件 < 2.5k 行）→ 战役机制插件化（TFA 作为第一个搬家对象：`stateSlice` / `project` / `actions+hooks` / `agentHints`）。
 
 **进展（截至 6e）**：引擎里的卡号字面量 **28 → 0**、战役名 **2 → 0**，`tests/phase6-guard.test.mjs` 把这两条变成门禁；
-`engine.js` **12654 → 2375 行（−81.2%）**，已拆出 **41 个模块**
+`engine.js` **12654 → 2377 行（−81.2%）**，已拆出 **41 个模块**
 （`tests` / `moves` / `setup` / `combat` / `dispatch` / `enemies` / `deck-ops` / `encounter` / `actions` /
 `actions-extra` / `scenario-runtime` / `turn` / `ability-exec` / `ability-rules` / `skill-effects` /
 `reveal` / `phases` / `api-*` / `hub` / `table-decisions` / `weakness` / `campaign-flow` / `movement` /
 `locations` / `describe` / `describe-ai` / `treachery-tokens` / `card-lookup` 等），另把
 `player-effects` 与 `campaign-plugin`（战役规则 + 玩家卡调度）搬到内容层。
-逐批证据见 [`phase6-decoupling.md`](phase6-decoupling.md)（44 节），交接与下一步见 [`phase6-handoff.md`](phase6-handoff.md)。
+逐批证据见 [`phase6-decoupling.md`](phase6-decoupling.md)（46 节），交接与下一步见 [`phase6-handoff.md`](phase6-handoff.md)。
 
-**③ 已完成（6e-1…6e-16）**：`EFFECTS` 30 → **0**、顶层字段 → **0**；`EFFECTS[code]` 不再兼「这张卡已实现」的语义——
+**Phase 6 四项结论**：
+1. ① 卡号字面量 28 → **0**（6a）；
+2. ② 引擎内战役名 2 → **0**（6b，`phase6-guard` 守）；
+3. ③ `EFFECTS` 57 → **0**、顶层字段 → **0**（6e-1…6e-16；观测面经实现账本解耦）；
+4. ④ `engine.js` 12654 → **2377 行**（6d/6e，41 个模块；< 2.5k 目标达成），战役插件化三批：
+   行为（`campaign-plugin`）/ 公开投影 + `agentHints`（`campaign-view`）/ `stateSlice`（`campaign-state`）。
+   规则层读座位（`resolution.js` 读 `state.humanSeats`）随 campaign-flow 拆分消解。
+
+**两条收尾 stretch（不影响 Phase 6 验收）**：
+- 逃生原语的「类型 → 处理函数」映射搬进内容层注册，让 `effects.js` 的 case 标签也不再带战役词；
+- `EFFECTS` 兼容层（空对象）与读点回落分支可整体删除（见 `phase6-handoff.md` §5.3.1 的逐点判断法）。
+
+**③ 已完成（6e-1…6e-16）**：`EFFECTS` 57 → **0**、顶层字段 → **0**；`EFFECTS[code]` 不再兼「这张卡已实现」的语义——
 `src/cards/card-implementation.js` 成为唯一读点（`implementationChannel` / `implementationSummary` /
 `legacyEntry` / `DATA_IMPLEMENTED_CODES`），`ai-context`、`deckbuilding`、`card-catalog` 都改读它。
 实测结论修正了 6c 的假设：**`implemented` 只是提示词，不参与状态指纹**——换摘要后 `replay --compare`
