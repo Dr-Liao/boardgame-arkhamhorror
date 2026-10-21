@@ -156,6 +156,12 @@ export const scenario = {
   setAsideLocations: [...SET_ASIDE_LOCATIONS],
   acts,
   agendas,
+  // 04320 的取遗物/控制遗物与 04321–04323 的修补裂痕行动都印在当前幕卡上。
+  scriptCards: { rules: {
+    searchRelic: { card: 'act', codes: ['04320'] },
+    takeRelic: { card: 'act', codes: ['04320'] },
+    attachLocation: { card: 'act', codes: ['04321', '04322', '04323'] },
+  } },
   ...definitions,
   storyAssets: storyCards([RELIC_AGES_UNLEASH, YIGS_MERCY, ANOTHER_WAY]),
   encounterDeck: deckCodes,

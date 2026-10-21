@@ -79,6 +79,8 @@ export const scenario = {
   agendas: stages(['04044', '04045'], 'agenda').map(agenda => ({
     ...agenda, reveal: { type: 'campaignRule' },
   })),
+  // 04044/04045 印着 [action]：探索；引擎的探索按钮归当前密谋卡。
+  scriptCards: { explore: { card: 'agenda' } },
   ...definitions,
   storyAssets: storyCards(['04051']),
   encounterDeck: encounterDeck(gathered),

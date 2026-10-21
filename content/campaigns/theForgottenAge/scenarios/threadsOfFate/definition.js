@@ -157,6 +157,8 @@ export const scenario = {
   agendas: stages(['04114', '04115', '04116'], 'agenda').map(agenda => ({
     ...agenda, reveal: { type: 'campaignRule' },
   })),
+  // 04114–04116 印着 [action]：撤退。
+  scriptCards: { rules: { resignAgenda: { card: 'agenda', codes: ['04114', '04115', '04116'] } } },
   ...definitions,
   storyAssets: storyCards(['04118b', '04125b', '04134b', '04147', '04148']),
   encounterDeck: encounterDeck(deckCards),

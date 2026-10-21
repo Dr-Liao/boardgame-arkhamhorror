@@ -57,6 +57,11 @@ export const scenario = {
     ...agenda,
     reveal: { type: 'campaignRule' },
   })),
+  // 03321a 的「花费 3 行动直面男子」与 03324 的 [free] 翻面能力都印在当前幕卡上。
+  scriptCards: { rules: {
+    confrontStranger: { card: 'act', codes: ['03321a'] },
+    flipCarcosaLocation: { card: 'act', codes: ['03324'] },
+  } },
   ...definitions,
   encounterDeck: encounterDeck(gathered.filter(card => !setAsideCodes.has(card.code))),
   resolutions: {

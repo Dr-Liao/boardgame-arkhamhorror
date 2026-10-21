@@ -5,6 +5,7 @@
 // 两边必须共用同一批判定函数，所以放在同一个模块里最安全。
 // 依赖注入同前几个域；依赖清单由「engine 顶层声明 ∪ import 绑定 − 函数内局部」生成（先剥注释），
 // 注入块用唯一标记定位，避免和 createCombat / createActions 的块混淆。
+import { scriptCardOwner } from './script-cards.js'
 
 export function createMoves(deps) {
   const {
@@ -89,6 +90,17 @@ export function createMoves(deps) {
     validateHubMove,
   } = deps
 
+  // 剧本卡行动归属：关卡数据里的 scenario.scriptCards 声明「这个行动印在当前哪张
+  // 幕/密谋卡上」（'act' / 'agenda'）。牌桌据此把按钮放到剧本书对应卡片旁、让该卡发光，
+  // 观察投影也会保留带 scriptCard 的提示；返回 null 表示这个行动不属于剧本卡
+  // （地点、敌人、剧情支援赋予的行动保持原样）。显式 scriptCard 优先，例如献祭丽塔的
+  // 'enemy' 只用于 AI 提示、不占剧本区。读点见 script-cards.js。
+  function ownedMove(state, move) {
+    if (move.scriptCard) return move
+    const owner = scriptCardOwner(state, move)
+    return owner ? { ...move, scriptCard: owner } : move
+  }
+
   function legalMoves(state, observerSeat) {
   if (state.status !== 'playing') return []
   if (state.pendingChoice) return choiceMoves(state, observerSeat)
@@ -102,10 +114,13 @@ export function createMoves(deps) {
   // 每一项都可以带 reason（条件不满足时给）：这里只取不带 reason 的进可执行列表，
   // 带 reason 的留给 scriptActionHints 当提示——否则客户端会渲染出点不动的按钮，
   // AI 也会照抄一个必被拒绝的行动。locationId 只补在"由当前地点赋予"的行动上，
-  // 让客户端在选中该地点时能展示它。
+  // 让客户端在选中该地点时能展示它。scriptCard 由关卡数据的 scriptCards 补，
+  // 让幕/密谋卡上的行动显示在剧本书旁而不是通用动作栏。
   moves.push(...(scenarioBehavior(state).actions?.(state, inv) || []).filter(move => !move.reason).map(move =>
+    ownedMove(state, move)).map(move =>
     move.locationId || move.scriptCard ? move : { ...move, locationId: inv.location }))
-  moves.push(...(scenarioBehavior(state).encounterActions?.(state, inv) || []).filter(move => !move.reason))
+  moves.push(...(scenarioBehavior(state).encounterActions?.(state, inv) || []).filter(move => !move.reason)
+    .map(move => ownedMove(state, move)))
   for (const attachment of state.playerLocationAttachments || []) {
     if (!registeredEntry(attachment.code)?.grantsShortcutMove || attachment.location !== inv.location || attachment.exhausted) continue
     for (const destination of new Set(loc?.connections || [])) {
@@ -209,9 +224,11 @@ export function createMoves(deps) {
   if (!drawBlocked(state, inv)) moves.push({ action: 'draw', label: '🀄 抽 1 张牌' })
   if (scenarioBehavior(state).canGainResources?.(state, inv) !== false) moves.push({ action: 'resource', label: '💰 获得 1 资源' })
   // 失落的时代：探索牌库非空且剧本允许时提供探索行动。
+  // 「探索」通常印在当前幕/密谋卡上（04044/04057/04207/04285…），由关卡数据的
+  // scriptCards 补 scriptCard，牌桌才会把它放在对应剧本卡旁。
   if ((state.explorationDeck || []).length && !investigatorTextBlanked(state, inv)
     && scenarioBehavior(state).canExplore?.(state, inv) !== false) {
-    moves.push({ action: 'explore', label: `🧭 探索（剩余 ${state.explorationDeck.length} 张）` })
+    moves.push(ownedMove(state, { action: 'explore', label: `🧭 探索（剩余 ${state.explorationDeck.length} 张）` }))
   }
 
   const skids = INVESTIGATOR_ABILITIES[inv.code]

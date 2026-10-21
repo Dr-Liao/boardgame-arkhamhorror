@@ -110,6 +110,8 @@ export const scenario = {
   agendas: stages(['04207', '04208'], 'agenda').map(agenda => ({
     ...agenda, reveal: { type: 'campaignRule' },
   })),
+  // 04207/04208 印着 [action]：探索；04210 的解石柱行动带显式 scriptCard。
+  scriptCards: { explore: { card: 'agenda' } },
   ...definitions,
   encounterDeck: deckCodes,
   resolutions: {

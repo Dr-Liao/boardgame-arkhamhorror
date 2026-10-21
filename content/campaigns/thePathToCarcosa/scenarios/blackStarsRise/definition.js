@@ -69,6 +69,9 @@ export const scenario = {
     { ...agendaVariants.tide[1], reveal: { type: 'campaignRule' } },
     { ...agendaVariants.tide[3], reveal: { type: 'campaignRule' } },
   ],
+  // 03275/03276a/03276b 与 03278/03279a/03279b 的 [free]：共同花费线索放毁灭。
+  scriptCards: { rules: { hastenAgenda: { card: 'agenda',
+    codes: ['03275', '03276a', '03276b', '03278', '03279a', '03279b'] } } },
   ...definitions,
   encounterDeck: encounterDeck(gathered.filter(card => !setAsideEncounterCodes.has(card.code))),
   resolutions: {

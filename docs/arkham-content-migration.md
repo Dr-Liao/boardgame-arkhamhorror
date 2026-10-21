@@ -24,6 +24,7 @@
 - **先原语、后卡牌**：每轮迁移先扫描新增机制并拆分原语，再批量写卡。卡牌只能使用已登记的原语；需要新原语时按 §4.6.3 的队列向主进程申请，不得由子进程直接改引擎。
 - **新机制先走通用层**：卡面写不下时，先扩 `ability.js` / `windows.js` / `matcher.js` / `modifiers.js` / `targets.js` / `play-condition.js` / `effect-state.js` 的通用能力，再写卡。新窗口必须同时完成注册、调用点接线与测试——注册不等于接线。
 - **新增交互先于批量卡牌**：新的选择、目标、提示、面板与动画必须在卡牌批量迁移前完成，并复用 `web/` 的现有组件、CSS 变量与交互模式；不允许在卡牌批次里边写卡边临时拼界面。验收必须覆盖桌面 1440 与移动端 390，见 §4.5。
+- **剧本卡行动必须标明归属**：幕／议程卡面上印着的 `[action]` / `[free]` 行动（包括引擎自带的「探索」）必须通过关卡数据的 `scenario.scriptCards` 或显式 `scriptCard` 标成 `act` / `agenda`，牌桌才会把它放在剧本书对应卡片旁；只出现在通用动作栏视为迁移缺口。声明方式与验收见 §4.5.1。
 - **多进程写入边界**：批量迁移由主进程 + 多个子进程完成；子进程只写分给自己的 `entries/<code>.js`，不得改 `entries/index.js`、`_shared.js`、`card-abilities.js`、`src/engine/`、`content/`、`docs/`、`audit/`。索引由主进程在合并时统一重建，见 §4.6。
 - **非玩家卡走 `encounter-abilities.js`**：敌人、地点、幕／议程、剧情支援与威胁的常驻规则写成带 `scope` 的描述子（Phase 3 · D1），引擎按场上实体枚举，读点是 `entityModifierTotal` / `entityRuleActive`；**不要**再往关卡 `behavior.js` 加按卡号的分支，也不要在引擎里加卡号判断。
 - **通道必须登记**：迁移范围内的每张卡在审计账本里记录通道状态 `descriptor | legacy | hybrid | missing` 与证据路径；`missing` 会让该章的 `literalCardBehavior` 保持 `false`。
@@ -181,6 +182,36 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 - **浏览器验收**：新增交互在卡牌批次前先跑对应 Playwright 用例；至少覆盖桌面和移动端各一条真实操作路径。
 - 产物：交互组件/样式、`presentation-state` 字段、浏览器测试、截图。
 - 门禁：桌面/移动端浏览器用例通过；新交互与既有界面的间距/字号/颜色一致；无卡号 UI 分支；新增颜色/字号/间距来自既有 token；隐私投影断言通过。
+
+#### 4.5.1 剧本卡行动归属（scriptCard）
+
+幕／议程卡面上印着的 `[action]` / `[free]` 能力（包括引擎自带的「探索」）必须能在剧本书
+对应卡片旁直接执行；只在通用动作栏里出现，视为该章 `actsAndAgendas` 未完成。
+
+- **归属标记**：行动带 `scriptCard: 'act' | 'agenda'` 时，`table-regions.js` 把按钮放在剧本书
+  对应卡片旁，`card-interactions.js` 给该卡发光与点击入口，`observation.js` 也只保留这两类
+  剧本行动提示。`scriptCard: 'location' | 'enemy'` 只喂 AI 计划，不占剧本区；**地点、敌人、
+  剧情支援赋予的行动不要标成幕／密谋**（用 `locationId` / `enemyId` 表达归属）。
+- **声明位置**：关卡定义（`definition.js`，没有独立定义文件的章节用其 `index.js`）里写
+  `scenario.scriptCards`，由 `src/engine/script-cards.js` 作为唯一读点：
+  - `explore: { card: 'act' | 'agenda' }`：声明引擎自带的探索行动归哪张当前剧本卡；
+    只有部分幕／密谋印着探索时加 `codes: ['04057', '04058']`，当前卡不在清单里就返回 `null`。
+  - `rules: { <rule>: 'act' | 'agenda' }`：按 `scenarioAction` / `encounterAction` 的 `rule`
+    声明归属（撤退、取遗物、翻面等）。只在部分剧本卡上印着时写
+    `{ card: 'act', codes: ['03324'] }`，当前卡不在清单里就返回 `null`。
+  - `scenarioAction` / `encounterAction` 已带显式 `scriptCard` 时优先保留（例如献祭丽塔的
+    `scriptCard: 'enemy'`）。不要在 `behavior.js` 里加新的 `scriptCardFor` 命令式钩子：行为层
+    行数只减不增，归属属于关卡数据而不是流程逻辑。
+- **只看当前卡**：当前幕／议程不印该行动时返回 `null`（例如《埃兹特里的覆灭》幕 3 不再探索，
+  不能因为前一幕印过就继续留在幕卡旁）。
+- **不可执行也要可见**：条件不满足时仍通过 `behavior.actions()` 返回带 `reason` 的提示；
+  引擎自带行动（探索）由 `scriptActionHints` 在 `scriptCards.explore` 命中时补一条提示。牌桌显示
+  带原因的禁用按钮，不允许整条消失，也不允许回落到通用动作栏。
+- **验收**：Node 测试至少断言 `legalMoves`、`scriptActionHints` 与
+  `viewState(...).scriptActions` 三处的 `scriptCard`，并断言地点／敌人行动未被误标；
+  Playwright 走真实大厅流程，桌面 1440 与移动 390 各验证：按钮位于剧本书对应卡片旁、
+  卡片发光、点击提交服务端公开动作。参考 `tests/script-card-ownership.test.mjs` 与
+  `tests/script-actions-tfa.browser.mjs`。
 
 ### 4.6 第 5 步：批量迁移卡牌（多子进程 + 原语队列）
 
@@ -385,7 +416,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 - `sourceLocked`：剧本、地点及必要卡牌来源已锁定。
 - `identityRegistered`：真实卡号、名称和章节身份已登记。
 - `setupAndZones`：准备、遭遇牌库、放在一边、移除、胜利区和可选遭遇组守恒。
-- `actsAndAgendas`：全部幕／议程、推进条件、背面效果和剧本行动已实现。
+- `actsAndAgendas`：全部幕／议程、推进条件、背面效果和剧本行动（含 `scriptCard` 归属，见 §4.5.1）已实现。
 - `locationsAndConnections`：地点正反面、随机变体、连接和离场行为已实现。
 - `encounterBehaviors`：敌人、诡计、剧情资产和共享遭遇组行为已实现。
 - `literalCardBehavior`：已逐张、逐能力严格核对卡面字面需求；每个时机、费用、目标、区位、限制、成功／失败分支、持续效果和离场条件都有可执行路径及测试证据。

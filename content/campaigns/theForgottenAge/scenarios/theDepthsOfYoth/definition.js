@@ -130,6 +130,8 @@ export const scenario = {
   setAsideLocations: [],
   acts,
   agendas,
+  // 04285 印着 [action]：探索（仅当地点无线索时）。
+  scriptCards: { explore: { card: 'act' } },
   ...definitions,
   storyAssets: storyCards([RELIC_OF_AGES]),
   encounterDeck: encounterDeck(deckCards),

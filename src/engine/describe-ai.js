@@ -1,6 +1,8 @@
 // describe-ai.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 给 AI 与界面看的描述层：猎物排序、可选能力提示、剧本动作提示、移动/动作文案。
 // 纯函数（只读 state），但依赖不少展示常量与卡牌数据。
+import { scriptCardOwner } from './script-cards.js'
+
 export function createDescribeAi(deps) {
   const {
     INVESTIGATOR_ABILITIES,
@@ -68,6 +70,12 @@ export function createDescribeAi(deps) {
     const inv = state.investigators.find(item => item.seat === seat)
     if (!inv || inv.defeated || inv.resigned) return []
     const behavior = scenarioBehavior(state), hints = []
+    // 行动归属：与 moves.js 共用关卡数据的 scriptCards，避免可执行列表带归属、
+    // 不可执行提示却不带，导致牌桌只剩通用动作栏里的按钮。
+    const owned = move => {
+      const scriptCard = move.scriptCard || scriptCardOwner(state, move)
+      return scriptCard ? { ...move, scriptCard } : move
+    }
     if (behavior.drawCultistActIndex === state.actIndex) {
       const cost = 2 * state.numInvestigators
       hints.push({ action: 'drawCultist', scriptCard: 'act', label: `抽取异教徒牌堆（调查员共同花费 ${cost} 线索）`,
@@ -79,8 +87,14 @@ export function createDescribeAi(deps) {
     }
     if (state.scenario.resignAnywhere) hints.push({ action: 'resign', scriptCard: 'agenda', label: '撤退', reason: null })
     hints.push(...(behavior.actions?.(state, inv) || []), ...(behavior.encounterActions?.(state, inv) || []))
+    // 引擎自带的探索行动没有卡号：当前幕/密谋印着「探索」时也要作为剧本行动列出，
+    // 能执行时与 legalMoves 里的探索合并成同一项，不能执行时给出缺口原因。
+    if (!hints.some(move => move.action === 'explore') && scriptCardOwner(state, { action: 'explore' })) {
+      const remaining = (state.explorationDeck || []).length
+      hints.push({ action: 'explore', label: remaining ? `🧭 探索（剩余 ${remaining} 张）` : '🧭 探索' })
+    }
     const choice = state.pendingChoice
-    return hints.map(({ reason, ...move }) => ({ ...move,
+    return hints.map(move => owned({ ...move })).map(({ reason, ...move }) => ({ ...move,
       reason: reason || (choice ? (choice.kind === 'turnOrder' && choiceSeats(choice).includes(seat) ? '先点击「开始行动」' : '等待当前选择结算')
         : seat !== state.currentSeat ? '尚未轮到你行动' : validateMove(state, seat, move)) || null }))
   }

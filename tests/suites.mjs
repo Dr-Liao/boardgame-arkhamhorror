@@ -40,6 +40,7 @@ export const FAST_TESTS = Object.freeze([
   'ai-dialogue.test.mjs', // 0.1
   'card-interactions.test.mjs', // 0.6
   'script-actions.test.mjs', // 0.6
+  'script-card-ownership.test.mjs', // 1.0
   'engagement-flow.test.mjs', // 0.8
   'reaction-preferences.test.mjs', // 0.6
   'card-filters.test.mjs', // 0.4

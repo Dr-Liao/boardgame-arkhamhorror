@@ -96,6 +96,11 @@ export const scenario = {
   agendas: stages(['04055', '04056'], 'agenda').map(agenda => ({
     ...agenda, reveal: { type: 'campaignRule' },
   })),
+  // 04345/04346 印着 [action]：探索；04347 的古代遗物行动也由当前幕赋予。
+  scriptCards: {
+    explore: { card: 'act', codes: ['04345', '04346'] },
+    rules: { relicOfAgesStrike: { card: 'act', codes: ['04347'] } },
+  },
   ...definitions,
   storyAssets: storyCards([RELIC_OF_AGES]),
   encounterDeck: deckCodes,

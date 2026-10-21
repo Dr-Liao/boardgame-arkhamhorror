@@ -86,6 +86,8 @@ export const scenario = {
   agendas: stages(['04211', '04212'], 'agenda').map(agenda => ({
     ...agenda, reveal: { type: 'campaignRule' },
   })),
+  // 04211/04212 印着 [action]：探索（仅当地点无线索时）。
+  scriptCards: { explore: { card: 'agenda' } },
   ...definitions,
   encounterDeck: deckCodes,
   resolutions: {

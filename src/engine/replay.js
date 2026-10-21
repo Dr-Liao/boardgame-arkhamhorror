@@ -30,8 +30,11 @@ export const STATE_HASH_VERSION = 2
 
 // 派生字段：能从当前内容与资源版本随时重建。把它们算进指纹会让"资源升级/新增卡牌"
 // 看起来像"行为变了"；而 cards / investigatorDefs 占 state 体积的 90%，排除后哈希快一个数量级。
+// scriptCards 是关卡数据里的「行动归属」展示元数据（见 src/engine/script-cards.js），
+// 只决定按钮放在剧本书哪一侧；补声明不应改变重放指纹。
 const DERIVED_KEYS = new Set([
   'cards', 'investigatorDefs', 'classNames', 'classColors', 'skillNames', 'tokenLabels', 'resourceVersion',
+  'scriptCards',
 ])
 
 // 瞬时字段：每次 applyMove 都会重算（legalMoves），或只对本次事务有意义（actionLog 另有用途）。

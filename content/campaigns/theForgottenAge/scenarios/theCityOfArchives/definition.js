@@ -96,6 +96,8 @@ export const scenario = {
   agendas: stages(['04238', '04239', '04240'], 'agenda').map(agenda => ({
     ...agenda, reveal: { type: 'campaignRule' },
   })),
+  // 04243 印着 [action]：花 1 线索抽取 2 张。
+  scriptCards: { rules: { repossessionDraw: { card: 'act', codes: ['04243'] } } },
   ...definitions,
   storyAssets: storyCards([CUSTODIAN_CODE]),
   encounterDeck: encounterDeck(gathered),

@@ -94,6 +94,8 @@ export const scenario = {
   agendas: stages(['04055', '04056'], 'agenda').map(agenda => ({
     ...agenda, reveal: { type: 'campaignRule' },
   })),
+  // 04057/04058 印着 [action]：探索；04059 逃出遗迹不再探索。
+  scriptCards: { explore: { card: 'act', codes: ['04057', '04058'] } },
   ...definitions,
   storyAssets: storyCards([RELIC_OF_AGES]),
   encounterDeck: encounterDeck(gathered),
