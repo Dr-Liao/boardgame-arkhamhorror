@@ -54,7 +54,7 @@ export function createTurn(deps) {
     runAgendaForced,
     scenarioBehavior,
     scenarioRuntime,
-    tfaBorrowedTimeTurnStart,
+    campaignBorrowedTimeTurnStart,
     triggerReaction,
     useGoldPocketWatch,
   } = deps
@@ -298,7 +298,7 @@ function turnBeginningWindow(state, events) {
     inv.actionsTakenThisTurn = 0
     scenarioBehavior(state).turnBegins?.(state, inv, scenarioRuntime(state, events))
     // 「时间借取」：回合开始时移除所有滴答，换取等量额外行动。
-    tfaBorrowedTimeTurnStart(state, inv, events)
+    campaignBorrowedTimeTurnStart(state, inv, events)
     triggerReaction(state, inv.seat, 'turnBegins', events, { seat: inv.seat, location: inv.location })
     reactionWindow(state, 'turnBegins', { when: 'turnBegins', seat: inv.seat, location: inv.location, prompt: `${inv.name} 的回合开始` }, events)
     // 「未知的呼唤」：回合开始时选择本回合要调查的地点。

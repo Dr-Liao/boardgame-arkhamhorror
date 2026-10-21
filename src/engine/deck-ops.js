@@ -39,7 +39,7 @@ export function createDeckOps(deps) {
     scenarioBehavior,
     scenarioRuntime,
     shuffle,
-    tfaCardDrawReaction,
+    campaignCardDrawReaction,
     triggerReaction,
     weaknessProfile,
   } = deps
@@ -390,7 +390,7 @@ function drawCards(state, inv, n, events) {
     applyHorror(state, inv, 1, events)
   }
   // 「古代巨石（研究完成）」：抽牌后可按抽到的张数花费秘密。
-  if (drawnCount > 0 && !inv.defeated) tfaCardDrawReaction(state, inv, events, drawnCount)
+  if (drawnCount > 0 && !inv.defeated) campaignCardDrawReaction(state, inv, events, drawnCount)
   return texts
 }
 

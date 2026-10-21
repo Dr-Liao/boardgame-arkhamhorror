@@ -6,6 +6,7 @@
 
 export function createClueApi(state, events, deps) {
   const {
+    campaignState,
     doInvestigate,
     doEvade,
     doPlay,
@@ -72,12 +73,14 @@ export function createClueApi(state, events, deps) {
       }
       return discarded
     },
-    // 本回合有效的帷幕修正（原引擎的 turnShroudMod / carcosaShroudModifier）。
+    // 本回合有效的帷幕修正（调查员侧字段 turnShroudMod；战役侧见 campaignState）。
     tempShroudMod: (location, amount) => {
       if (!location) return 0
       location.turnShroudMod = { amount, round: state.round, turnSeat: state.currentSeat }
       return amount
     },
+    // Phase 6：战役层的「本回合帷幕」由 campaignState 读写（数据面见 campaign-state.js）。
+    tempCampaignShroudMod: (location, amount) => campaignState.setTurnShroudModifier(location, state, amount),
     // Phase 5（5c）：把玩家卡作为「地点附属」放到场上（隐藏处 / 伏击 / 陷阱 / 捷径）。
     // 数据形状与引擎的读点一致（state.playerLocationAttachments），内容层不碰 state 内部结构。
     attachToLocation: (locationId, fields = {}) => {
@@ -96,7 +99,7 @@ export function createClueApi(state, events, deps) {
     playCard: (seat, code, options = {}) => {
       const owner = state.investigators[seat]
       if (!owner || !(owner.hand.includes(code) || options.fromDiscard === true)) return false
-      if (options.discount) owner.carcosaPlayDiscount = options.discount
+      if (options.discount) campaignState.setPlayDiscount(owner, options.discount)
       doPlay(state, seat, code, events, options.fromDiscard === true, options.noAction === true)
       return true
     },

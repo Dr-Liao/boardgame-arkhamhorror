@@ -1,4 +1,4 @@
-// 玩家卡效果调度（原 engine.js 的 dunwichPlayerEffect，Phase 6 · 6d-15 拆出）。
+// 玩家卡效果调度（原 engine.js 的 playerCardEffect，Phase 6 · 6d-15 拆出）。
 //
 // 位置说明：它在 src/cards/ 而不是 src/engine/ —— 玩家卡效果属于内容层，
 // Phase 6 门禁（tests/phase6-guard.test.mjs）要求 src/engine 里不出现战役名，
@@ -45,7 +45,7 @@ export function createPlayerEffects(deps) {
     triggerReaction,
   } = deps
 
-function dunwichPlayerEffect(state, seat, effect, events) {
+function playerCardEffect(state, seat, effect, events) {
   const inv = state.investigators[seat]
   if (effect.type === 'engageEnemies') {
     const enemies = state.enemies.filter(enemy => enemy.location === inv.location && enemy.engagedSeat !== seat)
@@ -319,5 +319,5 @@ function dunwichPlayerEffect(state, seat, effect, events) {
   info(state, events, `「${effect.type}」已进入敦威治专属时序。`)
 }
 
-  return dunwichPlayerEffect
+  return playerCardEffect
 }

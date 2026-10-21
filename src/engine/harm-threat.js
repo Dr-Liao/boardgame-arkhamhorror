@@ -3,6 +3,7 @@
 // 读点：combat 与 api 的伤害接口、威胁区的强制效果、弱点与淘汰判定。
 export function createHarmThreat(deps) {
   const {
+    campaignState,
     ALL_TREACHERIES,
     EFFECTS,
     activeHiddenRules,
@@ -80,7 +81,8 @@ export function createHarmThreat(deps) {
 
   function assetsCannotReady(inv, round = null) {
     // 「蟒蛇」（04079）：下个补给阶段不能重整（标记写在调查员身上）。
-    if (Number.isInteger(inv.tfaNoReadyRound) && (round == null || inv.tfaNoReadyRound === round)) return true
+    const noReadyRound = campaignState.cannotReadyRound(inv)
+    if (noReadyRound != null && (round == null || noReadyRound === round)) return true
     return inv.threat.some(card => getThreatEffect(card)?.preventReady)
   }
 

@@ -233,7 +233,7 @@ export function createCampaignPlugin(deps) {
       { code, kind: scenarioLocation ? 'location' : 'encounter', runtime: scenarioRuntime(state, events) })
   }
 
-  function tfaCardDrawReaction(state, inv, events, count) {
+  function campaignCardDrawReaction(state, inv, events, count) {
     for (const stone of inv.assets) {
       const mode = registeredEntry(stone.code)?.cardDrawSecretAction
       if (!mode || (stone.uses || 0) < count) continue
@@ -283,7 +283,7 @@ export function createCampaignPlugin(deps) {
     }
   }
 
-  function tfaFailedTestWindow(state, seat, context, events) {
+  function campaignFailedTestWindow(state, seat, context, events) {
     const { resolve, ...serializable } = context
     state.lastFailedTest = { seat, ...serializable, round: state.round }
     if (typeof resolve === 'function') failedTestResolves.set(state, resolve)
@@ -378,7 +378,7 @@ export function createCampaignPlugin(deps) {
     throw new Error(`未实现的失落调查员效果：${effect.action}`)
   }
 
-  function tfaBeforeChaosReveal(state, seat, inv, events) {
+  function campaignBeforeChaosReveal(state, seat, inv, events) {
     const test = state.skillTest
     if (!test) return null
     // Phase 5（5c-24）：判据改成「封印标记 + 条目声明 substituteSealedToken」，引擎不再认卡号。
@@ -402,7 +402,7 @@ export function createCampaignPlugin(deps) {
     return null
   }
 
-  function tfaPlayCostPreview(state, inv, code) {
+  function campaignPlayCostPreview(state, inv, code) {
     const def = cardDef(code)
     if (!def) return null
     const traits = (def.traits || []).map(trait => String(trait).toLowerCase())
@@ -428,7 +428,7 @@ export function createCampaignPlugin(deps) {
     return preview.sources.length ? preview : null
   }
 
-  function tfaApplyPlayCost(state, inv, preview, events) {
+  function campaignApplyPlayCost(state, inv, preview, events) {
     if (!preview) return
     for (const id of preview.sources) {
       const asset = inv.assets.find(item => item.id === id)
@@ -438,7 +438,7 @@ export function createCampaignPlugin(deps) {
     }
   }
 
-  function tfaDiscardOnYourOwn(state, inv, events) {
+  function campaignDiscardOnYourOwn(state, inv, events) {
     // Phase 5（5a-7）：「自食其力」这类「控制盟友槽位支援就自我弃掉」由条目级 discardIfControllingAlly 声明。
     const own = inv.assets.filter(asset => registeredEntry(asset.code)?.discardIfControllingAlly)
     if (!own.length) return
@@ -452,7 +452,7 @@ export function createCampaignPlugin(deps) {
     }
   }
 
-  function tfaBorrowedTimeTurnStart(state, inv, events) {
+  function campaignBorrowedTimeTurnStart(state, inv, events) {
     // Phase 5（5a-6）：「时间借取」这类「回合开始把滴答换成额外行动」由条目级 clicksToActions 声明。
     for (const asset of inv.assets.filter(item => registeredEntry(item.code)?.clicksToActions && (item.clicks || 0) > 0)) {
       const clicks = asset.clicks
@@ -462,13 +462,13 @@ export function createCampaignPlugin(deps) {
     }
   }
 
-  const TFA_PLAYER_WAVE3_ACTIONS = new Set([
+  const CAMPAIGN_PLAYER_WAVE3_ACTIONS = new Set([
     'youHandleThisOne', 'darkProphecy', 'dumbLuck', 'yaotlIcons', 'yaotlDiscardTop', 'marksmanship',
     'wellPrepared',
     'againstAllOdds', 'pnakoticSkipTest', 'pnakoticNextTest',
   ])
 
-  function tfaPlayerEffect3(state, seat, effect, events) {
+  function campaignPlayerEffect3(state, seat, effect, events) {
     const inv = state.investigators[seat]
     // 「交给你了！」：把刚抽到的遭遇卡转给另一位调查员。
     // 「黑暗预言」：改为揭示 5 个混乱标记，选 1 个带符号的结算。
@@ -486,13 +486,13 @@ export function createCampaignPlugin(deps) {
     throw new Error(`未实现的失落玩家卡效果：${effect.action}`)
   }
 
-  function tfaPlayerEffect(state, seat, effect, events) {
-    // 第三批卡牌统一走 tfaPlayerEffect3；前两批保持在原来的调度器里。
-    if (TFA_PLAYER_WAVE3_ACTIONS.has(effect.action)) return tfaPlayerEffect3(state, seat, effect, events)
-    return tfaPlayerEffectCore(state, seat, effect, events)
+  function campaignPlayerEffect(state, seat, effect, events) {
+    // 第三批卡牌统一走 campaignPlayerEffect3；前两批保持在原来的调度器里。
+    if (CAMPAIGN_PLAYER_WAVE3_ACTIONS.has(effect.action)) return campaignPlayerEffect3(state, seat, effect, events)
+    return campaignPlayerEffectCore(state, seat, effect, events)
   }
 
-  function tfaPlayerEffectCore(state, seat, effect, events) {
+  function campaignPlayerEffectCore(state, seat, effect, events) {
     const inv = state.investigators[seat]
     // 04157「一心一意」的技能成功后：在自己控制的一个充能/秘密支援上放 1 点。
     // 它属于「技能卡的 onSuccess 标志」而不是卡的 event，因此仍留在本调度器里。
@@ -540,5 +540,5 @@ export function createCampaignPlugin(deps) {
     throw new Error(`未实现的失落玩家卡效果：${effect.action}`)
   }
 
-  return { ensureSupplies, suppliesFor, hasSupply, grantSupplies, crossOffSupply, checkSupplies, suppliesAtLocation, vengeancePoints, recordVengeance, isPoisoned, poisonInvestigator, yigsFury, addYigsFury, setExpeditionLeader, moveRelicOfAges, relicOfAges, relicOfAgesLocation, buildExplorationDeck, addToExplorationDeck, doExplore, tfaCardDrawReaction, tfaFailedTestWindow, carcosaPlayerEffect, carcosaInvestigatorEffect, tfaInvestigatorEffect, tfaBeforeChaosReveal, tfaPlayCostPreview, tfaApplyPlayCost, tfaDiscardOnYourOwn, tfaBorrowedTimeTurnStart, TFA_PLAYER_WAVE3_ACTIONS, tfaPlayerEffect3, tfaPlayerEffect, tfaPlayerEffectCore }
+  return { ensureSupplies, suppliesFor, hasSupply, grantSupplies, crossOffSupply, checkSupplies, suppliesAtLocation, vengeancePoints, recordVengeance, isPoisoned, poisonInvestigator, yigsFury, addYigsFury, setExpeditionLeader, moveRelicOfAges, relicOfAges, relicOfAgesLocation, buildExplorationDeck, addToExplorationDeck, doExplore, campaignCardDrawReaction, campaignFailedTestWindow, carcosaPlayerEffect, carcosaInvestigatorEffect, tfaInvestigatorEffect, campaignBeforeChaosReveal, campaignPlayCostPreview, campaignApplyPlayCost, campaignDiscardOnYourOwn, campaignBorrowedTimeTurnStart, CAMPAIGN_PLAYER_WAVE3_ACTIONS, campaignPlayerEffect3, campaignPlayerEffect, campaignPlayerEffectCore }
 }

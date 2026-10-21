@@ -1,6 +1,6 @@
 # Phase 6 交接文档（engine 拆分 · 战役解耦）
 
-> 最后更新：Phase 6 `6e-17` 之后（`EFFECTS` 清零、engine.js 2375 行（−81.2%）、战役插件化第一/第二批）。
+> 最后更新：Phase 6 `6e-19` 之后（`EFFECTS` 清零、engine.js 2377 行（−81.2%）、战役插件化三批交付）。
 > 配套阅读：`docs/architecture-refactor-roadmap.md`（Phase 6 目标与判据）、
 > `docs/phase6-decoupling.md`（44 节逐批证据）、`docs/phase5-handoff.md`（能力层迁移交接）。
 
@@ -9,7 +9,7 @@
 ## 1. 一句话现状
 
 Phase 6 的四件事里，**①② 已完成**、**③ 已完成（`EFFECTS` 57 → 0、顶层字段 → 0）**、
-**④ 已拆到 −81.2%（2375 行，达到 < 2.5k 目标）；战役插件化第一（行为）+ 第二批（公开投影 / agentHints）已落地**。
+**④ 已拆到 −81.2%（2377 行，达到 < 2.5k 目标）；战役插件化三批（行为 / 公开投影+agentHints / stateSlice）已落地**。
 
 | 目标 | 状态 | 证据 |
 | --- | --- | --- |
@@ -166,7 +166,7 @@ node tools/run-tests.mjs fast                                                 # 
 | `deck-cards.js` | `playReactionCard` / `topDiscardEvent` / `disposePlayedEvent` / `refillAsset` / `reloadAmmo` / `rechargeAsset` / `searchCards` / `findZoneCard` | ~250 |
 | `stats.js` | `getStat` / `assetEffect` / `assetPassiveBonus` / `handSize` / `investigateBonus` / `extraActionBonus` / `iconValue` / `effectiveTraits` / `cardKeyword` | ~280 |
 
-### 5.2 战役插件化第三批（前两批已交付）
+### 5.2 战役插件化收尾（前三批已交付）
 
 第一批（6e-7）搬走了**行为**；第二批要把**状态切片与观察投影**也收进去：
 

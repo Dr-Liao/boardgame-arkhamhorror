@@ -1934,3 +1934,43 @@ engine.js：2403 → 2375 行（累计 12654 → 2375，−81.2%）
   战役专属字段仍由若干引擎模块直接读写；下一步用 `campaignSlice(state)` 暴露读写器，
   引擎只经访问器访问（**字段名不改**，否则 `stateHash` 变）。
 - `EFFECTS` 读点回落分支清理：`registeredEntry(code)?.x ?? EFFECTS[code]?.x` 的右半边已永远取不到值。
+
+---
+
+## 46. 6e-18 / 6e-19：战役插件化第三批（stateSlice + 引擎侧中性化）
+
+### 46.1 stateSlice：战役状态字段只经访问器读写
+
+新增 `src/cards/campaign-state.js`（`createCampaignState()`）——**战役专属状态字段的唯一读写口**，
+引擎通过 `commonDeps.campaignState` 注入：
+
+| 分组 | 字段（**名字保持不变**，因为进 `stateHash`） | 访问器 |
+| --- | --- | --- |
+| Carcosa 折扣 / 帷幕 / 难度 | `carcosaPlayDiscount` / `carcosaShroudModifier` / `carcosaDifficultyModifier` | `playDiscount` / `setPlayDiscount` / `clearPlayDiscount`、`setTurnShroudModifier` / `turnShroudModifier`、`setEnemyTestModifier` |
+| Carcosa 演出 / 押注 | `carcosaActionGains` / `carcosaWagers` | `grantActionGain`、`wager` / `addWager` / `clearWager` |
+| TFA 伤害 | `tfaDamageBonus` / `tfaDamageReduction` | `consumeDamageBonus`（取用即清）、`setDamageBonus`、`damageReduction` |
+| TFA 回合 | `tfaNoReadyRound` / `tfaRoundEndDiscard` | `cannotReadyRound` / `clearCannotReadyRound`、`roundEndDiscardRound` / `setRoundEndDiscard` |
+
+改造了 10 个引擎模块（`actions` / `api-clue` / `api-enemy` / `combat` / `enemies` / `harm-threat` /
+`phases` / `skill-effects` / `tests` / `turn-flow`），**行为零变化**（同一批字段、同一批写入点）。
+
+### 46.2 引擎侧中性化：战役名的三种残留与处理
+
+| 残留 | 处理 |
+| --- | --- |
+| 仍然 live 的 `tfa*` 包装（打出折扣 / 抽牌反应 / 弃置自身 / 借取时间 / 失败检定窗口 / 开局揭示） | 全局改名 `campaign*`（含 campaign-plugin 的内部函数名），语义本来就是「战役通用调度」 |
+| `dunwichPlayerEffect`（玩家卡通用效果调度，名字带战役） | 改名 `playerCardEffect`（内容层模块名同步） |
+| 四个**逃生原语** `carcosaPlayer` / `carcosaInvestigator` / `tfaPlayer` / `tfaInvestigator` | **保留**：它们是 `INVESTIGATOR_ABILITIES` 数据里的 effect 类型词表，删掉分派会让卡 Carcosa/TFA 调查员能力失效（本轮实测：删了之后 11 条验收用例红，含 Yorick / Sefina / Lola / Leo / Ursula）。要彻底中性化，需要把「类型 → 处理函数」的映射搬到内容层注册（下一批） |
+
+### 46.3 门禁
+
+- 新增 2 条用例（`tests/phase6-campaign.test.mjs`，共 7 条）：`stateSlice` 字段名/形状不变、读写往返、
+  「同一 round:seat 只给一次行动」；以及**机械守卫**：`src/engine/*` 里不得出现那 9 个战役状态字段名。
+- `replay --compare` 全程逐条一致；`fast` 2153 例 2146 通过、失败 7 条＝既有 7 条；
+  `cards:audit --check` / `phase6-guard` / `architecture-guard` 全绿。
+
+### 46.4 下一步
+
+把逃生原语的「类型 → 处理函数」映射搬进 `campaign-plugin`，由 engine.js 在装配时注册
+（`registerEffectPrimitives(...)`），`effects.js` / `ability-exec.js` 只按注册表分派，
+这样引擎源码里最后一个战役词（`'carcosaPlayer'` 等）也能消失。

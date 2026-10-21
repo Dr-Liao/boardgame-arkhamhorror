@@ -12,6 +12,7 @@
 
 export function createEnemies(deps) {
   const {
+    campaignState,
     entityModifierTotal,
     EFFECTS,
     PALLID_MASK_CODE,
@@ -318,13 +319,10 @@ function damageEnemy(state, enemy, amount, seat, events, source = null) {
     && (entityRuleActive(state, enemy, 'cannot:beDamaged')
       || scenarioBehavior(state).enemyDamageAllowed?.(state, enemy, source, seat) === false)) return false
   // 「职业杀手」：本回合该敌人下次受到的伤害 +1（一次性）。
-  let total = amount
-  if (enemy.tfaDamageBonus?.round === state.round) {
-    total += enemy.tfaDamageBonus.amount || 0
-    delete enemy.tfaDamageBonus
-  }
+  let total = amount + campaignState.consumeDamageBonus(enemy, state)
   // 幽嘶蛇人：每次受到攻击少受 1 点伤害（失落时代 M3 的通用减伤字段）。
-  if (enemy.tfaDamageReduction) total = Math.max(0, total - enemy.tfaDamageReduction)
+  const reduction = campaignState.damageReduction(enemy)
+  if (reduction) total = Math.max(0, total - reduction)
   enemy.damageTaken = (enemy.damageTaken || 0) + total
   enemy.defeatedBy = seat
   scenarioBehavior(state).enemyDamaged?.(state, enemy, scenarioRuntime(state, events))

@@ -10,6 +10,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import { campaignAgentHints, campaignProjection } from '../src/cards/campaign-view.js'
+import { createCampaignState } from '../src/cards/campaign-state.js'
 
 const ROOT = process.cwd()
 
@@ -74,4 +75,52 @@ test('观察投影不再自己认战役字段（插件化的机械守卫）', ()
   for (const token of ['relicOfAges', 'yigsFury', 'expeditionLeaderSeat', 'threadsOfFate', 'theDepthsOfYoth', 'explorationDeck']) {
     assert.equal(text.includes(token), false, `observation.js 里不应再出现战役字段 ${token}`)
   }
+})
+
+test('stateSlice：字段名与形状保持不变，只把读写收进访问器', () => {
+  const slice = createCampaignState()
+  const state = { round: 3, currentSeat: 1 }
+  const inv = { actionsLeft: 2 }
+  // 打出折扣
+  slice.setPlayDiscount(inv, 2)
+  assert.equal(inv.carcosaPlayDiscount, 2, '字段名必须保持不变（进 stateHash）')
+  assert.equal(slice.playDiscount(inv), 2)
+  slice.clearPlayDiscount(inv)
+  assert.equal(slice.playDiscount(inv), 0)
+  // 本回合帷幕（写入回合/座位，跨回合失效）
+  const loc = {}
+  slice.setTurnShroudModifier(loc, state, -1)
+  assert.deepEqual(loc.carcosaShroudModifier, { amount: -1, round: 3, turnSeat: 1 })
+  assert.equal(slice.turnShroudModifier(loc, state), -1)
+  assert.equal(slice.turnShroudModifier(loc, { round: 4, currentSeat: 1 }), 0)
+  // 伤害加成（取用即清）/ 减伤
+  const enemy = {}
+  slice.setDamageBonus(enemy, state, 2)
+  assert.equal(slice.consumeDamageBonus(enemy, state), 2)
+  assert.equal(slice.consumeDamageBonus(enemy, state), 0)
+  slice.setDamageReduction(enemy, 1)
+  assert.equal(slice.damageReduction(enemy), 1)
+  // 押注资源 / 演出奖励行动（同一 round:seat 只给一次）
+  slice.addWager(inv, '02001', 3)
+  assert.equal(slice.wager(inv, '02001'), 3)
+  slice.clearWager(inv, '02001')
+  assert.equal(slice.wager(inv, '02001'), 0)
+  assert.equal(slice.grantActionGain(inv, state, 'asset1'), true)
+  assert.equal(slice.grantActionGain(inv, state, 'asset1'), false)
+  assert.equal(inv.actionsLeft, 3)
+})
+
+test('stateSlice：引擎模块不再直接读写这些战役字段（机械守卫）', () => {
+  const fields = ['carcosaPlayDiscount', 'carcosaShroudModifier', 'carcosaActionGains',
+    'carcosaWagers', 'tfaDamageBonus', 'tfaDamageReduction', 'tfaNoReadyRound', 'tfaRoundEndDiscard']
+  const dir = path.join(ROOT, 'src', 'engine')
+  const offenders = []
+  for (const name of fs.readdirSync(dir)) {
+    if (!name.endsWith('.js')) continue
+    const text = fs.readFileSync(path.join(dir, name), 'utf8')
+    for (const field of fields) {
+      if (text.includes(field)) offenders.push(`${name}: ${field}`)
+    }
+  }
+  assert.deepEqual(offenders, [], '战役状态字段只允许出现在 src/cards/campaign-state.js')
 })

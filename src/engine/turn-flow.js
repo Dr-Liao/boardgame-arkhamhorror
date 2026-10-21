@@ -3,6 +3,7 @@
 // 打出费用与折扣、旧印结算、反应规格与条件评估、以及「支付/选择」的共用小函数。
 export function createTurnFlow(deps) {
   const {
+    campaignState,
     ALL_CARDS,
     EFFECTS,
     INVESTIGATOR_ABILITIES,
@@ -58,7 +59,7 @@ export function createTurnFlow(deps) {
     scenarioBehavior,
     scenarioRuntime,
     spendClues,
-    tfaPlayCostPreview,
+    campaignPlayCostPreview,
     tokenLabel,
     turnBeginningWindow,
     unpaidExtraActionThreats,
@@ -375,7 +376,7 @@ export function createTurnFlow(deps) {
     const lola = inv.lolaDiscount?.round === state.round && inv.lolaDiscount?.turnSeat === state.currentSeat
       && factions.includes(inv.lolaDiscount.role) ? inv.lolaDiscount.amount : 0
     // Phase 6：这两项都是「打出折扣」的通用通道（名字里的战役前缀是历史遗留的 state 字段）。
-    const cardDiscount = inv.carcosaPlayDiscount || 0
+    const cardDiscount = campaignState.playDiscount(inv)
     const playDiscount = inv.playDiscount || 0
     const threatIncrease = inv.threat.reduce((sum, threat) =>
       sum + (getThreatEffect(threat)?.playCostIncrease || 0), 0)
@@ -471,7 +472,7 @@ export function createTurnFlow(deps) {
     // 以及 C2 的 add:keyword 授予（卡在运行期获得"快速"）。三处汇合在 actionCost 一处。
     if (move.action === 'play' && (cardPlayFlag(move.copyCode || move.cardId, 'fast')
       || cardKeyword(state, inv, move.copyCode || move.cardId, 'fast')
-      || tfaPlayCostPreview(state, inv, move.copyCode || move.cardId)?.noAction)) cost = 0
+      || campaignPlayCostPreview(state, inv, move.copyCode || move.cardId)?.noAction)) cost = 0
     if (cost) cost += unpaidExtraActionThreats(state, inv, kind).length
     if (applyTome && cost > 0 && tomeActionEligible(state, inv, move)) cost--
     return cost

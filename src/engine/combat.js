@@ -9,6 +9,7 @@
 
 export function createCombat(deps) {
   const {
+    campaignState,
     afterEvade,
     aliveInvestigators,
     applyDamage,
@@ -168,9 +169,7 @@ function doFight(state, seat, opts, events, noSpend) {
       const weaponBonus = opts.successBy == null || r.value - difficulty >= opts.successBy ? opts.damageBonus || 0 : 0
       if (opts.damageOnSuccessBy != null && r.value - difficulty >= opts.damageOnSuccessBy) opts.damageBonus = (opts.damageBonus || 0) + 1
       if (opts.gainActionOnSuccessBy != null && r.value - difficulty >= opts.gainActionOnSuccessBy) {
-        inv.carcosaActionGains ||= {}
-        const key = `${state.round}:${state.currentSeat}:${opts.assetId || 'attack'}`
-        if (!inv.carcosaActionGains[key]) { inv.carcosaActionGains[key] = true; inv.actionsLeft++ }
+        campaignState.grantActionGain(inv, state, opts.assetId)
       }
       const onlyEngaged = enemiesEngagedWith(state, inv)
       const conditional = opts.onlyEngagedDamage && onlyEngaged.length === 1 && onlyEngaged[0].id === enemy.id ? opts.onlyEngagedDamage : 0
@@ -220,10 +219,7 @@ function doFight(state, seat, opts, events, noSpend) {
 
       if (enemyRuleFlags(enemy.code).damageOnlyFrom && opts.assetId !== enemyRuleFlags(enemy.code).damageOnlyFrom && !enemyTextBlanked(state, enemy)) return
       // 「职业杀手」：本回合该敌人下次受到的攻击伤害 +1（一次性）。
-      if (enemy.tfaDamageBonus?.round === state.round) {
-        dmg += enemy.tfaDamageBonus.amount || 0
-        delete enemy.tfaDamageBonus
-      }
+      dmg += campaignState.consumeDamageBonus(enemy, state)
       if (opts.stormOfSpirits) {
         for (const other of state.enemies.filter(item => item.location === enemy.location)) {
           damageEnemy(state, other, other.id === enemy.id ? dmg : 2, seat, events, opts.assetId || null)
@@ -359,7 +355,7 @@ function doEvade(state, seat, opts, events, noSpend) {
       for (const commitment of r.committed || []) {
         const code = typeof commitment === 'string' ? commitment : commitment.code
         const bonus = commitProfile(code)?.onEvadeSuccess?.damageBonusNext
-        if (bonus && state.enemies.includes(enemy)) enemy.tfaDamageBonus = { amount: bonus, round: state.round }
+        if (bonus && state.enemies.includes(enemy)) campaignState.setDamageBonus(enemy, state, bonus)
       }
       if (opts.preventEngageThisTurn) enemy.preventEngageSeat = { seat, round: state.round, turnSeat: state.currentSeat }
       if (opts.evadeOthersOnSuccess) for (const other of state.enemies.filter(item => item.engagedSeat === seat)) autoEvadeEnemy(state, other, events)

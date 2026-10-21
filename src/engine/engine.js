@@ -34,6 +34,7 @@ import { createAssets } from './assets.js'
 import { createHarmThreat } from './harm-threat.js'
 import { createTreacheryTokens } from './treachery-tokens.js'
 import { createCampaignPlugin } from '../cards/campaign-plugin.js'
+import { createCampaignState } from '../cards/campaign-state.js'
 import { createDescribeAi } from './describe-ai.js'
 import { createActionsExtra } from './actions-extra.js'
 import { createTableDecisions } from './table-decisions.js'
@@ -900,7 +901,11 @@ const hubPendingSeats = state => state.investigators.map(inv => inv.seat).filter
 // aliveInvestigators 17 张…）。把「3 张以上表都要、且不是工厂产物」的条目提成 commonDeps，
 // 各表只写自己额外需要的依赖。工厂产物（doFight/doEvade/… 等 const 绑定）仍逐表内联：
 // 它们在模块末尾才初始化，进 commonDeps 会 TDZ。
+// Phase 6（战役插件化第三批）：战役专属状态字段只经这个访问器读写。
+const campaignState = createCampaignState()
+
 const commonDeps = {
+  campaignState,
   ALL_CARDS,
   CLASS_NAMES,
   EFFECTS,
@@ -1196,8 +1201,8 @@ const { doPlay, doInvestigate } = createActions({
   playAccess,
   replaceAssets,
   sealChaosToken,
-  tfaApplyPlayCost,
-  tfaPlayCostPreview,
+  campaignApplyPlayCost,
+  campaignPlayCostPreview,
   withEffectCode,
 })
 
@@ -1217,7 +1222,7 @@ const { upkeepPhase, runAgendaReveal } = createPhases({
   runEnemyRoundEnd,
   runLocationRoundEnd,
   runThreatEndTurn,
-  tfaDiscardOnYourOwn,
+  campaignDiscardOnYourOwn,
 })
 
 // Phase 6（6d-6）：合法行动枚举 / 校验搬进 moves.js；外部仍然从 engine.js 取这两个名字。
@@ -1264,7 +1269,7 @@ export const { legalMoves, validateMove } = createMoves({
   playConditionHelpers,
   resolveTarget,
   stateCompatibilityError,
-  tfaPlayCostPreview,
+  campaignPlayCostPreview,
   tomeActionEligible,
   validateHubMove,
 })
@@ -1313,8 +1318,8 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
   resolveSpecialToken,
   returnChaosToken,
   summarizeTestResult,
-  tfaBeforeChaosReveal,
-  tfaFailedTestWindow,
+  campaignBeforeChaosReveal,
+  campaignFailedTestWindow,
 })
   return performTestImpl(state, seat, skill, difficulty, options)
 }
@@ -1387,15 +1392,15 @@ function resolveWeakness(state, inv, def, events, texts) {
 }
 
 // Phase 6（6d-15）：玩家卡效果调度搬进 player-effects.js；惰性装配，保留老调用点。
-let dunwichPlayerEffectImpl = null
-function dunwichPlayerEffect(state, seat, effect, events) {
-  dunwichPlayerEffectImpl ||= createPlayerEffects({
+let playerCardEffectImpl = null
+function playerCardEffect(state, seat, effect, events) {
+  playerCardEffectImpl ||= createPlayerEffects({
   ...commonDeps,
   doFight,
   doInvestigate,
   doPlay,
 })
-  return dunwichPlayerEffectImpl(state, seat, effect, events)
+  return playerCardEffectImpl(state, seat, effect, events)
 }
 
 // Phase 6（6d-16）：能力执行搬进 ability-exec.js；惰性装配（部分依赖表在顶层立即求值）。
@@ -1500,7 +1505,6 @@ function setupApi() {
   buildDeckFromList,
   campaignManifestFor,
   canSelectInvestigator,
-  carcosaPlayerEffect,
   consumeStartingAdjustments,
   corePlayerPool,
   embeddedCardDefs,
@@ -1710,6 +1714,10 @@ export function awardLocationVictory(...args) { return locationsApi().awardLocat
 let skillEffectsImpl = null
 function skillEffectsApi() {
   skillEffectsImpl ||= createSkillEffects({
+    tfaInvestigatorEffect,
+    carcosaPlayerEffect,
+    carcosaInvestigatorEffect,
+    campaignPlayerEffect,
   ...commonDeps,
   legalMoves,
   upkeepPhase,
@@ -1721,8 +1729,6 @@ function skillEffectsApi() {
   attachBarricade,
   autoEvadeNonElite,
   blankEnemy,
-  carcosaInvestigatorEffect,
-  carcosaPlayerEffect,
   chooseInvestigator,
   createEffect,
   dealDamageAll,
@@ -1733,7 +1739,7 @@ function skillEffectsApi() {
   disengageAll,
   drawEnemyByTrait,
   dukeInvestigate,
-  dunwichPlayerEffect,
+  playerCardEffect,
   enemyForTarget,
   healDamageAtLocation,
   healHorrorNearby,
@@ -1751,8 +1757,6 @@ function skillEffectsApi() {
   searchDiscard,
   shuffleIntoEncounter,
   targetedTest,
-  tfaInvestigatorEffect,
-  tfaPlayerEffect,
 })
   return skillEffectsImpl
 }
@@ -1775,7 +1779,7 @@ function turnApi() {
   exploreOnlyActionBonus,
   removeThreat,
   runAgendaForced,
-  tfaBorrowedTimeTurnStart,
+  campaignBorrowedTimeTurnStart,
   useGoldPocketWatch,
 })
   return turnImpl
@@ -1847,7 +1851,7 @@ function deckOpsApi() {
     normalizeSearchOptions,
     removeThreat,
     resolveWeakness,
-    tfaCardDrawReaction,
+    campaignCardDrawReaction,
     weaknessProfile,
   })
   return deckOpsImpl
@@ -2075,12 +2079,10 @@ export function suppliesAtLocation(...args) { return createCampaignPluginApi().s
 export function isPoisoned(...args) { return createCampaignPluginApi().isPoisoned(...args) } export function poisonInvestigator(...args) { return createCampaignPluginApi().poisonInvestigator(...args) } export function yigsFury(...args) { return createCampaignPluginApi().yigsFury(...args) }
 export function addYigsFury(...args) { return createCampaignPluginApi().addYigsFury(...args) } export function setExpeditionLeader(...args) { return createCampaignPluginApi().setExpeditionLeader(...args) } export function moveRelicOfAges(...args) { return createCampaignPluginApi().moveRelicOfAges(...args) }
 export function relicOfAges(...args) { return createCampaignPluginApi().relicOfAges(...args) } export function relicOfAgesLocation(...args) { return createCampaignPluginApi().relicOfAgesLocation(...args) } export function buildExplorationDeck(...args) { return createCampaignPluginApi().buildExplorationDeck(...args) }
-export function addToExplorationDeck(...args) { return createCampaignPluginApi().addToExplorationDeck(...args) } export function doExplore(...args) { return createCampaignPluginApi().doExplore(...args) } export function tfaCardDrawReaction(...args) { return createCampaignPluginApi().tfaCardDrawReaction(...args) }
-export function tfaFailedTestWindow(...args) { return createCampaignPluginApi().tfaFailedTestWindow(...args) } export function carcosaPlayerEffect(...args) { return createCampaignPluginApi().carcosaPlayerEffect(...args) } export function carcosaInvestigatorEffect(...args) { return createCampaignPluginApi().carcosaInvestigatorEffect(...args) }
-export function tfaInvestigatorEffect(...args) { return createCampaignPluginApi().tfaInvestigatorEffect(...args) } export function tfaBeforeChaosReveal(...args) { return createCampaignPluginApi().tfaBeforeChaosReveal(...args) } export function tfaPlayCostPreview(...args) { return createCampaignPluginApi().tfaPlayCostPreview(...args) }
-export function tfaApplyPlayCost(...args) { return createCampaignPluginApi().tfaApplyPlayCost(...args) } export function tfaDiscardOnYourOwn(...args) { return createCampaignPluginApi().tfaDiscardOnYourOwn(...args) } export function tfaBorrowedTimeTurnStart(...args) { return createCampaignPluginApi().tfaBorrowedTimeTurnStart(...args) }
-export function TFA_PLAYER_WAVE3_ACTIONS(...args) { return createCampaignPluginApi().TFA_PLAYER_WAVE3_ACTIONS(...args) } export function tfaPlayerEffect3(...args) { return createCampaignPluginApi().tfaPlayerEffect3(...args) } export function tfaPlayerEffect(...args) { return createCampaignPluginApi().tfaPlayerEffect(...args) }
-export function tfaPlayerEffectCore(...args) { return createCampaignPluginApi().tfaPlayerEffectCore(...args) }
+export function addToExplorationDeck(...args) { return createCampaignPluginApi().addToExplorationDeck(...args) } export function doExplore(...args) { return createCampaignPluginApi().doExplore(...args) } export function campaignPlayCostPreview(...args) { return createCampaignPluginApi().campaignPlayCostPreview(...args) } export function campaignCardDrawReaction(...args) { return createCampaignPluginApi().campaignCardDrawReaction(...args) }
+export function campaignFailedTestWindow(...args) { return createCampaignPluginApi().campaignFailedTestWindow(...args) } 
+export function campaignApplyPlayCost(...args) { return createCampaignPluginApi().campaignApplyPlayCost(...args) } export function campaignDiscardOnYourOwn(...args) { return createCampaignPluginApi().campaignDiscardOnYourOwn(...args) } export function campaignBorrowedTimeTurnStart(...args) { return createCampaignPluginApi().campaignBorrowedTimeTurnStart(...args) }
+export function campaignBeforeChaosReveal(...args) { return createCampaignPluginApi().campaignBeforeChaosReveal(...args) } export function carcosaPlayerEffect(...args) { return createCampaignPluginApi().carcosaPlayerEffect(...args) } export function carcosaInvestigatorEffect(...args) { return createCampaignPluginApi().carcosaInvestigatorEffect(...args) } export function tfaInvestigatorEffect(...args) { return createCampaignPluginApi().tfaInvestigatorEffect(...args) } export function tfaPlayerEffect(...args) { return createCampaignPluginApi().tfaPlayerEffect(...args) } export function campaignPlayerEffect(...args) { return createCampaignPluginApi().campaignPlayerEffect(...args) }
 
 
 // ---------------------------------------------------------------------------
@@ -2356,7 +2358,7 @@ function createTurnFlowApi() {
     resolveCallOfTheUnknown,
     runBetweenInvestigationPhases,
     runThreatEndTurn,
-    tfaPlayCostPreview,
+    campaignPlayCostPreview,
     turnBeginningWindow,
     unpaidExtraActionThreats,
     useGoldPocketWatch,

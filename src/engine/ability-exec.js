@@ -316,6 +316,25 @@ function effectError(state, inv, effect) {
     if (!hasTarget) return '没有可充能的法术支援'
   }
   if (effect.type === 'search' && !inv.deck.length) return '牌库中没有可搜索的牌'
+  if (effect.type === 'searchTop' && !inv.deck.length) return '牌库中没有可搜索的牌'
+  if (effect.type === 'investigateForResources') {
+    const loc = state.locations.find(item => item.id === inv.location)
+    if (!loc || loc.locked) return '这里不能调查'
+  }
+  if (effect.type === 'moveTo') {
+    if (!investigatorMoveDestinations(state, inv.seat, effect).length) return '没有可移动的地点'
+  }
+  if (effect.type === 'dealDamageAll') {
+    const locations = effect.location === 'choice'
+      ? [inv.location, ...((state.locations.find(item => item.id === inv.location)?.connections) || [])]
+      : [inv.location]
+    const hasTarget = state.enemies.some(enemy => locations.includes(enemy.location))
+      || (effect.investigators && aliveInvestigators(state).some(item => locations.includes(item.location)))
+    if (!hasTarget) return '这里没有可造成伤害的目标'
+  }
+  if (effect.type === 'dealDamageExhausted' && !state.enemies.some(enemy => enemy.location === inv.location && enemy.exhausted)) return '这里没有已横置的敌人'
+  if (effect.type === 'blankEnemy' && !state.enemies.some(enemy => enemy.location === inv.location && !enemy.elite)) return '这里没有非精英敌人'
+  if (effect.type === 'autoEvadeNonElite' && !state.enemies.some(enemy => enemy.location === inv.location && !enemy.elite)) return '这里没有非精英敌人'
   if (effect.type === 'tfaInvestigator') {
     if (effect.action === 'playAllyDiscounted') {
       const cost = code => Math.max(0, playCost(state, inv, cardDef(code)) - (effect.amount || 0))

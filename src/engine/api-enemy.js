@@ -7,6 +7,7 @@
 
 export function createEnemyApi(state, events, deps) {
   const {
+    campaignState,
     assetCannotLeavePlay,
     attachCardTo,
     cardName,
@@ -26,11 +27,7 @@ export function createEnemyApi(state, events, deps) {
   return {
     enemyTestModifier: (enemy, spec = {}) => {
       if (!enemy) return enemy
-      enemy.carcosaDifficultyModifier = {
-        fight: spec.fight || 0, evade: spec.evade || 0,
-        round: state.round, turnSeat: state.currentSeat,
-      }
-      return enemy
+      return campaignState.setEnemyTestModifier(enemy, state, spec)
     },
     // Phase 5（5c）：「本阶段非精英敌人不攻击」（内讧）。
     preventNonEliteAttacks: (seat = state.currentSeat) => {

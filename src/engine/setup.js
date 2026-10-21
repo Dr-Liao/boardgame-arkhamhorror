@@ -35,7 +35,6 @@ export function createSetup(deps) {
     campaignFor,
     campaignManifestFor,
     canSelectInvestigator,
-    carcosaPlayerEffect,
     cardDef,
     consumeStartingAdjustments,
     corePlayerPool,
@@ -207,7 +206,6 @@ function prepareInvestigator(state, inv, events, startLocation) {
       executeDescriptor(state, { inv, source: card, descriptor: setupDescriptor, events, silent: true })
     } else {
       const setup = EFFECTS[code]?.setup
-      if (setup) carcosaPlayerEffect(state, inv.seat, { ...setup, assetId: card.id }, events)
     }
   }
   drawOpeningHand(state, inv)

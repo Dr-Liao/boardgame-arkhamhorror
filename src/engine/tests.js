@@ -9,6 +9,7 @@
 
 export function createPerformTest(deps) {
   const {
+    campaignState,
     capabilityBlocked,
     EFFECTS,
     INVESTIGATOR_ABILITIES,
@@ -67,8 +68,8 @@ export function createPerformTest(deps) {
     scenarioRuntime,
     shuffle,
     summarizeTestResult,
-    tfaBeforeChaosReveal,
-    tfaFailedTestWindow,
+    campaignBeforeChaosReveal,
+    campaignFailedTestWindow,
     tokenLabel,
     triggerReaction,
   } = deps
@@ -221,8 +222,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         const wager = maximum ? Number(requestChoice(state, { kind: 'resource', source: code, seat: owner.seat,
           prompt: '选择为本次检定押注的资源。', options: Array.from({ length: maximum + 1 }, (_, amount) => ({ id: String(amount), label: `${amount}资源` })) })) : 0
         owner.resources -= wager
-        owner.carcosaWagers ||= {}
-        owner.carcosaWagers[code] = (owner.carcosaWagers[code] || 0) + wager
+        campaignState.addWager(owner, code, wager)
       }
       if (skillEffect?.spendChargesForIcons) {
         const chargeAssets = owner.assets.filter(asset => isChargeAsset(asset) && (asset.uses || 0) > 0)
@@ -416,7 +416,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     }
     // 失落时代：揭示前的替代与额外揭示（危险预感 / 奥利芙 / 黑暗预言）。
     if (token == null) {
-      const plan = tfaBeforeChaosReveal(state, seat, inv, events)
+      const plan = campaignBeforeChaosReveal(state, seat, inv, events)
       if (plan?.token) token = plan.token
       else if (plan?.count > 1) {
         const pool = Array.from({ length: plan.count }, () => drawChaosToken(state))
@@ -429,7 +429,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         const remaining = [...usable]
         for (let pick = 0; pick < keep && remaining.length; pick++) {
           const answer = remaining.length === 1 ? '0' : requestChoice(state, {
-            kind: 'token', source: plan.source || 'tfaReveal', seat,
+            kind: 'token', source: plan.source || 'campaignReveal', seat,
             prompt: `${usable.length === pool.length ? `揭示 ${pool.length} 个混乱标记` : `揭示 ${pool.length} 个混乱标记，其中只有 ${usable.length} 个带有符号`}，选择第 ${pick + 1} 个要结算的标记。`,
             options: remaining.map((item, index) => ({ id: String(index), label: tokenLabel(item.face) })),
           })
@@ -682,7 +682,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     state.skillTest.stage = 'ST.7'
     resolveResult(result)
     scenarioBehavior(state).afterTest?.(state, inv, result, scenarioRuntime(state, events))
-    tfaFailedTestWindow(state, seat, { skill, difficulty, baseValue: statReference, source: options.source,
+    campaignFailedTestWindow(state, seat, { skill, difficulty, baseValue: statReference, source: options.source,
       peril: options.peril, resolve: options.resolve, failedBy: difficulty }, events)
     return result
   }
@@ -837,7 +837,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   }
   // 「学无止境」：检定失败并结算完后重新尝试该检定。
   if (!success) {
-    tfaFailedTestWindow(state, seat, { skill, difficulty, baseValue: statReference, source: options.source,
+    campaignFailedTestWindow(state, seat, { skill, difficulty, baseValue: statReference, source: options.source,
       peril: options.peril, resolve: options.resolve, failedBy: Math.max(0, difficulty - value) }, events)
   }
   // 检定结束：本次检定内的效果到期（A1）。

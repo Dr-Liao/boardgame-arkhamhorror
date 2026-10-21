@@ -83,7 +83,7 @@ export function resolveEffect(state, seat, effect, rt) {
     case 'lookTopDeckAndDoom': case 'cancelHarmGainResources': case 'playItemFromHand':
     case 'removeDoomControlled': case 'temporaryAllyFromDiscard': case 'decipheredReality':
     case 'redrawEncounter': case 'redGlovedManSkills': case 'returnCommittedSkill': {
-      rt.dunwichPlayerEffect(seat, effect)
+      rt.playerCardEffect(seat, effect)
       break
     }
     case 'carcosaInvestigator': {
@@ -120,7 +120,7 @@ export function resolveEffect(state, seat, effect, rt) {
       break
     }
     case 'cancelHarm': {
-      rt.dunwichPlayerEffect(seat, { ...effect, type: 'cancelHarmGainResources', noResources: true })
+      rt.playerCardEffect(seat, { ...effect, type: 'cancelHarmGainResources', noResources: true })
       break
     }
     case 'researchSolution': {

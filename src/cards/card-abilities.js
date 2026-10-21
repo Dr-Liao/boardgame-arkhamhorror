@@ -3381,7 +3381,7 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '01008', tomeHandSlotsPerCopy: 2 },
   // 04308 时间借取：回合开始时把卡上的滴答全部换成额外行动（5c-37 已把滴答计数迁到描述子）。
   { code: '04308', clicksToActions: true },
-  // 04236 「自食其力」：控制占用盟友槽位的支援时自我弃掉（读点在 tfaDiscardOnYourOwn）。
+  // 04236 「自食其力」：控制占用盟友槽位的支援时自我弃掉（读点在 campaignDiscardOnYourOwn）。
   { code: '04236', discardIfControllingAlly: true },
   // 01007 疯狂之石（威胁）：带计数时剧本结束 +1 精神创伤（读点在结局结算段）。
   { code: '01007', mentalTraumaIfCounters: true },
@@ -3412,7 +3412,7 @@ export const MIGRATED_RULE_ENTRIES_5A6 = [
   { code: '04265', restrainsDoom: true, restrainsReady: true },
   // 04193 特制弹药：附属在枪械上，攻击怪物时 +1 伤害（读点在攻击结算）。
   { code: '04193', monsterAttackDamageBonus: 1 },
-  // 04230 / 04231 古代巨石（研究完成）：抽牌后花等量秘密，造成伤害 / 治愈恐惧（读点在 tfaCardDrawReaction）。
+  // 04230 / 04231 古代巨石（研究完成）：抽牌后花等量秘密，造成伤害 / 治愈恐惧（读点在 campaignCardDrawReaction）。
   { code: '04230', cardDrawSecretAction: 'damageEnemy' },
   { code: '04231', cardDrawSecretAction: 'healHorror' },
   // 01117 丽塔·钱德勒：同地点的调查员获得光环（被清空盟友文字的威胁压制；读点在 litaAuraAt）。

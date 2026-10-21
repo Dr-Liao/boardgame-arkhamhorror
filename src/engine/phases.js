@@ -6,6 +6,7 @@
 
 export function createPhases(deps) {
   const {
+    campaignState,
     ALL_CARDS,
     INVESTIGATOR_ABILITIES,
     aliveInvestigators,
@@ -54,7 +55,7 @@ export function createPhases(deps) {
     scenarioRuntime,
     shuffle,
     spawnEnemy,
-    tfaDiscardOnYourOwn,
+    campaignDiscardOnYourOwn,
   } = deps
 
 function upkeepPhase(state) {
@@ -75,7 +76,7 @@ function upkeepPhase(state) {
     inv.phaseStatBonuses = []
     inv.fearExtraPaid = false
     if (!assetsCannotReady(inv, state.round)) for (const a of inv.assets) a.exhausted = false
-    if (inv.tfaNoReadyRound === state.round) delete inv.tfaNoReadyRound
+    if (campaignState.cannotReadyRound(inv) === state.round) campaignState.clearCannotReadyRound(inv)
     for (const threat of inv.threat) if (getThreatEffect(threat)?.debt) threat.debtPaymentsThisRound = 0
   }
   for (const enemy of state.enemies) if (!enemy.bindMonster) {
@@ -143,13 +144,14 @@ function upkeepPhase(state) {
         leaveAsset(state, inv, asset); inv.discard.push(asset.code)
       }
       // 「英勇无畏」：由技能牌转化而来的支援在轮末弃掉。
-      if (asset.tfaRoundEndDiscard != null && asset.tfaRoundEndDiscard <= state.round) {
+      const roundEndDiscard = campaignState.roundEndDiscardRound(asset)
+    if (roundEndDiscard != null && roundEndDiscard <= state.round) {
         leaveAsset(state, inv, asset); inv.discard.push(asset.code)
         info(state, events, `「${cardName(asset.code)}」在轮末被弃掉。`)
       }
     }
     // 「自食其力」：控制占用盟友槽位的支援时强制弃掉。
-    tfaDiscardOnYourOwn(state, inv, events)
+    campaignDiscardOnYourOwn(state, inv, events)
   }
 
   playerWindow(state, 'upkeep.end', events)

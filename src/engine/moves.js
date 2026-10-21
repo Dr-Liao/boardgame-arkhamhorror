@@ -82,7 +82,7 @@ export function createMoves(deps) {
     runtimeCardAvailable,
     scenarioBehavior,
     stateCompatibilityError,
-    tfaPlayCostPreview,
+    campaignPlayCostPreview,
     tomeActionEligible,
     topDiscardEvent,
     unique,
@@ -150,7 +150,7 @@ export function createMoves(deps) {
       continue
     }
     const cost = playCost(state, inv, def)
-    if (inv.resources < cost - (tfaPlayCostPreview(state, inv, code)?.discount || 0)
+    if (inv.resources < cost - (campaignPlayCostPreview(state, inv, code)?.discount || 0)
       && !charlesPayCandidate(state, inv, cost)) continue
     if (def.type === 'asset' && normalizedSlots(def).length && !assetReplacementPlans(inv, def).length) continue
     const kindLabel = def.type === 'asset' ? '装备' : '打出'
@@ -421,7 +421,7 @@ export function createMoves(deps) {
       } else if (!inv.hand.includes(move.cardId)) return '手牌中没有这张牌'
       if (playAccess(move.cardId).reactionOnly) return '该牌只能在对应的反应窗口打出'
       if (cannotPlayTypes(inv).has(def.type)) return '当前禁止打出该类型卡牌'
-      if (inv.resources < playCost(state, inv, def) - (tfaPlayCostPreview(state, inv, move.cardId)?.discount || 0)
+      if (inv.resources < playCost(state, inv, def) - (campaignPlayCostPreview(state, inv, move.cardId)?.discount || 0)
         && !charlesPayCandidate(state, inv, playCost(state, inv, def))) return '资源不足'
       if (def.unique && state.investigators.some(item => item.assets.some(asset => cardDef(asset.code)?.name === def.name))) return '唯一资产已经在场'
       if (def.type === 'asset' && normalizedSlots(def).length && !assetReplacementPlans(inv, def).length) return '槽位已满'

@@ -7,6 +7,7 @@
 
 export function createActions(deps) {
   const {
+    campaignState,
     EFFECTS,
     SKILL_NAMES,
     abilityApi,
@@ -57,8 +58,8 @@ export function createActions(deps) {
     sealChaosToken,
     shuffle,
     spendAction,
-    tfaApplyPlayCost,
-    tfaPlayCostPreview,
+    campaignApplyPlayCost,
+    campaignPlayCostPreview,
     tokenLabel,
     topDiscardEvent,
     triggerReaction,
@@ -134,9 +135,9 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   if (def.type === 'asset') replaceAssets(state, inv, def, events)
 
   // 「销赃贩子」（违法卡获得快速／已有快速则减 1 费用）与「自食其力」（幸存者事件减 2 费用）。
-  const playPreview = tfaPlayCostPreview(state, inv, cardId)
+  const playPreview = campaignPlayCostPreview(state, inv, cardId)
   if (playPreview) {
-    tfaApplyPlayCost(state, inv, playPreview, events)
+    campaignApplyPlayCost(state, inv, playPreview, events)
     if (playPreview.noAction) noAction = true
     if (playPreview.discount) inv.playDiscount = (inv.playDiscount || 0) + playPreview.discount
   }
@@ -149,7 +150,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       prompt: `选择花费多少资源，为「${cardName(cardId)}」装填等量弹药。`,
       options: Array.from({ length: inv.resources + 1 }, (_, i) => ({ id: String(i), label: `${i} 资源／${i} 弹药` })),
     })) : playCost(state, inv, playedDef)
-  delete inv.carcosaPlayDiscount
+  campaignState.clearPlayDiscount(inv)
   delete inv.playDiscount
   const payer = inv.resources >= cost ? inv : (charlesPayCandidate(state, inv, cost) || inv)
   if (payer.resources < cost) {
@@ -309,8 +310,7 @@ function doInvestigate(state, seat, opts, events, noSpend) {
     return
   }
   const skill = loc.investigateSkill || 'intellect'
-  const temporaryShroud = (loc.carcosaShroudModifier?.round === state.round
-    && loc.carcosaShroudModifier.turnSeat === state.currentSeat ? loc.carcosaShroudModifier.amount : 0)
+  const temporaryShroud = campaignState.turnShroudModifier(loc, state)
     + (loc.turnShroudMod?.round === state.round && loc.turnShroudMod.turnSeat === state.currentSeat
       ? loc.turnShroudMod.amount : 0)
   // 帷幕的剧本修正：把正在调查的调查员也传进去（04182/04185 的帷幕取决于他的

@@ -9,6 +9,10 @@
 
 export function createSkillEffects(deps) {
   const {
+    campaignState,
+    carcosaInvestigatorEffect,
+    carcosaPlayerEffect,
+    tfaInvestigatorEffect,
     legalMoves,
     upkeepPhase,
     doPlay,
@@ -28,8 +32,6 @@ export function createSkillEffects(deps) {
     autoEvadeEnemy,
     autoEvadeNonElite,
     blankEnemy,
-    carcosaInvestigatorEffect,
-    carcosaPlayerEffect,
     cardDef,
     cardName,
     checkDefeated,
@@ -51,7 +53,7 @@ export function createSkillEffects(deps) {
     drawEncounter,
     drawEnemyByTrait,
     dukeInvestigate,
-    dunwichPlayerEffect,
+    playerCardEffect,
     effectError,
     enemyForTarget,
     healDamageAtLocation,
@@ -86,8 +88,7 @@ export function createSkillEffects(deps) {
     spawnEnemy,
     syncClues,
     targetedTest,
-    tfaInvestigatorEffect,
-    tfaPlayerEffect,
+    campaignPlayerEffect,
     triggerReaction,
   } = deps
 
@@ -123,7 +124,7 @@ function applyTokenFx(state, seat, inv, fx, events) {
 function applySkillOnSuccess(state, inv, committed, success, successBy = 0) {
   const out = { damageBonus: 0, clueBonus: 0, evadeDisengage: false, mayMoveAfterEvade: false, homeFrontDamage: 0 }
   if (!success) {
-    for (const code of committed) if (inv.carcosaWagers) delete inv.carcosaWagers[code]
+    for (const code of committed) campaignState.clearWager(inv, code)
     return out
   }
   for (const code of committed) {
@@ -157,7 +158,7 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0) {
       if (drawn) info(state, null, `${inv.name} 的「${cardName(code)}」触发：抽 ${drawn} 张牌。`)
     }
     // 「如痴如醉」：调查成功后在支援上放置充能或秘密。
-    if (o.placeChargeOrSecret) tfaPlayerEffect(state, inv.seat, { action: 'placeChargeOrSecret' }, [])
+    if (o.placeChargeOrSecret) campaignPlayerEffect(state, inv.seat, { action: 'placeChargeOrSecret' }, [])
     if (o.healHorror) {
       const h = Math.min(inv.horror, o.healHorror)
       inv.horror -= h
@@ -167,9 +168,10 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0) {
     if (o.evadeDisengage) out.evadeDisengage = true
     if (o.mayMoveAfterEvade) out.mayMoveAfterEvade = true
     const owner = inv
-    if (s.wagerResources && owner.carcosaWagers?.[code]) {
-      owner.resources += owner.carcosaWagers[code] * 2
-      delete owner.carcosaWagers[code]
+    const wager = campaignState.wager(owner, code)
+    if (s.wagerResources && wager) {
+      owner.resources += wager * 2
+      campaignState.clearWager(owner, code)
     }
     if (o.returnDiscardClass) {
       const candidates = owner.discard.filter(item => item !== code && cardDef(item)?.klass === o.returnDiscardClass)
@@ -205,7 +207,8 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0) {
     if (o.becomeAsset) {
       const spec = o.becomeAsset
       const asset = newCardInstance(state, code, { exhausted: false, enteredRound: state.round,
-        statBonus: { ...(spec.stats || {}) }, tfaRoundEndDiscard: state.round })
+        statBonus: { ...(spec.stats || {}) } })
+      campaignState.setRoundEndDiscard(asset, state.round)
       inv.assets.push(asset)
       info(state, null, `${inv.name} 的「${cardName(code)}」作为支援进入游戏区域，并在轮末弃掉。`)
       triggerReaction(state, inv.seat, 'assetEnteredPlay', [], { assetCode: code, assetId: asset.id, location: inv.location })
@@ -280,11 +283,11 @@ function makeRuntime(state, events) {
     healDamageAtLocation: (seat, amount) => healDamageAtLocation(state, seat, amount, events),
     healHorrorNearby: (seat, amount) => healHorrorNearby(state, seat, amount, events),
     dukeInvestigate: seat => dukeInvestigate(state, seat, events, effect.code),
-    dunwichPlayerEffect: (seat, effect) => dunwichPlayerEffect(state, seat, effect, events),
     carcosaInvestigatorEffect: (seat, effect) => carcosaInvestigatorEffect(state, seat, effect, events),
     carcosaPlayerEffect: (seat, effect) => carcosaPlayerEffect(state, seat, effect, events),
     tfaInvestigatorEffect: (seat, effect) => tfaInvestigatorEffect(state, seat, effect, events),
     tfaPlayerEffect: (seat, effect) => tfaPlayerEffect(state, seat, effect, events),
+    playerCardEffect: (seat, effect) => playerCardEffect(state, seat, effect, events),
     researchSolution: (seat, assetId) => researchSolution(state, seat, assetId, events),
     searchTop: (seat, effect) => searchTop(state, seat, effect, events),
     investigateForResources: (seat, effect) => investigateForResources(state, seat, effect, events),
