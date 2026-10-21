@@ -301,7 +301,8 @@ export function createTurnFlow(deps) {
       runThreatEndTurn(state, inv, events)
       // 04031 保护咒语：回合结束时花费 1 资源，或弃掉它。
       for (const asset of [...inv.assets]) {
-        const pay = EFFECTS[asset.code]?.forcedTurnEndPayOrDiscard
+        const pay = registeredEntry(asset.code)?.forcedTurnEndPayOrDiscard
+      ?? EFFECTS[asset.code]?.forcedTurnEndPayOrDiscard
         if (!pay) continue
         const answer = requestChoice(state, {
           kind: 'reaction', source: asset.code, seat: inv.seat, canSkip: true,
@@ -326,7 +327,7 @@ export function createTurnFlow(deps) {
         if (heal && (asset.horror || 0) > 0) asset.horror = Math.max(0, asset.horror - heal)
       }
       for (const code of inv.hand.slice()) {
-        const horror = EFFECTS[code]?.endTurnInHandHorror
+        const horror = registeredEntry(code)?.endTurnInHandHorror ?? EFFECTS[code]?.endTurnInHandHorror
         if (!horror) continue
         info(state, events, `🌑 ${inv.name} 回合结束时揭示「${cardName(code)}」，受到 ${horror} 恐惧，卡牌留在手中。`)
         applyHorror(state, inv, horror, events)

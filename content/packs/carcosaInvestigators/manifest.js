@@ -65,25 +65,17 @@ export const investigatorAbilities = {
 }
 
 export const signatureEffects = {
-  '03009': {
-    cannotLeavePlay: true,
-    abilities: [{
-      label: '受到1点直接伤害：本次检定任意技能值+2',
-      cost: { action: false, damageSelf: 1 },
-      duringOwnSkillTest: true,
-      maximumInvestigatorDamage: 4,
-      effect: { type: 'addTestValue', amount: 2 },
-    }],
-  },
+  // 03009 苏菲（受创版）已迁到能力层（6e-14）：主动能力是 action 描述子，
+  // 「不可离场」是条目级字段，见 src/cards/card-abilities.js。
   // 03010 分析性思维已迁到能力层（5a-5）：条目 passive 上的 analyticalMind 标记，
   // 读点是引擎 commit 段的 registeredEntry(...).passive.analyticalMind。
-  '03011': { weakness: { type: 'threat' }, kingInYellow: true, cannotLeavePlay: true },
-  '03012': { paintedWorld: true },
+  // 03011 已迁到能力层（6e-15：条目级规则字段 / played 描述子）。
+  // 03012 已迁到能力层（6e-15：条目级规则字段 / played 描述子）。
   // 03014 灵语人 / 03015 愤怒之灵已迁到能力层（5c-28），见 MIGRATED_ESCAPE_ENTRIES_5C28。
   // 03015 的威胁区弱点数据体也随同一条目搬走（弱点读点仍是 weaknessProfile）。
   // 03016 掩埋已迁到能力层（5c-27），见 MIGRATED_ESCAPE_ENTRIES_5C27。
   // 03018 即兴表演 / 03106 英勇救援已迁到能力层（5c-32），见 MIGRATED_ESCAPE_ENTRIES_5C32。
-  '03017': { enemyWeakness: { hunter: true, prey: 'bearer', lockDiscardWhileEngaged: true } },
+  // 03017 已迁到能力层（6e-16：enemyWeakness / weakness 数据体）。
 }
 
 export const runtimeDependencyCodes = ['03009b']

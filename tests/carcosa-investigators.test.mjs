@@ -71,7 +71,9 @@ test('C1 Mark is implemented inside the verified Carcosa investigator boundary',
   // Phase 5：签名卡的行为数据已搬到能力层，断言改为读生命周期读点（描述子优先）。
   assert.equal(commitProfile('03007').homeFront, true)
   assert.equal(weaknessProfile('03008').type, 'shellShock')
-  assert.equal(EFFECTS['03009'].cannotLeavePlay, true)
+  // Phase 6（6e-14）：03009 的主动能力与「不可离场」搬到能力层条目。
+  assert.equal(registeredEntry('03009').cannotLeavePlay, true)
+  assert.equal(registeredEntry('03009').abilities.length, 1)
   // Phase 5（5b-9）：03009b 的「不可离场」与被动搬到能力层条目。
   assert.equal(registeredEntry('03009b').cannotLeavePlay, true)
   assert.deepEqual(registeredEntry('03009b').passive.stats,

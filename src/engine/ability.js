@@ -204,6 +204,19 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'kingInYellowThreat',
   // Phase 5（5c-35）：这个 played 描述子的结算不写 `使用「X」：…` 日志（复刻旧数据体事件卡）。
   'quietPlay',
+  // Phase 6（6e-14）：「入场时放毁灭」与「回合结束弃置自己」也是条目级规则字段，
+  // 读点分别是 doPlay 的入场段（assetEffect 合并后读 eff.onPlayDoom）与回合结束扫描。
+  'onPlayDoom', 'discardAtRoundEnd',
+  // Phase 6（6e-15）：起始资源修正（02037 负债）、使用次数取自战役记录（04230/04231）、
+  // 「入场时封印若干标记」的选择式封印（04030/04031）、标记当结算结果（04030）、
+  // 回合结束付费或弃置（04031）、符号标记充能（04311）、用尽移出游戏（04311）。
+  'startingResources', 'usesFromStoneRecord', 'sealOnEnterChoice',
+  'returnToHandOnAutoFail', 'forcedTurnEndPayOrDiscard', 'chargesOnSymbolReveal',
+  'removeFromGameWhenEmpty',
+  // Phase 6（6e-16）：最后一批规则字段 —— 敌人弱点数据、可打出的弱点、手牌 Horror、
+  // 非法物的快速/费用优惠、幸存者事件折扣、每人张数限制。
+  'enemyWeakness', 'playableWeakness', 'endTurnInHandHorror', 'fastForIllicit',
+  'survivorEventDiscount', 'limitPerInvestigator',
   'fast', 'noOpportunityAttack'])
 
 // 条目级「能不能打出」条件：函数式 predicate，或 { when, message }（message 直接展示给玩家）。
@@ -463,6 +476,21 @@ export function registerCardAbilities(entries) {
       kingInYellowThreat: entry.kingInYellowThreat === true,
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
+      onPlayDoom: entry.onPlayDoom ?? null,
+      discardAtRoundEnd: entry.discardAtRoundEnd === true,
+      startingResources: entry.startingResources ?? null,
+      usesFromStoneRecord: entry.usesFromStoneRecord === true,
+      sealOnEnterChoice: entry.sealOnEnterChoice ?? null,
+      returnToHandOnAutoFail: entry.returnToHandOnAutoFail === true,
+      forcedTurnEndPayOrDiscard: entry.forcedTurnEndPayOrDiscard ?? null,
+      chargesOnSymbolReveal: entry.chargesOnSymbolReveal ?? null,
+      removeFromGameWhenEmpty: entry.removeFromGameWhenEmpty === true,
+      enemyWeakness: entry.enemyWeakness ? Object.freeze({ ...entry.enemyWeakness }) : null,
+      playableWeakness: entry.playableWeakness === true,
+      endTurnInHandHorror: entry.endTurnInHandHorror ?? null,
+      fastForIllicit: entry.fastForIllicit === true,
+      survivorEventDiscount: entry.survivorEventDiscount === true,
+      limitPerInvestigator: entry.limitPerInvestigator === true,
       source: entry.source || null,
       registered: true,
     }

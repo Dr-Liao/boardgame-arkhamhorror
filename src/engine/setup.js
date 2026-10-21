@@ -38,13 +38,13 @@ export function createSetup(deps) {
     carcosaPlayerEffect,
     cardDef,
     consumeStartingAdjustments,
-
     corePlayerPool,
     descriptorOfKind,
     embeddedCardDefs,
     executeCommand,
     executeDescriptor,
     expeditionLeaderSeat,
+    expireEffects,
     extraActionBonus,
     firstAliveSeat,
     hashSeed,
@@ -63,6 +63,7 @@ export function createSetup(deps) {
     randomValue,
     registerCampaignInvestigator,
     registerCampaignScenarios,
+    registeredEntry,
     relicOfAges,
     removeCardByCode,
     resolveAgendaDoomThresholds,
@@ -196,7 +197,9 @@ function prepareInvestigator(state, inv, events, startLocation) {
     const card = newPlayerAssetInstance(state, inv, code)
     if (cardDef(code)?.type === 'treachery') inv.threat.push(card)
     else inv.assets.push(card)
-    inv.resources = Math.max(0, inv.resources + (EFFECTS[code]?.startingResources || 0))
+    // Phase 6（6e-15）：起始资源修正从条目级字段读（旧 DSL 条目回落）。
+    inv.resources = Math.max(0, inv.resources + (registeredEntry(code)?.startingResources
+      ?? EFFECTS[code]?.startingResources ?? 0))
     // Phase 5（5c-39）：「原定计划」这类开局效果改成描述子（kind: 'setup'）；
     // 旧的数据体 setup 仍是回退路径，保证未迁移的卡不受影响。
     const setupDescriptor = descriptorOfKind(code, 'setup')

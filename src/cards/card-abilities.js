@@ -3513,12 +3513,291 @@ export const MIGRATED_EVENT_ENTRIES_6E8 = eventEntries6e8.map(([code, label, whe
   }],
 }))
 
+// ---------------------------------------------------------------------------
+// Phase 6（6e-14）：旧 DSL 的「支援主动能力」搬到 action 描述子
+// ---------------------------------------------------------------------------
+// 旧写法是 EFFECTS 顶层的 `abilities: [{ label, cost, effect }]`；新写法把每个能力搬成
+// `kind: 'action'` 描述子（同样的 label / cost / effect），读点仍是 assetEffect 的合并结果
+// 与 doAbility / legalMoves —— 与 5b 机械迁移的 19 张「abilities→action」同一手法。
+export const MIGRATED_ABILITY_ENTRIES_6E14 = [
+  // 01086 刀子：攻击 +1；弃置刀子攻击 +2、伤害 +1。
+  {
+    code: '01086',
+    abilities: [
+      { kind: 'action', label: '战斗（战斗 +1）', cost: { action: true }, effect: { type: 'fight', combatBonus: 1 } },
+      { kind: 'action', label: '弃置刀子（战斗 +2，伤害 +1）', cost: { action: true, discardSelf: true }, effect: { type: 'fight', combatBonus: 2, damageBonus: 1 } },
+    ],
+  },
+  // 02111 过度深入：打出后加入胜利区（事件本体由效果解释器结算）。
+  {
+    code: '02111',
+    abilities: [{ kind: 'played', label: '过度深入', addToVictory: true, effect: { type: 'drawEncounterAll' } }],
+  },
+  // 01076 野猫：引开（弃掉野猫，自动躲避同地点非精英敌人）。
+  {
+    code: '01076',
+    abilities: [{
+      kind: 'action', label: '引开（弃掉野猫，自动躲避同地点非精英敌人）',
+      cost: { action: false, discardSelf: true }, effect: { type: 'autoEvadeNonElite' },
+    }],
+  },
+  {
+    "code": "02114",
+    "abilities": [
+      {
+        "kind": "action",
+        "label": "灭火器攻击（战斗 +1）",
+        "cost": {
+          "action": true
+        },
+        "effect": {
+          "type": "fight",
+          "combatBonus": 1,
+          "damageBonus": 0
+        }
+      },
+      {
+        "kind": "action",
+        "label": "流放灭火器：敏捷 +3 躲避，成功时躲避所有其他交战敌人",
+        "cost": {
+          "action": true,
+          "exileSelf": true
+        },
+        "effect": {
+          "type": "evade",
+          "bonus": 3,
+          "evadeOthersOnSuccess": true
+        }
+      }
+    ]
+  },
+  {
+    "code": "03036",
+    "abilities": [
+      {
+        "kind": "action",
+        "label": "提灯调查",
+        "cost": {
+          "action": true
+        },
+        "effect": {
+          "type": "investigate",
+          "shroudMod": -1
+        }
+      },
+      {
+        "kind": "action",
+        "label": "弃置提灯造成1点伤害",
+        "cost": {
+          "action": true,
+          "discardSelf": true
+        },
+        "effect": {
+          "type": "dealDamage",
+          "amount": 1,
+          "target": "here",
+          "noOpportunityAttack": true
+        }
+      }
+    ]
+  },
+  {
+    "code": "03037",
+    "abilities": [
+      {
+        "kind": "action",
+        "label": "挖墓人的铲子攻击",
+        "cost": {
+          "action": true
+        },
+        "effect": {
+          "type": "fight",
+          "combatBonus": 2,
+          "damageBonus": 0
+        }
+      },
+      {
+        "kind": "action",
+        "label": "弃置铲子发现1条线索",
+        "cost": {
+          "action": true,
+          "discardSelf": true
+        },
+        "effect": {
+          "type": "discoverClue",
+          "amount": 1
+        }
+      }
+    ]
+  },
+  {
+    "code": "02152",
+    "fast": true,
+    "abilities": [
+      {
+        "kind": "action",
+        "label": "战斗 +2；成功至少 2 点时伤害 +1",
+        "cost": {
+          "action": true
+        },
+        "effect": {
+          "type": "fight",
+          "combatBonus": 2,
+          "damageBonus": 1,
+          "successBy": 2
+        }
+      }
+    ]
+  },
+  {
+    "code": "01044",
+    "fast": true,
+    "abilities": [
+      {
+        "kind": "action",
+        "label": "战斗（成功差值至少 2 时伤害 +1）",
+        "cost": {
+          "action": true
+        },
+        "effect": {
+          "type": "fight",
+          "successBy": 2,
+          "damageBonus": 1
+        }
+      }
+    ]
+  },
+  {
+    "code": "03009",
+    "cannotLeavePlay": true,
+    "abilities": [
+      {
+        "kind": "action",
+        "label": "受到1点直接伤害：本次检定任意技能值+2",
+        "cost": {
+          "action": false,
+          "damageSelf": 1
+        },
+        "duringOwnSkillTest": true,
+        "maximumInvestigatorDamage": 4,
+        "effect": {
+          "type": "addTestValue",
+          "amount": 2
+        }
+      }
+    ]
+  },
+  {
+    "code": "04268",
+    "uses": 5,
+    "usesType": "ammo",
+    "discardAtRoundEnd": true,
+    "abilities": [
+      {
+        "kind": "action",
+        "label": "花费 1 子弹：攻击（战斗 +1，伤害 +1）",
+        "cost": {
+          "action": true,
+          "uses": 1
+        },
+        "effect": {
+          "type": "fight",
+          "combatBonus": 1,
+          "damageBonus": 1
+        }
+      }
+    ]
+  },
+  {
+    "code": "01063",
+    "onPlayDoom": 1,
+    "abilities": [
+      {
+        "kind": "action",
+        "label": "召唤（检索牌库顶 3 张中的法术牌）",
+        "cost": {
+          "action": false,
+          "exhaust": true
+        },
+        "effect": {
+          "type": "searchTop",
+          "amount": 3,
+          "trait": "Spell",
+          "choose": 1
+        }
+      }
+    ]
+  },
+
+]
+
+
+// ---------------------------------------------------------------------------
+// Phase 6（6e-15）：最后一批「规则字段」条目
+// ---------------------------------------------------------------------------
+// 这些卡的行为早就在读点里，EFFECTS 条目只是登记；把字段搬到条目上之后删条目，
+// 读点顺序是 registeredEntry(code)?.xxx ?? EFFECTS[code]?.xxx（旧 DSL 回落）。
+export const MIGRATED_RULE_ENTRIES_6E15 = [
+  // 02037 负债（基础弱点）：起手资源 -2。
+  { code: '02037', startingResources: -2 },
+  // 04230 / 04231 古代巨石：秘密数取自战役记录（研究鉴定难度）。
+  { code: '04230', usesFromStoneRecord: true, usesType: 'secrets' },
+  { code: '04231', usesFromStoneRecord: true, usesType: 'secrets' },
+  // 04030 封印「符号」：自动失败时回到手牌。
+  { code: '04030', sealOnEnterChoice: 'symbol', returnToHandOnAutoFail: true },
+  // 04031 封印任意非自动失败标记：回合结束付费或弃置，团队上限 2。
+  { code: '04031', sealOnEnterChoice: 'nonAutofail', forcedTurnEndPayOrDiscard: 1, teamLimit: 2 },
+  // 04311 封印自动失败标记：7 充能、每个符号标记 +1、用尽移出游戏。
+  {
+    code: '04311', sealOnEnter: 'autofail', uses: 7, usesType: 'charges',
+    chargesOnSymbolReveal: 1, removeFromGameWhenEmpty: true,
+  },
+  // 04106 老练分析 / 04109 奥术研究：永久卡（只有构筑元数据，没有行为）。
+  // 行为在卡面数据里，登记为 data 通道由 card-implementation.js 负责。
+]
+
+// ---------------------------------------------------------------------------
+// Phase 6（6e-16）：最后 9 条旧 DSL 条目
+// ---------------------------------------------------------------------------
+// 敌人弱点数据、可打出的弱点、永久卡与折扣字段；行为读点已改为「条目优先、旧 DSL 回落」。
+export const MIGRATED_RULE_ENTRIES_6E16 = [
+  // 03017 蛇族敌人弱点 / 04014 熔岩之流 / 03042 熊之信标：敌人卡面弱点数据。
+  { code: '03017', enemyWeakness: { hunter: true, prey: 'bearer', lockDiscardWhileEngaged: true } },
+  { code: '04014', enemyWeakness: { sealsElderSign: true, hunter: true, prey: 'bearer' } },
+  { code: '03042', enemyWeakness: { hunter: true, prey: 'bearer', shuffleIntoDeckOnDefeat: true } },
+  // 04108 销赃贩子：非法物快速 / 减费。
+  { code: '04108', fastForIllicit: true },
+  // 04236 自食其力：幸存者事件减 2 费 + 每位调查员 1 张。
+  { code: '04236', survivorEventDiscount: true, limitPerInvestigator: true },
+  // 01013 黑暗回忆：可作为弱点打出；回合结束若还在手牌受到 2 点恐惧。
+  {
+    code: '01013', playableWeakness: true, endTurnInHandHorror: 2,
+    abilities: [{ kind: 'played', label: '黑暗回忆', effect: { type: 'addDoom', amount: 1 } }],
+  },
+  // 04038 离体体验：可作为弱点打出；弃牌堆/场上牌洗回牌库的事件链路。
+  {
+    code: '04038', playableWeakness: true,
+    abilities: [
+      {
+        kind: 'played', label: '离体体验',
+        effect: { type: 'targetedEffect', target: 'location', effect: { type: 'takeDamage', amount: 2 } },
+      },
+      { kind: 'weakness', label: '离体体验（弱点）', weakness: { type: 'darkPact' } },
+    ],
+  },
+  // 03011 黄衣之王：威胁区弱点（不可离场 + 黄衣之王威胁读点已在条目上）。
+  {
+    code: '03011', cannotLeavePlay: true, kingInYellowThreat: true,
+    abilities: [{ kind: 'weakness', label: '黄衣之王', weakness: { type: 'threat' } }],
+  },
+]
+
 // 按卡号合并：同一张卡可以同时有旧印、主动能力与修正，注册表只接受一个条目。
 // Phase 5 起，机械迁移的批次（tools/migrate-card.mjs 生成）也走同一次合并。
 const byCode = new Map()
 for (const entry of [...elderSignEntries, ...NEW_CARD_ABILITIES, ...MIGRATED_MODIFIER_ENTRIES,
   ...LIFECYCLE_ENTRIES, ...TRANSITION_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C4, ...MIGRATED_ESCAPE_ENTRIES_5C5, ...MIGRATED_REACTION_ENTRIES, ...MIGRATED_REACTION_ENTRIES_5B6B, ...MIGRATED_REACTION_ENTRIES_5B6C, ...MIGRATED_ESCAPE_ENTRIES_5C6, ...MIGRATED_ESCAPE_ENTRIES_5C7, ...MIGRATED_ESCAPE_ENTRIES_5C8, ...MIGRATED_ESCAPE_ENTRIES_5C9,
-  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, ...MIGRATED_ESCAPE_ENTRIES_5C35, ...MIGRATED_ESCAPE_ENTRIES_5C36, ...MIGRATED_ESCAPE_ENTRIES_5C37, ...MIGRATED_ESCAPE_ENTRIES_5C38, ...MIGRATED_ESCAPE_ENTRIES_5C39, ...MIGRATED_PASSIVE_ENTRIES_5B8, ...MIGRATED_PASSIVE_ENTRIES_5B9, ...MIGRATED_PASSIVE_ENTRIES_5B13, ...MIGRATED_PASSIVE_ENTRIES_5B14, ...MIGRATED_RULE_ENTRIES_5A6, ...MIGRATED_WEAKNESS_ENTRIES_5A12, ...MIGRATED_WEAKNESS_ENTRIES_5A14, ...MIGRATED_EVENT_ENTRIES_6E8, CALVIN_ENTRY]) {
+  ...MIGRATED_CARD_ENTRIES, ...MIGRATED_FREETRIGGER_ENTRIES, ...MIGRATED_ESCAPE_ENTRIES_5C10, ...MIGRATED_REACTION_ENTRIES_5B6D, ...MIGRATED_PASSIVE_ENTRIES, ...MIGRATED_PASSIVE_ABILITY_ENTRIES, ...MIGRATED_RULE_FIELD_ENTRIES, ...MIGRATED_SEAL_ATTACH_ENTRIES, ...MIGRATED_MIXED_ENTRIES_5B11, ...MIGRATED_ESCAPE_ENTRIES_5C19, ...MIGRATED_ESCAPE_ENTRIES_5C20, ...MIGRATED_ESCAPE_ENTRIES_5C21, ...MIGRATED_CARD_RULE_ENTRIES_5A5, ...MIGRATED_ESCAPE_ENTRIES_5C22, ...MIGRATED_ESCAPE_ENTRIES_5C23, ...MIGRATED_ESCAPE_ENTRIES_5C24, ...MIGRATED_ESCAPE_ENTRIES_5C25, ...MIGRATED_ESCAPE_ENTRIES_5C27, ...MIGRATED_ESCAPE_ENTRIES_5C28, ...MIGRATED_ESCAPE_ENTRIES_5C29, ...MIGRATED_ESCAPE_ENTRIES_5C30, ...MIGRATED_ESCAPE_ENTRIES_5C32, ...MIGRATED_ESCAPE_ENTRIES_5C33, ...MIGRATED_ESCAPE_ENTRIES_5C34, ...MIGRATED_ESCAPE_ENTRIES_5C35, ...MIGRATED_ESCAPE_ENTRIES_5C36, ...MIGRATED_ESCAPE_ENTRIES_5C37, ...MIGRATED_ESCAPE_ENTRIES_5C38, ...MIGRATED_ESCAPE_ENTRIES_5C39, ...MIGRATED_PASSIVE_ENTRIES_5B8, ...MIGRATED_PASSIVE_ENTRIES_5B9, ...MIGRATED_PASSIVE_ENTRIES_5B13, ...MIGRATED_PASSIVE_ENTRIES_5B14, ...MIGRATED_RULE_ENTRIES_5A6, ...MIGRATED_WEAKNESS_ENTRIES_5A12, ...MIGRATED_WEAKNESS_ENTRIES_5A14, ...MIGRATED_EVENT_ENTRIES_6E8, ...MIGRATED_ABILITY_ENTRIES_6E14, ...MIGRATED_RULE_ENTRIES_6E15, ...MIGRATED_RULE_ENTRIES_6E16, CALVIN_ENTRY]) {
   const existing = byCode.get(entry.code) || { code: entry.code }
   byCode.set(entry.code, {
     ...existing,
@@ -3586,4 +3865,7 @@ export const PHASE5_MIGRATED_CODES = new Set([
   ...MIGRATED_WEAKNESS_ENTRIES_5A12.map(entry => entry.code),
   ...MIGRATED_WEAKNESS_ENTRIES_5A14.map(entry => entry.code),
   ...MIGRATED_EVENT_ENTRIES_6E8.map(entry => entry.code),
+  ...MIGRATED_ABILITY_ENTRIES_6E14.map(entry => entry.code),
+  ...MIGRATED_RULE_ENTRIES_6E15.map(entry => entry.code),
+  ...MIGRATED_RULE_ENTRIES_6E16.map(entry => entry.code),
 ])

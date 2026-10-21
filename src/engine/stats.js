@@ -16,6 +16,7 @@ export function createStats(deps) {
     cardDef,
     collectGrants,
     doAbility,
+    doPlay,
     getThreatEffect,
     isCardAvailable,
     legalMoves,
@@ -44,6 +45,9 @@ export function createStats(deps) {
           ...(entry.uses != null ? { uses: entry.uses } : {}),
           ...(entry.usesType ? { usesType: entry.usesType } : {}),
           ...(entry.discardWhenEmpty ? { discardWhenEmpty: true } : {}),
+          // Phase 6（6e-14）：入场放毁灭 / 回合结束弃置自己（读点：doPlay 入场段、回合结束扫描）。
+          ...(entry.onPlayDoom != null ? { onPlayDoom: entry.onPlayDoom } : {}),
+          ...(entry.discardAtRoundEnd ? { discardAtRoundEnd: true } : {}),
           // Phase 5（5b-7）：「沉静」关键字（非直接恐惧必须先分给该支援）。
           ...(entry.composure ? { composure: true } : {}),
           // Phase 5（5b-11）：击败敌人后横置治愈恐惧。

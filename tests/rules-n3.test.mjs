@@ -5,12 +5,25 @@ import { EFFECTS } from '../src/cards/card-effects.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { SCENARIOS } from '../src/cards/scenarios-data.js'
 import { totalDoom, agendaDoom } from '../src/engine/rules-state.js'
+import { registeredEntry } from '../src/engine/ability.js'
 
 const clone = value => JSON.parse(JSON.stringify(value))
 // Phase 5：01038 已迁到能力层描述子（注册后不可变），旧 DSL 的「桩替换」改用
 // 一张仍然只在 EFFECTS 里实现的事件卡。02111 带 addToVictory（描述子没有读点），
 // 在 Phase 5/6 期间会一直留在旧 DSL 上。
 const STUB_EVENT_CARD = '02111'
+// Phase 6（6e-16）：EFFECTS 已清空，stub 改成改写该卡描述子的 effect 数据体（描述子本身冻结，
+// 但 effect 数据体是普通对象）。用完必须还原。
+function stubEffect(patch) {
+  const descriptor = registeredEntry(STUB_EVENT_CARD).abilities[0]
+  const original = JSON.parse(JSON.stringify(descriptor.effect))
+  for (const key of Object.keys(descriptor.effect)) delete descriptor.effect[key]
+  Object.assign(descriptor.effect, patch)
+  return () => {
+    for (const key of Object.keys(descriptor.effect)) delete descriptor.effect[key]
+    Object.assign(descriptor.effect, original)
+  }
+}
 function answer(state, optionId) {
   const choice = state.pendingChoice
   assert.ok(choice, '必须存在待决选择')
@@ -173,9 +186,8 @@ test('N3 求助后同地点队友投入切换回答座位，恢复后回到原�
 
 test('N3 未指定效果分支不能自动取首项，嵌套选择JSON恢复不重复支付', () => {
   const state = fixture()
-  const original = EFFECTS[STUB_EVENT_CARD].event
+  const restore = stubEffect({ type: 'chooseOne', options: [{ label: '外层', effect: { type: 'chooseOne', options: [{ label: '内层', effect: { type: 'gainResource', amount: 3 } }] } }] })
   try {
-    EFFECTS[STUB_EVENT_CARD].event = { type: 'chooseOne', options: [{ label: '外层', effect: { type: 'chooseOne', options: [{ label: '内层', effect: { type: 'gainResource', amount: 3 } }] } }] }
     state.investigators[0].hand = [STUB_EVENT_CARD]
     const resources = state.investigators[0].resources
     execute(state, { action: 'play', cardId: STUB_EVENT_CARD })
@@ -187,18 +199,17 @@ test('N3 未指定效果分支不能自动取首项，嵌套选择JSON恢复不�
     assert.deepEqual(clone(state), restored)
     assert.equal(state.investigators[0].resources, resources - ALL_CARDS[STUB_EVENT_CARD].cost + 3)
     assert.equal(state.investigators[0].actionsLeft, 2)
-  } finally { EFFECTS[STUB_EVENT_CARD].event = original }
+  } finally { restore() }
 })
 
 test('N3 未实现原语拒绝且资源手牌日志完全不变', () => {
   const state = fixture()
-  const original = EFFECTS[STUB_EVENT_CARD].event
+  const restore = stubEffect({ type: 'unknown-effect' })
   try {
-    EFFECTS[STUB_EVENT_CARD].event = { type: 'unknown-effect' }
     state.investigators[0].hand = [STUB_EVENT_CARD]
     reject(state, { action: 'play', cardId: STUB_EVENT_CARD }, /未实现/)
     assert.ok(!legalMoves(state).some(move => move.action === 'play' && move.cardId === STUB_EVENT_CARD))
-  } finally { EFFECTS[STUB_EVENT_CARD].event = original }
+  } finally { restore() }
 })
 
 test('N3 借机攻击可分配给资产，恢复后行动只扣一次且上限不增加', () => {
@@ -643,9 +654,8 @@ test('N3 猎手等距路线与任意无人地点生成都要显式选择', () =>
 
 test('N3 补弹在多个弹药武器时由持有者选择目标', () => {
   const state = fixture()
-  const original = EFFECTS[STUB_EVENT_CARD].event
+  const restore = stubEffect({ type: 'reloadAmmo', amount: 3 })
   try {
-    EFFECTS[STUB_EVENT_CARD].event = { type: 'reloadAmmo', amount: 3 }
     const pistol = asset(state, '01016', { uses: 0, usesType: 'ammo' })
     const shotgun = asset(state, '01029', { uses: 0, usesType: 'ammo' })
     state.investigators[0].hand = [STUB_EVENT_CARD]
@@ -656,7 +666,7 @@ test('N3 补弹在多个弹药武器时由持有者选择目标', () => {
     settle(state)
     assert.equal(state.investigators[0].assets.find(item => item.id === shotgun.id).uses, 3)
     assert.equal(state.investigators[0].assets.find(item => item.id === pistol.id).uses, 0)
-  } finally { EFFECTS[STUB_EVENT_CARD].event = original }
+  } finally { restore() }
 })
 
 test('N3 愤怒逐点选择弃牌或伤害恐惧，无牌可弃时仍可完成', () => {

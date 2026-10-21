@@ -160,9 +160,11 @@ export function createCardDefs(deps) {
       asset.usesType = usesType || 'charges'
     }
     // 「古代巨石（研究完成）」：秘密数等于剧本日志里记录的鉴定难度。
-    if (effect.usesFromStoneRecord && asset.uses == null) {
+    // Phase 6（6e-15）：标记搬到条目级字段（旧 DSL 条目回落）。
+    const usesFromStoneRecord = abilityEntry?.usesFromStoneRecord ?? effect.usesFromStoneRecord
+    if (usesFromStoneRecord && asset.uses == null) {
       asset.uses = Math.max(0, Number(state.campaign?.records?.identifiedTheAncientStone) || 0)
-      asset.usesType = effect.usesType || 'secrets'
+      asset.usesType = effect.usesType || abilityEntry?.usesType || 'secrets'
     }
     // Phase 5（5a-7）：入场额外充能完全由调查员能力的 additionalChargeOnEnter 决定（不再写卡号）。
     const extraCharges = INVESTIGATOR_ABILITIES[inv.code]?.additionalChargeOnEnter || 0

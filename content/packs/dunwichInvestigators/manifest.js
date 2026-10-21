@@ -16,7 +16,7 @@ export const signatureEffects = {
   // 02008 寻找真相已迁到能力层（kind: 'played'，见 src/cards/card-abilities.js）。
 }
 export const basicWeaknessEffects = {
-  '02037': { startingResources: -2 }, // 负债 Indebted（永久）
+  // 02037 已迁到能力层（6e-15：条目级规则字段 / played 描述子）。
 // 内伤 Internal Injury
 // 时间恐惧症 Chronophobia
 }

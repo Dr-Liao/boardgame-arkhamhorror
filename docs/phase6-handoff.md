@@ -1,21 +1,21 @@
 # Phase 6 交接文档（engine 拆分 · 战役解耦）
 
-> 最后更新：Phase 6 `6e-8` 之后（观测面解耦 + engine.js 再拆 5 个模块 + 战役插件化第一批 + 22 张快速反应事件迁移）。
+> 最后更新：Phase 6 `6e-16` 之后（`EFFECTS` 清零 30 → 0、engine.js 2375 行（−81.2%）、战役插件化第一批）。
 > 配套阅读：`docs/architecture-refactor-roadmap.md`（Phase 6 目标与判据）、
-> `docs/phase6-decoupling.md`（40 节逐批证据）、`docs/phase5-handoff.md`（能力层迁移交接）。
+> `docs/phase6-decoupling.md`（44 节逐批证据）、`docs/phase5-handoff.md`（能力层迁移交接）。
 
 ---
 
 ## 1. 一句话现状
 
-Phase 6 的四件事里，**①② 已完成**、**③ 的阻塞已解开并开始清零（57 → 30）**、
-**④ 已拆到 −81.0%（2403 行，达到 < 2.5k 目标）且战役插件化第一批已落地**。
+Phase 6 的四件事里，**①② 已完成**、**③ 已完成（`EFFECTS` 57 → 0、顶层字段 → 0）**、
+**④ 已拆到 −81.2%（2375 行，达到 < 2.5k 目标）且战役插件化第一批已落地**。
 
 | 目标 | 状态 | 证据 |
 | --- | --- | --- |
 | ① `engineCodes` 28 → 0（卡号文案标签数据驱动） | ✅ 完成 | `audit-abilities`：`engineCodes=0` |
 | ② 引擎里清掉战役字样与残留卡号 | ✅ 完成 | `tests/phase6-guard.test.mjs` 通过；`src/engine/*.js` 无 `tfa/carcosa/dunwich`、无 `0\d{4}` 字面量 |
-| ③ 迁移剩余 `EFFECTS` 30 条 / `effectsTopLevelFields` 30 项 | 🚧 已开工 | 6e-1 观测面解耦（`src/cards/card-implementation.js`）、6e-2 删 5 条纯登记条目、6e-8 迁 22 张快速反应事件 |
+| ③ 迁移 `EFFECTS`（57 → 0）/ 顶层字段（→ 0） | ✅ 完成 | 6e-1 实现账本、6e-2 删纯登记条目、6e-8/6e-14/6e-15/6e-16 分批迁完 |
 | ④ 拆分 engine.js + 战役插件化 | 🚧 拆分 −65.2%；插件化第一批已落地 | 本文 §2–§5 |
 
 ---
@@ -130,7 +130,7 @@ node tools/run-tests.mjs fast                                                 # 
 | 门禁 | 结果 |
 | --- | --- |
 | `replay --check` / `--compare` | ✔ 全部基线逐条一致 |
-| `audit-abilities` | `engineCodes=0` `effectsEntries=30` `effectsTopLevelFields=30` `escapeCards=0`；`descriptorEntries=441` `descriptorAbilities=366` `abilityKinds=12` `windows=52`；通道 descriptor 432 / legacy 20 / hybrid 9 / data 4 |
+| `audit-abilities` | `engineCodes=0` `effectsEntries=0` `effectsTopLevelFields=0` `escapeCards=0`；`descriptorEntries=459` `descriptorAbilities=385` `abilityKinds=12` `windows=52`；通道 descriptor 459 / data 6 |
 | `audit-workorder --check` | ✔ 非行为债务 0 |
 | `migrate-card --verify` | ✔ 79 个批次与实现一致 |
 | `audit-dead-primitives --check` | ✔ 没有死分支 |
@@ -153,7 +153,7 @@ node tools/run-tests.mjs fast                                                 # 
 
 ## 5. 下一步（建议顺序）
 
-### 5.1 ~~继续拆 engine.js~~（✅ 已完成：2403 行，−81.0%）
+### 5.1 ~~继续拆 engine.js~~（✅ 已完成：2375 行，−81.2%）
 
 拆分方法与踩坑见 `phase6-decoupling.md` §39.2 / §43.2（切块脚本 + 依赖差分脚本，可重建）。
 剩余可再拆的小块（按需）：

@@ -313,11 +313,14 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     if ((result.drawn || []).some(token => symbols.includes(token))) {
       for (const owner of state.investigators) {
         for (const asset of owner.assets.slice()) {
-          const amount = EFFECTS[asset.code]?.chargesOnSymbolReveal || 0
+          const amount = registeredEntry(asset.code)?.chargesOnSymbolReveal
+      ?? EFFECTS[asset.code]?.chargesOnSymbolReveal ?? 0
           if (!amount) continue
           asset.uses = Math.max(0, (asset.uses || 0) - amount)
           info(state, events, `🔮 「${cardName(asset.code)}」移除 ${amount} 点充能（剩余 ${asset.uses}）。`)
-          if ((asset.uses || 0) === 0 && EFFECTS[asset.code]?.removeFromGameWhenEmpty) {
+          const removeWhenEmpty = registeredEntry(asset.code)?.removeFromGameWhenEmpty
+      ?? EFFECTS[asset.code]?.removeFromGameWhenEmpty
+    if ((asset.uses || 0) === 0 && removeWhenEmpty) {
             leaveAsset(state, owner, asset, events)
             info(state, events, `「${cardName(asset.code)}」没有充能，被移出游戏。`)
           }
@@ -544,7 +547,8 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     if (token === 'skull') for (const owner of aliveInvestigators(state)) triggerReaction(state, owner.seat, 'skullRevealed', events, { seat, token })
     if (token === 'autofail') {
       autoFail = true
-      const stone = inv.assets.find(asset => EFFECTS[asset.code]?.returnToHandOnAutoFail)
+      const stone = inv.assets.find(asset => registeredEntry(asset.code)?.returnToHandOnAutoFail
+      ?? EFFECTS[asset.code]?.returnToHandOnAutoFail)
       if (stone) {
         leaveAsset(state, inv, stone, events)
         inv.hand.push(stone.code)

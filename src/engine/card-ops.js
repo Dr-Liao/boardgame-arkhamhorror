@@ -25,6 +25,7 @@ export function createCardOps(deps) {
     remainingHealth,
     removeOne,
     requestChoice,
+    searchDeck,
     shuffle,
   } = deps
 

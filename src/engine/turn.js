@@ -75,7 +75,9 @@ function runMythos(state, repeated = false) {
   if (!repeated) {
     for (const inv of state.investigators) {
       if (!inv || inv.defeated || inv.resigned) continue
-      for (const asset of inv.assets.filter(item => EFFECTS[item.code]?.discardAtRoundEnd).slice()) {
+      // Phase 6（6e-14）：轮末弃置从条目级字段读（旧 DSL 条目回落）。
+      for (const asset of inv.assets.filter(item =>
+        (registeredEntry(item.code)?.discardAtRoundEnd ?? EFFECTS[item.code]?.discardAtRoundEnd)).slice()) {
         leaveAsset(state, inv, asset, [])
         inv.discard.push(asset.code)
       }

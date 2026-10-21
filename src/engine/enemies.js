@@ -255,7 +255,8 @@ function defeatEnemy(state, enemy, events) {
     const inv = state.investigators[enemy.engagedSeat]
     if (inv) removeOne(inv.engaged, enemy.id)
   }
-  if (EFFECTS[enemy.code]?.enemyWeakness?.shuffleIntoDeckOnDefeat) {
+  if ((registeredEntry(enemy.code)?.enemyWeakness?.shuffleIntoDeckOnDefeat
+    ?? EFFECTS[enemy.code]?.enemyWeakness?.shuffleIntoDeckOnDefeat)) {
     const owner = state.investigators[enemy.bearerSeat]
     if (owner) owner.deck = shuffle([...owner.deck, enemy.code], () => randomValue(state))
     info(state, events, `「${enemy.name}」将被击败时改为洗回其承受者的牌库。`)

@@ -9,6 +9,7 @@ import { getStat } from '../src/engine/engine.js'
 import { expireEffects } from '../src/engine/effect-state.js'
 import { getAvailability } from '../src/deck/availability.js'
 import { registeredEntry } from '../src/engine/ability.js'
+import { DATA_IMPLEMENTED_CODES } from '../src/cards/card-implementation.js'
 import { effects, manifest } from '../content/packs/carcosaPlayer/manifest.js'
 
 const codes = manifest.cards.map(card => card.code).sort()
@@ -38,9 +39,12 @@ for (const code of codes) {
     if (abilityLayer.has(code)) {
       const entry = registeredEntry(code)
       assert.equal(EFFECTS[code], undefined, '迁移后不应再有旧 DSL 条目')
-      assert.ok(entry && (entry.abilities.length || entry.modifiers.length || entry.freeTriggers.length
-        || entry.passive),
-        '能力层条目必须存在（描述子 / 修正 / 天赋档位 / 被动至少一项）')
+      // Phase 6（6e-16）：EFFECTS 清空后，条目可能只有规则字段（敌人弱点等），
+      // 也可能整张卡走 data 通道（卡面数据即实现，例如 03114 珍爱纪念）。
+      const hasEntryData = Boolean(entry) && (entry.abilities.length || entry.modifiers.length
+        || entry.freeTriggers.length || entry.passive || entry.enemyWeakness)
+      assert.ok(hasEntryData || DATA_IMPLEMENTED_CODES.has(code),
+        '能力层条目必须存在（描述子 / 修正 / 天赋档位 / 被动 / 敌人弱点，或 data 通道）')
       assert.equal(inventory.rulesImplemented, true)
       assert.equal(getAvailability(code).availability, 'strict')
       // 基础弱点也走能力层（迁移后不再是 effects 条目），但它们不参与构筑。

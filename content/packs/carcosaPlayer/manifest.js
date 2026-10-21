@@ -101,6 +101,13 @@ export const abilityLayerCodes = Object.freeze([
   '03156',
   '03157',
   '03270',
+  // Phase 6（6e-14）：支援主动能力搬到 action 描述子。
+  '03036',
+  '03037',
+  // Phase 6（6e-15）：规则字段搬到条目 / played 描述子。
+  '03114',
+  // Phase 6（6e-16）：敌人的弱点数据搬到条目级字段。
+  '03042',
 ])
 
 const playerTypes = new Set(['asset', 'event', 'skill', 'treachery', 'enemy'])

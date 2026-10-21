@@ -214,7 +214,10 @@ export function createAssets(deps) {
       if (effect.label) info(state, events, `「${effect.label}」随「${cardName(asset.code)}」离场而结束。`)
     }
     // 「如果其离场，将其从游戏中移除」（04311 第七印记的封印）。
-    if (EFFECTS[asset.code]?.removeFromGameWhenEmpty) {
+    // Phase 6（6e-16）：从条目级字段读（旧 DSL 条目回落）。
+    const removeOnLeave = registeredEntry(asset.code)?.removeFromGameWhenEmpty
+      ?? EFFECTS[asset.code]?.removeFromGameWhenEmpty
+    if (removeOnLeave) {
       asset.removedFromGame = true
       state.removedFromGame ||= []
       if (!state.removedFromGame.includes(asset.code)) state.removedFromGame.push(asset.code)

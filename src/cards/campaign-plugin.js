@@ -409,14 +409,17 @@ export function createCampaignPlugin(deps) {
     const preview = { discount: 0, noAction: false, sources: [] }
     for (const asset of inv.assets) {
       const eff = EFFECTS[asset.code]
-      if (!eff || asset.exhausted) continue
-      if (eff.fastForIllicit && traits.includes('illicit') && !preview.sources.includes(asset.id)) {
+      const entry = registeredEntry(asset.code)
+      const fastForIllicit = entry?.fastForIllicit ?? eff?.fastForIllicit
+      const survivorEventDiscount = entry?.survivorEventDiscount ?? eff?.survivorEventDiscount
+      if ((!fastForIllicit && !survivorEventDiscount) || asset.exhausted) continue
+      if (fastForIllicit && traits.includes('illicit') && !preview.sources.includes(asset.id)) {
         preview.sources.push(asset.id)
         // Phase 5：fast 走统一读点（卡面 EFFECTS → 描述子的 fast 字段），迁移后优惠口径不变。
         if (cardPlayFlag(code, 'fast')) preview.discount += 1
         else preview.noAction = true
       }
-      if (eff.survivorEventDiscount && def.type === 'event'
+      if (survivorEventDiscount && def.type === 'event'
         && (def.factions || [def.klass]).includes('survivor') && !preview.sources.includes(asset.id)) {
         preview.sources.push(asset.id)
         preview.discount += 2

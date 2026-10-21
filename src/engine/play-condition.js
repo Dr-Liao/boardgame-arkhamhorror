@@ -97,9 +97,9 @@ export function playAccess(code) {
   return {
     fromDiscard: effect.playableFromDiscard === true || descriptor?.playableFromDiscard === true
       || (descriptorOfKind(code, 'played') ? false : false) || entryPlayableFromDiscard(code),
-    playableWeakness: effect.playableWeakness === true,
+    playableWeakness: registeredEntry(code)?.playableWeakness === true || effect.playableWeakness === true,
     reactionOnly,
-    limitPerInvestigator: Boolean(effect.limitPerInvestigator),
+    limitPerInvestigator: Boolean(registeredEntry(code)?.limitPerInvestigator ?? effect.limitPerInvestigator),
   }
 }
 

@@ -35,6 +35,9 @@ export const DATA_IMPLEMENTED_CODES = new Set([
   '01094', // 防弹衣：同上
   '01095', // 远古印记护身符：同上
   '01117', // 丽塔·钱德勒：光环 —— 条目级 auraWhileInPlay
+  '03114', // 珍爱纪念：原条目就是空对象（无行为，只有卡面数据）
+  '04106', // 老练分析：永久卡，只有构筑元数据（原 EFFECTS 只有 deckbuildingOnly/permanentRule）
+  '04109', // 奥术研究：同上
 ])
 
 // 旧 DSL 条目里「行为」载体的键；其余键都是条目级规则字段（fast / exileAfterPlay / …）。

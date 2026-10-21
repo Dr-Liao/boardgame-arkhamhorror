@@ -97,6 +97,12 @@ export const abilityLayerCodes = Object.freeze([
   '02225',
   '02261',
   '02307',
+  // Phase 6（6e-14）：支援主动能力搬到 action 描述子。
+  '02114',
+  '02152',
+  // Phase 6（6e-15）：规则字段搬到条目 / played 描述子。
+  '02111',
+  '02305',
 ])
 export const manifest = {
   schemaVersion: CONTENT_SCHEMA_VERSION, id: 'dunwichPlayer', name: '敦威治遗产 · 玩家卡',

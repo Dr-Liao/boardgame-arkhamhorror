@@ -16,23 +16,18 @@ export const effects = {
   // ---- 支援 ----
   // 04021 已迁到能力层（kind: 'entersPlay'，见 src/cards/card-abilities.js）。
   // 04037 背包已迁到能力层（5c-34），见 MIGRATED_ESCAPE_ENTRIES_5C34。
-  '04268': {
-    uses: 5, usesType: 'ammo', discardAtRoundEnd: true,
-    abilities: [action('花费 1 子弹：攻击（战斗 +1，伤害 +1）', fight(1, 1), { uses: 1 })],
-  },
+  // 04268 已迁到能力层（kind: 'action'，见 6e-14）。
   // 04270 骷髅钥匙已迁到能力层（5c-30），见 MIGRATED_ESCAPE_ENTRIES_5C30。
   // ---- 事件 ----
   // 04111 坚韧不拔已迁到能力层（6e-8：快速反应事件 → kind: 'played' + fast + trigger）。
   // ---- 技能 ----
   // ---- 封印 ----
-  '04030': { sealOnEnterChoice: 'symbol', returnToHandOnAutoFail: true },
-  '04031': { sealOnEnterChoice: 'nonAutofail', forcedTurnEndPayOrDiscard: 1, teamLimit: 2 },
-  '04311': { sealOnEnter: 'autofail', uses: 7, usesType: 'charges',
-    chargesOnSymbolReveal: 1, removeFromGameWhenEmpty: true },
+  // 04030 已迁到能力层（6e-15：条目级规则字段 / played 描述子）。
+  // 04031 已迁到能力层（6e-15：条目级规则字段 / played 描述子）。
+  // 04311 已迁到能力层（6e-15：条目级规则字段 / played 描述子）。
   // ---- 剧本模式弱点链 ----
   // 离体体验（04264）：把所有手牌洗回牌库、重抽等量，然后把本卡洗回牌库。
-  '04038': { playableWeakness: true, weakness: { type: 'darkPact' },
-    event: { type: 'targetedEffect', target: 'location', effect: { type: 'takeDamage', amount: 2 } } },
+  // 04038 已迁到能力层（6e-16：enemyWeakness / weakness 数据体）。
 
   // ---- 剧本资产 ----
   // 04191 古代遗物已迁到能力层（5c-25），见 MIGRATED_ESCAPE_ENTRIES_5C25。
@@ -47,20 +42,20 @@ export const effects = {
   // 古代巨石（未鉴定）：调查帷幕 +3，成功额外 1 线索并记录难度。
   // 埃兹特里之牙：结算诡计能力期间 +1 意志/+1 敏捷；成功后可横置抽牌。
   // 老练分析（永久）：升级带「未鉴定／未翻译」副标题的卡牌时额外免费升级第二张。
-  '04106': { permanentRule: 'shrewdAnalysis', deckbuildingOnly: true },
+  // 04106 已迁到能力层（6e-16：条目级规则字段 / weakness 数据体）。
   // 销赃贩子：在自回合打出违法卡时使其获得快速，已有快速则减 1 费用。
-  '04108': { fastForIllicit: true },
+  // 04108 已迁到能力层（6e-16：条目级规则字段 / weakness 数据体）。
   // 奥术研究（永久）：购买时承受 1 点精神创伤，每场冒险后第一张法术升级减 1 经验。
-  '04109': { permanentRule: 'arcaneResearch', deckbuildingOnly: true },
+  // 04109 已迁到能力层（6e-16：条目级规则字段 / weakness 数据体）。
   // 准备万全：横置选择一张支援，按匹配图标提升本次检定。
   // 追忆未来：检定开始时指定一个混乱标记，命中则横置并 +2。
   // 反复尝试：检定失败后横置并花费 1 次数，收回投入的技能牌。
   // 奥利芙·麦克布莱德：横置后揭示 3 个混乱标记并选 2 个结算。
   // 古代巨石（研究完成）：秘密数来自剧本日志；抽牌后花费等量秘密造成伤害／治愈恐惧。
-  '04230': { usesFromStoneRecord: true, usesType: 'secrets' },
-  '04231': { usesFromStoneRecord: true, usesType: 'secrets' },
+  // 04230 已迁到能力层（6e-15：条目级规则字段 / played 描述子）。
+  // 04231 已迁到能力层（6e-15：条目级规则字段 / played 描述子）。
   // 自食其力：幸存者事件减 2 费用；出现盟友支援时弃掉；每位调查员限 1 张。
-  '04236': { survivorEventDiscount: true, limitPerInvestigator: true },
+  // 04236 已迁到能力层（6e-16：条目级规则字段 / weakness 数据体）。
   // 纳克特手稿：显现检定或本回合下一场检定不揭示混乱标记。
   // 04308 时间借取 / 04310 虚空碎裂已迁到能力层（5c-37），见 MIGRATED_ESCAPE_ENTRIES_5C37。
 

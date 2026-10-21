@@ -1855,3 +1855,50 @@ descriptorEntries 419 → 441   descriptorAbilities 344 → 366
 `replay --compare` 全程逐条一致（行为零变化）；`fast` 2148 例 2141 通过、失败 7 条＝既有 7 条；
 `cards:audit --check` / `audit-workorder --check` / `audit-dead-primitives --check` /
 `phase6-guard` / `architecture-guard` / `replay:fixtures` 全绿。
+
+---
+
+## 44. 6e-14…6e-16：`EFFECTS` 清零（30 → 0）：Phase 6 的 ③ 完成
+
+### 44.1 三批，按「声明式形状」分组
+
+| 批次 | 内容 | 结果 |
+| --- | --- | --- |
+| 6e-14 | 9 张支援的主动能力搬进 `kind: 'action'` 描述子（01086 刀子 / 01076 野猫 / 02114 灭火器 / 03036 提灯 / 03037 铲子 / 02152 / 01044 / 03009 / 04268），新增条目级字段 `onPlayDoom`、`discardAtRoundEnd` | 22 → 20 |
+| 6e-15 | 12 条「规则字段 / 死数据」：02037 起始资源、04230/04231 取自战役记录、04030/04031/04311 封印字段、02111 事件+胜利区、02305 黄金怀表 / 03012 画中世界 / 03114 珍爱纪念 / 04106 / 04109（后三张原条目没有读点，直接删并登记 data 通道）；新增条目级字段 `startingResources` / `usesFromStoneRecord` / `sealOnEnterChoice` / `returnToHandOnAutoFail` / `forcedTurnEndPayOrDiscard` / `chargesOnSymbolReveal` / `removeFromGameWhenEmpty` | 20 → 9 |
+| 6e-16 | 最后 9 条：03017 / 04014 / 03042 的 `enemyWeakness`、04108 `fastForIllicit`、04236 `survivorEventDiscount` + `limitPerInvestigator`、01013 / 04038 `playableWeakness` + `weakness` 数据体、03011 威胁弱点；新增条目级字段 `enemyWeakness` / `playableWeakness` / `endTurnInHandHorror` / `fastForIllicit` / `survivorEventDiscount` / `limitPerInvestigator` | 9 → **0** |
+
+读点统一成 **「条目优先、旧 DSL 回落」**：`registeredEntry(code)?.xxx ?? EFFECTS[code]?.xxx`。
+EFFECTS 清空后，回落分支永远取不到值——它们可以在下一次清理时整体删掉（本节只做清零，不删读点）。
+
+### 44.2 四个必须记住的坑
+
+1. **拆出来的模块要同时补 deps 解构和装配对象**：只在模块里写 `registeredEntry(...)` 会 `ReferenceError`；
+   往装配块里加依赖时，`...commonDeps` 的 spread 行缩进是 2 个空格、其它依赖是 4 个（脚本按 4 匹配会漏）。
+2. **`card-lookup.js` 不能直接读注册表**：它是最底层模块，`registeredEntry` 要 `import` 自 `./ability.js`；
+   少一行 import 就是 24 条用例一起红（`cardDef is not a function` 从遭遇结算里冒出来）。
+3. **验收用例的 stub 要跟着通道变**：`rules-n3` 原来靠改写 `EFFECTS[stub].event` 注入效果；EFFECTS 清空后
+   改成改写**描述子的 effect 数据体**（描述子本身冻结，数据体是普通对象），用完还原。
+4. **`hasBehaviorData` 这类判据要认 data 通道**：`carcosa-player-acceptance` / `tfa-player-acceptance`
+   各有一处「条目里至少要有描述子/修正」的断言，现在还要接受 `enemyWeakness` 这类规则字段与
+   `DATA_IMPLEMENTED_CODES`（卡面数据即实现）。
+
+### 44.3 顺带修掉的依赖注入事故
+
+导出包装压缩（§43.3）后做了一次「装配去重」，把 `deck-ops` 这种**不 spread commonDeps** 的手写装配
+也删了依赖 → `cardDef is not a function`。修法是区分两类装配：
+`spread commonDeps` 的块按 commonDeps 键去重；**逐项列依赖的块一律补全**（`deck-ops` +18、`dispatch` +2 getter/setter、`hub` +7）。
+去重净省 308 行、补全回填 45 行，最终 `engine.js` 2375 行。
+
+### 44.4 指标与门禁
+
+```
+指标：engineCodes=0 effectsEntries=0 effectsTopLevelFields=0 escapeCards=0
+能力层：descriptorEntries=459 descriptorAbilities=385 abilityKinds=12 windows=52
+通道：descriptor 459 / data 6                     （合计 465 张，legacy/hybrid/engine 全部为 0）
+engine.js：2403 → 2375 行（累计 12654 → 2375，−81.2%）
+```
+
+`replay --compare` 全程逐条一致；`fast` 2148 例 2141 通过、失败 7 条＝既有 7 条；
+`cards:audit --check`（白名单已空）/ `cards:workorder --check` / `audit-dead-primitives --check` /
+`migrate-card --verify` / `replay:fixtures` / `phase6-guard` 全绿。

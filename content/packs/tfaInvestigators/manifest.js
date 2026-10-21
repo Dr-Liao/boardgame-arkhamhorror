@@ -71,9 +71,7 @@ export const investigatorAbilities = {
 export const signatureEffects = {
   // 04010 走私货物已迁到能力层（5c-20），见 src/cards/card-abilities.js 的
   // MIGRATED_ESCAPE_ENTRIES_5C20（含条目级 playRestriction）。
-  '04014': { // 伊格蛇族 Serpents of Yig
-    enemyWeakness: { sealsElderSign: true, hunter: true, prey: 'bearer' },
-  },
+  // 04014 已迁到能力层（6e-16：enemyWeakness / weakness 数据体）。
 }
 
 export const runtimeDependencyCodes = ['04009', '04014']

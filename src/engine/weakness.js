@@ -67,7 +67,8 @@ function resolveWeakness(state, inv, def, events, texts) {
     const enemy = spawnEnemy(state, def.code, location, inv.seat)
     if (enemy) {
       // 伊格蛇族：显现时把旧印标记封印在自身。
-      if (EFFECTS[def.code]?.enemyWeakness?.sealsElderSign && state.chaosBag.includes('eldersign')) {
+      if ((registeredEntry(def.code)?.enemyWeakness?.sealsElderSign
+    ?? EFFECTS[def.code]?.enemyWeakness?.sealsElderSign) && state.chaosBag.includes('eldersign')) {
         sealChaosToken(state, 'eldersign', enemy.id)
         info(state, events, `🔒 「${enemy.name}」封印了 ${tokenLabel('eldersign')}。`)
       }

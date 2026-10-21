@@ -172,6 +172,10 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       ...(EFFECTS[cardId] || {}),
       ...(entryPassive ? { passive: entryPassive } : {}),
       ...(entryFlags.sealOnEnter ? { sealOnEnter: entryFlags.sealOnEnter } : {}),
+      // Phase 6（6e-15）：选择式封印（04030/04031）也走条目级字段。
+      ...(entryFlags.sealOnEnterChoice ? { sealOnEnterChoice: entryFlags.sealOnEnterChoice } : {}),
+      // Phase 6（6e-14）：「入场放毁灭」搬到条目级字段（旧 DSL 条目由上面的 spread 回落）。
+      ...(entryFlags.onPlayDoom != null ? { onPlayDoom: entryFlags.onPlayDoom } : {}),
     }
     const asset = newPlayerAssetInstance(state, inv, cardId)
     // Phase 5（5a-18）：「打出时自选花费并转成弹药」也由条目级 chooseResourceCostOnPlay 声明。

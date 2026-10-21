@@ -11,6 +11,7 @@
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { EFFECTS } from '../cards/card-effects.js'
 import { enemyWeaknessExtra } from '../cards/card-rules.js'
+import { registeredEntry } from './ability.js'
 import { contentRegistry } from '../../content/registered.js'
 
 // 合并剧本注册表（遭遇牌 code 全局唯一，跨剧本合并后可按 code 直查）。
@@ -63,7 +64,7 @@ export function enemyDef(code) {
   if (ALL_ENEMIES[code]) return ALL_ENEMIES[code]
   const c = ALL_CARDS[code]
   if (c && c.type === 'enemy') {
-    const extra = { ...enemyWeaknessExtra(code), ...(EFFECTS[code]?.enemyWeakness || {}) }
+    const extra = { ...enemyWeaknessExtra(code), ...(registeredEntry(code)?.enemyWeakness || EFFECTS[code]?.enemyWeakness || {}) }
     return {
       code,
       name: c.nameZh || c.name,

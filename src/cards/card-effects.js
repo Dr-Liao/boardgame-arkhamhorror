@@ -61,12 +61,7 @@ export const EFFECTS = {
   // 中立 Neutral（0 级）
   // =========================================================================
   // 03143 焦虑（剧情资产）：理智 -1；理智不多于 3 时意志/战斗/敏捷 +1。
-  '01086': { // 刀子 Knife
-    abilities: [
-      { label: '战斗（战斗 +1）', cost: { action: true }, effect: { type: 'fight', combatBonus: 1 } },
-      { label: '弃置刀子（战斗 +2，伤害 +1）', cost: { action: true, discardSelf: true }, effect: { type: 'fight', combatBonus: 2, damageBonus: 1 } },
-    ],
-  },
+  // 01086 已迁到能力层（kind: 'action'，见 6e-14）。
   // 01088 应急物品已迁到能力层（kind: 'played'，见 src/cards/card-abilities.js）。
   // 01094 防弹衣 / 01095 远古印记护身符：卡面没有规则文本，只提供印刷生命/神智作为承伤容量，
   // 承伤逻辑在 engine.assignHarm() 里按 cardDef(code).health/sanity 通用处理。
@@ -89,23 +84,13 @@ export const EFFECTS = {
   // =========================================================================
   // 游荡者 Rogue（0 级 + XP）
   // =========================================================================
-  '01044': { // 弹簧刀 Switchblade
-    fast: true,
-    abilities: [
-      { label: '战斗（成功差值至少 2 时伤害 +1）', cost: { action: true }, effect: { type: 'fight', successBy: 2, damageBonus: 1 } },
-    ],
-  },
+  // 01044 已迁到能力层（kind: 'action'，见 6e-14）。
   // 01056 已迁到能力层（kind:'played'，见 6e-8）。
 
   // =========================================================================
   // 秘术师 Mystic（0 级 + XP）
   // =========================================================================
-  '01063': { // 新晋术士 Arcane Initiate
-    onPlayDoom: 1,
-    abilities: [
-      { label: '召唤（检索牌库顶 3 张中的法术牌）', cost: { action: false, exhaust: true }, effect: { type: 'searchTop', amount: 3, trait: 'Spell', choose: 1 } },
-    ],
-  },
+  // 01063 已迁到能力层（kind: 'action'，见 6e-14）。
   // 01065 已迁到能力层（kind:'played'，见 6e-8）。
   // 01068 已迁到能力层（kind:'played'，见 6e-8）。
 
@@ -113,11 +98,7 @@ export const EFFECTS = {
   // 幸存者 Survivor（0 级 + XP）
   // =========================================================================
   // 01072 皮大衣（无规则文本，印刷生命 2 作为承伤容量）：纯登记条目已在 6e-2 删除。
-  '01076': { // 野猫 Stray Cat
-    abilities: [
-      { label: '引开（弃掉野猫，自动躲避同地点非精英敌人）', cost: { action: false, discardSelf: true }, effect: { type: 'autoEvadeNonElite' } },
-    ],
-  },
+  // 01076 已迁到能力层（kind: 'action'，见 6e-14）。
   // 01079 已迁到能力层（kind:'played'，见 6e-8）。
   // 01080 已迁到能力层（kind:'played'，见 6e-8）。
   // 01083 已迁到能力层（kind:'played'，见 6e-8）。
@@ -133,10 +114,7 @@ export const EFFECTS = {
   // =========================================================================
   // 专属弱点（5 张，揭示时结算）
   // =========================================================================
-  '01013': { // 黑暗回忆 Dark Memory（放置毁灭 + 恐惧）
-    playableWeakness: true, endTurnInHandHorror: 2,
-    event: { type: 'addDoom', amount: 1 },
-  },
+  // 01013 已迁到能力层（6e-16：条目级规则字段 / weakness 数据体）。
 
   // =========================================================================
   // 核心包基础弱点（非敌人 5 张；敌人弱点 01101~01103 由 engine 按敌人卡直接生成）

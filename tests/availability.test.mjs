@@ -4,6 +4,7 @@ import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { CORE_INVESTIGATOR_CODES, PLAYABLE_INVESTIGATOR_CODES, CORE_PLAYER_CODES, PLAYER_CARD_CODES, CORE_UPGRADE_CODES, CORE_SIGNATURE_CODES, CORE_BASIC_WEAKNESS_CODES, SIGNATURES_BY_INVESTIGATOR, canSelectInvestigator, isCardAvailable, getAvailability } from '../src/deck/availability.js'
 import { corePlayablePool, isPlayable, buildDeck, buildDeckFromList, deckBuilderData } from '../src/deck/deckbuilding.js'
+import { CARD_ABILITY_CODES } from '../src/cards/card-abilities.js'
 
 const roland = INVESTIGATORS['01001']
 const list = () => buildDeck(roland, { seed: 'n1' }).playerCards
@@ -97,13 +98,17 @@ test('缺少签名、效果或基础弱点依赖时明确失败，不静默省�
     assert.throws(() => buildDeck(roland), /签名/)
     assert.ok(buildDeckFromList(roland, cards).errors.some(error => error.includes('签名')))
   } finally { ALL_CARDS['01006'] = signature }
-  // 两条通道各挑一张：01021 看门狗（Phase 5 起在能力层）与 01086 刀子（仍在旧 DSL 里）。
-  const effect = EFFECTS['01086']
-  try {
-    delete EFFECTS['01086']
-    assert.equal(isPlayable(ALL_CARDS['01086']), false)
-    assert.throws(() => corePlayablePool(), /效果/)
-  } finally { EFFECTS['01086'] = effect }
+  // 两条通道各挑一张：01021 看门狗（Phase 5 起在能力层）与「仍在旧 DSL 里」的任意玩家卡。
+  // Phase 6（6e 系列）继续迁移后旧通道的卡会一张张消失；没有旧通道卡时这段自然跳过。
+  const legacyCode = CORE_PLAYER_CODES.find(code => Object.hasOwn(EFFECTS, code) && !CARD_ABILITY_CODES.has(code))
+  if (legacyCode) {
+    const effect = EFFECTS[legacyCode]
+    try {
+      delete EFFECTS[legacyCode]
+      assert.equal(isPlayable(ALL_CARDS[legacyCode]), false)
+      assert.throws(() => corePlayablePool(), /效果/)
+    } finally { EFFECTS[legacyCode] = effect }
+  }
   // 能力层的卡不再依赖 EFFECTS：删掉 EFFECTS 条目仍可打出（读点是注册表）。
   assert.equal(isPlayable(ALL_CARDS['01021']), true)
   assert.equal(EFFECTS['01021'], undefined)

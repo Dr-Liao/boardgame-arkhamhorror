@@ -17,18 +17,12 @@ export const effects = {
   // 03030 / 03156 / 03157 / 03270 已迁到能力层（6e-8：快速反应事件 →
   // kind: 'played' + fast + trigger），见 src/cards/card-abilities.js。
   // 03033 解锢灵魂已迁到能力层（5c-21），见 MIGRATED_ESCAPE_ENTRIES_5C21。
-  '03036': { abilities: [
-    action('提灯调查', { type: 'investigate', shroudMod: -1 }),
-    action('弃置提灯造成1点伤害', { type: 'dealDamage', amount: 1, target: 'here', noOpportunityAttack: true }, { discardSelf: true }),
-  ] },
-  '03037': { abilities: [
-    action('挖墓人的铲子攻击', fight(2)),
-    action('弃置铲子发现1条线索', { type: 'discoverClue', amount: 1 }, { discardSelf: true }),
-  ] },
-  '03042': { enemyWeakness: { hunter: true, prey: 'bearer', shuffleIntoDeckOnDefeat: true } },
+  // 03036 已迁到能力层（kind: 'action'，见 6e-14）。
+  // 03037 已迁到能力层（kind: 'action'，见 6e-14）。
+  // 03042 已迁到能力层（6e-16：enemyWeakness / weakness 数据体）。
 
   // 03106 英勇救援已迁到能力层（5c-32），见 MIGRATED_ESCAPE_ENTRIES_5C32。
-  '03114': {},
+  // 03114 已迁到能力层（6e-15：条目级规则字段 / played 描述子）。
 
   // 03150 预警已迁到能力层（5c-22），见 MIGRATED_ESCAPE_ENTRIES_5C22。
   // 03158 求助盟友已迁到能力层（5c-19），见 src/cards/card-abilities.js 的 MIGRATED_ESCAPE_ENTRIES_5C19。

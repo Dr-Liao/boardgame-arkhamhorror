@@ -11,6 +11,7 @@ import { buildDeck, matchesDeckOptions } from '../src/deck/deckbuilding.js'
 import { replacementOptions, purchaseCard, shrewdAnalysisUpgrade } from '../src/campaign/campaign.js'
 import { manifest, IMPLEMENTED_PLAYER_CODES, WEAKNESS_PLAYER_CODES } from '../content/packs/tfaPlayer/manifest.js'
 import { registeredEntry } from '../src/engine/ability.js'
+import { DATA_IMPLEMENTED_CODES } from '../src/cards/card-implementation.js'
 
 const me = state => state.investigators[0]
 const IMPLEMENTED = [...IMPLEMENTED_PLAYER_CODES]
@@ -40,6 +41,9 @@ function sign(state, execute, choose) {
 
 function hasBehaviorData(code) {
   if (EFFECTS[code]) return true
+  // Phase 6（6e-15/6e-16）：EFFECTS 清空后，「有实现」的判据是能力层条目（含规则字段条目）。
+  if (registeredEntry(code)) return true
+  if (DATA_IMPLEMENTED_CODES.has(code)) return true
   // Phase 1 起，「有实现」不再等于「有 EFFECTS 条目」：生命周期钩子可以在能力层描述子里。
   const channel = lifecycleChannel(code)
   if (channel.played || channel.commit || channel.weakness || channel.entersPlay || channel.leavesPlay) return true
@@ -1495,7 +1499,8 @@ test('M2-B arcane research charges mental trauma and discounts the first spell u
 
   const spell = Object.values(ALL_CARDS).find(card => card.klass === 'mystic'
     && (card.traits || []).some(trait => String(trait).toLowerCase() === 'spell') && (card.xp || 0) >= 2
-    && EFFECTS[card.code] && matchesDeckOptions(INVESTIGATORS['04004'], card))
+    && (registeredEntry(card.code) || EFFECTS[card.code])
+    && matchesDeckOptions(INVESTIGATORS['04004'], card))
   assert.ok(spell, '找到一张可升级的法术卡')
   const candidates = replacementOptions(record, spell.code, campaign.records)
   assert.ok(candidates.length, '法术升级可购买')
