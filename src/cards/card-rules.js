@@ -1,148 +1,203 @@
-// 卡号级规则数据（原 engine.js 的 WEAKNESS_ENEMY_EXTRA）。
-// Phase 5（5a-2）：敌人型基础弱点的关键词属于**卡面数据**，不属于引擎分支；
-// 引擎用 enemyWeaknessExtra(code) 读取，code 不再出现在 engine.js 里。
-export const ENEMY_WEAKNESS_EXTRA = Object.freeze({
-  '01101': Object.freeze({ hunter: true, prey: true, parleyCost: 4 }),
-  '01102': Object.freeze({ hunter: true, prey: true, forcedDoom: true }),
-  '01103': Object.freeze({ hunter: true, prey: true, blanksInvestigatorText: true }),
-})
+// 卡号级规则数据的读点。
+//
+// Phase 3（REPORT.md 第 3 批）：这些规则原来是一张张「卡号 → 规则」表，现在全部由
+// 卡条目自己声明（entries/<code>.js 或 encounter-abilities.js），本文件只保留读点，
+// 不再维护第二份卡号表。引擎仍然只依赖这些函数名，所以迁移不需要改调用点。
+//
+// 仍未迁移的两类：
+//   · 「随机基础弱点 / 古代遗物 / 击退邪恶 / 寻找伊兹 / 丽塔」这些**游戏流程常量**，
+//     它们表示「哪张牌」而不是「这张牌的规则」，等第 8 批战役/叙事一起处理；
+//   · 旧存档迁移常量，只在 save-migration 里使用。
 
+import { registeredEntry, registeredEntries } from '../engine/ability.js'
+import { CARD_ABILITY_ENTRIES } from './card-abilities.js'
+import { investigatorRule } from './investigator-abilities.js'
+import { NON_PLAYER_ABILITY_ENTRIES } from './encounter-abilities.js'
+
+// 注册表由 engine.js 在模块初始化时填充；本文件可能被独立 import（测试 / 工具），
+// 因此保留一份静态条目索引作为回落。两者内容相同，注册表优先。
+const STATIC_ENTRIES = [...CARD_ABILITY_ENTRIES, ...NON_PLAYER_ABILITY_ENTRIES]
+const staticEntry = code => STATIC_ENTRIES.find(entry => entry.code === code) || null
+const entryOf = code => (code && (registeredEntry(code) || staticEntry(code))) || null
+const allEntries = () => {
+  const registered = registeredEntries()
+  return registered.length ? registered : STATIC_ENTRIES
+}
+
+const entryWith = (field, value) => allEntries().find(entry => entry[field] === value) || null
+
+// 调查员卡面规则（第 6 批）：数据在 entries/<code>.js 的 `investigator` 字段。
+export { investigatorRule }
+
+// 第 7 批：内容层从 card-data.js 的表改成读条目。
+export function hiddenRuleFor(code) {
+  return (code && entryOf(code)?.hiddenRule) || null
+}
+
+export function threatEffectFor(code) {
+  return (code && entryOf(code)?.threatEffect) || null
+}
+
+export function enemyRuleFor(code) {
+  return (code && entryOf(code)?.enemyRule) || null
+}
+
+export function treacheryRuleFor(code) {
+  return (code && entryOf(code)?.treacheryRule) || null
+}
+
+// 第 7 批：遭遇卡是否已声明「规则已实现」（替代 encounter-rules 的卡号集合）。
+export function implementedFor(code) {
+  return (code && entryOf(code)?.implemented) === true
+}
+
+export function doomPerInvestigatorFor(code) {
+  return (code && entryOf(code)?.doomPerInvestigator) === true
+}
+
+export function threatActionFor(code) {
+  return (code && entryOf(code)?.threatAction) || null
+}
+
+export function threatActionByRule(rule) {
+  return allEntries().find(entry => entry.threatAction?.rule === rule)?.threatAction || null
+}
+
+export function actRuleFor(code) {
+  return (code && entryOf(code)?.actRule) || null
+}
+
+export function agendaRuleFor(code) {
+  return (code && entryOf(code)?.agendaRule) || null
+}
+
+export function storyCardCode(role) {
+  return entryWith('storyRole', role)?.code || null
+}
+
+export function vengeanceWhileFor(code) {
+  return (code && entryOf(code)?.vengeanceWhile) || null
+}
+
+export function enemyStatRuleFor(code) {
+  return (code && entryOf(code)?.enemyStatRule) || null
+}
+
+export function enemySpawnRuleFor(code) {
+  return (code && entryOf(code)?.enemySpawnRule) || null
+}
+
+export function encounterResolveFor(code) {
+  return (code && entryOf(code)?.encounterResolve) || null
+}
+
+export function encounterResolveCampaignsFor(code) {
+  return (code && entryOf(code)?.encounterResolveCampaigns) || []
+}
+
+export function enemyScriptFor(code) {
+  return (code && entryOf(code)?.enemyScript) || null
+}
+
+// 敌人型基础弱点的关键词（01101–01103 的条目级 enemyWeakness）。
 export function enemyWeaknessExtra(code) {
-  return ENEMY_WEAKNESS_EXTRA[code] || {}
+  return (code && entryOf(code)?.enemyWeakness) || {}
 }
 
-// 「文本被清空」的敌人弱点：原引擎按卡号判断，现在按数据标记判断。
+// 「文本被清空」的敌人弱点：按数据标记判断。
 export function isTextBlankEnemy(code) {
-  return ENEMY_WEAKNESS_EXTRA[code]?.blanksInvestigatorText === true
+  return enemyWeaknessExtra(code).blanksInvestigatorText === true
 }
 
-// 卡号级规则数据：哪些卡会清空某类特质的卡面文本（原 engine.js 硬编码 02088）。
-export const BLANKS_TRAITS = Object.freeze({
-  '02088': Object.freeze(['ally']),
-})
-
+// 哪些卡会清空某类特质的卡面文本（02088）。
 export function blanksTraits(code) {
-  return BLANKS_TRAITS[code] || []
+  return (code && entryOf(code)?.blanksTraits) || []
 }
 
-// 卡号级规则数据：即使没有 reactions 数据也需要前端「有反应提示」的卡（原 engine.js 数组）。
-export const EXPLICIT_REACTION_PROMPT = Object.freeze(['01007', '01071', '01082', '02217'])
-
+// 即使没有 reactions 数据也需要前端「有反应提示」的卡。
+// 02217 还没有条目文件（行为未实现），暂时保留一个兜底码；补条目时一起删掉。
 export function hasExplicitReactionPrompt(code) {
-  return EXPLICIT_REACTION_PROMPT.includes(code)
+  return entryOf(code)?.explicitReactionPrompt === true || code === '02217'
 }
 
-// 卡号级规则数据：造成「中毒」的威胁卡（原 engine.js 硬编码 04102）。
-export const POISON_THREAT_CODES = Object.freeze(['04102'])
-
+// 造成「中毒」的威胁卡（04102）。
 export function isPoisonThreat(code) {
-  return POISON_THREAT_CODES.includes(code)
+  return entryOf(code)?.poisonThreat === true
 }
 
 export function poisonThreatCode() {
-  return POISON_THREAT_CODES[0]
+  return entryWith('poisonThreat', true)?.code || null
 }
 
-// 卡号级规则数据：议程在整理阶段扣减手牌上限（原 engine.js 硬编码 02043）。
-export const AGENDA_HAND_SIZE_PENALTY = Object.freeze({ '02043': 3 })
-
+// 议程在整理阶段扣减手牌上限（02043）。
 export function agendaHandSizePenalty(code) {
-  return AGENDA_HAND_SIZE_PENALTY[code] || 0
+  return (code && entryOf(code)?.agendaHandSizePenalty) || 0
 }
 
-// 卡号级规则数据：剧情资产「古代遗物」的默认卡号（原 engine.js 硬编码 04061）。
-export const RELIC_OF_AGES_CODE = '04061'
-
-// 卡号级规则数据：「随机基础弱点」自身的卡号（原 engine.js 硬编码 01000）。
-export const RANDOM_BASIC_WEAKNESS_CODE = '01000'
-
-// 卡号级规则数据：调查某些地点要额外花行动（原 engine.js 硬编码 02050）。
-export const INVESTIGATE_EXTRA_ACTIONS = Object.freeze({ '02050': 1 })
-
+// 调查某些地点要额外花行动（02050）。
 export function investigateExtraActionsFor(code) {
-  return INVESTIGATE_EXTRA_ACTIONS[code] || 0
+  return (code && entryOf(code)?.investigateExtraActions) || 0
 }
 
-// 卡号级规则数据：敌人卡面的特殊规则（原 engine.js 硬编码 01172 / 01177 与对应的 ruleId）。
-export const ENEMY_RULE_FLAGS = Object.freeze({
-  // 猎手夜魇：负面标记双倍结算。
-  '01172': Object.freeze({ doubleNegative: true }),
-  huntingNightgaunt: Object.freeze({ doubleNegative: true }),
-  // 02094：用远程/枪械/法术武器攻击它时难度 -3。
-  '02094': Object.freeze({ rangedAttackDifficultyReduction: 3 }),
-  // 02255：只能被 02254（深奥咒文）伤害，普通攻击/攻击行动都对它无效。
-  '02255': Object.freeze({ damageOnlyFrom: '02254' }),
-  // 03017：与它交战期间不能弃牌。
-  '03017': Object.freeze({ locksDiscardWhileEngaged: true }),
-  // 02182：与它交战期间不能移动。
-  '02182': Object.freeze({ blocksMovementWhileEngaged: true }),
-  // 02103：用近战武器攻击它时，武器被摧毁。
-  '02103': Object.freeze({ destroysMeleeWeapon: true }),
-  // 伊斯观察者：攻击时随机弃 1 张手牌，无手牌则伤害与恐惧各 +1。
-  '01177': Object.freeze({ discardRandomOnAttack: true }),
-  yithianObserver: Object.freeze({ discardRandomOnAttack: true }),
-})
-
+// 敌人卡面的特殊规则（双倍负修正 / 远程难度减免 / 只能被某张卡伤害…）。
 export function enemyRuleFlags(code) {
-  return (code && ENEMY_RULE_FLAGS[code]) || {}
+  return (code && entryOf(code)?.enemyRule) || {}
 }
 
-// 卡号级规则数据：地点离场时，按地点上的计数把对应遭遇卡放回遭遇弃牌堆
-// （奥术屏障 02102 / 肮脏而寂静 02089，原 engine.js 硬编码）。
-export const LOCATION_COUNTER_TREACHERY = Object.freeze({
-  arcaneBarriers: '02102',
-  sordidAndSilent: '02089',
-})
-
+// 地点离场时，按地点上的计数把对应遭遇卡放回遭遇弃牌堆（奥术屏障 02102 / 忍气吞声 02089）。
+// 计数器名由卡条目的 locationCounter 声明；排序保证与旧表的 arcaneBarriers → sordidAndSilent 顺序一致。
 export function locationCounterTreacheries(location) {
-  return Object.entries(LOCATION_COUNTER_TREACHERY)
-    .flatMap(([field, code]) => Array(location?.[field] || 0).fill(code))
+  return allEntries()
+    .filter(entry => entry.locationCounter && (location?.[entry.locationCounter] || 0) > 0)
+    .sort((left, right) => left.locationCounter.localeCompare(right.locationCounter))
+    .flatMap(entry => Array(location[entry.locationCounter]).fill(entry.code))
 }
 
-// 卡号级规则数据：两张「附着型」弱点自身的卡号（原 engine.js 硬编码）。
-export const SMITE_THE_WICKED_CODE = '02007'
-export const SEARCHING_FOR_IZZIE_CODE = '02011'
-
-// 卡号级规则数据：「弱点升级」后的替换卡号（原 engine.js 硬编码 04038 / 04041 / 04042）。
-export const WEAKNESS_UPGRADE_CODES = Object.freeze({
-  priceOfFailure: '04038',
-  impendingDoom: '04041',
-  cursedFate: '04042',
-})
-
-export function weaknessUpgradeCode(type) {
-  return WEAKNESS_UPGRADE_CODES[type] || null
-}
-
-// 卡号级规则数据：结局时加入战役牌组的剧情盟友（丽塔·钱德勒，原 engine.js 硬编码 01117）。
-export const LITA_CHANDLER_CODE = '01117'
-
-// 卡号级规则数据：某个地点计数对应哪张遭遇卡（奥术屏障这类「计数器 + 卡」的机制）。
 export function counterTreacheryCode(field) {
-  return LOCATION_COUNTER_TREACHERY[field] || null
+  return entryWith('locationCounter', field)?.code || null
 }
 
-// 卡号级规则数据：会在「无人生成地点为空」时翻开探索牌库放地点的议程/幕（原 engine.js 硬编码 04318）。
-export const ACTS_PLACING_LOCATION_FOR_EMPTY_SPAWN = Object.freeze(['04318'])
+// 「弱点升级」后的替换卡号（04038 / 04041 / 04042 的条目级 upgradesFrom）。
+export function weaknessUpgradeCode(type) {
+  return entryWith('upgradesFrom', type)?.code || null
+}
 
+// 会在「无人生成地点为空」时翻开探索牌库放地点的幕/议程（04318）。
 export function actPlacesLocationForEmptySpawn(code) {
-  return ACTS_PLACING_LOCATION_FOR_EMPTY_SPAWN.includes(code)
+  return entryOf(code)?.placesLocationForEmptySpawn === true
 }
 
-// 卡号级规则数据：剧情关键敌人 / 弱点（原 engine.js 硬编码 03059）。
-export const PALLID_MASK_CODE = '03059'
+// 剧情关键敌人 / 弱点（03059）。
+export function pallidMaskCode() {
+  return entryWith('pallidMask', true)?.code || null
+}
 
-// 卡号级规则数据：这些地点上的「遗物」购买有折扣（原 engine.js 硬编码 04142）。
-export const RELIC_DISCOUNT_LOCATION_CODES = Object.freeze(['04142'])
-
+// 这些地点上的「遗物」购买有折扣（04142）。
 export function relicDiscountLocation(code) {
-  return RELIC_DISCOUNT_LOCATION_CODES.includes(String(code ?? ''))
+  return entryOf(String(code ?? ''))?.relicDiscountLocation === true
 }
 
-// 卡号级规则数据：地点被移出游戏时的「默认去向」地点（原 engine.js 硬编码 02320）。
-export const RELOCATE_DESTINATION_LOCATION_CODE = '02320'
+// 地点被移出游戏时的「默认去向」地点（02320）。
+export function relocateDestinationCode() {
+  return entryWith('relocateDestination', true)?.code || null
+}
 
-// 卡号级规则数据：旧存档迁移用到的卡号（Phase 6 从 save-migration.js 搬出来，引擎不再写死）。
+// ---------------------------------------------------------------------------
+// 游戏流程常量（还不是「这张卡的规则」，第 8 批处理）
+// ---------------------------------------------------------------------------
+// 剧情资产「古代遗物」的默认卡号（原 engine.js 硬编码 04061）。
+export const RELIC_OF_AGES_CODE = storyCardCode('relicOfAges') || '04061'
+// 「随机基础弱点」自身的卡号（原 engine.js 硬编码 01000）。
+export const RANDOM_BASIC_WEAKNESS_CODE = '01000'
+// 两张「附着型」弱点自身的卡号（原 engine.js 硬编码）。
+export const SMITE_THE_WICKED_CODE = storyCardCode('smiteTheWicked') || '02007'
+export const SEARCHING_FOR_IZZIE_CODE = storyCardCode('searchingForIzzie') || '02011'
+// 结局时加入战役牌组的剧情盟友（丽塔·钱德勒，原 engine.js 硬编码 01117）。
+export const LITA_CHANDLER_CODE = storyCardCode('lita') || '01117'
+
+// ---------------------------------------------------------------------------
+// 旧存档迁移常量（只在 save-migration 里使用）
+// ---------------------------------------------------------------------------
 // 「回响」议程的毁灭阈值按调查员人数计。
 export const LEGACY_AGENDA_DOOM_PER_INVESTIGATOR = Object.freeze({
   '03121': 2,

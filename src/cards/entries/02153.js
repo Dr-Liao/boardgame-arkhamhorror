@@ -15,8 +15,15 @@ export default {
       "fast": true,
       "trigger": "enemyAttack",
       "label": "催眠术",
-      "effect": {
-        "type": "hypnoticGaze"
+      "resolve": ({ inv, api }) => {
+        const reaction = api.reactionContext()
+        if (reaction?.when !== 'enemyAttack') return
+        api.cancelCurrentAttack()
+        const token = api.revealChaosTokens(1)[0]
+        if (['skull', 'cultist', 'tablet', 'elderthing', 'autofail'].includes(token)) {
+          const enemy = reaction.context?.enemy || reaction.enemy
+          if (enemy) api.damageEnemy(enemy, enemy.damage || 0, inv.seat)
+        }
       }
     },
   ],

@@ -15,6 +15,11 @@ export const scenario = {
     startLocation: 'yourHouse',
     setAsideLocations: [],
     resignAnywhere: true,
+    // 墓地的失败分支在 movement.js 里还要选「受到 2 点恐惧」或「移动到河岸城」；
+    // onEnter 只声明了检定和默认失败，给 AI/移动提示补一句完整结算。
+    locationNotices: {
+      graveyard: '意志(3)检定，失败时受到 2 点恐惧，或移动到河岸城',
+    },
     locationVariants: {
       southside: [
         { originalCode: '01126', name: '南区 · 历史协会', text: '[action]：抽取3张卡牌。(每场游戏仅限一次)', ability: { id: 'southsideDraw', label: '抽取 3 张牌', limit: 'game', effect: { type: 'draw', amount: 3 } } },

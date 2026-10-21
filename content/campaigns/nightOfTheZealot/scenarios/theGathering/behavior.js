@@ -1,4 +1,5 @@
 import { declareScenario } from '../../../../scenario-declaration.js'
+import { actReveal, agendaForced, agendaReveal } from './act-reveal.js'
 
 // Phase 3（D3/D4）：布置、推进常量与结局结果都是声明。
 export const behavior = declareScenario({
@@ -6,6 +7,7 @@ export const behavior = declareScenario({
   data: { houseFateChoice: true, roundEndActIndex: 1, litaParleyActIndex: 2 },
   setup: { locations: ['study'] },
   hooks: {
+    actReveal, agendaForced, agendaReveal,
     investigatorEntryError(state, location) {
       // Also enforce the act gate for old saves that revealed the Parlor too early.
       if (location.id === 'parlor' && (state.actIndex < 2 || !location.revealed)) {

@@ -17,7 +17,11 @@ export default {
       kind: 'played',
       label: '嘲讽',
       fast: true,
-      effect: { type: 'engageEnemies', drawPerEnemy: 1 },
+      resolve: ({ state, inv, api }) => {
+        const enemies = state.enemies.filter(enemy => enemy.location === inv.location && enemy.engagedSeat !== inv.seat)
+        for (const enemy of enemies) api.engage(enemy, inv.seat)
+        if (enemies.length) api.drawCardsLogged(inv.seat, enemies.length)
+      },
     },
   ],
   modifiers: [

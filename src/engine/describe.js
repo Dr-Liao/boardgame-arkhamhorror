@@ -27,6 +27,7 @@ export function createDescribeState(deps) {
     assetEffect,
     CLASS_NAMES,
     investigatorParticipation,
+    investigatorAssigned,
     decisionSeat,
     aliveInvestigators,
     describeFreeAbilities,
@@ -64,8 +65,12 @@ export function createDescribeState(deps) {
     const lines = [...describeTeamParticipation(state, observerSeat), `【战役局外】${state.campaign.name} · ${state.uiState} · 难度 ${state.difficulty}`]
     lines.push('待操作席位：' + actingSeats(state).join('、') + '；下一关：' + (state.hubSelectedScenarioId || '未选择'))
     for (const inv of state.investigators) {
+      if (!investigatorAssigned(state, inv.seat)) {
+        lines.push(`${inv.seat}：还没选调查员`)
+        continue
+      }
       const record = state.campaign.investigators[inv.seat]
-      lines.push(`${inv.seat}：${inv.name} · ${record ? `牌组 ${record.deck.length} 张 · ${record.xp} XP` : '未保存牌组'}`)
+      lines.push(`${inv.seat}：${inv.name}（${CLASS_NAMES[inv.klass] || inv.klass}） · ${record ? `牌组 ${record.deck.length} 张 · ${record.xp} XP` : '未保存牌组'}`)
     }
     lines.push('【可执行行动】')
     if (actingSeats(state).includes(observerSeat)) for (const move of legalMoves(state, observerSeat)) lines.push(JSON.stringify(move))

@@ -14,6 +14,12 @@ const factory = () => ({ inv, api }) => ({
 
 export default {
   code: '01002',
+  investigator:   {
+    "elderSign": {
+      "kind": "drawPerTome"
+    },
+    "extraTomeAction": true
+  },
   kind: 'investigator',
   elderSign: { id: '01002-eldersign', resolve: factory() },
   abilities: [],

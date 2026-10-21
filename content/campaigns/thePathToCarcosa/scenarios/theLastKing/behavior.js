@@ -1,4 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { agendaRuleFor } from '../../../../../src/cards/card-rules.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { carcosaChaosToken } from '../../carcosa-chaos.js'
 
@@ -236,13 +237,7 @@ export const behavior = {
   },
 
   agendaReveal(state, agenda, api) {
-    if (agenda.originalCode === '03062') {
-      const fewest = Math.min(...state.storyAssets.map(asset => asset.clues || 0))
-      const candidates = state.storyAssets.filter(asset => (asset.clues || 0) === fewest)
-      const target = pickChoice(candidates, state, api, '03062', '选择黛安娜·迪瓦恩出现的旁人。')
-      if (target) api.spawn('03081', target.location)
-      api.shuffleDiscard()
-    } else if (agenda.originalCode === '03063') api.finish('r3')
+    agendaRuleFor(agenda.originalCode)?.onReveal?.(state, agenda, api)
   },
 
   agendaWouldAdvance(state, api) {

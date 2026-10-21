@@ -13,7 +13,7 @@ export default {
     { when: resignAvailable(), message: '场上没有带「撤退」能力的剧本卡' },
   ],
   abilities: [
-    { kind: 'played', label: '“我要走了！”', effect: { type: 'resign' } },
+    { kind: 'played', label: '“我要走了！”', resolve: ({ inv, api }) => api.resign(inv.seat) },
   ],
   modifiers: [
 

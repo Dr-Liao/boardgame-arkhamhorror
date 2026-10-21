@@ -34,10 +34,10 @@
 // 版权声明：卡名/设定/规则文本版权归 Fantasy Flight Games，本文件为粉丝项目。
 
 import { expansionEffects } from '../../content/expansions.js'
-import { investigatorAbilities as dunwichInvestigatorAbilities, signatureEffects as dunwichSignatureEffects, basicWeaknessEffects as dunwichBasicWeaknessEffects } from '../../content/packs/dunwichInvestigators/manifest.js'
-import { investigatorAbilities as carcosaInvestigatorAbilities, signatureEffects as carcosaSignatureEffects } from '../../content/packs/carcosaInvestigators/manifest.js'
+import { signatureEffects as dunwichSignatureEffects, basicWeaknessEffects as dunwichBasicWeaknessEffects } from '../../content/packs/dunwichInvestigators/manifest.js'
+import { signatureEffects as carcosaSignatureEffects } from '../../content/packs/carcosaInvestigators/manifest.js'
 import { effects as carcosaPlayerEffects } from '../../content/packs/carcosaPlayer/effects.js'
-import { investigatorAbilities as tfaInvestigatorAbilities, signatureEffects as tfaSignatureEffects } from '../../content/packs/tfaInvestigators/manifest.js'
+import { signatureEffects as tfaSignatureEffects } from '../../content/packs/tfaInvestigators/manifest.js'
 import { effects as tfaPlayerEffects } from '../../content/packs/tfaPlayer/effects.js'
 
 // Only unconditional resource rewards are safe to accept without a decision.
@@ -133,33 +133,11 @@ export const EFFECTS = {
 
 // ---------------------------------------------------------------------------
 // 调查员异能（Phase 3.1：完整 [reaction] / [elder_sign] / free 能力）
+// 第 6 批：数据体已搬进 entries/<code>.js 的 `investigator` 字段；
+// 这里只保留兼容导出，供尚未改读点的工具/测试使用。
 // ---------------------------------------------------------------------------
 
-export const INVESTIGATOR_ABILITIES = {
-  ...dunwichInvestigatorAbilities,
-  ...carcosaInvestigatorAbilities,
-  ...tfaInvestigatorAbilities,
-  '01001': { // 罗兰·班克斯 Roland Banks
-    elderSign: { kind: 'perClueAtLocation', bonus: 1 },
-    reactions: [{ id: 'rolandClue', when: 'defeatEnemy', limit: 'round', effect: { type: 'discoverClue', amount: 1 } }],
-  },
-  '01002': { // 黛西·沃克 Daisy Walker
-    elderSign: { kind: 'drawPerTome' },
-    extraTomeAction: true,
-  },
-  '01003': { // “倒霉蛋”奥图尔 Skids O'Toole
-    elderSign: { kind: 'static', bonus: 2, onSuccess: { type: 'gainResource', amount: 2 } },
-    freeAction: { id: 'skidsAction', cost: { resources: 2 }, effect: { type: 'gainAction', amount: 1 }, limit: 'round' },
-  },
-  '01004': { // 艾格尼丝·贝克 Agnes Baker
-    elderSign: { kind: 'perHorror', bonus: 1 },
-    reactions: [{ id: 'agnesDamage', when: 'horrorPlaced', limit: 'phase', effect: { type: 'dealDamage', amount: 1, target: 'here' } }],
-  },
-  '01005': { // 温蒂·亚当斯 Wendy Adams
-    elderSign: { kind: 'wendyAmulet' },
-    chaosTokenRedraw: true,
-  },
-}
+export { INVESTIGATOR_ABILITIES } from './investigator-abilities.js'
 
 // 返回所有「可玩玩家卡」的 code 列表（含纯技能牌，其图标来自 cards-data.js）。
 export function playablePlayerCardCodes() {

@@ -10,7 +10,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, play, move, answer, settle, use, legalMoves, validateMove } from './core-fixture.mjs'
 import { actionPreview, getMaxSanity, getStat, performTest } from '../src/engine/engine.js'
-import { actPlacesLocationForEmptySpawn, blanksTraits, counterTreacheryCode, PALLID_MASK_CODE, relicDiscountLocation, RELOCATE_DESTINATION_LOCATION_CODE, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
+import { actPlacesLocationForEmptySpawn, blanksTraits, counterTreacheryCode, pallidMaskCode, relicDiscountLocation, relocateDestinationCode, RANDOM_BASIC_WEAKNESS_CODE, investigateExtraActionsFor, enemyRuleFlags, locationCounterTreacheries,
   SMITE_THE_WICKED_CODE, SEARCHING_FOR_IZZIE_CODE, weaknessUpgradeCode, LITA_CHANDLER_CODE } from '../src/cards/card-rules.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS, INVESTIGATOR_ABILITIES } from '../src/cards/card-effects.js'
@@ -702,7 +702,7 @@ test('5a-33：六位调查员的能力判断都读 INVESTIGATOR_ABILITIES / 条�
 
 test('5a-32：怀表的阶段跳过标记与移出地点的默认去向都是数据', () => {
   assert.equal(registeredEntry('02305')?.skipOrRepeatPhase, true, '黄金怀表可跳过/重复阶段')
-  assert.equal(RELOCATE_DESTINATION_LOCATION_CODE, '02320')
+  assert.equal(relocateDestinationCode(), '02320')
 })
 
 // ---- 5a-31：丽塔光环 / 古代巨石鉴定（01117、02088、04022）----
@@ -742,7 +742,7 @@ test('5a-28：三个码都改成条目字段或规则表', () => {
 test('5a-27：五个卡号都改成条目字段 / 规则常量 / 状态字段', () => {
   assert.equal(registeredEntry('03148')?.ambushAttachment, true, '埋伏是附属触发的')
   assert.equal(registeredEntry('03199')?.snareAttachment, true, '陷阱是附属触发的')
-  assert.equal(PALLID_MASK_CODE, '03059')
+  assert.equal(pallidMaskCode(), '03059')
 })
 
 // ---- 5a-26：彩绘世界的下方复制 / 藏身地点 / 分析性思维（03010、03012、03038）----
@@ -770,7 +770,9 @@ test('5a-24：三条规则都改成数据驱动', () => {
 // ---- 5a-23：02255 的伤害来源限制（规则表）----
 
 test('5a-23：02255 只能被 02254 伤害的规则在敌人规则表里', () => {
-  assert.deepEqual(enemyRuleFlags('02255'), { damageOnlyFrom: '02254' })
+  const rule = enemyRuleFlags('02255')
+  assert.equal(rule.damageOnlyFrom, '02254')
+  assert.equal(rule.healthPerPlayerBonus, 1, '02255 同时带生命加成')
   assert.deepEqual(enemyRuleFlags('02254'), {}, '02254 自身没有该限制')
 })
 
@@ -792,7 +794,9 @@ test('5a-21：02230 的重抽费用与 02271 的流放换成功都由条目声�
 // ---- 5a-20：敌人规则 / 清空特质（02094、02182、02088）----
 
 test('5a-20：02182 的禁移与 02094 的远程难度修正都在规则表里', () => {
-  assert.deepEqual(enemyRuleFlags('02094'), { rangedAttackDifficultyReduction: 3 }, '02094 远程难度 -3')
+  const rule = enemyRuleFlags('02094')
+  assert.equal(rule.rangedAttackDifficultyReduction, 3, '02094 远程难度 -3')
+  assert.equal(rule.prey, 'lowestIntellect', '02094 猎物：智识最低')
   assert.deepEqual(enemyRuleFlags('02182'), { blocksMovementWhileEngaged: true }, '02182 交战时不能移动')
   assert.deepEqual(blanksTraits('02088'), ['ally'], '02088 清空盟友文字（BLANKS_TRAITS）')
 })
@@ -826,7 +830,9 @@ test('5a-17：弱点升级后的替换卡号在卡号规则数据里', () => {
 // ---- 5a-16：摧毁近战武器的敌人 / 失手转伤（02103、02113）----
 
 test('5a-16：02103 的近战摧毁规则在敌人规则表里；02113 的卡号随效果数据走', () => {
-  assert.deepEqual(enemyRuleFlags('02103'), { destroysMeleeWeapon: true }, '02103 摧毁近战武器')
+  const rule = enemyRuleFlags('02103')
+  assert.equal(rule.destroysMeleeWeapon, true, '02103 摧毁近战武器')
+  assert.equal(rule.prey, 'lowestWillpower', '02103 猎物：意志最低')
 })
 
 // ---- 5a-15：附着型弱点（02007 惩戒邪恶、02011 寻找伊兹）----

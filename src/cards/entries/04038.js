@@ -10,6 +10,7 @@
 
 export default {
   code: '04038',
+  upgradesFrom: 'priceOfFailure',
   playableWeakness: true,
   abilities: [
     {

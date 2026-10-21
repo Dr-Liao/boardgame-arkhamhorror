@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { createGameState, applyMove, validateMove } from '../src/engine/engine.js'
+import { registeredEntry } from '../src/engine/ability.js'
 import { contentRegistry, registerContentBundle } from '../content/registered.js'
 import { chapterSpecs, locationId as L } from '../content/campaigns/theDunwichLegacy/chapters.js'
 import { chapters, CHAOS_BAGS } from '../content/campaigns/theDunwichLegacy/shared.js'
@@ -244,7 +245,11 @@ for (const { chapterId, code, type } of allExpected) {
     const hasPrintedBehavior = Boolean(localized(catalog, 'text') || localized(catalog, 'backText'))
     if (hasPrintedBehavior && type !== 'scenario') {
       const alias = expected.aliases?.[code]
+      const entry = registeredEntry(code)
+      const entryLinked = Boolean(entry && (entry.actRule || entry.agendaRule || entry.locationRule
+        || entry.enemyScript || entry.enemyRule || entry.treacheryRule))
       const linked = behaviorSurface(behavior).includes(code)
+        || entryLinked
         || (alias && behaviorSurface(behavior).includes(alias))
         || (type === 'location' && definition.resign === true && /\bResign\./.test(catalog.text))
       assert.ok(linked, `${code} has printed behavior but no chapter behavior linkage`)

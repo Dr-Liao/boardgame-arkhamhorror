@@ -7,7 +7,7 @@ import { locationEntryErrors } from '../src/integration/presentation-state.js'
 
 const root = fileURLToPath(new URL('../../..', import.meta.url))
 
-async function mapFixture(page, scenarioId, { noCoordinates = false, variant = false, choice = false, hunter = false, massive = false, victoryPoints = [], attachment = false, oneWay = false, barrierReleased = false, difficulty = 'standard' } = {}) {
+async function mapFixture(page, scenarioId, { noCoordinates = false, variant = false, choice = false, hunter = false, massive = false, victoryPoints = [], attachment = false, oneWay = false, barrierReleased = false, train = false, difficulty = 'standard' } = {}) {
   const manifest = contentRegistry.getScenario(scenarioId)
   const scenario = contentRegistry.getScenarioData(scenarioId)
   let session
@@ -37,6 +37,18 @@ async function mapFixture(page, scenarioId, { noCoordinates = false, variant = f
     if (barrierReleased) {
       st.actIndex = 2
       st.locations.find(loc => loc.id === 'parlor').revealed = true
+    }
+    if (train) {
+      const slots = ['02167', '02168', '02169', '02170', '02171', '02172', '02175'].map(code => `location${code}`)
+      st.locations = slots.map((id, index) => ({
+        ...structuredClone(scenario.locations[id]),
+        originalCode: manifest.locations.find(entry => entry.id === id).frontCode,
+        revealed: index === 0,
+        clues: index === 0 ? 1 : 0,
+        connections: slots.filter((_, other) => Math.abs(index - other) === 1),
+      }))
+      st.scenarioZones = { ...(st.scenarioZones || {}), train: slots }
+      st.investigators[0].location = slots[0]
     }
     st.locationEntryErrors = locationEntryErrors(st)
     st.enemies = victoryPoints.length
@@ -305,6 +317,20 @@ test('简洁地图默认收起连线，选中仅显示相关路线且不立即�
   await expect(page.locator('.ah-map-edges .is-visible')).toHaveCount(0)
   await expect(page.getByRole('region', { name: '装备与威胁' })).toBeVisible()
   expect(fixture.submitted).toHaveLength(0)
+})
+
+test('疯狂列车：7 节车厢排成一行，6 条连线水平', async ({ page }) => {
+  await mapFixture(page, 'theEssexCountyExpress', { train: true })
+  await expect(page.locator('.ah-map-node')).toHaveCount(7)
+  const scene = page.locator('.ah-map-scene')
+  expect(Number(await scene.getAttribute('data-map-width'))).toBe(1498)
+  const tops = await page.locator('.ah-map-node').evaluateAll(nodes => nodes.map(node => parseFloat(node.style.top)))
+  expect(new Set(tops).size).toBe(1)
+  await page.locator('.ah-map-node').nth(3).hover()
+  const ys = await page.locator('.ah-map-edges line').evaluateAll(lines =>
+    lines.map(line => [Number(line.getAttribute('y1')), Number(line.getAttribute('y2'))]))
+  expect(ys).toHaveLength(6)
+  expect(ys.every(([a, b]) => a === b)).toBe(true)
 })
 
 test('P5 Edge 实际对局地图验收截图', async ({ page, request }) => {

@@ -9,7 +9,12 @@
 export default {
   code: '02111',
   abilities: [
-    { kind: 'played', label: '过度深入', addToVictory: true, effect: { type: 'drawEncounterAll' } },
+    {
+      kind: 'played', label: '过度深入', addToVictory: true,
+      resolve: ({ state, api }) => {
+        for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned)) api.drawEncounter(inv.seat)
+      },
+    },
   ],
   modifiers: [
 

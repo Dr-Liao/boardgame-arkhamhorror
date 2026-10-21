@@ -1,4 +1,5 @@
 import { requestChoice } from '../../../../../src/engine/resolution.js'
+import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { carcosaChaosToken } from '../../carcosa-chaos.js'
 import { storyText } from '../../story-text.js'
@@ -317,36 +318,10 @@ export const behavior = {
     }
   },
   actReveal(state, act, api) {
-    if (act.originalCode === '03320') {
-      if (!state.enemies.some(enemy => enemy.code === '03059')) api.spawn('03059', 'palaceOfTheKing')
-    } else if (act.originalCode === '03321a') {
-      const man = state.enemies.find(enemy => enemy.code === '03059')
-      if (man) api.removeEnemyFromGame(man)
-      if (!state.investigators.some(inv => inv.assets.some(asset => asset.code === '03321b'))) {
-        api.giveAsset(state.campaign.leadSeat, '03321b', { cannotLeavePlay: true, sanityModifier: -2 })
-      }
-      api.spawn('03334', 'palaceOfTheKing')
-    } else if (act.originalCode === '03322a') {
-      const man = state.enemies.find(enemy => enemy.code === '03059')
-      if (man) api.removeEnemyFromGame(man)
-      api.spawn('03332', 'palaceOfTheKing')
-    } else if (act.originalCode === '03323a') {
-      const man = state.enemies.find(enemy => enemy.code === '03059')
-      const location = man?.location || 'palaceOfTheKing'
-      if (man) api.removeEnemyFromGame(man)
-      api.spawn('03333', location)
-    } else if (act.originalCode === '03324') {
-      const defeated = state.scenarioFlags.defeatedHastur
-      api.finish(defeated === '03334' ? 'r1' : defeated === '03332' ? 'r2' : 'r3')
-    }
+    registeredEntry(act.originalCode)?.actRule?.onReveal?.(state, act, api)
   },
   agendaReveal(state, agenda, api) {
-    if (agenda.originalCode === '03318') {
-      if (!state.enemies.some(enemy => enemy.code === '03088')) api.spawn('03088', 'palaceOfTheKing')
-      api.shuffleDiscard()
-    } else if (agenda.originalCode === '03319') {
-      api.finish(Number(state.campaign.records.conviction || 0) >= Number(state.campaign.records.doubt || 0) ? 'r4' : 'r5')
-    }
+    registeredEntry(agenda.originalCode)?.agendaRule?.onReveal?.(state, agenda, api)
   },
   actions(state, inv) {
     const moves = []

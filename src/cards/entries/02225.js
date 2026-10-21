@@ -15,8 +15,11 @@ export default {
       "fast": true,
       "trigger": "defeatEnemy",
       "label": "“如果它会流血……”",
-      "effect": {
-        "type": "healHorrorAtLocationByEnemy"
+      "resolve": ({ inv, api }) => {
+        const reaction = api.reactionContext()
+        const enemy = reaction?.enemy || reaction?.context?.enemy
+        if (!enemy || !(enemy.traits || []).some(trait => String(trait).toLowerCase() === 'monster')) return
+        for (const target of api.investigatorsAt(inv.location)) api.healHorror(target.seat, enemy.horror || 0)
       }
     },
   ],

@@ -7,7 +7,23 @@
 export default {
   code: '02148',
   abilities: [
-    { kind: 'played', label: '团结一致', effect: { type: 'standTogether' } },
+    {
+      kind: 'played', label: '团结一致',
+      resolve: ({ state, inv, api }) => {
+        const targets = state.investigators.filter(other =>
+          !other.defeated && !other.resigned && other.seat !== inv.seat && other.location === inv.location)
+        if (!targets.length) return
+        const target = targets.length === 1 ? targets[0] : targets.find(other => other.seat === Number(api.choice({
+          kind: 'target', source: 'standTogether', seat: inv.seat, prompt: '选择与你共享卡牌与资源的调查员。',
+          options: targets.map(other => ({ id: String(other.seat), label: other.name })),
+        })))
+        if (!target) return
+        for (const owner of [inv, target]) {
+          api.gainResources(owner.seat, 2)
+          api.drawCardsLogged(owner.seat, 2)
+        }
+      },
+    },
   ],
   modifiers: [
 

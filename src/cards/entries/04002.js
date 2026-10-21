@@ -16,6 +16,25 @@ const factory = () => {
 
 export default {
   code: '04002',
+  investigator:   {
+    "reactions": [
+      {
+        "id": "ursulaInvestigate",
+        "when": "move",
+        "selfOnly": true,
+        "limit": "round",
+        "prompt": "是否立刻进行一次调查行动？",
+        "effect": {
+          "type": "tfaInvestigator",
+          "action": "investigateAction"
+        }
+      }
+    ],
+    "elderSign": {
+      "kind": "tfaMoveAfterTest",
+      "bonus": 1
+    }
+  },
   kind: 'investigator',
   elderSign: { id: '04002-eldersign', resolve: factory() },
   abilities: [],

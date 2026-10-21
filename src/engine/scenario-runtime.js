@@ -20,20 +20,25 @@ export function createScenarioRuntime(deps) {
     applyDamage,
     applyHarm,
     applyHorror,
+    autoEngageAll,
     autoEvadeEnemy,
     beginChaosTest,
+    basicWeaknessPool,
     buildExplorationDeck,
+    campaignCardChange,
     canDiscardFromHand,
     cardDef,
     cardName,
     checkSupplies,
     crossOffSupply,
     damageEnemy,
+    defeatAll,
     defeatEnemy,
     defeatedAssetRetaliation,
     discardEnemyCard,
     discardRandomFromHand,
     discardUntilEnemy,
+    discardUntilEnemyTrait,
     discardUntilEnemyFromEncounter,
     disengageEnemy,
     doExplore,
@@ -63,7 +68,10 @@ export function createScenarioRuntime(deps) {
     info,
     investigateTest,
     isPoisoned,
+    isWeaknessCode,
     leaveAsset,
+    leadDecisionSeat,
+    locName,
     moveRelicOfAges,
     newCardInstance,
     notifyCluesRemoved,
@@ -71,6 +79,7 @@ export function createScenarioRuntime(deps) {
     placeDoomOnCard,
     placeLocation,
     poisonInvestigator,
+    preyTarget,
     privateInfo,
     randomValue,
     recordVengeance,
@@ -83,6 +92,7 @@ export function createScenarioRuntime(deps) {
     removeOne,
     requestChoice,
     revealLocation,
+    ruleCodeForOriginal,
     scenarioAssetPlayError,
     scenarioBehavior,
     setExpeditionLeader,
@@ -90,6 +100,7 @@ export function createScenarioRuntime(deps) {
     spawnEnemy,
     spawnStoryAsset,
     spawnStoryEnemy,
+    spendAction,
     spendClues,
     stepToward,
     suppliesAtLocation,
@@ -102,11 +113,41 @@ export function createScenarioRuntime(deps) {
 function scenarioRuntime(state, events, testSource = null) {
   return {
     info: text => info(state, events, text),
+    cardName: code => cardName(code),
     random: () => randomValue(state),
+    shuffle: list => shuffle(list, () => randomValue(state)),
+    defeatAll: () => defeatAll(state, events),
+    discardUntilEnemyTrait: trait => discardUntilEnemyTrait(state, trait, events),
+    decideSeat: () => leadDecisionSeat(state),
+    preyTarget: (rule, seats) => preyTarget(state, rule, seats),
+    ruleCode: original => ruleCodeForOriginal(original),
+    basicWeaknesses: trait => basicWeaknessPool().filter(code =>
+      (cardDef(code)?.traits || []).some(value => String(value).toLowerCase() === String(trait).toLowerCase())),
+    isWeaknessCode: code => isWeaknessCode(code),
+    spendAction: seat => spendAction(state, state.investigators[seat]),
+    campaignCardChange: (...args) => campaignCardChange(...args),
+    locName: id => locName(state, id),
+    locationDistance: (from, targets) => {
+      const queue = [[from, 0]]
+      const seen = new Set([from])
+      for (const [id, steps] of queue) {
+        if (targets.includes(id)) return steps
+        const location = state.locations.find(candidate => candidate.id === id)
+        for (const next of location?.connections || []) {
+          if (seen.has(next)) continue
+          seen.add(next)
+          queue.push([next, steps + 1])
+        }
+      }
+      return -1
+    },
+    locationName: id => state.locations.find(location => location.id === id)?.name || id,
+    autoEngageAll: () => autoEngageAll(state, events),
     place: id => placeLocation(state, id, events),
     reveal: id => revealLocation(state, id, events),
     remove: id => removeLocation(state, id, events),
     spawn: (code, location) => spawnEnemy(state, code, location, null, true),
+    spawnEngaged: (code, location, seat) => spawnEnemy(state, code, location, seat),
     // 从玩家牌/无目录数据生成的敌人（04331 飞天水螅：把牌库顶的牌视为敌人）。
     spawnStoryEnemy: (code, location, stats = {}, extra = {}) => spawnStoryEnemy(state, code, location, stats, extra, events),
     attack: (enemy, inv) => enemyAttack(state, enemy, inv, events, '剧本效果', { kind: 'effect' }),
@@ -190,6 +231,7 @@ function scenarioRuntime(state, events, testSource = null) {
       if (state.currentSeat === seat) target.turnEnded = true
     },
     discardUntilEnemy: (seat, predicate) => discardUntilEnemyFromEncounter(state, seat, predicate, events),
+    discardAnyEnemy: () => discardUntilEnemy(state, events),
     clueRemoved: (loc, n) => notifyCluesRemoved(state, loc, n, events),
     finish: key => finishScenario(state, key, events),
     resign: seat => doResign(state, seat, events),

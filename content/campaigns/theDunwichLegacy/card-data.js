@@ -1,13 +1,8 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
+import { enemyRuleFor, implementedFor, threatEffectFor } from '../../../src/cards/card-rules.js'
 import { scenario as gathering } from '../nightOfTheZealot/scenarios/theGathering/definition.js'
 import { scenario as masks } from '../nightOfTheZealot/scenarios/theMidnightMasks/definition.js'
 import { scenario as devourer } from '../nightOfTheZealot/scenarios/theDevourerBelow/definition.js'
-import { implementedTreacheries } from './encounter-rules.js'
-
-const scenarioTreacheries = new Set([
-  '02089', '02142', '02143', '02144', '02145', '02146', '02178', '02180', '02181', '02220', '02221', '02222', '02223', '02256', '02257', '02258', '02259',
-  '02296', '02297', '02298', '02331', '02332', '02333',
-])
 
 const coreDefinitions = new Map([gathering, masks, devourer].flatMap(scenario =>
   ['enemies', 'treacheries'].flatMap(category => Object.values(scenario[category] || {})))
@@ -66,20 +61,17 @@ export function encounterDefinitions(cards) {
         massive: /\bMassive\./.test(card.text), retaliate: /\bRetaliate\./.test(card.text),
         victory: card.victory || 0, elite: card.traits.includes('Elite') } : {}),
     }
-    if (implementedTreacheries.has(card.code) || scenarioTreacheries.has(card.code)) {
+    if (implementedFor(card.code) && card.pack !== 'core') {
       result.rulesPending = false
       result.surge = hasPrintedSurge(card.text)
       result.peril = /\bPeril\./.test(card.text)
       result.effect = { kind: 'campaignRule' }
-      if (card.code === '02092') result.threatEffect = { mods: { allSkills: -1 } }
+      const threat = threatEffectFor(card.code)
+      if (threat) result.threatEffect = threat
     }
     if (card.type === 'enemy' && !definition) {
       result.rulesPending = false
-      if (card.code === '02058') result.healthPerPlayerBonus = 3
-      if (card.code === '02255') result.healthPerPlayerBonus = 1
-      if (card.code === '02323') result.healthPerPlayerBonus = 6
-      result.prey = ({ '02087': 'fewestHand', '02078': 'highestIntellect', '02103': 'lowestWillpower',
-        '02104': 'lowestAgility', '02094': 'lowestIntellect', '02095': 'lowestAgility' })[card.code]
+      Object.assign(result, enemyRuleFor(card.code) || {})
     }
     ;(card.type === 'enemy' ? enemies : treacheries)[result.code] = result
   }

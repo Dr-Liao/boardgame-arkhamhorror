@@ -7,7 +7,20 @@
 export default {
   code: '02303',
   abilities: [
-    { kind: 'played', label: '揭开现实的面纱', effect: { type: 'decipheredReality' } },
+    {
+      kind: 'played', label: '揭开现实的面纱',
+      resolve: ({ state, inv, api }) => {
+        const revealed = state.locations.filter(loc => loc.revealed)
+        const difficulty = Math.max(0, ...revealed.map(loc => loc.shroud + (loc.shroudMod || 0)))
+        api.test(inv.seat, 'intellect', difficulty, {
+          source: { label: '调查', name: api.cardName('02303'), code: '02303' },
+          resolve: result => {
+            if (!result.success) return
+            for (const loc of revealed) api.discoverAt(inv.seat, loc.id, 1, { silent: true })
+          },
+        })
+      },
+    },
   ],
   modifiers: [
 

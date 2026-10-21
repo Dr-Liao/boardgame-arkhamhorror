@@ -1,4 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { actRuleFor, agendaRuleFor } from '../../../../../src/cards/card-rules.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
@@ -619,12 +620,13 @@ export const behavior = {
 
   actReveal(state, act, api) {
     const code = original(act)
+    const entry = actRuleFor(code)
+    if (entry?.onReveal) { entry.onReveal(state, act, api); return }
     if (code === '04213') {
       resolveGoingInCircles(state, api)
       return
     }
     if (code === '04214') {
-      // 场景 2b：检查剧本日志，调查员解救了亚历山卓走结局 1，否则结局 2。
       api.finish(recordsFor(state).theInvestigatorsRescuedAlejandro ? 'r1' : 'r2')
       return
     }
@@ -633,16 +635,10 @@ export const behavior = {
 
   agendaReveal(state, agenda, api) {
     const code = original(agenda)
+    const entry = agendaRuleFor(code)
+    if (entry?.onReveal) { entry.onReveal(state, agenda, api); return }
     if (code === '04211') {
       spawnHarbinger(state, api)
-      return
-    }
-    if (code === '04212') {
-      // 幸存的每位调查员被击败并承受 1 点肉体创伤。
-      for (const inv of active(state)) {
-        api.trauma(inv.seat, 'physical', 1)
-        api.defeat(inv, null)
-      }
       return
     }
     throw new Error(`未知久远腹地（下）密谋：${code}`)

@@ -297,7 +297,7 @@ export function createHarmThreat(deps) {
         info(state, events, `${inv.name} 调查成功，将发现线索改为获得 ${amount} 资源（当前 ${inv.resources}）。`)
         if (loc.fog) {
           loc.shroudMod = Math.max(0, (loc.shroudMod || 0) - 2); loc.fog = 0
-          state.encounterDiscard.push(loc.fogCode || 'obscuringFog'); delete loc.fogCode
+          if (loc.fogCode) state.encounterDiscard.push(loc.fogCode); delete loc.fogCode
         }
         triggerReaction(state, seat, 'investigateSuccess', events, { location: loc.id, successBy: r.value - difficulty })
       } else {

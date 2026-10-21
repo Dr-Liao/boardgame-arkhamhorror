@@ -104,6 +104,9 @@ HTTP 和浏览器回归会加载大厅的 `lib/server.js`，所以需要在大�
 - [docs/phase2-primitives.md](docs/phase2-primitives.md)：Phase 2 语义原语的交付与门禁证据（费用/上限/检定结果/看牌/区域搬运等）
 - [docs/phase4-replay.md](docs/phase4-replay.md)：Phase 4 重放安全网——动作日志、稳定指纹、golden replay、迁移前后指纹对比、随机走子器门禁
 - [docs/arkham-content-migration.md](docs/arkham-content-migration.md)：扩展战役的迁移流程与验收门槛——六步顺序、原语拆分、关键字/规则书、交互一致性、多子进程批量迁移与原语队列
+- [docs/card-fidelity-audit.md](docs/card-fidelity-audit.md)：核心包与第 1–3 循环 1,262 张卡的「卡面文字 vs 实现」逐张审计——259 张缺口、24 张高严重度、系统性问题与全量清单
+- [docs/card-fidelity-todo.md](docs/card-fidelity-todo.md)：上述审计的修复工作单——P0 高严重度、P1 机制层、P2 双实现、P3 其余卡，逐张可勾选
+- [docs/card-fidelity-findings.csv](docs/card-fidelity-findings.csv)：259 条逐条明细（UTF-8，可由 Excel 打开筛选）
 - 大厅侧的适配入口：`index.js`、`src/integration/hall-integration.js`、`src/ai/agent-plans.js`
 
 ## 版权声明

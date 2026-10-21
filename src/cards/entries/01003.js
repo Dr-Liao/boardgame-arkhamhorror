@@ -16,6 +16,27 @@ const factory = () => {
 
 export default {
   code: '01003',
+  investigator:   {
+    "elderSign": {
+      "kind": "static",
+      "bonus": 2,
+      "onSuccess": {
+        "type": "gainResource",
+        "amount": 2
+      }
+    },
+    "freeAction": {
+      "id": "skidsAction",
+      "cost": {
+        "resources": 2
+      },
+      "effect": {
+        "type": "gainAction",
+        "amount": 1
+      },
+      "limit": "round"
+    }
+  },
   kind: 'investigator',
   elderSign: { id: '01003-eldersign', resolve: factory() },
   abilities: [],

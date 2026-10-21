@@ -1,4 +1,6 @@
 import { buildChapter } from '../../chapters.js'
 import { laterBehavior } from '../../later-behaviors.js'
-export const { scenario, identities, layout, manifest } = buildChapter('theEssexCountyExpress')
+import { coordinates } from './layout.js'
+const chapter = buildChapter('theEssexCountyExpress', coordinates)
+export const { scenario, identities, layout, manifest } = chapter
 export const behavior = laterBehavior('theEssexCountyExpress')

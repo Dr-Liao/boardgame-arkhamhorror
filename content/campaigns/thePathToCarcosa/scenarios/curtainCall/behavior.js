@@ -1,4 +1,5 @@
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
+import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { campaignCardChange } from '../../../../../src/campaign/campaign.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { carcosaChaosToken } from '../../carcosa-chaos.js'
@@ -164,30 +165,11 @@ export const behavior = {
   },
 
   actReveal(state, act, api) {
-    if (act.originalCode === '03046') {
-      const pool = [...state.scenarioFlags.lobbyDoorways, ...state.scenarioFlags.backstageDoorways]
-      const id = pickRandom(pool, api)
-      if (!id) throw new Error('没有可用于生成苍白面具下的男子的放在一边地点')
-      for (const key of ['lobbyDoorways', 'backstageDoorways']) {
-        const index = state.scenarioFlags[key].indexOf(id)
-        if (index >= 0) state.scenarioFlags[key].splice(index, 1)
-      }
-      api.place(id)
-      api.spawn('03059', id)
-    } else if (act.originalCode === '03048') {
-      state.scenarioFlags.hazardTests = {}
-    }
+    registeredEntry(act.originalCode)?.actRule?.onReveal?.(state, act, api)
   },
 
   agendaReveal(state, agenda, api) {
-    if (agenda.originalCode === '03044') {
-      const victory = state.victoryDisplay.findIndex(card => (card.originalCode || card.code) === '03060')
-      if (victory >= 0) state.victoryDisplay.splice(victory, 1)
-      if (!state.enemies.some(enemy => enemy.code === '03060')) api.spawn('03060', 'theatre')
-    } else if (agenda.originalCode === '03045') {
-      for (const inv of active(state)) api.horror(inv.seat, 100)
-      if (state.status === 'playing') api.finish('noResolution')
-    }
+    registeredEntry(agenda.originalCode)?.agendaRule?.onReveal?.(state, agenda, api)
   },
 
   enemyPhaseEnd(state, api) {

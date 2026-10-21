@@ -1,29 +1,7 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
+import { enemyRuleFor, hiddenRuleFor, threatEffectFor, doomPerInvestigatorFor } from '../../../src/cards/card-rules.js'
 
 const CARCOSA_PACKS = new Set(['ptc', 'eotp', 'tuo', 'apot', 'tpm', 'bsr', 'dca'])
-const DOOM_PER_INVESTIGATOR = new Set(['03121', '03122', '03123'])
-const HIDDEN_RULES = {
-  '03084a': { cannotCommitTypes: ['skill'], discard: { actions: 2 } },
-  '03084b': { maxMovesPerTurn: 1, discard: { actions: 2 } },
-  '03084c': { cannotTriggerFree: true, discard: { actions: 2 } },
-  '03084d': { cannotPlayTypes: ['event'], discard: { actions: 2 } },
-  '03186': { cannotFightTraits: ['Lunatic'] },
-  '03187': { cannotTriggerLocationAbilities: true },
-  '03340': { allowCommit: true, autoFailOnCommit: true, killAtHorrorOverSanityMultiplier: 2 },
-  '03341': { killAtHorrorOverSanityMultiplier: 2, discard: { actions: 1, resources: 5 } },
-  '03342': { killAtHorrorOverSanityMultiplier: 2, discard: { actions: 1, damageInvestigator: 2 } },
-}
-
-const THREAT_EFFECTS = {
-  '03225': { playCostIncrease: 1, consumeResourceAfterPlay: true },
-  '03226': { extraActionCost: ['move', 'fight', 'evade'], endTurnTest: { skill: 'willpower', difficulty: 3 } },
-}
-
-const ENEMY_RULES = {
-  '03086': { prey: 'lowestSanity' },
-  '03089': { prey: 'mostHorror' },
-  '03099': { prey: 'mostClues' },
-}
 
 export function printed(code) {
   const card = ALL_CARDS[code]
@@ -62,7 +40,7 @@ export function stages(codes, type) {
       id: `${type}${index + 1}`,
       stage: `${index + 1}a`,
       ...(type === 'agenda' ? { doomThreshold: card.doom } : {}),
-      ...(type === 'agenda' && DOOM_PER_INVESTIGATOR.has(code)
+      ...(type === 'agenda' && doomPerInvestigatorFor(code)
         ? { doomThresholdPerInvestigator: card.doom } : {}),
       advanceText: card.backTextZh || card.backText || '',
     }
@@ -103,15 +81,15 @@ export function encounterDefinitions(cards) {
         massive: /\bMassive\./i.test(card.text || ''),
         retaliate: /\bRetaliate\./i.test(card.text || ''),
         alert: /\bAlert\./i.test(card.text || ''),
-        ...(ENEMY_RULES[card.code] || {}),
+        ...(enemyRuleFor(card.code)?.prey ? { prey: enemyRuleFor(card.code).prey } : {}),
         victory: card.victory || 0,
         elite: (card.traits || []).includes('Elite'),
       } : {
         surge: hasPrintedSurge(card.text),
         peril: /\bPeril\./i.test(card.text || ''),
         hidden: /\bHidden\./i.test(card.text || ''),
-        ...(HIDDEN_RULES[card.code] ? { hiddenRule: structuredClone(HIDDEN_RULES[card.code]) } : {}),
-        ...(THREAT_EFFECTS[card.code] ? { threatEffect: structuredClone(THREAT_EFFECTS[card.code]) } : {}),
+        ...(hiddenRuleFor(card.code) ? { hiddenRule: structuredClone(hiddenRuleFor(card.code)) } : {}),
+        ...(threatEffectFor(card.code) ? { threatEffect: structuredClone(threatEffectFor(card.code)) } : {}),
         effect: { kind: 'campaignRule' },
       }),
     }

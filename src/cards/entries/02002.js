@@ -21,6 +21,23 @@ const factory = () => {
 
 export default {
   code: '02002',
+  investigator:   {
+    "elderSign": {
+      "kind": "rex",
+      "bonus": 2
+    },
+    "reactions": [
+      {
+        "id": "rexClue",
+        "when": "investigateSuccess",
+        "successByAtLeast": 2,
+        "effect": {
+          "type": "discoverClue",
+          "amount": 1
+        }
+      }
+    ]
+  },
   kind: 'investigator',
   elderSign: { id: '02002-eldersign', resolve: factory() },
   abilities: [],

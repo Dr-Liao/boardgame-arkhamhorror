@@ -8,6 +8,7 @@
 
 export default {
   code: '02011',
+  storyRole: 'searchingForIzzie',
   abilities: [
     {
       kind: 'weakness', label: '寻找伊莎贝拉', weakness: { type: 'attachedLocation' },

@@ -11,7 +11,16 @@ export default {
       kind: 'action',
       label: '从手牌打出一件物品',
       cost: { action: false, resources: 1 },
-      effect: { type: 'playItemFromHand' },
+      resolve: ({ inv, api }) => {
+        const items = inv.hand.map((code, index) => ({ code, index }))
+          .filter(item => api.cardTraits(item.code).some(trait => String(trait).toLowerCase() === 'item'))
+        if (!items.length) return
+        const chosen = items.length === 1 ? items[0] : items.find(item => String(item.index) === api.choice({
+          kind: 'card', seat: inv.seat, prompt: '选择要打出的道具支援（支付其费用）。',
+          options: items.map(item => ({ id: String(item.index), cardCode: item.code, label: api.cardName(item.code) })),
+        }))
+        if (chosen) api.playCard(inv.seat, chosen.code)
+      },
     },
   ],
   modifiers: [

@@ -1,10 +1,9 @@
 import { declareScenario } from '../../../../scenario-declaration.js'
+import { agendaReveal } from './reveal-hooks.js'
 
-// Phase 3（D3）：起始地点、随机变体、敌人与遭遇牌库组成都是声明。
 export const behavior = declareScenario({
   id: 'theMidnightMasks',
   data: {
-    includeSurvivingPriest: true,
     spawnOverrides: { ghoulPriest: 'yourHouse' },
     drawCultistActIndex: 0,
   },
@@ -12,13 +11,13 @@ export const behavior = declareScenario({
     startLocation: { record: 'houseBurned', then: 'rivertown', else: 'yourHouse' },
     locations: { all: true, variants: true, exceptIf: { record: 'houseBurned', ids: ['yourHouse'] } },
     enemies: [{ code: 'acolyte', count: 'investigators-1', at: ['southside', 'downtown', 'graveyard'] }],
-    deck: { removeSpawnedEnemies: true },
+    deck: { removeSpawnedEnemies: true, addSurvivingPriest: true },
   },
   hooks: {
+    agendaReveal,
     describe(state) {
       return [`已盘问异教徒：${state.cultistsInVictory.length}/6；异教徒牌堆剩余：${state.cultistDeck.length}。`]
     },
-    // Phase 3（D4）：已盘问/逃脱由牌桌推导，只有「是否已过午夜」是声明式结局常量。
     resolution(state, key, events, api) {
       const rec = state.campaign.records
       rec.cultistsInterrogated = [...state.cultistsInVictory].map(api.originalCardCode)

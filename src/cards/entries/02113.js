@@ -18,9 +18,23 @@ export default {
         "failedByAtMost": 2
       },
       "label": "哎呀！",
-      "effect": {
-        "type": "redirectFailedAttack",
-        "code": "02113"
+      "resolve": ({ state, inv, api }) => {
+        const reaction = api.reactionContext()
+        const context = reaction?.context || reaction
+        if (context?.when !== 'attackFail' && reaction?.when !== 'attackFail') return
+        const original = context.enemy
+        const targets = state.enemies.filter(enemy => enemy.location === inv.location && enemy.id !== original?.id)
+        if (!targets.length) return
+        const id = targets.length === 1 ? targets[0].id : api.choice({
+          kind: 'target', source: '02113', seat: inv.seat, prompt: '选择承受这次攻击伤害的另一名敌人。',
+          options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })),
+        })
+        const target = targets.find(enemy => enemy.id === id)
+        if (!target) return
+        api.setReactionFlag('redirected', true)
+        const damage = Math.max(1, context.attackDamage || 1)
+        api.damageEnemy(target, damage, inv.seat, '02113')
+        api.info(`${inv.name} 的攻击落空后改为对「${target.name}」造成 ${damage} 点伤害。`)
       }
     },
   ],

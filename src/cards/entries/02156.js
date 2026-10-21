@@ -9,8 +9,11 @@
 export default {
   code: '02156',
   abilities: [
-    // Phase 5（5a-14）：标记用的卡号随效果数据一起走（引擎读 effect.code）。
-    { kind: 'played', label: '诱敌深入', effect: { type: 'attachLure', code: '02156' } },
+    // Phase 5（5a-14）：标记用的卡号随效果数据一起走；第 4 批改成条目 resolve。
+    {
+      kind: 'played', label: '诱敌深入',
+      resolve: ({ inv, api, descriptor }) => api.setLocationLure(inv.location, inv.seat, descriptor.code),
+    },
   ],
   modifiers: [
 

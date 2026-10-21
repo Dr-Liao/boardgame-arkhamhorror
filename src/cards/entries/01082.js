@@ -10,6 +10,7 @@
 
 export default {
   code: '01082',
+  explicitReactionPrompt: true,
   redirectAttackToAsset: true,
   abilities: [
 

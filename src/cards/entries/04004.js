@@ -13,6 +13,14 @@ const factory = () => () => ({ delta: 0, autoSuccess: true, chosenReward: true }
 
 export default {
   code: '04004',
+  investigator:   {
+    "autofailToElderSign": {
+      "oncePerGame": true
+    },
+    "elderSign": {
+      "kind": "tfaChosenReward"
+    }
+  },
   kind: 'investigator',
   elderSign: { id: '04004-eldersign', resolve: factory() },
   abilities: [],

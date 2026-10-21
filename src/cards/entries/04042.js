@@ -6,6 +6,7 @@
 
 export default {
   code: '04042',
+  upgradesFrom: 'cursedFate',
   abilities: [
     { kind: 'weakness', label: '丧钟敲响', weakness: { type: 'deathKnell' } },
   ],

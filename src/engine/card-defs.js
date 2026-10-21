@@ -5,6 +5,7 @@
 // 注意：`contentRegistry` 是 `content/registered.js` 里的 `export let`（registerContentBundle
 // 会重新赋值），所以**必须 import live binding**，不能从 deps 注入快照——否则大厅注册新内容后
 // 这里还拿着旧对象（交接文档「依赖的四种类型」第 1 条）。
+import { investigatorRule } from '../cards/card-rules.js'
 import { contentRegistry } from '../../content/registered.js'
 import { allowsCard, cardPoolContext } from '../deck/card-pool.js'
 
@@ -16,7 +17,6 @@ export function createCardDefs(deps) {
     ALL_TREACHERIES,
     BASIC_WEAKNESSES,
     EFFECTS,
-    INVESTIGATOR_ABILITIES,
     RANDOM_BASIC_WEAKNESS_CODE,
     campaignManifestFor,
     campaignRuleCodes,
@@ -58,7 +58,7 @@ export function createCardDefs(deps) {
   // 只有会让玩家做选择的窗口才需要开关（reaction / playerWindow / boost 三类）；
   // 自动领取的资源奖励不打扰玩家。两个出卡分支（目录卡 / 规则卡）共用同一份判定。
   function hasReactionPromptFor(code, eff = EFFECTS[code], descriptorEntry = registeredEntry(code)) {
-    const reactions = [...(eff?.reactions || []), ...(INVESTIGATOR_ABILITIES[code]?.reactions || [])]
+    const reactions = [...(eff?.reactions || []), ...(investigatorRule(code)?.reactions || [])]
     const descriptorAbilities = descriptorEntry?.abilities || []
     // 迁移后「天赋自动投入档位」（freeTriggers，boost 询问）与「免费能力」（cost.action === false，
     // playerWindow 询问）都住在条目上：判定必须同时看旧 DSL 与描述子。只看 EFFECTS 会让
@@ -68,7 +68,7 @@ export function createCardDefs(deps) {
     const freeAbilityPrompt = !!(eff?.abilities?.some(ability => ability.cost?.action === false)
       || descriptorAbilities.some(descriptor => descriptor.kind === 'free' || descriptor.cost?.action === false))
     return !!(eff?.reaction || reactions.some(r => !isAutomaticReward(r))
-      || INVESTIGATOR_ABILITIES[code]?.chaosTokenRedraw || freeTriggerPrompt || freeAbilityPrompt || hasExplicitReactionPrompt(code)
+      || investigatorRule(code)?.chaosTokenRedraw || freeTriggerPrompt || freeAbilityPrompt || hasExplicitReactionPrompt(code)
       // Phase 5（5b-6）：迁移来的反应描述子按同一口径判断——自动奖励（无费用/无目标/无上限）不算询问。
       // Phase 6（6e-8）：快速反应事件搬成 `played` + `fast` + `trigger`，同样算「有反应提示」。
       || descriptorAbilities.some(descriptor =>
@@ -89,7 +89,7 @@ export function createCardDefs(deps) {
       const availability = getAvailability(code)
       const copy = { ...c, name: c.nameZh || c.name, nameEn: c.name,
         availability: availability.availability, strictAccepted: availability.strictAccepted }
-      const investigatorAbility = INVESTIGATOR_ABILITIES[code]
+      const investigatorAbility = investigatorRule(code)
       const reactions = [...(eff?.reactions || []), ...(investigatorAbility?.reactions || [])]
       copy.reactionIds = reactions.map(r => r.id || code)
       if (investigatorAbility?.chaosTokenRedraw) copy.reactionIds.push('wendyRedraw')
@@ -201,7 +201,7 @@ export function createCardDefs(deps) {
       asset.usesType = effect.usesType || abilityEntry?.usesType || 'secrets'
     }
     // Phase 5（5a-7）：入场额外充能完全由调查员能力的 additionalChargeOnEnter 决定（不再写卡号）。
-    const extraCharges = INVESTIGATOR_ABILITIES[inv.code]?.additionalChargeOnEnter || 0
+    const extraCharges = investigatorRule(inv.code)?.additionalChargeOnEnter || 0
     if (extraCharges && ['charge', 'charges'].includes(String(asset.usesType || '').toLowerCase())) {
       asset.uses = (asset.uses || 0) + extraCharges
     }

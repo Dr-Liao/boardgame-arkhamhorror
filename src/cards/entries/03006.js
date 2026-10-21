@@ -18,6 +18,27 @@ const factory = () => {
 
 export default {
   code: '03006',
+  investigator:   {
+    "deckbuildingRoles": true,
+    "elderSign": {
+      "kind": "static",
+      "bonus": 2,
+      "onSuccess": {
+        "type": "carcosaInvestigator",
+        "action": "lolaSwitchRole"
+      }
+    },
+    "freeAction": {
+      "id": "lolaRole",
+      "label": "⚡ 切换罗拉的角色",
+      "cost": {},
+      "effect": {
+        "type": "carcosaInvestigator",
+        "action": "lolaSwitchRole"
+      },
+      "limit": "round"
+    }
+  },
   kind: 'investigator',
   elderSign: { id: '03006-eldersign', resolve: factory() },
   abilities: [],

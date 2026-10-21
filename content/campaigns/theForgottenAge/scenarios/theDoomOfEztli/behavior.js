@@ -1,4 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { actRuleFor, agendaRuleFor } from '../../../../../src/cards/card-rules.js'
 import { campaignCardChange } from '../../../../../src/campaign/campaign.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
@@ -480,54 +481,11 @@ export const behavior = {
   },
 
   actReveal(state, act, api) {
-    const code = String(original(act))
-    if (code === '04057') {
-      // 将放在一边的时间石室洗入探索牌库。
-      takeFromSetAside(state, CHAMBER_OF_TIME)
-      const deck = [...(state.explorationDeck || []), CHAMBER_ID]
-      state.explorationDeck = shuffleWith(deck, () => api.random())
-      api.info?.('🧭 「时间石室」洗入探索牌库。')
-      // 检查补给：有粉笔则把本场景移出游戏，否则放进胜利区并获得复仇 1。
-      if (hasAnySupply(state, api, 'chalk')) {
-        api.info?.('✏️ 有人带着粉笔，你们抄下了雕文：本场景移出游戏。')
-      } else {
-        state.victoryDisplay.push({
-          id: `act:04057`, code: '04057', originalCode: '04057',
-          victory: 0, vengeance: 1, name: act.name,
-        })
-        api.info?.('📜 没有粉笔：本场景放进胜利区，并获得复仇 1。')
-      }
-      return
-    }
-    if (code === '04058') {
-      takeControlOfRelic(state, api)
-      formLocationLine(state, api)
-      return
-    }
-    if (code === '04059') {
-      // 控制古代遗物的调查员已撤退 → 结局 1；否则 → 结局 3。
-      const relic = state.relicOfAges
-      const bearer = relic?.seat != null ? state.investigators[relic.seat] : null
-      api.finish(bearer?.resigned ? 'r1' : 'r3')
-      return
-    }
-    throw new Error(`未知埃兹特里覆灭场景：${code}`)
+    actRuleFor(String(original(act)))?.onReveal?.(state, act, api)
   },
 
   agendaReveal(state, agenda, api) {
-    const code = String(original(agenda))
-    if (code === '04055') {
-      // 背面：把放在一边的预示者生成在毁灭标记最多的地点。
-      spawnHarbingerAtDoom(state, api)
-      return
-    }
-    if (code === '04056') {
-      // 背面：每位没有撤退的调查员被击败。卡面没有指定伤害/恐惧来源，
-      // 结局结算时由玩家选择 1 点肉体或精神创伤（不再 0 创伤白过）。
-      for (const inv of active(state)) api.defeat(inv, 'both')
-      return
-    }
-    throw new Error(`未知埃兹特里覆灭密谋：${code}`)
+    agendaRuleFor(String(original(agenda)))?.onReveal?.(state, agenda, api)
   },
 
   checkObjectives(state, api) {

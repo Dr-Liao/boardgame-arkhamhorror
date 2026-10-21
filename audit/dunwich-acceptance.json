@@ -24,7 +24,7 @@
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
-      "sha256": "fa22638a9cb345a70033e7e25befe72028574945dc8e97a0d380102519170123"
+      "sha256": "c224a82c092f732527768be2dce4dfd1607321f638c22cf72536a79a64806e43"
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
@@ -36,7 +36,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
-      "sha256": "31cebb8dab54daedabde1cc9b0616d8f612323c810f3230c418db7969174e33b"
+      "sha256": "f7bfeb4227db1177a2051993d34bfdb2f1e620224243adb17d2ceda77259bae8"
     }
   ],
   "entries": [

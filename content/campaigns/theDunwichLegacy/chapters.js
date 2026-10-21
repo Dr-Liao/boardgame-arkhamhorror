@@ -48,7 +48,7 @@ export const chapterSpecs = {
 }
 
 export const locationId = code => `location${code}`
-export function buildChapter(id) {
+export function buildChapter(id, layoutCoordinates = null) {
   const spec = chapterSpecs[id], chapter = chapters.find(c => c.id === id)
   const cards = encounterCards([spec.group, ...spec.groups])
   const active = cards.filter(c => !spec.aside.includes(c.code))
@@ -88,7 +88,9 @@ export function buildChapter(id) {
   }
   const identities = identitiesFor(scenario)
   if (id === 'bloodOnTheAltar') scenario.locations[locationId('02201')].central = true
-  const layout = layoutFor(scenario, Object.fromEntries(spec.locations.map((code, index) =>
+  // A scenario with a printed linear map (the train) passes its own coordinates
+  // from layout.js; everything else uses the compact four-column fallback.
+  const layout = layoutFor(scenario, layoutCoordinates || Object.fromEntries(spec.locations.map((code, index) =>
     [locationId(code), { x: index % 4, y: Math.floor(index / 4) }])))
   const manifest = scenarioManifest(scenario, identities, {
     campaignId: 'theDunwichLegacy', status: 'playable', requiredPackIds: ['core', 'dunwichCampaign'],

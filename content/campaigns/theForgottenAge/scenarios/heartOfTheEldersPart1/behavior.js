@@ -1,4 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { actRuleFor, agendaRuleFor } from '../../../../../src/cards/card-rules.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
@@ -572,54 +573,11 @@ export const behavior = {
   },
 
   actReveal(state, act, api) {
-    const code = original(act)
-    if (code === '04209') {
-      // 场景 1b：把羽翼蛇族带进场，生成在昆扬之口。
-      if (!state.enemies.some(enemy => original(enemy) === WINGED_SERPENT)) {
-        api.spawn(WINGED_SERPENT, MOUTH)
-        api.info?.('羽翼蛇族出现在昆扬之口，但它不能被击败。')
-      }
-      return
-    }
-    if (code === '04210') {
-      api.finish('r1')
-      return
-    }
-    throw new Error(`未知久远腹地（上）场景：${code}`)
+    actRuleFor(original(act))?.onReveal?.(state, act, api)
   },
 
   agendaReveal(state, agenda, api) {
-    const code = original(agenda)
-    if (code === '04207') {
-      // 密谋 1b：洗回遭遇弃牌堆；队长选一位调查员当瞭望员并检查补给品。
-      api.shuffleDiscard()
-      const candidates = active(state)
-      if (!candidates.length) return
-      const answer = candidates.length === 1 ? String(candidates[0].seat) : aiChoice(api, {
-        kind: 'investigator', source: '04207', seat: state.campaign?.leadSeat ?? candidates[0].seat,
-        prompt: '选择一位调查员担任瞭望员。',
-        options: candidates.map(inv => ({ id: String(inv.seat), label: inv.name })),
-      })
-      const lookout = candidates.find(inv => String(inv.seat) === String(answer)) || candidates[0]
-      if (api.checkSupplies(lookout.seat, 'binoculars')) {
-        api.info?.(`${lookout.name} 带着双筒望远镜，避开了逼近的生物。`)
-        return
-      }
-      const enemyCode = api.discardUntilEnemy?.(lookout.seat, () => true)
-      if (!enemyCode) {
-        api.info?.('遭遇牌库中没有弃出敌人。')
-        return
-      }
-      api.spawn(enemyCode, lookout.location)
-      api.info?.(`${lookout.name} 没有双筒望远镜：遭遇到「${ALL_CARDS[enemyCode]?.nameZh || enemyCode}」。`)
-      return
-    }
-    if (code === '04208') {
-      // 密谋 2b：每位幸存的调查员立即撤退。
-      for (const inv of active(state)) api.resign(inv.seat)
-      return
-    }
-    throw new Error(`未知久远腹地（上）密谋：${code}`)
+    agendaRuleFor(original(agenda))?.onReveal?.(state, agenda, api)
   },
 
   checkObjectives(state, api) {

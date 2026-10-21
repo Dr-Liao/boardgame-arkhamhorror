@@ -16,6 +16,14 @@ const factory = () => {
 
 export default {
   code: '03002',
+  investigator:   {
+    "elderSign": {
+      "kind": "minh",
+      "bonus": 1
+    },
+    "commitWildPerInvestigator": true,
+    "wildCommitCompanionBonus": 1
+  },
   kind: 'investigator',
   elderSign: { id: '03002-eldersign', resolve: factory() },
   abilities: [],

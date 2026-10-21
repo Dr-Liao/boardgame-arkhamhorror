@@ -49,7 +49,7 @@ import { CHAOS_BAGS, SYMBOL_DEFAULTS } from '../../content/campaigns/nightOfTheZ
 import { contentRegistry } from '../../content/registered.js'
 import { buildDeck, buildDeckFromList, playablePool, hashSeed, shuffle } from '../deck/deckbuilding.js'
 import { PLAYABLE_INVESTIGATOR_CODES, canSelectInvestigator, isCardAvailable, getAvailability } from '../deck/availability.js'
-import { EFFECTS, INVESTIGATOR_ABILITIES, isAutomaticReward } from '../cards/card-effects.js'
+import { EFFECTS, isAutomaticReward } from '../cards/card-effects.js'
 import {
   agendaHandSizePenalty, blanksTraits, enemyWeaknessExtra, hasExplicitReactionPrompt,
   isPoisonThreat, isTextBlankEnemy, poisonThreatCode,
@@ -62,11 +62,10 @@ import {
   SEARCHING_FOR_IZZIE_CODE,
   weaknessUpgradeCode,
   LITA_CHANDLER_CODE,
-  counterTreacheryCode,
   actPlacesLocationForEmptySpawn,
-  PALLID_MASK_CODE,
+  pallidMaskCode,
+  relocateDestinationCode,
   relicDiscountLocation,
-  RELOCATE_DESTINATION_LOCATION_CODE,
 } from '../cards/card-rules.js'
 import { CARD_ABILITY_ENTRIES } from '../cards/card-abilities.js'
 // Phase 3（D1）：非玩家卡（敌人/地点/幕/议程/剧情支援）的声明式行为通道。
@@ -106,7 +105,7 @@ import { all } from './matcher.js'
 import { cardIdentityFields } from '../cards/card-identity.js'
 import { captureTableState } from '../integration/presentation-state.js'
 import { attackStyle } from '../integration/attack-style.js'
-import { describeTeamParticipation, investigatorParticipation } from '../ai/ai-participation.js'
+import { describeTeamParticipation, investigatorParticipation, investigatorAssigned } from '../ai/ai-participation.js'
 import { narrativeLogTexts } from '../ai/ai-story.js'
 import { STATE_SCHEMA_VERSION, RULES_VERSION, randomValue, nextInstanceId, stateCompatibilityError, agendaDoom, totalDoom, doomCards, enemyHealthValue } from './rules-state.js'
 import { requestChoice, choiceMoves, choiceSeats, choiceError, resolveTransaction, resolutionCheckpoint } from './resolution.js'
@@ -502,7 +501,7 @@ function locationExists(state, id) {
   return state.locations.some((l) => l.id === id)
 }
 
-function investigatorEntryError(state, locationId, seat = state.currentSeat) {
+export function investigatorEntryError(state, locationId, seat = state.currentSeat) {
   const location = state.locations.find(loc => loc.id === locationId)
   if (!location) return '目标地点未入场'
   const inv = state.investigators[seat]
@@ -909,7 +908,6 @@ const commonDeps = {
   ALL_CARDS,
   CLASS_NAMES,
   EFFECTS,
-  INVESTIGATOR_ABILITIES,
   SKILL_NAMES,
   ScenarioEnded,
   abilityApi,
@@ -1056,6 +1054,7 @@ const apiMiscDeps = { ...commonDeps,
   activeEffects,
   cardHasTrait,
   createEffect,
+  doResign,
   effectiveTraits,
   failedTestResolves,
   getHandSize,
@@ -1195,7 +1194,8 @@ const { doPlay, doInvestigate } = createActions({
   consumeItemDiscountAtLocation,
   consumePlayThreatResources,
   disposePlayedEvent,
-  engagedWithMaskedHunter,
+  engagedWithClueBlocker,
+  clueBlockerName,
   entersPlayEffect,
   investigateBonus,
   nextInstanceId,
@@ -1217,7 +1217,6 @@ const { upkeepPhase, runAgendaReveal } = createPhases({
   exploreOnlyActionBonus,
   firstAliveSeat,
   getHandSize,
-  maskedHunterPrey,
   phaseBeginningWindow,
   runAgendaForced,
   runEnemyRoundEnd,
@@ -1285,6 +1284,7 @@ export const describeState = createDescribeState({
   totalDoom,
   agendaDoom,
   investigatorParticipation,
+  investigatorAssigned,
   decisionSeat,
   describeFreeAbilities,
   describePrey,
@@ -1337,11 +1337,15 @@ function scenarioRuntime(state, events, testSource = null) {
   addYigsFury,
   advanceAgenda,
   buildExplorationDeck,
+  campaignCardChange,
+  spendAction,
   checkSupplies,
   crossOffSupply,
   defeatedAssetRetaliation,
+  defeatAll,
   discardEnemyCard,
   discardUntilEnemy,
+  discardUntilEnemyTrait,
   discardUntilEnemyFromEncounter,
   doExplore,
   doPlay,
@@ -1350,6 +1354,8 @@ function scenarioRuntime(state, events, testSource = null) {
   eliminateInvestigator,
   enemyCannotAttack,
   enemyHealth,
+  preyTarget,
+  ruleCodeForOriginal,
   expeditionLeaderSeat,
   flipScenarioLocation,
   grantSupplies,
@@ -1455,7 +1461,7 @@ function campaignFlowApi() {
   campaignFlowImpl ||= createCampaignFlow({
   ...commonDeps,
   CHAOS_BAGS,
-  PALLID_MASK_CODE,
+  pallidMaskCode,
   ScenarioRestarted,
   addLitaToCampaign,
   applyCampaignEffect,
@@ -1647,7 +1653,6 @@ function movementApi() {
   movementImpl ||= createMovement({
   ...commonDeps,
   applyPenalty,
-  counterTreacheryCode,
   discardBarricades,
   investigatorEntryError,
   locationRevealCue,
@@ -1667,7 +1672,7 @@ let enemiesImpl = null
 function enemiesApi() {
   enemiesImpl ||= createEnemies({
   ...commonDeps,
-  PALLID_MASK_CODE,
+  pallidMaskCode,
   SMITE_THE_WICKED_CODE,
   addVictory,
   assetPassiveData,
@@ -1698,10 +1703,11 @@ function locationsApi() {
   locationsImpl ||= createLocations({
   ...commonDeps,
   ALL_TREACHERIES,
-  RELOCATE_DESTINATION_LOCATION_CODE,
+  relocateDestinationCode,
   assetPassiveData,
   discardBarricades,
-  engagedWithMaskedHunter,
+  engagedWithClueBlocker,
+  clueBlockerName,
   locationCounterTreacheries,
   locationRevealCue,
 })
@@ -2021,14 +2027,14 @@ function createActionsExtraApi() {
   return createActionsExtraImpl
 }
 // createActionsExtraApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
-export function readyUmordhoth(...args) { return createActionsExtraApi().readyUmordhoth(...args) } export function scenarioAssetPlayError(...args) { return createActionsExtraApi().scenarioAssetPlayError(...args) } export function attachmentTargets(...args) { return createActionsExtraApi().attachmentTargets(...args) }
+export function scenarioAssetPlayError(...args) { return createActionsExtraApi().scenarioAssetPlayError(...args) } export function attachmentTargets(...args) { return createActionsExtraApi().attachmentTargets(...args) }
 export function attachCardTo(...args) { return createActionsExtraApi().attachCardTo(...args) } export function assetCapacityValue(...args) { return createActionsExtraApi().assetCapacityValue(...args) } export function withEffectCode(...args) { return createActionsExtraApi().withEffectCode(...args) }
 export function doDraw(...args) { return createActionsExtraApi().doDraw(...args) } export function doResource(...args) { return createActionsExtraApi().doResource(...args) } export function doFreeAction(...args) { return createActionsExtraApi().doFreeAction(...args) }
 export function doHiddenAction(...args) { return createActionsExtraApi().doHiddenAction(...args) } export function doParley(...args) { return createActionsExtraApi().doParley(...args) } export function doParleyCultist(...args) { return createActionsExtraApi().doParleyCultist(...args) }
 export function doParleyLita(...args) { return createActionsExtraApi().doParleyLita(...args) } export function doDrawCultist(...args) { return createActionsExtraApi().doDrawCultist(...args) } export function doInterruptRitual(...args) { return createActionsExtraApi().doInterruptRitual(...args) }
 export function doSacrificeLita(...args) { return createActionsExtraApi().doSacrificeLita(...args) } export function doBreakDoor(...args) { return createActionsExtraApi().doBreakDoor(...args) } export function doDiscardThreat(...args) { return createActionsExtraApi().doDiscardThreat(...args) }
-export function doPayDebt(...args) { return createActionsExtraApi().doPayDebt(...args) } export function doPurgeThreat(...args) { return createActionsExtraApi().doPurgeThreat(...args) } export function engagedWithMaskedHunter(...args) { return createActionsExtraApi().engagedWithMaskedHunter(...args) }
-export function canSpendClues(...args) { return createActionsExtraApi().canSpendClues(...args) } export function locationAbilityAvailable(...args) { return createActionsExtraApi().locationAbilityAvailable(...args) } export function markLocationAbilityUsed(...args) { return createActionsExtraApi().markLocationAbilityUsed(...args) }
+export function doPayDebt(...args) { return createActionsExtraApi().doPayDebt(...args) } export function doPurgeThreat(...args) { return createActionsExtraApi().doPurgeThreat(...args) } export function engagedWithClueBlocker(...args) { return createActionsExtraApi().engagedWithClueBlocker(...args) } export function clueBlockerName(...args) { return createActionsExtraApi().clueBlockerName(...args) }
+export function canSpendClues(...args) { return createActionsExtraApi().canSpendClues(...args) } export function locationAbilityAvailable(...args) { return createActionsExtraApi().locationAbilityAvailable(...args) } export function locationAbilityStatus(...args) { return createActionsExtraApi().locationAbilityStatus(...args) } export function locationInvestigateStatus(...args) { return createActionsExtraApi().locationInvestigateStatus(...args) } export function markLocationAbilityUsed(...args) { return createActionsExtraApi().markLocationAbilityUsed(...args) }
 export function doLocationAbility(...args) { return createActionsExtraApi().doLocationAbility(...args) } export function doSearchIzzie(...args) { return createActionsExtraApi().doSearchIzzie(...args) } export function afterEvade(...args) { return createActionsExtraApi().afterEvade(...args) }
 
 
@@ -2245,7 +2251,7 @@ function createActAgendaApi() {
 export function advanceAct(...args) { return createActAgendaApi().advanceAct(...args) } export function discardUntilEnemy(...args) { return createActAgendaApi().discardUntilEnemy(...args) } export function canAdvanceWithClues(...args) { return createActAgendaApi().canAdvanceWithClues(...args) }
 export function actObjectiveContext(...args) { return createActAgendaApi().actObjectiveContext(...args) } export function payAndAdvanceAct(...args) { return createActAgendaApi().payAndAdvanceAct(...args) } export function checkAct(...args) { return createActAgendaApi().checkAct(...args) }
 export function locationRevealCue(...args) { return createActAgendaApi().locationRevealCue(...args) } export function spawnStoryAsset(...args) { return createActAgendaApi().spawnStoryAsset(...args) } export function advanceAgenda(...args) { return createActAgendaApi().advanceAgenda(...args) }
-export function maskedHunterPrey(...args) { return createActAgendaApi().maskedHunterPrey(...args) } export function discardUntilEnemyFromEncounter(...args) { return createActAgendaApi().discardUntilEnemyFromEncounter(...args) } export function investigateTest(...args) { return createActAgendaApi().investigateTest(...args) }
+export function discardUntilEnemyFromEncounter(...args) { return createActAgendaApi().discardUntilEnemyFromEncounter(...args) } export function investigateTest(...args) { return createActAgendaApi().investigateTest(...args) }
 export function discardUntilEnemyTrait(...args) { return createActAgendaApi().discardUntilEnemyTrait(...args) } export function checkAgenda(...args) { return createActAgendaApi().checkAgenda(...args) } export function checkAgendaForcedEnemyDefeated(...args) { return createActAgendaApi().checkAgendaForcedEnemyDefeated(...args) }
 export function placeDoomOnCard(...args) { return createActAgendaApi().placeDoomOnCard(...args) } export function addDoom(...args) { return createActAgendaApi().addDoom(...args) }
 
@@ -2357,7 +2363,6 @@ function createTurnFlowApi() {
     newEnemyId,
     nextSeat,
     playCostDelta,
-    readyUmordhoth,
     relicDiscountLocation,
     resolveCallOfTheUnknown,
     runBetweenInvestigationPhases,

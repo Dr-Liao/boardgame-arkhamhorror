@@ -10,13 +10,14 @@ export function createLocations(deps) {
     entityModifierTotal,
     ALL_CARDS,
     ALL_TREACHERIES,
-    RELOCATE_DESTINATION_LOCATION_CODE,
+    relocateDestinationCode,
     aliveInvestigators,
     assetPassiveData,
     autoEngageAll,
     autoEngageAt,
+    clueBlockerName,
     discardBarricades,
-    engagedWithMaskedHunter,
+    engagedWithClueBlocker,
     entityRuleActive,
     getThreatEffect,
     info,
@@ -111,7 +112,7 @@ function removeLocation(state, id, events) {
   const i = state.locations.findIndex((l) => l.id === id)
   if (i >= 0) {
     // Phase 5（5a-32）：移出地点时的默认去向在卡号规则数据里。
-    const destination = state.locations.find(loc => (loc.originalCode || loc.code) === RELOCATE_DESTINATION_LOCATION_CODE && loc.id !== id)
+    const destination = state.locations.find(loc => (loc.originalCode || loc.code) === relocateDestinationCode() && loc.id !== id)
     const departing = destination ? aliveInvestigators(state).filter(inv => inv.location === id) : []
     if (destination) {
       const companions = state.enemies.filter(enemy => enemy.location === id && departing.some(inv => inv.seat === enemy.engagedSeat))
@@ -163,8 +164,9 @@ function discoverClueAt(state, inv, amount, events) {
   if (scenarioBehavior(state).canDiscoverClues?.(state, inv) === false) return
   // Revelation can put the hunter into play after an event was paid for.
   // Recheck at resolution, including discoveries that bypass investigation.
-  if (engagedWithMaskedHunter(state, inv)) {
-    info(state, events, `${inv.name} 与蒙面猎手交战，不能发现线索。`)
+  const clueBlocker = engagedWithClueBlocker(state, inv)
+  if (clueBlocker) {
+    info(state, events, `${inv.name} 与${clueBlockerName(state, clueBlocker)}交战，不能发现线索。`)
     return
   }
   if (!state._discoveringClue) {

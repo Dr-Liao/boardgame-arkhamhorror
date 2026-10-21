@@ -15,7 +15,7 @@ export function createEnemies(deps) {
     campaignState,
     entityModifierTotal,
     EFFECTS,
-    PALLID_MASK_CODE,
+    pallidMaskCode,
     SMITE_THE_WICKED_CODE,
     addDoom,
     addVictory,
@@ -102,7 +102,7 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
     horror: 0,
     cancelled: false,
   }
-  if (!enemyTextBlanked(state, enemy) && enemy.code === 'wolfManDrew') enemy.damageTaken = Math.max(0, enemy.damageTaken - 1)
+  // “狼人”德鲁「攻击时治愈 1 点伤害」由 01137 的 forced 描述子在 enemyAttack 窗口结算。
   // 「不能攻击」（失落时代 P2 通用开关，04048 守卫者）。卡牌效果造成的攻击不受此限制。
   if (attack.kind !== 'effect' && enemyCannotAttack(state, enemy)) {
     info(state, events, `⛔ 「${enemy.name}」不能攻击。`)
@@ -231,11 +231,8 @@ function engageEnemy(state, enemy, seat, events = []) {
   if (inv && !enemyTextBlanked(state, enemy)) {
     scenarioBehavior(state).enemyEngaged?.(state, enemy, inv, scenarioRuntime(state, events))
   }
-  if (inv && state.enemies.includes(enemy)) triggerReaction(state, seat, 'enemyEngaged', events, { enemy })
-  if (inv && enemy.code === 'youngDeepOne' && !enemyTextBlanked(state, enemy)) {
-    info(state, events, `😱 「${enemy.name}」交战强制：${inv.name} 受到 1 点恐惧。`)
-    applyHorror(state, inv, 1, events)
-  }
+  if (inv && state.enemies.includes(enemy)) triggerReaction(state, seat, 'enemyEngaged', events, { enemy, seat })
+  // 年幼的深潜者「交战时受 1 点恐惧」由 youngDeepOne 的 forced 描述子结算。
 }
 
 function disengageEnemy(state, enemy) {
@@ -269,13 +266,9 @@ function defeatEnemy(state, enemy, events) {
     return
   }
   // "When defeated" forced effects resolve before "after defeated" reactions.
-  if (!enemyTextBlanked(state, enemy) && enemy.code === 'goatSpawn') {
-    for (const inv of aliveInvestigators(state).filter(inv=>inv.location===enemy.location)) {
-      info(state, events, `😱 「${enemy.name}」的临死反噬：${inv.name} 受到 1 点恐惧。`)
-      applyHorror(state, inv, 1, events)
-    }
-  }
-  if ((enemy.originalCode || enemy.code) === PALLID_MASK_CODE) {
+  // 黑山羊眷族这类「被击败时」的卡面强制效果走 enemyDefeated 窗口（在胜利区结算之前）。
+  if (!enemyTextBlanked(state, enemy)) triggerReaction(state, defeatedBy, 'enemyDefeated', events, { enemy, seat: defeatedBy, location: enemy.location })
+  if ((enemy.originalCode || enemy.code) === pallidMaskCode()) {
     state.campaign.records.chasingTheStranger =
       Number(state.campaign.records.chasingTheStranger || 0) + 1
   }

@@ -5,6 +5,8 @@
 //
 // 依赖注入同前；performTest / scenarioRuntime / triggerReaction 已迁出，作为函数声明引用即可。
 
+import { registeredEntries } from './ability.js'
+
 export function createMovement(deps) {
   const {
     advanceAct,
@@ -13,7 +15,6 @@ export function createMovement(deps) {
     applyHorror,
     applyPenalty,
     autoEngageAt,
-    counterTreacheryCode,
     discardBarricades,
     disengageEnemy,
     info,
@@ -21,6 +22,7 @@ export function createMovement(deps) {
     locName,
     locationExists,
     locationRevealCue,
+    makeRuntime,
     movementError,
     payActionCost,
     performTest,
@@ -28,6 +30,7 @@ export function createMovement(deps) {
     processPlayerEnemyEntry,
     registeredEntry,
     requestChoice,
+    resolveEffect,
     revealLocation,
     scenarioBehavior,
     scenarioRuntime,
@@ -82,6 +85,33 @@ function investigatorMoveDestinations(state, seat, effect) {
     destinations = state.locations.filter(item => item.id !== inv.location && item.revealed && !state.enemies.some(enemy => enemy.location === item.id)).map(item => item.id)
   }
   return destinations.filter(id => !investigatorEntryError(state, id, seat) && (!effect.destination || id === effect.destination))
+}
+
+// 地点进入检定的失败选项：数值 / 文案 / 效果全部来自卡条目的 locationRule（onEnter.failChoice），
+// 引擎只做「过滤不可用选项 + 询问 + 按效果原语结算」。墓地（REPORT.md §2.1）曾是这里的写死分支。
+function resolveEntryFailChoice(state, seat, inv, loc, enterRule, events) {
+  const spec = enterRule.failChoice
+  const options = (spec.options || [])
+    .filter(option => !option.requiresLocation || locationExists(state, option.requiresLocation))
+  if (!options.length) return
+  const answer = options.length === 1 ? options[0].id : requestChoice(state, {
+    kind: 'location', source: loc.id, seat: inv.seat, prompt: spec.prompt,
+    options: options.map(option => ({ id: option.id, label: option.label })),
+  })
+  const picked = options.find(option => option.id === answer)
+  if (!picked) return
+  if (picked.log) info(state, events, picked.log.replaceAll('{name}', inv.name).replaceAll('{location}', loc.name))
+  if (picked.effect) resolveEffect(state, seat, picked.effect, makeRuntime(state, events))
+}
+
+// 地点自身的行为规则由卡条目声明（静态注册表，不进 state，因此不改重放指纹）。
+function locationRuleOf(loc) {
+  return registeredEntry(loc?.originalCode || loc?.code)?.locationRule || null
+}
+
+// 地点计数器型障碍（奥术屏障）：规则来自卡条目的 locationBarrier，引擎只认计数器名。
+function locationBarrierEntry(counter) {
+  return registeredEntries().find(entry => entry.locationBarrier?.counter === counter) || null
 }
 
 function moveInvestigatorTo(state, seat, effect, events) {
@@ -161,28 +191,19 @@ function relocateInvestigator(state, seat, locationId, events, message = null) {
   autoEngageAt(state, locationId, events)
   const loc = state.locations.find((l) => l.id === locationId)
   scenarioBehavior(state).locationEntered?.(state, inv, loc, scenarioRuntime(state, events), companions)
-  if (loc && loc.onEnter) {
+  const enterRule = (loc ? locationRuleOf(loc)?.onEnter : null) || loc?.onEnter
+  if (loc && enterRule) {
     if (alreadyRevealed) info(state, events, `${inv.name} 进入「${loc.name}」，触发地点效果。`, locationRevealCue(loc, true, seat))
-    if (loc.onEnter.horror) { info(state, events, `😱 进入「${loc.name}」：${inv.name} 受到 ${loc.onEnter.horror} 点恐惧。`); applyHorror(state, inv, loc.onEnter.horror, events) }
-    if (loc.onEnter.damage) { info(state, events, `💥 进入「${loc.name}」：${inv.name} 受到 ${loc.onEnter.damage} 点伤害。`); applyDamage(state, inv, loc.onEnter.damage, events) }
-    if (loc.onEnter.test) {
-      performTest(state, seat, loc.onEnter.test.skill, loc.onEnter.test.difficulty, { source: { label: '进入地点', name: loc.name, code: loc.originalCode || loc.code }, resolve: r => {
-        if (!r.success && loc.id === 'graveyard') {
-          const options = [{ id: 'horror', label: '受到 2 点恐惧' }]
-          const rivertown = state.locations.find((item) => item.id === 'rivertown')
-          if (rivertown) options.push({ id: 'move', label: '移动到河岸城' })
-          const answer = options.length === 1 ? 'horror' : requestChoice(state, {
-            kind: 'location', source: loc.id, seat: inv.seat, prompt: '墓地检定失败：选择受到 2 点恐惧或移动到河岸城。', options,
-          })
-          if (answer === 'move') {
-            relocateInvestigator(state, seat, 'rivertown', events)
-          } else {
-            info(state, events, `😱 「墓地」检定失败：${inv.name} 受到 2 点恐惧。`)
-            applyHorror(state, inv, 2, events)
-          }
-        } else if (!r.success) {
-          applyPenalty(state, inv, loc.onEnter.fail, Math.max(0, loc.onEnter.test.difficulty - r.value), events)
+    if (loc.onEnter?.horror) { info(state, events, `😱 进入「${loc.name}」：${inv.name} 受到 ${loc.onEnter.horror} 点恐惧。`); applyHorror(state, inv, loc.onEnter.horror, events) }
+    if (loc.onEnter?.damage) { info(state, events, `💥 进入「${loc.name}」：${inv.name} 受到 ${loc.onEnter.damage} 点伤害。`); applyDamage(state, inv, loc.onEnter.damage, events) }
+    if (enterRule.test) {
+      performTest(state, seat, enterRule.test.skill, enterRule.test.difficulty, { source: { label: '进入地点', name: loc.name, code: loc.originalCode || loc.code }, resolve: r => {
+        if (r.success) return
+        if (enterRule.failChoice) {
+          resolveEntryFailChoice(state, seat, inv, loc, enterRule, events)
+          return
         }
+        applyPenalty(state, inv, enterRule.fail || loc.onEnter?.fail, Math.max(0, enterRule.test.difficulty - r.value), events)
       } })
     }
   }
@@ -199,10 +220,16 @@ function relocateInvestigator(state, seat, locationId, events, message = null) {
   }
   const moveAfterCosts = () => {
   scenarioBehavior(state).beforeMove?.(state, inv, state.locations.find(loc => loc.id === locationId), scenarioRuntime(state, events))
-  if (prevLoc?.id === 'twistingPaths') {
-    performTest(state, seat, 'intellect', 3, { source: { label: '离开地点', name: prevLoc.name, code: prevLoc.originalCode || prevLoc.code }, resolve: r => {
+  // 离开地点的检定由地点卡条目声明（locationRule.onLeave.test），引擎不再按地点 id 分支。
+  const leaveRule = locationRuleOf(prevLoc)?.onLeave || prevLoc?.onLeave
+  if (leaveRule?.test) {
+    performTest(state, seat, leaveRule.test.skill, leaveRule.test.difficulty, { source: { label: '离开地点', name: prevLoc.name, code: prevLoc.originalCode || prevLoc.code }, resolve: r => {
         if (r.success) enter()
-        else { inv.location = prevLoc.id; info(state, events, `🌀 「扭曲的道路」：${inv.name} 迷路了，移动被取消。`) }
+        else {
+          inv.location = prevLoc.id
+          const text = leaveRule.cancelMessage || `🌀 「${prevLoc.name}」：${inv.name} 的移动被取消。`
+          info(state, events, text.replaceAll('{name}', inv.name))
+        }
     } })
   } else {
     const leaveTest = scenarioBehavior(state).locationLeaveTest?.(state, inv, prevLoc, locationId)
@@ -217,17 +244,25 @@ function relocateInvestigator(state, seat, locationId, events, message = null) {
   }
   const barriers = state.locations.filter(loc => [inv.location, locationId].includes(loc.id))
     .flatMap(loc => Array(loc.arcaneBarriers || 0).fill(loc))
+  const barrierEntry = barriers.length ? locationBarrierEntry('arcaneBarriers') : null
+  if (barriers.length && !barrierEntry) throw new Error('arcaneBarriers 计数器缺少卡条目的 locationBarrier 声明')
   const payBarrier = index => {
     if (index >= barriers.length) return moveAfterCosts()
     const loc = barriers[index]
-    // Phase 5（5a-22）：奥术屏障的卡号来自「地点计数 → 遭遇卡」那张规则表。
-    const barrierCode = counterTreacheryCode('arcaneBarriers')
-    performTest(state, seat, 'willpower', 4, { source: { label: '奥术屏障', code: barrierCode }, resolve: result => {
-      if (result.success) { loc.arcaneBarriers--; state.encounterDiscard.push(barrierCode); payBarrier(index + 1) }
-      else if (requestChoice(state, { kind: 'encounter', source: barrierCode, seat,
-        prompt: '奥术屏障：取消移动，或弃掉牌库顶 5 张牌继续移动。',
-        options: [{ id: 'cancel', label: '取消移动' }, { id: 'mill', label: '弃掉 5 张牌继续移动' }] }) === 'mill') {
-        scenarioRuntime(state, events).discardTop(seat, 5)
+    const rule = barrierEntry.locationBarrier
+    performTest(state, seat, rule.test.skill, rule.test.difficulty, { source: { label: rule.label, code: barrierEntry.code }, resolve: result => {
+      if (result.success) {
+        loc.arcaneBarriers--
+        state.encounterDiscard.push(barrierEntry.code)
+        payBarrier(index + 1)
+        return
+      }
+      const mill = (rule.options || []).find(option => option.mill)
+      const answer = requestChoice(state, { kind: 'encounter', source: barrierEntry.code, seat,
+        prompt: rule.prompt,
+        options: rule.options.map(option => ({ id: option.id, label: option.label })) })
+      if (mill && answer === mill.id) {
+        scenarioRuntime(state, events).discardTop(seat, mill.mill)
         if (!inv.defeated) payBarrier(index + 1)
       }
     } })

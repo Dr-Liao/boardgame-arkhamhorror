@@ -16,6 +16,23 @@ const factory = () => {
 
 export default {
   code: '01001',
+  investigator:   {
+    "elderSign": {
+      "kind": "perClueAtLocation",
+      "bonus": 1
+    },
+    "reactions": [
+      {
+        "id": "rolandClue",
+        "when": "defeatEnemy",
+        "limit": "round",
+        "effect": {
+          "type": "discoverClue",
+          "amount": 1
+        }
+      }
+    ]
+  },
   kind: 'investigator',
   elderSign: { id: '01001-eldersign', resolve: factory() },
   abilities: [],

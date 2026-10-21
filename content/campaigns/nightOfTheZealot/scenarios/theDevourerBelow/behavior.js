@@ -1,14 +1,15 @@
 import { declareScenario } from '../../../../scenario-declaration.js'
+import { actReveal, agendaReveal, agendaForcedEnemyDefeated, turnEnded, scenarioActionError, sacrificeLitaAction } from './reveal-hooks.js'
 
-// Phase 3（D3）：地点与遭遇牌库组成是声明；脚本只剩额外毁灭、午夜弃牌、献祭行动与弱点。
 export const behavior = declareScenario({
   id: 'theDevourerBelow',
-  data: { includeSurvivingPriest: true, interruptRitualActIndex: 2, sacrificeLita: true },
+  data: { interruptRitualActIndex: 2, sacrificeLita: true },
   setup: {
     locations: { pool: 'woodsPool', count: 4, first: 'mainPath' },
-    deck: { addAgentSet: true },
+    deck: { addAgentSet: true, addSurvivingPriest: true },
   },
   hooks: {
+    actReveal, agendaReveal, agendaForcedEnemyDefeated, turnEnded, scenarioActionError, sacrificeLitaAction,
     afterDeckSetup(state, events, api) {
       const escaped = (state.campaign.records.cultistsEscaped || []).length
       const extraDoom = Math.floor((escaped + 1) / 2)
@@ -24,7 +25,6 @@ export const behavior = declareScenario({
         api.info(state, events, `${inv.name} 因午夜已至，随机弃掉 2 张起始手牌。`)
       }
     },
-    // 乌默尔多斯卡面上的 [action]：条件不满足时也返回，让 AI 知道这条路存在。
     actions(state, inv) {
       const boss = state.enemies.find(enemy => enemy.code === 'umordhoth')
       const controlled = inv.assets.some(asset => asset.code === '01117')

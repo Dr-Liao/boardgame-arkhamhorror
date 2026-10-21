@@ -8,6 +8,7 @@
 
 export default {
   code: '02178',
+  implemented: true,
   abilities: [
     {
       // P1：卡面只有显现效果，结算后应进弃牌堆；旧 type:'threat' 让 deck-ops

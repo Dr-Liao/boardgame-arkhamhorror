@@ -16,6 +16,27 @@ const factory = () => {
 
 export default {
   code: '03005',
+  investigator:   {
+    "elderSign": {
+      "kind": "static",
+      "bonus": 2,
+      "onSuccess": {
+        "type": "carcosaInvestigator",
+        "action": "yorickElderSign"
+      }
+    },
+    "reactions": [
+      {
+        "id": "yorickAsset",
+        "when": "defeatEnemy",
+        "limit": "round",
+        "effect": {
+          "type": "carcosaInvestigator",
+          "action": "yorickPlayAsset"
+        }
+      }
+    ]
+  },
   kind: 'investigator',
   elderSign: { id: '03005-eldersign', resolve: factory() },
   abilities: [],

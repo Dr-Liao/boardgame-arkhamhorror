@@ -7,6 +7,7 @@
 
 export default {
   code: '02007',
+  storyRole: 'smiteTheWicked',
   abilities: [
     {
       kind: 'weakness', label: '击退邪恶', weakness: { type: 'attachedEnemy' },

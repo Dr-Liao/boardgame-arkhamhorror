@@ -12,7 +12,25 @@ export default {
       kind: 'played',
       label: '暴露弱点',
       fast: true,
-      effect: { type: 'exposeWeakness' },
+      resolve: ({ state, inv, api }) => {
+        const enemies = state.enemies.filter(enemy => enemy.location === inv.location)
+        if (!enemies.length) { api.info('本地点没有可选择弱点的敌人。'); return }
+        const enemy = enemies.length === 1 ? enemies[0] : enemies.find(item => item.id === api.choice({
+          kind: 'target', source: '02228', seat: inv.seat, prompt: '选择要暴露弱点的敌人。',
+          options: enemies.map(item => ({ id: item.id, label: item.name })),
+        }))
+        if (!enemy) return
+        const difficulty = api.enemyFight(enemy, inv.seat)
+        api.test(inv.seat, 'intellect', difficulty, {
+          source: { label: '揭露弱点', name: enemy.name, code: '02228' },
+          resolve: result => {
+            if (!result.success) return
+            const margin = Math.max(1, result.value - difficulty)
+            api.addEnemyFightReduction(enemy, margin)
+            api.info(`「${enemy.name}」本阶段下一次被攻击时战斗值 -${margin}。`)
+          },
+        })
+      },
     },
   ],
   modifiers: [

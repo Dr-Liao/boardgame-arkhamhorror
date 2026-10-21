@@ -27,6 +27,13 @@ const factory = () => {
 
 export default {
   code: '03004',
+  investigator:   {
+    "elderSign": {
+      "kind": "akachi",
+      "bonus": 1
+    },
+    "additionalChargeOnEnter": 1
+  },
   kind: 'investigator',
   elderSign: { id: '03004-eldersign', resolve: factory() },
   abilities: [],

@@ -1,3 +1,4 @@
+import { investigatorRule } from '../cards/card-rules.js'
 // 技能检定主流程（performTest）从 engine.js 拆出的最大模块（Phase 6 · 6d-12）。
 //
 // 一次检定跨 ST.1–ST.8 八个阶段：投入 → 揭示标记 → 结算修正 → 结果回调 → 收尾。
@@ -12,7 +13,6 @@ export function createPerformTest(deps) {
     campaignState,
     capabilityBlocked,
     EFFECTS,
-    INVESTIGATOR_ABILITIES,
     SKILL_NAMES,
     ScenarioEnded,
     activeHiddenRules,
@@ -188,7 +188,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         .filter(item => hasHiddenCard(owner, item.code) || !commitProfile(item.code)?.scenarioAbilityOnly
           || options.source?.scenarioAbility === true)
         .filter(item => !committedCodes.has(item.code) || !String(cardDef(item.code)?.textZh || '').includes('最多投入1张'))
-      const kingInYellow = INVESTIGATOR_ABILITIES[owner.code]?.wildCommitCompanionBonus
+      const kingInYellow = investigatorRule(owner.code)?.wildCommitCompanionBonus
         && owner.threat.some(card => registeredEntry(card.code)?.kingInYellowThreat)
       if (kingInYellow && count === 0 && candidates.length < 3) candidates.length = 0
       if (owner !== inv && (!candidates.length || (!kingInYellow && count >= 1))) break
@@ -446,7 +446,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     }
     if (token == null) token = codexSealedElderSign(state, inv, seat, events)
     if (token == null) token = drawChaosToken(state)
-    if (INVESTIGATOR_ABILITIES[inv.code]?.chaosTokenRedraw && !wendyRedrawUsed && !investigatorTextBlanked(state, inv)) {
+    if (investigatorRule(inv.code)?.chaosTokenRedraw && !wendyRedrawUsed && !investigatorTextBlanked(state, inv)) {
       const candidates = inv.hand.map((code, index) => ({ code, index }))
         .filter(item => !isWeaknessCode(item.code) && canDiscardFromHand(inv, item.code))
       if (candidates.length) {
@@ -495,7 +495,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     // 马泰奥神父：任何调查员揭示 autofail 时，改为 elder_sign（每局一次）。
     if (token === 'autofail') {
       const mateo = aliveInvestigators(state).find(owner =>
-        INVESTIGATOR_ABILITIES[owner.code]?.autofailToElderSign && !owner.mateoSignUsed
+        investigatorRule(owner.code)?.autofailToElderSign && !owner.mateoSignUsed
         && !investigatorTextBlanked(state, owner))
       if (mateo) {
         const answer = requestChoice(state, { kind: 'reaction', source: mateo.code, seat: mateo.seat, canSkip: true,
@@ -617,8 +617,8 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       state.skillTest.cancelledCommitments = cancelled.map(item => ({ ...item }))
       committedCancelled = true
     }
-    let tokenDelta = !investigatorTextBlanked(state, inv) && INVESTIGATOR_ABILITIES[inv.code]?.tokenModifiers?.[token] != null
-      ? INVESTIGATOR_ABILITIES[inv.code].tokenModifiers[token] : res.delta
+    let tokenDelta = !investigatorTextBlanked(state, inv) && investigatorRule(inv.code)?.tokenModifiers?.[token] != null
+      ? investigatorRule(inv.code).tokenModifiers[token] : res.delta
     if (tokenDelta < 0) {
       const context = { when: 'negativeTokenRevealed', seat, location: inv.location, token, testValue: value + delta, prompt: '揭示了带有负值修正的混乱标记' }
       reactionWindow(state, 'negativeTokenRevealed', context, events)
@@ -660,7 +660,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     } else if (/^[+-]?\d+$/.test(replacement)) delta += Number(replacement)
     else {
       const res = resolveSpecialToken(state, seat, inv, replacement, events)
-      delta += INVESTIGATOR_ABILITIES[inv.code]?.tokenModifiers?.[replacement] ?? res.delta
+      delta += investigatorRule(inv.code)?.tokenModifiers?.[replacement] ?? res.delta
       autoFail ||= !!res.autoFail
       for (const fx of res.onDraw) applyTokenFx(state, seat, inv, fx, events)
       pendingOnFail.push(...res.onFail)
@@ -792,7 +792,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       }
     }
   }
-  if (success) for (const minh of state.investigators.filter(owner => INVESTIGATOR_ABILITIES[owner.code]?.wildCommitCompanionBonus)) {
+  if (success) for (const minh of state.investigators.filter(owner => investigatorRule(owner.code)?.wildCommitCompanionBonus)) {
     const king = minh.threat.find(card => registeredEntry(card.code)?.kingInYellowThreat)
     const matchingIcons = commitments.filter(item => item.seat === minh.seat).reduce((sum, item) => sum + item.icons, 0)
     if (king && matchingIcons >= 6) {
@@ -816,7 +816,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   }
   const result = { success, value, difficulty, skill, token: drawn.at(-1), committed, autoFail, drawn, elderSign, cancelledTokens,
     rewardMultiplier: doubleOrNothing && success ? 2 : 1, source: options.source || null, ...skillFx }
-  if (success && elderSign && !investigatorTextBlanked(state, inv)) result.damageBonus += INVESTIGATOR_ABILITIES[inv.code]?.elderSign?.attackDamageBonus || 0
+  if (success && elderSign && !investigatorTextBlanked(state, inv)) result.damageBonus += investigatorRule(inv.code)?.elderSign?.attackDamageBonus || 0
   state.skillTest.stage = 'ST.7'
   resolveResult(result)
   scenarioBehavior(state).afterTest?.(state, inv, result, scenarioRuntime(state, events))

@@ -4,7 +4,8 @@ import { presentationChanges, publicSequence } from '../web/table-presentation.j
 import { createGameState, applyMove } from '../src/engine/engine.js'
 import { mapGeometry } from '../web/map-layout.js'
 import { campaignPresentation, presentationAttributes } from '../web/campaign-presentation.js'
-import { buildChapter, chapterSpecs } from '../content/campaigns/theDunwichLegacy/chapters.js'
+import { buildChapter, chapterSpecs, locationId } from '../content/campaigns/theDunwichLegacy/chapters.js'
+import { layout as essexLayout, manifest as essexManifest } from '../content/campaigns/theDunwichLegacy/scenarios/theEssexCountyExpress/index.js'
 import { readFileSync } from 'node:fs'
 
 test('map arrows retain asymmetric rule direction and merge mutual connections once', () => {
@@ -17,8 +18,8 @@ test('map arrows retain asymmetric rule direction and merge mutual connections o
   assert.deepEqual(locations, original, 'drawing connections must not change legal movement')
 })
 
-test('later Dunwich chapter maps use grid coordinates that fit the map viewport', () => {
-  for (const id of Object.keys(chapterSpecs)) {
+test('later Dunwich chapter maps use compact grid coordinates that fit the map viewport', () => {
+  for (const id of Object.keys(chapterSpecs).filter(id => id !== 'theEssexCountyExpress')) {
     const { scenario, layout } = buildChapter(id)
     const points = Object.values(layout.locations)
     assert.ok(Math.max(...points.map(point => point.x)) <= 3, `${id} x coordinates must be grid columns`)
@@ -26,6 +27,29 @@ test('later Dunwich chapter maps use grid coordinates that fit the map viewport'
     const geometry = mapGeometry(Object.values(scenario.locations), layout)
     assert.ok(geometry.width <= 900, `${id} map must remain fittable, got width ${geometry.width}`)
   }
+})
+
+test('the Essex County Express lays its seven train cars in one straight row', () => {
+  const layout = essexLayout
+  assert.deepEqual(essexManifest.layout.locations, layout.locations, 'the manifest must ship the train layout to the client')
+  const slots = chapterSpecs.theEssexCountyExpress.initial.map(locationId)
+  // setup clones the sampled cars into the seven slots; the four unused variants
+  // (02173/02174/02176/02177) never become locations and do not need coordinates.
+  assert.deepEqual(Object.keys(layout.locations).sort(), slots.slice().sort())
+  assert.deepEqual(slots.map(id => layout.locations[id]), slots.map((_, index) => ({ x: index, y: 0 })))
+  // The engine is the last slot and must be rightmost so its only neighbour is on its left.
+  assert.deepEqual(layout.locations[locationId('02175')], { x: 6, y: 0 })
+  const locations = slots.map((id, index) => ({
+    id,
+    connections: slots.filter((_, other) => Math.abs(index - other) === 1),
+  }))
+  assert.deepEqual(locations.at(-1).connections, [slots.at(-2)])
+  const geometry = mapGeometry(locations, layout)
+  assert.equal(geometry.edges.length, 6)
+  for (const edge of geometry.edges) {
+    assert.equal(geometry.positions[edge.from].y, geometry.positions[edge.to].y, `${edge.from}→${edge.to} must stay horizontal`)
+  }
+  assert.ok(geometry.width <= 1600, `train map must fit the viewport, got width ${geometry.width}`)
 })
 
 test('campaign presentation layers common assets with opening-campaign art and palette', () => {

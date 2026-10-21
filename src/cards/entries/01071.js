@@ -7,6 +7,7 @@
 
 export default {
   code: '01071',
+  explicitReactionPrompt: true,
   uses: 4,
   usesType: 'charges',
   discardWhenEmpty: true,

@@ -6,22 +6,22 @@
     "effectsEntries": 0,
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
-    "descriptorEntries": 460,
-    "descriptorAbilities": 386,
+    "descriptorEntries": 463,
+    "descriptorAbilities": 390,
     "abilityKinds": 12,
-    "windows": 52,
-    "effectPrimitives": 97,
-    "nonPlayerCards": 9,
-    "behaviorLines": 14829,
+    "windows": 54,
+    "effectPrimitives": 78,
+    "nonPlayerCards": 13,
+    "behaviorLines": 14469,
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 460,
+    "descriptor": 463,
     "data": 6
   },
   "nonPlayer": {
     "byScope": {
-      "enemy": 7,
+      "enemy": 11,
       "location": 2
     },
     "codes": [
@@ -33,9 +33,13 @@
       "04086",
       "04095",
       "04209b",
-      "screechingByakhee"
+      "goatSpawn",
+      "relentlessDarkYoung",
+      "screechingByakhee",
+      "wolfManDrew",
+      "youngDeepOne"
     ],
-    "abilities": 0,
+    "abilities": 4,
     "modifiers": 15
   },
   "declaration": {
@@ -75,7 +79,7 @@
       "content/campaigns/thePathToCarcosa/scenarios/thePallidMask/behavior.js",
       "content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/behavior.js"
     ],
-    "behaviorLines": 14829,
+    "behaviorLines": 14469,
     "declaredScenarios": 3
   },
   "cards": [
@@ -581,6 +585,21 @@
       "code": "01100",
       "channel": "descriptor",
       "descriptors": 1
+    },
+    {
+      "code": "01101",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01102",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "01103",
+      "channel": "descriptor",
+      "descriptors": 0
     },
     {
       "code": "01117",

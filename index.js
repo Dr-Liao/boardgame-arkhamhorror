@@ -40,7 +40,7 @@ import {
 } from './src/ai/ai-dialogue.js'
 
 const MOVE_FORMAT = [
-  '局外：选择调查员 hubSelectInvestigator(code)；构筑 {"action":"hubSetDeck","codes":["卡号", "卡号", ...]}，按规定尺寸提交完整清单。',
+  '局外：选择调查员 hubSelectInvestigator(code)；选人先看【决策资料】的 teamSummary，优先补齐尚未覆盖的职责，不要与队友重复同一职业定位；构筑 {"action":"hubSetDeck","codes":["卡号", "卡号", ...]}，按规定尺寸提交完整清单。',
   '升级：hubPurchase(added,removed) 可以连续暂存；hubConfirmUpgrades 确认、hubCancelUpgrades 撤销；hubDoneSeat 完成。其余局外操作照抄合法列表。',
   '{"action":"<行动>"}，行动类型如下（具体可用行动见【可执行行动】列表，照抄其中的 JSON 即可）：',
   '- 回答待决选择：{"action":"choose","choiceId":"<当前选择 id>","optionId":"<合法选项 id>"}',

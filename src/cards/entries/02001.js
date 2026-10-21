@@ -16,6 +16,23 @@ const factory = () => {
 
 export default {
   code: '02001',
+  investigator:   {
+    "elderSign": {
+      "kind": "static",
+      "bonus": 1,
+      "attackDamageBonus": 1
+    },
+    "reactions": [
+      {
+        "id": "zoeyResource",
+        "when": "enemyEngaged",
+        "effect": {
+          "type": "gainResource",
+          "amount": 1
+        }
+      }
+    ]
+  },
   kind: 'investigator',
   elderSign: { id: '02001-eldersign', resolve: factory() },
   abilities: [],

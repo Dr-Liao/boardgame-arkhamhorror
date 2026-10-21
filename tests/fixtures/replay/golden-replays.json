@@ -31,6 +31,8 @@
           "seed": "p6-5",
           "campaignHub": true,
           "aiStoryAwareness": false,
+          "cardPoolScope": "all",
+          "allowRollback": true,
           "playerInvestigator": "01001",
           "seatInvestigators": [
             "01001"
@@ -576,6 +578,8 @@
           "seed": "p6-5",
           "campaignHub": true,
           "aiStoryAwareness": false,
+          "cardPoolScope": "all",
+          "allowRollback": true,
           "playerInvestigator": "01001",
           "seatInvestigators": [
             "01001"
@@ -1112,6 +1116,8 @@
           "seed": "p6-0",
           "campaignHub": true,
           "aiStoryAwareness": false,
+          "cardPoolScope": "all",
+          "allowRollback": true,
           "playerInvestigator": "01001",
           "seatInvestigators": [
             "01001"
@@ -1395,6 +1401,8 @@
           "seed": "p6-0",
           "campaignHub": true,
           "aiStoryAwareness": false,
+          "cardPoolScope": "all",
+          "allowRollback": true,
           "playerInvestigator": "01001",
           "seatInvestigators": [
             "01001"
@@ -1989,6 +1997,8 @@
           "seed": "p6-0",
           "campaignHub": true,
           "aiStoryAwareness": false,
+          "cardPoolScope": "all",
+          "allowRollback": true,
           "playerInvestigator": "01001",
           "seatInvestigators": [
             "01001"
@@ -3210,36 +3220,36 @@
         "c3b48a5739c9efa1c36c4c18a14d0eb826e41a9b8501e790c1c1d1c8dea29611",
         "91318f0c2e7bcb39f1425010a69314eabb09d71373b9b6ae70868e00a90b1d3a",
         "3981b1c10e92050ad2920bca62a2a6f36b5e57d8824b7b76556f9d4feec0003e",
-        "6bc67aadecab0a352c45e1fd3810a9228495f1eaa520425eacfe212d9f9c0878",
-        "9c7c8117cca4a17afb0d16fd9e880fa706b997ebe4fd556942638f1f738a3d59",
-        "801ef02ca8c6f7169c81b42ac4b652a2456bace00376ded3ecb0a8322347184a",
-        "83f53c2af78b14e7bd68fb2a4564552edc4645de2922b8efaff8afd30fc51c93",
-        "aea97a885fd3a1a84286c60210e6690633498da86b994bdbcf40667abe10bb3b",
-        "b2bf948f48bd8cb96b0e8538bb90c8ba0e209652fd233ed29a52818bdb1e0944",
-        "60f79b278b25351fa609b83ab8d3af81af49ae25d82e9e05413ae0739fcd7021",
-        "5db598623f1504426c55cc14ad0abab11c73b21e03867bf25506b0e4bc1a2995",
-        "77ea221d18e888c49f0029c68391a0799f270c2e19d3daa05726c68ab341397b",
-        "903832a2e51c48902f30d65da69398dcf0effbd72736077e11016ecc46e65d3b",
-        "6f3f340edc6d9e18b99dbefb2a0509bdeaed6c3e7a7822f3618cd759d8ec11f0",
-        "d40345d92a3ec42a4112b9f5a04ff5804fe4f2a6f3a9f944c3f499b6f04a5264",
-        "2114d1c37b679c78910b7ab257196d4d6807a8f838a56a1f7ba6f6a0e69c1929",
-        "984e64ee34576d3f539f5da86a9fffc90ae810a61b4fa1d8e624e68b2672d2bd",
-        "89241b4b1933381f536f5fbc5d8249848bcbc51049f058a158d994f9436ec046",
-        "86a1dff423ed538071a91df994a8e73e7c686a22e8da947e4d4935329f416096",
-        "30d4b766c3aedbeb12f57a166e01e1bb3496abc1781dab300d5a17d56928160f",
-        "a532dd43dfc0b0aadcd5132ea22a0d39aea36cfe8319233fd20d997bb948415a",
-        "956b078cc9fc2087195784c31725c2e2947abc928b0335d3ef6ab9fba8abfc81",
-        "302012c13b533231639346a2f537f0f42b0334546fb6d2dc9c1a600e4b5df07d",
-        "418fc4b8b583ddb59664b5d706db642982b89b232d5b6274b786bd1b988a9087",
-        "b8266706e3b9a7c367dcaba7bfc1cc62af7b309c969f296494c3bf95c7c50386",
-        "dc8040553606f02fc876a8840c6160530a3cb94698e8ae1c2fafe4aeb6368d08",
-        "5809bfd62baa82f5105de39e535df42b80c22d5cc74071c0c4e1904ef71cf2dd",
-        "d35346759682b6968e3a99f1c6975cfc7483b8b12968e06339feb3671fa8a3c6",
-        "1060a3047deee8755589b88d9fa527405ab9ef0087c724993dc80db982461e3f",
-        "6223f5d20232cb133976d8b1730847ce360f78a05c3ec9a526d728de079fdea0",
-        "c5aed4f368c0a5e6621625f55dd5106f8d4f0e86ccd0aba5f9c1bf1420a2ca8d",
-        "6d6f5801a0ce36a295a48483dcca1adf3adadc958977798b6e5abb621438ed1a",
-        "81fcd73e34178986f2beb74c847ca1e33e58b2bd10af22a9242bc4d2939d4e54",
+        "b0956e02c2428fa4f7cb04a54137e1eeac985cc05a76c419466499bc8d8a5337",
+        "13f54fb8a29568c62c113eb05e2ab28e31aedf324ba78a664f0bc103b2186518",
+        "85d8835fdd3b374e8f72abac96f922fd492979ce52f42db1b661f08ce243aa6d",
+        "af6cd32f2c6e3e52ff56c2bb65bf7ae10f478a8ba92a3b18d7ee6f57d6ea1112",
+        "bf5db957421e4f0318ff64044d8a8532921b78c4d4c0f653ff3451e6920f701a",
+        "4c1e1c2c37142e8a6164a6492bea2c8248eea7fd21c5c389bc3ec2c4c45101c0",
+        "ab9d35ffaf7be93ed9ebfccd59e1db3d839126659119cc9ab3b51b174a2c31b4",
+        "5c11f5084086cad652690da64c7bba89d9a6e392afca34c9fe76f74dd40d8820",
+        "a0825ca97d8ad2d45c5a2b7d7fb449bbde915babcbd0597e5226c764799ea566",
+        "6af69f0d9775721b710215cd5fb2b20b58b6fb584c2438139bb5e1641c4c2fcd",
+        "29c2d08ddd8fe321934e39dd6484c8b2bda73dcbf3c296d744eff9c9d1017f23",
+        "9484180be0ff9f021f67f7d0f97f9b859a0c982acfb80a802f031a9f247da8de",
+        "dd2be738e76c6adf74dd8002860f36a4600837e805273cf317dae9fdfba8891f",
+        "a618cd377f66ee143955165a273509bb3b148ee9378f58062d5f6b2afdc143a3",
+        "fb2d95c25683a74a2604f6b0eea52e25ec7d36272a7ffbf8f89ced7bfd74c543",
+        "eef2580c7a39ab569424cc5f4689262b11a0aad638f3295b9b83fba5ee864583",
+        "db685785cbb98644a1cc255a8642213c0efcc38c32bc76efa3f38f6fe028c22b",
+        "33693ef54a5bd88c9714de9cc7b1764b8805b04401c6a7944f1524f762e59ccc",
+        "9b2c137a25259e878be850eee7a5885f68a9e31bf26e200c2a969e44a572808f",
+        "67338fc51fd6dcc283d50465188eee6c86aae39169e9f3e95e4367258c9ff464",
+        "0caaa87e67b7b6d610c5e99a1b3e6b759472a95205c48413a5cab4212916438d",
+        "3df4642afcdea8265e053d221c07f6cd753befd8efdd7850d96136a15358a54e",
+        "8d720b96f441b7f5cd7b2cc32a84234426ef8734a0c644302d693dc56ad57e51",
+        "93c554f47045c0702c095245c86b3004df73c5a1312fa77f13473f234dc13472",
+        "26a30e6f1b229904052e19d47750ece83cb86593225037963e43793b0a61ff5a",
+        "1b2dac51a9c08eebc4a71d90a37f9e65233ed3e705f03ac0202c1e6c552d0db8",
+        "54809e40ed8498ccadf5963a90112902bae5378f29d3a9414bc177d8cad718db",
+        "951af4893083544e7c968b89acb8f326d42fd3d2b1cffeabf0fc162de622e52d",
+        "e17bf01ae65b2de929eb2c9a80544957d17f379f0bd4cffacbc1cf32fa33ba25",
+        "a7b7ee382b28575162593125ec575c60ee19cac2fb8dbef8faafc763bc5a76e9",
         "2f53dd773db214fad0a588e57e56bc60f72550d2ab54e37495d9cf168cc94e67",
         "178c28f29fc4945f237106ff3ff037876f80beab7baa33e6bd42e30e6db9b258",
         "2c59d1c3c72c6fc1e79e11debcccde739f28b7b67b622bee236cc49e85020e53",
@@ -3322,6 +3332,8 @@
           "seed": "p6-0",
           "campaignHub": true,
           "aiStoryAwareness": false,
+          "cardPoolScope": "all",
+          "allowRollback": true,
           "playerInvestigator": "01001",
           "seatInvestigators": [
             "01001"
@@ -4040,17 +4052,17 @@
         "c3b48a5739c9efa1c36c4c18a14d0eb826e41a9b8501e790c1c1d1c8dea29611",
         "91318f0c2e7bcb39f1425010a69314eabb09d71373b9b6ae70868e00a90b1d3a",
         "3981b1c10e92050ad2920bca62a2a6f36b5e57d8824b7b76556f9d4feec0003e",
-        "6bc67aadecab0a352c45e1fd3810a9228495f1eaa520425eacfe212d9f9c0878",
-        "9c7c8117cca4a17afb0d16fd9e880fa706b997ebe4fd556942638f1f738a3d59",
-        "801ef02ca8c6f7169c81b42ac4b652a2456bace00376ded3ecb0a8322347184a",
-        "83f53c2af78b14e7bd68fb2a4564552edc4645de2922b8efaff8afd30fc51c93",
-        "aea97a885fd3a1a84286c60210e6690633498da86b994bdbcf40667abe10bb3b",
-        "b2bf948f48bd8cb96b0e8538bb90c8ba0e209652fd233ed29a52818bdb1e0944",
-        "60f79b278b25351fa609b83ab8d3af81af49ae25d82e9e05413ae0739fcd7021",
-        "5db598623f1504426c55cc14ad0abab11c73b21e03867bf25506b0e4bc1a2995"
+        "b0956e02c2428fa4f7cb04a54137e1eeac985cc05a76c419466499bc8d8a5337",
+        "13f54fb8a29568c62c113eb05e2ab28e31aedf324ba78a664f0bc103b2186518",
+        "85d8835fdd3b374e8f72abac96f922fd492979ce52f42db1b661f08ce243aa6d",
+        "af6cd32f2c6e3e52ff56c2bb65bf7ae10f478a8ba92a3b18d7ee6f57d6ea1112",
+        "bf5db957421e4f0318ff64044d8a8532921b78c4d4c0f653ff3451e6920f701a",
+        "4c1e1c2c37142e8a6164a6492bea2c8248eea7fd21c5c389bc3ec2c4c45101c0",
+        "ab9d35ffaf7be93ed9ebfccd59e1db3d839126659119cc9ab3b51b174a2c31b4",
+        "5c11f5084086cad652690da64c7bba89d9a6e392afca34c9fe76f74dd40d8820"
       ],
       "final": {
-        "hash": "5db598623f1504426c55cc14ad0abab11c73b21e03867bf25506b0e4bc1a2995",
+        "hash": "5c11f5084086cad652690da64c7bba89d9a6e392afca34c9fe76f74dd40d8820",
         "revision": 80,
         "uiState": "inScenario",
         "status": "playing",
@@ -4086,6 +4098,8 @@
           "seed": "p6-3",
           "campaignHub": true,
           "aiStoryAwareness": false,
+          "cardPoolScope": "all",
+          "allowRollback": true,
           "playerInvestigator": "01001",
           "seatInvestigators": [
             "01001"
@@ -4269,6 +4283,8 @@
           "seed": "golden-carcosa",
           "campaignHub": true,
           "aiStoryAwareness": false,
+          "cardPoolScope": "all",
+          "allowRollback": true,
           "playerInvestigator": "03001",
           "seatInvestigators": [
             "03001",
@@ -4908,6 +4924,8 @@
           "seed": "golden-carcosa",
           "campaignHub": true,
           "aiStoryAwareness": false,
+          "cardPoolScope": "all",
+          "allowRollback": true,
           "playerInvestigator": "03001",
           "seatInvestigators": [
             "03001",
@@ -5212,6 +5230,8 @@
           "seed": "golden-dunwich",
           "campaignHub": true,
           "aiStoryAwareness": false,
+          "cardPoolScope": "all",
+          "allowRollback": true,
           "playerInvestigator": "02001",
           "seatInvestigators": [
             "02001",
@@ -5865,6 +5885,8 @@
           "seed": "golden-tfa",
           "campaignHub": true,
           "aiStoryAwareness": false,
+          "cardPoolScope": "all",
+          "allowRollback": true,
           "playerInvestigator": "04001",
           "seatInvestigators": [
             "04001",
@@ -6015,7 +6037,8 @@
           {
             "seat": 0,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "agenda"
             }
           },
           {
@@ -6029,7 +6052,8 @@
           {
             "seat": 0,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "agenda"
             }
           },
           {
@@ -6043,7 +6067,8 @@
           {
             "seat": 0,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "agenda"
             }
           },
           {
@@ -6227,19 +6252,22 @@
           {
             "seat": 0,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "act"
             }
           },
           {
             "seat": 0,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "act"
             }
           },
           {
             "seat": 0,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "act"
             }
           },
           {
@@ -6253,25 +6281,29 @@
           {
             "seat": 2,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "act"
             }
           },
           {
             "seat": 2,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "act"
             }
           },
           {
             "seat": 2,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "act"
             }
           },
           {
             "seat": 1,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "act"
             }
           },
           {
@@ -6285,7 +6317,8 @@
           {
             "seat": 1,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "act"
             }
           },
           {
@@ -6299,7 +6332,8 @@
           {
             "seat": 1,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "act"
             }
           },
           {
@@ -6361,7 +6395,8 @@
           {
             "seat": 2,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "act"
             }
           },
           {
@@ -6408,9 +6443,9 @@
         "4b008a6a120527dab3fc7fe41a782e9789f1133be4b2d836b936f1ff73edf5e3",
         "2fd60c0e068606c4efdea204ec0f0157f7aa975261e18f67da4eaa8df09a49a0",
         "79dbb7a0d9756aae2de82a4af7d9430ed9370a3fde27ee6cbf37d928cea6f1a3",
-        "3d8e05eea2931a0b154708f40b92717baec930c86dc18310f271a30030a93bef",
+        "f5c6ccfefa7ff898452b8be05223fe1936fc56830d9bc04f7d16ddabb2130c20",
         "5a6f86ebe28994de33c48776176bb70c314d92bcfd20141f96c82675c509e008",
-        "353b43fd4a89166db386dd65d17c3efb38f44448b655fa87e34619c5ad9f27cb",
+        "6ef46032f5b1a3211900fdfeb6568e1e8c57d579554d12e64a835e0ec2ca76cf",
         "d4309939a8f6a6f3b168e54f2ea8497875dfb86fbed6c8d3a5afd56b8e262f48",
         "20b4812a5b80be4c26136ce9000c9f7ae54cfc7c2b7f545460cec81b37eefa11",
         "74610d4e0f0121627e4e3da92049567b4132d27943aa8aa2d7592c9e7f8fad12",
@@ -6439,24 +6474,24 @@
         "e6d54ad55920be9dd05b78bc40dd6d7ec1f50865a618335a66b689b5a4773acd",
         "f356324ba3d2ab46aefb0da6086b2be60fbd2577debe8176585c6c7e81a2f589",
         "6e1360f9642311cb6c2b59e8fd5f8157f85f892c9d214b04321a60dfc621cea6",
-        "ad931c16ab19fd5f0e0959f0ba016086324555676685802110ed28e20d72096c",
+        "c24f44c283c9f781b7bdf2497474a50c937af36086c575e41ea16cef02df7ec6",
         "e7e073599569ab0c26b1c46d28de036e1b9e918c03378dc9ae4a3d044aa0998a",
         "4a0c88fae4ea70de244d3dda202180472496e84524aba74df5e57575f390f46c",
         "955b05813f294de5deaa4bde147a6ff53bc6c8998795ab5f695f28e48bd42afd",
         "fdce3fa7e719891e5536079e8c19e97314b1877b71086c36d70bb4611d093a07",
-        "aad9bf99b215bf8e9da46c112ea7ddd7075fa68a9ac25f3e5e07163cfad68c3f",
+        "1109a3d48e933fd8c7a2ac1cabfe5493f3e85f0f0b5d229e2f0c7f46a530b686",
         "15a1ae3ecfff2b1d0b4ba1cb82da67af67cc1276dbd26ef54589c58f8dfbc675",
-        "ec887d07c36550644450965aa2d8c0f96097113f3235b8b61a0ab5616da9a993",
+        "808d37e011f673804a3f05b432e1d0416e82cce8ce4fdf6bb1704743de80b869",
         "25e2336119438c6609214238e239f2b635c232497e9819e9e6d510f11ce0314e",
-        "e8e1714a1875198832457cf6116076d3ede308494aeee992501f6be68645ee2a",
-        "a8314bb4bfbf53f8ac6df0b7539a43f3b125f86da9a1c6ed17394733976392d4",
-        "d5f311dab6d0d2659d4541d6bb56511cdf95d981fbbe6501d3cb97e60c3d1f02",
-        "1e85899a06600e3ad7c00a66a5f7413608c0702cf79718eca5e8568cc8bc4ec8",
-        "df12d17f79c67f1e7eb0b3bca105825998f364674a7499a36be1f17a48fe0a52",
-        "d478964a204e3787424a31eed26ed2db3dc4bae22a3d4c4f4a8fe15c7acb3ceb",
-        "dc867fb0db9daa744e56dcb3636e9cd718b9e3867f1169375cd9aca1c88d169b",
+        "d25e3367047c77efe0773624e6f3de3b3849fb42027b6219ef86938a04febecb",
+        "9648df6df7b24d6804733f8996818b2d5d4965c110fb9ce599055340f0522ef0",
+        "358a45a6a36820dbb298f14b83b2d4a76bf58254f7db6945ec834baa836989cd",
+        "50b81a4836711db800d39902dcebf06b005306a378f2974065e34c57694c976d",
+        "bbe8103b195efec991bef70d50cf94fc279ec3e49b7b6fe8dd5cf9b92f4a3f85",
+        "a4cdce01ffe0238dd162fb89201b29b5428f88de9a72073ec3302008be6ac55b",
+        "802dc568d53d34fa4cdd42ca669488e8cddfd9f2b981502d59e1a54c779979ba",
         "a38a591b492af1b6af6f941d1ebb9373eef52a697cc49a02e51cf17f1aec14d2",
-        "1afbf94bdb8bbc3887953128152cbcee6034186c7016a62831908d6853900c6c",
+        "b02161b341934788363baa862629c103e161a2a08ee0ebd0670ff15af50345ce",
         "e444aaf939ad0cb14f141ec51d8d9c26b0fc46f05175bf74365ebeb5d9d94b20",
         "b920f6bccb95aabae8f420280740c795d80604e0adc749821d52d427daff166a",
         "a828ab3df1be7decd3e1343882bd89a2bfb7da1c504eed37eb58e9477f7ee93a"
@@ -6501,6 +6536,8 @@
           "seed": "golden-tfa",
           "campaignHub": true,
           "aiStoryAwareness": false,
+          "cardPoolScope": "all",
+          "allowRollback": true,
           "playerInvestigator": "04001",
           "seatInvestigators": [
             "04001",
@@ -6651,7 +6688,8 @@
           {
             "seat": 0,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "agenda"
             }
           },
           {
@@ -6665,7 +6703,8 @@
           {
             "seat": 0,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "agenda"
             }
           },
           {
@@ -6679,7 +6718,8 @@
           {
             "seat": 0,
             "move": {
-              "action": "explore"
+              "action": "explore",
+              "scriptCard": "agenda"
             }
           },
           {
@@ -6757,9 +6797,9 @@
         "4b008a6a120527dab3fc7fe41a782e9789f1133be4b2d836b936f1ff73edf5e3",
         "2fd60c0e068606c4efdea204ec0f0157f7aa975261e18f67da4eaa8df09a49a0",
         "79dbb7a0d9756aae2de82a4af7d9430ed9370a3fde27ee6cbf37d928cea6f1a3",
-        "3d8e05eea2931a0b154708f40b92717baec930c86dc18310f271a30030a93bef",
+        "f5c6ccfefa7ff898452b8be05223fe1936fc56830d9bc04f7d16ddabb2130c20",
         "5a6f86ebe28994de33c48776176bb70c314d92bcfd20141f96c82675c509e008",
-        "353b43fd4a89166db386dd65d17c3efb38f44448b655fa87e34619c5ad9f27cb",
+        "6ef46032f5b1a3211900fdfeb6568e1e8c57d579554d12e64a835e0ec2ca76cf",
         "d4309939a8f6a6f3b168e54f2ea8497875dfb86fbed6c8d3a5afd56b8e262f48",
         "20b4812a5b80be4c26136ce9000c9f7ae54cfc7c2b7f545460cec81b37eefa11",
         "74610d4e0f0121627e4e3da92049567b4132d27943aa8aa2d7592c9e7f8fad12",
@@ -6811,6 +6851,8 @@
           "seed": "golden-strict",
           "campaignHub": true,
           "aiStoryAwareness": true,
+          "cardPoolScope": "all",
+          "allowRollback": true,
           "playerInvestigator": "04002",
           "seatInvestigators": [
             "04002",

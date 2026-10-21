@@ -19,6 +19,27 @@ const factory = () => {
 
 export default {
   code: '04001',
+  investigator:   {
+    "reactions": [
+      {
+        "id": "leoPlayAlly",
+        "when": "turnBegins",
+        "selfOnly": true,
+        "limit": "turn",
+        "prompt": "是否打出 1 张盟友支援（费用减 1）？",
+        "effect": {
+          "type": "tfaInvestigator",
+          "action": "playAllyDiscounted",
+          "amount": 1
+        }
+      }
+    ],
+    "elderSign": {
+      "kind": "tfaSearchAlly",
+      "bonus": 2,
+      "amount": 3
+    }
+  },
   kind: 'investigator',
   elderSign: { id: '04001-eldersign', resolve: factory() },
   abilities: [],

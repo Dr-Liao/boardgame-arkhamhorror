@@ -10,7 +10,13 @@
 export default {
   code: '02008',
   abilities: [
-    { kind: 'played', label: '按线索数抽牌（最多 5 张）', effect: { type: 'drawPerClue', maximum: 5 } },
+    {
+      kind: 'played', label: '按线索数抽牌（最多 5 张）',
+      resolve: ({ api, inv }) => {
+        const amount = Math.min(5, inv.clues || 0)
+        if (amount > 0) api.drawCardsLogged(inv.seat, amount)
+      },
+    },
   ],
   modifiers: [
 

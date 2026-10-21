@@ -1,3 +1,4 @@
+import { investigatorRule } from '../cards/card-rules.js'
 // stats.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 属性与「卡面给什么」的读点：技能值、图标、特质/关键词、手牌位与行动数、
 // 生命力/神智上限，以及 assetEffect（旧 passive + 条目字段 + 描述子 shim 的合并结果）。
@@ -6,7 +7,6 @@ export function createStats(deps) {
     CLASS_NAMES,
     EFFECTS,
     HAND_SIZE_BASE,
-    INVESTIGATOR_ABILITIES,
     LOLA_ROLES,
     abilityShim,
     agendaHandSizePenalty,
@@ -99,7 +99,7 @@ export function createStats(deps) {
 
   function lolaCanUseCard(inv, code) {
     // Phase 5（5a-33）：只有「用角色限制卡牌」的调查员走这套校验。
-    if (!INVESTIGATOR_ABILITIES[inv.code]?.deckbuildingRoles) return true
+    if (!investigatorRule(inv.code)?.deckbuildingRoles) return true
     const def = cardDef(code)
     const factions = def?.factions || [def?.klass, def?.klass2, def?.klass3].filter(Boolean)
     return factions.includes('neutral') || factions.includes(inv.role)

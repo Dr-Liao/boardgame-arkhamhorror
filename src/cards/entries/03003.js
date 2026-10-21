@@ -17,6 +17,29 @@ const factory = () => {
 
 export default {
   code: '03003',
+  investigator:   {
+    "openingHandSize": 13,
+    "elderSign": {
+      "kind": "static",
+      "bonus": 3,
+      "onSuccess": {
+        "type": "carcosaInvestigator",
+        "action": "sefinaElderSign"
+      }
+    },
+    "freeAction": {
+      "id": "sefinaBeneath",
+      "label": "抽取赛菲娜下方的一张事件",
+      "cost": {},
+      "actionCost": 1,
+      "noOpportunityAttack": true,
+      "repeatable": true,
+      "effect": {
+        "type": "carcosaInvestigator",
+        "action": "sefinaDrawBeneath"
+      }
+    }
+  },
   kind: 'investigator',
   elderSign: { id: '03003-eldersign', resolve: factory() },
   abilities: [],

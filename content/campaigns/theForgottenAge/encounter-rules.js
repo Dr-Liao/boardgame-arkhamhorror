@@ -1,4 +1,7 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
+import {
+  encounterResolveFor, enemySpawnRuleFor, enemyStatRuleFor, threatActionByRule, threatActionFor, vengeanceWhileFor,
+} from '../../../src/cards/card-rules.js'
 
 // 失落的时代的跨章遭遇规则。共享遭遇组（Rainforest / Serpents / Expedition /
 // AgentsOfYig / GuardiansOfTime / DeadlyTraps / TemporalFlux / ForgottenRuins /
@@ -90,15 +93,13 @@ function inPlayVengeance(state) {
   for (const location of state.locations || []) {
     const code = original(location)
     // 只有卡面明确「视同进入胜利区」的地点才算；其他地点上的复仇点仍留在场上。
-    if (!['04066', '04287', '04288'].includes(code)) continue
+    const mode = vengeanceWhileFor(code)
+    if (!mode) continue
     const amount = Number(location.vengeance || ALL_CARDS[code]?.vengeance || 0)
     if (!amount) continue
-    // 04066 地下遗迹：有敌人时算在胜利区。
-    if (code === '04066' && (state.enemies || []).some(enemy => enemy.location === location.id)) total += amount
-    // 04287 万蛇之城：没有线索时算在胜利区。
-    if (code === '04287' && (location.clues || 0) === 0) total += amount
-    // 04288 异端教堂：有调查员时算在胜利区。
-    if (code === '04288' && (state.investigators || []).some(inv =>
+    if (mode === 'enemyHere' && (state.enemies || []).some(enemy => enemy.location === location.id)) total += amount
+    if (mode === 'noClues' && (location.clues || 0) === 0) total += amount
+    if (mode === 'investigatorHere' && (state.investigators || []).some(inv =>
       !inv.defeated && !inv.resigned && inv.location === location.id)) total += amount
   }
   return total
@@ -157,29 +158,9 @@ function harbingerAfterSuccessfulTest(state, enemy, api) {
 
 // 已逐条实现的共享遭遇卡。未列出的卡在审计里保留为待实现。
 // 01xxx 是核心盒的遭遇组：失落时代的牌堆会引用它们，规则同样写在共享解析器里。
-export const implementedTreacheries = new Set([
-  '01163', '01164', '01165', '01166', '01167', '01168', '01171', '01173', '01174', '01178',
-  '04076', '04077', '04080', '04081', '04082', '04085', '04087', '04088', '04089',
-  '04090', '04091', '04092', '04093', '04094', '04096', '04097', '04099', '04100',
-  '04101', '04102',
-])
 
-export const implementedEnemies = new Set([
-  '01170',
-  '04078', '04079', '04083', '04084', '04086', '04095', '04098',
-])
 
 const SKILL_LABELS = { willpower: '意志', intellect: '智识', combat: '战斗', agility: '敏捷' }
-
-const SUPPLY_THREAT_ACTIONS = {
-  '04076': { rule: 'clearOvergrowth', label: '清除疯狂生长', skills: ['combat', 'intellect'], difficulty: 4, target: 'location',
-    skillLabels: { combat: '检定战斗(4)清除疯狂生长', intellect: '检定智识(4)清除疯狂生长' } },
-  '04077': { rule: 'endVoiceOfTheJungle', label: '检定意志(3)驱散丛林之声', skills: ['willpower'], difficulty: 3, target: 'threat' },
-  '04085': { rule: 'endCurseOfYig', label: '检定意志(2+复仇)摆脱伊格的诅咒', skills: ['willpower'], difficulty: 2, target: 'threat', vengeance: true },
-  '04089': { rule: 'escapeEntombed', label: '逃出墓穴', skills: ['agility', 'combat'], difficulty: 4, target: 'threat',
-    skillLabels: { agility: '检定敏捷(4)逃出墓穴', combat: '检定战斗(4)逃出墓穴' } },
-  '04097': { rule: 'discardWordsOfPower', label: '花 2 个行动弃掉力量真言', actions: 2, target: 'threat', noTest: true },
-}
 
 // 「检定 A 或 B」的卡面要让玩家自己选技能：多技能条目拆成每个技能一个动作，
 // 引擎按 rule 校验、按 move.skill 取技能，因此不需要额外的选择窗口。
@@ -192,35 +173,32 @@ function threatMoves(base, spec) {
 }
 
 export const encounterRules = {
-  implementedTreacheries,
-  implementedEnemies,
   inPlayVengeance,
 
   // ---- 敌人常驻修正 ----
   // stat 可以是 'fight' / 'evade' / 'health'（P2：生命值也走这个钩子）。
   // 04095「每个毁灭标记 +1 战斗/躲避」已迁到 src/cards/encounter-abilities.js。
   enemyStatModifier(state, enemy, stat) {
-    const code = original(enemy)
-    if (code === '04083' && stat === 'fight') {
-      return inPlayVengeance(state)
-    }
+    const rule = enemyStatRuleFor(original(enemy))
+    if (rule?.fightBonusFromVengeance && stat === 'fight') return inPlayVengeance(state)
     return 0
   },
 
   enemySpawned(state, enemy, api) {
     const code = original(enemy)
-    // 01169 祭司：入场后在自身放置 1 个毁灭标记。
-    if (code === '01169') {
-      enemy.doom = (enemy.doom || 0) + 1
+    const rule = enemySpawnRuleFor(code)
+    if (rule?.doomOnSpawn) {
+      enemy.doom = (enemy.doom || 0) + rule.doomOnSpawn
       api?.info?.('🧿 祭司入场：在它身上放置 1 个毁灭标记。')
     }
-    if (code === '04084') {
+    if (rule?.vengeanceThresholds) {
       const vengeance = inPlayVengeance(state)
-      if (vengeance >= 1) enemy.retaliate = true
-      if (vengeance >= 2) enemy.hunter = true
-      if (vengeance >= 3) enemy.tfaDamageReduction = 1
+      const thresholds = rule.vengeanceThresholds
+      if (vengeance >= thresholds.retaliate) enemy.retaliate = true
+      if (vengeance >= thresholds.hunter) enemy.hunter = true
+      if (vengeance >= thresholds.damageReduction) enemy.tfaDamageReduction = 1
     }
-    if (code === '04098') {
+    if (rule?.preyPoisoned) {
       const prey = active(state).find(inv => isPoisoned(inv))
       if (prey) enemy.preySeat = prey.seat
     }
@@ -346,54 +324,11 @@ export const encounterRules = {
   resolveEncounter(state, inv, t, api) {
     const code = original(t)
     const location = here(state, inv)
+    const entryResolve = encounterResolveFor(code)
+    if (entryResolve && code !== '04092') return entryResolve(state, inv, t, api, { location })
     // ---- 核心遭遇卡（01xxx）----
     // 失落时代的部分牌堆引用了核心盒的遭遇组；这批卡的规则写在共享解析器里，
     // 十章都通过 ...encounterRules 继承，因此不会再「抽到即静默弃掉」。
-    if (code === '01163') {
-      // 腐烂的尸体：意志(3)，每差 1 点受到 1 点恐惧。
-      api.test(inv.seat, 'willpower', 3, result => {
-        if (result.success) return
-        const failedBy = Math.max(0, 3 - result.value)
-        if (failedBy > 0) api.horror(inv.seat, failedBy)
-      })
-      return false
-    }
-    if (code === '01164' || code === '01165') {
-      // 呆若木鸡 / 刺耳之声：进入威胁区域，限制由 card-data 的 threat 数据交给引擎读取。
-      if (threatWithCode(inv, code)) { api.drawEncounter(inv.seat); return false }
-      api.threat(inv.seat, code)
-      return true
-    }
-    if (code === '01166') {
-      // 远古恶魔：在当前密谋上放置 1 点毁灭。
-      api.addDoom(1)
-      api.info?.('🕯️ 远古恶魔：在当前密谋上放置 1 点毁灭。')
-      return false
-    }
-    if (code === '01167') {
-      // 地窖寒风：意志(4)；失败弃掉 1 个支援，不能则受到 2 点伤害。
-      api.test(inv.seat, 'willpower', 4, result => {
-        if (result.success) return
-        const assets = (inv.assets || []).filter(asset => !asset.isStoryAsset)
-        if (!assets.length) { api.damage(inv.seat, 2); return }
-        const answer = assets.length === 1 ? assets[0].id : api.choose({
-          kind: 'asset', source: code, seat: inv.seat,
-          prompt: '地窖寒风：选择并弃掉 1 个你控制的支援。',
-          options: assets.map(asset => ({ id: asset.id, label: asset.name || asset.code })),
-        })
-        api.discardAsset(inv.seat, (assets.find(asset => asset.id === answer) || assets[0]).id)
-      })
-      return false
-    }
-    if (code === '01168') {
-      // 朦胧之雾：附属到所在地点，隐藏值 +2。可叠加（每张各 +2）。
-      if (!location) return false
-      location.fog = (location.fog || 0) + 1
-      location.fogCode = '01168'
-      location.shroudMod = (location.shroudMod || 0) + 2
-      api.info?.(`🌫️ 朦胧之雾附着于「${location.name}」：隐藏值 +2（共 ${location.fog} 张）。`)
-      return true
-    }
     if (code === '01170') {
       // 密会巫师：生成在任意无人地点；反击与「神话阶段结束放毁灭」由敌人数据交给引擎。
       const empty = state.locations.filter(entry => !active(state).some(owner => owner.location === entry.id))
@@ -404,50 +339,6 @@ export const encounterRules = {
         options: empty.map(entry => ({ id: entry.id, label: entry.name })),
       })
       api.spawn(code, empty.some(entry => entry.id === target) ? target : empty[0].id)
-      return false
-    }
-    if (code === '01171') {
-      // 神秘咏唱：最近的异教徒身上放 2 点毁灭；没有异教徒时从遭遇牌库／弃牌堆找出一个。
-      const cultist = nearestWithTrait(state, inv.location, 'Cultist')
-      if (cultist) {
-        cultist.doom = (cultist.doom || 0) + 2
-        api.info?.(`🌑 「${cultist.name}」上放置 2 点毁灭（当前 ${cultist.doom}）。`)
-        return false
-      }
-      const isCultist = entry => {
-        const card = ALL_CARDS[entry]
-        return card?.type === 'enemy' && (card.traits || []).some(trait => String(trait).toLowerCase() === 'cultist')
-      }
-      const fromDiscard = state.encounterDiscard.findIndex(isCultist)
-      let found = null
-      if (fromDiscard >= 0) found = state.encounterDiscard.splice(fromDiscard, 1)[0]
-      else {
-        const fromDeck = state.encounterDeck.findIndex(isCultist)
-        if (fromDeck >= 0) found = state.encounterDeck.splice(fromDeck, 1)[0]
-      }
-      if (found) {
-        state.encounterDeck = shuffleWith(state.encounterDeck, () => api.random())
-        api.spawn(found, inv.location)
-        api.info?.('🔍 神秘咏唱：从遭遇牌堆／弃牌堆找到了一个异教徒。')
-      }
-      return false
-    }
-    if (code === '01173') {
-      // 乘着黑暗之翼：敏捷(4)；失败受到 1 伤害 1 恐惧，与非夜魇敌人解交战并移动到中心地点。
-      api.test(inv.seat, 'agility', 4, result => {
-        if (result.success) return
-        api.damage(inv.seat, 1)
-        api.horror(inv.seat, 1)
-        for (const enemy of state.enemies.filter(entry => entry.engagedSeat === inv.seat && !hasTrait(entry, 'Nightgaunt'))) {
-          enemy.engagedSeat = null
-          const engaged = state.investigators[inv.seat].engaged
-          const index = engaged.indexOf(enemy.id)
-          if (index >= 0) engaged.splice(index, 1)
-        }
-        const central = state.locations.find(entry => entry.central)
-        if (central && central.id !== inv.location) api.moveInvestigator(inv.seat, central.id)
-        else api.info?.('没有可退往的中心地点。')
-      })
       return false
     }
     if (code === '01174') {
@@ -478,156 +369,6 @@ export const encounterRules = {
       else api.horror(inv.seat, 2)
       return false
     }
-    if (code === '04076') {
-      if (!location) return false
-      if (attachmentsWithCode(location, '04076').length) { api.drawEncounter(inv.seat); return false }
-      location.attachments ||= []
-      location.attachments.push({ id: `overgrowth:${state.round}:${location.id}`, code: '04076', originalCode: '04076' })
-      api.info?.('疯狂生长附属到此地点：此处不能探索。')
-      return true
-    }
-    if (code === '04077') {
-      if (threatWithCode(inv, '04077')) { api.drawEncounter(inv.seat); return false }
-      api.threat(inv.seat, '04077', { forcedEndTurnHorror: 1 })
-      return true
-    }
-    if (code === '04080') {
-      api.test(inv.seat, 'agility', 3, result => {
-        if (result.success) return
-        const allies = inv.assets.filter(asset => hasTrait(asset, 'Ally'))
-        const options = [{ id: 'damage', label: '受到 1 点直接伤害（若未中毒则中毒）' }]
-        if (allies.length) options.unshift({ id: 'ally', label: '对一个盟友支援造成 5 点伤害' })
-        const answer = api.choose({
-          kind: 'harm', source: code, seat: inv.seat,
-          prompt: '毒蛇噬咬：选择承受 5 点盟友伤害，或 1 点直接伤害（并可能中毒）。',
-          options,
-        })
-        if (answer === 'ally' && allies.length) {
-          // 由玩家选择要伤害的盟友支援，而不是自动拿第一个。
-          const allyId = api.choose({
-            kind: 'asset', source: code, seat: inv.seat,
-            prompt: '选择受到 5 点伤害的盟友支援。',
-            options: allies.map(asset => ({ id: asset.id, label: ALL_CARDS[original(asset)]?.nameZh || asset.name || asset.code })),
-          })
-          const target = allies.find(asset => asset.id === allyId) || allies[0]
-          api.damageAsset(inv.seat, target.id, 5)
-          return
-        }
-        api.directDamage(inv.seat, 1)
-        if (!isPoisoned(inv)) api.poison(inv.seat)
-      })
-      return false
-    }
-    if (code === '04081') {
-      api.test(inv.seat, 'willpower', 3, result => {
-        if (result.success) return
-        const failedBy = Math.max(0, 3 - result.value)
-        for (let index = 0; index < failedBy; index++) api.horror(inv.seat, 1)
-        if (!threatWithCode(inv, '04081')) api.threat(inv.seat, '04081', { forcedEndTurnDiscard: true })
-      })
-      return false
-    }
-    if (code === '04082') {
-      const answer = api.choose({
-        kind: 'team', source: code, seat: inv.seat, peril: true,
-        prompt: '补给短缺：全队选择一项。',
-        options: [
-          { id: 'resources', label: '每位调查员失去 2 资源' },
-          { id: 'damage', label: '每位调查员受到 1 点伤害' },
-          { id: 'asset', label: '每位调查员弃掉自己控制的一个支援' },
-        ],
-      })
-      for (const target of active(state)) {
-        if (answer === 'resources') target.resources = Math.max(0, (target.resources || 0) - 2)
-        else if (answer === 'damage') api.damage(target.seat, 1)
-        else if (target.assets.length) {
-          // 卡面：每位调查员「自己选择」弃掉自己控制的一个支援。
-          const picked = api.choose({
-            kind: 'asset', source: code, seat: target.seat,
-            prompt: `${target.name}：选择弃掉自己控制的一个支援。`,
-            options: target.assets.map(asset => ({ id: asset.id, label: ALL_CARDS[original(asset)]?.nameZh || asset.name || asset.code })),
-          })
-          const chosen = target.assets.find(asset => asset.id === picked) || target.assets[0]
-          api.discardAsset(target.seat, chosen.id)
-        }
-      }
-      return false
-    }
-    if (code === '04085') {
-      if (threatWithCode(inv, '04085')) { api.drawEncounter(inv.seat); return false }
-      // 卡面：-1 战斗、-1 生命、获得[[蛇族]]特性。引擎只读 threatEffect，
-      // 所以把修正写进 threatEffect（不再是裸字段），并把特性记在调查员身上。
-      api.threat(inv.seat, '04085', {
-        threatEffect: { statModifiers: { combat: -1 }, healthModifier: -1 },
-        grantedTrait: 'Serpent',
-      })
-      inv.traits = [...new Set([...(inv.traits || []), 'Serpent'])]
-      return true
-    }
-    if (code === '04087') {
-      const harm = seat => {
-        const target = state.investigators[seat]
-        const allies = target.assets.filter(asset => hasTrait(asset, 'Ally')).length
-        api.damage(seat, 1 + allies)
-      }
-      harm(inv.seat)
-      for (const other of active(state)) {
-        if (other.seat === inv.seat) continue
-        if (hasTrait(here(state, other), 'Ancient')) harm(other.seat)
-      }
-      return false
-    }
-    if (code === '04088') {
-      const difficulty = 2 + (location?.doom || 0)
-      api.test(inv.seat, 'agility', difficulty, result => {
-        if (!result.success) api.damage(inv.seat, 2)
-      })
-      return false
-    }
-    if (code === '04089') {
-      if (threatWithCode(inv, '04089')) { api.drawEncounter(inv.seat); return false }
-      api.threat(inv.seat, '04089', { noMove: true, noDisengage: true })
-      return true
-    }
-    if (code === '04090') {
-      api.test(inv.seat, 'willpower', 3, result => {
-        if (result.success) return
-        const failedBy = Math.max(0, 3 - result.value)
-        for (let index = 0; index < failedBy; index++) {
-          // 没有行动可失去时只给「受到 1 点恐惧」，不再提供空选项。
-          if ((inv.actionsLeft || 0) <= 0) {
-            api.horror(inv.seat, 1)
-            continue
-          }
-          const answer = api.choose({
-            kind: 'harm', source: code, seat: inv.seat,
-            prompt: `时间裂缝：第 ${index + 1}/${failedBy} 点差额，选择失去 1 个行动或受到 1 点恐惧。`,
-            options: [{ id: 'action', label: '失去 1 个行动' }, { id: 'horror', label: '受到 1 点恐惧' }],
-          })
-          if (answer === 'horror') api.horror(inv.seat, 1)
-          else api.loseActions(inv.seat, 1)
-        }
-      })
-      return false
-    }
-    if (code === '04091') {
-      const candidates = inv.assets.filter(asset => !asset.isStoryAsset)
-      if (candidates.length) {
-        const picked = chooseOne(api, {
-          kind: 'asset', source: code, seat: inv.seat,
-          prompt: '困于时间：选择一张非剧情支援洗回牌库。',
-        }, candidates)
-        if (picked) {
-          const damage = picked.damage || 0, horror = picked.horror || 0
-          api.shuffleAssetIntoDeck(inv.seat, picked.id)
-          if (damage) api.directDamage(inv.seat, damage)
-          if (horror) api.directHorror(inv.seat, horror)
-          return false
-        }
-      }
-      api.discardChosen(inv.seat, 3, code)
-      return false
-    }
     if (code === '04092') {
       const candidates = state.locations.filter(entry => active(state).some(target => target.location === entry.id))
       if (!candidates.length) {
@@ -645,81 +386,6 @@ export const encounterRules = {
       }
       return false
     }
-    if (code === '04093') {
-      const answer = api.choose({
-        kind: 'harm', source: code, seat: inv.seat, peril: true,
-        prompt: '先祖恐惧：在你所在地点放置 1 点毁灭并弃掉本卡，或把本卡放进胜利区。',
-        options: [{ id: 'doom', label: '在所在地点放置 1 点毁灭' }, { id: 'victory', label: '放进胜利区' }],
-      })
-      if (answer === 'victory') {
-        state.victoryDisplay.push({ id: `ancestral-fear:${state.round}:${inv.seat}`,
-          code: '04093', originalCode: '04093', victory: 0, vengeance: 1 })
-        return false
-      }
-      if (location) location.doom = (location.doom || 0) + 1
-      else state.doom = (state.doom || 0) + 1
-      return false
-    }
-    if (code === '04094') {
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.deepDark = Number(state.scenarioFlags.deepDark || 0) + 1
-      state.scenarioFlags.deepDarkClaims = {}
-      api.info?.('一片漆黑开始生效：每位调查员每轮从单个地点最多发现 1 个线索。')
-      return true
-    }
-    if (code === '04096') {
-      const cultistsInPlay = state.enemies.filter(enemy => hasTrait(enemy, 'Cultist'))
-      if (!cultistsInPlay.length) {
-        api.horror(inv.seat, 1)
-        api.drawEncounter(inv.seat)
-        return false
-      }
-      const target = nearestWithTrait(state, inv.location, 'Cultist')
-      if (target) target.doom = (target.doom || 0) + 1
-      const difficulty = target ? (target.fight || 0) : 3
-      api.test(inv.seat, 'willpower', difficulty, result => {
-        if (!result.success) api.horror(inv.seat, 2)
-      })
-      return false
-    }
-    if (code === '04097') {
-      if (threatWithCode(inv, '04097')) { api.drawEncounter(inv.seat); return false }
-      api.threat(inv.seat, '04097', { blockDoomEnemyDamage: true, blockCluesHere: true })
-      return true
-    }
-    if (code === '04099') {
-      if (threatWithCode(inv, '04099')) { api.drawEncounter(inv.seat); return false }
-      const poisoned = isPoisoned(inv)
-      api.threat(inv.seat, '04099', { blankItemAssets: true, forcedRoundEndDiscard: true })
-      if (poisoned) api.drawEncounter(inv.seat)
-      return true
-    }
-    if (code === '04100') {
-      const answer = api.choose({
-        kind: 'harm', source: code, seat: inv.seat,
-        prompt: '毒蛇召来：把放在一边的中毒弱点放入威胁区域，或抽取遭遇牌库顶 2 张。',
-        options: [{ id: 'poison', label: '让一位调查员中毒' }, { id: 'cards', label: '抽出遭遇牌顶 2 张' }],
-      })
-      if (answer === 'poison') {
-        const target = chooseOne(api, {
-          kind: 'investigator', source: code, seat: inv.seat,
-          prompt: '毒蛇召来：选择中毒的调查员。',
-        }, active(state), entry => entry.name)
-        if (target) api.poison(target.seat)
-      } else {
-        api.drawEncounter(inv.seat)
-        if (!inv.defeated && !inv.resigned) api.drawEncounter(inv.seat)
-      }
-      return false
-    }
-    if (code === '04101') {
-      for (const target of active(state)) if (isPoisoned(target)) api.damage(target.seat, 1)
-      return false
-    }
-    if (code === '04102') {
-      api.poison(inv.seat)
-      return false
-    }
     return false
   },
 
@@ -728,7 +394,7 @@ export const encounterRules = {
     const moves = []
     for (const threat of inv.threat) {
       const code = original(threat)
-      const spec = SUPPLY_THREAT_ACTIONS[code]
+      const spec = threatActionFor(code)
       if (spec) moves.push(...threatMoves({
         action: 'encounterAction', rule: spec.rule, threatId: threat.id, actions: spec.actions ?? 1,
       }, spec))
@@ -736,7 +402,7 @@ export const encounterRules = {
     const location = here(state, inv)
     for (const attachment of location?.attachments || []) {
       const code = attachmentCode(attachment)
-      const spec = SUPPLY_THREAT_ACTIONS[code]
+      const spec = threatActionFor(code)
       if (spec?.target === 'location') moves.push(...threatMoves({
         action: 'encounterAction', rule: spec.rule, attachmentId: attachment.id, actions: 1,
       }, spec))
@@ -745,7 +411,7 @@ export const encounterRules = {
   },
 
   performEncounterAction(state, inv, move, api) {
-    const spec = Object.values(SUPPLY_THREAT_ACTIONS).find(entry => entry.rule === move.rule)
+    const spec = threatActionByRule(move.rule)
     if (!spec) return false
     if (spec.noTest) {
       if (move.threatId) {

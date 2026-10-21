@@ -7,7 +7,7 @@
 export default {
   code: '02270',
   abilities: [
-    { kind: 'played', label: '不期而遇', effect: { type: 'temporaryAllyFromDiscard' } },
+    { kind: 'played', label: '不期而遇', resolve: ({ inv, api }) => api.recruitTemporaryAllyFromDiscard(inv.seat, '02270') },
   ],
   modifiers: [
 

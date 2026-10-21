@@ -10,6 +10,7 @@
 
 export default {
   code: '01117',
+  storyRole: 'lita',
   modifiers: [
     { target: 'skill:combat', amount: 1, audience: 'here', condition: { controllerHasNoThreat: '02088' } },
   ],

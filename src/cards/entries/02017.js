@@ -13,7 +13,13 @@ export default {
     { when: ownTurn(), message: '只能在自己的回合打出' },
   ],
   abilities: [
-    { kind: 'played', label: '嘲讽', fast: true, effect: { type: 'engageEnemies' } },
+    {
+      kind: 'played', label: '嘲讽', fast: true,
+      resolve: ({ state, inv, api }) => {
+        const enemies = state.enemies.filter(enemy => enemy.location === inv.location && enemy.engagedSeat !== inv.seat)
+        for (const enemy of enemies) api.engage(enemy, inv.seat)
+      },
+    },
   ],
   modifiers: [
 

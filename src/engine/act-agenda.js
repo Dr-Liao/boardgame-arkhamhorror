@@ -204,12 +204,6 @@ export function createActAgenda(deps) {
     }
   }
 
-  function maskedHunterPrey(state) {
-    const living = aliveInvestigators(state)
-    if (!living.length) return null
-    return preyTarget(state, { code: 'theMaskedHunter', name: '假面猎手', prey: 'mostClues' }, living.map(inv => inv.seat))
-  }
-
   function discardUntilEnemyFromEncounter(state, seat, predicate, events) {
     const discarded = []
     let found = null
@@ -279,10 +273,8 @@ export function createActAgenda(deps) {
   function checkAgendaForcedEnemyDefeated(state, enemy, events) {
     const ag = state.agendas[state.agendaIndex]
     if (!ag || !ag.forced || !ag.forced.enemyDefeated) return
-    const f = ag.forced.enemyDefeated
-    if (f.type === 'umordhothDefeated' && enemy.code === 'umordhoth') {
-      finishScenario(state, 'r2', events)
-    }
+    // 第 5 批：击败触发的密谋推进由关卡行为结算（乌默尔多斯 → 结局 2）。
+    scenarioBehavior(state).agendaForcedEnemyDefeated?.(state, enemy, scenarioRuntime(state, events))
   }
 
   function placeDoomOnCard(state, card, amount, events, options = {}) {
@@ -311,5 +303,5 @@ export function createActAgenda(deps) {
     checkAgenda(state, events)
   }
 
-  return { advanceAct, discardUntilEnemy, canAdvanceWithClues, actObjectiveContext, payAndAdvanceAct, checkAct, locationRevealCue, spawnStoryAsset, advanceAgenda, maskedHunterPrey, discardUntilEnemyFromEncounter, investigateTest, discardUntilEnemyTrait, checkAgenda, checkAgendaForcedEnemyDefeated, placeDoomOnCard, addDoom }
+  return { advanceAct, discardUntilEnemy, canAdvanceWithClues, actObjectiveContext, payAndAdvanceAct, checkAct, locationRevealCue, spawnStoryAsset, advanceAgenda, discardUntilEnemyFromEncounter, investigateTest, discardUntilEnemyTrait, checkAgenda, checkAgendaForcedEnemyDefeated, placeDoomOnCard, addDoom }
 }

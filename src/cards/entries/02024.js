@@ -14,7 +14,31 @@ export default {
       kind: 'action',
       label: '治疗恐惧并检定意志',
       cost: { action: true, uses: 1 },
-      effect: { type: 'liquidCourage' },
+      resolve: ({ state, inv, api }) => {
+        const targets = state.investigators.filter(other =>
+          !other.defeated && !other.resigned && other.location === inv.location && other.horror > 0)
+        if (!targets.length) return
+        const targetSeat = targets.length === 1 ? String(targets[0].seat) : api.choice({
+          kind: 'target', seat: inv.seat, prompt: '选择治疗恐惧的调查员。',
+          options: targets.map(other => ({ id: String(other.seat), label: other.name })),
+        })
+        const target = targets.find(other => String(other.seat) === targetSeat)
+        if (!target) return
+        api.healHorror(target.seat, 1)
+        api.test(target.seat, 'willpower', 2, {
+          source: { label: '饮用烈酒', name: api.cardName('02024'), code: '02024' },
+          resolve: result => {
+            if (result.success) {
+              const healed = Math.min(target.horror, 1)
+              api.healHorror(target.seat, healed)
+              api.info(`${target.name} 检定成功，额外治愈 ${healed} 点恐惧。`)
+            } else {
+              api.info(`${target.name} 检定失败，随机弃掉 1 张手牌。`)
+              api.discardRandomFromHand(target.seat, 1)
+            }
+          },
+        })
+      },
     },
   ],
   modifiers: [

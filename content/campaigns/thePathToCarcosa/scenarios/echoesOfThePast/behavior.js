@@ -1,4 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { awardStoryCard } from '../../../../../src/campaign/campaign-effects.js'
 import { campaignCardChange } from '../../../../../src/campaign/campaign.js'
 import { requestChoice } from '../../../../../src/engine/resolution.js'
@@ -193,42 +194,10 @@ export const behavior = {
       && inv.assets.some(asset => asset.code === '03141')) ? -2 : 0
   },
   actReveal(state, act, api) {
-    if (act.originalCode === '03124' || act.originalCode === '03125') {
-      for (const location of state.locations.filter(candidate => candidate.revealed && historicalRooms.has(original(candidate)))) {
-        location.clues = Math.max(location.clues || 0, state.numInvestigators)
-      }
-    }
-    if (act.originalCode === '03125') {
-      const candidates = active(state)
-      const seat = candidates.length === 1 ? candidates[0].seat : Number(api.choose({
-        kind: 'storyAsset', source: '03141', seat: state.campaign.leadSeat,
-        prompt: '选择一位调查员控制皮博迪先生。',
-        options: candidates.map(inv => ({ id: String(inv.seat), label: inv.name })),
-      }))
-      api.giveAsset(seat, '03141')
-      api.place('hiddenLibrary')
-      this.connectPassageways(state)
-    } else if (act.originalCode === '03126') {
-      const answer = api.choose({
-        kind: 'story', source: act.id, seat: state.campaign.leadSeat,
-        prompt: '如何处置黑玛瑙扣环？',
-        options: [{ id: 'r1', label: '拿走它' }, { id: 'r2', label: '留在原处' }],
-      })
-      api.finish(answer)
-    }
-  },
-  connectPassageways(state) {
-    const inPlay = state.scenario.passagewayLocations.filter(id => state.locations.some(location => location.id === id))
-    for (const location of state.locations.filter(candidate => inPlay.includes(candidate.id))) {
-      location.connections = [...new Set([...location.connections, ...inPlay.filter(id => id !== location.id)])]
-    }
+    registeredEntry(act.originalCode)?.actRule?.onReveal?.(state, act, api)
   },
   agendaReveal(state, agenda, api) {
-    if (agenda.originalCode === '03121') api.shuffleDiscard()
-    else if (agenda.originalCode === '03122') {
-      api.spawn('03140', 'entryHall')
-      if (!(state.campaign.records.vipsSlain || []).includes('03068')) api.spawn('03068b', 'entryHall')
-    } else if (agenda.originalCode === '03123') api.finish('r4')
+    registeredEntry(agenda.originalCode)?.agendaRule?.onReveal?.(state, agenda, api)
   },
   actions(state, inv) {
     const moves = []

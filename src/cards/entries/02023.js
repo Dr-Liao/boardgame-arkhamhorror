@@ -7,7 +7,31 @@
 export default {
   code: '02023',
   abilities: [
-    { kind: 'played', label: '寻找答案', effect: { type: 'investigateConnectingClue' } },
+    {
+      kind: 'played', label: '寻找答案',
+      resolve: ({ state, inv, api }) => {
+        const loc = state.locations.find(item => item.id === inv.location)
+        const targets = (loc?.connections || [])
+          .map(id => state.locations.find(item => item.id === id))
+          .filter(item => (item?.clues || 0) > 0)
+        if (!targets.length) return api.investigate(inv.seat, {})
+        const difficulty = loc.shroud + (loc.shroudMod || 0)
+        api.test(inv.seat, 'intellect', difficulty, {
+          source: { label: '调查', name: api.cardName('02023'), code: '02023' },
+          resolve: result => {
+            if (!result.success) return
+            const targetId = targets.length === 1 ? targets[0].id : api.choice({
+              kind: 'location', source: '02023', seat: inv.seat,
+              prompt: '选择一个连接地点发现线索。',
+              options: targets.map(item => ({ id: item.id, label: item.name })),
+            })
+            api.discoverAt(inv.seat, targetId, 1, {
+              log: `${inv.name} 从「${targets.find(item => item.id === targetId)?.name || ''}」发现 1 条线索。`,
+            })
+          },
+        })
+      },
+    },
   ],
   modifiers: [
 

@@ -78,8 +78,8 @@ function resolveTreacheryEffect(state, inv, fx, events) {
       if (loc && !loc.fog) {
         loc.shroudMod = (loc.shroudMod || 0) + fx.amount
         loc.fog = (loc.fog || 0) + 1
-        loc.fogCode = loc.fogCode || 'obscuringFog'
-        info(state, events, `🌫️ 「朦胧之雾」附着于「${loc.name}」，帷幕 +${fx.amount}。`)
+        loc.fogCode = loc.fogCode || fx.code
+        info(state, events, `🌫️ 「${cardName(fx.code)}」附着于「${loc.name}」，帷幕 +${fx.amount}。`)
         return true
       }
       break
@@ -125,8 +125,8 @@ function resolveTreacheryEffect(state, inv, fx, events) {
       const chosen = pool.find(loc => loc.id === chosenId)
       if (chosen) {
         chosen.locked = true
-        chosen.lockedDoorCode = 'lockedDoor'
-        info(state, events, `🔒 「上锁的门」封锁了「${chosen.name}」。`)
+        chosen.lockedDoorCode = fx.code
+        info(state, events, `🔒 「${cardName(fx.code)}」封锁了「${chosen.name}」。`)
         return true
       }
       break
@@ -140,64 +140,18 @@ function runActReveal(state, act, events) {
   const r = act.reveal
   if (!r) return
   const scId = state.scenario.id
+  // 第 5 批：关卡行为能按 reveal.type 接管的，先交给行为（集结全部幕、地底噬魔幕 1/2/终幕）。
+  if (r.type !== 'campaignRule'
+    && scenarioBehavior(state).actReveal?.(state, act, scenarioRuntime(state, events), r.type)) return
   switch (r.type) {
     case 'campaignRule':
       if (!scenarioBehavior(state).actReveal) throw new Error(`场景规则尚未迁移：${act.originalCode}`)
       scenarioBehavior(state).actReveal(state, act, scenarioRuntime(state, events))
       break
-    case 'openHallway': {
-      // 原卡：将放在一边的走廊、地窖、阁楼和客厅放置入场；揭示走廊。
-      for (const id of ['hallway', 'cellar', 'attic', 'parlor']) placeLocation(state, id, events)
-      const studyEnemies = state.enemies.filter((e) => e.location === 'study')
-      for (const e of studyEnemies.slice()) {
-        disengageEnemy(state, e)
-        removeOne(state.enemies, e)
-        const owner = state.investigators[e.bearerSeat]
-        if (isWeaknessCode(e.code) && owner) owner.discard.push(e.code)
-        else state.encounterDiscard.push(e.code)
-      }
-      for (const inv of aliveInvestigators(state)) inv.location = 'hallway'
-      revealLocation(state, 'hallway', events)
-      removeLocation(state, 'study', events)
-      info(state, events, '🚪 书房的地板上出现一道暗门！所有人进入「走廊」，书房被移出游戏。')
-      break
-    }
-    case 'revealParlor': {
-      placeLocation(state, 'parlor', events)
-      revealLocation(state, 'parlor', events)
-      spawnStoryAsset(state, LITA_CHANDLER_CODE, 'parlor', events)
-      const boss = spawnEnemy(state, 'ghoulPriest', 'hallway', null)
-      if (boss) info(state, events, `👹 首领「${boss.name}」出现在「走廊」！`)
-      break
-    }
-    case 'revealRitualSite': {
-      // 地底噬魔场景 1 推进：放置仪式地（若未放），逃跑的异教徒生成于主道路。
-      placeLocation(state, 'ritualSite', events)
-      const escaped = state.campaign.records.cultistsEscaped || []
-      for (const originalCode of escaped) {
-        const code = ruleCodeForOriginal(originalCode)
-        const enemy = spawnEnemy(state, code, 'mainPath', null, true)
-        if (enemy) info(state, events, `👹 逃跑的异教徒「${enemy.name}」出现在「主道路」！`)
-      }
-      break
-    }
-    case 'drawEnemyAtRitualSite': {
-      // 地底噬魔场景 2 推进：洗回弃牌，弃牌直到翻出敌人（>3 人两次），生成于仪式地。
-      if (state.encounterDiscard.length) {
-        state.encounterDeck = shuffle([...state.encounterDeck, ...state.encounterDiscard], () => randomValue(state))
-        state.encounterDiscard = []
-      }
-      const times = state.numInvestigators >= 3 ? 2 : 1
-      for (let k = 0; k < times; k++) {
-        const enemy = discardUntilEnemy(state, events)
-        if (enemy) {
-          const e = spawnEnemy(state, enemy, 'ritualSite', null, true)
-          if (e) info(state, events, `👹 「${e.name}」在「仪式地」生成！`)
-        }
-      }
-      break
-    }
     case 'resolutionChoice': {
+      // 集结的幕 3 结局选择已搬到关卡行为；午夜假面等没有 actReveal 的关卡继续走下面的旧逻辑。
+      const handled = scenarioBehavior(state).actReveal?.(state, act, scenarioRuntime(state, events), r.type)
+      if (handled) break
       const resolution = scenarioBehavior(state).houseFateChoice ? requestChoice(state, { kind: 'story', source: act.id, seat: leadDecisionSeat(state),
         prompt: '决定房屋的命运。', options: [{ id: 'r1', label: '烧毁房屋' }, { id: 'r2', label: '保留房屋' }] }) : 'r1'
       finishScenario(state, resolution, events)
@@ -213,26 +167,8 @@ function runAgendaForced(state, when, events) {
   const ag = state.agendas[state.agendaIndex]
   if (!ag || !ag.forced || !ag.forced[when]) return
   const f = ag.forced[when]
-  if (f.type === 'ghoulsMoveToParlor') {
-    for (const enemy of state.enemies) {
-      if (enemy.engagedSeat != null) continue
-      const isGhoul = (enemy.traits || []).some((t) => t.toLowerCase() === 'ghoul')
-      if (!isGhoul) continue
-      const dest = stepToward(state, enemy.location, 'parlor')
-      if (dest && dest !== enemy.location) {
-        const prev = enemy.location
-        relocateEnemy(state, enemy, dest, events)
-        info(state, events, `「${enemy.name}」向客厅移动（${locName(state, prev)} → ${locName(state, dest)}）。`)
-      }
-    }
-    autoEngageAll(state, events)
-  } else if (f.type === 'doomPerGhoulAtParlorHallway') {
-    const n = state.enemies.filter((e) => ['parlor', 'hallway'].includes(e.location) && (e.traits || []).some((t) => t.toLowerCase() === 'ghoul')).length
-    if (n > 0) {
-      info(state, events, `🌑 密谋 3 强制：走廊/客厅有 ${n} 个食尸鬼，放置 ${n} 点毁灭。`)
-      addDoom(state, n, events)
-    }
-  }
+  // 第 5 批：强制效果由关卡行为按 type 结算（集结的「食尸鬼涌向客厅」等）。
+  scenarioBehavior(state).agendaForced?.(state, when, scenarioRuntime(state, events), f.type)
 }
 
 function executeDescriptor(state, { inv, source, descriptor, context = {}, events, windowId = null, fromHandIndex = null, effect = null, legacyAbilityLog = false, alreadyPaid = false, silent = false }) {

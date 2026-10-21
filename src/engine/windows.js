@@ -77,6 +77,10 @@ define('investigateSuccess', '调查成功后', 'reaction', 62)
 define('discoverClue', '发现线索前', 'interrupt', 63)
 define('scenarioStarts', '冒险开始时', 'reaction', 64)
 define('enemyEngaged', '与敌人交战后', 'reaction', 65)
+// 「被击败时」的强制效果（黑山羊眷族的临死反噬）在敌人离场后、剧本结算/胜利区之前开窗。
+define('enemyDefeated', '敌人被击败时', 'reaction', 39)
+// 回合结束时按敌人逐个开窗（坚韧的黑山羊幼崽「治愈 2 点伤害」）。
+define('enemyRoundEnd', '回合结束时（敌人）', 'reaction', 38)
 define('horrorPlaced', '受到恐惧后', 'reaction', 66)
 define('damageAssignedToSelf', '伤害分配到支援时', 'interrupt', 67)
 

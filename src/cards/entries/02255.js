@@ -9,6 +9,7 @@
 
 export default {
   code: '02255',
+  enemyRule: { damageOnlyFrom: '02254', healthPerPlayerBonus: 1 },
   modifiers: [
     {
       target: 'enemyHealth',

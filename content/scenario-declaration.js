@@ -119,7 +119,7 @@ function buildSetupEnemies(spec, origin) {
 // 遭遇牌库的结构性修改：移除开局已生成的敌人、随机加入一组「使者组」。
 function buildModifyDeck(spec, origin) {
   if (spec == null) return {}
-  assertKeys(spec, new Set(['removeSpawnedEnemies', 'addAgentSet']), `${origin}.deck`)
+  assertKeys(spec, new Set(['removeSpawnedEnemies', 'addAgentSet', 'addSurvivingPriest']), `${origin}.deck`)
   return {
     modifyDeck(state, deck, events, api) {
       let next = deck
@@ -135,6 +135,10 @@ function buildModifyDeck(spec, origin) {
           api.info(state, events, `🎲 随机使者组：${key}。`)
           next = next.concat(state.scenario.agentSets[key])
         }
+      }
+      if (spec.addSurvivingPriest && state.campaign.records.ghoulPriestAlive) {
+        next = next.concat(['ghoulPriest'])
+        api.info(state, events, '👹 食尸鬼祭司仍存活，被洗入遭遇牌库。')
       }
       return next
     },

@@ -1,4 +1,5 @@
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
+import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { awardStoryCard } from '../../../../../src/campaign/campaign-effects.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { chooseCandidate } from '../../../../choice-helpers.js'
@@ -61,55 +62,33 @@ export const behavior = {
   },
   turnEnded(state, inv, api) {
     encounterRules.turnEnded(state, inv, api)
-    const here = state.locations.find(location => location.id === inv.location)?.originalCode
-    if (here === '02049') api.discardTop(inv.seat, inv.horror)
-    if (here === '02053') api.discardTop(inv.seat, 1)
+    const here = state.locations.find(location => location.id === inv.location)
+    if (here) registeredEntry(here.originalCode)?.locationRule?.onTurnEnd?.(state, here, api, inv)
   },
   afterTest(state, inv, result, api) {
     encounterRules.afterTest(state, inv, result, api)
     dunwichChaosAfterTest('extracurricularActivity', state, inv, result, api)
     if (result.success) return
-    const here = state.locations.find(location => location.id === inv.location)?.originalCode
-    if (here === '02056' && result.skill === 'willpower') api.damage(inv.seat, 1)
+    const here = state.locations.find(location => location.id === inv.location)
+    if (here) registeredEntry(here.originalCode)?.locationRule?.onTestFail?.(state, here, api, inv, result)
   },
   enemyPhaseStart(state) {
-    for (const enemy of state.enemies.filter(enemy => enemy.code === '02058')) enemy.exhausted = false
+    for (const enemy of state.enemies) {
+      registeredEntry(enemy.originalCode || enemy.code)?.enemyScript?.onPhaseStart?.(state, enemy)
+    }
   },
   actReveal(state, act, api) {
-    if (act.originalCode === '02045') {
-      // Jazz is searched for in the encounter deck during the next act.
-      state.encounterDeck.push('02060')
-      api.shuffleDiscard()
-    } else if (act.originalCode === '02046') {
-      api.place('alchemyLabs')
-      if (state.agendaIndex < 2 && !state.enemies.some(enemy => enemy.code === '02058')) api.spawn('02058', 'alchemyLabs')
-      if (completedHouseAlwaysWins(state)) {
-        state.scenarioZones.underLocations ||= {}
-        state.scenarioZones.underLocations.alchemyLabs = '02059'
-      } else if (!state.scenarioZones.removed?.includes('02059')) {
-        // Extracurricular Activity as the first scenario: remove the concoction.
-        state.scenarioZones.removed ||= []
-        state.scenarioZones.removed.push('02059')
-        state.scenarioZones.concoctionClaimed = true
-      }
-    } else if (act.originalCode === '02047') api.finish('r3')
+    const entry = registeredEntry(act.originalCode)
+    entry?.actRule?.onReveal?.(state, act, api)
   },
   agendaReveal(state, agenda, api) {
-    if (agenda.originalCode === '02042') {
-      for (const inv of state.investigators.filter(inv => !inv.defeated && !inv.resigned)) {
-        if (inv.discard.length >= 5) api.horror(inv.seat, inv.discard.length >= 10 ? 2 : 1)
-      }
-      // "Advance directly to agenda 2b" is applied by agendaChain once agenda 2
-      // is revealed; the agenda itself must not be removed from the deck.
-      if (completedHouseAlwaysWins(state)) state.scenarioFlags.advanceDirectlyToAgenda = '02043'
-    } else if (agenda.originalCode === '02043') {
+    const entry = registeredEntry(agenda.originalCode)
+    if (entry?.agendaRule?.onReveal) { entry.agendaRule.onReveal(state, agenda, api); return }
+    if (agenda.originalCode === '02043') {
       api.place('dormitories')
       const experiment = state.enemies.find(enemy => enemy.code === '02058')
       if (experiment) this.moveExperiment(state, experiment, 'dormitories')
       else api.spawn('02058', 'scienceBuilding')
-    } else if (agenda.originalCode === '02044') {
-      for (const inv of state.investigators.filter(inv => !inv.defeated && !inv.resigned)) api.horror(inv.seat, 3)
-      api.finish('r4')
     }
   },
   agendaChain(state, agenda) {

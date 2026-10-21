@@ -21,6 +21,25 @@ const factory = () => {
 
 export default {
   code: '02005',
+  investigator:   {
+    "elderSign": {
+      "kind": "readySignature",
+      "bonus": 2,
+      "code": "02014"
+    },
+    "startsWith": "02014",
+    "freeAction": {
+      "id": "peteReady",
+      "label": "弃掉 1 张手牌，重整一张支援（每轮一次）",
+      "cost": {
+        "discardHand": 1
+      },
+      "effect": {
+        "type": "readyAsset"
+      },
+      "limit": "round"
+    }
+  },
   kind: 'investigator',
   elderSign: { id: '02005-eldersign', resolve: factory() },
   abilities: [],

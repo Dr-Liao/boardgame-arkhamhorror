@@ -1,4 +1,5 @@
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
+import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { carcosaChaosToken, carcosaChaosAfterTest } from '../../carcosa-chaos.js'
@@ -295,59 +296,10 @@ export const behavior = {
     }
   },
   actReveal(state, act, api) {
-    const code = act.originalCode
-    if (['03204', '03205'].includes(code)) {
-      const withClues = state.scenarioFlags.actOneAdvancedWith !== 'doom'
-      const convictionRoute = code === '03205'
-      const leadLocation = state.investigators[state.campaign.leadSeat]?.location
-      const allLocations = state.locations.map(location => location.id)
-      const distances = allLocations.map(id => ({ id, score: Math.min(...active(state)
-        .map(inv => distance(state, id, [inv.location])).filter(value => value >= 0)) }))
-      const maximum = Math.max(...distances.map(item => item.score))
-      const farthest = distances.filter(item => item.score === maximum)
-      const far = farthest.length === 1 ? farthest[0].id : api.choose({
-        kind: 'location',
-        source: code,
-        seat: state.campaign.leadSeat,
-        prompt: '选择离所有调查员最远的地点生成风琴手。',
-        options: farthest.map(item => ({ id: item.id, label: state.locations.find(loc => loc.id === item.id)?.name || item.id })),
-      })
-      if (!withClues) for (const inv of active(state)) api.horror(inv.seat, 2)
-      if ((convictionRoute && withClues) || (!convictionRoute && !withClues)) {
-        api.spawn(state.scenarioFlags.organistCode, far)
-      } else api.spawn(state.scenarioFlags.organistCode, leadLocation)
-    } else if (['03206', '03207'].includes(code)) {
-      api.finish(recordsFor(state).youIntrudedOnASecretMeeting ? 'r2' : 'r1')
-    }
+    registeredEntry(act.originalCode)?.actRule?.onReveal?.(state, act, api)
   },
   agendaReveal(state, agenda, api) {
-    if (agenda.originalCode === '03201' || agenda.originalCode === '03202') {
-      for (const inv of active(state)) {
-        for (const enemy of state.enemies.filter(candidate => candidate.engagedSeat === inv.seat)) {
-          enemy.engagedSeat = null
-        }
-        const location = state.locations.find(candidate => candidate.id === inv.location)
-        const choices = (location?.connections || []).filter(id => state.locations.some(candidate => candidate.id === id))
-        if (!choices.length) continue
-        const answer = api.choose({
-          kind: 'location',
-          source: agenda.originalCode,
-          seat: inv.seat,
-          canSkip: true,
-          prompt: '拂晓：你可以移动到一个连接地点。',
-          options: [{ id: 'skip', label: '留在原地' }, ...choices.map(id => ({
-            id, label: state.locations.find(candidate => candidate.id === id)?.name || id,
-          }))],
-        })
-        if (answer !== 'skip') api.moveInvestigator(inv.seat, answer)
-      }
-      moveOrganistAway(state, api)
-      if (agenda.originalCode === '03202' && !slain(state, '03066')
-        && !state.enemies.some(enemy => enemy.code === '03066b')) api.spawn('03066b', 'montparnasse')
-    } else if (agenda.originalCode === '03203') {
-      if (count(state, 'doubt') >= count(state, 'conviction')) api.finish('r3')
-      else api.advanceAct()
-    }
+    registeredEntry(agenda.originalCode)?.agendaRule?.onReveal?.(state, agenda, api)
   },
   agendaWouldAdvance(state) {
     if (count(state, 'conviction') <= count(state, 'doubt')) return false

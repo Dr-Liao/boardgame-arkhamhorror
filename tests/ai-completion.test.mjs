@@ -16,6 +16,7 @@ import { buildUserPrompt, buildChatUserPrompt, buildChatSystemPrompt } from '../
 import { createAgent } from '../../../lib/agent/orchestrator.js'
 import { createServer } from '../../../lib/server.js'
 import { snapshotPath } from '../../../lib/sessions.js'
+import { SCENARIOS } from '../src/cards/scenarios-data.js'
 
 function settle(s) {
   for(let i=0;s.pendingChoice;i++) {
@@ -26,6 +27,20 @@ function settle(s) {
 }
 function fixture(count=1) { const s=createGameState({playerInvestigator:'01001',seed:'ai-tests'},Array.from({length:count},(_,seat)=>({seat})));settle(s);return s }
 const context=s=>JSON.parse(aiDecisionContext(s,decisionSeat(s)).split('\n')[2])
+function scene(id) {
+  const s = fixture(1)
+  s.scenario = structuredClone(SCENARIOS[id])
+  s.campaign.scenarioIndex = Object.keys(SCENARIOS).indexOf(id)
+  s.acts = structuredClone(s.scenario.acts)
+  s.agendas = structuredClone(s.scenario.agendas)
+  s.actIndex = 0
+  s.agendaIndex = 0
+  s.locations = Object.values(s.scenario.locations).map(l => ({ ...structuredClone(l), revealed: true,
+    clues: l.cluesPerInvestigator || 0, maxClues: l.cluesPerInvestigator || 0 }))
+  s.investigators[0].location = s.scenario.startLocation
+  s.currentSeat = 0
+  return s
+}
 
 test('AI sees clue deficit and round-end payment location instead of guessing from the barrier story', () => {
   const state = fixture(2)
@@ -72,6 +87,81 @@ test('AI sees clue deficit and round-end payment location instead of guessing fr
   state.actIndex = 0
   assert.equal(context(state).actObjective.timing, 'actionWindow')
   assert.ok(arkham.legalMoves(state).some(m => m.action === 'advanceAct'))
+})
+
+test('AI location briefing: revealed locations expose implemented entry and move cost; unrevealed ones stay map-only', () => {
+  const s = fixture(1)
+  s.locations = ['hallway', 'cellar', 'attic'].map(id => ({ ...structuredClone(s.scenario.locations[id]), id,
+    revealed: id !== 'attic', clues: id === 'cellar' ? 2 : 0, maxClues: 2 }))
+  s.investigators[0].location = 'hallway'
+  s.currentSeat = 0
+
+  let data = context(s)
+  const cellar = data.locations.find(loc => loc.id === 'cellar')
+  const attic = data.locations.find(loc => loc.id === 'attic')
+  assert.match(cellar.entry.effects, /进入后：受到 1 点伤害/)
+  assert.equal(cellar.investigate.available, false)
+  assert.equal(cellar.investigate.reason, '你不在该地点')
+  assert.equal(attic.entry, undefined, 'unrevealed locations keep only map-level fields')
+  assert.equal(attic.investigate, undefined)
+  const move = arkham.legalMoves(s).find(m => m.action === 'move' && m.locationId === 'cellar')
+  assert.match(move.label, /进入后：受到 1 点伤害/)
+  assert.equal(actionPreview(s, 0, move).entryNotice, '受到 1 点伤害')
+
+  s.locations.find(loc => loc.id === 'attic').revealed = true
+  data = context(s)
+  assert.match(data.locations.find(loc => loc.id === 'attic').entry.effects, /进入后：受到 1 点恐惧/)
+
+  // 进入受阻的原因只在还没到达该地点时给出；已经站在这里就不再重复。
+  s.locations.push({ ...structuredClone(s.scenario.locations.parlor), id: 'parlor', revealed: true,
+    clues: 0, connections: ['hallway'] })
+  assert.match(context(s).locations.find(loc => loc.id === 'parlor').entry.blocked, /灼热屏障/)
+  s.investigators[0].steamImmobileRound = s.round
+  assert.match(context(s).locations.find(loc => loc.id === 'cellar').entry.blocked, /蒸汽之爪/)
+  s.investigators[0].location = 'cellar'
+  assert.equal(context(s).locations.find(loc => loc.id === 'cellar').entry.blocked, undefined)
+})
+
+test('AI location briefing: ability and investigation report why the engine will not trigger them', () => {
+  const s = scene('theMidnightMasks')
+  s.investigators[0].location = 'northside'
+  s.investigators[0].resources = 0
+  let data = context(s)
+  let north = data.locations.find(loc => loc.id === 'northside')
+  assert.equal(north.ability.available, false)
+  assert.match(north.ability.reason, /需要 5 资源/)
+  assert.equal(north.investigate.available, true)
+
+  s.locations.find(loc => loc.id === 'northside').clues = 0
+  data = context(s)
+  north = data.locations.find(loc => loc.id === 'northside')
+  assert.equal(north.investigate.available, false)
+  assert.equal(north.investigate.reason, '这里没有线索可调查')
+
+  s.locationAbilityTeamUsed = { northside: true }
+  assert.match(context(s).locations.find(loc => loc.id === 'northside').ability.reason, /本场游戏队伍已使用/)
+
+  s.investigators[0].location = 'southside'
+  s.locations.find(loc => loc.id === 'southside').abilityUsedSeats = [0]
+  data = context(s)
+  assert.match(data.locations.find(loc => loc.id === 'southside').ability.reason, /本场游戏此能力已使用/)
+
+  assert.match(data.locations.find(loc => loc.id === 'graveyard').entry.effects, /失败时受到 2 点恐惧，或移动到河岸城/)
+
+  s.locations.find(loc => loc.id === 'graveyard').revealed = false
+  data = context(s)
+  const hidden = data.locations.find(loc => loc.id === 'graveyard')
+  assert.equal(hidden.entry, undefined)
+  assert.equal(hidden.ability, undefined)
+  assert.equal(hidden.investigate, undefined)
+})
+
+test('AI location briefing includes declared non-player location rules', () => {
+  const s = fixture(1)
+  s.locations.push({ id: 'snakePit', name: '万蛇据点', originalCode: '04072', revealed: true,
+    clues: 0, connections: [], locked: false })
+  const row = context(s).locations.find(loc => loc.id === 'snakePit')
+  assert.match(row.rules, /蛇族/)
 })
 
 function participationSession() {
@@ -129,6 +219,39 @@ test('AI chat and action prompts retain explicit participation and player identi
   const hubPrompt = buildChatUserPrompt(arkham, {...session, state: hub}, 1, '下一关怎么办？', 'table')
   assert.ok(hubPrompt.includes('【战役局外】'))
   assert.ok(hubPrompt.includes(`座位 0／${hub.investigators[0].name}：已永久死亡`))
+})
+
+test('选人阶段：AI 上下文给出队伍职责缺口，未选座位不展示占位调查员', () => {
+  const state = createGameState({ campaignHub: true, campaignId: 'nightOfTheZealot', seed: 'hub-team-summary', playerInvestigator: '01003' },
+    [{ seat: 0, role: 'human' }, { seat: 1, role: 'ai' }, { seat: 2, role: 'ai' }])
+  for (const move of [{ action: 'hubGoSetup' }, { action: 'hubSelectInvestigator', code: '01003' },
+    { action: 'hubAutoDeck' }, { action: 'hubDoneSeat' }]) applyMove(state, 0, move)
+
+  const data = context(state)
+  assert.equal(data.team[0].picked, true)
+  assert.equal(data.team[0].klass, 'rogue')
+  assert.deepEqual(data.team[1], { seat: 1, picked: false, note: '尚未选择调查员' })
+  assert.deepEqual(data.team[2], { seat: 2, picked: false, note: '尚未选择调查员' })
+  assert.equal(data.investigator.code, null, '未选调查员的座位不能把自己的占位当成已选')
+  assert.equal(data.teamSummary.classCounts.rogue, 1)
+  assert.equal(data.teamSummary.classCounts.guardian, 0)
+  assert.deepEqual(data.teamSummary.pendingSeats, [1, 2])
+  assert.ok(data.teamSummary.missingRoles.some(row => row.klass === 'seeker' && row.duty === '调查/线索'))
+  assert.match(data.teamSummary.advice, /优先补齐尚未覆盖的职责/)
+
+  const text = arkham.describeState(state, 1)
+  assert.ok(text.includes('你（座位 1）还没选调查员'))
+  assert.ok(!text.includes(`你扮演的调查员是「${state.investigators[1].name}」`))
+  assert.ok(text.includes('2：还没选调查员'))
+
+  // 队友选完守卫后再看：摘要要计入守卫，缺口移到调查/线索。
+  for (const move of [{ action: 'hubSelectInvestigator', code: '01001' },
+    { action: 'hubAutoDeck' }, { action: 'hubDoneSeat' }]) applyMove(state, 1, move)
+  const next = context(state)
+  assert.deepEqual(next.teamSummary.pendingSeats, [2])
+  assert.equal(next.teamSummary.classCounts.guardian, 1)
+  assert.equal(next.teamSummary.classCounts.rogue, 1)
+  assert.match(next.teamSummary.advice, /调查\/线索/)
 })
 
 test('AI chat sends defeat awareness and identity to the model while preserving post-defeat discussion', {timeout: 10000}, async () => {

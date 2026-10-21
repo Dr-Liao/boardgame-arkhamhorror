@@ -17,6 +17,13 @@ const factory = () => {
 
 export default {
   code: '04003',
+  investigator:   {
+    "extraEvadeAction": true,
+    "elderSign": {
+      "kind": "tfaPerExhaustedEnemy",
+      "clueOnSuccessBy": 2
+    }
+  },
   kind: 'investigator',
   elderSign: { id: '04003-eldersign', resolve: factory() },
   abilities: [],

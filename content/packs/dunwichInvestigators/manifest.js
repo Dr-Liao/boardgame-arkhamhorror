@@ -1,17 +1,6 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
 import { CONTENT_SCHEMA_VERSION } from '../../schema.js'
 
-export const investigatorAbilities = {
-  '02001': { elderSign: { kind: 'static', bonus: 1, attackDamageBonus: 1 },
-    reactions: [{ id: 'zoeyResource', when: 'enemyEngaged', effect: { type: 'gainResource', amount: 1 } }] },
-  '02002': { elderSign: { kind: 'rex', bonus: 2 },
-    reactions: [{ id: 'rexClue', when: 'investigateSuccess', successByAtLeast: 2, effect: { type: 'discoverClue', amount: 1 } }] },
-  '02003': { elderSign: { kind: 'resources' }, upkeepResources: 2 },
-  '02004': { elderSign: { kind: 'jim', bonus: 1 }, tokenModifiers: { skull: 0 } },
-  '02005': { elderSign: { kind: 'readySignature', bonus: 2, code: '02014' }, startsWith: '02014',
-    freeAction: { id: 'peteReady', label: '弃掉 1 张手牌，重整一张支援（每轮一次）',
-      cost: { discardHand: 1 }, effect: { type: 'readyAsset' }, limit: 'round' } },
-}
 export const signatureEffects = {
   // 02008 寻找真相已迁到能力层（kind: 'played'，见 src/cards/card-abilities.js）。
 }

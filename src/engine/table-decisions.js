@@ -1,7 +1,9 @@
 // table-decisions.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 台面决策层：谁在操作、能不能行动、行动代价与开局调度（mulligan / 起始调整）。
 // 读点：legalMoves（actingSeats / actionPreview）、validateHubMove、runMulligans。
+import { investigatorRule } from '../cards/card-rules.js'
 import { allowsCard, cardPoolContext } from '../deck/card-pool.js'
+import { locationEntryNotice } from './location-facts.js'
 
 export function createTableDecisions(deps) {
   const {
@@ -9,7 +11,6 @@ export function createTableDecisions(deps) {
     CLASS_NAMES,
     EFFECTS,
     HUB_SEAT_ACTIONS,
-    INVESTIGATOR_ABILITIES,
     PLAYABLE_INVESTIGATORS,
     actionCost,
     advanceAct,
@@ -195,7 +196,7 @@ export function createTableDecisions(deps) {
   }
 
   function canUseExtraEvade(state, inv) {
-    if (!INVESTIGATOR_ABILITIES[inv.code]?.extraEvadeAction) return false
+    if (!investigatorRule(inv.code)?.extraEvadeAction) return false
     if (investigatorTextBlanked(state, inv)) return false
     if (state.currentSeat !== inv.seat && state.phase === 'investigation') return false
     return inv.extraEvadeUsed !== state.turnSerial
@@ -246,9 +247,9 @@ export function createTableDecisions(deps) {
     const enemy = state.enemies.find(e => e.id === move.enemyId)
     // 进入地点的强制效果是移动的真实代价之一；只在已揭示时给出，未揭示的背面不进预览。
     const destination = move.action === 'move' ? state.locations.find(l => l.id === move.locationId) : null
-    const entryNotice = destination?.revealed ? state.scenario?.locationNotices?.[move.locationId] : null
+    const entryNotice = destination?.revealed ? locationEntryNotice(state, destination) : null
     const extraCost = move.action === 'parleyCultist' ? enemyDef(enemy?.code)?.parley?.cost || {}
-      : move.action === 'freeAction' ? INVESTIGATOR_ABILITIES[inv.code]?.freeAction?.cost || {}
+      : move.action === 'freeAction' ? investigatorRule(inv.code)?.freeAction?.cost || {}
       : move.action === 'locationAbility' ? state.locations.find(l => l.id === move.locationId)?.ability?.cost || {}
       : move.action === 'parley' ? { resources: enemy?.parleyCost || 0 }
       : move.action === 'payDebt' ? { resources: 1 } : {}
@@ -286,13 +287,13 @@ export function createTableDecisions(deps) {
     // 幕间可能禁止下一场冒险换起始手牌（例如没有汽油 / 没有粉笔）。
     const noMulligan = consumeMulliganBlock(state)
     for (const inv of state.investigators) {
-      if ((noMulligan || inv.cannotMulligan) && !INVESTIGATOR_ABILITIES[inv.code]?.openingHandSize) {
+      if ((noMulligan || inv.cannotMulligan) && !investigatorRule(inv.code)?.openingHandSize) {
         info(state, events, `${inv.name} 必须保留起始手牌（幕间效果禁止换牌）。`)
         delete inv.cannotMulligan
         continue
       }
       delete inv.cannotMulligan
-      if (INVESTIGATOR_ABILITIES[inv.code]?.openingHandSize) {
+      if (investigatorRule(inv.code)?.openingHandSize) {
         inv.beneath ||= []
         while (inv.beneath.length < 5) {
           const eligible = inv.hand.map((code, index) => ({ code, index })).filter(item =>
@@ -326,7 +327,7 @@ export function createTableDecisions(deps) {
       drawOpeningHand(state, inv)
       inv.deck = shuffle([...inv.deck, ...held], () => randomValue(state))
       info(state, events, `${inv.name} 完成起始换牌（更换 ${held.length} 张）。`)
-      if (INVESTIGATOR_ABILITIES[inv.code]?.deckbuildingRoles && !inv.role) {
+      if (investigatorRule(inv.code)?.deckbuildingRoles && !inv.role) {
         chooseLolaRole(state, inv, 'lolaOpeningRole', '选择罗拉·海斯的初始角色。', true)
         info(state, events, `${inv.name} 选择了${CLASS_NAMES[inv.role] || inv.role}角色。`)
       }

@@ -26,21 +26,21 @@ assert.equal(new Set(expectedCodes).size, 112)
 
 const contracts = {
   '02016': ['abilities.0.effect', { type: 'fight', combatBonus: 1, noFriendlyFire: true }],
-  '02017': ['event', { type: 'engageEnemies' }],
-  '02018': ['event', { type: 'teamwork' }],
-  '02019': ['event', { type: 'engageEnemies', drawPerEnemy: 1 }],
+  '02017': ['event', { type: 'resolve' }],
+  '02018': ['event', { type: 'resolve' }],
+  '02019': ['event', { type: 'resolve' }],
   '02020': ['passive.handSizeBonus', 2, 'reactions.0.effect', { type: 'draw', amount: 2 }],
   '02021': ['abilities.0.effect.type', 'researchSolution'],
   '02022': ['event', { type: 'targetedEffect', target: 'location', effect: { type: 'moveTo' } }],
-  '02023': ['event.type', 'investigateConnectingClue'],
-  '02024': ['uses', 4, 'abilities.0.effect.type', 'liquidCourage'],
+  '02023': ['event.type', 'resolve'],
+  '02024': ['uses', 4, 'abilities.0.effect.type', 'resolve'],
   '02025': ['reaction.when', 'enemySpawn', 'event.type', 'moveTo'],
   '02026': ['skill', { doubleDifficultyAndRewards: true, maxPerTest: 1 }],
   '02027': ['passive.stats.combat', 1, 'forcedUpkeepPayOrDiscard', 1],
   '02028': ['uses', 3, 'abilities.0.effect', { type: 'investigate', skill: 'willpower', clueBonus: 1, symbolEndsTurn: true }],
   '02029': ['reactions.0.when', 'symbolRevealed', 'reactions.0.effect', { type: 'addCurrentTest', amount: 1 }],
   '02030': ['uses', 3, 'abilities.0.effect.effect', { type: 'heal', amount: 1, what: 'horror' }],
-  '02031': ['event.type', 'bindMonster'],
+  '02031': ['event.type', 'resolve'],
   '02032': ['abilities.0.effect', { type: 'fight', fireAxe: true }],
   '02033': ['passive.stats.agility', 1, 'healSelfHorrorAfterTurn', 1],
   '02034': ['event', { type: 'evade', moveEnemyOnSuccess: true }],
@@ -49,26 +49,26 @@ const contracts = {
   '02105': ['event', { type: 'healDamageAtLocation', amount: 2 }],  '02106': ['passive', { stats: { willpower: 1 }, assignHarmAtLocation: true }, 'defeatedDamage', 2],
   '02107': ['event', { type: 'fight', skill: 'intellect', damagePerClue: true, maxDamageBonus: 3 }],
   '02108': ['abilities.0.effect', { type: 'moveTo', requiresNoEnemies: true }],
-  '02109': ['event', { type: 'doubleUses', usesTypes: ['ammo', 'supplies'], target: 'location' }],
+  '02109': ['event', { type: 'resolve' }],
   // Phase 5（5b-9）起「适应性」用条目级 adaptableSwaps 声明；Phase 6 把契约对齐到新形状。
   '02110': ['adaptableSwaps', 2, 'passive.permanent', true],
-  '02111': ['event.type', 'drawEncounterAll', 'addToVictory', true],
+  '02111': ['event.type', 'resolve', 'addToVictory', true],
   '02112': ['uses', 5, 'abilities.0.effect', { type: 'fight', skill: 'willpower', combatBonus: 1, skullDamageBonus: 2 }],
-  '02113': ['reaction', { when: 'attackFail', failedByAtMost: 2 }, 'event.type', 'redirectFailedAttack'],
+  '02113': ['reaction', { when: 'attackFail', failedByAtMost: 2 }, 'event.type', 'resolve'],
   '02114': ['abilities.1.cost.exileSelf', true, 'abilities.1.effect', { type: 'evade', bonus: 3, evadeOthersOnSuccess: true }],
   '02115': ['event.type', 'flare', 'exileAfterPlay', true],
   '02116': ['uses', 3, 'abilities.0.effect.effects', [{ type: 'takeDamage', amount: 1 }, { type: 'heal', amount: 1, what: 'horror' }]],
   '02117': ['uses', 3, 'abilities.0.effect.effects', [{ type: 'takeHorror', amount: 1 }, { type: 'heal', amount: 1, what: 'damage' }]],
   '02147': ['passive.extraSlots.handWeapon', 1],
-  '02148': ['event.type', 'standTogether'],
+  '02148': ['event.type', 'resolve'],
   '02149': ['reactions.0', { when: 'assetEnteredPlay', assetCode: '02149', effect: { type: 'discoverClue', amount: 1 } }],
   '02150': ['skill', { onSuccess: { clueBonus: 1 }, successBy: { threshold: 2, clueBonus: 1 } }],
-  '02151': ['event.type', 'resign', 'requiresResign', true],
+  '02151': ['event.type', 'resolve'],
   '02152': ['fast', true, 'abilities.0.effect', { type: 'fight', combatBonus: 2, damageBonus: 1, successBy: 2 }],
-  '02153': ['reaction.when', 'enemyAttack', 'event.type', 'hypnoticGaze'],
+  '02153': ['reaction.when', 'enemyAttack', 'event.type', 'resolve'],
   '02154': ['uses', 4, 'abilities.0.effect', { type: 'fight', skill: 'willpower', combatBonus: 2, damageBonus: 1, onChaosSymbolHorror: 1 }],
   '02155': ['passive.investigateBonusIfNoClues', 2],
-  '02156': ['event.type', 'attachLure'],
+  '02156': ['event.type', 'resolve'],
   '02157': ['passive.extraSlots.accessory', 1],
   '02158': ['passive.extraSlots.ally', 1],
   '02184': ['event', { type: 'searchTop', amount: 9, trait: 'Weapon', choose: 1 }],
@@ -82,10 +82,10 @@ const contracts = {
   '02192': ['skill', { selfTestOnly: true, requireDifficultyAboveBase: 2 }],
   '02193': ['freeTriggers', [{ skill: 'combat', cost: { resources: 1 }, bonus: 1 }, { skill: 'agility', cost: { resources: 1 }, bonus: 1 }]],
   '02194': ['event.effects', [{ type: 'gainResource', amount: 3 }, { type: 'draw', amount: 1 }]],
-  '02225': ['reaction.when', 'defeatEnemy', 'event.type', 'healHorrorAtLocationByEnemy'],
+  '02225': ['reaction.when', 'defeatEnemy', 'event.type', 'resolve'],
   '02226': ['uses', 3, 'abilities.0.effect', { type: 'fight', combatBonus: 3, damageBonus: 2, requireNotEngagedTarget: true }],
   '02227': ['skill.requireClueAtLocation', true],
-  '02228': ['event.type', 'exposeWeakness'],
+  '02228': ['event.type', 'resolve'],
   '02229': ['skill.successBy', { threshold: 2, gainAction: 1 }],
   '02230': ['reactions.0', { when: 'chaosTokenRevealed', cost: { resources: 2 }, effect: { type: 'redrawChaos' } }],
   '02231': ['skill', { selfTestOnly: true, returnOnSuccessBy: 2 }],
@@ -98,12 +98,12 @@ const contracts = {
   '02262': ['uses', 4, 'abilities.0.effect.effect', { type: 'heal', amount: 2, what: 'damage' }],
   '02263': ['uses', 3, 'abilities.0.effect', { type: 'fight', baseValue: 6, damageBonus: 2 }],
   '02264': ['uses', 4, 'abilities.0.effect', { type: 'evade', baseValue: 6 }],
-  '02265': ['abilities.0', { cost: { action: false, resources: 1 }, effect: { type: 'playItemFromHand' } }],
+  '02265': ['abilities.0', { cost: { action: false, resources: 1 }, effect: { type: 'resolve' } }],
   '02266': ['event', { type: 'gainAction', amount: 3 }],
-  '02267': ['event.type', 'removeDoomControlled'],
+  '02267': ['event.type', 'resolve'],
   '02268': ['skill', { onSuccess: { healHorror: 1 }, successBy: { threshold: 2, healHorror: 1 } }],
   '02269': ['reactions.0', { when: 'symbolRevealed', cost: { exhaust: true }, effect: { type: 'chooseOne' } }],
-  '02270': ['event.type', 'temporaryAllyFromDiscard'],
+  '02270': ['event.type', 'resolve'],
   '02271': ['skill.selfTestOnly', true],
   '02272': ['passive.parleyDifficultyModifier', -2],
   '02273': ['playCondition.0', '当前地点有敌人', 'event.effects', [{ type: 'heal', amount: 3, what: 'horror' }, { type: 'draw', amount: 1 }]],
@@ -111,7 +111,7 @@ const contracts = {
   '02300': ['event', { type: 'fight', defeatNonEliteOnSuccess: true }],
   '02301': ['uses', 3, 'abilities.0.effect', { type: 'fight', combatBonus: 5, damageBonus: 2 }],
   '02302': ['reactions.0', { when: 'encounterDrawn', cost: { exhaust: true, clues: 1, returnClue: true }, effect: { type: 'redrawEncounter' } }],
-  '02303': ['event.type', 'decipheredReality'],
+  '02303': ['event.type', 'resolve'],
   '02304': ['uses', 4, 'abilities.0.effect', { type: 'fight', damageBonus: 2, additionalActionCombatBonus: 2 }],
   '02305': ['phaseControl', true],
   '02306': ['uses', 4, 'abilities.0.effect', { type: 'fight', skill: 'willpower', combatBonus: 3, damageBonus: 2, onChaosSymbolHorror: 2 }],
@@ -160,7 +160,15 @@ function behaviorOf(code) {
   const playCondition = entry?.playCondition?.map(item => item.message || '条件')
   const fromDescriptors = (entry?.abilities || [])
     .filter(descriptor => descriptor.kind === 'action' || descriptor.kind === 'free')
-    .map(descriptor => ({ label: descriptor.label, cost: descriptor.cost, effect: descriptor.effect ?? undefined }))
+    .map(descriptor => ({
+      label: descriptor.label,
+      cost: descriptor.cost,
+      // 用 resolve 实现的描述子没有 effect 数据体；契约层把它折成 { type: 'resolve' }。
+      effect: descriptor.effect ?? (typeof descriptor.resolve === 'function' ? { type: 'resolve' } : undefined),
+    }))
+  // 用 resolve 实现的 played 事件同样没有 effect 数据体：契约只看「声明了事件行为」。
+  const playedResolve = (entry?.abilities || []).find(descriptor => descriptor.kind === 'played' && typeof descriptor.resolve === 'function')
+  const event = played || (playedResolve ? { type: 'resolve' } : null)
   // Phase 5（5b-6）：从旧式 reactions 搬来的反应描述子折叠回同一份形状（criteria 是旧条件字段）。
   const fromReactions = (entry?.abilities || [])
     .filter(descriptor => descriptor.kind === 'reaction')
@@ -180,7 +188,7 @@ function behaviorOf(code) {
           : ['phase', 'perPhase'].includes(limit) ? { limit: 'phase' }
             : ['turn', 'perTurn'].includes(limit) ? { limit: 'turn' } : {}),
         cost: descriptor.cost,
-        effect: descriptor.effect ?? undefined,
+        effect: descriptor.effect ?? (typeof descriptor.resolve === 'function' ? { type: 'resolve' } : undefined),
       }
     })
   const stats = {}
@@ -188,14 +196,14 @@ function behaviorOf(code) {
     if (typeof modifier.target === 'string' && modifier.target.startsWith('skill:') && !modifier.condition
       && typeof modifier.amount === 'number') stats[modifier.target.slice('skill:'.length)] = modifier.amount
   }
-  if (!legacy && !played && !commit && !weakness && !entry?.passive
+  if (!legacy && !event && !commit && !weakness && !entry?.passive
     && !entry?.healSelfHorrorAfterTurn && !entry?.forcedUpkeepPayOrDiscard && !entry?.defeatedDamage && !entry?.freeTriggers?.length && !entry?.fast
     && !entry?.redirectAttackToAsset && !entry?.forcedMythosEndDiscard && !entry?.skipOrRepeatPhase
     && !fromDescriptors.length && !fromReactions.length && !Object.keys(stats).length
     && !playCondition?.length) return null
   const merged = {
     ...(legacy || {}),
-    ...(played ? { event: played } : {}),
+    ...(event ? { event } : {}),
     ...(commit ? { skill: commit } : {}),
     ...(weakness ? { weakness } : {}),
     ...(Object.keys(stats).length ? { passive: { ...(legacy?.passive || {}), stats } } : {}),

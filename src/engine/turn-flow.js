@@ -1,3 +1,4 @@
+import { investigatorRule } from '../cards/card-rules.js'
 // turn-flow.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 调查员回合内的推进与代价：advanceInvestigator（行动/结束回合的推进）、
 // 打出费用与折扣、旧印结算、反应规格与条件评估、以及「支付/选择」的共用小函数。
@@ -6,7 +7,6 @@ export function createTurnFlow(deps) {
     campaignState,
     ALL_CARDS,
     EFFECTS,
-    INVESTIGATOR_ABILITIES,
     LITA_CHANDLER_CODE,
     abilityApi,
     abilityOfMove,
@@ -48,7 +48,6 @@ export function createTurnFlow(deps) {
     newEnemyId,
     nextSeat,
     playCostDelta,
-    readyUmordhoth,
     registeredEntry,
     relicDiscountLocation,
     removeOne,
@@ -296,7 +295,7 @@ export function createTurnFlow(deps) {
     if (inv && !inv.defeated && !inv.resigned) resolveCallOfTheUnknown(state, inv, events)
     if (inv && state.status !== 'playing') return
     if (inv && !inv.defeated && !inv.resigned && inv.actionsLeft <= 0
-        && !inv.tomeActionUsed && !investigatorTextBlanked(state, inv) && INVESTIGATOR_ABILITIES[inv.code]?.extraTomeAction
+        && !inv.tomeActionUsed && !investigatorTextBlanked(state, inv) && investigatorRule(inv.code)?.extraTomeAction
         && legalMoves(state).some(move => tomeActionEligible(state, inv, move))) return
     if (inv) {
       runThreatEndTurn(state, inv, events)
@@ -344,12 +343,9 @@ export function createTurnFlow(deps) {
     if (next != null && next !== seat) {
       state.currentSeat = next
       state.phase = 'investigation'
-      // 乌默尔多斯：每位调查员回合结束时重整。
-      readyUmordhoth(state, events)
       turnBeginningWindow(state, events)
       return
     }
-    readyUmordhoth(state, events)
     if (useGoldPocketWatch(state, 'end', 'investigation', events)) {
       beginInvestigationPhase(state, events, true)
       return
@@ -371,7 +367,6 @@ export function createTurnFlow(deps) {
   }
 
   function playCost(state, inv, def) {
-    const discount = inv.location === 'easttown' && def.type === 'asset' && (def.traits || []).some(trait => trait.toLowerCase() === 'ally') ? 2 : 0
     const factions = def.factions || [def.klass, def.klass2, def.klass3].filter(Boolean)
     const lola = inv.lolaDiscount?.round === state.round && inv.lolaDiscount?.turnSeat === state.currentSeat
       && factions.includes(inv.lolaDiscount.role) ? inv.lolaDiscount.amount : 0
@@ -381,6 +376,10 @@ export function createTurnFlow(deps) {
     const threatIncrease = inv.threat.reduce((sum, threat) =>
       sum + (getThreatEffect(threat)?.playCostIncrease || 0), 0)
     const loc = state.locations.find(location => location.id === inv.location)
+    const playRule = registeredEntry(loc?.originalCode || loc?.code)?.locationRule?.playDiscount
+    const discount = playRule && def.type === playRule.cardType
+      && (def.traits || []).some(trait => trait.toLowerCase() === String(playRule.trait).toLowerCase())
+      ? playRule.amount : 0
     const locationIncrease = loc?.playCostIncrease || 0
     // 04142 珍品店：位于此处时打出每个 [[遗物]] 支援的费用 -2。
     const relicDiscount = loc && relicDiscountLocation(loc.originalCode || loc.code)
@@ -423,7 +422,7 @@ export function createTurnFlow(deps) {
   }
 
   function tomeActionEligible(state, inv, move) {
-    if (!INVESTIGATOR_ABILITIES[inv.code]?.extraTomeAction || investigatorTextBlanked(state, inv) || inv.tomeActionUsed
+    if (!investigatorRule(inv.code)?.extraTomeAction || investigatorTextBlanked(state, inv) || inv.tomeActionUsed
         || state.phase !== 'investigation' || state.currentSeat !== inv.seat) return false
     let source
     if (move.action === 'ability') {
@@ -441,7 +440,7 @@ export function createTurnFlow(deps) {
 
   function actionCost(state, inv, move, applyTome = true) {
     if (['endTurn', 'advanceAct', 'shortcutMove', 'extraEvade'].includes(move.action)) return 0
-    if (move.action === 'freeAction') return INVESTIGATOR_ABILITIES[inv.code]?.freeAction?.actionCost || 0
+    if (move.action === 'freeAction') return investigatorRule(inv.code)?.freeAction?.actionCost || 0
     let cost = 1
     const investigateLoc = state.locations.find(loc => loc.id === (move.locationId || inv.location))
     // Phase 5（5a-11）：某些地点调查要多花行动，映射在卡号规则数据里。

@@ -1,12 +1,13 @@
 import nodeTest from 'node:test'
 import assert from 'node:assert/strict'
 import {
-  AGENDA_HAND_SIZE_PENALTY, BLANKS_TRAITS, ENEMY_WEAKNESS_EXTRA, EXPLICIT_REACTION_PROMPT,
-  agendaHandSizePenalty, blanksTraits, enemyWeaknessExtra, hasExplicitReactionPrompt,
-  isPoisonThreat, isTextBlankEnemy, poisonThreatCode,
+  actPlacesLocationForEmptySpawn, agendaHandSizePenalty, blanksTraits, counterTreacheryCode,
+  enemyRuleFlags, enemyWeaknessExtra, hasExplicitReactionPrompt, investigateExtraActionsFor,
+  isPoisonThreat, isTextBlankEnemy, locationCounterTreacheries, pallidMaskCode, poisonThreatCode,
+  relocateDestinationCode, relicDiscountLocation, weaknessUpgradeCode,
 } from '../src/cards/card-rules.js'
 
-// Phase 5（5a）：原本写在 engine.js 里的卡号级规则数据搬到内容层后，读点必须仍然可用。
+// Phase 5（5a）/ Phase 3（第 3 批）：卡号级规则的读点必须仍然可用，但数据已经搬进卡条目。
 nodeTest('5a 卡号级规则数据：读点与数据形状', () => {
   assert.equal(enemyWeaknessExtra('01101').parleyCost, 4)
   assert.equal(enemyWeaknessExtra('01102').forcedDoom, true)
@@ -25,11 +26,27 @@ nodeTest('5a 卡号级规则数据：读点与数据形状', () => {
 
   assert.equal(agendaHandSizePenalty('02043'), 3)
   assert.equal(agendaHandSizePenalty('03044'), 0)
-})
 
-nodeTest('5a 卡号级规则数据：表是冻结的，避免运行期被改', () => {
-  assert.equal(Object.isFrozen(ENEMY_WEAKNESS_EXTRA), true)
-  assert.equal(Object.isFrozen(BLANKS_TRAITS), true)
-  assert.equal(Object.isFrozen(EXPLICIT_REACTION_PROMPT), true)
-  assert.equal(Object.isFrozen(AGENDA_HAND_SIZE_PENALTY), true)
+  assert.equal(investigateExtraActionsFor('02050'), 1)
+  assert.equal(investigateExtraActionsFor('01001'), 0)
+
+  assert.equal(enemyRuleFlags('02255').damageOnlyFrom, '02254')
+  assert.equal(enemyRuleFlags('02255').healthPerPlayerBonus, 1)
+  assert.equal(enemyRuleFlags('01172').doubleNegative, true)
+  assert.equal(enemyRuleFlags('huntingNightgaunt').doubleNegative, true)
+
+  assert.deepEqual(locationCounterTreacheries({ arcaneBarriers: 2, sordidAndSilent: 1 }), ['02102', '02102', '02089'])
+  assert.equal(counterTreacheryCode('arcaneBarriers'), '02102')
+  assert.equal(counterTreacheryCode('sordidAndSilent'), '02089')
+  assert.equal(counterTreacheryCode('nonexistent'), null)
+
+  assert.equal(weaknessUpgradeCode('priceOfFailure'), '04038')
+  assert.equal(weaknessUpgradeCode('impendingDoom'), '04041')
+  assert.equal(weaknessUpgradeCode('cursedFate'), '04042')
+  assert.equal(weaknessUpgradeCode('nonexistent'), null)
+
+  assert.equal(actPlacesLocationForEmptySpawn('04318'), true)
+  assert.equal(pallidMaskCode(), '03059')
+  assert.equal(relicDiscountLocation('04142'), true)
+  assert.equal(relocateDestinationCode(), '02320')
 })

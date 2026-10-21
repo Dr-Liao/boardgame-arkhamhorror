@@ -5,11 +5,12 @@
 // 两边必须共用同一批判定函数，所以放在同一个模块里最安全。
 // 依赖注入同前几个域；依赖清单由「engine 顶层声明 ∪ import 绑定 − 函数内局部」生成（先剥注释），
 // 注入块用唯一标记定位，避免和 createCombat / createActions 的块混淆。
+import { investigatorRule } from '../cards/card-rules.js'
 import { scriptCardOwner } from './script-cards.js'
+import { locationEntryNotice } from './location-facts.js'
 
 export function createMoves(deps) {
   const {
-    INVESTIGATOR_ABILITIES,
     LITA_CHANDLER_CODE,
     META,
     SKILL_NAMES,
@@ -239,7 +240,7 @@ export function createMoves(deps) {
     moves.push(ownedMove(state, { action: 'explore', label: `🧭 探索（剩余 ${state.explorationDeck.length} 张）` }))
   }
 
-  const skids = INVESTIGATOR_ABILITIES[inv.code]
+  const skids = investigatorRule(inv.code)
   if (skids && skids.freeAction && !investigatorTextBlanked(state, inv) && inv.resources >= (skids.freeAction.cost.resources || 0)
     && (skids.freeAction.repeatable || !inv.usedReactions[skids.freeAction.id + ':' + state.round])) {
     moves.push({ action: 'freeAction', label: skids.freeAction.label || '⚡ 花 2 资源获得 1 额外行动' })
@@ -250,7 +251,7 @@ export function createMoves(deps) {
     // P0：内容层可以声明「这次移动现在不能做」的理由（如《苍白面具》线索不足）。
     if (!target || investigatorEntryError(state, nb) || scenarioBehavior(state).moveError?.(state, inv, target, nb)) continue
     // 进入地点的强制效果由地点数据声明；只在已揭示时给出，避免泄露未翻开的背面。
-    const entryNotice = target.revealed ? state.scenario?.locationNotices?.[nb] : null
+    const entryNotice = target.revealed ? locationEntryNotice(state, target) : null
     moves.push({ action: 'move', locationId: nb, label: `🚶 移动到「${locLabel(state, nb)}」（线索 ${target.clues}${target.locked ? '，上锁' : ''}${entryNotice ? `；进入后：${entryNotice}` : ''}）` })
   }
 
@@ -466,7 +467,7 @@ export function createMoves(deps) {
     case 'draw': return drawBlocked(state, inv) ? '「残酷拷问」：你不能进行抽取行动' : null
     case 'resource': return scenarioBehavior(state).canGainResources?.(state, inv) === false ? '此地点不能获得资源' : null
     case 'freeAction': {
-      const skids = INVESTIGATOR_ABILITIES[inv.code]
+      const skids = investigatorRule(inv.code)
       if (!skids || !skids.freeAction || investigatorTextBlanked(state, inv)) return '你没有该异能'
       if (cannotTriggerFreeAbility(state, inv)) return '隐私牌禁止你触发免费能力'
       if (inv.resources < (skids.freeAction.cost.resources || 0)) return '资源不足'
@@ -519,12 +520,8 @@ export function createMoves(deps) {
       return null
     }
     case 'sacrificeLita': {
-      if (!scenarioBehavior(state).sacrificeLita) return '当前剧本不能献祭丽塔'
-      const boss = state.enemies.find(e => e.code === 'umordhoth')
-      if (!boss) return '乌默尔多斯尚未降临'
-      if (boss.location !== inv.location) return '乌默尔多斯不在你所在的地点'
-      if (!inv.assets.some(asset => asset.code === LITA_CHANDLER_CODE)) return '你没有控制丽塔·钱德勒'
-      return null
+      const error = scenarioBehavior(state).scenarioActionError?.(state, inv, 'sacrificeLita')
+      return error === undefined ? '当前剧本不能献祭丽塔' : error
     }
     case 'breakDoor': {
       const loc = state.locations.find((l) => l.id === inv.location)

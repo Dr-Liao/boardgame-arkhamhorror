@@ -243,19 +243,24 @@ function hunterStep(state, enemy) {
 function runLocationRoundEnd(state, events) {
   for (const loc of state.locations) {
     if (loc.lure?.round === state.round) { state.investigators[loc.lure.seat]?.discard.push(loc.lure.code); delete loc.lure }
-    if (loc.id === 'ritualSite' && loc.clues < state.numInvestigators * 2) {
-      loc.clues = state.numInvestigators * 2
-      info(state, events, `🔍 「仪式地」的线索补至 ${loc.clues}。`)
+    // 地点自己的「回合结束」规则（01156 仪式地：线索补至每人 2 个）。
+    const roundEnd = registeredEntry(loc.originalCode || loc.code)?.locationRule?.onRoundEnd
+    if (roundEnd?.cluesPerInvestigator) {
+      const target = state.numInvestigators * roundEnd.cluesPerInvestigator
+      if (loc.clues < target) {
+        loc.clues = target
+        info(state, events, `🔍 「${loc.name}」的线索补至 ${loc.clues}。`)
+      }
     }
   }
 }
 
 function runEnemyRoundEnd(state, events) {
-  for (const enemy of state.enemies) {
-    if (enemy.code === 'relentlessDarkYoung' && !enemyTextBlanked(state, enemy)) {
-      enemy.damageTaken = Math.max(0, enemy.damageTaken - 2)
-      info(state, events, `💉 「${enemy.name}」治愈 2 点伤害。`)
-    }
+  // 敌人「回合结束时」的强制效果由各自的 forced 描述子结算（如坚韧的黑山羊幼崽治愈 2 点）。
+  const seat = leadDecisionSeat(state)
+  if (seat == null) return
+  for (const enemy of state.enemies.slice()) {
+    triggerReaction(state, seat, 'enemyRoundEnd', events, { enemy, seat })
   }
 }
 

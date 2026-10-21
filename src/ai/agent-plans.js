@@ -46,6 +46,6 @@ export const agentPlanning = {
   commit: commitAgentPlan,
   view: plansForObserver,
   prompt: planPrompt,
-  instruction: '【协作规划】在输出 JSON 中另附 plan 对象：{role:"investigate|fight|support|flex",objective:"战役目标",intent:"本轮下一步意图",upgrade:"构筑或升级方向",reason:"本次选择的简短依据"}。每项简短，不超过160字。结合队友职责、成本和局势更新；计划不能替代 move，也不能改变规则。',
+  instruction: '【协作规划】在输出 JSON 中另附 plan 对象：{role:"investigate|fight|support|flex",objective:"战役目标",intent:"本轮下一步意图",upgrade:"构筑或升级方向",reason:"本次选择的简短依据"}。每项简短，不超过160字。结合队友职责、成本和局势更新；选择调查员时先看 teamSummary，优先补齐队伍缺少的职责，避免与队友重复同一职业定位。计划不能替代 move，也不能改变规则。',
   outputFormat: '{"move": <行动>, "speech": "<台词>", "plan":{"role":"flex","objective":"战役目标","intent":"下一步","upgrade":"升级方向","reason":"选择依据"}}',
 }

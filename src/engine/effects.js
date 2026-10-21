@@ -31,12 +31,11 @@ export const EFFECT_PRIMITIVES = [
   'returnAssetToHand', 'shuffleIntoEncounter', 'moveHorrorToInvestigator',
   'searchDiscard', 'autoEvadeNonElite', 'attachBarricade', 'drawEncounter',
   'addTestValue', 'disengageAll', 'flipTokenSign', 'scry', 'gainClues', 'targetedTest', 'aquinnahRedirect',
-  'readyAsset', 'healDamageAtLocation', 'researchSolution', 'drawPerClue', 'healHorrorNearby', 'dukeInvestigate',
-  'engageEnemies', 'teamwork', 'investigateConnectingClue', 'liquidCourage', 'bindMonster',
-  'doubleUses', 'drawEncounterAll', 'redirectFailedAttack', 'flare', 'standTogether', 'resign',
-  'hypnoticGaze', 'attachLure', 'healHorrorAtLocationByEnemy', 'exposeWeakness', 'redrawChaos',
-  'lookTopDeckAndDoom', 'cancelHarmGainResources', 'playItemFromHand', 'removeDoomControlled',
-  'temporaryAllyFromDiscard', 'decipheredReality', 'redrawEncounter', 'redGlovedManSkills', 'returnCommittedSkill',
+  'readyAsset', 'healDamageAtLocation', 'researchSolution', 'healHorrorNearby', 'dukeInvestigate',
+  'flare',
+  'redrawChaos',
+  'lookTopDeckAndDoom', 'cancelHarmGainResources',
+  'redrawEncounter', 'redGlovedManSkills', 'returnCommittedSkill',
   'carcosaInvestigator', 'carcosaPlayer', 'cancelHarm', 'addCurrentTest',
   // Phase 1：离场/效果实体相关原语
   'mill',
@@ -64,10 +63,6 @@ export function resolveEffect(state, seat, effect, rt) {
   if (!inv) return
 
   switch (effect.type) {
-    case 'drawPerClue': {
-      for (const line of rt.drawCards(inv, Math.min(effect.maximum ?? 5, inv.clues))) rt.info(line)
-      break
-    }
     case 'healHorrorNearby': {
       rt.healHorrorNearby(seat, effect.amount || 1)
       break
@@ -76,12 +71,9 @@ export function resolveEffect(state, seat, effect, rt) {
       rt.dukeInvestigate(seat)
       break
     }
-    case 'engageEnemies': case 'teamwork': case 'investigateConnectingClue': case 'liquidCourage':
-    case 'bindMonster': case 'doubleUses': case 'drawEncounterAll': case 'redirectFailedAttack':
-    case 'flare': case 'standTogether': case 'resign': case 'hypnoticGaze': case 'attachLure':
-    case 'healHorrorAtLocationByEnemy': case 'exposeWeakness': case 'redrawChaos':
-    case 'lookTopDeckAndDoom': case 'cancelHarmGainResources': case 'playItemFromHand':
-    case 'removeDoomControlled': case 'temporaryAllyFromDiscard': case 'decipheredReality':
+    case 'flare':
+    case 'redrawChaos':
+    case 'lookTopDeckAndDoom': case 'cancelHarmGainResources':
     case 'redrawEncounter': case 'redGlovedManSkills': case 'returnCommittedSkill': {
       rt.playerCardEffect(seat, effect)
       break
@@ -173,13 +165,14 @@ export function resolveEffect(state, seat, effect, rt) {
     }
     case 'takeDamage': {
       const n = effect.amount || 1
-      rt.info(`${inv.name} 受到 ${n} 点伤害。`)
+      // silent：调用方已经写过更具体的日志（例如地点进入失败的选项），不要再打一遍通用行。
+      if (!effect.silent) rt.info(`${inv.name} 受到 ${n} 点伤害。`)
       rt.applyDamage(seat, n, !!effect.direct)
       break
     }
     case 'takeHorror': {
       const n = effect.amount || 1
-      rt.info(`${inv.name} 受到 ${n} 点恐惧。`)
+      if (!effect.silent) rt.info(`${inv.name} 受到 ${n} 点恐惧。`)
       rt.applyHorror(seat, n, !!effect.direct)
       break
     }

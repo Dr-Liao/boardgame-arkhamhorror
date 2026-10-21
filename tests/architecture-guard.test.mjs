@@ -19,6 +19,8 @@ import { buildCoverage, collect } from '../tools/audit-abilities.mjs'
 import { collectDeadPrimitives } from '../tools/audit-dead-primitives.mjs'
 // Phase 3（D1）：非玩家卡条的修正目标在实体读点上校验（与 C1 的「声明即接线」同一口径）。
 import { describeEntityRules } from '../src/engine/modifiers.js'
+// 外部硬编码守卫（REPORT.md 第 0 批）：引擎实体 id / 卡牌层卡号 / 未接线原语。
+import { collectHardcodes, compareWhitelist } from '../tools/hardcode-audit.mjs'
 
 const root = new URL('../', import.meta.url)
 const read = path => readFileSync(new URL(path, root), 'utf8')
@@ -100,8 +102,7 @@ test('覆盖度产物与当前实现一致', () => {
 })
 
 // Phase 3（D1）：非玩家卡通道的守卫。
-test('非玩家卡描述子只能声明实体修正/规则目标', () => {
-  assert.ok(data.phase3.nonPlayerCards > 0, '非玩家卡通道至少要有敌人/地点条目')
+test('非玩家卡描述子只能声明实体修正/规则目标', () => {  assert.ok(data.phase3.nonPlayerCards > 0, '非玩家卡通道至少要有敌人/地点条目')
   const fake = { locations: [], enemies: [], acts: [], agendas: [], victoryDisplay: [], investigators: [] }
   for (const code of data.phase3.nonPlayerCodes) {
     // 读一遍会规范化修正目标：未知目标（例如把 skill:combat 写到敌人条目上）在这里就暴露。
@@ -154,4 +155,76 @@ test('引擎里没有已无数据引用的旧原语分支', () => {
   assert.deepEqual(result.dead.map(row => row.name), [],
     '这些旧原语分支已经没有数据引用，请删除（tools/audit-dead-primitives.mjs --check 可复算）：\n  '
     + result.dead.map(row => `${row.name} (L${row.lines.join(', L')})`).join('\n  '))
+})
+
+// ---------------------------------------------------------------------------
+// 外部硬编码守卫（REPORT.md §9 第 0 批）
+//
+// 口径：卡号只允许出现在 entries/<code>.js 与 cards-data.js；引擎不得出现内容实体 id；
+// 效果原语必须在数据里被引用。当前债务冻结在 audit/hardcode-whitelist.json，只减不增。
+// 修复后运行 `node tools/hardcode-audit.mjs --write` 让基线下降——这是迁移成果的证据。
+// ---------------------------------------------------------------------------
+const hardcode = collectHardcodes()
+const hardcodeWhitelist = JSON.parse(read('audit/hardcode-whitelist.json'))
+const hardcodeDiff = compareWhitelist(hardcode, hardcodeWhitelist)
+
+function assertNoHardcodeGrowth(label) {
+  assert.deepEqual(hardcodeDiff.growth, [],
+    `${label}：检测到新增外部硬编码。\n`
+    + hardcodeDiff.growth.map(line => `  + ${line}`).join('\n')
+    + '\n卡牌行为请写 src/cards/entries/<code>.js；非玩家卡写 encounter-abilities.js；'
+    + '不要为了绕开守卫把卡号搬到另一个公共文件。')
+}
+
+function assertHardcodeBaselineFresh(label) {
+  assert.deepEqual(hardcodeDiff.stale, [],
+    `${label}：这些硬编码已经消失，但 audit/hardcode-whitelist.json 还留着旧基线。\n`
+    + hardcodeDiff.stale.map(line => `  - ${line}`).join('\n')
+    + '\n运行 node tools/hardcode-audit.mjs --write 让基线随迁移下降。')
+}
+
+test('引擎模块没有新增 5 位卡号（src/engine/**）', () => {
+  assertNoHardcodeGrowth('src/engine/**')
+  assertHardcodeBaselineFresh('src/engine/**')
+})
+
+test('引擎模块没有新增内容实体 id（地点/敌人/剧本/战役）', () => {
+  assertNoHardcodeGrowth('src/engine/** 实体 id')
+  assertHardcodeBaselineFresh('src/engine/** 实体 id')
+})
+
+test('卡牌层非 entries 文件没有新增卡号（src/cards/**）', () => {
+  assertNoHardcodeGrowth('src/cards/**（非 entries）')
+  assertHardcodeBaselineFresh('src/cards/**（非 entries）')
+})
+
+test('效果原语都必须有数据引用', () => {
+  assertNoHardcodeGrowth('EFFECT_PRIMITIVES')
+  assertHardcodeBaselineFresh('EFFECT_PRIMITIVES')
+})
+
+// 第 7 批长尾守卫：content/ 的章节脚本里写死的卡号只能减少，不能新增。
+// 基线是 2026-10-22 迁移到第 7 批时的实测值；每迁走一批就调低这个数字。
+const CONTENT_CARD_CODE_BASELINE = 1282
+
+function countContentCardCodes() {
+  const files = []
+  const walk = dir => {
+    for (const entry of readdirSync(new URL(dir, root), { withFileTypes: true })) {
+      const path = `${dir}${entry.name}`
+      if (entry.isDirectory()) { walk(`${path}/`); continue }
+      if (!/(behavior|encounter-rules|card-data)\.js$/.test(entry.name)) continue
+      files.push(path)
+    }
+  }
+  walk('content/')
+  let total = 0
+  for (const file of files) total += (read(file).match(/['"]0\d{4}[a-z]?['"]/g) || []).length
+  return total
+}
+
+test('内容层章节脚本的卡号字面量只减不增', () => {
+  const count = countContentCardCodes()
+  assert.ok(count <= CONTENT_CARD_CODE_BASELINE,
+    `content 卡号字面量 ${count} 超过基线 ${CONTENT_CARD_CODE_BASELINE}：新增了硬编码`)
 })

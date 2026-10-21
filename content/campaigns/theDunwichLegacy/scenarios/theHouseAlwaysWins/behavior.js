@@ -1,4 +1,5 @@
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
+import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { awardStoryCard } from '../../../../../src/campaign/campaign-effects.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { chooseCandidate } from '../../../../choice-helpers.js'
@@ -58,53 +59,10 @@ export const behavior = {
     if (location.id === 'darkenedHall') for (const id of ['artGallery', 'vipArea', 'backAlley']) api.place(id)
   },
   actReveal(state, act, api) {
-    if (act.originalCode === '02066') {
-      api.place('darkenedHall')
-      if (state.agendaIndex === 0) {
-        // Discard from the top of the encounter deck until a Criminal enemy is
-        // discarded, then spawn that enemy (the intervening cards are discarded).
-        const code = api.discardUntilEnemy(state.currentSeat ?? state.campaign.leadSeat,
-          def => (def.traits || []).some(trait => String(trait).toLowerCase() === 'criminal'))
-        if (code) api.spawn(code, 'darkenedHall')
-      }
-    } else if (act.originalCode === '02067') {
-      if (universityFinished(state)) {
-        api.storyAsset('02079', 'cloverClubBar')
-        for (const pile of [state.encounterDeck, state.scenarioZones.clubAside || []]) {
-          const index = pile.findIndex(code => ALL_CARDS[code]?.encounterCode === 'hideous_abominations'
-            && ALL_CARDS[code]?.type === 'enemy')
-          if (index < 0) continue
-          api.spawn(pile.splice(index, 1)[0], 'cloverClubBar')
-          break
-        }
-        state.acts.splice(2, 1)
-      } else {
-        api.storyAsset('02080', 'vipArea')
-        state.acts.splice(3, 1)
-      }
-    } else if (act.originalCode === '02068') api.finish('r1')
-    else if (act.originalCode === '02069') api.finish('r1')
+    registeredEntry(act.originalCode)?.actRule?.onReveal?.(state, act, api)
   },
   agendaReveal(state, agenda, api) {
-    if (agenda.originalCode === '02063') {
-      for (const enemy of state.enemies) if (enemy.traits?.some(trait => trait.toLowerCase() === 'criminal')) enemy.aloof = false
-      api.shuffleDiscard()
-      if (universityFinished(state)) state.scenarioFlags.advanceDirectlyToAgenda = '02064'
-    } else if (agenda.originalCode === '02064') {
-      const aside = state.scenarioZones.clubAside || []
-      const candidates = aside.filter(code => ALL_CARDS[code]?.encounterCode === 'hideous_abominations'
-        && ALL_CARDS[code]?.type === 'enemy')
-      if (candidates.length) {
-        const code = candidates[Math.floor(api.random() * candidates.length)]
-        aside.splice(aside.indexOf(code), 1)
-        api.spawn(code, 'cloverClubLounge')
-      }
-      state.encounterDeck.push(...aside.splice(0))
-      api.shuffleDiscard()
-      for (const inv of active(state).filter(inv => inv.location === 'laBellaLuna')) inv.location = 'cloverClubLounge'
-      for (const enemy of state.enemies.filter(enemy => enemy.location === 'laBellaLuna')) enemy.location = 'cloverClubLounge'
-      api.remove('laBellaLuna')
-    } else if (agenda.originalCode === '02065') api.finish('r4')
+    registeredEntry(agenda.originalCode)?.agendaRule?.onReveal?.(state, agenda, api)
   },
   agendaChain(state, agenda) {
     const target = state.scenarioFlags.advanceDirectlyToAgenda

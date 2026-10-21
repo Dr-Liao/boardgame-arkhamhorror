@@ -9,6 +9,8 @@
 //
 // 依赖注入同前几批；本模块没有工厂产物依赖。
 
+import { NON_PLAYER_SCOPES } from './ability.js'
+
 export function createAbilityExecution(deps) {
   const {
     capabilityBlocked,
@@ -165,16 +167,23 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
 function openAbilityWindow(state, windowId, context, events) {
   noteUnknownWindow(windowId)
   if (state._reaction || state._abilityWindow) return context
+  // 印刷文本被清空的实体不结算它自己的描述子能力（与 enemyTextBlanked 同一口径）。
+  const entityBlanked = source => {
+    const blank = source?.textBlanked
+    return Boolean(blank && blank.round === state.round && blank.phase === state.phase)
+  }
   state._abilityWindow = true
   try {
     // 1) 强制能力：无条件结算，不询问。
     //    先玩家卡（逐座位），再非玩家卡（每张实体卡一次，由决定座位代表执行）。
     for (const inv of aliveInvestigators(state)) {
       for (const { source, code, fromHandIndex, entry, effect } of descriptorSources(state, inv)) {
+        // 非玩家实体由下面的专用块按「每张实体卡一次」结算，避免逐座位重复执行。
+        if (NON_PLAYER_SCOPES.includes(entry.scope)) continue
         for (const descriptor of descriptorsInEntry(entry, windowId, 'forced')) {
           if (!descriptorUsable(state, inv, source, descriptor, { windowId, context })) continue
           if (descriptor.fromHand && fromHandIndex == null) continue
-          executeDescriptor(state, { inv, source, descriptor, context, events, windowId, fromHandIndex, effect })
+          executeDescriptor(state, { inv, source, descriptor, context, events, windowId, fromHandIndex, effect, silent: descriptor.silent === true })
           if (state.pendingChoice) return context
         }
       }
@@ -189,16 +198,17 @@ function openAbilityWindow(state, windowId, context, events) {
       if (inv) {
         // 只按「窗口 + 本轮/阶段/回合 + 相关实体」去重：同一事件的两次窗口调用
         // 上下文可能一个带 seat 一个不带，不能用 windowInstanceKey 原样做键。
-        const instanceKey = [windowId, state.round, state.phase, state.turnSerial ?? 0,
+        const instanceKey = [windowId, state.round, state.phase, state.turnSerial ?? 0, state.moveCount ?? 0,
           context.enemy?.id ?? '', context.location ?? '', context.cardCode ?? ''].join('|')
         for (const { source, entry } of nonPlayerAbilitySources(state, context)) {
+          if (entityBlanked(source)) continue
           for (const descriptor of descriptorsInEntry(entry, windowId, 'forced')) {
             const markKey = `entityWindow:${instanceKey}:${descriptor.id}:${source?.id ?? descriptor.code}`
             if (state.abilityLimits?.[markKey]) continue
             if (!descriptorUsable(state, inv, source, descriptor, { windowId, context })) continue
             state.abilityLimits ||= {}
             state.abilityLimits[markKey] = { used: 1, round: state.round, phase: state.phase, turn: state.turnSerial ?? 0 }
-            executeDescriptor(state, { inv, source, descriptor, context, events, windowId })
+            executeDescriptor(state, { inv, source, descriptor, context, events, windowId, silent: descriptor.silent === true })
             if (state.pendingChoice) return context
           }
         }
@@ -208,6 +218,8 @@ function openAbilityWindow(state, windowId, context, events) {
     for (const inv of aliveInvestigators(state)) {
       const candidates = []
       for (const { source, code, fromHandIndex, entry, effect } of descriptorSources(state, inv)) {
+        // 非玩家实体的反应在下面的专用块里统一询问一次。
+        if (NON_PLAYER_SCOPES.includes(entry.scope)) continue
         for (const descriptor of descriptorsInEntry(entry, windowId, 'reaction')) {
           // Phase 5（5b-6）：从旧式 reactions 搬来的反应由 triggerReaction 用旧式询问结算，
           // 这里跳过，避免同一张卡在两个提示里各出现一次。
@@ -250,6 +262,7 @@ function openAbilityWindow(state, windowId, context, events) {
       if (inv) {
         const usable = []
         for (const { source, code, entry } of nonPlayer) {
+          if (entityBlanked(source)) continue
           for (const descriptor of descriptorsInEntry(entry, windowId, 'reaction')) {
             if (!descriptorUsable(state, inv, source, descriptor, { windowId, context })) continue
             usable.push({ source, code, descriptor })

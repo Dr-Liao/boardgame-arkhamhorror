@@ -8,6 +8,7 @@
 // 依赖注入同前；被外部 import 的三个名字（createGameState / refreshStateResources /
 // unknownCardCodes）在 engine.js 里用函数声明再导出，调用点不变。
 
+import { investigatorRule } from '../cards/card-rules.js'
 import { contentRegistry } from '../../content/registered.js'
 import {
   CARD_POOL_SCOPE_LABELS, allowsCard, cardPoolContext, normalizeCardPoolScope,
@@ -23,7 +24,6 @@ export function createSetup(deps) {
     CLASS_NAMES,
     DERIVED_STATE_KEYS,
     EFFECTS,
-    INVESTIGATOR_ABILITIES,
     META,
     PLAYABLE_INVESTIGATORS,
     RULES_VERSION,
@@ -115,7 +115,7 @@ function makeInvestigator(invDef, seat) {
 function drawOpeningHand(state, inv) {
   const weaknesses = []
   // Phase 5（5a-33）：起手张数由调查员能力数据声明（默认 5）。
-  const target = INVESTIGATOR_ABILITIES[inv.code]?.openingHandSize || 5
+  const target = investigatorRule(inv.code)?.openingHandSize || 5
   while (inv.hand.length < target && inv.deck.length) {
     const code = inv.deck.pop()
     if (isWeaknessCode(code)) weaknesses.push(code)
@@ -192,7 +192,7 @@ function prepareInvestigator(state, inv, events, startLocation) {
   inv.usedReactions = {}
   inv.location = startLocation
   inv.handSlotsPenalty = state.locations.find(location => location.id === startLocation)?.handSlotsPenalty || 0
-  const startsWith = INVESTIGATOR_ABILITIES[inv.code]?.startsWith
+  const startsWith = investigatorRule(inv.code)?.startsWith
   for (const code of startsWith == null ? [] : Array.isArray(startsWith) ? startsWith : [startsWith]) {
     if (removeCardByCode(inv.deck, code)) inv.assets.push(newPlayerAssetInstance(state, inv, code))
   }
@@ -574,12 +574,6 @@ function setupScenarioDecks(state, events) {
 
   deck = scenarioBehavior(state).modifyDeck?.(state, deck, events,
     { randomValue, removeCardByCode, info }) || deck
-
-  // 若食尸鬼祭司仍存活（第一幕未击败），洗入遭遇牌库。
-  if (scenarioBehavior(state).includeSurvivingPriest && state.campaign.records.ghoulPriestAlive) {
-    deck.push('ghoulPriest')
-    info(state, events, '👹 食尸鬼祭司仍存活，被洗入遭遇牌库。')
-  }
 
   state.encounterDeck = shuffle(deck, rng)
 

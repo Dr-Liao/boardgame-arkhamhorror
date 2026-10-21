@@ -1,4 +1,5 @@
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
+import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { carcosaChaosToken, carcosaChaosAfterTest } from '../../carcosa-chaos.js'
@@ -257,39 +258,10 @@ export const behavior = {
     }
   },
   actReveal(state, act, api) {
-    if (act.originalCode === '03243') {
-      const tomb = state.locations.find(location => location.originalCode === '03257')
-      if (!tomb) throw new Error('暗影坟墓尚未进入游戏')
-      state.scenarioFlags.tombLocationId = tomb.id
-      api.spawn('03059', tomb.id)
-      if (!slain(state, '03067')) api.spawn('03067b', state.scenarioFlags.startLocationId)
-    } else if (act.originalCode === '03244') {
-      const defeated = state.scenarioFlags.actTwoAdvancedWith === 'defeat'
-      const records = recordsFor(state)
-      const key = defeated ? 'conviction' : 'doubt'
-      records[key] = Number(records[key] || 0) + 2
-      const stranger = state.enemies.find(enemy => enemy.code === '03059')
-      if (stranger) {
-        state.enemies.splice(state.enemies.indexOf(stranger), 1)
-        state.scenarioZones.removed.push('03059')
-      }
-      const nextCode = defeated ? '03245' : '03246'
-      state.acts = [
-        ...state.acts.slice(0, 2),
-        structuredClone(state.scenario.acts.find(card => card.originalCode === nextCode)),
-      ]
-    } else if (act.originalCode === '03245') api.finish('r1')
-    else if (act.originalCode === '03246') api.finish('r2')
+    registeredEntry(act.originalCode)?.actRule?.onReveal?.(state, act, api)
   },
   agendaReveal(state, agenda, api) {
-    if (agenda.originalCode === '03241') {
-      api.spawn('03241b', state.scenarioFlags.startLocationId)
-    } else if (agenda.originalCode === '03242') {
-      for (const inv of active(state)) {
-        api.trauma(inv.seat, 'physical', 1)
-        api.defeat(inv, 'physical')
-      }
-    }
+    registeredEntry(agenda.originalCode)?.agendaRule?.onReveal?.(state, agenda, api)
   },
   enemySpawned(state, enemy, api) {
     encounterRules.enemySpawned?.(state, enemy, api)

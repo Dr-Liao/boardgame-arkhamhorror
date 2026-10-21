@@ -10,7 +10,7 @@ export function createCampaignFlow(deps) {
   const {
     ALL_CARDS,
     CHAOS_BAGS,
-    PALLID_MASK_CODE,
+    pallidMaskCode,
     ScenarioEnded,
     ScenarioRestarted,
     addLitaToCampaign,
@@ -143,7 +143,7 @@ function finishScenario(state, resolutionKey, events) {
   if (campaign.id === 'thePathToCarcosa' && campaign.records.pallidMaskBearer) {
     applyCampaignEffect(state, {
       type: 'transferCampaignWeakness',
-      code: PALLID_MASK_CODE,
+      code: pallidMaskCode(),
       bearerRecord: 'pallidMaskBearer',
     }, text => info(state, events, text))
   }

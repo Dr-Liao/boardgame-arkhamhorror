@@ -1,11 +1,14 @@
 // treachery-tokens.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 混乱标记与诡计结算：特殊标记（auto_fail / 旧神 / 失败惩罚）与揭示后的惩罚链。
 // 读点：performTest 的标记揭示、resolveTreachery（遭遇结算）、applyPenalty（失败追加）。
+
+import { investigatorRule } from '../cards/card-rules.js'
+import { registeredEntry } from './ability.js'
+
 export function createTreacheryTokens(deps) {
   const {
     BASIC_WEAKNESSES,
     basicWeaknessPool,
-    INVESTIGATOR_ABILITIES,
     SKILL_NAMES,
     SYMBOL_DEFAULTS,
     TOKEN_LABEL,
@@ -90,10 +93,12 @@ export function createTreacheryTokens(deps) {
       return true
     }
     if (t.effect) {
-      return resolveTreacheryEffect(state, inv, t.effect, events)
+      // 把卡号一并交给效果解释器：附着型效果（朦胧之雾 / 上锁的门）用它记录「该弃哪张卡」，
+      // 引擎不再写死 'obscuringFog' / 'lockedDoor'。用运行时 code，与 encounterDiscard 的历史口径一致。
+      return resolveTreacheryEffect(state, inv, { ...t.effect, code: t.code }, events)
     }
-    if (t.code === 'falseLead' && inv.clues === 0) {
-      info(state, events, '🌀 「错误指示」获得涌动：再抽取一张遭遇牌。')
+    if (registeredEntry(t.code)?.surgeIfNoClues && inv.clues === 0) {
+      info(state, events, `🌀 「${t.name}」获得涌动：再抽取一张遭遇牌。`)
       drawEncounter(state, inv, events)
       return
     }
@@ -104,7 +109,8 @@ export function createTreacheryTokens(deps) {
         } else {
           const failedBy = Math.max(0, t.test.difficulty - r.value)
           info(state, events, `❌ ${inv.name} 未通过「${t.name}」检定（${SKILL_NAMES[t.test.skill]} ${r.value} vs ${t.test.difficulty}，低于 ${failedBy}）。`)
-          applyPenalty(state, inv, t.fail, failedBy, events)
+          const alias = registeredEntry(t.code)?.penaltyKind
+          applyPenalty(state, inv, alias ? { ...t.fail, kind: alias } : t.fail, failedBy, events)
         }
       } })
     }
@@ -145,7 +151,9 @@ export function createTreacheryTokens(deps) {
       if (inv.defeated || inv.resigned) return
       drawMadnessWeakness(state, inv, events)
     }
-    else if (fail.kind === 'onWingsOfDarkness') {
+    else if (fail.kind === 'damageHorrorDisengageAndMoveCentral') {
+      // 「乘着黑暗之翼」这类：受伤/恐惧、与非夜魇敌人解除交战、被带到中心地点。
+      // 规则的数值与走向由卡面数据声明，kind 不再用卡名。
       info(state, events, `${inv.name} 受到 ${fail.damage} 点伤害和 ${fail.horror} 点恐惧。`)
       applyHarm(state, inv, fail.damage, fail.horror, events)
       if (inv.defeated || inv.resigned) return
@@ -205,7 +213,7 @@ export function createTreacheryTokens(deps) {
       .filter(({ code }) => isWeaknessCode(code) && (cardDef(code)?.traits || []).some(trait => trait.toLowerCase() === 'madness'))
     if (candidates.length) {
       const answer = requestChoice(state, {
-        kind: 'search', source: 'theYellowSign', seat: inv.seat,
+        kind: 'search', source: 'madness-weakness', seat: inv.seat,
         prompt: '选择牌库中的一张疯狂弱点并抽取。',
         options: candidates.map(({ code, index }) => ({ id: String(index), cardCode: code, label: cardName(code) })),
       })
@@ -355,7 +363,7 @@ export function createTreacheryTokens(deps) {
   function minhCommitWildBonus(state, committer, events) {
     let bonus = 0
     // Phase 5（5a-33）：敏的同地点万能加成由调查员能力数据声明。
-    for (const minh of aliveInvestigators(state).filter(owner => INVESTIGATOR_ABILITIES[owner.code]?.wildCommitCompanionBonus
+    for (const minh of aliveInvestigators(state).filter(owner => investigatorRule(owner.code)?.wildCommitCompanionBonus
       && owner.location === committer.location && !investigatorTextBlanked(state, owner))) {
       const key = `minhWild:${committer.seat}:${state.round}`
       if (minh.usedReactions?.[key]) continue

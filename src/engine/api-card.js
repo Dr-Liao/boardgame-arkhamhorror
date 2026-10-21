@@ -273,7 +273,7 @@ export function createCardApi(state, events, deps) {
     className: role => CLASS_NAMES[role] || role,
     // Phase 5（5c-31）：这个敌人是否还在场上（反击类能力要先确认目标没被同窗口的效果清掉）。
     isEnemyInPlay: enemy => Boolean(enemy) && state.enemies.includes(enemy),
-    discoverAt: (seat, locationId, amount = 1) => {
+    discoverAt: (seat, locationId, amount = 1, { silent = false, log = null } = {}) => {
       const inv = state.investigators[seat]
       const location = state.locations.find(entry => entry.id === locationId)
       if (!inv || !location) return 0
@@ -282,7 +282,9 @@ export function createCardApi(state, events, deps) {
       location.clues -= got
       inv.clues += got
       syncClues(state)
-      info(state, events, `🔍 ${inv.name} 在「${locName(state, location.id)}」发现 ${got} 个线索。`)
+      // log：调用方需要自己的文案（「寻找答案」）；silent：调用方已经写过日志。
+      if (log) info(state, events, log)
+      else if (!silent) info(state, events, `🔍 ${inv.name} 在「${locName(state, location.id)}」发现 ${got} 个线索。`)
       notifyCluesRemoved(state, location, got, events)
       return got
     },

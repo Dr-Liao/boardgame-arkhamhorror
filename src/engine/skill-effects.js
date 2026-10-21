@@ -1,3 +1,4 @@
+import { investigatorRule } from '../cards/card-rules.js'
 // 技能检定效果（applyTokenFx / applySkillOnSuccess / makeRuntime）从 engine.js 拆出的模块
 // （Phase 6 · 6d-24）。
 //
@@ -19,7 +20,6 @@ export function createSkillEffects(deps) {
     doInvestigate,
     doEvade,
     doFight,
-    INVESTIGATOR_ABILITIES,
     SKILL_NAMES,
     addDoom,
     aliveInvestigators,
@@ -215,7 +215,7 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0) {
     }
     if (o.searchTop) searchTop(state, inv.seat, { amount: o.searchTop, source: code }, [])
     // Phase 5（5a-33）：「家庭前线」的伤害转移由调查员能力数据声明。
-    if (s.homeFront && INVESTIGATOR_ABILITIES[inv.code]?.homeFrontMoveDamage
+    if (s.homeFront && investigatorRule(inv.code)?.homeFrontMoveDamage
       && inv.damage > out.homeFrontDamage && state.skillTest?.source?.enemyId) {
       const answer = requestChoice(state, { kind: 'skillEffect', source: code, seat: inv.seat,
         prompt: '是否从马克·哈里根身上移动1点伤害到正在攻击的敌人？',

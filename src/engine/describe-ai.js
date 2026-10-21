@@ -1,11 +1,11 @@
 // describe-ai.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 给 AI 与界面看的描述层：猎物排序、可选能力提示、剧本动作提示、移动/动作文案。
 // 纯函数（只读 state），但依赖不少展示常量与卡牌数据。
+import { investigatorRule } from '../cards/card-rules.js'
 import { scriptCardOwner } from './script-cards.js'
 
 export function createDescribeAi(deps) {
   const {
-    INVESTIGATOR_ABILITIES,
     SKILL_NAMES,
     assetEffect,
     canAffordAbility,
@@ -39,7 +39,7 @@ export function createDescribeAi(deps) {
   function describeFreeAbilities(state, inv) {
     if (cannotTriggerFreeAbility(state, inv)) return []
     const out = []
-    const ab = INVESTIGATOR_ABILITIES[inv.code] || {}
+    const ab = investigatorRule(inv.code) || {}
     if (ab.freeAction) {
       const cost = ab.freeAction.cost || {}
       if (inv.resources >= (cost.resources || 0) && !inv.usedReactions[ab.freeAction.id + ':' + state.round]) {

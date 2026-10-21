@@ -27,6 +27,7 @@ export function createMiscApi(state, events, deps) {
     damageEnemy,
     discoverClueAt,
     disengageEnemy,
+    discardRandomFromHand,
     drawCards,
     effectiveTraits,
     engageEnemy,
@@ -40,6 +41,7 @@ export function createMiscApi(state, events, deps) {
     isWeaknessCard,
     leaveAsset,
     locName,
+    newCardInstance,
     newPlayerAssetInstance,
     performTest,
     placeCluesOnLocation,
@@ -56,6 +58,7 @@ export function createMiscApi(state, events, deps) {
     shuffle,
     tokenLabel,
     unique,
+    doResign,
     doFightRaw,
   } = deps
 
@@ -63,7 +66,8 @@ export function createMiscApi(state, events, deps) {
 
   return {
     info: text => info(state, events, text),
-    random: () => randomValue(state),
+    // 「撤退」类事件/能力的统一入口（02151 “我要走了！”）。
+    resign: seat => doResign(state, seat, events),    random: () => randomValue(state),
     choice: options => requestChoice(state, options),
     damage: (seat, amount) => applyDamage(state, state.investigators[seat], amount, events),
     horror: (seat, amount) => applyHorror(state, state.investigators[seat], amount, events),
@@ -105,12 +109,23 @@ export function createMiscApi(state, events, deps) {
     discoverClue: (seat, amount = 1) => discoverClueAt(state, state.investigators[seat], amount, events),
     placeClues: (seat, amount = 1) => placeCluesOnLocation(state, state.investigators[seat], amount, events),
     moveInvestigator: (seat, locationId) => relocateInvestigator(state, seat, locationId, events),
-    damageEnemy: (enemy, amount, seat) => damageEnemy(state, enemy, amount, seat, events),
+    damageEnemy: (enemy, amount, seat, source = null) => damageEnemy(state, enemy, amount, seat, events, source),
+    // 敌人自愈（狼人德鲁这类「攻击时治愈 1 点伤害」）。只改实例，不触发击败/胜利结算。
+    healEnemy: (enemy, amount = 1) => {
+      const target = typeof enemy === 'string' ? state.enemies.find(item => item.id === enemy) : enemy
+      if (target) target.damageTaken = Math.max(0, (target.damageTaken || 0) - amount)
+    },
     moveEnemy: (enemy, locationId) => relocateEnemy(state, enemy, locationId, events),
     engage: (enemy, seat) => engageEnemy(state, enemy, seat, events),
     autoEvade: enemy => autoEvadeEnemy(state, enemy, events),
     exhaust: card => { if (card) card.exhausted = true },
     ready: card => { if (card) card.exhausted = false },
+    // 移除一张场上卡上的全部/指定数量毁灭标记（月光仪式这类卡用）。
+    setAssetDoom: (card, amount = 0) => {
+      if (!card) return 0
+      card.doom = Math.max(0, amount)
+      return card.doom
+    },
     addUses: (card, amount) => { if (card) card.uses = (card.uses || 0) + amount },
     addDoom: (amount = 1) => addDoom(state, amount, events),
     // Phase 1（A1）：持续效果的唯一创建接口。修正与能力都从 state.effects 读，
@@ -132,6 +147,22 @@ export function createMiscApi(state, events, deps) {
       if (!location) return
       location.traits ||= []
       if (!location.traits.some(value => String(value).toLowerCase() === String(trait).toLowerCase())) location.traits.push(trait)
+    },
+    // 「诱敌深入」：把附属地点标记为敌人本轮的移动目标；回合结束由 turn.js 弃掉。
+    setLocationLure: (locationId, seat, code = null) => {
+      const location = state.locations.find(item => item.id === locationId)
+      if (!location) return false
+      location.lure = { seat, round: state.round, code }
+      return true
+    },
+    // 「团队合作」：把一件支援交给同地点的另一名调查员（离场钩子照走，所有权转移）。
+    giveAsset: (asset, targetSeat) => {
+      const target = state.investigators[targetSeat]
+      const owner = state.investigators.find(person => person.assets?.includes(asset))
+      if (!asset || !owner || !target || owner === target) return false
+      leaveAsset(state, owner, asset)
+      target.assets.push(asset)
+      return true
     },
     gainAction: (seat, amount = 1) => {
       const inv = state.investigators[seat]
@@ -310,6 +341,40 @@ export function createMiscApi(state, events, deps) {
       owner.assets.push(newPlayerAssetInstance(state, owner, picked.code))
       return true
     },
+    // 「不期而遇」：从任意玩家弃牌堆临时招募一个盟友，本轮结束弃掉。
+    recruitTemporaryAllyFromDiscard: (seat, source = null) => {
+      const owner = state.investigators[seat]
+      if (!owner) return false
+      const candidates = aliveInvestigators(state).flatMap(person => person.discard
+        .map(code => ({ owner: person, code }))
+        .filter(item => (cardDef(item.code)?.traits || []).some(trait => String(trait).toLowerCase() === 'ally')))
+      if (!candidates.length) return false
+      const chosen = candidates.length === 1 ? candidates[0] : (() => {
+        const answer = requestChoice(state, {
+          kind: 'card', source, seat, prompt: '选择任意玩家弃牌堆中的盟友支援。',
+          options: candidates.map((item, index) => ({ id: String(index), cardCode: item.code,
+            label: `${cardName(item.code)}（${item.owner.name} 的弃牌堆）` })),
+        })
+        return candidates[Number(answer)]
+      })()
+      if (!chosen) return false
+      const index = chosen.owner.discard.indexOf(chosen.code)
+      if (index >= 0) chosen.owner.discard.splice(index, 1)
+      owner.assets.push(newCardInstance(state, chosen.code, { exhausted: false, temporaryAllyRound: state.round }))
+      info(state, events, `${owner.name} 让「${cardName(chosen.code)}」暂时入场。`)
+      return true
+    },
+    discardRandomFromHand: (seat, amount = 1) => discardRandomFromHand(state, state.investigators[seat], amount, events),
+    // 本阶段下一次攻击该敌人时战斗值 -N（可叠加）。
+    addEnemyFightReduction: (enemy, amount) => {
+      if (!enemy) return 0
+      const active = enemy.fightReduction?.round === state.round && enemy.fightReduction.phase === state.phase
+      enemy.fightReduction = {
+        amount: (active ? enemy.fightReduction.amount : 0) + amount,
+        round: state.round, phase: state.phase,
+      }
+      return enemy.fightReduction.amount
+    },
     // Phase 5（5c-14）：卡面读数与"打出标记"（时刻警惕 / 障眼戏法）。
     playCost: (seat, code) => {
       const owner = state.investigators[seat]
@@ -377,6 +442,22 @@ export function createMiscApi(state, events, deps) {
     },
     // Phase 5（5c-8）：反应窗口的上下文（快速事件的结算靠它拿到「这次遭遇/攻击」的信息）。
     reactionContext: () => state._reaction || null,
+    // 在反应窗口里记录一个标记（例如「哎呀！」把这次攻击伤害转给另一个敌人）。
+    // 旧式实现写的是 `_reaction.context`（存在时），这里保持同一目标。
+    setReactionFlag: (key, value = true) => {
+      if (!state._reaction) return false
+      const target = state._reaction.context || state._reaction
+      target[key] = value
+      return true
+    },
+    // 「绑定怪物」：横置并解除交战，然后把这张牌附到敌人身上。
+    bindMonsterToEnemy: (enemy, seat, code = null) => {
+      if (!enemy) return false
+      enemy.exhausted = true
+      if (enemy.engagedSeat != null) disengageEnemy(state, enemy)
+      enemy.bindMonster = { ownerSeat: seat, code }
+      return true
+    },
     // 「窄路逃生」：取消正在结算的攻击，并让下一次躲避 +2。
     cancelCurrentAttack: () => {
       if (!state._reaction) return false

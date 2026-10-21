@@ -10,7 +10,18 @@ export default {
     {
       kind: 'played',
       label: '走私品',
-      effect: { type: 'doubleUses', usesTypes: ['ammo', 'supplies'], target: 'location' },
+      resolve: ({ state, inv, api }) => {
+        const targets = state.investigators
+          .filter(other => !other.defeated && !other.resigned && other.location === inv.location)
+          .flatMap(owner => owner.assets.filter(asset => ['ammo', 'supplies'].includes(asset.usesType)))
+        if (!targets.length) return
+        const id = targets.length === 1 ? targets[0].id : api.choice({
+          kind: 'target', source: '02109', seat: inv.seat, prompt: '选择弹药或补给翻倍的支援。',
+          options: targets.map(asset => ({ id: asset.id, label: api.cardName(asset.code) })),
+        })
+        const asset = targets.find(item => item.id === id)
+        if (asset) api.setAssetUses(asset, (asset.uses || 0) * 2)
+      },
     },
   ],
   modifiers: [

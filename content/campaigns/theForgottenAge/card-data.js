@@ -1,4 +1,5 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
+import { enemyRuleFor, treacheryRuleFor } from '../../../src/cards/card-rules.js'
 
 // 失落的时代（三循环）的卡面数据入口。所有剧本的 definition.js 只从这里取印刷
 // 数据，避免把卡文抄成第二份事实来源。目录 encounterCode 用 snake_case，
@@ -165,54 +166,6 @@ export function encounterCards(groups) {
   return cardsInGroups(groups)
 }
 
-// 需要逐卡改写的敌人/诡计结构规则。胜利点与复仇点数以
-// Enemy/CardDefs/TheForgottenAge/*.hs 的 cdVictoryPoints / cdVengeancePoints 为准，
-// 目录里已经带值的（04187/04220/04297 等）会从这里再确认一次。
-const ENEMY_RULES = Object.freeze({
-  '04052': { prey: 'mostClues', parley: { skill: 'intellect', difficulty: 4 } },
-  // 04062 瓦卢西亚的预示者：警戒/猎手/反击由卡面英文解析；「处于横置状态时能反击」
-  // 由 retaliateWhileExhausted 交给引擎放行（P2 钩子）。
-  '04062': { healthPerInvestigator: 10, vengeance: 5, retaliateWhileExhausted: true },
-  '04078': { prey: 'poisoned', vengeance: 1 },
-  '04079': { vengeance: 2 },
-  '04084': { victory: 1 },
-  '04086': { spawnAnyEmpty: true },
-  // 核心盒的密会巫师（01170）：失落时代的牌堆也会引用它。
-  '01170': { retaliate: true, spawnAnyEmpty: true, mythosEndDoom: 1 },
-  // 伊斯学者（04259）：猎物是「手牌最多」。
-  '04259': { prey: 'mostHand' },
-  '04122b': { victory: 1 },
-  '04130b': { victory: 1 },
-  '04137b': { victory: 1 },
-  '04186': { victory: 2, vengeance: 2 },
-  '04187': { victory: 1, vengeance: 1 },
-  '04219': { victory: 1 },
-  '04220': { vengeance: 2 },
-  '04296': { victory: 5 },
-  // 04337 无形之子：庞大，不能移动，也不能被移动（引擎读 immobile）。
-  '04337': { immobile: true },
-  '04297': { vengeance: 1 },
-  '04298': { victory: 2 },
-})
-
-const TREACHERY_RULES = Object.freeze({
-  '04094': { sideArea: true },
-  '04102': { permanent: true },
-  '04089': { threatArea: true },
-  '04097': { threatArea: true },
-  '04099': { threatArea: true },
-  '04077': { threatArea: true },
-  '04085': { threatArea: true },
-  '04189': { threatArea: true },
-  '04190': { threatArea: true },
-  '04214': { threatArea: true },
-  // 残酷拷问（04261）：进威胁区域、不能进行抽取行动；卡面没有涌动（「获得涌动」是条件效果）。
-  '04261': { threatArea: true, threat: { noDrawAction: true }, surge: false },
-  // 核心盒的呆若木鸡 / 刺耳之声：威胁区域的限制交给引擎读取。
-  '01164': { threatArea: true, threat: { extraActionCost: ['move', 'fight', 'evade'], endTurnTest: { skill: 'willpower', difficulty: 3 } } },
-  '01165': { threatArea: true, threat: { cannotPlay: ['asset', 'event'], roundEndDiscard: true } },
-})
-
 // 印刷关键词只认「独立成句」的关键词，并且要排除 `gains retaliate.` / `gains hunter.`
 // 这种由强制效果**临时获得**的写法。简单切句即可：
 //   "Prey - ...\nHunter.\nForced - ..."  → "Hunter." 是关键词；Prey 行走人不影响后面的行。
@@ -266,7 +219,7 @@ export function encounterDefinitions(cards, extraRules = {}) {
         elite: (card.traits || []).includes('Elite'),
         ...(printedPrey(text) ? { prey: printedPrey(text) } : {}),
         ...(extraRules.enemies?.[card.code] || {}),
-        ...(ENEMY_RULES[card.code] || {}),
+        ...(enemyRuleFor(card.code) || {}),
       } : {
         type: 'treachery',
         surge: printedSurge(text) || hasKeyword(text, 'Surge'),
@@ -274,7 +227,7 @@ export function encounterDefinitions(cards, extraRules = {}) {
         hidden: hasKeyword(text, 'Hidden'),
         effect: { kind: 'campaignRule' },
         ...(extraRules.treacheries?.[card.code] || {}),
-        ...(TREACHERY_RULES[card.code] || {}),
+        ...(treacheryRuleFor(card.code) || {}),
       }),
     }
     ;(card.type === 'enemy' ? enemies : treacheries)[definition.code] = definition

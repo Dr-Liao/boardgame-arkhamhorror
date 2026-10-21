@@ -16,6 +16,24 @@ const factory = () => {
 
 export default {
   code: '01004',
+  investigator:   {
+    "elderSign": {
+      "kind": "perHorror",
+      "bonus": 1
+    },
+    "reactions": [
+      {
+        "id": "agnesDamage",
+        "when": "horrorPlaced",
+        "limit": "phase",
+        "effect": {
+          "type": "dealDamage",
+          "amount": 1,
+          "target": "here"
+        }
+      }
+    ]
+  },
   kind: 'investigator',
   elderSign: { id: '01004-eldersign', resolve: factory() },
   abilities: [],

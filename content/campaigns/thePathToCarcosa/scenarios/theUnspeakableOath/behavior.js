@@ -1,4 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { campaignCardChange } from '../../../../../src/campaign/campaign.js'
 import { requestChoice } from '../../../../../src/engine/resolution.js'
 import { encounterRules } from '../../encounter-rules.js'
@@ -205,66 +206,10 @@ export const behavior = {
     if (code === '03178' && ['03164', '03165'].includes(original(state.acts[state.actIndex]))) api.advanceAct()
   },
   actReveal(state, act, api) {
-    if (act.originalCode === '03163') {
-      chooseKeys(state, api)
-    } else if (act.originalCode === '03164') {
-      const atCell = active(state).filter(inv => inv.location === 'danielsCell')
-      const seat = atCell.length === 1 ? atCell[0].seat : Number(api.choose({
-        kind: 'storyAsset', source: '03182a', seat: state.campaign.leadSeat,
-        prompt: '选择一位位于丹尼尔牢房的调查员控制丹尼尔。',
-        options: atCell.map(inv => ({ id: String(inv.seat), label: inv.name })),
-      }))
-      api.giveAsset(seat, '03182a')
-      state.encounterDeck.push(...state.scenarioZones.underAct.splice(0))
-      api.shuffleDiscard()
-    } else if (act.originalCode === '03165') {
-      api.spawn('03182b', 'danielsCell')
-    } else if (act.originalCode === '03166') {
-      const underAct = state.scenarioZones.underAct.splice(0)
-      const discardedMonsters = state.encounterDiscard.filter(code =>
-        state.scenario.enemies[code]?.traits?.includes('Monster')).length
-      if (underAct.length + discardedMonsters >= 3) {
-        state.encounterDeck.push(...underAct)
-        api.shuffleDiscard()
-        const index = state.encounterDeck.findLastIndex(code =>
-          state.scenario.enemies[code]?.traits?.includes('Monster'))
-        if (index >= 0) {
-          const monster = state.encounterDeck.splice(index, 1)[0]
-          const lowest = Math.min(...active(state).map(inv => inv.willpower))
-          const candidates = active(state).filter(inv => inv.willpower === lowest)
-          const seat = candidates.length === 1 ? candidates[0].seat : Number(api.choose({
-            kind: 'target', source: '03166', seat: state.campaign.leadSeat,
-            prompt: '选择一位意志最低的调查员抽取怪物。',
-            options: candidates.map(inv => ({ id: String(inv.seat), label: inv.name })),
-          }))
-          api.spawn(monster, state.investigators[seat].location)
-        }
-      } else {
-        state.encounterDeck.push(...underAct)
-        api.shuffleDiscard()
-      }
-    } else if (act.originalCode === '03167') {
-      api.finish(state.scenarioFlags.tookKeysByForce ? 'r2' : 'r3')
-    }
+    registeredEntry(act.originalCode)?.actRule?.onReveal?.(state, act, api)
   },
   agendaReveal(state, agenda, api) {
-    if (agenda.originalCode === '03160') {
-      state.encounterDeck.push(...state.scenarioZones.lunatics.splice(0))
-      api.shuffleDiscard()
-      stashRandomMonster(state, api)
-    } else if (agenda.originalCode === '03161') {
-      const monsters = state.scenarioZones.monsters
-      if (monsters.length) {
-        state.encounterDeck.push(monsters.splice(randomIndex(monsters.length, api), 1)[0])
-        api.shuffleEncounterDeck()
-      }
-      if (!(state.campaign.records.vipsSlain || []).includes('03065')) api.spawn('03065b', 'garden')
-    } else if (agenda.originalCode === '03162') {
-      for (const inv of active(state)) api.defeat(inv, null)
-      api.finish(state.investigators.some(inv => inv.resigned)
-        ? state.scenarioFlags.tookKeysByForce ? 'r2' : 'r3'
-        : 'r1')
-    }
+    registeredEntry(agenda.originalCode)?.agendaRule?.onReveal?.(state, agenda, api)
   },
   checkObjectives(state, api) {
     if (original(state.acts[state.actIndex]) === '03166'

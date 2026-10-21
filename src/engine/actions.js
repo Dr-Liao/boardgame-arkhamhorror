@@ -29,7 +29,8 @@ export function createActions(deps) {
     disengageEnemy,
     disposePlayedEvent,
     enemiesEngagedWith,
-    engagedWithMaskedHunter,
+    engagedWithClueBlocker,
+    clueBlockerName,
     entersPlayEffect,
     executeDescriptor,
     exilePlayerCard,
@@ -305,8 +306,9 @@ function doInvestigate(state, seat, opts, events, noSpend) {
     info(state, events, `🔒 「${loc.name}」被上锁的门封锁，无法调查。`)
     return
   }
-  if (engagedWithMaskedHunter(state, inv)) {
-    info(state, events, `🎭 ${inv.name} 与假面猎手交战时不能发现线索。`)
+  const clueBlocker = engagedWithClueBlocker(state, inv)
+  if (clueBlocker) {
+    info(state, events, `🎭 ${inv.name} 与「${clueBlockerName(state, clueBlocker)}」交战时不能发现线索。`)
     return
   }
   // 卡面可以改写「这次调查用哪项技能」：礼寻术（02028 / 02233）的
@@ -386,7 +388,7 @@ function doInvestigate(state, seat, opts, events, noSpend) {
         // 朦胧之雾可以叠加：每次成功调查只吹散其中 1 张（-2 帷幕）。
         loc.fog -= 1
         loc.shroudMod = Math.max(0, (loc.shroudMod || 0) - 2)
-        state.encounterDiscard.push(loc.fogCode || 'obscuringFog')
+        if (loc.fogCode) state.encounterDiscard.push(loc.fogCode)
         if (!loc.fog) {
           delete loc.fogCode
           delete loc.fog

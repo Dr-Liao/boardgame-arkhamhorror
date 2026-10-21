@@ -1,10 +1,11 @@
 // Shared encounter sets used by multiple chapters. These handlers receive the
 // engine adapter and participate in its replayable choices and skill tests.
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
+import { enemySpawnRuleFor } from '../../../src/cards/card-rules.js'
+import { registeredEntry } from '../../../src/engine/ability.js'
 import { changeChaosBag } from '../../../src/engine/chaos-bag.js'
 const textActive = (state, enemy) => !enemy.textBlanked || enemy.textBlanked.round !== state.round || enemy.textBlanked.phase !== state.phase
 
-export const implementedTreacheries = new Set(['02081', '02082', '02083', '02084', '02085', '02088', '02091', '02092', '02093', '02096', '02099', '02100', '02101', '02102'])
 export const encounterRules = {
   canPlayScenarioCard(state, inv, code) {
     return ['02040', '02061', '02080', '02140', '02217', '02218', '02219'].includes(code)
@@ -25,19 +26,19 @@ export const encounterRules = {
       }
       return Infinity
     }
-    if (code === '02086') { const most = Math.max(...state.locations.map(loc => loc.clues)); candidates = state.locations.filter(loc => loc.clues === most) }
-    if (code === '02095') { const farthest = Math.max(...state.locations.map(loc => distance(loc.id))); candidates = state.locations.filter(loc => distance(loc.id) === farthest) }
-    if (code === '02224') candidates = state.locations.filter(loc => !state.enemies.some(enemy => enemy.location === loc.id)
+    const spawnRule = enemySpawnRuleFor(code)
+    if (spawnRule?.spawnMode === 'mostClues') { const most = Math.max(...state.locations.map(loc => loc.clues)); candidates = state.locations.filter(loc => loc.clues === most) }
+    if (spawnRule?.spawnMode === 'farthest') { const farthest = Math.max(...state.locations.map(loc => distance(loc.id))); candidates = state.locations.filter(loc => distance(loc.id) === farthest) }
+    if (spawnRule?.spawnMode === 'empty') candidates = state.locations.filter(loc => !state.enemies.some(enemy => enemy.location === loc.id)
       && !state.investigators.some(inv => !inv.defeated && !inv.resigned && inv.location === loc.id))
-    if (code === '02183') return state.scenarioZones.train?.[state.scenarioZones.train.indexOf(origin) + 1] || origin
-    if (code === '02294') candidates = state.locations.filter(loc => loc.originalCode === '02282')
-    if (code === '02295') {
+    if (spawnRule?.spawnMode === 'nextTrain') return state.scenarioZones.train?.[state.scenarioZones.train.indexOf(origin) + 1] || origin
+    if (spawnRule?.spawnMode === 'original') candidates = state.locations.filter(loc => loc.originalCode === spawnRule.spawnFrom)
+    if (spawnRule?.spawnMode === 'nearestAltered') {
       const altered = state.locations.filter(loc => loc.traits?.includes('Altered'))
       const nearest = Math.min(...altered.map(loc => distance(loc.id)))
       candidates = altered.filter(loc => distance(loc.id) === nearest)
     }
-    if (code === '02329') candidates = state.locations.filter(loc => loc.traits?.includes('Extradimensional'))
-    if (code === '02330') candidates = state.locations.filter(loc => loc.originalCode === '02320')
+    if (spawnRule?.spawnMode === 'extradimensional') candidates = state.locations.filter(loc => loc.traits?.includes('Extradimensional'))
     if (candidates == null) return origin
     if (!candidates.length) return null
     if (candidates.length === 1) return candidates[0].id
@@ -145,7 +146,7 @@ export const encounterRules = {
   },
   resolveEncounter(state, inv, card, api) {
     const code = card.originalCode || card.code
-    if (!implementedTreacheries.has(code)) throw new Error(`遭遇效果尚未迁移：${code}`)
+    if (!registeredEntry(code)?.implemented) throw new Error(`遭遇效果尚未迁移：${code}`)
     if (code === '02081') {
       for (const seat of state.scenarioFlags.hadDrink || []) {
         const target = state.investigators[seat]

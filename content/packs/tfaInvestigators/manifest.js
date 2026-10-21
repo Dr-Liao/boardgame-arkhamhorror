@@ -23,49 +23,6 @@ export const tfaInvestigatorCardVerified = code => implementedCodes.has(code)
 export const INVESTIGATOR_CODES = Object.freeze(['04001', '04002', '04003', '04004', '04005'])
 
 // Source: 参考资源/.../library/Arkham/Investigator/Cards/TheForgottenAge/*.hs
-export const investigatorAbilities = {
-  '04001': { // 里奥·安德森 Leo Anderson
-    // Reaction: 回合开始后打出 1 张盟友支援，费用减 1。
-    reactions: [{
-      id: 'leoPlayAlly', when: 'turnBegins', selfOnly: true, limit: 'turn',
-      prompt: '是否打出 1 张盟友支援（费用减 1）？',
-      effect: { type: 'tfaInvestigator', action: 'playAllyDiscounted', amount: 1 },
-    }],
-    // 旧印：+2，查找牌库顶 3 张并抽出其中的盟友支援。
-    elderSign: { kind: 'tfaSearchAlly', bonus: 2, amount: 3 },
-  },
-  '04002': { // 厄休拉·唐斯 Ursula Downs
-    // Reaction: 移动后进行调查行动（每轮一次）。
-    reactions: [{
-      id: 'ursulaInvestigate', when: 'move', selfOnly: true, limit: 'round',
-      prompt: '是否立刻进行一次调查行动？',
-      effect: { type: 'tfaInvestigator', action: 'investigateAction' },
-    }],
-    // 旧印：+1；检定结束后可以移动到连接地点。
-    elderSign: { kind: 'tfaMoveAfterTest', bonus: 1 },
-  },
-  '04003': { // 芬恩·爱德华兹 Finn Edwards
-    // 每回合额外 1 个只能用于躲避的行动。
-    extraEvadeAction: true,
-    // 旧印：场上每个横置敌人 +1；成功且超过难度 2 点时可以发现 1 个线索。
-    elderSign: { kind: 'tfaPerExhaustedEnemy', clueOnSuccessBy: 2 },
-  },
-  '04004': { // 马泰奥神父 Father Mateo
-    // Reaction: 任何调查员揭示 autofail 时改为 elder_sign（每局一次）。
-    autofailToElderSign: { oncePerGame: true },
-    // 旧印：自动成功；检定结束后二选一。
-    elderSign: { kind: 'tfaChosenReward' },
-  },
-  '04005': { // 加尔文·怀特 Calvin Wright
-    // 每点恐惧使意志与智识 +1，每点伤害使战斗与敏捷 +1。
-    statsPerHarm: {
-      horror: { willpower: 1, intellect: 1 },
-      damage: { combat: 1, agility: 1 },
-    },
-    // 旧印：+0；可以治疗 1 点伤害或恐惧，或受到 1 点直接伤害或恐惧。
-    elderSign: { kind: 'tfaCalvinSign' },
-  },
-}
 
 // Source: 参考资源/.../library/Arkham/Player/Cards/TheForgottenAge/*.hs
 export const signatureEffects = {

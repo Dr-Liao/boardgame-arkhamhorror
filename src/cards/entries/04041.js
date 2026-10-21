@@ -6,6 +6,7 @@
 
 export default {
   code: '04041',
+  upgradesFrom: 'impendingDoom',
   abilities: [
     { kind: 'weakness', label: '被诅咒的命运', weakness: { type: 'cursedFate' } },
   ],

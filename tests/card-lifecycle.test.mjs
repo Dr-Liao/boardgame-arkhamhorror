@@ -16,14 +16,14 @@ import { decisionSeat, performTest } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
-import { ABILITY_KINDS, normalizeDescriptor } from '../src/engine/ability.js'
+import { ABILITY_KINDS, normalizeDescriptor, registeredEntry } from '../src/engine/ability.js'
 import { commitProfile, entersPlayEffect, leavesPlayEffect, lifecycleChannel, playedEffect, weaknessProfile } from '../src/engine/lifecycle.js'
 import { isPlayable } from '../src/deck/deckbuilding.js'
 import { getAvailability } from '../src/deck/availability.js'
 
 // Phase 1 门禁：先迁 10 张 event/skill 卡（6 张 played + 4 张 commit），
 // 以及三个新生命周期钩子的试点卡（weakness / entersPlay / leavesPlay）。
-const PLAYED = ['01088', '02008', '02194', '02105', '02186', '02273']
+const PLAYED = ['01088', '01057', '02194', '02105', '02186', '02273']
 const COMMIT = ['02150', '02268', '02299', '02271']
 const WEAKNESS = ['01096', '01097']
 // 签名卡（02008）不进构筑池，但仍是玩家卡；只对它断言"可用"。
@@ -79,7 +79,9 @@ test('十张 event/skill 卡的行为数据已离开旧 DSL，走能力层读点
   }
   // 数据必须原样保留：迁移只改通道，不改行为。
   assert.deepEqual(playedEffect('01088'), { type: 'gainResource', amount: 3 })
-  assert.deepEqual(playedEffect('02008'), { type: 'drawPerClue', maximum: 5 })
+  assert.deepEqual(playedEffect('01057'), { type: 'gainResource', amount: 10 })
+  // 02008 已从「效果数据体」改成 resolve：它不再有 playedEffect 数据，但仍走 played 描述子。
+  assert.equal(typeof registeredEntry('02008').abilities[0].resolve, 'function')
   assert.deepEqual(playedEffect('02194'), {
     type: 'sequence', effects: [{ type: 'gainResource', amount: 3 }, { type: 'draw', amount: 1 }],
   })

@@ -8,6 +8,7 @@
 
 export default {
   code: '01007',
+  explicitReactionPrompt: true,
   abilities: [
     {
       kind: 'weakness',

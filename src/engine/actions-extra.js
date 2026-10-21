@@ -1,10 +1,10 @@
+import { investigatorRule } from '../cards/card-rules.js'
 // actions-extra.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 场景/剧情侧的额外行动：谈判、剧情资产、地点能力、威胁与债务等。
 // 这些行动都由「卡面文案 + 剧本数据」触发，读点仍是 applyMove → executeAction 的分派。
 export function createActionsExtra(deps) {
   const {
     EFFECTS,
-    INVESTIGATOR_ABILITIES,
     LITA_CHANDLER_CODE,
     SEARCHING_FOR_IZZIE_CODE,
     SKILL_NAMES,
@@ -18,6 +18,7 @@ export function createActionsExtra(deps) {
     canDiscardFromHand,
     canEquip,
     cannotPlayTypes,
+    capabilityBlocked,
     cardDef,
     cardHasTrait,
     cardName,
@@ -62,14 +63,6 @@ export function createActionsExtra(deps) {
     spendClues,
     unique,
   } = deps
-
-  function readyUmordhoth(state, events) {
-    const boss = state.enemies.find((e) => e.code === 'umordhoth' && e.exhausted)
-    if (boss) {
-      boss.exhausted = false
-      info(state, events, `🌀 「乌默尔多斯」重整。`)
-    }
-  }
 
   function scenarioAssetPlayError(state, inv, code) {
     const def = cardDef(code)
@@ -150,7 +143,7 @@ export function createActionsExtra(deps) {
 
   function doFreeAction(state, seat, events) {
     const inv = state.investigators[seat]
-    const skids = INVESTIGATOR_ABILITIES[inv.code]
+    const skids = investigatorRule(inv.code)
     if (!skids || !skids.freeAction || investigatorTextBlanked(state, inv)) return
     inv.resources -= skids.freeAction.cost.resources || 0
     if (skids.freeAction.cost.discardHand) {
@@ -274,19 +267,9 @@ export function createActionsExtra(deps) {
 
   function doSacrificeLita(state, seat, events) {
     const inv = state.investigators[seat]
-    const asset = inv.assets.find(item => item.code === LITA_CHANDLER_CODE)
-    if (!scenarioBehavior(state).sacrificeLita || !asset
-        || !state.enemies.some(enemy => enemy.code === 'umordhoth' && enemy.location === inv.location)) {
+    if (!scenarioBehavior(state).sacrificeLitaAction?.(state, inv, scenarioRuntime(state, events))) {
       throw new Error('献祭需要本人控制丽塔并与乌默尔多斯位于同一地点')
     }
-    const owners = Object.values(state.campaign.investigators || {}).filter(record => record.deck?.includes(asset.code))
-    if (owners.length !== 1) throw new Error('无法确定丽塔所属的持久牌组')
-    spendAction(state, inv)
-    leaveAsset(state, inv, asset)
-    campaignCardChange(state.campaign, owners[0].seat, asset.code, 'remove', 'sacrificedLita')
-    state.exiled.push(asset.code)
-    info(state, events, `${inv.name} 将丽塔·钱德勒推向了乌默尔多斯，并从实际牌组中移除丽塔。`)
-    finishScenario(state, 'r3', events)
   }
 
   function doBreakDoor(state, seat, skill, events) {
@@ -295,10 +278,11 @@ export function createActionsExtra(deps) {
     if (!loc || !loc.locked) return
     spendAction(state, inv)
     const useSkill = skill === 'agility' ? 'agility' : 'combat'
-    return performTest(state, seat, useSkill, 4, { source: { label: '破门', name: loc.name, code: loc.lockedDoorCode || 'lockedDoor' }, resolve: r => {
+    const doorCode = loc.lockedDoorCode || null
+    return performTest(state, seat, useSkill, 4, { source: { label: '破门', name: loc.name, code: doorCode }, resolve: r => {
       if (r.success) {
         loc.locked = false
-        state.encounterDiscard.push(loc.lockedDoorCode || 'lockedDoor')
+        if (doorCode) state.encounterDiscard.push(doorCode)
         delete loc.lockedDoorCode
         info(state, events, `🔓 ${inv.name} 以${SKILL_NAMES[useSkill]}检定破门而入。`)
       } else {
@@ -353,12 +337,23 @@ export function createActionsExtra(deps) {
     }
   }
 
-  function engagedWithMaskedHunter(state, inv) {
-    return state.enemies.some(enemy => enemy.code === 'theMaskedHunter' && enemy.engagedSeat === inv.seat && !enemyTextBlanked(state, enemy))
+  function enemyRuleEntry(state, enemy) {
+    const code = enemy.originalCode || enemyDef(enemy.code)?.originalCode
+      || state.scenario.enemies?.[enemy.code]?.originalCode || enemy.code
+    return registeredEntry(code)
+  }
+
+  function engagedWithClueBlocker(state, inv) {
+    return state.enemies.find(enemy => enemyRuleEntry(state, enemy)?.enemyRule?.blocksCluesWhileEngaged
+      && enemy.engagedSeat === inv.seat && !enemyTextBlanked(state, enemy)) || null
+  }
+
+  function clueBlockerName(state, enemy) {
+    return enemyRuleEntry(state, enemy)?.enemyRule?.blocksCluesMessage || enemy?.name || ''
   }
 
   function canSpendClues(state, inv) {
-    return !engagedWithMaskedHunter(state, inv)
+    return !engagedWithClueBlocker(state, inv)
   }
 
   function locationAbilityAvailable(state, loc, inv) {
@@ -372,6 +367,53 @@ export function createActionsExtra(deps) {
     if (effectError(state, inv, ab.effect)) return false
     if (ab.cost && ab.cost.resources && inv.resources < ab.cost.resources) return false
     return true
+  }
+
+  // 给 AI / 描述层的地点能力可用性：不仅回答「能不能用」，还回答「为什么不能用」。
+  // 读的条件与 moves.js 的 locationAbility case 对齐，但不受行动点、轮次和待决选择影响——
+  // 这些是「现在能不能提交」，不是「地点能力本身有什么门槛」。
+  function locationAbilityStatus(state, loc, inv) {
+    if (!loc) return { available: false, reason: '地点不存在' }
+    if (!loc.revealed) return { available: false, reason: '地点尚未揭示' }
+    if (inv.location !== loc.id) return { available: false, reason: '你不在该地点' }
+    const ab = loc.ability
+    if (!ab) return { available: false, reason: '没有已实现的地点能力' }
+    if (capabilityBlocked(state, inv, 'locationAbility')) return { available: false, reason: '当前效果禁止你使用地点能力' }
+    if (activeHiddenRules(state, inv).some(hidden => hidden.rule.cannotTriggerLocationAbilities)) {
+      return { available: false, reason: '隐私牌禁止你触发地点能力' }
+    }
+    if (ab.limit === 'game' && (loc.abilityUsed || loc.abilityUsedSeats?.includes(inv.seat))) {
+      return { available: false, reason: '本场游戏此能力已使用' }
+    }
+    if (ab.limit === 'team-game' && state.locationAbilityTeamUsed?.[loc.id]) {
+      return { available: false, reason: '本场游戏队伍已使用此能力' }
+    }
+    if (ab.limit === 'round' && loc.abilityRound === state.round) {
+      return { available: false, reason: '本轮此能力已使用' }
+    }
+    if (ab.limit === 'player-turn' && loc.abilityTurns?.[inv.seat] === `${state.round}:${state.currentSeat}`) {
+      return { available: false, reason: '本回合此能力已使用' }
+    }
+    if (ab.cost && ab.cost.resources && inv.resources < ab.cost.resources) {
+      return { available: false, reason: `需要 ${ab.cost.resources} 资源（当前 ${inv.resources}）` }
+    }
+    const reason = effectError(state, inv, ab.effect)
+    if (reason) return { available: false, reason }
+    return { available: true, reason: null }
+  }
+
+  // 调查的可用性同样给出原因：禁止调查 / 无线索 / 上锁 / 剧本限制。
+  // 与 moves.js 的 investigate case 对齐，但不看行动点。
+  function locationInvestigateStatus(state, loc, inv) {
+    if (!loc) return { available: false, reason: '地点不存在' }
+    if (!loc.revealed) return { available: false, reason: '地点尚未揭示' }
+    if (inv.location !== loc.id) return { available: false, reason: '你不在该地点' }
+    if (capabilityBlocked(state, inv, 'investigate')) return { available: false, reason: '当前效果禁止你调查' }
+    if ((loc.clues || 0) <= 0) return { available: false, reason: '这里没有线索可调查' }
+    if (loc.locked) return { available: false, reason: '地点被上锁的门封锁' }
+    const reason = scenarioBehavior(state).investigationError?.(state, inv, loc)
+    if (reason) return { available: false, reason }
+    return { available: true, reason: null }
   }
 
   function markLocationAbilityUsed(state, loc, inv) {
@@ -415,5 +457,5 @@ export function createActionsExtra(deps) {
     }
   }
 
-  return { readyUmordhoth, scenarioAssetPlayError, attachmentTargets, attachCardTo, assetCapacityValue, withEffectCode, doDraw, doResource, doFreeAction, doHiddenAction, doParley, doParleyCultist, doParleyLita, doDrawCultist, doInterruptRitual, doSacrificeLita, doBreakDoor, doDiscardThreat, doPayDebt, doPurgeThreat, engagedWithMaskedHunter, canSpendClues, locationAbilityAvailable, markLocationAbilityUsed, doLocationAbility, doSearchIzzie, afterEvade }
+  return { scenarioAssetPlayError, attachmentTargets, attachCardTo, assetCapacityValue, withEffectCode, doDraw, doResource, doFreeAction, doHiddenAction, doParley, doParleyCultist, doParleyLita, doDrawCultist, doInterruptRitual, doSacrificeLita, doBreakDoor, doDiscardThreat, doPayDebt, doPurgeThreat, engagedWithClueBlocker, clueBlockerName, canSpendClues, locationAbilityAvailable, locationAbilityStatus, locationInvestigateStatus, markLocationAbilityUsed, doLocationAbility, doSearchIzzie, afterEvade }
 }

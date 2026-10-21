@@ -10,6 +10,7 @@
 
 export default {
   code: '03017',
+  enemyRule: { locksDiscardWhileEngaged: true },
   enemyWeakness: { hunter: true, prey: 'bearer', lockDiscardWhileEngaged: true },
   abilities: [
 

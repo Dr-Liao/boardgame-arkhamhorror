@@ -101,7 +101,10 @@ const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'crit
   // 从 `EFFECTS[code].reactions` 搬过来的反应描述子带这个标记：引擎仍用旧式反应询问
   // （`是否触发「X」的反应？` + skip/trigger）结算它，保证迁移前后玩家看到的提示与状态指纹一致。
   // Phase 6 删掉旧式询问后，这个标记随之消失。
-  'legacyReaction'])
+  'legacyReaction',
+  // 强制/反应描述子默认会写一行「✨ 使用「X」…」；印在敌人卡上的强制效果通常没有这行，
+  // 用 silent 保持迁移前后的日志逐字一致（读点在 openAbilityWindow -> executeDescriptor）。
+  'silent'])
 const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities', 'modifiers', 'elderSign', 'source',
   'uses', 'usesType', 'playCondition', 'simplified', 'note',
   // Phase 5（D2）：「用完弃置」是使用次数元数据，与 uses/usesType 同层。
@@ -120,6 +123,56 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'redirectOneHorrorToSelf', 'cannotLeavePlay',
   // Phase 5（5b-10）：入场封印 / 替换封印旧印 / 附属目标声明（`attachTo` + `onAttach`）。
   'sealOnEnter', 'substituteSealedElderSign', 'attachTo', 'onAttach',
+  // 地点计数器型障碍（奥术屏障 02102）：检定难度、取消/继续选项与「弃牌库顶 N 张」都由卡条目声明，
+  // 引擎按 locationBarrier.counter 找规则，不再写死卡号（REPORT.md 第 1 批）。
+  'locationBarrier',
+  // 地点自身的行为规则（墓地 01133 / 扭曲的道路 01151）：进入失败的选项、离开检定都声明在卡条目上。
+  // 与 locationBarrier 一样是静态注册表数据，不进 state，因此不改重放指纹。
+  'locationRule',
+  // 调查员卡面规则（旧 INVESTIGATOR_ABILITIES 表的数据体，第 6 批搬进单卡条目）。
+  'investigator',
+  // 诡计的自己规则别名：卡面数据里的 kind 可能是卡名（onWingsOfDarkness），
+  // 由条目映射成通用 kind，避免引擎 switch 认识具体卡（REPORT.md 第 2 批）。
+  'penaltyKind',
+  // 「没有线索时获得涌动」这类数据开关；放条目上，不写进关卡定义（否则会改 state 指纹）。
+  'surgeIfNoClues',
+  // 敌人卡面的特殊规则（数值/布尔）：双倍负修正、远程难度减免、只能被某张卡伤害等。
+  // 原 card-rules.js 的 ENEMY_RULE_FLAGS，按 REPORT.md 第 3 批搬进卡条目。
+  'enemyRule',
+  // 敌人脚本钩子（函数，不进入关卡定义，避免 structuredClone 失败）。
+  'enemyScript',
+  // 隐藏卡/威胁区卡的数据型规则（第 7 批从 content/.../card-data.js 的表搬来）。
+  'hiddenRule',
+  'threatEffect',
+  'treacheryRule',
+  // 幕/议程揭示规则（第 7 批从章节 behavior.js 的 originalCode 分支搬来）。
+  'actRule',
+  'agendaRule',
+  // 地点标记（第 7 批：历史房间等章节级分组）。
+  'historicalRoom',
+  // 条目声明「这张遭遇卡的规则已经实现」，替代 encounter-rules 里的卡号集合。
+  'implemented',
+  // 密谋毁灭阈值按调查员人数计算（第 7 批从内容层 card-data 的集合搬来）。
+  'doomPerInvestigator',
+  // 威胁区卡的可执行「摆脱」行动（第 7 批从内容层 encounter-rules 的表搬来）。
+  'threatAction',
+  // 剧情角色（第 8 批：不再在引擎里写死丽塔/古代遗物等卡号）。
+  'storyRole',
+  // 地点复仇点何时「视同进入胜利区」（第 7 批从内容层 encounter-rules 搬来）。
+  'vengeanceWhile',
+  // 只进注册表、不并进 state 的敌人规则（第 7 批：避免改变场景定义哈希）。
+  'enemyStatRule',
+  'enemySpawnRule',
+  // 共享遭遇卡的结算入口（第 7 批：从内容层 encounter-rules 的 if 链搬来）。
+  'encounterResolve',
+  // 共享遭遇入口的生效战役（第 7 批：避免不同战役的同号卡互相覆盖）。
+  'encounterResolveCampaigns',
+  // 原 card-rules.js 的其余卡号级规则（第 3 批），全部由卡条目自己声明：
+  // 清空某类特质、强制显示反应提示、中毒威胁、议程手牌惩罚、调查额外行动、
+  // 地点计数器、空生成点放地点、苍白面具、遗物折扣、移出游戏去向、弱点升级来源。
+  'blanksTraits', 'explicitReactionPrompt', 'poisonThreat', 'agendaHandSizePenalty',
+  'investigateExtraActions', 'locationCounter', 'placesLocationForEmptySpawn', 'pallidMask',
+  'relicDiscountLocation', 'relocateDestination', 'upgradesFrom',
   // Phase 5（5b-11）：击败敌人后横置治愈恐惧。
   'exhaustOnEnemyDefeatedHealHorror',
   // Phase 5（5b-6d）：被动数据体（stats / handSizeBonus / sanityBonus …）。
@@ -322,6 +375,8 @@ export function normalizeDescriptor(raw, { code, index }) {
     countsAs: raw.countsAs || null,
     // Phase 5（5b-6）：从旧式 reactions 搬来的反应，沿用旧式询问（见 DESCRIPTOR_KEYS 注释）。
     legacyReaction: raw.legacyReaction === true,
+    // 不写「✨ 使用「X」…」日志（敌人卡上的强制效果等）。
+    silent: raw.silent === true,
     duringOwnSkillTest: raw.duringOwnSkillTest === true,
     requiresNoClues: raw.requiresNoClues === true,
     maximumInvestigatorDamage: raw.maximumInvestigatorDamage ?? null,
@@ -489,6 +544,78 @@ export function registerCardAbilities(entries) {
       chargesOnSymbolReveal: entry.chargesOnSymbolReveal ?? null,
       removeFromGameWhenEmpty: entry.removeFromGameWhenEmpty === true,
       enemyWeakness: entry.enemyWeakness ? Object.freeze({ ...entry.enemyWeakness }) : null,
+      locationBarrier: entry.locationBarrier ? Object.freeze({
+        ...entry.locationBarrier,
+        test: entry.locationBarrier.test ? Object.freeze({ ...entry.locationBarrier.test }) : null,
+        options: Object.freeze((entry.locationBarrier.options || []).map(option => Object.freeze({ ...option }))),
+      }) : null,
+      locationRule: entry.locationRule ? Object.freeze({
+        ...entry.locationRule,
+        onEnter: entry.locationRule.onEnter ? Object.freeze({
+          ...entry.locationRule.onEnter,
+          test: entry.locationRule.onEnter.test ? Object.freeze({ ...entry.locationRule.onEnter.test }) : null,
+          failChoice: entry.locationRule.onEnter.failChoice ? Object.freeze({
+            ...entry.locationRule.onEnter.failChoice,
+            options: Object.freeze((entry.locationRule.onEnter.failChoice.options || []).map(option => Object.freeze({ ...option }))),
+          }) : null,
+        }) : null,
+        onLeave: entry.locationRule.onLeave ? Object.freeze({
+          ...entry.locationRule.onLeave,
+          test: entry.locationRule.onLeave.test ? Object.freeze({ ...entry.locationRule.onLeave.test }) : null,
+        }) : null,
+      }) : null,
+      penaltyKind: entry.penaltyKind || null,
+      surgeIfNoClues: entry.surgeIfNoClues === true,
+      enemyRule: entry.enemyRule ? Object.freeze({ ...entry.enemyRule }) : null,
+      enemyScript: entry.enemyScript ? Object.freeze({ ...entry.enemyScript }) : null,
+      hiddenRule: entry.hiddenRule ? Object.freeze({
+        ...entry.hiddenRule,
+        cannotCommitTypes: Object.freeze([...(entry.hiddenRule.cannotCommitTypes || [])]),
+        cannotFightTraits: Object.freeze([...(entry.hiddenRule.cannotFightTraits || [])]),
+        cannotPlayTypes: Object.freeze([...(entry.hiddenRule.cannotPlayTypes || [])]),
+        discard: entry.hiddenRule.discard ? Object.freeze({ ...entry.hiddenRule.discard }) : null,
+      }) : null,
+      threatEffect: entry.threatEffect ? Object.freeze({
+        ...entry.threatEffect,
+        extraActionCost: Object.freeze([...(entry.threatEffect.extraActionCost || [])]),
+        endTurnTest: entry.threatEffect.endTurnTest ? Object.freeze({ ...entry.threatEffect.endTurnTest }) : null,
+      }) : null,
+      treacheryRule: entry.treacheryRule ? Object.freeze({
+        ...entry.treacheryRule,
+        threat: entry.treacheryRule.threat ? Object.freeze({
+          ...entry.treacheryRule.threat,
+          extraActionCost: Object.freeze([...(entry.treacheryRule.threat.extraActionCost || [])]),
+          cannotPlay: Object.freeze([...(entry.treacheryRule.threat.cannotPlay || [])]),
+        }) : null,
+      }) : null,
+      actRule: entry.actRule ? Object.freeze({ ...entry.actRule }) : null,
+      agendaRule: entry.agendaRule ? Object.freeze({ ...entry.agendaRule }) : null,
+      historicalRoom: entry.historicalRoom === true,
+      implemented: entry.implemented === true,
+      doomPerInvestigator: entry.doomPerInvestigator === true,
+      threatAction: entry.threatAction ? Object.freeze({
+        ...entry.threatAction,
+        skills: Object.freeze([...(entry.threatAction.skills || [])]),
+        skillLabels: entry.threatAction.skillLabels ? Object.freeze({ ...entry.threatAction.skillLabels }) : null,
+      }) : null,
+      storyRole: entry.storyRole || null,
+      vengeanceWhile: entry.vengeanceWhile || null,
+      enemyStatRule: entry.enemyStatRule ? Object.freeze({ ...entry.enemyStatRule }) : null,
+      enemySpawnRule: entry.enemySpawnRule ? Object.freeze({ ...entry.enemySpawnRule }) : null,
+      encounterResolve: typeof entry.encounterResolve === 'function' ? entry.encounterResolve : null,
+      encounterResolveCampaigns: Object.freeze([...(entry.encounterResolveCampaigns || [])]),
+      investigator: entry.investigator ? Object.freeze({ ...entry.investigator }) : null,
+      blanksTraits: Object.freeze([...(entry.blanksTraits || [])]),
+      explicitReactionPrompt: entry.explicitReactionPrompt === true,
+      poisonThreat: entry.poisonThreat === true,
+      agendaHandSizePenalty: entry.agendaHandSizePenalty ?? null,
+      investigateExtraActions: entry.investigateExtraActions ?? null,
+      locationCounter: entry.locationCounter || null,
+      placesLocationForEmptySpawn: entry.placesLocationForEmptySpawn === true,
+      pallidMask: entry.pallidMask === true,
+      relicDiscountLocation: entry.relicDiscountLocation === true,
+      relocateDestination: entry.relocateDestination === true,
+      upgradesFrom: entry.upgradesFrom || null,
       playableWeakness: entry.playableWeakness === true,
       endTurnInHandHorror: entry.endTurnInHandHorror ?? null,
       fastForIllicit: entry.fastForIllicit === true,
@@ -508,6 +635,12 @@ export function registeredEntry(code) {
 
 export function registeredCodes() {
   return [...REGISTRY.keys()].sort()
+}
+
+// 全部已注册条目（只读）。给「按条目级规则字段找唯一声明」的通用读点用，
+// 例如 movement.js 用 locationBarrier.counter 找奥术屏障规则，而不是写死 02102。
+export function registeredEntries() {
+  return [...REGISTRY.values()]
 }
 
 export function declaredAbilityCount() {

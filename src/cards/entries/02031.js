@@ -8,8 +8,29 @@
 export default {
   code: '02031',
   abilities: [
-    // Phase 5（5a-25）：卡号随效果数据走（引擎读 effect.code）。
-    { kind: 'played', label: '困兽之笼', effect: { type: 'bindMonster', code: '02031' } },
+    // Phase 5（5a-25）：卡号随效果数据走；第 4 批改成条目 resolve。
+    {
+      kind: 'played', label: '困兽之笼',
+      resolve: ({ state, inv, api }) => {
+        const candidates = state.enemies.filter(enemy =>
+          enemy.location === inv.location && !enemy.elite && !enemy.bindMonster)
+        if (!candidates.length) { api.info('本地点没有可绑定的非精英敌人。'); return }
+        const id = candidates.length === 1 ? candidates[0].id : api.choice({
+          kind: 'target', source: '02031', seat: inv.seat, prompt: '选择要绑定的非精英敌人。',
+          options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name })),
+        })
+        const enemy = candidates.find(item => item.id === id)
+        if (!enemy) return
+        api.test(inv.seat, 'willpower', api.enemyEvade(enemy, inv.seat), {
+          source: { label: '绑定怪物', name: enemy.name, code: '02031' },
+          resolve: result => {
+            if (!result.success || !state.enemies.includes(enemy)) return
+            api.bindMonsterToEnemy(enemy, inv.seat, '02031')
+            api.info(`「绑定怪物」附属于「${enemy.name}」；它被躲避，不能移动，并在重整阶段保持横置。`)
+          },
+        })
+      },
+    },
   ],
   modifiers: [
 

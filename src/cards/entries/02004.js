@@ -22,6 +22,15 @@ const factory = () => {
 
 export default {
   code: '02004',
+  investigator:   {
+    "elderSign": {
+      "kind": "jim",
+      "bonus": 1
+    },
+    "tokenModifiers": {
+      "skull": 0
+    }
+  },
   kind: 'investigator',
   elderSign: { id: '02004-eldersign', resolve: factory() },
   abilities: [],

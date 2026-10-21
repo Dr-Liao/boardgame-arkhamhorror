@@ -9,9 +9,9 @@ import { registeredEntry } from '../src/engine/ability.js'
 
 const clone = value => JSON.parse(JSON.stringify(value))
 // Phase 5：01038 已迁到能力层描述子（注册后不可变），旧 DSL 的「桩替换」改用
-// 一张仍然只在 EFFECTS 里实现的事件卡。02111 带 addToVictory（描述子没有读点），
-// 在 Phase 5/6 期间会一直留在旧 DSL 上。
-const STUB_EVENT_CARD = '02111'
+// 一张仍以 effect 数据体实现的普通事件卡（01057 百战百胜：获得 10 资源）。
+// 02111 已改成 resolve 描述子，不能再作为桩。
+const STUB_EVENT_CARD = '01057'
 // Phase 6（6e-16）：EFFECTS 已清空，stub 改成改写该卡描述子的 effect 数据体（描述子本身冻结，
 // 但 effect 数据体是普通对象）。用完必须还原。
 function stubEffect(patch) {

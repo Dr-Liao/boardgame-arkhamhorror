@@ -17,6 +17,27 @@ const factory = () => {
 
 export default {
   code: '03001',
+  investigator:   {
+    "startsWith": [
+      "03009"
+    ],
+    "elderSign": {
+      "kind": "perDamage",
+      "base": 0
+    },
+    "homeFrontMoveDamage": true,
+    "reactions": [
+      {
+        "id": "markDraw",
+        "when": "damagePlaced",
+        "limit": "phase",
+        "effect": {
+          "type": "draw",
+          "amount": 1
+        }
+      }
+    ]
+  },
   kind: 'investigator',
   elderSign: { id: '03001-eldersign', resolve: factory() },
   abilities: [],

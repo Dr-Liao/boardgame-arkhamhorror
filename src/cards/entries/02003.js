@@ -11,6 +11,12 @@ const factory = () => ({ inv }) => ({ delta: inv.resources })
 
 export default {
   code: '02003',
+  investigator:   {
+    "elderSign": {
+      "kind": "resources"
+    },
+    "upkeepResources": 2
+  },
   kind: 'investigator',
   elderSign: { id: '02003-eldersign', resolve: factory() },
   abilities: [],

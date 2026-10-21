@@ -1,3 +1,4 @@
+import { investigatorRule } from '../cards/card-rules.js'
 // 遭遇牌与反应窗口（drawEncounter / reactionWindow / triggerReaction / playerWindow）
 // 从 engine.js 拆出的模块（Phase 6 · 6d-20）。
 //
@@ -13,7 +14,6 @@ export function createEncounter(deps) {
     ALL_ENEMIES,
     ALL_TREACHERIES,
     EFFECTS,
-    INVESTIGATOR_ABILITIES,
     abilityApi,
     abilityTargets,
     actPlacesLocationForEmptySpawn,
@@ -250,7 +250,7 @@ function triggerReaction(state, seat, when, events, context = {}) {
   const inv = state.investigators[seat]
   if (!inv || inv.defeated || inv.resigned) return
   const entries = []
-  const ab = INVESTIGATOR_ABILITIES[inv.code]
+  const ab = investigatorRule(inv.code)
   for (const r of (ab && ab.reactions) || []) { if (!investigatorTextBlanked(state, inv)) entries.push({ r, type: 'investigator' }) }
   for (const asset of inv.assets) {
     const eff = assetEffect(inv, asset)

@@ -2,9 +2,13 @@
 //
 // 这里的内容原来在 card-abilities.js 顶部；拆分后由各 entries/<code>.js 按需 import。
 
-import { INVESTIGATOR_ABILITIES } from '../card-effects.js'
+import { registeredEntry } from '../../engine/ability.js'
 
-export const investigatorSign = code => INVESTIGATOR_ABILITIES[code]?.elderSign || {}
+// 调查员的旧印数据在条目自己的 `investigator.elderSign` 里；用惰性代理读取，
+// 避免卡文件在模块初始化时反向依赖 card-effects（第 6 批）。
+export const investigatorSign = code => new Proxy({}, {
+  get: (_, key) => registeredEntry(code)?.investigator?.elderSign?.[key],
+})
 
 export const skillModifier = (skill, amount, condition) =>
   ({ target: `skill:${skill}`, amount, ...(condition ? { condition } : {}) })

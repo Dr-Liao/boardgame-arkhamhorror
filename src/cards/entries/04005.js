@@ -8,7 +8,7 @@
 //
 // 加尔文·怀特：旧印 +0；治疗或承受 1 点伤害/恐惧。
 
-import { INVESTIGATOR_ABILITIES } from '../card-effects.js'
+import { registeredEntry } from '../../engine/ability.js'
 
 const factory = () => ({ inv, api }) => {
     const options = [
@@ -29,6 +29,21 @@ const factory = () => ({ inv, api }) => {
 
 export default {
   code: '04005',
+  investigator:   {
+    "statsPerHarm": {
+      "horror": {
+        "willpower": 1,
+        "intellect": 1
+      },
+      "damage": {
+        "combat": 1,
+        "agility": 1
+      }
+    },
+    "elderSign": {
+      "kind": "tfaCalvinSign"
+    }
+  },
   kind: 'investigator',
   elderSign: { id: '04005-eldersign', resolve: factory() },
   abilities: [
@@ -37,7 +52,7 @@ export default {
   modifiers: ['willpower', 'intellect', 'combat', 'agility'].map(skill => ({
     target: `skill:${skill}`,
     amount: ({ controller }) => {
-      const per = INVESTIGATOR_ABILITIES['04005']?.statsPerHarm || {}
+      const per = registeredEntry('04005')?.investigator?.statsPerHarm || {}
       return (controller?.horror || 0) * (per.horror?.[skill] || 0)
         + (controller?.damage || 0) * (per.damage?.[skill] || 0)
     },

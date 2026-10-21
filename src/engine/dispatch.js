@@ -8,6 +8,7 @@
 //
 // 依赖注入同前；被依赖表引用的 do* 与本模块函数都用函数声明 + 惰性装配。
 
+import { investigatorRule } from '../cards/card-rules.js'
 import { cardPoolContext } from '../deck/card-pool.js'
 
 export function createDispatch(deps) {
@@ -15,7 +16,6 @@ export function createDispatch(deps) {
     ALL_CARDS,
     ALL_INVESTIGATORS,
     EFFECTS,
-    INVESTIGATOR_ABILITIES,
     ScenarioEnded,
     ScenarioRestarted,
     actionCost,
@@ -200,7 +200,7 @@ function executeAction(state, seat, move, events) {
   state._actionPaid = true
   try {
     if (move.action === 'scenarioAction') scenarioBehavior(state).payScenarioActionCost?.(state, inv, move, scenarioRuntime(state, events))
-    const noOpportunityAttack = move.action === 'freeAction' && INVESTIGATOR_ABILITIES[inv.code]?.freeAction?.noOpportunityAttack
+    const noOpportunityAttack = move.action === 'freeAction' && investigatorRule(inv.code)?.freeAction?.noOpportunityAttack
     // Phase 2（C2）：noOpportunityAttack 也可以由描述子的 add:keyword 授予。
     // Phase 5（5c）：资产把「打出时不引发借机攻击」写成条目级 noOpportunityAttack
     // （旧 DSL 的字段名是 noOpportunityAttackOnPlay），两边都在这里汇合。

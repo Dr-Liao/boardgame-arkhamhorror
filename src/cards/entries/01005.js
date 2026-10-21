@@ -11,6 +11,12 @@ const factory = () => ({ inv }) => ({ delta: 0, autoSuccess: inv.assets.some(ass
 
 export default {
   code: '01005',
+  investigator:   {
+    "elderSign": {
+      "kind": "wendyAmulet"
+    },
+    "chaosTokenRedraw": true
+  },
   kind: 'investigator',
   elderSign: { id: '01005-eldersign', resolve: factory() },
   abilities: [],

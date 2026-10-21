@@ -9,7 +9,7 @@ import { actTwoVariants } from '../content/campaigns/thePathToCarcosa/scenarios/
 import { scenario as dimScenario } from '../content/campaigns/thePathToCarcosa/scenarios/dimCarcosa/definition.js'
 import { behavior as dimBehavior } from '../content/campaigns/thePathToCarcosa/scenarios/dimCarcosa/behavior.js'
 import {
-  encounterRules, implementedEnemies, implementedTreacheries,
+  encounterRules,
 } from '../content/campaigns/thePathToCarcosa/encounter-rules.js'
 import { requestChoice, resolveTransaction } from '../src/engine/resolution.js'
 // Phase 3（D1）：敌人/地点的卡面声明也是「逐卡行为证据」。
@@ -158,9 +158,9 @@ for (const card of campaignCards) {
 
 test('C5 shared encounter rules execute every formerly pending enemy and treachery family', () => {
   for (const code of ['03086', '03089', '03093', '03095', '03096', '03098', '03099', '03103',
-    '03222', '03258', '03259', '03335', '03336']) assert.equal(implementedEnemies.has(code), true, code)
+    '03222', '03258', '03259', '03335', '03336']) assert.equal(registeredEntry(code)?.implemented, true, code)
   for (const code of ['03224', '03225', '03226', '03260', '03261', '03262',
-    '03302', '03303', '03337', '03338', '03339']) assert.equal(implementedTreacheries.has(code), true, code)
+    '03302', '03303', '03337', '03338', '03339']) assert.equal(registeredEntry(code)?.implemented, true, code)
 
   const state = {
     round: 2, phase: 'investigation', campaign: { leadSeat: 0 },
