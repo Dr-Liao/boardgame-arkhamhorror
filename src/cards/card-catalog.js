@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { ALL_CARDS, CARDS_BY_TYPE, META } from './cards-data.js'
-import { EFFECTS } from './card-effects.js'
+import { implementationSummary } from './card-implementation.js'
 import { SCENARIO_CARD_IDENTITIES } from './scenarios-data.js'
 import { imageDescriptor, imageResolution, LOCALIZED_ART_SOURCE } from '../../presentation/images.js'
 import { getAvailability } from '../deck/availability.js'
@@ -155,7 +155,7 @@ export function getCatalogCardView(code) {
     view[field] = Array.isArray(card[field]) ? card[field].filter(value => typeof value === 'string') : []
   }
   view.icons = pickScalars(card.icons || {}, ['willpower', 'intellect', 'combat', 'agility', 'wild'])
-  view.effectNote = Object.hasOwn(EFFECTS, code) && typeof EFFECTS[code].note === 'string' ? EFFECTS[code].note : ''
+  view.effectNote = implementationSummary(code)?.note || ''
   view.scenarioIdentities = structuredClone(identitiesByCode.get(code) || [])
   view.differenceNotes = [...new Set([view.effectNote, ...view.scenarioIdentities.map(identity => identity.identityReason)].filter(Boolean))]
   view.imageNote = '默认 CDN 卡图首次显示后会按资源包目录缓存到本地；候选路径不代表远程已存在，中文缺图会回退英文或文字。'

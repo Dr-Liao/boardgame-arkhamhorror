@@ -11,8 +11,8 @@ import { deckRules, matchesCardRule, deckCardLimit, validateDeckRules } from './
 // 本引擎只读数据、可复现（种子随机），供 engine.js 调用。
 
 import { PLAYER_CARDS, ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
-import { EFFECTS } from '../cards/card-effects.js'
-import { CARD_ABILITY_CODES, PHASE5_MIGRATED_CODES } from '../cards/card-abilities.js'
+import { legacyEntry, implementation } from '../cards/card-implementation.js'
+import { PHASE5_MIGRATED_CODES } from '../cards/card-abilities.js'
 import { abilityShim, modifiersFor, registeredEntry } from '../engine/ability.js'
 import { playedEffect } from '../engine/lifecycle.js'
 import {
@@ -40,10 +40,10 @@ export function matchesDeckOptions(invDef, card) {
 }
 
 // 仅简化模式许可且有明确效果条目的卡牌；不使用技能图标隐式放行。
-// 「有行为实现」现在有两条通道：旧 DSL 的 EFFECTS，或能力层的描述子/修正。
+// 「有行为实现」的判定收敛到 src/cards/card-implementation.js（描述子 / 旧 DSL / 卡面数据三条通道）。
 export function isPlayable(card) {
   return !!card && card.dataStatus !== 'quarantined' && isCardAvailable(card.code)
-    && (Object.hasOwn(EFFECTS, card.code) || CARD_ABILITY_CODES.has(card.code))
+    && implementation(card.code).implemented
 }
 
 // 无效的张数元数据不能使构筑绕过数量限制。
@@ -146,7 +146,7 @@ export function scoreCard(card, invDef) {
   const rank = skillRank(invDef)
   const boost = (sk, v) => { s += v * (4 - rank(sk)) }
 
-  const eff = EFFECTS[card.code]
+  const eff = legacyEntry(card.code)
   // Phase 5：自动构筑的评分口径必须与迁移前一致（牌组会被写进对局存档）。
   // 因此只对「Phase 5 机械迁移」的卡改用新读点——把搬走的数据原样计回分数；
   // 更早手写描述子的卡保持历史口径（它们的 abilities/played 数据历来不参与评分）。
@@ -250,7 +250,7 @@ export function signatureAndWeaknesses(invDef, rng, options = {}) {
   for (const code of deckRules(invDef).signatureCards) {
     const def = ALL_CARDS[code]
     if (!def || def.code !== code
-      || !(Object.hasOwn(EFFECTS, code) || CARD_ABILITY_CODES.has(code))
+      || !implementation(code).implemented
       || !Array.isArray(def.signatureFor)
       || !def.signatureFor.includes(invDef.code)) {
       throw new Error('签名卡或专属弱点依赖缺失/不合法：' + code)

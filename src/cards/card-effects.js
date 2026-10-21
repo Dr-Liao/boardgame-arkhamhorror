@@ -68,10 +68,10 @@ export const EFFECTS = {
     ],
   },
   // 01088 应急物品已迁到能力层（kind: 'played'，见 src/cards/card-abilities.js）。
-  // 防弹衣 / 远古印记护身符：卡面没有规则文本，只提供印刷生命/神智作为承伤容量，
+  // 01094 防弹衣 / 01095 远古印记护身符：卡面没有规则文本，只提供印刷生命/神智作为承伤容量，
   // 承伤逻辑在 engine.assignHarm() 里按 cardDef(code).health/sanity 通用处理。
-  '01094': { engine: 'printedSoak' },
-  '01095': { engine: 'printedSoak' },
+  // Phase 6（6e-2）：纯登记条目（`engine: 'printedSoak'`）已删除，实现判定见
+  // src/cards/card-implementation.js 的 DATA_IMPLEMENTED_CODES（data 通道）。
 
   // =========================================================================
   // 守卫者 Guardian（0 级 + XP）
@@ -132,9 +132,7 @@ export const EFFECTS = {
   // =========================================================================
   // 幸存者 Survivor（0 级 + XP）
   // =========================================================================
-  '01072': { // 皮大衣 Leather Coat（无规则文本，印刷生命 2 作为承伤容量）
-    engine: 'printedSoak',
-  },
+  // 01072 皮大衣（无规则文本，印刷生命 2 作为承伤容量）：纯登记条目已在 6e-2 删除。
   '01076': { // 野猫 Stray Cat
     abilities: [
       { label: '引开（弃掉野猫，自动躲避同地点非精英敌人）', cost: { action: false, discardSelf: true }, effect: { type: 'autoEvadeNonElite' } },
@@ -169,11 +167,8 @@ export const EFFECTS = {
     reaction: { when: 'turnBegins', selfOnly: true },
     event: { type: 'onTheLam' },
   },
-  '01014': { // 温蒂的护身符 Wendy's Amulet
-    // 两条能力都在 engine.js 里按卡号实现：弃牌堆顶事件可当手牌打出（engine.js:2021-2027、
-    // 8160、8653-8655），打出的事件改为放到牌库底（engine.js disposePlayedEvent）。
-    engine: 'wendyAmulet',
-  },
+  // 01014 温蒂的护身符：两条能力都已在能力层（条目级 playedEventsToDeckTop，见 5a-18）。
+  // 纯登记条目 `engine: 'wendyAmulet'` 已在 6e-2 删除。
 
   // =========================================================================
   // 专属弱点（5 张，揭示时结算）
@@ -194,9 +189,8 @@ export const EFFECTS = {
   // =========================================================================
   // 剧情资产（丽塔·钱德勒 01117，场景 2 推进时在客厅生成）
   // =========================================================================
-  '01117': { // 剧情资产：丽塔·钱德勒（光环/谈判/献祭都由 engine.js 按卡号硬编码）
-    engine: 'litaAura',
-  },
+  // 01117 丽塔·钱德勒：光环由条目级 auraWhileInPlay 声明（5a-31），
+  // 纯登记条目 `engine: 'litaAura'` 已在 6e-2 删除。
 }
 
 // ---------------------------------------------------------------------------

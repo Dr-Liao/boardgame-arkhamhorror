@@ -11,14 +11,8 @@
     "engineMarkedCards": {
       "batch": "5a",
       "reason": "EFFECTS 里有 engine 标记：行为完全由引擎硬编码，迁移收益最高",
-      "count": 5,
-      "codes": [
-        "01014",
-        "01072",
-        "01094",
-        "01095",
-        "01117"
-      ]
+      "count": 0,
+      "codes": []
     },
     "escapeCards": {
       "batch": "5c",

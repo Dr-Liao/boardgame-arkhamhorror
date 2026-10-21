@@ -3,8 +3,8 @@
   "note": "由 tools/audit-abilities.mjs --write 生成，勿手改。指标只允许下降；engineCodes / effectsEntries 的每一次减少都是一次迁移证据，必须随迁移一起提交。",
   "metrics": {
     "engineCodes": 0,
-    "effectsEntries": 57,
-    "effectsTopLevelFields": 33,
+    "effectsEntries": 52,
+    "effectsTopLevelFields": 32,
     "escapeCards": 0,
     "descriptorEntries": 419,
     "descriptorAbilities": 344,
@@ -16,10 +16,10 @@
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 408,
-    "legacy": 43,
+    "descriptor": 410,
+    "legacy": 42,
     "hybrid": 9,
-    "engine": 5
+    "data": 4
   },
   "nonPlayer": {
     "byScope": {
@@ -148,9 +148,8 @@
     },
     {
       "code": "01014",
-      "channel": "engine",
-      "descriptors": 0,
-      "engineMarked": true
+      "channel": "descriptor",
+      "descriptors": 0
     },
     {
       "code": "01015",
@@ -439,9 +438,9 @@
     },
     {
       "code": "01072",
-      "channel": "engine",
+      "channel": "data",
       "descriptors": 0,
-      "engineMarked": true
+      "dataImplemented": true
     },
     {
       "code": "01073",
@@ -550,15 +549,15 @@
     },
     {
       "code": "01094",
-      "channel": "engine",
+      "channel": "data",
       "descriptors": 0,
-      "engineMarked": true
+      "dataImplemented": true
     },
     {
       "code": "01095",
-      "channel": "engine",
+      "channel": "data",
       "descriptors": 0,
-      "engineMarked": true
+      "dataImplemented": true
     },
     {
       "code": "01096",
@@ -587,9 +586,8 @@
     },
     {
       "code": "01117",
-      "channel": "engine",
-      "descriptors": 0,
-      "engineMarked": true
+      "channel": "descriptor",
+      "descriptors": 0
     },
     {
       "code": "01518",
@@ -1483,8 +1481,9 @@
     },
     {
       "code": "03114",
-      "channel": "legacy",
-      "descriptors": 0
+      "channel": "data",
+      "descriptors": 0,
+      "dataImplemented": true
     },
     {
       "code": "03115",

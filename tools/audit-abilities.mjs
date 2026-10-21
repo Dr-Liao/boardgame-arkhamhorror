@@ -27,6 +27,7 @@ import {
   nonPlayerEntries, ABILITY_SCOPES,
 } from '../src/engine/ability.js'
 import { CARD_ABILITY_ENTRIES } from '../src/cards/card-abilities.js'
+import { DATA_IMPLEMENTED_CODES } from '../src/cards/card-implementation.js'
 import { NON_PLAYER_ABILITY_ENTRIES } from '../src/cards/encounter-abilities.js'
 import { windows } from '../src/engine/windows.js'
 
@@ -147,7 +148,11 @@ export async function collect() {
   }
 
   const cards = []
-  for (const code of sorted(new Set([...effectsCodes, ...descriptorCodes]))) {
+  // Phase 6（6e-1）：通道口径与 src/cards/card-implementation.js 的实现账本对齐——
+  // 「纯登记条目」（只有 engine/note 标记）与「数据即实现」的卡记成 data 通道，
+  // 这样删掉登记条目只让 effectsEntries 下降，通道账本不会凭空丢卡。
+  const DATA_CODES = new Set(DATA_IMPLEMENTED_CODES)
+  for (const code of sorted(new Set([...effectsCodes, ...descriptorCodes, ...DATA_CODES]))) {
     const entry = EFFECTS[code]
     const escapePrimitives = sorted(new Set([
       ...(entry ? collectEscapePrimitives(entry) : []),
@@ -159,10 +164,12 @@ export async function collect() {
     const engineReferenced = engineCodes.includes(code)
     const hasDescriptor = descriptorCodes.includes(code)
     const inEffects = Boolean(entry)
+    const registrationOnly = inEffects && Object.keys(entry).every(key => ['engine', 'note', 'simplified', 'text'].includes(key))
     const channel = engineMarked ? 'engine'
       : escapePrimitives.length ? 'escape'
         : hasDescriptor && inEffects ? 'hybrid'
-          : hasDescriptor ? 'descriptor' : 'legacy'
+          : hasDescriptor ? 'descriptor'
+            : (inEffects && !registrationOnly) ? 'legacy' : 'data'
     cards.push({
       code,
       channel,
@@ -170,6 +177,7 @@ export async function collect() {
       ...(escapePrimitives.length ? { escapePrimitives } : {}),
       ...(engineMarked ? { engineMarked: true } : {}),
       ...(engineReferenced ? { engineReferenced: true } : {}),
+      ...(channel === 'data' ? { dataImplemented: true } : {}),
     })
   }
 

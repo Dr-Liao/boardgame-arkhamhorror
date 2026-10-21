@@ -1,6 +1,6 @@
 import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
-import { EFFECTS, INVESTIGATOR_ABILITIES } from '../cards/card-effects.js'
-import { abilitySummary } from '../engine/ability.js'
+import { INVESTIGATOR_ABILITIES } from '../cards/card-effects.js'
+import { implementationSummary } from '../cards/card-implementation.js'
 import { commitProfile } from '../engine/lifecycle.js'
 import { playablePool, matchesDeckOptions } from '../deck/deckbuilding.js'
 import { deckRules } from '../deck/deck-rules.js'
@@ -15,7 +15,7 @@ const card = code => {
   if (!c) return { code }
   return { code, name: c.nameZh || c.name, type: c.type, cost: c.cost, xp: c.xp || 0,
     icons: c.icons, slots: c.slots || c.slot, traits: c.traits, health: c.health, sanity: c.sanity,
-    printedText: c.textZh || c.text, implemented: EFFECTS[code] || abilitySummary(code) }
+    printedText: c.textZh || c.text, implemented: implementationSummary(code) }
 }
 
 // Only known cards and this observer's own deck composition; never deck order,
