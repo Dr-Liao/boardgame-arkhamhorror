@@ -4,6 +4,7 @@
 export function createTreacheryTokens(deps) {
   const {
     BASIC_WEAKNESSES,
+    basicWeaknessPool,
     INVESTIGATOR_ABILITIES,
     SKILL_NAMES,
     SYMBOL_DEFAULTS,
@@ -181,9 +182,13 @@ export function createTreacheryTokens(deps) {
 
   function addBasicWeakness(state, inv, events, traits = ['madness', 'injury']) {
     const wanted = new Set(traits.map(trait => String(trait).toLowerCase()))
-    const pool = Object.values(BASIC_WEAKNESSES).filter(def =>
-      (def.traits || []).some(trait => wanted.has(String(trait).toLowerCase()))
-      && !inv.deck.includes(def.code) && !inv.discard.includes(def.code))
+    // P0：只从本战役开放的基础弱点池里抽；旧实现遍历全目录 77 张，
+    // 会抽到没有任何描述子/profile 的弱点，抽到时 weakness.js 直接抛错。
+    const pool = basicWeaknessPool(state)
+      .map(code => BASIC_WEAKNESSES[code])
+      .filter(def => def
+        && (def.traits || []).some(trait => wanted.has(String(trait).toLowerCase()))
+        && !inv.deck.includes(def.code) && !inv.discard.includes(def.code))
     if (!pool.length) {
       info(state, events, `${inv.name} 的收藏里没有可用的基础弱点。`)
       return null

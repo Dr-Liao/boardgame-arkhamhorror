@@ -139,8 +139,15 @@
   .ah-roster-player { margin-top: 3px; padding-top: 3px; gap: 3px; }
   .ah-roster-avatar { width: 17px; height: 17px; flex-basis: 17px; font-size: 10px; }
   .ah-roster-player-name { font-size: 9px; }.ah-roster-player small { font-size: 7px; }
+  /* 4 人局在窄屏保持单行，避免名单换成两行把指挥台撑到地图上。 */
+  .ah-command-roster { grid-auto-flow: column; grid-auto-columns: minmax(0,1fr); grid-template-columns: none; }
   .ah-header-phase { padding: 2px 3px; gap: 3px; }.ah-header-phase .ah-icon { width: 13px; height: 13px; }
   .ah-header-phase strong { font-size: 10px; }.ah-header-phase.ah-phase-mythos strong { font-size: 13px; letter-spacing: 1px; }
   .ah-table.ah-calm.ah-noir .bg-game-status { max-width: none; }
+}
+@media (max-width: 480px) {
+  /* 手机竖屏固定地图行高，避免名单/资源区高度变化让 123px/114px 来回跳。 */
+  .ah-table.ah-calm.ah-noir .ah-table-shell { grid-template-rows: 264px 123px 161px 76px; }
+  .ah-table.ah-calm.ah-noir .ah-table-map { height: 123px; }
 }
 @media (prefers-reduced-motion: reduce) { .ah-roster-member { transition: none; } }

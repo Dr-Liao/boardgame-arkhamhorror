@@ -11,7 +11,7 @@ const deckFor = (code, extra = {}) => ({
   slots: { ...slots(buildDeck(INVESTIGATORS[code], { seed: 'import-ui' }).playerCards), ...INVESTIGATORS[code].deckRequirements.signatureCards.reduce((out, c) => ({ ...out, [c]: 1 }), {}), '01000': 1, ...extra },
 })
 const decks = {
-  1: describeArkhamDbDeck(deckFor('01001', { '03022': 1 }), { kind: 'decklist', id: '1' }),
+  1: describeArkhamDbDeck(deckFor('01001', { '05010': 1 }), { kind: 'decklist', id: '1' }),
   2: describeArkhamDbDeck(deckFor('01002'), { kind: 'decklist', id: '2' }),
   3: describeArkhamDbDeck(deckFor('01001'), { kind: 'decklist', id: '3' }),
 }

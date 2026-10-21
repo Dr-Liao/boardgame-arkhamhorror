@@ -6,17 +6,17 @@
     "effectsEntries": 0,
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
-    "descriptorEntries": 459,
-    "descriptorAbilities": 385,
+    "descriptorEntries": 460,
+    "descriptorAbilities": 386,
     "abilityKinds": 12,
     "windows": 52,
     "effectPrimitives": 97,
     "nonPlayerCards": 9,
-    "behaviorLines": 14831,
+    "behaviorLines": 14829,
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 459,
+    "descriptor": 460,
     "data": 6
   },
   "nonPlayer": {
@@ -75,7 +75,7 @@
       "content/campaigns/thePathToCarcosa/scenarios/thePallidMask/behavior.js",
       "content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/behavior.js"
     ],
-    "behaviorLines": 14831,
+    "behaviorLines": 14829,
     "declaredScenarios": 3
   },
   "cards": [
@@ -1630,6 +1630,11 @@
     },
     {
       "code": "03199",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "03227",
       "channel": "descriptor",
       "descriptors": 1
     },

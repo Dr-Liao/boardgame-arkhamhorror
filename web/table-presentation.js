@@ -92,7 +92,7 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
   let last = null, sessionId = null, lastSeq = -1, frame = 0, epoch = 0, layer = null, running = false
   let anchors = new Map(), queue = [], unlocked = false
   let presentedPlays = []
-  let blocking = false, cancelScene = null
+  let blocking = false, cancelScene = null, introPlayed = false
   let latest = null, displayed = null
   let cardTransits = [], maskedCards = new Set()
   const interaction = key => [...document.querySelectorAll('.ah-table [data-interaction]')].find(el => el.dataset.interaction === key)
@@ -173,7 +173,7 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
   }
   const clear = () => {
     cancelScene?.(); cancelScene = null; block(false)
-    epoch++; queue = []; presentedPlays = []; running = false; stopAudio(); cancelAnimationFrame(frame)
+    epoch++; queue = []; presentedPlays = []; running = false; stopAudio(); cancelAnimationFrame(frame); introPlayed = false
     for(const key of maskedCards) { const el=interaction(key);if(el)el.style.visibility='' }
     for(const transit of cardTransits) { const target=transitTarget(transit);if(target)target.style.visibility='' }
     maskedCards.clear();cardTransits=[]
@@ -755,7 +755,11 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
             : [...publicSequence(events),{kind:'checkpoint',tableState:session.state,inferReveals:!events.some(e=>e.presentation?.kind==='location'||e.kind==='location')}]
           for (const change of cues) queue.push({ change, before: anchors, after: nextAnchors })
         }
-        if (!last && session.state.scenario && session.state.round === 1 && (session.state.revision === 0 || session.state.pendingChoice?.kind === 'mulligan')) {
+        // P1：换牌是开局第一步。故事导入必须等换牌结束再播，否则会挡住待决选择面板；
+        // introPlayed 保证只播一次（换牌后不会再触发）。
+        if (session.state.scenario && session.state.round === 1 && !introPlayed
+          && session.state.pendingChoice?.kind !== 'mulligan') {
+          introPlayed = true
           const act = session.state.acts?.[session.state.actIndex]
           queue.push({ change: { kind: 'story', title: '故事导入', name: act?.name || session.state.scenario.name,
             code: act?.originalCode || act?.code, text: session.state.scenario.intro, intro: true }, before: anchors, after: nextAnchors })

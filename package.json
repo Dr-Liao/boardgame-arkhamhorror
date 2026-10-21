@@ -1,7 +1,7 @@
 {
   "name": "dsh-boardgame-arkhamhorror",
   "description": "桌游大厅 Mod：诡镇奇谈 · 卡牌版（Arkham Horror LCG），放在大厅的 games/arkhamhorror 下运行",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -62,6 +62,9 @@
     "audit:p6:write": "node tools/audit-p6.mjs --write",
     "cards:audit": "node tools/audit-abilities.mjs --check",
     "cards:audit:write": "node tools/audit-abilities.mjs --write",
+    "cards:index": "node tools/build-card-index.mjs --write",
+    "cards:index:check": "node tools/build-card-index.mjs --check",
+    "cards:check": "node tools/build-card-index.mjs --check && node --test tests/card-entries.test.mjs",
     "cards:migrate": "node tools/cards-migrate.mjs",
     "cards:migrate:list": "node tools/migrate-card.mjs --list",
     "cards:scaffold": "node tools/scaffold-card.mjs",

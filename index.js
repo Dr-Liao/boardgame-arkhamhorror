@@ -165,9 +165,19 @@ export default {
       options: campaignListForUi(contentRegistry).map(campaign => ({ value: campaign.id, label: campaign.name })),
     },
     {
-      key: 'aiStoryAwareness', type: 'select', label: 'AI 感知剧情', default: 'off',
+      // 卡牌范围与回档开关在「游戏高级设置」弹窗里编辑（hub.js），不占用开局表单的通用下拉框。
+      key: 'cardPoolScope', type: 'select', label: '卡牌范围', default: 'all',
+      description: '渐进式：禁止超过当前循环的所有卡牌，只能使用当前战役循环及更早循环的卡牌（调查员、构筑与关间升级都受限）；全部：不限制卡牌来源。',
+      options: [{ value: 'all', label: '全部' }, { value: 'progressive', label: '渐进式' }],
+    },
+    {
+      key: 'allowRollback', type: 'toggle', label: '允许回档', default: 'on',
+      description: '允许从关卡检查点「从此关重新开始」（创建分支存档）。关闭后本局不能回档；普通读档不受影响。',
+    },
+    {
+      // AI 感知剧情归入「AI 高级设置」弹窗；默认开启，让 AI 队友知道已经发生的剧情。
+      key: 'aiStoryAwareness', type: 'toggle', label: 'AI 感知剧情', default: 'on',
       description: '开启后，AI 队友决策时可读取已达成的冒险日志，剧情选择时附带当前关前情，聊天时参考剧情梗概；不会获得未到达的剧情或结局分支。',
-      options: [{ value: 'off', label: '关闭' }, { value: 'on', label: '开启' }],
     },
     {
       key: 'aiRoutineSpeechFrequency', type: 'range', label: '日常行动发言频率',
@@ -215,7 +225,8 @@ export default {
     },
   ] },
   defaults: {
-    playerCount: 2, campaignId: 'nightOfTheZealot', aiStoryAwareness: 'off',
+    playerCount: 2, campaignId: 'nightOfTheZealot', aiStoryAwareness: 'on',
+    cardPoolScope: 'all', allowRollback: 'on',
     aiRoutineSpeechFrequency: DEFAULT_AI_DIALOGUE_SETTINGS.routineFrequency,
     aiSelfTestSpeechFrequency: DEFAULT_AI_DIALOGUE_SETTINGS.selfTestFrequency,
     aiOtherTestSpeechFrequency: DEFAULT_AI_DIALOGUE_SETTINGS.otherTestFrequency,

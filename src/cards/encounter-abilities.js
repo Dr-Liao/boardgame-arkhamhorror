@@ -1,7 +1,7 @@
 // 诡镇奇谈：卡牌版 · 非玩家卡能力（Phase 3 · D1 内容通道）
 //
 // 这里写敌人 / 地点 / 幕与议程 / 剧情支援 / 威胁区遭遇卡的声明式行为。
-// 与 card-abilities.js 是同一套描述子，只是条目的 `scope` 不是 'card'：
+// 与 src/cards/entries/<code>.js 是同一套描述子，只是条目的 `scope` 不是 'card'：
 //   scope: 'enemy' | 'location' | 'act' | 'agenda' | 'storyAsset' | 'treachery'
 //
 // 为什么需要这个通道（重构路线 §5 D1）：

@@ -179,15 +179,18 @@ test('UI 响应夹具：答题权限随人类与 AI 待决座位切换而非回�
   })
   const panel = page.getByRole('region', { name: '待决选择' })
   await expect(panel.locator('.ah-choice-option').first()).toBeEnabled()
-  await expect(page.locator('.bg-game-status')).toContainText('请你回答')
+  await expect(page.locator('.bg-game-status')).toContainText(/请你.*回答/)
   const ai = structuredClone(session)
   ai.state.currentSeat = 0
   ai.state.revision += 1
   ai.state.pendingChoice = {
-    id: 'ui-ai-choice', kind: 'reaction', seat: 1, source: 'UI 座位切换夹具',
-    prompt: '请 AI 队友决定是否反应', options: [], canSkip: true,
+    id: 'ui-ai-choice', kind: 'investigator', seat: 1, source: 'UI 座位切换夹具',
+    prompt: '请 AI 队友选择调查员', options: [], canSkip: false,
   }
   ai.state.legalMoves = []
+  ai.actingSeats = [1]
+  // 这是一份 UI 回放夹具：把 round 置 2，避免换牌后触发开场故事导入遮住面板。
+  ai.state.round = 2
   await page.route('**/api/move', route => route.fulfill({ json: { ok: true, session: ai } }), { times: 1 })
   await panel.locator('.ah-choice-option').first().click()
   await expect(panel).toHaveAttribute('data-choice-seat', '1')
@@ -195,12 +198,13 @@ test('UI 响应夹具：答题权限随人类与 AI 待决座位切换而非回�
   await expect(panel).toContainText('等待队友操作')
   await expect(page.locator('.ah-actions')).toHaveCount(0)
   const human = structuredClone(session)
+  human.actingSeats = [0]
   human.state.revision = ai.state.revision + 1
   human.state.legalMoves.push({ action: 'draw', label: '不应展示的普通行动' })
   await page.route('**/api/session?*', route => route.fulfill({ json: { ok: true, busy: false, session: human } }), { times: 1 })
   await page.getByRole('button', { name: '刷新局势' }).click()
   await expect(panel).toHaveAttribute('data-choice-seat', '0')
   await expect(panel.locator('.ah-choice-option').first()).toBeEnabled()
-  await expect(page.locator('.bg-game-status')).toContainText('请你回答')
+  await expect(page.locator('.bg-game-status')).toContainText(/请你.*回答/)
   await expect(page.getByText('不应展示的普通行动')).toHaveCount(0)
 })

@@ -24,7 +24,7 @@ import { reactionEnabled, setReactionEnabled, reactionChoices, reactionView } fr
 import { presentationAttributes, campaignPlaylistId } from './campaign-presentation.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
 
-let h, api, render, state, reset, leave
+let h, api, render, state, reset, leave, openFeedback
 let beginInteraction = () => () => {}
 let hubUi
 let tableRegions
@@ -38,6 +38,13 @@ let tableSession = null
 let rulebook
 let lastReactionPass = null
 const mySeat = s => s.mySeat ?? s.observerSeat ?? 0
+
+// 宿主注入的反馈入口。旧版大厅没有 openFeedback 时按钮不渲染，Mod 单独加载也能跑。
+function feedbackEntry() {
+  if (typeof openFeedback !== 'function') return null
+  return h('button', { className: 'bg-btn secondary ah-feedback-entry', title: '反馈', 'aria-label': '反馈',
+    onclick: () => openFeedback() }, '💬 反馈')
+}
 const canAct = (s, seat) => seat === mySeat(s) && (!s.online || (state.online?.connected && !state.online?.busy && state.online?.room?.members.some(member => member.host && member.online)))
 // Some choices (e.g. who starts next) accept several seats; answer as myself when I'm one of them.
 const decisionSeatOf = s => {
@@ -91,7 +98,7 @@ function renderReactionToggle(s, code) {
 
 /** 大厅在加载 Mod 时调用一次，注入宿主能力并拿回本 Mod 的 UI 接口。 */
 export function createUI(host) {
-  ;({ h, api, render, state, reset, leave } = host)
+  ;({ h, api, render, state, reset, leave, openFeedback } = host)
   beginInteraction = host.beginInteraction || beginInteraction
   musicPlayer ||= createMusicPlayer(h)
   chaosBagView ||= createChaosBagView(h,render)
@@ -743,7 +750,12 @@ function renderCardActionPopover(s, humanTurn) {
     if (!grouped.has(group)) grouped.set(group, [])
     grouped.get(group).push(move)
   }
-  const popover = h('div', { className: 'ah-card-action-popover', role: 'group', 'aria-label': '卡牌操作' },
+  const popover = h('div', { className: 'ah-card-action-popover', role: 'group', 'aria-label': '卡牌操作',
+    onkeydown: event => {
+      if (event.key !== 'Escape') return
+      event.preventDefault()
+      state.arkhamSelection = null; state.arkhamDirectActions = null; state.arkhamTargetAbility = null; render()
+    } },
     [...grouped.values()].map(group => {
       const m = group[0]
       return h('button', { className: 'ah-action', disabled: state.busy || !humanTurn, title: m.label, 'aria-label': m.label, 'data-location-move': m.action === 'move' ? m.locationId : null,
@@ -756,6 +768,8 @@ function renderCardActionPopover(s, humanTurn) {
     h('button', { className: 'ah-action secondary', onclick: () => { state.arkhamSelection = null; state.arkhamDirectActions = null; state.arkhamTargetAbility = null; render() } }, '取消'))
   requestAnimationFrame(() => {
     if (!popover.isConnected) return
+    const action = popover.querySelector('.ah-action:not(:disabled)')
+    if (action && !popover.contains(document.activeElement)) action.focus({ preventScroll: true })
     const source = [...document.querySelectorAll('[data-interaction]')].find(el => el.dataset.interaction === selection?.key)
     const box = source?.getBoundingClientRect()
     if (box) { popover.style.left = Math.max(8, Math.min(innerWidth - popover.offsetWidth - 8, box.x + box.width / 2 - popover.offsetWidth / 2)) + 'px'; popover.style.top = Math.max(65, Math.min(innerHeight - popover.offsetHeight - 12, box.y - popover.offsetHeight - 8)) + 'px' }
@@ -1070,7 +1084,8 @@ function renderCardGame(s, autoPassing = false) {
         h('button', { className: 'bg-btn secondary', 'aria-pressed': String(presentation.preferences.fast), onclick: () => { presentation.toggleFast(); render() } }, presentation.preferences.fast ? '动画：快速' : '动画：标准'),
         !st.hubFlow ? h('button', { className: 'bg-btn secondary', disabled: state.busy, onclick: reset }, '再来一局') : null,
         h('button', { className: 'bg-btn secondary', disabled: state.busy, onclick: leave }, '退出')
-        ))
+        )),
+        feedbackEntry()
       )
     ),
     state.arkhamAcceptedFx?.sessionId === s.sessionId
@@ -1112,7 +1127,7 @@ function renderPlayerDock(s, inv, humanTurn) {
   const engaged = s.state.enemies.filter(enemy => enemy.engagedSeat === inv.seat || (enemy.massive && enemy.location === inv.location))
   return h('div', { className: 'ah-player-board' },
     !engaged.length ? h('div', { className: 'ah-engage-drop', 'data-interaction': 'zone:engage', role: 'region', 'aria-label': '拖入敌人交战' },
-      tableIcon('sword'), h('strong', {}, '拉入交战'), h('span', {}, '将同地点敌人拖到这里 · 消耗 1 行动')) : null,
+      tableIcon('sword'), h('strong', {}, '拉入交战'), h('span', {}, '将同地点敌人拖到这里，或直接点击敌人 · 消耗 1 行动')) : null,
     h('section', { className: 'ah-equipment-battlefield', 'aria-label': '装备与威胁' },
       h('div', { className: 'ah-play-surface' + (preview?.code ? ' has-card' : ''), 'data-interaction': 'zone:play', role: 'button', tabindex: 0, 'aria-label': '出牌区' },
         preview?.code ? tableArt(h, preview.originalCode || preview.code, preview.name) : [slotBackdrop('star'), h('span', { className: 'ah-play-label' }, '出牌区')]),
@@ -1706,8 +1721,8 @@ function renderEnemyChip(s, e, { map = false } = {}) {
   if (e.massive) kws.push('庞大')
   if (e.prey) kws.push('猎物：' + (AH_PREY_LABEL[e.prey] || e.prey))
   if (e.victory) kws.push('胜利点' + e.victory)
-  return h('div', { className: 'ah-enemy' + (e.massive ? ' is-massive' : '') + (victoryLevel ? ` has-victory victory-${victoryLevel}` : '') + (choiceMove ? ' ah-choice-target' : '') + (e.exhausted ? ' is-exhausted' : ''), title: choiceMove ? '选择此敌人作为目标' : `${e.name}\n${canEngage ? '拖到你的角色或交战区可主动交战，消耗 1 行动。' : ''}点击查看详情`, role: 'button', tabindex: 0,
-    'aria-label': `${e.name} · 生命 ${e.health - (e.damageTaken || 0)}/${e.health}${e.exhausted ? ' · 已横置' : ''}`,
+  return h('div', { className: 'ah-enemy' + (e.massive ? ' is-massive' : '') + (victoryLevel ? ` has-victory victory-${victoryLevel}` : '') + (choiceMove ? ' ah-choice-target' : '') + (e.exhausted ? ' is-exhausted' : ''), title: choiceMove ? '选择此敌人作为目标' : `${e.name}\n${canEngage ? '点击弹出交战等行动（主动交战消耗 1 行动），也可拖到你的角色或交战区。' : '点击查看详情'}`, role: 'button', tabindex: 0,
+    'aria-label': `${e.name} · 生命 ${e.health - (e.damageTaken || 0)}/${e.health}${e.exhausted ? ' · 已横置' : ''}${canEngage ? ' · 可交战' : ''}`,
     'data-inspect-default': map ? 'true' : null,
     'data-interaction': `enemy:${e.id}`,
     'data-victory': e.victory > 0 ? e.victory : null,

@@ -42,7 +42,7 @@ test('P2 新战役局外流程、原子存档、显式读取、删除与另存�
     const catalog = await app.request('/api/catalog')
     const entry = catalog.games.find(game => game.id === 'arkhamhorror')
     const settingKeys = entry.settingsSpec.map(item => item.key)
-    for (const key of ['playerCount', 'campaignId', 'aiStoryAwareness', 'opponents']) assert.ok(settingKeys.includes(key), key)
+    for (const key of ['playerCount', 'campaignId', 'aiStoryAwareness', 'cardPoolScope', 'allowRollback', 'opponents']) assert.ok(settingKeys.includes(key), key)
     assert.equal(new Set(settingKeys).size, settingKeys.length)
     const started = await app.request('/api/start', { modId: 'arkhamhorror', settings: { playerCount: 2, campaignId: 'nightOfTheZealot', opponents: ['ai-hu'] } })
     assert.equal(started.status, 200, started.error)

@@ -11,9 +11,11 @@
 
 ## 1. 一条原则
 
-**卡 = 数据 + 声明式行为。** 行为只有一种写法：`src/cards/card-abilities.js` 里的条目。
+**卡 = 数据 + 声明式行为。** 行为只有一种写法：`src/cards/entries/<code>.js` 里的**单卡条目**
+（一张卡一个文件）。`src/cards/card-abilities.js` 只做聚合，不再放条目。
 条目里没有函数式逃生口以外的自由度——数据是纯 JSON，`resolve` 只在"数据表达不了"时出现，
-且只能通过 `ctx.api` 改状态。
+且只能通过 `ctx.api` 改状态。拆分流程与 agent 一次执行清单见
+[`card-entry-files.md`](card-entry-files.md)。
 
 三层，自外向内：
 
@@ -305,7 +307,7 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 
 ## 8. 迁移一张卡的标准动作
 
-1. 在 `card-abilities.js` 写条目（`played`/`commit`/`weakness`/`entersPlay`/`leavesPlay`/`action`/`modifiers`/`playCondition` 按需）；
+1. 在 `src/cards/entries/<code>.js` 写条目（`played`/`commit`/`weakness`/`entersPlay`/`leavesPlay`/`action`/`modifiers`/`playCondition` 按需），并运行 `node tools/build-card-index.mjs --write`；新卡可用 `node tools/scaffold-card.mjs <code> --entry` 生成骨架；
 2. 删掉 `EFFECTS[code]`（或它在 `content/packs/*/effects.js` 里的条目）与 `engine.js` 里的卡号分支；
 3. 旧打出条件字段（`requiresClueAtLocation` 等）翻成条目的 `playCondition`，文案逐字保留；
 4. 包清单声明 `abilityLayerCodes`（若该包的可用性依赖 handler 表，见 `content/packs/dunwichPlayer/manifest.js`；

@@ -1887,6 +1887,7 @@ function hubApi() {
     campaignCardChange,
     campaignEnding,
     campaignManifestFor,
+    corePlayerPool,
     decisionSeat,
     hubInvestigatorChoices,
     hubStartingDeckReady,

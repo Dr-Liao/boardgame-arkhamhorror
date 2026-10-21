@@ -14,7 +14,7 @@
 
 ## 0. 结论摘要
 
-本实现的定位与参考实现不同，取舍也不同：它是"大厅里的一个可搬运 Mod + LLM 队友"，约束是嵌入大厅、零构建、离线可跑、AI 只能靠"观察投影 + 合法动作"决策。因此**参考实现的 Haskell/Postgres/Docker 三件套不要照搬**，要照搬的是它的**分层**（能力 / 窗口 / 代价 / 修正 / 匹配），不是它 6 千个逐卡模块的粒度。
+本实现的定位与参考实现不同，取舍也不同：它是"大厅里的一个可搬运 Mod + LLM 队友"，约束是嵌入大厅、零构建、离线可跑、AI 只能靠"观察投影 + 合法动作"决策。因此**参考实现的 Haskell/Postgres/Docker 三件套不要照搬**，要照搬的是它的**分层**（能力 / 窗口 / 代价 / 修正 / 匹配）。粒度上采用折中：**有行为的卡一张一个文件（约 470 个）**，5,930 张卡面目录数据仍保持单文件、由导入器生成——不按卡拆目录数据，也不恢复 `BATCH_*` 批次大数组（见 [`card-entry-files.md`](card-entry-files.md)）。
 
 当前状态一句话：**声明式入口通了，生命周期钩子补到五个，状态基础（持续效果 / 目标枚举 / 打出条件）与语义原语（布尔修正 / 费用表达式 / 上限归属 / 授予 / 分配策略 / 检定结果 / 看牌 / 区域搬运）都已落地（Phase 1、Phase 2 完成）；内容来源已统一（Phase 3 完成）；重放安全网完整交付（Phase 4 完成：golden replay 基线 + 100 局随机对局门禁 + 撤销 API）；Phase 5 的迁移工具、5b 机械迁移主体、**反应能力接线**与 5c 逃生卡（Carcosa → TFA，三十九批，**93 → 0 完成**）与 **5b 全部遗留（反应 / 战役规则 / 费用能力 / 剧情资产）已交付**（累计 341 张卡：`EFFECTS` 385 → 57、通道 legacy 286 → 50、descriptor 75 → 404、逃生卡 93 → 0、引擎卡号 166 → 28）——**5a 行为分支清零**，只剩 28 个 `reference`（归 Phase 6）。** 冻结守卫、账本、重放安全网都已就位，后续每批仍按「replay 指纹不变 + 账本指标单调下降」验收。
 
@@ -68,8 +68,8 @@ Phase 5 的两个新用例文件（`migration-tools`、`phase5-migration`）已�
 
 **已交付（Phase 5，迁移工具 + 5b 主体 + 反应接线 + 5c 五批 + 5a 死分支清理）**：`tools/migrate-card.mjs`（判定 + 生成 + 删条目 + 登记卡包）、
 `tools/scaffold-card.mjs`（测试骨架）、`tools/cards-migrate.mjs`（批次门禁编排）、
-`tools/rehash-acceptance.mjs`（验收账本证据哈希重算）；`src/cards/ability-migration-batches.js`（按批次的生成描述子）
-与 `audit/migration-batches.json`（批次账本）。**243 张卡迁完**（5b-1…5b-5 共 154 张机械迁移 + 5b-6/6b/6c 共 28 张反应描述子 + 5b-7 共 15 张天赋档位
+`tools/rehash-acceptance.mjs`（验收账本证据哈希重算）；`src/cards/entries/<code>.js`（2026-10 起的一卡一文件；
+Phase 5 当时是 `ability-migration-batches.js` 的批次块）与 `audit/migration-batches.json`（批次账本）。**243 张卡迁完**（5b-1…5b-5 共 154 张机械迁移 + 5b-6/6b/6c 共 28 张反应描述子 + 5b-7 共 15 张天赋档位
 + 5c-1…5c-9 共 47 张逃生卡）+ 5a-1 的 4 段死分支清理，`EFFECTS` 385→141、legacy 286→97、descriptor 75→310、逃生卡 93→47、引擎卡号 166→141；
 同时落地 D2（`discardWhenEmpty` 进注册表）、条目级 `fast`/`noOpportunityAttack`、描述子 `countsAs`，
 以及 7 个 `ctx.api` 薄包装（`attachToLocation` / `playCard` / `discardAsset` / `defeatEnemy` /
@@ -184,7 +184,7 @@ golden replay 已固化成用例（`tests/replay-golden.test.mjs` + `tests/fixtu
 
 | # | 唯一 | 现在 | 目标 |
 | --- | --- | --- | --- |
-| 1 | **行为入口** | `EFFECTS` DSL、`behavior.js`、引擎卡号分支、描述子 —— 四套并存 | 全部走 `card-abilities.js` 的描述子（含生命周期钩子） |
+| 1 | **行为入口** | `EFFECTS` DSL、`behavior.js`、引擎卡号分支、描述子 —— 四套并存 | 全部走 `src/cards/entries/<code>.js` 的单卡描述子（含生命周期钩子） |
 | 2 | **读点** | 引擎有 118 处 `eff.<field>` 读取（22 个字段名），`assetEffect` 只覆盖其中一部分 | 引擎只经 `ability.js` 注册表枚举，不读 `EFFECTS` |
 | 3 | **账本** | 审计账本按战役分散（core/dunwich/carcosa/tfa） | 一张 `audit/ability-coverage.json`：每张卡 → 通道/证据/缺口 |
 | 4 | **内容分层** | 卡=数据+EFFECTS；关卡=definition+behavior；战役=campaign-effects | 卡=数据+描述子；关卡=声明式定义+少数钩子；战役=声明式记录 |
@@ -200,7 +200,24 @@ golden replay 已固化成用例（`tests/replay-golden.test.mjs` + `tests/fixtu
 | 逃生原语卡 | **0** ✅（93 → 0，5c 三十九批全部迁完） | **0** |
 | 描述子 `kind` | 11 | **≤11**（Phase 1 后为生命周期钩子的全集；再加 kind 需要同时改本文、`card-model.md` 与守卫） |
 | 迁移批次的行为差异 | **已可断言**：`--baseline`/`--compare` 逐条比较逐步指纹，golden 基线 10 局 / 529 步；Phase 5 全部批次一致 | 每批 **replay hash 不变** |
-| 新增一张卡 | 已达成：1 个文件 + 0 引擎改动 | 保持 |
+| 新增一张卡 | 已达成：1 个单卡文件 + 索引 + 0 引擎改动 | 保持 |
+
+### 2.1 2026-10 粒度决定：行为一卡一文件
+
+这是对 §9“不照搬 6 千个逐卡模块”的**收窄执行**，不是全面反转：
+
+- **行为层**：459 个条目（385 条描述子）已拆到 `src/cards/entries/<code>.js`，一张有行为的卡一个文件；
+  `entries/index.js` 是生成的静态索引，顺序保持旧 `byCode` 的首次出现顺序。
+- **数据层**：5,930 张卡面数据仍在 `src/cards/cards-data.js`（导入器生成），不按卡拆，也不预建空行为文件。
+- **聚合层**：`card-abilities.js` 只导出 `CARD_ABILITY_ENTRIES` / `CARD_ABILITY_CODES` / `PHASE5_MIGRATED_CODES`；
+  `ability-migration-batches.js` 已删除；`audit/migration-batches.json` 只记批次归属。
+- **证据**：拆分前后逐条递归对比 0 差异；`replay-fixtures --compare` 10 局 / 529 步逐条一致；
+  `fast` 新增失败 0（7 条既有失败沿用 §1 记账）。
+- **执行规矩**：新增/修改/迁移卡牌必须在同一次改动里写单卡文件 + 跑 `build-card-index`；
+  完整 agent 清单见 [`card-entry-files.md`](card-entry-files.md)。
+- **整轮迁移顺序**：扫描新增机制 → 拆分原语 → 关键字/规则书 → 新增交互与界面 → 多子进程批量卡牌
+  （主进程持有共享文件与原语队列）→ 测试验收；见
+  [`arkham-content-migration.md`](arkham-content-migration.md) §4。
 
 ---
 
@@ -208,9 +225,9 @@ golden replay 已固化成用例（`tests/replay-golden.test.mjs` + `tests/fixtu
 
 以下八条是重构与迁移期间的**硬约束**，违反任一条都会把架构推回"四套并存"。
 
-1. **新增卡牌行为只写描述子**：在 `src/cards/card-abilities.js` 加条目（`abilities` / `modifiers` / `elderSign`），**不得**在 `engine.js` 按卡号新增分支，**不得**往 `EFFECTS` 加新条目。
+1. **新增卡牌行为只写单卡描述子**：在 `src/cards/entries/<code>.js` 写一个条目（`abilities` / `modifiers` / `elderSign`），并在同一次改动里跑 `node tools/build-card-index.mjs --write`；**不得**在 `engine.js` 按卡号新增分支，**不得**往 `EFFECTS` 加新条目，**不得**把条目塞回 `card-abilities.js` 或恢复 `BATCH_*` / `MIGRATED_*` 批次数组。
 2. **引擎不得按卡号、关卡名、战役名分支**。确实需要新机制时，先扩通用能力（`ability.js` / `windows.js` / `matcher.js` / `modifiers.js`），补窗口接线与测试，再写卡。
-3. **内容层不 import 引擎装配点**：`card-abilities.js → ability.js / modifiers.js / matcher.js / windows.js`，方向单向；`modifiers.js` 与 `ability.js` 互不 import（引擎通过 `setModifierRegistry` 注入读点）；`engine.js` 是唯一装配点。
+3. **内容层不 import 引擎装配点**：`entries/<code>.js → ability.js / modifiers.js / matcher.js / windows.js`，方向单向；`modifiers.js` 与 `ability.js` 互不 import（引擎通过 `setModifierRegistry` 注入读点）；`engine.js` 是唯一装配点。
 4. **描述子不可变、注册即校验**：注册时规范化并冻结；未知 `kind`、缺 `trigger`、缺必填 payload（`effect`/`skill`/`weakness`/`entersPlay`/`leavesPlay`）、未知字段、重复注册都在模块加载时抛错，不在对局中途静默失效。运行期数据一律写 `state`。
 5. **效果只经 `ctx.api` 窄接口结算**：描述子不直接改状态；需要新接口时，先在 `engine.js` 的 `abilityApi()` 加薄包装，再在内容侧使用——这是唯一允许的引擎侧改动。持续效果一律用 `api.addEffect()` 创建（A1），不要在调查员身上新写"到期靠某处记得清"的裸字段。
 6. **窗口注册 ≠ 已接线**：新增窗口 = `windows.js` 注册 + `engine.js` 对应位置 `openAbilityWindow(...)` / `triggerReaction(...)` + 测试。未注册 id 会被 `unknownWindows()` 记录，测试必须断言为空。
@@ -574,7 +591,7 @@ maxHealth / cardSanity
 | 项 | 产物 | 读点 / 命令 |
 | --- | --- | --- |
 | 迁移工具 | `tools/migrate-card.mjs`（判定/生成/删条目/登记卡包）、`tools/scaffold-card.mjs`（测试骨架）、`tools/cards-migrate.mjs`（批次门禁编排）、`tools/rehash-acceptance.mjs`（验收账本证据哈希） | `npm run cards:migrate` / `cards:migrate:list` / `cards:scaffold` |
-| 迁移目标 | `src/cards/ability-migration-batches.js`（按期次分组的生成描述子）+ `audit/migration-batches.json`（批次账本） | `card-abilities.js` 的 `byCode` 合并 |
+| 迁移目标 | `src/cards/entries/<code>.js`（一张卡一个文件）+ `entries/index.js`（生成索引）+ `audit/migration-batches.json`（批次账本） | `card-abilities.js` 只聚合 `CARD_ENTRY_LIST` |
 | D2 使用次数元数据 | `ability.js` 条目字段 `discardWhenEmpty` | `newPlayerAssetInstance` / `assetEffect` / `executeDescriptor` |
 | 卡面关键字与行动种类 | 条目级 `fast` / `noOpportunityAttack`（走 `lifecycle.playFlag`）+ 描述子 `countsAs`（走 `actionKind`） | 5c-2/5c-3 |
 | `ctx.api` 薄包装 | `attachToLocation` / `playCard` / `discardAsset` / `defeatEnemy` / `investigate` / `evade` / `enemyFight` / `enemyEvade` / `maxHealth` / `cardSanity` / `cardType` / `healAsset` / `cardFactions` / `enemyTestModifier` / `preventNonEliteAttacks` / `removeEnemy` / `shuffleIntoEncounterDeck` / `reactionContext` / `redirectEncounter` / `cancelCurrentAttack` / `prepareEvadeBonus` | 5c-1…5c-8 |
@@ -744,7 +761,7 @@ maxHealth / cardSanity
 
 ### 迁一张卡的标准动作
 
-1. 在 `card-abilities.js` 写描述子；
+1. 在 `src/cards/entries/<code>.js` 写描述子，并运行 `node tools/build-card-index.mjs --write`；
 2. 删掉 `card-effects.js` 里对应条目（或保留纯数据部分）与 `engine.js` 里该卡的**分支**；
 3. 更新该卡的测试断言：从"断言 `EFFECTS[code]` 的形状"改成"断言行为"（现存约 60 条这类断言 / 16 个文件）；
 4. 检查前端展示字段：`allCardDefs()` 目前从 `EFFECTS[code].passive` 生成 `statBonus` / `extraSlots` / `fightDamageBonus`，迁 passive 前先让它也读声明式修正，否则图鉴会丢字段；
@@ -807,14 +824,15 @@ maxHealth / cardSanity
 
 | 工具 | 作用 | 状态 |
 | --- | --- | --- |
-| `node tools/migrate-card.mjs <code…>` | 读 `EFFECTS[code]` → 判定哪些槽位能机械搬（`event→played`、`skill→commit`、`weakness→weakness`、`onEnter→entersPlay`、`passive.stats→modifiers`、`abilities→action`、旧打出条件→`playCondition`）→ 生成描述子草稿（`--plan`）/ 写入并删旧条目（`--write`）/ 校验（`--verify`）/ 重排生成文件（`--rebuild`）/ 判定统计（`--report` / `--list`） | ✅ |
-| `node tools/scaffold-card.mjs <code…\\|--batch N>` | 生成 `develop/scaffolds/<code>.test.mjs`（通道断言 + 读点断言 + 行为起手式），默认是绿的 | ✅ |
+| `node tools/migrate-card.mjs <code…>` | 读 `EFFECTS[code]` → 判定哪些槽位能机械搬（`event→played`、`skill→commit`、`weakness→weakness`、`onEnter→entersPlay`、`passive.stats→modifiers`、`abilities→action`、旧打出条件→`playCondition`）→ 生成描述子草稿（`--plan`）/ 写入 `entries/<code>.js` 并删旧条目（`--write`）/ 校验（`--verify`）/ 重建索引（`--rebuild`）/ 判定统计（`--report` / `--list`） | ✅ |
+| `node tools/scaffold-card.mjs <code…\\|--batch N> [--entry]` | `--entry` 生成 `src/cards/entries/<code>.js` 骨架并更新索引；同时生成 `develop/scaffolds/<code>.test.mjs`（通道断言 + 读点断言 + 行为起手式） | ✅ |
+| `node tools/build-card-index.mjs --write\\|--check` | 生成/校验 `src/cards/entries/index.js`（静态 import，运行时零扫描） | ✅ |
 | `node tools/cards-migrate.mjs --batch N --codes …` | 「迁卡 → 账本/白名单收缩 → replay 对比 → 架构守卫 → 产物自检」一次跑完 | ✅ |
 | `node tools/rehash-acceptance.mjs --check\\|--write` | 只重算 core/carcosa/dunwich 四份验收账本里「证据测试文件」的 sha256（证据映射不变） | ✅ |
 
 `--write` 的拒绝规则（不静默近似）：战役逃生原语 → 拒绝（归 5c）；`discardSelf`/`exileSelf`/`assetDamage`
 （副作用日志顺序不同）→ 拒绝；没有描述子读点的顶层字段 → 拒绝；源文件里 0 次或多次命中 → 拒绝。
-落点：描述子写进 `src/cards/ability-migration-batches.js` 的批次块，批次清单记在 `audit/migration-batches.json`。
+落点：描述子写进 `src/cards/entries/<code>.js` 单卡文件，批次清单（只记“哪张卡属于哪一批”）记在 `audit/migration-batches.json`；不再生成批次块。
 
 配合 `tools/audit-abilities.mjs` / `tools/replay-fixtures.mjs`，"接一张卡"的流程固定成：
 `scaffold` →（工具）写描述子 → `--baseline/--compare` 对比 → `audit` 看指标 → `test:fast`。
@@ -847,7 +865,7 @@ Phase 4 之后，路线里要求的"最低补充"已经落地：
 
 | 参考实现替我们验证了什么 | 我们照搬 | 我们不照搬 |
 | --- | --- | --- |
-| 能力分四层（`Ability` / `Window` / `Modifier` / `Matcher`），加卡不碰内核 | ✅ 分层与声明式入口（P0-A 已落地） | 6,261 个逐卡 `CardDef` 模块（JS 里会变成 6 千个不可维护文件） |
+| 能力分四层（`Ability` / `Window` / `Modifier` / `Matcher`），加卡不碰内核 | ✅ 分层与声明式入口（P0-A 已落地）；✅ 2026-10 起行为条目一卡一文件（459 个） | 6,261 个逐卡 `CardDef` **数据**模块；5,930 张目录数据仍保持单文件，不按卡拆 |
 | `ActiveCost` 把"付得起吗"算成独立结果，`validate` 与 `apply` 共用 | ✅ 费用表达式（C3）、目标枚举（B1） | Haskell/GHC 编译期检查兜底 |
 | `Effect.hs` + `Duration` 把持续效果做成实体 | ✅ 效果记录（A1，最高优先） | — |
 | `History.hs` 记录本回合/本阶段的行动 | ✅ 历史记录（C6） | — |

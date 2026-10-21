@@ -9,6 +9,7 @@
 
 export const FAST_TESTS = Object.freeze([
   'availability.test.mjs', // 0.4
+  'game-settings.test.mjs', // 开局高级设置：卡牌范围 / 回档 / AI 感知剧情
   'content-schema.test.mjs', // 0.6
   'content-registry.test.mjs', // 0.5
   'hall-boundary.test.mjs', // 0.2
@@ -16,7 +17,10 @@ export const FAST_TESTS = Object.freeze([
   'state-presentation.test.mjs', // 0.7
   'attack-style.test.mjs', // 0.7
   'rules-n3.test.mjs', // 3.4
+  'p0-regressions.test.mjs', // P0：选择 id / 弱点 / 基础弱点池 / 能力 API / 杜克 / 苍白面具
+  'p1-regressions.test.mjs', // P1：全灭继续 / 02178 去向 / 03186 攻击限制
   'ability-layer.test.mjs', // 0.9
+  'card-entries.test.mjs', // 0.4 —— 一卡一文件 / 索引 / 禁止批次大文件
   'architecture-guard.test.mjs', // 0.1
   'phase6-guard.test.mjs', // 0.1 —— Phase 6 门禁：引擎里无卡号 / 无战役名
   'phase6-implementation.test.mjs', // 0.4 —— Phase 6（6e-1）实现账本：通道判定 / 摘要形状 / isPlayable 一致

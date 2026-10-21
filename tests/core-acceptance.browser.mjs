@@ -18,6 +18,6 @@ test('Core 图鉴验收状态、随机地点和未验收扩展隔离在真实界
   await expect(detail.locator('.ah-status-badges')).toContainText('已验收')
   await expect(detail.locator('.ah-status-badges')).not.toContainText('待规则审计')
   await page.screenshot({path:'artifacts/arkham-polish/core-acceptance-catalog.png'})
-  const expansion=await (await request.get('/api/mods/arkhamhorror/catalog?code=03001')).json()
-  expect(expansion.cards.find(c=>c.code==='03001').effectStatus).not.toBe('verified')
+  const expansion=await (await request.get('/api/mods/arkhamhorror/catalog?code=05001')).json()
+  expect(expansion.cards.find(c=>c.code==='05001').effectStatus).not.toBe('verified')
 })

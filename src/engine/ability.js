@@ -24,7 +24,7 @@
 //   resolve(ctx)                       // ctx = { state, inv, seat, source, descriptor, target, context, events, api }
 // }
 //
-// 条目级字段（一个 card-abilities.js 条目）：
+// 条目级字段（一个 src/cards/entries/<code>.js 条目）：
 //   { code, modifiers[], abilities[], elderSign, playCondition[], uses, usesType, discardWhenEmpty,
 //     name, source }
 //
@@ -177,6 +177,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'exileForAutoSuccess',
   // Phase 5（5a-22）：抽到后留在手里的弱点（黑暗回忆）。
   'weaknessStaysInHand',
+  // P0：留在手牌时的提示文案（03142 黑玛瑙扣环）。
+  'weaknessHandNote',
   // Phase 5（5a-24）：附属在宿主支援上时给宿主的技能加成（值得信赖）。
   'attachedSkillBonus',
   // Phase 5（5a-25）：弱点在离承受者最远的地点生成（随行鬼影）。
@@ -459,6 +461,7 @@ export function registerCardAbilities(entries) {
       rerollTokenCost: entry.rerollTokenCost ?? null,
       exileForAutoSuccess: entry.exileForAutoSuccess === true,
       weaknessStaysInHand: entry.weaknessStaysInHand === true,
+      weaknessHandNote: entry.weaknessHandNote ? String(entry.weaknessHandNote) : null,
       attachedSkillBonus: entry.attachedSkillBonus ?? null,
       weaknessSpawnsAtFarthestLocation: entry.weaknessSpawnsAtFarthestLocation === true,
       copiesBeneathEvents: entry.copiesBeneathEvents === true,

@@ -4,6 +4,14 @@ import { fileURLToPath } from 'node:url'
 const output = fileURLToPath(new URL('../../../artifacts/p7/', import.meta.url))
 mkdirSync(output, { recursive: true })
 
+async function drainPresentation(page) {
+  await expect.poll(async () => {
+    const skip = page.getByRole('button', { name: '跳过演出' })
+    if (await skip.count()) { await skip.first().click(); return false }
+    return !(await page.locator('.ah-table').evaluate(el => el.classList.contains('ah-presenting')))
+  }, { timeout: 15000 }).toBe(true)
+}
+
 async function start(page, legacy = false) {
   await page.route('**/api/start', route => {
     const body = route.request().postDataJSON()
@@ -33,8 +41,8 @@ for (const width of [1440, 1920, 390]) {
       const response = await request.post('/api/move', { data: { sessionId: session.sessionId, revision: session.state.revision, move } })
       expect(response.ok()).toBeTruthy(); session = (await response.json()).session
     }
-    await page.getByRole('button', { name: '跳过演出' }).click()
     await page.getByRole('button', { name: '刷新局势' }).click()
+    await drainPresentation(page)
     await page.locator('.ah-map-viewport').press('0')
     await page.locator('.ah-map-node .ah-table-art img').first().evaluate(img => img.decode())
     await page.mouse.move(0, 0)
@@ -57,8 +65,8 @@ test('P7 resource, interaction, map redraw, hand animation and response budgets'
     const response = await request.post('/api/move', { data: { sessionId: session.sessionId, revision: session.state.revision, move } })
     expect(response.ok()).toBeTruthy(); session = (await response.json()).session
   }
-  await page.getByRole('button', { name: '跳过演出' }).click()
   await page.getByRole('button', { name: '刷新局势' }).click()
+  await drainPresentation(page)
   const resources = await page.evaluate(() => performance.getEntriesByType('resource').map(r => ({ name: r.name, bytes: r.transferSize })))
   const imageRequests = resources.filter(r => r.name.includes('/img/'))
   const mapRedrawMs = await page.locator('.ah-map-viewport').evaluate(async viewport => {

@@ -13,6 +13,14 @@ test('N4 真实关间界面：合法动作败退后显示个人XP，购买并继
   const initial = await (await startResponse).json()
   expect(initial.ok).toBe(true)
   let session = initial.session
+  // 测试绕过页面直接调 API 推进了多步；刷新后必须先消费演示队列，否则面板仍是初始换牌。
+  const drainPresentation = async () => {
+    await expect.poll(async () => {
+      const skip = page.getByRole('button', { name: '跳过演出' })
+      if (await skip.count()) { await skip.first().click(); return false }
+      return !(await page.locator('.ah-table').evaluate(el => el.classList.contains('ah-presenting')))
+    }, { timeout: 15000 }).toBe(true)
+  }
   for (let i = 0; session.state.pendingChoice?.kind !== 'interlude'; i++) {
     expect(i).toBeLessThan(150)
     const moves = session.state.legalMoves
@@ -28,11 +36,12 @@ test('N4 真实关间界面：合法动作败退后显示个人XP，购买并继
     session = body.session
   }
   await page.getByRole('button', { name: '刷新局势' }).click()
+  await drainPresentation()
   const situation = page.getByRole('dialog', { name: '调查局势' })
   const openSituation = async () => { await page.getByRole('button', { name: '局势', exact: true }).click(); await expect(situation).toBeVisible() }
   const closeSituation = async () => { await page.getByRole('button', { name: '关闭局势详情' }).click(); await expect(situation).toHaveCount(0) }
   const panel = page.getByRole('region', { name: '待决选择' })
-  await expect(panel).toHaveAttribute('data-choice-kind', 'interlude')
+  await expect(panel).toHaveAttribute('data-choice-kind', 'interlude', { timeout: 20000 })
   await openSituation()
   await expect(situation.locator('[data-campaign-seat="0"]')).toContainText('2 XP')
   await expect(situation.locator('.ah-campaign-panel')).toContainText('关间准备')
@@ -43,17 +52,23 @@ test('N4 真实关间界面：合法动作败退后显示个人XP，购买并继
   await panel.locator('.ah-choice-option:not([data-option-id="cancel"])').first().click()
   await expect(panel).toHaveAttribute('data-choice-kind', 'upgradeRemove')
   await panel.locator('.ah-choice-option:not([data-option-id="cancel"])').first().click()
-  await expect(panel).toHaveAttribute('data-choice-kind', 'interlude')
+  await expect(panel).toHaveAttribute('data-choice-kind', 'interlude', { timeout: 20000 })
   await openSituation()
   await expect(situation.locator('[data-campaign-seat="0"]')).toContainText('1 XP（已花费 1）')
   await closeSituation()
   await panel.locator('[data-option-id="done"]').click()
+  await page.waitForTimeout(500)
+  const skipScene = page.getByRole('button', { name: '跳过演出' })
+  if (await skipScene.count()) await skipScene.first().click()
+  await expect(page.locator('.ah-table')).not.toHaveClass(/ah-presenting/, { timeout: 30000 })
+  await expect(panel).toHaveAttribute('data-choice-kind', 'mulligan', { timeout: 10000 })
   await expect(panel).toHaveAttribute('data-choice-kind', 'mulligan')
   await openSituation()
   await expect(situation.locator('.ah-campaign-scenario')).toContainText('午夜假面')
   await closeSituation()
   await panel.locator('[data-option-id="done"]').click()
-  await expect(panel).toHaveCount(0)
+  await expect(panel).toHaveCount(0, { timeout: 15000 })
+  await drainPresentation()
   await expect(page.locator('.ah-actions')).toBeVisible()
   await openSituation()
   await expect(situation.locator('.ah-campaign-panel details')).toHaveCount(1)

@@ -14,13 +14,15 @@ process.env.BOARDGAME_NO_OPEN = '1'
 process.env.BOARDGAME_PERSIST = '1'
 delete process.env.AI_API_KEY
 const results = []
+// 浏览器套件实测 > 4 分钟；240s 会把 arkham-browser 直接杀掉。默认 15 分钟，可用环境变量覆盖。
+const CHILD_TIMEOUT_MS = Number(process.env.P7_TIMEOUT_MS || 900_000)
 async function run(name, args, env = {}) {
   console.log('\n[P7] ' + name)
   const started = Date.now()
   const child = spawn(process.execPath, args, { cwd: root, env: { ...process.env, ...env }, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true })
   let log = '', timedOut = false
   for (const stream of [child.stdout, child.stderr]) stream.on('data', bytes => { log += bytes; process.stdout.write(bytes) })
-  const timer = setTimeout(() => { timedOut = true; child.kill(); }, 240_000)
+  const timer = setTimeout(() => { timedOut = true; child.kill(); }, CHILD_TIMEOUT_MS)
   let code
   try { [code] = await once(child, 'exit') } finally { clearTimeout(timer) }
   writeFileSync(path.join(output, name + '.log'), log)

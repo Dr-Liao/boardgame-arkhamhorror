@@ -222,7 +222,8 @@ export function createMoves(deps) {
 
   for (const nb of new Set(loc && !movementError(state, inv) ? loc.connections : [])) {
     const target = state.locations.find((l) => l.id === nb)
-    if (!target || investigatorEntryError(state, nb)) continue
+    // P0：内容层可以声明「这次移动现在不能做」的理由（如《苍白面具》线索不足）。
+    if (!target || investigatorEntryError(state, nb) || scenarioBehavior(state).moveError?.(state, inv, target, nb)) continue
     moves.push({ action: 'move', locationId: nb, label: `🚶 移动到「${target.name}」（线索 ${target.clues}${target.locked ? '，上锁' : ''}）` })
   }
 
@@ -241,7 +242,7 @@ export function createMoves(deps) {
 
   for (const enemy of state.enemies.filter(enemy => enemy.location === inv.location)) {
     if ((!enemyRuleFlags(enemy.code).damageOnlyFrom || enemyTextBlanked(state, enemy)) && !hiddenFightBlocked(state, inv, enemy)
-      && !enemyCannotBeAttacked(state, enemy))
+      && !enemyCannotBeAttacked(state, enemy) && scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) !== false)
       moves.push({ action: 'fight', enemyId: enemy.id, label: `⚔️ 攻击「${enemy.name}」（战斗 vs ${enemyFightValue(state, enemy, inv)}${enemy.retaliate ? '，反击' : ''}）` })
     if (scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) !== false)
       moves.push({ action: 'evade', enemyId: enemy.id, label: `💨 躲避「${enemy.name}」（敏捷 vs ${enemyEvadeValue(state, enemy, inv)}）` })
@@ -535,7 +536,9 @@ export function createMoves(deps) {
     case 'move': {
       const loc = state.locations.find((l) => l.id === inv.location)
       if (!loc || !loc.connections.includes(move.locationId)) return '不能移动到该地点'
-      return movementError(state, inv) || investigatorEntryError(state, move.locationId)
+      const scenarioMoveError = scenarioBehavior(state).moveError?.(
+        state, inv, state.locations.find(l => l.id === move.locationId), move.locationId)
+      return movementError(state, inv) || investigatorEntryError(state, move.locationId) || scenarioMoveError || null
     }
     case 'investigate': {
       if (capabilityBlocked(state, inv, 'investigate')) return '当前效果禁止你调查'
@@ -563,6 +566,7 @@ export function createMoves(deps) {
       if (!enemy) return '未找到该敌人'
       if (enemyRuleFlags(enemy.code).damageOnlyFrom && !enemyTextBlanked(state, enemy)) return '子嗣只能使用深奥的咒文攻击'
       if (hiddenFightBlocked(state, inv, enemy)) return '隐私牌禁止你攻击该敌人'
+      if (scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) === false) return '当前剧本禁止你攻击该敌人'
       const canFight = enemy.location === inv.location
       if (!canFight) return '该敌人未与你交战'
       return null

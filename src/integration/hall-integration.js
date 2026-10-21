@@ -41,6 +41,8 @@ export function createSessionCheckpoint(session, receipt) {
 
 export function checkpointView(session, observerSeat) {
   const isLeader = Number.isInteger(observerSeat) && observerSeat === session.state.campaign?.leadSeat
+  // 「允许回档」是开局固定的对局规则：关掉后仍保留检查点摘要，但不能创建分支存档。
+  const rollbackAllowed = session.state?.allowRollback !== false
   return (session.scenarioCheckpoints || []).map(item => ({
     checkpointId: item.checkpointId,
     campaignId: item.campaignId,
@@ -51,7 +53,8 @@ export function checkpointView(session, observerSeat) {
     sourceRevision: item.sourceRevision,
     available: !item.unavailableReason,
     unavailableReason: item.unavailableReason || null,
-    canFork: isLeader && !item.unavailableReason,
+    rollbackAllowed,
+    canFork: rollbackAllowed && isLeader && !item.unavailableReason,
   }))
 }
 
@@ -83,6 +86,9 @@ export function migrateSessionCheckpoints(session, options = {}) {
 }
 
 export function forkSessionCheckpoint(session, checkpointId, { sessionId, revision, seat } = {}) {
+  if (session.state?.allowRollback === false) {
+    throw Object.assign(new Error('本局已关闭回档，不能从关卡检查点重新开始'), { statusCode: 403, code: 'ROLLBACK_DISABLED' })
+  }
   if (!Number.isInteger(seat) || seat !== session.state.campaign?.leadSeat) {
     throw Object.assign(new Error('只有当前队长可以从纪要重新开始关卡'), { statusCode: 403, code: 'LEADER_REQUIRED' })
   }

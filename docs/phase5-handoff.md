@@ -1,5 +1,9 @@
 # Phase 5 · 交接说明（Handoff）
 
+> **2026-10 更新**：行为条目已拆到 `src/cards/entries/<code>.js`（一张卡一个文件），
+> `ability-migration-batches.js` 已删除；本文提到的批次长文件属于 Phase 5 历史。
+> 当前流程见 [`card-entry-files.md`](card-entry-files.md)。
+>
 > 更新：2026-02（Phase 5 进行中，暂停点）
 > 上游：[`architecture-refactor-roadmap.md`](architecture-refactor-roadmap.md) §6 Phase 5、§7 迁移判据、§8 工具
 > 本阶段的完整批次证据：[`phase5-migration.md`](phase5-migration.md)
@@ -56,7 +60,7 @@ node tools/replay-fixtures.mjs --baseline ..\..\artifacts\replay-before.json
 | --- | --- |
 | 迁移工具 | `tools/migrate-card.mjs`（判定/生成/删条目/登记卡包）、`tools/scaffold-card.mjs`、`tools/cards-migrate.mjs`、`tools/rehash-acceptance.mjs` |
 | 5a 支持 | `tools/audit-workorder.mjs`（工作单）、`tools/audit-dead-primitives.mjs`（死分支守卫）、`src/cards/card-rules.js`（卡号级规则数据） |
-| 能力层 | `src/cards/card-abilities.js`（注册表）、`src/cards/ability-migration-batches.js`（工具生成批次）、`src/engine/ability.js`（描述子模型与校验） |
+| 能力层 | `src/cards/entries/<code>.js`（一卡一文件）、`src/cards/entries/index.js`（生成索引）、`src/cards/card-abilities.js`（只做聚合）、`src/engine/ability.js`（描述子模型与校验） |
 | 账本 | `audit/ability-coverage.json`、`audit/migration-batches.json`、`audit/ability-workorder.json`、两份白名单 |
 | 用例 | `tests/architecture-guard.test.mjs`（10 条含死分支/卡包登记守卫）、`tests/migration-tools.test.mjs`（8）、`tests/phase5-migration.test.mjs`（37）、`tests/card-rules.test.mjs`（2） |
 | 文档 | 本文 + `phase5-migration.md`（批次证据与踩坑记录）+ `card-model.md`（加卡流程） |

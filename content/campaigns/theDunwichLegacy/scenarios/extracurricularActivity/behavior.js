@@ -1,6 +1,7 @@
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
 import { awardStoryCard } from '../../../../../src/campaign/campaign-effects.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { chooseCandidate } from '../../../../choice-helpers.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { dunwichChaosToken, dunwichChaosAfterTest } from '../../dunwich-chaos.js'
 
@@ -51,10 +52,7 @@ export const behavior = {
         pile.forEach((code, index) => { if (humanoid(code)) matches.push({ code, index, pileName }) })
       }
       if (!matches.length) return
-      const chosen = matches.length === 1 ? matches[0] : matches.find(match => match.code === api.choose({
-        kind: 'card', source: '02054', seat: state.currentSeat ?? state.campaign.leadSeat, prompt: '选择要生成在教师办公室的类人敌人。',
-        options: matches.map(match => ({ id: match.code, cardCode: match.code, label: `${ALL_CARDS[match.code]?.nameZh || match.code}（${match.pileName === 'encounterDeck' ? '遭遇牌库' : '遭遇弃牌堆'}）` })),
-      }))
+      const chosen = chooseCandidate(api, { kind: 'card', source: '02054', seat: state.currentSeat ?? state.campaign.leadSeat, prompt: '选择要生成在教师办公室的类人敌人。' }, matches, { key: match => `${match.pileName}:${match.index}`, cardCode: match => match.code, label: match => `${ALL_CARDS[match.code]?.nameZh || match.code}（${match.pileName === 'encounterDeck' ? '遭遇牌库' : '遭遇弃牌堆'}）` })
       const pile = chosen.pileName === 'encounterDeck' ? state.encounterDeck : state.encounterDiscard
       pile.splice(chosen.index, 1)
       api.spawn(chosen.code, location.id)

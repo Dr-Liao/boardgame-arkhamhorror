@@ -4,6 +4,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { inspectJson, compareSources, stableStringify, sha256 } from './audit-resources.mjs'
 import { isCardAvailable, canSelectInvestigator } from '../src/deck/availability.js'
 import { EFFECTS, INVESTIGATOR_ABILITIES } from '../src/cards/card-effects.js'
+import { CARD_ABILITY_CODES } from '../src/cards/card-abilities.js'
+import { NON_PLAYER_ABILITY_CODES } from '../src/cards/encounter-abilities.js'
 import { SCENARIO_CARD_IDENTITIES, SCENARIOS } from '../src/cards/scenarios-data.js'
 import { coreCardVerified, CORE_ACCEPTANCE_PROFILE } from '../src/cards/core-acceptance.js'
 import { dunwichCardVerified, DUNWICH_ACCEPTANCE_PROFILE } from '../src/cards/dunwich-acceptance.js'
@@ -155,9 +157,12 @@ export function mergeCatalog(sources) {
     const available = !reasons.length && (canSelectInvestigator(code) || isCardAvailable(code))
     const accepted = !reasons.length && (canSelectInvestigator(code, 'strict') || isCardAvailable(code, 'strict'))
     const effect = Object.hasOwn(EFFECTS, code) ? EFFECTS[code] : null
+    // 能力层描述子（一卡一文件 / 非玩家卡）同样是「有实现」；只看 EFFECTS 会把
+    // 04147/04148/04191/04264 这类已迁移卡误标成 unimplemented。
+    const descriptor = CARD_ABILITY_CODES.has(code) || NON_PLAYER_ABILITY_CODES.has(code)
     // Encoding/allowlisting is not behavioral acceptance. P6 keeps proof scopes
     // in the per-code ledger; no card is promoted by the existence of a key.
-    const effectStatus = effect?.simplified ? 'simplified' : effect || Object.hasOwn(INVESTIGATOR_ABILITIES, code) || available ? 'unverified' : 'unimplemented'
+    const effectStatus = effect?.simplified ? 'simplified' : effect || descriptor || Object.hasOwn(INVESTIGATOR_ABILITIES, code) || available ? 'unverified' : 'unimplemented'
     cards[code] = { ...normalizeCard(row, locale), dataStatus: reasons.length ? 'quarantined' : source === 'legacy' ? 'compatibility' : 'validated', availability: accepted ? 'strict' : available ? 'simplified' : 'catalog-only', effectStatus, provenanceId: code }
     provenance[code] = { canonicalSource: source, rawSources: Object.keys(indexes).filter(id => indexes[id].has(code)), fields: fieldSources(row, source), locale, isolationReasons: reasons }
   }

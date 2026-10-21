@@ -107,9 +107,6 @@ function finishScenario(state, resolutionKey, events) {
   if (!Object.hasOwn(sc.resolutions, resolutionKey)) throw new Error('未知剧本结局')
   const visitId = `${campaign.flow?.nodeId || sc.id}:${campaign.flow?.visits?.[campaign.flow.nodeId] || 1}`
   if (campaign.scenarioResults.some(result => result.visitId === visitId)) throw new Error('本关已经结算')
-  // 剧本以「无结局」收场且没有任何幸存者时，战役到此为止，不能算胜利。
-  if (resolutionKey === 'noResolution'
-    && !state.investigators.some(inv => !inv.defeated && !inv.resigned)) campaign.failed = true
   const before = structuredClone(campaign.investigators)
   const recordsBefore = structuredClone(campaign.records)
   state.resolution = resolutionKey
@@ -171,7 +168,15 @@ function finishScenario(state, resolutionKey, events) {
     : Object.values(graph.nodes).find(item => item.type === 'scenario' && item.scenarioId === sc.id)
   campaign.pendingNode = node?.next
   const next = graph.nodes[campaign.pendingNode]
-  if (campaign.failed || !next || next.type === 'end') {
+  const campaignEnds = campaign.failed || !next || next.type === 'end'
+  // 规则（P1）：本关全灭/全员撤退只结束本关，队伍带着创伤进入下一关；
+  // 只有战役已无下一关（或剧本显式把 campaign.failed 置真）才算战役失败。
+  // 旧的非大厅流程没有关间换人步骤，若有人已死亡/疯狂则无法接手，仍按失败处理。
+  const noSurvivor = !state.investigators.some(inv => !inv.defeated && !inv.resigned)
+  const needsReplacement = state.investigators.some(inv => campaign.investigators[inv.seat]?.status !== 'active')
+  if (resolutionKey === 'noResolution' && noSurvivor
+    && (campaignEnds || (!state.hubFlow && needsReplacement))) campaign.failed = true
+  if (campaign.failed || campaignEnds) {
     throw new ScenarioEnded(null)
   }
   throw new ScenarioEnded(campaign.scenarioIndex + 1)

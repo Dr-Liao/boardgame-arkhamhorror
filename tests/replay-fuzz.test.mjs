@@ -20,7 +20,7 @@ const CAMPAIGNS = ['nightOfTheZealot', 'theDunwichLegacy', 'thePathToCarcosa', '
 const playersFor = count => Array.from({ length: count }, (_, seat) => ({ seat, role: seat === 0 ? 'human' : 'ai' }))
 
 test('100 局随机对局：重放与实时执行逐步一致', { timeout: 600000 }, () => {
-  const report = { games: 0, steps: 0, choices: 0, scenarios: new Set(), campaignResults: 0 }
+  const report = { games: 0, steps: 0, choices: 0, scenarios: new Set(), campaignResults: 0, scenarioResults: 0 }
   for (let index = 0; index < 100; index++) {
     const campaignId = CAMPAIGNS[index % CAMPAIGNS.length]
     const seats = 1 + (index % 4)
@@ -50,6 +50,7 @@ test('100 局随机对局：重放与实时执行逐步一致', { timeout: 60000
     const scenario = game.state.scenario?.id ?? null
     if (scenario) report.scenarios.add(scenario)
     if (game.state.uiState === 'campaignResult') report.campaignResults++
+    if (game.state.uiState === 'scenarioResult') report.scenarioResults++
     report.choices += game.log.moves.filter(entry => entry.move.action === 'choose').length
     report.games++
     report.steps += moves
@@ -58,7 +59,7 @@ test('100 局随机对局：重放与实时执行逐步一致', { timeout: 60000
   assert.ok(report.steps >= 900, `100 局合计步数不应过少（当前 ${report.steps}）`)
   assert.ok(report.scenarios.size >= 3, `100 局至少覆盖 3 个关卡（当前 ${[...report.scenarios].join('、')}）`)
   assert.ok(report.choices >= 100, `随机对局应产生大量待决选择（当前 ${report.choices}）`)
-  assert.ok(report.campaignResults >= 1, `至少应有一局走到战役结算（当前 ${report.campaignResults}）`)
+  // P1 起全员败退不再立刻结束战役；短局不一定走到结算，结算覆盖由 golden recipe 与战役用例保证。
 })
 
 test('5,000 步随机走子器：不变量、JSON 幂等与关键步重放', { timeout: 900000 }, () => {
@@ -71,6 +72,9 @@ test('5,000 步随机走子器：不变量、JSON 幂等与关键步重放', { t
   const checkState = (state, where) => {
     assert.ok(Number.isSafeInteger(state.revision), `${where}：revision 必须是安全整数`)
     if (state.uiState !== 'inScenario') return
+    // 进入新关卡时 setupLocations 可能停在 preScenarioSetup 的故事选择上（locations 尚未铺开），
+    // 此时调查员的 startLocation 还没进入 state.locations，不是规则违规。
+    if (!state.locations.length) return
     const clueTotal = state.investigators.reduce((sum, inv) => sum + (inv.clues || 0), 0)
     if (state.clues !== clueTotal) record(`${where}：公共线索 ${state.clues} != 个人线索之和 ${clueTotal}`)
     if (state.doom < 0) record(`${where}：议程毁灭为负（${state.doom}）`)
@@ -81,7 +85,9 @@ test('5,000 步随机走子器：不变量、JSON 幂等与关键步重放', { t
         if (inv.damage > inv.maxHealth) record(`${where}：座位 ${inv.seat} 未败北但伤害 ${inv.damage} > 上限 ${inv.maxHealth}`)
         if (inv.horror > inv.maxSanity) record(`${where}：座位 ${inv.seat} 未败北但恐惧 ${inv.horror} > 上限 ${inv.maxSanity}`)
       }
-      if (inv.location && !state.locations.some(location => location.id === inv.location)) {
+      // 已败北/撤退的调查员不再参与地点移动；地点被移除后留在原 id 不是规则违规。
+      if (!inv.defeated && !inv.resigned && inv.location
+        && !state.locations.some(location => location.id === inv.location)) {
         record(`${where}：座位 ${inv.seat} 在不存在的地点 ${inv.location}`)
       }
       for (const id of inv.engaged || []) {

@@ -107,6 +107,10 @@ export function captureReplayLog(state) {
       seed: state.seed ?? null,
       campaignHub: Boolean(state.hubFlow),
       aiStoryAwareness: state.aiStoryAwareness === true,
+      // 游戏高级设置：卡牌范围会影响 AI/自定义牌组与可选调查员，必须随建局参数重放；
+      // 回档开关只影响关卡检查点分支，同样记进日志，重放后的状态才和存档一致。
+      cardPoolScope: state.cardPoolScope === 'progressive' ? 'progressive' : 'all',
+      allowRollback: state.allowRollback !== false,
       playerInvestigator: openingCodes[0] ?? 'auto',
       // AI 席位的调查员可能由 persona 决定（engine 的 pickAiInvestigator），
       // state 里不保存 persona，所以把"建局时选到谁"记下来，重放才不受选人策略变化影响。
@@ -134,6 +138,8 @@ function normalizeSettings(log) {
   if (!settings.seed) throw new Error('重放日志缺少 seed，无法重建随机流')
   if (settings.campaignId == null) delete settings.campaignId
   settings.aiStoryAwareness = settings.aiStoryAwareness === true || settings.aiStoryAwareness === 'on'
+  settings.cardPoolScope = settings.cardPoolScope === 'progressive' ? 'progressive' : 'all'
+  settings.allowRollback = settings.allowRollback !== false && settings.allowRollback !== 'off'
   return settings
 }
 

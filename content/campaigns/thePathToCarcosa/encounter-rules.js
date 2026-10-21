@@ -39,11 +39,15 @@ function distance(state, from, to) {
   return Infinity
 }
 
+// P0：与 TFA 同一份修复——调查员没有 id，只有 seat。
+const choiceKey = (candidate, index) => String(candidate?.id ?? candidate?.seat ?? candidate?.code ?? index)
+
 function chooseOne(api, request, candidates, label = candidate => candidate.name || candidate.id) {
   if (!candidates.length) return null
   if (candidates.length === 1) return candidates[0]
-  const id = api.choose({ ...request, options: candidates.map(candidate => ({ id: candidate.id, label: label(candidate) })) })
-  return candidates.find(candidate => candidate.id === id) || candidates[0]
+  const id = api.choose({ ...request,
+    options: candidates.map((candidate, index) => ({ id: choiceKey(candidate, index), label: label(candidate) })) })
+  return candidates.find((candidate, index) => choiceKey(candidate, index) === id) || candidates[0]
 }
 
 export const implementedTreacheries = new Set([
@@ -61,6 +65,18 @@ export const implementedEnemies = new Set([
 ])
 
 export const encounterRules = {
+  // P0：苍白面具进入未揭示的地下墓穴要共同支付线索。付不起时这一步不能
+  // 出现在 legalMoves 里（moves.js 会读这个钩子），否则 beforeMove 会抛错。
+  moveError(state, inv, destination) {
+    if (state.scenario?.id !== 'thePallidMask') return null
+    const source = state.locations.find(location => location.id === inv.location)
+    if (destination?.revealed || source?.originalCode === '03248') return null
+    const cost = state.numInvestigators
+    const available = state.investigators
+      .filter(owner => !owner.defeated && !owner.resigned && owner.location === source?.id)
+      .reduce((sum, owner) => sum + (owner.clues || 0), 0)
+    return available < cost ? `进入未揭示的地下墓穴需要 ${cost} 点共同线索（当前 ${available}）` : null
+  },
   // 03103 蟑螂群 / 03222 潜行的拜亚基 / 03096 哈斯塔的傀儡的战斗修正已迁到
   // src/cards/encounter-abilities.js 的对应敌人条目；本章只保留「国王敕令」的全局规则。
   enemyStatModifier(state, enemy, stat) {

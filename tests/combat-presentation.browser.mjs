@@ -10,6 +10,8 @@ async function fixture(page) {
     const body=await response.json();session=body.session
     session.state.pendingChoice=null;session.state.currentSeat=0;session.state.phase='investigation'
     session.state.investigators[0].hand=['01087','01025'];session.state.investigators[0].resources=20
+    // 手牌是注入的，标准牌组不一定含 01025；补上卡牌定义，否则 UI 只能给通用置灰理由。
+    session.state.cards['01025']={code:'01025',type:'skill',name:'凶蛮打击',faction:'guardian',cost:0,level:0,traits:['Practiced']}
     session.state.legalMoves=[{action:'play',cardId:'01087',label:'装备手电筒'}]
     await route.fulfill({response,json:body})
   })
@@ -156,6 +158,9 @@ test('故事幕等待玩家手动继续，经过一分钟也不会自动关闭',
   await page.clock.install()
   await page.clock.fastForward(60000)
   await expect(scene).toBeVisible()
+  await scene.getByRole('button',{name:'继续',exact:true}).click()
+  // 开场排队两个故事幕：故事导入 → 密谋揭示；两个都要手动继续。
+  await expect(scene).toHaveAccessibleName('密谋揭示')
   await scene.getByRole('button',{name:'继续',exact:true}).click()
   await expect(scene).toHaveCount(0)
   expect(await page.locator('.ah-table').evaluate(el=>el.classList.contains('ah-presenting'))).toBe(false)

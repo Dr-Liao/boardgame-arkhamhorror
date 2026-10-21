@@ -2,6 +2,8 @@
 
 本文定义《诡镇奇谈：卡牌版》扩展循环的通用迁移格式。核心原则是：目录收录、规则实现、验收确认和正式开放彼此独立；不得因为卡牌已有数据或图片就将内容标记为可玩。
 
+执行顺序固定为 §4 的六步：**扫描新增机制 → 拆分原语 → 实现关键字与规则手册 → 实现新增交互与界面 → 多子进程批量迁移卡牌（原语请求排队）→ 测试与验收**。M0–M5 是内容阶段与产物范围，不是执行顺序。
+
 ## 1. 权威来源
 
 每轮迁移必须锁定以下来源及 SHA-256，不直接修改参考资源：
@@ -18,15 +20,18 @@
 迁移不只是把卡文变成代码，还必须把行为放进正确的层。以下规矩与重构路线一致；完整条文见
 [`architecture-refactor-roadmap.md`](architecture-refactor-roadmap.md) §3、§7，稳态架构见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md)。
 
-- **行为唯一入口**：新卡行为写在 `src/cards/card-abilities.js` 的描述子（`abilities` / `modifiers` / `elderSign`）。不得向 `card-effects.js` 的 `EFFECTS` 增加新条目，不得在 `engine.js` 按卡号、关卡名或战役名新增分支。
-- **新机制先走通用层**：卡面写不下时，先扩 `ability.js` / `windows.js` / `matcher.js` / `modifiers.js` 的通用能力，再写卡。新窗口必须同时完成注册、调用点接线与测试——注册不等于接线。
+- **行为唯一入口**：新卡行为写在 `src/cards/entries/<code>.js` 的单卡文件（一张卡一个文件，`export default` 恰好一个条目）。不得向 `card-effects.js` 的 `EFFECTS` 增加新条目，不得在 `engine.js` 按卡号、关卡名或战役名新增分支，不得恢复 `card-abilities.js` 条目或 `BATCH_*` / `MIGRATED_*` 批次大数组。
+- **先原语、后卡牌**：每轮迁移先扫描新增机制并拆分原语，再批量写卡。卡牌只能使用已登记的原语；需要新原语时按 §4.6.3 的队列向主进程申请，不得由子进程直接改引擎。
+- **新机制先走通用层**：卡面写不下时，先扩 `ability.js` / `windows.js` / `matcher.js` / `modifiers.js` / `targets.js` / `play-condition.js` / `effect-state.js` 的通用能力，再写卡。新窗口必须同时完成注册、调用点接线与测试——注册不等于接线。
+- **新增交互先于批量卡牌**：新的选择、目标、提示、面板与动画必须在卡牌批量迁移前完成，并复用 `web/` 的现有组件、CSS 变量与交互模式；不允许在卡牌批次里边写卡边临时拼界面。验收必须覆盖桌面 1440 与移动端 390，见 §4.5。
+- **多进程写入边界**：批量迁移由主进程 + 多个子进程完成；子进程只写分给自己的 `entries/<code>.js`，不得改 `entries/index.js`、`_shared.js`、`card-abilities.js`、`src/engine/`、`content/`、`docs/`、`audit/`。索引由主进程在合并时统一重建，见 §4.6。
 - **非玩家卡走 `encounter-abilities.js`**：敌人、地点、幕／议程、剧情支援与威胁的常驻规则写成带 `scope` 的描述子（Phase 3 · D1），引擎按场上实体枚举，读点是 `entityModifierTotal` / `entityRuleActive`；**不要**再往关卡 `behavior.js` 加按卡号的分支，也不要在引擎里加卡号判断。
 - **通道必须登记**：迁移范围内的每张卡在审计账本里记录通道状态 `descriptor | legacy | hybrid | missing` 与证据路径；`missing` 会让该章的 `literalCardBehavior` 保持 `false`。
 - **规则层不读策略**：不得引入"谁在操作这个座位"的分支（例如按 `humanSeats` 自动跳过可选反应）；这类判断由大厅注入。
 - **可重放**：迁移新增的状态字段必须进 `save-migration.js` 的版本迁移，并保证 JSON 存读档往返一致；行为改动要用 replay 基线证明"行为零变化"——迁移前 `node tools/replay-fixtures.mjs --baseline <文件>`，迁移后 `--compare <文件>`（见 [`phase4-replay.md`](phase4-replay.md) §4）。
 - **简化必须显式**：未逐条还原的卡写 `simplified: true` + `note` 并留在待实现清单，不得用"看起来一样"的实现静默通过验收。
 
-迁移完成的证据是三个指标**不增加且逐批下降**：`engine.js` 的卡号字面量、`EFFECTS` 条目数、战役逃生原语卡数。当前基线见重构路线 §1。
+迁移完成的证据是三个指标**不增加**（已经为 0 的保持 0）：`engine.js` 的卡号字面量、`EFFECTS` 条目数、战役逃生原语卡数。当前基线见重构路线 §1。
 
 ## 3. 目标目录
 
@@ -50,46 +55,324 @@ games/arkhamhorror/
 │     ├─ <cycle>Campaign/manifest.js
 │     ├─ <cycle>Investigators/manifest.js
 │     └─ <cycle>Player/manifest.js
+├─ src/cards/entries/<code>.js       # 一卡一文件（子进程只写自己分到的文件）
+├─ src/cards/entries/index.js        # 生成索引（只由主进程重建）
 ├─ audit/<cycle>-migration.json
 ├─ tests/<cycle>-migration.test.mjs
 └─ tools/audit-<cycle>.mjs
 ```
 
+迁移运行目录放在仓库根目录 `artifacts/migration/<cycle>/`（不签入）：
+
+```text
+artifacts/migration/<cycle>/
+├─ scope.json                  # 卡号范围、来源哈希、基线与分片
+├─ mechanism-scan.json         # 第 1 步：新增机制扫描
+├─ primitive-plan.json         # 第 2 步：原语复用/新增计划
+├─ primitive-catalog.json      # 主进程维护的原语快照（worker 只读）
+├─ primitive-requests/         # 子进程写入的请求（每个请求一个 JSON）
+├─ workers/<worker>.json       # 子进程进度/阻塞/产出清单
+└─ reports/                    # 合并、队列、验收报告
+```
+
 阶段说明、截图和执行日志放在仓库根目录 `artifacts/`；不得放入游戏运行目录。历史试点包只在确有独立行为边界时保留，不为保持目录数量而创建空包。
 
-## 4. 迁移阶段
+## 4. 迁移执行顺序（唯一）
 
-### M0：目录与来源基线
+迁移按以下六步执行，顺序不可交换：
+
+```text
+锁定范围 → 扫描新增机制 → 拆分原语 → 实现关键字与规则手册
+        → 实现新增交互与界面 → 批量迁移卡牌（多子进程 + 原语队列） → 测试与验收
+```
+
+M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描、原语、关键字、交互都可以在 M0 锁定范围后开始，不必等全部剧本迁完。
+
+### 4.1 第 0 步：锁定范围与基线
+
+- 锁定卡号范围、章节顺序、真实剧本提示卡号和初始混乱袋；记录来源路径与 SHA-256。
+- 把战役牌、调查员依赖和玩家卡做无重叠分区；每张卡只属于一个批次分片。
+- 记录迁移前基线：`node tools/replay-fixtures.mjs --baseline artifacts/migration/<cycle>/replay-before.json`，并保存当前 `git rev-parse HEAD`。
+- 产物：`artifacts/migration/<cycle>/scope.json`（范围、来源哈希、基线、分片草案）。
+- 门禁：来源哈希可复现；基线 10 局 / 529 步通过；范围外卡不得进入本轮。
+
+### 4.2 第 1 步：扫描新增机制
+
+先扫描，不写卡。扫描对象包括本循环全部卡面、规则来源、剧情、提示卡和参考实现行为，输出**机制条目**而不是代码：
+
+```json
+{
+  "mechanisms": [
+    {
+      "id": "willpower-evade",
+      "source": "04029 意志闪避 / 04271",
+      "type": "primitive",
+      "cards": ["04029", "04271"],
+      "existing": false,
+      "note": "现有 evade 只接受 agility，需要指定技能"
+    },
+    {
+      "id": "exploration-deck",
+      "source": "TFA 规则书",
+      "type": "keyword+scenario",
+      "cards": ["04050", "04285"],
+      "existing": false
+    }
+  ]
+}
+```
+
+- `type` 至少覆盖 `primitive`（引擎动作/读点）、`keyword`（关键词/时机词）、`rulebook`（规则条目）、`interaction`（选择/目标/提示/面板）、`scenario`（章节流程）、`content`（纯数据/文案）。
+- 每个机制条目必须列出代表卡号、来源、是否已有通用实现、缺口和候选原语。
+- 同一机制合并去重；同一张卡可以关联多个机制。
+- 未知机制默认**阻断**，不得用近似卡文实现静默过关。
+- 产物：`artifacts/migration/<cycle>/mechanism-scan.json`。
+- 门禁：本轮迁移范围内每张卡至少出现在一个机制条目；未分类卡为 0；`type=primitive` 的条目全部进入下一步。
+
+### 4.3 第 2 步：拆分原语
+
+把上一步的机制拆成**窄原语**，先实现通用层，不写卡：
+
+- 先盘点已有原语：`src/engine/effects.js` 的 `EFFECT_PRIMITIVES`、`ctx.api` 的 `api-*.js`、`ability.js` 的 `kind`、`matcher.js` 组合子、`targets.js` 的目标枚举、`play-condition.js` 的打出条件。能在现有原语里组合出来的，不新增。
+- 需要新增时，一个原语只做一件事：动词 + 参数 + 目标 + 持续时间 + 成功/失败分支；不要把整张卡的规则塞进一个 `carcosaPlayer` 式大原语。
+- 每个新原语必须同时具备：
+  1. 通用实现（`effects.js` / `api-*.js` / `ability.js` / `modifiers.js` 等，按所属层）；
+  2. 注册期校验（参数形状、未知目标、未知窗口在加载时失败）；
+  3. Node 单测：正常、无合法目标、费用不足、存档往返；
+  4. 文档条目（写入本轮 `primitive-plan.json` 的 `docs` 字段；稳定原语再补到引擎模块注释或 `docs/card-entry-files.md`）；
+  5. 对既有卡的行为零变化（replay 对比）。
+- 数据表达不了、且只服务一张卡的一次性逻辑，允许留在 `resolve(ctx)` 逃生口，但必须在 `primitive-plan.json` 的 `escape` 里登记卡号与理由；不得把可复用的原语写成 `resolve` 来绕过队列。
+- 产物：`artifacts/migration/<cycle>/primitive-plan.json`：
+
+```json
+{
+  "reuse": [{ "primitive": "draw", "cards": ["01001"] }],
+  "new": [{
+    "id": "evadeWithSkill",
+    "params": { "skill": "willpower", "moveAfterEvade": true },
+    "api": "api.evade(seat, { enemyId, skill, moveAfterEvade })",
+    "tests": ["tests/phase2-primitives.test.mjs"],
+    "docs": "docs/arkham-content-migration.md#43-第-2-步拆分原语",
+    "status": "done"
+  }],
+  "escape": [{ "card": "03157", "reason": "替换/防止管线尚未交付" }]
+}
+```
+
+- 门禁：所有 `new` 原语 `status=done` 且有测试；`reuse` 的引用在 `EFFECT_PRIMITIVES` / `ctx.api` 中可查；`escape` 只含单卡逻辑；`engine.js` 无卡号分支；`npm run test:fast` 无新增失败。
+
+### 4.4 第 3 步：实现关键字与规则手册
+
+- 对 `type=keyword` 的机制：实现引擎行为、窗口/时机、成功失败分支、存档恢复，并写 Node 测试；已有关键词要确认在本循环卡牌上仍然成立。
+- 对 `type=rulebook` 的机制：写规则书条目、关键词索引、卡文直达和桌面/移动端阅读路径；规则描述必须以当前实现为准，不能把未实现的原版规则写成可用。
+- 每个关键词/规则条目关联代表卡号；卡牌批量迁移时只能引用已经 `verified` 的关键词 id。
+- 产物：`confirmations.keywords`、`confirmations.rulebook` 的检查项与测试/审计证据路径。
+- 门禁：新增关键词与规则条目全部 `verified`；规则书桌面/移动端浏览器用例通过；未确认的关键词不得在卡牌文件里使用。
+
+### 4.5 第 4 步：实现新增交互逻辑与界面一致性
+
+批量写卡之前，先把新机制需要的新交互做完。交互包括：选择目标、选择卡牌/地点/敌人、多选、顺序排列、确认/取消、危险操作提示、空状态、不可用原因、动画与音效。
+
+- **复用现有界面**：只使用 `web/` 已有的组件、CSS 变量、间距/字号/圆角/颜色/动画；不得为新卡在 `public/` 或大厅写卡号分支，也不得用写死颜色/字号的内联样式临时拼一个“能点就行”的面板；动态位置/尺寸必须复用既有布局变量。
+- **数据通路**：交互状态由服务端 `requestChoice` / `presentation-state` / 观察投影产生；浏览器只提交合法动作，不复制规则判定。私有候选、手牌、牌库顺序不得进入其他座位投影。
+- **状态齐全**：可用、不可用（带原因）、空候选、提交中、失败重试、取消后回到原状态；键盘/触屏都可操作。
+- **视觉一致**：新面板与相邻面板使用同一套 token 和布局节奏；桌面 1440×900、移动端 390×844 各至少一张截图；截图放在 `test-results/` 或 `artifacts/`，不放进运行目录。
+- **美化标准**：间距、字号、颜色、圆角、阴影、动画时长与相邻界面一致；新增按钮/选项不得比现有控件更小或更拥挤；桌面与移动端各检查一次，不允许“功能能用但看起来像另一个游戏”。
+- **浏览器验收**：新增交互在卡牌批次前先跑对应 Playwright 用例；至少覆盖桌面和移动端各一条真实操作路径。
+- 产物：交互组件/样式、`presentation-state` 字段、浏览器测试、截图。
+- 门禁：桌面/移动端浏览器用例通过；新交互与既有界面的间距/字号/颜色一致；无卡号 UI 分支；新增颜色/字号/间距来自既有 token；隐私投影断言通过。
+
+### 4.6 第 5 步：批量迁移卡牌（多子进程 + 原语队列）
+
+卡牌迁移拆成「主进程 + N 个子进程」。主进程是唯一的共享文件写者，子进程只写自己分到的单卡文件。
+本文定义的是**协议**，不绑定某个固定工具名；本轮还没有专用编排器时，主进程脚本按 §4.6.2–§4.6.6
+直接 spawn worker 也算合规，但必须留下 `shards.json`、worker 报告、原语队列报告与合并报告。
+
+#### 4.6.1 角色与写入边界
+
+| 角色 | 可以写 | 绝对不写 |
+| --- | --- | --- |
+| 主进程 / 编排器 | `src/engine/**`、`entries/_shared.js`、`entries/index.js`、`card-abilities.js`、`phase5-codes.js`、`docs/**`、`audit/**`、`content/**`、`artifacts/migration/**` | 子进程分到的 `entries/<code>.js`（除非接管/返工） |
+| 子进程 worker | 自己分到的 `src/cards/entries/<code>.js`、自己的 `artifacts/migration/<cycle>/workers/<id>.json`、`primitive-requests/*.json` | `entries/index.js`、`_shared.js`、`card-abilities.js`、`src/engine/**`、`content/**`、`docs/**`、`audit/**`、其他 worker 的卡文件 |
+
+补充规则：
+
+- 子进程创建卡文件时使用 `node tools/scaffold-card.mjs <code> --entry --no-index`，或直接按模板写文件；**不得运行** `build-card-index.mjs`。
+- 索引由主进程在所有分片合并后**只重建一次**；子进程各自重建索引会造成顺序/覆盖冲突。
+- 子进程不做跨卡重构：需要改 `_shared.js`、`matcher.js`、`ctx.api` 时，一律走原语请求队列（§4.6.3），由主进程实现。
+- 任何两个 worker 不得写同一个 `code`；编排器在启动前检查分片交集为空。
+
+#### 4.6.2 分片
+
+- 按卡号区间、内容包或调查员分组切分，每片 20–50 张；同一张卡只进一片。
+- 分片清单写入 `artifacts/migration/<cycle>/shards.json`，含 `worker`、`codes[]`、起始/结束时间、输入快照哈希。
+- worker 启动时读取只读快照：`primitive-catalog.json`、`mechanism-scan.json`、`primitive-plan.json`、本轮卡牌清单。
+- 已存在且内容未变的 `entries/<code>.js` 跳过（幂等）；内容冲突或文件不在自己的分片里则报错退出。
+- 编排方式：主进程读 `shards.json`，用 `node:child_process` 的 `spawn` 为每个 worker 启动独立 Node 进程
+  （cwd 固定 `games/arkhamhorror/`，stdout/stderr 落到 `artifacts/migration/<cycle>/workers/<id>.log`）。
+  一个 worker 崩溃只重跑该分片，不影响其他 worker；没有编排器时，主进程脚本按同一份 `shards.json` 顺序 spawn 也符合本协议。
+
+#### 4.6.3 原语请求协议
+
+子进程遇到现有原语表达不了的卡面时，**不要停在那里等，也不要改引擎**：
+
+1. 写一个请求文件到 `artifacts/migration/<cycle>/primitive-requests/<request-id>.json`（先写 `.tmp`，再原子 rename）；
+2. 把该卡标记为 `blocked`，继续迁移同片其他卡；
+3. 在批次末尾或每 N 张卡后轮询 `primitive-requests/` 的 `status` / `primitive-catalog.json`；
+4. 主进程标记 `done` 后，重新实现该卡；标记 `rejected` 时按 `resolution.suggestion` 改用现有原语或 `resolve`，仍无法表达则留给主进程人工处理。
+
+请求文件：
+
+```json
+{
+  "schemaVersion": 1,
+  "id": "w03-04029-willpower-evade",
+  "cycle": "tfa",
+  "worker": "w-03",
+  "card": "04029",
+  "primitive": "evadeWithSkill",
+  "params": { "skill": "willpower", "moveAfterEvade": true },
+  "cardText": "[action] 花费 1 充能：躲避。本次躲避使用 willpower……",
+  "reason": "现有 evade 原语只接受 agility，无法指定技能",
+  "proposedApi": "api.evade(seat, { enemyId, skill, moveAfterEvade })",
+  "status": "pending",
+  "createdAt": "2026-10-21T12:00:00+08:00"
+}
+```
+
+主进程写回同一文件（状态机 `pending → claimed → done | rejected`）：
+
+```json
+{
+  "status": "done",
+  "claimedBy": "main",
+  "resolution": {
+    "api": "api.evade(seat, { enemyId, skill, moveAfterEvade })",
+    "implementedIn": ["src/engine/api-clue.js"],
+    "tests": ["tests/phase2-primitives.test.mjs"],
+    "catalog": "primitive-catalog.json#evadeWithSkill",
+    "notes": "skill 缺省为 agility；moveAfterEvade 只在成功时移动"
+  }
+}
+```
+
+队列规则：
+
+- **只由主进程实现**：主进程读 pending，按 `(primitive, stableStringify(params))` 去重；相同请求合并为一个实现，多个 worker 共享结果。
+- **先查已有原语**：能组合已有原语就回 `done` 并给出用法，不新增代码。
+- **实现顺序**：通用层 → 注册期校验 → Node 测试 → 原语目录 → 回写 `done`；任何一步失败都回 `rejected` 并给出替代方案，不允许“先标 done 再补测试”。
+- **不得改卡**：主进程不编辑 worker 分到的卡文件；只改共享层。
+- **队列可恢复**：请求文件是纯 JSON、状态可重放；主进程崩溃后重新扫描 `pending/claimed` 即可继续；`claimed` 超时回到 `pending`。
+- **审计**：队列统计（请求数、去重数、done/rejected、平均等待）写入 `artifacts/migration/<cycle>/reports/primitive-queue.json`，最终验收引用。
+
+#### 4.6.4 子进程循环
+
+```text
+读取分片与只读快照
+  → 对每张卡：匹配已有原语
+      ├─ 能表达：写 entries/<code>.js → node --check / 结构检查 → 记录 done
+      └─ 不能表达：写 primitive request → 记录 blocked → 继续下一张
+  → 本轮结束：轮询队列
+      ├─ done：重新实现 blocked 卡
+      └─ rejected：按建议改用现有原语/resolve，或保留 blocked 交主进程
+  → 写 workers/<id>.json（done/blocked/requests/files/耗时）
+  → 退出（不重建索引、不跑全量测试）
+```
+
+- 子进程的 `node --check`/结构检查只验证语法、单一 `export default`、`code` 与文件名一致、没有禁止 import；**不**加载完整引擎，也**不**注册/跑行为测试（这些由主进程合并后统一做）。
+- 子进程可被中断后 `--resume`：已完成且哈希一致的文件跳过；`blocked` 卡保留请求 id，不重复发请求。
+- 子进程超时/崩溃：主进程只回收该 worker 的分片，不碰其他分片；未写请求的卡回到待分配。
+
+#### 4.6.5 主进程处理
+
+1. 启动前：保存 `git rev-parse HEAD` 与共享文件哈希；检查分片无交集；生成 `primitive-catalog.json` 快照。
+2. 运行期间：只处理原语队列与共享层；按 §4.6.3 回写；每处理完一批请求，更新 `primitive-catalog.json` 并通知/让 worker 轮询。
+3. 合并前：检查每个 worker 的 `git status`/文件清单只包含自己的分片；发现越界写入直接拒绝该 worker 产物。
+4. 合并：收集所有 `entries/<code>.js`；逐文件校验文件名/`code`/单一 default/禁止 import；重建 `entries/index.js`；运行 `npm run cards:check`。
+5. 行为门禁：`replay-fixtures --compare` 与迁移前基线逐条一致；若本轮有意新增行为，必须单独记录差异并在验收报告中说明。
+6. 收尾：更新 `audit/<cycle>-migration.json`、`cards:audit:write`、队列报告、分片报告。
+
+#### 4.6.6 合并、索引与冲突
+
+- 索引只由主进程重建；worker 的 `--no-index` 是硬要求。
+- 同一 `code` 出现两份文件 → 合并失败，回到分片阶段；不允许“后写覆盖”。
+- `entries/<code>.js` 已存在且不在本轮变更清单 → 视为冲突，主进程人工确认后才能替换。
+- 子进程不得修改 `_shared.js`；需要新 helper 时放进自己的卡文件，确属跨卡复用再走原语请求由主进程提升到 `_shared.js`。
+
+#### 4.6.7 失败、重试与回滚
+
+- 单卡失败不阻塞分片：记录 `failed` 与原因，继续其他卡；主进程最后统一重试或转人工。
+- 原语请求 `rejected` 不是失败：按建议改写；仍无法表达则把卡留在 `blocked` 清单，不计入本轮 `done`。
+- 回滚以卡文件为单位：删除/还原单个 `entries/<code>.js` 并重建索引即可；不得回滚整个共享层来“撤销一张卡”。
+- 共享层改动必须单独提交/记录，便于把“原语实现”与“卡牌批量”分开审查。
+
+#### 4.6.8 批次验收
+
+| 检查 | 通过标准 |
+| --- | --- |
+| 分片完整性 | 每个 `code` 恰好一个 worker；无交集、无遗漏 |
+| 写入边界 | worker 只改自己的 `entries/<code>.js` 与自己的 `artifacts/migration/` 记录；无 `index.js`/engine/docs/audit 变更 |
+| 单卡文件 | 文件名=`code`、单一 default、无禁止 import |
+| 索引 | 主进程重建一次，`cards:check` 5/5 |
+| 原语队列 | 无 `pending`/`claimed` 悬挂；`done` 的原语都有测试；`rejected` 都有替代方案 |
+| 行为 | `replay-fixtures --compare` 一致；`test:fast` 无新增失败（既有 7 条除外） |
+| 审计 | `audit/<cycle>-migration.json` 的通道/证据更新；`cards:audit` 指标不倒退 |
+| 报告 | `reports/workers.json`、`reports/primitive-queue.json`、`reports/merge.json` |
+
+#### 4.6.9 示例：一张卡走完队列
+
+1. worker `w-03` 读到 04029，发现 `evade` 只接受 agility → 写 `w03-04029-willpower-evade.json`，卡标 `blocked`，继续 04271/04199。
+2. 主进程去重后发现没有 `evadeWithSkill` → 在 `api-clue.js` 增加 `skill` 参数、补 `phase2-primitives.test.mjs`、更新 `primitive-catalog.json`，回写 `done`。
+3. worker 轮询到 `done`，按 `resolution.api` 写 `entries/04029.js`，`node --check` 通过，标 `done`。
+4. 主进程合并全部分片，重建索引，跑 `cards:check`、replay、fast，写批次报告。
+
+### 4.7 第 6 步：测试与验收
+
+按阶段跑，不要等最后一次性补：
+
+| 阶段 | 必跑 | 通过标准 |
+| --- | --- | --- |
+| 原语 | 新原语单测 + `npm run test:fast` | 新原语覆盖正常/无目标/费用不足/存档往返；无新增失败 |
+| 关键字/规则书 | `npm run audit:<cycle>` + 规则书浏览器 | 关键词/规则条目 `verified`；桌面/移动端可读、可跳转 |
+| 交互 | Playwright 桌面 1440 / 移动 390 | 新交互可用、不可用原因、空状态、取消/重试；视觉与既有界面一致 |
+| 批量卡牌 | `cards:check` + replay + `test:fast` | 索引一致；行为零变化；无新增失败 |
+| 发布 | `npm run test:<cycle>`、`npm run replay:fixtures`、`npm test`、`npm run presentation:check`、浏览器回归 | 三组确认 `verified`；无新增失败；既有失败单独记账 |
+
+最终报告必须区分：本轮新增失败、可复现的既有失败、`blocked` 卡与未完成原语。任何 `blocked`/`rejected` 都不能写成“已迁移”。
+
+### 4.8 内容阶段 M0–M5（产物范围，不是执行顺序）
+
+#### M0：目录与来源基线
 
 - 登记卡号范围、章节顺序、真实剧本提示卡号和初始混乱袋。
 - 将战役牌、调查员依赖和玩家卡无重叠分区。
 - 每章建立独立 `scenarios/<scenarioId>/index.js`。
 - 所有内容保持 `catalog-only`，大厅、选人和构筑不得开放。
 
-### M1：调查员
+#### M1：调查员
 
 - 迁移构筑选项、牌组要求、主能力、旧印、专属卡与专属弱点。
 - 自动构筑和手动构筑使用同一服务端规则。
 - 每位调查员通过初始化、能力、依赖、存档恢复和负面路径测试后，才可加入选人列表。
 
-### M2：玩家卡
+#### M2：玩家卡
 
 - 逐卡登记费用、槽位、使用次数、时机、目标、检定、升级、永久、卓越、放逐等行为。
 - 每张开放卡必须有行为测试和审计账本证据。
 - 目录卡不能仅凭卡文解析进入构筑或升级池。
 
-### M3：剧本
+#### M3：剧本
 
 - 按章节迁移布置、遭遇区域、放在一边区域、地点连接、幕／议程、敌人、诡计、剧本行动、混乱符号、结局和跨关记录。
 - 章节可以单独处于 `development`，但战役在所有章节确认前保持不可启动。
 
-### M4：关键词与规则书
+#### M4：关键词与规则书
 
 - 从本循环所有卡面和规则来源提取关键词、时机词和循环专属机制。
 - 已有关键词必须确认引擎行为仍适用于本循环卡牌；新增关键词必须实现规则、测试和规则书条目。
 - 循环专属规则必须能从相关卡牌、地点、幕／议程和规则目录直达。
 
-### M5：发布
+#### M5：发布
 
 - 完成完整合法路线、失败路线、存档恢复、多人／AI、桌面和移动端浏览器验收。
 - 剧本、关键词和规则书三个确认组全部为 `verified` 后，才允许将战役及依赖包提升为 `playable`。
@@ -176,18 +459,26 @@ games/arkhamhorror/
 
 状态只有 `pending` 和 `verified`。校验器根据检查项计算应有状态，拒绝手工把不完整项目写成 `verified`；任何确认组未完成时，拒绝 `playable: true`。
 
+新增交互（目标/卡牌/地点选择、多选、排列、确认、空状态、不可用原因）还必须有桌面 1440 与移动 390 的浏览器用例和截图；只有 Node 测试不能算交互完成。原语队列、分片报告和交互截图路径应在迁移报告里可查。
+
 ## 9. 最低验证命令
 
-每轮至少提供并执行：
+每轮至少提供并执行（按 §4.7 的阶段顺序）：
 
 ```powershell
+npm run cards:check                         # 单卡文件 / 索引 / 禁止批次大文件
+npm run test:fast                           # 原语、关键字、卡牌逻辑；新增失败必须为 0
+node tools/replay-fixtures.mjs --baseline artifacts/migration/<cycle>/replay-before.json
+node tools/replay-fixtures.mjs --compare  artifacts/migration/<cycle>/replay-before.json
 npm run test:<cycle>
 npm run audit:<cycle>
-npm run replay:fixtures   # golden replay 基线没被无意改动（行为零变化）
+npm run replay:fixtures                     # golden replay 基线没被无意改动
 npm test
 npm run presentation:check
+npm run test:browser                        # 新交互与规则书桌面/移动端（Playwright）
 ```
 
 批量迁移（改卡行为）时另加 `tools/replay-fixtures.mjs --baseline/--compare` 的临时基线对比，见
 [`phase4-replay.md`](phase4-replay.md) §4。完整发布还必须运行相关大厅、浏览器、联机和图片库存验证。
-若全量回归存在既有失败，迁移报告必须明确区分新增失败与可复现的既有漂移。
+若全量回归存在既有失败，迁移报告必须明确区分新增失败与可复现的既有漂移；`blocked`/`rejected`
+的卡和原语必须单列，不能计入已完成。

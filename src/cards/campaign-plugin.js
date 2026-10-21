@@ -351,13 +351,13 @@ export function createCampaignPlugin(deps) {
     // 里奥·安德森：回合开始后打出 1 张盟友支援，费用减 1。
     if (effect.action === 'playAllyDiscounted') {
       const costOf = code => Math.max(0, playCost(state, inv, cardDef(code)) - (effect.amount || 0))
-      const candidates = inv.hand
+      const candidates = [...new Set(inv.hand
         .filter(code => cardDef(code)?.type === 'asset'
           && (cardDef(code)?.traits || []).some(trait => String(trait).toLowerCase() === 'ally'))
         .filter(code => inv.resources >= costOf(code))
         .filter(code => cardDef(code)?.unique
           ? !state.investigators.some(other => other.assets.some(asset => cardDef(asset.code)?.name === cardDef(code)?.name))
-          : true)
+          : true))]
       if (!candidates.length) return
       const chosen = requestChoice(state, { kind: 'target', source: effect.code, seat,
         prompt: '选择要打出并减免 1 费用的盟友支援。',

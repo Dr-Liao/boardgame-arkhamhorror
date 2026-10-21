@@ -20,6 +20,9 @@ const PUBLIC_STATE_FIELDS = [
   'cards', 'investigatorDefs', 'classNames', 'classColors', 'skillNames',
   'acts', 'agendas', 'tokenLabels', 'storyAssets', 'victoryDisplay', 'log',
   'turnsTaken', 'timingWindow', 'humanSeats', 'aiTurnOrder', 'aiTurnOrderRound',
+  // 开局「游戏高级设置」：卡牌范围与回档开关是公开的对局规则，前端据此收窄卡池、
+  // 在关卡纪要里隐藏/说明回档入口。
+  'cardPoolScope', 'allowRollback',
 ]
 
 // 剧本标记里可以公开给所有座位的键（深度、石柱、漆黑）。其余标记属于剧本内部状态，

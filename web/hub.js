@@ -1,11 +1,11 @@
 import { renderRulesText } from './card-text.js'
-import { registerDeckRules, validateDeckRules } from './deck-rules.js'
+import { registerDeckRules, validateDeckRules, cardAllowedByScope, campaignCycle, normalizeCardPoolScope, CARD_POOL_SCOPE_LABELS } from './deck-rules.js'
 import { parseArkhamDbInput, loadArkhamDbDeck, planArkhamDbImport } from './arkhamdb-import.js'
 import { listLocalDecks, saveLocalDeck, deleteLocalDeck } from './deck-library.js'
 import { tableArt } from './table-art.js'
 import { tableIcon, classIcon } from './table-components.js'
 import { renderStoryReader } from './story-reader.js'
-import { filterCards, renderCardFilters } from './card-filters.js'
+import { cardSource, filterCards, renderCardFilters } from './card-filters.js'
 import { campaignPresentation, presentationAttributes } from './campaign-presentation.js'
 import { renderSupplyPicker, supplyPickerModel } from './supply-picker.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
@@ -13,11 +13,20 @@ import { installCardZoom } from './card-zoom.js'
 const STAGES = { campaignHub: '战役准备', scenarioSetup: '调查准备', inScenario: '调查进行中', scenario: '调查进行中', scenarioResult: '调查报告', interlude: '关间休整', campaignResult: '战役终章' }
 const DIFFICULTIES = { easy: '简单', standard: '普通', hard: '困难', expert: '专家' }
 const CLASSES = { guardian: '守护者', seeker: '探求者', rogue: '流浪者', mystic: '潜修者', survivor: '生存者', neutral: '中立' }
-const PACKS = { core: '核心包', dwl: '敦威治遗产', ptc: '卡尔克萨之路' }
+// 选调查员时的扩展包署名：核心包沿用档案口径，其余循环复用卡牌筛选的系列表，
+// 所以新增循环（失落的时代、万象无终……）不必在两张表里各写一遍中文名。
+const PACKS = { core: '核心包' }
+function packLabel(pack, englishName = '') {
+  if (!pack) return '调查员'
+  if (PACKS[pack]) return PACKS[pack]
+  const series = cardSource({ pack, packName: englishName }).packName
+  return series && series !== pack ? series : englishName || pack
+}
 const outcomeName = value => ({ noResolution: '未达成结局', defeat: '调查失败', survived: '生还', victory: '调查成功' })[value] || String(value ?? '待结算').replace(/^r(\d+)$/, '结局 $1')
 // Arkham-only campaign shell. The hall provides transport and generic modal hosting.
 export function createHubUI({ h, api, render, state, startGame, loadSavedSession, renderOnlineSetup,
-  rememberSession, leave, submitMove, refreshSession, catalogOpen, rulebookOpen, inspectCard, canAct = () => true }) {
+  rememberSession, leave, submitMove, refreshSession, catalogOpen, rulebookOpen, inspectCard, canAct = () => true,
+  openFeedback }) {
   installCardZoom(h)
   const tabs = [
     ['departure', '开始关卡'],
@@ -27,6 +36,11 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   ]
   const TAB_ICONS = { departure: 'action', overview: 'clue', scenarios: 'eye', investigators: 'shield',
     deck: 'book', upgrades: 'star', supplies: 'supply', records: 'leaf', story: 'book' }
+  // 局外页面的反馈入口：宿主注入 openFeedback 时才出现，旧版大厅下自动隐藏。
+  const feedbackEntry = () => typeof openFeedback === 'function'
+    ? h('button', { className: 'bg-btn secondary ah-feedback-entry', title: '反馈', 'aria-label': '反馈',
+      onclick: () => openFeedback() }, '💬 反馈')
+    : null
   // 补给品是失落的时代的战役机制；标了 supplyLabels 的战役才会多出这一页。
   const supportsSupplies = campaign => Object.keys(campaign?.supplyLabels || {}).length > 0
   const game = () => state.catalog.find(item => item.id === 'arkhamhorror')
@@ -181,25 +195,71 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     state.arkhamSaveMode = 'solo'
     state.arkhamDeleteConfirmId = null
     state.arkhamAiSettingsOpen = false
+    state.arkhamGameSettingsOpen = false
     loadSaves()
   }
 
-  function select(options, value, onChange) {
-    return h('select', { value: String(value), onchange: event => onChange(event.target.value) },
+  function select(options, value, onChange, attrs = {}) {
+    return h('select', { value: String(value), ...attrs, onchange: event => onChange(event.target.value) },
       options.map(option => h('option', { value: String(option.value), selected: String(option.value) === String(value) }, option.label)))
   }
 
+  const cardPoolLabel = scope => CARD_POOL_SCOPE_LABELS[normalizeCardPoolScope(scope)]
+  const rollbackLabel = value => value === 'off' ? '禁止' : '允许'
+
   function renderAiDialogueSettings(g) {
     const values = [
+      ['剧情', state.setup.form.aiStoryAwareness === 'on' ? '开' : '关'],
       ['日常', state.setup.form.aiRoutineSpeechFrequency],
       ['自身检定', state.setup.form.aiSelfTestSpeechFrequency],
       ['他人检定', state.setup.form.aiOtherTestSpeechFrequency],
       ['击败敌人', state.setup.form.aiEnemyDefeatSpeechFrequency],
-    ].map(([label, value]) => `${label} ${value}%`).join(' · ')
+    ].map(([label, value]) => `${label} ${value}${typeof value === 'number' ? '%' : ''}`).join(' · ')
     return h('section', { className: 'ah-ai-dialogue-settings' },
       h('span', {}, h('strong', {}, 'AI 高级设置'), h('small', {}, values)),
       h('button', { type: 'button', className: 'bg-btn secondary',
         onclick: () => { state.arkhamAiSettingsOpen = true; render() } }, '修改 AI 高级设置'))
+  }
+
+  // 「游戏高级设置」与 AI 高级设置并列，都只在开局界面出现；值写进开局表单，
+  // 由大厅 startGame 一并提交，服务端再落到 state（随存档保留）。
+  function renderGameSettings() {
+    const values = [
+      `卡牌范围 ${cardPoolLabel(state.setup.form.cardPoolScope)}`,
+      `回档 ${rollbackLabel(state.setup.form.allowRollback)}`,
+    ].join(' · ')
+    return h('section', { className: 'ah-ai-dialogue-settings' },
+      h('span', {}, h('strong', {}, '游戏高级设置'), h('small', {}, values)),
+      h('button', { type: 'button', className: 'bg-btn secondary',
+        onclick: () => { state.arkhamGameSettingsOpen = true; render() } }, '修改游戏高级设置'))
+  }
+
+  function renderGameSettingsModal(g) {
+    if (!state.arkhamGameSettingsOpen) return null
+    const spec = key => g.settingsSpec.find(item => item.key === key)
+    const scope = spec('cardPoolScope'), rollback = spec('allowRollback')
+    const close = () => { state.arkhamGameSettingsOpen = false; render() }
+    return h('div', { className: 'ah-ai-dialogue-backdrop', onclick: event => { if (event.target === event.currentTarget) close() } },
+      h('section', { className: 'ah-ai-dialogue-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': '游戏高级设置',
+        onkeydown: modalKeys(close), onclick: event => event.stopPropagation() },
+        h('header', {}, h('div', {}, h('small', {}, 'ARKHAM HORROR'), h('h2', {}, '游戏高级设置')),
+          h('button', { type: 'button', className: 'bg-btn secondary', onclick: close, 'aria-label': '关闭游戏高级设置' }, '关闭')),
+        h('p', {}, '这些选项在开局后固定，并随存档保留。'),
+        h('div', { className: 'ah-ai-dialogue-group' },
+          h('h3', {}, scope.label),
+          h('div', { className: 'ah-game-settings-select' },
+            h('span', {}, '可用卡牌'),
+            select(scope.options, state.setup.form.cardPoolScope, value => { state.setup.form.cardPoolScope = value; render() },
+              { 'aria-label': scope.label })),
+          h('small', {}, scope.description)),
+        h('div', { className: 'ah-ai-dialogue-group' },
+          h('h3', {}, '回档'),
+          h('label', { className: 'ah-ai-dialogue-toggle' },
+            h('input', { type: 'checkbox', checked: state.setup.form.allowRollback !== 'off', 'aria-label': rollback.label,
+              onchange: event => { state.setup.form.allowRollback = event.target.checked ? 'on' : 'off' } }),
+            h('span', {}, rollback.label),
+            h('small', {}, '默认允许')),
+          h('small', {}, rollback.description))))
   }
 
   function renderAiDialogueModal(g) {
@@ -218,13 +278,13 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
             } }),
           h('output', {}, `${value}%`)))
     }
-    const toggle = key => {
+    const toggle = (key, hint = '开启后 100% 触发') => {
       const item = spec(key)
       return h('label', { className: 'ah-ai-dialogue-toggle' },
         h('input', { type: 'checkbox', checked: state.setup.form[key] === 'on', 'aria-label': item.label,
           onchange: event => { state.setup.form[key] = event.target.checked ? 'on' : 'off' } }),
         h('span', {}, item.label),
-        h('small', {}, '开启后 100% 触发'))
+        h('small', {}, hint))
     }
     const close = () => { state.arkhamAiSettingsOpen = false; render() }
     return h('div', { className: 'ah-ai-dialogue-backdrop', onclick: event => { if (event.target === event.currentTarget) close() } },
@@ -232,7 +292,11 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         onkeydown: modalKeys(close), onclick: event => event.stopPropagation() },
         h('header', {}, h('div', {}, h('small', {}, 'ARKHAM HORROR'), h('h2', {}, 'AI 高级设置')),
           h('button', { type: 'button', className: 'bg-btn secondary', onclick: close, 'aria-label': '关闭 AI 高级设置' }, '关闭')),
-        h('p', {}, '按检定者与结果分别控制每位 AI 的回应概率。自身指该 AI 操控的调查员，其他角色包括真人与其他 AI。'),
+        h('p', {}, '剧情感知与回应概率都在这里设置。自身指该 AI 操控的调查员，其他角色包括真人与其他 AI。'),
+        h('div', { className: 'ah-ai-dialogue-group' },
+          h('h3', {}, '剧情'),
+          toggle('aiStoryAwareness', '默认开启'),
+          h('small', {}, spec('aiStoryAwareness').description)),
         h('div', { className: 'ah-ai-dialogue-group' },
           h('h3', {}, '日常事件'),
           range('aiRoutineSpeechFrequency'),
@@ -278,6 +342,10 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     if (entry?.kind !== 'result') return null
     const checkpoint = checkpointForEntry(s, entry)
     if (!checkpoint) return null
+    // 「允许回档」在开局时固定：关闭后连队长也不能创建分支存档。
+    if (checkpoint.rollbackAllowed === false || s.state.allowRollback === false) {
+      return h('p', { className: 'ah-checkpoint-note', role: 'status' }, '本局已关闭回档：不能从关卡检查点重新开始。')
+    }
     if (!checkpoint.available) {
       return h('p', { className: 'ah-checkpoint-note', role: 'status' }, '此关卡的历史开局与当前版本不兼容，无法重新开始。')
     }
@@ -364,6 +432,16 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   }
   const deckSeat = s => s.mySeat ?? 0
   const deckInvestigator = (s, g) => g?.clientData?.deckBuilder?.investigators.find(item => item.code === s.state.investigators[deckSeat(s)].code)
+  // 按「卡牌范围」收窄构筑资料（导入/卡组库与服务端做同一判断）。
+  const scopedBuilder = (s, builder) => {
+    const scope = s.state.cardPoolScope
+    const cycle = campaignCycle(s.state.campaign?.id)
+    return {
+      ...builder,
+      investigators: (builder?.investigators || []).filter(inv => cardAllowedByScope(inv.code, scope, cycle)),
+      cardPool: (builder?.cardPool || []).filter(card => cardAllowedByScope(card.code, scope, cycle)),
+    }
+  }
   // A local draft survives only while its saved source stays unchanged. An
   // automatic build or a saved edit must become the next editing baseline.
   const deckDraftKey = (s, inv) => JSON.stringify([s.sessionId, inv?.code, [...(s.state.campaign.investigators[deckSeat(s)]?.deck || [])].sort()])
@@ -454,15 +532,20 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     if (state.arkhamSaves === undefined) onOpenSetup()
     const saves = state.arkhamSaves?.filter(item => (item.mode || (item.online ? 'online' : 'solo')) === (state.arkhamSaveMode || 'solo')) ?? state.arkhamSaves
     const newGame = h('div', { className: 'ah-hub-setup-fields' },
-      g.settingsSpec.filter(spec => spec.type === 'select' && !['playerCount', 'teammates'].includes(spec.key)).map(spec => {
+      g.settingsSpec.filter(spec => spec.type === 'select' && !['playerCount', 'teammates', 'cardPoolScope'].includes(spec.key)).map(spec => {
         return h('label', { className: 'bg-field' },
         h('span', {}, spec.label),
         select(spec.options, state.setup.form[spec.key], value => { state.setup.form[spec.key] = spec.key === 'playerCount' ? Number(value) : value; render() }),
         spec.description ? h('small', {}, spec.description) : null)
       }),
+      renderGameSettings(g),
       renderAiDialogueSettings(g),
       renderOnlineSetup?.(g),
       h('div', { className: 'bg-modal-foot' },
+        // 开局界面盖住了右下角的浮动规则书入口（会压到「开始新游戏」上），
+        // 改为放在页脚左侧，仍然随时可查规则。
+        rulebookOpen ? h('button', { type: 'button', className: 'bg-btn secondary ah-hub-setup-rulebook',
+          title: '规则书', 'aria-label': '规则书', onclick: rulebookOpen }, tableIcon('book'), '规则书') : null,
         h('button', { className: 'bg-btn secondary', onclick: () => { state.setup = null; render() } }, '取消'),
         h('button', { className: 'bg-btn', disabled: state.busy, onclick: startGame }, state.busy ? '创建中…' : '开始新游戏')))
     const saveList = h('div', { className: 'ah-save-list' },
@@ -503,6 +586,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           h('button', { className: state.arkhamSetupTab === 'saves' ? 'active' : '', onclick: () => { state.arkhamSetupTab = 'saves'; loadSaves() } }, '存档管理')),
         state.arkhamSetupTab === 'saves' ? saveList : newGame,
         state.error ? h('p', { role: 'alert' }, state.error) : null)),
+      renderGameSettingsModal(g),
       renderAiDialogueModal(g))
   }
 
@@ -715,24 +799,37 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const st = s.state
     const builderInvestigators = g.clientData?.deckBuilder?.investigators || []
     const selectedClass = state.arkhamInvestigatorClass || 'all'
+    const moves = legal(s, 'hubSelectInvestigator')
+    const packOf = ({ investigator }) => investigator.pack || 'core'
+    const candidates = moves.map(move => ({ move, investigator: builderInvestigators.find(item => item.code === move.code)
+      || { code: move.code, name: move.label.replace('选择调查员：', ''), pack: 'core' } }))
+    // 候选调查员横跨四个循环，扩展包改用下拉框收束；下拉项跟随职业筛选，
+    // 因此不会出现「职业 + 扩展包」组合下空名册的死路。
+    const classCandidates = selectedClass === 'all' ? candidates
+      : candidates.filter(({ investigator }) => investigator.klass === selectedClass)
+    const packs = [...new Set(classCandidates.map(packOf))]
+    const counts = classCandidates.reduce((result, item) => {
+      const pack = packOf(item); result[pack] = (result[pack] || 0) + 1; return result
+    }, {})
+    const selectedPack = packs.includes(state.arkhamInvestigatorPack) ? state.arkhamInvestigatorPack : 'all'
+    const packName = pack => packLabel(pack, candidates.find(item => packOf(item) === pack)?.investigator.packName)
+    const packOptions = [['all', '所有扩展包'], ...packs.map(pack => [pack, `${packName(pack)}（${counts[pack]}）`])]
+    const groups = Object.entries(classCandidates
+      .filter(item => selectedPack === 'all' || packOf(item) === selectedPack)
+      .reduce((result, item) => {
+        const pack = packOf(item)
+        ;(result[pack] ||= []).push(item)
+        return result
+      }, {}))
     return h('section', { className: 'ah-hub-pane ah-office-investigators' }, h('h2', {}, '调查员与席位'),
       st.investigators.map(inv => {
         const record = st.campaign.investigators[inv.seat]
         const active = acting(s, inv.seat) && !st.hubReady
         const selected = seatSelected(s, inv.seat)
         const detail = builderInvestigators.find(item => item.code === inv.code) || inv
-        const moves = legal(s, 'hubSelectInvestigator')
-        const candidates = moves.map(move => ({ move, investigator: builderInvestigators.find(item => item.code === move.code)
-          || { code: move.code, name: move.label.replace('选择调查员：', ''), pack: 'core' } }))
-          .filter(({ investigator }) => selectedClass === 'all' || investigator.klass === selectedClass)
-        const groups = Object.entries(candidates.reduce((result, item) => {
-          const pack = item.investigator.pack || 'core'
-          ;(result[pack] ||= []).push(item)
-          return result
-        }, {}))
         return h('article', { className: 'ah-hub-seat ah-office-investigator' + (active ? ' active' : '') },
           portrait(inv), h('div', { className: 'ah-office-investigator-copy' },
-          h('small', { className: 'ah-office-eyebrow' }, `${CLASSES[inv.klass] || inv.klass} · ${PACKS[detail.pack] || detail.packName || detail.pack || '调查员'} / 席位 0${inv.seat + 1}`),
+          h('small', { className: 'ah-office-eyebrow' }, `${CLASSES[inv.klass] || inv.klass} · ${packLabel(detail.pack, detail.packName)} / 席位 0${inv.seat + 1}`),
           playerBadge(s, inv.seat),
           h('h2', {}, inv.name), detail.subname ? h('p', { className: 'ah-investigator-subname' }, detail.subname) : null,
           h('div', { className: 'ah-office-metrics' }, metric('sword', inv.combat, '战斗'), metric('book', inv.intellect, '智识'), metric('star', inv.willpower, '意志'), metric('leaf', inv.agility, '敏捷')),
@@ -749,17 +846,22 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           active && inv.seat === (s.mySeat ?? 0) && moves.length ? h('div', { className: 'ah-investigator-browser' },
             h('div', { className: 'ah-investigator-browser-head' }, h('div', {},
               h('h3', {}, record && record.status !== 'active' ? `${record.status === 'insane' ? '已疯狂' : '已死亡'}，请挑选替补调查员` : '选择调查员'),
-              h('p', {}, record && record.status !== 'active' ? '替补以全新 0 XP 牌组加入，不继承旧人物的创伤与卡牌。' : '按职业颜色筛选，并依扩展包浏览。')),
-              h('div', { className: 'ah-investigator-class-filters', 'aria-label': '按职业颜色筛选调查员' },
-                [['all', '全部'], ...Object.entries(CLASSES).filter(([key]) => key !== 'neutral')].map(([key, label]) => h('button', {
-                  className: `ah-investigator-class-filter is-${key}`, 'aria-pressed': String(selectedClass === key),
-                  onclick: () => { state.arkhamInvestigatorClass = key; render() },
-                }, key === 'all' ? null : tableIcon(classIcon(key)), label)))),
+              h('p', {}, record && record.status !== 'active' ? '替补以全新 0 XP 牌组加入，不继承旧人物的创伤与卡牌。' : '按职业与扩展包筛选，再挑选一位调查员。')),
+              h('div', { className: 'ah-investigator-filter-bar' },
+                h('label', { className: 'ah-investigator-pack-filter' }, '扩展包',
+                  h('select', { 'aria-label': '筛选扩展包', 'data-focus-key': 'investigator:pack',
+                    onchange: event => { state.arkhamInvestigatorPack = event.target.value; render() },
+                  }, packOptions.map(([value, label]) => h('option', { value, selected: value === selectedPack }, label)))),
+                h('div', { className: 'ah-investigator-class-filters', 'aria-label': '按职业颜色筛选调查员' },
+                  [['all', '全部'], ...Object.entries(CLASSES).filter(([key]) => key !== 'neutral')].map(([key, label]) => h('button', {
+                    className: `ah-investigator-class-filter is-${key}`, 'aria-pressed': String(selectedClass === key),
+                    onclick: () => { state.arkhamInvestigatorClass = key; render() },
+                  }, key === 'all' ? null : tableIcon(classIcon(key)), label))))),
             groups.length ? groups.map(([pack, entries]) => h('section', { className: 'ah-investigator-pack', 'data-pack': pack },
-              h('header', {}, h('h4', {}, PACKS[pack] || entries[0].investigator.packName || pack), h('small', {}, `${entries.length} 位调查员`)),
+              h('header', {}, h('h4', {}, packName(pack)), h('small', {}, `${entries.length} 位调查员`)),
               h('div', { className: 'ah-office-roster' }, entries.map(({ move, investigator: candidate }) =>
                 h('button', { className: `ah-office-candidate is-${candidate.klass || 'neutral'}`, 'data-class': candidate.klass || 'neutral',
-                  'aria-label': `${move.label}；${CLASSES[candidate.klass] || candidate.klass || ''}；${PACKS[candidate.pack] || candidate.packName || ''}`,
+                  'aria-label': `${move.label}；${CLASSES[candidate.klass] || candidate.klass || ''}；${packName(pack)}`,
                   'aria-pressed': String(selected && inv.code === move.code), disabled: locked(s), onclick: () => submitMove(move, s) },
                 portrait(candidate), h('span', {}, candidate.name), h('small', {}, CLASSES[candidate.klass] || candidate.klass || '调查员'))))))
               : h('p', { className: 'ah-office-empty' }, '当前筛选下没有可选调查员')) : null,
@@ -985,7 +1087,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           h('button', { className: 'bg-btn secondary', onclick: rulebookOpen }, '规则书'),
           h('button', { className: 'bg-btn secondary', onclick: catalogOpen }, '全卡图鉴'),
           h('button', { className: 'bg-btn secondary', onclick: () => refreshSession(s) }, '刷新'),
-          h('button', { className: 'bg-btn secondary', onclick: leave }, '退出'))),
+          h('button', { className: 'bg-btn secondary', onclick: leave }, '退出'),
+          feedbackEntry())),
       saveNotice ? h('div', { className: 'ah-hub-save-alert', role: 'alert' }, saveNotice,
         s.online && s.mySeat !== 0 ? h('p', {}, '请房主处理存档问题。')
           : h('button', { className: 'bg-btn', onclick: () => retrySave(s, !!s.saveDetached) }, s.saveDetached ? '另存为新存档' : '重试保存')) : null,
@@ -1011,7 +1114,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     if (imp.pending.sessionId !== s.sessionId) { imp.pending = null; return }
     if (inv?.code !== imp.pending.code) { if (!state.busy) imp.pending = null; return }
     imp.pending = null
-    const builder = g.clientData?.deckBuilder
+    const builder = scopedBuilder(s, g.clientData?.deckBuilder)
     const plan = imp.deck && planArkhamDbImport(imp.deck, { investigators: builder?.investigators, cardPool: builder?.cardPool, currentCode: inv.code })
     if (!plan?.ready || plan.mismatch) return
     state.arkhamDeckUndo = [[...(state.arkhamDeckDraft || [])]]; state.arkhamDeckRedo = []
@@ -1023,7 +1126,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
 
   function importPanel(s, g, inv, draft, replaceDraft) {
     const imp = state.arkhamDeckImport
-    const builder = g.clientData?.deckBuilder
+    const builder = scopedBuilder(s, g.clientData?.deckBuilder)
     const deck = imp.deck
     const plan = deck ? planArkhamDbImport(deck, { investigators: builder?.investigators, cardPool: builder?.cardPool, currentCode: inv?.code }) : null
     const total = deck ? deck.entries.reduce((sum, entry) => sum + entry.count, 0) : 0
@@ -1073,6 +1176,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const lib = deckLibrary()
     const imp = state.arkhamDeckImport
     const builder = g.clientData?.deckBuilder
+    const scoped = scopedBuilder(s, builder)
     const investigatorName = code => builder?.investigators.find(item => item.code === code)?.name || nameOf(g, code)
     const current = lib.decks?.find(deck => deck.id === lib.currentId && deck.investigator_code === inv?.code)
     // Decks for the current investigator first; otherwise keep the newest-first order.
@@ -1080,7 +1184,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const total = deck => Object.values(deck.slots || {}).reduce((sum, count) => sum + count, 0)
     const fail = message => { lib.error = message; lib.notice = ''; render() }
     const load = deck => {
-      const plan = deck.description && planArkhamDbImport(deck.description, { investigators: builder?.investigators, cardPool: builder?.cardPool, currentCode: inv?.code })
+      const plan = deck.description && planArkhamDbImport(deck.description, { investigators: scoped?.investigators, cardPool: scoped?.cardPool, currentCode: inv?.code })
       if (!plan) return fail(`《${deck.name}》中没有可载入的卡牌。`)
       if (!plan.ready) return fail(`《${deck.name}》有 ${plan.blocked.length} 项无法使用：`
         + plan.blocked.slice(0, 4).map(item => `${item.name}（${item.reason}）`).join('、') + (plan.blocked.length > 4 ? ' 等' : ''))
@@ -1130,7 +1234,11 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const g = game()
     const inv = deckInvestigator(s, g)
     applyPendingImport(s, g, inv)
-    const pool = (g.clientData?.deckBuilder?.cardPool || []).filter(card => inv?.allowedCards?.includes(card.code))
+    // 卡牌范围（渐进式）在服务端校验；这里同步收窄候选，避免把必被拒绝的卡摆出来。
+    const scope = s.state.cardPoolScope
+    const cycle = campaignCycle(s.state.campaign?.id)
+    const pool = (g.clientData?.deckBuilder?.cardPool || [])
+      .filter(card => inv?.allowedCards?.includes(card.code) && cardAllowedByScope(card.code, scope, cycle))
       .map(card=>({...s.state.cards?.[card.code],...card}))
     const draft = state.arkhamDeckDraft ||= []
     const shown = filterCards(pool, cardFilters('deck'))

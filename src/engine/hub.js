@@ -7,6 +7,7 @@
 // 与 campaign-flow.js 的分工：那边是「一关的结算」，这边是「关卡之间的台面」。
 
 import { contentRegistry } from '../../content/registered.js'
+import { cardPoolContext } from '../deck/card-pool.js'
 
 // Phase 6（6d-29）：contentRegistry 是 `let`（registerContentBundle 会重新赋值），
 // SCENARIOS 是从它派生的表（registerCampaignScenarios 会往里写）。它们必须走 import 的
@@ -34,6 +35,7 @@ export function createHub(deps) {
     campaignFor,
     campaignManifestFor,
     cardName,
+    corePlayerPool,
 
     decisionSeat,
     hubInvestigatorChoices,
@@ -85,8 +87,9 @@ function runInterlude(state, nextIndex, events) {
   const campaign = state.campaign
   campaign.phase = 'interlude'
   state.phase = 'interlude'
+  const poolContext = cardPoolContext(state)
   const eliminated = state.investigators.filter(inv => campaign.investigators[inv.seat].status !== 'active')
-  if (replacementCandidates(campaign).length < eliminated.length) {
+  if (replacementCandidates(campaign, poolContext).length < eliminated.length) {
     campaign.failed = true
     info(state, events, '已开放的调查员不足以替换所有死亡或疯狂的人物，战役无法继续。')
     endCampaign(state, events)
@@ -95,11 +98,13 @@ function runInterlude(state, nextIndex, events) {
   for (const inv of eliminated) {
     const code = requestChoice(state, { kind: 'replacement', source: campaign.investigators[inv.seat].id,
       seat: inv.seat, prompt: '选择新的调查员，以全新 0 XP 牌组加入；不继承旧人物创伤与卡牌。',
-      options: replacementCandidates(campaign).map(code => ({ id: code, label: cardName(code) })),
+      options: replacementCandidates(campaign, poolContext).map(code => ({ id: code, label: cardName(code) })),
     })
     campaign.retired.push(structuredClone(campaign.investigators[inv.seat]))
     const replacement = makeInvestigator(ALL_INVESTIGATORS[code], inv.seat)
-    const built = buildDeck(ALL_INVESTIGATORS[code], { seat: inv.seat, seed: Math.floor(randomValue(state) * 4294967296) })
+    const built = buildDeck(ALL_INVESTIGATORS[code], {
+      seat: inv.seat, seed: Math.floor(randomValue(state) * 4294967296), playerPool: corePlayerPool(state),
+    })
     registerCampaignInvestigator(campaign, replacement, built.deck)
     state.investigators[inv.seat] = replacement
     info(state, events, `${replacement.name} 替换 ${inv.name} 加入战役。`)
@@ -113,7 +118,7 @@ function runInterlude(state, nextIndex, events) {
   }
   const resume = () => resolutionCheckpoint(state, inv.seat, { action: 'interlude', nextIndex })
   const record = campaign.investigators[inv.seat]
-  const cards = campaign.upgradesAllowed === false ? [] : availablePurchases(record, campaign.records)
+  const cards = campaign.upgradesAllowed === false ? [] : availablePurchases(record, campaign.records, poolContext)
   const answer = requestChoice(state, { kind: 'interlude', source: record.id, seat: inv.seat,
     prompt: `${inv.name}：未花费 ${record.xp} XP。可调整牌组，或保留经验进入下一关。候选卡按构筑限制、经验和替换后的完整牌组筛选。`,
     options: [{ id: 'done', label: '完成关间准备，保留剩余 XP' }, ...(cards.length ? [{ id: 'upgrade', label: '购买或替换一张卡牌' }] : [])],
@@ -126,10 +131,10 @@ function runInterlude(state, nextIndex, events) {
   if (added === 'cancel') resume()
   const removed = requestChoice(state, { kind: 'upgradeRemove', source: { type: 'upgrade', cardCode: added, id: record.id }, seat: inv.seat,
     prompt: '选择被替换的普通玩家卡；签名、弱点与剧情卡不能以此方式移除。', canSkip: true,
-    options: [{ id: 'cancel', label: '取消购买' }, ...replacementOptions(record, added, campaign.records).map(item => ({ id: item.code, label: `替换${cardName(item.code)}，支付 ${item.cost} XP` }))],
+    options: [{ id: 'cancel', label: '取消购买' }, ...replacementOptions(record, added, campaign.records, poolContext).map(item => ({ id: item.code, label: `替换${cardName(item.code)}，支付 ${item.cost} XP` }))],
   })
   if (removed === 'cancel') resume()
-  const purchase = purchaseCard(campaign, inv.seat, added, removed)
+  const purchase = purchaseCard(campaign, inv.seat, added, removed, poolContext)
   info(state, events, `${inv.name} 完成一次牌组调整，支付 ${purchase.cost} XP。`)
   resume()
 }
@@ -274,8 +279,9 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   }
   if (state.uiState === 'interlude' && record?.status === 'active' && state.campaign.upgradesAllowed !== false) {
     const effective = upgradeRecord(record)
-    for (const added of availablePurchases(effective, state.campaign.records)) {
-      for (const option of replacementOptions(effective, added, state.campaign.records)) moves.push({ action: 'hubPurchase', added, removed: option.code,
+    const poolContext = cardPoolContext(state)
+    for (const added of availablePurchases(effective, state.campaign.records, poolContext)) {
+      for (const option of replacementOptions(effective, added, state.campaign.records, poolContext)) moves.push({ action: 'hubPurchase', added, removed: option.code,
         label: `购入 ${cardName(added)}，${option.code ? '替换 ' + cardName(option.code) : '加入永久卡'}（${option.cost} XP）`, explanation: option.explanation })
     }
     if (!state.hubUpgradedSeats?.[seat] && moves.some(move => move.action === 'hubPurchase')) {

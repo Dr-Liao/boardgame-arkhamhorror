@@ -145,6 +145,8 @@ export function createMiscApi(state, events, deps) {
     cardIcons: code => ({ ...(cardDef(code)?.icons || {}) }),
     effectiveTraits: code => effectiveTraits(state, state.investigators[state.currentSeat], code),
     locationName: id => locName(state, id),
+    // P0：02007/02011/03310 等条目写的是 api.locName；两个名字指向同一读点。
+    locName: id => locName(state, id),
     // Phase 5（5c）：卡面印刷数值（恐惧/伤害上限），「治愈支援身上的恐惧」这类卡要用。
     cardSanity: code => cardDef(code)?.sanity || 0,
     cardType: code => cardDef(code)?.type || null,
@@ -422,11 +424,12 @@ export function createMiscApi(state, events, deps) {
         info(state, events, options.emptyText || '本次检定没有可收回的技能牌。')
         return null
       }
-      const chosen = committed.length === 1 ? committed[0].code : requestChoice(state, { kind: 'card',
+      // 检定时可以投入两张同名技能牌；选项 id 用下标，避免重复卡号。
+      const chosenIndex = committed.length === 1 ? 0 : Number(requestChoice(state, { kind: 'card',
         source: options.source || committed[0].code, seat,
         prompt: options.prompt || '选择要返回手牌的一张技能牌。',
-        options: committed.map(item => ({ id: item.code, cardCode: item.code, label: cardName(item.code) })) })
-      const entry = committed.find(item => item.code === chosen) || committed[0]
+        options: committed.map((item, index) => ({ id: String(index), cardCode: item.code, label: cardName(item.code) })) }))
+      const entry = committed[chosenIndex] || committed[0]
       removeOne(state.skillTest.committed, entry)
       owner.hand.push(entry.code)
       info(state, events, `「${cardName(options.source || entry.code)}」把「${cardName(entry.code)}」返回 ${owner.name} 的手牌。`)

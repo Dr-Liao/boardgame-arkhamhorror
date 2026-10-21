@@ -3,7 +3,10 @@
 // 用法（在 games/arkhamhorror/ 下）：
 //   node tools/scaffold-card.mjs 01089           生成 develop/scaffolds/01089.test.mjs
 //   node tools/scaffold-card.mjs --batch 5b-1    为整个批次生成骨架
-//   node tools/scaffold-card.mjs 01089 --force   覆盖已存在的骨架
+//   node tools/scaffold-card.mjs 01089 --entry   生成 src/cards/entries/01089.js 并重建索引
+//   node tools/scaffold-card.mjs 01089 --entry --no-index
+//                                               只写单卡文件、不动索引（批量 worker 用；主进程合并后统一重建）
+//   node tools/scaffold-card.mjs 01089 --force   覆盖已存在的测试骨架（行为文件永不覆盖）
 //   node --test develop/scaffolds/01089.test.mjs 直接跑（骨架默认是绿的）
 //
 // 骨架内容固定三段：
@@ -21,7 +24,8 @@ import { fileURLToPath } from 'node:url'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { CARD_ABILITY_ENTRIES } from '../src/cards/card-abilities.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
-import { MIGRATED_CARD_ENTRIES } from '../src/cards/ability-migration-batches.js'
+import { buildCardIndex } from './build-card-index.mjs'
+import { renderEntryModule } from './card-entry-source.mjs'
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
 const OUT_DIR = 'develop/scaffolds'
@@ -46,8 +50,7 @@ function scaffoldFor(code, ledger) {
   const card = ALL_CARDS[code] || {}
   const name = card.nameZh || card.name || code
   const entry = CARD_ABILITY_ENTRIES.find(item => item.code === code) || null
-  const migrated = MIGRATED_CARD_ENTRIES.find(item => item.code === code) || null
-  const descriptors = entry?.abilities || migrated?.abilities || []
+  const descriptors = entry?.abilities || []
   const lifecycle = descriptors.find(descriptor => READ_POINTS[descriptor.kind])
   const actions = descriptors.filter(descriptor => descriptor.kind === 'action' || descriptor.kind === 'free')
   const readPoint = lifecycle ? READ_POINTS[lifecycle.kind] : null
@@ -76,8 +79,8 @@ function scaffoldFor(code, ledger) {
   lines.push('  assert.equal(EFFECTS[CODE], undefined, `${CODE} 仍留在旧 DSL（EFFECTS）里`)')
   lines.push('  const entry = registeredEntry(CODE)')
   lines.push('  assert.ok(entry, `${CODE} 没有能力层条目`)')
-  if (migrated) {
-    lines.push(`  assert.equal(entry.abilities.length, ${migrated.abilities?.length ?? 0}, '描述子条数与迁移声明一致')`)
+  if (entry) {
+    lines.push(`  assert.equal(entry.abilities.length, ${entry.abilities?.length ?? 0}, '描述子条数与实现一致')`)
   }
   if (entry && entry.playCondition) lines.push("  assert.ok(abilitySummary(CODE).playCondition.length, '打出条件有给玩家/AI 看的文案')")
   lines.push('})')
@@ -128,6 +131,21 @@ function scaffoldFor(code, ledger) {
   return lines.join('\n')
 }
 
+// 新卡的行为文件骨架：默认只创建空条目，具体描述子由作者按卡面补。
+function entryTemplate(code) {
+  const card = ALL_CARDS[code] || {}
+  const name = card.nameZh || card.name || code
+  const text = card.textZh || card.text || ''
+  const source = `{
+  code: '${code}',
+  // TODO: 按卡面实现（abilities / modifiers / playCondition / elderSign）。
+  // 只通过 ctx.api 改状态；不要 import engine.js。
+  abilities: [],
+  modifiers: [],
+}`
+  return renderEntryModule({ code, name, text, source })
+}
+
 async function readLedger() {
   if (!existsSync(path.join(ROOT, LEDGER))) return { batches: {} }
   return JSON.parse(await readFile(path.join(ROOT, LEDGER), 'utf8'))
@@ -136,6 +154,8 @@ async function readLedger() {
 async function main() {
   const args = process.argv.slice(2)
   const force = args.includes('--force')
+  const withEntry = args.includes('--entry')
+  const noIndex = args.includes('--no-index')
   // 支持重复的 --batch：`--batch 5c-2 --batch 5c-3`（每批一次），也兼容卡号混写。
   const batchNames = []
   const codeArgs = []
@@ -153,8 +173,31 @@ async function main() {
     codes = [...new Set([...batchCodes, ...codes])]
   }
   if (!codes.length) {
-    console.error('用法：node tools/scaffold-card.mjs <code…> | --batch <名称> [--force]')
+    console.error('用法：node tools/scaffold-card.mjs <code…> | --batch <名称> [--entry] [--no-index] [--force]')
     process.exit(2)
+  }
+  if (withEntry) {
+    const entryDir = path.join(ROOT, 'src/cards/entries')
+    await mkdir(entryDir, { recursive: true })
+    let created = 0
+    for (const code of codes) {
+      const file = path.join(entryDir, `${code}.js`)
+      if (existsSync(file)) {
+        // 行为文件绝不覆盖：--force 只用于覆盖测试骨架，不能清空一张已实现的卡。
+        console.log(`  跳过行为文件 ${code}：${path.relative(ROOT, file)} 已存在（行为文件不允许 --force 覆盖）`)
+        continue
+      }
+      await writeFile(file, entryTemplate(code), 'utf8')
+      created++
+      console.log(`  写入行为文件 ${path.relative(ROOT, file).split(path.sep).join('/')}`)
+    }
+    if (created && !noIndex) await buildCardIndex({ write: true })
+    if (created && noIndex) {
+      console.log('  --no-index：跳过 entries/index.js 重建；由主进程合并分片后统一重建')
+      console.log('  worker 只做 node --check / 结构检查，不要跑 cards:check 或 test:fast（索引此时故意是旧的）')
+    } else {
+      console.log(`生成 ${created} 个行为文件骨架；补完描述子后运行 npm run test:fast`)
+    }
   }
   await mkdir(path.join(ROOT, OUT_DIR), { recursive: true })
   let written = 0

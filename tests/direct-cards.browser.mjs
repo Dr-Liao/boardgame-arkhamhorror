@@ -36,7 +36,7 @@ async function fixture(page, { players = 1, onMove } = {}) {
   await page.getByRole('button', { name: '开始新游戏' }).click()
   await expect(page.locator('.ah-player-board')).toBeVisible()
   await page.getByRole('button', { name: '跳过演出' }).click()
-  return { get session() { return session }, submitted, async update(change) { change(session.state); session.state.revision++; await page.getByRole('button', { name: '刷新局势' }).click(); await expect(page.locator('.ah-table')).toHaveAttribute('data-revision', String(session.state.revision)) } }
+  return { get session() { return session }, submitted, async update(change) { change(session.state); session.state.revision++; const skipScene=page.getByRole('button',{name:'跳过演出'}); if(await skipScene.count())await skipScene.first().click(); await page.getByRole('button', { name: '刷新局势' }).click(); await expect(page.locator('.ah-table')).toHaveAttribute('data-revision', String(session.state.revision)) } }
 }
 const entity = (page,key) => page.locator(`[data-interaction="${key}"]`).filter({ visible: true }).first()
 
@@ -309,6 +309,10 @@ test('常驻推进场景按钮显示有效线索，灰态与真实推进动作�
 
 test('聊天未读、头像气泡和频道已读状态，重绘与刷新不重复提醒',async({page})=>{
   const f=await fixture(page,{players:2})
+  // 换牌结束后会播开场故事；先跳过，否则全屏故事幕会拦截刷新按钮。
+  const skipScene=page.getByRole('button',{name:'跳过演出'})
+  if(await skipScene.count())await skipScene.first().click()
+  await expect(page.locator('.ah-table')).not.toHaveClass(/ah-presenting/)
   const errors=[];page.on('pageerror',e=>errors.push(e.message))
   let chatRequests=0;await page.route('**/api/chat',route=>{chatRequests++;return route.abort()})
   f.session.players[1].name='队友小林';f.session.players[1].avatar='🦉'
@@ -346,6 +350,8 @@ test('聊天未读、头像气泡和频道已读状态，重绘与刷新不重�
   await page.clock.fastForward(8000)
   await expect(page.locator('.bg-chat-toast')).toHaveCount(0);await expect(page.locator('.bg-chat-unread')).toHaveText('2')
   await page.reload()
+  await expect(page.locator('.ah-cinematic')).toBeVisible()
+  await page.getByRole('button',{name:'跳过演出'}).click()
   await expect(page.locator('.bg-chat-unread')).toHaveText('2');await expect(page.locator('.bg-chat-toast')).toHaveCount(0)
   // A private toast expiring while typing in public chat keeps the input node.
   append('私聊提醒。',1);await f.update(()=>{})
@@ -587,11 +593,27 @@ test('地图肖像、怪物、资源与场景卡可查看；交战区遵循归�
   }
   expect(f.submitted).toHaveLength(0)
   await expect(page.locator('.ah-table')).not.toHaveClass(/ah-presenting/)
+  // 可交战敌人：左键点击直接弹出交战等行动按钮，不再先打开详情。
   await map.locator('[data-interaction="enemy:roaming"]').click()
-  await page.getByRole('button',{name:'对该目标行动'}).click()
   await expect(page.getByRole('dialog',{name:'卡牌详情'})).toHaveCount(0)
+  await expect(page.locator('.ah-card-action-popover')).toBeVisible()
   await expect(page.getByRole('button',{name:'交战',exact:true})).toBeVisible()
   await page.keyboard.press('Escape')
+  await expect(page.locator('.ah-card-action-popover')).toHaveCount(0)
+  // 右键仍可查看该敌人的详情。
+  await map.locator('[data-interaction="enemy:roaming"]').click({button:'right'})
+  await expect(page.getByRole('dialog',{name:'卡牌详情'})).toBeVisible()
+  await page.getByRole('button',{name:'关闭卡牌详情'}).click()
+  // 移动端同样以点击弹出交战按钮（窄屏地图可能被裁切，直接派发点击以验证交互）。
+  await page.setViewportSize({width:390,height:844})
+  await page.locator('.ah-map-viewport').press('0')
+  await expect(map.locator('[data-interaction="enemy:roaming"]')).toHaveAttribute('aria-label', /可交战/)
+  await map.locator('[data-interaction="enemy:roaming"]').dispatchEvent('click')
+  await expect(page.getByRole('button',{name:'交战',exact:true})).toBeInViewport()
+  await page.keyboard.press('Escape')
+  await page.setViewportSize({width:1920,height:1080})
+  await page.locator('.ah-map-viewport').press('0')
+  await expect(map).toBeVisible()
   await entity(page,'hand:0:1').click()
   const play=entity(page,'zone:play'), bounds=await play.boundingBox()
   expect(bounds.height/bounds.width).toBeCloseTo(1.4,1)
@@ -656,6 +678,21 @@ test('快速反应不再询问、卡面开关恢复与刷新记忆，关闭不�
   await expect(page.getByRole('button',{name:'本局不再询问'})).toBeVisible()
   await page.getByRole('button',{name:'不打出',exact:true}).click()
   await expect.poll(()=>f.submitted.length).toBe(3)
+  await expect(toggle).toHaveAttribute('aria-checked','true')
+})
+
+test('场上的体能训练保留快速反应开关，可关掉再打开',async({page})=>{
+  const f=await fixture(page)
+  // 01017 的天赋档位在 Phase 5 搬到条目层：卡定义必须仍带 hasReactionPrompt，
+  // 否则「不再询问」之后没有入口恢复提示。
+  expect(f.session.state.cards['01017'].hasReactionPrompt).toBe(true)
+  await f.update(st=>{st.investigators[0].assets=[{id:'pt',code:'01017',exhausted:false}];st.legalMoves=[]})
+  const toggle=page.locator('.ah-table [data-reaction-toggle="01017"]').first()
+  await expect(toggle).toBeVisible()
+  await expect(toggle).toHaveAttribute('aria-checked','true')
+  await toggle.click()
+  await expect(toggle).toHaveAttribute('aria-checked','false')
+  await toggle.click()
   await expect(toggle).toHaveAttribute('aria-checked','true')
 })
 
@@ -848,6 +885,7 @@ test('服务端拒绝与等待中不移动卡牌，不重复提交，AI 回答�
   expect(f.submitted).toHaveLength(1)
   release(); await expect(page.getByText('状态版本已变化')).toBeVisible()
   await expect(page.locator('.ah-hand-card')).toHaveCount(4)
+  f.session.actingSeats=[1]
   await f.update(st=>{choice(st,'turnOrder',['0','1']);st.pendingChoice.seat=1})
   await entity(page,'investigator:0').click()
   expect(f.submitted).toHaveLength(1)
@@ -873,7 +911,6 @@ test('真实规则：拖动支援牌到槽位后才扣费、入场，右键仍�
   await page.goto('/index.html'); await page.locator('.bg-card').filter({hasText:'诡镇奇谈'}).click()
   let response=page.waitForResponse('**/api/start'); await page.getByRole('button',{name:'开始新游戏'}).click()
   let session=(await (await response).json()).session
-  await page.getByRole('button',{name:'跳过演出'}).click()
   for(let i=0;session.state.pendingChoice;i++) {
     expect(i).toBeLessThan(15)
     const m=session.state.legalMoves.find(m=>['done','skip'].includes(m.optionId))||session.state.legalMoves[0]
@@ -881,6 +918,10 @@ test('真实规则：拖动支援牌到槽位后才扣费、入场，右键仍�
     await page.locator(`[data-option-id="${m.optionId}"]:visible`).first().click()
     session=(await (await response).json()).session
   }
+  // P1 起开场故事要等换牌结束；换牌走完后再关故事幕。
+  const skipScene=page.getByRole('button',{name:'跳过演出'})
+  await expect(skipScene).toBeVisible({timeout:10000})
+  await skipScene.click()
   const m=session.state.legalMoves.find(m=>m.action==='play'&&session.state.cards[m.cardId]?.type==='asset')
   expect(m).toBeTruthy()
   const card=page.locator(`.ah-hand-card[data-card-code="${m.cardId}"]`).first()

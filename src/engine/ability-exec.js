@@ -213,6 +213,8 @@ function openAbilityWindow(state, windowId, context, events) {
           // 这里跳过，避免同一张卡在两个提示里各出现一次。
           if (descriptor.legacyReaction) continue
           if (descriptor.fromHand && !(inv.hand || []).includes(code)) continue
+          // 手牌来源（source 为 null）只允许显式 fromHand 描述子；资产/调查员能力不能从手里发动。
+          if (!source && !descriptor.fromHand) continue
           if (!descriptorUsable(state, inv, source, descriptor, { windowId, context })) continue
           candidates.push({ source, code, descriptor, fromHandIndex, effect })
         }
@@ -223,9 +225,10 @@ function openAbilityWindow(state, windowId, context, events) {
         const usable = candidates.filter(item => descriptorUsable(state, inv, item.source, item.descriptor, { windowId, context }))
         if (!usable.length) break
         const options = [{ id: 'skip', label: '不触发' }]
+        // 手牌里的两张同名卡是不同候选：id 必须带上 fromHandIndex，否则重复。
+        const candidateKey = item => `desc:${item.descriptor.id}:${item.source?.id ?? item.effect?.id ?? 'hand'}:${item.fromHandIndex ?? ''}`
         for (const item of usable) {
-          const id = `desc:${item.descriptor.id}:${item.source?.id ?? item.effect?.id ?? 'hand'}`
-          options.push({ id, label: `【能力】${cardName(item.code)}：${item.descriptor.label}`, cardCode: item.code })
+          options.push({ id: candidateKey(item), label: `【能力】${cardName(item.code)}：${item.descriptor.label}`, cardCode: item.code })
         }
         const answer = requestChoice(state, {
           kind: 'reaction', source: { type: 'window', when: windowId }, seat: inv.seat, canSkip: true,
@@ -233,7 +236,7 @@ function openAbilityWindow(state, windowId, context, events) {
           options,
         })
         if (answer === 'skip') break
-        const chosen = usable.find(item => `desc:${item.descriptor.id}:${item.source?.id ?? item.effect?.id ?? 'hand'}` === answer)
+        const chosen = usable.find(item => candidateKey(item) === answer)
         if (!chosen) break
         executeDescriptor(state, { inv, source: chosen.source, descriptor: chosen.descriptor, context, events,
           windowId, fromHandIndex: chosen.fromHandIndex, effect: chosen.effect })

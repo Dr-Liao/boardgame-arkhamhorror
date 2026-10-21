@@ -190,7 +190,7 @@ function behaviorOf(code) {
   }
   if (!legacy && !played && !commit && !weakness && !entry?.passive
     && !entry?.healSelfHorrorAfterTurn && !entry?.forcedUpkeepPayOrDiscard && !entry?.defeatedDamage && !entry?.freeTriggers?.length && !entry?.fast
-    && !entry?.redirectAttackToAsset && !entry?.forcedMythosEndDiscard
+    && !entry?.redirectAttackToAsset && !entry?.forcedMythosEndDiscard && !entry?.skipOrRepeatPhase
     && !fromDescriptors.length && !fromReactions.length && !Object.keys(stats).length
     && !playCondition?.length) return null
   const merged = {
@@ -226,8 +226,16 @@ function behaviorOf(code) {
   if (fromEnterPlay.length) merged.entersPlay = fromEnterPlay
   // 快速反应事件迁走后：trigger → reaction.when，effect 数据体 → event（只补空缺，不覆盖已折叠的 played）。
   const playedDescriptor = entry?.abilities?.find(item => item.kind === 'played')
-  if (playedDescriptor?.trigger?.length && !merged.reaction) merged.reaction = { when: playedDescriptor.trigger[0] }
+  const playedFlags = playedDescriptor?.criteria && typeof playedDescriptor.criteria === 'object'
+    && !Array.isArray(playedDescriptor.criteria) ? playedDescriptor.criteria : {}
+  if (playedDescriptor?.trigger?.length && !merged.reaction) merged.reaction = { when: playedDescriptor.trigger[0], ...playedFlags }
   if (playedDescriptor?.effect && !merged.event) merged.event = playedDescriptor.effect
+  // P1：迁移后的「打出后进胜利区 / 流放 / 跳过阶段 / 起始资源」是描述子或条目级字段，
+  // 折叠回契约使用的旧槽位名（02305 的旧名是 phaseControl）。
+  if (playedDescriptor?.addToVictory || entry?.addToVictory) merged.addToVictory = true
+  if (playedDescriptor?.exileAfterPlay || entry?.exileAfterPlay) merged.exileAfterPlay = true
+  if (entry?.skipOrRepeatPhase) merged.phaseControl = true
+  if (entry?.startingResources != null) merged.startingResources = entry.startingResources
   // 旧打出条件的「字段名」在迁移后变成 playCondition 的文案；契约按字段名断言，
   // 这里把文案确定性反查回字段名（同一份映射见 src/engine/play-condition.js）。
   for (const item of entry?.playCondition || []) {
@@ -767,7 +775,7 @@ function runWeakness(code) {
   if (code === '02037') {
     assert.equal(ALL_CARDS[code].permanent, true)
     assert.equal(ALL_CARDS[code].subtype, 'basicweakness')
-    assert.equal(EFFECTS[code].startingResources, -2)
+    assert.equal(registeredEntry(code).startingResources, -2)
   } else {
     const s = fixture(), inv = s.investigators[0]
     inv.threat = [{ id: 'weakness', code }]

@@ -113,7 +113,7 @@ export function createTurnFlow(deps) {
     const scenarioEffect = scenarioBehavior(state).elderSign?.(state, inv, scenarioRuntime(state, events))
     if (scenarioEffect) return scenarioEffect
     if (investigatorTextBlanked(state, inv)) return { delta: 0 }
-    // 能力层：调查员的旧印效果写在 card-abilities.js（kind: 'elderSign'），
+    // 能力层：调查员的旧印效果写在 src/cards/entries/<code>.js（kind: 'elderSign'），
     // 与卡牌能力共用同一套描述子、同样可被测试与审计枚举。
     const registered = elderSignDescriptor(inv.code)
     if (registered) {
@@ -124,7 +124,7 @@ export function createTurnFlow(deps) {
       }
       return registered.resolve?.(ctx) || { delta: 0 }
     }
-    // 21 位可玩调查员的旧印全部迁移到能力层（src/cards/card-abilities.js）；
+    // 21 位可玩调查员的旧印全部迁移到能力层（src/cards/entries/<code>.js）；
     // 未登记的新调查员在补描述子之前按默认 +1 结算。
     return { delta: 1 }
   }

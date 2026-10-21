@@ -38,6 +38,16 @@ export function requestChoice(state, { kind, source, seat, seats = null, prompt,
   const context = state._resolution
   if (!context) throw new Error('选择必须在规则事务中执行')
   if (!options?.length) throw new Error('选择没有合法选项')
+  // P0：选项 id 必须是唯一非空字符串。否则 legalMoves 会产出没有 optionId 的
+  // choose 动作，而 validateMove 又会拒绝它，整局陷入无法提交的软锁。
+  const optionIds = new Set()
+  for (const option of options) {
+    if (typeof option?.id !== 'string' || !option.id) {
+      throw new Error(`选择选项缺少字符串 id（${kind}：${prompt || source || ''}）`)
+    }
+    if (optionIds.has(option.id)) throw new Error(`选择选项 id 重复（${kind}：${option.id}）`)
+    optionIds.add(option.id)
+  }
   // Choices and continuation answers are persisted as JSON. Compare the same
   // representation on replay (e.g. a not-yet-spawned enemy has no instance id).
   if (source && typeof source === 'object') source = clone(source)

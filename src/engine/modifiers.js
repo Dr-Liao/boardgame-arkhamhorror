@@ -197,7 +197,8 @@ export function evaluateCondition(condition, ctx) {
     if (!inHand) return false
   }
   if (condition.blankedThisRound) {
-    const blank = ctx.enemy?.textBlanked
+    // 实体修正的 ctx 用 entity；旧读点可能用 enemy。两者都认。
+    const blank = ctx.entity?.textBlanked || ctx.enemy?.textBlanked
     if (!blank || blank.round !== state?.round || blank.phase !== state?.phase) return false
   }
   return true
@@ -459,13 +460,16 @@ export function entityModifierTotal(state, entity, target) {
     throw new Error(`未知实体修正目标 ${JSON.stringify(target)}（可选：${ENTITY_MODIFIER_TARGETS.join(' / ')}）`)
   }
   if (!entity) return 0
-  if (hooks.entityBlanked(state, entity)) return 0
+  // 文本被涂白时，印刷文本带来的修正一律失效；但 declare 了 blankedThisRound 的
+  // 修正本身就是「文本空白后发生的事」（02255 失去 +1[per_investigator] 生命），仍要结算。
+  const blanked = hooks.entityBlanked(state, entity)
   let total = 0
   for (const row of entityModifierRows(state, entity)) {
     // 场景行（幕/议程）只提供全局修正，避免把某张幕的「此处」写成全局。
     if (row.host === 'scene' && !['enemyFight', 'enemyEvade', 'enemyHealth'].includes(target)) continue
     for (const modifier of row.list) {
       if (modifier.target !== target) continue
+      if (blanked && modifier.condition?.blankedThisRound !== true) continue
       const ctx = entityModifierCtx(state, entity, row)
       if (!evaluateCondition(modifier.condition, ctx)) continue
       total += amountOf(modifier, ctx)

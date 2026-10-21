@@ -99,10 +99,14 @@ games/arkhamhorror/
 `src/cards/` 保存“卡是什么”和“已实现哪些行为”：
 
 - `cards-data.js` 是导入工具生成的完整目录，不手工编辑。
-- `card-effects.js` 注册玩家卡与调查员行为（旧式效果 DSL）。
-- `card-abilities.js` 是**新增卡牌的默认去处**：声明式描述子（能力、修正、旧印），注册进 `ability.js`，不需要改引擎。
-- `ability-migration-batches.js` 是 **Phase 5 机械迁移的落点**：按批次分组、由 `tools/migrate-card.mjs` 生成的描述子（`event→played`、`skill→commit`、`weakness→weakness`、`onEnter→entersPlay`、`passive.stats→modifiers`、`abilities→action`、旧打出条件→`playCondition`）。批次清单在 `audit/migration-batches.json`，流程与剩余清单见 [`docs/phase5-migration.md`](docs/phase5-migration.md)；手写新卡**不要**加到这里。
+- `card-effects.js` 保留调查员数据表（`INVESTIGATOR_ABILITIES`）；`EFFECTS` 已清空，不再是行为入口。
+- **`entries/<code>.js` 是一张卡一个文件的行为落点**（2026-10 起）：每个文件 `export default` 一个描述子条目，按需 import `entries/_shared.js` 与 `engine/matcher.js`。命名 = 卡号；条目 `code` 必须与文件名一致。新增卡用 `node tools/scaffold-card.mjs <code> --entry`。
+- `entries/index.js` 是**生成物**：静态 import 全部单卡文件，保持旧 `byCode` 的首次出现顺序。改/增/删卡文件后必须运行 `node tools/build-card-index.mjs --write`。
+- `entry` 文件的硬约束：不 import `engine.js` / `card-abilities.js` / 批次文件 / `content/`；只通过描述子与 `ctx.api` 结算。守卫见 `tests/card-entries.test.mjs`。
+- `card-abilities.js` 只做聚合：导出 `CARD_ABILITY_ENTRIES` / `CARD_ABILITY_CODES` / `PHASE5_MIGRATED_CODES`，**不再放条目**。
+- `ability-migration-batches.js` 已删除；`audit/migration-batches.json` 只保留“哪张卡属于哪一批”的账本。**不得恢复** `BATCH_*` / `MIGRATED_*` 数组。
 - `encounter-abilities.js` 是**新增敌人/地点/幕/议程能力**的去处（Phase 3 · D1）：同一套描述子，`scope` 写非玩家通道；引擎按场上实体枚举，禁止再往关卡 `behavior.js` 加卡号分支。
+- 完整流程、agent 一次执行清单与拆分证据见 [`docs/card-entry-files.md`](docs/card-entry-files.md)；整轮扩展的迁移顺序（扫描机制 → 拆分原语 → 关键字/规则书 → 交互 → 多子进程批量卡牌 → 验收）见 [`docs/arkham-content-migration.md`](docs/arkham-content-migration.md) §4。
 - `card-identity.js` 统一运行时别名、原卡号和双面身份。
 - `card-catalog.js` 组合目录、来源、图片和开放状态，供只读图鉴 API 使用。
 - `scenarios-data.js` 是旧调用方的兼容导出；新关卡应从 `content/registered.js` 注册。
@@ -147,7 +151,7 @@ games/arkhamhorror/
 - `presentation-state.js` 把权威状态转换为稳定的牌桌展示数据。
 - `web-api.js` 提供只读图鉴 API，并根据目录与前端实现计算资源版本。
 
-`presentation/` 只处理媒体选择和卡图回退；`web/` 只处理交互与渲染。前端提交服务端已经公开的合法动作，不复制规则判定。
+`presentation/` 只处理媒体选择和卡图回退；`web/` 只处理交互与渲染。前端提交服务端已经公开的合法动作，不复制规则判定。反馈弹窗属于大厅能力（`createUI(host)` 注入的 `openFeedback()`），`web/` 只在战役局外页和牌桌标题栏放入口，不重复实现表单。
 
 ## 4. 依赖方向
 
@@ -219,14 +223,14 @@ AI 看到的上下文同样来自观察投影和合法动作，不得读取其�
 权威状态每次成功 `applyMove` 都会把 `{ seat, move }` 追加到 `state.actionLog`（纯 JSON、随存档往返）。由此得到一条纯函数链路：
 
 ```text
-state.actionLog + 建局参数（state.setup / seed / difficulty / rulesMode / aiStoryAwareness / seatInvestigators）
+state.actionLog + 建局参数（state.setup / seed / difficulty / rulesMode / aiStoryAwareness / cardPoolScope / allowRollback / seatInvestigators）
   → captureReplayLog(state)
   → replayLog(log, { until })            # 纯函数：只依赖日志，不读外部状态
   → stateHash / replayHashes             # 键排序指纹，排除派生资源与瞬时字段
 ```
 
 - **迁移对比**：`tools/replay-fixtures.mjs --baseline <文件>` 采集迁移前基线，改完代码用 `--compare <文件>` 逐条比较逐步指纹；输出"行为零变化"才算过。流程见 [`docs/phase4-replay.md`](docs/phase4-replay.md) §4。
-- **golden replay**：`tests/fixtures/replay/golden-replays.json` 固化 10 局真实对局（4 战役 / 5 关卡 / 529 步 / 530 个逐步指纹），`tests/replay-golden.test.mjs` 在 `fast` tier 校验；`npm run replay:fixtures` 是同一份基线的命令行校验。
+- **golden replay**：`tests/fixtures/replay/golden-replays.json` 固化 13 局真实对局（4 战役 / 5 关卡 / 779 步 / 792 个逐步指纹），`tests/replay-golden.test.mjs` 在 `fast` tier 校验；`npm run replay:fixtures` 是同一份基线的命令行校验。
 - **撤销地基**：`rewindTo(state, until)` / `undoMoves(state, count)` 截断日志后重放并原地替换状态，保留检查点分支的 `revision` 偏移；交互入口（大厅 UI）尚未实现。
 - **两条实现约束**：日志由 `applyMove` 在事务外持有（事务快照会重建状态，`dynamicState` 已排除 `actionLog`）；`continuation.move` 只保留语义字段（`resolution.js` 的 `cloneMove`），展示文案不参与指纹。
 
@@ -244,7 +248,9 @@ state.actionLog + 建局参数（state.setup / seed / difficulty / rulesMode / a
 | `audit/ability-coverage.json`、`audit/ability-migration.json` | 能力层覆盖度与迁移工作单 | `npm run cards:audit:write` |
 | `audit/ability-workorder.json` | 166 个引擎码的形态与能力缺口分类 | `npm run cards:workorder:write` |
 | `audit/card-code-whitelist.json`、`audit/effects-whitelist.json` | 冻结基线（只减不增，由同一工具维护） | `npm run cards:audit:write` |
-| `src/cards/ability-migration-batches.js`、`audit/migration-batches.json` | Phase 5 机械迁移的批次描述子与批次账本 | `npm run cards:migrate -- --batch <名> --codes …` |
+| `src/cards/entries/index.js` | 单卡行为文件目录 → 静态索引（运行时不做目录扫描） | `npm run cards:index` |
+| `src/cards/phase5-codes.js` | 旧 `PHASE5_MIGRATED_CODES` 的成员关系（一次性生成，Set 内容不要按文件顺序重排） | 手工维护 |
+| `audit/migration-batches.json` | 迁移批次账本（“哪张卡属于哪一批”，不是行为存放处） | `npm run cards:migrate -- --batch <名> …` |
 | `audit/core-acceptance.json`、`audit/carcosa-*-acceptance.json`、`audit/dunwich-acceptance.json` 里的证据文件哈希 | 验收测试文件改动后重算（证据映射不变） | `node tools/rehash-acceptance.mjs --write` |
 | `tests/fixtures/replay/golden-replays.json` | golden replay 基线（真实对局的动作日志 + 逐步指纹） | `npm run replay:fixtures:write` |
 | `audit/p6-behavior-ledger.*` | P6 行为证据 | `npm run audit:p6:write` |
@@ -265,7 +271,7 @@ state.actionLog + 建局参数（state.setup / seed / difficulty / rulesMode / a
 | 用例 | tier | 作用 |
 | --- | --- | --- |
 | `replay.test.mjs` | fast | 日志/指纹/重放/撤销的契约，含 4 局随机走子与建局参数完整性 |
-| `replay-golden.test.mjs` | fast | 10 局真实对局重放出 530 个相同逐步指纹 |
+| `replay-golden.test.mjs` | fast | 13 局真实对局重放出 792 个相同逐步指纹 |
 | `replay-fuzz.test.mjs` | slow | 100 局随机对局逐步一致 + 5,000 步随机走子器不变量 |
 
 常用命令（在 `games/arkhamhorror/` 下运行；在大厅根目录可加 `-w games/arkhamhorror`）：
@@ -291,7 +297,7 @@ npm run replay:fixtures:write    # 行为有意变化后重采基线
 1. 新功能先选择所属层，不在 `index.js` 或 `engine.js` 旁新增未分类文件。
 2. 新关卡优先扩展内容注册表和关卡行为，不在通用引擎写名称分支。
 3. 新卡牌先登记数据与开放条件，再实现行为；未知机制默认阻断，而不是近似放行。
-4. **新卡牌行为写在 `src/cards/card-abilities.js` 的描述子里**（能力/修正/旧印）。不得在 `engine.js` 按卡号新增分支；确实需要新机制时，先扩 `ability.js` 的通用能力，再补窗口与测试。
+4. **新卡牌行为写在 `src/cards/entries/<code>.js` 的单卡文件里**（能力/修正/旧印），并在同一次改动里运行 `node tools/build-card-index.mjs --write`。不得在 `engine.js` 按卡号新增分支，也不得恢复 `card-abilities.js` 条目或批次大文件；确实需要新机制时，先扩 `ability.js` 的通用能力，再补窗口与测试。流程见 [`docs/card-entry-files.md`](docs/card-entry-files.md)。
 5. 任何状态变化都必须能由合法动作重放，并在 JSON 保存/恢复后得到一致结果。
 6. 新观察字段先判断隐私级别；私有候选、手牌和内部续执行数据不得进入其他座位投影。
 7. 浏览器只负责表达和提交，不把前端判断当作安全边界。
@@ -305,7 +311,7 @@ npm run replay:fixtures:write    # 行为有意变化后重采基线
 
 | # | 唯一 | 目标 |
 | --- | --- | --- |
-| 1 | 行为入口 | 全部走 `src/cards/card-abilities.js` 的描述子（含生命周期钩子）；不再新增 `EFFECTS` 条目 |
+| 1 | 行为入口 | 全部走 `src/cards/entries/<code>.js` 的单卡描述子（含生命周期钩子）；`card-abilities.js` 只聚合，不再新增 `EFFECTS` 条目 |
 | 2 | 读点 | 引擎只经 `ability.js` 注册表枚举行为，不读 `EFFECTS` |
 | 3 | 账本 | 一张 `audit/ability-coverage.json` 记录每张卡的通道、证据与缺口 |
 | 4 | 内容分层 | 卡=数据+描述子；关卡=声明式定义+少数钩子；战役=声明式记录 |
@@ -313,7 +319,7 @@ npm run replay:fixtures:write    # 行为有意变化后重采基线
 
 硬规矩（细节与反例见路线文档 §3、§7）：
 
-1. 新增卡牌行为只写描述子；引擎不得按卡号、关卡名或战役名分支。需要新机制时先扩通用能力（`ability.js`/`windows.js`/`matcher.js`/`modifiers.js`/`targets.js`/`play-condition.js`/`effect-state.js`），再写卡。
+1. 新增卡牌行为只写单卡描述子（`entries/<code>.js`）；引擎不得按卡号、关卡名或战役名分支。需要新机制时先扩通用能力（`ability.js`/`windows.js`/`matcher.js`/`modifiers.js`/`targets.js`/`play-condition.js`/`effect-state.js`），再写卡。
 2. 内容层不 import 引擎装配点；`engine.js` 是唯一装配点，`modifiers.js` 与 `ability.js` 互不 import。
 3. 描述子在注册时规范化并冻结；运行期数据一律写 `state`，效果只经 `ctx.api` 结算；持续效果一律 `api.addEffect`（`state.effects[]`，纯 JSON）。
 4. 规则层不读"谁在操作这个座位"这类策略；可选反应的自动跳过由大厅注入。

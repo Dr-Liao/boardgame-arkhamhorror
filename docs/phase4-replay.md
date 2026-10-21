@@ -46,6 +46,8 @@ Phase 4 的目标是"把行为零变化变成可断言"：`{ settings, players, 
     campaignId, difficulty, rulesMode, seed,
     campaignHub,                    // 是否走局外流程（决定建局后的 uiState）
     aiStoryAwareness,               // 布尔；影响 state 字段与 AI 上下文
+    cardPoolScope,                  // 'all' | 'progressive'；收窄可选调查员与可构筑卡池
+    allowRollback,                  // 布尔；false 时关卡检查点不能回档
     playerInvestigator,             // 建局时座位 0 的卡号
     seatInvestigators: [...],       // 建局时每个座位选到谁（锁定 AI 选人结果）
     playerDeck,                     // 可选：自定义卡组
@@ -59,7 +61,8 @@ Phase 4 的目标是"把行为零变化变成可断言"：`{ settings, players, 
 
 1. **纯数据**：JSON 往返后逐字相同（`tests/replay.test.mjs` 有断言），不带闭包、Date、Map。
 2. **建局参数够用**：`settings` 必须覆盖 `createGameState` 读到的全部输入。Phase 4 之前漏了
-   `aiStoryAwareness` 与 AI 选人依据，`tests/replay.test.mjs` 的"建局参数完整"用例是这条的回归守卫。
+   `aiStoryAwareness` 与 AI 选人依据，`tests/replay.test.mjs` 的"建局参数完整"用例是这条的回归守卫；
+   游戏高级设置（`cardPoolScope` / `allowRollback`）同样随日志重放（见 `tests/game-settings.test.mjs`）。
 3. **位置信息不进日志**：`move.revision` 由"这是第几个动作"决定；检查点分支会把 revision 拨快一步却不多记动作，
    保留它会让分支无法重放。
 
@@ -170,23 +173,26 @@ node tools/replay-fixtures.mjs --compare ..\..\artifacts\replay-before.json
 
 ## 5. golden 基线（`tests/fixtures/replay/golden-replays.json`）
 
-10 局生产内容对局，由 `tools/replay-games.mjs` 的 recipe 驱动，动作全部来自 `legalMoves` + `validateMove`。
-每局存 `log` + **逐步指纹** + `final` 摘要；文件约 150 KB（动作里的 `label`/`explanation` 已剔除）。
+13 局生产内容对局，由 `tools/replay-games.mjs` 的 recipe 驱动，动作全部来自 `legalMoves` + `validateMove`。
+每局存 `log` + **逐步指纹** + `final` 摘要；文件约 200 KB（动作里的 `label`/`explanation` 已剔除）。
 
 | recipe | 驱动器 | 步数 | 覆盖 |
 | --- | --- | --- | --- |
 | `notz-gathering-hub-victory-r1` | p6 | 53 | 局外准备 → 集结 → 分支 r1 结算（同 `tests/p6-content.test.mjs` 的棋子） |
 | `notz-gathering-hub-victory-r2` | p6 | 52 | 分支 r2 的战役记录（烧屋） |
-| `notz-gathering-defeat` | p6 | 25 | 自然失败路线（被击败 → 关卡结算 → 战役结算） |
+| `notz-gathering-defeat` | p6 | 25 | 自然失败路线（被击败 → 关卡结算；P1 起继续进入关间） |
 | `notz-gathering-resign` | p6 | 60 | 主动撤退路线 |
-| `notz-midnight-masks` | p6 | 96 | 关间升级（`hubPurchase`/`hubConfirmUpgrades`）→ 第二关午夜假面 |
+| `notz-midnight-masks` | p6 | 147 | 关间升级 → 午夜假面 → 第三关，直至 `campaignResult` |
+| `notz-midnight-masks-only` | p6 | 80 | 停在午夜假面关卡内（保证该关覆盖不随 P1 继续推进而丢失） |
 | `notz-gathering-pending-choice` | p6 | 12 | **停在待决选择**：`pendingChoice` + `continuation` 的存档形态 |
-| `carcosa-curtain-call-hub` | generic | 50 | 《卡尔克萨之路》2 人局外流程 → 帷幕落下（D1 敌人/地点、剧本钩子） |
+| `carcosa-curtain-call-hub` | generic | 70 | 《卡尔克萨之路》2 人局外流程 → 帷幕落下 → 下一关 |
+| `carcosa-curtain-call-only` | generic | 30 | 停在帷幕落下关卡内（覆盖 curtainCall） |
 | `dunwich-extracurricular-hub` | generic | 70 | 《敦威治遗产》2 人局外流程 → 课外活动 |
-| `tfa-untamed-wilds-hub` | generic | 31 | 《失落的时代》3 人局外流程 → 荒莽密林（探索牌库、中毒、补给） |
+| `tfa-untamed-wilds-hub` | generic | 70 | 《失落的时代》3 人局外流程 → 荒莽密林 → 下一关 |
+| `tfa-untamed-wilds-only` | generic | 30 | 停在荒莽密林关卡内（覆盖 theUntamedWilds） |
 | `notz-strict-random-3p` | random | 80 | 严格规则模式 + 3 席位随机走子（多人共同决定、可选反应自动跳过） |
 
-合计 **10 局 / 529 步**，覆盖 4 个战役、5 个关卡、3 种 `uiState`（`scenarioResult` / `campaignResult` / `inScenario`）。
+合计 **13 局 / 779 步 / 792 个逐步指纹**，覆盖 4 个战役、5 个关卡、3 种 `uiState`（`scenarioResult` / `campaignResult` / `inScenario`）。
 
 **测试断言**（`tests/replay-golden.test.mjs`）：
 
@@ -207,7 +213,7 @@ node tools/replay-fixtures.mjs --compare ..\..\artifacts\replay-before.json
 
 `npm run replay:fixtures`（等价于 `node tools/replay-fixtures.mjs --check`）：
 
-- 10 局逐条比对**逐步指纹**（529 步 = 530 个指纹），全部相等；
+- 13 局逐条比对**逐步指纹**（779 步 = 792 个指纹），全部相等；
 - `npm run replay:fixtures:verify` 额外用驱动器**实时重跑**同一批 recipe，再与基线比较，同样全部相等
   ——这就是"现有测试局实时执行 == 重放"的直接证据；
 - 基线覆盖了 `tests/p6-content.test.mjs` 的两条"纯合法动作从局外完成集结"路线（r1/r2）、失败路线与撤退路线，

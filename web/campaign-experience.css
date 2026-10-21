@@ -79,6 +79,8 @@
 .ah-rulebook-launcher { position: fixed; right: 18px; top: auto; bottom: 60px; display: flex; gap: 7px; align-items: center; border: 1px solid #ae975caa; border-radius: 3px; background: #12271eee; color: #e8cd8e; padding: 9px 13px; cursor: pointer; box-shadow: 0 3px 15px #0005; }
 body:has(.ah-db-modal,.ah-carddetail-modal) .ah-rulebook-launcher { left: 50%; right: auto; transform: translateX(-50%); top: 7px; bottom: auto; }
 body:has(.ah-hub):not(:has(.ah-db-modal,.ah-carddetail-modal)) .ah-rulebook-launcher { display: none; }
+/* 开局弹窗自带页脚「规则书」按钮：浮动入口会压住页脚的「开始新游戏」。 */
+body:has(.ah-hub-setup) .ah-rulebook-launcher { display: none; }
 body:has(.ah-table):not(:has(.ah-db-modal,.ah-carddetail-modal)) .ah-rulebook-launcher { display: none; }
 .ah-header-rulebook { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
 .ah-header-rulebook .ah-icon { width: 16px; height: 16px; }

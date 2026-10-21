@@ -101,7 +101,8 @@
 .ah-office.ah-hub-setup .bg-seat-list { gap: 6px; }
 .ah-office.ah-hub-setup .bg-seat-row { padding: 7px 10px; border-color: var(--office-edge); }
 .ah-office.ah-hub-setup .bg-seat-number { background: #b59b6018; color: var(--office-gold); }
-.ah-office.ah-hub-setup .bg-modal-foot { position: sticky; bottom: -1px; z-index: 2; background: #14241e; margin-top: 4px; padding: 12px 0; }
+.ah-office.ah-hub-setup .bg-modal-foot { position: sticky; bottom: -1px; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; background: #14241e; margin: 4px -36px 0; padding: 12px 36px 10px; border-top: 1px solid var(--office-edge); }
+.ah-hub-setup-rulebook { margin-right: auto; display: inline-flex; align-items: center; gap: 7px; }
 .ah-office .ah-hub-setup-fields .bg-field > span { color: #d4c7a0; font-size: 13px; }
 .ah-office .ah-hub-setup-fields small { font-size: 11px; line-height: 1.6; }
 .ah-ai-dialogue-settings { display: flex; align-items: center; justify-content: space-between; gap: 14px; border: 1px solid var(--office-edge); background: #0e1c177d; padding: 10px 12px; }
@@ -115,6 +116,8 @@
 .ah-ai-dialogue-modal > p, .ah-ai-dialogue-modal small { color: var(--office-muted); font-size: 11px; line-height: 1.6; }
 .ah-ai-dialogue-group { margin: 14px 0; padding: 12px; border: 1px solid var(--office-edge); background: #0e1c177d; }
 .ah-ai-dialogue-range { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(150px, 1.2fr); align-items: center; gap: 12px; padding: 7px 0; color: #d4c7a0; font-size: 12px; }
+.ah-game-settings-select { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(150px, 1.2fr); align-items: center; gap: 12px; padding: 7px 0; color: #d4c7a0; font-size: 12px; }
+.ah-game-settings-select select { width: 100%; min-height: 32px; border: 1px solid var(--office-edge); border-radius: 2px; background: #0e1c17; color: #e2c98f; padding: 5px 8px; font-size: 12px; }
 .ah-ai-dialogue-control { display: grid; grid-template-columns: 1fr 42px; align-items: center; gap: 8px; }
 .ah-ai-dialogue-control input { width: 100%; accent-color: #bda468; }
 .ah-ai-dialogue-control output { color: #f2dfb2; text-align: right; font-variant-numeric: tabular-nums; }
@@ -219,6 +222,9 @@
 .ah-investigator-browser-head { display: flex; align-items: end; justify-content: space-between; gap: 18px; border-bottom: 1px solid var(--office-edge); padding-bottom: 14px; }
 .ah-investigator-browser-head h3 { margin: 0 0 5px; color: #e6cf98; }
 .ah-investigator-browser-head p { margin: 0; }
+.ah-investigator-filter-bar { display: flex; align-items: end; justify-content: flex-end; flex-wrap: wrap; gap: 10px 14px; }
+.ah-investigator-pack-filter { display: inline-flex; align-items: center; gap: 10px; color: #b9c1a6; font-size: 11px; letter-spacing: 1px; }
+.ah-investigator-pack-filter select { min-height: 34px; padding: 5px 9px; font-size: 12px; }
 .ah-investigator-class-filters { display: flex; flex-wrap: wrap; gap: 7px; justify-content: flex-end; }
 .ah-investigator-class-filter { display: inline-flex; align-items: center; gap: 5px; min-height: 34px; padding: 6px 10px; color: #c7cdb9; border: 1px solid var(--office-edge); background: #12241c; border-radius: 20px; font-size: 11px; }
 .ah-investigator-class-filter .ah-icon { width: 15px; height: 15px; }
@@ -346,6 +352,7 @@
   .ah-office .ah-hub-tabs { gap: 6px; padding: 0 10px; }.ah-office .ah-hub-tabs button { font-size: 12px; padding: 15px 10px; gap: 5px; }
   .ah-office .ah-hub-pane { width: calc(100% - 32px); margin-top: 16px; padding: 18px; }
   .ah-office.ah-hub-setup { grid-template-columns: .85fr 1fr; }.ah-office-entry-controls { padding: 30px 22px; }
+  .ah-office.ah-hub-setup .bg-modal-foot { margin-left: -22px; margin-right: -22px; padding-left: 22px; padding-right: 22px; }
   .ah-office-entry-art { min-height: 560px; }.ah-office-entry-art > .ah-office-decor { width: 160%; left: -30%; }
   .ah-office-overview-grid { gap: 14px; }.ah-office-team { grid-template-columns: 1fr; }.ah-office-team-panel { padding: 18px; }
   .ah-office-dossier { aspect-ratio: 1.45; }.ah-office-dossier-copy { left: 25%; top: 27%; }.ah-office .ah-office-dossier-copy h2 { font-size: 18px; }
@@ -360,6 +367,10 @@
   .ah-office-entry-art > .ah-office-decor { width: 75%; left: 30%; bottom: -15%; }.ah-office-entry-art > .ah-office-decor:nth-child(2) { width: 70%; left: -13%; bottom: -18%; }
   .ah-office-entry-title { text-align: left; padding: 28px 22px; }.ah-office-entry-title small { letter-spacing: 4px; }.ah-office-entry-title h2 { font-size: 36px; letter-spacing: 5px; margin: 10px 0; }.ah-office-entry-title p { font-size: 10px; letter-spacing: 1px; }
   .ah-office-entry-controls { padding: 24px; }.ah-office-entry-controls > h2 { font-size: 24px; margin: 12px 0; }.ah-office-entry-controls .ah-hub-tabs { display: flex; gap: 30px; }.ah-office-entry-controls .ah-hub-tabs button { font-size: 14px; }
+  .ah-office.ah-hub-setup .bg-modal-foot { margin-left: -24px; margin-right: -24px; padding-left: 24px; padding-right: 24px; }
+  /* 手机上把页脚规则书收成图标，三个按钮才能留在一行。 */
+  .ah-office .ah-hub-setup-rulebook { width: 44px; min-width: 44px; padding: 0; gap: 0; justify-content: center; font-size: 0; }
+  .ah-office .ah-hub-setup-rulebook .ah-icon { width: 18px; height: 18px; }
   .ah-office .ah-hub-pane { width: calc(100% - 24px); padding: 14px; }.ah-office .ah-hub-pane h2 { font-size: 22px; }
   .ah-office-hero { min-height: 390px; align-items: flex-end; overflow: hidden; }.ah-office-hero > .ah-office-decor { width: 105%; height: 310px; top: -45px; right: 0; opacity: .6; -webkit-mask-image: radial-gradient(ellipse 90% 80% at center, #000 45%, transparent 100%); mask-image: radial-gradient(ellipse 90% 80% at center, #000 45%, transparent 100%); }
   .ah-office-hero-copy { max-width: 100%; padding: 125px 12px 25px; }.ah-office-hero h1 { font-size: 38px; letter-spacing: 3px; }.ah-office-hero-copy > p { font-size: 11px; letter-spacing: 1px; }.ah-office-metrics { gap: 22px; margin: 20px 0; }
@@ -370,7 +381,7 @@
   .ah-office .ah-campaign-graph { grid-template-columns: 1fr 1fr; gap: 10px; }.ah-office .ah-flow-node { padding: 14px 10px; font-size: 10px; }.ah-office .ah-flow-node strong { font-size: 13px; }
   .ah-office-cases { grid-template-columns: 1fr; gap: 10px; }.ah-office .ah-office-case { min-height: 240px; }.ah-office-case > .ah-office-decor { height: 250px; }
   .ah-office .ah-office-investigator { grid-template-columns: 80px minmax(0, 1fr); gap: 14px; padding-top: 10px; }.ah-office-investigator > .ah-office-portrait { width: 80px; height: 115px; }.ah-office-investigator-copy h2 { font-size: 24px !important; margin: 12px 0; }.ah-office-investigator-copy .ah-office-eyebrow { font-size: 9px; letter-spacing: 1px; }.ah-office-investigator-copy .ah-office-metrics { gap: 10px; }.ah-office-investigator-copy .ah-office-metric { column-gap: 4px; grid-template-columns: 16px auto; }.ah-office-investigator-copy .ah-office-metric .ah-icon { width: 16px; }.ah-office-investigator-copy .ah-office-metric b { font-size: 17px; }
-  .ah-investigator-browser { margin-left: -94px; padding: 14px; }.ah-investigator-browser-head { align-items: stretch; flex-direction: column; }.ah-investigator-class-filters { justify-content: flex-start; }.ah-office-roster { gap: 8px; }.ah-office-candidate { width: 75px; }.ah-office-candidate .ah-office-portrait { width: 53px; height: 70px; }
+  .ah-investigator-browser { margin-left: -94px; padding: 14px; }.ah-investigator-browser-head { align-items: stretch; flex-direction: column; }.ah-investigator-filter-bar { justify-content: flex-start; gap: 8px; }.ah-investigator-class-filters { justify-content: flex-start; }.ah-office-roster { gap: 8px; }.ah-office-candidate { width: 75px; }.ah-office-candidate .ah-office-portrait { width: 53px; height: 70px; }
   .ah-office .ah-hub-actions .bg-btn { padding: 10px 12px; font-size: 12px; }
   .ah-office.ah-db-modal { padding: 15px; }.ah-office.ah-db-modal > h2 { font-size: 18px; }.ah-office-builder { display: flex; flex-direction: column; }.ah-office .ah-hub-card-pool { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 44vh; gap: 10px; }.ah-office-deck-tray { padding: 14px; }.ah-office .ah-hub-deck-list { max-height: 180px; }.ah-office-cost-curve { height: 60px; }.ah-office-filters { gap: 5px; }.ah-office-filters button { flex: 1; padding: 7px; }.ah-office-filters input { flex-basis: 100%; }
   .ah-office .ah-office-records .ah-hub-scenario { grid-template-columns: 1fr; }.ah-office-records > p { font-size: 12px; }

@@ -282,7 +282,8 @@ function makeRuntime(state, events) {
     chooseInvestigator: (seat, target, effect, constraints) => chooseInvestigator(state, seat, target, effect, constraints),
     healDamageAtLocation: (seat, amount) => healDamageAtLocation(state, seat, amount, events),
     healHorrorNearby: (seat, amount) => healHorrorNearby(state, seat, amount, events),
-    dukeInvestigate: seat => dukeInvestigate(state, seat, events, effect.code),
+    // P0：effect 是 makeRuntime 的第二个参数；旧写法在箭头函数里读不到外层 effect。
+    dukeInvestigate: (seat, effect) => dukeInvestigate(state, seat, events, effect?.code),
     carcosaInvestigatorEffect: (seat, effect) => carcosaInvestigatorEffect(state, seat, effect, events),
     carcosaPlayerEffect: (seat, effect) => carcosaPlayerEffect(state, seat, effect, events),
     tfaInvestigatorEffect: (seat, effect) => tfaInvestigatorEffect(state, seat, effect, events),

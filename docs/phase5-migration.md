@@ -5,6 +5,12 @@
 > 完成声明与硬指标见 [`phase5-handoff.md`](phase5-handoff.md) §6。
 
 
+> **2026-10 更新**：迁移落点已改为 `src/cards/entries/<code>.js`（一张卡一个文件），
+> `ability-migration-batches.js` 已删除；本文中“批次文件 / 批次块”的描述是 Phase 5 历史记录。
+> 当前**整轮迁移的执行顺序**（扫描新增机制 → 拆分原语 → 关键字/规则书 → 交互 → 多子进程批量卡牌 → 测试验收）
+> 以 [`arkham-content-migration.md`](arkham-content-migration.md) §4 为准；单卡文件流程见
+> [`card-entry-files.md`](card-entry-files.md)。
+>
 > 日期：2026-02。上游决策文档：[`architecture-refactor-roadmap.md`](architecture-refactor-roadmap.md) §6 Phase 5、
 > §7 迁移判据与纪律、§8 守卫与工具。本文只记录 **Phase 5 实际交付了什么、怎么验收、还剩什么**，
 > 不重复路线里的规矩。
@@ -24,7 +30,7 @@
 | 测试骨架 | `tools/scaffold-card.mjs` | 按批次生成 `develop/scaffolds/<code>.test.mjs`（通道断言 + 读点断言 + 行为起手式），默认是绿的 |
 | 批次编排 | `tools/cards-migrate.mjs` | 一次跑完「迁卡 → 账本/白名单收缩 → replay 对比 → 架构守卫 → 产物自检」 |
 | 验收账本重算 | `tools/rehash-acceptance.mjs` | 只重算 core/carcosa 两份验收账本里「证据测试文件」的 sha256（证据映射不变） |
-| 迁移目标文件 | `src/cards/ability-migration-batches.js` | 按批次分组的生成描述子（标记块 `// >>> batch: <名>`），由 `CARD_ABILITY_ENTRIES` 一并注册 |
+| 迁移目标文件 | `src/cards/entries/<code>.js`（2026-10 起） | 一张卡一个文件的描述子；`entries/index.js` 由 `tools/build-card-index.mjs` 生成 |
 | 批次账本 | `audit/migration-batches.json` | 每个批次的卡号清单；`manual` 里是手写批次（5b-6 / 5c） |
 | 用例 | `tests/migration-tools.test.mjs` | 账本/读点/工具纯函数/批次文件格式（8 条） |
 | 用例 | `tests/phase5-migration.test.mjs` | 5c 改写后的行为（地点附属、连抽遭遇、牌库检索、捷径、调查/躲避、武器、治疗、5c-18 的五个新 api）（100 条） |
@@ -1502,6 +1508,14 @@ doEvade(state, seat, { enemyId: chooseEnemy(state, seat, {}).id, addSkill: 'will
 | 02187 / 02189 / 02191 / 02193 | Dunwich 天赋（`+2`/`+3`、毁灭代价、`minimumHandForBoost`） |
 | 03035 | 灵力祭祀刀：`Spell` 检定 +2 + 主动攻击能力 |
 | 03107 / 03109 / 03111 / 03113 / 03115 | 五张「沉静」天赋（`fast` + `composure`） |
+
+**补记（卡面开关丢失）**：这批当时以为读点只有 `applyFreeTriggers`，但 `allCardDefs` 的
+`hasReactionPrompt`（是否显示卡面「快速反应」开关）与 `reactionIds`（窗口询问的 source → 卡号映射）
+同样读这两个字段。它们留在只读 `EFFECTS` 的路径上，于是 01017 体能训练等 15 张天赋牌、20 张
+`cost.action === false` 的免费能力牌，以及 34 张已搬进描述子的反应牌，开关消失或点了不生效
+（「本局不再询问」之后没有入口恢复提示）。修法：`src/engine/card-defs.js` 的 `hasReactionPromptFor`
+同时读 `EFFECTS` 与条目/描述子，`reactionIds` 追加反应描述子的 id；目录卡与规则卡两个分支共用同一份判定。
+守卫见 `tests/reaction-preferences.test.mjs` 的三条用例（天赋/免费能力清单、全量条目扫描、反应 id 映射）。
 
 **纪律（新增守卫）**：迁走的卡必须登记进卡包的 `abilityLayerCodes`，否则包的 `deckbuilding` 变 false、
 自动牌组池少一张、开局牌组与 replay 基线都会变。`tests/architecture-guard.test.mjs` 现在有一条用例专门检查这件事——

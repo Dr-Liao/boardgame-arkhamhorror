@@ -1154,7 +1154,8 @@ test('5c-35：03149 查尔斯·罗斯横置后本地点下一件物品 -1；0318
   assert.equal(record?.round, state.round, '限定本轮')
 
   // 03189：击败交战中的非精英敌人，然后受 1 创伤并把伤害拉满。
-  const second = fixture()
+  // 用 2 人局：单人被拉满伤害会触发「全灭进入下一关」，反而看不到伤害值。
+  const second = fixture('01001', 2)
   const foe = enemy(second, { engagedSeat: 0, fight: 1, health: 1, damage: 0 })
   second.investigators[0].hand = ['03189']
   play(second, '03189')

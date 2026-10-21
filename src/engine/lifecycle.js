@@ -8,7 +8,7 @@
 //   5. 弱点揭示            → 本文件的 weaknessProfile(code)
 //
 // 后面四种都有两条数据来源，本模块是唯一的读取入口：
-//   · 能力层：card-abilities.js 里对应 kind 的描述子；
+//   · 能力层：src/cards/entries/<code>.js 里对应 kind 的描述子；
 //   · 旧 DSL：card-effects.js 的 EFFECTS[code].event / .skill / .onEnter / .weakness
 //     （离场没有旧字段：`millOnLeave` 是引擎内联特判，已随 03315 迁移删除）。
 // 描述子优先。迁移一张卡 = 把它的数据从 EFFECTS 搬到描述子、删掉旧条目，

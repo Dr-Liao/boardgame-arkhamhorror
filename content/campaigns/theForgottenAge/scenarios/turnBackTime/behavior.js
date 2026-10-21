@@ -1,4 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { chooseCandidate } from '../../../../choice-helpers.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
@@ -419,12 +420,10 @@ export const behavior = {
         const users = active(state).filter(other => other.location === inv.location && (other.clues || 0) > 0)
         let flipped = false
         if (users.length) {
-          const target = users.length === 1 ? users[0] : users.find(other =>
-            String(other.seat) === String(api.choose({
-              kind: 'investigator', source: RELIC_OF_AGES, seat: inv.seat,
-              prompt: '选择一位位于此地点、控制线索的调查员。',
-              options: users.map(other => ({ id: String(other.seat), label: other.name })),
-            }))) || users[0]
+          const target = chooseCandidate(api, {
+            kind: 'investigator', source: RELIC_OF_AGES, seat: inv.seat,
+            prompt: '选择一位位于此地点、控制线索的调查员。',
+          }, users, { key: other => String(other.seat), label: other => other.name })
           if (api.spendClues) api.spendClues(target.seat, 1)
           else target.clues -= 1
           placeDoom(here(state, inv) || here(state, target))

@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createGameState, allCardDefs, applyMove } from '../src/engine/engine.js'
 import { isAutomaticReward } from '../src/cards/card-effects.js'
-import { allDescriptors } from '../src/engine/ability.js'
+import { allDescriptors, registeredCodes, registeredEntry } from '../src/engine/ability.js'
 import { requestChoice, resolveTransaction } from '../src/engine/resolution.js'
 import { reactionChoices, reactionView, reactionEnabled, setReactionEnabled } from '../web/reaction-preferences.js'
 
@@ -18,6 +18,51 @@ test('免费且不限次的资源反应自动领取，有成本、目标或次�
   assert.equal(defs['01033'].hasReactionPrompt,false)
   assert.equal(defs['01073'].hasReactionPrompt,true)
   assert.equal(defs['01075'].hasReactionPrompt,true)
+})
+
+test('迁到条目层的天赋与免费能力仍显示快速反应开关',()=>{
+  const defs=allCardDefs({runtimeOnly:true})
+  // 15 张「花资源提高检定」天赋：freeTriggers 已搬到条目，boost 询问仍要能关掉／重新打开。
+  for(const code of ['01017','01034','01049','01062','01077','02187','02189','02191','02193',
+    '03035','03107','03109','03111','03113','03115'])
+    assert.equal(defs[code].hasReactionPrompt,true,`${code} ${defs[code].name}`)
+  // 免费能力（cost.action === false）：进入 playerWindow 询问，同样要留下开关。
+  for(const code of ['01018','01027','01040','02185','03149'])
+    assert.equal(defs[code].hasReactionPrompt,true,`${code} ${defs[code].name}`)
+  // 自动领取的资源反应不打扰玩家，保持无开关。
+  assert.equal(defs['01033'].hasReactionPrompt,false)
+  assert.equal(defs['02188'].hasReactionPrompt,false)
+})
+
+test('凡声明了天赋或免费能力的条目都带快速反应开关',()=>{
+  const defs=allCardDefs({runtimeOnly:true})
+  const missing=[]
+  for(const code of registeredCodes()){
+    const entry=registeredEntry(code), def=defs[code]
+    if(!entry||!def) continue
+    const wants=entry.freeTriggers.length>0
+      || entry.abilities.some(descriptor=>descriptor.kind==='free'||descriptor.cost?.action===false)
+    if(wants&&def.hasReactionPrompt!==true) missing.push(code)
+  }
+  assert.deepEqual(missing,[])
+})
+
+test('搬进描述子的反应仍能把窗口映射回卡号，开关才对它有作用',()=>{
+  const defs=allCardDefs({runtimeOnly:true})
+  assert.ok(defs['01073'].reactionIds.includes('scavenging'))
+  assert.ok(defs['01075'].reactionIds.includes('rabbitsFoot'))
+  const st=createGameState({seed:'descriptor-reaction-switch',playerInvestigator:'01001'},[{seat:0,role:'human'}])
+  st.cards['01073']={...defs['01073'],code:'01073'}
+  st.investigators[0].assets=[{id:'scav',code:'01073'}]
+  st.pendingChoice={id:'scav',kind:'reaction',seat:0,canSkip:true,source:'scavenging',
+    options:[{id:'skip',label:'跳过反应'},{id:'trigger',label:'触发反应'}]}
+  st.legalMoves=st.pendingChoice.options.map(option=>({action:'choose',choiceId:'scav',optionId:option.id}))
+  const s={sessionId:'descriptor-reaction-switch',state:st}
+  assert.deepEqual(reactionChoices(st).map(item=>item.code),['01073'])
+  setReactionEnabled(s.sessionId,0,['01073'],false)
+  assert.deepEqual(reactionView(s).state.legalMoves.map(move=>move.optionId),['skip'])
+  setReactionEnabled(s.sessionId,0,['01073'],true)
+  assert.equal(reactionView(s),s)
 })
 
 test('米兰调查奖励不询问，后续反应读档恢复不重复领取',()=>{

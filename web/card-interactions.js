@@ -173,6 +173,16 @@ export function mountCardInteractions(root, session, { state, submit, select, in
     if (offer.dataset.keepOffer !== 'true' && entities.some(el => el.dataset.interaction === offer.dataset.choiceOffer)) offer.hidden = true
   }
   let suppressClick = false
+  const selectWithActions = key => {
+    select(key)
+    // The table re-renders on selection, and a map enemy sits inside a keydown
+    // fence. Put focus on the popped action bar so Escape (handled by the
+    // table) cancels it and screen readers announce the available actions.
+    queueMicrotask(() => {
+      if (!root.isConnected) return
+      root.querySelector('.ah-card-action-popover .ah-action')?.focus({ preventScroll: true })
+    })
+  }
   const activate = event => {
     if (suppressClick) { event.preventDefault(); event.stopImmediatePropagation(); suppressClick = false; return }
     if (event.target.closest('[data-map-info],[data-reaction-toggle]')) return
@@ -184,14 +194,21 @@ export function mountCardInteractions(root, session, { state, submit, select, in
       return
     }
     const key = el.dataset.interaction
-    const direct = st.pendingChoice ? entityMoves(st, key) : []
+    const moves = entityMoves(st, key)
+    const direct = st.pendingChoice ? moves : []
     const targeted = selected && selected !== key ? movesOnto(selected, el) : []
+    // A co-located enemy that can be engaged answers a left click with its
+    // action buttons (交战/攻击/躲避) instead of the card dossier. Dragging it
+    // to the investigator or the engagement zone keeps working as before.
+    const engageable = key.startsWith('enemy:') && moves.some(move => move.action === 'engage')
     if (direct.length || targeted.length) {
       event.preventDefault(); event.stopImmediatePropagation(); commit(direct.length ? direct : targeted)
+    } else if (engageable) {
+      event.preventDefault(); event.stopImmediatePropagation(); selectWithActions(key)
     } else if (el.dataset.inspectDefault === 'true') {
       event.preventDefault(); event.stopImmediatePropagation(); inspect(key)
-    } else if (['asset', 'enemy', 'location', 'investigator', 'discard', 'act', 'agenda'].some(type => key.startsWith(type + ':')) && entityMoves(st, key).length) {
-      event.preventDefault(); event.stopImmediatePropagation(); select(key)
+    } else if (['asset', 'enemy', 'location', 'investigator', 'discard', 'act', 'agenda'].some(type => key.startsWith(type + ':')) && moves.length) {
+      event.preventDefault(); event.stopImmediatePropagation(); selectWithActions(key)
     }
   }
   root.addEventListener('click', activate, true)

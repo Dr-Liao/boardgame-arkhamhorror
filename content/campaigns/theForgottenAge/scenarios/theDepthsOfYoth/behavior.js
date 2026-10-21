@@ -1,5 +1,6 @@
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { chooseCandidate } from '../../../../choice-helpers.js'
 import { encounterRules, isPoisoned } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import {
@@ -966,12 +967,10 @@ function removeOneDoomFromAnyCard(state, inv, api) {
     api.info?.('古代遗物：场上没有任何卡牌带毁灭标记。')
     return false
   }
-  const chosen = candidates.length === 1 || typeof api.choose !== 'function'
-    ? candidates[0]
-    : candidates.find(option => option.id === api.choose({
-      kind: 'card', source: RELIC_OF_AGES, seat: inv.seat,
-      prompt: '选择要移除 1 点毁灭的卡牌。', options: candidates,
-    })) || candidates[0]
+  const chosen = chooseCandidate(api, {
+    kind: 'card', source: RELIC_OF_AGES, seat: inv.seat,
+    prompt: '选择要移除 1 点毁灭的卡牌。',
+  }, candidates, { key: option => String(option.id) })
   if (chosen.id === 'agenda') state.doom = Math.max(0, (state.doom || 0) - 1)
   else {
     const location = state.locations.find(entry => entry.id === chosen.id)

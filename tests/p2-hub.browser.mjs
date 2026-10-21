@@ -6,7 +6,7 @@ test('P2 局外面板建档、构筑、显式读档与删除确认', async ({ pa
   await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
   const setup = page.locator('.ah-hub-setup')
   await expect(setup).toBeVisible()
-  await expect(setup.locator('.bg-field')).toHaveCount(3)
+  await expect(setup.locator('.bg-field')).toHaveCount(2)
   await setup.getByText(/玩家人数|席位数量/).locator('..').locator('select').selectOption('1')
   await expect(setup.locator('.bg-field')).toHaveCount(2)
   const created = page.waitForResponse('**/api/start')

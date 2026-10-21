@@ -6,6 +6,7 @@
 // 会重新赋值），所以**必须 import live binding**，不能从 deps 注入快照——否则大厅注册新内容后
 // 这里还拿着旧对象（交接文档「依赖的四种类型」第 1 条）。
 import { contentRegistry } from '../../content/registered.js'
+import { allowsCard, cardPoolContext } from '../deck/card-pool.js'
 
 export function createCardDefs(deps) {
   const {
@@ -53,6 +54,29 @@ export function createCardDefs(deps) {
     }
   }
 
+  // 「卡面是否需要快速反应开关」的统一口径：旧 DSL（EFFECTS）与迁移后的条目/描述子一起看。
+  // 只有会让玩家做选择的窗口才需要开关（reaction / playerWindow / boost 三类）；
+  // 自动领取的资源奖励不打扰玩家。两个出卡分支（目录卡 / 规则卡）共用同一份判定。
+  function hasReactionPromptFor(code, eff = EFFECTS[code], descriptorEntry = registeredEntry(code)) {
+    const reactions = [...(eff?.reactions || []), ...(INVESTIGATOR_ABILITIES[code]?.reactions || [])]
+    const descriptorAbilities = descriptorEntry?.abilities || []
+    // 迁移后「天赋自动投入档位」（freeTriggers，boost 询问）与「免费能力」（cost.action === false，
+    // playerWindow 询问）都住在条目上：判定必须同时看旧 DSL 与描述子。只看 EFFECTS 会让
+    // 01017 体能训练这类天赋牌、01018 巡警这类免费能力丢掉卡面「快速反应」开关，
+    // 而那个开关是「本局不再询问」之后重新打开提示的唯一入口。
+    const freeTriggerPrompt = !!(eff?.freeTriggers?.length || descriptorEntry?.freeTriggers?.length)
+    const freeAbilityPrompt = !!(eff?.abilities?.some(ability => ability.cost?.action === false)
+      || descriptorAbilities.some(descriptor => descriptor.kind === 'free' || descriptor.cost?.action === false))
+    return !!(eff?.reaction || reactions.some(r => !isAutomaticReward(r))
+      || INVESTIGATOR_ABILITIES[code]?.chaosTokenRedraw || freeTriggerPrompt || freeAbilityPrompt || hasExplicitReactionPrompt(code)
+      // Phase 5（5b-6）：迁移来的反应描述子按同一口径判断——自动奖励（无费用/无目标/无上限）不算询问。
+      // Phase 6（6e-8）：快速反应事件搬成 `played` + `fast` + `trigger`，同样算「有反应提示」。
+      || descriptorAbilities.some(descriptor =>
+        (descriptor.kind === 'played' && descriptor.fast && descriptor.trigger.length > 0)
+        || (descriptor.kind === 'reaction'
+          && !(descriptor.legacyReaction && isAutomaticReward({ effect: descriptor.effect, cost: descriptor.cost, id: descriptor.id })))))
+  }
+
   function allCardDefs({ runtimeOnly = false, campaignId = null, playerCodes = null } = {}) {
     const out = {}
     const selected = playerCodes && new Set(playerCodes)
@@ -68,15 +92,14 @@ export function createCardDefs(deps) {
       copy.reactionIds = reactions.map(r => r.id || code)
       if (investigatorAbility?.chaosTokenRedraw) copy.reactionIds.push('wendyRedraw')
       const descriptorEntry = registeredEntry(code)
-      if (descriptorEntry?.abilities.length) copy.abilityIds = descriptorEntry.abilities.map(descriptor => descriptor.id)
-      copy.hasReactionPrompt = !!(eff?.reaction || reactions.some(r => !isAutomaticReward(r)) || investigatorAbility?.chaosTokenRedraw || eff?.freeTriggers?.length
-        || eff?.abilities?.some(ability => ability.cost?.action === false) || hasExplicitReactionPrompt(code)
-        // Phase 5（5b-6）：迁移来的反应描述子按同一口径判断——自动奖励（无费用/无目标/无上限）不算询问。
-        // Phase 6（6e-8）：快速反应事件搬成 `played` + `fast` + `trigger`，同样算「有反应提示」。
-        || descriptorEntry?.abilities?.some(descriptor => descriptor.kind === 'free'
-          || (descriptor.kind === 'played' && descriptor.fast && descriptor.trigger.length > 0)
-          || (descriptor.kind === 'reaction'
-            && !(descriptor.legacyReaction && isAutomaticReward({ effect: descriptor.effect, cost: descriptor.cost, id: descriptor.id })))))
+      const descriptorAbilities = descriptorEntry?.abilities || []
+      if (descriptorAbilities.length) copy.abilityIds = descriptorAbilities.map(descriptor => descriptor.id)
+      // 反应搬到描述子后，窗口询问的 source 是描述子 id（如 'scavenging'）：卡号映射
+      // （reaction-preferences 的「本局不再询问」与卡面开关）要认得它，否则开关看着在、点了不生效。
+      for (const descriptor of descriptorAbilities) {
+        if (descriptor.kind === 'reaction' && descriptor.id) copy.reactionIds.push(descriptor.id)
+      }
+      copy.hasReactionPrompt = hasReactionPromptFor(code, eff, descriptorEntry)
       const entryPassive = !eff?.passive ? registeredEntry(code)?.passive : null
       if (eff && eff.passive) {
         if (eff.passive.stats) copy.statBonus = eff.passive.stats
@@ -107,6 +130,8 @@ export function createCardDefs(deps) {
       const def = cardDef(code)
       const catalog = ALL_CARDS[def.originalCode || code]
       out[code] = { ...def, name: def.nameZh || def.name, availability: 'strict', strictAccepted: true,
+        // 剧情资产也会进玩家的控制区（例如救下的盟友），开关口径与目录卡一致。
+        ...(hasReactionPromptFor(code) ? { hasReactionPrompt: true } : {}),
         effectStatus: catalog?.effectStatus || 'unverified', acceptanceProfile: catalog?.acceptanceProfile || null }
     }
     return out
@@ -131,8 +156,12 @@ export function createCardDefs(deps) {
     return allCardDefs({ runtimeOnly: true, campaignId, playerCodes: codes })
   }
 
-  function corePlayerPool() {
-    return playablePool()
+  // 可构筑玩家卡池：传入 state 时按「卡牌范围」收窄（渐进式只给当前循环及更早的卡）。
+  // 不传 state 的旧调用保持全量池。
+  function corePlayerPool(state = null) {
+    const context = cardPoolContext(state)
+    const pool = playablePool()
+    return context ? pool.filter(card => allowsCard(card.code, context)) : pool
   }
 
   function basicWeaknessPool(state = null) {

@@ -23,17 +23,19 @@ const context = (s, seat = decisionSeat(s)) => JSON.parse(aiDecisionContext(s, s
 const session = s => ({ state: s, players: [{ seat: 0, name: '玩家' }, { seat: 1, name: '队友' }], events: [], notes: [] })
 const introText = s => s.scenarioIntro.paragraphs.join('\n\n')
 
-test('setting defaults to off and is exposed in the setup spec', () => {
+test('setting defaults to on in the AI advanced spec; the engine fallback stays off unless asked', () => {
   const spec = arkham.settingsSpec.find(item => item.key === 'aiStoryAwareness')
-  assert.equal(spec.type, 'select')
-  assert.equal(spec.default, 'off')
-  assert.deepEqual(spec.options.map(o => o.value), ['off', 'on'])
+  assert.equal(spec.type, 'toggle')
+  assert.equal(spec.default, 'on')
+  assert.equal(arkham.defaults.aiStoryAwareness, 'on')
+  // 直接建局（测试/工具/重放）不带这项时沿用旧行为；大厅开局按设置默认提交 'on'。
   assert.equal(fixture().aiStoryAwareness, false)
   assert.equal(fixture({ aiStoryAwareness: 'on' }).aiStoryAwareness, true)
+  assert.equal(fixture({ aiStoryAwareness: 'off' }).aiStoryAwareness, false)
 })
 
 test('off: no story context, and narrative prose in the log is collapsed', () => {
-  const s = fixture()
+  const s = fixture({ aiStoryAwareness: 'off' })
   s.campaign.records = { houseBurned: true }
   assert.ok(s.log.includes(introText(s)), 'fixture logs the intro prose')
   assert.equal(context(s).story, undefined)

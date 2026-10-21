@@ -46,7 +46,7 @@ export function createAbilityRules(deps) {
     if (!resolved) return false
     cost = resolved
     // 先整体校验，再逐项扣费：避免「付了一半失败」留下部分修改。
-    if (cost.exhaust && source?.exhausted) return false
+    if (cost.exhaust && (!source || source.exhausted)) return false
     if (cost.uses && (source?.uses || 0) < cost.uses) return false
     if (cost.resources && inv.resources < cost.resources) return false
     if (cost.clues && (inv.clues || 0) < cost.clues) return false

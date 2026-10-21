@@ -9,6 +9,9 @@
 // unknownCardCodes）在 engine.js 里用函数声明再导出，调用点不变。
 
 import { contentRegistry } from '../../content/registered.js'
+import {
+  CARD_POOL_SCOPE_LABELS, allowsCard, cardPoolContext, normalizeCardPoolScope,
+} from '../deck/card-pool.js'
 
 export function createSetup(deps) {
   const {
@@ -128,7 +131,7 @@ function buildInvestigatorsDeck(state, inv, def, events) {
   const opts = {
     seat: inv.seat,
     seed: Math.floor(randomValue(state) * 4294967296),
-    playerPool: corePlayerPool(),
+    playerPool: corePlayerPool(state),
     basicWeaknessPool: basicWeaknessPool(state),
   }
   if (inv.seat === 0 && state.customPlayerDeck) {
@@ -258,11 +261,18 @@ function createGameState(settings, players) {
   const rulesMode = settings.rulesMode || 'simplified'
   if (!['simplified', 'strict'].includes(rulesMode)) throw new Error('未知识别的规则模式')
   if (settings.playerDeck != null && !Array.isArray(settings.playerDeck)) throw new Error('自定义卡组必须是卡号数组')
+  // 游戏高级设置（开局固定、随存档保留）：
+  //   cardPoolScope  全部 / 渐进式（只允许当前循环及更早循环的卡牌）
+  //   allowRollback  是否允许从关卡检查点回档
+  const cardPoolScope = normalizeCardPoolScope(settings.cardPoolScope)
+  const allowRollback = !(settings.allowRollback === false || settings.allowRollback === 'off')
+  const poolContext = cardPoolContext({ scope: cardPoolScope, campaignId: manifest.id })
   // New games get independent randomness; explicit seeds remain reproducible.
   // The seed and evolving rngState are persisted with the game for resuming.
   const seed = String(settings.seed ?? randomUUID())
   const randomState = { rngState: hashSeed(seed) >>> 0 }
-  const invCodes = PLAYABLE_INVESTIGATORS
+  // 渐进式会同时收窄可选调查员；全部模式保持原来的候选表与随机流。
+  const invCodes = PLAYABLE_INVESTIGATORS.filter(code => allowsCard(code, poolContext))
   const rng = () => randomValue(randomState)
   // 调查员候选顺序只影响 AI 选人；用独立随机流，避免新增调查员改变主随机流
   // （否则旧种子对局的牌序、遭遇与混乱标记会随卡池扩张而漂移）。
@@ -273,6 +283,9 @@ function createGameState(settings, players) {
   if (!humanPick || humanPick === 'auto' || humanPick === '__random__') humanPick = order[0]
   if (!canSelectInvestigator(humanPick) || !Object.hasOwn(ALL_INVESTIGATORS, humanPick)) {
     throw new Error(`调查员未开放：${humanPick}`)
+  }
+  if (!allowsCard(humanPick, poolContext)) {
+    throw new Error(`调查员超出当前卡牌范围（${CARD_POOL_SCOPE_LABELS[cardPoolScope]}）：${humanPick}`)
   }
 
   // 重放（src/engine/replay.js）需要按座位复现建局结果。AI 席位的调查员由 persona
@@ -286,6 +299,7 @@ function createGameState(settings, players) {
     if (new Set(seatInvestigators).size !== seatInvestigators.length) throw new Error('座位调查员不能重复')
     seatInvestigators.forEach((code, index) => {
       if (!Object.hasOwn(ALL_INVESTIGATORS, code) || !canSelectInvestigator(code)) throw new Error(`调查员未开放：${code}`)
+      if (!allowsCard(code, poolContext)) throw new Error(`调查员超出当前卡牌范围（${CARD_POOL_SCOPE_LABELS[cardPoolScope]}）：${code}`)
       if (players[index].seat === 0 && code !== humanPick) throw new Error('座位调查员与主角调查员不一致')
     })
   }
@@ -299,7 +313,7 @@ function createGameState(settings, players) {
     } else if (p.seat === 0) {
       code = humanPick
     } else {
-      code = pickAiInvestigator(p, order, used)
+      code = pickAiInvestigator(p, order, used, invCodes)
     }
     used.add(code)
     investigators.push(makeInvestigator(ALL_INVESTIGATORS[code], p.seat))
@@ -359,6 +373,10 @@ function createGameState(settings, players) {
     legalMoves: [],
     customPlayerDeck: Array.isArray(settings.playerDeck) ? settings.playerDeck.slice() : null,
     aiStoryAwareness: settings.aiStoryAwareness === true || settings.aiStoryAwareness === 'on',
+    // 游戏高级设置只在非默认值时写入状态：默认局（全部 / 允许回档）的状态形状
+    // 与旧存档、旧重放基线保持一致；读取方一律按「缺省 = all / 允许」处理。
+    ...(cardPoolScope === 'progressive' ? { cardPoolScope } : {}),
+    ...(allowRollback ? {} : { allowRollback: false }),
     resourceVersion: META.resourceVersion,
     rulesMode,
     cards: allCardDefs({ runtimeOnly: true, campaignId: CAMPAIGN.id }),
@@ -410,7 +428,9 @@ function createGameState(settings, players) {
   return state
 }
 
-function pickAiInvestigator(player, order, used) {
+// allowed 是「卡牌范围」收窄后的候选表：默认就是 PLAYABLE_INVESTIGATORS，
+// 所以普通对局的选人顺序不变；渐进式不会因为人设里的职业关键词挑到范围外的调查员。
+function pickAiInvestigator(player, order, used, allowed = PLAYABLE_INVESTIGATORS) {
   const persona = (player && player.persona) || ''
   const map = {
     guardian: ['守卫', '守护', '战斗', '枪', '战士', '警察', 'guardian'],
@@ -421,7 +441,7 @@ function pickAiInvestigator(player, order, used) {
   }
   for (const [klass, keys] of Object.entries(map)) {
     if (keys.some((k) => persona.includes(k))) {
-      const code = PLAYABLE_INVESTIGATORS.find((c) => ALL_INVESTIGATORS[c].klass === klass && !used.has(c))
+      const code = allowed.find((c) => ALL_INVESTIGATORS[c].klass === klass && !used.has(c))
       if (code) return code
     }
   }

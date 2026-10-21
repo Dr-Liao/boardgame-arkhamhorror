@@ -49,8 +49,11 @@ test('Arkham 开局可逐席选择 AI，人数切换保留选择且实际座位�
     const enemyDefeatSpeech = page.getByLabel('击败敌人回应频率', { exact: true })
     const exitDialogue = page.getByLabel('调查员退出本关时对话', { exact: true })
     const scenarioDialogue = page.getByLabel('关卡结束时对话', { exact: true })
+    // AI 感知剧情已并入 AI 高级设置，默认开启。
+    const storyAwareness = page.getByLabel('AI 感知剧情', { exact: true })
     // 弹窗初始值直接取 Mod 的默认设置：调默认值时不必再改这份用例，也不会和源码漂移。
     const { DEFAULT_AI_DIALOGUE_SETTINGS: AI } = await import('../src/ai/ai-dialogue.js')
+    await expect(storyAwareness).toBeChecked({ checked: true })
     await expect(routineSpeech).toHaveValue(String(AI.routineFrequency))
     await expect(selfTestSpeech).toHaveValue(String(AI.selfTestFrequency))
     await expect(otherTestSpeech).toHaveValue(String(AI.otherTestFrequency))
@@ -72,6 +75,21 @@ test('Arkham 开局可逐席选择 AI，人数切换保留选择且实际座位�
     await exitDialogue.uncheck()
     await page.getByRole('button', { name: '关闭 AI 高级设置', exact: true }).click()
     await expect(page.getByRole('dialog', { name: 'AI 高级设置' })).toHaveCount(0)
+
+    // 游戏高级设置：卡牌范围（默认全部）与回档开关（默认允许）。
+    await page.getByRole('button', { name: '修改游戏高级设置', exact: true }).click()
+    const gameSettings = page.getByRole('dialog', { name: '游戏高级设置' })
+    await expect(gameSettings).toBeVisible()
+    const scopeSelect = gameSettings.getByLabel('卡牌范围', { exact: true })
+    await expect(scopeSelect).toHaveValue('all')
+    await scopeSelect.selectOption('progressive')
+    const rollback = gameSettings.getByLabel('允许回档', { exact: true })
+    await expect(rollback).toBeChecked()
+    await rollback.uncheck()
+    await page.getByRole('button', { name: '关闭游戏高级设置', exact: true }).click()
+    await expect(page.getByRole('dialog', { name: '游戏高级设置' })).toHaveCount(0)
+    await expect(page.locator('.ah-ai-dialogue-settings').filter({ hasText: '游戏高级设置' })).toContainText('渐进式')
+    await expect(page.locator('.ah-ai-dialogue-settings').filter({ hasText: '游戏高级设置' })).toContainText('禁止')
 
     const teammates = page.getByRole('combobox', { name: /^AI 队友/ })
     const count = page.getByRole('combobox', { name: '席位数量' })
@@ -95,6 +113,9 @@ test('Arkham 开局可逐席选择 AI，人数切换保留选择且实际座位�
     const result = await (await created).json()
     expect(result.ok, result.error).toBe(true)
     expect(result.session.settings).toMatchObject({
+      aiStoryAwareness: 'on',
+      cardPoolScope: 'progressive',
+      allowRollback: 'off',
       aiRoutineSpeechFrequency: 0,
       aiSelfTestSpeechFrequency: 100,
       aiOtherTestSpeechFrequency: 20,

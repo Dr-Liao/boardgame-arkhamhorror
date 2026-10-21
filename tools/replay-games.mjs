@@ -276,6 +276,13 @@ export const REPLAY_RECIPES = Object.freeze([
     driver: 'p6', seed: 'p6-0', limit: 220, difficulty: 'easy',
   },
   {
+    id: 'notz-midnight-masks-only',
+    // P1 之后全员败退不再立刻结束战役，长跑会推进到第三关；这条固定在第二关内，
+    // 保证基线的「theMidnightMasks」关卡覆盖不退化。
+    note: '《夜之狂热》第二关：在午夜假面关卡内停住（覆盖该关的遭遇与行动）',
+    driver: 'p6', seed: 'p6-0', limit: 80, difficulty: 'easy',
+  },
+  {
     id: 'notz-gathering-pending-choice',
     note: '《夜之狂热》第一关：停在一个真实待决选择上（存档续玩的形态：pendingChoice + continuation 都要重放出来）',
     driver: 'p6', seed: 'p6-3', difficulty: 'easy', pauseAfter: 12, limit: 40,
@@ -284,6 +291,12 @@ export const REPLAY_RECIPES = Object.freeze([
     id: 'carcosa-curtain-call-hub',
     note: '《卡尔克萨之路》开幕：2 人局外准备 → 帷幕落下，覆盖 D1 敌人/地点与剧本钩子',
     driver: 'generic', seed: 'golden-carcosa', steps: 70, players: 2,
+    settings: { campaignId: 'thePathToCarcosa', playerInvestigator: '03001' },
+  },
+  {
+    id: 'carcosa-curtain-call-only',
+    note: '《卡尔克萨之路》开幕：停在帷幕落下的关卡内，保证基线覆盖 curtainCall',
+    driver: 'generic', seed: 'golden-carcosa', steps: 30, players: 2,
     settings: { campaignId: 'thePathToCarcosa', playerInvestigator: '03001' },
   },
   {
@@ -296,6 +309,12 @@ export const REPLAY_RECIPES = Object.freeze([
     id: 'tfa-untamed-wilds-hub',
     note: '《失落的时代》第一章：3 人局外准备 → 荒莽密林，覆盖探索牌库与中毒/补给',
     driver: 'generic', seed: 'golden-tfa', steps: 70, players: 3,
+    settings: { campaignId: 'theForgottenAge', playerInvestigator: '04001' },
+  },
+  {
+    id: 'tfa-untamed-wilds-only',
+    note: '《失落的时代》第一章：停在荒莽密林关卡内，保证基线覆盖 theUntamedWilds',
+    driver: 'generic', seed: 'golden-tfa', steps: 30, players: 3,
     settings: { campaignId: 'theForgottenAge', playerInvestigator: '04001' },
   },
   {

@@ -22,6 +22,9 @@ import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { buildCardIndex } from './build-card-index.mjs'
+import { collectSymbols, renderEntryModule } from './card-entry-source.mjs'
+
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
 const rel = file => path.relative(ROOT, file).split(path.sep).join('/')
 const abs = file => path.join(ROOT, file)
@@ -47,7 +50,7 @@ export const PACK_MANIFESTS = Object.freeze({
   'content/packs/dunwichSupport/manifest.js': 'content/packs/dunwichSupport/manifest.js',
 })
 
-export const BATCH_FILE = 'src/cards/ability-migration-batches.js'
+export const ENTRY_DIR = 'src/cards/entries'
 export const BATCH_LEDGER = 'audit/migration-batches.json'
 
 // 战役逃生原语：带这些前缀的效果动词说明"这张卡的语义在原语层表达不了"，
@@ -463,6 +466,17 @@ export function renderEntry(plan, matcherNames) {
   return lines.join('\n')
 }
 
+// 单卡文件的源码：与 renderEntry 同一份数据，但去掉外层数组缩进与尾逗号。
+// playCondition 的 `when` 在 plan 里是表达式文本（'ownFirstAction()'），必须还原成
+// __raw 占位再渲染，否则会变成字符串字面量、注册时无法当 predicate 调用。
+export function entryObjectSource(plan) {
+  const entry = { ...plan.entry }
+  if (Array.isArray(entry.playCondition)) {
+    entry.playCondition = entry.playCondition.map(item => ({ ...item, when: raw(item.when) }))
+  }
+  return render(entry, 0)
+}
+
 function matcherCallName(expression) {
   const match = /^([A-Za-z_$][\w$]*)\(/.exec(String(expression))
   return match ? match[1] : null
@@ -479,90 +493,8 @@ export function collectMatcherNames(plans) {
   return names
 }
 
-const BATCH_HEADER = `// 诡镇奇谈：卡牌版 · Phase 5 批量迁移批次（由 tools/migrate-card.mjs 维护）
-//
-// 这个文件是**迁移目标**：\`tools/migrate-card.mjs --write\` 把旧 DSL（EFFECTS）里
-// 可以机械搬家的条目改写成能力层描述子，追加到下面按批次分组的常量里，同时删掉
-// 旧条目本身。手写新卡**不要**加到这里——新卡直接写 src/cards/card-abilities.js。
-//
-// 文件结构：每个批次是一个标记块，工具的读写都靠这两行标记
-//     // >>> batch: <批次名>
-//     // <<< batch: <批次名>
-// 块里只有 \`export const BATCH_<批次名> = [...]\`（批次名会转成大写常量名），
-// 文件末尾的 MIGRATED_CARD_ENTRIES 由工具按块清单重新生成，不要手改。
-//
-// 迁移纪律（见 docs/phase5-migration.md）：
-//   · **搬槽位，不改写法**：\`event → played\`、\`skill → commit\`、\`weakness → weakness\`、
-//     \`onEnter → entersPlay\`、\`passive.stats → modifiers\`、\`abilities → action 描述子\`；
-//     数据对象原样保留，不顺手改写成 resolve 闭包（否则覆盖度、AI 解释、审计都会退化）。
-//   · 每次只搬「读点已经存在」的槽位；读点还没到位或字段没有对应能力时，工具会把这张卡
-//     判成不可机械迁移（residual 非空），留给后续批次，不静默近似。
-//   · 行为必须零变化：每批用 \`node tools/replay-fixtures.mjs --baseline/--compare\` 逐条比指纹。
-`
-
-function batchConstName(batch) {
-  return `BATCH_${String(batch).toUpperCase().replace(/[^A-Z0-9]+/g, '_')}`
-}
-
-// 解析生成文件里的批次块（保留人工块，按名称覆盖同名块）。
-// 只认「块内容以 export const BATCH_ 开头」的标记块，文件头的示意文字因此不会被误读。
-export function parseBatchFile(text) {
-  const blocks = new Map()
-  const pattern = /\/\/ >>> batch: ([^\n]+)\n([\s\S]*?)\n?\/\/ <<< batch: \1\n/g
-  for (const match of text.matchAll(pattern)) {
-    const name = match[1].trim()
-    if (!/^export const BATCH_/.test(match[2].trim())) continue
-    blocks.set(name, match[2])
-  }
-  return blocks
-}
-
-export function renderBatchFile(blocks, matcherNames) {
-  const names = [...matcherNames].sort()
-  const imports = names.length
-    ? `\nimport { ${names.join(', ')} } from '../engine/matcher.js'\n`
-    : ''
-  const body = [...blocks.entries()]
-    .filter(([, content]) => content.trim())
-    .map(([batch, content]) => `// >>> batch: ${batch}\n${content.replace(/\n?$/, '\n')}// <<< batch: ${batch}\n`)
-    .join('\n')
-  const aggregate = [...blocks.entries()]
-    .filter(([, content]) => content.trim())
-    .map(([batch]) => batchConstName(batch))
-  const footer = aggregate.length
-    ? `\nexport const MIGRATED_CARD_ENTRIES = [\n${aggregate.map(name => `  ...${name},`).join('\n')}\n]\n`
-    : '\nexport const MIGRATED_CARD_ENTRIES = []\n'
-  return `${BATCH_HEADER}${imports}${body}${footer}`
-}
-
-export function renderBatchBlock(batch, plans) {
-  const matcherNames = collectMatcherNames(plans)
-  // 只为了把 predicate 表达式写进源码：渲染时用占位文本，注册时由 matcher 组合子替换。
-  const entries = plans.map(plan => renderEntry(plan, matcherNames))
-  return `export const ${batchConstName(batch)} = [\n${entries.join('\n')}\n]\n`
-}
-
-// 拆出批次块里的逐卡条目，返回 Map(code → 源码片段)。
-// 同一批次分几次 --write 时，先前的条目必须原样保留，否则重跑一次就丢卡。
-export function parseEntryChunks(blockText) {
-  const chunks = new Map()
-  const open = blockText.indexOf('[')
-  const close = blockText.lastIndexOf(']')
-  if (open < 0 || close < open) return chunks
-  const body = blockText.slice(open + 1, close)
-  let index = 0
-  while (index < body.length) {
-    const brace = body.indexOf('{', index)
-    if (brace < 0) break
-    const end = scanBraces(body, brace)
-    const lineStart = body.lastIndexOf('\n', brace) + 1
-    const chunk = body.slice(lineStart, end)
-    const code = /code: '([^']+)'/.exec(chunk)?.[1]
-    if (code) chunks.set(code, `${chunk},`)
-    index = end
-  }
-  return chunks
-}
+// 迁移写入目标 = src/cards/entries/<code>.js（一张卡一个文件）。
+// 不再生成批次大数组；audit/migration-batches.json 只作为「哪张卡属于哪一批」的账本。
 
 // ---------------------------------------------------------------------------
 // 卡包登记
@@ -597,11 +529,19 @@ export async function loadState() {
 /**
  * 把一批计划写入仓库：
  *   1. 从 ENTRY_SOURCES 里删掉旧条目（同一份文本里改，最后统一落盘）；
- *   2. 生成/更新 ability-migration-batches.js 的批次块；
- *   3. 卡包清单登记 abilityLayerCodes（只有 dunwichPlayer / carcosaPlayer 需要）。
- * 返回 { removed, batches, registeredPacks }；调用方负责事后校验与账本更新。
+ *   2. 为每张卡写 src/cards/entries/<code>.js（一张卡一个文件，不生成批次大数组）；
+ *   3. 重建 entries/index.js；
+ *   4. 卡包清单登记 abilityLayerCodes（只有 dunwichPlayer / carcosaPlayer 需要）。
+ * 返回 { removed, files, registeredPacks }；调用方负责事后校验与账本更新。
  */
 export async function applyMigration(plans, { batch }) {
+  const { ALL_CARDS } = await import('../src/cards/cards-data.js')
+  // 先做完全部前置检查，再动旧 DSL；否则“目标文件已存在”会在删旧条目之后才报错，留下半迁移。
+  for (const plan of plans) {
+    if (existsSync(abs(`${ENTRY_DIR}/${plan.code}.js`))) {
+      throw new Error(`${plan.code} 的行为文件已存在：${ENTRY_DIR}/${plan.code}.js。迁移不覆盖已有条目，请人工合并。`)
+    }
+  }
   const texts = new Map()
   const read = async file => {
     if (!texts.has(file)) texts.set(file, await readFile(abs(file), 'utf8'))
@@ -639,28 +579,27 @@ export async function applyMigration(plans, { batch }) {
     if (result.added.length) registeredPacks.push({ manifest, added: result.added })
   }
 
-  const existing = existsSync(abs(BATCH_FILE)) ? await readFile(abs(BATCH_FILE), 'utf8') : BATCH_HEADER
-  const blocks = parseBatchFile(existing)
-  const matcherNames = collectMatcherNames(plans)
   for (const [file, text] of texts) await writeFile(abs(file), text, 'utf8')
-  // 同一批次可能分多次写入：先保留块里已有的条目，本次计划覆盖同号条目。
-  const merged = new Map(parseEntryChunks(blocks.get(batch) || ''))
-  for (const [code, chunk] of parseEntryChunks(renderBatchBlock(batch, plans))) merged.set(code, chunk)
-  const ordered = [...merged.entries()].sort(([left], [right]) => left.localeCompare(right))
-  blocks.set(batch, `export const ${batchConstName(batch)} = [\n${ordered.map(([, chunk]) => chunk).join('\n')}\n]\n`)
-  await mkdir(path.dirname(abs(BATCH_FILE)), { recursive: true })
-  await writeFile(abs(BATCH_FILE), renderBatchFile(blocks, collectBlockMatcherNames(blocks) || matcherNames), 'utf8')
-  return { removed, batch, registeredPacks }
-}
 
-// 生成文件里已经用到的组合子（重写文件时保持 import 完整）。
-// playCondition 的写法固定是 `when: <name>(`，只认这个位置，避免把数据里的同形文本算进来。
-function collectBlockMatcherNames(blocks) {
-  const names = new Set()
-  for (const content of blocks.values()) {
-    for (const match of content.matchAll(/when:\s*([A-Za-z_$][\w$]*)\(/g)) names.add(match[1])
+  await mkdir(abs(ENTRY_DIR), { recursive: true })
+  const files = []
+  for (const plan of plans) {
+    const file = `${ENTRY_DIR}/${plan.code}.js`
+    const card = ALL_CARDS[plan.code] || {}
+    const source = entryObjectSource(plan)
+    const module = renderEntryModule({
+      code: plan.code,
+      name: card.nameZh || card.name || plan.code,
+      text: card.textZh || card.text || '',
+      source,
+      comment: [`由 tools/migrate-card.mjs 从旧 DSL 迁移（批次 ${batch}）`],
+      symbols: collectSymbols(source),
+    })
+    await writeFile(abs(file), module, 'utf8')
+    files.push(file)
   }
-  return names
+  await buildCardIndex({ write: true })
+  return { removed, files, registeredPacks }
 }
 
 // ---------------------------------------------------------------------------
@@ -749,17 +688,19 @@ async function main() {
       for (const code of codes) {
         if (effects[code]) { console.error(`  ✖ ${name} 的 ${code} 仍有旧 DSL 条目`); failures++ }
         if (!registered.has(code)) { console.error(`  ✖ ${name} 的 ${code} 没有能力层条目`); failures++ }
+        if (!existsSync(abs(`${ENTRY_DIR}/${code}.js`))) {
+          console.error(`  ✖ ${name} 的 ${code} 没有单卡行为文件 ${ENTRY_DIR}/${code}.js`); failures++
+        }
       }
     }
-    console.log(failures ? `✖ ${failures} 处不一致` : `✔ ${Object.keys(ledger.batches || {}).length} 个批次与实现一致`);
+    console.log(failures ? `✖ ${failures} 处不一致` : `✔ ${Object.keys(ledger.batches || {}).length} 个批次与单卡文件一致`);
     process.exit(failures ? 1 : 0)
   }
 
   if (mode === '--rebuild') {
-    // 只重排生成文件（修复标记块、补齐 import 与聚合清单），不动旧 DSL。
-    const blocks = parseBatchFile(await readFile(abs(BATCH_FILE), 'utf8'))
-    await writeFile(abs(BATCH_FILE), renderBatchFile(blocks, collectBlockMatcherNames(blocks)), 'utf8')
-    console.log(`重建 ${BATCH_FILE}：${blocks.size} 个批次块`)
+    // 只重建 entries/index.js，不动旧 DSL，也不生成批次文件。
+    const result = await buildCardIndex({ write: true })
+    console.log(`重建 entries/index.js：${result.order.length} 张卡`)
     return
   }
 
@@ -800,6 +741,7 @@ async function main() {
   await writeBatchLedger(ledger)
   console.log(`批次 ${batchName}：写入 ${selected.length} 张卡（${selected.map(plan => plan.code).join(', ')}）`)
   for (const item of result.removed) console.log(`  删除旧条目 ${item.code} ← ${item.file}`)
+  for (const file of result.files) console.log(`  写入单卡文件 ${file}`)
   for (const item of result.registeredPacks) console.log(`  登记卡包 ${item.manifest}：${item.added.join(', ')}`)
   console.log('\n下一步：node tools/audit-abilities.mjs --write && node tools/replay-fixtures.mjs --compare <基线>'
     + ' && npm run test:fast')

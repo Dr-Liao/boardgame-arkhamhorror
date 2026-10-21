@@ -8,6 +8,8 @@
 //
 // 依赖注入同前；被依赖表引用的 do* 与本模块函数都用函数声明 + 惰性装配。
 
+import { cardPoolContext } from '../deck/card-pool.js'
+
 export function createDispatch(deps) {
   const {
     ALL_CARDS,
@@ -97,6 +99,7 @@ export function createDispatch(deps) {
     selectInitialHubScenario,
     stagePurchase,
     startScenario,
+    syncClues,
     unpaidExtraActionThreats,
     validateMove,
   } = deps
@@ -116,6 +119,9 @@ function applyMove(state, seat, move) {
   // 对局级动作日志：重放、撤销与 AI 决策回归都读它（见 src/engine/replay.js）。
   // 只记成功提交的动作；内容是可 JSON 存档的纯数据，不含闭包。
   actionLog.push({ seat, move: { ...move } })
+  // 公共线索是个人线索之和的派生值；内容层直接写 inv.clues 时在这里统一收敛，
+  // 避免「公共线索 0 / 个人线索 1」导致共同支付与幕推进读错。
+  if (!inHub(state) && state.uiState === 'inScenario') syncClues(state)
   state.legalMoves = legalMoves(state)
   if (!inHub(state)) events.push({ type: 'presentation', kind: 'checkpoint', tableState: captureTableState(state, getStat, getMaxSanity) })
   return events
@@ -286,8 +292,10 @@ function executeHubMove(state, seat, move, events) {
       const inv = state.investigators[seat]
       const built = move.action === 'hubSetDeck'
         ? buildDeckFromList(ALL_INVESTIGATORS[inv.code], move.codes,
-          { seat, seed: Math.floor(randomValue(state) * 4294967296), playerPool: corePlayerPool(), basicWeaknessPool: basicWeaknessPool(state) })
-        : buildDeck(ALL_INVESTIGATORS[inv.code], { seat, seed: Math.floor(randomValue(state) * 4294967296) })
+          { seat, seed: Math.floor(randomValue(state) * 4294967296), playerPool: corePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state) })
+        : buildDeck(ALL_INVESTIGATORS[inv.code], {
+          seat, seed: Math.floor(randomValue(state) * 4294967296), playerPool: corePlayerPool(state),
+        })
       if (built.errors?.length) throw new Error(`牌组无效：${built.errors.join('；')}`)
       const existing = campaign.investigators[seat]
       if (existing) {
@@ -309,17 +317,17 @@ function executeHubMove(state, seat, move, events) {
       break
     }
     case 'hubPurchase': {
-      const purchase = stagePurchase(campaign, seat, move.added, move.removed)
+      const purchase = stagePurchase(campaign, seat, move.added, move.removed, cardPoolContext(state))
       info(state, events, `${state.investigators[seat].name} 暂存升级（${purchase.cost} XP），等待确认。`)
       break
     }
     case 'hubConfirmUpgrades': finishUpgradeDraft(campaign, seat, true); break
     case 'hubCancelUpgrades': finishUpgradeDraft(campaign, seat, false); break
     case 'hubAutoUpgrade': {
-      const advice = recommendUpgrade(campaign.investigators[seat], campaign.records)
+      const advice = recommendUpgrade(campaign.investigators[seat], campaign.records, cardPoolContext(state))
       campaign.investigators[seat].upgradeAdvice = advice
       if (advice.added) {
-        stagePurchase(campaign, seat, advice.added, advice.removed)
+        stagePurchase(campaign, seat, advice.added, advice.removed, cardPoolContext(state))
         finishUpgradeDraft(campaign, seat, true)
       }
       state.hubUpgradedSeats[seat] = true

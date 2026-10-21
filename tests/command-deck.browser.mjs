@@ -20,6 +20,9 @@ test('全员角色、玩家身份、行动切换和四阶段在各尺寸显示',
   await page.goto('/index.html')
   await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
   await page.getByRole('button', { name: '开始新游戏' }).click()
+  await expect(page.locator('.ah-cinematic')).toBeVisible()
+  await page.getByRole('button', { name: '跳过演出' }).click()
+  await expect(page.locator('.ah-table')).not.toHaveClass(/ah-presenting/)
   const roster = page.getByRole('list', { name: '当前调查员' })
   await expect(roster.getByRole('listitem')).toHaveCount(4)
   await expect(roster.locator('.is-active')).toHaveAttribute('data-seat', '0')
@@ -49,7 +52,7 @@ test('全员角色、玩家身份、行动切换和四阶段在各尺寸显示',
   session.state.phase = 'enemy'; session.state.revision++
   await page.getByRole('button', { name: '刷新局势' }).click()
   await expect(roster.locator('.is-active')).toHaveAttribute('data-seat', '1')
-  await expect(roster.locator('.is-active')).toContainText('处理中')
+  await expect(roster.locator('.is-active')).toContainText('AI 等待继续')
   await expect(page.locator('.ah-header-phase[aria-current="step"]')).toContainText('敌军阶段')
   session.state.pendingChoice = null; session.state.phase = 'mythos'; session.state.revision++
   await page.getByRole('button', { name: '刷新局势' }).click()

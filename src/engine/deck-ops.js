@@ -362,7 +362,8 @@ function drawCards(state, inv, n, events) {
       // Phase 5（5a-22）：「黑暗回忆」这类抽到后留在手里的弱点由条目级 weaknessStaysInHand 声明。
       if (registeredEntry(def.code)?.weaknessStaysInHand) {
         inv.hand.push(code)
-        texts.push(cardName(code) + '留在手中；可支付费用打出，否则每回合结束受到 2 恐惧。')
+        const note = registeredEntry(def.code)?.weaknessHandNote
+        texts.push(note || cardName(code) + '留在手中；可支付费用打出，否则每回合结束受到 2 恐惧。')
       } else {
         resolveWeakness(state, inv, def, events, texts)
         if (inv.shuffleWeaknessAfterResolution === code) {

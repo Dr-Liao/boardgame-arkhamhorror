@@ -1,5 +1,6 @@
 import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
 import { PLAYER_CARD_CODES, CORE_UPGRADE_CODES, TFA_PLAYER_BUILDABLE_CODES, canSelectInvestigator, isCardAvailable } from '../deck/availability.js'
+import { allowsCard, filterCardCodes } from '../deck/card-pool.js'
 import { matchesDeckOptions, cardLimit, isPlayable, scoreCard, hashSeed } from '../deck/deckbuilding.js'
 import { validateDeckRules, upgradeQuote } from '../deck/deck-rules.js'
 import { registeredEntry } from '../engine/ability.js'
@@ -9,8 +10,9 @@ const tfaPool = [...TFA_PLAYER_BUILDABLE_CODES]
 const tfaPoolSet = new Set(tfaPool)
 // 失落的时代玩家卡只有在失落的时代调查员的记录里才是合法升级目标，
 // 这样新卡池不会改变既有循环的升级候选与 AI 推荐结果。
-const poolFor = record => record && /^04\d{3}$/.test(String(record.code || ''))
-  ? [...playerPool, ...tfaPool] : playerPool
+// context 是「卡牌范围」过滤语境（src/deck/card-pool.js）：null 表示不限制。
+const poolFor = (record, context = null) => filterCardCodes(
+  record && /^04\d{3}$/.test(String(record.code || '')) ? [...playerPool, ...tfaPool] : playerPool, context)
 const ordinary = code => playerPool.includes(code) || tfaPoolSet.has(code)
 const researchRequirement = Object.freeze({
   '02262': 'identifiedStrangeSolution',
@@ -26,12 +28,12 @@ const STARTING_XP = Object.freeze({ '04004': 5 })
 // 「老练分析」（04106）：带（未鉴定）/（未翻译）副标题的卡牌升级时，
 // 可以用 0 经验再升级一张同名副本，两张升级版本从合法选项中确定性地伪随机挑选。
 const UNRESOLVED_SUBTITLE = /(未鉴定|未翻译|Unidentified|Untranslated)/
-const shrewdAnalysisEligible = (record, removedCode) => {
+const shrewdAnalysisEligible = (record, removedCode, context = null) => {
   const removedDef = ALL_CARDS[removedCode]
   if (!removedDef || !UNRESOLVED_SUBTITLE.test(String(removedDef.subnameZh || removedDef.subname || ''))) return []
   const inv = INVESTIGATORS[record.code]
   if (!record.deck.includes('04106')) return []
-  return [...playerPool, ...tfaPool].filter(code => {
+  return filterCardCodes([...playerPool, ...tfaPool], context).filter(code => {
     const def = ALL_CARDS[code]
     if (!def || def.name !== removedDef.name || (def.xp || 0) === 0) return false
     if (!isCardAvailable(code) || !isPlayable(def) || !matchesDeckOptions(inv, def)) return false
@@ -43,10 +45,10 @@ const shrewdAnalysisEligible = (record, removedCode) => {
 const shrewdPick = (record, campaign, eligible) =>
   eligible[hashSeed(`${record.id}:${campaign.scenarioIndex}:${record.purchases.length}:${eligible.length}`) % eligible.length]
 
-export function shrewdAnalysisUpgrade(campaign, seat, removedCode) {
+export function shrewdAnalysisUpgrade(campaign, seat, removedCode, context = null) {
   const record = campaign.investigators[seat]
   if (!record) return null
-  const eligible = shrewdAnalysisEligible(record, removedCode)
+  const eligible = shrewdAnalysisEligible(record, removedCode, context)
   if (eligible.length < 1) return null
   // 需要牌组里还有另一张同名副本可以升级。
   if (!record.deck.includes(removedCode)) return null
@@ -111,9 +113,9 @@ export function updateCampaignStatus(campaign, seat) {
   return record.status
 }
 
-export function replacementCandidates(campaign) {
+export function replacementCandidates(campaign, context = null) {
   const used = new Set([...Object.values(campaign.investigators), ...campaign.retired].map(record => record.code))
-  return Object.keys(INVESTIGATORS).filter(code => canSelectInvestigator(code) && !used.has(code))
+  return Object.keys(INVESTIGATORS).filter(code => canSelectInvestigator(code) && !used.has(code) && allowsCard(code, context))
 }
 
 export function awardExperience(campaign, seat, amount) {
@@ -149,10 +151,10 @@ function upgradeDiscountsFor(record) {
   return discounts
 }
 
-export function replacementOptions(record, addedCode, campaignRecords = null) {
+export function replacementOptions(record, addedCode, campaignRecords = null, context = null) {
   const added = ALL_CARDS[addedCode]
   const inv = INVESTIGATORS[record.code]
-  if (record.status !== 'active' || !poolFor(record).includes(addedCode) || !isCardAvailable(addedCode)
+  if (record.status !== 'active' || !poolFor(record, context).includes(addedCode) || !isCardAvailable(addedCode)
     || !isPlayable(added) || !matchesDeckOptions(inv, added) || added.signatureFor || added.subtype) return []
   const requiredResearch = researchRequirement[addedCode]
   if (requiredResearch && !campaignRecords?.[requiredResearch] && !record.research?.[requiredResearch]) return []
@@ -194,15 +196,15 @@ export function settleExiledCards(campaign, entries = []) {
   return removed
 }
 
-export function availablePurchases(record, campaignRecords = null) {
-  return poolFor(record).filter(code => replacementOptions(record, code, campaignRecords).length)
+export function availablePurchases(record, campaignRecords = null, context = null) {
+  return poolFor(record, context).filter(code => replacementOptions(record, code, campaignRecords, context).length)
 }
 
-export function purchaseCard(campaign, seat, addedCode, removedCode) {
+export function purchaseCard(campaign, seat, addedCode, removedCode, context = null) {
   if (campaign.phase !== 'interlude' || campaign.upgradesAllowed === false) throw new Error('只能在允许升级的关间阶段升级牌组')
   const record = campaign.investigators[seat]
   if (!record) throw new Error('未知战役调查员')
-  const option = replacementOptions(record, addedCode, campaign.records).find(item => item.code === removedCode)
+  const option = replacementOptions(record, addedCode, campaign.records, context).find(item => item.code === removedCode)
   if (!option) throw new Error('非法升级：卡池、经验、职业、张数或移除依赖不满足')
   if (removedCode) record.deck.splice(record.deck.indexOf(removedCode), 1, addedCode)
   else record.deck.push(addedCode)
@@ -224,12 +226,12 @@ export function purchaseCard(campaign, seat, addedCode, removedCode) {
 
 export function upgradeRecord(record) { return record.upgradeDraft?.record || record }
 
-export function stagePurchase(campaign, seat, added, removed) {
+export function stagePurchase(campaign, seat, added, removed, context = null) {
   const original = campaign.investigators[seat]
   const record = structuredClone(upgradeRecord(original))
   delete record.upgradeDraft
   const temporary = { ...campaign, investigators: { ...campaign.investigators, [seat]: record } }
-  const purchase = purchaseCard(temporary, seat, added, removed)
+  const purchase = purchaseCard(temporary, seat, added, removed, context)
   original.upgradeDraft = { record, changes: [...(original.upgradeDraft?.changes || []), purchase] }
   return purchase
 }
@@ -242,11 +244,11 @@ export function finishUpgradeDraft(campaign, seat, commit) {
   campaign.xp = Object.values(campaign.investigators).reduce((sum, record) => sum + record.xp, 0)
 }
 
-export function recommendUpgrade(record, campaignRecords = null) {
+export function recommendUpgrade(record, campaignRecords = null, context = null) {
   record = upgradeRecord(record)
   const inv = INVESTIGATORS[record.code]
-  const candidates = availablePurchases(record, campaignRecords)
-    .flatMap(added => replacementOptions(record, added, campaignRecords).map(option => {
+  const candidates = availablePurchases(record, campaignRecords, context)
+    .flatMap(added => replacementOptions(record, added, campaignRecords, context).map(option => {
       const before = ALL_CARDS[option.code]
       const after = ALL_CARDS[added]
       const sameName = before?.name === after.name

@@ -107,6 +107,39 @@ export function validateDeckRules(investigator, codes, cards, { partial = false 
   return { errors, size: rules.size, count: counted.length, permanent: ordinary.length - counted.length }
 }
 
+// ---------------------------------------------------------------------------
+// 卡牌范围（开局「游戏高级设置」的 cardPoolScope）
+// ---------------------------------------------------------------------------
+// 全部（all）：不限制卡牌来源。
+// 渐进式（progressive）：只允许当前循环及更早循环的卡牌，超过当前循环的卡牌
+// 不能选人、不能构筑、也不能在关间升级。循环按卡号前两位识别（01 核心包、
+// 02 敦威治遗产、03 卡尔克萨之路、04 失落的时代……），与官方产品循环一致。
+// 浏览器与服务器共用这份纯规则：新战役必须登记循环，否则渐进式视为不限制。
+export const CARD_POOL_SCOPES = Object.freeze(['all', 'progressive'])
+export const CARD_POOL_SCOPE_LABELS = Object.freeze({ all: '全部', progressive: '渐进式' })
+export const CAMPAIGN_CYCLES = Object.freeze({
+  nightOfTheZealot: 1,
+  theDunwichLegacy: 2,
+  thePathToCarcosa: 3,
+  theForgottenAge: 4,
+})
+export function normalizeCardPoolScope(scope) {
+  return CARD_POOL_SCOPES.includes(scope) ? scope : 'all'
+}
+export function campaignCycle(campaignId) {
+  return CAMPAIGN_CYCLES[campaignId] ?? null
+}
+export function cardCycle(code) {
+  const match = /^(\d{2})\d{3}[a-z]?$/.exec(String(code ?? ''))
+  const cycle = match ? Number(match[1]) : 0
+  return cycle >= 1 && cycle <= 9 ? cycle : null
+}
+export function cardAllowedByScope(code, scope, currentCycle) {
+  if (normalizeCardPoolScope(scope) !== 'progressive' || !currentCycle) return true
+  const cycle = cardCycle(code)
+  return cycle == null || cycle <= currentCycle
+}
+
 export function upgradeQuote(added, removed, { discounts = [] } = {}) {
   const printed = (added.xp || 0) * (added.exceptional ? 2 : 1)
   const credit = removed && added.name === removed.name && (added.xp || 0) > (removed.xp || 0)

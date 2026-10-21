@@ -1,6 +1,7 @@
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
 import { awardStoryCard } from '../../../../../src/campaign/campaign-effects.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { chooseCandidate } from '../../../../choice-helpers.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { dunwichChaosToken, dunwichChaosAfterTest } from '../../dunwich-chaos.js'
 
@@ -205,10 +206,9 @@ export const behavior = {
       const allies = inv.hand.map((code, index) => ({ code, index }))
         .filter(item => ALL_CARDS[item.code]?.traits?.some(trait => trait.toLowerCase() === 'ally'))
       if (!allies.length) throw new Error('手牌中没有盟友')
-      const chosen = allies.length === 1 ? allies[0] : allies.find(item => item.index === Number(api.choose({
-        kind: 'card', source: '02071', seat: inv.seat, prompt: '选择要弃掉以换取线索的盟友支援。',
-        options: allies.map(item => ({ id: String(item.index), cardCode: item.code, label: ALL_CARDS[item.code]?.nameZh || item.code })),
-      })))
+      const chosen = chooseCandidate(api, { kind: 'card', source: '02071', seat: inv.seat, prompt: '选择要弃掉以换取线索的盟友支援。' }, allies, {
+        key: item => String(item.index), cardCode: item => item.code, label: item => ALL_CARDS[item.code]?.nameZh || item.code,
+      })
       inv.discard.push(inv.hand.splice(chosen.index, 1)[0]); state.scenarioFlags.loungeUsed = true; api.gainClues(inv.seat, 2)
     } else if (move.rule === 'buyDrink') {
       inv.resources -= 2; state.scenarioFlags.barUsed = true; api.gainClues(inv.seat, 2)

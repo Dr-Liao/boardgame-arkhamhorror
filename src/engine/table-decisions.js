@@ -1,6 +1,8 @@
 // table-decisions.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 台面决策层：谁在操作、能不能行动、行动代价与开局调度（mulligan / 起始调整）。
 // 读点：legalMoves（actingSeats / actionPreview）、validateHubMove、runMulligans。
+import { allowsCard, cardPoolContext } from '../deck/card-pool.js'
+
 export function createTableDecisions(deps) {
   const {
     ALL_INVESTIGATORS,
@@ -102,7 +104,8 @@ export function createTableDecisions(deps) {
     for (const inv of state.investigators) {
       if (inv.seat !== seat && state.hubSeatSelected?.[inv.seat]) unavailable.add(inv.code)
     }
-    return PLAYABLE_INVESTIGATORS.filter(code => !unavailable.has(code))
+    const context = cardPoolContext(state)
+    return PLAYABLE_INVESTIGATORS.filter(code => !unavailable.has(code) && allowsCard(code, context))
   }
 
   function initialHubPreparation(state) {
@@ -123,7 +126,7 @@ export function createTableDecisions(deps) {
       if (!hubLegalMoves(state, seat).some(m => m.action === 'hubSetDeck')) return '当前不能保存牌组'
       if (!Array.isArray(move.codes)) return '牌组必须是卡号数组'
       const built = buildDeckFromList(ALL_INVESTIGATORS[state.investigators[seat].code], move.codes,
-        { seat, seed: 1, playerPool: corePlayerPool(), basicWeaknessPool: basicWeaknessPool(state) })
+        { seat, seed: 1, playerPool: corePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state) })
       return built.errors?.length ? `自定义卡组无效：${built.errors.join('；')}` : null
     }
     return hubLegalMoves(state, seat).some(legal => Object.entries(legal)

@@ -34,11 +34,16 @@ function nearestWithTrait(state, from, trait) {
     .sort((left, right) => left.steps - right.steps)[0].enemy
 }
 
+// P0：调查员没有 id，只有 seat；用稳定的 key 同时覆盖实体与调查员，避免
+// options 里出现 undefined id 让整局无法提交。
+const choiceKey = (candidate, index) => String(candidate?.id ?? candidate?.seat ?? candidate?.code ?? index)
+
 function chooseOne(api, request, candidates, label = candidate => candidate.name || candidate.id) {
   if (!candidates.length) return null
   if (candidates.length === 1) return candidates[0]
-  const id = api.choose({ ...request, options: candidates.map(candidate => ({ id: candidate.id, label: label(candidate) })) })
-  return candidates.find(candidate => candidate.id === id) || candidates[0]
+  const id = api.choose({ ...request,
+    options: candidates.map((candidate, index) => ({ id: choiceKey(candidate, index), label: label(candidate) })) })
+  return candidates.find((candidate, index) => choiceKey(candidate, index) === id) || candidates[0]
 }
 
 function attachmentsWithCode(location, code) {

@@ -123,7 +123,7 @@ export function createStats(deps) {
     let v = inv[skill] || 0
     if (inv.handlingEncounter?.bonus) v += inv.handlingEncounter.bonus
     // 修正管线（modifiers.js）：声明式修正 + 旧式 passive 字段的桥接。
-    // 迁移完成的卡牌分支已从引擎删除，新的修正请写在 card-abilities.js 的 modifiers 里。
+    // 迁移完成的卡牌分支已从引擎删除，新的修正请写在 src/cards/entries/<code>.js 的 modifiers 里。
     const { delta, floor } = statPipeline(state, inv, skill)
     v += delta
     if (floor != null) v = Math.max(v, floor)
