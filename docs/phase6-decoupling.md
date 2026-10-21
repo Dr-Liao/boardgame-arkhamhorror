@@ -1766,3 +1766,33 @@ descriptorEntries 419 → 441   descriptorAbilities 344 → 366
 `replay --compare` 每张卡迁移后逐条一致；`fast` 2148 例 2141 通过、失败 7 条＝既有 7 条；
 `cards:audit --check` / `cards:workorder --check` / `audit-dead-primitives --check` /
 `replay:fixtures` / `core-ledger` 全绿。
+
+---
+
+## 42. 6e-9：拆出 harm-threat.js（伤害 / 威胁区 / 击败与淘汰）
+
+### 42.1 拆的是什么
+
+33 个声明（约 420 行）搬进 `src/engine/harm-threat.js`——「一次伤害/恐惧/威胁是怎么落到人身上的」：
+
+| 分组 | 函数 |
+| --- | --- |
+| 唯一承伤入口 | `assignHarm`（含 5 种分配策略）、`dealDamageAll`、`dealDamageExhausted` |
+| 击败与淘汰 | `checkDefeated`、`checkOutcome`、`defeatAll`、`eliminateInvestigator`、`unpaidExtraActionThreats`、`payActionCost` |
+| 威胁区 | `getThreatEffect`、`availableThreatAbilities`、`removeThreat`、`triggerThreatForced`、`applyThreatForced`、`assetsCannotReady`、`drawBlocked`、`canDisengage`、`disengageAll` |
+| 地点/支援上的伤害与治疗 | `damagedTargetsAtLocation`、`healDamageAtLocation`、`healHorrorNearby`、`moveHorrorToInvestigator` |
+| 研究与剧情小动作 | `recordResearch`、`researchSolution`、`dukeInvestigate`、`blankEnemy`、`ignoreChaos`、`returnAssetToHand`、`shuffleIntoEncounter` |
+
+### 42.2 现状
+
+| 文件 | 行数 |
+| --- | --- |
+| `src/engine/engine.js` | **4097**（6e-8 后 4394） |
+| `src/engine/harm-threat.js` | **480** |
+
+累计迁出约 **8557 行**（12654 → 4097，**−67.6%**）；模块数 33 → 34。
+
+### 42.3 门禁
+
+`replay --compare` 逐条一致（行为零变化）；`fast` 2148 例 2141 通过、失败 7 条＝既有 7 条；
+`cards:audit --check` / `audit-dead-primitives --check` / `replay:fixtures` 全绿。

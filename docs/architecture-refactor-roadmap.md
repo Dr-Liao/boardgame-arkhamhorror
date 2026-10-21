@@ -24,7 +24,7 @@
 
 | 项 | 当前值 | 说明 |
 | --- | --- | --- |
-| `src/engine/engine.js` | **4,398 行**（Phase 6 `6e` 之后；原 12,600） | 只剩顶层状态机、约 300 个小函数与 25 张依赖表的装配；拆出的模块见 [`phase6-handoff.md`](phase6-handoff.md) §2 与 [`phase6-decoupling.md`](phase6-decoupling.md) §38–§44 |
+| `src/engine/engine.js` | **4,097 行**（Phase 6 `6e` 之后；原 12,600） | 只剩顶层状态机、约 270 个小函数与 26 张依赖表的装配；拆出的模块见 [`phase6-handoff.md`](phase6-handoff.md) §2 与 [`phase6-decoupling.md`](phase6-decoupling.md) §38–§42 |
 | `EFFECTS` 行为条目 | **30** | Phase 5 迁走 328 条；Phase 6 的 6e-2 删掉 5 条纯登记条目，6e-8 把 22 张「快速反应事件」搬到 `played` 描述子。通道分布（按卡）：descriptor 432 / legacy 20 / hybrid 9 / data 4 / escape 0 / engine 0，见 `audit/ability-coverage.json` |
 | `EFFECTS` 顶层字段 | **30** | 生命周期/metadata/条件混在一起（`engine` 字段已随 6e-2 归零；`cards:audit` 现算 **30** 个键） |
 | 引擎里的卡号字面量 | **0 个** ✅ | `tests/phase6-guard.test.mjs` 把「引擎内无卡号」变成门禁（6a 清零，`reference` 28 个也数据化） |
@@ -684,7 +684,7 @@ maxHealth / cardSanity
 删除 `EFFECTS` 行为读点（先留一版兼容层）→ 拆分 `engine.js`（卡号分支删完后自然变小，目标单文件 < 2.5k 行）→ 战役机制插件化（TFA 作为第一个搬家对象：`stateSlice` / `project` / `actions+hooks` / `agentHints`）。
 
 **进展（截至 6e）**：引擎里的卡号字面量 **28 → 0**、战役名 **2 → 0**，`tests/phase6-guard.test.mjs` 把这两条变成门禁；
-`engine.js` **12654 → 4398 行（−65.2%）**，已拆出 **33 个模块**
+`engine.js` **12654 → 4097 行（−67.6%）**，已拆出 **34 个模块**
 （`tests` / `moves` / `setup` / `combat` / `dispatch` / `enemies` / `deck-ops` / `encounter` / `actions` /
 `actions-extra` / `scenario-runtime` / `turn` / `ability-exec` / `ability-rules` / `skill-effects` /
 `reveal` / `phases` / `api-*` / `hub` / `table-decisions` / `weakness` / `campaign-flow` / `movement` /
@@ -700,7 +700,7 @@ maxHealth / cardSanity
 于是 ③ 开始清零：6e-2 删掉最后 5 条纯登记条目（57 → 52），6e-8 把 22 张快速反应事件搬进描述子（52 → 30）。
 
 剩余：`EFFECTS` 30 条（20 legacy + 9 hybrid + 1 data 占位）、`effectsTopLevelFields` 30 项、
-继续拆 `engine.js` 到 < 2.5k、战役插件化第二批（`stateSlice` / 观察投影 / `agentHints`）。
+继续拆 `engine.js` 到 < 2.5k（当前 4097）、战役插件化第二批（`stateSlice` / 观察投影 / `agentHints`）。
 
 **门禁**：`engine.js` / `observation.js` 内不出现 `tfa|carcosa|dunwich` 字样与具体卡号；新增战役只加 `content/campaigns/<id>/`。
 
@@ -714,7 +714,7 @@ maxHealth / cardSanity
 | 3 内容来源 | 2–3 周 | ✅ 完成（D1/D3 首批/D4） | 4 |
 | 4 重放安全网 | 2 周 | ✅ 完成（golden 基线 + 100 局门禁 + 撤销 API） | 1–3 |
 | 5 迁移 | 4–6 周 | ✅ 5c 三十九批（93/93）、✅ 5b 全部、✅ 5a 行为分支清零 | — |
-| 6 收尾 | 持续 | 🚧 ①② 完成（卡号 0 / 战役名 0）；③ 观测面已解耦、`EFFECTS` 57 → 30；④ engine.js 拆到 −65.2%（4391 行）+ 战役插件化第一批 | — |
+| 6 收尾 | 持续 | 🚧 ①② 完成（卡号 0 / 战役名 0）；③ 观测面已解耦、`EFFECTS` 57 → 30；④ engine.js 拆到 −67.6%（4097 行）+ 战役插件化第一批 | — |
 | **合计** | **13–17 周** | | 两人并行约 8–10 周 |
 
 ---
