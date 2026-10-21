@@ -6,6 +6,9 @@ import { contentRegistry } from '../../content/registered.js'
 import { projectTableState, locationEntryErrors, maskHiddenLocations, publicAttachments, attachLocationCards, publicCardInstance } from './presentation-state.js'
 import { campaignStory } from '../campaign/story.js'
 import { choiceOptionsFor, choiceSeats } from '../engine/resolution.js'
+// Phase 6（战役插件化第二批）：战役专属状态的公开投影收进内容层
+// （探索牌库 / 古代遗物 / 领队 / 复仇 / 伊格之怒 / 两个剧本的公开标记）。
+import { campaignProjection } from '../cards/campaign-view.js'
 
 const PUBLIC_STATE_FIELDS = [
   'schemaVersion', 'rulesVersion', 'resourceVersion', 'rulesMode', 'revision',
@@ -116,44 +119,8 @@ export function viewState(state, observerSeat = null) {
   view.campaignStory = campaignStory(state, contentRegistry, observer)
   view.agendaDoom = agendaDoom(state)
   view.totalDoom = totalDoom(state)
-  // 失落的时代：只投影公开的剧本状态。探索牌库是背面朝下的随机牌堆，只公开张数；
-  // 弃牌堆、古代遗物位置、领队座位、复仇合计与伊格之怒都是公开信息。
-  view.exploration = {
-    deck: Array.isArray(state.explorationDeck) ? state.explorationDeck.length : 0,
-    discard: [...(state.explorationDiscard || [])],
-  }
-  view.relicOfAges = state.relicOfAges
-    ? { code: state.relicOfAges.code, location: state.relicOfAges.location ?? null, seat: state.relicOfAges.seat ?? null }
-    : null
-  // 命运之线：亚历山卓的位置、伊塔卡的猎物与目的地都是公开信息（卡在桌上/记录里）。
-  if (state.scenario?.id === 'threadsOfFate') {
-    const flags = state.scenarioFlags || {}
-    const alejandro = flags.alejandro || null
-    view.threadsOfFate = {
-      alejandro: alejandro
-        ? { code: alejandro.code || '04051', location: alejandro.location ?? null, enemyId: alejandro.enemyId ?? null }
-        : null,
-      prey: [...(flags.ichtacasPrey || [])],
-      destinations: [...(flags.ichtacasDestinations || [])],
-    }
-  }
-  // 幽嘶深渊：深度、追击区、瓦卢西亚之子与密谋旁附属都是桌上公开信息。
-  if (state.scenario?.id === 'theDepthsOfYoth') {
-    const flags = state.scenarioFlags || {}
-    const zones = state.scenarioZones || {}
-    const agenda = state.agendas?.[state.agendaIndex]
-    view.depths = {
-      depthLevel: Number(flags.depthLevel || 1),
-      pursuit: [...(zones.pursuit || [])],
-      childrenOfValusia: [...(zones.childrenOfValusia || [])],
-      agendaAttachments: (agenda?.attachments || []).map(entry => entry.code || entry.originalCode),
-    }
-  }
-  view.expeditionLeaderSeat = Number.isInteger(state.expeditionLeaderSeat)
-    ? state.expeditionLeaderSeat
-    : (Number.isInteger(state.campaign?.expeditionLeader) ? state.campaign.expeditionLeader : null)
-  view.vengeance = (state.victoryDisplay || []).reduce((sum, card) => sum + (card.vengeance || 0), 0)
-  view.yigsFury = Number(state.campaign?.records?.yigsFury || 0)
+  // 失落的时代 / 命运之线 / 幽嘶深渊的公开状态由内容层投影（见 src/cards/campaign-view.js）。
+  Object.assign(view, campaignProjection(state))
   view.scenarioFlagsPublic = Object.fromEntries(PUBLIC_SCENARIO_FLAGS
     .filter(key => state.scenarioFlags?.[key] != null)
     .map(key => [key, state.scenarioFlags[key]]))

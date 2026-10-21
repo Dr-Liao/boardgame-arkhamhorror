@@ -18,6 +18,13 @@ const interlude = (id, next) => ({
 export const manifest = {
   schemaVersion: CONTENT_SCHEMA_VERSION,
   id: 'theForgottenAge',
+  // Phase 6（战役插件化：agentHints）：给 AI 的公开决策提示（不含隐藏信息）。
+  agentHints: [
+    '补给由全队共同持有：判断「检查补给」时看同地点任一调查员是否持有。',
+    '探索牌库背面朝下，只能依据张数规划；翻开后地点会与当前位置相连。',
+    '古代遗物的位置与持有者是公开信息；领队座位决定部分反应的先后。',
+    '复仇点数会累加进伊格之怒，伊格之怒越高，后面的议程越危险。',
+  ],
   name: '失落的时代',
   nameEn: 'The Forgotten Age',
   contentVersion: '0.1.0',

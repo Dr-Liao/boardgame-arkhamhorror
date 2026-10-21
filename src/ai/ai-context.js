@@ -8,6 +8,7 @@ import { upgradeRecord } from '../campaign/campaign.js'
 import { legalMoves, actionPreview, getStat, actingSeats, actObjectiveContext } from '../engine/engine.js'
 import { investigatorParticipation } from './ai-participation.js'
 import { storyDecisionContext } from './ai-story.js'
+import { campaignAgentHints } from '../cards/campaign-view.js'
 
 const counts = codes => Object.fromEntries([...new Set(codes)].sort().map(code => [code, codes.filter(c => c === code).length]))
 const card = code => {
@@ -31,6 +32,9 @@ export function aiDecisionContext(state, seat) {
       locationId: i.location, clues: i.clues,
       ...investigatorParticipation(state, i),
       stats: Object.fromEntries(['willpower', 'intellect', 'combat', 'agility'].map(k => [k, getStat(state, i, k)])) })) }
+  // Phase 6（战役插件化：agentHints）：战役作者提供的公开提示；旧战役为空、提示词不变。
+  const campaignHints = campaignAgentHints(state)
+  if (campaignHints.length) data.campaignHints = campaignHints
   const known = new Set(inv.hand)
   for (const i of state.investigators) for (const c of [...i.assets, ...i.threat]) known.add(c.code)
   for (const code of inv.discard) known.add(code)

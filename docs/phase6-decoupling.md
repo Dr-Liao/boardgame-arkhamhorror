@@ -1902,3 +1902,35 @@ engine.js：2403 → 2375 行（累计 12654 → 2375，−81.2%）
 `replay --compare` 全程逐条一致；`fast` 2148 例 2141 通过、失败 7 条＝既有 7 条；
 `cards:audit --check`（白名单已空）/ `cards:workorder --check` / `audit-dead-primitives --check` /
 `migrate-card --verify` / `replay:fixtures` / `phase6-guard` 全绿。
+
+---
+
+## 45. 6e-17：战役插件化第二批（project + agentHints）
+
+### 45.1 搬了什么
+
+| 项 | 之前 | 现在 |
+| --- | --- | --- |
+| 公开投影 | `src/integration/observation.js` 直接读 `state.explorationDeck` / `state.relicOfAges` / `state.expeditionLeaderSeat` / `state.campaign.records.yigsFury` / 胜利区复仇合计 / 两个剧本的公开标记 | `src/cards/campaign-view.js` 的 `campaignProjection(state)`；observation 只做 `Object.assign(view, campaignProjection(state))` |
+| AI 提示 | 无战役级提示（只有通用规则与卡面摘要） | 战役清单可以声明 `agentHints: string[]`；`campaignAgentHints(state)` 读取，`ai-context.js` 只在非空时写入 `campaignHints` |
+
+字段名与被投影值**逐字保留**（`exploration.deck` / `relicOfAges` / `expeditionLeaderSeat` /
+`vengeance` / `yigsFury` / `threadsOfFate` / `depths`），因此前端与既有验收用例不需要改；
+只有「谁提供这份投影」变了。TFA 清单先声明了 4 条公开提示（补给共享 / 探索牌库背面朝下 /
+遗物与领队公开 / 复仇进伊格之怒），其它战役不声明 ⇒ 提示词完全不变。
+
+### 45.2 门禁
+
+新增 `tests/phase6-campaign.test.mjs`（5 条，fast tier）：
+投影字段与旧口径一致（探索只给张数、弃牌堆给内容）、遗物/领队/复仇/伊格之怒、两个剧本标记只在对应关卡出现、
+`agentHints` 读取（没有清单时为空）、**observation.js 不再出现战役字段名的机械守卫**。
+
+`fast` 2153 例 2146 通过、失败 7 条＝既有 7 条；`replay --compare` 逐条一致
+（投影与提示都不进状态指纹）；`phase6-guard` / `architecture-guard` 保持绿。
+
+### 45.3 还差什么（第三批的入口）
+
+- **stateSlice**：`carcosaPlayDiscount` / `tfaDamageBonus` / `carcosaShroudModifier` 等
+  战役专属字段仍由若干引擎模块直接读写；下一步用 `campaignSlice(state)` 暴露读写器，
+  引擎只经访问器访问（**字段名不改**，否则 `stateHash` 变）。
+- `EFFECTS` 读点回落分支清理：`registeredEntry(code)?.x ?? EFFECTS[code]?.x` 的右半边已永远取不到值。
