@@ -1,0 +1,316 @@
+{
+  "seed": "view-hash-baseline",
+  "note": "逐字节视图基线（阶段 A 门禁）；重跑 node tools/capture-view-hashes.mjs 校验",
+  "fixtures": {
+    "hub-open": {
+      "revision": 0,
+      "uiState": "campaignHub",
+      "seats": {
+        "0": {
+          "sha256": "d61a485f002c6810dd5e176c07e3cba37c8332225808055174c1a322f91a2c69",
+          "bytes": 896212
+        },
+        "1": {
+          "sha256": "cdf7c799e2b0b26a356f14a70280f4858db47c4c3af541d598e1b172af4e3343",
+          "bytes": 895459
+        },
+        "2": {
+          "sha256": "cdf7c799e2b0b26a356f14a70280f4858db47c4c3af541d598e1b172af4e3343",
+          "bytes": 895459
+        },
+        "3": {
+          "sha256": "cdf7c799e2b0b26a356f14a70280f4858db47c4c3af541d598e1b172af4e3343",
+          "bytes": 895459
+        }
+      }
+    },
+    "scenario-open": {
+      "revision": 0,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "5b8820b0338b8aeb818eddce350ca3859d08a469d544adcdb3951615edd30656",
+          "bytes": 262474
+        },
+        "1": {
+          "sha256": "ca91f7dac3c9d404384cb14b8032991ebe04a9fa42be488dd5a5aa3402026f96",
+          "bytes": 261694
+        },
+        "2": {
+          "sha256": "54a759890ca40436eed49bffbc4b93a102a17c4de2d6ffb7da7086d4297ed6ee",
+          "bytes": 261694
+        },
+        "3": {
+          "sha256": "06c8400095393c0c6aa513510fd71884222512a8e88c788a60b09ecd423d90eb",
+          "bytes": 261694
+        }
+      }
+    },
+    "choice-mulligan": {
+      "revision": 1,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "a4d3d08183ea33a2e7fe2d9b05ca31fd9d934872f9163bcbad2c6d926908604f",
+          "bytes": 261762
+        },
+        "1": {
+          "sha256": "999b149e8bcfa744ed4463bca914873a2ad5cc62b1d36de20f40d22bf4e6bd70",
+          "bytes": 262540
+        },
+        "2": {
+          "sha256": "3e5c4c73c27dd9a5f1bdd848431c7871d34022d9e137287d1b597544fa765224",
+          "bytes": 261754
+        },
+        "3": {
+          "sha256": "ce61d127efbfb3e228c937009bd395ccf72e02c8ce965f1a3511c7614b10fefb",
+          "bytes": 261754
+        }
+      }
+    },
+    "choice-turnOrder": {
+      "revision": 4,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "3d25af3777c63511b63735822ddcea2e843cc6df87f8609a64f1e353e7e10cc6",
+          "bytes": 262078
+        },
+        "1": {
+          "sha256": "96dbfd23b3659f3ed2686fb577b992493a6ca193320107a587d827567dce347a",
+          "bytes": 262070
+        },
+        "2": {
+          "sha256": "b0a89b9523a13157d2b257e871bb9b6d6ce933c4a73bb69ef3814eefc19d0f27",
+          "bytes": 262070
+        },
+        "3": {
+          "sha256": "699c14c4bc7b8dab0d195d69dba5048014a9ec8f14054119c2377cc689341dfd",
+          "bytes": 262070
+        }
+      }
+    },
+    "choice-playerWindow": {
+      "revision": 6,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "78d8dbdeaa4c99c88390fd2d45ef3753a9f76933257505bb1b9f0bc9eb4c7147",
+          "bytes": 264946
+        },
+        "1": {
+          "sha256": "723aa9d654276367978f1d7fd2aa3e24bd6fb01ccdffcd77ddf9f0a12762e09c",
+          "bytes": 261801
+        },
+        "2": {
+          "sha256": "762b28d164ab30a62ca1d18fcf1ec949c91bcab3466799099a86312f9841b2ea",
+          "bytes": 261801
+        },
+        "3": {
+          "sha256": "da321c8920be36554186bc2c56cb365174bb56ccc935104799af9af3877ba73d",
+          "bytes": 261801
+        }
+      }
+    },
+    "private-test": {
+      "revision": 6,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "78d8dbdeaa4c99c88390fd2d45ef3753a9f76933257505bb1b9f0bc9eb4c7147",
+          "bytes": 264946
+        },
+        "1": {
+          "sha256": "723aa9d654276367978f1d7fd2aa3e24bd6fb01ccdffcd77ddf9f0a12762e09c",
+          "bytes": 261801
+        },
+        "2": {
+          "sha256": "762b28d164ab30a62ca1d18fcf1ec949c91bcab3466799099a86312f9841b2ea",
+          "bytes": 261801
+        },
+        "3": {
+          "sha256": "da321c8920be36554186bc2c56cb365174bb56ccc935104799af9af3877ba73d",
+          "bytes": 261801
+        }
+      }
+    },
+    "choice-commit": {
+      "revision": 7,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "77e75a66b5c00e6a56039d9fc26b92f6372085e66535c3c8720e366e260e60be",
+          "bytes": 264852
+        },
+        "1": {
+          "sha256": "762f984dc062e46037cd76403fd592b524f7709bb1dcaf9841296f42d1f1deae",
+          "bytes": 261801
+        },
+        "2": {
+          "sha256": "9e47d64fe1dd8bdf8deb04eb54298c28bf0e16533a7089353b2de070092bd31b",
+          "bytes": 261801
+        },
+        "3": {
+          "sha256": "153e3d460d418366ebb26a95e3ed8b995eec9e64b340f08c4327f2156a42dad4",
+          "bytes": 261801
+        }
+      }
+    },
+    "choice-reaction": {
+      "revision": 9,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "652643f6e02920f1e649e632646d399864c4be7779893404d29275d25f8deb45",
+          "bytes": 264618
+        },
+        "1": {
+          "sha256": "4b315e231339ebc8ba4f8d98e28aad2552fe609cc9d9f6e8359bd358854d3877",
+          "bytes": 261800
+        },
+        "2": {
+          "sha256": "02476df7a98eff45c07c447fffa1f4ae79549e4c61fd985229ae3f519aef89e7",
+          "bytes": 261800
+        },
+        "3": {
+          "sha256": "c82396cc92b89151c3f482a266aade75e654406eed98b2962d925427c62b533c",
+          "bytes": 262222
+        }
+      }
+    },
+    "midgame-40": {
+      "revision": 40,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "6d84c33b7f6aee37d2dea110b33a8a92e63f78c41f5b2e369a18e74ab6848a99",
+          "bytes": 262918
+        },
+        "1": {
+          "sha256": "f118c115932fec28bad010d157c0903b32abe430c517ffbc331e285eabdeffc5",
+          "bytes": 262910
+        },
+        "2": {
+          "sha256": "a7eaf46d4d394f16532fb58be67e168cd8b8c4ab44c7ddcf1e827340bf7521ae",
+          "bytes": 262910
+        },
+        "3": {
+          "sha256": "956418dc8277311e207a3ab0cf7659f44a41ffedf27af6a33f39d613324f7d3d",
+          "bytes": 263227
+        }
+      }
+    },
+    "choice-discard": {
+      "revision": 76,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "b6de19f49969859877cc3d3ec8956442632e9270df245761a9201b8ab357ab2c",
+          "bytes": 266464
+        },
+        "1": {
+          "sha256": "414827b05589911f451b7800f6677c3882907f1829bd5596e3dc6083f696d315",
+          "bytes": 266456
+        },
+        "2": {
+          "sha256": "c21a5e45a7376c33cd3011520003a553dc0c917deab8d22e2c5418e86d8a0780",
+          "bytes": 266456
+        },
+        "3": {
+          "sha256": "31f7cfd1a470059de26bc908cfa063a5ff3ea90e7961110a11b6d5035b27ffc5",
+          "bytes": 267588
+        }
+      }
+    },
+    "choice-agenda": {
+      "revision": 78,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "26fc06acc5aae9d058e03609760de639356793817181729d0e2b68370264393a",
+          "bytes": 267055
+        },
+        "1": {
+          "sha256": "f6fa85fcd424ef56b46ded096ccba24d2c916ca808fda2b51385b1614e2755a2",
+          "bytes": 266727
+        },
+        "2": {
+          "sha256": "b60e3c3b77f7f7d65faa11f63e51acc8d902c995ec87366892a89b6b90658630",
+          "bytes": 266727
+        },
+        "3": {
+          "sha256": "0d49345a3f40ff07f4d5b5f014ad0ebf406efe8d4c7ad173b821cbc7ef82350a",
+          "bytes": 266735
+        }
+      }
+    },
+    "midgame-80": {
+      "revision": 80,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "69435f2b152a6443f1944f4cadf7a82955c0f8e9cc7914b5db9d7466f0640fc2",
+          "bytes": 270808
+        },
+        "1": {
+          "sha256": "1a19a7e4df0c4af4df12c265041920f8aa7a39d3fb482fae85ccc32685e5975b",
+          "bytes": 269783
+        },
+        "2": {
+          "sha256": "cea7e53bbf55a2ad10e3c5fec9619a2a6a33e799eeaaef4e4438bb9abfdc723d",
+          "bytes": 269783
+        },
+        "3": {
+          "sha256": "2720caffea3947e478a9c6e29d8f5b5be2baa7a88d6ecd99dbaea18c7c56ae5f",
+          "bytes": 269791
+        }
+      }
+    },
+    "midgame-final": {
+      "revision": 120,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "c0b998cbce49ae7391b1117b8ba4d2c394d9bfaa4a12af1d5f5ecbe61b37bf50",
+          "bytes": 269909
+        },
+        "1": {
+          "sha256": "e53eeef055275d6aea7374aefb198e6952786b17bbc298af01fe8185d7409265",
+          "bytes": 269893
+        },
+        "2": {
+          "sha256": "d1827df75fff7cf5ff3fdf0bae0f13d344f5474d5966ae0dd2e5f22919107955",
+          "bytes": 271062
+        },
+        "3": {
+          "sha256": "f3e232bebfd2f90b93a17504e61fc885c45deae83d7111cb02a43f1b192b960f",
+          "bytes": 269893
+        }
+      }
+    },
+    "seats-1": {
+      "revision": 40,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "e60ed3300d592cd07f5d291194f143eeddedcffa1479e22c8f355cdfc8aa8f7e",
+          "bytes": 228618
+        }
+      }
+    },
+    "seats-2": {
+      "revision": 40,
+      "uiState": "inScenario",
+      "seats": {
+        "0": {
+          "sha256": "5b7f535bbe86f38fdf2b172729fee0e276d42aa279a626bc82decf9a0ad750ee",
+          "bytes": 212983
+        },
+        "1": {
+          "sha256": "e285ea6348dedac7d2b103e072d3a01aceb2eef10afc990122a7f98caa684e31",
+          "bytes": 214030
+        }
+      }
+    }
+  }
+}

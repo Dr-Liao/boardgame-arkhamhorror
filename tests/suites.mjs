@@ -15,6 +15,7 @@ export const FAST_TESTS = Object.freeze([
   'hall-boundary.test.mjs', // 0.2
   'card-identity.test.mjs', // 0.8
   'state-presentation.test.mjs', // 0.7
+  'view-privacy.test.mjs', // 1.2 —— 观察投影隐私边界（阶段 A 拆分护栏：手牌/牌组/选项/私人检定）
   'attack-style.test.mjs', // 0.7
   'rules-n3.test.mjs', // 3.4
   'p0-regressions.test.mjs', // P0：选择 id / 弱点 / 基础弱点池 / 能力 API / 杜克 / 苍白面具

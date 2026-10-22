@@ -142,18 +142,26 @@ export function createCardDefs(deps) {
     return out
   }
 
-  function embeddedCardDefs(state, campaignId) {
+  // 展示用卡面定义表。
+  //   不传 options：包含全场所有人的手牌/牌组/压牌（建局与存档快照用，权威且完整）。
+  //   传 { observerSeat }：按观察者收窄，别人的手牌/牌组/压牌不进来（观察投影用）。
+  //     observerSeat = null 表示没有观察者，只保留公共可见的卡。
+  function embeddedCardDefs(state, campaignId, options = {}) {
+    const filtered = Object.hasOwn(options, 'observerSeat')
+    const seatVisible = seat => !filtered || seat === options.observerSeat
     const codes = new Set()
     for (const inv of state.investigators || []) {
+      const own = seatVisible(inv.seat)
       codes.add(inv.code)
-      for (const code of [...(inv.hand || []), ...(inv.deck || []), ...(inv.discard || [])]) codes.add(code)
+      for (const code of [...(own ? inv.hand || [] : []), ...(own ? inv.deck || [] : []), ...(inv.discard || [])]) codes.add(code)
       for (const card of [...(inv.assets || []), ...(inv.threat || [])]) {
         codes.add(card.code)
         for (const code of card.attached || []) codes.add(code)
       }
-      for (const code of inv.beneath || []) codes.add(code)
+      if (own) for (const code of inv.beneath || []) codes.add(code)
     }
     for (const record of Object.values(state.campaign?.investigators || {})) {
+      if (!seatVisible(record.seat)) continue
       for (const code of record.deck || []) codes.add(code)
     }
     for (const card of state.victoryDisplay || []) codes.add(card.code)

@@ -198,7 +198,9 @@ export function viewState(state, observerSeat = null) {
   }
   for (const card of [...(state.storyAssets || []), ...(state.victoryDisplay || [])]) visibleCodes.add(card.code)
   if ([...visibleCodes].some(code => code && !view.cards?.[code])) {
-    const defs = embeddedCardDefs(state, state.campaign?.id)
+    // 只补「公共可见 + 本人手牌」的卡面：别人的手牌/牌组卡面若被顺带补进来，
+    // 等于泄露「他手里有这张牌」。观察者过滤在建局快照（不传 options）里保持全量。
+    const defs = embeddedCardDefs(state, state.campaign?.id, { observerSeat: observer })
     // cards 是派生展示表（见 replay.js 的 DERIVED_KEYS，不进重放指纹）：顺手补回权威状态算自愈，
     // 旧存档与中途加入的卡只补这一次；视图侧再克隆一份，避免与权威状态共享实例。
     Object.assign(state.cards ||= {}, defs)

@@ -33,6 +33,33 @@ test('关卡检查点只保留文字历史，不复制整桌演出快照', () =>
   assert.equal(session.events[0].tableState.investigators[0].hand[0], '01020', '不得改动线上事件')
 })
 
+test('旧版检查点的演出快照在迁移时压缩，输入保持只读', () => {
+  const checkpoint = {
+    checkpointId: 'scenario:nightOfTheZealot:theGathering:1',
+    visitId: 'theGathering:1',
+    snapshot: {
+      // 旧版没有迁移状态的问题不在本用例范围：只验证事件压缩本身。
+      events: [
+        { seq: 0, type: 'move', seat: 0, text: '移动', tableState: { investigators: [{ seat: 0, hand: ['01020'] }] } },
+        { seq: 1, type: 'presentation', tableState: { enemies: ['rat'] }, presentation: { kind: 'reveal', tableState: { enemies: ['rat'] }, from: 'deck' } },
+        { seq: 2, type: 'chat', seat: 1, text: '保持这条文字' },
+      ],
+    },
+  }
+  const before = JSON.parse(JSON.stringify(checkpoint))
+  const migrated = migrateSessionCheckpoints({ scenarioCheckpoints: [checkpoint] })
+  const events = migrated.checkpoints[0].snapshot.events
+  assert.equal(events.length, 3, '事件条数不能变')
+  assert.equal(events[0].tableState, undefined)
+  assert.equal(events[1].tableState, undefined)
+  assert.equal(events[1].presentation.tableState, undefined)
+  assert.equal(events[1].presentation.kind, 'reveal', 'presentation 的其它字段必须保留')
+  assert.equal(events[1].presentation.from, 'deck')
+  assert.equal(events[2].text, '保持这条文字')
+  assert.ok(migrated.changes.some(change => change.includes('压缩 2 条')), '迁移必须报告压缩条数')
+  assert.deepEqual(checkpoint, before, '迁移检查不能改动输入（含 tableState 引用）')
+})
+
 async function listen() {
   const server = createServer({ mods: [arkham] })
   await server.ready
@@ -174,10 +201,25 @@ test('关卡入口检查点可由队长创建精确分支，且原时间线保�
     // A broken historical checkpoint is isolated during load; the current
     // branch remains playable and the unavailable entry is only disabled.
     branchRecord.scenarioCheckpoints[0].snapshot.state.schemaVersion = 999
+    // 模拟旧版存档：线上事件与检查点都带着整桌演出快照。读档时应一次性压缩，
+    // 只保留最近 24 条事件的快照，检查点则完全去掉快照。
+    const legacyTable = { investigators: [], locations: [] }
+    branchRecord.events = branchRecord.events.map((event, index) => ({
+      ...event, tableState: { ...legacyTable, index },
+      ...(index === 1 ? { presentation: { kind: 'reveal', from: 'deck', tableState: { ...legacyTable, index } } } : {}),
+    }))
+    for (let index = 0; index < 30; index++) {
+      branchRecord.events.push({ seq: branchRecord.events.length, type: 'info', text: '旧版历史 ' + index, tableState: { ...legacyTable, index } })
+    }
+    branchRecord.scenarioCheckpoints[0].snapshot.events = branchRecord.scenarioCheckpoints[0].snapshot.events.map(event => ({
+      ...event, tableState: { ...legacyTable, checkpoint: true },
+      ...(event.presentation ? { presentation: { ...event.presentation, tableState: legacyTable } } : {}),
+    }))
     const branchPath = snapshotPath(forked.session.sessionId)
     const storedBranch = JSON.parse(fs.readFileSync(branchPath, 'utf8'))
     storedBranch.session = branchRecord
     fs.writeFileSync(branchPath, JSON.stringify(storedBranch))
+    const legacyBytes = fs.statSync(branchPath).size
     await app.close()
     app = await listen()
     const loaded = await app.request('/api/session/load', { sessionId: forked.session.sessionId })
@@ -185,6 +227,16 @@ test('关卡入口检查点可由队长创建精确分支，且原时间线保�
     assert.equal(loaded.session.state.uiState, 'inScenario')
     assert.equal(loaded.session.scenarioCheckpoints[0].available, false)
     assert.equal(loaded.session.scenarioCheckpoints[0].canFork, false)
+    assert.match(loaded.migrationChanges.join('；'), /压缩 \d+ 条历史事件的演出快照/, '读档必须报告线上历史快照的压缩')
+    assert.match(loaded.migrationChanges.join('；'), /关卡检查点.*压缩 \d+ 条历史演出快照/, '读档必须报告检查点快照的压缩')
+
+    const compacted = JSON.parse(fs.readFileSync(branchPath, 'utf8')).session
+    assert.equal(compacted.events.slice(0, -24).some(event => event.tableState != null), false, '窗口外的历史演出快照必须被剥掉')
+    assert.equal(compacted.events.slice(-24).every(event => event.tableState != null), true, '最近 24 条事件的演出快照必须保留')
+    assert.equal(compacted.scenarioCheckpoints[0].snapshot.events.some(event => event.tableState != null), false, '检查点不得保留演出快照')
+    assert.equal(compacted.scenarioCheckpoints[0].snapshot.events[0].text, branchRecord.scenarioCheckpoints[0].snapshot.events[0].text, '检查点文字历史必须保留')
+    assert.ok(fs.statSync(branchPath).size < legacyBytes, '压缩后的存档必须变小')
+    assert.equal(fs.readdirSync(path.dirname(branchPath)).some(name => name.startsWith(path.basename(branchPath) + '.pre-migrate-')), true, '压缩前必须备份原存档')
   } finally {
     if (app) await app.close()
     if (previous === undefined) delete process.env.DSH_HOME

@@ -18,13 +18,24 @@ function visitDetails(state) {
  * 每关复制一整份会让存档体积近似平方增长；而回档之后不会再回放历史演出，
  * 所以检查点里的历史事件一律不带演出快照。
  */
-function checkpointEvents(events) {
-  return (events || []).map(event => {
-    const copy = structuredClone(event)
+function compactEventVisuals(events) {
+  let stripped = 0
+  const compacted = (events || []).map(event => {
+    if (!event || (event.tableState == null && event.presentation?.tableState == null)) return event
+    stripped++
+    const copy = { ...event }
     if (copy.tableState != null) delete copy.tableState
-    if (copy.presentation?.tableState != null) delete copy.presentation.tableState
+    if (copy.presentation?.tableState != null) {
+      copy.presentation = { ...copy.presentation }
+      delete copy.presentation.tableState
+    }
     return copy
   })
+  return { events: compacted, stripped }
+}
+
+function checkpointEvents(events) {
+  return compactEventVisuals(events).events
 }
 
 /** Capture the first authoritative, interactive state after a scenario starts. */
@@ -77,24 +88,33 @@ export function migrateSessionCheckpoints(session, options = {}) {
   if (!Array.isArray(session.scenarioCheckpoints) || !session.scenarioCheckpoints.length) {
     return { checkpoints: [], changes: [] }
   }
-  const checkpoints = structuredClone(session.scenarioCheckpoints)
   const changes = []
-  checkpoints.forEach((checkpoint, index) => {
+  // 不整份 structuredClone：旧检查点里可能各存了几千条带演出快照的事件（单局上百 MB）。
+  // 只复制会被改动的层，事件数组在压缩时按需替换；输入对象保持只读。
+  const checkpoints = session.scenarioCheckpoints.map((checkpoint, index) => {
+    const snapshot = checkpoint.snapshot
+    const compacted = compactEventVisuals(snapshot?.events)
+    if (compacted.stripped) {
+      changes.push(`关卡检查点 ${checkpoint.visitId || index + 1}：压缩 ${compacted.stripped} 条历史演出快照`)
+    }
+    const copy = { ...checkpoint }
+    if (snapshot) copy.snapshot = { ...snapshot, events: compacted.events }
     try {
-      const migrated = migrateState(checkpoint.snapshot?.state, options)
-      checkpoint.snapshot.state = migrated.state
-      if (checkpoint.unavailableReason) {
-        delete checkpoint.unavailableReason
+      const migrated = migrateState(copy.snapshot?.state, options)
+      copy.snapshot.state = migrated.state
+      if (copy.unavailableReason) {
+        delete copy.unavailableReason
         changes.push(`恢复关卡检查点 ${checkpoint.visitId || index + 1}`)
       }
       if (migrated.changes.length) changes.push(`关卡检查点 ${checkpoint.visitId || index + 1}：${migrated.changes.join('；')}`)
     } catch (error) {
       const reason = String(error?.message || error)
-      if (checkpoint.unavailableReason !== reason) {
-        checkpoint.unavailableReason = reason
+      if (copy.unavailableReason !== reason) {
+        copy.unavailableReason = reason
         changes.push(`关卡检查点 ${checkpoint.visitId || index + 1} 已标记为不可用`)
       }
     }
+    return copy
   })
   return { checkpoints, changes }
 }
