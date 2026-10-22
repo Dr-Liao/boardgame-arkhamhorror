@@ -7,6 +7,8 @@ import { viewState } from '../src/integration/observation.js'
 import { PLAYER_CARD_CODES } from '../src/deck/availability.js'
 import { RULES, cardRuleIds, matchingRules, ruleById } from '../web/rulebook-data.js'
 import { renderRulesText } from '../web/card-text.js'
+import { recordValueText, recordChangeText } from '../web/campaign-records.js'
+import { renderStoryReader } from '../web/story-reader.js'
 import { STORY_TEXT } from '../content/campaigns/nightOfTheZealot/story-text.js'
 import { midnightConclusion } from './fixtures/midnight-story.mjs'
 const move=(s,m)=>{const seat=decisionSeat(s);assert.equal(validateMove(s,seat,m),null);return applyMove(s,seat,m)}
@@ -32,6 +34,37 @@ test('历史摘要升级为完整引言时使用当时记录，局内导入与�
   assert.ok(!past.paragraphs.includes(STORY_TEXT.theMidnightMasks.survivors[0]))
 })
 function settle(s,stop) {for(let n=0;s.pendingChoice&&s.pendingChoice.kind!==stop;n++){assert.ok(n<150);const c=s.pendingChoice;move(s,{action:'choose',choiceId:c.id,optionId:c.options.find(o=>['done','skip','self'].includes(o.id))?.id||c.options[0].id})}}
+test('战役记录里的卡号按当前记录投影成卡名，未知值保持原样',()=>{
+  const s=createGameState({campaignId:'theDunwichLegacy',campaignHub:true,seed:'record-card-names'},[{seat:0,role:'human'}])
+  s.campaign.records.sacrificedToYogSothoth=['02217','02061','02080','not-a-card']
+  s.campaign.scenarioResults=[{scenarioId:'bloodOnTheAltar',investigators:[],recordsBefore:{sacrificedToYogSothoth:['02217']},recordsAfter:{sacrificedToYogSothoth:['02217','02061']}}]
+  const names=viewState(s,0).campaign.recordCardNames
+  assert.equal(names['02217'],'西布伦·沃特雷')
+  assert.equal(names['02061'],'沃伦·莱斯教授')
+  assert.equal(names['02080'],'佛朗西斯·摩尔根博士')
+  assert.equal(Object.hasOwn(names,'not-a-card'),false)
+  assert.equal(recordValueText(s.campaign.records.sacrificedToYogSothoth,names),'西布伦·沃特雷、沃伦·莱斯教授、佛朗西斯·摩尔根博士、not-a-card')
+  assert.equal(recordValueText(true,names),'是')
+  assert.equal(recordValueText([],names),'无')
+  assert.equal(recordChangeText(undefined,['02061'],names),'未记录 → 沃伦·莱斯教授')
+})
+test('调查纪事的结算记录按卡名显示被献祭的人',()=>{
+  const h=(tag,props,...children)=>({tag,props:props||{},children})
+  const campaign={id:'theDunwichLegacy',recordCardNames:{'02217':'西布伦·沃特雷','02061':'沃伦·莱斯教授'}}
+  const entry={id:'result:bloodOnTheAltar',kind:'result',title:'血色祭坛',paragraphs:['结局正文'],records:{sacrificedToYogSothoth:['02217','02061']},investigators:[]}
+  const s={sessionId:'record-names',state:{campaign,campaignStory:{currentId:entry.id,entries:[entry]},investigatorDefs:{},investigators:[],legalMoves:[]}}
+  const game={clientData:{campaigns:[{id:'theDunwichLegacy',recordLabels:{sacrificedToYogSothoth:'献祭给犹格·索托斯的人'}}]}}
+  // 图标用 createElementNS 生成 SVG；Node 侧只记录属性，够渲染函数走完。
+  const previous=globalThis.document
+  globalThis.document={createElementNS:(ns,tag)=>({tag,attributes:{},setAttribute(key,value){this.attributes[key]=value},append(){}})}
+  let tree
+  try { tree=renderStoryReader(h,s,{arkhamStoryContext:null},()=>{},()=>{},game) }
+  finally { if(previous===undefined) delete globalThis.document; else globalThis.document=previous }
+  const texts=[]
+  const walk=node=>{if(node==null)return;if(Array.isArray(node)){node.forEach(walk);return}if(typeof node!=='object'){texts.push(String(node));return}walk(node.children)}
+  walk(tree)
+  assert.ok(texts.includes('献祭给犹格·索托斯的人：西布伦·沃特雷、沃伦·莱斯教授'))
+})
 test('新战役只投影当前导入，不发送未触发的结局和后续章节',()=>{
   const s=createGameState({campaignHub:true},[{seat:0,role:'human'}])
   const journal=viewState(s,0).campaignStory

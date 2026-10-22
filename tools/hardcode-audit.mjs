@@ -114,6 +114,7 @@ const CARD_CODE = /^\d{5}[a-z]?$/
 const GENERATED = [
   /\/cards-data\.js$/,
   /\/entries\//,
+  /\/encounter-entries\//,
   /\/phase5-codes\.js$/,
   /-acceptance\.js$/,
   /\/core-acceptance\.js$/,

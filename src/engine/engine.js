@@ -239,12 +239,16 @@ class ScenarioRestarted extends Error {
 // 通用小工具
 // ---------------------------------------------------------------------------
 
-function info(state, events, text, presentation = null) {
+// 个人检定期间的日志默认只对执行者可见（投入窗口会暴露手牌与牌库顺序）。
+// `{ public: true }` 给「规则书里本来就正面朝上」的事实开口子：投入的牌摆在检定旁，
+// 其他座位都看得见，不该在别人的时间线里消失（见 performTest 的投入循环）。
+function info(state, events, text, presentation = null, { public: isPublic = false } = {}) {
   state.log.push(text)
   if (state.log.length > 120) state.log.splice(0, state.log.length - 120)
   const cue = presentation || (['enemy', 'upkeep', 'mythos'].includes(state.phase)
     ? { kind: 'automatic', phase: state.phase, round: state.round, text } : null)
-  const event = { type: 'info', text, ...(state.skillTest && !state.skillTest.helpRequested ? { privateSeat: state.skillTest.seat } : {}), ...(cue ? { presentation: { ...cue, tableState: captureTableState(state, getStat, getMaxSanity) } } : {}) }
+  const privateSeat = state.skillTest && !state.skillTest.helpRequested && !isPublic ? state.skillTest.seat : null
+  const event = { type: 'info', text, ...(privateSeat == null ? {} : { privateSeat }), ...(cue ? { presentation: { ...cue, tableState: captureTableState(state, getStat, getMaxSanity) } } : {}) }
   if (events) events.push(event)
   if (state._resolution) state._resolution.events.push(event)
   return text
@@ -934,6 +938,7 @@ const commonDeps = {
   beginChaosTest,
   campaignFor,
   canDiscardFromHand,
+  canDiscoverClueAt,
   cannotPlayTypes,
   capabilityBlocked,
   cardDef,
@@ -1311,6 +1316,7 @@ export const describeState = createDescribeState({
   stripLabel,
   actionPreview,
   enemyCanOpportunityAttack,
+  abilityUsage,
 })
 
 // Phase 6（6d-12）：技能检定主流程搬进 tests.js。
@@ -1638,6 +1644,8 @@ function encounterApi() {
   ...commonDeps,
   ALL_ENEMIES,
   ALL_TREACHERIES,
+  // 收尾玩家窗口里的快速卡：与 legalMoves / validateMove 共用同一份判定。
+  actionCost: (...args) => actionCost(...args),
   actPlacesLocationForEmptySpawn,
   canAffordAbility,
   cannotTriggerFreeAbility,
@@ -1646,11 +1654,15 @@ function encounterApi() {
   descriptorReactionSpec,
   descriptorsForWindow,
   doAbility,
+  doPlay: (...args) => doPlay(...args),
   evaluateCriteria,
   isAutomaticReward,
+  legalMoves: (...args) => legalMoves(...args),
   limitUsed,
   openAbilityWindow,
   placeLocationForEmptySpawn,
+  playConditionError,
+  playConditionHelpers,
   playReactionCard,
   playerWindowLabel,
   resolveTreachery,
@@ -1730,7 +1742,7 @@ function locationsApi() {
 // locationsApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
 export function locName(...args) { return locationsApi().locName(...args) } export function locLabel(...args) { return locationsApi().locLabel(...args) } export function placeLocation(...args) { return locationsApi().placeLocation(...args) } export function flipScenarioLocation(...args) { return locationsApi().flipScenarioLocation(...args) }
 export function revealLocation(...args) { return locationsApi().revealLocation(...args) } export function removeLocation(...args) { return locationsApi().removeLocation(...args) } export function syncClues(...args) { return locationsApi().syncClues(...args) }
-export function placeCluesOnLocation(...args) { return locationsApi().placeCluesOnLocation(...args) } export function notifyCluesRemoved(...args) { return locationsApi().notifyCluesRemoved(...args) } export function discoverClueAt(...args) { return locationsApi().discoverClueAt(...args) }
+export function placeCluesOnLocation(...args) { return locationsApi().placeCluesOnLocation(...args) } export function notifyCluesRemoved(...args) { return locationsApi().notifyCluesRemoved(...args) } export function canDiscoverClueAt(...args) { return locationsApi().canDiscoverClueAt(...args) } export function discoverClueAt(...args) { return locationsApi().discoverClueAt(...args) }
 export function awardLocationVictory(...args) { return locationsApi().awardLocationVictory(...args) }
 
 // Phase 6（6d-24）：检定的效果侧搬进 skill-effects.js；惰性装配保持导出与调用点。
@@ -2066,6 +2078,7 @@ function createDescribeAiApi() {
     choiceSeats,
     controlledAbilityCards,
     groupClues,
+    limitUsed,
   })
   return createDescribeAiImpl
 }
@@ -2223,6 +2236,7 @@ function createStatsApi() {
     applyFreeTriggers,
     assetPassiveBonus,
     blanksTraits,
+    cardName,
     collectGrants,
     doAbility,
     isCardAvailable,
@@ -2234,6 +2248,7 @@ function createStatsApi() {
 }
 // createStatsApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
 export function assetEffect(...args) { return createStatsApi().assetEffect(...args) } export function controlledAbilityCards(...args) { return createStatsApi().controlledAbilityCards(...args) } export function controlledAbilityCard(...args) { return createStatsApi().controlledAbilityCard(...args) }
+export function abilityUsage(...args) { return createStatsApi().abilityUsage(...args) }
 export function lolaCanUseCard(...args) { return createStatsApi().lolaCanUseCard(...args) } export function chooseLolaRole(...args) { return createStatsApi().chooseLolaRole(...args) } export function runtimeCardAvailable(...args) { return createStatsApi().runtimeCardAvailable(...args) }
 export function getStat(...args) { return createStatsApi().getStat(...args) } export function getMaxHealth(...args) { return createStatsApi().getMaxHealth(...args) } export function getMaxSanity(...args) { return createStatsApi().getMaxSanity(...args) }
 export function extraActionBonus(...args) { return createStatsApi().extraActionBonus(...args) } export function exploreOnlyActionBonus(...args) { return createStatsApi().exploreOnlyActionBonus(...args) } export function normalActionsLeft(...args) { return createStatsApi().normalActionsLeft(...args) }

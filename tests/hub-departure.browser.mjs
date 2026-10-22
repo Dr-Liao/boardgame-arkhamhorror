@@ -11,6 +11,7 @@ test('出发页检查全队准备，局外显示队友名称与图片头像', as
     const body = await response.json(); session = body.session
     const st = session.state
     st.uiState = 'scenarioSetup'; st.hubReady = true; st.hubSeatSelected = { 0: true, 1: true }; st.hubSeatDone = { 0: true }
+    st.hubSelectedScenarioId = 'theGathering'
     st.investigators.push({ ...structuredClone(st.investigators[0]), seat: 1, code: '01002', name: '黛西·沃克', klass: 'seeker' })
     for (const inv of st.investigators) st.campaign.investigators[inv.seat] = { code: inv.code, status: 'active', deck: ['01087'], xp: 0 }
     st.campaign.investigators[1].deckSize = 33
@@ -26,6 +27,9 @@ test('出发页检查全队准备，局外显示队友名称与图片头像', as
   const hub = page.locator('.ah-hub'), nav = hub.getByRole('navigation', { name: '战役局外页面' })
   await nav.getByRole('button', { name: '开始关卡', exact: true }).click()
   await expect(hub.getByRole('button', { name: '开始当前关卡' })).toBeDisabled()
+  // 出发页插图跟随已选关卡，不能退回战役封面，否则同一战役每关都是同一张图。
+  await expect(hub.locator('.ah-departure-heading > img'))
+    .toHaveAttribute('src', /\/campaigns\/nightOfTheZealot\/scenarios\/theGathering\/scene\.webp$/)
   await expect(hub.locator('[data-player-seat="1"]')).toHaveText('才羽桃')
   await expect(hub.locator('[data-player-seat="1"] img')).toHaveAttribute('src', '/avatars/momoi.webp')
   await expect(hub.locator('.ah-departure-member[data-seat="1"] .is-done')).toHaveCount(2)

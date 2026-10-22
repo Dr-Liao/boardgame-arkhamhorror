@@ -1,9 +1,8 @@
 # 一卡一文件：卡牌行为目录（agent 执行手册）
 
-> 日期：2026-10。状态：**玩家卡已执行；非玩家卡迁移中**。468 个玩家卡能力条目已从
+> 日期：2026-10。状态：**玩家卡与非玩家卡均已执行**。468 个玩家卡能力条目已从
 > `card-abilities.js` / `ability-migration-batches.js` 拆到 `src/cards/entries/<code>.js`；
-> 529 个非玩家条目仍暂存在 `encounter-abilities.js`，按
-> [`encounter-entry-split-plan.md`](encounter-entry-split-plan.md) 迁往
+> 529 个非玩家条目已按 [`encounter-entry-split-plan.md`](encounter-entry-split-plan.md) 迁到
 > `src/cards/encounter-entries/`（通用 / 战役共用 / 关卡专用三档）。本文是**当前规矩**，
 > 不是历史记录；历史阶段见 [`phase5-migration.md`](phase5-migration.md) 与
 > [`architecture-refactor-roadmap.md`](architecture-refactor-roadmap.md)。
@@ -40,7 +39,7 @@
    （`npm run cards:encounter-index`）。两个索引都是签入仓库的生成物，运行时不做目录扫描。
 
 以上 1–4、6 由 [`tests/card-entries.test.mjs`](../tests/card-entries.test.mjs) 与
-`tests/encounter-entries.test.mjs`（迁移阶段补齐）守住；索引一致性由两个
+[`tests/encounter-entries.test.mjs`](../tests/encounter-entries.test.mjs) 守住；索引一致性由两个
 `build-*-index.mjs` 与对应用例守住。
 
 ---
@@ -121,6 +120,26 @@ export default {
 `enemy | location | act | agenda | treachery | storyAsset | threat` 之一；跨卡 helper 只从
 `encounter-entries/_shared.js` 取，跨条目查询只从 `encounter-entries/_lookup.js` 取。
 
+### 2.2 「每场游戏一次」的行动：用掉后要给 `used` 提示
+
+`actions()` / `encounterActions()` 里带 `reason` 的行动不会进 `legalMoves`，但会进
+`scriptActionHints`（AI 的「暂时不可执行的卡面行动」）。因此一次性行动**不要用早退把条目删掉**：
+
+```js
+actions({ state, moves }) {
+  const used = Boolean(state.scenarioFlags?.someFlagUsed)
+  moves.push({
+    action: 'scenarioAction', rule: 'someRule', label: '…（每场游戏一次）',
+    reason: used ? '本场游戏已使用（每场游戏仅限一次）' : null,
+    used: used || undefined,   // 观察投影收进 view.usedActions；牌桌在地点详情/动作栏显示「已用」
+  })
+}
+```
+
+`used: true` 只表示「这个行动已经用掉」，牌桌不会把它当成可点按钮；不写 `used` 的普通
+`reason` 提示仍然只喂 AI。支援上的 `limit` 能力不需要手写这段：引擎的
+`abilityUsage` 会按同一份 `state.abilityLimits` 投影到 `view.abilityUsage`。
+
 ---
 
 ## 3. 新增一张卡（agent 一次执行完）
@@ -178,8 +197,8 @@ npm run test:fast
 node tools/audit-abilities.mjs --write
 ```
 
-迁移完成前，`encounter-abilities.js` 只作为 facade 读取；**任何新增都进单卡文件**。存量 529 条的
-一次性迁移顺序、快照对账与验收门槛见 [`encounter-entry-split-plan.md`](encounter-entry-split-plan.md)。
+迁移完成后，`encounter-abilities.js` 只作为 facade 读取；**任何新增都进单卡文件**。529 条存量条目的
+一次性迁移顺序、快照对账与验收证据见 [`encounter-entry-split-plan.md`](encounter-entry-split-plan.md)。
 
 ### 3.1 批量迁移时：索引只由主进程重建
 
@@ -247,8 +266,9 @@ node tools/migrate-card.mjs --verify          # 账本/文件一致性
   `shortestNextStep` / `teamOnce`）与战役专用的（`tfaPursuitEvade` / `essexPassengerCompartment` 等）先
   同放这里，禁止写卡牌规则；增长到需要再按战役拆时另立 `encounter-entries/<campaign>/_shared.js`。
 - `src/cards/encounter-entries/_lookup.js`：跨条目查询的唯一读点。因为 `index.js` 会 import 所有条目，
-  条目再 import `index.js` 会形成 ESM 循环；`_lookup.js` 用**惰性建表**（第一次调用才 `new Map`），
-  条目可以在 `resolve`/规则函数里安全调用。禁止条目之间直接 import。
+  条目再 import `index.js` 会形成 ESM 循环；`index.js` 求值完成后把列表注册给 `_lookup.js`，查询在
+  第一次调用时才 `new Map`。条目可以在 `resolve`/规则函数里安全调用，单独 import 一个条目也不会踩 TDZ。
+  禁止条目之间直接 import。
 
 依赖方向：`encounter-entries/<归属>/<code>.js` → `encounter-entries/_shared.js` /
 `_lookup.js` / `engine/matcher.js`；**不能** import 聚合入口、`engine.js`、`content/`。
@@ -261,13 +281,13 @@ node tools/migrate-card.mjs --verify          # 账本/文件一致性
 | --- | --- | --- | --- |
 | 卡面数据（名字/类型/费用/文本） | 5,930 | `src/cards/cards-data.js`（导入器生成） | 否；生成物，按循环拆也没有收益 |
 | 玩家卡行为描述子 | 468 | `src/cards/entries/<code>.js` | 是 |
-| 非玩家条目（敌人/诡计/地点/幕/议程/剧情资产/威胁） | 529（迁移中） | `src/cards/encounter-entries/`（通用 / 战役共用 / 关卡专用） | 是（迁移完成后） |
+| 非玩家条目（敌人/诡计/地点/幕/议程/剧情资产/威胁） | 529 | `src/cards/encounter-entries/`（通用 / 战役共用 / 关卡专用） | 是 |
 | 战役/关卡内容 | 按章节 | `content/campaigns/` | 按章节文件 |
 
 实测（Node 24，热缓存）：468 个玩家卡模块约 +165 ms/新进程；5,930 个模块约 +1.9 s/新进程。
 测试按文件独立进程运行，后者会把启动成本乘以用例数量，且商店清单/增量更新也会变大。
 所以目录卡保持单文件；只给**已经实现行为**的卡建文件，未实现的卡用脚手架按需生成。
-非玩家条目迁移完成后总模块数约 1,000 个，仍远低于 5,930，启动成本可接受；真正的收益是
+玩家卡 468 个模块 + 非玩家条目 529 个模块 ≈ 1,000 个，仍远低于 5,930，启动成本可接受；真正的收益是
 文件级并行迁移与 review 边界。
 
 ---
@@ -277,17 +297,19 @@ node tools/migrate-card.mjs --verify          # 账本/文件一致性
 | 工具/用例 | 作用 |
 | --- | --- |
 | [`tools/build-card-index.mjs`](../tools/build-card-index.mjs) | 生成/校验 `entries/index.js`；`--write` / `--check` |
-| `tools/build-encounter-index.mjs` | 生成/校验 `encounter-entries/index.js`；保持拆分前顺序（迁移阶段补齐） |
-| [`tools/scaffold-card.mjs`](../tools/scaffold-card.mjs) | `--entry` 生成玩家卡骨架；`--encounter` 生成非玩家卡骨架并按归属落点（迁移阶段补齐）；默认同时重建索引，批量迁移加 `--no-index`；同时生成 `develop/scaffolds/<code>.test.mjs` |
+| [`tools/build-encounter-index.mjs`](../tools/build-encounter-index.mjs) | 生成/校验 `encounter-entries/index.js`；保持拆分前顺序 |
+| [`tools/encounter-entry-placement.mjs`](../tools/encounter-entry-placement.mjs) | 归属算法：扫描器、`scaffold --encounter` 与守卫共用，0 unresolved |
+| [`tools/scaffold-card.mjs`](../tools/scaffold-card.mjs) | `--entry` 生成玩家卡骨架；`--encounter` 生成非玩家卡骨架并按归属落点；默认同时重建索引，批量迁移加 `--no-index`；同时生成 `develop/scaffolds/<code>.test.mjs` |
 | [`tools/migrate-card.mjs`](../tools/migrate-card.mjs) | 旧 DSL → 单卡文件；`--verify` 校验账本与文件 |
 | [`tools/split-card-entries.mjs`](../tools/split-card-entries.mjs) | **一次性**玩家卡拆分工具；旧源码在拆分时备份到 `artifacts/legacy/`，不要重跑 |
-| `tools/split-encounter-entries.mjs` | **一次性**非玩家条目拆分工具；源码切片 + 顺序快照对账（迁移阶段补齐） |
+| [`tools/split-encounter-entries.mjs`](../tools/split-encounter-entries.mjs) | **一次性**非玩家条目拆分工具；源码切片 + 顺序快照对账，已执行，不要重跑 |
 | [`tests/card-entries.test.mjs`](../tests/card-entries.test.mjs) | 玩家卡：文件名/`code`/单一 default/索引顺序/禁止批次/禁止 import |
-| `tests/encounter-entries.test.mjs` | 非玩家卡：一卡一文件/归属目录/索引顺序/禁止写回 facade/禁止 import（迁移阶段补齐） |
+| [`tests/encounter-entries.test.mjs`](../tests/encounter-entries.test.mjs) | 非玩家卡：一卡一文件/归属目录/索引顺序/禁止写回 facade/禁止 import/单文件 import |
 | [`tests/migration-tools.test.mjs`](../tests/migration-tools.test.mjs) | 账本每张卡都有单卡文件；渲染/判定仍可复用 |
 
 `npm run cards:index` = `build-card-index.mjs --write`；`npm run cards:index:check` = `--check`。
-`npm run cards:encounter-index` / `cards:encounter-check` 在迁移阶段加入 `package.json`。
+`npm run cards:encounter-index` = `build-encounter-index.mjs --write`；
+`npm run cards:encounter-check` = 索引校验 + `tests/encounter-entries.test.mjs`。
 
 ---
 
@@ -305,5 +327,19 @@ node tools/migrate-card.mjs --verify          # 账本/文件一致性
   `artifacts/legacy/ability-migration-batches.js`（`artifacts/` 不签入；需要时从 git 历史取）。
   它们只作证据/回滚，不是运行时输入。
 
-非玩家条目拆分是**独立迁移**（529 条，尚未执行）：现状扫描、归属算法、工具改动与验收门槛见
-[`encounter-entry-split-plan.md`](encounter-entry-split-plan.md)。完成后把该轮的对账证据补到本节。
+### 7.1 非玩家条目（529 条，2026-10-22）
+
+- 旧源：`src/cards/encounter-abilities.js`（7,082 行；条目区 659–7067，顶部 52 个 helper）。
+- 生成：529 个条目文件 / 72 个目录；`shared/` 23、`<campaign>/_shared/` 97、`<campaign>/<scenario>/` 409；
+  最大目录 26 个文件（不可言说的誓约）。归属算法见 `tools/encounter-entry-placement.mjs`，0 unresolved。
+- 顺序与内容：`encounter-entries/index.js` 保持拆分前数组顺序；条目 code 顺序、对象 key 顺序、
+  `abilities`/`modifiers` 条数与运行时一致；`JSON.stringify(NON_PLAYER_ABILITY_ENTRIES)` 快照
+  `48,468 bytes / sha256 fb3cc3ac…` 与迁移前一致；函数源码逐条归一化对比 0 差异。
+- 唯一源码改写：03124 / 03125 的 `NON_PLAYER_ABILITY_ENTRIES.some(...)` 改走 `_lookup.js` 的
+  `someNonPlayerEntry(...)`（语义相同；对账时按旧函数名归一化）。
+- ESM：`_lookup.js` 改为「index 求值完成后注册 + 运行时惰性建表」，单独 import 02043 / 03137 /
+  03124 / 03125 / 03059 不抛错（守卫逐文件起新进程验证）。
+- 行为：`replay-fixtures --compare` 13 局 / 784 步逐条一致；`npm run test:fast` 2311 例全绿。
+- 硬编码：`cardLayerCodes` 642 → 100（白名单只降）；`engineCodes` / `engineEntityHits` 保持 0。
+- 旧源快照：`artifacts/legacy/encounter-abilities.js`（`artifacts/` 不签入；需要时从 git 历史取）。
+  对账门槛、执行步骤与工具说明见 [`encounter-entry-split-plan.md`](encounter-entry-split-plan.md)。

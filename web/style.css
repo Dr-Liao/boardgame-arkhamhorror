@@ -143,6 +143,15 @@
 .ah-minicard-ds { position: absolute; top: 22px; right: 4px; font-size: 10px; color: #9db4ff; }
 .ah-minicard-icons { display: flex; gap: 2px; margin-top: 3px; flex-wrap: wrap; }
 .ah-minicard-icon { font-size: 9px; line-height: 1; }
+/* 「每回合/每场游戏一次」的能力已经用掉：卡面角标常驻，不随按钮消失。 */
+.ah-minicard-usage {
+  position: absolute; left: 3px; top: 3px; z-index: 4;
+  padding: 0 4px; border-radius: 6px; border: 1px solid rgba(255, 233, 179, .55);
+  background: rgba(146, 64, 14, .92); color: #ffedc2;
+  font-size: 9px; font-weight: 700; line-height: 15px; letter-spacing: .04em;
+  pointer-events: none;
+}
+.ah-action.is-used { border-style: dashed; opacity: .8; color: #c9c2ad; cursor: not-allowed; }
 .ah-zone-threat { color: #ff9aa6; }
 
 .ah-carddetail-backdrop { z-index: 40; }
@@ -308,6 +317,8 @@ button:focus-visible, [role='button']:focus-visible, summary:focus-visible { out
 .ah-equip-zone { margin-top: 10px; }
 .ah-equip-slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 8px; }
 .ah-equip-slot { min-height: 94px; border: 1px dashed rgba(255,255,255,.2); border-radius: 9px; padding: 7px; background: rgba(255,255,255,.025); }
+.ah-equip-slot.is-restricted-slot { border-style: dotted; border-color: rgba(126,200,255,.32); background: rgba(80,140,220,.06); }
+.ah-equip-slot.is-restricted-slot .ah-equip-slot-label { color: #9cc3e8; }
 .ah-equip-slot-full { border-color: rgba(255,180,180,.45); }
 .ah-equip-slot-head { display: flex; justify-content: space-between; gap: 4px; font-size: 10px; color: #9fb0cc; margin-bottom: 6px; }
 .ah-equip-slot-label { font-weight: 700; }

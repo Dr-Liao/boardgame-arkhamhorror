@@ -1,6 +1,6 @@
 # 非玩家条目拆分：现状扫描与修改方案
 
-> 日期：2026-10-22。状态：**方案待执行**。范围：`src/cards/encounter-abilities.js` 的 529 条
+> 日期：2026-10-22（同日执行完毕）。状态：**已执行**。范围：`src/cards/encounter-abilities.js` 的 529 条
 > 非玩家条目（敌人/诡计/地点/幕/议程/剧情资产/威胁）。
 > 规矩条文已同步到 [`AGENTS.md`](../AGENTS.md)、[`ARCHITECTURE.md`](../ARCHITECTURE.md)、
 > [`card-entry-files.md`](card-entry-files.md)、[`card-model.md`](card-model.md)、
@@ -17,7 +17,7 @@
 | 聚合 | 文件即数据（`NON_PLAYER_ABILITY_ENTRIES` 数组） | 文件降级为 facade；索引是生成物 |
 | 归属 | 无归属元数据；只有 `scope` | 每张卡有唯一落点；守卫按算法校验 |
 | 迁移期写入 | 单文件（单写者） | 文件级并行（多子进程互不冲突） |
-| 硬编码基线 | `cardLayerCodes` 642 个键；本文件含 543 个唯一卡号（与其他文件重叠 1 个） | 迁移后约 **100**（其余在 `card-effects.js` 等） |
+| 硬编码基线 | `cardLayerCodes` 642 个键；本文件含 543 个唯一卡号（与其他文件重叠 1 个） | 迁移后 **100**（实测；其余在 `card-effects.js` 等） |
 
 **不动的东西**：`content/campaigns/**/definition.js` 的关卡数据、`cards-data.js` 的 5,930 张卡面、
 `behavior.js` 的剧本流程、两个聚合入口的**旧导出签名**。
@@ -229,6 +229,10 @@ export const entryByCode = code => table().get(code) || null
 尚未完成，立即建表会 TDZ。函数调用发生在对局中，那时所有模块已求值完毕，安全。守卫要加一条：
 “在新进程里单独 import 任一含跨条目查询的条目文件（02043 / 03137 / 03124 / 03125），不抛错”。
 
+> **执行时的修正**：仅“惰性建表”不够——单独 import 02043 时，`index.js` 的数组字面量仍会先读到
+> 尚未初始化的条目绑定并 TDZ。实际实现是 `_lookup.js` 不再 import `index.js`，改由 `index.js`
+> 求值完成后调用 `registerNonPlayerEntries(list)`；详见 §10.3。§2.2 的索引代码块因此多一行注册调用。
+
 ### 2.4 为什么不按 scope 拆
 
 - **按 scope 拆**（`enemies/`、`treacheries/`、`locations/`）只是把一个大文件换成三个大文件：
@@ -405,12 +409,12 @@ node tools/build-encounter-index.mjs --check && node --test tests/encounter-entr
 
 ## 8. 任务清单
 
-- [ ] 阶段 0：冻结 + 基线快照 + replay baseline
-- [ ] 阶段 1：`_shared.js` / `_lookup.js` 抽取，行为零变化
-- [ ] 阶段 2：归属算法 + 索引工具 + 拆分工具 dry-run（0 差异）
-- [ ] 阶段 3：写 529 文件 + facade + 双索引门禁
-- [ ] 阶段 4：hardcode 白名单下降 + 审计重算
-- [ ] 阶段 5：文档收尾 + 迁移记录
+- [x] 阶段 0：冻结 + 基线快照 + replay baseline
+- [x] 阶段 1：`_shared.js` / `_lookup.js` 抽取，行为零变化
+- [x] 阶段 2：归属算法 + 索引工具 + 拆分工具 dry-run（0 差异）
+- [x] 阶段 3：写 529 文件 + facade + 双索引门禁
+- [x] 阶段 4：hardcode 白名单下降 + 审计重算
+- [x] 阶段 5：文档收尾 + 迁移记录
 - [ ] 后续：4 组别名条目去重（独立任务）
 
 ---
@@ -516,4 +520,65 @@ node tools/build-encounter-index.mjs --check && node --test tests/encounter-entr
 - `thePathToCarcosa/theLastKing/`: 03062, 03063, 03070, 03071, 03072, 03075, 03076a, 03077, 03078, 03079, 03080, 03081, 03082, 03083
 - `thePathToCarcosa/thePallidMask/`: 03241, 03241b, 03242, 03243, 03244, 03245, 03246, 03248, 03249, 03250, 03251, 03254, 03255, 03256, 03257, 03258, 03259, 03260, 03261, 03262
 - `thePathToCarcosa/theUnspeakableOath/`: 03160, 03161, 03162, 03163, 03164, 03165, 03166, 03167, 03170, 03172, 03174, 03175, 03176, 03177, 03178, 03179, 03180, 03181, 03182a, 03182b, 03183, 03184, 03185, 03186, 03187, 03188
+
+---
+
+## 10. 执行记录（2026-10-22）
+
+> 本节的数字是**实际执行时**（21:30 左右）的快照。仓库在方案写入后仍有并行改动，因此与 §0/§1 的
+> 早期数字不同；迁移以执行时的文件为准。
+
+### 10.1 结果
+
+- 输出：`src/cards/encounter-entries/` 下 **529 个条目文件 / 72 个目录**；`shared/` 23、
+  `<campaign>/_shared/` 97、`<campaign>/<scenario>/` 409；最大目录 26 个文件。
+- `src/cards/encounter-abilities.js` 7,082 行 → facade（只 import 索引/`_lookup`/`_shared`，保留旧导出）。
+- 新工具：`tools/encounter-entry-placement.mjs`、`tools/build-encounter-index.mjs`、
+  `tools/split-encounter-entries.mjs`；`tools/scaffold-card.mjs` 支持 `--encounter`。
+- 新守卫：`tests/encounter-entries.test.mjs`（7 项，含逐文件起新进程 import 的 ESM 循环检查）。
+- 文档/脚本：`package.json` 增加 `cards:encounter-index` / `cards:encounter-index:check` /
+  `cards:encounter-check`；`hardcode-audit.mjs` 把 `encounter-entries/` 视为生成物。
+
+### 10.2 对账证据
+
+| 检查 | 结果 |
+| --- | --- |
+| 条目数 / code 唯一 | 529 / 529，0 重复 |
+| 归属 | 23 / 97 / 409；0 unresolved；目录数 72 |
+| 源码解析 vs 运行时 | code 顺序、对象 key 顺序、`abilities`/`modifiers` 条数全部一致 |
+| JSON 快照 | `48,468 bytes / sha256 fb3cc3ac544c8aca898fa9d035de3af5bb018af12161f02486fd550b1c0aa127`，与拆分前一致 |
+| 函数源码（逐条、逐行 trim 归一化） | 0 差异（03124/03125 的 `someNonPlayerEntry(` 按旧函数名归一化） |
+| 索引 | `build-encounter-index.mjs --check` 与 `split-encounter-entries.mjs --check` 均通过 |
+| replay | 13 局 / 784 步逐条一致（`--compare artifacts/encounter-split/replay-baseline.json`） |
+| 测试 | `npm run test:fast` **2311 例全绿，0 失败** |
+| 硬编码 | `engineCodes=0`、`engineEntityHits=0`、`cardLayerCodes` 642 → **100**（白名单只降） |
+
+### 10.3 与方案的偏差（均已记录）
+
+1. **ESM 循环修法**：`_lookup.js` 没有直接 `import index.js`。单独 import 02043 时，
+   `entry → _lookup → index → entry` 会让 index 的数组字面量读到未初始化的绑定并 TDZ 报错。
+   实际实现为「index 求值完成后 `registerNonPlayerEntries(list)` + 查询时惰性建表」，
+   满足 §2.3 的验收（单文件 import 不抛错），并补了逐文件新进程守卫。
+2. **两处源码改写**：03124 / 03125 的 `NON_PLAYER_ABILITY_ENTRIES.some(...)` 改为
+   `_lookup.js` 的 `someNonPlayerEntry(...)`。语义相同；对账时按旧函数名归一化后 0 差异。
+3. **基线数字**：§0 的 `44,948 bytes / cdbbceea…` 是方案写作时的快照；执行时已因并行改动变成
+   `48,468 bytes / fb3cc3ac…`。两者都保留，迁移只以执行时基线为准。
+4. **helper 先行**：阶段 1 先抽出 `_shared.js` 并跑全量 `test:fast`（2304 例）证明零变化，
+   再做条目切片；`split-encounter-entries.mjs` 因此读取“已是 facade 顶部 + 数组”的中间态。
+
+### 10.4 复现命令
+
+```bash
+cd games/arkhamhorror
+node artifacts/encounter-split/baseline.mjs            # 阶段 0 基线（artifacts/ 不签入）
+node tools/replay-fixtures.mjs --baseline artifacts/encounter-split/replay-baseline.json
+node tools/encounter-entry-placement.mjs               # 归属扫描：529 / 0 unresolved
+node tools/split-encounter-entries.mjs --check         # 写盘前对账
+node tools/split-encounter-entries.mjs --write         # 生成单卡文件 + index + facade
+npm run cards:encounter-check
+npm run cards:check
+node tools/replay-fixtures.mjs --compare artifacts/encounter-split/replay-baseline.json
+npm run test:fast
+node tools/hardcode-audit.mjs --write && node tools/hardcode-audit.mjs --check
+```
 

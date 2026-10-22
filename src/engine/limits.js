@@ -143,19 +143,36 @@ export function markLimitUsed(state, inv, descriptor, context = null, windowId =
   state.abilityLimits[key] = { used, round: state.round, phase: state.phase, turn: state.turnSerial ?? 0 }
 }
 
-// 审计/AI 上下文：把一条上限翻成中文。
-export function describeLimit(descriptor) {
+const SCOPE_TEXT = Object.freeze({
+  perTest: '每次检定', perTurn: '每回合', perPhase: '每阶段', perRound: '每轮',
+  perGame: '每场游戏', perCampaign: '整个战役', perWindow: '每次窗口', perAttack: '每次攻击',
+  perSearch: '每次搜索', perAction: '每次行动',
+})
+
+const OWNER_TEXT = Object.freeze({
+  instance: '每张卡', investigator: '每名调查员', player: '每个玩家', group: '团队',
+})
+
+function normalizedOf(descriptor) {
   const limit = descriptor?.limit
   if (!limit) return null
-  const normalized = typeof limit === 'string' ? normalizeLimit(limit) : limit
+  return typeof limit === 'string' ? normalizeLimit(limit) : limit
+}
+
+// 审计/AI 上下文：把一条上限翻成中文。
+export function describeLimit(descriptor) {
+  const normalized = normalizedOf(descriptor)
   if (!normalized) return null
-  const scope = {
-    perTest: '每次检定', perTurn: '每回合', perPhase: '每阶段', perRound: '每轮',
-    perGame: '每局', perCampaign: '整个战役', perWindow: '每次窗口', perAttack: '每次攻击',
-    perSearch: '每次搜索', perAction: '每次行动',
-  }[normalized.scope] || normalized.scope
-  const owner = {
-    instance: '每张卡', investigator: '每名调查员', player: '每个玩家', group: '团队',
-  }[normalized.owner] || normalized.owner
+  const scope = SCOPE_TEXT[normalized.scope] || normalized.scope
+  const owner = OWNER_TEXT[normalized.owner] || normalized.owner
+  return `${owner}${scope} ${normalized.count} 次`
+}
+
+// 牌桌文案：省略「每张卡」这种实例归属，只留频率本身（实例能力默认就是每张一次）。
+export function describeLimitShort(descriptor) {
+  const normalized = normalizedOf(descriptor)
+  if (!normalized) return null
+  const scope = SCOPE_TEXT[normalized.scope] || normalized.scope
+  const owner = normalized.owner === 'instance' ? '' : (OWNER_TEXT[normalized.owner] || normalized.owner)
   return `${owner}${scope} ${normalized.count} 次`
 }

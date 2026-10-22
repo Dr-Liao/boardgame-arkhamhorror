@@ -1,0 +1,19 @@
+// 01162 攫噬之手
+// 归属：跨战役通用
+// 遭遇组：ghouls
+// 卡面：显现 - 检定[agility](3)。你检定失败且每低于难度1点，受到1点伤害。
+//
+// 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
+
+export default {
+  code: '01162', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['carcosa'],
+  name: '攫噬之手',
+  text: '显现 - 检定[agility](3)。你检定失败且每低于难度 1 点，受到 1 点伤害。',
+  encounterResolve(state, inv, card, api) {
+    api.test(inv.seat, 'agility', 3, result => {
+      if (result.success) return
+      api.damage(inv.seat, Math.max(0, result.difficulty - result.value))
+    })
+    return false
+  },
+}

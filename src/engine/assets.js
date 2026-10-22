@@ -90,8 +90,9 @@ export function createAssets(deps) {
       else need[s] = (need[s] || 0) + 1
     }
     // 米奇·布朗：额外 2 个只能携带非独特盟友的盟友槽位。
-    const allyExtra = nonUniqueAllySlotsFor(inv)
-    if (need.ally && allyExtra && !allySlotsOk(inv, card, allyExtra)) return false
+    // 盟友槽要区分「不受限」与「只能放非独特盟友」两类：独特盟友只能占前者，
+    // 总数则两类都能用；否则与「魅力超凡」这类通用加槽叠加时会误判槽位已满。
+    if (need.ally && !allySlotsOk(inv, card, allySlotCapacities(inv))) return false
     const usage = slotUsage(inv)
     // Allocate Tomes to Daisy's restricted slots before counting ordinary hands.
     // Otherwise playing a non-Tome after two books incorrectly forces a discard.
@@ -103,7 +104,8 @@ export function createAssets(deps) {
     // Phase 5（5a-6）：「书虫」这类「每份占用 2 个书位」的规则由条目级 tomeHandSlotsPerCopy 声明。
     const restrictedHands = inv.assets.reduce((sum, asset) => sum + (registeredEntry(asset.code)?.tomeHandSlotsPerCopy || 0), 0)
     for (const [s, n] of Object.entries(need)) {
-      if (s === 'ally' && allyExtra) continue
+      // 盟友槽已在上面按「独特 / 非独特」分类校验，不再走通用容量比较。
+      if (s === 'ally') continue
       let cap = SLOT_CAPACITY[s] ?? 0
       if (s === 'hand') {
         cap += handSlotsBonusFor(inv, card) + Math.min(tomeHands, restrictedHands)
@@ -159,8 +161,22 @@ export function createAssets(deps) {
       sum + (assetEffect(inv, asset)?.passive?.allySlotsForNonUnique || 0), 0)
   }
 
-  function allySlotsOk(inv, card, extra) {
-    const base = SLOT_CAPACITY.ally ?? 1
+  // 盟友槽容量拆成两组：
+  // - unrestricted：基础槽 + 「额外盟友槽」（如 02158 魅力超凡）+ 能力层 add:slot，独特/非独特都能用；
+  // - restricted：米奇·布朗这类「只可携带非独特盟友」的额外槽。
+  // 读点与 canEquip 的通用容量一致：支援被动 + 能力层修正。
+  function allySlotCapacities(inv) {
+    const unrestricted = (SLOT_CAPACITY.ally ?? 1)
+      + (inv.assets || []).reduce((sum, asset) =>
+        sum + (assetEffect(inv, asset)?.passive?.extraSlots?.ally || 0), 0)
+      + slotBonus(inv, 'ally')
+    return { unrestricted, restricted: nonUniqueAllySlotsFor(inv) }
+  }
+
+  function allySlotsOk(inv, card, capacities = allySlotCapacities(inv)) {
+    const { unrestricted, restricted } = typeof capacities === 'number'
+      ? { unrestricted: allySlotCapacities(inv).unrestricted, restricted: capacities }
+      : capacities
     const entries = [...inv.assets, ...(inv.threat || []), { code: card.code }]
       .filter(item => normalizedSlots(cardDef(item.code)).includes('ally'))
     let unique = 0
@@ -169,7 +185,8 @@ export function createAssets(deps) {
       if (cardDef(item.code)?.unique) unique++
       else nonUnique++
     }
-    return unique <= base && nonUnique <= base + extra
+    // 独特盟友只能占不受限槽；所有盟友合计不能超过两类槽位之和。
+    return unique <= unrestricted && unique + nonUnique <= unrestricted + restricted
   }
 
   function isTomeCard(card) {
@@ -331,5 +348,5 @@ export function createAssets(deps) {
     } else disposePlayedEvent(inv, code)
   }
 
-  return { litaAuraAt, assetPassiveBonus, assetPassiveData, assetCannotLeavePlay, normalizedSlots, slotUsage, canEquip, assetReplacementPlans, replaceAssets, nonUniqueAllySlotsFor, allySlotsOk, isTomeCard, handSlotsBonusFor, isWeaponCard, weaponHandSlotsFor, isThreatWeakness, leaveAsset, discardRandomAsset, placeLocationForEmptySpawn, farthestLocationsFor, discardLocked, hasPlayedEventsToDeckTop, topDiscardEvent, disposePlayedEvent, consumePlayThreatResources, playReactionCard }
+  return { litaAuraAt, assetPassiveBonus, assetPassiveData, assetCannotLeavePlay, normalizedSlots, slotUsage, canEquip, assetReplacementPlans, replaceAssets, nonUniqueAllySlotsFor, allySlotCapacities, allySlotsOk, isTomeCard, handSlotsBonusFor, isWeaponCard, weaponHandSlotsFor, isThreatWeakness, leaveAsset, discardRandomAsset, placeLocationForEmptySpawn, farthestLocationsFor, discardLocked, hasPlayedEventsToDeckTop, topDiscardEvent, disposePlayedEvent, consumePlayThreatResources, playReactionCard }
 }

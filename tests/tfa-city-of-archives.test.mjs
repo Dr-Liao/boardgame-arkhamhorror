@@ -444,7 +444,12 @@ test('太阳系仪两个行动、纳克特之塔弃牌重抽、纳克特廊道�
   assert.equal(towerInv.hand.length, 4)
   assert.equal(towerInv.deck.length, 4)
   assert.equal(towerInv.tfaTowersRound, 1)
-  assert.equal(behavior.actions(towersState, towerInv).some(entry => entry.rule === 'towersOfPnakotus'), false)
+  // 每回合一次：用掉后保留「已用」提示，但不再可执行。
+  const towerAfter = behavior.actions(towersState, towerInv).find(entry => entry.rule === 'towersOfPnakotus')
+  assert.equal(towerAfter.used, true)
+  assert.match(towerAfter.reason, /本回合已使用/)
+  assert.equal(behavior.actions(towersState, towerInv)
+    .some(entry => entry.rule === 'towersOfPnakotus' && !entry.reason), false)
 
   const halls = prepared()
   const hallsInv = invAt(halls, 'hallsNorthern')
@@ -455,6 +460,10 @@ test('太阳系仪两个行动、纳克特之塔弃牌重抽、纳克特廊道�
   behavior.performAction(halls, hallsInv, shortcut, hallsApi)
   assert.equal(hallsInv.location, 'hallsEastern')
   assert.deepEqual(hallsInv.discard, ['01001'])
+  // 换地方后仍在同一轮：提示改为「本回合已使用」。
+  const shortcutAfter = behavior.actions(halls, hallsInv).find(entry => entry.rule === 'hallsShortcut')
+  assert.equal(shortcutAfter?.used, true)
+  assert.match(shortcutAfter.reason, /本回合已使用/)
 })
 
 test('回归自我：花 1 个线索抽取，手牌超出上限时多抽 1 张', () => {

@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { contentRegistry, registerContentBundle } from '../content/registered.js'
-import { createGameState, applyMove, validateMove, legalMoves, performTest, getStat, placeLocation, actionPreview, describeState, actObjectiveContext } from '../src/engine/engine.js'
+import { createGameState, applyMove, validateMove, legalMoves, performTest, getStat, placeLocation, actionPreview, describeState, actObjectiveContext, discoverClueAt, spawnEnemy } from '../src/engine/engine.js'
 import { modifierTotal } from '../src/engine/modifiers.js'
 import { aiDecisionContext } from '../src/ai/ai-context.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
@@ -1183,7 +1183,12 @@ test('D6 story allies react to treachery tests and evasion; Servant grants a dis
   assert.equal(modifierTotal(s, inv, 'skill:willpower'), 1)
   assert.equal(modifierTotal(s, inv, 'skill:agility'), 1)
   let drawn = 0
-  const api = { choose: () => 'yes', drawCards: (seat, n) => { drawn += n }, gainClues: (seat, n) => { s.investigators[seat].clues += n } }
+  const api = { choose: () => 'yes', drawCards: (seat, n) => { drawn += n }, gainClues: (seat, n) => { s.investigators[seat].clues += n },
+    canDiscoverClueAt: (_seat, id) => (s.locations.find(loc => loc.id === id)?.clues || 0) > 0,
+    discoverClue: (seat, n, id) => {
+      s.locations.find(loc => loc.id === id).clues -= n
+      s.investigators[seat].clues += n
+    } }
   const treachery = Object.keys(s.scenario.treacheries)[0]
   b.afterTest(s, inv, { success: true, skill: 'willpower', drawn: [], source: { type: 'encounter', code: treachery } }, api)
   b.afterEvade(s, inv, {}, null, api)
@@ -1192,6 +1197,49 @@ test('D6 story allies react to treachery tests and evasion; Servant grants a dis
   const before = target.clues
   b.enemyDefeated(s, { code: '02224', defeatedBy: inv.seat }, { ...api, choose: () => target.id })
   assert.equal(target.clues, before - 1); assert.equal(inv.clues, 1)
+})
+
+test('D6 学校（02213）只能通过调查发现线索：百口之物的仆人也不能从这里拿线索', () => {
+  const s = chapterFixture('bloodOnTheAltar'), inv = s.investigators[0]
+  const school = s.locations[0], elsewhere = s.locations[1]
+  school.code = '02213'; school.originalCode = '02213'; school.clues = 1
+  const events = []
+  // 1）站在学校里、不通过调查：发现被拒绝。
+  inv.location = school.id
+  assert.equal(discoverClueAt(s, inv, 1, events), false)
+  assert.equal(school.clues, 1)
+  // 2）远程发现（02224「发现任意地点的 1 个线索」）：限制跟着目标地点，同样被拒绝。
+  inv.location = elsewhere.id
+  assert.equal(discoverClueAt(s, inv, 1, events, { locationId: school.id }), false)
+  assert.equal(school.clues, 1)
+  // 3）只有「调查」这条路径能拿到线索。
+  s.skillTest = { source: { label: '调查' } }
+  assert.equal(discoverClueAt(s, inv, 1, events, { locationId: school.id }), true)
+  assert.equal(school.clues, 0)
+  delete s.skillTest
+})
+
+test('D6 百口之物的仆人击败后只能从合法地点发现线索（学校不在候选里）', () => {
+  const s = chapterFixture('bloodOnTheAltar'), inv = s.investigators[0]
+  const school = s.locations.find(loc => loc.originalCode === '02212')
+  const elsewhere = s.locations.find(loc => loc !== school)
+  school.code = '02213'; school.originalCode = '02213'; school.clues = 1
+  elsewhere.clues = 1
+  inv.location = elsewhere.id
+  inv.actionsLeft = 5
+  s.chaosBag = ['0']
+  const servant = spawnEnemy(s, '02224', elsewhere.id, null, true)
+  let offered = null
+  const pick = pending => {
+    if (pending.source !== '02224') return null
+    offered = pending.options.map(option => option.id)
+    return offered.find(id => id !== 'skip') || 'skip'
+  }
+  move(s, { action: 'fight', enemyId: servant.id }); settle(s, pick)
+  move(s, { action: 'fight', enemyId: servant.id }); settle(s, pick)
+  assert.ok(offered, '击败百口之物的仆人后应询问从哪个地点发现线索')
+  assert.ok(!offered.includes(school.id), '02213 学校只能通过调查发现线索，不应出现在候选里')
+  assert.equal(school.clues, 1)
 })
 
 test('D6 Across Space and Time mills three cards when drawn as a weakness', () => {

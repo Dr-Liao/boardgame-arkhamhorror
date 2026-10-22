@@ -34,6 +34,28 @@ test('Core 01108 01111 01112 支付线索离开书房，四地点入场并删除
   assert.ok(s.locations.find(l=>l.id==='hallway').revealed); assert.equal(s.investigators[0].clues,0)
 })
 
+test('Core 01108 01105 推进时演出文本取卡背 advanceText，而不是通用占位句',()=>{
+  const run = (s, action) => {
+    const events = []
+    events.push(...move(s,{action}))
+    for(let guard=0; s.pendingChoice && guard<20; guard++) {
+      const c=s.pendingChoice
+      const id=['done','skip','self'].find(id=>c.options.some(o=>o.id===id)) ?? c.options[0]?.id
+      events.push(...move(s,{action:'choose',choiceId:c.id,optionId:id}))
+    }
+    return events
+  }
+  const actState=fixture(); actState.investigators[0].clues=2; actState.clues=2
+  const actCue=run(actState,'advanceAct').find(event=>event.presentation?.title==='场景推进')
+  assert.equal(actCue.presentation.text, SCENARIOS.theGathering.acts[0].advanceText)
+  assert.ok(!actCue.presentation.text.includes('翻开场景卡'), '不能回落到通用占位句')
+
+  const agendaState=fixture(); agendaState.doom=agendaState.agendas[0].doomThreshold-1
+  const agendaCue=run(agendaState,'endTurn').find(event=>event.presentation?.title==='密谋推进')
+  assert.equal(agendaCue.presentation.text, SCENARIOS.theGathering.agendas[0].advanceText)
+  assert.ok(!agendaCue.presentation.text.includes('翻开密谋'), '不能回落到通用占位句')
+})
+
 test('Core 01109 01115 01117 轮末走廊付线索揭示客厅、生成丽塔和祭司',()=>{
   const s=scene('theGathering'); s.actIndex=1; s.investigators[0].location='hallway'; s.investigators[0].clues=3; s.clues=3
   assert.ok(validateMove(s,0,{action:'advanceAct'})); move(s,{action:'endTurn'})

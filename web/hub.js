@@ -10,6 +10,7 @@ import { campaignPresentation, presentationAttributes } from './campaign-present
 import { renderSupplyPicker, supplyPickerModel } from './supply-picker.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
 import { installCardZoom } from './card-zoom.js'
+import { recordValueText, recordChangeText } from './campaign-records.js'
 const STAGES = { campaignHub: '战役准备', scenarioSetup: '调查准备', inScenario: '调查进行中', scenario: '调查进行中', scenarioResult: '调查报告', interlude: '关间休整', campaignResult: '战役终章' }
 const DIFFICULTIES = { easy: '简单', standard: '普通', hard: '困难', expert: '专家' }
 const CLASSES = { guardian: '守护者', seeker: '探求者', rogue: '流浪者', mystic: '潜修者', survivor: '生存者', neutral: '中立' }
@@ -56,10 +57,11 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   const resultName = (s, result) => resultStory(s, result)?.resolutionTitle || outcomeName(result.resolution)
   const nameOf = (g, code) => state.session?.state.cards?.[code]?.name || g.clientData?.deckBuilder?.cardPool.find(card => card.code === code)?.name || '调查卡牌'
   const art = (code, name) => tableArt(h, code, name)
-  const decor = (name, className = '') => {
+  // 关卡内页面的插图必须带上已选关卡：不传 scenarioId 时只能拿到战役封面。
+  const decor = (name, className = '', scenarioId = '') => {
     const campaignId = state.session?.state?.campaign?.id || state.setup?.form?.campaignId
-    const assets = campaignPresentation(campaignId).assets
-    const key = ({ manor: 'hubHero', desk: 'hubDesk', casefile: 'casefile' })[name] || name
+    const assets = campaignPresentation(campaignId, scenarioId).assets
+    const key = ({ manor: 'hubHero', desk: 'hubDesk', casefile: 'casefile', scene: 'storyDefault' })[name] || name
     return h('img', { className: 'ah-office-decor ' + className, src: assets[key], alt: '', draggable: 'false', 'aria-hidden': 'true' })
   }
   const portrait = inv => h('div', { className: 'ah-office-portrait' }, art(inv.code, inv.name))
@@ -763,7 +765,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const count = st.investigators.filter(inv => seatPrepared(s, inv)).length
     const hint = preparationMessage(s)
     return h('section', { className: 'ah-hub-pane ah-office-departure', 'aria-label': '出发准备' },
-      h('div', { className: 'ah-departure-heading' }, decor('manor'), h('div', {},
+      h('div', { className: 'ah-departure-heading' }, decor('scene', '', st.hubSelectedScenarioId), h('div', {},
         h('small', { className: 'ah-office-eyebrow' }, '出发准备'), h('h2', {}, scenario?.name || '下一场调查'),
         h('p', {}, `${DIFFICULTIES[st.difficulty] || st.difficulty} · ${count}/${st.investigators.length} 席位已准备`),
         h('p', { id: 'ah-departure-hint', role: 'status' }, hint),
@@ -933,6 +935,14 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const cost = Number(selected?.label.match(/（(\d+) XP）/)?.[1] || 0)
     const record = st.campaign.investigators[s.mySeat ?? 0]
     const draft = record?.upgradeDraft
+    // 牌组里的每张卡都列在「② 选择替换卡」：换不掉的卡置灰并说明原因。
+    // 原因由服务端按同一套升级规则投影（state.upgradeBlocked），前端不复制升级判定。
+    const deck = draft?.record?.deck || record?.deck || []
+    const deckCodes = [...new Set(deck)]
+    const deckCount = code => deck.filter(item => item === code).length
+    const blockedReason = new Map((st.upgradeBlocked?.[state.arkhamUpgradeSelected] || []).map(item => [item.code, item.reason]))
+    const blockedNotice = state.arkhamUpgradeNotice && state.arkhamUpgradeSelected
+      ? blockedReason.get(state.arkhamUpgradeNotice) : null
     const upgraded = !!st.hubUpgradedSeats?.[s.mySeat ?? 0]
       || record?.purchases?.some(item => item.scenarioIndex === st.campaign.scenarioIndex)
     const inspectArt = code => h('button', {
@@ -951,14 +961,39 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
             shown.length ? h('div', { className: 'ah-office-upgrade-gallery', 'data-scroll-context': JSON.stringify([inv.seat,cardFilters('upgrade')]), 'aria-label': '选择要购入的卡牌' }, shown.map(({code}) => h('button', {
               'data-focus-key': 'upgrade:' + code, 'data-zoom-code': code, 'data-zoom-name': name(code),
               'aria-label': `查看升级：${name(code)}`, 'aria-pressed': String(state.arkhamUpgradeSelected === code),
-              onclick: () => { state.arkhamUpgradeSelected = code; render() },
+              onclick: () => { state.arkhamUpgradeSelected = code; state.arkhamUpgradeNotice = null; render() },
             }, art(code, name(code)), h('span', {}, name(code))))) : h('p', {className:'ah-office-empty'}, additions.length ? '没有符合筛选条件的卡牌，请调整或清除筛选。' : '当前没有可支付的合法升级，可以保留经验。')),
             selected ? h('section', {className:'ah-upgrade-workbench'},
               h('h3', {}, '② 选择替换卡'),
-              h('div', { className:'ah-office-upgrade-options', 'data-scroll-context': `${inv.seat}:${state.arkhamUpgradeSelected}`, 'aria-label':'选择替换方案' }, options.map(move=>h('button',{
-                'data-focus-key': 'replace:' + move.removed, 'data-zoom-code': move.removed || null, 'data-zoom-name': name(move.removed),
-                'aria-pressed':String(move===selected), onclick:()=>{state.arkhamUpgradeRemoved=move.removed;render()},
-              }, name(move.removed)))),
+              h('div', { className:'ah-office-upgrade-options', 'data-scroll-context': `${inv.seat}:${state.arkhamUpgradeSelected}`, 'aria-label':'选择替换方案' },
+                options.filter(move => move.removed == null).map(move => h('button', {
+                  type: 'button', className: 'ah-upgrade-replacement',
+                  'data-focus-key': 'replace:null', 'aria-pressed': String(move === selected),
+                  onclick: () => { state.arkhamUpgradeRemoved = move.removed; state.arkhamUpgradeNotice = null; render() },
+                }, name(move.removed))),
+                deckCodes.map(code => {
+                  const move = options.find(item => item.removed === code)
+                  const reason = move ? null : blockedReason.get(code) || '当前升级方案不能替换这张卡。'
+                  return h('button', {
+                    type: 'button', className: 'ah-upgrade-replacement' + (move ? '' : ' is-locked'),
+                    'data-focus-key': 'replace:' + code, 'data-zoom-code': code, 'data-zoom-name': name(code),
+                    'aria-pressed': String(!!move && move === selected),
+                    'aria-disabled': move ? null : 'true',
+                    // 置灰卡不写死文字标签：悬浮（title）或点按才说明为什么不能替换。
+                    // 原生 title 需要按钮保持可用状态，所以用 aria-disabled 表达不可选。
+                    title: move ? `替换「${name(code)}」` : reason,
+                    'aria-label': move ? `替换 ${name(code)}` : `${name(code)}：${reason}`,
+                    onclick: () => {
+                      if (move) { state.arkhamUpgradeRemoved = move.removed; state.arkhamUpgradeNotice = null }
+                      else state.arkhamUpgradeNotice = code
+                      render()
+                    },
+                  }, h('span', {}, name(code)), deckCount(code) > 1 ? h('i', {}, `×${deckCount(code)}`) : null)
+                })),
+              h('p', { className: 'ah-upgrade-replacement-note' },
+                '牌组里的每张卡都列在这里；灰色的卡本次不能选中，悬停或点按可查看原因。'),
+              blockedNotice ? h('p', { className: 'ah-upgrade-blocked-note', role: 'status' }, tableIcon('lock'),
+                `${name(state.arkhamUpgradeNotice)}：${blockedNotice}`) : null,
               h('div', {className:'ah-upgrade-comparison'},
                 h('div',{}, selected.removed?inspectArt(selected.removed):h('span',{},'额外加入'),h('strong',{},name(selected.removed)),
                   cardDescription(selected.removed)),
@@ -1037,17 +1072,18 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const cp = s.state.campaign
     const manifest = game()?.clientData?.campaigns?.find(item => item.id === cp.id)
     const label = key => manifest?.recordLabels?.[key] || key
+    const cardNames = cp.recordCardNames || {}
     const shownRecords = Object.entries(cp.records || {}).filter(([, value]) =>
       value !== false && value != null && value !== '' && !(Array.isArray(value) && !value.length))
     return h('section', { className: 'ah-hub-pane ah-office-records' }, h('small', { className: 'ah-office-eyebrow' }, '调查档案'), h('h2', {}, '战役记录'),
       h('div', { className: 'ah-office-metrics' }, metric('star', cp.victory, '总胜利点'), metric('book', cp.xp, '未花经验')),
       !shownRecords.length && !cp.scenarioResults?.length ? h('div', { className: 'ah-office-empty' }, tableIcon('book'), h('p', {}, '尚未留下调查记录')) : null,
-      shownRecords.map(([key, value]) => h('div', {}, `${label(key)}：${typeof value === 'boolean' ? value ? '是' : '否' : Array.isArray(value) ? value.join('、') : String(value)}`)),
+      shownRecords.map(([key, value]) => h('div', {}, `${label(key)}：${recordValueText(value, cardNames)}`)),
       (cp.scenarioResults || []).map(result => h('article', { className: 'ah-hub-scenario' },
         h('strong', {}, manifest?.scenarios.find(item => item.id === result.scenarioId)?.name || result.scenarioId),
         h('span', {}, `${resultName(s, result)} · 胜利点 ${result.victory} · ${result.rounds} 回合`),
         Object.entries(result.recordsAfter || {}).filter(([key, value]) => JSON.stringify(value) !== JSON.stringify(result.recordsBefore?.[key]))
-          .map(([key, value]) => h('p', {}, `${label(key)}：${JSON.stringify(result.recordsBefore?.[key] ?? '未记录')} → ${JSON.stringify(value)}`)))),
+          .map(([key, value]) => h('p', {}, `${label(key)}：${recordChangeText(result.recordsBefore?.[key], value, cardNames)}`)))),
       s.state.investigators.map(inv => h('p', {}, `${inv.name} · 创伤 肉体${cp.trauma[inv.seat]?.physical || 0} / 精神${cp.trauma[inv.seat]?.mental || 0}`)))
   }
 

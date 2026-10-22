@@ -21,6 +21,10 @@
 .ah-runtime-markers{display:flex;flex-wrap:wrap;gap:7px}.ah-runtime-marker{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border:1px solid #bfa875;border-radius:4px;background:#13241d;color:#fff1ca}
 .ah-runtime-marker .ah-icon{width:15px;height:15px}.ah-runtime-marker small{color:inherit}.ah-runtime-marker-doom{background:#432343;border-color:#d5a4ce}.ah-runtime-marker-damage{background:#6c211b;border-color:#eaa48a}.ah-runtime-marker-horror{background:#253e68;border-color:#b1c6ef}
 .ah-runtime-host{margin:10px 0 0;color:#c9bea3}.ah-runtime-card-state .ah-detail-attachments{margin-top:14px}
+/* 能力使用情况：上限（每回合 / 每场游戏…）与当前是否已用掉，逐条常驻显示。 */
+.ah-detail-usage{margin-top:14px}.ah-detail-usage-row{display:flex;align-items:center;gap:7px;margin:6px 0 0;padding:6px 9px;border:1px solid #9c8a5f66;border-radius:4px;background:#13241d;color:#e8d9b4}
+.ah-detail-usage-row .ah-icon{width:14px;height:14px;flex:0 0 14px}.ah-detail-usage-row span{flex:1 1 auto}.ah-detail-usage-row small{color:#b8ad8e}
+.ah-detail-usage-row.is-used{border-style:dashed;border-color:#b98a4f99;background:#2a2118;color:#f0cfa0}.ah-detail-usage-row.is-used small{color:#e0b478}
 .ah-detail-attachments{display:flex;flex-wrap:wrap;gap:8px}.ah-detail-attachments h4{flex-basis:100%}
 .ah-detail-attachment-card{display:flex;align-items:center;gap:8px;max-width:220px;padding:4px 9px 4px 4px;border:1px solid #bd8eae;border-radius:4px;background:#2b1a25;color:#f6e2ec;cursor:pointer}
 .ah-detail-attachment-card .ah-table-art{position:relative;flex:0 0 30px;width:30px;height:42px;border:0;border-radius:2px;overflow:hidden}.ah-detail-attachment-card span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

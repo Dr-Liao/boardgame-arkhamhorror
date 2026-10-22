@@ -13,6 +13,20 @@ function visitDetails(state) {
   }
 }
 
+/**
+ * 检查点只需要保住当时的文字历史。每条事件的整桌演出快照（tableState）有 5–10KB，
+ * 每关复制一整份会让存档体积近似平方增长；而回档之后不会再回放历史演出，
+ * 所以检查点里的历史事件一律不带演出快照。
+ */
+function checkpointEvents(events) {
+  return (events || []).map(event => {
+    const copy = structuredClone(event)
+    if (copy.tableState != null) delete copy.tableState
+    if (copy.presentation?.tableState != null) delete copy.presentation.tableState
+    return copy
+  })
+}
+
 /** Capture the first authoritative, interactive state after a scenario starts. */
 export function createSessionCheckpoint(session, receipt) {
   const state = receipt?.after
@@ -32,7 +46,7 @@ export function createSessionCheckpoint(session, receipt) {
     sourceRevision: state.revision,
     snapshot: {
       state: structuredClone(state),
-      events: structuredClone(session.events || []),
+      events: checkpointEvents(session.events),
       notes: structuredClone(session.notes || []),
       agentPlans: structuredClone(session.agentPlans || {}),
     },

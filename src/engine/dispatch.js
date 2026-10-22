@@ -434,7 +434,11 @@ function applyMoveUnchecked(state, seat, move, events) {
   checkOutcome(state, events)
 
   if (state.status === 'playing') {
-    playerWindow(state, 'investigation.afterAction', events)
+    // 行动点已经用完（或刚点了结束回合）时，收尾窗口里仍然可以打出快速卡：
+    // 否则「快速。只能在你回合期间打出」的手牌会随回合推进失去唯一的时机。
+    const acting = state.investigators[seat]
+    const closingTurn = !acting || acting.actionsLeft <= 0 || acting.turnEnded || acting.defeated || acting.resigned
+    playerWindow(state, 'investigation.afterAction', events, null, { fastCards: closingTurn })
     const cur = state.investigators[seat]
     if (cur.actionsLeft <= 0 || cur.turnEnded || cur.defeated || cur.resigned) {
       advanceInvestigator(state, seat, events)

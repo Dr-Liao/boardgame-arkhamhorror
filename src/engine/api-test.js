@@ -59,7 +59,7 @@ export function createTestApi(state, events, deps) {
         const icons = commitIcons(state, owner, code, state.skillTest.skill)
         state.skillTest.value = (state.skillTest.value || 0) + icons
         state.skillTest.committed.push({ seat: owner.seat, code, icons })
-        info(state, events, `${owner.name} 强制投入「${cardName(code)}」（${icons} 个图标）。`)
+        info(state, events, `${owner.name} 强制投入「${cardName(code)}」（${icons} 个图标）。`, null, { public: true })
         added += icons
       }
       return added

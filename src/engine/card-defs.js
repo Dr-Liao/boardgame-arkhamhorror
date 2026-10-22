@@ -110,6 +110,8 @@ export function createCardDefs(deps) {
           copy.extraSlots = { ...eff.passive.extraSlots }
           if (eff.passive.handSlotsBonus) copy.extraSlots.hand = (copy.extraSlots.hand || 0) + eff.passive.handSlotsBonus
         }
+        // 米奇·布朗：额外盟友槽只放非独特盟友，前端需要单独渲染这组受限槽位。
+        if (eff.passive.allySlotsForNonUnique) copy.allySlotsForNonUnique = eff.passive.allySlotsForNonUnique
       } else if (entryPassive) {
         if (entryPassive.stats) copy.statBonus = entryPassive.stats
         if (entryPassive.fightDamage) copy.fightDamageBonus = entryPassive.fightDamage
@@ -117,6 +119,7 @@ export function createCardDefs(deps) {
           copy.extraSlots = { ...entryPassive.extraSlots }
           if (entryPassive.handSlotsBonus) copy.extraSlots.hand = (copy.extraSlots.hand || 0) + entryPassive.handSlotsBonus
         }
+        if (entryPassive.allySlotsForNonUnique) copy.allySlotsForNonUnique = entryPassive.allySlotsForNonUnique
       } else if (descriptorEntry?.modifiers.length) {
         // Phase 5：passive.stats 迁成 modifiers 后，图鉴字段从声明式修正反推，
         // 否则前端会丢掉 statBonus / extraSlots（§7 迁移清单第 4 条）。

@@ -10,7 +10,28 @@ import arkham from '../index.js'
 import { PLAYER_CARD_CODES } from '../src/deck/availability.js'
 import { buildDeck } from '../src/deck/deckbuilding.js'
 import { INVESTIGATORS } from '../src/cards/cards-data.js'
-import { migrateSessionCheckpoints } from '../src/integration/hall-integration.js'
+import { migrateSessionCheckpoints, createSessionCheckpoint } from '../src/integration/hall-integration.js'
+
+test('关卡检查点只保留文字历史，不复制整桌演出快照', () => {
+  const after = {
+    uiState: 'inScenario', revision: 7,
+    scenario: { id: 'theGathering', name: '聚会' },
+    campaign: { id: 'nightOfTheZealot', flow: { nodeId: 'theGathering', visits: { theGathering: 1 } } },
+    investigators: [],
+  }
+  const session = { scenarioCheckpoints: [], events: [
+    { seq: 0, type: 'info', text: '第一幕', tableState: { investigators: [{ seat: 0, hand: ['01020'] }] } },
+    { seq: 1, type: 'presentation', kind: 'checkpoint', tableState: { investigators: [{ seat: 0, hand: ['01020'] }] } },
+  ] }
+  const checkpoint = createSessionCheckpoint(session, { move: { action: 'hubBeginScenario' }, after })
+  assert.ok(checkpoint, '关卡入口应生成检查点')
+  assert.equal(checkpoint.snapshot.events.length, 2)
+  assert.equal(checkpoint.snapshot.events[0].text, '第一幕', '文字历史必须保留')
+  assert.equal(checkpoint.snapshot.events[0].tableState, undefined)
+  assert.equal(checkpoint.snapshot.events[1].tableState, undefined)
+  assert.equal(checkpoint.snapshot.state.scenario.id, 'theGathering')
+  assert.equal(session.events[0].tableState.investigators[0].hand[0], '01020', '不得改动线上事件')
+})
 
 async function listen() {
   const server = createServer({ mods: [arkham] })

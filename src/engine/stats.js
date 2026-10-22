@@ -1,4 +1,5 @@
 import { investigatorRule } from '../cards/card-rules.js'
+import { describeLimitShort, limitUsed } from './limits.js'
 // stats.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 属性与「卡面给什么」的读点：技能值、图标、特质/关键词、手牌位与行动数、
 // 生命力/神智上限，以及 assetEffect（旧 passive + 条目字段 + 描述子 shim 的合并结果）。
@@ -14,6 +15,7 @@ export function createStats(deps) {
     assetPassiveBonus,
     blanksTraits,
     cardDef,
+    cardName,
     collectGrants,
     doAbility,
     doPlay,
@@ -223,5 +225,44 @@ export function createStats(deps) {
     return (ag && ag.passive) || {}
   }
 
-  return { assetEffect, controlledAbilityCards, controlledAbilityCard, lolaCanUseCard, chooseLolaRole, runtimeCardAvailable, getStat, getMaxHealth, getMaxSanity, extraActionBonus, exploreOnlyActionBonus, normalActionsLeft, investigateBonus, handSize, getHandSize, cardPlayFlag, iconValue, effectiveTraits, cardHasTrait, cardKeyword, commitIcons, enemyStatMods }
+  // 能力上限的使用情况（上限账本的展示侧）。
+  // 只回答「这条能力现在还剩几次」——费用、目标、时机由 legalMoves 决定，这里不重复判定。
+  // 读点：limitUsed 与 legalMoves / validateMove / 结算共用同一份 state.abilityLimits。
+  // 只投影不依赖调用上下文的 scope：perWindow/perAttack/perSearch/perAction 的账键里带
+  // 窗口/攻击/搜索/行动标识，这里拿不到，硬算会把「用过」误报成「没用过」。
+  const USAGE_SCOPES = new Set(['perTest', 'perTurn', 'perPhase', 'perRound', 'perGame', 'perCampaign'])
+
+  function abilityUsage(state, inv) {
+    if (!state || !inv || !Array.isArray(inv.assets)) return []
+    const cards = []
+    for (const card of controlledAbilityCards(inv)) {
+      if (!card?.id) continue
+      const abilities = assetEffect(inv, card)?.abilities
+      if (!Array.isArray(abilities)) continue
+      const limited = []
+      abilities.forEach((ability, index) => {
+        const descriptor = ability?.descriptor
+        const limit = descriptor?.limit
+        if (!limit || !USAGE_SCOPES.has(limit.scope)) return
+        limited.push({
+          index,
+          label: ability.label || descriptor.label || `能力 ${index + 1}`,
+          scope: limit.scope,
+          limitText: describeLimitShort(descriptor),
+          used: limitUsed(state, inv, descriptor, null, null, card),
+        })
+      })
+      if (!limited.length) continue
+      cards.push({
+        assetId: card.id,
+        code: card.code,
+        name: cardName(card.code),
+        used: limited.some(item => item.used),
+        abilities: limited,
+      })
+    }
+    return cards
+  }
+
+  return { assetEffect, controlledAbilityCards, controlledAbilityCard, lolaCanUseCard, chooseLolaRole, runtimeCardAvailable, getStat, getMaxHealth, getMaxSanity, extraActionBonus, exploreOnlyActionBonus, normalActionsLeft, investigateBonus, handSize, getHandSize, cardPlayFlag, iconValue, effectiveTraits, cardHasTrait, cardKeyword, commitIcons, enemyStatMods, abilityUsage }
 }

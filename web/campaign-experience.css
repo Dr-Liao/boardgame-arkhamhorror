@@ -45,6 +45,16 @@
 .ah-office .ah-office-upgrade-options { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
 .ah-office .ah-office-upgrade-options button { padding: 8px 12px; background: #152b22; color: #dbcea5; border: 1px solid #bca46555; border-radius: 3px; }
 .ah-office .ah-office-upgrade-options button[aria-pressed=true] { border-color: #f0cf85; background: #354835; }
+/* ② 选择替换卡：牌组里的每张卡都保留，换不掉的卡置灰并在悬停/点按时说明原因。 */
+.ah-office .ah-office-upgrade-options .ah-upgrade-replacement { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; }
+.ah-office .ah-office-upgrade-options .ah-upgrade-replacement > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ah-office .ah-office-upgrade-options .ah-upgrade-replacement > i { font-style: normal; font-size: 11px; color: #cbb57c; }
+.ah-office .ah-office-upgrade-options .ah-upgrade-replacement.is-locked { background: #12211b; border-color: #8f8a6a2e; color: #8d9487; filter: grayscale(.7); cursor: not-allowed; }
+.ah-office .ah-office-upgrade-options .ah-upgrade-replacement.is-locked:hover,
+.ah-office .ah-office-upgrade-options .ah-upgrade-replacement.is-locked:focus-visible { border-color: #b9a06b66; color: #a9ad9a; }
+.ah-upgrade-replacement-note { margin: -8px 0 16px; color: #9fae9b; line-height: 1.7; }
+.ah-upgrade-blocked-note { display: flex; align-items: center; gap: 8px; margin: 0 0 16px; padding: 10px 12px; border-left: 3px solid #b99a5b; background: #101f19; color: #d6c79d; }
+.ah-upgrade-blocked-note .ah-icon { flex: none; width: 17px; height: 17px; }
 .ah-office .ah-upgrade-workbench { grid-column: 2; grid-row: 1; border-left: 1px solid #aa97584d; padding: 0 0 0 25px; margin-bottom: 22px; }
 .ah-upgrade-library { grid-column: 1; min-width: 0; }
 .ah-upgrade-library > h3 { margin: 10px 0; }

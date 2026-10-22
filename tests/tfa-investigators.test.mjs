@@ -309,22 +309,48 @@ test('M1 Calvin Wright elder sign heals or takes one direct harm', () => {
 test('M1 Mitch Brown opens two ally slots that only non-unique allies may use', () => {
   const state = investigatorFixture('04001')
   state.encounterDeck = []
-  me(state).hand = ['04006', '01018', '01021', '01028', '01055']
+  me(state).hand = ['04006', '01018', '01021', '01028']
   me(state).resources = 40
   move(state, { action: 'play', cardId: '04006' })
   settle(state)
   assert.ok(me(state).assets.some(item => item.code === '04006'))
-  // 米奇之后最多还能有 2 个非独特盟友，合计 3 个盟友槽。
-  for (const code of ['01018', '01021', '01028']) {
+  // 米奇自己占基础盟友槽，最多再带 2 个非独特盟友（合计 3 个盟友）。
+  for (const code of ['01018', '01021']) {
     assert.equal(validateMove(state, 0, { action: 'play', cardId: code }), null, code)
     move(state, { action: 'play', cardId: code })
     settle(state)
   }
   assert.equal(me(state).assets.filter(item => ALL_CARDS[item.code].type === 'asset'
-    && (ALL_CARDS[item.code].traits || []).some(trait => String(trait).toLowerCase() === 'ally')).length, 4)
-  // 第四个非独特盟友需要换下已有盟友，而不是直接放不下。
-  const replacement = validateMove(state, 0, { action: 'play', cardId: '01055' })
-  assert.equal(replacement, null)
+    && (ALL_CARDS[item.code].traits || []).some(trait => String(trait).toLowerCase() === 'ally')).length, 3)
+  // 第三个非独特盟友需要换下已有盟友，而不是直接放不下。
+  assert.equal(validateMove(state, 0, { action: 'play', cardId: '01028' }), null)
+  move(state, { action: 'play', cardId: '01028' })
+  assert.equal(state.pendingChoice?.kind, 'assetReplacement')
+})
+
+test('M1 Mitch Brown ally slots stack with Charisma and unique allies', () => {
+  const state = investigatorFixture('04001')
+  state.encounterDeck = []
+  me(state).hand = ['01028', '01021', '01055']
+  me(state).resources = 40
+  // 魅力超凡（+1 盟友槽）+ 里奥·德·卢卡（独特盟友）+ 米奇（独特盟友）：
+  // 两个独特盟友占满基础槽与魅力槽，非独特盟友应进入米奇的两个受限槽。
+  me(state).assets.push(
+    { id: 'charisma', code: '02158', exhausted: false, damage: 0, horror: 0 },
+    { id: 'leo-de-luca', code: '01048', exhausted: false, damage: 0, horror: 0 },
+    { id: 'mickey', code: '04006', exhausted: false, damage: 0, horror: 0 },
+  )
+  for (const code of ['01028', '01021']) {
+    assert.equal(validateMove(state, 0, { action: 'play', cardId: code }), null, code)
+    move(state, { action: 'play', cardId: code })
+    settle(state)
+    assert.equal(state.pendingChoice, null, `${code} 不应要求替换盟友`)
+  }
+  assert.equal(me(state).assets.filter(item => (ALL_CARDS[item.code].traits || [])
+    .some(trait => String(trait).toLowerCase() === 'ally')).length, 4)
+  // 两个受限槽用完后，第三个非独特盟友才需要替换。
+  move(state, { action: 'play', cardId: '01055' })
+  assert.equal(state.pendingChoice?.kind, 'assetReplacement')
 })
 
 test('M1 Mitch Brown ally slots cannot hold a second unique ally without replacing one', () => {

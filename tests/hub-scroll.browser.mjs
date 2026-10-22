@@ -4,7 +4,7 @@ import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { deckBuilderData } from '../src/deck/deckbuilding.js'
 
 // A long upgrade round isolates presentation from campaign progression/AI timing.
-async function upgrades(page, filterFixture=false) {
+async function upgrades(page, filterFixture=false, blockedFixture=false) {
   let session
   await page.route('**/api/start', async route => {
     const response = await route.fetch({ postData: JSON.stringify({ modId:'arkhamhorror', settings:{legacyAutoStart:true,playerCount:1,playerInvestigator:'01001',seed:'upgrade-scroll'} }) })
@@ -14,7 +14,7 @@ async function upgrades(page, filterFixture=false) {
     session.events=[]
     const cards=Object.entries(ALL_CARDS).map(([code,card])=>({...card,code}))
       .filter(c=>['asset','event','skill'].includes(c.type))
-    const added=cards.slice(0,30), removed=cards.slice(30,150)
+    const added=cards.slice(0,30), removed=cards.slice(30, blockedFixture ? 38 : 150)
     for (const card of [...added,...removed]) st.cards[card.code]={...card,name:card.nameZh || card.name}
     for (const card of [added[0], removed[0]]) Object.assign(st.cards[card.code], {
       traits:['Practiced'],traitsZh:['精通'],text:'English upgrade text.',textZh:'中文升级说明。',
@@ -24,7 +24,14 @@ async function upgrades(page, filterFixture=false) {
       Object.assign(st.cards[card.code],{pack:['core','dwl','tmm'][index%3],packName:['基础包','敦威治遗产','米斯卡托尼克博物馆'][index%3],type:index%2?'event':'asset',klass:'guardian',cost:index%5,xp:index%6})
     })
     st.campaign.investigators[0]={...st.campaign.investigators[0],xp:20,status:'active',deck:removed.map(c=>c.code)}
-    st.legalMoves=added.flatMap(a=>removed.map(r=>({action:'hubPurchase',added:a.code,removed:r.code,label:'升级（1 XP）',explanation:'花费 1 XP'})))
+    // 关间升级：legalMoves 只列可替换组合，其余牌组卡的原因由观察投影补上。
+    const legalRemoved = blockedFixture ? removed.slice(0, 5) : removed
+    st.legalMoves=added.flatMap(a=>legalRemoved.map(r=>({action:'hubPurchase',added:a.code,removed:r.code,label:'升级（1 XP）',explanation:'花费 1 XP'})))
+    if(blockedFixture) {
+      const reasons = ['弱点不能替换。', '经验不足：这次替换需要 5 XP，当前只有 2 XP。', '牌组中已有 2 张同名的「.45 自动手枪」，达到 2 张上限。']
+      st.upgradeBlocked = Object.fromEntries(added.map(card => [card.code,
+        removed.slice(5).map((blocked, index) => ({ code: blocked.code, reason: reasons[index] }))]))
+    }
     await route.fulfill({response,json:payload})
   })
   await page.route('**/api/session?*', route=>route.fulfill({json:{ok:true,session}}))
@@ -126,6 +133,44 @@ for(const width of [1440,390]) test(`升级选卡、替换、暂存和详情保�
   await hub.getByRole('button',{name:'战役总览',exact:true}).evaluate(el=>el.click())
   await hub.getByRole('button',{name:'升级',exact:true}).evaluate(el=>el.click())
   expect(await offset(gallery)).toEqual({top:0,left:0})
+})
+
+for(const width of [1440,390]) test(`升级替换卡：不可替换的卡置灰并给出原因 ${width}`,async({page})=>{
+  await page.setViewportSize({width,height:900})
+  await upgrades(page,false,true)
+  const hub=page.locator('.ah-hub')
+  const options=hub.locator('.ah-office-upgrade-options .ah-upgrade-replacement')
+  // 牌组 8 张全部列出：5 张可替换 + 3 张置灰，不再把换不掉的卡藏起来。
+  await expect(options).toHaveCount(8)
+  const locked=hub.locator('.ah-upgrade-replacement.is-locked')
+  await expect(locked).toHaveCount(3)
+  // 卡面上不写「不可替换」标签：只有置灰，原因放在悬浮提示里。
+  expect(await locked.first().innerText()).not.toContain('不可替换')
+  await expect(locked.first().locator('small')).toHaveCount(0)
+  await expect(locked.first()).toHaveAttribute('aria-disabled','true')
+  expect(await locked.first().getAttribute('disabled')).toBeNull()
+  expect(await locked.first().getAttribute('title')).toBe('弱点不能替换。')
+  expect(await locked.first().getAttribute('aria-label')).toContain('弱点不能替换')
+  expect(await locked.first().evaluate(el=>getComputedStyle(el).filter)).toContain('grayscale')
+  await expect(hub.locator('.ah-upgrade-replacement-note')).toContainText('灰色的卡本次不能选中')
+  // 点按置灰卡显示完整原因，且不改变已经选好的替换卡。
+  // aria-disabled 只表达「不可替换」；按钮仍可点按（触屏没有悬停），所以测试用 force 点击。
+  const pressedBefore=await hub.locator('.ah-upgrade-replacement[aria-pressed="true"]').first().getAttribute('data-zoom-code')
+  await locked.first().click({force:true})
+  const note=hub.locator('.ah-upgrade-blocked-note')
+  await expect(note).toBeVisible()
+  await expect(note).toContainText('弱点不能替换。')
+  expect(await hub.locator('.ah-upgrade-replacement[aria-pressed="true"]').first().getAttribute('data-zoom-code')).toBe(pressedBefore)
+  // 截图只做验收留档：先等卡图加载，避免留下空白卡面。
+  await page.waitForFunction(() => document.querySelectorAll('.ah-hub .ah-table-art[data-image-state="displayable"]').length > 0, null, { timeout: 5000 }).catch(()=>{})
+  await page.waitForTimeout(150)
+  await page.screenshot({path:fileURLToPath(new URL(`../../../artifacts/arkham-polish/upgrade-blocked-${width}.png`,import.meta.url)),animations:'disabled'})
+  // 可替换的卡仍然正常选择并进入升级方案。
+  const legal=hub.locator('.ah-upgrade-replacement:not(.is-locked)').nth(1)
+  await legal.click()
+  await expect(legal).toHaveAttribute('aria-pressed','true')
+  await expect(hub.getByRole('button',{name:/加入升级方案/})).toBeVisible()
+  expect(await hub.evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true)
 })
 
 for(const width of [1440,390]) test(`升级页面复用筛选并按战役与扩展包组合过滤 ${width}`,async({page})=>{

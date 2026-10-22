@@ -263,12 +263,23 @@ const enemyChecks = {
   },
   '02224'() {
     const state = simpleState()
+    state.locations[0].clues = 1
     state.locations[1].clues = 2
     state.investigators[0].location = 'a'
     assert.equal(encounterRules.spawnLocation(state, '02224', 'a', 0, {}), 'b')
     let gained = 0
-    laterBehavior('bloodOnTheAltar').enemyDefeated(state, { code: '02224', defeatedBy: 0 },
-      { choose: () => 'b', gainClues: (_seat, n) => { gained += n } })
+    const offered = []
+    laterBehavior('bloodOnTheAltar').enemyDefeated(state, { code: '02224', defeatedBy: 0 }, {
+      // 候选地点由剧情的发现限制过滤（02213 学校：除调查外不能发现线索）。
+      canDiscoverClueAt: (_seat, id) => id !== 'a' && (state.locations.find(loc => loc.id === id)?.clues || 0) > 0,
+      choose: request => { offered.push(...request.options.map(option => option.id)); return 'b' },
+      discoverClue: (_seat, amount, id) => {
+        state.locations.find(loc => loc.id === id).clues -= amount
+        gained += amount
+      },
+    })
+    assert.deepEqual(offered, ['skip', 'b'])
+    assert.equal(state.locations[0].clues, 1)
     assert.equal(state.locations[1].clues, 1)
     assert.equal(gained, 1)
   },
@@ -1004,6 +1015,15 @@ const storyChecks = {
     })
     assert.deepEqual(test, [0, 'willpower', 3, 4, '02255'])
     assert.deepEqual(damage, ['brood', 2, 0, '02254'])
+    // 02094 鸟之奴仆：被[[法术]]支援攻击时 -3 攻击值，咒文攻击的难度应是 5-3=2。
+    const thrall = { id: 'thrall', code: '02094', name: '鸟之奴仆', traits: ['Abomination'], location: 'a', fight: 5, clues: 0 }
+    state.enemies = [thrall]
+    let thrallTest
+    laterBehavior('undimensionedAndUnseen').performAction(state, inv, { rule: 'castFormula', enemyId: 'thrall' }, {
+      test: (seat, skill, difficulty, resolve, bonus) => { thrallTest = [seat, skill, difficulty, bonus()]; resolve({ success: true }) },
+      damageEnemy: () => {},
+    })
+    assert.deepEqual(thrallTest, [0, 'willpower', 2, 0])
   },
 }
 

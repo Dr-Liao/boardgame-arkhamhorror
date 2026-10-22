@@ -28,6 +28,7 @@ export const FAST_TESTS = Object.freeze([
   'p1-regressions.test.mjs', // P1：全灭继续 / 02178 去向 / 03186 攻击限制
   'ability-layer.test.mjs', // 0.9
   'card-entries.test.mjs', // 0.4 —— 一卡一文件 / 索引 / 禁止批次大文件
+  'encounter-entries.test.mjs', // 非玩家条目：一卡一文件 / 归属 / 索引 / 跨条目查询单独 import
   'architecture-guard.test.mjs', // 0.1
   'phase6-guard.test.mjs', // 0.1 —— Phase 6 门禁：引擎里无卡号 / 无战役名
   'phase6-implementation.test.mjs', // 0.4 —— Phase 6（6e-1）实现账本：通道判定 / 摘要形状 / isPlayable 一致
@@ -40,12 +41,13 @@ export const FAST_TESTS = Object.freeze([
   'card-rules.test.mjs', // 0.1 —— Phase 5（5a）卡号级规则数据读点
   'phase5-migration.test.mjs', // 1.2 —— 5c 逃生卡改写后的行为（地点附属 / 连抽遭遇 / 检索）
   'replay.test.mjs', // 4.2 —— 日志/指纹/重放/撤销的契约（含 4 局随机走子）
-  'replay-golden.test.mjs', // 11.2 —— golden replay 基线（4 战役 / 5 关卡 / 529 步逐步指纹）
+  'replay-golden.test.mjs', // 11.2 —— golden replay 基线（4 战役 / 5 关卡 / 786 步逐步指纹）
   'decision-http.test.mjs', // 1.7
   'ai-completion.test.mjs', // 1.6
   'ai-story.test.mjs', // 0.8
   'ai-dialogue.test.mjs', // 0.1
   'card-interactions.test.mjs', // 0.6
+  'turn-end-window.test.mjs', // 0.5 —— 收尾窗口的快速卡 / 被击败前的救命卡窗口
   'script-actions.test.mjs', // 0.6
   'script-card-ownership.test.mjs', // 1.0
   'engagement-flow.test.mjs', // 0.8

@@ -35,13 +35,21 @@ export function createActAgenda(deps) {
     triggerReaction,
   } = deps
 
+  // 幕/议程的背面剧情在内容层统一叫 advanceText（敦威治起由卡面 backText 生成）；
+  // 旧数据或显式留空的最终议程再退回卡面 backText，最后才用通用说明。
+  function advanceStoryText(card, fallback) {
+    const printed = cardDef(card.originalCode || card.code)
+    return card.advanceText || card.backText || printed?.backTextZh || printed?.backText || fallback
+  }
+
   function advanceAct(state, events) {
     if (state.status !== 'playing') return
     const scBefore = state.scenario
     const cur = state.acts[state.actIndex]
     if (!cur) return
+    const advanceText = advanceStoryText(cur, '翻开场景卡，结算背面的剧情与效果。')
     info(state, events, `翻开场景「${cur.name}」的背面。`, { kind: 'story', title: '场景推进',
-      code: cur.originalCode || cur.code, face: 'back', name: cur.name, text: cur.backText || '翻开场景卡，结算背面的剧情与效果。', flip: true })
+      code: cur.originalCode || cur.code, face: 'back', name: cur.name, text: advanceText, flip: true })
     if (cur.reveal) runActReveal(state, cur, events)
     // 若 reveal 触发了剧本切换（finishScenario → startScenario），立即返回，避免污染新剧本。
     if (state.scenario !== scBefore || state.status !== 'playing') return
@@ -179,8 +187,9 @@ export function createActAgenda(deps) {
       const cur = state.agendas[state.agendaIndex]
       if (!cur) return
       scenarioBehavior(state).agendaAdvancing?.(state, cur, scenarioRuntime(state, events))
+      const advanceText = advanceStoryText(cur, '翻开密谋，结算背面的剧情与效果。')
       info(state, events, `翻开密谋「${cur.name}」的背面。`, { kind: 'story', title: '密谋推进',
-        code: cur.originalCode || cur.code, face: 'back', name: cur.name, text: cur.backText || '翻开密谋，结算背面的剧情与效果。', flip: true })
+        code: cur.originalCode || cur.code, face: 'back', name: cur.name, text: advanceText, flip: true })
       // Only the agenda's own doom is discarded; doom on enemies/locations/assets
       // stays in play (Rules Reference, "Doom").
       state.doom = 0

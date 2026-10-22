@@ -91,3 +91,40 @@ test('自动阶段无需任何操作即按序播放并消失，切换页面可�
   await expect(scene).toHaveCount(0,{timeout:6000})
   expect(await page.locator('.ah-table').evaluate(el=>el.classList.contains('ah-presenting'))).toBe(false)
 })
+
+test('米奇·布朗的额外盟友槽单独显示，且只放非独特盟友',async({page})=>{
+  const errors=[];page.on('pageerror',e=>errors.push(e.message))
+  await page.setViewportSize({width:1440,height:1000})
+  const f=await fixture(page)
+  await f.update(session=>{
+    const s=session.state,inv=s.investigators[0]
+    s.cards['04006']={...s.cards['04006'],code:'04006',name:'米奇·布朗',type:'asset',slot:'Ally',slots:['Ally'],unique:true,allySlotsForNonUnique:2}
+    s.cards['02158']={...s.cards['02158'],code:'02158',name:'魅力超凡',type:'asset',unique:false,extraSlots:{ally:1}}
+    s.cards['01048']={...s.cards['01048'],code:'01048',name:'里奥·德·卢卡',type:'asset',slot:'Ally',slots:['Ally'],unique:true}
+    s.cards['01018']={...s.cards['01018'],code:'01018',name:'巡警',type:'asset',slot:'Ally',slots:['Ally'],unique:false}
+    inv.assets=[
+      {id:'charisma',code:'02158',exhausted:false},
+      {id:'leo-de-luca',code:'01048',exhausted:false},
+      {id:'mickey',code:'04006',exhausted:false},
+      {id:'beat-cop',code:'01018',exhausted:false},
+    ]
+    inv.hand=['01021'];inv.resources=10
+    s.legalMoves=[{action:'play',cardId:'01021',label:'装备看门狗'}]
+  })
+  // 基础 1 + 魅力超凡 1：两个不受限盟友槽；米奇再开两个「非独特」受限槽。
+  await expect(page.locator('.ah-equip-slot[data-slot="ally"]')).toHaveCount(2)
+  const restricted=page.locator('.ah-equip-slot[data-slot="allyRestricted"]')
+  await expect(restricted).toHaveCount(2)
+  await expect(restricted.first()).toContainText('盟友·非独特 1')
+  await expect(restricted.first()).toContainText('巡警')
+  await expect(page.locator('.ah-equip-slot[data-slot="ally"]').first()).toContainText('里奥·德·卢卡')
+  await expect(page.locator('.ah-equip-slot[data-slot="ally"]').nth(1)).toContainText('米奇·布朗')
+  await page.screenshot({path:output+'mickey-ally-slots-desktop.png',animations:'disabled'})
+  for(const width of [1440,390]){
+    await page.setViewportSize({width,height:900})
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
+  }
+  await page.screenshot({path:output+'mickey-ally-slots.png',animations:'disabled'})
+  expect(errors).toEqual([])
+})
+

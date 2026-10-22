@@ -1,8 +1,9 @@
 import { agendaDoom, totalDoom } from '../engine/rules-state.js'
 import { registeredEntry } from '../engine/ability.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
-import { campaignView } from '../campaign/campaign.js'
-import { actingSeats, decisionSeat, embeddedCardDefs, enemyEvadeValue, enemyFightValue, enemyHealth, getMaxHealth, getMaxSanity, getStat, handSize, legalMoves, scriptActionHints } from '../engine/engine.js'
+import { campaignView, replacementBlockers, upgradeRecord } from '../campaign/campaign.js'
+import { cardPoolContext } from '../deck/card-pool.js'
+import { actingSeats, decisionSeat, embeddedCardDefs, enemyEvadeValue, enemyFightValue, enemyHealth, getMaxHealth, getMaxSanity, getStat, handSize, legalMoves, scriptActionHints, abilityUsage } from '../engine/engine.js'
 import { contentRegistry } from '../../content/registered.js'
 import { projectTableState, locationEntryErrors, maskHiddenLocations, publicAttachments, attachLocationCards, publicCardInstance } from './presentation-state.js'
 import { campaignStory } from '../campaign/story.js'
@@ -42,6 +43,29 @@ const PUBLIC_INVESTIGATOR_FIELDS = [
 
 function pick(object, fields) {
   return Object.fromEntries(fields.filter(key => Object.hasOwn(object, key)).map(key => [key, structuredClone(object[key])]))
+}
+
+// 战役记录里的数组/字符串可能是卡号（被献祭的角色、遇害的贵宾……）。规则继续用卡号判断，
+// 但界面必须显示卡名。这里只收集当前记录与每关结算快照里出现过的卡号，投影成一张很小的
+// 公开映射表（`campaign.recordCardNames`），避免前端各自维护一份卡号→卡名。
+function recordCardNames(campaign) {
+  const codes = new Set()
+  const add = value => {
+    if (Array.isArray(value)) value.forEach(code => typeof code === 'string' && codes.add(code))
+    else if (typeof value === 'string') codes.add(value)
+  }
+  for (const value of Object.values(campaign?.records || {})) add(value)
+  for (const result of campaign?.scenarioResults || []) {
+    for (const snapshot of [result.recordsBefore, result.recordsAfter]) {
+      for (const value of Object.values(snapshot || {})) add(value)
+    }
+  }
+  const names = {}
+  for (const code of codes) {
+    const name = ALL_CARDS[code]?.nameZh || ALL_CARDS[code]?.name
+    if (name) names[code] = name
+  }
+  return names
 }
 
 function publicSetAsideCards(state) {
@@ -113,6 +137,8 @@ export function viewState(state, observerSeat = null) {
   }))
   view.locationEntryErrors = locationEntryErrors(state)
   view.campaign = campaignView(state.campaign, observer)
+  // 记录值里的卡号→卡名只用于界面显示；规则读取的仍是 campaign.records 里的原值。
+  view.campaign.recordCardNames = recordCardNames(view.campaign)
   // 补给品是公开信息（「检查你们的补给品」由全队共同核对），标签随观察投影下发，
   // 前端因此不需要另存一份中文名。选购界面还需要单价、卡面说明与两个时点的完整清单。
   const campaignManifest = contentRegistry.getCampaign(state.campaign.id)
@@ -178,6 +204,15 @@ export function viewState(state, observerSeat = null) {
     Object.assign(state.cards ||= {}, defs)
     Object.assign(view.cards ||= {}, structuredClone(defs))
   }
+  // 旧存档的 cards 快照可能缺少后来新增的展示字段（例如 04006 的 allySlotsForNonUnique），
+  // 前端据此画不出受限盟友槽。可见卡按当前条目补一次，权威状态与视图一起更新。
+  for (const code of visibleCodes) {
+    if (!code || !view.cards?.[code]) continue
+    const nonUniqueSlots = registeredEntry(code)?.passive?.allySlotsForNonUnique
+    if (!nonUniqueSlots || view.cards[code].allySlotsForNonUnique === nonUniqueSlots) continue
+    state.cards[code] = { ...state.cards[code], allySlotsForNonUnique: nonUniqueSlots }
+    view.cards[code] = { ...view.cards[code], allySlotsForNonUnique: nonUniqueSlots }
+  }
   view.encounterDeck = []
   view.encounterDeckSize = state.encounterDeck.length
   view.cultistDeck = []
@@ -200,9 +235,38 @@ export function viewState(state, observerSeat = null) {
   // state.legalMoves is cached for the primary seat; simultaneous seats compute their own list.
   view.legalMoves = observer == null || !actingSeats(state).includes(observer) ? []
     : observer === decisionSeat(state) ? structuredClone(state.legalMoves || []) : legalMoves(state, observer)
+  // 关间升级：牌组里换不掉的卡与原因，由服务端用同一套升级规则算好再投影给本人。
+  // 升级界面据此把不可替换的卡置灰并显示原因；前端不复制升级判定（ARCHITECTURE §4 第 2 条）。
+  const purchaseMoves = view.legalMoves.filter(move => move.action === 'hubPurchase')
+  if (observer != null && purchaseMoves.length && state.campaign?.investigators?.[observer]) {
+    const record = upgradeRecord(state.campaign.investigators[observer])
+    const context = cardPoolContext(state)
+    const legalByAdded = new Map()
+    for (const move of purchaseMoves) {
+      if (!legalByAdded.has(move.added)) legalByAdded.set(move.added, new Set())
+      legalByAdded.get(move.added).add(move.removed)
+    }
+    const blocked = {}
+    for (const [added, knownLegal] of legalByAdded) {
+      const list = replacementBlockers(record, added, state.campaign.records, context, knownLegal)
+      if (list.length) blocked[added] = list
+    }
+    if (Object.keys(blocked).length) view.upgradeBlocked = blocked
+  }
   // 牌桌只显示场景/密谋区行动；敌人与地点绑定的条件行动只用于 AI 计划（describeState）。
-  view.scriptActions = observer == null ? [] : scriptActionHints(state, observer)
-    .filter(hint => ['act', 'agenda'].includes(hint.scriptCard))
+  // 同一份提示同时供「剧本行动」与「已用行动」使用，避免重复枚举 behavior.actions。
+  const actionHints = observer == null ? [] : scriptActionHints(state, observer)
+  view.scriptActions = actionHints.filter(hint => ['act', 'agenda'].includes(hint.scriptCard))
+  // 能力上限的公开投影：每张支援的每条「每回合/每场游戏…」能力是否已经用掉。
+  // 场上支援对所有座位可见，因此上限账本也按座位全量下发；它只回答「还能不能用」，
+  // 不重复 legalMoves 的费用/目标/时机判定。牌桌据此给卡面加「已用」角标。
+  view.abilityUsage = Object.fromEntries(state.investigators
+    .map(inv => [inv.seat, abilityUsage(state, inv)])
+    .filter(([, list]) => list.length))
+  // 已经用掉的「每场游戏一次」卡面行动：内容层在提示上打 used 标记（reason 给 AI 与牌桌共用）。
+  // 这里只投影地点绑定的条目——挂在幕/密谋上的已用行动已经在 scriptActions 里带 reason 显示。
+  view.usedActions = actionHints.filter(hint => hint.used && !hint.scriptCard)
+    .map(hint => ({ label: hint.label, reason: hint.reason }))
   return view
 }
 

@@ -27,6 +27,7 @@ export function createScenarioRuntime(deps) {
     buildExplorationDeck,
     campaignCardChange,
     canDiscardFromHand,
+    canDiscoverClueAt,
     cardDef,
     cardName,
     checkSupplies,
@@ -40,6 +41,7 @@ export function createScenarioRuntime(deps) {
     discardUntilEnemy,
     discardUntilEnemyTrait,
     discardUntilEnemyFromEncounter,
+    discoverClueAt,
     disengageEnemy,
     doExplore,
     doInvestigate,
@@ -285,6 +287,11 @@ function scenarioRuntime(state, events, testSource = null) {
     addBasicWeakness: (seat, traits = ['madness', 'injury']) =>
       addBasicWeakness(state, state.investigators[seat], events, traits),
     gainClues: (seat, n) => { const inv = state.investigators[seat]; inv.clues += n; syncClues(state); scenarioBehavior(state).cluesGained?.(state, inv, n, scenarioRuntime(state, events)) },
+    // 02224「发现任意地点的 1 个线索」：按目标地点走 canDiscoverClues（02213 学校只能靠调查）。
+    discoverClue: (seat, amount = 1, locationId = null) =>
+      discoverClueAt(state, state.investigators[seat], amount, events, { locationId: locationId ?? undefined }),
+    canDiscoverClueAt: (seat, locationId) =>
+      canDiscoverClueAt(state, state.investigators[seat], state.locations.find(loc => loc.id === locationId)),
     damageEnemy: (enemyId, amount, seat, source = null) => {
       const enemy = state.enemies.find(item => item.id === enemyId)
       return damageEnemy(state, enemy, amount, seat, events, source)

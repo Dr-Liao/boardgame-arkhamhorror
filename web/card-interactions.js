@@ -103,10 +103,14 @@ export function targetMoves(st, source, target) {
     return (st.legalMoves || []).filter(m => type === 'enemy' ? m.action === 'fight' && m.enemyId === id : type === 'location' && m.action === 'move' && m.locationId === id)
   }
   if (type === 'slot') {
+    const restrictedAlly = id === 'allyRestricted'
+    const wanted = restrictedAlly ? 'ally' : id
     return moves.filter(m => {
       const def = st.cards[m.cardId]; if (m.action !== 'play' || def?.type !== 'asset') return false
+      // 米奇·布朗的额外盟友槽只接受非独特盟友。
+      if (restrictedAlly && def.unique) return false
       const slots = (def.slots?.length ? def.slots : def.slot ? [def.slot] : []).map(s => String(s).toLowerCase().replace(/\s/g, '').replace('handx2', 'hand'))
-      return slots.length ? slots.includes(id) : id === 'other'
+      return slots.length ? slots.includes(wanted) : wanted === 'other'
     })
   }
   if (target === 'zone:play') return moves.filter(m => !m.targetId && !m.enemyId && !m.locationId)

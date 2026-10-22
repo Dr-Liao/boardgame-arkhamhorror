@@ -1,8 +1,19 @@
 import { renderRulesText, symbolToken } from './card-text.js'
+// 剧情事件的 event.text 只写一句「翻开…的背面」，卡面正文放在 presentation.text。
+// 时间线是玩家回看推进文本的主要入口，这里补上正文；已写进 event.text 的段落不重复。
+function timelineDetail(event) {
+  const presentation = event.presentation
+  if (presentation?.kind !== 'story' || typeof presentation.text !== 'string') return ''
+  const detail = presentation.text.trim()
+  return detail && !event.text.includes(detail) ? detail : ''
+}
 export function timelineEntries(session) {
   const entries = []
   for (const event of session.events || []) {
-    if (event.type === 'info' && typeof event.text === 'string') entries.push({ id: event.seq, text: event.text, phase: event.presentation?.phase })
+    if (event.type === 'info' && typeof event.text === 'string') {
+      const detail = timelineDetail(event)
+      entries.push({ id: event.seq, text: detail ? `${event.text} ${detail}` : event.text, phase: event.presentation?.phase })
+    }
     else if (event.type === 'presentation' && event.kind === 'chaos') entries.push({ id: event.seq, text: `${event.name || '调查员'}抽取混乱标记：${symbolToken(event.token)}` })
     else if (event.type === 'presentation' && event.kind === 'test') entries.push({ id: event.seq, text: `${event.name || '调查员'} · ${event.source?.name || '技能检定'}：${event.success ? '成功' : '失败'}（${event.value} / 难度 ${event.difficulty}）` })
     else if (event.type === 'move' && event.move?.action !== 'choose') {

@@ -597,8 +597,13 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
     position(); window.addEventListener('resize', position)
     try {
       const bag = document.querySelector('.ah-chaos-bag')?.getBoundingClientRect(), target = token.getBoundingClientRect()
+      // 观战方不播「从混乱袋飞入」：骰面在袋口起飞时弹窗里的槽位是空的，要等 0.7 秒
+      // 落位才出现，看起来就像骰子还在加载。自己抽时保留原演出。
+      const observer = latest?.observerSeat ?? latest?.mySeat
+      const observed = change.seat != null && observer != null && change.seat !== observer
       sound('reveal')
-      await animate(token, [{ transform: `translate(${bag ? bag.x - target.x : 0}px,${bag ? bag.y - target.y : 0}px) scale(.3) rotate(-160deg)`, opacity: .1 },
+      if (observed) await animate(token, [{ transform: 'scale(.86)', opacity: .45 }, { transform: 'translate(0,0) scale(1)', opacity: 1 }], 220)
+      else await animate(token, [{ transform: `translate(${bag ? bag.x - target.x : 0}px,${bag ? bag.y - target.y : 0}px) scale(.3) rotate(-160deg)`, opacity: .1 },
         { transform: 'translate(0,0) scale(1) rotate(0)', opacity: 1 }], 700)
       await showChaosToken(token,change.token)
       el.dataset.revealed = 'true'
@@ -623,7 +628,7 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
       // Keep this ledger across sync calls, but consume it at each checkpoint
       // so playing another copy in a later transaction still animates.
       const shown = presentedPlays; presentedPlays = []
-      const changes = presentationChanges(displayed?.state, c.tableState).filter(change => {
+      const changes = presentationChanges(displayed?.state, c.tableState || latest?.state).filter(change => {
         if (change.kind !== 'play') return true
         const index = shown.findIndex(play => play.seat === change.seat && play.code === change.code)
         if (index < 0) return true

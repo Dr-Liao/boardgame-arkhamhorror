@@ -16,6 +16,7 @@ export function createEncounter(deps) {
     EFFECTS,
     abilityApi,
     abilityTargets,
+    actionCost,
     actPlacesLocationForEmptySpawn,
     aliveInvestigators,
     applyHorror,
@@ -33,6 +34,7 @@ export function createEncounter(deps) {
     descriptorReactionSpec,
     descriptorsForWindow,
     doAbility,
+    doPlay,
     effectError,
     enemyDef,
     evaluateCriteria,
@@ -42,6 +44,7 @@ export function createEncounter(deps) {
     isWeaknessCode,
     leadDecisionSeat,
     leaveAsset,
+    legalMoves,
     limitUsed,
     locName,
     locationExists,
@@ -49,6 +52,8 @@ export function createEncounter(deps) {
     makeRuntime,
     openAbilityWindow,
     placeLocationForEmptySpawn,
+    playConditionError,
+    playConditionHelpers,
     playCost,
     playReactionCard,
     playedEffect,
@@ -167,8 +172,11 @@ function drawEncounter(state, inv, events) {
 // 快速反应窗口：同地点持有对应反应事件的调查员可显式打出（如闪躲、守护结界）。
 // 返回上下文；context.cancelled 为真表示本次结算被取消。
 
-function reactionWindow(state, when, context, events) {
-  if (state._reaction) return context
+function reactionWindow(state, when, context, events, opts = {}) {
+  // 嵌套保护：大多数窗口在「正在结算一次反应/能力」时不再重复开口，
+  // 但「将要被击败」必须例外——致命伤害可能来自快速卡自己的结算，
+  // 若在这里直接返回，玩家就再也没有机会打出救命卡。调用方负责恢复外层上下文。
+  if (state._reaction && !opts.allowNested) return context
   for (const inv of aliveInvestigators(state)) {
     if (context.peril && inv.seat !== context.seat) continue
     while (!context.cancelled) {
@@ -360,42 +368,81 @@ function triggerReaction(state, seat, when, events, context = {}) {
   openAbilityWindow(state, when, context, events)
 }
 
-function playerWindow(state, timing, events, restrictedSeat = null) {
+// 行动点用尽后的收尾窗口里仍然可以打出的快速卡。
+// 候选直接复用 legalMoves，保证打出条件、资源、槽位与「快速」判定和普通出牌同源
+// （卡面 0 费、可支付、非弱点、非反应专属……都在同一处判定）。
+function fastHandPlays(state, inv) {
+  if (inv.seat !== state.currentSeat) return []
+  const helpers = playConditionHelpers(state)
+  return legalMoves(state).filter(move => move.action === 'play' && move.cardId
+    && !move.fromDiscard && !move.fromPlanAssetId && !move.fromBackpackId && !move.copyCode
+    && inv.hand.includes(move.cardId)
+    && actionCost(state, inv, move) === 0
+    // legalMoves 只做「区域/类型/费用」级筛选，打出条件由 validateMove 读；
+    // 窗口里的快速卡必须同样过一遍，否则会绕过「只能在你回合期间打出」这类限制。
+    && !playConditionError(state, inv, move.cardId, helpers))
+}
+
+// 玩家窗口（免费触发能力）。行动点花完时（opts.fastCards）额外列出 0 费的快速卡：
+// 手牌里的「快速。只能在你回合期间打出」不能因为回合推进而失去唯一的打出时机。
+function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
   state.timingWindow = timing
   const participants = aliveInvestigators(state).filter(inv => restrictedSeat == null || inv.seat === restrictedSeat)
+  const fastCardSeat = opts.fastCards === true ? state.currentSeat : null
+  // 打不出去的快速卡只记一次，避免选项反复出现把窗口卡死。
+  const blockedFast = new Set()
   let passed = 0
   let cursor = 0
   while (participants.length && passed < participants.length) {
     const inv = participants[cursor++ % participants.length]
     if (inv.defeated || inv.resigned) { passed++; continue }
-    if (cannotTriggerFreeAbility(state, inv)) { passed++; continue }
     const options = []
-    for (const asset of controlledAbilityCards(inv)) {
-      for (const [index, ability] of (assetEffect(inv, asset)?.abilities || []).entries()) {
-        // Phase 5：用 resolve 实现的免费能力没有 effect 数据体，可行性由 resolve 自己判断。
-        if (ability.cost?.action !== false || !canAffordAbility(state, inv, asset, ability)
-          || (!ability.descriptor?.resolve && effectError(state, inv, ability.effect))) continue
-        if (!lolaCanUseCard(inv, asset.code)) continue
-        // 能力层：免费能力只在它声明的窗口里出现（旧 DSL 能力没有 trigger，行为不变）。
-        if (ability.windowTrigger?.length && !ability.windowTrigger.includes(timing)) continue
-        if (ability.duringOwnSkillTest && state.skillTest?.seat !== inv.seat) continue
-        if (ability.oncePerTest && state.skillTest?.usedAbilities?.[`${asset.id}:${index}`]) continue
-        if (ability.oncePerPhase && inv.usedAbilities?.[`${asset.id}:${index}:${state.round}:${state.phase}`]) continue
-        if (ability.descriptor && limitUsed(state, inv, ability.descriptor, null, timing, asset)) continue
-        const targets = abilityTargets(state, inv, ability.effect)
-        for (const targetId of targets.length ? targets.map(target => target.id) : [null]) options.push({
-          id: `${asset.id}:${index}:${targetId || ''}`, label: `${cardName(asset.code)}：${ability.label}`,
-          assetId: asset.id, index, targetId,
-        })
+    if (!cannotTriggerFreeAbility(state, inv)) {
+      for (const asset of controlledAbilityCards(inv)) {
+        for (const [index, ability] of (assetEffect(inv, asset)?.abilities || []).entries()) {
+          // Phase 5：用 resolve 实现的免费能力没有 effect 数据体，可行性由 resolve 自己判断。
+          if (ability.cost?.action !== false || !canAffordAbility(state, inv, asset, ability)
+            || (!ability.descriptor?.resolve && effectError(state, inv, ability.effect))) continue
+          if (!lolaCanUseCard(inv, asset.code)) continue
+          // 能力层：免费能力只在它声明的窗口里出现（旧 DSL 能力没有 trigger，行为不变）。
+          if (ability.windowTrigger?.length && !ability.windowTrigger.includes(timing)) continue
+          if (ability.duringOwnSkillTest && state.skillTest?.seat !== inv.seat) continue
+          if (ability.oncePerTest && state.skillTest?.usedAbilities?.[`${asset.id}:${index}`]) continue
+          if (ability.oncePerPhase && inv.usedAbilities?.[`${asset.id}:${index}:${state.round}:${state.phase}`]) continue
+          if (ability.descriptor && limitUsed(state, inv, ability.descriptor, null, timing, asset)) continue
+          const targets = abilityTargets(state, inv, ability.effect)
+          for (const targetId of targets.length ? targets.map(target => target.id) : [null]) options.push({
+            id: `${asset.id}:${index}:${targetId || ''}`, label: `${cardName(asset.code)}：${ability.label}`,
+            assetId: asset.id, index, targetId,
+          })
+        }
+      }
+    }
+    if (inv.seat === fastCardSeat) {
+      for (const move of fastHandPlays(state, inv)) {
+        if (blockedFast.has(move.cardId)) continue
+        const resourceCost = playCost(state, inv, cardDef(move.cardId))
+        options.push({ id: `fast-card:${move.cardId}`,
+          label: `⚡ 快速打出「${cardName(move.cardId)}」${resourceCost ? `（${resourceCost} 资源）` : ''}`,
+          cardCode: move.cardId })
       }
     }
     if (!options.length) { passed++; continue }
     const answer = requestChoice(state, { kind: 'playerWindow', source: timing, seat: inv.seat,
-      prompt: `${playerWindowLabel(timing)}：可以使用免费触发能力，或让过。`, canSkip: true,
+      prompt: inv.seat === fastCardSeat && options.some(option => option.cardCode)
+        ? '回合结束前：可以打出快速卡或使用免费触发能力，或让过。'
+        : `${playerWindowLabel(timing)}：可以使用免费触发能力，或让过。`, canSkip: true,
       options: [{ id: 'skip', label: '让过' }, ...options.map(({ id, label, assetId, index, targetId }) => ({ id, label, assetId, abilityIndex: index, targetId }))] })
     if (answer === 'skip') { passed++; continue }
     passed = 0
     const chosen = options.find(option => option.id === answer)
+    if (chosen.cardCode) {
+      const before = inv.hand.filter(code => code === chosen.cardCode).length
+      doPlay(state, inv.seat, chosen.cardCode, events, false, true)
+      const after = state.investigators[inv.seat].hand.filter(code => code === chosen.cardCode).length
+      if (after >= before) blockedFast.add(chosen.cardCode)
+      continue
+    }
     doAbility(state, inv.seat, chosen.assetId, chosen.index, chosen.targetId, null, events)
   }
   state.timingWindow = null

@@ -670,7 +670,11 @@ test('行动：撤退、维尔玛小餐馆、火车轨道与切换当前幕', ()
   assert.equal(gossip.actions, 3)
   fate.behavior.performAction(state, inv, gossip, api)
   assert.equal(inv.clues, 2)
-  assert.equal(fate.behavior.actions(state, inv).some(move => move.rule === 'velmasGossip'), false)
+  // 用掉后不再可执行，但保留一条带 used 的提示，避免地点能力无声消失。
+  const gossipAfter = fate.behavior.actions(state, inv).find(move => move.rule === 'velmasGossip')
+  assert.equal(gossipAfter.used, true)
+  assert.match(gossipAfter.reason, /本场游戏已使用/)
+  assert.equal(fate.behavior.actions(state, inv).some(move => move.rule === 'velmasGossip' && !move.reason), false)
 
   api.place('trainTracks')
   inv.location = 'trainTracks'

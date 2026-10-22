@@ -160,8 +160,9 @@ test('引擎里没有已无数据引用的旧原语分支', () => {
 // ---------------------------------------------------------------------------
 // 外部硬编码守卫（REPORT.md §9 第 0 批）
 //
-// 口径：卡号只允许出现在 entries/<code>.js 与 cards-data.js；引擎不得出现内容实体 id；
-// 效果原语必须在数据里被引用。当前债务冻结在 audit/hardcode-whitelist.json，只减不增。
+// 口径：卡号只允许出现在 entries/<code>.js、encounter-entries/<归属>/<code>.js 与 cards-data.js；
+// 引擎不得出现内容实体 id；效果原语必须在数据里被引用。当前债务冻结在
+// audit/hardcode-whitelist.json，只减不增。
 // 修复后运行 `node tools/hardcode-audit.mjs --write` 让基线下降——这是迁移成果的证据。
 // ---------------------------------------------------------------------------
 const hardcode = collectHardcodes()
@@ -172,7 +173,7 @@ function assertNoHardcodeGrowth(label) {
   assert.deepEqual(hardcodeDiff.growth, [],
     `${label}：检测到新增外部硬编码。\n`
     + hardcodeDiff.growth.map(line => `  + ${line}`).join('\n')
-    + '\n卡牌行为请写 src/cards/entries/<code>.js；非玩家卡写 encounter-abilities.js；'
+    + '\n卡牌行为请写 src/cards/entries/<code>.js；非玩家卡写 src/cards/encounter-entries/<归属>/<code>.js；'
     + '不要为了绕开守卫把卡号搬到另一个公共文件。')
 }
 
@@ -315,5 +316,5 @@ test('内容层按卡号的规则分支只减不增（含 later-behaviors 等共
   const count = countContentCardBranches()
   assert.ok(count <= CONTENT_BRANCH_BASELINE,
     `content 按卡号分支 ${count} 超过基线 ${CONTENT_BRANCH_BASELINE}：新增了按卡号分支，`
-    + '应写进 src/cards/entries/<code>.js 或 encounter-abilities.js 的条目')
+    + '应写进 src/cards/entries/<code>.js 或 src/cards/encounter-entries/<归属>/<code>.js 的条目')
 })

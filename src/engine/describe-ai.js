@@ -15,6 +15,7 @@ export function createDescribeAi(deps) {
     controlledAbilityCards,
     groupClues,
     inHub,
+    limitUsed,
     lolaCanUseCard,
     scenarioBehavior,
     validateMove,
@@ -56,6 +57,9 @@ export function createDescribeAi(deps) {
       }
       if (eff.abilities) {
         eff.abilities.forEach((ability) => {
+          // 上限已用掉的能力不能再说成「可用」：legalMoves 里已经没有它，
+          // 否则提示词会同时出现「可用」和「已用完」两句自相矛盾的话。
+          if (ability.descriptor && limitUsed(state, inv, ability.descriptor, null, null, a)) return
           if (ability.cost && ability.cost.action === false && canAffordAbility(state, inv, a, ability)) {
             out.push('免费能力「' + cardName(a.code) + '」' + ability.label)
           }

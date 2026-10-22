@@ -61,12 +61,13 @@ npm run test:fast
 node tools/audit-abilities.mjs --write
 ```
 
-> 上面的 `--encounter` / `cards:encounter-check` / `build-encounter-index.mjs` 在迁移落地时补齐；
-> 落地前新增非玩家条目按本节路径手写单卡文件，并在 `encounter-entries/index.js` 手工登记（或等主进程重建）。
+> `--encounter` 会按归属算法把骨架落到 `shared/`、`<campaign>/_shared/` 或 `<campaign>/<scenario>/`；
+> 批量 worker 加 `--no-index`，索引只由主进程重建。
 
-`fast` 应全绿（2026-10-22 实测 2304 例全部通过）。新增失败必须为 0。
-存量 529 条非玩家条目的一次性迁移方案见 [`docs/encounter-entry-split-plan.md`](docs/encounter-entry-split-plan.md)；
-迁移完成前 `encounter-abilities.js` 只读，新增一律进单卡文件。
+`fast` 应全绿（2026-10-22 迁移后实测 2311 例全部通过）。新增失败必须为 0。
+存量 529 条非玩家条目已于 2026-10-22 拆分完毕，迁移方案与对账证据见
+[`docs/encounter-entry-split-plan.md`](docs/encounter-entry-split-plan.md)；`encounter-abilities.js`
+只是 facade，只读，新增一律进单卡文件。
 
 ## 批量迁移（多子进程）
 

@@ -173,21 +173,33 @@ function notifyCluesRemoved(state, loc, amount, events) {
   scenarioBehavior(state).cluesRemoved?.(state, loc, amount, scenarioRuntime(state, events))
 }
 
-function discoverClueAt(state, inv, amount, events) {
-  if (scenarioBehavior(state).canDiscoverClues?.(state, inv) === false) return
+// 「只能通过调查发现线索」这类限制的查询点（02213 学校）：限制属于**目标地点**，
+// 不是调查员所在地点——例如「发现任意地点的 1 个线索」这类远程发现（02224）。
+function canDiscoverClueAt(state, inv, loc) {
+  if (!loc || loc.clues <= 0) return false
+  if (scenarioBehavior(state).canDiscoverClues?.(state, inv, loc) === false) return false
+  // 交战中的「不能发现线索」敌人（影子特工）跟着调查员走，与目标地点无关。
+  return !engagedWithClueBlocker(state, inv)
+}
+
+function discoverClueAt(state, inv, amount, events, opts = {}) {
+  // 默认发现调查员所在地点的线索；卡面允许指定别的地点（02224「发现任意地点的 1 个线索」）。
+  const targetId = opts.locationId ?? inv.location
+  let loc = state.locations.find((l) => l.id === targetId)
+  if (scenarioBehavior(state).canDiscoverClues?.(state, inv, loc) === false) return false
   // Revelation can put the hunter into play after an event was paid for.
   // Recheck at resolution, including discoveries that bypass investigation.
   const clueBlocker = engagedWithClueBlocker(state, inv)
   if (clueBlocker) {
     info(state, events, `${inv.name} 与${clueBlockerName(state, clueBlocker)}交战，不能发现线索。`)
-    return
+    return false
   }
   // 04094 一片漆黑：每位调查员每轮从单个地点最多发现 1 个线索（硬上限）。
   if (state.scenarioFlags?.deepDark) {
     state.scenarioFlags.deepDarkClaims ||= {}
-    const key = `${state.round}:${inv.seat}:${inv.location}`
+    const key = `${state.round}:${inv.seat}:${targetId}`
     const claims = state.scenarioFlags.deepDarkClaims
-    if ((claims[key] || 0) >= 1) return
+    if ((claims[key] || 0) >= 1) return false
     claims[key] = (claims[key] || 0) + 1
     amount = Math.min(amount, 1)
   }
@@ -195,7 +207,7 @@ function discoverClueAt(state, inv, amount, events) {
     state._discoveringClue = true
     try {
       triggerReaction(state, inv.seat, 'discoverClue', events, {
-        when: 'discoverClue', seat: inv.seat, location: inv.location, amount,
+        when: 'discoverClue', seat: inv.seat, location: targetId, amount,
       })
     } finally {
       state._discoveringClue = false
@@ -205,8 +217,9 @@ function discoverClueAt(state, inv, amount, events) {
     const th = getThreatEffect(t)
     return th && th.redirectClues && (t.counters || 0) > 0
   })
-  const loc = state.locations.find((l) => l.id === inv.location)
-  if (coverUp && loc?.clues > 0) {
+  // 掩盖罪证只在「你所在地点」替换发现，远程发现不触发。
+  loc = state.locations.find((l) => l.id === targetId)
+  if (coverUp && targetId === inv.location && loc?.clues > 0) {
     const answer = requestChoice(state, { kind: 'reaction', source: coverUp.id, seat: inv.seat,
       prompt: '是否用本次发现移除掩盖罪证上的线索？', canSkip: true,
       options: [{ id: 'skip', label: '正常发现地点线索' }, { id: 'remove', label: '移除掩盖罪证上的线索' }] })
@@ -214,7 +227,7 @@ function discoverClueAt(state, inv, amount, events) {
       const removed = Math.min(amount, loc.clues, coverUp.counters)
       coverUp.counters -= removed
       info(state, events, `移除掩盖罪证上的 ${removed} 个线索。`)
-      return
+      return true
     }
   }
   if (loc && loc.clues > 0) {
@@ -231,9 +244,10 @@ function discoverClueAt(state, inv, amount, events) {
       prompt: `${inv.name} 发现了 ${got} 个线索` }
     triggerReaction(state, inv.seat, 'clueDiscovered', events, clueContext)
     reactionWindow(state, 'clueDiscovered', clueContext, events)
-  } else {
-    info(state, events, '这里没有线索。')
+    return true
   }
+  info(state, events, '这里没有线索。')
+  return false
 }
 
 function awardLocationVictory(state, loc, events) {
@@ -251,5 +265,5 @@ function awardLocationVictory(state, loc, events) {
   }
 }
 
-  return { locName, locLabel, placeLocation, flipScenarioLocation, revealLocation, removeLocation, syncClues, placeCluesOnLocation, notifyCluesRemoved, discoverClueAt, awardLocationVictory }
+  return { locName, locLabel, placeLocation, flipScenarioLocation, revealLocation, removeLocation, syncClues, placeCluesOnLocation, notifyCluesRemoved, canDiscoverClueAt, discoverClueAt, awardLocationVictory }
 }

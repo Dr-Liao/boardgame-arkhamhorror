@@ -20,6 +20,7 @@ export function createMiscApi(state, events, deps) {
     assetsCannotReady,
     attachCardTo,
     autoEvadeEnemy,
+    canDiscoverClueAt,
     cardDef,
     cardHasTrait,
     cardName,
@@ -110,7 +111,11 @@ export function createMiscApi(state, events, deps) {
       inv.discard.push(code)
       return true
     },
-    discoverClue: (seat, amount = 1) => discoverClueAt(state, state.investigators[seat], amount, events),
+    // 第三个参数用于「发现任意地点的线索」（02224）：判定仍按目标地点走剧情的 canDiscoverClues。
+    discoverClue: (seat, amount = 1, locationId = null) =>
+      discoverClueAt(state, state.investigators[seat], amount, events, { locationId: locationId ?? undefined }),
+    canDiscoverClueAt: (seat, locationId) =>
+      canDiscoverClueAt(state, state.investigators[seat], state.locations.find(loc => loc.id === locationId)),
     placeClues: (seat, amount = 1) => placeCluesOnLocation(state, state.investigators[seat], amount, events),
     moveInvestigator: (seat, locationId) => relocateInvestigator(state, seat, locationId, events),
     damageEnemy: (enemy, amount, seat, source = null) => damageEnemy(state, enemy, amount, seat, events, source),

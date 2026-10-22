@@ -42,6 +42,7 @@ export function createDescribeState(deps) {
     actionPreview,
     enemyCanOpportunityAttack,
     enemiesEngagedWith,
+    abilityUsage,
   } = deps
 
   // 当前会真正发动借机攻击的敌人：已横置、被规则/剧本禁止、以及「声东击西」
@@ -223,6 +224,17 @@ export function createDescribeState(deps) {
       lines.push('【暂时不可执行的卡面行动】（不能直接提交；条件满足后才会出现在上面的可执行列表）')
       blocked.forEach(hint => lines.push(`- ${hint.label}：${hint.reason}`))
     }
+  }
+
+  // 上限已经用掉的能力：它们同样不在 legalMoves 里，但原因是「本回合/本场已经用过」，
+  // 不是条件不满足。明写一行，免得 AI 把「用过了」当成「这张卡没用」而反复尝试别的行动。
+  const usedAbilities = abilityUsage(state, state.investigators[observerSeat])
+    .flatMap(card => card.abilities.filter(ability => ability.used)
+      .map(ability => `- 「${card.name}」${ability.label}（${ability.limitText}）：已用`))
+  if (usedAbilities.length) {
+    lines.push('')
+    lines.push('【已经用完的能力】（上限已记账，不会出现在可执行列表里）')
+    lines.push(usedAbilities.join('\n'))
   }
 
   if (state.log.length) {

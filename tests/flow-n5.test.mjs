@@ -316,6 +316,48 @@ test('N5 升级草稿可撤销、确认一次、观察者看不到其他座位�
   assert.ok(recommendUpgrade(cp.investigators[0]).reason)
 })
 
+test('N5 升级界面：换不掉的牌组卡保留在列表里，并给出与合法动作一致的原因', () => {
+  // 关间升级的真实状态：牌组 = 普通卡 + 签名卡 + 弱点；升级列表只列合法组合，
+  // 其余牌组卡由观察投影补上「为什么不能替换」，两者必须覆盖整副牌组且不重叠。
+  const s = createGameState({ playerInvestigator: '01001', campaignId: 'thePathToCarcosa', seed: 'upgrade-blockers' },
+    [{ seat: 0, role: 'human' }, { seat: 1, role: 'ai' }])
+  Object.assign(s, { hubFlow: true, uiState: 'interlude', phase: 'interlude', currentSeat: 0, humanSeats: [],
+    pendingChoice: null, continuation: null, hubReady: false, hubUpgradedSeats: {}, hubSeatDone: {} })
+  Object.assign(s.campaign, { phase: 'interlude', flowStage: 'interlude', upgradesAllowed: true, scenarioIndex: 1,
+    scenarioResults: [{ scenarioId: 'curtainCall', investigators: [] }] })
+  Object.assign(s.campaign.investigators[0], { xp: 10, currentScenarioIndex: 0, startingDeckReady: true })
+  s.legalMoves = legalMoves(s)
+  const view = viewState(s, 0)
+  const purchases = view.legalMoves.filter(move => move.action === 'hubPurchase')
+  const record = s.campaign.investigators[0]
+  const deck = [...new Set(record.deck)]
+  for (const added of new Set(purchases.map(move => move.added))) {
+    const legal = new Set(purchases.filter(move => move.added === added).map(move => move.removed))
+    const blocked = new Map((view.upgradeBlocked?.[added] || []).map(item => [item.code, item.reason]))
+    for (const code of deck) assert.ok(legal.has(code) || blocked.has(code), `${added} 少了 ${code} 的去向`)
+    for (const code of legal) assert.ok(!blocked.has(code), `${added} 误标 ${code} 不可替换`)
+  }
+  const added = purchases[0].added
+  const blocked = new Map((view.upgradeBlocked[added] || []).map(item => [item.code, item.reason]))
+  const signature = deck.find(code => ALL_CARDS[code]?.signatureFor)
+  const weakness = deck.find(code => ['weakness', 'basicweakness'].includes(ALL_CARDS[code]?.subtype))
+  assert.ok(signature && weakness, '测试调查员的牌组必须含签名卡与弱点')
+  assert.match(blocked.get(signature), /专属卡牌/)
+  assert.match(blocked.get(weakness), /弱点/)
+  // 永久卡不占牌组槽位：换走普通卡会让牌组少一张，只能直接加入。
+  const permanent = purchases.find(move => move.removed == null && ALL_CARDS[move.added]?.permanent)
+  assert.ok(permanent, '当前卡池必须提供永久卡升级')
+  const ordinaryBlockers = (view.upgradeBlocked[permanent.added] || [])
+    .filter(item => !ALL_CARDS[item.code]?.signatureFor && !ALL_CARDS[item.code]?.subtype)
+  assert.ok(ordinaryBlockers.length)
+  for (const item of ordinaryBlockers) assert.match(item.reason, /永久卡不占牌组槽位/)
+  // 只有关间升级才投影；开局准备阶段不重复下发这份规则。
+  const outside = clone(s)
+  outside.uiState = 'scenarioSetup'
+  outside.legalMoves = legalMoves(outside)
+  assert.equal(viewState(outside, 0).upgradeBlocked, undefined)
+})
+
 test('N5 战役图支持条件分支、记录、检查点和重访；坏引用拒绝', () => {
   const manifest = { scenarioIds: ['s'], flow: { start: 'pick', nodes: {
     pick: { type: 'choice', options: [{ id: 'yes', label: '探索', when: { record: 'keys', atLeast: 1 }, effects: [{ type: 'increment', key: 'keys', amount: -1 }], next: 's' }] },

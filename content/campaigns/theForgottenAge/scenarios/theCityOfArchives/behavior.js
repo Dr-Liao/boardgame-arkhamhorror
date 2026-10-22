@@ -405,15 +405,11 @@ export const behavior = {
     }
     // 纳克特廊道：免费弃 1 张手牌换位置（每回合一次）。
     if (location && HALLS_SLOTS.includes(location.id)) {
-      const others = HALLS_SLOTS.filter(id => id !== location.id
-        && state.locations.some(entry => entry.id === id))
-      if (others.length && inv.tfaHallsShortcutRound !== state.round) {
-        moves.push({
-          action: 'scenarioAction', rule: 'hallsShortcut', actions: 0,
-          label: '🚪 免费：弃 1 张手牌，移动到另一处纳克特廊道（每回合一次）',
-          reason: (inv.hand || []).length ? null : '需要先有 1 张手牌可弃（手牌已空）',
-        })
-      }
+      const others = HALLS_SLOTS.filter(id => id !== location.id && state.locations.some(entry => entry.id === id))
+      const used = inv.tfaHallsShortcutRound === state.round
+      if (others.length) moves.push({ action: 'scenarioAction', rule: 'hallsShortcut', actions: 0,
+        label: '🚪 免费：弃 1 张手牌，移动到另一处纳克特廊道（每回合一次）',
+        reason: used ? '本回合已使用（每回合仅限一次）' : (inv.hand || []).length ? null : '需要先有 1 张手牌可弃（手牌已空）', used: used || undefined })
     }
     // 大图书馆：共同花费 1 线索/人，破译归位程式。
     if (code === CARD_CODES.greatLibrary) {
@@ -451,11 +447,11 @@ export const behavior = {
       })
     }
     // 纳克特之塔：弃任意张手牌后洗弃牌堆并抽回（每回合一次）。
-    if (code === CARD_CODES.towersOfPnakotus && inv.tfaTowersRound !== state.round) {
-      moves.push({
-        action: 'scenarioAction', rule: 'towersOfPnakotus',
+    if (code === CARD_CODES.towersOfPnakotus) {
+      const used = inv.tfaTowersRound === state.round
+      moves.push({ action: 'scenarioAction', rule: 'towersOfPnakotus',
         label: '🗼 弃任意张手牌，把弃牌堆洗回牌库并抽「弃牌数+1」张（每回合一次）',
-      })
+        reason: used ? '本回合已使用（每回合仅限一次）' : null, used: used || undefined })
     }
     // 回归自我：花 1 个线索执行抽取行动（手牌超上限再 +1）。
     if (original(state.acts?.[state.actIndex]) === CARD_CODES.act3) {

@@ -467,8 +467,11 @@ export function laterBehavior(id) {
       // 第 70 轮：02130/02131/02137/02174 的调查限制在地点条目声明。
       return locationRuleFor(original(loc))?.investigationError?.(state, inv, loc) || null
     },
-    canDiscoverClues(state, inv) {
-      if (id !== 'bloodOnTheAltar' || original(state.locations.find(loc => loc.id === inv.location)) !== '02213') return true
+    // 02213 学校：只能通过调查发现线索。第三个参数是**发现的目标地点**（02224 可以
+    // 从任意地点发现线索），缺省时才回落到调查员所在地点。
+    canDiscoverClues(state, inv, location = null) {
+      const here = location || state.locations.find(loc => loc.id === inv.location)
+      if (id !== 'bloodOnTheAltar' || !here || original(here) !== '02213') return true
       return state.skillTest?.source?.label === '调查'
     },
     canPlayCard(state, inv, card) {
@@ -664,7 +667,11 @@ export function laterBehavior(id) {
       } else if (move.rule === 'castFormula' && id === 'undimensionedAndUnseen') {
         const enemy = state.enemies.find(item => item.id === move.enemyId && item.traits?.includes('Abomination') && item.location === inv.location)
         if (!enemy || !inv.assets.some(asset => assetRuleFor(original(asset))?.formula)) throw new Error('没有合法的深奥咒文目标')
-        api.test(inv.seat, 'willpower', enemy.fight + this.enemyStatModifier(state, enemy, 'fight'), result => {
+        // 02254 是[[法术]]支援：02094 鸟之奴仆「被远程/枪械/法术支援攻击时 -3 攻击值」也要作用于咒文攻击，
+        // 不能只走 combat.js 的普通攻击路径，否则难度会是 5 而不是 2。
+        const spellReduction = enemyRuleFor(original(enemy))?.rangedAttackDifficultyReduction || 0
+        const formulaDifficulty = Math.max(0, enemy.fight + this.enemyStatModifier(state, enemy, 'fight') - spellReduction)
+        api.test(inv.seat, 'willpower', formulaDifficulty, result => {
           if (result.success) api.damageEnemy(enemy.id, 1 + (result.damageBonus || 0), inv.seat, '02254')
           else if (enemy.retaliate && !enemy.exhausted) api.attack(enemy, inv)
         }, () => 2 * (enemy.clues || 0), { label: '攻击', name: enemy.name, code: enemy.code, enemyId: enemy.id })

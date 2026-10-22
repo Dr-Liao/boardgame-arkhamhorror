@@ -87,7 +87,7 @@ games/arkhamhorror/
 2. **描述子不可变**：注册时规范化并冻结；运行期数据一律写入 `state`。
 3. **注册即校验**：未知 `kind`、缺 `trigger`、缺 payload、未知字段、重复注册都会在模块加载时抛错，而不是在对局中途静默失效。
 4. **能力与效果同形**：`kind: 'action' | 'free'` 的描述子会折叠成旧式 ability 形状，因此 `legalMoves`、牌桌按钮、`doAbility`、`playerWindow` 只有一套枚举。
-5. **上限与费用**：`limit` 支持旧字符串（`oncePerTest/Phase/Round/Turn/Game`）与 Phase 2 的对象形式 `{ scope, owner, count }`（scope 另有 `perWindow/perAttack/perSearch/perAction/perCampaign`，owner 有 `instance/investigator/player/group`），记账在 `state.abilityLimits`（`{ used, round, phase, turn }`）；费用支持数字、函数与声明式表达式（`cost.js` 统一求值），先整体校验再扣费，`legalMoves`/`validateMove`/预览三处同源。
+5. **上限与费用**：`limit` 支持旧字符串（`oncePerTest/Phase/Round/Turn/Game`）与 Phase 2 的对象形式 `{ scope, owner, count }`（scope 另有 `perWindow/perAttack/perSearch/perAction/perCampaign`，owner 有 `instance/investigator/player/group`），记账在 `state.abilityLimits`（`{ used, round, phase, turn }`）；费用支持数字、函数与声明式表达式（`cost.js` 统一求值），先整体校验再扣费，`legalMoves`/`validateMove`/预览三处同源。**上限的展示侧**：用掉的能力会从 `legalMoves` 消失，所以 `abilityUsage(state, inv)` 把每张支援的受限能力投影成 `view.abilityUsage`（卡面「已用」角标、动作面板置灰行、卡牌详情、AI 提示共用同一份账）；卡面之外的「每场游戏一次」行动（地点/剧本）由内容层在提示上同时给 `reason` 与 `used: true`，观察投影收进 `view.usedActions`，牌桌在地点详情与动作栏显示「已用」，AI 在「暂时不可执行的卡面行动」段读到原因。
 6. **窗口必须已注册**：能力层打开的窗口都会进 `windows.js`；未注册 id 会被记录并可由测试断言发现漂移。
 7. **目标先声明再执行**：需要选目标的能力写 `target: { kind, query, optional }`，不要在 `resolve()` 里再问一轮；`legalMoves`/`validateMove`/`ctx.target` 都读同一份枚举。
 8. **打出条件写 `playCondition`**：不要新增 `ownTurnOnly` 之类的散字段；旧字段由 `play-condition.js` 收敛。
@@ -102,18 +102,18 @@ games/arkhamhorror/
 - `card-effects.js` 保留调查员数据表（`INVESTIGATOR_ABILITIES`）；`EFFECTS` 已清空，不再是行为入口。
 - **`entries/<code>.js` 是一张卡一个文件的行为落点**（2026-10 起）：每个文件 `export default` 一个描述子条目，按需 import `entries/_shared.js` 与 `engine/matcher.js`。命名 = 卡号；条目 `code` 必须与文件名一致。新增卡用 `node tools/scaffold-card.mjs <code> --entry`。`entries/` 只放玩家卡。
 - `entries/index.js` 是**生成物**：静态 import 全部单卡文件，保持旧 `byCode` 的首次出现顺序。改/增/删卡文件后必须运行 `node tools/build-card-index.mjs --write`。
-- **非玩家条目同样一卡一文件**，统一放在 `src/cards/encounter-entries/`（目标结构，迁移中；存量仍在 `encounter-abilities.js`，见 [`docs/encounter-entry-split-plan.md`](docs/encounter-entry-split-plan.md)）：
+- **非玩家条目同样一卡一文件**，统一放在 `src/cards/encounter-entries/`（2026-10 起）：
   - `shared/<encounterGroup>/<code>.js`：跨战役复用的通用遭遇组卡；
   - `<campaign>/_shared/<encounterGroup>/<code>.js`：同一战役内跨关卡复用；
   - `<campaign>/<scenario>/<code>.js`：关卡专用（地点/幕/议程/专属敌人/诡计/剧情资产）。
   归属按「这张卡在几个关卡/战役的 `definition.js` 与 manifest zones 里出现」判定，别名条目跟随同名印刷卡；不得按 scope 建 `enemies.js` / `treacheries.js` 之类的大文件，也不得把多个关卡塞进同一个目录。
 - `encounter-entries/index.js` 是**生成物**：静态 import 全部分类文件，保持拆分前 `NON_PLAYER_ABILITY_ENTRIES` 的顺序；改/增/删非玩家条目后运行 `node tools/build-encounter-index.mjs --write`。
 - `encounter-abilities.js` 只做**兼容聚合（facade）**：导出 `NON_PLAYER_ABILITY_ENTRIES` / `NON_PLAYER_ABILITY_CODES` / `nonPlayerEntryFor` 等旧读点，不存放条目。新增敌人/地点/幕/议程规则写单卡文件，禁止再往 facade 追加。
-- `encounter-entries/_lookup.js` 是跨条目查询的唯一读点（惰性建表，避免 `index → entry → index` 的 ESM 循环）；条目之间不得互相直接 import。
-- `entry` 文件的硬约束：不 import `engine.js` / `card-abilities.js` / `encounter-abilities.js` / 批次文件 / `content/`；只通过描述子与 `ctx.api` 结算。守卫见 `tests/card-entries.test.mjs` 与 `tests/encounter-entries.test.mjs`（迁移阶段补齐）。
+- `encounter-entries/_lookup.js` 是跨条目查询的唯一读点：`index.js` 求值完成后把条目列表注册进来，查询在运行时惰性建表，避免 `entry → _lookup → index → entry` 的 ESM 循环在单独 import 条目时踩 TDZ；条目之间不得互相直接 import。
+- `entry` 文件的硬约束：不 import `engine.js` / `card-abilities.js` / `encounter-abilities.js` / 批次文件 / `content/`；只通过描述子与 `ctx.api` 结算。守卫见 `tests/card-entries.test.mjs` 与 `tests/encounter-entries.test.mjs`。
 - `card-abilities.js` 只做聚合：导出 `CARD_ABILITY_ENTRIES` / `CARD_ABILITY_CODES` / `PHASE5_MIGRATED_CODES`，**不再放条目**。
 - `ability-migration-batches.js` 已删除；`audit/migration-batches.json` 只保留“哪张卡属于哪一批”的账本。**不得恢复** `BATCH_*` / `MIGRATED_*` 数组。
-- 完整流程、agent 一次执行清单与拆分证据见 [`docs/card-entry-files.md`](docs/card-entry-files.md)；存量非玩家条目的迁移方案见 [`docs/encounter-entry-split-plan.md`](docs/encounter-entry-split-plan.md)；整轮扩展的迁移顺序（扫描机制 → 拆分原语 → 关键字/规则书 → 交互 → 多子进程批量卡牌 → 验收）见 [`docs/arkham-content-migration.md`](docs/arkham-content-migration.md) §4。
+- 完整流程、agent 一次执行清单与拆分证据见 [`docs/card-entry-files.md`](docs/card-entry-files.md)；非玩家条目拆分的扫描、归属算法与对账记录见 [`docs/encounter-entry-split-plan.md`](docs/encounter-entry-split-plan.md)；整轮扩展的迁移顺序（扫描机制 → 拆分原语 → 关键字/规则书 → 交互 → 多子进程批量卡牌 → 验收）见 [`docs/arkham-content-migration.md`](docs/arkham-content-migration.md) §4。
 - `card-identity.js` 统一运行时别名、原卡号和双面身份。
 - `card-catalog.js` 组合目录、来源、图片和开放状态，供只读图鉴 API 使用。
 - `scenarios-data.js` 是旧调用方的兼容导出；新关卡应从 `content/registered.js` 注册。
@@ -237,7 +237,7 @@ state.actionLog + 建局参数（state.setup / seed / difficulty / rulesMode / a
 ```
 
 - **迁移对比**：`tools/replay-fixtures.mjs --baseline <文件>` 采集迁移前基线，改完代码用 `--compare <文件>` 逐条比较逐步指纹；输出"行为零变化"才算过。流程见 [`docs/phase4-replay.md`](docs/phase4-replay.md) §4。
-- **golden replay**：`tests/fixtures/replay/golden-replays.json` 固化 13 局真实对局（4 战役 / 5 关卡 / 779 步 / 792 个逐步指纹），`tests/replay-golden.test.mjs` 在 `fast` tier 校验；`npm run replay:fixtures` 是同一份基线的命令行校验。
+- **golden replay**：`tests/fixtures/replay/golden-replays.json` 固化 13 局真实对局（4 战役 / 5 关卡 / 786 步 / 799 个逐步指纹），`tests/replay-golden.test.mjs` 在 `fast` tier 校验；`npm run replay:fixtures` 是同一份基线的命令行校验。
 - **撤销地基**：`rewindTo(state, until)` / `undoMoves(state, count)` 截断日志后重放并原地替换状态，保留检查点分支的 `revision` 偏移；交互入口（大厅 UI）尚未实现。
 - **两条实现约束**：日志由 `applyMove` 在事务外持有（事务快照会重建状态，`dynamicState` 已排除 `actionLog`）；`continuation.move` 只保留语义字段（`resolution.js` 的 `cloneMove`），展示文案不参与指纹。
 
@@ -278,7 +278,7 @@ state.actionLog + 建局参数（state.setup / seed / difficulty / rulesMode / a
 | 用例 | tier | 作用 |
 | --- | --- | --- |
 | `replay.test.mjs` | fast | 日志/指纹/重放/撤销的契约，含 4 局随机走子与建局参数完整性 |
-| `replay-golden.test.mjs` | fast | 13 局真实对局重放出 792 个相同逐步指纹 |
+| `replay-golden.test.mjs` | fast | 13 局真实对局重放出 799 个相同逐步指纹 |
 | `replay-fuzz.test.mjs` | slow | 100 局随机对局逐步一致 + 5,000 步随机走子器不变量 |
 
 常用命令（在 `games/arkhamhorror/` 下运行；在大厅根目录可加 `-w games/arkhamhorror`）：

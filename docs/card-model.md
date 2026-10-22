@@ -212,12 +212,12 @@ api.addEffect({
 | --- | --- | --- |
 | 玩家卡（手牌/场上的支援/威胁区） | ✅ 描述子 | 保持 |
 | 调查员（旧印、主动能力） | ✅ 描述子 + `INVESTIGATOR_ABILITIES` | 能力迁完后删旧表 |
-| 敌人 / 诡计 / 地点 / 幕 / 议程 / 剧情资产 / 威胁 | ✅ 描述子（`scope` 非玩家通道） | 一卡一文件，按通用 / 战役共用 / 关卡专用落点（`encounter-entries/`） |
+| 敌人 / 诡计 / 地点 / 幕 / 议程 / 剧情资产 / 威胁 | ✅ 描述子（`scope` 非玩家通道） | 一卡一文件，已按通用 / 战役共用 / 关卡专用落点（`encounter-entries/`） |
 | 剧本层机制 | `behavior.js`（命令式） | D3/D4 声明化（Phase 3） |
 
-非玩家条目的归属与目录规则见 [`card-entry-files.md`](card-entry-files.md) §2.1；存量 529 条的迁移方案见
-[`encounter-entry-split-plan.md`](encounter-entry-split-plan.md)。迁移完成前条目仍暂存在
-`encounter-abilities.js`，但新条目不得再写回该文件。
+非玩家条目的归属与目录规则见 [`card-entry-files.md`](card-entry-files.md) §2.1；529 条存量条目的
+迁移记录与对账证据见 [`encounter-entry-split-plan.md`](encounter-entry-split-plan.md)。
+`encounter-abilities.js` 现在只是 facade，新条目不得再写回该文件。
 
 ---
 

@@ -279,7 +279,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       committedCodes.add(code)
       commitments.push({ seat: owner.seat, code, icons })
       count++
-      info(state, null, `${owner.name} 投入「${cardName(code)}」。`)
+      info(state, null, `${owner.name} 投入「${cardName(code)}」。`, null, { public: true })
     }
     const analyticalMind = owner.assets.find(asset => !asset.exhausted
       && registeredEntry(asset.code)?.passive?.analyticalMind)

@@ -251,10 +251,25 @@ export function createHarmThreat(deps) {
           when: 'wouldDefeatByHorror', seat: inv.seat, location: inv.location,
         })
       }
-      reactionWindow(state, 'wouldDefeat', {
-        when: 'wouldDefeat', seat: inv.seat, location: inv.location,
-        prompt: `${inv.name} 将要被击败`,
-      }, events)
+      // 致命伤害/恐惧可能发生在快速卡或反应的结算内部（state._reaction 非空）。
+      // 那一层平时会拒绝再开窗口，但「将要被击败」必须例外：否则救命卡没有机会打出，
+      // 调查员会在 0 行动点的同一刻被直接判定击败并结束回合。
+      const outerReaction = state._reaction
+      if (state._defeatWindow !== true) {
+        state._defeatWindow = true
+        try {
+          reactionWindow(state, 'wouldDefeat', {
+            when: 'wouldDefeat', seat: inv.seat, location: inv.location,
+            prompt: `${inv.name} 将要被击败`,
+          }, events, { allowNested: true })
+        } finally {
+          // 嵌套窗口里打出的快速卡会把 _reaction 覆盖后删除；恢复外层上下文，
+          // 让外面那张卡的后续结算仍然以为自己还在反应窗口里。
+          if (outerReaction) state._reaction = outerReaction
+          else delete state._reaction
+          delete state._defeatWindow
+        }
+      }
       damageLethal = inv.damage >= getMaxHealth(inv)
       horrorLethal = inv.horror >= getMaxSanity(inv)
         && scenarioBehavior(state).investigatorCanBeDefeated?.(state, inv, 'horror') !== false

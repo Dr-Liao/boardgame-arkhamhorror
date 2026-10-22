@@ -753,7 +753,11 @@ test('错时林地：花 2 个行动把带复仇的卡牌放进遭遇弃牌堆�
   behavior.performAction(state, inv, move, makeApi(state))
   assert.equal(state.victoryDisplay.length, 1)
   assert.deepEqual(state.encounterDiscard, ['04220'])
-  assert.equal(behavior.actions(state, inv).some(entry => entry.rule === 'expelVengeance'), false)
+  // 用掉后不再可执行，但保留一条带 used 的提示（牌桌在「地点详情」里显示「已用」）。
+  const afterUsed = behavior.actions(state, inv).find(entry => entry.rule === 'expelVengeance')
+  assert.equal(afterUsed.used, true)
+  assert.match(afterUsed.reason, /本场游戏已使用/)
+  assert.equal(behavior.actions(state, inv).some(entry => entry.rule === 'expelVengeance' && !entry.reason), false)
 })
 
 test('结局写入战役记录并保留存档一致性', () => {

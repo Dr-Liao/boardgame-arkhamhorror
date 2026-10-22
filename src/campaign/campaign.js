@@ -154,38 +154,89 @@ function upgradeDiscountsFor(record) {
   return discounts
 }
 
-export function replacementOptions(record, addedCode, campaignRecords = null, context = null) {
+// 不参与升级替换的牌组卡：升级界面据此把卡置灰并说明原因。
+function nonReplaceableReason(card) {
+  if (!card) return '这张卡不在本次升级的可替换范围内。'
+  if (card.subtype === 'weakness' || card.subtype === 'basicweakness') return '弱点不能替换。'
+  if (card.signatureFor) return '专属卡牌（签名卡/专属弱点）随调查员加入牌组，不能替换。'
+  if (card.permanent) return '永久卡始终在场上，不占牌组槽位，不能替换。'
+  return '剧情资产与战役奖赏不占普通牌组槽位，不能通过升级替换。'
+}
+
+// 单张替换的判定（顺序与 legalMoves 完全一致）：成功给出报价，失败给出界面可直接展示的中文原因。
+function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillVacancy) {
+  const removed = removedCode ? ALL_CARDS[removedCode] : null
+  if (!removedCode) {
+    // 「无需替换」只在永久卡或牌组还有空位时成立。
+    if (!added.permanent && !mayFillVacancy) return { ok: false, reason: '牌组已满，需要先替换掉一张普通卡。' }
+  } else if (removedCode === addedCode) {
+    return { ok: false, reason: '不能把这张卡替换成同一张卡。' }
+  } else if (!ordinary(removedCode) || (removed && (removed.permanent || removed.signatureFor || removed.subtype))) {
+    return { ok: false, reason: nonReplaceableReason(removed) }
+  }
+  const limit = cardLimit(added)
+  const label = added.nameZh || added.name
+  const count = record.deck.filter(code => ALL_CARDS[code]?.name === added.name).length
+    - (removed?.name === added.name ? 1 : 0)
+  if (count >= limit) return { ok: false, reason: `牌组中已有 ${count} 张同名的「${label}」，达到 ${limit} 张上限。` }
+  const deck = [...record.deck]
+  if (removedCode) deck.splice(deck.indexOf(removedCode), 1)
+  deck.push(addedCode)
+  // Story assets earned by resolutions (e.g. Lita) are campaign dependencies,
+  // not ordinary deck slots. They must not block every subsequent upgrade.
+  const validatable = deck.filter(ordinary)
+  const errors = validateDeckRules(inv, validatable, ALL_CARDS).errors
+  if (errors.length) {
+    // 永久卡不占牌组槽位：换走一张普通卡会让牌组少一张，只能「无需替换」直接加入。
+    const rulesSize = inv.deckRequirements?.size || 30
+    const counted = validatable.filter(code => ALL_CARDS[code] && !ALL_CARDS[code].permanent && !ALL_CARDS[code].ignoreDeckLimit).length
+    return { ok: false, reason: added.permanent && counted < rulesSize
+      ? '永久卡不占牌组槽位，只能直接加入牌组，不能替换普通卡。'
+      : `替换后牌组不合法：${errors[0]}` }
+  }
+  const adaptableUsed = (record.purchases || []).filter(purchase => purchase.scenarioIndex === record.currentScenarioIndex && purchase.adaptable).length
+  // Phase 5（5b-9）：「适应性」这类「关间免费替换等级 0 卡」由条目级 adaptableSwaps 声明（次数即上限）。
+  const adaptableRule = record.deck.map(code => registeredEntry(code)?.adaptableSwaps).find(value => value > 0)
+  const adaptable = adaptableRule && removed && (added.xp || 0) === 0 && (removed.xp || 0) === 0 && adaptableUsed < adaptableRule
+  const quote = adaptable
+    ? { cost: 0, explanation: '随机应变：本次关间免费替换等级 0 卡牌' }
+    : upgradeQuote(added, removed, { discounts: upgradeDiscountsFor(record) })
+  if (quote.cost > record.xp) return { ok: false, reason: `经验不足：这次替换需要 ${quote.cost} XP，当前只有 ${record.xp} XP。` }
+  return { ok: true, quote, adaptable }
+}
+
+// 升级替换的唯一判定实现：legalMoves / 升级界面的置灰原因 / AI 推荐都读它。
+// 返回 { allowed, removals, blocked }；allowed=false 表示新卡本身不可购入。
+// knownLegal 是 legalMoves 已经确认可替换的卡号集合（[] 里的 null 也算），
+// 只用于补算置灰原因时跳过重复校验。
+export function replacementAnalysis(record, addedCode, campaignRecords = null, context = null, knownLegal = null) {
+  const result = { allowed: false, removals: [], blocked: [] }
   const added = ALL_CARDS[addedCode]
   const inv = INVESTIGATORS[record.code]
-  if (record.status !== 'active' || !poolFor(record, context).includes(addedCode) || !isCardAvailable(addedCode)
-    || !isPlayable(added) || !matchesDeckOptions(inv, added) || added.signatureFor || added.subtype) return []
+  if (!added || record.status !== 'active' || !poolFor(record, context).includes(addedCode) || !isCardAvailable(addedCode)
+    || !isPlayable(added) || !matchesDeckOptions(inv, added) || added.signatureFor || added.subtype) return result
   const requiredResearch = researchRequirementFor(addedCode)
-  if (requiredResearch && !campaignRecords?.[requiredResearch] && !record.research?.[requiredResearch]) return []
+  if (requiredResearch && !campaignRecords?.[requiredResearch] && !record.research?.[requiredResearch]) return result
+  result.allowed = true
   const invRulesSize = inv.deckRequirements?.size || 30
   const ordinaryCount = record.deck.filter(code => ordinary(code) && !ALL_CARDS[code]?.permanent).length
   const mayFillVacancy = ordinaryCount < invRulesSize
-  return (added.permanent || mayFillVacancy ? [null, ...new Set(record.deck.filter(ordinary))] : [...new Set(record.deck.filter(ordinary))]).flatMap(removedCode => {
-    if (removedCode === addedCode) return []
-    const removed = ALL_CARDS[removedCode]
-    if (removed && (removed.permanent || removed.signatureFor || removed.subtype)) return []
-    const count = record.deck.filter(code => ALL_CARDS[code]?.name === added.name).length
-      - (removed?.name === added.name ? 1 : 0)
-    if (count >= cardLimit(added)) return []
-    const deck = [...record.deck]
-    if (removedCode) deck.splice(deck.indexOf(removedCode), 1)
-    deck.push(addedCode)
-    // Story assets earned by resolutions (e.g. Lita) are campaign dependencies,
-    // not ordinary deck slots. They must not block every subsequent upgrade.
-    if (validateDeckRules(inv, deck.filter(ordinary), ALL_CARDS).errors.length) return []
-    const adaptableUsed = (record.purchases || []).filter(purchase => purchase.scenarioIndex === record.currentScenarioIndex && purchase.adaptable).length
-    // Phase 5（5b-9）：「适应性」这类「关间免费替换等级 0 卡」由条目级 adaptableSwaps 声明（次数即上限）。
-    const adaptableRule = record.deck.map(code => registeredEntry(code)?.adaptableSwaps).find(value => value > 0)
-    const adaptable = adaptableRule && removed && (added.xp || 0) === 0 && (removed.xp || 0) === 0 && adaptableUsed < adaptableRule
-    const quote = adaptable
-      ? { cost: 0, explanation: '随机应变：本次关间免费替换等级 0 卡牌' }
-      : upgradeQuote(added, removed, { discounts: upgradeDiscountsFor(record) })
-    return quote.cost <= record.xp ? [{ code: removedCode, ...quote, adaptable }] : []
-  })
+  for (const removedCode of [null, ...new Set(record.deck)]) {
+    if (knownLegal?.has(removedCode)) continue
+    const verdict = replacementVerdict(record, addedCode, added, inv, removedCode, mayFillVacancy)
+    if (verdict.ok) result.removals.push({ code: removedCode, ...verdict.quote, adaptable: verdict.adaptable })
+    else if (removedCode) result.blocked.push({ code: removedCode, reason: verdict.reason })
+  }
+  return result
+}
+
+export function replacementOptions(record, addedCode, campaignRecords = null, context = null) {
+  return replacementAnalysis(record, addedCode, campaignRecords, context).removals
+}
+
+// 升级界面用：这次升级里换不掉的牌组卡与原因；合法替换已经由 legalMoves 列出，两者互补。
+export function replacementBlockers(record, addedCode, campaignRecords = null, context = null, knownLegal = null) {
+  return replacementAnalysis(record, addedCode, campaignRecords, context, knownLegal).blocked
 }
 
 export function settleExiledCards(campaign, entries = []) {

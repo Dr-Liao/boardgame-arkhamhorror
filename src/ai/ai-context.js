@@ -6,7 +6,7 @@ import { commitProfile } from '../engine/lifecycle.js'
 import { playablePool, matchesDeckOptions } from '../deck/deckbuilding.js'
 import { deckRules } from '../deck/deck-rules.js'
 import { upgradeRecord } from '../campaign/campaign.js'
-import { legalMoves, actionPreview, getStat, actingSeats, actObjectiveContext, investigatorEntryError, locationAbilityStatus, locationInvestigateStatus } from '../engine/engine.js'
+import { legalMoves, actionPreview, getStat, actingSeats, actObjectiveContext, investigatorEntryError, locationAbilityStatus, locationInvestigateStatus, abilityUsage } from '../engine/engine.js'
 import { locationEntryNotice } from '../engine/location-facts.js'
 import { investigatorAssigned, investigatorParticipation } from './ai-participation.js'
 import { CLASS_NAMES } from '../engine/presentation-constants.js'
@@ -175,6 +175,14 @@ export function aiDecisionContext(state, seat) {
     data.remainingDeck = counts(inv.deck)
     data.discard = counts(inv.discard)
     data.assets = inv.assets.map(a => ({ ...a }))
+    // 上限记账：只给有「每回合/每场游戏…」能力的支援补一行，AI 才知道某个能力
+    // 已经从 legalMoves 里消失了（而不是以为自己漏看了卡面）。
+    const usageByAsset = new Map(abilityUsage(state, inv).map(item => [item.assetId, item]))
+    for (const row of data.assets) {
+      const usage = usageByAsset.get(row.id)
+      if (!usage) continue
+      row.abilities = usage.abilities.map(item => ({ label: item.label, limit: item.limitText, used: item.used }))
+    }
     // 威胁区域也摆在自己面前，属于公开状态。旧版只给 assets，AI 因此看不见弱点上的
     // 充能/标记（例如「怒灵」03015）：卡面写着「少于 4 个充能」却无法判断当前数量，
     // 于是会把所有法术支援的充能都移过去。requiredUses 取自条目级阈值（物理创伤线）。

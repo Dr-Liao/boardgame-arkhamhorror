@@ -22,6 +22,562 @@
           "hashVersion": 2,
           "schemaVersion": 7,
           "rulesVersion": "n6.0",
+          "moveCount": 54
+        },
+        "settings": {
+          "campaignId": "nightOfTheZealot",
+          "difficulty": "easy",
+          "rulesMode": "simplified",
+          "seed": "p6-5",
+          "campaignHub": true,
+          "aiStoryAwareness": false,
+          "cardPoolScope": "all",
+          "allowRollback": true,
+          "playerInvestigator": "01001",
+          "seatInvestigators": [
+            "01001"
+          ]
+        },
+        "players": [
+          {
+            "seat": 0,
+            "role": "human"
+          }
+        ],
+        "moves": [
+          {
+            "seat": 0,
+            "move": {
+              "action": "hubGoSetup"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "hubSelectInvestigator",
+              "code": "01001"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "hubSetDeck",
+              "codes": [
+                "01016",
+                "01016",
+                "01017",
+                "01017",
+                "01018",
+                "01018",
+                "01020",
+                "01020",
+                "01021",
+                "01021",
+                "01022",
+                "01022",
+                "01023",
+                "01023",
+                "01030",
+                "01030",
+                "01033",
+                "01033",
+                "01037",
+                "01037",
+                "01039",
+                "01039",
+                "01087",
+                "01087",
+                "01088",
+                "01088",
+                "01089",
+                "01089",
+                "01090",
+                "01090"
+              ]
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "hubDoneSeat"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "hubBeginScenario"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q5-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "play",
+              "cardId": "01030"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "play",
+              "cardId": "01020"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "play",
+              "cardId": "01088"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "play",
+              "cardId": "01033"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "ability",
+              "assetId": "c2",
+              "abilityIndex": 0,
+              "targetId": "e1"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q11-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q11-1",
+              "optionId": "trigger"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "investigate"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q14-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "advanceAct",
+              "scriptCard": "act"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q16-0",
+              "optionId": "1"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q16-1",
+              "optionId": "1"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "move",
+              "locationId": "attic"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q19-0",
+              "optionId": "c3"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q19-1",
+              "optionId": "skip"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "ability",
+              "assetId": "c2",
+              "abilityIndex": 0,
+              "targetId": "e2"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q22-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q22-1",
+              "optionId": "trigger"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "play",
+              "cardId": "01037"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "move",
+              "locationId": "hallway"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "move",
+              "locationId": "cellar"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q27-0",
+              "optionId": "c3"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q27-1",
+              "optionId": "discard"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q27-2",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "play",
+              "cardId": "01037"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "move",
+              "locationId": "hallway"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "endTurn"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q33-0",
+              "optionId": "advance"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q33-1",
+              "optionId": "1"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q33-2",
+              "optionId": "1"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q33-3",
+              "optionId": "1"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q33-4",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "ability",
+              "assetId": "c2",
+              "abilityIndex": 0,
+              "targetId": "e3"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q39-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q39-1",
+              "optionId": "0"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "ability",
+              "assetId": "c2",
+              "abilityIndex": 0,
+              "targetId": "e3"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q42-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "ability",
+              "assetId": "c2",
+              "abilityIndex": 0,
+              "targetId": "e3"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q44-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q44-1",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q44-2",
+              "optionId": "c1"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "ability",
+              "assetId": "c2",
+              "abilityIndex": 0,
+              "targetId": "e3"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q48-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q48-1",
+              "optionId": "0"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "ability",
+              "assetId": "c2",
+              "abilityIndex": 0,
+              "targetId": "e3"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q51-0",
+              "optionId": "done"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q51-1",
+              "optionId": "r1"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
+              "action": "choose",
+              "choiceId": "q51-2",
+              "optionId": "0"
+            }
+          }
+        ]
+      },
+      "hashes": [
+        "cf29362b8c8ea96d380e167462297e65fde0848e9b5a70fcc91f4431e878cd0a",
+        "67e1e3e24b6466b84ac182fd00b7bfdeb73a1a4a101d91decc70f5717c0560d1",
+        "561f32fdde64f931da23989241afa260b30393e11f1d328a2b3c3eccc6df3b06",
+        "4f3ef17157d48ae5655228e20fbf49f3ef25f502ac762887ee30b3c035024689",
+        "828a1242cf06cdfb04f47543c7564a0bfff9ac4079aefe389f3b41f412a45c8d",
+        "20a12fecfe1c63ae13e30cfb4d694bfda8ed8937bd4131b5b1d7ac1d1159da06",
+        "7ebf1748b7ec6d40d9ab52bcb07218da8278e1bf5e0c08a5fdaa8abd5b279b56",
+        "41e7d3c8751a14d0a1ae1a6b987eb3346cca094c53833ccb110092b4f0c0e5a5",
+        "3d0f7c743caa52b3aa619c1df205a0c185a7454a03bead4dd1ea1431cb465ee3",
+        "d63c2bbcb7d40e74b5abc6226c78ebe77dbd0962cac428e28a5668364091ca51",
+        "3f3f8317c86a295949b2eee57321c3e27d2c354aec1160dcd4b6f0579811612a",
+        "b7a6aeff089b45da7e5d3ee2c4f19ec289d96d68174cb81ee9863d9524e64c4e",
+        "f5011483d009ee081b139bc76c5b2a6a37376f5989137f9713237f2c6410b98b",
+        "8b99bb031e663b51e30a43723ff9ff8d4d38ab53567124d9764f7128952945d2",
+        "558121275bd0f56809c54b0a3cc721e3b1aa2c592a569bf577628c938d6cb809",
+        "00d566eba062859524345b7e4c405690788df7cf76074c1f41ba49c59a5bf2bb",
+        "659fbb6334b4731adc4923ac9b8694bd52b6d89755d08d3d486ffafe5429eb72",
+        "1bd7ccb7007da208f004e2110eca35f8c021d05311eebd62e6f89bc7e3013164",
+        "59d4e306bcb96d67dc93c3d0a6f56ef099fd9168a8733bee87569c7904a2682b",
+        "cd03a842c0e85c1509e36ab2796db8e4f7a2b8829739637c80cd0cbb7beb3813",
+        "001623fc1200634b5ff47ae395f5651be20f5a76207bf061c8c261a5e1c73ccc",
+        "c2b1899f56e9cb1b958d08b7092bd8462e1c42dfe6ec369f245755ae46165ea2",
+        "b0a26b2881d218192b8ad05805d386b108b7bf3a5a101a7ae522c05329939991",
+        "f4b5d28a8cd9005923df9f61a42b15c8b6449f1d405f88ee3de71d73a7a2d107",
+        "5338f22aabb3c6c2207369049ee76390c355f70a0048417c17d70386f0666083",
+        "3cd3e7ce7cce70eeb0cf813aac3e6c5a2dbd48690211078e8acc1bac58608726",
+        "fc884c35cde68fbb08e0bda626d8fde7a35516537f99e9d44c81b1475ea8574d",
+        "a8142d7640fb925f9d701bf5395db674e73ae72ddede9419d69534dd08462309",
+        "b7c493d92c61dc1e443e0f91353ceb74cc4e35f97b32cd99c925ac87542405f3",
+        "4f1eb4e86494d6fcb5778ef14c67f02ff203eeb7bb59fa8c6f0d8336d8b21346",
+        "7f157ff93f236a0875cc13bc6a543b4f1fade459c51e1bce497a3c39dc33c2b2",
+        "500a79bdd5b4de287cce731952cccead64b1ce194fa59afc271d1d12f2734335",
+        "3f46dce877eea4703f3d01861282c61da3c563c680d34ee8b7f8699b23acf0e3",
+        "c8a44d560f403b45cfeae5862de9c28971d57181edd40c1e18d53c71f3d83427",
+        "cfb67dd6dad03d219812212aaa763b8da6323a8907f325782ed7213ccd1448d6",
+        "73def018ae36420556dc658d43506d33fe8a1fab17f493931f43ec4b405e15a1",
+        "4c4e9a15e84b364e71e11aea539ffe32d5331c97e515c038f80097fe289bcd92",
+        "144447053b52c0c965a80bc67d9e97171c6a32f0cddb4e6f37b5cb4f1e78ee12",
+        "f51caec9312fc2b7fd5f0347d46dcdb848ff0cb8cb9449f047553a1ded46447d",
+        "946ee11db7d5fd01b4a3f72e3a27b14ab761743118d15e0f74ef25954c845017",
+        "d557e0dec14b822900556673db839c6605b46d0e2c7d9ad56bce231e436706dc",
+        "31a9d9d3dd33e095126fab0fcc6ad661226f755002df312716289e2a023bda9d",
+        "4db038c4df973d9f0ce0b931026ee8d190d76b8d0295d18af08df912ac3b3de8",
+        "fad590a9222bb091a4a8509e4a89402e23af438127185e8bd9e964c9c070466a",
+        "2055c7142289f9cc95134fdaae2619f93bdc8eb3d92679cb84c6d90884046b2e",
+        "711a49088285701379cba7ec0289d39e826d837decc851de45368a970ec7bda8",
+        "f4ba31a3aca4d14493a7f0bc22e2ce94072120f66b3317e85144edd76fe4e145",
+        "177c7e582d3f142fae0d47b06d336c720eb05aeea5a47f85e06fdbeb82a753aa",
+        "5136b5b4cfe5276105d1d99f78546344695daa71532b1e3d909d8cf69747e85f",
+        "3fb3830aadfbfaf2ffb0be5bd4cf74ae1c74e45fabf5196a2ec36431e3c5e9b8",
+        "2f8e41a32e2fd5a37150a5ca2b7018cd49f4fcbcbc4ca350b56e9da658f920e5",
+        "72b1a803b6ad9f9f03fc9ec30a6dcb1001cf019cfaa9ad5890de1baff632618f",
+        "5bc4a9dd6c6c76a214b512465d77d99184c56e5eeb3ada6ac6bc99a56c2181a6",
+        "75fe5d3967ee2937c5e19d97c3490c5e168769d5548b906ff01ec48b2d75c70b",
+        "58f78c518c8ea9f475dc6af5c76822b891140f366fac5c75fca096b0cdccd24c"
+      ],
+      "final": {
+        "hash": "58f78c518c8ea9f475dc6af5c76822b891140f366fac5c75fca096b0cdccd24c",
+        "revision": 54,
+        "uiState": "scenarioResult",
+        "status": "playing",
+        "scenario": "theGathering",
+        "outcome": null,
+        "pendingChoice": null
+      }
+    },
+    {
+      "id": "notz-gathering-hub-victory-r2",
+      "note": "《夜之狂热》第一关：分支 r2（烧屋）结算与战役记录",
+      "recipe": {
+        "id": "notz-gathering-hub-victory-r2",
+        "note": "《夜之狂热》第一关：分支 r2（烧屋）结算与战役记录",
+        "driver": "p6",
+        "seed": "p6-5",
+        "branch": "r2",
+        "stopAfterFirst": true
+      },
+      "log": {
+        "version": 1,
+        "meta": {
+          "hashVersion": 2,
+          "schemaVersion": 7,
+          "rulesVersion": "n6.0",
           "moveCount": 53
         },
         "settings": {
@@ -224,6 +780,14 @@
           {
             "seat": 0,
             "move": {
+              "action": "choose",
+              "choiceId": "q19-1",
+              "optionId": "skip"
+            }
+          },
+          {
+            "seat": 0,
+            "move": {
               "action": "ability",
               "assetId": "c2",
               "abilityIndex": 0,
@@ -234,7 +798,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q21-0",
+              "choiceId": "q22-0",
               "optionId": "done"
             }
           },
@@ -242,7 +806,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q21-1",
+              "choiceId": "q22-1",
               "optionId": "trigger"
             }
           },
@@ -271,7 +835,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q26-0",
+              "choiceId": "q27-0",
               "optionId": "c3"
             }
           },
@@ -279,7 +843,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q26-1",
+              "choiceId": "q27-1",
               "optionId": "discard"
             }
           },
@@ -287,7 +851,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q26-2",
+              "choiceId": "q27-2",
               "optionId": "done"
             }
           },
@@ -315,7 +879,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q32-0",
+              "choiceId": "q33-0",
               "optionId": "advance"
             }
           },
@@ -323,7 +887,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q32-1",
+              "choiceId": "q33-1",
               "optionId": "1"
             }
           },
@@ -331,7 +895,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q32-2",
+              "choiceId": "q33-2",
               "optionId": "1"
             }
           },
@@ -339,7 +903,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q32-3",
+              "choiceId": "q33-3",
               "optionId": "1"
             }
           },
@@ -347,7 +911,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q32-4",
+              "choiceId": "q33-4",
               "optionId": "done"
             }
           },
@@ -364,7 +928,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q38-0",
+              "choiceId": "q39-0",
               "optionId": "done"
             }
           },
@@ -372,7 +936,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q38-1",
+              "choiceId": "q39-1",
               "optionId": "0"
             }
           },
@@ -389,7 +953,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q41-0",
+              "choiceId": "q42-0",
               "optionId": "done"
             }
           },
@@ -406,7 +970,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q43-0",
+              "choiceId": "q44-0",
               "optionId": "done"
             }
           },
@@ -414,7 +978,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q43-1",
+              "choiceId": "q44-1",
               "optionId": "done"
             }
           },
@@ -422,7 +986,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q43-2",
+              "choiceId": "q44-2",
               "optionId": "c1"
             }
           },
@@ -439,7 +1003,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q47-0",
+              "choiceId": "q48-0",
               "optionId": "done"
             }
           },
@@ -447,7 +1011,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q47-1",
+              "choiceId": "q48-1",
               "optionId": "0"
             }
           },
@@ -464,7 +1028,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q50-0",
+              "choiceId": "q51-0",
               "optionId": "done"
             }
           },
@@ -472,554 +1036,7 @@
             "seat": 0,
             "move": {
               "action": "choose",
-              "choiceId": "q50-1",
-              "optionId": "r1"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q50-2",
-              "optionId": "0"
-            }
-          }
-        ]
-      },
-      "hashes": [
-        "cf29362b8c8ea96d380e167462297e65fde0848e9b5a70fcc91f4431e878cd0a",
-        "67e1e3e24b6466b84ac182fd00b7bfdeb73a1a4a101d91decc70f5717c0560d1",
-        "561f32fdde64f931da23989241afa260b30393e11f1d328a2b3c3eccc6df3b06",
-        "4f3ef17157d48ae5655228e20fbf49f3ef25f502ac762887ee30b3c035024689",
-        "828a1242cf06cdfb04f47543c7564a0bfff9ac4079aefe389f3b41f412a45c8d",
-        "20a12fecfe1c63ae13e30cfb4d694bfda8ed8937bd4131b5b1d7ac1d1159da06",
-        "7ebf1748b7ec6d40d9ab52bcb07218da8278e1bf5e0c08a5fdaa8abd5b279b56",
-        "41e7d3c8751a14d0a1ae1a6b987eb3346cca094c53833ccb110092b4f0c0e5a5",
-        "3d0f7c743caa52b3aa619c1df205a0c185a7454a03bead4dd1ea1431cb465ee3",
-        "d63c2bbcb7d40e74b5abc6226c78ebe77dbd0962cac428e28a5668364091ca51",
-        "3f3f8317c86a295949b2eee57321c3e27d2c354aec1160dcd4b6f0579811612a",
-        "b7a6aeff089b45da7e5d3ee2c4f19ec289d96d68174cb81ee9863d9524e64c4e",
-        "f5011483d009ee081b139bc76c5b2a6a37376f5989137f9713237f2c6410b98b",
-        "8b99bb031e663b51e30a43723ff9ff8d4d38ab53567124d9764f7128952945d2",
-        "558121275bd0f56809c54b0a3cc721e3b1aa2c592a569bf577628c938d6cb809",
-        "00d566eba062859524345b7e4c405690788df7cf76074c1f41ba49c59a5bf2bb",
-        "659fbb6334b4731adc4923ac9b8694bd52b6d89755d08d3d486ffafe5429eb72",
-        "1bd7ccb7007da208f004e2110eca35f8c021d05311eebd62e6f89bc7e3013164",
-        "59d4e306bcb96d67dc93c3d0a6f56ef099fd9168a8733bee87569c7904a2682b",
-        "cd03a842c0e85c1509e36ab2796db8e4f7a2b8829739637c80cd0cbb7beb3813",
-        "5f06af02aa8c69df412be1fef2e483d8d159238c70b0e8d9e60ee0b745ba20f5",
-        "2cfc238e12b2600c52ed8f27302daaa3e1c4d2f7b7f6f1464ef4492098805a11",
-        "869049bc6f521ee36162eb125280eeeaed843677cf2b79794aaf76f18b7b644d",
-        "3eb248723e26d591e419a14ff95cc97636ed6dda8123ffbeafdad53e85fe5ab4",
-        "676009aa0b15506380b6d95bb390e97e951d3e7ad72f2a7392dcf6ba95c67314",
-        "a2acdd1a7352f50f9cde7f5f91e45deae49257af3bc1d8f90df7cc345cd9e044",
-        "94baf9dba4a288007d5a6c1bcfa674116190db1dab5a40be78ad3e0f42817626",
-        "d931bb4b85e26482afb57d7fb85190e8240ca68609965e960e76fcfc15abf809",
-        "a1725eb698bf7d35d0ec6fbd52352a2ff18e04f606efa44572d82a197e7dd234",
-        "bbf45c1828c89fc7fd83cb4cb523fcc02f626b1bf65d987eba359970907b901f",
-        "049882fcb4f9978e24c9edea88d0ad456f126ccf2fb702735380ec98436f7247",
-        "baf53a869a591cfb57e64537b1e81ee55e040798da6763840666a67b4ae3aff4",
-        "b745d5308f1828bbe97f22032d8bfc8d53aaac09673a7f5cc113d25c20cb637a",
-        "daff03d4deb0744f8f68acc5d6a5f058833a5f6ba96865e0326a660cea383789",
-        "d3530b0407af983c27baa8f668482f723eff556008ef2230dc5304ef9dda1a1d",
-        "c8428103a7385d53d57e59b8e4e246027ea14a992cf3eec37ec343dff00a9248",
-        "332e5fb6564daa6eaaf153d73bf49a02d3a296ae9bc9877a3b6d65467ff56ba8",
-        "49fa1235ed7adcc309767ca887a4d52b08f0c31a82f6a53f71049ef3ecb13ee2",
-        "c04e5d7ba12581c28ca60701c5dbdab7fc9e6818eabe70147e96d1a8628b9963",
-        "eac1ec6f7f015ccda1bb9c1eab9413d72cc738049ee438c29d52948b7f93917c",
-        "3e751952bc16358783cd12fe105b5e2486bbead5b711adf6d660e256502f2d8d",
-        "2816abdd6fca81ebc45d99f7800954fb582f162f5202c9eaccdb6cac722af3e1",
-        "26606039bf08211d66761104f5e3d75b8fb4c76ea6829c95af82090ad1d6b153",
-        "c9ea28560b28f2da41ad426b69151be2b9123d198f7117f377529f1edd210854",
-        "f9d2a239be24d562d2437a0dbd1b201aea5b651eeea9b28d537b51734be62124",
-        "10f74de3ae599d505b0a1883b1aed1c5a5b4698bdaf4bb385743ba4460c86148",
-        "bb5beea0ba61dbc8082f8b08eee6d7a8cd6b9bff98522c2d0a0ea5bf08891a8a",
-        "bcda5afd3e911a4cde36d11c4511d27808532e3fc5a7b28c24fa12ec19e90fa5",
-        "d9450e254a64b16bb7ad45fe38ca2099b7c0a5e1f0963c9f726cd71988990097",
-        "97bc3f649cc285094fc94004ba639b0b90433a7d28677c15e4eec049e1e3c3c1",
-        "7cd737ef965b06a1c0009076bbb5498c81e038fe66cf862796a87b631816c07d",
-        "62c9a55784123090a5c0522545bc3cc14483f80774073ba58f44b568d0fa0b73",
-        "74e0e586ba94e619dbe74b1fa62dd96ff368e63f76d6cf24895658f62431a1c9",
-        "4a31f9489879093bb08dd1d745b43efed3b3633ca2d80234e4984bfd1d804bed"
-      ],
-      "final": {
-        "hash": "4a31f9489879093bb08dd1d745b43efed3b3633ca2d80234e4984bfd1d804bed",
-        "revision": 53,
-        "uiState": "scenarioResult",
-        "status": "playing",
-        "scenario": "theGathering",
-        "outcome": null,
-        "pendingChoice": null
-      }
-    },
-    {
-      "id": "notz-gathering-hub-victory-r2",
-      "note": "《夜之狂热》第一关：分支 r2（烧屋）结算与战役记录",
-      "recipe": {
-        "id": "notz-gathering-hub-victory-r2",
-        "note": "《夜之狂热》第一关：分支 r2（烧屋）结算与战役记录",
-        "driver": "p6",
-        "seed": "p6-5",
-        "branch": "r2",
-        "stopAfterFirst": true
-      },
-      "log": {
-        "version": 1,
-        "meta": {
-          "hashVersion": 2,
-          "schemaVersion": 7,
-          "rulesVersion": "n6.0",
-          "moveCount": 52
-        },
-        "settings": {
-          "campaignId": "nightOfTheZealot",
-          "difficulty": "easy",
-          "rulesMode": "simplified",
-          "seed": "p6-5",
-          "campaignHub": true,
-          "aiStoryAwareness": false,
-          "cardPoolScope": "all",
-          "allowRollback": true,
-          "playerInvestigator": "01001",
-          "seatInvestigators": [
-            "01001"
-          ]
-        },
-        "players": [
-          {
-            "seat": 0,
-            "role": "human"
-          }
-        ],
-        "moves": [
-          {
-            "seat": 0,
-            "move": {
-              "action": "hubGoSetup"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "hubSelectInvestigator",
-              "code": "01001"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "hubSetDeck",
-              "codes": [
-                "01016",
-                "01016",
-                "01017",
-                "01017",
-                "01018",
-                "01018",
-                "01020",
-                "01020",
-                "01021",
-                "01021",
-                "01022",
-                "01022",
-                "01023",
-                "01023",
-                "01030",
-                "01030",
-                "01033",
-                "01033",
-                "01037",
-                "01037",
-                "01039",
-                "01039",
-                "01087",
-                "01087",
-                "01088",
-                "01088",
-                "01089",
-                "01089",
-                "01090",
-                "01090"
-              ]
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "hubDoneSeat"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "hubBeginScenario"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q5-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "play",
-              "cardId": "01030"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "play",
-              "cardId": "01020"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "play",
-              "cardId": "01088"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "play",
-              "cardId": "01033"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "ability",
-              "assetId": "c2",
-              "abilityIndex": 0,
-              "targetId": "e1"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q11-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q11-1",
-              "optionId": "trigger"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "investigate"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q14-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "advanceAct",
-              "scriptCard": "act"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q16-0",
-              "optionId": "1"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q16-1",
-              "optionId": "1"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "move",
-              "locationId": "attic"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q19-0",
-              "optionId": "c3"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "ability",
-              "assetId": "c2",
-              "abilityIndex": 0,
-              "targetId": "e2"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q21-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q21-1",
-              "optionId": "trigger"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "play",
-              "cardId": "01037"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "move",
-              "locationId": "hallway"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "move",
-              "locationId": "cellar"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q26-0",
-              "optionId": "c3"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q26-1",
-              "optionId": "discard"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q26-2",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "play",
-              "cardId": "01037"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "move",
-              "locationId": "hallway"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "endTurn"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q32-0",
-              "optionId": "advance"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q32-1",
-              "optionId": "1"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q32-2",
-              "optionId": "1"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q32-3",
-              "optionId": "1"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q32-4",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "ability",
-              "assetId": "c2",
-              "abilityIndex": 0,
-              "targetId": "e3"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q38-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q38-1",
-              "optionId": "0"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "ability",
-              "assetId": "c2",
-              "abilityIndex": 0,
-              "targetId": "e3"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q41-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "ability",
-              "assetId": "c2",
-              "abilityIndex": 0,
-              "targetId": "e3"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q43-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q43-1",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q43-2",
-              "optionId": "c1"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "ability",
-              "assetId": "c2",
-              "abilityIndex": 0,
-              "targetId": "e3"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q47-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q47-1",
-              "optionId": "0"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "ability",
-              "assetId": "c2",
-              "abilityIndex": 0,
-              "targetId": "e3"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q50-0",
-              "optionId": "done"
-            }
-          },
-          {
-            "seat": 0,
-            "move": {
-              "action": "choose",
-              "choiceId": "q50-1",
+              "choiceId": "q51-1",
               "optionId": "r2"
             }
           }
@@ -1046,43 +1063,44 @@
         "1bd7ccb7007da208f004e2110eca35f8c021d05311eebd62e6f89bc7e3013164",
         "59d4e306bcb96d67dc93c3d0a6f56ef099fd9168a8733bee87569c7904a2682b",
         "cd03a842c0e85c1509e36ab2796db8e4f7a2b8829739637c80cd0cbb7beb3813",
-        "5f06af02aa8c69df412be1fef2e483d8d159238c70b0e8d9e60ee0b745ba20f5",
-        "2cfc238e12b2600c52ed8f27302daaa3e1c4d2f7b7f6f1464ef4492098805a11",
-        "869049bc6f521ee36162eb125280eeeaed843677cf2b79794aaf76f18b7b644d",
-        "3eb248723e26d591e419a14ff95cc97636ed6dda8123ffbeafdad53e85fe5ab4",
-        "676009aa0b15506380b6d95bb390e97e951d3e7ad72f2a7392dcf6ba95c67314",
-        "a2acdd1a7352f50f9cde7f5f91e45deae49257af3bc1d8f90df7cc345cd9e044",
-        "94baf9dba4a288007d5a6c1bcfa674116190db1dab5a40be78ad3e0f42817626",
-        "d931bb4b85e26482afb57d7fb85190e8240ca68609965e960e76fcfc15abf809",
-        "a1725eb698bf7d35d0ec6fbd52352a2ff18e04f606efa44572d82a197e7dd234",
-        "bbf45c1828c89fc7fd83cb4cb523fcc02f626b1bf65d987eba359970907b901f",
-        "049882fcb4f9978e24c9edea88d0ad456f126ccf2fb702735380ec98436f7247",
-        "baf53a869a591cfb57e64537b1e81ee55e040798da6763840666a67b4ae3aff4",
-        "b745d5308f1828bbe97f22032d8bfc8d53aaac09673a7f5cc113d25c20cb637a",
-        "daff03d4deb0744f8f68acc5d6a5f058833a5f6ba96865e0326a660cea383789",
-        "d3530b0407af983c27baa8f668482f723eff556008ef2230dc5304ef9dda1a1d",
-        "c8428103a7385d53d57e59b8e4e246027ea14a992cf3eec37ec343dff00a9248",
-        "332e5fb6564daa6eaaf153d73bf49a02d3a296ae9bc9877a3b6d65467ff56ba8",
-        "49fa1235ed7adcc309767ca887a4d52b08f0c31a82f6a53f71049ef3ecb13ee2",
-        "c04e5d7ba12581c28ca60701c5dbdab7fc9e6818eabe70147e96d1a8628b9963",
-        "eac1ec6f7f015ccda1bb9c1eab9413d72cc738049ee438c29d52948b7f93917c",
-        "3e751952bc16358783cd12fe105b5e2486bbead5b711adf6d660e256502f2d8d",
-        "2816abdd6fca81ebc45d99f7800954fb582f162f5202c9eaccdb6cac722af3e1",
-        "26606039bf08211d66761104f5e3d75b8fb4c76ea6829c95af82090ad1d6b153",
-        "c9ea28560b28f2da41ad426b69151be2b9123d198f7117f377529f1edd210854",
-        "f9d2a239be24d562d2437a0dbd1b201aea5b651eeea9b28d537b51734be62124",
-        "10f74de3ae599d505b0a1883b1aed1c5a5b4698bdaf4bb385743ba4460c86148",
-        "bb5beea0ba61dbc8082f8b08eee6d7a8cd6b9bff98522c2d0a0ea5bf08891a8a",
-        "bcda5afd3e911a4cde36d11c4511d27808532e3fc5a7b28c24fa12ec19e90fa5",
-        "d9450e254a64b16bb7ad45fe38ca2099b7c0a5e1f0963c9f726cd71988990097",
-        "97bc3f649cc285094fc94004ba639b0b90433a7d28677c15e4eec049e1e3c3c1",
-        "7cd737ef965b06a1c0009076bbb5498c81e038fe66cf862796a87b631816c07d",
-        "62c9a55784123090a5c0522545bc3cc14483f80774073ba58f44b568d0fa0b73",
-        "cbc27482c63cffd4f2a18a5ebe386589716c7d09d7af915dcad9df58d79bc0bb"
+        "001623fc1200634b5ff47ae395f5651be20f5a76207bf061c8c261a5e1c73ccc",
+        "c2b1899f56e9cb1b958d08b7092bd8462e1c42dfe6ec369f245755ae46165ea2",
+        "b0a26b2881d218192b8ad05805d386b108b7bf3a5a101a7ae522c05329939991",
+        "f4b5d28a8cd9005923df9f61a42b15c8b6449f1d405f88ee3de71d73a7a2d107",
+        "5338f22aabb3c6c2207369049ee76390c355f70a0048417c17d70386f0666083",
+        "3cd3e7ce7cce70eeb0cf813aac3e6c5a2dbd48690211078e8acc1bac58608726",
+        "fc884c35cde68fbb08e0bda626d8fde7a35516537f99e9d44c81b1475ea8574d",
+        "a8142d7640fb925f9d701bf5395db674e73ae72ddede9419d69534dd08462309",
+        "b7c493d92c61dc1e443e0f91353ceb74cc4e35f97b32cd99c925ac87542405f3",
+        "4f1eb4e86494d6fcb5778ef14c67f02ff203eeb7bb59fa8c6f0d8336d8b21346",
+        "7f157ff93f236a0875cc13bc6a543b4f1fade459c51e1bce497a3c39dc33c2b2",
+        "500a79bdd5b4de287cce731952cccead64b1ce194fa59afc271d1d12f2734335",
+        "3f46dce877eea4703f3d01861282c61da3c563c680d34ee8b7f8699b23acf0e3",
+        "c8a44d560f403b45cfeae5862de9c28971d57181edd40c1e18d53c71f3d83427",
+        "cfb67dd6dad03d219812212aaa763b8da6323a8907f325782ed7213ccd1448d6",
+        "73def018ae36420556dc658d43506d33fe8a1fab17f493931f43ec4b405e15a1",
+        "4c4e9a15e84b364e71e11aea539ffe32d5331c97e515c038f80097fe289bcd92",
+        "144447053b52c0c965a80bc67d9e97171c6a32f0cddb4e6f37b5cb4f1e78ee12",
+        "f51caec9312fc2b7fd5f0347d46dcdb848ff0cb8cb9449f047553a1ded46447d",
+        "946ee11db7d5fd01b4a3f72e3a27b14ab761743118d15e0f74ef25954c845017",
+        "d557e0dec14b822900556673db839c6605b46d0e2c7d9ad56bce231e436706dc",
+        "31a9d9d3dd33e095126fab0fcc6ad661226f755002df312716289e2a023bda9d",
+        "4db038c4df973d9f0ce0b931026ee8d190d76b8d0295d18af08df912ac3b3de8",
+        "fad590a9222bb091a4a8509e4a89402e23af438127185e8bd9e964c9c070466a",
+        "2055c7142289f9cc95134fdaae2619f93bdc8eb3d92679cb84c6d90884046b2e",
+        "711a49088285701379cba7ec0289d39e826d837decc851de45368a970ec7bda8",
+        "f4ba31a3aca4d14493a7f0bc22e2ce94072120f66b3317e85144edd76fe4e145",
+        "177c7e582d3f142fae0d47b06d336c720eb05aeea5a47f85e06fdbeb82a753aa",
+        "5136b5b4cfe5276105d1d99f78546344695daa71532b1e3d909d8cf69747e85f",
+        "3fb3830aadfbfaf2ffb0be5bd4cf74ae1c74e45fabf5196a2ec36431e3c5e9b8",
+        "2f8e41a32e2fd5a37150a5ca2b7018cd49f4fcbcbc4ca350b56e9da658f920e5",
+        "72b1a803b6ad9f9f03fc9ec30a6dcb1001cf019cfaa9ad5890de1baff632618f",
+        "5bc4a9dd6c6c76a214b512465d77d99184c56e5eeb3ada6ac6bc99a56c2181a6",
+        "a1e0d1d13486d10dad8cd47870f6507ab7df06662390cf023ddae51073fb4095"
       ],
       "final": {
-        "hash": "cbc27482c63cffd4f2a18a5ebe386589716c7d09d7af915dcad9df58d79bc0bb",
-        "revision": 52,
+        "hash": "a1e0d1d13486d10dad8cd47870f6507ab7df06662390cf023ddae51073fb4095",
+        "revision": 53,
         "uiState": "scenarioResult",
         "status": "playing",
         "scenario": "theGathering",

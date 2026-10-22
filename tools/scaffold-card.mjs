@@ -6,6 +6,11 @@
 //   node tools/scaffold-card.mjs 01089 --entry   生成 src/cards/entries/01089.js 并重建索引
 //   node tools/scaffold-card.mjs 01089 --entry --no-index
 //                                               只写单卡文件、不动索引（批量 worker 用；主进程合并后统一重建）
+//   node tools/scaffold-card.mjs 02052 --encounter
+//                                               按归属算法生成 src/cards/encounter-entries/<归属>/02052.js
+//                                               并重建 encounter-entries/index.js；--no-index 同上
+//   node tools/scaffold-card.mjs 02052 --encounter --no-index
+//                                               只写非玩家条目文件、不动索引（批量 worker 用）
 //   node tools/scaffold-card.mjs 01089 --force   覆盖已存在的测试骨架（行为文件永不覆盖）
 //   node --test develop/scaffolds/01089.test.mjs 直接跑（骨架默认是绿的）
 //
@@ -25,6 +30,7 @@ import { EFFECTS } from '../src/cards/card-effects.js'
 import { CARD_ABILITY_ENTRIES } from '../src/cards/card-abilities.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { buildCardIndex } from './build-card-index.mjs'
+import { buildEncounterIndex } from './build-encounter-index.mjs'
 import { renderEntryModule } from './card-entry-source.mjs'
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
@@ -146,6 +152,69 @@ function entryTemplate(code) {
   return renderEntryModule({ code, name, text, source })
 }
 
+// 非玩家卡骨架：由 --encounter 写到归属目录，不覆盖已有行为文件。
+const SCOPE_BY_TYPE = Object.freeze({
+  enemy: 'enemy', treachery: 'treachery', location: 'location',
+  act: 'act', agenda: 'agenda', asset: 'storyAsset',
+})
+
+function scopeFor(card) {
+  return SCOPE_BY_TYPE[card?.type] || 'threat'
+}
+
+function encounterEntryTemplate(code, placement) {
+  const card = ALL_CARDS[code] || {}
+  const name = card.nameZh || card.name || code
+  const text = card.textZh || card.text || ''
+  const attribution = placement.bucket === 'scenario'
+    ? `关卡专用 · ${placement.scenarioId}（${placement.scenarioName}）`
+    : placement.bucket === 'campaign'
+      ? `战役共用 · ${placement.campaignId}（${placement.campaignName}）`
+      : '跨战役通用'
+  const lines = [
+    `// ${code} ${name}`,
+    `// 归属：${attribution}`,
+    `// 遭遇组：${placement.group || '无（story）'}`,
+  ]
+  for (const line of String(text).split('\n')) if (line.trim()) lines.push(`// 卡面：${line}`)
+  lines.push('//', '// 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。')
+  lines.push('', 'export default {', `  code: '${code}',`, `  scope: '${scopeFor(card)}',`,
+    '  // TODO: 按卡面实现（abilities / modifiers / 规则字段）。只通过 ctx.api 改状态。', '}', '')
+  return lines.join('\n')
+}
+
+async function scaffoldEncounter(codes, { noIndex }) {
+  // 只有非玩家卡才需要加载 content/registered.js；玩家卡脚手架保持轻量。
+  const { loadPlacementIndex, resolvePlacement } = await import('./encounter-entry-placement.mjs')
+  const index = loadPlacementIndex()
+  const entryDir = path.join(ROOT, 'src/cards/encounter-entries')
+  let created = 0
+  for (const code of codes) {
+    const card = ALL_CARDS[code] || null
+    const placement = resolvePlacement({ code, scope: scopeFor(card) }, index)
+    if (!card) throw new Error(`${code} 不在 cards-data.js 里；先导入卡面数据，或确认卡号拼写`)
+    if (placement.unresolved) {
+      throw new Error(`${code} 无法归属到任何已注册关卡（content/registered.js）。先把它加入 definition，再重新运行`)
+    }
+    const file = path.join(entryDir, placement.targetPath)
+    if (existsSync(file)) {
+      console.log(`  跳过条目文件 ${code}：${path.relative(ROOT, file).split(path.sep).join('/')} 已存在（行为文件不允许覆盖）`)
+      continue
+    }
+    await mkdir(path.dirname(file), { recursive: true })
+    await writeFile(file, encounterEntryTemplate(code, placement), 'utf8')
+    created++
+    console.log(`  写入条目文件 ${path.relative(ROOT, file).split(path.sep).join('/')}`)
+  }
+  if (created && !noIndex) await buildEncounterIndex({ write: true })
+  if (created && noIndex) {
+    console.log('  --no-index：跳过 encounter-entries/index.js 重建；由主进程合并分片后统一重建')
+    console.log('  worker 只做 node --check / 结构检查，不要跑 cards:encounter-check（索引此时故意是旧的）')
+  } else if (created) {
+    console.log(`生成 ${created} 个非玩家条目骨架；补完规则后运行 npm run cards:encounter-check`)
+  }
+}
+
 async function readLedger() {
   if (!existsSync(path.join(ROOT, LEDGER))) return { batches: {} }
   return JSON.parse(await readFile(path.join(ROOT, LEDGER), 'utf8'))
@@ -155,6 +224,7 @@ async function main() {
   const args = process.argv.slice(2)
   const force = args.includes('--force')
   const withEntry = args.includes('--entry')
+  const withEncounter = args.includes('--encounter')
   const noIndex = args.includes('--no-index')
   // 支持重复的 --batch：`--batch 5c-2 --batch 5c-3`（每批一次），也兼容卡号混写。
   const batchNames = []
@@ -173,8 +243,13 @@ async function main() {
     codes = [...new Set([...batchCodes, ...codes])]
   }
   if (!codes.length) {
-    console.error('用法：node tools/scaffold-card.mjs <code…> | --batch <名称> [--entry] [--no-index] [--force]')
+    console.error('用法：node tools/scaffold-card.mjs <code…> | --batch <名称> [--entry | --encounter] [--no-index] [--force]')
     process.exit(2)
+  }
+  if (withEntry && withEncounter) throw new Error('--entry 与 --encounter 只能选一个（玩家卡 / 非玩家卡）')
+  if (withEncounter) {
+    await scaffoldEncounter(codes, { noIndex })
+    return
   }
   if (withEntry) {
     const entryDir = path.join(ROOT, 'src/cards/entries')

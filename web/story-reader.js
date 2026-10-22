@@ -1,6 +1,7 @@
 import { tableIcon } from './table-components.js'
 import { renderRulesText } from './card-text.js'
 import { campaignPresentation } from './campaign-presentation.js'
+import { recordValueText } from './campaign-records.js'
 export function renderStoryReader(h,s,state,render,action,game,checkpointAction=()=>null) {
   const journal=s.state.campaignStory || {entries:[]}, entries=journal.entries
   const key=`${s.sessionId}:${journal.currentId}`
@@ -8,7 +9,7 @@ export function renderStoryReader(h,s,state,render,action,game,checkpointAction=
   const selected=entries.find(e=>e.id===state.arkhamStorySelected) || entries.at(-1)
   const labels={intro:'导入',result:'结算',interlude:'幕间'}
   const recordLabels=game?.clientData?.campaigns?.find(c=>c.id===s.state.campaign.id)?.recordLabels || {}
-  const recordValue=v=>typeof v==='boolean'?(v?'是':'否'):Array.isArray(v)?v.join('、') || '无':String(v)
+  const recordCardNames=s.state.campaign?.recordCardNames || {}
   return h('section',{className:'ah-hub-pane ah-story-reader','aria-label':'战役故事'},
     h('header',{},h('small',{},'ARKHAM / 已发生的故事'),h('h2',{},'调查纪事')),
     !selected?h('p',{},'选定案件后，导入故事将在这里展开。'):h('div',{className:'ah-story-layout'},
@@ -21,7 +22,7 @@ export function renderStoryReader(h,s,state,render,action,game,checkpointAction=
           section.paragraphs.map(p=>h('p',{className:'ah-story-prose'},renderRulesText(h,p,{links:false}))))),
         selected.kind==='result'?h('section',{className:'ah-story-consequences','aria-label':'本次结算结果'},h('h3',{},'这次调查留下了什么'),
           h('div',{},`胜利点 ${selected.victory || 0} · ${selected.rounds || 0} 回合`),
-          Object.entries(selected.records || {}).filter(([key])=>recordLabels[key]).map(([key,value])=>h('p',{},`${recordLabels[key]}：${recordValue(value)}`)),
+          Object.entries(selected.records || {}).filter(([key])=>recordLabels[key]).map(([key,value])=>h('p',{},`${recordLabels[key]}：${recordValueText(value,recordCardNames)}`)),
           selected.investigators?.map(inv=>h('article',{},h('strong',{},s.state.investigatorDefs?.[inv.code]?.nameZh || s.state.investigators.find(i=>i.seat===inv.seat)?.name || '调查员'),
             h('span',{},`+${inv.xpAwarded || 0} XP`),h('span',{},`肉体创伤 +${(inv.traumaAfter?.physical||0)-(inv.traumaBefore?.physical||0)}`),h('span',{},`精神创伤 +${(inv.traumaAfter?.mental||0)-(inv.traumaBefore?.mental||0)}`),
             h('b',{},({killed:'阵亡',insane:'永久疯狂',active:'仍在役'})[inv.status] || inv.status)))):null,
