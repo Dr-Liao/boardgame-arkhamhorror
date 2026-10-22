@@ -2,6 +2,8 @@ import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { chooseCandidate } from '../../../../choice-helpers.js'
 import { encounterRules, isPoisoned } from '../../encounter-rules.js'
+import { agendaRuleFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
+import { nonPlayerEntryFor } from '../../../../../src/cards/encounter-abilities.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import {
   DEPTH_LOCATIONS, STEPS_OF_YOTH, RELIC_OF_AGES, HARBINGER, YIG, PIT_WARDEN,
@@ -52,7 +54,7 @@ export function poisonedSetAsideCount(state) {
   const list = state.campaign?.investigators
   const entries = Array.isArray(list) ? list : Object.values(list || {})
   let inDecks = 0
-  for (const entry of entries) inDecks += (entry?.deck || []).filter(code => code === '04102').length
+  for (const entry of entries) inDecks += (entry?.deck || []).filter(code => nonPlayerEntryFor(code)?.flags?.poisoned).length
   return Math.max(0, 4 - inDecks)
 }
 
@@ -106,7 +108,8 @@ export const behavior = {
     }
     if (faithRestored) return
     records.ichtacaIsSetAgainstYou = true
-    const hasPocketknife = active(state).some(inv => api.checkSupplies(inv.seat, 'pocketknife'))
+    const hasPocketknife = active(state).some(inv =>
+      api?.hasSupply?.(inv.seat, 'pocketknife') ?? api?.checkSupplies?.(inv.seat, 'pocketknife'))
     if (!records.theRelicIsMissing && !hasPocketknife) {
       // 伊塔卡拿走了古代遗物：划掉「找回了遗失的遗物」，把遗物移出战役。
       records.theInvestigatorsFoundTheMissingRelic = false
@@ -209,7 +212,7 @@ export const behavior = {
       const atSteps = active(state).filter(inv => inv.location === STEPS_OF_YOTH)
       const clues = atSteps.reduce((sum, inv) => sum + (inv.clues || 0), 0)
       const holder = stepsInPlay && clues >= 5 * state.numInvestigators
-        ? atSteps.find(inv => api?.checkSupplies?.(inv.seat, 'rope'))
+        ? atSteps.find(inv => api?.hasSupply?.(inv.seat, 'rope') ?? api?.checkSupplies?.(inv.seat, 'rope'))
         : null
       if (holder) {
         // [reaction] 是可选的：问一下，且真正划掉绳索（crossOffSupply 返回 false）才 +1。
@@ -266,20 +269,9 @@ export const behavior = {
     inv.tfaExploreFrom = inv.location
     const location = here(state, inv)
     const code = original(location)
-    if (code === '04293') {
-      // 坍塌的通道：没有鹤嘴锄就放 1 点毁灭。
-      if (!api.checkSupplies(inv.seat, 'pickaxe')) {
-        if (location) location.doom = (location.doom || 0) + 1
-        api.info?.(`坍塌的通道：${inv.name} 没有鹤嘴锄，此地点放置 1 点毁灭。`)
-      }
-      return true
-    }
-    if (code === '04289') {
-      // 岌岌可危的悬崖：意志(4) → 敏捷(3) → 战斗(2)，全失败则坠亡。
-      const outcome = { died: false }
-      crumblingChain(state, inv, api, 0, outcome)
-      return !outcome.died
-    }
+    // 第 87 轮：04293 坍塌通道的探索前规则在地点条目。
+    const entryHandled = locationRuleFor(code)?.beforeExplore?.(state, inv, api)
+    if (entryHandled != null) return entryHandled
     return true
   },
 
@@ -288,7 +280,7 @@ export const behavior = {
     delete inv.tfaExploreFrom
     const api = context?.runtime
     if (!api || context?.kind !== 'location') return
-    if (from !== 'forkedPath' || !api.checkSupplies(inv.seat, 'map')) return
+    if (from !== 'forkedPath' || !(api.hasSupply?.(inv.seat, 'map') ?? api.checkSupplies(inv.seat, 'map'))) return
     // 分岔路 + 地图：再从探索牌库翻出 1 处连接地点，放它入场并可以让过去。
     const extra = drawConnectingLocation(state, api)
     if (!extra) return
@@ -307,10 +299,11 @@ export const behavior = {
   // 被遗弃的仪式场所：帷幕 X = 当前深度等级；横跨恩凯之桥：每点复仇 +1 帷幕。
   locationShroudModifier(state, location) {
     const code = original(location)
-    // 04294 印刷帷幕 0，卡面「X = 当前深度等级」：直接按深度给常驻修正。
-    if (code === '04294') return depthOf(state)
+    // 第 87 轮：04294 的「帷幕=深度」在地点条目 shroudModifier。
+    const entryModifier = locationRuleFor(code)?.shroudModifier?.(state, location)
+    if (entryModifier != null) return entryModifier
     // 横跨恩凯之桥：每点复仇 +1 帷幕。要用「视同胜利区」的合计，而不是只读胜利区。
-    if (code === '04292') return totalVengeance(state)
+    if (nonPlayerEntryFor(code)?.flags?.vengeanceShroud) return totalVengeance(state)
     return 0
   },
 
@@ -340,7 +333,6 @@ export const behavior = {
       const used = state.scenarioFlags?.brightCanyonDepth
       // 卡面：只有带双筒望远镜才有这个行动；没有就不显示按钮。
       const hasBinoculars = (state.campaign?.supplies?.[inv.seat] || []).includes('binoculars')
-        || active(state).some(entry => (state.campaign?.supplies?.[entry.seat] || []).includes('binoculars'))
       if (used !== depthOf(state) && hasBinoculars) moves.push({
         action: 'scenarioAction', rule: 'brightCanyonClues', locationId: 'brightCanyon',
         label: '🔭 检查补给：带双筒望远镜就发现光耀峡谷的 2 个线索（团队每深度等级一次）',
@@ -359,7 +351,7 @@ export const behavior = {
   performAction(state, inv, move, api) {
     if (move.rule === 'brightCanyonClues') {
       const location = here(state, inv)
-      if (!api.checkSupplies(inv.seat, 'binoculars')) {
+      if (!(api.hasSupply?.(inv.seat, 'binoculars') ?? api.checkSupplies(inv.seat, 'binoculars'))) {
         api.info?.('光耀峡谷：队伍中没有人带双筒望远镜，这次行动没有效果。')
         return
       }
@@ -405,56 +397,7 @@ export const behavior = {
       api.info?.('瓦卢西亚之子被放在密谋牌库旁：每个蛇族敌人 +1 攻击值、+1 躲避值。')
       return true
     }
-    if (code === '04300') {
-      // 无光之影：敏捷(1 + 深度)。
-      api.test(inv.seat, 'agility', 1 + depthOf(state), result => {
-        if (!result.success) api.damage(inv.seat, 2)
-      })
-      return false
-    }
-    if (code === '04301') {
-      // 深渊恐惧症：意志(1 + 深度)。
-      api.test(inv.seat, 'willpower', 1 + depthOf(state), result => {
-        if (!result.success) api.horror(inv.seat, 2)
-      })
-      return false
-    }
-    if (code === '04302') {
-      // 蛇族的愤怒：追击区没有蛇族敌人则涌动，否则把攻击值最高的蛇族拽出来。
-      const pursuit = zonesFor(state).pursuit || []
-      const serpents = pursuit.filter(entry => hasSerpentDefinition(state, entry.code))
-      if (!serpents.length) {
-        // 涌动：由本函数自己抽取，返回 surgeHandled 避免引擎按印制的 surge 再抽一次。
-        api.info?.('蛇族的愤怒：追击区域没有蛇族敌人，本卡获得涌动。')
-        api.drawEncounter(inv.seat)
-        return { placed: false, surgeHandled: true }
-      }
-      const best = Math.max(...serpents.map(entry => serpentFight(state, entry.code)))
-      const chosen = serpents.filter(entry => serpentFight(state, entry.code) === best)[0]
-      const index = pursuit.indexOf(chosen)
-      if (index >= 0) pursuit.splice(index, 1)
-      const enemy = api.spawn(chosen.code, inv.location)
-      if (!enemy) {
-        pursuit.push(chosen)
-        return { placed: false, surgeHandled: true }
-      }
-      enemy.damageTaken = chosen.damageTaken || 0
-      if (!enemy.exhausted) {
-        if (typeof api.engage === 'function') api.engage(enemy, inv.seat)
-        else {
-          enemy.engagedSeat = inv.seat
-          if (!inv.engaged.includes(enemy.id)) inv.engaged.push(enemy.id)
-        }
-      }
-      api.info?.(`蛇族的愤怒：「${enemy.name}」在「${location?.name || inv.location}」生成并与 ${inv.name} 交战。`)
-      const difficulty = enemy.fight || 0
-      api.test(inv.seat, 'agility', difficulty, result => {
-        if (result.success) return
-        if (!state.enemies.includes(enemy)) return
-        api.attack(enemy, inv)
-      })
-      return { placed: false, surgeHandled: true }
-    }
+    // 第 114 轮：蛇族的愤怒（04302）已迁到遭遇条目（encounterResolve）。
     return encounterRules.resolveEncounter(state, inv, t, api)
   },
 
@@ -477,9 +420,8 @@ export const behavior = {
     // 瓦卢西亚之子：**每张**在密谋牌库旁的副本都给蛇族 +1 攻击值、+1 躲避值。
     const children = (state.scenarioZones?.childrenOfValusia || []).length
     if (isSerpent(enemy) && children && (stat === 'fight' || stat === 'evade')) value += children
-    // 深渊吞噬者：「X 为当前深度等级」——躲避值与生命值都按深度补（04298）。
+    // 深渊吞噬者：「X 为当前深度等级」——只补躲避值，生命值保持印刷 6（04298）。
     if (original(enemy) === EATER_OF_THE_DEPTHS && stat === 'evade') value += depthOf(state)
-    if (original(enemy) === EATER_OF_THE_DEPTHS && stat === 'health') value += depthOf(state)
     return value
   },
 
@@ -572,91 +514,9 @@ export const behavior = {
 
   agendaReveal(state, agenda, api) {
     const code = original(agenda)
-    const flags = flagsFor(state)
-    const zones = zonesFor(state)
-    if (code === '04278') {
-      placePursuitEnemies(state, api)
-      return
-    }
-    if (code === '04279') {
-      placePursuitEnemies(state, api)
-      const withCanteen = active(state).filter(inv => api.checkSupplies(inv.seat, 'canteen'))
-      if (!withCanteen.length) return
-      const holder = withCanteen.length === 1 ? withCanteen[0] : state.investigators[Number(api.choose({
-        kind: 'investigator', source: code, seat: state.campaign.leadSeat,
-        prompt: '谁带水壶？该调查员决定是否收集这种奇怪的液体。',
-        options: withCanteen.map(inv => ({ id: String(inv.seat), label: inv.name })),
-      }))] || withCanteen[0]
-      const answer = api.choose({
-        kind: 'story', source: code, seat: holder.seat,
-        prompt: '这可能有用。要不要收集这种奇怪的液体？',
-        options: [{ id: 'collect', label: '收集（记住“收集了一种奇怪的液体”）' },
-          { id: 'leave', label: '我不靠近它半步' }],
-      })
-      if (answer !== 'collect') return
-      flags.collectedAStrangeLiquid = true
-      api.privateInfo?.(holder.seat, '你在剧本日志里记住：你“收集了一种奇怪的液体”。')
-      return
-    }
-    if (code === '04280') {
-      placePursuitEnemies(state, api)
-      const scouts = active(state)
-      if (!scouts.length) return
-      const seat = scouts.length === 1 ? scouts[0].seat : Number(api.choose({
-        kind: 'investigator', source: code, seat: state.campaign.leadSeat,
-        prompt: '队长指定一位调查员担任队伍的侦查员。',
-        options: scouts.map(inv => ({ id: String(inv.seat), label: inv.name })),
-      }))
-      const scout = state.investigators[seat] && !state.investigators[seat].defeated
-        ? state.investigators[seat] : scouts[0]
-      if (api.checkSupplies(scout.seat, 'rope')) {
-        api.info?.(`侦查员 ${scout.name} 带着绳索，轻松爬上石崖。`)
-        return
-      }
-      // 卡面：侦查员检定 [combat] 或 [agility](5)，由该调查员选择技能。
-      const skill = String(api.choose?.({
-        kind: 'skill', source: code, seat: scout.seat,
-        prompt: '攀爬石崖：选择用战斗或敏捷检定(5)。',
-        options: [{ id: 'combat', label: '战斗(5)' }, { id: 'agility', label: '敏捷(5)' }],
-      }) || 'combat') === 'agility' ? 'agility' : 'combat'
-      api.test(scout.seat, skill, 5, result => {
-        if (result.success) return
-        api.trauma(scout.seat, 'physical', 1)
-      }, 0, { label: '攀爬石崖', ability: true })
-      return
-    }
-    if (code === '04281') {
-      // 血色城市：放在一边的瓦卢西亚的预示者被移进追击区域。
-      if (zones.harbingerAside) {
-        zones.pursuit ||= []
-        zones.pursuit.push(zones.harbingerAside)
-        delete zones.harbingerAside
-      }
-      placePursuitEnemies(state, api)
-      return
-    }
-    if (code === '04282') {
-      placePursuitEnemies(state, api)
-      // 撼地之怒：放在一边的伊格在起始地点入场。
-      const index = (zones.setAside || []).indexOf(YIG)
-      if (index >= 0) {
-        zones.setAside.splice(index, 1)
-        const start = flags.depthStartLocation
-        const enemy = api.spawn(YIG, start)
-        if (enemy) api.info?.(`伊格在「${start}」现身。`)
-        else zones.setAside.push(YIG)
-      }
-      return
-    }
-    if (code === '04283') {
-      placePursuitEnemies(state, api)
-      api.info?.('赤红深渊：此后每次在本密谋上放置毁灭，都会把追击中的敌人放出来。')
-      return
-    }
-    if (code === '04284') {
-      api.finish('r1')
-      return
-    }
+    // 第 111 轮：全部密谋翻面都在 agendaRule.onReveal。
+    const entry = nonPlayerEntryFor(code)?.agendaRule?.onReveal
+    if (entry) { entry(state, agenda, api); return }
     throw new Error(`未知幽嘶深渊密谋：${code}`)
   },
 
@@ -665,18 +525,12 @@ export const behavior = {
   //   04283 赤红深渊：每次在本密谋上放置毁灭后都放 1 名追击敌人。
   doomPlaced(state, payload, api) {
     if (!payload?.agenda) return
-    const agenda = state.agendas?.[state.agendaIndex]
-    const code = original(agenda)
-    if (code !== '04282' && code !== '04283') return
-    const flags = flagsFor(state)
-    flags.furyDoomPlaced ||= {}
-    const key = String(state.agendaIndex)
-    const placed = (flags.furyDoomPlaced[key] || 0) + (payload.amount || 0)
-    flags.furyDoomPlaced[key] = placed
-    if (code === '04282' && placed < 3) return
-    if (code === '04282' && flags.furyDoomThird) return
-    if (code === '04282') flags.furyDoomThird = true
-    placePursuitEnemies(state, api)
+    const code = original(state.agendas?.[state.agendaIndex])
+    nonPlayerEntryFor(code)?.agendaRule?.onDoomPlaced?.(state, payload, api)
+    // 04283 背面留下的持续效果：推进到 04284 后，每次当前密谋放毁灭仍然放追击敌人。
+    if (flagsFor(state).redDepthsOngoing && !nonPlayerEntryFor(code)?.agendaRule?.onDoomPlaced) {
+      tfaPlacePursuit(state, api)
+    }
   },
 
   // -------------------------------------------------------------------------
@@ -858,14 +712,6 @@ function suppliesOf(state, seat) {
   state.campaign.supplies ||= {}
   state.campaign.supplies[seat] ||= []
   return state.campaign.supplies[seat]
-}
-
-function hasSerpentDefinition(state, code) {
-  return isSerpent(state.scenario.enemies?.[code] || {})
-}
-
-function serpentFight(state, code) {
-  return Number(state.scenario.enemies?.[code]?.fight || 0)
 }
 
 function pursuitEvade(state, entry) {

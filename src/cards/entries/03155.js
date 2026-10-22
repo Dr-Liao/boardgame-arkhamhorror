@@ -11,6 +11,8 @@ import { ownTurn } from '../../engine/matcher.js'
 
 export default {
   code: '03155',
+  // 第 124 轮：旧存档迁移按这个标志找「战斗或逃跑」（原 card-rules.js 常量）。
+  legacyFightOrFlight: true,
   playCondition: [{ when: ownTurn(), message: '只能在自己的回合打出' }],
   abilities: [
     {

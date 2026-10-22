@@ -81,15 +81,15 @@ function spawn(state, code, extra = {}) {
 // 敌人生命值 + 手牌上线
 // ---------------------------------------------------------------------------
 
-test('敌人生命值钩子：深渊吞噬者按深度补生命，且观察投影使用同一读数', () => {
+test('敌人生命值钩子：深渊吞噬者只按深度补躲避，生命值保持印刷值', () => {
   const state = boot('theDepthsOfYoth')
   state.scenarioFlags.depthLevel = 4
   const eater = spawn(state, '04298')
   const base = eater.health
-  assert.equal(enemyHealth(state, eater), base + 4, '深渊吞噬者生命值 = 印刷值 + 深度')
+  assert.equal(enemyHealth(state, eater), base, '生命值不随深度增加')
   const view = viewState(state, 0)
   const projected = view.enemies.find(enemy => enemy.id === eater.id)
-  assert.equal(projected.health, base + 4, '前端看到的生命值也必须带上剧本修正')
+  assert.equal(projected.health, base, '前端看到的生命值同样是印刷值')
 })
 
 test('手牌上限钩子：天机之城的密谋 2/3 与太阳系仪真的改变整理阶段上限', () => {

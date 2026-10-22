@@ -1,4 +1,5 @@
 import { declareScenario } from '../../../../scenario-declaration.js'
+import { LITA_CHANDLER_CODE } from '../../../../../src/cards/card-rules.js'
 import { actReveal, agendaReveal, agendaForcedEnemyDefeated, turnEnded, scenarioActionError, sacrificeLitaAction } from './reveal-hooks.js'
 
 export const behavior = declareScenario({
@@ -27,7 +28,7 @@ export const behavior = declareScenario({
     },
     actions(state, inv) {
       const boss = state.enemies.find(enemy => enemy.code === 'umordhoth')
-      const controlled = inv.assets.some(asset => asset.code === '01117')
+      const controlled = inv.assets.some(asset => asset.code === LITA_CHANDLER_CODE)
       const bossAt = boss && (state.locations.find(location => location.id === boss.location)?.name || boss.location)
       return [{ action: 'sacrificeLita', enemyId: boss?.id, scriptCard: 'enemy', label: '😱 献祭丽塔·钱德勒（→ 结局 3）',
         reason: !controlled ? '需要先控制丽塔·钱德勒'

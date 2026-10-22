@@ -12,9 +12,13 @@ export default {
     {
       kind: 'played', label: '灵魂风暴',
       resolve: ({ state, inv, api }) => {
-        const engaged = state.enemies.filter(enemy => enemy.engagedSeat === inv.seat)
-        const target = engaged[0] || api.enemiesAt(inv.location)[0]
-        if (!target) { api.info('这里没有可攻击的敌人。'); return }
+        const candidates = state.enemies.filter(enemy => enemy.location === inv.location)
+        if (!candidates.length) { api.info('这里没有可攻击的敌人。'); return }
+        const targetId = candidates.length === 1 ? candidates[0].id : api.choice({
+          kind: 'enemy', source: '03153', seat: inv.seat, prompt: '选择灵力风暴攻击的敌人。',
+          options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name })),
+        })
+        const target = candidates.find(enemy => enemy.id === targetId) || candidates[0]
         api.fight(inv.seat, target.id, { skill: 'willpower', stormOfSpirits: true })
       },
     },

@@ -14,7 +14,15 @@ import { allSkillModifiers } from './_shared.js'
 export default {
   code: '04051',
   simplified: true,
-  modifiers: allSkillModifiers(1, { atTrait: 'ancient' }),
+  // 第 114 轮：「伊斯人身体」换身准备时，这张剧情资产要放到一边（原 theCityOfArchives 的卡号分支）。
+  assetRule: { setAsideOnBodySwap: true },
+  modifiers: allSkillModifiers(1, {
+    when: ({ state, inv }) => {
+      if (state?.skillTest?.source?.label !== '调查') return false
+      const location = (state.locations || []).find(item => item.id === inv?.location)
+      return (location?.traits || []).some(trait => String(trait).toLowerCase() === 'ancient')
+    },
+  }),
   abilities: [
     {
       kind: 'action', label: '横置：抽 2 张牌（需在[[古代]]地点）',

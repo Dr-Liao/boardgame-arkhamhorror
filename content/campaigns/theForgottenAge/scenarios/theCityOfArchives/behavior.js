@@ -1,6 +1,7 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
+import { assetRuleFor } from '../../../../../src/cards/card-rules.js'
 import {
   CARD_CODES, HALLS_SLOTS, OBSERVER_CODE, REMEMBERED_TASKS, ROOM_CODES, ROOM_SLOTS,
   SET_ASIDE_LOCATIONS, TASK_LABELS, isItemAsset,
@@ -19,6 +20,8 @@ const hasTrait = (card, trait) => traitsOf(card)
 const isYithian = card => hasTrait(card, 'Yithian') || card?.yithianTrait === true
 const threatWith = (inv, code) => (inv.threat || []).find(card => original(card) === code)
 const hardSide = state => ['hard', 'expert'].includes(state.difficulty)
+// 第 114 轮：换身时被放到一边的剧情资产（04051 亚历山卓·维拉）由条目 assetRule 声明。
+const setAsideOnBodySwap = code => assetRuleFor(code)?.setAsideOnBodySwap === true
 const handLimitBase = 8
 
 // 已经逐条实现印刷效果的本章遭遇卡原卡号（近似或未实现的不要列进来，
@@ -206,6 +209,15 @@ export const behavior = {
     return handLimit(state, inv) - handLimitBase
   },
 
+  // 04238 伟大种族之城：冒险 1 期间不能将[[道具]]支援放置入场（含直接放置与弱点）。
+  canPlaceAsset(state, inv, code) {
+    if (state.agendaIndex !== 0) return true
+    const def = ALL_CARDS[code]
+    if (!def || def.type !== 'asset') return true
+    const item = (def.traits || []).some(trait => ['Item', '道具'].includes(String(trait)))
+    return !item
+  },
+
   // 04244 伊斯人身体：你的每个[[盟友]]支援获得[[伊斯]]特性。
   assetEntered(state, inv, asset) {
     if (!inv?.yithianBody) return
@@ -249,9 +261,11 @@ export const behavior = {
       // prepareInvestigator 每场冒险都会按调查员卡重建，所以这里直接覆盖即可，
       // 不需要在结算时恢复；旧值只用于日志。
       flagsFor(state).yithianBodyOriginals ||= {}
+      // 04244 伊斯人身体：印刷属性 意志2/智识2/战斗2/敏捷2，生命 7、神智 7。
       flagsFor(state).yithianBodyOriginals[inv.seat] = {
         willpower: inv.willpower, intellect: inv.intellect, combat: inv.combat, agility: inv.agility,
         maxHealth: inv.maxHealth, baseHealth: inv.baseHealth,
+        maxSanity: inv.maxSanity, baseSanity: inv.baseSanity,
       }
       inv.willpower = 2
       inv.intellect = 2
@@ -259,7 +273,14 @@ export const behavior = {
       inv.agility = 2
       inv.maxHealth = 7
       inv.baseHealth = 7
-      api.info?.(`🧠 ${inv.name} 换上了伊斯人身体：四属性 2，生命 7。`)
+      inv.maxSanity = 7
+      inv.baseSanity = 7
+      // 已在场的盟友也要获得伊斯特性（不只是之后入场的）。
+      for (const asset of inv.assets || []) {
+        const traits = ALL_CARDS[asset?.code]?.traits || asset?.traits || []
+        if (traits.some(trait => ['Ally', '盟友'].includes(String(trait)))) asset.yithianTrait = true
+      }
+      api.info?.(`🧠 ${inv.name} 换上了伊斯人身体：四属性 2，生命 7，神智 7。`)
       for (const zone of ['deck', 'hand', 'discard']) {
         const kept = []
         for (const code of inv[zone] || []) {
@@ -267,7 +288,7 @@ export const behavior = {
             flagsFor(state).removedCards.push(code)
             continue
           }
-          if (code === '04051') {
+          if (setAsideOnBodySwap(code)) {
             flagsFor(state).setAsideCards.push(code)
             continue
           }
@@ -282,7 +303,7 @@ export const behavior = {
             flagsFor(state).removedCards.push(code)
             return false
           }
-          if (code === '04051') {
+          if (setAsideOnBodySwap(code)) {
             flagsFor(state).setAsideCards.push(code)
             return false
           }
@@ -552,8 +573,9 @@ export const behavior = {
         return
       }
       api.spendClues(inv.seat, 1)
-      const over = (inv.hand || []).length > handLimit(state, inv)
-      api.drawCards(inv.seat, over ? 3 : 2)
+      // 先抽 2 张，再按抽完后的手牌判断是否超上限，超了再抽 1 张。
+      api.drawCards(inv.seat, 2)
+      if ((inv.hand || []).length > handLimit(state, inv)) api.drawCards(inv.seat, 1)
       return
     }
     if (move.rule === 'parleyCustodian') {
@@ -736,7 +758,7 @@ export const behavior = {
       api.shuffleDiscard()
       moveCustodian(state, api)
       for (const inv of active(state)) {
-        if (api.checkSupplies?.(inv.seat, 'pendant')) {
+        if (api.hasSupply?.(inv.seat, 'pendant') ?? api.checkSupplies?.(inv.seat, 'pendant')) {
           inv.ignoreHandSizeReduction = true
           api.drawCards(inv.seat, 2)
           api.info?.(`📿 ${inv.name} 带着挂坠，记起了自己是谁：抽取 2 张牌，本场冒险忽略手牌上限减少。`)
@@ -868,8 +890,10 @@ export const behavior = {
     if (!inv?.yithianBody) return 1
     const test = state.skillTest
     if (!test || test.seat !== inv.seat || test.tfaYithianIconDoubled) return 1
-    test.tfaYithianIconDoubled = true
-    return 2
+    return {
+      multiplier: 2, once: 'tfaYithianIconDoubled', source: 'yithianBody',
+      prompt: '伊斯人身体：是否翻倍刚投入这张牌的技能图标？（每次检定一次）',
+    }
   },
 
   describe(state) {

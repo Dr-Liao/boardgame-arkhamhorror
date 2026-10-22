@@ -12,6 +12,8 @@ import { skillModifier } from './_shared.js'
 
 export default {
   code: '02218',
+  assetRule: { cancelTreacheryReaction: true },
+  scenarioPlayable: true,
   modifiers: [
     skillModifier('agility', 1),
   ],

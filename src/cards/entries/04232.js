@@ -17,7 +17,8 @@ export default {
         const chosen = targets.length === 1 ? targets[0].id
           : api.choice({ kind: 'target', source: '04232', seat: inv.seat,
             prompt: '选择要躲避的敌人。', options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })) })
-        api.evade(inv.seat, { enemyId: chosen, addSkill: 'intellect', skipReadyRounds: 1 })
+        api.evade(inv.seat, { enemyId: chosen, addSkill: 'intellect', skipReadyRounds: 1,
+          skipReadyRoundsIfSuccessBy: 2, skipReadyRoundsNonElite: true })
       },
     },
   ],

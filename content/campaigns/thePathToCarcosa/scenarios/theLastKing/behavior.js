@@ -1,9 +1,11 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { agendaRuleFor } from '../../../../../src/cards/card-rules.js'
+import { agendaRuleFor, assetRuleFor, enemyScriptFor, entryFlags, locationRuleFor } from '../../../../../src/cards/card-rules.js'
+import { nonPlayerEntryFor } from '../../../../../src/cards/encounter-abilities.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { carcosaChaosToken } from '../../carcosa-chaos.js'
 
 const GUESTS = ['03076a', '03077', '03078', '03079', '03080']
+const original = card => card?.originalCode || card?.code
 const REALITIES = {
   '03065': { guest: '03076a', enemy: '03065b' },
   '03066': { guest: '03077', enemy: '03066b' },
@@ -86,14 +88,13 @@ function finishInterview(state, guest, api) {
 function afterParley(state, inv, api) {
   const location = here(state, inv)
   const phaseKey = `${state.round}:${state.phase}`
-  if (location?.originalCode === '03071' && state.scenarioFlags.ballroomReaction !== phaseKey) {
-    state.scenarioFlags.ballroomReaction = phaseKey
-    inv.resources += 2
-  }
-  if (location?.originalCode === '03072' && state.scenarioFlags.livingRoomReaction !== phaseKey) {
-    state.scenarioFlags.livingRoomReaction = phaseKey
-    api.drawCards(inv.seat, 1)
-  }
+  const kind = nonPlayerEntryFor(location?.originalCode)?.flags?.afterParley
+  if (!kind) return
+  const key = `${kind}Reaction`
+  if (state.scenarioFlags[key] === phaseKey) return
+  state.scenarioFlags[key] = phaseKey
+  if (kind === 'resources') inv.resources += 2
+  else api.drawCards(inv.seat, 1)
 }
 
 export const behavior = {
@@ -175,38 +176,12 @@ export const behavior = {
   },
 
   resolveEncounter(state, inv, card, api) {
-    const code = card.originalCode || card.code
-    if (code === '03082') {
-      const bystanders = state.storyAssets.filter(asset => GUESTS.includes(asset.code))
-      const options = [{ id: 'harm', label: '受到1点伤害和1点恐惧' }]
-      if (inv.clues > 0 && bystanders.length) {
-        options.unshift(...bystanders.map(asset => ({
-          id: asset.id,
-          label: `将1个线索放到${asset.name}`,
-        })))
-      }
-      const choice = options.length === 1 ? 'harm' : api.choose({
-        kind: 'target', source: code, seat: inv.seat,
-        prompt: '盛宴：选择将线索放到一名旁人上，或受到伤害和恐惧。',
-        options,
-      })
-      if (choice === 'harm') {
-        api.damage(inv.seat, 1)
-        api.horror(inv.seat, 1)
-      } else {
-        const guest = bystanders.find(asset => asset.id === choice)
-        if (guest) {
-          api.spendClues(inv.seat, 1)
-          guest.clues = (guest.clues || 0) + 1
-        }
-      }
-      return false
-    }
-    if (code === '03083') {
-      state.scenarioFlags.toughCrowd.push(code)
-      return true
-    }
+    // 第 113 轮：03082/03083 的遭遇在条目里。
     return encounterRules.resolveEncounter(state, inv, card, api)
+  },
+  // 敌人受到伤害后的条目脚本（03067b 石丸春子：非攻击伤害后抽遭遇牌）。
+  enemyDamaged(state, enemy, api, seat, source) {
+    enemyScriptFor(original(enemy))?.onDamaged?.(state, enemy, api, seat, source)
   },
 
   roundEnded(state, api) {
@@ -257,10 +232,10 @@ export const behavior = {
   },
 
   enemyPhaseStart(state, api) {
-    for (const jordan of state.enemies.filter(enemy => enemy.code === '03066b')) {
+    for (const jordan of state.enemies.filter(enemy => enemyScriptFor(original(enemy))?.jordan)) {
       jordan.damageTaken = Math.max(0, (jordan.damageTaken || 0) - 1)
     }
-    for (const dianne of state.enemies.filter(enemy => enemy.code === '03081')) {
+    for (const dianne of state.enemies.filter(enemy => enemyScriptFor(original(enemy))?.dianne)) {
       if (!state.storyAssets.length) continue
       const fewest = Math.min(...state.storyAssets.map(asset => asset.clues || 0))
       const locations = [...new Set(state.storyAssets
@@ -273,16 +248,17 @@ export const behavior = {
 
   enemyStatModifier(state, enemy, stat) {
     const shared = encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
-    if (enemy.code === '03065b' && enemy.exhausted && stat === 'fight') return shared + 3
+    if (enemyScriptFor(original(enemy))?.reality && enemy.exhausted && stat === 'fight') return shared + 3
     return shared
   },
 
   skipUpkeepDraw(state, inv) {
-    return state.enemies.some(enemy => enemy.code === '03069b' && enemy.location === inv.location)
+    // 第 114 轮：阿什莉（03069b）由条目标志识别。
+    return state.enemies.some(enemy => entryFlags(original(enemy))?.ashleigh && enemy.location === inv.location)
   },
 
   canDiscoverClues(state, inv) {
-    return !state.enemies.some(enemy => enemy.code === '03081' && enemy.location === inv.location)
+    return !state.enemies.some(enemy => enemyScriptFor(original(enemy))?.dianne && enemy.location === inv.location)
   },
 
   actions(state, inv) {
@@ -290,34 +266,23 @@ export const behavior = {
     const location = here(state, inv)
     if (!location) return moves
     const extra = state.scenarioFlags.toughCrowd.length
-    if (location.originalCode === '03070') {
-      moves.push({ action: 'scenarioAction', rule: 'leaveParty', label: '撤退：带着已找到的情报离开庄园' })
-    }
-    if (location.originalCode === '03075') {
-      moves.push({ action: 'scenarioAction', rule: 'diningRoomHeal', label: '治愈1点恐惧并揭示一个混乱标记',
-        reason: inv.horror > 0 ? null : '没有需要治愈的恐惧' })
-    }
+    // 第 99 轮：03070/03075 的地点行动在地点条目。
+    locationRuleFor(original(location))?.actions?.({ state, inv, location, moves })
     // 黛安娜在场会打断一切会谈：贵宾仍留在桌上，只是此刻谈不了。
-    const dianne = state.enemies.some(enemy => enemy.code === '03081' && enemy.location === inv.location)
+    const dianne = state.enemies.some(enemy => enemyScriptFor(original(enemy))?.dianne && enemy.location === inv.location)
     for (const guest of state.storyAssets.filter(asset => asset.location === inv.location && (asset.clues || 0) > 0)) {
+      const parley = assetRuleFor(original(guest))?.parley
+      if (!parley) continue
       const common = {
         action: 'scenarioAction',
         actionKind: 'parley',
         rule: 'interviewGuest',
         guestId: guest.id,
-        actions: (guest.code === '03080' ? 2 : 1) + extra,
+        actions: (parley.actions || 1) + extra,
       }
-      const shortfall = guest.code === '03077'
-        ? inv.resources < 10 ? `需要 10 个资源（当前 ${inv.resources}）` : null
-        : guest.code === '03078'
-          ? inv.hand.length < 6 ? `需要 6 张手牌（当前 ${inv.hand.length}）` : null
-          : null
+      const shortfall = parley.shortfall?.(state, inv) || null
       const reason = dianne ? '同地点有「黛安娜·迪瓦恩」，需要先摆脱她' : shortfall
-      if (guest.code === '03076a') moves.push({ ...common, skill: 'intellect', difficulty: 3, label: '与康斯坦丝谈判（智识3）', reason })
-      else if (guest.code === '03077') moves.push({ ...common, skill: 'intellect', difficulty: 2, label: '与乔丹谈判（需10资源，智识2）', reason })
-      else if (guest.code === '03078') moves.push({ ...common, skill: 'willpower', difficulty: 2, label: '与春子谈判（需6张手牌，意志2）', reason })
-      else if (guest.code === '03079') moves.push({ ...common, skill: 'willpower', difficulty: 3, label: '与塞巴斯蒂安谈判（意志3）', reason })
-      else if (guest.code === '03080') moves.push({ ...common, label: '聆听阿什莉演唱，取得1个线索', reason })
+      moves.push({ ...common, skill: parley.skill, difficulty: parley.difficulty, label: parley.label, reason })
     }
     return moves
   },
@@ -332,19 +297,10 @@ export const behavior = {
     return true
   },
   performAction(state, inv, move, api) {
-    if (move.rule === 'leaveParty') {
-      state.actClues = Number(state.actClues || 0) + inv.clues
-      api.spendClues(inv.seat, inv.clues)
-      api.resign(inv.seat)
-    } else if (move.rule === 'diningRoomHeal') {
-      inv.horror = Math.max(0, inv.horror - 1)
-      const token = api.revealToken()
-      if (['skull', 'autofail'].includes(token)) {
-        api.horror(inv.seat, 1)
-        const location = here(state, inv)
-        if (location) location.doom = (location.doom || 0) + 1
-      }
-    } else if (move.rule === 'interviewGuest') {
+    const location = here(state, inv)
+    // 第 99 轮：地点条目先接管 03070/03075 的行动。
+    if (locationRuleFor(original(location))?.performAction?.(state, inv, move, api)) return
+    if (move.rule === 'interviewGuest') {
       const guest = state.storyAssets.find(asset => asset.id === move.guestId
         && asset.location === inv.location && (asset.clues || 0) > 0)
       if (!guest) throw new Error('没有合法的贵宾会谈目标')
@@ -354,7 +310,7 @@ export const behavior = {
         if (guest.clues === 0) finishInterview(state, guest, api)
         afterParley(state, inv, api)
       }
-      if (guest.code === '03080') succeed()
+      if (assetRuleFor(original(guest))?.parley?.autoSuccess) succeed()
       else api.test(inv.seat, move.skill, move.difficulty, result => {
         if (result.success) succeed()
         else afterParley(state, inv, api)

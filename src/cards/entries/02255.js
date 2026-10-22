@@ -9,7 +9,13 @@
 
 export default {
   code: '02255',
-  enemyRule: { damageOnlyFrom: '02254', healthPerPlayerBonus: 1 },
+  enemyRule: { damageOnlyFrom: '02254', healthPerPlayerBonus: 1, brood: true },
+  enemyScript: {
+    statModifier(state, enemy, stat) {
+      if (stat !== 'fight') return 0
+      return (enemy.toweringBeasts || 0) + Number(state.agendaIndex === 2)
+    },
+  },
   modifiers: [
     {
       target: 'enemyHealth',

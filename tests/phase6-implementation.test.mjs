@@ -29,7 +29,7 @@ function withLegacy(code, entry, run) {
   }
 }
 
-test('实现账本：通道分类覆盖描述子 / 旧 DSL / 混合 / 数据 / 未实现', () => {
+test('实现账本：通道分类覆盖描述子 / 数据 / 未实现', () => {
   assert.equal(implementationChannel('01022'), 'descriptor') // 6e-8 起快速反应事件走 played 描述子
   assert.equal(implementationChannel('01001'), 'descriptor') // 调查员旧印（描述子）
   assert.equal(implementationChannel('03009'), 'descriptor') // 6e-14 起能力与「不可离场」都在条目上
@@ -38,19 +38,17 @@ test('实现账本：通道分类覆盖描述子 / 旧 DSL / 混合 / 数据 / �
   assert.equal(implementationChannel('01666'), 'none') // 数据里没有这张卡
   assert.equal(implementation('01666').implemented, false)
   assert.equal(implementationSummary('01666'), null)
-  // 合成条目：只有旧 DSL ⇒ legacy；与描述子并存 ⇒ hybrid
+  // 第 126 轮：旧 DSL（EFFECTS）通道已删除，不再有 legacy / hybrid；合成条目也不会改变通道。
   withLegacy('01666', { event: { type: 'gainResource', amount: 1 } }, () => {
-    assert.equal(implementationChannel('01666'), 'legacy')
-    assert.equal(implementation('01666').implemented, true)
-    assert.equal(implementationSummary('01666').abilities[0].effects[0], 'gainResource')
+    assert.equal(implementationChannel('01666'), 'none')
   })
   withLegacy('01022', { event: { type: 'gainResource', amount: 1 } }, () => {
-    assert.equal(implementationChannel('01022'), 'hybrid')
+    assert.equal(implementationChannel('01022'), 'descriptor')
   })
   assert.equal(implementationChannel('01022'), 'descriptor')
   // 纯登记：条目只带 engine / note 标记时不改变实现判定
   withLegacy('01666', { engine: 'printedSoak' }, () => {
-    assert.equal(implementationChannel('01666'), 'data')
+    assert.equal(implementationChannel('01666'), 'none')
   })
 })
 
@@ -77,20 +75,15 @@ test('实现账本：摘要形状固定、纯 JSON、不含原始条目引用', 
   }
 })
 
-test('实现账本：描述子摘要按能力规则重建，旧 DSL 摘要同形状', () => {
+test('实现账本：描述子摘要按能力规则重建', () => {
   const migrated = implementationSummary('01022')
   assert.equal(migrated.channel, 'descriptor')
   assert.deepEqual(migrated.abilities.map(ability => ability.effects), [['discoverClue']])
   assert.deepEqual(migrated.abilities[0].trigger, ['defeatEnemy'])
   assert.equal(migrated.abilities[0].rules.includes('fast'), true)
-  // 旧 DSL 的合成条目产出同一形状（迁移前后 AI 看到的字段一致）
+  // 第 126 轮：旧 DSL（EFFECTS）已删除，合成旧的 EFFECTS 条目不再产出摘要。
   withLegacy('01666', { fast: true, reaction: { when: 'defeatEnemy', selfOnly: true }, event: { type: 'discoverClue', amount: 1 } }, () => {
-    const legacy = implementationSummary('01666')
-    assert.equal(legacy.channel, 'legacy')
-    assert.deepEqual(legacy.abilities.map(ability => ability.effects), [['discoverClue']])
-    assert.deepEqual(legacy.abilities[0].trigger, ['defeatEnemy'])
-    assert.deepEqual(legacy.abilities[0].rules, ['selfOnly:true'])
-    assert.deepEqual(legacy.rules, { fast: true })
+    assert.equal(implementationSummary('01666'), null)
   })
   for (const code of ['01014', '01094', '01117']) {
     const value = implementationSummary(code)

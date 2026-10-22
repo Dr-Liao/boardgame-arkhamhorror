@@ -1,4 +1,4 @@
-// 02019 嘲讽
+﻿// 02019 嘲讽（升级版）
 // 卡面：快速。只能在你回合期间打出。
 // 卡面：与你所在地点任意数量的敌人交战。你每以此方式与一个敌人交战，抽取1张卡牌。
 //
@@ -18,9 +18,23 @@ export default {
       label: '嘲讽',
       fast: true,
       resolve: ({ state, inv, api }) => {
-        const enemies = state.enemies.filter(enemy => enemy.location === inv.location && enemy.engagedSeat !== inv.seat)
-        for (const enemy of enemies) api.engage(enemy, inv.seat)
-        if (enemies.length) api.drawCardsLogged(inv.seat, enemies.length)
+        const remaining = state.enemies.filter(enemy => enemy.location === inv.location && enemy.engagedSeat !== inv.seat)
+        let engaged = 0
+        while (remaining.length) {
+          const answer = api.choice({
+            kind: 'target', source: '02019', seat: inv.seat,
+            prompt: '选择要与哪个敌人交战（可选择任意数量）。',
+            options: [...remaining.map(enemy => ({ id: enemy.id, label: enemy.name })),
+              { id: 'stop', label: '完成选择' }],
+          })
+          if (answer === 'stop' || !answer) break
+          const enemy = remaining.find(item => item.id === answer)
+          if (!enemy) break
+          api.engage(enemy, inv.seat)
+          remaining.splice(remaining.indexOf(enemy), 1)
+          engaged += 1
+        }
+        if (engaged) api.drawCardsLogged(inv.seat, engaged)
       },
     },
   ],
@@ -28,3 +42,4 @@ export default {
 
   ],
 }
+

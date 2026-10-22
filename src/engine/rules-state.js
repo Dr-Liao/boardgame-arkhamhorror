@@ -30,19 +30,17 @@ export function doomCards(state) {
   return [...state.enemies, ...state.locations, ...state.investigators.flatMap(inv => [...inv.assets, ...inv.threat])]
 }
 
-// Doom on the current agenda is the only doom that counts toward the agenda's
-// doom threshold (Rules Reference, "Agenda"). Doom sitting on enemies, locations
-// and assets is a separate pool: it is not cleared when an agenda advances and it
-// only matters where a card/token explicitly looks at it (e.g. the Midnight Masks
-// [skull] token or "total doom in play" on hard/expert).
+// Rules Reference, "Agenda": the agenda advances when the total amount of doom
+// in play (agenda + enemies + locations + assets/threats) reaches its threshold.
+// `state.doom` is the doom physically on the current agenda; card doom is counted
+// here as well so that "place 1 doom on this location/enemy" really advances it.
 export function agendaDoom(state) {
-  return state.doom || 0
+  return (state.doom || 0) + doomCards(state).reduce((sum, card) => sum + (card.doom || 0), 0)
 }
 
-// Every doom marker in play, agenda included. Used by card/token effects that
-// literally count "doom in play", never by the agenda threshold check.
+// Every doom marker in play, agenda included. Same total as the agenda threshold.
 export function totalDoom(state) {
-  return agendaDoom(state) + doomCards(state).reduce((sum, card) => sum + (card.doom || 0), 0)
+  return agendaDoom(state)
 }
 
 export function stateCompatibilityError(state, resourceVersion) {

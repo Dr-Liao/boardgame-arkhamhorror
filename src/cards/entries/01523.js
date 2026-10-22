@@ -14,7 +14,7 @@ export default {
       kind: 'reaction', trigger: 'enemyAttack', label: '取消该次攻击',
       fromHand: true,
       criteria: [ctx => ctx.context?.location === ctx.inv?.location],
-      resolve: ({ context }) => { context.cancelled = true },
+      resolve: ({ context }) => { if (context) context.cancelled = true },
     },
   ],
   modifiers: [

@@ -3,12 +3,16 @@ import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { carcosaChaosToken, carcosaChaosAfterTest } from '../../carcosa-chaos.js'
+import { entryFlags, locationRuleFor, pallidMaskCode } from '../../../../../src/cards/card-rules.js'
 
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
 const recordsFor = state => state.campaign.records ||= {}
 const original = card => card?.originalCode || card?.code
+// 第 114 轮：苍白面具下的男子由条目声明（pallidMask），不写死卡号。
+const isPallidMaskMan = card => original(card) === pallidMaskCode()
 const interviewed = (state, code) => (recordsFor(state).vipsInterviewed || []).includes(code)
 const slain = (state, code) => (recordsFor(state).vipsSlain || []).includes(code)
+const GATE_TO_HELL_CODE = '03247'
 const directions = {
   '03247': [[0, -1], [0, 1]],
   '03248': [[1, 0]],
@@ -229,53 +233,46 @@ export const behavior = {
   },
   beforeMove(state, inv, destination, api) {
     const source = state.locations.find(location => location.id === inv.location)
-    if (!destination?.revealed && source?.originalCode !== '03248') {
+    // 第 114 轮：石铺拱道（03248）的豁免由地点条目声明。
+    if (!destination?.revealed && !locationRuleFor(source?.originalCode)?.waivesEnterClueCost) {
       api.payClues(state.numInvestigators, source.id)
     }
   },
-  locationLeaveTest(state, inv, location) {
-    if (location?.originalCode === '03254') return { skill: 'agility', difficulty: 3 }
-    return null
-  },
-  locationLeaveFailed(state, inv, location, api) {
-    if (location?.originalCode === '03254') api.damage(inv.seat, 1)
-  },
+  // 第 114 轮：惧怖地窖（03254）的离开检定改由地点条目的 locationRule.onLeave 声明。
   locationRevealed(state, location, api) {
     updateConnections(state)
-    if (location.originalCode === '03257' && state.actIndex === 0) {
-      state.scenarioFlags.tombLocationId = location.id
-      api.advanceAct()
-      return
-    }
+    // 第 114 轮：暗影坟墓（03257）与堵塞通道（03256）的揭示规则在地点条目声明。
     if (directions[location.originalCode]) {
       placeNext(state, location, directions[location.originalCode], api,
         directionCount[location.originalCode] || directions[location.originalCode].length)
     }
-    if (location.originalCode === '03256' && state.acts[state.actIndex]?.originalCode !== '03246') {
-      const inv = state.investigators[state.currentSeat]
-      if (inv?.location === location.id) api.damage(inv.seat, 2)
-      location.cannotLeaveRound = state.round
-    }
   },
   actReveal(state, act, api) {
     registeredEntry(act.originalCode)?.actRule?.onReveal?.(state, act, api)
+  },
+  // 03257：苍白面具下的男子在暗影坟墓时 +每人 1 生命值。
+  enemyStatModifier(state, enemy, stat) {
+    if (stat !== 'health' || original(enemy) !== pallidMaskCode()) return 0
+    const location = state.locations.find(item => item.id === enemy.location)
+    return locationRuleFor(original(location))?.flags?.tombEntrance ? state.numInvestigators : 0
   },
   agendaReveal(state, agenda, api) {
     registeredEntry(agenda.originalCode)?.agendaRule?.onReveal?.(state, agenda, api)
   },
   enemySpawned(state, enemy, api) {
     encounterRules.enemySpawned?.(state, enemy, api)
-    if (enemy.code === '03059' && enemy.location === state.scenarioFlags.tombLocationId) {
+    // 第 114 轮：苍白面具下的男子由条目 storyRole/pallidMask 读点识别（pallidMaskCode）。
+    if (isPallidMaskMan(enemy) && enemy.location === state.scenarioFlags.tombLocationId) {
       enemy.health += state.numInvestigators
       enemy.cannotBeDefeatedByAction = true
     }
   },
   enemyCanBeDefeated(state, enemy, source) {
-    if (enemy.code === '03059' && enemy.cannotBeDefeatedByAction && source === '03059') return false
+    if (isPallidMaskMan(enemy) && enemy.cannotBeDefeatedByAction && source === pallidMaskCode()) return false
     return true
   },
   enemyDefeated(state, enemy, api) {
-    if (enemy.code === '03059' && state.actIndex === 1) {
+    if (isPallidMaskMan(enemy) && state.actIndex === 1) {
       state.scenarioFlags.actTwoAdvancedWith = 'defeat'
       api.advanceAct()
     }
@@ -335,7 +332,10 @@ export const behavior = {
   roundEnded(state, api) {
     encounterRules.roundEnded?.(state, api)
     if (state.acts[state.actIndex]?.originalCode !== '03245') return
-    const start = state.scenarioFlags.startLocationId
+    // 卡面以「地狱之门」(03247) 的实际所在地点为基准；它不在场时不结算。
+    const gate = state.locations.find(location => original(location) === GATE_TO_HELL_CODE)
+    if (!gate) return
+    const start = gate.id
     const candidates = state.locations.filter(location => location.id !== start)
       .map(location => ({ location, distance: distance(state, location.id, start) }))
     if (!candidates.length) return
@@ -371,37 +371,19 @@ export const behavior = {
   },
   checkObjectives(state, api) {
     const act = state.acts[state.actIndex]?.originalCode
-    if (act === '03245' && active(state).every(inv => inv.location === state.scenarioFlags.startLocationId)) api.advanceAct()
+    const gate = state.locations.find(location => original(location) === GATE_TO_HELL_CODE)
+    if (act === '03245' && gate && active(state).every(inv => inv.location === gate.id)) api.advanceAct()
     if (act === '03246') {
-      const blocked = state.locations.find(location => location.originalCode === '03256')?.id
+      // 第 114 轮：暗影坟墓（03256）由条目标志 shadowTomb 识别。
+      const blocked = state.locations.find(location => entryFlags(original(location))?.shadowTomb)?.id
       if (blocked && active(state).every(inv => inv.location === blocked)) api.advanceAct()
     }
   },
   turnEnded(state, inv, api) {
     encounterRules.turnEnded?.(state, inv, api)
-    const code = state.locations.find(location => location.id === inv.location)?.originalCode
-    if (code === '03251') {
-      const answer = api.choose({
-        kind: 'harm',
-        source: code,
-        seat: inv.seat,
-        prompt: '百魂之井：选择受到1点直接恐惧，或随机弃掉2张手牌。',
-        options: [{ id: 'horror', label: '受到1点直接恐惧' }, { id: 'discard', label: '随机弃2张手牌' }],
-      })
-      if (answer === 'horror') api.directHorror(inv.seat, 1)
-      else api.discardRandom(inv.seat, 2)
-    }
-    if (code === '03255') {
-      const answer = api.choose({
-        kind: 'harm',
-        source: code,
-        seat: inv.seat,
-        prompt: '颤栗水池：选择受到1点直接伤害，或失去5资源。',
-        options: [{ id: 'damage', label: '受到1点直接伤害' }, { id: 'resources', label: '失去5资源' }],
-      })
-      if (answer === 'damage') api.directDamage(inv.seat, 1)
-      else inv.resources = Math.max(0, inv.resources - 5)
-    }
+    // 第 114 轮：百魂之井 / 颤栗水池的回合结束规则在地点条目声明（locationRule.onTurnEnd）。
+    const location = state.locations.find(candidate => candidate.id === inv.location)
+    locationRuleFor(original(location))?.onTurnEnd?.(state, location, api, inv)
   },
   resolution(state, key, events, api) {
     if (!['noResolution', 'r1', 'r2'].includes(key)) throw new Error('未知苍白面具结局')

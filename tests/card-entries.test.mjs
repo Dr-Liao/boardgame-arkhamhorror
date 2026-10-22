@@ -16,6 +16,7 @@ import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import { CARD_ABILITY_ENTRIES, CARD_ABILITY_CODES } from '../src/cards/card-abilities.js'
+import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { buildCardIndex, entryFiles } from '../tools/build-card-index.mjs'
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
@@ -73,4 +74,28 @@ test('card-abilities.js 只聚合，不再含条目', async () => {
   assert.match(source, /CARD_ENTRY_LIST/, '聚合入口必须 import entries/index.js')
   assert.doesNotMatch(source, /\babilities\s*:/, 'card-abilities.js 不允许再写 abilities 条目')
   assert.doesNotMatch(source, /\bcode\s*:/, 'card-abilities.js 不允许再写卡号条目')
+})
+
+// P1 守卫（卡牌保真度审计 §3.1）：描述子的 kind 必须与卡型匹配。
+//   · 事件只结算 kind:'played'；写成 action 会让整张卡不可达（03108 的原始 bug）。
+//   · 支援的能力只枚举 action/free；只有 played 等于整条能力不存在（04156 的原始 bug）。
+test('卡型与描述子 kind 匹配：事件必须有 played，支援不得只有 played', () => {
+  const problems = []
+  for (const entry of CARD_ABILITY_ENTRIES) {
+    const card = ALL_CARDS[entry.code]
+    const abilities = entry.abilities || []
+    if (!card || !abilities.length) continue
+    const kinds = new Set(abilities.map(ability => ability.kind))
+    const weakness = card.type === 'event' && Boolean(card.subtype)
+    // 快速事件有两种已支持写法：played+fast+trigger，或 reaction+fromHand（窗口内从手牌打出）。
+    const handReaction = abilities.some(ability => ability.fromHand === true
+      && (ability.kind === 'reaction' || ability.kind === 'forced'))
+    if (card.type === 'event' && !weakness && !kinds.has('played') && !handReaction) {
+      problems.push(`${entry.code}（事件）缺少 kind:'played'：${[...kinds].join('/')}`)
+    }
+    if (card.type === 'asset' && kinds.size === 1 && kinds.has('played')) {
+      problems.push(`${entry.code}（支援）只有 kind:'played'，能力不可达`)
+    }
+  }
+  assert.deepEqual(problems, [], `描述子 kind 与卡型不匹配：\n  ${problems.join('\n  ')}`)
 })

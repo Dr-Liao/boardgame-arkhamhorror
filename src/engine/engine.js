@@ -293,7 +293,6 @@ import { createMiscApi } from './api-misc.js'
 import { createPerformTest } from './tests.js'
 import { createScenarioRuntime } from './scenario-runtime.js'
 import { createWeakness } from './weakness.js'
-import { createPlayerEffects } from '../cards/player-effects.js'
 import { createAbilityExecution } from './ability-exec.js'
 import { createCampaignFlow } from './campaign-flow.js'
 import { createSetup } from './setup.js'
@@ -507,6 +506,12 @@ export function investigatorEntryError(state, locationId, seat = state.currentSe
   const inv = state.investigators[seat]
   if (inv?.steamImmobileRound === state.round) return '本轮受到蒸汽之爪影响，不能移动'
   if (inv && state.enemies.some(enemy => enemyRuleFlags(enemy.code).blocksMovementWhileEngaged && enemy.engagedSeat === seat && !enemyTextBlanked(state, enemy))) return '与攫取恐怖交战时不能移动'
+  // 地点条目声明的进入限制（「门锁住了，你不能移动进入」）：读点是 locationRule.entryError。
+  // 「爵士」马利根这类「忽略未揭示面文字」的效果同样忽略门禁（剧本钩子统一判定）。
+  const ignoresRevealText = scenarioBehavior(state).ignoreLocationRevealText?.(state, inv, location) === true
+  const contentError = ignoresRevealText ? null
+    : registeredEntry(location.originalCode || location.code)?.locationRule?.entryError?.(state, location, inv)
+  if (contentError) return contentError
   return scenarioBehavior(state).investigatorEntryError?.(state, location, inv) || null
 }
 
@@ -1060,6 +1065,9 @@ const apiMiscDeps = { ...commonDeps,
   getHandSize,
   handSize,
   placeCluesOnLocation,
+  // 第 122 轮（第 4 批收尾）：搜查入场与移动目的地原语。
+  triggerReaction,
+  investigatorMoveDestinations,
   doFightRaw: (...args) => doFight(...args), }
 
 function abilityApi(state, events) {
@@ -1119,6 +1127,15 @@ function doEngage(state, seat, enemyId, events) {  const inv = state.investigato
 
 function doResign(state, seat, events) {
   const inv = state.investigators[seat]
+  // 04038 黑暗契约：退场时仍在手牌 → 移出牌库，换成「失败的代价」。
+  for (const code of [...(inv.hand || [])]) {
+    const entry = registeredEntry(code)
+    if (!entry?.darkPactForced || !entry.replacementCode) continue
+    inv.hand = inv.hand.filter(item => item !== code)
+    inv.deck = (inv.deck || []).filter(item => item !== code)
+    inv.deck.push(entry.replacementCode)
+    info(state, events, `📜 「${cardName(code)}」仍在你手中：移出牌库，换成「${cardName(entry.replacementCode)}」。`)
+  }
   inv.resigned = true
   eliminateInvestigator(state, inv, events)
   info(state, events, `🏳️ ${inv.name} 撤退了。`)
@@ -1338,6 +1355,7 @@ function scenarioRuntime(state, events, testSource = null) {
   advanceAgenda,
   buildExplorationDeck,
   campaignCardChange,
+  doInvestigate,
   spendAction,
   checkSupplies,
   crossOffSupply,
@@ -1354,6 +1372,8 @@ function scenarioRuntime(state, events, testSource = null) {
   eliminateInvestigator,
   enemyCannotAttack,
   enemyHealth,
+  // Phase 7（第 116 轮）：条目要写「揭示的混乱标记」日志时用同一份中文标记名，避免复制标签表。
+  tokenLabel,
   preyTarget,
   ruleCodeForOriginal,
   expeditionLeaderSeat,
@@ -1400,17 +1420,9 @@ function resolveWeakness(state, inv, def, events, texts) {
   return resolveWeaknessImpl(state, inv, def, events, texts)
 }
 
-// Phase 6（6d-15）：玩家卡效果调度搬进 player-effects.js；惰性装配，保留老调用点。
-let playerCardEffectImpl = null
-function playerCardEffect(state, seat, effect, events) {
-  playerCardEffectImpl ||= createPlayerEffects({
-  ...commonDeps,
-  doFight,
-  doInvestigate,
-  doPlay,
-})
-  return playerCardEffectImpl(state, seat, effect, events)
-}
+// 第 122 轮（第 4 批收尾）：`player-effects.js` 已删除——原先按 effect.type 分派的
+// 单卡逻辑全部搬进各自条目（02115 / 02232 / 02014 / 02261 / 02302 / 02309 / 02012 等），
+// 通用部分走 api.cancelHarm / cancelEncounterDraw / recallCommittedSkill / searchDeckIntoPlay。
 
 // Phase 6（6d-16）：能力执行搬进 ability-exec.js；惰性装配（部分依赖表在顶层立即求值）。
 let abilityExecution = null
@@ -1551,6 +1563,7 @@ function dispatchApi() {
   setCurrentActionKind: value => { currentActionKind = value },
   ALL_INVESTIGATORS,
   ScenarioRestarted,
+  abilityOfMove,
   actionCost,
   actionKind,
   advanceInvestigator,
@@ -1587,6 +1600,7 @@ function dispatchApi() {
   doSacrificeLita,
   doSearchIzzie,
   doShortcutMove,
+  doDetachLocationAttachment,
   endCampaign,
   enemyCanOpportunityAttack,
   finishUpgradeDraft,
@@ -1664,7 +1678,7 @@ function movementApi() {
 }
 // movementApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
 export function stepToward(...args) { return movementApi().stepToward(...args) } export function distanceToInvestigator(...args) { return movementApi().distanceToInvestigator(...args) } export function investigatorMoveDestinations(...args) { return movementApi().investigatorMoveDestinations(...args) }
-export function moveInvestigatorTo(...args) { return movementApi().moveInvestigatorTo(...args) } export function doShortcutMove(...args) { return movementApi().doShortcutMove(...args) } export function doMove(...args) { return movementApi().doMove(...args) }
+export function moveInvestigatorTo(...args) { return movementApi().moveInvestigatorTo(...args) } export function doShortcutMove(...args) { return movementApi().doShortcutMove(...args) } export function doDetachLocationAttachment(...args) { return movementApi().doDetachLocationAttachment(...args) } export function doMove(...args) { return movementApi().doMove(...args) }
 export function relocateInvestigator(...args) { return movementApi().relocateInvestigator(...args) } export function relocateEnemy(...args) { return movementApi().relocateEnemy(...args) }
 
 // Phase 6（6d-22）：敌人与伤害原语搬进 enemies.js；惰性装配保持导出与调用点。
@@ -1748,7 +1762,6 @@ function skillEffectsApi() {
   disengageAll,
   drawEnemyByTrait,
   dukeInvestigate,
-  playerCardEffect,
   enemyForTarget,
   healDamageAtLocation,
   healHorrorNearby,
@@ -1845,6 +1858,7 @@ function deckOpsApi() {
     randomValue,
     registeredEntry,
     requestChoice,
+    reactionWindow,
     scenarioBehavior,
     scenarioRuntime,
     shuffle,
@@ -1937,6 +1951,7 @@ function createAbilityRulesApi() {
     discardChosenCards,
     discardableHandCards,
     effectAbilitySources,
+    engagedWithClueBlocker,
     hasNonPlayerBehavior,
     hiddenFightBlocked,
     limitUsed,

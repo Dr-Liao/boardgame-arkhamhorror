@@ -1,6 +1,7 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
 import {
-  encounterResolveFor, enemySpawnRuleFor, enemyStatRuleFor, threatActionByRule, threatActionFor, vengeanceWhileFor,
+  encounterResolveCampaignsFor, encounterResolveFor, enemyScriptFor, enemySpawnRuleFor, enemyStatRuleFor,
+  isPoisonThreat, threatActionByRule, threatActionFor, vengeanceWhileFor,
 } from '../../../src/cards/card-rules.js'
 
 // 失落的时代的跨章遭遇规则。共享遭遇组（Rainforest / Serpents / Expedition /
@@ -11,7 +12,7 @@ const active = state => state.investigators.filter(inv => !inv.defeated && !inv.
 const here = (state, inv) => state.locations.find(location => location.id === inv.location)
 const traits = card => (ALL_CARDS[original(card)]?.traits || card?.traits || []).map(trait => String(trait).toLowerCase())
 const hasTrait = (card, trait) => traits(card).includes(String(trait).toLowerCase())
-const isPoisoned = inv => (inv?.threat || []).some(card => card.code === '04102') || inv?.poisoned === true
+const isPoisoned = inv => (inv?.threat || []).some(card => isPoisonThreat(card.code)) || inv?.poisoned === true
 const attachmentCode = attachment => original(typeof attachment === 'string' ? { code: attachment } : attachment)
 const recordsFor = state => (state.campaign.records ||= {})
 
@@ -110,52 +111,6 @@ function supplyCount(state, inv) {
   return (state.campaign.supplies?.[seat] || []).length
 }
 
-// ---- 04062 瓦卢西亚的预示者（跨章共享，P2）----
-// 卡面：警戒 / 猎手 / 反击；处于横置状态时也能反击。
-// 强制：成功攻击或躲避后放 1 资源；达到 2×人数时遁去身影（保留所有伤害标记）。
-function applyHarbingerSpawn(state, enemy) {
-  enemy.resources = enemy.resources || 0
-  // 引擎字段（横置也能反击）；tfaRetaliateWhileExhausted 是旧章节行为仍在读的别名。
-  enemy.retaliateWhileExhausted = true
-  enemy.tfaRetaliateWhileExhausted = true
-  const recorded = Number(state.scenarioFlags?.harbingerDamage
-    ?? state.campaign?.records?.theHarbingerIsStillAlive ?? 0)
-  if (!enemy.damageTaken && recorded > 0) enemy.damageTaken = recorded
-}
-
-function harbingerAfterSuccessfulTest(state, enemy, api) {
-  if (!enemy || original(enemy) !== '04062' || !state.enemies.includes(enemy)) return false
-  const need = 2 * Math.max(1, state.numInvestigators || 1)
-  const next = (enemy.resources || 0) + 1
-  if (next < need) {
-    enemy.resources = next
-    api?.info?.(`🐍 「${enemy.name}」上放置 1 资源（${next}/${need}）。`)
-    return false
-  }
-  // 这一击会击败它时先走引擎的击败判定（进胜利区 / 记复仇），不遁去。
-  if (Number.isFinite(enemy.health) && enemy.health > 0 && (enemy.damageTaken || 0) >= enemy.health) return false
-  const damage = enemy.damageTaken || 0
-  const flags = (state.scenarioFlags ||= {})
-  flags.harbingerDamage = damage
-  flags.harbingerSetAside = true
-  const records = state.campaign?.records
-  if (records) records.theHarbingerIsStillAlive = damage
-  if (enemy.engagedSeat != null) {
-    const holder = state.investigators[enemy.engagedSeat]
-    if (holder) holder.engaged = (holder.engaged || []).filter(id => id !== enemy.id)
-  }
-  enemy.engagedSeat = null
-  const index = state.enemies.indexOf(enemy)
-  if (index >= 0) state.enemies.splice(index, 1)
-  const zones = (state.scenarioZones ||= {})
-  zones.harbingerAside = { code: '04062', damageTaken: damage, resources: next }
-  zones.setAside ||= []
-  if (!zones.setAside.includes('04062')) zones.setAside.push('04062')
-  flags.harbingerResources = 0
-  api?.info?.('🐍 「瓦卢西亚的预示者」发出奸险的嘶嘶声，遁去身影（保留所有伤害标记）。')
-  return true
-}
-
 // 已逐条实现的共享遭遇卡。未列出的卡在审计里保留为待实现。
 // 01xxx 是核心盒的遭遇组：失落时代的牌堆会引用它们，规则同样写在共享解析器里。
 
@@ -172,8 +127,24 @@ function threatMoves(base, spec) {
   }))
 }
 
+// 04084 幽嘶蛇人：按当前胜利区复仇重新计算反击/猎手/减伤（复仇随时会变）。
+function refreshVengeanceEnemies(state) {
+  const vengeance = inPlayVengeance(state)
+  for (const enemy of state.enemies || []) {
+    const thresholds = enemySpawnRuleFor(original(enemy))?.vengeanceThresholds
+    if (!thresholds) continue
+    enemy.retaliate = vengeance >= thresholds.retaliate
+    enemy.hunter = vengeance >= thresholds.hunter
+    enemy.tfaDamageReduction = vengeance >= thresholds.damageReduction ? 1 : 0
+  }
+}
+
 export const encounterRules = {
   inPlayVengeance,
+  refreshVengeanceEnemies,
+  victoryChanged(state) {
+    refreshVengeanceEnemies(state)
+  },
 
   // ---- 敌人常驻修正 ----
   // stat 可以是 'fight' / 'evade' / 'health'（P2：生命值也走这个钩子）。
@@ -184,8 +155,7 @@ export const encounterRules = {
     return 0
   },
 
-  enemySpawned(state, enemy, api) {
-    const code = original(enemy)
+  enemySpawned(state, enemy, api) {    const code = original(enemy)
     const rule = enemySpawnRuleFor(code)
     if (rule?.doomOnSpawn) {
       enemy.doom = (enemy.doom || 0) + rule.doomOnSpawn
@@ -202,18 +172,17 @@ export const encounterRules = {
       const prey = active(state).find(inv => isPoisoned(inv))
       if (prey) enemy.preySeat = prey.seat
     }
-    // 04062 瓦卢西亚的预示者：不管由哪一章生成，都带「资源累积 / 横置也能反击 /
-    // 按记录带伤入场」三件事（P2：此前这些只写在各章的私有 behavior 里）。
-    if (code === '04062') applyHarbingerSpawn(state, enemy)
+    // 04062 瓦卢西亚的预示者的入场规则在敌人条目里（enemyScript.onSpawn）。
+    enemyScriptFor(code)?.onSpawn?.(state, enemy, api)
   },
 
   // 04062 的强制：成功攻击或躲避后放 1 资源；满 2×人数时遁去身影（保留伤害）。
   enemyAttackedSuccessfully(state, inv, enemy, api) {
-    if (original(enemy) === '04062') harbingerAfterSuccessfulTest(state, enemy, api)
+    enemyScriptFor(original(enemy))?.onAttackSuccess?.(state, inv, enemy, api)
   },
 
   afterEvade(state, inv, enemy, result, api) {
-    if (original(enemy) === '04062' && result?.success !== false) harbingerAfterSuccessfulTest(state, enemy, api)
+    enemyScriptFor(original(enemy))?.onEvade?.(state, inv, enemy, result, api)
   },
 
   // 兄弟会异教徒：每次对它发动攻击先放置 1 点毁灭（每次攻击只记一次）。
@@ -232,19 +201,9 @@ export const encounterRules = {
     return true
   },
 
-  beforeEnemyHarm(state, enemy, inv, harm, api) {
-    const code = original(enemy)
-    if (code === '04084') return harm
-    return undefined
-  },
-
+  // 04078 蝮蛇的中毒 / 04079 的「下一轮不能准备」都在敌人条目的 enemyScript 里。
   enemyAttackResolved(state, enemy, inv, api, attack) {
-    const code = original(enemy)
-    // 04078 蝮蛇：只有攻击真的造成了伤害才中毒（P2：引擎回传实际伤害）。
-    if (code === '04078' && (attack ? attack.damage > 0 : true) && !isPoisoned(inv)) api.poison(inv.seat)
-    if (code === '04079') {
-      inv.tfaNoReadyRound = state.round + 1
-    }
+    enemyScriptFor(original(enemy))?.onAttackResolved?.(state, enemy, inv, api, attack)
   },
 
   // 埃兹特里的守卫者：敌人阶段开始时攻击每个连接地点的调查员。
@@ -325,66 +284,10 @@ export const encounterRules = {
     const code = original(t)
     const location = here(state, inv)
     const entryResolve = encounterResolveFor(code)
-    if (entryResolve && code !== '04092') return entryResolve(state, inv, t, api, { location })
-    // ---- 核心遭遇卡（01xxx）----
-    // 失落时代的部分牌堆引用了核心盒的遭遇组；这批卡的规则写在共享解析器里，
-    // 十章都通过 ...encounterRules 继承，因此不会再「抽到即静默弃掉」。
-    if (code === '01170') {
-      // 密会巫师：生成在任意无人地点；反击与「神话阶段结束放毁灭」由敌人数据交给引擎。
-      const empty = state.locations.filter(entry => !active(state).some(owner => owner.location === entry.id))
-      if (!empty.length) { api.drawEncounter(inv.seat); return false }
-      const target = empty.length === 1 ? empty[0].id : api.choose({
-        kind: 'target', source: code, seat: inv.seat,
-        prompt: '密会巫师：选择生成它的无人地点。',
-        options: empty.map(entry => ({ id: entry.id, label: entry.name })),
-      })
-      api.spawn(code, empty.some(entry => entry.id === target) ? target : empty[0].id)
-      return false
-    }
-    if (code === '01174') {
-      // 上锁的门：附属到线索最多且没有锁的地点；引擎已负责禁止调查与「破门」行动。
-      const candidates = state.locations.filter(entry => !entry.locked)
-      if (!candidates.length) { api.info?.('没有可附属上锁的门的地点。'); return false }
-      const maxClues = Math.max(...candidates.map(entry => entry.clues || 0))
-      const pool = candidates.filter(entry => (entry.clues || 0) === maxClues)
-      const chosenId = pool.length === 1 ? pool[0].id : api.choose({
-        kind: 'target', source: code, seat: inv.seat,
-        prompt: '上锁的门：选择线索最多且没有锁的地点。',
-        options: pool.map(entry => ({ id: entry.id, label: `${entry.name}（线索 ${entry.clues || 0}）` })),
-      })
-      const chosen = pool.find(entry => entry.id === chosenId) || pool[0]
-      chosen.locked = true
-      chosen.lockedDoorCode = '01174'
-      api.info?.(`🔒 「上锁的门」封锁了「${chosen.name}」。`)
-      return true
-    }
-    if (code === '01178') {
-      // 提供力量：险境。抽 2 张牌并放 2 点毁灭，或受到 2 点恐惧。
-      const answer = api.choose({
-        kind: 'treachery', source: code, seat: inv.seat, peril: true,
-        prompt: '提供力量：抽 2 张牌并放 2 点毁灭，或受到 2 点恐惧。',
-        options: [{ id: 'horror', label: '受到 2 点恐惧' }, { id: 'power', label: '抽 2 张牌并放置 2 点毁灭' }],
-      })
-      if (answer === 'power') { api.drawCards(inv.seat, 2); api.addDoom(2) }
-      else api.horror(inv.seat, 2)
-      return false
-    }
-    if (code === '04092') {
-      const candidates = state.locations.filter(entry => active(state).some(target => target.location === entry.id))
-      if (!candidates.length) {
-        state.doom = (state.doom || 0) + 1
-        return false
-      }
-      const picked = chooseOne(api, {
-        kind: 'location', source: code, seat: inv.seat, peril: true,
-        prompt: '不祥之兆：选择放置 1 点毁灭的地点。',
-      }, candidates)
-      if (picked) {
-        picked.doom = (picked.doom || 0) + 1
-        for (const target of active(state).filter(entry => entry.location === picked.id)) api.horror(target.seat, 1)
-        return false
-      }
-      return false
+    const campaigns = encounterResolveCampaignsFor(code)
+    // 第 120 轮：04092 也走条目（条目里的选项 id/顺序与旧分支一致，选择恢复凭据不变）。
+    if (entryResolve && (!campaigns.length || campaigns.includes('tfa'))) {
+      return entryResolve(state, inv, t, api, { location })
     }
     return false
   },

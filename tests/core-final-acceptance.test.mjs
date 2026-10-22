@@ -32,12 +32,12 @@ test('Core 01127 01131 午夜假面实际随机布置使用变体数值并按人
 })
 
 test('Core 01117 丽塔横置后仍给同地点队友战斗与怪物伤害加成，远处无加成',()=>{
-  const s=fixture('01001',2); asset(s,'01117',{exhausted:true},1)
+  const s=fixture('01001',2); s.humanSeats=[0,1]; asset(s,'01117',{exhausted:true},1)
   assert.equal(getStat(s,s.investigators[0],'combat'),5)
-  const e=enemy(s,{traits:['Monster']}); move(s,{action:'fight',enemyId:e.id}); settle(s)
+  const e=enemy(s,{traits:['Monster']}); move(s,{action:'fight',enemyId:e.id}); settle(s,c=>c.source==='litaDamage'?'trigger':null)
   assert.equal(s.enemies[0].damageTaken,2)
   s.investigators[1].location='remote'; assert.equal(getStat(s,s.investigators[0],'combat'),4)
-  move(s,{action:'fight',enemyId:e.id}); settle(s); assert.equal(s.enemies[0].damageTaken,3)
+  move(s,{action:'fight',enemyId:e.id}); settle(s,c=>c.source==='litaDamage'?'trigger':null); assert.equal(s.enemies[0].damageTaken,3)
 })
 
 test('Core 01035 医学教科书检定失败伤害选定队友，不伤害使用者',()=>{

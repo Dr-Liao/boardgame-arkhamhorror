@@ -6,20 +6,22 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 02261 “我见过更糟的……”
+// 第 121 轮：取消伤害/恐惧走通用原语 api.cancelHarm（gainResources 为卡面差异）。
 
 export default {
   code: '02261',
   abilities: [
     {
-      "kind": "played",
-      "fast": true,
-      "trigger": "harmDealt",
-      "label": "“我见过更糟的……”",
-      "effect": {
-        "type": "cancelHarmGainResources",
-        "code": "02261",
-        "maximum": 5
-      }
+      kind: 'played',
+      fast: true,
+      trigger: 'harmDealt',
+      label: '“我见过更糟的……”',
+      resolve: ({ inv, api }) => {
+        api.cancelHarm(inv.seat, {
+          maximum: 5, gainResources: true, source: '02261',
+          prompt: '选择“我见过更糟的”要取消的伤害与恐惧。',
+        })
+      },
     },
   ],
   modifiers: [

@@ -20,13 +20,13 @@
 迁移不只是把卡文变成代码，还必须把行为放进正确的层。以下规矩与重构路线一致；完整条文见
 [`architecture-refactor-roadmap.md`](architecture-refactor-roadmap.md) §3、§7，稳态架构见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md)。
 
-- **行为唯一入口**：新卡行为写在 `src/cards/entries/<code>.js` 的单卡文件（一张卡一个文件，`export default` 恰好一个条目）。不得向 `card-effects.js` 的 `EFFECTS` 增加新条目，不得在 `engine.js` 按卡号、关卡名或战役名新增分支，不得恢复 `card-abilities.js` 条目或 `BATCH_*` / `MIGRATED_*` 批次大数组。
+- **行为唯一入口**：新卡行为写在单卡文件里（一张卡一个文件，`export default` 恰好一个条目）。玩家卡写 `src/cards/entries/<code>.js`；非玩家卡按归属写 `src/cards/encounter-entries/`（通用 `shared/`、战役共用 `<campaign>/_shared/`、关卡专用 `<campaign>/<scenario>/`）。不得向 `card-effects.js` 的 `EFFECTS` 增加新条目，不得在 `engine.js` 按卡号、关卡名或战役名新增分支，不得恢复 `card-abilities.js` / `encounter-abilities.js` 条目或 `BATCH_*` / `MIGRATED_*` 批次大数组。
 - **先原语、后卡牌**：每轮迁移先扫描新增机制并拆分原语，再批量写卡。卡牌只能使用已登记的原语；需要新原语时按 §4.6.3 的队列向主进程申请，不得由子进程直接改引擎。
 - **新机制先走通用层**：卡面写不下时，先扩 `ability.js` / `windows.js` / `matcher.js` / `modifiers.js` / `targets.js` / `play-condition.js` / `effect-state.js` 的通用能力，再写卡。新窗口必须同时完成注册、调用点接线与测试——注册不等于接线。
 - **新增交互先于批量卡牌**：新的选择、目标、提示、面板与动画必须在卡牌批量迁移前完成，并复用 `web/` 的现有组件、CSS 变量与交互模式；不允许在卡牌批次里边写卡边临时拼界面。验收必须覆盖桌面 1440 与移动端 390，见 §4.5。
 - **剧本卡行动必须标明归属**：幕／议程卡面上印着的 `[action]` / `[free]` 行动（包括引擎自带的「探索」）必须通过关卡数据的 `scenario.scriptCards` 或显式 `scriptCard` 标成 `act` / `agenda`，牌桌才会把它放在剧本书对应卡片旁；只出现在通用动作栏视为迁移缺口。声明方式与验收见 §4.5.1。
-- **多进程写入边界**：批量迁移由主进程 + 多个子进程完成；子进程只写分给自己的 `entries/<code>.js`，不得改 `entries/index.js`、`_shared.js`、`card-abilities.js`、`src/engine/`、`content/`、`docs/`、`audit/`。索引由主进程在合并时统一重建，见 §4.6。
-- **非玩家卡走 `encounter-abilities.js`**：敌人、地点、幕／议程、剧情支援与威胁的常驻规则写成带 `scope` 的描述子（Phase 3 · D1），引擎按场上实体枚举，读点是 `entityModifierTotal` / `entityRuleActive`；**不要**再往关卡 `behavior.js` 加按卡号的分支，也不要在引擎里加卡号判断。
+- **多进程写入边界**：批量迁移由主进程 + 多个子进程完成；子进程只写分给自己的单卡文件（玩家卡 `entries/<code>.js`，非玩家卡 `encounter-entries/<归属目录>/<code>.js`），不得改 `entries/index.js`、`encounter-entries/index.js`、任一本 `_shared.js` / `_lookup.js`、两个聚合入口、`src/engine/`、`content/`、`docs/`、`audit/`。索引由主进程在合并时统一重建，见 §4.6。
+- **非玩家卡一卡一文件**：敌人、地点、幕／议程、剧情支援与威胁的常驻规则写成带 `scope` 的描述子（Phase 3 · D1），引擎按场上实体枚举，读点是 `entityModifierTotal` / `entityRuleActive`。落点按使用范围分三档：跨战役 → `encounter-entries/shared/<encounterGroup>/`；同一战役跨关卡 → `encounter-entries/<campaign>/_shared/<encounterGroup>/`；只在单关卡 → `encounter-entries/<campaign>/<scenario>/`。**不要**再往关卡 `behavior.js` 加按卡号的分支，也不要在引擎里加卡号判断，更不要把条目写回 `encounter-abilities.js` 单文件。
 - **通道必须登记**：迁移范围内的每张卡在审计账本里记录通道状态 `descriptor | legacy | hybrid | missing` 与证据路径；`missing` 会让该章的 `literalCardBehavior` 保持 `false`。
 - **规则层不读策略**：不得引入"谁在操作这个座位"的分支（例如按 `humanSeats` 自动跳过可选反应）；这类判断由大厅注入。
 - **可重放**：迁移新增的状态字段必须进 `save-migration.js` 的版本迁移，并保证 JSON 存读档往返一致；行为改动要用 replay 基线证明"行为零变化"——迁移前 `node tools/replay-fixtures.mjs --baseline <文件>`，迁移后 `--compare <文件>`（见 [`phase4-replay.md`](phase4-replay.md) §4）。
@@ -56,8 +56,14 @@ games/arkhamhorror/
 │     ├─ <cycle>Campaign/manifest.js
 │     ├─ <cycle>Investigators/manifest.js
 │     └─ <cycle>Player/manifest.js
-├─ src/cards/entries/<code>.js       # 一卡一文件（子进程只写自己分到的文件）
+├─ src/cards/entries/<code>.js       # 玩家卡一卡一文件（子进程只写自己分到的文件）
 ├─ src/cards/entries/index.js        # 生成索引（只由主进程重建）
+├─ src/cards/encounter-entries/
+│  ├─ shared/<group>/<code>.js       # 跨战役通用（一卡一文件）
+│  ├─ <campaign>/_shared/<group>/<code>.js  # 战役内跨关卡
+│  ├─ <campaign>/<scenario>/<code>.js       # 关卡专用
+│  ├─ _shared.js / _lookup.js        # 跨卡工具 / 跨条目查询（主进程独占）
+│  └─ index.js                       # 生成索引（只由主进程重建）
 ├─ audit/<cycle>-migration.json
 ├─ tests/<cycle>-migration.test.mjs
 └─ tools/audit-<cycle>.mjs
@@ -223,22 +229,25 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 
 | 角色 | 可以写 | 绝对不写 |
 | --- | --- | --- |
-| 主进程 / 编排器 | `src/engine/**`、`entries/_shared.js`、`entries/index.js`、`card-abilities.js`、`phase5-codes.js`、`docs/**`、`audit/**`、`content/**`、`artifacts/migration/**` | 子进程分到的 `entries/<code>.js`（除非接管/返工） |
-| 子进程 worker | 自己分到的 `src/cards/entries/<code>.js`、自己的 `artifacts/migration/<cycle>/workers/<id>.json`、`primitive-requests/*.json` | `entries/index.js`、`_shared.js`、`card-abilities.js`、`src/engine/**`、`content/**`、`docs/**`、`audit/**`、其他 worker 的卡文件 |
+| 主进程 / 编排器 | `src/engine/**`、`entries/_shared.js`、`entries/index.js`、`encounter-entries/_shared.js`、`encounter-entries/_lookup.js`、`encounter-entries/index.js`、两个聚合入口、`phase5-codes.js`、`docs/**`、`audit/**`、`content/**`、`artifacts/migration/**` | 子进程分到的单卡文件（除非接管/返工） |
+| 子进程 worker | 自己分到的单卡文件（`src/cards/entries/<code>.js` 或 `src/cards/encounter-entries/<归属目录>/<code>.js`）、自己的 `artifacts/migration/<cycle>/workers/<id>.json`、`primitive-requests/*.json` | 两个 `index.js`、任一本 `_shared.js` / `_lookup.js`、两个聚合入口、`src/engine/**`、`content/**`、`docs/**`、`audit/**`、其他 worker 的卡文件 |
 
 补充规则：
 
-- 子进程创建卡文件时使用 `node tools/scaffold-card.mjs <code> --entry --no-index`，或直接按模板写文件；**不得运行** `build-card-index.mjs`。
-- 索引由主进程在所有分片合并后**只重建一次**；子进程各自重建索引会造成顺序/覆盖冲突。
-- 子进程不做跨卡重构：需要改 `_shared.js`、`matcher.js`、`ctx.api` 时，一律走原语请求队列（§4.6.3），由主进程实现。
+- 子进程创建卡文件时使用 `node tools/scaffold-card.mjs <code> --entry --no-index`（玩家卡）或
+  `node tools/scaffold-card.mjs <code> --encounter --no-index`（非玩家卡），或直接按模板写文件；
+  **不得运行** `build-card-index.mjs` / `build-encounter-index.mjs`。
+- 索引由主进程在所有分片合并后**只重建一次**（两个索引都重建）；子进程各自重建索引会造成顺序/覆盖冲突。
+- 子进程不做跨卡重构：需要改 `_shared.js`、`_lookup.js`、`matcher.js`、`ctx.api` 时，一律走原语请求队列（§4.6.3），由主进程实现。
 - 任何两个 worker 不得写同一个 `code`；编排器在启动前检查分片交集为空。
+- 非玩家卡的分片按**归属目录**（战役/关卡/遭遇组）切，而不是按 scope 切；同一目录内保持 20–50 张一片。
 
 #### 4.6.2 分片
 
 - 按卡号区间、内容包或调查员分组切分，每片 20–50 张；同一张卡只进一片。
 - 分片清单写入 `artifacts/migration/<cycle>/shards.json`，含 `worker`、`codes[]`、起始/结束时间、输入快照哈希。
 - worker 启动时读取只读快照：`primitive-catalog.json`、`mechanism-scan.json`、`primitive-plan.json`、本轮卡牌清单。
-- 已存在且内容未变的 `entries/<code>.js` 跳过（幂等）；内容冲突或文件不在自己的分片里则报错退出。
+- 已存在且内容未变的单卡文件跳过（幂等）；内容冲突或文件不在自己的分片里则报错退出。
 - 编排方式：主进程读 `shards.json`，用 `node:child_process` 的 `spawn` 为每个 worker 启动独立 Node 进程
   （cwd 固定 `games/arkhamhorror/`，stdout/stderr 落到 `artifacts/migration/<cycle>/workers/<id>.log`）。
   一个 worker 崩溃只重跑该分片，不影响其他 worker；没有编排器时，主进程脚本按同一份 `shards.json` 顺序 spawn 也符合本协议。
@@ -301,7 +310,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 ```text
 读取分片与只读快照
   → 对每张卡：匹配已有原语
-      ├─ 能表达：写 entries/<code>.js → node --check / 结构检查 → 记录 done
+      ├─ 能表达：写单卡文件（玩家卡 entries/<code>.js / 非玩家卡 encounter-entries/<归属>/<code>.js）→ node --check / 结构检查 → 记录 done
       └─ 不能表达：写 primitive request → 记录 blocked → 继续下一张
   → 本轮结束：轮询队列
       ├─ done：重新实现 blocked 卡
@@ -319,7 +328,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 1. 启动前：保存 `git rev-parse HEAD` 与共享文件哈希；检查分片无交集；生成 `primitive-catalog.json` 快照。
 2. 运行期间：只处理原语队列与共享层；按 §4.6.3 回写；每处理完一批请求，更新 `primitive-catalog.json` 并通知/让 worker 轮询。
 3. 合并前：检查每个 worker 的 `git status`/文件清单只包含自己的分片；发现越界写入直接拒绝该 worker 产物。
-4. 合并：收集所有 `entries/<code>.js`；逐文件校验文件名/`code`/单一 default/禁止 import；重建 `entries/index.js`；运行 `npm run cards:check`。
+4. 合并：收集所有单卡文件（`entries/<code>.js` 与 `encounter-entries/<归属目录>/<code>.js`）；逐文件校验文件名/`code`/单一 default/禁止 import；重建 `entries/index.js` 与 `encounter-entries/index.js`；运行 `npm run cards:check` 与 `npm run cards:encounter-check`。
 5. 行为门禁：`replay-fixtures --compare` 与迁移前基线逐条一致；若本轮有意新增行为，必须单独记录差异并在验收报告中说明。
 6. 收尾：更新 `audit/<cycle>-migration.json`、`cards:audit:write`、队列报告、分片报告。
 
@@ -327,14 +336,14 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 
 - 索引只由主进程重建；worker 的 `--no-index` 是硬要求。
 - 同一 `code` 出现两份文件 → 合并失败，回到分片阶段；不允许“后写覆盖”。
-- `entries/<code>.js` 已存在且不在本轮变更清单 → 视为冲突，主进程人工确认后才能替换。
+- 目标单卡文件已存在且不在本轮变更清单 → 视为冲突，主进程人工确认后才能替换。
 - 子进程不得修改 `_shared.js`；需要新 helper 时放进自己的卡文件，确属跨卡复用再走原语请求由主进程提升到 `_shared.js`。
 
 #### 4.6.7 失败、重试与回滚
 
 - 单卡失败不阻塞分片：记录 `failed` 与原因，继续其他卡；主进程最后统一重试或转人工。
 - 原语请求 `rejected` 不是失败：按建议改写；仍无法表达则把卡留在 `blocked` 清单，不计入本轮 `done`。
-- 回滚以卡文件为单位：删除/还原单个 `entries/<code>.js` 并重建索引即可；不得回滚整个共享层来“撤销一张卡”。
+- 回滚以卡文件为单位：删除/还原单个单卡文件并重建对应索引即可；不得回滚整个共享层来“撤销一张卡”。
 - 共享层改动必须单独提交/记录，便于把“原语实现”与“卡牌批量”分开审查。
 
 #### 4.6.8 批次验收
@@ -342,9 +351,9 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 | 检查 | 通过标准 |
 | --- | --- |
 | 分片完整性 | 每个 `code` 恰好一个 worker；无交集、无遗漏 |
-| 写入边界 | worker 只改自己的 `entries/<code>.js` 与自己的 `artifacts/migration/` 记录；无 `index.js`/engine/docs/audit 变更 |
-| 单卡文件 | 文件名=`code`、单一 default、无禁止 import |
-| 索引 | 主进程重建一次，`cards:check` 5/5 |
+| 写入边界 | worker 只改自己的单卡文件与自己的 `artifacts/migration/` 记录；无 `index.js`/engine/docs/audit 变更 |
+| 单卡文件 | 文件名=`code`、单一 default、无禁止 import；非玩家卡归属目录符合扫描规则 |
+| 索引 | 主进程重建两个索引各一次，`cards:check` 与 `cards:encounter-check` 全绿 |
 | 原语队列 | 无 `pending`/`claimed` 悬挂；`done` 的原语都有测试；`rejected` 都有替代方案 |
 | 行为 | `replay-fixtures --compare` 一致；`test:fast` 无新增失败（既有 7 条除外） |
 | 审计 | `audit/<cycle>-migration.json` 的通道/证据更新；`cards:audit` 指标不倒退 |

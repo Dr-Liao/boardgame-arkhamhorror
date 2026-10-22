@@ -3,6 +3,7 @@ import { chooseCandidate } from '../../../../choice-helpers.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
+import { actRuleFor, agendaRuleFor, isPoisonThreat, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import {
   EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES,
   RELIC_OF_AGES, HARBINGER_OF_VALUSIA, YIG, CHAMBER_OF_TIME,
@@ -47,14 +48,24 @@ function shuffleDeck(state, api) {
   return copy
 }
 
+// 第 115 轮：幕/密谋条目通过这个 hooks 对象调用本章实现，保证同一份「放在一边 / 进胜利区」逻辑。
+function chapterHooks(state, api) {
+  return {
+    removeSetAside: code => removeSetAside(state, code),
+    removeSetAsideLocation: id => removeSetAsideLocation(state, id),
+    addActToVictory: act => addActToVictory(state, act),
+    shuffleDeck: () => shuffleDeck(state, api),
+  }
+}
+
 // 4 张「中毒」中已经进入牌组/威胁区的部分不再放在一边（Haskell getSetAsidePoisonedCount）。
 function setAsidePoisonCount(state) {
   let owned = 0
   for (const inv of state.investigators || []) {
-    owned += (inv.threat || []).filter(card => original(card) === '04102').length
+    owned += (inv.threat || []).filter(card => isPoisonThreat(original(card))).length
   }
   for (const record of Object.values(state.campaign?.investigators || {})) {
-    owned += (record?.deck || []).filter(code => code === '04102').length
+    owned += (record?.deck || []).filter(code => isPoisonThreat(code)).length
   }
   return Math.max(0, 4 - owned)
 }
@@ -363,14 +374,8 @@ export const behavior = {
   actions(state, inv) {
     const moves = []
     const location = here(state, inv)
-    const code = original(location)
-    if (code === '04060') {
-      moves.push({ action: 'scenarioAction', rule: 'resignEntryway', label: '🚪 撤退：你暂时……逃出来了。' })
-      moves.push({
-        action: 'scenarioAction', rule: 'inspectSupplies',
-        label: '🔦 检查补给品：查看探索牌库顶 2 张，弃掉其中的诡计后洗牌',
-      })
-    }
+    // 第 115 轮：入口地点（04060）的撤退与检查补给在地点条目的 locationRule.actions。
+    locationRuleFor(original(location))?.actions?.({ state, inv, location, moves })
     const relic = (inv.assets || []).find(asset => original(asset) === RELIC_OF_AGES)
     const yig = state.enemies.find(enemy => original(enemy) === YIG)
     if (original(state.acts?.[state.actIndex]) === '04347') {
@@ -384,28 +389,8 @@ export const behavior = {
   },
 
   performAction(state, inv, move, api) {
-    if (move.rule === 'resignEntryway') {
-      api.resign(inv.seat)
-      return
-    }
-    if (move.rule === 'inspectSupplies') {
-      if (!api.checkSupplies(inv.seat, 'torches')) {
-        api.info?.('检查补给品：队伍中没有火把，这次行动没有效果。')
-        return
-      }
-      const deck = state.explorationDeck || []
-      const top = deck.slice(-2)
-      if (!top.length) return
-      state.explorationDeck = deck.slice(0, deck.length - top.length)
-      state.explorationDiscard ||= []
-      for (const entry of top) {
-        if (ALL_CARDS[entry]?.type === 'treachery') state.explorationDiscard.push(entry)
-        else state.explorationDeck.push(entry)
-      }
-      shuffleDeck(state, api)
-      api.info?.('火把照亮了探索牌库顶：诡计被弃掉，其余卡牌洗回牌库。')
-      return
-    }
+    // 第 115 轮：地点条目先接管自己的场景行动。
+    if (locationRuleFor(original(here(state, inv)))?.performAction?.(state, inv, move, api)) return
     if (move.rule === 'relicOfAgesStrike') {
       const yig = state.enemies.find(enemy => original(enemy) === YIG)
       if (!yig) { api.info?.('伊格不在场，古代遗物没有目标。'); return }
@@ -444,80 +429,18 @@ export const behavior = {
 
   actReveal(state, act, api) {
     const code = original(act)
-    if (code === '04345') {
-      // 背面：把放在一边的时间石室洗入探索牌库；本场景进胜利区并获得复仇 2。
-      removeSetAsideLocation(state, CHAMBER_OF_TIME)
-      if (api.addToExplorationDeck) api.addToExplorationDeck([CHAMBER_OF_TIME])
-      else {
-        state.explorationDeck = [...(state.explorationDeck || []), CHAMBER_OF_TIME]
-        shuffleDeck(state, api)
-      }
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.chamberOfTimeInDeck = true
-      addActToVictory(state, act)
-      api.info?.('🧭 时间石室被洗入探索牌库。')
-      return
-    }
-    if (code === '04346') {
-      // 背面：选择时间石室的调查员控制古代遗物；伊格生成在时间石室；进胜利区并获得复仇 2。
-      const chamber = state.locations.find(location => original(location) === '04068')
-      const candidates = active(state).filter(inv => chamber && inv.location === chamber.id)
-      let seat = null
-      if (candidates.length === 1) seat = candidates[0].seat
-      else if (candidates.length > 1) {
-        seat = Number(api.choose({
-          kind: 'investigator', source: '04346', seat: state.campaign.leadSeat,
-          prompt: '选择一位位于时间石室的调查员控制古代遗物。',
-          options: candidates.map(inv => ({ id: String(inv.seat), label: inv.name })),
-        }))
-        if (!Number.isInteger(seat)) seat = candidates[0].seat
-      }
-      if (seat == null) seat = state.campaign.leadSeat
-      const holder = state.investigators[seat]
-      if (holder) {
-        removeSetAside(state, RELIC_OF_AGES)
-        api.giveAsset?.(seat, RELIC_OF_AGES)
-        if (api.moveRelicOfAges) api.moveRelicOfAges({ code: RELIC_OF_AGES, seat })
-        else state.relicOfAges = { code: RELIC_OF_AGES, location: holder.location, seat }
-        api.info?.(`🏺 ${holder.name} 控制了古代遗物。`)
-      }
-      removeSetAside(state, YIG)
-      const spawnAt = chamber?.id || CHAMBER_OF_TIME
-      const yig = api.spawn(YIG, spawnAt)
-      if (yig) {
-        yig.damageTaken = 0
-        api.info?.(`🐍 伊格在「${yig.location}」现身！`)
-      }
-      addActToVictory(state, act)
-      return
-    }
-    if (code === '04347') { api.finish('r1'); return }
+    // 第 115 轮：04345–04347 的翻面效果在幕条目（条目通过 hooks 调用本章实现）。
+    const entry = actRuleFor(code)?.onReveal
+    if (entry) { entry(state, act, api, chapterHooks(state, api)); return }
     throw new Error(`未知时间倒流场景：${code}`)
   },
 
   agendaReveal(state, agenda, api) {
     const code = original(agenda)
-    if (code === '04055') {
-      // 背面：把放在一边的瓦卢西亚的预示者生成在毁灭标记最多的地点。
-      removeSetAside(state, HARBINGER_OF_VALUSIA)
-      const candidates = [...state.locations].sort((left, right) =>
-        (right.doom || 0) - (left.doom || 0))
-      const target = candidates[0]?.id
-      if (!target) return
-      const enemy = api.spawn(HARBINGER_OF_VALUSIA, target)
-      if (enemy) {
-        enemy.damageTaken = Number(state.scenarioFlags?.harbingerDamage || 0)
-        enemy.resources = 0
-        api.info?.(`🐍 瓦卢西亚的预示者在「${enemy.location}」苏醒。`)
-      }
-      return
-    }
-    if (code === '04056') {
-      // 背面：每位没有撤退的调查员被击败 → 无结局（时间之布被拆解）。
-      for (const inv of active(state)) api.defeat(inv, null)
-      if (state.status === 'playing') api.finish('noResolution')
-      return
-    }
+    // 第 120 轮：04055 / 04056 与其他章节共用同一张卡，但文案与结局不同；
+    // 条目的 agendaRuleByScenario.turnBackTime 存本章版本，读点带 scenarioId。
+    const entry = agendaRuleFor(code, state.scenario?.id)
+    if (entry?.onReveal) { entry.onReveal(state, agenda, api, chapterHooks(state, api)); return }
     throw new Error(`未知时间倒流密谋：${code}`)
   },
 

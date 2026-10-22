@@ -8,6 +8,7 @@
 
 export default {
   code: '02234',
+  limitPerInvestigator: true,
   passive: {"darkHorse":true,"allStatsIfNoResources":1},
   abilities: [
 

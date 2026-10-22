@@ -15,9 +15,8 @@ export default {
       criteria: { nonPerilOnly: true, selfOnly: true },
       label: '你来处理',
       resolve: ({ state, inv, api }) => {
-        const others = api.investigatorsAt(inv.location).filter(other => other.seat !== inv.seat)
-        const everyone = state.investigators.filter(other => !other.defeated && !other.resigned && other.seat !== inv.seat)
-        const candidates = others.length ? others : everyone
+        // 卡面：选择另一位调查员（任意地点），不要求同地点。
+        const candidates = state.investigators.filter(other => !other.defeated && !other.resigned && other.seat !== inv.seat)
         if (!candidates.length) { api.info('没有其他调查员可以接手这张遭遇卡。'); return }
         const chosen = candidates.length === 1 ? String(candidates[0].seat)
           : api.choice({ kind: 'target', source: '04028', seat: inv.seat,

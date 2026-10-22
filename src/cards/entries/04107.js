@@ -10,8 +10,8 @@ export default {
   code: '04107',
   abilities: [
     {
-      kind: 'reaction', trigger: 'investigateSuccess', id: 'luckyCase', legacyReaction: true,
-      criteria: { successByAtLeast: 2 }, limit: 'oncePerRound', label: '调查成功超出 2 点时抽 1 张',
+      kind: 'reaction', trigger: 'skillTestSuccess', id: 'luckyCase', legacyReaction: true,
+      criteria: { successByAtLeast: 2 }, limit: 'oncePerRound', label: '技能检定成功超出 2 点时抽 1 张',
       cost: { exhaust: true }, effect: { type: 'draw', amount: 1 },
     },
   ],

@@ -14,7 +14,7 @@ export default {
   abilities: [
     {
       kind: 'played', label: '查找牌库顶 9 张或弃牌堆中的违法卡',
-      resolve: ({ inv, api }) => {
+      resolve: ({ state, inv, api }) => {
         const illicit = code => api.cardTraits(code).some(trait => ['illicit', '违法'].includes(trait))
         const options = [{ id: 'deck', label: '查看牌库顶 9 张' }]
         if (inv.discard.some(illicit)) options.push({ id: 'discard', label: '查看弃牌堆' })
@@ -31,6 +31,8 @@ export default {
           return
         }
         api.searchTop(inv.seat, { amount: 9, trait: 'Illicit', traitZh: '违法', source: '04010', mandatory: true })
+        // 查找了牌库：结算后把走私货物洗回牌库，而不是进弃牌堆。
+        state._playDisposal = 'shuffleBack'
       },
     },
   ],

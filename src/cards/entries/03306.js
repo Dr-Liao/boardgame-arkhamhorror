@@ -12,7 +12,7 @@ export default {
   quietPlay: true,
   abilities: [
     {
-      kind: 'played', fast: true, label: '复制弃牌堆里的一张洞察事件并重放',
+      kind: 'played', label: '复制弃牌堆里的一张洞察事件并重放',
       resolve: ({ inv, api }) => {
         const candidates = api.discardPiles()
           .filter(item => api.cardType(item.code) === 'event'

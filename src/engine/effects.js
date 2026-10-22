@@ -18,28 +18,31 @@
 import { requestChoice } from './resolution.js'
 
 // 效果原语清单（用于校验与文档化）。
+// 第 126 轮（DoD 第 6 条）：退役 12 个**没有任何数据引用**的旧原语
+// （addFog / addTestBonus / aquinnahRedirect / becomeAsset / discardAsset / discardHand /
+//  exhaust / moveHorrorToInvestigator / retryTest / search / skillTest / spawnEnemy）。
+// 它们对应的卡要么已经迁到条目 resolve，要么当初只作为 DSL 样例存在；
+// 删名前 `tools/hardcode-audit.mjs` 的 unusedPrimitives 就是这 12 个。
 export const EFFECT_PRIMITIVES = [
   'gainResource', 'loseResource', 'draw', 'heal', 'takeDamage', 'takeHorror',
   'gainAction', 'discoverClue', 'addDoom', 'dealDamage', 'investigate', 'fight',
-  'evade', 'discardHand', 'discardAsset', 'addFog', 'addTestBonus', 'skillTest',
-  'spawnEnemy', 'moveInvestigator', 'chooseOne', 'exhaust', 'discardHandTo',
+  'evade', 'moveInvestigator', 'chooseOne', 'discardHandTo',
   'reloadAmmo', 'defeatNonEliteEnemy', 'removeDiscard', 'onTheLam',
-  'addStatPhase', 'rechargeAsset', 'search',
+  'addStatPhase', 'rechargeAsset',
   'cancelEnemyAttack', 'cancelTreachery', 'substituteSkill', 'sequence',
   'targetedEffect', 'searchTop', 'investigateForResources', 'moveTo',
   'dealDamageAll', 'dealDamageExhausted', 'blankEnemy', 'ignoreChaos',
-  'returnAssetToHand', 'shuffleIntoEncounter', 'moveHorrorToInvestigator',
+  'returnAssetToHand', 'shuffleIntoEncounter',
   'searchDiscard', 'autoEvadeNonElite', 'attachBarricade', 'drawEncounter',
-  'addTestValue', 'disengageAll', 'flipTokenSign', 'scry', 'gainClues', 'targetedTest', 'aquinnahRedirect',
-  'readyAsset', 'healDamageAtLocation', 'researchSolution', 'healHorrorNearby', 'dukeInvestigate',
-  'flare',
-  'redrawChaos',
-  'lookTopDeckAndDoom', 'cancelHarmGainResources',
-  'redrawEncounter', 'redGlovedManSkills', 'returnCommittedSkill',
-  'carcosaInvestigator', 'carcosaPlayer', 'cancelHarm', 'addCurrentTest',
+  'addTestValue', 'disengageAll', 'flipTokenSign', 'scry', 'gainClues', 'targetedTest',
+  'readyAsset', 'healDamageAtLocation', 'researchSolution',
+  // 第 121–122 轮（第 4 批）：healHorrorNearby / dukeInvestigate / flare / redrawChaos /
+  // cancelHarmGainResources / redrawEncounter / redGlovedManSkills / returnCommittedSkill /
+  // cancelHarm 已退役——单卡逻辑搬进各自条目（resolve + 通用原语），不再有 `effect.type` 分派。
+  'carcosaInvestigator', 'carcosaPlayer', 'addCurrentTest',
   // Phase 1：离场/效果实体相关原语
   'mill',
-  'tfaInvestigator', 'tfaPlayer', 'cancelSymbolToken', 'retryTest', 'becomeAsset',
+  'tfaInvestigator', 'tfaPlayer', 'cancelSymbolToken',
 ]
 
 export function effectDefinitionError(effect) {
@@ -63,21 +66,10 @@ export function resolveEffect(state, seat, effect, rt) {
   if (!inv) return
 
   switch (effect.type) {
-    case 'healHorrorNearby': {
-      rt.healHorrorNearby(seat, effect.amount || 1)
-      break
-    }
-    case 'dukeInvestigate': {
-      rt.dukeInvestigate(seat)
-      break
-    }
-    case 'flare':
-    case 'redrawChaos':
-    case 'lookTopDeckAndDoom': case 'cancelHarmGainResources':
-    case 'redrawEncounter': case 'redGlovedManSkills': case 'returnCommittedSkill': {
-      rt.playerCardEffect(seat, effect)
-      break
-    }
+    // 第 121–122 轮（第 4 批）：原先按 `effect.type` 分派的单卡逻辑已全部搬进各自条目
+    // （`flare` → 02115、`lookTopDeckAndDoom` → 02232、`dukeInvestigate` → 02014，
+    // 其余走通用原语 api.cancelHarm / cancelEncounterDraw / recallCommittedSkill）。
+    // `src/cards/player-effects.js` 与其 `rt.playerCardEffect` 接线随之删除。
     case 'carcosaInvestigator': {
       rt.carcosaInvestigatorEffect(seat, effect)
       break
@@ -109,10 +101,6 @@ export function resolveEffect(state, seat, effect, rt) {
     }
     case 'becomeAsset': {
       rt.becomeAsset?.(seat, effect)
-      break
-    }
-    case 'cancelHarm': {
-      rt.playerCardEffect(seat, { ...effect, type: 'cancelHarmGainResources', noResources: true })
       break
     }
     case 'researchSolution': {
@@ -209,8 +197,13 @@ export function resolveEffect(state, seat, effect, rt) {
     case 'fight': {
       // 没有合法敌人时按"无事发生"处理：随机走子器在"场上有需要敌人的事件卡、却没有合法目标"
       // 时走到过这条路径，抛错会让一个合法动作直接崩掉（Phase 4 · 重放安全网）。
-      const enemyId = effect.enemyId || rt.chooseEnemy(seat, effect)?.id
-      if (!enemyId) { rt.info('这里没有可攻击的敌人。'); break }
+      // 「枪法如神」允许在没有同地点目标时激活枪械攻击（窗口里改指连接地点），
+      // 因此没有目标也把攻击交给 doFight，由它打开 activateFirearmFight 窗口后再判定。
+      let enemyId = effect.enemyId
+      if (!enemyId && (rt.hasEnemyTargets?.(seat, effect) ?? true)) {
+        enemyId = rt.chooseEnemy(seat, effect)?.id
+      }
+      if (!enemyId) { rt.fight(seat, { ...effect }); break }
       rt.fight(seat, { ...effect, enemyId })
       break
     }

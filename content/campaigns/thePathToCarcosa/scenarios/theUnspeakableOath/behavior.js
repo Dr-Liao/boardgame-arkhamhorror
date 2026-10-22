@@ -3,6 +3,7 @@ import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { campaignCardChange } from '../../../../../src/campaign/campaign.js'
 import { requestChoice } from '../../../../../src/engine/resolution.js'
 import { encounterRules } from '../../encounter-rules.js'
+import { assetRuleFor, enemyScriptFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { carcosaChaosToken, carcosaChaosAfterTest } from '../../carcosa-chaos.js'
 
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
@@ -27,11 +28,6 @@ function replaceSymbols(state, token) {
   const replace = bag => [...(bag || []).filter(face => !symbolFamily.has(face)), token, token]
   state.chaosBag = replace(state.chaosBag)
   state.campaign.chaosBag = replace(state.campaign.chaosBag)
-}
-
-function remember(state, fact) {
-  state.scenarioFlags.remembered ||= []
-  if (!state.scenarioFlags.remembered.includes(fact)) state.scenarioFlags.remembered.push(fact)
 }
 
 function addVipSlain(state, code) {
@@ -131,6 +127,16 @@ export function setupPlan(state) {
 }
 
 export const behavior = {
+  // 03175 后院：调查时每有 1 点恐惧，隐藏值 +1。
+  locationShroudModifier(state, location, inv) {
+    return original(location) === '03175' && inv ? (inv.horror || 0) : 0
+  },
+  // 03052 后台：手牌中的每张隐私诡计按 3 张计算手牌上限。
+  handSizePenalty(state, inv) {
+    const location = state.locations.find(candidate => candidate.id === inv.location)
+    if (!registeredEntry(original(location))?.flags?.backstage) return 0
+    return 2 * (inv.hiddenCards || []).length
+  },
   ...encounterRules,
   id: 'theUnspeakableOath',
   spawnOverrides: { '03183': 'basementHall' },
@@ -192,19 +198,6 @@ export const behavior = {
   beforeMove(_state, inv, location) {
     if (location.enterClueCost && !location.revealed) inv.clues--
   },
-  locationRevealed(state, location, api) {
-    const code = original(location)
-    if (code === '03177' && !state.scenarioFlags.cellsPlaced) {
-      state.scenarioFlags.cellsPlaced = true
-      const cells = ['danielsCell', 'occupiedCell', 'drearyCell', 'familiarCell']
-      for (let i = cells.length - 1; i > 0; i--) {
-        const j = randomIndex(i + 1, api)
-        ;[cells[i], cells[j]] = [cells[j], cells[i]]
-      }
-      for (const id of cells) api.place(id)
-    }
-    if (code === '03178' && ['03164', '03165'].includes(original(state.acts[state.actIndex]))) api.advanceAct()
-  },
   actReveal(state, act, api) {
     registeredEntry(act.originalCode)?.actRule?.onReveal?.(state, act, api)
   },
@@ -217,19 +210,17 @@ export const behavior = {
       api.advanceAct()
     }
   },
-  canOpportunityAttack(_state, enemy) {
-    return enemy.code !== '03183'
-  },
   canFightEnemy(state, inv, enemy) {
     return !(inv.hiddenCards || []).includes('03186') || !isLunatic(enemy)
   },
+  // 第 114 轮：疯人院暴食怪的「移动后同一阶段不能攻击」由条目 enemyScript 声明，
+  // 这里只做通用分派（不再按卡号分支）。
   enemyMoved(state, enemy) {
-    if (enemy.code === '03183' && state.phase === 'enemy') enemy.hunterMovedRound = state.round
+    enemyScriptFor(original(enemy))?.onMoved?.(state, enemy)
   },
   enemyAttackModifier(state, enemy) {
-    const base = enemy.code === '03183' && enemy.hunterMovedRound === state.round ? {
-      damage: -enemy.damage, horror: -enemy.horror,
-    } : {}
+    const scripted = enemyScriptFor(original(enemy))?.attackModifier?.(state, enemy) || {}
+    const base = scripted
     if (enemy.location === 'westernHall169' && enemy.traits?.some(trait => String(trait).toLowerCase() === 'possessed')) {
       return { ...base, horror: (base.horror || 0) + 1 }
     }
@@ -245,9 +236,7 @@ export const behavior = {
     return shared
   },
   enemyDamaged(state, enemy, api) {
-    if (enemy.code === '03184' && state.skillTest?.source?.enemyId === enemy.id && enemy.defeatedBy != null) {
-      api.horror(enemy.defeatedBy, 1)
-    }
+    enemyScriptFor(original(enemy))?.onDamaged?.(state, enemy, api)
   },
   turnEnded(state, inv, api) {
     encounterRules.turnEnded?.(state, inv, api)
@@ -285,44 +274,21 @@ export const behavior = {
     const code = original(location)
     const noClues = (location?.clues || 0) === 0
     const facts = state.scenarioFlags.remembered || []
-    if (code === '03172' && !facts.includes('setAFireInTheKitchen'))
-      moves.push({ action: 'scenarioAction', rule: 'kitchenFire', label: '检定意志（2），在厨房放火',
-        reason: noClues ? null : `需要先取走厨房的线索（还剩 ${location.clues || 0} 个）` })
-    if (code === '03175' && !facts.includes('incitedAFightAmongstThePatients'))
-      moves.push({ action: 'scenarioAction', rule: 'yardFight', label: '受到 1 点伤害，煽动病人互相攻击',
-        reason: !noClues ? `需要先取走院子的线索（还剩 ${location.clues || 0} 个）`
-          : inv.damage < inv.maxHealth ? null : '伤害已满，无法再承受 1 点伤害' })
-    if (code === '03176' && !facts.includes('distractedTheGuards'))
-      moves.push({ action: 'scenarioAction', rule: 'gardenGuards', label: '检定敏捷（2），分散守卫注意力',
-        reason: noClues ? null : `需要先取走花园的线索（还剩 ${location.clues || 0} 个）` })
-    if (code === '03179' && !facts.includes('releasedADangerousPatient'))
-      moves.push({ action: 'scenarioAction', rule: 'occupiedCell', label: '检定战斗（2），释放危险病人' })
-    if (code === '03180' && !facts.includes('knowTheGuardsPatrols'))
-      moves.push({ action: 'scenarioAction', rule: 'drearyCell', label: '检定智识（2），获知守卫巡逻路线' })
-    if (code === '03181' && !facts.includes('recalledTheWayOut'))
-      moves.push({ action: 'scenarioAction', rule: 'familiarCell', label: '检定意志（等同恐惧），想起出去的路' })
-    if (code === '03174') moves.push({ action: 'scenarioAction', rule: 'infirmary', label: '使用医务室' })
-    if (code === '03170') for (const enemy of state.enemies.filter(candidate =>
-      candidate.location === inv.location && isLunatic(candidate))) {
-      moves.push({ action: 'scenarioAction', rule: 'eastHallEvade', enemyId: enemy.id, label: `承受 1 恐惧，自动躲避${enemy.name}` })
-    }
-    if (code === '03176' && original(state.acts[state.actIndex]) === '03167') {
-      moves.push({ action: 'scenarioAction', rule: 'escapeGarden', label: '从花园撤退',
-        reason: state.enemies.some(enemy => enemy.location === inv.location && !enemy.exhausted)
-          ? '同地点还有未横置的敌人，需要先躲避或击败' : null })
-    }
+    // 第 83 轮：六个「记忆事实」地点与医务室的行动在地点条目声明。
+    // 第 114 轮：东区病房（03170）的躲避行动也在地点条目声明。
+    locationRuleFor(code)?.actions?.({ state, inv, location, moves, facts })
     if (inv.hiddenCards?.some(hidden => ['03186', '03187'].includes(hidden))) {
       for (const hidden of inv.hiddenCards.filter(card => ['03186', '03187'].includes(card))) {
         moves.push({ action: 'scenarioAction', rule: 'discardGift', hidden, label: '弃掉隐藏的疯狂馈赠' })
       }
     }
-    for (const enemy of state.enemies.filter(candidate => candidate.code === '03182b'
+    for (const enemy of state.enemies.filter(candidate => enemyScriptFor(original(candidate))?.danielPossessed
       && candidate.location === inv.location)) {
       moves.push({ action: 'scenarioAction', actionKind: 'parley', rule: 'onyxParley',
         enemyId: enemy.id, label: '展示黑玛瑙扣环，与丹尼尔谈判',
-        reason: inv.assets.some(asset => asset.code === '03142') ? null : '需要控制“黑玛瑙扣环”' })
+        reason: inv.assets.some(asset => assetRuleFor(original(asset))?.onxyRing) ? null : '需要控制“黑玛瑙扣环”' })
     }
-    const daniel = inv.assets.find(asset => asset.code === '03182a')
+    const daniel = inv.assets.find(asset => assetRuleFor(original(asset))?.daniel)
     if (daniel) {
       moves.push({ action: 'scenarioAction', rule: 'transferDaniel', actions: 0, label: '横置丹尼尔，将其交给同地点调查员',
         reason: daniel.exhausted ? '需要先重整“丹尼尔”先生'
@@ -333,47 +299,20 @@ export const behavior = {
       || !['kitchenFire', 'yardFight', 'gardenGuards', 'occupiedCell', 'drearyCell', 'familiarCell', 'infirmary', 'eastHallEvade'].includes(move.rule))
   },
   performAction(state, inv, move, api) {
-    const testFact = (skill, difficulty, fact) => api.test(inv.seat, skill, difficulty, result => {
-      if (result.success) remember(state, fact)
-    })
-    if (move.rule === 'kitchenFire') testFact('willpower', 2, 'setAFireInTheKitchen')
-    else if (move.rule === 'yardFight') {
-      api.damage(inv.seat, 1)
-      remember(state, 'incitedAFightAmongstThePatients')
-    } else if (move.rule === 'gardenGuards') testFact('agility', 2, 'distractedTheGuards')
-    else if (move.rule === 'occupiedCell') testFact('combat', 2, 'releasedADangerousPatient')
-    else if (move.rule === 'drearyCell') testFact('intellect', 2, 'knowTheGuardsPatrols')
-    else if (move.rule === 'familiarCell') testFact('willpower', inv.horror, 'recalledTheWayOut')
-    else if (move.rule === 'infirmary') {
-      const answer = api.choose({
-        kind: 'location', source: '03174', seat: inv.seat, prompt: '选择医务室的治疗。',
-        options: [{ id: 'damage', label: '治疗 1 伤害，受到 1 直接恐惧' }, { id: 'horror', label: '治疗 1 恐惧，受到 1 直接伤害' }],
-      })
-      if (answer === 'damage') {
-        inv.damage = Math.max(0, inv.damage - 1)
-        api.directHorror(inv.seat, 1)
-      } else {
-        inv.horror = Math.max(0, inv.horror - 1)
-        api.directDamage(inv.seat, 1)
-      }
-    } else if (move.rule === 'eastHallEvade') {
-      const enemy = state.enemies.find(candidate => candidate.id === move.enemyId && candidate.location === inv.location
-        && isLunatic(candidate))
-      if (!enemy) throw new Error('没有可由东区病房躲避的疯子敌人')
-      api.horror(inv.seat, 1)
-      api.evadeEnemy(enemy)
-    } else if (move.rule === 'escapeGarden') api.resign(inv.seat)
-    else if (move.rule === 'discardGift') {
+    // 第 83 轮：地点条目先接管自己的场景行动。
+    const here = state.locations.find(candidate => candidate.id === inv.location)
+    if (locationRuleFor(original(here))?.performAction?.(state, inv, move, api)) return
+    if (move.rule === 'discardGift') {
       if (!(inv.hiddenCards || []).includes(move.hidden)) throw new Error('隐藏牌不在手中')
       stashRandomMonster(state, api)
       discardHidden(state, inv, move.hidden)
     } else if (move.rule === 'onyxParley') {
-      const enemy = state.enemies.find(candidate => candidate.id === move.enemyId && candidate.code === '03182b'
+      const enemy = state.enemies.find(candidate => candidate.id === move.enemyId && enemyScriptFor(original(candidate))?.danielPossessed
         && candidate.location === inv.location)
-      if (!enemy || !inv.assets.some(asset => asset.code === '03142')) throw new Error('无法与丹尼尔谈判')
+      if (!enemy || !inv.assets.some(asset => assetRuleFor(original(asset))?.onxyRing)) throw new Error('无法与丹尼尔谈判')
       api.damageEnemy(enemy.id, 99, inv.seat, '03142')
     } else if (move.rule === 'transferDaniel') {
-      const daniel = inv.assets.find(asset => asset.code === '03182a' && !asset.exhausted)
+      const daniel = inv.assets.find(asset => assetRuleFor(original(asset))?.daniel && !asset.exhausted)
       const candidates = active(state).filter(other => other.seat !== inv.seat && other.location === inv.location)
       if (!daniel || !candidates.length) throw new Error('无法转交丹尼尔')
       const seat = candidates.length === 1 ? candidates[0].seat : Number(api.choose({
@@ -385,47 +324,8 @@ export const behavior = {
       state.investigators[seat].assets.push(daniel)
     } else throw new Error(`未知邪秽誓约行动：${move.rule}`)
   },
-  resolveEncounter(state, inv, card, api) {
-    const code = original(card)
-    if (code === '03185') {
-      if (inv.threat.some(threat => threat.code === code)) return false
-      for (const asset of [...inv.assets]) {
-        const slots = ALL_CARDS[asset.code]?.slots || []
-        if (!slots.some(slot => ['Body', 'Hand'].includes(slot))) continue
-        api.removeAsset(inv.seat, asset.id)
-        inv.hand.push(asset.code)
-      }
-      api.threat(inv.seat, code, {
-        slots: ['Body', 'Hand x2'],
-        cannotLeavePlay: true,
-        threatEffect: {
-          discardCost: { action: 2 },
-          sameLocationAction: true,
-        },
-      })
-      return true
-    }
-    if (code === '03186' || code === '03187') {
-      inv.hand.push(code)
-      inv.hiddenCards ||= []
-      inv.hiddenCards.push(code)
-      return true
-    }
-    if (code === '03188') {
-      const location = state.locations.find(candidate => candidate.id === inv.location)
-      api.test(inv.seat, 'willpower', location?.shroud || 0, result => {
-        if (result.success) return
-        const amount = Math.max(1, result.difficulty - result.value)
-        const options = [{ id: 'horror', label: `受到 ${amount} 点恐惧` }]
-        if (state.scenarioZones.monsters.length) options.push({ id: 'monster', label: '将随机怪物放到场景牌库底下' })
-        const answer = api.choose({ kind: 'encounter', source: code, seat: inv.seat, prompt: '墙壁逼近', options })
-        if (answer === 'monster') stashRandomMonster(state, api)
-        else api.horror(inv.seat, amount)
-      })
-      return false
-    }
-    return encounterRules.resolveEncounter.call(this, state, inv, card, api)
-  },
+  // 第 114 轮：约束衣（03185）与危墙迫近（03188）的显现结算已迁到遭遇条目，
+  // 本章的 resolveEncounter 直接沿用共享遭遇规则（...encounterRules 已提供）。
   allResigned(state, api) {
     api.advanceAct()
   },
@@ -440,8 +340,8 @@ export const behavior = {
     if (state.victoryDisplay.some(card => original(card) === '03065b')) addVipSlain(state, '03065')
     const records = state.campaign.records
     const danielAllyEscaped = state.investigators.some(inv =>
-      inv.resigned && inv.assets.some(asset => asset.code === '03182a'))
-    const danielWasPossessed = state.enemies.some(enemy => enemy.code === '03182b')
+      inv.resigned && inv.assets.some(asset => assetRuleFor(original(asset))?.daniel))
+    const danielWasPossessed = state.enemies.some(enemy => enemyScriptFor(original(enemy))?.danielPossessed)
       || state.victoryDisplay.some(card => original(card) === '03182b')
     records.danielStatus = danielAllyEscaped ? 'survived'
       : danielWasPossessed ? 'possessed' : 'didNotSurvive'

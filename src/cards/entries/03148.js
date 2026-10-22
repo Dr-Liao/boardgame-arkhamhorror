@@ -19,6 +19,7 @@ export default {
     },
   ],
   ambushAttachment: true,
+  discardWhenNoInvestigator: true,
   modifiers: [
 
   ],

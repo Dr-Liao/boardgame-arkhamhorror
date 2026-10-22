@@ -7,6 +7,8 @@
 
 export default {
   code: '02263',
+  // 第 123 轮：升级前置记录由条目声明（原 src/campaign/campaign.js 的 researchRequirement 表）。
+  researchRequirement: 'identifiedStrangeSolution',
   uses: 3,
   usesType: 'supplies',
   abilities: [

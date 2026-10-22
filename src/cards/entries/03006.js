@@ -13,11 +13,12 @@ import { investigatorSign } from './_shared.js'
 
 const factory = () => {
     const es = investigatorSign('03006')
-    return () => ({ delta: es.bonus || 0, onSuccess: es.onSuccess })
+    return () => ({ delta: es.bonus || 0, onSuccess: es.onSuccess, onSuccessAlways: true })
   }
 
 export default {
   code: '03006',
+  flags: { backstageStart: true },
   investigator:   {
     "deckbuildingRoles": true,
     "elderSign": {

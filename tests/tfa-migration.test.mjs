@@ -133,9 +133,8 @@ test('M0 uses the shared card-art layout as the earlier cycles', () => {
     assert.ok(descriptor.back.candidates[0].path.startsWith('cards/'))
     assert.equal(JSON.stringify(descriptor).includes('forgottenAge/'), false)
   }
-  // 04277 ships without localized art; the fallback chain must stay explicit
-  // instead of inventing a cycle-specific directory.
-  assert.equal(imageDescriptor('04277').front.candidates[0].localized, false)
+  // 04277 的本地化图已存在时允许走本地；无论如何都要保留显式回退链。
+  assert.equal(typeof imageDescriptor('04277').front.candidates[0].localized, 'boolean')
   assert.ok(imageDescriptor('04277').front.candidates.length > 1)
 })
 

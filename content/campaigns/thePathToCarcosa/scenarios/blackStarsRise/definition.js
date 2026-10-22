@@ -12,22 +12,27 @@ const gathered = encounterCards(groups)
 const setAsideEncounterCodes = new Set(['03088', '03300', '03301'])
 const definitions = encounterDefinitions([...gathered, ALL_CARDS['03069b']])
 
+// 两条密谋路线都是「4 张牌 → 3 个阶段」：第一张 1、最后一张 3、中间两张同属 2。
+// 阶段号由牌库顺序决定（第 114 轮：不再按卡号分支）。
+const DECK_STAGES = [1, 2, 2, 3]
+
 export const agendaVariants = {
   tide: stages(['03275', '03276a', '03276b', '03277'], 'agenda')
-    .map(card => {
-      const stage = card.originalCode === '03275' ? 1 : card.originalCode === '03277' ? 3 : 2
+    .map((card, index) => {
+      const stage = DECK_STAGES[index] || 2
       return { ...card, id: `agenda${stage}a`, stage: `${stage}a` }
     }),
   ritual: stages(['03278', '03279a', '03279b', '03280'], 'agenda')
-    .map(card => {
-      const stage = card.originalCode === '03278' ? 1 : card.originalCode === '03280' ? 3 : 2
+    .map((card, index) => {
+      const stage = DECK_STAGES[index] || 2
       return { ...card, id: `agenda${stage}c`, stage: `${stage}c` }
     }),
 }
 
-export const actVariants = stages(['03281', '03282'], 'act').map(act => ({
+const ACT_VARIANT_IDS = ['act3Below', 'act3Above']
+export const actVariants = stages(['03281', '03282'], 'act').map((act, index) => ({
   ...act,
-  id: act.originalCode === '03281' ? 'act3Below' : 'act3Above',
+  id: ACT_VARIANT_IDS[index] || 'act3Above',
   stage: '3a',
   reveal: { type: 'campaignRule' },
 }))

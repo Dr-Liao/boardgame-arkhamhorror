@@ -11,6 +11,8 @@
 
 export default {
   code: '03009',
+  // 第 125 轮（第 8 批）：受创后公开投影翻面成 03009b（原先写死在 observation.js）。
+  observationVariant: { code: '03009b', minDamage: 5 },
   modifiers: [
     { target: 'skill:*', amount: -1, condition: { damageAtLeast: 5 } },
   ],

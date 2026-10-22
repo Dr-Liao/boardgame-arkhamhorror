@@ -14,10 +14,18 @@ export default {
   usesType: 'secrets',
   abilities: [
     {
-      kind: 'action', label: '花费 1 秘密：本回合该调查员下次检定不揭示标记',
-      cost: { action: false, uses: 1 },
-      // Phase 5（5c-12）：不再走 tfaPlayer 逃生原语。
-      resolve: ({ inv, api }) => { api.skipNextTestTokens(inv.seat) },
+      kind: 'action', label: '花费 1 行动与 1 秘密：本回合该调查员下次检定不揭示标记',
+      cost: { action: true, uses: 1 },
+      resolve: ({ inv, api }) => {
+        const candidates = api.investigatorsAt(inv.location)
+        if (!candidates.length) return
+        const seat = candidates.length === 1 ? candidates[0].seat : Number(api.choice({
+          kind: 'investigator', source: '04307', seat: inv.seat,
+          prompt: '选择本回合下次检定不揭示标记的调查员。',
+          options: candidates.map(owner => ({ id: String(owner.seat), label: owner.name })),
+        }))
+        api.skipNextTestTokens(Number.isInteger(seat) ? seat : inv.seat)
+      },
     },
     {
       kind: 'reaction', trigger: 'revelationTest', id: 'pnakoticRevelation', legacyReaction: true,

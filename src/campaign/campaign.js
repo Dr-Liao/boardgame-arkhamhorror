@@ -14,16 +14,14 @@ const tfaPoolSet = new Set(tfaPool)
 const poolFor = (record, context = null) => filterCardCodes(
   record && /^04\d{3}$/.test(String(record.code || '')) ? [...playerPool, ...tfaPool] : playerPool, context)
 const ordinary = code => playerPool.includes(code) || tfaPoolSet.has(code)
-const researchRequirement = Object.freeze({
-  '02262': 'identifiedStrangeSolution',
-  '02263': 'identifiedStrangeSolution',
-  '02264': 'identifiedStrangeSolution',
-  '03192': 'translatedGlyphs',
-  '03193': 'translatedGlyphs',
-})
+// 第 123 轮（第 8 批）：升级前置记录、开局经验、永久资产身份、同名去重全部由条目声明：
+// `researchRequirement` / `startingXp` / `shrewdAnalysis` / `arcaneResearch` / `uniqueInDeck`。
+const entryFlagOf = code => registeredEntry(code) || null
+const researchRequirementFor = code => entryFlagOf(code)?.researchRequirement || null
+// 「老练分析」「奥术研究」按身份标志在牌组里定位（不再写死卡号）。
+const deckCardWithFlag = (record, flag) => (record.deck || []).find(code => entryFlagOf(code)?.[flag] === true) || null
 
-// 个别调查员在战役开始时带有额外经验（马泰奥神父：+5）。
-const STARTING_XP = Object.freeze({ '04004': 5 })
+// 个别调查员在战役开始时带有额外经验（马泰奥神父：+5，由 04004 条目声明）。
 
 // 「老练分析」（04106）：带（未鉴定）/（未翻译）副标题的卡牌升级时，
 // 可以用 0 经验再升级一张同名副本，两张升级版本从合法选项中确定性地伪随机挑选。
@@ -32,7 +30,7 @@ const shrewdAnalysisEligible = (record, removedCode, context = null) => {
   const removedDef = ALL_CARDS[removedCode]
   if (!removedDef || !UNRESOLVED_SUBTITLE.test(String(removedDef.subnameZh || removedDef.subname || ''))) return []
   const inv = INVESTIGATORS[record.code]
-  if (!record.deck.includes('04106')) return []
+  if (!deckCardWithFlag(record, 'shrewdAnalysis')) return []
   return filterCardCodes([...playerPool, ...tfaPool], context).filter(code => {
     const def = ALL_CARDS[code]
     if (!def || def.name !== removedDef.name || (def.xp || 0) === 0) return false
@@ -65,7 +63,8 @@ export function shrewdAnalysisUpgrade(campaign, seat, removedCode, context = nul
 export function applyPermanentPurchaseEffects(campaign, seat, addedCode) {
   const record = campaign.investigators[seat]
   if (!record) return null
-  if (addedCode !== '04109') return null
+  // 第 123 轮：「奥术研究」按条目 identity 判定，不再写死 04109。
+  if (!entryFlagOf(addedCode)?.arcaneResearch) return null
   campaign.trauma ||= {}
   campaign.trauma[seat] ||= { physical: 0, mental: 0 }
   campaign.trauma[seat].mental += 1
@@ -79,7 +78,7 @@ export function applyPermanentPurchaseEffects(campaign, seat, addedCode) {
 export function refreshArcaneResearch(campaign) {
   const refreshed = []
   for (const record of Object.values(campaign.investigators || {})) {
-    if (!record.deck?.includes('04109')) continue
+    if (!deckCardWithFlag(record, 'arcaneResearch')) continue
     record.arcaneResearchDiscount = true
     refreshed.push(record.seat)
   }
@@ -88,7 +87,7 @@ export function refreshArcaneResearch(campaign) {
 
 export function registerCampaignInvestigator(campaign, inv, deck) {
   const id = `investigator-${++campaign.investigatorSeq}`
-  const startingXp = STARTING_XP[inv.code] || 0
+  const startingXp = entryFlagOf(inv.code)?.startingXp ?? 0
   const record = {
     id, seat: inv.seat, code: inv.code, name: inv.name, deck: [...deck].sort(),
     currentScenarioIndex: campaign.scenarioIndex || 0,
@@ -130,7 +129,8 @@ export function campaignCardChange(campaign, seat, code, action, reason) {
   const record = campaign.investigators[seat]
   if (!record || !ALL_CARDS[code]) throw new Error('无效的战役卡牌变更')
   if (action === 'add') {
-    if (code !== '01117' || !record.deck.includes(code)) record.deck.push(code)
+    // 第 123 轮：「丽塔·钱德勒」这类剧情资产由条目 uniqueInDeck 声明同名只保留一张。
+    if (!entryFlagOf(code)?.uniqueInDeck || !record.deck.includes(code)) record.deck.push(code)
     record.deck.sort()
   } else if (action === 'remove') {
     const index = record.deck.indexOf(code)
@@ -147,7 +147,10 @@ export function upgradeCost(added, removed) {
 // 升级优惠：记录上的通用优惠 + 「奥术研究」每场冒险后的第一张法术减 1。
 function upgradeDiscountsFor(record) {
   const discounts = [...(record.upgradeDiscounts || [])]
-  if (record.arcaneResearchDiscount) discounts.push({ amount: 1, match: { traits: ['Spell'] }, source: '04109' })
+  const arcaneCode = deckCardWithFlag(record, 'arcaneResearch')
+  if (record.arcaneResearchDiscount && arcaneCode) {
+    discounts.push({ amount: 1, match: { traits: ['Spell'] }, source: arcaneCode })
+  }
   return discounts
 }
 
@@ -156,7 +159,7 @@ export function replacementOptions(record, addedCode, campaignRecords = null, co
   const inv = INVESTIGATORS[record.code]
   if (record.status !== 'active' || !poolFor(record, context).includes(addedCode) || !isCardAvailable(addedCode)
     || !isPlayable(added) || !matchesDeckOptions(inv, added) || added.signatureFor || added.subtype) return []
-  const requiredResearch = researchRequirement[addedCode]
+  const requiredResearch = researchRequirementFor(addedCode)
   if (requiredResearch && !campaignRecords?.[requiredResearch] && !record.research?.[requiredResearch]) return []
   const invRulesSize = inv.deckRequirements?.size || 30
   const ordinaryCount = record.deck.filter(code => ordinary(code) && !ALL_CARDS[code]?.permanent).length

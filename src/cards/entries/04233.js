@@ -10,7 +10,7 @@ export default {
   code: '04233',
   abilities: [
     {
-      kind: 'played', noOpportunityAttack: true, label: '本回合每个行动换 1 资源并结束回合',
+      kind: 'played', label: '本回合每个行动换 1 资源并结束回合',
       resolve: ({ state, inv, api }) => {
         const amount = Math.max(1, inv.actionsTakenThisTurn || 1)
         api.gainResources(inv.seat, amount)

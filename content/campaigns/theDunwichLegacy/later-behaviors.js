@@ -1,5 +1,7 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
-import { chooseCandidate } from '../../choice-helpers.js'
+import { actRuleFor, agendaRuleFor, assetRuleFor, encounterResolveCampaignsFor, encounterResolveFor, enemyRuleFor, enemyScriptFor, foundCardRuleFor, locationRuleFor, threatEffectFor, treacheryRuleFor } from '../../../src/cards/card-rules.js'
+// 第 81 轮：跨卡限制统一读条目标志，不再按卡号查资产/威胁。
+const hasThreatFlag = (inv, flag) => (inv?.threat || []).some(item => threatEffectFor(original(item))?.[flag] === true)
 import { changeChaosBag } from '../../../src/engine/chaos-bag.js'
 import { campaignCardChange } from '../../../src/campaign/campaign.js'
 import { awardStoryCard } from '../../../src/campaign/campaign-effects.js'
@@ -95,7 +97,7 @@ export function laterBehavior(id) {
         state.acts[0].objective = { type: 'clues', perInvestigator: 2 }
         state.acts[2].objective = { type: 'clues', perInvestigator: 2, atLocation: L('02284') }
         state.doom = records.noBroodEscapedIntoTheWild ? 0 : records.broodEscapedIntoTheWild || 0
-        if (records.naomiHasTheInvestigatorsBacks) state.investigators[state.campaign.leadSeat].clues++
+        if (records.naomiHasTheInvestigatorsBacks) state.investigators[state.campaign.leadSeat].clues += state.numInvestigators >= 3 ? 2 : 1
       } else if (id === 'lostInTimeAndSpace') {
         state.acts[0].objective = { type: 'clues', perInvestigator: 2 }
         state.acts[2].objective = { type: 'clues', perInvestigator: 3, atLocation: L('02321') }
@@ -142,271 +144,15 @@ export function laterBehavior(id) {
     resolveChaosToken(state, inv, token, api) { return dunwichChaosToken(id, state, inv, token, api) },
     resolveEncounter(state, inv, card, api) {
       const code = original(card)
-      if (id === 'theMiskatonicMuseum' && code === '02142') {
-        const horror = state.enemies.find(enemy => enemy.code === '02141')
-        if (horror) horror.shadowSpawned = true
-        return true
+      // 第 56 轮：已条目化的诡计直接走条目；章节私有的多卡流程仍在下面按场景分支。
+      const entryResolve = encounterResolveFor(code)
+      if (entryResolve && encounterResolveCampaignsFor(code).includes('dunwich')) {
+        return entryResolve(state, inv, card, api, { location: state.locations.find(loc => loc.id === inv.location) })
       }
-      if (id === 'whereDoomAwaits' && code === '02297') {
-        const paths = state.locations.filter(loc => !loc.traits?.includes('Sentinel Hill'))
-        const hills = state.locations.filter(loc => loc.traits?.includes('Sentinel Hill'))
-        for (const loc of paths) {
-          loc.revealed = false; loc.clues = 0
-          const distance = target => {
-            const queue = [[loc.id, 0]], seen = new Set([loc.id])
-            for (const [next, n] of queue) {
-              if (next === target) return n
-              for (const neighbor of state.locations.find(item => item.id === next)?.connections || [])
-                if (!seen.has(neighbor)) { seen.add(neighbor); queue.push([neighbor, n + 1]) }
-            }
-            return Infinity
-          }
-          const minimum = Math.min(...hills.map(hill => distance(hill.id)))
-          const nearest = hills.filter(hill => distance(hill.id) === minimum)
-          const choose = seat => nearest.length === 1 ? nearest[0].id : api.choose({ kind: 'location', source: code, seat,
-            prompt: '选择最近的哨兵山地点。', options: nearest.map(hill => ({ id: hill.id, label: hill.name })) })
-          for (const target of active(state).filter(item => item.location === loc.id)) api.moveInvestigator(target.seat, choose(target.seat))
-          for (const enemy of state.enemies.filter(item => item.location === loc.id)) api.moveEnemy(enemy, choose(state.campaign.leadSeat))
-        }
-        // The physical card backs still distinguish Diverging Paths from
-        // Altered Paths. Shuffle identities only within each matching back.
-        const pathGroups = [
-          [new Set(['02285', '02286', '02287', '02288']), '02285'],
-          [new Set(['02289', '02290', '02291', '02292']), '02289'],
-        ]
-        const classified = new Set(pathGroups.flatMap(([codes]) => [...codes]))
-        pathGroups.push([null, null])
-        for (const [codes, artCode] of pathGroups) {
-          const group = paths.filter(loc => codes ? codes.has(original(loc)) : !classified.has(original(loc)))
-          const shuffled = group.map(loc => structuredClone(loc))
-          for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(api.random() * (i + 1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-          }
-          group.forEach((loc, i) => {
-            const slot = { id: loc.id, connections: loc.connections }
-            for (const key of Object.keys(loc)) delete loc[key]
-            Object.assign(loc, shuffled[i], slot)
-            loc.hiddenIdentity = true
-            if (artCode) loc.artCode = artCode
-            loc.unrevealedActualName = loc.name; loc.name = '未知小径'
-            state.locationVariants[loc.id] = { ...structuredClone(loc) }
-          })
-        }
-        return false
-      }
-      if (['bloodOnTheAltar', 'undimensionedAndUnseen'].includes(id) && code === '02089') {
-        const loc = state.locations.find(item => item.id === inv.location)
-        loc.sordidAndSilent = (loc.sordidAndSilent || 0) + 1
-        return true
-      }
-      if (id === 'theMiskatonicMuseum') {
-        const horror = state.enemies.find(enemy => enemy.code === '02141')
-        if (code === '02143') {
-          if (!horror) api.drawEncounter(inv.seat)
-          else {
-            horror.exhausted = false
-            // The printed ability readies and engages the Horror only where it
-            // already is; it does not teleport across the museum.
-            if (horror.location === inv.location) {
-              api.engage(horror, inv.seat)
-              for (const target of active(state).filter(other => other.location === inv.location)) api.attack(horror, target)
-            }
-          }
-          return false
-        }
-        if (code === '02145') {
-          api.test(inv.seat, 'intellect', 3, result => {
-            if (!result.success) inv.actionsLeft = Math.max(0, inv.actionsLeft - Math.max(0, 3 - result.value))
-          })
-          return false
-        }
-        if (code === '02144') {
-          api.test(inv.seat, 'willpower', 3 + (horror?.location === inv.location ? 2 : 0), result => {
-            if (result.success) return
-            const choice = api.choose({ kind: 'encounter', source: code, seat: inv.seat,
-              prompt: '通往异界的道路：弃掉牌库顶 5 张，或受到 1 点直接伤害并使每位盟友受到 1 点伤害。',
-              options: [{ id: 'mill', label: '弃掉牌库顶 5 张' }, { id: 'damage', label: '承受直接伤害并伤害盟友' }] })
-            if (choice === 'mill') api.discardTop(inv.seat, 5)
-            else {
-              api.directDamage(inv.seat, 1)
-              for (const ally of [...inv.assets].filter(asset => (ALL_CARDS[asset.code]?.traits || [])
-                .some(trait => String(trait).toLowerCase() === 'ally'))) {
-                api.damageAsset(inv.seat, ally.id, 1)
-              }
-            }
-          })
-          return false
-        }
-        if (code === '02146') {
-          if (horror) horror.doom = (horror.doom || 0) + 1
-          else {
-            const spawned = summonHorror(state, inv.location, api)
-            api.engage(spawned, inv.seat)
-          }
-          api.shuffleEncounterDeck()
-          return false
-        }
-      }
-      if (id === 'bloodOnTheAltar') {
-        if (code === '02220') {
-          const skill = api.choose({ kind: 'skill', source: code, seat: inv.seat, prompt: '绑架：选择意志或敏捷进行检定（4）。',
-            options: [{ id: 'willpower', label: '意志' }, { id: 'agility', label: '敏捷' }] })
-          api.test(inv.seat, skill, 4, result => {
-            if (result.success) { state.encounterDiscard.push(code); return }
-            const allies = inv.assets.filter(asset => ALL_CARDS[asset.code]?.traits?.includes('Ally'))
-            if (!allies.length) { api.damage(inv.seat, 2); state.encounterDiscard.push(code); return }
-            const chosen = api.choose({ kind: 'target', source: code, seat: inv.seat, prompt: '选择被绑架的盟友。',
-              options: allies.map(asset => ({ id: asset.id, label: ALL_CARDS[asset.code]?.nameZh || asset.code })) })
-            state.scenarioZones.sacrifices.push(api.removeAsset(inv.seat, chosen))
-            state.scenarioFlags.kidnapped = (state.scenarioFlags.kidnapped || 0) + 1
-          })
-          return true
-        }
-        if (code === '02221') {
-          const candidates = active(state)
-          const seat = candidates.length === 1 ? String(candidates[0].seat) : api.choose({
-            kind: 'investigator', source: code, seat: inv.seat, prompt: '选择承受灵魂之歌的调查员。',
-            options: candidates.map(target => ({ id: String(target.seat), label: target.name })),
-          })
-          const chosen = candidates.find(target => String(target.seat) === seat)
-          if (!chosen) throw new Error('必须选择一名调查员')
-          api.threat(chosen.seat, code)
-          api.drawEncounter(inv.seat)
-          return { placed: true, surgeHandled: true }
-        }
-        if (code === '02222') {
-          api.test(inv.seat, 'intellect', 3, result => {
-            if (!result.success) {
-              const loc = state.locations.find(item => item.id === inv.location)
-              if (loc) loc.clues += state.numInvestigators >= 3 ? 2 : 1
-            }
-          })
-          return false
-        }
-        if (code === '02223') {
-          api.test(inv.seat, 'willpower', 3, result => {
-            if (!result.success) api.horror(inv.seat, Math.max(0, 3 - result.value))
-          })
-          return false
-        }
-      }
-      if (id === 'theEssexCountyExpress' && code === '02178') {
-        api.discardTop(inv.seat, 3)
-        return false
-      }
-      if (id === 'theEssexCountyExpress' && code === '02180') {
-        api.test(inv.seat, 'willpower', 3, result => {
-          if (!result.success) { inv.steamImmobileRound = state.round; api.assetsFirstDamage(inv.seat, 2) }
-        })
-        return false
-      }
-      if (id === 'theEssexCountyExpress' && code === '02181') {
-        for (const target of active(state).filter(other => other.location === inv.location)) {
-          target.actionsLeft = Math.max(0, target.actionsLeft - 1)
-          if (target.damage >= 4 && target.assets.length) {
-            const choice = api.choose({ kind: 'target', source: code, seat: target.seat,
-              prompt: '铁轨断裂：选择弃掉一张你控制的支援。',
-              options: target.assets.map(asset => ({ id: asset.id, label: ALL_CARDS[asset.code]?.nameZh || asset.code })) })
-            api.discardAsset(target.seat, choice)
-          }
-        }
-        return false
-      }
-      if (id === 'whereDoomAwaits' && code === '02296') {
-        for (const target of active(state)) api.discardTop(target.seat, 3)
-        for (const target of active(state).filter(other => state.locations.find(loc => loc.id === other.location)
-          ?.traits?.some(trait => trait.toLowerCase() === 'altered'))) {
-          const weaknesses = target.discard.filter(item => ['weakness', 'basicweakness'].includes(ALL_CARDS[item]?.subtype))
-          target.discard = target.discard.filter(item => !weaknesses.includes(item))
-          target.deck.push(...weaknesses)
-          for (let i = target.deck.length - 1; i > 0; i--) {
-            const j = Math.floor(api.random() * (i + 1))
-            ;[target.deck[i], target.deck[j]] = [target.deck[j], target.deck[i]]
-          }
-        }
-        return false
-      }
-      if (id === 'whereDoomAwaits' && code === '02298') {
-        for (const target of active(state).filter(other => state.locations.find(loc => loc.id === other.location)
-          ?.traits?.some(trait => trait.toLowerCase() === 'sentinel hill'))) {
-          api.test(target.seat, 'willpower', 4, result => { if (!result.success) api.damage(target.seat, 2) })
-        }
-        return false
-      }
-      if (id === 'lostInTimeAndSpace' && code === '02331') {
-        const loc = state.locations.find(item => item.id === inv.location)
-        if (loc?.traits?.some(trait => trait.toLowerCase() === 'extradimensional')) {
-          discardEncounterLocation(state, loc, api)
-          api.damage(inv.seat, 1)
-        } else api.damage(inv.seat, 2)
-        return false
-      }
-      if (id === 'lostInTimeAndSpace' && code === '02332') {
-        const loc = this.drawEncounterLocation(state, inv.seat, api)
-        if (loc) { api.moveInvestigator(inv.seat, loc.id); this.investigatorMovedByEncounterCard(state, inv, api) }
-        return false
-      }
-      if (id === 'lostInTimeAndSpace' && code === '02333') {
-        const count = state.locations.filter(loc => loc.traits?.some(trait => trait.toLowerCase() === 'extradimensional')).length
-        if (!count) api.drawEncounter(inv.seat)
-        else api.test(inv.seat, 'willpower', Math.min(5, count), result => {
-          if (!result.success) api.horror(inv.seat, Math.max(0, Math.min(5, count) - result.value))
-        })
-        return false
-      }
-      if (id !== 'undimensionedAndUnseen' || !['02256', '02257', '02258', '02259'].includes(code))
-        return encounterRules.resolveEncounter(state, inv, card, api)
-      const brood = state.enemies.filter(enemy => enemy.code === '02255')
-      if (code === '02256') {
-        if (!brood.length) return false
-        const enemyId = brood.length === 1 ? brood[0].id : api.choose({
-          kind: 'target', source: code, seat: inv.seat, prompt: '选择一只子嗣附属「高耸的野兽」。',
-          options: brood.map(enemy => ({ id: enemy.id, label: `${enemy.name}（${state.locations.find(loc => loc.id === enemy.location)?.name || enemy.location}）` })),
-        })
-        const chosen = brood.find(enemy => enemy.id === enemyId)
-        if (!chosen) throw new Error('必须选择一只在场的子嗣')
-        chosen.toweringBeasts = (chosen.toweringBeasts || 0) + 1
-        chosen.health += 1
-        chosen.attachedTreacheries = [...(chosen.attachedTreacheries || []), code]
-        if (chosen.location === inv.location) api.damage(inv.seat, 1)
-        return true
-      }
-      if (code === '02257') {
-        const exposed = active(state).filter(target => brood.some(enemy => enemy.location === target.location))
-        if (!exposed.length) api.drawEncounter(inv.seat)
-        else for (const target of exposed) api.test(target.seat, 'agility', 3, result => {
-          if (!result.success) api.damage(target.seat, Math.max(0, 3 - result.value))
-        })
-      } else if (code === '02258') {
-        const pending = [...brood]
-        while (pending.length) {
-          const enemyId = pending.length === 1 ? pending[0].id : api.choose({
-            kind: 'target', source: code, seat: inv.seat, prompt: '选择下一只朝你移动的子嗣。',
-            options: pending.map(enemy => ({ id: enemy.id, label: `${enemy.name}（${state.locations.find(loc => loc.id === enemy.location)?.name || enemy.location}）` })),
-          })
-          const chosen = pending.find(enemy => enemy.id === enemyId)
-          if (!chosen) throw new Error('必须选择一只待移动的子嗣')
-          moveBroodToward(state, chosen, inv.location, api)
-          pending.splice(pending.indexOf(chosen), 1)
-        }
-        api.drawEncounter(inv.seat)
-        return { placed: false, surgeHandled: true }
-      } else {
-        const options = [{ id: 'horror', label: '受到 2 点恐惧' }]
-        if (state.scenarioZones.brood.remaining > 0) options.push({ id: 'spawn', label: '在随机地点生成一只备用子嗣' })
-        const choice = api.choose({ kind: 'encounter', source: code, seat: inv.seat,
-          prompt: '生物的踪迹：受到 2 点恐惧，或生成一只备用子嗣。', options })
-        if (choice === 'horror') api.horror(inv.seat, 2)
-        else {
-          const locations = state.locations
-          const location = chooseBroodRandomLocation(state, api)
-          state.scenarioZones.brood.remaining--
-          state.scenarioZones.setAside.splice(state.scenarioZones.setAside.indexOf('02255'), 1)
-          const enemy = api.spawn('02255', location.id)
-          if (enemy) enemy.health = 1 + state.numInvestigators
-        }
-      }
-      return false
+      // 第 77 轮：02178 已条目化；未迁移的遭遇统一走共享解析器。
+      // 第 63 轮：02332 已条目化；未迁移的遭遇统一走共享解析器。
+      // 第 61 轮：02258/02259 已条目化；未迁移的遭遇统一走共享解析器。
+      return encounterRules.resolveEncounter(state, inv, card, api)
     },
     afterDeckSetup(state, events, api) {
       if (id === 'bloodOnTheAltar') {
@@ -420,138 +166,45 @@ export function laterBehavior(id) {
       if (id === 'theEssexCountyExpress') changeChaosBag(state, { easy: '-2', standard: '-3', hard: '-4', expert: '-5' }[state.difficulty], 1, { permanent: true })
       if (id === 'whereDoomAwaits') changeChaosBag(state, { easy: '-3', standard: '-5', hard: '-6', expert: '-7' }[state.difficulty], 1, { permanent: true })
     },
-    locationRevealed(state, location, api) {
-      if (id === 'theEssexCountyExpress') {
-        const code = original(location), investigator = active(state).find(inv => inv.location === location.id)
-        if (['02173', '02176'].includes(code) && investigator) {
-          for (const pile of [state.encounterDeck, state.encounterDiscard]) {
-            const index = pile.indexOf('02182')
-            if (index >= 0) { pile.splice(index, 1); state.encounterDeck.push('02182'); api.drawEncounter(investigator.seat); break }
-          }
-          api.shuffleEncounterDeck()
-        }
-        if (code === '02177' && investigator) for (let i = 0; i < 3; i++) api.drawEncounter(investigator.seat)
-      }
-      if (id === 'whereDoomAwaits') {
-        const code = original(location), lead = active(state).find(inv => inv.location === location.id)
-          || state.investigators[state.campaign.leadSeat]
-        if (code === '02287') location.doom = (location.doom || 0) + state.numInvestigators
-        if (code === '02289') {
-          while (state.encounterDeck.length) {
-            const drawn = state.encounterDeck.pop()
-            if (state.scenario.enemies[drawn]) { api.spawn(drawn, location.id); break }
-            state.encounterDiscard.push(drawn)
-          }
-        }
-        if (lead && ['02285', '02286', '02288', '02290', '02291', '02292'].includes(code)) {
-          if (code === '02288') api.endTurn(lead.seat)
-          if (code === '02285' && !lead.actionsLeft) api.horror(lead.seat, 2)
-          if (code === '02286') api.discardTop(lead.seat, 2 * lead.actionsLeft)
-          if (code === '02290' && !lead.actionsLeft) api.damage(lead.seat, 2)
-          if (code === '02291' && !lead.actionsLeft) api.discardTop(lead.seat, 5)
-          if (code === '02292') api.horror(lead.seat, lead.actionsLeft)
-        }
-      }
-      if (id !== 'bloodOnTheAltar') return
-      const trait = ({ '02208': 'Humanoid', '02211': 'Nightgaunt' })[original(location)]
-      if (!trait) return
-      const matches = []
-      for (const [pileName, pile] of [['encounterDeck', state.encounterDeck], ['encounterDiscard', state.encounterDiscard]]) {
-        pile.forEach((code, index) => {
-          if ((state.scenario.enemies[code]?.traits || []).some(item => item.toLowerCase() === trait.toLowerCase())) {
-            matches.push({ code, index, pileName })
-          }
-        })
-      }
-      if (!matches.length) return
-      const chosen = chooseCandidate(api, {
-        kind: 'card', source: original(location), seat: state.currentSeat ?? state.campaign.leadSeat,
-        prompt: `选择要生成在村公所的 ${trait} 敌人。`,
-      }, matches, {
-        key: match => `${match.pileName}:${match.index}`, cardCode: match => match.code,
-        label: match => `${ALL_CARDS[match.code]?.nameZh || match.code}（${match.pileName === 'encounterDeck' ? '遭遇牌库' : '遭遇弃牌堆'}）`,
-      })
-      const pile = chosen.pileName === 'encounterDeck' ? state.encounterDeck : state.encounterDiscard
-      pile.splice(chosen.index, 1)
-      api.spawn(chosen.code, L('02201'))
-      api.shuffleEncounterDeck()
-    },
     locationEntered(state, inv, loc, api, companions = []) {
       if (!loc) return
       encounterRules.locationEntered(state, inv, loc, api, companions)
-      const code = original(loc)
-      if (id === 'theMiskatonicMuseum') {
-        if (code === '02132') api.endTurn(inv.seat)
-        if (code === '02134') api.discardRandom(inv.seat, 2)
-      }
-      if (id === 'theEssexCountyExpress' && code >= '02167' && code <= '02171') {
-        const skill = ({ '02167': 'agility', '02168': 'combat', '02169': 'willpower', '02170': 'intellect', '02171': 'wild' })[code]
-        const needed = code === '02171' ? 1 : 2, options = []
-        for (let mask = 1; mask < 2 ** inv.hand.length; mask++) {
-          const indices = inv.hand.map((_, i) => i).filter(i => mask & (1 << i))
-          const value = indices.reduce((sum, i) => sum + (ALL_CARDS[inv.hand[i]]?.icons?.[skill] || 0)
-            + (skill === 'wild' ? 0 : ALL_CARDS[inv.hand[i]]?.icons?.wild || 0), 0)
-          if (value < needed || indices.some(i => value - (ALL_CARDS[inv.hand[i]]?.icons?.[skill] || 0)
-            - (skill === 'wild' ? 0 : ALL_CARDS[inv.hand[i]]?.icons?.wild || 0) >= needed)) continue
-          options.push({ id: indices.join(','), label: `弃牌：${indices.map(i => ALL_CARDS[inv.hand[i]]?.nameZh || inv.hand[i]).join('、')}` })
-        }
-        const answer = api.choose({ kind: 'location', source: code, seat: inv.seat,
-          prompt: `旅客车厢：弃掉合计至少 ${needed} 个指定图标，或受到伤害／恐惧。`,
-          options: [{ id: 'harm', label: code === '02171' ? '受到 1 伤害与 1 恐惧' : ['02169', '02170'].includes(code) ? '受到 2 恐惧' : '受到 2 伤害' }, ...options] })
-        if (answer === 'harm') {
-          if (['02167', '02168', '02171'].includes(code)) api.damage(inv.seat, code === '02171' ? 1 : 2)
-          if (['02169', '02170', '02171'].includes(code)) api.horror(inv.seat, code === '02171' ? 1 : 2)
-        } else for (const index of answer.split(',').map(Number).sort((a, b) => b - a)) inv.discard.push(inv.hand.splice(index, 1)[0])
-      }
+      // 第 68 轮：旅客车厢 02167–02171 的进入规则在地点条目的 onEnter.effect。
     },
     encounterDrawn(state, inv, code, api) {
       encounterRules.encounterDrawn(state, inv, code, api)
       if (id === 'whereDoomAwaits' && original(state.locations.find(loc => loc.id === inv.location)) === '02284'
         && ALL_CARDS[code]?.traits?.some(trait => trait.toLowerCase() === 'hex')) api.damage(inv.seat, 1)
     },
-    locationLeaveTest(state, inv, loc) {
-      return id === 'lostInTimeAndSpace' && original(loc) === '02327'
-        ? { skill: 'willpower', difficulty: 2 } : null
-    },
-    locationLeaveFailed(state, inv, loc, api) {
-      if (id !== 'lostInTimeAndSpace' || original(loc) !== '02327') return
-      discardEncounterLocation(state, loc, api, true)
-    },
-    locationLeft(state, inv, loc, api) {
-      if (id !== 'lostInTimeAndSpace' || original(loc) !== '02326') return
-      const choice = api.choose({ kind: 'location', source: '02326', seat: inv.seat,
-        prompt: '离开无尽之桥：放置 1 个毁灭，或弃掉它？',
-        options: [{ id: 'doom', label: '放置 1 个毁灭' }, { id: 'discard', label: '弃掉无尽之桥' }] })
-      if (choice === 'doom') loc.doom = (loc.doom || 0) + 1
-      else discardEncounterLocation(state, loc, api)
-    },
     skipUpkeepDraw(state, inv) {
       return id === 'lostInTimeAndSpace' && original(state.locations.find(loc => loc.id === inv.location)) === '02321'
     },
     canGainResources(state, inv) {
       if (!encounterRules.canGainResources(state, inv)) return false
+      // 第 72 轮：02126/02206 的「不能获得资源」在地点条目声明。
       const code = original(state.locations.find(loc => loc.id === inv.location))
-      return !((id === 'theMiskatonicMuseum' && code === '02126')
-        || (id === 'bloodOnTheAltar' && code === '02206'))
+      return locationRuleFor(code)?.canGainResources !== false
     },
     enemyStatModifier(state, enemy, stat) {
       const loc = state.locations.find(item => item.id === enemy.location), code = original(loc)
-      if (stat === 'fight' && enemy.code === '02255') return (enemy.toweringBeasts || 0) + Number(state.agendaIndex === 2)
-      if (stat === 'evade' && id === 'bloodOnTheAltar' && code === '02204') return 1
-      if (stat === 'evade' && id === 'undimensionedAndUnseen' && ['02244', '02245'].includes(code)) return -1
-      if (id === 'undimensionedAndUnseen' && state.agendaIndex === 2 && enemy.traits?.some(t => t.toLowerCase() === 'abomination')) return 1
-      return 0
+      // 第 66 轮：敌人脚本的 statModifier 与当前地点的 enemyEvadeModifier 走条目声明。
+      const scriptModifier = enemyScriptFor(original(enemy))?.statModifier?.(state, enemy, stat)
+      const locationModifier = locationRuleFor(code)?.enemyEvadeModifier
+      // 多个来源要相加，不能提前 return 把后续修正吞掉（02239 +1 与 02244/02245 -1）。
+      let total = scriptModifier || 0
+      if (stat === 'evade' && locationModifier) total += locationModifier
+      if (id === 'undimensionedAndUnseen' && state.agendaIndex === 2 && enemy.traits?.some(t => t.toLowerCase() === 'abomination')) total += 1
+      return total
     },
     enemyAttackModifier(state, enemy) {
       return id === 'bloodOnTheAltar' && original(state.locations.find(loc => loc.id === enemy.location)) === '02202'
         ? { horror: 1 } : null
     },
     canEvadeEnemy(state, inv, enemy) {
-      return !(id === 'lostInTimeAndSpace' && enemy.code === '02323')
+      return enemyRuleFor(original(enemy))?.cannotEvade !== true
     },
     canOpportunityAttack(state, enemy) {
-      return !((id === 'bloodOnTheAltar' && enemy.code === '02216')
-        || (id === 'lostInTimeAndSpace' && enemy.code === '02323'))
+      return enemyRuleFor(original(enemy))?.cannotOpportunityAttack !== true
     },
     beforeEnemyHarm(state, enemy, inv, harm, api) {
       if (id !== 'lostInTimeAndSpace' || enemy.code !== '02323' || harm.horror <= 0) return null
@@ -571,21 +224,21 @@ export function laterBehavior(id) {
     beforeHarm(state, inv, harm) {
       harm = encounterRules.beforeHarm(state, inv, harm)
       if (id !== 'bloodOnTheAltar' || harm.damage <= 0) return harm
-      const song = inv.threat.find(item => item.code === '02221')
+      const song = inv.threat.find(item => treacheryRuleFor(original(item))?.song)
       if (!song) return harm
       inv.threat.splice(inv.threat.indexOf(song), 1)
       state.encounterDiscard.push(song.code)
       return { ...harm, damage: harm.damage + 2 }
     },
     enemyAttackResolved(state, enemy, inv) {
+      // 第 75 轮：02295 的「击败调查员即死亡」在 enemyScript.onAttackResolved。
       encounterRules.enemyAttackResolved(state, enemy, inv)
-      if (id === 'whereDoomAwaits' && enemy.code === '02295' && inv.defeated)
-        state.campaign.investigators[inv.seat].status = 'killed'
     },
     turnEnded(state, inv, api) {
-      encounterRules.turnEnded(state, inv, api)
-      if (id === 'undimensionedAndUnseen'
-        && state.locations.find(loc => loc.id === inv.location)?.originalCode === '02249') api.damage(inv.seat, 1)
+      encounterRules.turnEnded?.(state, inv, api)
+      // 第 82 轮：02249 的回合结束伤害在地点条目 turnEndDamage。
+      const turnEndDamage = locationRuleFor(original(state.locations.find(loc => loc.id === inv.location)))?.turnEndDamage
+      if (turnEndDamage) api.damage(inv.seat, turnEndDamage)
       if (id === 'lostInTimeAndSpace' && original(state.locations.find(loc => loc.id === inv.location)) === '02328') {
         const loc = state.locations.find(item => item.id === inv.location)
         const options = [{ id: 'shuffle', label: '将次元门洗入遭遇牌库' }]
@@ -597,12 +250,12 @@ export function laterBehavior(id) {
       }
     },
     statModifier(state, inv, skill) {
-      const alliesBlank = inv.threat.some(item => item.code === '02088')
+      const alliesBlank = hasThreatFlag(inv, 'blanksAllies')
       let bonus = encounterRules.statModifier(state, inv, skill)
       if (id === 'theMiskatonicMuseum') {
         const loc = state.locations.find(item => item.id === inv.location)
         if (skill === 'agility' && original(loc) === '02132') bonus += 2
-        if (!alliesBlank && state.skillTest?.source?.label === '调查' && skill === 'intellect' && inv.assets.some(asset => asset.code === '02138')
+        if (!alliesBlank && state.skillTest?.source?.label === '调查' && skill === 'intellect' && inv.assets.some(asset => assetRuleFor(original(asset))?.intellectClueAssist)
           && loc?.traits?.some(trait => trait.toLowerCase() === 'miskatonic')) bonus += 2
       }
       if (id === 'undimensionedAndUnseen' && skill === 'willpower'
@@ -610,7 +263,8 @@ export function laterBehavior(id) {
       return bonus
     },
     enemyPhaseEnd(state, api) {
-      if (id === 'whereDoomAwaits') for (const enemy of [...state.enemies].filter(item => item.code === '02294')) {
+      // 第 82 轮：02294 的「到达山顶移除并加毁灭」在 enemyRule.alteredHerald。
+      for (const enemy of [...state.enemies].filter(item => enemyRuleFor(original(item))?.alteredHerald)) {
         if (enemy.location === L('02284')) {
           state.enemies.splice(state.enemies.indexOf(enemy), 1)
           state.encounterDiscard.push(enemy.code)
@@ -618,7 +272,7 @@ export function laterBehavior(id) {
         } else moveBroodToward(state, enemy, L('02284'), api)
       }
       if (id !== 'undimensionedAndUnseen' || state.agendaIndex > 2) return
-      for (const enemy of state.enemies.filter(item => item.code === '02255')) {
+      for (const enemy of state.enemies.filter(item => enemyRuleFor(original(item))?.brood)) {
         const destinations = state.locations
         if (!destinations.length) continue
         const target = chooseBroodRandomLocation(state, api)
@@ -627,7 +281,7 @@ export function laterBehavior(id) {
     },
     enemyPhaseStart(state, api) {
       if (id !== 'theMiskatonicMuseum') return
-      const horror = state.enemies.find(enemy => enemy.code === '02141')
+      const horror = state.enemies.find(enemy => enemyRuleFor(original(enemy))?.huntingHorror)
       if (horror && ['skull', 'cultist', 'tablet', 'elderthing', 'autofail'].includes(api.revealToken())) horror.exhausted = false
     },
     roundEnded(state, api) {
@@ -644,7 +298,7 @@ export function laterBehavior(id) {
         else discardEncounterLocation(state, loc, api)
       }
       if (id !== 'undimensionedAndUnseen') return
-      for (const enemy of state.enemies.filter(item => item.code === '02255' && item.rainClues)) {
+      for (const enemy of state.enemies.filter(item => enemyRuleFor(original(item))?.brood && item.rainClues)) {
         enemy.clues = Math.max(0, (enemy.clues || 0) - enemy.rainClues)
         delete enemy.rainClues
       }
@@ -682,33 +336,26 @@ export function laterBehavior(id) {
       encounterRules.afterTest(state, inv, result)
       dunwichChaosAfterTest(id, state, inv, result, api)
       if (result.success && result.skill === 'willpower'
-        && !inv.threat.some(item => item.code === '02088') && result.source?.type === 'encounter' && state.scenario.treacheries[result.source.code]) {
-        const ally = inv.assets.find(asset => asset.code === '02217' && !asset.exhausted)
+        && !hasThreatFlag(inv, 'blanksAllies') && result.source?.type === 'encounter'
+        && (state.scenario.treacheries[result.source.code]
+          || Object.values(state.scenario.treacheries || {}).some(card =>
+            (card.originalCode || card.code) === result.source.code))) {
+        const ally = inv.assets.find(asset => assetRuleFor(original(asset))?.cancelEncounterReaction && !asset.exhausted)
         if (ally && api.choose({ kind: 'reaction', source: '02217', seat: inv.seat, canSkip: true,
           prompt: '横置泽布伦·沃特雷，抽 1 张牌？',
           options: [{ id: 'yes', label: '横置并抽牌' }, { id: 'no', label: '不触发' }] }) === 'yes') {
           ally.exhausted = true; api.drawCards(inv.seat, 1)
         }
       }
-      if (id === 'theMiskatonicMuseum' && !result.success && result.source?.label === '调查') {
-        const code = original(state.locations.find(loc => loc.id === inv.location))
-        if (code === '02133' && inv.assets.length) {
-          const choice = api.choose({ kind: 'target', source: code, seat: inv.seat,
-            prompt: '选择弃掉一张受你控制的支援卡。', options: inv.assets.map(asset => ({ id: asset.id, label: asset.name || ALL_CARDS[asset.code]?.nameZh || asset.code })) })
-          api.discardAsset(inv.seat, choice)
-        }
-        if (code === '02135') inv.actionsLeft = Math.max(0, inv.actionsLeft - 1)
-        if (code === '02136') api.horror(inv.seat, 1)
-      }
-      if (id === 'bloodOnTheAltar' && !result.success && result.source?.label === '调查'
-        && state.locations.find(loc => loc.id === inv.location)?.originalCode === '02205') {
+      if (!result.success && result.source?.label === '调查') {
+        // 第 82 轮：02205 的「调查失败把线索转成毁灭」在地点条目 onInvestigateFail。
         const loc = state.locations.find(item => item.id === inv.location)
-        if (loc.clues > 0) { loc.clues--; loc.doom = (loc.doom || 0) + 1 }
+        locationRuleFor(original(loc))?.onInvestigateFail?.(state, inv, loc)
       }
     },
     afterEvade(state, inv, enemy, result, api) {
-      if (inv.threat.some(item => item.code === '02088')) return
-      const ally = inv.assets.find(asset => asset.code === '02218' && !asset.exhausted)
+      if (hasThreatFlag(inv, 'blanksAllies')) return
+      const ally = inv.assets.find(asset => assetRuleFor(original(asset))?.cancelTreacheryReaction && !asset.exhausted)
       if (ally && api.choose({ kind: 'reaction', source: '02218', seat: inv.seat, canSkip: true,
         prompt: '横置厄尔·索耶，抽 1 张牌？',
         options: [{ id: 'yes', label: '横置并抽牌' }, { id: 'no', label: '不触发' }] }) === 'yes') {
@@ -716,108 +363,26 @@ export function laterBehavior(id) {
       }
     },
     agendaReveal(state, agenda, api) {
-      const code = original(agenda), zones = state.scenarioZones
-      if (['02119', '02120'].includes(code)) {
-        const enemy = state.enemies.find(e => e.code === '02141')
-        if (enemy) enemy.doom++
-        else summonHorror(state, L('02127'), api)
-        api.shuffleDiscard()
-      } else if (code === '02121') {
-        for (const inv of active(state)) api.defeat(inv, 'damage')
-        api.finish('noResolution')
-      } else if (['02160', '02161', '02162', '02163'].includes(code)) {
-        const count = ['02162', '02163'].includes(code) ? 2 : 1
-        for (const loc of zones.train.splice(0, count)) api.devourLocation(loc)
-        for (const inv of active(state)) inv.clues = 0
-        state.clues = 0
-      } else if (code === '02164') {
-        for (const inv of active(state)) api.defeat(inv, 'horror')
-        api.finish('r2')
-      } else if (['02196', '02197'].includes(code)) {
-        const needed = code === '02196' ? 3 : 2
-        if (zones.sacrifices.length >= needed) {
-          const index = Math.floor(api.random() * zones.sacrifices.length)
-          zones.sacrificed.push(zones.sacrifices.splice(index, 1)[0])
-        }
-      } else if (code === '02198') {
-        for (const inv of active(state)) inv.resigned = true
-        api.finish('noResolution')
-      } else if (['02237', '02238'].includes(code)) {
-        api.shuffleDiscard()
-        if (zones.brood.remaining) {
-          zones.brood.remaining--
-          zones.setAside.splice(zones.setAside.indexOf('02255'), 1)
-          const lead = state.investigators[state.campaign.leadSeat]
-          const loc = code === '02237' ? chooseBroodRandomLocation(state, api).id : lead.location
-          const enemy = api.spawn('02255', loc)
-          enemy.health = 1 + state.numInvestigators
-          if (code === '02238') for (const inv of active(state).filter(i => i.location === loc)) {
-            api.test(inv.seat, 'agility', 4, r => { if (!r.success) api.attack(enemy, inv) })
-          }
-        }
-      } else if (code === '02239') api.finish('r1')
-      else if (code === '02275') api.shuffleDiscard()
-      else if (code === '02276') api.finish('r2')
-      else if (['02312', '02313'].includes(code)) {
-        api.shuffleDiscard()
-        api.drawEncounterLocation(state.campaign.leadSeat)
-        if (code === '02312' && state.campaign.records.theInvestigatorsFailedToSaveTheStudents) {
-          for (const inv of active(state)) api.horror(inv.seat, 1)
-        }
-        if (code === '02313') for (const inv of active(state)) {
-          const n = (state.campaign.records.sacrificedToYogSothoth || []).length
-          if (n) api.test(inv.seat, 'willpower', n, r => { if (!r.success) api.damage(inv.seat, Math.max(0, n - r.value)) })
-        }
-      } else if (code === '02314') {
-        const enemy = api.spawn('02323', state.locations.some(l => l.id === L('02321')) ? L('02321') : L('02320'))
-        enemy.health = 4 + 6 * state.numInvestigators
-      } else if (code === '02315') {
-        const enemy = state.enemies.find(e => e.code === '02323')
-        if (enemy) for (const inv of active(state)) api.attack(enemy, inv)
-        state.agendas[state.agendaIndex] = { ...agenda } // Replacing the card keeps 4a in play.
-      } else throw new Error(`未迁移的密谋：${code}`)
+      // 第 64 轮：全部密谋规则已条目化，这里只做注册表分派。
+      const entry = agendaRuleFor(original(agenda))
+      if (entry?.onReveal) return entry.onReveal(state, agenda, api)
     },
     enemyDefeated(state, enemy, api) {
       encounterRules.enemyDefeated(state, enemy, api)
       if (enemy.attachedTreacheries?.length) state.encounterDiscard.push(...enemy.attachedTreacheries)
-      if (enemy.code === '02224') {
-        const locations = state.locations.filter(loc => loc.clues > 0)
-        if (locations.length) {
-          const seat = enemy.defeatedBy ?? state.campaign.leadSeat
-          const chosen = api.choose({ kind: 'location', source: '02224', seat,
-            prompt: '（可选）选择任意一个有线索的地点，发现 1 个线索。',
-            options: [{ id: 'skip', label: '不发现线索' }, ...locations.map(loc => ({ id: loc.id, label: loc.name }))] })
-          if (chosen !== 'skip') {
-            const loc = locations.find(item => item.id === chosen)
-            if (loc) { loc.clues--; api.gainClues(seat, 1) }
-          }
-        }
-      }
-      if (id === 'lostInTimeAndSpace' && enemy.code === '02323' && original(state.agendas[state.agendaIndex] || {}) === '02315') api.finish('r3')
-      if (enemy.code !== '02141') return false
-      state.scenarioZones.void = { code: enemy.code, resources: enemy.shadowResources || 0 }
-      return true // Replacement for discard/victory; ordinary defeat reactions still fire.
-    },
-    enemySpawned(state, enemy, api) {
-      encounterRules.enemySpawned(state, enemy, api)
-      if (id === 'theMiskatonicMuseum' && enemy.code === '02141') attachShadowSpawned(state, enemy, api)
+      // 第 65 轮：02141 的虚空记录、02224 的线索、02323 的结局都走 enemyScript.onDefeated。
+      return enemyScriptFor(original(enemy))?.onDefeated?.(state, enemy, api) === true
     },
     cluesRemoved(state, loc, amount, api) {
-      if (original(loc) !== '02325' || (loc.clues || 0) > 0) return
-      api.remove(loc.id)
-      state.encounterDiscard.push('02325')
-      api.info('「菱柱瀑布」上的最后 1 个线索被移除，它被弃掉。')
+      // 第 66 轮：02325 的「最后一个线索被移除」在地点条目的 onCluesRemoved。
+      locationRuleFor(original(loc))?.onCluesRemoved?.(state, loc, api, amount)
     },
     cluesOnReveal(state, loc) {
-      if (id !== 'whereDoomAwaits') return null
-      const actCode = original(state.acts[state.actIndex] || {})
-      if (!['02278', '02279', '02280'].includes(actCode)) return null
+      // 第 66 轮：异变小径的线索归零由当前幕的 actRule.cluesOnReveal 声明。
+      const rule = actRuleFor(original(state.acts[state.actIndex] || {}))
+      if (rule?.cluesOnReveal == null) return null
       if ((loc.traits || []).some(trait => String(trait).toLowerCase() === 'altered')) return null
-      return 0
-    },
-    investigatorMovedByEncounterCard(state, inv, api) {
-      if (id !== 'lostInTimeAndSpace' || inv.defeated || inv.resigned || inv.location == null) return
-      if (['02312', '02313', '02314', '02315'].includes(original(state.agendas[state.agendaIndex] || {}))) api.horror(inv.seat, 1)
+      return rule.cluesOnReveal
     },
     drawStoryAsset(state, inv, code, api) {
       if (id !== 'theEssexCountyExpress' || code !== '02179') throw new Error(`未知剧情资产遭遇卡：${code}`)
@@ -830,7 +395,7 @@ export function laterBehavior(id) {
     },
     assetLeftPlay(state, inv, asset, api) {
       encounterRules.assetLeftPlay(state, inv, asset)
-      if (asset.code === '02179') this.storyAssetLeftPlay(state, asset, api)
+      if (assetRuleFor(original(asset))?.passenger) this.storyAssetLeftPlay(state, asset, api)
     },
     storyAssetLeftPlay(state, asset, api) {
       if (asset.code !== '02179') return
@@ -858,85 +423,29 @@ export function laterBehavior(id) {
       }
       return null
     },
-    drawLocation(state, seat, code, api) {
+    drawLocation(state, seat, code, api, meta = {}) {
       if (id !== 'lostInTimeAndSpace') throw new Error('当前剧本不使用遭遇地点')
-      const loc = api.placeEncounterLocation(code), inv = state.investigators[seat]
-      if (code === '02324') api.drawEncounter(seat)
-      else if (code === '02325') api.discardRandom(seat, 1)
-      else if (code === '02326') inv.resources = Math.max(0, inv.resources - 2)
-      else if (code === '02327') {
-        const index = inv.discard.findLastIndex(c => ALL_CARDS[c]?.traits?.includes('Madness'))
-        if (index >= 0) api.drawDiscard(seat, index)
-      } else if (code === '02328') {
-        const index = state.encounterDiscard.findLastIndex(c => ALL_CARDS[c]?.traits?.includes('Hex') || state.scenario.treacheries[c]?.traits?.includes('Hex'))
-        if (index >= 0) api.drawEncounterDiscard(seat, index)
-      }
+      const loc = api.placeEncounterLocation(code)
+      // 第 69 轮：02324–02328 的「放置后立刻结算」在地点条目的 onDraw。
+      locationRuleFor(code)?.onDraw?.(state, loc, api, seat, meta)
       return loc
     },
     actReveal(state, act, api) {
-      const code = original(act), lead = state.campaign.leadSeat, zones = state.scenarioZones
-      if (code === '02122') {
-        api.reveal(L('02127'))
-        if (state.scenarioFlags.brokeMuseumDoor) state.acts[1] = { ...state.scenario.acts.find(a => original(a) === '02124') }
-        else chooseStoryController(state, '02139', api)
-      } else if (['02123', '02124'].includes(code)) {
-        if (code === '02124') chooseStoryController(state, '02138', api)
-        summonHorror(state, L('02137'), api)
-      } else if (code === '02125') {
-        api.finish(requestChoice(state, { kind: 'story', source: code, seat: lead, prompt: '如何处置死灵之书？',
-          options: [{ id: 'r1', label: '销毁' }, { id: 'r2', label: '保管' }] }))
-      } else if (code === '02165') {
-        const inv = active(state).find(i => i.location === L('02175'))
-        const skill = requestChoice(state, { kind: 'story', source: code, seat: inv.seat, prompt: '如何越过煤水车？',
-          options: [{ id: 'agility', label: '敏捷（3）：躲避' }, { id: 'combat', label: '战斗（3）：承受高温' }] })
-        api.test(inv.seat, skill, 3, r => { if (!r.success) api.trauma(inv.seat, skill === 'agility' ? 'mental' : 'physical', 1) })
-      } else if (code === '02166') api.finish('r1')
-      else if (code === '02199') {
-        for (const loc of state.locations) api.reveal(loc.id)
-        const chamber = state.locations.find(l => l.id === L('02214'))
-        const n = state.locations.reduce((sum, l) => sum + l.clues, 0) + state.investigators.reduce((sum, i) => sum + i.clues, 0)
-        for (const loc of state.locations) loc.clues = 0
-        for (const inv of state.investigators) inv.clues = 0
-        state.clues = 0; chamber.clues = n
-        api.spawn('02216', chamber.id)
-      } else if (code === '02200') api.finish(state.investigators.some(i => i.assets.some(a => a.code === '02140')) ? 'r2' : 'r3')
-      else if (code === '02240') {
-        for (const inv of active(state)) api.giveAsset(inv.seat, '02254')
-        zones.setAside = zones.setAside.filter(code => code !== '02254')
-        if ((state.campaign.records.sacrificedToYogSothoth || []).includes('02040')) state.doom++
-      } else if (code === '02241') api.finish('r2')
-      else if (code === '02277') {
-        for (const loc of state.locations) loc.clues = 0
-        api.reveal(L('02283'))
-      } else if (['02278', '02279', '02280'].includes(code)) {
-        if (code !== '02278') {
-          const enemy = api.spawn('02293', L('02284'))
-          if (code === '02280') enemy.damageTaken = state.numInvestigators
-        }
-      } else if (code === '02281') api.finish('r1')
-      else if (code === '02316') api.place(L('02321'))
-      else if (code === '02317') { /* No reverse effect. */ }
-      else if (code === '02318') {
-        // Leaving locations moves their occupants to Another Dimension.
-        api.remove(L('02321')); api.place(L('02322'))
-      } else if (code === '02319') api.finish('r1')
-      else throw new Error(`未迁移的场景：${code}`)
+      // 第 64 轮：全部幕规则已条目化，这里只做注册表分派。
+      const entry = actRuleFor(original(act))
+      if (entry?.onReveal) return entry.onReveal(state, act, api)
     },
     checkObjectives(state, api) {
-      const code = original(state.acts[state.actIndex] || {})
+      const rule = actRuleFor(original(state.acts[state.actIndex] || {}))
       const entered = c => active(state).some(i => i.location === L(c))
       const empty = c => state.locations.some(l => l.id === L(c) && l.revealed && l.clues === 0)
-      if ((['02123', '02124'].includes(code) && entered('02137'))
-        || (code === '02125' && empty('02137')) || (code === '02165' && entered('02175'))
-        || (code === '02166' && empty('02175')) || (code === '02199' && entered('02214'))
-        || (code === '02200' && empty('02214')) || (['02278', '02279', '02280'].includes(code) && entered('02284'))
-        || (code === '02317' && entered('02321'))
-        || (code === '02241' && !state.scenarioZones.brood.remaining && !state.enemies.some(e => e.code === '02255'))) api.advanceAct()
-      if (code === '02200' && state.victoryDisplay.some(c => original(c) === '02216')) api.finish('r1')
+      // 第 71 轮：幕目标条件与结局条件由 actRule.objective / actRule.finish 声明。
+      if (rule?.objective?.(state, { entered, empty })) api.advanceAct()
+      if (rule?.finish?.when?.(state)) api.finish(rule.finish.resolution)
     },
     investigatorEntryError(state, loc, inv = state.investigators[state.currentSeat]) {
       if (inv.steamImmobileRound === state.round) return '本轮受到蒸汽之爪影响，不能移动'
-      if (state.enemies.some(enemy => enemy.code === '02182' && enemy.engagedSeat === inv.seat)) return '与攫取恐怖交战时不能移动'
+      if (state.enemies.some(enemy => enemyRuleFor(original(enemy))?.blocksMovementWhileEngaged && enemy.engagedSeat === inv.seat)) return '与攫取恐怖交战时不能移动'
       if (id === 'theMiskatonicMuseum' && loc.id === L('02127') && state.actIndex === 0) return '博物馆入口尚未打开'
       if (id === 'theEssexCountyExpress') {
         const train = state.scenarioZones.train, left = state.locations.find(l => l.id === train[train.indexOf(loc.id) - 1])
@@ -955,13 +464,8 @@ export function laterBehavior(id) {
       if (id === 'whereDoomAwaits' && original(loc) === '02284' && !loc.revealed) api.payClues(2 * state.numInvestigators)
     },
     investigationError(state, inv, loc) {
-      if (id === 'theEssexCountyExpress' && original(loc) === '02174') return '会客车厢不能调查'
-      if (id !== 'theMiskatonicMuseum') return null
-      const code = original(loc)
-      if (code === '02130' && inv.resources <= 4) return '资源不足 5，无法调查管理办公室'
-      if (code === '02131' && inv.hand.length <= 4) return '手牌不足 5，无法调查管理办公室'
-      if (code === '02137' && state.enemies.some(enemy => enemy.code === '02141' && enemy.location === loc.id)) return '恐惧猎手在此，无法调查'
-      return null
+      // 第 70 轮：02130/02131/02137/02174 的调查限制在地点条目声明。
+      return locationRuleFor(original(loc))?.investigationError?.(state, inv, loc) || null
     },
     canDiscoverClues(state, inv) {
       if (id !== 'bloodOnTheAltar' || original(state.locations.find(loc => loc.id === inv.location)) !== '02213') return true
@@ -982,16 +486,13 @@ export function laterBehavior(id) {
       // 所以条件判断只需要在 actions() 里写一遍。
       const add = (rule, label, reason) => moves.push({ action: 'scenarioAction', rule, label, reason })
       const zones = state.scenarioZones
-      if (inv.assets.some(asset => asset.code === '02140'))
-        add('necronomiconResource', '死灵之书：获得 2 资源',
-          this.canGainResources(state, inv) ? null : '此地不能获得资源')
       if (id === 'theMiskatonicMuseum') {
         if (original(state.locations.find(loc => loc.id === inv.location)) === '02128'
-          && state.scenarioFlags[`security:${inv.seat}`] !== state.round) moves.push({ action: 'scenarioAction', rule: 'searchSecurityOffice', actions: inv.assets.some(asset => asset.code === '02139') ? 1 : 2,
+          && state.scenarioFlags[`security:${inv.seat}`] !== state.round) moves.push({ action: 'scenarioAction', rule: 'searchSecurityOffice', actions: inv.assets.some(asset => assetRuleFor(original(asset))?.securityKeys) ? 1 : 2,
             label: '保安办公室：搜索牌库顶 6 张牌' })
         if (original(state.locations.find(loc => loc.id === inv.location)) === '02129'
           && state.scenarioFlags[`security:${inv.seat}`] !== state.round)
-          moves.push({ action: 'scenarioAction', rule: 'inspectSecurityOffice', actions: inv.assets.some(asset => asset.code === '02139') ? 1 : 2,
+          moves.push({ action: 'scenarioAction', rule: 'inspectSecurityOffice', actions: inv.assets.some(asset => assetRuleFor(original(asset))?.securityKeys) ? 1 : 2,
             label: '保安办公室：查看展厅正面或展厅牌库顶牌',
             reason: zones.exhibits.length || state.locations.some(loc => loc.traits?.includes('Exhibit')) ? null
               : '展厅牌库已空且场上没有展厅' })
@@ -1004,13 +505,9 @@ export function laterBehavior(id) {
       }
       if (id === 'theEssexCountyExpress') {
         const here = state.locations.find(loc => loc.id === inv.location)
-        const code = original(here)
-        if (code === '02172' && !state.scenarioFlags.stolePassengersLuggage)
-          add('stealLuggage', '拿走旅客行李：获得 3 资源')
-        if (code === '02174') add('parlorClue', '支付 3 资源，发现会客车厢 1 个线索',
-          inv.resources < 3 ? `需要 3 资源（当前 ${inv.resources}）`
-            : !(here?.clues > 0) ? '会客车厢已经没有线索' : null)
-        const passenger = (state.storyAssets || []).find(asset => asset.code === '02179' && asset.location === inv.location && asset.controllerSeat == null)
+        // 第 72 轮：02172/02174 的场景行动在地点条目声明。
+        locationRuleFor(original(here))?.actions?.({ state, inv, loc: here, add, moves })
+        const passenger = (state.storyAssets || []).find(asset => assetRuleFor(original(asset))?.passenger && asset.location === inv.location && asset.controllerSeat == null)
         if (passenger) moves.push({ action: 'scenarioAction', rule: 'parleyPassenger', assetId: passenger.id, label: '谈判：控制无助的旅客' })
       }
       if (id === 'bloodOnTheAltar') {
@@ -1027,12 +524,12 @@ export function laterBehavior(id) {
         if (chamber && !state.scenarioFlags.chamberUnlocked && here?.connections.includes(chamber.id))
           moves.push({ action: 'scenarioAction', rule: 'attachChamberKey', actions: 0,
             label: '将密室钥匙附属到隐藏密室',
-            reason: inv.assets.some(asset => asset.code === '02215') ? null : '需要控制密室钥匙' })
+            reason: inv.assets.some(asset => assetRuleFor(original(asset))?.chamberKey) ? null : '需要控制密室钥匙' })
       }
       if (id === 'undimensionedAndUnseen') {
         const here = state.locations.find(loc => loc.id === inv.location)
-        const brood = state.enemies.filter(enemy => enemy.code === '02255' && enemy.location === inv.location)
-        const powder = inv.assets.find(asset => asset.code === '02219')
+        const brood = state.enemies.filter(enemy => enemyRuleFor(original(enemy))?.brood && enemy.location === inv.location)
+        const powder = inv.assets.find(asset => assetRuleFor(original(asset))?.powder)
         const powderClues = powder
           ? (powder.clues ?? survivors.filter(([code]) => !(state.campaign.records.sacrificedToYogSothoth || []).includes(code)).length)
           : 0
@@ -1045,7 +542,7 @@ export function laterBehavior(id) {
             label: '伊本·加齐之粉：将 1 个线索放到一只子嗣上',
             reason: brood.length ? '需要先横置一只子嗣' : '所在地点没有子嗣' })
         }
-        if (inv.assets.some(asset => asset.code === '02254')) {
+        if (inv.assets.some(asset => assetRuleFor(original(asset))?.formula)) {
           const abominations = state.enemies.filter(enemy => enemy.location === inv.location && enemy.traits?.includes('Abomination'))
           if (abominations.length) for (const enemy of abominations)
             moves.push({ action: 'scenarioAction', rule: 'castFormula', enemyId: enemy.id,
@@ -1072,11 +569,11 @@ export function laterBehavior(id) {
         }
         if (original(here || {}) === '02243') moves.push({ action: 'scenarioAction', rule: 'lureBrood',
           label: '引导一只子嗣朝敦威治村移动',
-          reason: state.enemies.some(enemy => enemy.code === '02255' && enemy.location !== inv.location) ? null
+          reason: state.enemies.some(enemy => enemyRuleFor(original(enemy))?.brood && enemy.location !== inv.location) ? null
             : '没有在别处的子嗣' })
         if (original(here || {}) === '02251') moves.push({ action: 'scenarioAction', rule: 'redirectBrood',
           label: '检定智识 4，引导子嗣移动',
-          reason: state.enemies.some(enemy => enemy.code === '02255') ? null : '场上没有子嗣' })
+          reason: state.enemies.some(enemy => enemyRuleFor(original(enemy))?.brood) ? null : '场上没有子嗣' })
       }
       if (id === 'whereDoomAwaits') for (const [code, deck] of [['02282', 'divergingPaths'], ['02283', 'alteredPaths']]) {
         if (inv.location === L(code) && state.scenarioFlags[`${inv.seat}:${deck}`] !== state.round)
@@ -1133,7 +630,7 @@ export function laterBehavior(id) {
           const code = locations[Number(index)]
           const discardIndex = state.encounterDiscard.lastIndexOf(code)
           if (discardIndex >= 0) state.encounterDiscard.splice(discardIndex, 1)
-          this.drawLocation(state, inv.seat, code, api)
+          this.drawLocation(state, inv.seat, code, api, { fromDiscard: true })
         }
       } else if (move.rule === 'resignBeyond') api.resign(inv.seat)
       else if (move.rule === 'inspectSecurityOffice') {
@@ -1141,41 +638,39 @@ export function laterBehavior(id) {
         if (state.scenarioZones.exhibits.length) options.push({ id: 'top', label: '查看展厅牌库顶牌' })
         const choice = api.choose({ kind: 'inspect', source: '02129', seat: inv.seat, prompt: '选择要查看的展厅。', options })
         const code = choice === 'top' ? state.scenarioZones.exhibits.at(-1) : original(state.locations.find(loc => loc.id === choice))
+        const definition = ALL_CARDS[code] || {}
+        const stats = `帷幕 ${definition.shroud ?? '?'}，线索 ${definition.clues ?? '?'}`
+          + (definition.victory ? `，胜利 ${definition.victory}` : '')
+          + (definition.traits?.length ? `，特性 ${definition.traits.join('/')}` : '')
         api.choose({ kind: 'inspect', source: '02129', seat: inv.seat, prompt: '查看完毕后确认。',
-          options: [{ id: 'done', label: `${ALL_CARDS[code].nameZh || ALL_CARDS[code].name}：${ALL_CARDS[code].textZh || ALL_CARDS[code].text}` }] })
+          options: [{ id: 'done', label: `${definition.nameZh || definition.name || code}：${stats}。${definition.textZh || definition.text || ''}` }] })
         state.scenarioFlags[`security:${inv.seat}`] = state.round
-      } else if (move.rule === 'necronomiconResource') {
-        if (!inv.assets.some(asset => asset.code === '02140') || !this.canGainResources(state, inv)) throw new Error('不能使用死灵之书获得资源')
-        inv.resources += 2
       } else if (move.rule === 'searchUnderLocation' && id === 'bloodOnTheAltar') {
         const code = state.scenarioZones.underLocations[inv.location]
         if (!code || state.scenarioFlags[`searched:${inv.location}`]) throw new Error('此地点没有可揭示的底牌')
         delete state.scenarioZones.underLocations[inv.location]
         state.scenarioFlags[`searched:${inv.location}`] = true
-        if (code === '02214') {
-          api.place(L('02214'))
-          const here = state.locations.find(loc => loc.id === inv.location)
-          const chamber = state.locations.find(loc => loc.id === L('02214'))
-          if (!here.connections.includes(chamber.id)) here.connections.push(chamber.id)
-          if (!chamber.connections.includes(here.id)) chamber.connections.push(here.id)
-        } else if (code === '02215') api.giveAsset(inv.seat, code)
-        else { state.encounterDeck.push(code); api.drawEncounter(inv.seat) }
+        // 第 78 轮：02214/02215 翻出时的结算在条目 onFound；其余底牌仍洗回遭遇牌库。
+        const found = foundCardRuleFor(code)
+        if (found) {
+          found(state, inv, api, { sourceLocation: state.locations.find(loc => loc.id === inv.location) })
+        } else { state.encounterDeck.push(code); api.drawEncounter(inv.seat) }
       } else if (move.rule === 'attachChamberKey' && id === 'bloodOnTheAltar') {
-        const index = inv.assets.findIndex(asset => asset.code === '02215')
+        const index = inv.assets.findIndex(asset => assetRuleFor(original(asset))?.chamberKey)
         if (index < 0) throw new Error('没有密室钥匙')
         inv.assets.splice(index, 1)
         state.scenarioFlags.chamberUnlocked = true
         state.scenarioZones.keyAttached = '02215'
       } else if (move.rule === 'castFormula' && id === 'undimensionedAndUnseen') {
         const enemy = state.enemies.find(item => item.id === move.enemyId && item.traits?.includes('Abomination') && item.location === inv.location)
-        if (!enemy || !inv.assets.some(asset => asset.code === '02254')) throw new Error('没有合法的深奥咒文目标')
+        if (!enemy || !inv.assets.some(asset => assetRuleFor(original(asset))?.formula)) throw new Error('没有合法的深奥咒文目标')
         api.test(inv.seat, 'willpower', enemy.fight + this.enemyStatModifier(state, enemy, 'fight'), result => {
           if (result.success) api.damageEnemy(enemy.id, 1 + (result.damageBonus || 0), inv.seat, '02254')
           else if (enemy.retaliate && !enemy.exhausted) api.attack(enemy, inv)
         }, () => 2 * (enemy.clues || 0), { label: '攻击', name: enemy.name, code: enemy.code, enemyId: enemy.id })
       } else if (move.rule === 'powderBrood' && id === 'undimensionedAndUnseen') {
-        const powder = inv.assets.find(asset => asset.code === '02219')
-        const enemy = state.enemies.find(item => item.id === move.enemyId && item.code === '02255'
+        const powder = inv.assets.find(asset => assetRuleFor(original(asset))?.powder)
+        const enemy = state.enemies.find(item => item.id === move.enemyId && enemyRuleFor(original(item))?.brood
           && item.location === inv.location && item.exhausted)
         if (!powder || !enemy) throw new Error('没有合法的伊本·加齐之粉目标')
         if (powder.clues == null) powder.clues = survivors.filter(([code]) =>
@@ -1230,14 +725,14 @@ export function laterBehavior(id) {
         if (site === '02246') enemy.rainClues = (enemy.rainClues || 0) + moved
         state.scenarioFlags[`marked:${inv.location}`] = true
       } else if (move.rule === 'lureBrood' && id === 'undimensionedAndUnseen') {
-        const candidates = state.enemies.filter(enemy => enemy.code === '02255' && enemy.location !== inv.location)
+        const candidates = state.enemies.filter(enemy => enemyRuleFor(original(enemy))?.brood && enemy.location !== inv.location)
         if (!candidates.length) throw new Error('没有可移动的子嗣')
         const picked = api.choose({ kind: 'target', source: '02243', seat: inv.seat,
           prompt: '选择向敦威治村移动的子嗣。', options: candidates.map(item => ({ id: item.id, label: `${item.name}（${state.locations.find(loc => loc.id === item.location)?.name || item.location}）` })) })
         const enemy = candidates.find(item => item.id === picked)
         if (enemy) moveBroodToward(state, enemy, inv.location, api)
       } else if (move.rule === 'redirectBrood' && id === 'undimensionedAndUnseen') {
-        const candidates = state.enemies.filter(item => item.code === '02255')
+        const candidates = state.enemies.filter(item => enemyRuleFor(original(item))?.brood)
         const picked = api.choose({ kind: 'target', source: '02251', seat: inv.seat,
           prompt: '选择要移动的子嗣。', options: candidates.map(item => ({ id: item.id, label: item.name })) })
         const enemy = candidates.find(item => item.id === picked)
@@ -1257,7 +752,7 @@ export function laterBehavior(id) {
         state.campaign.records.stolePassengersLuggage = true
         inv.resources += 3
       } else if (move.rule === 'parleyPassenger' && id === 'theEssexCountyExpress') {
-        const index = state.storyAssets.findIndex(asset => asset.code === '02179' && asset.location === inv.location && asset.controllerSeat == null
+        const index = state.storyAssets.findIndex(asset => assetRuleFor(original(asset))?.passenger && asset.location === inv.location && asset.controllerSeat == null
           && (move.assetId == null || asset.id === move.assetId))
         if (index < 0) throw new Error('此地点没有无助的旅客')
         const [asset] = state.storyAssets.splice(index, 1)
@@ -1281,7 +776,10 @@ export function laterBehavior(id) {
       } else if (move.rule === 'clearDestroyedPathDoom' && id === 'whereDoomAwaits') {
         const loc = state.locations.find(item => item.id === inv.location)
         if (original(loc) !== '02287' || !loc.doom) throw new Error('此地点没有毁灭可移除')
-        api.test(inv.seat, 'intellect', loc.shroud, result => { if (result.success) loc.doom-- }, 0, { label: '调查', code: original(loc) })
+        api.investigate(inv.seat, {
+          allowNoClues: true, noClueDiscovery: true,
+          onInvestigateSuccess: () => { loc.doom -= 1 },
+        })
       } else if (move.rule === 'breakMuseumDoor') api.test(inv.seat, 'combat', 5, result => {
         if (result.success) { state.scenarioFlags.brokeMuseumDoor = true; api.advanceAct() }
       })
@@ -1293,13 +791,17 @@ export function laterBehavior(id) {
       } else if (['divergingPaths', 'alteredPaths'].includes(move.rule)) {
         const loc = state.locations.find(l => l.id === inv.location)
         state.scenarioFlags[`${inv.seat}:${move.rule}`] = state.round
-        api.test(inv.seat, 'intellect', loc.shroud + (loc.shroudMod || 0) + (state.fogMod || 0), result => {
-          if (result.success) {
+        // 卡面是「调查」行动：走统一调查管线（调查加值/成功失败窗口/地点限制），
+        // 成功后改为把小径放入场，而不是发现线索。
+        api.investigate(inv.seat, {
+          allowNoClues: true, noClueDiscovery: true,
+          onInvestigateSuccess: () => {
             const path = L(state.scenarioZones[move.rule].pop())
+            if (!path) return
             api.place(path)
             if (!loc.connections.includes(path)) loc.connections.push(path)
-          }
-        }, 0, { label: '调查', code: original(loc) })
+          },
+        })
       } else throw new Error('未知剧本行动')
     },
     resolution(state, key, events, api) {
@@ -1332,7 +834,7 @@ export function laterBehavior(id) {
         return { award: true, bonus: 2 }
       } else if (id === 'undimensionedAndUnseen') {
         if (key === 'r2') records.noBroodEscapedIntoTheWild = true
-        else records.broodEscapedIntoTheWild = (zones.brood?.remaining || 0) + state.enemies.filter(e => e.code === '02255').length
+        else records.broodEscapedIntoTheWild = (zones.brood?.remaining || 0) + state.enemies.filter(e => enemyRuleFor(original(e))?.brood).length
         removeCampaign(state, '02219')
       } else if (id === 'whereDoomAwaits') {
         if (key === 'r1') records.theInvestigatorsEnteredTheGate = true
@@ -1352,12 +854,6 @@ export function laterBehavior(id) {
       return { award: true }
     },
   }
-}
-
-function chooseStoryController(state, code, api) {
-  const seat = requestChoice(state, { kind: 'story', source: code, seat: state.campaign.leadSeat,
-    prompt: '选择剧情资产的控制者。', options: active(state).map(inv => ({ id: String(inv.seat), label: inv.name })) })
-  api.giveAsset(Number(seat), code)
 }
 
 function endWorld(state) {
@@ -1431,7 +927,7 @@ function discardEncounterLocation(state, loc, api, shuffleBack = false) {
 
 export function summonHorror(state, location, api) {
   const zones = state.scenarioZones
-  let enemy = state.enemies.find(e => e.code === '02141')
+  let enemy = state.enemies.find(e => enemyRuleFor(original(e))?.huntingHorror)
   if (!enemy) {
     for (const pile of [state.encounterDeck, state.encounterDiscard]) { const index = pile.indexOf('02141'); if (index >= 0) pile.splice(index, 1) }
     enemy = api.spawn('02141', location)
@@ -1439,7 +935,8 @@ export function summonHorror(state, location, api) {
     // The engine's enemySpawned hook normally attaches Shadow-spawned; stub
     // APIs (tests, custom runtimes) fall back to attaching it here.
     if (!enemy.shadowSpawned) attachShadowSpawned(state, enemy, api)
-  } else enemy.location = location
+  } else if (api.moveEnemy) api.moveEnemy(enemy, location)
+  else enemy.location = location
   enemy.exhausted = false
   return enemy
 }
@@ -1465,3 +962,4 @@ function attachShadowSpawned(state, enemy, api) {
   enemy.massive = resources >= 3
   api.info?.(`「追猎恐魔」附属「暗影之子」（${resources} 资源${resources >= 3 ? '，获得巨大' : ''}）。`)
 }
+

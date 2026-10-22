@@ -7,7 +7,7 @@
 
 export default {
   code: '04235',
-  sealOnEnter: "eldersign",
+  sealOnEnterChoice: ['+1', 'eldersign'],
   passive: {"stats":{"willpower":1,"intellect":1,"combat":1,"agility":1}},
   abilities: [
 

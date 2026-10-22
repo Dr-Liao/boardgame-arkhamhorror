@@ -16,7 +16,7 @@ export default {
     {
       kind: 'played', label: '放置 2 个秘密',
       resolve: ({ inv, api }) => {
-        const candidates = inv.assets.filter(asset => ['secrets', 'charges'].includes(String(asset.usesType || '')))
+        const candidates = inv.assets.filter(asset => String(asset.usesType || '') === 'secrets')
         if (!candidates.length) return api.info('没有可放置秘密的支援。')
         const chosen = candidates.length === 1 ? candidates[0].id
           : api.choice({ kind: 'target', source: '04152', seat: inv.seat, prompt: '选择要放置 2 秘密的支援。',

@@ -1,6 +1,7 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
 import { randomValue } from '../../../../../src/engine/rules-state.js'
+import { agendaRuleFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { encounterRules, tfaDistance as distance } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { ACTS_BY_CODE, SPECIAL_ACT_OBJECTIVES, START_LOCATIONS, THREAD_IDS } from './definition.js'
@@ -363,7 +364,7 @@ function runActReveal(state, act, api = {}) {
       const existing = there(state, 'townHall')
       const hall = ensureTownHall(state, api)
       if (existing) hall.clues = (hall.clues || 0) + perPlayer(state, 1)
-      if (actsInPlay(state).length >= 2) hall.clues = (hall.clues || 0) + perPlayer(state, 1)
+      if (actsInPlay(state).length <= 2) hall.clues = (hall.clues || 0) + perPlayer(state, 1)
       placeRelic(state, api, { location: hall.id })
       break
     }
@@ -741,22 +742,10 @@ export const behavior = {
   },
 
   agendaReveal(state, agenda, api) {
-    const code = original(agenda)
-    if (code === '04114' || code === '04115') {
-      api.shuffleDiscard?.()
-      const count = actsInPlay(state).length
-      const doom = code === '04114' ? (count === 2 ? 1 : 0) : (count === 2 ? 1 : count === 1 ? 2 : 0)
-      if (doom) api.addDoom?.(doom)
-      return
-    }
-    if (code === '04116') {
-      for (const inv of active(state)) {
-        api.trauma?.(inv.seat, 'mental', 1)
-        api.defeat?.(inv, null)
-      }
-      return
-    }
-    throw new Error(`未知命运之线密谋：${code}`)
+    // 第 118 轮：04114 / 04115 / 04116 的背面在密谋条目（幕牌库计数与章节同源）。
+    const entry = agendaRuleFor(original(agenda))
+    if (entry?.onReveal) { entry.onReveal(state, agenda, api); return }
+    throw new Error(`未知命运之线密谋：${original(agenda)}`)
   },
 
   checkObjectives(state, api) {
@@ -853,16 +842,8 @@ export const behavior = {
   },
 
   enemySpawned(state, enemy, api) {
+    // 第 118 轮：04062 / 04122b / 04130b / 04137b 的生成脚本在敌人条目的 enemyScript.onSpawn。
     encounterRules.enemySpawned?.(state, enemy, api)
-    const code = original(enemy)
-    if (code === '04062') flagsFor(state).harbingerEnteredPlay = true
-    if (code === '04122b') {
-      if (relic(state)?.enemyId !== enemy.id) placeRelic(state, api, { location: enemy.location, enemyId: enemy.id })
-    }
-    if (code === '04130b') {
-      if (alejandro(state)?.enemyId !== enemy.id) placeAlejandro(state, api, { location: enemy.location, enemyId: enemy.id })
-    }
-    if (code === '04137b') rememberPrey(state, enemy)
   },
 
   enemyStatModifier(state, enemy, stat) {
@@ -907,67 +888,8 @@ export const behavior = {
   },
 
   resolveEncounter(state, inv, treachery, api) {
-    const code = original(treachery)
-    if (code === '04144') {
-      const decks = actsInPlay(state).length
-      const bonus = Math.max(0, 3 - decks)
-      api.test(inv.seat, 'willpower', 3 + bonus, result => {
-        if (result.success) return
-        for (let index = 0; index < 1 + bonus; index++) {
-          api.damage(inv.seat, 1)
-          api.horror(inv.seat, 1)
-        }
-      })
-      return false
-    }
-    if (code === '04145') {
-      const location = here(state, inv)
-      if (!location) return false
-      if ((location.clues || 0) === 0) {
-        api.drawEncounter(inv.seat)
-        return false
-      }
-      location.attachments ||= []
-      if (!location.attachments.some(entry => original(entry) === '04145')) {
-        location.investigateExtraActions = (location.investigateExtraActions || 0) + 1
-      }
-      location.attachments.push({ id: `nobodys-home:${state.round}:${location.id}`, code: '04145', originalCode: '04145' })
-      api.info?.('「屋中无人」附属到此地点：调查它需要额外 1 个行动。')
-      return true
-    }
-    if (code === '04146') {
-      const agenda = state.agendas?.[state.agendaIndex]
-      if (!agenda) return false
-      agenda.doomThreshold = Math.max(1, (agenda.doomThreshold || 0) - 1)
-      agenda.attachments ||= []
-      agenda.attachments.push({ id: `conspiracy:${state.round}`, code: '04146', originalCode: '04146' })
-      api.info?.('「鲜血阴谋」附属到当前密谋：毁灭阈值 -1。')
-      return true
-    }
-    if (code === '01135') {
-      const answer = api.choose?.({
-        kind: 'harm', source: code, seat: inv.seat,
-        prompt: '追猎鬼影：花费 1 个线索，或受到 2 点伤害。',
-        options: [{ id: 'clue', label: '花费 1 个线索' }, { id: 'damage', label: '受到 2 点伤害' }],
-      }) ?? ((inv.clues || 0) > 0 ? 'clue' : 'damage')
-      if (answer === 'clue' && (inv.clues || 0) > 0) { inv.clues -= 1; syncClues(state) }
-      else api.damage(inv.seat, 2)
-      return false
-    }
-    if (code === '01136') {
-      if ((inv.clues || 0) === 0) { api.drawEncounter(inv.seat); return false }
-      api.test(inv.seat, 'intellect', 4, result => {
-        if (result.success) return
-        const location = here(state, inv)
-        const failedBy = Math.max(0, 4 - (result.value ?? 0))
-        for (let index = 0; index < failedBy && (inv.clues || 0) > 0; index++) {
-          inv.clues -= 1
-          if (location) location.clues = (location.clues || 0) + 1
-        }
-        syncClues(state)
-      })
-      return false
-    }
+    // 第 118 轮：04144 / 04145 / 04146 / 01135 / 01136 的显现结算在遭遇条目
+    // （encounterResolveCampaigns: ['tfa']，不会截胡其它战役的同号卡）。
     return encounterRules.resolveEncounter(state, inv, treachery, api)
   },
 
@@ -986,16 +908,8 @@ export const behavior = {
       moves.push({ action: 'scenarioAction', rule: 'resignAgenda', label: '🚪 撤退：带着搜集到的信息安全返回' })
     }
     const used = flagsFor(state).usedAbilities || (flagsFor(state).usedAbilities = {})
-    const code = original(here(state, inv))
-    if (code === '04141' && !used.velmasDiner) {
-      moves.push({ action: 'scenarioAction', rule: 'velmasGossip', actions: 3, label: '☕ 在小餐馆听人闲聊（3 行动，获得 2 个线索）' })
-    }
-    if (code === '04126b') {
-      moves.push({ action: 'scenarioAction', rule: 'policeSearchWeapon', label: '🔫 查找牌库顶 6 张中的一张武器' })
-    }
-    if (code === '04128b' && !used.trainTracks) {
-      moves.push({ action: 'scenarioAction', rule: 'trainTracksDraw', label: '🚂 花费 1 个线索，抽取 4 张卡牌（每场游戏一次）' })
-    }
+    // 第 118 轮：04141 小餐馆 / 04126b 警局 / 04128b 火车轨道的行动在地点条目。
+    locationRuleFor(original(here(state, inv)))?.actions?.({ state, inv, location: here(state, inv), moves })
     // 旁人资产的谈判行动（卡面：[action] 弃牌/花钱 → 检定 → 在其上放置 1 个线索）。
     const parleys = {
       '04118b': { rule: 'parleyHarlan', label: '🗣️ 谈判：弃牌库顶 3 张，检定意志(4) 让哈伦清醒', skill: 'willpower', difficulty: 4 },
@@ -1067,7 +981,7 @@ export const behavior = {
       }
       const rest = [...top]
       rest.splice(rest.indexOf(chosen), 1)
-      inv.deck = [...keep, ...shuffleWith(state, rest)]
+      inv.deck = shuffleWith(state, [...keep, ...rest])
       inv.hand.push(chosen)
       api.info?.(`找到武器「${cardName(chosen)}」。`)
       return

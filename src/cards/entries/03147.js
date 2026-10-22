@@ -9,6 +9,7 @@
 
 export default {
   code: '03147',
+  engageNoOpportunityAttack: true,
   abilities: [
     {
       kind: 'action', label: '双刃短刀攻击', cost: { action: true }, countsAs: 'fight',

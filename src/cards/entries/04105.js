@@ -20,15 +20,16 @@ export default {
           : api.choice({ kind: 'target', source: '04105', seat: inv.seat, prompt: '选择要劝服的敌人。',
             options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })) })
         const enemy = targets.find(item => item.id === chosen) || targets[0]
-        if (enemy.elite) {
-          api.autoEvade(enemy)
-          api.info('「' + enemy.name + '」是精英，改为自动躲避。')
-          return
-        }
         api.test(inv.seat, 'intellect', 3 + (enemy.horror || 0), {
           source: { label: '劝服', enemyId: enemy.id, name: enemy.name, code: '04105' },
           resolve: result => {
             if (!result.success) return
+            if (enemy.elite) {
+              // 精英仍要检定成功，成功后才改为自动躲避。
+              api.autoEvade(enemy)
+              api.info('「' + enemy.name + '」是精英，改为自动躲避。')
+              return
+            }
             api.removeEnemy(enemy)
             api.shuffleIntoEncounterDeck(enemy.code)
             api.info('「' + enemy.name + '」被劝服并洗回遭遇牌库。')

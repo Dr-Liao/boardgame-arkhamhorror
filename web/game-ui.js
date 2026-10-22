@@ -6,6 +6,8 @@
 // 不要把这些逻辑写回大厅的 public/app.js。
 
 import { createCatalogUI, getCardPresentation, renderDetailContent, renderImage, cardFaceText, preloadScenarioImages } from './catalog.js'
+// 第 127 轮：UI 的卡号表现表在 web/ui-cards.js（纯数据表，必须留在浏览器挂载目录内）。
+import { UI_CARDS } from './ui-cards.js'
 import { createHubUI } from './hub.js'
 import { createMusicPlayer } from './music-player.js'
 import { createChaosBagView } from './chaos-bag-view.js'
@@ -187,10 +189,11 @@ function locationAttachments(s, loc) {
   }
   if (loc.fog || loc.fogCode) include(loc.fogCode || 'obscuringFog', loc.fog || 1)
   if (loc.lockedDoorCode) include(loc.lockedDoorCode)
-  if (loc.barricade || loc.barricades?.length) include('01038', Math.max(loc.barricades?.length || 0, loc.barricade ? 1 : 0))
-  if (loc.arcaneBarriers) include('02102', loc.arcaneBarriers)
-  if (loc.sordidAndSilent) include('02089', loc.sordidAndSilent)
-  if (loc.searchingForIzzieSeat != null) include('02011')
+  const markers = UI_CARDS.locationMarkers
+  if (loc.barricade || loc.barricades?.length) include(markers.barricade, Math.max(loc.barricades?.length || 0, loc.barricade ? 1 : 0))
+  if (loc.arcaneBarriers) include(markers.arcaneBarrier, loc.arcaneBarriers)
+  if (loc.sordidAndSilent) include(markers.sordidAndSilent, loc.sordidAndSilent)
+  if (loc.searchingForIzzieSeat != null) include(markers.searchingForIzzie)
   return cards.map(card => {
     const def = ahCardDef(s, card.code)
     const resolved = def.name ? def : Object.values(s.state.cards || {}).find(item => item.originalCode === card.code) || def
@@ -309,7 +312,7 @@ function ahCardDefRaw(s, code) {
 function enemyFightDisplay(enemy) {
   if (enemy.effectiveFight != null) return enemy.effectiveFight
   const code = enemy.originalCode || enemy.code
-  return code === '03103' && enemy.fight === -2 ? 'X' : enemy.fight
+  return code === UI_CARDS.enemyDisplay.fightMinusTwo && enemy.fight === -2 ? 'X' : enemy.fight
 }
 
 function renderSkillIcons(icons) {
@@ -1461,7 +1464,7 @@ function ahSlotBonuses(s, inv) {
     const def = ahCardDef(s, asset.code)
     // Older sessions only exposed Daisy's tote bag by card code.
     const extra = def.extraSlots || { ...def.passive?.extraSlots,
-      hand: def.passive?.handSlotsBonus || (asset.code === '01008' ? 2 : 0) }
+      hand: def.passive?.handSlotsBonus || UI_CARDS.handSlots[asset.code] || 0 }
     for (const [slot, amount] of Object.entries(extra)) bonus[slot] = (bonus[slot] || 0) + amount
   }
   return bonus

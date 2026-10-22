@@ -31,7 +31,10 @@ const VERSIONED_FILES = Object.freeze([
   '../cards/cards-data.js', '../cards/scenarios-data.js', '../cards/card-effects.js', '../cards/card-catalog.js',
   './image-cache.js', './music-cache.js', './scenario-images.js', '../../web/music-player.js',
   '../../presentation/art-rules.js', '../../presentation/images.js',
-  '../../presentation/localized-arts.json', '../../presentation/media-registry.json',
+  // 第 127 轮：UI 的卡号表现表（剧本参考卡/剧情标记/手牌位/构筑规则）。
+  // 第 128 轮：随浏览器模块一起移入 web/，必须与 web/ 其余文件同源才能被浏览器加载。
+  '../../web/ui-cards.js',
+  '../../presentation/localized-arts.json', '../../presentation/generated-localized-arts.json', '../../presentation/media-registry.json',
   '../../web/images.js', '../../web/catalog.js', '../../web/card-filters.js', '../../web/game-ui.js', '../../web/hub.js', '../../web/supply-picker.js', '../../web/deck-rules.js', '../../web/arkhamdb-import.js', '../../web/deck-library.js', '../../web/hub-office.css',
   '../../web/card-text.js', '../../web/story-reader.js', '../../web/rulebook-data.js', '../../web/rulebook.js', '../../web/style.css',
   '../campaign/story.js', '../../content/campaigns/theDunwichLegacy/story-text.js',

@@ -11,8 +11,10 @@
 
 ## 1. 一条原则
 
-**卡 = 数据 + 声明式行为。** 行为只有一种写法：`src/cards/entries/<code>.js` 里的**单卡条目**
-（一张卡一个文件）。`src/cards/card-abilities.js` 只做聚合，不再放条目。
+**卡 = 数据 + 声明式行为。** 行为只有一种写法：单卡文件里的**单卡条目**（一张卡一个文件）。
+玩家卡在 `src/cards/entries/<code>.js`；非玩家卡在 `src/cards/encounter-entries/`（通用 / 战役共用 /
+关卡专用三档，见 [`card-entry-files.md`](card-entry-files.md) §2.1）。`card-abilities.js` 与
+`encounter-abilities.js` 都只做聚合，不再放条目。
 条目里没有函数式逃生口以外的自由度——数据是纯 JSON，`resolve` 只在"数据表达不了"时出现，
 且只能通过 `ctx.api` 改状态。拆分流程与 agent 一次执行清单见
 [`card-entry-files.md`](card-entry-files.md)。
@@ -26,7 +28,7 @@
 | **运行期状态** | `state.effects[]`、`state.abilityLimits`、实例字段 | 只写进 `state`，随存档往返 |
 
 不允许第四层：**不得**在 `engine.js` 按卡号分支，**不得**把行为写进 `content/**.js` 的命令式钩子
-（例外：非玩家卡在 D1 通道落地前暂留 `behavior.js`，见 §6）。
+（例外：剧本流程、布置与结局仍属 `behavior.js`；单卡规则写 `encounter-entries/`，见 §6）。
 
 ---
 
@@ -210,11 +212,12 @@ api.addEffect({
 | --- | --- | --- |
 | 玩家卡（手牌/场上的支援/威胁区） | ✅ 描述子 | 保持 |
 | 调查员（旧印、主动能力） | ✅ 描述子 + `INVESTIGATOR_ABILITIES` | 能力迁完后删旧表 |
-| 敌人 / 诡计 / 地点 / 幕 / 议程 | ❌ 只有 `behavior.js` 与引擎分支 | **D1 通道**（Phase 3）：`descriptorSources` 扩展到这些实体 |
+| 敌人 / 诡计 / 地点 / 幕 / 议程 / 剧情资产 / 威胁 | ✅ 描述子（`scope` 非玩家通道） | 一卡一文件，按通用 / 战役共用 / 关卡专用落点（`encounter-entries/`） |
 | 剧本层机制 | `behavior.js`（命令式） | D3/D4 声明化（Phase 3） |
 
-D1 落地前，非玩家卡的行为**允许**留在 `behavior.js`，但必须在迁移账本标记"待通道扩展"，
-且不得为它们给引擎加卡号分支。
+非玩家条目的归属与目录规则见 [`card-entry-files.md`](card-entry-files.md) §2.1；存量 529 条的迁移方案见
+[`encounter-entry-split-plan.md`](encounter-entry-split-plan.md)。迁移完成前条目仍暂存在
+`encounter-abilities.js`，但新条目不得再写回该文件。
 
 ---
 

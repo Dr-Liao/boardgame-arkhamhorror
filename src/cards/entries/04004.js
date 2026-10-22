@@ -22,6 +22,8 @@ export default {
     }
   },
   kind: 'investigator',
+  // 第 123 轮：开局额外经验由条目声明（原 src/campaign/campaign.js 的 STARTING_XP 表）。
+  startingXp: 5,
   elderSign: { id: '04004-eldersign', resolve: factory() },
   abilities: [],
   modifiers: [],

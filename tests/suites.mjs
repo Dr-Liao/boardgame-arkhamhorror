@@ -18,6 +18,13 @@ export const FAST_TESTS = Object.freeze([
   'attack-style.test.mjs', // 0.7
   'rules-n3.test.mjs', // 3.4
   'p0-regressions.test.mjs', // P0：选择 id / 弱点 / 基础弱点池 / 能力 API / 杜克 / 苍白面具
+  'card-fidelity-p0.test.mjs', // 卡牌保真度审计 P0 逐卡行为回归（24 张高严重度）
+  'card-fidelity-p1.test.mjs', // 卡牌保真度审计 P1/P2：地点限制与双实现收敛
+  'card-fidelity-core-p3.test.mjs', // 卡牌保真度 P3：核心包批次
+  'card-fidelity-dunwich-p3.test.mjs', // 卡牌保真度 P3：敦威治机制批次
+  'card-fidelity-carcosa-p3.test.mjs', // 卡牌保真度 P3：卡尔克萨机制批次
+  'card-fidelity-tfa-p3.test.mjs', // 卡牌保真度 P3：失落时代首批
+  'encounter-handler-guard.test.mjs', // campaignRule 诡计必须有条目结算或章节显式登记
   'p1-regressions.test.mjs', // P1：全灭继续 / 02178 去向 / 03186 攻击限制
   'ability-layer.test.mjs', // 0.9
   'card-entries.test.mjs', // 0.4 —— 一卡一文件 / 索引 / 禁止批次大文件

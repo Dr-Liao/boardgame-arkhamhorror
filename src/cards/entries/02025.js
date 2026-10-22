@@ -11,7 +11,7 @@ export default {
   code: '02025',
   abilities: [
     {
-      kind: 'played', fast: true, trigger: 'enemySpawn', criteria: { selfOnly: true },
+      kind: 'played', fast: true, trigger: 'enemySpawn',
       label: '先制攻击', effect: { type: 'moveTo' },
     },
   ],

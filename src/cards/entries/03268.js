@@ -10,6 +10,12 @@
 // 5c-26：主动能力不再走 carcosaPlayer 逃生原语。**顺带修了一个既有 bug**：
 // 旧原语把空 effect 传给 chooseEnemy，而 abilityTargets({}) 恒为空 → 一用就抛
 // 「没有合法敌人目标」。现在按躲避的目标形状（交战中的敌人）选目标，并先挡掉无目标的情况。
+//
+// P0 修复：旧版把取消攻击写成 `legacyReaction` + effect 数据体，但 enemyAttack 只开
+// reactionWindow（不调用 triggerReaction），所以这条反应从未被枚举。改成能力层反应描述子，
+// 由 openAbilityWindow 在 enemyAttack 窗口枚举，并把取消写回窗口上下文。
+
+import { ownSeat } from '../../engine/matcher.js'
 
 export default {
   code: '03268',
@@ -17,7 +23,7 @@ export default {
   usesType: 'charges',
   abilities: [
     {
-      kind: 'action', label: '建议躲避', cost: { action: true, exhaust: true },
+      kind: 'action', label: '建议躲避', countsAs: 'evade', cost: { action: true, exhaust: true },
       resolve: ({ inv, source, api }) => {
         const engaged = api.enemiesAt(inv.location).filter(item => item.engagedSeat === inv.seat)
         if (!engaged.length) { api.info('你没有可建议躲避的交战敌人。'); return }
@@ -27,9 +33,15 @@ export default {
       },
     },
     {
-      kind: 'reaction', trigger: 'enemyAttack', id: 'suggestionCancel', legacyReaction: true,
-      criteria: { nonEliteOnly: true }, label: '取消非精英敌人的攻击',
-      cost: { uses: 1 }, effect: { type: 'cancelEnemyAttack' },
+      kind: 'reaction', trigger: 'enemyAttack', id: 'suggestionCancel',
+      criteria: [ownSeat(), ({ context }) => context?.enemy?.elite !== true],
+      label: '花费 1 充能：取消非精英敌人的攻击',
+      cost: { uses: 1 },
+      resolve: ({ context, api }) => {
+        if (!context) return
+        context.cancelled = true
+        api.info(`「建议」取消了「${context.enemy?.name || '敌人'}」的这次攻击。`)
+      },
     },
   ],
   modifiers: [

@@ -56,7 +56,8 @@ const contracts = {
   '02112': ['uses', 5, 'abilities.0.effect', { type: 'fight', skill: 'willpower', combatBonus: 1, skullDamageBonus: 2 }],
   '02113': ['reaction', { when: 'attackFail', failedByAtMost: 2 }, 'event.type', 'resolve'],
   '02114': ['abilities.1.cost.exileSelf', true, 'abilities.1.effect', { type: 'evade', bonus: 3, evadeOthersOnSuccess: true }],
-  '02115': ['event.type', 'flare', 'exileAfterPlay', true],
+  // 第 122 轮：照明弹的「攻击 / 搜索盟友入场」二选一改成条目 resolve。
+  '02115': ['event.type', 'resolve', 'exileAfterPlay', true],
   '02116': ['uses', 3, 'abilities.0.effect.effects', [{ type: 'takeDamage', amount: 1 }, { type: 'heal', amount: 1, what: 'horror' }]],
   '02117': ['uses', 3, 'abilities.0.effect.effects', [{ type: 'takeHorror', amount: 1 }, { type: 'heal', amount: 1, what: 'damage' }]],
   '02147': ['passive.extraSlots.handWeapon', 1],
@@ -87,14 +88,17 @@ const contracts = {
   '02227': ['skill.requireClueAtLocation', true],
   '02228': ['event.type', 'resolve'],
   '02229': ['skill.successBy', { threshold: 2, gainAction: 1 }],
-  '02230': ['reactions.0', { when: 'chaosTokenRevealed', cost: { resources: 2 }, effect: { type: 'redrawChaos' } }],
+  // 第 121 轮：重抽混乱标记由条目级 rerollTokenCost 提供，反应描述子只留时机与费用。
+  '02230': ['reactions.0', { when: 'chaosTokenRevealed', cost: { resources: 2 }, effect: { type: 'resolve' } }],
   '02231': ['skill', { selfTestOnly: true, returnOnSuccessBy: 2 }],
-  '02232': ['passive.stats.intellect', 1, 'abilities.0.effect.type', 'lookTopDeckAndDoom'],
+  // 第 122 轮：查看牌库顶 + 放毁灭改成条目 resolve。
+  '02232': ['passive.stats.intellect', 1, 'abilities.0.effect.type', 'resolve'],
   '02233': ['uses', 3, 'abilities.0.effect', { type: 'investigate', skill: 'willpower', bonus: 2, clueBonus: 2, symbolEndsTurn: true }],
   '02234': ['passive', { darkHorse: true, allStatsIfNoResources: 1 }],
   '02235': ['skill.onSuccess', { evadeDisengage: true, mayMoveAfterEvade: true }],
   '02260': ['skill.leadership', true],
-  '02261': ['event', { type: 'cancelHarmGainResources', maximum: 5 }],
+  // 第 121 轮：取消伤害/恐惧改成通用原语 api.cancelHarm（条目内唯一实现在 02261 的文件里）。
+  '02261': ['event', { type: 'resolve' }],
   '02262': ['uses', 4, 'abilities.0.effect.effect', { type: 'heal', amount: 2, what: 'damage' }],
   '02263': ['uses', 3, 'abilities.0.effect', { type: 'fight', baseValue: 6, damageBonus: 2 }],
   '02264': ['uses', 4, 'abilities.0.effect', { type: 'evade', baseValue: 6 }],
@@ -110,7 +114,8 @@ const contracts = {
   '02299': ['skill', { onSuccess: { damageBonus: 1 }, successBy: { threshold: 2, damageBonus: 1 } }],
   '02300': ['event', { type: 'fight', defeatNonEliteOnSuccess: true }],
   '02301': ['uses', 3, 'abilities.0.effect', { type: 'fight', combatBonus: 5, damageBonus: 2 }],
-  '02302': ['reactions.0', { when: 'encounterDrawn', cost: { exhaust: true, clues: 1, returnClue: true }, effect: { type: 'redrawEncounter' } }],
+  // 第 121 轮：取消遭遇并重抽改成通用原语 api.cancelEncounterDraw。
+  '02302': ['reactions.0', { when: 'encounterDrawn', cost: { exhaust: true, clues: 1, returnClue: true }, effect: { type: 'resolve' } }],
   '02303': ['event.type', 'resolve'],
   '02304': ['uses', 4, 'abilities.0.effect', { type: 'fight', damageBonus: 2, additionalActionCombatBonus: 2 }],
   '02305': ['phaseControl', true],
@@ -119,7 +124,8 @@ const contracts = {
   // Phase 5（5b-8）：02308 / 02310 已迁到能力层——攻击转移与入场自选技能不再是旧 reaction 数据。
   '02308': ['redirectAttackToAsset', true],
   '02310': ['fast', true, 'forcedMythosEndDiscard', true, 'entersPlay.0.label', '入场：选择两项技能，其基础值提升为 6'],
-  '02309': ['reactions.0', { when: 'skillTestFail', cost: { exhaust: true }, effect: { type: 'returnCommittedSkill' } }],
+  // 第 121 轮：取回投入的技能卡改成通用原语 api.recallCommittedSkill（与 04159 同一实现）。
+  '02309': ['reactions.0', { when: 'skillTestFail', cost: { exhaust: true }, effect: { type: 'resolve' } }],
 }
 
 function atPath(value, path) {

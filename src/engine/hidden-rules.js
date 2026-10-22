@@ -76,6 +76,11 @@ export function createHiddenRules(deps) {
   function movementError(state, inv) {
     // Phase 2（C1）：capability:move —— 「不能移动」由卡面声明，引擎只问读点。
     if (capabilityBlocked(state, inv, 'move')) return '当前效果禁止你移动'
+    // 「本轮不能离开本地点」（03256 堵塞通道）：地点实例上的轮次标记是全阶段读点。
+    const currentLocation = state.locations?.find(location => location.id === inv?.location)
+    if (currentLocation?.cannotLeaveRound === state.round) {
+      return `本轮不能离开「${currentLocation.name || currentLocation.id}」`
+    }
     if (state.phase !== 'investigation' || !state.turnSerial) return null
     const maximum = Math.min(...activeHiddenRules(state, inv)
       .map(item => item.rule.maxMovesPerTurn).filter(Number.isFinite), Infinity)

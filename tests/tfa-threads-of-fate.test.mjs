@@ -254,7 +254,7 @@ test('A/B 线：遗物不见了 → 埃兹特里展厅 → 市政厅 + 遗物 �
   assert.ok(hall, '市政厅放置入场')
   assert.equal(state.relicOfAges.location, 'townHall')
   assert.equal(state.relicOfAges.enemyId, undefined)
-  assert.equal(hall.clues, 2 + 2, '市政厅 1/人 + 场上有 ≥2 本幕牌库时额外 1/人')
+  assert.equal(hall.clues, 2, '三本幕牌库俱在（>2）时不再加额外线索')
   assert.equal(originals(state)[0], '04123')
   assert.equal(state.acts[0].objective.type, 'actRule')
 

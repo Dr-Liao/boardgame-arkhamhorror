@@ -37,27 +37,27 @@
     },
     {
       "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
-      "sha256": "1fc87fca0c49dc3e8fcf3fb201639f36dd7df50092b94b82b17f4eeee62052e3"
+      "sha256": "1cf654c095f6bea5539da729b4a16f0507fd533980403ac98aaadf13e2b97ac4"
     },
     {
       "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
-      "sha256": "1746674a7cb0f94fc559309c9c3f5774ef8c2f811bffe60ab40999551a619973"
+      "sha256": "52d7384275b1b37c60acf5a6bce195d90dd93db46169c9eb427179ce84f2317e"
     },
     {
       "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
-      "sha256": "1edf977e5278037f4e0ea6cab308a31ee690d774052ea87ab2e5122a2923e36a"
+      "sha256": "f1829c88849ff5b9a71ae1813f39ee8b9c8e67ae245b46a5976adef81a9b2c0d"
     },
     {
       "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",
-      "sha256": "11141631e320029ee5774da6f5bb079181e0975b2fbad6da2955eaef82da38ae"
+      "sha256": "20945e5fc3af80de0b21ef1bf0b6d3ebe3c2753726476d88c3c9cad08935d6d3"
     },
     {
       "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
-      "sha256": "f17ef9da87b0204ebcc9a49f19b8266e632794235bf4667e3d36c72cc2cbb70e"
+      "sha256": "3819a44c38f8b6795cfd2a1cb7c9dd3b534be4fcbc1724bf7a21872a575199f3"
     },
     {
       "file": "games/arkhamhorror/tests/core-n4.test.mjs",
-      "sha256": "fa3a1bb5d936e6198ed6d5d51f8637b3771c338db6d9e7572bdc9ae736694c69"
+      "sha256": "80dc838d99c23f0068230642c1f841ba9b800a67651f49f7e9e68acb09242d38"
     },
     {
       "file": "games/arkhamhorror/tests/core-n4b.test.mjs",

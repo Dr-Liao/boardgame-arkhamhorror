@@ -18,7 +18,6 @@ import {
 } from '../src/engine/effect-state.js'
 import { TARGET_KINDS, enumerateTargets, normalizeTarget } from '../src/engine/targets.js'
 import { LEGACY_PLAY_CONDITION_FIELDS, describePlayCondition, playAccess, playConditionError } from '../src/engine/play-condition.js'
-import { EFFECTS } from '../src/cards/card-effects.js'
 import { migrateState } from '../src/engine/save-migration.js'
 import { STATE_SCHEMA_VERSION, RULES_VERSION } from '../src/engine/rules-state.js'
 
@@ -172,16 +171,13 @@ test('playCondition：描述子与旧字段都由单一读点判定，文案不�
   settle(s)
   assert.equal(s.investigators[0].hand.length, 3, '抽取 3 张卡牌')
 
-  // 旧 DSL 字段的读点：用一条临时的 EFFECTS 条目验证（不依赖某张卡还没被迁移，
-  // 否则这条断言会随 Phase 5 的迁卡进度反复失效）。读点把旧字段翻成 predicate + 原文案。
+  // 旧 DSL 字段的读点（第 126 轮：`EFFECTS` 旧通道已清空并删除所有 `EFFECTS[` 读取）。
+  // 读点仍保留 `LEGACY_PLAY_CONDITION_FIELDS` 这些字段名用于存档兼容，但不再有任何数据来源：
+  // 传进来的旧卡号既没有条件错误、也不会被描述成 legacy 记录。
   const legacy = fixture()
   legacy.phase = 'mythos'
-  EFFECTS.__legacyPlayConditionSample = { ownTurnOnly: true }
-  try {
-    assert.equal(playConditionError(legacy, legacy.investigators[0], '__legacyPlayConditionSample'), '只能在自己的回合打出')
-    assert.deepEqual(describePlayCondition('__legacyPlayConditionSample'),
-      [{ source: 'legacy', field: 'ownTurnOnly', message: '只能在自己的回合打出' }])
-  } finally { delete EFFECTS.__legacyPlayConditionSample }
+  assert.equal(playConditionError(legacy, legacy.investigators[0], '__legacyPlayConditionSample'), null)
+  assert.deepEqual(describePlayCondition('__legacyPlayConditionSample'), [])
   // 区域许可与条件分开：03315 不是「弃牌堆可打出」的卡。
   assert.deepEqual(playAccess('03315'), {
     fromDiscard: false, playableWeakness: false, reactionOnly: false, limitPerInvestigator: false,

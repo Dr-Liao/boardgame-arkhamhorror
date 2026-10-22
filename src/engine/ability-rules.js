@@ -25,6 +25,7 @@ export function createAbilityRules(deps) {
     exilePlayerCard,
     getMaxSanity,
     hasNonPlayerBehavior,
+    engagedWithClueBlocker,
     hiddenFightBlocked,
     info,
     isWeaknessCode,
@@ -35,6 +36,7 @@ export function createAbilityRules(deps) {
     openAbilityWindow,
     playCost,
     registeredEntry,
+    scenarioBehavior,
     scenarioResignAvailable,
     syncClues,
   } = deps
@@ -50,6 +52,7 @@ export function createAbilityRules(deps) {
     if (cost.uses && (source?.uses || 0) < cost.uses) return false
     if (cost.resources && inv.resources < cost.resources) return false
     if (cost.clues && (inv.clues || 0) < cost.clues) return false
+    if (cost.clues && engagedWithClueBlocker(state, inv)) return false
     if (cost.discardHand && discardableHandCards(inv, cost.discardHandIcon).length < cost.discardHand) return false
     if (cost.exhaust) source.exhausted = true
     if (cost.uses) source.uses -= cost.uses
@@ -122,6 +125,7 @@ export function createAbilityRules(deps) {
         isWeakness: code => isWeaknessCode(code),
         cardType: code => cardDef(code)?.type || null,
         cardTraits: code => cardDef(code)?.traits || [],
+        canGainResources: () => scenarioBehavior(state).canGainResources?.(state, inv) !== false,
       },
     })) return false
     return true
@@ -217,6 +221,7 @@ export function createAbilityRules(deps) {
     if (cost.uses && (asset?.uses || 0) < cost.uses) return false
     if (cost.resources && inv.resources < cost.resources) return false
     if (cost.clues && (inv.clues || 0) < cost.clues) return false
+    if (cost.clues && engagedWithClueBlocker(state, inv)) return false
     if (cost.discardHand && discardableHandCards(inv, cost.discardHandIcon).length < cost.discardHand) return false
     if (cost.damageSelf && inv.damage + cost.damageSelf >= inv.health) return false
     if (ability.maximumInvestigatorDamage != null && inv.damage > ability.maximumInvestigatorDamage) return false

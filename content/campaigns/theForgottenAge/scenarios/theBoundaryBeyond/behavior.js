@@ -1,6 +1,7 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { randomValue } from '../../../../../src/engine/rules-state.js'
 import { encounterRules } from '../../encounter-rules.js'
+import { actRuleFor, agendaRuleFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { symbolConnections } from '../../card-data.js'
 import {
@@ -425,10 +426,14 @@ function teamOnce(state, key, scope = 'phase') {
 // 「发现本地点的 N 个线索」：从地点搬到调查员的线索池（与引擎调查成功同一口径）。
 function discoverAt(state, api, inv, location, amount) {
   if (!inv || !location) return 0
+  // 04186 帕德玛重整时，任何[[古代]]地点的线索均不能被发现（含地点卡自身的发现效果）。
+  if (isAncient(location)
+    && state.enemies.some(enemy => original(enemy) === PADMA && !enemy.exhausted)) return 0
   const found = Math.min(Math.max(0, amount), location.clues || 0)
   if (found <= 0) return 0
   location.clues -= found
   api.gainClues(inv.seat, found)
+  notifyAncientLastClue(state, location, api)
   return found
 }
 
@@ -532,86 +537,61 @@ function enterAncientFace(state, api, location, explorer = null) {
   api.info?.(`🗿 「${location.name}」的入场强制效果已结算。`)
 }
 
+function brotherhoodHandBlocks(state, locationId) {
+  const hand = state.enemies.find(enemy => original(enemy) === HAND_OF_THE_BROTHERHOOD
+    && !enemy.exhausted && !enemy.defeated)
+  if (!hand || hand.location == null) return false
+  if (hand.location === locationId) return true
+  const handLocation = state.locations.find(entry => entry.id === hand.location)
+  const here = state.locations.find(entry => entry.id === locationId)
+  return (handLocation?.connections || []).includes(locationId)
+    || (here?.connections || []).includes(hand.location)
+}
+
+function notifyAncientLastClue(state, location, api) {
+  if (!isAncient(location) || (location.clues || 0) > 0) return
+  const hand = state.enemies.find(enemy => original(enemy) === HAND_OF_THE_BROTHERHOOD
+    && !enemy.exhausted && !enemy.defeated)
+  if (!hand) return
+  hand.doom = (hand.doom || 0) + 1
+  api.info?.(`🌑 古代地点的最后一个线索被发现：兄弟会之手上放置 1 个毁灭标记。`)
+}
+
 // 04174 的反应：在本地点击败或躲避蛇族后，发现本地点的 1 个线索（团队每阶段一次）。
 function temploMayorReaction(state, api, enemy, seat) {
   if (!enemy || !hasTrait(enemy, 'Serpent')) return
   const location = state.locations.find(entry => entry.id === enemy.location)
   if (!location || original(location) !== '04174') return
+  if (brotherhoodHandBlocks(state, location.id)) return
   if (!teamOnce(state, '04174clue')) return
   const inv = state.investigators[Number.isInteger(seat) ? seat : state.currentSeat]
   const found = discoverAt(state, api, inv, location, 1)
   if (found) api.info?.(`🏛️ 大神庙：${inv.name} 击败或躲避蛇族后发现了 ${found} 个线索。`)
 }
 
-// 古代地点的 [action]：只有团队当轮/当阶段还没用过时才列出。
+// 第 92 轮：古代地点的 [action] 由地点条目 ancientAction 声明。
 function ancientActions(state, inv, location) {
-  const code = original(location)
-  const moves = []
-  if (code === '04175' && (inv.discard || []).some(isWeaknessCode)) {
-    moves.push({ action: 'scenarioAction', rule: 'ancientClue', label: '♻️ 把弃牌堆的一张弱点洗回牌库：发现本地点的 2 个线索（团队每轮一次）' })
-  }
-  if (code === '04177' && state.enemies.some(enemy => !enemy.defeated)) {
-    moves.push({ action: 'scenarioAction', rule: 'ancientClue', label: '🌑 在一个敌人上放置 1 个毁灭：发现本地点的 2 个线索（团队每轮一次）' })
-  }
-  if (code === '04178' && (inv.hand || []).length >= 3) {
-    moves.push({ action: 'scenarioAction', rule: 'ancientClue', label: '🃏 弃掉你所有手牌：发现本地点的 2 个线索（团队每轮一次）' })
-  }
-  if (code === '04184' && (inv.deck || []).length === 0) {
-    moves.push({ action: 'scenarioAction', rule: 'ancientClue', label: '📖 如果你牌库内没有剩余卡牌：发现圣林所有的线索' })
-  }
-  return moves
+  const action = locationRuleFor(original(location))?.ancientAction
+  if (!action?.available?.(state, inv, location)) return []
+  return [{ action: 'scenarioAction', rule: 'ancientClue', label: action.label }]
 }
 
 function useAncientAction(state, inv, api, location, code) {
-  if (code === '04175') {
-    if (!teamOnce(state, '04175clue', 'round')) { api.info?.('本轮的团队次数已用完。'); return false }
-    const candidates = [...new Set((inv.discard || []).filter(isWeaknessCode))]
-    const chosen = candidates.length === 1 ? candidates[0] : api.choose({
-      kind: 'card', source: '04175', seat: inv.seat,
-      prompt: '选择一张要洗回牌库的弱点卡牌。',
-      options: candidates.map(cardCode => ({ id: cardCode, label: ALL_CARDS[cardCode]?.nameZh || ALL_CARDS[cardCode]?.name || cardCode })),
-    })
-    const index = (inv.discard || []).indexOf(chosen)
-    if (index < 0) return false
-    inv.discard.splice(index, 1)
-    inv.deck.push(chosen)
-    shuffleDeckWith(state, inv, api)
-    const found = discoverAt(state, api, inv, location, 2)
-    api.info?.(`🏛️ 特诺奇蒂特兰神庙：发现 ${found} 个线索（团队每轮一次）。`)
-    return true
+  return locationRuleFor(code)?.ancientAction?.perform?.(state, inv, api, location) === true
+}
+
+// 第 115 轮：幕后条目（04162/04163/04166）通过这个 hooks 对象调用本章的换图实现，
+// 保证「时间线换图」只有一份实现（条目只编排顺序，不再复制 helper）。
+function boundaryHooks(state, api) {
+  return {
+    sweep: options => sweepTenochtitlan(state, api, options),
+    shiftPresentDay: source => shiftRemainingPresentDay(state, api, source),
+    loseAllClues: () => loseAllClues(state),
+    spawnPadma: () => spawnPadma(state, api),
+    spawnHarbinger: () => spawnHarbinger(state, api),
+    enterFinalStage: options => enterFinalStage(state, api, options),
+    records: () => recordsFor(state),
   }
-  if (code === '04177') {
-    if (!teamOnce(state, '04177clue', 'round')) { api.info?.('本轮的团队次数已用完。'); return false }
-    const candidates = state.enemies.filter(enemy => !enemy.defeated)
-    if (!candidates.length) return false
-    const chosenId = candidates.length === 1 ? candidates[0].id : api.choose({
-      kind: 'enemy', source: '04177', seat: inv.seat, prompt: '选择要放置 1 个毁灭标记的敌人。',
-      options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name })),
-    })
-    const enemy = candidates.find(entry => entry.id === chosenId)
-    if (!enemy) return false
-    const placed = api.doomOn?.(enemy, 1)
-    if (!placed) return false
-    const found = discoverAt(state, api, inv, location, 2)
-    api.info?.(`🌑 特诺奇蒂特兰神庙：发现 ${found} 个线索（团队每轮一次）。`)
-    return true
-  }
-  if (code === '04178') {
-    if (!teamOnce(state, '04178clue', 'round')) { api.info?.('本轮的团队次数已用完。'); return false }
-    if ((inv.hand || []).length < 3) return false
-    inv.discard.push(...inv.hand)
-    inv.hand = []
-    const found = discoverAt(state, api, inv, location, 2)
-    api.info?.(`🃏 查普尔特佩克山：弃掉所有手牌，发现 ${found} 个线索（团队每轮一次）。`)
-    return true
-  }
-  if (code === '04184') {
-    if ((inv.deck || []).length > 0) return false
-    const found = discoverAt(state, api, inv, location, location.clues || 0)
-    api.info?.(`📖 圣林：牌库已空，发现剩下的 ${found} 个线索。`)
-    return true
-  }
-  return false
 }
 
 export function setupPlan(state, helper = {}) {
@@ -768,10 +748,14 @@ export const behavior = {
   },
 
   // 帕德玛处于重整状态时，古代地点的线索不能被探查。
-  canDiscoverClues(state, inv) {
-    if (encounterRules.canDiscoverClues?.(state, inv) === false) return false
+  canDiscoverClues(state, inv) {    if (encounterRules.canDiscoverClues?.(state, inv) === false) return false
     const padma = state.enemies.some(enemy => original(enemy) === PADMA && !enemy.exhausted)
     return !(padma && isAncient(here(state, inv)))
+  },
+
+  // 引擎调查路径拿掉最后一个线索时也要通知（04188）。
+  cluesRemoved(state, location, amount, api) {
+    if ((amount || 0) > 0) notifyAncientLastClue(state, location, api)
   },
 
   actions(state, inv) {
@@ -793,9 +777,8 @@ export const behavior = {
         reason: exploreBlockReason(state, inv, spec),
       })
     }
-    if (code === '04169') {
-      moves.push({ action: 'scenarioAction', rule: 'studyCathedral', label: '📖 受到 1 点恐惧：抽 2 张牌' })
-    }
+    // 第 91 轮：04169 的特拉洛克大教堂行动在地点条目。
+    locationRuleFor(code)?.actions?.({ state, inv, location, moves })
     // 12 张古代地点的 [action]（P2）。
     moves.push(...ancientActions(state, inv, location))
     return moves
@@ -804,17 +787,10 @@ export const behavior = {
   // 12 张古代地点的常驻修正（P2）：帷幕、属性、敌人躲避。
   locationShroudModifier(state, location, inv = null) {
     const base = encounterRules.locationShroudModifier?.(state, location) || 0
-    const code = original(location)
     const who = inv || state.investigators?.[state.currentSeat] || null
-    if (code === '04176' && who && (who.maxHealth ?? 0) - (who.damage || 0) <= 3) return base - 2
-    if (code === '04183' && who && (who.maxSanity ?? 0) - (who.horror || 0) <= 3) return base - 2
-    if (code === '04180') {
-      return base + (state.enemies.some(enemy => enemy.location === location.id && enemy.exhausted) ? -3 : 0)
-    }
-    if (code === '04181') return base + (location.resources || 0)
-    if (code === '04182') return base + 2 * (who?.actionsLeft || 0)
-    if (code === '04185') return base - (who?.assets?.length || 0)
-    return base
+    // 第 84 轮：六张古代地点的帷幕修正在地点条目 shroudModifier。
+    const modifier = locationRuleFor(original(location))?.shroudModifier?.(state, location, who)
+    return base + (modifier || 0)
   },
 
   statModifier(state, inv, skill) {
@@ -836,6 +812,7 @@ export const behavior = {
   cardDrawn(state, inv, code, api) {
     encounterRules.cardDrawn?.(state, inv, code, api)
     if (original(here(state, inv)) !== '04179' || !hasTrait({ code }, 'Hex')) return
+    if (brotherhoodHandBlocks(state, inv.location)) return
     if (!teamOnce(state, '04179clue')) return
     const found = discoverAt(state, api, inv, here(state, inv), 1)
     if (found) api.info?.(`🌿 查普尔特佩克山：${inv.name} 抽到巫术卡牌后发现了 ${found} 个线索。`)
@@ -856,6 +833,8 @@ export const behavior = {
   performAction(state, inv, move, api) {
     const location = here(state, inv)
     const code = original(location)
+    // 第 91 轮：地点条目先接管自己的场景行动。
+    if (locationRuleFor(code)?.performAction?.(state, inv, move, api)) return
     if (move.rule === 'exploreHere') {
       const spec = EXPLORE_SPECS[code]
       if (!exploreUsable(state, inv, spec)) throw new Error('探索当前不可用')
@@ -887,11 +866,6 @@ export const behavior = {
       exploreFrom(state, inv, api)
       return
     }
-    if (move.rule === 'studyCathedral') {
-      api.horror(inv.seat, 1)
-      api.drawCards(inv.seat, 2)
-      return
-    }
     if (move.rule === 'ancientClue') {
       const handled = useAncientAction(state, inv, api, location, code)
       if (!handled) throw new Error('这个行动现在不能结算')
@@ -908,8 +882,6 @@ export const behavior = {
   afterTest(state, inv, result, api) {
     tfaChaosAfterTest('theBoundaryBeyond', state, inv, result, api)
     encounterRules.afterTest?.(state, inv, result, api)
-    const code = original(here(state, inv))
-    if (code === '04170' && !result?.success && result?.skill === 'willpower') api.horror(inv.seat, 1)
   },
 
   resolveChaosToken(state, inv, token, api) {
@@ -920,66 +892,17 @@ export const behavior = {
 
   actReveal(state, act, api) {
     const code = original(act)
-    const flags = (state.scenarioFlags ||= {})
-    if (code === '04165') {
-      // 刚探索出特诺奇蒂特兰地点的调查员检定意志(4)，失败则找到一张随机基础
-      // 疯狂/伤害弱点洗入牌库。
-      const seat = flags.ancientPlacerSeat ?? active(state)[0]?.seat
-      if (seat == null) return
-      api.test(seat, 'willpower', 4, result => {
-        if (result.success) return
-        api.info?.('🌫️ 穿过界限的冲击让你心神不宁：从收藏中找出一张基础疯狂/损伤弱点洗入牌库。')
-        // 04165 背面：查找收藏（不是搜自己牌库）随机拿一张基础疯狂或损伤弱点。
-        api.addBasicWeakness?.(seat, ['madness', 'injury'])
-      })
-      return
-    }
-    if (code === '04166') {
-      // 过去与现在（背面）：所有特诺奇蒂特兰地点进胜利区 → 换图 → 失去线索 →
-      // 在大神庙生成帕德玛 → 移除当前场景/密谋牌库，把场景 3a 与密谋 3a 放进场。
-      sweepTenochtitlan(state, api, { onlyCleared: false })
-      shiftRemainingPresentDay(state, api, '04166')
-      loseAllClues(state)
-      spawnPadma(state, api)
-      state.scenarioZones.removed = [...(state.scenarioZones.removed || []), '04162', '04163']
-      // 引擎在 actReveal 之后才把 actIndex +1，所以这里只补上场景 3a 的槽位；
-      // 密谋 3a 则直接成为当前密谋（Haskell 的 SetCurrentAgendaDeck）。
-      enterFinalStage(state, api, { advanceAct: true })
-      return
-    }
-    if (code === '04167') {
-      api.finish('r1')
-      return
-    }
+    // 第 115 轮：04165/04166/04167 的翻面效果在幕条目；条目通过 hooks 调用本章的换图实现。
+    const entry = actRuleFor(code)?.onReveal
+    if (entry) { entry(state, act, api, boundaryHooks(state, api)); return }
     throw new Error(`未知界限彼端场景：${code}`)
   },
 
   agendaReveal(state, agenda, api) {
     const code = original(agenda)
-    const records = recordsFor(state)
-    if (code === '04162') {
-      // 预示者的追击：先看剧本日志里预示者是否还活着。
-      if (Number(records.theHarbingerIsStillAlive || 0) > 0) spawnHarbinger(state, api)
-      else api.info?.('剧本日志里没有「预示者还活着」的记录，这一面没有额外效果。')
-      return
-    }
-    if (code === '04163') {
-      // 未来幻象（背面）：与场景 2b 相同的换图流程，但只把「没有线索」的
-      // 特诺奇蒂特兰地点放进胜利区；随后把场景 3a 与密谋 3a 放进场。
-      sweepTenochtitlan(state, api, { onlyCleared: true })
-      shiftRemainingPresentDay(state, api)
-      loseAllClues(state)
-      spawnPadma(state, api)
-      state.scenarioZones.removed = [...(state.scenarioZones.removed || []), '04165', '04166']
-      // 引擎在 agendaReveal 之后才把 agendaIndex +1，这里补上密谋 3a 的槽位，
-      // 场景 3a 则直接成为当前场景（Haskell 的 SetCurrentActDeck）。
-      enterFinalStage(state, api, { advanceAgenda: true })
-      return
-    }
-    if (code === '04164') {
-      api.finish('r2')
-      return
-    }
+    // 第 115 轮：04162/04163/04164 的翻面效果在密谋条目。
+    const entry = agendaRuleFor(code)?.onReveal
+    if (entry) { entry(state, agenda, api, boundaryHooks(state, api)); return }
     throw new Error(`未知界限彼端密谋：${code}`)
   },
 

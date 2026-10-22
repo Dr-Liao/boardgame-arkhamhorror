@@ -543,7 +543,8 @@ test(title('02235'), () => {
     if (p.source === 'survivalInstinct') return 'trigger'
     return null
   })
-  assert.equal(s.enemies.find(item => item.id === second.id).exhausted, true)
+  assert.ok(!s.enemies.find(item => item.id === second.id).exhausted, '只解除交战，不横置敌人')
+  assert.equal(s.enemies.find(item => item.id === second.id).engagedSeat, null)
 })
 
 test(title('02260'), () => {

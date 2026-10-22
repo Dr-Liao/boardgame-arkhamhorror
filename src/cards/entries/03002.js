@@ -11,7 +11,7 @@ import { investigatorSign } from './_shared.js'
 
 const factory = () => {
     const es = investigatorSign('03002')
-    return () => ({ delta: es.bonus || 1, returnCommittedSkill: true })
+    return () => ({ delta: es.bonus || 1, returnCommittedSkill: true, onSuccessAlways: true })
   }
 
 export default {

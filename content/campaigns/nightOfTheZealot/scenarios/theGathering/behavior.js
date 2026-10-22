@@ -1,4 +1,5 @@
 import { declareScenario } from '../../../../scenario-declaration.js'
+import { LITA_CHANDLER_CODE } from '../../../../../src/cards/card-rules.js'
 import { actReveal, agendaForced, agendaReveal } from './act-reveal.js'
 
 // Phase 3（D3/D4）：布置、推进常量与结局结果都是声明。
@@ -18,7 +19,7 @@ export const behavior = declareScenario({
     // 客厅谈判（取得丽塔控制权）：条件不满足时也返回，带上缺什么，AI 才知道她在哪个地点。
     actions(state, inv) {
       const parlorId = state.locations.find(location => location.parley)?.id
-      const lita = (state.storyAssets || []).find(asset => asset.code === '01117' && asset.controllerSeat == null)
+      const lita = (state.storyAssets || []).find(asset => asset.code === LITA_CHANDLER_CODE && asset.controllerSeat == null)
       if (!parlorId || !lita) return []
       const litaAt = state.locations.find(location => location.id === lita.location)?.name || lita.location
       const here = inv.location === parlorId && lita.location === inv.location

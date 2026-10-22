@@ -31,4 +31,19 @@ export default {
     },
   ],
   modifiers: [],
+  // 第 119 轮：这张弱点也可能从遭遇牌库结算（卡尔克萨章节的 resolveEncounter 分支），
+  // 逻辑与上面的 weakness resolve 同源，统一放进条目。
+  encounterResolveCampaigns: ['carcosa'],
+  encounterResolve(state, inv, card, api) {
+    const records = state.campaign?.records || {}
+    const doubt = Number(records[DOUBT_KEY] || 0)
+    const conviction = Number(records[CONVICTION_KEY] || 0)
+    const doubtRoute = doubt >= conviction
+    const skill = doubtRoute ? 'intellect' : 'willpower'
+    const difficulty = doubtRoute ? (inv.willpower || 0) : (inv.intellect || 0)
+    api.test(inv.seat, skill, difficulty, result => {
+      if (!result.success) api.damage(inv.seat, 2)
+    })
+    return false
+  },
 }

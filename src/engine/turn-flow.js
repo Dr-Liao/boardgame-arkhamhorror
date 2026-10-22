@@ -93,8 +93,7 @@ export function createTurnFlow(deps) {
   }
 
   function codexSealedElderSign(state, inv, seat, events) {
-    const codex = inv.assets.find(asset => (EFFECTS[asset.code]?.substituteSealedElderSign
-      || registeredEntry(asset.code)?.substituteSealedElderSign)
+    const codex = inv.assets.find(asset => (registeredEntry(asset.code)?.substituteSealedElderSign)
       && (state.chaos?.sealed || []).some(entry => entry.source === asset.id && entry.token === 'eldersign'))
     if (!codex) return null
     const answer = requestChoice(state, { kind: 'reaction', source: codex.id, seat, canSkip: true,
@@ -151,7 +150,8 @@ export function createTurnFlow(deps) {
     // Phase 5（5a-26）：「藏身处」这类给敌人 aloof 的附属由条目级 grantsHidingSpot 声明。
     enemy.hidingSpotAloof = !enemy.elite
       && attachments.some(item => registeredEntry(item.code)?.grantsHidingSpot && item.location === enemy.location)
-    enemy.aloof = !!enemy.printedAloof || enemy.hidingSpotAloof
+    // 剧本赋予的冷漠（02063 四叶草俱乐部）在敌人移动后仍然保留。
+    enemy.aloof = !!enemy.printedAloof || enemy.hidingSpotAloof || enemy.grantedAloof === true
     // Phase 5（5a-27）：「伏击」这类敌人入场即触发伤害的附属由条目级 ambushAttachment 声明。
     const ambush = spawned && attachments.find(item => registeredEntry(item.code)?.ambushAttachment && item.location === enemy.location)
     if (ambush) {
@@ -210,6 +210,7 @@ export function createTurnFlow(deps) {
       info(state, events, `💥 「${enemy.name}」被击败了！胜利点 +${enemy.victory}（累计 ${state.victory}）。`)
     }
     if (vengeance) info(state, events, `🐍 「${enemy.name}」带有 ${vengeance} 点复仇。`)
+    scenarioBehavior(state).victoryChanged?.(state, scenarioRuntime(state, events))
     if (enemy.uniqueCultist && !state.cultistsInVictory.includes(enemy.code)) {
       state.cultistsInVictory.push(enemy.code)
       info(state, events, `🕵️ 「${enemy.name}」被盘问/击败，加入胜利区（${state.cultistsInVictory.length}/6）。`)
@@ -302,7 +303,6 @@ export function createTurnFlow(deps) {
       // 04031 保护咒语：回合结束时花费 1 资源，或弃掉它。
       for (const asset of [...inv.assets]) {
         const pay = registeredEntry(asset.code)?.forcedTurnEndPayOrDiscard
-      ?? EFFECTS[asset.code]?.forcedTurnEndPayOrDiscard
         if (!pay) continue
         const answer = requestChoice(state, {
           kind: 'reaction', source: asset.code, seat: inv.seat, canSkip: true,
@@ -327,7 +327,7 @@ export function createTurnFlow(deps) {
         if (heal && (asset.horror || 0) > 0) asset.horror = Math.max(0, asset.horror - heal)
       }
       for (const code of inv.hand.slice()) {
-        const horror = registeredEntry(code)?.endTurnInHandHorror ?? EFFECTS[code]?.endTurnInHandHorror
+        const horror = registeredEntry(code)?.endTurnInHandHorror
         if (!horror) continue
         info(state, events, `🌑 ${inv.name} 回合结束时揭示「${cardName(code)}」，受到 ${horror} 恐惧，卡牌留在手中。`)
         applyHorror(state, inv, horror, events)
@@ -415,10 +415,12 @@ export function createTurnFlow(deps) {
     return false
   }
 
-  function charlesPayCandidate(state, inv, cost) {
+  function charlesPayCandidate(state, inv, cost, def = null) {
+    // 只允许代付[[道具]]支援；与「横置减 1」能力互相独立。
+    if (def && !(def.type === 'asset' && (def.traits || []).some(trait => String(trait).toLowerCase() === 'item'))) return null
     return state.investigators.find(other => other !== inv && other.location === inv.location
       && !other.defeated && !other.resigned && other.resources >= cost
-      && other.assets.some(asset => asset.itemDiscountAtLocation)) || null
+      && other.assets.some(asset => registeredEntry(asset.code)?.charlesRoss)) || null
   }
 
   function tomeActionEligible(state, inv, move) {

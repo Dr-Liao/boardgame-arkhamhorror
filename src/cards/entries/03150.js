@@ -13,11 +13,11 @@ export default {
   abilities: [
     {
       kind: 'played', fast: true, trigger: 'encounterDrawn',
-      criteria: { nonWeaknessOnly: true, treacheryOnly: true },
+      criteria: { selfOnly: true, nonWeaknessOnly: true, treacheryOnly: true },
       label: '花 1 个线索取消刚抽到的诡计',
       resolve: ({ inv, api }) => {
         api.spendClueToLocation(inv.seat, 1)
-        api.cancelCurrentAttack()
+        api.cancelEncounterDraw(inv.seat)
       },
     },
   ],

@@ -1,5 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { actRuleFor, agendaRuleFor } from '../../../../../src/cards/card-rules.js'
+import { actRuleFor, agendaRuleFor, entryFlags, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
@@ -21,12 +21,8 @@ const CHAOS_TABLE_ID = (() => {
 
 const MOUTH = 'mouthOfKnyan'
 const POISONED_SET_ASIDE = 4
+// 第 116 轮：04218 石板祭坛的标记名已改走 api.tokenLabel（卡条目里），这里只导出符号集合给测试用。
 const SYMBOL_TOKENS = new Set(['eldersign', 'skull', 'cultist', 'tablet', 'elderthing', 'autofail'])
-// 日志里显示中文标记名，不把内部 id（autofail/elderthing…）直接甩给玩家。
-const TOKEN_LABELS = {
-  eldersign: '旧印', skull: '骷髅', cultist: '异教徒', tablet: '石板',
-  elderthing: '旧神', autofail: '自动失败',
-}
 
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
 const recordsFor = state => (state.campaign.records ||= {})
@@ -216,43 +212,12 @@ export const behavior = {
   },
 
   // 04102 中毒弱点按共享规则（encounter-rules）留在威胁区域，这里只处理本章地点的限制。
+  // 第 116 轮：索桥（04071）/ 曲折小道（04073）的探索前规则在地点条目。
   beforeExplore(state, inv, api) {
-    const code = original(here(state, inv))
-    if (code === '04071') {
-      // 索桥：探索前检定敏捷(2)；失败则取消探索、受到 2 点伤害、失去所有行动并结束回合。
-      let failed = false
-      api.test(inv.seat, 'agility', 2, result => {
-        if (result.success) return
-        failed = true
-        api.damage(inv.seat, 2)
-        api.loseActions(inv.seat, 99)
-        api.endTurn(inv.seat)
-      })
-      if (failed) {
-        const canyon = state.locations.find(entry => original(entry) === '04070')
-        if (canyon) api.moveInvestigator(inv.seat, canyon.id)
-        else {
-          const index = (state.explorationDeck || []).indexOf('riverCanyon')
-          if (index >= 0) {
-            state.explorationDeck.splice(index, 1)
-            state.explorationDeck = shuffleWith([...state.explorationDeck], () => api.random?.() ?? 0)
-            api.place('riverCanyon')
-          }
-          api.moveInvestigator(inv.seat, 'riverCanyon')
-        }
-        return false
-      }
-    }
-    if (code === '04073') {
-      // 曲折小道：调查或探索的额外费用 —— 没有指南针则必须花 3 资源。
-      if (!api.checkSupplies(inv.seat, 'compass')) {
-        if ((inv.resources || 0) < 3) {
-          api.info?.(`曲折小道：${inv.name} 没有指南针，也没有 3 资源支付额外费用。`)
-          return false
-        }
-        inv.resources -= 3
-        api.info?.(`曲折小道：${inv.name} 没有指南针，额外花费 3 资源。`)
-      }
+    const location = here(state, inv)
+    const rule = locationRuleFor(original(location))
+    if (typeof rule?.beforeExplore === 'function' && rule.beforeExplore(state, inv, api, location) === false) {
+      return false
     }
     // 引擎的 doExplore 在 beforeExplore 之后才从探索牌库抽卡；用这个标记让「落入陷阱」
     // 知道自己是“从探索牌库抽出”的（此时不能选择洗回探索牌库）。
@@ -261,33 +226,28 @@ export const behavior = {
     return true
   },
 
-  // 04073 曲折小道：调查或探索时若没有指南针，必须先花 3 资源。
+  // 04073 曲折小道：调查或探索时若没有指南针，必须先花 3 资源（条目声明）。
   beforeInvestigate(state, inv, location, api) {
-    if (original(location) !== '04073') return true
-    if (api?.checkSupplies?.(inv.seat, 'compass')) return true
-    if ((inv.resources || 0) < 3) {
-      api?.info?.(`曲折小道：${inv.name} 没有指南针，也没有 3 资源支付额外费用。`)
-      return false
-    }
-    inv.resources -= 3
-    api?.info?.(`曲折小道：${inv.name} 没有指南针，调查额外花费 3 资源。`)
-    return true
+    const rule = locationRuleFor(original(location))
+    if (typeof rule?.beforeInvestigate !== 'function') return true
+    return rule.beforeInvestigate(state, inv, location, api) !== false
   },
 
   afterExplore(state, inv, context) {
     syncSymbolConnections(state)
     const api = context?.runtime
     const location = here(state, inv)
-    const code = original(location)
+    const rule = locationRuleFor(original(location))
     if (state.scenarioFlags) delete state.scenarioFlags.exploreDrawPending
+    // 第 116 轮：04072 万蛇据点的中毒伤害在地点条目（探索成功也要结算）。
+    rule?.afterExplore?.({ state, inv, api, context, location })
     if (context?.kind === 'location') {
       state.explorationDiscard ||= []
       inv.tfaExploredThisTurn = true
       return
     }
-    // 抽到的是诡计/敌人＝探索失败，按地点的强制效果结算。
-    if (code === '04069' && api) api.damage(inv.seat, 1)
-    if (code === '04072' && isPoisoned(inv) && api) api.damage(inv.seat, 1)
+    // 抽到的是诡计/敌人＝探索失败，按地点的强制效果结算（04069 荆棘之路）。
+    rule?.afterExploreFailure?.({ state, inv, api, context, location })
   },
 
   afterTest(state, inv, result, api) {
@@ -295,10 +255,8 @@ export const behavior = {
     encounterRules.afterTest?.(state, inv, result, api)
     // 困难/专家的平板条款统一由 tfa-chaos.js 结算（含把放在一边的 04102 移入威胁区域），
     // 本章不再重复放置，避免同一张弱点被结算两次。
-    const investigating = result?.source?.label === '调查'
-    const code = original(here(state, inv))
-    if (!result.success && investigating && code === '04069') api.damage(inv.seat, 1)
-    if (code === '04072' && isPoisoned(inv) && investigating) api.damage(inv.seat, 1)
+    // 第 116 轮：04069 / 04072 / 04053 的调查后规则在地点条目。
+    locationRuleFor(original(here(state, inv)))?.afterTest?.({ state, inv, result, api })
   },
 
   resolveChaosToken(state, inv, token, api) {
@@ -309,22 +267,9 @@ export const behavior = {
   // src/cards/encounter-abilities.js 的 04074 地点条目，本章不再重复实现。
 
   locationEntered(state, inv, location, api) {
-    const code = original(location)
-    if (code === '04075' && isPoisoned(inv)) {
-      inv.actionsLeft = 0
-      inv.turnEnded = true
-      api.info?.('杂草丛生的遗迹：中毒的探索者失去所有行动并结束回合。')
-    }
-    if (code === '04218') {
-      // 石板祭坛：进入后随机揭示一个混乱标记；符号则失去 1 行动，无法失去则改为 1 点恐惧。
-      const token = api.revealToken?.(inv.seat)
-      if (!token) return
-      const label = TOKEN_LABELS[String(token)] || (/^-?\d+$/.test(String(token)) ? `数值 ${token}` : String(token))
-      api.info?.(`石板祭坛：揭示混乱标记「${label}」。`)
-      if (!SYMBOL_TOKENS.has(String(token))) return
-      if ((inv.actionsLeft || 0) > 0) api.loseActions(inv.seat, 1)
-      else api.horror(inv.seat, 1)
-    }
+    // 第 116 轮：04075（中毒即结束回合）与 04218（石板祭坛）的进入规则在地点条目，
+    // 由引擎派发 locationRule.onEnter.effect；本章不再重复实现。
+    return encounterRules.locationEntered?.(state, inv, location, api)
   },
 
   enemyStatModifier(state, enemy, stat) {
@@ -365,7 +310,7 @@ export const behavior = {
   enemyAttackResolved(state, enemy, inv, api, attack) {
     encounterRules.enemyAttackResolved?.(state, enemy, inv, api, attack)
     if (original(enemy) !== APEX_STRANGLEWEED || attack?.kind !== 'opportunity') return
-    if (api.checkSupplies?.(inv.seat, 'pocketknife')) return
+    if (api.hasSupply?.(inv.seat, 'pocketknife') ?? api.checkSupplies?.(inv.seat, 'pocketknife')) return
     api.loseActions(inv.seat, 99)
     api.endTurn(inv.seat)
     api.info?.(`绝命噬藤：${inv.name} 没有折叠小刀，失去所有行动并结束回合。`)
@@ -374,7 +319,9 @@ export const behavior = {
   // 本章专门的遭遇结算（先串联共享遭遇组规则）。
   resolveEncounter(state, inv, t, api) {
     const code = original(t)
-    if (code === '04215') {
+    // 第 117 轮：这三张卡的身份由条目标志声明（上下两章共用，本章文案/数值仍在本文件）。
+    const flags = entryFlags(code) || {}
+    if (flags.pitfall) {
       const fromExploration = Boolean(state.scenarioFlags?.exploreDrawPending)
       if (state.scenarioFlags) delete state.scenarioFlags.exploreDrawPending
       const pitfallTest = () => api.test(inv.seat, 'agility', 3, result => {
@@ -405,7 +352,7 @@ export const behavior = {
       pitfallTest()
       return false
     }
-    if (code === '04216') {
+    if (flags.spores) {
       const location = here(state, inv)
       if (!location) {
         api.horror(inv.seat, 1)
@@ -420,7 +367,7 @@ export const behavior = {
       api.info?.(`有毒孢子附属到「${location.name}」；本轮结束时结算。`)
       return true
     }
-    if (code === '04221') {
+    if (flags.ants) {
       api.test(inv.seat, 'agility', 4, result => {
         if (result.success) return
         const failedBy = Math.max(0, 4 - (result.value ?? 0))
@@ -456,50 +403,24 @@ export const behavior = {
 
   actions(state, inv) {
     const moves = []
-    const code = original(here(state, inv))
-    const act = original(state.acts?.[state.actIndex])
-    if (code === '04206') {
-      moves.push({ action: 'scenarioAction', rule: 'resignMouth', label: '⛺ 撤退：搭起帐篷，明天再解开石柱的谜团' })
-      moves.push({ action: 'scenarioAction', rule: 'mouthCompass', label: '🧭 检查补给：用指南针查看探索牌库顶 3 张' })
-      const groupClues = active(state).filter(entry => entry.location === inv.location)
-        .reduce((sum, entry) => sum + (entry.clues || 0), 0)
-      if (act === '04210') {
-        moves.push({
-          action: 'scenarioAction', rule: 'solvePillar', scriptCard: 'act',
-          label: `🗿 共同花费 ${state.numInvestigators} 个线索，解开一根石柱（${pillarCount(state)}/${PILLARS_TO_OPEN}）`,
-          reason: groupClues >= state.numInvestigators ? null
-            : `需要共同花费 ${state.numInvestigators} 个线索（当前 ${groupClues}）`,
-        })
-      }
-    }
-    if (code === '04217' && !state.scenarioFlags?.timeWrackedWoodsUsed) {
-      moves.push({
-        action: 'scenarioAction', rule: 'expelVengeance', actions: 2,
-        label: '⏳ 把胜利区一张带复仇点数的非精英卡牌放进遭遇弃牌堆（团队每场一次）',
-      })
-    }
-    // 04070 河流峡谷：治愈 1 点伤害；有水壶再额外 2 点（每场游戏一次）。
-    if (code === '04070' && !state.scenarioFlags?.riverCanyonHealed) {
-      moves.push({ action: 'scenarioAction', rule: 'healRiverCanyon', label: '💧 治愈所在调查员 1 点伤害（有水壶再额外 2 点）' })
-    }
+    const location = here(state, inv)
+    // 第 116 轮：04206 昆扬之口 / 04217 时间折磨的树林 / 04070 河流峡谷的行动在地点条目。
+    locationRuleFor(original(location))?.actions?.({
+      state, inv, location, moves, hooks: { pillarsToOpen: PILLARS_TO_OPEN },
+    })
     return moves
   },
 
   performAction(state, inv, move, api) {
+    // 第 116 轮：地点条目先接管自己的场景行动（如 04070 的治愈）。
+    const location = here(state, inv)
+    if (locationRuleFor(original(location))?.performAction?.(state, inv, move, api, location)) return
     if (move.rule === 'resignMouth') {
       api.resign(inv.seat)
       return
     }
-    if (move.rule === 'healRiverCanyon') {
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.riverCanyonHealed = true
-      api.healDamage(inv.seat, 1)
-      if (api.checkSupplies?.(inv.seat, 'canteen')) api.healDamage(inv.seat, 2)
-      api.info?.(`💧 河流峡谷：治愈 ${inv.name}（${api.checkSupplies?.(inv.seat, 'canteen') ? 3 : 1} 点伤害）。`)
-      return
-    }
     if (move.rule === 'mouthCompass') {
-      if (!api.checkSupplies(inv.seat, 'compass')) {
+      if (!(api.hasSupply?.(inv.seat, 'compass') ?? api.checkSupplies(inv.seat, 'compass'))) {
         api.info?.('检查补给：队伍中没有指南针，这次行动没有效果。')
         return
       }

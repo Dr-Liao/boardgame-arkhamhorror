@@ -74,7 +74,7 @@ const LEGACY_RULES = Object.freeze([
 
 // 旧 DSL 条目（未迁移的卡）仍然提供这些字段；迁移后条目消失，规则自然失效。
 export function legacyPlayFields(code) {
-  return EFFECTS[code] || {}
+  return {}
 }
 
 // 描述子条目声明的打出条件（能力层写法）。

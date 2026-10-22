@@ -18,15 +18,21 @@ export default {
         const resources = Number(answer)
         api.gainResources(inv.seat, resources)
         const supplies = 4 - resources
-        if (!supplies) return
-        const targets = api.investigatorsAt(inv.location).flatMap(owner => owner.assets)
-          .filter(asset => String(asset.usesType).toLowerCase().startsWith('suppl'))
-        if (!targets.length) return
-        const chosen = targets.length === 1 ? targets[0].id
-          : api.choice({ kind: 'target', source: '03239', seat: inv.seat, prompt: '选择要放置补给的支援。',
-            options: targets.map(asset => ({ id: asset.id, label: api.cardName(asset.code) })) })
-        const asset = targets.find(item => item.id === chosen) || targets[0]
-        api.addUses(asset, supplies)
+        let remaining = supplies
+        while (remaining > 0) {
+          const targets = api.investigatorsAt(inv.location).flatMap(owner => owner.assets)
+            .filter(asset => String(asset.usesType).toLowerCase().startsWith('suppl'))
+          if (!targets.length) break
+          const chosen = targets.length === 1 ? targets[0].id
+            : api.choice({ kind: 'target', source: '03239', seat: inv.seat,
+              prompt: `选择要放置补给的支援（还可放置 ${remaining} 个）。`,
+              options: targets.map(asset => ({ id: asset.id, label: api.cardName(asset.code) })) })
+          const asset = targets.find(item => item.id === chosen) || targets[0]
+          api.addUses(asset, 1)
+          remaining -= 1
+        }
+        // 没有可放置补给的支援时，剩余点数改为资源。
+        if (remaining > 0) api.gainResources(inv.seat, remaining)
       },
     },
   ],

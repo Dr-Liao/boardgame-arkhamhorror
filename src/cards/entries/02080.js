@@ -12,6 +12,8 @@ import { skillModifier } from './_shared.js'
 
 export default {
   code: '02080',
+  assetRule: { morgan: true },
+  scenarioPlayable: true,
   modifiers: [
     skillModifier('combat', 1),
   ],

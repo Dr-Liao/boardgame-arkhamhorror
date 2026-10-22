@@ -57,7 +57,7 @@ export function createCardDefs(deps) {
   // 「卡面是否需要快速反应开关」的统一口径：旧 DSL（EFFECTS）与迁移后的条目/描述子一起看。
   // 只有会让玩家做选择的窗口才需要开关（reaction / playerWindow / boost 三类）；
   // 自动领取的资源奖励不打扰玩家。两个出卡分支（目录卡 / 规则卡）共用同一份判定。
-  function hasReactionPromptFor(code, eff = EFFECTS[code], descriptorEntry = registeredEntry(code)) {
+  function hasReactionPromptFor(code, eff = null, descriptorEntry = registeredEntry(code)) {
     const reactions = [...(eff?.reactions || []), ...(investigatorRule(code)?.reactions || [])]
     const descriptorAbilities = descriptorEntry?.abilities || []
     // 迁移后「天赋自动投入档位」（freeTriggers，boost 询问）与「免费能力」（cost.action === false，
@@ -85,7 +85,7 @@ export function createCardDefs(deps) {
       // 即使目录可用性是 catalog-only（如 02040 亨利·阿米蒂奇博士这类剧情奖赏卡），也必须带
       // hasReactionPrompt / reactionIds 进 state.cards；否则卡面的「快速反应」开关会凭空消失。
       if (selected ? !selected.has(code) : runtimeOnly && !canSelectInvestigator(code) && !isCardAvailable(code)) continue
-      const eff = EFFECTS[code]
+      const eff = null
       const availability = getAvailability(code)
       const copy = { ...c, name: c.nameZh || c.name, nameEn: c.name,
         availability: availability.availability, strictAccepted: availability.strictAccepted }
@@ -184,9 +184,11 @@ export function createCardDefs(deps) {
   }
 
   function newPlayerAssetInstance(state, inv, code, fields = {}) {
-    const effect = EFFECTS[code] || {}
+    const effect = {}
     const abilityEntry = registeredEntry(code)
     const asset = newCardInstance(state, code, { exhausted: false, enteredRound: state.round, ...fields })
+    // 「强制 - 入场后放置 1 个毁灭」（01063 新晋术士）：所有入场路径共用同一实例创建点。
+    if (asset.doom == null && abilityEntry?.onPlayDoom != null) asset.doom = abilityEntry.onPlayDoom
     const uses = effect.uses ?? abilityEntry?.uses
     const usesType = effect.usesType ?? abilityEntry?.usesType
     if (uses != null && asset.uses == null) {

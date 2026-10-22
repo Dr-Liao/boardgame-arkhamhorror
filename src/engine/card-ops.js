@@ -13,11 +13,13 @@ export function createCardOps(deps) {
     describePrey,
     discardLocked,
     disposePlayedEvent,
+    drawCards,
     effectError,
     enemyTextBlanked,
     getMaxSanity,
     getStat,
     info,
+    registeredEntry,
     invClues,
     isWeaknessCode,
     leadDecisionSeat,
@@ -38,8 +40,34 @@ export function createCardOps(deps) {
     mostClues: (state, inv) => -invClues(inv),
     mostHorror: (state, inv) => -inv.horror,
     lowestSanity: (state, inv) => getMaxSanity(inv) - inv.horror,
+    // 「猎物 - 剩余神智值最高」：数值越小越优先，所以取负。
+    mostRemainingSanity: (state, inv) => -(getMaxSanity(inv) - (inv.horror || 0)),
     lowestAgility: (state, inv) => getStat(state, inv, 'agility'),
     lowestCombat: (state, inv) => getStat(state, inv, 'combat'),
+    // 「猎物 - 距离昆扬之口最近」：按地点连接数计算最短距离。
+    nearestMouth: (state, inv) => {
+      const mouth = (state.locations || []).find(location =>
+        registeredEntry(location.originalCode || location.code)?.flags?.mouthOfKnyan
+        || registeredEntry(location.linkedOriginalCode)?.flags?.mouthOfKnyan)
+      if (!mouth || mouth.id === inv.location) return 0
+      const distance = (from, to) => {
+        if (from === to) return 0
+        const queue = [[from, 0]]
+        const seen = new Set([from])
+        while (queue.length) {
+          const [id, steps] = queue.shift()
+          const location = state.locations.find(entry => entry.id === id)
+          for (const next of location?.connections || []) {
+            if (next === to) return steps + 1
+            if (seen.has(next)) continue
+            seen.add(next)
+            queue.push([next, steps + 1])
+          }
+        }
+        return 999
+      }
+      return distance(inv.location, mouth.id)
+    },
     fewestHand: (state, inv) => inv.hand.length,
     // 「猎物 - 手牌最多」：数值越小越优先，所以取负。
     mostHand: (state, inv) => -inv.hand.length,
@@ -212,18 +240,20 @@ export function createCardOps(deps) {
       info(state, events, `${inv.name} 查看了牌库顶 ${cards.length} 张，没有符合条件的卡牌，洗回牌库。`)
       return
     }
+    const optional = effect.optional === true
     const answer = requestChoice(state, {
-      kind: 'search', source: effect.source || 'search-top', seat, canSkip: !effect.mandatory,
-      prompt: `查看牌库顶 ${cards.length} 张，选择 ${effect.choose || 1} 张加入手牌，其余洗回。`,
-      options: [...(effect.mandatory ? [] : [{ id: 'skip', label: '不选择' }]),
+      kind: 'search', source: effect.source || 'search-top', seat, canSkip: optional,
+      prompt: `查看牌库顶 ${cards.length} 张，选择 ${effect.choose || 1} 张抽取，其余洗回。`,
+      options: [...(optional ? [{ id: 'skip', label: '不选择' }] : []),
         ...matches.map((code, index) => ({ id: String(index), cardCode: code, label: cardName(code) }))],
     })
     if (answer !== 'skip') {
       const code = matches[Number(answer)]
       const idx = inv.deck.lastIndexOf(code)
+      // 把选中的牌放到牌库顶，再走统一抽牌管线：弱点、抽牌窗口与日志都按「抽取」结算。
       if (idx >= 0) inv.deck.splice(idx, 1)
-      inv.hand.push(code)
-      info(state, events, `${inv.name} 查找后将「${cardName(code)}」加入手牌。`)
+      inv.deck.push(code)
+      for (const text of drawCards(state, inv, 1, events)) info(state, events, text)
     }
     inv.deck = shuffle(inv.deck, () => randomValue(state))
   }

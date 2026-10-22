@@ -11,7 +11,7 @@ export default {
   code: '03271',
   abilities: [
     {
-      kind: 'reaction', trigger: 'assetEnteredPlay', label: '入场：放 1 毁灭或受 2 恐惧',
+      kind: 'forced', trigger: 'assetEnteredPlay', label: '入场：放 1 毁灭或受 2 恐惧',
       criteria: [ctx => ctx.context?.assetCode === '03271'],
       resolve: ({ inv, context, api }) => {
         const entered = inv.assets.find(item => item.id === context?.assetId)

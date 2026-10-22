@@ -142,6 +142,7 @@ function descriptorStats(localizedArts) {
 const SAMPLE_CODES = Object.freeze(['01001', '01016', '01111', '01119', '01121a', '01121b', '01149', '01104', '01145', '60336'])
 const PRESENTATION_FILES = Object.freeze([
   'games/arkhamhorror/presentation/art-rules.js',
+  'games/arkhamhorror/presentation/generated-localized-arts.json',
   'games/arkhamhorror/presentation/images.js',
   'games/arkhamhorror/src/cards/card-catalog.js',
   'games/arkhamhorror/src/integration/web-api.js',
@@ -174,7 +175,8 @@ function fingerprint() {
 
 export function buildPresentation() {
   const localized = localizedArtList()
-  const localizedArts = new Set(localized.arts)
+  const generated = JSON.parse(readFileSync(new URL('presentation/generated-localized-arts.json', GAME), 'utf8'))
+  const localizedArts = new Set([...localized.arts, ...generated.arts])
   const registry = mediaRegistry()
   const linkedFronts = new Map()
   for (const card of Object.values(ALL_CARDS)) {
@@ -213,7 +215,7 @@ export function buildPresentation() {
       localizedFrontCandidates: stats.localizedFront,
       cardsWithBackArt: stats.withBackArt,
       genericBacks: stats.genericBack,
-      localizedArtEntries: localized.arts.length,
+      localizedArtEntries: localizedArts.size,
       localImagesCopied: 0,
       remoteManifestEntries: registry.remoteManifest.entries,
       referenceLocalMediaFiles: registry.referenceLocalFiles.total,

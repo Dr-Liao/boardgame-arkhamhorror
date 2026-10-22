@@ -1,5 +1,6 @@
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
+import { actRuleFor, locationRuleFor, entryFlags } from '../../../../../src/cards/card-rules.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { carcosaChaosToken, carcosaChaosAfterTest } from '../../carcosa-chaos.js'
@@ -185,33 +186,32 @@ export const behavior = {
   afterTest(state, inv, result, api) {
     encounterRules.afterTest?.(state, inv, result, api)
     carcosaChaosAfterTest('aPhantomOfTruth', state, inv, result, api)
-    if (result.success && result.source?.label === '调查'
-      && state.locations.find(location => location.id === inv.location)?.originalCode === '03215') {
-      state.scenarioFlags.pereLachaiseLock = { seat: inv.seat, round: state.round }
-    }
+    // 第 119 轮：03215 拉雪兹神父公墓的「调查成功即锁住离场」在地点条目。
+    const location = state.locations.find(candidate => candidate.id === inv.location)
+    locationRuleFor(original(location))?.afterTest?.({ state, inv, result, api })
   },
   movementError(state, inv) {
-    const lock = state.scenarioFlags?.pereLachaiseLock
-    if (lock && lock.seat === inv.seat && lock.round === state.round
-      && state.locations.find(location => location.id === inv.location)?.originalCode === '03215') {
-      return '拉雪兹神父公墓：本回合不能离开'
-    }
-    const marais = state.scenarioFlags?.leMaraisLock
-    if (marais && marais.seat === inv.seat && marais.round === state.round
-      && state.locations.find(location => location.id === inv.location)?.originalCode === '03218') {
-      return '玛黑区：本回合不能离开'
+    // 第 119 轮：03215 / 03218 的「不能离开」由地点条目的 exitLock 声明。
+    const location = state.locations.find(candidate => candidate.id === inv.location)
+    const rule = locationRuleFor(original(location))
+    if (rule?.exitLock) {
+      const locks = state.scenarioFlags?.[rule.exitLock.flag]
+      const locked = Array.isArray(locks)
+        ? locks.some(lock => lock.seat === inv.seat && lock.round === state.round)
+        : locks && locks.seat === inv.seat && locks.round === state.round
+      if (locked) return rule.exitLock.message
     }
     return null
   },
   locationEntered(state, inv, location, api) {
-    encounterRules.locationEntered?.(state, inv, location, api)
-    if (original(location) === '03218') state.scenarioFlags.leMaraisLock = { seat: inv.seat, round: state.round }
+    // 第 119 轮：03218 玛黑区的进入锁由地点条目的 onEnter.effect 声明（引擎派发）。
+    return encounterRules.locationEntered?.(state, inv, location, api)
   },
   afterEvade(state, inv, enemy, result, api) {
     encounterRules.afterEvade?.(state, inv, enemy, result, api)
     if (!result?.success || original(state.locations.find(location => location.id === inv.location)) !== '03216') return
-    if (state.scenarioFlags.canalMoveRound === state.round) return
-    state.scenarioFlags.canalMoveRound = state.round
+    if (state.scenarioFlags[`canalMoveRound:${inv.seat}`] === state.round) return
+    state.scenarioFlags[`canalMoveRound:${inv.seat}`] = state.round
     const here = state.locations.find(location => location.id === inv.location)
     const destinations = (here?.connections || []).filter(id => state.locations.some(location => location.id === id))
     if (!destinations.length) return
@@ -233,52 +233,63 @@ export const behavior = {
     if (!state.investigators.some(inv => !inv.defeated && !inv.resigned && inv.location === 'gardensOfLuxembourg')) return []
     return ['gardensOfLuxembourg']
   },
+  // 风琴手（03221，确信路线）：通过猎手关键词移动后若未交战，再结算一次猎手（每轮一次）；
+  // 它在本阶段不能攻击。
+  hunterMove(state, enemy, api) {
+    if (encounterRules.hunterMove?.(state, enemy, api)) return true
+    if (entryFlags(original(enemy))?.organist !== 'conviction') return false
+    const first = api.hunterStep(enemy)
+    const moved = first && first !== enemy.location
+    if (moved) api.moveEnemy(enemy, first)
+    if (!moved) return true
+    const marks = (state.scenarioFlags.organistExtraHunter ||= {})
+    if (enemy.engagedSeat == null && marks[state.round] !== true) {
+      marks[state.round] = true
+      const second = api.hunterStep(enemy)
+      if (second && second !== enemy.location) api.moveEnemy(enemy, second)
+    }
+    enemy.skipAttackRound = state.round
+    api.info?.(`「${enemy.name}」因猎手移动本阶段不能攻击。`)
+    return true
+  },
+  enemyPhaseEnd(state, api) {
+    encounterRules.enemyPhaseEnd?.(state, api)
+    // 风琴手（03221b，疑惑路线）：敌军阶段结束时未交战则远离最近调查员移动 1 地点
+    //（优先无调查员地点）；已交战则解除交战（不横置）。
+    const organist = state.enemies.find(enemy => entryFlags(original(enemy))?.organist === 'doubt')
+    if (!organist) return
+    if (organist.engagedSeat != null) {
+      const holder = state.investigators[organist.engagedSeat]
+      if (holder) holder.engaged = (holder.engaged || []).filter(id => id !== organist.id)
+      organist.engagedSeat = null
+      api.info?.(`「${organist.name}」解除与调查员的交战。`)
+      return
+    }
+    const location = state.locations.find(candidate => candidate.id === organist.location)
+    const investigatorLocations = active(state).map(inv => inv.location)
+    if (!location || !investigatorLocations.length) return
+    const candidates = (location.connections || []).filter(id => state.locations.some(candidate => candidate.id === id))
+    if (!candidates.length) return
+    const empty = candidates.filter(id => !state.investigators.some(inv => !inv.defeated && !inv.resigned && inv.location === id))
+    const pool = empty.length ? empty : candidates
+    const scored = pool.map(id => ({ id, score: distance(state, id, investigatorLocations) }))
+    const best = Math.max(...scored.map(item => item.score))
+    const choices = scored.filter(item => item.score === best)
+    const destination = choices.length === 1 ? choices[0].id : api.choose({
+      kind: 'location', source: 'organistDoubt', seat: state.campaign.leadSeat,
+      prompt: '选择风琴手远离最近调查员的移动地点。',
+      options: choices.map(item => ({ id: item.id, label: state.locations.find(location => location.id === item.id)?.name || item.id })),
+    })
+    api.moveEnemy(organist, destination)
+  },
   resolveEncounter(state, inv, card, api) {
-    const code = original(card)
-    if (code === '03223') {
-      api.test(inv.seat, 'intellect', 4, result => {
-        if (result.success) return
-        const failedBy = Math.max(1, result.difficulty - result.value)
-        const options = state.doom > 0
-          ? [{ id: 'doom', label: '从当前密谋移除 1 个毁灭' }, { id: 'horror', label: `承受 ${failedBy} 点恐惧` }]
-          : [{ id: 'horror', label: `承受 ${failedBy} 点恐惧` }]
-        const choice = options.length === 1 ? 'horror' : api.choose({
-          kind: 'encounter', source: code, seat: inv.seat, prompt: '双生太阳：移除毁灭或承受恐惧。', options,
-        })
-        if (choice === 'doom') state.doom = Math.max(0, state.doom - 1)
-        else api.horror(inv.seat, failedBy)
-      })
-      return false
-    }
-    if (code === '03227') {
-      const doubt = count(state, 'doubt')
-      const conviction = count(state, 'conviction')
-      const doubtRoute = doubt >= conviction
-      const skill = doubtRoute ? 'intellect' : 'willpower'
-      const difficulty = doubtRoute ? (inv.willpower || 0) : (inv.intellect || 0)
-      api.test(inv.seat, skill, difficulty, result => {
-        if (!result.success) api.damage(inv.seat, 2)
-      })
-      return false
-    }
+    // 第 119 轮：03223 双生太阳与 03227 失魂落魄的显现结算在条目
+    // （03227 是玩家弱点，条目同时声明 carcosa 的遭遇结算入口）。
     return encounterRules.resolveEncounter(state, inv, card, api)
   },
   locationRevealed(state, location, api) {
-    if (location.originalCode !== '03211') return
-    const answer = api.choose({
-      kind: 'location',
-      source: '03211',
-      seat: state.currentSeat,
-      prompt: '揭示大木偶剧场：选择受到2点恐惧，或洗回全部非弱点手牌并重抽。',
-      options: [{ id: 'horror', label: '受到2点恐惧' }, { id: 'shuffle', label: '洗回并重抽手牌' }],
-    })
-    const inv = state.investigators[state.currentSeat]
-    if (answer === 'horror') api.horror(inv.seat, 2)
-    else {
-      const cards = inv.hand.splice(0)
-      inv.deck.push(...cards)
-      api.drawCards(inv.seat, cards.length)
-    }
+    // 第 119 轮：03211 大木偶剧场的揭示强制效果在地点条目的 locationRule.onReveal。
+    return encounterRules.locationRevealed?.(state, location, api)
   },
   roundEnded(state, api) {
     encounterRules.roundEnded?.(state, api)
@@ -311,20 +322,28 @@ export const behavior = {
     return state.doom - otherDoom < agenda.doomThreshold
   },
   enemyAttackedSuccessfully(state, inv, enemy, api) {
-    if (state.acts[state.actIndex]?.originalCode !== '03206' || !['03221', '03221b'].includes(enemy.code)
-      || inv.clues < 1) return
+    if (state.acts[state.actIndex]?.originalCode !== '03206' || !['03221', '03221b'].includes(enemy.code)) return
     state.scenarioFlags.organistClueRound ||= {}
     const used = state.scenarioFlags.organistClueRound[state.round] || 0
     if (used >= state.numInvestigators) return
+    const candidates = active(state).filter(other => other.location === inv.location && (other.clues || 0) > 0)
+    if (!candidates.length) return
     if (api.choose({
       kind: 'reaction',
       source: '03206',
       seat: inv.seat,
       canSkip: true,
-      prompt: '是否花费1个线索并放到风琴手上？',
+      prompt: '是否由你所在地点的一位调查员放置 1 个线索到风琴手上？',
       options: [{ id: 'skip', label: '不放置' }, { id: 'place', label: '放置1个线索' }],
     }) === 'place') {
-      inv.clues--
+      // 卡面：你所在地点的「一位调查员」可以放置他/她自己的线索，不限于攻击者。
+      const placer = candidates.length === 1 ? candidates[0]
+        : state.investigators[Number(api.choose({
+          kind: 'investigator', source: 'organistClue', seat: inv.seat,
+          prompt: '选择放置线索的调查员。',
+          options: candidates.map(other => ({ id: String(other.seat), label: other.name })),
+        }))] || candidates[0]
+      placer.clues--
       enemy.clues = (enemy.clues || 0) + 1
       state.scenarioFlags.organistClueRound[state.round] = used + 1
       if (enemy.clues >= 3 * state.numInvestigators) api.advanceAct()
@@ -333,37 +352,10 @@ export const behavior = {
   actions(state, inv) {
     const moves = []
     const location = state.locations.find(candidate => candidate.id === inv.location)
-    const code = original(location)
-    const perRoundKey = `${code}:${inv.seat}`
-    if (code === '03208' && state.scenarioFlags[perRoundKey] !== state.round) {
-      const discardable = inv.hand.some(card => !inv.hiddenCards?.includes(card))
-      moves.push({ action: 'scenarioAction', rule: 'montparnasseDiscard', actions: 0,
-        label: '弃掉1张手牌，获得等同其意志图标数量的资源',
-        reason: discardable ? null : '需要 1 张可弃的手牌（隐藏的疯狂牌不能弃）' })
-    }
-    if (code === '03209' && state.scenarioFlags.montmartrePlayRound !== state.round) {
-      moves.push({ action: 'scenarioAction', rule: 'montmartrePlay',
-        label: '揭示每位调查员牌库顶牌并可打出一张支援' })
-    }
-    if (code === '03210' && state.scenarioFlags[perRoundKey] !== state.round) {
-      const reloadable = inv.assets.some(asset =>
-        ['ammo', 'supply', 'supplies'].includes(String(asset.usesType || '').toLowerCase()))
-      moves.push({ action: 'scenarioAction', rule: 'montmartreReload',
-        label: '花费1资源，为一张卡牌补充1补给或子弹',
-        reason: inv.resources < 1 ? `需要 1 个资源（当前 ${inv.resources}）`
-          : reloadable ? null : '需要一张带弹药或补给的支援' })
-    }
-    if (code === '03214' && state.locations.some(candidate =>
-      candidate.id !== inv.location && ALL_CARDS[original(candidate)]?.traits?.includes('Rail'))) {
-      moves.push({ action: 'scenarioAction', rule: 'gareRailMove',
-        actionKind: 'move', label: '花费1资源，移动到任意轨道沿线地点',
-        reason: inv.resources < 1 ? `需要 1 个资源（当前 ${inv.resources}）` : null })
-    }
-    if (code === '03219' && !state.scenarioFlags.notreDameUsed) {
-      moves.push({ action: 'scenarioAction', rule: 'notreDameDoom',
-        label: '检定意志（6），放置或移除1个毁灭' })
-    }
-    if (state.acts[state.actIndex]?.originalCode === '03207'
+    // 第 119 轮：03208 / 03209 / 03210 / 03214 / 03219 的场景行动在地点条目。
+    locationRuleFor(original(location))?.actions?.({ state, inv, location, moves })
+    // 幕 03207 背面的「跟踪阴影」团队行动（条目声明 shadowAction）。
+    if (actRuleFor(original(state.acts[state.actIndex]))?.shadowAction
       && state.scenarioFlags.shadowActionRound !== state.round) {
       const teamClues = active(state).reduce((sum, candidate) => sum + candidate.clues, 0)
       moves.push({

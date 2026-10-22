@@ -4,6 +4,8 @@ import { groupedChaosTokens } from './chaos-bag-view.js'
 import { tableArt, retainTableArt } from './table-art.js'
 import { tableIcon } from './table-components.js'
 import { cardSymbol } from './card-text.js'
+// 第 127 轮：「书籍行动」调查员表在 web/ui-cards.js。
+import { UI_CARDS } from './ui-cards.js'
 
 const IMG = '/mods/arkhamhorror/img/'
 const PHASES = [
@@ -159,7 +161,7 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
         token('resource', 'resource', '资源', inv.resources ?? 0),
         token('clue', 'clue', '线索', inv.clues ?? 0),
         token('action', 'action', '行动', inv.actionsLeft ?? 0),
-        inv.code === '01002' ? token('tome', 'book', '书籍行动', inv.tomeActionUsed ? 0 : 1) : null),
+        UI_CARDS.tomeInvestigators.includes(inv.code) ? token('tome', 'book', '书籍行动', inv.tomeActionUsed ? 0 : 1) : null),
       h('div', { className: 'ah-situ-skills' }, SKILLS.map(([skill, label]) => h('span', { className: 'ah-situ-skill', 'data-skill': skill, title: label },
         cardSymbol(h, skill), h('b', {}, String(effStat(s, inv, skill))), h('small', {}, label)))),
       h('div', { className: 'ah-situ-decks' },

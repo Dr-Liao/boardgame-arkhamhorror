@@ -34,21 +34,30 @@ export function tableCounter(h, kind, label, value) {
     h('span', { className: 'ah-counter-face' }, tableIcon(kind), h('strong', {}, String(value))), h('small', {}, label))
 }
 
+// 第 127 轮：剧情标记的卡号由 web/ui-cards.js 声明。
+import { UI_CARDS } from './ui-cards.js'
+
 export function cardAttachmentReferences(card = {}) {
+  const storyCode = role => UI_CARDS.story[role]
   const references = []
   for (const value of [card.attachedTreacheries, card.attachedCards, card.attachments, card.attached]) {
     if (Array.isArray(value)) references.push(...value)
   }
   const hasCode = code => references.some(item => (typeof item === 'string' ? item : item?.code) === code)
-  if (card.smiteTheWickedSeat != null && !hasCode('02007')) references.push({ code: '02007', ownerSeat: card.smiteTheWickedSeat })
-  if (card.searchingForIzzieSeat != null && !hasCode('02011')) references.push({ code: '02011', ownerSeat: card.searchingForIzzieSeat })
+  if (card.smiteTheWickedSeat != null && !hasCode(storyCode('smiteTheWicked'))) {
+    references.push({ code: storyCode('smiteTheWicked'), ownerSeat: card.smiteTheWickedSeat })
+  }
+  if (card.searchingForIzzieSeat != null && !hasCode(storyCode('searchingForIzzie'))) {
+    references.push({ code: storyCode('searchingForIzzie'), ownerSeat: card.searchingForIzzieSeat })
+  }
   if (card.bindMonster?.code && !hasCode(card.bindMonster.code)) references.push(card.bindMonster)
   if (card.snareTrap?.code && !hasCode(card.snareTrap.code)) references.push(card.snareTrap)
   // The Miskatonic Museum tracks Shadow-spawned as a flag plus a resource
   // count instead of an attachment array; derive the card so it and its
   // resource tokens stay visible.
-  if (card.shadowSpawned && !hasCode('02142')) {
-    references.push({ code: '02142', originalCode: '02142', resources: card.shadowResources || 0 })
+  if (card.shadowSpawned && !hasCode(storyCode('shadowSpawned'))) {
+    const code = storyCode('shadowSpawned')
+    references.push({ code, originalCode: code, resources: card.shadowResources || 0 })
   }
   return references
 }

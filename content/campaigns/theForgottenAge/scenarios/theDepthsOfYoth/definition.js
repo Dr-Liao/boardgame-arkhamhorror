@@ -108,12 +108,15 @@ const acts = stages(['04285'], 'act').map(act => ({
   objective: { type: 'clues', perInvestigator: 3, atLocation: STEPS_OF_YOTH },
 }))
 
-// 04284「复仇」没有毁灭阈值（Haskell：doomThresholdL .~ Nothing），不能被毁灭推进。
-const agendas = stages(['04278', '04279', '04280', '04281', '04282', '04283', '04284'], 'agenda')
-  .map(agenda => ({
+// 最后一张密谋「复仇」（04284）没有毁灭阈值（Haskell：doomThresholdL .~ Nothing），不能被毁灭推进。
+// 第 114 轮：按牌库顺序（最后一张）判断，不再写死卡号。
+const AGENDA_CODES = ['04278', '04279', '04280', '04281', '04282', '04283', '04284']
+const LAST_AGENDA_INDEX = AGENDA_CODES.length - 1
+const agendas = stages(AGENDA_CODES, 'agenda')
+  .map((agenda, index) => ({
     ...agenda,
     reveal: { type: 'campaignRule' },
-    ...(agenda.originalCode === '04284'
+    ...(index === LAST_AGENDA_INDEX
       ? { doomThreshold: null, objective: { type: 'allDefeated' } }
       : {}),
   }))

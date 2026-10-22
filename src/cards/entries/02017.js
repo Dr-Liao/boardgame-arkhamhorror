@@ -1,4 +1,4 @@
-// 02017 嘲讽
+﻿// 02017 嘲讽
 // 卡面：快速。只能在你回合期间打出。
 // 卡面：与你所在地点任意数量的敌人交战。
 //
@@ -16,8 +16,21 @@ export default {
     {
       kind: 'played', label: '嘲讽', fast: true,
       resolve: ({ state, inv, api }) => {
-        const enemies = state.enemies.filter(enemy => enemy.location === inv.location && enemy.engagedSeat !== inv.seat)
-        for (const enemy of enemies) api.engage(enemy, inv.seat)
+        // 「任意数量」：逐次选择要交战的敌人；选「完成」即停止。
+        const remaining = state.enemies.filter(enemy => enemy.location === inv.location && enemy.engagedSeat !== inv.seat)
+        while (remaining.length) {
+          const answer = api.choice({
+            kind: 'target', source: '02017', seat: inv.seat,
+            prompt: '选择要与哪个敌人交战（可选择任意数量）。',
+            options: [...remaining.map(enemy => ({ id: enemy.id, label: enemy.name })),
+              { id: 'stop', label: '完成选择' }],
+          })
+          if (answer === 'stop' || !answer) return
+          const enemy = remaining.find(item => item.id === answer)
+          if (!enemy) return
+          api.engage(enemy, inv.seat)
+          remaining.splice(remaining.indexOf(enemy), 1)
+        }
       },
     },
   ],
@@ -25,3 +38,4 @@ export default {
 
   ],
 }
+

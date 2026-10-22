@@ -1,4 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { bindScenarioIdentities } from '../../../../identities.js'
 import {
   location, stages, encounterCards, encounterDefinitions, encounterDeck, identitiesFor,
@@ -13,12 +14,14 @@ const gathered = encounterCards(['the_pallid_mask', 'ghouls', 'hauntings', 'chil
 const definitions = encounterDefinitions([...gathered, ALL_CARDS['03059'], ALL_CARDS['03067b']])
 Object.assign(definitions.enemies['03241b'], { healthPerInvestigator: 5, victory: 2 })
 
+// 第 114 轮：地点的调查技能与手部槽位惩罚由地点条目的 locationRule 声明，不再按卡号分支。
+const ruleFor = code => locationRuleFor(code) || {}
 const locations = Object.fromEntries(CATACOMB_CODES.map((code, index) => [
   `catacomb${index}`,
   location(`catacomb${index}`, code, [], {
     catacomb: true,
-    ...(code === '03249' ? { investigateSkill: 'willpower' } : {}),
-    ...(code === '03250' ? { handSlotsPenalty: 1 } : {}),
+    ...(ruleFor(code).investigateSkill ? { investigateSkill: ruleFor(code).investigateSkill } : {}),
+    ...(ruleFor(code).handSlotsPenalty ? { handSlotsPenalty: ruleFor(code).handSlotsPenalty } : {}),
   }),
 ]))
 

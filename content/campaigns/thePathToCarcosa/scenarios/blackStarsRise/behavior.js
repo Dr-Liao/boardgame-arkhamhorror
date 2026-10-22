@@ -1,9 +1,12 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { encounterRules } from '../../encounter-rules.js'
+import { locationRuleFor } from '../../../../../src/cards/card-rules.js'
+import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { carcosaChaosToken } from '../../carcosa-chaos.js'
 import { agendaVariants } from './definition.js'
 
 const clone = value => structuredClone(value)
+const MONSTER_BONUS_AGENDAS = ['03279a', '03279b', '03280']
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
 const codeOf = card => card?.originalCode || card?.code
 const interviewedAshleigh = state =>
@@ -90,8 +93,8 @@ function syncMainAgenda(state) {
 
 function spawnAshleighAndBeast(state, deckId, api) {
   const location = deckId === 'a' ? 'abbeyTower' : 'chapelOfStAubert'
-  if (!state.enemies.some(enemy => enemy.code === '03088')) api.spawn('03088', location)
-  if (!ashleighSlain(state) && !state.enemies.some(enemy => enemy.code === '03069b')) {
+  if (!state.enemies.some(enemy => registeredEntry(codeOf(enemy))?.flags?.spawnGuard)) api.spawn('03088', location)
+  if (!ashleighSlain(state) && !state.enemies.some(enemy => registeredEntry(codeOf(enemy))?.flags?.ashleigh)) {
     api.spawn('03069b', 'porteDeLAvancee')
   }
 }
@@ -100,31 +103,53 @@ export function advanceAgendaDeck(state, deckId, api) {
   syncMainAgenda(state)
   const decks = state.scenarioFlags.agendaDecks
   const deck = decks?.[deckId]
-  if (!deck || deck.index >= 3) throw new Error(`未知黑星升起密谋牌堆：${deckId}`)
+  if (!deck || deck.removed) return null
+  if (deck.index >= 3) throw new Error(`未知黑星升起密谋牌堆：${deckId}`)
   const code = deck.cards[deck.index]
   if (deck.index === 0) {
     const opposing = decks[deckId === 'a' ? 'c' : 'a']
-    addCampaignMark(state, opposing.doom > 3 ? 'doubt' : 'conviction')
+    // 卡面：对立密谋上的毁灭 ≥3 记疑惑，否则记确信；团队每轮仅限一次。
+    if (state.round == null || state.scenarioFlags.bsrMarkRound !== state.round) {
+      if (state.round != null) state.scenarioFlags.bsrMarkRound = state.round
+      addCampaignMark(state, opposing.doom >= 3 ? 'doubt' : 'conviction')
+    }
     const additions = deckId === 'a' ? ['03300', '03300'] : ['03301', '03301']
     state.encounterDeck.push(...state.encounterDiscard.splice(0), ...additions)
     api.shuffleEncounterDeck?.()
     deck.index = 1
     deck.doom = 0
   } else if (deck.index === 1) {
-    const correct = (state.scenarioFlags.route === 'below' && deckId === 'a')
-      || (state.scenarioFlags.route === 'above' && deckId === 'c')
-    if (correct) {
-      state.scenarioFlags.openPath = stageCards[state.scenarioFlags.route].act
+    // 卡背两种版本：
+    //  b：把本密谋牌堆移出游戏，用放在一边的场景 3a/3c 替换并推进到该场景。
+    //  a：把另一张场景 3a/3c 移出游戏，推进到 agendas 3a/3c，目标在另一密谋牌堆。
+    const route = state.scenarioFlags.route
+    const routeAct = stageCards[route].act
+    const otherAct = stageCards[route === 'below' ? 'above' : 'below'].act
+    const setAside = state.scenarioFlags.setAside || (state.scenarioFlags.setAside = [])
+    const removeSetAside = target => {
+      const index = setAside.indexOf(target)
+      if (index >= 0) setAside.splice(index, 1)
+    }
+    if (String(code).endsWith('b')) {
+      removeSetAside(routeAct)
+      const actIndex = (state.acts || []).findIndex(act => original(act) === routeAct)
+      if (actIndex >= 0) state.actIndex = actIndex
+      deck.index = 3
+      deck.removed = true
+      deck.doom = 0
+      api.info?.(`🌑 本密谋牌堆移出游戏，改用场景卡「${routeAct}」继续。`)
     } else {
+      removeSetAside(otherAct)
       spawnAshleighAndBeast(state, deckId, api)
       state.scenarioFlags.wrongRoute = deckId
       deck.index = 2
       deck.doom = 0
+      api.info?.(`🌒 另一本密谋牌堆才是目标；移除了场景卡「${otherAct}」。`)
     }
   } else {
     api.finish('r3')
   }
-  if (deckId === 'a') {
+  if (deckId === 'a' && !deck.removed) {
     state.doom = deck.doom
     state.agendaIndex = deck.index
   }
@@ -140,7 +165,7 @@ export function placeAgendaDoom(state, deckId, amount, api) {
   if (deckId === 'a') state.doom = deck.doom
   if (deckId === 'a') {
     const wall = state.locations.find(location => location.id === 'outerWall')
-    if (wall?.originalCode === '03285') {
+    if (registeredEntry(codeOf(wall))?.flags?.wall) {
       for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned && item.location === 'outerWall')) {
         api.damage?.(inv.seat, 1)
       }
@@ -148,7 +173,7 @@ export function placeAgendaDoom(state, deckId, amount, api) {
   }
   if (deckId === 'c') {
     const tower = state.locations.find(location => location.id === 'northTower')
-    if (tower?.originalCode === '03287') {
+    if (registeredEntry(codeOf(tower))?.flags?.tower) {
       for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned && item.location === 'northTower')) {
         api.horror?.(inv.seat, 1)
       }
@@ -205,15 +230,21 @@ export const behavior = {
     const code = codeOf(location)
     if (['03296', '03297'].includes(code) && !state.scenarioFlags.foundGuide) return '需要先在回廊找到向导'
     if (['03298', '03299'].includes(code) && !state.scenarioFlags.foundTowerKey) return '需要先在骑士大厅找到塔楼钥匙'
+    if (registeredEntry(code)?.flags?.abbeyChurch) {
+      // 进入修道院教堂的额外费用：垮塌的台阶的调查员共同支付 3×人数线索。
+      const stairs = state.locations.find(item => item.id === 'brokenSteps')
+      const pool = stairs ? state.investigators.filter(inv => !inv.defeated && !inv.resigned && inv.location === stairs.id)
+        .reduce((sum, inv) => sum + (inv.clues || 0), 0) : 0
+      if (pool < 3 * state.numInvestigators) return `进入修道院教堂需要在垮塌的台阶共同支付 ${3 * state.numInvestigators} 个线索`
+    }
     return null
+  },
+  beforeMove(state, inv, location, api) {
+    if (registeredEntry(codeOf(location))?.flags?.abbeyChurch) api.payClues(3 * state.numInvestigators, 'brokenSteps')
   },
   investigationError(state, inv, location) {
     const code = codeOf(location)
-    if (code === '03296' && (inv.maxSanity || inv.sanity || 0) - (inv.horror || 0) > 3) {
-      return '剩余神智必须为3点或更少'
-    }
-    if (code === '03298' && inv.hand.length) return '必须没有手牌'
-    return null
+    return locationRuleFor(code)?.investigationError?.(state, inv, location) ?? null
   },
   encounterActions(state, inv) {
     const moves = encounterRules.encounterActions?.(state, inv) || []
@@ -268,30 +299,9 @@ export const behavior = {
     const decks = state.scenarioFlags.agendaDecks || {}
     const agendaDoom = Object.values(decks).some(deck => deck.doom > 0)
     // 地点能力已经就位，只差"密谋上有毁灭""本地点线索已取空""手牌还有"这类能改变的条件。
-    if (code === '03283') moves.push({ action: 'scenarioAction', rule: 'shiftAgendaDoom', actions: 2,
-      label: '花费2行动，将1个毁灭移到另一密谋并放置2个线索',
-      reason: agendaDoom ? null : '“a”“c”两张密谋上都没有毁灭' })
-    if (['03292', '03293'].includes(code) && !state.scenarioFlags.choeurGothiqueUsed) {
-      moves.push({ action: 'scenarioAction', rule: 'choeurGothiqueHeal',
-        label: code === '03292' ? '在“a”密谋放置1毁灭，治愈2点伤害' : '在“c”密谋放置1毁灭，治愈2点恐惧' })
-    }
-    if (code === '03294' && !state.scenarioFlags.foundGuide) {
-      moves.push({ action: 'scenarioAction', actionKind: 'parley', rule: 'findGuide',
-        label: '谈判：检定意志（3），寻找向导',
-        reason: location.clues === 0 ? null : `需要先取走回廊的全部线索（还剩 ${location.clues} 个）` })
-    }
-    if (code === '03295' && !state.scenarioFlags.foundTowerKey) {
-      moves.push({ action: 'scenarioAction', actionKind: 'investigate', rule: 'findTowerKey',
-        label: '使用敏捷调查骑士大厅，寻找塔楼钥匙',
-        reason: location.clues === 0 ? null : `需要先取走骑士大厅的全部线索（还剩 ${location.clues} 个）` })
-    }
-    if (code === '03296') moves.push({
-      action: 'scenarioAction', rule: 'takeChapelHorror', label: '受到最多3点恐惧',
-    })
-    if (code === '03298') moves.push({
-      action: 'scenarioAction', rule: 'discardTowerCards', label: '弃掉最多3张手牌',
-      reason: inv.hand.length ? null : '需要至少 1 张手牌',
-    })
+    // 第 90 轮：03296/03298 的行动在地点条目声明。
+    // 第 106 轮：03283/03292/03293 的行动在地点条目声明。
+    locationRuleFor(code)?.actions?.({ state, inv, location, moves })
     const teamClues = active(state).reduce((sum, investigator) => sum + (investigator.clues || 0), 0)
     for (const deckId of ['a', 'c']) moves.push({
       action: 'scenarioAction',
@@ -311,6 +321,8 @@ export const behavior = {
   performAction(state, inv, move, api) {
     const location = state.locations.find(item => item.id === inv.location)
     const code = codeOf(location)
+    // 第 90 轮：地点条目先接管自己的场景行动。
+    if (locationRuleFor(code)?.performAction?.(state, inv, move, api)) return
     if (move.rule === 'shiftAgendaDoom') {
       const decks = state.scenarioFlags.agendaDecks
       const sources = Object.values(decks).filter(deck => deck.doom > 0)
@@ -326,43 +338,15 @@ export const behavior = {
       placeAgendaDoom(state, destination.id, 1, api)
       location.clues = (location.clues || 0) + 2
     } else if (move.rule === 'choeurGothiqueHeal') {
-      if (!['03292', '03293'].includes(code) || state.scenarioFlags.choeurGothiqueUsed) {
+      // 第 114 轮：密谋牌堆与治愈类型由地点条目的 locationRule.choeurGothique 声明。
+      const rule = locationRuleFor(code)?.choeurGothique
+      if (!rule || state.scenarioFlags.choeurGothiqueUsed) {
         throw new Error('哥特式唱诗台能力当前不可用')
       }
       state.scenarioFlags.choeurGothiqueUsed = true
-      placeAgendaDoom(state, code === '03292' ? 'a' : 'c', 1, api)
-      if (code === '03292') api.healDamage(inv.seat, 2)
+      placeAgendaDoom(state, rule.deck, 1, api)
+      if (rule.heal === 'damage') api.healDamage(inv.seat, 2)
       else api.healHorror(inv.seat, 2)
-    } else if (move.rule === 'findGuide') {
-      if (code !== '03294' || location.clues > 0 || state.scenarioFlags.foundGuide) {
-        throw new Error('回廊能力当前不可用')
-      }
-      api.test(inv.seat, 'willpower', 3, result => {
-        if (result.success) state.scenarioFlags.foundGuide = true
-      })
-    } else if (move.rule === 'findTowerKey') {
-      if (code !== '03295' || location.clues > 0 || state.scenarioFlags.foundTowerKey) {
-        throw new Error('骑士大厅能力当前不可用')
-      }
-      const difficulty = location.shroud + (location.shroudMod || 0) + (state.fogMod || 0)
-      api.test(inv.seat, 'agility', difficulty, result => {
-        if (result.success) state.scenarioFlags.foundTowerKey = true
-      }, 0, { action: 'investigate', label: '骑士大厅寻找塔楼钥匙' })
-    } else if (move.rule === 'takeChapelHorror') {
-      if (code !== '03296') throw new Error('圣奥伯特礼拜堂能力当前不可用')
-      const amount = Number(api.choose({
-        kind: 'harm', source: code, seat: inv.seat, prompt: '选择受到多少点恐惧。',
-        options: Array.from({ length: 4 }, (_, value) => ({ id: String(value), label: `${value}点恐惧` })),
-      }))
-      if (amount) api.horror(inv.seat, amount)
-    } else if (move.rule === 'discardTowerCards') {
-      if (code !== '03298' || !inv.hand.length) throw new Error('修道院塔楼能力当前不可用')
-      const amount = Number(api.choose({
-        kind: 'discard', source: code, seat: inv.seat, prompt: '选择弃掉多少张手牌。',
-        options: Array.from({ length: Math.min(3, inv.hand.length) + 1 }, (_, value) =>
-          ({ id: String(value), label: `${value}张` })),
-      }))
-      if (amount) api.discardChosen(inv.seat, amount, code)
     } else if (move.rule === 'hastenAgenda') {
       api.payClues(state.numInvestigators)
       placeAgendaDoom(state, move.deckId, 1, api)
@@ -387,9 +371,14 @@ export const behavior = {
   enemyStatModifier(state, enemy, stat) {
     const base = encounterRules.enemyStatModifier(state, enemy, stat)
     if (stat !== 'fight') return base
+    const decks = state.scenarioFlags?.agendaDecks
+    const cCode = decks?.c ? decks.c.cards?.[decks.c.index] : null
     const agenda = codeOf(state.agendas?.[state.agendaIndex])
     const monster = enemy.traits?.some(trait => String(trait).toLowerCase() === 'monster')
-    return base + (monster && ['03279a', '03279b', '03280'].includes(agenda) ? 1 : 0)
+    // c 牌堆的密谋不是主议程：怪物 +1 攻击需直接读 c 牌堆当前卡。
+    const cMonsterBonus = MONSTER_BONUS_AGENDAS.includes(cCode)
+    const aMonsterBonus = MONSTER_BONUS_AGENDAS.includes(agenda)
+    return base + (monster && (aMonsterBonus || cMonsterBonus) ? 1 : 0)
   },
   commitIconMultiplier(state, inv, location) {
     if (codeOf(location) !== '03286') return 1
@@ -398,26 +387,43 @@ export const behavior = {
     return decks.c.doom > decks.a.doom ? 2 : 1
   },
   locationShroudModifier(state, location) {
-    if (codeOf(location) !== '03288') return 0
+    const code = codeOf(location)
+    if (registeredEntry(code)?.flags?.abbeyChurch) {
+      // 场上有两张编号不同的密谋：+2 帷幕。
+      const decks = state.scenarioFlags?.agendaDecks
+      return decks && decks.a.index !== decks.c.index ? 2 : 0
+    }
+    if (!registeredEntry(code)?.flags?.northTower) return 0
+    const decks = state.scenarioFlags?.agendaDecks
+    return decks && decks.a.doom > decks.c.doom ? -1 : 0
+  },
+  // 北部塔楼：「a」密谋上的毁灭多于「c」时，此地点的所有技能检定难度 -1。
+  testDifficultyModifier(state, inv) {
+    const location = state.locations.find(item => item.id === inv.location)
+    if (!registeredEntry(codeOf(location))?.flags?.northTower) return 0
     const decks = state.scenarioFlags?.agendaDecks
     return decks && decks.a.doom > decks.c.doom ? -1 : 0
   },
   locationEntered(state, inv, location, api) {
     const code = codeOf(location)
-    if (code !== '03289' && code !== '03290') return
-    const loseAction = { id: 'action', label: '失去 1 个行动' }
-    const draw = code === '03289'
-      ? { id: 'draw', label: '抽取遭遇弃牌堆顶的预兆诡计' }
-      : { id: 'draw', label: '抽取遭遇弃牌堆顶的异教徒敌人' }
-    const options = [loseAction, draw]
+    const trait = registeredEntry(code)?.flags?.stairsTrait
+    if (!trait) return
+    const discard = { id: 'discard', label: '弃掉一个你控制的支援' }
+    const draw = { id: 'draw', label: trait === 'omen' ? '抽取遭遇弃牌堆顶的预兆诡计' : '抽取遭遇弃牌堆顶的异教徒敌人' }
+    const options = inv.assets.length ? [discard, draw] : [draw]
     const choice = options.length === 1 ? options[0].id : api.choose({
       kind: 'encounter', source: code, seat: inv.seat,
-      prompt: code === '03289' ? '垮塌的台阶：失去行动或抽取预兆诡计。' : '垮塌的台阶：弃置资产或抽取异教徒敌人。',
+      prompt: trait === 'omen' ? '垮塌的台阶：弃掉支援或抽取预兆诡计。' : '垮塌的台阶：弃掉支援或抽取异教徒敌人。',
       options,
     })
-    if (choice === 'action') api.loseActions(inv.seat, 1)
-    else {
-      const trait = code === '03289' ? 'omen' : 'cultist'
+    if (choice === 'discard') {
+      const chosen = inv.assets.length === 1 ? inv.assets[0].id : api.choose({
+        kind: 'discard-asset', source: code, seat: inv.seat, prompt: '选择要弃掉的支援。',
+        options: inv.assets.map(asset => ({ id: asset.id, label: api.cardName(asset.code) })),
+      })
+      const asset = inv.assets.find(item => item.id === chosen)
+      if (asset) api.discardAsset(inv.seat, asset)
+    } else {
       const index = state.encounterDiscard.findLastIndex(card => ALL_CARDS[codeOf(card)]?.traits
         ?.some(value => String(value).toLowerCase() === trait))
       if (index >= 0) {
@@ -436,7 +442,12 @@ export const behavior = {
       && result.value - result.difficulty <= 1) {
       const decks = state.scenarioFlags.agendaDecks
       if (decks) {
-        const target = decks.a.doom >= decks.c.doom ? 'a' : 'c'
+        const target = decks.a.doom > decks.c.doom ? 'a' : decks.c.doom > decks.a.doom ? 'c'
+          : api.choose({
+            kind: 'agenda', source: '03284', seat: inv.seat,
+            prompt: '环山大道：两张密谋的毁灭数相等，选择在其中一张上放置 1 个毁灭。',
+            options: [{ id: 'a', label: 'a 密谋' }, { id: 'c', label: 'c 密谋' }],
+          })
         placeAgendaDoom(state, target, 1, api)
       }
     }

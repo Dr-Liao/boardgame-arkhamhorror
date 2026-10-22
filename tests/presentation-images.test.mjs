@@ -94,6 +94,15 @@ test('中文清单决定语言候选顺序，缺图回退英文', () => {
   assert.ok(back.every(candidate => candidate.language === 'back'))
 })
 
+test('新增中文卡图进入本地和 CDN 候选', () => {
+  const descriptor = imageDescriptor('03068b')
+  assert.equal(descriptor.front.candidates[0].localized, true)
+  assert.equal(descriptor.front.candidates[0].localLocalized, true)
+  const candidates = imageCandidates(descriptor, { language: 'zh-cn' })
+  assert.equal(candidates[0].url, '/mods/arkhamhorror/img/zh/cards/03068b.avif?cache=cdn')
+  assert.equal(candidates[1].url, 'https://drliao1.com/arkhamhorror/cards/zh/03068b.avif')
+})
+
 test('主机可配置、可禁用；非法主机显式报错而不静默拼接', () => {
   assert.equal(normalizeImageHost('https://cdn.test/assets/'), 'https://cdn.test/assets')
   assert.equal(normalizeImageHost(''), '')
@@ -140,10 +149,10 @@ test('全部 5,930 张卡都能解析，且逐类型统计可复核', () => {
   assert.equal(stats.cards, 5930)
   assert.equal(stats.resolved, 5930)
   assert.deepEqual(stats.unresolved, [])
-  assert.equal(stats.localizedFront, 3778)
+  assert.equal(stats.localizedFront, 3956)
   assert.equal(stats.withBackArt, 2592)
   assert.deepEqual(stats.genericBack, { encounter: 1635, player: 1703 })
-  assert.equal(stats.localizedArtEntries, 5065)
+  assert.equal(stats.localizedArtEntries, 5243)
   assert.equal(stats.localMediaCopied, 0)
   assert.equal(LOCALIZED_ART_SOURCE.language, 'zh')
   assert.equal(LOCALIZED_ART_SOURCE.urlPrefix, 'img/arkham/zh/')
@@ -177,13 +186,15 @@ test('媒体许可登记保留，运行时图片仅在 Mod 图库；PNG 验收�
   assert.match(readFileSync(resolve(audio, 'License.txt'), 'utf8'), /Creative Commons Zero, CC0/)
   const snapshots = resolve(ROOT, 'games/arkhamhorror/tests/p7-release.browser.mjs-snapshots')
   const results = resolve(ROOT, 'games/arkhamhorror/test-results')
+  const stagedTranslations = resolve(ROOT, 'games/arkhamhorror/artifacts/card-translation/zh/cards') + sep
+  const translationPreviews = resolve(ROOT, 'games/arkhamhorror/artifacts/card-translation/previews') + sep
   // README 的牌桌插图属于文档，不参与运行时资源；单独登记在 docs/images 下。
   const docsMedia = resolve(ROOT, 'games/arkhamhorror/docs/images') + sep
   for (const file of walk(resolve(ROOT, 'games/arkhamhorror'))) {
     const testPng = file.endsWith('.png') && [snapshots, results].some(dir => file.startsWith(dir + sep))
     const music = file.startsWith(resolve(audio, 'music') + sep) && file.endsWith('.mp3')
     const symbolFont = SYMBOL_FONTS.some(name => file === resolve(fonts, name))
-    assert.ok(file.startsWith(library + sep) || (file.startsWith(audio + sep) && file.endsWith('.ogg')) || music || testPng || symbolFont || file.startsWith(docsMedia), file)
+    assert.ok(file.startsWith(library + sep) || (file.startsWith(audio + sep) && file.endsWith('.ogg')) || music || testPng || symbolFont || file.startsWith(docsMedia) || (file.startsWith(stagedTranslations) && file.endsWith('.avif')) || (file.startsWith(translationPreviews) && file.endsWith('.png')), file)
   }
 })
 
@@ -263,8 +274,8 @@ test('实现状态与可用性取值与目录一致，展示层有对应中文�
 
 test('本地图库覆盖全部卡面，候选优先同源地址并可离线使用', () => {
   assert.equal(LOCAL_IMAGE_LIBRARY.available, true)
-  assert.equal(LOCAL_IMAGE_LIBRARY.total, 13245)
-  assert.deepEqual(LOCAL_IMAGE_LIBRARY.byLanguage, { en: 8180, zh: 5065 })
+  assert.equal(LOCAL_IMAGE_LIBRARY.total, 13423)
+  assert.deepEqual(LOCAL_IMAGE_LIBRARY.byLanguage, { en: 8180, zh: 5243 })
 
   let local = 0
   const remote = []

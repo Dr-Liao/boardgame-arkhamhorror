@@ -7,12 +7,12 @@
 
 export default {
   code: '01055',
-  noOpportunityAttack: true,
   passive: { stats: { agility: 1 } },
   abilities: [
     {
       kind: 'action', label: '脱身（与全部敌人脱离交战并移到一个连接地点）',
       cost: { action: true, exhaust: true },
+      noOpportunityAttack: true,
       effect: { type: 'sequence', effects: [{ type: 'disengageAll' }, { type: 'moveTo' }] },
     },
   ],

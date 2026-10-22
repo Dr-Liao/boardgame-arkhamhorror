@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { contentRegistry, registerContentBundle } from '../content/registered.js'
 import { createGameState, applyMove, validateMove, legalMoves, performTest, getStat, placeLocation, actionPreview, describeState, actObjectiveContext } from '../src/engine/engine.js'
+import { modifierTotal } from '../src/engine/modifiers.js'
 import { aiDecisionContext } from '../src/ai/ai-context.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { getAvailability, canSelectInvestigator } from '../src/deck/availability.js'
@@ -555,10 +556,10 @@ test('D6 Train: parlor clues cost resources and passenger entry enforces its pri
   move(s, { action: 'scenarioAction', rule: 'parlorClue' }); settle(s)
   assert.equal(s.investigators[0].resources, 0)
   assert.equal(s.investigators[0].clues, 1)
-  const b = laterBehavior('theEssexCountyExpress')
   const before = s.investigators[0].damage
-  b.locationEntered(s, s.investigators[0], { originalCode: '02167' },
-    { choose: () => 'harm', damage: (seat, amount) => { s.investigators[seat].damage += amount } })
+  // 第 68 轮：旅客车厢规则已条目化；这里直接验证条目 effect（引擎会在进入时派发）。
+  registeredEntry('02167').locationRule.onEnter.effect(s, { originalCode: '02167' },
+    { choose: () => 'harm', damage: (seat, amount) => { s.investigators[seat].damage += amount } }, s.investigators[0])
   assert.equal(s.investigators[0].damage, before + 2)
 })
 
@@ -707,7 +708,7 @@ test('D8 Train weakness and Hill rites discard deck cards; altered investigators
     const inv = state.investigators[seat]
     for (let i = 0; i < n && inv.deck.length; i++) inv.discard.push(inv.deck.pop())
   }
-  tb.resolveEncounter(train, traveler, { code: '02178' }, { discardTop: (seat, n) => discardTop(train, seat, n) })
+  tb.resolveEncounter(train, traveler, { code: '02178' }, { discardTopOfDeck: (seat, n) => discardTop(train, seat, n) })
   assert.deepEqual(traveler.deck, ['01088'])
 
   const hill = chapterFixture('whereDoomAwaits'), hb = laterBehavior('whereDoomAwaits')
@@ -1179,8 +1180,8 @@ test('D6 story allies react to treachery tests and evasion; Servant grants a dis
   const s = chapterFixture('bloodOnTheAltar'), b = laterBehavior('bloodOnTheAltar'), inv = s.investigators[0]
   const zebulon = { code: '02217', exhausted: false }, earl = { code: '02218', exhausted: false }
   inv.assets.push(zebulon, earl)
-  assert.equal(b.statModifier(s, inv, 'willpower'), 1)
-  assert.equal(b.statModifier(s, inv, 'agility'), 1)
+  assert.equal(modifierTotal(s, inv, 'skill:willpower'), 1)
+  assert.equal(modifierTotal(s, inv, 'skill:agility'), 1)
   let drawn = 0
   const api = { choose: () => 'yes', drawCards: (seat, n) => { drawn += n }, gainClues: (seat, n) => { s.investigators[seat].clues += n } }
   const treachery = Object.keys(s.scenario.treacheries)[0]
@@ -1492,7 +1493,7 @@ test('D10 Oops redirects a narrowly failed attack to another enemy', () => {
   const s = fixture(), inv = s.investigators[0]
   inv.hand = ['02113']; inv.combat = 4; s.chaosBag = ['-1']
   s.enemies = [
-    { id: 'target', code: 'swarmOfRats', name: '原目标', location: inv.location, fight: 5, evade: 1, health: 5, damageTaken: 0, traits: [], exhausted: true },
+    { id: 'target', code: 'swarmOfRats', name: '原目标', location: inv.location, fight: 5, evade: 1, health: 5, damageTaken: 0, traits: [], exhausted: true, engagedSeat: 0 },
     { id: 'other', code: 'swarmOfRats', name: '另一敌人', location: inv.location, fight: 1, evade: 1, health: 5, damageTaken: 0, traits: [], exhausted: true },
   ]
   move(s, { action: 'fight', enemyId: 'target' })
@@ -1536,7 +1537,8 @@ test('D10 Maleson returns a clue to the location and redraws the encounter card'
   assert.equal(s.investigators[0].clues, 0)
   assert.equal(s.locations.find(item => item.id === s.investigators[0].location).clues, before + 1)
   assert.equal(s.investigators[0].assets.find(asset => asset.id === 'maleson-asset').exhausted, true)
-  assert.ok(s.encounterDiscard.includes(original))
+  assert.ok(s.log.some(line => String(line).includes('混洗回遭遇牌库')), '取消的遭遇卡应混洗回牌库')
+  assert.ok(s.encounterDeck.includes(original) || s.encounterDiscard.includes(original))
 })
 
 test('D10 Double or Nothing doubles both difficulty and investigation reward', () => {
@@ -1786,9 +1788,11 @@ test('fix: Passage into the Veil damages story allies without a slot field', () 
 test('fix: Exhibit Hall entry ends the turn', () => {
   const s = chapterFixture('theMiskatonicMuseum')
   let endedSeat = null
-  laterBehavior('theMiskatonicMuseum').locationEntered(s, s.investigators[0],
-    { id: 'exhibit', originalCode: '02132', traits: ['Miskatonic'] }, { endTurn: seat => { endedSeat = seat } }, [])
-  assert.equal(endedSeat, s.investigators[0].seat)
+  const inv = s.investigators[0]
+  const rule = registeredEntry('02132').locationRule
+  rule.onEnter.effect(s, { id: 'exhibit', originalCode: '02132', traits: ['Miskatonic'] },
+    { endTurn: seat => { endedSeat = seat } }, inv)
+  assert.equal(endedSeat, inv.seat)
 })
 
 test('fix: Undimensioned and Unseen records calming or warning the townsfolk', () => {

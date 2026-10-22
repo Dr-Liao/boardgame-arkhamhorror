@@ -16,10 +16,18 @@ export default {
   grantsHidingSpot: true,
   abilities: [
     {
-      kind: 'played', fast: true, label: '附属到一个已揭示的地点',
-      resolve: ({ state, inv, api }) => attachToChosenLocation(state, inv, api, {
-        code: '03038', source: 'hidingSpot', revealedOnly: true,
-      }),
+      kind: 'played', fast: true, label: '附属到任意地点',
+      resolve: ({ state, inv, api }) => {
+        const attachment = attachToChosenLocation(state, inv, api, {
+          code: '03038', source: 'hidingSpot', anyLocation: true,
+        })
+        if (!attachment) return
+        // 已在场的非精英敌人也立刻获得冷漠。
+        for (const enemy of state.enemies.filter(item => item.location === attachment.location && !item.elite)) {
+          enemy.aloof = true
+          enemy.hidingSpotAloof = true
+        }
+      },
     },
   ],
   modifiers: [

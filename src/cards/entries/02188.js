@@ -9,6 +9,7 @@
 
 export default {
   code: '02188',
+  limitPerInvestigator: true,
   abilities: [
     {
       kind: 'reaction', trigger: 'turnBegins', id: 'loneWolf', legacyReaction: true,

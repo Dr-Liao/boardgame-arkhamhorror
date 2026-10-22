@@ -3,17 +3,21 @@
 // 公开地址：https://drliao1.com/arkhamhorror/cards/01001.avif ，中文为 zh/01001.avif
 //
 //   node tools/upload-card-images.mjs [--concurrency=8]
+//   node tools/upload-card-images.mjs --staged [--concurrency=8]
 //
 // 凭证只从环境变量读取：R2_ACCOUNT_ID、R2_ACCESS_KEY_ID、R2_SECRET_ACCESS_KEY、R2_BUCKET。
 
 import { createHash, createHmac } from 'node:crypto'
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import { remoteImagePath } from '../web/images.js'
 
 const SOURCE = 'https://assets.arkhamhorror.app/img/arkham/'
 const PREFIX = 'arkhamhorror/cards/'
 const TYPES = { '.avif': 'image/avif', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.gif': 'image/gif' }
 const argv = process.argv.slice(2)
+const staged = argv.includes('--staged')
+const limit = Number(argv.find(value => value.startsWith('--limit='))?.split('=')[1] || Infinity)
+if (limit !== Infinity && (!staged || !Number.isInteger(limit) || limit < 1)) throw new Error('--limit 仅用于 --staged，且需为正整数')
 const concurrency = Number(argv.find(value => value.startsWith('--concurrency='))?.split('=')[1] || 8)
 if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 16) throw new Error('concurrency 需在 1–16')
 const { R2_ACCOUNT_ID: account, R2_ACCESS_KEY_ID: accessKey, R2_SECRET_ACCESS_KEY: secretKey, R2_BUCKET: bucket } = process.env
@@ -60,11 +64,17 @@ async function existingKeys() {
   return found
 }
 
-const inventory = JSON.parse(readFileSync(new URL('../audit/local-images.json', import.meta.url), 'utf8'))
-const files = inventory.files
+const inventory = staged ? null : JSON.parse(readFileSync(new URL('../audit/local-images.json', import.meta.url), 'utf8'))
+const files = staged
+  ? readdirSync(new URL('../artifacts/card-translation/zh/cards/', import.meta.url))
+    .filter(name => /^[0-9A-Za-z_-]+\.avif$/.test(name))
+    .sort()
+    .map(name => `zh/cards/${name}`)
+  : inventory.files
+if (staged && limit < files.length) files.length = limit
 if (!Array.isArray(files) || !files.length) throw new Error('卡图清单为空')
 const present = await existingKeys()
-console.log(`清单 ${files.length} 张，R2 已有 ${[...present].filter(key => key.startsWith(PREFIX)).length} 个对象`)
+console.log(`${staged ? '暂存' : '清单'} ${files.length} 张，R2 已有 ${[...present].filter(key => key.startsWith(PREFIX)).length} 个对象`)
 
 const stats = { uploaded: 0, skipped: 0, missing: 0, failed: 0, bytes: 0 }
 const problems = []
@@ -73,10 +83,15 @@ let cursor = 0
 async function once(file) {
   const key = PREFIX + remoteImagePath(file)
   if (present.has(key)) { stats.skipped++; return }
-  const source = await fetch(SOURCE + file.split('/').map(encodeURIComponent).join('/'), { signal: AbortSignal.timeout(60_000) })
-  if (source.status === 404) { stats.missing++; return }
-  if (!source.ok) throw new Error(`源 HTTP ${source.status}`)
-  const body = Buffer.from(await source.arrayBuffer())
+  let body
+  if (staged) {
+    body = readFileSync(new URL(`../artifacts/card-translation/${file}`, import.meta.url))
+  } else {
+    const source = await fetch(SOURCE + file.split('/').map(encodeURIComponent).join('/'), { signal: AbortSignal.timeout(60_000) })
+    if (source.status === 404) { stats.missing++; return }
+    if (!source.ok) throw new Error(`源 HTTP ${source.status}`)
+    body = Buffer.from(await source.arrayBuffer())
+  }
   if (!body.length) throw new Error('空响应')
   const extension = file.slice(file.lastIndexOf('.')).toLowerCase()
   await s3('PUT', key, {

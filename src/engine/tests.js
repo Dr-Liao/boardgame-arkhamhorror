@@ -1,4 +1,4 @@
-import { investigatorRule } from '../cards/card-rules.js'
+import { enemyRuleFlags, investigatorRule } from '../cards/card-rules.js'
 // 技能检定主流程（performTest）从 engine.js 拆出的最大模块（Phase 6 · 6d-12）。
 //
 // 一次检定跨 ST.1–ST.8 八个阶段：投入 → 揭示标记 → 结算修正 → 结果回调 → 收尾。
@@ -33,6 +33,7 @@ export function createPerformTest(deps) {
     elderSignEffect,
     endChaosTest,
     enemiesEngagedWith,
+    enemyTextBlanked,
     exilePlayerCard,
     expireEffects,
     getMaxSanity,
@@ -74,6 +75,16 @@ export function createPerformTest(deps) {
     triggerReaction,
   } = deps
 
+// 第 59 轮：地点卡自己的「检定失败」规则（02133/02135/02136、02056 等）由条目声明。
+// 引擎在内容层 afterTest 之后统一派发，避免每个章节 behavior 手写一遍。
+function runLocationTestFail(state, inv, result, events) {
+  if (result.success) return
+  const loc = state.locations.find(item => item.id === inv.location)
+  if (!loc) return
+  registeredEntry(loc.originalCode || loc.code)?.locationRule?.onTestFail?.(
+    state, loc, scenarioRuntime(state, events), inv, result)
+}
+
 function performTest(state, seat, skill, difficulty, options = {}) {
   beginChaosTest(state)
   const previousTest = state.skillTest || null
@@ -82,6 +93,12 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   const inv = state.investigators[seat]
   const events = []
   difficulty = Math.max(0, difficulty)
+  // 全局难度修正（03288 北部塔楼：a 密谋毁灭多于 c 时所有技能检定 -1）。
+  const globalDifficulty = scenarioBehavior(state).testDifficultyModifier?.(state, inv, skill, difficulty, options.source) || 0
+  if (globalDifficulty) {
+    difficulty = Math.max(0, difficulty + globalDifficulty)
+    state.skillTest.difficulty = difficulty
+  }
   // 「纳克特手稿」：本回合下一场检定不揭示混乱标记。
   if (inv.nextTestNoTokens?.round === state.round) {
     delete inv.nextTestNoTokens
@@ -186,7 +203,8 @@ function performTest(state, seat, skill, difficulty, options = {}) {
           || item.code === commitments[0]?.code)
         // 「参透真谛」：只能投入冒险卡印刷能力的检定。
         .filter(item => hasHiddenCard(owner, item.code) || !commitProfile(item.code)?.scenarioAbilityOnly
-          || options.source?.scenarioAbility === true)
+          || options.source?.scenarioAbility === true || options.source?.ability === true
+          || options.ability === true || options.scenarioAbility === true)
         .filter(item => !committedCodes.has(item.code) || !String(cardDef(item.code)?.textZh || '').includes('最多投入1张'))
       const kingInYellow = investigatorRule(owner.code)?.wildCommitCompanionBonus
         && owner.threat.some(card => registeredEntry(card.code)?.kingInYellowThreat)
@@ -240,8 +258,19 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       if (owner !== inv && commitProfile(code)?.leadership) icons += skill === 'willpower' ? 2 : 1
       icons += minhCommitWildBonus(state, owner, events)
       const commitLocation = state.locations.find(location => location.id === owner.location)
-      const multiplier = scenarioBehavior(state).commitIconMultiplier?.(state, owner, commitLocation)
+      const hookMultiplier = scenarioBehavior(state).commitIconMultiplier?.(state, owner, commitLocation)
         || commitLocation?.commitIconMultiplier
+      let multiplier = hookMultiplier
+      // 04244 伊斯人身体：翻倍是可选反应，由玩家决定是否对刚投入的这张牌生效。
+      if (hookMultiplier && typeof hookMultiplier === 'object' && hookMultiplier.multiplier) {
+        const answer = requestChoice(state, {
+          kind: 'reaction', source: hookMultiplier.source || 'commitIconMultiplier', seat: owner.seat, canSkip: true,
+          prompt: hookMultiplier.prompt || '是否翻倍刚投入卡牌的技能图标？',
+          options: [{ id: 'use', label: '翻倍' }, { id: 'skip', label: '不翻倍' }],
+        })
+        multiplier = answer === 'use' ? hookMultiplier.multiplier : 1
+        if (answer === 'use' && hookMultiplier.once) state.skillTest[hookMultiplier.once] = true
+      }
       const investigateOnly = commitLocation?.commitIconMultiplierInvestigateOnly
       if (multiplier && multiplier !== 1 && (!investigateOnly || state.skillTest.source?.label === '调查')) icons *= multiplier
       value += icons
@@ -313,13 +342,11 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     if ((result.drawn || []).some(token => symbols.includes(token))) {
       for (const owner of state.investigators) {
         for (const asset of owner.assets.slice()) {
-          const amount = registeredEntry(asset.code)?.chargesOnSymbolReveal
-      ?? EFFECTS[asset.code]?.chargesOnSymbolReveal ?? 0
+          const amount = registeredEntry(asset.code)?.chargesOnSymbolReveal ?? 0
           if (!amount) continue
           asset.uses = Math.max(0, (asset.uses || 0) - amount)
           info(state, events, `🔮 「${cardName(asset.code)}」移除 ${amount} 点充能（剩余 ${asset.uses}）。`)
           const removeWhenEmpty = registeredEntry(asset.code)?.removeFromGameWhenEmpty
-      ?? EFFECTS[asset.code]?.removeFromGameWhenEmpty
     if ((asset.uses || 0) === 0 && removeWhenEmpty) {
             leaveAsset(state, owner, asset, events)
             info(state, events, `「${cardName(asset.code)}」没有充能，被移出游戏。`)
@@ -359,10 +386,13 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   let elderSign = false
   let elderAutoSuccess = false
   let elderOnSuccess = null
+  let elderOnSuccessAlways = false
   let elderReturnCommittedSkill = false
   let elderMayMoveAfterTest = false
+  let elderMayMoveAfterTestAlways = false
   let elderClueOnSuccessBy = 0
   let elderChosenReward = false
+  let elderOptionalDraw = 0
   const drawn = []
   const cancelledTokens = []
   const pendingOnFail = []
@@ -470,7 +500,8 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     // Phase 5（5a-21）：幸运骰由条目级 rerollTokenCost 声明（花 N 资源重抽）。
     let luckyDice = inv.assets.find(asset => registeredEntry(asset.code)?.rerollTokenCost)
     let luckyGuard = 0
-    while (luckyDice && inv.resources >= 2 && luckyGuard++ < 20) {
+    // 卡面：只能对「非 auto_fail」的标记使用。
+    while (luckyDice && token !== 'autofail' && inv.resources >= 2 && luckyGuard++ < 20) {
       const answer = requestChoice(state, { kind: 'reaction', source: luckyDice.id, seat, canSkip: true,
         prompt: `幸运骰：是否支付 2 资源，取消并归还 ${tokenLabel(token)}，然后重新揭示？`,
         options: [{ id: 'skip', label: '保留该标记' }, { id: 'trigger', label: '支付 2 资源并重抽' }] })
@@ -481,9 +512,12 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       token = drawChaosToken(state)
       info(state, events, `${inv.name} 使用「幸运骰」归还混乱标记并重新揭示 ${tokenLabel(token)}。`)
       if (token === 'autofail') {
+        // 新标记为 auto_fail：把幸运骰子移出游戏（不是弃置）。
+        luckyDice.removedFromGame = true
+        state.removedFromGame ||= []
+        if (!state.removedFromGame.includes(luckyDice.code)) state.removedFromGame.push(luckyDice.code)
         leaveAsset(state, inv, luckyDice, events)
-        inv.discard.push(luckyDice.code)
-        info(state, events, `「幸运骰」重新揭示自动失败，弃置。`)
+        info(state, events, `「幸运骰」重新揭示自动失败，从游戏中移除。`)
         luckyDice = null
       }
     }
@@ -512,6 +546,18 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     drawn.push(token)
     state.skillTest.currentToken = token
     state.skillTest.cancelledSymbol = null
+    // 「没有剩余神智值的调查员攻击或躲避哈斯塔时，把 +1/0/-1/旧印视为自动失败」（03334）。
+    const sourceEnemy = options.source?.enemyId != null
+      ? state.enemies.find(enemy => enemy.id === options.source.enemyId) : null
+    if (sourceEnemy && !enemyTextBlanked(state, sourceEnemy)
+      && enemyRuleFlags(sourceEnemy.code).noSanityAutoFailTokens === true
+      && ['攻击', '躲避'].includes(options.source?.label)
+      && getMaxSanity(inv) - (inv.horror || 0) <= 0
+      && ['eldersign', '+1', '0', '-1'].includes(token)) {
+      info(state, events, `☠️ ${inv.name} 没有剩余神智：${tokenLabel(token)} 被视作${tokenLabel('autofail')}。`)
+      autoFail = true
+      break
+    }
     // 「追忆未来」：揭示了指定的混乱标记时横置支援并 +2。
     const named = state.skillTest.namedToken
     if (named && named.token === token) {
@@ -547,8 +593,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     if (token === 'skull') for (const owner of aliveInvestigators(state)) triggerReaction(state, owner.seat, 'skullRevealed', events, { seat, token })
     if (token === 'autofail') {
       autoFail = true
-      const stone = inv.assets.find(asset => registeredEntry(asset.code)?.returnToHandOnAutoFail
-      ?? EFFECTS[asset.code]?.returnToHandOnAutoFail)
+      const stone = inv.assets.find(asset => registeredEntry(asset.code)?.returnToHandOnAutoFail)
       if (stone) {
         leaveAsset(state, inv, stone, events)
         inv.hand.push(stone.code)
@@ -579,16 +624,14 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         lastTokenDelta = es.delta
         elderAutoSuccess = !!es.autoSuccess
         elderOnSuccess = es.onSuccess || null
+        elderOnSuccessAlways = !!es.onSuccessAlways
         elderReturnCommittedSkill = !!es.returnCommittedSkill
         elderMayMoveAfterTest = !!es.mayMoveAfterTest
+        elderMayMoveAfterTestAlways = !!es.mayMoveAfterTestAlways
         elderClueOnSuccessBy = es.clueOnSuccessBy || 0
         elderChosenReward = !!es.chosenReward
-        if (es.optionalDraw > 0) {
-          const answer = requestChoice(state, { kind: 'reaction', source: 'daisyElderSign', seat, canSkip: true,
-            prompt: `旧印：是否为控制的书籍抽取 ${es.optionalDraw} 张牌？`,
-            options: [{ id: 'skip', label: '不抽牌' }, { id: 'trigger', label: `抽取 ${es.optionalDraw} 张牌` }] })
-          if (answer === 'trigger') for (const text of drawCards(state, inv, es.optionalDraw, events)) info(state, events, text)
-        }
+        // 黛西的「如果你检定成功」要等成败判定后结算，不能在这里提前抽牌。
+        elderOptionalDraw = Number(es.optionalDraw) || 0
         if (elderAutoSuccess) info(state, null, `✨ ${inv.name} 的 elder_sign 效果触发自动成功！`)
       }
       break
@@ -634,6 +677,12 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   }
 
   state.skillTest.stage = 'ST.5'
+  // 「本次攻击期间揭示了 X 则自动失败」（04273 陈旧猎枪的卡膛）：在成算之前把检定改为自动失败。
+  // 与 autofail 标记同一条失败路径，因此不会产生伤害、不会被「成功」类反应误读。
+  if (Array.isArray(options.autoFailOnTokens)
+    && options.autoFailOnTokens.some(token => drawn.includes(token))) {
+    autoFail = true
+  }
   if (typeof options.skillBonus === 'function') value += options.skillBonus() - initialBonus
   const rexCurse = inv.threat.find(item => registeredEntry(item.code)?.rerollRevealedTokenOnSuccess)
   if (rexCurse && !autoFail && (elderAutoSuccess || value + delta >= difficulty) && drawn.length) {
@@ -642,6 +691,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     delta -= lastTokenDelta
     elderAutoSuccess = false
     elderOnSuccess = null
+    elderOnSuccessAlways = false
     elderSign = false
     const replacement = drawChaosToken(state)
     drawn.push(replacement)
@@ -654,7 +704,10 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       elderAutoSuccess = !!es.autoSuccess
       elderReturnCommittedSkill = !!es.returnCommittedSkill
       elderMayMoveAfterTest = !!es.mayMoveAfterTest
+      elderMayMoveAfterTestAlways = !!es.mayMoveAfterTestAlways
       elderClueOnSuccessBy = es.clueOnSuccessBy || 0
+      elderOnSuccess = es.onSuccess || null
+      elderOnSuccessAlways = !!es.onSuccessAlways
       elderChosenReward = !!es.chosenReward
       if (es.autoFail) autoFail = true
     } else if (/^[+-]?\d+$/.test(replacement)) delta += Number(replacement)
@@ -682,6 +735,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     state.skillTest.stage = 'ST.7'
     resolveResult(result)
     scenarioBehavior(state).afterTest?.(state, inv, result, scenarioRuntime(state, events))
+    runLocationTestFail(state, inv, result, events)
     campaignFailedTestWindow(state, seat, { skill, difficulty, baseValue: statReference, source: options.source,
       peril: options.peril, resolve: options.resolve, failedBy: difficulty }, events)
     return result
@@ -719,6 +773,9 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   state.skillTest.value = value
   state.skillTest.stage = 'ST.6'
   const success = elderAutoSuccess || value >= difficulty
+  // 任意技能检定成功的统一反应窗口（04107 幸运烟盒等）。
+  if (success) triggerReaction(state, seat, 'skillTestSuccess', events,
+    { skill, successBy: value - difficulty, difficulty, value })
   // 「埃兹特里之牙」：结算诡计卡上的能力时检定成功后可以横置抽牌。
   if (success && state._treacheryResolving) {
     triggerReaction(state, seat, 'treacheryTestSuccess', events, { location: inv.location, skill, cardCode: state._treacheryResolving })
@@ -731,6 +788,10 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   for (let pass = 0; pass < (doubleOrNothing && success ? 2 : 1); pass++) {
     for (const commitment of commitments) {
       const result = applySkillOnSuccess(state, state.investigators[commitment.seat], [commitment.code], success, value - difficulty)
+      // 04153 参透真谛：任意冒险能力检定成功后由投入者发现 1 个线索。
+      if (success && result.discoverClue) {
+        discoverClueAt(state, state.investigators[commitment.seat], result.discoverClue, events)
+      }
       skillFx.damageBonus += result.damageBonus
       skillFx.clueBonus += result.clueBonus
       skillFx.evadeDisengage ||= result.evadeDisengage
@@ -739,8 +800,17 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     if (result.homeFrontCode) skillFx.homeFrontCode = result.homeFrontCode
     }
   }
-  if (elderOnSuccess && success) {
+  if (elderOnSuccess && (success || elderOnSuccessAlways)) {
     resolveEffect(state, seat, elderOnSuccess, makeRuntime(state, []))
+  }
+  // 黛西·沃克：旧印 +0，如果本次检定成功，每控制一个[[书籍]]抽取 1 张（可选）。
+  if (success && elderOptionalDraw > 0) {
+    const answer = requestChoice(state, { kind: 'reaction', source: 'daisyElderSign', seat, canSkip: true,
+      prompt: `旧印：是否为控制的书籍抽取 ${elderOptionalDraw} 张牌？`,
+      options: [{ id: 'skip', label: '不抽牌' }, { id: 'trigger', label: `抽取 ${elderOptionalDraw} 张牌` }] })
+    if (answer === 'trigger') {
+      for (const text of drawCards(state, inv, elderOptionalDraw, events)) info(state, events, text)
+    }
   }
   // 「挥金如土」等：检定成功后的额外结算。
   if (success && state.skillTest?.extraOnSuccess?.length) {
@@ -755,7 +825,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       options: [{ id: 'skip', label: '不发现' }, { id: 'trigger', label: '发现 1 个线索' }] })
     if (answer === 'trigger') discoverClueAt(state, inv, 1, events)
   }
-  if (success && elderMayMoveAfterTest) {
+  if ((success || elderMayMoveAfterTestAlways) && elderMayMoveAfterTest) {
     const destinations = investigatorMoveDestinations(state, seat, {})
     if (destinations.length) {
       const answer = requestChoice(state, { kind: 'move', source: 'ursulaElderSign', seat, canSkip: true,
@@ -820,6 +890,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   state.skillTest.stage = 'ST.7'
   resolveResult(result)
   scenarioBehavior(state).afterTest?.(state, inv, result, scenarioRuntime(state, events))
+  runLocationTestFail(state, inv, result, events)
   if (success) {
     const successBy = value - difficulty
     for (const commitment of commitments) {

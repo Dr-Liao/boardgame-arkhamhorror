@@ -1,5 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { actRuleFor, agendaRuleFor } from '../../../../../src/cards/card-rules.js'
+import { actRuleFor, agendaRuleFor, entryFlags, isPoisonThreat, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
@@ -13,7 +13,9 @@ const flagsFor = state => (state.scenarioFlags ||= {})
 const original = card => card?.originalCode || card?.code
 const here = (state, inv) => state.locations.find(location => location.id === inv.location)
 const locationById = (state, id) => state.locations.find(location => location.id === id)
-const isPoisoned = inv => (inv?.threat || []).some(card => card.code === '04102') || inv?.poisoned === true
+// 中毒判定走条目读点（04102 的 poisonThreat），不在内容层写死卡号。
+const isPoisoned = inv => (inv?.threat || []).some(card => isPoisonThreat(card?.originalCode || card?.code))
+  || inv?.poisoned === true
 const attachmentsWith = (location, code) =>
   (location?.attachments || []).filter(attachment => original(attachment) === code)
 
@@ -82,7 +84,7 @@ function yigsFuryOf(state) {
 function setAsidePoisonedCount(state) {
   const records = Object.values(state.campaign?.investigators || {})
   const inDecks = records.reduce((sum, record) =>
-    sum + (record?.deck || []).filter(code => code === '04102').length, 0)
+    sum + (record?.deck || []).filter(code => isPoisonThreat(code)).length, 0)
   return Math.max(0, Math.min(4, 4 - inDecks))
 }
 
@@ -308,7 +310,7 @@ function clearNoTurningBack(state, inv, move, api) {
     api.info?.(`「${location.name}」上的无路可退被弃掉。`)
   }
   // 印刷：检定战斗(3)成功，或你带有鹤嘴锄。
-  if (api.checkSupplies(inv.seat, 'pickaxe')) {
+  if (api.hasSupply?.(inv.seat, 'pickaxe') ?? api.checkSupplies(inv.seat, 'pickaxe')) {
     discard()
     return true
   }
@@ -390,6 +392,14 @@ function spawnHarbinger(state, api) {
 
 // ---- 结局分流 -------------------------------------------------------------
 
+// 第 117 轮：幕/密谋条目通过这个 hooks 对象调用本章实现（走圈、预示者），实现只有一份。
+function chapterHooks(state, api) {
+  return {
+    goingInCircles: () => resolveGoingInCircles(state, api),
+    spawnHarbinger: () => spawnHarbinger(state, api),
+  }
+}
+
 // 密谋／场景把「没有结局」分流到结局 1／2：调查员解救了亚历山卓走结局 1，否则结局 2。
 export function reachedResolutionKey(state, key) {
   if (key !== 'noResolution') return key
@@ -440,17 +450,9 @@ export const behavior = {
   },
 
   beforeExplore(state, inv, api) {
-    const location = here(state, inv)
-    const code = original(location)
-    // 宽阔步道：没有双筒望远镜必须额外花费 1 个行动。
-    if (code === '04222' && !api.checkSupplies(inv.seat, 'binoculars')) {
-      if ((inv.actionsLeft || 0) < 1) {
-        api.info?.('宽阔步道：本地点没有人带双筒望远镜，需要额外 1 个行动，你的行动不足。')
-        return false
-      }
-      inv.actionsLeft -= 1
-      api.info?.('宽阔步道：本地点没有人带双筒望远镜，额外花费 1 个行动。')
-    }
+    // 第 117 轮：宽阔步道（04222）的双筒望远镜行动费在地点条目的 locationRule.beforeExplore。
+    const rule = locationRuleFor(original(here(state, inv)))
+    if (typeof rule?.beforeExplore === 'function' && rule.beforeExplore(state, inv, api) === false) return false
     // 记录本次探索，用于「落入陷阱」的「从探索牌库抽出」判断。
     flagsFor(state).exploringSeat = inv.seat
     return true
@@ -484,14 +486,8 @@ export const behavior = {
   afterTest(state, inv, result, api) {
     tfaChaosAfterTest(CHAOS_CHAPTER_ID, state, inv, result, api)
     encounterRules.afterTest?.(state, inv, result, api)
-    const location = here(state, inv)
-    const code = original(location)
-    // 危险峡谷：调查检定失败后，本地点没人带绳索就放 1 个毁灭。
-    if (code === '04225' && !result.success && result.source?.label === '调查'
-      && !api.checkSupplies(inv.seat, 'rope')) {
-      location.doom = (location.doom || 0) + 1
-      api.info?.('危险峡谷：本地点没有人带绳索，放置 1 个毁灭标记。')
-    }
+    // 第 117 轮：危险峡谷（04225）的调查失败规则在地点条目的 locationRule.afterTest。
+    locationRuleFor(original(here(state, inv)))?.afterTest?.({ state, inv, result, api })
   },
 
   resolveChaosToken(state, inv, token, api) {
@@ -503,14 +499,16 @@ export const behavior = {
   // 就完全交给共享规则，避免本章的本地补齐重复结算。
   resolveEncounter(state, inv, t, api) {
     const code = original(t)
-    const locallyImplemented = code === '04215' || code === '04216'
+    // 第 117 轮：这几张卡的身份由条目标志声明（两章共用，但本章文案与数值仍在本文件）。
+    const flags = entryFlags(code) || {}
+    const locallyImplemented = flags.pitfall || flags.spores
     if (locallyImplemented && encounterRules.implementedTreacheries?.has(code)) {
       return encounterRules.resolveEncounter(state, inv, t, api)
     }
     const handled = encounterRules.resolveEncounter?.(state, inv, t, api)
-    if (code === '04215') return resolvePitfall(state, inv, api)
-    if (code === '04216') return resolvePoisonousSpores(state, inv, api)
-    if (code === '04228') return resolveNoTurningBack(state, inv, api)
+    if (flags.pitfall) return resolvePitfall(state, inv, api)
+    if (flags.spores) return resolvePoisonousSpores(state, inv, api)
+    if (flags.noTurningBack) return resolveNoTurningBack(state, inv, api)
     return handled
   },
 
@@ -561,11 +559,7 @@ export const behavior = {
       })
     }
     if (original(location) === DESCENT_TO_YOTH) {
-      moves.push({
-        action: 'scenarioAction', rule: 'flipDescentDoom', actions: 1,
-        label: `🕳️ 调查深入幽嘶：检定智识(${descentDifficulty(state, location)})，把 1 个毁灭标记翻至线索面`,
-        reason: (location?.doom || 0) > 0 ? null : '深入幽嘶上没有毁灭标记可翻面',
-      })
+      // 04227 的翻面是「成功调查后的可选替代」，不再提供额外的 1 行动按钮。
     }
     // 04212 黑暗中的眼睛：[action] 如果所在地点没有线索，探索。
     const agenda = state.agendas?.[state.agendaIndex]
@@ -576,6 +570,23 @@ export const behavior = {
       })
     }
     return moves
+  },
+
+  // 04227 深入幽嘶：成功调查后可以不发现线索，改为把 1 个毁灭翻到线索面。
+  investigateResult(state, inv, location, result, api) {
+    if (!result?.success || original(location) !== DESCENT_TO_YOTH || (location.doom || 0) <= 0) return
+    const answer = typeof api.choose === 'function'
+      ? api.choose({
+        kind: 'reaction', source: DESCENT_TO_YOTH, seat: inv.seat, canSkip: true,
+        prompt: '深入幽嘶：是否不发现线索，改为把 1 个毁灭标记翻至线索面？',
+        options: [{ id: 'flip', label: '翻 1 个毁灭为线索' }, { id: 'clues', label: '正常发现线索' }],
+      })
+      : 'clues'
+    if (answer !== 'flip') return
+    location.doom -= 1
+    location.clues = (location.clues || 0) + 1
+    api.info?.('深入幽嘶：1 个毁灭标记翻至线索面，本次不发现线索。')
+    return false
   },
 
   performAction(state, inv, move, api) {
@@ -595,7 +606,7 @@ export const behavior = {
       return
     }
     if (move.rule === 'scoutDepths') {
-      if (!api.checkSupplies(inv.seat, 'map')) {
+      if (!(api.hasSupply?.(inv.seat, 'map') ?? api.checkSupplies(inv.seat, 'map'))) {
         api.info?.('昆扬之口：队伍中没有地图，这次行动没有效果。')
         return
       }
@@ -621,26 +632,17 @@ export const behavior = {
   actReveal(state, act, api) {
     const code = original(act)
     const entry = actRuleFor(code)
-    if (entry?.onReveal) { entry.onReveal(state, act, api); return }
-    if (code === '04213') {
-      resolveGoingInCircles(state, api)
-      return
-    }
-    if (code === '04214') {
-      api.finish(recordsFor(state).theInvestigatorsRescuedAlejandro ? 'r1' : 'r2')
-      return
-    }
+    // 第 120 轮：04213 与 04214 的背面都在幕条目（04214 是「同号双类型」，
+    // 幕规则挂在遭遇条目的 actRule 上，引擎只对幕读它）。
+    if (entry?.onReveal) { entry.onReveal(state, act, api, chapterHooks(state, api)); return }
     throw new Error(`未知久远腹地（下）场景：${code}`)
   },
 
   agendaReveal(state, agenda, api) {
     const code = original(agenda)
     const entry = agendaRuleFor(code)
-    if (entry?.onReveal) { entry.onReveal(state, agenda, api); return }
-    if (code === '04211') {
-      spawnHarbinger(state, api)
-      return
-    }
+    // 第 117 轮：04211 的背面在密谋条目。
+    if (entry?.onReveal) { entry.onReveal(state, agenda, api, chapterHooks(state, api)); return }
     throw new Error(`未知久远腹地（下）密谋：${code}`)
   },
 

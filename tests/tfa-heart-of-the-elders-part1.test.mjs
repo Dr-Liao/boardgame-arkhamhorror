@@ -3,12 +3,14 @@ import assert from 'node:assert/strict'
 // 引擎是唯一装配点：import 它之前不会注册能力条目、注入修正读点
 // （setModifierRegistry / setModifierHooks），下面的 entityModifierTotal / entityRuleActive 会恒为 0/false。
 import '../src/engine/engine.js'
+import { tokenLabel } from '../src/engine/engine.js'
 import * as chapter from '../content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/index.js'
 import {
   scenario as definition, EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES, RUINS_CANDIDATES,
 } from '../content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/definition.js'
 // Phase 3（D1）：04209b 的「不能被击败 / 不借机攻击」与地点修正已迁到能力层。
 import { entityModifierTotal, entityRuleActive } from '../src/engine/modifiers.js'
+import { locationRuleFor } from '../src/cards/card-rules.js'
 
 const clone = value => structuredClone(value)
 const behavior = chapter.behavior
@@ -258,7 +260,7 @@ test('印刷卡面校正：蛇怪复仇 2、绝命噬藤无复仇、羽翼蛇族
   assert.equal(definition.enemies['04219'].alert, true)
   assert.equal(definition.enemies['04219'].retaliate, true)
   assert.equal(definition.enemies['04220'].hunter, true)
-  assert.equal(definition.enemies['04220'].prey, "Nearest to the Mouth of K'n-yan")
+  assert.equal(definition.enemies['04220'].prey, 'nearestMouth')
   assert.equal(definition.enemies['04209b'].cannotBeDefeated, true)
   assert.equal(definition.enemies['04209b'].health, null, '没有生命值，不要兜底成 1')
   assert.equal(definition.enemies['04209b'].hunter, true)
@@ -417,13 +419,15 @@ test('石柱祭坛：进入后揭示混乱标记，符号则失去 1 行动，�
   const state = placed(stateFor(1))
   const inv = state.investigators[0]
   const altar = state.locations.find(entry => entry.id === 'stoneAltar')
-  behavior.locationEntered(state, inv, altar, makeApi(state, { revealToken: 'skull' }))
+  // 第 116 轮：04218 的进入规则在卡条目（引擎派发 locationRule.onEnter.effect）。
+  const enter = api => locationRuleFor('04218').onEnter.effect(state, altar, api, inv)
+  enter(makeApi(state, { revealToken: 'skull' }))
   assert.equal(inv.actionsLeft, 2)
   inv.actionsLeft = 0
-  behavior.locationEntered(state, inv, altar, makeApi(state, { revealToken: 'autofail' }))
+  enter(makeApi(state, { revealToken: 'autofail' }))
   assert.equal(inv.horror, 1)
   inv.actionsLeft = 3
-  behavior.locationEntered(state, inv, altar, makeApi(state, { revealToken: '-2' }))
+  enter(makeApi(state, { revealToken: '-2' }))
   assert.equal(inv.actionsLeft, 3, '非符号标记没有惩罚')
 })
 
@@ -443,7 +447,10 @@ test('杂草丛生的遗迹：中毒者进入后失去所有行动并结束回�
   const inv = state.investigators[0]
   const ruins = state.locations.find(entry => entry.id === 'overgrownRuins')
   inv.threat.push({ id: 'p', code: '04102', permanent: true })
+  // 第 116 轮：04075 的「中毒即结束回合」在卡条目（引擎派发 locationRule.onEnter.effect），
+  // 两个使用该地点的章节共用同一份实现，所以这里直接读条目规则。
   behavior.locationEntered(state, inv, ruins, makeApi(state))
+  locationRuleFor('04075').onEnter.effect(state, ruins, makeApi(state), inv)
   assert.equal(inv.actionsLeft, 0)
   assert.equal(inv.turnEnded, true)
 })
@@ -850,8 +857,10 @@ test('04218 石板祭坛：日志用中文标记名，不暴露内部 id', () =>
   const location = { ...clone(state.scenario.locations.stoneAltar), id: 'stoneAltar', revealed: true, clues: 1 }
   state.locations.push(location)
   const logs = []
-  const api = { info: text => logs.push(text), revealToken: () => 'autofail', loseActions: () => {}, horror: () => {} }
-  behavior.locationEntered(state, inv, location, api)
+  // 第 116 轮：条目通过 api.tokenLabel 取中文标记名（与引擎日志同源）。
+  const api = { info: text => logs.push(text), revealToken: () => 'autofail', loseActions: () => {}, horror: () => {},
+    tokenLabel: tokenLabel }
+  locationRuleFor('04218').onEnter.effect(state, location, api, inv)
   assert.ok(logs.some(text => text.includes('自动失败')))
   assert.equal(logs.some(text => text.includes('autofail')), false)
 })

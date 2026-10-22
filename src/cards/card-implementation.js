@@ -208,8 +208,9 @@ export function isRegistrationOnly(legacy) {
 
 // 与通道无关的「实现」判定。
 export function implementationChannel(code) {
-  const legacy = Object.hasOwn(EFFECTS, code) ? EFFECTS[code] : null
-  const behavior = legacy && !isRegistrationOnly(legacy) ? legacy : null
+  // 第 126 轮：旧 DSL 通道（EFFECTS）已清空，legacy / behavior 恒为 null。
+  const legacy = null
+  const behavior = null
   const entry = ENTRY_BY_CODE.get(code) || null
   if (entry && behavior) return 'hybrid'
   if (entry) return 'descriptor'
@@ -226,7 +227,9 @@ export function implementation(code) {
 
 // 迁移期唯一允许读旧 DSL 原始条目的入口（未来 EFFECTS 清零时只删这一个函数）。
 export function legacyEntry(code) {
-  return Object.hasOwn(EFFECTS, code) ? EFFECTS[code] : null
+  // 第 126 轮：EFFECTS 已清空，迁移期读点恒为空（保留导出给旧调用点）。
+  void code
+  return null
 }
 
 // 旧 DSL 条目上「某张卡打出/揭示时的那份数据体」，供迁移期的效果解释器使用。

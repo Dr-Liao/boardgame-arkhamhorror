@@ -2,6 +2,7 @@ import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
+import { actRuleFor, agendaRuleFor, entryFlags, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import {
   ALEJANDRO, ALTERNATE_ACTS, ANCIENT_EVILS, ANOTHER_WAY, BETWEEN_WORLDS,
   BETWEEN_WORLDS_LOCATION, CREEPING_DARKNESS, EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES,
@@ -134,6 +135,19 @@ function addToVictory(state, card, extra = {}) {
   if (state.victoryDisplay.some(entry => entry.id === card.id)) return
   state.victoryDisplay.push({ id: card.id, code, originalCode: code,
     victory: card.victory || 0, vengeance: card.vengeance || 0, ...extra })
+}
+
+// 04325b/04326b：让已在场的某类敌人立刻变成 passive（不主动交战），并解除已有交战。
+function markTraitPassive(state, trait) {
+  for (const enemy of state.enemies.filter(entry => hasTrait(entry, trait))) {
+    enemy.grantedAloof = true
+    enemy.aloof = true
+    if (enemy.engagedSeat != null) {
+      const holder = state.investigators[enemy.engagedSeat]
+      if (holder) holder.engaged = (holder.engaged || []).filter(id => id !== enemy.id)
+      enemy.engagedSeat = null
+    }
+  }
 }
 
 function doomAtNexus(state) {
@@ -281,7 +295,30 @@ function sealedSymbolCount(state, symbol) {
       for (const sealed of asset.sealed || []) if (sealed === symbol) count += 1
     }
   }
-  return count
+  return count;
+}
+
+// 第 116 轮：幕/密谋条目通过这个 hooks 对象编排本章实现（洗牌、放在一边、胜利区、常量），
+// 条目只决定「什么时候做什么」，实现只有一份。
+function aeonsHooks(state, api) {
+  return {
+    flags: () => flagsFor(state),
+    records: () => recordsFor(state),
+    active: () => active(state),
+    byId: id => byId(state, id),
+    removeFromSetAside: code => removeFromSetAside(state, code),
+    removeSetAsideLocation: id => removeSetAsideLocation(state, id),
+    shuffleInPlace: () => shuffleInPlace(state, api),
+    addToVictory: (card, extra) => addToVictory(state, card, extra),
+    relicControlledBy: () => relicControlledBy(state),
+    shatteredLocations: () => [...SHATTERED_LOCATIONS],
+    pocket: () => POCKET,
+    nexus: () => NEXUS,
+    formlessSpawn: () => FORMLESS_SPAWN,
+    ichtaca: () => ICHTACA,
+    alejandro: () => ALEJANDRO,
+    relicAgesUnleash: () => RELIC_AGES_UNLEASH,
+  }
 }
 
 function createBetweenWorldsLocation(state, api) {
@@ -507,65 +544,35 @@ export const behavior = {
     // 「探索」行动通过该地点的能力移动时，不结算联结点/时间之窗的强制效果。
     if (flags.ignoreNodeHazard) return
     const from = byId(state, inv.tfaFromLocation)
-    const fromCode = original(from)
-    const code = original(location)
-    // 恩凯联结点 ↔ 异界：每有 1 个线索受到 1 点恐惧。
-    if ((fromCode === '04324' && isOtherworld(location)) || (code === '04324' && isOtherworld(from))) {
-      const source = isOtherworld(location) ? location : from
-      const clues = source?.clues || 0
-      if (clues > 0) {
-        api?.horror?.(inv.seat, clues)
-        api?.info?.(`🌀 「${source.name}」的 ${clues} 个线索化作恐惧。`)
-      }
-      return
+    // 第 116 轮：联结点/时间之窗的强制效果由地点条目的 nodeHazard 数据声明。
+    const hazardOf = (self, other) => {
+      const hazard = locationRuleFor(original(self))?.nodeHazard
+      return hazard && other && hasTrait(other, hazard.withTrait) ? hazard : null
     }
-    // 时间之窗 ↔ 破碎：每有 1 个线索受到 1 点伤害。
-    if ((fromCode === '04330' && isShattered(location)) || (code === '04330' && isShattered(from))) {
-      const source = isShattered(location) ? location : from
-      const clues = source?.clues || 0
-      if (clues > 0) {
-        api?.damage?.(inv.seat, clues)
-        api?.info?.(`⏳ 「${source.name}」的 ${clues} 个线索化作伤害。`)
-      }
-    }
+    const entering = hazardOf(location, from)
+    const leaving = entering ? null : hazardOf(from, location)
+    const hazard = entering || leaving
+    if (!hazard) return
+    const source = entering ? from : location
+    const clues = source?.clues || 0
+    if (clues <= 0) return
+    api?.[hazard.harm]?.(inv.seat, clues)
+    api?.info?.(`${hazard.icon} 「${source.name}」的 ${clues} 个线索化作${hazard.label}。`)
   },
 
-  locationShroudModifier(state, location) {
-    const code = original(location)
-    // 拉莱耶海岸：其上每张卡牌（含自身）的每个毁灭标记使隐藏值 +1。
-    if (code === '04328') {
-      let doom = location.doom || 0
-      for (const enemy of state.enemies.filter(entry => entry.location === location.id)) doom += enemy.doom || 0
-      for (const attachment of location.attachments || []) doom += attachment.doom || 0
-      for (const inv of state.investigators.filter(entry => entry.location === location.id)) {
-        doom += (inv.threat || []).reduce((sum, card) => sum + (card.doom || 0), 0)
-        doom += (inv.assets || []).reduce((sum, card) => sum + (card.doom || 0), 0)
-      }
-      return doom
-    }
-    if (code === '04335' && flagsFor(state).valusiaShroudZero) return -(location.shroud || 0)
+  locationShroudModifier() {
+    // 第 116 轮：04328（拉莱耶海岸）与 04335（瓦卢西亚）的隐藏值修正已改成条目的
+    // locationShroud 修饰符（引擎的 entityModifierTotal 会一起结算）。
     return 0
   },
 
   actions(state, inv) {
     const moves = []
     const location = here(state, inv)
-    const code = original(location)
     const flags = flagsFor(state)
     const actCode = currentActCode(state)
-    if (code === '04324' || code === '04330') {
-      moves.push({
-        action: 'scenarioAction', rule: 'exploreFromNode', locationId: location.id,
-        label: `🧭 探索（无视「${location.name}」的强制效果）`,
-        reason: (state.explorationDeck || []).length ? null : '探索牌库已空',
-      })
-    }
-    if (code === '04327') moves.push({
-      action: 'scenarioAction', rule: 'yuggothFlip',
-      label: '🌀 把犹格斯星的 1 个线索翻至毁灭标记面，然后抽 1 张卡',
-      // 卡面要求「把 1 个线索翻面」：没有线索时不能发动。
-      reason: (location.clues || 0) > 0 ? null : '犹格斯星上没有线索可以翻面',
-    })
+    // 第 116 轮：04324/04327/04330/04334/04335 的场景行动在地点条目的 locationRule.actions。
+    locationRuleFor(original(location))?.actions?.({ state, inv, location, moves })
     // 04342 黑暗隐伏：[action][action] 检定意志(3)或检查补给（火把）弃掉 1 张。
     {
       const nexus = byId(state, NEXUS)
@@ -576,22 +583,6 @@ export const behavior = {
           label: '🔥 检定意志(3)或检查补给（火把）：弃掉 1 张「黑暗隐伏」',
         })
       }
-    }
-    if (code === '04334' && !flags.pnakotusUsed) {
-      const tablets = sealedSymbolCount(state, 'tablet')
-      moves.push({
-        action: 'scenarioAction', rule: 'pnakotusInsight',
-        label: '📚 发现纳克特所有的线索并抽取等量的卡牌（团队每场游戏一次）',
-        reason: tablets >= 3 ? null : `需要混沌袋或封印区里至少有 3 个石板标记（当前 ${tablets} 个）`,
-      })
-    }
-    if (code === '04335' && !flags.valusiaUsed) {
-      const cultists = sealedSymbolCount(state, 'cultist')
-      moves.push({
-        action: 'scenarioAction', rule: 'valusiaRenewal',
-        label: '🐍 治愈 2 点伤害和 2 点恐惧，并把瓦卢西亚的隐藏值设为 0（团队每场游戏一次）',
-        reason: cultists >= 3 ? null : `需要混沌袋或封印区里至少有 3 个异教徒标记（当前 ${cultists} 个）`,
-      })
     }
     if (actCode === ACT_TYPES.relic) {
       if (relicInAnyDeck(state)) moves.push({
@@ -668,7 +659,7 @@ export const behavior = {
         api.info?.('🔥 弃掉了 1 张「黑暗隐伏」，无形之子的生命值相应回退。')
       }
       // 卡面：检定意志(3)，成功则弃；或检查补给，带火把直接弃。
-      if (api.checkSupplies?.(inv.seat, 'torches')) {
+      if (api.hasSupply?.(inv.seat, 'torches') ?? api.checkSupplies?.(inv.seat, 'torches')) {
         discardOne()
         return
       }
@@ -887,7 +878,7 @@ export const behavior = {
         }
         api.info?.('🌑 黑暗隐伏被弃掉，无形之子的生命值恢复原状。')
       }
-      if (api.checkSupplies?.(inv.seat, 'torches')) {
+      if (api.hasSupply?.(inv.seat, 'torches') ?? api.checkSupplies?.(inv.seat, 'torches')) {
         discard()
         return true
       }
@@ -951,14 +942,16 @@ export const behavior = {
     if (code === TEMPORAL_DEVOURER) placeClueAtEnemy(state, enemy, api)
     if (code === FORMLESS_SPAWN) {
       const nexus = byId(state, NEXUS)
-      if (nexus?.attachments?.some(entry => original(entry) === CREEPING_DARKNESS)) {
-        enemy.health += state.numInvestigators
-        enemy.creepingDarknessHealth = (enemy.creepingDarknessHealth || 0) + state.numInvestigators
+      const creepCount = (nexus?.attachments || []).filter(entry => original(entry) === CREEPING_DARKNESS).length
+      if (creepCount) {
+        // 每张「黑暗隐伏」各给一份 +1[每名调查员] 生命。
+        enemy.health += state.numInvestigators * creepCount
+        enemy.creepingDarknessHealth = (enemy.creepingDarknessHealth || 0) + state.numInvestigators * creepCount
       }
     }
-    // 「我答应你」：蛇族/异教徒敌人不与你交战、也不攻击你（用 aloof 近似）。
-    if (flags.cultistPassive && hasTrait(enemy, 'Cultist')) enemy.aloof = true
-    if (flags.serpentPassive && hasTrait(enemy, 'Serpent')) enemy.aloof = true
+    // 「我答应你」：蛇族/异教徒敌人不与你交战、也不攻击你（用常驻 aloof 表示）。
+    if (flags.cultistPassive && hasTrait(enemy, 'Cultist')) enemy.grantedAloof = true
+    if (flags.serpentPassive && hasTrait(enemy, 'Serpent')) enemy.grantedAloof = true
   },
 
   enemyMoved(state, enemy, previous, api) {
@@ -974,7 +967,7 @@ export const behavior = {
 
   enemyStatModifier(state, enemy, stat) {
     let value = encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
-    if (original(enemy) === FORMLESS_SPAWN) value += doomAtNexus(state)
+    if (original(enemy) === FORMLESS_SPAWN && (stat === 'fight' || stat === 'evade')) value += doomAtNexus(state)
     return value
   },
 
@@ -1075,68 +1068,9 @@ export const behavior = {
 
   actReveal(state, act, api) {
     const code = original(act)
-    const flags = flagsFor(state)
-    if (code === '04318') {
-      // 背面：把放在一边的时间之窗洗入探索牌库。
-      removeSetAsideLocation(state, POCKET)
-      if (!(state.explorationDeck || []).includes(POCKET)) {
-        state.explorationDeck = [...(state.explorationDeck || []), POCKET]
-        flags.pocketInDeck = true
-      }
-      shuffleInPlace(state, api)
-      api.info?.('🕳️ 时间之窗被洗入探索牌库。')
-      return
-    }
-    if (code === '04319') {
-      // 背面：把放在一边的破碎地点洗入探索牌库；每位调查员把遭遇弃牌堆顶的第一张
-      // 巫术诡计洗入探索牌库；检查剧本日志决定遗物是否已附属到时间之窗。
-      for (const id of SHATTERED_LOCATIONS) {
-        removeSetAsideLocation(state, id)
-        state.explorationDeck = [...(state.explorationDeck || []), id]
-      }
-      shuffleInPlace(state, api)
-      for (const inv of active(state)) {
-        const index = (state.encounterDiscard || []).findLastIndex(entry =>
-          ALL_CARDS[entry]?.traits?.some(trait => String(trait).toLowerCase() === 'hex'))
-        if (index < 0) continue
-        const [hex] = state.encounterDiscard.splice(index, 1)
-        // 同一张巫术诡计只洗入一次（防重复触发时叠加）。
-        if (!flags.foundHexFromDiscard.includes(hex)) {
-          state.explorationDeck.push(hex)
-          flags.foundHexFromDiscard.push(hex)
-        }
-        api.info?.(`🃏 ${inv.name} 把「${ALL_CARDS[hex]?.nameZh || hex}」洗入探索牌库。`)
-      }
-      shuffleInPlace(state, api)
-      if (recordsFor(state).theRelicIsMissing) {
-        const pocket = byId(state, POCKET)
-        removeFromSetAside(state, RELIC_AGES_UNLEASH)
-        flags.relicCode = RELIC_AGES_UNLEASH
-        if (pocket) {
-          if (api.moveRelicOfAges) api.moveRelicOfAges({ code: RELIC_AGES_UNLEASH, location: pocket.id })
-          else state.relicOfAges = { code: RELIC_AGES_UNLEASH, location: pocket.id, seat: null }
-          api.info?.('🏺 遗物已丢失：放在一边的古代遗物（时光涌流）附属到时间之窗。')
-        }
-      }
-      return
-    }
-    if (code === '04320') {
-      // 背面：伊塔卡/亚历山卓若与你为敌则生成；并启用「遗物离场 → 重置到 3a」。
-      flags.relicGuard = true
-      flags.relicWasControlled = !!relicControlledBy(state)
-      if (recordsFor(state).ichtacaIsSetAgainstYou) {
-        removeFromSetAside(state, ICHTACA)
-        const nexus = byId(state, NEXUS)
-        if (nexus) api.spawn(ICHTACA, nexus.id)
-      }
-      if (recordsFor(state).alejandroIsSetAgainstYou) {
-        removeFromSetAside(state, ALEJANDRO)
-        const pocket = byId(state, POCKET)
-        if (pocket) api.spawn(ALEJANDRO, pocket.id)
-      }
-      api.info?.('📜 若古代遗物因任何原因离场：把它附属的地点洗回探索牌库，并将场景重置到 3a。')
-      return
-    }
+    // 第 116 轮：04318–04320 的背面效果在幕条目（条目通过 hooks 编排本章实现）。
+    const entry = actRuleFor(code)?.onReveal
+    if (entry) { entry(state, act, api, aeonsHooks(state, api)); return }
     if (code === MEND_THE_SHATTER) {
       if (String(relicVersion(state)) === RELIC_REPOSSESS_THE_PAST) { api.finish('r5'); return }
       api.finish('r1')
@@ -1149,34 +1083,9 @@ export const behavior = {
 
   agendaReveal(state, agenda, api) {
     const code = original(agenda)
-    if (code === '04315') {
-      api.shuffleDiscard()
-      removeFromSetAside(state, FORMLESS_SPAWN)
-      const nexus = byId(state, NEXUS)
-      if (nexus) api.spawn(FORMLESS_SPAWN, nexus.id)
-      addToVictory(state, agenda, { vengeance: 1 })
-      api.info?.('🌑 无形之子在恩凯联结点现身；本密谋进入胜利区并获得复仇 1。')
-      return
-    }
-    if (code === '04316') {
-      api.shuffleDiscard()
-      const nexus = byId(state, NEXUS)
-      const formless = state.enemies.find(enemy => original(enemy) === FORMLESS_SPAWN)
-      if (formless && nexus) {
-        placeDoom(nexus, 2)
-        api.info?.('🌑 无形之子在场：恩凯联结点上放置 2 个毁灭标记。')
-      }
-      const inVictory = (state.victoryDisplay || []).find(card =>
-        String(card.originalCode || card.code) === FORMLESS_SPAWN)
-      if (inVictory) {
-        state.victoryDisplay = state.victoryDisplay.filter(card => card !== inVictory)
-        state.encounterDeck = [...(state.encounterDeck || []), FORMLESS_SPAWN]
-        api.info?.('🌑 胜利区里的无形之子被洗回遭遇牌库。')
-      }
-      addToVictory(state, agenda, { vengeance: 1 })
-      return
-    }
-    if (code === '04317') { api.finish('r4'); return }
+    // 第 116 轮：04315–04317 的背面效果在密谋条目。
+    const entry = agendaRuleFor(code)?.onReveal
+    if (entry) { entry(state, agenda, api, aeonsHooks(state, api)); return }
     throw new Error(`未知破碎永世密谋：${code}`)
   },
 
@@ -1351,6 +1260,7 @@ function resolveParleyStory(state, inv, enemy, api) {
       replaceActFour(state, PARADISE_LOST, api)
       flags.noParleyAlejandro = true
       flags.serpentPassive = true
+      markTraitPassive(state, 'Serpent')
       api.info?.('🐍 你答应了伊塔卡：场景 4a 换成「失乐园」，蛇族不再与你交战，也不能再与亚历山卓谈判。')
       return
     }
@@ -1379,6 +1289,7 @@ function resolveParleyStory(state, inv, enemy, api) {
     replaceActFour(state, TIMELOCK, api)
     flags.noParleyIchtaca = true
     flags.cultistPassive = true
+    markTraitPassive(state, 'Cultist')
     api.info?.('👤 你答应了亚历山卓：场景 4a 换成「锁定时间」，异教徒不再与你交战，也不能再与伊塔卡谈判。')
     return
   }

@@ -34,7 +34,7 @@ test('P0 选择事务拒绝缺失或重复的选项 id，避免产出不可提�
   }), 'a')
 })
 
-test('P0 TFA 04100 毒蛇召来：调查员选项有字符串 id，且能映射回座位', () => {
+test('P0 TFA 04100 毒蛇召来：中毒弱点放入抽到者的威胁区域', () => {
   const state = {
     investigators: [
       { seat: 0, name: 'A', location: 'x', defeated: false, resigned: false },
@@ -42,22 +42,14 @@ test('P0 TFA 04100 毒蛇召来：调查员选项有字符串 id，且能映射�
     ],
     locations: [{ id: 'x', clues: 0 }],
   }
-  const requests = []
   const poisoned = []
   const api = {
-    choose: request => {
-      requests.push(request)
-      if (request.options.some(option => option.id === 'poison')) return 'poison'
-      return request.options[1]?.id
-    },
+    choose: request => (request.options.some(option => option.id === 'poison') ? 'poison' : request.options[0]?.id),
     poison: seat => poisoned.push(seat),
     drawEncounter: () => {},
   }
   tfaRules.resolveEncounter(state, state.investigators[0], { code: '04100' }, api)
-  const investigatorChoice = requests.at(-1)
-  assert.equal(investigatorChoice.kind, 'investigator')
-  assert.deepEqual(investigatorChoice.options.map(option => option.id), ['0', '1'])
-  assert.deepEqual(poisoned, [1])
+  assert.deepEqual(poisoned, [0], '固定是抽到它的调查员，不能改选别人')
 })
 
 test('P0 03227 失魂落魄：抽到后按疑惑/确信检定，不再抛「未实现弱点」', () => {

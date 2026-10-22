@@ -272,7 +272,7 @@ test('C5 Dim Carcosa resolves all thirteen location backs and the Pallid Mask as
     enemies: [{ id: 'stranger', code: '03059' }], scenarioFlags: {}, actIndex: 1, numInvestigators: 1,
   }
   let spawned = null
-  dimBehavior.actReveal(state, { originalCode: '03321a' }, {
+  registeredEntry('03321a').actRule.onAdvance(state, { originalCode: '03321a' }, {
     removeEnemyFromGame: enemy => state.enemies.splice(state.enemies.indexOf(enemy), 1),
     giveAsset: (seat, code, extra) => state.investigators[seat].assets.push({ code, ...extra }),
     spawn: code => { spawned = code },
@@ -338,10 +338,11 @@ test('C5 mid-cycle privacy and Behind You ownership rules execute precisely', ()
     locations: [{ id: 'catacomb', originalCode: '03247', revealed: false, name: '墓穴' }],
     enemies: [{ id: 'lecturer', code: '03258', location: 'catacomb' }], scenarioFlags: {},
   }
-  const actions = encounterRules.encounterActions(state, helper)
-  const shadow = actions.find(action => action.rule === 'lookBehindYou')
+  // 「查看身后」只能由该威胁区的控制者本人执行。
+  assert.equal(encounterRules.encounterActions(state, helper).some(action => action.rule === 'lookBehindYou'), false)
+  const shadow = encounterRules.encounterActions(state, owner).find(action => action.rule === 'lookBehindYou')
   assert.equal(shadow.threatOwnerSeat, 0)
-  encounterRules.performEncounterAction(state, helper, shadow, {})
+  encounterRules.performEncounterAction(state, owner, shadow, {})
   assert.equal(owner.threat[0].lookedRound, 2)
   encounterRules.turnEnded(state, owner, { choose: () => 'resources' })
   assert.equal(owner.resources, 2)
@@ -373,9 +374,10 @@ test('C5 Dim Carcosa flip windows and Hastur defeat gate use printed ordering', 
   const inv = { seat: 0, location: 'target', clues: 3, assets: [], threat: [] }
   const hastur = { id: 'hastur', code: '03332', health: 3, damageTaken: 3 }
   const state = {
-    round: 1, agendaIndex: 0, campaign: { leadSeat: 0, records: {} }, investigators: [inv],
+    round: 1, agendaIndex: 0, actIndex: 0, campaign: { leadSeat: 0, records: {} }, investigators: [inv],
     locations: [loc, { id: 'near', connections: ['target'] }], enemies: [hastur],
     scenarioFlags: {}, numInvestigators: 1,
+    acts: [{ originalCode: '03324' }],
   }
   assert.ok(dimBehavior.encounterActions(state, inv).some(action => action.rule === 'flipCarcosaLocation'))
   assert.equal(dimBehavior.enemyCanBeDefeated(state, hastur), false)

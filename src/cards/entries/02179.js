@@ -9,6 +9,7 @@
 
 export default {
   code: '02179',
+  assetRule: { passenger: true },
   discardOnElimination: true,
   abilities: [
 

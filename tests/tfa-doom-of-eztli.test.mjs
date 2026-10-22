@@ -320,7 +320,7 @@ test('华美石室：调查未超过难度 2 点即把 1 个线索翻成毁灭',
     const state = setup(placed(stateFor(1), ['entryway', 'grandChamber']))
     state.investigators[0].location = 'grandChamber'
     loc(state, 'grandChamber').clues = 2
-    eztli.behavior.afterTest(state, state.investigators[0], {
+    eztli.behavior.investigateResult(state, state.investigators[0], loc(state, 'grandChamber'), {
       ...result, source: { label: '调查', code: '04064' }, drawn: [],
     }, { info: () => {} })
     return state

@@ -380,7 +380,7 @@ test('04344 时间倒流困难面：旧神标记不要求失败也放毁灭', as
   assert.equal(location.doom, before + 1)
 })
 
-test('04090 时间裂缝：没有行动时不再提供「失去 1 行动」空选项', () => {
+test('04090 时间裂缝：0 行动时仍可选择失去行动（无效果）或受恐惧', () => {
   const state = launchTfa()
   const inv = me(state)
   inv.actionsLeft = 0
@@ -393,6 +393,6 @@ test('04090 时间裂缝：没有行动时不再提供「失去 1 行动」空�
     loseActions: () => {},
   }
   encounterRules.resolveEncounter(state, inv, { code: '04090', originalCode: '04090' }, api)
-  assert.equal(choices, 0, '没有行动可失去时不再询问')
-  assert.equal(inv.horror, 3, '3 点差额都转为恐惧')
+  assert.equal(choices, 3, '每点差额都提供二选一')
+  assert.equal(inv.horror, 0, '选择失去行动（已经为 0）则不转为恐惧')
 })

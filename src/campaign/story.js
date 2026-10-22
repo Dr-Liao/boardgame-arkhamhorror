@@ -1,12 +1,20 @@
 import { STORY_TEXT } from '../../content/campaigns/nightOfTheZealot/story-text.js'
 import { DUNWICH_STORY_TEXT } from '../../content/campaigns/theDunwichLegacy/story-text.js'
 import { CARCOSA_STORY_TEXT } from '../../content/campaigns/thePathToCarcosa/story-text.js'
+import { CARCOSA_STORY_ROLES } from '../../content/campaigns/thePathToCarcosa/story-roles.js'
 import { TFA_STORY_TEXT } from '../../content/campaigns/theForgottenAge/story-text.js'
+import { TFA_STORY_ROLES } from '../../content/campaigns/theForgottenAge/story-roles.js'
 
 const CARCOSA_IDS = new Set(Object.keys(CARCOSA_STORY_TEXT.introductions))
 const TFA_IDS = new Set(Object.keys(TFA_STORY_TEXT.introductions))
 
+// 第 123 轮（第 8 批）：剧情角色 → 卡号由战役内容声明（story-roles.js），本文件不再写死卡号。
+const carcosaCode = role => CARCOSA_STORY_ROLES[role] || null
+const tfaCode = role => TFA_STORY_ROLES[role] || null
+const interviewed = (records, role) => (records.vipsInterviewed || []).includes(carcosaCode(role))
+
 function campaignHasInvestigator(context, code) {
+  if (!code) return false
   const records = Object.values(context?.campaign?.investigators || context?.investigators || {})
   return records.some(record => record?.code === code)
 }
@@ -21,16 +29,16 @@ function carcosaIntroduction(sc, records, context) {
   if (sc.id === 'curtainCall') {
     add(CARCOSA_STORY_TEXT.prologue.epigraph.title, CARCOSA_STORY_TEXT.prologue.epigraph.paragraphs)
     add(`战役序章 · ${CARCOSA_STORY_TEXT.prologue.title}`, CARCOSA_STORY_TEXT.prologue.common)
-    if (campaignHasInvestigator(context, '03006')) add('萝拉的序幕', CARCOSA_STORY_TEXT.prologue.lola)
+    if (campaignHasInvestigator(context, carcosaCode('lola'))) add('萝拉的序幕', CARCOSA_STORY_TEXT.prologue.lola)
     add(source.title, source.common)
   } else if (sc.id === 'echoesOfThePast') {
     add(source.title, source.common)
-    if ((records.vipsInterviewed || []).includes('03079')) add('塞巴斯蒂安提供的信息', source.sebastiensInformation)
+    if (interviewed(records, 'sebastiensInformation')) add('塞巴斯蒂安提供的信息', source.sebastiensInformation)
   } else if (sc.id === 'theUnspeakableOath') {
     add(source.title, records.theFollowersOfTheSignHaveFoundTheWayForward
       ? source.foundTheWayForward : source.didNotFindTheWayForward)
     add(null, source.common)
-    if ((records.vipsInterviewed || []).includes('03076a')) add('康斯坦丝提供的信息', source.constancesInformation)
+    if (interviewed(records, 'constancesInformation')) add('康斯坦丝提供的信息', source.constancesInformation)
   } else if (sc.id === 'aPhantomOfTruth') {
     add(source.title, records.theKingClaimedItsVictims ? source.kingClaimedVictims : source.common)
     const logged = context?.scenarioFlags?.dreamLog
@@ -44,7 +52,7 @@ function carcosaIntroduction(sc, records, context) {
       ]),
       'dream8',
       ...(Number(records.chasingTheStranger || 0) <= 3 ? ['dream9', 'dream13'] : ['dream10']),
-      ...((records.vipsInterviewed || []).includes('03077') ? ['jordansInformation'] : []),
+      ...(interviewed(records, 'jordansInformation') ? ['jordansInformation'] : []),
     ])
     add('梦境 1', source.dreams.dream1)
     add('梦境 2', source.dream2)
@@ -60,10 +68,10 @@ function carcosaIntroduction(sc, records, context) {
   } else if (sc.id === 'thePallidMask') {
     add(source.title, records.youAwokeInsideTheCatacombs || records.youDidNotEscapeTheGazeOfThePhantom
       || records.youWereUnableToFindNigel ? source.awokeInside : source.enteredOnYourOwn)
-    if ((records.vipsInterviewed || []).includes('03078')) add('石丸春子提供的信息', source.harukosInformation)
+    if (interviewed(records, 'harukosInformation')) add('石丸春子提供的信息', source.harukosInformation)
   } else if (sc.id === 'blackStarsRise') {
     add(source.title, source.common)
-    if ((records.vipsInterviewed || []).includes('03080')) add('阿什莉提供的信息', source.ashleighsInformation)
+    if (interviewed(records, 'ashleighsInformation')) add('阿什莉提供的信息', source.ashleighsInformation)
   } else if (sc.id === 'dimCarcosa') {
     add(source.title, records.youOpenedThePathBelow ? source.pathBelow : source.pathAbove)
   } else add(source.title, source.common)
@@ -135,9 +143,9 @@ function tfaIntroduction(sc, records = {}, context = null) {
     const flags = context?.scenarioFlags || {}
     const hasCampaignCard = code => Object.values(context?.campaign?.investigators || {})
       .some(record => (record?.deck || []).includes(code))
-    const ichtaca = flags.ichtacaPresent ?? hasCampaignCard('04147')
-    const alejandro = flags.alejandroPresent ?? hasCampaignCard('04051')
-    const journal = flags.journalPresent ?? hasCampaignCard('04148')
+    const ichtaca = flags.ichtacaPresent ?? hasCampaignCard(tfaCode('ichtaca'))
+    const alejandro = flags.alejandroPresent ?? hasCampaignCard(tfaCode('alejandro'))
+    const journal = flags.journalPresent ?? hasCampaignCard(tfaCode('journal'))
     if (ichtaca) add(null, ['intro2'])
     if (alejandro) add(null, ['intro3'])
     if (journal) add(null, ['intro4'])

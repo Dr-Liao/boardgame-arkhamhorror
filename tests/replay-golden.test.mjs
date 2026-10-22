@@ -92,5 +92,6 @@ test('基线的动作与关卡覆盖不能退化', () => {
     assert.ok(scenarios.has(required), `基线里缺少关卡 ${required}`)
   }
   const uiStates = new Set(FIXTURES.fixtures.map(fixture => fixture.final.uiState))
-  assert.deepEqual([...uiStates].sort(), ['campaignResult', 'inScenario', 'scenarioResult'])
+  // 敦威治关卡现在能真正推进到幕间（interlude），覆盖范围只增不减。
+  assert.deepEqual([...uiStates].sort(), ['campaignResult', 'inScenario', 'interlude', 'scenarioResult'])
 })

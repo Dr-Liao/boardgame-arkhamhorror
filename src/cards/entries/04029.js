@@ -24,7 +24,7 @@ export default {
         const chosen = targets.length === 1 ? targets[0].id
           : api.choice({ kind: 'target', source: code, seat: inv.seat,
             prompt: '选择要躲避的敌人。', options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })) })
-        api.evade(inv.seat, { enemyId: chosen, skill: 'willpower', moveAfterEvade: true })
+        api.evade(inv.seat, { enemyId: chosen, skill: 'willpower', moveAfterEvade: true, symbolDiscard: true })
       },
     },
   ],

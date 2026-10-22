@@ -342,15 +342,10 @@ export const behavior = {
     }
   },
 
-  // 华美石室：调查未成功或未超过难度至少 2 点时，先把 1 个线索翻成毁灭。
+  // 华美石室：翻线索的强制只在 investigateResult（发现线索之前）结算一次。
   afterTest(state, inv, result, api) {
     encounterRules.afterTest?.(state, inv, result, api)
     tfaChaosAfterTest('theDoomOfEztli', state, inv, result, api)
-    const source = result?.source || {}
-    if (String(source.code) !== GRAND_CHAMBER || source.label !== '调查') return
-    const margin = Number(result.value ?? 0) - Number(result.difficulty ?? 0)
-    if (result.success && margin >= 2) return
-    flipClueToDoom(state, byCode(state, GRAND_CHAMBER), api)
   },
 
   resolveChaosToken(state, inv, token, api) {

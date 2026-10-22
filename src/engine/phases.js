@@ -23,7 +23,6 @@ export function createPhases(deps) {
     discardUntilEnemyTrait,
     drawCards,
     eliminateInvestigator,
-    enemyAttack,
     expireEffects,
     exploreOnlyActionBonus,
     extraActionBonus,
@@ -104,8 +103,7 @@ function upkeepPhase(state) {
       owner.discard.push(enemy.bindMonster.code)
       delete enemy.bindMonster
       enemy.exhausted = false
-      info(state, events, `维持「绑定怪物」失败；「${enemy.name}」解除绑定并攻击 ${owner.name}。`)
-      enemyAttack(state, enemy, owner, events, `「${enemy.name}」解除绑定后攻击。`, { kind: 'effect' })
+      info(state, events, `维持「绑定怪物」失败；「${enemy.name}」解除绑定并重整。`)
     } })
   }
   autoEngageAll(state, events)
@@ -134,7 +132,8 @@ function upkeepPhase(state) {
         info(state, events, supplyText, { kind: 'automatic', phase: 'upkeep', round: state.round, text: supplyText, effect: 'resource', delta: supply, seat: inv.seat, location: inv.location })
       }
     }
-    const limit = getHandSize(state, inv)
+    const limit = Math.max(0, getHandSize(state, inv)
+      - (scenarioBehavior(state).handSizePenalty?.(state, inv) || 0))
     discardHandTo(state, inv, limit, events)
     runThreatEndTurn(state, inv, events, 'round')
     for (const asset of inv.assets.slice()) {

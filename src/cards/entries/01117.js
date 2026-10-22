@@ -11,8 +11,10 @@
 export default {
   code: '01117',
   storyRole: 'lita',
+  // 第 123 轮：战役把这张剧情资产加入牌组时同名只保留一张（原 campaign.js 的 01117 特判）。
+  uniqueInDeck: true,
   modifiers: [
-    { target: 'skill:combat', amount: 1, audience: 'here', condition: { controllerHasNoThreat: '02088' } },
+    { target: 'skill:combat', amount: 1, audience: 'here', condition: { sourceTraitNotBlanked: 'ally' } },
   ],
   auraWhileInPlay: true,
   abilities: [

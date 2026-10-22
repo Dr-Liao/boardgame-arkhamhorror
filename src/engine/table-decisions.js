@@ -172,13 +172,13 @@ export function createTableDecisions(deps) {
     if (capabilityBlocked(state, inv, 'play')) return '当前效果禁止你打出卡牌'
     // Phase 5（5c-20）：条目的同名字段优先（迁移后可删旧 DSL 条目），读点只有一个。
     const entry = def?.code ? registeredEntry(def.code) : null
-    const restriction = entry?.playRestriction ?? EFFECTS[def?.code]?.playRestriction
+    const restriction = entry?.playRestriction
     if (restriction === 'noReadyEnemy'
       && state.enemies.some(enemy => enemy.location === inv.location && !enemy.exhausted && !enemy.defeated)) {
       return '你所在地点有处于重整状态的敌人'
     }
     // 「团队仅限 N 张」的支援（04031 保护咒语）：场上所有调查员的副本合计不能超过 N。
-    const teamLimit = entry?.teamLimit ?? EFFECTS[def?.code]?.teamLimit
+    const teamLimit = entry?.teamLimit
     if (teamLimit) {
       const inPlay = state.investigators.reduce((sum, owner) =>
         sum + owner.assets.filter(asset => asset.code === def.code).length, 0)
@@ -189,9 +189,9 @@ export function createTableDecisions(deps) {
 
   function jakeSkipsOpportunityAttack(state, inv, kind) {  if (!inv.assets.some(asset => assetPassiveData(asset.code)?.noOpportunityFirstAction)) return false
     if (!['move', 'investigate'].includes(kind)) return false
-    if (inv.jakeFree?.round !== state.round) inv.jakeFree = { round: state.round, used: [] }
-    if (inv.jakeFree.used.includes(kind)) return false
-    inv.jakeFree.used.push(kind)
+    if (inv.jakeFree?.round !== state.round) inv.jakeFree = { round: state.round, used: false }
+    if (inv.jakeFree.used) return false
+    inv.jakeFree.used = true
     return true
   }
 
@@ -220,8 +220,8 @@ export function createTableDecisions(deps) {
     if (move.action === 'scenarioAction' && /explore/i.test(String(move.rule))) return 'explore'
     // 芬恩·爱德华兹的额外躲避行动按躲避结算（不引发借机攻击）。
     if (move.action === 'extraEvade') return 'evade'
-    const source = move.action === 'play' ? EFFECTS[move.copyCode || move.cardId]
-      : move.action === 'ability' ? assetEffect(inv, controlledAbilityCard(inv, move.assetId)) : null
+    // 第 126 轮：旧 DSL（EFFECTS）通道已删；支援/威胁区的「不引发借机攻击」仍走 assetEffect。
+    const source = move.action === 'ability' ? assetEffect(inv, controlledAbilityCard(inv, move.assetId)) : null
     if (source?.noOpportunityAttack) return 'evade'
     // Phase 2：描述子化的「不引发借机攻击」事件卡（统一读点）。
     if (move.action === 'play' && cardPlayFlag(move.copyCode || move.cardId, 'noOpportunityAttack')) return 'evade'
@@ -313,7 +313,8 @@ export function createTableDecisions(deps) {
             options: inv.hand.map((code, index) => ({ id: String(index), cardCode: code, label: cardName(code) })) })
           returned.push(inv.hand.splice(Number(answer), 1)[0])
         }
-        inv.deck = shuffle([...inv.deck, ...returned], () => randomValue(state))
+        // 卡面：弃掉其余卡牌（不是洗回牌库）。
+        inv.discard.push(...returned)
         info(state, events, `${inv.name} 将 ${inv.beneath.length} 张事件放在下方并保留8张起始手牌；不能调度。`)
         continue
       }

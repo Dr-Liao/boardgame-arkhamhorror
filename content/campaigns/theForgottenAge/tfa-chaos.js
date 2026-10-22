@@ -1,13 +1,16 @@
 // 每章的混乱标记表来自 Haskell Scenario/Scenarios/TheForgottenAge/*.hs 的
 // getChaosTokenValue，四档难度按「简单/普通」与「困难/专家」两组取值。
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
+import { isPoisonThreat } from '../../../src/cards/card-rules.js'
 import { encounterRules } from './encounter-rules.js'
 
 const hardSide = state => ['hard', 'expert'].includes(state.difficulty)
 const here = (state, inv) => state.locations.find(location => location.id === inv.location)
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
 const traitsOf = (card, trait) => (card?.traits || []).some(value => String(value).toLowerCase() === trait.toLowerCase())
-const isPoisoned = inv => (inv?.threat || []).some(card => card.code === '04102') || inv?.poisoned === true
+// 中毒判定走条目读点（04102 的 poisonThreat），不在内容层写死卡号。
+const isPoisoned = inv => (inv?.threat || []).some(card => isPoisonThreat(card?.originalCode || card?.code))
+  || inv?.poisoned === true
 const fx = (delta, extra = {}) => ({ delta, ...extra })
 const nearest = (state, from, filter) => {
   if (!from) return null
@@ -41,9 +44,9 @@ const distance = (state, from, to) => {
 const cultists = state => state.enemies.filter(enemy => traitsOf(enemy, 'Cultist'))
 const doomLocations = state => state.locations.filter(location => (location.doom || 0) > 0)
 // 场上毁灭标记总数（地点 + 敌人 + 支援/剧情资产），04113 困难面 [skull] 用。
-const doomInPlay = state => [
+const doomInPlay = state => (Number(state.doom) || 0) + [
   ...(state.locations || []), ...(state.enemies || []),
-  ...(state.storyAssets || []), ...(state.investigators || []).flatMap(inv => inv.assets || []),
+  ...(state.storyAssets || []), ...(state.investigators || []).flatMap(inv => [...(inv.assets || []), ...(inv.threat || [])]),
 ].reduce((sum, card) => sum + (card.doom || 0), 0)
 
 export function tfaChaosToken(id, state, inv, token, api) {

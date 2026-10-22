@@ -18,6 +18,7 @@ export function createDispatch(deps) {
     EFFECTS,
     ScenarioEnded,
     ScenarioRestarted,
+    abilityOfMove,
     actionCost,
     actionKind,
     advanceAct,
@@ -65,6 +66,7 @@ export function createDispatch(deps) {
     doSacrificeLita,
     doSearchIzzie,
     doShortcutMove,
+    doDetachLocationAttachment,
     endCampaign,
     enemiesEngagedWith,
     enemyAttack,
@@ -205,10 +207,16 @@ function executeAction(state, seat, move, events) {
     // Phase 5（5c）：资产把「打出时不引发借机攻击」写成条目级 noOpportunityAttack
     // （旧 DSL 的字段名是 noOpportunityAttackOnPlay），两边都在这里汇合。
     const playNoAoO = move.action === 'play'
-      && (EFFECTS[move.copyCode || move.cardId]?.noOpportunityAttackOnPlay
-        || playFlag(move.copyCode || move.cardId, 'noOpportunityAttack')
+      && (playFlag(move.copyCode || move.cardId, 'noOpportunityAttack')
         || cardKeyword(state, inv, move.copyCode || move.cardId, 'noOpportunityAttack'))
-    if (totalCost && !noOpportunityAttack && !playNoAoO && !ruleIgnored(state, inv, 'opportunityAttack')
+    // 行动/能力级豁免（01055 飞贼的 [action]）：只豁免这一次行动，不豁免打出资产本身。
+    const usedAbility = move.action === 'ability' ? abilityOfMove(state, inv, move) : null
+    const abilityNoAoO = usedAbility?.descriptor?.noOpportunityAttack === true
+      || usedAbility?.noOpportunityAttack === true
+    // 03147 双刃短刀：控制者的「交战」行动不引发借机攻击。
+    const engageNoAoO = kind === 'engage'
+      && inv.assets.some(item => registeredEntry(item.code)?.engageNoOpportunityAttack === true)
+    if (totalCost && !noOpportunityAttack && !playNoAoO && !abilityNoAoO && !engageNoAoO && !ruleIgnored(state, inv, 'opportunityAttack')
       && !jakeSkipsOpportunityAttack(state, inv, kind)
       && !['fight', 'evade', 'resign', 'parley', 'parleyCultist', 'parleyLita'].includes(kind)) {
       const pending = enemiesEngagedWith(state, inv).filter(enemy => !enemy.exhausted
@@ -389,6 +397,7 @@ function applyMoveUnchecked(state, seat, move, events) {
     case 'advanceAct': payAndAdvanceAct(state, events); break
     case 'scenarioAction': scenarioBehavior(state).performAction(state, inv, m, scenarioRuntime(state, events)); break
     case 'shortcutMove': doShortcutMove(state, seat, m, events); break
+    case 'detachLocationAttachment': doDetachLocationAttachment(state, seat, m, events); break
     case 'encounterAction': scenarioBehavior(state).performEncounterAction(state, inv, m, scenarioRuntime(state, events)); break
     case 'play': doPlay(state, seat, m.cardId, events, !!m.fromDiscard, false, m.copyCode, m.fromPlanAssetId, m.fromBackpackId); break
     case 'draw': doDraw(state, seat, events); break

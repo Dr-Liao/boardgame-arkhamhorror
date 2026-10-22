@@ -76,7 +76,7 @@ Windows 发布时，卡图单独打成资源包：在大厅根目录双击 `buil
 在大厅根目录运行：
 
 ```bash
-npm run cards:check                      # 一卡一文件 / entries 索引守卫（改卡后先跑）
+npm run cards:check                      # 一卡一文件 / entries 索引守卫（改卡后先跑；非玩家索引守卫随迁移加入）
 npm run test:mod -- arkhamhorror fast     # 日常回归：规则、AI、卡牌逻辑、golden replay，约 20 秒
 npm run test:mod -- arkhamhorror assets   # 资源与生成器校验：卡池导入、展示资源、媒体许可，约 30 秒
 npm run test:mod -- arkhamhorror slow     # 长跑：整局模拟、存读档迁移、100 局随机对局重放与大厅联机集成，约 2 分钟以上
@@ -100,7 +100,8 @@ HTTP 和浏览器回归会加载大厅的 `lib/server.js`，所以需要在大�
 - [ARCHITECTURE.md](ARCHITECTURE.md)：目录职责、依赖方向、运行流程、内容扩展和修改约定（含演进规矩摘要）
 - [docs/architecture-refactor-roadmap.md](docs/architecture-refactor-roadmap.md)：重构路线唯一决策文档——现状基线、分层硬规矩、加卡指南、表达力缺口、阶段门禁与迁移判据
 - [docs/card-model.md](docs/card-model.md)：卡牌模型 v1——十一种能力 kind、修正与条件、目标枚举、持续效果、生命周期读点契约、迁移标准动作
-- [docs/card-entry-files.md](docs/card-entry-files.md)：一卡一文件的行为目录与 **agent 一次执行清单**（新增/修改/迁移卡的固定流程）
+- [docs/card-entry-files.md](docs/card-entry-files.md)：一卡一文件的行为目录与 **agent 一次执行清单**（新增/修改/迁移卡的固定流程，含非玩家卡的通用 / 战役共用 / 关卡专用落点）
+- [docs/encounter-entry-split-plan.md](docs/encounter-entry-split-plan.md)：非玩家条目现状扫描与拆分方案（529 条 → 单卡文件、归属算法、工具与验收门槛）
 - [docs/phase2-primitives.md](docs/phase2-primitives.md)：Phase 2 语义原语的交付与门禁证据（费用/上限/检定结果/看牌/区域搬运等）
 - [docs/phase4-replay.md](docs/phase4-replay.md)：Phase 4 重放安全网——动作日志、稳定指纹、golden replay、迁移前后指纹对比、随机走子器门禁
 - [docs/arkham-content-migration.md](docs/arkham-content-migration.md)：扩展战役的迁移流程与验收门槛——六步顺序、原语拆分、关键字/规则书、交互一致性、多子进程批量迁移与原语队列

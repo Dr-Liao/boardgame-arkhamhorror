@@ -6,33 +6,40 @@
     "effectsEntries": 0,
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
-    "descriptorEntries": 463,
-    "descriptorAbilities": 390,
+    "descriptorEntries": 468,
+    "descriptorAbilities": 392,
     "abilityKinds": 12,
-    "windows": 54,
-    "effectPrimitives": 78,
-    "nonPlayerCards": 13,
-    "behaviorLines": 14469,
+    "windows": 56,
+    "effectPrimitives": 56,
+    "nonPlayerCards": 20,
+    "behaviorLines": 13032,
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 463,
-    "data": 6
+    "descriptor": 468,
+    "data": 4
   },
   "nonPlayer": {
     "byScope": {
-      "enemy": 11,
-      "location": 2
+      "enemy": 14,
+      "location": 6
     },
     "codes": [
       "03096",
       "03103",
+      "03137",
+      "03183",
+      "03219",
+      "03221",
+      "03221b",
       "03222",
       "04072",
       "04074",
       "04086",
       "04095",
       "04209b",
+      "04328",
+      "04335",
       "goatSpawn",
       "relentlessDarkYoung",
       "screechingByakhee",
@@ -40,7 +47,7 @@
       "youngDeepOne"
     ],
     "abilities": 4,
-    "modifiers": 15
+    "modifiers": 23
   },
   "declaration": {
     "abilityScopes": [
@@ -79,10 +86,15 @@
       "content/campaigns/thePathToCarcosa/scenarios/thePallidMask/behavior.js",
       "content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/behavior.js"
     ],
-    "behaviorLines": 14469,
+    "behaviorLines": 13032,
     "declaredScenarios": 3
   },
   "cards": [
+    {
+      "code": "01000",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
     {
       "code": "01001",
       "channel": "descriptor",
@@ -1045,6 +1057,11 @@
       "code": "02194",
       "channel": "descriptor",
       "descriptors": 1
+    },
+    {
+      "code": "02217",
+      "channel": "descriptor",
+      "descriptors": 0
     },
     {
       "code": "02218",
@@ -2064,9 +2081,8 @@
     },
     {
       "code": "04106",
-      "channel": "data",
-      "descriptors": 0,
-      "dataImplemented": true
+      "channel": "descriptor",
+      "descriptors": 0
     },
     {
       "code": "04107",
@@ -2080,9 +2096,8 @@
     },
     {
       "code": "04109",
-      "channel": "data",
-      "descriptors": 0,
-      "dataImplemented": true
+      "channel": "descriptor",
+      "descriptors": 0
     },
     {
       "code": "04110",
@@ -2327,7 +2342,7 @@
     {
       "code": "04273",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "04274",
@@ -2343,6 +2358,11 @@
       "code": "04276",
       "channel": "descriptor",
       "descriptors": 2
+    },
+    {
+      "code": "04303",
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "04304",

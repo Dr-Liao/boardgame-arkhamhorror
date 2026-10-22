@@ -12,7 +12,8 @@ export default {
     {
       kind: 'reaction', trigger: 'encounterDrawn', id: 'maleson', legacyReaction: true,
       label: '横置并花 1 线索重抽遭遇卡', cost: { exhaust: true, clues: 1, returnClue: true },
-      effect: { type: 'redrawEncounter' },
+      // 第 121 轮：取消抽取并重抽走通用原语 api.cancelEncounterDraw。
+      resolve: ({ inv, api }) => api.cancelEncounterDraw(inv.seat, { redraw: true, shuffleBack: true }),
     },
   ],
   modifiers: [

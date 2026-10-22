@@ -31,15 +31,15 @@
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
-      "sha256": "e233954205acef9ecf9533b64469abfe874cb54cb96762d911ca993d54679a7c"
+      "sha256": "2609e8a6ee52bb2c490c4031192eb83bfc81b6139baca62c34c8bfebaa2a431c"
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
-      "sha256": "0e07ba931d267a1b2146d840185bd226898113c63c5a9edd6b204889af2b1415"
+      "sha256": "a48d7b49cf0282ceed791aabf5abe0d23663eb4bcd066b51e54130657258d8cc"
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-literal-behavior.test.mjs",
-      "sha256": "e1c0a9d00ce3725f76efcd4a14972c19a8e6d21c4896f8fcefd2c0bc5136bf34"
+      "sha256": "461e7130651b9193ec6d00c5b1fc1c14217379b57c0c225d9a889d0fe9c27883"
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-pending-encounters.test.mjs",

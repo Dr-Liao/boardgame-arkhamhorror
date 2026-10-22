@@ -42,7 +42,7 @@ export function createDescribeAi(deps) {
     const ab = investigatorRule(inv.code) || {}
     if (ab.freeAction) {
       const cost = ab.freeAction.cost || {}
-      if (inv.resources >= (cost.resources || 0) && !inv.usedReactions[ab.freeAction.id + ':' + state.round]) {
+      if (inv.resources >= (cost.resources || 0) && !inv.usedReactions[ab.freeAction.id + ':' + state.turnSerial]) {
         out.push('⚡异能「花 ' + (cost.resources || 0) + ' 资源 +1 行动」')
       }
     }

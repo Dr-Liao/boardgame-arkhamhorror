@@ -9,6 +9,8 @@
 export default {
   code: '04147',
   exhaustOnEnemyDefeatedHealHorror: 1,
+  bonusVsVictoryCombat: 1,
+  bonusVsVengeanceAgility: 1,
   passive: {"stats":{"combat":1,"agility":1}},
   abilities: [
 

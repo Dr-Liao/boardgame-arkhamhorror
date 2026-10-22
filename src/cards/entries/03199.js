@@ -12,6 +12,7 @@ import { attachToChosenLocation } from './_shared.js'
 
 export default {
   code: '03199',
+  limitPerLocation: true,
   abilities: [
     {
       kind: 'played', label: '附属到所在地点',

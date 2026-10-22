@@ -1,4 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { actRuleFor } from '../../../../../src/cards/card-rules.js'
 import { bindScenarioIdentities } from '../../../../identities.js'
 import {
   location, stages, encounterCards, encounterDefinitions, encounterDeck, identitiesFor,
@@ -39,9 +40,10 @@ export const scenario = {
     rehearsalRoom: location('rehearsalRoom', '03057', ['backstage']),
     trapRoom: location('trapRoom', '03058', ['backstage']),
   },
+  // 第 114 轮：幕的推进条件从条目 actRule.objective 读，不再按卡号分支。
   acts: stages(['03046', '03047a', '03047b', '03047c', '03048'], 'act').map(act => ({
     ...act,
-    ...(act.originalCode === '03046' ? { objective: { type: 'clues', perInvestigator: 3 } } : {}),
+    ...(actRuleFor(act.originalCode)?.objective ? { objective: actRuleFor(act.originalCode).objective } : {}),
     reveal: { type: 'campaignRule' },
   })),
   agendas: stages(['03044', '03045'], 'agenda').map(agenda => ({

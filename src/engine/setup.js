@@ -8,6 +8,7 @@
 // 依赖注入同前；被外部 import 的三个名字（createGameState / refreshStateResources /
 // unknownCardCodes）在 engine.js 里用函数声明再导出，调用点不变。
 
+import { requestChoice } from './resolution.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { contentRegistry } from '../../content/registered.js'
 import {
@@ -96,7 +97,9 @@ function makeInvestigator(invDef, seat) {
     hand: [], deck: [], discard: [], hiddenCards: [],
     assets: [],           // [{ id, code, exhausted, uses? }]
     threat: [],           // 威胁区域：持续型弱点/诡计 [{ id, code, ... }]
-    location: 'study',
+    // 第 124 轮：初始地点留空，由 prepareInvestigator / 剧本 setup 写入真实起点。
+    // 这一步会改变初始状态指纹，13 局 replay 基线已同步重录（只有第 0 步变化）。
+    location: null,
     engaged: [],          // enemy ids
     defeated: false,
     resigned: false,
@@ -202,15 +205,14 @@ function prepareInvestigator(state, inv, events, startLocation) {
     if (cardDef(code)?.type === 'treachery') inv.threat.push(card)
     else inv.assets.push(card)
     // Phase 6（6e-15）：起始资源修正从条目级字段读（旧 DSL 条目回落）。
-    inv.resources = Math.max(0, inv.resources + (registeredEntry(code)?.startingResources
-      ?? EFFECTS[code]?.startingResources ?? 0))
+    inv.resources = Math.max(0, inv.resources + (registeredEntry(code)?.startingResources ?? 0))
     // Phase 5（5c-39）：「原定计划」这类开局效果改成描述子（kind: 'setup'）；
     // 旧的数据体 setup 仍是回退路径，保证未迁移的卡不受影响。
     const setupDescriptor = descriptorOfKind(code, 'setup')
     if (setupDescriptor?.resolve) {
       executeDescriptor(state, { inv, source: card, descriptor: setupDescriptor, events, silent: true })
     } else {
-      const setup = EFFECTS[code]?.setup
+      const setup = null
     }
   }
   // 开局就带在身上的支援（签名卡 / 永久卡）也计入额外行动；上一关的资产已在上面清空，
@@ -501,6 +503,8 @@ function startScenario(state, index, events) {
   state.locationVariants = {}
   state.scenarioZones = {}
   state.scenarioFlags = {}
+  // 地点能力的「每场游戏一次（团队）」标记属于上一关；重开或进入新关时必须清空。
+  state.locationAbilityTeamUsed = {}
   state.round = 1
   state.phase = 'investigation'
   state.turnsTaken = []
@@ -564,7 +568,9 @@ function setupScenarioLocations(state, events) {
 }
 
 function setupScenarioEnemies(state, events) {
-  scenarioBehavior(state).setupEnemies?.(state, events, { spawnEnemy, locName, info })
+  scenarioBehavior(state).setupEnemies?.(state, events, {
+    spawnEnemy, locName, info, choose: options => requestChoice(state, options),
+  })
 }
 
 function setupScenarioDecks(state, events) {

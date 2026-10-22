@@ -12,7 +12,7 @@
 //   node tools/audit-dead-primitives.mjs --check    # 有死分支就 exit 1（架构守卫用）
 //   node tools/audit-dead-primitives.mjs --json     # 机器可读
 
-import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { EFFECTS, INVESTIGATOR_ABILITIES } from '../src/cards/card-effects.js'
@@ -27,7 +27,8 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url))
 const ENGINE_DIR = path.join(ROOT, 'src/engine')
 const DISPATCH_FILES = [
   path.join(ENGINE_DIR, 'engine.js'),
-  path.join(ROOT, 'src', 'cards', 'player-effects.js'),
+  // 第 122 轮（第 4 批收尾）：`src/cards/player-effects.js` 已删除，单卡 `effect.type` 分派不再存在；
+  // 剩下的分派点是引擎通用原语与战役插件。文件缺失时自动跳过（下面按 existsSync 过滤）。
   path.join(ROOT, 'src', 'cards', 'campaign-plugin.js'),
 ]
 
@@ -36,8 +37,10 @@ function dispatchSources() {
   for (const name of readdirSync(ENGINE_DIR)) {
     if (name.endsWith('.js')) files.push(path.join(ENGINE_DIR, name))
   }
-  for (const file of DISPATCH_FILES) if (!files.includes(file)) files.push(file)
-  return files.map(file => ({ file, text: readFileSync(file, 'utf8') }))
+  for (const file of DISPATCH_FILES) {
+    if (!files.includes(file)) files.push(file)
+  }
+  return files.filter(file => existsSync(file)).map(file => ({ file, text: readFileSync(file, 'utf8') }))
 }
 
 function collectContentText(dir, acc = []) {

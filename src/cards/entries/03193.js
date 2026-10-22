@@ -7,6 +7,8 @@
 
 export default {
   code: '03193',
+  // 第 123 轮：升级前置记录由条目声明（原 src/campaign/campaign.js 的 researchRequirement 表）。
+  researchRequirement: 'translatedGlyphs',
   uses: 3,
   usesType: 'charges',
   abilities: [
@@ -14,7 +16,7 @@ export default {
       kind: 'action',
       label: '预言调查',
       cost: { action: true, uses: 1 },
-      effect: { type: 'investigate', autoEvadeOnSuccess: true, noOpportunityAttack: true },
+      effect: { type: 'investigate', autoEvadeOnSuccess: true, autoEvadeChoice: true, noOpportunityAttack: true },
     },
   ],
   modifiers: [

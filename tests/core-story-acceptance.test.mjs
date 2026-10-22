@@ -136,6 +136,14 @@ test('Core 01022 证据只在自己击败后发现线索，不在队友击败后
   assert.equal(s.investigators[0].clues,1); assert.deepEqual(s.investigators[1].hand,['01022'])
 })
 
+test('Core 01055 打出飞贼本身仍会引发借机攻击（只有脱身行动豁免）',()=>{
+  const s=fixture(); s.investigators[0].hand=['01055']; s.investigators[0].resources=10
+  enemy(s,{damage:1})
+  move(s,{action:'play',cardId:'01055'}); settle(s)
+  assert.equal(s.investigators[0].damage,1,'打出资产不享受行动的「不引发借机攻击」')
+  assert.ok(s.investigators[0].assets.some(asset=>asset.code==='01055'))
+})
+
 test('Core 01050 01055 脱离并移动遵守目的地限制且不受借机攻击',()=>{
   for(const code of ['01050','01055']) {
     const s=fixture(); s.locations[0].connections=['target']; s.locations.push({...s.locations[0],id:'target',revealed:true})

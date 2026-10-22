@@ -108,7 +108,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   } else if (!removeCardByCode(inv.hand, cardId)) return
 
   // Phase 5（5b-10）：附属声明也可以写在能力层条目上。
-  const attachSpec = EFFECTS[copyCode || cardId]?.attachTo ?? registeredEntry(copyCode || cardId)?.attachTo
+  const attachSpec = registeredEntry(copyCode || cardId)?.attachTo
   if (attachSpec && (attachSpec.kind === 'asset')) {
     const candidates = attachmentTargets(state, inv, attachSpec, cardId)
     if (!candidates.length) {
@@ -121,7 +121,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     const target = candidates.find(asset => asset.id === chosen) || candidates[0]
     attachCardTo(state, seat, cardId, target)
     // Phase 5（5b-10）：附带来的加值也可以写在能力层条目上。
-    const onAttach = EFFECTS[cardId]?.onAttach || registeredEntry(cardId)?.onAttach || {}
+    const onAttach = registeredEntry(cardId)?.onAttach || {}
     if (onAttach.ammo) target.uses = (target.uses || 0) + onAttach.ammo
     info(state, events, `「${cardName(cardId)}」附属到「${cardName(target.code)}」。`)
     if (!noAction) spendAction(state, inv)
@@ -153,7 +153,15 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     })) : playCost(state, inv, playedDef)
   campaignState.clearPlayDiscount(inv)
   delete inv.playDiscount
-  const payer = inv.resources >= cost ? inv : (charlesPayCandidate(state, inv, cost) || inv)
+  let payer = inv
+  if (inv.resources < cost) {
+    const charles = charlesPayCandidate(state, inv, cost, playedDef)
+    if (charles && requestChoice(state, {
+      kind: 'resource', source: cardId, seat: charles.seat, canSkip: true,
+      prompt: `${inv.name} 资源不足，是否由查尔斯·罗斯代付 ${cost} 资源？`,
+      options: [{ id: 'skip', label: '不代付' }, { id: 'pay', label: '让查尔斯支付' }],
+    }) === 'pay') payer = charles
+  }
   if (payer.resources < cost) {
     info(state, events, `${inv.name} 资源不足，无法打出「${cardName(cardId)}」。`)
     return
@@ -171,7 +179,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     const entryPassive = registeredEntry(cardId)?.passive
     const entryFlags = registeredEntry(cardId) || {}
     const eff = {
-      ...(EFFECTS[cardId] || {}),
+      ...({}),
       ...(entryPassive ? { passive: entryPassive } : {}),
       ...(entryFlags.sealOnEnter ? { sealOnEnter: entryFlags.sealOnEnter } : {}),
       // Phase 6（6e-15）：选择式封印（04030/04031）也走条目级字段。
@@ -194,6 +202,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     if (eff.sealOnEnterChoice) {
       const symbols = ['skull', 'cultist', 'tablet', 'elderthing']
       const pool = state.chaosBag.filter(token => {
+        if (Array.isArray(eff.sealOnEnterChoice)) return eff.sealOnEnterChoice.includes(token)
         if (eff.sealOnEnterChoice === 'symbol') return symbols.includes(token)
         if (eff.sealOnEnterChoice === 'nonAutofail') return token !== 'autofail'
         return true
@@ -228,7 +237,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     }
     triggerReaction(state, seat, 'assetEnteredPlay', events, { assetCode: cardId, assetId: asset.id, location: inv.location })
   } else if (def.type === 'event') {
-    const eff = EFFECTS[copyCode || cardId] || {}
+    const eff = {}
     // Phase 5（5c-10）：打出后的去向（移出游戏 / 洗回牌库）也可以写在 played 描述子上。
     const playedFlags = descriptorOfKind(copyCode || cardId, 'played') || {}
     const entryFlags = registeredEntry(copyCode || cardId) || {}
@@ -241,6 +250,8 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       becomesAsset: eff.becomesAsset === true || playedFlags.becomesAsset === true || entryFlags.becomesAsset === true,
     }
     const played = withEffectCode(playedEffect(copyCode || cardId), copyCode || cardId)
+    // 结算型「之后洗回牌库」：条目可在 resolve 里声明本次打出的去向（04010 走私货物）。
+    delete state._playDisposal
     // Phase 2：事件卡的「played」描述子可以直接带 resolve（数据表达不了时），
     // 与 effect 数据体共用同一个读点，因此迁移一张事件卡不需要改引擎。
     const playedDescriptor = descriptorOfKind(copyCode || cardId, 'played')
@@ -259,6 +270,11 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       if (previousFromDiscard === undefined) delete state._fromDiscardCode
       else state._fromDiscardCode = previousFromDiscard
     }
+    if (state._playDisposal === 'shuffleBack') {
+      disposal.shuffleBackAfterPlay = true
+      disposal.fromHandShuffle = true
+    }
+    delete state._playDisposal
     if (copyCode && registeredEntry(cardId)?.copiesBeneathEvents) {
       state.removedFromGame ||= []
       state.removedFromGame.push(cardId)
@@ -271,7 +287,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       info(state, events, `💎 「${cardName(cardId)}」被加入胜利展示区。`)
     } else if (disposal.exileAfterPlay) exilePlayerCard(state, inv, cardId, events)
     else if (disposal.becomesAsset) { /* 「危险预感」等：卡牌本身留在场上，由效果创建实例。 */ }
-    else if (fromDiscard && disposal.shuffleBackAfterPlay) {
+    else if (disposal.shuffleBackAfterPlay && (fromDiscard || disposal.fromHandShuffle)) {
       inv.deck = shuffle([...inv.deck, cardId], () => randomValue(state))
       info(state, events, `「${cardName(cardId)}」洗回 ${inv.name} 的牌库。`)
     }
@@ -298,7 +314,7 @@ function doInvestigate(state, seat, opts, events, noSpend) {
     state, inv, loc, scenarioRuntime(state, events))
   if (before === false) return
   if (!noSpend) spendAction(state, inv)
-  if (!loc || loc.clues <= 0) {
+  if (!loc || (loc.clues <= 0 && !opts.allowNoClues)) {
     info(state, events, `${inv.name} 调查了「${loc ? loc.name : inv.location}」，但这里已经没有线索了。`)
     return
   }
@@ -307,7 +323,7 @@ function doInvestigate(state, seat, opts, events, noSpend) {
     return
   }
   const clueBlocker = engagedWithClueBlocker(state, inv)
-  if (clueBlocker) {
+  if (clueBlocker && !opts.noClueDiscovery) {
     info(state, events, `🎭 ${inv.name} 与「${clueBlockerName(state, clueBlocker)}」交战时不能发现线索。`)
     return
   }
@@ -325,7 +341,7 @@ function doInvestigate(state, seat, opts, events, noSpend) {
   // 「骷髅钥匙」：附属地点的帷幕设为 1（现在是附属条目上的声明式标记 shroudAsOne）。
   const keyed = (loc.attachments || []).some(entry => entry.shroudAsOne === true)
   const difficulty = keyed ? 1
-    : loc.shroud + (loc.shroudMod || 0) + temporaryShroud + scenarioShroud + (state.fogMod || 0) + (opts.shroudMod || 0)
+    : loc.shroud + (loc.shroudMod || 0) + (loc.peabodyShroud || 0) + temporaryShroud + scenarioShroud + (state.fogMod || 0) + (opts.shroudMod || 0)
   const noIntellectBoost = skill === 'intellect' && loc.noIntellectBoost
   const baseValue = opts.baseValue ?? (loc.doubleBaseSkill ? (inv[skill] || 0) * 2
     : noIntellectBoost ? (inv[skill] || 0) : undefined)
@@ -355,7 +371,7 @@ function doInvestigate(state, seat, opts, events, noSpend) {
       }
     }
     // 调查结果窗口（在发现线索之前）：04064 华美石室要先把线索翻成毁灭。
-    scenarioBehavior(state).investigateResult?.(state, inv, loc, r, scenarioRuntime(state, events))
+    const investigationReplaced = scenarioBehavior(state).investigateResult?.(state, inv, loc, r, scenarioRuntime(state, events)) === false
     if (r.success) {
       const successBy = r.value - difficulty
       // 「未知的呼唤」需要知道本回合是否成功调查了被指定的地点。
@@ -365,7 +381,9 @@ function doInvestigate(state, seat, opts, events, noSpend) {
         + (opts.successByClueEvery ? Math.floor(successBy / opts.successByClueEvery) : 0)) * (r.rewardMultiplier || 1)
       info(state, events, `${inv.name} 调查成功（${SKILL_NAMES[skill]} ${r.value} vs ${difficulty}）。`)
       triggerReaction(state, seat, 'investigateSuccess', events, { location: loc.id, successBy: r.value - difficulty })
-      discoverClueAt(state, inv, gain, events)
+      // 「改为不发现线索」的调查（02282/02283/02287）先走完调查成功窗口，再交给卡面回调。
+      if (opts.onInvestigateSuccess) opts.onInvestigateSuccess(r, { state, inv, loc })
+      if (!opts.noClueDiscovery && !investigationReplaced) discoverClueAt(state, inv, gain, events)
       // 「古代巨石」：成功时额外发现 1 个线索、弃置自身并记录鉴定难度。
       if (opts.ancientStone) {
         discoverClueAt(state, inv, 1, events)
@@ -373,15 +391,22 @@ function doInvestigate(state, seat, opts, events, noSpend) {
         const stone = inv.assets.find(asset => registeredEntry(asset.code)?.identifiedStoneOnInvestigateSuccess)
         if (stone) { leaveAsset(state, inv, stone, events); inv.discard.push(stone.code) }
         state.campaign.records ||= {}
-        state.campaign.records.identifiedTheAncientStone = r.value
-        info(state, events, `📜 剧本日志：你鉴定了古代巨石（难度 ${r.value}）。`)
+        state.campaign.records.identifiedTheAncientStone = r.difficulty
+        info(state, events, `📜 剧本日志：你鉴定了古代巨石（难度 ${r.difficulty}）。`)
       }
       if (opts.autoEvadeOnSuccess) {
         const targets = enemiesEngagedWith(state, inv)
         if (targets.length) {
-          const enemy = targets.length === 1 ? targets[0]
-            : chooseEnemyFrom(state, seat, targets, loc.originalCode || loc.code)
-          enemy.exhausted = true; disengageEnemy(state, enemy); afterEvade(state, inv, enemy, events)
+          const want = !opts.autoEvadeChoice || requestChoice(state, {
+            kind: 'effect', source: loc.originalCode || loc.code, seat, canSkip: true,
+            prompt: '是否自动躲避一个与你交战的敌人？',
+            options: [{ id: 'skip', label: '不躲避' }, { id: 'trigger', label: '自动躲避' }],
+          }) === 'trigger'
+          if (want) {
+            const enemy = targets.length === 1 ? targets[0]
+              : chooseEnemyFrom(state, seat, targets, loc.originalCode || loc.code)
+            enemy.exhausted = true; disengageEnemy(state, enemy); afterEvade(state, inv, enemy, events)
+          }
         }
       }
       if (loc.fog) {

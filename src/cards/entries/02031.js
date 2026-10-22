@@ -12,11 +12,12 @@ export default {
     {
       kind: 'played', label: '困兽之笼',
       resolve: ({ state, inv, api }) => {
+        // 卡面：任何敌人均可尝试躲避；只有非精英才会被附属。
         const candidates = state.enemies.filter(enemy =>
-          enemy.location === inv.location && !enemy.elite && !enemy.bindMonster)
-        if (!candidates.length) { api.info('本地点没有可绑定的非精英敌人。'); return }
+          enemy.location === inv.location && !enemy.bindMonster)
+        if (!candidates.length) { api.info('本地点没有可绑定的敌人。'); return }
         const id = candidates.length === 1 ? candidates[0].id : api.choice({
-          kind: 'target', source: '02031', seat: inv.seat, prompt: '选择要绑定的非精英敌人。',
+          kind: 'target', source: '02031', seat: inv.seat, prompt: '选择要绑定的敌人。',
           options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name })),
         })
         const enemy = candidates.find(item => item.id === id)
@@ -25,6 +26,11 @@ export default {
           source: { label: '绑定怪物', name: enemy.name, code: '02031' },
           resolve: result => {
             if (!result.success || !state.enemies.includes(enemy)) return
+            if (enemy.elite) {
+              api.autoEvade(enemy)
+              api.info(`「${enemy.name}」是精英，仍被躲避，但「困兽之笼」不能附属。`)
+              return
+            }
             api.bindMonsterToEnemy(enemy, inv.seat, '02031')
             api.info(`「绑定怪物」附属于「${enemy.name}」；它被躲避，不能移动，并在重整阶段保持横置。`)
           },

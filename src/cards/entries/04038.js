@@ -12,6 +12,8 @@ export default {
   code: '04038',
   upgradesFrom: 'priceOfFailure',
   playableWeakness: true,
+  darkPactForced: true,
+  replacementCode: '04039',
   abilities: [
     {
       kind: 'played', label: '离体体验',

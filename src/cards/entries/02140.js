@@ -7,16 +7,19 @@
 //
 // 02140 死灵之书：+1 智识；[行动]获得 2 资源。
 
+import { canGainResources } from '../../engine/matcher.js'
 import { skillModifier } from './_shared.js'
 
 export default {
   code: '02140',
+  assetRule: { necronomicon: true },
+  scenarioPlayable: true,
   modifiers: [
     skillModifier('intellect', 1),
   ],
   abilities: [
     {
-      kind: 'action', label: '获得 2 资源',
+      kind: 'action', label: '获得 2 资源', criteria: [canGainResources()],
       resolve: ({ inv, api }) => api.gainResources(inv.seat, 2),
     },
   ],

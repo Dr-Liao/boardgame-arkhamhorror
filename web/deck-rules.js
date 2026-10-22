@@ -1,5 +1,8 @@
 // Shared by initial construction and upgrades. Content supplies declarative
 // rules; clients may supply only card codes, never rules or costs.
+// 第 127 轮：敦威治调查员集合与黛西的「命运」限制改由 web/ui-cards.js 声明。
+import { UI_CARDS } from './ui-cards.js'
+
 const extensions = new Map()
 export function registerDeckRules(investigatorCode, rules) {
   if (!Number.isSafeInteger(rules.size) || rules.size < 1 || !Array.isArray(rules.options)) throw new Error('无效构筑规则')
@@ -10,11 +13,12 @@ export function registerDeckRules(investigatorCode, rules) {
   extensions.set(investigatorCode, structuredClone(rules))
 }
 export function deckRules(investigator) {
-  const dunwich = ['02001', '02002', '02003', '02004', '02005'].includes(investigator.code)
+  const { dunwichInvestigators, noFortuneInvestigator } = UI_CARDS.deckRules
+  const dunwich = dunwichInvestigators.includes(investigator.code)
   const options = dunwich ? [
     { factions: [investigator.klass, 'neutral'], level: { min: 0, max: 5 } },
     { level: { min: 0, max: 0 }, limit: 5,
-      ...(investigator.code === '02002' ? { not: { traits: ['Fortune'] } } : {}) },
+      ...(investigator.code === noFortuneInvestigator ? { not: { traits: ['Fortune'] } } : {}) },
   ] : investigator.deckOptions || []
   return structuredClone({
     size: investigator.deckRequirements?.size,
@@ -26,7 +30,8 @@ export function deckRules(investigator) {
 }
 const lower = value => String(value).toLowerCase().replace(/\.$/, '')
 export function matchesCardRule(card, rule, investigator) {
-  if (investigator.code === '02002' && (card.traits || []).some(trait => lower(trait) === 'fortune')) return false
+  if (investigator.code === UI_CARDS.deckRules.noFortuneInvestigator
+    && (card.traits || []).some(trait => lower(trait) === 'fortune')) return false
   const known = new Set(['factions', 'faction', 'level', 'types', 'traits', 'trait', 'uses', 'tag',
     'atleast', 'error', 'limit', 'not', 'codes', 'investigatorTraits'])
   if (Object.keys(rule).some(key => !known.has(key))) return false
@@ -57,7 +62,9 @@ export function matchesCardRule(card, rule, investigator) {
   return true
 }
 export function deckCardLimit(card) {
-  const limit = card.deckLimit ?? (card.myriad ? 3 : 2)
+  let limit = card.deckLimit ?? (card.myriad ? 3 : 2)
+  // 卡面「每位调查员仅限 1 张」是构筑限制，卡表 deckLimit 未必同步。
+  if (/Limit 1 per investigator/i.test(card.text || '')) limit = Math.min(limit, 1)
   return Number.isSafeInteger(limit) && limit > 0 ? (card.exceptional ? Math.min(1, limit) : limit) : 0
 }
 export function validateDeckRules(investigator, codes, cards, { partial = false } = {}) {

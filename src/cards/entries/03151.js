@@ -11,6 +11,8 @@ export default {
   abilities: [
     {
       kind: 'action', label: '达里奥获得2资源', cost: { action: true, exhaust: true },
+      criteria: [ctx => !(ctx.state.enemies || []).some(enemy =>
+        enemy.location === ctx.inv.location && !enemy.defeated)],
       effect: { type: 'gainResource', amount: 2 },
     },
   ],

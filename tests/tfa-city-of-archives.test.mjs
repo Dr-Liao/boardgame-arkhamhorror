@@ -477,7 +477,8 @@ test('回归自我：花 1 个线索抽取，手牌超出上限时多抽 1 张',
   const crampedApi = makeApi(cramped)
   behavior.performAction(cramped, crampedInv, { rule: 'repossessionDraw' }, crampedApi)
   assert.equal(handLimit(cramped, crampedInv), 4)
-  assert.ok(crampedApi.log.some(entry => entry[0] === 'draw' && entry[2] === 3))
+  // 先抽 2 张，抽完超过上限后再抽 1 张。
+  assert.deepEqual(crampedApi.log.filter(entry => entry[0] === 'draw').map(entry => entry[2]), [2, 1])
 })
 
 test('看管人：谈判成功后放线索并取得控制权', () => {
@@ -760,7 +761,8 @@ test('伊斯人身体：投入卡牌时技能图标翻倍（每次检定一次�
   const state = prepared(undefined, 1)
   const inv = state.investigators[0]
   state.skillTest = { seat: inv.seat }
-  assert.equal(behavior.commitIconMultiplier(state, inv), 2)
+  assert.equal(behavior.commitIconMultiplier(state, inv).multiplier, 2)
+  state.skillTest.tfaYithianIconDoubled = true
   assert.equal(behavior.commitIconMultiplier(state, inv), 1)
   const human = prepared(undefined, 1)
   human.investigators[0].yithianBody = false
@@ -861,7 +863,8 @@ test('04244 图标翻倍只作用于持有者自己执行的检定', () => {
   const inv = state.investigators[0]
   inv.yithianBody = true
   state.skillTest = { seat: 0 }
-  assert.equal(behavior.commitIconMultiplier(state, inv), 2)
+  assert.equal(behavior.commitIconMultiplier(state, inv).multiplier, 2)
+  state.skillTest.tfaYithianIconDoubled = true
   assert.equal(behavior.commitIconMultiplier(state, inv), 1, '每次检定一次')
   state.skillTest = { seat: 1 }
   assert.equal(behavior.commitIconMultiplier(state, inv), 1, '别人执行、别人投入的牌不翻倍')

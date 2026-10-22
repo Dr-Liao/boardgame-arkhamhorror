@@ -41,8 +41,17 @@
 .ah-direct-table [data-interaction^="hand:"],.ah-direct-table [data-interaction^="asset:"],.ah-direct-table [data-interaction^="investigator:"],.ah-direct-table [data-interaction^="enemy:"] { touch-action: none; user-select: none; }
 .ah-direct-table [data-interaction] img { -webkit-user-drag: none; }
 .ah-direct-table .is-dragging { opacity: .35; }
+/* 拖动中的幽灵卡：抬起的是真实 .ah-table-art 节点，离开 .ah-table 后
+   .ah-calm 的卡面适配不再命中，基础 .ah-art 的 min-height:240px（卡牌详情尺寸）
+   会把图片撑到 240px 高、只露出左上角；通用 .ah-drag-proxy 的内边距还会把卡面
+   挤进 68×106 的窗口。这里把幽灵和卡面一起钉在 5:7 卡位上。 */
+.ah-drag-proxy.ah-card-ghost { padding: 0; overflow: hidden; }
 .ah-card-ghost { position: fixed; width: 94px; height: 132px; pointer-events: none; z-index: 10001; padding: 0; border: 2px solid #e8d18a; background: #122723; box-shadow: 0 12px 30px #000a; border-radius: 6px; transform: rotate(5deg); }
-.ah-card-ghost .ah-table-art,.ah-card-ghost img { width: 100%; height: 100%; object-fit: contain; }
+.ah-card-ghost > .ah-table-art { width: 100%; height: 100%; border: 0; border-radius: 4px; overflow: hidden; }
+.ah-card-ghost .ah-table-art .ah-art { display: block; min-height: 0; aspect-ratio: auto; }
+.ah-card-ghost .ah-table-art .ah-art img { width: 100%; height: 100%; min-height: 0; max-height: none; object-fit: contain; flex: none; }
+.ah-card-ghost .ah-table-art .ah-art img[hidden] { display: none; }
+.ah-card-ghost:not(:has(.ah-table-art)) { display: grid; place-items: center; padding: 10px; text-align: center; font-size: 11px; line-height: 1.35; }
 .ah-card-inspection { position: fixed; z-index: 80; width: 220px; height: 308px; pointer-events: none; border: 1px solid #bba670; border-radius: 8px; background: #10221f; box-shadow: 0 12px 40px #000c; }
 .ah-card-inspection > .ah-table-art { width: 100%; height: 100%; border: 0; }
 .ah-card-inspection .ah-table-art .ah-art { display: block; min-height: 0; aspect-ratio: auto; }

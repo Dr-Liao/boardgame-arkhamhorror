@@ -1,4 +1,5 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
+import { enemyRuleFor, entryFlags } from '../../../src/cards/card-rules.js'
 
 const original = card => card?.originalCode || card?.code
 const hardSide = state => ['hard', 'expert'].includes(state.difficulty)
@@ -9,7 +10,10 @@ const fromTopCost = (inv, count, api) => {
   return inv.discard.slice(before).reduce((sum, code) => sum + cardCost(code), 0)
 }
 const location = (state, inv) => state.locations.find(loc => loc.id === inv.location)
-const brood = state => state.enemies.filter(enemy => enemy.code === '02255')
+// 第 114 轮：子嗣 / 追猎恐魔 / 犹格·索托斯都改由条目标志识别，不在内容层写死卡号。
+const isBrood = card => enemyRuleFor(original(card))?.brood === true
+const isHorror = card => enemyRuleFor(original(card))?.huntingHorror === true
+const brood = state => state.enemies.filter(enemy => isBrood(enemy))
 const fx = (delta, extra = {}) => ({ delta, ...extra })
 
 export function dunwichChaosToken(id, state, inv, token, api) {
@@ -42,11 +46,11 @@ export function dunwichChaosToken(id, state, inv, token, api) {
     return null
   }
   if (id === 'theMiskatonicMuseum') {
-    if (token === 'skull') return fx(state.enemies.some(e => e.code === '02141' && e.location === inv.location)
+    if (token === 'skull') return fx(state.enemies.some(e => isHorror(e) && e.location === inv.location)
       ? hard ? -4 : -3 : hard ? -2 : -1)
     if (token === 'cultist') return fx(hard ? -3 : -1)
     if (token === 'tablet') {
-      if (hard) { const horror = state.enemies.find(e => e.code === '02141' && e.location === inv.location); if (horror) api.attack(horror, inv) }
+      if (hard) { const horror = state.enemies.find(e => isHorror(e) && e.location === inv.location); if (horror) api.attack(horror, inv) }
       else if (inv.clues) { api.spendClues(inv.seat, 1); here.clues++ }
       return fx(hard ? -4 : -2)
     }
@@ -92,7 +96,7 @@ export function dunwichChaosToken(id, state, inv, token, api) {
       }
       return hard ? fx(0, { autoFail: true }) : fx(-4)
     }
-    if (state.skillTest?.source?.code === '02255'
+    if (enemyRuleFor(state.skillTest?.source?.code)?.brood === true
       && ['攻击', '躲避'].includes(state.skillTest.source.label)) {
       const target = brood(state).find(enemy => state.skillTest.source.enemyId ? enemy.id === state.skillTest.source.enemyId : enemy.location === inv.location)
       if (target) api.attack(target, inv)
@@ -131,7 +135,7 @@ export function dunwichChaosAfterTest(id, state, inv, result, api) {
     if (has('cultist') && !result.success) {
       // Only search the encounter deck / discard pile / void. If the Horror is
       // already in play, there is nothing to find ("if able").
-      const horror = state.enemies.find(e => e.code === '02141')
+      const horror = state.enemies.find(e => isHorror(e))
       if (!horror) {
         const pile = [state.encounterDeck, state.encounterDiscard].find(cards => cards.includes('02141'))
         if (pile) pile.splice(pile.indexOf('02141'), 1)
@@ -147,7 +151,7 @@ export function dunwichChaosAfterTest(id, state, inv, result, api) {
     }
   }
   if (id === 'theEssexCountyExpress') {
-    if (has('cultist') && !result.success && state.phase === 'investigation' && state.currentSeat === inv.seat) inv.actionsLeft = 0
+    if (has('cultist') && !result.success && state.phase === 'investigation' && state.currentSeat === inv.seat) api.endTurn(inv.seat)
     if (has('elderthing') && !result.success) for (let i = 0, n = hard ? Math.max(1, result.difficulty - result.value) : 1;
       i < n && inv.hand.length; i++) {
       const chosen = api.choose({ kind: 'card', source: '02159', seat: inv.seat,
@@ -168,7 +172,7 @@ export function dunwichChaosAfterTest(id, state, inv, result, api) {
       const destination = api.drawEncounterLocation(inv.seat)
       if (destination) api.moveInvestigator(inv.seat, destination.id)
     }
-    if (has('tablet')) { const yog = state.enemies.find(e => e.code === '02323'); if (yog) api.attack(yog, inv) }
+    if (has('tablet')) { const yog = state.enemies.find(e => entryFlags(original(e))?.yogSothoth === true); if (yog) api.attack(yog, inv) }
     if (has('elderthing') && !result.success && location(state, inv)?.traits?.some(t => t.toLowerCase() === 'extradimensional')) {
       const removed = inv.location, cardCode = original(location(state, inv))
       api.remove(removed)

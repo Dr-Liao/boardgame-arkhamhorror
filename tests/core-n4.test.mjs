@@ -1,4 +1,4 @@
-﻿import test from 'node:test'
+import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createGameState, applyMove, legalMoves, validateMove, decisionSeat } from '../src/engine/engine.js'
 import { randomValue } from '../src/engine/rules-state.js'
@@ -110,7 +110,7 @@ test('N4 黛西第三个普通行动打出书后仍可用书籍额外行动，�
   assert.ok(command)
   move(state, command)
   const restored = clone(state)
-  answer(state, '0'); answer(state, 'skip'); answer(restored, '0'); answer(restored, 'skip')
+  answer(state, '0'); answer(state, '0'); answer(restored, '0'); answer(restored, '0')
   assert.deepEqual(clone(state), restored)
   assert.equal(state.investigators[0].tomeActionUsed, true)
   assert.equal(state.investigators[0].actionsLeft, 0)

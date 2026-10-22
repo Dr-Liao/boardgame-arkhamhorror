@@ -21,6 +21,7 @@ export function createSkillEffects(deps) {
     doEvade,
     doFight,
     SKILL_NAMES,
+    abilityTargets,
     addDoom,
     aliveInvestigators,
     all,
@@ -45,6 +46,7 @@ export function createSkillEffects(deps) {
     defeatEnemy,
     defeatNonEliteEnemyAt,
     discardHandTo,
+    discardLocked,
     discardRandomAsset,
     discardRandomFromHand,
     discoverClueAt,
@@ -53,7 +55,6 @@ export function createSkillEffects(deps) {
     drawEncounter,
     drawEnemyByTrait,
     dukeInvestigate,
-    playerCardEffect,
     effectError,
     enemyForTarget,
     healDamageAtLocation,
@@ -141,6 +142,7 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0) {
     }
     if (o.damageBonus) out.damageBonus += o.damageBonus
     if (o.clueBonus) out.clueBonus += o.clueBonus
+    if (o.discoverClue) out.discoverClue = (out.discoverClue || 0) + o.discoverClue
     // 「孤注一掷」：按成功超出难度的点数抽牌，抽到的弱点洗回牌库而不是结算。
     if (o.drawPerSuccessBy) {
       const amount = Math.min(o.maxDraw || 5, Math.max(0, successBy) * o.drawPerSuccessBy)
@@ -158,7 +160,9 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0) {
       if (drawn) info(state, null, `${inv.name} 的「${cardName(code)}」触发：抽 ${drawn} 张牌。`)
     }
     // 「如痴如醉」：调查成功后在支援上放置充能或秘密。
-    if (o.placeChargeOrSecret) campaignPlayerEffect(state, inv.seat, { action: 'placeChargeOrSecret' }, [])
+    if (o.placeChargeOrSecret && state.skillTest?.source?.label === '调查') {
+      campaignPlayerEffect(state, inv.seat, { action: 'placeChargeOrSecret' }, [])
+    }
     if (o.healHorror) {
       const h = Math.min(inv.horror, o.healHorror)
       inv.horror -= h
@@ -173,7 +177,7 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0) {
       owner.resources += wager * 2
       campaignState.clearWager(owner, code)
     }
-    if (o.returnDiscardClass) {
+    if (o.returnDiscardClass && !discardLocked(state, owner)) {
       const candidates = owner.discard.filter(item => item !== code && cardDef(item)?.klass === o.returnDiscardClass)
       if (candidates.length) {
         const answer = requestChoice(state, { kind: 'card', source: code, seat: owner.seat, canSkip: true,
@@ -254,6 +258,9 @@ function makeRuntime(state, events) {
     canReadyAssets: seat => !assetsCannotReady(state.investigators[seat], state.round),
     investigate: (seat, opts) => doInvestigate(state, seat, opts || {}, events, true),
     fight: (seat, opts) => doFight(state, seat, opts || {}, events, true),
+    // 「枪法如神」：没有同地点目标时攻击效果仍要交给 doFight（窗口会改指连接地点），
+    // 因此效果解释器需要一个不抛错的「当前是否有合法敌人目标」读点。
+    hasEnemyTargets: (seat, effect) => abilityTargets(state, state.investigators[seat], effect).length > 0,
     evade: (seat, opts) => doEvade(state, seat, opts || {}, events, true),
     autoEvade: (enemy) => autoEvadeEnemy(state, enemy, events),
     discardRandomFromHand: (inv, n) => discardRandomFromHand(state, inv, n, events),
@@ -288,7 +295,6 @@ function makeRuntime(state, events) {
     carcosaPlayerEffect: (seat, effect) => carcosaPlayerEffect(state, seat, effect, events),
     tfaInvestigatorEffect: (seat, effect) => tfaInvestigatorEffect(state, seat, effect, events),
     tfaPlayerEffect: (seat, effect) => tfaPlayerEffect(state, seat, effect, events),
-    playerCardEffect: (seat, effect) => playerCardEffect(state, seat, effect, events),
     researchSolution: (seat, assetId) => researchSolution(state, seat, assetId, events),
     searchTop: (seat, effect) => searchTop(state, seat, effect, events),
     investigateForResources: (seat, effect) => investigateForResources(state, seat, effect, events),

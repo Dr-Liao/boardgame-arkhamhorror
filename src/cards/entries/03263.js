@@ -16,6 +16,8 @@ export default {
       criteria: { ownMythosOnly: true },
       label: '从遭遇牌库顶 9 张里找一名敌人生成并交战',
       resolve: ({ inv, api }) => {
+        // 「改为」：取消原本抽到的遭遇卡，不再结算它。
+        api.cancelEncounterDraw(inv.seat)
         const candidates = api.encounterEnemies(9)
         if (!candidates.length) { api.drawEncounter(inv.seat); return }
         const chosen = candidates.length === 1 ? candidates[0] : api.choice({ kind: 'enemy', source: '03263',

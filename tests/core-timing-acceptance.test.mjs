@@ -13,13 +13,20 @@ for(const code of ['01001','01003','01004','01005']) test(`Core ${code} 旧印�
   if(code==='01003') assert.equal(s.investigators[0].resources,32)
 })
 
-test('Core 01002 黛西旧印没有书不抽牌，有书时可选择抽取或拒绝',()=>{
+test('Core 01002 黛西旧印：检定失败不抽；成功后每控制一本书可抽 1（可选）',()=>{
+  // 失败：即使控制书籍也不能抽牌，也不应出现旧印选择窗口。
+  const fail=fixture('01002'); fail.chaosBag=['eldersign']; fail.investigators[0].intellect=0; fail.locations[0].shroud=3
+  asset(fail,'01031'); asset(fail,'01035'); move(fail,{action:'investigate'}); answer(fail,'done'); settle(fail)
+  assert.equal(fail.investigators[0].hand.length,0)
+  assert.notEqual(fail.pendingChoice?.source,'daisyElderSign')
   for(const draw of [false,true]) {
-    const s=fixture('01002'); s.chaosBag=['eldersign']; s.investigators[0].intellect=0
-    move(s,{action:'investigate'}); settle(s); assert.equal(s.investigators[0].hand.length,0)
-    asset(s,'01031'); asset(s,'01035'); move(s,{action:'investigate'}); answer(s,'done')
-    assert.equal(s.pendingChoice.source,'daisyElderSign'); answer(s,draw?'trigger':'skip'); settle(s)
-    assert.equal(s.investigators[0].hand.length,draw?2:0); assert.equal(s.investigators[0].clues,0)
+    const s=fixture('01002'); s.chaosBag=['eldersign']; s.investigators[0].intellect=5
+    s.locations[0].shroud=1; s.locations[0].clues=3
+    asset(s,'01031'); asset(s,'01035'); s.investigators[0].hand=[]
+    move(s,{action:'investigate'}); answer(s,'done')
+    assert.equal(s.pendingChoice.source,'daisyElderSign')
+    answer(s,draw?'trigger':'skip'); settle(s)
+    assert.equal(s.investigators[0].hand.length,draw?2:0)
   }
 })
 

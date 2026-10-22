@@ -11,7 +11,7 @@ export default {
     {
       kind: 'commit',
       label: '参透真谛',
-      skill: { scenarioAbilityOnly: true, onSuccess: { clueBonus: 1 } },
+      skill: { scenarioAbilityOnly: true, onSuccess: { discoverClue: 1 } },
     },
   ],
   modifiers: [

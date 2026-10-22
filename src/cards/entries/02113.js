@@ -15,7 +15,8 @@ export default {
       "fast": true,
       "trigger": "attackFail",
       "criteria": {
-        "failedByAtMost": 2
+        "failedByAtMost": 2,
+        "enemyEngagedWithYou": true
       },
       "label": "哎呀！",
       "resolve": ({ state, inv, api }) => {
@@ -32,7 +33,7 @@ export default {
         const target = targets.find(enemy => enemy.id === id)
         if (!target) return
         api.setReactionFlag('redirected', true)
-        const damage = Math.max(1, context.attackDamage || 1)
+        const damage = Math.max(0, context.attackDamage || 1)
         api.damageEnemy(target, damage, inv.seat, '02113')
         api.info(`${inv.name} 的攻击落空后改为对「${target.name}」造成 ${damage} 点伤害。`)
       }

@@ -1,4 +1,5 @@
 import { agendaDoom, totalDoom } from '../engine/rules-state.js'
+import { registeredEntry } from '../engine/ability.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { campaignView } from '../campaign/campaign.js'
 import { actingSeats, decisionSeat, embeddedCardDefs, enemyEvadeValue, enemyFightValue, enemyHealth, getMaxHealth, getMaxSanity, getStat, handSize, legalMoves, scriptActionHints } from '../engine/engine.js'
@@ -140,11 +141,15 @@ export function viewState(state, observerSeat = null) {
     layout: structuredClone(contentRegistry.getScenario(state.scenario.id).layout),
   } : null
   view.setAsideCards = publicSetAsideCards(state)
+  // 第 125 轮（第 8 批）：「翻面/变体」表现由条目声明（03009 → 03009b，伤害 ≥5 时）。
+  const projectAsset = (asset, inv) => {
+    const variant = registeredEntry(asset.code)?.observationVariant
+    if (!variant || !(inv.damage >= (variant.minDamage ?? 0))) return publicCardInstance(asset)
+    return { ...publicCardInstance(asset), code: variant.code, linkedFromCode: asset.code }
+  }
   view.investigators = state.investigators.map(inv => ({
     ...pick(inv, PUBLIC_INVESTIGATOR_FIELDS),
-    assets: inv.assets.map(asset => asset.code === '03009' && inv.damage >= 5
-      ? { ...publicCardInstance(asset), code: '03009b', linkedFromCode: '03009' }
-      : publicCardInstance(asset)),
+    assets: inv.assets.map(asset => projectAsset(asset, inv)),
     threat: (inv.threat || []).map(publicCardInstance),
     maxSanity: getMaxSanity(inv),
     maxHealth: getMaxHealth(inv),

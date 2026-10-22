@@ -16,8 +16,8 @@ export default {
   usesType: 'charges',
   abilities: [
     {
-      kind: 'reaction', trigger: 'defeatEnemy', label: '击败敌人后放置 1 充能',
-      criteria: [ownSeat()], limit: 'oncePerPhase',
+      kind: 'reaction', trigger: ['defeatEnemy', 'defeatAtLocation'], label: '本地点的调查员/盟友/敌人被击败后放置 1 充能',
+      criteria: [ownSeat()], limit: { scope: 'perWindow', owner: 'instance' },
       resolve: ({ source, api }) => {
         if (!source) return
         api.addUses(source, 1)

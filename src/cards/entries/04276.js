@@ -19,7 +19,7 @@ export default {
         const enemy = target?.entity
         if (!enemy) { api.info('没有可攻击的敌人。'); return }
         const elite = !!enemy.elite
-        api.fight(inv.seat, enemy.id, { addSkill: 'willpower', damageOverride: 3 })
+        api.fight(inv.seat, enemy.id, { addSkill: 'willpower', damageBonus: 3 })
         if (elite && !state.enemies.includes(enemy)) api.drawCards(inv.seat, 3)
       },
     },

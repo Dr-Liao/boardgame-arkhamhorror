@@ -13,6 +13,7 @@
 export default {
   code: '04270',
   fast: true,
+  detachAction: true,
   abilities: [
     {
       kind: 'action', label: '附属/解除到所在地点',

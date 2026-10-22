@@ -6,14 +6,16 @@
 //
 // 02040 亨利·阿米蒂奇博士：[反应]抽到非弱点牌后，弃掉该牌并横置：获得 3 资源。
 
-import { ownSeat } from '../../engine/matcher.js'
+import { canGainResources, ownSeat } from '../../engine/matcher.js'
 
 export default {
   code: '02040',
+  assetRule: { armitage: true },
+  scenarioPlayable: true,
   abilities: [
     {
       kind: 'reaction', trigger: 'cardDrawn', label: '弃掉刚抽到的牌并横置：获得 3 资源',
-      criteria: [ownSeat(), ctx => Boolean(ctx.context?.cardCode)
+      criteria: [ownSeat(), canGainResources(), ctx => Boolean(ctx.context?.cardCode)
         && ctx.context.cardCode !== '02040'
         && !ctx.helpers.isWeakness(ctx.context.cardCode)],
       cost: { exhaust: true },

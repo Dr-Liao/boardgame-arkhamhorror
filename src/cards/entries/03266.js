@@ -14,7 +14,7 @@ export default {
   abilities: [
     {
       kind: 'action', label: '奥术洞察降低帷幕', cost: { action: false, uses: 1 },
-      limit: { scope: 'perRound', owner: 'instance' },
+      limit: { scope: 'perTurn', owner: 'instance' },
       resolve: ({ state, inv, api }) => {
         const location = state.locations.find(item => item.id === inv.location)
         if (location) api.tempShroudMod(location, -2)

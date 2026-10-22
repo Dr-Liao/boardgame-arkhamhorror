@@ -8,6 +8,7 @@
 
 export default {
   code: '01009',
+  threatCannotLeaveWhileCounters: true,
   abilities: [
     {
       kind: 'weakness',

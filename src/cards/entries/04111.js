@@ -11,17 +11,27 @@ export default {
   code: '04111',
   abilities: [
     {
-      "kind": "played",
-      "fast": true,
-      "trigger": "harmDealt",
-      "criteria": {
-        "selfOnly": true
-      },
-      "label": "坚韧不拔",
-      "effect": {
-        "type": "cancelHarm",
-        "maximum": 4
-      }
+      kind: 'played',
+      fast: true,
+      trigger: 'harmDealt',
+      criteria: Object.assign([
+        ({ inv, context }) => context?.seat == null || inv?.seat == null || context.seat === inv.seat,
+        ({ state, inv, context }) => {
+          const harm = (context && (context.damage || context.horror)) ? context : state?.lastHarmContext
+          if (!harm) return true
+          const damage = Number(harm.damage) || 0
+          const horror = Number(harm.horror) || 0
+          if (!damage && !horror) return false
+          const maxHealth = inv?.maxHealth ?? inv?.health ?? 0
+          const maxSanity = inv?.maxSanity ?? inv?.sanity ?? 0
+          if (!maxHealth || !maxSanity) return true
+          return (damage > 0 && (inv.damage || 0) + damage >= maxHealth)
+            || (horror > 0 && (inv.horror || 0) + horror >= maxSanity)
+        },
+      ], { selfOnly: true }),
+      label: '坚韧不拔',
+      // 第 121 轮：取消伤害/恐惧走通用原语 api.cancelHarm。
+      resolve: ({ inv, api }) => api.cancelHarm(inv.seat, { maximum: 4, source: '04111' }),
     },
   ],
   modifiers: [

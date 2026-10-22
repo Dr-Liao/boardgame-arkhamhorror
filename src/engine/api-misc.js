@@ -12,6 +12,7 @@ export function createMiscApi(state, events, deps) {
     abilityTargets,
     activeEffects,
     addDoom,
+    discardLocked,
     addTrauma,
     aliveInvestigators,
     applyDamage,
@@ -58,6 +59,9 @@ export function createMiscApi(state, events, deps) {
     shuffle,
     tokenLabel,
     unique,
+    // 第 122 轮（第 4 批收尾）：照明弹的搜索入场与杜克的移动目的地点需要这两个引擎入口。
+    triggerReaction,
+    investigatorMoveDestinations,
     doResign,
     doFightRaw,
   } = deps
@@ -328,15 +332,21 @@ export function createMiscApi(state, events, deps) {
     },
     recruitAllyFromDiscard: (seat, source = null) => {
       const owner = state.investigators[seat]
+      if (!owner || discardLocked(state, owner)) return false
       const candidates = state.investigators.flatMap(person => person.discard
         .filter(code => cardDef(code)?.type === 'asset' && (cardDef(code)?.traits || [])
           .some(trait => String(trait).toLowerCase() === 'ally'))
         .map(code => ({ code, owner: person })))
       if (!candidates.length || !owner) return false
+      // 03238 的 X 费用：按所选盟友的印刷费用支付。
+      const affordable = candidates.filter(item => owner.resources >= (cardDef(item.code)?.cost || 0))
+      if (!affordable.length) return false
       const answer = requestChoice(state, { kind: 'card', source, seat, prompt: '选择弃牌堆中的盟友。',
-        options: candidates.map((item, index) => ({ id: String(index), cardCode: item.code, label: cardName(item.code) })) })
-      const picked = candidates[Number(answer)]
+        options: affordable.map((item, index) => ({ id: String(index), cardCode: item.code, label: cardName(item.code) })) })
+      const picked = affordable[Number(answer)]
       if (!picked) return false
+      const cost = cardDef(picked.code)?.cost || 0
+      owner.resources -= cost
       removeOne(picked.owner.discard, picked.code)
       owner.assets.push(newPlayerAssetInstance(state, owner, picked.code))
       return true
@@ -517,14 +527,96 @@ export function createMiscApi(state, events, deps) {
       return entry.code
     },
     // 「我來处理」：把当前遭遇卡改由该座位接手结算（反应窗口里唯一的接线点）。
-    redirectEncounter: seat => {
+    redirectEncounter: (seat, bonus = 0) => {
       const context = state._reaction?.context || state._reaction
       const owner = state.investigators[seat]
       if (!context || !owner || context.when !== 'encounterDrawn' || context.seat === seat) return false
       context.redirectSeat = seat
       context.location = owner.location
+      if (bonus) context.redirectBonus = bonus
       return true
     },
+    // 第 121 轮（第 4 批）：反应窗口里的通用原语，取代 player-effects.js 中按卡分派的
+    // cancelHarmGainResources / cancelHarm / redrawEncounter（卡面差异只剩 maximum 与文案）。
+    cancelHarm: (seat, options = {}) => {
+      const context = state._reaction
+      const owner = state.investigators[seat]
+      if (!context || !owner || context.when !== 'harmDealt') return null
+      const maximum = options.maximum ?? 5
+      const cap = Math.min(maximum, (context.damage || 0) + (context.horror || 0))
+      const choices = []
+      for (let damage = 0; damage <= Math.min(context.damage || 0, cap); damage++) {
+        for (let horror = 0; horror <= Math.min(context.horror || 0, cap - damage); horror++) {
+          if (damage + horror > 0) {
+            choices.push({ id: `${damage}:${horror}`,
+              label: `取消 ${damage} 伤害、${horror} 恐惧${options.gainResources ? `（获得 ${damage + horror} 资源）` : ''}` })
+          }
+        }
+      }
+      if (!choices.length) return null
+      const answer = choices.length === 1 ? choices[0].id : requestChoice(state, {
+        kind: 'harm', source: options.source || 'cancelHarm', seat,
+        prompt: options.prompt || '选择要取消的伤害与恐惧。', options: choices,
+      })
+      const [damage, horror] = String(answer).split(':').map(Number)
+      if (!Number.isFinite(damage) || !Number.isFinite(horror)) return null
+      context.damage = Math.max(0, (context.damage || 0) - damage)
+      context.horror = Math.max(0, (context.horror || 0) - horror)
+      if (options.gainResources) owner.resources += damage + horror
+      info(state, events, `${owner.name} 取消 ${damage} 点伤害与 ${horror} 点恐惧`
+        + (options.gainResources ? `，并获得 ${damage + horror} 资源。` : '。'))
+      return { damage, horror }
+    },
+    // 取消刚抽到的遭遇卡（可要求重抽一张），取代 02302 的 redrawEncounter 分派。
+    cancelEncounterDraw: (seat, options = {}) => {
+      const context = state._reaction?.context || state._reaction
+      const when = context?.when || state._reaction?.when
+      if (!context || when !== 'encounterDrawn') return false
+      context.cancelled = true
+      if (options.redraw === true) context.redraw = true
+      if (options.shuffleBack === true) context.shuffleBack = true
+      return true
+    },
+    // 第 122 轮（第 4 批收尾）：搜索任意调查员牌库顶 N 张，把符合特质的牌直接放进场
+    // （照明弹 02115 的第二个选项）。日志与旧实现一致：不额外写「加入手牌」之类的行。
+    searchDeckIntoPlay: (seat, options = {}) => {
+      const controller = state.investigators[seat]
+      if (!controller) return null
+      const owners = aliveInvestigators(state)
+      if (!owners.length) return null
+      const ownerSeat = options.fromSeat != null ? options.fromSeat
+        : owners.length === 1 ? owners[0].seat : Number(requestChoice(state, {
+          kind: 'target', source: options.source || 'searchDeckIntoPlay', seat,
+          prompt: options.ownerPrompt || '选择要搜索的牌库。',
+          options: owners.map(owner => ({ id: String(owner.seat), label: `${owner.name} 的牌库` })),
+        }))
+      const owner = state.investigators[ownerSeat]
+      if (!owner) return null
+      const amount = options.amount || 9
+      const trait = String(options.trait || 'ally').toLowerCase()
+      const cards = owner.deck.slice(-Math.min(amount, owner.deck.length))
+      const matches = cards.filter(code => (cardDef(code)?.traits || []).some(item => String(item).toLowerCase() === trait))
+      let played = null
+      if (matches.length) {
+        const chosen = matches.length === 1 ? matches[0] : matches[Number(requestChoice(state, {
+          kind: 'card', source: options.source || 'searchDeckIntoPlay', seat,
+          prompt: options.prompt || '选择要放置入场的牌。',
+          options: matches.map((code, index) => ({ id: String(index), cardCode: code, label: cardName(code) })),
+        }))]
+        const code = chosen || matches[0]
+        const index = owner.deck.lastIndexOf(code)
+        if (index >= 0) owner.deck.splice(index, 1)
+        const asset = newCardInstance(state, code, { exhausted: false })
+        controller.assets.push(asset)
+        played = asset
+        triggerReaction(state, seat, 'assetEnteredPlay', events,
+          { assetCode: code, assetId: asset.id, location: controller.location })
+      }
+      owner.deck = shuffle(owner.deck, () => randomValue(state))
+      return played
+    },
+    // 杜克（02014）调查前可先移动：返回本次可移动到的地点 id 列表。
+    moveDestinations: seat => investigatorMoveDestinations(state, seat, {}),
     isNonWeakness: code => {
       const def = cardDef(code)
       return Boolean(def) && !isWeaknessCard(def)

@@ -106,7 +106,7 @@ export function agendaForced(state, when, api, forcedType) {
         api.info(`「${enemy.name}」向客厅移动（${api.locName(previous)} → ${api.locName(dest)}）。`)
       }
     }
-    api.autoEngageAll()
+    // 卡面只说「移动 1 个地点」；交战在敌军阶段的交战步骤结算，移动本身不自动交战。
     return true
   }
   if (forcedType === 'doomPerGhoulAtParlorHallway') {

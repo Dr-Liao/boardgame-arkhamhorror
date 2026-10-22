@@ -35,10 +35,10 @@ export function createStats(deps) {
       && (cardDef(asset?.code)?.traits || []).some(trait => blankedTraits.includes(String(trait).toLowerCase()))) return {}
     // 「毒蛇灾厄」（04099）：非弱点道具的文字视为空白。
     if (inv.threat?.some(item => item.blankItemAssets) && (cardDef(asset?.code)?.traits || []).includes('Item')) return {}
-    const legacy = EFFECTS[asset?.code]
     // Phase 5（D2）：使用次数元数据（uses / usesType / discardWhenEmpty）可以整组搬到
     // 注册表条目上；这里与描述子一起合并，读点（补充弹药、充能耗尽、界面文字）不需要
     // 知道自己拿到的是旧 DSL 还是新条目。
+    const legacy = null
     const entry = registeredEntry(asset?.code)
     const meta = entry
       ? {

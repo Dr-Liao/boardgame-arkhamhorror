@@ -22,6 +22,26 @@ import { CARD_ABILITY_ENTRIES } from '../src/cards/card-abilities.js'
 const abilityOption = choice => (choice?.options || []).find(option =>
   String(option.label).includes('【能力】') || (option.assetId != null && option.abilityIndex != null))
 const hasAbilityOption = choice => Boolean(abilityOption(choice))
+// 能力层快速事件（played + fast + trigger）在反应窗口里以 cardCode 选项出现。
+const cardOption = (choice, code) => (choice?.options || []).find(option => option.cardCode === code)
+
+function passUntilCard(state, code, limit = 20) {
+  for (let i = 0; i < limit; i++) {
+    if (state.pendingChoice && cardOption(state.pendingChoice, code)) return true
+    if (!state.pendingChoice) return false
+    const choice = state.pendingChoice
+    const option = choice.options.find(item => item.id === 'skip') || choice.options.at(-1)
+    applyMove(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId: option.id })
+  }
+  return false
+}
+
+function chooseCard(state, code) {
+  const choice = state.pendingChoice
+  const option = cardOption(choice, code)
+  assert.ok(option, `没有快速事件选项 ${code}：${JSON.stringify(choice?.options)}`)
+  applyMove(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId: option.id })
+}
 
 // 把当前待决选择逐个点掉（优先 skip，否则最后一项），直到没有待决选择。
 function passAll(state, limit = 40) {
@@ -130,11 +150,14 @@ test('P0-A 修正管线：声明式修正、条件、槽位与打出费用', () 
   assert.equal(getStat(state, inv, 'combat'), base, '02080 +1 与 03009 -1 应互相抵消')
   inv.damage = 0
 
-  // 04051：位于[[古代]]地点时全部技能 +1。
+  // 04051：调查[[古代]]地点时全部技能 +1（只在调查检定中生效）。
   const ancientBase = getStat(state, inv, 'agility')
   state.locations[0].traits = ['Ancient']
   asset(state, '04051')
+  assert.equal(getStat(state, inv, 'agility'), ancientBase, '非调查检定不加值')
+  state.skillTest = { source: { label: '调查' } }
   assert.equal(getStat(state, inv, 'agility'), ancientBase + 1)
+  state.skillTest = null
   state.locations[0].traits = []
   assert.equal(getStat(state, inv, 'agility'), ancientBase)
 

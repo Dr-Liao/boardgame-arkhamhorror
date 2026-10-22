@@ -1,3 +1,4 @@
+import { assetRuleFor, enemyScriptFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { awardStoryCard } from '../../../../../src/campaign/campaign-effects.js'
@@ -111,6 +112,12 @@ export function setupPlan(state) {
 }
 
 export const behavior = {
+  // 03139 隐藏的图书馆：只在敌人移动时获得[[通道]]特性（提供到其他通道的连接）。
+  enemyConnections(state, enemy, location) {
+    if (location.id !== 'hiddenLibrary') return null
+    return (state.scenario.passagewayLocations || []).filter(id =>
+      id !== location.id && state.locations.some(candidate => candidate.id === id))
+  },
   ...encounterRules,
   id: 'echoesOfThePast',
   setupPlan,
@@ -140,58 +147,62 @@ export const behavior = {
   },
   setupEnemies(state, _events, api) {
     const count = state.numInvestigators === 1 ? 0 : state.numInvestigators === 2 ? 1 : state.numInvestigators === 3 ? 2 : 3
-    for (let i = 0; i < count; i++) api.spawnEnemy(state, '03144', state.scenarioFlags.seekerLocations[i], null)
+    // 卡面：生成在「任意无人历史协会地点」，由玩家选择。
+    const empty = state.locations.filter(location => historicalRooms.has(original(location))
+      && !active(state).some(inv => inv.location === location.id)).map(location => location.id)
+    for (let i = 0; i < count; i++) {
+      const id = empty.length
+        ? (empty.length === 1 ? empty[0] : api.choose({
+          kind: 'location', source: 'seekerSpawn', seat: state.campaign.leadSeat,
+          prompt: '选择卡尔克萨探求者生成的无人历史协会地点。',
+          options: empty.map(candidate => ({ id: candidate, label: state.locations.find(item => item.id === candidate)?.name || candidate })),
+        }))
+        : state.scenarioFlags.seekerLocations[i]
+      const index = empty.indexOf(id)
+      if (index >= 0) empty.splice(index, 1)
+      api.spawnEnemy(state, '03144', id, null)
+    }
   },
   enemySpawned(state, enemy, api) {
     encounterRules.enemySpawned?.(state, enemy, api)
     const location = state.locations.find(candidate => candidate.id === enemy.location)
     if (location && historicalRooms.has(original(location)) && !location.revealed) api.reveal(location.id)
   },
-  enemyDamaged(state, enemy) {
-    if (enemy.code === '03140' && state.agendaIndex < 2) enemy.damageTaken = 0
+  mythosEnded(state, api) {
+    // 03144 卡尔克萨探求者：神话阶段结束时移走 1 个线索，不能则放 1 毁灭。
+    for (const enemy of state.enemies) enemyScriptFor(original(enemy))?.onMythosEnd?.(state, enemy, api)
+  },
+  enemyDamaged(state, enemy, api) {
+    // 第 119 轮：03140 附身宣誓者的「密谋 2 之前免疫伤害」在敌人条目的 enemyScript.onDamaged。
+    enemyScriptFor(original(enemy))?.onDamaged?.(state, enemy, api)
   },
   enemyDefeated(state, enemy, api) {
-    if (enemy.code === '03140') {
-      if (!state.victoryDisplay.some(card => card.id === enemy.id)) state.victoryDisplay.push({
-        ...structuredClone(enemy), originalCode: '03140', victory: 2,
-      })
-      api.finish('r3')
-      return true
-    }
+    // 第 119 轮：03140 被击败的胜利区与结局在条目的 enemyScript.onDefeated。
+    const script = enemyScriptFor(original(enemy))
+    if (script?.onDefeated) return script.onDefeated(state, enemy, api) === true
     return encounterRules.enemyDefeated?.(state, enemy, api) || false
   },
   enemyPhaseStart(state, api) {
-    for (const enemy of state.enemies.filter(candidate => candidate.code === '03140')) {
-      if (!enemy.exhausted) enemy.doom = (enemy.doom || 0) + 1
-      else {
-        const answer = api.choose({
-          kind: 'enemy', source: enemy.id, seat: state.campaign.leadSeat,
-          prompt: '附身宣誓者：重整它，或在其上放置 1 个毁灭标记。',
-          options: [{ id: 'ready', label: '重整附身宣誓者' }, { id: 'doom', label: '放置 1 毁灭' }],
-        })
-        if (answer === 'ready') enemy.exhausted = false
-        else enemy.doom = (enemy.doom || 0) + 1
-      }
-    }
+    // 第 119 轮：敌军阶段开始的敌人脚本统一按条目派发（03140 的毁灭/重整选择）。
+    for (const enemy of state.enemies) enemyScriptFor(original(enemy))?.onPhaseStart?.(state, enemy, api)
   },
   roundEnded(state, api) {
     encounterRules.roundEnded?.(state, api)
-    for (const enemy of state.enemies.filter(candidate => candidate.code === '03144')) {
-      const location = state.locations.find(candidate => candidate.id === enemy.location)
-      if (location?.clues > 0) location.clues--
-      enemy.doom = (enemy.doom || 0) + 1
-    }
+    // 第 119 轮：03144 追寻者的轮末线索/毁灭在条目的 enemyScript.onRoundEnd。
+    for (const enemy of state.enemies) enemyScriptFor(original(enemy))?.onRoundEnd?.(state, enemy, api)
     const temporary = state.scenarioFlags.peabodyPassage
     if (temporary) {
       const location = state.locations.find(candidate => candidate.id === temporary)
-      if (location) location.connections = location.connections.filter(id => !state.scenario.passagewayLocations.includes(id))
+      if (location) {
+        delete location.peabodyShroud
+        location.traits = (location.traits || []).filter(trait => trait !== 'Passageway')
+      }
       delete state.scenarioFlags.peabodyPassage
     }
   },
-  locationShroudModifier(state, location) {
-    if (original(location) !== '03137') return 0
-    return state.investigators.some(inv => inv.location === location.id
-      && inv.assets.some(asset => asset.code === '03141')) ? -2 : 0
+  locationShroudModifier() {
+    // 第 119 轮：03137 的「皮博迪先生在此地则帷幕 -2」已改成地点条目的 locationShroud 修饰符。
+    return 0
   },
   actReveal(state, act, api) {
     registeredEntry(act.originalCode)?.actRule?.onReveal?.(state, act, api)
@@ -203,29 +214,16 @@ export const behavior = {
     const moves = []
     const location = state.locations.find(candidate => candidate.id === inv.location)
     const code = original(location)
-    const meetingRoomKey = `meetingRoom:${inv.seat}`
-    // 会议室能力（每轮每人一次）已经就位，只差"地点还有线索""还有一名未横置的盟友"。
-    if (code === '03128' && state.scenarioFlags[meetingRoomKey] !== state.round) {
-      const readyAlly = inv.assets.some(asset => !asset.exhausted
-        && ALL_CARDS[asset.code]?.traits?.some(trait => trait.toLowerCase() === 'ally'))
-      moves.push({ action: 'scenarioAction', rule: 'meetingRoomAlly',
-        label: '横置一名盟友，在会议室发现1个线索',
-        reason: location.clues > 0
-          ? readyAlly ? null : '需要一名未横置的[[盟友]]支援'
-          : '会议室已经没有线索' })
-    }
+    // 第 119 轮：03128 会议室 / 03134 阅览室的场景行动在地点条目。
+    locationRuleFor(code)?.actions?.({ state, inv, location, moves })
     if (['03131', '03135'].includes(code)) {
       const unrevealed = state.locations.filter(candidate => !candidate.revealed).length
       const withClues = state.locations.filter(candidate => (candidate.clues || 0) > 0).length
       moves.push({ action: 'scenarioAction', rule: 'restoreClues', label: '在宁静的走廊放置线索',
         reason: unrevealed ? '还有地点尚未揭示' : withClues ? '还有地点留着线索' : null })
     }
-    if (code === '03134') {
-      moves.push({ action: 'scenarioAction', rule: 'readingRoom', label: '调查阅览室，将敌人上的毁灭转为线索',
-        reason: state.enemies.some(enemy => (enemy.doom || 0) > 0) ? null : '场上没有带毁灭的敌人' })
-    }
-    // 皮博迪先生在场时，只差他是否已重整。
-    const peabody = inv.assets.find(asset => asset.code === '03141')
+    // 皮博迪先生在场时，只差他是否已重整（身份读条目的 assetRule.peabody）。
+    const peabody = inv.assets.find(asset => assetRuleFor(original(asset))?.peabody)
     if (peabody) moves.push({ action: 'scenarioAction', rule: 'peabodyPassage', label: '横置皮博迪先生，选择一个地点作为通道',
       reason: peabody.exhausted ? '需要先重整“皮博迪先生”' : null })
     return moves
@@ -255,6 +253,7 @@ export const behavior = {
     } else if (move.rule === 'restoreClues') {
       state.locations.find(location => location.id === inv.location).clues += state.numInvestigators
     } else if (move.rule === 'readingRoom') {
+      state.scenarioFlags.readingRoomRound = state.round
       const location = state.locations.find(candidate => candidate.id === inv.location)
       api.test(inv.seat, 'intellect', location.shroud + (location.shroudMod || 0), result => {
         if (!result.success) return
@@ -270,7 +269,8 @@ export const behavior = {
         }
       })
     } else if (move.rule === 'peabodyPassage') {
-      const peabody = inv.assets.find(asset => asset.code === '03141' && !asset.exhausted)
+      // 第 119 轮：皮博迪先生的身份读条目的 assetRule.peabody。
+      const peabody = inv.assets.find(asset => assetRuleFor(original(asset))?.peabody && !asset.exhausted)
       if (!peabody) throw new Error('皮博迪先生必须处于重整状态')
       const locations = state.locations.filter(location => location.id !== inv.location)
       const id = api.choose({
@@ -280,8 +280,11 @@ export const behavior = {
       peabody.exhausted = true
       state.scenarioFlags.peabodyPassage = id
       const location = state.locations.find(candidate => candidate.id === id)
-      const passageways = state.scenario.passagewayLocations.filter(candidate => state.locations.some(item => item.id === candidate))
-      location.connections = [...new Set([...location.connections, ...passageways.filter(candidate => candidate !== id)])]
+      // 卡面：直到皮博迪先生重整，该地点 -1 帷幕并获得[[通道]]特性。
+      if (location) {
+        location.peabodyShroud = -1
+        if (!(location.traits || []).includes('Passageway')) location.traits = [...(location.traits || []), 'Passageway']
+      }
     } else throw new Error(`未知往事回声行动：${move.rule}`)
   },
   afterTest(state, inv, result, api) {
@@ -322,37 +325,8 @@ export const behavior = {
     return shared + (['03129', '03138'].includes(original(location)) && ['fight', 'evade'].includes(stat) ? 1 : 0)
   },
   resolveEncounter(state, inv, card, api) {
-    const code = original(card)
-    if (code === '03145') {
-      const cultists = state.enemies.filter(enemy => enemy.traits?.includes('Cultist'))
-      const options = [{ id: 'agenda', label: '在当前议程放置 1 个毁灭' }]
-      if (inv.clues > 0) options.unshift(...cultists.map(enemy => ({ id: enemy.id, label: `将 1 个线索移到${enemy.name}` })))
-      const answer = api.choose({ kind: 'encounter', source: code, seat: inv.seat, prompt: '误入歧途', options })
-      const enemy = cultists.find(candidate => candidate.id === answer)
-      if (enemy) {
-        inv.clues--
-        enemy.doom = (enemy.doom || 0) + 1
-      } else state.doom++
-      return false
-    }
-    if (code === '03146') {
-      const cultists = state.enemies.filter(enemy => enemy.traits?.includes('Cultist') && (enemy.doom || 0) > 0)
-      if (cultists.length) {
-        for (const enemy of cultists) {
-          state.doom += enemy.doom
-          enemy.doom = 0
-        }
-      } else {
-        const index = state.encounterDeck.findLastIndex(candidate =>
-          state.scenario.enemies[candidate]?.traits?.includes('Cultist'))
-        if (index >= 0) {
-          const enemyCode = state.encounterDeck.splice(index, 1)[0]
-          api.spawn(enemyCode, inv.location)
-          api.shuffleEncounterDeck()
-        }
-      }
-      return false
-    }
+    // 第 119 轮：03145 误入歧途 / 03146 追随者找到前路的显现结算在遭遇条目
+    // （encounterResolveCampaigns: ['carcosa']）。
     return encounterRules.resolveEncounter.call(this, state, inv, card, api)
   },
   allResigned(_state, api) {

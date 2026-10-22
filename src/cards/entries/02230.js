@@ -6,6 +6,8 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 02230 幸运骰子：揭示混乱标记后花 2 资源重抽。
+// 第 121 轮：重抽本身由条目级 rerollTokenCost 提供（tests.js 读它），
+// 这个反应描述子只负责「花 2 资源」的时机，不再走 effect.type 分派。
 
 export default {
   code: '02230',
@@ -13,7 +15,7 @@ export default {
     {
       kind: 'reaction', trigger: 'chaosTokenRevealed', id: 'luckyDice', legacyReaction: true,
       label: '花 2 资源重抽混乱标记', cost: { resources: 2 },
-      effect: { type: 'redrawChaos' },
+      resolve: () => { /* 重抽由 rerollTokenCost 的通用流程结算 */ },
     },
   ],
   rerollTokenCost: 2,

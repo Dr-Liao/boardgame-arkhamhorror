@@ -7,6 +7,7 @@
 
 export default {
   code: '02139',
+  assetRule: { securityKeys: true },
   discardOnElimination: true,
   abilities: [
 

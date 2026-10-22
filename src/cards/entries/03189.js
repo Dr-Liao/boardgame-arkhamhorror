@@ -15,7 +15,7 @@ export default {
       kind: 'played', label: '击败所有交战的非精英敌人，受 1 创伤并把伤害拉满',
       resolve: ({ inv, api }) => {
         for (const enemy of api.engagedEnemies(inv.seat).filter(foe => !foe.elite)) api.defeatEnemy(enemy, inv.seat)
-        api.bumpInstanceTrauma(inv.seat, 'physical', 1)
+        api.addTrauma(inv.seat, 'physical', 1)
         api.setDamageToMax(inv.seat)
       },
     },

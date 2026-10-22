@@ -487,16 +487,38 @@ test('5c-6：04027 窃听对抗未交战敌人的躲避值', () => {
   assert.equal(state.locations.find(location => location.id === here.id).clues, 1, '成功发现 2 个线索')
 })
 
-test('5c-6：04273 旧霰弹枪成功造成 2 点伤害', () => {
+test('5c-6：04273 陈旧猎枪成功造成 3 点伤害（+2），且揭示骷髅会卡膛', () => {
   const state = fixture()
   const target = enemy(state, { engagedSeat: 0, fight: 1, health: 10 })
   state.chaosBag = ['0']
   const gun = asset(state, '04273')
-  use(state, gun)
+  const attack = legalMoves(state, 0).find(item => item.action === 'ability'
+    && item.assetId === gun.id && item.targetId === target.id)
+  move(state, attack)
   assert.equal(state.skillTest?.skill, 'combat')
   assert.equal(state.investigators[0].assets.find(item => item.id === gun.id).uses, 2, '消耗 1 子弹')
   settle(state)
-  assert.equal(state.enemies.find(item => item.id === target.id).damageTaken, 2)
+  assert.equal(state.enemies.find(item => item.id === target.id).damageTaken, 3, '基础 1 + 卡面 +2')
+
+  // 卡膛：揭示骷髅 → 本次攻击自动失败并卡住；清除前攻击能力不可用。
+  const jammed = fixture()
+  const victim = enemy(jammed, { engagedSeat: 0, fight: 1, health: 10 })
+  jammed.chaosBag = ['skull']
+  const rifle = asset(jammed, '04273')
+  const first = legalMoves(jammed, 0).find(item => item.action === 'ability'
+    && item.assetId === rifle.id && item.targetId === victim.id)
+  move(jammed, first)
+  settle(jammed)
+  assert.equal(jammed.enemies.find(item => item.id === victim.id).damageTaken, 0, '卡膛时攻击自动失败')
+  assert.equal(jammed.investigators[0].assets.find(item => item.id === rifle.id).jammed, true)
+  const afterJam = legalMoves(jammed, 0).filter(item => item.action === 'ability' && item.assetId === rifle.id)
+  assert.equal(afterJam.some(item => item.label.includes('攻击')), false, '卡膛期间攻击能力不可用')
+  const clear = afterJam.find(item => item.label.includes('卡膛情况'))
+  assert.ok(clear, '卡膛后出现「解决卡膛情况」行动')
+  move(jammed, clear)
+  assert.equal(jammed.investigators[0].assets.find(item => item.id === rifle.id).jammed, undefined)
+  assert.ok(legalMoves(jammed, 0).some(item => item.action === 'ability' && item.assetId === rifle.id
+    && item.label.includes('攻击')), '清除卡膛后可以再次攻击')
 })
 
 // ---- 5c-8：反应窗口的快速事件（played + fast + trigger）----
@@ -587,15 +609,14 @@ test('5c-18：03195 扒手躲避成功后抽 1 张或获得 1 资源', () => {
   assert.equal(state.investigators[0].hand.length, handBefore, '没有抽牌')
 })
 
-test('5c-18：03195 扒手「超出 2 点两项都做」仍是既有缺口（迁移按原样保留）', () => {
-  // 已知缺口（记在 docs/phase5-migration.md §6）：evadeSuccess 的窗口上下文里没有
-  // successBy，旧 handler 的 `state._reaction?.successBy` 恒为 0，因此卡面「检定成功且
-  // 超过难度至少 2 点改为两项都做」这一句自始不可达。5c-18 只搬运实现、不改规则：
-  // 即使超出 2 点，仍然出现「抽牌 / 资源」二选一；补上下文属于 A 类能力改动，另开一批。
+test('5c-18：03195 扒手「超出 2 点两项都做」', () => {
+  // evadeSuccess 窗口现在携带 successBy；超出 2 点时不再询问二选一，直接抽 1 张并获得 1 资源。
   const state = fixture()
   asset(state, '03195')
   enemy(state, { engagedSeat: 0, fight: 1, evade: 0, health: 10 })
   state.chaosBag = ['0']
+  const handBefore = state.investigators[0].hand.length
+  const resourcesBefore = state.investigators[0].resources
   let sawEffectChoice = false
   move(state, legalMoves(state).find(command => command.action === 'evade'))
   settle(state, pending => {
@@ -603,9 +624,9 @@ test('5c-18：03195 扒手「超出 2 点两项都做」仍是既有缺口（迁
     if (pending.kind === 'effect') { sawEffectChoice = true; return 'draw' }
     return null
   })
-  assert.equal(sawEffectChoice, true, '仍然要求二选一（与旧实现一致）')
-  assert.ok(state.investigators[0].hand.length >= 1, '选择抽牌')
-  assert.ok(state.log.some(line => line.includes('抽取了 1 张牌')), '抽牌日志由 api.drawCardsLogged 写出')
+  assert.equal(sawEffectChoice, false, '超出 2 点不再二选一')
+  assert.equal(state.investigators[0].hand.length, handBefore + 1, '抽 1 张')
+  assert.equal(state.investigators[0].resources, resourcesBefore + 1, '并获得 1 资源')
 })
 
 // ---- 5c-19：entersPlay 的 resolve 读点 + 牌库顶检索附属（04021 / 03158）----
@@ -1167,7 +1188,7 @@ test('5c-35：03149 查尔斯·罗斯横置后本地点下一件物品 -1；0318
   play(second, '03189')
   settle(second)
   assert.equal(second.enemies.some(item => item.id === foe.id), false, '交战的非精英敌人被击败')
-  assert.equal(second.investigators[0].physicalTrauma, 1, '受 1 点（实例）物理创伤')
+  assert.equal(second.campaign.trauma[0].physical, 1, '受 1 点战役物理创伤')
   assert.equal(second.investigators[0].damage, second.investigators[0].maxHealth, '伤害拉满')
 })
 

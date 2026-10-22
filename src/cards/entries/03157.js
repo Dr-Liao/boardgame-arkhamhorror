@@ -11,15 +11,13 @@ export default {
   code: '03157',
   abilities: [
     {
-      "kind": "played",
-      "fast": true,
-      "trigger": "harmDealt",
-      "label": "吉人天相",
-      "effect": {
-        "type": "cancelHarm",
-        "maximum": 10
-      },
-      "exileAfterPlay": true
+      kind: 'played',
+      fast: true,
+      trigger: 'harmDealt',
+      label: '吉人天相',
+      exileAfterPlay: true,
+      // 第 121 轮：取消伤害/恐惧走通用原语 api.cancelHarm。
+      resolve: ({ inv, api }) => api.cancelHarm(inv.seat, { maximum: 10, source: '03157' }),
     },
   ],
   modifiers: [

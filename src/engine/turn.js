@@ -77,18 +77,26 @@ function runMythos(state, repeated = false) {
       if (!inv || inv.defeated || inv.resigned) continue
       // Phase 6（6e-14）：轮末弃置从条目级字段读（旧 DSL 条目回落）。
       for (const asset of inv.assets.filter(item =>
-        (registeredEntry(item.code)?.discardAtRoundEnd ?? EFFECTS[item.code]?.discardAtRoundEnd)).slice()) {
+        (registeredEntry(item.code)?.discardAtRoundEnd)).slice()) {
         leaveAsset(state, inv, asset, [])
         inv.discard.push(asset.code)
       }
     }
   }
-  state.doom += 1
-  info(state, events, `🌑 神话阶段（第 ${state.round} 回合）：密谋上放置 1 点毁灭（当前 ${state.doom}）。`,
-    { kind: 'phase', phase: 'mythos', round: state.round, text: `密谋增加 1 点毁灭 · 当前 ${state.doom}`, effect: 'doom', delta: 1 })
-  // 神话阶段的毁灭也是「放置毁灭」，剧本的强制要能看到（04282/04283）。
-  scenarioBehavior(state).doomPlaced?.(state,
-    { target: null, amount: 1, agenda: true }, scenarioRuntime(state, events))
+  // 卡面「跳过神话阶段的『在当前密谋放置 1 个毁灭』步骤」（03121/03122/03123）。
+  const currentAgenda = state.agendas[state.agendaIndex]
+  const skipMythosDoom = registeredEntry(currentAgenda?.originalCode || currentAgenda?.code)?.skipMythosDoom === true
+  if (skipMythosDoom) {
+    info(state, events, `🌑 神话阶段（第 ${state.round} 回合）：「${currentAgenda?.name || '当前密谋'}」跳过放置毁灭步骤（当前 ${state.doom}）。`,
+      { kind: 'phase', phase: 'mythos', round: state.round, text: '跳过密谋毁灭 · 当前无变化', effect: 'doom', delta: 0 })
+  } else {
+    state.doom += 1
+    info(state, events, `🌑 神话阶段（第 ${state.round} 回合）：密谋上放置 1 点毁灭（当前 ${state.doom}）。`,
+      { kind: 'phase', phase: 'mythos', round: state.round, text: `密谋增加 1 点毁灭 · 当前 ${state.doom}`, effect: 'doom', delta: 1 })
+    // 神话阶段的毁灭也是「放置毁灭」，剧本的强制要能看到（04282/04283）。
+    scenarioBehavior(state).doomPlaced?.(state,
+      { target: null, amount: 1, agenda: true }, scenarioRuntime(state, events))
+  }
   phaseBeginningWindow(state, events)
   checkAgenda(state, events)
   // 神话阶段「检查毁灭阈值」步骤结束后的剧本强制（04284 复仇等）。
@@ -114,6 +122,7 @@ function runMythos(state, repeated = false) {
       info(state, events, `🌑 「${cardName(asset.code)}」在神话阶段结束时被弃掉。`)
     }
   }
+  scenarioBehavior(state).mythosEnded?.(state, scenarioRuntime(state, events))
   return events
 }
 
@@ -198,7 +207,7 @@ function enemyPhase(state) {
   return events
 }
 
-function hunterStep(state, enemy) {
+function hunterStep(state, enemy, options = {}) {
   const loc = state.locations.find((l) => l.id === enemy.location)
   const extraConnections = scenarioBehavior(state).enemyConnections?.(state, enemy, loc) || []
   const neighbours = [...new Set([...(loc ? loc.connections : []), ...extraConnections])].filter((id) => {
@@ -217,9 +226,9 @@ function hunterStep(state, enemy) {
     return chooseAmong(state, { kind: 'hunter', source: { type: 'enemy', code: enemy.code }, seat: leadDecisionSeat(state),
       prompt: `选择「${enemy.name}」向诱饵移动的路线。`, options: pool.map(id => ({ id, label: locName(state, id) })) })
   }
-  let targets = aliveInvestigators(state).filter(i => enemy.prey !== 'bearer' || i.seat === enemy.bearerSeat)
+  let targets = options.targets || aliveInvestigators(state).filter(i => enemy.prey !== 'bearer' || i.seat === enemy.bearerSeat)
   // Phase 2（C1）：ignore:hunter —— 声明「敌人不把你当作猎手目标」的调查员不参与猎物计算。
-  targets = targets.filter(i => !ruleIgnored(state, i, 'hunter'))
+  if (!options.targets) targets = targets.filter(i => !ruleIgnored(state, i, 'hunter'))
   if (!targets.length) return null
   const proximity = targets.map(i => distanceToInvestigator(state, enemy.location, [i]))
   const nearest = Math.min(...proximity)

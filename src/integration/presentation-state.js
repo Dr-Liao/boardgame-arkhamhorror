@@ -1,4 +1,5 @@
 import { contentRegistry } from '../../content/registered.js'
+import { HIDDEN_LOCATION_ART } from '../../content/campaigns/thePathToCarcosa/presentation.js'
 import { agendaDoom, totalDoom, enemyHealthValue } from '../engine/rules-state.js'
 
 // Use the same scenario gate as movement, independently of remaining actions,
@@ -42,9 +43,9 @@ export function publicCardInstance(card) {
   }
   return visible
 }
+// 第 125 轮（第 8 批）：隐藏地点的背面图案分组表在内容层（`content/campaigns/thePathToCarcosa/presentation.js`）。
 const hiddenLocationArtCode = loc => loc.artCode
-  || (['02285', '02286', '02287', '02288'].includes(loc.originalCode || loc.code) ? '02285'
-    : ['02289', '02290', '02291', '02292'].includes(loc.originalCode || loc.code) ? '02289' : undefined)
+  || HIDDEN_LOCATION_ART[loc.originalCode || loc.code]
 export function maskHiddenLocations(locations) {
   return locations.map(loc => loc.hiddenIdentity && !loc.revealed
     ? { id: loc.id, name: '未知小径', artCode: hiddenLocationArtCode(loc), revealed: false, clues: 0,

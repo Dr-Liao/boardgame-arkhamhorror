@@ -9,6 +9,7 @@
 
 export default {
   code: '02138',
+  assetRule: { intellectClueAssist: true },
   discardOnElimination: true,
   abilities: [
 

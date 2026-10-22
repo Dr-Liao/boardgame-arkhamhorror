@@ -27,11 +27,12 @@ export const LOCAL_IMAGE_LIBRARY = Object.freeze({
 })
 
 const localized = JSON.parse(readFileSync(new URL('./localized-arts.json', import.meta.url), 'utf8'))
+const generatedLocalized = JSON.parse(readFileSync(new URL('./generated-localized-arts.json', import.meta.url), 'utf8'))
 const mediaRegistry = JSON.parse(readFileSync(new URL('./media-registry.json', import.meta.url), 'utf8'))
 
 export const LOCALIZED_ART_SOURCE = Object.freeze({ ...localized.source })
 export const MEDIA_REGISTRY = Object.freeze(mediaRegistry)
-const localizedArts = new Set(localized.arts)
+const localizedArts = new Set([...localized.arts, ...generatedLocalized.arts])
 
 // 关联面是双向关系，但目录只记录一侧；反向索引让「背面卡」也能找到自己的正面。
 const linkedFronts = new Map()

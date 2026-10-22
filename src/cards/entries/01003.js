@@ -34,7 +34,7 @@ export default {
         "type": "gainAction",
         "amount": 1
       },
-      "limit": "round"
+      "limit": "turn"
     }
   },
   kind: 'investigator',

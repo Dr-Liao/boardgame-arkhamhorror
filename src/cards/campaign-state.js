@@ -41,11 +41,11 @@ export function createCampaignState() {
     },
     enemyTestModifier: enemy => enemy?.carcosaDifficultyModifier || null,
 
-    // 演出奖励行动：同一 round/seat/asset 只给一次（避免重复成功重复加行动）。
+    // 演出奖励行动：同一 turn/seat/asset 只给一次（「每回合一次」；额外回合是新的 turnSerial）。
     grantActionGain: (inv, state, key) => {
       if (!inv) return false
       inv.carcosaActionGains ||= {}
-      const id = `${state.round}:${state.currentSeat}:${key || 'attack'}`
+      const id = `${state.round}:${state.turnSerial ?? 0}:${state.currentSeat}:${key || 'attack'}`
       if (inv.carcosaActionGains[id]) return false
       inv.carcosaActionGains[id] = true
       inv.actionsLeft++
@@ -65,14 +65,21 @@ export function createCampaignState() {
     // ---------------- 失落的时代 ----------------
     // 「职业杀手」：本回合该敌人下次受到的伤害 +N（一次性，取用即清）。
     consumeDamageBonus: (enemy, state) => {
-      if (enemy?.tfaDamageBonus?.round !== state?.round) return 0
-      const amount = enemy.tfaDamageBonus.amount || 0
+      const bonus = enemy?.tfaDamageBonus
+      if (!bonus) return 0
+      // 「本回合」：同一 round 内换人后失效。
+      if (bonus.round !== state?.round
+        || (bonus.turnSerial != null && state?.turnSerial != null && bonus.turnSerial !== state.turnSerial)) {
+        delete enemy.tfaDamageBonus
+        return 0
+      }
+      const amount = bonus.amount || 0
       delete enemy.tfaDamageBonus
       return amount
     },
     setDamageBonus: (enemy, state, amount) => {
       if (!enemy || !amount) return null
-      enemy.tfaDamageBonus = { amount, round: state.round }
+      enemy.tfaDamageBonus = { amount, round: state.round, turnSerial: state.turnSerial ?? null }
       return enemy.tfaDamageBonus
     },
     // 通用减伤（幽嘶蛇人）。

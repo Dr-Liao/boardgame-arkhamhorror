@@ -8,6 +8,7 @@
 
 export default {
   code: '03142',
+  assetRule: { onxyRing: true },
   // P0：这是剧情加入的「弱点支援」，卡面没有显现效果；抽到后应留在手牌里
   // 让 +1 费用生效，而不是走弱点结算后进弃牌堆（旧实现会因缺 profile 直接抛错）。
   weaknessStaysInHand: true,

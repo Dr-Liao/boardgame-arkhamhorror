@@ -11,8 +11,8 @@
 
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { readFileSync, readdirSync } from 'node:fs'
-import { join, relative } from 'node:path'
+import { readFileSync, readdirSync, existsSync } from 'node:fs'
+import path, { join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildCoverage, collect } from '../tools/audit-abilities.mjs'
 // Phase 5（5a）：旧原语分派点的死代码检测——引擎里不得留「已经没有数据引用」的分支。
@@ -203,23 +203,105 @@ test('效果原语都必须有数据引用', () => {
   assertHardcodeBaselineFresh('EFFECT_PRIMITIVES')
 })
 
+// 第 8 批收尾守卫（第 127 轮）：`web/**/*.js` 里不再出现 5 位卡号字面量。
+// 浏览器端的「哪张卡」由 web/ui-cards.js 声明（纯数据表，唯一允许的卡号来源），
+// 其余前端代码只读数据；这条守卫防止再把卡号写回 UI 代码。
+const WEB_CARD_CODE_BASELINE = 0
+const WEB_CARD_DATA_MODULE = 'web/ui-cards.js'
+
+function webJsFiles() {
+  const files = []
+  const walk = dir => {
+    for (const entry of readdirSync(new URL(dir, root), { withFileTypes: true })) {
+      const path = `${dir}${entry.name}`
+      if (entry.isDirectory()) {
+        if (['node_modules', 'img', 'audio'].includes(entry.name)) continue
+        walk(`${path}/`)
+      } else if (entry.name.endsWith('.js')) files.push(path)
+    }
+  }
+  walk('web/')
+  return files
+}
+
+test('web 代码里没有卡号字面量（第 8 批：改读 web/ui-cards.js）', () => {
+  const hits = []
+  for (const file of webJsFiles()) {
+    if (file === WEB_CARD_DATA_MODULE) continue
+    const source = readFileSync(new URL(file, root), 'utf8')
+    for (const match of source.matchAll(/['"`]0\d{4}[a-z]?['"`]/g)) hits.push(`${file}: ${match[0]}`)
+  }
+  assert.ok(hits.length <= WEB_CARD_CODE_BASELINE,
+    `web 里新增了卡号字面量（基线 ${WEB_CARD_CODE_BASELINE}）：\n  ${hits.join('\n  ')}`)
+})
+
+// 第 128 轮守卫：浏览器模块必须自包含在 web/ 内。
+// 大厅只把 Mod 的 web 目录挂到 /mods/<id>/（lib/mods.js 的 web 契约）；相对导入一旦跨出
+// 这个目录，浏览器会把它解析成 /mods/<越界路径> 并 404（例如 /mods/presentation/ui-cards.js），
+// 整个 Mod 界面随之加载失败：启动页退回大厅通用弹窗，开局后停在「正在加载界面…」。
+// Node 能正常解析这些路径，所以单元测试必须按浏览器口径静态检查。
+test('web 模块的导入不越出 web/ 挂载目录', () => {
+  const offenders = []
+  for (const file of webJsFiles()) {
+    const source = readFileSync(new URL(file, root), 'utf8')
+    const dir = path.posix.dirname(file)
+    for (const match of source.matchAll(/from\s+['"]([^'"]+)['"]/g)) {
+      const specifier = match[1]
+      if (!specifier.startsWith('.')) {
+        offenders.push(`${file}: 裸模块名「${specifier}」——浏览器没有 import map，无法解析`)
+        continue
+      }
+      const target = path.posix.normalize(path.posix.join(dir, specifier))
+      if (!target.startsWith('web/')) {
+        offenders.push(`${file}: ${specifier} → /mods/${target.slice('web/'.length)}（跨出 web/ 挂载点，浏览器会 404）`)
+        continue
+      }
+      if (!existsSync(new URL(target, root))) offenders.push(`${file}: ${specifier} → ${target}（文件不存在）`)
+    }
+  }
+  assert.deepEqual(offenders, [],
+    'web/ 是挂给浏览器的唯一目录，模块只能从其中导入：\n  ' + offenders.join('\n  ')
+    + '\n浏览器界面代码请放在 web/ 内（纯数据表见 web/ui-cards.js）；'
+    + '服务端模块如需复用，应由 Node 侧 import web/ 中的文件，而不是反过来。')
+})
+
 // 第 7 批长尾守卫：content/ 的章节脚本里写死的卡号只能减少，不能新增。
 // 基线是 2026-10-22 迁移到第 7 批时的实测值；每迁走一批就调低这个数字。
-const CONTENT_CARD_CODE_BASELINE = 1282
+const CONTENT_CARD_CODE_BASELINE = 845
+// 与上面的字面量口径分开统计「规则分支」：DoD 要求内容层 `code === '0xxxx'` 分支归零。
+// 口径包含 content/ 下全部 .js（此前只扫 behavior/encounter-rules/card-data，漏掉
+// later-behaviors.js 这类共享章节文件）。
+// 第 120 轮达成 **0**：跨章共用议程用 `agendaRuleByScenario`、04092 走条目、
+// 04214 的幕规则挂在遭遇条目的 actRule 上。之后只减不增（任何新增都会直接失败）。
+const CONTENT_BRANCH_BASELINE = 0
 
-function countContentCardCodes() {
+function contentJsFiles() {
   const files = []
   const walk = dir => {
     for (const entry of readdirSync(new URL(dir, root), { withFileTypes: true })) {
       const path = `${dir}${entry.name}`
       if (entry.isDirectory()) { walk(`${path}/`); continue }
-      if (!/(behavior|encounter-rules|card-data)\.js$/.test(entry.name)) continue
-      files.push(path)
+      if (entry.name.endsWith('.js')) files.push(path)
     }
   }
   walk('content/')
+  return files
+}
+
+function countContentCardCodes() {
   let total = 0
-  for (const file of files) total += (read(file).match(/['"]0\d{4}[a-z]?['"]/g) || []).length
+  for (const file of contentJsFiles()) {
+    if (!/(behavior|encounter-rules|card-data)\.js$/.test(file)) continue
+    total += (read(file).match(/['"]0\d{4}[a-z]?['"]/g) || []).length
+  }
+  return total
+}
+
+function countContentCardBranches() {
+  let total = 0
+  for (const file of contentJsFiles()) {
+    total += (read(file).match(/(?:code|originalCode)\s*===\s*['"]0\d{4}[a-z]?['"]/g) || []).length
+  }
   return total
 }
 
@@ -227,4 +309,11 @@ test('内容层章节脚本的卡号字面量只减不增', () => {
   const count = countContentCardCodes()
   assert.ok(count <= CONTENT_CARD_CODE_BASELINE,
     `content 卡号字面量 ${count} 超过基线 ${CONTENT_CARD_CODE_BASELINE}：新增了硬编码`)
+})
+
+test('内容层按卡号的规则分支只减不增（含 later-behaviors 等共享章节文件）', () => {
+  const count = countContentCardBranches()
+  assert.ok(count <= CONTENT_BRANCH_BASELINE,
+    `content 按卡号分支 ${count} 超过基线 ${CONTENT_BRANCH_BASELINE}：新增了按卡号分支，`
+    + '应写进 src/cards/entries/<code>.js 或 encounter-abilities.js 的条目')
 })

@@ -216,6 +216,7 @@ function openAbilityWindow(state, windowId, context, events) {
     }
     // 2) 可选反应：逐个座位询问，直到让过。
     for (const inv of aliveInvestigators(state)) {
+      if (context?.cancelled) break
       const candidates = []
       for (const { source, code, fromHandIndex, entry, effect } of descriptorSources(state, inv)) {
         // 非玩家实体的反应在下面的专用块里统一询问一次。
@@ -234,6 +235,8 @@ function openAbilityWindow(state, windowId, context, events) {
       if (!candidates.length) continue
       let guard = 0
       while (guard++ < 12) {
+        // 窗口上下文被取消（如「建议」取消攻击）后不再枚举同一窗口的后续反应。
+        if (context?.cancelled) break
         const usable = candidates.filter(item => descriptorUsable(state, inv, item.source, item.descriptor, { windowId, context }))
         if (!usable.length) break
         const options = [{ id: 'skip', label: '不触发' }]
@@ -255,6 +258,7 @@ function openAbilityWindow(state, windowId, context, events) {
       }
     }
     // 3) 非玩家卡：同一个窗口里只问一次，由决定座位代表调查队作答。
+    if (context?.cancelled) return context
     const nonPlayer = nonPlayerAbilitySources(state, context)
     if (nonPlayer.length) {
       const seat = decideSeatFor(state, context)

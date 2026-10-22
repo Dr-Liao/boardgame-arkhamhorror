@@ -3,12 +3,8 @@
 // adapter while layout can change independently.
 import { tableArt } from './table-art.js'
 import { tableIcon, placedCardMarkers } from './table-components.js'
-
-const SCENARIO_REFERENCE = {
-  theGathering: '01104', theMidnightMasks: '01120', theDevourerBelow: '01142',
-  extracurricularActivity: '02041', theHouseAlwaysWins: '02062', theMiskatonicMuseum: '02118', theEssexCountyExpress: '02159',
-  bloodOnTheAltar: '02195', undimensionedAndUnseen: '02236', whereDoomAwaits: '02274', lostInTimeAndSpace: '02311',
-}
+// 第 127 轮：剧本 → 剧本参考卡的卡号表搬到 web/ui-cards.js。
+import { UI_CARDS } from './ui-cards.js'
 
 // Only doom on the current agenda counts toward its threshold; doom sitting on
 // enemies/locations/assets is a separate pool and is shown as a side note.
@@ -40,7 +36,7 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
     item ? placedCardMarkers(h, item, { attachmentCount: attached.length }) : null,
     item ? attachedStrip(attached, label) : null)
   const referenceCard = state => {
-    const code = SCENARIO_REFERENCE[state.scenario?.id]
+    const code = UI_CARDS.scenarioCards[state.scenario?.id]
     if (!code) return null
     const hard = ['hard', 'expert'].includes(state.difficulty)
     const face = hard ? 'back' : 'front'

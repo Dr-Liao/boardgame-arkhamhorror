@@ -19,7 +19,9 @@ export default {
       kind: 'reaction', trigger: 'enemyAttackDamage', id: 'survivalKnife', legacyReaction: true,
       criteria: { selfOnly: true }, label: '敌人攻击造成伤害时反击',
       cost: { exhaust: true },
-      resolve: ({ inv, api }) => {
+      resolve: ({ state, inv, api }) => {
+        // 卡面限定「敌军阶段期间」。
+        if (state.phase !== 'enemy') return
         const attacker = api.reactionContext()?.enemy
         if (!attacker || !api.isEnemyInPlay(attacker)) return
         api.fight(inv.seat, attacker.id, { combatBonus: 2, damageBonus: 1, noSpend: true })

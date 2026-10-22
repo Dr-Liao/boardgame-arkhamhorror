@@ -15,7 +15,7 @@ export default {
       criteria: { otherInvestigator: true, nonPerilOnly: true },
       label: '我来处理',
       resolve: ({ inv, api }) => {
-        if (!api.redirectEncounter(inv.seat)) return
+        if (!api.redirectEncounter(inv.seat, 2)) return
         api.info(`${inv.name} 接手结算这张遭遇卡，并在其技能检定中获得 +2。`)
       },
     },

@@ -83,7 +83,7 @@ games/arkhamhorror/
 
 #### 3.2.1 能力层的最小约定
 
-1. **新增一张卡**：在 `src/cards/card-abilities.js` 增加一个条目（`code` + `abilities`/`modifiers`/`elderSign`/`playCondition`），不要修改 `engine.js`。
+1. **新增一张卡**：玩家卡写 `src/cards/entries/<code>.js`；非玩家卡写 `src/cards/encounter-entries/` 下按归属落点的单卡文件（通用 / 战役共用 / 关卡专用，见 §3.3）。不要修改 `engine.js`。
 2. **描述子不可变**：注册时规范化并冻结；运行期数据一律写入 `state`。
 3. **注册即校验**：未知 `kind`、缺 `trigger`、缺 payload、未知字段、重复注册都会在模块加载时抛错，而不是在对局中途静默失效。
 4. **能力与效果同形**：`kind: 'action' | 'free'` 的描述子会折叠成旧式 ability 形状，因此 `legalMoves`、牌桌按钮、`doAbility`、`playerWindow` 只有一套枚举。
@@ -100,13 +100,20 @@ games/arkhamhorror/
 
 - `cards-data.js` 是导入工具生成的完整目录，不手工编辑。
 - `card-effects.js` 保留调查员数据表（`INVESTIGATOR_ABILITIES`）；`EFFECTS` 已清空，不再是行为入口。
-- **`entries/<code>.js` 是一张卡一个文件的行为落点**（2026-10 起）：每个文件 `export default` 一个描述子条目，按需 import `entries/_shared.js` 与 `engine/matcher.js`。命名 = 卡号；条目 `code` 必须与文件名一致。新增卡用 `node tools/scaffold-card.mjs <code> --entry`。
+- **`entries/<code>.js` 是一张卡一个文件的行为落点**（2026-10 起）：每个文件 `export default` 一个描述子条目，按需 import `entries/_shared.js` 与 `engine/matcher.js`。命名 = 卡号；条目 `code` 必须与文件名一致。新增卡用 `node tools/scaffold-card.mjs <code> --entry`。`entries/` 只放玩家卡。
 - `entries/index.js` 是**生成物**：静态 import 全部单卡文件，保持旧 `byCode` 的首次出现顺序。改/增/删卡文件后必须运行 `node tools/build-card-index.mjs --write`。
-- `entry` 文件的硬约束：不 import `engine.js` / `card-abilities.js` / 批次文件 / `content/`；只通过描述子与 `ctx.api` 结算。守卫见 `tests/card-entries.test.mjs`。
+- **非玩家条目同样一卡一文件**，统一放在 `src/cards/encounter-entries/`（目标结构，迁移中；存量仍在 `encounter-abilities.js`，见 [`docs/encounter-entry-split-plan.md`](docs/encounter-entry-split-plan.md)）：
+  - `shared/<encounterGroup>/<code>.js`：跨战役复用的通用遭遇组卡；
+  - `<campaign>/_shared/<encounterGroup>/<code>.js`：同一战役内跨关卡复用；
+  - `<campaign>/<scenario>/<code>.js`：关卡专用（地点/幕/议程/专属敌人/诡计/剧情资产）。
+  归属按「这张卡在几个关卡/战役的 `definition.js` 与 manifest zones 里出现」判定，别名条目跟随同名印刷卡；不得按 scope 建 `enemies.js` / `treacheries.js` 之类的大文件，也不得把多个关卡塞进同一个目录。
+- `encounter-entries/index.js` 是**生成物**：静态 import 全部分类文件，保持拆分前 `NON_PLAYER_ABILITY_ENTRIES` 的顺序；改/增/删非玩家条目后运行 `node tools/build-encounter-index.mjs --write`。
+- `encounter-abilities.js` 只做**兼容聚合（facade）**：导出 `NON_PLAYER_ABILITY_ENTRIES` / `NON_PLAYER_ABILITY_CODES` / `nonPlayerEntryFor` 等旧读点，不存放条目。新增敌人/地点/幕/议程规则写单卡文件，禁止再往 facade 追加。
+- `encounter-entries/_lookup.js` 是跨条目查询的唯一读点（惰性建表，避免 `index → entry → index` 的 ESM 循环）；条目之间不得互相直接 import。
+- `entry` 文件的硬约束：不 import `engine.js` / `card-abilities.js` / `encounter-abilities.js` / 批次文件 / `content/`；只通过描述子与 `ctx.api` 结算。守卫见 `tests/card-entries.test.mjs` 与 `tests/encounter-entries.test.mjs`（迁移阶段补齐）。
 - `card-abilities.js` 只做聚合：导出 `CARD_ABILITY_ENTRIES` / `CARD_ABILITY_CODES` / `PHASE5_MIGRATED_CODES`，**不再放条目**。
 - `ability-migration-batches.js` 已删除；`audit/migration-batches.json` 只保留“哪张卡属于哪一批”的账本。**不得恢复** `BATCH_*` / `MIGRATED_*` 数组。
-- `encounter-abilities.js` 是**新增敌人/地点/幕/议程能力**的去处（Phase 3 · D1）：同一套描述子，`scope` 写非玩家通道；引擎按场上实体枚举，禁止再往关卡 `behavior.js` 加卡号分支。
-- 完整流程、agent 一次执行清单与拆分证据见 [`docs/card-entry-files.md`](docs/card-entry-files.md)；整轮扩展的迁移顺序（扫描机制 → 拆分原语 → 关键字/规则书 → 交互 → 多子进程批量卡牌 → 验收）见 [`docs/arkham-content-migration.md`](docs/arkham-content-migration.md) §4。
+- 完整流程、agent 一次执行清单与拆分证据见 [`docs/card-entry-files.md`](docs/card-entry-files.md)；存量非玩家条目的迁移方案见 [`docs/encounter-entry-split-plan.md`](docs/encounter-entry-split-plan.md)；整轮扩展的迁移顺序（扫描机制 → 拆分原语 → 关键字/规则书 → 交互 → 多子进程批量卡牌 → 验收）见 [`docs/arkham-content-migration.md`](docs/arkham-content-migration.md) §4。
 - `card-identity.js` 统一运行时别名、原卡号和双面身份。
 - `card-catalog.js` 组合目录、来源、图片和开放状态，供只读图鉴 API 使用。
 - `scenarios-data.js` 是旧调用方的兼容导出；新关卡应从 `content/registered.js` 注册。
@@ -334,7 +341,7 @@ npm run replay:fixtures:write    # 行为有意变化后重采基线
 | 卡牌顶层字段 | 69 | ≤10 组 |
 | 战役逃生原语卡 | 93 | 0 |
 | 描述子 `kind` | 11（含 5 个生命周期钩子） | ≤11 |
-| 非玩家卡能力条目 | 9（敌人 7 / 地点 2） | 逐批 + |
+| 非玩家卡带 `abilities` 的条目 | 20（敌人 14 / 地点 6；另有 509 条为规则/修正条目） | 逐批 + |
 | `behavior.js` 总行数 | 14,831（Phase 3 基线） | 只减不增 |
 
 这四行由 `npm run cards:audit` 从 `audit/ability-coverage.json` 重算；`tests/architecture-guard.test.mjs`

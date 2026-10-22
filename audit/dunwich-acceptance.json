@@ -24,19 +24,19 @@
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/dunwich-player-acceptance.test.mjs",
-      "sha256": "c224a82c092f732527768be2dce4dfd1607321f638c22cf72536a79a64806e43"
+      "sha256": "f8d328aa3e2e4fff0e72f940f8fa36f4ef052d03cf20acfb912abfa3b2ccfc92"
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-player-gaps.test.mjs",
-      "sha256": "570d74fef27a2317f8d9b290a07e700fa081a8904356a3e18170fae44d53baa6"
+      "sha256": "d5d4fb84b5e44e1d370ae774aec6be75eb145faa93b942adee7ac0d7a57d6028"
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-encounter-acceptance.test.mjs",
-      "sha256": "65a61aca2aab1cfeb3f63a2accb376da0f7d7aa2d147677a62a25ff133efa9e1"
+      "sha256": "740fb7eed975473a14c9f9b3d1912e404bfa04d0ac523b1351cc4efb19463856"
     },
     {
       "file": "games/arkhamhorror/tests/dunwich-scenario-acceptance.test.mjs",
-      "sha256": "f7bfeb4227db1177a2051993d34bfdb2f1e620224243adb17d2ceda77259bae8"
+      "sha256": "afe590b815c6ae85433ee9d6dfc1dc6cf1e501034edb3c01378727e5a6054771"
     }
   ],
   "entries": [

@@ -111,9 +111,24 @@ function finishScenario(state, resolutionKey, events) {
   const recordsBefore = structuredClone(campaign.records)
   state.resolution = resolutionKey
   campaign.phase = 'resolution'
+  const awardedLocationIds = new Set((state.victoryDisplay || [])
+    .filter(card => String(card.id || '').startsWith('location:'))
+    .map(card => String(card.id).slice('location:'.length)))
   state.victory = (state.victoryDisplay || []).reduce((sum, card) => sum + (card.victory || 0), 0)
-    + state.locations.filter(loc => loc.revealed && loc.clues === 0).reduce((sum, loc) => sum + (loc.victory || 0), 0)
+    + state.locations.filter(loc => !awardedLocationIds.has(loc.id) && loc.revealed && loc.clues === 0)
+      .reduce((sum, loc) => sum + (loc.victory || 0), 0)
   info(state, events, `剧本结局：${resolutionKey}。`)
+  // 04038 黑暗契约：游戏结束/退场时仍在手牌，则移出牌库并换成「失败的代价」。
+  for (const inv of state.investigators) {
+    for (const code of [...(inv.hand || [])]) {
+      const entry = registeredEntry(code)
+      if (!entry?.darkPactForced || !entry.replacementCode) continue
+      inv.hand = inv.hand.filter(item => item !== code)
+      inv.deck = (inv.deck || []).filter(item => item !== code)
+      inv.deck.push(entry.replacementCode)
+      info(state, events, `📜 「${cardName(code)}」仍在你手中：移出牌库，换成「${cardName(entry.replacementCode)}」。`)
+    }
+  }
   const storyKey = scenarioBehavior(state).storyResolutionKey?.(state, resolutionKey) || resolutionKey
   const story = resolutionStory(sc, storyKey, null, {
     records: recordsBefore,
@@ -140,11 +155,14 @@ function finishScenario(state, resolutionKey, events) {
       || state.locations.some(loc => loc.searchingForIzzieSeat === inv.seat)) addTrauma(state, inv.seat, 'mental', 1, events)
     updateCampaignStatus(campaign, inv.seat)
   }
-  if (campaign.id === 'thePathToCarcosa' && campaign.records.pallidMaskBearer) {
+  // 第 124 轮：关末的「战役弱点转交」由战役清单声明记录键
+  // （`campaignWeaknessTransferRecord`），引擎不再写死战役 id。
+  const weaknessTransferRecord = campaignManifestFor(state)?.campaignWeaknessTransferRecord
+  if (weaknessTransferRecord && campaign.records[weaknessTransferRecord]) {
     applyCampaignEffect(state, {
       type: 'transferCampaignWeakness',
       code: pallidMaskCode(),
-      bearerRecord: 'pallidMaskBearer',
+      bearerRecord: weaknessTransferRecord,
     }, text => info(state, events, text))
   }
   campaign.victory += state.victory

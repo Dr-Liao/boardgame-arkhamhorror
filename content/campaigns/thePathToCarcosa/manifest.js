@@ -30,6 +30,9 @@ export const manifest = {
   recordSchema: { ...recordTypes, ...RESEARCH_RECORD_TYPES },
   interludeHandlerId: 'carcosaInterlude',
   resolutionIds: ['victory', 'defeat'],
+  // 第 124 轮：关末把「苍白面具」这张战役弱点转交给携带者。
+  // 原先引擎里写的是 `campaign.id === 'thePathToCarcosa'`，现在由战役清单声明记录键。
+  campaignWeaknessTransferRecord: 'pallidMaskBearer',
   flow: {
     start: 'prologue',
     nodes: {

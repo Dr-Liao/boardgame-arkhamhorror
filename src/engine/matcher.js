@@ -203,6 +203,12 @@ export function resignAvailable() {
   return ctx => ctx?.helpers?.resignAvailable?.() === true
 }
 
+// 「你不能获得资源」类剧本规则（敦威治：与守财奴/资源封锁敌人交战）。读点由引擎注入，
+// 内容层只写条件，不再逐卡判断敌人特性。
+export function canGainResources() {
+  return ctx => ctx?.helpers?.canGainResources?.() !== false
+}
+
 
 // ---------------------------------------------------------------------------
 // 实体查询（返回数组，供 resolve() 内部使用）

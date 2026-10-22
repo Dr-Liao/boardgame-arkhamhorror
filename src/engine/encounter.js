@@ -84,13 +84,17 @@ function drawEncounter(state, inv, events) {
   }
   if (!redrawContext.cancelled) reactionWindow(state, 'encounterDrawn', redrawContext, events)
   if (redrawContext.cancelled) {
-    state.encounterDiscard.push(code)
+    // 02302：被取消的遭遇卡应混洗回遭遇牌库，而不是进入弃牌堆。
+    if (redrawContext.shuffleBack) {
+      state.encounterDeck.push(code)
+      state.encounterDeck = shuffle(state.encounterDeck, () => randomValue(state))
+    } else state.encounterDiscard.push(code)
     const cancelledName = encounter?.hidden ? '一张隐私遭遇卡' : `「${encounter?.name || code}」`
     if (redrawContext.redraw) {
-      info(state, events, `${cancelledName}被取消并弃置，${inv.name} 重新抽取遭遇卡。`)
+      info(state, events, `${cancelledName}被取消并${redrawContext.shuffleBack ? '混洗回遭遇牌库' : '弃置'}，${inv.name} 重新抽取遭遇卡。`)
       return drawEncounter(state, inv, events)
     }
-    info(state, events, `${cancelledName}的显现效果被取消并弃置。`)
+    info(state, events, `${cancelledName}的显现效果被取消并${redrawContext.shuffleBack ? '混洗回遭遇牌库' : '弃置'}。`)
     return
   }
   const resolvingInv = redrawContext.redirectSeat == null ? inv : state.investigators[redrawContext.redirectSeat]
@@ -174,8 +178,7 @@ function reactionWindow(state, when, context, events) {
         ? (inv.beneath || []).flatMap(copyCode => {
           const copied = cardDef(copyCode)
           // Phase 6（6e-8）：快速反应事件搬成 `played` + `fast` + `trigger`，复制时同样算可打出。
-          const copyReactive = Boolean(EFFECTS[copyCode]?.reaction)
-            || descriptorOfKind(copyCode, 'played')?.fast === true
+          const copyReactive = descriptorOfKind(copyCode, 'played')?.fast === true
           return copied?.type === 'event' && !copied.exceptional && copyReactive
             ? [{ code, copyCode, index, id: `${index}:${copyCode}` }] : []
         })
@@ -187,12 +190,10 @@ function reactionWindow(state, when, context, events) {
         ...planCandidates,
         ...(discardEvent ? [{ code: discardEvent, fromDiscard: true, id: 'discard' }] : [])]
         .filter(({ code, copyCode }) => {
-          const eff = EFFECTS[copyCode || code]
           // Phase 5（5c-8）：快速事件也可以在能力层声明——`kind:'played'` + `fast` + `trigger:<窗口>`，
           // 条件写在 criteria 的旧字段里。两条通道共用下面同一份条件判定。
           const descriptor = descriptorOfKind(copyCode || code, 'played')
-          const reaction = eff?.reaction
-            ?? (descriptor?.fast && descriptor.trigger.includes(when)
+          const reaction = (descriptor?.fast && descriptor.trigger?.includes(when)
               ? { when, ...(descriptor.criteria && typeof descriptor.criteria === 'object' && !Array.isArray(descriptor.criteria)
                 ? descriptor.criteria : {}) }
               : null)
@@ -206,6 +207,8 @@ function reactionWindow(state, when, context, events) {
           if (reaction.nonWeaknessOnly && (context.weakness || !context.cardCode || isWeaknessCode(context.cardCode))) return false
           if (reaction.nonElite && context.enemy?.elite) return false
           if (reaction.nonEliteOnly && context.enemy?.elite) return false
+          // 卡面「攻击与你交战的敌人」：目标必须正与出牌者交战。
+          if (reaction.enemyEngagedWithYou && context.enemy?.engagedSeat !== inv.seat) return false
           if (reaction.treacheryOnly && context.cardCode
             && ALL_CARDS[context.cardCode]?.type !== 'treachery') return false
           if (reaction.requiresClue

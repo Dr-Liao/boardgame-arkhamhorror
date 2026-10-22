@@ -9,6 +9,7 @@
 
 export default {
   code: '03149',
+  charlesRoss: true,
   abilities: [
     {
       kind: 'action', label: '横置：本地点下一件物品费用 -1', cost: { action: false, exhaust: true },

@@ -26,35 +26,35 @@ import { descriptorOfKind, registeredEntry } from './ability.js'
 export function playedEffect(code) {
   const descriptor = descriptorOfKind(code, 'played')
   if (descriptor) return descriptor.effect || null
-  return EFFECTS[code]?.event || null
+  return null
 }
 
 // 投入技能检定时的检定档案（onSuccess / successBy / 各种投入限制）。
 export function commitProfile(code) {
   const descriptor = descriptorOfKind(code, 'commit')
   if (descriptor) return descriptor.skill || null
-  return EFFECTS[code]?.skill || null
+  return null
 }
 
 // 弱点档案：揭示时的数据（type / threat 字段 / effects 等）。
 export function weaknessProfile(code) {
   const descriptor = descriptorOfKind(code, 'weakness')
   if (descriptor) return descriptor.weakness || null
-  return EFFECTS[code]?.weakness || null
+  return null
 }
 
 // 入场钩子：支援放置入场时结算（原 EFFECTS[code].onEnter）。
 export function entersPlayEffect(code) {
   const descriptor = descriptorOfKind(code, 'entersPlay')
   if (descriptor) return descriptor.entersPlay || null
-  return EFFECTS[code]?.onEnter || null
+  return null
 }
 
 // 离场钩子：支援离开场上时结算（原引擎内联的 millOnLeave 特判）。
 export function leavesPlayEffect(code) {
   const descriptor = descriptorOfKind(code, 'leavesPlay')
   if (descriptor) return descriptor.leavesPlay || null
-  return EFFECTS[code]?.leavesPlay || null
+  return null
 }
 
 // 事件卡的打出关键字（fast / noOpportunityAttack）：描述子优先、旧 DSL 回落。
@@ -66,20 +66,20 @@ export function playFlag(code, flag) {
   if (descriptor && descriptor[flag] === true) return true
   const entry = registeredEntry(code)
   if (entry && entry[flag] === true) return true
-  return EFFECTS[code]?.[flag] === true
+  void code
+  void flag
+  return false
 }
 
 // 审计用：这张卡的生命周期数据现在在哪条通道上。
+// 第 126 轮：旧 DSL（EFFECTS）已清空，通道只剩 descriptor 一种。
 export function lifecycleChannel(code) {
-  const channel = (kind, legacy) => {
-    if (descriptorOfKind(code, kind)) return 'descriptor'
-    return legacy ? 'legacy' : null
-  }
+  const channel = kind => (descriptorOfKind(code, kind) ? 'descriptor' : null)
   return {
-    played: channel('played', EFFECTS[code]?.event),
-    commit: channel('commit', EFFECTS[code]?.skill),
-    weakness: channel('weakness', EFFECTS[code]?.weakness),
-    entersPlay: channel('entersPlay', EFFECTS[code]?.onEnter),
-    leavesPlay: channel('leavesPlay', EFFECTS[code]?.leavesPlay),
+    played: channel('played'),
+    commit: channel('commit'),
+    weakness: channel('weakness'),
+    entersPlay: channel('entersPlay'),
+    leavesPlay: channel('leavesPlay'),
   }
 }

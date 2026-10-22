@@ -84,7 +84,7 @@ test('Black Stars Rise transactionally selects one internally consistent hidden 
 })
 
 test('Black Stars Rise checks the opposing agenda at the printed 3/4 doom boundary', () => {
-  for (const [doom, record] of [[2, 'conviction'], [3, 'conviction'], [4, 'doubt']]) {
+  for (const [doom, record] of [[2, 'conviction'], [3, 'doubt'], [4, 'doubt']]) {
     const draft = state()
     draft.scenarioFlags = {
       route: 'below',

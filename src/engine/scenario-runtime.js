@@ -42,6 +42,7 @@ export function createScenarioRuntime(deps) {
     discardUntilEnemyFromEncounter,
     disengageEnemy,
     doExplore,
+    doInvestigate,
     doPlay,
     doResign,
     doomCards,
@@ -106,6 +107,8 @@ export function createScenarioRuntime(deps) {
     suppliesAtLocation,
     suppliesFor,
     syncClues,
+    // Phase 7（第 116 轮）：条目写「揭示的混乱标记」日志时用的中文标记名（与引擎日志同源）。
+    tokenLabel,
     vengeancePoints,
     yigsFury,
   } = deps
@@ -114,6 +117,8 @@ function scenarioRuntime(state, events, testSource = null) {
   return {
     info: text => info(state, events, text),
     cardName: code => cardName(code),
+    // 混乱标记的中文名：「旧印」「骷髅」…（条目写日志时用，不要复制标签表）。
+    tokenLabel: token => tokenLabel(token),
     random: () => randomValue(state),
     shuffle: list => shuffle(list, () => randomValue(state)),
     defeatAll: () => defeatAll(state, events),
@@ -171,7 +176,7 @@ function scenarioRuntime(state, events, testSource = null) {
     moveInvestigator: (seat, destination) => relocateInvestigator(state, seat, destination, events),
     moveEnemy: (enemy, destination) => relocateEnemy(state, enemy, destination, events),
     stepToward: (from, to) => stepToward(state, from, to),
-    hunterStep: enemy => hunterStep(state, enemy),
+    hunterStep: (enemy, options) => hunterStep(state, enemy, options),
     loseActions: (seat, n) => {
       const inv = state.investigators[seat]
       if (state.phase === 'investigation') inv.actionsLeft = Math.max(0, inv.actionsLeft - n)
@@ -193,7 +198,7 @@ function scenarioRuntime(state, events, testSource = null) {
       if (asset.damage >= (cardDef(asset.code)?.health || Infinity)) {
         leaveAsset(state, inv, asset, events)
         if (!asset.removedFromGame) inv.discard.push(asset.code)
-        const retaliationDamage = EFFECTS[asset.code]?.defeatedDamage ?? registeredEntry(asset.code)?.defeatedDamage
+        const retaliationDamage = registeredEntry(asset.code)?.defeatedDamage
         if (retaliationDamage) defeatedAssetRetaliation(state, inv, retaliationDamage, events)
       }
     },
@@ -204,7 +209,7 @@ function scenarioRuntime(state, events, testSource = null) {
       if (asset.horror >= (cardDef(asset.code)?.sanity || Infinity)) {
         leaveAsset(state, inv, asset, events)
         if (!asset.removedFromGame) inv.discard.push(asset.code)
-        if (EFFECTS[asset.code]?.defeatedDamage) defeatedAssetRetaliation(state, inv, EFFECTS[asset.code].defeatedDamage, events)
+        if (registeredEntry(asset.code)?.defeatedDamage) defeatedAssetRetaliation(state, inv, registeredEntry(asset.code).defeatedDamage, events)
       }
     },
     discardAsset: (seat, assetId) => {
@@ -222,7 +227,9 @@ function scenarioRuntime(state, events, testSource = null) {
       inv.deck = shuffle(inv.deck, () => randomValue(state))
       return asset.code
     },
-    test: (seat, skill, difficulty, resolve, skillBonus = 0, source = null) => performTest(state, seat, skill, difficulty, { resolve, skillBonus, source: source || testSource }),
+    test: (seat, skill, difficulty, resolve, skillBonus = 0, source = null, options = {}) =>
+      performTest(state, seat, skill, difficulty, { ...options, resolve, skillBonus, source: source || testSource }),
+    investigate: (seat, options = {}) => doInvestigate(state, seat, options, events, true),
     investigateTest: (seat, options = {}) => investigateTest(state, seat, options, events),
     endTurn: seat => {
       const target = state.investigators[seat]
@@ -336,7 +343,12 @@ function scenarioRuntime(state, events, testSource = null) {
       return discarded
     },
     giveAsset: (seat, code, extra = {}) => {
-      const inv = state.investigators[seat], asset = newCardInstance(state, code, { exhausted: false, ...extra })
+      const inv = state.investigators[seat]
+      if (scenarioBehavior(state).canPlaceAsset?.(state, inv, code) === false) {
+        info(state, events, `⛔ 「${cardName(code)}」当前不能放置入场。`)
+        return null
+      }
+      const asset = newCardInstance(state, code, { exhausted: false, ...extra })
       inv.assets.push(asset); scenarioBehavior(state).assetEntered?.(state, inv, asset, scenarioRuntime(state, events))
       return asset
     },

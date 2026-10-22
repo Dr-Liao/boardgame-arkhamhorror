@@ -247,7 +247,7 @@ for (const { chapterId, code, type } of allExpected) {
       const alias = expected.aliases?.[code]
       const entry = registeredEntry(code)
       const entryLinked = Boolean(entry && (entry.actRule || entry.agendaRule || entry.locationRule
-        || entry.enemyScript || entry.enemyRule || entry.treacheryRule))
+        || entry.enemyScript || entry.enemyRule || entry.treacheryRule || entry.relocateDestination))
       const linked = behaviorSurface(behavior).includes(code)
         || entryLinked
         || (alias && behaviorSurface(behavior).includes(alias))

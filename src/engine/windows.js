@@ -74,11 +74,14 @@ for (const [id, label] of [
 define('cardDrawn', '抽取卡牌后', 'reaction', 60)
 define('clueDiscovered', '发现线索后', 'reaction', 61)
 define('investigateSuccess', '调查成功后', 'reaction', 62)
+define('skillTestSuccess', '技能检定成功后', 'reaction', 62)
 define('discoverClue', '发现线索前', 'interrupt', 63)
 define('scenarioStarts', '冒险开始时', 'reaction', 64)
 define('enemyEngaged', '与敌人交战后', 'reaction', 65)
 // 「被击败时」的强制效果（黑山羊眷族的临死反噬）在敌人离场后、剧本结算/胜利区之前开窗。
 define('enemyDefeated', '敌人被击败时', 'reaction', 39)
+// 「你所在地点有调查员/盟友/敌人被击败后」（04026 彩饰骷髅）。
+define('defeatAtLocation', '本地点有卡牌被击败后', 'reaction', 40)
 // 回合结束时按敌人逐个开窗（坚韧的黑山羊幼崽「治愈 2 点伤害」）。
 define('enemyRoundEnd', '回合结束时（敌人）', 'reaction', 38)
 define('horrorPlaced', '受到恐惧后', 'reaction', 66)

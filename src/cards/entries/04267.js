@@ -11,13 +11,12 @@ export default {
   code: '04267',
   uses: 3,
   usesType: 'secrets',
-  discardWhenEmpty: true,
   abilities: [
     {
       kind: 'action', label: '养神', cost: { action: true, exhaust: true, uses: 1 },
       resolve: ({ inv, api }) => {
         api.startTest({
-          skill: 'willpower', difficulty: 0, seat: inv.seat,
+          skill: 'intellect', difficulty: 0, seat: inv.seat,
           source: { label: '养神术', code: '04267' },
           resolve: result => {
             if (!result.success) return

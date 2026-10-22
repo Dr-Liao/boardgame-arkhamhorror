@@ -35,6 +35,7 @@ export function createDeckOps(deps) {
     registeredEntry,
     removeThreat,
     requestChoice,
+    reactionWindow,
     resolveWeakness,
     scenarioBehavior,
     scenarioRuntime,
@@ -109,7 +110,7 @@ function lookAt(state, seat, rawOptions, events) {
       if (options.filter.type && def.type !== options.filter.type) return false
       if (options.filter.trait && !(def.traits || []).some(trait => String(trait).toLowerCase() === String(options.filter.trait).toLowerCase())) return false
       if (options.filter.usesType) {
-        const usesType = registeredEntry(code)?.usesType ?? EFFECTS[code]?.usesType
+        const usesType = registeredEntry(code)?.usesType
         if (!usesType || String(usesType).toLowerCase() !== String(options.filter.usesType).toLowerCase()) return false
       }
       return true
@@ -233,7 +234,7 @@ function searchDeck(state, seat, rawOptions, events) {
     if (options.trait && !(def.traits || []).some(trait => String(trait).toLowerCase() === String(options.trait).toLowerCase())) return false
     // usesType 不是卡面数据，按注册条目 / 旧 DSL 的 uses 判定。
     if (options.usesType) {
-      const usesType = registeredEntry(code)?.usesType ?? EFFECTS[code]?.usesType
+      const usesType = registeredEntry(code)?.usesType
       if (!usesType || String(usesType).toLowerCase() !== String(options.usesType).toLowerCase()) return false
     }
     return true
@@ -380,8 +381,10 @@ function drawCards(state, inv, n, events) {
       texts.push(`${inv.name} 抽取了 1 张牌。`)
       scenarioBehavior(state).cardDrawn?.(state, inv, code, scenarioRuntime(state, events))
       // 能力层窗口：抽牌后（02040 亨利·阿米蒂奇博士等）。
-      triggerReaction(state, inv.seat, 'cardDrawn', events, { when: 'cardDrawn', seat: inv.seat,
-        location: inv.location, cardCode: code })
+      const drawContext = { when: 'cardDrawn', seat: inv.seat, location: inv.location, cardCode: code,
+        prompt: `${inv.name} 抽取了「${cardName(code)}」` }
+      triggerReaction(state, inv.seat, 'cardDrawn', events, drawContext)
+      reactionWindow(state, 'cardDrawn', drawContext, events)
     }
     scenarioBehavior(state).deckEmptied?.(state, inv, scenarioRuntime(state, events))
     if (inv.defeated) break

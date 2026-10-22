@@ -18,6 +18,7 @@ export default {
       effect: {
         type: 'targetedEffect',
         target: 'location',
+        chooseBy: 'controller',
         effect: {
           type: 'chooseOne',
           options: [

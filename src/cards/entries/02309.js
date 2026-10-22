@@ -12,7 +12,11 @@ export default {
     {
       kind: 'reaction', trigger: 'skillTestFail', id: 'tryAgain', legacyReaction: true,
       label: '技能检定失败后取回投入的技能卡', cost: { exhaust: true },
-      effect: { type: 'returnCommittedSkill' },
+      // 第 121 轮：取回投入的技能卡走通用原语 api.recallCommittedSkill（与 04159 同一实现）。
+      resolve: ({ inv, api }) => api.recallCommittedSkill(inv.seat, {
+        source: '02309',
+        prompt: '选择一张已投入的技能牌返回其持有者手牌。',
+      }),
     },
   ],
   modifiers: [

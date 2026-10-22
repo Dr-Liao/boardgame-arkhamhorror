@@ -184,13 +184,7 @@ export function coreEffectCodes() {
 
 // 统计：已编码效果 vs 简化标记。
 export function effectStats(cards) {
-  let encoded = 0
-  let simplified = 0
-  for (const card of cards) {
-    if (EFFECTS[card.code]) {
-      encoded++
-      if (EFFECTS[card.code].simplified) simplified++
-    }
-  }
-  return { encoded, simplified }
+  // 第 126 轮：旧 DSL（EFFECTS）已清空，encoded / simplified 恒为 0；保留签名给审计工具。
+  void cards
+  return { encoded: 0, simplified: 0 }
 }

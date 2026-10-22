@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, move, settle, validateMove } from './core-fixture.mjs'
 import { getStat, legalMoves } from '../src/engine/engine.js'
+import { entityModifierTotal } from '../src/engine/modifiers.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { behavior as phantom } from '../content/campaigns/thePathToCarcosa/scenarios/aPhantomOfTruth/behavior.js'
 import { scenario as phantomScenario } from '../content/campaigns/thePathToCarcosa/scenarios/aPhantomOfTruth/definition.js'
@@ -302,10 +303,15 @@ test('Paris location abilities are represented in definitions and behavior', () 
 test('Echoes locations and Tattered Cloak apply their modifiers', () => {
   assert.equal(echoesScenario.locations.groundMuseum.noIntellectBoost, true)
   assert.equal(echoesScenario.locations.secondMuseum.noIntellectBoost, true)
+  // 第 119 轮：03137 的帷幕修正改成地点条目的 locationShroud 修饰符（引擎统一合计），
+  // 与拥有皮博迪先生（03141）的调查员所在地点比较。
   const state = {
     investigators: [{ location: 'peabodysOffice', assets: [{ code: '03141' }] }],
   }
-  assert.equal(echoes.locationShroudModifier(state, { id: 'peabodysOffice', originalCode: '03137' }), -2)
+  const office = { id: 'peabodysOffice', originalCode: '03137' }
+  assert.equal(entityModifierTotal(state, office, 'locationShroud'), -2)
+  const elsewhere = { investigators: [{ location: 'elsewhere', assets: [{ code: '03141' }] }] }
+  assert.equal(entityModifierTotal(elsewhere, office, 'locationShroud'), 0)
   const game = fixture()
   asset(game, '03143')
   game.investigators[0].horror = game.investigators[0].maxSanity - 2

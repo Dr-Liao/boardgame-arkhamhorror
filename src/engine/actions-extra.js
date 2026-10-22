@@ -113,7 +113,7 @@ export function createActionsExtra(deps) {
   function assetCapacityValue(asset, capacity) {
     let value = cardDef(asset.code)?.[capacity] || 0
     for (const entry of asset.attachments || []) {
-      const passive = EFFECTS[entry.code]?.passive || registeredEntry(entry.code)?.passive
+      const passive = registeredEntry(entry.code)?.passive
       if (!passive) continue
       if (capacity === 'health') value += passive.hostHealth || 0
       if (capacity === 'sanity') value += passive.hostSanity || 0
@@ -152,7 +152,7 @@ export function createActionsExtra(deps) {
           ? [] : [{ id: String(i), label: cardName(code) }]) })
       inv.discard.push(...inv.hand.splice(Number(index), 1))
     }
-    if (!skids.freeAction.repeatable) inv.usedReactions[skids.freeAction.id + ':' + state.round] = true
+    if (!skids.freeAction.repeatable) inv.usedReactions[skids.freeAction.id + ':' + state.turnSerial] = true
     info(state, events, `⚡ ${inv.name} 使用调查员免费能力。`)
     resolveEffect(state, seat, skids.freeAction.effect, makeRuntime(state, events))
   }
@@ -302,8 +302,7 @@ export function createActionsExtra(deps) {
     const cost = th.discardCost.action ?? 1
     for (let i = 0; i < cost; i++) spendAction(state, inv)
     const discard = () => {
-      removeThreat(state, owner, t, events)
-      info(state, events, `${inv.name} 花 ${cost} 行动弃掉了「${cardName(t.code)}」。`)
+      if (removeThreat(state, owner, t, events)) info(state, events, `${inv.name} 花 ${cost} 行动弃掉了「${cardName(t.code)}」。`)
     }
     if (th.discardTest) {
       performTest(state, seat, th.discardTest.skill, th.discardTest.difficulty, { source: { label: '解除威胁', name: cardName(t.code), code: t.code }, resolve: result => {

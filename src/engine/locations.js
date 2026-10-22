@@ -4,6 +4,12 @@
 // 这一组是「地图怎么变」：从探索牌库放出地点、翻开、移出（含离开时的结算）、
 // 以及线索的发现/归还/同步。地点相关的反应窗口（locationRevealed 等）通过
 // triggerReaction 触发，所以本模块依赖它。
+import { registeredEntry } from './ability.js'
+
+// 地点卡自己的「揭示时」规则由条目声明（静态注册表，不进 state）。
+function locationRuleOf(loc) {
+  return registeredEntry(loc?.originalCode || loc?.code)?.locationRule || null
+}
 
 export function createLocations(deps) {
   const {
@@ -25,6 +31,7 @@ export function createLocations(deps) {
     locationExists,
     locationRevealCue,
     requestChoice,
+    reactionWindow,
     scenarioBehavior,
     scenarioRuntime,
     spendClues,
@@ -103,8 +110,14 @@ function revealLocation(state, id, events, seat = null) {
     const ignored = seat != null
       && (entityRuleActive(state, loc, 'ignore:revealText')
         || scenarioBehavior(state).ignoreLocationRevealText?.(state, state.investigators[seat], loc))
-    if (!ignored) scenarioBehavior(state).locationRevealed?.(state, loc, scenarioRuntime(state, events), seat)
+    if (!ignored) {
+      scenarioBehavior(state).locationRevealed?.(state, loc, scenarioRuntime(state, events), seat)
+      // 第 55 轮：地点卡自己的「揭示时」规则（02173/02176/02177/02285–02292 等）。
+      locationRuleOf(loc)?.onReveal?.(state, loc, scenarioRuntime(state, events), seat)
+    }
     if (seat != null) triggerReaction(state, seat, 'locationRevealed', events, { when: 'locationRevealed', seat, location: loc.id })
+    // 「地点入场/被揭示后」的玩家卡（04306 有利位置）读最近一次揭示；回合结束自然过期。
+    state.lastLocationRevealed = { id: loc.id, round: state.round, turnSerial: state.turnSerial ?? null }
   }
 }
 
@@ -169,6 +182,15 @@ function discoverClueAt(state, inv, amount, events) {
     info(state, events, `${inv.name} 与${clueBlockerName(state, clueBlocker)}交战，不能发现线索。`)
     return
   }
+  // 04094 一片漆黑：每位调查员每轮从单个地点最多发现 1 个线索（硬上限）。
+  if (state.scenarioFlags?.deepDark) {
+    state.scenarioFlags.deepDarkClaims ||= {}
+    const key = `${state.round}:${inv.seat}:${inv.location}`
+    const claims = state.scenarioFlags.deepDarkClaims
+    if ((claims[key] || 0) >= 1) return
+    claims[key] = (claims[key] || 0) + 1
+    amount = Math.min(amount, 1)
+  }
   if (!state._discoveringClue) {
     state._discoveringClue = true
     try {
@@ -204,8 +226,11 @@ function discoverClueAt(state, inv, amount, events) {
     notifyCluesRemoved(state, loc, got, events)
     scenarioBehavior(state).cluesGained?.(state, inv, got, scenarioRuntime(state, events))
     // 能力层窗口：发现线索后（02061 沃伦·莱斯教授、05025 串联线索等）。
-    triggerReaction(state, inv.seat, 'clueDiscovered', events, { when: 'clueDiscovered', seat: inv.seat,
-      location: loc.id, amount: got, lastClue: loc.clues === 0, shroud: loc.shroud })
+    const clueContext = { when: 'clueDiscovered', seat: inv.seat,
+      location: loc.id, amount: got, lastClue: loc.clues === 0, shroud: loc.shroud,
+      prompt: `${inv.name} 发现了 ${got} 个线索` }
+    triggerReaction(state, inv.seat, 'clueDiscovered', events, clueContext)
+    reactionWindow(state, 'clueDiscovered', clueContext, events)
   } else {
     info(state, events, '这里没有线索。')
   }

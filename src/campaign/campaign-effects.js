@@ -1,4 +1,5 @@
 import { ALL_CARDS } from '../cards/cards-data.js'
+import { poisonWeaknessCode } from '../cards/card-rules.js'
 import { awardExperience, campaignCardChange, updateCampaignStatus } from './campaign.js'
 import { changeChaosBag } from '../engine/chaos-bag.js'
 import { requestChoice } from '../engine/resolution.js'
@@ -361,7 +362,7 @@ function applyDiscardSupplies(state, effect, log) {
 // 补给点：花 3 XP 移除中毒弱点，花 5 XP 移除 1 点肉体或精神创伤。
 function applyResupplyServices(state, effect, log) {
   const campaign = state.campaign
-  const poison = effect.poisonCode || '04102'
+  const poison = effect.poisonCode || poisonWeaknessCode()
   for (const record of activeRecords(state)) {
     const poisoned = record.deck.includes(poison)
     if (poisoned && record.xp >= (effect.poisonCost || 3)) {
@@ -516,7 +517,7 @@ function applyCurePoisonedWithMedicine(state, effect, log) {
   const campaign = state.campaign
   const active = activeRecords(state)
   const medicine = effect.medicine || 'medicine'
-  const poison = effect.poisonCode || '04102'
+  const poison = effect.poisonCode || poisonWeaknessCode()
   const labels = effect.labels || {}
   const label = labels[medicine] || '药品'
   const poisoned = seat => (campaign.investigators[seat]?.deck || []).includes(poison)

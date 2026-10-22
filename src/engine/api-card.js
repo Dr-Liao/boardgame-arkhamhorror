@@ -292,6 +292,10 @@ export function createCardApi(state, events, deps) {
       const inv = state.investigators[seat]
       const index = inv?.hand.indexOf(code) ?? -1
       if (!inv || index < 0) return null
+      if (scenarioBehavior(state).canPlaceAsset?.(state, inv, code) === false) {
+        info(state, events, `⛔ 「${cardName(code)}」当前不能放置入场。`)
+        return null
+      }
       inv.hand.splice(index, 1)
       const asset = newPlayerAssetInstance(state, inv, code)
       inv.assets.push(asset)

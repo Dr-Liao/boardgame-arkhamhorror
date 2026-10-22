@@ -8,6 +8,8 @@
 import { investigatorRule } from '../cards/card-rules.js'
 import { scriptCardOwner } from './script-cards.js'
 import { locationEntryNotice } from './location-facts.js'
+import { all as matchAll } from './matcher.js'
+import { descriptorOfKind } from './ability.js'
 
 export function createMoves(deps) {
   const {
@@ -110,6 +112,26 @@ export function createMoves(deps) {
       && state.enemies.some(enemy => enemy.engagedSeat === inv.seat && !enemy.defeated)
   }
 
+  // 「沉稳」卡牌场上仅限 1 张：按印刷特性判定，跨调查员也只允许一张。
+  function isSteadfastCard(card) {
+    return (card?.traits || []).some(trait => String(trait).toLowerCase() === 'composure')
+  }
+
+  function steadfastInPlay(state) {
+    return state.investigators.some(inv => (inv.assets || []).some(asset => isSteadfastCard(cardDef(asset.code))))
+  }
+
+  // 「枪法如神」（04104）：持有 activateFirearmFight 窗口的快速事件时，枪械/远程支援的攻击
+  // 可以只指向连接地点上的敌人——没有同地点目标也能激活，由窗口里的 04104 选择目标。
+  function canExtendFirearmTarget(inv, asset) {
+    const traits = cardDef(asset?.code)?.traits || []
+    if (!traits.some(trait => ['firearm', 'ranged'].includes(String(trait).toLowerCase()))) return false
+    return (inv.hand || []).some(code => {
+      const descriptor = descriptorOfKind(code, 'played')
+      return descriptor?.fast === true && descriptor.trigger.includes('activateFirearmFight')
+    })
+  }
+
   function legalMoves(state, observerSeat) {
   if (state.status !== 'playing') return []
   if (state.pendingChoice) return choiceMoves(state, observerSeat)
@@ -138,6 +160,13 @@ export function createMoves(deps) {
         label: `🏃 捷径：移动到「${locName(state, destination)}」` })
     }
   }
+  // 地点附属的「解除并放回游戏区域」（04270 骷髅钥匙）。
+  for (const [attachmentIndex, attachment] of (loc?.attachments || []).entries()) {
+    if (!registeredEntry(attachment.code)?.detachAction) continue
+    if (attachment.ownerSeat != null && attachment.ownerSeat !== inv.seat) continue
+    moves.push({ action: 'detachLocationAttachment', locationId: loc.id, attachmentIndex,
+      label: `🔓 解除「${cardName(attachment.code)}」并放回游戏区域` })
+  }
   for (const { code, rule } of activeHiddenRules(state, inv)) {
     const discard = rule.discard
     if (!discard || inv.resources < (discard.resources || 0)) continue
@@ -161,13 +190,18 @@ export function createMoves(deps) {
     if (activeHiddenRules(state, inv).some(hidden => hidden.rule.cannotPlayTypes?.includes(def.type))) continue
     if (blocked.has(def.type)) continue
     if (cardPlayBlockedReason(state, inv, def)) continue
+    // 「每个地点仅限 1 张」的附属（03199）：同一地点已有同码附属时不能再打。
+    if (registeredEntry(code)?.limitPerLocation
+      && (state.playerLocationAttachments || []).some(item => item.code === code && item.location === inv.location)) continue
     if (registeredEntry(code)?.copiesBeneathEvents) {
       for (const copyCode of inv.beneath || []) {
         const copy = cardDef(copyCode)
         const copyPlayed = playedEffect(copyCode)
-        if (!copy || copy.type !== 'event' || copy.exceptional || !copyPlayed || playAccess(copyCode).reactionOnly) continue
+        const copyDescriptor = descriptorOfKind(copyCode, 'played')
+        if (!copy || copy.type !== 'event' || copy.exceptional
+          || (!copyPlayed && !copyDescriptor?.resolve) || playAccess(copyCode).reactionOnly) continue
         const cost = playCost(state, inv, copy)
-        if (inv.resources < cost || effectError(state, inv, copyPlayed)) continue
+        if (inv.resources < cost || (copyPlayed && effectError(state, inv, copyPlayed))) continue
         moves.push({ action: 'play', cardId: code, copyCode,
           label: `🃏 彩绘世界复制「${cardName(copyCode)}」(${cost} 资源)` })
       }
@@ -175,7 +209,8 @@ export function createMoves(deps) {
     }
     const cost = playCost(state, inv, def)
     if (inv.resources < cost - (campaignPlayCostPreview(state, inv, code)?.discount || 0)
-      && !charlesPayCandidate(state, inv, cost)) continue
+      && !charlesPayCandidate(state, inv, cost, def)) continue
+    if (isSteadfastCard(def) && steadfastInPlay(state)) continue
     if (def.type === 'asset' && normalizedSlots(def).length && !assetReplacementPlans(inv, def).length) continue
     const kindLabel = def.type === 'asset' ? '装备' : '打出'
     moves.push({ action: 'play', cardId: code, label: `🃏 ${kindLabel}「${cardName(code)}」(${cost} 资源)` })
@@ -242,7 +277,7 @@ export function createMoves(deps) {
 
   const skids = investigatorRule(inv.code)
   if (skids && skids.freeAction && !investigatorTextBlanked(state, inv) && inv.resources >= (skids.freeAction.cost.resources || 0)
-    && (skids.freeAction.repeatable || !inv.usedReactions[skids.freeAction.id + ':' + state.round])) {
+    && (skids.freeAction.repeatable || !inv.usedReactions[skids.freeAction.id + ':' + state.turnSerial])) {
     moves.push({ action: 'freeAction', label: skids.freeAction.label || '⚡ 花 2 资源获得 1 额外行动' })
   }
 
@@ -259,7 +294,7 @@ export function createMoves(deps) {
     const skill = loc.investigateSkill || 'intellect'
     const scenarioShroud = (scenarioBehavior(state).locationShroudModifier?.(state, loc, inv) || 0)
       + entityModifierTotal(state, loc, 'locationShroud')
-    const shroud = loc.shroud + (loc.shroudMod || 0) + (state.fogMod || 0) + scenarioShroud
+    const shroud = loc.shroud + (loc.shroudMod || 0) + (loc.peabodyShroud || 0) + (state.fogMod || 0) + scenarioShroud
     moves.push({ action: 'investigate', label: `🔍 调查「${loc.name}」（${SKILL_NAMES[skill]} vs 帷幕 ${shroud}）` })
   }
 
@@ -322,6 +357,10 @@ export function createMoves(deps) {
       if (ab.duringOwnSkillTest && state.skillTest?.seat !== inv.seat) return
       if (ab.oncePerTest && state.skillTest?.usedAbilities?.[`${a.id}:${i}`]) return
       if (ab.oncePerPhase && inv.usedAbilities?.[`${a.id}:${i}:${state.round}:${state.phase}`]) return
+      // 描述子的 criteria 是「这条能力当前是否可用」的唯一声明；legalMoves 不读会让
+      // 条件型主动能力（如卡膛、古代地点）出现在列表里却在执行时静默失败。
+      if (ab.descriptor?.criteria
+        && !matchAll(ab.descriptor.criteria)({ state, inv, source: a, windowId: state.timingWindow, context: {} })) return
       if (ab.requiresNoClues && loc && loc.clues > 0) return
       if (moveToBlocked(state, inv, ab.effect)) return
       const free = ab.cost && ab.cost.action === false
@@ -349,7 +388,8 @@ export function createMoves(deps) {
         }
         return
       }
-      if (ab.effect?.type === 'fight' && !abilityTargets(state, inv, ab.effect).length) return
+      if (ab.effect?.type === 'fight' && !abilityTargets(state, inv, ab.effect).length
+        && !canExtendFirearmTarget(inv, a)) return
       if (ab.effect && (ab.effect.type === 'investigate' || ab.effect.type === 'discoverClue') && (!loc || loc.clues <= 0)) return
       if (ab.effect && ab.effect.type === 'dealDamage' && abilityTargets(state, inv, ab.effect).length === 0) return
       // choose 分支：每个选项拆成一条独立行动（optionIndex 从 0 起）。
@@ -432,14 +472,19 @@ export function createMoves(deps) {
       const conditionError = playConditionError(state, inv, move.cardId, playConditionHelpers(state))
       if (conditionError) return conditionError
       if (!runtimeCardAvailable(state, inv, move.cardId) || def.dataStatus === 'quarantined') return '该卡牌未获运行时许可'
+      if (registeredEntry(move.cardId)?.limitPerLocation
+        && (state.playerLocationAttachments || []).some(item => item.code === move.cardId && item.location === inv.location)) {
+        return '该地点已经有一张同名附属'
+      }
       if (registeredEntry(move.cardId)?.copiesBeneathEvents) {
         const copied = cardDef(move.copyCode)
         const copiedPlayed = playedEffect(move.copyCode)
+        const copiedDescriptor = descriptorOfKind(move.copyCode, 'played')
         if (!inv.beneath?.includes(move.copyCode) || !copied || copied.type !== 'event' || copied.exceptional
-          || !copiedPlayed || playAccess(move.copyCode).reactionOnly) return '彩绘世界没有合法的复制事件'
+          || (!copiedPlayed && !copiedDescriptor?.resolve) || playAccess(move.copyCode).reactionOnly) return '彩绘世界没有合法的复制事件'
         if (!inv.hand.includes(move.cardId)) return '手牌中没有彩绘世界'
         if (inv.resources < playCost(state, inv, copied)) return '资源不足'
-        return effectError(state, inv, copiedPlayed)
+        return copiedPlayed ? effectError(state, inv, copiedPlayed) : null
       }
       if (def.type === 'skill' || (isWeaknessCard(def) && !playAccess(move.cardId).playableWeakness)) return '该牌不能作为行动打出'
       if (move.fromDiscard) {
@@ -457,11 +502,13 @@ export function createMoves(deps) {
       if (playAccess(move.cardId).reactionOnly) return '该牌只能在对应的反应窗口打出'
       if (cannotPlayTypes(inv).has(def.type)) return '当前禁止打出该类型卡牌'
       if (inv.resources < playCost(state, inv, def) - (campaignPlayCostPreview(state, inv, move.cardId)?.discount || 0)
-        && !charlesPayCandidate(state, inv, playCost(state, inv, def))) return '资源不足'
+        && !charlesPayCandidate(state, inv, playCost(state, inv, def), def)) return '资源不足'
       if (def.unique && state.investigators.some(item => item.assets.some(asset => cardDef(asset.code)?.name === def.name))) return '唯一资产已经在场'
       if (def.type === 'asset' && normalizedSlots(def).length && !assetReplacementPlans(inv, def).length) return '槽位已满'
       if (playAccess(move.cardId).limitPerInvestigator
         && inv.assets.some(asset => asset.code === move.cardId)) return '每位调查员仅限 1 张'
+      // 「沉稳」卡牌场上仅限 1 张（03107/03109/03111/03113/03115）。
+      if (isSteadfastCard(def) && steadfastInPlay(state)) return '沉稳卡牌场上仅限 1 张'
       return effectError(state, inv, playedEffect(move.cardId))
     }
     case 'draw': return drawBlocked(state, inv) ? '「残酷拷问」：你不能进行抽取行动' : null
@@ -474,7 +521,7 @@ export function createMoves(deps) {
       if (skids.freeAction.cost.discardHand
         && !inv.hand.some(code => !isWeaknessCode(code) && canDiscardFromHand(inv, code))) return '没有可弃掉的手牌'
       if (effectError(state, inv, skids.freeAction.effect)) return effectError(state, inv, skids.freeAction.effect)
-      if (!skids.freeAction.repeatable && inv.usedReactions[skids.freeAction.id + ':' + state.round]) return '本回合已使用'
+      if (!skids.freeAction.repeatable && inv.usedReactions[skids.freeAction.id + ':' + state.turnSerial]) return '本回合已使用'
       return null
     }
     case 'hiddenAction': {
@@ -630,6 +677,10 @@ export function createMoves(deps) {
       if (ability.descriptor && limitUsed(state, inv, ability.descriptor, null, state.timingWindow, asset)) {
         return '该能力的次数已用完（本阶段/本回合/本局）'
       }
+      if (ability.descriptor?.criteria
+        && !matchAll(ability.descriptor.criteria)({ state, inv, source: asset, windowId: state.timingWindow, context: {} })) {
+        return '该能力当前不可用'
+      }
       if (ability.cost?.action === false && cannotTriggerFreeAbility(state, inv)) return '隐私牌禁止你触发免费能力'
       if (!canAffordAbility(state, inv, asset, ability)) return '能力成本不足'
       if (ability.duringOwnSkillTest && state.skillTest?.seat !== inv.seat) return '只能在自己的技能检定期间使用'
@@ -639,7 +690,9 @@ export function createMoves(deps) {
       if (ability.requiresNoClues) { const loc = state.locations.find(item => item.id === inv.location); if (loc && loc.clues > 0) return '所在地点仍有线索' }
       if (moveToBlocked(state, inv, ability.effect)) return '与敌人交战时不能使用这项移动'
       const effectInvalid = effectError(state, inv, ability.effect)
-      if (effectInvalid) return effectInvalid
+      // 没有同地点目标时，持有 04104 的枪械攻击仍然可以激活（窗口里改指连接地点）。
+      const extendTarget = ability.effect?.type === 'fight' && canExtendFirearmTarget(inv, asset)
+      if (effectInvalid && !extendTarget) return effectInvalid
       if (move.optionIndex != null) {
         const ok = ability.effect && ability.effect.type === 'chooseOne' && Array.isArray(ability.effect.options) && ability.effect.options[move.optionIndex]
         if (!Number.isInteger(move.optionIndex) || !ok) return '无效选项'
@@ -677,6 +730,13 @@ export function createMoves(deps) {
       return null
     }
     case 'advanceAct': return canAdvanceWithClues(state) ? null : '当前线索或窗口不能推进场景'
+    case 'detachLocationAttachment': {
+      const detachLoc = state.locations.find(item => item.id === move.locationId)
+      const attachment = detachLoc?.attachments?.[move.attachmentIndex]
+      if (!attachment || !registeredEntry(attachment.code)?.detachAction) return '这里没有可解除的附属'
+      if (attachment.ownerSeat != null && attachment.ownerSeat !== inv.seat) return '这不是你的附属'
+      return null
+    }
     case 'endTurn': return null
     default: return '未知行动：' + move.action
   }

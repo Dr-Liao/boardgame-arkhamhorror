@@ -15,7 +15,8 @@ test('03185 约束衣进入威胁区、占槽且提供双行动弃除能力', ()
   const inv = investigator({
     assets: [{ id: 'gun', code: '01016' }, { id: 'coat', code: '01072' }],
   })
-  const state = { investigators: [inv] }
+  // 第 114 轮：03185 的显现结算迁到遭遇条目后，共享解析器会先读所在地点（here）。
+  const state = { investigators: [inv], locations: [{ id: 'hall', name: '大厅' }] }
   const returned = []
   let threat = null
   const resolved = oathBehavior.resolveEncounter(state, inv, { code: '03185' }, {

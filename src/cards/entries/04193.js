@@ -8,6 +8,7 @@
 
 export default {
   code: '04193',
+  playCondition: [{ when: ({ state, inv }) => state.currentSeat === inv.seat, message: '只能在你自己的回合打出' }],
   attachTo: {"kind":"asset","trait":"firearm","maxPerTarget":1},
   onAttach: {"ammo":2},
   fast: true,

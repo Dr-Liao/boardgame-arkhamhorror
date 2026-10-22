@@ -232,6 +232,8 @@ test('M2 staunch cancels up to four points of harm', () => {
   me(state).hand = ['04111']
   me(state).deck = ['01015']
   const health = ALL_CARDS['01001'].health
+  // 卡面要求「这次伤害/恐惧足以击败你」。
+  me(state).horror = ALL_CARDS['01001'].sanity - 1
   move(state, { action: 'draw' })
   let played = false
   settle(state, pending => {
@@ -250,7 +252,7 @@ test('M2 staunch cancels up to four points of harm', () => {
   })
   // 直接恐惧 2 点被完全取消。
   assert.equal(played, true)
-  assert.equal(me(state).horror, 0)
+  assert.equal(me(state).horror, ALL_CARDS['01001'].sanity - 1, '致命恐惧被取消 2 点')
   assert.equal(me(state).damage < health, true)
 })
 
@@ -311,7 +313,7 @@ test('M2 professional hit adds one damage to the evaded enemy', () => {
   })
   const evaded = state.enemies.find(item => item.id === target.id)
   assert.equal(evaded.exhausted, true)
-  assert.deepEqual(evaded.tfaDamageBonus, { amount: 1, round: state.round })
+  assert.deepEqual(evaded.tfaDamageBonus, { amount: 1, round: state.round, turnSerial: state.turnSerial })
   state.chaosBag = ['0']
   move(state, { action: 'fight', enemyId: target.id })
   settle(state)
@@ -670,7 +672,7 @@ test('M2 restorative draws by success then punishes overflow', () => {
 
 
 
-test('M2 rusted sword heavy slash adds willpower and triple damage', () => {
+test('M2 rusted sword heavy slash adds willpower and +3 damage', () => {
   const state = fixture('01001')
   playCard(state, '04276')
   const sword = me(state).assets.find(item => item.code === '04276')
@@ -681,7 +683,7 @@ test('M2 rusted sword heavy slash adds willpower and triple damage', () => {
   assert.ok(slash, '蓄力斩应当按 target 枚举出攻击动作')
   move(state, slash)
   settle(state)
-  assert.equal(state.enemies.find(item => item.id === target.id).damageTaken, 3)
+  assert.equal(state.enemies.find(item => item.id === target.id).damageTaken, 4)
   // 「每局一次」现在记在 state.abilityLimits（不再有 inv.rustedSwordUsed 裸字段）。
   assert.ok(Object.keys(state.abilityLimits || {}).some(key => key.startsWith('04276#1|')))
 })
@@ -716,8 +718,10 @@ test('M2 flamethrower spreads damage among engaged enemies', () => {
   const second = enemy(state, { id: 'flame-b', fight: 2, evade: 1, health: 6 })
   state.chaosBag = ['0']
   move(state, { action: 'ability', assetId: flamer.id, abilityIndex: 0 })
+  let assign = 0
   settle(state, pending => {
     if (pending.kind === 'effect' && pending.source === '04305') return 'spread'
+    if (pending.kind === 'assign-damage') return pending.options[assign++ % pending.options.length].id
     return null
   })
   assert.ok(state.enemies.find(item => item.id === first.id).damageTaken >= 1)
@@ -926,6 +930,12 @@ test('M2 skeleton key sets the location shroud to one and can be detached', () =
   move(state, { action: 'investigate' })
   settle(state)
   assert.equal(me(state).clues, 1, '隐藏值视为 1，智力 3 成功')
+  // 再次使用：解除附属并放回游戏区域。
+  move(state, legalMoves(state).find(command => command.action === 'detachLocationAttachment'))
+  settle(state)
+  const afterDetach = state.locations.find(location => location.id === me(state).location)
+  assert.equal((afterDetach.attachments || []).some(entry => entry.code === '04270'), false, '解除附属')
+  assert.equal(me(state).assets.some(item => item.code === '04270'), true, '放回游戏区域')
 })
 
 test('M2 vantage point lowers shroud for the turn and moves a clue', () => {
@@ -935,10 +945,12 @@ test('M2 vantage point lowers shroud for the turn and moves a clue', () => {
   here.shroud = 3
   here.clues = 0
   state.locations.push({ id: 'elsewhere', name: '别处', revealed: true, clues: 1, maxClues: 1, shroud: 1, connections: [here.id] })
-  here.connections.push('elsewhere')
+  state.locations.push({ id: 'revealing', name: '新地点', revealed: true, clues: 0, maxClues: 2, shroud: 3, connections: [here.id] })
+  here.connections.push('elsewhere', 'revealing')
+  state.lastLocationRevealed = { id: 'revealing', round: state.round, turnSerial: state.turnSerial ?? null }
   move(state, { action: 'play', cardId: '04306' })
   settle(state, pending => pending.kind === 'location' ? 'elsewhere' : null)
-  const lowered = state.locations.find(location => location.id === here.id)
+  const lowered = state.locations.find(location => location.id === 'revealing')
   assert.equal(lowered.turnShroudMod.amount, -1)
   assert.equal(lowered.clues, 1)
   assert.equal(state.locations.find(location => location.id === 'elsewhere').clues, 0)
@@ -1214,18 +1226,33 @@ test('M2-B last chance only sees wild icons and loses one per card in hand', () 
   assert.equal(state.testResult.value, 3 + 3)
 })
 
-test('M2-B marksmanship attacks an enemy at a connecting location with a firearm', () => {
+test('M2-B marksmanship modifies the activated firearm attack and can redirect it to a connecting location', () => {
   const state = fixture('01001')
-  me(state).assets.push({ id: 'marksman-gun', code: '01016', exhausted: false, uses: 3, usesType: 'ammo' })
+  const gun = { id: 'marksman-gun', code: '01016', exhausted: false, uses: 3, usesType: 'ammo' }
+  me(state).assets.push(gun)
   me(state).hand = ['04104']
+  me(state).resources = 10
   const here = state.locations.find(location => location.id === me(state).location)
   state.locations.push({ id: 'next-door', name: '隔壁', revealed: true, clues: 0, maxClues: 0, shroud: 1, connections: [here.id] })
   here.connections.push('next-door')
+  const decoy = enemy(state, { id: 'local-decoy', fight: 0, evade: 0, health: 9, engagedSeat: null })
   const faraway = enemy(state, { id: 'faraway-enemy', fight: 0, evade: 0, health: 8, engagedSeat: null, location: 'next-door' })
   state.chaosBag = ['0']
-  move(state, { action: 'play', cardId: '04104' })
-  settle(state, pending => pending.kind === 'target' ? pending.options[0].id : null)
-  assert.equal(state.enemies.find(item => item.id === faraway.id).damageTaken, 2, '远程支援基础 1 + 未交战 +1')
+  // 激活 .45 自动手枪的攻击能力（本次攻击的先决条件），再在 activateFirearmFight 窗口打出枪法如神。
+  const attack = legalMoves(state, 0).find(item => item.action === 'ability'
+    && item.assetId === gun.id && item.targetId === decoy.id)
+  assert.ok(attack, '枪械攻击能力可激活')
+  move(state, attack)
+  const pending = state.pendingChoice
+  assert.equal(pending.kind, 'reaction')
+  const marksmanship = pending.options.find(option => option.cardCode === '04104')
+  assert.ok(marksmanship, '激活枪械攻击时提供枪法如神')
+  move(state, { action: 'choose', choiceId: pending.id, optionId: marksmanship.id })
+  settle(state)
+  assert.equal(state.enemies.find(item => item.id === faraway.id).damageTaken, 3,
+    '.45 自动手枪基础 1 + 卡面 +1 + 枪法如神未交战 +1')
+  assert.equal(state.enemies.find(item => item.id === decoy.id).damageTaken, 0, '攻击被改指连接地点')
+  assert.equal(me(state).assets.find(item => item.id === gun.id).uses, 2, '沿用被激活武器的弹药消耗')
 })
 
 test('M2-B fence makes an illicit card fast and discounts an already fast one', () => {
@@ -1234,7 +1261,7 @@ test('M2-B fence makes an illicit card fast and discounts an already fast one', 
   me(state).hand.push('01045')
   const actions = me(state).actionsLeft
   move(state, { action: 'play', cardId: '01045' })
-  settle(state)
+  settle(state, pending => (pending.source === '04108' ? 'use' : null))
   assert.equal(me(state).actionsLeft, actions, '违法卡获得快速：不消耗行动')
   assert.equal(assetOf(state, '04108').exhausted, true)
   assert.equal(me(state).assets.some(item => item.code === '01045'), true)
@@ -1244,7 +1271,7 @@ test('M2-B fence makes an illicit card fast and discounts an already fast one', 
   fast.investigators[0].hand.push('02152')
   const resources = me(fast).resources
   move(fast, { action: 'play', cardId: '02152' })
-  settle(fast)
+  settle(fast, pending => (pending.source === '04108' ? 'use' : null))
   assert.equal(me(fast).resources, resources, '已有快速：改为减 1 费用（1 → 0）')
 })
 
@@ -1287,10 +1314,11 @@ test('M2-B well prepared adds the matching icons of a chosen asset', () => {
 test('M2-B true understanding is limited to scenario-card tests and finds a clue', () => {
   const state = fixture('01001')
   me(state).hand = ['04153']
+  state.locations.find(location => location.id === me(state).location).clues = 1
   const execute = current => performTest(current, 0, 'intellect', 0,
     { source: { type: 'encounter', label: '遭遇检定', scenarioAbility: true }, resolve: value => { current.testResult = value } })
   sign(state, execute, commitCards('04153'))
-  assert.equal(state.testResult.clueBonus, 1, '成功后额外发现 1 个线索')
+  assert.equal(me(state).clues, 1, '成功后在你所在地点发现 1 个线索')
 
   const blocked = fixture('01001')
   me(blocked).hand = ['04153']
@@ -1301,6 +1329,20 @@ test('M2-B true understanding is limited to scenario-card tests and finds a clue
     return null
   })
   assert.equal(offered, false, '普通检定不能投入')
+})
+
+test('M2-B high roller spends 3 resources and exhausts for +2, refunding on success', () => {
+  const state = fixture('01001')
+  playCard(state, '04156')
+  const highRoller = assetOf(state, '04156')
+  me(state).resources = 5
+  const execute = current => performTest(current, 0, 'willpower', 0, {
+    resolve: value => { current.testResult = value } })
+  sign(state, execute, pending => windowAbility(pending, highRoller))
+  assert.equal(state.testResult.value, 3 + 2, '[free] 使本次检定 +2')
+  assert.equal(state.testResult.success, true)
+  assert.equal(me(state).resources, 5, '花 3 资源，成功后返还 3 资源')
+  assert.equal(assetOf(state, '04156').exhausted, true, '横置支付费用')
 })
 
 test('M2-B quick study returns a clue and adds three to the test', () => {

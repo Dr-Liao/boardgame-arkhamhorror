@@ -383,20 +383,22 @@ test('N3 集结幕二限制走廊贡献和轮末窗口', () => {
   assert.equal(state.clues, 6)
 })
 
-test('N3 只有密谋上的毁灭参与阈值，议程推进保留场上毁灭', () => {
+test('N3 场上毁灭也计入密谋阈值，议程推进保留场上毁灭', () => {
   const state = fixture()
   const threshold = state.agendas[0].doomThreshold
   enemy(state, { engagedSeat: null, exhausted: true, doom: threshold - 1 })
   asset(state, '01072', { doom: 1 })
   state.doom = threshold - 1
-  assert.equal(agendaDoom(state), threshold - 1)
+  // 场上毁灭 + 密谋毁灭 = 2×阈值 - 1，已达到阈值。
+  assert.equal(agendaDoom(state), 2 * threshold - 1)
   assert.equal(totalDoom(state), 2 * threshold - 1)
   execute(state, { action: 'endTurn' })
   assert.equal(state.pendingChoice.kind, 'agenda')
   answer(state, 'horror')
   settle(state)
   assert.equal(state.agendaIndex, 1)
-  assert.equal(agendaDoom(state), 0)
+  // 密谋上的毁灭清空，敌人/支援上的毁灭保留。
+  assert.equal(agendaDoom(state), threshold)
   assert.equal(totalDoom(state), threshold)
 })
 

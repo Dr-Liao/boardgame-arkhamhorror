@@ -43,13 +43,13 @@ test('Core 01102 银暮祭司攻击后放毁灭，达到阈值立即推进密谋
   assert.equal(s.agendaIndex,1); assert.equal(s.doom,0)
 })
 
-test('Core 01143 01169 场上毁灭不计入密谋阈值，推进密谋时也保留',()=>{
-  const s=fixture(); enemy(s,{code:'acolyte',engagedSeat:null,doom:5})
-  s.doom=1; play(s,'01013'); settle(s)
-  assert.equal(s.agendaIndex,0); assert.equal(s.doom,2)
-  play(s,'01013'); settle(s)
-  assert.equal(s.agendaIndex,1); assert.equal(s.doom,0)
-  assert.equal(s.enemies.find(e=>e.code==='acolyte').doom,5)
+test('Core 01143 01169 场上毁灭计入密谋阈值，推进时仍保留',()=>{
+  const s=fixture(); const threshold=s.agendas[0].doomThreshold
+  enemy(s,{code:'acolyte',engagedSeat:null,doom:threshold-1})
+  s.doom=1
+  move(s,{action:'endTurn'}); settle(s)
+  assert.equal(s.agendaIndex,1)
+  assert.equal(s.enemies.find(e=>e.code==='acolyte').doom,threshold-1,'推进密谋不清除场上毁灭')
 })
 
 test('Core 01105 全员空手时仍可选择随机弃掉 1 张手牌的分支',()=>{

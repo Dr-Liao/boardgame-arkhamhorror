@@ -155,6 +155,34 @@ test('拖动手牌使用原卡面，取消拖动后同一张卡归位',async({pa
   expect(f.submitted).toHaveLength(0)
 })
 
+test('拖动手牌的幽灵卡按卡位缩放真实卡面，不放大裁切',async({page})=>{
+  await fixture(page)
+  const card=entity(page,'hand:0:0')
+  await expect(card.locator('.ah-table-art')).toHaveAttribute('data-image-state','displayable')
+  const box=await card.boundingBox()
+  await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down()
+  await page.mouse.move(box.x+box.width/2-50,box.y-120,{steps:6})
+  const ghost=page.locator('.ah-card-ghost')
+  await expect(ghost).toBeVisible()
+  const metrics=await page.evaluate(()=>{
+    const ghost=document.querySelector('.ah-card-ghost'),art=ghost.querySelector('.ah-table-art'),img=art?.querySelector('img')
+    return{ghost:[ghost.offsetWidth,ghost.offsetHeight],padding:getComputedStyle(ghost).padding,
+      art:[art.offsetWidth,art.offsetHeight],artMinHeight:getComputedStyle(art.querySelector('.ah-art')).minHeight,
+      img:[img?.clientWidth,img?.clientHeight],fit:img&&getComputedStyle(img).objectFit}
+  })
+  // 幽灵卡是 5:7 的 94×132 卡位；卡面铺满 2px 描边以内的 90×128 内容区。
+  expect(metrics.ghost).toEqual([94,132])
+  expect(metrics.padding).toBe('0px')
+  expect(metrics.art).toEqual([90,128])
+  expect(metrics.artMinHeight).toBe('0px')
+  expect(metrics.fit).toBe('contain')
+  // 卡图必须和卡面一样大：离开 .ah-table 后基础 .ah-art 的 min-height 会把它撑到 240px 高再裁掉大半。
+  expect(metrics.img[0]).toBe(90)
+  expect(Math.abs(metrics.img[1]-128)).toBeLessThanOrEqual(1)
+  await page.keyboard.press('Escape');await page.mouse.up()
+  await expect(ghost).toHaveCount(0)
+})
+
 test('打出的实际卡面从手牌连续进入装备槽，事件牌进入弃牌区',async({page})=>{
   let event=false
   const f=await fixture(page,{onMove:async(route,body,s)=>{

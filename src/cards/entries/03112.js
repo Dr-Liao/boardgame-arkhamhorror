@@ -19,7 +19,11 @@ export default {
       kind: 'free', label: '放置 1 毁灭并获得等量资源', cost: { action: false, exhaust: true },
       resolve: ({ source, inv, api }) => {
         if (!source) return
-        api.placeDoomOnCard(source, 1)
+        // 「你可以」：可以选择不放毁灭，仍然按现有毁灭数获得资源。
+        const answer = api.choice({ kind: 'effect', source: '03112', seat: inv.seat,
+          prompt: '是否在大卫·伦费尔德身上放置 1 个毁灭标记？',
+          options: [{ id: 'yes', label: '放置 1 毁灭' }, { id: 'no', label: '不放置' }] })
+        if (answer === 'yes') api.placeDoomOnCard(source, 1)
         api.gainResources(inv.seat, source.doom || 0)
       },
     },

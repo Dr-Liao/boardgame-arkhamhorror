@@ -265,7 +265,7 @@ function executeDescriptor(state, { inv, source, descriptor, context = {}, event
   if (handCode) disposePlayedEvent(inv, handCode)
   // Phase 5（D2）：discardWhenEmpty 也可以写在注册表条目上（与 uses/usesType 同层）。
   const entry = registeredEntry(descriptor.code)
-  const discardWhenEmpty = entry?.discardWhenEmpty || EFFECTS[descriptor.code]?.discardWhenEmpty
+  const discardWhenEmpty = entry?.discardWhenEmpty
   if (discardWhenEmpty && source && source.uses != null && source.uses <= 0) {
     leaveAsset(state, inv, source)
     if (!source.removedFromGame) inv.discard.push(source.code)

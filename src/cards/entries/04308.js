@@ -10,6 +10,7 @@
 
 export default {
   code: '04308',
+  noOpportunityAttack: true,
   abilities: [
     {
       kind: 'action', label: '放置 1 声滴答（最多 3）', cost: { action: true }, maxClicks: 3,

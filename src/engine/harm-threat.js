@@ -13,7 +13,6 @@ export function createHarmThreat(deps) {
     assetCapacityValue,
     assetEffect,
     assetPassiveData,
-    autoEngageAt,
     capabilityBlocked,
     captureTableState,
     cardDef,
@@ -92,12 +91,18 @@ export function createHarmThreat(deps) {
   }
 
   function removeThreat(state, inv, threatCard, events) {
+    // 「死灵之书上有恐惧时不能离场」（01009）：只要还有计数器，任何离场路径都不生效。
+    if (registeredEntry(threatCard.code)?.threatCannotLeaveWhileCounters && (threatCard.counters || 0) > 0) {
+      info(state, events, `⛔ 「${cardName(threatCard.code)}」上还有恐惧，不能离场。`)
+      return false
+    }
     removeOne(inv.threat, threatCard)
     const discard = ALL_TREACHERIES[threatCard.code] ? state.encounterDiscard : inv.discard
     discard.push(threatCard.code)
+    return true
   }
 
-  const HARM_STRATEGIES = Object.freeze(['distribute', 'self', 'assetsFirst', 'soakFirst', 'assetsOnly'])
+  const HARM_STRATEGIES = Object.freeze(['distribute', 'self', 'assetsFirst', 'soakFirst', 'assetsOnly', 'fillOne'])
 
   function assignHarm(state, inv, amount, kind, events, direct, assetsFirst = false, strategy = null) {
     if (strategy != null && !HARM_STRATEGIES.includes(strategy)) {
@@ -114,7 +119,18 @@ export function createHarmThreat(deps) {
       .flatMap(other => other.assets
         .filter(asset => assetEffect(other, asset)?.passive?.assignHarmAtLocation)
         .map(asset => ({ asset, owner: other })))
+    let locked = null
     for (let i = 0; i < amount; i++) {
+      // 「先把一张卡填满再分配下一张」（03088 毕宿五的野兽）。
+      if (strategy === 'fillOne' && locked) {
+        const stillOpen = locked === inv
+          || assetCapacityValue(locked, capacity) > (locked[kind] || 0) + (assignments.get(locked) || 0)
+        if (stillOpen) {
+          assignments.set(locked, (assignments.get(locked) || 0) + 1)
+          continue
+        }
+        locked = null
+      }
       // 「时间尽头」允许把直接伤害/直接恐惧分配给自己，其余支援不能承接直接伤害。
       const directSoaks = direct
         ? inv.assets.filter(asset => assetPassiveData(asset.code)?.assignDirectHarm
@@ -123,8 +139,8 @@ export function createHarmThreat(deps) {
       let assets = direct ? directSoaks
         : inv.assets.filter(asset => assetCapacityValue(asset, capacity) > (asset[kind] || 0) + (assignments.get(asset) || 0))
       // Phase 5（5b-7）：「沉静」与「redirectOneHorrorToSelf」也可以写在能力层条目上（读点走 assetEffect）。
-      const mandatory = kind === 'horror' && assets.filter(asset => (EFFECTS[asset.code]?.composure || assetEffect(inv, asset)?.composure)
-        || ((EFFECTS[asset.code]?.redirectOneHorrorToSelf || assetEffect(inv, asset)?.redirectOneHorrorToSelf) && !(assignments.get(asset) > 0)))
+      const mandatory = kind === 'horror' && assets.filter(asset => (assetEffect(inv, asset)?.composure)
+        || ((assetEffect(inv, asset)?.redirectOneHorrorToSelf) && !(assignments.get(asset) > 0)))
       if (mandatory?.length) assets = mandatory
       const candidates = assets.length || soaks.length
         ? requestChoice(state, { kind: 'assign-' + kind, source: 'harm', seat: inv.seat,
@@ -136,6 +152,7 @@ export function createHarmThreat(deps) {
       const recipient = candidates === 'self' ? inv
         : assets.find(item => item.id === candidates) || soaks.find(item => item.asset.id === candidates)?.asset
       assignments.set(recipient, (assignments.get(recipient) || 0) + 1)
+      if (strategy === 'fillOne') locked = recipient
     }
     return assignments
   }
@@ -189,6 +206,12 @@ export function createHarmThreat(deps) {
   }
 
   function eliminateInvestigator(state, inv, events) {
+    // 本地点有调查员被击败（04026 彩饰骷髅），其他调查员可触发。
+    for (const other of state.investigators.filter(item =>
+      item !== inv && !item.defeated && !item.resigned && item.location === inv.location)) {
+      triggerReaction(state, other.seat, 'defeatAtLocation', events,
+        { when: 'defeatAtLocation', kind: 'investigator', seat: other.seat, location: inv.location, defeatedSeat: inv.seat })
+    }
     for (const code of [...(inv.hiddenCards || [])]) discardHiddenCard(state, inv, code, events)
     // Phase 5（5a-19）：「被消除时离场」的支援由条目级 discardOnElimination 声明。
     for (const asset of inv.assets.filter(item => registeredEntry(item.code)?.discardOnElimination)) {
@@ -359,7 +382,6 @@ export function createHarmThreat(deps) {
     const enemy = candidates.find(item => item.id === id)
     enemy.textBlanked = { round: state.round, phase: state.phase }
     if (enemy.damageTaken >= enemyHealth(state, enemy)) { enemy.defeatedBy = seat; defeatEnemy(state, enemy, events) }
-    else autoEngageAt(state, enemy.location, events)
     info(state, events, `📖 「${enemy.name}」的印刷文本被视为空白，直到本阶段结束。`)
   }
 
@@ -459,14 +481,14 @@ export function createHarmThreat(deps) {
     } })
   }
 
-  function healHorrorNearby(state, seat, amount, events) {
+  function healHorrorNearby(state, seat, amount, events, sourceCode = null) {
     const inv = state.investigators[seat]
     const connections = state.locations.find(loc => loc.id === inv.location)?.connections || []
     const targets = aliveInvestigators(state).filter(other => other.horror > 0
       && (other.location === inv.location || connections.includes(other.location)))
     if (!targets.length) return
     const id = targets.length === 1 ? String(targets[0].seat) : requestChoice(state, {
-      kind: 'target', source: effect.code, seat, prompt: '选择本地点或连接地点的一名调查员，治疗 1 点恐惧。',
+      kind: 'target', source: sourceCode || 'healHorrorNearby', seat, prompt: '选择本地点或连接地点的一名调查员，治疗 1 点恐惧。',
       options: targets.map(target => ({ id: String(target.seat), label: target.name })),
     })
     const target = targets.find(item => String(item.seat) === id)

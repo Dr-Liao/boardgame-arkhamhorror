@@ -18,24 +18,29 @@ export default {
       resolve: ({ state, inv, api }) => {
         const here = state.locations.find(location => location.id === inv.location)
         if (here?.enemyDefeatedRound !== state.round) { api.info('本地点本轮没有敌人被击败。'); return }
-        const targets = api.investigatorsAt(inv.location)
-        const options = [
-          ...targets.map(owner => ({ id: `inv:${owner.seat}`, label: owner.name })),
-          ...targets.flatMap(owner => (state.investigators[owner.seat]?.assets || [])
-            .filter(card => (api.cardSanity(card.code) || 0) > 0 && (card.horror || 0) > 0)
-            .map(card => ({ id: `asset:${card.id}`, label: api.cardName(card.code) }))),
-        ]
-        if (!options.length) return
-        const chosen = options.length === 1 ? options[0].id
-          : api.choice({ kind: 'target', source: '04304', seat: inv.seat,
-            prompt: '选择要治愈恐惧的目标（最多 2 点）。', options })
-        if (String(chosen).startsWith('inv:')) {
-          api.healHorror(Number(String(chosen).slice(4)), 2)
-          return
+        let remaining = 2
+        while (remaining > 0) {
+          const investigators = api.investigatorsAt(inv.location).filter(owner => (owner.horror || 0) > 0)
+          const allies = api.investigatorsAt(inv.location).flatMap(owner =>
+            (owner.assets || []).filter(card => api.cardTraits(card.code).some(trait => String(trait).toLowerCase() === 'ally')
+              && (api.cardSanity(card.code) || 0) > (card.horror || 0)))
+          const options = [
+            ...investigators.map(owner => ({ id: `inv:${owner.seat}`, label: owner.name })),
+            ...allies.map(card => ({ id: `asset:${card.id}`, label: api.cardName(card.code) })),
+          ]
+          if (!options.length) break
+          const chosen = options.length === 1 ? options[0].id
+            : api.choice({ kind: 'target', source: '04304', seat: inv.seat,
+              prompt: `选择要治愈恐惧的目标（还可治疗 ${remaining} 点；仅限调查员与[[盟友]]）。`, options })
+          if (String(chosen).startsWith('inv:')) api.healHorror(Number(String(chosen).slice(4)), 1)
+          else {
+            const card = api.investigatorsAt(inv.location)
+              .flatMap(owner => owner.assets || [])
+              .find(item => item.id === String(chosen).slice(6))
+            if (card) api.addAssetHorror(card, -1)
+          }
+          remaining -= 1
         }
-        const card = targets.flatMap(owner => state.investigators[owner.seat]?.assets || [])
-          .find(item => item.id === String(chosen).slice(6))
-        if (card) api.addAssetHorror(card, -2)
       },
     },
   ],

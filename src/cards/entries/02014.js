@@ -19,7 +19,20 @@ export default {
       kind: 'action',
       label: '杜克调查（可先移动，基础智识 4）',
       cost: { action: true, exhaust: true },
-      effect: { type: 'dukeInvestigate' },
+      // 第 122 轮：从 player-effects.js 的 `dukeInvestigate` 分派搬进本文件。
+      resolve: ({ inv, api }) => {
+        const destinations = api.moveDestinations(inv.seat)
+        if (destinations.length) {
+          const id = api.choice({
+            kind: 'move', source: '02014', seat: inv.seat,
+            prompt: '杜克调查前是否移动到连接地点？',
+            options: [{ id: 'stay', label: '留在原地调查' },
+              ...destinations.map(loc => ({ id: loc, label: api.locName(loc) }))],
+          })
+          if (id !== 'stay') api.moveInvestigator(inv.seat, id)
+        }
+        api.investigate(inv.seat, { baseValue: 4 })
+      },
     },
   ],
   modifiers: [

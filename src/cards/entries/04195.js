@@ -25,9 +25,10 @@ export default {
           source: { label: '揭露弱点', name: enemy.name, code: '04195' },
           resolve: result => {
             if (!result.success) return
-            const margin = Math.max(1, result.value - difficulty)
-            api.addEnemyFightReduction(enemy, margin)
-            api.info(`「${enemy.name}」本阶段下一次被攻击时战斗值 -${margin}。`)
+            // 引擎已有 exposeWeakness 读点：本阶段下一次对该敌人的攻击攻击值视为 0。
+            enemy.exposeWeakness = { round: state.round, phase: state.phase }
+            api.drawCards(inv.seat, 1)
+            api.info(`「${enemy.name}」本阶段下一次被攻击时攻击值视为 0，并抽取 1 张牌。`)
           },
         })
       },

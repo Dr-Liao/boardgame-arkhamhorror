@@ -67,8 +67,7 @@ function resolveWeakness(state, inv, def, events, texts) {
     const enemy = spawnEnemy(state, def.code, location, inv.seat)
     if (enemy) {
       // 伊格蛇族：显现时把旧印标记封印在自身。
-      if ((registeredEntry(def.code)?.enemyWeakness?.sealsElderSign
-    ?? EFFECTS[def.code]?.enemyWeakness?.sealsElderSign) && state.chaosBag.includes('eldersign')) {
+      if ((registeredEntry(def.code)?.enemyWeakness?.sealsElderSign) && state.chaosBag.includes('eldersign')) {
         sealChaosToken(state, 'eldersign', enemy.id)
         info(state, events, `🔒 「${enemy.name}」封印了 ${tokenLabel('eldersign')}。`)
       }
@@ -161,7 +160,14 @@ function resolveWeakness(state, inv, def, events, texts) {
     const handAllies = inv.hand.filter(code => (cardDef(code)?.traits || [])
       .some(trait => String(trait).toLowerCase() === 'ally'))
     let discarded = 0
-    if (controlled.length) {
+    const options = []
+    if (controlled.length) options.push({ id: 'asset', label: '弃掉一张你控制的盟友支援' })
+    if (handAllies.length) options.push({ id: 'hand', label: '弃掉手牌中所有盟友支援' })
+    const choice = options.length <= 1 ? options[0]?.id : requestChoice(state, {
+      kind: 'discard', source: def.code, seat: inv.seat,
+      prompt: '「血的代价」：弃掉一张盟友支援，或弃掉手牌中所有盟友支援。', options,
+    })
+    if (choice === 'asset' && controlled.length) {
       const chosen = controlled.length === 1 ? controlled[0].id : requestChoice(state, { kind: 'discard',
         source: def.code, seat: inv.seat, prompt: '「血的代价」：选择弃掉的盟友支援。',
         options: controlled.map(asset => ({ id: asset.id, label: cardName(asset.code) })) })
@@ -170,7 +176,7 @@ function resolveWeakness(state, inv, def, events, texts) {
       inv.discard.push(asset.code)
       discarded = 1
       info(state, events, `「${cardName(def.code)}」：${inv.name} 弃掉「${cardName(asset.code)}」。`)
-    } else if (handAllies.length) {
+    } else if (choice === 'hand' && handAllies.length) {
       for (const code of handAllies.slice()) {
         removeOne(inv.hand, code)
         inv.discard.push(code)

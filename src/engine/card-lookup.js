@@ -64,7 +64,7 @@ export function enemyDef(code) {
   if (ALL_ENEMIES[code]) return ALL_ENEMIES[code]
   const c = ALL_CARDS[code]
   if (c && c.type === 'enemy') {
-    const extra = { ...enemyWeaknessExtra(code), ...(registeredEntry(code)?.enemyWeakness || EFFECTS[code]?.enemyWeakness || {}) }
+    const extra = { ...enemyWeaknessExtra(code), ...(registeredEntry(code)?.enemyWeakness || {}) }
     return {
       code,
       name: c.nameZh || c.name,

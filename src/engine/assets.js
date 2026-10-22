@@ -51,11 +51,11 @@ export function createAssets(deps) {
   }
 
   function assetPassiveData(code) {
-    return EFFECTS[code]?.passive || registeredEntry(code)?.passive || null
+    return registeredEntry(code)?.passive || null
   }
 
   function assetCannotLeavePlay(asset) {
-    return Boolean(asset?.cannotLeavePlay || EFFECTS[asset?.code]?.cannotLeavePlay
+    return Boolean(asset?.cannotLeavePlay
       || registeredEntry(asset?.code)?.cannotLeavePlay)
   }
 
@@ -213,10 +213,10 @@ export function createAssets(deps) {
     for (const effect of removeEffectsFromSource(state, asset.id)) {
       if (effect.label) info(state, events, `「${effect.label}」随「${cardName(asset.code)}」离场而结束。`)
     }
-    // 「如果其离场，将其从游戏中移除」（04311 第七印记的封印）。
+    // 「如果其离场，将其从游戏中移除」（04311 第七印记的封印 / 03182a 丹尼尔·契斯特菲尔德）。
     // Phase 6（6e-16）：从条目级字段读（旧 DSL 条目回落）。
     const removeOnLeave = registeredEntry(asset.code)?.removeFromGameWhenEmpty
-      ?? EFFECTS[asset.code]?.removeFromGameWhenEmpty
+      || registeredEntry(asset.code)?.removeFromGameOnLeave
     if (removeOnLeave) {
       asset.removedFromGame = true
       state.removedFromGame ||= []

@@ -9,13 +9,23 @@
 
 export default {
   code: '04306',
+  playCondition: [{
+    when: ({ state }) => {
+      const revealed = state.lastLocationRevealed
+      return Boolean(revealed && revealed.round === state.round
+        && (revealed.turnSerial == null || state.turnSerial == null || revealed.turnSerial === state.turnSerial))
+    },
+    message: '只能在某地点入场或被揭示后、当前调查员回合内打出',
+  }],
   abilities: [
     {
-      kind: 'played', fast: true, label: '本回合帷幕 -1，并移动 1 个线索到这里',
+      kind: 'played', fast: true, label: '该地点本回合帷幕 -1，并移动 1 个线索到这里',
       resolve: ({ state, inv, api }) => {
-        const here = state.locations.find(location => location.id === inv.location)
+        const revealed = state.lastLocationRevealed
+        const here = state.locations.find(location => location.id === revealed?.id)
+          || state.locations.find(location => location.id === inv.location)
         if (here) api.tempShroudMod(here, -1)
-        const sources = state.locations.filter(location => location.id !== inv.location && (location.clues || 0) > 0)
+        const sources = state.locations.filter(location => location.id !== here.id && (location.clues || 0) > 0)
         if (!sources.length || !here) return
         const chosen = sources.length === 1 ? sources[0].id
           : api.choice({ kind: 'location', source: '04306', seat: inv.seat, prompt: '选择要移动 1 个线索的地点（可跳过）。',

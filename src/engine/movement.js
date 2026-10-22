@@ -145,6 +145,23 @@ function doShortcutMove(state, seat, move, events) {
     `${inv.name} 使用「捷径」移动到「${locName(state, move.locationId)}」。`)
 }
 
+function doDetachLocationAttachment(state, seat, move, events) {
+  const inv = state.investigators[seat]
+  const loc = state.locations.find(item => item.id === move.locationId)
+  const attachment = loc?.attachments?.[move.attachmentIndex]
+  if (!inv || !loc || !attachment) return
+  if (attachment.ownerSeat != null && attachment.ownerSeat !== seat) return
+  payActionCost(state, inv, 'action', events)
+  loc.attachments.splice(move.attachmentIndex, 1)
+  const owner = state.investigators[attachment.ownerSeat ?? seat] || inv
+  state.instanceCounter = (state.instanceCounter || 0) + 1
+  owner.assets.push({
+    id: `detached-${attachment.code}-${state.instanceCounter}`,
+    code: attachment.code, exhausted: false, enteredRound: state.round,
+  })
+  info(state, events, `🔓 ${inv.name} 解除「${attachment.code}」并放回${owner.name}的游戏区域。`)
+}
+
 function doMove(state, seat, locationId, events) {
   const inv = state.investigators[seat]
   payActionCost(state, inv, 'move', events)
@@ -174,7 +191,22 @@ function relocateInvestigator(state, seat, locationId, events, message = null) {
     info(state, events, `🚧 「${prevLoc.name}」上的屏障因调查员离开而被弃掉。`)
   }
   inv.location = locationId
-  inv.handSlotsPenalty = state.locations.find(location => location.id === locationId)?.handSlotsPenalty || 0
+  const enteredLocation = state.locations.find(location => location.id === locationId)
+  // 03250：手部槽位 -1 只在该地点调查时生效，不能常驻。
+  inv.handSlotsPenalty = registeredEntry(enteredLocation?.originalCode || enteredLocation?.code)?.handSlotsPenaltyWhileInvestigating
+    ? 0 : (enteredLocation?.handSlotsPenalty || 0)
+  // 03148 埋伏：被附属地点没有调查员时立刻弃掉（持续条件）。
+  if (prevLoc) {
+    for (const attachment of (state.playerLocationAttachments || []).filter(item =>
+      item.location === prevLoc.id && registeredEntry(item.code)?.discardWhenNoInvestigator)) {
+      if (state.investigators.some(other => !other.defeated && !other.resigned && other.location === prevLoc.id)) continue
+      const index = state.playerLocationAttachments.indexOf(attachment)
+      if (index >= 0) state.playerLocationAttachments.splice(index, 1)
+      const owner = state.investigators[attachment.ownerSeat]
+      if (owner) owner.discard.push(attachment.code)
+      info(state, events, `🪤 「${attachment.code}」因「${prevLoc.name || prevLoc.id}」没有调查员而被弃掉。`)
+    }
+  }
   if (state.phase === 'investigation' && state.turnSerial) {
     if (inv.hiddenMoves?.turnSerial !== state.turnSerial) inv.hiddenMoves = { turnSerial: state.turnSerial, count: 0 }
     inv.hiddenMoves.count++
@@ -191,6 +223,8 @@ function relocateInvestigator(state, seat, locationId, events, message = null) {
   autoEngageAt(state, locationId, events)
   const loc = state.locations.find((l) => l.id === locationId)
   scenarioBehavior(state).locationEntered?.(state, inv, loc, scenarioRuntime(state, events), companions)
+  // 第 55 轮：地点卡自己的「进入时」自定义效果（02132/02134 等）；与剧本钩子同序。
+  locationRuleOf(loc)?.onEnter?.effect?.(state, loc, scenarioRuntime(state, events), inv)
   const enterRule = (loc ? locationRuleOf(loc)?.onEnter : null) || loc?.onEnter
   if (loc && enterRule) {
     if (alreadyRevealed) info(state, events, `${inv.name} 进入「${loc.name}」，触发地点效果。`, locationRevealCue(loc, true, seat))
@@ -222,13 +256,16 @@ function relocateInvestigator(state, seat, locationId, events, message = null) {
   scenarioBehavior(state).beforeMove?.(state, inv, state.locations.find(loc => loc.id === locationId), scenarioRuntime(state, events))
   // 离开地点的检定由地点卡条目声明（locationRule.onLeave.test），引擎不再按地点 id 分支。
   const leaveRule = locationRuleOf(prevLoc)?.onLeave || prevLoc?.onLeave
-  if (leaveRule?.test) {
+  const leaveDestination = state.locations.find(loc => loc.id === locationId)
+  const leaveTestApplies = leaveRule?.test && (!leaveRule.test.onlyUnrevealedDestination || !leaveDestination?.revealed)
+  if (leaveTestApplies) {
     performTest(state, seat, leaveRule.test.skill, leaveRule.test.difficulty, { source: { label: '离开地点', name: prevLoc.name, code: prevLoc.originalCode || prevLoc.code }, resolve: r => {
         if (r.success) enter()
         else {
           inv.location = prevLoc.id
           const text = leaveRule.cancelMessage || `🌀 「${prevLoc.name}」：${inv.name} 的移动被取消。`
           info(state, events, text.replaceAll('{name}', inv.name))
+          leaveRule.onFail?.(state, prevLoc, scenarioRuntime(state, events), inv)
         }
     } })
   } else {
@@ -240,7 +277,11 @@ function relocateInvestigator(state, seat, locationId, events, message = null) {
       } })
     else enter()
   }
-  if (prevLoc && prevLoc.id !== inv.location) scenarioBehavior(state).locationLeft?.(state, inv, prevLoc, scenarioRuntime(state, events))
+  if (prevLoc && prevLoc.id !== inv.location) {
+    scenarioBehavior(state).locationLeft?.(state, inv, prevLoc, scenarioRuntime(state, events))
+    // 第 66 轮：地点卡自己的「离开后」效果（02326 无尽之桥）。
+    locationRuleOf(prevLoc)?.onLeave?.effect?.(state, prevLoc, scenarioRuntime(state, events), inv)
+  }
   }
   const barriers = state.locations.filter(loc => [inv.location, locationId].includes(loc.id))
     .flatMap(loc => Array(loc.arcaneBarriers || 0).fill(loc))
@@ -286,5 +327,5 @@ function relocateEnemy(state, enemy, destination, events) {
   autoEngageAt(state, destination, events)
 }
 
-  return { stepToward, distanceToInvestigator, investigatorMoveDestinations, moveInvestigatorTo, doShortcutMove, doMove, relocateInvestigator, relocateEnemy }
+  return { stepToward, distanceToInvestigator, investigatorMoveDestinations, moveInvestigatorTo, doShortcutMove, doDetachLocationAttachment, doMove, relocateInvestigator, relocateEnemy }
 }

@@ -106,7 +106,7 @@ const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'crit
   // 用 silent 保持迁移前后的日志逐字一致（读点在 openAbilityWindow -> executeDescriptor）。
   'silent'])
 const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities', 'modifiers', 'elderSign', 'source',
-  'uses', 'usesType', 'playCondition', 'simplified', 'note',
+  'uses', 'usesType', 'playCondition', 'simplified', 'note', 'onFound', 'assetRule', 'flags',
   // Phase 5（D2）：「用完弃置」是使用次数元数据，与 uses/usesType 同层。
   // 读点仍是 assetEffect / executeDescriptor 两处，旧 DSL 字段逐渐消失。
   'discardWhenEmpty',
@@ -148,16 +148,44 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // 幕/议程揭示规则（第 7 批从章节 behavior.js 的 originalCode 分支搬来）。
   'actRule',
   'agendaRule',
+  // 第 120 轮：同一卡号在不同剧本里的议程规则不同时，按剧本提供变体
+  // （读点：card-rules.js 的 agendaRuleFor(code, scenarioId)）。
+  'agendaRuleByScenario',
   // 地点标记（第 7 批：历史房间等章节级分组）。
   'historicalRoom',
   // 条目声明「这张遭遇卡的规则已经实现」，替代 encounter-rules 里的卡号集合。
   'implemented',
   // 密谋毁灭阈值按调查员人数计算（第 7 批从内容层 card-data 的集合搬来）。
   'doomPerInvestigator',
+  // 卡面「跳过神话阶段的放毁灭步骤」（03121/03122/03123）：引擎在 runMythos 读当前议程条目。
+  'skipMythosDoom',
+  // 卡面「离场时从游戏中移除」（03182a 丹尼尔·契斯特菲尔德）。
+  'removeFromGameOnLeave',
+  // 卡面「受到恐惧时，只要有 1 点没有分配给这张支援就受到 1 点伤害」（03182a）。
+  'horrorOverflowDamage',
+  // 威胁区卡「还有恐惧时不能离场」（01009 死灵之书）。
+  'threatCannotLeaveWhileCounters',
   // 威胁区卡的可执行「摆脱」行动（第 7 批从内容层 encounter-rules 的表搬来）。
   'threatAction',
   // 剧情角色（第 8 批：不再在引擎里写死丽塔/古代遗物等卡号）。
   'storyRole',
+  // 第 123 轮（第 8 批）：战役层读的条目字段，取代 src/campaign 里的卡号表。
+  // - `researchRequirement`：升级这张卡需要哪条战役记录（奇怪的溶液 / 古代雕文）；
+  // - `startingXp`：调查员开局额外经验（马泰奥神父）；
+  // - `shrewdAnalysis` / `arcaneResearch`：两张永久资产的身份标志（老练分析 / 奥术研究）；
+  // - `uniqueInDeck`：战役把这张卡加入牌组时同名只保留一张（丽塔·钱德勒）；
+  'researchRequirement', 'startingXp', 'shrewdAnalysis', 'arcaneResearch',
+  'uniqueInDeck',
+  // 「中毒」这类弱点：战役补给点/药品按这个标志找它（第 8 批，取代 campaign-effects.js 的默认卡号）。
+  'poisonWeakness',
+  // 第 124 轮：把 card-rules.js 最后几个流程常量交给条目声明。
+  // - `randomBasicWeakness`：「随机基础弱点」占位卡自身的卡号；
+  // - `doomPerInvestigatorAmount`：旧存档里议程毁灭阈值按人数计的倍率；
+  // - `legacyStraitjacket` / `legacyFightOrFlight`：旧存档迁移要认的两张卡。
+  'randomBasicWeakness', 'doomPerInvestigatorAmount', 'legacyStraitjacket', 'legacyFightOrFlight',
+  // 第 125 轮（第 8 批）：公开投影里的「翻面/变体」表现（03009 苏菲）。
+  // 形状 `{ code, minDamage }`：调查员伤害达到 minDamage 时，投影成另一张卡。
+  'observationVariant',
   // 地点复仇点何时「视同进入胜利区」（第 7 批从内容层 encounter-rules 搬来）。
   'vengeanceWhile',
   // 只进注册表、不并进 state 的敌人规则（第 7 批：避免改变场景定义哈希）。
@@ -172,7 +200,7 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // 地点计数器、空生成点放地点、苍白面具、遗物折扣、移出游戏去向、弱点升级来源。
   'blanksTraits', 'explicitReactionPrompt', 'poisonThreat', 'agendaHandSizePenalty',
   'investigateExtraActions', 'locationCounter', 'placesLocationForEmptySpawn', 'pallidMask',
-  'relicDiscountLocation', 'relocateDestination', 'upgradesFrom',
+  'relicDiscountLocation', 'relocateDestination', 'scenarioPlayable', 'cluesFromSurvivors', 'upgradesFrom',
   // Phase 5（5b-11）：击败敌人后横置治愈恐惧。
   'exhaustOnEnemyDefeatedHealHorror',
   // Phase 5（5b-6d）：被动数据体（stats / handSizeBonus / sanityBonus …）。
@@ -240,7 +268,9 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'copiesBeneathEvents',
   'grantsHidingSpot',
   // Phase 5（5a-27）：附属触发型（埋伏 / 陷阱）。
-  'ambushAttachment',
+  'ambushAttachment', 'discardWhenNoInvestigator', 'spawnChoices', 'charlesRoss', 'handSlotsPenaltyWhileInvestigating', 'spawnFarthestFromAll',
+  'detachAction', 'spawnAncientFirst', 'darkPactForced', 'replacementCode',
+  'bonusVsVictoryCombat', 'bonusVsVengeanceAgility',
   'snareAttachment',
   // Phase 5（5a-28）：附属提供地点行动（捷径）/ 禁放毁灭 / 禁重整（手铐）。
   'grantsShortcutMove',
@@ -271,7 +301,7 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // Phase 6（6e-16）：最后一批规则字段 —— 敌人弱点数据、可打出的弱点、手牌 Horror、
   // 非法物的快速/费用优惠、幸存者事件折扣、每人张数限制。
   'enemyWeakness', 'playableWeakness', 'endTurnInHandHorror', 'fastForIllicit',
-  'survivorEventDiscount', 'limitPerInvestigator',
+  'survivorEventDiscount', 'limitPerInvestigator', 'limitPerLocation', 'engageNoOpportunityAttack',
   'fast', 'noOpportunityAttack'])
 
 // 条目级「能不能打出」条件：函数式 predicate，或 { when, message }（message 直接展示给玩家）。
@@ -522,6 +552,17 @@ export function registerCardAbilities(entries) {
       copiesBeneathEvents: entry.copiesBeneathEvents === true,
       grantsHidingSpot: entry.grantsHidingSpot === true,
       ambushAttachment: entry.ambushAttachment === true,
+      discardWhenNoInvestigator: entry.discardWhenNoInvestigator === true,
+      spawnChoices: Array.isArray(entry.spawnChoices) ? [...entry.spawnChoices] : null,
+      charlesRoss: entry.charlesRoss === true,
+      handSlotsPenaltyWhileInvestigating: entry.handSlotsPenaltyWhileInvestigating === true,
+      spawnFarthestFromAll: entry.spawnFarthestFromAll === true,
+      detachAction: entry.detachAction === true,
+      spawnAncientFirst: entry.spawnAncientFirst === true,
+      darkPactForced: entry.darkPactForced === true,
+      replacementCode: entry.replacementCode || null,
+      bonusVsVictoryCombat: entry.bonusVsVictoryCombat ?? 0,
+      bonusVsVengeanceAgility: entry.bonusVsVengeanceAgility ?? 0,
       snareAttachment: entry.snareAttachment === true,
       grantsShortcutMove: entry.grantsShortcutMove === true,
       restrainsDoom: entry.restrainsDoom === true,
@@ -568,6 +609,9 @@ export function registerCardAbilities(entries) {
       surgeIfNoClues: entry.surgeIfNoClues === true,
       enemyRule: entry.enemyRule ? Object.freeze({ ...entry.enemyRule }) : null,
       enemyScript: entry.enemyScript ? Object.freeze({ ...entry.enemyScript }) : null,
+      onFound: typeof entry.onFound === 'function' ? entry.onFound : null,
+      assetRule: entry.assetRule ? Object.freeze({ ...entry.assetRule }) : null,
+      flags: entry.flags ? Object.freeze({ ...entry.flags }) : null,
       hiddenRule: entry.hiddenRule ? Object.freeze({
         ...entry.hiddenRule,
         cannotCommitTypes: Object.freeze([...(entry.hiddenRule.cannotCommitTypes || [])]),
@@ -590,15 +634,37 @@ export function registerCardAbilities(entries) {
       }) : null,
       actRule: entry.actRule ? Object.freeze({ ...entry.actRule }) : null,
       agendaRule: entry.agendaRule ? Object.freeze({ ...entry.agendaRule }) : null,
+      // 第 120 轮：按剧本的议程变体（浅冻结每一份规则对象）。
+      agendaRuleByScenario: entry.agendaRuleByScenario
+        ? Object.freeze(Object.fromEntries(Object.entries(entry.agendaRuleByScenario)
+          .map(([scenarioId, rule]) => [scenarioId, rule && typeof rule === 'object' ? Object.freeze({ ...rule }) : rule])))
+        : null,
       historicalRoom: entry.historicalRoom === true,
       implemented: entry.implemented === true,
       doomPerInvestigator: entry.doomPerInvestigator === true,
+      skipMythosDoom: entry.skipMythosDoom === true,
+      removeFromGameOnLeave: entry.removeFromGameOnLeave === true,
+      horrorOverflowDamage: Number.isSafeInteger(entry.horrorOverflowDamage) ? entry.horrorOverflowDamage : null,
+      threatCannotLeaveWhileCounters: entry.threatCannotLeaveWhileCounters === true,
       threatAction: entry.threatAction ? Object.freeze({
         ...entry.threatAction,
         skills: Object.freeze([...(entry.threatAction.skills || [])]),
         skillLabels: entry.threatAction.skillLabels ? Object.freeze({ ...entry.threatAction.skillLabels }) : null,
       }) : null,
       storyRole: entry.storyRole || null,
+      // 第 123 轮（第 8 批）：战役层的条目字段（读点见 card-rules.js / campaign.js）。
+      researchRequirement: entry.researchRequirement || null,
+      startingXp: Number.isSafeInteger(entry.startingXp) ? entry.startingXp : null,
+      shrewdAnalysis: entry.shrewdAnalysis === true,
+      arcaneResearch: entry.arcaneResearch === true,
+      uniqueInDeck: entry.uniqueInDeck === true,
+      poisonWeakness: entry.poisonWeakness === true,
+      randomBasicWeakness: entry.randomBasicWeakness === true,
+      doomPerInvestigatorAmount: Number.isSafeInteger(entry.doomPerInvestigatorAmount)
+        ? entry.doomPerInvestigatorAmount : null,
+      legacyStraitjacket: entry.legacyStraitjacket === true,
+      legacyFightOrFlight: entry.legacyFightOrFlight === true,
+      observationVariant: entry.observationVariant ? Object.freeze({ ...entry.observationVariant }) : null,
       vengeanceWhile: entry.vengeanceWhile || null,
       enemyStatRule: entry.enemyStatRule ? Object.freeze({ ...entry.enemyStatRule }) : null,
       enemySpawnRule: entry.enemySpawnRule ? Object.freeze({ ...entry.enemySpawnRule }) : null,
@@ -615,12 +681,16 @@ export function registerCardAbilities(entries) {
       pallidMask: entry.pallidMask === true,
       relicDiscountLocation: entry.relicDiscountLocation === true,
       relocateDestination: entry.relocateDestination === true,
+      scenarioPlayable: entry.scenarioPlayable === true,
+      cluesFromSurvivors: Object.freeze([...(entry.cluesFromSurvivors || [])]),
       upgradesFrom: entry.upgradesFrom || null,
       playableWeakness: entry.playableWeakness === true,
       endTurnInHandHorror: entry.endTurnInHandHorror ?? null,
       fastForIllicit: entry.fastForIllicit === true,
       survivorEventDiscount: entry.survivorEventDiscount === true,
       limitPerInvestigator: entry.limitPerInvestigator === true,
+      limitPerLocation: entry.limitPerLocation === true,
+      engageNoOpportunityAttack: entry.engageNoOpportunityAttack === true,
       source: entry.source || null,
       registered: true,
     }

@@ -1,3 +1,6 @@
+// 第 127 轮：规则书「当作幕/议程」的卡号表在 web/ui-cards.js。
+import { UI_CARDS } from './ui-cards.js'
+
 // Local play guide follows this game's implemented actions. Original reference
 // remains linked separately; it must not imply all catalog cards are playable.
 export const RULE_SOURCES = [
@@ -106,7 +109,8 @@ export function matchingRules(text) {
 }
 export function cardRuleIds(card) {
   const ids = scenarioCardRuleIds(card)
-  return ['act', 'agenda'].includes(card?.type) || ['02085', '02220'].includes(String(card?.originalCode || card?.code || ''))
+  return ['act', 'agenda'].includes(card?.type)
+    || UI_CARDS.rulebookActAgenda.includes(String(card?.originalCode || card?.code || ''))
     ? [...new Set([...ids, 'script'])] : ids
 }
 function scenarioCardRuleIds(card) {

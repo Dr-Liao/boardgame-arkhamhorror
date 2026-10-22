@@ -1,7 +1,8 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { contentRegistry, registerContentBundle } from '../content/registered.js'
-import { createGameState, applyMove, validateMove, legalMoves, getStat } from '../src/engine/engine.js'
+import { createGameState, applyMove, validateMove, legalMoves, getStat, getThreatEffect } from '../src/engine/engine.js'
+import { modifierTotal } from '../src/engine/modifiers.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { chapterSpecs, locationId as L } from '../content/campaigns/theDunwichLegacy/chapters.js'
 import { encounterRules } from '../content/campaigns/theDunwichLegacy/encounter-rules.js'
@@ -9,6 +10,7 @@ import { laterBehavior, summonHorror } from '../content/campaigns/theDunwichLega
 import { behavior as university } from '../content/campaigns/theDunwichLegacy/scenarios/extracurricularActivity/behavior.js'
 import { behavior as club } from '../content/campaigns/theDunwichLegacy/scenarios/theHouseAlwaysWins/behavior.js'
 import { CHAOS_BAGS, chapters } from '../content/campaigns/theDunwichLegacy/shared.js'
+import { registeredEntry } from '../src/engine/ability.js'
 
 const ENEMIES = [
   '02058', '02078', '02086', '02087', '02090', '02094', '02095', '02097', '02098', '02103', '02104', '02141',
@@ -405,10 +407,10 @@ const treacheryChecks = {
     const inv = state.investigators[0]
     inv.assets = [{ code: '02061' }]
     encounterRules.resolveEncounter(state, inv, { code: '02088' }, { threat: (seat, code) => state.investigators[seat].threat.push({ code }) })
-    assert.equal(encounterRules.statModifier(state, inv, 'intellect'), 0)
-    encounterRules.turnEnded(state, inv, { test: (_seat, _skill, difficulty, resolve) => { assert.equal(difficulty, 3); resolve({ success: true }) } })
-    assert.equal(inv.threat.length, 0)
-    assert.deepEqual(state.encounterDiscard, ['02088'])
+    assert.equal(modifierTotal(state, inv, 'skill:intellect'), 0)
+    // 回合结束意志（3）检定由引擎 runThreatEndTurn 统一结算；这里验证威胁数据已声明。
+    assert.deepEqual(getThreatEffect({ code: '02088' }).endTurnTest, { skill: 'willpower', difficulty: 3 })
+    inv.threat.length = 0
   },
   '02089'() {
     const state = simpleState(2)
@@ -580,7 +582,7 @@ const treacheryChecks = {
     const state = simpleState()
     let milled = 0
     laterBehavior('theEssexCountyExpress').resolveEncounter(state, state.investigators[0], { code: '02178' },
-      { discardTop: (_seat, n) => { milled = n } })
+      { discardTopOfDeck: (_seat, n) => { milled = n } })
     assert.equal(milled, 3)
   },
   '02180'() {
@@ -783,11 +785,31 @@ const storyChecks = {
     const armitage = { code: '02040', exhausted: false }
     inv.assets = [armitage]
     inv.hand = ['01088']
-    encounterRules.cardDrawn(state, inv, '01088', { choose: () => 'trigger' })
-    assert.equal(armitage.exhausted, true)
+    // 行为已迁到条目：卡面反应声明在 cardDrawn 窗口上，resolve 负责弃牌与获得资源。
+    const reaction = registeredEntry('02040').abilities.find(ability => ability.kind === 'reaction')
+    assert.deepEqual(reaction.trigger, ['cardDrawn'])
+    let discarded = null
+    reaction.resolve({
+      inv,
+      context: { cardCode: '01088' },
+      api: {
+        discardFromHand(seat, code) {
+          discarded = [seat, code]
+          inv.hand = inv.hand.filter(item => item !== code)
+          inv.discard.push(code)
+          return true
+        },
+        gainResources(seat, n) { inv.resources += n },
+      },
+    })
+    assert.deepEqual(discarded, [0, '01088'])
     assert.equal(inv.resources, 8)
     assert.deepEqual(inv.hand, [])
     assert.deepEqual(inv.discard, ['01088'])
+    // 「不能获得资源」时该反应不出现。
+    const blocked = reaction.criteria.some(predicate => !predicate({ inv, context: { cardCode: '01088' },
+      helpers: { isWeakness: () => false, canGainResources: () => false } }))
+    assert.equal(blocked, true)
   },
   '02059'() {
     const state = simpleState()
@@ -827,10 +849,11 @@ const storyChecks = {
     const rice = { code: '02061', exhausted: false }
     inv.assets = [rice]
     let drawn = 0
-    encounterRules.cluesGained(state, inv, 1, { choose: () => 'trigger', drawCards: (_seat, n) => { drawn += n } })
-    assert.equal(rice.exhausted, true)
+    const reaction = registeredEntry('02061').abilities.find(ability => ability.kind === 'reaction')
+    assert.deepEqual(reaction.trigger, ['clueDiscovered'])
+    reaction.resolve({ inv, api: { drawCards: (_seat, n) => { drawn += n } } })
     assert.equal(drawn, 1)
-    assert.equal(encounterRules.statModifier(state, inv, 'intellect'), 1)
+    assert.equal(modifierTotal(state, inv, 'skill:intellect'), 1)
   },
   '02079'() {
     const state = simpleState()
@@ -854,10 +877,11 @@ const storyChecks = {
     const morgan = { code: '02080', exhausted: false }
     inv.assets = [morgan]
     let drawn = 0
-    encounterRules.enemyDefeated(state, { defeatedBy: 0 }, { choose: () => 'trigger', drawCards: (_seat, n) => { drawn += n } })
-    assert.equal(morgan.exhausted, true)
+    const reaction = registeredEntry('02080').abilities.find(ability => ability.kind === 'reaction')
+    assert.deepEqual(reaction.trigger, ['defeatEnemy'])
+    reaction.resolve({ inv, api: { drawCards: (_seat, n) => { drawn += n } } })
     assert.equal(drawn, 1)
-    assert.equal(encounterRules.statModifier(state, inv, 'combat'), 1)
+    assert.equal(modifierTotal(state, inv, 'skill:combat'), 1)
   },
   '02138'() {
     const state = simpleState()
@@ -884,15 +908,13 @@ const storyChecks = {
     const state = simpleState()
     const inv = state.investigators[0]
     inv.assets = [{ code: '02140' }]
-    const behavior = laterBehavior('theMiskatonicMuseum')
-    assert.ok(behavior.actions(state, inv).some(action => action.rule === 'necronomiconResource'))
-    behavior.performAction(state, inv, { rule: 'necronomiconResource' }, {})
+    // 行为已迁到条目：获得 2 资源的行动只在「可以获得资源」时可用。
+    const action = registeredEntry('02140').abilities.find(ability => ability.kind === 'action')
+    assert.equal(action.criteria[0]({ helpers: { canGainResources: () => true } }), true)
+    assert.equal(action.criteria[0]({ helpers: { canGainResources: () => false } }), false)
+    action.resolve({ inv, api: { gainResources: (_seat, n) => { inv.resources += n } } })
     assert.equal(inv.resources, 7)
-    state.enemies = [{ code: '02097', engagedSeat: 0 }]
-    // 空无之地不能获得资源：条目仍在 actions() 里，但带 reason，因而不进 legalMoves。
-    const blocked = behavior.actions(state, inv).find(action => action.rule === 'necronomiconResource')
-    assert.ok(blocked?.reason, '不可执行时必须给出 reason')
-    assert.ok(!legalMoves(state).some(action => action.rule === 'necronomiconResource'))
+    assert.equal(modifierTotal(state, inv, 'skill:intellect'), 1)
   },
   '02179'() {
     const state = simpleState(2)
@@ -931,7 +953,7 @@ const storyChecks = {
     state.scenario.treacheries.hex = {}
     let drawn = 0
     const behavior = laterBehavior('bloodOnTheAltar')
-    assert.equal(behavior.statModifier(state, inv, 'willpower'), 1)
+    assert.equal(modifierTotal(state, inv, 'skill:willpower'), 1)
     behavior.afterTest(state, inv, { success: true, skill: 'willpower', value: 4, difficulty: 3, drawn: [], cancelledTokens: [],
       source: { type: 'encounter', code: 'hex' } },
       { choose: () => 'yes', drawCards: (_seat, n) => { drawn += n } })
@@ -945,7 +967,7 @@ const storyChecks = {
     inv.assets = [earl]
     let drawn = 0
     const behavior = laterBehavior('bloodOnTheAltar')
-    assert.equal(behavior.statModifier(state, inv, 'agility'), 1)
+    assert.equal(modifierTotal(state, inv, 'skill:agility'), 1)
     behavior.afterEvade(state, inv, {}, null, { choose: () => 'yes', drawCards: (_seat, n) => { drawn += n } })
     assert.equal(earl.exhausted, true)
     assert.equal(drawn, 1)

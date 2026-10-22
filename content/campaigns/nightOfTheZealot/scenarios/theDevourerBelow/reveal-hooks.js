@@ -1,4 +1,7 @@
 // 「地底噬魔」幕/密谋揭示（第 5 批从 src/engine/reveal.js 与 phases.js 搬出）。
+// 第 114 轮：丽塔的卡号改由条目 storyRole 派生（storyCardCode('lita')），不在内容层写死。
+import { LITA_CHANDLER_CODE } from '../../../../../src/cards/card-rules.js'
+
 export function agendaForcedEnemyDefeated(state, enemy, api) {
   const forced = state.agendas[state.agendaIndex]?.forced?.enemyDefeated
   if (!forced || forced.type !== 'umordhothDefeated') return false
@@ -21,12 +24,12 @@ export function scenarioActionError(state, inv, action) {
   const boss = state.enemies.find(enemy => enemy.code === 'umordhoth')
   if (!boss) return '乌默尔多斯尚未降临'
   if (boss.location !== inv.location) return '乌默尔多斯不在你所在的地点'
-  if (!inv.assets.some(asset => asset.code === '01117')) return '你没有控制丽塔·钱德勒'
+  if (!inv.assets.some(asset => asset.code === LITA_CHANDLER_CODE)) return '你没有控制丽塔·钱德勒'
   return null
 }
 
 export function sacrificeLitaAction(state, inv, api) {
-  const asset = inv.assets.find(item => item.code === '01117')
+  const asset = inv.assets.find(item => item.code === LITA_CHANDLER_CODE)
   if (!asset) return false
   const owners = Object.values(state.campaign.investigators || {})
     .filter(record => record.deck?.includes(asset.code))

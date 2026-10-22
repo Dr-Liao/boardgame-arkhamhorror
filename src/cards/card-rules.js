@@ -64,11 +64,17 @@ export function threatActionByRule(rule) {
 }
 
 export function actRuleFor(code) {
-  return (code && entryOf(code)?.actRule) || null
+  // 第 120 轮：同一卡号的幕/议程分散在不同战役而规则不同时，用 `actRuleByScenario` /
+  // `agendaRuleByScenario` 提供按剧本的变体；读点接受可选的 scenarioId。
+  const entry = entryOf(String(code ?? ''))
+  return (entry && entry.actRule) || null
 }
 
-export function agendaRuleFor(code) {
-  return (code && entryOf(code)?.agendaRule) || null
+export function agendaRuleFor(code, scenarioId = null) {
+  const entry = entryOf(String(code ?? ''))
+  if (!entry) return null
+  if (scenarioId && entry.agendaRuleByScenario?.[scenarioId]) return entry.agendaRuleByScenario[scenarioId]
+  return entry.agendaRule || null
 }
 
 export function storyCardCode(role) {
@@ -114,10 +120,9 @@ export function blanksTraits(code) {
   return (code && entryOf(code)?.blanksTraits) || []
 }
 
-// 即使没有 reactions 数据也需要前端「有反应提示」的卡。
-// 02217 还没有条目文件（行为未实现），暂时保留一个兜底码；补条目时一起删掉。
+// 即使没有 reactions 数据也需要前端「有反应提示」的卡（第 124 轮：02217 已条目化）。
 export function hasExplicitReactionPrompt(code) {
-  return entryOf(code)?.explicitReactionPrompt === true || code === '02217'
+  return entryOf(code)?.explicitReactionPrompt === true
 }
 
 // 造成「中毒」的威胁卡（04102）。
@@ -127,6 +132,11 @@ export function isPoisonThreat(code) {
 
 export function poisonThreatCode() {
   return entryWith('poisonThreat', true)?.code || null
+}
+
+// 「中毒」弱点（战役补给点 / 药品按这个标志找它，第 123 轮）。
+export function poisonWeaknessCode() {
+  return entryWith('poisonWeakness', true)?.code || null
 }
 
 // 议程在整理阶段扣减手牌上限（02043）。
@@ -177,34 +187,64 @@ export function relicDiscountLocation(code) {
   return entryOf(String(code ?? ''))?.relicDiscountLocation === true
 }
 
+// 剧情资产即使不在常规卡池里，也允许在战役牌组中打出（02040/02061/02080/02140/02217/02218/02219）。
+export function scenarioPlayableFor(code) {
+  return entryOf(String(code ?? ''))?.scenarioPlayable === true
+}
+
+// 条目级身份标志（第 114 轮）：内容层用「这张卡是不是 X」来读，而不写死卡号。
+// 与 content 里 existing 的 nonPlayerEntryFor(...)?.flags?.X 同一份数据。
+export function entryFlags(code) {
+  return entryOf(String(code ?? ''))?.flags || null
+}
+
+// 地点的声明式规则（onReveal / onEnter.effect / onLeave.effect / onCluesRemoved …）。
+export function locationRuleFor(code) {
+  return entryOf(String(code ?? ''))?.locationRule || null
+}
+
+// 「从地点底下翻出这张牌」时的结算钩子（02214 隐藏密室 / 02215 密室钥匙）。
+export function foundCardRuleFor(code) {
+  return entryOf(String(code ?? ''))?.onFound || null
+}
+
+// 剧情资产 / 关键道具的身份与规则标志（02140 死灵之书、02215 密室钥匙 …）。
+export function assetRuleFor(code) {
+  return entryOf(String(code ?? ''))?.assetRule || null
+}
+
+// 入场时按战役记录发放线索的剧情资产（02219 伊本巴奇之粉末）。
+export function cluesFromSurvivorsFor(code) {
+  return entryOf(String(code ?? ''))?.cluesFromSurvivors || []
+}
+
 // 地点被移出游戏时的「默认去向」地点（02320）。
 export function relocateDestinationCode() {
   return entryWith('relocateDestination', true)?.code || null
 }
 
 // ---------------------------------------------------------------------------
-// 游戏流程常量（还不是「这张卡的规则」，第 8 批处理）
+// 游戏流程常量（第 124 轮：全部改成条目派生，不再写死卡号）
 // ---------------------------------------------------------------------------
-// 剧情资产「古代遗物」的默认卡号（原 engine.js 硬编码 04061）。
-export const RELIC_OF_AGES_CODE = storyCardCode('relicOfAges') || '04061'
-// 「随机基础弱点」自身的卡号（原 engine.js 硬编码 01000）。
-export const RANDOM_BASIC_WEAKNESS_CODE = '01000'
-// 两张「附着型」弱点自身的卡号（原 engine.js 硬编码）。
-export const SMITE_THE_WICKED_CODE = storyCardCode('smiteTheWicked') || '02007'
-export const SEARCHING_FOR_IZZIE_CODE = storyCardCode('searchingForIzzie') || '02011'
-// 结局时加入战役牌组的剧情盟友（丽塔·钱德勒，原 engine.js 硬编码 01117）。
-export const LITA_CHANDLER_CODE = storyCardCode('lita') || '01117'
+// 剧情资产「古代遗物」的卡号（条目 04061 用 storyRole: 'relicOfAges' 声明）。
+export const RELIC_OF_AGES_CODE = storyCardCode('relicOfAges')
+// 「随机基础弱点」自身的卡号（条目 01000 用 randomBasicWeakness 声明）。
+export const RANDOM_BASIC_WEAKNESS_CODE = entryWith('randomBasicWeakness', true)?.code || null
+// 两张「附着型」弱点自身的卡号。
+export const SMITE_THE_WICKED_CODE = storyCardCode('smiteTheWicked')
+export const SEARCHING_FOR_IZZIE_CODE = storyCardCode('searchingForIzzie')
+// 结局时加入战役牌组的剧情盟友（丽塔·钱德勒）。
+export const LITA_CHANDLER_CODE = storyCardCode('lita')
 
 // ---------------------------------------------------------------------------
-// 旧存档迁移常量（只在 save-migration 里使用）
+// 旧存档迁移常量（只在 save-migration 里使用；值由条目声明）
 // ---------------------------------------------------------------------------
-// 「回响」议程的毁灭阈值按调查员人数计。
-export const LEGACY_AGENDA_DOOM_PER_INVESTIGATOR = Object.freeze({
-  '03121': 2,
-  '03122': 2,
-  '03123': 3,
-})
+// 「回响」议程的毁灭阈值按调查员人数计（条目用 doomPerInvestigatorAmount 声明倍率）。
+export const LEGACY_AGENDA_DOOM_PER_INVESTIGATOR = Object.freeze(
+  Object.fromEntries(allEntries()
+    .filter(entry => entry.doomPerInvestigatorAmount)
+    .map(entry => [entry.code, entry.doomPerInvestigatorAmount])))
 // 「束身衣」旧存档里被放在支援区，迁移时换到威胁区并补上不可离场与弃置费用。
-export const LEGACY_STRAITJACKET_CODE = '03185'
+export const LEGACY_STRAITJACKET_CODE = entryWith('legacyStraitjacket', true)?.code || null
 // 「战斗或逃跑」旧存档的裸字段折算成持久效果时，用它的卡号做 sourceCode。
-export const LEGACY_FIGHT_OR_FLIGHT_CODE = '03155'
+export const LEGACY_FIGHT_OR_FLIGHT_CODE = entryWith('legacyFightOrFlight', true)?.code || null

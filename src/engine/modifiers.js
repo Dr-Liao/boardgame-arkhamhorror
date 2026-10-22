@@ -36,6 +36,7 @@
 import { registeredEntry } from './ability.js'
 import { EFFECTS } from '../cards/card-effects.js'
 import { hasTrait } from './matcher.js'
+import { blanksTraits } from '../cards/card-rules.js'
 
 const MODIFIER_CACHE = new Map()
 
@@ -146,7 +147,7 @@ const CONDITION_KEYS = new Set([
   'horrorAtLeast', 'horrorAtMost', 'atTrait', 'inPhase', 'inRound',
   'sourceDamageAtLeast', 'sourceHorrorAtLeast', 'sourceDoomAtLeast', 'sourceUsesAtLeast',
   'controllerHasThreat', 'controllerHasNoThreat', 'sealedWithSource', 'treacheryResolving',
-  'sourceInHand', 'blankedThisRound',
+  'sourceInHand', 'blankedThisRound', 'sourceTraitNotBlanked',
 ])
 
 export function validateCondition(condition, origin = 'condition') {
@@ -190,6 +191,11 @@ export function evaluateCondition(condition, ctx) {
   if (condition.sourceUsesAtLeast != null && (source?.uses ?? 0) < condition.sourceUsesAtLeast) return false
   if (condition.controllerHasThreat != null && !threatCodes(controller).has(condition.controllerHasThreat)) return false
   if (condition.controllerHasNoThreat != null && threatCodes(controller).has(condition.controllerHasNoThreat)) return false
+  // 来源支援的某条印刷特性被威胁卡抹消时，修正不生效（丽塔的 +1 战斗）。
+  if (condition.sourceTraitNotBlanked != null) {
+    const trait = String(condition.sourceTraitNotBlanked).toLowerCase()
+    if ((controller?.threat || []).some(item => blanksTraits(item.code).includes(trait))) return false
+  }
   if (condition.sealedWithSource && !(state?.chaos?.sealed || []).some(entry => entry.source === source?.id)) return false
   if (condition.treacheryResolving && !state?._treacheryResolving) return false
   if (condition.sourceInHand) {
@@ -230,7 +236,7 @@ let hooks = {
   // 空白时该实体自己的声明式修正与布尔规则都不生效。
   entityBlanked: () => false,
   activeEffects: () => [],
-  weaknessProfile: code => EFFECTS[code]?.weakness || null,
+  weaknessProfile: code => null,
 }
 
 export function setModifierHooks(next) {
@@ -243,7 +249,7 @@ function modifiersOf(code) {
   const list = []
   const entry = lookupEntry(code)
   for (const raw of entry?.modifiers || []) list.push(normalizeModifier(raw, `卡片 ${code} 的修正`))
-  for (const raw of EFFECTS[code]?.modifiers || []) list.push(normalizeModifier(raw, `卡片 ${code} 的旧式修正`))
+  for (const raw of []) list.push(normalizeModifier(raw, `卡片 ${code} 的旧式修正`))
   MODIFIER_CACHE.set(code, list)
   return list
 }
@@ -323,9 +329,8 @@ export function legacyStatDelta(state, inv, skill) {
   for (const asset of inv?.assets || []) {
     // 文本被清空的支援（02088 等）不提供被动加成，与 assetEffect 的口径一致。
     if (hooks.sourceBlanked(state, inv, asset)) continue
-    const eff = EFFECTS[asset?.code]
-    // Phase 5（5b-8）：passive 已搬到能力层条目时，桥接同样要认。
-    const passive = eff?.passive || registeredEntry(asset?.code)?.passive
+    // Phase 5（5b-8）：passive 在能力层条目上（第 126 轮起旧 DSL 通道已删）。
+    const passive = registeredEntry(asset?.code)?.passive
     if (passive) {
       if (passive.stats) v += passive.stats[skill] || 0
       if (passive.statsWhileSealed && (state?.chaos?.sealed || []).some(entry => entry.source === asset.id)) {

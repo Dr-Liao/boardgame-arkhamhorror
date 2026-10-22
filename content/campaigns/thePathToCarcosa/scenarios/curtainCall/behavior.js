@@ -1,10 +1,12 @@
-import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
-import { registeredEntry } from '../../../../../src/engine/ability.js'
+
+import { nonPlayerEntryFor } from '../../../../../src/cards/encounter-abilities.js'
 import { campaignCardChange } from '../../../../../src/campaign/campaign.js'
 import { encounterRules } from '../../encounter-rules.js'
+import { locationRuleFor, enemyScriptFor, actRuleFor, entryFlags } from '../../../../../src/cards/card-rules.js'
 import { carcosaChaosToken } from '../../carcosa-chaos.js'
 
 const ACTIVE_ACT_TWO = new Set(['03047a', '03047b', '03047c'])
+const original = card => card?.originalCode || card?.code
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
 const here = (state, inv) => state.locations.find(location => location.id === inv.location)
 
@@ -39,8 +41,12 @@ function addCampaignWeakness(state) {
 
 function triggerHazard(state, inv, difficulty, harm, api, key) {
   state.scenarioFlags.hazardTests ||= {}
-  if (state.scenarioFlags.hazardTests[`${key}:${inv.seat}`] === state.round) return
-  state.scenarioFlags.hazardTests[`${key}:${inv.seat}`] = state.round
+  // 卡面是「每个带有恐惧的地点获得……（每轮仅限一次）」：上限属于该地点的能力，
+  // 不是每位调查员一次。进入与回合结束触发共用同一个地点槽位。
+  const locationId = here(state, inv)?.id || inv.location
+  const slot = `${key}:${locationId}`
+  if (state.scenarioFlags.hazardTests[slot] === state.round) return
+  state.scenarioFlags.hazardTests[slot] = state.round
   api.test(inv.seat, 'agility', difficulty, result => {
     if (result.success) return
     if (harm.damage) api.damage(inv.seat, harm.damage)
@@ -57,9 +63,9 @@ export const behavior = {
     const actTwos = state.scenario.acts.filter(act => ACTIVE_ACT_TWO.has(act.originalCode))
     const selected = api.shuffle([...actTwos], () => api.randomValue(state))[0]
     state.acts = [
-      structuredClone(state.scenario.acts.find(act => act.originalCode === '03046')),
+      structuredClone(state.scenario.acts.find(act => nonPlayerEntryFor(act.originalCode)?.flags?.firstAct)),
       structuredClone(selected),
-      structuredClone(state.scenario.acts.find(act => act.originalCode === '03048')),
+      structuredClone(state.scenario.acts.find(act => nonPlayerEntryFor(act.originalCode)?.flags?.escapeAct)),
     ]
     state.scenarioFlags = {
       actTwoCode: selected.originalCode,
@@ -69,7 +75,10 @@ export const behavior = {
       boxOfficeUsed: false,
       hazardTests: {},
     }
-    for (const inv of state.investigators) if (inv.code === '03006') inv.location = 'backstage'
+    // 第 114 轮：起始地点由调查员条目的 flags.backstageStart 声明（不再写死卡号）。
+    for (const inv of state.investigators) {
+      if (entryFlags(inv.code)?.backstageStart) inv.location = 'backstage'
+    }
     return setupPlan(state).locations
   },
 
@@ -89,32 +98,6 @@ export const behavior = {
     return { delta: hard ? -5 : -4 }
   },
 
-  locationRevealed(state, location, api) {
-    let pool
-    if (location.originalCode === '03050') pool = state.scenarioFlags.lobbyDoorways
-    if (location.originalCode === '03052') pool = state.scenarioFlags.backstageDoorways
-    if (pool) for (let count = 0; count < 2 && pool.length; count++) {
-      const id = pickRandom(pool, api)
-      pool.splice(pool.indexOf(id), 1)
-      api.place(id)
-    }
-    if (location.originalCode !== '03058') return
-    const copies = state.numInvestigators >= 3 ? 2 : 1
-    for (let count = 0; count < copies; count++) {
-      let found = false
-      for (const pile of [state.encounterDeck, state.encounterDiscard]) {
-        const index = pile.findIndex(code => code === 'swarmOfRats' || code === '01159')
-        if (index < 0) continue
-        const enemy = api.spawn(pile.splice(index, 1)[0], location.id)
-        if (enemy) api.engage(enemy, state.currentSeat)
-        found = true
-        break
-      }
-      if (!found) break
-    }
-    api.shuffleEncounterDeck()
-  },
-
   locationEntered(state, inv, location, api) {
     if (state.scenarioFlags.hazard === 'flames' && (location.horror || 0) > 0) {
       triggerHazard(state, inv, 3, { damage: 1 }, api, '03047a')
@@ -123,7 +106,6 @@ export const behavior = {
 
   locationLeft(state, inv, location, api) {
     encounterRules.locationLeft?.(state, inv, location, api)
-    if (location.originalCode === '03051' && inv.location === 'theatre') api.damage(inv.seat, 2)
     if (state.scenarioFlags.hazard === 'ooze' && (location.horror || 0) > 0) {
       api.test(inv.seat, 'agility', 4, result => {
         if (!result.success) {
@@ -137,8 +119,9 @@ export const behavior = {
   locationLeaveTest(state, inv, location) {
     if (state.scenarioFlags.hazard !== 'flood' || !(location?.horror || 0)) return null
     state.scenarioFlags.floodTests ||= {}
-    if (state.scenarioFlags.floodTests[inv.seat] === state.round) return null
-    state.scenarioFlags.floodTests[inv.seat] = state.round
+    const slot = `${inv.seat}:${location.id}`
+    if (state.scenarioFlags.floodTests[slot] === state.round) return null
+    state.scenarioFlags.floodTests[slot] = state.round
     return { skill: 'agility', difficulty: 2 }
   },
 
@@ -165,15 +148,15 @@ export const behavior = {
   },
 
   actReveal(state, act, api) {
-    registeredEntry(act.originalCode)?.actRule?.onReveal?.(state, act, api)
+    nonPlayerEntryFor(act.originalCode)?.actRule?.onReveal?.(state, act, api)
   },
 
   agendaReveal(state, agenda, api) {
-    registeredEntry(agenda.originalCode)?.agendaRule?.onReveal?.(state, agenda, api)
+    nonPlayerEntryFor(agenda.originalCode)?.agendaRule?.onReveal?.(state, agenda, api)
   },
 
   enemyPhaseEnd(state, api) {
-    for (const emissary of state.enemies.filter(enemy => enemy.code === '03060')) {
+    for (const emissary of state.enemies.filter(enemy => enemyScriptFor(original(enemy))?.emissary)) {
       const origin = state.locations.find(location => location.id === emissary.location)
       const affected = new Set([emissary.location, ...(origin?.connections || [])])
       for (const inv of active(state).filter(inv => affected.has(inv.location))) api.horror(inv.seat, 1)
@@ -181,39 +164,26 @@ export const behavior = {
   },
 
   enemyDiscarded(state, enemy, api) {
-    if ((enemy.originalCode || enemy.code) === '03059'
-      && state.acts[state.actIndex]?.originalCode === '03047c') api.advanceAct()
+    // 第 101 轮：03047c 的「使者被弃置」在幕条目。
+    return actRuleFor(original(state.acts[state.actIndex]))?.onEmissaryDiscarded?.(state, enemy, api)
   },
 
-  enemyDefeated(state, enemy, api) {    if (enemy.code === '03060') {
+  enemyDefeated(state, enemy, api) {
+    if (enemyScriptFor(original(enemy))?.emissary) {
       api.clearDoom()
       state.agendaIndex = 0
       state.doom = 3
       return false
     }
-    if (enemy.code !== '03059') return encounterRules.enemyDefeated?.(state, enemy, api) || false
+    if (!enemyScriptFor(original(enemy))?.pallidMask) {
+      return encounterRules.enemyDefeated?.(state, enemy, api) || false
+    }
     if (!ACTIVE_ACT_TWO.has(state.acts[state.actIndex]?.originalCode)) {
       return encounterRules.enemyDefeated?.(state, enemy, api) || false
     }
 
-    const origin = state.locations.find(location => location.id === enemy.location)
-    const code = state.acts[state.actIndex].originalCode
-    if (code === '03047a') {
-      changeChaosBag(state, 'cultist', 2, { permanent: true })
-      const theatre = state.locations.find(location => location.id === 'theatre')
-      if (theatre) theatre.horror = (theatre.horror || 0) + 1
-      state.scenarioFlags.hazard = 'flames'
-    } else if (code === '03047b') {
-      changeChaosBag(state, 'tablet', 2, { permanent: true })
-      if (origin) origin.horror = (origin.horror || 0) + 1
-      state.scenarioFlags.hazard = 'ooze'
-    } else {
-      changeChaosBag(state, 'elderthing', 2, { permanent: true })
-      for (const location of state.locations) {
-        if (location.traits?.includes('Private')) location.horror = (location.horror || 0) + 1
-      }
-      state.scenarioFlags.hazard = 'flood'
-    }
+    const handled = actRuleFor(original(state.acts[state.actIndex]))?.onEmissaryDefeated?.(state, enemy, api)
+    if (!handled) return false
     removeEngagement(state, enemy)
     enemy.damageTaken = 0
     enemy.location = 'lobby'
@@ -225,30 +195,17 @@ export const behavior = {
   afterTest(state, inv, result, api) {
     encounterRules.afterTest?.(state, inv, result, api)
     if (result.success && result.value - result.difficulty >= 2
-      && result.source?.code === '03057') api.horror(inv.seat, 1)
+      && nonPlayerEntryFor(result.source?.code)?.flags?.overSuccessHorror) api.horror(inv.seat, 1)
   },
 
   actions(state, inv) {
     const moves = []
     const location = here(state, inv)
     if (!location) return moves
-    if (location.originalCode === '03050') {
-      moves.push({ action: 'scenarioAction', rule: 'lobbyDraw', actions: 2, label: '花费2行动，抽取3张牌' })
-    }
-    if (location.originalCode === '03054' && !state.scenarioFlags.boxOfficeUsed) {
-      moves.push({ action: 'scenarioAction', rule: 'stealBoxOffice', label: '从售票处取得5资源' })
-    }
-    if (location.originalCode === '03055') {
-      moves.push({ action: 'scenarioAction', rule: 'greenRoomInvestigate', label: '调查演员休息室（本次智识+3，之后弃掉全部手牌）' })
-    }
-    if (location.originalCode === '03056') {
-      // 化妆间能力一直登记，只差"身上还有恐惧"这个能被治愈改变的条件。
-      moves.push({ action: 'scenarioAction', rule: 'dressingRoomHeal', actions: 3,
-        label: '花费3行动，治愈3点恐惧',
-        reason: inv.horror > 0 ? null : '没有需要治愈的恐惧' })
-    }
-    if (state.acts[state.actIndex]?.originalCode === '03048' && location.id === 'lobby') {
-      const stranger = state.enemies.some(enemy => enemy.code === '03059')
+    // 第 93 轮：03050/03054/03055/03056 的地点行动在地点条目声明。
+    locationRuleFor(location.originalCode)?.actions?.({ state, inv, location, moves })
+    if (nonPlayerEntryFor(state.acts[state.actIndex]?.originalCode)?.flags?.escapeAct && location.id === 'lobby') {
+      const stranger = state.enemies.some(enemy => enemyScriptFor(original(enemy))?.pallidMask)
       moves.push({ action: 'scenarioAction', rule: 'escapeTheatre', label: '撤退：逃离剧院',
         reason: stranger ? '「苍白面具下的男子」还在场上，需要先解决他' : null })
     }
@@ -257,22 +214,9 @@ export const behavior = {
 
   performAction(state, inv, move, api) {
     const location = here(state, inv)
-    if (move.rule === 'lobbyDraw') api.drawCards(inv.seat, 3)
-    else if (move.rule === 'stealBoxOffice') {
-      if (state.scenarioFlags.boxOfficeUsed) throw new Error('本场游戏已从售票处取过资源')
-      state.scenarioFlags.boxOfficeUsed = true
-      state.scenarioFlags.stoleFromBoxOffice = true
-      inv.resources += 5
-    } else if (move.rule === 'greenRoomInvestigate') {
-      api.test(inv.seat, 'intellect', (location.shroud || 0) + (location.shroudMod || 0), result => {
-        if (result.success && location.clues > 0) {
-          location.clues--
-          api.gainClues(inv.seat, 1)
-        }
-        inv.discard.push(...inv.hand.splice(0))
-      }, 3, { type: 'scenario', label: '调查', code: '03055' })
-    } else if (move.rule === 'dressingRoomHeal') inv.horror = Math.max(0, inv.horror - 3)
-    else if (move.rule === 'escapeTheatre') api.resign(inv.seat)
+    // 第 93 轮：地点条目先接管 03050/03054/03055/03056 的行动。
+    if (locationRuleFor(location?.originalCode)?.performAction?.(state, inv, move, api)) return
+    if (move.rule === 'escapeTheatre') api.resign(inv.seat)
     else throw new Error(`未知谢幕行动：${move.rule}`)
   },
 

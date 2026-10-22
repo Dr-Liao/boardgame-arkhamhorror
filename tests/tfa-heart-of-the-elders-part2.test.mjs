@@ -517,26 +517,17 @@ test('深入幽嘶：入场时每位调查员二选一，调查行动可以把�
   const inv = state.investigators[0]
   inv.location = 'descentToYoth'
   const descent = state.locations.find(location => location.id === 'descentToYoth')
-  assert.deepEqual(behavior.actions(state, inv).filter(move => !move.reason).map(move => move.rule), [], '没有毁灭时没有可执行的翻面行动')
-  assert.equal(behavior.actions(state, inv).find(move => move.rule === 'flipDescentDoom')?.reason,
-    '深入幽嘶上没有毁灭标记可翻面', '没有毁灭时给出缺口')
+  assert.equal(behavior.actions(state, inv).some(move => move.rule === 'flipDescentDoom'), false,
+    '翻面不再是额外行动，而是成功调查后的可选替代')
   let answers = ['doom', 'draw']
   const api = recordingApi(state, { choose: () => answers.shift() })
   behavior.afterExplore(state, inv, { code: 'descentToYoth', kind: 'location', runtime: api })
   assert.equal(descent.doom, 1, '第一位放毁灭')
   assert.equal(api.calls.draws.length, 2, '第二位抽 2 张')
-  // 翻面行动：检定智识(帷幕 3)，成功把 1 个毁灭翻成线索。
-  const moves = behavior.actions(state, inv)
-  assert.deepEqual(moves.map(move => move.rule), ['flipDescentDoom'])
-  assert.equal(moves[0].actions, 1)
-  behavior.performAction(state, inv, moves[0], recordingApi(state, {
-    test: (seat, skill, difficulty, resolve, bonus, source) => {
-      assert.equal(skill, 'intellect')
-      assert.equal(difficulty, 3, '深入幽嘶帷幕 3')
-      assert.equal(source?.label, '调查')
-      resolve({ success: true, value: 4, difficulty, skill })
-    },
-  }))
+  // 成功调查后的可选替代：不发现线索，改为把 1 个毁灭翻成线索。
+  const replaced = behavior.investigateResult(state, inv, descent, { success: true, value: 4, difficulty: 3, skill: 'intellect' },
+    recordingApi(state, { choose: () => 'flip' }))
+  assert.equal(replaced, false, '替代后发现线索的默认流程被取消')
   assert.equal(descent.doom, 0)
   assert.equal(descent.clues, 1)
 })

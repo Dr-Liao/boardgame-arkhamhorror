@@ -39,10 +39,12 @@ export function searchInvestigatorDeck(inv, api, amount, state = null) {
 
 // 03038 / 03148 / 03199 / 03232 共用的「选择附属地点」：候选集合与旧实现一致
 // （藏身地点可以是任一已揭示地点，其余只能附属到所在地点），询问文案逐字保留。
-export function attachToChosenLocation(state, inv, api, { code, source, revealedOnly = false }) {
-  const locations = revealedOnly
-    ? state.locations.filter(location => location.revealed)
-    : state.locations.filter(location => location.id === inv.location)
+export function attachToChosenLocation(state, inv, api, { code, source, revealedOnly = false, anyLocation = false }) {
+  const locations = anyLocation
+    ? state.locations
+    : revealedOnly
+      ? state.locations.filter(location => location.revealed)
+      : state.locations.filter(location => location.id === inv.location)
   if (!locations.length) return null
   const locationId = locations.length === 1 ? locations[0].id
     : api.choice({ kind: 'location', source, seat: inv.seat, prompt: '选择附加地点。',

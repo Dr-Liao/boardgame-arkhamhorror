@@ -39,6 +39,7 @@ export function createEnemies(deps) {
     enemyStatMods,
     enemyTextBlanked,
     entityRuleActive,
+    getMaxSanity,
     info,
     isWeaknessCode,
     leadDecisionSeat,
@@ -70,6 +71,8 @@ function enemyFightValue(state, enemy, inv) {
   // D1：敌人的战斗值修正来自它自己的卡面声明，或它所在地点的卡面声明
   // （「此处的每个蛇族敌人 +1」不再需要章节 behavior）。
   value += entityModifierTotal(state, enemy, 'enemyFight')
+  // 03100 王之法令：本轮每有 1 个线索/毁灭，攻击 +1。
+  if (enemy.kingsEdictRound === state.round) value += (enemy.clues || 0) + (enemy.doom || 0)
   const reduction = enemy.fightReduction
   if (reduction && reduction.round === state.round && reduction.phase === state.phase) value = Math.max(0, value - (reduction.amount || 0))
   return value
@@ -102,6 +105,11 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
     horror: 0,
     cancelled: false,
   }
+  // 「在逃中」（01010）：直到本轮结束，非精英敌人不能攻击你——包括反击、警戒与效果发起的攻击。
+  if (inv?.onTheLam && !enemy.elite) {
+    info(state, events, `🕶️ 「在逃中」：非精英敌人「${enemy.name}」不能攻击 ${inv.name}。`)
+    return false
+  }
   // “狼人”德鲁「攻击时治愈 1 点伤害」由 01137 的 forced 描述子在 enemyAttack 窗口结算。
   // 「不能攻击」（失落时代 P2 通用开关，04048 守卫者）。卡牌效果造成的攻击不受此限制。
   if (attack.kind !== 'effect' && enemyCannotAttack(state, enemy)) {
@@ -112,6 +120,11 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
   const context = reactionWindow(state, 'enemyAttack',
     { when: 'enemyAttack', seat: inv.seat, location: inv.location, enemy, attackKind: attack.kind,
       prompt: `「${enemy.name}」攻击 ${inv.name}` }, events)
+  // 03068b：该敌人的攻击不能被取消。
+  if (context.cancelled && enemyRuleFlags(enemy.code).attacksCannotBeCancelled) {
+    info(state, events, `⛔ 「${enemy.name}」的攻击不能被取消。`)
+    context.cancelled = false
+  }
   if (context.cancelled) {
     info(state, events, `「${enemy.name}」对 ${inv.name} 的攻击被取消。`)
     attack.cancelled = true
@@ -141,12 +154,21 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
     effect: 'attack', seat: inv.seat, enemyId: enemy.id, location: inv.location, damage: enemy.damage + extraDamage, horror: enemy.horror + extraHorror })
   const damageBefore = inv.damage || 0
   const horrorBefore = inv.horror || 0
+  // 「如果哈斯塔的攻击造成的恐惧超出你的神智值，你还受到 1 点伤害」（03332/03334）。
+  const excessHorrorDamage = !enemyTextBlanked(state, enemy)
+    && enemyRuleFlags(enemy.code).excessHorrorDamage === true
+  const remainingSanityBefore = excessHorrorDamage ? getMaxSanity(inv) - (inv.horror || 0) : 0
   if (!inv.defeated && !tryAquinnahRedirect(state, enemy, inv, events, extraDamage, extraHorror)) {
-    applyHarm(state, inv, enemy.damage + extraDamage, enemy.horror + extraHorror, events, false, { enemy, location: inv.location })
+    applyHarm(state, inv, enemy.damage + extraDamage, enemy.horror + extraHorror, events, false, { enemy, location: inv.location },
+      false, enemyRuleFlags(enemy.code).harmStrategy || null)
   }
   // 实际落到调查员身上的伤害/恐惧（被取消、被防止或转移时为 0）。
   attack.damage = Math.max(0, (inv.damage || 0) - damageBefore)
   attack.horror = Math.max(0, (inv.horror || 0) - horrorBefore)
+  if (excessHorrorDamage && attack.horror > remainingSanityBefore && !inv.defeated && !inv.resigned) {
+    info(state, events, `💥 「${enemy.name}」造成的恐惧超出 ${inv.name} 的神智值，额外受到 1 点伤害。`)
+    applyDamage(state, inv, 1, events)
+  }
   scenarioBehavior(state).enemyAttackResolved?.(state, enemy, inv, scenarioRuntime(state, events), attack)
   if (inv.defeated) checkOutcome(state, events)
   if (!enemyTextBlanked(state, enemy) && enemy.forcedDoom) {
@@ -158,12 +180,82 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
   return true
 }
 
+function buildDistance(state, from, to) {
+  if (!from || !to) return Infinity
+  if (from === to) return 0
+  const distance = new Map([[from, 0]])
+  const queue = [from]
+  while (queue.length) {
+    const current = queue.shift()
+    const location = state.locations.find(item => item.id === current)
+    for (const next of location?.connections || []) {
+      if (distance.has(next)) continue
+      distance.set(next, distance.get(current) + 1)
+      if (next === to) return distance.get(next)
+      queue.push(next)
+    }
+  }
+  return Infinity
+}
+
 function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, temporary = false) {
   const def = enemyDef(code)
   if (!def) return null
   const override = scenarioBehavior(state).spawnOverrides?.[code]
   let loc = override && locationExists(state, override)
     ? override : !ignoreSpawn && def.spawn ? def.spawn : locationId
+  // 「生成 - 距离所有调查员最远的地点」（03059）：只在通用生成时生效；
+  // 剧本用 api.spawn(..., ignoreSpawn=true) 明确指定的剧情生成点仍然优先。
+  if (!ignoreSpawn && !override && registeredEntry(code)?.spawnFarthestFromAll) {
+    const alive = state.investigators.filter(inv => !inv.defeated && !inv.resigned)
+    if (alive.length) {
+      const farthest = []
+      let best = -1
+      for (const candidate of state.locations) {
+        let nearest = Infinity
+        for (const inv of alive) {
+          const distance = buildDistance(state, inv.location, candidate.id)
+          if (distance < nearest) nearest = distance
+        }
+        if (!Number.isFinite(nearest)) continue
+        if (nearest > best) { best = nearest; farthest.length = 0; farthest.push(candidate.id) }
+        else if (nearest === best) farthest.push(candidate.id)
+      }
+      if (farthest.length) {
+        loc = farthest.length === 1 ? farthest[0] : requestChoice(state, {
+          kind: 'location', source: code, seat: state.currentSeat ?? state.campaign?.leadSeat ?? 0,
+          prompt: `选择「${def.name}」生成的、距离所有调查员最远的地点。`,
+          options: farthest.map(id => ({ id, label: state.locations.find(item => item.id === id)?.name || id })),
+        })
+      }
+    }
+  }
+  // 「生成 - 任意无人地点（如可能，生成在[[古代]]地点）」（04086）。
+  if (!override && !ignoreSpawn && registeredEntry(code)?.spawnAncientFirst) {
+    const active = state.investigators.filter(inv => !inv.defeated && !inv.resigned)
+    const empty = state.locations.filter(loc => !active.some(inv => inv.location === loc.id))
+    const ancient = empty.filter(loc => (cardDef(loc.originalCode || loc.code)?.traits || [])
+      .some(trait => String(trait).toLowerCase() === 'ancient'))
+    const pool = ancient.length ? ancient : empty
+    if (pool.length) {
+      loc = pool.length === 1 ? pool[0].id : requestChoice(state, {
+        kind: 'location', source: code, seat: state.currentSeat ?? state.campaign?.leadSeat ?? 0,
+        prompt: `选择「${def.name}」的生成地点（古代地点优先）。`,
+        options: pool.map(entry => ({ id: entry.id, label: entry.name })),
+      })
+    }
+  }
+  const spawnChoices = !override && !ignoreSpawn ? registeredEntry(code)?.spawnChoices : null
+  if (spawnChoices?.length) {
+    const available = spawnChoices.filter(id => locationExists(state, id))
+    if (available.length) {
+      loc = available.length === 1 ? available[0] : requestChoice(state, {
+        kind: 'location', source: code, seat: state.currentSeat ?? state.campaign?.leadSeat ?? 0,
+        prompt: `选择「${def.name}」的生成地点。`,
+        options: available.map(id => ({ id, label: state.locations.find(item => item.id === id)?.name || id })),
+      })
+    }
+  }
   if (!ignoreSpawn && scenarioBehavior(state).spawnLocation) loc = scenarioBehavior(state).spawnLocation(state, code, loc, engagedSeat, scenarioRuntime(state, []))
   if (!locationExists(state, loc)) {
     state.encounterDiscard.push(code)
@@ -258,8 +350,7 @@ function defeatEnemy(state, enemy, events) {
     const inv = state.investigators[enemy.engagedSeat]
     if (inv) removeOne(inv.engaged, enemy.id)
   }
-  if ((registeredEntry(enemy.code)?.enemyWeakness?.shuffleIntoDeckOnDefeat
-    ?? EFFECTS[enemy.code]?.enemyWeakness?.shuffleIntoDeckOnDefeat)) {
+  if ((registeredEntry(enemy.code)?.enemyWeakness?.shuffleIntoDeckOnDefeat)) {
     const owner = state.investigators[enemy.bearerSeat]
     if (owner) owner.deck = shuffle([...owner.deck, enemy.code], () => randomValue(state))
     info(state, events, `「${enemy.name}」将被击败时改为洗回其承受者的牌库。`)
@@ -278,8 +369,7 @@ function defeatEnemy(state, enemy, events) {
   for (const holder of aliveInvestigators(state)) {
     // Phase 5（5a-29）：条目上的 exhaustOnEnemyDefeatedHealHorror 本身就是标记，不再写死卡号。
     const ichtaca = holder.assets.find(asset => !asset.exhausted
-      && (EFFECTS[asset.code]?.exhaustOnEnemyDefeatedHealHorror
-        ?? registeredEntry(asset.code)?.exhaustOnEnemyDefeatedHealHorror))
+      && (registeredEntry(asset.code)?.exhaustOnEnemyDefeatedHealHorror))
     if (!ichtaca) continue
     const answer = requestChoice(state, {
       kind: 'reaction', source: ichtaca.code, seat: holder.seat, canSkip: true,
@@ -304,6 +394,14 @@ function defeatEnemy(state, enemy, events) {
       prompt: `「${enemy.name}」被击败后`,
     }, events)
   }
+  // 本地点有敌人被击败（04026 彩饰骷髅）：同地点每位调查员都能触发。
+  for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned && item.location === enemy.location)) {
+    if (inv.seat !== defeatedBy) {
+      reactionWindow(state, 'defeatEnemy',
+        { when: 'defeatEnemy', seat: inv.seat, location: enemy.location, enemy,
+          prompt: `「${enemy.name}」在本地点被击败后` }, events)
+    }
+  }
   checkAct(state, events)
   checkAgendaForcedEnemyDefeated(state, enemy, events)
 }
@@ -318,12 +416,9 @@ function damageEnemy(state, enemy, amount, seat, events, source = null) {
       || scenarioBehavior(state).enemyDamageAllowed?.(state, enemy, source, seat) === false)) return false
   // 「职业杀手」：本回合该敌人下次受到的伤害 +1（一次性）。
   let total = amount + campaignState.consumeDamageBonus(enemy, state)
-  // 幽嘶蛇人：每次受到攻击少受 1 点伤害（失落时代 M3 的通用减伤字段）。
-  const reduction = campaignState.damageReduction(enemy)
-  if (reduction) total = Math.max(0, total - reduction)
   enemy.damageTaken = (enemy.damageTaken || 0) + total
   enemy.defeatedBy = seat
-  scenarioBehavior(state).enemyDamaged?.(state, enemy, scenarioRuntime(state, events))
+  scenarioBehavior(state).enemyDamaged?.(state, enemy, scenarioRuntime(state, events), seat, source)
   if (enemy.damageTaken >= enemyHealth(state, enemy)
     && enemyCanBeDefeated(state, enemy, source, seat)) defeatEnemy(state, enemy, events)
   return true
@@ -340,10 +435,18 @@ function autoEvadeEnemy(state, enemy, events) {
 // 冷漠（aloof）敌人不会主动与调查员交战，需由调查员主动交战或攻击。
 
 function applyHarm(state, inv, damage, horror, events, direct, attack = null, assetsFirst = false, strategy = null) {
+  // 「在你受到恐惧时，如果这些恐惧中至少有 1 点没有分配给 X，受到 1 点伤害」（03182a 丹尼尔）。
+  // 在分配前记下带这条强制的支援，分配后按分配结果判定。
+  const horrorOverflowAssets = (horror || 0) > 0
+    ? (inv.assets || []).filter(asset => registeredEntry(asset.code)?.horrorOverflowDamage)
+    : []
   const changed = scenarioBehavior(state).beforeHarm?.(state, inv,
     { damage: damage || 0, horror: horror || 0, direct: !!direct }, scenarioRuntime(state, events))
   if (changed) { damage = changed.damage; horror = changed.horror; direct = changed.direct }
   if (!(damage > 0 || horror > 0)) return
+  // 「这次伤害/恐惧是否足以击败你」（04111 坚韧不拔）：窗口开始前写入，供反应条件读取。
+  state.lastHarmContext = { seat: inv.seat, damage: damage || 0, horror: horror || 0, direct: !!direct,
+    round: state.round, turnSerial: state.turnSerial ?? null }
   const harmContext = reactionWindow(state, 'harmDealt', { when: 'harmDealt', seat: inv.seat, location: inv.location,
     damage: damage || 0, horror: horror || 0, direct: !!direct, attack, prompt: `${inv.name} 将受到伤害或恐惧` }, events)
   damage = Math.max(0, harmContext.damage || 0)
@@ -387,10 +490,26 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
         leaveAsset(state, owner, asset)
         if (!asset.removedFromGame) owner.discard.push(asset.code)
         info(state, events, `${cardName(asset.code)} 被击败并弃置。`)
-        const retaliation = EFFECTS[asset.code]?.defeatedDamage ?? registeredEntry(asset.code)?.defeatedDamage
+        for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned && item.location === owner.location)) {
+          triggerReaction(state, inv.seat, 'defeatAtLocation', events,
+            { when: 'defeatAtLocation', kind: 'ally', seat: inv.seat, location: owner.location, assetCode: asset.code })
+          reactionWindow(state, 'defeatAtLocation',
+            { when: 'defeatAtLocation', kind: 'ally', seat: inv.seat, location: owner.location, assetCode: asset.code,
+              prompt: `「${cardName(asset.code)}」在本地点被击败后` }, events)
+        }
+        const retaliation = registeredEntry(asset.code)?.defeatedDamage
         if (retaliation) defeatedAssetRetaliation(state, owner, retaliation, events)
       }
     }
+  }
+  const totalHorror = [...assignedHorror.values()].reduce((total, amount) => total + amount, 0)
+  for (const asset of horrorOverflowAssets) {
+    const assignedHere = assignedHorror.get(asset) || 0
+    if (assignedHere >= totalHorror) continue
+    const overflowDamage = registeredEntry(asset.code)?.horrorOverflowDamage || 1
+    info(state, events, `💥 「${cardName(asset.code)}」强制：这些恐惧中至少有 1 点没有分配给他，你受到 ${overflowDamage} 点伤害。`)
+    applyDamage(state, inv, overflowDamage, events)
+    break
   }
   checkDefeated(state, inv.seat, events)
   if (inv.defeated || inv.resigned) return

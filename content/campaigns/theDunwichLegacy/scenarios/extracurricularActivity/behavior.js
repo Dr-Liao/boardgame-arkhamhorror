@@ -4,13 +4,15 @@ import { awardStoryCard } from '../../../../../src/campaign/campaign-effects.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { chooseCandidate } from '../../../../choice-helpers.js'
 import { encounterRules } from '../../encounter-rules.js'
+import { assetRuleFor, enemyScriptFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
+const original = card => card?.originalCode || card?.code
 import { dunwichChaosToken, dunwichChaosAfterTest } from '../../dunwich-chaos.js'
 
 const completedHouseAlwaysWins = state =>
   state.campaign.scenarioResults.some(result => result.scenarioId === 'theHouseAlwaysWins')
 
 function concoctionState(state) {
-  const owned = state.investigators.some(inv => inv.assets.some(asset => asset.code === '02059'))
+  const owned = state.investigators.some(inv => inv.assets.some(asset => assetRuleFor(original(asset))?.reagent))
   const discarded = state.investigators.some(inv => inv.discard.includes('02059'))
   const removed = (state.scenarioZones.removed || []).includes('02059')
   const underneath = state.scenarioZones.underLocations?.alchemyLabs === '02059'
@@ -43,10 +45,12 @@ export const behavior = {
     return plan.locations
   },
   locationRevealed(state, location, api) {
-    if (location.id === 'studentUnion') api.place('dormitories')
-    if (location.id === 'administrationBuilding') api.place('facultyOffices')
-    if (location.id === 'scienceBuilding') api.place('alchemyLabs')
-    if (location.id === 'facultyOffices' && location.originalCode === '02054') {
+    // 「放置入场」时这些上锁地点同时翻开：未揭示面的门禁在入场后解除。
+    if (location.id === 'studentUnion') { api.place('dormitories'); api.reveal('dormitories') }
+    if (location.id === 'administrationBuilding') { api.place('facultyOffices'); api.reveal('facultyOffices') }
+    if (location.id === 'scienceBuilding') { api.place('alchemyLabs'); api.reveal('alchemyLabs') }
+    // 第 115 轮：教师办公室的触发由地点条目的 facultyOfficeReveal 标志声明。
+    if (location.id === 'facultyOffices' && locationRuleFor(original(location))?.facultyOfficeReveal) {
       const humanoid = code => (state.scenario.enemies[code]?.traits || []).some(trait => trait.toLowerCase() === 'humanoid')
       const matches = []
       for (const [pileName, pile] of [['encounterDeck', state.encounterDeck], ['encounterDiscard', state.encounterDiscard]]) {
@@ -61,7 +65,7 @@ export const behavior = {
     }
   },
   turnEnded(state, inv, api) {
-    encounterRules.turnEnded(state, inv, api)
+    encounterRules.turnEnded?.(state, inv, api)
     const here = state.locations.find(location => location.id === inv.location)
     if (here) registeredEntry(here.originalCode)?.locationRule?.onTurnEnd?.(state, here, api, inv)
   },
@@ -70,7 +74,6 @@ export const behavior = {
     dunwichChaosAfterTest('extracurricularActivity', state, inv, result, api)
     if (result.success) return
     const here = state.locations.find(location => location.id === inv.location)
-    if (here) registeredEntry(here.originalCode)?.locationRule?.onTestFail?.(state, here, api, inv, result)
   },
   enemyPhaseStart(state) {
     for (const enemy of state.enemies) {
@@ -82,14 +85,8 @@ export const behavior = {
     entry?.actRule?.onReveal?.(state, act, api)
   },
   agendaReveal(state, agenda, api) {
-    const entry = registeredEntry(agenda.originalCode)
-    if (entry?.agendaRule?.onReveal) { entry.agendaRule.onReveal(state, agenda, api); return }
-    if (agenda.originalCode === '02043') {
-      api.place('dormitories')
-      const experiment = state.enemies.find(enemy => enemy.code === '02058')
-      if (experiment) this.moveExperiment(state, experiment, 'dormitories')
-      else api.spawn('02058', 'scienceBuilding')
-    }
+    // 第 115 轮：密谋的显现规则由条目声明；02043 的「放置宿舍 + 实验体」也在条目里。
+    registeredEntry(agenda.originalCode)?.agendaRule?.onReveal?.(state, agenda, api)
   },
   agendaChain(state, agenda) {
     const target = state.scenarioFlags.advanceDirectlyToAgenda
@@ -99,7 +96,7 @@ export const behavior = {
   },
   ignoreLocationRevealText(state, inv, location) {
     // "Jazz" Mulligan: ignore the text on each unrevealed [[Miskatonic]] location.
-    return (inv?.assets || []).some(asset => asset.code === '02060')
+    return (inv?.assets || []).some(asset => assetRuleFor(original(asset))?.jazz)
       && (location.traits || []).some(trait => String(trait).toLowerCase() === 'miskatonic')
   },
   moveExperiment(state, experiment, target) {
@@ -120,7 +117,7 @@ export const behavior = {
   agendaWouldAdvance(state, api) {
     if (state.agendas[state.agendaIndex]?.originalCode !== '02044') return false
     api.clearDoom()
-    const experiment = state.enemies.find(enemy => enemy.code === '02058')
+    const experiment = state.enemies.find(enemy => enemyScriptFor(original(enemy))?.experiment)
     if (experiment) this.moveExperiment(state, experiment, 'dormitories')
     if (experiment?.location === 'dormitories') api.advanceAgenda()
     return true
@@ -134,15 +131,17 @@ export const behavior = {
     const groupClues = state.investigators.filter(other => !other.defeated && !other.resigned && other.location === inv.location)
       .reduce((total, other) => total + other.clues, 0)
     const here = state.locations.find(loc => loc.id === inv.location)
-    if (here?.originalCode === '02051')
+    // 第 115 轮：地点提供哪些场景行动由条目 locationRule.scenarioActions 声明。
+    const offered = new Set(locationRuleFor(original(here))?.scenarioActions || [])
+    if (offered.has('unionHeal'))
       moves.push({ action: 'scenarioAction', rule: 'unionHeal', actions: 2, label: '花费 2 行动，治愈 1 伤害和 1 恐惧',
         reason: inv.damage > 0 || inv.horror > 0 ? null : '没有伤害或恐惧需要治愈' })
-    if (here?.originalCode === '02057') {
+    if (offered.has('searchConcoction')) {
       const available = concoctionState(state).available
       moves.push({ action: 'scenarioAction', rule: 'searchConcoction',
         label: available ? '调查炼金实验室，取得炼金试剂' : '调查炼金实验室（下方没有炼金试剂）' })
     }
-    if (inv.assets.some(asset => asset.code === '02059')) {
+    if (inv.assets.some(asset => assetRuleFor(original(asset))?.reagent)) {
       const targets = state.enemies.filter(enemy => enemy.location === inv.location)
       if (targets.length) for (const enemy of targets)
         moves.push({ action: 'scenarioAction', rule: 'concoctionAttack', enemyId: enemy.id, label: `使用炼金试剂攻击「${enemy.name}」（智识）` })
@@ -154,7 +153,7 @@ export const behavior = {
       moves.push({ action: 'scenarioAction', rule: 'rescueStudents', label: '共同支付线索，救出学生',
         reason: groupClues >= needed ? null : `需要共同支付 ${needed} 个线索（当前 ${groupClues}）` })
     }
-    if (here?.id === 'facultyOffices' && here.originalCode === '02054') {
+    if (here?.id === 'facultyOffices' && offered.has('rescueRice')) {
       const needed = 2 * state.numInvestigators
       moves.push({ action: 'scenarioAction', rule: 'rescueRice', label: '共同支付线索，救出莱斯教授',
         reason: groupClues >= needed ? null : `需要共同支付 ${needed} 个线索（当前 ${groupClues}）` })
@@ -162,7 +161,7 @@ export const behavior = {
     if (state.actIndex === 1) {
       // 02046 莱斯的下落：[action] 花费 1 线索，弃遭遇牌库顶 5（单人 10）张。
       // 爵士在场但不同地点时给出他的位置；已被控制则整条不列，免得每回合刷同一个死提示。
-      const jazz = state.storyAssets.find(asset => asset.code === '02060' && asset.controllerSeat == null)
+      const jazz = state.storyAssets.find(asset => assetRuleFor(original(asset))?.jazz && asset.controllerSeat == null)
       if (jazz) {
         const jazzAt = state.locations.find(loc => loc.id === jazz.location)?.name || jazz.location
         moves.push({ action: 'scenarioAction', rule: 'parleyJazz', label: '谈判“爵士”马利根（智识 3）',
@@ -190,11 +189,11 @@ export const behavior = {
       } })
     } else if (move.rule === 'concoctionAttack') {
       const enemy = state.enemies.find(item => item.id === move.enemyId && item.location === inv.location)
-      if (!enemy || !inv.assets.some(asset => asset.code === '02059')) throw new Error('没有合法的炼金试剂目标')
+      if (!enemy || !inv.assets.some(asset => assetRuleFor(original(asset))?.reagent)) throw new Error('没有合法的炼金试剂目标')
       api.test(inv.seat, 'intellect', enemy.fight, result => {
         if (!result.success) return
-        api.damageEnemy(enemy.id, enemy.code === '02058' ? 7 : 1, inv.seat, '02059')
-        const index = inv.assets.findIndex(asset => asset.code === '02059')
+        api.damageEnemy(enemy.id, enemyScriptFor(original(enemy))?.experiment ? 7 : 1, inv.seat, '02059')
+        const index = inv.assets.findIndex(asset => assetRuleFor(original(asset))?.reagent)
         if (index >= 0) { inv.assets.splice(index, 1); state.scenarioZones.removed ||= []; state.scenarioZones.removed.push('02059') }
       })
     } else if (move.rule === 'rescueStudents') {
@@ -208,12 +207,12 @@ export const behavior = {
       const count = state.numInvestigators === 1 ? 10 : 5
       for (let i = 0; i < count && state.encounterDeck.length; i++) {
         const code = state.encounterDeck.pop()
-        if (code === '02060') api.storyAsset(code, inv.location)
+        if (assetRuleFor(code)?.jazz) api.storyAsset(code, inv.location)
         else state.encounterDiscard.push(code)
       }
     } else if (move.rule === 'parleyJazz') api.test(inv.seat, 'intellect', 3, result => {
       if (!result.success) return
-      const index = state.storyAssets.findIndex(asset => asset.code === '02060' && asset.location === inv.location)
+      const index = state.storyAssets.findIndex(asset => assetRuleFor(original(asset))?.jazz && asset.location === inv.location)
       if (index < 0) return
       const [asset] = state.storyAssets.splice(index, 1)
       inv.assets.push({ ...asset, controllerSeat: inv.seat })
@@ -222,8 +221,8 @@ export const behavior = {
     else throw new Error(`未知课外活动行动：${move.rule}`)
   },
   checkObjectives(state, api) {
-    if (state.actIndex === 2 && state.victoryDisplay.some(card => (card.originalCode || card.code) === '02058')) api.advanceAct()
-    if (state.agendaIndex === 2 && state.enemies.some(enemy => enemy.code === '02058' && enemy.location === 'dormitories')) api.advanceAgenda()
+    if (state.actIndex === 2 && state.victoryDisplay.some(card => enemyScriptFor(original(card))?.experiment)) api.advanceAct()
+    if (state.agendaIndex === 2 && state.enemies.some(enemy => enemyScriptFor(original(enemy))?.experiment && enemy.location === 'dormitories')) api.advanceAgenda()
   },
   resolution(state, key) {
     if (!['noResolution', 'r1', 'r2', 'r3', 'r4'].includes(key)) throw new Error('未知课外活动结局')

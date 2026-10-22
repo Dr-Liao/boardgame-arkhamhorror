@@ -25,7 +25,8 @@ export default {
           source: { label: '揭露弱点', name: enemy.name, code: '02228' },
           resolve: result => {
             if (!result.success) return
-            const margin = Math.max(1, result.value - difficulty)
+            const margin = Math.max(0, result.value - difficulty)
+            if (margin <= 0) return
             api.addEnemyFightReduction(enemy, margin)
             api.info(`「${enemy.name}」本阶段下一次被攻击时战斗值 -${margin}。`)
           },

@@ -3,10 +3,14 @@ import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { carcosaChaosToken } from '../../carcosa-chaos.js'
 import { storyText } from '../../story-text.js'
+import { entryFlags, pallidMaskCode } from '../../../../../src/cards/card-rules.js'
 import { actTwoVariants } from './definition.js'
 
 const POSSESSION_CODES = new Set(['03340', '03341', '03342'])
-const HASTUR_CODES = new Set(['03332', '03333', '03334'])
+// 第 114 轮：哈斯塔 / 王之宫殿 / 苍白面具下的男子都改由条目标志识别（内容层不再写死卡号）。
+const isHastur = card => entryFlags(card?.originalCode || card?.code)?.hastur === true
+const isKingInYellow = card => entryFlags(card?.originalCode || card?.code)?.kingInYellow === true
+const isPallidMaskMan = card => (card?.originalCode || card?.code) === pallidMaskCode()
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
 const clone = value => structuredClone(value)
 const LOCATION_BACKS = {
@@ -27,7 +31,7 @@ function pick(api, state, values) {
 }
 
 function hastur(state) {
-  return state.enemies.find(enemy => HASTUR_CODES.has(enemy.code))
+  return state.enemies.find(enemy => isHastur(enemy))
 }
 
 function strikeHastur(state, api, amount, exhaust = false) {
@@ -63,8 +67,13 @@ function replaceLocation(state, location, api, backCode) {
   location.clues = location.maxClues
 }
 
-export function actTwoVersion(state, choose = null) {
-  const doubt = Number(state.campaign.records.doubt || 0)
+function advanceActTwo(state, api) {
+  const act = state.acts[state.actIndex]
+  registeredEntry(act?.originalCode || act?.code)?.actRule?.onAdvance?.(state, act, api)
+  api.advanceAct()
+}
+
+export function actTwoVersion(state, choose = null) {  const doubt = Number(state.campaign.records.doubt || 0)
   const conviction = Number(state.campaign.records.conviction || 0)
   if (doubt + conviction <= 5) return 1
   if (doubt > conviction) return 2
@@ -218,7 +227,7 @@ export const behavior = {
       lockStory(location)
     } else if (back === '03326b') {
       for (const inv of active(state)) api.healHorror(inv.seat, 3)
-      const enemies = state.enemies.filter(enemy => !HASTUR_CODES.has(enemy.code))
+      const enemies = state.enemies.filter(enemy => !isHastur(enemy))
       if (enemies.length) {
         const id = enemies.length === 1 ? enemies[0].id : api.choose({
           kind: 'enemy', source: back, seat, prompt: '选择受到4点伤害的非哈斯塔敌人。',
@@ -312,7 +321,7 @@ export const behavior = {
     const hard = ['hard', 'expert'].includes(state.difficulty)
     const tokens = result.drawn || []
     if (!result.success && tokens.includes('cultist')) api.horror(inv.seat, hard ? 2 : 1)
-    if (!result.success && tokens.includes('tablet') && state.enemies.some(enemy => HASTUR_CODES.has(enemy.code))) {
+    if (!result.success && tokens.includes('tablet') && state.enemies.some(enemy => isHastur(enemy))) {
       const location = state.locations.find(item => item.id === inv.location)
       if (location) location.clues++
     }
@@ -323,12 +332,26 @@ export const behavior = {
   agendaReveal(state, agenda, api) {
     registeredEntry(agenda.originalCode)?.agendaRule?.onReveal?.(state, agenda, api)
   },
+  // 哈斯塔（黄衣之王，03332）：「强制 - 敌军阶段开始时，若哈斯塔处于重整状态：
+  // 按玩家顺序攻击场上每位调查员（无视所在地点）。」恐惧溢出的额外伤害在引擎 enemyAttack 里。
+  enemyPhaseStart(state, api) {
+    const king = state.enemies.find(enemy => isKingInYellow(enemy))
+    if (!king || king.exhausted) return
+    const lead = state.campaign?.leadSeat ?? 0
+    const count = state.numInvestigators || state.investigators.length
+    const order = active(state).slice().sort((left, right) =>
+      ((left.seat - lead + count) % count) - ((right.seat - lead + count) % count))
+    for (const inv of order) {
+      if (!state.enemies.includes(king) || inv.defeated || inv.resigned) continue
+      api.attack(king, inv)
+    }
+  },
   actions(state, inv) {
     const moves = []
     if (state.actIndex === 1 && state.scenarioFlags.actTwoVersion === 1
       && inv.seat === state.campaign.leadSeat) {
       // 只有领队能与男子对话；男子就在此处时，唯一可变的缺口是本回合的行动点。
-      const man = state.enemies.find(enemy => enemy.code === '03059' && enemy.location === inv.location)
+      const man = state.enemies.find(enemy => isPallidMaskMan(enemy) && enemy.location === inv.location)
       if (man) moves.push({
         action: 'scenarioAction', rule: 'confrontStranger', actions: 3,
         label: '花费3行动，直面苍白面具下的男子',
@@ -341,7 +364,9 @@ export const behavior = {
     const moves = encounterRules.encounterActions?.(state, inv) || []
     const location = state.locations.find(candidate => candidate.id === inv.location)
     const enemy = hastur(state)
-    if (enemy?.code === '03332') {
+    const flipAct = registeredEntry(
+      (state.acts?.[state.actIndex]?.originalCode) || (state.acts?.[state.actIndex]?.code))?.flags?.flipCarcosaAct === true
+    if (enemy && isKingInYellow(enemy)) {
       moves.push({
         action: 'encounterAction', rule: 'exhaustKingInYellow', enemyId: enemy.id,
         actions: 1, label: `检定意志（${enemy.fight + Math.min(2, state.agendaIndex)}），横置哈斯塔`,
@@ -349,9 +374,9 @@ export const behavior = {
       })
     }
     const palaceDamage = 5 * state.numInvestigators
-    const palaceLocked = location?.originalCode === '03331'
+    const palaceLocked = entryFlags(location?.originalCode)?.palaceOfTheKing === true
       && (!enemy || (enemy.damageTaken || 0) < palaceDamage)
-    if (location?.revealed && !location.cannotFlipAgain) {
+    if (location?.revealed && !location.cannotFlipAgain && flipAct) {
       moves.push({
         action: 'encounterAction', rule: 'flipCarcosaLocation', locationId: location.id,
         actions: 0, label: `翻面「${location.name}」（移除所有调查员控制的线索）`,
@@ -366,7 +391,7 @@ export const behavior = {
   performEncounterAction(state, inv, move, api) {
     if (move.rule === 'exhaustKingInYellow') {
       const enemy = state.enemies.find(candidate => candidate.id === move.enemyId
-        && candidate.code === '03332' && !candidate.exhausted)
+        && isKingInYellow(candidate) && !candidate.exhausted)
       if (!enemy) throw new Error('黄衣之王哈斯塔当前不能被横置')
       api.test(inv.seat, 'willpower', api.enemyFight(enemy, inv.seat), result => {
         if (result.success && state.enemies.includes(enemy)) enemy.exhausted = true
@@ -375,6 +400,10 @@ export const behavior = {
     }
     if (move.rule !== 'flipCarcosaLocation') {
       return encounterRules.performEncounterAction?.(state, inv, move, api)
+    }
+    const act = state.acts[state.actIndex]
+    if (registeredEntry((act?.originalCode) || (act?.code))?.flags?.flipCarcosaAct !== true) {
+      throw new Error('翻面能力只在「褴褛之王」幕在场时可用')
     }
     const location = state.locations.find(candidate => candidate.id === move.locationId)
     if (!location || location.id !== inv.location || location.clues || location.cannotFlipAgain) {
@@ -387,19 +416,29 @@ export const behavior = {
   },
   performAction(state, inv, move, api) {
     if (move.rule !== 'confrontStranger') throw new Error(`未知卡城幽影行动：${move.rule}`)
-    api.advanceAct()
+    advanceActTwo(state, api)
   },
   enemyDefeated(state, enemy, api) {
-    if (HASTUR_CODES.has(enemy.code)) state.scenarioFlags.defeatedHastur = enemy.code
-    if (enemy.code === '03059' && state.actIndex === 1) state.scenarioFlags.strangerDefeated = true
+    if (isHastur(enemy)) state.scenarioFlags.defeatedHastur = enemy.code
+    if (isPallidMaskMan(enemy) && state.actIndex === 1) state.scenarioFlags.strangerDefeated = true
     return encounterRules.enemyDefeated?.(state, enemy, api) || false
   },
+  // 03321a/03322a/03323a：每位调查员均不能发现线索。
+  canDiscoverClues(state) {
+    const act = state.acts?.[state.actIndex]
+    return registeredEntry((act?.originalCode) || (act?.code))?.flags?.noClueDiscovery !== true
+  },
   enemyCanBeDefeated(state, enemy, source) {
-    if (enemy.code === '03059' && state.actIndex === 1) {
-      if (state.scenarioFlags.actTwoVersion === 1) return false
-      if (state.scenarioFlags.actTwoVersion === 2) return source === '03059'
+    const currentAct = state.acts?.[state.actIndex]
+    const actFlags = registeredEntry((currentAct?.originalCode) || (currentAct?.code))?.flags
+    const version = actFlags?.pallidMaskActVersion ?? state.scenarioFlags?.actTwoVersion
+    if (isPallidMaskMan(enemy) && version) {
+      // 版本一：完全不能击败；版本二：只能被他的 [action] 能力击败；版本三：只能因伤害被击败。
+      if (version === 1) return false
+      if (version === 2) return source === '03059'
+      if (version === 3) return source !== '03059'
     }
-    if (!HASTUR_CODES.has(enemy.code)) return true
+    if (!isHastur(enemy)) return true
     if (state.agendaIndex < 2) return false
     return Boolean(state.campaign.records.knowTheSecret)
   },
@@ -416,7 +455,7 @@ export const behavior = {
   },
   enemyStatModifier(state, enemy, stat) {
     const shared = encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
-    return shared + (HASTUR_CODES.has(enemy.code) && stat === 'fight' ? Math.min(2, state.agendaIndex) : 0)
+    return shared + (isHastur(enemy) && stat === 'fight' ? Math.min(2, state.agendaIndex) : 0)
   },
   cluesGained(state, inv, amount, api) {
     const location = state.locations.find(candidate => candidate.id === inv.location)
@@ -425,14 +464,17 @@ export const behavior = {
     if (['03328a', '03328c', '03328e'].includes(location.originalCode)) api.loseActions(inv.seat, 1)
   },
   checkObjectives(state, api) {
-    const hasturDamage = Math.max(0, ...state.enemies.filter(enemy => HASTUR_CODES.has(enemy.code))
+    const hasturDamage = Math.max(0, ...state.enemies.filter(enemy => isHastur(enemy))
       .map(enemy => enemy.damageTaken || 0))
     if (state.agendaIndex === 0 && hasturDamage >= 3 * state.numInvestigators) api.advanceAgenda()
     else if (state.agendaIndex === 1 && hasturDamage >= 5 * state.numInvestigators) api.advanceAgenda()
     if (state.actIndex === 1 && state.scenarioFlags.actTwoVersion !== 1 && state.scenarioFlags.strangerDefeated) {
-      api.advanceAct()
+      advanceActTwo(state, api)
     }
-    if (state.actIndex === 2 && state.scenarioFlags.defeatedHastur) api.advanceAct()
+    if (state.actIndex === 2 && state.scenarioFlags.defeatedHastur) {
+      const act = state.acts[state.actIndex]
+      registeredEntry(act?.originalCode || act?.code)?.actRule?.onComplete?.(state, act, api)
+    }
   },
   storyResolutionKey(state, key) {
     return key === 'noResolution'

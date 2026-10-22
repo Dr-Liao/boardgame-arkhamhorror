@@ -48,7 +48,7 @@ export const scenario = {
     thirdLibrary: location('thirdLibrary', '03136', ['quietHallsThird']),
     peabodysOffice: location('peabodysOffice', '03137', ['quietHallsThird']),
     thirdRecordOffice: location('thirdRecordOffice', '03138', ['quietHallsThird']),
-    hiddenLibrary: location('hiddenLibrary', '03139', passageways.filter(id => id !== 'hiddenLibrary')),
+    hiddenLibrary: location('hiddenLibrary', '03139', []),
   },
   acts: stages(['03124', '03125', '03126'], 'act').map((act, index) => ({
     ...act,

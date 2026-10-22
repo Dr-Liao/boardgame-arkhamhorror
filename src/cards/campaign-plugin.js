@@ -411,18 +411,17 @@ export function createCampaignPlugin(deps) {
     const def = cardDef(code)
     if (!def) return null
     const traits = (def.traits || []).map(trait => String(trait).toLowerCase())
-    const preview = { discount: 0, noAction: false, sources: [] }
+    const preview = { discount: 0, noAction: false, sources: [], fastDiscount: 0, fastNoAction: false }
     for (const asset of inv.assets) {
-      const eff = EFFECTS[asset.code]
       const entry = registeredEntry(asset.code)
-      const fastForIllicit = entry?.fastForIllicit ?? eff?.fastForIllicit
-      const survivorEventDiscount = entry?.survivorEventDiscount ?? eff?.survivorEventDiscount
+      const fastForIllicit = entry?.fastForIllicit
+      const survivorEventDiscount = entry?.survivorEventDiscount
       if ((!fastForIllicit && !survivorEventDiscount) || asset.exhausted) continue
       if (fastForIllicit && traits.includes('illicit') && !preview.sources.includes(asset.id)) {
         preview.sources.push(asset.id)
         // Phase 5：fast 走统一读点（卡面 EFFECTS → 描述子的 fast 字段），迁移后优惠口径不变。
-        if (cardPlayFlag(code, 'fast')) preview.discount += 1
-        else preview.noAction = true
+        if (cardPlayFlag(code, 'fast')) { preview.discount += 1; preview.fastDiscount += 1 }
+        else { preview.noAction = true; preview.fastNoAction = true }
       }
       if (survivorEventDiscount && def.type === 'event'
         && (def.factions || [def.klass]).includes('survivor') && !preview.sources.includes(asset.id)) {
@@ -435,11 +434,25 @@ export function createCampaignPlugin(deps) {
 
   function campaignApplyPlayCost(state, inv, preview, events) {
     if (!preview) return
+    let declinedFast = false
     for (const id of preview.sources) {
       const asset = inv.assets.find(item => item.id === id)
       if (!asset) continue
+      // 04108 销赃贩子是 [reaction]：可以横置，也可以不横置而保持原费用。
+      if (registeredEntry(asset.code)?.fastForIllicit) {
+        const use = requestChoice(state, {
+          kind: 'reaction', source: asset.code, seat: inv.seat, canSkip: true,
+          prompt: `是否横置「${cardName(asset.code)}」，让这张违法卡获得快速/减费？`,
+          options: [{ id: 'use', label: '横置并使用' }, { id: 'skip', label: '不横置' }],
+        })
+        if (use !== 'use') { declinedFast = true; continue }
+      }
       asset.exhausted = true
       info(state, events, `⚡ 横置「${cardName(asset.code)}」以调整本次打出的费用。`)
+    }
+    if (declinedFast) {
+      if (preview.fastNoAction) preview.noAction = false
+      preview.discount = Math.max(0, preview.discount - (preview.fastDiscount || 0))
     }
   }
 
@@ -502,8 +515,7 @@ export function createCampaignPlugin(deps) {
     // 04157「一心一意」的技能成功后：在自己控制的一个充能/秘密支援上放 1 点。
     // 它属于「技能卡的 onSuccess 标志」而不是卡的 event，因此仍留在本调度器里。
     if (effect.action === 'placeChargeOrSecret') {
-      const candidates = inv.assets.filter(asset => ['charges', 'secrets'].includes(String(asset.usesType || ''))
-        || EFFECTS[asset.code]?.usesType === 'secrets' || EFFECTS[asset.code]?.usesType === 'charges')
+      const candidates = inv.assets.filter(asset => ['charges', 'secrets'].includes(String(asset.usesType || '')))
       if (!candidates.length) return
       const chosen = candidates.length === 1 ? candidates[0].id : requestChoice(state, { kind: 'target', source: effect.code, seat,
         prompt: '选择要放置充能/秘密的支援。', options: candidates.map(asset => ({ id: asset.id, label: cardName(asset.code) })) })

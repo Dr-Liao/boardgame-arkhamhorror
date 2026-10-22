@@ -19,21 +19,25 @@ export default {
       countsAs: 'fight',
       resolve: ({ inv, source, api }) => {
         if (!source) return
-        let paid = false
-        if ((source.uses || 0) > 0) {
-          api.addUses(source, -1)
-          paid = true
-          api.info(`「${api.cardName('04310')}」花费 1 充能（剩 ${source.uses}）。`)
-        } else if (api.sealedTokensFrom(source, '0') > 0) {
-          const released = api.releaseSealedToken(source, '0')
-          paid = true
-          api.info(`「${api.cardName('04310')}」释放封印的 ${api.tokenLabel(released)} 作为费用。`)
-        }
-        if (!paid) { api.info('「虚空碎裂」没有充能或封印标记可支付。'); return }
         const targets = api.enemiesAt(inv.location)
         if (!targets.length) { api.info('这里没有可攻击的敌人。'); return }
         const enemy = targets.length === 1 ? targets[0] : api.chooseEnemy(inv.seat, { type: 'fight' })
         if (!enemy) return
+        const canCharge = (source.uses || 0) > 0
+        const canSeal = api.sealedTokensFrom(source, '0') > 0
+        if (!canCharge && !canSeal) { api.info('「虚空碎裂」没有充能或封印标记可支付。'); return }
+        const payment = canCharge && canSeal ? api.choice({
+          kind: 'effect', source: '04310', seat: inv.seat,
+          prompt: '选择支付方式：花费 1 充能，或释放一个封印的「0」标记。',
+          options: [{ id: 'charge', label: '花费 1 充能' }, { id: 'seal', label: '释放封印的「0」' }],
+        }) : (canCharge ? 'charge' : 'seal')
+        if (payment === 'charge') {
+          api.addUses(source, -1)
+          api.info(`「${api.cardName('04310')}」花费 1 充能（剩 ${source.uses}）。`)
+        } else {
+          const released = api.releaseSealedToken(source, '0')
+          api.info(`「${api.cardName('04310')}」释放封印的 ${api.tokenLabel(released)} 作为费用。`)
+        }
         const sealedNow = api.sealedTokensFrom(source, '0')
         api.fight(inv.seat, enemy.id, { skill: 'willpower', combatBonus: sealedNow * 2, damageBonus: 1,
           noSpend: true, sealZerosTo: source.id, sealZerosLabel: api.cardName('04310') })

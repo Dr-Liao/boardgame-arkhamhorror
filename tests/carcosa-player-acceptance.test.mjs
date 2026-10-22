@@ -331,7 +331,7 @@ test('Carcosa 03193 古代雕文 成功后自动躲避一个交战敌人', () =>
   const target = enemy(s, { evade: 1, engagedSeat: 0 })
   s.chaosBag = ['0']
   move(s, { action: 'ability', assetId: card.id, abilityIndex: 0 })
-  settle(s)
+  settle(s, pending => pending.kind === 'effect' ? 'trigger' : null)
   const after = s.enemies.find(item => item.id === target.id)
   assert.equal(after.exhausted, true)
   assert.equal(after.engagedSeat, null)
