@@ -890,9 +890,11 @@ function renderPendingChoice(s, humanTurn) {
   const testValue = test?.value ?? test?.baseValue ?? '—'
   const testBase = test?.printedValue ?? test?.baseValue ?? testValue
   const testDelta = Number.isFinite(testValue) && Number.isFinite(testBase) ? testValue - testBase : 0
-  const testAria = multi
-    ? `${multi.label}：基础 ${testBase}，修正 ${testDelta>=0?'+':''}${testDelta}，当前 ${testValue}，难度 ${test.difficulty}`
-    : `${skillName}：基础 ${testBase}，修正 ${testDelta>=0?'+':''}${testDelta}，当前 ${testValue}，难度 ${test.difficulty}`
+  const testAria = !test
+    ? `${names[choice.kind] || '待决选择'}：选择目标`
+    : multi
+      ? `${multi.label}：基础 ${testBase}，修正 ${testDelta>=0?'+':''}${testDelta}，当前 ${testValue}，难度 ${test.difficulty}`
+      : `${skillName}：基础 ${testBase}，修正 ${testDelta>=0?'+':''}${testDelta}，当前 ${testValue}，难度 ${test.difficulty}`
   return h('section', { className: 'ah-choice ah-direct-prompt', role: 'region', 'aria-label': '待决选择',
     'aria-busy': String(!!state.busy), 'data-choice-id': choice.id, 'data-choice-kind': choice.kind,
     'data-choice-seat': choice.seat, 'data-interaction': choice.kind === 'commit' ? 'zone:commit' : 'zone:discard' },
