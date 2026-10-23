@@ -11,6 +11,33 @@ function locationRuleOf(loc) {
   return registeredEntry(loc?.originalCode || loc?.code)?.locationRule || null
 }
 
+// A location entering play must be connected to the locations already in play
+// by its printed symbols, in both directions (A prints B's symbol, B prints A's
+// symbol). Static connections are computed at chapter-build time against base
+// ids, which is not enough for encounter locations that enter play under an
+// instance id (location02327-1): story locations placed later (e.g. The Edge of
+// the Universe / Tear Through Time) would otherwise stay unreachable until some
+// other encounter location happened to be placed and refreshed every connection.
+// Additive only: never replace a connection list, so hand-made links (e.g. the
+// Blood on the Altar hidden chamber) and printed one-way links are preserved.
+// Shared with the encounter-location placement path (scenario-runtime), which
+// used to rebuild every connection list and dropped hand-made links.
+export function linkLocationBySymbols(state, loc) {
+  const mine = loc.symbols?.front
+  if (!mine || !Array.isArray(loc.connections)) return
+  for (const other of state.locations) {
+    if (other === loc) continue
+    const theirs = other.symbols?.front
+    if (!theirs || !Array.isArray(other.connections)) continue
+    if ((mine.links || []).includes(theirs.symbol) && !loc.connections.includes(other.id)) {
+      loc.connections.push(other.id)
+    }
+    if ((theirs.links || []).includes(mine.symbol) && !other.connections.includes(loc.id)) {
+      other.connections.push(loc.id)
+    }
+  }
+}
+
 export function createLocations(deps) {
   const {
     entityModifierTotal,
@@ -69,6 +96,7 @@ function placeLocation(state, id, events, seat = null) {
     || state.investigators.some(inv => inv.location === id)
   const loc = { ...def, id, revealed, clues: revealed ? clues : 0, maxClues: clues }
   state.locations.push(loc)
+  linkLocationBySymbols(state, loc)
   info(state, events, `📍 「${loc.name}」进入游戏。`)
   // 印刷就是 0 线索的地点（如 04227 深入幽嘶）：入场即视为「已被完全调查」，
   // 胜利/复仇点数立刻进胜利区（否则地点复仇 2 永远不会计入）。

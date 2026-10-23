@@ -6,6 +6,8 @@
 //
 // 依赖注入同前几批；被多个 api 依赖表引用的 doPlay / performTest 用惰性 thunk。
 
+import { linkLocationBySymbols } from './locations.js'
+
 export function createScenarioRuntime(deps) {
   const {
     EFFECTS,
@@ -380,9 +382,15 @@ function scenarioRuntime(state, events, testSource = null) {
       const loc = { ...structuredClone(def), id: `${def.id}-${state.scenarioZones.locationSeq}`, revealed: true,
         clues: def.cluesFixed ?? def.cluesPerInvestigator * state.numInvestigators }
       state.locations.push(loc)
-      for (const here of state.locations) if (here.symbols) {
-        here.connections = state.locations.filter(other => other.id !== here.id && here.symbols.front.links.includes(other.symbols?.front.symbol)).map(other => other.id)
+      // Refresh the symbol graph additively instead of rebuilding every list:
+      // drop ids that no longer exist, then re-add the printed symbol edges for
+      // all symbol locations. Keeps hand-made links (e.g. 02214 hidden chamber)
+      // that the old overwrite used to wipe.
+      for (const here of state.locations) {
+        if (!here.symbols || !Array.isArray(here.connections)) continue
+        here.connections = here.connections.filter(id => state.locations.some(other => other.id === id))
       }
+      for (const here of state.locations) linkLocationBySymbols(state, here)
       return loc
     },
     discardRandom: (seat, n) => discardRandomFromHand(state, state.investigators[seat], n, events),

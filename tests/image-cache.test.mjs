@@ -59,6 +59,25 @@ test('服务端缓存器拒绝被改造成任意远程代理', () => {
   assert.throws(() => createImageAssetCache({ host: 'http://drliao1.com/arkhamhorror/cards' }), /默认 HTTPS CDN/)
 })
 
+test('CDN 上没有的卡图短期内不再重复下载（避免每次重绘都等一轮往返）', async t => {
+  const webRoot = await mkdtemp(path.join(tmpdir(), 'arkham-image-miss-'))
+  t.after(() => rm(webRoot, { recursive: true, force: true }))
+  let requests = 0
+  const cache = createImageAssetCache({
+    webRoot,
+    missTtlMs: 40,
+    fetchImpl: async () => { requests++; return new Response('missing', { status: 404 }) },
+  })
+  const input = { relative: 'img/zh/cards/09999.avif', searchParams: query('cache=cdn') }
+  assert.equal(await cache(input), false)
+  assert.equal(await cache(input), false)
+  assert.equal(await cache(input), false)
+  assert.equal(requests, 1, '失败结果应被记住')
+  await new Promise(resolve => setTimeout(resolve, 60))
+  assert.equal(await cache(input), false)
+  assert.equal(requests, 2, '超过重试窗口后允许再试一次')
+})
+
 test('大厅在静态文件缺失时调用 Mod 缓存钩子并返回新文件', async t => {
   const webRoot = await mkdtemp(path.join(tmpdir(), 'mod-web-cache-'))
   let calls = 0

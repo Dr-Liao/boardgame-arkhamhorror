@@ -4,7 +4,7 @@ import { createGameState, allCardDefs, applyMove, embeddedCardDefs, legalMoves }
 import { isAutomaticReward } from '../src/cards/card-effects.js'
 import { allDescriptors, registeredCodes, registeredEntry } from '../src/engine/ability.js'
 import { requestChoice, resolveTransaction } from '../src/engine/resolution.js'
-import { reactionChoices, reactionView, reactionEnabled, setReactionEnabled } from '../web/reaction-preferences.js'
+import { reactionChoices, reactionView, reactionEnabled, setReactionEnabled, reactionPassPlan } from '../web/reaction-preferences.js'
 
 test('免费且不限次的资源反应自动领取，有成本、目标或次数限制的反应保留选择',()=>{
   // Phase 5（5b-6）：01033 的反应搬到能力层，读点改成描述子（数据形状不变）。
@@ -103,6 +103,33 @@ test('搬进描述子的反应仍能把窗口映射回卡号，开关才对它�
   assert.deepEqual(reactionView(s).state.legalMoves.map(move=>move.optionId),['skip'])
   setReactionEnabled(s.sessionId,0,['01073'],true)
   assert.equal(reactionView(s),s)
+})
+
+test('自动跳过计划在联机忙碌快照里仍然成立，只是暂不提交',()=>{
+  const defs=allCardDefs({runtimeOnly:true})
+  const st=createGameState({seed:'reaction-pass-plan',playerInvestigator:'01001'},[{seat:0,role:'human'},{seat:1,role:'ai'}])
+  st.cards['01073']={...defs['01073'],code:'01073'}
+  st.investigators[0].assets=[{id:'scav',code:'01073'}]
+  st.pendingChoice={id:'scav',kind:'reaction',seat:0,canSkip:true,source:'scavenging',
+    options:[{id:'skip',label:'跳过反应'},{id:'trigger',label:'触发反应'}]}
+  st.legalMoves=st.pendingChoice.options.map(option=>({action:'choose',choiceId:'scav',optionId:option.id}))
+  const s={sessionId:'reaction-pass-plan',state:st}
+  // 反应还开着：不该自动过。
+  assert.equal(reactionPassPlan(s,0,true),null)
+  setReactionEnabled(s.sessionId,0,['01073'],false)
+  // 联机快照先以 busy 到达：不能提交，但计划仍要给出，前端据此继续藏住窗口。
+  const held=reactionPassPlan(s,0,false)
+  assert.equal(held?.submit,false)
+  assert.equal(held?.skip.optionId,'skip')
+  assert.deepEqual(held?.items.map(item=>item.code),['01073'])
+  assert.equal(held?.key,`${s.sessionId}:${st.revision}:scav`)
+  assert.equal(reactionPassPlan(s,0,true)?.submit,true)
+  // 不是本人座位的窗口、没有跳过选项时都不该接管。
+  assert.equal(reactionPassPlan(s,1,true),null)
+  st.legalMoves=st.legalMoves.filter(move=>move.optionId!=='skip')
+  assert.equal(reactionPassPlan(s,0,true),null)
+  setReactionEnabled(s.sessionId,0,['01073'],true)
+  assert.equal(reactionPassPlan(s,0,true),null)
 })
 
 test('米兰调查奖励不询问，后续反应读档恢复不重复领取',()=>{

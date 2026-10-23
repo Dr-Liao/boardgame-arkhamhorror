@@ -31,6 +31,18 @@ export function reactionChoices(st) {
     return { move, code }
   })
 }
+// 自动跳过判定：只回答「这个窗口该不该自动过」，ready 只表示「现在能不能提交」。
+// 联机快照会先带着 busy 到达（房主还在结算上一步），这时不能提交，但调用方仍要
+// 把窗口藏住——先画出来再消失就是玩家看到的「卡顿一下」。
+export function reactionPassPlan(session, seat, ready = true) {
+  const st = session?.state, choice = st?.pendingChoice
+  if (!choice || choice.seat !== seat) return null
+  const items = reactionChoices(st)
+  if (!items.length || items.some(item => !item.code || reactionEnabled(session.sessionId, choice.seat, item.code))) return null
+  const skip = (st.legalMoves || []).find(move => move.action === 'choose' && move.optionId === 'skip')
+  if (!skip) return null
+  return { choice, items, skip, key: `${session.sessionId}:${st.revision}:${choice.id}`, submit: !!ready }
+}
 export function reactionView(session) {
   const st = session.state, choice = st.pendingChoice, items = reactionChoices(st)
   if (!items.length) return session

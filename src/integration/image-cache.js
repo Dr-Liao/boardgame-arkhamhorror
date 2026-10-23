@@ -31,6 +31,7 @@ export function createImageAssetCache({
   fetchImpl = globalThis.fetch,
   timeoutMs = 15000,
   maxBytes = MAX_IMAGE_BYTES,
+  missTtlMs = 10 * 60 * 1000,
 } = {}) {
   const root = path.resolve(webRoot)
   const source = new URL(host)
@@ -39,6 +40,24 @@ export function createImageAssetCache({
     throw new RangeError('按需卡图缓存只允许使用默认 HTTPS CDN')
   }
   const pending = new Map()
+  // 失败记忆：CDN 上没有这张图时，每次界面重绘都会再来问一次，而每次都要等一轮
+  // CDN 往返（实测 400–750 ms，被网络卡住时更久）。同一路径短时间内直接回答「没有」，
+  // 让浏览器立刻走下一个候选（英文图/远程地址/文字），不要排在慢请求后面。
+  const misses = new Map()
+  const MISS_LIMIT = 2048
+
+  function rememberMiss(relative) {
+    misses.delete(relative)
+    misses.set(relative, Date.now() + missTtlMs)
+    if (misses.size > MISS_LIMIT) misses.delete(misses.keys().next().value)
+  }
+
+  function knownMiss(relative) {
+    const until = misses.get(relative)
+    if (!until) return false
+    if (until <= Date.now()) { misses.delete(relative); return false }
+    return true
+  }
 
   return async function cacheWebAsset({ relative, searchParams }) {
     if (searchParams?.getAll('cache').length !== 1 || searchParams.get('cache') !== 'cdn') return false
@@ -47,6 +66,7 @@ export function createImageAssetCache({
     const inside = path.relative(root, target)
     if (!inside || inside.startsWith('..') || path.isAbsolute(inside)) return false
     if (existsSync(target)) return true
+    if (knownMiss(relative)) return false
     if (pending.has(relative)) return pending.get(relative)
 
     const job = (async () => {
@@ -76,7 +96,11 @@ export function createImageAssetCache({
         await rm(temporary, { force: true }).catch(() => {})
         return false
       }
-    })().finally(() => pending.delete(relative))
+    })().then(cached => {
+      if (cached) misses.delete(relative)
+      else rememberMiss(relative)
+      return cached
+    }).finally(() => pending.delete(relative))
     pending.set(relative, job)
     return job
   }

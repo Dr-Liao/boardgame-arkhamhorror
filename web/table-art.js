@@ -58,9 +58,14 @@ export function tableArt(h, code, name, { landscape = false, face = 'front' } = 
     if (!holder.isConnected) return
     if (typeof IntersectionObserver === 'undefined') { load(); return }
     const observer = new IntersectionObserver(entries => {
-      if (entries.some(entry => entry.isIntersecting)) { observer.disconnect(); load() }
+      if (entries.some(entry => entry.isIntersecting)) { observer.disconnect(); load(); return }
+      // 观察者会一直强引用目标节点。整树重绘把占位节点换掉后如果不主动断开，
+      // 一局下来会攒下成百上千个观察者和已离屏的卡图节点（越玩越卡）。
+      if (!holder.isConnected) observer.disconnect()
     }, { rootMargin: '120px' })
     observer.observe(holder)
+    // 兜底：占位节点在第一次交叉回调之前就被换掉时（重绘频繁发生），上面那条路径不会触发。
+    setTimeout(() => { if (!holder.isConnected) observer.disconnect() }, 2000)
   })
   return holder
 }

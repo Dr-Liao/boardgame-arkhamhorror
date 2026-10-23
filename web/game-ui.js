@@ -22,7 +22,7 @@ import { mapGeometry, hunterRouteEdges, MAP_CARD_WIDTH, MAP_CARD_HEIGHT } from '
 import { createTablePresentation } from './table-presentation.js'
 import { tableIcon, classIcon, cardAttachmentReferences, cardMarkerData, placedCardMarkers } from './table-components.js'
 import { choicePresentation, entityMoves, mountCardInteractions, cancelTableGesture, handUnavailableReason } from './card-interactions.js'
-import { reactionEnabled, setReactionEnabled, reactionChoices, reactionView } from './reaction-preferences.js'
+import { reactionEnabled, setReactionEnabled, reactionChoices, reactionView, reactionPassPlan } from './reaction-preferences.js'
 import { presentationAttributes, campaignPlaylistId } from './campaign-presentation.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
 
@@ -56,29 +56,28 @@ const decisionSeatOf = s => {
 // 演出期间只读视图必须使用正在播放的牌桌快照，避免提前泄露尚未演出的结果。
 const viewSession = () => (presentation?.isBlocking && tableSession?.sessionId === state.session?.sessionId && tableSession) || state.session
 
-function automaticReactionPass(session) {
-  const choice = session.state.pendingChoice, items = reactionChoices(session.state)
-  if (!items.length || !canAct(session, choice.seat)
-      || items.some(item => !item.code || reactionEnabled(session.sessionId, choice.seat, item.code))) return
-  const skip = session.state.legalMoves.find(move => move.action === 'choose' && move.optionId === 'skip')
-  const key = `${session.sessionId}:${session.state.revision}:${choice.id}`
-  return skip ? { choice, items, skip, key } : null
-}
-
 function scheduleReactionPass(session) {
-  const pass = automaticReactionPass(session)
+  const seat = mySeat(session)
+  // 「该不该自动过」与「现在能不能提交」分开判定：联机的忙碌快照（房主还在结算
+  // 上一步）不能提交，但窗口必须继续藏住，否则会先画出反应内容再消失。
+  const ready = !state.busy && !presentation.isBlocking && canAct(session, seat)
+  const pass = reactionPassPlan(session, seat, ready)
   if (!pass) return false
+  if (!pass.submit) return true
   const { choice, items, skip, key } = pass
-  // Keep the automatic choice hidden while another render is caused by the
-  // presentation or by the in-flight skip request.
-  if (state.busy || presentation.isBlocking) return true
   if (key === lastReactionPass) return state.movePending?.sessionId === session.sessionId
   lastReactionPass = key
   queueMicrotask(() => {
-    if (state.busy || presentation.isBlocking || state.session?.sessionId !== session.sessionId
-        || state.session.state.revision !== session.state.revision || key !== lastReactionPass) return
-    if (items.some(item => reactionEnabled(session.sessionId,choice.seat,item.code))) return
-    cardMove(skip,session)
+    if (key !== lastReactionPass || state.session?.sessionId !== session.sessionId
+        || state.session.state.revision !== session.state.revision) return
+    // 排队期间又忙起来（别人的行动先到）：这次不提交，等忙碌结束的那次渲染重新排队。
+    if (state.busy || presentation.isBlocking || !canAct(session, choice.seat)) {
+      lastReactionPass = null
+      render()
+      return
+    }
+    if (items.some(item => reactionEnabled(session.sessionId, choice.seat, item.code))) return
+    cardMove(skip, session)
   })
   return true
 }

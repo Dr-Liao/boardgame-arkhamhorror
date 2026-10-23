@@ -1898,3 +1898,49 @@ test('fix: Beginner\'s Luck discards until a Criminal enemy is discarded', () =>
   assert.equal(seen[0][1]({ traits: ['Monster'] }), false)
   assert.deepEqual(spawned, [['02078', 'darkenedHall']])
 })
+
+test('fix: 迷失时空剧情地点入场即与在场遭遇地点按印刷符号双向相连（不补单向印刷连接）', () => {
+  const s = chapterFixture('lostInTimeAndSpace')
+  const inv = s.investigators[0]
+  // 遭遇地点由 placeEncounterLocation 放入场，实例 id 带序号。
+  const stepsDef = Object.values(s.scenario.locations).find(loc => loc.originalCode === '02327')
+  const steps = { ...JSON.parse(JSON.stringify(stepsDef)), id: 'location02327-99', revealed: true, clues: 1 }
+  s.locations.push(steps)
+  inv.location = 'location02320'
+
+  // 幕 1 推进：把「宇宙的边缘」放入场（02316 onReveal）。
+  placeLocation(s, 'location02321', [])
+  const edge = s.locations.find(loc => loc.id === 'location02321')
+  assert.ok(edge.connections.includes(steps.id), '宇宙的边缘 → 伊哈格尔的阶梯 缺失')
+  assert.ok(steps.connections.includes(edge.id), '伊哈格尔的阶梯 → 宇宙的边缘 缺失')
+  inv.clues = 2
+  inv.location = steps.id
+  inv.actionsLeft = 3
+  assert.equal(validateMove(s, inv.seat, { action: 'move', locationId: edge.id }), null)
+
+  // 幕 3 推进：把「时间缝隙」放入场（02318 onReveal）。
+  placeLocation(s, 'location02322', [])
+  const tear = s.locations.find(loc => loc.id === 'location02322')
+  assert.ok(tear.connections.includes(steps.id), '时间缝隙 → 伊哈格尔的阶梯 缺失')
+  assert.ok(steps.connections.includes(tear.id), '伊哈格尔的阶梯 → 时间缝隙 缺失')
+  // 印刷上「另一个次元」只连 Square/Diamond/Triangle，不能补成 hub ↔ 时间缝隙。
+  const hub = s.locations.find(loc => loc.id === 'location02320')
+  assert.equal(hub.connections.includes(tear.id), false)
+  // 站上时间缝隙、持有 2 线索时可以撤退（幕 4 的达成条件）。
+  inv.location = tear.id
+  inv.clues = 2
+  assert.ok(legalMoves(s, inv.seat).some(move => move.action === 'scenarioAction' && move.rule === 'resignBeyond'))
+
+  // 旧的 placeEncounterLocation 会重算并覆盖所有连接，把手写连接冲掉；
+  // 现在只剪掉失效 id、再增量补符号边，手写连接必须存活。
+  edge.connections.push(hub.id)
+  s.encounterDeck = ['02327', '02327', '02327']
+  inv.location = hub.id
+  move(s, { action: 'scenarioAction', rule: 'searchEncounterLocations' })
+  settle(s)
+  assert.ok(s.locations.some(loc => loc.id === 'location02327-1'), '幕行动应放入一张遭遇地点')
+  // 引擎在待决选择回放后会重建 state，重新取一次对象再断言。
+  const edgeAfter = s.locations.find(loc => loc.id === 'location02321')
+  assert.ok(edgeAfter.connections.includes(hub.id), '放置遭遇地点时手写连接被冲掉了')
+  assert.equal(edgeAfter.connections.includes('location02327'), false, '失效的基础 id 应被剪掉')
+})
