@@ -687,12 +687,15 @@ async function cardMove(move, displayedSession) {
     const r = await api('POST', '/move', { sessionId: session.sessionId, ...version, ...(batchChoices
       ? { batchChoices } : { move: { ...mv, ...version } }) })
     if (sameSession()) {
-      state.session = r.session
+      // P1.2：联机客人拿到的命令响应只有摘要（无 session），权威状态随后由快照 + 长轮询送达；
+      // 这里不能把 state.session 覆盖成 undefined，也不要用缺失的 session 计算反馈 revision。
+      if (r.session) state.session = r.session
       if (batchChoices) state.arkhamChoiceDraft = null
       state.arkhamSelection = null
       if (state.arkhamMapView) state.arkhamMapView.selectedId = null
       clearCardDrag()
-      const feedback = { sessionId: session.sessionId, revision: r.session.state.revision, label: move.label || '行动已确认' }
+      const revision = Number.isSafeInteger(r.revision) ? r.revision : r.session?.state?.revision ?? st.revision
+      const feedback = { sessionId: session.sessionId, revision, label: move.label || '行动已确认' }
       state.arkhamAcceptedFx = feedback
       setTimeout(() => { if (state.arkhamAcceptedFx === feedback) { state.arkhamAcceptedFx = null; render() } }, 900)
     }
