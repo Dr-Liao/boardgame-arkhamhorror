@@ -32,7 +32,7 @@ import { handleApi, resourceVersion } from './src/integration/web-api.js'
 import { handleDeckLibrary } from './src/integration/deck-library.js'
 import { cacheWebAsset as cacheImageAsset } from './src/integration/image-cache.js'
 import { cacheMusicAsset } from './src/integration/music-cache.js'
-import { viewState, viewEvents } from './src/integration/observation.js'
+import { viewState, viewEvents, staticTables } from './src/integration/observation.js'
 import { aiDecisionContext } from './src/ai/ai-context.js'
 import { storyChatContext } from './src/ai/ai-story.js'
 import {
@@ -258,6 +258,8 @@ export default {
   migrateState,
   viewState,
   viewEvents,
+  // P1.4：会话级公共静态表（cards / investigatorDefs），大厅按 staticVersion 只下发一次。
+  staticTables,
 
   // —— 规则 ——
   createState(settings, players) {

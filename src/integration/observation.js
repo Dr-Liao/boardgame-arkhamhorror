@@ -31,6 +31,10 @@ const PUBLIC_STATE_FIELDS = [
 // 直接全量下发会泄露尚未揭示的内容。
 const PUBLIC_SCENARIO_FLAGS = Object.freeze(['depthLevel', 'pillars', 'deepDark'])
 
+// P1.4：两张公共静态表由大厅的会话级缓存单独下发（mod.staticTables），精简视图里不出现。
+const STATIC_STATE_FIELDS = Object.freeze(['cards', 'investigatorDefs'])
+const PUBLIC_STATE_FIELDS_SLIM = Object.freeze(PUBLIC_STATE_FIELDS.filter(key => !STATIC_STATE_FIELDS.includes(key)))
+
 const PUBLIC_INVESTIGATOR_FIELDS = [
   'seat', 'code', 'name', 'nameEn', 'klass', 'willpower', 'intellect', 'combat', 'agility',
   'baseHealth', 'baseSanity', 'health', 'sanity', 'maxHealth', 'maxSanity',
@@ -109,10 +113,13 @@ function timelineSummary(state) {
   return { ancient, modern }
 }
 
-export function viewState(state, observerSeat = null) {
+export function viewState(state, observerSeat = null, options = {}) {
+  // P1.4：includeStatic=false 时跳过两张公共静态表（cards / investigatorDefs），也不再深拷它们；
+  // 大厅会另行下发会话级静态表，并按 staticVersion 让浏览器 hydrate 回来。
+  const slim = !!(options && options.includeStatic === false)
   const observer = Number.isInteger(observerSeat) && state.investigators.some(inv => inv.seat === observerSeat)
     ? observerSeat : null
-  const view = pick(state, PUBLIC_STATE_FIELDS)
+  const view = pick(state, slim ? PUBLIC_STATE_FIELDS_SLIM : PUBLIC_STATE_FIELDS)
   const attachments = publicAttachments(state)
   view.locations = maskHiddenLocations(attachLocationCards(view.locations || [], attachments.locations))
   // 投影有效帷幕：印刷值 + shroudMod + 迷雾 + 剧本常驻修正（04294 的「X=深度」等），
@@ -199,23 +206,54 @@ export function viewState(state, observerSeat = null) {
     if (inv.seat === observer) for (const code of inv.hand || []) visibleCodes.add(code)
   }
   for (const card of [...(state.storyAssets || []), ...(state.victoryDisplay || [])]) visibleCodes.add(card.code)
-  if ([...visibleCodes].some(code => code && !view.cards?.[code])) {
+  // P1.4：精简视图拿不到 view.cards，用大厅传入的公共表（publicCards，只读）判断缺哪些卡面。
+  const publicCards = slim && options.publicCards && typeof options.publicCards === 'object' ? options.publicCards : null
+  const publicCardCodes = slim && !publicCards && options.publicCardCodes instanceof Set ? options.publicCardCodes : null
+  const missingVisible = [...visibleCodes].some(code => code && !(publicCards ? publicCards[code] : (publicCardCodes ? publicCardCodes.has(code) : view.cards?.[code])))
+  if (missingVisible) {
     // 只补「公共可见 + 本人手牌」的卡面：别人的手牌/牌组卡面若被顺带补进来，
     // 等于泄露「他手里有这张牌」。观察者过滤在建局快照（不传 options）里保持全量。
     const defs = embeddedCardDefs(state, state.campaign?.id, { observerSeat: observer })
-    // cards 是派生展示表（见 replay.js 的 DERIVED_KEYS，不进重放指纹）：顺手补回权威状态算自愈，
-    // 旧存档与中途加入的卡只补这一次；视图侧再克隆一份，避免与权威状态共享实例。
-    Object.assign(state.cards ||= {}, defs)
-    Object.assign(view.cards ||= {}, structuredClone(defs))
+    if (!slim) {
+      // cards 是派生展示表（见 replay.js 的 DERIVED_KEYS，不进重放指纹）：顺手补回权威状态算自愈，
+      // 旧存档与中途加入的卡只补这一次；视图侧再克隆一份，避免与权威状态共享实例。
+      Object.assign(state.cards ||= {}, defs)
+      Object.assign(view.cards ||= {}, structuredClone(defs))
+    } else {
+      // 公共表只来自 mod.staticTables：公共新增进 cardsPatch（大厅合并后重发一次静态表），
+      // 只有本人手牌/牌库/压牌里的卡面进 privateCards，只发给这个观察者。
+      const privateZones = new Set()
+      const own = (state.investigators || []).find(inv => inv.seat === observer)
+      if (own) for (const code of [...(own.hand || []), ...(own.deck || []), ...(own.beneath || [])]) if (code) privateZones.add(code)
+      const patch = {}
+      const privateCards = {}
+      for (const [code, def] of Object.entries(defs)) {
+        const known = publicCards ? publicCards[code] : undefined
+        // 与全量视图保持一致：全量会把 defs 整体覆盖进 view.cards，因此公共表里内容不同的也要更新。
+        if (known && JSON.stringify(known) === JSON.stringify(def)) continue
+        if (!known && privateZones.has(code)) privateCards[code] = def
+        else patch[code] = def
+      }
+      if (Object.keys(patch).length) view.cardsPatch = patch
+      if (Object.keys(privateCards).length) view.privateCards = privateCards
+    }
   }
   // 旧存档的 cards 快照可能缺少后来新增的展示字段（例如 04006 的 allySlotsForNonUnique），
   // 前端据此画不出受限盟友槽。可见卡按当前条目补一次，权威状态与视图一起更新。
   for (const code of visibleCodes) {
-    if (!code || !view.cards?.[code]) continue
-    const nonUniqueSlots = registeredEntry(code)?.passive?.allySlotsForNonUnique
-    if (!nonUniqueSlots || view.cards[code].allySlotsForNonUnique === nonUniqueSlots) continue
-    state.cards[code] = { ...state.cards[code], allySlotsForNonUnique: nonUniqueSlots }
-    view.cards[code] = { ...view.cards[code], allySlotsForNonUnique: nonUniqueSlots }
+    const nonUniqueSlots = code ? registeredEntry(code)?.passive?.allySlotsForNonUnique : null
+    if (!nonUniqueSlots) continue
+    if (!slim) {
+      if (!view.cards?.[code] || view.cards[code].allySlotsForNonUnique === nonUniqueSlots) continue
+      state.cards[code] = { ...state.cards[code], allySlotsForNonUnique: nonUniqueSlots }
+      view.cards[code] = { ...view.cards[code], allySlotsForNonUnique: nonUniqueSlots }
+    } else {
+      const known = publicCards ? publicCards[code] : null
+      if (!known) continue
+      const base = view.cardsPatch?.[code] || known
+      if (base.allySlotsForNonUnique === nonUniqueSlots) continue
+      ;(view.cardsPatch ||= {})[code] = { ...base, allySlotsForNonUnique: nonUniqueSlots }
+    }
   }
   view.encounterDeck = []
   view.encounterDeckSize = state.encounterDeck.length
@@ -284,4 +322,13 @@ export function viewEvents(events, observerSeat = null) {
     }
     return copy
   })
+}
+
+// P1.4：会话级公共静态表。只含公共卡面与调查员定义（与所有人本来就拿到的展示表内容一致），
+// 不含任何席位的私有信息；返回独立副本，供大厅长期缓存、合并 cardsPatch，且不回写权威状态。
+export function staticTables(state) {
+  return {
+    cards: structuredClone(state.cards || {}),
+    investigatorDefs: structuredClone(state.investigatorDefs || {}),
+  }
 }
