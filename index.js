@@ -258,6 +258,9 @@ export default {
   migrateState,
   viewState,
   viewEvents,
+  // P3.2 A1′：viewState 不修改入参 state（含嵌套对象），因此大厅可以每 revision 只把权威 state
+  // structuredClone 一次，作为隔离副本交给各席位视图共用；不声明该能力时大厅保持逐席位拷贝。
+  viewStateSharesState: true,
   // P1.4：会话级公共静态表（cards / investigatorDefs），大厅按 staticVersion 只下发一次。
   staticTables,
 

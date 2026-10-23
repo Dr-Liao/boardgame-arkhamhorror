@@ -45,8 +45,17 @@ const PUBLIC_INVESTIGATOR_FIELDS = [
   'role', 'lolaDiscount',
 ]
 
-function pick(object, fields) {
-  return Object.fromEntries(fields.filter(key => Object.hasOwn(object, key)).map(key => [key, structuredClone(object[key])]))
+// A1′（P3.2）：大厅声明 stateIsolated=true 时，传给 viewState 的 state 是「每 revision 只
+// structuredClone 一次、多个席位共用」的隔离副本。这份副本不会被权威状态改动，Mod 也承诺不写它，
+// 因此视图字段只需浅拷贝（数组/对象各复制一层），无需逐字段深拷大字段。
+function copyViewValue(value) {
+  if (Array.isArray(value)) return value.slice()
+  if (value && typeof value === 'object') return { ...value }
+  return value
+}
+
+function pick(object, fields, copy = structuredClone) {
+  return Object.fromEntries(fields.filter(key => Object.hasOwn(object, key)).map(key => [key, copy(object[key])]))
 }
 
 // 战役记录里的数组/字符串可能是卡号（被献祭的角色、遇害的贵宾……）。规则继续用卡号判断，
@@ -117,9 +126,13 @@ export function viewState(state, observerSeat = null, options = {}) {
   // P1.4：includeStatic=false 时跳过两张公共静态表（cards / investigatorDefs），也不再深拷它们；
   // 大厅会另行下发会话级静态表，并按 staticVersion 让浏览器 hydrate 回来。
   const slim = !!(options && options.includeStatic === false)
+  // A1′（P3.2）：stateIsolated=true 表示入参 state 已被大厅深度隔离（同一 revision 的四席位共用
+  // 同一份副本）。此时视图字段浅拷贝即可，但本函数绝不能写入入参（含嵌套对象）。
+  const isolated = !!(options && options.stateIsolated === true)
+  const copyField = isolated ? copyViewValue : structuredClone
   const observer = Number.isInteger(observerSeat) && state.investigators.some(inv => inv.seat === observerSeat)
     ? observerSeat : null
-  const view = pick(state, slim ? PUBLIC_STATE_FIELDS_SLIM : PUBLIC_STATE_FIELDS)
+  const view = pick(state, slim ? PUBLIC_STATE_FIELDS_SLIM : PUBLIC_STATE_FIELDS, copyField)
   const attachments = publicAttachments(state)
   view.locations = maskHiddenLocations(attachLocationCards(view.locations || [], attachments.locations))
   // 投影有效帷幕：印刷值 + shroudMod + 迷雾 + 剧本常驻修正（04294 的「X=深度」等），
@@ -171,7 +184,7 @@ export function viewState(state, observerSeat = null, options = {}) {
   if (privateTest) { view.log = [...(state.skillTest.publicLog || [])]; view.timingWindow = null }
   view.skillTest = state.skillTest && !privateTest ? { ...structuredClone(state.skillTest) } : null
   view.scenario = state.scenario ? {
-    ...pick(state.scenario, ['id', 'name', 'nameEn', 'intro', 'setup']),
+    ...pick(state.scenario, ['id', 'name', 'nameEn', 'intro', 'setup'], copyField),
     intro: view.campaignStory.entries.find(e => e.id === `current:${state.scenario.id}`)?.paragraphs.join('\n\n') || state.scenarioIntro?.paragraphs?.join('\n\n') || state.scenario.intro,
     layout: structuredClone(contentRegistry.getScenario(state.scenario.id).layout),
   } : null
@@ -183,7 +196,7 @@ export function viewState(state, observerSeat = null, options = {}) {
     return { ...publicCardInstance(asset), code: variant.code, linkedFromCode: asset.code }
   }
   view.investigators = state.investigators.map(inv => ({
-    ...pick(inv, PUBLIC_INVESTIGATOR_FIELDS),
+    ...pick(inv, PUBLIC_INVESTIGATOR_FIELDS, copyField),
     assets: inv.assets.map(asset => projectAsset(asset, inv)),
     threat: (inv.threat || []).map(publicCardInstance),
     maxSanity: getMaxSanity(inv),
@@ -215,10 +228,10 @@ export function viewState(state, observerSeat = null, options = {}) {
     // 等于泄露「他手里有这张牌」。观察者过滤在建局快照（不传 options）里保持全量。
     const defs = embeddedCardDefs(state, state.campaign?.id, { observerSeat: observer })
     if (!slim) {
-      // cards 是派生展示表（见 replay.js 的 DERIVED_KEYS，不进重放指纹）：顺手补回权威状态算自愈，
-      // 旧存档与中途加入的卡只补这一次；视图侧再克隆一份，避免与权威状态共享实例。
-      Object.assign(state.cards ||= {}, defs)
-      Object.assign(view.cards ||= {}, structuredClone(defs))
+      // cards 是派生展示表（见 replay.js 的 DERIVED_KEYS，不进重放指纹），旧存档与中途加入的卡
+      // 在这里自愈。A1′：入参 state 可能是四席位共享的隔离副本，视图侧 copy-on-write 只更新
+      // 本视图的 cards，绝不回写入参（视图生成期间权威 state 必须保持不变）。
+      view.cards = { ...(view.cards || {}), ...structuredClone(defs) }
     } else {
       // 公共表只来自 mod.staticTables：公共新增进 cardsPatch（大厅合并后重发一次静态表），
       // 只有本人手牌/牌库/压牌里的卡面进 privateCards，只发给这个观察者。
@@ -239,13 +252,13 @@ export function viewState(state, observerSeat = null, options = {}) {
     }
   }
   // 旧存档的 cards 快照可能缺少后来新增的展示字段（例如 04006 的 allySlotsForNonUnique），
-  // 前端据此画不出受限盟友槽。可见卡按当前条目补一次，权威状态与视图一起更新。
+  // 前端据此画不出受限盟友槽。可见卡按当前条目补一次；A1′：只补本视图（copy-on-write），
+  // 不回写共享副本或权威状态。
   for (const code of visibleCodes) {
     const nonUniqueSlots = code ? registeredEntry(code)?.passive?.allySlotsForNonUnique : null
     if (!nonUniqueSlots) continue
     if (!slim) {
       if (!view.cards?.[code] || view.cards[code].allySlotsForNonUnique === nonUniqueSlots) continue
-      state.cards[code] = { ...state.cards[code], allySlotsForNonUnique: nonUniqueSlots }
       view.cards[code] = { ...view.cards[code], allySlotsForNonUnique: nonUniqueSlots }
     } else {
       const known = publicCards ? publicCards[code] : null
@@ -264,15 +277,15 @@ export function viewState(state, observerSeat = null, options = {}) {
   // answer a mandatory effect. Keep that recipient's own decision visible.
   const responder = choiceSeats(choice).includes(observer)
   view.pendingChoice = choice && (!privateTest || responder) ? {
-    ...pick(choice, ['id', 'kind', 'seat', 'seats', 'prompt', 'canSkip', 'min', 'max', 'payment']),
+    ...pick(choice, ['id', 'kind', 'seat', 'seats', 'prompt', 'canSkip', 'min', 'max', 'payment'], copyField),
     source: typeof choice.source === 'string' ? choice.source : pick(choice.source || {}, [
       'id', 'code', 'label', 'name', 'type',
       // 补给选购要区分序幕与补给点：两处的清单和点数不同，前端据此列出完整卡面。
       ...(choice.kind === 'pickSupplies' ? ['context'] : []),
-    ]),
+    ], copyField),
     // cardCode 只下发给该选择的应答者（非应答者 options 为空），供界面显示候选卡面；
     // 它不包含牌库顺序等隐藏信息，且卡名此前已通过 label 公开给应答者。
-    options: responder ? choiceOptionsFor(choice, observer).map(option => pick(option, ['id', 'label', 'cardCode'])) : [],
+    options: responder ? choiceOptionsFor(choice, observer).map(option => pick(option, ['id', 'label', 'cardCode'], copyField)) : [],
   } : null
   // state.legalMoves is cached for the primary seat; simultaneous seats compute their own list.
   view.legalMoves = observer == null || !actingSeats(state).includes(observer) ? []
