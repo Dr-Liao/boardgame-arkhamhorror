@@ -507,8 +507,76 @@ export function createHarmThreat(deps) {
       options: targets.map(target => ({ id: String(target.seat), label: target.name })),
     })
     const target = targets.find(item => String(item.seat) === id)
-    if (target) { target.horror = Math.max(0, target.horror - amount); info(state, events, `${target.name} 治疗 ${amount} 点恐惧。`) }
+    if (target) {
+      // 旧文案逐字保留（会进 state.log 与重放指纹）：治疗本身走统一入口，只是不重复打日志。
+      target.horror = Math.max(0, target.horror - amount)
+      info(state, events, `${target.name} 治疗 ${amount} 点恐惧。`)
+      reactionWindow(state, 'horrorHealed', {
+        when: 'horrorHealed', seat, cardSeat: seat, location: target.location,
+        cardCode: sourceCode || null, healedSeat: target.seat, assetId: null, amount,
+        prompt: `${target.name} 的恐惧被治疗 ${amount} 点`,
+      }, events)
+    }
   }
+
+  // -------------------------------------------------------------------------
+  // 治疗恐惧的唯一入口（第 5 步 M1 调查员批次 P6）
+  //
+  // 为什么要收敛：卡面「在你的卡牌效果治愈调查员或[[盟友]]支援的恐惧后」需要一个统一的事后窗口。
+  // 所有治疗恐惧的卡牌效果都走这里，窗口就只需要开一次：
+  //   · target 是调查员（有 seat）或支援（此时必须给 owner）；
+  //   · owner.hasThreatHorrorSink 的威胁卡（「理性思考」）接管本次治疗——它自己写着
+  //     「它上面的恐惧可以如同在卡洛琳身上一样被治愈 / 你不能治愈其他卡牌上的恐惧」；
+  //   · 真正治疗了 ≥1 点时开 `horrorHealed` 窗口，只有治疗方（healerSeat）的卡面反应会响应。
+  // -------------------------------------------------------------------------
+  function healHorrorFrom(state, target, amount, events, options = {}) {
+    const healedAmount = Math.max(0, Math.floor(Number(amount) || 0))
+    if (!target || !healedAmount) return 0
+    const isInvestigator = target.seat != null && target.name != null
+    const owner = isInvestigator ? target : options.owner
+    if (!owner) return 0
+    const healerSeat = options.healerSeat ?? owner.seat
+    // 「理性思考」（05008）：威胁卡上的恐惧优先被治疗，且其他卡牌的恐惧不能被治疗。
+    const sink = (owner.threat || []).find(card => registeredEntry(card.code)?.threatHorrorSink)
+    if (sink && (sink.counters || 0) > 0 && !options.ignoreSink) {
+      const healed = Math.min(sink.counters, healedAmount)
+      sink.counters -= healed
+      if (options.log !== false) info(state, events, `💚 ${owner.name} 治疗了「${cardName(sink.code)}」上的 ${healed} 点恐惧（剩 ${sink.counters}）。`)
+      if (!sink.counters) {
+        removeThreat(state, owner, sink, events)
+        if (options.log !== false) info(state, events, `「${cardName(sink.code)}」上的恐惧被治愈，弃掉它。`)
+      }
+      openHealedWindow(healed)
+      return healed
+    }
+    if (sink && !isInvestigator) return 0
+    const before = target.horror || 0
+    const healed = Math.min(before, healedAmount)
+    if (!healed) return 0
+    target.horror = before - healed
+    if (options.log !== false) info(state, events, `💚 ${targetLabel()} 治疗了 ${healed} 点恐惧。`)
+    openHealedWindow(healed)
+    return healed
+
+    function targetLabel() {
+      return isInvestigator ? target.name : `${owner.name} 的「${cardName(target.code)}」`
+    }
+
+    function openHealedWindow(amountHealed) {
+      reactionWindow(state, 'horrorHealed', {
+        when: 'horrorHealed',
+        seat: healerSeat,
+        cardSeat: healerSeat,
+        location: owner.location,
+        cardCode: options.cardCode || null,
+        healedSeat: owner.seat,
+        assetId: isInvestigator ? null : target.id,
+        amount: amountHealed,
+        prompt: `${owner.name} 的恐惧被治疗 ${amountHealed} 点`,
+      }, events)
+    }
+  }
+
 
   function dukeInvestigate(state, seat, events, code = null) {
     const inv = state.investigators[seat]
@@ -522,5 +590,5 @@ export function createHarmThreat(deps) {
     return doInvestigate(state, seat, { baseValue: 4 }, events, true)
   }
 
-  return { hasTomeAsset, getThreatEffect, availableThreatAbilities, assetsCannotReady, drawBlocked, removeThreat, HARM_STRATEGIES, assignHarm, triggerThreatForced, applyThreatForced, unpaidExtraActionThreats, payActionCost, defeatAll, eliminateInvestigator, checkDefeated, checkOutcome, disengageAll, canDisengage, targetedTest, investigateForResources, dealDamageAll, dealDamageExhausted, blankEnemy, ignoreChaos, returnAssetToHand, shuffleIntoEncounter, moveHorrorToInvestigator, damagedTargetsAtLocation, healDamageAtLocation, recordResearch, researchSolution, healHorrorNearby, dukeInvestigate }
+  return { hasTomeAsset, getThreatEffect, availableThreatAbilities, assetsCannotReady, drawBlocked, removeThreat, HARM_STRATEGIES, assignHarm, triggerThreatForced, applyThreatForced, unpaidExtraActionThreats, payActionCost, defeatAll, eliminateInvestigator, checkDefeated, checkOutcome, disengageAll, canDisengage, targetedTest, investigateForResources, dealDamageAll, dealDamageExhausted, blankEnemy, ignoreChaos, returnAssetToHand, shuffleIntoEncounter, moveHorrorToInvestigator, damagedTargetsAtLocation, healDamageAtLocation, recordResearch, researchSolution, healHorrorNearby, healHorrorFrom, dukeInvestigate }
 }

@@ -1,0 +1,48 @@
+// 05009 侦探的柯尔特1911式手枪
+// 卡面：乔·戴蒙德牌库专用。使用(4子弹)。
+// 卡面：你控制的最多2张[[工具]]支援不占用手部槽位。
+// 卡面：[action]花费1子弹：攻击。你本次攻击得到+1[combat]并造成+1伤害。如果本次攻击击败了敌人，
+//       你可以将你弃牌堆的一张[[洞察]]事件移动到你的直觉牌库底。
+//
+// 一张卡一个文件：这张卡的行为只在这里维护。
+// 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
+//
+// simplified：「最多 2 张[[工具]]支援不占用手部槽位」需要按特性组算手部槽位（现有读点只支持
+// 整张卡的手部槽位修正），本批未实现；影响仅限构筑后的槽位显示，不影响攻击能力本身。
+
+import { entryFlag } from './_shared.js'
+
+export default {
+  code: '05009',
+  uses: 4,
+  usesType: 'ammo',
+  simplified: true,
+  note: '「最多 2 张[[工具]]支援不占用双手槽位」未实现（现有手部槽位读点不支持按特性分组），其余效果已实现。',
+  abilities: [
+    {
+      kind: 'action',
+      label: '射击（战斗 +1，伤害 +1；击败敌人可回收洞察事件）',
+      cost: { action: true, uses: 1 },
+      target: { kind: 'enemy' },
+      resolve: ({ inv, api, state, targetId }) => {
+        const enemy = state.enemies.find(item => item.id === targetId)
+        if (!enemy) return
+        api.fight(inv.seat, enemy.id, { combatBonus: 1, damageBonus: 1 })
+        // 「如果本次攻击击败了敌人」：攻击结算完敌人已离场即视为被击败。
+        if (state.enemies.includes(enemy)) return
+        const insights = api.hunchDeck.insightsInDiscard(inv)
+        if (!insights.length) return
+        const answer = api.choice({
+          kind: 'card', source: '05009', seat: inv.seat, canSkip: true,
+          prompt: '本次攻击击败了敌人：是否把弃牌堆的一张[[洞察]]事件放到直觉牌库底？',
+          options: [{ id: 'skip', label: '不移动' },
+            ...insights.map((code, index) => ({ id: String(index), cardCode: code, label: api.cardName(code) }))],
+        })
+        if (answer === 'skip') return
+        const chosen = insights[Number(answer)]
+        if (chosen) api.hunchDeck.moveToBottom(inv, chosen)
+      },
+    },
+  ],
+  modifiers: [],
+}

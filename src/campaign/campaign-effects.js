@@ -569,7 +569,14 @@ export function applyCampaignEffect(state, effect, log) {
   if (effect.type === 'chaos') changeChaosBag(state, effect.token, effect.amount, { permanent: true })
   else if (effect.type === 'log') log(effect.text)
   else if (effect.type === 'storyCard') awardStoryCard(state, effect.code, state.campaign.flow.nodeId)
-  else if (effect.type === 'recordUnion') {
+  else if (effect.type === 'addCampaignCardToDeck') {
+    // 第 2 步 P2.10：剧情/战役资产加入战役牌组（不洗牌、不占 30 张，下一章随牌组带入）。
+    if (typeof effect.code !== 'string' || !effect.code) throw new Error('战役资产入牌组需要卡号')
+    const targets = Array.isArray(effect.seats) && effect.seats.length
+      ? effect.seats
+      : [Number.isInteger(effect.seat) ? effect.seat : 0]
+    for (const seat of targets) campaignCardChange(state.campaign, seat, effect.code, 'add', effect.reason || '剧情奖励')
+  } else if (effect.type === 'recordUnion') {
     if (!Array.isArray(effect.values) || effect.values.some(value => typeof value !== 'string')) {
       throw new Error('集合记录必须是字符串数组')
     }

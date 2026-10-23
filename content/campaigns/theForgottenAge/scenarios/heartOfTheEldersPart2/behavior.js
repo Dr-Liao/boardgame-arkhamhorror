@@ -1,5 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { actRuleFor, agendaRuleFor, entryFlags, isPoisonThreat, locationRuleFor } from '../../../../../src/cards/card-rules.js'
+import { actRuleFor, agendaRuleFor, encounterResolveFor, entryFlags, isPoisonThreat, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
@@ -495,14 +495,14 @@ export const behavior = {
   },
 
   // 共享遭遇组效果先结算，再本地补齐落入陷阱／有毒孢子／无路可退。
-  // 如果 part 1 的实现者把 04215／04216 也写进共享规则（implementedTreacheries 声明），
+  // 如果 part 1 的实现者把 04215／04216 也写进共享条目（encounterResolve 声明），
   // 就完全交给共享规则，避免本章的本地补齐重复结算。
   resolveEncounter(state, inv, t, api) {
     const code = original(t)
     // 第 117 轮：这几张卡的身份由条目标志声明（两章共用，但本章文案与数值仍在本文件）。
     const flags = entryFlags(code) || {}
     const locallyImplemented = flags.pitfall || flags.spores
-    if (locallyImplemented && encounterRules.implementedTreacheries?.has(code)) {
+    if (locallyImplemented && encounterResolveFor(code)) {
       return encounterRules.resolveEncounter(state, inv, t, api)
     }
     const handled = encounterRules.resolveEncounter?.(state, inv, t, api)

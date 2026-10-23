@@ -1,0 +1,142 @@
+/* 万象无终（The Circle Undone）· 第 4 步 P5 的交互面板样式。
+ *
+ * 只服务 web/tcu-ui.js 的四个区块：塔罗抽牌、序章选人、闹鬼结算、战役面板补充。
+ * 桌面 1440 与移动 390 共用一套规则；窄屏改成单列/两列，不横向溢出。
+ * 颜色沿用既有界面调色板（.--ah-panel / --ah-gold / --office-muted），不按卡号或循环分支。
+ */
+
+/* ---------------- 通用面板外壳 ---------------- */
+.ah-tcu-panel { display: grid; gap: 12px; min-width: 0; }
+.ah-tcu-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.ah-tcu-head h2 { margin: 2px 0 4px; font-size: 20px; line-height: 1.25; color: #f0dcb0; }
+.ah-tcu-lead { display: flex; gap: 8px; margin: 0; font-size: 12px; line-height: 1.55; color: #cdd6b6; }
+.ah-tcu-lead .ah-icon { width: 16px; height: 16px; flex: none; margin-top: 2px; }
+.ah-tcu-purse {
+  display: grid; justify-items: center; gap: 2px; flex: none;
+  padding: 6px 12px; border-radius: 8px; border: 1px solid var(--ah-edge, rgba(209, 182, 125, .27));
+  background: var(--ah-panel, #172032);
+}
+.ah-tcu-purse span { font-size: 10px; letter-spacing: 1px; color: #aeb59c; }
+.ah-tcu-purse b { font-size: 18px; line-height: 1.1; color: #e4cea0; }
+.ah-tcu-note { margin: 0; font-size: 12px; line-height: 1.55; color: #aeb59c; }
+.ah-tcu-note.is-muted { opacity: .85; }
+.ah-tcu-option {
+  display: grid; gap: 4px; width: 100%; text-align: left; padding: 10px 12px;
+  border-radius: 8px; border: 1px solid var(--ah-edge, rgba(209, 182, 125, .27));
+  background: linear-gradient(180deg, #1b2434, #141b28); color: #e8e2d2;
+  font: inherit; cursor: pointer;
+}
+.ah-tcu-option:hover:not(:disabled) { border-color: var(--ah-gold, #e7c685); }
+.ah-tcu-option:disabled { cursor: not-allowed; opacity: .55; }
+.ah-tcu-option:focus-visible { outline: 2px solid #f7d698; outline-offset: 2px; }
+/* 可跳过的选择：取消按钮与候选按钮分开一栏，避免误点。 */
+.ah-tcu-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.ah-tcu-option.is-secondary {
+  width: auto; padding: 7px 14px; background: transparent;
+  border-style: dashed; color: #aeb59c;
+}
+.ah-tcu-option.is-secondary:hover:not(:disabled) { color: #e4cea0; }
+
+/* ---------------- 塔罗抽牌 ---------------- */
+.ah-tarot-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: 10px; margin: 0; padding: 0; list-style: none;
+}
+.ah-tarot-grid > li { min-width: 0; }
+.ah-tarot-face { display: grid; gap: 2px; justify-items: center; text-align: center; padding: 6px 2px; }
+.ah-tarot-sigil { font-size: 22px; font-weight: 700; letter-spacing: 1px; color: #f0dcb0; }
+.ah-tarot-face strong { font-size: 14px; }
+.ah-tarot-face small { font-size: 11px; color: #aeb59c; }
+.ah-tarot-face em { font-size: 10px; font-style: normal; letter-spacing: .5px; color: #8b9682; }
+/* 逆位：文字保持正向可读，用边线与角标提示，不旋转卡面（旋转后罗马数字会读不出来）。 */
+.ah-tarot-face.is-reverse { border-color: rgba(176, 106, 90, .55); }
+.ah-tarot-face.is-reverse .ah-tarot-sigil { color: #e8b8a6; }
+.ah-tarot-face.is-reverse small::before { content: '↺ '; }
+.ah-tarot-history { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 11px; color: #aeb59c; }
+.ah-tarot-chip {
+  padding: 2px 9px; border-radius: 999px; font-size: 11px; color: #e4cea0;
+  border: 1px solid var(--ah-edge, rgba(209, 182, 125, .27)); background: #141b28;
+}
+
+/* ---------------- 序章选人 ---------------- */
+.ah-story-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  gap: 10px; margin: 0; padding: 0; list-style: none;
+}
+.ah-story-grid > li { min-width: 0; }
+.ah-story-face { display: grid; gap: 4px; }
+.ah-story-class { font-size: 10px; letter-spacing: 1px; color: #aeb59c; }
+.ah-story-face strong { font-size: 15px; color: #f0dcb0; }
+.ah-story-face small { font-size: 11px; color: #aeb59c; }
+.ah-story-stats { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12px; color: #e8e2d2; }
+.ah-story-stat { display: inline-flex; align-items: center; gap: 2px; }
+.ah-story-stat .ah-icon { width: 12px; height: 12px; }
+.ah-story-vitals { font-size: 11px; color: #aeb59c; }
+
+/* ---------------- 闹鬼结算 ---------------- */
+.ah-haunted-source {
+  margin: 0; padding: 8px 12px; border-left: 3px solid #b06a5a; border-radius: 0 6px 6px 0;
+  background: rgba(176, 106, 90, .12); font-size: 12px; line-height: 1.55; color: #ecd9c8;
+}
+.ah-haunted-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.ah-haunted-list > li { min-width: 0; }
+.ah-haunted-row { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; align-items: start; }
+.ah-haunted-index {
+  display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  border: 1px solid var(--ah-edge, rgba(209, 182, 125, .27)); font-size: 11px; color: #e4cea0;
+}
+.ah-haunted-text { font-size: 12px; line-height: 1.55; }
+
+/* ---------------- 多技能检定（阵法） ---------------- */
+.ah-test-skill-icons { display: inline-flex; align-items: center; gap: 3px; }
+.ah-test-preview.is-multi-skill { border-left: 2px solid var(--ah-gold, #e7c685); padding-left: 8px; }
+.ah-test-multiskill {
+  font-style: normal; font-size: 10px; letter-spacing: 1px; margin-left: 6px; padding: 1px 6px;
+  border-radius: 999px; color: #e4cea0; border: 1px solid var(--ah-edge, rgba(209, 182, 125, .27));
+}
+
+/* ---------------- 战役面板补充（局势弹窗） ---------------- */
+.ah-campaign-tcu { display: grid; gap: 8px; margin-top: 12px; }
+.ah-campaign-tcu h4 { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; letter-spacing: 1px; color: #cdd6b6; }
+.ah-campaign-tcu h4 .ah-icon { width: 14px; height: 14px; }
+.ah-campaign-tcu ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.ah-campaign-tcu li { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; }
+.ah-campaign-tcu li span { display: inline-flex; align-items: center; gap: 5px; color: var(--office-muted, #aeb59c); }
+.ah-campaign-tcu li .ah-icon { width: 13px; height: 13px; }
+.ah-campaign-tcu li strong { color: #e4cea0; font-weight: 600; text-align: right; }
+.ah-tcu-watcher { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; color: #ecd9c8; }
+.ah-tcu-watcher .ah-icon { width: 13px; height: 13px; }
+.ah-tcu-mementos { display: grid; gap: 4px; }
+.ah-tcu-mementos small { font-size: 11px; color: #aeb59c; }
+.ah-tcu-mementos ul { display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.ah-tcu-mementos li {
+  padding: 2px 9px; border-radius: 999px; font-size: 11px; color: #e4cea0;
+  border: 1px solid var(--ah-edge, rgba(209, 182, 125, .27));
+}
+
+/* ---------------- 大厅（记录芯片 / 面板容器） ---------------- */
+.ah-hub-tcu-panel { display: grid; gap: 12px; }
+.ah-hub-records-block { display: grid; gap: 6px; margin-top: 10px; }
+.ah-hub-records-block h3 { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; letter-spacing: 1px; color: #cdd6b6; }
+.ah-hub-records-block h3 .ah-icon { width: 14px; height: 14px; }
+.ah-hub-record-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.ah-hub-record-chip {
+  padding: 3px 10px; border-radius: 999px; font-size: 12px; color: #e4cea0;
+  border: 1px solid var(--ah-edge, rgba(209, 182, 125, .27)); background: var(--ah-panel, #172032);
+}
+
+/* ---------------- 牌桌地点徽标：裂口 / 火盆 / 幽灵 ---------------- */
+.ah-loc-badge.ah-loc-breach { color: #f0b0a0; border-color: rgba(224, 128, 112, .5); }
+.ah-loc-badge.ah-loc-brazier { color: #f5d9a0; border-color: rgba(233, 199, 133, .5); }
+.ah-loc-badge.ah-loc-spectral { color: #b8d8e8; border-color: rgba(152, 204, 226, .5); }
+
+/* ---------------- 窄屏（移动 390） ---------------- */
+@media (max-width: 720px) {
+  .ah-tcu-head { flex-direction: column; align-items: stretch; }
+  .ah-tcu-purse { grid-auto-flow: column; justify-content: space-between; justify-items: stretch; align-items: center; }
+  .ah-tcu-head h2 { font-size: 17px; }
+  .ah-tarot-grid, .ah-story-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ah-tarot-grid { gap: 8px; }
+  .ah-story-stats { gap: 6px; font-size: 11px; }
+  .ah-campaign-tcu li { font-size: 11px; }
+}

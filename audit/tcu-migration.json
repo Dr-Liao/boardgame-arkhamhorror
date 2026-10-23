@@ -1,0 +1,2094 @@
+{
+  "schemaVersion": 2,
+  "cycle": "tcu",
+  "cycleNameZh": "万象无终",
+  "milestone": "P6",
+  "stage": "第 5 步：批量迁移内容 · M1 调查员",
+  "generatedBy": "tools/audit-tcu.mjs",
+  "docs": "docs/tcu-migration-roadmap.md",
+  "scope": {
+    "path": "artifacts/migration/tcu/scope.json",
+    "sha256": "49b70c19c66da056e3246195ba2ba69bf4be2bcbab2a63ae074e74f2cf0d3b00"
+  },
+  "campaign": {
+    "id": "theCircleUndone",
+    "status": "catalog-only",
+    "name": "万象无终",
+    "nameEn": "The Circle Undone",
+    "chapters": 9,
+    "requiredPackIds": [
+      "core",
+      "tcuCampaign",
+      "tcuInvestigators",
+      "tcuPlayer"
+    ],
+    "launchBlocked": true,
+    "launchError": "campaign.theCircleUndone: 发布状态 catalog-only 不可启动"
+  },
+  "status": "catalog-only",
+  "playable": false,
+  "launchEnabled": false,
+  "earlyAccess": false,
+  "equivalenceCertified": false,
+  "verifiedScope": {
+    "milestone": "P4–P6",
+    "keywords": true,
+    "rulebook": true,
+    "interactions": true,
+    "investigators": true,
+    "scenarios": false,
+    "playerCards": false,
+    "story": false
+  },
+  "packs": [
+    {
+      "id": "tcuCampaign",
+      "exists": true,
+      "status": "catalog-only",
+      "cards": 237,
+      "ranges": [
+        "05043-05346"
+      ],
+      "encounterGroupIds": [
+        "disappearanceAtTheTwilightEstate",
+        "theWitchingHour",
+        "atDeathsDoorstep",
+        "theSecretName",
+        "theWagesOfSin",
+        "forTheGreaterGood",
+        "unionAndDisillusion",
+        "inTheClutchesOfChaos",
+        "beforeTheBlackThrone",
+        "agentsOfAzathoth",
+        "anettesCoven",
+        "cityOfSins",
+        "inexorableFate",
+        "musicOfTheDamned",
+        "realmOfDeath",
+        "secretsOfTheUniverse",
+        "silverTwilightLodge",
+        "spectralPredators",
+        "theWatcher",
+        "trappedSpirits",
+        "witchcraft"
+      ],
+      "rulesImplemented": 4,
+      "deckbuildingOpen": 0
+    },
+    {
+      "id": "tcuInvestigators",
+      "exists": true,
+      "status": "verified",
+      "cards": 19,
+      "ranges": [
+        "05001-05019"
+      ],
+      "encounterGroupIds": [],
+      "rulesImplemented": 19,
+      "deckbuildingOpen": 13
+    },
+    {
+      "id": "tcuPlayer",
+      "exists": true,
+      "status": "catalog-only",
+      "cards": 87,
+      "ranges": [
+        "05020-05324"
+      ],
+      "encounterGroupIds": [],
+      "rulesImplemented": 0,
+      "deckbuildingOpen": 0
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "disappearanceAtTheTwilightEstate",
+      "status": "catalog-only",
+      "referenceCode": "05043",
+      "requiredPackIds": [
+        "core",
+        "tcuCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "disappearanceAtTheTwilightEstate"
+      ],
+      "launchable": false
+    },
+    {
+      "id": "theWitchingHour",
+      "status": "catalog-only",
+      "referenceCode": "05050",
+      "requiredPackIds": [
+        "core",
+        "tcuCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "theWitchingHour"
+      ],
+      "launchable": false
+    },
+    {
+      "id": "atDeathsDoorstep",
+      "status": "catalog-only",
+      "referenceCode": "05065",
+      "requiredPackIds": [
+        "core",
+        "tcuCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "atDeathsDoorstep"
+      ],
+      "launchable": false
+    },
+    {
+      "id": "theSecretName",
+      "status": "catalog-only",
+      "referenceCode": "05120",
+      "requiredPackIds": [
+        "core",
+        "tcuCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "theSecretName"
+      ],
+      "launchable": false
+    },
+    {
+      "id": "theWagesOfSin",
+      "status": "catalog-only",
+      "referenceCode": "05161",
+      "requiredPackIds": [
+        "core",
+        "tcuCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "theWagesOfSin"
+      ],
+      "launchable": false
+    },
+    {
+      "id": "forTheGreaterGood",
+      "status": "catalog-only",
+      "referenceCode": "05197",
+      "requiredPackIds": [
+        "core",
+        "tcuCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "forTheGreaterGood"
+      ],
+      "launchable": false
+    },
+    {
+      "id": "unionAndDisillusion",
+      "status": "catalog-only",
+      "referenceCode": "05238",
+      "requiredPackIds": [
+        "core",
+        "tcuCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "unionAndDisillusion"
+      ],
+      "launchable": false
+    },
+    {
+      "id": "inTheClutchesOfChaos",
+      "status": "catalog-only",
+      "referenceCode": "05284",
+      "requiredPackIds": [
+        "core",
+        "tcuCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "inTheClutchesOfChaos"
+      ],
+      "launchable": false
+    },
+    {
+      "id": "beforeTheBlackThrone",
+      "status": "catalog-only",
+      "referenceCode": "05325",
+      "requiredPackIds": [
+        "core",
+        "tcuCampaign"
+      ],
+      "requiredEncounterGroupIds": [
+        "beforeTheBlackThrone"
+      ],
+      "launchable": false
+    }
+  ],
+  "chapters": [
+    {
+      "id": "disappearanceAtTheTwilightEstate",
+      "code": "05043",
+      "name": "暮色庄园失踪事件",
+      "status": "catalog-only",
+      "scenarioCard": "05043",
+      "status2": "ok",
+      "checks": {
+        "chapterRegistered": true,
+        "referenceCardExists": true,
+        "scenarioCardMapped": true,
+        "linksCampaignRule": true,
+        "linksChaosRule": true
+      }
+    },
+    {
+      "id": "theWitchingHour",
+      "code": "05050",
+      "name": "巫异时刻",
+      "status": "catalog-only",
+      "scenarioCard": "05050",
+      "status2": "ok",
+      "checks": {
+        "chapterRegistered": true,
+        "referenceCardExists": true,
+        "scenarioCardMapped": true,
+        "linksCampaignRule": true,
+        "linksChaosRule": true
+      }
+    },
+    {
+      "id": "atDeathsDoorstep",
+      "code": "05065",
+      "name": "死亡门前",
+      "status": "catalog-only",
+      "scenarioCard": "05065",
+      "status2": "ok",
+      "checks": {
+        "chapterRegistered": true,
+        "referenceCardExists": true,
+        "scenarioCardMapped": true,
+        "linksCampaignRule": true,
+        "linksChaosRule": true
+      }
+    },
+    {
+      "id": "theSecretName",
+      "code": "05120",
+      "name": "隐秘之名",
+      "status": "catalog-only",
+      "scenarioCard": "05120",
+      "status2": "ok",
+      "checks": {
+        "chapterRegistered": true,
+        "referenceCardExists": true,
+        "scenarioCardMapped": true,
+        "linksCampaignRule": true,
+        "linksChaosRule": true
+      }
+    },
+    {
+      "id": "theWagesOfSin",
+      "code": "05161",
+      "name": "恶罪报应",
+      "status": "catalog-only",
+      "scenarioCard": "05161",
+      "status2": "ok",
+      "checks": {
+        "chapterRegistered": true,
+        "referenceCardExists": true,
+        "scenarioCardMapped": true,
+        "linksCampaignRule": true,
+        "linksChaosRule": true
+      }
+    },
+    {
+      "id": "forTheGreaterGood",
+      "code": "05197",
+      "name": "崇高利益",
+      "status": "catalog-only",
+      "scenarioCard": "05197",
+      "status2": "ok",
+      "checks": {
+        "chapterRegistered": true,
+        "referenceCardExists": true,
+        "scenarioCardMapped": true,
+        "linksCampaignRule": true,
+        "linksChaosRule": true
+      }
+    },
+    {
+      "id": "unionAndDisillusion",
+      "code": "05238",
+      "name": "聚合幻灭",
+      "status": "catalog-only",
+      "scenarioCard": "05238",
+      "status2": "ok",
+      "checks": {
+        "chapterRegistered": true,
+        "referenceCardExists": true,
+        "scenarioCardMapped": true,
+        "linksCampaignRule": true,
+        "linksChaosRule": true
+      }
+    },
+    {
+      "id": "inTheClutchesOfChaos",
+      "code": "05284",
+      "name": "混沌魔掌",
+      "status": "catalog-only",
+      "scenarioCard": "05284",
+      "status2": "ok",
+      "checks": {
+        "chapterRegistered": true,
+        "referenceCardExists": true,
+        "scenarioCardMapped": true,
+        "linksCampaignRule": true,
+        "linksChaosRule": true
+      }
+    },
+    {
+      "id": "beforeTheBlackThrone",
+      "code": "05325",
+      "name": "黑色王座",
+      "status": "catalog-only",
+      "scenarioCard": "05325",
+      "status2": "ok",
+      "checks": {
+        "chapterRegistered": true,
+        "referenceCardExists": true,
+        "scenarioCardMapped": true,
+        "linksCampaignRule": true,
+        "linksChaosRule": true
+      }
+    }
+  ],
+  "encounterGroups": [
+    "disappearanceAtTheTwilightEstate",
+    "theWitchingHour",
+    "atDeathsDoorstep",
+    "theSecretName",
+    "theWagesOfSin",
+    "forTheGreaterGood",
+    "unionAndDisillusion",
+    "inTheClutchesOfChaos",
+    "beforeTheBlackThrone",
+    "agentsOfAzathoth",
+    "anettesCoven",
+    "cityOfSins",
+    "inexorableFate",
+    "musicOfTheDamned",
+    "realmOfDeath",
+    "secretsOfTheUniverse",
+    "silverTwilightLodge",
+    "spectralPredators",
+    "theWatcher",
+    "trappedSpirits",
+    "witchcraft"
+  ],
+  "counts": {
+    "main": 343,
+    "faces": 34,
+    "records": 377,
+    "packs": {
+      "tcuCampaign": 237,
+      "tcuInvestigators": 19,
+      "tcuPlayer": 87
+    },
+    "chapters": 9
+  },
+  "chaosBags": {
+    "easy": {
+      "tokens": 13,
+      "skulls": 2
+    },
+    "standard": {
+      "tokens": 13,
+      "skulls": 2
+    },
+    "hard": {
+      "tokens": 13,
+      "skulls": 2
+    },
+    "expert": {
+      "tokens": 13,
+      "skulls": 2
+    }
+  },
+  "recordSchema": {
+    "mementosDiscovered": "string[]",
+    "missingPersons": "string[]",
+    "wasTakenByTheWatcher": "string[]",
+    "youAreBeingHunted": "string[]"
+  },
+  "investigatorCodes": [
+    "05001",
+    "05002",
+    "05003",
+    "05004",
+    "05005",
+    "05006"
+  ],
+  "storyInvestigatorCodes": [
+    "05046",
+    "05047",
+    "05048",
+    "05049"
+  ],
+  "mechanics": {
+    "status": "verified",
+    "items": [
+      {
+        "id": "tcuHaunted",
+        "keyword": "haunted",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuSpectral",
+        "keyword": "spectral",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuCircle",
+        "keyword": "circle",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuTarot",
+        "keyword": "tarotDeck",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuTarotSlot",
+        "keyword": "tarotSlot",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuBonded",
+        "keyword": "bonded",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuMemento",
+        "keyword": "memento",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuWatcher",
+        "keyword": "watcher",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuPrologue",
+        "keyword": "storyInvestigator",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuBreaches",
+        "keyword": "breach",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuChaos",
+        "keyword": "chaos",
+        "implemented": false,
+        "registered": false,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuHeretics",
+        "keyword": "heretic",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuCosmos",
+        "keyword": "cosmos",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuBraziers",
+        "keyword": "brazier",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      },
+      {
+        "id": "tcuCampaignAssets",
+        "keyword": "campaignAsset",
+        "implemented": true,
+        "registered": true,
+        "evidence": "tests/tcu-rules.test.mjs"
+      }
+    ]
+  },
+  "primitives": {
+    "new": 14,
+    "done": 14,
+    "unfinished": []
+  },
+  "sources": [
+    {
+      "path": "src/cards/cards-data.js",
+      "sha256": "87849b46d71a7e444453e371c38f455fad3d539a7d3eed2d6f176b924e9a6918"
+    },
+    {
+      "path": "artifacts/migration/tcu/mechanism-scan.json",
+      "sha256": "deaa41c8f9993c499877746ccb83b65eb30e91c44990dcd92b53fcd9e589281b"
+    },
+    {
+      "path": "content/packs/tcuCampaign/manifest.js",
+      "sha256": "9c623ea8fb46fb04255525c75210bbf01b508cacdc71abcea48a1fba5cce4548"
+    },
+    {
+      "path": "content/packs/tcuInvestigators/manifest.js",
+      "sha256": "d23d6ed977a3a9dcca24336e10428c484979178feeae0e7265944a757b60f76e"
+    },
+    {
+      "path": "content/packs/tcuPlayer/manifest.js",
+      "sha256": "d5c88923e186e091a83ceb38e3421b5b6699d66c0d0a74c223ae27abe490b792"
+    },
+    {
+      "path": "content/campaigns/theCircleUndone/shared.js",
+      "sha256": "a17b64111c17c6e2c7ab08e3da901c50cc4b773de43f7c2f401966a5818c273a"
+    }
+  ],
+  "confirmations": {
+    "scenarios": [],
+    "keywords": {
+      "status": "verified",
+      "items": [
+        {
+          "id": "haunted",
+          "printed": "Haunted",
+          "zh": "闹鬼",
+          "kind": "printed",
+          "ruleId": "tcuHaunted",
+          "mechanismId": "haunted",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "text",
+          "cardCodes": [
+            "05043",
+            "05065",
+            "05079",
+            "05080",
+            "05081",
+            "05082",
+            "05083",
+            "05084"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/engine/haunted.js#hauntedAbilitiesAt,isLocationHaunted,normalizeScenarioHaunted",
+            "src/cards/cards-data.js#05043",
+            "src/cards/cards-data.js#05065",
+            "src/cards/cards-data.js#05079",
+            "src/cards/cards-data.js#05080",
+            "src/cards/cards-data.js#05081",
+            "src/cards/cards-data.js#05082",
+            "src/cards/cards-data.js#05083",
+            "src/cards/cards-data.js#05084"
+          ]
+        },
+        {
+          "id": "spectral",
+          "printed": "Spectral",
+          "zh": "幽灵",
+          "kind": "trait",
+          "ruleId": "tcuSpectral",
+          "mechanismId": "spectral",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "text",
+          "cardCodes": [
+            "05065",
+            "05067",
+            "05078",
+            "05086",
+            "05087",
+            "05164",
+            "05165",
+            "05262"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/engine/alt-decks.js#setExtraEncounterDeck,drawFromExtraEncounterDeck,shuffleIntoExtraEncounterDeck",
+            "src/engine/locations.js#isSpectralLocation,spectralFaceOf",
+            "src/cards/cards-data.js#05065",
+            "src/cards/cards-data.js#05067",
+            "src/cards/cards-data.js#05078",
+            "src/cards/cards-data.js#05086",
+            "src/cards/cards-data.js#05087",
+            "src/cards/cards-data.js#05164",
+            "src/cards/cards-data.js#05165",
+            "src/cards/cards-data.js#05262"
+          ]
+        },
+        {
+          "id": "circle",
+          "printed": "Circle",
+          "zh": "阵法",
+          "kind": "printed",
+          "ruleId": "tcuCircle",
+          "mechanismId": "circle",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "text",
+          "cardCodes": [
+            "05238",
+            "05243",
+            "05244",
+            "05245",
+            "05246",
+            "05247",
+            "05248",
+            "05250"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/engine/tests.js#normalizeTestSkills,testSkillLabel",
+            "src/cards/cards-data.js#05238",
+            "src/cards/cards-data.js#05243",
+            "src/cards/cards-data.js#05244",
+            "src/cards/cards-data.js#05245",
+            "src/cards/cards-data.js#05246",
+            "src/cards/cards-data.js#05247",
+            "src/cards/cards-data.js#05248",
+            "src/cards/cards-data.js#05250"
+          ]
+        },
+        {
+          "id": "tarotDeck",
+          "printed": null,
+          "zh": "塔罗牌组",
+          "kind": "mechanism",
+          "ruleId": "tcuTarot",
+          "mechanismId": "tarotDeck",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "engine",
+          "cardCodes": [],
+          "cardLinkMode": "none",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/engine/tarot.js#buildTarotDeck,drawTarot,chooseTarot,MAJOR_ARCANA"
+          ]
+        },
+        {
+          "id": "tarotSlot",
+          "printed": "Tarot",
+          "zh": "塔罗槽位",
+          "kind": "printed",
+          "ruleId": "tcuTarotSlot",
+          "mechanismId": "tarotSlot",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "text",
+          "cardCodes": [
+            "05023",
+            "05027",
+            "05031",
+            "05035",
+            "05039",
+            "05040",
+            "05042",
+            "05283"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/engine/tarot-slot.js#tarotSlotCapacity,enterOpeningHandCards,handCommitBlocker",
+            "src/cards/cards-data.js#05023",
+            "src/cards/cards-data.js#05027",
+            "src/cards/cards-data.js#05031",
+            "src/cards/cards-data.js#05035",
+            "src/cards/cards-data.js#05039",
+            "src/cards/cards-data.js#05040",
+            "src/cards/cards-data.js#05042",
+            "src/cards/cards-data.js#05283"
+          ]
+        },
+        {
+          "id": "parley",
+          "printed": "Parley",
+          "zh": "谈判",
+          "kind": "printed",
+          "ruleId": "parley",
+          "mechanismId": "parley",
+          "ruleOwned": false,
+          "implemented": true,
+          "sourceKind": "text",
+          "cardCodes": [
+            "05020",
+            "05076",
+            "05085",
+            "05095",
+            "05096",
+            "05097",
+            "05178a",
+            "05178c"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/engine/parley.js#entityParleyDescriptors,parleyMovesFor,isParleyCard",
+            "src/cards/cards-data.js#05020",
+            "src/cards/cards-data.js#05076",
+            "src/cards/cards-data.js#05085",
+            "src/cards/cards-data.js#05095",
+            "src/cards/cards-data.js#05096",
+            "src/cards/cards-data.js#05097",
+            "src/cards/cards-data.js#05178a",
+            "src/cards/cards-data.js#05178c"
+          ]
+        },
+        {
+          "id": "bonded",
+          "printed": "Bonded",
+          "zh": "绑定",
+          "kind": "printed",
+          "ruleId": "tcuBonded",
+          "mechanismId": "bonded",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "text",
+          "cardCodes": [
+            "05313",
+            "05314",
+            "05316",
+            "05317"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/engine/bonded.js#bondedCardList,findBondedMain",
+            "src/cards/cards-data.js#05313",
+            "src/cards/cards-data.js#05314",
+            "src/cards/cards-data.js#05316",
+            "src/cards/cards-data.js#05317"
+          ]
+        },
+        {
+          "id": "memento",
+          "printed": null,
+          "zh": "遗留记忆",
+          "kind": "mechanism",
+          "ruleId": "tcuMemento",
+          "mechanismId": "memento",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "engine",
+          "cardCodes": [],
+          "cardLinkMode": "none",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/campaign/mementos.js#recordMemento,crossOffMemento,mementoCount,MEMENTOS"
+          ]
+        },
+        {
+          "id": "watcher",
+          "printed": null,
+          "zh": "看守人",
+          "kind": "mechanism",
+          "ruleId": "tcuWatcher",
+          "mechanismId": "watcher",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "text",
+          "cardCodes": [
+            "05086",
+            "05087",
+            "05228",
+            "05247",
+            "05248",
+            "05257",
+            "05272"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/campaign/mementos.js#markHunted,isBeingHunted,markTakenByWatcher",
+            "src/cards/cards-data.js#05086",
+            "src/cards/cards-data.js#05087",
+            "src/cards/cards-data.js#05228",
+            "src/cards/cards-data.js#05247",
+            "src/cards/cards-data.js#05248",
+            "src/cards/cards-data.js#05257",
+            "src/cards/cards-data.js#05272"
+          ]
+        },
+        {
+          "id": "storyInvestigator",
+          "printed": null,
+          "zh": "序章故事调查员",
+          "kind": "mechanism",
+          "ruleId": "tcuPrologue",
+          "mechanismId": "storyInvestigator",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "card-kind",
+          "cardCodes": [
+            "05046",
+            "05047",
+            "05048",
+            "05049"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/engine/story-investigators.js#selectStoryInvestigators,prepareStoryInvestigator,restoreStoryInvestigators",
+            "src/cards/cards-data.js#05046",
+            "src/cards/cards-data.js#05047",
+            "src/cards/cards-data.js#05048",
+            "src/cards/cards-data.js#05049"
+          ]
+        },
+        {
+          "id": "breach",
+          "printed": "Breach",
+          "zh": "裂口",
+          "kind": "printed",
+          "ruleId": "tcuBreaches",
+          "mechanismId": "breach",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "text",
+          "cardCodes": [
+            "05284",
+            "05285",
+            "05286a",
+            "05286b",
+            "05287",
+            "05288a",
+            "05288b",
+            "05289"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/engine/location-state.js#addBreach,removeBreach,breachTotal,locationSkullValue",
+            "src/cards/cards-data.js#05284",
+            "src/cards/cards-data.js#05285",
+            "src/cards/cards-data.js#05286a",
+            "src/cards/cards-data.js#05286b",
+            "src/cards/cards-data.js#05287",
+            "src/cards/cards-data.js#05288a",
+            "src/cards/cards-data.js#05288b",
+            "src/cards/cards-data.js#05289"
+          ]
+        },
+        {
+          "id": "chaos",
+          "printed": null,
+          "zh": "混乱符号",
+          "kind": "rule",
+          "ruleId": "tcuChaos",
+          "mechanismId": "chaosBag",
+          "ruleOwned": true,
+          "implemented": false,
+          "sourceKind": "text",
+          "cardCodes": [
+            "05043",
+            "05050",
+            "05065",
+            "05120",
+            "05161",
+            "05197",
+            "05238",
+            "05284",
+            "05325"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "content/campaigns/theCircleUndone/shared.js#CHAOS_BAGS",
+            "src/cards/cards-data.js#05043",
+            "src/cards/cards-data.js#05050",
+            "src/cards/cards-data.js#05065",
+            "src/cards/cards-data.js#05120",
+            "src/cards/cards-data.js#05161",
+            "src/cards/cards-data.js#05197",
+            "src/cards/cards-data.js#05238",
+            "src/cards/cards-data.js#05284",
+            "src/cards/cards-data.js#05325"
+          ]
+        },
+        {
+          "id": "heretic",
+          "printed": null,
+          "zh": "异端者多面与放逐",
+          "kind": "mechanism",
+          "ruleId": "tcuHeretics",
+          "mechanismId": "hereticMultiface",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "text",
+          "cardCodes": [
+            "05161",
+            "05165",
+            "05171",
+            "05178a",
+            "05178c",
+            "05178e",
+            "05179",
+            "05185"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/engine/enemy-faces.js#flipEnemyFace,banishEnemyToVictory,enemyCannotBeDefeated",
+            "src/cards/cards-data.js#05161",
+            "src/cards/cards-data.js#05165",
+            "src/cards/cards-data.js#05171",
+            "src/cards/cards-data.js#05178a",
+            "src/cards/cards-data.js#05178c",
+            "src/cards/cards-data.js#05178e",
+            "src/cards/cards-data.js#05179",
+            "src/cards/cards-data.js#05185"
+          ]
+        },
+        {
+          "id": "cosmos",
+          "printed": null,
+          "zh": "宇宙牌库",
+          "kind": "mechanism",
+          "ruleId": "tcuCosmos",
+          "mechanismId": "cosmos",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "text",
+          "cardCodes": [
+            "05329",
+            "05330",
+            "05331",
+            "05332",
+            "05333",
+            "05334",
+            "05336",
+            "05337"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/engine/alt-decks.js#buildScenarioLocationDeck,drawScenarioLocationDeck,chooseScenarioLocationDeck,shuffleScenarioLocationIntoDeck",
+            "src/cards/cards-data.js#05329",
+            "src/cards/cards-data.js#05330",
+            "src/cards/cards-data.js#05331",
+            "src/cards/cards-data.js#05332",
+            "src/cards/cards-data.js#05333",
+            "src/cards/cards-data.js#05334",
+            "src/cards/cards-data.js#05336",
+            "src/cards/cards-data.js#05337"
+          ]
+        },
+        {
+          "id": "brazier",
+          "printed": null,
+          "zh": "火盆",
+          "kind": "mechanism",
+          "ruleId": "tcuBraziers",
+          "mechanismId": "brazier",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "text",
+          "cardCodes": [
+            "05228",
+            "05243",
+            "05244",
+            "05245",
+            "05246",
+            "05247",
+            "05248",
+            "05250"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/engine/location-state.js#locationFlagOf,setLocationFlag,locationFlagsOf",
+            "src/cards/cards-data.js#05228",
+            "src/cards/cards-data.js#05243",
+            "src/cards/cards-data.js#05244",
+            "src/cards/cards-data.js#05245",
+            "src/cards/cards-data.js#05246",
+            "src/cards/cards-data.js#05247",
+            "src/cards/cards-data.js#05248",
+            "src/cards/cards-data.js#05250"
+          ]
+        },
+        {
+          "id": "campaignAsset",
+          "printed": null,
+          "zh": "战役资产",
+          "kind": "mechanism",
+          "ruleId": "tcuCampaignAssets",
+          "mechanismId": "campaignAssetDeck",
+          "ruleOwned": true,
+          "implemented": true,
+          "sourceKind": "text",
+          "cardCodes": [
+            "05150",
+            "05207",
+            "05228"
+          ],
+          "cardLinkMode": "cards",
+          "status": "verified",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "web/rulebook-data.js",
+            "tests/tcu-rules.test.mjs",
+            "src/campaign/campaign-effects.js#applyCampaignEffect",
+            "src/cards/cards-data.js#05150",
+            "src/cards/cards-data.js#05207",
+            "src/cards/cards-data.js#05228"
+          ]
+        }
+      ]
+    },
+    "rulebook": {
+      "status": "verified",
+      "requiredRuleIds": [
+        "tcuCampaign",
+        "tcuHaunted",
+        "tcuSpectral",
+        "tcuCircle",
+        "tcuTarot",
+        "tcuTarotSlot",
+        "tcuBonded",
+        "tcuMemento",
+        "tcuWatcher",
+        "tcuPrologue",
+        "tcuBreaches",
+        "tcuChaos",
+        "tcuHeretics",
+        "tcuCosmos",
+        "tcuBraziers",
+        "tcuCampaignAssets"
+      ],
+      "checks": {
+        "campaignOverview": true,
+        "scenarioMechanics": true,
+        "keywordEntries": true,
+        "cardLinks": true,
+        "desktopBrowser": true,
+        "mobileBrowser": true
+      },
+      "details": {
+        "campaignOverview": {
+          "entryPresent": true,
+          "listsEveryChapter": true,
+          "statesCurrentStatus": true,
+          "namesAuditLedger": true,
+          "statesChaosBagShape": true,
+          "relatedRulesExist": true
+        },
+        "scenarioMechanics": {
+          "chapters": 9,
+          "allChaptersOk": true,
+          "scenarioCardCount": 9
+        },
+        "keywordEntries": {
+          "entries": 16,
+          "entriesPresent": true,
+          "searchable": true,
+          "status": "verified"
+        },
+        "cardLinks": {
+          "cards": 377,
+          "everyCardLinked": true,
+          "noForeignCycleLinks": true,
+          "unlinkedCards": [],
+          "foreignLinks": []
+        },
+        "browser": {
+          "reportPresent": true,
+          "generatedByRunner": true,
+          "specs": [
+            "tests/tcu-interactions.browser.mjs",
+            "tests/tcu-rules.browser.mjs"
+          ],
+          "specReported": true,
+          "statusPassed": true,
+          "tests": 6,
+          "rulesDesktop": true,
+          "rulesMobile": true,
+          "interactionsDesktop": true,
+          "interactionsMobile": true,
+          "desktop": true,
+          "mobile": true,
+          "screenshots": 4,
+          "screenshotsComplete": true
+        }
+      },
+      "evidence": [
+        "web/rulebook-data.js",
+        "web/ui-cards.js",
+        "content/campaigns/theCircleUndone/keywords.js",
+        "tests/tcu-rules.test.mjs",
+        "tests/tcu-rules.browser.mjs",
+        "audit/tcu-browser-acceptance.json"
+      ]
+    },
+    "interactions": {
+      "status": "verified",
+      "checks": {
+        "desktopBrowser": true,
+        "mobileBrowser": true,
+        "nodeAcceptance": true
+      },
+      "items": [
+        {
+          "id": "tarotPick",
+          "zh": "塔罗抽牌/选择",
+          "keyword": "tarotDeck",
+          "model": [
+            "tarotPickerModel",
+            "renderTarotPicker"
+          ],
+          "status": "verified",
+          "checks": {
+            "model": true,
+            "engineReadPoint": true,
+            "nodeAcceptance": true,
+            "desktopBrowser": true,
+            "mobileBrowser": true
+          },
+          "problems": [],
+          "evidence": [
+            "web/tcu-ui.js",
+            "web/tcu-panels.css",
+            "tests/tcu-interactions.test.mjs",
+            "tests/tcu-interactions.browser.mjs"
+          ]
+        },
+        {
+          "id": "storyInvestigatorPick",
+          "zh": "序章选调查员",
+          "keyword": "storyInvestigator",
+          "model": [
+            "storyInvestigatorPickerModel",
+            "renderStoryInvestigatorPicker"
+          ],
+          "status": "verified",
+          "checks": {
+            "model": true,
+            "engineReadPoint": true,
+            "nodeAcceptance": true,
+            "desktopBrowser": true,
+            "mobileBrowser": true
+          },
+          "problems": [],
+          "evidence": [
+            "web/tcu-ui.js",
+            "web/tcu-panels.css",
+            "tests/tcu-interactions.test.mjs",
+            "tests/tcu-interactions.browser.mjs"
+          ]
+        },
+        {
+          "id": "hauntedResolution",
+          "zh": "闹鬼结算",
+          "keyword": "haunted",
+          "model": [
+            "hauntedChoiceModel",
+            "renderHauntedChoice"
+          ],
+          "status": "verified",
+          "checks": {
+            "model": true,
+            "engineReadPoint": true,
+            "nodeAcceptance": true,
+            "desktopBrowser": true,
+            "mobileBrowser": true
+          },
+          "problems": [],
+          "evidence": [
+            "web/tcu-ui.js",
+            "web/tcu-panels.css",
+            "tests/tcu-interactions.test.mjs",
+            "tests/tcu-interactions.browser.mjs"
+          ]
+        },
+        {
+          "id": "spectralDeck",
+          "zh": "幽灵界第二牌堆面板",
+          "keyword": "spectral",
+          "model": [
+            "tcuCampaignModel",
+            "renderTcuCampaignPanel"
+          ],
+          "status": "verified",
+          "checks": {
+            "model": true,
+            "engineReadPoint": true,
+            "nodeAcceptance": true,
+            "desktopBrowser": true,
+            "mobileBrowser": true
+          },
+          "problems": [],
+          "evidence": [
+            "web/tcu-ui.js",
+            "web/tcu-panels.css",
+            "tests/tcu-interactions.test.mjs",
+            "tests/tcu-interactions.browser.mjs"
+          ]
+        },
+        {
+          "id": "circleTest",
+          "zh": "阵法多技能检定",
+          "keyword": "circle",
+          "model": [
+            "multiSkillTestInfo"
+          ],
+          "status": "verified",
+          "checks": {
+            "model": true,
+            "engineReadPoint": true,
+            "nodeAcceptance": true,
+            "desktopBrowser": true,
+            "mobileBrowser": true
+          },
+          "problems": [],
+          "evidence": [
+            "web/tcu-ui.js",
+            "web/tcu-panels.css",
+            "tests/tcu-interactions.test.mjs",
+            "tests/tcu-interactions.browser.mjs"
+          ]
+        },
+        {
+          "id": "parleyTarget",
+          "zh": "谈判目标与豁免",
+          "keyword": "parley",
+          "model": [],
+          "status": "verified",
+          "checks": {
+            "model": true,
+            "engineReadPoint": true,
+            "nodeAcceptance": true,
+            "desktopBrowser": true,
+            "mobileBrowser": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "tests/tcu-interactions.browser.mjs"
+          ]
+        },
+        {
+          "id": "campaignRecords",
+          "zh": "遗留记忆/记录面板",
+          "keyword": "memento",
+          "model": [
+            "tcuCampaignModel"
+          ],
+          "status": "verified",
+          "checks": {
+            "model": true,
+            "engineReadPoint": true,
+            "nodeAcceptance": true,
+            "desktopBrowser": true,
+            "mobileBrowser": true
+          },
+          "problems": [],
+          "evidence": [
+            "web/tcu-ui.js",
+            "web/tcu-panels.css",
+            "tests/tcu-interactions.test.mjs",
+            "tests/tcu-interactions.browser.mjs"
+          ]
+        },
+        {
+          "id": "watcherPanel",
+          "zh": "看守人公开提示",
+          "keyword": "watcher",
+          "model": [
+            "tcuCampaignModel"
+          ],
+          "status": "verified",
+          "checks": {
+            "model": true,
+            "engineReadPoint": true,
+            "nodeAcceptance": true,
+            "desktopBrowser": true,
+            "mobileBrowser": true
+          },
+          "problems": [],
+          "evidence": [
+            "web/tcu-ui.js",
+            "web/tcu-panels.css",
+            "tests/tcu-interactions.test.mjs",
+            "tests/tcu-interactions.browser.mjs"
+          ]
+        },
+        {
+          "id": "breachDoom",
+          "zh": "裂口/毁灭标记",
+          "keyword": "breach",
+          "model": [
+            "locationTcuBadges"
+          ],
+          "status": "verified",
+          "checks": {
+            "model": true,
+            "engineReadPoint": true,
+            "nodeAcceptance": true,
+            "desktopBrowser": true,
+            "mobileBrowser": true
+          },
+          "problems": [],
+          "evidence": [
+            "web/tcu-ui.js",
+            "web/tcu-panels.css",
+            "tests/tcu-interactions.test.mjs",
+            "tests/tcu-interactions.browser.mjs"
+          ]
+        },
+        {
+          "id": "hereticFaces",
+          "zh": "异端者翻面/放逐",
+          "keyword": "heretic",
+          "model": [
+            "enemyFaceBadge"
+          ],
+          "status": "verified",
+          "checks": {
+            "model": true,
+            "engineReadPoint": true,
+            "nodeAcceptance": true,
+            "desktopBrowser": true,
+            "mobileBrowser": true
+          },
+          "problems": [],
+          "evidence": [
+            "web/tcu-ui.js",
+            "web/tcu-panels.css",
+            "tests/tcu-interactions.test.mjs",
+            "tests/tcu-interactions.browser.mjs"
+          ]
+        },
+        {
+          "id": "tarotSlot",
+          "zh": "塔罗槽位",
+          "keyword": "tarotSlot",
+          "model": [],
+          "status": "verified",
+          "checks": {
+            "model": true,
+            "engineReadPoint": true,
+            "nodeAcceptance": true,
+            "desktopBrowser": true,
+            "mobileBrowser": true
+          },
+          "problems": [],
+          "evidence": [
+            "content/campaigns/theCircleUndone/keywords.js",
+            "tests/tcu-interactions.browser.mjs"
+          ]
+        }
+      ],
+      "evidence": [
+        "web/tcu-ui.js",
+        "web/tcu-panels.css",
+        "tests/tcu-interactions.test.mjs",
+        "tests/tcu-interactions.browser.mjs",
+        "audit/tcu-browser-acceptance.json"
+      ]
+    },
+    "investigators": {
+      "status": "verified",
+      "checks": {
+        "formalSelectable": true,
+        "deckbuildingOpen": true,
+        "entriesRegistered": true,
+        "signaturesImplemented": true,
+        "ruleDataValid": true,
+        "deckContracts": true,
+        "storyInvestigators": true,
+        "nodeAcceptance": true
+      },
+      "items": [
+        {
+          "code": "05001",
+          "name": "卡洛琳·弗恩",
+          "klass": "guardian",
+          "signatureCodes": [
+            "05007",
+            "05008"
+          ],
+          "checks": {
+            "selectable": true,
+            "deckbuildingOpen": true,
+            "dataDeclared": true,
+            "signaturesImplemented": true,
+            "ruleDataValid": true,
+            "deckContract": true,
+            "nodeAcceptance": true
+          },
+          "problems": [],
+          "status": "verified"
+        },
+        {
+          "code": "05002",
+          "name": "乔·戴蒙德",
+          "klass": "seeker",
+          "signatureCodes": [
+            "05009",
+            "05010"
+          ],
+          "checks": {
+            "selectable": true,
+            "deckbuildingOpen": true,
+            "dataDeclared": true,
+            "signaturesImplemented": true,
+            "ruleDataValid": true,
+            "deckContract": true,
+            "nodeAcceptance": true
+          },
+          "problems": [],
+          "status": "verified"
+        },
+        {
+          "code": "05003",
+          "name": "普雷斯顿·费尔蒙特",
+          "klass": "rogue",
+          "signatureCodes": [
+            "05011",
+            "05012"
+          ],
+          "checks": {
+            "selectable": true,
+            "deckbuildingOpen": true,
+            "dataDeclared": true,
+            "signaturesImplemented": true,
+            "ruleDataValid": true,
+            "deckContract": true,
+            "nodeAcceptance": true
+          },
+          "problems": [],
+          "status": "verified"
+        },
+        {
+          "code": "05004",
+          "name": "黛安娜·史丹利",
+          "klass": "mystic",
+          "signatureCodes": [
+            "05013",
+            "05014",
+            "05015"
+          ],
+          "checks": {
+            "selectable": true,
+            "deckbuildingOpen": true,
+            "dataDeclared": true,
+            "signaturesImplemented": true,
+            "ruleDataValid": true,
+            "deckContract": true,
+            "nodeAcceptance": true
+          },
+          "problems": [],
+          "status": "verified"
+        },
+        {
+          "code": "05005",
+          "name": "丽塔·杨",
+          "klass": "survivor",
+          "signatureCodes": [
+            "05016",
+            "05017"
+          ],
+          "checks": {
+            "selectable": true,
+            "deckbuildingOpen": true,
+            "dataDeclared": true,
+            "signaturesImplemented": true,
+            "ruleDataValid": true,
+            "deckContract": true,
+            "nodeAcceptance": true
+          },
+          "problems": [],
+          "status": "verified"
+        },
+        {
+          "code": "05006",
+          "name": "玛丽·朗博",
+          "klass": "mystic",
+          "signatureCodes": [
+            "05018",
+            "05019"
+          ],
+          "checks": {
+            "selectable": true,
+            "deckbuildingOpen": true,
+            "dataDeclared": true,
+            "signaturesImplemented": true,
+            "ruleDataValid": true,
+            "deckContract": true,
+            "nodeAcceptance": true
+          },
+          "problems": [],
+          "status": "verified"
+        }
+      ],
+      "storyItems": [
+        {
+          "code": "05046",
+          "name": "加弗瑞拉·米兹拉克",
+          "checks": {
+            "registered": true,
+            "notSelectable": true,
+            "elderSign": true,
+            "inCampaignPack": true
+          },
+          "problems": []
+        },
+        {
+          "code": "05047",
+          "name": "杰罗姆·戴维斯",
+          "checks": {
+            "registered": true,
+            "notSelectable": true,
+            "elderSign": true,
+            "inCampaignPack": true
+          },
+          "problems": []
+        },
+        {
+          "code": "05048",
+          "name": "瓦伦蒂诺·里瓦斯",
+          "checks": {
+            "registered": true,
+            "notSelectable": true,
+            "elderSign": true,
+            "inCampaignPack": true
+          },
+          "problems": []
+        },
+        {
+          "code": "05049",
+          "name": "佩妮·怀特",
+          "checks": {
+            "registered": true,
+            "notSelectable": true,
+            "elderSign": true,
+            "inCampaignPack": true
+          },
+          "problems": []
+        }
+      ],
+      "simplified": [
+        {
+          "code": "05009",
+          "name": "侦探的柯尔特1911式手枪",
+          "note": "「最多 2 张[[工具]]支援不占用双手槽位」未实现（现有手部槽位读点不支持按特性分组），其余效果已实现。"
+        },
+        {
+          "code": "05010",
+          "name": "悬案",
+          "note": "「游戏结束时少取得 2 点经验」只记录 inv.unsolvedCasePenalty 标记，经验结算读点属 P9/P10。"
+        },
+        {
+          "code": "05012",
+          "name": "秘社“债务”",
+          "note": "「游戏结束时仍在你手牌中则承受 1 点精神创伤」在本引擎里没有可达状态（弱点抽到即结算），只实现「移出游戏」。"
+        },
+        {
+          "code": "05013",
+          "name": "银暮匕首",
+          "note": "「可以把黛安娜底下的事件/技能当作手牌打出或投入」未实现（需要 beneath 打出通道），其余效果已实现。"
+        },
+        {
+          "code": "05019",
+          "name": "安息日男爵",
+          "note": "「少于 3 个毁灭标记时不能离场」未实现（现有 cannotLeavePlay 无阈值条件）；3 个毁灭后弃掉的另一半已实现。"
+        }
+      ],
+      "evidence": [
+        "content/packs/tcuInvestigators/manifest.js",
+        "tests/tcu-investigators.test.mjs",
+        "src/engine/hunch-deck.js",
+        "src/engine/resource-bank.js",
+        "src/engine/spell-actions.js",
+        "src/engine/cancel-note.js"
+      ]
+    }
+  },
+  "evidence": {
+    "files": {
+      "content/campaigns/theCircleUndone/keywords.js": "a15750fecc33ffe1626140153d612264af52ccbef03c78f0e6e7b55a102d92ec",
+      "web/rulebook-data.js": "82dcc53d756b9049f98cc906a86306c7af41dc33c8a7306eaa47f623eca4cbdf",
+      "web/ui-cards.js": "2b95a685962737d535b29885e4178fcb0f30478ec2b690b86b76e852928bada0",
+      "content/mechanics.js": "d4b0e12839023251e7e7cf327623ffc73d0c181c1558b7083ba53a0d5747d9b7",
+      "tests/tcu-rules.test.mjs": "729e169793d81de72e95601f4ae92cb4bd012c99eb5cd38e00553dd7abfeff64",
+      "tests/tcu-rules.browser.mjs": "f1de86ce2338927eabc1c12663e65d31486ce2bac9682e78180d7d2d9067a087",
+      "web/tcu-ui.js": "6870aea53447b1ce71e1085181ee421b4558f4ad1df2355b02e6236e61c6ebd6",
+      "web/tcu-panels.css": "f4b31d9538e35b6b1e004b7b1d1d29b738639355b9e4b59bc3db1ad210cf65ba",
+      "tests/tcu-interactions.test.mjs": "2756090e59dadfa3a2444d1ecc7ffe235d0e264ef181eccbdf0dbd6c66fabc8e",
+      "tests/tcu-interactions.browser.mjs": "3b18d73835b97aa82469820f7e3c5bc0a524795d1767dd486237f71112806585",
+      "audit/tcu-browser-acceptance.json": "f4cb72ad9f82f67528f72f3b389c368399dc9f187349eb5fc413bc905eb4d0ab",
+      "artifacts/migration/tcu/mechanism-scan.json": "deaa41c8f9993c499877746ccb83b65eb30e91c44990dcd92b53fcd9e589281b",
+      "content/packs/tcuInvestigators/manifest.js": "d23d6ed977a3a9dcca24336e10428c484979178feeae0e7265944a757b60f76e",
+      "tests/tcu-investigators.test.mjs": "606677f7be1ae4a29016573d711aea83d0e43c9505c561e2b0ad0b25eeb6d6b5",
+      "src/engine/hunch-deck.js": "3f29b9d12a01d82c784a1be79843e31eb0524c1bbb5a2622a57b62249aab557d",
+      "src/engine/resource-bank.js": "976c65389c961ebefb1115f3ec021c6470e3fe8ebccc95f0ec04754e2324c712",
+      "src/engine/spell-actions.js": "15f27ec7f580c9b2598ee9afff1e6bd19b3a1f7fbb81c96515ec0d8b3566d442",
+      "src/engine/cancel-note.js": "2f2a4c036d3cc30d588fe717b9dfb6f9b9c98ed50703ac19850e2dd007d2e188"
+    },
+    "nodeAcceptance": {
+      "command": "node --test tests/tcu-rules.test.mjs",
+      "status": 0,
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "ok": true
+    },
+    "interactionsAcceptance": {
+      "command": "node --test tests/tcu-interactions.test.mjs",
+      "status": 0,
+      "tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "ok": true
+    },
+    "investigatorAcceptance": {
+      "command": "node --test tests/tcu-investigators.test.mjs",
+      "status": 0,
+      "tests": 33,
+      "passed": 33,
+      "failed": 0,
+      "ok": true
+    },
+    "browser": {
+      "path": "audit/tcu-browser-acceptance.json",
+      "generatedBy": "playwright + tools/playwright-tcu-reporter.mjs",
+      "status": "passed"
+    }
+  },
+  "tests": [
+    "tests/tcu-interactions.test.mjs",
+    "tests/tcu-investigators.test.mjs",
+    "tests/tcu-migration.test.mjs",
+    "tests/tcu-primitives-bonded.test.mjs",
+    "tests/tcu-primitives-campaign-records.test.mjs",
+    "tests/tcu-primitives-circle.test.mjs",
+    "tests/tcu-primitives-cosmos.test.mjs",
+    "tests/tcu-primitives-enemy-faces.test.mjs",
+    "tests/tcu-primitives-haunted.test.mjs",
+    "tests/tcu-primitives-location-state.test.mjs",
+    "tests/tcu-primitives-parley.test.mjs",
+    "tests/tcu-primitives-spectral-deck.test.mjs",
+    "tests/tcu-primitives-spectral-location.test.mjs",
+    "tests/tcu-primitives-story-investigators.test.mjs",
+    "tests/tcu-primitives-tarot-slot.test.mjs",
+    "tests/tcu-primitives-tarot.test.mjs",
+    "tests/tcu-rules.test.mjs",
+    "tests/tcu-rules.browser.mjs",
+    "tests/tcu-interactions.browser.mjs"
+  ],
+  "remaining": [
+    "9 章仍是 catalog-only（P8 剧本）：逐章 12 项验收尚未建立",
+    "显式简化：05009 侦探的柯尔特1911式手枪——「最多 2 张[[工具]]支援不占用双手槽位」未实现（现有手部槽位读点不支持按特性分组），其余效果已实现。",
+    "显式简化：05010 悬案——「游戏结束时少取得 2 点经验」只记录 inv.unsolvedCasePenalty 标记，经验结算读点属 P9/P10。",
+    "显式简化：05012 秘社“债务”——「游戏结束时仍在你手牌中则承受 1 点精神创伤」在本引擎里没有可达状态（弱点抽到即结算），只实现「移出游戏」。",
+    "显式简化：05013 银暮匕首——「可以把黛安娜底下的事件/技能当作手牌打出或投入」未实现（需要 beneath 打出通道），其余效果已实现。",
+    "显式简化：05019 安息日男爵——「少于 3 个毁灭标记时不能离场」未实现（现有 cannotLeavePlay 无阈值条件）；3 个毁灭后弃掉的另一半已实现。",
+    "87 张玩家卡没有单卡行为：M2（P7）逐张验收",
+    "233 张战役卡没有单卡行为：M3（P8）逐章验收",
+    "战役记录只登记 4 个键（参考实现 64 个）：其余键、中文名与幕间结算属 P9",
+    "交互实机路径待 P8：9 章仍 catalog-only，序章与章节内容接通后才能在大厅里走完整条交互路径"
+  ],
+  "gate": {
+    "scopeLedger": {
+      "path": "artifacts/migration/tcu/scope.json",
+      "sha256": "49b70c19c66da056e3246195ba2ba69bf4be2bcbab2a63ae074e74f2cf0d3b00",
+      "pass": true
+    },
+    "records": {
+      "total": 377,
+      "assigned": 377,
+      "pass": true
+    },
+    "packsByPhase": {
+      "investigators": {
+        "status": "verified",
+        "cards": 19,
+        "implemented": 19
+      },
+      "campaign": {
+        "status": "catalog-only",
+        "cards": 237,
+        "implemented": 4
+      },
+      "player": {
+        "status": "catalog-only",
+        "cards": 87,
+        "implemented": 0
+      },
+      "pass": true
+    },
+    "campaignCatalogOnly": {
+      "status": "catalog-only",
+      "chapters": 9,
+      "packIds": [
+        "core",
+        "tcuCampaign",
+        "tcuInvestigators",
+        "tcuPlayer"
+      ],
+      "pass": true
+    },
+    "launchBlocked": {
+      "blocked": true,
+      "reason": "campaign.theCircleUndone: 发布状态 catalog-only 不可启动",
+      "pass": true
+    },
+    "chaptersNotLaunchable": {
+      "statuses": [
+        "disappearanceAtTheTwilightEstate:catalog-only",
+        "theWitchingHour:catalog-only",
+        "atDeathsDoorstep:catalog-only",
+        "theSecretName:catalog-only",
+        "theWagesOfSin:catalog-only",
+        "forTheGreaterGood:catalog-only",
+        "unionAndDisillusion:catalog-only",
+        "inTheClutchesOfChaos:catalog-only",
+        "beforeTheBlackThrone:catalog-only"
+      ],
+      "pass": true
+    },
+    "encounterGroups": {
+      "expected": 21,
+      "registered": 21,
+      "unique": true,
+      "missingChapterGroups": [],
+      "pass": true
+    },
+    "packCounts": {
+      "campaign": 237,
+      "investigators": 19,
+      "player": 87,
+      "pass": true
+    },
+    "requiredPacksExist": {
+      "packs": [
+        "core",
+        "tcuCampaign",
+        "tcuInvestigators",
+        "tcuPlayer"
+      ],
+      "pass": true
+    },
+    "keywordScanAligned": {
+      "scanMechanisms": [
+        "bonded",
+        "brazier",
+        "breach",
+        "campaignAssetDeck",
+        "chaosBag",
+        "circle",
+        "cosmos",
+        "haunted",
+        "hereticMultiface",
+        "memento",
+        "parley",
+        "spectral",
+        "storyInvestigator",
+        "tarotDeck",
+        "tarotSlot",
+        "watcher"
+      ],
+      "keywordMechanisms": [
+        "bonded",
+        "brazier",
+        "breach",
+        "campaignAssetDeck",
+        "chaosBag",
+        "circle",
+        "cosmos",
+        "haunted",
+        "hereticMultiface",
+        "memento",
+        "parley",
+        "spectral",
+        "storyInvestigator",
+        "tarotDeck",
+        "tarotSlot",
+        "watcher"
+      ],
+      "missing": [],
+      "extra": [],
+      "ruleIdMismatch": [],
+      "pass": true
+    },
+    "keywordsVerified": {
+      "total": 16,
+      "verified": 16,
+      "pending": [],
+      "pass": true
+    },
+    "rulebookEntries": {
+      "required": 16,
+      "present": 16,
+      "missing": [],
+      "orphan": [],
+      "unindexed": [],
+      "badSortKeys": [],
+      "pass": true
+    },
+    "rulebookVerified": {
+      "checks": {
+        "campaignOverview": true,
+        "scenarioMechanics": true,
+        "keywordEntries": true,
+        "cardLinks": true,
+        "desktopBrowser": true,
+        "mobileBrowser": true
+      },
+      "pending": [],
+      "pass": true
+    },
+    "nodeAcceptance": {
+      "command": "node --test tests/tcu-rules.test.mjs",
+      "status": 0,
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "ok": true,
+      "pass": true
+    },
+    "mechanicsRegistered": {
+      "registered": 14,
+      "mismatches": [],
+      "pass": true
+    },
+    "interactionsVerified": {
+      "total": 11,
+      "verified": 11,
+      "pending": [],
+      "nodeAcceptance": true,
+      "browser": {
+        "desktop": true,
+        "mobile": true
+      },
+      "pass": true
+    },
+    "investigatorsVerified": {
+      "formal": 6,
+      "selectable": 6,
+      "verified": 6,
+      "pending": [],
+      "story": 4,
+      "storyPending": [],
+      "signatures": 13,
+      "signaturesImplemented": 13,
+      "nodeAcceptance": true,
+      "simplified": [
+        "05009",
+        "05010",
+        "05012",
+        "05013",
+        "05019"
+      ],
+      "pass": true
+    },
+    "primitivesDone": {
+      "new": 14,
+      "done": 14,
+      "unfinished": [],
+      "pass": true
+    },
+    "pass": true
+  }
+}

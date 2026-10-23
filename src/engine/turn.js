@@ -9,6 +9,9 @@
 //   doEndTurn —— 结束回合
 // 拆完后 engine.js 里的「状态机」只剩一个顶层循环（startScenario → 各阶段 → 结局）。
 
+// 第 5 步 P6：法术专用额外行动的授权/清理只走 spell-actions 的算术（纯函数，无依赖）。
+import { clearSpellCredit, grantSpellCredit } from './spell-actions.js'
+
 export function createTurn(deps) {
   const {
     upkeepPhase,
@@ -38,6 +41,10 @@ export function createTurn(deps) {
     extraActionBonus,
     getThreatEffect,
     info,
+    // 第 5 步 P6：直觉牌库的揭示/洗回与资源寄存的回合结算。
+    hunchDeck,
+    investigatorTextBlanked,
+    resourceBank,
     leadDecisionSeat,
     leaveAsset,
     locName,
@@ -310,6 +317,14 @@ function turnBeginningWindow(state, events) {
   if (inv) {
     inv.turnEnded = false
     inv.actionsTakenThisTurn = 0
+    // 第 5 步 P6：回合开始时清理上一回合的「法术专用额外行动」授权，再按当前毁灭标记重新授权，
+    // 资源寄存支援的「放置 4 资源」也在这里结算（都是「在你的回合开始时」）。
+    clearSpellCredit(inv)
+    resourceBank.beginTurn(state, inv, events)
+    grantSpellCredit(state, inv, {
+      blanked: investigatorTextBlanked(state, inv),
+      info: text => info(state, events, text),
+    })
     scenarioBehavior(state).turnBegins?.(state, inv, scenarioRuntime(state, events))
     // 「时间借取」：回合开始时移除所有滴答，换取等量额外行动。
     campaignBorrowedTimeTurnStart(state, inv, events)
@@ -337,6 +352,12 @@ function beginInvestigationPhase(state, events, repeated = false) {
     const loss = inv.pendingActionLoss?.[state.round] || 0
     inv.actionsLeft = Math.max(0, 3 + extraActionBonus(inv) - loss)
     inv.exploreOnlyActions = Math.max(0, exploreOnlyActionBonus(inv) - loss)
+    // 第 5 步 P6：「下个回合期间可以额外行动一次」（序章故事调查员的旧印）。
+    if (inv.extraActionNextTurn) {
+      inv.actionsLeft += 1
+      delete inv.extraActionNextTurn
+    }
+    clearSpellCredit(inv)
     if (inv.pendingActionLoss) delete inv.pendingActionLoss[state.round]
   }
   // Phase 1（A1）：阶段级临时修正改由 state.effects 承载，上面的 expireEffects 已经清掉，
@@ -344,6 +365,8 @@ function beginInvestigationPhase(state, events, repeated = false) {
   for (const inv of aliveInvestigators(state)) inv.phaseStatBonus = null
   state.phase = 'investigation'
   phaseBeginningWindow(state, events)
+  // 第 5 步 P6：「强制 - 在调查阶段开始时：揭示你直觉牌库顶 1 张卡牌」。
+  for (const inv of aliveInvestigators(state)) hunchDeck.reveal(state, inv, events)
   const first = chooseTurn(state)
   if (first == null) { checkOutcome(state, events); return }
   state.currentSeat = first
@@ -353,6 +376,8 @@ function beginInvestigationPhase(state, events, repeated = false) {
 }
 
 function runBetweenInvestigationPhases(state, events) {
+  // 第 5 步 P6：调查阶段结束——直觉牌库顶那张没打出的牌洗回直觉牌库。
+  for (const inv of aliveInvestigators(state)) hunchDeck.returnCard(state, inv, events)
   if (!useGoldPocketWatch(state, 'begin', 'enemy', events)) {
     events.push(...enemyPhase(state))
     if (state.status !== 'playing') return

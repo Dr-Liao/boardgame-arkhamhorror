@@ -8,6 +8,12 @@
 // 依赖注入同前；被外部 import 的三个名字（createGameState / refreshStateResources /
 // unknownCardCodes）在 engine.js 里用函数声明再导出，调用点不变。
 
+import { normalizeScenarioHaunted } from './haunted.js'
+import { enterOpeningHandCards } from './tarot-slot.js'
+import {
+  isStoryInvestigator, normalizeStoryInvestigatorConfig, prepareStoryInvestigator,
+  restoreStoryInvestigators, selectStoryInvestigators, storyInvestigatorSetupCards,
+} from './story-investigators.js'
 import { requestChoice } from './resolution.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { contentRegistry } from '../../content/registered.js'
@@ -26,6 +32,7 @@ export function createSetup(deps) {
     DERIVED_STATE_KEYS,
     EFFECTS,
     META,
+    returnAllBonded,
     PLAYABLE_INVESTIGATORS,
     RULES_VERSION,
     SCENARIOS,
@@ -40,6 +47,7 @@ export function createSetup(deps) {
     campaignManifestFor,
     canSelectInvestigator,
     cardDef,
+    cardName,
     consumeStartingAdjustments,
     corePlayerPool,
     descriptorOfKind,
@@ -53,6 +61,7 @@ export function createSetup(deps) {
     hashSeed,
     inHub,
     info,
+    hunchDeck,
     initialHubScenarioMoves,
     initializeChaosBag,
     introduction,
@@ -150,18 +159,22 @@ function buildInvestigatorsDeck(state, inv, def, events) {
 
 function prepareInvestigator(state, inv, events, startLocation) {
   const def = ALL_INVESTIGATORS[inv.code]
-  let record = state.campaign.investigators[inv.seat]
-  let deck
-  if (!record) {
-    const built = buildInvestigatorsDeck(state, inv, def, events)
-    record = registerCampaignInvestigator(state.campaign, inv, built.deck)
-    deck = built.deck
-  } else {
-    if (record.code !== inv.code || record.status !== 'active') throw new Error('调查员战役身份不可进入剧本')
-    deck = shuffle(record.deck, () => randomValue(state))
+  // 第 2 步 P2.6：无牌组故事调查员——不登记战役身份、不建牌库、不受创伤。
+  const story = isStoryInvestigator(state, inv)
+  let record = story ? null : state.campaign.investigators[inv.seat]
+  let deck = []
+  if (!story) {
+    if (!record) {
+      const built = buildInvestigatorsDeck(state, inv, def, events)
+      record = registerCampaignInvestigator(state.campaign, inv, built.deck)
+      deck = built.deck
+    } else {
+      if (record.code !== inv.code || record.status !== 'active') throw new Error('调查员战役身份不可进入剧本')
+      deck = shuffle(record.deck, () => randomValue(state))
+    }
   }
-  const trauma = state.campaign.trauma[inv.seat]
-  inv.campaignId = record.id
+  const trauma = story ? { physical: 0, mental: 0 } : state.campaign.trauma[inv.seat]
+  if (record) inv.campaignId = record.id
   inv.baseHealth = def.health
   inv.baseSanity = def.sanity
   inv.maxHealth = def.health
@@ -195,10 +208,20 @@ function prepareInvestigator(state, inv, events, startLocation) {
   inv.usedReactions = {}
   inv.location = startLocation
   inv.handSlotsPenalty = state.locations.find(location => location.id === startLocation)?.handSlotsPenalty || 0
+  if (story) {
+    // 无牌组：deck/hand/discard 清空，专属设置卡直接入场（不占 30 张）。
+    const { setupCards } = prepareStoryInvestigator(inv, { setupCards: storyInvestigatorSetupCards(state, inv.code) })
+    for (const code of setupCards) inv.assets.push(newPlayerAssetInstance(state, inv, code))
+    inv.actionsLeft = 3 + extraActionBonus(inv)
+    info(state, events, `📜 ${inv.name} 是故事调查员：没有牌组，起始手牌为 0。`)
+    return
+  }
   const startsWith = investigatorRule(inv.code)?.startsWith
   for (const code of startsWith == null ? [] : Array.isArray(startsWith) ? startsWith : [startsWith]) {
     if (removeCardByCode(inv.deck, code)) inv.assets.push(newPlayerAssetInstance(state, inv, code))
   }
+  // 第 5 步 P6：直觉牌库（乔·戴蒙德）——必须在发起手之前把 11 张洞察事件从牌库里分出来。
+  hunchDeck.prepare(state, inv, events)
   for (const code of inv.deck.filter(code => cardDef(code)?.permanent)) {
     removeCardByCode(inv.deck, code)
     const card = newPlayerAssetInstance(state, inv, code)
@@ -219,6 +242,21 @@ function prepareInvestigator(state, inv, events, startLocation) {
   // 因此这里只会读到本关真实在场的卡。
   inv.actionsLeft = 3 + extraActionBonus(inv)
   drawOpeningHand(state, inv)
+  // 第 5 步 P6：「每场游戏开始时，你的起始手牌中额外有一张 X」（黛安娜·史丹利的黑暗洞察）。
+  const extraOpening = investigatorRule(inv.code)?.openingHandExtra
+  for (const code of extraOpening == null ? [] : Array.isArray(extraOpening) ? extraOpening : [extraOpening]) {
+    if (removeCardByCode(inv.deck, code)) {
+      inv.hand.push(code)
+      info(state, events, `🖐️ ${inv.name} 的起始手牌额外获得「${cardName(code)}」。`)
+    }
+  }
+  // 第 2 步 P2.9：起始手牌里的塔罗可以直接放置入场（不付费用，条目声明）。
+  enterOpeningHandCards(state, inv, {
+    lookup: code => registeredEntry(code),
+    createAsset: (target, owner, code) => newPlayerAssetInstance(target, owner, code),
+    info,
+    events,
+  })
   // 幕间留下的下一场修正（原卡：配给不足 → 起始资源 -3，水壶 → 起始线索 +1）。
   consumeStartingAdjustments(state, inv, events)
   if ((trauma.physical || 0) > 0 || (trauma.mental || 0) > 0) {
@@ -470,6 +508,11 @@ function startScenario(state, index, events) {
   const sc = structuredClone(SCENARIOS[scenarioId])
   resolveAgendaDoomThresholds(sc.agendas, state.numInvestigators)
   state.scenario = sc
+  // 第四循环P2.1：地点闹鬼能力在开局校验——未知子句/未知目标在加载时失败，
+  // 并把规范化后的能力写回剧本数据（读取点只做查询，不再逐次校验）。
+  for (const [id, abilities] of Object.entries(normalizeScenarioHaunted(sc.locations))) {
+    sc.locations[id].haunted = abilities
+  }
   state.acts = sc.acts
   state.agendas = sc.agendas
   state.campaign.scenarioIndex = index
@@ -496,6 +539,11 @@ function startScenario(state, index, events) {
   // 失落的时代：探索牌库逐关重建；免疫/复仇等记录随关卡重置。
   state.explorationDeck = []
   state.explorationDiscard = []
+  // 第四循环 P2.2：第二遭遇牌堆逐关重建（关卡 setup 用 api.extraDeck 建堆）。
+  // 只在已经存在时清空：不给没有第二牌堆的战役新增状态键，replay 指纹因此零变化。
+  if (state.extraEncounterDecks) state.extraEncounterDecks = {}
+  // 第四循环 P2.4：塔罗牌组逐关重建；存在才删键，避免给旧战役新增状态字段（replay 指纹不变）。
+  if (state.scenarioDecks?.tarot) delete state.scenarioDecks.tarot
   state.relicOfAges = null
   state.expeditionLeaderSeat = state.expeditionLeaderSeat ?? null
   state.exiled = []
@@ -505,11 +553,43 @@ function startScenario(state, index, events) {
   state.scenarioFlags = {}
   // 地点能力的「每场游戏一次（团队）」标记属于上一关；重开或进入新关时必须清空。
   state.locationAbilityTeamUsed = {}
+  // 第 5 步 P6：「压在黛安娜底下」的延后结算队列属于上一关，不能跨关残留。
+  if (state.deferredBeneath) delete state.deferredBeneath
   state.round = 1
   state.phase = 'investigation'
   state.turnsTaken = []
   // 新关卡不带上一关的临时效果（A1）；持续到关卡结束的效果由「所有调查员离场」自然消失。
   state.effects = []
+
+  // 第 2 步 P2.8：上一章散落在手牌/牌库/场上的绑定副本先收回场外集合，再重建牌库。
+  if (state.bondedSets) returnAllBonded(state, { events })
+
+  // 第 2 步 P2.6：故事调查员——本章声明了就选人（每座位各选一次，其余划掉），
+  // 没有声明就换回原本的调查员；两者都必须在 prepareInvestigator 之前完成。
+  if (sc.storyInvestigators) {
+    if (!state.storyInvestigators) {
+      selectStoryInvestigators(state, normalizeStoryInvestigatorConfig(sc.storyInvestigators, `${sc.id}.storyInvestigators`), {
+        requestChoice,
+        cardName: code => ALL_INVESTIGATORS[code]?.nameZh || ALL_INVESTIGATORS[code]?.name || code,
+        // 界面靠这份身份信息渲染选人卡；只读卡面印刷字段，不涉及任何隐藏信息。
+        cardInfo: code => {
+          const card = ALL_INVESTIGATORS[code]
+          if (!card) return null
+          return {
+            klass: card.klass,
+            classLabel: state.classNames?.[card.klass] || null,
+            subtitle: card.subnameZh || card.subname || null,
+            stats: { willpower: card.willpower, intellect: card.intellect, combat: card.combat, agility: card.agility },
+            health: card.health,
+            sanity: card.sanity,
+          }
+        },
+      })
+    }
+  } else if (state.storyInvestigators) {
+    restoreStoryInvestigators(state)
+    info(state, events, '📜 故事调查员退场，队伍换回原本的调查员。')
+  }
 
   // 计算有效起始地点（午夜假面：房屋已烧毁则从河岸城开始）。
   const startLoc = scenarioStartLocation(state, sc)
@@ -552,6 +632,9 @@ function startScenario(state, index, events) {
     info(state, events, `${CLASS_EMOJI[inv.klass] || ''} ${inv.name} 位于「${locName(state, inv.location)}」。`)
   }
   info(state, events, `☀️ 第 1 回合 · 调查阶段开始，轮到 ${state.investigators[state.currentSeat]?.name}。`)
+  // 第 5 步 P6：剧本开局直接进入调查阶段，第一回合的「调查阶段开始时」必须在这里补一次
+  // （之后各回合由 turn.js 的 beginInvestigationPhase 结算）。
+  for (const inv of state.investigators) hunchDeck.reveal(state, inv, events)
   // 能力层窗口：冒险开始时（起始手牌里的塔罗牌等「游戏开始时」能力）。
   openAbilityWindow(state, 'scenarioStarts', { when: 'scenarioStarts', scenarioId: sc.id }, events)
   state.legalMoves = legalMoves(state)

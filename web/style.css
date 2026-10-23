@@ -11,6 +11,7 @@
 @import url('./hub-office.css');
 @import url('./campaign-experience.css');
 @import url('./campaign-theme.css');
+@import url('./tcu-panels.css');
 .ah-player-avatar { display: inline-block; width: 20px; height: 20px; margin-right: 5px; border-radius: 50%; object-fit: cover; vertical-align: middle; }
 /* 诡镇奇谈 · 卡牌版 Mod 专属样式
  *

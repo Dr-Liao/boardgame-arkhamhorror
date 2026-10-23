@@ -1,6 +1,9 @@
 import { assertContentBundle, assertLaunchableCampaign } from './schema.js'
 import { campaignGraph, validateCampaignGraph } from '../src/campaign/campaign-flow.js'
 import { RULES_VERSION } from '../src/engine/rules-state.js'
+import { normalizeScenarioHaunted } from '../src/engine/haunted.js'
+import { normalizeScenarioSpectralLocations } from '../src/engine/locations.js'
+import { normalizeStoryInvestigatorConfig } from '../src/engine/story-investigators.js'
 import { missingMechanics } from './mechanics.js'
 
 // Registration is explicit. A new campaign or scenario adds an entry to the
@@ -43,6 +46,13 @@ export function createContentRegistry({ packs, campaigns, scenarios }, rulesVers
   }
   const byId = new Map(entries.map(entry => [entry.manifest.id, entry]))
   if (byId.size !== entries.length) throw new TypeError('重复关卡注册 ID')
+  // 第四循环（第 2 步 P2.1）：地点「闹鬼」能力在注册期校验——未知子句/未知字段/非法参数
+  // 在装配内容时就失败，而不是对局中途才静默失效。校验收敛在引擎的 haunted.js（单一读点）。
+  for (const entry of entries) {
+    normalizeScenarioHaunted(entry.scenario.locations, `${entry.manifest.id}.locations`)
+    normalizeScenarioSpectralLocations(entry.scenario.locations, `${entry.manifest.id}.locations`)
+    normalizeStoryInvestigatorConfig(entry.scenario.storyInvestigators, `${entry.manifest.id}.storyInvestigators`)
+  }
   const requireScenario = id => {
     const entry = byId.get(id)
     if (!entry) throw new RangeError(`未知关卡 ${id}`)

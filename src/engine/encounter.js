@@ -1,4 +1,5 @@
 import { investigatorRule } from '../cards/card-rules.js'
+import { extraDeckPiles } from './alt-decks.js'
 // 遭遇牌与反应窗口（drawEncounter / reactionWindow / triggerReaction / playerWindow）
 // 从 engine.js 拆出的模块（Phase 6 · 6d-20）。
 //
@@ -7,6 +8,9 @@ import { investigatorRule } from '../cards/card-rules.js'
 //   reactionWindow / playerWindow 开一个可交互窗口（反应、强制、玩家窗口）
 //   triggerReaction 是旧式 reactions 的入口（数据体 reactions）
 // 它们与 ability-exec.js 的分工：那边结算单个能力，这边决定「什么时候问」。
+//
+// 第 2 步 P2.2：`drawEncounter(state, inv, events, { deck: 'spectral' })` 从第二遭遇牌堆
+// 抽牌；不传 `deck` 时完全走原来的普通遭遇牌堆（行为零变化）。牌堆读写统一走 alt-decks.js。
 
 export function createEncounter(deps) {
   const {
@@ -72,13 +76,20 @@ export function createEncounter(deps) {
     topDiscardEvent,
   } = deps
 
-function drawEncounter(state, inv, events) {
-  if (state.encounterDeck.length === 0) {
-    if (state.encounterDiscard.length === 0) return
-    state.encounterDeck = shuffle(state.encounterDiscard, () => randomValue(state))
-    state.encounterDiscard = []
+function drawEncounter(state, inv, events, options = {}) {
+  // P2.2：deck 缺省是普通遭遇牌库；传 'spectral' 时读写第二遭遇牌堆的两堆。
+  const deckId = options.deck || 'encounter'
+  const piles = deckId === 'encounter' ? null : extraDeckPiles(state, deckId)
+  const deck = () => (piles ? piles.deck : state.encounterDeck)
+  const discard = () => (piles ? piles.discard : state.encounterDiscard)
+  const setDeck = list => { if (piles) piles.deck = list; else state.encounterDeck = list }
+  if (deck().length === 0) {
+    if (discard().length === 0) return
+    setDeck(shuffle([...discard()], () => randomValue(state)))
+    if (piles) piles.discard = []
+    else state.encounterDiscard = []
   }
-  const code = state.encounterDeck.pop()
+  const code = deck().pop()
   const encounter = ALL_ENEMIES[code] || ALL_TREACHERIES[code]
   const redrawContext = { when: 'encounterDrawn', seat: inv.seat, location: inv.location, cardCode: code,
     weakness: isWeaknessCode(code), peril: !!encounter?.peril, cancelled: false,
@@ -91,13 +102,13 @@ function drawEncounter(state, inv, events) {
   if (redrawContext.cancelled) {
     // 02302：被取消的遭遇卡应混洗回遭遇牌库，而不是进入弃牌堆。
     if (redrawContext.shuffleBack) {
-      state.encounterDeck.push(code)
-      state.encounterDeck = shuffle(state.encounterDeck, () => randomValue(state))
-    } else state.encounterDiscard.push(code)
+      deck().push(code)
+      setDeck(shuffle(deck(), () => randomValue(state)))
+    } else discard().push(code)
     const cancelledName = encounter?.hidden ? '一张隐私遭遇卡' : `「${encounter?.name || code}」`
     if (redrawContext.redraw) {
       info(state, events, `${cancelledName}被取消并${redrawContext.shuffleBack ? '混洗回遭遇牌库' : '弃置'}，${inv.name} 重新抽取遭遇卡。`)
-      return drawEncounter(state, inv, events)
+      return drawEncounter(state, inv, events, options)
     }
     info(state, events, `${cancelledName}的显现效果被取消并${redrawContext.shuffleBack ? '混洗回遭遇牌库' : '弃置'}。`)
     return
@@ -140,10 +151,10 @@ function drawEncounter(state, inv, events) {
         picked = placeLocationForEmptySpawn(state)
         if (picked) info(state, events, `🌐 彼端的世界：从探索牌库翻出地点「${locName(state, picked)}」并让「${def.name}」在那里生成。`)
       }
-      if (!picked) { state.encounterDiscard.push(code); return }
+      if (!picked) { discard().push(code); return }
       loc = picked
     } else if (def.spawn) {
-      if (!locationExists(state, def.spawn)) { state.encounterDiscard.push(code); return }
+      if (!locationExists(state, def.spawn)) { discard().push(code); return }
       loc = def.spawn
     } else {
       engage = resolvingInv.seat
@@ -155,11 +166,11 @@ function drawEncounter(state, inv, events) {
     const resolution = resolveTreachery(state, resolvingInv, ALL_TREACHERIES[code], events)
     // Older campaign handlers may already perform their printed surge; the marker prevents a second draw.
     const placed = typeof resolution === 'object' ? resolution.placed : resolution
-    if (!placed) state.encounterDiscard.push(code)
+    if (!placed) discard().push(code)
     const surge = encounter.surge || scenarioBehavior(state).encounterGainsSurge?.(state, code, resolvingInv)
     if (surge && !resolution?.surgeHandled && !resolvingInv.defeated && !resolvingInv.resigned) {
       info(state, events, `🌀 「${encounter.name || code}」涌动：再抽取一张遭遇牌。`)
-      drawEncounter(state, resolvingInv, events)
+      drawEncounter(state, resolvingInv, events, options)
     }
   } else if (ALL_CARDS[code]?.type === 'asset' && scenarioBehavior(state).drawStoryAsset) {
     scenarioBehavior(state).drawStoryAsset(state, resolvingInv, code, scenarioRuntime(state, events))
@@ -448,5 +459,10 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
   state.timingWindow = null
 }
 
-  return { drawEncounter, reactionWindow, triggerReaction, playerWindow }
+// 第 2 步 P2.2：从第二遭遇牌堆抽一张并走同一条显现管线。
+function drawExtraEncounter(state, inv, events, deckId) {
+  return drawEncounter(state, inv, events, { deck: deckId })
+}
+
+  return { drawEncounter, drawExtraEncounter, reactionWindow, triggerReaction, playerWindow }
 }

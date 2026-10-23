@@ -6,22 +6,22 @@
     "effectsEntries": 0,
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
-    "descriptorEntries": 468,
-    "descriptorAbilities": 392,
+    "descriptorEntries": 490,
+    "descriptorAbilities": 414,
     "abilityKinds": 12,
-    "windows": 56,
+    "windows": 61,
     "effectPrimitives": 56,
-    "nonPlayerCards": 20,
+    "nonPlayerCards": 21,
     "behaviorLines": 13035,
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 468,
+    "descriptor": 490,
     "data": 4
   },
   "nonPlayer": {
     "byScope": {
-      "enemy": 14,
+      "enemy": 15,
       "location": 6
     },
     "codes": [
@@ -40,13 +40,14 @@
       "04209b",
       "04328",
       "04335",
+      "05017",
       "goatSpawn",
       "relentlessDarkYoung",
       "screechingByakhee",
       "wolfManDrew",
       "youngDeepOne"
     ],
-    "abilities": 4,
+    "abilities": 5,
     "modifiers": 23
   },
   "declaration": {
@@ -2415,6 +2416,96 @@
       "descriptors": 1
     },
     {
+      "code": "05001",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05002",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "05003",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "05004",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05005",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05006",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "05007",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05008",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05009",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05010",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05011",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05012",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05013",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05014",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05015",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05016",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05018",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05019",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
       "code": "05023",
       "channel": "descriptor",
       "descriptors": 1
@@ -2426,6 +2517,26 @@
     },
     {
       "code": "05028",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05046",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05047",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05048",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05049",
       "channel": "descriptor",
       "descriptors": 1
     },

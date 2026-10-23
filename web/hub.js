@@ -11,6 +11,12 @@ import { renderSupplyPicker, supplyPickerModel } from './supply-picker.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
 import { installCardZoom } from './card-zoom.js'
 import { recordValueText, recordChangeText } from './campaign-records.js'
+// 第 4 步 P5：万象无终的待决选择面板（塔罗抽牌 / 序章选人）也走大厅这一层——
+// 这两个选择发生在进入剧本之前的准备阶段，uiState 还是 campaignHub / scenarioSetup。
+import {
+  hauntedChoiceModel, renderHauntedChoice, renderStoryInvestigatorPicker, renderTarotPicker,
+  storyInvestigatorPickerModel, tarotPickerModel,
+} from './tcu-ui.js'
 const STAGES = { campaignHub: '战役准备', scenarioSetup: '调查准备', inScenario: '调查进行中', scenario: '调查进行中', scenarioResult: '调查报告', interlude: '关间休整', campaignResult: '战役终章' }
 const DIFFICULTIES = { easy: '简单', standard: '普通', hard: '困难', expert: '专家' }
 const CLASSES = { guardian: '守护者', seeker: '探求者', rogue: '流浪者', mystic: '潜修者', survivor: '生存者', neutral: '中立' }
@@ -1053,6 +1059,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   }
 
   // 待决的战役选择。补给选购走卡牌面板（完成按钮在独立的完成栏）；
+  // 塔罗抽牌、序章选人、闹鬼结算走万象无终的专用面板（P5）；
   // 其余选择（领队、幕间核对、补给点治疗）仍保持一列按钮。
   function pendingChoicePane(s) {
     const market = supplyPickerModel(s)
@@ -1062,6 +1069,16 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         disabled: locked(s), busy: state.busy,
         onSubmit: move => { if (move && !state.busy) submitMove(move, s) },
       }))
+    const panelProps = {
+      disabled: locked(s), busy: state.busy,
+      onSubmit: move => { if (move && !state.busy) submitMove(move, s) },
+    }
+    const tarot = tarotPickerModel(s)
+    if (tarot) return h('div', { className: 'ah-hub-pane ah-hub-tcu-panel' }, interludeBriefing(s, true), renderTarotPicker(h, tarot, panelProps))
+    const story = storyInvestigatorPickerModel(s)
+    if (story) return h('div', { className: 'ah-hub-pane ah-hub-tcu-panel' }, interludeBriefing(s, true), renderStoryInvestigatorPicker(h, story, panelProps))
+    const haunted = hauntedChoiceModel(s)
+    if (haunted) return h('div', { className: 'ah-hub-pane ah-hub-tcu-panel' }, interludeBriefing(s, true), renderHauntedChoice(h, haunted, panelProps))
     return h('section', { className: 'ah-hub-pane', role: 'dialog', 'aria-label': '战役选择' },
       interludeBriefing(s, true),
       h('h2', {}, renderRulesText(h, s.state.pendingChoice.prompt, { links: false })),
@@ -1079,6 +1096,24 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       h('div', { className: 'ah-office-metrics' }, metric('star', cp.victory, '总胜利点'), metric('book', cp.xp, '未花经验')),
       !shownRecords.length && !cp.scenarioResults?.length ? h('div', { className: 'ah-office-empty' }, tableIcon('book'), h('p', {}, '尚未留下调查记录')) : null,
       shownRecords.map(([key, value]) => h('div', {}, `${label(key)}：${recordValueText(value, cardNames)}`)),
+      // 万象无终（P5）：遗留记忆与被看守人追捕都是公开记录，中文名由战役清单下发。
+      (s.state.mementos || []).length
+        ? h('div', { className: 'ah-hub-records-block', role: 'group', 'aria-label': '已发现的遗留记忆' },
+          h('h3', {}, tableIcon('book'), `遗留记忆 ${s.state.mementos.length} 条`),
+          h('ul', { className: 'ah-hub-record-chips' }, s.state.mementos.map(id =>
+            h('li', { className: 'ah-hub-record-chip', 'data-memento': id },
+              manifest?.mementoLabels?.[id] || cp.mementoLabels?.[id] || id))))
+        : null,
+      s.state.watcher
+        ? h('div', { className: 'ah-hub-records-block', role: 'group', 'aria-label': '看守人' },
+          h('h3', {}, tableIcon('eye'), '看守人'),
+          h('p', {}, (s.state.watcher.huntedSeats || []).length
+            ? `正在追捕：${(s.state.watcher.huntedSeats || []).map(seat => s.state.investigators.find(inv => inv.seat === seat)?.name || `座位 ${seat + 1}`).join('、')}`
+            : '尚未盯上任何调查员。'),
+          (s.state.watcher.taken || []).length
+            ? h('p', {}, `已带走：${s.state.watcher.taken.map(code => cardNames[code] || s.state.investigators.find(inv => inv.code === code)?.name || code).join('、')}`)
+            : null)
+        : null,
       (cp.scenarioResults || []).map(result => h('article', { className: 'ah-hub-scenario' },
         h('strong', {}, manifest?.scenarios.find(item => item.id === result.scenarioId)?.name || result.scenarioId),
         h('span', {}, `${resultName(s, result)} · 胜利点 ${result.victory} · ${result.rounds} 回合`),

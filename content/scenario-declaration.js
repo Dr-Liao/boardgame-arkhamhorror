@@ -26,13 +26,14 @@
 //   setup.enemies        [{ code, count, at, exhausted }]            → setupEnemies
 //   setup.deck           { removeSpawnedEnemies, addAgentSet }       → modifyDeck
 //   setup.startRevealed  boolean                                    → locationsStartRevealed
+//   setup.storyInvestigators { codes, crossOutUnused?, setupCards? }  → storyInvestigators（无牌组故事调查员，P2.6）
 //   data                 其余「关卡常量」原样挂到 behavior 上（roundEndActIndex / houseFateChoice…）
 //   hooks                真正的脚本钩子（actions / describe / resolution / actReveal…）
 //
 // 返回的对象与旧 behavior.js 完全同形：引擎按同名钩子调用，注册表只校验 behavior.id。
 // 因此迁移一个关卡不需要改引擎，测试里 `{ ...behavior }` 的展开也照旧成立。
 
-const SETUP_KEYS = new Set(['startLocation', 'locations', 'enemies', 'deck', 'startRevealed'])
+const SETUP_KEYS = new Set(['startLocation', 'locations', 'enemies', 'deck', 'startRevealed', 'storyInvestigators'])
 const DECLARATION_KEYS = new Set(['id', 'setup', 'data', 'hooks'])
 const RESERVED_HOOKS = new Set(['id', 'startLocation', 'setupLocations', 'setupEnemies', 'modifyDeck', 'locationsStartRevealed'])
 
@@ -162,6 +163,8 @@ export function declareScenario(declaration) {
     ...buildSetupEnemies(setup.enemies, `${id}.setup`),
     ...buildModifyDeck(setup.deck, `${id}.setup`),
     ...(setup.startRevealed === undefined ? {} : { locationsStartRevealed: setup.startRevealed }),
+    // 第 2 步 P2.6：无牌组故事调查员的选择配置（形状由 story-investigators.js 校验）。
+    ...(setup.storyInvestigators === undefined ? {} : { storyInvestigators: setup.storyInvestigators }),
     ...hooks,
   }
   return Object.freeze(built)

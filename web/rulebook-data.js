@@ -33,7 +33,7 @@ export const RULES = [
   entry('revelation','显现','遭遇',['显现','Revelation'],['调查员抽取遭遇卡时，先结算其显现能力；敌人随后按生成指示入场，诡计则通常在结算后弃置。','显现能力造成的检定、伤害、恐惧和选择均属于当前遭遇卡的结算。'],['encounter','spawn','surge','peril']),
   entry('spawn','生成','敌人',['生成','Spawn'],['敌人被抽取时，按其生成指示放到指定地点。若没有生成指示，它通常与抽取它的调查员交战。','“生成于”不是普通移动；如果指定地点不在场，依卡面和当前场景规则处理。'],['encounter','engage','prey']),
   entry('encounter','遭遇与揭示','流程',['遭遇','揭示'],['神话阶段按流程从遭遇牌堆抽牌，并展示抽到的卡与当前调查员。','敌人会生成到规定地点；诡计可能产生检定、伤害或待决选择。牌堆与弃牌数量可在桌面查看。'],['test','revelation','spawn','surge','peril']),
-  entry('parley','谈判','敌人',['谈判','Parley'],['谈判是卡牌能力指定的一种行动。执行卡面所列费用与检定；它不是攻击，也不会仅因谈判而受到反击。','谈判仍可能引发与普通行动相同的借机攻击，除非卡面或当前效果另有说明。'],['actions','opportunity','engage']),
+  entry('parley','谈判','敌人',['谈判','Parley','谈判行动','Parley -','谈判 -'],['谈判是卡牌能力指定的一种行动。执行卡面所列费用与检定；它不是攻击，也不会仅因谈判而受到反击。','敌人、地点与剧情资产上的「谈判 - …」能力现在走同一条执行管线：消耗一个行动，目标由同一份目标列举校验，并且不引发借机攻击（与卡牌能力的豁免一致）。','谈判仍可能引发与普通行动相同的借机攻击，除非卡面或当前效果另有说明。','带有「谈判」的卡牌可以作为构筑筛选条件（《万象无终》的普雷斯顿·费尔蒙特会用到）；卡面文字与条目能力都计入。'],['actions','opportunity','engage','tcuCampaign']),
   entry('victory','胜利与胜利区','战役',['胜利','胜利区','Victory'],['带有胜利点的敌人被击败、或带有胜利点且没有线索的地点完成调查后，通常放入胜利区。','剧本结束时，胜利区中的卡牌会依当前剧本规则提供经验或参与结局。'],['upgrade','fight','clues']),
   entry('elite','精英','关键字',['精英','Elite'],['精英敌人会忽略明确写着只能选择或影响“非精英”敌人的效果。','精英本身不会改变攻击、躲避或交战流程；仍需查看该敌人的其他关键字与卡面能力。'],['fight','evade','engage']),
   entry('clues','线索、调查与场景','流程',['线索','调查','帷幕','推进场景','[clue]'],['调查时会以地点的帷幕为基础难度。取得的线索放在人物旁的线索盘中。','右上角推进场景按钮显示当前可用线索和所需数量。还必须满足地点或时机条件，按钮才会开放。'],['test','doom','script']),
@@ -74,6 +74,22 @@ export const RULES = [
   entry('tfaTimeline','时间线与年代','失落的时代',['时间线','年代','时间之窗','破碎永世','Timeline'],['《破碎永世》把调查员带到不同年代的地点（犹格斯星、拉莱耶海岸、姆大陆、亚特兰蒂斯、纳克特、瓦卢西亚、冷原），并用「时间之窗」把它们连接起来。','火盆是否点燃、遗物是哪一个版本、遗失的遗物是否找回等记录会决定导入分支、替代场景与最终结局；只有实际到达的分支显示正文。','古代遗物会改变时间之窗附近的地图：破碎地点被附属到遗物，凑够人数+1 处后进入结局；遗物离场时会把附属地点洗回探索牌库并重置场景。'],['tfaRelic','tfaChaos','tfaExploration']),
   entry('tfaDescent','深度等级与下降','失落的时代',['深度','深度等级','下降','幽嘶深渊','Depth'],['《幽嘶深渊》用「当前深度等级」记录下降层数，从 1 开始，每推进一次场景增加 1；混乱袋的骷髅标记按当前深度取负值。','每下降一层会重建探索牌库、把没有跟上的人留在上一层、把追击区的敌人放到本层起点，并清理上一层的卡牌。','深度到 5 时直接进入结局；伊格之怒至少 18 会从较深的密谋开始，至少 21 时伊格已经在追击区。深度等级写入状态并随存档恢复。'],['tfaExploration','tfaChaos','tfaVengeance']),
   entry('tfaChaos','失落时代的混乱符号','失落的时代',['失落时代的混乱符号','旧神标记','古神标记','剧本提示卡','elder_thing','Elder Thing'],['每一章都有自己的提示卡：骷髅、异教徒、石板与旧神标记按当前章节、难度面与场上状态取值。战役初始混乱袋没有异教徒与石板标记，部分章节会在结局后把符号永久加入（例如荒莽密林的女猎手结局）。','旧神标记通常为 -2／-3；在荒莽密林与久远腹地，中毒时改为自动失败；在幽嘶深渊，胜利区复仇点数达到 3 时也改为自动失败。','骷髅常读取复仇点数、带有毁灭的地点数量或当前深度；石板在部分章节读取探索牌库张数或手牌数。符号的额外后果在检定结算后执行，例如在所在地点放置毁灭或让一张中毒弱点进入威胁区域。'],['chaos','tfaCampaign','tfaVengeance']),
+  entry('tcuCampaign','万象无终战役与记录','万象无终',['万象无终','四循环','TCU','The Circle Undone','女巫集会','银暮秘社','战役记录'],['《万象无终》是第四个循环：序章《暮色庄园失踪事件》先选出四位无牌组故事调查员，再依次是《巫异时刻》《死亡门前》，幕间《进步的代价》，《隐秘之名》《恶罪报应》《崇高利益》，幕间《核心圈》，《聚合幻灭》《混沌魔掌》，幕间《扭转命运》，《黑色王座》，最后进入尾声。','内容按三个包登记：战役 237 张、调查员 19 张、玩家 87 张，合 343 张主卡加 34 个关联面，共 377 条印刷记录。','当前状态：战役与九章都还是「仅图鉴」（catalog-only），不能从大厅启动。本条目与下面各条描述的是已经接线并有测试的引擎部分；章节布置、卡面行为与剧情分别属 P8、P9，逐项证据与未完成清单在 audit/tcu-migration.json。','战役记录目前只登记四项：遗留记忆、你被追捕、被看守人带走、失踪人口；参考实现共 64 个键（中文 base.json 为 63 个），其余键随 P9 补齐，档案页届时显示中文名。','混乱袋四个难度都是 13 枚基础袋（骷髅×2）；异教徒、石板与古神标记由章节和幕间按分支加入，不要照静态 16 枚表。'],['tcuHaunted','tcuPrologue','tcuChaos']),
+  entry('tcuHaunted','闹鬼（Haunted）','万象无终',['闹鬼','Haunted','闹鬼能力','结算闹鬼能力','Haunted -'],['「闹鬼 - …」印在地点上。调查员在该地点进行一次调查检定并失败后，结算该地点印刷的每条闹鬼能力；由玩家决定结算顺序，某条能力没有合法目标时跳过不结算。','本局只在调查检定失败后自动触发。攻击或躲避失败本身不是闹鬼的条件——那是混乱标记或敌人能力单独印的文本，由卡面显式调用同一个结算入口；章节也可以把战斗、躲避失败纳入。','多条能力时逐条弹出选择；「结算两次」会整轮重复；有取消窗口，替代整次结算的效果可以在窗口里生效。无法执行的复杂效果会记入 hauntedGaps 并在日志标注，不会静默通过。','引擎入口在 src/engine/haunted.js（hauntedAbilitiesAt、isLocationHaunted、normalizeScenarioHaunted），内容层用 scenarioRuntime.haunted 结算。代表卡：05043、05065、05079 至 05084。'],['tcuSpectral','test','clues']),
+  entry('tcuSpectral','幽灵界、幽灵地点与第二遭遇牌堆','万象无终',['幽灵','Spectral','幽灵界','幽灵地点','幽灵牌堆','翻面','第二遭遇牌堆'],['「幽灵」是特性（[[幽灵]] / [[Spectral]]）：幽灵地点带幽灵面，部分幽灵敌人在非幽灵地点不能被交战、也不能受到伤害。','第二遭遇牌堆与普通遭遇牌堆分开建堆、抽牌、洗回、弃置；牌堆张数对全桌公开，牌序不公开（观察投影只给张数）。','地点翻面：单面幽灵地点写 spectral，双面地点写 back；翻面只替换印刷字段，线索与毁灭保留，连接与在场单位不变。','当前状态：原语已实现并有测试（src/engine/alt-decks.js 与 src/engine/locations.js），但 05 章节尚未接线；幽灵敌人的目标限制由章节的 canFightEnemy 读 isSpectral 实现，不是一个全局规则。'],['tcuHaunted','tcuWatcher','encounter']),
+  entry('tcuCircle','阵法与多技能检定','万象无终',['阵法','Circle','阵法行动','多技能检定'],['「阵法」是地点或幕上的一种行动（写作 Circle.）：一次检定把 2 至 4 项技能值相加作为检定值，难度按卡面。','实现上允许把技能数组传给技能检定：标签显示「意志+智力」这类合计样式，投入的卡牌匹配任一技能即计入图标，万能图标只算一次；单技能调用的数值、标签与日志与旧实现逐字一致。','本次检定的行动类型记为阵法，混乱标记与卡面可以据此判断「本次检定在阵法行动期间」。','代表卡：《聚合幻灭》的 05250 至 05257，其中 05257 灵怪陷阱是四项技能合计 20 的终局仪式。'],['test','tcuBraziers','actions']),
+  entry('tcuTarot','塔罗牌组（剧本）','万象无终',['塔罗','Tarot','塔罗牌组','大阿卡纳','正位','逆位','塔罗占卜'],['序章与《巫异时刻》使用 22 张大阿卡纳牌组（愚者 0 到世界 XXI）。它是剧本级牌组：不是 05 卡号的卡牌，也不是玩家牌组里的塔罗槽资产。','实现：建堆时校验 22 张唯一、抽取、抽 N 选 1（未选中的放回牌库底）、正位与逆位、洗回与弃置。随机只走引擎的随机源，因此可以确定性测试；牌序与已抽牌随存档恢复。','当前状态：原语已实现并有测试（src/engine/tarot.js），但 22 张牌的结果表、序章与《巫异时刻》的抽取时机属 P8，抽牌与选择面板属 P5；在那之前本条目只说明引擎能力。'],['tcuTarotSlot','tcuPrologue','doom']),
+  entry('tcuTarotSlot','塔罗槽位与开局入场','万象无终',['塔罗槽位','塔罗牌槽','Tarot','塔罗','Tarot slot','开局入场','高塔'],['塔罗是玩家卡的槽位，默认一个：7 张塔罗资产（05023 宝剑王牌、05027 死神、05031 月亮、05035 圣杯四、05039 星币五、05040 权杖王牌、05042 高塔）占 Tarot 槽。','额外槽位走修正管线（add:slot，value 为 tarot），不写 slot:tarot——后者不在修正目标表里，注册期就会抛错。安娜·卡斯洛（05283）给 2 个额外槽；再加 1 槽的月之吊坠（54012）属于 Return to The Circle Undone，不在本轮范围。','开局入场：卡面写「游戏开始时若在你起始手牌中则放置入场」的塔罗，抽完起始手牌后直接入场、不付费用。高塔（05042）同时是基础弱点与塔罗：它在手牌中时你不能投入任何卡牌，而且起始手牌抽到后不能被换掉。','当前状态：原语已实现并有测试（src/engine/tarot-slot.js）；7 张塔罗的单卡条目属 M2（P7），构筑合法性也由那时验收。'],['slots','deck','tcuTarot']),
+  entry('tcuBonded','绑定（Bonded）','万象无终',['绑定','Bonded','绑定卡','场外绑定'],['「绑定」是印刷词：主卡入场后从场外绑定集合检索 3 张副本，1 张加入手牌、其余洗回牌库；主卡离场时把这些副本全部收回场外（即使在牌库、手牌或弃牌堆也不留在场内）。','绑定关系全部来自卡面字段（bondedCards、bondedTo、bondedCount），引擎不认卡号；场外集合只存剩下的副本，牌堆张数不含绑定副本；章节开始时会把散落的副本收回。','两组：圣化之镜（05313）与舒缓旋律（05314），密教辞典（05316）与鲜血仪式（05317）。'],['deck','slots','tcuCampaign']),
+  entry('tcuMemento','遗留记忆（Memento）','万象无终',['遗留记忆','Memento','记忆','发现'],['「遗留记忆」不是卡面印刷关键词，而是战役日志里的 10 条集合（参考实现 Memento.hs 的枚举：长笛、奇怪的咒文、仪式材料、撕碎的影子等），在《隐秘之名》《恶罪报应》里发现，幕间与终章按数量分支。','实现：mementosDiscovered 是一个字符串记录，发现去重写入、可以划掉、可以计数；未知 id 直接失败；观察投影只给已发现的名单。','当前状态：记录层已实现并有测试（src/campaign/mementos.js）；10 条的中文名与章节接线属 P9 与 P8，在那之前不要把本条目当作卡牌文本。'],['tcuCampaign','tcuWatcher','weakness']),
+  entry('tcuWatcher','看守人（Watcher）','万象无终',['看守人','Watcher','幽灵看守人','你被追捕'],['幽灵看守人是跨章追踪的敌人与记录：你被追捕（youAreBeingHunted，座位集合）与被带走（wasTakenByTheWatcher，调查员卡号集合）。两者都是公开信息。','实现：markHunted、clearHunted、isBeingHunted、markTakenByWatcher、takenByWatcher（src/campaign/mementos.js）；随存档与章节切换恢复，投影只给被追捕的座位与被带走的卡号，不泄露章节私有分支。','当前状态：记录层已实现；幽灵看守人本身（05086 敌人）、05100 至 05103 的授予闹鬼、以及《聚合幻灭》里的 05247、05248、05257 属 P8。'],['tcuCampaign','tcuSpectral','hunter']),
+  entry('tcuPrologue','序章与无牌组故事调查员','万象无终',['序章','序章故事调查员','故事调查员','无牌组','暮色庄园','划掉'],['序章《暮色庄园失踪事件》用四位无牌组故事调查员：05046 加弗瑞拉·米兹拉克、05047 杰罗姆·戴维斯、05048 瓦伦蒂诺·里瓦斯、05049 佩妮·怀特。每位玩家选一位；不足四人时把没人选的划掉。','无牌组意味着没有牌库、手牌与弃牌堆：不能抽牌、不能换起始手牌、不参与构筑与升级。专属设置卡（05258 至 05261）直接入场，不占 30 张；离开序章后换回各人的原调查员。','实现：选人、划掉、换回与无牌组准备都在引擎里（src/engine/story-investigators.js），关卡用 setup.storyInvestigators 声明；随存档往返，投影只给已选与划掉的名单。','当前状态：原语已实现并有测试；序章建局、失踪人口记录与 AI 在选人窗口上的偏好属 P6 与 P8。'],['tcuCampaign','tcuTarot','deck']),
+  entry('tcuBreaches','裂口与入侵','万象无终',['裂口','Breach','入侵','Incursion'],['《混沌魔掌》用裂口计数器：裂口可以叠在地点或幕上，并沿连接传播；骷髅标记的取值等于你所在地点的裂口加毁灭。','实现：地点实例上有裂口数（缺省 0、上限 3），读点是 addBreach、removeBreach、breachTotal 与 locationSkullValue（裂口加地点毁灭）；观察投影只给有标记的地点。幕上的裂口由卡面与章节脚本表达。','当前状态：地点计数器已实现并有测试（src/engine/location-state.js）；沿连接传播、幕与议程的阈值属 P8。'],['doom','chaos','tcuCampaign']),
+  entry('tcuChaos','万象无终的混乱符号','万象无终',['混乱标记','混乱符号','混乱袋','骷髅','异教徒','石板','古神','剧本提示卡'],['四个难度都是 13 枚基础袋：+1、0、负值若干、骷髅×2、自动失败与旧印。这与前三循环的静态袋不同；异教徒、石板与古神标记由章节和幕间按分支加入。','骷髅常读「你所在地点的裂口与毁灭」或「胜利区的未了之事数量」；异教徒、石板与古神标记按各章提示卡结算，部分在检定成功或失败后追加后果。','当前状态：基础袋已登记在战役清单（content/campaigns/theCircleUndone/shared.js 的 CHAOS_BAGS）并随存档；逐章符号效果尚未实现（P8 的 tcu-chaos.js），在那之前不要把本条目当成可用规则。'],['chaos','tcuCampaign','tcuBreaches']),
+  entry('tcuHeretics','异端者、多面与放逐','万象无终',['异端者','异端者多面与放逐','Heretic','未了之事','Unfinished Business','放逐','驱除','翻面'],['《恶罪报应》的 6 个异端者各有两面（敌人面与未了之事面，合 12 条印刷记录）：被击败后翻面，不进入弃牌堆；「不能以任何方式被击败」的敌人只能用放逐（驱除）离场，放逐到胜利区。','实现：面表与当前面（faces、side）、换面（flipEnemyFace：离场、解除交战、威胁区剧情卡随面切换）、放逐到胜利区（banishEnemyToVictory）与不能击败读点（enemyCannotBeDefeated）。','当前状态：通用读点已实现并有测试（src/engine/enemy-faces.js）；每个异端者面的具体文本属 P8，单面的特殊分支可以登记为逃生口，不为一张卡扩通用层。'],['victory','engage','tcuSpectral']),
+  entry('tcuCosmos','宇宙牌库与虚空地点','万象无终',['宇宙','Cosmos','宇宙牌库','虚空','Void','黑色王座'],['《黑色王座》用面朝下的「宇宙」地点牌库：花费线索抽 X 张、选 1 张按「宇宙 -」指示放置入场并移动过去，其余洗回；虚空（[[虚空]] / Void）地点可以洗回牌库。','实现：剧本级地点牌库（buildScenarioLocationDeck、drawScenarioLocationDeck、chooseScenarioLocationDeck、shuffleScenarioLocationIntoDeck）；牌库顺序不投影，只公开张数；放置时可以把它原地点上的调查员与敌人一起搬过去。','当前状态：牌库原语已实现并有测试（src/engine/alt-decks.js）；《黑色王座》的布置、阿撒托斯终局与毁灭计时属 P8。'],['clues','tcuChaos','tcuCampaign']),
+  entry('tcuBraziers','火盆与地点状态','万象无终',['火盆','brazier','点燃','熄灭','地点状态'],['《聚合幻灭》用火盆的布尔状态（点燃或熄灭）决定推进哪一版幕；熄灭地点火盆也是机关盒（05228）的行动之一。','实现：地点实例上的 flags.brazier，读点是 locationFlagOf、setLocationFlag、locationFlagsOf；标记词表只有火盆一项，未知标记立即失败；观察投影只给有标记的地点。','当前状态：状态读点已实现并有测试（src/engine/location-state.js）；幕的分叉与 17 张相关卡面属 P8。'],['tcuBreaches','tcuCircle','script']),
+  entry('tcuCampaignAssets','战役资产入牌组','万象无终',['战役资产','机关盒','黑书','钥匙','Puzzle Box','Black Book'],['部分战役资产（机关盒 05228、黑书 05150、四把钥匙 05203）会加入调查员的战役牌组：不占 30 张、不洗入牌库，下一章开始时随牌组带入；团队之间的控制权转移按卡面处理。','实现：战役效果 addCampaignCardToDeck（applyCampaignEffect）与内容层的 api.campaignCard；卡号无效时抛错；加入后由战役牌组统一排序并带入下一章。','当前状态：效果已实现并有测试（src/campaign/campaign-effects.js）；具体获得时机、钥匙标记与机关盒的能力属 P8。'],['deck','tcuCampaign','permanent']),
 ]
 export const ruleById = id => RULES.find(r => r.id === id) || RULES[0]
 // Explicit readings keep polyphonic headings (for example 重整 / chongzheng)
@@ -100,6 +116,13 @@ const RULE_PINYIN = {
   tfaCampaign:'shiluodeshidai', tfaExploration:'tansuopaiku', tfaSupplies:'bujipinyujianchabuji',
   tfaVengeance:'fuchouyuyigezhinu', tfaPoison:'zhongduyudusu', tfaRelic:'gudaiyiwuyuyuanzhenglingdui',
   tfaTimeline:'shijianxianyuniandai', tfaDescent:'shendudengjiyuxiajiang', tfaChaos:'shiluodeshidaihunluanfuhao',
+  tcuCampaign:'wanxiangwuzhongzhanyiyujilu', tcuHaunted:'naogui',
+  tcuSpectral:'youlingjieyudierzaoyupaidui', tcuCircle:'zhenfayuduojinengjianding',
+  tcuTarot:'taluopaizujuben', tcuTarotSlot:'taluocaowei', tcuBonded:'bangding',
+  tcuMemento:'yiliujiyi', tcuWatcher:'kanshouren', tcuPrologue:'xuzhanggushidiaochayuan',
+  tcuBreaches:'liekouyuruqin', tcuChaos:'wanxiangwuzhongdehunluanfuhao',
+  tcuHeretics:'yiduanzheduomianyufangzhu', tcuCosmos:'yuzhoupaikuyuxukongdidian',
+  tcuBraziers:'huopenyudidianzhuangtai', tcuCampaignAssets:'zhanyizichanrupaizu',
 }
 export const RULE_INDEX = RULES.map(rule => ({...rule, sortKey:RULE_PINYIN[rule.id], initial:RULE_PINYIN[rule.id][0].toUpperCase()}))
   .sort((a,b)=>a.sortKey.localeCompare(b.sortKey,'en'))
@@ -143,6 +166,7 @@ function scenarioCardRuleIds(card) {
     if (card?.type === 'scenario' || ['act', 'agenda', 'location', 'enemy', 'treachery'].includes(card?.type)) ids.push('carcosaChaos')
     return [...new Set(ids)]
   }
+  if (/^05\d{3}[a-z]?$/.test(code)) return tcuCardRuleIds(card)
   if (!/^02\d{3}$/.test(code)) return []
   const number = Number(code.slice(2))
   if (number >= 62 && number <= 80) return number >= 79 ? ['storyGuests', 'clubGambling'] : ['clubGambling']
@@ -156,6 +180,40 @@ function scenarioCardRuleIds(card) {
     'undimensioned_and_unseen', 'where_doom_awaits', 'lost_in_time_and_space'].includes(card?.encounterCode))
     return ['dunwichZones', 'dunwichChaos']
   return []
+}
+// 万象无终（05 段）的卡文直达。判据与 content/campaigns/theCircleUndone/keywords.js 的 pattern 一致：
+// 卡面命中哪个 pattern 就必须连到对应条目，测试逐张比对（tests/tcu-rules.test.mjs），所以两份判据不能各走各的。
+// 卡号表放在 web/ui-cards.js（浏览器端唯一的卡号来源，见 architecture-guard），这里只读数据。
+const TCU_REFERENCE_CARDS = UI_CARDS.rulebookReferences
+const TCU_CARD_RULES = Object.freeze([
+  ['tcuHaunted', /Haunted|闹鬼/i],
+  ['tcuSpectral', /Spectral|幽灵/],
+  ['tcuCircle', /Circle|阵法/],
+  ['tcuTarotSlot', /Tarot|塔罗/i],
+  ['parley', /Parley|谈判/i],
+  ['tcuBonded', /bonded|绑定/i],
+  ['tcuBreaches', /Breach|裂口|Incursion|入侵/],
+  ['tcuCosmos', /Cosmos|宇宙/],
+  ['tcuBraziers', /brazier|火盆/i],
+  ['tcuHeretics', /Heretic|异端者/i],
+  ['tcuWatcher', /Watcher|看守人/i],
+  ['tcuChaos', /\[skull\]|骷髅/],
+  ['tcuCampaignAssets', /机关盒|Puzzle Box|黑书|Black Book|钥匙|\bkey\b/i],
+])
+function tcuTextOf(card) {
+  return [card?.text, card?.textZh, (card?.traits || []).join(' '), card?.slot].filter(Boolean).join('\n')
+}
+function tcuCardRuleIds(card) {
+  const code = String(card?.originalCode || card?.code || '')
+  const text = tcuTextOf(card)
+  const ids = ['tcuCampaign']
+  for (const [id, pattern] of TCU_CARD_RULES) if (pattern.test(text)) ids.push(id)
+  // 序章调查员与他们的专属设置卡直接连序章条目；战役资产按卡号登记（卡名不在卡文里）。
+  if (TCU_REFERENCE_CARDS.storyInvestigators.includes(code) || TCU_REFERENCE_CARDS.storySetupCards.includes(code)) ids.push('tcuPrologue')
+  if (TCU_REFERENCE_CARDS.campaignAssets.includes(code)) ids.push('tcuCampaignAssets')
+  // 章节卡与遭遇卡都受该章混乱符号表约束。
+  if (['scenario', 'act', 'agenda', 'location', 'enemy', 'treachery'].includes(card?.type)) ids.push('tcuChaos')
+  return [...new Set(ids)]
 }
 export function openRule(id = 'round') { window.dispatchEvent(new CustomEvent('arkham-open-rule', { detail: id })) }
 export function ruleLink(h,id,label) { return h('button',{type:'button',className:'ah-rule-link','data-rule-id':id,'aria-label':'查阅规则：'+ruleById(id).title,title:'查阅规则：'+ruleById(id).title,onclick:event=>{event.stopPropagation();openRule(id)}},label || ruleById(id).title) }

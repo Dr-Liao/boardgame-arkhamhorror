@@ -10,6 +10,9 @@ import { scriptCardOwner } from './script-cards.js'
 import { locationEntryNotice } from './location-facts.js'
 import { all as matchAll } from './matcher.js'
 import { descriptorOfKind } from './ability.js'
+import { entityParleyDescriptors, parleyMovesFor, parleyTargetError } from './parley.js'
+// 第 5 步 P6：法术专用额外行动的算术（与 dispatch 共用同一份读点）。
+import { actionsAvailable, spellOnlyActionsOf } from './spell-actions.js'
 
 export function createMoves(deps) {
   const {
@@ -20,6 +23,7 @@ export function createMoves(deps) {
     actingSeats,
     actionCost,
     actionKind,
+    isSpellAction,
     activeHiddenRules,
     advanceAct,
     aliveInvestigators,
@@ -327,6 +331,9 @@ export function createMoves(deps) {
     }
   }
 
+  // 第 2 步 P2.7：地点 / 敌人 / 剧情资产上的「谈判」通用行动（不引发借机攻击）。
+  for (const parley of parleyMovesFor(state, inv)) moves.push(parley)
+
   // 午夜假面场景 1：抽异教徒牌堆。
   if (scenarioBehavior(state).drawCultistActIndex === state.actIndex && groupClues(state) >= 2 * state.numInvestigators && state.cultistDeck.length) {
     moves.push({ action: 'drawCultist', scriptCard: 'act', label: `🕵️ 抽取异教徒牌堆（花 ${2 * state.numInvestigators} 线索）` })
@@ -448,8 +455,10 @@ export function createMoves(deps) {
   {
     const cost = actionCost(state, inv, move)
     const kind = actionKind(state, inv, move)
-    if (kind === 'explore' ? inv.actionsLeft < cost : normalActionsLeft(inv) < cost) {
-      return kind === 'explore' ? '行动点不足' : '行动点不足（额外行动只能用于探索）'
+    if (kind === 'explore' ? inv.actionsLeft < cost : actionsAvailable(inv, isSpellAction(state, inv, move)) < cost) {
+      return kind === 'explore' ? '行动点不足'
+        : spellOnlyActionsOf(inv) && !isSpellAction(state, inv, move) ? '行动点不足（额外行动只能用于探索或法术）'
+          : '行动点不足（额外行动只能用于探索）'
     }
   }
 
@@ -616,6 +625,19 @@ export function createMoves(deps) {
       const scenarioMoveError = scenarioBehavior(state).moveError?.(
         state, inv, state.locations.find(l => l.id === move.locationId), move.locationId)
       return movementError(state, inv) || investigatorEntryError(state, move.locationId) || scenarioMoveError || null
+    }
+    case 'entityAbility': {
+      const entity = state.enemies.find(item => item.id === move.entityId)
+        || state.locations.find(item => item.id === move.entityId)
+        || (state.storyAssets || []).find(item => item.id === move.entityId)
+      if (!entity) return '目标实体不在场上'
+      if (entity.location != null && entity.location !== inv.location) return '目标不在此地点'
+      const descriptors = entityParleyDescriptors(entity)
+      const descriptor = descriptors[move.abilityIndex]
+      if (!descriptor) return '该实体没有这条能力'
+      const error = parleyTargetError(state, inv, entity, descriptor, move)
+      if (error) return error
+      return null
     }
     case 'investigate': {
       if (capabilityBlocked(state, inv, 'investigate')) return '当前效果禁止你调查'

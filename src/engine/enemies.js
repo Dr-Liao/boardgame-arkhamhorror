@@ -170,6 +170,11 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
     applyDamage(state, inv, 1, events)
   }
   scenarioBehavior(state).enemyAttackResolved?.(state, enemy, inv, scenarioRuntime(state, events), attack)
+  // 第 5 步 P6：「敌人攻击你后」的反应窗口（序章故事调查员；被取消的攻击也算）。
+  reactionWindow(state, 'enemyAttacked', {
+    when: 'enemyAttacked', seat: inv.seat, location: inv.location, enemy, attack,
+    cancelled: false, prompt: `「${enemy.name}」攻击 ${inv.name} 后`,
+  }, events)
   if (inv.defeated) checkOutcome(state, events)
   if (!enemyTextBlanked(state, enemy) && enemy.forcedDoom) {
     // "Place 1 doom on the current agenda" goes through the agenda clock, so it

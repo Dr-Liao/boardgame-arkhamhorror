@@ -7,6 +7,14 @@
 // 依赖注入同前几批；被多个 api 依赖表引用的 doPlay / performTest 用惰性 thunk。
 
 import { linkLocationBySymbols } from './locations.js'
+import {
+  buildScenarioLocationDeck, chooseScenarioLocationDeck, discardScenarioLocation,
+  drawScenarioLocationDeck, scenarioLocationDeckInfo, shuffleScenarioLocationIntoDeck,
+} from './alt-decks.js'
+import {
+  LOCATION_FLAGS as LOCATION_FLAG_KEYS,
+  addBreach, breachOf, breachTotal, locationFlagOf, locationSkullValue, removeBreach, setLocationFlag,
+} from './location-state.js'
 
 export function createScenarioRuntime(deps) {
   const {
@@ -27,7 +35,11 @@ export function createScenarioRuntime(deps) {
     beginChaosTest,
     basicWeaknessPool,
     buildExplorationDeck,
+    buildTarotDeck,
     campaignCardChange,
+    chooseTarot,
+    discardDrawnTarot,
+    drawTarot,
     canDiscardFromHand,
     canDiscoverClueAt,
     cardDef,
@@ -43,6 +55,10 @@ export function createScenarioRuntime(deps) {
     discardUntilEnemy,
     discardUntilEnemyTrait,
     discardUntilEnemyFromEncounter,
+    // 第 2 步 P2.2：第二遭遇牌堆（幽灵界）的建堆/抽牌/洗回/弃牌与公开读数。
+    addToExtraEncounterDeck,
+    discardFromExtraEncounterDeck,
+    discardTopOfExtraEncounterDeck,
     discoverClueAt,
     disengageEnemy,
     doExplore,
@@ -53,6 +69,7 @@ export function createScenarioRuntime(deps) {
     drawCards,
     drawChaosToken,
     drawEncounter,
+    drawExtraEncounter,
     drawMadnessWeakness,
     eliminateInvestigator,
     endChaosTest,
@@ -64,14 +81,26 @@ export function createScenarioRuntime(deps) {
     enemyHealth,
     engageEnemy,
     expeditionLeaderSeat,
+    extraEncounterDeckInfo,
+    extraEncounterDecksInfo,
     finishScenario,
+    banishEnemyToVictory,
+    enemyFace,
+    flipEnemyFace,
+    flipLocationFace,
     flipScenarioLocation,
     grantSupplies,
     groupPayment,
+    // 第四循环P2.1：闹鬼结算（印刷 + 授予能力、顺序询问、可取消、可重复）。
+    clearHauntedGrants,
+    grantHaunted,
+    hauntedAbilitiesAt,
     hasSupply,
     hunterStep,
     info,
     investigateTest,
+    isLocationHaunted,
+    isSpectralLocation,
     isPoisoned,
     isWeaknessCode,
     leaveAsset,
@@ -96,12 +125,16 @@ export function createScenarioRuntime(deps) {
     removeLocation,
     removeOne,
     requestChoice,
+    resolveHaunted,
     revealLocation,
     ruleCodeForOriginal,
     scenarioAssetPlayError,
     scenarioBehavior,
     setExpeditionLeader,
+    shuffleTarotIntoDeck,
+    setExtraEncounterDeck,
     shuffle,
+    shuffleIntoExtraEncounterDeck,
     spawnEnemy,
     spawnStoryAsset,
     spawnStoryEnemy,
@@ -111,6 +144,9 @@ export function createScenarioRuntime(deps) {
     suppliesAtLocation,
     suppliesFor,
     syncClues,
+    tarotInfo,
+    tarotOrientation,
+    tarotRemaining,
     // Phase 7（第 116 轮）：条目写「揭示的混乱标记」日志时用的中文标记名（与引擎日志同源）。
     tokenLabel,
     vengeancePoints,
@@ -135,6 +171,8 @@ function scenarioRuntime(state, events, testSource = null) {
     isWeaknessCode: code => isWeaknessCode(code),
     spendAction: seat => spendAction(state, state.investigators[seat]),
     campaignCardChange: (...args) => campaignCardChange(...args),
+    // 第 2 步 P2.10：战役资产加入某位调查员的战役牌组（不占 30 张，下一章带入）。
+    campaignCard: (code, seat = 0, reason) => campaignCardChange(state.campaign, seat, code, 'add', reason || '剧情奖励'),
     locName: id => locName(state, id),
     locationDistance: (from, targets) => {
       const queue = [[from, 0]]
@@ -282,7 +320,55 @@ function scenarioRuntime(state, events, testSource = null) {
     addToExplorationDeck: (codes, options) => addToExplorationDeck(state, codes, options),
     explorationDeck: () => [...(state.explorationDeck || [])],
     shuffleExploration: () => { state.explorationDeck = shuffle(state.explorationDeck || [], () => randomValue(state)) },
+    // 第 2 步 P2.2：第二遭遇牌堆（幽灵界）。建堆/加牌/抽牌/洗回/弃牌 + 公开读数；
+    // 抽牌走与普通遭遇牌同一条显现管线；牌堆顺序不进入观察投影，只公开张数与弃牌堆。
+    extraDeck: (id, codes) => setExtraEncounterDeck(state, id, codes, { shuffle: list => shuffle(list, () => randomValue(state)) }),
+    extraDeckInfo: id => extraEncounterDeckInfo(state, id),
+    extraDecks: () => extraEncounterDecksInfo(state),
+    addExtra: (id, codes, options) => addToExtraEncounterDeck(state, id, codes, options),
+    shuffleExtra: (id, codes) => shuffleIntoExtraEncounterDeck(state, id, codes, { shuffle: list => shuffle(list, () => randomValue(state)) }),
+    drawExtra: (seat, id) => drawExtraEncounter(state, state.investigators[seat], events, id),
+    discardExtra: (id, count) => discardTopOfExtraEncounterDeck(state, id, count),
+    discardExtraCards: (id, codes) => discardFromExtraEncounterDeck(state, id, codes),
     explore: seat => doExplore(state, seat, events),
+    // 第 2 步 P2.4：塔罗牌组（22 张大阿卡纳，剧本级牌组，不是 05 卡）。
+    // 随机只走 randomValue；正逆位、抽牌、N 选 1、洗回、弃置都在这里，状态是纯 JSON。
+    // 第 2 步 P2.13：地点牌库（Cosmos / 未知地点）。面朝下抽 X 选 1 → 放置入场 →
+    // 原地点上的调查员与敌人一起搬过去；未选中的放回牌库底；Void 地点可洗回。
+    cosmos: (options = {}) => {
+      const id = options.id || 'cosmos'
+      if (options.build) return buildScenarioLocationDeck(state, id, options.build, { shuffle })
+      if (options.shuffle) return shuffleScenarioLocationIntoDeck(state, id, options.shuffle, { shuffle })
+      if (options.discard) return discardScenarioLocation(state, id, options.discard)
+      if (options.draw) return drawScenarioLocationDeck(state, id, options.draw)
+      if (options.take) {
+        const placeId = chooseScenarioLocationDeck(state, id, options.take, {
+          requestChoice, seat: options.seat ?? state.currentSeat, source: 'cosmos', prompt: options.prompt,
+        })
+        if (!placeId) return null
+        const from = options.from || null
+        const placed = placeLocation(state, placeId, events)
+        if (placed && from) {
+          for (const inv of aliveInvestigators(state).filter(item => item.location === from)) relocateInvestigator(state, inv.seat, placeId, events)
+          for (const enemy of state.enemies.filter(item => item.location === from)) relocateEnemy(state, enemy, placeId, events)
+        }
+        return placeId
+      }
+      return scenarioLocationDeckInfo(state, id)
+    },
+    locationDeck: id => scenarioLocationDeckInfo(state, id || 'cosmos'),
+    tarot: {
+      build: (options = {}) => buildTarotDeck(state, { ...options, shuffle: list => shuffle(list, () => randomValue(state)) }),
+      draw: (seat, options = {}) => drawTarot(state, { ...options, random: () => randomValue(state) }),
+      choose: (seat, options = {}) => chooseTarot(state, { ...options, seat, requestChoice, random: () => randomValue(state) }),
+      shuffleInto: (options = {}) => shuffleTarotIntoDeck(state, { ...options, shuffle: list => shuffle(list, () => randomValue(state)) }),
+      discard: arcana => discardDrawnTarot(state, arcana),
+      remaining: () => tarotRemaining(state),
+      info: () => tarotInfo(state),
+    },
+    tarotRemaining: () => tarotRemaining(state),
+    tarotInfo: () => tarotInfo(state),
+    tarotOrientation: raw => tarotOrientation(raw),
     drawCards: (seat, n) => drawCards(state, state.investigators[seat], n, events),
     drawMadnessWeakness: seat => drawMadnessWeakness(state, state.investigators[seat], events),
     // 04165 穿越界限：从收藏里随机获得一张基础[[疯狂]]或[[损伤]]弱点并洗入牌库。
@@ -310,6 +396,14 @@ function scenarioRuntime(state, events, testSource = null) {
       return replacement ?? token
     },
     choose: request => requestChoice(state, request),
+    // 第四循环P2.1：闹鬼。`haunted(seat, { locationId, times, kind })` 结算一次（可重复）；
+    // `hauntedAt(id)` 读「这个地点是否闹鬼」；`grantHaunted/grantHauntedClear` 管理授予的能力
+    // （05102「每个地点获得：闹鬼 - 受到 1 点恐惧」这类）。参数形状由 haunted.js 在登记期校验。
+    haunted: (seat, options = {}) => resolveHaunted(state, seat, options, scenarioRuntime(state, events), events),
+    hauntedAt: id => hauntedAbilitiesAt(state, id),
+    hauntedIs: id => isLocationHaunted(state, id),
+    grantHaunted: grant => grantHaunted(state, grant),
+    clearHauntedGrants: predicate => clearHauntedGrants(state, predicate),
     privateInfo: (seat, text) => privateInfo(state, events, seat, text),
     cardReveal: (code, title = '卡牌结算') => {
       const card = cardDef(code)
@@ -336,6 +430,27 @@ function scenarioRuntime(state, events, testSource = null) {
       })
     },
     flipLocation: (id, seat) => flipScenarioLocation(state, id, seat, events),
+    // 第 2 步 P2.12：异端者多面与放逐（面的代码/属性来自关卡数据与卡面定义）。
+    flipEnemy: (enemy, nextCode) => flipEnemyFace(state, enemy, nextCode, { defOf: code => cardDef(code), newCardInstance, info, events }),
+    enemyFace: enemy => enemyFace(enemy),
+    banish: enemy => banishEnemyToVictory(state, enemy, { info, events }),
+    // 第 2 步 P2.11：裂口与地点布尔状态（火盆）。
+    breach: (id, amount = 1, options) => addBreach(state, id, amount, options),
+    removeBreach: (id, amount = 1) => removeBreach(state, id, amount),
+    breachOf: id => breachOf((state.locations || []).find(location => location.id === id)),
+    breachTotal: () => breachTotal(state),
+    skullValue: id => locationSkullValue(state, id),
+    locationFlag: id => {
+      const location = (state.locations || []).find(item => item.id === id)
+      return LOCATION_FLAG_KEYS.reduce((out, flag) => { out[flag] = locationFlagOf(location, flag); return out }, {})
+    },
+    setLocationFlag: (id, flag, value = true) => setLocationFlag(state, id, flag, value),
+    hasLocationFlag: (id, flag) => locationFlagOf((state.locations || []).find(location => location.id === id), flag),
+    // 第 2 步 P2.3：幽灵地点。flipSpectral 按 definition 里声明的 back 面翻面（保留线索/毁灭），
+    // isSpectral 是「这个地点是不是幽灵地点」的单一读点（幽灵敌人的目标限制读它）。
+    flipSpectral: (id, seat, options) => flipLocationFace(state, id, seat, events, options),
+    isSpectral: id => isSpectralLocation(state, id),
+    spectralFace: id => spectralFaceOf((state.locations || []).find(location => location.id === id)),
     drawEncounter: seat => { const inv = state.investigators[seat]; if (!inv.defeated && !inv.resigned) drawEncounter(state, inv, events) },
     threat: (seat, code, extra = {}) =>
       state.investigators[seat].threat.push(newCardInstance(state, code, extra)),

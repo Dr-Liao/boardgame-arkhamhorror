@@ -462,9 +462,25 @@ function doEvade(state, seat, opts, events, noSpend) {
       if (suggestion) suggestion.uses = Math.max(0, (suggestion.uses || 0) - 1)
     }
     if (r.success) {
-      enemy.exhausted = !opts.noExhaustOnSuccess
-      if (canDisengage(state, inv, enemy)) disengageEnemy(state, enemy)
-      else info(state, events, `${inv.name} 无法与「${enemy.name}」解除交战。`)
+      // 第 5 步 P6：「我不会再逃了！」——本回合内躲避成功时可以改为对敌人造成 1 点伤害，
+      // 不横置该敌人也不与它解除交战（成功躲避的其它效果仍然结算）。
+      const damageInstead = inv.evadeDamageInsteadRound === state.round && enemy.engagedSeat === seat
+        && state.enemies.includes(enemy) && canDisengage(state, inv, enemy)
+        && requestChoice(state, {
+          kind: 'evade', source: 'imDoneRunnin', seat, canSkip: true,
+          prompt: `躲避「${enemy.name}」成功：是否改为对它造成 1 点伤害（不横置、不解除交战）？`,
+          options: [{ id: 'damage', label: '造成 1 点伤害' }, { id: 'skip', label: '照常横置并解除交战' }],
+        }) === 'damage'
+      if (damageInstead) {
+        enemy.defeatedBy = seat
+        damageEnemy(state, enemy, 1, seat, events)
+        info(state, events, `💥 「${enemy.name}」被躲避后受到 1 点伤害（${enemy.damageTaken}/${enemy.health}），不横置、不解除交战。`)
+      }
+      if (!damageInstead) {
+        enemy.exhausted = !opts.noExhaustOnSuccess
+        if (canDisengage(state, inv, enemy)) disengageEnemy(state, enemy)
+        else info(state, events, `${inv.name} 无法与「${enemy.name}」解除交战。`)
+      }
       // 「职业杀手」：躲避成功后该敌人本回合下次受伤 +1。
       for (const commitment of r.committed || []) {
         const code = typeof commitment === 'string' ? commitment : commitment.code

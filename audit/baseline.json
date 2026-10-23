@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "milestone": "P0",
+  "purpose": "修基线：TFA/各循环审计命令全绿、文档链接无 404、golden replay 计数与冻结基线一致。",
+  "audits": [
+    {
+      "id": "tfa",
+      "command": "node tools/audit-tfa.mjs --check",
+      "status": 0,
+      "lastLine": "M5: 338 main codes = 231 campaign + 16 investigator + 91 player; 23 linked faces; selectable investigators=5; verified player cards=91; chapters=10; keywords=8/8; rulebook=verified; campaign launchable=true"
+    },
+    {
+      "id": "tfaScenarios",
+      "command": "node tools/audit-tfa-scenarios.mjs --check",
+      "status": 0,
+      "lastLine": "M3 scenario ledger: 1/10 verified; 0 encounter cards pending"
+    },
+    {
+      "id": "carcosa",
+      "command": "node tools/audit-carcosa.mjs --check",
+      "status": 0,
+      "lastLine": "C4: 383/383 verified cards; 0 pending; Hidden/rulebook verified; campaign playable=true"
+    },
+    {
+      "id": "carcosaScenarios",
+      "command": "node tools/audit-carcosa-scenarios.mjs --check",
+      "status": 0,
+      "lastLine": "M3 scenario ledger: 8/8 verified; production=playable"
+    },
+    {
+      "id": "carcosaPlayer",
+      "command": "node tools/audit-carcosa-player.mjs",
+      "status": 0,
+      "lastLine": "{\"total\":95,\"constructible\":92,\"basicWeaknesses\":3,\"verified\":95,\"unverified\":0,\"testsPassed\":109}"
+    },
+    {
+      "id": "carcosaAllCards",
+      "command": "node tools/audit-carcosa-all-cards.mjs",
+      "status": 0,
+      "lastLine": "{\"total\":383,\"verified\":383,\"pending\":0,\"investigator\":20,\"player\":95,\"campaign\":268,\"testsPassed\":421}"
+    },
+    {
+      "id": "dunwich",
+      "command": "node tools/audit-dunwich.mjs --check",
+      "status": 0,
+      "lastLine": "D11: 8 playable chapters; 47/47 treacheries handled; 91 player cards; 5 investigators; campaign playable=true"
+    },
+    {
+      "id": "dunwichAcceptance",
+      "command": "node tools/audit-dunwich-acceptance.mjs",
+      "status": 0,
+      "lastLine": "{\"total\":333,\"verified\":333,\"unverified\":0,\"unimplemented\":0,\"testsPassed\":387}"
+    },
+    {
+      "id": "coreAcceptance",
+      "command": "node tools/audit-core-acceptance.mjs --check",
+      "status": 0,
+      "lastLine": "{\"total\":183,\"verified\":183,\"unverified\":0,\"unimplemented\":0,\"testsPassed\":376}"
+    },
+    {
+      "id": "p6",
+      "command": "node tools/audit-p6.mjs --check",
+      "status": 0,
+      "lastLine": "{\"cards\":300,\"scopedFixes\":6,\"fullCardEquivalenceClaimed\":0,\"needsBehaviorReview\":177,\"catalogOnly\":117}"
+    },
+    {
+      "id": "abilities",
+      "command": "node tools/audit-abilities.mjs --check",
+      "status": 0,
+      "lastLine": "通道：descriptor=490 data=4"
+    },
+    {
+      "id": "workorder",
+      "command": "node tools/audit-workorder.mjs --check",
+      "status": 0,
+      "lastLine": "参考：EFFECTS 0 条、逃生卡 0 张、窗口 61 个"
+    },
+    {
+      "id": "deadPrimitives",
+      "command": "node tools/audit-dead-primitives.mjs --check",
+      "status": 0,
+      "lastLine": "✔ 没有死分支"
+    },
+    {
+      "id": "resourcesSource",
+      "command": "node tools/audit-resources.mjs --check-source",
+      "status": 0,
+      "lastLine": "}"
+    },
+    {
+      "id": "tcuScope",
+      "command": "node tools/scan-tcu-scope.mjs --check",
+      "status": 0,
+      "lastLine": "scope 复算一致：377 条记录，三包 237/19/87，21 个遭遇组"
+    },
+    {
+      "id": "tcuMigration",
+      "command": "node tools/audit-tcu.mjs --check",
+      "status": 0,
+      "lastLine": "audit 复算一致：P6，关键词 16/16，规则书 verified，gate pass"
+    }
+  ],
+  "docLinks": {
+    "files": 25,
+    "links": 93,
+    "broken": 0
+  },
+  "goldenReplay": {
+    "fixtures": 13,
+    "steps": 786,
+    "hashes": 799,
+    "rulesVersion": "n6.0",
+    "hashVersion": 2
+  },
+  "tests": {
+    "command": "node tools/run-tests.mjs fast",
+    "status": 0,
+    "tests": 2510,
+    "pass": 2510,
+    "fail": 0
+  },
+  "notes": [
+    "audit-resources 用 --check-source：--check 比较的是「当前目录 vs 冻结的 N0」，N1 接管后按设计非零退出。",
+    "TFA 账本由 tools/audit-tfa-scenarios.mjs 生成、aggregator 由 tools/audit-tfa.mjs 生成；改章节文件后按顺序 --write 再 --check。",
+    "基线依赖本机 参考资源/（TFA/Carcosa/Dunwich 的来源哈希）；缺失时这些审计会失败，属预期。"
+  ]
+}

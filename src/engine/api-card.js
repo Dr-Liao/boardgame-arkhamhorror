@@ -9,6 +9,9 @@
 
 export function createCardApi(state, events, deps) {
   const {
+    bondedGroupOf,
+    retrieveBonded,
+    returnBonded,
     CLASS_NAMES,
     beginChaosTest,
     cardDef,
@@ -41,6 +44,13 @@ export function createCardApi(state, events, deps) {
   } = deps
 
   return {
+    // 第 2 步 P2.8：绑定（场外集合/检索 3 张/洗回/离场收回）。卡面生命周期钩子调用它；
+    // 主卡与副本的关系来自卡面数据（bondedCards / bondedTo），引擎不认卡号。
+    bonded: {
+      group: code => bondedGroupOf(code),
+      retrieve: (seat, mainCode, options = {}) => retrieveBonded(state, state.investigators[seat], mainCode, { ...options, events }),
+      return: (seat, mainCode) => returnBonded(state, state.investigators[seat], mainCode, { events }),
+    },
     locationById: id => state.locations.find(location => location.id === id) || null,
     // Phase 5（5a-15）：把一张牌直接放进弃牌堆（附着型弱点没找到目标时用）。
     putIntoDiscard: (seat, code) => {

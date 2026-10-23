@@ -20,6 +20,8 @@
 // - `handSlots`：支援卡给的手牌位加成（卡号 → 加成值）；
 // - `deckRules`：两组**构筑规则**用的调查员集合（敦威治五人 / 黛西的「命运」限制）；
 // - `rulebookActAgenda`：规则书里当作「幕/议程」展示的卡；
+// - `rulebookReferences`：卡名不在卡文里的「按卡号归类」（序章调查员、专属设置卡、战役资产），
+//   规则书靠这张表把它们的详情页连到对应条目；
 // - `tomeInvestigators`：拥有「书籍行动」的调查员。
 
 export const UI_CARDS = Object.freeze({
@@ -35,6 +37,17 @@ export const UI_CARDS = Object.freeze({
     undimensionedAndUnseen: '02236',
     whereDoomAwaits: '02274',
     lostInTimeAndSpace: '02311',
+    // 万象无终（四循环，P4 补）：id 与 content/campaigns/theCircleUndone/chapters.js 的章节 id 一致，
+    // 卡号是各章的剧本参考卡；章节未开放时只作为提示卡素材，不影响任何既有战役。
+    disappearanceAtTheTwilightEstate: '05043',
+    theWitchingHour: '05050',
+    atDeathsDoorstep: '05065',
+    theSecretName: '05120',
+    theWagesOfSin: '05161',
+    forTheGreaterGood: '05197',
+    unionAndDisillusion: '05238',
+    inTheClutchesOfChaos: '05284',
+    beforeTheBlackThrone: '05325',
   }),
   story: Object.freeze({
     smiteTheWicked: '02007',
@@ -58,5 +71,12 @@ export const UI_CARDS = Object.freeze({
     noFortuneInvestigator: '02002',
   }),
   rulebookActAgenda: Object.freeze(['02085', '02220']),
+  // 万象无终（P4）：这些卡的「身份」写在卡名而不是卡文里（序章调查员、专属设置卡、战役资产），
+  // 规则书只能按卡号把它们连到 tcuPrologue / tcuCampaignAssets 条目。
+  rulebookReferences: Object.freeze({
+    storyInvestigators: Object.freeze(['05046', '05047', '05048', '05049']),
+    storySetupCards: Object.freeze(['05258', '05259', '05260', '05261']),
+    campaignAssets: Object.freeze(['05150', '05203', '05207', '05228']),
+  }),
   tomeInvestigators: Object.freeze(['01002']),
 })

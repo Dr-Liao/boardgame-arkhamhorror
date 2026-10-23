@@ -97,6 +97,8 @@ const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'crit
   // Phase 5（5c）：能力"按哪种行动结算"。旧式能力把这件事写在 `effect.kind`（`fight`/`evade`），
   // 描述子用 resolve 实现时没有 effect 数据体，需要显式声明，否则借机攻击判定会把它当成普通行动。
   'countsAs',
+  // 第 2 步 P2.7：能力按哪种行动结算（'parley' 谈判不引发借机攻击）。
+  'actionKind',
   // Phase 5（5b-6）：反应能力的"旧式询问"兼容标记。
   // 从 `EFFECTS[code].reactions` 搬过来的反应描述子带这个标记：引擎仍用旧式反应询问
   // （`是否触发「X」的反应？` + skip/trigger）结算它，保证迁移前后玩家看到的提示与状态指纹一致。
@@ -106,6 +108,8 @@ const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'crit
   // 用 silent 保持迁移前后的日志逐字一致（读点在 openAbilityWindow -> executeDescriptor）。
   'silent'])
 const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities', 'modifiers', 'elderSign', 'source',
+  // 第 2 步 P2.9：塔罗的开局入场 / 手牌封锁 / 不能换掉（只有布尔值，无行为代码）。
+  'entersPlayFromOpeningHand', 'blocksCommitWhileInHand', 'cannotMulliganAway',
   'uses', 'usesType', 'playCondition', 'simplified', 'note', 'onFound', 'assetRule', 'flags',
   // Phase 5（D2）：「用完弃置」是使用次数元数据，与 uses/usesType 同层。
   // 读点仍是 assetEffect / executeDescriptor 两处，旧 DSL 字段逐渐消失。
@@ -302,6 +306,11 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // 非法物的快速/费用优惠、幸存者事件折扣、每人张数限制。
   'enemyWeakness', 'playableWeakness', 'endTurnInHandHorror', 'fastForIllicit',
   'survivorEventDiscount', 'limitPerInvestigator', 'limitPerLocation', 'engageNoOpportunityAttack',
+  // 第 5 步 M1 调查员批次（P6）：三个只有卡面语义的布尔标记。
+  // - `threatHorrorSink`：威胁卡上的恐惧优先被治疗，其他卡牌的恐惧不能被治疗（05008 理性思考）；
+  // - `blocksHealReward`：在场时不能从「治愈恐惧后获得资源」的能力获利（05008）；
+  // - `avoidHunchShuffle`：本应洗入直觉牌库时改为进入威胁区域（05010 悬案）。
+  'threatHorrorSink', 'blocksHealReward', 'avoidHunchShuffle',
   'fast', 'noOpportunityAttack'])
 
 // 条目级「能不能打出」条件：函数式 predicate，或 { when, message }（message 直接展示给玩家）。
@@ -403,6 +412,9 @@ export function normalizeDescriptor(raw, { code, index }) {
     addToVictory: raw.addToVictory === true,
     // Phase 5：这条能力"按哪种行动结算"（借机攻击判定用）。
     countsAs: raw.countsAs || null,
+    // 第 2 步 P2.7：显式的行动种类（'parley' 谈判 / 'circle' 阵法…），优先于 countsAs；
+    // 非玩家实体只有带 actionKind 的 action 才允许注册。
+    actionKind: raw.actionKind || null,
     // Phase 5（5b-6）：从旧式 reactions 搬来的反应，沿用旧式询问（见 DESCRIPTOR_KEYS 注释）。
     legacyReaction: raw.legacyReaction === true,
     // 不写「✨ 使用「X」…」日志（敌人卡上的强制效果等）。
@@ -462,9 +474,13 @@ export function registerCardAbilities(entries) {
     // 否则会声明出永远不结算的条目。注册期直接失败，不等到对局中途静默失效。
     if (NON_PLAYER_SCOPES.includes(scope)) {
       for (const descriptor of abilities) {
-        if (LIFECYCLE_KINDS.has(descriptor.kind) || descriptor.kind === 'action' || descriptor.kind === 'free') {
+        // 第 2 步 P2.7：非玩家实体可以声明「由调查员发起的行动」（谈判），但必须显式写
+        // actionKind 说明它按哪种行动结算；其余 action/free 仍然拒绝，避免声明出永远不结算的条目。
+        const playerInitiated = descriptor.kind === 'action' && typeof descriptor.actionKind === 'string'
+        if (LIFECYCLE_KINDS.has(descriptor.kind) || descriptor.kind === 'free'
+          || (descriptor.kind === 'action' && !playerInitiated)) {
           throw new Error(`${origin}: 非玩家卡（scope ${scope}）不能声明 ${descriptor.kind}`
-            + '（只能写 constant / reaction / forced / elderSign）')
+            + '（只能写 constant / reaction / forced / elderSign；谈判类行动必须带 actionKind）')
         }
       }
       if (entry.playCondition) throw new Error(`${origin}: 非玩家卡不能声明 playCondition`)
@@ -641,6 +657,10 @@ export function registerCardAbilities(entries) {
         : null,
       historicalRoom: entry.historicalRoom === true,
       implemented: entry.implemented === true,
+      // 第 2 步 P2.9：塔罗的条目级标记（读点在 src/engine/tarot-slot.js）。
+      entersPlayFromOpeningHand: entry.entersPlayFromOpeningHand === true,
+      blocksCommitWhileInHand: entry.blocksCommitWhileInHand === true,
+      cannotMulliganAway: entry.cannotMulliganAway === true,
       doomPerInvestigator: entry.doomPerInvestigator === true,
       skipMythosDoom: entry.skipMythosDoom === true,
       removeFromGameOnLeave: entry.removeFromGameOnLeave === true,
@@ -691,6 +711,13 @@ export function registerCardAbilities(entries) {
       limitPerInvestigator: entry.limitPerInvestigator === true,
       limitPerLocation: entry.limitPerLocation === true,
       engageNoOpportunityAttack: entry.engageNoOpportunityAttack === true,
+      // 第 5 步 P6：三个卡面语义的布尔标记（见 ENTRY_KEYS 的注释）。
+      threatHorrorSink: entry.threatHorrorSink === true,
+      blocksHealReward: entry.blocksHealReward === true,
+      avoidHunchShuffle: entry.avoidHunchShuffle === true,
+      // 条目级的「简化声明」：审计把 simplified + note 汇总进 remaining，不静默放过。
+      simplified: entry.simplified === true,
+      note: entry.note ? String(entry.note) : null,
       source: entry.source || null,
       registered: true,
     }

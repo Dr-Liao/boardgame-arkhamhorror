@@ -4,8 +4,8 @@
 > `card-abilities.js` / `ability-migration-batches.js` 拆到 `src/cards/entries/<code>.js`；
 > 529 个非玩家条目已按 [`encounter-entry-split-plan.md`](encounter-entry-split-plan.md) 迁到
 > `src/cards/encounter-entries/`（通用 / 战役共用 / 关卡专用三档）。本文是**当前规矩**，
-> 不是历史记录；历史阶段见 [`phase5-migration.md`](phase5-migration.md) 与
-> [`architecture-refactor-roadmap.md`](architecture-refactor-roadmap.md)。
+> 不是历史记录；原阶段文档（phase5-migration.md、architecture-refactor-roadmap.md）已在 2026-10 的
+> 拆分迁移后删除，现行架构与演进规矩见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md)。
 
 ---
 

@@ -17,8 +17,8 @@
 
 ## 2. 实现规矩（迁移必须遵守）
 
-迁移不只是把卡文变成代码，还必须把行为放进正确的层。以下规矩与重构路线一致；完整条文见
-[`architecture-refactor-roadmap.md`](architecture-refactor-roadmap.md) §3、§7，稳态架构见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md)。
+迁移不只是把卡文变成代码，还必须把行为放进正确的层。以下规矩与稳态架构一致；完整条文见
+[`../ARCHITECTURE.md`](../ARCHITECTURE.md) §3–§9。
 
 - **行为唯一入口**：新卡行为写在单卡文件里（一张卡一个文件，`export default` 恰好一个条目）。玩家卡写 `src/cards/entries/<code>.js`；非玩家卡按归属写 `src/cards/encounter-entries/`（通用 `shared/`、战役共用 `<campaign>/_shared/`、关卡专用 `<campaign>/<scenario>/`）。不得向 `card-effects.js` 的 `EFFECTS` 增加新条目，不得在 `engine.js` 按卡号、关卡名或战役名新增分支，不得恢复 `card-abilities.js` / `encounter-abilities.js` 条目或 `BATCH_*` / `MIGRATED_*` 批次大数组。
 - **先原语、后卡牌**：每轮迁移先扫描新增机制并拆分原语，再批量写卡。卡牌只能使用已登记的原语；需要新原语时按 §4.6.3 的队列向主进程申请，不得由子进程直接改引擎。
@@ -29,10 +29,10 @@
 - **非玩家卡一卡一文件**：敌人、地点、幕／议程、剧情支援与威胁的常驻规则写成带 `scope` 的描述子（Phase 3 · D1），引擎按场上实体枚举，读点是 `entityModifierTotal` / `entityRuleActive`。落点按使用范围分三档：跨战役 → `encounter-entries/shared/<encounterGroup>/`；同一战役跨关卡 → `encounter-entries/<campaign>/_shared/<encounterGroup>/`；只在单关卡 → `encounter-entries/<campaign>/<scenario>/`。**不要**再往关卡 `behavior.js` 加按卡号的分支，也不要在引擎里加卡号判断，更不要把条目写回 `encounter-abilities.js` 单文件。
 - **通道必须登记**：迁移范围内的每张卡在审计账本里记录通道状态 `descriptor | legacy | hybrid | missing` 与证据路径；`missing` 会让该章的 `literalCardBehavior` 保持 `false`。
 - **规则层不读策略**：不得引入"谁在操作这个座位"的分支（例如按 `humanSeats` 自动跳过可选反应）；这类判断由大厅注入。
-- **可重放**：迁移新增的状态字段必须进 `save-migration.js` 的版本迁移，并保证 JSON 存读档往返一致；行为改动要用 replay 基线证明"行为零变化"——迁移前 `node tools/replay-fixtures.mjs --baseline <文件>`，迁移后 `--compare <文件>`（见 [`phase4-replay.md`](phase4-replay.md) §4）。
+- **可重放**：迁移新增的状态字段必须进 `save-migration.js` 的版本迁移，并保证 JSON 存读档往返一致；行为改动要用 replay 基线证明"行为零变化"——迁移前 `node tools/replay-fixtures.mjs --baseline <文件>`，迁移后 `--compare <文件>`（见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md#53-重放撤销与迁移对比)）。
 - **简化必须显式**：未逐条还原的卡写 `simplified: true` + `note` 并留在待实现清单，不得用"看起来一样"的实现静默通过验收。
 
-迁移完成的证据是三个指标**不增加**（已经为 0 的保持 0）：`engine.js` 的卡号字面量、`EFFECTS` 条目数、战役逃生原语卡数。当前基线见重构路线 §1。
+迁移完成的证据是三个指标**不增加**（已经为 0 的保持 0）：`engine.js` 的卡号字面量、`EFFECTS` 条目数、战役逃生原语卡数。当前基线见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §9。
 
 ## 3. 目标目录
 
@@ -519,6 +519,6 @@ npm run test:browser                        # 新交互与规则书桌面/移动
 ```
 
 批量迁移（改卡行为）时另加 `tools/replay-fixtures.mjs --baseline/--compare` 的临时基线对比，见
-[`phase4-replay.md`](phase4-replay.md) §4。完整发布还必须运行相关大厅、浏览器、联机和图片库存验证。
+[`../ARCHITECTURE.md`](../ARCHITECTURE.md#53-重放撤销与迁移对比)。完整发布还必须运行相关大厅、浏览器、联机和图片库存验证。
 若全量回归存在既有失败，迁移报告必须明确区分新增失败与可复现的既有漂移；`blocked`/`rejected`
 的卡和原语必须单列，不能计入已完成。

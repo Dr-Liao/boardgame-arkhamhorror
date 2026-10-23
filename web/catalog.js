@@ -268,7 +268,9 @@ export function renderDetailContent(h, detail, renderTextCard, onChange, gameSta
       renderImage(h, entry?.images || card.images, side, { artId: detail.def.artId }),
       h('div', null, renderTextCard(face),
         h('nav', {className:'ah-card-rule-links','aria-label':'相关规则'},
-          [...new Set([...cardRuleIds(detail.def), ...matchingRules([face.text,face.textZh,face.slot,face.slots?.join(' '),face.keywords?.join?.(' ')].filter(Boolean).join(' ')).map(r=>r.id)])]
+          // 卡号级映射优先：`card` 是已加载的卡面（含 text/textZh/traits/slot），只传 `detail.def`
+          // 会让 `^04`/`^05` 这类「按卡文判定」的条目丢失，只剩通用条目占满 10 个名额。
+          [...new Set([...cardRuleIds({ ...detail.def, ...card }), ...matchingRules([face.text,face.textZh,face.slot,face.slots?.join(' '),face.keywords?.join?.(' ')].filter(Boolean).join(' ')).map(r=>r.id)])]
             .slice(0,10).map(id=>ruleLink(h,id)),
           ruleLink(h,'round','打开规则书')),
         detail.runtime && objective ? h('section', { className: 'ah-runtime-text' }, h('h3', null, '当前目标'), h('p', null, renderRulesText(h, objective))) : null,

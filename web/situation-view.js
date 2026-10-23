@@ -6,6 +6,8 @@ import { tableIcon } from './table-components.js'
 import { cardSymbol } from './card-text.js'
 // 第 127 轮：「书籍行动」调查员表在 web/ui-cards.js。
 import { UI_CARDS } from './ui-cards.js'
+// 第 4 步 P5：万象无终的公开剧本状态（幽灵牌堆 / 塔罗 / 裂口 / 火盆 / 看守人 / 遗留记忆）。
+import { renderTcuCampaignPanel, tcuCampaignModel } from './tcu-ui.js'
 
 const IMG = '/mods/arkhamhorror/img/'
 const PHASES = [
@@ -204,6 +206,7 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
       cp.phase === 'interlude' ? h('p', { className: 'ah-campaign-note' }, '关间准备：逐位确认牌组、保留经验或购买已开放卡牌；完成后开始下一关。') : null,
       suppliesPanel(cp),
       tfaStatusPanel(st),
+      renderTcuCampaignPanel(h, tcuCampaignModel(st)),
       h('ul', { className: 'ah-campaign-records' }, Object.values(cp.investigators || {}).map(record => {
         const trauma = cp.trauma?.[record.seat] || {}
         const status = record.status === 'killed' ? '死亡' : record.status === 'insane' ? '疯狂' : '在役'

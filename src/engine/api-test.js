@@ -23,6 +23,15 @@ export function createTestApi(state, events, deps) {
 
   return {
     addTestValue: amount => { if (state.skillTest) state.skillTest.value = (state.skillTest.value || 0) + amount },
+    // 第 5 步 P6：「本次检定难度 -N」（序章故事调查员瓦伦蒂诺）。与 addTestValue 分开，
+    // 因为「降低难度」与「提高技能值」在结算与展示上是两件事。读点：tests.js 在判定前
+    // 统一扣减 state.skillTest.difficultyReduction。
+    reduceTestDifficulty: (amount = 1) => {
+      if (!state.skillTest) return 0
+      state.skillTest.difficultyReduction = (state.skillTest.difficultyReduction || 0) + amount
+      state.skillTest.difficulty = Math.max(0, (state.skillTest.difficulty || 0) - amount)
+      return state.skillTest.difficulty
+    },
     // Phase 2（B2）：伤害/恐惧的统一入口，可以指定分配策略。
     //   strategy: 'distribute'（默认，逐点询问）| 'self' | 'assetsFirst' | 'assetsOnly'
     harm: (seat, spec = {}) => {

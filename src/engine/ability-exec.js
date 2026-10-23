@@ -10,6 +10,7 @@
 // 依赖注入同前几批；本模块没有工厂产物依赖。
 
 import { NON_PLAYER_SCOPES } from './ability.js'
+import { entityParleyDescriptors, parleyTargetError } from './parley.js'
 
 export function createAbilityExecution(deps) {
   const {
@@ -63,6 +64,29 @@ export function createAbilityExecution(deps) {
     syncClues,
     windowLabelOf,
   } = deps
+
+// 第 2 步 P2.7：非玩家实体（地点 / 敌人 / 剧情资产）上的通用行动（谈判）。
+// 与玩家卡能力共用 executeDescriptor 的费用/上限/日志管线；能力由条目声明，引擎不认卡号。
+function doEntityAbility(state, seat, move, events) {
+  const inv = state.investigators[seat]
+  if (!inv) return false
+  const entity = state.enemies.find(item => item.id === move.entityId)
+    || state.locations.find(item => item.id === move.entityId)
+    || (state.storyAssets || []).find(item => item.id === move.entityId)
+  if (!entity) return false
+  const descriptor = entityParleyDescriptors(entity)[move.abilityIndex]
+  if (!descriptor) return false
+  const error = parleyTargetError(state, inv, entity, descriptor, move)
+  if (error) {
+    info(state, events, `⛔ ${error}`)
+    return false
+  }
+  if (!descriptorUsable(state, inv, entity, descriptor, { windowId: state.timingWindow, mode: 'action' })) return false
+  executeDescriptor(state, { inv, source: entity, descriptor,
+    context: { targetId: move.targetId, optionIndex: move.optionIndex },
+    events, windowId: state.timingWindow, legacyAbilityLog: true })
+  return true
+}
 
 function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, events) {
   const inv = state.investigators[seat]
@@ -404,5 +428,5 @@ function effectError(state, inv, effect) {
   return null
 }
 
-  return { doAbility, openAbilityWindow, effectError }
+  return { doAbility, doEntityAbility, openAbilityWindow, effectError }
 }

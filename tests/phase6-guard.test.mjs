@@ -3,6 +3,8 @@
 // 这两条是 architecture-refactor-roadmap.md 的 Phase 6 门禁：
 //   「`engine.js` / `observation.js` 内不出现 `tfa|carcosa|dunwich` 字样与具体卡号；
 //     新增战役只加 `content/campaigns/<id>/`。」
+// 第四循环（万象无终）开工时把 `tcu` 一并纳入同一门禁（路线图 §4.4：`src/engine`
+// 不出现 `tcu|theCircleUndone` 字样），否则新循环可以在引擎里留下战役名分支。
 //
 // 为什么用正则扫源码而不是统计 AST：
 // 这两类痕迹都是**字符串字面量**，AST 统计反而更容易漏掉模板字符串与注释里的残留；
@@ -36,7 +38,7 @@ test('Phase 6 门禁：引擎源码里没有战役名', () => {
   for (const file of engineFiles()) {
     const text = fs.readFileSync(path.join(ENGINE_DIR, file), 'utf8')
     for (const [index, line] of text.split('\n').entries()) {
-      if (/\b(tfa|carcosa|dunwich)\b/i.test(line)) {
+      if (/\b(tfa|carcosa|dunwich|tcu)\b/i.test(line)) {
         offenders.push(`${file}:${index + 1}: ${line.trim().slice(0, 110)}`)
       }
     }

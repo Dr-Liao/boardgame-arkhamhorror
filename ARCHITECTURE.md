@@ -72,7 +72,7 @@ games/arkhamhorror/
 - `effect-state.js`：**持续效果实体（A1）**。`state.effects[]`（6 种 `duration`）、`expireEffects(state, timing)` 统一过期、来源绑定清理与效果能力枚举；记录必须是纯 JSON（能力只能写 `effect` 数据，不能写 `resolve`）。
 - `lifecycle.js`：**生命周期读点**。事件打出（`playedEffect`）、投入检定（`commitProfile`）、弱点揭示（`weaknessProfile`）、进场/离场（`entersPlayEffect`/`leavesPlayEffect`）只从这里取行为数据：描述子优先，缺失时回落到 `EFFECTS`，因此迁移一张卡不需要改引擎。
 - `play-condition.js`：**打出条件单一读点**。描述子的 `playCondition` 与旧 DSL 的 10 个可用性字段（`ownTurnOnly`/`requiresClueAtLocation`/`playableFromDiscard`…）都在这里翻译成 matcher predicate 并给出原文案；`playAccess()` 统一区域/类型许可。
-- `replay.js`：**对局日志与重放（Phase 4）**。`state.actionLog` 记录每个成功动作（纯 JSON，随存档往返）；`stateHash` 是稳定指纹（键排序、排除派生资源与瞬时字段，`STATE_HASH_VERSION` 见模块头）；`captureReplayLog` / `replayLog(log, { until, observe })` / `replayHashes` 支撑迁移安全网与存档回放；`verifyReplay` / `stateDiff` 给出路径级差异；`rewindTo` / `undoMoves` 是撤销地基（截断日志后重放）。golden 基线与迁移对比工具见 [`docs/phase4-replay.md`](docs/phase4-replay.md)，描述子/模型规格见 [`docs/card-model.md`](docs/card-model.md)。
+- `replay.js`：**对局日志与重放（Phase 4）**。`state.actionLog` 记录每个成功动作（纯 JSON，随存档往返）；`stateHash` 是稳定指纹（键排序、排除派生资源与瞬时字段，`STATE_HASH_VERSION` 见模块头）；`captureReplayLog` / `replayLog(log, { until, observe })` / `replayHashes` 支撑迁移安全网与存档回放；`verifyReplay` / `stateDiff` 给出路径级差异；`rewindTo` / `undoMoves` 是撤销地基（截断日志后重放）。golden 基线与迁移对比工具见 §5.3，描述子/模型规格见 [`docs/card-model.md`](docs/card-model.md)。
 - `cost.js`：**费用表达式（C3，Phase 2）**。`cost` 字段可以是数字、函数或声明式表达式（`per/amount/offset/min/max/filter/x`）；`normalizeCostValues` 是一份求值器，行动文案预览、`canAffordAbility` 校验、`payAbilityCost` 扣费三处共用，求值失败按"付不起"处理。
 - `limits.js`：**上限作用域与归属（C4，Phase 2）**。`limit: { scope, owner, count }`：10 种 scope（含 `perWindow/perAttack/perSearch/perAction/perCampaign`）、4 种 owner（`instance/investigator/player/group`）；记账仍是 `state.abilityLimits` 的纯 JSON，旧字符串写法自动映射。
 - `test-result.js`：**检定结果契约（B3，Phase 2）**。阶段词表（beforeCommit/afterCommit/tokens/results）+ 标准结果形状；`performTest().summary`、`state.lastTestResult`、窗口 `ctx.result` 与 `api.retryTest`/`api.commitCards` 共用同一份数据。
@@ -236,7 +236,7 @@ state.actionLog + 建局参数（state.setup / seed / difficulty / rulesMode / a
   → stateHash / replayHashes             # 键排序指纹，排除派生资源与瞬时字段
 ```
 
-- **迁移对比**：`tools/replay-fixtures.mjs --baseline <文件>` 采集迁移前基线，改完代码用 `--compare <文件>` 逐条比较逐步指纹；输出"行为零变化"才算过。流程见 [`docs/phase4-replay.md`](docs/phase4-replay.md) §4。
+- **迁移对比**：`tools/replay-fixtures.mjs --baseline <文件>` 采集迁移前基线，改完代码用 `--compare <文件>` 逐条比较逐步指纹；输出"行为零变化"才算过。流程见 §5.3。
 - **golden replay**：`tests/fixtures/replay/golden-replays.json` 固化 13 局真实对局（4 战役 / 5 关卡 / 786 步 / 799 个逐步指纹），`tests/replay-golden.test.mjs` 在 `fast` tier 校验；`npm run replay:fixtures` 是同一份基线的命令行校验。
 - **撤销地基**：`rewindTo(state, until)` / `undoMoves(state, count)` 截断日志后重放并原地替换状态，保留检查点分支的 `revision` 偏移；交互入口（大厅 UI）尚未实现。
 - **两条实现约束**：日志由 `applyMove` 在事务外持有（事务快照会重建状态，`dynamicState` 已排除 `actionLog`）；`continuation.move` 只保留语义字段（`resolution.js` 的 `cloneMove`），展示文案不参与指纹。
@@ -273,7 +273,7 @@ state.actionLog + 建局参数（state.setup / seed / difficulty / rulesMode / a
 - `tests/fixtures/` 保存可复用的最小状态与剧情夹具；`tests/fixtures/replay/` 是 golden replay 基线（动作日志 + 逐步指纹，由 `npm run replay:fixtures:write` 生成，不要手改）。
 - `tests/*-snapshots/` 保存需要人工确认的稳定视觉基线。
 
-重放相关的分层（详见 [`docs/phase4-replay.md`](docs/phase4-replay.md)）：
+重放相关的分层（详见 §5.3）：
 
 | 用例 | tier | 作用 |
 | --- | --- | --- |
@@ -309,12 +309,12 @@ npm run replay:fixtures:write    # 行为有意变化后重采基线
 6. 新观察字段先判断隐私级别；私有候选、手牌和内部续执行数据不得进入其他座位投影。
 7. 浏览器只负责表达和提交，不把前端判断当作安全边界。
 8. 临时分析、截图、执行日志和阶段总结写入根目录 `artifacts/`，不回填到运行目录。
-9. 架构演进（重构、加卡、迁移）的决策依据是 [`docs/architecture-refactor-roadmap.md`](docs/architecture-refactor-roadmap.md)：本文定义稳态架构条文，路线文档定义重构阶段与迁移判据。
+9. 架构演进（重构、加卡、迁移）的决策依据是本文 §3–§8 与 [`docs/arkham-content-migration.md`](docs/arkham-content-migration.md)：本文定义稳态架构条文与演进规矩，内容迁移规范定义六步顺序与阶段判据。
 
 ## 9. 演进规矩（重构期摘要）
 
-重构期间的目标形态是"五件唯一"。完整条文、阶段门禁与迁移判据见
-[`docs/architecture-refactor-roadmap.md`](docs/architecture-refactor-roadmap.md)，此处只保留不可协商的部分。
+重构期间的目标形态是"五件唯一"。原重构路线文档已在 2026-10 的重构收尾后删除；现行条文见本文 §3–§8 与
+[`docs/arkham-content-migration.md`](docs/arkham-content-migration.md)，此处只保留不可协商的部分。
 
 | # | 唯一 | 目标 |
 | --- | --- | --- |

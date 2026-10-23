@@ -25,6 +25,12 @@ import { choicePresentation, entityMoves, mountCardInteractions, cancelTableGest
 import { reactionEnabled, setReactionEnabled, reactionChoices, reactionView, reactionPassPlan } from './reaction-preferences.js'
 import { presentationAttributes, campaignPlaylistId } from './campaign-presentation.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
+// 第 4 步 P5：万象无终的专用交互面板（塔罗抽牌 / 序章选人 / 闹鬼来源 / 地点标记 / 多技能检定）。
+import {
+  enemyFaceBadge, hauntedChoiceModel, locationTcuBadges, multiSkillTestInfo,
+  renderHauntedChoice, renderStoryInvestigatorPicker, renderTarotPicker,
+  storyInvestigatorPickerModel, tarotPickerModel,
+} from './tcu-ui.js'
 
 let h, api, render, state, reset, leave, openFeedback
 let beginInteraction = () => () => {}
@@ -854,6 +860,15 @@ function renderPendingChoice(s, humanTurn) {
   const choice = s.state.pendingChoice
   if (!choice) return null
   if(choice.kind==='payment' && choice.source==='group-clues')return renderCluePayment(s,humanTurn)
+  // 万象无终（P5）：三种选择有自己的面板，语义与排版都与通用按钮列不同。
+  // 非当前回答者照样能看到面板（桌面公开信息），只是按钮置灰并说明在等谁。
+  const panelProps = { disabled: !humanTurn, busy: state.busy, onSubmit: move => { if (humanTurn && !state.busy) cardMove(move, s) } }
+  const tarotPanel = tarotPickerModel(s)
+  if (tarotPanel) return renderTarotPicker(h, tarotPanel, panelProps)
+  const storyPanel = storyInvestigatorPickerModel(s)
+  if (storyPanel) return renderStoryInvestigatorPicker(h, storyPanel, panelProps)
+  const hauntedPanel = hauntedChoiceModel(s)
+  if (hauntedPanel) return renderHauntedChoice(h, hauntedPanel, panelProps)
   const items = choicePresentation(s.state)
   const reactions = reactionChoices(s.state)
   const names = { turnOrder: '准备开始行动', mulligan: '点选手牌换牌', commit: '拖入卡牌以投入检定',
@@ -866,10 +881,15 @@ function renderPendingChoice(s, humanTurn) {
   const assigningHarm = ['assign-damage', 'assign-horror'].includes(choice.kind)
   const test = assigningHarm ? null : s.state.skillTest, testSource = test?.source
   const staged = humanTurn ? choiceDraft(s)?.selected || [] : []
-  const skillName = ({ intellect: '智识', combat: '战斗', agility: '敏捷', willpower: '意志' })[test?.skill] || '技能'
+  // 阵法（P2.5）把 2–4 项技能相加：`skillTest.skill` 可能是数组，标签与图标都按整组显示。
+  const multi = test ? multiSkillTestInfo(s.state) : null
+  const skillName = multi?.label || '技能'
   const testValue = test?.value ?? test?.baseValue ?? '—'
   const testBase = test?.printedValue ?? test?.baseValue ?? testValue
   const testDelta = Number.isFinite(testValue) && Number.isFinite(testBase) ? testValue - testBase : 0
+  const testAria = multi
+    ? `${multi.label}：基础 ${testBase}，修正 ${testDelta>=0?'+':''}${testDelta}，当前 ${testValue}，难度 ${test.difficulty}`
+    : `${skillName}：基础 ${testBase}，修正 ${testDelta>=0?'+':''}${testDelta}，当前 ${testValue}，难度 ${test.difficulty}`
   return h('section', { className: 'ah-choice ah-direct-prompt', role: 'region', 'aria-label': '待决选择',
     'aria-busy': String(!!state.busy), 'data-choice-id': choice.id, 'data-choice-kind': choice.kind,
     'data-choice-seat': choice.seat, 'data-interaction': choice.kind === 'commit' ? 'zone:commit' : 'zone:discard' },
@@ -878,10 +898,13 @@ function renderPendingChoice(s, humanTurn) {
       h('span', { className: 'ah-choice-prompt' }, renderRulesText(h,choice.prompt,{links:false}))),
     testSource?.code ? h('button', { className: 'ah-test-source', 'data-card-code': testSource.code, title: '查看检定来源：' + testSource.name,
       onclick: () => openCardDetailDef({ ...ahCardDef(s, testSource.code), code: testSource.code, name: testSource.name }) }, tableArt(h, testSource.code, testSource.name)) : null,
-    test ? h('div', { className: 'ah-test-preview',
-      'aria-label': `${skillName}：基础 ${testBase}，修正 ${testDelta>=0?'+':''}${testDelta}，当前 ${testValue}，难度 ${test.difficulty}` },
-      tableIcon(({ intellect: 'book', combat: 'sword', agility: 'leaf', willpower: 'star' })[s.state.skillTest.skill]),
+    test ? h('div', { className: 'ah-test-preview' + (multi?.multi ? ' is-multi-skill' : ''),
+      'aria-label': testAria },
+      h('span', { className: 'ah-test-skill-icons' },
+        (multi?.skills || [{ icon: ({ intellect: 'book', combat: 'sword', agility: 'leaf', willpower: 'star' })[test.skill] || 'star' }])
+          .map(skill => tableIcon(skill.icon))),
       h('strong', {}, skillName + ' ' + testBase,
+        multi?.multi ? h('em', { className: 'ah-test-multiskill' }, '合计' ) : null,
         testDelta ? h('small', { className: 'ah-test-modifier ' + (testDelta > 0 ? 'is-positive' : 'is-negative') }, `${testDelta>0?'+':''}${testDelta}`) : null,
         ' / 难度 ' + test.difficulty),
       h('span', {}, '已投入 ' + (s.state.skillTest.committed?.length || 0) + ' 张' + (staged.length ? ` · 待确认 ${staged.length} 张` : ''))) : null,
@@ -1348,7 +1371,9 @@ function renderLocationNode(s, loc, opts = {}) {
     className: `ah-loc-badge ah-loc-${kind}`, 'data-map-info': kind, title: `${label} ${value ?? ''}`, 'aria-label': `${loc.name} · ${label} ${value ?? ''}`,
     onclick: event => { event.stopPropagation(); openCardDetailDef({ ...loc, type: 'location' }, { focusInfo: kind }) },
     onkeydown: event => event.stopPropagation(),
-  }, tableIcon(kind === 'clues' ? 'clue' : kind === 'locked' ? 'lock' : kind === 'attached' ? 'book' : kind === 'resources' ? 'resource' : kind), value == null ? null : String(value))
+  }, tableIcon(kind === 'clues' ? 'clue' : kind === 'locked' ? 'lock' : kind === 'attached' ? 'book'
+    : kind === 'resources' ? 'resource' : kind === 'breach' ? 'doom' : kind === 'brazier' ? 'star'
+    : kind === 'spectral' ? 'eye' : kind), value == null ? null : String(value))
   const badges = []
   if (loc.clues) badges.push(resourceBadge('clues', '线索', loc.clues, `此地点有 ${loc.clues} 个线索。`))
   if (loc.locked) badges.push(resourceBadge('locked', '上锁', null, '此地点目前处于上锁状态。'))
@@ -1356,6 +1381,8 @@ function renderLocationNode(s, loc, opts = {}) {
   if (loc.resources) badges.push(resourceBadge('resources', '资源', loc.resources, `此地点有 ${loc.resources} 个资源。`))
   if (attachments.length) badges.push(resourceBadge('attached', '附属卡', attachments.length,
     attachments.map(item => typeof item === 'string' ? item : item.name || ahCardDef(s, item.code).name || '附属卡').join('、')))
+  // 万象无终（P5）：裂口计数、火盆点燃状态、幽灵地点。都来自公开投影。
+  for (const badge of locationTcuBadges(st, loc.id)) badges.push(resourceBadge(badge.kind, badge.label, badge.value, badge.title))
   const view = currentMapView(s)
   const activate = (focusActions = false) => {
     if (choiceMove && opts.humanTurn && !state.busy) return cardMove(choiceMove, s)
@@ -1824,7 +1851,13 @@ function renderEnemyChip(s, e, { map = false } = {}) {
   if (e.massive) kws.push('庞大')
   if (e.prey) kws.push('猎物：' + (AH_PREY_LABEL[e.prey] || e.prey))
   if (e.victory) kws.push('胜利点' + e.victory)
-  return h('div', { className: 'ah-enemy' + (e.massive ? ' is-massive' : '') + (victoryLevel ? ` has-victory victory-${victoryLevel}` : '') + (choiceMove ? ' ah-choice-target' : '') + (e.exhausted ? ' is-exhausted' : ''), title: choiceMove ? '选择此敌人作为目标' : `${e.name}\n${canEngage ? '点击弹出交战等行动（主动交战消耗 1 行动），也可拖到你的角色或交战区。' : '点击查看详情'}`, role: 'button', tabindex: 0,
+  // 万象无终（P5）：异端者的多面与「不能以任何方式被击败」写在敌人卡上，翻面/放逐动作仍来自 legalMoves。
+  const face = enemyFaceBadge(e)
+  if (face?.label) kws.push(face.label)
+  if (face?.cannotBeDefeated) kws.push('不能击败')
+  const enemyTitle = choiceMove ? '选择此敌人作为目标'
+    : `${e.name}${face?.title ? `\n${face.title}` : ''}\n${canEngage ? '点击弹出交战等行动（主动交战消耗 1 行动），也可拖到你的角色或交战区。' : '点击查看详情'}`
+  return h('div', { className: 'ah-enemy' + (e.massive ? ' is-massive' : '') + (victoryLevel ? ` has-victory victory-${victoryLevel}` : '') + (choiceMove ? ' ah-choice-target' : '') + (e.exhausted ? ' is-exhausted' : ''), title: enemyTitle, role: 'button', tabindex: 0,
     'aria-label': `${e.name} · 生命 ${e.health - (e.damageTaken || 0)}/${e.health}${e.exhausted ? ' · 已横置' : ''}${canEngage ? ' · 可交战' : ''}`,
     'data-inspect-default': map ? 'true' : null,
     'data-interaction': `enemy:${e.id}`,

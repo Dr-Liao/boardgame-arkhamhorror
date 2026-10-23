@@ -11,6 +11,12 @@
 import { investigatorRule } from '../cards/card-rules.js'
 import { cardPoolContext } from '../deck/card-pool.js'
 
+import { isParleyDescriptor } from './parley.js'
+// 第 5 步 P6：法术专用额外行动的算术在 spell-actions.js（纯函数，无依赖）。
+import {
+  actionsAvailable as spellActionsAvailable, consumeAction as consumeSpellAction, spellOnlyActionsOf,
+} from './spell-actions.js'
+
 export function createDispatch(deps) {
   const {
     ALL_CARDS,
@@ -21,6 +27,7 @@ export function createDispatch(deps) {
     abilityOfMove,
     actionCost,
     actionKind,
+    isSpellAction,
     advanceAct,
     advanceInvestigator,
     aliveInvestigators,
@@ -39,7 +46,9 @@ export function createDispatch(deps) {
     corePlayerPool,
     getCurrentActionKind,
     setCurrentActionKind,
+    setCurrentSpellAction,
     doAbility,
+    doEntityAbility,
     doBreakDoor,
     doDiscardThreat,
     doDraw,
@@ -181,15 +190,21 @@ function executeAction(state, seat, move, events) {
   const cost = actionCost(state, inv, move)
   const kind = actionKind(state, inv, move)
   setCurrentActionKind(kind)
-  // 04148 探险日志：每回合额外一次只能探索的行动。普通行动不能花掉它。
+  // 第 5 步 P6：法术专用额外行动（玛丽·朗博）——最后一个行动只能花在法术卡/法术能力上。
+  const spell = isSpellAction(state, inv, move)
+  setCurrentSpellAction(spell)
   if (kind === 'explore') {
     if (inv.actionsLeft < cost) throw new Error('行动点不足')
     const normal = normalActionsLeft(inv)
     inv.actionsLeft -= cost
     if (normal < cost) inv.exploreOnlyActions = Math.max(0, (inv.exploreOnlyActions || 0) - (cost - normal))
   } else {
-    if (normalActionsLeft(inv) < cost) throw new Error('行动点不足（额外行动只能用于探索）')
-    inv.actionsLeft -= cost
+    if (spellActionsAvailable(inv, spell) < cost) {
+      throw new Error(spellOnlyActionsOf(inv) && !spell
+        ? '行动点不足（额外行动只能用于探索或法术）'
+        : '行动点不足')
+    }
+    consumeSpellAction(inv, cost, spell)
   }
   inv.exploreOnlyActions = Math.min(inv.exploreOnlyActions || 0, Math.max(0, inv.actionsLeft))
   if (cost > 0) { inv.actionsTakenThisTurn = (inv.actionsTakenThisTurn || 0) + 1; state.phaseActionCount = (state.phaseActionCount || 0) + 1 }
@@ -213,6 +228,9 @@ function executeAction(state, seat, move, events) {
     const usedAbility = move.action === 'ability' ? abilityOfMove(state, inv, move) : null
     const abilityNoAoO = usedAbility?.descriptor?.noOpportunityAttack === true
       || usedAbility?.noOpportunityAttack === true
+      // 第 2 步 P2.7：谈判行动按规则不引发借机攻击；非玩家实体的通用行动同理。
+      || isParleyDescriptor(usedAbility?.descriptor)
+      || move.action === 'entityAbility'
     // 03147 双刃短刀：控制者的「交战」行动不引发借机攻击。
     const engageNoAoO = kind === 'engage'
       && inv.assets.some(item => registeredEntry(item.code)?.engageNoOpportunityAttack === true)
@@ -419,6 +437,8 @@ function applyMoveUnchecked(state, seat, move, events) {
     case 'interruptRitual': doInterruptRitual(state, seat, m.skill, events); break
     case 'sacrificeLita': doSacrificeLita(state, seat, events); break
     case 'breakDoor': doBreakDoor(state, seat, m.skill, events); break
+    // 第 2 步 P2.7：地点/敌人/剧情资产上的通用行动（谈判）——与玩家卡能力同一条描述子管线。
+    case 'entityAbility': doEntityAbility(state, seat, m, events); break
     case 'ability': doAbility(state, seat, m.assetId, m.abilityIndex, m.targetId, m.optionIndex, events); break
     case 'discardThreat': doDiscardThreat(state, seat, m.threatId, events); break
     case 'purgeThreat': doPurgeThreat(state, seat, m.threatId, events); break

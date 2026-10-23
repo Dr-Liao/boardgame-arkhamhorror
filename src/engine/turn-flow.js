@@ -63,6 +63,9 @@ export function createTurnFlow(deps) {
     turnBeginningWindow,
     unpaidExtraActionThreats,
     useGoldPocketWatch,
+    // 第 5 步 P6：直觉牌库揭示的那张牌打出时少付 2 资源；资源寄存的回合结束结算。
+    hunchDeck,
+    resourceBank,
   } = deps
 
   function tryAquinnahRedirect(state, enemy, inv, events, extraDamage = 0, extraHorror = 0) {
@@ -322,6 +325,8 @@ export function createTurnFlow(deps) {
         }
       }
       scenarioBehavior(state).turnEnded?.(state, inv, scenarioRuntime(state, events))
+      // 第 5 步 P6：「当你的回合结束时，弃掉这张卡牌上的所有资源」（家族遗产）。
+      resourceBank.endTurn(state, inv, events)
       for (const asset of inv.assets) {
         const heal = assetEffect(inv, asset)?.healSelfHorrorAfterTurn || 0
         if (heal && (asset.horror || 0) > 0) asset.horror = Math.max(0, asset.horror - heal)
@@ -387,7 +392,9 @@ export function createTurnFlow(deps) {
     const charles = itemDiscountAtLocation(state, inv, def)
     // 能力层修正：例如 03142「黑玛瑙扣环」在手牌中时其他手牌 +1 费用（负数为折扣）。
     const abilityLayer = playCostDelta(state, inv, def.code)
-    return Math.max(0, (def.cost || 0) - discount - lola - cardDiscount - playDiscount + threatIncrease + locationIncrease - relicDiscount - charles + abilityLayer)
+    // 第 5 步 P6：直觉牌库顶揭示的那一张可以少付 2 资源（「如同它是你的手牌」）。
+    const hunch = hunchDeck.playDiscount(state, inv, def.code)
+    return Math.max(0, (def.cost || 0) - discount - lola - cardDiscount - playDiscount + threatIncrease + locationIncrease - relicDiscount - charles + abilityLayer - hunch)
   }
 
   function itemDiscountAtLocation(state, inv, def) {

@@ -12,14 +12,38 @@
 // 读点：`src/integration/observation.js` 里的 `Object.assign(view, campaignProjection(state))`；
 // 以及 `src/ai/ai-context.js` 的 campaignHints（战役作者给出的决策提示，只写公开信息）。
 import { contentRegistry } from '../../content/registered.js'
+import { extraEncounterDeckInfo } from '../engine/alt-decks.js'
+import { tarotInfo } from '../engine/tarot.js'
+import { bondedSetProjection } from '../engine/bonded.js'
+import { watcherAndMementoProjection } from '../campaign/mementos.js'
+import { locationStateProjection } from '../engine/location-state.js'
+import { storyInvestigatorProjection } from '../engine/story-investigators.js'
+import { projectHunch } from '../engine/hunch-deck.js'
+import { resourceBankProjection } from '../engine/resource-bank.js'
 
 export function campaignProjection(state) {
   const out = {}
+  // 直觉牌库（第 5 步 P6）：牌库张数与已揭示的那张是桌面公开信息，顺序不投影。
+  const hunch = projectHunch(state)
+  if (hunch.length) out.hunch = hunch
+  // 资源寄存（第 5 步 P6）：「家族遗产」上的资源数印在卡面上，属于公开信息。
+  const banks = (state.investigators || []).map(inv => resourceBankProjection(inv)).filter(Boolean)
+  if (banks.length) out.resourceBanks = banks
   // 探索牌库是背面朝下的随机牌堆：只公开张数；弃牌堆公开内容。
   out.exploration = {
     deck: Array.isArray(state.explorationDeck) ? state.explorationDeck.length : 0,
     discard: [...(state.explorationDiscard || [])],
   }
+  // 第二遭遇牌堆（第四循环 P2.2）：只有建过堆的关卡才投影；顺序永不外泄，只给张数与弃牌堆。
+  if (state.extraEncounterDecks?.spectral) out.spectral = extraEncounterDeckInfo(state, 'spectral')
+  // 塔罗牌组（第四循环 P2.4）：只给牌库存量与已抽出的牌（正逆位），顺序不投影。
+  if (state.scenarioDecks?.tarot) out.tarot = tarotInfo(state)
+  // 序章故事调查员（第四循环 P2.6）：谁选了谁、哪些被划掉都是桌面公开信息。
+  const storyInvestigators = storyInvestigatorProjection(state)
+  if (storyInvestigators) out.storyInvestigators = storyInvestigators
+  // 绑定（第四循环 P2.8）：场外集合是桌面公开信息，只投影有集合的关卡。
+  const bonded = bondedSetProjection(state)
+  if (Object.keys(bonded).length) out.bonded = bonded
   // 古代遗物：位置与持有人都是桌上的公开信息。
   out.relicOfAges = state.relicOfAges
     ? {
@@ -52,6 +76,12 @@ export function campaignProjection(state) {
       agendaAttachments: (agenda?.attachments || []).map(entry => entry.code || entry.originalCode),
     }
   }
+  // 遗留记忆 / 看守人（第四循环 P2.10）：记录里的公开信息，非空时才出现。
+  Object.assign(out, watcherAndMementoProjection(state))
+  // 裂口/火盆（第四循环 P2.11）：只投影有标记的地点，公开值。
+  // 注意键名**不能**叫 `locations`：观察投影里的 `view.locations` 是地点数组，同名会把牌桌整张地图覆盖掉。
+  const locationStates = locationStateProjection(state)
+  if (Object.keys(locationStates).length) out.locationStates = locationStates
   // 领队：状态字段优先，其次战役记录（旧存档只有后者）。
   out.expeditionLeaderSeat = Number.isInteger(state.expeditionLeaderSeat)
     ? state.expeditionLeaderSeat

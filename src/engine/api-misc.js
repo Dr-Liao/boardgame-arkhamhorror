@@ -65,6 +65,12 @@ export function createMiscApi(state, events, deps) {
     investigatorMoveDestinations,
     doResign,
     doFightRaw,
+    // 第 5 步 P6：治疗恐惧的统一入口 / 资源寄存 / 取消记账（都要能开窗口）。
+    healHorrorFrom,
+    resourceBank,
+    hunchDeck,
+    reactionWindow,
+    noteCardCancelled,
   } = deps
 
   const doFight = (...args) => doFightRaw(...args)
@@ -82,13 +88,26 @@ export function createMiscApi(state, events, deps) {
       const inv = state.investigators[seat]
       if (inv) inv.damage = Math.max(0, (inv.damage || 0) - amount)
     },
-    healHorror: (seat, amount) => {
+    // 第 5 步 P6：治疗恐惧走统一入口（治疗支援时 owner 是控制者），
+    // 这样「在你的卡牌效果治愈恐惧后」的反应有一个事后窗口，且「理性思考」的承接规则只有一处。
+    healHorror: (seat, amount, options = {}) => {
       const inv = state.investigators[seat]
-      if (inv) inv.horror = Math.max(0, (inv.horror || 0) - amount)
+      if (inv) healHorrorFrom(state, inv, amount, events, options)
     },
     gainResources: (seat, amount) => {
       const inv = state.investigators[seat]
-      if (inv) inv.resources += amount
+      // 第 5 步 P6：卡牌效果获得的资源可能被「家族遗产」寄存（resourceBank 规则）。
+      if (inv) resourceBank.gainResource(state, inv, amount, events)
+    },
+    // 第 5 步 P6：资源寄存的两条卡面读写点（家族遗产）。
+    resourceBank: {
+      bankedOf: inv => resourceBank.bankedOf(inv),
+      withdraw: inv => resourceBank.withdrawAll(state, inv, events),
+    },
+    // 第 5 步 P6：直觉牌库的两条卡面读写点（乔·戴蒙德的旧印）。
+    hunchDeck: {
+      insightsInDiscard: inv => hunchDeck.insightsInDiscard(inv),
+      moveToBottom: (inv, code) => hunchDeck.moveToBottom(state, inv, code, events),
     },
     loseResources: (seat, amount) => {
       const inv = state.investigators[seat]
@@ -194,7 +213,12 @@ export function createMiscApi(state, events, deps) {
     healAsset: (card, spec = {}) => {
       if (!card) return card
       card.damage = Math.max(0, (card.damage || 0) - (spec.damage || 0))
-      card.horror = Math.max(0, (card.horror || 0) - (spec.horror || 0))
+      if (spec.horror) {
+        // 第 5 步 P6：支援上的恐惧同样走统一入口；owner 由调用方（描述子上下文）给出。
+        const owner = spec.owner || state.investigators[spec.ownerSeat ?? state.currentSeat]
+        if (owner) healHorrorFrom(state, card, spec.horror, events, { ...spec, owner })
+        else card.horror = Math.max(0, (card.horror || 0) - spec.horror)
+      }
       return card
     },
     cardFactions: code => {
@@ -570,6 +594,8 @@ export function createMiscApi(state, events, deps) {
       if (options.gainResources) owner.resources += damage + horror
       info(state, events, `${owner.name} 取消 ${damage} 点伤害与 ${horror} 点恐惧`
         + (options.gainResources ? `，并获得 ${damage + horror} 资源。` : '。'))
+      // 第 5 步 P6：取消效果是一张卡做的事，「你拥有的一张卡取消了……」的反应靠这份记账。
+      noteCardCancelled(reactionWindow, state, events, { seat, what: 'harm' })
       return { damage, horror }
     },
     // 取消刚抽到的遭遇卡（可要求重抽一张），取代 02302 的 redrawEncounter 分派。
@@ -580,6 +606,7 @@ export function createMiscApi(state, events, deps) {
       context.cancelled = true
       if (options.redraw === true) context.redraw = true
       if (options.shuffleBack === true) context.shuffleBack = true
+      noteCardCancelled(reactionWindow, state, events, { seat, what: 'encounter' })
       return true
     },
     // 第 122 轮（第 4 批收尾）：搜索任意调查员牌库顶 N 张，把符合特质的牌直接放进场

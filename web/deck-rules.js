@@ -29,13 +29,37 @@ export function deckRules(investigator) {
   })
 }
 const lower = value => String(value).toLowerCase().replace(/\.$/, '')
+// 第 5 步 M1 调查员批次（P6）：构筑标签的三种印刷写法。
+//   uc = 带「使用（充能）」、hh = 能治愈恐惧、st = [[法术]]；
+// 卡表用 tag + text（正则）描述「带有『治愈……恐惧』字样的卡牌」这类构筑选项。
+const KNOWN_DECK_TAGS = Object.freeze(['uc', 'hh', 'st'])
+const CARD_TEXTS = card => [card.text, card.textZh].filter(Boolean).map(text => String(text))
+const healsHorror = card => CARD_TEXTS(card).some(text => /heals? .*horror|治愈[^。\n]*恐惧|治癒[^。\n]*恐懼/i.test(text))
+const isSpellCard = card => (card.traits || []).some(trait => lower(trait) === 'spell')
+  || CARD_TEXTS(card).some(text => /\[\[spell\]\]/i.test(text))
+// 「额外限制：无等级 1-5 的[[武器]]卡牌」这类 `not: true` 规则是**排除项**，不是允许项：
+// 其余字段命中即整张牌不能进牌组（与 `not: {…}` 的否定式允许项互不冲突）。
+export function optionExcluded(investigator, card) {
+  for (const rule of deckRules(investigator).options) {
+    if (rule.not !== true) continue
+    const { not, ...rest } = rule
+    if (matchesCardRule(card, rest, investigator)) return true
+  }
+  return false
+}
 export function matchesCardRule(card, rule, investigator) {
   if (investigator.code === UI_CARDS.deckRules.noFortuneInvestigator
     && (card.traits || []).some(trait => lower(trait) === 'fortune')) return false
   const known = new Set(['factions', 'faction', 'level', 'types', 'traits', 'trait', 'uses', 'tag',
-    'atleast', 'error', 'limit', 'not', 'codes', 'investigatorTraits'])
+    'atleast', 'error', 'limit', 'not', 'codes', 'investigatorTraits', 'text'])
   if (Object.keys(rule).some(key => !known.has(key))) return false
-  if (rule.not && matchesCardRule(card, rule.not, investigator)) return false
+  if (rule.not && typeof rule.not === 'object' && matchesCardRule(card, rule.not, investigator)) return false
+  if (rule.text?.length) {
+    const patterns = (Array.isArray(rule.text) ? rule.text : [rule.text])
+      .map(source => { try { return new RegExp(source, 'i') } catch { return null } })
+      .filter(Boolean)
+    if (!patterns.some(pattern => CARD_TEXTS(card).some(text => pattern.test(text)))) return false
+  }
   const factions = card.factions || [card.klass, card.klass2, card.klass3].filter(Boolean)
   const allowed = rule.factions || rule.faction
   if (allowed?.length && !allowed.some(faction => factions.includes(faction))) return false
@@ -52,8 +76,10 @@ export function matchesCardRule(card, rule, investigator) {
   if (rule.uses?.length && !rule.uses.map(lower).some(use => printedUses.includes(use))) return false
   if (rule.tag?.length) {
     const tags = rule.tag.map(lower)
-    if (tags.some(tag => tag !== 'uc')) return false
+    if (tags.some(tag => !KNOWN_DECK_TAGS.includes(tag))) return false
     if (tags.includes('uc') && !printedUses.some(use => ['charge', 'charges'].includes(use))) return false
+    if (tags.includes('hh') && !healsHorror(card)) return false
+    if (tags.includes('st') && !isSpellCard(card)) return false
   }
   if (rule.investigatorTraits?.length && !rule.investigatorTraits.some(trait => (investigator.traits || []).map(lower).includes(lower(trait)))) return false
   const xp = card.xp || 0
@@ -72,6 +98,10 @@ export function validateDeckRules(investigator, codes, cards, { partial = false 
   const errors = []
   const ordinary = codes.map(code => cards[code]).filter(card => card && !card.signatureFor && !card.subtype && !card.story)
   for (const code of codes) if (!cards[code]) errors.push(`未知卡牌：${code}`)
+  // 排除式构筑限制（`not: true`）：命中的卡不能进牌组，且不受其它允许项豁免。
+  for (const card of ordinary) {
+    if (optionExcluded(investigator, card)) errors.push(`${card.name || card.code} 属于构筑限制排除的卡牌`)
+  }
   const counted = ordinary.filter(card => !card.permanent && !card.ignoreDeckLimit)
   if ((!partial && counted.length !== rules.size) || counted.length > rules.size) errors.push(`牌库需 ${rules.size} 张玩家卡，当前 ${counted.length} 张`)
   const names = new Map()
@@ -129,6 +159,8 @@ export const CAMPAIGN_CYCLES = Object.freeze({
   theDunwichLegacy: 2,
   thePathToCarcosa: 3,
   theForgottenAge: 4,
+  // 第 5 步（P6）：调查员已可选。战役本身仍是 catalog-only，登记循环只影响渐进式卡池的判定。
+  theCircleUndone: 5,
 })
 export function normalizeCardPoolScope(scope) {
   return CARD_POOL_SCOPES.includes(scope) ? scope : 'all'

@@ -237,6 +237,14 @@ function executeDescriptor(state, { inv, source, descriptor, context = {}, event
       ? options
       : { ...options, assetId: sourceAsset.id }),
   } : baseApi
+  // 第 5 步 P6：「治疗恐惧后」窗口要知道是哪张卡的效果在治疗（卡洛琳·弗恩）。
+  const healingApi = {
+    ...api,
+    healHorror: (seat, amount, options = {}) => api.healHorror(seat, amount, {
+      healerSeat: inv.seat, cardCode: descriptor.code, ...options,
+    }),
+    healAsset: (card, spec = {}) => api.healAsset(card, { owner: inv, cardCode: descriptor.code, ...spec }),
+  }
   const ctx = {
     state, seat: inv.seat, inv,
     source: source || { code: descriptor.code },
@@ -250,19 +258,47 @@ function executeDescriptor(state, { inv, source, descriptor, context = {}, event
     // 这里还原成实体（enemy / investigator / location / asset / cardInHand）。
     targetId: context?.targetId ?? null,
     target: resolveTarget(state, inv, descriptor.target, context?.targetId, { source, windowId, context }),
-    api,
+    api: healingApi,
   }
-  descriptor.resolve?.(ctx)
-  // 描述子也可以只声明旧式 effect（例如「花 1 子弹攻击」），由效果解释器结算。
-  // Phase 5：legalMoves 已经让玩家/AI 选好 targetId，effect 数据体必须像旧式能力那样
-  // 收到同一份目标（doAbility 的 applyAbilityTarget），否则解释器会再问一次目标。
-  if (!descriptor.resolve && descriptor.effect) {
-    let effectData = { ...descriptor.effect, assetId: source?.id ?? descriptor.code }
-    if (ctx.targetId != null) effectData = applyAbilityTarget(effectData, ctx.targetId)
-    if (context?.optionIndex != null) effectData = { ...effectData, optionIndex: context.optionIndex }
-    resolveEffect(state, inv.seat, effectData, makeRuntime(state, events))
+  // 第 5 步 P6：结算期间记录「正在结算的是哪张卡」——取消/忽略效果的记账（cardCancelled）
+  // 与「放在黛安娜底下」都靠它，不要求每个取消路径各传一次卡号。
+  const previousResolving = state._resolvingCardCode
+  const previousResolvingSeat = state._resolvingSeat
+  state._resolvingCardCode = descriptor.code
+  state._resolvingSeat = inv.seat
+  try {
+    descriptor.resolve?.(ctx)
+    // 描述子也可以只声明旧式 effect（例如「花 1 子弹攻击」），由效果解释器结算。
+    // Phase 5：legalMoves 已经让玩家/AI 选好 targetId，effect 数据体必须像旧式能力那样
+    // 收到同一份目标（doAbility 的 applyAbilityTarget），否则解释器会再问一次目标。
+    if (!descriptor.resolve && descriptor.effect) {
+      let effectData = { ...descriptor.effect, assetId: source?.id ?? descriptor.code }
+      if (ctx.targetId != null) effectData = applyAbilityTarget(effectData, ctx.targetId)
+      if (context?.optionIndex != null) effectData = { ...effectData, optionIndex: context.optionIndex }
+      resolveEffect(state, inv.seat, effectData, makeRuntime(state, events))
+    }
+  } finally {
+    if (previousResolving === undefined) delete state._resolvingCardCode
+    else state._resolvingCardCode = previousResolving
+    if (previousResolvingSeat === undefined) delete state._resolvingSeat
+    else state._resolvingSeat = previousResolvingSeat
   }
   if (handCode) disposePlayedEvent(inv, handCode)
+  // 「放在某张调查员底下」的延后结算（黛安娜·史丹利的反应）：
+  // 反应在取消的当刻结算，而取消方那张事件卡要到这里才进弃牌堆，所以先记账、再搬运。
+  if (Array.isArray(state.deferredBeneath) && state.deferredBeneath.length) {
+    const pending = state.deferredBeneath
+    delete state.deferredBeneath
+    for (const item of pending) {
+      const owner = state.investigators[item.seat]
+      if (!owner) continue
+      const discardIndex = (owner.discard || []).indexOf(item.code)
+      if (discardIndex >= 0) owner.discard.splice(discardIndex, 1)
+      owner.beneath ||= []
+      owner.beneath.push(item.code)
+      if (item.log !== false) info(state, events, `「${cardName(item.code)}」被放在 ${owner.name} 底下。`)
+    }
+  }
   // Phase 5（D2）：discardWhenEmpty 也可以写在注册表条目上（与 uses/usesType 同层）。
   const entry = registeredEntry(descriptor.code)
   const discardWhenEmpty = entry?.discardWhenEmpty

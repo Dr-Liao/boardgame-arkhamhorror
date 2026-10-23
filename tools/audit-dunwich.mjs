@@ -4,8 +4,8 @@ import { contentRegistry } from '../content/registered.js'
 import { scenarioZoneReport } from '../content/scenario-manifest.js'
 import { missingMechanics } from '../content/mechanics.js'
 import { chapters } from '../content/campaigns/theDunwichLegacy/shared.js'
-import { effects as playerEffects } from '../content/packs/dunwichPlayer/effects.js'
-import { implementedTreacheries } from '../content/campaigns/theDunwichLegacy/encounter-rules.js'
+import { abilityLayerCodes } from '../content/packs/dunwichPlayer/manifest.js'
+import { NON_PLAYER_ABILITY_ENTRIES } from '../src/cards/encounter-abilities.js'
 
 const sources = [
   'Campaign/Campaigns/TheDunwichLegacy.hs',
@@ -27,13 +27,20 @@ const sourceHashes = await Promise.all(sources.map(async path => ({ path,
 const treacheries = new Map(chapters.flatMap(chapter =>
   Object.values(contentRegistry.getScenarioData(chapter.id).treacheries || {})).map(card => [card.code, card]))
 const pendingTreacheries = [...treacheries.values()].filter(card => card.rulesPending).map(card => card.code).sort()
+// 一卡一文件之后，「遭遇处理器」的事实源是条目声明的 encounterResolve，不再读
+// encounter-rules.js 的手写卡号集合（那次重构已删除该导出）。
+const sharedEncounterHandlers = NON_PLAYER_ABILITY_ENTRIES
+  .filter(entry => /^02\d{3}[a-z]?$/.test(entry.code) && typeof entry.encounterResolve === 'function')
+  .map(entry => entry.code)
+  .sort()
 const report = {
   schemaVersion: 1, milestone: 'D11', campaignId: 'theDunwichLegacy',
   status: contentRegistry.getCampaign('theDunwichLegacy').status,
   playable: true, equivalenceCertified: false,
   verifiedScope: 'D11 开放大厅战役入口；八章、五位调查员、专属卡与弱点、91 张敦威治玩家卡、遭遇与混乱标记规则均已接入。仍属于本 Mod 的简化规则实现，不声明与原版逐条等价。',
-  newlyPlayablePlayerCards: Object.keys(playerEffects),
-  sharedEncounterHandlers: [...implementedTreacheries],
+  // 一卡一文件后 effects.js 只剩注释；可玩玩家卡的唯一来源是包清单的 abilityLayerCodes。
+  newlyPlayablePlayerCards: [...abilityLayerCodes],
+  sharedEncounterHandlers,
   encounterRuleCoverage: { total: treacheries.size, implemented: treacheries.size - pendingTreacheries.length,
     pending: pendingTreacheries },
   investigators: { mainAbilities: ['02001', '02002', '02003', '02004', '02005'],

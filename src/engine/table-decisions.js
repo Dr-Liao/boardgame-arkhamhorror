@@ -4,6 +4,7 @@
 import { investigatorRule } from '../cards/card-rules.js'
 import { allowsCard, cardPoolContext } from '../deck/card-pool.js'
 import { locationEntryNotice } from './location-facts.js'
+import { mulliganCandidates } from './tarot-slot.js'
 
 export function createTableDecisions(deps) {
   const {
@@ -208,6 +209,20 @@ export function createTableDecisions(deps) {
     return assetEffect(inv, card)?.abilities?.[move.abilityIndex] || null
   }
 
+  // 第 5 步 P6：「这个行动是不是『打出法术卡牌 / 激活法术能力』」——法术专用额外行动（玛丽·朗博）
+  // 的唯一判据。特性判定走卡面数据，复制事件（彩绘世界）按被复制的那张看。
+  function isSpellAction(state, inv, move) {
+    if (!move || move.action == null || !inv) return false
+    const hasSpell = code => (cardDef(code)?.traits || [])
+      .some(trait => String(trait).toLowerCase() === 'spell')
+    if (move.action === 'play') return hasSpell(move.copyCode || move.cardId)
+    if (move.action === 'ability') {
+      const card = controlledAbilityCard(inv, move.assetId)
+      return Boolean(card) && hasSpell(card.code)
+    }
+    return false
+  }
+
   function actionKind(state, inv, move) {
     if (move.action === 'scenarioAction' || move.action === 'encounterAction') {
       const declared = move.actionKind || scenarioBehavior(state).actionKind?.(state, inv, move)
@@ -231,7 +246,11 @@ export function createTableDecisions(deps) {
     // Phase 5：描述子用 resolve 实现时没有 effect 数据体，「按哪种行动结算」写在 countsAs 上
     // （旧式能力写在 effect.kind 上，见「意志闪避」）。
     const ability = move.action === 'ability' ? abilityOfMove(state, inv, move) : null
+    // 第 2 步 P2.7：描述子可以直接声明自己按哪种行动结算（谈判 / 阵法 …），优先于旧的 countsAs。
+    if (ability?.descriptor?.actionKind) return ability.descriptor.actionKind
     if (ability?.descriptor?.countsAs) return ability.descriptor.countsAs
+    // 非玩家实体上的通用行动（谈判等）在 move 上带 actionKind，这里直接返回。
+    if (move.action === 'entityAbility' && move.actionKind) return move.actionKind
     // 失落时代的卡牌能力在 effect.kind 里声明自己属于攻击/躲避，避免被当成普通行动引发借机攻击。
     return actionEffect?.kind || actionEffect?.type || move.action
   }
@@ -287,6 +306,8 @@ export function createTableDecisions(deps) {
     // 幕间可能禁止下一场冒险换起始手牌（例如没有汽油 / 没有粉笔）。
     const noMulligan = consumeMulliganBlock(state)
     for (const inv of state.investigators) {
+      // 第 2 步 P2.6：无牌组故事调查员没有起始手牌，直接跳过换牌。
+      if (inv.storyInvestigator) continue
       if ((noMulligan || inv.cannotMulligan) && !investigatorRule(inv.code)?.openingHandSize) {
         info(state, events, `${inv.name} 必须保留起始手牌（幕间效果禁止换牌）。`)
         delete inv.cannotMulligan
@@ -320,7 +341,9 @@ export function createTableDecisions(deps) {
       }
       const held = []
       while (true) {
-        const options = [{ id: 'done', label: held.length ? '确认换牌' : '保留起始手牌' }, ...inv.hand.map((code, i) => ({ id: String(i), label: '换掉：' + cardName(code) }))]
+        // 第 2 步 P2.9：cannotMulliganAway 的卡（高塔）不在换牌候选里。
+        const options = [{ id: 'done', label: held.length ? '确认换牌' : '保留起始手牌' },
+          ...mulliganCandidates(inv, registeredEntry).map(({ code, index }) => ({ id: String(index), label: '换掉：' + cardName(code) }))]
         const answer = requestChoice(state, { kind: 'mulligan', source: 'opening-hand', seat: inv.seat, prompt: '选择要更换的起始手牌，完成后确认。', options, canSkip: true })
         if (answer === 'done') break
         held.push(inv.hand.splice(Number(answer), 1)[0])
@@ -373,5 +396,5 @@ export function createTableDecisions(deps) {
     }
   }
 
-  return { decisionSeat, actingSeats, seatLocalMove, hubActingSeats, initialHubScenarioMoves, hubInvestigatorChoices, initialHubPreparation, hubStartingDeckReady, validateHubMove, autoHubMove, decisionSeed, moveCost, cardPlayBlockedReason, jakeSkipsOpportunityAttack, canUseExtraEvade, abilityOfMove, actionKind, actionPreview, consumeStartingAdjustments, consumeMulliganBlock, runMulligans, useGoldPocketWatch, resolveCallOfTheUnknown }
+  return { decisionSeat, actingSeats, seatLocalMove, hubActingSeats, initialHubScenarioMoves, hubInvestigatorChoices, initialHubPreparation, hubStartingDeckReady, validateHubMove, autoHubMove, decisionSeed, moveCost, cardPlayBlockedReason, jakeSkipsOpportunityAttack, canUseExtraEvade, abilityOfMove, actionKind, isSpellAction, actionPreview, consumeStartingAdjustments, consumeMulliganBlock, runMulligans, useGoldPocketWatch, resolveCallOfTheUnknown }
 }

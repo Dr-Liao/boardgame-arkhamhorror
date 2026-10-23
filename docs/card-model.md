@@ -2,10 +2,9 @@
 
 > 日期：2026-02。这是**模型规格**，不是实现说明：它定义"一张卡的行为可以写成什么"，
 > 后续迁移（Phase 1/2/5）按它写，注册表按它校验。
-> 稳态架构见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md)，阶段与判据见
-> [`architecture-refactor-roadmap.md`](architecture-refactor-roadmap.md)，内容迁移流程见
+> 稳态架构见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md)，内容迁移流程见
 > [`arkham-content-migration.md`](arkham-content-migration.md)，
-> Phase 2 八项原语的用法与对照表见 [`phase2-primitives.md`](phase2-primitives.md)。
+> Phase 2 八项原语的读点契约见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §3.2–§3.3。
 
 ---
 
@@ -333,6 +332,6 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 7. 跑 `npm run cards:audit:write`（白名单收缩）+ `npm run test:fast`，指标下降即迁移成立的证据；
    若该卡属于有验收账本的战役，再按对应 `audit:*:acceptance` 重新生成账本哈希；
 8. 用 replay 基线证明"行为零变化"：迁移前 `node tools/replay-fixtures.mjs --baseline <文件>`，
-   改完 `--compare <文件>`（命令与判定口径见 [`phase4-replay.md`](phase4-replay.md) §4）。
+   改完 `--compare <文件>`（命令与判定口径见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md#53-重放撤销与迁移对比)）。
 
 **判据**：旧通道表达不了才迁；纯数据卡不迁成闭包（见路线文档 §7）。

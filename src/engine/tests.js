@@ -1,4 +1,6 @@
 import { enemyRuleFlags, investigatorRule } from '../cards/card-rules.js'
+import { SKILL_NAMES } from './presentation-constants.js'
+import { handCommitBlocker } from './tarot-slot.js'
 // 技能检定主流程（performTest）从 engine.js 拆出的最大模块（Phase 6 · 6d-12）。
 //
 // 一次检定跨 ST.1–ST.8 八个阶段：投入 → 揭示标记 → 结算修正 → 结果回调 → 收尾。
@@ -7,6 +9,27 @@ import { enemyRuleFlags, investigatorRule } from '../cards/card-rules.js'
 // 主流程本身搬走后，engine.js 只剩各域动作与阶段机的调度。
 //
 // 依赖注入同前；resolve 回调不可序列化，仍然挂在 WeakMap（见 engine.js 的 testResolvers）。
+
+// 第 2 步 P2.5：技能可以是单个技能名，也可以是 2–4 个技能的数组（阵法）。
+// 规范化在进入检定流程前完成，单技能调用得到 ['<skill>']，后续求和与单值完全一致。
+// 技能名表与引擎其它日志同源（presentation-constants），不复制中文。
+const TEST_SKILL_NAMES = Object.freeze({ ...SKILL_NAMES, wild: '万能' })
+
+export function normalizeTestSkills(skill) {
+  const list = Array.isArray(skill) ? skill : [skill]
+  if (!list.length) throw new Error('技能检定至少需要一个技能')
+  for (const name of list) {
+    if (typeof name !== 'string' || !TEST_SKILL_NAMES[name]) throw new Error(`未知技能：${JSON.stringify(name)}`)
+  }
+  if (list.length > 4) throw new Error(`一次检定最多使用 4 项技能（收到 ${list.length} 项）`)
+  return [...list]
+}
+
+// 单技能时返回与旧实现逐字一致的标签（'智识'），多技能用 '+' 连接（'意志+智识'）。
+export function testSkillLabel(skill) {
+  const list = Array.isArray(skill) ? skill : [skill]
+  return list.map(name => TEST_SKILL_NAMES[name] || name).join('+')
+}
 
 export function createPerformTest(deps) {
   const {
@@ -87,14 +110,20 @@ function runLocationTestFail(state, inv, result, events) {
 
 function performTest(state, seat, skill, difficulty, options = {}) {
   beginChaosTest(state)
+  // P2.5：多技能合成检定。单技能时 skillList=[skill]，所有求和退化为原值，行为逐字不变。
+  const skillList = normalizeTestSkills(skill)
+  const skillContext = skillList.length === 1 ? skillList[0] : [...skillList]
+  const skillLabel = testSkillLabel(skillList)
+  const skillTotal = () => skillList.reduce((sum, name) => sum + getStat(state, inv, name), 0)
   const previousTest = state.skillTest || null
-  state.skillTest = { seat, skill, difficulty: Math.max(0, difficulty), stage: 'ST.1', committed: [], publicLog: [...state.log],
-    source: options.source || { type: 'effect', label: '卡牌效果检定', name: SKILL_NAMES[skill] + '检定' } }
+  state.skillTest = { seat, skill: skillContext, difficulty: Math.max(0, difficulty), stage: 'ST.1', committed: [], publicLog: [...state.log],
+    ...(options.actionKind ? { actionKind: String(options.actionKind) } : {}),
+    source: options.source || { type: 'effect', label: '卡牌效果检定', name: skillLabel + '检定' } }
   const inv = state.investigators[seat]
   const events = []
   difficulty = Math.max(0, difficulty)
   // 全局难度修正（03288 北部塔楼：a 密谋毁灭多于 c 时所有技能检定 -1）。
-  const globalDifficulty = scenarioBehavior(state).testDifficultyModifier?.(state, inv, skill, difficulty, options.source) || 0
+  const globalDifficulty = scenarioBehavior(state).testDifficultyModifier?.(state, inv, skillContext, difficulty, options.source) || 0
   if (globalDifficulty) {
     difficulty = Math.max(0, difficulty + globalDifficulty)
     state.skillTest.difficulty = difficulty
@@ -104,7 +133,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     delete inv.nextTestNoTokens
     state.skillTest.skipTokens = true
   }
-  const statReference = getStat(state, inv, skill)
+  const statReference = skillTotal()
   const startingStat = options.baseValue ?? statReference
   // Phase 5（5a-8）：「谈判」检定难度降低由条目级 negotiationDifficultyReduction 声明。
   const negotiationReduction = inv.assets.reduce((sum, asset) => sum + (registeredEntry(asset.code)?.negotiationDifficultyReduction || 0), 0)
@@ -129,19 +158,20 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     inv.testBonus = 0
   }
 
-  state.skillTest.printedValue = options.baseValue ?? (inv[skill] || 0)
+  state.skillTest.printedValue = options.baseValue ?? skillList.reduce((sum, name) => sum + (inv[name] || 0), 0)
   state.skillTest.baseValue = startingStat
   state.skillTest.value = value
 
   // 「追忆未来」等：技能检定开始（投入之前）的反应窗口。
   {
-    const context = { when: 'testBegins', seat, location: inv.location, skill, difficulty, baseValue: statReference }
+    const context = { when: 'testBegins', seat, location: inv.location, skill: skillContext, difficulty, baseValue: statReference,
+      ...(options.actionKind ? { actionKind: String(options.actionKind) } : {}) }
     triggerReaction(state, seat, 'testBegins', events, context)
-    reactionWindow(state, 'testBegins', { ...context, prompt: `${inv.name} 的${SKILL_NAMES[skill]}检定开始` }, events)
+    reactionWindow(state, 'testBegins', { ...context, prompt: `${inv.name} 的${skillLabel}检定开始` }, events)
   }
   // 「手稿」等：显现效果期间的检定可以提前取消混乱标记。
   if (state._treacheryResolving) {
-    const context = { when: 'revelationTest', seat, location: inv.location, skill, difficulty }
+    const context = { when: 'revelationTest', seat, location: inv.location, skill: skillContext, difficulty }
     triggerReaction(state, seat, 'revelationTest', events, context)
     for (const other of aliveInvestigators(state).filter(owner => owner.location === inv.location)) {
       if (other.seat !== seat) triggerReaction(state, other.seat, 'revelationTestAlly', events, context)
@@ -152,7 +182,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   playerWindow(state, 'test.beforeCommit', events, seat)
   value += state.skillTest.pendingBonus || 0
   state.skillTest.pendingBonus = 0
-  value += applyFreeTriggers(state, inv, skill, events)
+  value += applyFreeTriggers(state, inv, skillContext, events)
   state.skillTest.stage = 'ST.2'
 
   const committed = []
@@ -172,14 +202,16 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   for (const owner of testOwners) {
     let count = 0
     while (true) {
-      state.skillTest.value = value + getStat(state, inv, skill) - statReference
+      state.skillTest.value = value + skillTotal() - statReference
       const candidates = owner.hand.map((code, index) => ({ code, index }))
         .filter(() => !(cannotCommit && owner === inv))
+        // 第 2 步 P2.9：手牌里有「不能投入」的卡（高塔）时，本人不能投入任何卡牌。
+        .filter(() => !(owner === inv && handCommitBlocker(inv, registeredEntry)))
         .filter(item => {
           const rule = hiddenRule(state, item.code)
           if (hasHiddenCard(owner, item.code)) return rule?.allowCommit === true
           return runtimeCardAvailable(state, owner, item.code) && !isWeaknessCode(item.code)
-            && (commitIcons(state, owner, item.code, skill) > 0 || commitProfile(item.code)?.anySkill === true)
+            && (commitIcons(state, owner, item.code, skillList) > 0 || commitProfile(item.code)?.anySkill === true)
         })
         .filter(item => lolaCanUseCard(owner, item.code))
         .filter(item => !activeHiddenRules(state, owner).some(hidden =>
@@ -188,14 +220,14 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         .filter(item => owner === inv || !commitProfile(item.code)?.selfTestOnly)
         .filter(item => !commitProfile(item.code)?.requireClueAtLocation || (state.locations.find(loc => loc.id === owner.location)?.clues || 0) > 0)
         .filter(item => !commitProfile(item.code)?.requireDifficultyAboveBase
-          || difficulty - getStat(state, inv, skill) >= commitProfile(item.code).requireDifficultyAboveBase)
+          || difficulty - skillTotal() >= commitProfile(item.code).requireDifficultyAboveBase)
         .filter(item => commitProfile(item.code)?.remainingSanityAtMost == null
           || getMaxSanity(owner) - owner.horror <= commitProfile(item.code).remainingSanityAtMost)
         .filter(item => !commitProfile(item.code)?.requireEngagedEnemy || enemiesEngagedWith(state, owner).length > 0)
         .filter(item => !commitProfile(item.code)?.maxPerTest
           || commitments.filter(committed => committed.code === item.code).length < commitProfile(item.code).maxPerTest)
         // 「重拾信念」等：可投入任意类型检定（不要求匹配图标）。
-        .filter(item => hasHiddenCard(owner, item.code) || commitProfile(item.code)?.anySkill || commitIcons(state, owner, item.code, skill) > 0 || committedCodes.has(item.code))
+        .filter(item => hasHiddenCard(owner, item.code) || commitProfile(item.code)?.anySkill || commitIcons(state, owner, item.code, skillList) > 0 || committedCodes.has(item.code))
         // 「殊死一搏」：只能单独投入。
         .filter(item => hasHiddenCard(owner, item.code) || !commitProfile(item.code)?.noOtherCommits || commitments.length === 0)
         // 已投入「殊死一搏」时不能再投入其他牌。
@@ -211,9 +243,9 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       if (kingInYellow && count === 0 && candidates.length < 3) candidates.length = 0
       if (owner !== inv && (!candidates.length || (!kingInYellow && count >= 1))) break
       const canFinish = !kingInYellow || count === 0 || count >= 3
-      const answer = requestChoice(state, { kind: 'commit', source: `test:${seat}:${skill}`, seat: owner.seat,
-        prompt: owner === inv ? `${inv.name} 的${SKILL_NAMES[skill]}检定：投入手牌后，可直接检定或求助队友。`
-          : `${inv.name} 请求协助${SKILL_NAMES[skill]}检定；你可以投入一张牌，或放弃协助。`, canSkip: true,
+      const answer = requestChoice(state, { kind: 'commit', source: `test:${seat}:${skillList.join(',')}`, seat: owner.seat,
+        prompt: owner === inv ? `${inv.name} 的${skillLabel}检定：投入手牌后，可直接检定或求助队友。`
+          : `${inv.name} 请求协助${skillLabel}检定；你可以投入一张牌，或放弃协助。`, canSkip: true,
         options: [...(canFinish ? [{ id: 'done', label: owner === inv ? '开始检定' : '放弃协助' }] : []),
           ...(owner === inv && helpers.length ? [{ id: 'help', label: '求助' }] : []),
           ...candidates.map(item => ({ id: String(item.index), label: '投入：' + cardName(item.code) }))] })
@@ -226,7 +258,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       }
       const code = owner.hand.splice(Number(answer), 1)[0]
       if (hasHiddenCard(owner, code)) removeHiddenMarker(owner, code)
-      let icons = commitIcons(state, owner, code, skill)
+      let icons = commitIcons(state, owner, code, skillList)
       // 「殊死一搏」：手牌越多失去越多万能图标；「占据先机」：本阶段每个行动减少 1 个万能图标。
       const skillRules = commitProfile(code)
       if (skillRules?.wildLosesPerHandCard) icons = Math.max(0, icons - owner.hand.length)
@@ -252,10 +284,10 @@ function performTest(state, seat, skill, difficulty, options = {}) {
           const used = Math.min(remaining, charged.uses); charged.uses -= used; remaining -= used
           if (!remaining) break
         }
-        icons += spend * (skill === 'willpower' ? 2 : 1)
+        icons += spend * (skillList.includes('willpower') ? 2 : 1)
       }
-      if (skillEffect?.iconsPerEngagedEnemy?.includes(skill)) icons += enemiesEngagedWith(state, owner).length
-      if (owner !== inv && commitProfile(code)?.leadership) icons += skill === 'willpower' ? 2 : 1
+      if (skillList.some(name => skillEffect?.iconsPerEngagedEnemy?.includes(name))) icons += enemiesEngagedWith(state, owner).length
+      if (owner !== inv && commitProfile(code)?.leadership) icons += skillList.includes('willpower') ? 2 : 1
       icons += minhCommitWildBonus(state, owner, events)
       const commitLocation = state.locations.find(location => location.id === owner.location)
       const hookMultiplier = scenarioBehavior(state).commitIconMultiplier?.(state, owner, commitLocation)
@@ -294,7 +326,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     }
   }
 
-  state.skillTest.value = value + getStat(state, inv, skill) - statReference
+  state.skillTest.value = value + skillTotal() - statReference
   const doubleOrNothing = commitments.some(item => commitProfile(item.code)?.doubleDifficultyAndRewards)
   if (doubleOrNothing) {
     difficulty *= 2
@@ -310,8 +342,8 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   playerWindow(state, 'test.afterCommit', events, options.peril || !state.skillTest.helpRequested ? seat : null)
   value += state.skillTest.pendingBonus || 0
   state.skillTest.pendingBonus = 0
-  value += applyFreeTriggers(state, inv, skill, events)
-  value += getStat(state, inv, skill) - statReference
+  value += applyFreeTriggers(state, inv, skillContext, events)
+  value += skillTotal() - statReference
   state.skillTest.stage = 'ST.3'
   const sealElderSign = commitments.some(item => commitProfile(item.code)?.elderSignInsteadOfChaos)
   const closeTest = resolved => {
@@ -357,11 +389,11 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     // Public, confirmed result for the UI. Transaction replay already deduplicates
     // emitted events across choice pauses; no random draw happens in the client.
     state._resolution?.events.push({ type: 'presentation', kind: 'test', seat, name: inv.name,
-      skill, value: result.value, difficulty: result.difficulty, success: result.success,
+      skill: skillContext, value: result.value, difficulty: result.difficulty, success: result.success,
       autoFail: !!result.autoFail, drawn: [...result.drawn], source: state.skillTest.source })
     // Phase 2（B3）：标准化结果。三处共用一份：options.resolve 的入参、窗口的 ctx.result、
     // state.lastTestResult（结算后仍可读，随存档往返），以及 api.test() 的返回值。
-    summary = summarizeTestResult(state.skillTest, { ...result, seat, skill })
+    summary = summarizeTestResult(state.skillTest, { ...result, seat, skill: skillContext })
     state.lastTestResult = summary
     // 就地写入：调用方（performTest 的返回值、afterTest、窗口条件）拿到的是同一个对象。
     result.summary = summary
@@ -655,7 +687,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     if (res.autoFail) autoFail = true
     if (res.cancelCommitted && !committedCancelled) {
       const cancelled = commitments.filter(item => cardDef(item.code)?.type === 'skill')
-      value -= cancelled.reduce((sum, item) => sum + commitIcons(state, state.investigators[item.seat], item.code, skill), 0)
+      value -= cancelled.reduce((sum, item) => sum + commitIcons(state, state.investigators[item.seat], item.code, skillList), 0)
       for (const item of cancelled) commitments.splice(commitments.indexOf(item), 1)
       state.skillTest.cancelledCommitments = cancelled.map(item => ({ ...item }))
       committedCancelled = true
@@ -729,14 +761,14 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   if (autoFail) {
     state.skillTest.stage = 'ST.6'
     for (const fx of pendingOnFail.filter(fx=>fx.type!=='drawEnemyTrait')) applyTokenFx(state, seat, inv, fx, events)
-    triggerReaction(state, seat, 'skillTestFail', events, { skill, difficulty, failedBy: Math.max(0, difficulty),
+    triggerReaction(state, seat, 'skillTestFail', events, { skill: skillContext, difficulty, failedBy: Math.max(0, difficulty),
       committed: commitments.map(item => ({ ...item })) })
-    const result = { success: false, value: 0, difficulty, skill, token: 'autofail', committed, autoFail: true, drawn, cancelledTokens, source: options.source || null, damageBonus: 0, clueBonus: 0 }
+    const result = { success: false, value: 0, difficulty, skill: skillContext, token: 'autofail', committed, autoFail: true, drawn, cancelledTokens, source: options.source || null, damageBonus: 0, clueBonus: 0 }
     state.skillTest.stage = 'ST.7'
     resolveResult(result)
     scenarioBehavior(state).afterTest?.(state, inv, result, scenarioRuntime(state, events))
     runLocationTestFail(state, inv, result, events)
-    campaignFailedTestWindow(state, seat, { skill, difficulty, baseValue: statReference, source: options.source,
+    campaignFailedTestWindow(state, seat, { skill: skillContext, difficulty, baseValue: statReference, source: options.source,
       peril: options.peril, resolve: options.resolve, failedBy: difficulty }, events)
     return result
   }
@@ -752,7 +784,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   if (!elderAutoSuccess && value < difficulty) {
     // Phase 2（B3）：窗口上下文带上标准化的当前结果（ctx.result），
     // 内容层不需要再从 testValue/difficulty 自己算差额。
-    const context = { when: 'testWouldFail', seat, location: inv.location, skill, difficulty, testValue: value,
+    const context = { when: 'testWouldFail', seat, location: inv.location, skill: skillContext, difficulty, testValue: value,
       testBonus: 0, prompt: '技能检定将要失败', result: pendingTestResult(state.skillTest) }
     reactionWindow(state, 'testWouldFail', context, events)
     if (context.testBonus) {
@@ -762,7 +794,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   }
   value = Math.max(0, value)
   if (!elderAutoSuccess && value >= difficulty) {
-    const context = { when: 'wouldSucceedTest', seat, location: inv.location, skill, difficulty, testValue: value,
+    const context = { when: 'wouldSucceedTest', seat, location: inv.location, skill: skillContext, difficulty, testValue: value,
       testBonus: 0, prompt: '技能检定将要成功', result: pendingTestResult(state.skillTest) }
     reactionWindow(state, 'wouldSucceedTest', context, events)
     if (context.testBonus) {
@@ -772,13 +804,19 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   }
   state.skillTest.value = value
   state.skillTest.stage = 'ST.6'
+  // 第 5 步 P6：（故事）调查员可以在检定期内直接降低本次难度（`api.reduceTestDifficulty`）。
+  // 与「技能 +N」分开记：判定用扣减后的难度，展示与结果摘要也读同一份。
+  if (state.skillTest.difficultyReduction) {
+    difficulty = Math.max(0, difficulty - state.skillTest.difficultyReduction)
+    state.skillTest.difficulty = difficulty
+  }
   const success = elderAutoSuccess || value >= difficulty
   // 任意技能检定成功的统一反应窗口（04107 幸运烟盒等）。
   if (success) triggerReaction(state, seat, 'skillTestSuccess', events,
-    { skill, successBy: value - difficulty, difficulty, value })
+    { skill: skillContext, successBy: value - difficulty, difficulty, value })
   // 「埃兹特里之牙」：结算诡计卡上的能力时检定成功后可以横置抽牌。
   if (success && state._treacheryResolving) {
-    triggerReaction(state, seat, 'treacheryTestSuccess', events, { location: inv.location, skill, cardCode: state._treacheryResolving })
+    triggerReaction(state, seat, 'treacheryTestSuccess', events, { location: inv.location, skill: skillContext, cardCode: state._treacheryResolving })
   }
   if (!success) {
     for (const fx of pendingOnFail.filter(fx=>fx.type!=='drawEnemyTrait')) applyTokenFx(state, seat, inv, fx, events)
@@ -871,7 +909,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       info(state, events, `${minh.name} 投入了至少6个匹配图标，弃置「${cardName(king.code)}」。`)
     }
   }
-  if (!success) triggerReaction(state, seat, 'skillTestFail', events, { skill, difficulty, failedBy: Math.max(0, difficulty - value),
+  if (!success) triggerReaction(state, seat, 'skillTestFail', events, { skill: skillContext, difficulty, failedBy: Math.max(0, difficulty - value),
     committed: commitments.map(item => ({ ...item })) })
   // 技能牌失败奖励（如「重拾信念」）。
   if (!success) {
@@ -884,7 +922,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       info(state, events, `${owner.name} 的「${cardName(item.code)}」检定失败奖励已结算。`)
     }
   }
-  const result = { success, value, difficulty, skill, token: drawn.at(-1), committed, autoFail, drawn, elderSign, cancelledTokens,
+  const result = { success, value, difficulty, skill: skillContext, token: drawn.at(-1), committed, autoFail, drawn, elderSign, cancelledTokens,
     rewardMultiplier: doubleOrNothing && success ? 2 : 1, source: options.source || null, ...skillFx }
   if (success && elderSign && !investigatorTextBlanked(state, inv)) result.damageBonus += investigatorRule(inv.code)?.elderSign?.attackDamageBonus || 0
   state.skillTest.stage = 'ST.7'
@@ -908,7 +946,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   }
   // 「学无止境」：检定失败并结算完后重新尝试该检定。
   if (!success) {
-    campaignFailedTestWindow(state, seat, { skill, difficulty, baseValue: statReference, source: options.source,
+    campaignFailedTestWindow(state, seat, { skill: skillContext, difficulty, baseValue: statReference, source: options.source,
       peril: options.peril, resolve: options.resolve, failedBy: Math.max(0, difficulty - value) }, events)
   }
   // 检定结束：本次检定内的效果到期（A1）。

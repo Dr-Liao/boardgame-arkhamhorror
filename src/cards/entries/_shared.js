@@ -10,6 +10,11 @@ export const investigatorSign = code => new Proxy({}, {
   get: (_, key) => registeredEntry(code)?.investigator?.elderSign?.[key],
 })
 
+// 跨条目的布尔标记与数据读点（第 5 步 P6）：卡文件只经能力层注册表查询，
+// 不 import 引擎装配点，也不在卡文件里写死另一张卡的实现细节。
+export const entryFlag = (code, key) => code ? registeredEntry(code)?.[key] === true : false
+export const entryData = (code, key) => (code ? registeredEntry(code)?.[key] ?? null : null)
+
 export const skillModifier = (skill, amount, condition) =>
   ({ target: `skill:${skill}`, amount, ...(condition ? { condition } : {}) })
 

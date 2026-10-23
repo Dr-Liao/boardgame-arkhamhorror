@@ -20,7 +20,7 @@
     "verified": 183,
     "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 374
+    "testsPassed": 376
   },
   "testFiles": [
     {
@@ -97,7 +97,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
-          "test": "Core 01002 黛西旧印没有书不抽牌，有书时可选择抽取或拒绝"
+          "test": "Core 01002 黛西旧印：检定失败不抽；成功后每控制一本书可抽 1（可选）"
         }
       ]
     },
@@ -948,6 +948,10 @@
           "test": "Core 01055 常驻属性在横置后仍有效"
         },
         {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01055 打出飞贼本身仍会引发借机攻击（只有脱身行动豁免）"
+        },
+        {
           "file": "games/arkhamhorror/tests/core-timing-acceptance.test.mjs",
           "test": "Core 01055 支援按印刷承伤容量被击败"
         }
@@ -1710,6 +1714,10 @@
         {
           "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
           "test": "Core 01105 议程一两个背面分支分别弃牌或队长受恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01108 01105 推进时演出文本取卡背 advanceText，而不是通用占位句"
         }
       ]
     },
@@ -1743,6 +1751,10 @@
       "type": "act",
       "status": "verified",
       "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
+          "test": "Core 01108 01105 推进时演出文本取卡背 advanceText，而不是通用占位句"
+        },
         {
           "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
           "test": "Core 01108 01111 01112 支付线索离开书房，四地点入场并删除书房"
@@ -2257,7 +2269,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
-          "test": "Core 01143 01169 场上毁灭不计入密谋阈值，推进密谋时也保留"
+          "test": "Core 01143 01169 场上毁灭计入密谋阈值，推进时仍保留"
         },
         {
           "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
@@ -2589,7 +2601,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
-          "test": "Core 01143 01169 场上毁灭不计入密谋阈值，推进密谋时也保留"
+          "test": "Core 01143 01169 场上毁灭计入密谋阈值，推进时仍保留"
         },
         {
           "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",

@@ -4,7 +4,7 @@ import { access } from 'node:fs/promises'
 import { chapters } from '../content/campaigns/theForgottenAge/shared.js'
 import { scenarioZoneReport } from '../content/scenario-manifest.js'
 import { TFA_STORY_TEXT } from '../content/campaigns/theForgottenAge/story-text.js'
-import { implementedTreacheries, implementedEnemies } from '../content/campaigns/theForgottenAge/encounter-rules.js'
+import { implementedFor } from '../src/cards/card-rules.js'
 
 const hash = content => createHash('sha256').update(content).digest('hex')
 // 浏览器验收结果由 `npm run test:tfa:rules:browser` 写入；没有产物时按未验收处理。
@@ -90,7 +90,9 @@ for (const chapter of chapters) {
   ]
   const declaredImplemented = module.implementedEncounterCodes
     ?? module.behavior.implementedEncounterCodes ?? []
-  const implemented = code => implementedTreacheries.has(code) || implementedEnemies.has(code)
+  // 第 121 轮：单卡条目化之后，「是否已实现」的事实源是条目的 implemented 声明
+  // （card-rules.implementedFor）；不再读 encounter-rules.js 的手写卡号集合。
+  const implemented = code => implementedFor(code)
     || declaredImplemented.includes?.(code) || declaredImplemented.has?.(code)
   const pendingEncounterCodes = encounterCodes.filter(code => !implemented(code))
   const gaps = [...(SCENARIO_GAPS[chapter.id] || [])]

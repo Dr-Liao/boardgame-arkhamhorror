@@ -35,6 +35,7 @@ export function createActions(deps) {
     executeDescriptor,
     exilePlayerCard,
     getStat,
+    hauntedAfterFail,
     info,
     investigateBonus,
     isWeaknessCard,
@@ -424,6 +425,9 @@ function doInvestigate(state, seat, opts, events, noSpend) {
     } else {
       info(state, events, `🔍 ${inv.name} 调查失败（${SKILL_NAMES[skill]} ${r.value} vs ${difficulty}，标记 ${tokenLabel(r.token)}）。`)
       reactionWindow(state, 'investigateFail', { when: 'investigateFail', seat, location: loc.id, failedBy: Math.max(0, difficulty - r.value), prompt: '调查检定失败后' }, events)
+      // 第四循环P2.1：闹鬼关键字——调查检定失败后结算该地点的每个闹鬼能力。
+      // 攻击/躲避失败由卡面（混乱标记/敌人强制能力）显式调用 api.haunted，不在这里触发。
+      hauntedAfterFail(state, seat, 'investigate', scenarioRuntime(state, events), events, { locationId: loc.id })
     }
   } })
 }

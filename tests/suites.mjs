@@ -117,6 +117,23 @@ export const FAST_TESTS = Object.freeze([
   'tfa-story.test.mjs', // 0.2
   'tfa-rules.test.mjs', // 0.3
   'tfa-supply-picker.test.mjs', // 0.1
+  'tcu-primitives-haunted.test.mjs', // 0.1 —— 万象无终第 2 步原语 P2.1（闹鬼）
+  'tcu-primitives-spectral-deck.test.mjs', // 0.1 —— 第 2 步原语 P2.2（幽灵界第二遭遇牌堆）
+  'tcu-primitives-spectral-location.test.mjs', // 0.1 —— 第 2 步原语 P2.3（幽灵地点与翻面）
+  'tcu-primitives-tarot.test.mjs', // 0.1 —— 第 2 步原语 P2.4（塔罗牌组）
+  'tcu-primitives-circle.test.mjs', // 0.1 —— 第 2 步原语 P2.5（阵法多技能检定）
+  'tcu-primitives-story-investigators.test.mjs', // 0.1 —— 第 2 步原语 P2.6（无牌组故事调查员）
+  'tcu-primitives-parley.test.mjs', // 0.1 —— 第 2 步原语 P2.7（通用谈判）
+  'tcu-primitives-bonded.test.mjs', // 0.1 —— 第 2 步原语 P2.8（绑定）
+  'tcu-primitives-tarot-slot.test.mjs', // 0.1 —— 第 2 步原语 P2.9（塔罗槽位与开局入场）
+  'tcu-primitives-campaign-records.test.mjs', // 0.1 —— 第 2 步原语 P2.10（Memento/看守人/战役资产）
+  'tcu-primitives-location-state.test.mjs', // 0.1 —— 第 2 步原语 P2.11（裂口/火盆）
+  'tcu-primitives-enemy-faces.test.mjs', // 0.1 —— 第 2 步原语 P2.12（异端者多面/放逐）
+  'tcu-primitives-cosmos.test.mjs', // 0.1 —— 第 2 步原语 P2.13（Cosmos/未知地点牌库）
+  'tcu-migration.test.mjs', // 0.2 —— 万象无终 P1：范围/三包/9 章占位/不可启动
+  'tcu-rules.test.mjs', // 0.2 —— 万象无终 P4：关键词清单/规则书条目/卡文直达/机制登记
+  'tcu-interactions.test.mjs', // 0.2 —— 万象无终 P5：塔罗/选人/闹鬼协议与面板模型
+  'tcu-investigators.test.mjs', // 0.2 —— 万象无终 P6：六位调查员 + 13 张专属卡 + 序章故事调查员逐人验收
 ])
 
 export const SLOW_TESTS = Object.freeze([

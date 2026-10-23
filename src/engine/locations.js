@@ -11,6 +11,47 @@ function locationRuleOf(loc) {
   return registeredEntry(loc?.originalCode || loc?.code)?.locationRule || null
 }
 
+// 第 2 步 P2.3：幽灵地点的单一读点。
+//   · 单面幽灵地点：定义里写 `spectral: true`；
+//   · 双面幽灵地点：翻到幽灵面后实例上 `spectralFace === 'spectral'`（同时维护 `spectral: true`）。
+// 「非幽灵地点」是默认值：任何没有声明的普通地点都返回 'normal'。
+export function spectralFaceOf(location) {
+  if (!location) return 'normal'
+  return location.spectralFace === 'spectral' || location.spectral === true ? 'spectral' : 'normal'
+}
+
+export function isSpectralLocation(state, locationId) {
+  const location = (state.locations || []).find(candidate => candidate.id === locationId)
+  return spectralFaceOf(location) === 'spectral'
+}
+
+// 第 2 步 P2.3 注册期校验：地点定义里的 `spectral` / `back` 写错时在装配内容时就失败。
+export function normalizeScenarioSpectralLocations(locations, origin = 'scenario.locations') {
+  const fail = message => { throw new Error(`幽灵地点无效（${origin}）：${message}`) }
+  const out = {}
+  for (const [id, location] of Object.entries(locations || {})) {
+    if (location?.spectral != null && typeof location.spectral !== 'boolean') {
+      fail(`${id}.spectral 必须是布尔值`)
+    }
+    const back = location?.back
+    if (back != null) {
+      if (typeof back !== 'object' || Array.isArray(back)) fail(`${id}.back 必须是对象`)
+      if (typeof back.code !== 'string' || !back.code) fail(`${id}.back.code 必须是非空字符串`)
+      if (back.name != null && typeof back.name !== 'string') fail(`${id}.back.name 必须是字符串`)
+      if (back.subname != null && typeof back.subname !== 'string') fail(`${id}.back.subname 必须是字符串`)
+      if (back.clues != null && (!Number.isInteger(back.clues) || back.clues < 0)) fail(`${id}.back.clues 必须是非负整数`)
+      out[id] = { ...(out[id] || {}), back: {
+        code: back.code,
+        ...(back.name != null ? { name: back.name } : {}),
+        ...(back.subname != null ? { subname: back.subname } : {}),
+        ...(back.clues != null ? { clues: back.clues } : {}),
+      } }
+    }
+    if (location?.spectral === true) out[id] = { ...(out[id] || {}), spectral: true }
+  }
+  return out
+}
+
 // A location entering play must be connected to the locations already in play
 // by its printed symbols, in both directions (A prints B's symbol, B prints A's
 // symbol). Static connections are computed at chapter-build time against base
@@ -119,6 +160,65 @@ function flipScenarioLocation(state, id, seat, events) {
   scenarioBehavior(state).locationFlipped?.(state, loc, api, seat)
   autoEngageAll(state, events)
   info(state, events, `「${loc.name}」完成翻面结算。`, locationRevealCue(loc, false, seat))
+  return true
+}
+
+// 第 2 步 P2.3：把地点翻到幽灵面（或翻回正常面）。
+// 数据形状（写在关卡 definition 的地点里，纯 JSON）：
+//   { id, code, name, ..., spectral: true }                    // 单面幽灵地点：只读标志
+//   { id, code, name, ..., back: { code, name, subname, clues } } // 双面幽灵地点：back 是幽灵面
+// 翻面保留线索与毁灭（印刷规则要求），只替换印刷字段；行为钩子与 revealLocation 同序：
+// locationWillFlip（翻面前）→ 应用数据 → locationStory → locationFlipped（翻面后）。
+function flipLocationFace(state, id, seat, events, options = {}) {
+  const loc = state.locations.find(location => location.id === id)
+  if (!loc) return false
+  const current = spectralFaceOf(loc)
+  const target = options.face === 'normal' || options.face === 'spectral' ? options.face
+    : current === 'spectral' ? 'normal' : 'spectral'
+  if (target === current) return false
+  const api = scenarioRuntime(state, events)
+  scenarioBehavior(state).locationWillFlip?.(state, loc, api, seat)
+  if (target === 'spectral') {
+    loc.front ||= {
+      code: loc.originalCode || loc.code,
+      name: loc.name,
+      ...(loc.subname ? { subname: loc.subname } : {}),
+      ...(Number.isFinite(loc.clues) ? { clues: loc.clues } : {}),
+    }
+    const back = loc.back || null
+    if (back) {
+      const code = back.code || loc.code
+      loc.code = code
+      loc.originalCode = code
+      loc.artCode = code
+      if (back.name) loc.name = back.name
+      if (back.subname != null) loc.subname = back.subname
+      if (Number.isFinite(back.clues)) {
+        loc.clues = back.clues
+        loc.maxClues = Math.max(loc.maxClues || 0, back.clues)
+      }
+    }
+    loc.spectral = true
+    loc.spectralFace = 'spectral'
+  } else {
+    const front = loc.front || null
+    if (front) {
+      if (front.code) { loc.code = front.code; loc.originalCode = front.code; loc.artCode = front.code }
+      if (front.name) loc.name = front.name
+      if (front.subname != null) loc.subname = front.subname
+      if (Number.isFinite(front.clues)) {
+        loc.clues = front.clues
+        loc.maxClues = Math.max(loc.maxClues || 0, front.clues)
+      }
+    }
+    loc.spectral = false
+    loc.spectralFace = 'normal'
+  }
+  scenarioBehavior(state).locationStory?.(state, loc, api, seat)
+  scenarioBehavior(state).locationFlipped?.(state, loc, api, seat)
+  info(state, events, target === 'spectral'
+    ? `👻 「${loc.name}」翻到了幽灵面。`
+    : `🏛️ 「${loc.name}」回到了正常面。`, locationRevealCue(loc, false, seat))
   return true
 }
 
@@ -293,5 +393,5 @@ function awardLocationVictory(state, loc, events) {
   }
 }
 
-  return { locName, locLabel, placeLocation, flipScenarioLocation, revealLocation, removeLocation, syncClues, placeCluesOnLocation, notifyCluesRemoved, canDiscoverClueAt, discoverClueAt, awardLocationVictory }
+  return { locName, locLabel, placeLocation, flipScenarioLocation, flipLocationFace, revealLocation, removeLocation, syncClues, placeCluesOnLocation, notifyCluesRemoved, canDiscoverClueAt, discoverClueAt, awardLocationVictory }
 }

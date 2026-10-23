@@ -463,8 +463,11 @@ function doHeal(state, inv, amount, what, rt) {
     rt.info(`${inv.name} 治疗了 ${h} 点伤害。`)
   }
   if (what === 'horror' || what === 'both') {
-    const h = Math.min(inv.horror, amount)
-    inv.horror -= h
-    rt.info(`${inv.name} 治疗了 ${h} 点恐惧。`)
+    // 第 5 步 P6：治疗恐惧走统一入口（治疗支援的 owner 由调用方给出），
+    // rt 没有这个读点时仍然直接扣（旧数据体的行为不变）。日志文案逐字保留。
+    const healed = rt.healHorror
+      ? rt.healHorror(inv, amount, { log: false })
+      : (() => { const h = Math.min(inv.horror, amount); inv.horror -= h; return h })()
+    rt.info(`${inv.name} 治疗了 ${healed} 点恐惧。`)
   }
 }

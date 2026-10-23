@@ -1,4 +1,5 @@
 import { investigatorRule } from '../cards/card-rules.js'
+import { noteCardCancelled } from './cancel-note.js'
 // 技能检定效果（applyTokenFx / applySkillOnSuccess / makeRuntime）从 engine.js 拆出的模块
 // （Phase 6 · 6d-24）。
 //
@@ -91,6 +92,9 @@ export function createSkillEffects(deps) {
     targetedTest,
     campaignPlayerEffect,
     triggerReaction,
+    // 第 5 步 P6：治疗恐惧的统一入口与取消记账（都要能开窗口）。
+    healHorrorFrom,
+    reactionWindow,
   } = deps
 
 function applyTokenFx(state, seat, inv, fx, events) {
@@ -235,7 +239,12 @@ function makeRuntime(state, events) {
     cancelPending: (when) => {
       if (!state._reaction || state._reaction.when !== when) throw new Error('当前没有可取消的结算')
       state._reaction.cancelled = true
+      // 第 5 步 P6：取消记账（「你拥有的一张卡取消了……」）。
+      noteCardCancelled(reactionWindow, state, events, { seat: state._reaction.seat, what: when })
     },
+    // 第 5 步 P6：治疗恐惧走统一入口（效果数据体 heal horror 也开 horrorHealed 窗口）。
+    healHorror: (target, amount, options = {}) => healHorrorFrom(state, target, amount, events, options),
+    noteCancelled: (options = {}) => noteCardCancelled(reactionWindow, state, events, options),
     substituteSkill: (seat, from, to) => {
       const target = state.investigators[seat]
       target.skillSubstitute = { from: [...from], to, round: state.round }

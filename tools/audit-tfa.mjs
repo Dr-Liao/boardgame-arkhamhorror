@@ -204,14 +204,22 @@ const rulebookChecks = {
   mobileBrowser: browserCovered('mobile'),
 }
 
+// remaining 由账本计算，不再写死：浏览器证据与 literalCardBehavior 都从逐章 checks 汇总，
+// 避免出现「checks 全 true 但 remaining 仍写 false」的自相矛盾。
+const pendingLiteral = ledger.items.filter(item => !item.checks.literalCardBehavior)
+const pendingBrowser = ledger.items.filter(item => !item.checks.browserAcceptance)
 const remaining = [
   ...ledger.items.flatMap(item => [
     ...(item.inventory.pendingEncounterCodes.length
       ? [`${item.id}：遭遇卡 ${item.inventory.pendingEncounterCodes.join('、')} 仍按共享规则/待办处理`] : []),
     ...item.gaps.map(gap => `${item.id}：${gap}`),
   ]),
-  '逐章 literalCardBehavior：十个剧本尚未逐张核对卡面字面需求，按规范 5.2 保持 false',
-  '章节浏览器验收：browserAcceptance 仍为 false，需真实大厅流程的端到端验收',
+  ...(pendingLiteral.length
+    ? [`逐章 literalCardBehavior 未完成：${pendingLiteral.map(item => item.id).join('、')}（按规范 5.2 保持 false）`]
+    : []),
+  ...(pendingBrowser.length
+    ? [`章节浏览器验收未完成：${pendingBrowser.map(item => item.id).join('、')}`]
+    : [`章节浏览器验收：${ledger.items.length} 章 checks 全真，但 audit/tfa-browser-acceptance.json 为手工提交、无 runner 生成器（TCU 审计必须由 runner 生成）`]),
   '发布验收：大厅、联机与浏览器端到端发布验收（earlyAccess 期间不宣称规则等价）',
 ]
 

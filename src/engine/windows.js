@@ -86,6 +86,21 @@ define('defeatAtLocation', '本地点有卡牌被击败后', 'reaction', 40)
 define('enemyRoundEnd', '回合结束时（敌人）', 'reaction', 38)
 define('horrorPlaced', '受到恐惧后', 'reaction', 66)
 define('damageAssignedToSelf', '伤害分配到支援时', 'interrupt', 67)
+// 第四循环P2.1：地点闹鬼能力即将结算（可取消/替代）。
+// 调用点在 src/engine/haunted.js 的 resolveHaunted；卡面用 interrupt 把 context.cancelled 置真。
+define('haunted', '结算闹鬼能力时', 'interrupt', 41)
+// 第五步 M1 调查员批次（P6）的三个窗口：
+//   horrorHealed  —— 卡牌效果治疗恐惧之后（「卡洛琳·弗恩」的回合并行读点，调用点在
+//                    src/engine/harm-threat.js 的 healHorrorFrom，所有治疗恐惧都走那一处）；
+//   cardCancelled —— 你拥有的一张卡取消/忽略了卡牌或游戏效果之后（「黛安娜·史丹利」）；
+//                    调用点见 src/engine/cancel-note.js 的调用方清单；
+//   enemyAttacked —— 敌人攻击一名调查员之后（序章故事调查员的反应）。
+define('horrorHealed', '治疗恐惧后', 'reaction', 68)
+define('cardCancelled', '卡牌效果被取消后', 'reaction', 69)
+define('enemyAttacked', '敌人攻击后', 'reaction', 70)
+// 密谋将要因达到毁灭阈值而推进（05018 神秘乐曲）。调用点在 src/engine/act-agenda.js 的 checkAgenda，
+// 窗口内把 state.agendaDoomLock 写成本轮/本阶段即阻止这次推进。
+define('agendaWouldAdvance', '密谋将要因毁灭阈值推进时', 'reaction', 71)
 
 // 玩家窗口（免费触发）。engine.js 的 playerWindow(timing) 使用这批 id。
 for (const [id, label] of [

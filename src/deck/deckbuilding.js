@@ -1,4 +1,4 @@
-import { deckRules, matchesCardRule, deckCardLimit, validateDeckRules } from './deck-rules.js'
+import { deckRules, matchesCardRule, deckCardLimit, validateDeckRules, optionExcluded } from './deck-rules.js'
 // 诡镇奇谈：卡牌版（Arkham Horror LCG）· 牌组构筑引擎
 //
 // Phase 2 · 完整构筑规则：
@@ -35,8 +35,10 @@ export { CORE_INVESTIGATOR_CODES, PLAYABLE_INVESTIGATOR_CODES }
 // ---------------------------------------------------------------------------
 
 // 该卡是否满足调查员的 deck_options（阵营 + 等级区间）。
+// 「额外限制：无等级 1-5 的[[武器]]卡牌」这类排除项先否决，再看是否命中某个允许项。
 export function matchesDeckOptions(invDef, card) {
-  return deckRules(invDef).options.some(rule => matchesCardRule(card, rule, invDef))
+  if (optionExcluded(invDef, card)) return false
+  return deckRules(invDef).options.some(rule => rule.not !== true && matchesCardRule(card, rule, invDef))
 }
 
 // 仅简化模式许可且有明确效果条目的卡牌；不使用技能图标隐式放行。
@@ -211,6 +213,18 @@ export function scoreCard(card, invDef) {
 // options: { seat, seed, playerPool?, basicWeaknessPool?, xpBudget? }
 // playerPool 只能收窄许可池（卡定义或编号数组）；XP 预算默认 0。
 // deck 为洗好的 30 张玩家卡 + 签名卡 + 专属弱点 + 随机基础弱点。
+// 第 5 步 P6：直觉牌库（乔·戴蒙德）要求牌组至少含 N 张[[洞察]]事件——自动构筑会先放够配额。
+function hunchRequirement(invDef) {
+  const rule = registeredEntry(invDef?.code)?.investigator?.hunchDeck || null
+  if (!rule || typeof rule.trait !== 'string' || !Number.isSafeInteger(rule.size)) return null
+  const required = Array.isArray(rule.requiredCodes) ? rule.requiredCodes.length : 0
+  return { trait: rule.trait, size: rule.size, required: Math.max(0, rule.size - required) }
+}
+
+function isTraitCard(card, trait) {
+  return (card?.traits || []).some(item => String(item).toLowerCase() === String(trait).toLowerCase())
+}
+
 export function buildDeck(invDef, options = {}) {
   validateInvestigator(invDef)
   const size = deckRules(invDef).size
@@ -220,8 +234,27 @@ export function buildDeck(invDef, options = {}) {
   const scored = pool.map((c) => ({ card: c, score: scoreCard(c, invDef) + (rng() * 0.6 - 0.3) }))
   scored.sort((a, b) => b.score - a.score)
 
+  const hunch = hunchRequirement(invDef)
   const deck = []
   let spentXp = 0
+  // 直觉牌库的定额先放：只要洞察事件，避免自动构筑把配额定缺。
+  // 0 XP 开局只能放等级 0 的卡（升级后才可能换成更高等级的洞察事件）。
+  if (hunch) {
+    let added = 0
+    for (const { card } of scored) {
+      if (added >= hunch.required) break
+      if (card.type !== 'event' || !isTraitCard(card, hunch.trait)) continue
+      const xpCost = (card.xp ?? 0) * (card.exceptional ? 2 : 1)
+      if (xpCost && xpCost > budget - spentXp) continue
+      const add = Math.min(cardLimit(card), hunch.required - added, size - deck.length)
+      for (let k = 0; k < add; k++) {
+        if (validateDeckRules(invDef, [...deck, card.code], ALL_CARDS, { partial: true }).errors.length) break
+        deck.push(card.code)
+        added++
+        spentXp += xpCost
+      }
+    }
+  }
   for (const { card } of scored) {
     if (deck.length >= size) break
     const cost = (card.xp ?? 0) * (card.exceptional ? 2 : 1)
@@ -233,6 +266,12 @@ export function buildDeck(invDef, options = {}) {
     }
   }
   if (deck.length !== size) throw new Error('许可卡池与 XP 预算不足以构筑 ' + size + ' 张玩家卡，当前 ' + deck.length + ' 张')
+  if (hunch) {
+    const insights = deck.filter(code => isTraitCard(ALL_CARDS[code], hunch.trait) && ALL_CARDS[code]?.type === 'event')
+    if (insights.length < hunch.required) {
+      throw new Error(`许可卡池不足以构筑直觉牌库：需要 ${hunch.required} 张[[${hunch.trait}]]事件，当前 ${insights.length} 张`)
+    }
+  }
 
   const sig = signatureAndWeaknesses(invDef, rng, options)
   const full = [...deck, ...sig.signatureCards, ...sig.signatureWeaknesses, ...sig.basicWeaknesses]
@@ -321,6 +360,14 @@ export function buildDeckFromList(invDef, cardCodes, options = {}) {
     spentXp += n * (card.xp ?? 0) * (card.exceptional ? 2 : 1)
   }
   errors.push(...validateDeckRules(invDef, codes, ALL_CARDS).errors)
+  // 第 5 步 P6：直觉牌库的定额（手动构筑同样要满足）。
+  const hunch = hunchRequirement(invDef)
+  if (hunch) {
+    const insights = codes.filter(code => isTraitCard(ALL_CARDS[code], hunch.trait) && ALL_CARDS[code]?.type === 'event')
+    if (insights.length < hunch.required) {
+      errors.push(`牌组需要至少 ${hunch.required} 张[[${hunch.trait}]]事件作为直觉牌库，当前 ${insights.length} 张`)
+    }
+  }
   if (spentXp > budget) errors.push('牌组需要 ' + spentXp + ' XP，超过预算 ' + budget + ' XP')
 
 

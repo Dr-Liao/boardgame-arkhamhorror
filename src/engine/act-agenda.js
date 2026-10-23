@@ -1,6 +1,9 @@
 // act-agenda.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 幕与议程的推进：目标判定、花费线索推进、密谋揭示与毁灭累积。
 // 读点：checkAct / checkAgenda 由阶段机与效果共同调用；addDoom 是毁灭的唯一入口。
+// 第 5 步 P6：放置毁灭可能新增「法术专用额外行动」（玛丽·朗博），授权逻辑在 spell-actions.js。
+import { grantSpellCredit } from './spell-actions.js'
+
 export function createActAgenda(deps) {
   const {
     ALL_STORY_ASSETS,
@@ -17,6 +20,7 @@ export function createActAgenda(deps) {
     groupPayment,
     info,
     investigateBonus,
+    investigatorTextBlanked,
     leadDecisionSeat,
     locLabel,
     locName,
@@ -276,7 +280,25 @@ export function createActAgenda(deps) {
     if (ag.doomThreshold == null) return
     // Only doom on the current agenda advances it. Doom on enemies/locations/assets
     // stays in play when the agenda advances (see rules-state.js).
-    if (agendaDoom(state) >= ag.doomThreshold) advanceAgenda(state, events, 'doom')
+    if (agendaDoom(state) < ag.doomThreshold) return
+    // 第 5 步 P6：「当密谋将要因达到毁灭阈值而推进时」的窗口（05018 神秘乐曲）。
+    // 只在没有其它窗口正在结算时开，避免推进 → 放毁灭 → 再推进的递归。
+    if (!state._agendaAdvanceWindow) {
+      state._agendaAdvanceWindow = true
+      try {
+        reactionWindow(state, 'agendaWouldAdvance', {
+          when: 'agendaWouldAdvance', agenda: ag, doom: agendaDoom(state), threshold: ag.doomThreshold,
+          prompt: `「${ag.name || ag.code}」将要因毁灭阈值推进`,
+        }, events)
+      } finally {
+        delete state._agendaAdvanceWindow
+      }
+    }
+    if (state.agendaDoomLock?.round === state.round && state.agendaDoomLock?.phase === state.phase) {
+      info(state, events, `🎵 本阶段的密谋推进已被阻止（毁灭阈值不推进）。`)
+      return
+    }
+    advanceAgenda(state, events, 'doom')
   }
 
   function checkAgendaForcedEnemyDefeated(state, enemy, events) {
@@ -297,6 +319,15 @@ export function createActAgenda(deps) {
       return 0
     }
     card.doom = (card.doom || 0) + amount
+    // 第 5 步 P6：卡牌上出现毁灭标记可能新增「法术专用额外行动」（玛丽·朗博）。
+    // 只在轮到该调查员时结算；没有该规则的调查员在这里是纯读点（investigatorRule 返回空）。
+    const current = state.investigators[state.currentSeat]
+    if (current) {
+      grantSpellCredit(state, current, {
+        blanked: investigatorTextBlanked(state, current),
+        info: text => info(state, events, text),
+      })
+    }
     scenarioBehavior(state).doomPlaced?.(state,
       { target: card, amount, agenda: false }, scenarioRuntime(state, events))
     return amount

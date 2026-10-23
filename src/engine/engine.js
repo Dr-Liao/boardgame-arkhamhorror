@@ -102,6 +102,14 @@ import { describeLook, describeSearch, normalizeLookOptions, normalizeSearchOpti
 import { describeCardMove, normalizeCardMove } from './zones.js'
 import { playerWindowLabel, noteUnknownWindow } from './windows.js'
 import { all } from './matcher.js'
+// 第 5 步 M1 调查员批次（P6）：直觉牌库 / 资源寄存 / 法术专用额外行动。
+import { createHunchDeck } from './hunch-deck.js'
+import { createResourceBank } from './resource-bank.js'
+import {
+  actionsAvailable as spellActionsAvailable, clearSpellCredit, consumeAction as consumeSpellAction,
+  doomAmongControlled, grantSpellCredit, spellOnlyActionsOf,
+} from './spell-actions.js'
+import { noteCardCancelled } from './cancel-note.js'
 import { cardIdentityFields } from '../cards/card-identity.js'
 import { captureTableState } from '../integration/presentation-state.js'
 import { attackStyle } from '../integration/attack-style.js'
@@ -286,6 +294,21 @@ function aliveInvestigators(state) {
 
 import { createDescribeState } from './describe.js'
 import { createCombat } from './combat.js'
+import { bondedSetProjection, createBonded } from './bonded.js'
+import {
+  banishEnemyToVictory, currentFaceCode, enemyCannotBeDefeated, enemyFacesOf, faceOf, flipEnemyFace,
+} from './enemy-faces.js'
+import { enterOpeningHandCards as enterOpeningHandCardsImpl } from './tarot-slot.js'
+import { createHaunted, isLocationHaunted, normalizeScenarioHaunted } from './haunted.js'
+import { hauntedAbilitiesAt } from './haunted.js'
+import { isSpectralLocation, spectralFaceOf } from './locations.js'
+import {
+  buildTarotDeck, chooseTarot, discardDrawnTarot, drawTarot, shuffleTarotIntoDeck, tarotInfo, tarotOrientation, tarotRemaining,
+} from './tarot.js'
+import {
+  addToExtraEncounterDeck, discardFromExtraEncounterDeck, discardTopOfExtraEncounterDeck,
+  extraEncounterDeckInfo, extraEncounterDecksInfo, setExtraEncounterDeck, shuffleIntoExtraEncounterDeck,
+} from './alt-decks.js'
 import { createActions } from './actions.js'
 import { createPhases } from './phases.js'
 import { createMoves } from './moves.js'
@@ -376,6 +399,8 @@ const LOLA_ROLES = ['guardian', 'seeker', 'rogue', 'mystic', 'survivor', 'neutra
 
 // 当前这次行动的类型（由 executeAction 设置），spendAction 用它判断能否使用探索专用行动。
 let currentActionKind = null
+// 第 5 步 P6：正在结算的行动是不是「法术行动」（法术专用额外行动的唯一判据，由 dispatch 写入）。
+let currentSpellAction = false
 
 
 // 手牌上限：8 + 剧本修正（handSizeModifier，失落时代 P2）+ 支援/威胁修正。
@@ -796,10 +821,16 @@ function spendAction(state, inv) {
   if (currentActionKind === 'explore') {
     // 探索：先花普通行动，不够时才花「只能探索」的额外行动。
     if (normalActionsLeft(inv) < 1) inv.exploreOnlyActions = Math.max(0, (inv.exploreOnlyActions || 0) - 1)
+    inv.actionsLeft--
   } else {
-    if (normalActionsLeft(inv) < 1) throw new Error('行动点不足（额外行动只能用于探索）')
+    // 第 5 步 P6：法术专用额外行动（玛丽·朗博）——最后一个行动只能花在法术卡/法术能力上。
+    if (spellActionsAvailable(inv, currentSpellAction) < 1) {
+      throw new Error(spellOnlyActionsOf(inv)
+        ? '行动点不足（额外行动只能用于探索或法术）'
+        : '行动点不足（额外行动只能用于探索）')
+    }
+    consumeSpellAction(inv, 1, currentSpellAction)
   }
-  inv.actionsLeft--
   inv.exploreOnlyActions = Math.min(inv.exploreOnlyActions || 0, Math.max(0, inv.actionsLeft))
   state.moveCount++
 }
@@ -912,6 +943,33 @@ const hubPendingSeats = state => state.investigators.map(inv => inv.seat).filter
 // Phase 6（战役插件化第三批）：战役专属状态字段只经这个访问器读写。
 const campaignState = createCampaignState()
 
+// 第 5 步 M1 调查员批次（P6）：两个调查员专属读点的惰性门面。
+// 工厂（hunchDeckApi / resourceBankApi）在本文件后面才初始化，因此这里只放转发函数，
+// 调用发生在对局里，模块初始化顺序不受影响。
+const hunchDeck = {
+  ruleOf: code => hunchDeckApi().hunchRuleOf(code),
+  isHunchInvestigator: (state, inv) => hunchDeckApi().isHunchInvestigator(state, inv),
+  prepare: (state, inv, events) => hunchDeckApi().prepareHunchDeck(state, inv, events),
+  reveal: (state, inv, events) => hunchDeckApi().revealHunchCard(state, inv, events),
+  returnCard: (state, inv, events) => hunchDeckApi().returnHunchCard(state, inv, events),
+  playDiscount: (state, inv, code) => hunchDeckApi().hunchPlayDiscount(state, inv, code),
+  insightsInDiscard: inv => hunchDeckApi().insightInDiscard(inv),
+  moveToBottom: (state, inv, code, events) => hunchDeckApi().moveInsightToHunchBottom(state, inv, code, events),
+  clear: inv => hunchDeckApi().clearHunchDeck(inv),
+  projection: state => hunchDeckApi().hunchProjection(state),
+}
+
+const resourceBank = {
+  ruleOf: code => resourceBankApi().ruleOf(code),
+  bankAsset: inv => resourceBankApi().bankAsset(inv),
+  bankedOf: inv => resourceBankApi().bankedOf(inv),
+  gainResource: (state, inv, amount, events) => resourceBankApi().gainResource(state, inv, amount, events),
+  beginTurn: (state, inv, events) => resourceBankApi().beginTurn(state, inv, events),
+  endTurn: (state, inv, events) => resourceBankApi().endTurn(state, inv, events),
+  withdrawAll: (state, inv, events) => resourceBankApi().withdrawAll(state, inv, events),
+  projection: inv => resourceBankApi().projection(inv),
+}
+
 const commonDeps = {
   campaignState,
   ALL_CARDS,
@@ -982,6 +1040,9 @@ const commonDeps = {
   getMaxSanity,
   getStat,
   getThreatEffect,
+  healHorrorFrom,
+  hunchDeck,
+  resourceBank,
   inHub,
   info,
   investigatorMoveDestinations,
@@ -1035,7 +1096,11 @@ const apiDeps = { ...commonDeps,
   chooseLolaRole,
   disengageAll,
   farthestLocationsFor,
-  itemDiscountAtLocation, }
+  itemDiscountAtLocation,
+  // 第 2 步 P2.8：绑定（ctx.api.bonded 的三个读点）。
+  bondedGroupOf: (...args) => bondedGroupOf(...args),
+  retrieveBonded: (...args) => retrieveBonded(...args),
+  returnBonded: (...args) => returnBonded(...args), }
 
 const apiEnemyDeps = { ...commonDeps,
   assetCannotLeavePlay,
@@ -1073,6 +1138,10 @@ const apiMiscDeps = { ...commonDeps,
   // 第 122 轮（第 4 批收尾）：搜查入场与移动目的地原语。
   triggerReaction,
   investigatorMoveDestinations,
+  // 第 5 步 P6：取消/忽略效果的记账（黛安娜·史丹利的反应挂在 cardCancelled 窗口上）。
+  noteCardCancelled,
+  // 第 5 步 P6：直觉牌库与资源寄存的卡面读取点（乔·戴蒙德的旧印 / 家族遗产的行动）。
+  hunchDeck,
   doFightRaw: (...args) => doFight(...args), }
 
 function abilityApi(state, events) {
@@ -1208,6 +1277,7 @@ const { doFight, doEvade } = createCombat({
 // Phase 6（6d-4）：打牌 / 调查搬进 actions.js；依赖一次性注入。
 const { doPlay, doInvestigate } = createActions({
   ...commonDeps,
+  hauntedAfterFail: (...args) => hauntedApi().resolveAfterFailedAction(...args),
   afterEvade,
   attachmentTargets,
   awardLocationVictory,
@@ -1255,6 +1325,7 @@ export const { legalMoves, validateMove } = createMoves({
   actingSeats,
   actionCost,
   actionKind,
+  isSpellAction,
   activeHiddenRules,
   assetReplacementPlans,
   availableThreatAbilities,
@@ -1319,6 +1390,37 @@ export const describeState = createDescribeState({
   abilityUsage,
 })
 
+// 第四循环P2.1：闹鬼原语的核心在 haunted.js；数据规范化与读取是纯函数直接导入，
+// 需要窗口/询问/剧本钩子的部分在这里惰性装配（依赖表在模块顶层立即求值）。
+// 第 2 步 P2.8：绑定（场外集合/检索/洗回/收回）。随机只走 randomValue（洗回牌库，
+// 由调用方把 state 传进来），因此工厂本身不需要 state。
+let bondedImpl = null
+function bondedApi() {
+  bondedImpl ||= createBonded({ ALL_CARDS, cardName, info })
+  return bondedImpl
+}
+
+let hauntedImpl = null
+function hauntedApi() {
+  hauntedImpl ||= createHaunted({ reactionWindow, requestChoice, scenarioBehavior, cardDef })
+  return hauntedImpl
+}
+
+// 第 5 步 M1 调查员批次（P6）：直觉牌库与资源寄存的工厂（惰性装配，依赖 commonDeps 里的读点）。
+let hunchDeckImpl = null
+function hunchDeckApi() {
+  hunchDeckImpl ||= createHunchDeck({
+    cardDef, cardName, info, newCardInstance, randomValue, registeredEntry, requestChoice, shuffle,
+  })
+  return hunchDeckImpl
+}
+
+let resourceBankImpl = null
+function resourceBankApi() {
+  resourceBankImpl ||= createResourceBank({ cardName, info })
+  return resourceBankImpl
+}
+
 // Phase 6（6d-12）：技能检定主流程搬进 tests.js。
 // 用惰性装配的原因：performTest 被多个 api 依赖表引用，而那些表在模块顶层立即求值；
 // 若这里用 const 初始化会 TDZ（Cannot access 'performTest' before initialization）。
@@ -1354,6 +1456,11 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
 let scenarioRuntimeImpl = null
 function scenarioRuntime(state, events, testSource = null) {
   scenarioRuntimeImpl ||= createScenarioRuntime({
+  // 第 2 步 P2.12：异端者多面/放逐（deps 注入卡面定义与胜利区结算）。
+  flipEnemyFace: (state2, enemy, nextCode, deps) => flipEnemyFace(state2, enemy, nextCode, { ...deps, defOf: code => enemyDef(code) }),
+  banishEnemyToVictory: (state2, enemy, deps) => banishEnemyToVictory(state2, enemy, { addVictory, ...deps }),
+  enemyFace: enemy => faceOf(enemy),
+  enemyFaces: enemy => enemyFacesOf(enemy),
   ...commonDeps,
   addBasicWeakness,
   addToExplorationDeck,
@@ -1383,7 +1490,18 @@ function scenarioRuntime(state, events, testSource = null) {
   preyTarget,
   ruleCodeForOriginal,
   expeditionLeaderSeat,
+  flipLocationFace,
   flipScenarioLocation,
+  isSpectralLocation,
+  spectralFaceOf,
+  buildTarotDeck,
+  chooseTarot,
+  discardDrawnTarot,
+  drawTarot,
+  shuffleTarotIntoDeck,
+  tarotInfo,
+  tarotOrientation,
+  tarotRemaining,
   grantSupplies,
   groupPayment,
   hasSupply,
@@ -1402,6 +1520,20 @@ function scenarioRuntime(state, events, testSource = null) {
   spawnStoryAsset,
   spawnStoryEnemy,
   stepToward,
+  resolveHaunted: (...args) => hauntedApi().resolveHaunted(...args),
+  grantHaunted: (...args) => hauntedApi().grantHaunted(...args),
+  clearHauntedGrants: (...args) => hauntedApi().clearHauntedGrants(...args),
+  hauntedAbilitiesAt,
+  isLocationHaunted,
+  // 第 2 步 P2.2：第二遭遇牌堆的纯数据操作（建堆/加牌/洗回/弃牌/公开读数）与抽牌管线。
+  addToExtraEncounterDeck,
+  discardFromExtraEncounterDeck,
+  discardTopOfExtraEncounterDeck,
+  extraEncounterDeckInfo,
+  extraEncounterDecksInfo,
+  setExtraEncounterDeck,
+  shuffleIntoExtraEncounterDeck,
+  drawExtraEncounter: (...args) => drawExtraEncounter(...args),
   suppliesAtLocation,
   suppliesFor,
   vengeancePoints,
@@ -1514,6 +1646,7 @@ function applyDefeatTrauma(...args) { return campaignFlowApi().applyDefeatTrauma
 let setupImpl = null
 function setupApi() {
   setupImpl ||= createSetup({
+  returnAllBonded: (...args) => returnAllBonded(...args),
   ...commonDeps,
   ALL_INVESTIGATORS,
   CARD_CODE,
@@ -1567,11 +1700,13 @@ function dispatchApi() {
     ...commonDeps,
   getCurrentActionKind: () => currentActionKind,
   setCurrentActionKind: value => { currentActionKind = value },
+  setCurrentSpellAction: value => { currentSpellAction = value === true },
   ALL_INVESTIGATORS,
   ScenarioRestarted,
   abilityOfMove,
   actionCost,
   actionKind,
+  isSpellAction,
   advanceInvestigator,
   buildDeck,
   buildDeckFromList,
@@ -1581,6 +1716,7 @@ function dispatchApi() {
   corePlayerPool,
   currentActionKind,
   doAbility,
+    doEntityAbility: (...args) => doEntityAbility(...args),
   doBreakDoor,
   doDiscardThreat,
   doDraw,
@@ -1670,7 +1806,7 @@ function encounterApi() {
   return encounterImpl
 }
 // encounterApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
-export function drawEncounter(...args) { return encounterApi().drawEncounter(...args) } export function reactionWindow(...args) { return encounterApi().reactionWindow(...args) } export function triggerReaction(...args) { return encounterApi().triggerReaction(...args) }
+export function drawEncounter(...args) { return encounterApi().drawEncounter(...args) } export function drawExtraEncounter(...args) { return encounterApi().drawExtraEncounter(...args) } export function reactionWindow(...args) { return encounterApi().reactionWindow(...args) } export function triggerReaction(...args) { return encounterApi().triggerReaction(...args) }
 export function playerWindow(...args) { return encounterApi().playerWindow(...args) }
 
 // Phase 6（6d-21）：移动与位置搬进 movement.js；惰性装配保持调用点与导出。
@@ -1740,7 +1876,7 @@ function locationsApi() {
   return locationsImpl
 }
 // locationsApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
-export function locName(...args) { return locationsApi().locName(...args) } export function locLabel(...args) { return locationsApi().locLabel(...args) } export function placeLocation(...args) { return locationsApi().placeLocation(...args) } export function flipScenarioLocation(...args) { return locationsApi().flipScenarioLocation(...args) }
+export function flipLocationFace(...args) { return locationsApi().flipLocationFace(...args) } export function locName(...args) { return locationsApi().locName(...args) } export function locLabel(...args) { return locationsApi().locLabel(...args) } export function placeLocation(...args) { return locationsApi().placeLocation(...args) } export function flipScenarioLocation(...args) { return locationsApi().flipScenarioLocation(...args) }
 export function revealLocation(...args) { return locationsApi().revealLocation(...args) } export function removeLocation(...args) { return locationsApi().removeLocation(...args) } export function syncClues(...args) { return locationsApi().syncClues(...args) }
 export function placeCluesOnLocation(...args) { return locationsApi().placeCluesOnLocation(...args) } export function notifyCluesRemoved(...args) { return locationsApi().notifyCluesRemoved(...args) } export function canDiscoverClueAt(...args) { return locationsApi().canDiscoverClueAt(...args) } export function discoverClueAt(...args) { return locationsApi().discoverClueAt(...args) }
 export function awardLocationVictory(...args) { return locationsApi().awardLocationVictory(...args) }
@@ -1851,6 +1987,17 @@ function revealApi() {
 // revealApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
 export function resolveTreacheryEffect(...args) { return revealApi().resolveTreacheryEffect(...args) } export function runActReveal(...args) { return revealApi().runActReveal(...args) } export function runAgendaForced(...args) { return revealApi().runAgendaForced(...args) }
 export function executeDescriptor(...args) { return revealApi().executeDescriptor(...args) }
+export function doEntityAbility(...args) { return abilityExec().doEntityAbility(...args) }
+export function enterOpeningHandCards(...args) { return enterOpeningHandCardsImpl(...args) }
+export function bondedGroupOf(code) { return bondedApi().groupOf(code) }
+export function retrieveBonded(state, inv, mainCode, options = {}) {
+  return bondedApi().retrieve(state, inv, mainCode, { ...options, shuffle: options.shuffle || (list => shuffle(list, () => randomValue(state))) })
+}
+export function returnBonded(state, inv, mainCode, options = {}) { return bondedApi().returnToSet(state, inv, mainCode, options) }
+export function returnAllBonded(state, options = {}) { return bondedApi().returnAll(state, options) }
+export function bondedProjection(state) { return bondedSetProjection(state) }
+// 第 2 步 P2.12：异端者多面与放逐。
+export { banishEnemyToVictory, currentFaceCode, enemyCannotBeDefeated, enemyFacesOf, faceOf, flipEnemyFace }
 
 // Phase 6（6d-28）：牌堆操作搬进 deck-ops.js；惰性装配保持导出与调用点。
 let deckOpsImpl = null
@@ -2014,7 +2161,7 @@ function createTableDecisionsApi() {
 }
 // createTableDecisionsApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
 export function validateHubMove(...args) { return createTableDecisionsApi().validateHubMove(...args) } export function autoHubMove(...args) { return createTableDecisionsApi().autoHubMove(...args) } export function decisionSeed(...args) { return createTableDecisionsApi().decisionSeed(...args) }
-export function moveCost(...args) { return createTableDecisionsApi().moveCost(...args) } export function cardPlayBlockedReason(...args) { return createTableDecisionsApi().cardPlayBlockedReason(...args) } export function actionKind(...args) { return createTableDecisionsApi().actionKind(...args) }
+export function moveCost(...args) { return createTableDecisionsApi().moveCost(...args) } export function cardPlayBlockedReason(...args) { return createTableDecisionsApi().cardPlayBlockedReason(...args) } export function actionKind(...args) { return createTableDecisionsApi().actionKind(...args) } export function isSpellAction(...args) { return createTableDecisionsApi().isSpellAction(...args) }
 export function actionPreview(...args) { return createTableDecisionsApi().actionPreview(...args) } export function consumeStartingAdjustments(...args) { return createTableDecisionsApi().consumeStartingAdjustments(...args) } export function consumeMulliganBlock(...args) { return createTableDecisionsApi().consumeMulliganBlock(...args) }
 export function runMulligans(...args) { return createTableDecisionsApi().runMulligans(...args) } export function useGoldPocketWatch(...args) { return createTableDecisionsApi().useGoldPocketWatch(...args) } export function resolveCallOfTheUnknown(...args) { return createTableDecisionsApi().resolveCallOfTheUnknown(...args) }
 export function hubStartingDeckReady(...args) { return createTableDecisionsApi().hubStartingDeckReady(...args) } export function initialHubScenarioMoves(...args) { return createTableDecisionsApi().initialHubScenarioMoves(...args) } export function hubInvestigatorChoices(...args) { return createTableDecisionsApi().hubInvestigatorChoices(...args) }
@@ -2186,7 +2333,7 @@ export function targetedTest(...args) { return createHarmThreatApi().targetedTes
 export function dealDamageExhausted(...args) { return createHarmThreatApi().dealDamageExhausted(...args) } export function blankEnemy(...args) { return createHarmThreatApi().blankEnemy(...args) } export function ignoreChaos(...args) { return createHarmThreatApi().ignoreChaos(...args) }
 export function returnAssetToHand(...args) { return createHarmThreatApi().returnAssetToHand(...args) } export function shuffleIntoEncounter(...args) { return createHarmThreatApi().shuffleIntoEncounter(...args) } export function moveHorrorToInvestigator(...args) { return createHarmThreatApi().moveHorrorToInvestigator(...args) }
 export function damagedTargetsAtLocation(...args) { return createHarmThreatApi().damagedTargetsAtLocation(...args) } export function healDamageAtLocation(...args) { return createHarmThreatApi().healDamageAtLocation(...args) } export function recordResearch(...args) { return createHarmThreatApi().recordResearch(...args) }
-export function researchSolution(...args) { return createHarmThreatApi().researchSolution(...args) } export function healHorrorNearby(...args) { return createHarmThreatApi().healHorrorNearby(...args) } export function dukeInvestigate(...args) { return createHarmThreatApi().dukeInvestigate(...args) }
+export function researchSolution(...args) { return createHarmThreatApi().researchSolution(...args) } export function healHorrorNearby(...args) { return createHarmThreatApi().healHorrorNearby(...args) } export function healHorrorFrom(...args) { return createHarmThreatApi().healHorrorFrom(...args) } export function dukeInvestigate(...args) { return createHarmThreatApi().dukeInvestigate(...args) }
 
 
 // ---------------------------------------------------------------------------

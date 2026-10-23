@@ -469,6 +469,29 @@ import e04106 from './04106.js'
 import e04109 from './04109.js'
 import e01000 from './01000.js'
 import e04303 from './04303.js'
+import e05001 from './05001.js'
+import e05002 from './05002.js'
+import e05003 from './05003.js'
+import e05004 from './05004.js'
+import e05005 from './05005.js'
+import e05006 from './05006.js'
+import e05007 from './05007.js'
+import e05008 from './05008.js'
+import e05009 from './05009.js'
+import e05010 from './05010.js'
+import e05011 from './05011.js'
+import e05012 from './05012.js'
+import e05013 from './05013.js'
+import e05014 from './05014.js'
+import e05015 from './05015.js'
+import e05016 from './05016.js'
+import e05017 from './05017.js'
+import e05018 from './05018.js'
+import e05019 from './05019.js'
+import e05046 from './05046.js'
+import e05047 from './05047.js'
+import e05048 from './05048.js'
+import e05049 from './05049.js'
 
 export const CARD_ENTRY_LIST = [
   e01001,
@@ -939,6 +962,29 @@ export const CARD_ENTRY_LIST = [
   e04109,
   e01000,
   e04303,
+  e05001,
+  e05002,
+  e05003,
+  e05004,
+  e05005,
+  e05006,
+  e05007,
+  e05008,
+  e05009,
+  e05010,
+  e05011,
+  e05012,
+  e05013,
+  e05014,
+  e05015,
+  e05016,
+  e05017,
+  e05018,
+  e05019,
+  e05046,
+  e05047,
+  e05048,
+  e05049,
 ]
 
 export const CARD_ENTRY_BY_CODE = new Map(CARD_ENTRY_LIST.map(entry => [entry.code, entry]))

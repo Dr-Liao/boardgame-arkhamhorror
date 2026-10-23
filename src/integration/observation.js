@@ -146,6 +146,8 @@ export function viewState(state, observerSeat = null) {
   if (campaignManifest?.supplyCosts) view.campaign.supplyCosts = { ...campaignManifest.supplyCosts }
   if (campaignManifest?.supplyHints) view.campaign.supplyHints = { ...campaignManifest.supplyHints }
   if (campaignManifest?.supplyLists) view.campaign.supplyLists = structuredClone(campaignManifest.supplyLists)
+  // 遗留记忆的中文名随观察投影下发（牌桌战役面板用）；P9 补齐 64 个记录键时沿用同一张表。
+  view.campaign.mementoLabels = { ...(campaignManifest?.mementoLabels || {}) }
   view.campaignStory = campaignStory(state, contentRegistry, observer)
   view.agendaDoom = agendaDoom(state)
   view.totalDoom = totalDoom(state)

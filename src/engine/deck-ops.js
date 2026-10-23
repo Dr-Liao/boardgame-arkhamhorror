@@ -344,6 +344,11 @@ function moveCardTo(state, inv, rawSpec, events) {
 }
 
 function drawCards(state, inv, n, events) {
+  // 第 2 步 P2.6：无牌组故事调查员不能抽牌（也不进入重洗/弃牌逻辑）。
+  if (inv?.storyInvestigator) {
+    info(state, events, `📜 ${inv.name} 没有牌组，不能抽牌。`)
+    return []
+  }
   const texts = []
   let reshuffles = 0
   let drawnCount = 0

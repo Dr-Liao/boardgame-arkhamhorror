@@ -188,10 +188,15 @@ export function createStats(deps) {
     return playFlag(code, flag)
   }
 
+  // 第 2 步 P2.5：skill 可以是单个技能名，也可以是技能数组（阵法/合成检定）。
+  // 数组时把每个技能的图标相加，万能图标只算一次（不能按技能数重复计入）。
   function iconValue(code, skill) {
     const c = cardDef(code)
     if (!c || !c.icons) return 0
-    return (c.icons[skill] || 0) + (c.icons.wild || 0)
+    const list = Array.isArray(skill) ? skill : [skill]
+    let total = c.icons.wild || 0
+    for (const name of list) total += c.icons[name] || 0
+    return total
   }
 
   function effectiveTraits(state, inv, code) {
@@ -217,7 +222,9 @@ export function createStats(deps) {
   function commitIcons(state, inv, code, skill) {
     const base = iconValue(code, skill)
     if (!state || !inv) return base
-    return base + (collectGrants(state, inv, 'skillIcon', { code }).has(skill) ? 1 : 0)
+    const granted = collectGrants(state, inv, 'skillIcon', { code })
+    const wanted = Array.isArray(skill) ? skill : [skill]
+    return base + (wanted.some(name => granted.has(name)) ? 1 : 0)
   }
 
   function enemyStatMods(state) {

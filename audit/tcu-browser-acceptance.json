@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "playwright + tools/playwright-tcu-reporter.mjs",
+  "spec": "tests/tcu-rules.browser.mjs",
+  "specs": [
+    "tests/tcu-interactions.browser.mjs",
+    "tests/tcu-rules.browser.mjs"
+  ],
+  "milestone": "P4/P5",
+  "campaignId": "theCircleUndone",
+  "status": "passed",
+  "screenshotBase": "repo-root",
+  "checks": {
+    "desktopBrowser": true,
+    "mobileBrowser": true
+  },
+  "tests": [
+    {
+      "title": "M4 万象无终卡牌规则链接在desktop端可达并恢复详情焦点",
+      "spec": "tests/tcu-rules.browser.mjs",
+      "file": "tests/tcu-rules.browser.mjs",
+      "viewport": "desktop",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "M4 万象无终卡牌规则链接在mobile端可达并恢复详情焦点",
+      "spec": "tests/tcu-rules.browser.mjs",
+      "file": "tests/tcu-rules.browser.mjs",
+      "viewport": "mobile",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "M4 万象无终规则目录、搜索与返回在desktop端可用",
+      "spec": "tests/tcu-rules.browser.mjs",
+      "file": "tests/tcu-rules.browser.mjs",
+      "viewport": "desktop",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "M4 万象无终规则目录、搜索与返回在mobile端可用",
+      "spec": "tests/tcu-rules.browser.mjs",
+      "file": "tests/tcu-rules.browser.mjs",
+      "viewport": "mobile",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P5 万象无终交互面板在desktop端可读、可点、可键盘操作",
+      "spec": "tests/tcu-interactions.browser.mjs",
+      "file": "tests/tcu-interactions.browser.mjs",
+      "viewport": "desktop",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P5 万象无终交互面板在mobile端可读、可点、可键盘操作",
+      "spec": "tests/tcu-interactions.browser.mjs",
+      "file": "tests/tcu-interactions.browser.mjs",
+      "viewport": "mobile",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "tcu-rules-desktop",
+      "path": "artifacts/tcu-migration/p4-rulebook-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "spec": "tests/tcu-rules.browser.mjs"
+    },
+    {
+      "name": "tcu-rules-mobile",
+      "path": "artifacts/tcu-migration/p4-rulebook-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "spec": "tests/tcu-rules.browser.mjs"
+    },
+    {
+      "name": "tcu-interactions-desktop",
+      "path": "artifacts/tcu-migration/p5-interactions-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "spec": "tests/tcu-interactions.browser.mjs"
+    },
+    {
+      "name": "tcu-interactions-mobile",
+      "path": "artifacts/tcu-migration/p5-interactions-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "spec": "tests/tcu-interactions.browser.mjs"
+    }
+  ]
+}

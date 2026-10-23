@@ -27,6 +27,11 @@ import * as aPhantomOfTruth from './campaigns/thePathToCarcosa/scenarios/aPhanto
 import * as thePallidMask from './campaigns/thePathToCarcosa/scenarios/thePallidMask/index.js'
 import * as blackStarsRise from './campaigns/thePathToCarcosa/scenarios/blackStarsRise/index.js'
 import * as dimCarcosa from './campaigns/thePathToCarcosa/scenarios/dimCarcosa/index.js'
+import { manifest as tcuCampaignPack } from './packs/tcuCampaign/manifest.js'
+import { manifest as tcuInvestigators } from './packs/tcuInvestigators/manifest.js'
+import { manifest as tcuPlayer } from './packs/tcuPlayer/manifest.js'
+import { manifest as theCircleUndone } from './campaigns/theCircleUndone/manifest.js'
+import { catalogChapters } from './campaigns/theCircleUndone/chapters.js'
 import { manifest as tfaCampaignPack } from './packs/tfaCampaign/manifest.js'
 import { manifest as tfaInvestigators } from './packs/tfaInvestigators/manifest.js'
 import { manifest as tfaPlayer } from './packs/tfaPlayer/manifest.js'
@@ -44,14 +49,16 @@ import * as turnBackTime from './campaigns/theForgottenAge/scenarios/turnBackTim
 
 let bundle = {
   packs: [...packs, ...expansionBundles.map(entry => entry.manifest), dunwichCampaignPack, dunwichInvestigators,
-    carcosaCampaignPack, carcosaInvestigators, tfaCampaignPack, tfaInvestigators, tfaPlayer],
-  campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa, theForgottenAge],
+    carcosaCampaignPack, carcosaInvestigators, tfaCampaignPack, tfaInvestigators, tfaPlayer,
+    tcuCampaignPack, tcuInvestigators, tcuPlayer],
+  campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa, theForgottenAge, theCircleUndone],
   scenarios: [gathering, masks, devourer, extracurricularActivity, theHouseAlwaysWins, theMiskatonicMuseum,
     theEssexCountyExpress, bloodOnTheAltar, undimensionedAndUnseen, whereDoomAwaits, lostInTimeAndSpace,
     curtainCall, theLastKing, echoesOfThePast, theUnspeakableOath, aPhantomOfTruth, thePallidMask,
     blackStarsRise, dimCarcosa,
     theUntamedWilds, theDoomOfEztli, threadsOfFate, theBoundaryBeyond, heartOfTheEldersPart1,
-    heartOfTheEldersPart2, theCityOfArchives, theDepthsOfYoth, shatteredAeons, turnBackTime],
+    heartOfTheEldersPart2, theCityOfArchives, theDepthsOfYoth, shatteredAeons, turnBackTime,
+    ...catalogChapters],
 }
 export let contentRegistry = createContentRegistry(bundle)
 

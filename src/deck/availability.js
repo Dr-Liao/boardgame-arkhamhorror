@@ -6,11 +6,14 @@ export const CORE_INVESTIGATOR_CODES = Object.freeze(['01001', '01002', '01003',
 export const DUNWICH_INVESTIGATOR_CODES = Object.freeze(['02001', '02002', '02003', '02004', '02005'])
 export const CARCOSA_INVESTIGATOR_CODES = Object.freeze(['03001', '03002', '03003', '03004', '03005', '03006'])
 export const TFA_INVESTIGATOR_CODES = Object.freeze(['04001', '04002', '04003', '04004', '04005'])
+// 第四循环（万象无终）：6 位正式调查员；序章 4 位故事调查员永远不在这里（无牌组、不可构筑）。
+export const TCU_INVESTIGATOR_CODES = Object.freeze(['05001', '05002', '05003', '05004', '05005', '05006'])
 export const PLAYABLE_INVESTIGATOR_CODES = Object.freeze([
   ...CORE_INVESTIGATOR_CODES,
   ...DUNWICH_INVESTIGATOR_CODES,
   ...CARCOSA_INVESTIGATOR_CODES,
   ...TFA_INVESTIGATOR_CODES,
+  ...TCU_INVESTIGATOR_CODES,
 ])
 
 export const CORE_PLAYER_CODES = Object.freeze([
@@ -61,6 +64,12 @@ export const SIGNATURES_BY_INVESTIGATOR = Object.freeze({
   '04003': Object.freeze(['04010', '04011', '04012']),
   '04004': Object.freeze(['04013', '04014']),
   '04005': Object.freeze(['04015', '04016']),
+  '05001': Object.freeze(['05007', '05008']),
+  '05002': Object.freeze(['05009', '05010']),
+  '05003': Object.freeze(['05011', '05012']),
+  '05004': Object.freeze(['05013', '05014', '05015']),
+  '05005': Object.freeze(['05016', '05017']),
+  '05006': Object.freeze(['05018', '05019']),
 })
 export const SIMPLIFIED_CARD_CODES = Object.freeze([...CORE_PLAYER_CODES, ...CORE_SIGNATURE_CODES, ...CORE_BASIC_WEAKNESS_CODES, ...CORE_STORY_CODES])
 export {
@@ -72,7 +81,11 @@ export {
 const investigators = new Set(PLAYABLE_INVESTIGATOR_CODES)
 const dunwichSignatures = Object.values(SIGNATURES_BY_INVESTIGATOR).slice(5, 10).flat()
 const carcosaSignatures = [...Object.values(SIGNATURES_BY_INVESTIGATOR).slice(10, 16).flat(), '03009b']
-const tfaSignatures = Object.values(SIGNATURES_BY_INVESTIGATOR).slice(16).flat()
+// 第 5 步 M1 调查员批次（P6）：TCU 的 13 张专属卡。按调查员显式取，不再用 slice 位置——
+// 新增循环时 `slice(16)` 这类写法会把后面的循环一起算进来。
+const tfaSignatureGroups = Object.values(SIGNATURES_BY_INVESTIGATOR).slice(16, 21)
+const tfaSignatures = tfaSignatureGroups.flat()
+const tcuSignatures = TCU_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])])
 const tfaPlayerCodes = [...IMPLEMENTED_PLAYER_CODES]
 export const TFA_PLAYER_BUILDABLE_CODES = Object.freeze(tfaPlayerCodes.filter(code => tfaPlayerBuildable(code)))
 export const PLAYER_CARD_CODES = Object.freeze([
@@ -82,7 +95,7 @@ export const PLAYER_CARD_CODES = Object.freeze([
 // 新增卡池不应改变既有循环自动牌组的产出。
 export const ALL_BUILDABLE_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TFA_PLAYER_BUILDABLE_CODES])
 const cards = new Set([...SIMPLIFIED_CARD_CODES, ...CORE_UPGRADE_CODES, ...expansionPlayerCodes,
-  ...dunwichSignatures, ...carcosaSignatures, ...tfaSignatures, ...tfaPlayerCodes,
+  ...dunwichSignatures, ...carcosaSignatures, ...tfaSignatures, ...tfaPlayerCodes, ...tcuSignatures,
   ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES])
 const strictAcceptedCodes = new Set([...investigators, ...cards])
 const strictScenarioCodes = new Set(Object.values(SCENARIO_CARD_IDENTITIES).flatMap(categories =>
@@ -109,12 +122,15 @@ export function getAvailability(code) {
     deckbuilding: ALL_BUILDABLE_CODES.includes(code),
     upgradeOnly: CORE_UPGRADE_CODES.includes(code),
     dependencyOnly: CORE_SIGNATURE_CODES.includes(code) || dunwichSignatures.includes(code)
-      || carcosaSignatures.includes(code) || tfaSignatures.includes(code) || ALL_BASIC_WEAKNESS_CODES.includes(code),
+      || carcosaSignatures.includes(code) || tfaSignatures.includes(code) || tcuSignatures.includes(code)
+      || ALL_BASIC_WEAKNESS_CODES.includes(code),
     scenarioOnly: CORE_STORY_CODES.includes(code),
     acceptanceProfile: coreCardVerified(code) ? CORE_ACCEPTANCE_PROFILE.id : null,
     reason: coreCardVerified(code) ? '初始包已通过逐卡行为验收；范围与测试见 audit/core-acceptance.json。'
       : tfaPlayerCardVerified(code)
         ? 'M2 失落的时代玩家卡已全部通过逐卡主要印刷效果验收（含战役层永久卡）。'
+      : TCU_INVESTIGATOR_CODES.includes(code) || tcuSignatures.includes(code)
+        ? 'M1 万象无终六位调查员及其 13 张专属依赖已通过逐人行为与存档回放验收；玩家卡与剧本仍未开放。'
       : TFA_INVESTIGATOR_CODES.includes(code) || tfaSignatures.includes(code)
         ? 'M1 失落的时代五位调查员及其 11 张专属依赖已通过逐人行为与存档回放验收；玩家卡与剧本仍未开放。'
       : CARCOSA_INVESTIGATOR_CODES.includes(code) || carcosaSignatures.includes(code)
