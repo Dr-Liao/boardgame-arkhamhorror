@@ -57,15 +57,16 @@
 
 ## 安装
 
-本 Mod 不能单独运行，需要通过大厅仓库拉取：
+本 Mod 不能单独运行，需要放在大厅仓库的 `games/arkhamhorror` 下：
 
 ```bash
-git clone --recursive https://github.com/Dr-Liao/boardgame-hall-ai.git
+git clone https://github.com/Dr-Liao/boardgame-hall-ai.git
 cd boardgame-hall-ai
+git clone https://github.com/Dr-Liao/boardgame-arkhamhorror.git games/arkhamhorror
 npm install
 ```
 
-已经克隆过大厅的话，在大厅根目录运行 `git submodule update --init` 再 `npm install`。
+大厅不跟踪本目录。已经克隆过的话，在 `games/arkhamhorror` 里 `git pull` 即可更新。
 
 卡图约 1.9 GB，不在仓库中。首次显示时会自动缓存，也可以在本目录运行 `npm run images:fetch` 一次性下载（`npm run images:estimate` 预估大小，`npm run images:verify` 校验）。
 

@@ -294,7 +294,7 @@ npm run replay:fixtures          # 校验 golden replay 基线
 npm run replay:fixtures:write    # 行为有意变化后重采基线
 ```
 
-本目录是独立的 git 仓库，以子模块形式挂在大厅的 `games/arkhamhorror`。`tests/node-suite.mjs` 含 HTTP 回归，
+本目录是独立的 git 仓库，按需克隆到大厅的 `games/arkhamhorror`（大厅不跟踪本目录的内容）。`tests/node-suite.mjs` 含 HTTP 回归，
 与浏览器、P7 回归一样会加载大厅的 `lib/server.js`，因此需要在大厅目录内运行。
 
 测试运行产生的 `test-results/` 可以随时清理；它不是测试输入。证据报告只有在对应生成器、来源和审核范围明确时才能更新。
