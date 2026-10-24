@@ -4,6 +4,8 @@ import { parseArkhamDbInput, loadArkhamDbDeck, planArkhamDbImport } from './arkh
 import { listLocalDecks, saveLocalDeck, deleteLocalDeck } from './deck-library.js'
 import { tableArt } from './table-art.js'
 import { tableIcon, classIcon } from './table-components.js'
+import { cardDisplayName, cardDisplayText, cardDisplayTraits } from './catalog.js'
+import { t } from './i18n.js'
 import { renderStoryReader } from './story-reader.js'
 import { cardSource, filterCards, renderCardFilters } from './card-filters.js'
 import { campaignPresentation, presentationAttributes } from './campaign-presentation.js'
@@ -17,8 +19,16 @@ import {
   hauntedChoiceModel, renderHauntedChoice, renderStoryInvestigatorPicker, renderTarotPicker,
   storyInvestigatorPickerModel, tarotPickerModel,
 } from './tcu-ui.js'
-const STAGES = { campaignHub: '战役准备', scenarioSetup: '调查准备', inScenario: '调查进行中', scenario: '调查进行中', scenarioResult: '调查报告', interlude: '关间休整', campaignResult: '战役终章' }
-const DIFFICULTIES = { easy: '简单', standard: '普通', hard: '困难', expert: '专家' }
+// 界面文案统一走 web/i18n.js 的 t()（缺失时回退 zh-CN 源文案），见 docs/localization.md §8.7 第三步。
+const STAGE_KEYS = {
+  campaignHub: 'hub.stage.campaignHub', scenarioSetup: 'hub.stage.scenarioSetup',
+  inScenario: 'hub.stage.inScenario', scenario: 'hub.stage.inScenario',
+  scenarioResult: 'hub.stage.scenarioResult', interlude: 'hub.stage.interlude',
+  campaignResult: 'hub.stage.campaignResult',
+}
+const stageLabel = value => t(STAGE_KEYS[value] || STAGE_KEYS.inScenario)
+const DIFFICULTY_KEYS = { easy: 'hub.difficulty.easy', standard: 'hub.difficulty.standard', hard: 'hub.difficulty.hard', expert: 'hub.difficulty.expert' }
+const difficultyLabel = value => DIFFICULTY_KEYS[value] ? t(DIFFICULTY_KEYS[value]) : value
 const CLASSES = { guardian: '守护者', seeker: '探求者', rogue: '流浪者', mystic: '潜修者', survivor: '生存者', neutral: '中立' }
 // 选调查员时的扩展包署名：核心包沿用档案口径，其余循环复用卡牌筛选的系列表，
 // 所以新增循环（失落的时代、万象无终……）不必在两张表里各写一遍中文名。
@@ -35,11 +45,12 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   rememberSession, leave, submitMove, refreshSession, catalogOpen, rulebookOpen, inspectCard, canAct = () => true,
   openFeedback }) {
   installCardZoom(h)
-  const tabs = [
-    ['departure', '开始关卡'],
-    ['overview', '战役总览'], ['scenarios', '关卡选择'], ['investigators', '调查员与席位'],
-    ['deck', '卡组构筑'], ['upgrades', '升级'], ['supplies', '补给品'], ['records', '战役记录'],
-    ['story', '调查纪事'],
+  // 页签在每次渲染时按当前语言生成，onLocaleChange 后重绘即可切换（无需重新加载模块）。
+  const tabLabels = () => [
+    ['departure', t('hub.tab.departure')],
+    ['overview', t('hub.tab.overview')], ['scenarios', t('hub.tab.scenarios')], ['investigators', t('hub.tab.investigators')],
+    ['deck', t('hub.tab.deck')], ['upgrades', t('hub.tab.upgrades')], ['supplies', t('hub.tab.supplies')], ['records', t('hub.tab.records')],
+    ['story', t('hub.tab.story')],
   ]
   const TAB_ICONS = { departure: 'action', overview: 'clue', scenarios: 'eye', investigators: 'shield',
     deck: 'book', upgrades: 'star', supplies: 'supply', records: 'leaf', story: 'book' }
@@ -61,7 +72,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     return s.state.campaignStory?.entries?.find(entry => entry.id === id)
   }
   const resultName = (s, result) => resultStory(s, result)?.resolutionTitle || outcomeName(result.resolution)
-  const nameOf = (g, code) => state.session?.state.cards?.[code]?.name || g.clientData?.deckBuilder?.cardPool.find(card => card.code === code)?.name || '调查卡牌'
+  const nameOf = (g, code) => cardDisplayName(state.session?.state.cards?.[code]) || cardDisplayName(g.clientData?.deckBuilder?.cardPool.find(card => card.code === code)) || '调查卡牌'
   const art = (code, name) => tableArt(h, code, name)
   // 关卡内页面的插图必须带上已选关卡：不传 scenarioId 时只能拿到战役封面。
   const decor = (name, className = '', scenarioId = '') => {
@@ -567,7 +578,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           h('strong', {}, `${item.online ? '联机' : '单人'} · ${item.campaignName || item.campaignId || '未知战役'}`),
           item.online ? h('p', {}, `${item.humanCount} 个玩家席位 · ${item.aiCount} 个 AI 席位；读档后创建房间等待玩家加入。`) : null,
           h('div', { className: 'ah-save-portraits' }, item.investigators.map(inv => portrait(inv))),
-          h('div', {}, `${STAGES[item.uiState] || '调查进行中'} · ${item.playerCount} 人 · ${item.investigators.map(inv => inv.name).join('、')}`),
+          h('div', {}, `${stageLabel(item.uiState)} · ${item.playerCount} 人 · ${item.investigators.map(inv => inv.name).join('、')}`),
           h('small', {}, new Date(item.savedAt).toLocaleString()),
           !item.compatible ? h('p', { role: 'status' }, '不可读取：' + item.compatibilityError) : null,
           item.needsMigration ? h('p', { role: 'status' }, `旧版本存档，读取时会自动升级并备份原档（${item.migrationChanges.join('；')}）`) : null,
@@ -584,7 +595,11 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     return h('div', { className: 'bg-backdrop' },
       h('div', { className: 'bg-modal ah-hub-setup ah-office ah-theme', ...presentationAttributes({ campaign: { id: state.setup?.form?.campaignId } }), role: 'dialog', 'aria-modal': 'true', 'aria-label': '调查准备设置',
         onkeydown: modalKeys(() => { state.setup = null; render() }), onclick: event => event.stopPropagation() },
-        h('div', { className: 'ah-office-entry-art' }, decor('manor'), decor('desk'),
+        h('div', { className: 'ah-office-entry-art' },
+          h('div', { className: 'ah-office-entry-hero' }, decor('manor'),
+            h('span', { className: 'ah-office-entry-blur is-top', 'aria-hidden': 'true' }),
+            h('span', { className: 'ah-office-entry-blur is-bottom', 'aria-hidden': 'true' })),
+          decor('desk'),
           h('div', { className: 'ah-office-entry-title' }, h('small', {}, 'ARKHAM HORROR'), h('h2', {}, '诡镇奇谈'), h('p', {}, '灯尚未熄灭，调查尚未结束。'))),
         h('div', { className: 'ah-office-entry-controls' },
         h('small', { className: 'ah-office-eyebrow' }, '调查事务所 / 案件档案'),
@@ -713,7 +728,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
             legal(s, 'hubSetDifficulty').map(move => h('button', {
               className: 'bg-btn secondary', 'aria-pressed': String(s.state.difficulty === move.difficulty),
               disabled: locked(s), onclick: () => submitMove(move, s),
-            }, DIFFICULTIES[move.difficulty] || move.difficulty))) : null,
+            }, difficultyLabel(move.difficulty)))) : null,
           h('div', { className: 'ah-office-primary' },
             s.state.uiState === 'scenarioResult' ? h('div', { className: 'ah-office-result' },
               h('h3', {}, '本关结算'), h('p', {}, `${cp.scenarioResults?.length ? resultName(s, cp.scenarioResults.at(-1)) : outcomeName(s.state.resolution)} · 本关胜利点 ${s.state.victory}`),
@@ -722,7 +737,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       h('div', { className: 'ah-office-overview-grid' },
         h('article', { className: 'ah-office-dossier' }, decor('casefile'), h('div', { className: 'ah-office-dossier-copy' },
           h('small', {}, '当前案件'), h('h2', {}, selected?.scenarios?.find(item => item.id === s.state.hubSelectedScenarioId)?.name || '待选择'),
-          h('p', {}, `${DIFFICULTIES[s.state.difficulty] || s.state.difficulty} · 已完成 ${cp.scenarioResults.length}/${selected?.scenarios?.length || 0} 个剧本`),
+          h('p', {}, `${difficultyLabel(s.state.difficulty)} · 已完成 ${cp.scenarioResults.length}/${selected?.scenarios?.length || 0} 个剧本`),
           h('button', { onclick: () => changeTab('scenarios') }, '展开案件路线 →'))),
         h('section', { className: 'ah-office-team-panel' }, h('h3', {}, '调查小队'), team(s))),
       h('details', { className: 'ah-content-packs', 'aria-label': '已注册内容与依赖' },
@@ -773,7 +788,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     return h('section', { className: 'ah-hub-pane ah-office-departure', 'aria-label': '出发准备' },
       h('div', { className: 'ah-departure-heading' }, decor('scene', '', st.hubSelectedScenarioId), h('div', {},
         h('small', { className: 'ah-office-eyebrow' }, '出发准备'), h('h2', {}, scenario?.name || '下一场调查'),
-        h('p', {}, `${DIFFICULTIES[st.difficulty] || st.difficulty} · ${count}/${st.investigators.length} 席位已准备`),
+        h('p', {}, `${difficultyLabel(st.difficulty)} · ${count}/${st.investigators.length} 席位已准备`),
         h('p', { id: 'ah-departure-hint', role: 'status' }, hint),
         h('button', {className:'bg-btn secondary',onclick:()=>changeTab('story')}, '阅读本关导入'),
         h('button', { className: 'bg-btn ah-departure-start', disabled: !ready || locked(s) || !!s.saveError || !!s.saveDetached,
@@ -854,7 +869,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           active && inv.seat === (s.mySeat ?? 0) && moves.length ? h('div', { className: 'ah-investigator-browser' },
             h('div', { className: 'ah-investigator-browser-head' }, h('div', {},
               h('h3', {}, record && record.status !== 'active' ? `${record.status === 'insane' ? '已疯狂' : '已死亡'}，请挑选替补调查员` : '选择调查员'),
-              h('p', {}, record && record.status !== 'active' ? '替补以全新 0 XP 牌组加入，不继承旧人物的创伤与卡牌。' : '按职业与扩展包筛选，再挑选一位调查员。')),
+              h('p', {}, record && record.status !== 'active' ? '替补以全新 0 XP 牌组加入，不继承旧人物的创伤与卡牌。' : '按职业与扩展包筛选，再挑选一位调查员。点卡面右上角的书本图标先看完整人物档案；按住 Alt 悬停卡面可放大卡牌。')),
               h('div', { className: 'ah-investigator-filter-bar' },
                 h('label', { className: 'ah-investigator-pack-filter' }, '扩展包',
                   h('select', { 'aria-label': '筛选扩展包', 'data-focus-key': 'investigator:pack',
@@ -868,10 +883,16 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
             groups.length ? groups.map(([pack, entries]) => h('section', { className: 'ah-investigator-pack', 'data-pack': pack },
               h('header', {}, h('h4', {}, packName(pack)), h('small', {}, `${entries.length} 位调查员`)),
               h('div', { className: 'ah-office-roster' }, entries.map(({ move, investigator: candidate }) =>
-                h('button', { className: `ah-office-candidate is-${candidate.klass || 'neutral'}`, 'data-class': candidate.klass || 'neutral',
-                  'aria-label': `${move.label}；${CLASSES[candidate.klass] || candidate.klass || ''}；${packName(pack)}`,
-                  'aria-pressed': String(selected && inv.code === move.code), disabled: locked(s), onclick: () => submitMove(move, s) },
-                portrait(candidate), h('span', {}, candidate.name), h('small', {}, CLASSES[candidate.klass] || candidate.klass || '调查员'))))))
+                // 候选人卡 = 选择按钮 + 独立的档案按钮（不能把 button 嵌进 button）。
+                // 点卡直接选定（原有行为），点右上角 ⓘ 只看完整人物档案、不提交选择。
+                h('div', { className: 'ah-office-candidate-shell', 'data-code': candidate.code },
+                  h('button', { className: `ah-office-candidate is-${candidate.klass || 'neutral'}`, 'data-class': candidate.klass || 'neutral',
+                    'aria-label': `${move.label}；${CLASSES[candidate.klass] || candidate.klass || ''}；${packName(pack)}`,
+                    'aria-pressed': String(selected && inv.code === move.code), disabled: locked(s), onclick: () => submitMove(move, s) },
+                  portrait(candidate), h('span', {}, candidate.name), h('small', {}, CLASSES[candidate.klass] || candidate.klass || '调查员')),
+                  h('button', { type: 'button', className: 'ah-office-candidate-info', 'data-candidate-info': candidate.code,
+                    'aria-label': `查看调查员档案：${candidate.name}`, title: `查看 ${candidate.name} 的完整人物档案`,
+                    onclick: () => inspectCard(candidate.code) }, tableIcon('book')))))))
               : h('p', { className: 'ah-office-empty' }, '当前筛选下没有可选调查员')) : null,
           active && inv.seat === (s.mySeat ?? 0) ? h('div', { className: 'ah-hub-actions' },
             legal(s, 'hubAutoDeck').map(move => action(s, move)),
@@ -920,15 +941,15 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
 
   function upgrades(s, g) {
     const st = s.state
-    const name = code => code ? st.cards?.[code]?.name || nameOf(g, code) : '无需替换'
+    const name = code => code ? cardDisplayName(st.cards?.[code]) || nameOf(g, code) : '无需替换'
     const card = code => code ? { ...g.clientData?.deckBuilder?.cardPool.find(item => item.code === code), ...st.cards?.[code] } : null
     const cardDescription = code => {
       const detail = card(code)
       if (!detail) return h('p', { className: 'ah-upgrade-card-description' }, '不移除现有卡牌，直接加入牌组。')
-      const traits = (detail.traitsZh?.length ? detail.traitsZh : detail.traits || []).join(' · ')
+      const traits = cardDisplayTraits(detail).join(' · ')
       return h('div', { className: 'ah-upgrade-card-description' },
         traits ? h('small', {}, traits) : null,
-        h('p', {}, renderRulesText(h, detail.textZh || detail.abilityTextZh || detail.text || detail.abilityText || '此卡没有额外规则文字。')))
+        h('p', {}, renderRulesText(h, cardDisplayText(detail) || cardDisplayText({ text: detail.abilityText, textZh: detail.abilityTextZh }) || t('card.zoom.noRules'))))
     }
     const purchases = legal(s, 'hubPurchase')
     const additions = [...new Set(purchases.map(move => move.added))]
@@ -1072,6 +1093,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const panelProps = {
       disabled: locked(s), busy: state.busy,
       onSubmit: move => { if (move && !state.busy) submitMove(move, s) },
+      // 序章选人的「详情」入口：复用大厅已有的卡牌详情弹窗（卡面 + 卡背设置），
+      // 旧版大厅没有注入 inspectCard 时面板自动隐藏这个按钮。
+      inspectCard,
     }
     const tarot = tarotPickerModel(s)
     if (tarot) return h('div', { className: 'ah-hub-pane ah-hub-tcu-panel' }, interludeBriefing(s, true), renderTarotPicker(h, tarot, panelProps))
@@ -1143,7 +1167,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     }
     if (canDepart(s) && state.arkhamDepartureReady !== `${s.sessionId}:${s.state.campaign.scenarioIndex}`) state.arkhamHubTab = 'departure'
     state.arkhamDepartureReady = canDepart(s) ? `${s.sessionId}:${s.state.campaign.scenarioIndex}` : null
-    const campaignTabs = supportsSupplies(s.state.campaign) ? tabs : tabs.filter(([id]) => id !== 'supplies')
+    const campaignTabs = supportsSupplies(s.state.campaign) ? tabLabels() : tabLabels().filter(([id]) => id !== 'supplies')
     const activeTab = campaignTabs.some(([id]) => id === state.arkhamHubTab) ? state.arkhamHubTab : 'overview'
     const panes = { departure, overview, scenarios, investigators, deck, upgrades, supplies, records,
       story:s=>renderStoryReader(h,s,state,render,action,g,checkpointAction) }
@@ -1153,12 +1177,12 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       'data-scroll-context': `${s.sessionId}:${s.state.uiState}:${activeTab}` },
       h('header', { className: 'bg-game-head' },
         h('div', { className: 'bg-game-title' }, '诡镇奇谈 · ' + s.state.campaign.name),
-        h('div', { className: 'bg-game-status' }, STAGES[s.state.uiState] || '调查进行中'),
+        h('div', { className: 'bg-game-status' }, stageLabel(s.state.uiState)),
         h('div', { className: 'bg-game-actions' },
-          h('button', { className: 'bg-btn secondary', onclick: rulebookOpen }, '规则书'),
-          h('button', { className: 'bg-btn secondary', onclick: catalogOpen }, '全卡图鉴'),
-          h('button', { className: 'bg-btn secondary', onclick: () => refreshSession(s) }, '刷新'),
-          h('button', { className: 'bg-btn secondary', onclick: leave }, '退出'),
+          h('button', { className: 'bg-btn secondary', onclick: rulebookOpen }, t('table.rulebook')),
+          h('button', { className: 'bg-btn secondary', onclick: catalogOpen }, t('table.catalog')),
+          h('button', { className: 'bg-btn secondary', onclick: () => refreshSession(s) }, t('hub.refresh')),
+          h('button', { className: 'bg-btn secondary', onclick: leave }, t('table.leave')),
           feedbackEntry())),
       saveNotice ? h('div', { className: 'ah-hub-save-alert', role: 'alert' }, saveNotice,
         s.online && s.mySeat !== 0 ? h('p', {}, '请房主处理存档问题。')

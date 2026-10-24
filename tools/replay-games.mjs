@@ -2,7 +2,7 @@
 //
 // 两个用途：
 //   1. tools/replay-fixtures.mjs 用它采集 golden 基线（真实对局的 settings/players/moves/hashes）；
-//   2. tests/replay-fuzz.test.mjs 用它做"100 局随机对局 replay 与实时执行一致"的门禁。
+//   2. tests/replay-fuzz.test.mjs 用它做"随机对局 replay 与实时执行一致"的门禁（默认 40 局）。
 //
 // 三条约定：
 //   - **只用合法动作**：每一步都过 validateMove，任何非法动作都当成驱动器的 bug 抛错，

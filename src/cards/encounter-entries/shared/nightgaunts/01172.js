@@ -9,4 +9,4 @@
 // 敌人卡面的特殊规则（原 card-rules.js 的 ENEMY_RULE_FLAGS，REPORT.md 第 3 批）
 // 猎手夜魇（01172 / huntingNightgaunt）：负面标记双倍结算。
 
-export default { code: '01172', name: '猎手夜魇', scope: 'enemy', text: '负面标记双倍结算。', enemyRule: { doubleNegative: true } }
+export default { implemented: true, code: '01172', name: '猎手夜魇', scope: 'enemy', text: '负面标记双倍结算。', enemyRule: { doubleNegative: true } }

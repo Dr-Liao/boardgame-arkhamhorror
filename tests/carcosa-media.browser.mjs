@@ -44,10 +44,10 @@ test('卡尔克萨八章图片可解码，整轮歌单与六首专属音乐正�
   for (const [title, file] of tracks) {
     await page.getByRole('button', { name: '播放 ' + title, exact: true }).click()
     await expect(page.locator('.ah-music-now')).toHaveText(title)
-    expect(await page.evaluate(() => window.musicAudio.src)).toContain(`/campaigns/thePathToCarcosa/${file}.mp3`)
+    expect(await page.evaluate(() => window.musicAudio.src)).toContain(`/common/${file}.mp3`)
     await expect.poll(() => page.evaluate(() => window.musicAudio.duration || 0)).toBeGreaterThan(90)
     await expect.poll(() => page.evaluate(() => window.musicAudio.currentTime)).toBeGreaterThan(.1)
-    const partial = await request.get(`/mods/arkhamhorror/audio/music/campaigns/thePathToCarcosa/${file}.mp3`, { headers: { Range: 'bytes=0-31' } })
+    const partial = await request.get(`/mods/arkhamhorror/audio/music/common/${file}.mp3`, { headers: { Range: 'bytes=0-31' } })
     expect(partial.status()).toBe(206)
     expect(partial.headers()['content-type']).toBe('audio/mpeg')
   }

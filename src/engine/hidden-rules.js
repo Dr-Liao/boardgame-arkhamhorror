@@ -114,6 +114,17 @@ export function createHiddenRules(deps) {
     return scenarioBehavior(state).enemyCannotBeAttacked?.(state, enemy) === true
   }
 
+  // 冷漠（aloof）：未与调查员交战的冷漠敌人不能被攻击——调查员必须先主动交战，
+  // 或使用写明「忽略冷漠」的攻击（04104 枪法如神等，通过 options.ignoreAloof 放行）。
+  // 庞大敌人视为与所在地点每位调查员交战（规则书「庞大」），因此不受这条限制。
+  function aloofPreventsAttack(state, inv, enemy, options = {}) {
+    if (!enemy || options.ignoreAloof === true) return false
+    if (enemyTextBlanked(state, enemy) || !enemy.aloof) return false
+    if (enemy.engagedSeat != null) return false
+    if (enemy.massive && enemy.location === inv?.location) return false
+    return true
+  }
+
   function enemyCanOpportunityAttack(state, enemy) {
     if (entityRuleActive(state, enemy, 'cannot:opportunityAttack')) return false
     return scenarioBehavior(state).canOpportunityAttack?.(state, enemy) !== false
@@ -125,5 +136,5 @@ export function createHiddenRules(deps) {
     return scenarioBehavior(state).enemyCanBeDefeated?.(state, enemy, source, seat) !== false
   }
 
-  return { hiddenDefinition, hiddenRule, hasHiddenCard, removeHiddenMarker, canDiscardFromHand, discardHiddenCard, placeHiddenCard, activeHiddenRules, cannotTriggerFreeAbility, hiddenFightBlocked, movementError, currentInv, investigatorTextBlanked, enemyTextBlanked, enemyCannotAttack, enemyCannotBeAttacked, enemyCanOpportunityAttack, enemyCanBeDefeated }
+  return { hiddenDefinition, hiddenRule, hasHiddenCard, removeHiddenMarker, canDiscardFromHand, discardHiddenCard, placeHiddenCard, activeHiddenRules, cannotTriggerFreeAbility, hiddenFightBlocked, movementError, currentInv, investigatorTextBlanked, enemyTextBlanked, enemyCannotAttack, enemyCannotBeAttacked, aloofPreventsAttack, enemyCanOpportunityAttack, enemyCanBeDefeated }
 }

@@ -4,9 +4,13 @@ import { CARCOSA_STORY_TEXT } from '../../content/campaigns/thePathToCarcosa/sto
 import { CARCOSA_STORY_ROLES } from '../../content/campaigns/thePathToCarcosa/story-roles.js'
 import { TFA_STORY_TEXT } from '../../content/campaigns/theForgottenAge/story-text.js'
 import { TFA_STORY_ROLES } from '../../content/campaigns/theForgottenAge/story-roles.js'
+import { TCU_STORY_TEXT } from '../../content/campaigns/theCircleUndone/story-text.js'
+import { ALL_CARDS } from '../cards/cards-data.js'
+import { campaignEnding } from './campaign.js'
 
 const CARCOSA_IDS = new Set(Object.keys(CARCOSA_STORY_TEXT.introductions))
 const TFA_IDS = new Set(Object.keys(TFA_STORY_TEXT.introductions))
+const TCU_IDS = new Set(Object.keys(TCU_STORY_TEXT.introductions))
 
 // 第 123 轮（第 8 批）：剧情角色 → 卡号由战役内容声明（story-roles.js），本文件不再写死卡号。
 const carcosaCode = role => CARCOSA_STORY_ROLES[role] || null
@@ -202,6 +206,140 @@ function tfaFlowStory(visit, campaign) {
   return paragraphs.length ? { title: source.title, paragraphs } : null
 }
 
+// 万象无终（The Circle Undone）：导入正文按进入该章时的战役记录选择分支；
+// 未触发的分支不投影（参考实现各章 PreScenarioSetup 的 when 分支）。
+const tcuSection = (scenarioId, key) => TCU_STORY_TEXT.introductions?.[scenarioId]?.sections?.[key] || []
+const tcuRecord = (records, key) => Boolean(records?.[key])
+
+// 「任一调查员是潜修者」：intro3Mystic 只在有潜修者时阅读（参考 selectAny InvestigatorWithClass Mystic）。
+// context 可能是完整 state（investigators 里有卡号），也可能是结局快照（campaign.investigators 记录里有 code）。
+function tcuHasMystic(context) {
+  const investigators = [
+    ...(context?.investigators || []),
+    ...Object.values(context?.campaign?.investigators || {}),
+  ]
+  return investigators.some(inv => ALL_CARDS[inv?.code]?.klass === 'mystic')
+}
+
+function tcuIntroduction(sc, records = {}, context = null) {
+  if (!TCU_STORY_TEXT.introductions?.[sc.id]) return null
+  const paragraphs = []
+  const add = (...keys) => {
+    for (const key of keys) {
+      for (const paragraph of tcuSection(sc.id, key)) paragraphs.push(paragraph)
+    }
+  }
+  const has = key => tcuSection(sc.id, key).length > 0
+  const record = key => tcuRecord(records, key)
+  if (sc.id === 'disappearanceAtTheTwilightEstate') {
+    // 序章：1925 年的庄园与宴会。4 位故事调查员的独立引言是座位级私密正文，
+    // 由章节 behavior 写进 campaign.privateStories（见 disappearanceAtTheTwilightEstate/behavior.js），
+    // 不放进所有人都能读的 scenarioIntro。
+    add('body', 'intro')
+  } else if (sc.id === 'theWitchingHour') {
+    add('intro1')
+    if (record('youHaveAcceptedYourFate')) add('intro2')
+    else if (record('youHaveRejectedYourFate')) add('intro3')
+    // intro4 在参考实现里由 setup 的 DoStep 4 读取；本仓库 P8 未接线该步骤，
+    // 保留在导入数据里但不默认展开（见 docs/tcu-story.md 的显式近似）。
+  } else if (sc.id === 'atDeathsDoorstep') {
+    add('introPart1', 'introPart2', 'introPart3', 'introPart4')
+  } else if (sc.id === 'theSecretName') {
+    if (has('checkCampaignLog')) add('checkCampaignLog')
+    if (record('theInvestigatorsAreMembersOfTheLodge')) add('intro1')
+    if (record('theInvestigatorsToldTheLodgeAboutTheCoven')) {
+      add('intro2')
+    } else if (record('theInvestigatorsHidTheirKnowledgeOfTheCoven')) {
+      add('intro3')
+      if (tcuHasMystic(context) && has('intro3Mystic')) add('intro3Mystic')
+      add('intro3Part2')
+    }
+    if (record('theInvestigatorsAreEnemiesOfTheLodge')) add('intro4')
+    if (record('theInvestigatorsLearnedNothingOfTheLodgesSchemes')) add('intro5')
+    if (record('theInvestigatorsAreNeverSeenOrHeardFromAgain')) add('intro6')
+  } else if (sc.id === 'theWagesOfSin') {
+    add('body')
+  } else if (sc.id === 'forTheGreaterGood') {
+    add('intro1')
+    if (record('theInvestigatorsAreMembersOfTheLodge')) {
+      add('intro2')
+      if (record('theInvestigatorsAreDeceivingTheLodge')) add('deceivingTheLodge')
+      add('intro2Skip')
+    } else if (record('theInvestigatorsAreEnemiesOfTheLodge')) add('intro3')
+    else if (record('theInvestigatorsLearnedNothingOfTheLodgesSchemes')) add('intro4')
+    else add('intro5')
+  } else if (sc.id === 'unionAndDisillusion') {
+    add('body')
+    if (record('theInvestigatorsSidedWithTheCoven') && record('erynnJoinedTheInvestigators')) {
+      add('additionalIntro')
+    }
+  } else if (sc.id === 'inTheClutchesOfChaos') {
+    add('intro1')
+    add(record('theInvestigatorsAreNeverSeenOrHeardFromAgain') ? 'intro2' : 'intro3')
+    add('intro4')
+  } else if (sc.id === 'beforeTheBlackThrone') {
+    add('body')
+  }
+  if (!paragraphs.length) return null
+  return [{ title: sc.name, paragraphs }]
+}
+
+// 幕间二的正文开头按「是否有调查员带银暮秘社特性」二选一（参考实现 thePriceOfProgress1/2）。
+function tcuHasSilverTwilight(campaign) {
+  const records = Object.values(campaign?.investigators || {})
+  return records.some(record => (ALL_CARDS[record?.code]?.traits || []).includes('Silver Twilight'))
+}
+
+// 战役尾声：按实际结局标签 + 命中的条件片段组装；未触发片段/私密正文不出现。
+// 参考实现 Campaigns/TheCircleUndone.hs EpilogueStep（P9 把 5 个条件片段导入 story-text）。
+function tcuEpilogueStory(campaign, manifest) {
+  const source = TCU_STORY_TEXT.epilogue
+  if (!source) return null
+  const records = campaign.records || {}
+  const paragraphs = []
+  const ending = manifest ? campaignEnding(manifest, records) : null
+  if (ending) paragraphs.push(`【战役结局】${ending.label}。`)
+  const add = key => {
+    const sourceParagraphs = source.sections?.[key] || []
+    if (sourceParagraphs.length) paragraphs.push(...sourceParagraphs)
+  }
+  if (records.theInvestigatorsArrestedAnette) add('arrestedAnette')
+  if (records.theInvestigatorsAssumedControlOfTheSilverTwilightLodge) add('assumedControlOfTheLodge')
+  if (records.theInvestigatorsSurvivedTheWatchersEmbrace) add('survivedTheWatchersEmbrace')
+  if (records.theInvestigatorsSignedTheBlackBookOfAzathoth) add('signedTheBlackBook')
+  const hunted = records.youAreBeingHunted
+  if (Array.isArray(hunted) ? hunted.length > 0 : Boolean(hunted)) add('youAreBeingHunted')
+  if (!paragraphs.length) {
+    paragraphs.push('尘埃落定。阿卡姆的迷雾暂时散去，但这座城市与你们自己都已不再是从前的模样。')
+  }
+  return { title: source.title || '尾声', paragraphs }
+}
+
+function tcuFlowStory(visit, campaign, manifest = null) {
+  if (campaign.id !== 'theCircleUndone') return null
+  if (visit.nodeId === 'epilogue') return tcuEpilogueStory(campaign, manifest)
+  if (visit.nodeId === 'interludeTwo') {
+    const opening = TCU_STORY_TEXT.interludes?.interludeTwo
+    if (!opening) return null
+    const chosen = tcuHasSilverTwilight(campaign)
+      ? opening.sections?.thePriceOfProgress1 || []
+      : opening.sections?.thePriceOfProgress2 || []
+    const paragraphs = [
+      ...chosen,
+      ...(opening.sections?.thePriceOfProgress3 || []),
+    ]
+    return paragraphs.length ? { title: opening.title, paragraphs } : null
+  }
+  if (visit.nodeId === 'interludeThreeInnerCircle') {
+    // 核心圈四：开场正文（节点 text）+ 实际问到的 3 个问题的回答（storyQuestions 写进 storySections）。
+    const reached = campaign.storySections?.[visit.nodeId]
+    if (!Array.isArray(reached) || !reached.length) return null
+    const paragraphs = [visit.storyText, ...reached].filter(Boolean)
+    return paragraphs.length ? { title: TCU_STORY_TEXT.interludes?.interludeThree?.title || '核心圈', paragraphs } : null
+  }
+  return null
+}
+
 function dunwichIntroduction(sc, records) {
   const source = DUNWICH_STORY_TEXT.introductions[sc.id]
   if (!source) return null
@@ -244,9 +382,11 @@ export function introduction(sc, records = {}, context = null) {
   const dunwich = dunwichIntroduction(sc, records)
   const carcosa = carcosaIntroduction(sc, records, context)
   const tfa = tfaIntroduction(sc, records, context)
+  const tcu = tcuIntroduction(sc, records, context)
   if (dunwich) sections.push(...dunwich)
   else if (carcosa) sections.push(...carcosa)
   else if (tfa) sections.push(...tfa)
+  else if (tcu) sections.push(...tcu)
   else {
     const narrative = sc.id === 'theMidnightMasks'
       ? [...STORY_TEXT.theMidnightMasks[records.litaForcedOthers ? 'others' : 'survivors'], ...STORY_TEXT.theMidnightMasks.common]
@@ -286,6 +426,10 @@ function savedIntroduction(snapshot, sc, records, context = null) {
     if (prose.length <= String(sc.intro || '').trim().length + 20) return introduction(sc, records, context)
   }
   if (TFA_IDS.has(sc.id)) {
+    const prose = Array.isArray(snapshot.paragraphs) ? snapshot.paragraphs.join('').trim() : ''
+    if (prose.length <= String(sc.intro || '').trim().length + 20) return introduction(sc, records, context)
+  }
+  if (TCU_IDS.has(sc.id)) {
     const prose = Array.isArray(snapshot.paragraphs) ? snapshot.paragraphs.join('').trim() : ''
     if (prose.length <= String(sc.intro || '').trim().length + 20) return introduction(sc, records, context)
   }
@@ -335,7 +479,10 @@ export function resolutionStory(sc, key, snapshot = null, context = null) {
     ? snapshot.title?.match(/^结局 (\d+)$/)?.[1]
     : null
   if (savedBranch) branch = `r${savedBranch}`
-  const title = /^r\d+$/.test(branch) ? '结局 ' + branch.slice(1) : '未达成结局'
+  // 万象无终的《巫异时刻》《隐秘之名》直接用 `resolutionN` 作为结局键，其余章节用 `rN`；
+  // 两种写法都要能显示「结局 N」。
+  const branchNumber = /^r(\d+)$/.exec(branch)?.[1] ?? /^resolution(\d+)$/.exec(branch)?.[1] ?? null
+  const title = branchNumber ? '结局 ' + branchNumber : '未达成结局'
   const prelude = branch === 'noResolution' ? [] : defeatedPrelude(sc, key, context)
   const snapshotHasPrelude = !prelude.length
     || prelude.every(paragraph => snapshot?.paragraphs?.includes(paragraph))
@@ -344,6 +491,7 @@ export function resolutionStory(sc, key, snapshot = null, context = null) {
     || STORY_TEXT.resolutions?.[sc.id]?.[branch]
     || CARCOSA_STORY_TEXT.resolutions?.[sc.id]?.[branch]
     || TFA_STORY_TEXT.resolutions?.[sc.id]?.[branch]
+    || TCU_STORY_TEXT.resolutions?.[sc.id]?.[branch]
     || snapshot?.paragraphs || [sc.resolutions?.[key]].filter(Boolean)
   if (prelude.length) paragraphs = [...prelude, ...paragraphs]
   if (sc.id === 'theUnspeakableOath') {
@@ -357,6 +505,7 @@ export function resolutionStory(sc, key, snapshot = null, context = null) {
 
 export function campaignStory(state, registry, observerSeat = null) {
   const campaign = state.campaign, entries = [], history = campaign.flow?.history || []
+  const campaignManifest = registry.getCampaign(campaign.id)
   for (const result of campaign.scenarioResults || []) {
     const sc = registry.getScenarioData(result.scenarioId)
     if (!sc) continue
@@ -383,7 +532,7 @@ export function campaignStory(state, registry, observerSeat = null) {
     if (campaign.id === 'theDunwichLegacy' && visit.nodeId === 'prologue') continue
     if (campaign.id === 'thePathToCarcosa' && ['prologue', 'possessedEpilogue'].includes(visit.nodeId)) continue
     const expanded = dunwichFlowStory(visit.nodeId, campaign) || carcosaFlowStory(visit, campaign)
-      || tfaFlowStory(visit, campaign)
+      || tfaFlowStory(visit, campaign) || tcuFlowStory(visit, campaign, campaignManifest)
     if (expanded || visit.storyText) entries.push({ _order:index*3-1, id: `flow:${index}`, kind: 'interlude',
       nodeId: visit.nodeId,
       title: expanded?.title || visit.storyTitle || '调查纪事', paragraphs: expanded?.paragraphs || [visit.storyText] })

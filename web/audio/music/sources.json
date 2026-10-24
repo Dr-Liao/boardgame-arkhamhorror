@@ -205,12 +205,15 @@
       "bytes": 11286064,
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300041",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Evening%20of%20Chaos.mp3",
-      "localFile": "campaigns/thePathToCarcosa/evening-of-chaos.mp3",
+      "localFile": "common/evening-of-chaos.mp3",
       "retrieved": "2026-10-15",
       "encoded": {
         "bytes": 4514854,
         "sha256": "ea65730a6bc396cfd37e0b1ac43ee2f1f864b2def7079091710fe6341f1a7ab8"
-      }
+      },
+      "legacyFiles": [
+        "campaigns/thePathToCarcosa/evening-of-chaos.mp3"
+      ]
     },
     {
       "title": "Danse Macabre",
@@ -232,12 +235,15 @@
       "bytes": 16341156,
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100546",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Danse%20Macabre.mp3",
-      "localFile": "campaigns/thePathToCarcosa/danse-macabre.mp3",
+      "localFile": "common/danse-macabre.mp3",
       "retrieved": "2026-10-15",
       "encoded": {
         "bytes": 6500651,
         "sha256": "965ec0b2e99954ca7681231d75de48c2b62c2d60f9b43ae1136e0f44cf5ea408"
-      }
+      },
+      "legacyFiles": [
+        "campaigns/thePathToCarcosa/danse-macabre.mp3"
+      ]
     },
     {
       "title": "Echoes of Time",
@@ -259,12 +265,15 @@
       "bytes": 11408327,
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300029",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Echoes%20of%20Time.mp3",
-      "localFile": "campaigns/thePathToCarcosa/echoes-of-time.mp3",
+      "localFile": "common/echoes-of-time.mp3",
       "retrieved": "2026-10-15",
       "encoded": {
         "bytes": 4563773,
         "sha256": "d6c6d35a304eb3fa43e635090dcc74f4895ce638053273a9739d93db881494b2"
-      }
+      },
+      "legacyFiles": [
+        "campaigns/thePathToCarcosa/echoes-of-time.mp3"
+      ]
     },
     {
       "title": "Long Note Two",
@@ -286,12 +295,15 @@
       "bytes": 18641758,
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100420",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Long%20Note%20Two.mp3",
-      "localFile": "campaigns/thePathToCarcosa/long-note-two.mp3",
+      "localFile": "common/long-note-two.mp3",
       "retrieved": "2026-10-15",
       "encoded": {
         "bytes": 7394152,
         "sha256": "02b61f62ae0fac515a9aad396287716c171284c00adee0b7c362d43c868b14cd"
-      }
+      },
+      "legacyFiles": [
+        "campaigns/thePathToCarcosa/long-note-two.mp3"
+      ]
     },
     {
       "title": "Ghost Processional",
@@ -313,12 +325,15 @@
       "bytes": 3440840,
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100219",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ghost%20Processional.mp3",
-      "localFile": "campaigns/thePathToCarcosa/ghost-processional.mp3",
+      "localFile": "common/ghost-processional.mp3",
       "retrieved": "2026-10-15",
       "encoded": {
         "bytes": 1665383,
         "sha256": "fd6b838542abbad884439e88350701e5804d01beda381d63d1c3eee6c8355cbd"
-      }
+      },
+      "legacyFiles": [
+        "campaigns/thePathToCarcosa/ghost-processional.mp3"
+      ]
     },
     {
       "title": "Ossuary 6 - Air",
@@ -340,12 +355,15 @@
       "bytes": 8004526,
       "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500048",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ossuary%206%20-%20Air.mp3",
-      "localFile": "campaigns/thePathToCarcosa/ossuary-6-air.mp3",
+      "localFile": "common/ossuary-6-air.mp3",
       "retrieved": "2026-10-15",
       "encoded": {
         "bytes": 4002524,
         "sha256": "20caca09601bd84626d1d8798332466d09e9a519e91365c74f5ab2aafa797711"
-      }
+      },
+      "legacyFiles": [
+        "campaigns/thePathToCarcosa/ossuary-6-air.mp3"
+      ]
     },
     {
       "title": "Deadly Roulette",
@@ -461,14 +479,17 @@
       "isrc": "USUAN1600044",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600044",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Magic%20Forest.mp3",
-      "localFile": "campaigns/theForgottenAge/magic-forest.mp3",
+      "localFile": "common/magic-forest.mp3",
       "bytes": 8324631,
       "sha256": "0e8f92a3dfb5e71398502478d6d3be14b705b0dfc0afabccf5831bc741592f55",
       "encoded": {
         "bytes": 4162534,
         "sha256": "8bb79577f24ed049acc75f60af906e58fa536d2f48d540f9ba08d0c55e6922c2"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/magic-forest.mp3"
+      ]
     },
     {
       "title": "Shamanistic",
@@ -476,14 +497,17 @@
       "isrc": "USUAN1100353",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100353",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Shamanistic.mp3",
-      "localFile": "campaigns/theForgottenAge/shamanistic.mp3",
+      "localFile": "common/shamanistic.mp3",
       "bytes": 7412503,
       "sha256": "69265f2089672b2b798e0e3bb8f5d79d1b5af7a479aff4cdfb19658311be7910",
       "encoded": {
         "bytes": 3059846,
         "sha256": "7672ff86dea9de5d2402f001d5b50f02638541c51dfc71964b8b79d5c7426754"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/shamanistic.mp3"
+      ]
     },
     {
       "title": "Invariance",
@@ -491,14 +515,17 @@
       "isrc": "USUAN1100847",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100847",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Invariance.mp3",
-      "localFile": "campaigns/theForgottenAge/invariance.mp3",
+      "localFile": "common/invariance.mp3",
       "bytes": 8675894,
       "sha256": "1d6e3b8e1a2dca31d911396b2839c832da6380ff05a5538d2050aacaace52eef",
       "encoded": {
         "bytes": 3470787,
         "sha256": "88ceacd54b4eb0697d58ac2d66b587dd8a41585d377c9fbcf1f2b9022a44d394"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/invariance.mp3"
+      ]
     },
     {
       "title": "Ancient Rite",
@@ -506,14 +533,17 @@
       "isrc": "USUAN1900048",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1900048",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ancient%20Rite.mp3",
-      "localFile": "campaigns/theForgottenAge/ancient-rite.mp3",
+      "localFile": "common/ancient-rite.mp3",
       "bytes": 4663306,
       "sha256": "3a0f9d6fc09c4d0605bfd07577600245fdd6c91394dc4037b5112c94a6d93756",
       "encoded": {
         "bytes": 2323545,
         "sha256": "68baae7a8bafc0bbe075b3d71e86c4f1622cb4feae93c743bf491d00c0f3e462"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/ancient-rite.mp3"
+      ]
     },
     {
       "title": "Rites",
@@ -521,14 +551,17 @@
       "isrc": "USUAN1100722",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100722",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Rites.mp3",
-      "localFile": "campaigns/theForgottenAge/rites.mp3",
+      "localFile": "common/rites.mp3",
       "bytes": 5078605,
       "sha256": "269fbc51c8866b674e557ca570671b8ca5658c62965ba9b69853dd210c372646",
       "encoded": {
         "bytes": 2032165,
         "sha256": "49459937af894c3d3197debe432983496f3ba953d75d816c4f27f54878e1b418"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/rites.mp3"
+      ]
     },
     {
       "title": "Lost Frontier",
@@ -536,14 +569,17 @@
       "isrc": "USUAN1300039",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300039",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Lost%20Frontier.mp3",
-      "localFile": "campaigns/theForgottenAge/lost-frontier.mp3",
+      "localFile": "common/lost-frontier.mp3",
       "bytes": 10599561,
       "sha256": "aa26ceb895a64387c5ba8565c4a23045caf10725c1dacb7a17b5d3d28240991c",
       "encoded": {
         "bytes": 4240256,
         "sha256": "c99dea940c64508bdfbff25de472ebb1401be92d44e2cdaec5904fdc337ef6c9"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/lost-frontier.mp3"
+      ]
     },
     {
       "title": "Gloom Horizon",
@@ -551,14 +587,17 @@
       "isrc": "USUAN1100813",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100813",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Gloom%20Horizon.mp3",
-      "localFile": "campaigns/theForgottenAge/gloom-horizon.mp3",
+      "localFile": "common/gloom-horizon.mp3",
       "bytes": 5118872,
       "sha256": "8d5bb444cd6c4beca20855636b8a708c77e12b49dd13010ff0569de8aa01ecbb",
       "encoded": {
         "bytes": 2047254,
         "sha256": "2cb9dc3c2a915b14d77e1f5f3c3c9ccc5b4f4a8cebb557b7ccd91a25ffa66915"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/gloom-horizon.mp3"
+      ]
     },
     {
       "title": "Enter the Maze",
@@ -566,14 +605,17 @@
       "isrc": "USUAN1100782",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100782",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Enter%20the%20Maze.mp3",
-      "localFile": "campaigns/theForgottenAge/enter-the-maze.mp3",
+      "localFile": "common/enter-the-maze.mp3",
       "bytes": 7127287,
       "sha256": "06fc2496272926375e5ef2c4da2b761283bfe8f6e924c42528e4f52279399ab1",
       "encoded": {
         "bytes": 2851358,
         "sha256": "0bf1b47efd949326163ec5504641f1e5d91d0b3214c772473b9cc7efa6ad3df1"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/enter-the-maze.mp3"
+      ]
     },
     {
       "title": "Penumbra",
@@ -581,14 +623,17 @@
       "isrc": "USUAN1200105",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200105",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Penumbra.mp3",
-      "localFile": "campaigns/theForgottenAge/penumbra.mp3",
+      "localFile": "common/penumbra.mp3",
       "bytes": 11845077,
       "sha256": "55bcea6dbd758694862a8c3de03c4f293cce2c13bd752fa570886d8849f43cfb",
       "encoded": {
         "bytes": 4738454,
         "sha256": "5b1230e96ab32c9612a82367e4aa87d315629571fe8035bdf8eedbe2b439484f"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/penumbra.mp3"
+      ]
     },
     {
       "title": "Static Motion",
@@ -596,14 +641,17 @@
       "isrc": "USUAN1200062",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200062",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Static%20Motion.mp3",
-      "localFile": "campaigns/theForgottenAge/static-motion.mp3",
+      "localFile": "common/static-motion.mp3",
       "bytes": 7553686,
       "sha256": "ba6d9b08db388e975ca64962a052af2d5d7a9b58b2abbe446f4fd35b72733478",
       "encoded": {
         "bytes": 3021907,
         "sha256": "aef7d25067d105d8f8cb323f55c8f77334c2e21aa3a2c7710196135426b0a69c"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/static-motion.mp3"
+      ]
     },
     {
       "title": "Controlled Chaos",
@@ -611,14 +659,17 @@
       "isrc": "USUAN1200059",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200059",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Controlled%20Chaos.mp3",
-      "localFile": "campaigns/theForgottenAge/controlled-chaos.mp3",
+      "localFile": "common/controlled-chaos.mp3",
       "bytes": 14092660,
       "sha256": "2272606eca85243b723eeba82bb2b2c078f0c753c931103f768c233bb34987f0",
       "encoded": {
         "bytes": 5637498,
         "sha256": "c4d099b0c00b3a73de4d894f521b79c61fab521bd80a930f12f92d26cb1a13b8"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/controlled-chaos.mp3"
+      ]
     },
     {
       "title": "Orion 300XB",
@@ -626,14 +677,17 @@
       "isrc": "USUAN1100697",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100697",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Orion%20300XB.mp3",
-      "localFile": "campaigns/theForgottenAge/orion-300xb.mp3",
+      "localFile": "common/orion-300xb.mp3",
       "bytes": 8918693,
       "sha256": "2db82098f9018751768f97577fad1cbd2cdf754a80412ed81025d3ebd09c41a7",
       "encoded": {
         "bytes": 3568191,
         "sha256": "024a91acc498fc0f9109c817938224ebce04ae18a022e70ed4a3f5bf62ec8ddc"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/orion-300xb.mp3"
+      ]
     },
     {
       "title": "Digital Bark",
@@ -641,14 +695,17 @@
       "isrc": "USUAN1100260",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100260",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Digital%20Bark.mp3",
-      "localFile": "campaigns/theForgottenAge/digital-bark.mp3",
+      "localFile": "common/digital-bark.mp3",
       "bytes": 10570102,
       "sha256": "3c6b42d4e42861a7bb8ee756454444d164ee98b7f40ab2900820b4b530a74b5b",
       "encoded": {
         "bytes": 4422684,
         "sha256": "d749b97c861e1f640a3da0e7d7d3ad015ea84defd2c6a37662a075d642685bc9"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/digital-bark.mp3"
+      ]
     },
     {
       "title": "It is Lost",
@@ -656,14 +713,17 @@
       "isrc": "USUAN1100190",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100190",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/It%20is%20Lost.mp3",
-      "localFile": "campaigns/theForgottenAge/it-is-lost.mp3",
+      "localFile": "common/it-is-lost.mp3",
       "bytes": 7129788,
       "sha256": "1499fdb324278365425e4435ba72228d4ec3246683a949e4fb44e4853d2ba76b",
       "encoded": {
         "bytes": 2947229,
         "sha256": "720d4afb76a9012f361ed93ead8fe7f2a8908cecf123e2443799b3d5a7f09bb6"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/it-is-lost.mp3"
+      ]
     },
     {
       "title": "Interloper",
@@ -671,14 +731,17 @@
       "isrc": "USUAN1100401",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100401",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Interloper.mp3",
-      "localFile": "campaigns/theForgottenAge/interloper.mp3",
+      "localFile": "common/interloper.mp3",
       "bytes": 10639852,
       "sha256": "f979f0a000e45e7007121ee9b4292f0aa17ec661512f6517ac84d2ad1cfabecd",
       "encoded": {
         "bytes": 4343483,
         "sha256": "aa765bc3be0d07d1a742d3bf932cdfae6e2693a2a4ffd437d4f963e001491166"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/interloper.mp3"
+      ]
     },
     {
       "title": "Truth in the Stones",
@@ -686,14 +749,17 @@
       "isrc": "USUAN1700059",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700059",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Truth%20in%20the%20Stones.mp3",
-      "localFile": "campaigns/theForgottenAge/truth-in-the-stones.mp3",
+      "localFile": "common/truth-in-the-stones.mp3",
       "bytes": 11950880,
       "sha256": "d0b88ba6bb2b28d04289494af123f147de8e2e64c7239f3b78929471b0e893b2",
       "encoded": {
         "bytes": 5975695,
         "sha256": "b87034a595af07301055101c9857232c541a8558aafa7c483d1c898c61343fe7"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/truth-in-the-stones.mp3"
+      ]
     },
     {
       "title": "Thunder Dreams",
@@ -701,14 +767,17 @@
       "isrc": "USUAN1200063",
       "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200063",
       "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Thunder%20Dreams.mp3",
-      "localFile": "campaigns/theForgottenAge/thunder-dreams.mp3",
+      "localFile": "common/thunder-dreams.mp3",
       "bytes": 9218209,
       "sha256": "ca85e13e4041210474a8c449162e0cc9e8b5fd0882b4e40463437c2e1dadc52f",
       "encoded": {
         "bytes": 3687716,
         "sha256": "eff9f379f74ef95b05ed733a2ffdd81e0d4d2565349c732001e3b0cee4972d28"
       },
-      "retrieved": "2026-10-19"
+      "retrieved": "2026-10-19",
+      "legacyFiles": [
+        "campaigns/theForgottenAge/thunder-dreams.mp3"
+      ]
     },
     {
       "title": "Come Play with Me",
@@ -934,9 +1003,495 @@
         "sha256": "3fd1f1fd5b882202a0b7827f10e2289493b54bee180ffb3a9f362fab14e29a3e"
       },
       "retrieved": "2026-10-19"
+    },
+    {
+      "title": "Vanishing",
+      "filename": "Vanishing.mp3",
+      "isrc": "USUAN1600050",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600050",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Vanishing.mp3",
+      "localFile": "common/vanishing.mp3",
+      "bytes": 7522118,
+      "sha256": "76c7857f54f3aa60f9b2ec56afb239546b545d4d0514e1d33d23ba154f662f3b",
+      "encoded": {
+        "bytes": 3761264,
+        "sha256": "7e044000e8cbe373e2b18138ceb934e5972c0ed2f969f9804fb3ad5925e5a931"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/vanishing.mp3"
+      ]
+    },
+    {
+      "title": "Evening Fall (Piano)",
+      "filename": "Evening Fall - Piano.mp3",
+      "isrc": "USUAN1100235",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100235",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Evening%20Fall%20-%20Piano.mp3",
+      "localFile": "common/evening-fall-piano.mp3",
+      "bytes": 5397796,
+      "sha256": "5195c266275c694f9186dceb23e667c45ed74767d97f6615df01021fed3f048e",
+      "encoded": {
+        "bytes": 2642154,
+        "sha256": "11ec594dcfc8f08032d0467ae1f8985c40d8962f2364bb576896de6708bb9fc0"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/evening-fall-piano.mp3"
+      ]
+    },
+    {
+      "title": "This House",
+      "filename": "This House.mp3",
+      "isrc": "USUAN1500055",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500055",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/This%20House.mp3",
+      "localFile": "common/this-house.mp3",
+      "bytes": 8598815,
+      "sha256": "5d6070abd7fe89e13fd641406e6093c1eee8473ae0999b82e5e7334f28f36fd5",
+      "encoded": {
+        "bytes": 4299628,
+        "sha256": "70b77dc3d9088e7b8b89ff2a36621b1c84f7dbd6128eeabc9dc873517d2d370a"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/this-house.mp3"
+      ]
+    },
+    {
+      "title": "Baba Yaga",
+      "filename": "Baba Yaga.mp3",
+      "isrc": "USUAN1500079",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500079",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Baba%20Yaga.mp3",
+      "localFile": "common/baba-yaga.mp3",
+      "bytes": 8068037,
+      "sha256": "b587196214e29d8c5ecc4f9e463fbab68772c6086a43a5fa1f8e498200d0288e",
+      "encoded": {
+        "bytes": 4034269,
+        "sha256": "b8c8274727a66b1f9910e4fc1a0c76d7277d1137cd584b473096d6e44441a79f"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/baba-yaga.mp3"
+      ]
+    },
+    {
+      "title": "Myst on the Moor",
+      "filename": "Myst on the Moor.mp3",
+      "isrc": "USUAN1600007",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600007",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Myst%20on%20the%20Moor.mp3",
+      "localFile": "common/myst-on-the-moor.mp3",
+      "bytes": 7331606,
+      "sha256": "7f99264bf77e3746f7d63c99e63db77e06aac0a47b37b7a0f053df84e2bb8ac7",
+      "encoded": {
+        "bytes": 3666063,
+        "sha256": "b7ac4ba17501e4e8a81fa9214e3049ee248d716598717d11612e382406897eb3"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/myst-on-the-moor.mp3"
+      ]
+    },
+    {
+      "title": "Spellbound",
+      "filename": "Spellbound.mp3",
+      "isrc": "USUAN1500061",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500061",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Spellbound.mp3",
+      "localFile": "common/spellbound.mp3",
+      "bytes": 7355000,
+      "sha256": "dac3a2ef2e1e27e2467aa048cf889c58b3d5fe54ebd97421102ee7f9d29be80d",
+      "encoded": {
+        "bytes": 3677756,
+        "sha256": "d670375566f189232810b1f6f8e424ed9ba8562c50da678b81e75d87eb7cfc50"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/spellbound.mp3"
+      ]
+    },
+    {
+      "title": "SCP-x5x (Outer Thoughts)",
+      "filename": "SCP-x5x.mp3",
+      "isrc": "USUAN2000011",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN2000011",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/SCP-x5x.mp3",
+      "localFile": "common/scp-x5x-outer-thoughts.mp3",
+      "bytes": 4323409,
+      "sha256": "cb346a34d4e074e469b41dff74acc0bd275a77d1be592e4fb8fc6b48eed1657c",
+      "encoded": {
+        "bytes": 3458294,
+        "sha256": "1f5beea2aff1acb875b260365ca0664f193f5d7d406e6a92b8b0cec607ffd753"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/scp-x5x-outer-thoughts.mp3"
+      ]
+    },
+    {
+      "title": "Ossuary 4 - Animate",
+      "filename": "Ossuary 4 - Animate.mp3",
+      "isrc": "USUAN1500046",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500046",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ossuary%204%20-%20Animate.mp3",
+      "localFile": "common/ossuary-4-animate.mp3",
+      "bytes": 6291734,
+      "sha256": "1dd0f96e070266306ae36b81d864858e0d986b49f166d4ccf63a421e016b2730",
+      "encoded": {
+        "bytes": 3146130,
+        "sha256": "8b7521c1a9e3da15afbde368d091a38f24f0a04efd280e71fb92fadca0b8f45a"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/ossuary-4-animate.mp3"
+      ]
+    },
+    {
+      "title": "Phantasm",
+      "filename": "Phantasm.mp3",
+      "isrc": "USUAN1100113",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100113",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Phantasm.mp3",
+      "localFile": "common/phantasm.mp3",
+      "bytes": 8893626,
+      "sha256": "f5d2256207776d572d248732b91b49b35f971f5e9708d509c5d869ff366b8ee8",
+      "encoded": {
+        "bytes": 3506353,
+        "sha256": "913f95c5d3d95ca02b6cfe275091a14119ae93fba7467f55591d0658a0a99dcf"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/phantasm.mp3"
+      ]
+    },
+    {
+      "title": "Metaphysik",
+      "filename": "Metaphysik.mp3",
+      "isrc": "USUAN1400056",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400056",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Metaphysik.mp3",
+      "localFile": "common/metaphysik.mp3",
+      "bytes": 8896446,
+      "sha256": "e6d3d7993b42b9c0ed948e9683652bbf883f636a9f7496a27279e8c2415a2186",
+      "encoded": {
+        "bytes": 4448477,
+        "sha256": "e3e20dbc67c51ae4e455fefc6b20ca8d50630ca2b9bb66746d8fca5c4d1c15a5"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/metaphysik.mp3"
+      ]
+    },
+    {
+      "title": "Crypto",
+      "filename": "Crypto.mp3",
+      "isrc": "USUAN1600013",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600013",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Crypto.mp3",
+      "localFile": "common/crypto.mp3",
+      "bytes": 6532455,
+      "sha256": "f09ba8bff00baca85fcdcde3b7f5d6b34a09c2c0b44b007a9123ee42f7d1bcf2",
+      "encoded": {
+        "bytes": 3266481,
+        "sha256": "89679950d7f101461e0c5157334833df6ff4110c5b8f7c0399a6e37b2d681863"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/crypto.mp3"
+      ]
+    },
+    {
+      "title": "Inner Sanctum",
+      "filename": "Inner Sanctum.mp3",
+      "isrc": "USUAN1100196",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100196",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Inner%20Sanctum.mp3",
+      "localFile": "common/inner-sanctum.mp3",
+      "bytes": 10152744,
+      "sha256": "e6d6f055c590b56f5be6ca534d905383af7e3132206f436c40774e20352df084",
+      "encoded": {
+        "bytes": 4008277,
+        "sha256": "69ae95f2d3e3b76e5e7cc220c44b86e68a1b249852e045453e31ecc275bcdb2f"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/inner-sanctum.mp3"
+      ]
+    },
+    {
+      "title": "Ossuary 5 - Rest",
+      "filename": "Ossuary 5 - Rest.mp3",
+      "isrc": "USUAN1500047",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500047",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ossuary%205%20-%20Rest.mp3",
+      "localFile": "common/ossuary-5-rest.mp3",
+      "bytes": 7547280,
+      "sha256": "895d3f3ef3be3a1da4b4198a6c131b55fb87176f43bcaf7e104d320a3dee3bd4",
+      "encoded": {
+        "bytes": 3773901,
+        "sha256": "1d189965ed39d8217e08e8870dec1a37a209f8245505f8884f484bded6cd10cb"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/ossuary-5-rest.mp3"
+      ]
+    },
+    {
+      "title": "Anguish",
+      "filename": "Anguish.mp3",
+      "isrc": "USUAN1400047",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400047",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Anguish.mp3",
+      "localFile": "common/anguish.mp3",
+      "bytes": 7653395,
+      "sha256": "b1750903a90c2cfe88445196e78181a9093c0a3bc08f8bed39993d969fe0d268",
+      "encoded": {
+        "bytes": 3826938,
+        "sha256": "979822a36732eb6a0f836ee76bdf1fca58c88bce15f6a9e46a12ccba02a68922"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/anguish.mp3"
+      ]
+    },
+    {
+      "title": "Land of the Dead",
+      "filename": "Land of the Dead.mp3",
+      "isrc": "USUAN1100179",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100179",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Land%20of%20the%20Dead.mp3",
+      "localFile": "common/land-of-the-dead.mp3",
+      "bytes": 10598431,
+      "sha256": "f83bebf4bbeb03e2e30b82a0d070eea8110213576ecb70296b7690b9e230fa93",
+      "encoded": {
+        "bytes": 4184704,
+        "sha256": "dca775054ee526b473eaf1cff282f2ea34f943e9471ba17458368b9f7a3481a2"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/land-of-the-dead.mp3"
+      ]
+    },
+    {
+      "title": "Hidden Past",
+      "filename": "Hidden Past.mp3",
+      "isrc": "USUAN1600030",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600030",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Hidden%20Past.mp3",
+      "localFile": "common/hidden-past.mp3",
+      "bytes": 6147939,
+      "sha256": "ffe6e898e8744d759f7f1cfebb401287b8aeb8686aa9a757de680f8012f02e24",
+      "encoded": {
+        "bytes": 3074220,
+        "sha256": "cb553af055599b8a316ba1b2f9c93b9de9b8cd2f940afdf4a7d7f9f0b49ecab0"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/hidden-past.mp3"
+      ]
+    },
+    {
+      "title": "Hidden Wonders",
+      "filename": "Hidden Wonders.mp3",
+      "isrc": "USUAN1700006",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700006",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Hidden%20Wonders.mp3",
+      "localFile": "common/hidden-wonders.mp3",
+      "bytes": 5751680,
+      "sha256": "e70bdc46c8e72dc48cf88debb8a4b2b219824f2bc0314246790a1ad08d85879f",
+      "encoded": {
+        "bytes": 2876070,
+        "sha256": "47eaac6f15253596313dca84bac1fc30e98ce322f178d3297bfc9db51438c54a"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/hidden-wonders.mp3"
+      ]
+    },
+    {
+      "title": "Mystic Force",
+      "filename": "Mystic Force.mp3",
+      "isrc": "USUAN1500060",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500060",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Mystic%20Force.mp3",
+      "localFile": "common/mystic-force.mp3",
+      "bytes": 7163578,
+      "sha256": "6aadb4a305d906e69514047219d3d69afae5f218e50ddf66164674c69893bb9b",
+      "encoded": {
+        "bytes": 3582045,
+        "sha256": "01769d31d7dd8ca51fa7fb140ae56531626cb54f178b5995f656030d5bf5d5ca"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/mystic-force.mp3"
+      ]
+    },
+    {
+      "title": "Shadowlands 1 - Horizon",
+      "filename": "Shadowlands 1 - Horizon.mp3",
+      "isrc": "USUAN1700034",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700034",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Shadowlands%201%20-%20Horizon.mp3",
+      "localFile": "common/shadowlands-1-horizon.mp3",
+      "bytes": 7044008,
+      "sha256": "2d3f1d151bb028aa33c80a70095d00794c96ba52f17f01e7d6fb77d066b5de97",
+      "encoded": {
+        "bytes": 3522231,
+        "sha256": "56d72b246fae9a5df08c5a004e25f62098fe593e12141d2bcab7b2bce03ca56a"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/shadowlands-1-horizon.mp3"
+      ]
+    },
+    {
+      "title": "Shadowlands 2 - Bridge",
+      "filename": "Shadowlands 2 - Bridge.mp3",
+      "isrc": "USUAN1700035",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700035",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Shadowlands%202%20-%20Bridge.mp3",
+      "localFile": "common/shadowlands-2-bridge.mp3",
+      "bytes": 6660320,
+      "sha256": "68d3714d215cb8d35cb6831e45c154f48b86bd4f92b7a44a928b8e4b58f65acf",
+      "encoded": {
+        "bytes": 3330386,
+        "sha256": "6ce103e9a334dc66e45617ec7b10d023c3ecfc54396b66a96af5ae115942ec20"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/shadowlands-2-bridge.mp3"
+      ]
+    },
+    {
+      "title": "Final Battle of the Dark Wizards",
+      "filename": "Final Battle of the Dark Wizards.mp3",
+      "isrc": "USUAN1500085",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500085",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Final%20Battle%20of%20the%20Dark%20Wizards.mp3",
+      "localFile": "common/final-battle-of-the-dark-wizards.mp3",
+      "bytes": 8694170,
+      "sha256": "f4b4321aa1e4b7057c4e06e9c67f4f713d42555d9fec9950b07ec305af25f8dc",
+      "encoded": {
+        "bytes": 4347353,
+        "sha256": "381fae7be6b17e2a4ee08d57208c379c9db65e85af26606ce015c06254d223e9"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/final-battle-of-the-dark-wizards.mp3"
+      ]
+    },
+    {
+      "title": "The Escalation",
+      "filename": "The Escalation.mp3",
+      "isrc": "USUAN1400041",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400041",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/The%20Escalation.mp3",
+      "localFile": "common/the-escalation.mp3",
+      "bytes": 10477113,
+      "sha256": "7ac5c8397d395421db2f682ae8f39c8c04eff39d565f6d32745ac6c1d1f05a89",
+      "encoded": {
+        "bytes": 5238775,
+        "sha256": "37f7949e0946f69aa1010dad6240a59074865a2313564b939fd615b6bd1ea7cb"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/the-escalation.mp3"
+      ]
+    },
+    {
+      "title": "Darkling",
+      "filename": "Darkling.mp3",
+      "isrc": "USUAN1700050",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700050",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Darkling.mp3",
+      "localFile": "common/darkling.mp3",
+      "bytes": 5434888,
+      "sha256": "71fcef204297b7cdbfd85b287687ab32cba65f08dd4d2f66299a041f370ac945",
+      "encoded": {
+        "bytes": 2717694,
+        "sha256": "879d0ddfcb07ec3e7da8b625723015e9969e928d7035e71af58938e17023c8b3"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/darkling.mp3"
+      ]
+    },
+    {
+      "title": "Volatile Reaction",
+      "filename": "Volatile Reaction.mp3",
+      "isrc": "USUAN1400039",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400039",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Volatile%20Reaction.mp3",
+      "localFile": "common/volatile-reaction.mp3",
+      "bytes": 5293585,
+      "sha256": "ced1148df201a6c69062a96b7ef49c49924572ca5023c2ac5a2d6c5828ecb218",
+      "encoded": {
+        "bytes": 2647018,
+        "sha256": "6a4541ec5a8c2bb1bbb348e36d753a3d021027e62b68be2ee679edb183862633"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/volatile-reaction.mp3"
+      ]
+    },
+    {
+      "title": "Ossuary 3 - Words",
+      "filename": "Ossuary 3 - Words.mp3",
+      "isrc": "USUAN1500045",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500045",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ossuary%203%20-%20Words.mp3",
+      "localFile": "common/ossuary-3-words.mp3",
+      "bytes": 7580718,
+      "sha256": "9e6df3a1e92723d4364e6186af758a013e41adbbf2d9efe099ef6a5031e7bdab",
+      "encoded": {
+        "bytes": 3790620,
+        "sha256": "14333a43162daf61420a45909740b531953206440a2b3590b7faff23c68891a7"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/ossuary-3-words.mp3"
+      ]
+    },
+    {
+      "title": "Symmetry",
+      "filename": "Symmetry.mp3",
+      "isrc": "USUAN1900006",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1900006",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Symmetry.mp3",
+      "localFile": "common/symmetry.mp3",
+      "bytes": 14646251,
+      "sha256": "b87ec5f401416826506858b0a6c585976535abdc7b2056c79ca48c8ec07f9a3d",
+      "encoded": {
+        "bytes": 5858024,
+        "sha256": "061eefba16e25ea8cf81728a8d7ca1d0410cd2015fdbc52bab63dc66f7f61e77"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/symmetry.mp3"
+      ]
+    },
+    {
+      "title": "Shadowlands 6 - The Pit",
+      "filename": "Shadowlands 6 - The Pit.mp3",
+      "isrc": "USUAN1700039",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700039",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Shadowlands%206%20-%20The%20Pit.mp3",
+      "localFile": "common/shadowlands-6-the-pit.mp3",
+      "bytes": 6595956,
+      "sha256": "499e801bb93c3d4241787c3cba054abd2af5f6f09c091c0de871966c256b0644",
+      "encoded": {
+        "bytes": 3298205,
+        "sha256": "7c1e1406a34aa03a89e6ad78953ef969e28515668e9f42b231499609a4841f70"
+      },
+      "retrieved": "2026-10-24",
+      "legacyFiles": [
+        "campaigns/theCircleUndone/shadowlands-6-the-pit.mp3"
+      ]
     }
   ],
-  "updated": "2026-10-19",
+  "updated": "2026-10-24",
   "encoding": {
     "codec": "mp3",
     "encoder": "ffmpeg libmp3lame",

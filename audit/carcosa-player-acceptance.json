@@ -39,7 +39,7 @@
     },
     {
       "file": "games/arkhamhorror/src/deck/availability.js",
-      "sha256": "2093470b00fade0104ec7b842882c77caab32f60c668abecc573d73ea23d2742"
+      "sha256": "69bfa51dfe1d44480d640e99c6708109642d6109b671556258fbfffe5687469b"
     },
     {
       "file": "games/arkhamhorror/src/engine/effects.js",
@@ -47,7 +47,7 @@
     },
     {
       "file": "games/arkhamhorror/src/engine/engine.js",
-      "sha256": "e0a69354d49e84a029db511c08479a12b43d164e474d61d7e8bd02cb10d0d7c8"
+      "sha256": "b1e666507200ad93a0918744be099e1e4e294372da503185c98bbfe776b1320e"
     }
   ],
   "entries": [

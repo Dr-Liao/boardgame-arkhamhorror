@@ -17,6 +17,14 @@ import { legalMoves } from '../src/engine/engine.js'
 import { campaignProjection } from '../src/cards/campaign-view.js'
 
 const STORY = ['05046', '05047', '05048', '05049']
+const SKILLS = ['willpower', 'intellect', 'combat', 'agility']
+
+// 一套调查员身份快照：换人会把职业与四项技能也改成卡面印刷值，换回时必须整套恢复。
+function identity(inv) {
+  const snapshot = { code: inv.code, name: inv.name, nameEn: inv.nameEn, klass: inv.klass }
+  for (const skill of SKILLS) snapshot[skill] = inv[skill]
+  return snapshot
+}
 
 function storyFixture(seats = 1) {
   const state = fixture('01001', seats)
@@ -105,17 +113,46 @@ test('P2.6 无牌组：抽牌动作被拦下并记日志，手牌保持为空', 
   assert.ok(state.log.some(line => line.includes('没有牌组')), '应记录「没有牌组」')
 })
 
-test('P2.6 换回：下一章没有声明时恢复原本的调查员并清掉状态键', () => {
+test('P2.6 换回：下一章没有声明时恢复原本的调查员身份（职业+四技能）并清掉状态键', () => {
   const state = storyFixture(2)
-  const before = state.investigators.map(inv => ({ code: inv.code, name: inv.name }))
+  const before = state.investigators.map(identity)
   selectStoryInvestigators(state, { codes: STORY }, { requestChoice: chooseFirst() })
   assert.notEqual(state.investigators[0].code, before[0].code)
+  // 进入剧本时引擎会按卡面把职业/技能改成故事调查员的印刷值（真实开局见 tcu-prologue 用例），
+  // 这里手动模拟一遍，确认换回时不是只恢复 code/name。
+  for (const inv of state.investigators) {
+    inv.klass = 'neutral'
+    inv.nameEn = 'Story Investigator'
+    for (const skill of SKILLS) inv[skill] = 9
+  }
   const record = restoreStoryInvestigators(state)
   assert.ok(record)
-  assert.deepEqual(state.investigators.map(inv => ({ code: inv.code, name: inv.name })), before)
+  assert.deepEqual(state.investigators.map(identity), before)
   assert.equal(state.storyInvestigators, undefined)
   assert.equal(state.investigators[0].storyInvestigator, false)
   assert.equal(restoreStoryInvestigators(state), null)
+})
+
+test('P2.6 换回：旧存档的 originals 没有身份快照时用 cardInfo 恢复职业与技能', () => {
+  const state = storyFixture(1)
+  selectStoryInvestigators(state, { codes: STORY }, { requestChoice: chooseFirst() })
+  // 旧存档只有 seat/code/name；同时把调查员改成故事调查员的印刷身份来模拟已换人。
+  state.storyInvestigators.originals = state.storyInvestigators.originals
+    .map(({ seat, code, name }) => ({ seat, code, name }))
+  const inv = state.investigators[0]
+  inv.klass = 'neutral'
+  inv.nameEn = 'Story Investigator'
+  for (const skill of SKILLS) inv[skill] = 9
+  restoreStoryInvestigators(state, {
+    cardInfo: code => code === '01001'
+      ? { name: 'Roland Banks', klass: 'guardian', willpower: 3, intellect: 3, combat: 4, agility: 2 }
+      : null,
+  })
+  assert.equal(inv.code, '01001')
+  assert.equal(inv.nameEn, 'Roland Banks')
+  assert.equal(inv.klass, 'guardian')
+  assert.deepEqual(SKILLS.map(skill => inv[skill]), [3, 3, 4, 2])
+  assert.equal(inv.storyInvestigator, false)
 })
 
 test('P2.6 投影：公开选人与划掉结果，未选/隐藏信息不出现', () => {

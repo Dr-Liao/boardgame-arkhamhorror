@@ -1,0 +1,1069 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theCircleUndone",
+  "milestone": "M3",
+  "generatedFrom": "original-campaign-only",
+  "status": "verified",
+  "productionGate": "playable",
+  "summary": {
+    "chapters": 9,
+    "verified": 9,
+    "development": 0,
+    "pending": 0,
+    "totalEncounterCards": 274,
+    "pendingEncounterCards": 0,
+    "gaps": 0,
+    "testCases": 323
+  },
+  "items": [
+    {
+      "id": "disappearanceAtTheTwilightEstate",
+      "code": "05043",
+      "name": "暮色庄园失踪事件",
+      "status": "verified",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": true,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "notes": {
+        "testCoveredCodes": "1/13",
+        "uncoveredCodes": [
+          "05100",
+          "05101",
+          "05103",
+          "05086",
+          "01167",
+          "05087",
+          "05102",
+          "05104",
+          "05105",
+          "05106",
+          "05107",
+          "05108"
+        ],
+        "storyFallbacks": [],
+        "browser": {
+          "pass": true,
+          "desktop": true,
+          "mobile": true,
+          "desktopShot": true,
+          "mobileShot": true
+        }
+      },
+      "inventory": {
+        "locations": 7,
+        "acts": 1,
+        "agendas": 1,
+        "enemies": 4,
+        "treacheries": 9,
+        "storyAssets": 0,
+        "encounterCards": 25,
+        "setAsideCards": 1,
+        "resolutions": [
+          "noResolution"
+        ],
+        "encounterCodes": 13
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [],
+      "approximations": [
+        "议程 1b 的「推进后翻回 1a 且不移除毁灭」：引擎议程没有 revert 原语，改为在 investigatorEliminated 里直接结算 1b 记录，agendaIndex 保持 0、毁灭不移除（1a 始终显示）",
+        "「失踪人口」没有 crossedOut 字段：string[] 只记录已选故事调查员卡号，未选者缺席即等于划掉（后续章节读到的语义与参考实现 getRecordedCardCodes 一致）",
+        "击败来源判定：引擎不保留「被谁击败」，用最近一次敌人攻击（beforeEnemyHarm）与议程 1a 强制伤害标记近似 1b 的四分支记录",
+        "卡背固定起手牌直接写入 inv.hand（卡号数组），不经引擎抓牌管线，因此不触发「抽牌」窗口",
+        "朦胧之雾(01168) 的附属按核心共享条目的 location.fog/shroudMod 语义近似，不建独立附属实例",
+        "「放在密谋牌库旁」的 05102/05107 存共享区 state.scenarioZones.agendaAside（纯 JSON），持续效果与轮末清理由 encounterRules 的通用钩子读取",
+        "幕 1b 的「记录你被追捕」把全队座位写入 youAreBeingHunted（参考实现是 boolean 记录，本仓库该键类型为 string[]）"
+      ],
+      "testFile": "tests/tcu-prologue.test.mjs",
+      "testCases": {
+        "passed": 41,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/DisappearanceAtTheTwilightEstate.hs",
+          "ok": true,
+          "expected": "7849b113941a58415834afbae59bef14e023493874e641be03b3af0f45b3dac5",
+          "actual": "7849b113941a58415834afbae59bef14e023493874e641be03b3af0f45b3dac5"
+        }
+      ],
+      "fileHashes": {
+        "definition.js": "0403ea592199cba6c515b60e5088affb7aae0a7e54532319e4cbdc9c29d03820",
+        "layout.js": "929650d2a5d46db00e032fbf8dfbf8bde702be7205939ffca2ec73777897507c",
+        "behavior.js": "c1b7db9699e0e578a47986ce351baa77c508a10d3bb5f6e79d0559a986073e8f",
+        "index.js": "bc4051a14b5df375942a39a99ece2e83e92bb20e62dff97972f32c632addca1b",
+        "chaos.js": "d9b9def127601519ca927d59caedf86db7a2cc5b8deadbf12d018cf70c3ce0d2"
+      }
+    },
+    {
+      "id": "theWitchingHour",
+      "code": "05050",
+      "name": "巫异时刻",
+      "status": "verified",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": true,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "notes": {
+        "testCoveredCodes": "0/16",
+        "uncoveredCodes": [
+          "05090",
+          "05091",
+          "05057",
+          "05088",
+          "01180",
+          "01179",
+          "01163",
+          "01164",
+          "01165",
+          "01166",
+          "05092",
+          "05093",
+          "05094",
+          "05098",
+          "05099",
+          "05089"
+        ],
+        "storyFallbacks": [],
+        "browser": {
+          "pass": true,
+          "desktop": true,
+          "mobile": true,
+          "desktopShot": true,
+          "mobileShot": true
+        }
+      },
+      "inventory": {
+        "locations": 14,
+        "acts": 4,
+        "agendas": 2,
+        "enemies": 6,
+        "treacheries": 10,
+        "storyAssets": 0,
+        "encounterCards": 26,
+        "setAsideCards": 16,
+        "resolutions": [
+          "noResolution",
+          "resolution1",
+          "resolution2",
+          "resolution3",
+          "resolution4",
+          "resolution5"
+        ],
+        "encounterCodes": 16
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [],
+      "approximations": [
+        "05062 被污染的井：引擎没有「跨地点投入」的修正目标；用 canCommitCard/commitIconMultiplier 近似——其他森林地点的调查员对本地点检定各可投入 1 张并只算 1 个图标。",
+        "05058/05060 的 [free] 交换能力：用 api.choose 逐段选择对象与张数（0–3 / 0–1），团队每轮一次用 scenarioFlags 记录；语义与卡面一致，交互是本章自定义。",
+        "「面前的地点」：引擎没有 LocationInFrontOf 概念；setup 把 5 张森林按玩家顺序记到 scenarioFlags.frontOf，moveError 在 act1–2 拒绝进入别人面前的地点。静态连线使用印刷符号图（森林本就互连）。",
+        "核心包地点 01150–01155（阿卡姆密林）没有共享单卡条目：本章在 definition 里声明并以 investigateSkill 表达 01152/01153/01154，behavior 实现 01150 入地点检定与 01155 治疗行动；01151 走既有条目。",
+        "05052 背面「从收藏随机找基础征兆/诅咒弱点」：引擎没有收藏检索接口；近似为 api.addBasicWeakness(seat, [omen, curse])，找不到对应弱点时按卡面 1 点精神创伤兜底。",
+        "05051 背面「女性敌人从遭遇弃牌堆顶抽取」：直接读 encounterDiscard 的诡计/敌人数组并按 api.spawn 生成（与卡面一致，少了「由谁抽」的额外交互）。",
+        "塔罗占卜：只读 import tarot.js 的固定 8 张正位表（参考实现不洗牌）；结果放 scenarioFlags.campaignReading，P9 再并入战役记录。",
+        "01179/01180 黑山羊：卡面规则（被击败时同地点恐惧 / 轮末治愈 2 伤）由本章 behavior 按 code 实现（它们来自核心包，单卡条目只声明 implemented）。",
+        "01151 阿卡姆密林（扭曲的道路）的离开检定走核心包既有条目；如果该条目未随索引注册，本章不做二次实现。"
+      ],
+      "testFile": "tests/tcu-witching-hour.test.mjs",
+      "testCases": {
+        "passed": 33,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/TheWitchingHour.hs",
+          "ok": true,
+          "expected": "25cfa20897c899aaa39718f0f978b4cf2cac8141e2641c9e9a19540c1ee8229f",
+          "actual": "25cfa20897c899aaa39718f0f978b4cf2cac8141e2641c9e9a19540c1ee8229f"
+        },
+        {
+          "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/TheWitchingHour.hs",
+          "ok": true,
+          "expected": "3be793f0acdf2e078ca31ebfbbcd53e7a8fb1dad38ee75939282403d394a3a6c",
+          "actual": "3be793f0acdf2e078ca31ebfbbcd53e7a8fb1dad38ee75939282403d394a3a6c"
+        }
+      ],
+      "fileHashes": {
+        "definition.js": "a2caf3080e60d8b8d80b2921e5d45c153d48854a6acb33dfec5f1341a1929392",
+        "layout.js": "789c36ea0a1460f3fce7c532fc76a0f65d6917aa771866cf0f6c012f84edd974",
+        "behavior.js": "2885eb7a40d466f50d69b1839c85d7a9b5ce8f18a3e2f655919f0255aa96451e",
+        "index.js": "209c5e51bcb8a5590a8fbb0f7e6561e42a5d775248885489f909b032c81833cd",
+        "chaos.js": "0ac4a83ea48328c5efd6d4dc6a8c1e3840519a6f99f57c8cff91295d8956f2bb"
+      }
+    },
+    {
+      "id": "atDeathsDoorstep",
+      "code": "05065",
+      "name": "死亡门前",
+      "status": "verified",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": true,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "notes": {
+        "testCoveredCodes": "1/17",
+        "uncoveredCodes": [
+          "05095",
+          "05096",
+          "05100",
+          "05101",
+          "05103",
+          "05086",
+          "01167",
+          "01168",
+          "05097",
+          "05102",
+          "05104",
+          "05107",
+          "05108",
+          "05087",
+          "05105",
+          "05106"
+        ],
+        "storyFallbacks": [],
+        "browser": {
+          "pass": true,
+          "desktop": true,
+          "mobile": true,
+          "desktopShot": true,
+          "mobileShot": true
+        }
+      },
+      "inventory": {
+        "locations": 7,
+        "acts": 3,
+        "agendas": 2,
+        "enemies": 7,
+        "treacheries": 10,
+        "storyAssets": 1,
+        "encounterCards": 25,
+        "setAsideCards": 15,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2",
+          "r3"
+        ],
+        "encounterCodes": 17
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [],
+      "approximations": [
+        "议程 1「抽到[[怪物]]敌人时不生成、放一边」→ spawnLocation 返回非法生成点，spawnFailed 把遭遇弃牌堆里的该卡移到 scenarioZones.setAside，并用 api.addDoom(1) 在议程上放毁灭（同一结算内完成，等价「该敌人不生成，改为放在一边」）。",
+        "议程 2「猎手移动时把银暮秘社敌人视为调查员」→ 重写 hunterMove：目标候选 = 存活调查员所在地点 + 场上银暮秘社敌人所在地点，沿连接走一步（等价「将其视为调查员」的目标选择）。",
+        "议程 2 强制「猎手移动步骤后：重整幽灵敌人对同地点每个类人敌人造成伤害」→ 引擎没有独立的「猎手移动后」钩子，结算放在 enemyPhaseEnd（数值、目标、次数忠实；时点晚于敌人攻击）。",
+        "露台「弃掉合计至少 3 个智识图标的手牌：谈判」→ 通用谈判原语的实体描述子需登记在条目/能力层，本章在 behavior.actions/performAction 内实现（按手牌图标从高到低凑够 3 点，费用与结果与卡面一致）。",
+        "幽灵面的闹鬼能力 → flipSpectral 只替换印刷字段；locationFlipped 把幽灵面的 haunted 数组写入地点实例、翻回正常面时清除（与 P2.1 的 haunted 数据形状一致）。",
+        "幽灵面的胜利点（05081/05082/05084）→ 翻面时补一次「无线索则进胜利区」结算（与引擎 revealLocation 的 awardLocationVictory 同口径）。",
+        "幕间故事 I 的正文 → P9 起从 story-text.js 读入（幕 1b 写 trail 记录时逐段读出）；幕间故事 II 的分支（Josef 命运）在 P9 起落到战役记录（josefDisappearedIntoTheMist / theInvestigatorsRescuedJosef / josefIsAliveAndWell），供 campaign.flow 的 interludeTwoFate 分支使用；记录在关末写入（参考实现在幕间开始时写入，状态等价、观察时机略早）。",
+        "「留下的证据」线索移除「尽量平均」→ 参考实现由队长逐个选择；本实现用确定性等价规则（每次从线索最多的地点移除，平手按地点 id）。",
+        "办公室「位于办公室的银暮秘社敌人失去冷漠」→ 事件驱动把结果同步到 enemy.aloof（生成/移动/回合开始/幕议程推进后），引擎没有关键词修正词表。",
+        "Josef 谈判成功 → 一次结算内：flipEnemy 到 05085b、移除毁灭、记录本局限制、翻回敌人面并解除交战（等价双面卡正反面的连续结算）。",
+        "银暮秘社敌人「获得胜利 0」→ 引擎的胜利点只在进入胜利区时按 victory 统计，0 点不改变任何数值；本章不改数据（等价）。"
+      ],
+      "testFile": "tests/tcu-deaths-doorstep.test.mjs",
+      "testCases": {
+        "passed": 34,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/AtDeathsDoorstep.hs",
+          "ok": true,
+          "expected": "babc7cf305e692c3e8607f13a22d0fb96ee941988b6b889d42fe9784b412f6b0",
+          "actual": "babc7cf305e692c3e8607f13a22d0fb96ee941988b6b889d42fe9784b412f6b0"
+        },
+        {
+          "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/AtDeathsDoorstep.hs",
+          "ok": true,
+          "expected": "7ddddbaa7c835732c6718d01375cb39697de74e130ea706e5a541294369f1882",
+          "actual": "7ddddbaa7c835732c6718d01375cb39697de74e130ea706e5a541294369f1882"
+        }
+      ],
+      "fileHashes": {
+        "definition.js": "faceb3e25ae1586ed49a87b5751c3ea4a4ba6b44cfec70c2b16f41109b7290e7",
+        "layout.js": "40b2c68a6fc7fd620eb036c6a68cc20a90ebd3c7e0988f853fc3eb2d79e81830",
+        "behavior.js": "10ac119e5b0f19b40120e68c6aae4adc1d9e8977398ea613206bff5b096ba644",
+        "index.js": "0495643d1e3dedba53283267d8ed529e05064e6066f284e40a50cb06e8e1e3ad",
+        "chaos.js": "d1aeb9be0c5e6f48bdfcbdace36fff8559aeb858ec6533182a6d0e8f1a2c9e89"
+      }
+    },
+    {
+      "id": "theSecretName",
+      "code": "05120",
+      "name": "隐秘之名",
+      "status": "verified",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": true,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "notes": {
+        "testCoveredCodes": "5/17",
+        "uncoveredCodes": [
+          "01159",
+          "05149",
+          "05148",
+          "05092",
+          "05093",
+          "05094",
+          "05098",
+          "05099",
+          "05105",
+          "05106",
+          "05107",
+          "05108"
+        ],
+        "storyFallbacks": [],
+        "browser": {
+          "pass": true,
+          "desktop": true,
+          "mobile": true,
+          "desktopShot": true,
+          "mobileShot": true
+        }
+      },
+      "inventory": {
+        "locations": 16,
+        "acts": 3,
+        "agendas": 4,
+        "enemies": 3,
+        "treacheries": 14,
+        "storyAssets": 1,
+        "encounterCards": 34,
+        "setAsideCards": 9,
+        "resolutions": [
+          "noResolution",
+          "resolution1",
+          "resolution2"
+        ],
+        "encounterCodes": 17
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [],
+      "approximations": [
+        "「未知地点」的未揭示面：引擎只认识 unrevealedActualName/hiddenIdentity；本章 locationRevealed 里应用 definition 的 unrevealed 数据（名称/副标题/traits/符号）并按符号重算连线，等价于翻面。",
+        "未知地点牌库：buildScenarioLocationDeck 只负责洗牌；本章按参考实现 splitAt 3 自行拼 state.extraLocationDecks.unknownPlaces 的上下 3/4 张（仍是原语的纯 JSON 堆结构，可存档）。",
+        "黑书加入战役牌组：用 api.campaignCard（P2.10 原语）；「混乱袋 +1 骷髅」按卡面永久化，P8 只验证本局袋（P9 再接战役袋持久化）。",
+        "黑书（05150）的 [reaction] 打牌减费：被动 +1 意志/+1 智识已接线，减费需要费用支付窗口的反应修饰，P8 未接线（P9 交互窗口）；卡面其余语义（入牌组、+1 骷髅）已实现。",
+        "05123 背面「密谋 4a 入场时放 4 毁灭」：引擎的密谋揭示只触发一次背面，没有「4a 入场」窗口；本章在 05123 揭示时直接把 4 毁灭放到下一张密谋（05124）实例上，数字与卡面一致。",
+        "05121/05122 背面「查找遭遇牌库/弃牌堆/收藏找敌人」：直接操作 state.encounterDeck/encounterDiscard/场外定义（纯数据），再用 api.spawn 生成；找不到时按卡面「找出」= 从 set aside 生成。",
+        "Rats（01159，核心包 rats 组）由本章写单卡条目（只声明 implemented，猎手关键词由 definition 印刷数据解析）。",
+        "05129/05133 的闹鬼 script 子句由 behavior.hauntedScript 实现；05140 的「下一行动必须是调查」引擎无行动限制读点，近似为 scenarioFlags.mustInvestigateSeat 提示（不阻止其他行动）。",
+        "Nahab 在 act3 的「被击败时不弃掉，改为治愈/横置/本轮不重整」用 enemyCanBeDefeated=false 表达（保留在场上、伤害清零），并手动给击败者议程奖励线索。",
+        "布朗·詹金/那赫卜的「击败奖励线索」反应由 behavior.enemyDefeated 手动结算（引擎的 enemyDefeated 已经在击退流程末端，无法作为反应窗口）。",
+        "古怪图形（05142）从遭遇牌库翻出时用 drawLocation 放置两条预定义地点 id（strangeGeometry1/2，一卡两副本）；静态邻接给 moldyHalls，场景推进后该连接失效属展示层近似。"
+      ],
+      "testFile": "tests/tcu-secret-name.test.mjs",
+      "testCases": {
+        "passed": 36,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/TheSecretName.hs",
+          "ok": true,
+          "expected": "672ddc39af42dd22a32cca8d25f13b418cb56b688bd52f830aacd35f8829486d",
+          "actual": "672ddc39af42dd22a32cca8d25f13b418cb56b688bd52f830aacd35f8829486d"
+        },
+        {
+          "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/TheSecretName.hs",
+          "ok": true,
+          "expected": "b2183238c73c1f7b55129fdda251a65137961c254dfc4a1ecf8d1c00d6e0efd9",
+          "actual": "b2183238c73c1f7b55129fdda251a65137961c254dfc4a1ecf8d1c00d6e0efd9"
+        }
+      ],
+      "fileHashes": {
+        "definition.js": "a2836b3136de7c74ba6b57ed0baf9253e479ea8e49f05842f99a2aa82a025c8e",
+        "layout.js": "81811714296dfcfeee2e0e2cbb35c59141e9a91f9f53099c3922e173e5e8ed68",
+        "behavior.js": "424d1e3d7f8bf287a119566977b22e2f2454546ebaaafd3cd660ef1a91a2340c",
+        "index.js": "a913b3bc0f1a3513d7cc3d7b9e33cf54f63362b0bf92d095c25340e0005f9627",
+        "chaos.js": "b311d8dd84b352869c577ad581f7e8f50a6017c90d79491dbf5e8c8365fce890"
+      }
+    },
+    {
+      "id": "theWagesOfSin",
+      "code": "05161",
+      "name": "恶罪报应",
+      "status": "verified",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": true,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "notes": {
+        "testCoveredCodes": "5/28",
+        "uncoveredCodes": [
+          "05090",
+          "05091",
+          "05103",
+          "05178a",
+          "05178c",
+          "05178e",
+          "05178g",
+          "05178i",
+          "05178k",
+          "05179",
+          "05180",
+          "05086",
+          "05092",
+          "05093",
+          "05094",
+          "05098",
+          "05099",
+          "05104",
+          "05105",
+          "05106",
+          "05107",
+          "05108",
+          "05087"
+        ],
+        "storyFallbacks": [],
+        "browser": {
+          "pass": true,
+          "desktop": true,
+          "mobile": true,
+          "desktopShot": true,
+          "mobileShot": true
+        }
+      },
+      "inventory": {
+        "locations": 11,
+        "acts": 2,
+        "agendas": 2,
+        "enemies": 12,
+        "treacheries": 16,
+        "storyAssets": 7,
+        "encounterCards": 24,
+        "setAsideCards": 13,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2",
+          "r3"
+        ],
+        "encounterCodes": 28
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [],
+      "approximations": [
+        "石板标记/轮末的「触发未了之事的强制能力」→ 由 behavior.unfinishedBusinessForced 按数据表 `forced.kind` 统一实现（威胁区卡实例 code 由 flipEnemyFace 写入）。",
+        "异端者「在非幽灵地点获得冷漠且不能被交战」→ 引擎没有 canEngage 读点，用 enemy.aloof + canFightEnemy=false + enemyDamageAllowed=false 承载（不能被交战体现为不能被攻击/伤害；aloof 仍阻止未交战攻击）。",
+        "异端者「[fast] 花费 1 线索：谈判，查看另一面」→ 谈判在 behavior.actions 里实现；B/D/F/H 只记录查看（剧情面直接揭示），I/K（J/L）按卡面 Forced 立刻翻回并攻击。",
+        "J/L「翻回敌人面并立即攻击」→ 一次 enemyDefeated 结算内完成（flipEnemy 往返 + api.attack），并写这里标记；参数来自 UNFINISHED_BUSINESS_RULES[].immediate。",
+        "05184 长明灯「从基础/幽灵牌库抽出」的区分 → 引擎不传抽牌来源；由 behavior.encounterDeckFor 在抽牌前写 scenarioFlags.lastEncounterDeck（显式 drawExtra 的卡由章节 resolver 写同一标记），encounterGainsSurge 的 surgeRule 完成「洗入幽灵牌库 + 涌动 / 放回基础弃牌堆」。",
+        "05170/05170b 的隐藏值 X（灵怪敌人数量）→ 卡面扫描把 shroud 记成 -2 占位，definition 归零，由地点数据 shroudRule: perGeist 给出 X。",
+        "教堂阁楼的「放在阁楼底下」→ 地点实例 beneath 数组（{code, ownerSeat}，纯 JSON）；cardDrawn 强制与 investigateResult 的取回反应只对 beneathRule: atticBottom 的 175/175b 面生效。",
+        "异端者墓地 171「调查时把意志值加入技能值」与教堂阁楼 176「把手牌张数加入技能值」→ 地点数据 investigateBonus，beforeInvestigate 登记 wosInvestigateBonus、statModifier 在本次检定中加值（引擎 statModifier 没有 investigation 上下文）。",
+        "闹鬼农田/废弃教堂/绞刑架/教堂地下室/教堂阁楼/异端者墓地的常驻与闹鬼文本 → 地点数据字段（horrorAura/statRule/shroudRule/beneathRule/defeatRule）+ HAUNTED_BY_LOCATION 数据表 + hauntedScript 承载（闭集子句无法表达移动敌人/弃遭遇牌/生成敌人/设定基础值）。",
+        "「地点不能被翻到幽灵/非幽灵面」→ 引擎无 CannotBeFlipped 修正词表；behavior.actions 只在该幕允许的方向给出翻面行动（剧情脚本翻面不受影响）。",
+        "未了之事的强制在「如同此时是一轮结束」时触发 → 与 roundEnded 共用同一函数（行为一致，触发源不同）。",
+        "逐卡规则键放在单卡条目 flags（entryFlags 读点）；条目索引尚未重建时 behavior 回退 definition.CARD_RULES 的同一份键，因此章节行为零卡号分支且离线单测可跑。"
+      ],
+      "testFile": "tests/tcu-wages-of-sin.test.mjs",
+      "testCases": {
+        "passed": 45,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/TheWagesOfSin.hs",
+          "ok": true,
+          "expected": "5662b3387f0e2d6104d8bc0b4379b22fd741e088292f1865588681556cafff21",
+          "actual": "5662b3387f0e2d6104d8bc0b4379b22fd741e088292f1865588681556cafff21"
+        },
+        {
+          "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/TheWagesOfSin.hs",
+          "ok": true,
+          "expected": "4d53380e287ac1a3d3cf5aadd85b818bfb8046aa40adb73d94ebf814298fd9db",
+          "actual": "4d53380e287ac1a3d3cf5aadd85b818bfb8046aa40adb73d94ebf814298fd9db"
+        }
+      ],
+      "fileHashes": {
+        "definition.js": "fb4774c3bb12d3a50021d4dc4ce740a562f0dea010fba2c16e5a9cbc91ce3802",
+        "layout.js": "d00f13dca9f914eb582b6805319b3d82d5157a4f86ae686f3a73d623ee66e2b2",
+        "behavior.js": "9fedbe590c14f079a8336c1777f11a7b44515b4dd561e3bba342eacf96dc8b22",
+        "index.js": "5d31c78d1cec1f182396415e067a223b5d915c5d0bd6eb24d1981b2a2e2a0ba4",
+        "chaos.js": "a81534e1692f46b0e1fa6be08e70432cae56fe57c8b9e491f0fe95c45f27577a"
+      }
+    },
+    {
+      "id": "forTheGreaterGood",
+      "code": "05197",
+      "name": "崇高利益",
+      "status": "verified",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": true,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "notes": {
+        "testCoveredCodes": "4/16",
+        "uncoveredCodes": [
+          "05095",
+          "05096",
+          "05218",
+          "05219",
+          "05221",
+          "05222",
+          "05217",
+          "05217b",
+          "05220",
+          "05097",
+          "05098",
+          "05099"
+        ],
+        "storyFallbacks": [],
+        "browser": {
+          "pass": true,
+          "desktop": true,
+          "mobile": true,
+          "desktopShot": true,
+          "mobileShot": true
+        }
+      },
+      "inventory": {
+        "locations": 13,
+        "acts": 3,
+        "agendas": 2,
+        "enemies": 9,
+        "treacheries": 7,
+        "storyAssets": 2,
+        "encounterCards": 25,
+        "setAsideCards": 10,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2",
+          "r3"
+        ],
+        "encounterCodes": 16
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [],
+      "approximations": [
+        "结局的额外 XP（数字混乱标记钥匙按 1 点经验结算）未在 resolution 里发放：引擎没有结局 XP 管线，经验值由 P9 战役流程统一结算（胜利区卡牌的胜利点已计入 state.victory）。",
+        "参考实现收齐的「远古恶魔/黑暗异教徒/上锁的门」三个核组不在本战役包（TCU 只有 21 个遭遇组）：议程 1 背面只能从本包弃掉的异教徒敌人中抽取，黑暗异教徒组的祭司/密会巫师等不参与；setup 的「从遭遇组移除 3 祭司/1 密会巫师」相应只做了本包内的等价移除。",
+        "四把钥匙：参考实现用混乱标记钥匙（Arkham.Key，skull/cultist/tablet/elderthing 标记）实现；本轮无钥匙原语，改用 `state.scenarioKeys`（{ holder, location, enemyId } 纯 JSON）记录同一语义：放在敌人/地点/调查员上、敌人离场时由击败者取得否则留在原地、同地点四钥匙开启机关盒。",
+        "机关盒「附属到敌人」：引擎没有 AttachedToEnemy 的剧情资产，用 `state.scenarioFlags.puzzleBox`（holder: enemy/seat/removed + enemyId/seat）记录归属，资产实例只存 `state.storyAssets`（location 同步）。",
+        "议程 2 背面「弃掉全部幕牌」：用 `state.acts = []` 近似（引擎没有「弃幕」原语）；此后幕无法推进，只能等撤退/结局。",
+        "幕 1 渗透秘社正面「在你躲避一个敌人后：移除其所有毁灭」：自动结算（不询问玩家是否使用反应），在 afterEvade 中移除该敌人全部毁灭。",
+        "边缘虚空骑士谈判成功「控制其 1 个毁灭并翻至线索面」：用「敌人 -1 毁灭、调查员 +1 线索」等价实现。",
+        "核心圈骑士的猎物「控制最多钥匙」不影响引擎的猎物选择（引擎 prey 管线只认印刷猎物短语）；生成位置按「与你所在地点连接的地点」实现。",
+        "南森·威克（引导面）谈判计数用敌人实例的 resources 字段；「加入胜利区」用 api.banish（放逐到胜利区）。"
+      ],
+      "testFile": "tests/tcu-greater-good.test.mjs",
+      "testCases": {
+        "passed": 36,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/ForTheGreaterGood.hs",
+          "ok": true,
+          "expected": "55e8afc9e671229a5fd31e66fa2e36d9f49e76c5c4411c1d22d3c14d24073de9",
+          "actual": "55e8afc9e671229a5fd31e66fa2e36d9f49e76c5c4411c1d22d3c14d24073de9"
+        },
+        {
+          "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/ForTheGreaterGood.hs",
+          "ok": true,
+          "expected": "d7b1d67eeecb89b1ecbca2e3f76ccefdd8451ee977ad7ee9522d33a6209d6dfe",
+          "actual": "d7b1d67eeecb89b1ecbca2e3f76ccefdd8451ee977ad7ee9522d33a6209d6dfe"
+        }
+      ],
+      "fileHashes": {
+        "definition.js": "f94ad849aa850620508bf92c162335595e0288954ec0ab7ee89041b94961f792",
+        "layout.js": "6e4c0c5a4311abd9fee4a38530cae1a24653f65efd8ae6e49c69385b8d2b40bf",
+        "behavior.js": "3d9b91b6fbe00910ca36dc0162d559b40d05d40811bfb729378cc7516b4b1cb6",
+        "index.js": "79c14ae4da49564734e2a422e73499dc8fe7d3c5b4f9f941d42acf226fb8c59e",
+        "chaos.js": "080dc568f2735c15187fa0cea72031f1e3ea033ff0785ad1cbb5dc4352ac3eeb"
+      }
+    },
+    {
+      "id": "unionAndDisillusion",
+      "code": "05238",
+      "name": "聚合幻灭",
+      "status": "verified",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": true,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "notes": {
+        "testCoveredCodes": "0/24",
+        "uncoveredCodes": [
+          "05100",
+          "05101",
+          "05266",
+          "05267",
+          "05262b",
+          "05263b",
+          "05264b",
+          "05265b",
+          "05086",
+          "05057",
+          "05085",
+          "05090",
+          "05095",
+          "05096",
+          "05102",
+          "05105",
+          "05106",
+          "05107",
+          "05108",
+          "05268",
+          "05269",
+          "05270",
+          "05271",
+          "05272"
+        ],
+        "storyFallbacks": [],
+        "browser": {
+          "pass": true,
+          "desktop": true,
+          "mobile": true,
+          "desktopShot": true,
+          "mobileShot": true
+        }
+      },
+      "inventory": {
+        "locations": 9,
+        "acts": 4,
+        "agendas": 2,
+        "enemies": 14,
+        "treacheries": 10,
+        "storyAssets": 8,
+        "encounterCards": 28,
+        "setAsideCards": 25,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2",
+          "r3",
+          "r4",
+          "r5",
+          "r6",
+          "r7",
+          "r8",
+          "r9",
+          "r10"
+        ],
+        "encounterCodes": 24
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [],
+      "approximations": [
+        "结局 9/10 的 ReturnTo 分支不适用（本仓库无 ReturnTo 包）；结局 2（秘社胜）与结局 9（女巫集会胜）只写战役记录，战役结束与尾声由 P9 的战役 flow 接线。",
+        "结局 XP 未在 resolution 里发放（引擎没有结局 XP 管线，P9 战役流程统一结算）。",
+        "参考实现收齐的「远古恶魔」「寒冷刺骨」两个核组不在本战役包（TCU 只有 21 个遭遇组），相关遭遇卡不参与牌堆。",
+        "4 张命运剧情卡没有「冒险参考牌底」原语：用 state.scenarioFlags.fateCards（{ code, ally, enemy, person, trail, resolved, seat } 纯 JSON）记录；幕 1 背面按玩家顺序发放并逐张结算，翻回敌人面用 spawnStoryEnemy 近似。",
+        "失踪人口：reference 用剧本日志的划掉标记区分「失踪/已死」；本实现按 missingPersons（空记录时视为 4 人全部失踪，等同 standalone）与 disappearedIntoTheMist/wasClaimedBySpecters 记录判断。",
+        "幽灵看守人「被击败时不弃掉，改为治愈所有伤害、解除交战并横置」：enemyDefeated 中把引擎已移出敌人列表的看守人放回，治愈+横置；「被偷走的灵魂」用 enemy.lostSouls 计数折算攻击/生命。",
+        "共享 encounter-rules 的「幽灵敌人只能在幽灵地点被攻击/躲避」不适用于本章：UAD 的幽灵敌人（命运敌人/幽灵乌鸦/夜鸦）卡面没有该限制，behavior 覆盖 canFightEnemy/canEvadeEnemy 为恒可。",
+        "灵怪陷阱在剧情中「不能进入」与未访之岛的「鬼灵迷雾」限制都用 behavior.investigatorEntryError 在未揭示时挡路；没有独立的通行原语。",
+        "幕 2 背面「把看守人的攫噬（05286，TheWatcher 组）洗入遭遇牌库」：该卡不在本包卡表，只把本包的看守人的注视 05272 洗入牌库并洗回弃牌堆。",
+        "幕 3 背面按版本生成的敌人：v1「女巫的法术成功 → 安妮特·梅森」用目录卡 05057 的数值 spawnStoryEnemy；失败时生成 05090 女巫集会学徒；v3/v4 生成 05095 秘社新信徒（1–2 张）并在 josefIsAliveAndWell 时生成 05085 约瑟夫·梅吉尔（不可谈判由 flags.noParleyJosef 记录）。",
+        "火盆：用 P2.11 locationFlag（brazier）记录；setup 时把已点燃地点的 flags 直接写进 state.locationVariants，避免引擎放置地点前没有实例可写。",
+        "阵法检定难度 +2（立石闹鬼）用 state.scenarioFlags.circleDifficultyRound + testDifficultyModifier 近似「直到本轮结束」。"
+      ],
+      "testFile": "tests/tcu-union-disillusion.test.mjs",
+      "testCases": {
+        "passed": 29,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/UnionAndDisillusion.hs",
+          "ok": true,
+          "expected": "b87c3d9bdb78f84fbccb8189b263beac929a17488e65444f5d1ab3e66adcc00c",
+          "actual": "b87c3d9bdb78f84fbccb8189b263beac929a17488e65444f5d1ab3e66adcc00c"
+        },
+        {
+          "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/UnionAndDisillusion.hs",
+          "ok": true,
+          "expected": "04e1a130612b5d4ddd6a2f5fca08fc444a023e712460deda2e06c21b4c045819",
+          "actual": "04e1a130612b5d4ddd6a2f5fca08fc444a023e712460deda2e06c21b4c045819"
+        }
+      ],
+      "fileHashes": {
+        "definition.js": "dd251f202ea4ca7054bb750999a1a440fcfe06edc5b4cd15e00a8dac93aff6fa",
+        "layout.js": "10409d9f4d7d653d32c1cd0a584c4778829aecc5725dd20e8b021f402f26cc04",
+        "behavior.js": "4282040da5d74e6c4dbf5c9e6c9dfcd2733725504ef4df76b910ef1113901821",
+        "index.js": "04657726de4bfd861ce862e1e96da30c27825b9d2ec7651dcdee11219eecce99",
+        "chaos.js": "ae91554baca78e38a0572b9f0de66e1a9103ad3bd9ab15a96b92f08d34f87198"
+      }
+    },
+    {
+      "id": "inTheClutchesOfChaos",
+      "code": "05284",
+      "name": "混沌魔掌",
+      "status": "verified",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": true,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "notes": {
+        "testCoveredCodes": "5/28",
+        "uncoveredCodes": [
+          "01172",
+          "05088",
+          "05090",
+          "05091",
+          "05095",
+          "05096",
+          "05286b",
+          "05288b",
+          "05309",
+          "05311",
+          "01163",
+          "01164",
+          "01165",
+          "01173",
+          "05089",
+          "05092",
+          "05093",
+          "05094",
+          "05097",
+          "05098",
+          "05099",
+          "01135",
+          "01136"
+        ],
+        "storyFallbacks": [],
+        "browser": {
+          "pass": true,
+          "desktop": true,
+          "mobile": true,
+          "desktopShot": true,
+          "mobileShot": true
+        }
+      },
+      "inventory": {
+        "locations": 16,
+        "acts": 2,
+        "agendas": 1,
+        "enemies": 10,
+        "treacheries": 18,
+        "storyAssets": 0,
+        "encounterCards": 57,
+        "setAsideCards": 1,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2",
+          "r3",
+          "r4"
+        ],
+        "encounterCodes": 28
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [],
+      "approximations": [
+        "遭遇牌库：manifest 静态声明「基线 + 两变体并集」，开局 modifyDeck 按剧本日志裁成单局分支（区域报表因此是单局张数的超集）。",
+        "幕上裂口：P2.11 只支持地点裂口，幕上裂口用 scenarioFlags.actBreaches 单一计数承载，幕推进时随当前幕移动。",
+        "「随机地点」：参考实现混洗开局移出的 8 张地点版本抽取 label，等价于在 8 个在场地点槽中洗牌抽取；用 randomLocationIds 从在场地点取样。",
+        "05285 强制①（毁灭改为裂口）在引擎 doomPlaced 钩子里回退 state.doom 后再放裂口；引擎先放置后通知，时序等价但非「替换式」窗口。",
+        "05307 元初通道的「地点文本视为空白」只屏蔽本章 behavior 提供的地点行动与关闭通道行动；引擎自带的调查/移动规则不受影响。",
+        "05312 不惮辛劳不惮烦的「重演遭遇弃牌堆最顶力量诡计」通过把该牌放回遭遇牌库顶再抽牌实现，走引擎完整显现管线。",
+        "05302/05305 的「查找遭遇牌库和弃牌堆的某特性敌人」只从两堆中按特性取最上面一张，洗牌走 engine 的 shuffleEncounterDeck（没有先让玩家浏览全部候选）。"
+      ],
+      "testFile": "tests/tcu-clutches-chaos.test.mjs",
+      "testCases": {
+        "passed": 35,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/InTheClutchesOfChaos.hs",
+          "ok": true,
+          "expected": "899adf64375e283f8d3c75177d0b5db22a0eda3e7cc668d36335eeccd820fc6e",
+          "actual": "899adf64375e283f8d3c75177d0b5db22a0eda3e7cc668d36335eeccd820fc6e"
+        },
+        {
+          "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/InTheClutchesOfChaos.hs",
+          "ok": true,
+          "expected": "f83c72410e3ffcf1491652ddd87badea9d9ba4051f9fe4345b7d7b15b574a422",
+          "actual": "f83c72410e3ffcf1491652ddd87badea9d9ba4051f9fe4345b7d7b15b574a422"
+        }
+      ],
+      "fileHashes": {
+        "definition.js": "4884217580d0656189128e81a0ab0d2fb4886812d99d20ca40270f8bf7b88372",
+        "layout.js": "a31b2ea9a8421a9f8d8890c02b5fe540adc682e04c659254f49292f7754df6fc",
+        "behavior.js": "0d4b30f639bb76bb5fb15c5b1b2a84527a23bd5b9b19c17531270c798e295186",
+        "index.js": "8b743346b28ee6ee90744b3206df447243c32ce184a54497cd6e504535ae449f",
+        "chaos.js": "e49d22eb76a04fbc89a05a653ed75ade1442fa4e25b9e198e82c30759a588770"
+      }
+    },
+    {
+      "id": "beforeTheBlackThrone",
+      "code": "05325",
+      "name": "黑色王座",
+      "status": "verified",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": true,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": true,
+        "saveReplay": true,
+        "browserAcceptance": true
+      },
+      "notes": {
+        "testCoveredCodes": "4/14",
+        "uncoveredCodes": [
+          "01169",
+          "01170",
+          "05341",
+          "05346",
+          "05088",
+          "01166",
+          "01171",
+          "05089",
+          "05107",
+          "05108"
+        ],
+        "storyFallbacks": [],
+        "browser": {
+          "pass": true,
+          "desktop": true,
+          "mobile": true,
+          "desktopShot": true,
+          "mobileShot": true
+        }
+      },
+      "inventory": {
+        "locations": 16,
+        "acts": 3,
+        "agendas": 3,
+        "enemies": 5,
+        "treacheries": 9,
+        "storyAssets": 0,
+        "encounterCards": 30,
+        "setAsideCards": 3,
+        "resolutions": [
+          "noResolution",
+          "r1",
+          "r2",
+          "r3",
+          "r4",
+          "r5",
+          "r6"
+        ],
+        "encounterCodes": 14
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [],
+      "approximations": [
+        "宇宙网格：用 P2.13 地点牌库 + scenarioFlags.cosmosOrder「放置顺序」承载；「右/下」连接最近放置者、「上」连接最早放置者、「任意方向」由玩家选；没有二维坐标与滑动。",
+        "「宇宙 -」放置指令表在 definition.locations[*].cosmos（direction/cost），behavior.placeCosmosLocation 按表建立连接；支付代价后与任意已放置地点连接的替代选项已实现。",
+        "虚空格子：不建地点卡，只用 scenarioFlags.emptySpaceCount 记账（不参与移动/连接/猎手目标；盲目舞者的相关子句因此近似为「离调查员最远的在场地点」）。",
+        "阿撒托斯不建场上敌人实体（参考实现里它也不在任何地点）：毁灭记 scenarioFlags.azathothDoom，「阿撒托斯攻击你」= 3 伤害 + 3 恐惧；免疫/不可击败因此自动成立。",
+        "冒险参考卡资源用 scenarioFlags.referenceResources 记账；宇宙门扉的「移动任意数量调查员」实现为移动该处全部调查员；三个地点的「把本地点上/下/左/右移动一格」用放置顺序交换近似。",
+        "幕推进时的清场重建：不搬动虚空格子上的玩家卡、不重建二维布局；改为把本幕宇宙地点洗回宇宙牌库、放置新枢纽并抽 2/3 张新地点，同时把调查员移到安全的枢纽。",
+        "「命运之轮·X」的「在宇宙中向左移动 / 把地点向左移动」用放置顺序的相邻位置承载；「它在等待」的意志检定与「最后的倒计时」的娃娃效果按卡面实现。",
+        "调查员被击败的「调查员被击败」段落只记日志 + 1 点精神创伤（参考实现的 drivenInsane 会改写战役记录状态）。",
+        "DarkCult 遭遇组：本仓库卡表把 Acolyte/Wizard of the Order/Mysterious Chanting 归在 pentagram 组，遭遇牌库用 pentagram 组近似。",
+        "ReturnTo 专属内容（夜魇坐骑 54061 等 4 张变体卡）不在本次非 ReturnTo 剧本的卡表范围内，未实现。"
+      ],
+      "testFile": "tests/tcu-black-throne.test.mjs",
+      "testCases": {
+        "passed": 34,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/BeforeTheBlackThrone.hs",
+          "ok": true,
+          "expected": "a0641bbfb293d0a76332658ebc3ff4af9332d9b7c65743f18942f51b1c48abcf",
+          "actual": "a0641bbfb293d0a76332658ebc3ff4af9332d9b7c65743f18942f51b1c48abcf"
+        },
+        {
+          "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/BeforeTheBlackThrone.hs",
+          "ok": true,
+          "expected": "f401246f0da450023a8b0584a1be729cb15f31d59dada67a90e7a7ba924adf71",
+          "actual": "f401246f0da450023a8b0584a1be729cb15f31d59dada67a90e7a7ba924adf71"
+        }
+      ],
+      "fileHashes": {
+        "definition.js": "f876eadb818e9320bc82e78b6c3524544bc9587a0a8a1fcf0298d14726efc89a",
+        "layout.js": "9bc26bc900bcae7f5fac14c6202af7306c00af63e367b49361c29835798844e8",
+        "behavior.js": "011f9e7ee6df612edc900fd962a93ce306f7d8a16abae561e6b48d74fa296dec",
+        "index.js": "380f26b04e7de2ff778f77b9766f480f1a0e10a5b4173203ff3e607af6f92b16",
+        "chaos.js": "a5b089247ae8e6c6d94ef01ec01704890b2f8bd74c77e2dd8ffce8b1479795b3"
+      }
+    }
+  ],
+  "remaining": [
+    "disappearanceAtTheTwilightEstate（近似实现，行为等价）：议程 1b 的「推进后翻回 1a 且不移除毁灭」：引擎议程没有 revert 原语，改为在 investigatorEliminated 里直接结算 1b 记录，agendaIndex 保持 0、毁灭不移除（1a 始终显示）",
+    "disappearanceAtTheTwilightEstate（近似实现，行为等价）：「失踪人口」没有 crossedOut 字段：string[] 只记录已选故事调查员卡号，未选者缺席即等于划掉（后续章节读到的语义与参考实现 getRecordedCardCodes 一致）",
+    "disappearanceAtTheTwilightEstate（近似实现，行为等价）：击败来源判定：引擎不保留「被谁击败」，用最近一次敌人攻击（beforeEnemyHarm）与议程 1a 强制伤害标记近似 1b 的四分支记录",
+    "disappearanceAtTheTwilightEstate（近似实现，行为等价）：卡背固定起手牌直接写入 inv.hand（卡号数组），不经引擎抓牌管线，因此不触发「抽牌」窗口",
+    "disappearanceAtTheTwilightEstate（近似实现，行为等价）：朦胧之雾(01168) 的附属按核心共享条目的 location.fog/shroudMod 语义近似，不建独立附属实例",
+    "disappearanceAtTheTwilightEstate（近似实现，行为等价）：「放在密谋牌库旁」的 05102/05107 存共享区 state.scenarioZones.agendaAside（纯 JSON），持续效果与轮末清理由 encounterRules 的通用钩子读取",
+    "disappearanceAtTheTwilightEstate（近似实现，行为等价）：幕 1b 的「记录你被追捕」把全队座位写入 youAreBeingHunted（参考实现是 boolean 记录，本仓库该键类型为 string[]）",
+    "theWitchingHour（近似实现，行为等价）：05062 被污染的井：引擎没有「跨地点投入」的修正目标；用 canCommitCard/commitIconMultiplier 近似——其他森林地点的调查员对本地点检定各可投入 1 张并只算 1 个图标。",
+    "theWitchingHour（近似实现，行为等价）：05058/05060 的 [free] 交换能力：用 api.choose 逐段选择对象与张数（0–3 / 0–1），团队每轮一次用 scenarioFlags 记录；语义与卡面一致，交互是本章自定义。",
+    "theWitchingHour（近似实现，行为等价）：「面前的地点」：引擎没有 LocationInFrontOf 概念；setup 把 5 张森林按玩家顺序记到 scenarioFlags.frontOf，moveError 在 act1–2 拒绝进入别人面前的地点。静态连线使用印刷符号图（森林本就互连）。",
+    "theWitchingHour（近似实现，行为等价）：核心包地点 01150–01155（阿卡姆密林）没有共享单卡条目：本章在 definition 里声明并以 investigateSkill 表达 01152/01153/01154，behavior 实现 01150 入地点检定与 01155 治疗行动；01151 走既有条目。",
+    "theWitchingHour（近似实现，行为等价）：05052 背面「从收藏随机找基础征兆/诅咒弱点」：引擎没有收藏检索接口；近似为 api.addBasicWeakness(seat, [omen, curse])，找不到对应弱点时按卡面 1 点精神创伤兜底。",
+    "theWitchingHour（近似实现，行为等价）：05051 背面「女性敌人从遭遇弃牌堆顶抽取」：直接读 encounterDiscard 的诡计/敌人数组并按 api.spawn 生成（与卡面一致，少了「由谁抽」的额外交互）。",
+    "theWitchingHour（近似实现，行为等价）：塔罗占卜：只读 import tarot.js 的固定 8 张正位表（参考实现不洗牌）；结果放 scenarioFlags.campaignReading，P9 再并入战役记录。",
+    "theWitchingHour（近似实现，行为等价）：01179/01180 黑山羊：卡面规则（被击败时同地点恐惧 / 轮末治愈 2 伤）由本章 behavior 按 code 实现（它们来自核心包，单卡条目只声明 implemented）。",
+    "theWitchingHour（近似实现，行为等价）：01151 阿卡姆密林（扭曲的道路）的离开检定走核心包既有条目；如果该条目未随索引注册，本章不做二次实现。",
+    "atDeathsDoorstep（近似实现，行为等价）：议程 1「抽到[[怪物]]敌人时不生成、放一边」→ spawnLocation 返回非法生成点，spawnFailed 把遭遇弃牌堆里的该卡移到 scenarioZones.setAside，并用 api.addDoom(1) 在议程上放毁灭（同一结算内完成，等价「该敌人不生成，改为放在一边」）。",
+    "atDeathsDoorstep（近似实现，行为等价）：议程 2「猎手移动时把银暮秘社敌人视为调查员」→ 重写 hunterMove：目标候选 = 存活调查员所在地点 + 场上银暮秘社敌人所在地点，沿连接走一步（等价「将其视为调查员」的目标选择）。",
+    "atDeathsDoorstep（近似实现，行为等价）：议程 2 强制「猎手移动步骤后：重整幽灵敌人对同地点每个类人敌人造成伤害」→ 引擎没有独立的「猎手移动后」钩子，结算放在 enemyPhaseEnd（数值、目标、次数忠实；时点晚于敌人攻击）。",
+    "atDeathsDoorstep（近似实现，行为等价）：露台「弃掉合计至少 3 个智识图标的手牌：谈判」→ 通用谈判原语的实体描述子需登记在条目/能力层，本章在 behavior.actions/performAction 内实现（按手牌图标从高到低凑够 3 点，费用与结果与卡面一致）。",
+    "atDeathsDoorstep（近似实现，行为等价）：幽灵面的闹鬼能力 → flipSpectral 只替换印刷字段；locationFlipped 把幽灵面的 haunted 数组写入地点实例、翻回正常面时清除（与 P2.1 的 haunted 数据形状一致）。",
+    "atDeathsDoorstep（近似实现，行为等价）：幽灵面的胜利点（05081/05082/05084）→ 翻面时补一次「无线索则进胜利区」结算（与引擎 revealLocation 的 awardLocationVictory 同口径）。",
+    "atDeathsDoorstep（近似实现，行为等价）：幕间故事 I 的正文 → P9 起从 story-text.js 读入（幕 1b 写 trail 记录时逐段读出）；幕间故事 II 的分支（Josef 命运）在 P9 起落到战役记录（josefDisappearedIntoTheMist / theInvestigatorsRescuedJosef / josefIsAliveAndWell），供 campaign.flow 的 interludeTwoFate 分支使用；记录在关末写入（参考实现在幕间开始时写入，状态等价、观察时机略早）。",
+    "atDeathsDoorstep（近似实现，行为等价）：「留下的证据」线索移除「尽量平均」→ 参考实现由队长逐个选择；本实现用确定性等价规则（每次从线索最多的地点移除，平手按地点 id）。",
+    "atDeathsDoorstep（近似实现，行为等价）：办公室「位于办公室的银暮秘社敌人失去冷漠」→ 事件驱动把结果同步到 enemy.aloof（生成/移动/回合开始/幕议程推进后），引擎没有关键词修正词表。",
+    "atDeathsDoorstep（近似实现，行为等价）：Josef 谈判成功 → 一次结算内：flipEnemy 到 05085b、移除毁灭、记录本局限制、翻回敌人面并解除交战（等价双面卡正反面的连续结算）。",
+    "atDeathsDoorstep（近似实现，行为等价）：银暮秘社敌人「获得胜利 0」→ 引擎的胜利点只在进入胜利区时按 victory 统计，0 点不改变任何数值；本章不改数据（等价）。",
+    "theSecretName（近似实现，行为等价）：「未知地点」的未揭示面：引擎只认识 unrevealedActualName/hiddenIdentity；本章 locationRevealed 里应用 definition 的 unrevealed 数据（名称/副标题/traits/符号）并按符号重算连线，等价于翻面。",
+    "theSecretName（近似实现，行为等价）：未知地点牌库：buildScenarioLocationDeck 只负责洗牌；本章按参考实现 splitAt 3 自行拼 state.extraLocationDecks.unknownPlaces 的上下 3/4 张（仍是原语的纯 JSON 堆结构，可存档）。",
+    "theSecretName（近似实现，行为等价）：黑书加入战役牌组：用 api.campaignCard（P2.10 原语）；「混乱袋 +1 骷髅」按卡面永久化，P8 只验证本局袋（P9 再接战役袋持久化）。",
+    "theSecretName（近似实现，行为等价）：黑书（05150）的 [reaction] 打牌减费：被动 +1 意志/+1 智识已接线，减费需要费用支付窗口的反应修饰，P8 未接线（P9 交互窗口）；卡面其余语义（入牌组、+1 骷髅）已实现。",
+    "theSecretName（近似实现，行为等价）：05123 背面「密谋 4a 入场时放 4 毁灭」：引擎的密谋揭示只触发一次背面，没有「4a 入场」窗口；本章在 05123 揭示时直接把 4 毁灭放到下一张密谋（05124）实例上，数字与卡面一致。",
+    "theSecretName（近似实现，行为等价）：05121/05122 背面「查找遭遇牌库/弃牌堆/收藏找敌人」：直接操作 state.encounterDeck/encounterDiscard/场外定义（纯数据），再用 api.spawn 生成；找不到时按卡面「找出」= 从 set aside 生成。",
+    "theSecretName（近似实现，行为等价）：Rats（01159，核心包 rats 组）由本章写单卡条目（只声明 implemented，猎手关键词由 definition 印刷数据解析）。",
+    "theSecretName（近似实现，行为等价）：05129/05133 的闹鬼 script 子句由 behavior.hauntedScript 实现；05140 的「下一行动必须是调查」引擎无行动限制读点，近似为 scenarioFlags.mustInvestigateSeat 提示（不阻止其他行动）。",
+    "theSecretName（近似实现，行为等价）：Nahab 在 act3 的「被击败时不弃掉，改为治愈/横置/本轮不重整」用 enemyCanBeDefeated=false 表达（保留在场上、伤害清零），并手动给击败者议程奖励线索。",
+    "theSecretName（近似实现，行为等价）：布朗·詹金/那赫卜的「击败奖励线索」反应由 behavior.enemyDefeated 手动结算（引擎的 enemyDefeated 已经在击退流程末端，无法作为反应窗口）。",
+    "theSecretName（近似实现，行为等价）：古怪图形（05142）从遭遇牌库翻出时用 drawLocation 放置两条预定义地点 id（strangeGeometry1/2，一卡两副本）；静态邻接给 moldyHalls，场景推进后该连接失效属展示层近似。",
+    "theWagesOfSin（近似实现，行为等价）：石板标记/轮末的「触发未了之事的强制能力」→ 由 behavior.unfinishedBusinessForced 按数据表 `forced.kind` 统一实现（威胁区卡实例 code 由 flipEnemyFace 写入）。",
+    "theWagesOfSin（近似实现，行为等价）：异端者「在非幽灵地点获得冷漠且不能被交战」→ 引擎没有 canEngage 读点，用 enemy.aloof + canFightEnemy=false + enemyDamageAllowed=false 承载（不能被交战体现为不能被攻击/伤害；aloof 仍阻止未交战攻击）。",
+    "theWagesOfSin（近似实现，行为等价）：异端者「[fast] 花费 1 线索：谈判，查看另一面」→ 谈判在 behavior.actions 里实现；B/D/F/H 只记录查看（剧情面直接揭示），I/K（J/L）按卡面 Forced 立刻翻回并攻击。",
+    "theWagesOfSin（近似实现，行为等价）：J/L「翻回敌人面并立即攻击」→ 一次 enemyDefeated 结算内完成（flipEnemy 往返 + api.attack），并写这里标记；参数来自 UNFINISHED_BUSINESS_RULES[].immediate。",
+    "theWagesOfSin（近似实现，行为等价）：05184 长明灯「从基础/幽灵牌库抽出」的区分 → 引擎不传抽牌来源；由 behavior.encounterDeckFor 在抽牌前写 scenarioFlags.lastEncounterDeck（显式 drawExtra 的卡由章节 resolver 写同一标记），encounterGainsSurge 的 surgeRule 完成「洗入幽灵牌库 + 涌动 / 放回基础弃牌堆」。",
+    "theWagesOfSin（近似实现，行为等价）：05170/05170b 的隐藏值 X（灵怪敌人数量）→ 卡面扫描把 shroud 记成 -2 占位，definition 归零，由地点数据 shroudRule: perGeist 给出 X。",
+    "theWagesOfSin（近似实现，行为等价）：教堂阁楼的「放在阁楼底下」→ 地点实例 beneath 数组（{code, ownerSeat}，纯 JSON）；cardDrawn 强制与 investigateResult 的取回反应只对 beneathRule: atticBottom 的 175/175b 面生效。",
+    "theWagesOfSin（近似实现，行为等价）：异端者墓地 171「调查时把意志值加入技能值」与教堂阁楼 176「把手牌张数加入技能值」→ 地点数据 investigateBonus，beforeInvestigate 登记 wosInvestigateBonus、statModifier 在本次检定中加值（引擎 statModifier 没有 investigation 上下文）。",
+    "theWagesOfSin（近似实现，行为等价）：闹鬼农田/废弃教堂/绞刑架/教堂地下室/教堂阁楼/异端者墓地的常驻与闹鬼文本 → 地点数据字段（horrorAura/statRule/shroudRule/beneathRule/defeatRule）+ HAUNTED_BY_LOCATION 数据表 + hauntedScript 承载（闭集子句无法表达移动敌人/弃遭遇牌/生成敌人/设定基础值）。",
+    "theWagesOfSin（近似实现，行为等价）：「地点不能被翻到幽灵/非幽灵面」→ 引擎无 CannotBeFlipped 修正词表；behavior.actions 只在该幕允许的方向给出翻面行动（剧情脚本翻面不受影响）。",
+    "theWagesOfSin（近似实现，行为等价）：未了之事的强制在「如同此时是一轮结束」时触发 → 与 roundEnded 共用同一函数（行为一致，触发源不同）。",
+    "theWagesOfSin（近似实现，行为等价）：逐卡规则键放在单卡条目 flags（entryFlags 读点）；条目索引尚未重建时 behavior 回退 definition.CARD_RULES 的同一份键，因此章节行为零卡号分支且离线单测可跑。",
+    "forTheGreaterGood（近似实现，行为等价）：结局的额外 XP（数字混乱标记钥匙按 1 点经验结算）未在 resolution 里发放：引擎没有结局 XP 管线，经验值由 P9 战役流程统一结算（胜利区卡牌的胜利点已计入 state.victory）。",
+    "forTheGreaterGood（近似实现，行为等价）：参考实现收齐的「远古恶魔/黑暗异教徒/上锁的门」三个核组不在本战役包（TCU 只有 21 个遭遇组）：议程 1 背面只能从本包弃掉的异教徒敌人中抽取，黑暗异教徒组的祭司/密会巫师等不参与；setup 的「从遭遇组移除 3 祭司/1 密会巫师」相应只做了本包内的等价移除。",
+    "forTheGreaterGood（近似实现，行为等价）：四把钥匙：参考实现用混乱标记钥匙（Arkham.Key，skull/cultist/tablet/elderthing 标记）实现；本轮无钥匙原语，改用 `state.scenarioKeys`（{ holder, location, enemyId } 纯 JSON）记录同一语义：放在敌人/地点/调查员上、敌人离场时由击败者取得否则留在原地、同地点四钥匙开启机关盒。",
+    "forTheGreaterGood（近似实现，行为等价）：机关盒「附属到敌人」：引擎没有 AttachedToEnemy 的剧情资产，用 `state.scenarioFlags.puzzleBox`（holder: enemy/seat/removed + enemyId/seat）记录归属，资产实例只存 `state.storyAssets`（location 同步）。",
+    "forTheGreaterGood（近似实现，行为等价）：议程 2 背面「弃掉全部幕牌」：用 `state.acts = []` 近似（引擎没有「弃幕」原语）；此后幕无法推进，只能等撤退/结局。",
+    "forTheGreaterGood（近似实现，行为等价）：幕 1 渗透秘社正面「在你躲避一个敌人后：移除其所有毁灭」：自动结算（不询问玩家是否使用反应），在 afterEvade 中移除该敌人全部毁灭。",
+    "forTheGreaterGood（近似实现，行为等价）：边缘虚空骑士谈判成功「控制其 1 个毁灭并翻至线索面」：用「敌人 -1 毁灭、调查员 +1 线索」等价实现。",
+    "forTheGreaterGood（近似实现，行为等价）：核心圈骑士的猎物「控制最多钥匙」不影响引擎的猎物选择（引擎 prey 管线只认印刷猎物短语）；生成位置按「与你所在地点连接的地点」实现。",
+    "forTheGreaterGood（近似实现，行为等价）：南森·威克（引导面）谈判计数用敌人实例的 resources 字段；「加入胜利区」用 api.banish（放逐到胜利区）。",
+    "unionAndDisillusion（近似实现，行为等价）：结局 9/10 的 ReturnTo 分支不适用（本仓库无 ReturnTo 包）；结局 2（秘社胜）与结局 9（女巫集会胜）只写战役记录，战役结束与尾声由 P9 的战役 flow 接线。",
+    "unionAndDisillusion（近似实现，行为等价）：结局 XP 未在 resolution 里发放（引擎没有结局 XP 管线，P9 战役流程统一结算）。",
+    "unionAndDisillusion（近似实现，行为等价）：参考实现收齐的「远古恶魔」「寒冷刺骨」两个核组不在本战役包（TCU 只有 21 个遭遇组），相关遭遇卡不参与牌堆。",
+    "unionAndDisillusion（近似实现，行为等价）：4 张命运剧情卡没有「冒险参考牌底」原语：用 state.scenarioFlags.fateCards（{ code, ally, enemy, person, trail, resolved, seat } 纯 JSON）记录；幕 1 背面按玩家顺序发放并逐张结算，翻回敌人面用 spawnStoryEnemy 近似。",
+    "unionAndDisillusion（近似实现，行为等价）：失踪人口：reference 用剧本日志的划掉标记区分「失踪/已死」；本实现按 missingPersons（空记录时视为 4 人全部失踪，等同 standalone）与 disappearedIntoTheMist/wasClaimedBySpecters 记录判断。",
+    "unionAndDisillusion（近似实现，行为等价）：幽灵看守人「被击败时不弃掉，改为治愈所有伤害、解除交战并横置」：enemyDefeated 中把引擎已移出敌人列表的看守人放回，治愈+横置；「被偷走的灵魂」用 enemy.lostSouls 计数折算攻击/生命。",
+    "unionAndDisillusion（近似实现，行为等价）：共享 encounter-rules 的「幽灵敌人只能在幽灵地点被攻击/躲避」不适用于本章：UAD 的幽灵敌人（命运敌人/幽灵乌鸦/夜鸦）卡面没有该限制，behavior 覆盖 canFightEnemy/canEvadeEnemy 为恒可。",
+    "unionAndDisillusion（近似实现，行为等价）：灵怪陷阱在剧情中「不能进入」与未访之岛的「鬼灵迷雾」限制都用 behavior.investigatorEntryError 在未揭示时挡路；没有独立的通行原语。",
+    "unionAndDisillusion（近似实现，行为等价）：幕 2 背面「把看守人的攫噬（05286，TheWatcher 组）洗入遭遇牌库」：该卡不在本包卡表，只把本包的看守人的注视 05272 洗入牌库并洗回弃牌堆。",
+    "unionAndDisillusion（近似实现，行为等价）：幕 3 背面按版本生成的敌人：v1「女巫的法术成功 → 安妮特·梅森」用目录卡 05057 的数值 spawnStoryEnemy；失败时生成 05090 女巫集会学徒；v3/v4 生成 05095 秘社新信徒（1–2 张）并在 josefIsAliveAndWell 时生成 05085 约瑟夫·梅吉尔（不可谈判由 flags.noParleyJosef 记录）。",
+    "unionAndDisillusion（近似实现，行为等价）：火盆：用 P2.11 locationFlag（brazier）记录；setup 时把已点燃地点的 flags 直接写进 state.locationVariants，避免引擎放置地点前没有实例可写。",
+    "unionAndDisillusion（近似实现，行为等价）：阵法检定难度 +2（立石闹鬼）用 state.scenarioFlags.circleDifficultyRound + testDifficultyModifier 近似「直到本轮结束」。",
+    "inTheClutchesOfChaos（近似实现，行为等价）：遭遇牌库：manifest 静态声明「基线 + 两变体并集」，开局 modifyDeck 按剧本日志裁成单局分支（区域报表因此是单局张数的超集）。",
+    "inTheClutchesOfChaos（近似实现，行为等价）：幕上裂口：P2.11 只支持地点裂口，幕上裂口用 scenarioFlags.actBreaches 单一计数承载，幕推进时随当前幕移动。",
+    "inTheClutchesOfChaos（近似实现，行为等价）：「随机地点」：参考实现混洗开局移出的 8 张地点版本抽取 label，等价于在 8 个在场地点槽中洗牌抽取；用 randomLocationIds 从在场地点取样。",
+    "inTheClutchesOfChaos（近似实现，行为等价）：05285 强制①（毁灭改为裂口）在引擎 doomPlaced 钩子里回退 state.doom 后再放裂口；引擎先放置后通知，时序等价但非「替换式」窗口。",
+    "inTheClutchesOfChaos（近似实现，行为等价）：05307 元初通道的「地点文本视为空白」只屏蔽本章 behavior 提供的地点行动与关闭通道行动；引擎自带的调查/移动规则不受影响。",
+    "inTheClutchesOfChaos（近似实现，行为等价）：05312 不惮辛劳不惮烦的「重演遭遇弃牌堆最顶力量诡计」通过把该牌放回遭遇牌库顶再抽牌实现，走引擎完整显现管线。",
+    "inTheClutchesOfChaos（近似实现，行为等价）：05302/05305 的「查找遭遇牌库和弃牌堆的某特性敌人」只从两堆中按特性取最上面一张，洗牌走 engine 的 shuffleEncounterDeck（没有先让玩家浏览全部候选）。",
+    "beforeTheBlackThrone（近似实现，行为等价）：宇宙网格：用 P2.13 地点牌库 + scenarioFlags.cosmosOrder「放置顺序」承载；「右/下」连接最近放置者、「上」连接最早放置者、「任意方向」由玩家选；没有二维坐标与滑动。",
+    "beforeTheBlackThrone（近似实现，行为等价）：「宇宙 -」放置指令表在 definition.locations[*].cosmos（direction/cost），behavior.placeCosmosLocation 按表建立连接；支付代价后与任意已放置地点连接的替代选项已实现。",
+    "beforeTheBlackThrone（近似实现，行为等价）：虚空格子：不建地点卡，只用 scenarioFlags.emptySpaceCount 记账（不参与移动/连接/猎手目标；盲目舞者的相关子句因此近似为「离调查员最远的在场地点」）。",
+    "beforeTheBlackThrone（近似实现，行为等价）：阿撒托斯不建场上敌人实体（参考实现里它也不在任何地点）：毁灭记 scenarioFlags.azathothDoom，「阿撒托斯攻击你」= 3 伤害 + 3 恐惧；免疫/不可击败因此自动成立。",
+    "beforeTheBlackThrone（近似实现，行为等价）：冒险参考卡资源用 scenarioFlags.referenceResources 记账；宇宙门扉的「移动任意数量调查员」实现为移动该处全部调查员；三个地点的「把本地点上/下/左/右移动一格」用放置顺序交换近似。",
+    "beforeTheBlackThrone（近似实现，行为等价）：幕推进时的清场重建：不搬动虚空格子上的玩家卡、不重建二维布局；改为把本幕宇宙地点洗回宇宙牌库、放置新枢纽并抽 2/3 张新地点，同时把调查员移到安全的枢纽。",
+    "beforeTheBlackThrone（近似实现，行为等价）：「命运之轮·X」的「在宇宙中向左移动 / 把地点向左移动」用放置顺序的相邻位置承载；「它在等待」的意志检定与「最后的倒计时」的娃娃效果按卡面实现。",
+    "beforeTheBlackThrone（近似实现，行为等价）：调查员被击败的「调查员被击败」段落只记日志 + 1 点精神创伤（参考实现的 drivenInsane 会改写战役记录状态）。",
+    "beforeTheBlackThrone（近似实现，行为等价）：DarkCult 遭遇组：本仓库卡表把 Acolyte/Wizard of the Order/Mysterious Chanting 归在 pentagram 组，遭遇牌库用 pentagram 组近似。",
+    "beforeTheBlackThrone（近似实现，行为等价）：ReturnTo 专属内容（夜魇坐骑 54061 等 4 张变体卡）不在本次非 ReturnTo 剧本的卡表范围内，未实现。"
+  ]
+}

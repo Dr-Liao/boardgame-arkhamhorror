@@ -1,0 +1,783 @@
+// 万象无终（TCU）共享遭遇组（P8 / W-shared）验收测试。
+//
+// 写法：钩子级（照 tests/tfa-untamed-wilds.test.mjs）——自建假状态，直接调用
+// content/campaigns/theCircleUndone/encounter-rules.js 的共享钩子与 23 张单卡条目的
+// enemyScript / encounterResolve，不启动真实对局。
+//
+// 条目的注册：新条目要等 Lead 合并后重建 encounter-entries/index.js 才会进入引擎注册表；
+// 本测试先把 23 个条目手动 registerCardAbilities，这样 card-rules.js 的读点
+//（enemyScriptFor / treacheryRuleFor / encounterResolveFor …）在合并前就能验收。
+import test from 'node:test'
+import assert from 'node:assert/strict'
+// 只注册本测试要用的 23 个条目：不 import engine.js，避免并行 worker 尚未合并的
+// 其他 TCU 章节条目（引擎在 import 时会全局注册全部条目）影响本文件的独立验收。
+import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
+
+import {
+  encounterRules, resolveHauntedOnFailure, testActionKind, isSpectralLocation,
+  spectralTargetRestricted, spectralEnemyTargetBlocked, watcherHuntedSeats, isHunted,
+  markHuntedSeat, clearHuntedSeat, watcherTaken, markWatcherTaken, watcherSummary,
+  agendaAside, agendaAsideCount, placeAgendaAside, removeAgendaAside,
+  discardEncounterTop, witchEnemyEncountersInDiscard, isSpellOrRelicSource,
+  enemyRuleReads, original, activeInvestigators, here, hasTrait, doomOn,
+} from '../content/campaigns/theCircleUndone/encounter-rules.js'
+import { enemyScriptFor, treacheryRuleFor, encounterResolveFor, enemyStatRuleFor } from '../src/cards/card-rules.js'
+
+// ---- 23 张共享组单卡条目（一卡一文件） ----
+import e05086 from '../src/cards/encounter-entries/theCircleUndone/_shared/the_watcher/05086.js'
+import e05087 from '../src/cards/encounter-entries/theCircleUndone/_shared/the_watcher/05087.js'
+import e05088 from '../src/cards/encounter-entries/theCircleUndone/_shared/agents_of_azathoth/05088.js'
+import e05089 from '../src/cards/encounter-entries/theCircleUndone/_shared/agents_of_azathoth/05089.js'
+import e05090 from '../src/cards/encounter-entries/theCircleUndone/_shared/anettes_coven/05090.js'
+import e05091 from '../src/cards/encounter-entries/theCircleUndone/_shared/anettes_coven/05091.js'
+import e05092 from '../src/cards/encounter-entries/theCircleUndone/_shared/witchcraft/05092.js'
+import e05093 from '../src/cards/encounter-entries/theCircleUndone/_shared/witchcraft/05093.js'
+import e05094 from '../src/cards/encounter-entries/theCircleUndone/_shared/witchcraft/05094.js'
+import e05095 from '../src/cards/encounter-entries/theCircleUndone/_shared/silver_twilight_lodge/05095.js'
+import e05096 from '../src/cards/encounter-entries/theCircleUndone/_shared/silver_twilight_lodge/05096.js'
+import e05097 from '../src/cards/encounter-entries/theCircleUndone/_shared/silver_twilight_lodge/05097.js'
+import e05098 from '../src/cards/encounter-entries/theCircleUndone/_shared/city_of_sins/05098.js'
+import e05099 from '../src/cards/encounter-entries/theCircleUndone/_shared/city_of_sins/05099.js'
+import e05100 from '../src/cards/encounter-entries/theCircleUndone/_shared/spectral_predators/05100.js'
+import e05101 from '../src/cards/encounter-entries/theCircleUndone/_shared/spectral_predators/05101.js'
+import e05102 from '../src/cards/encounter-entries/theCircleUndone/_shared/spectral_predators/05102.js'
+import e05103 from '../src/cards/encounter-entries/theCircleUndone/_shared/trapped_spirits/05103.js'
+import e05104 from '../src/cards/encounter-entries/theCircleUndone/_shared/trapped_spirits/05104.js'
+import e05105 from '../src/cards/encounter-entries/theCircleUndone/_shared/realm_of_death/05105.js'
+import e05106 from '../src/cards/encounter-entries/theCircleUndone/_shared/realm_of_death/05106.js'
+import e05107 from '../src/cards/encounter-entries/theCircleUndone/_shared/inexorable_fate/05107.js'
+import e05108 from '../src/cards/encounter-entries/theCircleUndone/_shared/inexorable_fate/05108.js'
+
+const ENTRIES = [
+  e05086, e05087, e05088, e05089, e05090, e05091, e05092, e05093, e05094, e05095, e05096,
+  e05097, e05098, e05099, e05100, e05101, e05102, e05103, e05104, e05105, e05106, e05107, e05108,
+]
+
+// 合并前后都成立：若 encounter-entries/index.js 已经收录这 23 个条目（Lead 重建后），
+// 引擎注册表里已存在，只补缺的；未收录时手动注册，让 card-rules 读点在合并前可验收。
+const missingEntries = ENTRIES.filter(entry => !registeredEntry(entry.code))
+if (missingEntries.length) registerCardAbilities(missingEntries)
+
+const clone = value => structuredClone(value)
+
+// ---- 假状态 ----
+function stateFor(options = {}) {
+  const count = options.count ?? 2
+  const locationIds = options.locationIds ?? ['a', 'b']
+  const locations = locationIds.map((id, index) => ({
+    id, name: id.toUpperCase(), connections: options.connections?.[id]
+      ?? (locationIds[index + 1] ? [locationIds[index + 1]] : []),
+    clues: 0, revealed: true, attachments: [], doom: 0,
+    ...(options.locationExtra?.[id] || {}),
+  }))
+  return {
+    scenario: {
+      id: 'tcuSharedProbe',
+      locations: options.scenarioLocations ?? {},
+      ...(options.hauntedOn ? { hauntedOn: options.hauntedOn } : {}),
+    },
+    investigators: Array.from({ length: count }, (_, seat) => ({
+      seat, code: `0100${seat + 1}`, name: `调查员${seat + 1}`, location: locationIds[0],
+      damage: 0, horror: 0, clues: 0, resources: 5, sanity: 5,
+      hand: [], assets: [], threat: [], engaged: [], deck: [], discard: [], actionsLeft: 3,
+    })),
+    locations,
+    enemies: [],
+    storyAssets: [],
+    scenarioFlags: {},
+    scenarioZones: {},
+    victoryDisplay: [],
+    encounterDeck: [],
+    encounterDiscard: [],
+    campaign: { leadSeat: 0, records: {}, chaosBag: [] },
+    chaosBag: [],
+    difficulty: 'standard',
+    numInvestigators: count,
+    round: 1,
+    phase: 'investigation',
+    status: 'playing',
+  }
+}
+
+// ---- 假 api（scenarioRuntime 的窄替身；只实现被测钩子会用到的成员） ----
+function makeApi(state, options = {}) {
+  const calls = []
+  const answers = [...(options.answers || [])]
+  const attackLog = []
+  const api = {
+    calls,
+    attackLog,
+    info(text) { calls.push({ type: 'info', text: String(text) }) },
+    choose(request) {
+      calls.push({ type: 'choose', request })
+      if (options.choose) {
+        const answer = options.choose(request, answers)
+        if (answer !== undefined) return answer
+      }
+      return answers.shift() ?? request.options?.[0]?.id
+    },
+    test(seat, skill, difficulty, resolve, bonus = 0, source = null, testOptions = {}) {
+      const outcome = options.tests?.length
+        ? options.tests.shift()
+        : { success: true, value: difficulty, difficulty, skill, source }
+      const result = {
+        ...outcome,
+        skill: outcome.skill ?? skill,
+        difficulty: outcome.difficulty ?? difficulty,
+        source: outcome.source ?? source ?? testOptions.source ?? null,
+      }
+      calls.push({ type: 'test', seat, skill, difficulty, result })
+      if (resolve) resolve(result)
+      return result
+    },
+    haunted(seat, hauntedOptions) {
+      calls.push({ type: 'haunted', seat, options: hauntedOptions })
+    },
+    damage(seat, amount) {
+      const inv = state.investigators[seat]
+      inv.damage += Number(amount) || 0
+      calls.push({ type: 'damage', seat, amount })
+    },
+    horror(seat, amount) {
+      const inv = state.investigators[seat]
+      inv.horror += Number(amount) || 0
+      calls.push({ type: 'horror', seat, amount })
+    },
+    directDamage(seat, amount) {
+      api.damage(seat, amount)
+      calls.push({ type: 'directDamage', seat, amount })
+    },
+    damageAsset(seat, assetId, amount) {
+      calls.push({ type: 'damageAsset', seat, assetId, amount })
+    },
+    discardRandom(seat, amount) {
+      const inv = state.investigators[seat]
+      for (let index = 0; index < amount && inv.hand.length; index++) inv.discard.push(inv.hand.pop())
+      calls.push({ type: 'discardRandom', seat, amount })
+    },
+    doomOn(card, amount = 1) {
+      card.doom = (Number(card.doom) || 0) + Number(amount)
+      calls.push({ type: 'doomOn', card, amount })
+    },
+    threat(seat, code, extra = {}) {
+      const inv = state.investigators[seat]
+      const card = { id: `threat:${inv.seat}:${inv.threat.length}:${code}`, code, ...extra }
+      inv.threat.push(card)
+      calls.push({ type: 'threat', seat, code })
+      return card
+    },
+    grantHaunted(grant) {
+      state.hauntedGrants ||= []
+      state.hauntedGrants.push(grant)
+      calls.push({ type: 'grantHaunted', grant })
+    },
+    clearHauntedGrants(predicate) {
+      if (!state.hauntedGrants) return 0
+      const before = state.hauntedGrants.length
+      state.hauntedGrants = state.hauntedGrants.filter(grant => !predicate(grant))
+      calls.push({ type: 'clearHauntedGrants', removed: before - state.hauntedGrants.length })
+      return before - state.hauntedGrants.length
+    },
+    attack(enemy, inv) {
+      attackLog.push({ enemyId: enemy.id, seat: inv.seat })
+    },
+    spawnEngaged(code, location, seat) {
+      const enemy = {
+        id: `spawn:${code}:${state.enemies.length}`, code, originalCode: code, name: code,
+        location, engagedSeat: seat, exhausted: false, damageTaken: 0, doom: 0, health: 7,
+      }
+      state.enemies.push(enemy)
+      calls.push({ type: 'spawnEngaged', code, location, seat })
+      return enemy
+    },
+    moveEnemy(enemy, location) { enemy.location = location },
+    hunterStep(enemy) {
+      if (options.hunterStep) return options.hunterStep(enemy)
+      const location = state.locations.find(entry => entry.id === enemy.location)
+      return location?.connections?.[0] ?? null
+    },
+    drawEncounter(seat) {
+      calls.push({ type: 'drawEncounter', seat })
+      if (state.encounterDeck.length) state.encounterDeck.pop()
+    },
+    shuffleDiscard() {
+      state.encounterDeck = [...state.encounterDeck, ...state.encounterDiscard]
+      state.encounterDiscard = []
+    },
+    cannotAttack: enemy => options.cannotAttack?.(enemy) === true,
+  }
+  return api
+}
+
+const inv = (state, seat = 0) => state.investigators[seat]
+const threatOf = (state, seat, code) => (inv(state, seat).threat || []).find(card => original(card) === code)
+
+// ===========================================================================
+// 1. 模块表面与条目完整性
+// ===========================================================================
+test('共享遭遇规则保留骨架导出名且钩子齐全', () => {
+  for (const value of [encounterRules, resolveHauntedOnFailure, testActionKind, isSpectralLocation,
+    spectralTargetRestricted, watcherHuntedSeats, isHunted, markHuntedSeat, clearHuntedSeat,
+    agendaAside, agendaAsideCount, placeAgendaAside, removeAgendaAside, discardEncounterTop,
+    witchEnemyEncountersInDiscard, isSpellOrRelicSource, enemyRuleReads, original,
+    activeInvestigators, here, hasTrait, doomOn]) {
+    assert.ok(value !== undefined && value !== null)
+  }
+  for (const hook of ['afterTest', 'canFightEnemy', 'canEvadeEnemy', 'enemySpawned', 'enemyMoved',
+    'enemyDamaged', 'enemyDefeated', 'enemyAttackResolved', 'enemyPhaseEnd', 'mythosEnded',
+    'enemyStatModifier', 'statModifier', 'turnBegins', 'turnEnded', 'roundEnded', 'encounterDrawn',
+    'resolveEncounter', 'encounterActions', 'performEncounterAction']) {
+    assert.equal(typeof encounterRules[hook], 'function', `缺少共享钩子 ${hook}`)
+  }
+})
+
+test('23 张共享组条目一卡一文件、implemented 且 code/scope 合法', () => {
+  assert.equal(ENTRIES.length, 23)
+  const scopes = new Set(['enemy', 'treachery'])
+  const codes = new Set()
+  for (const entry of ENTRIES) {
+    assert.equal(entry.implemented, true, `${entry.code} 必须 implemented: true`)
+    assert.ok(scopes.has(entry.scope), `${entry.code} scope 非法：${entry.scope}`)
+    assert.ok(!codes.has(entry.code), `${entry.code} 重复`)
+    codes.add(entry.code)
+  }
+  // 敌人 9 / 诡计 14（scenario-inventory.json groups[] 口径）。
+  assert.equal(ENTRIES.filter(entry => entry.scope === 'enemy').length, 9)
+  assert.equal(ENTRIES.filter(entry => entry.scope === 'treachery').length, 14)
+  // 条目已进 card-rules 读点（本测试手动注册）。
+  assert.equal(enemyScriptFor('05088') !== null, true)
+  assert.equal(treacheryRuleFor('05105')?.turnBeginsHaunted, true)
+  assert.equal(encounterResolveFor('05106') !== null, true)
+})
+
+// ===========================================================================
+// 2. 闹鬼失败窗口
+// ===========================================================================
+test('闹鬼失败窗口：攻击失败且剧本配置 fight 时结算一次', () => {
+  const state = stateFor({ hauntedOn: ['investigate', 'fight', 'evade'] })
+  const api = makeApi(state)
+  const result = { success: false, value: 1, difficulty: 3, source: { label: '攻击' } }
+  assert.equal(resolveHauntedOnFailure(state, inv(state), result, api), true)
+  assert.equal(api.calls.filter(call => call.type === 'haunted').length, 1)
+  assert.equal(api.calls.find(call => call.type === 'haunted').options.kind, 'fight')
+  assert.equal(testActionKind(result), 'fight')
+})
+
+test('闹鬼失败窗口：调查失败不重复结算（引擎负责 investigate）', () => {
+  const state = stateFor({ hauntedOn: ['investigate', 'fight', 'evade'] })
+  const api = makeApi(state)
+  const result = { success: false, value: 1, difficulty: 3, source: { label: '调查' } }
+  assert.equal(resolveHauntedOnFailure(state, inv(state), result, api), false)
+  assert.equal(api.calls.filter(call => call.type === 'haunted').length, 0)
+  // 成功检定也不结算。
+  assert.equal(resolveHauntedOnFailure(state, inv(state),
+    { success: true, source: { label: '攻击' } }, api), false)
+})
+
+// ===========================================================================
+// 3. 幽灵敌人目标限制
+// ===========================================================================
+test('幽灵敌人目标限制：非幽灵地点禁止攻击/躲避，幽灵地点允许', () => {
+  const state = stateFor({
+    locationIds: ['a', 'b'],
+    scenarioLocations: { a: { spectral: true }, b: {} },
+    locationExtra: { a: { spectral: true } },
+  })
+  const spectralEnemy = { id: 'e1', code: '05100', originalCode: '05100', traits: ['Monster', 'Spectral'], location: 'b' }
+  const normalEnemy = { id: 'e2', code: '05090', originalCode: '05090', traits: ['Humanoid', 'Witch'], location: 'b' }
+  // 调查员也在非幽灵地点 b：此时不能攻击幽灵敌人。
+  inv(state, 0).location = 'b'
+  assert.equal(spectralTargetRestricted(state), true)
+  assert.equal(encounterRules.canFightEnemy(state, inv(state), spectralEnemy), false, '非幽灵地点不能攻击幽灵敌人')
+  assert.equal(encounterRules.canEvadeEnemy(state, inv(state), spectralEnemy), false)
+  assert.equal(encounterRules.canFightEnemy(state, inv(state), normalEnemy), true)
+  // 移动到幽灵地点后允许。
+  spectralEnemy.location = 'a'
+  inv(state, 0).location = 'a'
+  assert.equal(isSpectralLocation(here(state, inv(state))), true)
+  assert.equal(encounterRules.canFightEnemy(state, inv(state), spectralEnemy), true)
+})
+
+test('幽灵敌人目标限制：没有幽灵地点的剧本不受影响，可按剧本覆盖', () => {
+  const state = stateFor({ scenarioLocations: { a: {}, b: {} } })
+  const spectralEnemy = { id: 'e1', code: '05100', traits: ['Spectral'], location: 'a' }
+  assert.equal(spectralTargetRestricted(state), false)
+  assert.equal(encounterRules.canFightEnemy(state, inv(state), spectralEnemy), true)
+  state.scenario.spectralTargetLimit = true
+  assert.equal(spectralEnemyTargetBlocked(state, inv(state), spectralEnemy), true)
+})
+
+// ===========================================================================
+// 4. 看守人（watcher）跨章记录读点
+// ===========================================================================
+test('看守人记录：标记/查询/清除被追捕座位与被带走调查员', () => {
+  const state = stateFor()
+  markHuntedSeat(state, 1)
+  markWatcherTaken(state, '05046')
+  assert.deepEqual(watcherHuntedSeats(state), [1])
+  assert.equal(isHunted(state, 1), true)
+  assert.equal(isHunted(state, 0), false)
+  assert.deepEqual(watcherTaken(state), ['05046'])
+  assert.deepEqual(watcherSummary(state), { huntedSeats: [1], taken: ['05046'] })
+  clearHuntedSeat(state, 1)
+  assert.deepEqual(watcherHuntedSeats(state), [])
+})
+
+// ===========================================================================
+// 5. agents_of_azathoth
+// ===========================================================================
+test('05088 吹笛手：敌军阶段结束攻击同地点未交战调查员', () => {
+  const state = stateFor({ count: 2 })
+  inv(state, 0).location = 'a'
+  inv(state, 1).location = 'a'
+  const piper = { id: 'piper', code: '05088', originalCode: '05088', name: '吹笛手', location: 'a', engagedSeat: 1, exhausted: true }
+  state.enemies.push(piper)
+  const api = makeApi(state)
+  encounterRules.enemyPhaseEnd(state, api)
+  assert.deepEqual(api.attackLog, [{ enemyId: 'piper', seat: 0 }], '只攻击未与其交战的 0 号调查员')
+})
+
+test('05089 魔鬼的笛声：吹笛手在场时对地点与连接地点造成恐惧', () => {
+  const state = stateFor({ count: 2 })
+  inv(state, 0).location = 'a'
+  inv(state, 1).location = 'b'
+  state.enemies.push({ id: 'piper', code: '05088', originalCode: '05088', location: 'a', engagedSeat: null })
+  const api = makeApi(state)
+  const resolved = encounterResolveFor('05089')(state, inv(state, 0), { code: '05089' }, api)
+  assert.equal(resolved, false)
+  assert.equal(inv(state, 0).horror, 1, '同地点调查员受到 1 点恐惧')
+  assert.equal(inv(state, 1).horror, 1, '连接地点调查员也受到 1 点恐惧')
+  assert.equal(agendaAsideCount(state, '05089'), 0)
+})
+
+test('05089 魔鬼的笛声：三张集齐弃掉并生成与猎物交战的吹笛手', () => {
+  const state = stateFor({ count: 2 })
+  inv(state, 0).horror = 3 // 剩余神智最低 → 猎物
+  inv(state, 1).horror = 0
+  inv(state, 0).location = 'a'
+  inv(state, 1).location = 'b'
+  state.encounterDeck = ['05088']
+  const api = makeApi(state)
+  const resolve = encounterResolveFor('05089')
+  assert.equal(resolve(state, inv(state, 0), { code: '05089' }, api), true)
+  assert.equal(resolve(state, inv(state, 0), { code: '05089' }, api), true)
+  assert.equal(agendaAsideCount(state, '05089'), 2)
+  assert.equal(resolve(state, inv(state, 0), { code: '05089' }, api), true)
+  assert.equal(agendaAsideCount(state, '05089'), 0, '三张全部弃掉')
+  assert.equal(state.encounterDiscard.filter(code => code === '05089').length, 3)
+  assert.equal(state.enemies.filter(enemy => enemy.code === '05088').length, 1)
+  assert.equal(state.enemies.find(enemy => enemy.code === '05088').engagedSeat, 0, '与剩余神智最低者交战')
+})
+
+// ===========================================================================
+// 6. anettes_coven
+// ===========================================================================
+test('05090 女巫集会学徒：显现弃 2 张，耗尽时抽取弃牌堆巫术卡', () => {
+  const state = stateFor()
+  state.encounterDeck = ['05092']
+  state.encounterDiscard = ['05093']
+  const api = makeApi(state)
+  const enemy = { id: 'initiate', code: '05090', originalCode: '05090', location: 'a', drawnBySeat: 0 }
+  state.enemies.push(enemy)
+  encounterRules.enemySpawned(state, enemy, api)
+  assert.equal(state.encounterDeck.length, 0, '遭遇牌库顶 2 张都被弃掉（原本只有 1 张）')
+  assert.ok(state.encounterDiscard.includes('05092'))
+  assert.equal(api.calls.some(call => call.type === 'drawEncounter' && call.seat === 0), true,
+    '耗尽后抽取弃牌堆顶的巫术（Hex）卡牌')
+  assert.equal(state.encounterDiscard.includes('05093'), false, '巫术卡离开弃牌堆')
+})
+
+test('05091 女祭司：弃牌堆女巫敌人提供攻击/躲避加成（上限 3）', () => {
+  const state = stateFor()
+  const enemy = { id: 'priestess', code: '05091', originalCode: '05091', location: 'a' }
+  state.enemies.push(enemy)
+  state.encounterDiscard = ['05090', '05090', '05100', '05090', '05090']
+  assert.equal(witchEnemyEncountersInDiscard(state), 4)
+  assert.equal(enemyStatRuleFor('05091')?.fightEvadePerWitchInDiscard?.cap, 3)
+  assert.equal(encounterRules.enemyStatModifier(state, enemy, 'fight'), 3)
+  assert.equal(encounterRules.enemyStatModifier(state, enemy, 'evade'), 3)
+  assert.equal(encounterRules.enemyStatModifier(state, enemy, 'health'), 0)
+})
+
+test('05091 女祭司：遭遇牌库耗尽时重整并攻击', () => {
+  const state = stateFor()
+  inv(state, 0).location = 'a'
+  const enemy = { id: 'priestess', code: '05091', originalCode: '05091', location: 'a', exhausted: true, engagedSeat: null }
+  state.enemies.push(enemy)
+  const api = makeApi(state)
+  enemyScriptFor('05091').onEncounterDeckEmpty(state, enemy, api)
+  assert.equal(enemy.exhausted, false)
+  assert.deepEqual(api.attackLog, [{ enemyId: 'priestess', seat: 0 }, { enemyId: 'priestess', seat: 1 }],
+    '攻击其所在地点的每位调查员')
+})
+
+// ===========================================================================
+// 7. silver_twilight_lodge
+// ===========================================================================
+test('05095 秘社新信徒：任意无人地点生成、入场毁灭与谈判清空', () => {
+  assert.equal(e05095.enemyRule.spawnAnyEmpty, true)
+  assert.equal(e05095.enemySpawnRule.doomOnSpawn, 1)
+  const state = stateFor()
+  const enemy = { id: 'neophyte', code: '05095', originalCode: '05095', name: '秘社新信徒', location: 'a', doom: 0 }
+  state.enemies.push(enemy)
+  const api = makeApi(state)
+  encounterRules.enemySpawned(state, enemy, api)
+  assert.equal(enemy.doom, 1, '入场后放置 1 个毁灭标记')
+  const moves = encounterRules.encounterActions(state, inv(state))
+  assert.equal(moves.length, 1)
+  assert.equal(moves[0].rule, 'parleyLodgeNeophyte')
+  encounterRules.performEncounterAction(state, inv(state), moves[0], api)
+  assert.equal(enemy.doom, 0, '谈判成功移除所有毁灭标记')
+  // 05097 的「直到一轮结束 +2 难度」生效。
+  enemy.doom = 2
+  enemy.roundFightEvadeBonus = { round: state.round, amount: 2 }
+  const before = api.calls.filter(call => call.type === 'test').length
+  encounterRules.performEncounterAction(state, inv(state), moves[0], api)
+  const lastTest = api.calls.filter(call => call.type === 'test')[before]
+  assert.equal(lastTest.difficulty, 4)
+  assert.equal(enemy.doom, 0)
+})
+
+test('05096 守密人：神话阶段结束放置毁灭，谈判用智识(3)', () => {
+  const state = stateFor()
+  const keeper = { id: 'keeper', code: '05096', originalCode: '05096', name: '守密人', location: 'a', doom: 0 }
+  state.enemies.push(keeper)
+  const api = makeApi(state)
+  encounterRules.mythosEnded(state, api)
+  assert.equal(keeper.doom, 1)
+  const moves = encounterRules.encounterActions(state, inv(state))
+  assert.equal(moves[0].rule, 'parleyKeeperOfSecrets')
+  encounterRules.performEncounterAction(state, inv(state), moves[0], api)
+  assert.equal(api.calls.find(call => call.type === 'test').skill, 'intellect')
+  assert.equal(keeper.doom, 0)
+})
+
+test('05097 秘社玄仪：最近异教徒放置毁灭并获得 +2 难度；无异教徒时涌动', () => {
+  const state = stateFor({ locationIds: ['a', 'b', 'c'], connections: { a: ['b'], b: ['a', 'c'], c: ['b'] } })
+  const far = { id: 'cultist-far', code: '05090', traits: ['Humanoid', 'Cultist'], location: 'c', doom: 0 }
+  const near = { id: 'cultist-near', code: '05096', traits: ['Humanoid', 'Cultist'], location: 'b', doom: 0 }
+  state.enemies.push(far, near)
+  const api = makeApi(state)
+  encounterResolveFor('05097')(state, inv(state), { code: '05097' }, api)
+  assert.equal(near.doom, 1, '最近的异教徒被放置毁灭')
+  assert.equal(far.doom, 0)
+  assert.deepEqual(near.roundFightEvadeBonus, { round: state.round, amount: 2 })
+  assert.equal(encounterRules.enemyStatModifier(state, near, 'fight'), 2)
+  assert.equal(encounterRules.enemyStatModifier(state, near, 'evade'), 2)
+  // 无异教徒 → 涌动。
+  state.enemies = []
+  const surgeApi = makeApi(state)
+  encounterResolveFor('05097')(state, inv(state), { code: '05097' }, surgeApi)
+  assert.equal(surgeApi.calls.some(call => call.type === 'drawEncounter'), true)
+})
+
+// ===========================================================================
+// 8. the_watcher
+// ===========================================================================
+test('05086 幽灵看守人：被击败时改为治疗/横置/不重整并留在场上', () => {
+  const state = stateFor()
+  inv(state, 0).engaged = ['watcher']
+  const watcher = {
+    id: 'watcher', code: '05086', originalCode: '05086', name: '幽灵看守人',
+    location: 'a', damageTaken: 5, exhausted: false, engagedSeat: 0,
+  }
+  state.enemies.push(watcher)
+  const api = makeApi(state)
+  const replaced = encounterRules.enemyDefeated(state, watcher, api)
+  assert.equal(replaced, true, '替代击败：不弃掉/不进胜利区')
+  assert.equal(state.enemies.includes(watcher), true, '重新留在场上')
+  assert.equal(watcher.damageTaken, 0, '治愈所有伤害')
+  assert.equal(watcher.exhausted, true)
+  assert.equal(watcher.engagedSeat, null)
+  assert.deepEqual(inv(state, 0).engaged, [])
+  assert.deepEqual(watcher.preventReady, { from: state.round, rounds: 1 })
+})
+
+test('05087 看守人的攫噬：治愈 3、重整、移动、交战并攻击', () => {
+  const state = stateFor({ count: 1, locationIds: ['a', 'b'] })
+  const watcher = {
+    id: 'watcher', code: '05086', originalCode: '05086', name: '幽灵看守人',
+    location: 'a', damageTaken: 4, exhausted: true, engagedSeat: null,
+  }
+  state.enemies.push(watcher)
+  // 猎手步：从 a 移到 b；抽到本卡的调查员在 b。
+  inv(state, 0).location = 'b'
+  const api = makeApi(state, { hunterStep: () => 'b' })
+  encounterResolveFor('05087')(state, inv(state), { code: '05087' }, api)
+  assert.equal(watcher.damageTaken, 1, '治愈 3 点伤害')
+  assert.equal(watcher.exhausted, false)
+  assert.equal(watcher.location, 'b', '移动')
+  assert.equal(watcher.engagedSeat, 0, '交战')
+  assert.deepEqual(api.attackLog, [{ enemyId: 'watcher', seat: 0 }], '攻击')
+})
+
+// ===========================================================================
+// 9. spectral_predators
+// ===========================================================================
+test('05100 冥府之雾：为所在地点授予闹鬼并随移动迁移', () => {
+  const state = stateFor()
+  const mist = { id: 'mist', code: '05100', originalCode: '05100', location: 'a' }
+  state.enemies.push(mist)
+  const api = makeApi(state)
+  encounterRules.enemySpawned(state, mist, api)
+  assert.equal(state.hauntedGrants.length, 1)
+  assert.equal(state.hauntedGrants[0].locationId, 'a')
+  assert.equal(state.hauntedGrants[0].ability.id, '05100:mist')
+  mist.location = 'b'
+  encounterRules.enemyMoved(state, mist, 'b', api)
+  assert.equal(state.hauntedGrants.filter(grant => grant.ability.id === '05100:mist').length, 1)
+  assert.equal(state.hauntedGrants[0].locationId, 'b')
+  encounterRules.enemyDefeated(state, mist, api)
+  assert.equal(state.hauntedGrants.filter(grant => grant.ability.id === '05100:mist').length, 0)
+})
+
+test('05101 暗影猎犬：攻击后结算所在地点闹鬼', () => {
+  const state = stateFor()
+  const hound = { id: 'hound', code: '05101', originalCode: '05101', location: 'a' }
+  state.enemies.push(hound)
+  const api = makeApi(state)
+  encounterRules.enemyAttackResolved(state, hound, inv(state), api)
+  const haunted = api.calls.find(call => call.type === 'haunted')
+  assert.ok(haunted)
+  assert.equal(haunted.options.locationId, 'a')
+})
+
+test('05102 黑暗中的低语：放置牌库旁、每个地点获得闹鬼；轮末弃掉并撤销授予', () => {
+  const state = stateFor()
+  const api = makeApi(state)
+  encounterResolveFor('05102')(state, inv(state), { code: '05102' }, api)
+  assert.equal(agendaAsideCount(state, '05102'), 1)
+  assert.equal(state.hauntedGrants.length, 1)
+  assert.equal(state.hauntedGrants[0].locationId, 'all')
+  assert.equal(state.hauntedGrants[0].ability.effect[0].kind, 'horror')
+  encounterRules.roundEnded(state, api)
+  assert.equal(agendaAsideCount(state, '05102'), 0)
+  assert.equal(state.hauntedGrants.length, 0)
+  assert.ok(state.encounterDiscard.includes('05102'))
+})
+
+// ===========================================================================
+// 10. trapped_spirits
+// ===========================================================================
+test('05103 怨灵：非法术/遗物伤害击败改为附属地点并授予闹鬼', () => {
+  const state = stateFor()
+  const wraith = {
+    id: 'wraith', code: '05103', originalCode: '05103', name: '怨灵',
+    location: 'a', health: 2, damageTaken: 2,
+  }
+  state.enemies.push(wraith)
+  const api = makeApi(state)
+  encounterRules.enemyDamaged(state, wraith, api, 0, 'encounter')
+  const replaced = encounterRules.enemyDefeated(state, wraith, api)
+  assert.equal(replaced, true)
+  assert.equal(state.locations.find(entry => entry.id === 'a').attachments.length, 1)
+  assert.equal(state.hauntedGrants.length, 1)
+  assert.deepEqual(state.hauntedGrants[0].ability.effect[0], { kind: 'spawn', code: '05103', locationId: 'a' })
+})
+
+test('05103 怨灵：法术/遗物伤害或非伤害击败时正常弃掉', () => {
+  const state = stateFor()
+  inv(state, 0).assets.push({ id: 'spell-asset', code: '01060' }) // 01060 = 皱缩术（Spell）
+  const wraith = {
+    id: 'wraith', code: '05103', originalCode: '05103', location: 'a', health: 2, damageTaken: 2,
+  }
+  state.enemies.push(wraith)
+  const api = makeApi(state)
+  encounterRules.enemyDamaged(state, wraith, api, 0, 'spell-asset')
+  assert.equal(isSpellOrRelicSource(state, 'spell-asset'), true)
+  assert.equal(encounterRules.enemyDefeated(state, wraith, api), false)
+  // 非伤害击败（伤害未填满生命）也正常弃掉。
+  const state2 = stateFor()
+  const wraith2 = { id: 'w2', code: '05103', originalCode: '05103', location: 'a', health: 2, damageTaken: 0 }
+  state2.enemies.push(wraith2)
+  assert.equal(encounterRules.enemyDefeated(state2, wraith2, makeApi(state2)), false)
+})
+
+test('05104 被困的灵魂：检定失败按差额受到伤害', () => {
+  const state = stateFor()
+  const api = makeApi(state, { tests: [{ success: false, value: 1, difficulty: 3 }] })
+  encounterResolveFor('05104')(state, inv(state), { code: '05104' }, api)
+  assert.equal(inv(state, 0).damage, 2)
+  assert.equal(e05104.simplified, true, '投入卡牌的额外费用缺口必须显式登记')
+})
+
+// ===========================================================================
+// 11. realm_of_death
+// ===========================================================================
+test('05105 苦痛之地：威胁区 + 回合开始结算闹鬼 + 回合结束检定弃掉', () => {
+  const state = stateFor()
+  const api = makeApi(state)
+  encounterResolveFor('05105')(state, inv(state), { code: '05105' }, api)
+  assert.equal(inv(state, 0).threat.length, 1)
+  encounterRules.turnBegins(state, inv(state), api)
+  assert.equal(api.calls.filter(call => call.type === 'haunted').length, 1)
+  const discardApi = makeApi(state) // 默认检定成功
+  encounterRules.turnEnded(state, inv(state), discardApi)
+  assert.equal(inv(state, 0).threat.length, 0, '检定成功弃掉苦痛之地')
+  assert.ok(state.encounterDiscard.includes('05105'))
+})
+
+test('05106 雾中身形：显现结算所在地点每个闹鬼能力', () => {
+  const state = stateFor()
+  const api = makeApi(state)
+  encounterResolveFor('05106')(state, inv(state), { code: '05106' }, api)
+  const haunted = api.calls.find(call => call.type === 'haunted')
+  assert.ok(haunted)
+  assert.equal(haunted.options.locationId, 'a')
+})
+
+// ===========================================================================
+// 12. inexorable_fate
+// ===========================================================================
+test('05107 恐怖夜色：失败放到密谋牌库旁，第三张触发全体 3 点恐惧', () => {
+  const state = stateFor({ count: 2 })
+  const api = makeApi(state, { tests: [{ success: false, value: 3, difficulty: 4 }] })
+  const resolve = encounterResolveFor('05107')
+  // 失败 1 点：不放牌库旁？——只要失败就放牌库旁，低于 3 点不获得涌动。
+  resolve(state, inv(state, 0), { code: '05107' }, api)
+  assert.equal(agendaAsideCount(state, '05107'), 1)
+  assert.equal(api.calls.filter(call => call.type === 'drawEncounter').length, 0, '失败 <3 没有涌动')
+  resolve(state, inv(state, 0), { code: '05107' }, makeApi(state, { tests: [{ success: false, value: 0, difficulty: 4 }] }))
+  assert.equal(agendaAsideCount(state, '05107'), 2)
+  const thirdApi = makeApi(state, { tests: [{ success: false, value: 0, difficulty: 4 }] })
+  resolve(state, inv(state, 0), { code: '05107' }, thirdApi)
+  assert.equal(agendaAsideCount(state, '05107'), 0)
+  assert.equal(state.encounterDiscard.filter(code => code === '05107').length, 3)
+  assert.equal(inv(state, 0).horror, 3)
+  assert.equal(inv(state, 1).horror, 3)
+})
+
+test('05108 愚人的命运：无复制品进威胁区；有复制品时选择直接伤害/毁灭', () => {
+  const state = stateFor({ count: 2 })
+  const resolve = encounterResolveFor('05108')
+  assert.equal(resolve(state, inv(state, 0), { code: '05108' }, makeApi(state)), true)
+  assert.equal(inv(state, 0).threat.length, 1)
+  // 第二位调查员抽到：选择「另一张愚人的命运上放毁灭」。
+  const api = makeApi(state, { answers: ['otherCopy'] })
+  resolve(state, inv(state, 1), { code: '05108' }, api)
+  assert.equal(threatOf(state, 0, '05108').doom, 1)
+  // 第三位（复用 0 号威胁区后再抽）选择直接伤害 → 只对持有一张的调查员。
+  const api2 = makeApi(state, { answers: ['otherInvestigator'] })
+  resolve(state, inv(state, 1), { code: '05108' }, api2)
+  assert.equal(inv(state, 0).damage, 2)
+})
+
+// ===========================================================================
+// 13. city_of_sins
+// ===========================================================================
+test('05098 邪恶往昔：首张进威胁区，重复时涌动；遭遇牌库耗尽强制', () => {
+  const state = stateFor()
+  const resolve = encounterResolveFor('05098')
+  assert.equal(resolve(state, inv(state, 0), { code: '05098' }, makeApi(state)), true)
+  assert.equal(inv(state, 0).threat.length, 1)
+  const surgeApi = makeApi(state)
+  assert.equal(resolve(state, inv(state, 0), { code: '05098' }, surgeApi), false)
+  assert.equal(surgeApi.calls.some(call => call.type === 'drawEncounter'), true, '重复时获得涌动')
+  // 遭遇牌库耗尽：抽牌后牌库为 0，下一次抽牌触发强制。
+  const emptyApi = makeApi(state, { tests: [{ success: false, value: 0, difficulty: 3 }] })
+  state.scenarioFlags.encounterDeckSizeAfterDraw = 0
+  encounterRules.encounterDrawn(state, inv(state, 0), '05090', emptyApi)
+  assert.equal(inv(state, 0).horror, 2, '受到 2 点恐惧')
+  assert.equal(inv(state, 0).threat.length, 1, '检定失败：邪恶往昔仍留在威胁区域')
+})
+
+test('05099 百年秘事：失败按差额弃遭遇牌；弃到诅咒诡计造成直接伤害', () => {
+  const state = stateFor()
+  state.encounterDeck = ['05100', '05090', '05101', '05098'] // 顶(末尾)=05098 诅咒诡计
+  inv(state, 0).assets.push({ id: 'ally-1', code: '01018' }) // 01018 = 侍卫（盟友）
+  const api = makeApi(state, { tests: [{ success: false, value: 2, difficulty: 5 }] })
+  encounterResolveFor('05099')(state, inv(state, 0), { code: '05099' }, api)
+  assert.equal(inv(state, 0).damage, 1, '弃到诅咒诡计：直接伤害 1')
+  assert.ok(state.encounterDiscard.includes('05098'), '诅咒诡计被弃掉')
+  assert.equal(api.calls.filter(call => call.type === 'damageAsset').length, 1, '盟友支援也受到伤害')
+})
+
+// ===========================================================================
+// 14. witchcraft
+// ===========================================================================
+test('05092 恶魔之音：失败弃手牌，弃不掉的张数二选一', () => {
+  const state = stateFor()
+  inv(state, 0).hand = ['01018']
+  state.encounterDiscard = ['05092']
+  const api = makeApi(state, {
+    tests: [{ success: false, value: 0, difficulty: 4 }],
+    answers: ['damage', 'horror'],
+  })
+  encounterResolveFor('05092')(state, inv(state, 0), { code: '05092' }, api)
+  // 难度 3 + 弃牌堆 1 张 = 4；失败 4 点：弃 1 张手牌，其余 3 点二选一（第 3 次在 defeat 前继续）。
+  assert.deepEqual(inv(state, 0).discard, ['01018'])
+  assert.equal(inv(state, 0).damage, 1)
+  assert.equal(inv(state, 0).horror, 2)
+})
+
+test('05093 崩毁离析：每轮第一次技能检定 -1，横置女巫时摆脱检定自动成功', () => {
+  const state = stateFor()
+  const api = makeApi(state)
+  encounterResolveFor('05093')(state, inv(state, 0), { code: '05093' }, api)
+  assert.equal(inv(state, 0).threat.length, 1)
+  // 本轮第一次检定期间每项技能 -1。
+  assert.equal(encounterRules.statModifier(state, inv(state, 0), 'willpower'), -1)
+  encounterRules.afterTest(state, inv(state, 0), { success: true, source: { label: '调查' } }, makeApi(state))
+  assert.equal(encounterRules.statModifier(state, inv(state, 0), 'willpower'), 0, '本轮已检定过，不再 -1')
+  // 横置的女巫敌人让摆脱检定自动成功。
+  state.enemies.push({ id: 'witch', code: '05090', traits: ['Humanoid', 'Witch'], location: 'a', exhausted: true })
+  const autoApi = makeApi(state)
+  const moves = encounterRules.encounterActions(state, inv(state, 0))
+  assert.equal(moves[0].rule, 'discardWracked')
+  encounterRules.performEncounterAction(state, inv(state, 0), moves[0], autoApi)
+  assert.equal(inv(state, 0).threat.length, 0, '自动成功：弃掉崩毁离析')
+  assert.equal(autoApi.calls.filter(call => call.type === 'test').length, 0, '没有进行检定')
+})
+
+test('05094 苦痛折磨：进威胁区并列出摆脱行动', () => {
+  const state = stateFor()
+  const api = makeApi(state)
+  encounterResolveFor('05094')(state, inv(state, 0), { code: '05094' }, api)
+  assert.equal(inv(state, 0).threat.length, 1)
+  const moves = encounterRules.encounterActions(state, inv(state, 0))
+  assert.deepEqual(moves.map(move => move.rule), ['discardBedeviled'])
+  assert.equal(e05094.simplified, true, '[action] 禁止能力的缺口必须显式登记')
+})
+
+// ===========================================================================
+// 15. 存档往返与确定性（saveReplay 证据）
+// ===========================================================================
+function playSharedRoute(seed = 7) {
+  const state = stateFor({ count: 2 })
+  inv(state, 0).hand = ['01018', '01019']
+  state.encounterDeck = ['05092', '05090', '05099', '05100']
+  state.encounterDiscard = ['05093']
+  const api = makeApi(state, {
+    answers: ['otherCopy', 'horror', 'damage', 'discardWarded'],
+    tests: [
+      { success: false, value: 0, difficulty: 4 },
+      { success: false, value: 2, difficulty: 5 },
+    ],
+    hunterStep: () => 'b',
+  })
+  encounterResolveFor('05092')(state, inv(state, 0), { code: '05092' }, api)
+  encounterResolveFor('05099')(state, inv(state, 0), { code: '05099' }, api)
+  encounterRules.enemySpawned(state, {
+    id: 'mist', code: '05100', originalCode: '05100', location: 'a',
+  }, api)
+  encounterResolveFor('05093')(state, inv(state, 0), { code: '05093' }, api)
+  encounterResolveFor('05108')(state, inv(state, 0), { code: '05108' }, api)
+  encounterRules.turnBegins(state, inv(state, 0), api)
+  encounterRules.roundEnded(state, api)
+  return state
+}
+
+test('同一路线两次运行完全一致（确定性）', () => {
+  const first = playSharedRoute(7)
+  const second = playSharedRoute(7)
+  assert.equal(JSON.stringify(first), JSON.stringify(second))
+})
+
+test('共享组状态在 JSON 往返后一致（saveReplay）', () => {
+  const state = playSharedRoute(11)
+  const restored = JSON.parse(JSON.stringify(state))
+  assert.deepEqual(restored, state)
+  assert.deepEqual(restored.investigators[0].threat, state.investigators[0].threat)
+  assert.deepEqual(restored.scenarioFlags, state.scenarioFlags)
+  assert.deepEqual(restored.hauntedGrants, state.hauntedGrants)
+})

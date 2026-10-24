@@ -28,8 +28,12 @@ import {
   decisionSeed, moveCost, autoHubMove,
 } from './src/engine/engine.js'
 
+// P0 自动跳过：纯判定放在 web/ 里给浏览器与 Node 共用（Node 反向 import web/ 是允许的，
+// 见 tests/architecture-guard.test.mjs 的「服务端模块如需复用，应由 Node 侧 import web/」）。
+import { reactionSkipPlan } from './web/reaction-preferences.js'
 import { handleApi, resourceVersion } from './src/integration/web-api.js'
 import { handleDeckLibrary } from './src/integration/deck-library.js'
+import { handleMusicLibrary } from './src/integration/music-library.js'
 import { cacheWebAsset as cacheImageAsset } from './src/integration/image-cache.js'
 import { cacheMusicAsset } from './src/integration/music-cache.js'
 import { viewState, viewEvents, staticTables } from './src/integration/observation.js'
@@ -38,6 +42,10 @@ import { storyChatContext } from './src/ai/ai-story.js'
 import {
   DEFAULT_AI_DIALOGUE_SETTINGS, actionSpeechFrequency, reactionTriggers,
 } from './src/ai/ai-dialogue.js'
+
+// 动态元数据本地化缓存（docs/localization.md §7.2）：战役名来自内容注册表，
+// 无法写死在静态 i18n.messages 里，由顶层 localize(locale) 按 locale 缓存。
+const LOCALIZED_CAMPAIGN_OPTIONS = {}
 
 const MOVE_FORMAT = [
   '局外：选择调查员 hubSelectInvestigator(code)；选人先看【决策资料】的 teamSummary，优先补齐尚未覆盖的职责，不要与队友重复同一职业定位；构筑 {"action":"hubSetDeck","codes":["卡号", "卡号", ...]}，按规定尺寸提交完整清单。',
@@ -134,15 +142,82 @@ export default {
   coverEmoji: '\u00a0',
   description: '克苏鲁神话合作卡牌桌游：扮演调查员，构筑卡组，与 AI 队友一起调查诡异事件、对抗古老邪神。',
   tags: ['卡牌', '合作', '克苏鲁', '策略'],
+
+  // 目录与开局设置元数据的本地化声明（docs/localization.md §7.1；接入步骤见 §8.7 第一步）。
+  // i18n 是纯 JSON：大厅只按当前语言取展示文案，不改 type/default/选项集合。
+  // zh-CN 是源语言，基础字段本身就是中文，messages 里可以省略。
+  i18n: {
+    defaultLocale: 'zh-CN',
+    supportedLocales: ['zh-CN', 'en'],
+    messages: {
+      en: {
+        name: 'Arkham Horror: The Card Game',
+        description: 'A cooperative Lovecraftian card game: play investigators, build decks, and join AI teammates to investigate strange cases and confront ancient evils.',
+        tags: ['Cards', 'Cooperative', 'Cthulhu', 'Strategy'],
+        aiSlotLabel: 'AI teammate',
+        aiSlotDescription: 'An AI-controlled investigator teammate (the AI assigns an investigator and builds the deck automatically)',
+        settings: {
+          playerCount: {
+            label: 'Number of players',
+            description: 'Total investigator seats; currently one human player plus AI teammates.',
+            options: { 1: '1 player', 2: '2 players', 3: '3 players', 4: '4 players' },
+          },
+          campaignId: { label: 'Campaign' },
+          cardPoolScope: {
+            label: 'Card pool',
+            description: 'Progressive: cards from cycles after the current campaign cycle are disallowed (investigators, deckbuilding and between-scenario upgrades are all restricted); All: no restriction on card sources.',
+            options: { all: 'All', progressive: 'Progressive' },
+          },
+          allowRollback: {
+            label: 'Allow rollback',
+            description: 'Allow restarting from a scenario checkpoint (creates a branched save). When off, this game cannot roll back; normal save loading is unaffected.',
+          },
+          aiStoryAwareness: {
+            label: 'AI story awareness',
+            description: 'When on, AI teammates can read completed adventure log entries when deciding, get prior-scenario context for story choices, and reference story summaries in chat; they never see unreached story or ending branches.',
+          },
+          aiRoutineSpeechFrequency: { label: 'Routine action speech frequency' },
+          aiSelfTestSpeechFrequency: { label: 'Self regular test response frequency' },
+          aiOtherTestSpeechFrequency: { label: 'Other investigators regular test response frequency' },
+          aiSelfCriticalSuccessSpeechFrequency: { label: 'Self critical success response frequency' },
+          aiOtherCriticalSuccessSpeechFrequency: { label: 'Other investigators critical success response frequency' },
+          aiSelfCriticalFailureSpeechFrequency: { label: 'Self critical failure response frequency' },
+          aiOtherCriticalFailureSpeechFrequency: { label: 'Other investigators critical failure response frequency' },
+          aiEnemyDefeatSpeechFrequency: { label: 'Enemy defeat response frequency' },
+          aiInvestigatorExitDialogue: { label: 'Dialogue when an investigator leaves the scenario' },
+          aiScenarioEndDialogue: { label: 'Dialogue at scenario end' },
+          opponents: {
+            label: 'AI teammates',
+            description: 'Choose teammates from the hall AI list; teammates pick their investigator and deck during campaign preparation.',
+          },
+        },
+      },
+    },
+  },
+
+  // 动态元数据（docs/localization.md §7.2）：战役名等来自内容注册表的选项。
+  // 同步纯函数、不得修改入参、不做重 I/O；返回形状与 messages[locale] 相同，最后合并。
+  // 结果按 locale 缓存在模块内；没有英文名时保留中文。
+  localize(locale) {
+    if (locale !== 'en') return null
+    let options = LOCALIZED_CAMPAIGN_OPTIONS.en
+    if (!options) {
+      options = Object.fromEntries(campaignListForUi(contentRegistry).map(campaign => [campaign.id, campaign.nameEn || campaign.name]))
+      LOCALIZED_CAMPAIGN_OPTIONS.en = options
+    }
+    return { settings: { campaignId: { options: { ...options } } } }
+  },
+
   render: { kind: 'cards' },
   agentHint: AGENT_HINT,
 
   // 本 Mod 自带的浏览器资源（脚本／样式／卡图）全部放在 games/arkhamhorror/web/，
   // 由大厅挂载到 /mods/arkhamhorror/；不要把这些文件散落到大厅的 public/ 里。
-  web: { dir: 'web', client: 'game-ui.js', styles: 'style.css' },
+  // locales：游戏自带的前端语言包（docs/localization.md §8.2），大厅只校验路径并生成 URL。
+  web: { dir: 'web', client: 'game-ui.js', styles: 'style.css', locales: { 'zh-CN': 'locales/zh-CN.js', en: 'locales/en.js' } },
   resourceVersion,
   handleApi,
-  handleLocalApi: handleDeckLibrary,
+  handleLocalApi(request) { return handleMusicLibrary(request) || handleDeckLibrary(request) },
   async cacheWebAsset(request) {
     return request.relative?.startsWith('audio/') ? cacheMusicAsset(request) : cacheImageAsset(request)
   },
@@ -270,4 +345,18 @@ export default {
   },
   validateMove,
   applyMove,
+
+  // P0 自动跳过（大厅可选钩子）：房主在命令发布前替人类座位补一条普通 choose/skip。
+  // disabledCodes 来自该玩家本机「反应关」的卡号集合，随 move 的 client.autoPass 上行；
+  // 判定与浏览器 reactionPassPlan 共用 reactionSkipPlan，映射不出卡号时 fail-closed。
+  // 返回的是普通 move，仍要过大厅的 validateMove/applyMove、进 actionLog——回放与手点一致。
+  autoPassChoice({ state, seat, disabledCodes }) {
+    if (!Array.isArray(disabledCodes) || !disabledCodes.length) return null
+    const choice = state?.pendingChoice
+    if (!choice || !choice.canSkip || choice.seat !== seat) return null
+    const disabled = new Set(disabledCodes)
+    const plan = reactionSkipPlan(state, code => disabled.has(code))
+    if (!plan) return null
+    return { action: 'choose', choiceId: plan.choice.id, optionId: 'skip' }
+  },
 }

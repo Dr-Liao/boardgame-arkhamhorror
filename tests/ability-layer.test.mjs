@@ -11,7 +11,7 @@ import { fixture, asset, enemy, move, answer, settle, use, decisionSeat, legalMo
 import { applyMove, getStat } from '../src/engine/engine.js'
 import {
   registerCardAbilities, describeRegistry, abilityShim, descriptorsForWindow, elderSignDescriptor,
-  declaredAbilityCount, allDescriptors,
+  declaredAbilityCount, allDescriptors, registeredEntry,
 } from '../src/engine/ability.js'
 import { windowLabel, playerWindowLabel, normalizeTrigger, unknownWindows, isKnownWindow } from '../src/engine/windows.js'
 import { all, any, none, ownSeat, atTrait, contextEnemy } from '../src/engine/matcher.js'
@@ -54,12 +54,16 @@ function passAll(state, limit = 40) {
 }
 
 // 一路点掉，直到出现带能力层选项的选择（或超时）。
+// P7：优先点 skip / done（跳过投入与普通确认），否则盲选最后一项会把被测的快速反应卡
+// 当成技能卡投入掉（05025 在 P7 开放运行时许可后首次可被投入，曾因此误点）。
 function passUntilAbility(state, limit = 12) {
   for (let i = 0; i < limit; i++) {
     if (state.pendingChoice && hasAbilityOption(state.pendingChoice)) return true
     if (!state.pendingChoice) return false
     const choice = state.pendingChoice
-    const option = choice.options.find(item => item.id === 'skip') || choice.options.at(-1)
+    const option = choice.options.find(item => item.id === 'skip')
+      || choice.options.find(item => item.id === 'done')
+      || choice.options.at(-1)
     applyMove(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId: option.id })
   }
   return false
@@ -166,7 +170,8 @@ test('P0-A 修正管线：声明式修正、条件、槽位与打出费用', () 
   assert.equal(slotBonus(inv, 'arcane'), 1)
   inv.hand = ['03142', '01086']
   assert.equal(playCostDelta(state, inv, '01086'), 1)
-  assert.deepEqual(declaredModifiers('05112').map(entry => entry.target), ['slot:arcane'])
+  // P7：P2.9 起槽位授予的规范写法是 add:slot + value（旧写法 slot:arcane 也能生效，但不再作为口径）。
+  assert.deepEqual(registeredEntry('05112').modifiers.map(modifier => [modifier.target, modifier.value]), [['add:slot', 'arcane']])
 })
 
 // ---------------------------------------------------------------------------

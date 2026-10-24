@@ -314,3 +314,47 @@ test('顶部阶段提示无溢出，遭遇牌堆抽牌翻面，检定来源和�
   await expect(page.locator('.ah-fx-banner')).toContainText('检定失败')
   await expect(chaos).toHaveCount(0)
 })
+
+test('规则代号检定来源（呆若木鸡 frozenInFear）按原卡号加载卡图',async({page})=>{
+  await page.setViewportSize({width:1440,height:960})
+  const f=await fixture(page)
+  await page.getByRole('button',{name:'跳过演出'}).click()
+  await f.update(s=>{
+    // 夜之狂热的威胁卡在引擎里用规则代号 frozenInFear，卡图与详情只认真实卡号 01164。
+    s.state.cards['frozenInFear']={code:'frozenInFear',originalCode:'01164',name:'呆若木鸡',nameZh:'呆若木鸡',type:'treachery',
+      text:'你每回合第一次执行移动/攻击/躲避需额外 1 行动。回合结束意志（3）检定成功则弃掉。',
+      textZh:'显现 - 将呆若木鸡放置入场，放到你的威胁区域。\n你每轮第一次执行以下行动(移动、攻击、或躲避)之一，须支付额外1个行动。\n强制 - 当你的回合结束时：检定[willpower](3)。如果你检定成功，弃掉呆若木鸡。'}
+    const inv=s.state.investigators[0]
+    inv.threat=[...(inv.threat||[]),{id:'fear',code:'frozenInFear',originalCode:'01164',name:'呆若木鸡'}]
+    const source={label:'回合结束',name:'呆若木鸡',code:'frozenInFear'}
+    s.state.skillTest={seat:0,skill:'willpower',difficulty:3,printedValue:2,baseValue:3,value:3,stage:'ST.2',committed:[],source}
+    s.state.pendingChoice={id:'fear-test',kind:'commit',seat:0,prompt:'罗兰·班克斯的意志检定：投入手牌后可检定或求助。',options:[{id:'done',label:'开始检定'}]}
+    s.state.legalMoves=[{action:'choose',choiceId:'fear-test',optionId:'done'}]
+  })
+  // 威胁区缩略卡与底栏「检定来源」缩略图都必须走真实卡号 01164。
+  const threatArt=page.locator('.ah-threat-row .ah-minicard .ah-table-art').first()
+  await expect(threatArt).toHaveAttribute('data-art-code','01164')
+  await expect(threatArt).toHaveAttribute('data-image-state','displayable')
+  await expect(threatArt.locator('img')).toHaveAttribute('src',/01164\.avif/)
+  const source=page.locator('.ah-test-source')
+  await expect(source).toHaveAttribute('data-card-code','01164')
+  const sourceArt=source.locator('.ah-table-art')
+  await expect(sourceArt).toHaveAttribute('data-art-code','01164')
+  await expect(sourceArt).toHaveAttribute('data-image-state','displayable')
+  await expect(sourceArt.locator('img')).toBeVisible()
+  await expect(sourceArt.locator('img')).toHaveAttribute('src',/01164\.avif/)
+  await expect(sourceArt.locator('img')).toHaveJSProperty('complete',true)
+  await source.click()
+  const detail=page.getByRole('dialog',{name:'卡牌详情'})
+  await expect(detail).toBeVisible()
+  await expect(detail).toContainText('呆若木鸡')
+  await page.getByRole('button',{name:'关闭卡牌详情'}).click()
+  await page.screenshot({path:`${output}/test-source-rule-code.png`,animations:'disabled'})
+  // 同类规则代号：梦中的拉莱耶（dreamsOfRlyeh → 01171，解除威胁检定）也按原卡号取图。
+  await f.update(s=>{
+    s.state.cards['dreamsOfRlyeh']={code:'dreamsOfRlyeh',originalCode:'01171',name:'梦中的拉莱耶',nameZh:'梦中的拉莱耶',type:'treachery'}
+    s.state.skillTest.source={label:'解除威胁',name:'梦中的拉莱耶',code:'dreamsOfRlyeh'}
+  })
+  await expect(source).toHaveAttribute('data-card-code','01171')
+  await expect(sourceArt).toHaveAttribute('data-art-code','01171')
+})

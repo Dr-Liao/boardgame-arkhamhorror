@@ -12,6 +12,7 @@ export function createCombat(deps) {
     campaignState,
     afterEvade,
     aliveInvestigators,
+    aloofPreventsAttack,
     applyDamage,
     applyHarm,
     applyHorror,
@@ -100,6 +101,8 @@ function doFight(state, seat, opts, events, noSpend) {
     if (context.allowConnecting) opts.atConnectingLocation = true
     if (context.ignoreRetaliate) opts.ignoreRetaliate = true
     if (context.marksmanship) opts.marksmanship = true
+    // 04104 枪法如神：「忽略冷漠」跟随这次攻击（否则未交战的冷漠敌人不能被攻击）。
+    if (context.ignoreAloof) opts.ignoreAloof = true
     if (context.redirectEnemyId) {
       const redirected = state.enemies.find(item => item.id === context.redirectEnemyId)
       if (redirected && (redirected.location === inv.location
@@ -110,6 +113,12 @@ function doFight(state, seat, opts, events, noSpend) {
     }
   }
   if (!enemy) { info(state, events, `${inv.name} 找不到可攻击的敌人。`); return }
+  // 冷漠（aloof）：未与调查员交战的冷漠敌人不能被攻击。必须先主动交战（或使用
+  // 写明「忽略冷漠」的攻击，例如 04104 枪法如神通过 opts.ignoreAloof 放行）。
+  if (aloofPreventsAttack(state, inv, enemy, opts)) {
+    info(state, events, `⛔ 「${enemy.name}」具有冷漠关键词且未与调查员交战；需要先主动交战，或使用忽略冷漠的攻击。`)
+    return
+  }
   // 「攻击此敌人时受到恐惧」（03184 阴魂不散的病人）：攻击宣言即触发，不要求命中。
   const attackedHorror = enemyRuleFlags(enemy.code).onAttackedHorror || 0
   if (attackedHorror && !enemyTextBlanked(state, enemy)) {

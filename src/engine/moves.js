@@ -27,6 +27,7 @@ export function createMoves(deps) {
     activeHiddenRules,
     advanceAct,
     aliveInvestigators,
+    aloofPreventsAttack,
     assetEffect,
     assetReplacementPlans,
     availableThreatAbilities,
@@ -136,6 +137,15 @@ export function createMoves(deps) {
     })
   }
 
+  // 剧本行动里的「攻击」：条目用 attack: true 声明，与普通攻击/卡牌攻击共用同一份
+  // 冷漠（aloof）判定——未与调查员交战的冷漠敌人不能被攻击，除非该行动写明忽略冷漠。
+  // 剧本自己的攻击结算不经过 doFight，因此这里和 validateMove 必须同时拦住。
+  function scenarioAttackBlocked(state, inv, move) {
+    if (!move || move.attack !== true || move.enemyId == null) return false
+    const enemy = state.enemies.find(item => item.id === move.enemyId)
+    return aloofPreventsAttack(state, inv, enemy, move)
+  }
+
   function legalMoves(state, observerSeat) {
   if (state.status !== 'playing') return []
   if (state.pendingChoice) return choiceMoves(state, observerSeat)
@@ -151,7 +161,9 @@ export function createMoves(deps) {
   // AI 也会照抄一个必被拒绝的行动。locationId 只补在"由当前地点赋予"的行动上，
   // 让客户端在选中该地点时能展示它。scriptCard 由关卡数据的 scriptCards 补，
   // 让幕/密谋卡上的行动显示在剧本书旁而不是通用动作栏。
-  moves.push(...(scenarioBehavior(state).actions?.(state, inv) || []).filter(move => !move.reason).map(move =>
+  // attack: true 的剧本行动与普通攻击共用「冷漠」读点（见 scenarioAttackBlocked）。
+  moves.push(...(scenarioBehavior(state).actions?.(state, inv) || []).filter(move => !move.reason)
+    .filter(move => !scenarioAttackBlocked(state, inv, move)).map(move =>
     ownedMove(state, move)).map(move =>
     move.locationId || move.scriptCard ? move : { ...move, locationId: inv.location }))
   moves.push(...(scenarioBehavior(state).encounterActions?.(state, inv) || []).filter(move => !move.reason)
@@ -309,7 +321,8 @@ export function createMoves(deps) {
 
   for (const enemy of state.enemies.filter(enemy => enemy.location === inv.location)) {
     if ((!enemyRuleFlags(enemy.code).damageOnlyFrom || enemyTextBlanked(state, enemy)) && !hiddenFightBlocked(state, inv, enemy)
-      && !enemyCannotBeAttacked(state, enemy) && scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) !== false)
+      && !enemyCannotBeAttacked(state, enemy) && !aloofPreventsAttack(state, inv, enemy)
+      && scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) !== false)
       moves.push({ action: 'fight', enemyId: enemy.id, label: `⚔️ 攻击「${enemy.name}」（战斗 vs ${enemyFightValue(state, enemy, inv)}${enemy.retaliate ? '，反击' : ''}）` })
     if (scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) !== false)
       moves.push({ action: 'evade', enemyId: enemy.id, label: `💨 躲避「${enemy.name}」（敏捷 vs ${enemyEvadeValue(state, enemy, inv)}）` })
@@ -463,8 +476,23 @@ export function createMoves(deps) {
   }
 
   switch (move.action) {
-    case 'scenarioAction': return scenarioBehavior(state).actions?.(state, inv).some(m => m.rule === move.rule && !m.reason)
-      ? null : '当前不能执行此剧本行动'
+    case 'scenarioAction': {
+      // 剧本行动的校验不能只看「规则名存在」：带 enemyId 的行动还要确认该目标在
+      // actions() 里被列出（冷漠敌人未交战时攻击行动不会列出），再统一过冷漠读点。
+      const offered = scenarioBehavior(state).actions?.(state, inv) || []
+      const matches = offered.filter(m => m.rule === move.rule && !m.reason)
+      if (!matches.length) return '当前不能执行此剧本行动'
+      if (move.enemyId != null) {
+        const targeted = matches.find(m => m.enemyId === move.enemyId)
+          // 有些剧本行动在执行时才选目标（actions() 不给 enemyId），保留给 performAction 校验。
+          || matches.find(m => m.enemyId == null)
+        if (!targeted) return '该行动不能以这个敌人为目标'
+        if (scenarioAttackBlocked(state, inv, targeted)) {
+          return '冷漠敌人未与调查员交战，需要先主动交战（或使用忽略冷漠的攻击）'
+        }
+      }
+      return null
+    }
     case 'encounterAction': return scenarioBehavior(state).encounterActions?.(state, inv).some(m => m.rule === move.rule && !m.reason)
       ? null : '当前不能执行此遭遇卡行动'
     case 'play': {
@@ -666,6 +694,7 @@ export function createMoves(deps) {
       if (enemyRuleFlags(enemy.code).damageOnlyFrom && !enemyTextBlanked(state, enemy)) return '子嗣只能使用深奥的咒文攻击'
       if (hiddenFightBlocked(state, inv, enemy)) return '隐私牌禁止你攻击该敌人'
       if (scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) === false) return '当前剧本禁止你攻击该敌人'
+      if (aloofPreventsAttack(state, inv, enemy)) return '冷漠敌人未与调查员交战，需要先主动交战（或使用忽略冷漠的攻击）'
       const canFight = enemy.location === inv.location
       if (!canFight) return '该敌人未与你交战'
       return null

@@ -5,6 +5,7 @@ import { changeChaosBag } from '../engine/chaos-bag.js'
 import { requestChoice } from '../engine/resolution.js'
 import { randomValue } from '../engine/rules-state.js'
 import { resolveSurvivors } from '../../content/campaigns/theDunwichLegacy/later-behaviors.js'
+import { crossOffMemento, mementosDiscovered } from './mementos.js'
 
 // Called inside the existing replayable resolution transaction. A saved choice
 // replays from its base state, so neither rewards nor bag changes are duplicated.
@@ -565,6 +566,107 @@ function applyExpeditionLeaderChoice(state, effect, log) {
   log(`🧭 ${recordLabelOf(campaign, seat)} 成为远征求领队。`)
 }
 
+// 万象无终（TCU）幕间三：把「已发现的遗留记忆」全部划掉
+// （参考实现 Campaigns/TheCircleUndone.hs InterludeStepPart 3 2 -> crossOutRecordSetEntries MementosDiscovered）。
+// 只移除记录、不新增引擎状态；中文名由 effect.labels 提供（战役层是唯一事实源）。
+function applyCrossOffMementos(state, effect, log) {
+  const labels = effect.labels || {}
+  const found = mementosDiscovered(state)
+  for (const id of found) {
+    crossOffMemento(state, id)
+    if (log) log(`✂️ 划掉遗留记忆：${labels[id] || id}。`)
+  }
+  if (!found.length && log) log('（没有已发现的遗留记忆可划掉。）')
+  return found
+}
+
+// 万象无终幕间三·核心圈 4：「在桑福德的耐心耗尽之前，最多问他 3 个问题」。
+// 只做叙事选择（问题与答案由战役内容提供，不带规则后果）；答案段写进纪事 storySections。
+function applyStoryQuestions(state, effect, log) {
+  const max = Number(effect.max)
+  if (!Number.isSafeInteger(max) || max < 1) throw new Error('storyQuestions.max 必须是正整数')
+  if (!Array.isArray(effect.questions) || !effect.questions.length) {
+    throw new Error('storyQuestions.questions 必须是非空数组')
+  }
+  const lead = Number.isInteger(effect.seat) ? effect.seat : state.campaign?.leadSeat
+  const seat = Number.isInteger(lead) ? lead : 0
+  const remaining = [...effect.questions]
+  const asked = []
+  for (let index = 0; index < max && remaining.length; index++) {
+    const answer = requestChoice(state, {
+      kind: 'storyQuestion',
+      source: effect.id || 'storyQuestions',
+      seat,
+      prompt: effect.prompt || '选择要问的问题。',
+      canSkip: true,
+      options: [
+        { id: 'done', label: effect.doneLabel || '不再提问' },
+        ...remaining.map(question => ({ id: question.id, label: question.label })),
+      ],
+    })
+    if (answer === 'done') break
+    const question = remaining.find(item => item.id === answer)
+    if (!question) break
+    remaining.splice(remaining.indexOf(question), 1)
+    asked.push(question.id)
+    if (question.text) story(state, question.text, log)
+  }
+  if (log && asked.length) log(`🗣️ 你们向桑福德提出了 ${asked.length} 个问题。`)
+  return asked
+}
+
+// 万象无终幕间四《扭转命运》：按参考实现 Campaigns/TheCircleUndone/TheCircleUndone.hs:137-312 统计
+// 「你面前的道路蜿蜒曲折」的数值，并在请求安妮特/桑福德帮助时按难度加入混乱标记。
+// 统计项全部由 effect 数据声明（战役层是唯一事实源），ReturnTo 的增减项按 D2 不参与。
+function applyTwistOfFate(state, effect, log) {
+  const campaign = state.campaign
+  if (!campaign) throw new Error('twistOfFate 需要 state.campaign')
+  const records = campaign.records || (campaign.records = {})
+  if (typeof effect.record !== 'string' || !effect.record) throw new Error('twistOfFate 需要 record 键名')
+  let total = 0
+  const parts = []
+  for (const condition of effect.conditions || []) {
+    if (!records[condition.record]) continue
+    const amount = Number(condition.amount)
+    if (!Number.isSafeInteger(amount)) throw new Error('twistOfFate.conditions.amount 必须是整数')
+    total += amount
+    parts.push(condition.label || condition.record)
+  }
+  const mementoRecord = effect.mementos?.record || 'mementosDiscovered'
+  const mementoCount = Array.isArray(records[mementoRecord]) ? records[mementoRecord].length : 0
+  for (const threshold of effect.mementos?.thresholds || []) {
+    if (mementoCount < Number(threshold.atLeast)) continue
+    const amount = Number(threshold.amount)
+    if (!Number.isSafeInteger(amount)) throw new Error('twistOfFate.mementos.amount 必须是整数')
+    total += amount
+    parts.push(threshold.label || `${threshold.atLeast}+ 遗留记忆`)
+  }
+  for (const card of effect.cards || []) {
+    const held = Object.values(campaign.investigators || {}).some(record =>
+      record.status === 'active' && Array.isArray(record.deck) && record.deck.includes(card.code))
+    if (!held) continue
+    const amount = Number(card.amount)
+    if (!Number.isSafeInteger(amount)) throw new Error('twistOfFate.cards.amount 必须是整数')
+    total += amount
+    parts.push(card.label || card.code)
+  }
+  records[effect.record] = total
+  if (log) {
+    log(`📓 「${effect.recordLabel || effect.record}」= ${total}`
+      + `${parts.length ? `（${parts.join('、')}）` : '（没有任何加值项）'}。`)
+  }
+  for (const condition of effect.chaosIf || []) {
+    const hit = (condition.records || []).some(key => Array.isArray(records[key])
+      ? records[key].length > 0 : Boolean(records[key]))
+    if (!hit) continue
+    const token = (condition.tokenByDifficulty || {})[state.difficulty || 'standard']
+    if (!token) continue
+    changeChaosBag(state, token, 1, { permanent: true })
+    if (log) log(`🎲 混乱袋加入标记 ${token}。`)
+  }
+  return total
+}
+
 export function applyCampaignEffect(state, effect, log) {
   if (effect.type === 'chaos') changeChaosBag(state, effect.token, effect.amount, { permanent: true })
   else if (effect.type === 'log') log(effect.text)
@@ -637,6 +739,10 @@ export function applyCampaignEffect(state, effect, log) {
     state.campaign.records[key] = next[1].id
   }
   else if (effect.type === 'dunwichSurvivors') resolveSurvivors(state)
+  // 万象无终（TCU）M3-C 的幕间效果：遗留记忆划掉、核心圈提问、扭转命运计数。
+  else if (effect.type === 'crossOffMementos') applyCrossOffMementos(state, effect, log)
+  else if (effect.type === 'storyQuestions') applyStoryQuestions(state, effect, log)
+  else if (effect.type === 'twistOfFate') applyTwistOfFate(state, effect, log)
   else if (effect.type === 'pickSupplies') applyPickSupplies(state, effect, log)
   else if (effect.type === 'crossOffSupply') applyCrossOffSupply(state, effect, log)
   else if (effect.type === 'curePoisonedWithMedicine') applyCurePoisonedWithMedicine(state, effect, log)

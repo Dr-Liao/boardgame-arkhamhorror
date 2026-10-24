@@ -75,6 +75,33 @@ export function storyInvestigatorSetupCards(state, code) {
   return state.storyInvestigators?.config?.setupCards?.[code] || []
 }
 
+// 换人会一起改掉的技能字段（故事调查员用卡面印刷的固定属性，见 setup.js 的
+// prepareInvestigator 故事调查员分支）。
+const SKILL_KEYS = ['willpower', 'intellect', 'combat', 'agility']
+
+// 一套「调查员身份」快照：换人时存下、换回时原样写回。
+// 旧存档的 originals 只有 seat/code/name，恢复时再用 cardInfo 兜底。
+function identitySnapshot(inv) {
+  const snapshot = { seat: inv.seat, code: inv.code, name: inv.name, nameEn: inv.nameEn, klass: inv.klass }
+  for (const skill of SKILL_KEYS) snapshot[skill] = inv[skill]
+  return snapshot
+}
+
+function restoreIdentity(inv, original, cardInfo) {
+  inv.code = original.code
+  inv.name = original.name
+  const info = typeof cardInfo === 'function' ? cardInfo(original.code) : null
+  const nameEn = info?.name ?? original.nameEn
+  const klass = info?.klass ?? original.klass
+  if (nameEn != null) inv.nameEn = nameEn
+  if (klass != null) inv.klass = klass
+  for (const skill of SKILL_KEYS) {
+    const value = info?.[skill] ?? original[skill]
+    if (value != null) inv[skill] = value
+  }
+  return inv
+}
+
 // 选人：每个座位各选一次，已选的 code 不可重复；人数少于 4 时其余 code 被划掉。
 // `requestChoice(state, request)` 与 `cardName(code)` 由引擎注入；`cardInfo(code)` 可选，
 // 用来把卡面身份（职业、属性、生命／理智）带进选项，界面就不必再查一遍卡表。
@@ -90,7 +117,8 @@ export function selectStoryInvestigators(state, rawConfig, { seats, requestChoic
 
   const originals = seatList.map(seat => {
     const inv = state.investigators[seat]
-    return { seat, code: inv.code, name: inv.name }
+    // 换人会把职业与四项技能也改成卡面印刷值，因此换回时要恢复整套身份，而不只是卡号/名字。
+    return identitySnapshot(inv)
   })
   const chosen = []
   const remaining = [...config.codes]
@@ -115,7 +143,8 @@ export function selectStoryInvestigators(state, rawConfig, { seats, requestChoic
     })
     const code = remaining.includes(String(answer)) ? String(answer) : remaining[0]
     remaining.splice(remaining.indexOf(code), 1)
-    // 换人：只换身份字段；属性/牌组由进入剧本的 prepareStoryInvestigator 统一处理。
+    // 换人：这里只换卡号/名字；职业、四项技能与无牌组牌组由进入剧本的
+    // prepareInvestigator 按卡面统一写入（属性在 prepareStoryInvestigator 前后都要算准）。
     inv.code = code
     inv.name = cardName(code)
     chosen.push({ seat, code, name: inv.name })
@@ -126,14 +155,16 @@ export function selectStoryInvestigators(state, rawConfig, { seats, requestChoic
 }
 
 // 换回原本的调查员（下一章不再声明故事调查员时调用），并清掉状态键。
-export function restoreStoryInvestigators(state) {
+// 职业与四项技能也一并恢复：新存档用 originals 里的身份快照；旧存档只有
+// seat/code/name，此时用调用方注入的 cardInfo（卡面定义查询）兜底；两者都
+// 没有就保持原值（不猜测）。
+export function restoreStoryInvestigators(state, { cardInfo = null } = {}) {
   const record = state.storyInvestigators
   if (!record) return null
   for (const original of record.originals || []) {
     const inv = state.investigators[original.seat]
     if (!inv) continue
-    inv.code = original.code
-    inv.name = original.name
+    restoreIdentity(inv, original, cardInfo)
     inv.storyInvestigator = false
     invokeCleanup(inv)
   }

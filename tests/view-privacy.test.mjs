@@ -94,6 +94,43 @@ test('待决选择只把选项给应答座位', () => {
   assert.deepEqual(otherView.legalMoves?.filter(move => move.action === 'choose') || [], [])
 })
 
+// 序章故事调查员的选人面板要显示职业、副标题、四维与生命/理智，这些字段都印在公开卡面上；
+// 但它们只补发给这类选择的应答座位，普通待决选择不能借用同一份白名单把内部字段带出去。
+test('故事调查员选项向应答座位补发公开卡面身份字段', () => {
+  const state = settled(2)
+  // 形状与 src/engine/story-investigators.js 的选项一致，另加一个未登记的内部字段作探针。
+  const identity = {
+    klass: 'seeker', classLabel: '探求者', subtitle: '女继承人',
+    stats: { willpower: 2, intellect: 4, combat: 2, agility: 3 },
+    health: 6, sanity: 8,
+  }
+  state.pendingChoice = {
+    id: 'q-story-1', kind: 'storyInvestigator', seat: 0,
+    prompt: 'P0：选择你本次冒险使用的故事调查员。',
+    options: [
+      { id: '05046', label: '阿米莉亚·班克罗夫特', ...identity, secret: '内部字段不应下发' },
+      { id: '05047', label: '另一张故事调查员' },
+    ],
+  }
+  const responderView = viewState(structuredClone(state), 0)
+  assert.deepEqual(responderView.pendingChoice.options[0], { id: '05046', label: '阿米莉亚·班克罗夫特', ...identity })
+  assert.equal(responderView.pendingChoice.options[0].secret, undefined, '未登记的内部字段不得下发')
+  assert.deepEqual(responderView.pendingChoice.options[1], { id: '05047', label: '另一张故事调查员' })
+
+  const otherView = viewState(structuredClone(state), 1)
+  assert.deepEqual(otherView.pendingChoice.options, [], '非应答座位仍然拿不到选项')
+
+  // 非 storyInvestigator 的普通待决选择即使选项带着同样的字段也不能放行。
+  const commitState = structuredClone(state)
+  commitState.pendingChoice = {
+    id: 'q-commit-1', kind: 'commit', seat: 0,
+    prompt: '确认？',
+    options: [{ id: 'confirm', label: '确认', cardCode: '05046', ...identity, secret: '内部字段不应下发' }],
+  }
+  const commitView = viewState(structuredClone(commitState), 0)
+  assert.deepEqual(commitView.pendingChoice.options, [{ id: 'confirm', label: '确认', cardCode: '05046' }])
+})
+
 test('非行动座位的合法行动为空，私人检定不外泄', () => {
   const state = settled(2)
   state.pendingChoice = null

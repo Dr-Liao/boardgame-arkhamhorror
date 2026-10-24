@@ -2,6 +2,8 @@ import { tableIcon } from './table-components.js'
 import { renderRulesText } from './card-text.js'
 import { campaignPresentation } from './campaign-presentation.js'
 import { recordValueText } from './campaign-records.js'
+import { cardDisplayName } from './catalog.js'
+import { t } from './i18n.js'
 export function renderStoryReader(h,s,state,render,action,game,checkpointAction=()=>null) {
   const journal=s.state.campaignStory || {entries:[]}, entries=journal.entries
   const key=`${s.sessionId}:${journal.currentId}`
@@ -23,7 +25,7 @@ export function renderStoryReader(h,s,state,render,action,game,checkpointAction=
         selected.kind==='result'?h('section',{className:'ah-story-consequences','aria-label':'本次结算结果'},h('h3',{},'这次调查留下了什么'),
           h('div',{},`胜利点 ${selected.victory || 0} · ${selected.rounds || 0} 回合`),
           Object.entries(selected.records || {}).filter(([key])=>recordLabels[key]).map(([key,value])=>h('p',{},`${recordLabels[key]}：${recordValueText(value,recordCardNames)}`)),
-          selected.investigators?.map(inv=>h('article',{},h('strong',{},s.state.investigatorDefs?.[inv.code]?.nameZh || s.state.investigators.find(i=>i.seat===inv.seat)?.name || '调查员'),
+          selected.investigators?.map(inv=>h('article',{},h('strong',{},cardDisplayName(s.state.investigatorDefs?.[inv.code]) || s.state.investigators.find(i=>i.seat===inv.seat)?.name || t('story.investigator')),
             h('span',{},`+${inv.xpAwarded || 0} XP`),h('span',{},`肉体创伤 +${(inv.traumaAfter?.physical||0)-(inv.traumaBefore?.physical||0)}`),h('span',{},`精神创伤 +${(inv.traumaAfter?.mental||0)-(inv.traumaBefore?.mental||0)}`),
             h('b',{},({killed:'阵亡',insane:'永久疯狂',active:'仍在役'})[inv.status] || inv.status)))):null,
         h('footer',{},

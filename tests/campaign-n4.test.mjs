@@ -1,6 +1,12 @@
+// N4 战役回归（快速部分）：卡池/升级、事务回滚、结局结算、创伤与牌组迁移。
+//
+// 2026-10-24 P0 拆分：原文件的"连续取消购卡"压测移到 campaign-n4-purchase-stress.test.mjs，
+// "1/2/4 人整局合法走子矩阵"移到 campaign-n4-matrix.test.mjs——它们都是 30s+ 的重活用例，
+// 拆开后由 node --test 按文件并行，不再串行拖长整个文件；建局/结算样板统一在
+// campaign-n4-fixture.mjs。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createGameState, applyMove, legalMoves, validateMove, decisionSeat } from '../src/engine/engine.js'
+import { legalMoves, validateMove } from '../src/engine/engine.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { SCENARIOS } from '../src/cards/scenarios-data.js'
 import { CORE_PLAYER_CODES, PLAYER_CARD_CODES, CORE_UPGRADE_CODES, getAvailability } from '../src/deck/availability.js'
@@ -9,66 +15,7 @@ import { availablePurchases, purchaseCard, upgradeCost, campaignCardChange, upda
 import { viewState } from '../src/integration/observation.js'
 import { resolveTransaction, resolutionCheckpoint } from '../src/engine/resolution.js'
 import { RULES_VERSION, STATE_SCHEMA_VERSION } from '../src/engine/rules-state.js'
-
-const clone = value => JSON.parse(JSON.stringify(value))
-function move(state, command) {
-  const seat = decisionSeat(state)
-  assert.equal(validateMove(state, seat, command), null)
-  return applyMove(state, seat, command)
-}
-function answer(state, optionId) {
-  return move(state, { action: 'choose', choiceId: state.pendingChoice.id, optionId })
-}
-function settle(state, stopKind = null) {
-  const events = []
-  for (let i = 0; state.pendingChoice && state.pendingChoice.kind !== stopKind; i++) {
-    assert.ok(i < 150, '选择必须在有限步骤内完成')
-    const choice = state.pendingChoice
-    const preferred = ['done', 'skip', 'self', 'cancel'].find(id => choice.options.some(option => option.id === id))
-    events.push(...answer(state, preferred || choice.options[0].id))
-  }
-  return events
-}
-function game(code = '01001', count = 1, difficulty = 'standard') {
-  const state = createGameState({ playerInvestigator: code, seed: 'n4-campaign', difficulty }, Array.from({ length: count }, (_, seat) => ({ seat })))
-  settle(state)
-  return state
-}
-function gatheringConclusion(state, resolution = 'r2') {
-  state.actIndex = 2
-  state.chaosBag = ['0']
-  state.investigators[0].hand = []
-  state.enemies = []
-  move(state, { action: 'resource' })
-  settle(state, 'story')
-  assert.equal(state.pendingChoice.kind, 'story')
-  answer(state, resolution)
-}
-function finishInterlude(state) {
-  settle(state, 'mulligan')
-  assert.equal(state.pendingChoice?.kind, 'mulligan')
-  settle(state)
-}
-
-test('N4 连续300次取消购卡不累积旧事务答案、不锁局、不重复奖励', () => {
-  const state = game()
-  gatheringConclusion(state)
-  const initial = clone(state.campaign.investigators[0])
-  for (let i = 0; i < 300; i++) {
-    answer(state, 'upgrade')
-    if (i % 2) answer(state, '01094')
-    answer(state, 'cancel')
-    assert.equal(state.pendingChoice.kind, 'interlude')
-    assert.equal(state.continuation.answers.length, 0)
-    assert.equal(state.continuation.move.action, 'interlude')
-  }
-  assert.deepEqual(clone(state.campaign.investigators[0]), initial)
-  const restored = clone(state)
-  finishInterlude(state); finishInterlude(restored)
-  assert.deepEqual(clone(state), restored)
-  assert.equal(state.scenario.id, 'theMidnightMasks')
-  assert.equal(state.campaign.scenarioResults.length, 1)
-})
+import { move, answer, settle, game, gatheringConclusion, finishInterlude, clone } from './campaign-n4-fixture.mjs'
 
 test('N4 检查点后续发生异常时整条命令仍原子回滚', () => {
   const state = game()
@@ -373,22 +320,6 @@ for (const code of ['01094', '01095']) test(`N4 ${code} 以资产自身容量承
   assert.equal(state.investigators[0].horror, 0)
 })
 
-for (const [count, difficulty] of [[1, 'easy'], [1, 'standard'], [1, 'hard'], [1, 'expert'], [2, 'standard'], [3, 'standard'], [4, 'standard']]) test(`N4 合法战役失败流程 ${count}人/${difficulty}：从正式开局仅提交动作与选择，不改状态`, () => {
-  let state = createGameState({ playerInvestigator: '01001', seed: 'n4-legal-campaign', difficulty }, Array.from({ length: count }, (_, seat) => ({ seat })))
-  const commands = []
-  for (let i = 0; state.status === 'playing' && i < 900; i++) {
-    const choices = legalMoves(state)
-    assert.ok(choices.length)
-    const command = state.pendingChoice
-      ? choices.find(item => ['done', 'skip', 'self'].includes(item.optionId)) || choices[0]
-      : choices.find(item => item.action === 'resign') || choices.find(item => item.action === 'endTurn')
-    assert.ok(command)
-    commands.push(clone(command))
-    move(state, command)
-    state = clone(state)
-  }
-  assert.equal(state.status, 'over', `未完成，命令数 ${commands.length}`)
-  assert.deepEqual(state.campaign.scenarioResults.map(result => result.scenarioId), ['theGathering', 'theMidnightMasks', 'theDevourerBelow'])
-  assert.equal(state.outcome, 'defeat')
-  assert.ok(commands.length > 10)
-})
+// 「1/2/4 人整局合法走子矩阵」拆到 campaign-n4-matrix.test.mjs；
+// 「连续取消购卡压测」拆到 campaign-n4-purchase-stress.test.mjs。
+

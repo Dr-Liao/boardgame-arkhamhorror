@@ -285,7 +285,13 @@ export function viewState(state, observerSeat = null, options = {}) {
     ], copyField),
     // cardCode 只下发给该选择的应答者（非应答者 options 为空），供界面显示候选卡面；
     // 它不包含牌库顺序等隐藏信息，且卡名此前已通过 label 公开给应答者。
-    options: responder ? choiceOptionsFor(choice, observer).map(option => pick(option, ['id', 'label', 'cardCode'], copyField)) : [],
+    options: responder ? choiceOptionsFor(choice, observer).map(option => pick(option, [
+      'id', 'label', 'cardCode',
+      // 序章故事调查员：额外放行公开印刷卡面身份（职业、职业名、副标题、四维、生命/理智），
+      // 选人界面据此画出卡面。这些字段只放宽给 storyInvestigator 的应答座位，其他 kind
+      // 仍只保留 id/label/cardCode，避免把无关选择里的内部数据顺带带出。
+      ...(choice.kind === 'storyInvestigator' ? ['klass', 'classLabel', 'subtitle', 'stats', 'health', 'sanity'] : []),
+    ], copyField)) : [],
   } : null
   // state.legalMoves is cached for the primary seat; simultaneous seats compute their own list.
   view.legalMoves = observer == null || !actingSeats(state).includes(observer) ? []

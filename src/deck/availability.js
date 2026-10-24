@@ -2,6 +2,13 @@ import { SCENARIO_CARD_IDENTITIES, SCENARIOS } from '../cards/scenarios-data.js'
 import { expansionPlayerCodes } from '../../content/expansions.js'
 import { coreCardVerified, CORE_ACCEPTANCE_PROFILE } from '../cards/core-acceptance.js'
 import { tfaPlayerCardVerified, tfaPlayerBuildable, IMPLEMENTED_PLAYER_CODES } from '../../content/packs/tfaPlayer/manifest.js'
+// P7（M2 玩家卡）：87 张逐卡验收后开放 strict 可用性；85 张可构筑，2 张基础弱点只作依赖。
+// 可构筑码表来自生成物（src/cards/tcu-player-acceptance.js → manifest），这里不手写卡号清单。
+import {
+  PLAYER_CARD_CODES as TCU_PLAYER_CARD_CODES,
+  TCU_PLAYER_BASIC_WEAKNESS_CODES, TCU_PLAYER_BUILDABLE_CODES,
+} from '../../content/packs/tcuPlayer/manifest.js'
+export { TCU_PLAYER_BUILDABLE_CODES }
 export const CORE_INVESTIGATOR_CODES = Object.freeze(['01001', '01002', '01003', '01004', '01005'])
 export const DUNWICH_INVESTIGATOR_CODES = Object.freeze(['02001', '02002', '02003', '02004', '02005'])
 export const CARCOSA_INVESTIGATOR_CODES = Object.freeze(['03001', '03002', '03003', '03004', '03005', '03006'])
@@ -32,6 +39,7 @@ export const ALL_BASIC_WEAKNESS_CODES = Object.freeze([
   ...CORE_BASIC_WEAKNESS_CODES,
   ...DUNWICH_BASIC_WEAKNESS_CODES,
   ...CARCOSA_BASIC_WEAKNESS_CODES,
+  ...TCU_PLAYER_BASIC_WEAKNESS_CODES,
 ])
 export const CORE_STORY_CODES = Object.freeze(['01117'])
 export const CORE_UPGRADE_CODES = Object.freeze([
@@ -91,11 +99,14 @@ export const TFA_PLAYER_BUILDABLE_CODES = Object.freeze(tfaPlayerCodes.filter(co
 export const PLAYER_CARD_CODES = Object.freeze([
   ...CORE_PLAYER_CODES, ...expansionPlayerCodes,
 ])
-// 失落的时代玩家卡可用于手动牌组与升级，但不进入默认自动构筑池：
+// 失落的时代 & 万象无终玩家卡可用于手动牌组与升级，但不进入默认自动构筑池：
 // 新增卡池不应改变既有循环自动牌组的产出。
-export const ALL_BUILDABLE_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TFA_PLAYER_BUILDABLE_CODES])
+export const ALL_BUILDABLE_CODES = Object.freeze([
+  ...PLAYER_CARD_CODES, ...TFA_PLAYER_BUILDABLE_CODES, ...TCU_PLAYER_BUILDABLE_CODES,
+])
 const cards = new Set([...SIMPLIFIED_CARD_CODES, ...CORE_UPGRADE_CODES, ...expansionPlayerCodes,
   ...dunwichSignatures, ...carcosaSignatures, ...tfaSignatures, ...tfaPlayerCodes, ...tcuSignatures,
+  ...TCU_PLAYER_CARD_CODES,
   ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES])
 const strictAcceptedCodes = new Set([...investigators, ...cards])
 const strictScenarioCodes = new Set(Object.values(SCENARIO_CARD_IDENTITIES).flatMap(categories =>
@@ -129,8 +140,10 @@ export function getAvailability(code) {
     reason: coreCardVerified(code) ? '初始包已通过逐卡行为验收；范围与测试见 audit/core-acceptance.json。'
       : tfaPlayerCardVerified(code)
         ? 'M2 失落的时代玩家卡已全部通过逐卡主要印刷效果验收（含战役层永久卡）。'
+      : TCU_PLAYER_CARD_CODES.includes(code)
+        ? 'M2 万象无终玩家卡已通过逐卡主要印刷效果验收（83 张可入牌组；05314/05317 为绑定副本、05041/05042 基础弱点只作依赖），P10 起进入构筑界面与 TCU 战役起始牌组池。'
       : TCU_INVESTIGATOR_CODES.includes(code) || tcuSignatures.includes(code)
-        ? 'M1 万象无终六位调查员及其 13 张专属依赖已通过逐人行为与存档回放验收；玩家卡与剧本仍未开放。'
+        ? 'M1 万象无终六位调查员及其 13 张专属依赖已通过逐人行为与存档回放验收；P10 起玩家卡、九章剧本与大厅入口均已开放（战役 playable）。'
       : TFA_INVESTIGATOR_CODES.includes(code) || tfaSignatures.includes(code)
         ? 'M1 失落的时代五位调查员及其 11 张专属依赖已通过逐人行为与存档回放验收；玩家卡与剧本仍未开放。'
       : CARCOSA_INVESTIGATOR_CODES.includes(code) || carcosaSignatures.includes(code)

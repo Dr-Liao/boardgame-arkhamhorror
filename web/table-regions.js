@@ -3,6 +3,7 @@
 // adapter while layout can change independently.
 import { tableArt } from './table-art.js'
 import { tableIcon, placedCardMarkers } from './table-components.js'
+import { cardDisplayName } from './catalog.js'
 // 第 127 轮：剧本 → 剧本参考卡的卡号表搬到 web/ui-cards.js。
 import { UI_CARDS } from './ui-cards.js'
 
@@ -20,10 +21,10 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
   // 附着卡压在场景/密谋卡下方，只露出上沿，点击查看卡面。
   const attachedStrip = (cards, label) => cards.length ? h('div', { className: 'ah-script-attachments', role: 'group', 'aria-label': `${label}的附属卡` },
     cards.map(card => {
-      const name = card.nameZh || card.name || card.code
+      const name = cardDisplayName(card) || card.code
       return h('button', { type: 'button', className: 'ah-script-attachment', 'data-map-info': 'attachment',
         'data-card-code': card.code, 'data-attachment-code': card.code, title: `附着于${label} · ${name}`, 'aria-label': `查看附属卡 ${name}`,
-        onclick: event => { event.stopPropagation(); openDetail({ ...card, name: card.name || name, type: card.type || 'treachery',
+        onclick: event => { event.stopPropagation(); openDetail({ ...card, name: cardDisplayName(card) || name, type: card.type || 'treachery',
           attachedTo: { type: label === '当前密谋' ? 'agenda' : 'act', name: label } }) },
         onkeydown: event => event.stopPropagation(),
       }, tableArt(h, card.originalCode || card.code, name), h('span', {}, name))

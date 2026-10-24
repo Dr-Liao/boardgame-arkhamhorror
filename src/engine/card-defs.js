@@ -23,6 +23,7 @@ export function createCardDefs(deps) {
     canSelectInvestigator,
     cardDef,
     cardIdentityFields,
+    expandedPlayablePool,
     getAvailability,
     hasExplicitReactionPrompt,
     isAutomaticReward,
@@ -172,11 +173,46 @@ export function createCardDefs(deps) {
     return allCardDefs({ runtimeOnly: true, campaignId, playerCodes: codes })
   }
 
+  // P10（M5 全量开放）：战役 requiredPackIds 里已开放内容包中的可构筑玩家卡进入起始牌组池。
+  // 内容驱动、无战役名分支：只有包的 status 为 playable/verified 且卡自身 deckbuilding=true 才计入。
+  // 目前只有《万象无终》战役（tcuPlayer verified → 83 张可入牌组的 05 卡）会命中，
+  // 其它战役的自动牌组产出保持 P7 基线不变。绑定卡副本（deckLimit=0）由 expandedPlayablePool 排除。
+  const DECKABLE_PLAYER_TYPES = new Set(['asset', 'event', 'skill'])
+  function campaignDeckbuildingCodes(state = null) {
+    const campaign = state?.campaign ? campaignManifestFor(state) : null
+    if (!campaign) return []
+    const codes = new Set()
+    for (const packId of campaign.requiredPackIds) {
+      const pack = contentRegistry.getPack(packId)
+      if (!pack || !['playable', 'verified'].includes(pack.status)) continue
+      for (const card of pack.cards) {
+        if (!card.deckbuilding) continue
+        const definition = ALL_CARDS[card.code]
+        if (!definition || !DECKABLE_PLAYER_TYPES.has(definition.type)) continue
+        codes.add(card.code)
+      }
+    }
+    return [...codes]
+  }
+
   // 可构筑玩家卡池：传入 state 时按「卡牌范围」收窄（渐进式只给当前循环及更早的卡）。
-  // 不传 state 的旧调用保持全量池。
+  // 不传 state 的旧调用保持全量池；战役起始牌组额外拿到本战役已开放玩家包的卡（P10）。
   function corePlayerPool(state = null) {
     const context = cardPoolContext(state)
-    const pool = playablePool()
+    const base = playablePool()
+    const campaignCodes = campaignDeckbuildingCodes(state)
+    const baseCodes = new Set(base.map(card => card.code))
+    const pool = campaignCodes.length
+      ? [...base, ...expandedPlayablePool().filter(card => campaignCodes.includes(card.code) && !baseCodes.has(card.code))]
+      : base
+    return context ? pool.filter(card => allowsCard(card.code, context)) : pool
+  }
+
+  // P10：手动提交牌组（hubSetDeck）的许可池 = 开放玩家池按「卡牌范围」收窄。
+  // '全部' 范围下允许任一已开放循环的卡（与构筑界面展示一致）；渐进式仍只到当前循环。
+  function availablePlayerPool(state = null) {
+    const context = cardPoolContext(state)
+    const pool = expandedPlayablePool()
     return context ? pool.filter(card => allowsCard(card.code, context)) : pool
   }
 
@@ -231,5 +267,5 @@ export function createCardDefs(deps) {
     }
   }
 
-  return { declarativeDisplayBonuses, allCardDefs, embeddedCardDefs, corePlayerPool, basicWeaknessPool, newCardInstance, newPlayerAssetInstance, newEnemyId, resolveAgendaDoomThresholds }
+  return { declarativeDisplayBonuses, allCardDefs, embeddedCardDefs, corePlayerPool, availablePlayerPool, basicWeaknessPool, newCardInstance, newPlayerAssetInstance, newEnemyId, resolveAgendaDoomThresholds }
 }

@@ -1,9 +1,20 @@
 // Shared by initial construction and upgrades. Content supplies declarative
 // rules; clients may supply only card codes, never rules or costs.
 // 第 127 轮：敦威治调查员集合与黛西的「命运」限制改由 web/ui-cards.js 声明。
+//
+// 性能（2026-10-24 P1 热点修复）：构筑规则校验在 legalMoves / 升级界面里是热路径——
+// 旧实现对每次 deckRules() 都 structuredClone，而 validateDeckRules 会在「每张牌 × 每个替换候选」
+// 的循环里反复调用它；profile 显示一次升级枚举能把它调用上百万次（structuredClone 占 60%+ CPU）。
+// 现在：
+//   - deckRules 按调查员对象身份缓存（registerDeckRules 时 epoch 失效），返回冻结对象共享读取；
+//   - 规则上的正则/未知键检查、卡面上的 text 特征与 printed uses、调查员特质小写表都用 WeakMap 缓存；
+//   - validateDeckRules 一次取出排除式规则，避免每张牌重新构建。
+// 语义不变：缓存键含调查员对象身份与 epoch，卡牌仍按传入 cards 映射逐次读取。
 import { UI_CARDS } from './ui-cards.js'
 
 const extensions = new Map()
+let rulesEpoch = 0
+const rulesCache = new WeakMap() // investigator object -> { epoch, rules }
 export function registerDeckRules(investigatorCode, rules) {
   if (!Number.isSafeInteger(rules.size) || rules.size < 1 || !Array.isArray(rules.options)) throw new Error('无效构筑规则')
   for (const option of rules.options) {
@@ -11,38 +22,110 @@ export function registerDeckRules(investigatorCode, rules) {
     if (option.level && (!Number.isSafeInteger(option.level.min ?? 0) || !Number.isSafeInteger(option.level.max ?? 5) || (option.level.min ?? 0) < 0 || (option.level.max ?? 5) < (option.level.min ?? 0))) throw new Error('无效卡牌等级区间')
   }
   extensions.set(investigatorCode, structuredClone(rules))
+  rulesEpoch++ // 新规则注册后让所有缓存失效（WeakMap 条目靠 epoch 比对淘汰）
+}
+function freezeDeep(value) {
+  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
+    Object.freeze(value)
+    for (const key of Object.keys(value)) freezeDeep(value[key])
+  }
+  return value
 }
 export function deckRules(investigator) {
+  const cached = rulesCache.get(investigator)
+  if (cached && cached.epoch === rulesEpoch) return cached.rules
   const { dunwichInvestigators, noFortuneInvestigator } = UI_CARDS.deckRules
   const dunwich = dunwichInvestigators.includes(investigator.code)
   const options = dunwich ? [
     { factions: [investigator.klass, 'neutral'], level: { min: 0, max: 5 } },
     { level: { min: 0, max: 0 }, limit: 5,
       ...(investigator.code === noFortuneInvestigator ? { not: { traits: ['Fortune'] } } : {}) },
-  ] : investigator.deckOptions || []
-  return structuredClone({
+  ] : structuredClone(investigator.deckOptions || [])
+  const rules = freezeDeep({
     size: investigator.deckRequirements?.size,
     options,
-    signatureCards: investigator.deckRequirements?.signatureCards || [],
-    random: investigator.deckRequirements?.random || [],
+    signatureCards: structuredClone(investigator.deckRequirements?.signatureCards || []),
+    random: structuredClone(investigator.deckRequirements?.random || []),
     ...(extensions.get(investigator.code) || {}),
   })
+  rulesCache.set(investigator, { epoch: rulesEpoch, rules })
+  return rules
 }
 const lower = value => String(value).toLowerCase().replace(/\.$/, '')
 // 第 5 步 M1 调查员批次（P6）：构筑标签的三种印刷写法。
 //   uc = 带「使用（充能）」、hh = 能治愈恐惧、st = [[法术]]；
 // 卡表用 tag + text（正则）描述「带有『治愈……恐惧』字样的卡牌」这类构筑选项。
 const KNOWN_DECK_TAGS = Object.freeze(['uc', 'hh', 'st'])
-const CARD_TEXTS = card => [card.text, card.textZh].filter(Boolean).map(text => String(text))
-const healsHorror = card => CARD_TEXTS(card).some(text => /heals? .*horror|治愈[^。\n]*恐惧|治癒[^。\n]*恐懼/i.test(text))
-const isSpellCard = card => (card.traits || []).some(trait => lower(trait) === 'spell')
-  || CARD_TEXTS(card).some(text => /\[\[spell\]\]/i.test(text))
+const HEALS_HORROR = /heals? .*horror|治愈[^。\n]*恐惧|治癒[^。\n]*恐懼/i
+const SPELL_TEXT = /\[\[spell\]\]/i
+const PRINTED_USES = /Uses\s*\([^)]*?\b([A-Za-z]+)\s*\)/gi
+
+// 卡面派生信息缓存：构筑校验只读卡牌的 text/traits/uses，按卡牌对象身份缓存。
+const cardInfoCache = new WeakMap()
+function cardInfo(card) {
+  const cached = cardInfoCache.get(card)
+  if (cached) return cached
+  const texts = [card.text, card.textZh].filter(Boolean).map(text => String(text))
+  const traits = (card.traits || []).map(lower)
+  const printedUses = [
+    card.usesType,
+    ...(Array.isArray(card.uses) ? card.uses : []),
+    ...texts.flatMap(text => [...text.matchAll(PRINTED_USES)].map(match => match[1])),
+  ].filter(Boolean).map(lower)
+  const info = {
+    texts,
+    traits,
+    printedUses,
+    factions: card.factions || [card.klass, card.klass2, card.klass3].filter(Boolean),
+    healsHorror: texts.some(text => HEALS_HORROR.test(text)),
+    isSpell: traits.includes('spell') || texts.some(text => SPELL_TEXT.test(text)),
+  }
+  cardInfoCache.set(card, info)
+  return info
+}
+
+const investigatorInfoCache = new WeakMap()
+function investigatorTraits(investigator) {
+  const cached = investigatorInfoCache.get(investigator)
+  if (cached) return cached
+  const traits = (investigator.traits || []).map(lower)
+  investigatorInfoCache.set(investigator, traits)
+  return traits
+}
+
+const KNOWN_RULE_KEYS = new Set(['factions', 'faction', 'level', 'types', 'traits', 'trait', 'uses', 'tag',
+  'atleast', 'error', 'limit', 'not', 'codes', 'investigatorTraits', 'text'])
+// 规则对象（来自冻结的构筑规则，或临时的优惠 match 对象）上的正则/未知键检查缓存。
+const ruleInfoCache = new WeakMap()
+function ruleInfo(rule) {
+  const cached = ruleInfoCache.get(rule)
+  if (cached) return cached
+  const info = { known: Object.keys(rule).every(key => KNOWN_RULE_KEYS.has(key)), patterns: null }
+  if (rule.text?.length) {
+    const sources = Array.isArray(rule.text) ? rule.text : [rule.text]
+    info.patterns = sources
+      .map(source => { try { return new RegExp(source, 'i') } catch { return null } })
+      .filter(Boolean)
+  }
+  ruleInfoCache.set(rule, info)
+  return info
+}
+
+// 排除式规则（`not: true`）的匹配体：从冻结规则里预先拆出，validateDeckRules 每张牌直接复用。
+const exclusionRulesCache = new WeakMap()
+function exclusionRulesOf(rules) {
+  const cached = exclusionRulesCache.get(rules)
+  if (cached) return cached
+  const rest = rules.options
+    .filter(rule => rule.not === true)
+    .map(rule => { const { not, ...body } = rule; return freezeDeep(body) })
+  exclusionRulesCache.set(rules, rest)
+  return rest
+}
 // 「额外限制：无等级 1-5 的[[武器]]卡牌」这类 `not: true` 规则是**排除项**，不是允许项：
 // 其余字段命中即整张牌不能进牌组（与 `not: {…}` 的否定式允许项互不冲突）。
 export function optionExcluded(investigator, card) {
-  for (const rule of deckRules(investigator).options) {
-    if (rule.not !== true) continue
-    const { not, ...rest } = rule
+  for (const rest of exclusionRulesOf(deckRules(investigator))) {
     if (matchesCardRule(card, rest, investigator)) return true
   }
   return false
@@ -50,41 +133,33 @@ export function optionExcluded(investigator, card) {
 export function matchesCardRule(card, rule, investigator) {
   if (investigator.code === UI_CARDS.deckRules.noFortuneInvestigator
     && (card.traits || []).some(trait => lower(trait) === 'fortune')) return false
-  const known = new Set(['factions', 'faction', 'level', 'types', 'traits', 'trait', 'uses', 'tag',
-    'atleast', 'error', 'limit', 'not', 'codes', 'investigatorTraits', 'text'])
-  if (Object.keys(rule).some(key => !known.has(key))) return false
+  const info = ruleInfo(rule)
+  if (!info.known) return false
   if (rule.not && typeof rule.not === 'object' && matchesCardRule(card, rule.not, investigator)) return false
-  if (rule.text?.length) {
-    const patterns = (Array.isArray(rule.text) ? rule.text : [rule.text])
-      .map(source => { try { return new RegExp(source, 'i') } catch { return null } })
-      .filter(Boolean)
-    if (!patterns.some(pattern => CARD_TEXTS(card).some(text => pattern.test(text)))) return false
+  const cardValues = cardInfo(card)
+  if (info.patterns) {
+    if (!info.patterns.some(pattern => cardValues.texts.some(text => pattern.test(text)))) return false
   }
-  const factions = card.factions || [card.klass, card.klass2, card.klass3].filter(Boolean)
   const allowed = rule.factions || rule.faction
-  if (allowed?.length && !allowed.some(faction => factions.includes(faction))) return false
+  if (allowed?.length && !allowed.some(faction => cardValues.factions.includes(faction))) return false
   if (rule.types?.length && !rule.types.includes(card.type)) return false
   if (rule.codes?.length && !rule.codes.includes(card.code)) return false
   const requiredTraits = rule.traits || rule.trait
-  if (requiredTraits?.length && !requiredTraits.some(trait => (card.traits || []).map(lower).includes(lower(trait)))) return false
-  const printedUses = [
-    card.usesType,
-    ...(Array.isArray(card.uses) ? card.uses : []),
-    ...[card.text, card.textZh].filter(Boolean).flatMap(text =>
-      [...String(text).matchAll(/Uses\s*\([^)]*?\b([A-Za-z]+)\s*\)/gi)].map(match => match[1])),
-  ].filter(Boolean).map(lower)
-  if (rule.uses?.length && !rule.uses.map(lower).some(use => printedUses.includes(use))) return false
+  if (requiredTraits?.length && !requiredTraits.some(trait => cardValues.traits.includes(lower(trait)))) return false
+  if (rule.uses?.length && !rule.uses.map(lower).some(use => cardValues.printedUses.includes(use))) return false
   if (rule.tag?.length) {
     const tags = rule.tag.map(lower)
     if (tags.some(tag => !KNOWN_DECK_TAGS.includes(tag))) return false
-    if (tags.includes('uc') && !printedUses.some(use => ['charge', 'charges'].includes(use))) return false
-    if (tags.includes('hh') && !healsHorror(card)) return false
-    if (tags.includes('st') && !isSpellCard(card)) return false
+    if (tags.includes('uc') && !cardValues.printedUses.some(use => ['charge', 'charges'].includes(use))) return false
+    if (tags.includes('hh') && !cardValues.healsHorror) return false
+    if (tags.includes('st') && !cardValues.isSpell) return false
   }
-  if (rule.investigatorTraits?.length && !rule.investigatorTraits.some(trait => (investigator.traits || []).map(lower).includes(lower(trait)))) return false
+  if (rule.investigatorTraits?.length
+    && !rule.investigatorTraits.some(trait => investigatorTraits(investigator).includes(lower(trait)))) return false
   const xp = card.xp || 0
   if (rule.level && (xp < (rule.level.min || 0) || xp > (rule.level.max ?? 5))) return false
-  if (card.requiredInvestigatorTraits?.length && !card.requiredInvestigatorTraits.some(trait => (investigator.traits || []).map(lower).includes(lower(trait)))) return false
+  if (card.requiredInvestigatorTraits?.length
+    && !card.requiredInvestigatorTraits.some(trait => investigatorTraits(investigator).includes(lower(trait)))) return false
   return true
 }
 export function deckCardLimit(card) {
@@ -99,8 +174,9 @@ export function validateDeckRules(investigator, codes, cards, { partial = false 
   const ordinary = codes.map(code => cards[code]).filter(card => card && !card.signatureFor && !card.subtype && !card.story)
   for (const code of codes) if (!cards[code]) errors.push(`未知卡牌：${code}`)
   // 排除式构筑限制（`not: true`）：命中的卡不能进牌组，且不受其它允许项豁免。
+  const exclusionRules = exclusionRulesOf(rules)
   for (const card of ordinary) {
-    if (optionExcluded(investigator, card)) errors.push(`${card.name || card.code} 属于构筑限制排除的卡牌`)
+    if (exclusionRules.some(rest => matchesCardRule(card, rest, investigator))) errors.push(`${card.name || card.code} 属于构筑限制排除的卡牌`)
   }
   const counted = ordinary.filter(card => !card.permanent && !card.ignoreDeckLimit)
   if ((!partial && counted.length !== rules.size) || counted.length > rules.size) errors.push(`牌库需 ${rules.size} 张玩家卡，当前 ${counted.length} 张`)

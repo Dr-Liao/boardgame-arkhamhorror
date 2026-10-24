@@ -13,3 +13,13 @@ web/img/.translation/
 
 # 本地验收截图
 artifacts/
+
+# Player-owned playlist settings and music additions (directory markers stay tracked).
+web/audio/music/playlists.json
+web/audio/music/campaigns/**/*.mp3
+web/audio/music/campaigns/**/*.ogg
+web/audio/music/campaigns/**/*.wav
+web/audio/music/campaigns/**/*.m4a
+web/audio/music/campaigns/**/*.aac
+web/audio/music/campaigns/**/*.flac
+web/audio/music/campaigns/**/*.webm

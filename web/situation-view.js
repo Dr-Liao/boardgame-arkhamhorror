@@ -4,6 +4,7 @@ import { groupedChaosTokens } from './chaos-bag-view.js'
 import { tableArt, retainTableArt } from './table-art.js'
 import { tableIcon } from './table-components.js'
 import { cardSymbol } from './card-text.js'
+import { cardDisplayName } from './catalog.js'
 // 第 127 轮：「书籍行动」调查员表在 web/ui-cards.js。
 import { UI_CARDS } from './ui-cards.js'
 // 第 4 步 P5：万象无终的公开剧本状态（幽灵牌堆 / 塔罗 / 裂口 / 火盆 / 看守人 / 遗留记忆）。
@@ -219,7 +220,7 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
       ...results.map(result => h('details', { className: 'ah-campaign-result' },
         h('summary', {}, `第 ${result.scenarioIndex + 1} 关 · ${resultTitle(st, result)} · 胜利点 ${result.victory}`),
         ...result.investigators.map(record => h('div', {},
-          `${st.investigatorDefs?.[record.code]?.nameZh || record.code}：本关 +${record.xpAwarded} XP；肉体创伤 ${record.traumaAfter.physical}，精神创伤 ${record.traumaAfter.mental}`)))))
+          `${cardDisplayName(st.investigatorDefs?.[record.code]) || record.code}：本关 +${record.xpAwarded} XP；肉体创伤 ${record.traumaAfter.physical}，精神创伤 ${record.traumaAfter.mental}`)))))
   }
 
   // 补给品是公开信息：直接读战役投影里的 supplies，标签随 campaign.supplyLabels 下发。
@@ -298,9 +299,11 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
       h('div', { className: 'ah-situ-story-cards' }, assets.map(asset => {
         const code = typeof asset === 'string' ? asset : asset.code
         const name = (typeof asset === 'object' && asset.name) || cardName(s, code) || code
+        // 剧情卡也可能是规则代号（如 frozenInFear），卡图按原卡号取。
+        const artCode = (typeof asset === 'object' && asset.originalCode) || s.state.cards?.[code]?.originalCode || code
         const clues = Number(asset?.clues || 0)
         return h('button', { type: 'button', className: 'ah-situ-story-card', 'aria-label': '查看剧情卡 ' + name + (clues ? `（${clues} 个线索）` : ''), onclick: () => openCard(s, asset) },
-          tableArt(h, code, name), h('small', {}, name),
+          tableArt(h, artCode, name), h('small', {}, name),
           ...(clues ? [h('small', { className: 'ah-situ-story-clues' }, `🔍 ${clues}`)] : []))
       })))
   }

@@ -290,3 +290,47 @@ test('素材提供真实透明通道，减少动态效果设置生效', async ({
   await setup.getByRole('button', { name: '开始新游戏' }).click()
   expect(await page.locator('.ah-hub-pane').evaluate(el => getComputedStyle(el).animationName)).toBe('none')
 })
+
+test('开局封面主图上下虚化：照片边缘渐隐并叠渐进模糊带，桌面图仍是清晰前景', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  const setup = await open(page)
+  const art = setup.locator('.ah-office-entry-art')
+  await expect(art.locator('.ah-office-entry-hero')).toHaveCount(1)
+  await expect(art.locator('.ah-office-entry-hero > .ah-office-decor')).toHaveCount(1)
+  // 桌面图仍直接挂在封面层上，z-index 高于主图，模糊带不会糊到它。
+  await expect(art.locator(':scope > .ah-office-decor')).toHaveCount(1)
+  const report = await art.evaluate(el => {
+    const hero = el.querySelector('.ah-office-entry-hero')
+    const photo = hero.querySelector('.ah-office-decor')
+    const desk = el.querySelector(':scope > .ah-office-decor')
+    const style = (node, pseudo = null) => getComputedStyle(node, pseudo)
+    return {
+      photoMask: style(photo).maskImage,
+      heroZ: style(hero).zIndex,
+      deskZ: style(desk).zIndex,
+      bands: [...hero.querySelectorAll('.ah-office-entry-blur')].map(band => ({
+        isTop: band.classList.contains('is-top'),
+        isBottom: band.classList.contains('is-bottom'),
+        blur: style(band).backdropFilter,
+        mask: style(band).maskImage,
+      })),
+      artAfter: { content: style(el, '::after').content, blur: style(el, '::after').backdropFilter },
+    }
+  })
+  // 横向渐隐留在父层，纵向渐隐（上下各约 16%）落在照片自己身上。
+  expect(report.photoMask).toContain('linear-gradient')
+  expect(report.photoMask).toContain('16%')
+  expect(report.photoMask).toContain('84%')
+  expect(report.heroZ).toBe('0')
+  expect(report.deskZ).toBe('1')
+  expect(report.bands).toHaveLength(2)
+  expect(report.bands.filter(band => band.isTop)).toHaveLength(1)
+  expect(report.bands.filter(band => band.isBottom)).toHaveLength(1)
+  for (const band of report.bands) {
+    expect(band.blur).toContain('blur(')
+    expect(band.mask).toContain('linear-gradient')
+  }
+  // 整块封面的最底边还有一道轻虚化，避免桌面图在面板边框处硬切。
+  expect(report.artAfter.content).toBe('""')
+  expect(report.artAfter.blur).toContain('blur(')
+})

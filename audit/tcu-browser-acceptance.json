@@ -1,25 +1,99 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 3,
   "generatedBy": "playwright + tools/playwright-tcu-reporter.mjs",
-  "spec": "tests/tcu-rules.browser.mjs",
+  "spec": "tests/tcu-interactions.browser.mjs",
   "specs": [
     "tests/tcu-interactions.browser.mjs",
-    "tests/tcu-rules.browser.mjs"
+    "tests/tcu-media.browser.mjs",
+    "tests/tcu-release.browser.mjs",
+    "tests/tcu-rules.browser.mjs",
+    "tests/tcu-scenarios.browser.mjs"
   ],
-  "milestone": "P4/P5",
+  "milestone": "P10",
   "campaignId": "theCircleUndone",
   "status": "passed",
   "screenshotBase": "repo-root",
   "checks": {
     "desktopBrowser": true,
-    "mobileBrowser": true
+    "mobileBrowser": true,
+    "release": {
+      "desktop": true,
+      "mobile": true
+    },
+    "media": {
+      "desktop": true,
+      "mobile": false
+    }
   },
+  "release": {
+    "desktop": true,
+    "mobile": true,
+    "screenshots": [
+      "artifacts/tcu-migration/p10-release-chapter-desktop.png",
+      "artifacts/tcu-migration/p10-release-chapter-mobile.png",
+      "artifacts/tcu-migration/p10-release-prologue-desktop.png",
+      "artifacts/tcu-migration/p10-release-prologue-mobile.png"
+    ]
+  },
+  "media": {
+    "desktop": true,
+    "mobile": false,
+    "resources": 0
+  },
+  "scenarios": [
+    {
+      "scenario": "atDeathsDoorstep",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "beforeTheBlackThrone",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "disappearanceAtTheTwilightEstate",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "forTheGreaterGood",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "inTheClutchesOfChaos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "theSecretName",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "theWagesOfSin",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "theWitchingHour",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "unionAndDisillusion",
+      "desktop": true,
+      "mobile": true
+    }
+  ],
   "tests": [
     {
       "title": "M4 万象无终卡牌规则链接在desktop端可达并恢复详情焦点",
       "spec": "tests/tcu-rules.browser.mjs",
       "file": "tests/tcu-rules.browser.mjs",
       "viewport": "desktop",
+      "scenario": null,
       "expectedStatus": "passed",
       "status": "passed",
       "retry": 0
@@ -29,6 +103,7 @@
       "spec": "tests/tcu-rules.browser.mjs",
       "file": "tests/tcu-rules.browser.mjs",
       "viewport": "mobile",
+      "scenario": null,
       "expectedStatus": "passed",
       "status": "passed",
       "retry": 0
@@ -38,6 +113,7 @@
       "spec": "tests/tcu-rules.browser.mjs",
       "file": "tests/tcu-rules.browser.mjs",
       "viewport": "desktop",
+      "scenario": null,
       "expectedStatus": "passed",
       "status": "passed",
       "retry": 0
@@ -47,6 +123,27 @@
       "spec": "tests/tcu-rules.browser.mjs",
       "file": "tests/tcu-rules.browser.mjs",
       "viewport": "mobile",
+      "scenario": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P10 真实大厅→序章→章节实机路径成立（desktop 1440×950）",
+      "spec": "tests/tcu-release.browser.mjs",
+      "file": "tests/tcu-release.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P10 真实大厅→序章→章节实机路径成立（mobile 390×844）",
+      "spec": "tests/tcu-release.browser.mjs",
+      "file": "tests/tcu-release.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null,
       "expectedStatus": "passed",
       "status": "passed",
       "retry": 0
@@ -56,6 +153,7 @@
       "spec": "tests/tcu-interactions.browser.mjs",
       "file": "tests/tcu-interactions.browser.mjs",
       "viewport": "desktop",
+      "scenario": null,
       "expectedStatus": "passed",
       "status": "passed",
       "retry": 0
@@ -65,6 +163,197 @@
       "spec": "tests/tcu-interactions.browser.mjs",
       "file": "tests/tcu-interactions.browser.mjs",
       "viewport": "mobile",
+      "scenario": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 崇高利益 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "forTheGreaterGood",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 崇高利益 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "forTheGreaterGood",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 巫异时刻 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "theWitchingHour",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 巫异时刻 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "theWitchingHour",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 恶罪报应 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "theWagesOfSin",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 恶罪报应 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "theWagesOfSin",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 暮色庄园失踪事件 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "disappearanceAtTheTwilightEstate",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 暮色庄园失踪事件 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "disappearanceAtTheTwilightEstate",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 死亡门前 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "atDeathsDoorstep",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 死亡门前 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "atDeathsDoorstep",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 混沌魔掌 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "inTheClutchesOfChaos",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 混沌魔掌 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "inTheClutchesOfChaos",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 聚合幻灭 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "unionAndDisillusion",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 聚合幻灭 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "unionAndDisillusion",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 隐秘之名 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "theSecretName",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 隐秘之名 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "theSecretName",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 黑色王座 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "beforeTheBlackThrone",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P8 黑色王座 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tcu-scenarios.browser.mjs",
+      "file": "tests/tcu-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "beforeTheBlackThrone",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "四循环十张图片可解码，27 首本地音乐均可播放",
+      "spec": "tests/tcu-media.browser.mjs",
+      "file": "tests/tcu-media.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null,
       "expectedStatus": "passed",
       "status": "passed",
       "retry": 0
@@ -72,32 +361,212 @@
   ],
   "screenshots": [
     {
-      "name": "tcu-rules-desktop",
+      "name": "p10-release-chapter-desktop",
+      "path": "artifacts/tcu-migration/p10-release-chapter-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "spec": "tests/tcu-release.browser.mjs"
+    },
+    {
+      "name": "p10-release-chapter-mobile",
+      "path": "artifacts/tcu-migration/p10-release-chapter-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "spec": "tests/tcu-release.browser.mjs"
+    },
+    {
+      "name": "p10-release-prologue-desktop",
+      "path": "artifacts/tcu-migration/p10-release-prologue-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "spec": "tests/tcu-release.browser.mjs"
+    },
+    {
+      "name": "p10-release-prologue-mobile",
+      "path": "artifacts/tcu-migration/p10-release-prologue-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "spec": "tests/tcu-release.browser.mjs"
+    },
+    {
+      "name": "p4-rulebook-desktop",
       "path": "artifacts/tcu-migration/p4-rulebook-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
+      "scenario": null,
       "spec": "tests/tcu-rules.browser.mjs"
     },
     {
-      "name": "tcu-rules-mobile",
+      "name": "p4-rulebook-mobile",
       "path": "artifacts/tcu-migration/p4-rulebook-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
+      "scenario": null,
       "spec": "tests/tcu-rules.browser.mjs"
     },
     {
-      "name": "tcu-interactions-desktop",
+      "name": "p5-interactions-desktop",
       "path": "artifacts/tcu-migration/p5-interactions-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
+      "scenario": null,
       "spec": "tests/tcu-interactions.browser.mjs"
     },
     {
-      "name": "tcu-interactions-mobile",
+      "name": "p5-interactions-mobile",
       "path": "artifacts/tcu-migration/p5-interactions-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
+      "scenario": null,
       "spec": "tests/tcu-interactions.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-atDeathsDoorstep-desktop",
+      "path": "artifacts/tcu-migration/p8-scenario-atDeathsDoorstep-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "atDeathsDoorstep",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-atDeathsDoorstep-mobile",
+      "path": "artifacts/tcu-migration/p8-scenario-atDeathsDoorstep-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "atDeathsDoorstep",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-beforeTheBlackThrone-desktop",
+      "path": "artifacts/tcu-migration/p8-scenario-beforeTheBlackThrone-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "beforeTheBlackThrone",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-beforeTheBlackThrone-mobile",
+      "path": "artifacts/tcu-migration/p8-scenario-beforeTheBlackThrone-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "beforeTheBlackThrone",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-disappearanceAtTheTwilightEstate-desktop",
+      "path": "artifacts/tcu-migration/p8-scenario-disappearanceAtTheTwilightEstate-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "disappearanceAtTheTwilightEstate",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-disappearanceAtTheTwilightEstate-mobile",
+      "path": "artifacts/tcu-migration/p8-scenario-disappearanceAtTheTwilightEstate-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "disappearanceAtTheTwilightEstate",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-forTheGreaterGood-desktop",
+      "path": "artifacts/tcu-migration/p8-scenario-forTheGreaterGood-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "forTheGreaterGood",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-forTheGreaterGood-mobile",
+      "path": "artifacts/tcu-migration/p8-scenario-forTheGreaterGood-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "forTheGreaterGood",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-inTheClutchesOfChaos-desktop",
+      "path": "artifacts/tcu-migration/p8-scenario-inTheClutchesOfChaos-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "inTheClutchesOfChaos",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-inTheClutchesOfChaos-mobile",
+      "path": "artifacts/tcu-migration/p8-scenario-inTheClutchesOfChaos-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "inTheClutchesOfChaos",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-theSecretName-desktop",
+      "path": "artifacts/tcu-migration/p8-scenario-theSecretName-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "theSecretName",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-theSecretName-mobile",
+      "path": "artifacts/tcu-migration/p8-scenario-theSecretName-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "theSecretName",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-theWagesOfSin-desktop",
+      "path": "artifacts/tcu-migration/p8-scenario-theWagesOfSin-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "theWagesOfSin",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-theWagesOfSin-mobile",
+      "path": "artifacts/tcu-migration/p8-scenario-theWagesOfSin-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "theWagesOfSin",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-theWitchingHour-desktop",
+      "path": "artifacts/tcu-migration/p8-scenario-theWitchingHour-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "theWitchingHour",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-theWitchingHour-mobile",
+      "path": "artifacts/tcu-migration/p8-scenario-theWitchingHour-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "theWitchingHour",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-unionAndDisillusion-desktop",
+      "path": "artifacts/tcu-migration/p8-scenario-unionAndDisillusion-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "unionAndDisillusion",
+      "spec": "tests/tcu-scenarios.browser.mjs"
+    },
+    {
+      "name": "p8-scenario-unionAndDisillusion-mobile",
+      "path": "artifacts/tcu-migration/p8-scenario-unionAndDisillusion-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "unionAndDisillusion",
+      "spec": "tests/tcu-scenarios.browser.mjs"
     }
   ]
 }

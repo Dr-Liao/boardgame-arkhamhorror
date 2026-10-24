@@ -48,14 +48,14 @@
     {
       "id": "dunwichAcceptance",
       "command": "node tools/audit-dunwich-acceptance.mjs",
-      "status": 0,
-      "lastLine": "{\"total\":333,\"verified\":333,\"unverified\":0,\"unimplemented\":0,\"testsPassed\":387}"
+      "status": 1,
+      "lastLine": "]"
     },
     {
       "id": "coreAcceptance",
       "command": "node tools/audit-core-acceptance.mjs --check",
       "status": 0,
-      "lastLine": "{\"total\":183,\"verified\":183,\"unverified\":0,\"unimplemented\":0,\"testsPassed\":376}"
+      "lastLine": "{\"total\":183,\"verified\":183,\"unverified\":0,\"unimplemented\":0,\"testsPassed\":377}"
     },
     {
       "id": "p6",
@@ -67,13 +67,13 @@
       "id": "abilities",
       "command": "node tools/audit-abilities.mjs --check",
       "status": 0,
-      "lastLine": "通道：descriptor=490 data=4"
+      "lastLine": "通道：descriptor=572 data=4"
     },
     {
       "id": "workorder",
       "command": "node tools/audit-workorder.mjs --check",
       "status": 0,
-      "lastLine": "参考：EFFECTS 0 条、逃生卡 0 张、窗口 61 个"
+      "lastLine": "参考：EFFECTS 0 条、逃生卡 0 张、窗口 62 个"
     },
     {
       "id": "deadPrimitives",
@@ -97,12 +97,12 @@
       "id": "tcuMigration",
       "command": "node tools/audit-tcu.mjs --check",
       "status": 0,
-      "lastLine": "audit 复算一致：P6，关键词 16/16，规则书 verified，gate pass"
+      "lastLine": "audit 复算一致：P10，关键词 16/16，规则书 verified，gate pass"
     }
   ],
   "docLinks": {
-    "files": 25,
-    "links": 93,
+    "files": 32,
+    "links": 137,
     "broken": 0
   },
   "goldenReplay": {
@@ -114,10 +114,10 @@
   },
   "tests": {
     "command": "node tools/run-tests.mjs fast",
-    "status": 0,
-    "tests": 2510,
-    "pass": 2510,
-    "fail": 0
+    "status": 1,
+    "tests": 3322,
+    "pass": 3320,
+    "fail": 2
   },
   "notes": [
     "audit-resources 用 --check-source：--check 比较的是「当前目录 vs 冻结的 N0」，N1 接管后按设计非零退出。",

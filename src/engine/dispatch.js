@@ -44,6 +44,7 @@ export function createDispatch(deps) {
     chooseAttack,
     controlledAbilityCard,
     corePlayerPool,
+    availablePlayerPool,
     getCurrentActionKind,
     setCurrentActionKind,
     setCurrentSpellAction,
@@ -318,7 +319,7 @@ function executeHubMove(state, seat, move, events) {
       const inv = state.investigators[seat]
       const built = move.action === 'hubSetDeck'
         ? buildDeckFromList(ALL_INVESTIGATORS[inv.code], move.codes,
-          { seat, seed: Math.floor(randomValue(state) * 4294967296), playerPool: corePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state) })
+          { seat, seed: Math.floor(randomValue(state) * 4294967296), playerPool: availablePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state) })
         : buildDeck(ALL_INVESTIGATORS[inv.code], {
           seat, seed: Math.floor(randomValue(state) * 4294967296), playerPool: corePlayerPool(state),
         })

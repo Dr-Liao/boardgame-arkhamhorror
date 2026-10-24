@@ -618,12 +618,29 @@ test('N3 冷漠敌人不自动交战，可用主动交战行动接战', () => {
   settle(state)
   assert.equal(state.enemies.find(item => item.id === target.id).engagedSeat, null)
   assert.equal(state.investigators[0].engaged.length, 0)
+  // 未与调查员交战的冷漠敌人不能被攻击：列表里不出现攻击，提交也会被拒绝。
+  assert.ok(!legalMoves(state).some(move => move.action === 'fight' && move.enemyId === target.id),
+    '未交战的冷漠敌人不能直接攻击')
+  reject(state, { action: 'fight', enemyId: target.id }, /冷漠/)
   const engage = legalMoves(state).find(move => move.action === 'engage' && move.enemyId === target.id)
   assert.ok(engage, '同地点敌人应提供主动交战')
   execute(state, engage)
   settle(state)
   assert.equal(state.enemies.find(item => item.id === target.id).engagedSeat, 0)
+  // 主动交战之后，冷漠敌人才进入合法攻击目标。
+  assert.ok(legalMoves(state).some(move => move.action === 'fight' && move.enemyId === target.id),
+    '交战后的冷漠敌人可以攻击')
   reject(state, { action: 'engage', enemyId: target.id }, /已经与该敌人交战/)
+})
+
+test('N3 冷漠敌人被清空文本后按普通敌人处理，非冷漠敌人未交战也可攻击', () => {
+  const state = fixture()
+  const blanked = enemy(state, { engagedSeat: null, aloof: true, name: '被清空文本的冷漠敌人' })
+  blanked.textBlanked = { round: state.round, phase: state.phase }
+  const normal = enemy(state, { engagedSeat: null, aloof: false, name: '普通敌人' })
+  const fights = legalMoves(state).filter(move => move.action === 'fight').map(move => move.enemyId)
+  assert.ok(fights.includes(blanked.id), '文本被清空时冷漠关键词也失效')
+  assert.ok(fights.includes(normal.id), '未交战的非冷漠敌人可以攻击')
 })
 
 test('N3 猎手等距路线与任意无人地点生成都要显式选择', () => {

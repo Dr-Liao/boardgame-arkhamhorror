@@ -5,6 +5,7 @@ export function createAssets(deps) {
   const {
     EFFECTS,
     SLOT_CAPACITY,
+    abilityApi,
     assetEffect,
     blanksTraits,
     cardDef,
@@ -240,9 +241,18 @@ export function createAssets(deps) {
       if (!state.removedFromGame.includes(asset.code)) state.removedFromGame.push(asset.code)
     }
     // 离场钩子（Phase 1 的 leavesPlay kind）：数据驱动，引擎不再认识具体卡面字段。
-    const leaveEffect = leavesPlayEffect(asset.code)
-    if (leaveEffect) {
-      resolveEffect(state, inv.seat, { ...leaveEffect, assetId: asset.id }, makeRuntime(state, events))
+    // 第 5 步 P7：描述子允许只带 resolve（05313/05316 的绑定副本收回走 api.bonded.return）。
+    const leaveDescriptor = descriptorOfKind(asset.code, 'leavesPlay')
+    if (leaveDescriptor?.resolve) {
+      leaveDescriptor.resolve({
+        state, inv, seat: inv.seat, source: asset, descriptor: leaveDescriptor, events, context: {},
+        api: abilityApi(state, events),
+      })
+    } else {
+      const leaveEffect = leavesPlayEffect(asset.code)
+      if (leaveEffect) {
+        resolveEffect(state, inv.seat, { ...leaveEffect, assetId: asset.id }, makeRuntime(state, events))
+      }
     }
     scenarioBehavior(state).assetLeftPlay?.(state, inv, asset, scenarioRuntime(state, events))
   }

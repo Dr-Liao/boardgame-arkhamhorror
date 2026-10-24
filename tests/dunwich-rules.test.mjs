@@ -123,6 +123,28 @@ test('D6 University: alchemy investigation finds the concoction, then its intell
   assert.ok(!s.investigators[0].assets.some(asset => asset.code === '02059'))
 })
 
+test('D6 University: 冷漠敌人未交战时，炼金试剂攻击不列出、提交被拒绝', () => {
+  const s = universityFixture('d6-alchemy-aloof'), inv = s.investigators[0]
+  s.locations.push({ ...structuredClone(s.scenario.locations.alchemyLabs), id: 'alchemyLabs', revealed: true, clues: 0 })
+  inv.location = 'alchemyLabs'; inv.intellect = 10
+  s.scenarioZones.underLocations = { alchemyLabs: '02059' }
+  move(s, { action: 'scenarioAction', rule: 'searchConcoction' }); settle(s)
+  const hero = s.investigators[0]
+  assert.ok(hero.assets.some(asset => asset.code === '02059'), '先取得炼金试剂')
+  const whippoorwill = { id: 'whippoorwill-test', code: '02090', name: '夜鹰', location: 'alchemyLabs',
+    fight: 2, evade: 4, health: 1, damageTaken: 0, damage: 0, horror: 1, traits: ['Creature'],
+    aloof: true, printedAloof: true, engagedSeat: null, exhausted: false }
+  s.enemies = [whippoorwill]
+  // 未交战：剧本自己的攻击行动也不能绕过冷漠——列表里没有它，伪造提交被拒绝。
+  assert.ok(!legalMoves(s).some(item => item.rule === 'concoctionAttack' && item.enemyId === whippoorwill.id),
+    '未交战的冷漠敌人不能成为炼金试剂攻击目标')
+  assert.match(validateMove(s, s.currentSeat, { action: 'scenarioAction', rule: 'concoctionAttack', enemyId: whippoorwill.id }) ?? '',
+    /冷漠|目标/)
+  // 主动交战之后重新可用（冷漠只禁止未交战时的直接攻击）。
+  whippoorwill.engagedSeat = 0; hero.engaged.push(whippoorwill.id)
+  assert.ok(legalMoves(s).some(item => item.rule === 'concoctionAttack' && item.enemyId === whippoorwill.id))
+})
+
 test('D6 University: a second-opening save recovers a missing concoction marker exactly once', () => {
   const s = universityFixture('d6-alchemy-recovery'), inv = s.investigators[0]
   s.campaign.scenarioResults.push({ scenarioId: 'theHouseAlwaysWins', resolution: 'r1' })

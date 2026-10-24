@@ -1,0 +1,108 @@
+{
+  "campaignId": "theCircleUndone",
+  "created": "2026-10-24",
+  "source": "Original AI-generated artwork using OpenAI image_gen; not official game art.",
+  "palette": "charcoal, smoky violet, oxidized silver, restrained amber",
+  "assets": [
+    {
+      "id": "table",
+      "title": "万象无终·塔罗调查桌布",
+      "file": "table/investigation-desk.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 450594,
+      "sha256": "1c61bc1fabfafc603b35eadfcb207070759c2dcd67c6a879ea6f364040eb550f",
+      "original": "artifacts/tcu-media/originals/table.png"
+    },
+    {
+      "id": "disappearanceAtTheTwilightEstate",
+      "title": "暮色庄园失踪事件",
+      "file": "scenarios/disappearanceAtTheTwilightEstate/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 416612,
+      "sha256": "a9708ddada4b98c72213fc79f27bad6f6475484ab0e06d126f3483d50dcee7d1",
+      "original": "artifacts/tcu-media/originals/disappearanceAtTheTwilightEstate.png"
+    },
+    {
+      "id": "theWitchingHour",
+      "title": "巫异时刻",
+      "file": "scenarios/theWitchingHour/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 436746,
+      "sha256": "1ebfc057109e204162751c54c4d3750d2f758630ac2df8924889d6947ccdb2ea",
+      "original": "artifacts/tcu-media/originals/theWitchingHour.png"
+    },
+    {
+      "id": "atDeathsDoorstep",
+      "title": "死亡门前",
+      "file": "scenarios/atDeathsDoorstep/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 365860,
+      "sha256": "57954d888315218fc44fc993173f475cfe9a32a014a458137328f2bb43f64f31",
+      "original": "artifacts/tcu-media/originals/atDeathsDoorstep.png"
+    },
+    {
+      "id": "theSecretName",
+      "title": "隐秘之名",
+      "file": "scenarios/theSecretName/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 449304,
+      "sha256": "d26138c412393ae0396ab00772f26fca3943c5c6d745bbd8f75b09929e97c295",
+      "original": "artifacts/tcu-media/originals/theSecretName.png"
+    },
+    {
+      "id": "theWagesOfSin",
+      "title": "恶罪报应",
+      "file": "scenarios/theWagesOfSin/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 486422,
+      "sha256": "3bb3f7a99effef6ecdd6a9bb4fd6674d620f635b2c8b33e26d5f32335a429ace",
+      "original": "artifacts/tcu-media/originals/theWagesOfSin.png"
+    },
+    {
+      "id": "forTheGreaterGood",
+      "title": "崇高利益",
+      "file": "scenarios/forTheGreaterGood/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 424520,
+      "sha256": "f36412f27aa46744516bbdcf577ee79d236944cd34936fa0b6d73c20e2a1caf2",
+      "original": "artifacts/tcu-media/originals/forTheGreaterGood.png"
+    },
+    {
+      "id": "unionAndDisillusion",
+      "title": "聚合幻灭",
+      "file": "scenarios/unionAndDisillusion/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 411870,
+      "sha256": "03e3c68734c7d254dae723b6373e7a29fa0ce381e89beb15e57f721d02a9c295",
+      "original": "artifacts/tcu-media/originals/unionAndDisillusion.png"
+    },
+    {
+      "id": "inTheClutchesOfChaos",
+      "title": "混沌魔掌",
+      "file": "scenarios/inTheClutchesOfChaos/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 549810,
+      "sha256": "c25a4c5b43953c7097a8545f9610f4af47b3bcac999c2c9d17acebe02ead7769",
+      "original": "artifacts/tcu-media/originals/inTheClutchesOfChaos.png"
+    },
+    {
+      "id": "beforeTheBlackThrone",
+      "title": "黑色王座",
+      "file": "scenarios/beforeTheBlackThrone/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 469570,
+      "sha256": "f3fe893ef4bc6c485adca54f309ae7e0005f06c2b67f640a03a80d8476f83bd2",
+      "original": "artifacts/tcu-media/originals/beforeTheBlackThrone.png"
+    }
+  ]
+}

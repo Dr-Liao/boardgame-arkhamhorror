@@ -5,8 +5,8 @@ import { registerNonPlayerEntries } from './_lookup.js'
 
 import ewolfManDrew from './nightOfTheZealot/theMidnightMasks/wolfManDrew.js'
 import eyoungDeepOne from './nightOfTheZealot/theDevourerBelow/youngDeepOne.js'
-import egoatSpawn from './nightOfTheZealot/theDevourerBelow/goatSpawn.js'
-import erelentlessDarkYoung from './nightOfTheZealot/theDevourerBelow/relentlessDarkYoung.js'
+import egoatSpawn from './shared/agents_of_shub/goatSpawn.js'
+import erelentlessDarkYoung from './shared/agents_of_shub/relentlessDarkYoung.js'
 import e01172 from './shared/nightgaunts/01172.js'
 import ehuntingNightgaunt from './shared/nightgaunts/huntingNightgaunt.js'
 import e02094 from './theDunwichLegacy/_shared/beast_thralls/02094.js'
@@ -24,7 +24,7 @@ import e03096 from './thePathToCarcosa/_shared/hasturs_gift/03096.js'
 import e04072 from './theForgottenAge/_shared/rainforest/04072.js'
 import e04074 from './theForgottenAge/_shared/rainforest/04074.js'
 import e01133 from './nightOfTheZealot/theMidnightMasks/01133.js'
-import e01151 from './nightOfTheZealot/theDevourerBelow/01151.js'
+import e01151 from './shared/tentacles/01151.js'
 import e01156 from './nightOfTheZealot/theDevourerBelow/01156.js'
 import e01121b from './nightOfTheZealot/theMidnightMasks/01121b.js'
 import e01132 from './shared/arkham/01132.js'
@@ -532,6 +532,256 @@ import e03221b from './thePathToCarcosa/aPhantomOfTruth/03221b.js'
 import e04302 from './theForgottenAge/theDepthsOfYoth/04302.js'
 import e02052 from './theDunwichLegacy/extracurricularActivity/02052.js'
 import e02055 from './theDunwichLegacy/extracurricularActivity/02055.js'
+import e05088 from './theCircleUndone/_shared/agents_of_azathoth/05088.js'
+import e05089 from './theCircleUndone/_shared/agents_of_azathoth/05089.js'
+import e05090 from './theCircleUndone/_shared/anettes_coven/05090.js'
+import e05091 from './theCircleUndone/_shared/anettes_coven/05091.js'
+import e05098 from './theCircleUndone/_shared/city_of_sins/05098.js'
+import e05099 from './theCircleUndone/_shared/city_of_sins/05099.js'
+import e05107 from './theCircleUndone/_shared/inexorable_fate/05107.js'
+import e05108 from './theCircleUndone/_shared/inexorable_fate/05108.js'
+import e05286a from './theCircleUndone/inTheClutchesOfChaos/05286a.js'
+import e05286b from './theCircleUndone/inTheClutchesOfChaos/05286b.js'
+import e05287 from './theCircleUndone/inTheClutchesOfChaos/05287.js'
+import e05302 from './theCircleUndone/inTheClutchesOfChaos/05302.js'
+import e05303 from './theCircleUndone/inTheClutchesOfChaos/05303.js'
+import e05311 from './theCircleUndone/inTheClutchesOfChaos/05311.js'
+import e05312 from './theCircleUndone/inTheClutchesOfChaos/05312.js'
+import e05105 from './theCircleUndone/_shared/realm_of_death/05105.js'
+import e05106 from './theCircleUndone/_shared/realm_of_death/05106.js'
+import e05288a from './theCircleUndone/inTheClutchesOfChaos/05288a.js'
+import e05288b from './theCircleUndone/inTheClutchesOfChaos/05288b.js'
+import e05289 from './theCircleUndone/inTheClutchesOfChaos/05289.js'
+import e05304 from './theCircleUndone/inTheClutchesOfChaos/05304.js'
+import e05305 from './theCircleUndone/inTheClutchesOfChaos/05305.js'
+import e05309 from './theCircleUndone/inTheClutchesOfChaos/05309.js'
+import e05310 from './theCircleUndone/inTheClutchesOfChaos/05310.js'
+import e05095 from './theCircleUndone/_shared/silver_twilight_lodge/05095.js'
+import e05096 from './theCircleUndone/_shared/silver_twilight_lodge/05096.js'
+import e05097 from './theCircleUndone/_shared/silver_twilight_lodge/05097.js'
+import e05100 from './theCircleUndone/_shared/spectral_predators/05100.js'
+import e05101 from './theCircleUndone/_shared/spectral_predators/05101.js'
+import e05102 from './theCircleUndone/_shared/spectral_predators/05102.js'
+import e05086 from './theCircleUndone/_shared/the_watcher/05086.js'
+import e05087 from './theCircleUndone/_shared/the_watcher/05087.js'
+import e05103 from './theCircleUndone/_shared/trapped_spirits/05103.js'
+import e05104 from './theCircleUndone/_shared/trapped_spirits/05104.js'
+import e05092 from './theCircleUndone/_shared/witchcraft/05092.js'
+import e05093 from './theCircleUndone/_shared/witchcraft/05093.js'
+import e05094 from './theCircleUndone/_shared/witchcraft/05094.js'
+import e05066 from './theCircleUndone/atDeathsDoorstep/05066.js'
+import e05067 from './theCircleUndone/atDeathsDoorstep/05067.js'
+import e05068 from './theCircleUndone/atDeathsDoorstep/05068.js'
+import e05069 from './theCircleUndone/atDeathsDoorstep/05069.js'
+import e05070 from './theCircleUndone/atDeathsDoorstep/05070.js'
+import e05071 from './theCircleUndone/atDeathsDoorstep/05071.js'
+import e05072 from './theCircleUndone/atDeathsDoorstep/05072.js'
+import e05073 from './theCircleUndone/atDeathsDoorstep/05073.js'
+import e05074 from './theCircleUndone/atDeathsDoorstep/05074.js'
+import e05075 from './theCircleUndone/atDeathsDoorstep/05075.js'
+import e05076 from './theCircleUndone/atDeathsDoorstep/05076.js'
+import e05077 from './theCircleUndone/atDeathsDoorstep/05077.js'
+import e05078 from './theCircleUndone/_shared/at_deaths_doorstep/05078.js'
+import e05079 from './theCircleUndone/_shared/at_deaths_doorstep/05079.js'
+import e05080 from './theCircleUndone/_shared/at_deaths_doorstep/05080.js'
+import e05081 from './theCircleUndone/_shared/at_deaths_doorstep/05081.js'
+import e05082 from './theCircleUndone/_shared/at_deaths_doorstep/05082.js'
+import e05083 from './theCircleUndone/_shared/at_deaths_doorstep/05083.js'
+import e05084 from './theCircleUndone/_shared/at_deaths_doorstep/05084.js'
+import e05085 from './theCircleUndone/_shared/at_deaths_doorstep/05085.js'
+import e05085b from './theCircleUndone/atDeathsDoorstep/05085b.js'
+import e05044 from './theCircleUndone/disappearanceAtTheTwilightEstate/05044.js'
+import e05045 from './theCircleUndone/disappearanceAtTheTwilightEstate/05045.js'
+import e05198 from './theCircleUndone/forTheGreaterGood/05198.js'
+import e05199 from './theCircleUndone/forTheGreaterGood/05199.js'
+import e05200 from './theCircleUndone/forTheGreaterGood/05200.js'
+import e05201 from './theCircleUndone/forTheGreaterGood/05201.js'
+import e05202 from './theCircleUndone/forTheGreaterGood/05202.js'
+import e05203 from './theCircleUndone/forTheGreaterGood/05203.js'
+import e05204 from './theCircleUndone/forTheGreaterGood/05204.js'
+import e05205 from './theCircleUndone/forTheGreaterGood/05205.js'
+import e05206 from './theCircleUndone/forTheGreaterGood/05206.js'
+import e05207 from './theCircleUndone/forTheGreaterGood/05207.js'
+import e05208 from './theCircleUndone/forTheGreaterGood/05208.js'
+import e05209 from './theCircleUndone/forTheGreaterGood/05209.js'
+import e05210 from './theCircleUndone/forTheGreaterGood/05210.js'
+import e05211 from './theCircleUndone/forTheGreaterGood/05211.js'
+import e05212 from './theCircleUndone/forTheGreaterGood/05212.js'
+import e05213 from './theCircleUndone/forTheGreaterGood/05213.js'
+import e05214 from './theCircleUndone/forTheGreaterGood/05214.js'
+import e05215 from './theCircleUndone/forTheGreaterGood/05215.js'
+import e05216 from './theCircleUndone/forTheGreaterGood/05216.js'
+import e05217 from './theCircleUndone/forTheGreaterGood/05217.js'
+import e05217b from './theCircleUndone/forTheGreaterGood/05217b.js'
+import e05218 from './theCircleUndone/forTheGreaterGood/05218.js'
+import e05219 from './theCircleUndone/forTheGreaterGood/05219.js'
+import e05220 from './theCircleUndone/forTheGreaterGood/05220.js'
+import e05221 from './theCircleUndone/forTheGreaterGood/05221.js'
+import e05222 from './theCircleUndone/forTheGreaterGood/05222.js'
+import e05223 from './theCircleUndone/forTheGreaterGood/05223.js'
+import e05224 from './theCircleUndone/forTheGreaterGood/05224.js'
+import e05225 from './theCircleUndone/forTheGreaterGood/05225.js'
+import e05226 from './theCircleUndone/forTheGreaterGood/05226.js'
+import e05227 from './theCircleUndone/forTheGreaterGood/05227.js'
+import e05228 from './theCircleUndone/forTheGreaterGood/05228.js'
+import e05285 from './theCircleUndone/inTheClutchesOfChaos/05285.js'
+import e05290 from './theCircleUndone/inTheClutchesOfChaos/05290.js'
+import e05291 from './theCircleUndone/inTheClutchesOfChaos/05291.js'
+import e05292 from './theCircleUndone/inTheClutchesOfChaos/05292.js'
+import e05293 from './theCircleUndone/inTheClutchesOfChaos/05293.js'
+import e05294 from './theCircleUndone/inTheClutchesOfChaos/05294.js'
+import e05295 from './theCircleUndone/inTheClutchesOfChaos/05295.js'
+import e05296 from './theCircleUndone/inTheClutchesOfChaos/05296.js'
+import e05297 from './theCircleUndone/inTheClutchesOfChaos/05297.js'
+import e05298 from './theCircleUndone/inTheClutchesOfChaos/05298.js'
+import e05299 from './theCircleUndone/inTheClutchesOfChaos/05299.js'
+import e05300 from './theCircleUndone/inTheClutchesOfChaos/05300.js'
+import e05301 from './theCircleUndone/inTheClutchesOfChaos/05301.js'
+import e05306 from './theCircleUndone/inTheClutchesOfChaos/05306.js'
+import e05307 from './theCircleUndone/inTheClutchesOfChaos/05307.js'
+import e05308 from './theCircleUndone/inTheClutchesOfChaos/05308.js'
+import e01179 from './shared/agents_of_shub/01179.js'
+import e01180 from './shared/agents_of_shub/01180.js'
+import e05051 from './theCircleUndone/theWitchingHour/05051.js'
+import e05052 from './theCircleUndone/theWitchingHour/05052.js'
+import e05053 from './theCircleUndone/theWitchingHour/05053.js'
+import e05054 from './theCircleUndone/theWitchingHour/05054.js'
+import e05055 from './theCircleUndone/theWitchingHour/05055.js'
+import e05055b from './theCircleUndone/theWitchingHour/05055b.js'
+import e05056 from './theCircleUndone/theWitchingHour/05056.js'
+import e05057 from './theCircleUndone/_shared/the_witching_hour/05057.js'
+import e05058 from './theCircleUndone/theWitchingHour/05058.js'
+import e05059 from './theCircleUndone/theWitchingHour/05059.js'
+import e05060 from './theCircleUndone/theWitchingHour/05060.js'
+import e05061 from './theCircleUndone/theWitchingHour/05061.js'
+import e05062 from './theCircleUndone/theWitchingHour/05062.js'
+import e05063 from './theCircleUndone/theWitchingHour/05063.js'
+import e05064 from './theCircleUndone/theWitchingHour/05064.js'
+import e05326 from './theCircleUndone/beforeTheBlackThrone/05326.js'
+import e05327 from './theCircleUndone/beforeTheBlackThrone/05327.js'
+import e05328 from './theCircleUndone/beforeTheBlackThrone/05328.js'
+import e05329 from './theCircleUndone/beforeTheBlackThrone/05329.js'
+import e05330 from './theCircleUndone/beforeTheBlackThrone/05330.js'
+import e05331 from './theCircleUndone/beforeTheBlackThrone/05331.js'
+import e05332 from './theCircleUndone/beforeTheBlackThrone/05332.js'
+import e05333 from './theCircleUndone/beforeTheBlackThrone/05333.js'
+import e05334 from './theCircleUndone/beforeTheBlackThrone/05334.js'
+import e05335 from './theCircleUndone/beforeTheBlackThrone/05335.js'
+import e05336 from './theCircleUndone/beforeTheBlackThrone/05336.js'
+import e05337 from './theCircleUndone/beforeTheBlackThrone/05337.js'
+import e05338 from './theCircleUndone/beforeTheBlackThrone/05338.js'
+import e05339 from './theCircleUndone/beforeTheBlackThrone/05339.js'
+import e05340 from './theCircleUndone/beforeTheBlackThrone/05340.js'
+import e05341 from './theCircleUndone/beforeTheBlackThrone/05341.js'
+import e05342 from './theCircleUndone/beforeTheBlackThrone/05342.js'
+import e05343 from './theCircleUndone/beforeTheBlackThrone/05343.js'
+import e05344 from './theCircleUndone/beforeTheBlackThrone/05344.js'
+import e05345 from './theCircleUndone/beforeTheBlackThrone/05345.js'
+import e05346 from './theCircleUndone/beforeTheBlackThrone/05346.js'
+import e05162 from './theCircleUndone/theWagesOfSin/05162.js'
+import e05163 from './theCircleUndone/theWagesOfSin/05163.js'
+import e05164 from './theCircleUndone/theWagesOfSin/05164.js'
+import e05165 from './theCircleUndone/theWagesOfSin/05165.js'
+import e05166 from './theCircleUndone/theWagesOfSin/05166.js'
+import e05167 from './theCircleUndone/theWagesOfSin/05167.js'
+import e05168 from './theCircleUndone/theWagesOfSin/05168.js'
+import e05169 from './theCircleUndone/theWagesOfSin/05169.js'
+import e05170 from './theCircleUndone/theWagesOfSin/05170.js'
+import e05171 from './theCircleUndone/theWagesOfSin/05171.js'
+import e05172 from './theCircleUndone/theWagesOfSin/05172.js'
+import e05173 from './theCircleUndone/theWagesOfSin/05173.js'
+import e05174 from './theCircleUndone/theWagesOfSin/05174.js'
+import e05175 from './theCircleUndone/theWagesOfSin/05175.js'
+import e05176 from './theCircleUndone/theWagesOfSin/05176.js'
+import e05177 from './theCircleUndone/theWagesOfSin/05177.js'
+import e05178a from './theCircleUndone/theWagesOfSin/05178a.js'
+import e05178b from './theCircleUndone/theWagesOfSin/05178b.js'
+import e05178c from './theCircleUndone/theWagesOfSin/05178c.js'
+import e05178d from './theCircleUndone/theWagesOfSin/05178d.js'
+import e05178e from './theCircleUndone/theWagesOfSin/05178e.js'
+import e05178f from './theCircleUndone/theWagesOfSin/05178f.js'
+import e05178g from './theCircleUndone/theWagesOfSin/05178g.js'
+import e05178h from './theCircleUndone/theWagesOfSin/05178h.js'
+import e05178i from './theCircleUndone/theWagesOfSin/05178i.js'
+import e05178j from './theCircleUndone/theWagesOfSin/05178j.js'
+import e05178k from './theCircleUndone/theWagesOfSin/05178k.js'
+import e05178l from './theCircleUndone/theWagesOfSin/05178l.js'
+import e05179 from './theCircleUndone/theWagesOfSin/05179.js'
+import e05180 from './theCircleUndone/theWagesOfSin/05180.js'
+import e05181 from './theCircleUndone/theWagesOfSin/05181.js'
+import e05182 from './theCircleUndone/theWagesOfSin/05182.js'
+import e05183 from './theCircleUndone/theWagesOfSin/05183.js'
+import e05184 from './theCircleUndone/theWagesOfSin/05184.js'
+import e05185 from './theCircleUndone/theWagesOfSin/05185.js'
+import e05239 from './theCircleUndone/unionAndDisillusion/05239.js'
+import e05240 from './theCircleUndone/unionAndDisillusion/05240.js'
+import e05241 from './theCircleUndone/unionAndDisillusion/05241.js'
+import e05242 from './theCircleUndone/unionAndDisillusion/05242.js'
+import e05243 from './theCircleUndone/unionAndDisillusion/05243.js'
+import e05244 from './theCircleUndone/unionAndDisillusion/05244.js'
+import e05245 from './theCircleUndone/unionAndDisillusion/05245.js'
+import e05246 from './theCircleUndone/unionAndDisillusion/05246.js'
+import e05247 from './theCircleUndone/unionAndDisillusion/05247.js'
+import e05248 from './theCircleUndone/unionAndDisillusion/05248.js'
+import e05249 from './theCircleUndone/unionAndDisillusion/05249.js'
+import e05250 from './theCircleUndone/unionAndDisillusion/05250.js'
+import e05251 from './theCircleUndone/unionAndDisillusion/05251.js'
+import e05252 from './theCircleUndone/unionAndDisillusion/05252.js'
+import e05253 from './theCircleUndone/unionAndDisillusion/05253.js'
+import e05254 from './theCircleUndone/unionAndDisillusion/05254.js'
+import e05255 from './theCircleUndone/unionAndDisillusion/05255.js'
+import e05256 from './theCircleUndone/unionAndDisillusion/05256.js'
+import e05257 from './theCircleUndone/unionAndDisillusion/05257.js'
+import e05258 from './theCircleUndone/unionAndDisillusion/05258.js'
+import e05259 from './theCircleUndone/unionAndDisillusion/05259.js'
+import e05260 from './theCircleUndone/unionAndDisillusion/05260.js'
+import e05261 from './theCircleUndone/unionAndDisillusion/05261.js'
+import e05262 from './theCircleUndone/unionAndDisillusion/05262.js'
+import e05262b from './theCircleUndone/unionAndDisillusion/05262b.js'
+import e05263 from './theCircleUndone/unionAndDisillusion/05263.js'
+import e05263b from './theCircleUndone/unionAndDisillusion/05263b.js'
+import e05264 from './theCircleUndone/unionAndDisillusion/05264.js'
+import e05264b from './theCircleUndone/unionAndDisillusion/05264b.js'
+import e05265 from './theCircleUndone/unionAndDisillusion/05265.js'
+import e05265b from './theCircleUndone/unionAndDisillusion/05265b.js'
+import e05266 from './theCircleUndone/unionAndDisillusion/05266.js'
+import e05267 from './theCircleUndone/unionAndDisillusion/05267.js'
+import e05268 from './theCircleUndone/unionAndDisillusion/05268.js'
+import e05269 from './theCircleUndone/unionAndDisillusion/05269.js'
+import e05270 from './theCircleUndone/unionAndDisillusion/05270.js'
+import e05271 from './theCircleUndone/unionAndDisillusion/05271.js'
+import e05272 from './theCircleUndone/unionAndDisillusion/05272.js'
+import e01159 from './shared/rats/01159.js'
+import e05121 from './theCircleUndone/theSecretName/05121.js'
+import e05122 from './theCircleUndone/theSecretName/05122.js'
+import e05123 from './theCircleUndone/theSecretName/05123.js'
+import e05124 from './theCircleUndone/theSecretName/05124.js'
+import e05125 from './theCircleUndone/theSecretName/05125.js'
+import e05126 from './theCircleUndone/theSecretName/05126.js'
+import e05127 from './theCircleUndone/theSecretName/05127.js'
+import e05128 from './theCircleUndone/theSecretName/05128.js'
+import e05129 from './theCircleUndone/theSecretName/05129.js'
+import e05130 from './theCircleUndone/theSecretName/05130.js'
+import e05131 from './theCircleUndone/theSecretName/05131.js'
+import e05132 from './theCircleUndone/theSecretName/05132.js'
+import e05133 from './theCircleUndone/theSecretName/05133.js'
+import e05134 from './theCircleUndone/theSecretName/05134.js'
+import e05135 from './theCircleUndone/theSecretName/05135.js'
+import e05136 from './theCircleUndone/theSecretName/05136.js'
+import e05137 from './theCircleUndone/theSecretName/05137.js'
+import e05138 from './theCircleUndone/theSecretName/05138.js'
+import e05139 from './theCircleUndone/theSecretName/05139.js'
+import e05140 from './theCircleUndone/theSecretName/05140.js'
+import e05141 from './theCircleUndone/theSecretName/05141.js'
+import e05142 from './theCircleUndone/theSecretName/05142.js'
+import e05143 from './theCircleUndone/theSecretName/05143.js'
+import e05144 from './theCircleUndone/theSecretName/05144.js'
+import e05145 from './theCircleUndone/theSecretName/05145.js'
+import e05146 from './theCircleUndone/theSecretName/05146.js'
+import e05147 from './theCircleUndone/theSecretName/05147.js'
+import e05148 from './theCircleUndone/theSecretName/05148.js'
+import e05149 from './theCircleUndone/theSecretName/05149.js'
+import e05150 from './theCircleUndone/theSecretName/05150.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -1063,6 +1313,256 @@ export const NON_PLAYER_ENTRY_LIST = [
   e04302,
   e02052,
   e02055,
+  e05088,
+  e05089,
+  e05090,
+  e05091,
+  e05098,
+  e05099,
+  e05107,
+  e05108,
+  e05286a,
+  e05286b,
+  e05287,
+  e05302,
+  e05303,
+  e05311,
+  e05312,
+  e05105,
+  e05106,
+  e05288a,
+  e05288b,
+  e05289,
+  e05304,
+  e05305,
+  e05309,
+  e05310,
+  e05095,
+  e05096,
+  e05097,
+  e05100,
+  e05101,
+  e05102,
+  e05086,
+  e05087,
+  e05103,
+  e05104,
+  e05092,
+  e05093,
+  e05094,
+  e05066,
+  e05067,
+  e05068,
+  e05069,
+  e05070,
+  e05071,
+  e05072,
+  e05073,
+  e05074,
+  e05075,
+  e05076,
+  e05077,
+  e05078,
+  e05079,
+  e05080,
+  e05081,
+  e05082,
+  e05083,
+  e05084,
+  e05085,
+  e05085b,
+  e05044,
+  e05045,
+  e05198,
+  e05199,
+  e05200,
+  e05201,
+  e05202,
+  e05203,
+  e05204,
+  e05205,
+  e05206,
+  e05207,
+  e05208,
+  e05209,
+  e05210,
+  e05211,
+  e05212,
+  e05213,
+  e05214,
+  e05215,
+  e05216,
+  e05217,
+  e05217b,
+  e05218,
+  e05219,
+  e05220,
+  e05221,
+  e05222,
+  e05223,
+  e05224,
+  e05225,
+  e05226,
+  e05227,
+  e05228,
+  e05285,
+  e05290,
+  e05291,
+  e05292,
+  e05293,
+  e05294,
+  e05295,
+  e05296,
+  e05297,
+  e05298,
+  e05299,
+  e05300,
+  e05301,
+  e05306,
+  e05307,
+  e05308,
+  e01179,
+  e01180,
+  e05051,
+  e05052,
+  e05053,
+  e05054,
+  e05055,
+  e05055b,
+  e05056,
+  e05057,
+  e05058,
+  e05059,
+  e05060,
+  e05061,
+  e05062,
+  e05063,
+  e05064,
+  e05326,
+  e05327,
+  e05328,
+  e05329,
+  e05330,
+  e05331,
+  e05332,
+  e05333,
+  e05334,
+  e05335,
+  e05336,
+  e05337,
+  e05338,
+  e05339,
+  e05340,
+  e05341,
+  e05342,
+  e05343,
+  e05344,
+  e05345,
+  e05346,
+  e05162,
+  e05163,
+  e05164,
+  e05165,
+  e05166,
+  e05167,
+  e05168,
+  e05169,
+  e05170,
+  e05171,
+  e05172,
+  e05173,
+  e05174,
+  e05175,
+  e05176,
+  e05177,
+  e05178a,
+  e05178b,
+  e05178c,
+  e05178d,
+  e05178e,
+  e05178f,
+  e05178g,
+  e05178h,
+  e05178i,
+  e05178j,
+  e05178k,
+  e05178l,
+  e05179,
+  e05180,
+  e05181,
+  e05182,
+  e05183,
+  e05184,
+  e05185,
+  e05239,
+  e05240,
+  e05241,
+  e05242,
+  e05243,
+  e05244,
+  e05245,
+  e05246,
+  e05247,
+  e05248,
+  e05249,
+  e05250,
+  e05251,
+  e05252,
+  e05253,
+  e05254,
+  e05255,
+  e05256,
+  e05257,
+  e05258,
+  e05259,
+  e05260,
+  e05261,
+  e05262,
+  e05262b,
+  e05263,
+  e05263b,
+  e05264,
+  e05264b,
+  e05265,
+  e05265b,
+  e05266,
+  e05267,
+  e05268,
+  e05269,
+  e05270,
+  e05271,
+  e05272,
+  e01159,
+  e05121,
+  e05122,
+  e05123,
+  e05124,
+  e05125,
+  e05126,
+  e05127,
+  e05128,
+  e05129,
+  e05130,
+  e05131,
+  e05132,
+  e05133,
+  e05134,
+  e05135,
+  e05136,
+  e05137,
+  e05138,
+  e05139,
+  e05140,
+  e05141,
+  e05142,
+  e05143,
+  e05144,
+  e05145,
+  e05146,
+  e05147,
+  e05148,
+  e05149,
+  e05150,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

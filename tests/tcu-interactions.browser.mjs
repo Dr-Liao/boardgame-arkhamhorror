@@ -27,6 +27,15 @@ mkdirSync(output, { recursive: true })
 
 const STORY = ['05046', '05047', '05048', '05049']
 const STORY_NAMES = ['加弗瑞拉·米兹拉克', '杰罗姆·戴维斯', '瓦伦蒂诺·里瓦斯', '佩妮·怀特']
+// 05046–05049 的真实印刷身份。observation 对 storyInvestigator 只放行这些公开卡面字段，
+// 面板据此画卡面/职业/四维/生命理智；这里按投影形状构造，避免测试再维护一份假数据。
+const STORY_IDENTITY = {
+  '05046': { klass: 'neutral', classLabel: '中立', subtitle: '私人警卫', stats: { willpower: 3, intellect: 2, combat: 4, agility: 1 }, health: 8, sanity: 4 },
+  '05047': { klass: 'neutral', classLabel: '中立', subtitle: '约瑟夫的秘书', stats: { willpower: 2, intellect: 4, combat: 1, agility: 3 }, health: 4, sanity: 8 },
+  '05048': { klass: 'neutral', classLabel: '中立', subtitle: '富有的慈善家', stats: { willpower: 1, intellect: 3, combat: 2, agility: 4 }, health: 5, sanity: 7 },
+  '05049': { klass: 'neutral', classLabel: '中立', subtitle: '约瑟夫的管家', stats: { willpower: 4, intellect: 1, combat: 3, agility: 2 }, health: 7, sanity: 5 },
+}
+const STORY_VITALS = ['生命 8 · 理智 4', '生命 4 · 理智 8', '生命 5 · 理智 7', '生命 7 · 理智 5']
 
 // 用真实引擎产出四个面板要的会话状态（与 tests/tcu-interactions.test.mjs 同一套构造）。
 function buildPayload() {
@@ -53,9 +62,7 @@ function buildPayload() {
     source: { kind: 'storyInvestigator', remaining: [...STORY], seatCount: 1 },
     prompt: '选择你本次冒险使用的故事调查员。',
     options: STORY.map((code, index) => ({
-      id: code, label: STORY_NAMES[index], name: STORY_NAMES[index],
-      klass: 'neutral', classLabel: '中立', subtitle: '私人警卫',
-      stats: { willpower: 3, intellect: 3, combat: 4, agility: 2 }, health: 8, sanity: 4,
+      id: code, label: STORY_NAMES[index], name: STORY_NAMES[index], ...STORY_IDENTITY[code],
     })),
   }
   const story = {
@@ -125,10 +132,16 @@ async function harness(payload) {
     return el
   }
   const h = createH()
+  // 卡面放大走真实卡牌模块（与游戏内同一个 Alt 悬停交互），用于验证「可以 alt 的卡面」。
+  const { installCardZoom } = await import('/mods/arkhamhorror/card-zoom.js')
+  installCardZoom(h)
   const mod = await import('/mods/arkhamhorror/tcu-ui.js')
   const submitted = []
   const onSubmit = move => { submitted.push({ action: move.action, choiceId: move.choiceId, optionId: String(move.optionId) }) }
   window.__tcuSubmitted = submitted
+  const inspected = []
+  window.__tcuInspected = inspected
+  const inspectCard = code => { inspected.push(String(code)) }
   const host = document.createElement('main')
   host.id = 'tcu-harness'
   host.className = 'ah-table ah-calm ah-theme'
@@ -144,7 +157,7 @@ async function harness(payload) {
   }
   const tarotModel = mod.tarotPickerModel(payload.tarot)
   section('pane-tarot', mod.renderTarotPicker(h, tarotModel, { onSubmit }))
-  section('pane-story', mod.renderStoryInvestigatorPicker(h, mod.storyInvestigatorPickerModel(payload.story), { onSubmit }))
+  section('pane-story', mod.renderStoryInvestigatorPicker(h, mod.storyInvestigatorPickerModel(payload.story), { onSubmit, inspectCard }))
   section('pane-haunted', mod.renderHauntedChoice(h, mod.hauntedChoiceModel(payload.haunted), { onSubmit }))
   const campaignModel = mod.tcuCampaignModel(payload.campaign)
   section('pane-campaign', mod.renderTcuCampaignPanel(h, campaignModel))
@@ -181,6 +194,11 @@ async function harness(payload) {
       candidates: document.querySelectorAll('#pane-story .ah-tcu-option').length,
       disabled: [...document.querySelectorAll('#pane-story .ah-tcu-option')].filter(button => button.disabled).length,
       names: [...document.querySelectorAll('#pane-story .ah-story-face strong')].map(node => node.textContent),
+      classes: [...document.querySelectorAll('#pane-story .ah-story-class')].map(node => node.textContent),
+      stats: document.querySelectorAll('#pane-story .ah-story-stat').length,
+      vitals: [...document.querySelectorAll('#pane-story .ah-story-vitals')].map(node => node.textContent),
+      arts: [...document.querySelectorAll('#pane-story .ah-story-art .ah-table-art')].map(node => node.dataset.artCode),
+      details: [...document.querySelectorAll('#pane-story [data-story-detail]')].map(node => node.dataset.storyDetail),
     },
     haunted: {
       rows: document.querySelectorAll('#pane-haunted .ah-haunted-row').length,
@@ -230,6 +248,13 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     expect(result.story.candidates).toBe(4)
     expect(result.story.disabled).toBe(1)
     expect(result.story.names).toEqual(STORY_NAMES)
+    // 卡面身份与卡图：职业、副标题、四维、生命/理智都来自服务端选项投影；
+    // 每位候选都画真实卡面（可 Alt 放大），并有独立「详情」按钮（点卡=选择，点详情=档案）。
+    expect(result.story.classes).toEqual(['中立', '中立', '中立', '中立'])
+    expect(result.story.stats).toBe(16)
+    expect(result.story.vitals).toEqual(STORY_VITALS)
+    expect(result.story.arts).toEqual(STORY)
+    expect(result.story.details).toEqual(STORY)
     // 闹鬼：3 条能力按 1/2/3 排序，最后一条没有合法目标。
     expect(result.haunted.rows).toBe(3)
     expect(result.haunted.disabled).toBe(1)
@@ -260,6 +285,24 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
       { action: 'choose', choiceId: 'q3-0', optionId: result.haunted.options[1] },
       { action: 'choose', choiceId: 'q1-0', optionId: tarotIds[2] },
     ])
+    // 「详情」按钮只看档案、不提交选择：点完之后卡号按候选顺序进入 inspectCard 回调。
+    const submittedBeforeDetail = submitted.length
+    await page.locator('#pane-story [data-story-detail]').first().click()
+    expect(await page.evaluate(() => window.__tcuInspected)).toEqual(['05046'])
+    expect(await page.evaluate(() => window.__tcuSubmitted.length)).toBe(submittedBeforeDetail)
+
+    // 卡面「可以 Alt」：按住 Alt 悬停第一张卡 → 放大卡图 + 规则文字；松开即收起。
+    const zoom = page.locator('.ah-card-zoom')
+    await expect(zoom).toHaveCount(0)
+    await page.locator('#pane-story .ah-story-art .ah-table-art').first().hover()
+    await page.keyboard.down('Alt')
+    await expect(zoom).toBeVisible()
+    await expect(zoom).toHaveAttribute('data-zoom-for', '05046')
+    await expect(zoom.locator('h3')).toHaveText(STORY_NAMES[0])
+    await expect(zoom.locator('.ah-card-zoom-rules')).not.toBeEmpty()
+    await page.keyboard.up('Alt')
+    await expect(zoom).toHaveCount(0)
+
     // 置灰的选项点不动：第 4 位故事调查员没有动作，点击不产生提交。
     const before = submitted.length
     await page.locator('#pane-story .ah-tcu-option').nth(3).click({ force: true }).catch(() => {})

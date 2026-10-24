@@ -20,7 +20,7 @@
     "verified": 183,
     "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 376
+    "testsPassed": 377
   },
   "testFiles": [
     {
@@ -53,7 +53,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
-      "sha256": "3819a44c38f8b6795cfd2a1cb7c9dd3b534be4fcbc1724bf7a21872a575199f3"
+      "sha256": "c9da583ccf8421c1f42cd2c404fdcba5287d4e51950ce0212ec9874176f6ff9b"
     },
     {
       "file": "games/arkhamhorror/tests/core-n4.test.mjs",

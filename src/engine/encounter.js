@@ -78,7 +78,11 @@ export function createEncounter(deps) {
 
 function drawEncounter(state, inv, events, options = {}) {
   // P2.2：deck 缺省是普通遭遇牌库；传 'spectral' 时读写第二遭遇牌堆的两堆。
-  const deckId = options.deck || 'encounter'
+  // P8：章节可以用 behavior.encounterDeckFor(state, inv) 在**抽牌时**决定从哪一堆抽
+  // （《恶罪报应》等：调查员在幽灵地点时从幽灵遭遇牌堆抽）；显式 options.deck 优先。
+  const deckId = options.deck
+    || scenarioBehavior(state).encounterDeckFor?.(state, inv)
+    || 'encounter'
   const piles = deckId === 'encounter' ? null : extraDeckPiles(state, deckId)
   const deck = () => (piles ? piles.deck : state.encounterDeck)
   const discard = () => (piles ? piles.discard : state.encounterDiscard)

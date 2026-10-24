@@ -6,4 +6,4 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-export default { code: '01169', scope: 'enemy', enemySpawnRule: { doomOnSpawn: 1 } }
+export default { implemented: true, code: '01169', scope: 'enemy', enemySpawnRule: { doomOnSpawn: 1 } }

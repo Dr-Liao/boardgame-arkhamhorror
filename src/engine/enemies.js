@@ -437,7 +437,8 @@ function autoEvadeEnemy(state, enemy, events) {
   info(state, events, `💨 「${enemy.name}」被横置并脱离交战。`)
 }
 
-// 冷漠（aloof）敌人不会主动与调查员交战，需由调查员主动交战或攻击。
+// 冷漠（aloof）敌人不会主动与调查员交战；未交战时也不能被攻击，需要调查员主动交战
+// （或使用写明「忽略冷漠」的攻击，见 hidden-rules.js 的 aloofPreventsAttack）。
 
 function applyHarm(state, inv, damage, horror, events, direct, attack = null, assetsFirst = false, strategy = null) {
   // 「在你受到恐惧时，如果这些恐惧中至少有 1 点没有分配给 X，受到 1 点伤害」（03182a 丹尼尔）。

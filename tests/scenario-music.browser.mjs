@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { SCENARIO_MUSIC } from '../web/scenario-music.js'
 import { MUSIC_TRACKS } from '../web/music-player.js'
 
-test('19 个关卡切换正确歌单和音频，自动轮播与暂停不串曲', async ({ page }) => {
+test('全部已配置关卡切换正确歌单和音频，自动轮播与暂停不串曲', async ({ page }) => {
   test.setTimeout(90_000)
   const errors = []; page.on('pageerror', error => errors.push(error.message))
   await page.route('**/scenario-music-fixture', route => route.fulfill({ contentType: 'text/html', body: '<main></main>' }))

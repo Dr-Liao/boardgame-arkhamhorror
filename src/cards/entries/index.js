@@ -492,6 +492,88 @@ import e05046 from './05046.js'
 import e05047 from './05047.js'
 import e05048 from './05048.js'
 import e05049 from './05049.js'
+import e05042 from './05042.js'
+import e05278 from './05278.js'
+import e05314 from './05314.js'
+import e05315 from './05315.js'
+import e05024 from './05024.js'
+import e05109 from './05109.js'
+import e05113 from './05113.js'
+import e05186 from './05186.js'
+import e05196 from './05196.js'
+import e05232 from './05232.js'
+import e05041 from './05041.js'
+import e05275 from './05275.js'
+import e05277 from './05277.js'
+import e05279 from './05279.js'
+import e05280 from './05280.js'
+import e05281 from './05281.js'
+import e05282 from './05282.js'
+import e05283 from './05283.js'
+import e05110 from './05110.js'
+import e05111 from './05111.js'
+import e05114 from './05114.js'
+import e05313 from './05313.js'
+import e05316 from './05316.js'
+import e05317 from './05317.js'
+import e05318 from './05318.js'
+import e05319 from './05319.js'
+import e05321 from './05321.js'
+import e05322 from './05322.js'
+import e05323 from './05323.js'
+import e05020 from './05020.js'
+import e05021 from './05021.js'
+import e05027 from './05027.js'
+import e05031 from './05031.js'
+import e05035 from './05035.js'
+import e05039 from './05039.js'
+import e05040 from './05040.js'
+import e05116 from './05116.js'
+import e05117 from './05117.js'
+import e05118 from './05118.js'
+import e05119 from './05119.js'
+import e05151 from './05151.js'
+import e05152 from './05152.js'
+import e05153 from './05153.js'
+import e05154 from './05154.js'
+import e05155 from './05155.js'
+import e05156 from './05156.js'
+import e05157 from './05157.js'
+import e05158 from './05158.js'
+import e05159 from './05159.js'
+import e05160 from './05160.js'
+import e05187 from './05187.js'
+import e05188 from './05188.js'
+import e05189 from './05189.js'
+import e05190 from './05190.js'
+import e05022 from './05022.js'
+import e05026 from './05026.js'
+import e05029 from './05029.js'
+import e05030 from './05030.js'
+import e05032 from './05032.js'
+import e05033 from './05033.js'
+import e05034 from './05034.js'
+import e05036 from './05036.js'
+import e05037 from './05037.js'
+import e05038 from './05038.js'
+import e05191 from './05191.js'
+import e05192 from './05192.js'
+import e05193 from './05193.js'
+import e05194 from './05194.js'
+import e05195 from './05195.js'
+import e05229 from './05229.js'
+import e05230 from './05230.js'
+import e05231 from './05231.js'
+import e05233 from './05233.js'
+import e05234 from './05234.js'
+import e05235 from './05235.js'
+import e05236 from './05236.js'
+import e05237 from './05237.js'
+import e05273 from './05273.js'
+import e05274 from './05274.js'
+import e05276 from './05276.js'
+import e05320 from './05320.js'
+import e05324 from './05324.js'
 
 export const CARD_ENTRY_LIST = [
   e01001,
@@ -985,6 +1067,88 @@ export const CARD_ENTRY_LIST = [
   e05047,
   e05048,
   e05049,
+  e05042,
+  e05278,
+  e05314,
+  e05315,
+  e05024,
+  e05109,
+  e05113,
+  e05186,
+  e05196,
+  e05232,
+  e05041,
+  e05275,
+  e05277,
+  e05279,
+  e05280,
+  e05281,
+  e05282,
+  e05283,
+  e05110,
+  e05111,
+  e05114,
+  e05313,
+  e05316,
+  e05317,
+  e05318,
+  e05319,
+  e05321,
+  e05322,
+  e05323,
+  e05020,
+  e05021,
+  e05027,
+  e05031,
+  e05035,
+  e05039,
+  e05040,
+  e05116,
+  e05117,
+  e05118,
+  e05119,
+  e05151,
+  e05152,
+  e05153,
+  e05154,
+  e05155,
+  e05156,
+  e05157,
+  e05158,
+  e05159,
+  e05160,
+  e05187,
+  e05188,
+  e05189,
+  e05190,
+  e05022,
+  e05026,
+  e05029,
+  e05030,
+  e05032,
+  e05033,
+  e05034,
+  e05036,
+  e05037,
+  e05038,
+  e05191,
+  e05192,
+  e05193,
+  e05194,
+  e05195,
+  e05229,
+  e05230,
+  e05231,
+  e05233,
+  e05234,
+  e05235,
+  e05236,
+  e05237,
+  e05273,
+  e05274,
+  e05276,
+  e05320,
+  e05324,
 ]
 
 export const CARD_ENTRY_BY_CODE = new Map(CARD_ENTRY_LIST.map(entry => [entry.code, entry]))

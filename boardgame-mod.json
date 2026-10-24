@@ -18,6 +18,7 @@
     "web/img/.translation/",
     "web/audio/music/common/",
     "web/audio/music/campaigns/",
+    "web/audio/music/playlists.json",
     "web/img/backs/back_artifact.jpg",
     "web/img/backs/back_cthulhu_deck.jpg",
     "web/img/backs/back_encounter.jpg",
@@ -54,6 +55,8 @@
   "portableNotes": [
     "诡镇存档管理分为单人和联机。房主在“联机存档”中选择“创建房间继续”，朋友按原席位加入并准备，再继续原有进度。",
     "本包不预装诡镇奇谈卡牌图片：联网时已显示的卡图会自动缓存到 app/games/arkhamhorror/web/img/，以后可离线复用。\n   如需一次获得完整离线卡图，请下载“BoardgameHall-ArkhamCards-*.zip”卡图资源包，解压到本文件夹并合并 app 文件夹，然后重启大厅。",
-    "本包也不预装背景音乐：联网时首次播放的曲目会从 incompetech.com 下载并缓存到 app/games/arkhamhorror/web/audio/music/，以后可离线播放。"
+    "本包不预装背景音乐：首次播放优先从 CDN 缓存到 games/arkhamhorror/web/audio/music/common/，以后可离线播放。",
+    "自定义音乐：将音频放入 games/arkhamhorror/web/audio/music/campaigns/<战役>/<关卡>/，切关、展开播放器或点击刷新歌单后自动加入。各目录附有添加音乐.txt。",
+    "首次打开音乐播放器后生成 web/audio/music/playlists.json，可用文本编辑器修改每关曲目 ID、顺序和 includeCustom。playlists.example.json 为默认模板；更新会保留玩家配置和自定义歌曲。"
   ]
 }

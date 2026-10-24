@@ -127,7 +127,9 @@ function makeInvestigator(invDef, seat) {
 function drawOpeningHand(state, inv) {
   const weaknesses = []
   // Phase 5（5a-33）：起手张数由调查员能力数据声明（默认 5）。
-  const target = investigatorRule(inv.code)?.openingHandSize || 5
+  // 第 5 步 P7：在场永久卡的条目级修正（05276 苦心钻研）在这里叠加；读点只有这一处。
+  const target = (investigatorRule(inv.code)?.openingHandSize || 5)
+    + (inv.assets || []).reduce((sum, asset) => sum + (registeredEntry(asset.code)?.openingHandBonus || 0), 0)
   while (inv.hand.length < target && inv.deck.length) {
     const code = inv.deck.pop()
     if (isWeaknessCode(code)) weaknesses.push(code)
@@ -155,6 +157,19 @@ function buildInvestigatorsDeck(state, inv, def, events) {
     return built
   }
   return buildDeck(def, opts)
+}
+
+// 故事调查员的「固定属性」：职业与四项技能按卡面印刷值写入（生命/理智已在上方按新卡号写入）。
+// 没有这一步，序章会沿用开局时原本调查员的技能与职业（例如普雷斯顿 05003 的 1/1/1/1），
+// 序章里的检定、UI 人物面板与 AI 决策都会按错误数值结算。
+function applyStoryInvestigatorStats(inv, def) {
+  if (!def) return
+  inv.nameEn = def.name
+  inv.klass = def.klass
+  inv.willpower = def.willpower
+  inv.intellect = def.intellect
+  inv.combat = def.combat
+  inv.agility = def.agility
 }
 
 function prepareInvestigator(state, inv, events, startLocation) {
@@ -209,7 +224,9 @@ function prepareInvestigator(state, inv, events, startLocation) {
   inv.location = startLocation
   inv.handSlotsPenalty = state.locations.find(location => location.id === startLocation)?.handSlotsPenalty || 0
   if (story) {
-    // 无牌组：deck/hand/discard 清空，专属设置卡直接入场（不占 30 张）。
+    // 无牌组故事调查员：职业/技能用卡面印刷的固定属性，deck/hand/discard 清空，
+    // 专属设置卡直接入场（不占 30 张）。
+    applyStoryInvestigatorStats(inv, def)
     const { setupCards } = prepareStoryInvestigator(inv, { setupCards: storyInvestigatorSetupCards(state, inv.code) })
     for (const code of setupCards) inv.assets.push(newPlayerAssetInstance(state, inv, code))
     inv.actionsLeft = 3 + extraActionBonus(inv)
@@ -587,7 +604,8 @@ function startScenario(state, index, events) {
       })
     }
   } else if (state.storyInvestigators) {
-    restoreStoryInvestigators(state)
+    // 换回原本的调查员：职业/技能按 originals 快照恢复；旧存档没有快照时用卡面定义兜底。
+    restoreStoryInvestigators(state, { cardInfo: code => ALL_INVESTIGATORS[code] || null })
     info(state, events, '📜 故事调查员退场，队伍换回原本的调查员。')
   }
 

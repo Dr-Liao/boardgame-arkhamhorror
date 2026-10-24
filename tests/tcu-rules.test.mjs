@@ -162,16 +162,18 @@ test('P4 规则书 16 条：分组、拼音索引与相关跳转', () => {
 test('P4 规则描述与当前实现边界一致（不得把未实现写成可用）', () => {
   const body = id => ruleById(id).body.join('')
   const campaign = body('tcuCampaign')
-  // 战役总览：九章中文名、仅图鉴状态、审计账本位置、袋数与记录键现状。
+  // 战役总览：九章中文名、战役 P10 起从大厅开放（playable）、审计账本位置、袋数与记录键现状。
   for (const chapter of chapters) assert.ok(campaign.includes(chapter.name), `战役条目缺少章节「${chapter.name}」`)
-  assert.match(campaign, /catalog-only/)
-  assert.match(campaign, /仅图鉴/)
+  assert.match(campaign, /playable/)
+  assert.match(campaign, /tcu-all-card-acceptance\.json/)
   assert.match(campaign, /audit\/tcu-migration\.json/)
   assert.match(campaign, /13 枚/)
   assert.match(campaign, /377/)
-  // 逐章混乱符号尚未实现，必须显式写出来。
-  assert.match(body('tcuChaos'), /尚未实现/)
+  assert.match(campaign, /64 个键/)
+  // P8：逐章混乱符号已接线；规则书必须写清实现位置，不得再把未实现写成可用或反过来。
+  assert.match(body('tcuChaos'), /resolveChaosToken/)
   assert.match(body('tcuChaos'), /tcu-chaos\.js/)
+  assert.match(body('tcuChaos'), /changeChaosBag/)
   // 关键实现细节必须写对，避免规则书与代码各说一套。
   assert.match(body('tcuHaunted'), /调查检定/)
   assert.match(body('tcuHaunted'), /hauntedAbilitiesAt/)
@@ -373,13 +375,13 @@ test('P4 九章剧本参考卡与混乱符号直达', () => {
   assert.deepEqual(tcuMapped.sort(), [...chapterIds].sort())
 })
 
-test('P4 机制登记与关键词表一致（tcuChaos 留给 P8）', () => {
+test('P4 机制登记与关键词表一致（P8 起 tcuChaos 已接线）', () => {
   const tcuMechanics = [...supportedMechanics].filter(id => id.startsWith('tcu')).sort()
   const expected = TCU_KEYWORDS.filter(keyword => keyword.ruleOwned && keyword.implemented !== false).map(keyword => keyword.ruleId).sort()
   assert.deepEqual(tcuMechanics, expected)
   assert.deepEqual(missingMechanics(expected), [])
-  // 逐章混乱符号表还没实现：不得提前登记，否则章节声明它会缺少真实能力。
-  assert.deepEqual(missingMechanics(['tcuChaos']), ['tcuChaos'])
+  // P8：逐章混乱符号表已由各章 resolveChaosToken 接线，因此必须登记。
+  assert.deepEqual(missingMechanics(['tcuChaos']), [])
   for (const keyword of TCU_KEYWORDS.filter(item => item.ruleOwned)) {
     assert.equal(keyword.implemented !== false, supportedMechanics.has(keyword.ruleId), `${keyword.id} 的实现状态与登记不一致`)
   }

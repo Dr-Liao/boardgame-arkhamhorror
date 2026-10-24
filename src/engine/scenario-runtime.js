@@ -27,6 +27,7 @@ export function createScenarioRuntime(deps) {
     advanceAct,
     advanceAgenda,
     aliveInvestigators,
+    aloofPreventsAttack,
     applyDamage,
     applyHarm,
     applyHorror,
@@ -202,6 +203,10 @@ function scenarioRuntime(state, events, testSource = null) {
     // 自己的攻击循环里也能用同一份判定。Phase 3（D1）起，敌人自己的卡面声明优先。
     cannotAttack: enemy => enemyCannotAttack(state, enemy),
     cannotBeAttacked: enemy => enemyCannotBeAttacked(state, enemy),
+    // 冷漠（aloof）：剧本自己的攻击行动在列出目标和结算前要问这个读点，
+    // 否则会绕过 doFight 的冷漠限制（如课外活动的炼金试剂攻击）。
+    aloofPreventsAttack: (enemy, inv = state.investigators[state.currentSeat], options = {}) =>
+      aloofPreventsAttack(state, inv, enemy, options),
     damage: (seat, n) => applyDamage(state, state.investigators[seat], n, events),
     horror: (seat, n) => applyHorror(state, state.investigators[seat], n, events),
     healDamage: (seat, n) => {

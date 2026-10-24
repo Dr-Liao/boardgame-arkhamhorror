@@ -1,6 +1,7 @@
-import { getCardPresentation, cardFaceText, TYPE_LABELS } from './catalog.js'
+import { getCardPresentation, cardFaceText, typeLabel, cardDisplayName, cardDisplayText, cardDisplayFlavor, cardDisplaySubname, cardDisplayTraits } from './catalog.js'
 import { renderRulesText } from './card-text.js'
 import { tableArt } from './table-art.js'
+import { t } from './i18n.js'
 
 const CLASS_LABELS = { guardian: '守卫者', seeker: '探求者', rogue: '游荡者', mystic: '秘术师', survivor: '幸存者', neutral: '中立', mythos: '神话' }
 const LANDSCAPE_TYPES = ['investigator', 'location', 'act', 'agenda']
@@ -39,18 +40,20 @@ export function installCardZoom(h) {
   }
 
   const describe = (panel, card, linked, face, fallbackName) => {
+    // cardFaceText 负责背面关联面与卡背占位文本；名称/文本再统一走 cardDisplay*（§8.7 第二步）。
     const text = cardFaceText(card, linked, face)
-    const traits = (text.traitsZh?.length ? text.traitsZh : text.traits || []).join(' · ')
-    const meta = face === 'back' ? '背面' : [TYPE_LABELS[text.type] || text.type, CLASS_LABELS[text.klass] || text.klass,
+    const traits = cardDisplayTraits(text).join(' · ')
+    const meta = face === 'back' ? t('card.zoom.back') : [typeLabel(text.type), CLASS_LABELS[text.klass] || text.klass,
       text.cost != null ? `${text.cost} 资源` : null, text.xp ? `${text.xp} 级` : null, text.slot || null].filter(Boolean).join(' · ')
-    const rules = text.textZh || text.text || ''
-    const flavor = text.flavorZh || text.flavor || ''
+    const rules = cardDisplayText(text)
+    const flavor = cardDisplayFlavor(text)
+    const subname = cardDisplaySubname(text)
     panel.replaceChildren(...[
-      h('h3', {}, text.nameZh || text.name || fallbackName),
-      text.subnameZh || text.subname ? h('small', { className: 'ah-card-zoom-subname' }, text.subnameZh || text.subname) : null,
+      h('h3', {}, cardDisplayName(text) || fallbackName),
+      subname ? h('small', { className: 'ah-card-zoom-subname' }, subname) : null,
       meta ? h('small', { className: 'ah-card-zoom-meta' }, meta) : null,
       traits ? h('p', { className: 'ah-card-zoom-traits' }, traits) : null,
-      h('p', { className: 'ah-card-zoom-rules' }, rules ? renderRulesText(h, rules, { links: false }) : '此卡没有额外规则文字。'),
+      h('p', { className: 'ah-card-zoom-rules' }, rules ? renderRulesText(h, rules, { links: false }) : t('card.zoom.noRules')),
       flavor ? h('p', { className: 'ah-card-zoom-flavor' }, flavor) : null].filter(Boolean))
   }
 
@@ -66,10 +69,10 @@ export function installCardZoom(h) {
   const show = found => {
     target = found
     const { code, face, art: source } = found
-    const name = found.name || '卡牌'
+    const name = found.name || t('detail.type.card')
     const landscape = source?.classList.contains('ah-table-art-landscape')
     const art = source?.dataset.imageState === 'displayable' ? source.cloneNode(true) : tableArt(h, code, name, { face, landscape })
-    const panel = h('div', { className: 'ah-card-zoom-text' }, h('h3', {}, name), h('p', { className: 'ah-card-zoom-loading' }, '正在读取卡牌说明…'))
+    const panel = h('div', { className: 'ah-card-zoom-text' }, h('h3', {}, name), h('p', { className: 'ah-card-zoom-loading' }, t('card.zoom.loading')))
     zoom = h('div', { className: 'ah-card-zoom' + (landscape ? ' is-landscape' : ''), role: 'tooltip', 'data-zoom-for': code, 'data-zoom-face': face },
       h('div', { className: 'ah-card-zoom-art' }, art), panel)
     const fit = () => {
@@ -89,7 +92,7 @@ export function installCardZoom(h) {
       fit()
     }).catch(() => {
       if (ticket !== sequence) return
-      panel.querySelector('.ah-card-zoom-loading')?.replaceChildren('卡牌说明暂不可用，可打开卡牌详情查看。')
+      panel.querySelector('.ah-card-zoom-loading')?.replaceChildren(t('card.zoom.unavailable'))
     })
   }
 

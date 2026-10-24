@@ -144,7 +144,7 @@ export const behavior = {
     if (inv.assets.some(asset => assetRuleFor(original(asset))?.reagent)) {
       const targets = state.enemies.filter(enemy => enemy.location === inv.location)
       if (targets.length) for (const enemy of targets)
-        moves.push({ action: 'scenarioAction', rule: 'concoctionAttack', enemyId: enemy.id, label: `使用炼金试剂攻击「${enemy.name}」（智识）` })
+        moves.push({ action: 'scenarioAction', rule: 'concoctionAttack', attack: true, enemyId: enemy.id, label: `使用炼金试剂攻击「${enemy.name}」（智识）` })
       else moves.push({ action: 'scenarioAction', rule: 'concoctionAttack', label: '使用炼金试剂攻击敌人（智识）',
         reason: '所在地点没有敌人' })
     }
@@ -190,6 +190,9 @@ export const behavior = {
     } else if (move.rule === 'concoctionAttack') {
       const enemy = state.enemies.find(item => item.id === move.enemyId && item.location === inv.location)
       if (!enemy || !inv.assets.some(asset => assetRuleFor(original(asset))?.reagent)) throw new Error('没有合法的炼金试剂目标')
+      // 冷漠（aloof）：未交战的冷漠敌人不能被攻击。legalMoves/validateMove 已经拦住，
+      // 这里再挡一次直接调用 performAction 的路径（防御性校验）。
+      if (api.aloofPreventsAttack?.(enemy, inv)) throw new Error('冷漠敌人未与调查员交战，不能直接攻击')
       api.test(inv.seat, 'intellect', enemy.fight, result => {
         if (!result.success) return
         api.damageEnemy(enemy.id, enemyScriptFor(original(enemy))?.experiment ? 7 : 1, inv.seat, '02059')

@@ -141,3 +141,38 @@ Official MP3 files re-encoded to 128 kbps CBR MP3 at 44.1 kHz with ffmpeg
 originals are kept in artifacts/legacy-music-originals/.
 The original and encoded bytes and SHA-256 hashes are recorded in sources.json.
 These tracks are independently licensed and are not an official soundtrack.
+
+The Circle Undone / 万象无终 — added 2026-10-24
+"Vanishing", "Evening Fall (Piano)", "This House", "Baba Yaga", "Myst on the Moor", "Spellbound", "SCP-x5x (Outer Thoughts)", "Ossuary 4 - Animate", "Phantasm", "Metaphysik", "Crypto", "Inner Sanctum", "Ossuary 5 - Rest", "Anguish", "Land of the Dead", "Hidden Past", "Hidden Wonders", "Mystic Force", "Shadowlands 1 - Horizon", "Shadowlands 2 - Bridge", "Final Battle of the Dark Wizards", "The Escalation", "Darkling", "Volatile Reaction", "Ossuary 3 - Words", "Symmetry", "Shadowlands 6 - The Pit"
+Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+Official licensing: https://incompetech.com/music/royalty-free/licenses/
+Re-encoded to 128 kbps MP3, 44.1 kHz; no cuts or mixing.
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600050
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100235
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500055
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500079
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600007
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500061
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN2000011
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500046
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100113
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400056
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600013
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100196
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500047
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400047
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100179
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600030
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700006
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500060
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700034
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700035
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500085
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400041
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700050
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400039
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500045
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1900006
+https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700039

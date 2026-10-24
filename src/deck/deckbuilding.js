@@ -19,12 +19,23 @@ import {
   CORE_INVESTIGATOR_CODES, SIMPLIFIED_PLAYER_CARD_CODES, PLAYER_CARD_CODES,
   PLAYABLE_INVESTIGATOR_CODES,
   SIGNATURE_CARD_CODES_BY_INVESTIGATOR, BASIC_WEAKNESS_CODES, ALL_BASIC_WEAKNESS_CODES,
+  TCU_PLAYER_BUILDABLE_CODES,
   canSelectInvestigator, isCardAvailable,
 } from './availability.js'
 
 const DECK_SIZE_DEFAULT = 30
 const PLAYER_TYPES = new Set(['asset', 'event', 'skill'])
 const PLAYER_CODE_SET = new Set(PLAYER_CARD_CODES)
+// P10（M5 全量开放）：05 循环已验收的玩家卡进入开放玩家池（默认池 + 83 张可入牌组的 05 卡）。
+// 05314/05317 是绑定卡的场外副本（deckLimit=0，不在牌组里），只作为已验收目录卡存在，不进构筑池。
+// 默认池 PLAYER_CARD_CODES 保持原语义（核心 + 可选扩展包），00–04 循环的自动牌组产出不变；
+// 「开放玩家池」只用于 TCU 战役的起始牌组与 TCU 调查员的构筑界面。
+const TCU_DECK_CARD_CODES = Object.freeze(TCU_PLAYER_BUILDABLE_CODES.filter(code => {
+  const card = ALL_CARDS[code]
+  return Boolean(card) && cardLimit(card) > 0
+}))
+export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TCU_DECK_CARD_CODES])
+const EXPANDED_PLAYER_CODE_SET = new Set(EXPANDED_PLAYER_CARD_CODES)
 // Phase 5 机械迁移的卡号：评分口径对这些卡改用能力层读点（其余卡保持旧口径）。
 const PHASE5_MIGRATED = PHASE5_MIGRATED_CODES
 
@@ -77,9 +88,9 @@ function xpBudget(options) {
   return budget
 }
 
-function playerCardDefinition(code) {
+function cardDefinitionIn(set, code) {
   const card = ALL_CARDS[code]
-  if (!PLAYER_CODE_SET.has(code) || !Object.hasOwn(PLAYER_CARDS, code) || !card || card.code !== code) {
+  if (!set.has(code) || !Object.hasOwn(PLAYER_CARDS, code) || !card || card.code !== code) {
     throw new Error('玩家卡依赖缺失或未获许可：' + code)
   }
   if (!PLAYER_TYPES.has(card.type) || card.subtype === 'weakness' || card.subtype === 'basicweakness' || card.signatureFor) {
@@ -92,12 +103,22 @@ function playerCardDefinition(code) {
   return card
 }
 
+function playerCardDefinition(code) {
+  return cardDefinitionIn(PLAYER_CODE_SET, code)
+}
+
+function expandedPlayerCardDefinition(code) {
+  return cardDefinitionIn(EXPANDED_PLAYER_CODE_SET, code)
+}
+
 function allowedPlayerPool(options) {
-  const source = options.playerPool === undefined ? PLAYER_CARD_CODES : options.playerPool
+  const provided = options.playerPool !== undefined
+  const source = provided ? options.playerPool : PLAYER_CARD_CODES
+  const allowed = provided ? EXPANDED_PLAYER_CODE_SET : PLAYER_CODE_SET
   if (!Array.isArray(source)) throw new Error('playerPool 必须为玩家卡数组')
   const codes = source.map((card) => typeof card === 'string' ? card : card?.code)
   if (codes.some((code) => typeof code !== 'string')) throw new Error('playerPool 包含无效卡牌编号')
-  return [...new Set(codes)].filter((code) => PLAYER_CODE_SET.has(code)).map(playerCardDefinition)
+  return [...new Set(codes)].filter((code) => allowed.has(code)).map((code) => cardDefinitionIn(allowed, code))
 }
 
 function emptyDeck(errors) {
@@ -305,8 +326,11 @@ export function signatureAndWeaknesses(invDef, rng, options = {}) {
   if (!Array.isArray(basicPool) || !basicPool.length) throw new Error('基础弱点依赖缺失：候选池不能为空')
   for (const code of basicPool) {
     const def = ALL_CARDS[code]
+    // P8：TCU 的 05042《高塔·XVI》是**资产**型基础弱点（占塔罗槽），构筑规则允许它作为
+    // 随机基础弱点候选；旧校验只认 treachery/enemy，会把整包合法候选判成非法。
+    const weaknessTypeOk = ['treachery', 'enemy'].includes(def?.type) || PLAYER_TYPES.has(def?.type)
     if (!ALL_BASIC_WEAKNESS_CODES.includes(code) || !def || def.code !== code || def.subtype !== 'basicweakness'
-      || def.dataStatus === 'quarantined' || def.signatureFor || !['treachery', 'enemy'].includes(def.type)
+      || def.dataStatus === 'quarantined' || def.signatureFor || !weaknessTypeOk
       || (def.type !== 'enemy' && !isPlayable(def))) {
       throw new Error('基础弱点依赖缺失或未获许可：' + code)
     }
@@ -387,9 +411,13 @@ export function corePlayablePool() {
   return SIMPLIFIED_PLAYER_CARD_CODES.map(playerCardDefinition)
 }
 export function playablePool() { return PLAYER_CARD_CODES.map(playerCardDefinition) }
+// P10：开放玩家池 = 默认池 + 83 张 05 可入牌组的卡。自动构筑默认仍用 playablePool（旧循环产出不变），
+// 只有 TCU 战役的起始牌组（engine corePlayerPool）与构筑界面（deckBuilderData）、'all' 范围手动提交用它。
+export function expandedPlayablePool() { return EXPANDED_PLAYER_CARD_CODES.map(expandedPlayerCardDefinition) }
 
 // 给前端「卡组构筑界面」的静态元数据（纯 JSON，经 catalog 下发）。
 export function deckBuilderData() {
+  const pool = expandedPlayablePool()
   const investigators = PLAYABLE_INVESTIGATOR_CODES.map((code) => {
     const inv = INVESTIGATORS[code]
     validateInvestigator(inv)
@@ -416,14 +444,15 @@ export function deckBuilderData() {
       deckSize: deckRules(inv).size,
       rules: deckRules(inv),
       deckOptions: deckRules(inv).options,
-      allowedCards: playablePool().filter(card => matchesDeckOptions(inv, card) && (card.xp || 0) === 0).map(card => card.code),
+      allowedCards: pool.filter(card => matchesDeckOptions(inv, card) && (card.xp || 0) === 0).map(card => card.code),
       signatureCards: sigs.filter((s) => !s.subtype || (s.subtype !== 'weakness' && s.subtype !== 'basicweakness')),
       signatureWeaknesses: sigs.filter((s) => s.subtype === 'weakness' || s.subtype === 'basicweakness'),
     }
   })
 
-  const cardPool = playablePool().map((c) => ({
+  const cardPool = pool.map((c) => ({
     code: c.code, name: c.nameZh, nameEn: c.name, klass: c.klass, type: c.type,
+    pack: c.pack || null, campaignCode: c.campaignCode || null,
     cost: c.cost, xp: c.xp ?? 0, icons: c.icons || {}, slot: c.slot || null, slots: c.slots || [],
     traits: c.traits || [], traitsZh: c.traitsZh || [],
     text: c.textZh || c.text || '', flavor: c.flavorZh || c.flavor || '',

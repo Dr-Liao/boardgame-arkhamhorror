@@ -7,8 +7,8 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 04104 枪法如神：在 `activateFirearmFight` 窗口改写正在激活的那次攻击（不另起攻击）：
-// 目标可改为连接地点上的敌人、忽略反击、未交战时命中 +1 伤害。战斗加值、伤害与弹药消耗
-// 全部沿用被激活的枪械/远程支援。
+// 目标可改为连接地点上的敌人、忽略冷漠与反击、未交战时命中 +1 伤害。战斗加值、伤害与
+// 弹药消耗全部沿用被激活的枪械/远程支援。
 
 export default {
   code: '04104',
@@ -19,19 +19,23 @@ export default {
         if (!context) return
         const here = state.locations.find(location => location.id === inv.location)
         const connecting = new Set(here?.connections || [])
-        const targets = state.enemies.filter(enemy => connecting.has(enemy.location))
+        // 候选：连接地点上的敌人（卡面允许改指）；本地点上未交战的冷漠敌人也算——
+        // 卡面的「忽略冷漠」正是让这类目标这次可以被选中（否则必须先主动交战）。
+        const targets = state.enemies.filter(enemy => connecting.has(enemy.location)
+          || (enemy.location === inv.location && enemy.aloof === true && enemy.engagedSeat == null))
         if (targets.length) {
           const chosen = targets.length === 1 ? targets[0].id
             : api.choice({ kind: 'target', source: '04104', seat: inv.seat,
-              prompt: '选择连接地点上的敌人作为本次攻击的目标。',
+              prompt: '选择本次攻击的目标（连接地点的敌人，或本地未交战的冷漠敌人）。',
               options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })) })
           const enemy = targets.find(item => item.id === chosen) || targets[0]
           context.redirectEnemyId = enemy.id
-          api.info(`🎯 ${inv.name} 用「枪法如神」把攻击目标改为连接地点上的「${enemy.name}」。`)
+          api.info(`🎯 ${inv.name} 用「枪法如神」把攻击目标改为「${enemy.name}」。`)
         }
         // 本次攻击忽略冷漠与反击；攻击未与本人交战的敌人命中时 +1 伤害。
         context.allowConnecting = true
         context.ignoreRetaliate = true
+        context.ignoreAloof = true
         context.marksmanship = true
       },
     },

@@ -115,7 +115,13 @@ test('Arkham guest answers own mulligan in UI; refresh preserves private hand an
   await expect.poll(async () => (await api(1, 'status')).session?.state.pendingChoice?.seat).toBe(1)
   const guest = await browser.newPage(), errors = []
   let commands = 0
-  guest.on('request', request => { if (request.method() === 'POST' && request.url().includes('/api/online/command')) commands++ })
+  // prefs（P1 自动跳过偏好同步）是后台轻量命令，不计入「玩家操作发了几条命令」的断言。
+  guest.on('request', request => {
+    if (request.method() !== 'POST' || !request.url().includes('/api/online/command')) return
+    let body = null
+    try { body = request.postDataJSON() } catch { /* 非 JSON 请求 */ }
+    if (body?.action !== 'prefs') commands++
+  })
   guest.on('pageerror', e => errors.push(e.message))
   await guest.addInitScript(() => localStorage.setItem('arkham-presentation', JSON.stringify({ sound: false, fast: true })))
   await guest.goto(halls[1].url)

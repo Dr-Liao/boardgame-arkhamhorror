@@ -5,7 +5,9 @@
 // 战役选择、卡组构筑、对局界面、卡牌详情与全卡图鉴。
 // 不要把这些逻辑写回大厅的 public/app.js。
 
-import { createCatalogUI, getCardPresentation, renderDetailContent, renderImage, cardFaceText, preloadScenarioImages } from './catalog.js'
+import { createCatalogUI, getCardPresentation, renderDetailContent, renderImage, cardFaceText, preloadScenarioImages,
+  cardDisplayName, cardDisplayText, cardDisplayFlavor, cardDisplaySubname, cardDisplayTraits, currentLanguage, setHostLocale } from './catalog.js'
+import { setLocale as setUiLocale, t } from './i18n.js'
 // 第 127 轮：UI 的卡号表现表在 web/ui-cards.js（纯数据表，必须留在浏览器挂载目录内）。
 import { UI_CARDS } from './ui-cards.js'
 import { createHubUI } from './hub.js'
@@ -22,7 +24,7 @@ import { mapGeometry, hunterRouteEdges, MAP_CARD_WIDTH, MAP_CARD_HEIGHT } from '
 import { createTablePresentation } from './table-presentation.js'
 import { tableIcon, classIcon, cardAttachmentReferences, cardMarkerData, placedCardMarkers } from './table-components.js'
 import { choicePresentation, entityMoves, mountCardInteractions, cancelTableGesture, handUnavailableReason } from './card-interactions.js'
-import { reactionEnabled, setReactionEnabled, reactionChoices, reactionView, reactionPassPlan } from './reaction-preferences.js'
+import { reactionEnabled, setReactionEnabled, reactionChoices, reactionView, reactionPassPlan, reactionDisabledCodes } from './reaction-preferences.js'
 import { presentationAttributes, campaignPlaylistId } from './campaign-presentation.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
 // 第 4 步 P5：万象无终的专用交互面板（塔罗抽牌 / 序章选人 / 闹鬼来源 / 地点标记 / 多技能检定）。
@@ -45,6 +47,53 @@ let situationView
 let tableSession = null
 let rulebook
 let lastReactionPass = null
+// P1：把本机「反应关」集合异步同步给房主（房主据此代答任意座位的窗口）。
+// 只在本局/本进程/集合变化时发送；失败按错误类型冷却，下一次渲染或开关变化再试。
+// 额外两种「房主缓存可能丢了」的情况会强制重发：连接断开后恢复、房主从离线变在线；
+// 以及每 2 分钟一次的低频刷新（防止房主进程重启后缓存清空但客人客户端 key 未变）。
+const REACTION_SYNC_REFRESH_MS = 120000
+let reactionSyncKey = ''
+let reactionSyncFailed = ''
+let reactionSyncing = ''
+let reactionSyncAfter = 0
+let reactionSyncedAt = 0
+let reactionSyncConnected = null
+let reactionSyncHostOnline = null
+// 偏好序号：每次上报单调递增（跨页面刷新也增大），房主据此丢弃乱序到达的旧偏好。
+let reactionPrefsSeq = 0
+const nextReactionPrefsSeq = () => (reactionPrefsSeq = Math.max(reactionPrefsSeq + 1, Date.now()))
+const resetReactionSync = () => {
+  reactionSyncKey = ''; reactionSyncFailed = ''; reactionSyncing = ''; reactionSyncAfter = 0; reactionSyncedAt = 0
+}
+function syncReactionPreferences(session) {
+  const connected = !!(session?.online && state.online?.room && state.online?.connected)
+  // 断线→恢复：房主可能经历了重启/缓存重建，强制重发。
+  if (reactionSyncConnected === false && connected) resetReactionSync()
+  reactionSyncConnected = connected
+  if (!connected) return
+  const hostOnline = state.online.room.members?.some(member => member.host && member.online) === true
+  // 房主离线→在线：同样视为缓存可能已重建。
+  if (reactionSyncHostOnline === false && hostOnline) resetReactionSync()
+  reactionSyncHostOnline = hostOnline
+  // 房主不在线时命令无法被处理；等 hostOnline 由 false→true 时强制重发。
+  if (!hostOnline) return
+  const seat = mySeat(session)
+  const codes = reactionDisabledCodes(session, seat)
+  const key = [state.online.instanceId || '', session.sessionId, seat, codes.slice().sort().join(',')].join('|')
+  if (key === reactionSyncing) return
+  if (key === reactionSyncKey && Date.now() - reactionSyncedAt < REACTION_SYNC_REFRESH_MS) return
+  if (key === reactionSyncFailed && Date.now() < reactionSyncAfter) return
+  reactionSyncing = key
+  reactionSyncAfter = Date.now() + 5000
+  api('POST', '/prefs', { sessionId: session.sessionId, codes, seq: nextReactionPrefsSeq() })
+    .then(() => { reactionSyncKey = key; reactionSyncedAt = Date.now(); reactionSyncFailed = '' })
+    .catch(error => {
+      // 房主忙碌（SESSION_BUSY）很快重试；旧房主不支持该命令时拉长冷却，避免每帧重发。
+      reactionSyncFailed = key
+      reactionSyncAfter = Date.now() + (error?.code === 'SESSION_BUSY' ? 800 : 30000)
+    })
+    .finally(() => { if (reactionSyncing === key) reactionSyncing = '' })
+}
 const mySeat = s => s.mySeat ?? s.observerSeat ?? 0
 
 // 宿主注入的反馈入口。旧版大厅没有 openFeedback 时按钮不渲染，Mod 单独加载也能跑。
@@ -83,7 +132,7 @@ function scheduleReactionPass(session) {
       return
     }
     if (items.some(item => reactionEnabled(session.sessionId, choice.seat, item.code))) return
-    cardMove(skip, session)
+    cardMove(skip, session, { auto: true })
   })
   return true
 }
@@ -95,11 +144,11 @@ function renderReactionToggle(s, code) {
   if (!inv || !(inv.code === code || inv.hand?.includes(code) || [...(inv.assets || []),...(inv.threat || [])].some(card => card.code === code))) return null
   const enabled = reactionEnabled(s.sessionId,seat,code)
   return h('button', { className:'ah-reaction-toggle'+(enabled?' is-on':''), 'data-reaction-toggle':code,
-    role:'switch', 'aria-checked':String(enabled), 'aria-label':(ahCardDef(s,code).name || code)+'的快速反应',
+    role:'switch', 'aria-checked':String(enabled), 'aria-label':(cardDisplayName(ahCardDef(s,code)) || code)+'的快速反应',
     title:enabled?'快速反应已开启，点击关闭本局提示':'快速反应已关闭，点击恢复提示',
     disabled:presentation.isBlocking,
     onpointerdown:event=>event.stopPropagation(), onkeydown:event=>event.stopPropagation(),
-    onclick:event=>{event.stopPropagation();setReactionEnabled(s.sessionId,seat,[code],!enabled);lastReactionPass=null;render()},
+    onclick:event=>{event.stopPropagation();setReactionEnabled(s.sessionId,seat,[code],!enabled);lastReactionPass=null;resetReactionSync();render()},
   },tableIcon('action'),enabled?'反应开':'反应关')
 }
 
@@ -107,6 +156,11 @@ function renderReactionToggle(s, code) {
 export function createUI(host) {
   ;({ h, api, render, state, reset, leave, openFeedback } = host)
   beginInteraction = host.beginInteraction || beginInteraction
+  // 大厅语言（docs/localization.md §8.1）：旧版大厅没有 host.locale，回退游戏默认语言中文。
+  // UI 词典与卡牌语言分开：卡牌语言默认跟随大厅，但玩家显式改过后由 preferences.followHall 决定。
+  const initialLocale = host.locale?.resolved || 'zh-CN'
+  setUiLocale(initialLocale)
+  setHostLocale(initialLocale)
   musicPlayer ||= createMusicPlayer(h)
   chaosBagView ||= createChaosBagView(h,render)
   rulebook ||= createRulebook(h,render)
@@ -116,18 +170,28 @@ export function createUI(host) {
   situationView ||= createSituationView(h, { render: () => render(), openChaosBag: () => openChaosBag(),
     effStat: (s, inv, skill) => ahEffStat(s, inv, skill), mySeat: s => mySeat(s),
     openDetail: (def, options) => openCardDetailDef(def, options), openCard: (s, reference) => openCardDetail(s, reference),
-    cardName: (s, code) => ahCardDef(s, code).name })
+    cardName: (s, code) => cardDisplayName(ahCardDef(s, code)) })
   hubUi = createHubUI({ ...host, canAct, submitMove: cardMove, refreshSession: refreshCardSession,
     catalogOpen: () => arkhamCatalog.open(), rulebookOpen: () => openRule(), inspectCard: code => openCardDetailDef({...ahCardDef(state.session,code),code}, {runtime:false}) })
   return {
     onOpenSetup: game => { state.cardDetail = null; state.arkhamZoneOpen = null; state.arkhamDeckOpen = false; if (arkhamCatalog.isOpen) arkhamCatalog.close(); hubUi.onOpenSetup(game) },
     onDeactivate: () => { musicPlayer.render(false); rulebook.render(false); chaosBagView.reset(); situationView.reset(); state.arkhamZoneOpen = null; tableSession = null },
+    // 大厅切换语言后调用（§8.3）：幂等、同步，只换词典与卡牌语言并重绘；
+    // 不重置对局、不重新请求存档、不 location.reload()、不触发 AI 回合。
+    onLocaleChange(next) {
+      const locale = next?.resolved || next || 'zh-CN'
+      setUiLocale(locale)
+      setHostLocale(locale)
+      render()
+    },
     isModalOpen: () => !!(state.cardDetail || state.arkhamZoneOpen || state.arkhamDeckOpen || arkhamCatalog.isOpen || chaosBagView.opened || situationView.opened),
     renderSetupModal: game => hubUi.renderSetupModal(game),
     renderGame: session => {
       session = presentation.sync(session)
       if (session.state.hubFlow && ['interlude', 'scenarioSetup'].includes(session.state.uiState)) preloadScenarioImages(session.state.hubSelectedScenarioId)
       if (session.state.hubFlow && session.state.uiState !== 'inScenario') { tableSession = null; return hubUi.renderGame(session) }
+      // P1：每次进局/重连/开关变化时把「反应关」集合同步给房主；房主据此代答任意座位的窗口。
+      syncReactionPreferences(session)
       const autoPassing = scheduleReactionPass(session)
       session = reactionView(session)
       tableSession = session
@@ -183,6 +247,13 @@ function slotLabel(slot) {
 
 function ahCardDef(s, code) {
   return (s.state && s.state.cards && s.state.cards[code]) || {}
+}
+
+// 卡牌实例与剧本条目常用「规则代号」（如夜之狂热的 frozenInFear），
+// 而卡图、图鉴和卡牌详情只按真实卡号索引；展示前统一回落到原卡号。
+function ahArtCode(s, code) {
+  if (!code) return code
+  return (s.state && s.state.cards && s.state.cards[code] && s.state.cards[code].originalCode) || code
 }
 
 function locationAttachments(s, loc) {
@@ -252,11 +323,11 @@ function renderRuntimeCardState(detail) {
     attachments.length ? h('div', { className: 'ah-detail-attachments' },
       h('h4', {}, `附属卡（${attachments.length}）`),
       attachments.map(attachment => {
-        const name = attachment.nameZh || attachment.name || attachment.code
+        const name = cardDisplayName(attachment) || attachment.code
         return h('button', { type: 'button', className: 'ah-detail-attachment-card',
           'data-attachment-code': attachment.code, 'aria-label': `查看附属卡 ${name}`,
           onclick: () => openCardDetail(s, { ...attachment, attachedTo: {
-            type: card.type || (enemy ? 'enemy' : 'card'), name: card.nameZh || card.name || card.code,
+            type: card.type || (enemy ? 'enemy' : 'card'), name: cardDisplayName(card) || card.code,
           } }) }, tableArt(h, attachment.originalCode || attachment.code, name), h('span', {}, name))
       })) : null)
 }
@@ -284,11 +355,12 @@ function cardDisplay(def) {
   const isEnemy = def.type === 'enemy' || (def.fight != null && def.type !== 'investigator')
   const isLoc = def.type === 'location' || def.shroud != null
   const isInvestigator = def.type === 'investigator'
+  const english = currentLanguage() === 'en'
   return {
     code: def.code,
-    name: def.nameZh || def.name || def.code || '?',
-    nameEn: def.nameEn || (def.nameZh && def.name !== def.nameZh ? def.name : ''),
-    subname: def.subnameZh || def.subname || '',
+    name: cardDisplayName(def),
+    nameEn: english ? '' : (def.nameEn || (def.nameZh && def.name !== def.nameZh ? def.name : '')),
+    subname: cardDisplaySubname(def),
     klass: (def.klass || 'neutral').toLowerCase(),
     type: def.type || (isEnemy ? 'enemy' : (isLoc ? 'location' : '')),
     cost: def.cost,
@@ -296,9 +368,9 @@ function cardDisplay(def) {
     slot: def.slot || (Array.isArray(def.slots) && def.slots[0]) || null,
     slots: def.slots || (def.slot ? [def.slot] : []),
     icons: def.icons || {},
-    text: def.textZh || def.text || '',
-    flavor: def.flavorZh || def.flavor || '',
-    traits: def.traitsZh || def.traits || [],
+    text: cardDisplayText(def),
+    flavor: cardDisplayFlavor(def),
+    traits: cardDisplayTraits(def),
     subtype: def.subtype || null,
     unique: !!def.unique,
     permanent: !!def.permanent,
@@ -507,7 +579,7 @@ function renderLocationDetail(detail) {
   const loc = st.locations.find(item => item.id === detail.locationId) || detail.def
   const front = detail.side === 'front' && loc.revealed
   const face = cardFaceText(detail.entry?.card || detail.def, detail.entry?.linkedCard, front ? 'front' : 'back')
-  const rules = front ? face.textZh || face.text : [face.text === '通用卡背或此面没有独立卡文。' ? '' : face.text, face.flavor].filter(Boolean).join('\n\n')
+  const rules = front ? cardDisplayText(face) : [face.text === t('card.back.generic') ? '' : face.text, face.flavor].filter(Boolean).join('\n\n')
   const plain = text => String(text || '').replace(/<[^>]+>/g, '').replace(/\[action\]/g, '行动：').replace(/\[reaction\]/g, '反应：')
     .replace(/\[(willpower|intellect|combat|agility)\]/g, (_,key) => ({willpower:'意志',intellect:'智识',combat:'战斗',agility:'敏捷'})[key])
   const entryEffect = loc.onEnter
@@ -549,7 +621,7 @@ function renderLocationDetail(detail) {
             people.map(inv=>h('button',{className:'is-investigator',onclick:()=>openCardDetailDef({...st.investigatorDefs[inv.code],...inv,type:'investigator'})},tableArt(h,inv.code,inv.name),h('span',{},inv.name))),
             enemies.map(enemy=>h('button',{className:'is-enemy',onclick:()=>openCardDetail(s,enemy)},tableArt(h,enemy.originalCode || enemy.code,enemy.name),h('span',{},enemy.name)))) : h('p',{},'目前无人停留。')),
         attachments.length ? h('section',{className:'ah-location-attachments'+(detail.focusInfo === 'attached' ? ' is-focused' : '')},h('h3',{},'附属卡'),
-          attachments.map(card=>h('button',{onclick:()=>openCardDetail(s,{...card,attachedTo:{type:'location',name:loc.name}})},card.nameZh || card.name || card.code))) : null,
+          attachments.map(card=>h('button',{onclick:()=>openCardDetail(s,{...card,attachedTo:{type:'location',name:loc.name}})},cardDisplayName(card) || card.code))) : null,
         h('section',{className:'ah-location-connections'},h('h3',{},'通往'),h('div',{},(loc.connections || []).map(id=>st.locations.find(item=>item.id===id)).filter(Boolean).map(other=>
           h('button',{onclick:()=>openCardDetailDef({...other,type:'location'})},'→ '+other.name)))),
         h('footer',{className:'ah-location-detail-actions'},moves.length ? moves.map(move=>h('button',{className:'ah-action',onclick:()=>{state.cardDetail=null;cardMove(move,s)}},move.label || ({move:'移动到此处',investigate:'调查',locationAbility:'使用地点能力'})[move.action] || '执行行动'))
@@ -613,7 +685,7 @@ function renderCardZoneModal(s) {
       cards.length ? h('div', { className: 'ah-card-zone-grid', role: 'group', 'aria-label': `${title}中的卡牌` },
         cards.map((card, index) => {
           const def = { ...ahCardDefRaw(s, card.code), ...card }
-          const name = def.nameZh || def.name || card.code
+          const name = cardDisplayName(def) || card.code
           const code = def.originalCode || card.originalCode || card.code
           return h('button', { className: 'ah-card-zone-card', 'data-zone-card': card.code,
             'aria-label': `查看${name}`, title: `查看卡牌详情 · ${name}`, onclick: () => openCardDetail(s, def) },
@@ -626,7 +698,7 @@ function renderCardZoneModal(s) {
       h('footer', {}, victory ? '胜利区会随剧本结算实时更新。' : '点击卡牌可查看正面资料；卡牌仍由剧本效果决定何时入场。')))
 }
 
-async function cardMove(move, displayedSession) {
+async function cardMove(move, displayedSession, options = {}) {
   const session = state.session
   if (!session || state.busy || presentation.isBlocking || session.sessionId !== displayedSession.sessionId) return
   const st = session.state
@@ -684,8 +756,12 @@ async function cardMove(move, displayedSession) {
   try {
     const { label, ...mv } = move
     const version = Number.isSafeInteger(st.revision) ? { revision: st.revision } : {}
-    const r = await api('POST', '/move', { sessionId: session.sessionId, ...version, ...(batchChoices
-      ? { batchChoices } : { move: { ...mv, ...version } }) })
+    // P0/P1：把本机「反应关」的卡号集合随 move 带给房主并刷新缓存（空集合=清除缓存），
+    // seq 让房主丢弃乱序到达的旧偏好。旧房主会忽略未知的 client 字段，行为与以前一致。
+    const autoPassCodes = reactionDisabledCodes(session, mySeat(session))
+    const r = await api('POST', '/move', { sessionId: session.sessionId, ...version,
+      client: { autoPass: { codes: autoPassCodes, seq: nextReactionPrefsSeq() } }, ...(batchChoices
+        ? { batchChoices } : { move: { ...mv, ...version } }) })
     if (sameSession()) {
       // P1.2：联机客人拿到的命令响应只有摘要（无 session），权威状态随后由快照 + 长轮询送达；
       // 这里不能把 state.session 覆盖成 undefined，也不要用缺失的 session 计算反馈 revision。
@@ -706,7 +782,12 @@ async function cardMove(move, displayedSession) {
           (!Number.isSafeInteger(st.revision) || fresh.state.revision >= st.revision)) {
         state.session = fresh
       }
-      state.error = String(e.message)
+      // 自动提交的 skip 遇到版本已推进/房主忙碌是预期内的竞争（对局已经继续），不弹错误提示。
+      // 直连错误可能没有 code，退回到文案匹配（这些文案只在“提交落后于服务端”时出现）。
+      const autoRace = options.auto && (['STALE_REVISION', 'SESSION_BUSY'].includes(e.code)
+        || /对局版本已变化|正在处理|稍后重试|版本号/.test(String(e.message)))
+      if (autoRace) console.warn('[autoPass] 自动跳过提交落后于服务端状态：' + String(e.message))
+      else state.error = String(e.message)
       state.arkhamSelection = null
       if (state.arkhamMapView) state.arkhamMapView.selectedId = null
       clearCardDrag()
@@ -865,7 +946,14 @@ function renderPendingChoice(s, humanTurn) {
   if(choice.kind==='payment' && choice.source==='group-clues')return renderCluePayment(s,humanTurn)
   // 万象无终（P5）：三种选择有自己的面板，语义与排版都与通用按钮列不同。
   // 非当前回答者照样能看到面板（桌面公开信息），只是按钮置灰并说明在等谁。
-  const panelProps = { disabled: !humanTurn, busy: state.busy, onSubmit: move => { if (humanTurn && !state.busy) cardMove(move, s) } }
+  const panelProps = {
+    disabled: !humanTurn, busy: state.busy,
+    onSubmit: move => { if (humanTurn && !state.busy) cardMove(move, s) },
+    // 序章选人的「详情」：与牌桌其它卡牌一致，打开完整卡牌详情（卡面 + 卡背设置）。
+    inspectCard: code => openCardDetailDef({
+      ...(s.state.cards?.[code] || s.state.investigatorDefs?.[code] || {}), code, type: 'investigator',
+    }, { runtime: false }),
+  }
   const tarotPanel = tarotPickerModel(s)
   if (tarotPanel) return renderTarotPicker(h, tarotPanel, panelProps)
   const storyPanel = storyInvestigatorPickerModel(s)
@@ -883,6 +971,8 @@ function renderPendingChoice(s, humanTurn) {
   const offers = ordering ? [] : items.filter(item => !item.control && (!item.key || !item.key.startsWith('hand:')))
   const assigningHarm = ['assign-damage', 'assign-horror'].includes(choice.kind)
   const test = assigningHarm ? null : s.state.skillTest, testSource = test?.source
+  // 检定来源可能是规则代号（威胁区卡如「呆若木鸡」= frozenInFear），底栏缩略图按原卡号取图。
+  const testSourceCode = testSource ? (testSource.originalCode || ahArtCode(s, testSource.code)) : null
   const staged = humanTurn ? choiceDraft(s)?.selected || [] : []
   // 阵法（P2.5）把 2–4 项技能相加：`skillTest.skill` 可能是数组，标签与图标都按整组显示。
   const multi = test ? multiSkillTestInfo(s.state) : null
@@ -901,8 +991,8 @@ function renderPendingChoice(s, humanTurn) {
     h('div', { className: 'ah-direct-instruction', role: 'status' },
       h('strong', { className: test ? 'ah-test-context' : '' }, test ? `${testSource?.label || '技能检定'} · ${testSource?.name || skillName + '检定'}` : humanTurn ? names[choice.kind] || '结算卡牌效果' : '等待队友操作'),
       h('span', { className: 'ah-choice-prompt' }, renderRulesText(h,choice.prompt,{links:false}))),
-    testSource?.code ? h('button', { className: 'ah-test-source', 'data-card-code': testSource.code, title: '查看检定来源：' + testSource.name,
-      onclick: () => openCardDetailDef({ ...ahCardDef(s, testSource.code), code: testSource.code, name: testSource.name }) }, tableArt(h, testSource.code, testSource.name)) : null,
+    testSourceCode ? h('button', { className: 'ah-test-source', 'data-card-code': testSourceCode, title: '查看检定来源：' + testSource.name,
+      onclick: () => openCardDetailDef({ ...ahCardDef(s, testSource.code), originalCode: testSourceCode, code: testSourceCode, name: testSource.name }) }, tableArt(h, testSourceCode, testSource.name)) : null,
     test ? h('div', { className: 'ah-test-preview' + (multi?.multi ? ' is-multi-skill' : ''),
       'aria-label': testAria },
       h('span', { className: 'ah-test-skill-icons' },
@@ -915,9 +1005,9 @@ function renderPendingChoice(s, humanTurn) {
       h('span', {}, '已投入 ' + (s.state.skillTest.committed?.length || 0) + ' 张' + (staged.length ? ` · 待确认 ${staged.length} 张` : ''))) : null,
     staged.length ? h('div', { className: 'ah-choice-staged', role: 'status', 'aria-label': '本机待确认卡牌' },
       `本机已选 ${staged.length} 张，点击已选卡牌可撤销；确认后同步`,
-      h('div', { className: 'ah-committed-cards' }, staged.map(item => tableArt(h, item.code, ahCardDef(s, item.code).name || item.code)))) : null,
+      h('div', { className: 'ah-committed-cards' }, staged.map(item => tableArt(h, item.code, cardDisplayName(ahCardDef(s, item.code)) || item.code)))) : null,
     test?.committed?.length ? h('div', { className: 'ah-committed-cards', 'aria-label': '已投入卡牌' },
-      s.state.skillTest.committed.map(card => tableArt(h, card.code, ahCardDef(s, card.code).name || card.code))) : null,
+      s.state.skillTest.committed.map(card => tableArt(h, card.code, cardDisplayName(ahCardDef(s, card.code)) || card.code))) : null,
     items.filter(item => item.control).flatMap(item => {
       const assisting = choice.kind === 'commit' && s.state.skillTest?.seat != null && s.state.skillTest.seat !== choice.seat
       const finish = choice.kind === 'commit' && item.move.optionId === 'done'
@@ -939,7 +1029,7 @@ function renderPendingChoice(s, humanTurn) {
     humanTurn && reactions.length && reactions.every(item=>item.code) ? h('button',{
       className:'ah-action secondary ah-mute-reaction',disabled:state.busy,
       title:'关闭本次可选卡牌的反应提示，可在卡牌上的开关重新开启',
-      onclick:()=>{setReactionEnabled(s.sessionId,choice.seat,reactions.map(item=>item.code),false);lastReactionPass=null;render()},
+      onclick:()=>{setReactionEnabled(s.sessionId,choice.seat,reactions.map(item=>item.code),false);lastReactionPass=null;resetReactionSync();render()},
     },'本局不再询问') : null,
     ordering ? renderScryOrder(s, humanTurn) : null,
     offers.length ? h('div', { className: 'ah-visual-choices', 'aria-label': '卡牌效果' }, offers.map(item => {
@@ -951,7 +1041,7 @@ function renderPendingChoice(s, humanTurn) {
         'data-option-id': item.move.optionId, 'data-choice-offer': item.key, 'data-keep-offer': choice.kind === 'prey' || assigningHarm ? 'true' : null,
         'data-interaction': choice.kind === 'prey' ? item.key : null, disabled: state.busy || !humanTurn,
         title: item.label, onclick: () => cardMove(item.move, s) },
-        cards.length ? h('span', { className: 'ah-offer-cards' }, cards.map(card => tableArt(h, card.code, card.nameZh || card.name))) :
+        cards.length ? h('span', { className: 'ah-offer-cards' }, cards.map(card => tableArt(h, card.originalCode || ahArtCode(s, card.code), cardDisplayName(card)))) :
           tableIcon(optionIcon),
         h('span', {}, renderChoiceText(h,item.label)))
     })) : null)
@@ -1025,7 +1115,7 @@ function renderScryOrder(s, humanTurn) {
         }
         document.addEventListener('pointerup',finish); document.addEventListener('pointercancel',cancel)
       } },
-      tableArt(h,code,ahCardDef(s,code).name || code),
+      tableArt(h,code,cardDisplayName(ahCardDef(s,code)) || code),
       h('span', {}, h('button',{ disabled: !humanTurn || state.busy || index === 0, 'aria-label': `将第 ${index+1} 张牌前移`, onclick: () => reorder(index,index-1) },'←'),
         String(index+1),h('button',{ disabled: !humanTurn || state.busy || index === codes.length-1, 'aria-label': `将第 ${index+1} 张牌后移`, onclick: () => reorder(index,index+1) },'→'))))),
     h('button', { className: 'ah-action', disabled: !humanTurn || state.busy || !move, onclick: () => move && cardMove(move,s) }, '确认牌序'))
@@ -1138,26 +1228,26 @@ function renderCardGame(s, autoPassing = false) {
         statusText),
       h('div', { className: 'bg-game-actions' },
         h('button', { className: 'bg-btn secondary ah-card-zone-launcher ah-victory-launcher',
-          'aria-label': `查看胜利区，共 ${zoneCards(s, 'victory').length} 张卡牌`,
+          'aria-label': t('table.victory.aria', { count: zoneCards(s, 'victory').length }),
           'aria-haspopup': 'dialog', 'aria-expanded': String(state.arkhamZoneOpen?.kind === 'victory'),
           onclick: () => { state.arkhamZoneOpen = { sessionId: s.sessionId, kind: 'victory' }; render() } },
-        tableIcon('star'), h('span', {}, '胜利区'), h('b', {}, zoneCards(s, 'victory').length)),
+        tableIcon('star'), h('span', {}, t('table.victory')), h('b', {}, zoneCards(s, 'victory').length)),
         h('button', { className: 'bg-btn secondary ah-card-zone-launcher ah-aside-launcher',
-          'aria-label': `查看放在一边的卡牌，共 ${zoneCards(s, 'aside').length} 张`,
+          'aria-label': t('table.aside.aria', { count: zoneCards(s, 'aside').length }),
           'aria-haspopup': 'dialog', 'aria-expanded': String(state.arkhamZoneOpen?.kind === 'aside'),
           onclick: () => { state.arkhamZoneOpen = { sessionId: s.sessionId, kind: 'aside' }; render() } },
-        tableIcon('supply'), h('span', {}, '放在一边'), h('b', {}, zoneCards(s, 'aside').length)),
+        tableIcon('supply'), h('span', {}, t('table.aside')), h('b', {}, zoneCards(s, 'aside').length)),
         h('button', { className: 'bg-btn secondary', 'data-situation-toggle': 'true', 'aria-haspopup': 'dialog',
-          'aria-expanded': String(situationView.opened), title: '查看调查局势', onclick: () => situationView.open(s.sessionId) }, '局势'),
-        h('button', { className: 'bg-btn secondary', onclick: () => arkhamCatalog.open() }, '全卡图鉴'),
-        h('button', { className: 'bg-btn secondary ah-header-rulebook', title: '规则书 · F1', onclick: () => openRule() }, tableIcon('book'), '规则书'),
-        h('button', { className: 'bg-btn secondary', 'aria-label': '刷新局势', title: '刷新局势', disabled: state.busy, onclick: () => refreshCardSession(s) }, '↻'),
-        h('details', { className: 'ah-session-menu' }, h('summary', { 'aria-label': '对局菜单' }, '•••'),
+          'aria-expanded': String(situationView.opened), title: t('table.situation.title'), onclick: () => situationView.open(s.sessionId) }, t('table.situation')),
+        h('button', { className: 'bg-btn secondary', onclick: () => arkhamCatalog.open() }, t('table.catalog')),
+        h('button', { className: 'bg-btn secondary ah-header-rulebook', title: t('table.rulebook.title'), onclick: () => openRule() }, tableIcon('book'), t('table.rulebook')),
+        h('button', { className: 'bg-btn secondary', 'aria-label': t('table.refresh'), title: t('table.refresh'), disabled: state.busy, onclick: () => refreshCardSession(s) }, '↻'),
+        h('details', { className: 'ah-session-menu' }, h('summary', { 'aria-label': t('table.menu') }, '•••'),
         h('div', { className: 'ah-session-menu-items' },
-        h('button', { className: 'bg-btn secondary', 'aria-pressed': String(presentation.preferences.sound), onclick: () => { presentation.toggleSound(); render() } }, presentation.preferences.sound ? '音效：开' : '音效：关'),
-        h('button', { className: 'bg-btn secondary', 'aria-pressed': String(presentation.preferences.fast), onclick: () => { presentation.toggleFast(); render() } }, presentation.preferences.fast ? '动画：快速' : '动画：标准'),
-        !st.hubFlow ? h('button', { className: 'bg-btn secondary', disabled: state.busy, onclick: reset }, '再来一局') : null,
-        h('button', { className: 'bg-btn secondary', disabled: state.busy, onclick: leave }, '退出')
+        h('button', { className: 'bg-btn secondary', 'aria-pressed': String(presentation.preferences.sound), onclick: () => { presentation.toggleSound(); render() } }, presentation.preferences.sound ? t('table.sound.on') : t('table.sound.off')),
+        h('button', { className: 'bg-btn secondary', 'aria-pressed': String(presentation.preferences.fast), onclick: () => { presentation.toggleFast(); render() } }, presentation.preferences.fast ? t('table.animation.fast') : t('table.animation.standard')),
+        !st.hubFlow ? h('button', { className: 'bg-btn secondary', disabled: state.busy, onclick: reset }, t('table.restart')) : null,
+        h('button', { className: 'bg-btn secondary', disabled: state.busy, onclick: leave }, t('table.leave'))
         )),
         feedbackEntry()
       )
@@ -1338,7 +1428,7 @@ function renderMiniCard(s, reference, exhausted, opts = {}) {
     ondragstart: event => event.preventDefault(),
     ondragend: draggable ? () => clearCardDrag() : null,
   },
-    tableArt(h, d.originalCode || code, cd.name),
+    tableArt(h, d.originalCode || ahArtCode(s, code), cd.name),
     renderReactionToggle(s,code),
     h('div', { className: 'ah-minicard-cost' }, cd.cost != null ? cd.cost : ''),
     opts.asset && cd.sanity != null ? h('div', {
@@ -1385,7 +1475,7 @@ function renderLocationNode(s, loc, opts = {}) {
   if (loc.doom) badges.push(resourceBadge('doom', '毁灭', loc.doom, `此地点有 ${loc.doom} 个毁灭标记。`))
   if (loc.resources) badges.push(resourceBadge('resources', '资源', loc.resources, `此地点有 ${loc.resources} 个资源。`))
   if (attachments.length) badges.push(resourceBadge('attached', '附属卡', attachments.length,
-    attachments.map(item => typeof item === 'string' ? item : item.name || ahCardDef(s, item.code).name || '附属卡').join('、')))
+    attachments.map(item => typeof item === 'string' ? item : cardDisplayName(item) || cardDisplayName(ahCardDef(s, item.code)) || '附属卡').join('、')))
   // 万象无终（P5）：裂口计数、火盆点燃状态、幽灵地点。都来自公开投影。
   for (const badge of locationTcuBadges(st, loc.id)) badges.push(resourceBadge(badge.kind, badge.label, badge.value, badge.title))
   const view = currentMapView(s)
@@ -1435,7 +1525,7 @@ function renderLocationNode(s, loc, opts = {}) {
     enemiesHere.length ? h('div', { className: 'ah-location-entities', onclick: event => event.stopPropagation(),
       onkeydown: event => event.stopPropagation() }, enemiesHere.map(enemy => renderEnemyChip(s, enemy, { map: true }))) : null,
     attachments.length ? h('div', { className: 'ah-location-story-markers' }, attachments.map((asset,index) => {
-      const def = ahCardDef(s, asset.code), name = asset.nameZh || asset.name || def.nameZh || def.name || asset.code
+      const def = ahCardDef(s, asset.code), name = cardDisplayName(asset) || cardDisplayName(def) || asset.code
       const attached = index < attachedCards.length
       return h('button', { className: 'ah-map-story-marker' + (attached ? ' ah-map-attachment' : ''), 'data-map-info': attached ? 'attachment' : 'story',
         'data-attachment-code': attached ? asset.code : null,
@@ -1480,8 +1570,8 @@ function dropMove(s, code, index, kind, slot = null) {
   const move = findPlayMove(s, code)
   const def = ahCardDef(s, code)
   if (kind === 'equip' && def.type !== 'asset') return { reason: '只有支援卡可以放入装备栏。' }
-  if (kind === 'equip' && !assetFitsSlot(def, slot)) return { reason: `「${def.nameZh || def.name || code}」不能占用这个装备槽。` }
-  return move ? { move } : { reason: `「${def.nameZh || def.name || code}」当前不在服务端合法动作列表中；请检查资源、行动点和时机。` }
+  if (kind === 'equip' && !assetFitsSlot(def, slot)) return { reason: `「${cardDisplayName(def) || code}」不能占用这个装备槽。` }
+  return move ? { move } : { reason: `「${cardDisplayName(def) || code}」当前不在服务端合法动作列表中；请检查资源、行动点和时机。` }
 }
 
 function clearCardDrag() {
@@ -1503,7 +1593,7 @@ function startCardDrag(event, s, code, index) {
   const def = ahCardDef(s, code)
   const proxy = document.createElement('div')
   proxy.className = 'ah-drag-proxy'
-  proxy.textContent = def.nameZh || def.name || code
+  proxy.textContent = cardDisplayName(def) || code
   document.body.append(proxy)
   state.arkhamDragProxy = proxy
   event.dataTransfer.setDragImage(proxy, 24, 24)
@@ -1618,9 +1708,9 @@ function renderEquipmentSlots(s, inv, humanTurn) {
       h('div', { className: 'ah-equip-slot-head' }, h('span', { className: 'ah-equip-slot-label' }, label), h('span', { className: 'ah-equip-slot-count' }, used + '/1')),
       h('div', { className: 'ah-equip-slot-cards' }, entry?.linked
         ? h('button', { className: 'ah-slot-linked', 'data-interaction': 'asset:' + asset.id,
-          'aria-label': (def.nameZh || def.name) + ' · ' + entry.reason, title: (def.nameZh || def.name) + ' · ' + entry.reason,
+          'aria-label': (cardDisplayName(def) || '') + ' · ' + entry.reason, title: (cardDisplayName(def) || '') + ' · ' + entry.reason,
           onclick: () => openCardDetail(s, asset),
-        }, tableArt(h, asset.code, def.nameZh || def.name), h('span', { className: 'ah-slot-occupancy' }, entry.reason))
+        }, tableArt(h, asset.code, cardDisplayName(def)), h('span', { className: 'ah-slot-occupancy' }, entry.reason))
         : asset ? renderMiniCard(s, asset, asset.exhausted, { slot, asset: true, draggable: false }) : null))
   }))
   slots.push(...[...other, null].map((asset, index) => h('div', {
@@ -1644,7 +1734,7 @@ function currentMapView(s) {
   if (state.arkhamMapView?.key !== key) {
     let saved = {}
     try { saved = JSON.parse(localStorage.getItem(`arkham-map:${key}`) || '{}') } catch { /* local storage is optional */ }
-    state.arkhamMapView = { key, scale: 1, tx: 0, ty: 0, fitted: false, positions: saved.positions || {} }
+    state.arkhamMapView = { key, scale: 1, tx: 0, ty: 0, fitted: false, sceneWidth: null, sceneHeight: null, positions: saved.positions || {} }
   }
   return state.arkhamMapView
 }
@@ -1825,14 +1915,20 @@ function renderLocationMap(s, humanTurn) {
   mapTransform(view, scene)
   queueMicrotask(() => {
     if (!root.isConnected) return
-    if (!view.fitted || view.viewportWidth !== viewport.clientWidth || view.viewportHeight !== viewport.clientHeight) fitMap(view, viewport, scene)
-    else mapTransform(view, scene)
+    // 地图几何尺寸变化时必须重新适配：进入关卡时先渲染占位地图（1×1），演出结束后换成真实地点，
+    // 若只比较视口尺寸就会保留旧 scale/tx/ty，真实节点落在视口外（表现为地图空白）。
+    const geometryChanged = view.sceneWidth !== geometry.width || view.sceneHeight !== geometry.height
+    if (!view.fitted || geometryChanged || view.viewportWidth !== viewport.clientWidth || view.viewportHeight !== viewport.clientHeight) {
+      fitMap(view, viewport, scene)
+      view.sceneWidth = geometry.width; view.sceneHeight = geometry.height
+    } else mapTransform(view, scene)
     view.viewportWidth = viewport.clientWidth; view.viewportHeight = viewport.clientHeight
     mapResizeObserver?.disconnect()
     const observer = new ResizeObserver(() => {
       if (!root.isConnected) { observer.disconnect(); return }
       if (view.viewportWidth === viewport.clientWidth && view.viewportHeight === viewport.clientHeight) return
       fitMap(view, viewport, scene)
+      view.sceneWidth = geometry.width; view.sceneHeight = geometry.height
       view.viewportWidth = viewport.clientWidth; view.viewportHeight = viewport.clientHeight
     })
     mapResizeObserver = observer
@@ -1923,7 +2019,7 @@ function renderActionButtons(s, humanTurn) {
     onkeydown: event => { if (event.key === 'Escape' && selection) { state.arkhamSelection = null; render() } },
     ondragover: humanTurn ? event => { event?.preventDefault?.(); if (event?.dataTransfer) event.dataTransfer.dropEffect = 'move' } : null,
     ondrop: humanTurn ? event => handlePlayDrop(s, event, 'play') : null,
-  }, selection ? h('span', { className: 'ah-context-name' }, def.nameZh || def.name || selection.code) : null,
+  }, selection ? h('span', { className: 'ah-context-name' }, cardDisplayName(def) || selection.code) : null,
   selection ? h('span', { className: 'ah-context-reason' }, selectedMoves(s, selection).length ? '拖动或点选发光目标 · 右键查看卡牌 · Esc 取消' : selectionUnavailableReason(s, selection) || '当前不能使用；检查费用、行动点与时机。') : null,
   buttons,
   usedHints.map(hint => h('button', { className: 'ah-action is-used', disabled: true,

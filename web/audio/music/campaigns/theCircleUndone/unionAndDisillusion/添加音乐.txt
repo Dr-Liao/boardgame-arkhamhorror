@@ -1,0 +1,5 @@
+将 MP3、OGG、WAV、M4A、AAC、FLAC 或 WebM 文件放在此目录。
+歌单：theCircleUndone/unionAndDisillusion
+展开播放器、切关或点击“刷新歌单”后自动加入。
+只扫描此目录的音频文件，不递归子目录；文件名可使用中文。
+修改 audio/music/playlists.json 可调整默认歌曲与顺序；includeCustom:false 可关闭自动加入。

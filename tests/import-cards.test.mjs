@@ -135,11 +135,15 @@ test('Core、敦威治、卡尔克萨与失落调查员和 1–4 人开局正常
       // 只嵌入本局可用的运行时定义，远小于全部 5 930 张目录卡。
       assert.ok(Object.keys(state.cards).length <= 420)
       assert.equal(Object.keys(state.investigatorDefs).length, PLAYABLE_INVESTIGATOR_CODES.length)
-      assert.equal(Object.keys(state.investigatorDefs).length, 21)
+      // 27 = 核心 5 + 敦威治 5 + 卡尔克萨 6 + 失落 5 + 万象无终 6（P6 起 TCU 调查员可选）。
+      assert.equal(Object.keys(state.investigatorDefs).length, 27)
       assert.equal(state.cards['09001'], undefined)
       assert.ok(!JSON.stringify(state).includes('canonicalSource'))
       for (const inv of state.investigators) {
-        assert.equal(inv.hand.length, inv.code === '03003' ? 13 : 5)
+        // 起始手牌：玩家席位固定 5（卡森 13，卡背）；AI 队友可能抽到 TCU 调查员（P6 起可选），
+        // 他们自带开场能力（黛安娜 +1 张、乔揭示直觉牌库顶），因此只断言下限与合理上限。
+        if (inv.seat === 0) assert.equal(inv.hand.length, code === '03003' ? 13 : 5)
+        else assert.ok(inv.hand.length >= 5 && inv.hand.length <= 13, `${inv.code} 起始手牌 ${inv.hand.length}`)
         assert.ok([...inv.deck, ...inv.hand].every(card => state.cards[card]))
       }
       assert.ok(legalMoves(state).length)

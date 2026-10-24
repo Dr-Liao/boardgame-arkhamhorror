@@ -548,7 +548,7 @@ export function laterBehavior(id) {
         if (inv.assets.some(asset => assetRuleFor(original(asset))?.formula)) {
           const abominations = state.enemies.filter(enemy => enemy.location === inv.location && enemy.traits?.includes('Abomination'))
           if (abominations.length) for (const enemy of abominations)
-            moves.push({ action: 'scenarioAction', rule: 'castFormula', enemyId: enemy.id,
+            moves.push({ action: 'scenarioAction', rule: 'castFormula', attack: true, enemyId: enemy.id,
               label: `深奥的咒文：攻击「${enemy.name}」` })
           else moves.push({ action: 'scenarioAction', rule: 'castFormula', label: '深奥的咒文：攻击异形敌人',
             reason: '所在地点没有[[异形]]敌人' })
@@ -667,6 +667,7 @@ export function laterBehavior(id) {
       } else if (move.rule === 'castFormula' && id === 'undimensionedAndUnseen') {
         const enemy = state.enemies.find(item => item.id === move.enemyId && item.traits?.includes('Abomination') && item.location === inv.location)
         if (!enemy || !inv.assets.some(asset => assetRuleFor(original(asset))?.formula)) throw new Error('没有合法的深奥咒文目标')
+        if (api.aloofPreventsAttack?.(enemy, inv)) throw new Error('冷漠敌人未与调查员交战，不能直接攻击')
         // 02254 是[[法术]]支援：02094 鸟之奴仆「被远程/枪械/法术支援攻击时 -3 攻击值」也要作用于咒文攻击，
         // 不能只走 combat.js 的普通攻击路径，否则难度会是 5 而不是 2。
         const spellReduction = enemyRuleFor(original(enemy))?.rangedAttackDifficultyReduction || 0

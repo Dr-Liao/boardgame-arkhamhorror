@@ -61,7 +61,8 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     // 战役总览要写明当前状态与章节中文名。
     await search.fill('万象无终')
     await nav.locator('[data-rule-id="tcuCampaign"]').click()
-    await expect(article).toContainText('仅图鉴')
+    // P10：战役已从「仅图鉴」升为 playable（可从大厅启动），规则书状态文案同步更新。
+    await expect(article).toContainText('从大厅开放')
     await expect(article).toContainText('聚合幻灭')
     await expect(article).toContainText('377')
     // 移动端不能横向溢出（桌面同样按 1px 容差检查）。

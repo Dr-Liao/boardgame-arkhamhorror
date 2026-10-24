@@ -31,7 +31,17 @@ import { manifest as tcuCampaignPack } from './packs/tcuCampaign/manifest.js'
 import { manifest as tcuInvestigators } from './packs/tcuInvestigators/manifest.js'
 import { manifest as tcuPlayer } from './packs/tcuPlayer/manifest.js'
 import { manifest as theCircleUndone } from './campaigns/theCircleUndone/manifest.js'
-import { catalogChapters } from './campaigns/theCircleUndone/chapters.js'
+// P8（M3 剧本）：9 章全部从占位升级为真实章节（M0 占位工厂 buildCatalogChapter 保留在
+// chapters.js 供「尚未迁移章节」的校验工具使用，组合根不再注册任何占位关卡）。
+import * as tcuDisappearanceAtTheTwilightEstate from './campaigns/theCircleUndone/scenarios/disappearanceAtTheTwilightEstate/index.js'
+import * as tcuTheWitchingHour from './campaigns/theCircleUndone/scenarios/theWitchingHour/index.js'
+import * as tcuAtDeathsDoorstep from './campaigns/theCircleUndone/scenarios/atDeathsDoorstep/index.js'
+import * as tcuTheSecretName from './campaigns/theCircleUndone/scenarios/theSecretName/index.js'
+import * as tcuTheWagesOfSin from './campaigns/theCircleUndone/scenarios/theWagesOfSin/index.js'
+import * as tcuForTheGreaterGood from './campaigns/theCircleUndone/scenarios/forTheGreaterGood/index.js'
+import * as tcuUnionAndDisillusion from './campaigns/theCircleUndone/scenarios/unionAndDisillusion/index.js'
+import * as tcuInTheClutchesOfChaos from './campaigns/theCircleUndone/scenarios/inTheClutchesOfChaos/index.js'
+import * as tcuBeforeTheBlackThrone from './campaigns/theCircleUndone/scenarios/beforeTheBlackThrone/index.js'
 import { manifest as tfaCampaignPack } from './packs/tfaCampaign/manifest.js'
 import { manifest as tfaInvestigators } from './packs/tfaInvestigators/manifest.js'
 import { manifest as tfaPlayer } from './packs/tfaPlayer/manifest.js'
@@ -58,9 +68,18 @@ let bundle = {
     blackStarsRise, dimCarcosa,
     theUntamedWilds, theDoomOfEztli, threadsOfFate, theBoundaryBeyond, heartOfTheEldersPart1,
     heartOfTheEldersPart2, theCityOfArchives, theDepthsOfYoth, shatteredAeons, turnBackTime,
-    ...catalogChapters],
+    tcuDisappearanceAtTheTwilightEstate, tcuTheWitchingHour, tcuAtDeathsDoorstep, tcuTheSecretName,
+    tcuTheWagesOfSin, tcuForTheGreaterGood, tcuUnionAndDisillusion, tcuInTheClutchesOfChaos,
+    tcuBeforeTheBlackThrone],
 }
 export let contentRegistry = createContentRegistry(bundle)
+
+// 工具/测试用只读快照：把当前组合根（含迁移中的占位章节）交给校验工具，
+// 让 tools/check-tcu-registry.mjs 能在替换 registered.js 之前用真实章节做注册期校验。
+// 运行时不得依赖这个函数（它是 composition root 的镜像，不是内容 API）。
+export function currentContentBundle() {
+  return { packs: [...bundle.packs], campaigns: [...bundle.campaigns], scenarios: [...bundle.scenarios] }
+}
 
 // For trusted content modules only. HTTP input never reaches this function.
 export function registerContentBundle(additions) {

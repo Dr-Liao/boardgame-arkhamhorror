@@ -248,9 +248,15 @@ test('Arkham four humans: preparation, choices, private tests, round transitions
   const kinds = new Set(), actors = new Set(), actions = new Set()
   let help = false, privateTest = false, reconnected = false, peak = 0
   async function views() {
-    const revision = (await halls[0].call('status')).session.state.revision
-    await waitFor(async () => (await Promise.all(halls.map(h => h.call('status')))).every(v => v.session?.state.revision === revision))
-    const sessions = await Promise.all(halls.map(async h => (await h.call('status')).session))
+    // 一次并行取 4 席视图；只有 revision 不一致时才进入轮询（旧实现固定先取 host 再轮询再重取，
+    // 每步最多 9 次 status 请求，而每次 status 都是 ~1.5MB 的全量视图）。
+    let sessions = await Promise.all(halls.map(async h => (await h.call('status')).session))
+    if (sessions.some(session => !session || session.state.revision !== sessions[0].state.revision)) {
+      const revision = sessions[0].state.revision
+      await waitFor(async () => (await Promise.all(halls.map(h => h.call('status')))).every(v => v.session?.state.revision === revision))
+      sessions = await Promise.all(halls.map(async h => (await h.call('status')).session))
+    }
+    const revision = sessions[0].state.revision
     for (const [seat, session] of sessions.entries()) {
       assert.equal(session.mySeat, seat)
       assert.equal(session.state.revision, revision)
@@ -282,9 +288,9 @@ test('Arkham four humans: preparation, choices, private tests, round transitions
     assert.equal(result.ok, true, `${seat}: ${JSON.stringify(move)}: ${result.error}`)
     assert.equal(result.session.state.revision, revision + 1)
     actions.add(move.action); actors.add(seat)
-    // Stay below the public relay's per-connection abuse limit while testing
-    // four snapshot recipients and a rejected spoof before each real action.
-    await new Promise(r => setTimeout(r, 350))
+    // Relay abuse limit is 600 messages / 10s per socket (~60/s); this test sends well below that
+    // even at 150ms per step (~30/s worst case), and `views()` itself waits for revision convergence.
+    await new Promise(r => setTimeout(r, 150))
   }
   for (let step = 0; step < 240; step++) {
     const sessions = await views(), seat = sessions[0].decisionSeat

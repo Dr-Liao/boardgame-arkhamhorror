@@ -113,7 +113,10 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   if (attachSpec && (attachSpec.kind === 'asset')) {
     const candidates = attachmentTargets(state, inv, attachSpec, cardId)
     if (!candidates.length) {
-      if (!fromAttachmentAssetId) inv.hand.push(cardId)
+      // 没有合法宿主：把卡放回被取出的位置（P7 顺带修：这里原本引用从未存在的
+      // fromAttachmentAssetId，任何无宿主的附属事件都会 ReferenceError；004193 / 05152 会踩）。
+      if (fromDiscard) inv.discard.push(cardId)
+      else inv.hand.push(cardId)
       info(state, events, `没有可以附属「${cardName(cardId)}」的支援。`)
       return
     }
@@ -296,6 +299,14 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     // 条目声明 keepOnPlay，或这张牌正以「绑定」形态留在敌人身上时，不按普通事件弃掉。
     else if (registeredEntry(cardId)?.keepOnPlay !== true
       && !state.enemies.some(enemy => enemy.bindMonster?.ownerSeat === seat && enemy.bindMonster.code === cardId)) disposePlayedEvent(inv, cardId)
+  }
+  // 第 5 步 P7：事件打出并结算后开窗（05320 超级加倍；卡面用 api.replayPlayedCode 重放刚打出的事件）。
+  // 只有事件卡开这个窗口；没有卡面挂载时 reactionWindow 是 no-op，不影响既有行为。
+  if (def.type === 'event') {
+    reactionWindow(state, 'eventPlayed', {
+      when: 'eventPlayed', seat, cardId, cardCode: copyCode || cardId, location: inv.location,
+      prompt: `${inv.name} 打出「${cardName(cardId)}」后`,
+    }, events)
   }
   const traits = (playedDef.traits || []).map(trait => String(trait).toLowerCase())
   if (traits.includes('spell')) triggerReaction(state, seat, 'spellPlayed', events, { location: inv.location, cardId })

@@ -1,6 +1,17 @@
 // Curated by setting and pacing. Track files remain shared; playlists never copy audio.
 const chapter = (name, mood, tracks) => Object.freeze({ name, mood, tracks: Object.freeze(tracks) })
 export const SCENARIO_MUSIC = Object.freeze({
+  theCircleUndone: Object.freeze({
+    disappearanceAtTheTwilightEstate: chapter("暮色庄园失踪事件", "庄园晚宴、失踪者、暮色疑云", ["tcuVanishing","tcuEveningFallPiano","tcuThisHouse"]),
+    theWitchingHour: chapter("巫异时刻", "林间迷途、女巫集会、命运占卜", ["tcuBabaYaga","tcuMystOnTheMoor","tcuSpellbound"]),
+    atDeathsDoorstep: chapter("死亡门前", "幽灵庄园、现实翻面、看守人追猎", ["tcuScpX5xOuterThoughts","tcuOssuary4Animate","tcuPhantasm"]),
+    theSecretName: chapter("隐秘之名", "女巫旧屋、异次元走廊、黑书秘密", ["tcuMetaphysik","tcuCrypto","tcuInnerSanctum"]),
+    theWagesOfSin: chapter("恶罪报应", "绞刑山墓地、异端幽魂、未了之事", ["tcuOssuary5Rest","tcuAnguish","tcuLandOfTheDead"]),
+    forTheGreaterGood: chapter("崇高利益", "秘社调查、机关钥匙、内殿阴谋", ["tcuHiddenPast","tcuHiddenWonders","tcuMysticForce"]),
+    unionAndDisillusion: chapter("聚合幻灭", "荒岛火盆、阵法仪式、阵营对峙", ["tcuShadowlands1Horizon","tcuShadowlands2Bridge","tcuFinalBattleOfTheDarkWizards"]),
+    inTheClutchesOfChaos: chapter("混沌魔掌", "阿卡姆裂口、连锁入侵、危机升级", ["tcuTheEscalation","tcuDarkling","tcuVolatileReaction"]),
+    beforeTheBlackThrone: chapter("黑色王座", "宇宙漂流、虚空吞噬、终末倒计时", ["tcuOssuary3Words","tcuSymmetry","tcuShadowlands6ThePit"]),
+  }),
   theForgottenAge: Object.freeze({
     theUntamedWilds: chapter('荒莽密林', '潮湿丛林、未知踪迹、远处神庙', ['magicForest', 'shamanistic', 'lostFrontier']),
     theDoomOfEztli: chapter('埃兹特里的覆灭', '古代神庙、陷阱、崩塌逃生', ['invariance', 'enterTheMaze', 'ancientRite']),

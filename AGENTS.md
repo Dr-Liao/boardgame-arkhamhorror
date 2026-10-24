@@ -64,7 +64,8 @@ node tools/audit-abilities.mjs --write
 > `--encounter` 会按归属算法把骨架落到 `shared/`、`<campaign>/_shared/` 或 `<campaign>/<scenario>/`；
 > 批量 worker 加 `--no-index`，索引只由主进程重建。
 
-`fast` 应全绿（2026-10-23 实测 2337 例全部通过，基线见 `audit/baseline.json` 与 `npm run baseline:check`）。新增失败必须为 0。
+`fast` / `slow` / `assets` 应全绿；**用例数与耗时不要写死在文档里**（会随迁移与引擎变化失真），以
+`node tools/test-timings.mjs <tier>` 的实时输出和 `npm run baseline:check` 为准。新增失败必须为 0。
 存量 529 条非玩家条目已于 2026-10-22 拆分完毕，迁移方案与对账证据见
 [`docs/encounter-entry-split-plan.md`](docs/encounter-entry-split-plan.md)；`encounter-abilities.js`
 只是 facade，只读，新增一律进单卡文件。

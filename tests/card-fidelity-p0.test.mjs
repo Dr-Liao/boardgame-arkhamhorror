@@ -51,6 +51,35 @@ test('04104 枪法如神：没有同地点敌人时可激活枪械攻击并改�
 })
 
 // ---------------------------------------------------------------------------
+// 冷漠（aloof）：未交战的冷漠敌人不能被攻击；04104 的「忽略冷漠」可以把它选为目标。
+// ---------------------------------------------------------------------------
+test('04104 枪法如神：忽略冷漠，未交战的冷漠敌人可以成为本次攻击目标', () => {
+  const state = fixture('01001')
+  const gun = asset(state, '01016')
+  const inv = state.investigators[0]
+  inv.resources = 10
+  const whippoorwill = enemy(state, { id: 'whippoorwill', code: '02090', name: '夜鹰',
+    fight: 0, evade: 0, health: 8, engagedSeat: null, aloof: true, printedAloof: true })
+  state.chaosBag = ['0']
+  assert.ok(!legalMoves(state, 0).some(item => item.action === 'fight' && item.enemyId === whippoorwill.id),
+    '未交战的冷漠敌人不能被普通攻击')
+  assert.ok(!legalMoves(state, 0).some(item => item.action === 'ability' && item.assetId === gun.id),
+    '不忽略冷漠的武器攻击不能选中未交战的冷漠敌人')
+  inv.hand = ['04104']
+  const attack = legalMoves(state, 0).find(item => item.action === 'ability' && item.assetId === gun.id)
+  assert.ok(attack, '枪法如神让枪械攻击可以激活')
+  assert.equal(attack.targetId, undefined)
+  move(state, attack)
+  const pending = state.pendingChoice
+  const option = pending?.options.find(item => item.cardCode === '04104')
+  assert.ok(option, '激活时提供枪法如神')
+  move(state, { action: 'choose', choiceId: pending.id, optionId: option.id })
+  settle(state)
+  assert.equal(state.enemies.find(item => item.id === whippoorwill.id)?.damageTaken, 3,
+    '.45 自动手枪 2 点 + 枪法如神未交战 +1')
+})
+
+// ---------------------------------------------------------------------------
 // 02012 吉姆的小号：多目标时必须让玩家选择治愈对象，而不是抛错或跳过。
 // ---------------------------------------------------------------------------
 test('02012 吉姆的小号：2 名候选人时选择其中一名治愈 1 点恐惧', () => {

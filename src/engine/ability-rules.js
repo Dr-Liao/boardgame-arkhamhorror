@@ -5,6 +5,7 @@
 export function createAbilityRules(deps) {
   const {
     all,
+    aloofPreventsAttack,
     applyDamage,
     applyHorror,
     cannotPlayTypes,
@@ -246,6 +247,7 @@ export function createAbilityRules(deps) {
     }
     if (effect.type === 'fight') return state.enemies.filter(enemy => enemy.location === inv.location
       && (!effect.requireNotEngagedTarget || enemy.engagedSeat !== inv.seat)
+      && !aloofPreventsAttack(state, inv, enemy, effect)
       && (!enemyRuleFlags(enemy.code).damageOnlyFrom || enemyTextBlanked(state, enemy))
       && !hiddenFightBlocked(state, inv, enemy))
     if (effect.type === 'evade') return enemiesEngagedWith(state, inv)

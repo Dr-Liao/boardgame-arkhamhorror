@@ -2,31 +2,126 @@ import { imageCandidates, createImageCache, DEFAULT_IMAGE_HOST, normalizeImageHo
 import { objectiveText, renderRulesText } from './card-text.js'
 import { cardRuleIds, matchingRules, ruleLink } from './rulebook-data.js'
 import { renderCardFilters } from './card-filters.js'
+import { t } from './i18n.js'
 
 export const TYPE_LABELS = { investigator: '调查员', asset: '支援', event: '事件', skill: '技能', treachery: '诡计', enemy: '敌人', location: '地点', scenario: '剧本', agenda: '密谋', act: '场景', story: '故事', key: '钥匙', enemy_location: '敌人地点' }
 // 可用性和规则验收分别展示；Core 验收不能推广到尚未验收的扩展牌。
 export const EFFECT_LABELS = { unimplemented: '未实现', unverified: '有实现，未验收', partial: '部分实现', simplified: '简化实现', implemented: '已实现，未验收', verified: '已验收', 'not-applicable': '不适用' }
 export const AVAILABILITY_LABELS = { 'catalog-only': '仅图鉴', simplified: '当前可玩', strict: '当前可玩，待规则审计', disabled: '禁用' }
-const availabilityLabel = card => card.availability === 'strict' && card.effectStatus === 'verified'
-  ? '当前可玩' : AVAILABILITY_LABELS[card.availability] || card.availability
+// 上面的常量是中文源文案（Node 侧的展示口径/旧调用方仍按中文取），界面展示走下面的函数按当前语言取。
+const TYPE_LABEL_KEYS = { investigator: 'card.type.investigator', asset: 'card.type.asset', event: 'card.type.event', skill: 'card.type.skill', treachery: 'card.type.treachery', enemy: 'card.type.enemy', location: 'card.type.location', scenario: 'card.type.scenario', agenda: 'card.type.agenda', act: 'card.type.act', story: 'card.type.story', key: 'card.type.key', enemy_location: 'card.type.enemyLocation' }
+const EFFECT_LABEL_KEYS = { unimplemented: 'card.effect.unimplemented', unverified: 'card.effect.unverified', partial: 'card.effect.partial', simplified: 'card.effect.simplified', implemented: 'card.effect.implemented', verified: 'card.effect.verified', 'not-applicable': 'card.effect.notApplicable' }
+const AVAILABILITY_LABEL_KEYS = { 'catalog-only': 'card.availability.catalogOnly', simplified: 'card.availability.simplified', strict: 'card.availability.strict', disabled: 'card.availability.disabled' }
+export function typeLabel(value) {
+  return TYPE_LABEL_KEYS[value] ? t(TYPE_LABEL_KEYS[value]) : (TYPE_LABELS[value] || value)
+}
+export function effectLabel(value) {
+  return EFFECT_LABEL_KEYS[value] ? t(EFFECT_LABEL_KEYS[value]) : (EFFECT_LABELS[value] || value)
+}
+export function availabilityLabel(card) {
+  return card.availability === 'strict' && card.effectStatus === 'verified'
+    ? t('card.availability.playable') : (AVAILABILITY_LABEL_KEYS[card.availability] ? t(AVAILABILITY_LABEL_KEYS[card.availability]) : card.availability)
+}
+const localizedLabels = (labels, keys) => Object.fromEntries(Object.keys(labels).map(value => [value, keys[value] ? t(keys[value]) : labels[value]]))
 const CLASS_LABELS = { guardian: '守卫者', seeker: '探求者', rogue: '游荡者', mystic: '秘术师', survivor: '幸存者', neutral: '中立', mythos: '神话' }
 const imageCache = createImageCache()
 const responseCache = new Map()
 let metadata = null
 let metadataPending = null
 const LEGACY_IMAGE_HOST = 'https://assets.arkhamhorror.app'
-const preferences = { host: DEFAULT_IMAGE_HOST, language: 'zh-cn', enabled: true, variant: '' }
+const preferences = { host: DEFAULT_IMAGE_HOST, language: 'zh-cn', followHall: true, enabled: true, variant: '' }
 try {
   const saved = JSON.parse(localStorage.getItem('arkham.presentation') || 'null')
   if (saved) {
     const host = normalizeImageHost(saved.host)
     preferences.host = !host || host === LEGACY_IMAGE_HOST ? DEFAULT_IMAGE_HOST : host
     preferences.language = saved.language === 'en' ? 'en' : 'zh-cn'
+    // §8.5 迁移：旧数据没有 followHall。旧值 language === 'en' 视为玩家显式选过英文，
+    // 置 followHall:false，避免升级后突然被大厅语言改回中文；其它情况默认跟随大厅。
+    preferences.followHall = typeof saved.followHall === 'boolean' ? saved.followHall : saved.language !== 'en'
     preferences.enabled = saved.enabled !== false
     preferences.variant = saved.variant === 'revised' ? 'revised' : ''
     if (host === LEGACY_IMAGE_HOST) savePreferences({})
   }
 } catch {}
+
+// ---------------------------------------------------------------------------
+// 卡牌语言（docs/localization.md §8.5）
+//
+// 大厅 locale（zh-CN / en / en-US / 其它）→ 游戏卡牌语言（'zh-cn' | 'en'）。
+// 大厅 zh-CN 对应游戏 zh-cn；en 及其地区变体对应 en；其它语言按 Mod 的
+// defaultLocale（zh-CN）处理。卡牌语言默认跟随大厅，玩家在游戏内显式改过才覆盖。
+// ---------------------------------------------------------------------------
+
+/** 大厅 locale → 游戏卡牌语言；空值返回 Mod 默认语言。 */
+export function cardLanguage(locale) {
+  const tag = String(locale ?? '').trim().toLowerCase()
+  return tag === 'en' || tag.startsWith('en-') ? 'en' : 'zh-cn'
+}
+
+// 大厅当前语言的映射结果；'' 表示旧大厅没有 host.locale，此时回退玩家自己的卡牌语言偏好。
+let hallLanguage = ''
+
+/** createUI 时同步大厅语言（host.locale.resolved）；跟随大厅时同时更新卡牌语言偏好。 */
+export function setHostLocale(locale) {
+  hallLanguage = typeof locale === 'string' && locale.trim() ? cardLanguage(locale) : ''
+  if (hallLanguage && preferences.followHall) savePreferences({ language: hallLanguage })
+  return currentLanguage()
+}
+
+/** 当前生效的卡牌语言：跟随大厅且已知大厅语言时用大厅映射，否则用玩家偏好。 */
+export function currentLanguage() {
+  return preferences.followHall && hallLanguage ? hallLanguage : preferences.language
+}
+
+function displayLanguage(locale) {
+  return typeof locale === 'string' && locale.trim() ? cardLanguage(locale) : currentLanguage()
+}
+
+/**
+ * 卡牌显示名的唯一入口（§8.7 第二步）。
+ * en：优先 nameEn（引擎/构筑投影把英文名放在这里），否则基础 name（目录数据基础字段是英文）；
+ * zh-CN：nameZh || name，逐字段回退；其它 locale 按 defaultLocale（zh-CN）处理。
+ */
+export function cardDisplayName(card, locale) {
+  if (!card) return ''
+  const language = displayLanguage(locale)
+  const english = card.nameEn || card.name || card.nameZh || ''
+  return language === 'en' ? english : (card.nameZh || card.name || english)
+}
+
+/** 卡牌规则文本：zh-CN 用 textZh||text，en 用基础英文字段（text 缺失时回退 textZh）。 */
+export function cardDisplayText(card, locale) {
+  if (!card) return ''
+  return displayLanguage(locale) === 'en'
+    ? (card.text || card.textZh || '')
+    : (card.textZh || card.text || '')
+}
+
+/** 卡牌风味文本，回退规则同 cardDisplayText。 */
+export function cardDisplayFlavor(card, locale) {
+  if (!card) return ''
+  return displayLanguage(locale) === 'en'
+    ? (card.flavor || card.flavorZh || '')
+    : (card.flavorZh || card.flavor || '')
+}
+
+/** 卡牌副标题（调查员称号等），回退规则同 cardDisplayName。 */
+export function cardDisplaySubname(card, locale) {
+  if (!card) return ''
+  return displayLanguage(locale) === 'en'
+    ? (card.subname || card.subnameZh || '')
+    : (card.subnameZh || card.subname || '')
+}
+
+/** 卡牌特性：逐项回退到另一种语言，避免空数组时显示空白。 */
+export function cardDisplayTraits(card, locale) {
+  const traits = Array.isArray(card?.traits) ? card.traits : []
+  const traitsZh = Array.isArray(card?.traitsZh) ? card.traitsZh : []
+  return displayLanguage(locale) === 'en'
+    ? (traits.length ? traits : traitsZh)
+    : (traitsZh.length ? traitsZh : traits)
+}
 
 // 本 Mod 的只读接口由大厅按通用契约挂在 /api/mods/<id>/ 下。
 const API_ROOT = '/api/mods/arkhamhorror/'
@@ -61,18 +156,23 @@ export async function getCardPresentation(code) {
   return request('cards/' + encodeURIComponent(code) + '?v=' + encodeURIComponent(meta.resourceVersion))
 }
 
-export function cardFaceText(card, linkedCard, side, language = preferences.language) {
+export function cardFaceText(card, linkedCard, side, language = currentLanguage()) {
   const back = side === 'back'
   const associated = back && linkedCard
   const source = associated || card
   const prefix = back && !associated ? 'back' : ''
   const field = name => prefix ? prefix + name[0].toUpperCase() + name.slice(1) : name
-  const choose = name => language === 'en' ? source[field(name)] || '' : source[field(name) + 'Zh'] || source[field(name)] || ''
+  // 逐字段回退：en 用基础英文字段（缺失时才退中文），其它语言用中文叠加字段（缺失退基础字段）。
+  const choose = name => {
+    const base = source[field(name)]
+    const zh = source[field(name) + 'Zh']
+    return language === 'en' ? (base || zh || '') : (zh || base || '')
+  }
   if (!back) return { ...source, nameZh: language === 'en' ? '' : source.nameZh, textZh: language === 'en' ? '' : source.textZh, flavorZh: language === 'en' ? '' : source.flavorZh, subnameZh: language === 'en' ? '' : source.subnameZh, traitsZh: language === 'en' ? null : source.traitsZh }
   return {
     code: source.code, type: associated ? source.type : 'card_back', klass: source.klass,
-    name: choose('name') || ((card.nameZh || card.name) + ' · 背面'),
-    text: choose('text') || '通用卡背或此面没有独立卡文。',
+    name: choose('name') || t('card.back.name', { name: cardDisplayName(card, language) }),
+    text: choose('text') || t('card.back.generic'),
     flavor: choose('flavor'),
     ...(associated ? { health: source.health, fight: source.fight, evade: source.evade, damage: source.damage, horror: source.horror, traits: source.traits } : {}),
   }
@@ -89,12 +189,12 @@ export function renderImage(h, descriptor, side = 'front', { compact = false, ar
   holder.append(status)
   const fallback = () => {
     holder.dataset.imageState = 'text-fallback'
-    status.textContent = preferences.enabled ? '卡图不可用，仅显示文字' : '纯文字模式'
+    status.textContent = preferences.enabled ? t('image.unavailable') : t('image.textMode')
   }
   if (!descriptor || !preferences.enabled) { fallback(); return holder }
   let candidates
-  try { candidates = imageCandidates(descriptor, { side, host: preferences.host, language: preferences.language, artId, variant: preferences.variant }) } catch { fallback(); return holder }
-  const img = h('img', { alt: side === 'back' ? '卡牌背面' : '卡牌正面', decoding: 'async', referrerpolicy: 'no-referrer' })
+  try { candidates = imageCandidates(descriptor, { side, host: preferences.host, language: currentLanguage(), artId, variant: preferences.variant }) } catch { fallback(); return holder }
+  const img = h('img', { alt: side === 'back' ? t('card.face.back') : t('card.face.front'), decoding: 'async', referrerpolicy: 'no-referrer' })
   holder.prepend(img)
   let timer
   let current
@@ -104,7 +204,7 @@ export function renderImage(h, descriptor, side = 'front', { compact = false, ar
     current = imageCache.next(candidates)
     if (!current) { img.removeAttribute('src'); img.hidden = true; fallback(); return }
     holder.dataset.imageState = 'loading'
-    status.textContent = '正在加载卡图…'
+    status.textContent = t('image.loading')
     img.hidden = false
     img.src = current.url
     timer = setTimeout(() => fail(), 8000)
@@ -124,8 +224,8 @@ export function renderImage(h, descriptor, side = 'front', { compact = false, ar
     holder.dataset.imageState = 'displayable'
     holder.classList.toggle('ah-art-landscape', img.naturalWidth > img.naturalHeight)
     status.textContent = current.source?.startsWith('declared-variant')
-      ? '修订版替代美术'
-      : current.language === 'zh' ? '中文卡图' : current.language === 'en' ? '英文卡图' : '卡背'
+      ? t('image.revised')
+      : current.language === 'zh' ? t('image.zh') : current.language === 'en' ? t('image.en') : t('image.back')
   })
   const start = () => { if (!active) { active = true; attempt() } }
   if (compact && typeof IntersectionObserver !== 'undefined') {
@@ -185,7 +285,8 @@ function preloadOne(candidates, signal) {
  */
 export function preloadScenarioImages(scenarioId) {
   if (!scenarioId || !preferences.enabled || typeof Image === 'undefined') return
-  const key = JSON.stringify([scenarioId, preferences.host, preferences.language, preferences.variant])
+  const language = currentLanguage()
+  const key = JSON.stringify([scenarioId, preferences.host, language, preferences.variant])
   if (preloadRun?.key === key) return
   preloadRun?.controller.abort()
   const controller = new AbortController()
@@ -194,14 +295,14 @@ export function preloadScenarioImages(scenarioId) {
   ;(async () => {
     const meta = await getCatalogMetadata()
     const manifest = await request('scenarios/' + encodeURIComponent(scenarioId) + '/images?v=' + encodeURIComponent(meta.resourceVersion))
-    const wantsLocalized = preferences.language !== 'en'
+    const wantsLocalized = language !== 'en'
     const queue = []
     const seen = new Set()
     for (const { images } of manifest.cards || []) {
       for (const side of ['front', 'back']) {
         if (faceIsLocal(images?.[side], wantsLocalized)) continue
         let candidates
-        try { candidates = imageCandidates(images, { side, host: preferences.host, language: preferences.language, variant: preferences.variant }) } catch { continue }
+        try { candidates = imageCandidates(images, { side, host: preferences.host, language, variant: preferences.variant }) } catch { continue }
         if (!candidates.length || seen.has(candidates[0].url)) continue
         seen.add(candidates[0].url)
         queue.push(candidates)
@@ -215,23 +316,31 @@ export function preloadScenarioImages(scenarioId) {
 }
 
 export function renderPresentationSettings(h, onChange) {
-  const host = h('input', { className: 'bg-input', value: preferences.host, placeholder: DEFAULT_IMAGE_HOST, 'aria-label': '卡图主机', autocomplete: 'off' })
+  const host = h('input', { className: 'bg-input', value: preferences.host, placeholder: DEFAULT_IMAGE_HOST, 'aria-label': t('presentation.host.label'), autocomplete: 'off' })
   const message = h('div', { className: 'ah-resource-note', role: 'status' })
-  const language = h('select', { className: 'bg-select', 'aria-label': '卡文与图片语言', onchange: event => { savePreferences({ language: event.target.value }); onChange() } },
-    h('option', { value: 'zh-cn' }, '简体中文'), h('option', { value: 'en' }, 'English'))
+  const language = h('select', { className: 'bg-select', 'aria-label': t('presentation.language.label'), onchange: event => {
+    // 玩家在游戏内显式选择卡牌语言 = 不再跟随大厅（§8.5）。
+    savePreferences({ language: event.target.value, followHall: false }); onChange()
+  } },
+    h('option', { value: 'zh-cn' }, t('locale.zh-CN')), h('option', { value: 'en' }, t('locale.en')))
   language.value = preferences.language
-  const variant = h('select', { className: 'bg-select', 'aria-label': '美术版本', onchange: event => { savePreferences({ variant: event.target.value }); onChange() } },
-    h('option', { value: '' }, '原版美术'), h('option', { value: 'revised' }, '修订版替代美术'))
+  const languageRow = h('div', { className: 'ah-settings-row' }, language,
+    h('label', { className: 'ah-text-mode' }, h('input', { type: 'checkbox', checked: preferences.followHall, onchange: event => {
+      const followHall = !!event.target.checked
+      savePreferences({ followHall, ...(followHall && hallLanguage ? { language: hallLanguage } : {}) }); onChange()
+    } }), t('presentation.language.follow')))
+  const variant = h('select', { className: 'bg-select', 'aria-label': t('presentation.variant.label'), onchange: event => { savePreferences({ variant: event.target.value }); onChange() } },
+    h('option', { value: '' }, t('presentation.variant.original')), h('option', { value: 'revised' }, t('presentation.variant.revised')))
   variant.value = preferences.variant
   return h('details', { className: 'ah-presentation-settings' },
-    h('summary', null, '图片与语言设置'),
-    h('p', { className: 'ah-resource-note' }, '默认 CDN 卡图首次显示后会缓存到本地资源目录；自定义主机仍由浏览器直接加载。中文缺图时显示英文卡图；修订版美术只覆盖少数卡。设置不改变规则或可用卡池。'),
+    h('summary', null, t('presentation.settings.title')),
+    h('p', { className: 'ah-resource-note' }, t('presentation.settings.note')),
     h('div', { className: 'ah-settings-row' }, host, h('button', { className: 'bg-btn secondary', onclick: () => {
-      try { savePreferences({ host: normalizeImageHost(host.value) }); onChange() } catch { message.textContent = '请输入不带账号、查询参数或片段的 HTTP(S) 主机地址。' }
-    } }, '应用主机')),
-    language,
+      try { savePreferences({ host: normalizeImageHost(host.value) }); onChange() } catch { message.textContent = t('presentation.host.invalid') }
+    } }, t('presentation.host.apply'))),
+    languageRow,
     variant,
-    h('label', { className: 'ah-text-mode' }, h('input', { type: 'checkbox', checked: !preferences.enabled, onchange: event => { savePreferences({ enabled: !event.target.checked }); onChange() } }), '纯文字模式，不加载远程图片'),
+    h('label', { className: 'ah-text-mode' }, h('input', { type: 'checkbox', checked: !preferences.enabled, onchange: event => { savePreferences({ enabled: !event.target.checked }); onChange() } }), t('presentation.textMode')),
     message)
 }
 
@@ -253,33 +362,33 @@ export function renderDetailContent(h, detail, renderTextCard, onChange, gameSta
   const runtime = detail.runtime && side === 'front' ? runtimeCardStats(detail.def) : null
   const card = runtime ? { ...base, ...runtime } : base
   const linked = entry?.linkedCard
-  const labels = [availabilityLabel(card), EFFECT_LABELS[card.effectStatus] || card.effectStatus].filter(Boolean)
+  const labels = [availabilityLabel(card), effectLabel(card.effectStatus)].filter(Boolean)
   const notes = [...new Set([...(entry?.differenceNotes || card.differenceNotes || []), detail.def.identityReason].filter(Boolean))]
   const face = cardFaceText(card, linked, side)
   const objective = objectiveText(detail.def.objective, gameState)
   const backAllowed = !detail.runtime || card.type === 'investigator' || (!card.doubleSided && !card.linkedCardCode && !card.linkedToCode && !['location', 'act', 'agenda', 'scenario', 'story'].includes(card.type))
   return h('div', { className: 'ah-detail-content' },
     h('div', { className: 'ah-detail-toolbar' },
-      h('button', { className: 'bg-btn secondary', 'aria-pressed': String(side === 'front'), onclick: () => { detail.side = 'front'; onChange() } }, '正面'),
-      h('button', { className: 'bg-btn secondary', disabled: !backAllowed, 'aria-pressed': String(side === 'back'), onclick: () => { detail.side = 'back'; onChange() } }, '背面'),
-      h('span', { className: 'ah-resource-note' }, '编号 ' + (card.code || detail.code || '未映射'))),
-    h('div', { className: 'ah-detail-kicker' }, TYPE_LABELS[card.type] || '卡牌'),
+      h('button', { className: 'bg-btn secondary', 'aria-pressed': String(side === 'front'), onclick: () => { detail.side = 'front'; onChange() } }, t('detail.front')),
+      h('button', { className: 'bg-btn secondary', disabled: !backAllowed, 'aria-pressed': String(side === 'back'), onclick: () => { detail.side = 'back'; onChange() } }, t('detail.back')),
+      h('span', { className: 'ah-resource-note' }, t('detail.code', { code: card.code || detail.code || t('detail.unmapped') }))),
+    h('div', { className: 'ah-detail-kicker' }, typeLabel(card.type) || t('detail.type.card')),
     h('div', { className: 'ah-detail-layout' },
       renderImage(h, entry?.images || card.images, side, { artId: detail.def.artId }),
       h('div', null, renderTextCard(face),
-        h('nav', {className:'ah-card-rule-links','aria-label':'相关规则'},
+        h('nav', {className:'ah-card-rule-links','aria-label':t('detail.rules.links')},
           // 卡号级映射优先：`card` 是已加载的卡面（含 text/textZh/traits/slot），只传 `detail.def`
           // 会让 `^04`/`^05` 这类「按卡文判定」的条目丢失，只剩通用条目占满 10 个名额。
           [...new Set([...cardRuleIds({ ...detail.def, ...card }), ...matchingRules([face.text,face.textZh,face.slot,face.slots?.join(' '),face.keywords?.join?.(' ')].filter(Boolean).join(' ')).map(r=>r.id)])]
             .slice(0,10).map(id=>ruleLink(h,id)),
-          ruleLink(h,'round','打开规则书')),
-        detail.runtime && objective ? h('section', { className: 'ah-runtime-text' }, h('h3', null, '当前目标'), h('p', null, renderRulesText(h, objective))) : null,
-        h('details', { className: 'ah-detail-meta' }, h('summary', {}, '卡牌资料与规则说明'),
+          ruleLink(h,'round',t('detail.rulebook.open'))),
+        detail.runtime && objective ? h('section', { className: 'ah-runtime-text' }, h('h3', null, t('detail.objective')), h('p', null, renderRulesText(h, objective))) : null,
+        h('details', { className: 'ah-detail-meta' }, h('summary', {}, t('detail.meta.title')),
           h('div', { className: 'ah-status-badges' }, labels.map(label => h('span', { className: 'ah-kw' }, label))),
-          h('p', { className: 'ah-resource-note' }, detail.runtime ? '本局按已实现规则结算；卡面供查阅，查看背面不会推进剧情。' : '目录收录不等于可用卡池。'),
+          h('p', { className: 'ah-resource-note' }, detail.runtime ? t('detail.meta.runtime') : t('detail.meta.catalog')),
           notes.map(note => h('p', { className: 'ah-difference-note' }, note))))),
-    detail.loading ? h('p', { className: 'ah-resource-note', role: 'status' }, '正在读取卡牌资料…') : null,
-    detail.error ? h('p', { className: 'ah-difference-note', role: 'status' }, detail.error + '；保留已知文字，不影响对局。') : null,
+    detail.loading ? h('p', { className: 'ah-resource-note', role: 'status' }, t('detail.loading')) : null,
+    detail.error ? h('p', { className: 'ah-difference-note', role: 'status' }, t('detail.error', { error: detail.error })) : null,
     renderPresentationSettings(h, onChange))
 }
 
@@ -313,7 +422,7 @@ export function createCatalogUI({ h, onChange, openCard }) {
   }
   const choose = (key, label, values, labels = {}) => {
     const select = h('select', { className: 'bg-select', 'aria-label': label, 'data-focus-key':`catalog:${key}`, onchange: event => { state.filters[key] = event.target.value; state.offset = 0; load() } },
-      h('option', { value: '' }, '全部' + label),
+      h('option', { value: '' }, t('catalog.allOption', { label })),
       (values || []).map(value => { const code = typeof value === 'string' ? value : value.code || value.value; return h('option', { value: code }, labels[code] || value.name || code) }))
     select.value = state.filters[key]
     return select
@@ -326,26 +435,28 @@ export function createCatalogUI({ h, onChange, openCard }) {
       const close = () => { state.open = false; state.sequence++; onChange() }
       const result = state.result
       return h('div', { className: 'bg-backdrop ah-catalog-backdrop' },
-        h('section', { className: 'bg-modal ah-catalog-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': '诡镇全卡图鉴', onclick: event => event.stopPropagation(), onkeydown: event => { if (event.key === 'Escape') close() } },
-          h('header', { className: 'ah-catalog-head' }, h('div', null, h('h2', null, '诡镇全卡图鉴'), h('p', { className: 'ah-resource-note' }, '目录收录不等于可玩。构筑仍仅开放获准卡池；图鉴含剧情及背面信息。')), h('button', { className: 'bg-btn secondary', onclick: close, 'aria-label': '关闭图鉴' }, '关闭')),
-          renderCardFilters(h,{scope:'catalog',filters:state.filters,count:result?.total||0,searchLabel:'卡号或名称',
-            options:{...metadata,typeLabels:TYPE_LABELS},onChange:filters=>{state.filters=filters;state.offset=0;load()}}),
-          h('div', { className: 'ah-catalog-filters' }, h('button',{className:'bg-btn',onclick:()=>{state.offset=0;load()}},'检索'),choose('effectStatus', '实现状态', metadata?.effectStatuses, EFFECT_LABELS), choose('availability', '可用性', metadata?.availabilityStatuses, AVAILABILITY_LABELS)),
+        h('section', { className: 'bg-modal ah-catalog-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('catalog.title'), onclick: event => event.stopPropagation(), onkeydown: event => { if (event.key === 'Escape') close() } },
+          h('header', { className: 'ah-catalog-head' }, h('div', null, h('h2', null, t('catalog.title')), h('p', { className: 'ah-resource-note' }, t('catalog.note'))), h('button', { className: 'bg-btn secondary', onclick: close, 'aria-label': t('catalog.close') }, t('catalog.closeAction'))),
+          renderCardFilters(h,{scope:'catalog',filters:state.filters,count:result?.total||0,searchLabel:t('catalog.searchLabel'),
+            options:{...metadata,typeLabels:localizedLabels(TYPE_LABELS, TYPE_LABEL_KEYS)},onChange:filters=>{state.filters=filters;state.offset=0;load()}}),
+          h('div', { className: 'ah-catalog-filters' }, h('button',{className:'bg-btn',onclick:()=>{state.offset=0;load()}},t('catalog.search')),choose('effectStatus', t('catalog.effectStatus'), metadata?.effectStatuses, localizedLabels(EFFECT_LABELS, EFFECT_LABEL_KEYS)), choose('availability', t('catalog.availability'), metadata?.availabilityStatuses, localizedLabels(AVAILABILITY_LABELS, AVAILABILITY_LABEL_KEYS))),
           renderPresentationSettings(h, onChange),
-          h('div', { className: 'ah-catalog-summary', role: 'status' }, state.loading ? '正在加载目录…' : state.error || ('找到 ' + (result?.total || 0) + ' 张 · 每页 ' + state.limit + ' 张')),
-          state.error ? h('button', { className: 'bg-btn secondary', onclick: load }, '重新加载') : null,
-          h('div', { className: 'ah-catalog-grid', 'aria-busy': String(state.loading) }, !state.error ? (result?.cards || []).map(card =>
-            h('button', { className: 'ah-catalog-card', disabled:state.loading, onclick: () => openCard(card), 'aria-label': (card.nameZh || card.name) + ' ' + card.code,
-              'data-zoom-code': card.code, 'data-zoom-name': card.nameZh || card.name },
+          h('div', { className: 'ah-catalog-summary', role: 'status' }, state.loading ? t('catalog.loading') : state.error || t('catalog.summary', { total: result?.total || 0, limit: state.limit })),
+          state.error ? h('button', { className: 'bg-btn secondary', onclick: load }, t('catalog.reload')) : null,
+          h('div', { className: 'ah-catalog-grid', 'aria-busy': String(state.loading) }, !state.error ? (result?.cards || []).map(card => {
+            const name = cardDisplayName(card)
+            return h('button', { className: 'ah-catalog-card', disabled:state.loading, onclick: () => openCard(card), 'aria-label': name + ' ' + card.code,
+              'data-zoom-code': card.code, 'data-zoom-name': name },
               renderImage(h, card.images, 'front', { compact: true }),
-              h('span', { className: 'ah-catalog-card-name' }, card.nameZh || card.name),
-              h('span', { className: 'ah-catalog-card-meta' }, card.code + ' · ' + (TYPE_LABELS[card.type] || card.type)),
-              h('span', { className: 'ah-catalog-card-meta' }, (EFFECT_LABELS[card.effectStatus] || card.effectStatus) + ' · ' + availabilityLabel(card)))) : null),
-          !state.loading && !state.error && result?.total === 0 ? h('p', { className: 'bg-empty' }, '没有匹配的卡牌。请放宽筛选条件。') : null,
+              h('span', { className: 'ah-catalog-card-name' }, name),
+              h('span', { className: 'ah-catalog-card-meta' }, card.code + ' · ' + typeLabel(card.type)),
+              h('span', { className: 'ah-catalog-card-meta' }, effectLabel(card.effectStatus) + ' · ' + availabilityLabel(card)))
+          }) : null),
+          !state.loading && !state.error && result?.total === 0 ? h('p', { className: 'bg-empty' }, t('catalog.empty')) : null,
           h('footer', { className: 'ah-catalog-pagination' },
-            h('button', { className: 'bg-btn secondary', disabled: state.loading || state.offset === 0, onclick: () => { state.offset = Math.max(0, state.offset - state.limit); load() } }, '上一页'),
-            h('span', null, '第 ' + (Math.floor(state.offset / state.limit) + 1) + ' 页'),
-            h('button', { className: 'bg-btn secondary', disabled: state.loading || !result || state.offset + state.limit >= result.total, onclick: () => { state.offset += state.limit; load() } }, '下一页'))))
+            h('button', { className: 'bg-btn secondary', disabled: state.loading || state.offset === 0, onclick: () => { state.offset = Math.max(0, state.offset - state.limit); load() } }, t('catalog.prev')),
+            h('span', null, t('catalog.page', { page: Math.floor(state.offset / state.limit) + 1 })),
+            h('button', { className: 'bg-btn secondary', disabled: state.loading || !result || state.offset + state.limit >= result.total, onclick: () => { state.offset += state.limit; load() } }, t('catalog.next')))))
     },
   }
 }

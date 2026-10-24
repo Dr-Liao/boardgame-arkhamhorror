@@ -13,6 +13,7 @@
 - 《敦威治遗产》状态为 `playable`，八章组成可从大厅启动的完整战役；规则仍采用本 Mod 的简化实现边界。
 - 《卡尔克萨之路》为 `playable`，沿用敦威治的卡包、章节、资源与验收目录契约；逐卡字面核对仍在迁移账本中跟踪。
 - 《失落的时代》为 `playable`（账本 `earlyAccess`）：十章组成可从大厅启动的战役，序幕按补给品点数购买补给、幕间按卡面划掉补给；逐张卡面字面核对仍在 `audit/tfa-migration.json` 的 `remaining` 清单与 `confirmations.scenarios[].checks.literalCardBehavior` 下跟踪。
+- 《万象无终》M0–M5 已交付（发布口径 `playable` + `earlyAccess`）：战役、9 章与 `tcuCampaign` 包可从大厅启动，`assertLaunchable` 通过；六位正式调查员可选人/可构筑，87 张玩家卡逐卡验收（85 张可构筑，83 张可入牌组进构筑界面与 TCU 战役起始牌组池；05314/05317 绑定副本与 2 张基础弱点只作依赖）。逐卡自动账本 `audit/tcu-all-card-acceptance.json` 377/377 verified；P10 逐卡行为审计 `audit/tcu-card-behavior-audit.json` 记录 143 match / 174 approximation / 60 gap，因此 `equivalenceCertified: false`、60 条 gap 逐卡在总账 remaining 中，未宣称规则等价。发布级证据（大厅→序章→章节实机路径、媒体资源、展示素材与 27 首 BGM）见 [docs/tcu-release.md](docs/tcu-release.md)；逐章证据见 `audit/tcu-scenario-acceptance.json`，整轮账本见 `audit/tcu-migration.json`。
 - 目录收录不等于规则已实现；可选人、可构筑和可启动状态必须经过服务端许可与内容注册表校验。
 
 ## 2. 目录结构
@@ -53,6 +54,16 @@ games/arkhamhorror/
 - `src/engine/`：建局、合法动作、校验与执行。
 - `src/deck/`：构筑面板数据。
 - `content/`：战役列表及可启动状态。
+
+入口另外声明两个与浏览器界面共享的约定：
+
+- `viewState` / `viewEvents` / `staticTables`：观察者投影（见 `src/integration/observation.js`）。
+- `autoPassChoice`：自动跳过的房主侧代答钩子。客户端在 move 的 `body.client.autoPass` 里带上本机
+  「反应关」的卡号集合，并用联机 `prefs` 命令在开关变化/进局/重连时全量同步；大厅按座位缓存后，
+  在命令的发布之前调用它，把返回的普通 `choose/skip` 交给 `commitMove` 提交（与玩家手点同一条路径，
+  回放/撤销/审计不变）。P1 起缓存覆盖任意在线座位，所以别人命令触发的窗口、多座位连续窗口也能在
+  同一条命令里代答；离线座位不代答。判定函数 `reactionSkipPlan` 放在 `web/reaction-preferences.js`，
+  浏览器与 Node 共用同一份映射逻辑（Node 反向 import `web/` 是架构守卫允许的方向）。
 
 ### 3.2 权威规则引擎
 
@@ -261,6 +272,9 @@ state.actionLog + 建局参数（state.setup / seed / difficulty / rulesMode / a
 | `audit/core-acceptance.json`、`audit/carcosa-*-acceptance.json`、`audit/dunwich-acceptance.json` 里的证据文件哈希 | 验收测试文件改动后重算（证据映射不变） | `node tools/rehash-acceptance.mjs --write` |
 | `tests/fixtures/replay/golden-replays.json` | golden replay 基线（真实对局的动作日志 + 逐步指纹） | `npm run replay:fixtures:write` |
 | `audit/p6-behavior-ledger.*` | P6 行为证据 | `npm run audit:p6:write` |
+| `audit/tcu-player-acceptance.json`、`src/cards/tcu-player-acceptance.js` | P7（M2）玩家卡逐卡验收证据与运行时 verified 集合（`--check` 逐字节复算） | `node tools/audit-tcu-player.mjs --write` |
+| `audit/tcu-scenario-acceptance.json` | P8（M3）9 章逐章 12 项验收证据（实跑章节测试 + 内容计算 + 文件哈希；`--check` 逐字节复算） | `node tools/audit-tcu-scenarios.mjs --write` |
+| `audit/tcu-scenario-source-lock.json` | P8 参考实现来源锁（9 章 Scenario 文件与战役共享文件 SHA-256） | `node develop/gen-tcu-source-lock.mjs` |
 | 图片库存与摘要 | 本地图片库 | `npm run images:verify` |
 
 `audit/resource-report.json` 是历史冻结基线，不能因为目录整理而重写成新的历史。报告中的旧路径属于当时证据快照；当前结构以本文和现有源码为准。
@@ -279,7 +293,8 @@ state.actionLog + 建局参数（state.setup / seed / difficulty / rulesMode / a
 | --- | --- | --- |
 | `replay.test.mjs` | fast | 日志/指纹/重放/撤销的契约，含 4 局随机走子与建局参数完整性 |
 | `replay-golden.test.mjs` | fast | 13 局真实对局重放出 799 个相同逐步指纹 |
-| `replay-fuzz.test.mjs` | slow | 100 局随机对局逐步一致 + 5,000 步随机走子器不变量 |
+| `replay-fuzz.test.mjs` | slow | 随机对局逐步一致（默认 40 局；REPLAY_FUZZ_FULL=1 跑 100 局） |
+| `replay-fuzz-walker.test.mjs` | slow | 随机走子器状态不变量 / JSON 幂等 / 关键步重放（默认 400 步；FULL=2,000 步） |
 
 常用命令（在 `games/arkhamhorror/` 下运行；在大厅根目录可加 `-w games/arkhamhorror`）：
 

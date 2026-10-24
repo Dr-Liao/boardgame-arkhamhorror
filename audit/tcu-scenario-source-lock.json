@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tcu",
+  "campaignId": "theCircleUndone",
+  "generatedBy": "develop/gen-tcu-source-lock.mjs",
+  "referenceRoot": "参考资源/ArkhamHorror-main",
+  "shared": [
+    {
+      "path": "backend/arkham-api/library/Arkham/Campaigns/TheCircleUndone/Key.hs",
+      "sha256": "55864a132fb310b8191ac6a2ac8209d15a23db1ec70f39d5595b08a33c6dfb52",
+      "bytes": 2427
+    },
+    {
+      "path": "backend/arkham-api/library/Arkham/Campaigns/TheCircleUndone/ChaosBag.hs",
+      "sha256": "e8fe8ac3661b8611fa5a7c6c41be98d48df7799baceed3a600fa6969b55b54ef",
+      "bytes": 992
+    },
+    {
+      "path": "backend/arkham-api/library/Arkham/Campaigns/TheCircleUndone/Memento.hs",
+      "sha256": "5dfb676281052b93f661ba7f249c664369fba1a27ef45ef9601d7dccf10a110e",
+      "bytes": 380
+    },
+    {
+      "path": "backend/arkham-api/library/Arkham/Campaigns/TheCircleUndone/CampaignSteps.hs",
+      "sha256": "34c88e3a410c0e3f73aac8a910d0f3148eb8ecc278d4272518a4f620640aaf79",
+      "bytes": 3004
+    },
+    {
+      "path": "backend/arkham-api/library/Arkham/Campaigns/TheCircleUndone/Helpers.hs",
+      "sha256": "79ee3abc4a414cae4ab46c826ea826e535ec27ff2adc4c785209d34c93962c79",
+      "bytes": 1453
+    },
+    {
+      "path": "backend/arkham-api/library/Arkham/Tarot.hs",
+      "sha256": "c124bdc00effc15be9fcce1ea475b6e53ef5c32fa3b1581c5332a93d70c3db12",
+      "bytes": 1509
+    },
+    {
+      "path": "backend/arkham-api/library/Arkham/Helpers/Tarot.hs",
+      "sha256": "efb5f3f1a3ccf203b675982a9bd85e8daf0b775a0fd497742512100629e06470",
+      "bytes": 497
+    }
+  ],
+  "chapters": {
+    "disappearanceAtTheTwilightEstate": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/DisappearanceAtTheTwilightEstate.hs",
+        "sha256": "7849b113941a58415834afbae59bef14e023493874e641be03b3af0f45b3dac5",
+        "bytes": 15182
+      }
+    ],
+    "theWitchingHour": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/TheWitchingHour.hs",
+        "sha256": "25cfa20897c899aaa39718f0f978b4cf2cac8141e2641c9e9a19540c1ee8229f",
+        "bytes": 12096
+      },
+      {
+        "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/TheWitchingHour.hs",
+        "sha256": "3be793f0acdf2e078ca31ebfbbcd53e7a8fb1dad38ee75939282403d394a3a6c",
+        "bytes": 2689
+      }
+    ],
+    "atDeathsDoorstep": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/AtDeathsDoorstep.hs",
+        "sha256": "babc7cf305e692c3e8607f13a22d0fb96ee941988b6b889d42fe9784b412f6b0",
+        "bytes": 10133
+      },
+      {
+        "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/AtDeathsDoorstep.hs",
+        "sha256": "7ddddbaa7c835732c6718d01375cb39697de74e130ea706e5a541294369f1882",
+        "bytes": 2201
+      }
+    ],
+    "theSecretName": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/TheSecretName.hs",
+        "sha256": "672ddc39af42dd22a32cca8d25f13b418cb56b688bd52f830aacd35f8829486d",
+        "bytes": 10620
+      },
+      {
+        "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/TheSecretName.hs",
+        "sha256": "b2183238c73c1f7b55129fdda251a65137961c254dfc4a1ecf8d1c00d6e0efd9",
+        "bytes": 3739
+      }
+    ],
+    "theWagesOfSin": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/TheWagesOfSin.hs",
+        "sha256": "5662b3387f0e2d6104d8bc0b4379b22fd741e088292f1865588681556cafff21",
+        "bytes": 8757
+      },
+      {
+        "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/TheWagesOfSin.hs",
+        "sha256": "4d53380e287ac1a3d3cf5aadd85b818bfb8046aa40adb73d94ebf814298fd9db",
+        "bytes": 3999
+      }
+    ],
+    "forTheGreaterGood": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/ForTheGreaterGood.hs",
+        "sha256": "55e8afc9e671229a5fd31e66fa2e36d9f49e76c5c4411c1d22d3c14d24073de9",
+        "bytes": 11767
+      },
+      {
+        "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/ForTheGreaterGood.hs",
+        "sha256": "d7b1d67eeecb89b1ecbca2e3f76ccefdd8451ee977ad7ee9522d33a6209d6dfe",
+        "bytes": 2911
+      }
+    ],
+    "unionAndDisillusion": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/UnionAndDisillusion.hs",
+        "sha256": "b87c3d9bdb78f84fbccb8189b263beac929a17488e65444f5d1ab3e66adcc00c",
+        "bytes": 14114
+      },
+      {
+        "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/UnionAndDisillusion.hs",
+        "sha256": "04e1a130612b5d4ddd6a2f5fca08fc444a023e712460deda2e06c21b4c045819",
+        "bytes": 2627
+      }
+    ],
+    "inTheClutchesOfChaos": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/InTheClutchesOfChaos.hs",
+        "sha256": "899adf64375e283f8d3c75177d0b5db22a0eda3e7cc668d36335eeccd820fc6e",
+        "bytes": 10843
+      },
+      {
+        "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/InTheClutchesOfChaos.hs",
+        "sha256": "f83c72410e3ffcf1491652ddd87badea9d9ba4051f9fe4345b7d7b15b574a422",
+        "bytes": 2978
+      }
+    ],
+    "beforeTheBlackThrone": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheCircleUndone/BeforeTheBlackThrone.hs",
+        "sha256": "a0641bbfb293d0a76332658ebc3ff4af9332d9b7c65743f18942f51b1c48abcf",
+        "bytes": 11263
+      },
+      {
+        "path": "backend/arkham-api/library/Arkham/Location/CardDefs/TheCircleUndone/BeforeTheBlackThrone.hs",
+        "sha256": "f401246f0da450023a8b0584a1be729cb15f31d59dada67a90e7a7ba924adf71",
+        "bytes": 2197
+      }
+    ]
+  }
+}

@@ -73,18 +73,25 @@ test('联机忙碌快照不会先画出已关闭的快速反应窗口', async ({
   await expect(page.locator('.ah-table')).toBeVisible()
   await expect(page.locator('.bg-online-banner')).toContainText('房间 REACT01')
 
-  // 房主还在结算（busy=true）：窗口必须继续藏着，也不能提交。
+  // P1：进局时客户端会把本机「反应关」集合用 prefs 命令同步给房主（不需要等窗口出现）。
+  await expect.poll(() => commands.filter(command => command.action === 'prefs').length, { timeout: 10000 }).toBeGreaterThan(0)
+  expect(commands.find(command => command.action === 'prefs').body.codes).toEqual(['01073'])
+
+  // 房主还在结算（busy=true）：窗口必须继续藏着，也不能提交 skip。
   await expect(page.locator('.bg-game-status')).toHaveText('正在继续结算…')
   await page.waitForTimeout(600)
   await expect(page.locator('[data-choice-kind="reaction"]')).toHaveCount(0)
   expect(await page.evaluate(() => window.__reactionPanels)).toBe(0)
-  expect(commands).toEqual([])
+  expect(commands.filter(command => command.action === 'move')).toEqual([])
 
   // 结算结束（busy=false）：自动跳过补发，牌桌推进，全程没有画出反应窗口。
   busy = false
-  await expect.poll(() => commands.length, { timeout: 10000 }).toBeGreaterThan(0)
-  expect(commands[0].action).toBe('move')
-  expect(commands[0].body.move).toEqual({ action: 'choose', choiceId: 'reaction-online', optionId: 'skip', revision })
+  await expect.poll(() => commands.filter(command => command.action === 'move').length, { timeout: 10000 }).toBeGreaterThan(0)
+  const moveCommand = commands.find(command => command.action === 'move')
+  expect(moveCommand.action).toBe('move')
+  expect(moveCommand.body.move).toEqual({ action: 'choose', choiceId: 'reaction-online', optionId: 'skip', revision })
+  // 这条兜底 skip 同时把本机「反应关」集合带给房主（房主收到后会代答后续窗口）。
+  expect(moveCommand.body.client?.autoPass?.codes).toEqual(['01073'])
   await expect(page.locator('.ah-table')).toHaveAttribute('data-revision', String(revision + 1))
   await expect(page.locator('[data-choice-kind="reaction"]')).toHaveCount(0)
   expect(await page.evaluate(() => window.__reactionPanels)).toBe(0)

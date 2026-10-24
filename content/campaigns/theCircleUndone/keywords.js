@@ -195,13 +195,17 @@ export const TCU_KEYWORDS = Object.freeze([
     ruleId: 'tcuChaos',
     mechanismId: 'chaosBag',
     ruleOwned: true,
-    // 基础袋已登记，但逐章符号效果（P8 的 tcu-chaos.js）未实现，因此不登记进 content/mechanics.js。
-    implemented: false,
+    // P8：逐章符号表已由各章 behavior.resolveChaosToken + tcu-chaos.js 的公共读点实现，
+    // 因而登记进 content/mechanics.js；证据链 = 各章固定测试的混乱标记用例 + 公共工具导出。
+    implemented: true,
     sourceKind: 'text',
     pattern: '\\[skull\\]|骷髅',
     cardCodes: ['05043', '05050', '05065', '05120', '05161', '05197', '05238', '05284', '05325'],
-    engine: [{ module: 'content/campaigns/theCircleUndone/shared.js', names: [], values: [{ name: 'CHAOS_BAGS', keys: ['easy', 'standard', 'hard', 'expert'] }] }],
-    note: '四档基础袋各 13 枚（骷髅×2）；逐章符号效果属 P8 的 tcu-chaos.js，当前**未实现**，规则书记为待接线。',
+    engine: [
+      { module: 'content/campaigns/theCircleUndone/shared.js', names: [], values: [{ name: 'CHAOS_BAGS', keys: ['easy', 'standard', 'hard', 'expert'] }] },
+      { module: 'content/campaigns/theCircleUndone/tcu-chaos.js', names: ['chaosFx', 'hardSide', 'byDifficulty', 'doomInPlay', 'addChaosToken'], values: [] },
+    ],
+    note: '四档基础袋各 13 枚（骷髅×2）；逐章符号效果写在 scenarios/<章>/chaos.js 的 resolveChaosToken 表 + tcu-chaos.js 的公共读点，四档难度分组与增删走 changeChaosBag。',
   },
   {
     id: 'heretic',

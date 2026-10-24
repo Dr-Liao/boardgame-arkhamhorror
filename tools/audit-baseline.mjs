@@ -77,8 +77,10 @@ const goldenReplay = {
 }
 
 // 与 npm run test:fast 同一条命令；直接跑 node 入口，避免 Windows 下 spawn npm.cmd 需要 shell。
+// Node 的 node --test 在管道下用 TAP reporter（`# tests N`），在 TTY 下用 spec reporter（`ℹ tests N`）；
+// 这里两种都接受，保证 spawnSync 捕获输出时仍能记录真实用例数（否则会记成 -1）。
 const testsResult = run(node, ['tools/run-tests.mjs', 'fast'])
-const testNumber = label => Number((testsResult.stdout.match(new RegExp(`ℹ\\s*${label}\\s+(\\d+)`)) || [])[1] ?? -1)
+const testNumber = label => Number((testsResult.stdout.match(new RegExp(`(?:ℹ|#)\\s*${label}\\s+(\\d+)`)) || [])[1] ?? -1)
 const tests = {
   command: 'node tools/run-tests.mjs fast',
   status: testsResult.status,

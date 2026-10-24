@@ -16,6 +16,10 @@
 
 import { renderRulesText } from './card-text.js'
 import { tableIcon } from './table-components.js'
+// 序章选人要画真实卡面：卡图走现有 tableArt，按住 Alt 悬停即可放大看全卡（与牌桌/构筑一致）。
+import { tableArt } from './table-art.js'
+// 卡名/卡文统一走 catalog.js 的 cardDisplay*（docs/localization.md §8.7 第二步）。
+import { cardDisplayName, currentLanguage } from './catalog.js'
 
 const SKILL_LABELS = Object.freeze({ willpower: '意志', intellect: '智识', combat: '战斗', agility: '敏捷' })
 const SKILL_ICONS = Object.freeze({ willpower: 'star', intellect: 'book', combat: 'sword', agility: 'leaf' })
@@ -86,6 +90,8 @@ export function storyInvestigatorPickerModel(session) {
   const picked = st.storyInvestigators?.chosen || []
   const candidates = (choice.options || []).map(option => ({
     optionId: String(option.id),
+    // 选项 id 就是故事调查员的卡号（05046–05049）；优先用 cardCode，界面据此画卡面与开关联档案。
+    code: String(option.cardCode || option.id),
     name: option.name || option.label || String(option.id),
     subtitle: option.subtitle || null,
     klass: option.klass || null,
@@ -158,8 +164,7 @@ export function tcuCampaignModel(state) {
       id, lit: entry.flags.brazier === true,
       name: (state.locations || []).find(location => location.id === id)?.name || id,
     }))
-  const nameOfCode = code => state.cards?.[code]?.nameZh || state.cards?.[code]?.name
-    || state.investigatorDefs?.[code]?.nameZh || state.investigatorDefs?.[code]?.name
+  const nameOfCode = code => cardDisplayName(state.cards?.[code]) || cardDisplayName(state.investigatorDefs?.[code])
     || (state.investigators || []).find(inv => inv.code === code)?.name || code
   const taken = (watcher?.taken || []).map(code => nameOfCode(code))
   const hunted = (watcher?.huntedSeats || []).map(seat => (state.investigators || []).find(inv => inv.seat === seat)?.name || `座位 ${Number(seat) + 1}`)
@@ -276,28 +281,77 @@ export function renderTarotPicker(h, model, { onSubmit = () => {}, disabled = fa
         busy,
         label: h('span', { className: 'ah-tarot-face' + (candidate.orientation === 'reverse' ? ' is-reverse' : '') },
           h('span', { className: 'ah-tarot-sigil', 'aria-hidden': 'true' }, candidate.roman),
-          h('strong', {}, candidate.nameZh),
+          h('strong', {}, cardDisplayName(candidate)),
           h('small', {}, `${candidate.roman} · ${candidate.orientationLabel}`),
-          candidate.nameEn ? h('em', {}, candidate.nameEn) : null),
+          currentLanguage() === 'en' ? null : (candidate.nameEn ? h('em', {}, candidate.nameEn) : null),
+        ),
         title: candidate.move
-          ? `结算「${candidate.nameZh}」（${candidate.orientationLabel}）`
-          : `「${candidate.nameZh}」当前不可选（服务端未提供该选项的动作）`,
+          ? `结算「${cardDisplayName(candidate)}」（${candidate.orientationLabel}）`
+          : `「${cardDisplayName(candidate)}」当前不可选（服务端未提供该选项的动作）`,
         onclick: () => candidate.move && onSubmit(candidate.move),
       })))),
     model.drawn.length
       ? h('div', { className: 'ah-tarot-history', role: 'group', 'aria-label': '已抽出的塔罗牌' },
         h('small', {}, '已抽出'),
         ...model.drawn.map(entry => h('span', { className: 'ah-tarot-chip' },
-          `${entry.nameZh || `大阿卡纳 ${entry.arcana}`}·${entry.orientationLabel}`)))
+          `${cardDisplayName(entry) || `大阿卡纳 ${entry.arcana}`}·${entry.orientationLabel}`)))
       : null,
     skipButton(h, model, { onSubmit, disabled, busy }))
 }
 
-// 序章选人：一张卡 = 一位故事调查员；没有牌组的提示写在主说明里。
-export function renderStoryInvestigatorPicker(h, model, { onSubmit = () => {}, disabled = false, busy = false } = {}) {
+// 序章选人：一张卡 = 一位故事调查员。
+// 卡面图与「详情」按钮缺一不可——故事调查员都不进构筑、没有牌组，玩家只能靠卡面
+// 判断职业/属性/能力；卡面图沿用 tableArt，按住 Alt 悬停即与原版卡一样放大，
+// 「详情」调用宿主注入的 inspectCard 打开完整人物档案（卡面＋卡背设置）。
+export function renderStoryInvestigatorPicker(h, model, { onSubmit = () => {}, disabled = false, busy = false, inspectCard = null } = {}) {
   if (!model) return null
   const name = model.investigator?.name || '该调查员'
   const interactive = !disabled
+  const canInspect = typeof inspectCard === 'function'
+  const skillRow = stats => ['willpower', 'intellect', 'combat', 'agility'].map(skill =>
+    h('span', { key: skill, className: 'ah-story-stat', 'data-skill': skill },
+      tableIcon(SKILL_ICONS[skill]), String(stats[skill] ?? '—')))
+  const candidateCard = candidate => {
+    // busy 时同样置灰：与塔罗/闹鬼面板一致，避免提交中重复点选。
+    const unavailable = !interactive || !candidate.move || busy
+    const classLabel = candidate.classLabel || '调查员'
+    const vitals = [candidate.health != null ? `生命 ${candidate.health}` : null,
+      candidate.sanity != null ? `理智 ${candidate.sanity}` : null].filter(Boolean).join('，')
+    // 读屏用户听不到卡面上的四维/生命理智，把可见数值并入可访问名；数值缺失时只报名字。
+    const actionLabel = candidate.move
+      ? `选择 ${candidate.name}（${classLabel}${vitals ? '，' + vitals : ''}）`
+      : `${candidate.name} 当前不可选`
+    return h('li', { className: 'ah-story-cell', 'data-story-code': candidate.code },
+      h('button', {
+        type: 'button',
+        className: 'ah-tcu-option ah-story-choice' + (unavailable ? ' is-unavailable' : ''),
+        'data-option-id': candidate.optionId,
+        disabled: unavailable,
+        title: candidate.move
+          ? `选择 ${candidate.name} 作为你的故事调查员（按住 Alt 悬停卡面可放大）`
+          : `${candidate.name} 当前不可选（服务端未提供对应的选择动作）`,
+        'aria-label': actionLabel,
+        onclick: () => candidate.move && onSubmit(candidate.move),
+      },
+        h('span', { className: 'ah-story-art' }, tableArt(h, candidate.code, candidate.name, { landscape: true })),
+        h('span', { className: 'ah-story-face' },
+          h('span', { className: 'ah-story-class' }, classLabel),
+          h('strong', {}, candidate.name),
+          candidate.subtitle ? h('small', {}, candidate.subtitle) : null,
+          // 属性/生命理智来自观察投影；旧存档或旧会话缺这些字段时不伪造数值。
+          candidate.stats ? h('span', { className: 'ah-story-stats' }, skillRow(candidate.stats)) : null,
+          candidate.health != null || candidate.sanity != null
+            ? h('span', { className: 'ah-story-vitals' }, `生命 ${candidate.health ?? '—'} · 理智 ${candidate.sanity ?? '—'}`)
+            : null)),
+      canInspect
+        ? h('button', {
+          type: 'button', className: 'ah-story-detail', 'data-story-detail': candidate.code,
+          'aria-label': `查看 ${candidate.name} 的完整人物档案`,
+          title: `查看 ${candidate.name} 的完整人物档案`,
+          onclick: () => inspectCard(candidate.code),
+        }, tableIcon('book'), h('span', {}, '详情'))
+        : null)
+  }
   return h('section', {
     className: 'ah-choice ah-tcu-panel ah-story-picker', role: 'region', 'aria-label': '选择故事调查员',
     'data-choice-id': model.choice.id, 'data-choice-kind': 'storyInvestigator', 'data-choice-seat': model.seat,
@@ -312,27 +366,12 @@ export function renderStoryInvestigatorPicker(h, model, { onSubmit = () => {}, d
         h('span', {}, '剩余候选'), h('b', {}, String(model.remainingCount)))),
     h('p', { className: 'ah-tcu-note', role: 'status' },
       `${name}：故事调查员没有牌组，不能抽牌或换起始手牌；没被选中的会在序章里被划掉。`),
+    model.candidates.length ? h('p', { className: 'ah-tcu-note is-muted' },
+      canInspect
+        ? '点卡牌选择；按住 Alt 悬停卡面可放大查看卡牌与规则文字，点「详情」查看完整人物档案。'
+        : '点卡牌选择；按住 Alt 悬停卡面可放大查看卡牌与规则文字。') : null,
     h('ul', { className: 'ah-story-grid', 'aria-label': '可选的故事调查员' },
-      model.candidates.map(candidate => h('li', {}, moveButton(h, {
-        optionId: candidate.optionId,
-        disabled: !interactive || !candidate.move,
-        busy,
-        label: h('span', { className: 'ah-story-face' },
-          h('span', { className: 'ah-story-class' }, candidate.classLabel || '中立'),
-          h('strong', {}, candidate.name),
-          candidate.subtitle ? h('small', {}, candidate.subtitle) : null,
-          candidate.stats
-            ? h('span', { className: 'ah-story-stats' },
-              ['willpower', 'intellect', 'combat', 'agility'].map(skill =>
-                h('span', { key: skill, className: 'ah-story-stat', 'data-skill': skill },
-                  tableIcon(SKILL_ICONS[skill]), String(candidate.stats[skill] ?? '—'))))
-            : null,
-          candidate.health != null || candidate.sanity != null
-            ? h('span', { className: 'ah-story-vitals' }, `生命 ${candidate.health ?? '—'} · 理智 ${candidate.sanity ?? '—'}`)
-            : null),
-        title: candidate.move ? `选择 ${candidate.name}` : `${candidate.name} 当前不可选`,
-        onclick: () => candidate.move && onSubmit(candidate.move),
-      })))),
+      model.candidates.map(candidateCard)),
     model.alreadyChosen.length
       ? h('p', { className: 'ah-tcu-note' }, `已选：${model.alreadyChosen.map(entry => `座位 ${entry.seat + 1} ${entry.name}`).join('、')}`)
       : null,

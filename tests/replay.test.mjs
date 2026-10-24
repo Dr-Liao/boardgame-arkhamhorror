@@ -7,7 +7,8 @@
 //   4. 建局参数完整（AI 选人、剧情感知、自定义卡组、规则模式都不能在重放时丢失）；
 //   5. 指纹只覆盖权威状态（派生资源与瞬时字段不参与），并能定位到具体路径。
 //
-// 完整 100 局随机对局与 5,000 步随机走子器在 tests/replay-fuzz.test.mjs（slow tier），
+// 随机对局重放与随机走子器门禁在 tests/replay-fuzz.test.mjs / replay-fuzz-walker.test.mjs（slow tier；
+// 默认 40 局 / 400 步，REPLAY_FUZZ_FULL=1 时跑完整 100 局 / 2,000 步），
 // golden 基线在 tests/replay-golden.test.mjs（fast tier）。
 
 import test from 'node:test'

@@ -47,7 +47,7 @@ import {
 } from '../cards/cards-data.js'
 import { CHAOS_BAGS, SYMBOL_DEFAULTS } from '../../content/campaigns/nightOfTheZealot/shared.js'
 import { contentRegistry } from '../../content/registered.js'
-import { buildDeck, buildDeckFromList, playablePool, hashSeed, shuffle } from '../deck/deckbuilding.js'
+import { buildDeck, buildDeckFromList, playablePool, expandedPlayablePool, hashSeed, shuffle } from '../deck/deckbuilding.js'
 import { PLAYABLE_INVESTIGATOR_CODES, canSelectInvestigator, isCardAvailable, getAvailability } from '../deck/availability.js'
 import { EFFECTS, isAutomaticReward } from '../cards/card-effects.js'
 import {
@@ -983,6 +983,7 @@ const commonDeps = {
   addTrauma,
   advanceAct,
   aliveInvestigators,
+  aloofPreventsAttack,
   applyDamage,
   applyHarm,
   applyHorror,
@@ -1714,6 +1715,7 @@ function dispatchApi() {
   cardKeyword,
   chooseAttack,
   corePlayerPool,
+  availablePlayerPool,
   currentActionKind,
   doAbility,
     doEntityAbility: (...args) => doEntityAbility(...args),
@@ -2482,12 +2484,13 @@ function createCardDefsApi() {
     isCardAvailable,
     nextInstanceId,
     playablePool,
+    expandedPlayablePool,
   })
   return createCardDefsImpl
 }
 // createCardDefsApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
 export function declarativeDisplayBonuses(...args) { return createCardDefsApi().declarativeDisplayBonuses(...args) } export function allCardDefs(...args) { return createCardDefsApi().allCardDefs(...args) } export function embeddedCardDefs(...args) { return createCardDefsApi().embeddedCardDefs(...args) }
-export function corePlayerPool(...args) { return createCardDefsApi().corePlayerPool(...args) } export function basicWeaknessPool(...args) { return createCardDefsApi().basicWeaknessPool(...args) } export function newCardInstance(...args) { return createCardDefsApi().newCardInstance(...args) }
+export function corePlayerPool(...args) { return createCardDefsApi().corePlayerPool(...args) } export function availablePlayerPool(...args) { return createCardDefsApi().availablePlayerPool(...args) } export function basicWeaknessPool(...args) { return createCardDefsApi().basicWeaknessPool(...args) } export function newCardInstance(...args) { return createCardDefsApi().newCardInstance(...args) }
 export function newPlayerAssetInstance(...args) { return createCardDefsApi().newPlayerAssetInstance(...args) } export function newEnemyId(...args) { return createCardDefsApi().newEnemyId(...args) } export function resolveAgendaDoomThresholds(...args) { return createCardDefsApi().resolveAgendaDoomThresholds(...args) }
 
 
@@ -2509,7 +2512,7 @@ export function removeHiddenMarker(...args) { return createHiddenRulesApi().remo
 export function placeHiddenCard(...args) { return createHiddenRulesApi().placeHiddenCard(...args) } export function activeHiddenRules(...args) { return createHiddenRulesApi().activeHiddenRules(...args) } export function cannotTriggerFreeAbility(...args) { return createHiddenRulesApi().cannotTriggerFreeAbility(...args) }
 export function hiddenFightBlocked(...args) { return createHiddenRulesApi().hiddenFightBlocked(...args) } export function movementError(...args) { return createHiddenRulesApi().movementError(...args) } export function currentInv(...args) { return createHiddenRulesApi().currentInv(...args) }
 export function investigatorTextBlanked(...args) { return createHiddenRulesApi().investigatorTextBlanked(...args) } export function enemyTextBlanked(...args) { return createHiddenRulesApi().enemyTextBlanked(...args) } export function enemyCannotAttack(...args) { return createHiddenRulesApi().enemyCannotAttack(...args) }
-export function enemyCannotBeAttacked(...args) { return createHiddenRulesApi().enemyCannotBeAttacked(...args) } export function enemyCanOpportunityAttack(...args) { return createHiddenRulesApi().enemyCanOpportunityAttack(...args) } export function enemyCanBeDefeated(...args) { return createHiddenRulesApi().enemyCanBeDefeated(...args) }
+export function enemyCannotBeAttacked(...args) { return createHiddenRulesApi().enemyCannotBeAttacked(...args) } export function aloofPreventsAttack(...args) { return createHiddenRulesApi().aloofPreventsAttack(...args) } export function enemyCanOpportunityAttack(...args) { return createHiddenRulesApi().enemyCanOpportunityAttack(...args) } export function enemyCanBeDefeated(...args) { return createHiddenRulesApi().enemyCanBeDefeated(...args) }
 
 
 // ---------------------------------------------------------------------------

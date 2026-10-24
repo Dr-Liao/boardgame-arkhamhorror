@@ -101,6 +101,9 @@ define('enemyAttacked', '敌人攻击后', 'reaction', 70)
 // 密谋将要因达到毁灭阈值而推进（05018 神秘乐曲）。调用点在 src/engine/act-agenda.js 的 checkAgenda，
 // 窗口内把 state.agendaDoomLock 写成本轮/本阶段即阻止这次推进。
 define('agendaWouldAdvance', '密谋将要因毁灭阈值推进时', 'reaction', 71)
+// 第 5 步 P7：事件打出并结算后（05320 超级加倍）。调用点在 src/engine/actions.js#doPlay 的事件收尾段；
+// 卡面用 api.replayPlayedCode 重放刚打出的事件。没有卡面挂载时 reactionWindow 是 no-op。
+define('eventPlayed', '打出一张事件后', 'reaction', 72)
 
 // 玩家窗口（免费触发）。engine.js 的 playerWindow(timing) 使用这批 id。
 for (const [id, label] of [

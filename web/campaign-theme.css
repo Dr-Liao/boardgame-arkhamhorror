@@ -7,6 +7,9 @@
   --ah-theme-accent-strong: #f2d99b;
   --ah-theme-muted: #acb7a4;
   --ah-theme-edge: #b59b604b;
+  /* Materials stay fixed across cycles unless a theme overrides them in
+     web/campaign-presentation.js (materials.paperInk). */
+  --ah-material-paper-ink: #000;
 }
 .ah-office.ah-theme { color: #e8e3ce; background: radial-gradient(ellipse at 65% 15%, color-mix(in srgb,var(--ah-theme-accent) 16%,transparent), transparent 65%), var(--ah-theme-bg); }
 .ah-theme .bg-game-head { background: color-mix(in srgb,var(--ah-theme-header) 92%,transparent); border-bottom-color: var(--ah-theme-edge); }
@@ -16,6 +19,276 @@
 .ah-theme .bg-btn:hover:not(:disabled),.ah-theme button[aria-pressed='true'] { border-color: var(--ah-theme-accent-strong); }
 .ah-theme .ah-hub-pane { background-color: color-mix(in srgb,var(--ah-theme-panel) 76%,transparent); }
 .ah-table.ah-theme .ah-table-shell { background-color: var(--ah-theme-bg); }
+
+/* ---------------------------------------------------------------------------
+ * Theme-aware chrome.
+ * The palette above used to tint only the surfaces, so the default green/gold
+ * buttons, inputs, segmented controls and tabs still rendered on top of a
+ * violet or teal desk. These rules re-derive the shared control tokens from the
+ * campaign palette, so a cycle gets one coherent set of controls instead of two
+ * competing palettes. Geometry, layout and copy are untouched.
+ * ------------------------------------------------------------------------- */
+
+/* Shared tokens consumed by the table and the TCU panels. */
+.ah-theme.ah-theme,
+.ah-table.ah-theme.ah-theme {
+  --ah-gold: var(--ah-theme-accent);
+  --ah-edge: var(--ah-theme-edge);
+  --ah-panel: color-mix(in srgb,var(--ah-theme-panel) 86%,#000);
+  --office-gold: var(--ah-theme-accent);
+  --office-edge: var(--ah-theme-edge);
+  --office-muted: var(--ah-theme-muted);
+}
+
+/* Primary actions are a campaign-accent plate; secondary actions stay quiet. */
+.ah-theme.ah-theme .bg-btn:not(.secondary):not(.danger) {
+  border: 1px solid color-mix(in srgb,var(--ah-theme-accent) 58%,transparent);
+  background: linear-gradient(135deg,color-mix(in srgb,var(--ah-theme-accent) 30%,var(--ah-theme-panel)),color-mix(in srgb,var(--ah-theme-panel) 84%,#000));
+  color: var(--ah-theme-accent-strong);
+}
+.ah-theme.ah-theme .bg-btn.secondary {
+  border-color: var(--ah-theme-edge);
+  background: color-mix(in srgb,var(--ah-theme-panel) 58%,transparent);
+  color: var(--ah-theme-muted);
+}
+.ah-theme.ah-theme .bg-btn:hover:not(:disabled) {
+  border-color: var(--ah-theme-accent-strong);
+  background: color-mix(in srgb,var(--ah-theme-accent) 34%,var(--ah-theme-panel));
+  color: var(--ah-theme-accent-strong);
+}
+.ah-theme.ah-theme .bg-btn.secondary:hover:not(:disabled) {
+  background: color-mix(in srgb,var(--ah-theme-accent) 16%,var(--ah-theme-panel));
+}
+.ah-theme.ah-theme .bg-btn:focus-visible { outline-color: var(--ah-theme-accent-strong); }
+.ah-theme.ah-theme button[aria-pressed='true'] {
+  border-color: var(--ah-theme-accent-strong);
+  box-shadow: 0 0 0 1px var(--ah-theme-accent-strong),0 0 22px color-mix(in srgb,var(--ah-theme-accent) 24%,transparent);
+  color: var(--ah-theme-accent-strong);
+}
+
+/* Hall-rendered segmented control (local / online play). */
+.ah-theme.ah-theme .bg-play-modes {
+  background: color-mix(in srgb,var(--ah-theme-panel) 52%,transparent);
+  border-color: var(--ah-theme-edge);
+}
+.ah-theme.ah-theme .bg-play-modes button[aria-pressed='true'] {
+  background: color-mix(in srgb,var(--ah-theme-accent) 26%,var(--ah-theme-panel));
+  color: var(--ah-theme-accent-strong);
+}
+
+/* Inputs, selects and focus halos. */
+.ah-theme.ah-theme input,
+.ah-theme.ah-theme select,
+.ah-theme.ah-theme textarea,
+.ah-theme.ah-theme .bg-select,
+.ah-theme.ah-theme .bg-input {
+  background-color: color-mix(in srgb,var(--ah-theme-panel) 72%,#000);
+  border-color: var(--ah-theme-edge);
+  color: color-mix(in srgb,var(--ah-theme-accent-strong) 42%,#f2eef5);
+}
+.ah-theme.ah-theme input:focus,
+.ah-theme.ah-theme select:focus,
+.ah-theme.ah-theme textarea:focus,
+.ah-theme.ah-theme .bg-select:focus,
+.ah-theme.ah-theme .bg-input:focus {
+  border-color: var(--ah-theme-accent);
+  outline-color: var(--ah-theme-accent-strong);
+}
+.ah-theme.ah-theme option {
+  background-color: color-mix(in srgb,var(--ah-theme-panel) 80%,#000);
+  color: color-mix(in srgb,var(--ah-theme-accent-strong) 42%,#f2eef5);
+}
+.ah-theme.ah-theme button:focus-visible,
+.ah-theme.ah-theme summary:focus-visible,
+.ah-theme.ah-theme input:focus-visible,
+.ah-theme.ah-theme select:focus-visible { outline-color: var(--ah-theme-accent-strong); }
+
+/* Office chrome: campaign hub, setup modal and their quiet controls. */
+.ah-theme.ah-theme .ah-hub-tabs {
+  background: color-mix(in srgb,var(--ah-theme-header) 55%,transparent);
+  border-bottom-color: color-mix(in srgb,var(--ah-theme-accent) 24%,transparent);
+}
+.ah-theme.ah-theme .ah-hub-tabs button { color: var(--ah-theme-muted); }
+.ah-theme.ah-theme .ah-hub-tabs button.active,
+.ah-theme.ah-theme .ah-hub-tabs button:hover {
+  border-bottom-color: var(--ah-theme-accent);
+  background: color-mix(in srgb,var(--ah-theme-accent) 8%,transparent);
+  color: var(--ah-theme-accent-strong);
+}
+.ah-theme.ah-theme .ah-office-entry-controls > h2 { color: var(--ah-theme-accent-strong); }
+.ah-theme.ah-theme .ah-office-hero h1 { color: var(--ah-theme-accent-strong); }
+.ah-theme.ah-theme .ah-office-metric { color: var(--ah-theme-accent); }
+.ah-theme.ah-theme .ah-hub-pane h2 { color: var(--ah-theme-accent-strong); }
+.ah-theme.ah-theme .ah-hub-setup-fields .bg-field > span { color: var(--ah-theme-muted); }
+.ah-theme.ah-theme .ah-ai-dialogue-settings {
+  border-color: var(--ah-theme-edge);
+  background: color-mix(in srgb,var(--ah-theme-panel) 46%,transparent);
+}
+.ah-theme.ah-theme .ah-ai-dialogue-settings > span { color: var(--ah-theme-accent-strong); }
+.ah-theme.ah-theme .ah-ai-dialogue-settings small { color: var(--ah-theme-muted); }
+.ah-theme.ah-theme .ah-office-entry-art {
+  background: radial-gradient(ellipse at 50% 45%,color-mix(in srgb,var(--ah-theme-accent) 16%,transparent),transparent 70%),var(--ah-theme-bg);
+  border-color: var(--ah-theme-edge);
+}
+.ah-theme.ah-theme.ah-office.ah-hub-setup { border-color: color-mix(in srgb,var(--ah-theme-accent) 42%,transparent); }
+.ah-theme.ah-theme .ah-hub-setup .bg-seat-row { border-color: var(--ah-theme-edge); }
+.ah-theme.ah-theme .ah-hub-setup .bg-seat-number {
+  background: color-mix(in srgb,var(--ah-theme-accent) 14%,transparent);
+  color: var(--ah-theme-accent);
+}
+.ah-theme.ah-theme .bg-modal-foot,
+.ah-theme.ah-theme .ah-hub-setup .bg-modal-foot {
+  background: var(--ah-theme-panel);
+  border-top-color: var(--ah-theme-edge);
+}
+.ah-theme.ah-theme .ah-office-filters button {
+  border-color: var(--ah-theme-edge);
+  background: color-mix(in srgb,var(--ah-theme-panel) 65%,transparent);
+  color: var(--ah-theme-muted);
+}
+.ah-theme.ah-theme .ah-office-filters button:hover { border-color: var(--ah-theme-accent); color: var(--ah-theme-accent-strong); }
+.ah-theme.ah-theme .ah-office-empty, .ah-theme.ah-theme .ah-office-muted { color: var(--ah-theme-muted); }
+.ah-theme.ah-theme .ah-supply-card {
+  border-color: var(--ah-theme-edge);
+  background: color-mix(in srgb,var(--ah-theme-panel) 52%,transparent);
+}
+
+/* Workflow ribbon, team cards and folded content summaries on the hub. */
+.ah-theme.ah-theme .ah-workflow-guide {
+  border-color: var(--ah-theme-edge);
+  background: color-mix(in srgb,var(--ah-theme-panel) 82%,transparent);
+}
+.ah-theme.ah-theme .ah-workflow-guide li::after { background: color-mix(in srgb,var(--ah-theme-accent) 25%,transparent); }
+.ah-theme.ah-theme .ah-workflow-guide li > span { border-color: color-mix(in srgb,var(--ah-theme-accent) 55%,transparent); }
+.ah-theme.ah-theme .ah-workflow-guide li.is-done { color: var(--ah-theme-muted); }
+.ah-theme.ah-theme .ah-workflow-guide li.is-done > span {
+  border-color: var(--ah-theme-edge);
+  background: color-mix(in srgb,var(--ah-theme-accent) 18%,transparent);
+}
+.ah-theme.ah-theme .ah-workflow-guide li.is-current { color: var(--ah-theme-accent-strong); }
+.ah-theme.ah-theme .ah-workflow-guide li.is-current > span {
+  border-color: var(--ah-theme-accent);
+  background: color-mix(in srgb,var(--ah-theme-accent) 22%,transparent);
+  box-shadow: 0 0 16px color-mix(in srgb,var(--ah-theme-accent) 25%,transparent);
+}
+.ah-theme.ah-theme .ah-workflow-next strong { color: var(--ah-theme-accent-strong); }
+.ah-theme.ah-theme .ah-workflow-next small { color: var(--ah-theme-muted); }
+.ah-theme.ah-theme .ah-office-teammate,
+.ah-theme.ah-theme .ah-departure-member {
+  border-color: var(--ah-theme-edge);
+  background: color-mix(in srgb,var(--ah-theme-panel) 55%,transparent);
+}
+.ah-theme.ah-theme .ah-departure-member.is-ready { border-color: color-mix(in srgb,var(--ah-theme-accent) 45%,transparent); }
+.ah-theme.ah-theme .ah-office-teammate small { color: var(--ah-theme-muted); }
+.ah-theme.ah-theme .ah-office-player-avatar { border-color: var(--ah-theme-edge); background: color-mix(in srgb,var(--ah-theme-panel) 60%,#000); }
+.ah-theme.ah-theme .ah-office-portrait {
+  border-color: color-mix(in srgb,var(--ah-theme-accent) 45%,transparent);
+  background: color-mix(in srgb,var(--ah-theme-panel) 70%,#000);
+}
+.ah-theme.ah-theme .ah-office-team-panel h3 { color: var(--ah-theme-accent); }
+.ah-theme.ah-theme .ah-content-packs,
+.ah-theme.ah-theme .ah-content-pack {
+  border-color: var(--ah-theme-edge);
+  background: color-mix(in srgb,var(--ah-theme-panel) 52%,transparent);
+}
+.ah-theme.ah-theme .ah-content-packs { color: var(--ah-theme-muted); }
+.ah-theme.ah-theme .ah-content-packs summary { color: var(--ah-theme-accent); }
+.ah-theme.ah-theme .ah-content-status { color: var(--ah-theme-accent); }
+
+/* The casefile dossier is an in-world paper prop, not a themed control: its
+   text stays ink-black (materials.paperInk) instead of taking the cycle accent. */
+.ah-theme .ah-office-dossier-copy { color: var(--ah-material-paper-ink); }
+.ah-theme.ah-theme .ah-office-dossier-copy h2,
+.ah-theme.ah-theme .ah-office-dossier-copy p,
+.ah-theme.ah-theme .ah-office-dossier-copy small,
+.ah-theme.ah-theme .ah-office-dossier-copy strong,
+.ah-theme.ah-theme .ah-office-dossier-copy button { color: var(--ah-material-paper-ink); }
+
+/* Table desk: the quiet "investigation desk" material follows the campaign ink
+   too; card art, brass tokens and parchment keep their fixed physical colors. */
+.ah-table.ah-theme.ah-theme {
+  background: radial-gradient(ellipse at 50% 38%,color-mix(in srgb,var(--ah-theme-accent) 14%,var(--ah-theme-bg)) 0%,color-mix(in srgb,var(--ah-theme-bg) 72%,#000) 43%,color-mix(in srgb,var(--ah-theme-bg) 58%,#000) 100%);
+}
+.ah-table.ah-theme.ah-theme .ah-table-player {
+  background: linear-gradient(180deg,color-mix(in srgb,var(--ah-theme-panel) 80%,transparent),color-mix(in srgb,var(--ah-theme-bg) 82%,transparent)) !important;
+  border-top-color: color-mix(in srgb,var(--ah-theme-accent) 40%,transparent) !important;
+}
+.ah-table.ah-theme.ah-theme .ah-action {
+  background: linear-gradient(color-mix(in srgb,var(--ah-theme-accent) 24%,var(--ah-theme-panel)),color-mix(in srgb,var(--ah-theme-panel) 78%,#000));
+  border-color: color-mix(in srgb,var(--ah-theme-accent) 45%,transparent);
+  color: var(--ah-theme-accent-strong);
+}
+.ah-table.ah-theme.ah-theme .ah-action:hover:not(:disabled) {
+  background: color-mix(in srgb,var(--ah-theme-accent) 30%,var(--ah-theme-panel));
+  border-color: var(--ah-theme-accent-strong);
+}
+.ah-table.ah-theme.ah-theme .ah-action.secondary {
+  background: color-mix(in srgb,var(--ah-theme-panel) 60%,transparent);
+  color: var(--ah-theme-muted);
+}
+.ah-table.ah-theme.ah-theme .ah-action:focus-visible,
+.ah-table.ah-theme.ah-theme button:focus-visible { outline-color: var(--ah-theme-accent-strong); }
+.ah-table.ah-theme.ah-theme .ah-dock-equipment {
+  background: color-mix(in srgb,var(--ah-theme-panel) 58%,transparent);
+  border-color: var(--ah-theme-edge);
+  color: var(--ah-theme-accent-strong);
+}
+.ah-table.ah-theme.ah-theme .ah-equipment-tray,
+.ah-table.ah-theme.ah-theme .ah-more-actions,
+.ah-table.ah-theme.ah-theme .ah-session-menu-items,
+.ah-table.ah-theme.ah-theme .ah-map-controls {
+  background: color-mix(in srgb,var(--ah-theme-panel) 82%,transparent);
+  border-color: var(--ah-theme-edge);
+}
+.ah-table.ah-theme.ah-theme .ah-location-caption {
+  background: color-mix(in srgb,var(--ah-theme-panel) 85%,transparent);
+  border-bottom-color: var(--ah-theme-edge);
+}
+.ah-table.ah-theme.ah-theme .ah-equipment-battlefield {
+  background: color-mix(in srgb,var(--ah-theme-panel) 66%,transparent);
+  border-bottom-color: var(--ah-theme-edge);
+}
+.ah-table.ah-theme.ah-theme .ah-equip-slot {
+  border-color: var(--ah-theme-edge);
+  background: color-mix(in srgb,var(--ah-theme-panel) 42%,transparent);
+}
+.ah-table.ah-theme.ah-theme .ah-equip-slot-head { color: var(--ah-theme-muted); }
+.ah-table.ah-theme.ah-theme .ah-act-advance {
+  border-color: color-mix(in srgb,var(--ah-theme-accent) 50%,transparent);
+  background: linear-gradient(135deg,color-mix(in srgb,var(--ah-theme-accent) 26%,var(--ah-theme-panel)),color-mix(in srgb,var(--ah-theme-panel) 80%,#000));
+  color: var(--ah-theme-accent-strong);
+}
+.ah-table.ah-theme.ah-theme .ah-act-advance.is-ready:not(:disabled) {
+  border-color: var(--ah-theme-accent-strong);
+  background: linear-gradient(135deg,color-mix(in srgb,var(--ah-theme-accent) 36%,var(--ah-theme-panel)),color-mix(in srgb,var(--ah-theme-panel) 78%,#000));
+  color: var(--ah-theme-accent-strong);
+  box-shadow: inset 0 0 16px color-mix(in srgb,var(--ah-theme-accent) 20%,transparent),0 0 16px color-mix(in srgb,var(--ah-theme-accent) 30%,transparent);
+}
+.ah-table.ah-theme.ah-theme .ah-act-advance:disabled {
+  border-color: var(--ah-theme-edge);
+  background: color-mix(in srgb,var(--ah-theme-panel) 45%,transparent);
+  color: var(--ah-theme-muted);
+}
+.ah-table.ah-theme.ah-theme .ah-action-pips > span {
+  border-color: var(--ah-theme-edge);
+  background: color-mix(in srgb,var(--ah-theme-panel) 55%,transparent);
+  color: var(--ah-theme-muted);
+}
+.ah-table.ah-theme.ah-theme .ah-action-pips > .is-ready {
+  border-color: var(--ah-theme-accent);
+  background: color-mix(in srgb,var(--ah-theme-accent) 18%,transparent);
+  color: var(--ah-theme-accent-strong);
+}
+
+/* Table chrome: same quiet layout, campaign ink. */
+.ah-table.ah-theme.ah-theme .bg-game-head {
+  background: color-mix(in srgb,var(--ah-theme-header) 92%,transparent);
+  border-bottom-color: var(--ah-theme-edge);
+}
+.ah-table.ah-theme.ah-theme .bg-game-title { color: var(--ah-theme-accent); }
+.ah-table.ah-theme.ah-theme .bg-game-status { color: var(--ah-theme-muted); }
+.ah-table.ah-theme.ah-theme .bg-game-actions .bg-btn { color: color-mix(in srgb,var(--ah-theme-accent-strong) 72%,#cdd0dc); }
+.ah-table.ah-theme.ah-theme .bg-game-actions .bg-btn:hover:not(:disabled) { color: var(--ah-theme-accent-strong); }
 
 @supports not (color: color-mix(in srgb,white,black)) {
   .ah-office.ah-theme { background: var(--ah-theme-bg); }

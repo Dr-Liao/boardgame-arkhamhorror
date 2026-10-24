@@ -6,17 +6,17 @@
     "effectsEntries": 0,
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
-    "descriptorEntries": 490,
-    "descriptorAbilities": 414,
+    "descriptorEntries": 572,
+    "descriptorAbilities": 505,
     "abilityKinds": 12,
-    "windows": 61,
+    "windows": 62,
     "effectPrimitives": 56,
     "nonPlayerCards": 21,
-    "behaviorLines": 13035,
+    "behaviorLines": 20821,
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 490,
+    "descriptor": 572,
     "data": 4
   },
   "nonPlayer": {
@@ -65,6 +65,15 @@
       "content/campaigns/nightOfTheZealot/scenarios/theDevourerBelow/behavior.js",
       "content/campaigns/nightOfTheZealot/scenarios/theGathering/behavior.js",
       "content/campaigns/nightOfTheZealot/scenarios/theMidnightMasks/behavior.js",
+      "content/campaigns/theCircleUndone/scenarios/atDeathsDoorstep/behavior.js",
+      "content/campaigns/theCircleUndone/scenarios/beforeTheBlackThrone/behavior.js",
+      "content/campaigns/theCircleUndone/scenarios/disappearanceAtTheTwilightEstate/behavior.js",
+      "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/behavior.js",
+      "content/campaigns/theCircleUndone/scenarios/inTheClutchesOfChaos/behavior.js",
+      "content/campaigns/theCircleUndone/scenarios/theSecretName/behavior.js",
+      "content/campaigns/theCircleUndone/scenarios/theWagesOfSin/behavior.js",
+      "content/campaigns/theCircleUndone/scenarios/theWitchingHour/behavior.js",
+      "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/behavior.js",
       "content/campaigns/theDunwichLegacy/later-behaviors.js",
       "content/campaigns/theDunwichLegacy/scenarios/extracurricularActivity/behavior.js",
       "content/campaigns/theDunwichLegacy/scenarios/theHouseAlwaysWins/behavior.js",
@@ -87,7 +96,7 @@
       "content/campaigns/thePathToCarcosa/scenarios/thePallidMask/behavior.js",
       "content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/behavior.js"
     ],
-    "behaviorLines": 13035,
+    "behaviorLines": 20821,
     "declaredScenarios": 3
   },
   "cards": [
@@ -2506,7 +2515,27 @@
       "descriptors": 2
     },
     {
+      "code": "05020",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05021",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05022",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
       "code": "05023",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05024",
       "channel": "descriptor",
       "descriptors": 1
     },
@@ -2516,7 +2545,87 @@
       "descriptors": 1
     },
     {
+      "code": "05026",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05027",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
       "code": "05028",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05029",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05030",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05031",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05032",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05033",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05034",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05035",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05036",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05037",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05038",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05039",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05040",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05041",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05042",
       "channel": "descriptor",
       "descriptors": 1
     },
@@ -2541,12 +2650,322 @@
       "descriptors": 1
     },
     {
+      "code": "05109",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "05110",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05111",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
       "code": "05112",
       "channel": "descriptor",
       "descriptors": 0
     },
     {
+      "code": "05113",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05114",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
       "code": "05115",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05116",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05117",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05118",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05119",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05151",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05152",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "05153",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05154",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05155",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05156",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05157",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05158",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05159",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05160",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05186",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05187",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05188",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05189",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05190",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05191",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05192",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05193",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05194",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05195",
+      "channel": "descriptor",
+      "descriptors": 3
+    },
+    {
+      "code": "05196",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05229",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05230",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "05231",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05232",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05233",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05234",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05235",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05236",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "05237",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05273",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05274",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05275",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05276",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "05277",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05278",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "05279",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05280",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05281",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05282",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05283",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05313",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05314",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05315",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05316",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "05317",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05318",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05319",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05320",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05321",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05322",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05323",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "05324",
       "channel": "descriptor",
       "descriptors": 1
     },

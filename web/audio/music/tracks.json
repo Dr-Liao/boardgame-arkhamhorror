@@ -1,0 +1,382 @@
+[
+  {
+    "id": "tcuVanishing",
+    "title": "Vanishing",
+    "file": "common/vanishing.mp3"
+  },
+  {
+    "id": "tcuEveningFallPiano",
+    "title": "Evening Fall (Piano)",
+    "file": "common/evening-fall-piano.mp3"
+  },
+  {
+    "id": "tcuThisHouse",
+    "title": "This House",
+    "file": "common/this-house.mp3"
+  },
+  {
+    "id": "tcuBabaYaga",
+    "title": "Baba Yaga",
+    "file": "common/baba-yaga.mp3"
+  },
+  {
+    "id": "tcuMystOnTheMoor",
+    "title": "Myst on the Moor",
+    "file": "common/myst-on-the-moor.mp3"
+  },
+  {
+    "id": "tcuSpellbound",
+    "title": "Spellbound",
+    "file": "common/spellbound.mp3"
+  },
+  {
+    "id": "tcuScpX5xOuterThoughts",
+    "title": "SCP-x5x (Outer Thoughts)",
+    "file": "common/scp-x5x-outer-thoughts.mp3"
+  },
+  {
+    "id": "tcuOssuary4Animate",
+    "title": "Ossuary 4 - Animate",
+    "file": "common/ossuary-4-animate.mp3"
+  },
+  {
+    "id": "tcuPhantasm",
+    "title": "Phantasm",
+    "file": "common/phantasm.mp3"
+  },
+  {
+    "id": "tcuMetaphysik",
+    "title": "Metaphysik",
+    "file": "common/metaphysik.mp3"
+  },
+  {
+    "id": "tcuCrypto",
+    "title": "Crypto",
+    "file": "common/crypto.mp3"
+  },
+  {
+    "id": "tcuInnerSanctum",
+    "title": "Inner Sanctum",
+    "file": "common/inner-sanctum.mp3"
+  },
+  {
+    "id": "tcuOssuary5Rest",
+    "title": "Ossuary 5 - Rest",
+    "file": "common/ossuary-5-rest.mp3"
+  },
+  {
+    "id": "tcuAnguish",
+    "title": "Anguish",
+    "file": "common/anguish.mp3"
+  },
+  {
+    "id": "tcuLandOfTheDead",
+    "title": "Land of the Dead",
+    "file": "common/land-of-the-dead.mp3"
+  },
+  {
+    "id": "tcuHiddenPast",
+    "title": "Hidden Past",
+    "file": "common/hidden-past.mp3"
+  },
+  {
+    "id": "tcuHiddenWonders",
+    "title": "Hidden Wonders",
+    "file": "common/hidden-wonders.mp3"
+  },
+  {
+    "id": "tcuMysticForce",
+    "title": "Mystic Force",
+    "file": "common/mystic-force.mp3"
+  },
+  {
+    "id": "tcuShadowlands1Horizon",
+    "title": "Shadowlands 1 - Horizon",
+    "file": "common/shadowlands-1-horizon.mp3"
+  },
+  {
+    "id": "tcuShadowlands2Bridge",
+    "title": "Shadowlands 2 - Bridge",
+    "file": "common/shadowlands-2-bridge.mp3"
+  },
+  {
+    "id": "tcuFinalBattleOfTheDarkWizards",
+    "title": "Final Battle of the Dark Wizards",
+    "file": "common/final-battle-of-the-dark-wizards.mp3"
+  },
+  {
+    "id": "tcuTheEscalation",
+    "title": "The Escalation",
+    "file": "common/the-escalation.mp3"
+  },
+  {
+    "id": "tcuDarkling",
+    "title": "Darkling",
+    "file": "common/darkling.mp3"
+  },
+  {
+    "id": "tcuVolatileReaction",
+    "title": "Volatile Reaction",
+    "file": "common/volatile-reaction.mp3"
+  },
+  {
+    "id": "tcuOssuary3Words",
+    "title": "Ossuary 3 - Words",
+    "file": "common/ossuary-3-words.mp3"
+  },
+  {
+    "id": "tcuSymmetry",
+    "title": "Symmetry",
+    "file": "common/symmetry.mp3"
+  },
+  {
+    "id": "tcuShadowlands6ThePit",
+    "title": "Shadowlands 6 - The Pit",
+    "file": "common/shadowlands-6-the-pit.mp3"
+  },
+  {
+    "id": "darkestChild",
+    "title": "Darkest Child",
+    "file": "common/darkest-child.mp3"
+  },
+  {
+    "id": "longNoteOne",
+    "title": "Long note One",
+    "file": "common/long-note-one.mp3"
+  },
+  {
+    "id": "unseenHorrors",
+    "title": "Unseen Horrors",
+    "file": "common/unseen-horrors.mp3"
+  },
+  {
+    "id": "ritual",
+    "title": "Ritual",
+    "file": "common/ritual.mp3"
+  },
+  {
+    "id": "gatheringDarkness",
+    "title": "Gathering Darkness",
+    "file": "common/gathering-darkness.mp3"
+  },
+  {
+    "id": "theDread",
+    "title": "The Dread",
+    "file": "common/the-dread.mp3"
+  },
+  {
+    "id": "darkWalk",
+    "title": "Dark Walk",
+    "file": "common/dark-walk.mp3"
+  },
+  {
+    "id": "eveningOfChaos",
+    "title": "Evening of Chaos",
+    "file": "common/evening-of-chaos.mp3"
+  },
+  {
+    "id": "danseMacabre",
+    "title": "Danse Macabre",
+    "file": "common/danse-macabre.mp3"
+  },
+  {
+    "id": "echoesOfTime",
+    "title": "Echoes of Time",
+    "file": "common/echoes-of-time.mp3"
+  },
+  {
+    "id": "longNoteTwo",
+    "title": "Long Note Two",
+    "file": "common/long-note-two.mp3"
+  },
+  {
+    "id": "ghostProcessional",
+    "title": "Ghost Processional",
+    "file": "common/ghost-processional.mp3"
+  },
+  {
+    "id": "ossuarySixAir",
+    "title": "Ossuary 6 - Air",
+    "file": "common/ossuary-6-air.mp3"
+  },
+  {
+    "id": "deadlyRoulette",
+    "title": "Deadly Roulette",
+    "file": "common/deadly-roulette.mp3"
+  },
+  {
+    "id": "dancesAndDames",
+    "title": "Dances and Dames",
+    "file": "common/dances-and-dames.mp3"
+  },
+  {
+    "id": "chasePulse",
+    "title": "Chase Pulse",
+    "file": "common/chase-pulse.mp3"
+  },
+  {
+    "id": "shadowlandsAntechamber",
+    "title": "Shadowlands 5 - Antechamber",
+    "file": "common/shadowlands-5-antechamber.mp3"
+  },
+  {
+    "id": "comePlayWithMe",
+    "title": "Come Play with Me",
+    "file": "common/come-play-with-me.mp3"
+  },
+  {
+    "id": "iKnewAGuy",
+    "title": "I Knew a Guy",
+    "file": "common/i-knew-a-guy.mp3"
+  },
+  {
+    "id": "onTheGround",
+    "title": "On the Ground",
+    "file": "common/on-the-ground.mp3"
+  },
+  {
+    "id": "decay",
+    "title": "Decay",
+    "file": "common/decay.mp3"
+  },
+  {
+    "id": "lightlessDawn",
+    "title": "Lightless Dawn",
+    "file": "common/lightless-dawn.mp3"
+  },
+  {
+    "id": "rightBehindYou",
+    "title": "Right Behind You",
+    "file": "common/right-behind-you.mp3"
+  },
+  {
+    "id": "longNoteThree",
+    "title": "Long Note Three",
+    "file": "common/long-note-three.mp3"
+  },
+  {
+    "id": "nightBreak",
+    "title": "Night Break",
+    "file": "common/night-break.mp3"
+  },
+  {
+    "id": "theVoices",
+    "title": "The Voices",
+    "file": "common/the-voices.mp3"
+  },
+  {
+    "id": "shadowlandsSevenCodex",
+    "title": "Shadowlands 7 - Codex",
+    "file": "common/shadowlands-7-codex.mp3"
+  },
+  {
+    "id": "shadowlandsFourBreath",
+    "title": "Shadowlands 4 - Breath",
+    "file": "common/shadowlands-4-breath.mp3"
+  },
+  {
+    "id": "wretchedDestroyer",
+    "title": "Wretched Destroyer",
+    "file": "common/wretched-destroyer.mp3"
+  },
+  {
+    "id": "ossuaryOneBeginning",
+    "title": "Ossuary 1 - A Beginning",
+    "file": "common/ossuary-1-a-beginning.mp3"
+  },
+  {
+    "id": "ossuarySevenResolve",
+    "title": "Ossuary 7 - Resolve",
+    "file": "common/ossuary-7-resolve.mp3"
+  },
+  {
+    "id": "ossuaryTwoTurn",
+    "title": "Ossuary 2 - Turn",
+    "file": "common/ossuary-2-turn.mp3"
+  },
+  {
+    "id": "magicForest",
+    "title": "Magic Forest",
+    "file": "common/magic-forest.mp3"
+  },
+  {
+    "id": "shamanistic",
+    "title": "Shamanistic",
+    "file": "common/shamanistic.mp3"
+  },
+  {
+    "id": "invariance",
+    "title": "Invariance",
+    "file": "common/invariance.mp3"
+  },
+  {
+    "id": "ancientRite",
+    "title": "Ancient Rite",
+    "file": "common/ancient-rite.mp3"
+  },
+  {
+    "id": "rites",
+    "title": "Rites",
+    "file": "common/rites.mp3"
+  },
+  {
+    "id": "lostFrontier",
+    "title": "Lost Frontier",
+    "file": "common/lost-frontier.mp3"
+  },
+  {
+    "id": "gloomHorizon",
+    "title": "Gloom Horizon",
+    "file": "common/gloom-horizon.mp3"
+  },
+  {
+    "id": "enterTheMaze",
+    "title": "Enter the Maze",
+    "file": "common/enter-the-maze.mp3"
+  },
+  {
+    "id": "penumbra",
+    "title": "Penumbra",
+    "file": "common/penumbra.mp3"
+  },
+  {
+    "id": "staticMotion",
+    "title": "Static Motion",
+    "file": "common/static-motion.mp3"
+  },
+  {
+    "id": "controlledChaos",
+    "title": "Controlled Chaos",
+    "file": "common/controlled-chaos.mp3"
+  },
+  {
+    "id": "orion300xb",
+    "title": "Orion 300XB",
+    "file": "common/orion-300xb.mp3"
+  },
+  {
+    "id": "digitalBark",
+    "title": "Digital Bark",
+    "file": "common/digital-bark.mp3"
+  },
+  {
+    "id": "itIsLost",
+    "title": "It is Lost",
+    "file": "common/it-is-lost.mp3"
+  },
+  {
+    "id": "interloper",
+    "title": "Interloper",
+    "file": "common/interloper.mp3"
+  },
+  {
+    "id": "truthInTheStones",
+    "title": "Truth in the Stones",
+    "file": "common/truth-in-the-stones.mp3"
+  },
+  {
+    "id": "thunderDreams",
+    "title": "Thunder Dreams",
+    "file": "common/thunder-dreams.mp3"
+  }
+]

@@ -22,7 +22,7 @@ test('每个已配置关卡都有两到三首独立 BGM，所有音乐均参与�
   }
   assert.deepEqual([...used].sort(), MUSIC_TRACKS.map(track => track.id).sort())
   const earlierTracks = Object.entries(SCENARIO_MUSIC)
-    .filter(([campaign]) => campaign !== 'theForgottenAge')
+    .filter(([campaign]) => ['nightOfTheZealot', 'theDunwichLegacy', 'thePathToCarcosa'].includes(campaign))
     .flatMap(([, chapters]) => Object.values(chapters).flatMap(chapter => chapter.tracks))
   const uses = new Map()
   for (const id of earlierTracks) uses.set(id, (uses.get(id) || 0) + 1)
@@ -50,7 +50,7 @@ test('内置音乐、官方授权署名和文件校验一致', () => {
   assert.deepEqual(musicTracksForPlaylist('nightOfTheZealot').map(track => track.id), MUSIC_PLAYLISTS.nightOfTheZealot)
   assert.deepEqual(musicTracksForPlaylist('unknown').map(track => track.id), MUSIC_PLAYLISTS.common)
   for (const track of MUSIC_TRACKS) {
-    assert.match(track.file, /^(?:common|campaigns\/(?:thePathToCarcosa|theForgottenAge))\/[a-z0-9-]+\.mp3$/)
+    assert.match(track.file, /^(?:common|campaigns\/(?:thePathToCarcosa|theForgottenAge|theCircleUndone))\/[a-z0-9-]+\.mp3$/)
     const source = manifest.tracks.find(t => t.isrc === track.isrc)
     assert.equal(source.localFile, track.file)
     assert.ok(credits.includes(track.title))

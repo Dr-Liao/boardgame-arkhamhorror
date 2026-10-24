@@ -84,6 +84,16 @@
 .ah-office.ah-hub-setup { display: grid; grid-template-columns: 1.15fr 1fr; width: min(1180px, 95vw); padding: 0; max-height: 90vh; border: 1px solid #927b49; border-radius: 6px; overflow: auto; box-shadow: 0 35px 110px #000c; }
 .ah-office-entry-art { position: relative; isolation: isolate; min-height: 610px; overflow: hidden; background: radial-gradient(ellipse at 50% 45%, #4b655740, transparent 70%), #091613; border-right: 1px solid var(--office-edge); }
 .ah-office-entry-art > .ah-office-decor { position: absolute; z-index: 0; width: 125%; left: -13%; bottom: 20%; opacity: .85; -webkit-mask-image: linear-gradient(to right, transparent 8%, #000 24%, #000 76%, transparent 92%); mask-image: linear-gradient(to right, transparent 8%, #000 24%, #000 76%, transparent 92%); }
+/* 封面主图（战役场景照）单独一层：照片是硬边矩形，不处理会在标题下方、桌面图上方各切出
+   一条直边。这里让照片自己的上下边缘渐隐，并在边缘叠一条渐进模糊带；模糊带绑在照片盒子
+   上，桌面 / 平板 / 手机三种摆法都不用另调。桌面图仍是 z-index: 1 的清晰前景。 */
+.ah-office-entry-art > .ah-office-entry-hero { position: absolute; z-index: 0; width: 125%; left: -13%; bottom: 20%; opacity: .85; -webkit-mask-image: linear-gradient(to right, transparent 8%, #000 24%, #000 76%, transparent 92%); mask-image: linear-gradient(to right, transparent 8%, #000 24%, #000 76%, transparent 92%); }
+.ah-office-entry-hero > .ah-office-decor { display: block; width: 100%; height: auto; -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%); }
+.ah-office-entry-hero > .ah-office-entry-blur { position: absolute; z-index: 1; left: 0; right: 0; height: 26%; pointer-events: none; -webkit-backdrop-filter: blur(7px) saturate(.94); backdrop-filter: blur(7px) saturate(.94); }
+.ah-office-entry-blur.is-top { top: 0; -webkit-mask-image: linear-gradient(to bottom, #000 2%, #0006 46%, transparent 100%); mask-image: linear-gradient(to bottom, #000 2%, #0006 46%, transparent 100%); }
+.ah-office-entry-blur.is-bottom { bottom: 0; -webkit-mask-image: linear-gradient(to top, #000 2%, #0006 46%, transparent 100%); mask-image: linear-gradient(to top, #000 2%, #0006 46%, transparent 100%); }
+/* 整块封面的最底边再轻虚化一道：桌面图保持清晰，但底边化进面板边框，不出现硬切口。 */
+.ah-office-entry-art::after { content: ''; position: absolute; z-index: 1; left: 0; right: 0; bottom: 0; height: 15%; pointer-events: none; -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); -webkit-mask-image: linear-gradient(to top, #000 2%, rgba(0, 0, 0, .45) 52%, transparent 100%); mask-image: linear-gradient(to top, #000 2%, rgba(0, 0, 0, .45) 52%, transparent 100%); }
 .ah-office-entry-art > .ah-office-decor:nth-child(2) { z-index: 1; width: 115%; bottom: -1%; left: -6%; opacity: 1; }
 .ah-office-entry-title { position: relative; z-index: 2; text-align: center; padding: 52px 16px; text-shadow: 0 2px 20px #000; }
 .ah-office-entry-title small { color: #ac9b6b; letter-spacing: 7px; font-size: 10px; }
@@ -240,6 +250,18 @@
 .ah-office-candidate .ah-office-portrait { margin: 0 auto 8px; width: 65px; height: 85px; }
 .ah-office-candidate > span { display: block; font-size: 10px; }
 .ah-office-candidate > small { display: block; margin-top: 4px; color: #879b8c; font-size: 9px; }
+/* 候选人卡与档案按钮：shell 固定 96px 宽，选择按钮保持原尺寸，档案按钮浮在卡面右上角。 */
+.ah-office-candidate-shell { position: relative; display: flex; width: 96px; flex: none; }
+.ah-office-candidate-shell .ah-office-candidate { width: 100%; min-width: 0; }
+.ah-office-candidate-info {
+  position: absolute; top: 5px; right: 5px; z-index: 2;
+  display: grid; place-items: center; width: 24px; height: 24px; padding: 0;
+  border-radius: 50%; border: 1px solid #bca570; background: #0b1a16e0;
+  color: #e4cea0; cursor: pointer;
+}
+.ah-office-candidate-info .ah-icon { width: 14px; height: 14px; }
+.ah-office-candidate-info:hover { color: #ffe0a1; border-color: #f0d99d; }
+.ah-office-candidate-info:focus-visible { outline: 2px solid #f7d698; outline-offset: 2px; }
 .ah-office-deck-heading { display: flex; gap: 15px; align-items: center; margin: 20px 0; }
 .ah-deck-next-action { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 18px 0; padding: 15px 18px; border: 1px solid #9fb17466; background: #243b2a; }
 .ah-deck-next-action > div { display: grid; flex: 1 1 280px; gap: 5px; }.ah-deck-next-action strong { color: #d9e4b5; }.ah-deck-next-action small { color: #afbea2; line-height: 1.5; }
@@ -353,7 +375,7 @@
   .ah-office .ah-hub-pane { width: calc(100% - 32px); margin-top: 16px; padding: 18px; }
   .ah-office.ah-hub-setup { grid-template-columns: .85fr 1fr; }.ah-office-entry-controls { padding: 30px 22px; }
   .ah-office.ah-hub-setup .bg-modal-foot { margin-left: -22px; margin-right: -22px; padding-left: 22px; padding-right: 22px; }
-  .ah-office-entry-art { min-height: 560px; }.ah-office-entry-art > .ah-office-decor { width: 160%; left: -30%; }
+  .ah-office-entry-art { min-height: 560px; }.ah-office-entry-art > .ah-office-entry-hero { width: 160%; left: -30%; }
   .ah-office-overview-grid { gap: 14px; }.ah-office-team { grid-template-columns: 1fr; }.ah-office-team-panel { padding: 18px; }
   .ah-office-dossier { aspect-ratio: 1.45; }.ah-office-dossier-copy { left: 25%; top: 27%; }.ah-office .ah-office-dossier-copy h2 { font-size: 18px; }
   .ah-office-builder { grid-template-columns: minmax(0, 1fr) 260px; gap: 15px; }
@@ -364,7 +386,7 @@
   .ah-office .bg-game-actions { width: 100%; margin: 0; }.ah-office .ah-hub-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 0 8px; }
   .ah-office .ah-hub-tabs button { justify-content: center; padding: 13px 3px; font-size: 11px; }.ah-office .ah-hub-tabs .ah-icon { width: 16px; height: 16px; }
   .ah-office.ah-hub-setup { display: block; width: 95vw; max-height: 92vh; }.ah-office-entry-art { min-height: 230px; height: 230px; border-right: 0; border-bottom: 1px solid var(--office-edge); }
-  .ah-office-entry-art > .ah-office-decor { width: 75%; left: 30%; bottom: -15%; }.ah-office-entry-art > .ah-office-decor:nth-child(2) { width: 70%; left: -13%; bottom: -18%; }
+  .ah-office-entry-art > .ah-office-entry-hero { width: 75%; left: 30%; bottom: -15%; }.ah-office-entry-art > .ah-office-decor:nth-child(2) { width: 70%; left: -13%; bottom: -18%; }
   .ah-office-entry-title { text-align: left; padding: 28px 22px; }.ah-office-entry-title small { letter-spacing: 4px; }.ah-office-entry-title h2 { font-size: 36px; letter-spacing: 5px; margin: 10px 0; }.ah-office-entry-title p { font-size: 10px; letter-spacing: 1px; }
   .ah-office-entry-controls { padding: 24px; }.ah-office-entry-controls > h2 { font-size: 24px; margin: 12px 0; }.ah-office-entry-controls .ah-hub-tabs { display: flex; gap: 30px; }.ah-office-entry-controls .ah-hub-tabs button { font-size: 14px; }
   .ah-office.ah-hub-setup .bg-modal-foot { margin-left: -24px; margin-right: -24px; padding-left: 24px; padding-right: 24px; }
@@ -381,7 +403,7 @@
   .ah-office .ah-campaign-graph { grid-template-columns: 1fr 1fr; gap: 10px; }.ah-office .ah-flow-node { padding: 14px 10px; font-size: 10px; }.ah-office .ah-flow-node strong { font-size: 13px; }
   .ah-office-cases { grid-template-columns: 1fr; gap: 10px; }.ah-office .ah-office-case { min-height: 240px; }.ah-office-case > .ah-office-decor { height: 250px; }
   .ah-office .ah-office-investigator { grid-template-columns: 80px minmax(0, 1fr); gap: 14px; padding-top: 10px; }.ah-office-investigator > .ah-office-portrait { width: 80px; height: 115px; }.ah-office-investigator-copy h2 { font-size: 24px !important; margin: 12px 0; }.ah-office-investigator-copy .ah-office-eyebrow { font-size: 9px; letter-spacing: 1px; }.ah-office-investigator-copy .ah-office-metrics { gap: 10px; }.ah-office-investigator-copy .ah-office-metric { column-gap: 4px; grid-template-columns: 16px auto; }.ah-office-investigator-copy .ah-office-metric .ah-icon { width: 16px; }.ah-office-investigator-copy .ah-office-metric b { font-size: 17px; }
-  .ah-investigator-browser { margin-left: -94px; padding: 14px; }.ah-investigator-browser-head { align-items: stretch; flex-direction: column; }.ah-investigator-filter-bar { justify-content: flex-start; gap: 8px; }.ah-investigator-class-filters { justify-content: flex-start; }.ah-office-roster { gap: 8px; }.ah-office-candidate { width: 75px; }.ah-office-candidate .ah-office-portrait { width: 53px; height: 70px; }
+  .ah-investigator-browser { margin-left: -94px; padding: 14px; }.ah-investigator-browser-head { align-items: stretch; flex-direction: column; }.ah-investigator-filter-bar { justify-content: flex-start; gap: 8px; }.ah-investigator-class-filters { justify-content: flex-start; }.ah-office-roster { gap: 8px; }.ah-office-candidate { width: 75px; }.ah-office-candidate-shell { width: 75px; }.ah-office-candidate .ah-office-portrait { width: 53px; height: 70px; }
   .ah-office .ah-hub-actions .bg-btn { padding: 10px 12px; font-size: 12px; }
   .ah-office.ah-db-modal { padding: 15px; }.ah-office.ah-db-modal > h2 { font-size: 18px; }.ah-office-builder { display: flex; flex-direction: column; }.ah-office .ah-hub-card-pool { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 44vh; gap: 10px; }.ah-office-deck-tray { padding: 14px; }.ah-office .ah-hub-deck-list { max-height: 180px; }.ah-office-cost-curve { height: 60px; }.ah-office-filters { gap: 5px; }.ah-office-filters button { flex: 1; padding: 7px; }.ah-office-filters input { flex-basis: 100%; }
   .ah-office .ah-office-records .ah-hub-scenario { grid-template-columns: 1fr; }.ah-office-records > p { font-size: 12px; }

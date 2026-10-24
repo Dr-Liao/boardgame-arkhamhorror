@@ -77,7 +77,8 @@ const KINDS_NEEDING_PAYLOAD = Object.freeze({
 const LIFECYCLE_KINDS = new Set(Object.keys(KINDS_NEEDING_PAYLOAD))
 // Phase 5（5c-19）：这两个生命周期钩子允许「只带 resolve」——效果 DSL 表达不了时由 resolve 接管，
 // 读点仍是 lifecycle 的 playedEffect / entersPlayEffect，引擎侧没有第二条路径。
-const LIFECYCLE_RESOLVE_KINDS = new Set(['played', 'entersPlay', 'setup'])
+// 第 5 步 P7：leavesPlay 同理（05313/05316 的绑定副本收回要走 api.bonded.return）。
+const LIFECYCLE_RESOLVE_KINDS = new Set(['played', 'entersPlay', 'setup', 'leavesPlay'])
 const COST_KEYS = new Set(['action', 'exhaust', 'uses', 'resources', 'clues', 'discardSelf',
   'exileSelf', 'horror', 'damageSelf', 'assetDamage', 'discardHand', 'discardHandIcon',
   // Phase 5（5b-6）：旧式反应的「花 1 线索但放回地点」费用（02302 马莱森博士）。
@@ -300,6 +301,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // 「入场时封印若干标记」的选择式封印（04030/04031）、标记当结算结果（04030）、
   // 回合结束付费或弃置（04031）、符号标记充能（04311）、用尽移出游戏（04311）。
   'startingResources', 'usesFromStoneRecord', 'sealOnEnterChoice',
+  // 第 5 步 P7：永久卡的开局手牌修正（05276 苦心钻研）。读点：setup.js#drawOpeningHand。
+  'openingHandBonus',
   'returnToHandOnAutoFail', 'forcedTurnEndPayOrDiscard', 'chargesOnSymbolReveal',
   'removeFromGameWhenEmpty',
   // Phase 6（6e-16）：最后一批规则字段 —— 敌人弱点数据、可打出的弱点、手牌 Horror、
@@ -340,6 +343,33 @@ function assertKnownKeys(object, allowed, origin) {
   }
 }
 
+// 第 5 步 P7：条件技能图标（commit 描述子的 skill.conditionalIcons）。注册期校验形状，
+// 避免条件名/图标名写错后在对局中途静默失效。读点：src/engine/stats.js#commitIcons。
+const COMMIT_ICON_NAMES = new Set(['willpower', 'intellect', 'combat', 'agility', 'wild'])
+const COMMIT_ICON_CONDITION_KEYS = new Set([
+  'remainingHealthSanityAtLeast', 'handAtLeast', 'resourcesAtLeast', 'doomAtLeast', 'controlledTraitAtMost',
+])
+
+function validateConditionalIcons(list, origin) {
+  if (!Array.isArray(list)) throw new Error(`${origin}: conditionalIcons 必须是数组`)
+  for (const [index, item] of list.entries()) {
+    if (!item || typeof item !== 'object') throw new Error(`${origin}: conditionalIcons[${index}] 必须是对象`)
+    if (!item.when || typeof item.when !== 'object') throw new Error(`${origin}: conditionalIcons[${index}] 缺少 when`)
+    for (const key of Object.keys(item.when)) {
+      if (!COMMIT_ICON_CONDITION_KEYS.has(key)) {
+        throw new Error(`${origin}: conditionalIcons[${index}] 未知条件 ${key}`)
+      }
+    }
+    if (!item.icons || typeof item.icons !== 'object') throw new Error(`${origin}: conditionalIcons[${index}] 缺少 icons`)
+    for (const key of Object.keys(item.icons)) {
+      if (!COMMIT_ICON_NAMES.has(key)) throw new Error(`${origin}: conditionalIcons[${index}] 未知图标 ${key}`)
+      if (!Number.isInteger(item.icons[key]) || item.icons[key] < 1) {
+        throw new Error(`${origin}: conditionalIcons[${index}] 图标 ${key} 必须是正整数`)
+      }
+    }
+  }
+}
+
 export function normalizeDescriptor(raw, { code, index }) {
   const origin = `能力 ${code}#${index}`
   if (!raw || typeof raw !== 'object') throw new Error(`${origin}: 描述子必须是对象`)
@@ -377,6 +407,10 @@ export function normalizeDescriptor(raw, { code, index }) {
     if (!(LIFECYCLE_RESOLVE_KINDS.has(kind) && typeof raw.resolve === 'function')) {
       throw new Error(`${origin}: ${kind} 必须提供 ${payload.field}（${payload.hint}）`)
     }
+  }
+  // 第 5 步 P7：投入时按调查员状态追加图标的技能卡（05022/05026/05030/05034/05038）。
+  if (kind === 'commit' && raw.skill?.conditionalIcons != null) {
+    validateConditionalIcons(raw.skill.conditionalIcons, origin)
   }
   // Phase 5（5c-8）：`played` 平时是生命周期钩子、不声明 trigger；但**快速事件**可以在
   // 反应窗口打出（旧 DSL 写成 `fast: true, reaction: { when }`），所以允许 fast 的 played 声明 trigger。
@@ -456,6 +490,10 @@ export function registerCardAbilities(entries) {
     const origin = `能力条目 ${entry.code || '<无 code>'}`
     assertKnownKeys(entry, ENTRY_KEYS, origin)
     if (typeof entry.code !== 'string' || !entry.code) throw new Error(`${origin}: 缺少 code`)
+    if (entry.openingHandBonus != null
+      && (!Number.isInteger(entry.openingHandBonus) || entry.openingHandBonus < 1)) {
+      throw new Error(`${origin}: openingHandBonus 必须是正整数`)
+    }
     if (REGISTRY.has(entry.code) && REGISTRY.get(entry.code).registered !== false) {
       throw new Error(`${origin}: 重复注册（能力层同一卡号只允许一个条目）`)
     }
@@ -594,6 +632,7 @@ export function registerCardAbilities(entries) {
       onPlayDoom: entry.onPlayDoom ?? null,
       discardAtRoundEnd: entry.discardAtRoundEnd === true,
       startingResources: entry.startingResources ?? null,
+      openingHandBonus: entry.openingHandBonus ?? null,
       usesFromStoneRecord: entry.usesFromStoneRecord === true,
       sealOnEnterChoice: entry.sealOnEnterChoice ?? null,
       returnToHandOnAutoFail: entry.returnToHandOnAutoFail === true,

@@ -8,6 +8,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { createHash } from 'node:crypto'
 import { fileURLToPath } from 'node:url'
+import { createMusicLayout } from './music-layout.mjs'
 
 const modDir = fileURLToPath(new URL('..', import.meta.url))
 const staging = path.resolve(process.argv[2] || '')
@@ -18,6 +19,7 @@ if (!process.argv[2] || (!assetPack && !fs.existsSync(path.join(staging, 'index.
 }
 
 const sourcePath = path.join(modDir, 'audit', 'local-images.json')
+if (!assetPack) createMusicLayout(staging)
 if (fs.existsSync(sourcePath)) {
   const source = JSON.parse(fs.readFileSync(sourcePath, 'utf8'))
   const imageRoot = path.join(staging, 'web', 'img')

@@ -134,6 +134,13 @@ test('P5 序章选人：选项带职业/属性，source 记录人数；模型给
   assert.equal(model.selectable, 4)
   assert.equal(model.seatCount, 2)
   assert.equal(model.candidates[0].classLabel, '中立')
+  // 选项 id 就是故事调查员卡号：界面据此画卡面并打开完整人物档案。
+  // 观察投影会把 klass/classLabel/subtitle/stats/health/sanity 补发给应答座位（见 view-privacy.test.mjs）。
+  assert.equal(model.candidates[0].code, '05046')
+  assert.equal(model.candidates[0].subtitle, '私人警卫')
+  assert.equal(model.candidates[0].health, 8)
+  assert.equal(model.candidates[0].sanity, 4)
+  assert.deepEqual(model.candidates[0].stats, { willpower: 3, intellect: 3, combat: 4, agility: 2 })
   assert.equal(model.collapsed.length, 0)
   assert.equal(model.alreadyChosen.length, 0)
   // 选完之后：模型从投影里读到已选两人与被划掉的两人。
@@ -146,6 +153,29 @@ test('P5 序章选人：选项带职业/属性，source 记录人数；模型给
   assert.equal(after.alreadyChosen.length, 2)
   assert.equal(after.collapsed.length, 2)
   assert.equal(after.remainingCount, 3)
+})
+
+test('P5 序章选人模型：旧会话只有 id/label 时降级不崩，code 回落卡号', () => {
+  const model = storyInvestigatorPickerModel({
+    state: {
+      pendingChoice: {
+        id: 'q-old', kind: 'storyInvestigator', seat: 0, prompt: '选择故事调查员。',
+        // 旧存档/旧投影：选项只有 id/label，没有 cardCode 与卡面身份字段。
+        options: [{ id: '05046', label: '加弗瑞拉·米兹拉克' }],
+      },
+      legalMoves: [{ action: 'choose', choiceId: 'q-old', optionId: '05046', label: '加弗瑞拉·米兹拉克' }],
+    },
+  })
+  assert.ok(model)
+  assert.equal(model.candidates.length, 1)
+  // id 就是卡号：即使没有 cardCode，界面仍能画卡面/打开档案；身份字段缺失时不伪造。
+  assert.equal(model.candidates[0].code, '05046')
+  assert.equal(model.candidates[0].name, '加弗瑞拉·米兹拉克')
+  assert.equal(model.candidates[0].classLabel, null)
+  assert.equal(model.candidates[0].stats, null)
+  assert.equal(model.candidates[0].health, null)
+  assert.equal(model.candidates[0].sanity, null)
+  assert.equal(model.candidates[0].move.optionId, '05046')
 })
 
 test('P5 闹鬼：待决选择带地点与能力身份，面板按顺序列出条目', () => {

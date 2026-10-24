@@ -1,5 +1,6 @@
 import { investigatorRule } from '../cards/card-rules.js'
 import { describeLimitShort, limitUsed } from './limits.js'
+import { totalDoom } from './rules-state.js'
 // stats.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 属性与「卡面给什么」的读点：技能值、图标、特质/关键词、手牌位与行动数、
 // 生命力/神智上限，以及 assetEffect（旧 passive + 条目字段 + 描述子 shim 的合并结果）。
@@ -190,13 +191,55 @@ export function createStats(deps) {
 
   // 第 2 步 P2.5：skill 可以是单个技能名，也可以是技能数组（阵法/合成检定）。
   // 数组时把每个技能的图标相加，万能图标只算一次（不能按技能数重复计入）。
+  function iconsValue(icons, skill) {
+    if (!icons) return 0
+    const list = Array.isArray(skill) ? skill : [skill]
+    let total = icons.wild || 0
+    for (const name of list) total += icons[name] || 0
+    return total
+  }
+
   function iconValue(code, skill) {
     const c = cardDef(code)
     if (!c || !c.icons) return 0
-    const list = Array.isArray(skill) ? skill : [skill]
-    let total = c.icons.wild || 0
-    for (const name of list) total += c.icons[name] || 0
-    return total
+    return iconsValue(c.icons, skill)
+  }
+
+  // 第 5 步 P7：条件技能图标（05022/05026/05030/05034/05038）。
+  // 数据格式：commit 描述子的 `skill.conditionalIcons: [{ when, icons }]`。
+  // 按数组顺序取**最后一个条件成立的条目**，把它的图标叠加到印刷图标上——卡面的
+  // 「改为获得…」用后一条（更严格条件）覆盖前一条表达，不需要额外的覆盖/组语义。
+  const COMMIT_ICON_CONDITIONS = Object.freeze({
+    remainingHealthSanityAtLeast: (state, inv, value) =>
+      getMaxHealth(inv) - (inv.damage || 0) + getMaxSanity(inv) - (inv.horror || 0) >= Number(value),
+    handAtLeast: (state, inv, value) => (inv.hand || []).length >= Number(value),
+    resourcesAtLeast: (state, inv, value) => (inv.resources || 0) >= Number(value),
+    doomAtLeast: (state, inv, value) => totalDoom(state) >= Number(value),
+    controlledTraitAtMost: (state, inv, value) => {
+      const trait = String(value?.trait || '').toLowerCase()
+      if (!trait) return false
+      const count = (inv.assets || []).filter(asset =>
+        (cardDef(asset.code)?.traits || []).some(item => String(item).toLowerCase() === trait)).length
+      return count <= Number(value?.count ?? 0)
+    },
+  })
+
+  function conditionalCommitIcons(state, inv, code, skill) {
+    const entry = registeredEntry(code)
+    const profile = (entry?.abilities || []).find(ability => ability.kind === 'commit')?.skill
+    const list = profile?.conditionalIcons
+    if (!Array.isArray(list) || !list.length) return 0
+    let matched = null
+    for (const item of list) {
+      const when = item?.when
+      if (!when || typeof when !== 'object') continue
+      const ok = Object.entries(when).every(([key, value]) => {
+        const check = COMMIT_ICON_CONDITIONS[key]
+        return typeof check === 'function' ? check(state, inv, value) : false
+      })
+      if (ok) matched = item
+    }
+    return matched ? iconsValue(matched.icons, skill) : 0
   }
 
   function effectiveTraits(state, inv, code) {
@@ -224,7 +267,7 @@ export function createStats(deps) {
     if (!state || !inv) return base
     const granted = collectGrants(state, inv, 'skillIcon', { code })
     const wanted = Array.isArray(skill) ? skill : [skill]
-    return base + (wanted.some(name => granted.has(name)) ? 1 : 0)
+    return base + (wanted.some(name => granted.has(name)) ? 1 : 0) + conditionalCommitIcons(state, inv, code, skill)
   }
 
   function enemyStatMods(state) {
