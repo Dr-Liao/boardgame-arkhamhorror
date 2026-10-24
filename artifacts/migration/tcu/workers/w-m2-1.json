@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "worker": "w-m2-1",
+  "shard": "M2-1",
+  "cycle": "tcu",
+  "milestone": "P7",
+  "startedAt": "2026-10-24T02:07:35+08:00",
+  "finishedAt": "2026-10-24T02:42:00+08:00",
+  "codes": [
+    "05020", "05021", "05022", "05023", "05024", "05025", "05026", "05027", "05028", "05029", "05030",
+    "05031", "05032", "05033", "05034", "05035", "05036", "05037", "05038", "05039", "05040", "05041"
+  ],
+  "done": [
+    "05020", "05021", "05022", "05023", "05024", "05025", "05026", "05027", "05028", "05029", "05030",
+    "05031", "05032", "05033", "05034", "05035", "05036", "05037", "05038", "05039", "05040", "05041"
+  ],
+  "blocked": [],
+  "simplified": [
+    {
+      "code": "05021",
+      "note": "未实现：卡面允许附属到同地点任意调查员（本实现只附属到自己）；神话阶段结束的「花 2 资源或弃掉」简化为直接弃掉（forcedMythosEndDiscard）。已实现快速打出、受伤害/恐惧时弃掉并取消该次全部伤害与恐惧。"
+    },
+    {
+      "code": "05029",
+      "note": "未实现：把本次检定的技能类型改为「资源技能检定」（引擎缺替换技能类型/投入图标的读点）。已实现基础技能值改为 floor(资源/2)。"
+    },
+    {
+      "code": "05032",
+      "note": "未实现：取消「弃手牌 / 失资源 / 失行动」三项（引擎缺通用取消读点，原语请求 w-m2-1-cancel-effect-aspect 被主进程 rejected，P10 前补）；触发范围放宽为任意伤害/恐惧来源。已实现快速打出并取消本次伤害和/或恐惧。"
+    },
+    {
+      "code": "05033",
+      "note": "未实现：① 「额外结算一次该效果」；② 「取消该效果」近似为取消该符号标记本次的效果（含修正值）——没有「卡牌符号触发效果」的通用取消窗口（原语请求 w-m2-1-cancel-or-repeat-symbol-effect 被主进程 rejected，P10 前补）；③ [auto_fail] 符号没有可打出的窗口。"
+    },
+    {
+      "code": "05036",
+      "note": "未实现：① 反应时机在敌人自动交战之后（卡面要求交战之前）；② 「每位调查员仅限1张[[鞋子]]」未校验（缺按特性分组的限额读点）。已实现 +1 敏捷、横置、敏捷(3)检定、成功移动到连接地点。"
+    },
+    {
+      "code": "05040",
+      "note": "未实现：技能 +2 的作用域是「该次额外行动期间」，本实现放宽为「本回合结束前」（持续效果没有单次行动作用域）。已实现流放自身、本回合额外 1 次行动、开局起始手牌放置入场。"
+    }
+  ],
+  "doneCount": 22,
+  "blockedCount": 0,
+  "testFile": "tests/tcu-player-m2-1.test.mjs",
+  "testsPassed": 26,
+  "primitiveRequests": [
+    {
+      "id": "w-m2-1-commit-conditional-icons",
+      "cards": ["05022", "05026", "05030", "05034", "05038"],
+      "status": "done",
+      "resolution": "主进程实现（stats.js#commitIcons + 注册期校验）；5 张条目已改为 commit 描述子的 skill.conditionalIcons，并补 commitIcons 行为测试"
+    },
+    {
+      "id": "w-m2-1-cancel-effect-aspect",
+      "card": "05032",
+      "status": "rejected",
+      "resolution": "通用取消窗口本轮不扩（P10 前补）；05032 保持 simplified: true + note"
+    },
+    {
+      "id": "w-m2-1-cancel-or-repeat-symbol-effect",
+      "card": "05033",
+      "status": "rejected",
+      "resolution": "通用取消/替换窗口本轮不扩（P10 前补）；05033 保持 simplified: true + note"
+    }
+  ],
+  "reviewedSamples": {
+    "05023": "保留 scenarioStarts 反应并通过测试；补 P2.9 条目级 entersPlayFromOpeningHand 读点（引擎在抽完起始手牌后自动放置，与反应互不重复）",
+    "05025": "逐句复核：反应窗口/仅发现最后线索/只对低印刷隐藏值地点发现 2 线索均正确，未改条目；补真实行为测试（含高隐藏值地点不受影响）",
+    "05028": "修正：原 resolve 用 api.addTestValue 在 test.beforeCommit 窗口里改 value，会被检定主流程重算覆盖（+2 实际丢失）；改为 api.addPendingTestBonus，并补「每位调查员仅限 1 张」limitPerInvestigator"
+  },
+  "notes": "22/22 条目完成，26 条测试全绿（node tests/tcu-player-m2-1.test.mjs）。塔罗槽 6 张（05023/05027/05031/05035/05039/05040）均声明 entersPlayFromOpeningHand 并在 tests 里覆盖开局入场；05041 基础弱点的显现入威胁区、平局失败光环（本人+同地点队友）与 [action][action] 弃置均已实现并测试。05037 条目已按 Lead 热修复改为从 cards-data.js 的 ALL_CARDS 读槽位数据（避免 ESM 循环），测试覆盖场上/手牌两条额外费用分支。另发现两处**非本分片**的既有测试回归（供 Lead 处理）：① tests/ability-layer.test.mjs「05025 反应窗口」失败——tcu 玩家卡 availability 放开后 05025 出现在 commit 候选里，passUntilAbility 会把它投入而不是点 done；② 同文件「修正管线」失败——w-m2-2 把 05112 的槽位修正从 slot:arcane 改成 add:slot，与旧断言不一致。"
+}

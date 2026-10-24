@@ -22,7 +22,7 @@ export function createMusicLibrary({ root = DEFAULT_ROOT } = {}) {
         fs.mkdirSync(root, { recursive: true })
         try { fs.writeFileSync(file, JSON.stringify(defaults(), null, 2) + '\n', { flag: 'wx' }) } catch (e) { if (e.code !== 'EEXIST') throw e }
       }
-      const config = JSON.parse(fs.readFileSync(file, 'utf8'))
+      const config = JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, ''))
       if (config.schemaVersion !== 1 || !config.playlists || typeof config.playlists !== 'object' || Array.isArray(config.playlists)) throw new Error('格式无效')
       lastGood = config
     } catch {

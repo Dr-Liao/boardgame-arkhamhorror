@@ -27,9 +27,12 @@ export default {
         if (here) api.tempShroudMod(here, -1)
         const sources = state.locations.filter(location => location.id !== here.id && (location.clues || 0) > 0)
         if (!sources.length || !here) return
-        const chosen = sources.length === 1 ? sources[0].id
-          : api.choice({ kind: 'location', source: '04306', seat: inv.seat, prompt: '选择要移动 1 个线索的地点（可跳过）。',
-            options: sources.map(location => ({ id: location.id, label: location.name })) })
+        // 卡面「你可以……」（可选）：总是给出跳过项，只有一个候选来源时也不能强制移动。
+        const chosen = api.choice({ kind: 'location', source: '04306', seat: inv.seat, canSkip: true,
+          prompt: '是否将其他地点上的 1 个线索移动到该地点？（可跳过）',
+          options: [{ id: 'skip', label: '不移动线索' },
+            ...sources.map(location => ({ id: location.id, label: location.name }))] })
+        if (chosen === 'skip') return
         const source = sources.find(location => location.id === chosen)
         if (source) api.moveClueToLocation(source.id, here.id, 1)
       },

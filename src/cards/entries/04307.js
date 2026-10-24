@@ -32,6 +32,13 @@ export default {
       label: '显现检定前跳过', cost: { uses: 1 },
       resolve: ({ api }) => { api.skipTestTokens() },
     },
+    {
+      // 卡面「an investigator at your location」：同地点的其他调查员进行显现检定时也要能触发。
+      // 引擎把“队友显现检定”作为独立窗口 revelationTestAlly 发给同地点的其他调查员。
+      kind: 'reaction', trigger: 'revelationTestAlly', id: 'pnakoticRevelationAlly', legacyReaction: true,
+      label: '队友显现检定前跳过', cost: { uses: 1 },
+      resolve: ({ api }) => { api.skipTestTokens() },
+    },
   ],
   modifiers: [
 

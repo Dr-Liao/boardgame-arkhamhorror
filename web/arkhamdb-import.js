@@ -2,6 +2,7 @@
 // 只有牌组内所有普通卡都已实现且可用于当前调查员 0 XP 开局时才允许载入；
 // 签名卡、专属弱点与基础弱点由服务端在保存时自动加入，导入时跳过。
 import { registerDeckRules, validateDeckRules } from './deck-rules.js'
+import { t, getLocale } from './i18n.js'
 
 const API_ROOT = '/api/mods/arkhamhorror/arkhamdb/'
 const PLAYER_TYPES = new Set(['asset', 'event', 'skill'])
@@ -9,20 +10,20 @@ const PLAYER_TYPES = new Set(['asset', 'event', 'skill'])
 /** @returns {{ kind: 'decklist'|'deck'|'auto', id: string } | { json: object } | { error: string }} */
 export function parseArkhamDbInput(text) {
   const value = String(text ?? '').trim()
-  if (!value) return { error: '请粘贴 ArkhamDB 牌组链接、编号或导出的 JSON。' }
+  if (!value) return { error: t('misc.import.empty') }
   if (value.startsWith('{')) {
     try {
       const json = JSON.parse(value)
-      if (!json || typeof json !== 'object' || !json.investigator_code || !json.slots) return { error: 'JSON 中缺少 investigator_code 或 slots 字段。' }
+      if (!json || typeof json !== 'object' || !json.investigator_code || !json.slots) return { error: t('misc.import.missingFields') }
       return { json }
-    } catch { return { error: 'JSON 格式无效，请复制完整的牌组数据。' } }
+    } catch { return { error: t('misc.import.badJson') } }
   }
   if (/^\d{1,10}$/.test(value)) return { kind: 'auto', id: value }
   let url
-  try { url = new URL(/^[a-z]+:\/\//i.test(value) ? value : 'https://' + value) } catch { return { error: '无法识别的链接。' } }
-  if (!/^(?:[a-z-]+\.)?arkhamdb\.com$/i.test(url.hostname)) return { error: '仅支持 arkhamdb.com 的牌组链接。' }
+  try { url = new URL(/^[a-z]+:\/\//i.test(value) ? value : 'https://' + value) } catch { return { error: t('misc.import.badUrl') } }
+  if (!/^(?:[a-z-]+\.)?arkhamdb\.com$/i.test(url.hostname)) return { error: t('misc.import.host') }
   const match = url.pathname.match(/\/(?:api\/public\/)?(decklist|deck)\/(?:(?:view|edit|export\/[a-z]+)\/)?(\d{1,10})(?:[/.]|$)/i)
-  if (!match) return { error: '链接中没有找到牌组编号，例如 https://arkhamdb.com/decklist/view/12345。' }
+  if (!match) return { error: t('misc.import.noDeckId') }
   return { kind: match[1].toLowerCase(), id: match[2] }
 }
 
@@ -32,11 +33,11 @@ const slotQuery = slots => Object.entries(slots && typeof slots === 'object' && 
 async function request(path, fetchImpl) {
   let response
   try { response = await fetchImpl(API_ROOT + path, { signal: AbortSignal.timeout(20000) }) } catch (error) {
-    throw new Error(error?.name === 'TimeoutError' ? '导入超时，请稍后重试。' : '无法连接大厅服务。')
+    throw new Error(error?.name === 'TimeoutError' ? t('misc.import.timeout') : t('misc.import.network'))
   }
   let value
-  try { value = await response.json() } catch { throw new Error('导入接口响应无效。') }
-  if (!response.ok || !value.ok || !value.deck) throw new Error(value.error || '导入失败。')
+  try { value = await response.json() } catch { throw new Error(t('misc.import.badResponse')) }
+  if (!response.ok || !value.ok || !value.deck) throw new Error(value.error || t('misc.import.failed'))
   return value.deck
 }
 
@@ -66,7 +67,7 @@ export function planArkhamDbImport(deck, { investigators = [], cardPool = [], cu
   const notes = [], auto = [], blocked = []
   if (!investigator) {
     return { investigator: null, mismatch: deck.investigatorCode !== currentCode, codes: [], auto, notes, errors: [],
-      blocked: [{ code: deck.investigatorCode, name: deck.investigatorName, count: 1, reason: '调查员尚未实现' }], ready: false }
+      blocked: [{ code: deck.investigatorCode, name: deck.investigatorName, count: 1, reason: t('misc.import.investigatorMissing') }], ready: false }
   }
   const pool = new Map(cardPool.map(card => [card.code, card]))
   const allowed = new Set(investigator.allowedCards || [])
@@ -76,21 +77,21 @@ export function planArkhamDbImport(deck, { investigators = [], cardPool = [], cu
     const card = pool.get(entry.code)
     const item = { code: entry.code, name: card?.name || entry.name || entry.code, count: entry.count }
     const block = reason => blocked.push({ ...item, reason })
-    if (fixed.has(entry.code) || entry.signatureFor?.includes(investigator.code)) auto.push({ ...item, reason: '专属卡牌，保存时自动加入' })
-    else if (entry.subtype === 'basicweakness') auto.push({ ...item, reason: '基础弱点由系统随机抽取' })
-    else if (!entry.known) block('图鉴中不存在该卡')
-    else if (entry.signatureFor) block('其他调查员的专属卡牌')
-    else if (entry.subtype || !PLAYER_TYPES.has(entry.type)) block('不是可加入牌库的普通玩家卡')
-    else if (!card) block('尚未实现')
-    else if (!allowed.has(entry.code)) block((card.xp || 0) > 0 ? `${card.xp} 级卡，开局牌组只能使用 0 级卡` : `不符合${investigator.name}的构筑限制`)
+    if (fixed.has(entry.code) || entry.signatureFor?.includes(investigator.code)) auto.push({ ...item, reason: t('misc.import.autoSignature') })
+    else if (entry.subtype === 'basicweakness') auto.push({ ...item, reason: t('misc.import.autoWeakness') })
+    else if (!entry.known) block(t('misc.import.notInCatalog'))
+    else if (entry.signatureFor) block(t('misc.import.otherSignature'))
+    else if (entry.subtype || !PLAYER_TYPES.has(entry.type)) block(t('misc.import.notPlayerCard'))
+    else if (!card) block(t('misc.import.notImplemented'))
+    else if (!allowed.has(entry.code)) block((card.xp || 0) > 0 ? t('misc.import.xpTooHigh', { xp: card.xp }) : t('misc.import.restriction', { name: investigator.name }))
     else for (let i = 0; i < entry.count; i++) codes.push(entry.code)
   }
-  if (deck.tabooId) notes.push('本牌组使用了禁限卡表，导入时按原始卡牌规则处理。')
-  if (deck.sideCount) notes.push(`已忽略备选区的 ${deck.sideCount} 张卡。`)
-  if (Object.keys(deck.ignoreDeckLimit || {}).length) notes.push('ArkhamDB 中「不计入牌库张数」的标记不会保留。')
+  if (deck.tabooId) notes.push(t('misc.import.taboo'))
+  if (deck.sideCount) notes.push(t('misc.import.side', { count: deck.sideCount }))
+  if (Object.keys(deck.ignoreDeckLimit || {}).length) notes.push(t('misc.import.ignoreLimit'))
   codes.sort((a, b) => {
     const x = pool.get(a), y = pool.get(b)
-    return (typeOrder[x.type] ?? 9) - (typeOrder[y.type] ?? 9) || (x.cost ?? 99) - (y.cost ?? 99) || String(x.name).localeCompare(String(y.name), 'zh') || a.localeCompare(b)
+    return (typeOrder[x.type] ?? 9) - (typeOrder[y.type] ?? 9) || (x.cost ?? 99) - (y.cost ?? 99) || String(x.name).localeCompare(String(y.name), getLocale()) || a.localeCompare(b)
   })
   const cardMap = Object.fromEntries(cardPool.filter(card => allowed.has(card.code)).map(card => [card.code, card]))
   if (investigator.rules) registerDeckRules(investigator.code, investigator.rules)

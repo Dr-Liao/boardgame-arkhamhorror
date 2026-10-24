@@ -31,12 +31,13 @@ export default {
         api.info?.('检查补给：队伍中没有地图，这次行动没有效果。')
         return true
       }
-      const top = (state.explorationDeck || []).slice(-3).reverse()
+      const deck = state.explorationDeck || []
+      const top = deck.slice(-3).reverse()
       if (!top.length) return true
       const labelOf = code => ALL_CARDS[code]?.nameZh || ALL_CARDS[code]?.name || code
       const bottom = api.choose({
         kind: 'deck', source: '04050', seat: inv.seat,
-        prompt: '选择 1 张放在探索牌库底部（其余 2 张按原顺序放回顶）。',
+        prompt: '选择 1 张放在探索牌库底部（其余 2 张随后按你选择的顺序放回顶部）。',
         options: top.map((code, index) => ({ id: String(index), label: labelOf(code) })),
       })
       const picked = top[Number(bottom)] || top[0]
@@ -51,10 +52,12 @@ export default {
         : '0'
       const first = rest[Number(firstAnswer)] || rest[0]
       const ordered = rest.length === 2 ? [first, rest.find(entry => entry !== first)] : rest
+      // 探索牌库数组的末尾是牌库顶（campaign-plugin.js 的 doExplore 用 pop 抽牌），
+      // 所以「放在牌库底」= 放到数组最前面；其余两张按选择顺序放到末尾（first 在最顶）。
       state.explorationDeck = [
-        ...(state.explorationDeck || []).slice(0, Math.max(0, state.explorationDeck.length - 3)),
-        ...[...ordered].reverse(),
         picked,
+        ...deck.slice(0, Math.max(0, deck.length - top.length)),
+        ...[...ordered].reverse(),
       ]
       api.info?.('地图：一张牌放在探索牌库底部，其余两张按你选择的顺序回到顶部。')
       return true

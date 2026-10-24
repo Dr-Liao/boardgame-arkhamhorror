@@ -337,6 +337,7 @@ test('TCU 05196 委员会的保险箱 双行动检定任意技能移除锁头，
   assert.ok(me(state).assets.some(entry => entry.code === '01018'), '免费打出弃牌堆里的巡警')
   assert.equal(me(state).resources, 30, '免费打出（巡警 4 费不付）')
   assert.ok(state.exiled.includes('05196'), '放逐委员会的保险箱')
+  assert.equal(me(state).discard.includes('05196'), false, '放逐的卡不留在弃牌堆（修复：不再可被检索取回）')
 })
 
 // ---------------------------------------------------------------------------
@@ -364,14 +365,28 @@ test('TCU 05229 鸣枪示警 花 1 子弹把所在地点所有非精英敌人赶
 // 05230 瞄准镜（升级 · 显式简化）
 // ---------------------------------------------------------------------------
 
-test('TCU 05230 瞄准镜 快速附属到[[枪械]]支援（简化：附属期能力见条目 note）', () => {
+test('TCU 05230 瞄准镜 快速附属到[[枪械]]支援（引擎已支持手槽过滤；附属期能力见条目 note）', () => {
   const state = fixture('01001')
-  asset(state, '05186')
+  const gun = asset(state, '05186') // .45汤姆逊冲锋枪：Hand x2
+  const resourcesBefore = me(state).resources
   playCard(state, '05230')
   const host = cardOf(state, '05186')
   assert.ok((host.attachments || []).some(entry => entry.code === '05230'), '附属到枪械支援')
   assert.equal(cardOf(state, '05230'), undefined, '升级事件不作为独立支援留在场上')
   assert.ok(!me(state).discard.includes('05230'), '附属后不进入弃牌堆')
+  assert.equal(me(state).resources, resourcesBefore - 3, '修复：附属事件支付 3 资源费用（引擎 payPlayCost）')
+  // 修复：只接受「占用 2 个手部槽位」的[[枪械]]支援（一手槽手枪不能当宿主）。
+  // 注意：引擎不把附属宿主纳入 validateMove 预校验，实际检查发生在打出时的宿主筛选（没有宿主则卡回手牌）。
+  const oneHand = fixture('01001')
+  asset(oneHand, '01016') // .45自动手枪：单手槽
+  me(oneHand).hand.push('05230')
+  if (validateMove(oneHand, 0, { action: 'play', cardId: '05230' }) == null) {
+    move(oneHand, { action: 'play', cardId: '05230' })
+    settle(oneHand)
+  }
+  assert.ok(me(oneHand).hand.includes('05230'), '一手槽枪械不是合法宿主（handSlots:2 过滤后无宿主，卡回手牌）')
+  assert.ok(!(cardOf(oneHand, '01016')?.attachments || []).some(entry => entry.code === '05230'),
+    '瞄准镜没有附属到一手槽手枪')
   // 没有枪械支援时没有合法宿主：卡牌留在手牌。
   const bare = fixture('01001')
   me(bare).hand.push('05230')
@@ -469,6 +484,18 @@ test('TCU 05234 诱敌 自动躲避非精英敌人；可支付 +2 资源改为�
   assert.equal(enemyById(state, 'decoy-a').exhausted, true, '第 1 个敌人被自动躲避')
   assert.equal(enemyById(state, 'decoy-b').exhausted, true, '第 2 个敌人被自动躲避（+2 资源的版本）')
   assert.equal(me(state).resources, 26, '打出费用 2 + 提升费用 2')
+})
+
+test('TCU 05234 诱敌 修复：没有可躲避的非精英敌人时打不出（含连接地点判定）', () => {
+  const state = fixture('01001')
+  me(state).hand = ['05234']
+  assert.match(String(validateMove(state, 0, { action: 'play', cardId: '05234' })), /没有可自动躲避|不能打出/,
+    '无合法目标时不能打出「诱敌」')
+  // 只有连接地点的非精英敌人时仍可打出（范围模式有目标）。
+  const graph = withLocationGraph(state)
+  enemy(state, { id: 'decoy-far', location: graph.hall.id, fight: 1, evade: 1, health: 5 })
+  assert.equal(validateMove(state, 0, { action: 'play', cardId: '05234' }), null,
+    '连接地点有非精英敌人时可打出')
 })
 
 // ---------------------------------------------------------------------------

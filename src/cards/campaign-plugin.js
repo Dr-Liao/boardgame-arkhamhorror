@@ -18,6 +18,7 @@ export function createCampaignPlugin(deps) {
     damageEnemy,
     discardLocked,
     doInvestigate,
+    grantedInvestigateAction,
     doPlay,
     drawEncounter,
     expeditionLeaderSeat,
@@ -374,9 +375,9 @@ export function createCampaignPlugin(deps) {
       delete inv.playDiscount
       return
     }
-    // 厄休拉·唐斯：移动后进行 1 次调查行动（不额外消耗行动点）。
+    // 厄休拉·唐斯：移动后进行 1 次调查行动（不额外消耗行动点；走借机攻击与回合时点校验）。
     if (effect.action === 'investigateAction') {
-      doInvestigate(state, seat, {}, events, true)
+      grantedInvestigateAction?.(state, seat, events)
       return
     }
     // 芬恩·爱德华兹：手枪攻击，未交战时额外 +1 伤害。
@@ -387,12 +388,19 @@ export function createCampaignPlugin(deps) {
     const test = state.skillTest
     if (!test) return null
     // Phase 5（5c-24）：判据改成「封印标记 + 条目声明 substituteSealedToken」，引擎不再认卡号。
-    const premonition = inv.assets.find(asset => asset.sealedToken
-      && registeredEntry(asset.code)?.substituteSealedToken)
+    // 04199：替代读点覆盖所有在场调查员的支援（执行者优先），队友的封印也能替你替代。
+    const owners = [inv, ...aliveInvestigators(state).filter(owner => owner !== inv)]
+    let premonition = null
+    let owner = inv
+    for (const candidate of owners) {
+      premonition = candidate.assets.find(asset => asset.sealedToken
+        && registeredEntry(asset.code)?.substituteSealedToken) || null
+      if (premonition) { owner = candidate; break }
+    }
     if (premonition) {
       const token = premonition.sealedToken
-      leaveAsset(state, inv, premonition, events)
-      if (!premonition.removedFromGame) inv.discard.push(premonition.code)
+      leaveAsset(state, owner, premonition, events)
+      if (!premonition.removedFromGame) owner.discard.push(premonition.code)
       state.chaos.sealed = (state.chaos.sealed || []).filter(entry => entry.source !== premonition.id)
       state.sealedTokens = (state.chaos.sealed || []).map(entry => entry.token)
       state.chaosBag.push(token)

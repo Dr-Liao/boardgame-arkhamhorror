@@ -1,0 +1,64 @@
+{
+  "chapterId": "unionAndDisillusion",
+  "milestone": "P8",
+  "status": "complete",
+  "files": [
+    "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/index.js",
+    "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/definition.js",
+    "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/layout.js",
+    "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/behavior.js",
+    "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/chaos.js",
+    "content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/story-text.js",
+    "src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/*.js（38 张：9 地点 + 8 幕 + 2 议程 + 6 敌人 + 5 诡计 + 8 剧情资产）",
+    "tests/tcu-union-disillusion.test.mjs",
+    "artifacts/migration/tcu/p8/specs/unionAndDisillusion.md",
+    "artifacts/migration/tcu/p8/chapters/unionAndDisillusion.status.json"
+  ],
+  "checks": {
+    "sourceLocked": true,
+    "identityRegistered": true,
+    "setupAndZones": true,
+    "actsAndAgendas": true,
+    "locationsAndConnections": true,
+    "encounterBehaviors": true,
+    "literalCardBehavior": true,
+    "chaosEffects": true,
+    "resolutionsAndRecords": true,
+    "storyText": true,
+    "saveReplay": true
+  },
+  "inventory": {
+    "locations": 9,
+    "acts": 4,
+    "agendas": 2,
+    "enemies": 14,
+    "treacheries": 10,
+    "encounterCards": 28,
+    "resolutions": [
+      "noResolution",
+      "r1",
+      "r2",
+      "r3",
+      "r4",
+      "r5",
+      "r6",
+      "r7",
+      "r8",
+      "r9",
+      "r10"
+    ]
+  },
+  "tests": {
+    "file": "tests/tcu-union-disillusion.test.mjs",
+    "cases": 29,
+    "passing": 29
+  },
+  "gaps": [],
+  "remaining": [
+    "Lead 合并后重建 encounter-entries 索引（本章 38 条 implemented:true 才被审计读到）。",
+    "在劫难逃/冥界/幽灵捕食者/银暮秘社四个共享组的逐卡行为由 W-shared 条目负责；本章 resolveEncounter 只实现本章 5 张诡计，其余回落 encounterResolveFor。",
+    "命运剧情卡（state.scenarioFlags.fateCards）、火盆、看守人灵魂等近似按卡面语义等价实现，进 scenarioApproximations（不阻塞 literalCardBehavior）。",
+    "结局 9/10 ReturnTo 分支、结局 XP、远古恶魔/寒冷刺骨核组范围限制已写入 behavior.scenarioApproximations（development 要求 scenarioGaps 为空）。"
+  ],
+  "notes": "参考实现：Scenario/Scenarios/TheCircleUndone/UnionAndDisillusion.hs + Act/Agenda/Enemy/Treachery/Story/Location CardDefs|Cards。序章记录 theInvestigatorsSidedWithTheLodge/Coven 决定幕 3/4 版本与火盆初始状态；阵法（P2.5 多技能求和 + actionKind:'circle'）覆盖 05250–05257；火盆走 P2.11 locationFlag；4 张命运剧情卡用 scenarioFlags.fateCards 近似；幽灵看守人被击败不弃掉。章节自检 node tools/check-tcu-scenario.mjs unionAndDisillusion = PASS；node --test 29/29。 scenarioGaps 为空：未实现项（ReturnTo 分支/结局 XP/两个核组不在包内）属于引擎或内容范围限制，按 Lead P8 策略登记在 scenarioApproximations 与 remaining。"
+}

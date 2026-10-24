@@ -1,0 +1,115 @@
+关卡自定义歌曲目录（相对于本文件）
+
+暮色庄园失踪事件
+  campaigns/theCircleUndone/disappearanceAtTheTwilightEstate/
+
+巫异时刻
+  campaigns/theCircleUndone/theWitchingHour/
+
+死亡门前
+  campaigns/theCircleUndone/atDeathsDoorstep/
+
+隐秘之名
+  campaigns/theCircleUndone/theSecretName/
+
+恶罪报应
+  campaigns/theCircleUndone/theWagesOfSin/
+
+崇高利益
+  campaigns/theCircleUndone/forTheGreaterGood/
+
+聚合幻灭
+  campaigns/theCircleUndone/unionAndDisillusion/
+
+混沌魔掌
+  campaigns/theCircleUndone/inTheClutchesOfChaos/
+
+黑色王座
+  campaigns/theCircleUndone/beforeTheBlackThrone/
+
+荒莽密林
+  campaigns/theForgottenAge/theUntamedWilds/
+
+埃兹特里的覆灭
+  campaigns/theForgottenAge/theDoomOfEztli/
+
+命运之线
+  campaigns/theForgottenAge/threadsOfFate/
+
+界限彼端
+  campaigns/theForgottenAge/theBoundaryBeyond/
+
+久远腹地（上）
+  campaigns/theForgottenAge/heartOfTheEldersPart1/
+
+久远腹地（下）
+  campaigns/theForgottenAge/heartOfTheEldersPart2/
+
+天机之城
+  campaigns/theForgottenAge/theCityOfArchives/
+
+幽嘶深渊
+  campaigns/theForgottenAge/theDepthsOfYoth/
+
+破碎永世
+  campaigns/theForgottenAge/shatteredAeons/
+
+时间倒流
+  campaigns/theForgottenAge/turnBackTime/
+
+集结
+  campaigns/nightOfTheZealot/theGathering/
+
+午夜假面
+  campaigns/nightOfTheZealot/theMidnightMasks/
+
+地底噬魔
+  campaigns/nightOfTheZealot/theDevourerBelow/
+
+课外活动
+  campaigns/theDunwichLegacy/extracurricularActivity/
+
+百赌百胜
+  campaigns/theDunwichLegacy/theHouseAlwaysWins/
+
+米斯卡塔尼克博物馆
+  campaigns/theDunwichLegacy/theMiskatonicMuseum/
+
+疯狂列车
+  campaigns/theDunwichLegacy/theEssexCountyExpress/
+
+血色祭坛
+  campaigns/theDunwichLegacy/bloodOnTheAltar/
+
+无人知晓
+  campaigns/theDunwichLegacy/undimensionedAndUnseen/
+
+毁灭之地
+  campaigns/theDunwichLegacy/whereDoomAwaits/
+
+迷失时空
+  campaigns/theDunwichLegacy/lostInTimeAndSpace/
+
+谢幕
+  campaigns/thePathToCarcosa/curtainCall/
+
+最后的王者
+  campaigns/thePathToCarcosa/theLastKing/
+
+往事回声
+  campaigns/thePathToCarcosa/echoesOfThePast/
+
+邪秽誓约
+  campaigns/thePathToCarcosa/theUnspeakableOath/
+
+真相幻影
+  campaigns/thePathToCarcosa/aPhantomOfTruth/
+
+苍白面具
+  campaigns/thePathToCarcosa/thePallidMask/
+
+黑星升起
+  campaigns/thePathToCarcosa/blackStarsRise/
+
+卡城幽影
+  campaigns/thePathToCarcosa/dimCarcosa/

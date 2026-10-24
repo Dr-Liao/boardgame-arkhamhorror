@@ -10,6 +10,8 @@ export default {
   cardDrawSecretAction: 'healHorror',
   usesFromStoneRecord: true,
   usesType: 'secrets',
+  // 「研究完成(Researched)」：升级/构筑前必须先在剧本里鉴定过古代巨石（记录由 04022 的鉴定调查写入）。
+  researchRequirement: 'identifiedTheAncientStone',
   abilities: [
 
   ],

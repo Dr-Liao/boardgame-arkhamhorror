@@ -301,7 +301,8 @@ test('幕间：局外面板的数据通路（当前节点 + 到达段落 + 记�
   // 记录标签随大厅战役清单下发，档案页与结算页才能显示中文名。
   const listed = campaignListForUi(contentRegistry).find(entry => entry.id === manifest.id)
   assert.equal(listed.recordLabels.yigsFury, '伊格之怒')
-  assert.equal(Object.keys(listed.recordLabels).length, 48)
+  assert.equal(listed.recordLabels.theHarbingerIsAlive, '预示者还活着')
+  assert.equal(Object.keys(listed.recordLabels).length, 49)
 })
 
 test('幕间修正：起始资源 / 起始线索用一次后清空，禁止换牌也只生效一次', () => {

@@ -304,7 +304,7 @@ function executeDescriptor(state, { inv, source, descriptor, context = {}, event
   const discardWhenEmpty = entry?.discardWhenEmpty
   if (discardWhenEmpty && source && source.uses != null && source.uses <= 0) {
     leaveAsset(state, inv, source)
-    if (!source.removedFromGame) inv.discard.push(source.code)
+    if (!source.removedFromGame && !source.returnedToHand) inv.discard.push(source.code)
     info(state, events, `「${cardName(source.code)}」充能耗尽，弃掉。`)
   }
   return true

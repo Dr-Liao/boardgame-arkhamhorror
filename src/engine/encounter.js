@@ -246,6 +246,10 @@ function reactionWindow(state, when, context, events, opts = {}) {
           if (cannotPlayTypes(inv).has(cardDef(copyCode || code)?.type)) return false
           if (scenarioBehavior(state).canPlayCard?.(state, inv, cardDef(copyCode || code)) === false) return false
           if (inv.resources < playCost(state, inv, cardDef(copyCode || code))) return false
+          // 04111 坚韧不拔等：criteria 写成函数/数组的新通道（旧的对象形字段展开保持原样）。
+          if (descriptor?.criteria
+            && (Array.isArray(descriptor.criteria) || typeof descriptor.criteria === 'function')
+            && !evaluateCriteria(descriptor.criteria, { state, inv, source: null, windowId: when, context })) return false
           if (descriptor) {
             // resolve 型描述子自己判断可行性；数据体走效果解释器的校验。
             return Boolean(descriptor.resolve) || !effectError(state, inv, descriptor.effect)
@@ -267,7 +271,7 @@ function reactionWindow(state, when, context, events, opts = {}) {
     }
   }
   // 能力层：同一个窗口下，声明式反应/强制能力也在这里结算。
-  return openAbilityWindow(state, when, context, events)
+  return openAbilityWindow(state, when, context, events, opts)
 }
 
 // Phase 5（5a-25）：「离某调查员最远的地点」——弱点生成与 api 共用一份实现。
@@ -341,7 +345,7 @@ function triggerReaction(state, seat, when, events, context = {}) {
     if (cost.damageSelf) { inv.damage += cost.damageSelf; checkDefeated(state, seat, events) }
     if (cost.discardSelf && asset) {
       leaveAsset(state, inv, asset)
-      if (!asset.removedFromGame) inv.discard.push(asset.code)
+      if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
       info(state, events, `♻️ ${inv.name} 弃掉了「${cardName(asset.code)}」。`)
     }
     info(state, events, `⚡ ${inv.name} 触发「${asset ? cardName(asset.code) : (r.id || inv.name)}」的反应。`)
@@ -375,7 +379,7 @@ function triggerReaction(state, seat, when, events, context = {}) {
     }
     if (asset && assetEffect(inv, asset)?.discardWhenEmpty && asset.uses != null && asset.uses <= 0 && inv.assets.includes(asset)) {
       leaveAsset(state, inv, asset)
-      if (!asset.removedFromGame) inv.discard.push(asset.code)
+      if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
       info(state, events, `「${cardName(asset.code)}」充能耗尽，弃掉。`)
     }
   }

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "w-m2-4-05324-token-reveal-replacement",
+  "cycle": "tcu",
+  "worker": "w-m2-4",
+  "card": "05324",
+  "primitive": "tokenRevealReplacement",
+  "params": {
+    "window": "tokenReveal",
+    "context": [
+      "seat",
+      "token",
+      "testValue",
+      "wouldReduceToZero"
+    ],
+    "replacementField": "replacementToken"
+  },
+  "cardText": "快速。在技能检定期间，你揭示一个混乱标记，且该标记将要令你的技能值减少到0时打出(包括[auto_fail]标记)。取消该标记并改为将其视作[elder_sign]标记。",
+  "reason": "window 'tokenReveal' 已注册为 interrupt 但引擎从未打开；state.skillTest.cancelledSymbol 只能取消符号标记（不提供旧印结算），马泰奥神父的 autofail→eldersign 是引擎内联的卡号/调查员分支，没有卡面可用的替换通道。",
+  "proposedApi": "src/engine/tests.js#performTest 在 drawn.push(token) / state.skillTest.currentToken = token 之后、autofail/数字/符号结算之前打开 const ctx = reactionWindow(state,'tokenReveal',{ when:'tokenReveal', seat, location: inv.location, token, testValue: value + delta, wouldReduceToZero: token === 'autofail' || (/^-?\\d+$/.test(token) && value + delta + Number(token) <= 0) }, events)；若 ctx.replacementToken 存在：returnChaosToken(state, token)；token = ctx.replacementToken；drawn[drawn.length-1] = token；state.skillTest.currentToken = token；继续既有结算（'eldersign' 走 642 行的旧印分支）。05324 条目：{ kind:'reaction', trigger:'tokenReveal', fromHand:true, criteria: ctx => ctx.context?.seat === ctx.inv?.seat && ctx.context?.wouldReduceToZero === true, resolve: ({ context }) => { context.replacementToken = 'eldersign' } }。",
+  "status": "rejected",
+  "createdAt": "2026-10-24T03:00:00+08:00",
+  "claimedBy": "main",
+  "resolvedAt": "2026-10-23T18:39:00.291Z",
+  "resolution": {
+    "suggestion": "本轮保持简化（取消混乱标记并改为视作 elder_sign 的 interrupt 未接线）；token 结算期的替换通道牵动核心检定循环，P10 前评估。简化写 simplified:true + note 并在 remaining 列出。",
+    "catalog": "P7 玩家卡批次（2026-10）：拒绝新增原语",
+    "notes": "已有 tokenReveal 窗口注册但未接线；不在 P7 核心检定循环上开新口。"
+  }
+}

@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tcu",
+  "milestone": "P7",
+  "generatedBy": "tools 无（主进程手工结算；请求文件本身是状态可重放的事实源）",
+  "generatedAt": "2026-10-23T18:39:00.291Z",
+  "totals": {
+    "requests": 17,
+    "done": 4,
+    "rejected": 13,
+    "pending": 0,
+    "claimed": 0,
+    "deduped": 0
+  },
+  "newPrimitives": [
+    {
+      "id": "w-m2-1-commit-conditional-icons",
+      "card": "05022",
+      "primitive": "commitConditionalIcons",
+      "implementedIn": [
+        "games/arkhamhorror/src/engine/stats.js",
+        "games/arkhamhorror/src/engine/ability.js"
+      ],
+      "tests": [
+        "games/arkhamhorror/tests/tcu-primitives-p7.test.mjs"
+      ]
+    },
+    {
+      "id": "w-m2-4-05276-opening-hand-bonus",
+      "card": "05276",
+      "primitive": "openingHandBonus",
+      "implementedIn": [
+        "games/arkhamhorror/src/engine/setup.js",
+        "games/arkhamhorror/src/engine/ability.js"
+      ],
+      "tests": [
+        "games/arkhamhorror/tests/tcu-primitives-p7.test.mjs"
+      ]
+    },
+    {
+      "id": "w-m2-4-05313-05316-leaves-play-resolve",
+      "card": "05313",
+      "primitive": "leavesPlayResolve",
+      "implementedIn": [
+        "games/arkhamhorror/src/engine/assets.js",
+        "games/arkhamhorror/src/engine/ability.js"
+      ],
+      "tests": [
+        "games/arkhamhorror/tests/tcu-primitives-p7.test.mjs"
+      ]
+    },
+    {
+      "id": "w-m2-4-05320-event-played-window",
+      "card": "05320",
+      "primitive": "eventPlayedWindow",
+      "implementedIn": [
+        "games/arkhamhorror/src/engine/windows.js",
+        "games/arkhamhorror/src/engine/actions.js"
+      ],
+      "tests": [
+        "games/arkhamhorror/tests/tcu-primitives-p7.test.mjs"
+      ]
+    }
+  ],
+  "rejected": [
+    {
+      "id": "w-m2-1-cancel-effect-aspect",
+      "card": "05032",
+      "primitive": "cancelPendingEffectAspect",
+      "suggestion": "本轮保持简化（伤害/恐惧取消已用 api.cancelHarm 实现；弃手牌/失资源/失行动三项取消需通用待结算效果替换通道）；P10 前评估。"
+    },
+    {
+      "id": "w-m2-1-cancel-or-repeat-symbol-effect",
+      "card": "05033",
+      "primitive": "cancelOrRepeatSymbolTriggeredEffect",
+      "suggestion": "本轮保持简化；符号触发效果的取消/重复需要「符号触发结算前」通用窗口，P10 前评估。"
+    },
+    {
+      "id": "w-m2-2-05042-opening-hand-retention",
+      "card": "05042",
+      "primitive": "openingHandWeaknessRetention",
+      "suggestion": "用既有条目读点表达：blocksCommitWhileInHand（手牌封锁）、cannotMulliganAway（换牌保护）、weaknessStaysInHand（弱点留手）；读点见 src/engine/tarot-slot.js。剩余「开局强制保留」分支若仍不合口径，保留 simplified + note 并登记 worker 报告。"
+    },
+    {
+      "id": "w-m2-2-05112-restricted-slot",
+      "card": "05112",
+      "primitive": "restrictedSlotGrant",
+      "suggestion": "本轮保持简化（额外法术槽不限特性）；加 trait 过滤的槽位授予属通用 modifiers 扩展，P10 前评估。"
+    },
+    {
+      "id": "w-m2-2-05116-deck-bottom",
+      "card": "05116",
+      "primitive": "deckBottomLookAndMove",
+      "suggestion": "本轮保持简化；lookAt 的 zone adapter 只从牌堆顶取牌，牌堆底查看/移动是通用牌堆原语扩展，P10 前评估。"
+    },
+    {
+      "id": "w-m2-2-05152-asset-discarded-window",
+      "card": "05152",
+      "primitive": "assetDiscardedWindow",
+      "suggestion": "本轮保持简化（支援被弃置后的返还反应无窗口）；通用「卡牌离开场上」窗口与取消/替换窗口一起留 P10。"
+    },
+    {
+      "id": "w-m2-2-05157-enemy-stat-duration",
+      "card": "05157",
+      "primitive": "enemyStatModifierForDuration",
+      "suggestion": "本轮保持简化；运行期敌方躲避/攻击值修正需要 state.effects 的敌方数值读点，P10 前统一评估。"
+    },
+    {
+      "id": "w-m2-2-05158-investigate-retarget",
+      "card": "05158",
+      "primitive": "investigateSymbolRetarget",
+      "suggestion": "本轮保持简化（符号后改写调查地点无读点）；如后续有第二张同类卡再提升为通用原语。"
+    },
+    {
+      "id": "w-m2-3-05230-attached-abilities",
+      "card": "05230",
+      "primitive": "attachedCardAbilities",
+      "suggestion": "本轮保持简化；附属卡能力枚举需要「附属卡反应窗口」读点，属通用窗口扩展，P10 前评估。"
+    },
+    {
+      "id": "w-m2-3-05231-resolve-card-ability",
+      "card": "05231",
+      "primitive": "resolveCardAbility",
+      "suggestion": "本轮保持简化（resolve 直接结算所支援首个 action/free，效果对但未走费用/上限管线）；通用 api.resolveCardAbility 会牵动费用管线，P10 前评估。"
+    },
+    {
+      "id": "w-m2-3-05236-asset-defeat-reason",
+      "card": "05236",
+      "primitive": "assetDefeatReason",
+      "suggestion": "用既有 removeFromGameOnLeave 表达「因恐惧被击败时放逐」的近似，保持 simplified + note。"
+    },
+    {
+      "id": "w-m2-3-05237-doom-placement-window",
+      "card": "05237",
+      "primitive": "doomWouldBePlacedWindow",
+      "suggestion": "本轮保持简化（自己回合快速打出、取消密谋上 1 点毁灭）；通用「毁灭将要放置」interrupt 窗口与 05033 同批留 P10。"
+    },
+    {
+      "id": "w-m2-4-05324-token-reveal-replacement",
+      "card": "05324",
+      "primitive": "tokenRevealReplacement",
+      "suggestion": "本轮保持简化（取消混乱标记并改为视作 elder_sign 的 interrupt 未接线）；token 结算期的替换通道牵动核心检定循环，P10 前评估。简化写 simplified:true + note 并在 remaining 列出。"
+    }
+  ],
+  "rows": [
+    {
+      "id": "w-m2-1-cancel-effect-aspect",
+      "worker": "w-m2-1",
+      "card": "05032",
+      "primitive": "cancelPendingEffectAspect",
+      "status": "rejected"
+    },
+    {
+      "id": "w-m2-1-cancel-or-repeat-symbol-effect",
+      "worker": "w-m2-1",
+      "card": "05033",
+      "primitive": "cancelOrRepeatSymbolTriggeredEffect",
+      "status": "rejected"
+    },
+    {
+      "id": "w-m2-1-commit-conditional-icons",
+      "worker": "w-m2-1",
+      "card": "05022",
+      "primitive": "commitConditionalIcons",
+      "status": "done"
+    },
+    {
+      "id": "w-m2-2-05042-opening-hand-retention",
+      "worker": "w-m2-2",
+      "card": "05042",
+      "primitive": "openingHandWeaknessRetention",
+      "status": "rejected"
+    },
+    {
+      "id": "w-m2-2-05112-restricted-slot",
+      "worker": "w-m2-2",
+      "card": "05112",
+      "primitive": "restrictedSlotGrant",
+      "status": "rejected"
+    },
+    {
+      "id": "w-m2-2-05116-deck-bottom",
+      "worker": "w-m2-2",
+      "card": "05116",
+      "primitive": "deckBottomLookAndMove",
+      "status": "rejected"
+    },
+    {
+      "id": "w-m2-2-05152-asset-discarded-window",
+      "worker": "w-m2-2",
+      "card": "05152",
+      "primitive": "assetDiscardedWindow",
+      "status": "rejected"
+    },
+    {
+      "id": "w-m2-2-05157-enemy-stat-duration",
+      "worker": "w-m2-2",
+      "card": "05157",
+      "primitive": "enemyStatModifierForDuration",
+      "status": "rejected"
+    },
+    {
+      "id": "w-m2-2-05158-investigate-retarget",
+      "worker": "w-m2-2",
+      "card": "05158",
+      "primitive": "investigateSymbolRetarget",
+      "status": "rejected"
+    },
+    {
+      "id": "w-m2-3-05230-attached-abilities",
+      "worker": "w-m2-3",
+      "card": "05230",
+      "primitive": "attachedCardAbilities",
+      "status": "rejected"
+    },
+    {
+      "id": "w-m2-3-05231-resolve-card-ability",
+      "worker": "w-m2-3",
+      "card": "05231",
+      "primitive": "resolveCardAbility",
+      "status": "rejected"
+    },
+    {
+      "id": "w-m2-3-05236-asset-defeat-reason",
+      "worker": "w-m2-3",
+      "card": "05236",
+      "primitive": "assetDefeatReason",
+      "status": "rejected"
+    },
+    {
+      "id": "w-m2-3-05237-doom-placement-window",
+      "worker": "w-m2-3",
+      "card": "05237",
+      "primitive": "doomWouldBePlacedWindow",
+      "status": "rejected"
+    },
+    {
+      "id": "w-m2-4-05276-opening-hand-bonus",
+      "worker": "w-m2-4",
+      "card": "05276",
+      "primitive": "openingHandBonus",
+      "status": "done"
+    },
+    {
+      "id": "w-m2-4-05313-05316-leaves-play-resolve",
+      "worker": "w-m2-4",
+      "card": "05313",
+      "primitive": "leavesPlayResolve",
+      "status": "done"
+    },
+    {
+      "id": "w-m2-4-05320-event-played-window",
+      "worker": "w-m2-4",
+      "card": "05320",
+      "primitive": "eventPlayedWindow",
+      "status": "done"
+    },
+    {
+      "id": "w-m2-4-05324-token-reveal-replacement",
+      "worker": "w-m2-4",
+      "card": "05324",
+      "primitive": "tokenRevealReplacement",
+      "status": "rejected"
+    }
+  ],
+  "verification": {
+    "testFile": "games/arkhamhorror/tests/tcu-primitives-p7.test.mjs",
+    "covered": [
+      "openingHandBonus",
+      "leavesPlayResolve",
+      "eventPlayedWindow",
+      "commitConditionalIcons"
+    ],
+    "note": "四个 done 原语各有通用实现 + 注册期校验 + Node 测试；replay 对比见 reports/merge.json。"
+  }
+}

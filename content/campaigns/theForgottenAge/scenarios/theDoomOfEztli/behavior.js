@@ -535,7 +535,9 @@ function applyRelicToDeck(state, api) {
 function recordHarbingerDamage(state) {
   const inPlay = harbingerOf(state)
   const damage = inPlay ? (inPlay.damageTaken || 0) : Number(state.scenarioFlags?.harbingerDamage || 0)
-  recordsFor(state).theHarbingerIsStillAlive = damage
+  const records = recordsFor(state)
+  records.theHarbingerIsStillAlive = damage
+  if (inPlay) records.theHarbingerIsAlive = true
   return damage
 }
 

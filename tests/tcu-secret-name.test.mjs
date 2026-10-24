@@ -557,6 +557,16 @@ test('05139 物理教室：成功超难度 ≥2 时在另一地点发现 1 线�
   physicsRoom.locationRule.onInvestigateSuccess({ state, location: loc(state, 'physicsClassroom'), inv,
     result: { success: true, value: 6, difficulty: 4 }, api })
   assert.equal(inv.clues, 1, '每轮一次：第二次不再触发')
+  // 「每轮一次」是每名调查员一次（不是团队共享）：另一名调查员同轮仍可触发。
+  const otherRoom = placeFromDefinition(state, 'walterGilmansRoom')
+  otherRoom.revealed = true
+  otherRoom.clues = 1
+  const other = { ...inv, seat: 1, clues: 0, location: 'physicsClassroom' }
+  state.investigators.push(other)
+  const otherApi = apiStub(state, { choose: () => 'walterGilmansRoom' })
+  physicsRoom.locationRule.onInvestigateSuccess({ state, location: loc(state, 'physicsClassroom'), inv: other,
+    result: { success: true, value: 6, difficulty: 4 }, api: otherApi })
+  assert.equal(state.scenarioFlags.physicsRoundBySeat[1], state.round, '每名调查员独立记录')
 })
 
 // ---------------------------------------------------------------------------
@@ -581,7 +591,7 @@ test('混乱标记：skull 异次元 -3、cultist 再抽、tablet -2/-3、eldert
     [secretName.behavior.resolveChaosToken(state, inv, 'skull', apiStub(state)).delta,
       secretName.behavior.resolveChaosToken(state, inv, 'tablet', apiStub(state)).delta,
       secretName.behavior.resolveChaosToken(state, inv, 'elderthing', apiStub(state)).delta],
-    [-3, -3, -4])
+    [-4, -3, -4])
 })
 
 test('混乱标记失败后果：cultist 弃 3/5 张；tablet 那赫卜攻击；elderthing 猎手移动', () => {
@@ -603,11 +613,12 @@ test('混乱标记失败后果：cultist 弃 3/5 张；tablet 那赫卜攻击；
     { success: false, value: 0, difficulty: 2, drawn: ['tablet'], cancelledTokens: [] }, apiStub(state))
   assert.equal(apiForAttack.length, 1, '简单模式：那赫卜与调查员同地点时攻击')
 
-  state.huntersMoved = 0
+  // 那赫卜远离调查员所在地点：elderthing 应真的把它沿连接移动一步（旧实现只调用纯计算 hunterStep）。
   state.enemies[0].hunter = true
+  state.enemies[0].location = 'walterGilmansRoom'
   secretName.behavior.afterTest(state, inv,
     { success: false, value: 0, difficulty: 2, drawn: ['elderthing'], cancelledTokens: [] }, apiStub(state))
-  assert.equal(state.huntersMoved, 1)
+  assert.equal(state.enemies[0].location, 'moldyHalls', 'elderthing 结算猎手关键词：向调查员移动一步')
 })
 
 // ---------------------------------------------------------------------------
@@ -712,4 +723,54 @@ test('enemyStatModifier / tokenMeanings / 剧本数据一致性', () => {
     { card: 'act', codes: ['05125'] })
   assert.equal(cityRoom.implemented, true)
   assert.equal(geometryRoom.implemented, true)
+})
+
+// ---------------------------------------------------------------------------
+// task-42 回归：TSN performEncounterAction 转发共享威胁行动（05093/05094/05146）
+// ---------------------------------------------------------------------------
+test('05093/05094 崩毁离析/苦痛折磨：TSN 转发共享实现（横置女巫自动成功 + 遭遇弃牌堆）', () => {
+  for (const code of ['05093', '05094']) {
+    const state = setup(stateFor(1))
+    const inv = state.investigators[0]
+    inv.threat.push({ id: `threat-${code}`, code, originalCode: code })
+    // 同地点横置女巫：卡面「本次检定自动成功」。
+    state.enemies.push({ id: `witch-${code}`, code: '05090', originalCode: '05090', name: '女巫',
+      traits: ['Witch'], exhausted: true, location: inv.location, engagedSeat: null })
+    const move = secretName.behavior.actions(state, inv)
+      .concat(secretName.behavior.encounterActions?.(state, inv) || [])
+      .find(candidate => String(candidate.threatId) === `threat-${code}`)
+    assert.ok(move, `${code} 应在遭遇行动里列出（共享 encounterActions）`)
+    let tested = 0
+    const api = apiStub(state, {
+      test: (seat, skill, difficulty, resolve) => {
+        tested += 1
+        resolve({ success: true, value: 99, difficulty, skill })
+      },
+    })
+    assert.equal(secretName.behavior.performEncounterAction(state, inv, move, api), true)
+    assert.equal(tested, 0, '横置女巫在场：自动成功，不进行检定')
+    assert.equal(inv.threat.length, 0, '威胁卡弃掉')
+    assert.ok(state.encounterDiscard.includes(code), `${code} 应弃入遭遇弃牌堆（而不是调查员弃牌堆）`)
+    assert.ok(!inv.discard.includes(code), `${code} 不应进入调查员弃牌堆`)
+  }
+})
+
+test('05093 崩毁离析：无横置女巫时检定 意志(3)，成功弃入遭遇弃牌堆', () => {
+  const state = setup(stateFor(1))
+  const inv = state.investigators[0]
+  inv.threat.push({ id: 'threat-05093', code: '05093', originalCode: '05093' })
+  const move = (secretName.behavior.encounterActions?.(state, inv) || [])
+    .find(candidate => String(candidate.threatId) === 'threat-05093')
+  assert.ok(move)
+  let seen = null
+  const api = apiStub(state, {
+    test: (seat, skill, difficulty, resolve) => {
+      seen = { seat, skill, difficulty }
+      resolve({ success: true, value: 9, difficulty, skill })
+    },
+  })
+  assert.equal(secretName.behavior.performEncounterAction(state, inv, move, api), true)
+  assert.deepEqual(seen, { seat: 0, skill: 'willpower', difficulty: 3 })
+  assert.ok(state.encounterDiscard.includes('05093'))
+  assert.ok(!inv.discard.includes('05093'))
 })

@@ -30,8 +30,8 @@
     {
       "id": "carcosaPlayer",
       "command": "node tools/audit-carcosa-player.mjs",
-      "status": 0,
-      "lastLine": "{\"total\":95,\"constructible\":92,\"basicWeaknesses\":3,\"verified\":95,\"unverified\":0,\"testsPassed\":109}"
+      "status": 1,
+      "lastLine": "Node.js v22.23.1"
     },
     {
       "id": "carcosaAllCards",
@@ -48,8 +48,8 @@
     {
       "id": "dunwichAcceptance",
       "command": "node tools/audit-dunwich-acceptance.mjs",
-      "status": 1,
-      "lastLine": "]"
+      "status": 0,
+      "lastLine": "{\"total\":333,\"verified\":333,\"unverified\":0,\"unimplemented\":0,\"testsPassed\":387}"
     },
     {
       "id": "coreAcceptance",
@@ -60,8 +60,8 @@
     {
       "id": "p6",
       "command": "node tools/audit-p6.mjs --check",
-      "status": 0,
-      "lastLine": "{\"cards\":300,\"scopedFixes\":6,\"fullCardEquivalenceClaimed\":0,\"needsBehaviorReview\":177,\"catalogOnly\":117}"
+      "status": 1,
+      "lastLine": "账本漂移：p6-behavior-ledger.json"
     },
     {
       "id": "abilities",
@@ -73,7 +73,7 @@
       "id": "workorder",
       "command": "node tools/audit-workorder.mjs --check",
       "status": 0,
-      "lastLine": "参考：EFFECTS 0 条、逃生卡 0 张、窗口 62 个"
+      "lastLine": "参考：EFFECTS 0 条、逃生卡 0 张、窗口 66 个"
     },
     {
       "id": "deadPrimitives",
@@ -101,8 +101,8 @@
     }
   ],
   "docLinks": {
-    "files": 32,
-    "links": 137,
+    "files": 31,
+    "links": 258,
     "broken": 0
   },
   "goldenReplay": {
@@ -114,10 +114,10 @@
   },
   "tests": {
     "command": "node tools/run-tests.mjs fast",
-    "status": 1,
-    "tests": 3322,
-    "pass": 3320,
-    "fail": 2
+    "status": 0,
+    "tests": 3388,
+    "pass": 3388,
+    "fail": 0
   },
   "notes": [
     "audit-resources 用 --check-source：--check 比较的是「当前目录 vs 冻结的 N0」，N1 接管后按设计非零退出。",

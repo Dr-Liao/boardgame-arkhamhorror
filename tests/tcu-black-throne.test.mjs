@@ -411,7 +411,34 @@ test('幕 1 背面：标记皇廷为枢纽、抽 2 张宇宙地点、调查员�
   assert.equal(bbt.behavior.currentHubId(state), COURT)
   assert.equal(bbt.behavior.cosmosOrder(state).length, 2)
   for (const inv of state.investigators) assert.equal(inv.location, HIDEOUS_PALACE)
-  assert.ok(state.scenarioFlags.emptySpaceCount >= 12)
+  // 05329 背面：宇宙入口移出游戏；虚空格子数按卡面放置图（7 个）。
+  assert.equal(loc(state, COSMIC_INGRESS), undefined, '宇宙入口应移出游戏')
+  assert.equal(state.scenarioFlags.emptySpaceCount, 7)
+})
+
+test('幕 1 背面：被洗回宇宙地点的调查员阵亡、敌人混洗进遭遇牌库顶、按玩家顺序抽遭遇', () => {
+  const state = stateFor(2)
+  const { rng } = setup(state)
+  // 把一个地点放进场、把一名调查员和一名敌人放在那里；再在遭遇牌库顶放 2 张。
+  placeInState(state, DANCERS_MIST[0], { revealed: true })
+  state.investigators[0].location = HIDEOUS_PALACE // 例外地点：不会被抛下
+  state.investigators[1].location = DANCERS_MIST[0]
+  state.enemies.push({ id: 'e1', code: '05341', originalCode: '05341', location: DANCERS_MIST[0], doom: 0 })
+  state.encounterDeck.push('01166', '01167', '01168', '01169')
+  const defeated = []
+  const draws = []
+  const api = apiFor(state, { rng })
+  api.defeat = (inv, cause) => { defeated.push({ seat: inv.seat, cause }); inv.defeated = true }
+  api.drawEncounter = seat => { draws.push(seat); const code = state.encounterDeck.pop(); if (code) state.encounterDiscard.push(code) }
+  bbt.behavior.actReveal(state, state.acts[0], api)
+  assert.deepEqual(defeated, [{ seat: 1, cause: 'abandoned' }], '被抛下的调查员阵亡')
+  assert.ok(api.log.some(line => line.includes('被洗回宇宙')), '被洗回宇宙的地点离开原有实例')
+  assert.equal(loc(state, COSMIC_INGRESS), undefined, '宇宙入口移出游戏')
+  assert.ok(!state.enemies.some(enemy => enemy.id === 'e1'), '敌人离开场上')
+  // 敌人卡与遭遇牌库顶 5 张混洗后放回顶；随后按玩家顺序的遭遇抽牌可能把顶牌抽走，
+  // 因此断言「牌库+弃牌堆里恰有 1 张该敌人卡」。
+  assert.equal([...state.encounterDeck, ...state.encounterDiscard].filter(code => code === '05341').length, 1, '敌人卡进入遭遇牌库')
+  assert.deepEqual(draws, [0], '按玩家顺序每人抽 1 张（阵亡者不再抽）')
 })
 
 test('幕 2 背面：标记黑色王座为枢纽、抽 3 张宇宙地点、调查员移到皇廷', () => {
@@ -419,12 +446,22 @@ test('幕 2 背面：标记黑色王座为枢纽、抽 3 张宇宙地点、调�
   const { rng } = setup(state)
   const api = apiFor(state, { rng })
   state.actIndex = 1
+  placeInState(state, COURT, { revealed: true })
+  locationClues(state, COURT, { clues: 0 })
   bbt.behavior.actReveal(state, state.acts[1], api)
   assert.ok(loc(state, BLACK_THRONE))
   assert.equal(bbt.behavior.currentHubId(state), BLACK_THRONE)
   assert.equal(bbt.behavior.cosmosOrder(state).length, 3)
   for (const inv of state.investigators) assert.equal(inv.location, COURT)
+  assert.equal(loc(state, HIDEOUS_PALACE), undefined, '憎恶宫殿应移出游戏')
+  assert.equal(state.scenarioFlags.emptySpaceCount, 8)
 })
+
+function locationClues(state, id, patch) {
+  const location = loc(state, id)
+  if (location) Object.assign(location, patch)
+  return location
+}
 
 test('幕 3 目标：队长在黑色王座且该地点没有线索时推进', () => {
   const state = stateFor(2)
@@ -489,16 +526,34 @@ test('阿撒托斯上 ≥10 毁灭：直接进入结局 1', () => {
   assert.equal(state.scenarioFlags.finishedKey, 'r1')
 })
 
-test('事件 3 背面（必竟之事）：按记录/Memento 给出 R2/R3/R4，R4 再选 R5/R1', () => {
-  const state = stateFor(2, { youHaveAcceptedYourFate: true, mementosDiscovered: ['mesmerizingFlute'] })
-  setup(state)
-  bbt.behavior.actReveal(state, state.acts[2], apiFor(state, { choices: ['r2'] }))
-  assert.equal(state.scenarioFlags.finishedKey, 'r2')
+test('必竟之事背面：满足条件才给 R2/R3，否则（→R4）；R4 由独立结局卡结算签名/拒绝', () => {
+  // 只满足「接受命运」两项 → 只提供 R2。
+  const accepted = stateFor(2, { youHaveAcceptedYourFate: true, mementosDiscovered: ['mesmerizingFlute'] })
+  setup(accepted)
+  bbt.behavior.actReveal(accepted, accepted.acts[2], apiFor(accepted, { choices: ['r2'] }))
+  assert.equal(accepted.scenarioFlags.finishedKey, 'r2')
 
-  const refuse = stateFor(2)
-  setup(refuse)
-  bbt.behavior.actReveal(refuse, refuse.acts[2], apiFor(refuse, { choices: ['r4', 'r1'] }))
-  assert.equal(refuse.scenarioFlags.finishedKey, 'r1')
+  // 两组都满足 → 提供 R2/R3 二选一。
+  const both = stateFor(2, {
+    youHaveAcceptedYourFate: true, youHaveRejectedYourFate: true,
+    mementosDiscovered: ['mesmerizingFlute', 'scrapOfTornShadow'],
+  })
+  setup(both)
+  bbt.behavior.actReveal(both, both.acts[2], apiFor(both, { choices: ['r3'] }))
+  assert.equal(both.scenarioFlags.finishedKey, 'r3')
+
+  // 两组都不满足 → （→R4），不再直接弹 R5/R1；由 resolution('r4') 结算黑书。
+  const neither = stateFor(2)
+  setup(neither)
+  bbt.behavior.actReveal(neither, neither.acts[2], apiFor(neither, { choices: ['r4', 'r1'] }))
+  assert.equal(neither.scenarioFlags.finishedKey, 'r4')
+  // R4：签名 → 记录黑书 + 全员 2/2 创伤。
+  const sign = stateFor(2)
+  setup(sign)
+  const result = bbt.behavior.resolution(sign, 'r4', [], apiFor(sign, { choices: ['r5'] }))
+  assert.equal(sign.campaign.records.theInvestigatorsSignedTheBlackBookOfAzathoth, true)
+  assert.equal(result.award, true)
+  assert.equal(result.bonus, 10)
 })
 
 // ---------------------------------------------------------------------------
@@ -560,12 +615,17 @@ test('石板/古神标记：难度取值；石板失败时阿撒托斯攻击你'
 test('古神标记：本次检定修正技能值为 0 时在阿撒托斯上放 1 毁灭', () => {
   const state = stateFor(2)
   setup(state)
-  state.skillTest = { value: 0 }
-  bbt.behavior.resolveChaosToken(state, state.investigators[0], 'elderthing', apiFor(state))
+  const inv = state.investigators[0]
+  const token = bbt.behavior.resolveChaosToken(state, inv, 'elderthing', apiFor(state))
+  assert.equal(token.delta, -4, '标准难度 -4')
+  // 卡面判「本次检定经过修正后的技能值是否为 0」：在结果落定后判定（afterTest），
+  // 旧实现在 token 揭示时读修正前的值，会漏掉 -4/-6 把最终值压到 0 的情形。
+  bbt.behavior.afterTest(state, inv,
+    { success: false, value: 0, difficulty: 4, drawn: ['elderthing'], cancelledTokens: [] }, apiFor(state))
   assert.equal(state.scenarioFlags.azathothDoom, 1)
-  state.skillTest = { value: 2 }
-  bbt.behavior.resolveChaosToken(state, state.investigators[0], 'elderthing', apiFor(state))
-  assert.equal(state.scenarioFlags.azathothDoom, 1)
+  bbt.behavior.afterTest(state, inv,
+    { success: true, value: 2, difficulty: 4, drawn: ['elderthing'], cancelledTokens: [] }, apiFor(state))
+  assert.equal(state.scenarioFlags.azathothDoom, 1, '最终值非 0 时不再放毁灭')
 })
 
 // ---------------------------------------------------------------------------

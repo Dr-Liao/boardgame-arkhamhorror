@@ -5,6 +5,8 @@
 //
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
+//
+// 反应只以「横置杰克」为费用：卡面没有「每轮一次」上限，杰克被其他效果重整后同轮可以再次触发。
 
 export default {
   code: '04008',
@@ -12,7 +14,7 @@ export default {
   abilities: [
     {
       kind: 'reaction', trigger: 'locationRevealed', id: 'jakeDraw', legacyReaction: true,
-      label: '是否横置杰克·威廉斯抽取 1 张牌？', cost: { exhaust: true }, limit: 'oncePerRound',
+      label: '是否横置杰克·威廉斯抽取 1 张牌？', cost: { exhaust: true },
       effect: { type: 'draw', amount: 1 },
     },
   ],

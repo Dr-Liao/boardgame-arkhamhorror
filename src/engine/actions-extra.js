@@ -83,16 +83,48 @@ export function createActionsExtra(deps) {
   function attachmentTargets(state, inv, spec, code) {
     if (!spec) return []
     if (spec.kind === 'asset') {
-      return inv.assets.filter(asset => {
+      // controllerScope==='location'（04193 特制弹药）：可选同地点其他调查员的支援，附件仍由打出者拥有。
+      const owners = spec.controllerScope === 'location'
+        ? state.investigators.filter(owner => owner.location === inv.location && !owner.defeated && !owner.resigned)
+        : [inv]
+      const seen = new Set()
+      return owners.flatMap(owner => owner.assets.filter(asset => {
+        if (seen.has(asset.id)) return false
+        seen.add(asset.id)
         if (asset.code === code) return false
         // Phase 2（C2）：特性判定走 effectiveTraits，运行期授予的特性也能当附件目标。
-        if (spec.trait && !cardHasTrait(state, inv, asset.code, spec.trait)) return false
+        if (spec.trait && !cardHasTrait(state, owner, asset.code, spec.trait)) return false
+        // 2026-10-25：05230 瞄准镜「附属到一张占用 2 个手部槽位的[[枪械]]支援」由
+        // attachTo.handSlots 声明；按目标卡印刷槽位过滤。
+        if (spec.handSlots) {
+          const slots = cardDef(asset.code)?.slots || []
+          const handSlots = slots.reduce((count, slot) => {
+            const key = String(slot).trim().toLowerCase()
+            if (key === 'hand x2') return count + 2
+            return key === 'hand' ? count + 1 : count
+          }, 0)
+          if (handSlots < spec.handSlots) return false
+        }
         if (spec.maxPerTarget) {
           const used = (asset.attachments || []).filter(entry => entry.code === code).length
           if (used >= spec.maxPerTarget) return false
         }
         return true
-      })
+      }))
+    }
+    // 2026-10-25：05021 勤教延后等「附属到同地点任意调查员」的支援/事件，
+    // 由 attachTo.kind='investigator' 声明；返回可附属的调查员（排除自己可选）。
+    if (spec.kind === 'investigator') {
+      const owners = spec.controllerScope === 'location'
+        ? state.investigators.filter(owner => owner.location === inv.location && !owner.defeated && !owner.resigned)
+        : state.investigators.filter(owner => !owner.defeated && !owner.resigned)
+      return owners.filter(owner => {
+        if (spec.excludeSelf && owner.seat === inv.seat) return false
+        if (spec.trait && !(investigatorRule(owner.code)?.traits || []).some(trait =>
+          String(trait).toLowerCase() === String(spec.trait).toLowerCase())) return false
+        return true
+      }).map(owner => ({ id: `seat:${owner.seat}`, seat: owner.seat, code: owner.code,
+        label: owner.name, investigator: owner }))
     }
     if (spec.kind === 'location') return state.locations.filter(location => location.inPlay !== false)
     if (spec.kind === 'enemy') {

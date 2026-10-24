@@ -196,7 +196,12 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     && grantsRemoteCommit(other))
   const helpers = options.peril ? [] : aliveInvestigators(state).filter(other => other.seat !== seat
     && other.location === inv.location && !remoteMinhs.includes(other))
-  const testOwners = [inv, ...remoteMinhs]
+  // 2026-10-25：剧本级「跨地点投入」钩子（05062 女巫作祟之林：其他女巫作祟之林的调查员
+  // 可以对本地点的技能检定各投入 1 张牌，反之亦然）。返回 true 的调查员加入投入方列表。
+  const crossCommitOwners = options.peril ? [] : aliveInvestigators(state).filter(other => other.seat !== seat
+    && !remoteMinhs.includes(other) && !helpers.includes(other)
+    && scenarioBehavior(state).crossLocationCommit?.(state, other, inv, skillContext) === true)
+  const testOwners = [inv, ...remoteMinhs, ...crossCommitOwners]
   // Phase 2（C1）：capability:commit —— 不能投入卡牌（队友投入不受影响）。
   const cannotCommit = capabilityBlocked(state, inv, 'commit')
   for (const owner of testOwners) {
@@ -368,16 +373,18 @@ function performTest(state, seat, skill, difficulty, options = {}) {
 
   let summary = null
   const resolveResult = result => {
-    // 「第七印记的封印」（04311）：任何技能检定期间揭示符号标记后移除 1 充能；
-    // 充能耗尽时移出游戏（离场时移出由 leaveAsset 处理）。
+    // 「第七印记的封印」（04311）：任何技能检定期间每揭示一个符号标记后移除 1 充能
+    // （一次检定揭示多个符号时按符号个数各触发一次）；充能耗尽时移出游戏（离场时移出由 leaveAsset 处理）。
     const symbols = ['skull', 'cultist', 'tablet', 'elderthing']
-    if ((result.drawn || []).some(token => symbols.includes(token))) {
+    const symbolCount = (result.drawn || []).filter(token => symbols.includes(token)).length
+    if (symbolCount > 0) {
       for (const owner of state.investigators) {
         for (const asset of owner.assets.slice()) {
           const amount = registeredEntry(asset.code)?.chargesOnSymbolReveal ?? 0
           if (!amount) continue
-          asset.uses = Math.max(0, (asset.uses || 0) - amount)
-          info(state, events, `🔮 「${cardName(asset.code)}」移除 ${amount} 点充能（剩余 ${asset.uses}）。`)
+          const removed = amount * symbolCount
+          asset.uses = Math.max(0, (asset.uses || 0) - removed)
+          info(state, events, `🔮 「${cardName(asset.code)}」移除 ${removed} 点充能（剩余 ${asset.uses}）。`)
           const removeWhenEmpty = registeredEntry(asset.code)?.removeFromGameWhenEmpty
     if ((asset.uses || 0) === 0 && removeWhenEmpty) {
             leaveAsset(state, owner, asset, events)
@@ -761,8 +768,13 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   if (autoFail) {
     state.skillTest.stage = 'ST.6'
     for (const fx of pendingOnFail.filter(fx=>fx.type!=='drawEnemyTrait')) applyTokenFx(state, seat, inv, fx, events)
-    triggerReaction(state, seat, 'skillTestFail', events, { skill: skillContext, difficulty, failedBy: Math.max(0, difficulty),
-      committed: commitments.map(item => ({ ...item })) })
+    const failContext = { skill: skillContext, difficulty, failedBy: Math.max(0, difficulty),
+      committed: commitments.map(item => ({ ...item })) }
+    triggerReaction(state, seat, 'skillTestFail', events, failContext)
+    // 04159 反复尝试等「投入了技能牌的其他调查员」也会获得自己的 skillTestFail 窗口。
+    for (const otherSeat of [...new Set(commitments.map(item => item.seat))]) {
+      if (otherSeat !== seat) triggerReaction(state, otherSeat, 'skillTestFail', events, failContext)
+    }
     const result = { success: false, value: 0, difficulty, skill: skillContext, token: 'autofail', committed, autoFail: true, drawn, cancelledTokens, source: options.source || null, damageBonus: 0, clueBonus: 0 }
     state.skillTest.stage = 'ST.7'
     resolveResult(result)
@@ -825,7 +837,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   const skillFx = { damageBonus: 0, clueBonus: 0, evadeDisengage: false, mayMoveAfterEvade: false, homeFrontDamage: 0 }
   for (let pass = 0; pass < (doubleOrNothing && success ? 2 : 1); pass++) {
     for (const commitment of commitments) {
-      const result = applySkillOnSuccess(state, state.investigators[commitment.seat], [commitment.code], success, value - difficulty)
+      const result = applySkillOnSuccess(state, state.investigators[commitment.seat], [commitment.code], success, value - difficulty, events)
       // 04153 参透真谛：任意冒险能力检定成功后由投入者发现 1 个线索。
       if (success && result.discoverClue) {
         discoverClueAt(state, state.investigators[commitment.seat], result.discoverClue, events)
@@ -875,7 +887,11 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   }
   if (elderChosenReward && success) {
     const options = [{ id: 'draw', label: '抽取 1 张牌并获得 1 资源' }]
-    if (state.currentSeat === seat) options.push({ id: 'action', label: '本回合额外 1 次行动' })
+    // 04004 马泰奥神父：「如果此时是你的回合」——只有调查阶段且轮到自己且回合未结束时
+    // 才提供「额外 1 次行动」；神话/遭遇阶段即使 currentSeat 仍指向该座位也不提供。
+    if (state.phase === 'investigation' && state.currentSeat === seat && !inv.turnEnded) {
+      options.push({ id: 'action', label: '本回合额外 1 次行动' })
+    }
     const answer = requestChoice(state, { kind: 'effect', source: 'mateoElderSign', seat,
       prompt: '旧印：选择一项结算。', options })
     if (answer === 'action') { inv.actionsLeft += 1; info(state, events, `${inv.name} 获得 1 次额外行动。`) }
@@ -909,14 +925,22 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       info(state, events, `${minh.name} 投入了至少6个匹配图标，弃置「${cardName(king.code)}」。`)
     }
   }
-  if (!success) triggerReaction(state, seat, 'skillTestFail', events, { skill: skillContext, difficulty, failedBy: Math.max(0, difficulty - value),
-    committed: commitments.map(item => ({ ...item })) })
-  // 技能牌失败奖励（如「重拾信念」）。
+  if (!success) {
+    const failContext = { skill: skillContext, difficulty, failedBy: Math.max(0, difficulty - value),
+      committed: commitments.map(item => ({ ...item })) }
+    triggerReaction(state, seat, 'skillTestFail', events, failContext)
+    // 04159 反复尝试：投入技能牌的其他调查员也获得自己的 skillTestFail 窗口。
+    for (const otherSeat of [...new Set(commitments.map(item => item.seat))]) {
+      if (otherSeat !== seat) triggerReaction(state, otherSeat, 'skillTestFail', events, failContext)
+    }
+  }
+  // 技能牌失败奖励（如「重拾信念」）：奖励给执行检定的调查员，而不是投入者。
+  const failRewardSeat = state.skillTest?.seat ?? seat
   if (!success) {
     for (const item of commitments) {
       const fail = commitProfile(item.code)?.onFail
       if (!fail) continue
-      const owner = state.investigators[item.seat]
+      const owner = state.investigators[failRewardSeat]
       if (fail.draw) for (const line of drawCards(state, owner, fail.draw, events)) info(state, events, line)
       if (fail.resources) owner.resources += fail.resources
       info(state, events, `${owner.name} 的「${cardName(item.code)}」检定失败奖励已结算。`)

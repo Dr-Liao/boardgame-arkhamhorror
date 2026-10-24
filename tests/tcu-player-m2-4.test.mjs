@@ -7,7 +7,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
-import { fixture, move, settle, asset, enemy } from './core-fixture.mjs'
+import { fixture, move, settle, asset, enemy, validateMove } from './core-fixture.mjs'
 import {
   applyHarm, createGameState, getHandSize, getStat, performTest, reactionWindow, returnAssetToHand,
 } from '../src/engine/engine.js'
@@ -97,6 +97,22 @@ test(`TCU 05275 ${nameOf('05275')} 可把线索交给另一位调查员`, () => 
   assert.equal(state.locations[0].clues, 1, '被击败后自己留的 1 个线索按消除规则放回地点')
 })
 
+test(`TCU 05275 ${nameOf('05275')} 修复：把线索放到地点不改变地点 maxClues`, () => {
+  const state = fixture('01001', 2)
+  const inv = me(state)
+  state.locations[0].clues = 3
+  const maxCluesBefore = state.locations[0].maxClues
+  inv.hand = ['05275']
+  move(state, { action: 'play', cardId: '05275' })
+  settle(state, pending => {
+    if (pending.kind === 'effect' && pending.options.some(option => option.id === 'place')) return 'place'
+    if (pending.kind === 'target') return pending.options[0].id
+    if (pending.kind === 'resource') return '1'
+    return null
+  })
+  assert.equal(state.locations[0].maxClues, maxCluesBefore, '放置线索不再抬高 maxClues（非卡面规则）')
+})
+
 // ---------------------------------------------------------------------------
 // 05277 帮个小忙
 // ---------------------------------------------------------------------------
@@ -134,6 +150,28 @@ test(`TCU 05277 ${nameOf('05277')} 额外付 2 费可指向连接 2 次内的地
   move(state, { action: 'play', cardId: '05277' })
   settle(state, pending => pending.kind === 'effect' ? 'range' : null)
   assert.equal(state.enemies.find(item => item.id === far.id).damageTaken, 1, '连接 2 次内的敌人被命中')
+})
+
+test(`TCU 05277 ${nameOf('05277')} 修复：范围模式不含自身地点；没有可伤害目标时打不出`, () => {
+  // 范围内（1–2 连接）有敌人：范围模式不应把「自身地点」算进范围——
+  // 只放一个「本地」敌人时，本模式没有合法目标，可选模式只剩基础模式。
+  const state = fixture('01001')
+  addConnections(state, [
+    { id: 'hallway', name: '走廊', connections: ['study', 'attic'], clues: 0, revealed: true },
+    { id: 'attic', name: '阁楼', connections: ['hallway'], clues: 0, revealed: true },
+  ])
+  state.locations[0].connections = ['hallway']
+  const local = enemy(state, { id: 'local-only', fight: 2, evade: 2, health: 5, damageTaken: 0 })
+  me(state).hand = ['05277']
+  move(state, { action: 'play', cardId: '05277' })
+  settle(state, pending => (pending.kind === 'effect' ? null : null))
+  assert.equal(state.enemies.find(item => item.id === local.id).damageTaken, 1, '基础模式打本地敌人')
+
+  // 完全没有非精英敌人：打出被拒绝。
+  const bare = fixture('01001')
+  me(bare).hand = ['05277']
+  assert.match(String(validateMove(bare, 0, { action: 'play', cardId: '05277' })), /非\[\[精英\]\]敌人|不能打出/,
+    '没有合法目标时不能打出「帮个小忙」')
 })
 
 // ---------------------------------------------------------------------------
@@ -224,6 +262,13 @@ test(`TCU 05281 ${nameOf('05281')} 把选定技能的基础值设为 5 直到回
 // ---------------------------------------------------------------------------
 // 05282 偷梁换柱
 // ---------------------------------------------------------------------------
+
+test(`TCU 05282 ${nameOf('05282')} 修复：没有可躲避的敌人时打不出`, () => {
+  const state = fixture('01001')
+  me(state).hand = ['05282']
+  assert.match(String(validateMove(state, 0, { action: 'play', cardId: '05282' })), /没有可以躲避|不能打出/,
+    '无合法目标时不能打出「偷梁换柱」')
+})
 
 test(`TCU 05282 ${nameOf('05282')} 躲避交战敌人成功后把它移到连接地点`, () => {
   const state = fixture('01001')
@@ -463,6 +508,9 @@ test(`TCU 05319 ${nameOf('05319')} 打出另一位调查员手牌并双方各抽
   assert.equal(me(state).resources, 33, '打出了对方的「应急物品」，获得 3 资源')
   assert.equal(me(state).hand.length, 1, '打牌者抽 1 张')
   assert.equal(state.investigators[1].hand.length, 1, '对方抽 1 张')
+  // 修复：手牌内容走 privateInfo 私密投影，公开日志只报张数（不再包含卡名）。
+  assert.ok(state.log.some(line => /查看了.*手牌（共 1 张）/.test(line)), '公开日志只报张数')
+  assert.ok(!state.log.some(line => /查看了.*手牌：/.test(line)), '公开日志不列出对方手牌内容')
 })
 
 // ---------------------------------------------------------------------------

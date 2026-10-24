@@ -14,7 +14,9 @@ export default {
       }
       const walter = state.locations.find(location => String(originalOf(location)) === '05132')
       const investigators = activeInvestigators(state)
-      // 记录原房间上的标记，然后只保留凯夏的房间（其余地点全部移出游戏）。
+      // 「原地点上的标记和卡牌视为在新地点」：先记录被移除地点上的敌人与标记。
+      const removedIds = new Set(state.locations.map(location => location.id))
+      const displacedEnemies = (state.enemies || []).filter(enemy => removedIds.has(enemy.location))
       const clues = walter?.clues || 0
       const doom = walter?.doom || 0
       state.locations = state.locations.filter(location => false)
@@ -28,6 +30,11 @@ export default {
         keziah.doom = doom
       }
       for (const inv of investigators) api.moveInvestigator?.(inv.seat, 'keziahsRoom')
+      // 被移除地点上的敌人（含与调查员交战的敌人）一起移到凯夏的房间。
+      for (const enemy of displacedEnemies) {
+        api.moveEnemy?.(enemy, 'keziahsRoom')
+        api.info?.(`👹 「${enemy.name}」随被移除的地点一并移到「凯夏的房间」。`)
+      }
       // 选择一位调查员控制黑书。
       take('05150')
       const chosen = investigators.length === 1 ? investigators[0] : investigators.find(inv =>

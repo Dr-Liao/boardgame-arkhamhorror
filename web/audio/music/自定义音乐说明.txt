@@ -1,0 +1,53 @@
+诡镇奇谈 · 音乐配置与自定义歌曲
+
+1. 内置歌曲与播放配置分开
+所有内置 MP3 统一存放在 common/，每关通过 playlists.json 指定曲目。
+发布包不预装音频；第一次播放从 CDN 下载到 common/，以后可离线播放。
+tracks.json 是内置曲目查询表：id 为配置用的曲目 ID，title 为曲名，file 为相对路径。
+sources.json 和 CREDITS.txt 用于授权署名及下载校验，请勿当作歌单编辑。
+
+2. 添加自己的歌曲
+在 campaigns/<战役 ID>/<关卡 ID>/ 目录放入音频文件。
+例如巫异时刻：campaigns/theCircleUndone/theWitchingHour/
+目录索引.txt 列出中文关卡名称和目录。每个目录里的“添加音乐.txt”用于保留空目录，可以留着。
+支持 MP3、OGG、WAV、M4A、AAC、FLAC、WebM；具体编码需浏览器支持，推荐 MP3。
+文件名可用中文。只扫描对应目录，不递归扫描其子目录；默认按文件名排序后追加到歌单。
+放入文件后，切换到该关、展开播放器，或点击“刷新歌单”即可加入，无需重启。
+直接放在 campaigns/<战役 ID>/ 的歌曲仅用于战役总歌单，不会自动加入所有关卡。
+在 common/ 新加的非内置歌曲只自动加入通用歌单；可在各关配置里明确引用。
+自定义歌曲只在本机使用，不会自动上传 CDN。
+
+3. 修改每关歌单
+首次进入游戏并加载音乐播放器时会生成 playlists.json。现在也可复制 playlists.example.json 为 playlists.json。
+用记事本等文本编辑器打开 playlists.json，以 UTF-8 保存，不能加注释或多余逗号。
+其中 playlists 的键是“战役 ID/关卡 ID”。修改 tracks 即可调整歌曲和顺序。
+例如（这是完整有效的小配置；未列出的关卡继续使用默认歌单）：
+
+{
+  "schemaVersion": 1,
+  "playlists": {
+    "theCircleUndone/theWitchingHour": {
+      "tracks": [
+        "tcuBabaYaga",
+        "ritual",
+        "campaigns/theCircleUndone/theWitchingHour/我的歌曲.mp3"
+      ],
+      "includeCustom": true
+    }
+  }
+}
+
+tracks 可以填 tracks.json 中的 ID，也可以填相对于本目录的音频路径，如 common/ritual.mp3。
+同一文件只播放列表中的一份，不会因自动扫描而重复加入。
+includeCustom: true 自动追加目录中的歌曲；false 只使用 tracks 中列出的歌曲。
+只听自己的音乐：tracks 改为 []，includeCustom 保持 true。
+本关静音歌单：tracks 改为 []，includeCustom 改为 false。
+修改后点击“刷新歌单”。若当前歌曲仍在新歌单里，会保留播放进度。
+配置格式错误会显示提示并暂用上次有效配置，不会覆盖损坏的原文件；修正后再次刷新。
+
+4. 打包与更新
+Windows、macOS 及游戏商店包都会保留各关目录、说明和默认配置模板。
+玩家的 playlists.json 与自定义音频不会被打进发布包。新安装首次使用时生成玩家配置。
+更新时保留旧安装内的 playlists.json、自定义歌曲及已下载音乐；默认模板可随版本更新。
+配置与歌曲位于当前 app 版本目录的 games/arkhamhorror/web/audio/music/ 下。
+不要只备份 playlists.json：自定义歌曲也要一起备份。

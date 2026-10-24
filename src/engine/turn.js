@@ -125,7 +125,7 @@ function runMythos(state, repeated = false) {
     for (const asset of inv.assets.slice()) {
       if (!assetEffect(inv, asset)?.forcedMythosEndDiscard) continue
       leaveAsset(state, inv, asset)
-      if (!asset.removedFromGame) inv.discard.push(asset.code)
+      if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
       info(state, events, `🌑 「${cardName(asset.code)}」在神话阶段结束时被弃掉。`)
     }
   }
@@ -159,6 +159,8 @@ function enemyPhase(state) {
         name: enemy.name, text: `${enemy.name}：${locName(state, prev)} → ${locName(state, target)}`, effect: 'hunter', enemyId: enemy.id, from: prev, to: target, location: target })
     }
   }
+  // 2026-10-25：新增「猎手移动后」剧本钩子（05067 等「在敌人经猎手关键词移动后」的强制时点）。
+  scenarioBehavior(state).enemyPhaseAfterHunters?.(state, scenarioRuntime(state, events))
   autoEngageAll(state, events)
   playerWindow(state, 'enemy.afterHunters', events)
 
@@ -259,9 +261,13 @@ function hunterStep(state, enemy, options = {}) {
 function runLocationRoundEnd(state, events) {
   for (const loc of state.locations) {
     if (loc.lure?.round === state.round) { state.investigators[loc.lure.seat]?.discard.push(loc.lure.code); delete loc.lure }
-    // 地点自己的「回合结束」规则（01156 仪式地：线索补至每人 2 个）。
+    // 地点自己的「回合结束」规则（01156 仪式地：线索补至每人 2 个；05141 祭品场所：补到 3×人数）。
+    // 2026-10-25 修复：条目可以写函数 onRoundEnd；此前引擎只读 cluesPerInvestigator 字段，
+    // 05141 这类「函数写在条目里」的规则永远不会执行。
     const roundEnd = registeredEntry(loc.originalCode || loc.code)?.locationRule?.onRoundEnd
-    if (roundEnd?.cluesPerInvestigator) {
+    if (typeof roundEnd === 'function') {
+      roundEnd(state, loc, scenarioRuntime(state, events))
+    } else if (roundEnd?.cluesPerInvestigator) {
       const target = state.numInvestigators * roundEnd.cluesPerInvestigator
       if (loc.clues < target) {
         loc.clues = target

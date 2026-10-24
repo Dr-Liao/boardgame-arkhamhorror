@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tcu",
+  "milestone": "P7",
+  "generatedBy": "lead（主进程，合并阶段）",
+  "generatedAt": "2026-10-23T18:45:09.236Z",
+  "summary": {
+    "shards": 4,
+    "cards": 87,
+    "blocked": 0,
+    "simplified": 22,
+    "testsPassed": 117,
+    "primitiveRequests": 17
+  },
+  "workers": [
+    {
+      "worker": "w-m2-1",
+      "shard": "M2-1",
+      "codes": 22,
+      "done": 22,
+      "blocked": 0,
+      "simplified": [
+        "05021",
+        "05029",
+        "05032",
+        "05033",
+        "05036",
+        "05040"
+      ],
+      "testsPassed": 26,
+      "primitiveRequests": 3,
+      "report": "artifacts/migration/tcu/workers/w-m2-1.json",
+      "startedAt": "2026-10-24T02:07:35+08:00",
+      "finishedAt": "2026-10-24T02:42:00+08:00"
+    },
+    {
+      "worker": "w-m2-2",
+      "shard": "M2-2",
+      "codes": 22,
+      "done": 22,
+      "blocked": 0,
+      "simplified": [
+        "05042",
+        "05112",
+        "05152",
+        "05157",
+        "05158"
+      ],
+      "testsPassed": 34,
+      "primitiveRequests": 6,
+      "report": "artifacts/migration/tcu/workers/w-m2-2.json",
+      "startedAt": "2026-10-24T02:07:37+08:00",
+      "finishedAt": "2026-10-24T02:38:34+08:00"
+    },
+    {
+      "worker": "w-m2-3",
+      "shard": "M2-3",
+      "codes": 22,
+      "done": 22,
+      "blocked": 0,
+      "simplified": [
+        "05196",
+        "05230",
+        "05231",
+        "05236",
+        "05237"
+      ],
+      "testsPassed": 24,
+      "primitiveRequests": 4,
+      "report": "artifacts/migration/tcu/workers/w-m2-3.json",
+      "startedAt": "2026-10-24T02:07:39+08:00",
+      "finishedAt": "2026-10-24T02:40:02+08:00"
+    },
+    {
+      "worker": "w-m2-4",
+      "shard": "M2-4",
+      "codes": 21,
+      "done": 21,
+      "blocked": 0,
+      "simplified": [
+        "05279",
+        "05280",
+        "05319",
+        "05321",
+        "05322",
+        "05324"
+      ],
+      "testsPassed": 33,
+      "primitiveRequests": 4,
+      "report": "artifacts/migration/tcu/workers/w-m2-4.json",
+      "startedAt": "2026-10-24T02:07:41+08:00",
+      "finishedAt": "2026-10-24T03:05:00+08:00"
+    }
+  ],
+  "note": "每行来自 worker 自己的 artifacts/migration/tcu/workers/<id>.json；testsPassed 是分片测试文件的用例通过数。"
+}

@@ -185,15 +185,10 @@ export const encounterRules = {
     enemyScriptFor(original(enemy))?.onEvade?.(state, inv, enemy, result, api)
   },
 
-  // 兄弟会异教徒：每次对它发动攻击先放置 1 点毁灭（每次攻击只记一次）。
+  // 兄弟会异教徒（04095）的「每次对它发动攻击时放 1 毁灭」已由引擎的攻击宣言钩子
+  // （combat.js:128-133 / enemyDamageAllowed 之外的路径）结算；这里不要再补一次，
+  // 否则单次成功攻击会放 2 点毁灭。
   enemyDamageAllowed(state, enemy, source, seat) {
-    if (original(enemy) === '04095' && source !== 'encounter') {
-      const key = `attack:${state.round}:${state.phase}`
-      if (enemy.tfaDoomAttackKey !== key) {
-        enemy.tfaDoomAttackKey = key
-        enemy.doom = (enemy.doom || 0) + 1
-      }
-    }
     // 「力量真言」（04097）：与带毁灭的敌人同地点时不能伤害该敌人。
     const inv = Number.isInteger(seat) ? state.investigators[seat] : null
     if (inv && threatHasFlag(inv, 'blockDoomEnemyDamage')

@@ -12,14 +12,18 @@ import { originalOf } from '../../../_shared.js'
 export default {
   code: '04081', scope: 'treachery', implemented: true,
   encounterResolve(state, inv, card, api) {
+    // 失败分支把卡放进威胁区域后要返回 true（= 已入场，引擎不再把本卡弃入遭遇弃牌堆）；
+    // 成功分支返回 false 由引擎正常弃置。旧实现一律 return false，导致卡同时在威胁区与弃牌堆。
+    let placed = false
     api.test(inv.seat, 'willpower', 3, result => {
       if (result.success) return
       const failedBy = Math.max(0, 3 - result.value)
       for (let index = 0; index < failedBy; index++) api.horror(inv.seat, 1)
       if (!(inv.threat || []).some(item => originalOf(item) === '04081')) {
         api.threat(inv.seat, '04081', { forcedEndTurnDiscard: true })
+        placed = true
       }
     })
-    return false
+    return placed
   },
 }

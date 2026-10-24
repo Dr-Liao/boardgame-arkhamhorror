@@ -20,11 +20,11 @@ function isExtradimensional(state, inv) {
   return traits.some(trait => String(trait).toLowerCase() === 'extradimensional')
 }
 
-// 卡面数值：skull -1（异次元地点 -3）/ 困难 -2（-3）；tablet -2/-3；elderthing -3/-4；
+// 卡面数值：skull -1（异次元地点 -3）/ 困难 -2（异次元地点 -4）；tablet -2/-3；elderthing -3/-4；
 // cultist 无修正但「再揭示一个混乱标记」。
 export function secretNameChaosToken(state, inv, token, api) {
   const hard = hardSide(state)
-  if (token === 'skull') return chaosFx(isExtradimensional(state, inv) ? (hard ? -3 : -3) : (hard ? -2 : -1))
+  if (token === 'skull') return chaosFx(isExtradimensional(state, inv) ? (hard ? -4 : -3) : (hard ? -2 : -1))
   if (token === 'cultist') return chaosFx(0, { drawAnother: true })
   if (token === 'tablet') return chaosFx(hard ? -3 : -2)
   if (token === 'elderthing') return chaosFx(hard ? -4 : -3)
@@ -43,10 +43,39 @@ function discardEncounterTop(state, inv, amount, api) {
   return discarded
 }
 
+const connectionsOf = (state, id) => (state.locations || []).find(location => location.id === id)?.connections || []
+
+// 到目标地点的一步（BFS；返回 { next, distance }）。引擎的 hunterStep 是纯计算，移动要由调用方执行。
+function stepToward(state, from, to) {
+  if (!from || !to || from === to) return null
+  const seen = new Set([from])
+  const queue = [[from, null, 0]]
+  while (queue.length) {
+    const [id, first, distance] = queue.shift()
+    for (const next of connectionsOf(state, id)) {
+      if (next === to) return { next: first || next, distance: distance + 1 }
+      if (seen.has(next)) continue
+      seen.add(next)
+      queue.push([next, first || next, distance + 1])
+    }
+  }
+  return null
+}
+
+// [elderthing]：结算场上每个敌人的猎手关键词（向最近调查员移动一步）。
 function moveHunters(state, api) {
-  for (const enemy of state.enemies || []) {
-    if (!enemy.hunter) continue
-    api?.hunterStep?.(enemy, {})
+  const alive = (state.investigators || []).filter(inv => !inv.defeated && !inv.resigned && inv.location)
+  for (const enemy of [...(state.enemies || [])]) {
+    if (!enemy.hunter || !enemy.location) continue
+    let best = null
+    for (const inv of alive) {
+      const step = stepToward(state, enemy.location, inv.location)
+      if (!step) continue
+      if (!best || step.distance < best.distance) best = step
+    }
+    if (!best) continue
+    api?.moveEnemy?.(enemy, best.next)
+    api?.info?.(`[elderthing]：「${enemy.name}」向「${best.next}」移动。`)
   }
 }
 
@@ -86,7 +115,7 @@ export const SECRET_NAME_TOKEN_MEANINGS = Object.freeze({
     elderthing: { text: '-3。如果你检定失败，结算场上每个敌人的猎手关键词。', delta: -3 },
   },
   hard: {
-    skull: { text: '-2（如果你位于异次元地点，改为 -3）。', delta: -2 },
+    skull: { text: '-2（如果你位于异次元地点，改为 -4）。', delta: -2 },
     cultist: { text: '再揭示一个混乱标记。如果你检定失败，弃掉遭遇牌库顶 5 张卡牌。', delta: 0 },
     tablet: { text: '-3。如果你检定失败，那赫卜攻击你（无视她的地点）。', delta: -3 },
     elderthing: { text: '-4。结算场上每个敌人的猎手关键词。', delta: -4 },

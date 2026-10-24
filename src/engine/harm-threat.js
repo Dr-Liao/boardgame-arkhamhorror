@@ -206,6 +206,16 @@ export function createHarmThreat(deps) {
   }
 
   function eliminateInvestigator(state, inv, events) {
+    // 04038 黑暗契约：退场（被击败/发疯/撤退都走这里）时若仍在手牌 → 移出牌库，
+    // 查找收藏换成「失败的代价」。主动撤退路径在 doResign 里已先结算过（幂等）。
+    for (const code of [...(inv.hand || [])]) {
+      const entry = registeredEntry(code)
+      if (!entry?.darkPactForced || !entry.replacementCode) continue
+      inv.hand = inv.hand.filter(item => item !== code)
+      inv.deck = (inv.deck || []).filter(item => item !== code)
+      inv.deck.push(entry.replacementCode)
+      info(state, events, `📜 「${cardName(code)}」仍在你手中：移出牌库，换成「${cardName(entry.replacementCode)}」。`)
+    }
     // 本地点有调查员被击败（04026 彩饰骷髅），其他调查员可触发。
     for (const other of state.investigators.filter(item =>
       item !== inv && !item.defeated && !item.resigned && item.location === inv.location)) {
@@ -216,7 +226,7 @@ export function createHarmThreat(deps) {
     // Phase 5（5a-19）：「被消除时离场」的支援由条目级 discardOnElimination 声明。
     for (const asset of inv.assets.filter(item => registeredEntry(item.code)?.discardOnElimination)) {
       leaveAsset(state, inv, asset, events)
-      if (!asset.removedFromGame) inv.discard.push(asset.code)
+      if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
     }
     for (const eid of inv.engaged.slice()) {
       const enemy = state.enemies.find((e) => e.id === eid)

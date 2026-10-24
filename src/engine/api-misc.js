@@ -71,6 +71,8 @@ export function createMiscApi(state, events, deps) {
     hunchDeck,
     reactionWindow,
     noteCardCancelled,
+    getMaxSanity,
+    privateInfo,
   } = deps
 
   const doFight = (...args) => doFightRaw(...args)
@@ -104,6 +106,13 @@ export function createMiscApi(state, events, deps) {
       bankedOf: inv => resourceBank.bankedOf(inv),
       withdraw: inv => resourceBank.withdrawAll(state, inv, events),
     },
+    // 2026-10-25：卡面描述子可读的神智上限（05114「剩余神智值」按修正后上限计算）。
+    maxSanity: seat => {
+      const inv = state.investigators[seat]
+      return inv ? getMaxSanity(inv) : 0
+    },
+    // 2026-10-25：05319「查看另一位调查员手牌」的私密投影（只对该座位可见，不进公开日志）。
+    privateInfo: (seat, text, presentation = null) => privateInfo(state, events, seat, text, presentation),
     // 第 5 步 P6：直觉牌库的两条卡面读写点（乔·戴蒙德的旧印）。
     hunchDeck: {
       insightsInDiscard: inv => hunchDeck.insightsInDiscard(inv),
@@ -111,7 +120,36 @@ export function createMiscApi(state, events, deps) {
     },
     loseResources: (seat, amount) => {
       const inv = state.investigators[seat]
-      if (inv) inv.resources = Math.max(0, inv.resources - amount)
+      if (!inv || !(amount > 0)) return 0
+      // 2026-10-25：05280「否决存在：忽略失去资源的效果」需要一个按面向取消的窗口。
+      const context = reactionWindow(state, 'wouldLoseResources', {
+        when: 'wouldLoseResources', seat: inv.seat, amount, what: 'resources', location: inv.location,
+        prompt: `${inv.name} 将要失去 ${amount} 资源`,
+      }, events)
+      if (context.cancelled) {
+        info(state, events, `🛡️ ${inv.name} 忽略了失去资源的效果。`)
+        return 0
+      }
+      const lost = Math.min(inv.resources, amount)
+      inv.resources -= lost
+      return lost
+    },
+    // 2026-10-25：05280 的「失去行动」面向。卡面把「弃手牌/失资源/失行动/受伤/受恐惧」
+    // 统一成同一个替换效果；窗口名与 what 字段供条目按面向分派。
+    loseActions: (seat, amount) => {
+      const inv = state.investigators[seat]
+      if (!inv || !(amount > 0)) return 0
+      const context = reactionWindow(state, 'wouldLoseActions', {
+        when: 'wouldLoseActions', seat: inv.seat, amount, what: 'actions', location: inv.location,
+        prompt: `${inv.name} 将要失去 ${amount} 个行动`,
+      }, events)
+      if (context.cancelled) {
+        info(state, events, `🛡️ ${inv.name} 忽略了失去行动的效果。`)
+        return 0
+      }
+      const lost = Math.min(inv.actionsLeft || 0, amount)
+      inv.actionsLeft = Math.max(0, (inv.actionsLeft || 0) - lost)
+      return lost
     },
     drawCards: (seat, amount) => drawCards(state, state.investigators[seat], amount, events),
     // Phase 5（5c-18）：抽牌并把引擎的抽牌日志写进事件流。
@@ -128,6 +166,18 @@ export function createMiscApi(state, events, deps) {
       if (index == null || index < 0) return false
       inv.hand.splice(index, 1)
       inv.discard.push(code)
+      return true
+    },
+    // 2026-10-25：05152「所附属支援被弃掉后：把该支援与其升级附属返回各自所有者手牌」。
+    // 标记 returnedToHand 让后续弃牌守卫跳过；升级（attachments）一并返回。
+    returnAssetAndAttachmentsToHand: (seat, asset) => {
+      const owner = state.investigators[seat]
+      if (!owner || !asset) return false
+      const codes = [asset.code]
+      for (const attachment of asset.attachments || []) if (attachment?.code) codes.push(attachment.code)
+      for (const code of codes) if (!(owner.hand || []).includes(code)) owner.hand.push(code)
+      asset.returnedToHand = true
+      info(state, events, `♻️ ${owner.name} 把「${cardName(asset.code)}」及其升级附属返回手牌。`)
       return true
     },
     // 第三个参数用于「发现任意地点的线索」（02224）：判定仍按目标地点走剧情的 canDiscoverClues。
@@ -311,6 +361,52 @@ export function createMiscApi(state, events, deps) {
     skipTestTokens: () => {
       if (!state.skillTest) return false
       state.skillTest.skipTokens = true
+      return true
+    },
+    // 04313 改变命运：枚举「场上」的全部诡计实例（威胁区、地点/敌人/幕/议程的附属）。
+    // 返回纯数据视图；真正移除走 discardCardInPlay。
+    cardsInPlayTreacheries: () => {
+      const out = []
+      const codeOf = entry => entry?.originalCode || entry?.code || null
+      for (const inv of state.investigators) {
+        for (const threat of inv.threat || []) {
+          out.push({ code: codeOf(threat), hostType: 'investigator', host: inv, hostId: inv.seat, attachment: threat })
+        }
+      }
+      for (const location of state.locations || []) {
+        for (const attachment of location.attachments || []) {
+          out.push({ code: codeOf(attachment), hostType: 'location', host: location, hostId: location.id, attachment })
+        }
+      }
+      for (const enemy of state.enemies || []) {
+        for (const attachment of enemy.attachments || []) {
+          out.push({ code: codeOf(attachment), hostType: 'enemy', host: enemy, hostId: enemy.id, attachment })
+        }
+      }
+      for (const [hostType, hosts] of [['agenda', state.agendas || []], ['act', state.acts || []]]) {
+        for (const host of hosts) {
+          for (const attachment of host.attachments || []) {
+            out.push({ code: codeOf(attachment), hostType, host, hostId: host.id || host.code, attachment })
+          }
+        }
+      }
+      return out.filter(entry => entry.code)
+    },
+    discardCardInPlay: entry => {
+      if (!entry?.code) return false
+      const removeFrom = list => {
+        const index = (list || []).indexOf(entry.attachment)
+        if (index >= 0) { list.splice(index, 1); return true }
+        return false
+      }
+      let removed = false
+      if (entry.hostType === 'investigator') removed = removeFrom(entry.host?.threat)
+      else if (entry.hostType === 'location' || entry.hostType === 'enemy' || entry.hostType === 'agenda' || entry.hostType === 'act') {
+        removed = removeFrom(entry.host?.attachments)
+      }
+      if (!removed) return false
+      state.encounterDiscard.push(entry.code)
+      info(state, events, `🃏 「${cardName(entry.code)}」从场上被弃掉。`)
       return true
     },
     // Phase 5（5c-17）：把这张支援附属到敌人身上（手铐：横置 + 脱离交战）。

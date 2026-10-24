@@ -3,14 +3,17 @@ import { preloadChaosTokens, showChaosToken } from './chaos-token.js'
 import { createCombatSound } from './combat-sound.js'
 import { attackChoreography, blastChoreography } from './attack-fx.js'
 import { setRulesText } from './card-text.js'
+import { t } from './i18n.js'
 const ROOT = '/mods/arkhamhorror/'
 const SOUNDS = { select: 'click_003', draw: 'card-slide', encounter: 'encounter-reveal', play: 'drop_003', move: 'drop_001',
   clue: 'glass_001', damage: 'error_003', reveal: 'pluck_001', success: 'confirmation_002',
   failure: 'back_002', agenda: 'bong_001', gunshot: 'firearm-shot.wav', bladeSlash: 'blade-slash', bladeHit: 'blade-hit',
   lightningZap: 'lightning-zap.wav', dynamiteBlast: 'dynamite-blast' }
 const VOLUMES = { select: .16, gunshot: .22, bladeSlash: .4, bladeHit: .4, lightningZap: .35, dynamiteBlast: .55 }
-const SKILLS = { intellect: '智识', willpower: '意志', combat: '战斗', agility: '敏捷' }
-const PHASES = { enemy: ['敌军阶段', '⚔', '猎手逼近，威胁降临'], upkeep: ['整备阶段', '◇', '重整装备，补充物资'], mythos: ['神话阶段', '◉', '黑暗蔓延，遭遇未知'], investigation: ['调查阶段', '⌕', '新的调查即将开始'] }
+// 技能/阶段表只存词典 key，演出渲染时再 t()（模块顶层不调用 t()）。
+const SKILLS = { intellect: 'symbol.intellect', willpower: 'symbol.willpower', combat: 'symbol.combat', agility: 'symbol.agility' }
+const skillLabel = (skill, fallback = '') => SKILLS[skill] ? t(SKILLS[skill]) : fallback
+const PHASES = { enemy: ['table.phase.enemy', '⚔', 'table.phase.enemy.cinematic'], upkeep: ['table.phase.upkeep', '◇', 'table.phase.upkeep.cinematic'], mythos: ['table.phase.mythos', '◉', 'table.phase.mythos.cinematic'], investigation: ['table.phase.investigation', '⌕', 'table.phase.investigation.cinematic'] }
 export function publicSequence(events) {
   const cues = []
   for (const event of events) {
@@ -78,9 +81,9 @@ export function presentationChanges(before, after, events = []) {
       if (delta && (field === 'resources' || delta > 0)) changes.push({ kind, field, delta, seat: inv.seat, location: inv.location })
     }
   }
-  for (const loc of after.locations || []) if (loc.revealed && before.locations?.some(old => old.id === loc.id && !old.revealed) && !changes.some(c => c.kind === 'location' && c.location === loc.id)) changes.push({ kind: 'location', location: loc.id, name: loc.name, code: loc.originalCode || loc.code, title: '地点揭示', flip: true, shroud: loc.shroud, clues: loc.clues, onEnter: loc.onEnter, text: loc.text || '查看已揭示地点与进入效果。' })
-  if (before.agendaIndex !== after.agendaIndex) changes.push({ kind: 'agenda', title: '密谋推进', name: after.agendas?.[after.agendaIndex]?.name || '新的威胁正在逼近' })
-  if (before.actIndex !== after.actIndex) changes.push({ kind: 'agenda', title: '调查推进', name: after.acts?.[after.actIndex]?.name || '新的线索浮出水面' })
+  for (const loc of after.locations || []) if (loc.revealed && before.locations?.some(old => old.id === loc.id && !old.revealed) && !changes.some(c => c.kind === 'location' && c.location === loc.id)) changes.push({ kind: 'location', location: loc.id, name: loc.name, code: loc.originalCode || loc.code, title: t('table.change.location'), flip: true, shroud: loc.shroud, clues: loc.clues, onEnter: loc.onEnter, text: loc.text || t('table.change.locationText') })
+  if (before.agendaIndex !== after.agendaIndex) changes.push({ kind: 'agenda', title: t('table.change.agenda'), name: after.agendas?.[after.agendaIndex]?.name || t('table.change.agendaFallback') })
+  if (before.actIndex !== after.actIndex) changes.push({ kind: 'agenda', title: t('table.change.act'), name: after.acts?.[after.actIndex]?.name || t('table.change.actFallback') })
   return changes
 }
 
@@ -200,11 +203,12 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
     const a=rect(source)||rect(fallback),b=rect(target)||rect(fallback)
     if(!a||!b)return
     const start=center(a),end=center(b),dx=end.x-start.x,dy=end.y-start.y,length=Math.hypot(dx,dy)||1
-    const label=miss?'攻击落空':incoming?`${c.damage||0} 伤害${c.horror?` / ${c.horror} 恐惧`:''}`:`命中 · ${c.damage||0} 伤害${c.defeated?' · 击败':''}`
-    const who=displayed?.state.investigators.find(inv=>inv.seat===c.seat)?.name||'调查员'
+    const damageText=c.horror?t('table.combat.damageHorror',{damage:c.damage||0,horror:c.horror}):t('table.combat.damage',{damage:c.damage||0})
+    const label=miss?t('table.combat.miss'):incoming?damageText:(c.defeated?t('table.combat.hitDefeated',{damage:c.damage||0}):t('table.combat.hit',{damage:c.damage||0}))
+    const who=displayed?.state.investigators.find(inv=>inv.seat===c.seat)?.name||t('table.investigator')
     const fx=node('div','ah-combat-fx'+(incoming?' is-incoming':'')+(miss?' is-miss':''))
     fx.dataset.direction=incoming?'incoming':'outgoing';fx.dataset.enemyId=c.enemyId;fx.setAttribute('role','status')
-    const caption=node('div','ah-combat-caption',incoming?`${who} 受到「${c.name||'敌人'}」攻击 · ${label}`:`${who} → ${c.name||'敌人'} · ${label}`)
+    const caption=node('div','ah-combat-caption',incoming?t('table.combat.incomingCaption',{who,enemy:c.name||t('table.enemy'),label}):t('table.combat.outgoingCaption',{who,enemy:c.name||t('table.enemy'),label}))
     const captionMargin=Math.min(380,innerWidth-28)/2+14
     Object.assign(caption.style,{left:Math.max(captionMargin,Math.min(innerWidth-captionMargin,end.x))+'px',top:Math.max(85,Math.min(innerHeight-100,b.y-54))+'px'})
     const plan=attackChoreography(incoming?'default':c.attackStyle,{node,start,end,box:b,length,angle:Math.atan2(dy,dx),ux:dx/length,uy:dy/length,miss})
@@ -243,10 +247,10 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
     const area=rect(location)||rect(targets[0]?.[0])
     if(!area)return
     const thrower=rect(seatNode(c.seat))||rect(interaction(`investigator:${c.seat}`))||area
-    const who=displayed?.state.investigators.find(inv=>inv.seat===c.seat)?.name||'调查员'
+    const who=displayed?.state.investigators.find(inv=>inv.seat===c.seat)?.name||t('table.investigator')
     const plan=blastChoreography({node,from:center(thrower),center:center(area),radius:Math.max(area.width,area.height)/2,targets})
     const fx=node('div','ah-combat-fx ah-blast-fx');fx.dataset.fx=c.fx||'blast';fx.setAttribute('role','status')
-    const caption=node('div','ah-combat-caption',`${who} · 炸药爆破「${c.name||'地点'}」 · 每个目标 ${c.damage||0} 伤害`)
+    const caption=node('div','ah-combat-caption',t('table.blast.caption',{who,name:c.name||t('table.location'),damage:c.damage||0}))
     const captionMargin=Math.min(380,innerWidth-28)/2+14
     Object.assign(caption.style,{left:Math.max(captionMargin,Math.min(innerWidth-captionMargin,center(area).x))+'px',top:Math.max(85,Math.min(innerHeight-100,area.y-54))+'px'})
     fx.append(...plan.elements,caption);ensureLayer().append(fx)
@@ -361,7 +365,8 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
   }
   const cinematic = async change => {
     const generation = epoch
-    const location = change.kind === 'location', story = change.kind === 'story' || location, phase = PHASES[change.phase] || PHASES.investigation
+    const location = change.kind === 'location', story = change.kind === 'story' || location, phaseDef = PHASES[change.phase] || PHASES.investigation
+    const phase = [t(phaseDef[0]), phaseDef[1], t(phaseDef[2])]
     const el = node('section', story ? 'ah-cinematic is-story' + (location ? ' ah-location-reveal' : '') : 'ah-phase-scene is-' + change.phase)
     if (change.intro) el.classList.add('ah-introduction')
     el.dataset.fxKind = change.kind; el.dataset.phase = change.phase || ''; el.dataset.title = change.title || phase[0]
@@ -412,8 +417,8 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
       ensureLayer().append(ring); worldNodes.push(ring)
       if (!step.effect) return
       const label = step.effect === 'attack' ? `♥ −${step.damage || 0}  ◈ −${step.horror || 0}`
-        : step.effect === 'hunter' ? step.name || '猎手移动' : step.effect === 'draw' ? '抽牌 +1'
-          : step.effect === 'resource' ? `资源 +${step.delta || 1}` : step.effect === 'doom' ? `毁灭 +${step.delta || 1}` : '遭遇揭示'
+        : step.effect === 'hunter' ? step.name || t('table.world.hunter') : step.effect === 'draw' ? t('table.world.draw')
+          : step.effect === 'resource' ? t('table.world.resource', { delta: step.delta || 1 }) : step.effect === 'doom' ? t('table.world.doom', { delta: step.delta || 1 }) : t('table.world.encounter')
       token = node('div', 'ah-phase-world-cue is-' + change.phase, label)
       token.dataset.effect = step.effect
       const from = step.effect === 'hunter' ? location(step.from)?.getBoundingClientRect()
@@ -427,7 +432,7 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
     }
     const content = node('div', 'ah-cinematic-content')
     content.append(node('div', 'ah-cinematic-sigil', story ? '✦' : phase[1]),
-      node('small', 'ah-cinematic-kicker', story ? change.title : `第 ${change.round || 1} 轮 · 自动结算`),
+      node('small', 'ah-cinematic-kicker', story ? change.title : t('table.cinematic.autoRound', { round: change.round || 1 })),
       node('h1', '', story ? change.name || change.title : phase[0]))
     if (story && change.code && art) {
       const card = node('div', 'ah-cinematic-card' + (change.flip ? ' is-flipping' : ''))
@@ -438,15 +443,15 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
     if (!story) content.append(stepArt)
     const detail = node('p', 'ah-cinematic-detail'), progress = node('div', 'ah-cinematic-progress')
     if (location) {
-      const stats = node('div', 'ah-location-reveal-stats', `帷幕 ${change.shroud ?? '—'}　 ·　线索 ${change.clues ?? 0}`)
+      const stats = node('div', 'ah-location-reveal-stats', t('table.cinematic.locationStats', { shroud: change.shroud ?? '—', clues: change.clues ?? 0 }))
       const effect = change.onEnter
-      const lines = [effect?.damage ? `进入后受到 ${effect.damage} 点伤害` : '', effect?.horror ? `进入后受到 ${effect.horror} 点恐惧` : '', effect?.test ? `进入后进行${SKILLS[effect.test.skill] || '技能'}检定（${effect.test.difficulty}）` : ''].filter(Boolean)
-      stats.append(node('strong', '', lines.join('；') || '没有额外的进入惩罚'))
+      const lines = [effect?.damage ? t('table.enter.damage', { damage: effect.damage }) : '', effect?.horror ? t('table.enter.horror', { horror: effect.horror }) : '', effect?.test ? t('table.enter.test', { skill: skillLabel(effect.test.skill, t('table.skill.generic')), difficulty: effect.test.difficulty }) : ''].filter(Boolean)
+      stats.append(node('strong', '', lines.join('；') || t('table.enter.none')))
       content.append(stats)
     }
     detail.setAttribute('aria-live', 'polite')
     content.append(detail, progress)
-    const controls = node('div', 'ah-cinematic-controls'), next = node('button', '', '继续'), skip = node('button', '', '跳过演出')
+    const controls = node('div', 'ah-cinematic-controls'), next = node('button', '', t('table.cinematic.next')), skip = node('button', '', t('table.cinematic.skip'))
     if (story) controls.append(next)
     controls.append(skip); content.append(controls); el.append(content)
     ensureLayer().append(el); place(); block(true)
@@ -475,7 +480,7 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
       if (duration === null) return // Story and location pages wait for the reader.
       timer = setTimeout(release, prefs.fast ? duration * .35 : duration)
     })
-    const steps = story ? [{ text: change.text || '新的篇章已经展开。' }] : change.steps?.length ? change.steps : [{ text: phase[2] }]
+    const steps = story ? [{ text: change.text || t('table.cinematic.storyFallback') }] : change.steps?.length ? change.steps : [{ text: phase[2] }]
     try {
       for (let index = 0; index < steps.length && !stopped; index++) {
         stepArt.replaceChildren()
@@ -485,12 +490,12 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
           // Public hidden-card cues intentionally omit the real card identity.
           const hidden = node('img', 'ah-encounter-hidden-art')
           hidden.src = ROOT + 'img/backs/hidden-encounter.png'
-          hidden.alt = '隐私牌'
+          hidden.alt = t('table.cinematic.privateCard')
           stepArt.append(hidden)
         }
         if (['resource', 'doom'].includes(steps[index].effect)) {
           const token = node('div', 'ah-cinematic-counter', `+${steps[index].delta || 1}`)
-          token.append(node('small', '', steps[index].effect === 'doom' ? '毁灭' : '资源')); stepArt.append(token)
+          token.append(node('small', '', steps[index].effect === 'doom' ? t('table.marker.doom') : t('table.marker.resource'))); stepArt.append(token)
           if (!reduced()) token.animate([{ transform: 'scale(.3) rotate(-45deg)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }], { duration: 550, fill: 'both' })
           sound(steps[index].effect === 'doom' ? 'agenda' : 'clue')
         }
@@ -502,10 +507,10 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
         }
         const stepText = steps[index].text || phase[2]
         setRulesText(detail, stepText)
-        progress.textContent = story ? '阅读完毕后点击继续' : `${phase[2]} · ${index + 1} / ${steps.length}`
+        progress.textContent = story ? t('table.cinematic.readThenContinue') : t('table.cinematic.progress', { caption: phase[2], index: index + 1, total: steps.length })
         el.dataset.step = String(index + 1)
         if (steps[index].effect === 'encounter') {
-          const back = node('img', 'ah-encounter-reveal-back'); back.src = ROOT + 'img/backs/back_encounter.webp'; back.alt = '抽取遭遇卡'
+          const back = node('img', 'ah-encounter-reveal-back'); back.src = ROOT + 'img/backs/back_encounter.webp'; back.alt = t('table.cinematic.encounterBack')
           stepArt.append(back); sound('draw')
           const from = document.querySelector('.ah-encounter-deck img')?.getBoundingClientRect(), to = stepArt.getBoundingClientRect()
           if (from && !reduced()) await animate(stepArt, [
@@ -553,14 +558,14 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
     const test = change.kind === 'test'
     const el = node('div', 'ah-fx-banner' + (test ? (change.success ? ' is-success' : ' is-failure') : ''))
     el.dataset.fxKind = change.kind
-    el.append(node('span', 'ah-fx-eyebrow', test ? `${change.name} · ${change.source?.label || ''} ${change.source?.name || ''} · ${SKILLS[change.skill] || change.skill}检定` : '档案更新'))
+    el.append(node('span', 'ah-fx-eyebrow', test ? t('table.banner.testKicker', { name: change.name, source: `${change.source?.label || ''} ${change.source?.name || ''}`, skill: skillLabel(change.skill, change.skill) }) : t('table.banner.archive')))
     if (test) {
       const tokens = node('div', 'ah-fx-tokens')
       await Promise.all((change.drawn || []).map(async value => {
         const token = node('span', 'ah-fx-chaos'); tokens.append(token)
         await showChaosToken(token,value)
       }))
-      el.append(tokens, node('strong', '', change.success ? '检定成功' : '检定失败'), node('span', 'ah-fx-equation', `${change.value} / 难度 ${change.difficulty}${change.autoFail ? ' · 自动失败' : ''}`))
+      el.append(tokens, node('strong', '', change.success ? t('table.banner.success') : t('table.banner.failure')), node('span', 'ah-fx-equation', change.autoFail ? t('table.banner.equationAuto', { value: change.value, difficulty: change.difficulty }) : t('table.banner.equation', { value: change.value, difficulty: change.difficulty })))
     } else el.append(node('strong', '', change.title), node('span', '', change.name))
     if (generation !== epoch) return
     ensureLayer().append(el)
@@ -576,14 +581,14 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
   const chaosReveal = async change => {
     const generation = epoch, el = node('section', 'ah-chaos-reveal')
     el.dataset.fxKind = 'chaos'; el.dataset.token = change.token
-    el.setAttribute('role', 'status'); el.setAttribute('aria-label', '抽取混乱标记')
+    el.setAttribute('role', 'status'); el.setAttribute('aria-label', t('table.chaos.reveal'))
     const token = node('div', 'ah-chaos-reveal-token')
     await showChaosToken(token,'blank')
     if (generation !== epoch) return
-    const skip = node('button', '', '继续')
-    el.append(node('small', '', `${change.name || '调查员'} · ${change.source?.label || '技能检定'}`),
-      node('strong', '', change.source?.name || '抽取混乱标记'), token,
-      node('span', '', change.skill ? `${SKILLS[change.skill]}检定 · 难度 ${change.difficulty}` : '混乱标记揭示'), skip)
+    const skip = node('button', '', t('table.cinematic.next'))
+    el.append(node('small', '', t('table.chaos.revealSource', { name: change.name || t('table.investigator'), source: change.source?.label || t('table.test.generic') })),
+      node('strong', '', change.source?.name || t('table.chaos.reveal')), token,
+      node('span', '', change.skill ? t('table.chaos.testLine', { skill: skillLabel(change.skill, change.skill), difficulty: change.difficulty }) : t('table.chaos.revealLabel')), skip)
     ensureLayer().append(el); block(true)
     let stopped = false, timer, release
     const cancel = () => { stopped = true; clearTimeout(timer); for (const animation of el.getAnimations({subtree:true})) animation.cancel(); release?.() }
@@ -658,9 +663,9 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
       const who = latest?.state.investigators.find(inv => inv.seat === c.seat)
       const note = node('div', 'ah-location-notice')
       note.setAttribute('role', 'status')
-      note.append(node('strong', '', `${who?.name || '队友'} · ${c.title || '进入地点'}「${c.name}」`))
+      note.append(node('strong', '', t('table.locationNotice.title', { who: who?.name || t('table.teammate'), title: c.title || t('table.change.enterLocation'), name: c.name })))
       const effect = c.onEnter
-      const details = [effect?.damage ? `受到 ${effect.damage} 点伤害` : '', effect?.horror ? `受到 ${effect.horror} 点恐惧` : '', effect?.test ? `${SKILLS[effect.test.skill]}检定 ${effect.test.difficulty}` : ''].filter(Boolean)
+      const details = [effect?.damage ? t('table.notice.damage', { damage: effect.damage }) : '', effect?.horror ? t('table.notice.horror', { horror: effect.horror }) : '', effect?.test ? t('table.notice.test', { skill: skillLabel(effect.test.skill, effect.test.skill), difficulty: effect.test.difficulty }) : ''].filter(Boolean)
       if (details.length) note.append(node('span', '', details.join(' · ')))
       ensureLayer().append(note)
       const bounds = loc?.getBoundingClientRect(), box = note.getBoundingClientRect()
@@ -677,7 +682,7 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
     if (c.kind === 'chaos') return chaosReveal(c)
     if (c.kind === 'engagement') {
       const el=node('div','ah-engagement-alert');el.setAttribute('role','status')
-      el.append(node('strong','','进入交战状态'),node('span','',`${c.name} · ${c.enemies}`))
+      el.append(node('strong','',t('table.engagement.alert')),node('span','',`${c.name} · ${c.enemies}`))
       ensureLayer().append(el);sound('damage')
       if(!reduced())el.animate([{opacity:0,transform:'translate(-50%,-12px)'},{opacity:1,transform:'translate(-50%,0)'}],{duration:260,fill:'both'})
       await new Promise(resolve=>setTimeout(resolve,2600));el.remove();return
@@ -696,7 +701,8 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
     }
     const r = after.get('inv:' + c.seat) || after.get('player')
     if (!r) return
-    const el = node('div', 'ah-fx-number ' + (c.kind === 'damage' ? 'is-damage' : ''), `${c.delta > 0 ? '+' : ''}${c.delta} ${({ damage: '伤害', horror: '恐惧', resources: '资源' })[c.field] || ''}`)
+    const statLabel = ({ damage: 'table.marker.damage', horror: 'table.marker.horror', resources: 'table.marker.resource' })[c.field]
+    const el = node('div', 'ah-fx-number ' + (c.kind === 'damage' ? 'is-damage' : ''), `${c.delta > 0 ? '+' : ''}${c.delta} ${statLabel ? t(statLabel) : ''}`)
     el.style.left = center(r).x + 'px'; el.style.top = r.y + 'px'; ensureLayer().append(el)
     await animate(el, [{ transform: 'translate(-50%,0)', opacity: 0 }, { transform: 'translate(-50%,-16px)', opacity: 1, offset: .3 }, { transform: 'translate(-50%,-40px)', opacity: 0 }], 650); el.remove()
   }
@@ -765,11 +771,11 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
         // 同样先演故事、再轮到换牌面板。
         if (!last && session.state.scenario && session.state.round === 1 && session.state.revision === 0) {
           const act = session.state.acts?.[session.state.actIndex]
-          queue.push({ change: { kind: 'story', title: '故事导入', name: act?.name || session.state.scenario.name,
+          queue.push({ change: { kind: 'story', title: t('table.change.intro'), name: act?.name || session.state.scenario.name,
             code: act?.originalCode || act?.code, text: session.state.scenario.intro, intro: true }, before: anchors, after: nextAnchors })
           const agenda = session.state.agendas?.[session.state.agendaIndex]
-          if (agenda) queue.push({ change: { kind: 'story', title: '密谋揭示', name: agenda.name,
-            code: agenda.originalCode || agenda.code, text: agenda.text || '新的威胁正在逼近。',
+          if (agenda) queue.push({ change: { kind: 'story', title: t('table.change.agendaReveal'), name: agenda.name,
+            code: agenda.originalCode || agenda.code, text: agenda.text || t('table.change.agendaText'),
             initialAgenda: true }, before: anchors, after: nextAnchors })
         }
         lastSeq = Math.max(lastSeq, seq)

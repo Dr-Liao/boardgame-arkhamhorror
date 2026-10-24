@@ -38,11 +38,21 @@ export default {
     // behavior.investigateResult 读取；返回 false 表示「不发现线索」。
     onInvestigateSuccess({ state, location, inv, result, api }) {
       if (!result?.success) return undefined
-      const id = api.cosmos?.({ id: 'unknownPlaces', draw: 1 })?.[0]
-      if (!id) {
-        api.info?.('🌫️ 未知地点牌库已空。')
-        return false
+      const deck = state.extraLocationDecks?.unknownPlaces?.deck || []
+      // 牌库空：未发动 → 照常发现线索（不能取消发现）。
+      if (!deck.length) {
+        api.info?.('🌫️ 未知地点牌库已空：本次照常发现线索。')
+        return undefined
       }
+      // [reaction] 可选：不发动则照常发现线索。
+      const answer = api.choose?.({
+        kind: 'reaction', source: '05133', seat: inv.seat, canSkip: true,
+        prompt: '凯夏的房间：是否改为放置未知地点牌库顶的地点（不发现线索）？',
+        options: [{ id: 'use', label: '发动：放置未知地点，不发现线索' }, { id: 'skip', label: '不发动：照常发现线索' }],
+      })
+      if (answer === 'skip') return undefined
+      const id = api.cosmos?.({ id: 'unknownPlaces', draw: 1 })?.[0]
+      if (!id) return undefined
       api.place?.(id)
       const placed = state.locations.find(entry => entry.id === id)
       const here = state.locations.find(entry => entry.id === location.id)
@@ -51,12 +61,12 @@ export default {
         if (!placed.connections.includes(location.id)) placed.connections.push(location.id)
       }
       api.info?.(`🌫️ 凯夏的房间：未知地点牌库顶的「${api.locName?.(id) || id}」以未揭示面入场。`)
-      const answer = api.choose?.({
+      const moveAnswer = api.choose?.({
         kind: 'story', source: '05133', seat: inv.seat, canSkip: true,
         prompt: '是否移动到新放置的地点？',
         options: [{ id: 'stay', label: '留在凯夏的房间' }, { id: 'move', label: '移动到新地点' }],
       })
-      if (answer === 'move') api.moveInvestigator?.(inv.seat, id)
+      if (moveAnswer === 'move') api.moveInvestigator?.(inv.seat, id)
       return false
     },
   },

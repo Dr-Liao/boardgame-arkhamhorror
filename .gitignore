@@ -11,8 +11,15 @@ web/img/zh/
 # 卡图翻译任务的中间清单
 web/img/.translation/
 
-# 本地验收截图
-artifacts/
+# 本地验收截图 / 临时产物：默认忽略整个 artifacts/。
+# 例外（必须入库）：audit-tcu / audit-tcu-primitives 的 --check 依赖
+# artifacts/migration/tcu/{scope,mechanism-scan,primitive-plan,primitive-catalog}.json，
+# 干净检出必须能直接复算；git 的否定规则要求逐级放开父目录，所以用「忽略子项 + 逐级取反」，
+# 而不是只写 !artifacts/migration/tcu/（父目录仍被忽略时否定规则不生效），也不放开整个 artifacts/。
+artifacts/*
+!artifacts/migration/
+artifacts/migration/*
+!artifacts/migration/tcu/
 
 # Player-owned playlist settings and music additions (directory markers stay tracked).
 web/audio/music/playlists.json

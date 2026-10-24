@@ -10,7 +10,9 @@ export default {
       if (!result?.success) return undefined
       if (Number(result.value) - Number(result.difficulty) < 2) return undefined
       state.scenarioFlags ||= {}
-      if (state.scenarioFlags.physicsRound === state.round) return undefined
+      // 「每轮一次」为每名调查员一次（不是团队共享）。
+      const usedBySeat = state.scenarioFlags.physicsRoundBySeat || {}
+      if (usedBySeat[inv.seat] === state.round) return undefined
       const candidates = state.locations.filter(entry => entry.revealed && entry.id !== location.id && (entry.clues || 0) > 0)
       if (!candidates.length) return undefined
       const picked = api.choose?.({
@@ -19,7 +21,7 @@ export default {
         options: candidates.map(entry => ({ id: entry.id, label: entry.name })),
       })
       const target = candidates.find(entry => entry.id === picked) || candidates[0]
-      state.scenarioFlags.physicsRound = state.round
+      state.scenarioFlags.physicsRoundBySeat = { ...(state.scenarioFlags.physicsRoundBySeat || {}), [inv.seat]: state.round }
       api.discoverClue?.(inv.seat, 1, target.id)
       api.info?.(`🔬 物理教室：${inv.name} 在「${target.name}」发现 1 个线索。`)
       return undefined

@@ -32,6 +32,7 @@ const hasTraitCode = (code, trait) => traitsOf(code).includes(String(trait).toLo
 const isVoidLocation = location => hasTraitCode(original(location), 'Void')
 const currentAgenda = state => (state.agendas || [])[state.agendaIndex] || null
 const currentAct = state => (state.acts || [])[state.actIndex] || null
+const HUB_IDS = Object.freeze([COSMIC_INGRESS, HIDEOUS_PALACE, COURT, BLACK_THRONE])
 const leadSeat = state => state.campaign?.leadSeat ?? 0
 const leadInvestigator = state => state.investigators?.[leadSeat(state)] || state.investigators?.[0]
 
@@ -193,10 +194,69 @@ function returnLocationToCosmos(state, api, locationId, destinationId) {
   return true
 }
 
-function rebuildForNextAct(state, api, { nextHub, drawCount, moveTo }) {
-  // 清掉本幕的宇宙地点（洗回宇宙库），保留四个枢纽主链。
-  for (const id of [...placedCosmosIds(state)]) returnLocationToCosmos(state, api, id, moveTo)
-  flagsOf(state).cosmosOrder = []
+// 玩家顺序：从队长起按座位环绕。
+function playerOrder(state) {
+  const count = state.numInvestigators || (state.investigators || []).length
+  const seats = []
+  for (let offset = 0; offset < count; offset++) {
+    const seat = (leadSeat(state) + offset) % count
+    if (state.investigators?.[seat]) seats.push(seat)
+  }
+  return seats
+}
+
+// 卡背「位于这些地点的调查员被抛弃并阵亡」。
+function killAbandonedInvestigators(state, api, removedIds) {
+  const killed = []
+  for (const inv of active(state).filter(item => removedIds.includes(item.location))) {
+    killed.push(inv.seat)
+    api.defeat?.(inv, 'abandoned')
+    api.info?.(`💀 ${inv.name} 被抛在正在消散的地点，阵亡。`)
+  }
+  return killed
+}
+
+// 卡背「这些地点的每个敌人与遭遇牌库顶 5 张混洗后放到遭遇牌库顶」。
+function shuffleAbandonedEnemiesIntoEncounterDeck(state, api, removedIds) {
+  const abandoned = (state.enemies || []).filter(enemy => removedIds.includes(enemy.location))
+  if (!abandoned.length) return []
+  const codes = abandoned.map(enemy => String(original(enemy)))
+  for (const enemy of abandoned) {
+    state.enemies = state.enemies.filter(candidate => candidate !== enemy)
+    for (const inv of state.investigators || []) {
+      inv.engaged = (inv.engaged || []).filter(id => id !== enemy.id)
+    }
+  }
+  const top = []
+  for (let index = 0; index < 5 && state.encounterDeck.length; index++) top.push(state.encounterDeck.pop())
+  const merged = [...top, ...codes]
+  const shuffled = typeof api.shuffle === 'function' ? api.shuffle(merged) : merged
+  state.encounterDeck.push(...shuffled)
+  api.info?.(`🎴 ${codes.length} 个敌人与遭遇牌库顶 ${top.length} 张混洗后放回遭遇牌库顶。`)
+  return codes
+}
+
+// 幕推进的清场重建（05329/05330 背面）：移除旧枢纽、洗回宇宙、抛弃/阵亡、混洗敌人、
+// 放置新枢纽 + 抽 N 张宇宙地点、按玩家顺序抽遭遇。参数全部来自单卡条目 actRule.advance.rebuild。
+function rebuildForNextAct(state, api, { nextHub, drawCount, moveTo, emptySpaces = null }) {
+  const HUB_CHAIN = [COSMIC_INGRESS, HIDEOUS_PALACE, COURT, BLACK_THRONE]
+  const nextIndex = HUB_CHAIN.indexOf(nextHub)
+  // 卡面「移除 X 从游戏中」：上一幕的枢纽移出游戏；其余在场地点洗回宇宙。例外地点 = moveTo。
+  const oldHub = nextIndex >= 2 ? HUB_CHAIN[nextIndex - 2] : null
+  const removedIds = (state.locations || [])
+    .map(location => location.id)
+    .filter(id => id !== moveTo && id !== nextHub)
+  killAbandonedInvestigators(state, api, removedIds)
+  shuffleAbandonedEnemiesIntoEncounterDeck(state, api, removedIds)
+  for (const id of removedIds) {
+    if (id === oldHub) {
+      api.remove?.(id)
+      api.info?.(`🌀 「${locationById(state, id)?.name || id}」被移出游戏。`)
+    } else if (locationById(state, id)) {
+      returnLocationToCosmos(state, api, id, moveTo)
+    }
+  }
+  flagsOf(state).cosmosOrder = (flagsOf(state).cosmosOrder || []).filter(id => locationById(state, id))
   if (!locationById(state, nextHub)) {
     api.place?.(nextHub)
     const chain = nextHub === COURT ? [HIDEOUS_PALACE] : [COURT]
@@ -215,10 +275,17 @@ function rebuildForNextAct(state, api, { nextHub, drawCount, moveTo }) {
   }
   for (const inv of active(state)) api.moveInvestigator?.(inv.seat, moveTo)
   const flags = flagsOf(state)
-  flags.emptySpaceCount = Number(flags.emptySpaceCount || 0) + drawCount + 5
+  flags.emptySpaceCount = Number(emptySpaces ?? (drawCount + 5))
   flags.stageHub = nextHub
-  api.info?.(`🌌 宇宙重新铺开：${drawn.length} 张新地点 + ${drawCount + 5} 个虚空格子（近似记账）。`)
+  api.info?.(`🌌 宇宙重新铺开：${drawn.length} 张新地点 + ${flags.emptySpaceCount} 个虚空格子（近似记账）。`)
+  // 卡面最后一步：按玩家顺序，每位调查员抽取遭遇牌库顶 1 张（阵亡/撤退者不再抽）。
+  for (const seat of playerOrder(state)) {
+    const inv = state.investigators?.[seat]
+    if (!inv || inv.defeated || inv.resigned) continue
+    api.drawEncounter?.(seat)
+  }
 }
+
 
 // ---------------------------------------------------------------------------
 // 秘仪：议程推进时弃掉全部异教徒敌人并把其毁灭移到阿撒托斯
@@ -241,13 +308,21 @@ export function commitRitualSuicide(state, api) {
 
 function drawSpecificEncounter(state, api, seat, code) {
   const deck = state.encounterDeck || []
-  const index = deck.lastIndexOf(code)
-  if (index < 0) {
-    api.info?.(`遭遇牌库中没有「${ALL_CARDS[code]?.nameZh || code}」。`)
-    return false
+  const discard = state.encounterDiscard || []
+  let index = deck.lastIndexOf(code)
+  if (index >= 0) {
+    deck.splice(index, 1)
+    deck.push(code)
+  } else {
+    // 卡面「查找遭遇牌库和遭遇弃牌堆」：弃牌堆里的同名卡也要能找到。
+    index = discard.lastIndexOf(code)
+    if (index < 0) {
+      api.info?.(`遭遇牌库与遭遇弃牌堆中都没有「${ALL_CARDS[code]?.nameZh || code}」。`)
+      return false
+    }
+    discard.splice(index, 1)
+    deck.push(code)
   }
-  deck.splice(index, 1)
-  deck.push(code)
   api.drawEncounter?.(seat)
   return true
 }
@@ -307,7 +382,8 @@ function resolveEndIsNigh(state, inv, api) {
       enemy.doom = 0
     }
     if (moved > 0) addAzathothDoom(state, api, moved)
-    else addAzathothDoom(state, api, 1)
+    // 卡面：只有场上没有[[异教徒]]敌人时，才改为在阿撒托斯上放 1 点（旧实现按「没移走毁灭」判断）。
+    if (!cultists.length) addAzathothDoom(state, api, 1)
   }, 0, { code: THE_END_IS_NIGH })
   return false
 }
@@ -375,7 +451,8 @@ function actRevealFor(state, act, api) {
   if (advance.resolutionChoice) resolveActThreeAdvance(state, api)
 }
 
-// 必竟之事背面：按 Memento/记录选择 R2 / R3 / R4；R4 再选 R5 或 R1。
+// 必竟之事背面：满足两组条件之一时可前往 R2/R3；否则（→R4，独立结局卡，由 applyResolution('r4')
+// 结算「翻开黑书 → 签名(R5) 或拒绝(R1)」）。
 function resolveActThreeAdvance(state, api) {
   const records = recordsFor(state)
   const mementos = new Set(records.mementosDiscovered || [])
@@ -386,21 +463,15 @@ function resolveActThreeAdvance(state, api) {
   const options = []
   if (accepted >= 2) options.push({ id: 'r2', label: '结局 2（你接受了自己的命运）' })
   if (rejected >= 2) options.push({ id: 'r3', label: '结局 3（你拒绝了自己的命运）' })
-  options.push({ id: 'r4', label: '结局 4（翻开黑书）' })
+  if (!options.length) {
+    api.finish?.('r4')
+    return
+  }
   const answer = chooseOption(api, {
     kind: 'story', source: String(original(currentAct(state))), seat: leadSeat(state),
     prompt: '「必竟之事」：选择要结算的结局。', options,
   })
-  if (answer === 'r2' || answer === 'r3') {
-    api.finish?.(answer)
-    return
-  }
-  const picked = chooseOption(api, {
-    kind: 'story', source: String(original(currentAct(state))), seat: leadSeat(state),
-    prompt: '你必须在阿撒托斯的黑书上签名，或者拒绝。',
-    options: [{ id: 'r5', label: 'It must be done.（签名 → 结局 5）' }, { id: 'r1', label: 'I refuse.（拒绝 → 结局 1）' }],
-  })
-  api.finish?.(picked === 'r5' ? 'r5' : 'r1')
+  api.finish?.(answer === 'r3' ? 'r3' : 'r2')
 }
 
 function agendaRevealFor(state, agenda, api) {
@@ -448,7 +519,11 @@ function agendaRevealFor(state, agenda, api) {
     flags.azathothDoom = Math.max(0, Number(flags.azathothDoom || 0) - 1)
     api.info?.(`🌽 「${advance.removeDoomMemento}」让阿撒托斯失去 1 点毁灭。`)
   }
-  if (advance.discardSelf) api.info?.('⏳ 最后的倒计时被弃掉——此后毁灭将直接落在阿撒托斯上。')
+  if (advance.discardSelf) {
+    // 05328 背面：此后没有议程牌库；毁灭改为放到阿撒托斯，且场上所有毁灭视为在阿撒托斯上。
+    flagsOf(state).azathothAbsorbsAllDoom = true
+    api.info?.('⏳ 最后的倒计时被弃掉——此后毁灭直接落到阿撒托斯上，场上的毁灭也视为在阿撒托斯上。')
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -732,17 +807,40 @@ export const behavior = {
   },
 
   // ---- 敌人 ----
-  spawnLocation(state, code) {
-    return spawnLocationFor(state, code)
+  spawnLocation(state, code, fallbackLoc) {
+    // 05346 阿撒托斯：免疫所有玩家卡牌效果/调查员行动、不能被击败；它不建场上实体
+    // （定义上 cannotBeDefeated/immuneToPlayerCards/omnipotent 已声明）。任何生成路径直接判失败。
+    if (String(code) === AZATHOTH) return null
+    // 引擎语义：spawnLocation 返回 null = 生成失败。只有盲目舞者的「最远虚空格子」需要改道，
+    // 其余敌人必须回退到引擎地点，否则整关敌人无法生成。
+    return spawnLocationFor(state, code) || fallbackLoc || null
+  },
+
+  // 05341 盲目舞者：卡面「可以进入虚空格子，如同其进入一个地点」+「经猎手关键词移动到虚空格子后
+  // 再次结算猎手关键词（每轮仅限一次）」。本剧本不建虚空格子实体（近似记账，见 scenarioApproximations），
+  // 用「进入非枢纽的宇宙地点」近似「进入虚空格子」：进入后同一轮再结算一次猎手移动，每轮一次。
+  hunterMove(state, enemy, api) {
+    if (String(original(enemy)) !== MIND_DANCER) return false
+    if (enemy.exhausted || !enemy.hunter) return true
+    if (active(state).some(inv => inv.location === enemy.location)) return true
+    const step = () => {
+      const target = api.hunterStep?.(enemy, {})
+      if (!target || target === enemy.location) return false
+      api.moveEnemy?.(enemy, target)
+      return true
+    }
+    if (!step()) return true
+    if (!HUB_IDS.includes(enemy.location) && flagsOf(state).dancerVoidRound !== state.round) {
+      flagsOf(state).dancerVoidRound = state.round
+      if (step()) api.info?.('💃 盲目舞者进入虚空格子（近似）：再次结算猎手关键词（每轮一次）。')
+    }
+    return true
   },
 
   // ---- 混乱标记 ----
   resolveChaosToken(state, inv, token, api) {
     const result = bbtChaosToken(state, inv, token)
     if (!result) return null
-    if (result.azathothIfZeroSkill && Number(state.skillTest?.value ?? 1) === 0) {
-      addAzathothDoom(state, api, 1)
-    }
     return {
       delta: result.delta,
       ...(result.drawAnother ? { drawAnother: true } : {}),
@@ -754,6 +852,12 @@ export const behavior = {
     encounterRules.afterTest?.(state, inv, result, api)
     const tokens = (result?.drawn || []).filter(token => !(result?.cancelledTokens || []).includes(token))
     if (result?.success === false && tokens.includes('tablet')) azathothAttack(state, api, inv.seat)
+    // 05325 [elder_thing]：卡面判「本次检定经过修正后的技能值是否为 0」——必须在结果落定后
+    // 用最终 value 判断（旧实现在 token 揭示时读修正前的值，漏掉 -4/-6 把值压到 0 的情形）。
+    if (tokens.includes('elderthing') && Number(result?.value) === 0) {
+      addAzathothDoom(state, api, 1)
+      api.info?.('古神标记：本次检定修正后的技能值为 0，在阿撒托斯上放置 1 个毁灭。')
+    }
   },
 
   encounterGainsSurge(state) {
@@ -796,7 +900,8 @@ export const behavior = {
         })
       }
     }
-    const handler = LOCATION_ACTIONS[String(original(here))]
+    // LOCATION_ACTIONS 以地点 id（'cosmicGate'）为键；这里不能用卡号 '05339' 查找。
+    const handler = LOCATION_ACTIONS[here.id]
     if (handler) {
       for (const action of handler.actions(state, inv, here)) {
         moves.push({ action: 'scenarioAction', locationId: here.id, ...action })
@@ -808,7 +913,7 @@ export const behavior = {
       if (Number(flags.referenceResources || 0) >= 1 && !flags.teamUsed?.[`up:${here.id}`]) {
         moves.push({
           action: 'scenarioAction', locationId: here.id, rule: 'moveLocationUp',
-          label: `⬆️ 移除冒险参考卡 1 资源：把「${here.name}」向上移动一格（团队每场一次）`, actions: 0,
+          label: `⬆️ 移除冒险参考卡 1 资源：把「${here.name}」向上移动一格（团队每场一次）`,
         })
       }
     }
@@ -817,7 +922,7 @@ export const behavior = {
       if (Number(flags.referenceResources || 0) >= 1 && !flags.teamUsed?.[`down:${here.id}`]) {
         moves.push({
           action: 'scenarioAction', locationId: here.id, rule: 'moveLocationDown',
-          label: `⬇️ 移除冒险参考卡 1 资源：把「${here.name}」向下移动一格（团队每场一次）`, actions: 0,
+          label: `⬇️ 移除冒险参考卡 1 资源：把「${here.name}」向下移动一格（团队每场一次）`,
         })
       }
     }
@@ -826,7 +931,7 @@ export const behavior = {
       if (Number(flags.referenceResources || 0) >= 1 && !flags.teamUsed?.[`roundAdjacent:${here.id}`]) {
         moves.push({
           action: 'scenarioAction', locationId: here.id, rule: 'moveLocationAdjacent',
-          label: `↔️ 移除冒险参考卡 1 资源：把「${here.name}」移动到任意相邻位置（团队每轮一次）`, actions: 0,
+          label: `↔️ 移除冒险参考卡 1 资源：把「${here.name}」移动到任意相邻位置（团队每轮一次）`,
         })
       }
     }
@@ -846,7 +951,9 @@ export const behavior = {
       })
       const count = Math.max(1, Math.min(Number(answer) || 1, Math.floor(inv.clues)))
       inv.clues -= count
-      const placedId = api.cosmos?.({ take: count, from: inv.location, prompt: '选择要放置入场的宇宙地点。' })
+      // 注意：不传 from —— 卡面只要求「行动者本人移动到其上」；引擎的 cosmos({from}) 会把该地点的
+      // 所有调查员与敌人一起搬过去（src/engine/scenario-runtime.js:357-368），那会放大移动范围。
+      const placedId = api.cosmos?.({ take: count, prompt: '选择要放置入场的宇宙地点。' })
       if (!placedId) {
         api.info?.('宇宙牌库是空的。')
         return
@@ -867,7 +974,7 @@ export const behavior = {
     }
     if (move.rule === 'gateMove') {
       const handler = LOCATION_ACTIONS[COSMIC_GATE]
-      if (here && String(original(here)) === COSMIC_GATE) handler.perform(state, inv, api, here)
+      if (here && here.id === COSMIC_GATE) handler.perform(state, inv, api, here)
       return
     }
     if (move.rule === 'moveLocationUp') {
@@ -902,10 +1009,10 @@ export const behavior = {
   scenarioApproximations: [
     '宇宙网格：用 P2.13 地点牌库 + scenarioFlags.cosmosOrder「放置顺序」承载；「右/下」连接最近放置者、「上」连接最早放置者、「任意方向」由玩家选；没有二维坐标与滑动。',
     '「宇宙 -」放置指令表在 definition.locations[*].cosmos（direction/cost），behavior.placeCosmosLocation 按表建立连接；支付代价后与任意已放置地点连接的替代选项已实现。',
-    '虚空格子：不建地点卡，只用 scenarioFlags.emptySpaceCount 记账（不参与移动/连接/猎手目标；盲目舞者的相关子句因此近似为「离调查员最远的在场地点」）。',
-    '阿撒托斯不建场上敌人实体（参考实现里它也不在任何地点）：毁灭记 scenarioFlags.azathothDoom，「阿撒托斯攻击你」= 3 伤害 + 3 恐惧；免疫/不可击败因此自动成立。',
+    '虚空格子：不建地点卡，只用 scenarioFlags.emptySpaceCount 记账（不参与移动/连接/猎手目标）。盲目舞者因此用「离所有调查员最远的在场地点」近似「最远的虚空格子」，并用「进入非枢纽宇宙地点」近似「进入虚空格子」，此时同轮再结算一次猎手（每轮一次）。',
+    '阿撒托斯不建场上敌人实体（参考实现里它也不在任何地点）：毁灭记 scenarioFlags.azathothDoom，「阿撒托斯攻击你」= 3 伤害 + 3 恐惧；免疫/不可击败因此自动成立。05328 背面推进后置 flags.azathothAbsorbsAllDoom，此时阿撒托斯毁灭 = 累积计数 + 场上所有卡牌/当前密谋上的毁灭（等价 CountAllDoomInPlay），skull X / 黑色王座隐藏值 / 05344·05345 都读同一口径。',
     '冒险参考卡资源用 scenarioFlags.referenceResources 记账；宇宙门扉的「移动任意数量调查员」实现为移动该处全部调查员；三个地点的「把本地点上/下/左/右移动一格」用放置顺序交换近似。',
-    '幕推进时的清场重建：不搬动虚空格子上的玩家卡、不重建二维布局；改为把本幕宇宙地点洗回宇宙牌库、放置新枢纽并抽 2/3 张新地点，同时把调查员移到安全的枢纽。',
+    '幕推进时的清场重建（05329/05330 背面）：旧枢纽移出游戏、其余地点洗回宇宙、这些地点的调查员被 api.defeat 阵亡、这些地点的敌人与遭遇牌库顶 5 张混洗后放回牌库顶、新枢纽 + 宇宙顶 2/3 张入场、按玩家顺序每人抽 1 张遭遇均已实现；仍近似的是「宇宙顶 N 张与枢纽混洗至无法分辨后的具体格位摆放」与虚空格子实体——本实现按放置顺序放置，虚空格子只记数量（7/8 个）。',
     '「命运之轮·X」的「在宇宙中向左移动 / 把地点向左移动」用放置顺序的相邻位置承载；「它在等待」的意志检定与「最后的倒计时」的娃娃效果按卡面实现。',
     '调查员被击败的「调查员被击败」段落只记日志 + 1 点精神创伤（参考实现的 drivenInsane 会改写战役记录状态）。',
     'DarkCult 遭遇组：本仓库卡表把 Acolyte/Wizard of the Order/Mysterious Chanting 归在 pentagram 组，遭遇牌库用 pentagram 组近似。',

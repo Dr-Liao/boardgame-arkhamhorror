@@ -7,11 +7,12 @@
 //
 // 04152 洞悉真相：在控制的一个充能/秘密支援上放 2 个秘密。
 
-import { investigatorClues } from '../../engine/matcher.js'
+import { clueAtLocation } from '../../engine/matcher.js'
 
 export default {
   code: '04152',
-  playCondition: [{ when: investigatorClues(1), message: '需要至少 1 个线索才能打出' }],
+  // 卡面：「你所在地点有线索才能打出」→ 判据是地点上的线索，而不是自己控制的线索。
+  playCondition: [{ when: clueAtLocation(), message: '你所在地点没有线索' }],
   abilities: [
     {
       kind: 'played', label: '放置 2 个秘密',

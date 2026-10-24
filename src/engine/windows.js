@@ -47,6 +47,11 @@ for (const [id, label, kind] of [
   ['phaseBegins', '阶段开始时', 'reaction'],
   ['turnBegins', '回合开始时', 'reaction'],
 ]) define(id, label, kind)
+// 2026-10-25 修复战役新增的窗口：05152 的「所附属支援离场后」与 05280 的三类取消面向。
+define('assetLeavesPlay', '支援离场后', 'reaction')
+define('wouldDiscardFromHand', '将要弃掉手牌时', 'interrupt')
+define('wouldLoseResources', '将要失去资源时', 'interrupt')
+define('wouldLoseActions', '将要失去行动时', 'interrupt')
 
 // 旧式 triggerReaction 通道使用的窗口（engine.js 与战役 behavior 的调用点）。
 // 它们与 reactionWindow 的窗口共享同一份注册表，能力层描述子因此也能挂在这些时机上。

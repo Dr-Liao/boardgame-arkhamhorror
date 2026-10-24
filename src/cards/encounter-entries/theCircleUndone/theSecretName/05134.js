@@ -23,7 +23,18 @@ export default {
           options: [{ id: 'skip', label: '不求助' }, { id: 'request', label: '返回弃牌堆顶 1 张' }],
         })
         if (answer !== 'request') continue
-        other.hand.push(other.discard.pop())
+        // 返回哪张弃牌由该调查员选择（不是固定堆顶）。
+        const options = (other.discard || []).map((code, index) => ({
+          id: String(index), label: ALL_CARDS[originalOf(code)]?.nameZh || String(code),
+        }))
+        const pickedIndex = api.choose?.({
+          kind: 'card', source: '05134', seat: other.seat,
+          prompt: '选择 1 张弃牌堆中的卡牌返回手牌。',
+          options,
+        })
+        const index = Number(pickedIndex)
+        const index2 = Number.isInteger(index) && index >= 0 && index < other.discard.length ? index : other.discard.length - 1
+        other.hand.push(other.discard.splice(index2, 1)[0])
         state.scenarioFlags.meddledWithThePast = [...(state.scenarioFlags.meddledWithThePast || []), other.name]
         api.info?.(`⏳ ${other.name} 向过去的自己求助。`)
       }

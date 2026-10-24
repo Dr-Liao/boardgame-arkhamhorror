@@ -6,7 +6,7 @@ import {
 } from '../../../../../src/cards/card-rules.js'
 import { recordMemento } from '../../../../../src/campaign/mementos.js'
 import { symbolConnections } from '../../card-data.js'
-import { encounterRules, activeInvestigators, original, here, recordsFor } from '../../encounter-rules.js'
+import { encounterRules, activeInvestigators, original, here, recordsFor, discardThreatCard } from '../../encounter-rules.js'
 import { addChaosToken } from '../../tcu-chaos.js'
 import {
   BROWN_JENKIN, KEZIAHS_ROOM, MOLDY_HALLS, NAHAB, SITE_OF_THE_SACRIFICE, STRANGE_GEOMETRY,
@@ -192,6 +192,16 @@ export const behavior = {
     api.advanceAct?.()
   },
 
+  // act3 背面：「那赫卜不能离开献祭场所」——覆写猎手移动，使其原地不动。
+  hunterMove(state, enemy, api) {
+    if (encounterRules.hunterMove?.(state, enemy, api)) return true
+    if ((state.actIndex ?? 0) === 2 && String(codeOf(enemy)) === NAHAB) {
+      api?.info?.(`⛓️ 「${enemy.name}」不能离开献祭场所。`)
+      return true
+    }
+    return false
+  },
+
   // ---- 玩家行动：幕数据声明的团队线索推进（advanceRule）+ 地点/威胁行动 ----
   actions(state, inv) {
     const moves = encounterRules.actions?.(state, inv) || []
@@ -209,6 +219,8 @@ export const behavior = {
       if (eligible && clues >= required) {
         moves.push({
           action: 'scenarioAction', rule: advance.rule,
+          // 幕目标的团队线索推进不花行动（参考实现为 FastAbility；引擎标准 advanceAct 亦为 0 费）。
+          actions: 0,
           label: advance.label.replace('{required}', String(required)),
         })
       }
@@ -249,27 +261,19 @@ export const behavior = {
     if (!spec) return false
     const threat = (inv.threat || []).find(card => String(card.id) === String(move.threatId))
     if (!threat) return false
-    const discardThreat = () => {
-      const index = inv.threat.indexOf(threat)
-      if (index < 0) return
-      inv.threat.splice(index, 1)
-      inv.discard.push(codeOf(threat))
-      api.info?.(`✅ ${inv.name} 弃掉「${ALL_CARDS[codeOf(threat)]?.nameZh || codeOf(threat)}」。`)
-    }
-    // 05146：所在地点有横置的女巫敌人时，本次检定自动成功。
+    // 05146：所在地点有横置的女巫敌人时，本次检定自动成功。弃牌走共享的「遭遇弃牌堆」出口。
     if (move.rule === 'discardPulledByTheStars') {
       const witch = state.enemies.some(enemy => enemy.exhausted && hasTrait(enemy, 'Witch')
         && enemy.location === inv.location)
       if (witch) {
-        discardThreat()
+        discardThreatCard(state, inv, threat)
         api.info?.('🌟 所在地点有横置的女巫敌人：本次检定自动成功。')
         return true
       }
     }
-    api.test?.(inv.seat, move.skill || spec.skills?.[0] || 'willpower', spec.difficulty || 0, result => {
-      if (result?.success) discardThreat()
-    })
-    return true
+    // 其余威胁行动（05093 崩毁离析 / 05094 苦痛折磨 / 05146 后续检定等）统一交回共享实现：
+    // 横置女巫自动成功（autoSuccessWhen）与成功弃牌去向（遭遇弃牌堆）都由 encounter-rules 维护。
+    return encounterRules.performEncounterAction?.(state, inv, move, api) === true
   },
 
   // ---- 地点：揭示面 / 调查反应 / 闹鬼 script ----
@@ -432,7 +436,13 @@ export const behavior = {
     if (code === BROWN_JENKIN) state.scenarioFlags.brownJenkinDefeated = true
     if (code === NAHAB) state.scenarioFlags.nahabDefeated = true
     if (code === BROWN_JENKIN || code === NAHAB) {
-      grantAgendaClue(state, enemy.defeatedBy, api)
+      // 05121/05122/05124 的 [reaction]：击败后获得线索，可以发动或放弃。
+      const answer = api?.choose?.({
+        kind: 'reaction', source: code, seat: state.campaign?.leadSeat ?? 0, canSkip: true,
+        prompt: `「${enemy.name}」被击败：是否发动反应，发现 1 个线索？`,
+        options: [{ id: 'use', label: '发动：发现 1 个线索' }, { id: 'skip', label: '不发动' }],
+      })
+      if (answer !== 'skip') grantAgendaClue(state, enemy.defeatedBy, api)
     }
     return false
   },

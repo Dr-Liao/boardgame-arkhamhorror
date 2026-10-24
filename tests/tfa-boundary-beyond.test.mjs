@@ -779,7 +779,9 @@ test('古代地点动作：04175/04177/04178/04184 发现线索的团队每轮�
   behavior.performAction(templo, inv1, rule1, api1)
   assert.equal(inv1.clues, 2)
   assert.equal(locationOf(templo, 'templeRuins').clues, 3)
-  assert.throws(() => behavior.performAction(templo, inv1, rule1, makeApi(templo)), /不能结算/, '同一轮不能再触发')
+  // 04175 的「团队每轮一次」行为改为「记录后不再结算」，不再抛错。
+  assert.doesNotThrow(() => behavior.performAction(templo, inv1, rule1, makeApi(templo)), '同一轮再次触发不抛错')
+  assert.equal(inv1.clues, 2, '同一轮再次触发不再获得线索')
 
   // 04177：在一个敌人上放毁灭，发现 2 个线索。
   const templo177 = chapterState(1)

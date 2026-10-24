@@ -17,6 +17,8 @@ export default {
     {
       kind: 'action', label: '攻击（+1 战斗；可花 1 充能再 +1 战斗/+1 伤害）',
       cost: { action: true },
+      // 卡面「攻击」= Fight 行动：按 fight 结算（借机攻击豁免、行动种类展示）。
+      countsAs: 'fight',
       target: { kind: 'enemy' },
       resolve: ({ inv, source, target, api }) => {
         const enemy = target?.entity

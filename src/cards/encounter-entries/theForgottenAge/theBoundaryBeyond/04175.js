@@ -10,12 +10,20 @@
 
 import { ALL_CARDS, isWeaknessCode, teamOnce, discoverAt, shuffleDeckWith } from '../../_shared.js'
 
+// 「团队每轮一次」是否已用完：与 _shared.teamOnce 的 tag 口径一致（scope 'round'）。
+// legalMoves 的 available 必须读同一个标记，否则按钮会在用完时仍然可点，
+// 执行时 perform 返回 false 而行为层抛错（runtime-1 的 ancientClue 中断）。
+const roundUsed = (state, key) => Boolean(state.scenarioFlags?.teamOnce?.[`${key}:${state.round}:r`])
+
 export default {
   code: '04175', scope: 'location',
   locationRule: {
     ancientAction: {
       label: '♻️ 把弃牌堆的一张弱点洗回牌库：发现本地点的 2 个线索（团队每轮一次）',
-      available(state, inv) { return (inv.discard || []).some(isWeaknessCode) },
+      available(state, inv) {
+        if (roundUsed(state, '04175clue')) return false
+        return (inv.discard || []).some(isWeaknessCode)
+      },
       perform(state, inv, api, location) {
         if (!teamOnce(state, '04175clue', 'round')) { api.info?.('本轮的团队次数已用完。'); return false }
         const candidates = [...new Set((inv.discard || []).filter(isWeaknessCode))]

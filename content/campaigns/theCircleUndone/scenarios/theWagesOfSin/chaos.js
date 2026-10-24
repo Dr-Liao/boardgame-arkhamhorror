@@ -28,6 +28,9 @@ export function resolveChaosToken(state, inv, token, api = {}) {
   }
   if (token === 'cultist') {
     // 本轮结束前场上每个异端者敌人 +1 攻击/+1 躲避（共享 enemyStatModifier 读这个实例字段）。
+    // 记下本轮标记：同一轮稍后生成的异端者也应获得（behavior.enemySpawned 读它）。
+    state.scenarioFlags ||= {}
+    state.scenarioFlags.wosCultistBuffRound = state.round
     for (const enemy of state.enemies || []) {
       if (!enemy.hereticFace) continue
       enemy.roundFightEvadeBonus = { round: state.round, amount: 1 }
@@ -42,11 +45,13 @@ export function resolveChaosToken(state, inv, token, api = {}) {
 // 检定后：tablet（失败 → 触发未了之事强制）与 elderthing（攻击/躲避后结算闹鬼）。
 // `handlers.triggerUnfinishedBusinessForced(inv, threat)` 由 behavior.afterTest 注入
 // （本模块不 import 章节目录，避免循环依赖）。
+// 一次揭示可能同时有 tablet 与 elderthing（困难面 skull「再揭示一个标记」可能凑出），两个都要结算。
 export function chaosAfterTest(state, inv, result, api = {}, handlers = {}) {
   const tokens = (result?.drawn || []).filter(token => !(result?.cancelledTokens || []).includes(token))
   const has = token => tokens.includes(token)
   const hard = hardSide(state)
   const location = here(state, inv)
+  let handled = false
   if (has('tablet') && !result.success) {
     const stories = (inv.threat || []).filter(card =>
       UNFINISHED_BUSINESS_CODES.includes(card.code || card.originalCode))
@@ -63,12 +68,12 @@ export function chaosAfterTest(state, inv, result, api = {}, handlers = {}) {
       api.info?.(`🪨 石板标记：如同轮末一般触发「${story.name || story.code}」的强制能力。`)
       const trigger = handlers.triggerUnfinishedBusinessForced || api.triggerUnfinishedBusinessForced
       if (typeof trigger === 'function') trigger(inv, story)
-      return true
+      handled = true
     }
   }
   if (has('elderthing') && (hard || !result.success) && isAttackOrEvadeTest(result)) {
     api.haunted?.(inv.seat, { locationId: location?.id || inv.location, kind: 'elderthing' })
-    return true
+    handled = true
   }
-  return false
+  return handled
 }

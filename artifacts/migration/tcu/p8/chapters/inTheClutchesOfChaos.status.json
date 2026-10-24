@@ -1,0 +1,54 @@
+{
+  "chapterId": "inTheClutchesOfChaos",
+  "milestone": "P8",
+  "status": "complete",
+  "files": [
+    "index.js", "definition.js", "layout.js", "behavior.js", "chaos.js",
+    "tests/tcu-clutches-chaos.test.mjs",
+    "specs/inTheClutchesOfChaos.md",
+    "entry:05285", "entry:05290", "entry:05291", "entry:05292", "entry:05293", "entry:05294",
+    "entry:05295", "entry:05296", "entry:05297", "entry:05298", "entry:05299", "entry:05300",
+    "entry:05301", "entry:05306", "entry:05307", "entry:05308",
+    "entry:05286a", "entry:05286b", "entry:05287", "entry:05302", "entry:05303", "entry:05311", "entry:05312",
+    "entry:05288a", "entry:05288b", "entry:05289", "entry:05304", "entry:05305", "entry:05309", "entry:05310"
+  ],
+  "checks": {
+    "sourceLocked": true,
+    "identityRegistered": true,
+    "setupAndZones": true,
+    "actsAndAgendas": true,
+    "locationsAndConnections": true,
+    "encounterBehaviors": true,
+    "literalCardBehavior": true,
+    "chaosEffects": true,
+    "resolutionsAndRecords": true,
+    "storyText": true,
+    "saveReplay": true
+  },
+  "inventory": {
+    "locations": 16,
+    "acts": 2,
+    "agendas": 1,
+    "enemies": 10,
+    "treacheries": 18,
+    "encounterCards": 57,
+    "resolutions": ["noResolution", "r1", "r2", "r3", "r4"]
+  },
+  "tests": { "file": "tests/tcu-clutches-chaos.test.mjs", "cases": 35, "passing": 35 },
+  "gaps": [],
+  "approximations": [
+    "遭遇牌库：manifest 静态声明「基线 + 两变体并集」，开局 modifyDeck 按剧本日志裁成单局分支（区域报表是单局张数的超集）。",
+    "幕上裂口用 scenarioFlags.actBreaches 单一计数承载（P2.11 只支持地点裂口），幕推进时随当前幕移动。",
+    "「随机地点」从在场地点槽洗牌取样（等价于参考实现混洗开局移出的 8 张地点版本取 label）。",
+    "05285 强制①在引擎 doomPlaced 钩子里回退 state.doom 后放裂口（时序等价，非替换式窗口）。",
+    "05307 元初通道的「地点文本视为空白」只屏蔽本章 behavior 提供的地点行动；引擎自带的调查/移动规则不受影响。",
+    "05312 的重演力量诡计通过把该牌放回遭遇牌库顶再抽牌实现，走引擎完整显现管线。",
+    "05302/05305 的「查找某特性敌人」取两堆中最上面一张，不先让玩家浏览全部候选。"
+  ],
+  "remaining": [
+    "Lead：合并后重建 encounter-entries 索引（check-tcu-scenario 当前仅报「索引尚未重建」警告）并把本章接线进 content/registered.js / 战役 flow（P9）。",
+    "Lead：新增条目规则数据后跑 node tools/audit-abilities.mjs --write 更新 audit/ability-coverage.json（覆盖度产物归 Lead 独占）。",
+    "P9：把 zh locale 的 intro/setup/resolutions 全文导入 story-text（当前为等义中文摘要，>20 字、无 HTML）。"
+  ],
+  "notes": "参考实现：Scenario/Scenarios/TheCircleUndone/InTheClutchesOfChaos.hs + Location/CardDefs + Helpers.hs + 逐卡 Haskell 行为。裂口/入侵走 P2.11 唯一入口（api.breach/removeBreach），4 人 3×3 初始裂口，议程毁灭转裂口，双变体（受诅咒的歌声/宇宙之秘）按剧本日志选幕牌库/地点/遭遇分支。14 张变体子剧本条目按 Lead 的归属算法放在章节目录（原 _shared 组目录已由 Lead 归位）。逐卡规则已数据化：actRule.advance（4 张幕）与 enemySpawnRule.location（05309/05311）写在单卡条目，behavior 只读 actRuleFor/enemySpawnRuleFor；架构守卫的 content 按卡号分支在本章为 0。"
+}

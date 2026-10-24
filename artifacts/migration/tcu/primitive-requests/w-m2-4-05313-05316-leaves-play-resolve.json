@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "w-m2-4-05313-05316-leaves-play-resolve",
+  "cycle": "tcu",
+  "worker": "w-m2-4",
+  "card": "05313",
+  "primitive": "leavesPlayResolve",
+  "params": {
+    "alsoCards": [
+      "05316"
+    ],
+    "descriptorKind": "leavesPlay"
+  },
+  "cardText": "在圣化之镜离场时，找到所有这些舒缓旋律（即使在场外），将它们放在一边，位于场外。（05316 密教辞典 → 鲜血仪式 同形）",
+  "reason": "assets.js 的 leaveAsset 只读 leavesPlayEffect(code)（纯数据体）并用 resolveEffect 结算；ability.js 的 KINDS_NEEDING_PAYLOAD 要求 leavesPlay 必须是对象，而 LIFECYCLE_RESOLVE_KINDS 只允许 played/entersPlay/setup 带 resolve。绑定副本的收回只能走 api.bonded.return（P2.8），没有对应的效果原语。",
+  "proposedApi": "把 'leavesPlay' 加入 ability.js 的 LIFECYCLE_RESOLVE_KINDS（允许 resolve-only）；src/engine/assets.js#leaveAsset：const enterDescriptor = descriptorOfKind(code,'leavesPlay')，若有 resolve 则调用 resolve({ state, inv, seat, source: asset, descriptor, events, context: {}, api: abilityApi(state, events) })，否则维持现在的 leavesPlayEffect 数据体路径。卡面数据：05313 离场 → api.bonded.return(seat,'05313')；05316 离场 → api.bonded.return(seat,'05316')。",
+  "status": "done",
+  "createdAt": "2026-10-24T03:00:00+08:00",
+  "claimedBy": "main",
+  "resolvedAt": "2026-10-23T18:39:00.291Z",
+  "resolution": {
+    "api": "abilities: [{ kind: 'leavesPlay', resolve(ctx) }]（LIFECYCLE_RESOLVE_KINDS 允许 resolve-only）；assets.js#leaveAsset 优先调用 resolve，ctx 带 state/inv/seat/source/descriptor/events/context/api",
+    "implementedIn": [
+      "games/arkhamhorror/src/engine/assets.js",
+      "games/arkhamhorror/src/engine/ability.js"
+    ],
+    "tests": [
+      "games/arkhamhorror/tests/tcu-primitives-p7.test.mjs"
+    ],
+    "catalog": "P7 玩家卡批次（2026-10）：leavesPlay resolve",
+    "notes": "数据体 leavesPlay 的回退路径不变；绑定收回用 api.bonded.return(seat, mainCode)。"
+  }
+}

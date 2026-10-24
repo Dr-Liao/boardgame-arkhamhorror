@@ -279,6 +279,12 @@ export function purchaseCard(campaign, seat, addedCode, removedCode, context = n
   }
   // 永久卡购买的战役层效果（如「奥术研究」的精神创伤）。
   applyPermanentPurchaseEffects(campaign, seat, addedCode)
+  // 04106 老练分析：升级「(未鉴定)/(未翻译)」卡时，牌组里有老练分析则用 0 经验
+  // 再把另一张同名副本升级为新版本（选择为自动执行，记入 purchases 供界面展示）。
+  if (removedCode) {
+    const extra = shrewdAnalysisUpgrade(campaign, seat, removedCode, context)
+    if (extra) purchase.shrewdAnalysisUpgrade = extra
+  }
   campaign.xp = Object.values(campaign.investigators).reduce((sum, item) => sum + item.xp, 0)
   return purchase
 }

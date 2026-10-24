@@ -1,5 +1,6 @@
 // One audio transport for the entire Mod, independent of table/hub re-renders.
 import { SCENARIO_MUSIC, SCENARIO_PLAYLISTS } from './scenario-music.js'
+import { subscribeLocaleChange, t } from './i18n.js'
 
 export const MUSIC_TRACKS = [
   { id: 'tcuVanishing', title: "Vanishing", mood: "庄园晚宴、失踪者、暮色疑云", file: 'common/vanishing.mp3', isrc: 'USUAN1600050' },
@@ -101,9 +102,10 @@ export function createMusicPlayer(h) {
   let playlistId = 'common', playlist = musicTracksForPlaylist(playlistId)
   let index = Number.isInteger(saved.index) && playlist[saved.index] ? saved.index : 0
   let loopOne = saved.loopOne === true
+  // error / configWarningKey 存的是词典 key（不是成品文案），切换语言时仍然能重新翻译。
   let active = false, expanded = false, error = '', pending = false, generation = 0
   let waitingGesture = false
-  let refreshTicket = 0, configWarning = '', lastRequestedPlaylist = null
+  let refreshTicket = 0, configWarning = '', configWarningKey = '', lastRequestedPlaylist = null, refreshAutoplay = false
   const audio = new Audio()
   audio.preload = 'none'
   audio.volume = Number.isFinite(saved.volume) ? Math.max(0, Math.min(1, saved.volume)) : .3
@@ -116,39 +118,75 @@ export function createMusicPlayer(h) {
   const button = (label, text, onclick, extra = {}) => h('button', { type: 'button', 'aria-label': label, title: label, onclick, ...extra }, text)
   const title = h('strong')
   const status = h('small')
-  const launcher = button('展开音乐播放器', '', () => { expanded = !expanded; update(); if (expanded) refreshPlaylist() }, { className: 'ah-music-launcher', 'aria-controls': 'ah-music-panel' })
+  const launcher = button(t('music.launcher.expand'), '', () => { expanded = !expanded; update(); if (expanded) refreshPlaylist() }, { className: 'ah-music-launcher', 'aria-controls': 'ah-music-panel' })
   launcher.append(h('span', { className: 'ah-music-note', 'aria-hidden': 'true' }, '♫'), h('span', {}, title, status))
-  const miniPlay = button('播放音乐', '▶', toggle, { className: 'ah-music-mini' })
-  const heading = h('strong', {}, '诡镇留声机')
+  const miniPlay = button(t('music.play'), '▶', toggle, { className: 'ah-music-mini' })
+  const heading = h('strong', {}, t('music.heading'))
   const now = h('strong', { className: 'ah-music-now' })
   const mood = h('span', { className: 'ah-music-mood' })
-  const play = button('播放音乐', '▶', toggle, { className: 'ah-music-play' })
-  const repeat = button('列表循环', '↻ 列表', () => { loopOne = !loopOne; audio.loop = loopOne; save(); update() })
-  const seek = h('input', { type: 'range', min: 0, max: 100, step: .1, value: 0, 'aria-label': '音乐进度', oninput: () => { if (Number.isFinite(audio.duration)) audio.currentTime = Number(seek.value) / 100 * audio.duration; updateTime() } })
+  const play = button(t('music.play'), '▶', toggle, { className: 'ah-music-play' })
+  const repeat = button(t('music.repeat.list'), t('music.repeat.listText'), () => { loopOne = !loopOne; audio.loop = loopOne; save(); update() })
+  const seek = h('input', { type: 'range', min: 0, max: 100, step: .1, value: 0, 'aria-label': t('music.seek'), oninput: () => { if (Number.isFinite(audio.duration)) audio.currentTime = Number(seek.value) / 100 * audio.duration; updateTime() } })
   const time = h('span', { className: 'ah-music-time' })
-  const mute = button('静音音乐', '♪', () => { audio.muted = !audio.muted; save(); update() })
-  const volume = h('input', { type: 'range', min: 0, max: 100, step: 1, value: audio.volume * 100, 'aria-label': '音乐音量', oninput: () => { audio.volume = Number(volume.value) / 100; audio.muted = false; save(); update() } })
+  const mute = button(t('music.mute'), '♪', () => { audio.muted = !audio.muted; save(); update() })
+  const volume = h('input', { type: 'range', min: 0, max: 100, step: 1, value: audio.volume * 100, 'aria-label': t('music.volume'), oninput: () => { audio.volume = Number(volume.value) / 100; audio.muted = false; save(); update() } })
   const volumeText = h('span')
   const feedback = h('p', { className: 'ah-music-feedback', role: 'status' })
   let trackButtons = []
   const trackList = h('div', { className: 'ah-music-tracks' })
   function rebuildTracks() {
-    trackButtons = playlist.map((track, n) => button(`播放 ${track.title}`, '', () => select(n, true), { className: 'ah-music-track' }))
+    trackButtons = playlist.map((track, n) => button(t('music.track.play', { title: track.title }), '', () => select(n, true), { className: 'ah-music-track' }))
     trackButtons.forEach((el, n) => el.append(h('span', { className: 'ah-music-number' }, String(n + 1).padStart(2, '0')), h('span', {}, h('strong', {}, playlist[n].title), h('small', {}, playlist[n].mood))))
     trackList.replaceChildren(...trackButtons)
   }
   rebuildTracks()
   const link = (text, href) => h('a', { href, target: '_blank', rel: 'noopener noreferrer' }, text)
-  const panel = h('section', { id: 'ah-music-panel', className: 'ah-music-panel', 'aria-label': '音乐播放器' },
-    h('header', {}, heading, button('收起音乐播放器', '×', () => { expanded = false; update(); launcher.focus() })),
+  const closeButton = button(t('music.launcher.collapse'), '×', () => { expanded = false; update(); launcher.focus() })
+  const previousButton = button(t('music.prev'), '❮', () => select(index - 1, true))
+  const nextButton = button(t('music.next'), '❯', () => select(index + 1, true))
+  const refreshButton = button(t('music.refresh'), t('music.refresh.button'), () => refreshPlaylist())
+  const footerLabel = h('span', {}, t('music.footer.label'))
+  const footerNote = h('span', {}, t('music.footer.note'))
+  const creditsLink = link(t('music.footer.credits'), '/mods/arkhamhorror/audio/music/CREDITS.txt')
+  const panel = h('section', { id: 'ah-music-panel', className: 'ah-music-panel', 'aria-label': t('music.panel') },
+    h('header', {}, heading, closeButton),
     h('div', { className: 'ah-music-record', 'aria-hidden': 'true' }, h('span', {}, 'AH')),
     now, mood,
-    h('div', { className: 'ah-music-controls' }, button('上一首', '❮', () => select(index - 1, true)), play, button('下一首', '❯', () => select(index + 1, true)), repeat),
+    h('div', { className: 'ah-music-controls' }, previousButton, play, nextButton, repeat),
     seek, time,
     h('div', { className: 'ah-music-volume' }, mute, volume, volumeText),
-    feedback, button('刷新歌单', '↻ 刷新歌单', () => refreshPlaylist()), trackList,
-    h('footer', {}, '音乐：', link('Kevin MacLeod', 'https://incompetech.com/'), ' · ', link('CC BY 4.0', 'https://creativecommons.org/licenses/by/4.0/'), h('br'), '仅转码压缩，未作剪辑 · ', link('来源与署名', '/mods/arkhamhorror/audio/music/CREDITS.txt')))
-  const root = h('aside', { className: 'ah-music', 'aria-label': '诡镇背景音乐', onkeydown: e => { if (e.key === 'Escape' && expanded) { e.stopPropagation(); expanded = false; update(); launcher.focus() } } }, panel, h('div', { className: 'ah-music-dock' }, launcher, miniPlay))
+    feedback, refreshButton, trackList,
+    h('footer', {}, footerLabel, link('Kevin MacLeod', 'https://incompetech.com/'), ' · ', link('CC BY 4.0', 'https://creativecommons.org/licenses/by/4.0/'), h('br'), footerNote, creditsLink))
+  const root = h('aside', { className: 'ah-music', 'aria-label': t('music.player.aria'), onkeydown: e => { if (e.key === 'Escape' && expanded) { e.stopPropagation(); expanded = false; update(); launcher.focus() } } }, panel, h('div', { className: 'ah-music-dock' }, launcher, miniPlay))
+
+  // 播放器 DOM 长期存活（createMusicPlayer 只调用一次）：切换语言时只刷新静态文案与 aria、重算动态标签，
+  // 不重建音频、不丢弃当前播放状态。订阅只注册一次；组件没有销毁生命周期，监听保持到页面结束。
+  function setControlLabel(node, key) {
+    const text = t(key)
+    node.setAttribute('aria-label', text)
+    node.title = text
+  }
+  function syncTrackLabels() {
+    trackButtons.forEach((el, n) => el.setAttribute('aria-label', t('music.track.play', { title: playlist[n].title })))
+  }
+  function applyStaticText() {
+    heading.textContent = t('music.heading')
+    panel.setAttribute('aria-label', t('music.panel'))
+    root.setAttribute('aria-label', t('music.player.aria'))
+    seek.setAttribute('aria-label', t('music.seek'))
+    volume.setAttribute('aria-label', t('music.volume'))
+    setControlLabel(closeButton, 'music.launcher.collapse')
+    setControlLabel(previousButton, 'music.prev')
+    setControlLabel(nextButton, 'music.next')
+    setControlLabel(refreshButton, 'music.refresh')
+    refreshButton.textContent = t('music.refresh.button')
+    footerLabel.textContent = t('music.footer.label')
+    footerNote.textContent = t('music.footer.note')
+    creditsLink.textContent = t('music.footer.credits')
+    syncTrackLabels()
+  }
+  applyStaticText()
+  subscribeLocaleChange(() => { applyStaticText(); update() })
 
   function updateTime() {
     const duration = audio.duration
@@ -163,25 +201,29 @@ export function createMusicPlayer(h) {
     root.classList.toggle('is-playing', playing)
     panel.hidden = !expanded
     launcher.setAttribute('aria-expanded', String(expanded))
-    launcher.setAttribute('aria-label', expanded ? '收起音乐播放器' : '展开音乐播放器')
-    title.textContent = track?.title || '本关暂无音乐'
-    status.textContent = error ? '播放失败，点击重试' : pending ? '正在载入…' : playing ? '正在播放' : waitingGesture ? '点击后自动播放' : '音乐已暂停'
-    now.textContent = track?.title || '本关暂无音乐'; mood.textContent = track?.mood || '添加本地歌曲或修改 playlists.json 后刷新歌单'
+    launcher.setAttribute('aria-label', expanded ? t('music.launcher.collapse') : t('music.launcher.expand'))
+    launcher.title = launcher.getAttribute('aria-label')
+    title.textContent = track?.title || t('music.now.empty')
+    status.textContent = error ? t('music.status.error') : pending ? t('music.status.loading') : playing ? t('music.status.playing') : waitingGesture ? t('music.status.waitingGesture') : t('music.status.paused')
+    now.textContent = track?.title || t('music.now.empty'); mood.textContent = track?.mood || t('music.mood.empty')
     for (const control of [play, miniPlay]) {
       control.textContent = playing || pending ? 'Ⅱ' : '▶'
-      control.setAttribute('aria-label', playing || pending ? '暂停音乐' : '播放音乐')
+      control.setAttribute('aria-label', playing || pending ? t('music.pause') : t('music.play'))
       control.title = control.getAttribute('aria-label')
       control.disabled = !track
     }
-    repeat.textContent = loopOne ? '↻ 单曲' : '↻ 列表'
-    repeat.setAttribute('aria-label', loopOne ? '单曲循环' : '列表循环')
+    repeat.textContent = loopOne ? t('music.repeat.oneText') : t('music.repeat.listText')
+    repeat.setAttribute('aria-label', loopOne ? t('music.repeat.one') : t('music.repeat.list'))
+    repeat.title = repeat.getAttribute('aria-label')
     repeat.setAttribute('aria-pressed', String(loopOne))
     mute.textContent = audio.muted || audio.volume === 0 ? '♪ ×' : '♪'
-    mute.setAttribute('aria-label', audio.muted ? '取消音乐静音' : '静音音乐')
+    mute.setAttribute('aria-label', audio.muted ? t('music.unmute') : t('music.mute'))
+    mute.title = mute.getAttribute('aria-label')
     mute.setAttribute('aria-pressed', String(audio.muted))
     volumeText.textContent = `${Math.round(audio.volume * 100)}%`
-    feedback.textContent = error || configWarning
-    feedback.hidden = !(error || configWarning)
+    const warning = configWarningKey ? t(configWarningKey) : configWarning
+    feedback.textContent = error ? t(error) : warning
+    feedback.hidden = !(error || warning)
     trackButtons.forEach((el, n) => el.setAttribute('aria-current', String(n === index)))
     updateTime()
   }
@@ -219,11 +261,11 @@ export function createMusicPlayer(h) {
     try { await audio.play() } catch (err) {
       if (ticket === generation && active) {
         if (err.name === 'NotAllowedError') waitForGesture(true)
-        else if (err.name !== 'AbortError') error = '音乐暂时无法播放，请点击播放重试。'
+        else if (err.name !== 'AbortError') error = 'music.error.play'
       }
     } finally { if (ticket === generation) { pending = false; update() } }
   }
-  function pause() { generation++; pending = false; waitForGesture(false); audio.pause(); update() }
+  function pause() { generation++; refreshAutoplay = false; pending = false; waitForGesture(false); audio.pause(); update() }
   function toggle() { if (error) start(); else if (!audio.paused || pending) pause(); else start() }
   function select(n, autoplay) {
     if (!playlist.length) return
@@ -234,19 +276,22 @@ export function createMusicPlayer(h) {
   audio.addEventListener('ended', () => { if (active && !loopOne) select(index + 1, true) })
   // Only after the current track is playing, so the two downloads never compete.
   audio.addEventListener('playing', () => { if (active && !loopOne) prefetch(playlist[(index + 1) % playlist.length]) })
-  audio.addEventListener('error', () => { pending = false; error = '音乐载入失败，请检查连接后重试。'; update() })
+  audio.addEventListener('error', () => { pending = false; error = 'music.error.load'; update() })
   for (const event of ['play', 'pause', 'loadedmetadata', 'durationchange', 'volumechange']) audio.addEventListener(event, update)
   audio.addEventListener('timeupdate', updateTime)
   window.addEventListener('pagehide', pause)
   async function refreshPlaylist(autoplay = false) {
+    autoplay = autoplay || refreshAutoplay
+    refreshAutoplay = autoplay
     const ticket = ++refreshTicket, requestedId = playlistId, intent = generation
     try {
       const response = await fetch('/api/mods/arkhamhorror/music/playlist?id=' + encodeURIComponent(requestedId), { cache: 'no-store' })
-      if (!response.ok) throw new Error('歌单读取失败')
+      if (!response.ok) throw new Error('playlist read failed')
       const result = await response.json()
       if (ticket !== refreshTicket || requestedId !== playlistId) return
-      if (!Array.isArray(result.tracks) || result.playlistId !== requestedId) throw new Error('歌单格式无效')
-      configWarning = (result.warnings || []).join('；')
+      refreshAutoplay = false
+      if (!Array.isArray(result.tracks) || result.playlistId !== requestedId) throw new Error('invalid playlist format')
+      configWarning = (result.warnings || []).join('；'); configWarningKey = ''
       const resume = active && generation === intent && (autoplay || !audio.paused || pending || waitingGesture)
       const previous = playlist[index]
       const currentIndex = result.tracks.findIndex(t => t.file === previous?.file)
@@ -266,7 +311,8 @@ export function createMusicPlayer(h) {
       }
     } catch {
       if (ticket !== refreshTicket || requestedId !== playlistId) return
-      configWarning = '暂时无法刷新本地歌单，保留当前歌单。'
+      refreshAutoplay = false
+      configWarning = ''; configWarningKey = 'music.warning.refresh'
       update()
       if (autoplay && active && generation === intent) start()
     }

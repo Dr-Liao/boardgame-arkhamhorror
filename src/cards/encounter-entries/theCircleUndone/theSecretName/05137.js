@@ -8,8 +8,10 @@ export default {
   locationRule: {
     actions({ moves, state, inv, location }) {
       if (inv.location !== location.id) return
-      if (state.scenarioFlags?.ruinsHealUsed) return
-      moves.push({ action: 'scenarioAction', rule: 'investigateRuins', label: '🔍 调查巫宅遗址（成功改为治愈 2 点恐惧，每场一次）' })
+      // 每名调查员每场一次（不是团队共享一次）。
+      const usedBySeat = state.scenarioFlags?.ruinsHealUsedBySeat || {}
+      if (usedBySeat[inv.seat]) return
+      moves.push({ action: 'scenarioAction', rule: 'investigateRuins', label: '🔍 调查巫宅遗址（成功改为治愈 2 点恐惧，每名调查员每场一次）' })
     },
     performAction(state, inv, move, api) {
       if (move.rule !== 'investigateRuins') return false
@@ -17,7 +19,7 @@ export default {
       api.test?.(inv.seat, 'intellect', location?.shroud || 2, result => {
         if (!result?.success) return
         state.scenarioFlags ||= {}
-        state.scenarioFlags.ruinsHealUsed = true
+        state.scenarioFlags.ruinsHealUsedBySeat = { ...(state.scenarioFlags.ruinsHealUsedBySeat || {}), [inv.seat]: true }
         api.healHorror?.(inv.seat, 2)
         api.info?.(`🏚️ ${inv.name} 在巫宅遗址挖掘出往事：治愈 2 点恐惧。`)
       })

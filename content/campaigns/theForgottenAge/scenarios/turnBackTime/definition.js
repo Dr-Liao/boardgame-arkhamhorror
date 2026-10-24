@@ -61,7 +61,9 @@ export const EXPLORATION_TREACHERIES = {
 export const RUINS_LOCATIONS = [
   'ancientHall', 'grandChamber', 'burialPit', 'undergroundRuins', 'secretPassage',
 ]
-export const RELIC_OF_AGES = '04061'
+// 参考实现 TurnBackTime.hs 的 setAside 是 Assets.relicOfAgesRepossessThePast（04303，
+// 「重拾往昔」版本）；本关的古代遗物行动/封印结局都基于这一版本。
+export const RELIC_OF_AGES = '04303'
 export const HARBINGER_OF_VALUSIA = '04062'
 export const YIG = '04296'
 export const CHAMBER_OF_TIME = 'chamberOfTime'

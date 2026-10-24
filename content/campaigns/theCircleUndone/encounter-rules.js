@@ -189,14 +189,56 @@ export function spectralEnemyTargetBlocked(state, inv, enemy) {
 }
 
 // ---------------------------------------------------------------------------
-// 遭遇牌库顶弃牌（05099 百年秘事 / 05090 女巫集会学徒共用）。牌库空时按规则把弃牌堆
-// 洗回再继续——与引擎 drawEncounter 的补牌口径一致，但不触发「抽到」的显现效果。
+// 遭遇牌库「耗尽」的共享事件（05091 女祭司 / 05090 学徒 / 05098 邪恶往昔）。
+//
+// 引擎在抽牌前发现牌库为空会先把弃牌堆洗回，所以「本次抽牌后牌库为 0」= 本次抽牌耗尽了
+// 牌库（encounterDrawn 钩子里直接结算，比旧实现「下一次抽牌才触发」早一轮）。
+// 弃牌效果（05090/05099、discardEncounterTop）同样能耗尽牌库，由调用方在同一结算里通知。
 // ---------------------------------------------------------------------------
-export function discardEncounterTop(state, api, count = 1) {
+export function resolveEncounterDeckEmptyForced(state, api) {
+  api?.info?.('🌀 遭遇牌库耗尽，结算相关强制能力。')
+  for (const enemy of [...(state.enemies || [])]) {
+    enemyScriptFor(original(enemy))?.onEncounterDeckEmpty?.(state, enemy, api)
+  }
+  for (const owner of activeInvestigators(state)) {
+    for (const threat of [...(owner.threat || [])]) {
+      const forced = treacheryRuleFor(original(threat))?.encounterDeckEmptyForced
+      if (!forced) continue
+      if (forced.horror) api.horror(owner.seat, Number(forced.horror))
+      if (forced.test) {
+        api.test(owner.seat, forced.test.skill || 'willpower', Number(forced.test.difficulty ?? 3), result => {
+          if (result.success && forced.test.discardOnSuccess) discardThreatCard(state, owner, threat)
+        })
+      }
+    }
+  }
+}
+
+// 最近一次抽到的遭遇卡（单卡条目用来区分「抽到」与「被剧本效果生成」，例如 05090 的显现）。
+export function lastEncounterDrawn(state) {
+  const last = state?.scenarioFlags?.lastEncounterDrawn
+  return last && typeof last === 'object' ? last : null
+}
+export function consumeLastEncounterDrawn(state, code) {
+  const last = lastEncounterDrawn(state)
+  if (!last || String(last.code) !== String(code)) return null
+  delete state.scenarioFlags.lastEncounterDrawn
+  return last
+}
+
+// ---------------------------------------------------------------------------
+// 遭遇牌库顶弃牌（05099 百年秘事 / 05090 女巫集会学徒共用）。
+// `reshuffle`：牌库中途耗尽时是否把弃牌堆洗回继续（「一直弃到某张」类效果需要；
+//   「弃顶 2 张」类效果不应把刚弃掉的牌洗回来，05090 显式传 false）。
+// `notifyEmpty`：弃牌造成「由有到无」时是否触发共享的「遭遇牌库耗尽」强制（05091/05098）。
+// ---------------------------------------------------------------------------
+export function discardEncounterTop(state, api, count = 1, options = {}) {
+  const { reshuffle = true, notifyEmpty = true } = options
+  const startedWithCards = (state.encounterDeck || []).length > 0
   const discarded = []
   for (let index = 0; index < Math.max(0, count); index++) {
     if (!state.encounterDeck.length) {
-      if (!state.encounterDiscard.length) break
+      if (!reshuffle || !state.encounterDiscard.length) break
       if (typeof api?.shuffleDiscard === 'function') api.shuffleDiscard()
       else {
         state.encounterDeck = [...state.encounterDiscard]
@@ -207,6 +249,9 @@ export function discardEncounterTop(state, api, count = 1) {
     const code = state.encounterDeck.pop()
     state.encounterDiscard.push(code)
     discarded.push(code)
+  }
+  if (notifyEmpty && startedWithCards && discarded.length > 0 && (state.encounterDeck || []).length === 0) {
+    resolveEncounterDeckEmptyForced(state, api)
   }
   return discarded
 }
@@ -235,15 +280,39 @@ export function discardLocationAttachment(state, location, attachment) {
   return code
 }
 
-// 伤害来源是否为「法术/遗物」：引擎把 source 传成支援 id 字符串（见 03093 条目）。
+// 伤害来源是否为「法术/遗物」：引擎可能传支援实例 id（见 03093 条目），也可能传
+// { code / traits / kind } 形状的来源对象（事件卡、效果伤害）。两种形状都要识别，
+// 否则 05103 会把事件/效果伤害误判成普通伤害。
+const SPELL_RELIC_TRAITS = Object.freeze(['spell', 'relic'])
+const isSpellRelicCode = code => (ALL_CARDS[code]?.traits || [])
+  .some(trait => SPELL_RELIC_TRAITS.includes(String(trait).toLowerCase()))
 export function isSpellOrRelicSource(state, source) {
-  if (!source || typeof source !== 'string') return false
-  for (const inv of state.investigators || []) {
-    const asset = (inv.assets || []).find(item => item.id === source)
-    if (!asset) continue
-    return (ALL_CARDS[original(asset)]?.traits || []).some(trait => ['spell', 'relic'].includes(String(trait).toLowerCase()))
+  if (source == null) return false
+  if (typeof source === 'string') {
+    if (isSpellRelicCode(source)) return true
+    for (const inv of state.investigators || []) {
+      const asset = (inv.assets || []).find(item => item.id === source)
+      if (asset) return isSpellRelicCode(original(asset))
+    }
+    return false
+  }
+  if (typeof source !== 'object') return false
+  const kind = String(source.kind || source.type || '').toLowerCase()
+  if (SPELL_RELIC_TRAITS.includes(kind)) return true
+  const traits = source.traits || (source.code ? ALL_CARDS[source.code]?.traits : null) || []
+  if (traits.some(trait => SPELL_RELIC_TRAITS.includes(String(trait).toLowerCase()))) return true
+  for (const key of ['code', 'assetCode', 'cardCode', 'sourceCode']) {
+    if (typeof source[key] === 'string' && isSpellRelicCode(source[key])) return true
   }
   return false
+}
+
+// 05097 秘社玄仪写下的「直到一轮结束，对该敌人攻击/躲避/谈判的难度 +2」。
+// 攻击/躲避由本文件 enemyStatModifier 汇总；谈判由条目级 performEncounterAction 读这个 helper。
+export function parleyDifficultyBonus(state, enemy) {
+  const bonus = enemy?.roundFightEvadeBonus
+  if (!bonus || bonus.round !== state?.round) return 0
+  return Number(bonus.amount) || 0
 }
 
 // 幽灵目标限制的旧名（章节若已引用）：与 spectralEnemyTargetBlocked 同义。
@@ -294,8 +363,23 @@ export const encounterRules = Object.freeze({
     enemyScriptFor(code)?.onSpawn?.(state, enemy, api)
   },
 
-  enemyMoved(state, enemy, newLocationId, api) {
-    enemyScriptFor(original(enemy))?.onMoved?.(state, enemy, newLocationId, api)
+  // ---- 敌人移动：第三参兼容两种引擎语义 ----
+  // 旧引擎（movement.js）传「移动前地点」；Lead 修好后传「新地点」。这里统一成
+  // onMoved(state, enemy, 新地点, api, 旧地点)，单卡条目不用关心引擎版本。
+  enemyMoved(state, enemy, locationArg, api, previousArg) {
+    const script = enemyScriptFor(original(enemy))
+    if (typeof script?.onMoved !== 'function') return
+    const current = enemy.location
+    const previous = locationArg === current ? (previousArg ?? null) : (locationArg ?? null)
+    script.onMoved(state, enemy, current, api, previous)
+  },
+
+  // ---- 敌人阶段开始：给条目一个可刷新「每阶段猎物/状态」的窗口（05100 的猎物）----
+  // 章节若覆盖该钩子需转发 encounterRules.enemyPhaseStart（theSecretName/atDeathsDoorstep 已转发）。
+  enemyPhaseStart(state, api) {
+    for (const enemy of [...(state.enemies || [])]) {
+      enemyScriptFor(original(enemy))?.onEnemyPhaseStart?.(state, enemy, api)
+    }
   },
 
   enemyDamaged(state, enemy, api, seat, source) {
@@ -403,29 +487,15 @@ export const encounterRules = Object.freeze({
   },
 
   // ---- 遭遇牌库耗尽（05091 女巫集会女祭司 / 05098 邪恶往昔 的强制） ----
-  // 引擎在抽牌前发现牌库为空会把弃牌堆洗回；因此「上一次抽牌后牌库为 0」等价于本次抽牌
-  // 前牌库耗尽。记录写在 scenarioFlags（纯 JSON，随存档往返）。
+  // 引擎在抽牌前发现牌库为空会把弃牌堆洗回；因此「本次抽牌后牌库为 0」就是本次抽牌
+  // 耗尽了牌库——立即结算，不再等下一次抽牌（旧实现在下一次抽牌时才触发，且那之前
+  // 弃牌堆可能已经被洗回，导致永不触发）。
   encounterDrawn(state, inv, code, api) {
     const flags = (state.scenarioFlags ||= {})
-    const previousSize = flags.encounterDeckSizeAfterDraw
     flags.encounterDeckSizeAfterDraw = state.encounterDeck.length
-    if (previousSize !== 0) return
-    api.info?.('🌀 遭遇牌库耗尽，结算相关强制能力。')
-    for (const enemy of [...(state.enemies || [])]) {
-      enemyScriptFor(original(enemy))?.onEncounterDeckEmpty?.(state, enemy, api)
-    }
-    for (const owner of activeInvestigators(state)) {
-      for (const threat of [...(owner.threat || [])]) {
-        const forced = treacheryRuleFor(original(threat))?.encounterDeckEmptyForced
-        if (!forced) continue
-        if (forced.horror) api.horror(owner.seat, Number(forced.horror))
-        if (forced.test) {
-          api.test(owner.seat, forced.test.skill || 'willpower', Number(forced.test.difficulty ?? 3), result => {
-            if (result.success && forced.test.discardOnSuccess) discardThreatCard(state, owner, threat)
-          })
-        }
-      }
-    }
+    // 05090 的显现只在「抽到」时结算：记录最近一次抽到的卡号供条目区分「效果生成」。
+    flags.lastEncounterDrawn = { code: String(code), round: state.round, seat: inv?.seat ?? null }
+    if (state.encounterDeck.length === 0) resolveEncounterDeckEmptyForced(state, api)
   },
 
   // ---- 共享诡计结算：分派到单卡条目的 encounterResolve ----

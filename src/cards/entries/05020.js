@@ -10,6 +10,13 @@
 
 export default {
   code: '05020',
+  // 卡面「选择你所在地点的一个[[类人]]敌人」：没有合法目标时不能打出（引擎的打出条件读点）。
+  playCondition: [{
+    when: ({ state, inv }) => (state.enemies || []).some(enemy => !enemy.defeated
+      && enemy.location === inv.location
+      && (enemy.traits || []).some(trait => String(trait).toLowerCase() === 'humanoid')),
+    message: '你所在地点没有[[类人]]敌人，不能打出「拷问」',
+  }],
   abilities: [
     {
       kind: 'played',

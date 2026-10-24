@@ -190,8 +190,8 @@ test('神庙看守者背面：每位没有撤退的调查员被击败', () => {
     info: () => {},
     defeat: (inv, cause) => { inv.defeated = true; defeated.push({ seat: inv.seat, cause }) },
   })
-  assert.deepEqual(defeated, [{ seat: 0, cause: 'both' }],
-    'cause=both 让被击败者在结局结算时选择 1 点创伤，而不是 0 创伤白过')
+  assert.deepEqual(defeated, [{ seat: 0, cause: null }],
+    '04056 神庙看守者：被击败不额外折算创伤（卡面没有伤害/恐惧来源）')
 })
 
 test('进入遗迹背面：时间石室洗入探索牌库；没有粉笔则进胜利区并获复仇 1', () => {
@@ -756,7 +756,7 @@ test('04056 神庙看守者：被击败的调查员会按卡面留下创伤（ca
   }
   const agenda = state.agendas.find(entry => (entry.originalCode || entry.code) === '04056')
   eztli.behavior.agendaReveal(state, agenda, api)
-  assert.deepEqual(defeated, [[1, 'both']], '撤退者不受影响，未撤退者被击败并留创伤')
+  assert.deepEqual(defeated, [[1, null]], '撤退者不受影响，未撤退者被击败（04056 不再额外折算创伤）')
 })
 
 test('04058 科学与魔法：地点排成一条线并给出线性 layout', () => {

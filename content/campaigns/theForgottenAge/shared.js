@@ -40,6 +40,7 @@ export const recordTypes = {
   theInvestigatorsRecoveredTheRelicOfAges: 'boolean',
   alejandroRecoveredTheRelicOfAges: 'boolean',
   theHarbingerIsStillAlive: 'number',
+  theHarbingerIsAlive: 'boolean',
   theInvestigatorsGaveCustodyOfTheRelicToAlejandro: 'boolean',
   theInvestigatorsHaveEarnedAlejandrosTrust: 'boolean',
   theInvestigatorsGaveCustodyOfTheRelicToHarlanEarnstone: 'boolean',

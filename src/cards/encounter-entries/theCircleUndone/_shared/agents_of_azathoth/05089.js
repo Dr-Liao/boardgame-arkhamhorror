@@ -8,15 +8,16 @@
 //
 // 「放在密谋牌库旁边」用纯 JSON 的 state.scenarioZones.agendaAside = [{ id, code }] 表示
 // （见 encounter-rules.js 的同名共享区注释）；3 张的计数也读同一份数据。
+// 猎物「剩余神智值最低的调查员」：引擎的 getMaxSanity 会叠加场上修正，内容层只读调查员的
+// 印刷神智（inv.sanity）再减恐惧——不再把支援自身的神智轨道加到调查员身上（旧实现会误加）。
 
-import { ALL_CARDS, activeInvestigators, originalOf } from '../../../_shared.js'
+import { activeInvestigators, originalOf } from '../../../_shared.js'
 
 const PIPER = '05088'
 
-// 剩余神智值：基础神智 + 支援神智 - 恐惧（与混乱卡裁决口径一致，近似）。
+// 剩余神智值：印刷神智 − 恐惧（引擎 getMaxSanity 的修正项内容层无法读取，按最接近口径近似）。
 function remainingSanity(inv) {
-  const assetSanity = (inv.assets || []).reduce((sum, asset) => sum + (ALL_CARDS[asset.code]?.sanity || 0), 0)
-  return (inv.sanity || 0) + assetSanity - (inv.horror || 0)
+  return (Number(inv.sanity) || 0) - (Number(inv.horror) || 0)
 }
 
 function lowestRemainingSanity(investigators) {
@@ -64,6 +65,7 @@ export default {
     const setAside = state.scenarioZones?.setAside
     if (Array.isArray(setAside)) state.scenarioZones.setAside = setAside.filter(code => code !== PIPER)
     const spawned = api.spawnEngaged?.(PIPER, prey.location, prey.seat)
+    if (spawned) spawned.preySeat = prey.seat // 参考实现：与「剩余神智最低者」交战并以其为猎物。
     api.info?.('三张「魔鬼的笛声」被弃掉：阿撒托斯的吹笛手从场外生成，与其猎物交战！')
     if (!spawned) api.info?.('没有合法生成地点，阿撒托斯的吹笛手无法生成。')
     return true

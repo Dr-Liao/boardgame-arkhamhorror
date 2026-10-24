@@ -13,7 +13,7 @@ import {
   ACT_BROKEN_RITE, ACT_DECKS, ACT_FATED_SOULS, ACT_UNVISITED_ISLE, AGENDA_CROSSROADS,
   AGENDA_LOVERS, ANETTE_MASON, COVEN_INITIATE, FATE_LIST, FORBIDDING_SHORE, GEIST_TRAP,
   ISLE_CODES, JOSEF_MEIGER, KEEPER_OF_SECRETS, LODGE_NEOPHYTE, MISKATONIC_RIVER,
-  SPECTRAL_RAVEN, THE_SPECTRAL_WATCHER, TREACHERY_CODES, UNVISITED_ISLES, WHIPPOORWILL,
+  SCENARIO_CARD, SPECTRAL_RAVEN, THE_SPECTRAL_WATCHER, TREACHERY_CODES, UNVISITED_ISLES, WHIPPOORWILL,
 } from './definition.js'
 import { scenarioGaps, scenarioApproximations } from './notes.js'
 
@@ -28,6 +28,23 @@ const here = (state, inv) => locById(state, inv?.location)
 const watcherOf = state => (state.enemies || []).find(enemy => original(enemy) === THE_SPECTRAL_WATCHER) || null
 const traitsOf = card => ALL_CARDS[original(card)]?.traits || card?.traits || []
 const setFlags = (state, patch) => Object.assign((state.scenarioFlags ||= {}), patch)
+const actCodeOf = state => String(original(state.acts?.[state.actIndex]))
+// 05243–05248 的正面 [fast]：阵法行动期间花 1 线索，使本次技能检定难度 -2。
+const FAST_CIRCLE_ACTS = Object.freeze([
+  ACT_BEYOND_V1, ACT_BEYOND_V2, ACT_BEYOND_V3, ACT_BEYOND_V4, ACT_BINDING_RITE, ACT_BROKEN_RITE,
+])
+// 地点此刻是否有闹鬼能力（印刷 + 授予，与 haunted.js 的读点同口径）。
+const hasHauntedAt = (state, locationId) => {
+  if (!locationId) return false
+  if (locById(state, locationId)?.haunted?.length) return true
+  return (state.hauntedGrants || []).some(grant => grant.locationId === 'all' || grant.locationId === locationId)
+}
+// 05257：幽灵看守人位于灵怪陷阱时获得反击（引擎只在攻击结算读 enemy.retaliate）。
+function syncWatcherRetaliate(state) {
+  const watcher = watcherOf(state)
+  if (!watcher) return
+  watcher.retaliate = String(original(locById(state, watcher.location))) === GEIST_TRAP
+}
 
 function takeFromSetAside(state, code) {
   const zones = (state.scenarioZones ||= {})
@@ -140,6 +157,10 @@ function resolveFate(state, api, fate, inv) {
       inv.assets ||= []
       inv.assets.push({ id: `story:${fate.ally}`, code: fate.ally, originalCode: fate.ally })
     }
+    // 卡面「本场冒险不占盟友槽」：引擎没有 DoNotTakeUpSlot，改用实例 slots 覆盖成不占槽的占位标签
+    // （assets.js:74-99 的 slotUsage 优先读实例 slots），避免剧情盟友挤占盟友槽。
+    const asset = inv?.assets?.find(item => original(item) === fate.ally)
+    if (asset) asset.slots = ['none']
     records[fate.alive] = true
     api?.info?.(`“${fate.name}”从雾中跌出：你控制其剧情支援，记录其还活着。`)
     return
@@ -189,6 +210,26 @@ export const CIRCLE_ACTIONS = Object.freeze({
   [UNVISITED_ISLES.decayedWillow]: { skills: ['intellect', 'combat'], difficulty: 9 },
   [GEIST_TRAP]: { skills: ['willpower', 'intellect', 'combat', 'agility'], difficulty: 20 },
 })
+
+// 05243–05248 正面 [fast]：阵法行动期间花 1 线索，使本次技能检定难度 -2。
+function circleTestDifficulty(state, inv, base, api) {
+  if (!FAST_CIRCLE_ACTS.includes(actCodeOf(state)) || (inv?.clues || 0) < 1) return base
+  let answer = 'skip'
+  if (typeof api?.choose === 'function') {
+    answer = api.choose({
+      kind: 'circle', source: actCodeOf(state), seat: inv.seat,
+      prompt: '阵法行动期间：花 1 个线索使本次技能检定难度 -2？',
+      options: [
+        { id: 'spend', label: '花 1 个线索（难度 -2）' },
+        { id: 'skip', label: '不花线索' },
+      ],
+    })
+  }
+  if (answer !== 'spend') return base
+  inv.clues -= 1
+  api?.info?.('花 1 个线索：本次阵法检定的难度 -2。')
+  return Math.max(0, base - 2)
+}
 
 export const implementedEncounterCodes = [
   WHIPPOORWILL, SPECTRAL_RAVEN,
@@ -309,6 +350,17 @@ export const behavior = {
     return null
   },
 
+  // 05242「每位调查员不能离开自己面前的地点」：以 05241 背面记录的 flags.frontOf 为准。
+  // 引擎在移动行动（moves.js:649-656）与合法动作列表读这个钩子；效果位移由 movementError 通道处理
+  // （本仓库没有对效果位移的章节钩子，登记为近似）。
+  moveError(state, inv, destLoc) {
+    if (actCodeOf(state) !== ACT_FATED_SOULS) return undefined
+    const fronts = state.scenarioFlags?.frontOf || {}
+    if (Number(fronts[inv?.location]) !== Number(inv?.seat)) return undefined
+    if (destLoc && destLoc.id === inv.location) return undefined
+    return '你被钉在自己面前的地点：本幕你不能离开它。'
+  },
+
   // 阵法行动：任何有火盆且已揭示的地点。
   actions(state, inv) {
     const moves = []
@@ -366,13 +418,13 @@ export const behavior = {
         })
       }
       if (!spec.skills.includes(skill)) skill = spec.skills[0]
-      api?.test?.(inv.seat, skill, spec.difficulty, finish, 0,
-        { label: '阵法', code: original(location) }, { actionKind: 'circle' })
+      api?.test?.(inv.seat, skill, circleTestDifficulty(state, inv, spec.difficulty, api),
+        finish, 0, { label: '阵法', code: original(location) }, { actionKind: 'circle' })
       return true
     }
     // P2.5：2–4 个技能求和检定。
-    api?.test?.(inv.seat, [...spec.skills], spec.difficulty, finish, 0,
-      { label: '阵法', code: original(location) }, { actionKind: 'circle' })
+    api?.test?.(inv.seat, [...spec.skills], circleTestDifficulty(state, inv, spec.difficulty, api),
+      finish, 0, { label: '阵法', code: original(location) }, { actionKind: 'circle' })
     return true
   },
 
@@ -397,12 +449,54 @@ export const behavior = {
       api?.info?.('苔藓阶梯闹鬼：本轮你的下一次移动行动额外花费 1 个行动。')
       return true
     }
+    if (scriptId === 'hauntedSpring') {
+      // 卡面：弃掉你控制的一张支援，或受到 1 点伤害。没有支援时只提供「受到 1 点伤害」。
+      const inv = state.investigators?.[payload?.seat]
+      if (!inv) return false
+      const assets = inv.assets || []
+      const options = []
+      if (assets.length) options.push({ id: 'asset', label: '弃掉你控制的一张支援' })
+      options.push({ id: 'damage', label: '受到 1 点伤害' })
+      let answer = options[options.length - 1].id
+      if (typeof api?.choose === 'function' && options.length > 1) {
+        answer = api.choose({
+          kind: 'haunted', source: 'hauntedSpring', seat: payload?.seat,
+          prompt: '闹鬼：弃掉一张支援，或受到 1 点伤害。', options,
+        })
+      }
+      if (answer === 'asset' && assets.length) {
+        const picked = assets.length === 1 ? assets[0].id : api.choose?.({
+          kind: 'target', source: 'hauntedSpring', seat: payload?.seat,
+          prompt: '选择并弃掉你控制的一张支援。',
+          options: assets.map(asset => ({ id: asset.id, cardCode: asset.code, label: api?.cardName?.(asset.code) || asset.name || asset.code })),
+        })
+        api?.discardAsset?.(payload.seat, picked && assets.some(asset => asset.id === picked) ? picked : assets[0].id)
+      } else {
+        api?.damage?.(payload.seat, 1)
+      }
+      api?.info?.('闹鬼：闹鬼的泉水结算完毕。')
+      return true
+    }
     if (scriptId === 'forsakenWoods') {
-      const nearby = state.enemies.filter(enemy => original(enemy) === WHIPPOORWILL)[0] || null
+      const ravens = state.enemies.filter(enemy => original(enemy) === WHIPPOORWILL)
+      // 「最近的夜鹰」：优先同地点的夜鹰；仍有多只时由玩家选择。
+      const localRavens = ravens.filter(enemy => enemy.location === locationId)
+      const pool = localRavens.length ? localRavens : ravens
+      let nearby = pool[0] || null
+      if (pool.length > 1 && typeof api?.choose === 'function') {
+        const picked = api.choose({
+          kind: 'enemy', source: 'forsakenWoods', seat: payload?.seat,
+          prompt: '选择要攻击你的夜鹰。',
+          options: pool.map(enemy => ({ id: enemy.id, label: enemy.name })),
+        })
+        nearby = pool.find(enemy => String(enemy.id) === String(picked)) || pool[0]
+      }
       const options = []
       const found = findWhippoorwill(state)
-      if (found || true) options.push({ id: 'search', label: '查找夜鹰并生成在此地点' })
+      // 卡面「找出一张夜鹰并生成」在牌库与弃牌堆都没有夜鹰时没有可结算的来源：不提供该选项（参考实现同口径）。
+      if (found) options.push({ id: 'search', label: '查找夜鹰并生成在此地点' })
       if (nearby) options.push({ id: 'attack', label: '最近的夜鹰攻击你' })
+      if (!options.length) return true
       let answer = options[0].id
       if (typeof api?.choose === 'function' && options.length > 1) {
         answer = api.choose({
@@ -414,12 +508,8 @@ export const behavior = {
         api?.attack?.(nearby, state.investigators[payload.seat])
         return true
       }
-      if (found) {
-        removeEncounterCard(state, found)
-        api?.spawn?.(WHIPPOORWILL, locationId)
-      } else {
-        api?.spawn?.(WHIPPOORWILL, locationId)
-      }
+      removeEncounterCard(state, found)
+      api?.spawn?.(WHIPPOORWILL, locationId)
       api?.info?.('被遗忘的树林闹鬼：一张夜鹰生成在此地点。')
       return true
     }
@@ -449,17 +539,20 @@ export const behavior = {
       const aside = [...(state.scenarioFlags?.asideIsles || [])]
       const placedIsles = state.scenarioFlags?.placedIsles || []
       const faction = factionOf(state)
+      const fronts = {}
       for (const inv of activeInvestigators(state)) {
         if (!aside.length) break
         const isleCode = aside.shift()
         const id = idOfIsle(isleCode)
         placeUnrevealedLocation(state, api, id, { lit: faction === 'coven' })
         placedIsles.push(isleCode)
+        // 05241/05242：「放到自己面前」→ flags.frontOf[地点 id] = 座位（引擎没有面前地点原语）。
+        fronts[id] = inv.seat
         api?.moveInvestigator?.(inv.seat, id)
         if (typeof api?.moveInvestigator !== 'function') inv.location = id
         api?.info?.(`${inv.name} 面前放置了「未访之岛」，并立即移动到该地点。`)
       }
-      setFlags(state, { asideIsles: aside, placedIsles })
+      setFlags(state, { asideIsles: aside, placedIsles, frontOf: fronts })
       dealFateCards(state, api)
       return
     }
@@ -568,16 +661,19 @@ export const behavior = {
   // -------------------------------------------------------------------------
   // 敌人
   // -------------------------------------------------------------------------
-  spawnLocation(state, code) {
+  spawnLocation(state, code, fallbackLoc) {
     if (code === WHIPPOORWILL || code === SPECTRAL_RAVEN) {
       const alive = activeInvestigators(state)
-      return alive[0]?.location || null
+      return alive[0]?.location || fallbackLoc || null
     }
-    return null
+    // 引擎语义：spawnLocation 返回 null = 生成失败。未特判的 code 必须回退到引擎给定的地点，
+    // 否则整关所有未列出的敌人都无法生成（含共享组敌人与放一边的 05100 等）。
+    return fallbackLoc || null
   },
 
   enemySpawned(state, enemy, api) {
     encounterRules.enemySpawned?.(state, enemy, api)
+    syncWatcherRetaliate(state)
     const code = String(original(enemy))
     if (code === THE_SPECTRAL_WATCHER) {
       enemy.lostSouls = Number(enemy.lostSouls) || Number(state.scenarioFlags?.watcherSouls) || 0
@@ -589,20 +685,33 @@ export const behavior = {
       enemy.prey = 'lowestIntellect'
       return
     }
-    // 秘社新信徒的「入场放 1 毁灭」：用 definition 声明的 ruleId 判断（共享组条目不属本章）。
+    // 秘社新信徒的「入场放 1 毁灭」已由共享 encounterRules.enemySpawned 按
+    // enemySpawnRule.doomOnSpawn 结算（本函数开头已转发）；这里不再手动 +1，
+    // 否则 QA 实测入场毁灭会变成 2 个（05095 verdict=mismatch 的根因）。
     if (code === LODGE_NEOPHYTE) {
-      enemy.doom = (enemy.doom || 0) + 1
-      api?.info?.('秘社新信徒入场：在其上放置 1 个毁灭。')
+      api?.info?.('秘社新信徒入场：共享规则已在其上放置 1 个毁灭。')
     }
+  },
+
+  // 05257：看守人移动到灵怪陷阱/离开时要同步反击关键词。
+  enemyMoved(state, enemy, previousLocation, api) {
+    encounterRules.enemyMoved?.(state, enemy, previousLocation, api)
+    if (String(original(enemy)) === THE_SPECTRAL_WATCHER) syncWatcherRetaliate(state)
   },
 
   enemyDefeated(state, enemy, api) {
     const code = String(original(enemy))
     if (code === THE_SPECTRAL_WATCHER) {
       // 卡面：被击败时不弃掉，改为治愈所有伤害、解除交战并横置；本轮补给阶段不重整。
+      // 与共享条目 05086 同口径：preventReady 由引擎补给阶段读；还要从交战调查员的 engaged 数组清理。
       enemy.damageTaken = 0
-      enemy.horror = 0
       enemy.exhausted = true
+      enemy.preventReady = { from: state.round, rounds: 1 }
+      const holder = enemy.engagedSeat == null ? null : state.investigators[enemy.engagedSeat]
+      if (holder) holder.engaged = (holder.engaged || []).filter(id => id !== enemy.id)
+      for (const inv of state.investigators || []) {
+        if (Array.isArray(inv.engaged)) inv.engaged = inv.engaged.filter(id => id !== enemy.id)
+      }
       enemy.engagedSeat = null
       if (!state.enemies.includes(enemy)) state.enemies.push(enemy)
       const atTrap = String(original(locById(state, enemy.location))) === GEIST_TRAP
@@ -640,7 +749,7 @@ export const behavior = {
       return
     }
     if (code === SPECTRAL_RAVEN) {
-      const haunted = typeof api?.haunted === 'function' && locById(state, inv.location)?.haunted
+      const haunted = hasHauntedAt(state, inv.location)
       let answer = 'modify'
       if (typeof api?.choose === 'function') {
         answer = api.choose({
@@ -654,8 +763,9 @@ export const behavior = {
       }
       if (answer === 'haunted') api?.haunted?.(inv.seat, { locationId: inv.location })
       else {
-        enemy.ravenBoostRound = state.round
-        enemy.ravenBoostPhase = 'investigation'
+        // 卡面「直到调查阶段结束」：敌人阶段/补给阶段触发时指向下一轮的调查阶段结束。
+        enemy.ravenBoostUntilRound = (state.phase === 'enemy' || state.phase === 'upkeep')
+          ? state.round + 1 : state.round
         api?.info?.('幽灵乌鸦得到 +2 攻击与 +2 躲避直到调查阶段结束。')
       }
     }
@@ -678,32 +788,40 @@ export const behavior = {
     }
   },
 
-  // 夜鹰：所在地点的调查员 -1 全部技能。
+  // 夜鹰：所在地点的调查员每有 1 张夜鹰 -1 全部技能（横置不影响；多张叠加）。
   statModifier(state, inv, skill) {
     let delta = encounterRules.statModifier?.(state, inv, skill) || 0
-    const whippoorwillHere = state.enemies.some(enemy =>
-      String(original(enemy)) === WHIPPOORWILL && enemy.location === inv.location && !enemy.exhausted)
-    if (whippoorwillHere) delta -= 1
+    const whippoorwillsHere = state.enemies.filter(enemy =>
+      String(original(enemy)) === WHIPPOORWILL && enemy.location === inv.location).length
+    if (whippoorwillsHere) delta -= whippoorwillsHere
     return delta
   },
 
   enemyStatModifier(state, enemy, stat) {
     let delta = encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
     const code = String(original(enemy))
-    if (code === THE_SPECTRAL_WATCHER && (stat === 'fight' || stat === 'evade')) {
+    // 05239：恋人·VI 只给看守人 +1 攻击值（旧实现连躲避一起加）。
+    if (code === THE_SPECTRAL_WATCHER && stat === 'fight') {
       delta += Number(enemy.lostSouls) || 0
     }
-    if (code === SPECTRAL_RAVEN && state.phase === 'investigation'
-      && enemy.ravenBoostRound === state.round && (stat === 'fight' || stat === 'evade')) delta += 2
+    // 05267：+2 攻击/+2 躲避直到调查阶段结束（敌人阶段触发 → 下一轮调查阶段末）。
+    if (code === SPECTRAL_RAVEN && (stat === 'fight' || stat === 'evade')) {
+      const until = Number(enemy.ravenBoostUntilRound)
+      const active = Number.isFinite(until) && (state.round < until
+        || (state.round === until && (state.phase === 'mythos' || state.phase === 'investigation')))
+      if (active) delta += 2
+    }
     return delta
   },
 
   // 共享 encounter-rules 的幽灵敌人地点限制不适用于本章（UAD 幽灵敌人卡面无此限制）。
-  canFightEnemy() {
+  canFightEnemy(state, inv, enemy) {
+    syncWatcherRetaliate(state)
     return true
   },
 
-  canEvadeEnemy() {
+  canEvadeEnemy(state, inv, enemy) {
+    syncWatcherRetaliate(state)
     return true
   },
 
@@ -743,7 +861,16 @@ export const behavior = {
       const locals = state.enemies.filter(enemy =>
         enemy.location === inv.location && traitsOf(enemy).some(trait => String(trait).toLowerCase() === 'spectral'))
       if (locals.length) {
-        const target = locals[0]
+        // 05238 [tablet]：由结算玩家选择所在地点的哪个幽灵敌人攻击（旧实现固定取第一个）。
+        let target = locals[0]
+        if (locals.length > 1 && typeof api?.choose === 'function') {
+          const picked = api.choose({
+            kind: 'enemy', source: SCENARIO_CARD, seat: inv.seat,
+            prompt: '石板失败：选择所在地点的一个幽灵敌人攻击你。',
+            options: locals.map(enemy => ({ id: enemy.id, label: enemy.name })),
+          })
+          target = locals.find(enemy => String(enemy.id) === String(picked)) || locals[0]
+        }
         api?.attack?.(target, inv)
         api?.info?.(`石板失败：所在地点的幽灵敌人「${target.name}」攻击你（不论是否横置）。`)
       }
@@ -779,12 +906,24 @@ export const behavior = {
       return false
     }
     if (code === TREACHERY_CODES.psychopompsSong || code === TREACHERY_CODES.deathApproaches) {
-      inv.threat ||= []
-      if (!inv.threat.some(card => original(card) === code)) {
-        inv.threat.push({ id: `threat:${code}`, code, originalCode: code, name: ALL_CARDS[code]?.nameZh || code })
+      // 卡面「任意调查员的威胁区」：由结算玩家选择目标调查员（旧实现固定给抽牌者）。
+      let target = inv
+      const pool = activeInvestigators(state)
+      if (pool.length > 1 && typeof api?.choose === 'function') {
+        const picked = api.choose({
+          kind: 'investigator', source: code, seat: inv.seat,
+          prompt: `选择「${ALL_CARDS[code]?.nameZh || code}」放入其威胁区的调查员。`,
+          options: pool.map(candidate => ({ id: String(candidate.seat), label: candidate.name })),
+        })
+        target = pool.find(candidate => String(candidate.seat) === String(picked)) || inv
       }
-      api?.info?.(`「${ALL_CARDS[code]?.nameZh || code}」进入 ${inv.name} 的威胁区域。`)
-      return false
+      target.threat ||= []
+      if (!target.threat.some(card => original(card) === code)) {
+        target.threat.push({ id: `threat:${code}:${target.seat}`, code, originalCode: code, name: ALL_CARDS[code]?.nameZh || code })
+      }
+      api?.info?.(`「${ALL_CARDS[code]?.nameZh || code}」进入 ${target.name} 的威胁区域。`)
+      // 卡牌已在威胁区（不是弃牌堆）：返回 true 让引擎不再把它弃进遭遇弃牌堆（避免重复记账）。
+      return true
     }
     if (code === TREACHERY_CODES.markedForDeath) {
       const difficulty = 2 + (Number(inv.horror) || 0)
@@ -801,10 +940,18 @@ export const behavior = {
           if (result?.success) return
           const watcher = watcherOf(state)
           const watcherLocation = watcher?.location
-          const options = [{ id: 'here', label: '结算你所在地点的闹鬼能力' }]
-          if (watcherLocation) options.push({ id: 'watcher', label: '结算幽灵看守人所在地点的闹鬼能力' })
+          // 卡面两条二选一：先校验两个地点是否真的有闹鬼能力，没有就不给该选项。
+          const options = []
+          if (hasHauntedAt(state, target.location)) options.push({ id: 'here', label: '结算你所在地点的闹鬼能力' })
+          if (watcherLocation && hasHauntedAt(state, watcherLocation)) {
+            options.push({ id: 'watcher', label: '结算幽灵看守人所在地点的闹鬼能力' })
+          }
+          if (!options.length) {
+            api?.info?.('看守人的注视：两个地点都没有闹鬼能力，效果结束。')
+            return
+          }
           let answer = options[0].id
-          if (typeof api?.choose === 'function') {
+          if (typeof api?.choose === 'function' && options.length > 1) {
             answer = api.choose({
               kind: 'treachery', source: TREACHERY_CODES.watchersGaze, seat: target.seat,
               prompt: '看守人的注视：检定失败，选择结算哪个地点的闹鬼能力。', options,

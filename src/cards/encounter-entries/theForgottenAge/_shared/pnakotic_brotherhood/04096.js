@@ -16,10 +16,25 @@ export default {
       api.drawEncounter(inv.seat)
       return false
     }
-    const target = [...cultists].sort((left, right) =>
-      entryDistance(state, inv.location, left.location) - entryDistance(state, inv.location, right.location))[0]
+    const scored = cultists.map(enemy => ({ enemy, steps: entryDistance(state, inv.location, enemy.location) }))
+    const nearest = Math.min(...scored.map(entry => entry.steps))
+    const tied = scored.filter(entry => entry.steps === nearest).map(entry => entry.enemy)
+    let target = tied[0]
+    if (tied.length > 1 && typeof api.choose === 'function') {
+      const answer = api.choose({
+        kind: 'target', source: '04096', seat: inv.seat,
+        prompt: '选择离你最近的异教徒敌人。',
+        options: tied.map((enemy, index) => ({ id: String(index), enemyId: enemy.id, label: enemy.name })),
+      })
+      target = tied[Number(answer)] || target
+    }
     if (target) target.doom = (target.doom || 0) + 1
-    api.test(inv.seat, 'willpower', target ? ((target.fight || 0) + (target.doom || 0)) : 3, result => {
+    // X = 该敌人在结算时的攻击值：走 enemyFightValue 才能算上毁灭修正与场景修正
+    // （例如 04140「伊塔卡的猎物」在无线索地点 +1 攻击），而不是只算基础 fight+毁灭。
+    const fightValue = target
+      ? (typeof api.enemyFight === 'function' ? api.enemyFight(target, inv.seat) : (target.fight || 0) + (target.doom || 0))
+      : 3
+    api.test(inv.seat, 'willpower', fightValue, result => {
       if (!result.success) api.horror(inv.seat, 2)
     })
     return false

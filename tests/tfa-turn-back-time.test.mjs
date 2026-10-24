@@ -119,7 +119,7 @@ function runtimeApi(state, overrides = {}) {
     checkEnemyDefeat: () => false,
     addToExplorationDeck: codes => { state.explorationDeck = [...(state.explorationDeck || []), ...codes] },
     moveRelicOfAges: payload => {
-      state.relicOfAges = { code: '04061', location: null, seat: null, ...payload }
+      state.relicOfAges = { code: '04303', location: null, seat: null, ...payload }
       if (state.relicOfAges.seat != null) {
         state.relicOfAges.location = state.investigators[state.relicOfAges.seat]?.location ?? null
       }
@@ -206,7 +206,7 @@ test('布置把古代遗物、预示者、伊格和时间石室放在一边，�
   const state = setup(stateFor(2))
   const zones = state.scenarioZones
   assert.deepEqual(zones.setAside.filter(code => code === '04102').length, 4)
-  assert.ok(zones.setAside.includes('04061'), '古代遗物')
+  assert.ok(zones.setAside.includes('04303'), '古代遗物')
   assert.ok(zones.setAside.includes('04062'), '瓦卢西亚的预示者')
   assert.ok(zones.setAside.includes('04296'), '伊格')
   assert.deepEqual(zones.setAsideLocations, ['chamberOfTime'])
@@ -252,9 +252,9 @@ test('时间石室入场：古代遗物附属于此并放置 1 个毁灭', () =>
   state.investigators[0].location = 'secretPassage'
   const chamber = state.locations.find(location => location.id === 'chamberOfTime')
   behavior.locationRevealed(state, chamber, api)
-  assert.deepEqual(state.relicOfAges, { code: '04061', location: 'chamberOfTime', seat: null })
+  assert.deepEqual(state.relicOfAges, { code: '04303', location: 'chamberOfTime', seat: null })
   assert.equal(chamber.doom, 1)
-  assert.equal(state.scenarioZones.setAside.includes('04061'), false)
+  assert.equal(state.scenarioZones.setAside.includes('04303'), false)
   behavior.locationRevealed(state, chamber, api)
   assert.equal(chamber.doom, 1, '只结算一次')
 })
@@ -270,8 +270,8 @@ test('第二幕推进：时间石室中的调查员取得古代遗物，伊格�
   state.investigators[0].location = 'chamberOfTime'
   state.investigators[1].location = 'chamberOfTime'
   behavior.actReveal(state, state.acts[1], api)
-  assert.equal(state.investigators[0].assets.some(asset => asset.code === '04061'), true)
-  assert.deepEqual(state.relicOfAges, { code: '04061', location: 'chamberOfTime', seat: 0 })
+  assert.equal(state.investigators[0].assets.some(asset => asset.code === '04303'), true)
+  assert.deepEqual(state.relicOfAges, { code: '04303', location: 'chamberOfTime', seat: 0 })
   const yig = state.enemies.find(enemy => enemy.code === '04296')
   assert.equal(yig.location, 'chamberOfTime')
   assert.equal(state.victoryDisplay.find(card => card.id === 'act2').vengeance, 2)
@@ -287,7 +287,7 @@ test('古代遗物与伊格：第三幕行动检定成功后翻线索为毁灭�
   const inv = state.investigators[0]
   inv.location = 'chamberOfTime'
   inv.clues = 1
-  api.giveAsset(0, '04061')
+  api.giveAsset(0, '04303')
   const yig = api.spawn('04296', 'chamberOfTime')
   const moves = behavior.actions(state, inv)
   assert.deepEqual(moves.map(move => move.rule), ['relicOfAgesStrike'])

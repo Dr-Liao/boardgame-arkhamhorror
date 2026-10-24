@@ -11,15 +11,16 @@
 //   - validateDeckRules 一次取出排除式规则，避免每张牌重新构建。
 // 语义不变：缓存键含调查员对象身份与 epoch，卡牌仍按传入 cards 映射逐次读取。
 import { UI_CARDS } from './ui-cards.js'
+import { t } from './i18n.js'
 
 const extensions = new Map()
 let rulesEpoch = 0
 const rulesCache = new WeakMap() // investigator object -> { epoch, rules }
 export function registerDeckRules(investigatorCode, rules) {
-  if (!Number.isSafeInteger(rules.size) || rules.size < 1 || !Array.isArray(rules.options)) throw new Error('无效构筑规则')
+  if (!Number.isSafeInteger(rules.size) || rules.size < 1 || !Array.isArray(rules.options)) throw new Error(t('misc.deckRules.invalid'))
   for (const option of rules.options) {
-    if (option.limit != null && (!Number.isSafeInteger(option.limit) || option.limit < 0)) throw new Error('无效构筑限额')
-    if (option.level && (!Number.isSafeInteger(option.level.min ?? 0) || !Number.isSafeInteger(option.level.max ?? 5) || (option.level.min ?? 0) < 0 || (option.level.max ?? 5) < (option.level.min ?? 0))) throw new Error('无效卡牌等级区间')
+    if (option.limit != null && (!Number.isSafeInteger(option.limit) || option.limit < 0)) throw new Error(t('misc.deckRules.limit'))
+    if (option.level && (!Number.isSafeInteger(option.level.min ?? 0) || !Number.isSafeInteger(option.level.max ?? 5) || (option.level.min ?? 0) < 0 || (option.level.max ?? 5) < (option.level.min ?? 0))) throw new Error(t('misc.deckRules.levelRange'))
   }
   extensions.set(investigatorCode, structuredClone(rules))
   rulesEpoch++ // 新规则注册后让所有缓存失效（WeakMap 条目靠 epoch 比对淘汰）
@@ -172,20 +173,20 @@ export function validateDeckRules(investigator, codes, cards, { partial = false 
   const rules = deckRules(investigator)
   const errors = []
   const ordinary = codes.map(code => cards[code]).filter(card => card && !card.signatureFor && !card.subtype && !card.story)
-  for (const code of codes) if (!cards[code]) errors.push(`未知卡牌：${code}`)
+  for (const code of codes) if (!cards[code]) errors.push(t('misc.deck.unknownCard', { code }))
   // 排除式构筑限制（`not: true`）：命中的卡不能进牌组，且不受其它允许项豁免。
   const exclusionRules = exclusionRulesOf(rules)
   for (const card of ordinary) {
-    if (exclusionRules.some(rest => matchesCardRule(card, rest, investigator))) errors.push(`${card.name || card.code} 属于构筑限制排除的卡牌`)
+    if (exclusionRules.some(rest => matchesCardRule(card, rest, investigator))) errors.push(t('misc.deck.excluded', { name: card.name || card.code }))
   }
   const counted = ordinary.filter(card => !card.permanent && !card.ignoreDeckLimit)
-  if ((!partial && counted.length !== rules.size) || counted.length > rules.size) errors.push(`牌库需 ${rules.size} 张玩家卡，当前 ${counted.length} 张`)
+  if ((!partial && counted.length !== rules.size) || counted.length > rules.size) errors.push(t('misc.deck.size', { size: rules.size, count: counted.length }))
   const names = new Map()
   for (const card of ordinary) {
     const group = names.get(card.name || card.code) || []
     group.push(card); names.set(card.name || card.code, group)
   }
-  for (const [name, group] of names) if (group.length > Math.min(...group.map(deckCardLimit))) errors.push(`${name} 超过张数上限`)
+  for (const [name, group] of names) if (group.length > Math.min(...group.map(deckCardLimit))) errors.push(t('misc.deck.overLimit', { name }))
   // Capacity matching prevents one card from consuming both a primary option
   // and a limited splash allowance; augmentation makes this order independent.
   const limited = ordinary.filter(card => !rules.options.some(rule => rule.limit == null && matchesCardRule(card, rule, investigator)))
@@ -199,12 +200,12 @@ export function validateDeckRules(investigator, codes, cards, { partial = false 
     }
     return false
   }
-  for (let i = 0; i < limited.length; i++) if (!assign(i, new Set())) errors.push(`${limited[i].name || limited[i].code} 不符合构筑限制或限额`)
+  for (let i = 0; i < limited.length; i++) if (!assign(i, new Set())) errors.push(t('misc.deck.restriction', { name: limited[i].name || limited[i].code }))
   for (const rule of partial ? [] : rules.options.filter(option => option.atleast)) {
     const requiredFactions = rule.atleast.factions
     const minimum = rule.atleast.min
     if (!Number.isSafeInteger(requiredFactions) || requiredFactions < 1 || !Number.isSafeInteger(minimum) || minimum < 1) {
-      errors.push('无效的阵营数量构筑要求')
+      errors.push(t('misc.deck.atleastInvalid'))
       continue
     }
     const allowedFactions = rule.factions || rule.faction || []
@@ -214,7 +215,7 @@ export function validateDeckRules(investigator, codes, cards, { partial = false 
       for (const faction of new Set(factions)) if (counts.has(faction)) counts.set(faction, counts.get(faction) + 1)
     }
     if ([...counts.values()].filter(count => count >= minimum).length < requiredFactions) {
-      errors.push(rule.error || `牌组必须至少包含 ${requiredFactions} 个不同阵营各 ${minimum} 张牌`)
+      errors.push(rule.error || t('misc.deck.atleast', { factions: requiredFactions, minimum }))
     }
   }
   return { errors, size: rules.size, count: counted.length, permanent: ordinary.length - counted.length }
@@ -229,7 +230,11 @@ export function validateDeckRules(investigator, codes, cards, { partial = false 
 // 02 敦威治遗产、03 卡尔克萨之路、04 失落的时代……），与官方产品循环一致。
 // 浏览器与服务器共用这份纯规则：新战役必须登记循环，否则渐进式视为不限制。
 export const CARD_POOL_SCOPES = Object.freeze(['all', 'progressive'])
-export const CARD_POOL_SCOPE_LABELS = Object.freeze({ all: '全部', progressive: '渐进式' })
+// getter：取到时按当前语言求值（不能在这里直接 t()，那会在导入时固定成 zh-CN）。
+export const CARD_POOL_SCOPE_LABELS = Object.freeze({
+  get all() { return t('misc.cardPool.all') },
+  get progressive() { return t('misc.cardPool.progressive') },
+})
 export const CAMPAIGN_CYCLES = Object.freeze({
   nightOfTheZealot: 1,
   theDunwichLegacy: 2,
@@ -262,5 +267,5 @@ export function upgradeQuote(added, removed, { discounts = [] } = {}) {
   const base = Math.max(1, printed - credit)
   const discount = discounts.filter(rule => matchesCardRule(added, rule.match || {}, {})).reduce((sum, rule) => sum + rule.amount, 0)
   return { cost: Math.max(0, base - discount), printed, credit, discount,
-    explanation: `卡牌经验 ${printed} − 同名升级抵扣 ${credit}，最低 1 XP${discount ? `，优惠 ${discount}` : ''}` }
+    explanation: t('misc.upgrade.quote', { printed, credit }) + (discount ? t('misc.upgrade.discount', { discount }) : '') }
 }

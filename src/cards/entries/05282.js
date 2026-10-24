@@ -17,6 +17,13 @@ function connectorsOf(state, locationId) {
 
 export default {
   code: '05282',
+  // 卡面两项都以「躲避」为目标：没有可躲避的敌人（与本人交战，或位于连接地点的非精英）时不能打出。
+  playCondition: [{
+    when: ({ state, inv }) => (state.enemies || []).some(enemy => !enemy.defeated
+      && (enemy.engagedSeat === inv.seat
+        || (!enemy.elite && (state.locations.find(location => location.id === inv.location)?.connections || []).includes(enemy.location)))),
+    message: '没有可以躲避的敌人（与你交战的敌人，或连接地点的非精英敌人），不能打出「偷梁换柱」',
+  }],
   abilities: [
     {
       kind: 'played',

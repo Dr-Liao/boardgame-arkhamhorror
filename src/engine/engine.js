@@ -121,7 +121,7 @@ import { introduction, resolutionStory } from '../campaign/story.js'
 import { campaignGraph, enterCampaignNode, walkCampaign } from '../campaign/campaign-flow.js'
 import { applyCampaignEffect, applyResolutionResults } from '../campaign/campaign-effects.js'
 import { initializeChaosBag, beginChaosTest, drawChaosToken, returnChaosToken, endChaosTest, releaseChaosTokens, sealChaosToken } from './chaos-bag.js'
-import { registerCampaignInvestigator, updateCampaignStatus, replacementCandidates, awardExperience, campaignCardChange, settleExiledCards, availablePurchases, replacementOptions, purchaseCard, upgradeRecord, stagePurchase, finishUpgradeDraft, recommendUpgrade, campaignEnding } from '../campaign/campaign.js'
+import { registerCampaignInvestigator, updateCampaignStatus, replacementCandidates, awardExperience, campaignCardChange, settleExiledCards, availablePurchases, replacementOptions, purchaseCard, upgradeRecord, stagePurchase, finishUpgradeDraft, recommendUpgrade, campaignEnding, refreshArcaneResearch } from '../campaign/campaign.js'
 
 const PLAYABLE_INVESTIGATORS = PLAYABLE_INVESTIGATOR_CODES
 
@@ -327,6 +327,7 @@ import { createDispatch } from './dispatch.js'
 import { createEncounter } from './encounter.js'
 import { createMovement } from './movement.js'
 import { createEnemies } from './enemies.js'
+import { enemyIgnoresInvestigator } from './trait-passives.js'
 import { createLocations } from './locations.js'
 import { createSkillEffects } from './skill-effects.js'
 import { createTurn } from './turn.js'
@@ -607,7 +608,9 @@ function engagesAutomatically(state, enemy) {
 function autoEngageAt(state, locationId, events = []) {
   for (const enemy of state.enemies) {
     if (enemy.location !== locationId || !engagesAutomatically(state, enemy)) continue
-    const here = aliveInvestigators(state).filter((i) => i.location === locationId).map((i) => i.seat)
+    const here = aliveInvestigators(state)
+      .filter((i) => i.location === locationId && !enemyIgnoresInvestigator(state, i, enemy))
+      .map((i) => i.seat)
     const target = preyTarget(state, enemy, here)
     if (target != null) engageEnemy(state, enemy, target, events)
   }
@@ -616,7 +619,9 @@ function autoEngageAt(state, locationId, events = []) {
 function autoEngageAll(state, events) {
   for (const enemy of state.enemies) {
     if (!engagesAutomatically(state, enemy)) continue
-    const here = aliveInvestigators(state).filter((i) => i.location === enemy.location).map((i) => i.seat)
+    const here = aliveInvestigators(state)
+      .filter((i) => i.location === enemy.location && !enemyIgnoresInvestigator(state, i, enemy))
+      .map((i) => i.seat)
     const target = preyTarget(state, enemy, here)
     if (target != null) {
       engageEnemy(state, enemy, target, events)
@@ -1076,6 +1081,8 @@ const commonDeps = {
   requestChoice,
   resolveEffect,
   returnAssetToHand,
+  // 2026-10-25：05319「查看另一位调查员手牌」的私密投影入口（abilityApi.privateInfo）。
+  privateInfo,
   revealLocation,
   ruleIgnored,
   runtimeCardAvailable,
@@ -1192,8 +1199,45 @@ const windowLabelOf = id => playerWindowLabel(id)
 function doEngage(state, seat, enemyId, events) {  const inv = state.investigators[seat]
   const enemy = state.enemies.find((e) => e.id === enemyId)
   if (!enemy) return
+  // 04325b/04326b：「不与你交战」——不能主动与该特性的敌人建立交战。
+  if (enemyIgnoresInvestigator(state, inv, enemy)) {
+    info(state, events, `🕊️ ${inv.name} 不能与「${enemy.name}」交战（调查员被动）。`)
+    return
+  }
   engageEnemy(state, enemy, seat, events)
   info(state, events, `${inv.name} 主动与「${enemy.name}」交战。`)
+}
+
+// 04002 厄休拉·唐斯等：「进行一次调查行动」的能力授予行动。
+// 与行动入口同口径：先走借机攻击，再执行 noSpend 的调查（不扣行动点），
+// 且只能在调查阶段、自己的回合、回合未结束时执行。
+export function grantedInvestigateAction(state, seat, events = []) {
+  const inv = state.investigators?.[seat]
+  if (!inv || inv.defeated || inv.resigned || state.status !== 'playing') return null
+  if (state.phase !== 'investigation' || state.currentSeat !== seat || inv.turnEnded) {
+    info(state, events, `⏳ ${inv.name} 现在不能执行额外的调查行动（只能在自己的调查阶段）。`)
+    return null
+  }
+  const pending = enemiesEngagedWith(state, inv)
+    .filter(enemy => !enemy.exhausted && enemyCanOpportunityAttack(state, enemy)).map(enemy => enemy.id)
+  while (pending.length) {
+    const candidates = pending.map(id => state.enemies.find(enemy => enemy.id === id)).filter(enemy => enemy && !enemy.exhausted)
+    if (!candidates.length) break
+    const enemy = chooseAttack(state, inv, candidates, 'opportunity')
+    pending.splice(pending.indexOf(enemy.id), 1)
+    if (inv.onTheLam && !enemy.elite) continue
+    const opportunity = reactionWindow(state, 'opportunityAttack', {
+      when: 'opportunityAttack', seat, location: inv.location, enemy,
+      prompt: `「${enemy.name}」对 ${inv.name} 发动借机攻击`,
+    }, events)
+    if (opportunity.cancelled) {
+      info(state, events, `${inv.name} 取消了「${enemy.name}」的借机攻击。`)
+      continue
+    }
+    enemyAttack(state, enemy, inv, events, `${enemy.name} 发动借机攻击。`, { kind: 'opportunity' })
+    if (inv.defeated || state.status !== 'playing') return null
+  }
+  return doInvestigate(state, seat, {}, events, true)
 }
 
 
@@ -1598,8 +1642,10 @@ function abilityExec() {
 function doAbility(state, seat, assetId, index, targetId, choice, events) {
   return abilityExec().doAbility(state, seat, assetId, index, targetId, choice, events)
 }
-function openAbilityWindow(state, when, context, events) {
-  return abilityExec().openAbilityWindow(state, when, context, events)
+function openAbilityWindow(state, when, context, events, opts) {
+  // 2026-10-25：必须把 opts（allowNested）透传给能力层实现；否则 reactionWindow 的
+  // cardCancelled 嵌套放行在中间 wrapper 处丢失，黛安娜 05004 的真实取消路径仍不触发。
+  return abilityExec().openAbilityWindow(state, when, context, events, opts)
 }
 function effectError(state, inv, effect) {
   return abilityExec().effectError(state, inv, effect)
@@ -1629,6 +1675,7 @@ function campaignFlowApi() {
   resolutionStory,
   runInterlude,
   runMulligans,
+  refreshArcaneResearch,
   settleExiledCards,
   startScenario,
   updateCampaignStatus,
@@ -1713,6 +1760,7 @@ function dispatchApi() {
   buildDeckFromList,
   captureTableState,
   cardKeyword,
+  campaignDiscardOnYourOwn,
   chooseAttack,
   corePlayerPool,
   availablePlayerPool,
@@ -1849,6 +1897,7 @@ function enemiesApi() {
   enemyStatMods,
   newEnemyId,
   processPlayerEnemyEntry,
+  releaseChaosTokens,
   triggerThreatForced,
   tryAquinnahRedirect,
 })
@@ -2245,6 +2294,7 @@ function createCampaignPluginApi() {
     ...commonDeps,
     doInvestigate,
     doPlay,
+    grantedInvestigateAction,
     RELIC_OF_AGES_CODE,
     assetReplacementPlans,
     cardPlayFlag,

@@ -13,13 +13,17 @@ export default {
     },
     performAction(state, inv, move, api) {
       if (move.rule !== 'joeSearchBlessed') return false
+      // 卡面是「团队每场游戏一次」：能力一旦被触发就消耗次数，即使牌组里没有合法目标。
+      state.scenarioFlags ||= {}
+      if (state.scenarioFlags.joeSearchUsed) return false
+      state.scenarioFlags.joeSearchUsed = true
       const candidates = (inv.deck || []).filter(code => {
         const card = ALL_CARDS[code]
         return card?.type === 'asset'
           && (card.traits || []).some(trait => ['Blessed', 'Item'].includes(trait))
       })
       if (!candidates.length) {
-        api.info?.('📖 乔的房间：牌组里没有祝福/道具支援。')
+        api.info?.('📖 乔的房间：牌组里没有祝福/道具支援（本次已消耗团队每场一次）。')
         return true
       }
       const picked = candidates.length === 1 ? candidates[0] : candidates.find(code =>
@@ -30,8 +34,6 @@ export default {
         })) === code) || candidates[0]
       inv.deck.splice(inv.deck.indexOf(picked), 1)
       inv.hand.push(picked)
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.joeSearchUsed = true
       api.info?.(`📖 乔的房间：${inv.name} 找到「${ALL_CARDS[picked]?.nameZh || picked}」。`)
       return true
     },

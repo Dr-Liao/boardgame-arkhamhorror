@@ -1,4 +1,5 @@
 import { getCardPresentation, renderImage } from './catalog.js'
+import { t } from './i18n.js'
 
 // Keep loaded image nodes through host re-renders; card bindings live on their
 // parents. Face and preferences must match so a flip/language change stays real.
@@ -35,8 +36,8 @@ export function tableArt(h, code, name, { landscape = false, face = 'front' } = 
   const holder = h('div', {
     className: 'ah-table-art' + (landscape ? ' ah-table-art-landscape' : ''),
     'data-art-code': code || '', 'data-art-face': face, 'data-art-preference': preference, 'data-image-state': 'pending',
-    'aria-label': name || '卡牌',
-  }, h('span', { className: 'ah-table-art-fallback' }, name || '卡牌'))
+    'aria-label': name || t('detail.type.card'),
+  }, h('span', { className: 'ah-table-art-fallback' }, name || t('detail.type.card')))
   if (!code) { holder.dataset.imageState = 'text-fallback'; return holder }
   let requested = false
   const load = async () => {

@@ -1,6 +1,5 @@
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { chooseCandidate } from '../../../../choice-helpers.js'
 import { encounterRules, isPoisoned } from '../../encounter-rules.js'
 import { agendaRuleFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { nonPlayerEntryFor } from '../../../../../src/cards/encounter-abilities.js'
@@ -279,21 +278,47 @@ export const behavior = {
     const from = inv.tfaExploreFrom
     delete inv.tfaExploreFrom
     const api = context?.runtime
-    if (!api || context?.kind !== 'location') return
-    if (from !== 'forkedPath' || !(api.hasSupply?.(inv.seat, 'map') ?? api.checkSupplies(inv.seat, 'map'))) return
-    // 分岔路 + 地图：再从探索牌库翻出 1 处连接地点，放它入场并可以让过去。
-    const extra = drawConnectingLocation(state, api)
-    if (!extra) return
-    const destination = state.locations.find(location => location.id === extra)
-    const answer = typeof api.choose === 'function'
-      ? api.choose({
+    if (!api || from !== 'forkedPath') return
+    if (!(api.hasSupply?.(inv.seat, 'map') ?? api.checkSupplies?.(inv.seat, 'map'))) return
+    if (context?.kind === 'location') {
+      // 主探索已经放置并移动了第 1 个连接地点；地图再补第 2 个，二者二选一移动。
+      const extra = drawConnectingLocation(state, api)
+      if (!extra) return
+      const current = state.locations.find(location => location.id === inv.location)
+      const destination = state.locations.find(location => location.id === extra)
+      const answer = typeof api.choose === 'function'
+        ? api.choose({
+          kind: 'location', source: '04291', seat: inv.seat,
+          prompt: '分岔路（地图）：选择要停留的地点（刚发现的两处连接地点之一）。',
+          options: [{ id: 'stay', label: `留在「${current?.name || inv.location}」` },
+            { id: extra, label: `移动到「${destination?.name || extra}」` }],
+        })
+        : 'stay'
+      if (answer === extra) api.moveInvestigator(inv.seat, extra)
+      return
+    }
+    if (context?.kind !== 'blocked') return
+    // 主探索翻到的地点不与分岔路相连（引擎把它放回探索牌库底部并跳过放置）；
+    // 卡面仍要求「继续从探索牌库抽牌，直到抽出 2 个连接地点」。这里补齐：
+    // 独立再抽最多 2 个连接地点，全部放入场，然后选择移动到其中一处。
+    const found = []
+    while (found.length < 2) {
+      const id = drawConnectingLocation(state, api)
+      if (!id) break
+      found.push(id)
+    }
+    if (!found.length) return
+    api.info?.(`分岔路（地图）：继续探索，发现了 ${found.length} 处连接地点。`)
+    const chosen = found.length === 1 || typeof api.choose !== 'function'
+      ? found[0]
+      : api.choose({
         kind: 'location', source: '04291', seat: inv.seat,
-        prompt: '分岔路（地图）：是否移动到另一处刚刚发现的地点？',
-        options: [{ id: 'stay', label: `留在「${state.locations.find(location => location.id === context.code)?.name || context.code}」` },
-          { id: extra, label: `移动到「${destination?.name || extra}」` }],
+        prompt: '分岔路（地图）：两处连接地点已放入场，选择移动到其中一处。',
+        options: found.map(id => ({
+          id, label: `移动到「${state.locations.find(location => location.id === id)?.name || id}」`,
+        })),
       })
-      : 'stay'
-    if (answer === extra) api.moveInvestigator(inv.seat, extra)
+    api.moveInvestigator(inv.seat, found.includes(chosen) ? chosen : found[0])
   },
 
   // 被遗弃的仪式场所：帷幕 X = 当前深度等级；横跨恩凯之桥：每点复仇 +1 帷幕。
@@ -329,22 +354,19 @@ export const behavior = {
   actions(state, inv) {
     const moves = []
     const location = here(state, inv)
+    // 04295 光耀峡谷：只有带双筒望远镜才有这个行动；没有就不显示按钮。
     if (original(location) === '04295') {
       const used = state.scenarioFlags?.brightCanyonDepth
-      // 卡面：只有带双筒望远镜才有这个行动；没有就不显示按钮。
       const hasBinoculars = (state.campaign?.supplies?.[inv.seat] || []).includes('binoculars')
       if (used !== depthOf(state) && hasBinoculars) moves.push({
         action: 'scenarioAction', rule: 'brightCanyonClues', locationId: 'brightCanyon',
         label: '🔭 检查补给：带双筒望远镜就发现光耀峡谷的 2 个线索（团队每深度等级一次）',
       })
     }
-    const relic = (inv.assets || []).find(asset => original(asset) === RELIC_OF_AGES)
-    if (!state.scenarioFlags?.relicOfAgesSucceeded) moves.push({
-      action: 'scenarioAction', rule: 'relicOfAgesDoom', assetId: relic?.id,
-      label: '🏺 横置古代遗物：检定意志(4)，成功则移除场上 1 点毁灭（每场游戏一次成功）',
-      reason: !relic ? '需要先控制古代遗物'
-        : relic.exhausted ? '古代遗物已横置，需要先重整' : null,
-    })
+    // 04303 古代遗物：卡面能力由单卡条目 src/cards/entries/04303.js 的 [fast] 描述子提供
+    // （free/exhaust、意志或智识二选一、任意带毁灭卡）。修复（task-19）：不再在剧本层
+    // 额外给出一条旧的 scenarioAction 重复路径（那条会按 1 行动结算、只检定意志、
+    // 只能选密谋/地点），避免同一张卡出现两条冲突实现。
     return moves
   },
 
@@ -363,19 +385,6 @@ export const behavior = {
         api.gainClues(inv.seat, found)
       }
       api.info?.(`光耀峡谷：发现了 ${found} 个线索。`)
-      return
-    }
-    if (move.rule === 'relicOfAgesDoom') {
-      const asset = (inv.assets || []).find(item => item.id === move.assetId)
-      if (!asset) return
-      asset.exhausted = true
-      api.test(inv.seat, 'willpower', 4, result => {
-        if (!result.success) return
-        const removed = removeOneDoomFromAnyCard(state, inv, api)
-        if (!removed) return
-        flagsFor(state).relicOfAgesSucceeded = true
-        api.info?.('古代遗物：场上 1 点毁灭被移除。')
-      }, 0, { label: '古代遗物', ability: true })
       return
     }
     if (encounterRules.performAction?.(state, inv, move, api)) return
@@ -528,8 +537,11 @@ export const behavior = {
     const code = original(state.agendas?.[state.agendaIndex])
     nonPlayerEntryFor(code)?.agendaRule?.onDoomPlaced?.(state, payload, api)
     // 04283 背面留下的持续效果：推进到 04284 后，每次当前密谋放毁灭仍然放追击敌人。
+    // 修复（campaign-4/task-19）：此前这里调用未 import/未定义的 tfaPlacePursuit →
+    // 推进到 04284 后第一次放毁灭抛 ReferenceError。改用本文件已导出且被
+    // tests/tfa-depths-of-yoth.test.mjs 覆盖的 placePursuitEnemies（同语义）。
     if (flagsFor(state).redDepthsOngoing && !nonPlayerEntryFor(code)?.agendaRule?.onDoomPlaced) {
-      tfaPlacePursuit(state, api)
+      placePursuitEnemies(state, api)
     }
   },
 
@@ -560,9 +572,7 @@ export const behavior = {
   mythosDoomChecked(state, api) {
     const agenda = state.agendas?.[state.agendaIndex]
     if (original(agenda) !== '04284') return
-    const doom = (state.doom || 0)
-      + state.locations.reduce((sum, location) => sum + (location.doom || 0), 0)
-      + state.enemies.reduce((sum, enemy) => sum + (enemy.doom || 0), 0)
+    const doom = doomInPlay(state)
     if (!doom) return
     const order = active(state).slice().sort((left, right) =>
       (left.seat - (state.campaign.leadSeat ?? 0) + state.numInvestigators) % state.numInvestigators
@@ -626,10 +636,12 @@ export const behavior = {
     if (flagsFor(state).harbingerEnteredPlay) {
       const inVictory = (state.victoryDisplay || []).some(card => original(card) === HARBINGER)
       if (inVictory) {
+        records.theHarbingerIsAlive = false
         records.theHarbingerIsStillAlive = 0
       } else {
         const inPlay = state.enemies.find(enemy => original(enemy) === HARBINGER)
         const aside = zonesFor(state).harbingerAside
+        records.theHarbingerIsAlive = true
         records.theHarbingerIsStillAlive = inPlay
           ? (inPlay.damageTaken || 0)
           : aside ? (aside.damageTaken || 0) : Number(records.theHarbingerIsStillAlive || 0)
@@ -664,27 +676,9 @@ export const behavior = {
 // 内部工具
 // ---------------------------------------------------------------------------
 
-const CRUMBLING_TESTS = [['willpower', 4], ['agility', 3], ['combat', 2]]
-
-function crumblingChain(state, inv, api, index, outcome) {
-  const [skill, difficulty] = CRUMBLING_TESTS[index]
-  api.test(inv.seat, skill, difficulty, result => {
-    if (result.success) {
-      outcome.died = false
-      return
-    }
-    if (index + 1 < CRUMBLING_TESTS.length) {
-      crumblingChain(state, inv, api, index + 1, outcome)
-      return
-    }
-    outcome.died = true
-    api.info?.(`岌岌可危的悬崖：${inv.name} 三次检定全部失败，坠入深渊身亡。`)
-    // 卡面是「坠入深渊，阵亡」：直接写进战役记录，而不是折算成精神创伤。
-    api.defeat(inv, 'killed')
-    const record = state.campaign?.investigators?.[inv.seat]
-    if (record) record.status = 'killed'
-  }, 0, { label: '岌岌可危的悬崖', ability: true })
-}
+// （修复 task-19）04289 岌岌可危的悬崖的三级检定链只在单卡条目
+// src/cards/encounter-entries/theForgottenAge/theDepthsOfYoth/04289.js 维护；
+// 这里删掉了旧的重复 crumblingChain 死代码，避免两版实现漂移。
 
 // 04296 伊格：所在地点上的其他蛇族敌人获得警戒与反击。这是持续光环——
 // 蛇族离开、伊格离开或被击败后要还原到印刷关键词。
@@ -792,6 +786,22 @@ function drawConnectingLocation(state, api) {
   return found
 }
 
+// 04284 复仇：「场上每点毁灭」要统计所有在场卡牌（密谋、地点、敌人、剧情资产、
+// 调查员的支援/威胁区、地点/敌人附属），而不是只算密谋+地点+敌人。
+function doomInPlay(state) {
+  const cards = [
+    ...(state.locations || []),
+    ...(state.enemies || []),
+    ...(state.storyAssets || []),
+  ]
+  for (const location of state.locations || []) cards.push(...(location.attachments || []))
+  for (const enemy of state.enemies || []) cards.push(...(enemy.attachments || []))
+  for (const inv of state.investigators || []) {
+    cards.push(...(inv.assets || []), ...(inv.threat || []))
+  }
+  return (Number(state.doom) || 0) + cards.reduce((sum, card) => sum + (Number(card?.doom) || 0), 0)
+}
+
 function removeEnemyFromPlay(state, enemy) {
   const index = state.enemies.indexOf(enemy)
   if (index < 0) return false
@@ -799,28 +809,6 @@ function removeEnemyFromPlay(state, enemy) {
   if (enemy.engagedSeat != null) {
     const inv = state.investigators[enemy.engagedSeat]
     if (inv) inv.engaged = (inv.engaged || []).filter(id => id !== enemy.id)
-  }
-  return true
-}
-
-function removeOneDoomFromAnyCard(state, inv, api) {
-  const candidates = []
-  if ((state.doom || 0) > 0) candidates.push({ id: 'agenda', label: '当前密谋' })
-  for (const location of state.locations) {
-    if ((location.doom || 0) > 0) candidates.push({ id: location.id, label: location.name })
-  }
-  if (!candidates.length) {
-    api.info?.('古代遗物：场上没有任何卡牌带毁灭标记。')
-    return false
-  }
-  const chosen = chooseCandidate(api, {
-    kind: 'card', source: RELIC_OF_AGES, seat: inv.seat,
-    prompt: '选择要移除 1 点毁灭的卡牌。',
-  }, candidates, { key: option => String(option.id) })
-  if (chosen.id === 'agenda') state.doom = Math.max(0, (state.doom || 0) - 1)
-  else {
-    const location = state.locations.find(entry => entry.id === chosen.id)
-    if (location) location.doom = Math.max(0, (location.doom || 0) - 1)
   }
   return true
 }

@@ -20,14 +20,16 @@ export default {
     {
       kind: 'action', label: '意志攻击（符号：敌人 -1 攻击值/-1 躲避值）',
       cost: { action: true },
+      // 卡面「攻击。」= Fight 行动：按 fight 结算（借机攻击豁免、行动种类展示）。
+      countsAs: 'fight',
       target: { kind: 'enemy' },
       resolve: ({ state, inv, target, api }) => {
         const enemy = target?.entity
         if (!enemy) return
         api.fight(inv.seat, enemy.id, { skill: 'willpower' })
         const result = api.testResult()
-        if (!result?.success) return
-        if ((result.drawn || []).some(token => SYMBOLS.includes(token)) && state.enemies.includes(enemy)) {
+        // 卡面只要求「本次攻击期间揭示符号」，不要求检定成功。
+        if ((result?.drawn || []).some(token => SYMBOLS.includes(token)) && state.enemies.includes(enemy)) {
           api.addEnemyFightReduction(enemy, 1)
           api.info(`凋零术：「${enemy.name}」在本回合剩余时间内 -1 攻击值（引擎原语：作用于下一次攻击）。`)
         }

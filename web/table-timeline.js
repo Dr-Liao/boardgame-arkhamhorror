@@ -1,4 +1,7 @@
+import { t } from './i18n.js'
 import { renderRulesText, symbolToken } from './card-text.js'
+// 时间线里的行动标签：模块顶层只存 key，生成条目/渲染时再 t()（导入时求值会固化语言）。
+const MOVE_KEYS = { draw:'table.move.draw',resource:'table.move.resource',move:'table.move.move',play:'table.move.play',fight:'table.move.fight',evade:'table.move.evade',investigate:'table.move.investigate',endTurn:'table.move.endTurn',ability:'table.move.ability',engage:'table.move.engage',resign:'table.move.resign' }
 // 剧情事件的 event.text 只写一句「翻开…的背面」，卡面正文放在 presentation.text。
 // 时间线是玩家回看推进文本的主要入口，这里补上正文；已写进 event.text 的段落不重复。
 function timelineDetail(event) {
@@ -14,12 +17,18 @@ export function timelineEntries(session) {
       const detail = timelineDetail(event)
       entries.push({ id: event.seq, text: detail ? `${event.text} ${detail}` : event.text, phase: event.presentation?.phase })
     }
-    else if (event.type === 'presentation' && event.kind === 'chaos') entries.push({ id: event.seq, text: `${event.name || '调查员'}抽取混乱标记：${symbolToken(event.token)}` })
-    else if (event.type === 'presentation' && event.kind === 'test') entries.push({ id: event.seq, text: `${event.name || '调查员'} · ${event.source?.name || '技能检定'}：${event.success ? '成功' : '失败'}（${event.value} / 难度 ${event.difficulty}）` })
+    else if (event.type === 'presentation' && event.kind === 'chaos') entries.push({ id: event.seq, text: t('table.timeline.chaos', { name: event.name || t('table.investigator'), token: symbolToken(event.token) }) })
+    else if (event.type === 'presentation' && event.kind === 'test') entries.push({ id: event.seq, text: t('table.timeline.test', {
+      name: event.name || t('table.investigator'),
+      source: event.source?.name || t('table.test.generic'),
+      result: event.success ? t('table.result.success') : t('table.result.failure'),
+      value: event.value,
+      difficulty: event.difficulty,
+    }) })
     else if (event.type === 'move' && event.move?.action !== 'choose') {
-      const name = session.state.investigators?.find(i => i.seat === event.seat)?.name || session.players?.[event.seat]?.name || '调查员'
-      const label = event.move?.label || ({ draw:'抽牌',resource:'获得资源',move:'移动',play:'打出卡牌',fight:'攻击',evade:'躲避',investigate:'调查',endTurn:'结束行动',ability:'使用能力',engage:'交战',resign:'撤退' })[event.move?.action]
-      if (label) entries.push({ id: event.seq, text: `${name} · ${label}` })
+      const name = session.state.investigators?.find(i => i.seat === event.seat)?.name || session.players?.[event.seat]?.name || t('table.investigator')
+      const label = event.move?.label || (MOVE_KEYS[event.move?.action] ? t(MOVE_KEYS[event.move?.action]) : '')
+      if (label) entries.push({ id: event.seq, text: t('table.timeline.move', { name, action: label }) })
     }
   }
   return entries.length ? entries : (session.state.log || []).map((text, id) => ({ id, text }))
@@ -84,12 +93,12 @@ export function timelineCardParts(text,index,event={}) {
 export function renderTableLog(h, session, inspect) {
   const entries = timelineEntries(session)
   const index=timelineCardIndex(session),events=new Map((session.events||[]).map(event=>[event.seq,event]))
-  return h('div', { className: 'ah-log-wrap' }, h('div', { className: 'ah-log', 'aria-label': '游戏事件时间线' },
+  return h('div', { className: 'ah-log-wrap' }, h('div', { className: 'ah-log', 'aria-label': t('table.log.aria') },
     entries.length ? entries.slice().reverse().map(event => h('div', { className: 'ah-log-line' + (event.phase ? ' is-' + event.phase : ''), 'data-event-seq': event.id },
       timelineCardParts(event.text,index,events.get(event.id)).map(part=>part.card&&inspect?h('button',{
         className:'ah-log-card-link',type:'button','data-timeline-card':part.card.originalCode||part.card.code||part.card.id,
-        'aria-label':'查看'+part.text+'详情',title:'查看'+part.text+'详情',
+        'aria-label':t('table.log.inspect', { name: part.text }),title:t('table.log.inspect', { name: part.text }),
         onclick:()=>inspect(part.card),
       },renderRulesText(h,part.text,{links:false})):renderRulesText(h,part.text,{links:false}))))
-      : h('div', { className: 'ah-log-line' }, '调查即将开始')))
+      : h('div', { className: 'ah-log-line' }, t('table.log.empty'))))
 }

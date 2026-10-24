@@ -24,6 +24,7 @@ export function createAssets(deps) {
     playCost,
     playedEffect,
     randomValue,
+    reactionWindow,
     registeredEntry,
     releaseChaosTokens,
     removeEffectsFromSource,
@@ -79,6 +80,20 @@ export function createAssets(deps) {
         else if (s === 'arcanex2') usage.arcane = (usage.arcane || 0) + 2
         else usage[s] = (usage[s] || 0) + 1
       }
+    }
+    // 2026-10-25：05009「最多 2 张[[工具]]支援不占用手部槽位」由条目级 toolHandSlotsExempt 声明。
+    // 在占用统计里扣掉对应数量的工具手槽；canEquip 的容量比较因此自动生效。
+    const exemptLimit = [...inv.assets, ...(inv.threat || [])]
+      .reduce((sum, a) => sum + (registeredEntry(a.code)?.toolHandSlotsExempt || 0), 0)
+    if (exemptLimit > 0 && usage.hand) {
+      const toolHandSlots = [...inv.assets, ...(inv.threat || [])].reduce((sum, a) => {
+        const def = cardDef(a.code)
+        const isTool = (def?.traits || []).some(trait => String(trait).toLowerCase() === 'tool')
+        if (!isTool) return sum
+        return sum + normalizedSlots(Array.isArray(a.slots) && a.slots.length ? a : def)
+          .reduce((count, slot) => count + (slot === 'handx2' ? 2 : slot === 'hand' ? 1 : 0), 0)
+      }, 0)
+      usage.hand = Math.max(0, usage.hand - Math.min(exemptLimit, toolHandSlots))
     }
     return usage
   }
@@ -150,7 +165,7 @@ export function createAssets(deps) {
     }
     for (const asset of inv.assets.filter(a => removed.includes(a.id))) {
       leaveAsset(state, inv, asset, events)
-      if (!asset.removedFromGame) inv.discard.push(asset.code)
+      if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
       releaseChaosTokens(state, asset.id)
       info(state, events, `${inv.name} 弃置「${cardName(asset.code)}」腾出槽位。`)
     }
@@ -255,6 +270,15 @@ export function createAssets(deps) {
       }
     }
     scenarioBehavior(state).assetLeftPlay?.(state, inv, asset, scenarioRuntime(state, events))
+    // 2026-10-25：新增「支援离场后」通用玩家卡反应窗口（05152 妥善养护：
+    // 带附属升级的支援被弃置/放回后，把该支援与其升级返回手牌）。
+    // context 带 asset 实例与附件数；调用方随后是否把卡放进弃牌堆由原逻辑决定。
+    reactionWindow?.(state, 'assetLeavesPlay', {
+      when: 'assetLeavesPlay', seat: inv.seat, location: inv.location,
+      assetCode: asset.code, assetId: asset.id, asset,
+      upgrades: (asset.attachments || []).length,
+      prompt: `「${cardName(asset.code)}」离场后`,
+    }, events)
   }
 
   function discardRandomAsset(state, inv, events) {
@@ -264,7 +288,7 @@ export function createAssets(deps) {
       prompt: '选择一件要弃置的资产。', options: candidates.map(asset => ({ id: asset.id, label: cardName(asset.code) })) })
     const a = candidates.find(asset => asset.id === id)
     leaveAsset(state, inv, a, events)
-    if (!a.removedFromGame) inv.discard.push(a.code)
+    if (!a.removedFromGame && !a.returnedToHand) inv.discard.push(a.code)
     info(state, events, `${inv.name} 弃掉了资产「${cardName(a.code)}」。`)
   }
 

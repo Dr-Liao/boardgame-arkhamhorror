@@ -8,12 +8,18 @@
 
 import { teamOnce, discoverAt } from '../../_shared.js'
 
+// 「团队每轮一次」是否已用完：与 _shared.teamOnce 的 tag 口径一致（scope 'round'）。
+const roundUsed = (state, key) => Boolean(state.scenarioFlags?.teamOnce?.[`${key}:${state.round}:r`])
+
 export default {
   code: '04177', scope: 'location',
   locationRule: {
     ancientAction: {
       label: '🌑 在一个敌人上放置 1 个毁灭：发现本地点的 2 个线索（团队每轮一次）',
-      available(state) { return state.enemies.some(enemy => !enemy.defeated) },
+      available(state) {
+        if (roundUsed(state, '04177clue')) return false
+        return state.enemies.some(enemy => !enemy.defeated)
+      },
       perform(state, inv, api, location) {
         if (!teamOnce(state, '04177clue', 'round')) { api.info?.('本轮的团队次数已用完。'); return false }
         const candidates = state.enemies.filter(enemy => !enemy.defeated)

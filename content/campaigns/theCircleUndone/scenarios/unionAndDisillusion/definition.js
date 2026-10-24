@@ -93,6 +93,12 @@ const definitions = encounterDefinitions([
 // 印刷卡面修正。
 Object.assign(definitions.enemies[SPECTRAL_RAVEN], { prey: 'lowestIntellect' })
 for (const fate of FATE_LIST) Object.assign(definitions.enemies[fate.enemy], { victory: 0 })
+// 印刷卡面修正：catalog 的 en.json 对三张命运敌人缺 enemy_horror 字段，导致 cards-data 记为 0；
+// 参考实现 Enemy/CardDefs/TheCircleUndone/UnionAndDisillusion.hs 明确 cdSanityDamage：
+// 05263b（杰罗姆）=1、05264b（佩妮）=2、05265b（瓦伦蒂诺）=1。05262b（加弗瑞拉）参考无该字段，保持 0。
+Object.assign(definitions.enemies['05263b'], { horror: 1 })
+Object.assign(definitions.enemies['05264b'], { horror: 2 })
+Object.assign(definitions.enemies['05265b'], { horror: 1 })
 Object.assign(definitions.enemies[THE_SPECTRAL_WATCHER], { spectral: true })
 
 // ---- 地点 ---------------------------------------------------------------------
@@ -118,22 +124,20 @@ const MISTY_CLEARING_HAUNTED = [{
     ],
   }],
 }]
+// 闹鬼 - 你必须弃掉你控制的一张支援，或受到 1 点伤害。
+// 用 script 而非 choice：choice 子句会把不可结算的选项也交给玩家（没有支援时选「弃支援」会以空选项抛错，
+// 同时规避本应承受的伤害）；script 由 behavior.hauntedScript 过滤合法选项（参考 HauntedSpring.hs:48-53 同口径）。
 const HAUNTED_SPRING_HAUNTED = [{
   text: '闹鬼 - 你必须弃掉你控制的一张支援，或受到 1 点伤害。',
-  effect: [{
-    kind: 'choice',
-    options: [
-      { id: 'asset', label: '弃掉你控制的一张支援', effect: [{ kind: 'discardAsset', amount: 1 }] },
-      { id: 'damage', label: '受到 1 点伤害', effect: [{ kind: 'damage', amount: 1 }] },
-    ],
-  }],
+  effect: [{ kind: 'script', id: 'hauntedSpring' }],
 }]
 const DECAYED_WILLOW_HAUNTED = [{ text: '闹鬼 - 选择并弃掉你的 1 张手牌。', effect: [{ kind: 'discardChosen', amount: 1 }] }]
 const GEIST_TRAP_HAUNTED = [{ text: '闹鬼 - 受到 1 点伤害和 1 点恐惧。', effect: [{ kind: 'damage', amount: 1 }, { kind: 'horror', amount: 1 }] }]
 
 const locations = {
+  // 05249 卡面 [action]：撤退（引擎直读 loc.resign，见 src/engine/moves.js:448-453）。
   miskatonicRiver: location('miskatonicRiver', MISKATONIC_RIVER, {
-    symbol: 'triangle', links: ['moon'],
+    symbol: 'triangle', links: ['moon'], resign: true,
   }),
   forbiddingShore: location('forbiddingShore', FORBIDDING_SHORE, {
     symbol: 'moon', links: ['triangle', 'squiggle'],
@@ -202,6 +206,9 @@ export const STORY_ASSETS = storyCards([...FATE_STORY_CODES, ...FATE_ALLY_CODES]
 export const scenario = {
   id: 'unionAndDisillusion',
   originalCode: SCENARIO_CARD,
+  // 计划里按「本关临时追加」处理：05238 的 [tablet]/[elder_thing] 不在 TCU 基础袋里
+  // （参考实现的 standaloneChaosTokens）。与 atDeathsDoorstep/theWagesOfSin 同口径。
+  chaosBagExtra: ['tablet', 'elderthing'],
   name: '万象无终 · 聚合幻灭',
   intro: INTRO,
   setup: SETUP,

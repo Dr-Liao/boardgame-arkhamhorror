@@ -54,6 +54,7 @@ export function createAbilityExecution(deps) {
     noteUnknownWindow,
     playCost,
     rechargeAsset,
+    registeredEntry,
     reloadAmmo,
     requestChoice,
     resolveEffect,
@@ -143,7 +144,7 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
     const assetDef = cardDef(asset.code)
     if (assetDef?.health > 0 && asset.damage >= assetDef.health) {
       leaveAsset(state, inv, asset)
-      if (!asset.removedFromGame) inv.discard.push(asset.code)
+      if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
       info(state, events, `${cardName(asset.code)} 因自身伤害被弃置。`)
     }
   }
@@ -158,7 +159,7 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
   }
   if (cost.discardSelf) {
     leaveAsset(state, inv, asset)
-    if (!asset.removedFromGame) inv.discard.push(asset.code)
+    if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
     info(state, events, `♻️ ${inv.name} 弃掉了「${cardName(asset.code)}」。`)
   }
   if (cost.exileSelf) {
@@ -176,7 +177,7 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
 
   if (eff.discardWhenEmpty && asset.uses != null && asset.uses <= 0) {
     leaveAsset(state, inv, asset)
-    if (!asset.removedFromGame) inv.discard.push(asset.code)
+    if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
     info(state, events, `「${cardName(asset.code)}」充能耗尽，弃掉。`)
   }
 }
@@ -188,9 +189,12 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
 // 能力 resolve() 可用的窄接口。只用引擎已有的入口，避免内容层直接改状态。
 // Phase 6（6d-7）：abilityApi 按域拆分的依赖表（第一批：卡牌/状态写入口）。
 
-function openAbilityWindow(state, windowId, context, events) {
+function openAbilityWindow(state, windowId, context, events, opts = {}) {
   noteUnknownWindow(windowId)
-  if (state._reaction || state._abilityWindow) return context
+  // 2026-10-25：cardCancelled 这类「取消后」时点可能发生在结算另一张反应卡的嵌套上下文里
+  // （playReactionCard 会先写 state._reaction）。允许调用方传 allowNested 放行；仍用
+  // _abilityWindow 防止能力窗口自身递归。
+  if (state._abilityWindow || (state._reaction && !opts.allowNested)) return context
   // 印刷文本被清空的实体不结算它自己的描述子能力（与 enemyTextBlanked 同一口径）。
   const entityBlanked = source => {
     const blank = source?.textBlanked
@@ -254,6 +258,21 @@ function openAbilityWindow(state, windowId, context, events) {
           if (!source && !descriptor.fromHand) continue
           if (!descriptorUsable(state, inv, source, descriptor, { windowId, context })) continue
           candidates.push({ source, code, descriptor, fromHandIndex, effect })
+        }
+      }
+      // 2026-10-25：05152 这类「所附属支援离场后」的附属卡反应——宿主已从 inv.assets 移除，
+      // descriptorSources 枚举不到它；从窗口 context.asset 的 attachments 补一次能力源。
+      const orphanHost = context?.asset
+      if (orphanHost && context.seat != null && inv.seat === context.seat) {
+        for (const attachment of orphanHost.attachments || []) {
+          const attachedEntry = registeredEntry(attachment.code)
+          if (!attachedEntry?.abilities.length) continue
+          const source = { ...attachment, hostAssetId: orphanHost.id, hostCode: orphanHost.code, orphanHost }
+          for (const descriptor of descriptorsInEntry(attachedEntry, windowId, 'reaction')) {
+            if (descriptor.legacyReaction) continue
+            if (!descriptorUsable(state, inv, source, descriptor, { windowId, context })) continue
+            candidates.push({ source, code: attachment.code, descriptor })
+          }
         }
       }
       if (!candidates.length) continue

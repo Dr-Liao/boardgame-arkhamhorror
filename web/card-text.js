@@ -1,3 +1,4 @@
+import { t } from './i18n.js'
 import { tableIcon } from './table-components.js'
 import { RULES, ruleLink } from './rulebook-data.js'
 const aliases = RULES.flatMap(r=>r.aliases.filter(a=>!a.startsWith('[')).map(a=>[a,r.id])).sort((a,b)=>b[0].length-a[0].length)
@@ -9,17 +10,19 @@ function linkedText(h,text) {
     return match?ruleLink(h,match[1],part):part
   })
 }
+// 模块顶层只存 icon 与词典 key（渲染期再 t()），避免导入时求值把默认语言固化下来。
+// 第三项是插值参数（目前只有 TDC 符文用 letter）。
 const SYMBOLS = {
-  action:['action','行动'], reaction:['star','反应'], free:['action','免费触发'], fast:['action','快速'],
-  combat:['sword','战斗'], willpower:['star','意志'], intellect:['book','智识'], agility:['leaf','敏捷'], wild:['star','任意技能'],
-  guardian:['shield','守卫者'], seeker:['book','探求者'], rogue:['sword','流浪者'], mystic:['star','潜修者'], survivor:['leaf','求生者'], neutral:['star','中立'],
-  health:['health','生命'], sanity:['sanity','理智'], resource:['resource','资源'], clue:['clue','线索'],
-  per_investigator:['ally','每位调查员'], investigator:['ally','调查员'],
-  skull:['doom','骷髅'], cultist:['eye','异教徒'], tablet:['tarot','石板'], elder_thing:['eye','古神'], elder_sign:['star','旧印'], auto_fail:['doom','自动失败'],
-  bless:['star','祝福'], curse:['doom','诅咒'], frost:['star','冰霜'], blood:['health','鲜血'],
-  seal_a:['star','封印 A'], seal_b:['star','封印 B'], seal_c:['star','封印 C'], seal_d:['star','封印 D'], seal_e:['star','封印 E'],
-  day:['star','白昼'], night:['star','黑夜'], codex:['book','规则集'],
-  ...Object.fromEntries(TDC_RUNES.map((name, index) => [name, ['star', `溺水之城符文 ${String.fromCharCode(65 + index)}`]])),
+  action:['action','symbol.action'], reaction:['star','symbol.reaction'], free:['action','symbol.free'], fast:['action','symbol.fast'],
+  combat:['sword','symbol.combat'], willpower:['star','symbol.willpower'], intellect:['book','symbol.intellect'], agility:['leaf','symbol.agility'], wild:['star','symbol.wild'],
+  guardian:['shield','symbol.guardian'], seeker:['book','symbol.seeker'], rogue:['sword','symbol.rogue'], mystic:['star','symbol.mystic'], survivor:['leaf','symbol.survivor'], neutral:['star','symbol.neutral'],
+  health:['health','symbol.health'], sanity:['sanity','symbol.sanity'], resource:['resource','symbol.resource'], clue:['clue','symbol.clue'],
+  per_investigator:['ally','symbol.per_investigator'], investigator:['ally','symbol.investigator'],
+  skull:['doom','symbol.skull'], cultist:['eye','symbol.cultist'], tablet:['tarot','symbol.tablet'], elder_thing:['eye','symbol.elder_thing'], elder_sign:['star','symbol.elder_sign'], auto_fail:['doom','symbol.auto_fail'],
+  bless:['star','symbol.bless'], curse:['doom','symbol.curse'], frost:['star','symbol.frost'], blood:['health','symbol.blood'],
+  seal_a:['star','symbol.seal_a'], seal_b:['star','symbol.seal_b'], seal_c:['star','symbol.seal_c'], seal_d:['star','symbol.seal_d'], seal_e:['star','symbol.seal_e'],
+  day:['star','symbol.day'], night:['star','symbol.night'], codex:['book','symbol.codex'],
+  ...Object.fromEntries(TDC_RUNES.map((name, index) => [name, ['star', 'symbol.tdcRune', { letter: String.fromCharCode(65 + index) }]])),
 }
 // Source: the bundled reference's styles/icons.css and matching symbol fonts.
 const CARD_GLYPHS = {
@@ -45,7 +48,8 @@ export function cardSymbol(h, name) {
   const symbol = SYMBOLS[name]
   if (!symbol) return `[${name}]`
   const glyph = CARD_GLYPHS[name]
-  return h('span', { className: 'ah-rule-symbol', 'data-card-symbol': name, title: symbol[1], 'aria-label': symbol[1], role: 'img' },
+  const label = symbol[2] ? t(symbol[1], symbol[2]) : t(symbol[1])
+  return h('span', { className: 'ah-rule-symbol', 'data-card-symbol': name, title: label, 'aria-label': label, role: 'img' },
     glyph ? h('span', {
       className: 'ah-card-glyph' + (ICON_GLYPHS.has(name) ? ' ah-card-glyph-icons' : SLIM_GLYPHS.has(name) ? ' ah-card-glyph-slim' : ''),
       'aria-hidden': 'true',
@@ -79,12 +83,15 @@ export function setRulesText(element, text) {
 export function objectiveText(objective, state = {}) {
   if (typeof objective === 'string') return objective
   if (!objective || typeof objective !== 'object') return ''
-  const count = objective.perInvestigator ? `${objective.perInvestigator} × 调查员人数` : String(objective.amount ?? 0)
-  const location = id => state.locations?.find(l => l.id === id)?.name || ({hallway:'走廊',ritualSite:'仪式地点'})[id] || '指定地点'
-  if (objective.type === 'clues') return `${objective.atLocation ? '在「'+location(objective.atLocation)+'」' : '团队'}花费 ${count} 个线索，推进当前场景。`
-  if (objective.type === 'actClues') return `在当前场景放置 ${count} 个线索。`
-  if (objective.type === 'uniqueCultists') return `找出 ${count} 名不同的独特异教徒。`
-  if (objective.type === 'defeatEnemy') return `击败「${state.enemies?.find(e => e.id === objective.enemy || e.code === objective.enemy)?.name || ({ghoulPriest:'食尸鬼祭司'})[objective.enemy] || '目标敌人'}」。`
-  if (objective.type === 'enterLocation') return `进入「${location(objective.location)}」。`
-  return '达成卡面所述目标后推进。'
+  const count = objective.perInvestigator ? t('objective.perInvestigator', { count: objective.perInvestigator }) : String(objective.amount ?? 0)
+  // 地点/敌人名属于内容数据（不翻译）：优先取观察投影里的名字，只有缺失时才用本文件的兜底名。
+  const location = id => state.locations?.find(l => l.id === id)?.name || ({hallway:'走廊',ritualSite:'仪式地点'})[id] || t('objective.location.generic')
+  if (objective.type === 'clues') return objective.atLocation
+    ? t('objective.clues', { location: location(objective.atLocation), count })
+    : t('objective.clues.team', { count })
+  if (objective.type === 'actClues') return t('objective.actClues', { count })
+  if (objective.type === 'uniqueCultists') return t('objective.uniqueCultists', { count })
+  if (objective.type === 'defeatEnemy') return t('objective.defeatEnemy', { name: state.enemies?.find(e => e.id === objective.enemy || e.code === objective.enemy)?.name || ({ghoulPriest:'食尸鬼祭司'})[objective.enemy] || t('objective.enemy.generic') })
+  if (objective.type === 'enterLocation') return t('objective.enterLocation', { location: location(objective.location) })
+  return t('objective.generic')
 }

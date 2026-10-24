@@ -19,7 +19,9 @@ export default {
     if (answer === 'victory') {
       state.victoryDisplay.push({ id: `ancestral-fear:${state.round}:${inv.seat}`,
         code: '04093', originalCode: '04093', victory: 0, vengeance: 1 })
-      return false
+      // 卡面：这一支是「将先祖恐惧放到胜利区」而不是弃掉；返回 true 告诉引擎本卡已入场，
+      // 不再按「未放置」把它额外弃入遭遇弃牌堆（旧实现 return false 造成胜利区+弃牌堆两份记录）。
+      return true
     }
     if (location) location.doom = (location.doom || 0) + 1
     else state.doom = (state.doom || 0) + 1

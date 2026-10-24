@@ -4,17 +4,18 @@
 import { ALL_CARDS, activeInvestigators, originalOf } from '../../_shared.js'
 
 const isEnemyCode = code => ALL_CARDS[code]?.type === 'enemy'
+// 查找遭遇牌库与遭遇弃牌堆（卡面：查找 encounter deck/discard pile）。牌库顶 = 数组尾。
 const findInEncounter = (state, predicate) => {
-  for (let index = state.encounterDiscard.length - 1; index >= 0; index--) {
-    const code = state.encounterDiscard[index]
-    if (!predicate(code)) continue
-    state.encounterDiscard.splice(index, 1)
-    return code
-  }
   for (let index = state.encounterDeck.length - 1; index >= 0; index--) {
     const code = state.encounterDeck[index]
     if (!predicate(code)) continue
     state.encounterDeck.splice(index, 1)
+    return code
+  }
+  for (let index = state.encounterDiscard.length - 1; index >= 0; index--) {
+    const code = state.encounterDiscard[index]
+    if (!predicate(code)) continue
+    state.encounterDiscard.splice(index, 1)
     return code
   }
   return null
@@ -36,7 +37,12 @@ export default {
   code: '05129', scope: 'location', implemented: true,
   locationRule: {
     onReveal(state, location, api) {
-      const code = findInEncounter(state, candidate => String(candidate) === '01159') || '01159'
+      const code = findInEncounter(state, candidate => String(candidate) === '01159')
+      // 卡面是「查找」，找不到时没有效果；不得从场外凭空生成第 4 张鼠群。
+      if (!code) {
+        api.info?.('🐀 屋主的住处：遭遇牌库与弃牌堆里没有「鼠群」，本次没有效果。')
+        return
+      }
       const target = state.locations.find(entry => String(originalOf(entry)) === '05128')?.id
       spawnFromAside(state, api, code, target)
       api.shuffleEncounterDeck?.()

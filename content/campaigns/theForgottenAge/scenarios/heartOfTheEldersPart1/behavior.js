@@ -36,7 +36,72 @@ const pillarCount = state => Number(state.scenarioFlags?.pillars || 0)
 const hardSide = state => ['hard', 'expert'].includes(state.difficulty)
 
 // ---------------------------------------------------------------------------
-// 本章实现方式（与迁移审计一致）
+// TFA 探索规则：只能翻出「连接地点」
+// ---------------------------------------------------------------------------
+// 参考实现（Campaigns/TheForgottenAge/Helpers.hs:239-335）的 explore：从探索牌库顶
+// 一直抽到「与当前地点的连接符号相同的地点」或遭遇卡；途中不连接的地点先放一边，
+// 本次探索结束后洗回探索牌库。引擎 doExplore 目前只抽 1 张（读点 exploreConnects
+// 已存在），因此本章在 beforeExplore 里先把不连接的地点挪到一边，让引擎抽到的第一张
+// 就是合法目标；afterExplore 再把一边的牌洗回。04207/04208 的探索由此获得连接筛选。
+const scenarioLocations = state => state.scenario?.locations || {}
+
+const exploreLinks = (state, fromId) => scenarioLocations(state)[fromId]?.connections || []
+
+function connectsForExplore(state, fromId, code) {
+  const target = scenarioLocations(state)[code]
+  if (!target) return true
+  const links = exploreLinks(state, fromId)
+  if (!links.length) return true
+  return links.includes(code)
+}
+
+function shuffleExplorationAsideBack(state, api) {
+  const aside = state.scenarioFlags?.exploreAside || []
+  if (!aside.length) return false
+  state.scenarioFlags.exploreAside = []
+  const merged = [...aside, ...(state.explorationDeck || [])]
+  state.explorationDeck = typeof api?.shuffle === 'function' ? api.shuffle(merged) : merged
+  return true
+}
+
+function prepareExplorationDraw(state, inv, api) {
+  const deck = state.explorationDeck || []
+  const aside = []
+  while (deck.length) {
+    const code = deck[deck.length - 1]
+    if (!scenarioLocations(state)[code]) break // 遭遇卡：本次探索停在它上面
+    if (connectsForExplore(state, inv.location, code)) break
+    deck.pop()
+    aside.push(code)
+  }
+  state.explorationDeck = deck
+  if (aside.length) {
+    state.scenarioFlags.exploreAside = [...(state.scenarioFlags.exploreAside || []), ...aside]
+  }
+  // 牌库里已没有可翻的地点：把一边的牌洗回，让引擎照常翻出一张（多半是遭遇卡）。
+  if (!state.explorationDeck.length && (state.scenarioFlags.exploreAside || []).length) {
+    shuffleExplorationAsideBack(state, api)
+  }
+}
+
+// 04205 重玩：Haskell 用 scenario metadata 的 reachedAct2 跨 RestartScenario 保留
+// （HeartOfTheElders.hs:64-84,393-430）。引擎 startScenario 会清空 scenarioFlags，
+// 所以这里写进战役级 JSON 槽位（campaign.flow）；不需要新增存档 schema。
+const REPLAY_META = 'heartOfTheEldersPart1'
+const replayMetaFor = state => state.campaign?.flow?.tfaScenarioMeta?.[REPLAY_META] || null
+
+function writeReplayMeta(state, reachedAct2) {
+  state.campaign ||= {}
+  state.campaign.flow ||= {}
+  state.campaign.flow.tfaScenarioMeta ||= {}
+  state.campaign.flow.tfaScenarioMeta[REPLAY_META] = { reachedAct2: Boolean(reachedAct2) }
+}
+
+function clearReplayMeta(state) {
+  const meta = state.campaign?.flow?.tfaScenarioMeta
+  if (meta && Object.hasOwn(meta, REPLAY_META)) delete meta[REPLAY_META]
+}
+
 // ---------------------------------------------------------------------------
 // 04215 落入陷阱 / 04216 有毒孢子 属于上下两部共用的 HeartOfTheElders 遭遇组，但
 // encounter-rules.js 还没有收录，因此在本文件用本地 resolveEncounter 实现（先串联共享规则）。
@@ -151,6 +216,8 @@ export function setupPlan(state, helper = {}) {
   return {
     pathsKnown, mappedOut, ruinLocation, removedRuins,
     autoResolve: pathsKnown >= PILLARS_TO_OPEN,
+    // 重玩（上次无结局）时：已进入过场景 2 的，跳过场景 1（Haskell setActDeck）。
+    reachedAct2: Boolean(replayMetaFor(state)?.reachedAct2),
     explorationDeck: mix(state, helper, pool),
   }
 }
@@ -200,15 +267,34 @@ export const behavior = {
     state.scenarioFlags.ruinsLocation = plan.ruinLocation
     state.scenarioFlags.mappedOutTheWayForward = plan.mappedOut
     state.scenarioFlags.autoResolveR1 = plan.autoResolve
-    state.scenarioFlags.reachedAct2 = false
+    state.scenarioFlags.reachedAct2 = plan.reachedAct2
     state.scenarioFlags.basiliskRound = 0
+    // 幕牌库：重玩且上次已进入过场景 2 时，场景 1 已完成，不再放进幕牌库
+    // （Haskell setActDeck $ [act1 | not reachedAct2] <> [openingTheMaw]）。
+    state.acts = state.scenario.acts
+      .filter(card => !(plan.reachedAct2 && (card.originalCode || card.code) === '04209'))
+      .map(card => structuredClone(card))
     const placed = [MOUTH]
     if (plan.mappedOut) placed.push(plan.ruinLocation)
     return placed
   },
 
+  // 重玩跳过场景 1 时，羽翼蛇族不会由 04209 的背面生成：按参考实现在布置时直接放在
+  // 昆扬之口（Haskell HeartOfTheElders.hs:263-264）。
+  setupEnemies(state, events, helper = {}) {
+    if (!state.scenarioFlags?.reachedAct2) return
+    helper.spawnEnemy?.(state, WINGED_SERPENT, MOUTH, null)
+    helper.info?.(state, events, '🐍 重玩：羽翼蛇族已在昆扬之口等着你们。')
+  },
+
   canExplore(state, inv) {
     return encounterRules.canExplore(state, inv)
+  },
+
+  // 引擎读点（src/cards/campaign-plugin.js 的 doExplore）：探索牌库抽到的地点必须
+  // 与当前地点相连（卡面 04207/04208/04211/04212 的「如果该卡牌是一个连接地点」）。
+  exploreConnects(state, fromId, code) {
+    return connectsForExplore(state, fromId, code)
   },
 
   // 04102 中毒弱点按共享规则（encounter-rules）留在威胁区域，这里只处理本章地点的限制。
@@ -222,6 +308,8 @@ export const behavior = {
     // 引擎的 doExplore 在 beforeExplore 之后才从探索牌库抽卡；用这个标记让「落入陷阱」
     // 知道自己是“从探索牌库抽出”的（此时不能选择洗回探索牌库）。
     state.scenarioFlags ||= {}
+    // TFA 探索：先把不连接的地点挪到一边，让引擎翻出的是「连接地点」。
+    prepareExplorationDraw(state, inv, api)
     state.scenarioFlags.exploreDrawPending = true
     return true
   },
@@ -241,6 +329,10 @@ export const behavior = {
     if (state.scenarioFlags) delete state.scenarioFlags.exploreDrawPending
     // 第 116 轮：04072 万蛇据点的中毒伤害在地点条目（探索成功也要结算）。
     rule?.afterExplore?.({ state, inv, api, context, location })
+    // TFA 探索：把本次探索时放一边的不连接地点洗回探索牌库。
+    if (shuffleExplorationAsideBack(state, api)) {
+      api?.info?.('🧭 与当前地点不连接的地点已洗回探索牌库。')
+    }
     if (context?.kind === 'location') {
       state.explorationDiscard ||= []
       inv.tfaExploredThisTurn = true
@@ -547,7 +639,12 @@ export const behavior = {
       const solved = pillarCount(state)
       if (solved > Number(records.pathsAreKnownToYou || 0)) records.pathsAreKnownToYou = solved
       state.scenarioFlags.reachedAct2 = state.actIndex >= 1
-      return { award: false, bonus: 0 }
+      // reachedAct2 要跨 restart 保留（startScenario 会清空 scenarioFlags），写进战役级槽位。
+      writeReplayMeta(state, state.scenarioFlags.reachedAct2)
+      // 与 04059 结局 4 相同的方式调用引擎重开：原地重开本关并重新发起手牌。
+      const restarted = typeof api?.restartScenario === 'function' ? api.restartScenario() : false
+      // 兼容只有结局对象、没有重开能力的调用方（测试/独立结算）：未重开时保持原返回形状。
+      return restarted ? { award: false, bonus: 0, restarted: true } : { award: false, bonus: 0 }
     }
     if (key === 'r2') {
       // 结局 2（基础流程不会触发，保留给「重返」的未达成分支）：补齐石柱并记录伊格之怒。
@@ -562,6 +659,8 @@ export const behavior = {
         else api.campaignCardChange?.(state.campaign, inv.seat, POISONED_WEAKNESS, 'add', state.scenario.id)
       }
     }
+    // 通过本关（r1/r2）：清掉重玩元数据，避免影响后续战役流程。
+    clearReplayMeta(state)
     // 结局 1（以及结局 2 之后）：把胜利区中带复仇点数的卡牌记入“丛林窥视”。
     const watches = (state.victoryDisplay || [])
       .filter(card => (card.vengeance || 0) > 0)

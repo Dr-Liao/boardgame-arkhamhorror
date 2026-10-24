@@ -4,7 +4,11 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 04024 发掘古物：智识检定（难度 = 支援费用），成功后把该探求者支援直接放置入场（遗物再抽 1 张）。
+// 04024 发掘古物：智识检定（难度 = 支援费用），成功后把该探求者支援“放置入场”（遗物再抽 1 张）。
+// 「放置入场」走 api.putIntoPlay（src/engine/api-card.js:301-315）：校验场景 canPlaceAsset、
+// 从手牌移出、创建实例、触发剧本 assetEntered 钩子；比原先直接 api.putAssetIntoPlay 只 push 实例多走了
+// 剧本入场钩子。仍缺“正常打出入场通道”里的 entersPlay 描述子 / 槽位替换 / assetEnteredPlay 窗口，
+// 属于引擎侧通道收敛，见 artifacts/tfa-fix/primitive-requests/player-1-04024.json。
 
 export default {
   code: '04024',
@@ -23,8 +27,8 @@ export default {
           source: { label: '发掘古物', code: '04024' },
           resolve: result => {
             if (!result.success) return
-            if (!api.putAssetIntoPlay(inv.seat, chosen)) return
-            api.info(`「${api.cardName(chosen)}」被直接放置入场。`)
+            const asset = api.putIntoPlay(inv.seat, chosen)
+            if (!asset) { api.info(`「${api.cardName(chosen)}」当前无法放置入场。`); return }
             if (api.cardTraits(chosen).includes('relic')) api.drawCards(inv.seat, 1)
           },
         })

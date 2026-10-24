@@ -125,3 +125,34 @@ test('P8 战役基础弱点池：资产型 05042《高塔·XVI》可作为随机
     assert.ok(['05041', '05042'].includes(built.basicWeaknesses[0]))
   })
 })
+
+// ===========================================================================
+// c7shared 修复回归：05258–05261 剧情支援卡面能力（+1 技能 / reaction / [fast]）
+// 条目在 UAD 的 resolveFate 里由 api.giveAsset 交给调查员控制；受控后走与玩家卡同一套
+// 描述子通道（modifiers 进 stat 管线、abilities 进相应窗口）。
+// ===========================================================================
+test('c7shared：05258–05261 剧情支援条目声明 +1 技能与卡面能力', async () => {
+  const entries = await Promise.all(['05258', '05259', '05260', '05261'].map(async code =>
+    (await import(`../src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/${code}.js`)).default))
+  const expected = {
+    '05258': { skill: 'combat', trigger: 'enemyAttacked' },
+    '05259': { skill: 'intellect', trigger: 'encounterDrawn' },
+    '05260': { skill: 'willpower', trigger: 'skillTestSuccess' },
+    '05261': { skill: 'agility', trigger: 'testBegins' },
+  }
+  for (const entry of entries) {
+    const spec = expected[entry.code]
+    assert.ok(spec, `${entry.code} 未知`)
+    assert.equal(entry.scope, 'storyAsset')
+    assert.equal(entry.implemented, true)
+    assert.deepEqual(entry.modifiers, [{ target: `skill:${spec.skill}`, amount: 1 }],
+      `${entry.code} 应声明 +1 ${spec.skill}`)
+    assert.equal(entry.abilities.length, 1, `${entry.code} 应有一条卡面能力`)
+    assert.equal(entry.abilities[0].kind, 'reaction')
+    assert.equal(entry.abilities[0].trigger, spec.trigger)
+    assert.equal(typeof entry.abilities[0].resolve, 'function')
+  }
+  // 05261 的费用：花费 2 资源 + 横置；05259 的弃牌条件只统计非弱点手牌图标。
+  assert.deepEqual(entries.find(entry => entry.code === '05261').abilities[0].cost, { resources: 2, exhaust: true })
+  assert.deepEqual(entries.find(entry => entry.code === '05258').abilities[0].cost, { exhaust: true })
+})

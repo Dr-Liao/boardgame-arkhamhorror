@@ -548,17 +548,28 @@ test('加弗瑞拉：成功攻击时若她仍重整则受到 1 点恐惧', () =>
   assert.equal(inv.horror, 1, '她已横置时不触发')
 })
 
-test('夜鹰：所在地点调查员全部技能 -1；幽灵乌鸦交战二选一', () => {
+test('夜鹰：所在地点调查员全部技能 -1、多张叠加；幽灵乌鸦交战二选一', () => {
   const state = placedState(2, RECORD_COVEN)
   const inv = state.investigators[0]
   enemy(state, '05266', inv.location)
   assert.equal(uad.behavior.statModifier(state, inv, 'willpower'), -1)
   assert.equal(uad.behavior.statModifier(state, inv, 'intellect'), -1)
+  // 卡面：每张夜鹰各自 -1，多张叠加（旧实现用 some 只算 -1）。
+  enemy(state, '05266', inv.location)
+  assert.equal(uad.behavior.statModifier(state, inv, 'willpower'), -2, '两张夜鹰叠加 -2')
   const raven = enemy(state, '05267', inv.location)
   const api = apiFor(state, { choose: () => 'modify' })
   uad.behavior.enemyEngaged(state, raven, inv, api)
-  assert.equal(raven.ravenBoostRound, state.round)
+  assert.equal(raven.ravenBoostUntilRound, state.round)
   assert.equal(uad.behavior.enemyStatModifier(state, raven, 'fight'), 2)
+  // 敌人阶段交战 → 加成延续到下一轮调查阶段结束。
+  state.phase = 'enemy'
+  const ravenNight = enemy(state, '05267', inv.location)
+  uad.behavior.enemyEngaged(state, ravenNight, inv, apiFor(state, { choose: () => 'modify' }))
+  assert.equal(ravenNight.ravenBoostUntilRound, state.round + 1)
+  state.phase = 'investigation'
+  state.round += 1
+  assert.equal(uad.behavior.enemyStatModifier(state, ravenNight, 'fight'), 2, '下一轮调查阶段仍生效')
   const hauntApi = apiFor(state, { choose: () => 'haunted' })
   uad.behavior.enemyEngaged(state, enemy(state, '05267', inv.location), inv, hauntApi)
   assert.ok(hauntApi.calls.some(call => call[0] === 'haunted'))
@@ -680,4 +691,24 @@ test('同一路线在 JSON 往返后完全一致（存档/读档）', () => {
   assert.deepEqual(restored.locationVariants, first.locationVariants)
   assert.deepEqual(restored.locations.map(entry => entry.flags || null), first.locations.map(entry => entry.flags || null))
   assert.deepEqual(restored.enemies, first.enemies)
+})
+
+// ---------------------------------------------------------------------------
+// task-42 回归：05086 幽灵看守人被击败（preventReady + 解除交战清理）
+// ---------------------------------------------------------------------------
+test('幽灵看守人被击败：本轮补给阶段不重整（preventReady）并清理交战数组', () => {
+  const state = stateFor(2)
+  const holder = state.investigators[0]
+  const watcher = {
+    id: 'watcher-regression', code: '05086', originalCode: '05086', name: '幽灵看守人',
+    location: holder.location, damageTaken: 3, horror: 2, exhausted: false, engagedSeat: 0,
+  }
+  state.enemies.push(watcher)
+  holder.engaged = [watcher.id]
+  assert.equal(uad.behavior.enemyDefeated(state, watcher, { info: () => {} }), true)
+  assert.deepEqual(watcher.preventReady, { from: state.round, rounds: 1 }, '本轮补给阶段不重整')
+  assert.equal(watcher.engagedSeat, null, '与所有调查员解除交战')
+  assert.deepEqual(holder.engaged, [], '交战调查员的 engaged 数组已清理')
+  assert.equal(watcher.damageTaken, 0, '治愈所有伤害')
+  assert.equal(watcher.horror, 2, '恐惧不在卡面治愈范围内')
 })

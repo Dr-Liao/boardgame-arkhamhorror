@@ -1,0 +1,65 @@
+{
+  "chapterId": "disappearanceAtTheTwilightEstate",
+  "milestone": "P8",
+  "status": "complete",
+  "files": [
+    "content/campaigns/theCircleUndone/scenarios/disappearanceAtTheTwilightEstate/index.js",
+    "content/campaigns/theCircleUndone/scenarios/disappearanceAtTheTwilightEstate/definition.js",
+    "content/campaigns/theCircleUndone/scenarios/disappearanceAtTheTwilightEstate/layout.js",
+    "content/campaigns/theCircleUndone/scenarios/disappearanceAtTheTwilightEstate/behavior.js",
+    "content/campaigns/theCircleUndone/scenarios/disappearanceAtTheTwilightEstate/chaos.js",
+    "content/campaigns/theCircleUndone/tarot.js",
+    "src/cards/encounter-entries/theCircleUndone/disappearanceAtTheTwilightEstate/05044.js",
+    "src/cards/encounter-entries/theCircleUndone/disappearanceAtTheTwilightEstate/05045.js",
+    "tests/tcu-prologue.test.mjs",
+    "artifacts/migration/tcu/p8/specs/disappearanceAtTheTwilightEstate.md",
+    "artifacts/migration/tcu/p8/chapters/disappearanceAtTheTwilightEstate.status.json"
+  ],
+  "checks": {
+    "sourceLocked": true,
+    "identityRegistered": true,
+    "setupAndZones": true,
+    "actsAndAgendas": true,
+    "locationsAndConnections": true,
+    "encounterBehaviors": true,
+    "literalCardBehavior": true,
+    "chaosEffects": true,
+    "resolutionsAndRecords": true,
+    "storyText": true,
+    "saveReplay": true
+  },
+  "inventory": {
+    "locations": 7,
+    "acts": 1,
+    "agendas": 1,
+    "enemies": 4,
+    "treacheries": 9,
+    "encounterCards": 25,
+    "resolutions": ["noResolution"]
+  },
+  "tests": {
+    "file": "tests/tcu-prologue.test.mjs",
+    "cases": 40,
+    "passing": 40
+  },
+  "gaps": [],
+  "approximations": [
+    "议程 1b 的「推进后翻回 1a 且不移除毁灭」：引擎议程没有 revert 原语，改为在 investigatorEliminated 里直接结算 1b 记录，agendaIndex 保持 0、毁灭不移除（1a 始终显示）",
+    "击败来源判定：引擎不保留「被谁击败」，用最近一次敌人攻击（beforeEnemyHarm）+ 议程 1a 强制伤害标记近似 1b 的四分支记录",
+    "「失踪人口」没有 crossedOut 字段：string[] 只记录已选故事调查员卡号，未选者缺席即等于划掉（后续章节读到的语义与参考实现 getRecordedCardCodes 一致）",
+    "卡背固定起手牌直接写入 inv.hand（卡号数组），不经引擎抓牌管线，因此不触发「抽牌」窗口",
+    "朦胧之雾(01168) 的附属按核心共享条目的 location.fog/shroudMod 语义近似，不建独立附属实例",
+    "「放在密谋牌库旁」的 05102/05107 存共享区 state.scenarioZones.agendaAside，持续效果与轮末清理由 encounterRules 通用钩子读取",
+    "幕 1b 的「记录你被追捕」把全队座位写入 youAreBeingHunted（参考实现是 boolean 记录，本仓库该键类型为 string[]）",
+    "序章证据计数：参考实现结局用 recordCount（覆盖）设为幕上线索数；本实现固定走塔罗路径（塔罗已累加证据），结局改为累加幕上线索"
+  ],
+  "remaining": [
+    "Lead：把本章注册进 content/registered.js（从 catalogChapters 移除 + import index.js），并重建遭遇条目索引（worker 不写注册表/索引）",
+    "Lead：把 tests/tcu-prologue.test.mjs 登记进 tests/suites.mjs（FAST）与 tests/node-suite.mjs",
+    "Lead：合并后重跑 node tools/check-tcu-scenario.mjs disappearanceAtTheTwilightEstate 与 node --test tests/tcu-prologue.test.mjs；当前两者均已本地通过",
+    "共享组 13 张卡（05086/05087/05100–05108/01167/01168）的单卡条目由 W-shared 交付；本次已确认 implementedFor 全命中（索引已重建）",
+    "P9：把 zh locale 的 intro/setup/4 位调查员引言正文导入 story-text.js；P10 补从大厅进入序章的真实浏览器路径",
+    "引擎级真实开局（startScenario：P2.6 选人 → prepareInvestigator 无牌组 → 本章 layout）在 tcuCampaign 包保持 catalog-only 期间无法从大厅启动，本章测试用纯 hook 骨架覆盖"
+  ],
+  "notes": "规则事实源 DisappearanceAtTheTwilightEstate.hs（setup/DoStep 3 塔罗/PreScenarioSetup 选人/Skull/ScenarioResolution）+ Act/Agenda Cards；地点与闹鬼文本来自 AtDeathsDoorstep.hs 与 ALL_CARDS。塔罗固定走 22 正位表（参考实现是 Return To 'skip' 分支），每人 1 张、唯一、按 arcana 写 4 个 string[] 记录 + 证据计数；Witching Hour 8 张占卜表在 tarot.js 只导出数据供 w-witch 只读 import。"
+}

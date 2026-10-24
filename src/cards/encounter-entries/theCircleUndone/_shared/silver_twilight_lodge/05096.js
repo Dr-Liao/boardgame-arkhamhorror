@@ -7,6 +7,8 @@
 // 近似：「如果可以」的毁灭放置限制（CannotPlaceDoomOnThis）当前引擎没有通用读点，
 // 这里无条件放置，记入 status.json 的 approximations。
 
+import { enemyParleyDifficultyBonus } from '../../../_shared.js'
+
 export default {
   code: '05096',
   scope: 'enemy',
@@ -23,8 +25,8 @@ export default {
     },
     performEncounterAction(state, inv, enemy, move, api) {
       if (move.rule !== 'parleyKeeperOfSecrets') return false
-      const bonus = enemy.roundFightEvadeBonus?.round === state.round
-        ? Number(enemy.roundFightEvadeBonus.amount) || 0 : 0
+      // 05097 秘社玄仪的「直到一轮结束，对该敌人谈判难度 +2」：与章节 behavior 共用读点。
+      const bonus = enemyParleyDifficultyBonus(enemy, state.round)
       api.test(inv.seat, 'intellect', 3 + bonus, result => {
         if (!result.success) return
         enemy.doom = 0

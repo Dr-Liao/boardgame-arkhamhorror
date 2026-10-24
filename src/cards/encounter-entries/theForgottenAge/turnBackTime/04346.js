@@ -29,10 +29,11 @@ export default {
       if (seat == null) seat = state.campaign.leadSeat
       const holder = state.investigators[seat]
       if (holder) {
-        hooks.removeSetAside('04061')
-        api.giveAsset?.(seat, '04061')
-        if (api.moveRelicOfAges) api.moveRelicOfAges({ code: '04061', seat })
-        else state.relicOfAges = { code: '04061', location: holder.location, seat }
+        // 参考实现：TurnBackTime 放在一边/授予的是「重拾往昔」版本（04303）。
+        hooks.removeSetAside('04303')
+        api.giveAsset?.(seat, '04303')
+        if (api.moveRelicOfAges) api.moveRelicOfAges({ code: '04303', seat })
+        else state.relicOfAges = { code: '04303', location: holder.location, seat }
         api.info?.(`🏺 ${holder.name} 控制了古代遗物。`)
       }
       hooks.removeSetAside('04296')

@@ -9,7 +9,9 @@ export default {
   agendaRule: {
     onReveal(state, agenda, api, hooks) {
       // 预示者的追击：先看剧本日志里预示者是否还活着。
-      if (Number(hooks.records().theHarbingerIsStillAlive || 0) > 0) hooks.spawnHarbinger()
+      const records = hooks.records()
+      const alive = records.theHarbingerIsAlive === true || Number(records.theHarbingerIsStillAlive || 0) > 0
+      if (alive) hooks.spawnHarbinger()
       else api.info?.('剧本日志里没有「预示者还活着」的记录，这一面没有额外效果。')
     },
   },

@@ -42,10 +42,18 @@ export function actionsAvailable(inv, spell) {
   return Math.max(0, total - restricted - explore)
 }
 
-// 花掉行动之后的收窄：法术专用额度不会超过剩余行动数（未用完就随回合结束一起消失）。
+// 花掉行动之后的收窄：法术行动优先消耗「法术专用额度」，用完后才动普通行动。
+// 2026-10-25 修复 05006：旧实现只收窄不扣减，先打法术会残留 1 个法术额度，
+// 导致普通行动少 1 个（3 普通 + 1 法术的卡面实际只剩 2 普通）。
 export function consumeAction(inv, cost, spell) {
   if (!inv) return
-  inv.actionsLeft = Math.max(0, (inv.actionsLeft || 0) - cost)
+  let remaining = Math.max(0, Number(cost) || 0)
+  if (spell && inv.spellOnlyActions) {
+    const used = Math.min(remaining, inv.spellOnlyActions)
+    inv.spellOnlyActions -= used
+    remaining -= used
+  }
+  inv.actionsLeft = Math.max(0, (inv.actionsLeft || 0) - remaining)
   if (inv.spellOnlyActions) inv.spellOnlyActions = Math.min(inv.spellOnlyActions, inv.actionsLeft)
   if (!inv.spellOnlyActions) delete inv.spellOnlyActions
 }

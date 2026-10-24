@@ -7,6 +7,8 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 04010 走私货物：查找牌库顶 9 张或弃牌堆中的[[违法]]卡，加入手牌。
+// 「弃牌堆或牌库顶 9 张」是自由二选一：弃牌堆里没有违法卡时也要提供「查看弃牌堆」，
+// 只是查找结果为空（结算后按普通事件进弃牌堆，而不是像查牌库那样洗回牌库）。
 
 export default {
   code: '04010',
@@ -16,13 +18,19 @@ export default {
       kind: 'played', label: '查找牌库顶 9 张或弃牌堆中的违法卡',
       resolve: ({ state, inv, api }) => {
         const illicit = code => api.cardTraits(code).some(trait => ['illicit', '违法'].includes(trait))
-        const options = [{ id: 'deck', label: '查看牌库顶 9 张' }]
-        if (inv.discard.some(illicit)) options.push({ id: 'discard', label: '查看弃牌堆' })
+        const options = [
+          { id: 'deck', label: '查看牌库顶 9 张' },
+          { id: 'discard', label: '查看弃牌堆' },
+        ]
         const zone = api.choice({ kind: 'effect', source: '04010', seat: inv.seat,
           prompt: '走私货物：选择查找的区域。', options })
         if (zone === 'discard') {
           const matches = [...new Set(inv.discard.filter(illicit))]
-          if (!matches.length) return
+          if (!matches.length) {
+            // 卡面允许搜索空/无违法卡的弃牌堆：查不到就按普通事件结算进弃牌堆。
+            api.info(`${inv.name} 查找了弃牌堆，没有找到[[违法]]卡。`)
+            return
+          }
           const chosen = api.choice({ kind: 'target', source: '04010', seat: inv.seat,
             prompt: '选择加入手牌的违法卡。',
             options: matches.map(code => ({ id: code, cardCode: code, label: api.cardName(code) })) })

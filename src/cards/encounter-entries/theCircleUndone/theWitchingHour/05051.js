@@ -8,8 +8,9 @@ export default {
   agendaRule: {
     onReveal(state, agenda, api) {
       while (state.encounterDeck.length > 5) state.encounterDiscard.push(state.encounterDeck.pop())
+      // 「游戏区域卡牌最多」只数场上支援（威胁区不在游戏区域，事件/技能不在区域）。
       const counts = activeInvestigators(state).map(inv => ({
-        inv, count: (inv.assets || []).length + (inv.threat || []).length,
+        inv, count: (inv.assets || []).length,
       }))
       if (!counts.length) return true
       const most = Math.max(...counts.map(entry => entry.count))
@@ -22,14 +23,22 @@ export default {
         }))) || candidates[0]
       const isWitchEnemy = code => ALL_CARDS[code]?.type === 'enemy'
         && (ALL_CARDS[code]?.traits || []).some(trait => String(trait).toLowerCase() === 'witch')
-      let code = null
-      for (let index = state.encounterDiscard.length - 1; index >= 0; index--) {
-        if (!isWitchEnemy(state.encounterDiscard[index])) continue
-        code = state.encounterDiscard.splice(index, 1)[0]
+      // 卡面：「从遭遇弃牌堆顶抽取 1 张女巫敌人」——走 drawEncounter 管线（进威胁区/生成并结算），
+      // 不是直接 api.spawn 绕过遭遇结算。
+      let index = -1
+      for (let cursor = state.encounterDiscard.length - 1; cursor >= 0; cursor--) {
+        if (!isWitchEnemy(state.encounterDiscard[cursor])) continue
+        index = cursor
         break
       }
-      if (code) {
-        api.spawn?.(code, chosen.location)
+      if (index >= 0) {
+        const code = state.encounterDiscard[index]
+        if (typeof api.drawEncounterDiscard === 'function') {
+          api.drawEncounterDiscard(chosen.seat, index)
+        } else {
+          state.encounterDiscard.splice(index, 1)
+          api.spawn?.(code, chosen.location)
+        }
         api.info?.(`🌑 节制·XIV：${chosen.name} 抽取遭遇弃牌堆顶部的「${ALL_CARDS[code]?.nameZh || code}」。`)
       } else {
         api.info?.('🌑 节制·XIV：遭遇弃牌堆里没有女巫敌人。')

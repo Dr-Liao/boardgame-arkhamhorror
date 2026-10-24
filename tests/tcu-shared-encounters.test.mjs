@@ -20,8 +20,11 @@ import {
   agendaAside, agendaAsideCount, placeAgendaAside, removeAgendaAside,
   discardEncounterTop, witchEnemyEncountersInDiscard, isSpellOrRelicSource,
   enemyRuleReads, original, activeInvestigators, here, hasTrait, doomOn,
+  resolveEncounterDeckEmptyForced, lastEncounterDrawn, consumeLastEncounterDrawn,
+  parleyDifficultyBonus,
 } from '../content/campaigns/theCircleUndone/encounter-rules.js'
 import { enemyScriptFor, treacheryRuleFor, encounterResolveFor, enemyStatRuleFor } from '../src/cards/card-rules.js'
+import { refreshNetherMistPrey } from '../src/cards/encounter-entries/theCircleUndone/_shared/spectral_predators/05100.js'
 
 // ---- 23 张共享组单卡条目（一卡一文件） ----
 import e05086 from '../src/cards/encounter-entries/theCircleUndone/_shared/the_watcher/05086.js'
@@ -191,8 +194,8 @@ function makeApi(state, options = {}) {
       return enemy
     },
     moveEnemy(enemy, location) { enemy.location = location },
-    hunterStep(enemy) {
-      if (options.hunterStep) return options.hunterStep(enemy)
+    hunterStep(enemy, stepOptions) {
+      if (options.hunterStep) return options.hunterStep(enemy, stepOptions)
       const location = state.locations.find(entry => entry.id === enemy.location)
       return location?.connections?.[0] ?? null
     },
@@ -220,13 +223,14 @@ test('共享遭遇规则保留骨架导出名且钩子齐全', () => {
     spectralTargetRestricted, watcherHuntedSeats, isHunted, markHuntedSeat, clearHuntedSeat,
     agendaAside, agendaAsideCount, placeAgendaAside, removeAgendaAside, discardEncounterTop,
     witchEnemyEncountersInDiscard, isSpellOrRelicSource, enemyRuleReads, original,
-    activeInvestigators, here, hasTrait, doomOn]) {
+    activeInvestigators, here, hasTrait, doomOn, resolveEncounterDeckEmptyForced,
+    lastEncounterDrawn, consumeLastEncounterDrawn, parleyDifficultyBonus]) {
     assert.ok(value !== undefined && value !== null)
   }
   for (const hook of ['afterTest', 'canFightEnemy', 'canEvadeEnemy', 'enemySpawned', 'enemyMoved',
-    'enemyDamaged', 'enemyDefeated', 'enemyAttackResolved', 'enemyPhaseEnd', 'mythosEnded',
-    'enemyStatModifier', 'statModifier', 'turnBegins', 'turnEnded', 'roundEnded', 'encounterDrawn',
-    'resolveEncounter', 'encounterActions', 'performEncounterAction']) {
+    'enemyDamaged', 'enemyDefeated', 'enemyAttackResolved', 'enemyPhaseEnd', 'enemyPhaseStart',
+    'mythosEnded', 'enemyStatModifier', 'statModifier', 'turnBegins', 'turnEnded', 'roundEnded',
+    'encounterDrawn', 'resolveEncounter', 'encounterActions', 'performEncounterAction']) {
     assert.equal(typeof encounterRules[hook], 'function', `缺少共享钩子 ${hook}`)
   }
 })
@@ -379,12 +383,37 @@ test('05090 女巫集会学徒：显现弃 2 张，耗尽时抽取弃牌堆巫�
   const api = makeApi(state)
   const enemy = { id: 'initiate', code: '05090', originalCode: '05090', location: 'a', drawnBySeat: 0 }
   state.enemies.push(enemy)
+  // 显现只在「抽到」时结算：共享 encounterDrawn 钩子记录最近抽到的卡号。
+  encounterRules.encounterDrawn(state, inv(state, 0), '05090', api)
   encounterRules.enemySpawned(state, enemy, api)
   assert.equal(state.encounterDeck.length, 0, '遭遇牌库顶 2 张都被弃掉（原本只有 1 张）')
   assert.ok(state.encounterDiscard.includes('05092'))
   assert.equal(api.calls.some(call => call.type === 'drawEncounter' && call.seat === 0), true,
     '耗尽后抽取弃牌堆顶的巫术（Hex）卡牌')
   assert.equal(state.encounterDiscard.includes('05093'), false, '巫术卡离开弃牌堆')
+})
+
+test('05090 女巫集会学徒：效果生成不结算显现，只有本效果弃空牌库才继续', () => {
+  // 剧本效果生成（最近抽到的不是 05090）：不弃牌库。
+  const state = stateFor()
+  state.encounterDeck = ['05092', '05093']
+  const spawned = { id: 'i1', code: '05090', originalCode: '05090', location: 'a', drawnBySeat: 0 }
+  const api = makeApi(state)
+  state.scenarioFlags.lastEncounterDrawn = { code: '05099', round: 1, seat: 0 }
+  encounterRules.enemySpawned(state, spawned, makeApi(state))
+  assert.equal(state.encounterDeck.length, 2, '效果生成不结算显现')
+  // 抽到 05090 时弃 2 张把牌库清空（弃牌前有牌）→ 继续抽巫术。
+  state.scenarioFlags.lastEncounterDrawn = { code: '05090', round: 1, seat: 0 }
+  encounterRules.encounterDrawn(state, inv(state, 0), '05090', api)
+  encounterRules.enemySpawned(state, { id: 'i2', code: '05090', originalCode: '05090', location: 'a', drawnBySeat: 0 }, api)
+  assert.equal(api.calls.some(call => call.type === 'drawEncounter'), true)
+  // 牌库本来就是 0 时弃不出牌，不触发「本效果耗尽」。
+  const empty = stateFor()
+  empty.scenarioFlags.lastEncounterDrawn = { code: '05090', round: 1, seat: 0 }
+  const emptyApi = makeApi(empty)
+  encounterRules.encounterDrawn(empty, inv(empty, 0), '05090', emptyApi)
+  encounterRules.enemySpawned(empty, { id: 'i3', code: '05090', originalCode: '05090', location: 'a', drawnBySeat: 0 }, emptyApi)
+  assert.equal(emptyApi.calls.some(call => call.type === 'drawEncounter'), false)
 })
 
 test('05091 女祭司：弃牌堆女巫敌人提供攻击/躲避加成（上限 3）', () => {
@@ -409,6 +438,19 @@ test('05091 女祭司：遭遇牌库耗尽时重整并攻击', () => {
   assert.equal(enemy.exhausted, false)
   assert.deepEqual(api.attackLog, [{ enemyId: 'priestess', seat: 0 }, { enemyId: 'priestess', seat: 1 }],
     '攻击其所在地点的每位调查员')
+})
+
+test('05091 女祭司：抽到牌库最后一张时立即触发强制（不等下一次抽牌）', () => {
+  const state = stateFor()
+  inv(state, 0).location = 'a'
+  const enemy = { id: 'priestess', code: '05091', originalCode: '05091', location: 'a', exhausted: true, engagedSeat: null }
+  state.enemies.push(enemy)
+  state.encounterDeck = ['05100']
+  state.encounterDeck.pop() // 引擎：本次抽牌抽走最后一张
+  const api = makeApi(state)
+  encounterRules.encounterDrawn(state, inv(state, 0), '05100', api)
+  assert.equal(enemy.exhausted, false, '抽空牌库当次即重整')
+  assert.equal(api.attackLog.length, 2, '并攻击同地点每位调查员')
 })
 
 // ===========================================================================
@@ -640,8 +682,12 @@ test('05107 恐怖夜色：失败放到密谋牌库旁，第三张触发全体 3
   resolve(state, inv(state, 0), { code: '05107' }, makeApi(state, { tests: [{ success: false, value: 0, difficulty: 4 }] }))
   assert.equal(agendaAsideCount(state, '05107'), 2)
   const thirdApi = makeApi(state, { tests: [{ success: false, value: 0, difficulty: 4 }] })
-  resolve(state, inv(state, 0), { code: '05107' }, thirdApi)
+  const thirdPlaced = resolve(state, inv(state, 0), { code: '05107' }, thirdApi)
   assert.equal(agendaAsideCount(state, '05107'), 0)
+  assert.equal(thirdPlaced, false, '第三张由引擎弃置（返回 false = 本卡离开）')
+  // 牌库旁的 2 张先推进弃牌堆；当前这张由引擎在 encounterResolve=false 后弃置 → 合计 3 张。
+  assert.equal(state.encounterDiscard.filter(code => code === '05107').length, 2)
+  state.encounterDiscard.push('05107') // 引擎路径：encounter.js 对 false 结果弃置当前卡
   assert.equal(state.encounterDiscard.filter(code => code === '05107').length, 3)
   assert.equal(inv(state, 0).horror, 3)
   assert.equal(inv(state, 1).horror, 3)
@@ -673,12 +719,24 @@ test('05098 邪恶往昔：首张进威胁区，重复时涌动；遭遇牌库�
   const surgeApi = makeApi(state)
   assert.equal(resolve(state, inv(state, 0), { code: '05098' }, surgeApi), false)
   assert.equal(surgeApi.calls.some(call => call.type === 'drawEncounter'), true, '重复时获得涌动')
-  // 遭遇牌库耗尽：抽牌后牌库为 0，下一次抽牌触发强制。
+  // 卡面没有 [action] 摆脱行动：威胁区不应列出任何 encounterAction。
+  assert.deepEqual(encounterRules.encounterActions(state, inv(state, 0)), [], '05098 卡面无 [action]')
+  // 遭遇牌库耗尽：本次抽牌把牌库抽到 0 → 立即触发强制（旧实现在下一次抽牌才触发）。
   const emptyApi = makeApi(state, { tests: [{ success: false, value: 0, difficulty: 3 }] })
-  state.scenarioFlags.encounterDeckSizeAfterDraw = 0
+  state.encounterDeck = ['05090']
+  state.encounterDeck.pop() // 引擎：先抽走最后一张
   encounterRules.encounterDrawn(state, inv(state, 0), '05090', emptyApi)
   assert.equal(inv(state, 0).horror, 2, '受到 2 点恐惧')
   assert.equal(inv(state, 0).threat.length, 1, '检定失败：邪恶往昔仍留在威胁区域')
+  // 检定成功则弃掉邪恶往昔。
+  const successState = stateFor()
+  encounterResolveFor('05098')(successState, inv(successState, 0), { code: '05098' }, makeApi(successState))
+  const successApi = makeApi(successState, { tests: [{ success: true, value: 5, difficulty: 3 }] })
+  successState.encounterDeck = ['05090']
+  successState.encounterDeck.pop()
+  encounterRules.encounterDrawn(successState, inv(successState, 0), '05090', successApi)
+  assert.equal(inv(successState, 0).threat.length, 0, '检定成功：弃掉邪恶往昔')
+  assert.ok(successState.encounterDiscard.includes('05098'), '威胁区诡计弃置到遭遇弃牌堆')
 })
 
 test('05099 百年秘事：失败按差额弃遭遇牌；弃到诅咒诡计造成直接伤害', () => {
@@ -739,6 +797,145 @@ test('05094 苦痛折磨：进威胁区并列出摆脱行动', () => {
   assert.equal(e05094.simplified, true, '[action] 禁止能力的缺口必须显式登记')
 })
 
+// ===========================================================================
+// 14.5 2026-10-25 修复回归：enemyMoved 语义 / 敌方阶段猎物 / 05087 门控 / 05089 猎物 /
+//      05100 preySeat / 05103 多只怨灵 / 遭遇牌库耗尽触发
+// ===========================================================================
+test('enemyMoved：共享钩子以 enemy.location 为新地点、第三参只作旧地点（05100）', () => {
+  const state = stateFor()
+  inv(state, 0).location = 'a'
+  const mist = { id: 'mist', code: '05100', originalCode: '05100', location: 'a' }
+  state.enemies.push(mist)
+  const api = makeApi(state)
+  encounterRules.enemySpawned(state, mist, api)
+  assert.equal(state.hauntedGrants[0].locationId, 'a')
+  // 引擎语义：先更新 enemy.location，再把「移动前地点」作为第三参传给行为钩子。
+  mist.location = 'b'
+  encounterRules.enemyMoved(state, mist, 'a', api)
+  assert.equal(state.hauntedGrants[0].locationId, 'b')
+  assert.equal(state.hauntedGrants.length, 1, '移动先清旧授予再授予新地点')
+  // 新语义（第三参=新地点）也必须兼容，避免引擎侧再改时共享规则失效。
+  mist.location = 'a'
+  encounterRules.enemyMoved(state, mist, 'a', api)
+  assert.equal(state.hauntedGrants[0].locationId, 'a')
+})
+
+test('enemyPhaseStart：共享钩子派发条目 onEnemyPhaseStart 并刷新 05100 猎物', () => {
+  const state = stateFor()
+  inv(state, 0).location = 'a'
+  inv(state, 1).location = 'b'
+  const mist = { id: 'mist', code: '05100', originalCode: '05100', location: 'a' }
+  state.enemies.push(mist)
+  encounterRules.enemySpawned(state, mist, makeApi(state))
+  assert.equal(mist.preySeat, 0, '当前只有 0 号调查员在场地')
+  // 地点线索变化后，敌方阶段开始按「所在地点线索最多」重算猎物。
+  state.locations.find(entry => entry.id === 'b').clues = 3
+  encounterRules.enemyPhaseStart(state, makeApi(state))
+  assert.equal(mist.preySeat, 1)
+  // 并列时由队长选择，默认取第一个候选。
+  state.locations.find(entry => entry.id === 'a').clues = 3
+  const api = makeApi(state)
+  encounterRules.enemyPhaseStart(state, api)
+  assert.equal([0, 1].includes(mist.preySeat), true)
+})
+
+test('05087 看守人的攫噬：所在地点已有调查员时跳过猎手移动，仍交战并攻击', () => {
+  const state = stateFor({ count: 1, locationIds: ['a', 'b'] })
+  const watcher = {
+    id: 'watcher', code: '05086', originalCode: '05086', name: '幽灵看守人',
+    location: 'a', damageTaken: 4, exhausted: true, engagedSeat: null, hunter: true,
+  }
+  state.enemies.push(watcher)
+  inv(state, 0).location = 'a' // 与看守人同地点：敌军阶段不会猎手移动
+  let hunterCalls = 0
+  const api = makeApi(state, { hunterStep: () => { hunterCalls++; return 'b' } })
+  encounterResolveFor('05087')(state, inv(state, 0), { code: '05087' }, api)
+  assert.equal(hunterCalls, 0, '同地点有调查员时不移动')
+  assert.equal(watcher.damageTaken, 1, '治愈 3 点伤害')
+  assert.equal(watcher.exhausted, false, '重整')
+  assert.equal(watcher.engagedSeat, 0, '交战抽牌者（猎物 - 你）')
+  assert.deepEqual(api.attackLog, [{ enemyId: 'watcher', seat: 0 }], '攻击其交战调查员')
+  // 无调查员同地点时按「猎物 - 你」猎手移动一步。
+  const state2 = stateFor({ count: 1, locationIds: ['a', 'b'] })
+  const watcher2 = {
+    id: 'watcher2', code: '05086', originalCode: '05086', name: '幽灵看守人',
+    location: 'a', damageTaken: 0, exhausted: false, engagedSeat: null, hunter: true,
+  }
+  state2.enemies.push(watcher2)
+  inv(state2, 0).location = 'b'
+  const moves = []
+  const api2 = makeApi(state2, { hunterStep: (enemy, options) => { moves.push(options); return 'b' } })
+  encounterResolveFor('05087')(state2, inv(state2, 0), { code: '05087' }, api2)
+  assert.equal(watcher2.location, 'b', '猎手移动')
+  assert.deepEqual(moves[0]?.targets?.map(target => target.seat), [0], '移动目标=猎物 - 你')
+  assert.equal(watcher2.engagedSeat, 0)
+  assert.deepEqual(api2.attackLog, [{ enemyId: 'watcher2', seat: 0 }])
+})
+
+test('05089 魔鬼的笛声：猎物按印刷神智−恐惧，不再叠加支援神智轨道', () => {
+  const state = stateFor({ count: 2 })
+  inv(state, 0).location = 'a'
+  inv(state, 1).location = 'a'
+  inv(state, 0).horror = 4 // 5-4=1
+  inv(state, 1).horror = 2 // 5-2=3
+  inv(state, 0).assets.push({ id: 'ghost', code: '05236' }) // 神智轨道 3：旧实现会把它加到剩余神智上
+  const resolve = encounterResolveFor('05089')
+  const api = makeApi(state)
+  resolve(state, inv(state, 0), { code: '05089' }, api)
+  resolve(state, inv(state, 0), { code: '05089' }, api)
+  resolve(state, inv(state, 0), { code: '05089' }, api)
+  const spawned = state.enemies.find(enemy => enemy.code === '05088')
+  assert.ok(spawned)
+  assert.equal(spawned.engagedSeat, 0, '剩余神智最低者=0 号（旧实现会因支援神智误选 1 号）')
+  assert.equal(spawned.preySeat, 0)
+})
+
+test('05103 怨灵：两只怨灵各自附属并获得独立闹鬼能力；对象来源识别法术', () => {
+  const state = stateFor()
+  const makeWraith = id => ({ id, code: '05103', originalCode: '05103', location: 'a', health: 2, damageTaken: 2 })
+  const w1 = makeWraith('w1')
+  const w2 = makeWraith('w2')
+  state.enemies.push(w1, w2)
+  const api = makeApi(state)
+  encounterRules.enemyDamaged(state, w1, api, 0, 'encounter')
+  assert.equal(encounterRules.enemyDefeated(state, w1, api), true)
+  encounterRules.enemyDamaged(state, w2, api, 0, 'encounter')
+  assert.equal(encounterRules.enemyDefeated(state, w2, api), true)
+  assert.equal(state.locations.find(entry => entry.id === 'a').attachments.length, 2, '两只怨灵都附属')
+  assert.equal(state.hauntedGrants.filter(grant => grant.ability.id.startsWith('05103:haunt:')).length, 2, '各自授予闹鬼')
+  // 对象来源：{ kind:'asset', code:'01060'(Spell) } 视作法术伤害 → 正常弃掉。
+  const state2 = stateFor()
+  const w3 = makeWraith('w3')
+  state2.enemies.push(w3)
+  const api2 = makeApi(state2)
+  encounterRules.enemyDamaged(state2, w3, api2, 0, { kind: 'asset', code: '01060' })
+  assert.equal(encounterRules.enemyDefeated(state2, w3, api2), false)
+})
+
+test('parleyDifficultyBonus：05097 的谈判 +2 只在本轮有效', () => {
+  const state = stateFor()
+  const enemy = { id: 'cultist', roundFightEvadeBonus: { round: 1, amount: 2 } }
+  assert.equal(parleyDifficultyBonus(state, enemy), 2)
+  state.round = 2
+  assert.equal(parleyDifficultyBonus(state, enemy), 0)
+  assert.equal(parleyDifficultyBonus(state, { id: 'x' }), 0)
+})
+
+test('discardEncounterTop：弃到牌库由有到无时触发共享的遭遇牌库耗尽强制', () => {
+  const state = stateFor()
+  inv(state, 0).threat.push({ id: 'evil', code: '05098', originalCode: '05098' })
+  state.encounterDeck = ['05090', '05091']
+  const api = makeApi(state, { tests: [{ success: false, value: 0, difficulty: 3 }] })
+  const discarded = discardEncounterTop(state, api, 2)
+  assert.deepEqual(discarded, ['05091', '05090'])
+  assert.equal(inv(state, 0).horror, 2, '耗尽触发 05098 的 2 点恐惧')
+  // 只弃 1 张（牌库仍有牌）时不触发。
+  const state2 = stateFor()
+  inv(state2, 0).threat.push({ id: 'evil2', code: '05098', originalCode: '05098' })
+  state2.encounterDeck = ['05090', '05091']
+  discardEncounterTop(state2, makeApi(state2), 1)
+  assert.equal(inv(state2, 0).horror, 0)
+})
 // ===========================================================================
 // 15. 存档往返与确定性（saveReplay 证据）
 // ===========================================================================

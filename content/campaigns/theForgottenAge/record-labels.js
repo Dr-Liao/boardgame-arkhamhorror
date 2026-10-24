@@ -12,6 +12,7 @@ export const RECORD_LABELS = Object.freeze({
   theInvestigatorsRecoveredTheRelicOfAges: '调查队取回古代遗物',
   alejandroRecoveredTheRelicOfAges: '亚历山卓取回古代遗物',
   theHarbingerIsStillAlive: '预示者身上的伤害',
+  theHarbingerIsAlive: '预示者还活着',
   theInvestigatorsGaveCustodyOfTheRelicToAlejandro: '遗物交给亚历山卓保管',
   theInvestigatorsHaveEarnedAlejandrosTrust: '调查队赢得亚历山卓的信任',
   theInvestigatorsGaveCustodyOfTheRelicToHarlanEarnstone: '遗物交给哈伦·恩斯通保管',

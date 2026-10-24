@@ -280,16 +280,27 @@ function takeEncounterCard(state, code) {
   return false
 }
 
+// 04135：从遭遇牌库顶弃牌直到弃掉一个指定特性的敌人。牌库耗尽时把弃牌堆洗回
+// 牌库继续弃（卡面是「直到弃掉一个异教徒敌人」，不是「牌库顶若干张里找」）。
 function discardUntilTrait(state, trait) {
   const discarded = []
-  while (state.encounterDeck.length) {
+  let guard = 0
+  const ceiling = (state.encounterDeck.length + (state.encounterDiscard || []).length) * 2 + 8
+  while (guard++ < ceiling) {
+    if (!state.encounterDeck.length) {
+      // 本次已弃的牌全部进弃牌堆，再把弃牌堆洗回牌库继续。
+      state.encounterDiscard.push(...discarded.splice(0))
+      if (!state.encounterDiscard.length) return null
+      state.encounterDeck = shuffleWith(state, state.encounterDiscard.splice(0))
+      continue
+    }
     const code = state.encounterDeck.pop()
-    discarded.push(code)
     const definition = state.scenario.enemies?.[code]
     if (definition && (definition.traits || []).some(value => String(value).toLowerCase() === trait)) {
-      state.encounterDiscard.push(...discarded.slice(0, -1))
+      state.encounterDiscard.push(...discarded)
       return code
     }
+    discarded.push(code)
   }
   state.encounterDiscard.push(...discarded)
   return null
@@ -312,6 +323,12 @@ function rememberPrey(state, enemy) {
   const flags = flagsFor(state)
   flags.ichtacasPrey ||= []
   if (!flags.ichtacasPrey.includes(enemy.id)) flags.ichtacasPrey.push(enemy.id)
+  // 04140 背面要「离玛利亚最近」：猎物推进时必然已离场，只能靠记录下来的
+  // 敌人卡号与最后所在地点选人，所以生成/移动时都要维护这两个映射。
+  flags.ichtacasPreyCodes ||= {}
+  flags.ichtacasPreyCodes[enemy.id] = original(enemy)
+  flags.ichtacasPreyLocations ||= {}
+  flags.ichtacasPreyLocations[enemy.id] = enemy.location
 }
 
 function rememberDestination(state, locationId) {
@@ -329,6 +346,19 @@ function giveIchtaca(state, api, locationId) {
   if (index >= 0) list.splice(index, 1)
   api?.giveAsset?.(seat, '04147')
   api?.info?.(`🐍 ${inv.name} 得到伊塔卡（失落的守卫者）。`)
+}
+
+// 04145「屋中无人」的强制：所附属地点没有线索时立即弃掉，并回退它加的额外调查行动。
+// 线索被发现的即时路径走 cluesRemoved 钩子；其它直接改 clues 的效果由 roundEnded 兜底。
+function discardNobodyHomeAt(state, location, api) {
+  if (!location || (location.clues || 0) > 0) return 0
+  const copies = (location.attachments || []).filter(entry => original(entry) === '04145')
+  if (!copies.length) return 0
+  location.attachments = (location.attachments || []).filter(entry => original(entry) !== '04145')
+  location.investigateExtraActions = Math.max(0, (location.investigateExtraActions || 0) - copies.length)
+  for (const _copy of copies) state.encounterDiscard.push('04145')
+  api?.info?.(`🏚️ 「${location.name}」已无线索，弃掉「屋中无人」。`)
+  return copies.length
 }
 
 function discardTopEncounterAndMaybeDraw(state, inv, api) {
@@ -369,11 +399,11 @@ function runActReveal(state, act, api = {}) {
       break
     }
     case '04120': {
-      if (!state.enemies.some(enemy => original(enemy) === '04095')) {
-        if (takeEncounterCard(state, '04095')) {
-          const location = farthestLocation(state)
-          if (location) api.spawn?.('04095', location.id)
-        }
+      // 卡面：查找遭遇牌库、弃牌堆、胜利区，找出一张兄弟会异教徒并生成在最远地点。
+      // 即使场上已有一张，也要继续从这三个区域找另一张（副本共 2 张）。
+      if (takeEncounterCard(state, '04095')) {
+        const location = farthestLocation(state)
+        if (location) api.spawn?.('04095', location.id)
       }
       for (const enemy of state.enemies.filter(entry => original(entry) === '04095')) enemy.damageTaken = 0
       const target = farthestEnemy(state, entry => original(entry) === '04095')
@@ -426,11 +456,15 @@ function runActReveal(state, act, api = {}) {
       break
     }
     case '04127': {
-      if (!state.enemies.some(enemy => original(enemy) === '01172')) {
-        if (takeEncounterCard(state, '01172')) {
-          const location = farthestLocation(state)
-          if (location) api.spawn?.('01172', location.id)
-        }
+      // 卡面：查找所有场上和场外区域找出一个狩猎中的夜魇，并生成在最远地点。
+      // 已在场时「生成」表现为把它移到最远地点（而不是忽略它）。
+      const inPlay = state.enemies.find(enemy => original(enemy) === '01172')
+      if (inPlay) {
+        const location = farthestLocation(state)
+        if (location && location.id !== inPlay.location) api.moveEnemy?.(inPlay, location.id)
+      } else if (takeEncounterCard(state, '01172')) {
+        const location = farthestLocation(state)
+        if (location) api.spawn?.('01172', location.id)
       }
       for (const enemy of state.enemies.filter(entry => original(entry) === '01172')) enemy.damageTaken = 0
       const target = farthestEnemy(state, entry => original(entry) === '01172')
@@ -524,9 +558,15 @@ function runActReveal(state, act, api = {}) {
       break
     }
     case '04140': {
-      const prey = (flags.ichtacasPrey || []).map(id => state.enemies.find(enemy => enemy.id === id)).filter(Boolean)
-      const maria = prey.find(enemy => original(enemy) === '04137b')
-      const locationId = maria?.location || 'blackCave'
+      // 目标达成时所有猎物都已离场（玛利亚也不例外），只能靠 rememberPrey/enemyMoved
+      // 记下的卡号与最后地点选「离玛利亚最近的调查员」；否则走卡面的幽暗洞穴分支。
+      const codes = flags.ichtacasPreyCodes || {}
+      const locations = flags.ichtacasPreyLocations || {}
+      const preyList = flags.ichtacasPrey || []
+      const mariaId = preyList.find(id => codes[id] === '04137b')
+        || preyList.find(id => state.enemies.some(enemy => enemy.id === id && original(enemy) === '04137b'))
+      const locationId = (mariaId && (state.enemies.find(enemy => enemy.id === mariaId)?.location || locations[mariaId]))
+        || 'blackCave'
       giveIchtaca(state, api, locationId)
       break
     }
@@ -611,8 +651,9 @@ function objectiveMet(state, spec) {
     })
   }
   if (spec.kind === 'preyGone') {
+    // 「所有猎物均不在场」在空集上为真（例如 04135 弃牌没找到教众的边界）。
     const list = flags.ichtacasPrey || []
-    return list.length > 0 && !state.enemies.some(enemy => list.includes(enemy.id))
+    return !state.enemies.some(enemy => list.includes(enemy.id))
   }
   return false
 }
@@ -748,6 +789,18 @@ export const behavior = {
     throw new Error(`未知命运之线密谋：${original(agenda)}`)
   },
 
+  // 04146：附着在密谋上的「鲜血阴谋」随宿主离场进遭遇弃牌堆（之后可被重新洗回）。
+  agendaLeftPlay(state, agenda, api) {
+    const attachments = agenda?.attachments || []
+    if (!attachments.length) return
+    for (const attachment of attachments) {
+      const code = typeof attachment === 'string' ? attachment : original(attachment)
+      if (code) state.encounterDiscard.push(code)
+    }
+    agenda.attachments = []
+    api?.info?.('📜 密谋离场：其上的附着卡进入遭遇弃牌堆。')
+  },
+
   checkObjectives(state, api) {
     if (state.status !== 'playing') return
     for (const thread of THREAD_IDS) {
@@ -769,15 +822,14 @@ export const behavior = {
 
   roundEnded(state, api) {
     encounterRules.roundEnded?.(state, api)
-    // 04145「屋中无人」的强制：附属地点没有线索时弃掉；并回退额外行动。
-    for (const location of state.locations || []) {
-      const copies = (location.attachments || []).filter(entry => original(entry) === '04145')
-      if (!copies.length || (location.clues || 0) > 0) continue
-      location.attachments = location.attachments.filter(entry => original(entry) !== '04145')
-      location.investigateExtraActions = Math.max(0, (location.investigateExtraActions || 0) - copies.length)
-      for (const _copy of copies) state.encounterDiscard.push('04145')
-      api.info?.(`🏚️ 「${location.name}」已无线索，弃掉「屋中无人」。`)
-    }
+    // 04145「屋中无人」的强制兜底（线索被直接改写、没走 cluesRemoved 的路径）。
+    for (const location of state.locations || []) discardNobodyHomeAt(state, location, api)
+  },
+
+  // 04145「屋中无人」：最后一个线索被发现时立即弃掉（卡面是强制，不是轮末）。
+  cluesRemoved(state, location, amount, api) {
+    if (!location || (location.clues || 0) > 0) return
+    discardNobodyHomeAt(state, location, api)
   },
 
   turnEnded(state, inv, api) {
@@ -846,6 +898,19 @@ export const behavior = {
     encounterRules.enemySpawned?.(state, enemy, api)
   },
 
+  // 附属敌人的「所在地点」：04124/04132 背面在敌人离场后仍要按它最后所在的地点选最近
+  // 调查员，而 04095/01172 都带猎手会移动，所以每次移动都要刷新记录的地点。
+  enemyMoved(state, enemy, previous, api) {
+    if (!enemy) return
+    const flags = flagsFor(state)
+    if (state.relicOfAges?.enemyId === enemy.id) state.relicOfAges.location = enemy.location
+    if (flags.alejandro?.enemyId === enemy.id) flags.alejandro.location = enemy.location
+    if ((flags.ichtacasPrey || []).includes(enemy.id)) {
+      flags.ichtacasPreyLocations ||= {}
+      flags.ichtacasPreyLocations[enemy.id] = enemy.location
+    }
+  },
+
   enemyStatModifier(state, enemy, stat) {
     let value = encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
     const flags = flagsFor(state)
@@ -857,8 +922,13 @@ export const behavior = {
     // P2：生命值修正（引擎 enemyStatModifier('health') 分支）。
     if (stat === 'health') {
       // 04124 / 04132：古代遗物或亚历山卓附属的敌人 +2×调查员数生命。
-      if (relicCarrier(state)?.id === enemy.id) value += 2 * (state.numInvestigators || 1)
-      if (alejandroEnemy(state)?.id === enemy.id) value += 2 * (state.numInvestigators || 1)
+      // 只在对应幕在场时生效（「古代遗物附属到一个敌人时」是 04124 的持续文本）。
+      if (actInPlay(state, '04124') && relicCarrier(state)?.id === enemy.id) {
+        value += 2 * (state.numInvestigators || 1)
+      }
+      if (actInPlay(state, '04132') && alejandroEnemy(state)?.id === enemy.id) {
+        value += 2 * (state.numInvestigators || 1)
+      }
       // 04140：伊塔卡的猎物在无线索地点时 +1×调查员数生命（战斗/躲避 +1 见上）。
       if (prey.includes(enemy.id) && actInPlay(state, '04140')) {
         const location = there(state, enemy.location)
@@ -965,7 +1035,8 @@ export const behavior = {
       const keep = (inv.deck || []).slice(0, Math.max(0, (inv.deck || []).length - top.length))
       const weapons = top.filter(code => (ALL_CARDS[code]?.traits || []).includes('Weapon'))
       if (!weapons.length) {
-        inv.deck = [...keep, ...shuffleWith(state, top)]
+        // 卡面「混洗你的牌库」：没找到也要洗整副牌，而不是只洗搜索过的 6 张。
+        inv.deck = shuffleWith(state, [...keep, ...top])
         api.info?.('牌库顶 6 张里没有武器。')
         return
       }
@@ -1079,9 +1150,16 @@ export const behavior = {
     const harbingerCode = '04062'
     const inPlay = state.enemies.find(enemy => original(enemy) === harbingerCode)
     const inVictory = (state.victoryDisplay || []).find(card => original(card) === harbingerCode)
-    if (inPlay) records.theHarbingerIsStillAlive = inPlay.damageTaken || 0
-    else if (inVictory) records.theHarbingerIsStillAlive = 0
-    else if (flagsFor(state).harbingerEnteredPlay) records.theHarbingerIsStillAlive = 0
+    if (inPlay) {
+      records.theHarbingerIsAlive = true
+      records.theHarbingerIsStillAlive = inPlay.damageTaken || 0
+    } else if (inVictory) {
+      records.theHarbingerIsAlive = false
+      records.theHarbingerIsStillAlive = 0
+    } else if (flagsFor(state).harbingerEnteredPlay) {
+      records.theHarbingerIsAlive = true
+      records.theHarbingerIsStillAlive = 0
+    }
 
     const forging = records.youAreForgingYourOwnWay === true
     const extra = {}

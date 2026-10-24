@@ -7,8 +7,9 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// simplified：「最多 2 张[[工具]]支援不占用手部槽位」需要按特性组算手部槽位（现有读点只支持
-// 整张卡的手部槽位修正），本批未实现；影响仅限构筑后的槽位显示，不影响攻击能力本身。
+// 修复（task-33）：「最多 2 张[[工具]]支援不占用手部槽位」现在由条目级 toolHandSlotsExempt: 2 声明，
+// 读点是 src/engine/assets.js 的 slotUsage（2026-10-25 引擎新增）：统计手槽占用时按特性 [[工具]]
+// 扣掉最多 2 个手部槽位，canEquip 的容量比较因此自动生效。
 
 import { entryFlag } from './_shared.js'
 
@@ -16,8 +17,7 @@ export default {
   code: '05009',
   uses: 4,
   usesType: 'ammo',
-  simplified: true,
-  note: '「最多 2 张[[工具]]支援不占用双手槽位」未实现（现有手部槽位读点不支持按特性分组），其余效果已实现。',
+  toolHandSlotsExempt: 2,
   abilities: [
     {
       kind: 'action',

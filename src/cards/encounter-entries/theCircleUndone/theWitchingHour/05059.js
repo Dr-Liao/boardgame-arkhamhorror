@@ -17,7 +17,9 @@ export default {
   code: '05059', scope: 'location', implemented: true,
   locationRule: {
     cluesRemoved(state, location, amount, api) {
-      if (location.clues > 0 || (amount || 0) <= 0) return
+      // 卡面是「任意数量的线索被发现后」（每次发现都触发），不是「最后一个线索被发现」——
+      // 不能因 location.clues>0 提前返回。
+      if ((amount || 0) <= 0) return
       for (const inv of activeInvestigators(state).filter(entry => entry.location === location.id)) {
         const lost = Math.min(inv.resources || 0, amount)
         inv.resources = (inv.resources || 0) - lost

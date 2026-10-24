@@ -5,7 +5,8 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 04265 手铐：对同地点人形敌人做战斗检定（难度 = 其躲避值），成功则横置并铐住。
+// 04265 手铐：对同地点人形敌人做一次标准躲避尝试（战斗代替敏捷），成功则横置、脱离交战并铐住。
+// 走 api.evade 才能拿到标准躲避语义：警戒（Alert）失败反击、evadeSuccess 反应窗口、afterEvade 钩子。
 
 export default {
   code: '04265',
@@ -20,13 +21,11 @@ export default {
           seat: inv.seat, prompt: '选择要铐住的敌人。',
           options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })) })
         const enemy = targets.find(item => item.id === chosen) || targets[0]
-        api.startTest({
-          skill: 'combat', difficulty: Math.max(0, api.enemyEvade(enemy, inv.seat)), seat: inv.seat,
-          source: { label: '手铐', enemyId: enemy.id, name: enemy.name, code: '04265' },
-          resolve: result => {
-            if (!result.success) return
+        api.evade(inv.seat, {
+          enemyId: enemy.id, skill: 'combat', sourceCode: '04265',
+          onSuccess: ({ inv: actor }) => {
             api.attachSelfTo('04265', enemy.id)
-            api.info(`「${enemy.name}」被手铐铐住：不能重整，也不能放置毁灭。`)
+            api.info(`「${enemy.name}」被${actor?.name || '你'}的手铐铐住：不能重整，也不能放置毁灭。`)
           },
         })
       },

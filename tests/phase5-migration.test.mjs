@@ -686,12 +686,15 @@ test('5c-20：04010 走私货物可从弃牌堆找回违法卡', () => {
   assert.equal(state.investigators[0].discard.includes('01044'), false, '离开弃牌堆')
 })
 
-test('5c-20：04010 走私货物在没有违法卡时只提供牌库顶 9 张', () => {
+test('5c-20：04010 走私货物在没有违法卡时仍可选择弃牌堆或牌库顶 9 张', () => {
   const state = fixture()
   state.investigators[0].deck = [...state.investigators[0].deck.slice(0, -1), '01044']
   play(state, '04010')
   assert.equal(state.pendingChoice?.kind, 'effect', '区域选择')
-  assert.deepEqual(state.pendingChoice.options.map(option => option.id), ['deck'], '弃牌堆没有违法卡时不提供该选项')
+  // 卡面为「弃牌堆或牌库顶 9 张」自由二选一：弃牌堆没有违法卡时仍提供该选项，
+  // 选到弃牌堆后按普通事件结算（由条目负责）。
+  assert.deepEqual(state.pendingChoice.options.map(option => option.id), ['deck', 'discard'],
+    '弃牌堆没有违法卡时也提供选项（卡面是自由二选一）')
   answer(state, 'deck')
   assert.equal(state.pendingChoice?.kind, 'search', '进入牌库顶检索询问')
   assert.ok(state.pendingChoice.options.some(option => option.cardCode === '01044'))

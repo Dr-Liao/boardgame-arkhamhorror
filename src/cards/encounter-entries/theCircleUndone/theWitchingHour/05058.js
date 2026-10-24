@@ -10,8 +10,10 @@ const isWitchHauntedWoods = card => {
   return data?.encounterCode === WOODS_ENCOUNTER && data?.type === 'location' && original !== '05055b'
 }
 const woodsInPlay = state => state.locations.filter(isWitchHauntedWoods)
+// 「另一处女巫作祟之林」：必须与自己在不同的森林地点（同地点不算）。
 const otherWoodsInvestigators = (state, inv) => activeInvestigators(state)
-  .filter(other => other.seat !== inv.seat && woodsInPlay(state).some(loc => loc.id === other.location))
+  .filter(other => other.seat !== inv.seat && other.location !== inv.location
+    && woodsInPlay(state).some(loc => loc.id === other.location))
 
 export default {
   code: '05058', scope: 'location', implemented: true,
@@ -25,11 +27,13 @@ export default {
     },
     actions({ moves, state, inv, location }) {
       if (inv.location !== location.id) return
-      if (state.scenarioFlags?.mineSwapRound === state.round) return
+      // [free]：不花行动；每名调查员每轮一次（不是团队共享）。
+      const usedBySeat = state.scenarioFlags?.mineSwapRoundBySeat || {}
+      if (usedBySeat[inv.seat] === state.round) return
       if (!otherWoodsInvestigators(state, inv).length) return
       moves.push({
-        action: 'scenarioAction', rule: 'mineSwapResources',
-        label: '⛏️ 废弃矿山：与另一处女巫作祟之林的调查员交换最多 3 点资源（团队每轮一次）',
+        action: 'scenarioAction', rule: 'mineSwapResources', actions: 0,
+        label: '⛏️ 废弃矿山：与另一处女巫作祟之林的调查员交换最多 3 点资源（每轮一次）',
       })
     },
     performAction(state, inv, move, api) {
@@ -59,7 +63,8 @@ export default {
       const amount = Math.max(1, Math.min(available, Number(answer) || 1))
       if (direction === 'toThem') { inv.resources -= amount; picked.resources = (picked.resources || 0) + amount }
       else { picked.resources -= amount; inv.resources = (inv.resources || 0) + amount }
-      state.scenarioFlags.mineSwapRound = state.round
+      state.scenarioFlags ||= {}
+      state.scenarioFlags.mineSwapRoundBySeat = { ...(state.scenarioFlags.mineSwapRoundBySeat || {}), [inv.seat]: state.round }
       api.info?.(`⛏️ ${inv.name} 与 ${picked.name} 交换了 ${amount} 点资源。`)
       return true
     },

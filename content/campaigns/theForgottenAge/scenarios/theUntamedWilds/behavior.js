@@ -3,13 +3,15 @@ import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
 import { actRuleFor, agendaRuleFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
-import { EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES } from './definition.js'
+import { EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES, scenario } from './definition.js'
 
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
 const recordsFor = state => (state.campaign.records ||= {})
 const original = card => card?.originalCode || card?.code
 const here = (state, inv) => state.locations.find(location => location.id === inv.location)
-const AGENTS_OF_YIG = ['04083', '04084', '04085']
+// 伊格的使徒遭遇组：definition.js 的 agentSets 已按印刷份数重复列出（04083×3、04084×1、04085×2），
+// 「放在一边」与 manifest.zones.setAside 都从这一份数据派生，避免两处份数漂移。
+const AGENTS_OF_YIG = Object.values(scenario.agentSets || {}).flat()
 
 // 本章逐条实现的敌人/诡计原卡号（供迁移审计核对，不实现的不列）。
 export const implementedEncounterCodes = [
@@ -55,8 +57,6 @@ export const behavior = {
     state.scenarioZones.setAside = [
       '04051', '04052', '04053', '04074', '04075', '04102', '04102', '04102', '04102',
       ...AGENTS_OF_YIG,
-      // 伊格的使徒按印刷份数放在一边：伊格之子 3 张、伊格的诅咒 2 张。
-      AGENTS_OF_YIG[0], AGENTS_OF_YIG[0], AGENTS_OF_YIG[2],
     ]
     state.scenarioZones.removed = []
     state.scenarioZones.explorationLocations = [...plan.locations]
@@ -80,6 +80,18 @@ export const behavior = {
     const location = here(state, inv)
     const rule = locationRuleFor(original(location))
     if (typeof rule?.beforeExplore === 'function') return rule.beforeExplore(state, inv, api, location) !== false
+    return true
+  },
+
+  // 04073 曲折小道：调查前检查补给，无指南针必须花费 3 资源。引擎在调查前只读
+  // scenarioBehavior.beforeInvestigate（src/engine/actions.js 的 doInvestigate），
+  // 因此本章与 beforeExplore 一样把地点条目的 locationRule.beforeInvestigate 转发出去。
+  beforeInvestigate(state, inv, location, api) {
+    const loc = location || here(state, inv)
+    const rule = locationRuleFor(original(loc))
+    if (typeof rule?.beforeInvestigate === 'function') {
+      return rule.beforeInvestigate(state, inv, loc, api) !== false
+    }
     return true
   },
 

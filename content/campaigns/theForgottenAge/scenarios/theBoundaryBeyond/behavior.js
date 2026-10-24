@@ -477,22 +477,26 @@ const ANCIENT_ENTRY = {
   },
 
   '04175'(state, api, location, explorer) {
-    if (!explorer) { api.info?.('🗿 特诺奇蒂特兰神庙：这次入场没有可结算「你的牌库」的调查员。'); return }
-    explorer.deck = [...(explorer.deck || []), ...(explorer.discard || [])]
-    explorer.discard = []
-    shuffleDeckWith(state, explorer, api)
+    // 批量换图（04163/04166 的 2b 背面）没有「刚刚放它入场的调查员」：按参考实现
+    // 由队长作为这条「你」的强制效果的结算者（Haskell 的 DoStep1 也是队长选目标）。
+    const lead = state.investigators?.[state.campaign?.leadSeat ?? 0]
+    const who = explorer || (lead && !lead.defeated && !lead.resigned ? lead : active(state)[0])
+    if (!who) { api.info?.('🗿 特诺奇蒂特兰神庙：没有可结算「你的牌库」的调查员。'); return }
+    who.deck = [...(who.deck || []), ...(who.discard || [])]
+    who.discard = []
+    shuffleDeckWith(state, who, api)
     const discarded = []
-    while (explorer.deck.length) {
-      const code = explorer.deck.pop()
+    while (who.deck.length) {
+      const code = who.deck.pop()
       if (isWeaknessCode(code)) {
-        explorer.deck.push(code)
-        api.drawCards(explorer.seat, 1)
+        who.deck.push(code)
+        api.drawCards(who.seat, 1)
         api.info?.(`🃏 特诺奇蒂特兰神庙：弃到弱点「${ALL_CARDS[code]?.nameZh || ALL_CARDS[code]?.name || code}」并抽到它。`)
         break
       }
       discarded.push(code)
     }
-    explorer.discard.push(...discarded)
+    who.discard.push(...discarded)
   },
 
   '04176'(state, api, location) {
@@ -640,7 +644,9 @@ export const behavior = {
       ...PLAYER_SET_ASIDE,
       ...Array(4 - poisonedAlreadyInDecks(state)).fill(POISON_CODE),
     ]
-    if (Number(state.campaign.records?.theHarbingerIsStillAlive || 0) > 0) {
+    const harbingerRecords = state.campaign.records || {}
+    if (harbingerRecords.theHarbingerIsAlive === true
+      || Number(harbingerRecords.theHarbingerIsStillAlive || 0) > 0) {
       state.scenarioZones.setAside.push(HARBINGER)
     }
     state.explorationDeck = [...plan.explorationDeck]
@@ -837,10 +843,17 @@ export const behavior = {
     if (locationRuleFor(code)?.performAction?.(state, inv, move, api)) return
     if (move.rule === 'exploreHere') {
       const spec = EXPLORE_SPECS[code]
-      if (!exploreUsable(state, inv, spec)) throw new Error('探索当前不可用')
+      if (!exploreUsable(state, inv, spec)) {
+        // 同 ancientClue：合法动作在生成与执行之间失效时不 throw，记录后返回。
+        api.info?.('这次探索现在已不可用（行动/手牌/资源或探索牌库状态已变化）。')
+        return
+      }
       if (spec.discardCost) discardForCost(state, inv, spec.discardCost, api)
       if (spec.resources) {
-        if ((inv.resources || 0) < spec.resources) throw new Error('资源不足')
+        if ((inv.resources || 0) < spec.resources) {
+          api.info?.('这次探索所需的资源不足（状态在执行前发生变化）。')
+          return
+        }
         inv.resources -= spec.resources
         api.info?.(`💸 ${inv.name} 花费 ${spec.resources} 资源探索。`)
       }
@@ -868,7 +881,13 @@ export const behavior = {
     }
     if (move.rule === 'ancientClue') {
       const handled = useAncientAction(state, inv, api, location, code)
-      if (!handled) throw new Error('这个行动现在不能结算')
+      // 选项可能在「生成合法动作」与「执行动作」之间失效（团队次数被同一窗口里更早的
+      // 行动用掉、敌人被移除、牌库被抽空…）。这属于合法但已无效果的行动：记录后返回，
+      // 不能 throw——否则一次可点动作会直接打断整局（runtime-1 round 4 的复现）。
+      if (!handled) {
+        api.info?.('这个古代地点行动现在已没有可结算的效果（多半是团队每轮次数已用完）。')
+        return
+      }
       return
     }
     throw new Error(`未知界限彼端行动：${move.rule}`)
@@ -1083,10 +1102,11 @@ export const behavior = {
     if (state.scenarioFlags?.harbingerEnteredPlay) {
       const inVictory = (state.victoryDisplay || []).some(card => (card.originalCode || card.code) === HARBINGER)
       if (inVictory) {
-        // 划掉「预示者还活着」：本战役记录是数字，0 表示已划掉。
+        records.theHarbingerIsAlive = false
         records.theHarbingerIsStillAlive = 0
       } else {
         const harbinger = state.enemies.find(enemy => original(enemy) === HARBINGER)
+        records.theHarbingerIsAlive = true
         records.theHarbingerIsStillAlive = harbinger
           ? Number(harbinger.damageTaken || 0)
           : Number(records.theHarbingerIsStillAlive || 0)

@@ -12,6 +12,15 @@ import { ALL_CARDS } from '../cards-data.js'
 
 export { hasTrait, ALL_CARDS }
 
+// 05097 秘社玄仪「直到一轮结束，对该敌人攻击、躲避或谈判的难度 +2」的通用读点。
+// 攻击/躲避由 encounter-rules.js 的 enemyStatModifier 汇总；谈判由各谈判条目/章节
+// behavior 调用这一个口径（内容层 encounter-rules.parleyDifficultyBonus 是它的别名）。
+export function enemyParleyDifficultyBonus(enemy, round) {
+  const bonus = enemy?.roundFightEvadeBonus
+  if (!bonus || bonus.round !== round) return 0
+  return Number(bonus.amount) || 0
+}
+
 // 沿连接图从 from 走一步，使得到 to 的距离最短（03097 的逐地点移动）。
 export function shortestNextStep(state, from, to) {
   const distance = new Map([[to, 0]])

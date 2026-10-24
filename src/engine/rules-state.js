@@ -34,8 +34,12 @@ export function doomCards(state) {
 // in play (agenda + enemies + locations + assets/threats) reaches its threshold.
 // `state.doom` is the doom physically on the current agenda; card doom is counted
 // here as well so that "place 1 doom on this location/enemy" really advances it.
+// 2026-10-25 修复：议程实例自身的 doom（api.doomOn(agenda, n)）也必须计入——
+// 《万象无终》05052/05123/05126 把强制毁灭写在议程实例上，此前不计入导致阈值/推进失效。
 export function agendaDoom(state) {
-  return (state.doom || 0) + doomCards(state).reduce((sum, card) => sum + (card.doom || 0), 0)
+  const agenda = state.agendas?.[state.agendaIndex]
+  return (state.doom || 0) + (agenda?.doom || 0)
+    + doomCards(state).reduce((sum, card) => sum + (card.doom || 0), 0)
 }
 
 // Every doom marker in play, agenda included. Same total as the agenda threshold.

@@ -324,7 +324,7 @@ test('幽灵敌人目标限制：非幽灵地点不能攻击/交战，翻到幽�
   assert.equal(behavior.canFightEnemy(state, inv, monster), true)
 })
 
-test('翻到幽灵面：写入幽灵面的 haunted，翻回时清除，并补胜利点', () => {
+test('翻到幽灵面：写入幽灵面的 haunted，翻回时清除；胜利点留到幕末口径', () => {
   const state = stateFor()
   placed(state, ['entryHall', 'office'])
   const office = loc(state, 'office')
@@ -337,7 +337,10 @@ test('翻到幽灵面：写入幽灵面的 haunted，翻回时清除，并补胜
   behavior.locationFlipped(state, office, api)
   assert.equal(office.haunted.length, 1)
   assert.equal(office.haunted[0].effect[0].kind, 'discardChosen')
-  assert.equal(state.victory, 2, '05084 幽灵面胜利 2，无线索 → 进胜利区')
+  // 05084 幽灵面印刷胜利 2：只写到实例上供幕末 campaign-flow 口径结算，不再翻面即计分。
+  assert.equal(office.victory, 2, '05084 幽灵面胜利点写入实例')
+  assert.equal(state.victory || 0, 0, '翻面不再立即计分（幕末「揭示且无线索」才计）')
+  assert.equal(state.victoryDisplay.length, 0, '不提前进入胜利区')
   office.spectralFace = 'normal'
   office.code = '05077'
   office.originalCode = '05077'
@@ -345,7 +348,7 @@ test('翻到幽灵面：写入幽灵面的 haunted，翻回时清除，并补胜
   assert.equal(office.haunted, undefined)
 })
 
-test('幽灵面的入口大厅：揭示前不能进入，揭示后放行', () => {
+test('幽灵面的入口大厅：揭示前不能进入，揭示后放行（独立封印 flag 不依赖 revealed）', () => {
   const state = stateFor()
   placed(state, ['entryHall'])
   const entryHall = loc(state, 'entryHall')
@@ -354,6 +357,11 @@ test('幽灵面的入口大厅：揭示前不能进入，揭示后放行', () =>
   entryHall.revealed = false
   assert.match(behavior.investigatorEntryError(state, entryHall), /封锁/)
   entryHall.revealed = true
+  assert.equal(behavior.investigatorEntryError(state, entryHall), null)
+  // 引擎翻面不重置 revealed：用独立封印 flag，即使 revealed=true 也应封锁。
+  state.scenarioFlags.entryHallSealed = true
+  assert.match(behavior.investigatorEntryError(state, entryHall), /封锁/)
+  state.scenarioFlags.entryHallSealed = false
   assert.equal(behavior.investigatorEntryError(state, entryHall), null)
   // 普通面入口大厅不封锁。
   assert.equal(behavior.investigatorEntryError(state, { id: 'entryHall', code: '05071', revealed: false }), null)
@@ -387,8 +395,16 @@ test('议程 1 强制：抽到怪物敌人时改放一边，并在议程上放 1
   assert.deepEqual(api.calls.filter(call => call.name === 'addDoom'), [{ name: 'addDoom', args: [1] }])
   // 非怪物照常生成。
   assert.equal(behavior.spawnLocation(state, '05095', fallback), fallback)
-  // 银暮秘社敌人不能生成在入口大厅（需要入口大厅已入场）。
+  // 银暮秘社敌人不能生成在「幽灵面入口大厅」（05078 背面）；普通面入口大厅不限制。
   placed(state, ['entryHall'])
+  const hall = state.locations.find(location => location.id === 'entryHall')
+  hall.code = '05071'
+  hall.originalCode = '05071'
+  hall.spectralFace = 'normal'
+  assert.equal(behavior.spawnLocation(state, '05095', 'entryHall'), 'entryHall')
+  hall.code = '05078'
+  hall.originalCode = '05078'
+  hall.spectralFace = 'spectral'
   assert.equal(behavior.spawnLocation(state, '05095', 'entryHall'), '__nowhere__')
 })
 
@@ -407,18 +423,45 @@ test('办公室：银暮秘社敌人失去冷漠，离开后恢复', () => {
 // ---------------------------------------------------------------------------
 // 幕 / 议程结算
 // ---------------------------------------------------------------------------
-test('幕 1b：全员移到维多利亚式宴会厅、7 地点翻到幽灵面、揭示有人地点、生成看守人并洗回两组', () => {
+test('幕 1b：全员移到维多利亚式宴会厅、7 地点翻到幽灵面、按在场重算揭示、生成看守人并洗回两组', () => {
   const state = setup(stateFor())
   state.locations.forEach(location => { location.revealed = true })
   state.scenarioFlags.monsterSetAside = ['05101']
   state.encounterDiscard.push('01167')
-  const api = stubApi({ isSpectral: () => false, locate: null })
+  const api = stubApi({
+    isSpectral: () => false,
+    locate: null,
+    // 模拟引擎 api.moveInvestigator：真的把调查员移到目标地点。
+    moveInvestigator: (seat, destination) => {
+      state.investigators[seat].location = destination
+      api.calls.push({ name: 'moveInvestigator', args: [seat, destination] })
+    },
+    // 模拟引擎 flipSpectral：真的把地点换成幽灵面卡号。
+    flipSpectral: id => {
+      const location = state.locations.find(entry => entry.id === id)
+      location.code = SPECTRAL_LOCATION_CODES[id]
+      location.originalCode = SPECTRAL_LOCATION_CODES[id]
+      location.spectralFace = 'spectral'
+      api.calls.push({ name: 'flipSpectral', args: [id] })
+      return true
+    },
+  })
   behavior.actReveal(state, state.acts[0], api)
   const flips = api.calls.filter(call => call.name === 'flipSpectral').map(call => call.args[0])
   assert.deepEqual(flips.sort(), Object.keys(SPECTRAL_LOCATION_CODES).sort())
   const moves = api.calls.filter(call => call.name === 'moveInvestigator')
   assert.equal(moves.length, 2)
   assert.ok(moves.every(call => call.args[1] === 'victorianHalls'))
+  // 换面后按「有调查员则揭示」重算：调查员已到维多利亚式宴会厅 → 该地点揭示、入口大厅不揭示。
+  const entryHall = loc(state, 'entryHall')
+  const victorianHalls = loc(state, 'victorianHalls')
+  assert.equal(entryHall.revealed, false, '入口大厅无调查员 → 未揭示（鬼灵迷雾封锁生效）')
+  assert.equal(state.scenarioFlags.entryHallSealed, true, '独立封印 flag：换面时大厅无人 → 封锁')
+  assert.equal(victorianHalls.revealed, true, '有调查员的地点换面后揭示')
+  // 7 张幽灵地点已从放一边区移出。
+  for (const code of Object.values(SPECTRAL_LOCATION_CODES)) {
+    assert.equal(state.scenarioZones.setAside.includes(code), false, `${code} 应从放一边区移出`)
+  }
   const spawns = api.calls.filter(call => call.name === 'spawn').map(call => call.args[0])
   assert.ok(spawns.includes('05101'), '放一边的怪物要在玩家地点生成')
   assert.ok(spawns.includes('05086'), '幽灵看守人生成在入口大厅')
@@ -431,11 +474,13 @@ test('幕 1b：全员移到维多利亚式宴会厅、7 地点翻到幽灵面、
   assert.equal(state.scenarioFlags.monsterSetAside.length, 0)
 })
 
-test('幕 2b：揭示入口大厅并把遭遇弃牌堆洗回牌库', () => {
+test('幕 2b：揭示入口大厅并把遭遇弃牌堆洗回牌库（同时解除封印 flag）', () => {
   const state = setup(stateFor())
+  state.scenarioFlags.entryHallSealed = true
   const api = stubApi()
   behavior.actReveal(state, state.acts[1], api)
   assert.deepEqual(api.calls.filter(call => call.name === 'reveal'), [{ name: 'reveal', args: ['entryHall'] }])
+  assert.equal(state.scenarioFlags.entryHallSealed, false, '幕 2b 解除鬼灵迷雾封印')
   assert.equal(api.calls.some(call => call.name === 'shuffleDiscard'), true)
 })
 
@@ -453,7 +498,12 @@ test('议程 1b：团队线索足够时花费并生成 Josef 于最远地点，�
   placed(state, Object.keys(state.scenario.locations))
   for (const inv of state.investigators) inv.clues = 4 // 2 人 × 3 = 6
   const office = state.locations.find(location => location.id === 'office')
+  // 未揭示地点的线索只在 maxClues；要模拟「已无线索」必须两处都清 0。
   office.clues = 0
+  office.maxClues = 0
+  const entryHall = state.locations.find(location => location.id === 'entryHall')
+  entryHall.clues = 0
+  entryHall.maxClues = 0
   const api = stubApi()
   behavior.agendaReveal(state, state.agendas[0], api)
   assert.equal(state.investigators.reduce((sum, inv) => sum + inv.clues, 0), 2, '6 个线索被花掉')
@@ -464,7 +514,38 @@ test('议程 1b：团队线索足够时花费并生成 Josef 于最远地点，�
   assert.equal(state.campaign.records.theInvestigatorsAreOnJeromesTrail, true, '办公室无线索 → 追查杰罗姆')
   assert.equal(state.campaign.records.theInvestigatorsAreOnGavriellasTrail, true, '入口大厅无线索 → 追查加弗瑞拉')
   assert.ok(state.locations.every(location => (location.clues || 0) === 0), '所有地点的线索被移除')
+  assert.ok(state.locations.every(location => (location.maxClues || 0) === 0), '未揭示地点的 maxClues 也被清空')
   assert.equal(api.calls.some(call => call.name === 'advanceAct'), true)
+})
+
+test('议程 1b：未揭示地点的 maxClues 视为「仍有线索」→ 不写 trail 记录；Valentino/Penny 记录不互换', () => {
+  const state = stateFor()
+  state.campaign.records.missingPersons = ['05048', '05049']
+  behavior.setupLocations(state, [], setupApi(1))
+  placed(state, Object.keys(state.scenario.locations))
+  for (const inv of state.investigators) inv.clues = 4
+  // 模拟 distributeClues：未揭示地点把线索放在 maxClues（而非 clues）。
+  for (const id of ['billiardsRoom', 'balcony']) {
+    const location = state.locations.find(entry => entry.id === id)
+    location.clues = 0
+    location.maxClues = 6
+  }
+  const api = stubApi()
+  behavior.agendaReveal(state, state.agendas[0], api)
+  // 05048=Valentino（台球室）、05049=Penny（露台）：地点未揭示且 maxClues>0 → 两条都不应写成「无线索」。
+  assert.equal(state.campaign.records.theInvestigatorsAreOnValentinosTrail, undefined)
+  assert.equal(state.campaign.records.theInvestigatorsAreOnPennysTrail, undefined)
+  // 清空后：Valentino → ValentinosTrail、Penny → PennysTrail（不互换）。
+  const state2 = stateFor()
+  state2.campaign.records.missingPersons = ['05048', '05049']
+  behavior.setupLocations(state2, [], setupApi(1))
+  placed(state2, Object.keys(state2.scenario.locations))
+  for (const inv of state2.investigators) inv.clues = 4
+  for (const location of state2.locations) { location.clues = 0; location.maxClues = 0 }
+  behavior.agendaReveal(state2, state2.agendas[0], stubApi())
+  assert.equal(state2.campaign.records.theInvestigatorsAreOnValentinosTrail, true)
+  assert.equal(state2.campaign.records.theInvestigatorsAreOnPennysTrail, true)
+  assert.equal(state2.campaign.records.theInvestigatorsAreOnGavriellasTrail, undefined)
 })
 
 test('议程 1b：线索不足时全队失去所有线索且不生成 Josef', () => {
@@ -475,6 +556,38 @@ test('议程 1b：线索不足时全队失去所有线索且不生成 Josef', ()
   assert.equal(state.investigators.every(inv => inv.clues === 0), true)
   assert.equal(api.calls.some(call => call.name === 'spawn'), false)
   assert.equal(api.calls.some(call => call.name === 'advanceAct'), true)
+})
+
+test('议程 2 正面：银暮秘社敌人被击败后带胜利 0 进入胜利区（幕间 II 分支可数）', () => {
+  const state = stateFor()
+  state.agendaIndex = 1
+  const enemy = { id: 'rst1', code: '05095', name: '秘社新信徒', location: 'entryHall',
+    traits: ['Humanoid', 'Silver Twilight'], victory: undefined }
+  state.enemies.push(enemy)
+  const api = stubApi()
+  behavior.enemyDefeated(state, enemy, api)
+  const entry = state.victoryDisplay.find(card => card.id === 'enemy:rst1')
+  assert.ok(entry, '进入胜利区')
+  assert.equal(entry.victory, 0, '胜利 0 不改变比分')
+  const found = state.victoryDisplay.filter(card => card.originalCode === '05095').length
+  // 之后再被同一个敌人触发也不会重复入区。
+  behavior.enemyDefeated(state, enemy, api)
+  assert.equal(state.victoryDisplay.filter(card => card.originalCode === '05095').length, found)
+})
+
+test('05085b 背面：本局毁灭不能放在银暮秘社敌人上；约瑟夫获得冷漠', () => {
+  const state = stateFor()
+  const josef = { id: 'josef1', code: JOSEF, originalCode: JOSEF, name: '约瑟夫·梅吉尔',
+    location: 'entryHall', aloof: false, printedAloof: false, doom: 0, traits: ['Humanoid', 'Silver Twilight'] }
+  state.enemies.push(josef)
+  // 通过行为入口翻面（stubApi 的 flipEnemy 只记录）：直接调用 behavior.enemySpawned 验证冷漠同步。
+  state.scenarioFlags.josefPlanResolved = true
+  behavior.enemySpawned(state, josef, stubApi())
+  assert.equal(josef.aloof, true, '约瑟夫获得冷漠')
+  // 引擎 placeDoomOnCard 先写后回调 doomPlaced：模拟「已放 1 点」后应被退回。
+  josef.doom = 1
+  behavior.doomPlaced(state, { target: josef, amount: 1, agenda: false }, stubApi())
+  assert.equal(josef.doom, 0, '银暮秘社敌人不能保留毁灭')
 })
 
 test('议程 2b：幕 2 → 结局 3；幕 3 → 未撤退者被击败并承受 1 点肉体创伤', () => {
@@ -529,7 +642,7 @@ test('议程 2 强制：重整幽灵敌人对同地点类人敌人造成伤害',
   const humanoid = { id: 'h', name: '秘社新信徒', code: '05095', location: 'entryHall', traits: ['Humanoid', 'Silver Twilight'] }
   state.enemies.push(spectral, humanoid)
   const api = stubApi()
-  behavior.enemyPhaseEnd(state, api)
+  behavior.enemyPhaseAfterHunters(state, api)
   const hits = api.calls.filter(call => call.name === 'damageEnemy')
   assert.equal(hits.length, 1)
   assert.deepEqual(hits[0].args, ['h', 1, null, 'encounter'])
@@ -582,6 +695,8 @@ test('约瑟夫·梅吉尔谈判：成功翻面结算 05085b 并记录本局限�
   state.investigators[0].engaged.push(josef.id)
   const moves = behavior.actions(state, state.investigators[0])
   assert.equal(moves.some(move => move.rule === 'josefParley'), true)
+  assert.equal(moves.find(move => move.rule === 'josefParley').actionKind, 'parley',
+    '谈判行动不引发趁乱攻击（05085）')
   const api = stubApi({ testResolve: 'success' })
   behavior.performAction(state, state.investigators[0], { rule: 'josefParley' }, api)
   assert.equal(state.scenarioFlags.josefPlanResolved, true)

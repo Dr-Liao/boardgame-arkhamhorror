@@ -1,0 +1,7 @@
+﻿not ok 1198 - 幕间奖励的剧情支援在关卡开始时带上槽位定义（02040 画在盟友槽，而不是其他资产）
+not ok 1688 - 旧存档的卡牌展示表会补上米奇·布朗的受限盟友槽字段
+not ok 1690 - 分层清单与 node-suite 一致，且磁盘上每个用例都归属唯一的 tier
+not ok 1733 - P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一致
+# tests 2512
+# pass 2508
+# fail 4

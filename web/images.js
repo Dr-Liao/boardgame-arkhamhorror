@@ -3,6 +3,7 @@
 // 服务端下发的描述符只包含有序候选路径、语言标记与候选来源；主机由本地设置决定，
 // 可以留空表示纯文字模式。候选代表「可以拼出的地址」，不代表远程图片已存在或可达，
 // 因此加载结果必须由调用方的 load/error 记录，并通过缓存避免重复渲染时无限重试。
+import { t } from './i18n.js'
 
 // 公开目录是 https://drliao1.com/arkhamhorror/cards/01001.avif ；中文在 zh/，卡背在 backs/。
 export const DEFAULT_IMAGE_HOST = 'https://drliao1.com/arkhamhorror/cards'
@@ -22,9 +23,9 @@ export function normalizeImageHost(value) {
   if (value == null || String(value).trim() === '') return ''
   const raw = String(value).trim()
   let url
-  try { url = new URL(raw) } catch { throw new RangeError('卡图主机必须是完整的 http(s) 地址') }
-  if (!['http:', 'https:'].includes(url.protocol)) throw new RangeError('卡图主机只允许 http 或 https')
-  if (url.username || url.password || url.search || url.hash) throw new RangeError('卡图主机不能包含账号、查询参数或片段')
+  try { url = new URL(raw) } catch { throw new RangeError(t('misc.imageHost.invalid')) }
+  if (!['http:', 'https:'].includes(url.protocol)) throw new RangeError(t('misc.imageHost.protocol'))
+  if (url.username || url.password || url.search || url.hash) throw new RangeError(t('misc.imageHost.credentials'))
   return (url.origin + url.pathname).replace(/\/+$/, '')
 }
 

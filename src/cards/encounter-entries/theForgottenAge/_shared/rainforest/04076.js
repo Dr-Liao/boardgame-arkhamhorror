@@ -14,8 +14,10 @@ export default {
   threatAction: { rule: 'clearOvergrowth', label: '清除疯狂生长', skills: ['combat', 'intellect'], difficulty: 4, target: 'location', skillLabels: { combat: '检定战斗(4)清除疯狂生长', intellect: '检定智识(4)清除疯狂生长' } },
   encounterResolve(state, inv, card, api, { location }) {
     if (!location) return false
+    // 卡面「每个地点仅限 1 张」：已有同卡附属时第二张不能再附属（结算后按常规弃入遭遇弃牌堆），
+    // 不能像旧实现那样改成「再抽 1 张遭遇牌」——卡面没有涌动/额外抽牌。
     if ((location.attachments || []).some(item => originalOf(item) === '04076')) {
-      api.drawEncounter(inv.seat)
+      api.info?.('疯狂生长：此地点已有 1 张，第二张不再附属。')
       return false
     }
     location.attachments ||= []

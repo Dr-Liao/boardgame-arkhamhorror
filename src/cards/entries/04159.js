@@ -16,7 +16,10 @@ export default {
   abilities: [
     {
       kind: 'reaction', trigger: 'skillTestFail', id: 'tryAndTryAgain', legacyReaction: true,
-      criteria: { selfOnly: true }, label: '检定失败后取回投入的技能卡',
+      // 卡面前提：「如果有投入到该检定的技能卡牌归你所有」。资产反应的函数型 criteria 由
+      // triggerReaction 的 criteriaFn 读点执行（引擎在本窗口的 context 里带 committed 列表）。
+      criteria: ({ inv, context }) => (context?.committed || []).some(item => item.seat === inv.seat),
+      label: '检定失败后取回投入的技能卡',
       cost: { exhaust: true, uses: 1 },
       resolve: ({ inv, api }) => { api.recallCommittedSkill(inv.seat, { source: '04159' }) },
     },

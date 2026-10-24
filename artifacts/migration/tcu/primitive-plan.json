@@ -1,0 +1,2509 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tcu",
+  "cycleName": "The Circle Undone",
+  "cycleNameZh": "万象无终",
+  "step": 2,
+  "stepName": "拆分原语与通用层改动",
+  "milestone": "P3",
+  "generatedBy": "tools/audit-tcu-primitives.mjs",
+  "spec": "tools/tcu-primitive-spec.mjs",
+  "docs": "docs/tcu-primitives.md",
+  "prerequisites": [
+    {
+      "path": "artifacts/migration/tcu/mechanism-scan.json",
+      "sha256": "deaa41c8f9993c499877746ccb83b65eb30e91c44990dcd92b53fcd9e589281b",
+      "gatePass": true
+    }
+  ],
+  "summary": {
+    "newTotal": 14,
+    "done": 14,
+    "pending": 0,
+    "reuse": 10,
+    "escape": 3,
+    "mechanismsTotal": 20,
+    "mechanismsCovered": 20,
+    "mechanismsDeferred": []
+  },
+  "reuse": [
+    {
+      "primitive": "doomOn",
+      "api": "scenarioRuntime.doomOn(card, n)",
+      "mechanisms": [
+        "campaignRecords"
+      ],
+      "checks": [
+        {
+          "kind": "scenario-runtime",
+          "name": "doomOn",
+          "ok": true,
+          "detail": "155 keys"
+        }
+      ],
+      "ok": true
+    },
+    {
+      "primitive": "recordUnion/recordRemove",
+      "api": "campaign effect { type: 'recordUnion' | 'recordRemove' }",
+      "mechanisms": [
+        "memento",
+        "watcher",
+        "campaignRecords"
+      ],
+      "checks": [
+        {
+          "kind": "source-pattern",
+          "file": "src/campaign/campaign-effects.js",
+          "pattern": "recordUnion",
+          "ok": true,
+          "detail": "战役记录写入是 switch 分支"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/campaign/campaign-effects.js",
+          "pattern": "recordRemove",
+          "ok": true,
+          "detail": "战役记录删除是 switch 分支"
+        }
+      ],
+      "ok": true
+    },
+    {
+      "primitive": "flipScenarioLocation",
+      "api": "scenarioRuntime.flipLocation(id, seat)",
+      "mechanisms": [
+        "spectral"
+      ],
+      "checks": [
+        {
+          "kind": "factory-keys",
+          "file": "src/engine/locations.js",
+          "name": "flipScenarioLocation",
+          "ok": true,
+          "detail": "13 keys"
+        }
+      ],
+      "ok": true
+    },
+    {
+      "primitive": "flow branch/record/includes",
+      "api": "manifest.flow nodes { branch, record, includes }",
+      "mechanisms": [
+        "campaignRecords",
+        "watcher"
+      ],
+      "checks": [
+        {
+          "kind": "source-pattern",
+          "file": "src/campaign/campaign-flow.js",
+          "pattern": "includes",
+          "ok": true,
+          "detail": "战役流程节点条件在 flow 解释器里"
+        }
+      ],
+      "ok": true
+    },
+    {
+      "primitive": "effect:draw",
+      "api": "resolveEffect { type: 'draw' }",
+      "mechanisms": [
+        "openingSetup"
+      ],
+      "checks": [
+        {
+          "kind": "effect-primitive",
+          "name": "draw",
+          "ok": true,
+          "detail": "56 primitives"
+        }
+      ],
+      "ok": true
+    },
+    {
+      "primitive": "effect:chooseOne",
+      "api": "resolveEffect { type: 'chooseOne' }",
+      "mechanisms": [
+        "haunted",
+        "openingSetup"
+      ],
+      "checks": [
+        {
+          "kind": "effect-primitive",
+          "name": "chooseOne",
+          "ok": true,
+          "detail": "56 primitives"
+        }
+      ],
+      "ok": true
+    },
+    {
+      "primitive": "cardsBeneath",
+      "api": "api.moveCard({ to: 'beneath' })",
+      "mechanisms": [
+        "cardsBeneath"
+      ],
+      "checks": [
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/zones.js",
+          "pattern": "beneath",
+          "ok": true,
+          "detail": "「底下」是区域词表成员"
+        }
+      ],
+      "ok": true
+    },
+    {
+      "primitive": "permanentExceptionalExile",
+      "api": "permanent / exceptional / exile 静态字段",
+      "mechanisms": [
+        "openingSetup"
+      ],
+      "checks": [
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/setup.js",
+          "pattern": "permanent",
+          "ok": true,
+          "detail": "永久卡开局入场在 setup"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/deck/deckbuilding.js",
+          "pattern": "exceptional",
+          "ok": true,
+          "detail": "卓越卡双倍经验在构筑规则"
+        }
+      ],
+      "ok": true
+    },
+    {
+      "primitive": "coreEncounterGroups",
+      "api": "content/packs/manifests.js 中既有的核心/前循环遭遇组",
+      "mechanisms": [
+        "spectral"
+      ],
+      "checks": [
+        {
+          "kind": "source-pattern",
+          "file": "content/packs/manifests.js",
+          "pattern": "chillingCold",
+          "ok": true,
+          "detail": "核心遭遇组清单是内容注册表数据"
+        }
+      ],
+      "ok": true
+    },
+    {
+      "primitive": "tarotSlotCapacity",
+      "api": "engine SLOT_CAPACITY.tarot + modifiers add:slot",
+      "mechanisms": [
+        "tarotSlot"
+      ],
+      "checks": [
+        {
+          "kind": "modifier-target",
+          "name": "add:slot",
+          "ok": true,
+          "detail": "17+4"
+        }
+      ],
+      "ok": true
+    }
+  ],
+  "new": [
+    {
+      "id": "resolveHaunted",
+      "step": "P2.1",
+      "title": "闹鬼结算",
+      "mechanism": [
+        "haunted"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "scenarioRuntime.haunted(seat, { locationId, times, kind, source })",
+      "params": {
+        "locationId": "string",
+        "times": "number=1",
+        "kind": "investigate|fight|evade|effect",
+        "source": "string=null"
+      },
+      "docs": "docs/tcu-primitives.md#p21-闹鬼结算",
+      "note": "失败检定的三类来源（调查/攻击/躲避）由剧本设置决定；结算顺序由玩家选择，全部可被 haunted 窗口取消。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/haunted.js",
+          "name": "hauntedAbilitiesAt",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/haunted.js",
+          "name": "isLocationHaunted",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/haunted.js",
+          "name": "normalizeHauntedAbility",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/haunted.js",
+          "name": "normalizeScenarioHaunted",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "factory-keys",
+          "file": "src/engine/haunted.js",
+          "name": "resolveHaunted",
+          "ok": true,
+          "detail": "4 keys"
+        },
+        {
+          "kind": "factory-keys",
+          "file": "src/engine/haunted.js",
+          "name": "resolveAfterFailedAction",
+          "ok": true,
+          "detail": "4 keys"
+        },
+        {
+          "kind": "factory-keys",
+          "file": "src/engine/haunted.js",
+          "name": "grantHaunted",
+          "ok": true,
+          "detail": "4 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "haunted",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "hauntedAt",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "grantHaunted",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "window",
+          "name": "haunted",
+          "ok": true,
+          "detail": "62 windows"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/actions.js",
+          "pattern": "hauntedAfterFail\\(",
+          "ok": true,
+          "detail": "调查失败后的调用点在 doInvestigate 的失败分支，不是可枚举注册表"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/setup.js",
+          "pattern": "normalizeScenarioHaunted",
+          "ok": true,
+          "detail": "开局校验在 startScenario，不是可枚举注册表"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "content/registry.js",
+          "pattern": "normalizeScenarioHaunted",
+          "ok": true,
+          "detail": "注册期校验在内容装配点，不是可枚举注册表"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/haunted.js",
+          "sha256": "d0d77e4c6444e9430aa225b02046c9b6cef937af0db137828f6d7e5d841a1c26",
+          "exists": true
+        },
+        {
+          "path": "src/engine/windows.js",
+          "sha256": "bcbba125e247b2a47023eb996881077da47f728c74a8457c425baae8ef997d34",
+          "exists": true
+        },
+        {
+          "path": "src/engine/scenario-runtime.js",
+          "sha256": "c48bfcc63fa067f7055f9ddd3a27f0eeeda22737c9d9be543464b6d1ba08108e",
+          "exists": true
+        },
+        {
+          "path": "src/engine/actions.js",
+          "sha256": "5de7bd2fd10955810fabb6865c95851f876dbb87b3cf21d5e9a5976ff61077cd",
+          "exists": true
+        },
+        {
+          "path": "src/engine/setup.js",
+          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "exists": true
+        },
+        {
+          "path": "src/engine/engine.js",
+          "sha256": "30b483442f7c960947b89714fdba1f85a3992c02daab21a42f82be02bd6af4cd",
+          "exists": true
+        },
+        {
+          "path": "content/registry.js",
+          "sha256": "7e0946569fbe8ca7b6872763fc007cea3ad30b30db8759de154c670e6658066e",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-primitives.md",
+          "sha256": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-primitives-haunted.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 18,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 8
+    },
+    {
+      "id": "extraEncounterDeck",
+      "step": "P2.2",
+      "title": "幽灵界第二遭遇牌堆",
+      "mechanism": [
+        "spectral"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "scenarioRuntime.extraDeck(id, codes) / drawExtra(seat, id) / shuffleExtra(id, codes) / discardExtra(id, n)",
+      "params": {
+        "deckId": "'spectral'",
+        "cards": "string[]",
+        "count": "number"
+      },
+      "docs": "docs/tcu-primitives.md#p22-幽灵界第二遭遇牌堆",
+      "note": "公开张数进观察投影；抽牌复用显现管线；洗回与弃牌走同一份顺序日志。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/alt-decks.js",
+          "name": "setExtraEncounterDeck",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/alt-decks.js",
+          "name": "addToExtraEncounterDeck",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/alt-decks.js",
+          "name": "shuffleIntoExtraEncounterDeck",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/alt-decks.js",
+          "name": "discardTopOfExtraEncounterDeck",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/alt-decks.js",
+          "name": "extraEncounterDeckInfo",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/alt-decks.js",
+          "name": "drawFromExtraEncounterDeck",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/alt-decks.js",
+          "name": "EXTRA_ENCOUNTER_DECKS",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/engine.js",
+          "name": "drawExtraEncounter",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "factory-keys",
+          "file": "src/engine/encounter.js",
+          "name": "drawExtraEncounter",
+          "ok": true,
+          "detail": "5 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "extraDeck",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "extraDeckInfo",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "extraDecks",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "addExtra",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "shuffleExtra",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "drawExtra",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "discardExtra",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/setup.js",
+          "pattern": "extraEncounterDecks",
+          "ok": true,
+          "detail": "每关重置额外牌堆在 startScenario，按存在才清空以免改指纹"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/cards/campaign-view.js",
+          "pattern": "spectral",
+          "ok": true,
+          "detail": "公开投影（张数 + 弃牌堆）在战役投影，不是可枚举注册表"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/alt-decks.js",
+          "sha256": "bb79246b2dce15f071c8a8e8cac1aef4070c85ed8db5f2b3c20209edf1f79aff",
+          "exists": true
+        },
+        {
+          "path": "src/engine/encounter.js",
+          "sha256": "a8cb5f24e24b6a9847f57326d32b8082647d797c3e3c0a5d4ce5d6019f2acc71",
+          "exists": true
+        },
+        {
+          "path": "src/engine/scenario-runtime.js",
+          "sha256": "c48bfcc63fa067f7055f9ddd3a27f0eeeda22737c9d9be543464b6d1ba08108e",
+          "exists": true
+        },
+        {
+          "path": "src/engine/engine.js",
+          "sha256": "30b483442f7c960947b89714fdba1f85a3992c02daab21a42f82be02bd6af4cd",
+          "exists": true
+        },
+        {
+          "path": "src/engine/setup.js",
+          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "exists": true
+        },
+        {
+          "path": "src/cards/campaign-view.js",
+          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-primitives.md",
+          "sha256": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-primitives-spectral-deck.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 12,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 7
+    },
+    {
+      "id": "flipLocationToSpectral",
+      "step": "P2.3",
+      "title": "幽灵地点与翻面",
+      "mechanism": [
+        "spectral"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "scenarioRuntime.flipLocationToSpectral(id, seat) / locationIsSpectral(id)",
+      "params": {
+        "locationId": "string",
+        "face": "'spectral'|'normal'",
+        "seat": "number=null"
+      },
+      "docs": "docs/tcu-primitives.md#p23-幽灵地点与翻面",
+      "note": "双面幽灵地点用 back 数据翻面并保留线索/毁灭；单面幽灵地点声明 spectral: true；非幽灵地点的目标限制由章节的 canFightEnemy 读 isSpectral 实现。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/locations.js",
+          "name": "spectralFaceOf",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/locations.js",
+          "name": "isSpectralLocation",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/locations.js",
+          "name": "normalizeScenarioSpectralLocations",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/engine.js",
+          "name": "flipLocationFace",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "factory-keys",
+          "file": "src/engine/locations.js",
+          "name": "flipLocationFace",
+          "ok": true,
+          "detail": "13 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "flipSpectral",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "isSpectral",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "spectralFace",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "content/registry.js",
+          "pattern": "normalizeScenarioSpectralLocations",
+          "ok": true,
+          "detail": "注册期校验在内容装配点，不是可枚举注册表"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/locations.js",
+          "sha256": "2a0e24b03e85853be3d1840e00f9c4dc71e9f1da717d7ab57327de92cb85eef5",
+          "exists": true
+        },
+        {
+          "path": "src/engine/engine.js",
+          "sha256": "30b483442f7c960947b89714fdba1f85a3992c02daab21a42f82be02bd6af4cd",
+          "exists": true
+        },
+        {
+          "path": "src/engine/scenario-runtime.js",
+          "sha256": "c48bfcc63fa067f7055f9ddd3a27f0eeeda22737c9d9be543464b6d1ba08108e",
+          "exists": true
+        },
+        {
+          "path": "content/registry.js",
+          "sha256": "7e0946569fbe8ca7b6872763fc007cea3ad30b30db8759de154c670e6658066e",
+          "exists": true
+        },
+        {
+          "path": "src/cards/campaign-view.js",
+          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-primitives.md",
+          "sha256": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-primitives-spectral-location.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 7,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 6
+    },
+    {
+      "id": "tarotDeck",
+      "step": "P2.4",
+      "title": "塔罗牌组（22 张大阿卡纳）",
+      "mechanism": [
+        "tarotDeck"
+      ],
+      "layer": "scenario",
+      "status": "done",
+      "api": "scenarioRuntime.tarot({ count, mode, take })",
+      "params": {
+        "count": "number=1",
+        "mode": "'draw'|'choose'",
+        "orientation": "'upright'|'reverse'"
+      },
+      "docs": "docs/tcu-primitives.md#p24-塔罗牌组",
+      "note": "剧本级牌组，不建 05 卡号；确定性洗牌走 randomValue；22 张唯一、正逆位、抽取/选择、存档往返。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/tarot.js",
+          "name": "buildTarotDeck",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/tarot.js",
+          "name": "drawTarot",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/tarot.js",
+          "name": "chooseTarot",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/tarot.js",
+          "name": "tarotOrientation",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/tarot.js",
+          "name": "tarotInfo",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/tarot.js",
+          "name": "MAJOR_ARCANA",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "tarot",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "tarotRemaining",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "tarotInfo",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/setup.js",
+          "pattern": "scenarioDecks\\?\\.tarot",
+          "ok": true,
+          "detail": "每关重置塔罗牌组（存在才删键，避免改指纹）"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/cards/campaign-view.js",
+          "pattern": "tarot",
+          "ok": true,
+          "detail": "公开投影（张数 + 已抽出的正逆位）在战役投影"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/tarot.js",
+          "sha256": "884778eeb97a96bb4af669267495f0cbe8a45601b26c73c3a1dd016787c1183d",
+          "exists": true
+        },
+        {
+          "path": "src/engine/scenario-runtime.js",
+          "sha256": "c48bfcc63fa067f7055f9ddd3a27f0eeeda22737c9d9be543464b6d1ba08108e",
+          "exists": true
+        },
+        {
+          "path": "src/engine/engine.js",
+          "sha256": "30b483442f7c960947b89714fdba1f85a3992c02daab21a42f82be02bd6af4cd",
+          "exists": true
+        },
+        {
+          "path": "src/engine/setup.js",
+          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "exists": true
+        },
+        {
+          "path": "src/cards/campaign-view.js",
+          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-primitives.md",
+          "sha256": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-primitives-tarot.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 10,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 6
+    },
+    {
+      "id": "circleTest",
+      "step": "P2.5",
+      "title": "阵法（多技能合成检定）",
+      "mechanism": [
+        "circle"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "performTest(state, seat, ['willpower','intellect'], difficulty, { actionKind: 'circle' })",
+      "params": {
+        "skills": "string[2..4]",
+        "difficulty": "number",
+        "actionKind": "'circle'"
+      },
+      "docs": "docs/tcu-primitives.md#p25-阵法",
+      "note": "2–4 个技能值相加再投入；不新增 ability kind，借 actionKind 钩子；单技能调用零行为变化。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/tests.js",
+          "name": "normalizeTestSkills",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/tests.js",
+          "name": "testSkillLabel",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/tests.js",
+          "pattern": "skillList",
+          "ok": true,
+          "detail": "多技能求和在 performTest 内部，导出的是规范化辅助函数"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/tests.js",
+          "pattern": "actionKind",
+          "ok": true,
+          "detail": "阵法行动种类记在检定记录与 testBegins 上下文"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/tests.js",
+          "sha256": "e751b0222d0b6919c5c17fa85d0fb310f226155bd1fae6da1a4b9e43207d0872",
+          "exists": true
+        },
+        {
+          "path": "src/engine/stats.js",
+          "sha256": "bf7c00414ee7c0a93694f376e2de8341781e4acef508d11ccde4e94bcbf08310",
+          "exists": true
+        },
+        {
+          "path": "src/engine/scenario-runtime.js",
+          "sha256": "c48bfcc63fa067f7055f9ddd3a27f0eeeda22737c9d9be543464b6d1ba08108e",
+          "exists": true
+        },
+        {
+          "path": "src/engine/engine.js",
+          "sha256": "30b483442f7c960947b89714fdba1f85a3992c02daab21a42f82be02bd6af4cd",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-primitives.md",
+          "sha256": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-primitives-circle.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 9,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 5
+    },
+    {
+      "id": "storyInvestigators",
+      "step": "P2.6",
+      "title": "序章无牌组故事调查员",
+      "mechanism": [
+        "storyInvestigator",
+        "openingSetup"
+      ],
+      "layer": "campaign",
+      "status": "done",
+      "api": "campaign effect { type: 'storyInvestigators', codes }",
+      "params": {
+        "codes": "string[]",
+        "chosen": "number[]",
+        "crossedOut": "number[]"
+      },
+      "docs": "docs/tcu-primitives.md#p26-序章故事调查员",
+      "note": "1–4 人、重复选择、未选者划掉、无牌组（不能抽牌/弃牌）、存档与观察投影不含隐藏牌库。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/story-investigators.js",
+          "name": "normalizeStoryInvestigatorConfig",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/story-investigators.js",
+          "name": "selectStoryInvestigators",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/story-investigators.js",
+          "name": "prepareStoryInvestigator",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/story-investigators.js",
+          "name": "restoreStoryInvestigators",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/story-investigators.js",
+          "name": "isStoryInvestigator",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/story-investigators.js",
+          "name": "storyInvestigatorProjection",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/setup.js",
+          "pattern": "selectStoryInvestigators",
+          "ok": true,
+          "detail": "选人在 startScenario 内、prepareInvestigator 之前，不是可枚举注册表"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/deck-ops.js",
+          "pattern": "storyInvestigator",
+          "ok": true,
+          "detail": "无牌组抽牌拦截在 drawCards，不是可枚举注册表"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/table-decisions.js",
+          "pattern": "storyInvestigator",
+          "ok": true,
+          "detail": "换起始手牌跳过在 runMulligans"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "content/registry.js",
+          "pattern": "normalizeStoryInvestigatorConfig",
+          "ok": true,
+          "detail": "注册期校验在内容装配点"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "content/scenario-declaration.js",
+          "pattern": "storyInvestigators",
+          "ok": true,
+          "detail": "关卡声明的 setup.storyInvestigators 由 declareScenario 透传"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/story-investigators.js",
+          "sha256": "8b246e93f43981ed476f1ca25d27af7fee2a0ae8704f12fbeca84777b213a467",
+          "exists": true
+        },
+        {
+          "path": "src/engine/setup.js",
+          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "exists": true
+        },
+        {
+          "path": "src/engine/deck-ops.js",
+          "sha256": "c89cc47f0555ceb0b71fd67d2adafb4e010bee896f0e05164360779958134237",
+          "exists": true
+        },
+        {
+          "path": "src/engine/table-decisions.js",
+          "sha256": "58fb960c9ddb7c874cb656c278dcf18f4ac14a1d7f7ed3830f3784d0871e6659",
+          "exists": true
+        },
+        {
+          "path": "content/registry.js",
+          "sha256": "7e0946569fbe8ca7b6872763fc007cea3ad30b30db8759de154c670e6658066e",
+          "exists": true
+        },
+        {
+          "path": "content/scenario-declaration.js",
+          "sha256": "b915c74aa874c2179f43a13fcc739bbfb3f16e74a8de9cf9d98ff0cdbae2916c",
+          "exists": true
+        },
+        {
+          "path": "src/cards/campaign-view.js",
+          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-primitives.md",
+          "sha256": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-primitives-story-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 11,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 8
+    },
+    {
+      "id": "parley",
+      "step": "P2.7",
+      "title": "通用谈判",
+      "mechanism": [
+        "parley"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "描述子 { kind: 'action', actionKind: 'parley', target: { kind: 'location' } }",
+      "params": {
+        "target": "enemy|location|storyAsset",
+        "actionKind": "'parley'",
+        "test": "optional"
+      },
+      "docs": "docs/tcu-primitives.md#p27-通用谈判",
+      "note": "敌人/地点/剧情资产都能声明；借机攻击豁免沿用既有 actionKind；补「带谈判的卡」构筑筛选。",
+      "checks": [
+        {
+          "kind": "ability-kind",
+          "name": "action",
+          "ok": true,
+          "detail": "12 kinds"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/parley.js",
+          "name": "isParleyDescriptor",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/parley.js",
+          "name": "entityParleyDescriptors",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/parley.js",
+          "name": "parleyMovesFor",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/parley.js",
+          "name": "isParleyCard",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "factory-keys",
+          "file": "src/engine/ability-exec.js",
+          "name": "doEntityAbility",
+          "ok": true,
+          "detail": "4 keys"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/engine.js",
+          "name": "doEntityAbility",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/moves.js",
+          "pattern": "parleyMovesFor",
+          "ok": true,
+          "detail": "legalMoves 的枚举点不是可枚举注册表"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/dispatch.js",
+          "pattern": "entityAbility",
+          "ok": true,
+          "detail": "执行分支与借机攻击豁免在 dispatch"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/table-decisions.js",
+          "pattern": "descriptor\\?\\.actionKind",
+          "ok": true,
+          "detail": "actionKind 读点在 table-decisions"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/ability.js",
+          "pattern": "playerInitiated",
+          "ok": true,
+          "detail": "非玩家实体只允许带 actionKind 的 action 描述子"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/parley.js",
+          "sha256": "6d61c6475d48bb054d5af55be235840b20710c1ecdc6ae33eef9a4cfaa93d2b5",
+          "exists": true
+        },
+        {
+          "path": "src/engine/moves.js",
+          "sha256": "6438d8fa2186174e00b09298c2724faac0f5e12c7b2b1b7171e5ee8fd0c3d132",
+          "exists": true
+        },
+        {
+          "path": "src/engine/dispatch.js",
+          "sha256": "faad57ca306602685b2ec1d3daaa7dd8a100fdb0e55e0b3d8ecfed29e381c64c",
+          "exists": true
+        },
+        {
+          "path": "src/engine/ability-exec.js",
+          "sha256": "af49afc251d0ce99dc2f3ed461bebea8c359e6fa4b11bc8bb6eeae164b9b3200",
+          "exists": true
+        },
+        {
+          "path": "src/engine/ability.js",
+          "sha256": "3df8575e777ed7e19fbb7ac796daa1e22e5205c0e0712d3d0554385e934f5b54",
+          "exists": true
+        },
+        {
+          "path": "src/engine/table-decisions.js",
+          "sha256": "58fb960c9ddb7c874cb656c278dcf18f4ac14a1d7f7ed3830f3784d0871e6659",
+          "exists": true
+        },
+        {
+          "path": "src/engine/engine.js",
+          "sha256": "30b483442f7c960947b89714fdba1f85a3992c02daab21a42f82be02bd6af4cd",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-primitives.md",
+          "sha256": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-primitives-parley.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 9,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 8
+    },
+    {
+      "id": "bonded",
+      "step": "P2.8",
+      "title": "绑定（场外绑定集合）",
+      "mechanism": [
+        "bonded"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "api.bonded.code(seat) / api.bonded.return(seat, code)",
+      "params": {
+        "code": "string",
+        "count": "number=3"
+      },
+      "docs": "docs/tcu-primitives.md#p28-绑定",
+      "note": "绑定副本不计入 30 张；入场检索 3 张、1 张入手 2 张洗回；离场收回。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/bonded.js",
+          "name": "bondedCardList",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/bonded.js",
+          "name": "isBondedCopy",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/bonded.js",
+          "name": "findBondedMain",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/bonded.js",
+          "name": "bondedSetProjection",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "factory-keys",
+          "file": "src/engine/bonded.js",
+          "name": "retrieve",
+          "ok": true,
+          "detail": "6 keys"
+        },
+        {
+          "kind": "factory-keys",
+          "file": "src/engine/bonded.js",
+          "name": "returnToSet",
+          "ok": true,
+          "detail": "6 keys"
+        },
+        {
+          "kind": "factory-keys",
+          "file": "src/engine/bonded.js",
+          "name": "returnAll",
+          "ok": true,
+          "detail": "6 keys"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/engine.js",
+          "name": "retrieveBonded",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/engine.js",
+          "name": "returnBonded",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/engine.js",
+          "name": "returnAllBonded",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "ctx-api",
+          "name": "bonded",
+          "ok": true,
+          "detail": "206 keys"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/setup.js",
+          "pattern": "returnAllBonded",
+          "ok": true,
+          "detail": "章节开始时收回散落副本的调用点在 startScenario"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/cards/campaign-view.js",
+          "pattern": "bondedSetProjection",
+          "ok": true,
+          "detail": "公开投影在战役投影"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/bonded.js",
+          "sha256": "5e5e624a51c8e6817046b15c0e9f5054a265eafd44e31597b8b9900c8db6647e",
+          "exists": true
+        },
+        {
+          "path": "src/engine/api-card.js",
+          "sha256": "d73321bcf033adcde9c3608992a07a6016f813eb4813ce9969c198bda0da8305",
+          "exists": true
+        },
+        {
+          "path": "src/engine/setup.js",
+          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "exists": true
+        },
+        {
+          "path": "src/engine/engine.js",
+          "sha256": "30b483442f7c960947b89714fdba1f85a3992c02daab21a42f82be02bd6af4cd",
+          "exists": true
+        },
+        {
+          "path": "src/cards/campaign-view.js",
+          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-primitives.md",
+          "sha256": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-primitives-bonded.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 9,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 6
+    },
+    {
+      "id": "tarotSlotOpening",
+      "step": "P2.9",
+      "title": "塔罗槽位补全与开局入手",
+      "mechanism": [
+        "tarotSlot",
+        "openingSetup"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "modifiers [{ target: 'add:slot', value: 'tarot' }] + 开局入手效果",
+      "params": {
+        "slot": "'tarot'",
+        "extra": "number",
+        "opening": "boolean"
+      },
+      "docs": "docs/tcu-primitives.md#p29-塔罗槽位",
+      "note": "额外槽位走 add:slot（不是 slot:tarot）；「高塔」禁止投入单独读点。",
+      "checks": [
+        {
+          "kind": "modifier-target",
+          "name": "add:slot",
+          "ok": true,
+          "detail": "17+4"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/tarot-slot.js",
+          "name": "isTarotCard",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/tarot-slot.js",
+          "name": "tarotSlotCapacity",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/tarot-slot.js",
+          "name": "tarotSlotInfo",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/tarot-slot.js",
+          "name": "enterOpeningHandCards",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/tarot-slot.js",
+          "name": "handCommitBlocker",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/tarot-slot.js",
+          "name": "mulliganCandidates",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/engine.js",
+          "name": "enterOpeningHandCards",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/setup.js",
+          "pattern": "enterOpeningHandCards",
+          "ok": true,
+          "detail": "开局入场时机在 drawOpeningHand 之后"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/tests.js",
+          "pattern": "handCommitBlocker",
+          "ok": true,
+          "detail": "手牌封锁读点在投入候选过滤"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/table-decisions.js",
+          "pattern": "mulliganCandidates",
+          "ok": true,
+          "detail": "不能换掉的起始手牌在 runMulligans 候选过滤"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/ability.js",
+          "pattern": "entersPlayFromOpeningHand",
+          "ok": true,
+          "detail": "条目级标记的注册期校验在 ability.js"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/tarot-slot.js",
+          "sha256": "a655e4ab8556397cdef33cc3fa5088696a97ef7beb18a998a3eb61df0c4c5a17",
+          "exists": true
+        },
+        {
+          "path": "src/engine/setup.js",
+          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "exists": true
+        },
+        {
+          "path": "src/engine/tests.js",
+          "sha256": "e751b0222d0b6919c5c17fa85d0fb310f226155bd1fae6da1a4b9e43207d0872",
+          "exists": true
+        },
+        {
+          "path": "src/engine/table-decisions.js",
+          "sha256": "58fb960c9ddb7c874cb656c278dcf18f4ac14a1d7f7ed3830f3784d0871e6659",
+          "exists": true
+        },
+        {
+          "path": "src/engine/ability.js",
+          "sha256": "3df8575e777ed7e19fbb7ac796daa1e22e5205c0e0712d3d0554385e934f5b54",
+          "exists": true
+        },
+        {
+          "path": "src/engine/engine.js",
+          "sha256": "30b483442f7c960947b89714fdba1f85a3992c02daab21a42f82be02bd6af4cd",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-primitives.md",
+          "sha256": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-primitives-tarot-slot.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 8,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 7
+    },
+    {
+      "id": "campaignRecordsAndAssets",
+      "step": "P2.10",
+      "title": "Memento / 看守人记录与战役资产入牌组",
+      "mechanism": [
+        "memento",
+        "watcher",
+        "campaignRecords",
+        "campaignAssetDeck"
+      ],
+      "layer": "campaign",
+      "status": "done",
+      "api": "campaign effect { type: 'addCampaignCardToDeck', code, deck }",
+      "params": {
+        "record": "string",
+        "value": "string[]|number|boolean",
+        "card": "string",
+        "deck": "'player'|'campaign'"
+      },
+      "docs": "docs/tcu-primitives.md#p210-遗留记忆与看守人",
+      "note": "Memento/看守人用 string[] 记录，不新增引擎状态；战役资产入牌组不占 30 张。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/campaign/mementos.js",
+          "name": "recordMemento",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/campaign/mementos.js",
+          "name": "crossOffMemento",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/campaign/mementos.js",
+          "name": "mementoCount",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/campaign/mementos.js",
+          "name": "markHunted",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/campaign/mementos.js",
+          "name": "isBeingHunted",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/campaign/mementos.js",
+          "name": "watcherAndMementoProjection",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/campaign/campaign-effects.js",
+          "name": "applyCampaignEffect",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/campaign/campaign-effects.js",
+          "pattern": "addCampaignCardToDeck",
+          "ok": true,
+          "detail": "战役资产入牌组是新的 effect type"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/campaign/campaign-effects.js",
+          "pattern": "campaignCardChange",
+          "ok": true,
+          "detail": "入牌组复用战役卡牌变更的同一读点"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "campaignCard",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/cards/campaign-view.js",
+          "pattern": "watcherAndMementoProjection",
+          "ok": true,
+          "detail": "公开投影在战役投影"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/campaign/mementos.js",
+          "sha256": "ea6634799c429c92bca6374e04f1e9db3e7043b2c06983baebdcb68f1f3b9202",
+          "exists": true
+        },
+        {
+          "path": "src/campaign/campaign-effects.js",
+          "sha256": "759eb1eb119ac1c1c202f2415da67af94c2e5f34f0277ff5ff454445954beada",
+          "exists": true
+        },
+        {
+          "path": "src/campaign/campaign.js",
+          "sha256": "1dcc7117f4d9c0ac050d97f92642c5c921be54682535146b8f36b2eff3b09344",
+          "exists": true
+        },
+        {
+          "path": "src/engine/scenario-runtime.js",
+          "sha256": "c48bfcc63fa067f7055f9ddd3a27f0eeeda22737c9d9be543464b6d1ba08108e",
+          "exists": true
+        },
+        {
+          "path": "src/cards/campaign-view.js",
+          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-primitives.md",
+          "sha256": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-primitives-campaign-records.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 6,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 6
+    },
+    {
+      "id": "locationState",
+      "step": "P2.11",
+      "title": "裂口与地点布尔状态",
+      "mechanism": [
+        "breach",
+        "brazier"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "scenarioRuntime.addBreach(id, n) / setLocationFlag(id, flag, value)",
+      "params": {
+        "locationId": "string",
+        "flag": "'brazier'|'lit'",
+        "amount": "number"
+      },
+      "docs": "docs/tcu-primitives.md#p211-裂口与地点状态",
+      "note": "裂口沿连接传播；骷髅值 = 裂口 + 毁灭；火盆点燃/熄灭决定推进哪一版幕。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/location-state.js",
+          "name": "addBreach",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/location-state.js",
+          "name": "removeBreach",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/location-state.js",
+          "name": "locationSkullValue",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/location-state.js",
+          "name": "locationFlagOf",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/location-state.js",
+          "name": "setLocationFlag",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/location-state.js",
+          "name": "locationStateProjection",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "breach",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "removeBreach",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "skullValue",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "locationFlag",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "setLocationFlag",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/cards/campaign-view.js",
+          "pattern": "locationStateProjection",
+          "ok": true,
+          "detail": "地点标记的公开投影在战役投影"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/location-state.js",
+          "sha256": "f68f32282b4ec5f1452c54f7c18a4d48270d429685839b8af0468772790ee513",
+          "exists": true
+        },
+        {
+          "path": "src/engine/scenario-runtime.js",
+          "sha256": "c48bfcc63fa067f7055f9ddd3a27f0eeeda22737c9d9be543464b6d1ba08108e",
+          "exists": true
+        },
+        {
+          "path": "src/cards/campaign-view.js",
+          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-primitives.md",
+          "sha256": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-primitives-location-state.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 6,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 4
+    },
+    {
+      "id": "enemyFaces",
+      "step": "P2.12",
+      "title": "异端者多面与放逐",
+      "mechanism": [
+        "hereticMultiface"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "scenarioRuntime.flipEnemy(enemy, code) / banishEnemy(enemy)",
+      "params": {
+        "enemyId": "string",
+        "face": "'enemy'|'unfinishedBusiness'",
+        "banish": "boolean"
+      },
+      "docs": "docs/tcu-primitives.md#p212-异端者多面与放逐",
+      "note": "「不能以任何方式被击败」走 enemyCannotBeDefeated 读点；放逐进胜利区而不是弃牌堆。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/enemy-faces.js",
+          "name": "flipEnemyFace",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/enemy-faces.js",
+          "name": "banishEnemyToVictory",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/enemy-faces.js",
+          "name": "faceOf",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/enemy-faces.js",
+          "name": "enemyCannotBeDefeated",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/engine.js",
+          "name": "flipEnemyFace",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/engine.js",
+          "name": "banishEnemyToVictory",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "flipEnemy",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "banish",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "enemyFace",
+          "ok": true,
+          "detail": "155 keys"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/enemy-faces.js",
+          "sha256": "6d12fd1b281922a841bad2eb2bbd464bb98bfb84c82153dcf332ecf6c2a78873",
+          "exists": true
+        },
+        {
+          "path": "src/engine/scenario-runtime.js",
+          "sha256": "c48bfcc63fa067f7055f9ddd3a27f0eeeda22737c9d9be543464b6d1ba08108e",
+          "exists": true
+        },
+        {
+          "path": "src/engine/engine.js",
+          "sha256": "30b483442f7c960947b89714fdba1f85a3992c02daab21a42f82be02bd6af4cd",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-primitives.md",
+          "sha256": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-primitives-enemy-faces.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 6,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 4
+    },
+    {
+      "id": "cosmosDeck",
+      "step": "P2.13",
+      "title": "Cosmos / 未知地点牌库",
+      "mechanism": [
+        "cosmos",
+        "unknownLocationDeck"
+      ],
+      "layer": "scenario",
+      "status": "done",
+      "api": "scenarioRuntime.cosmos({ take, count })",
+      "params": {
+        "id": "'cosmos'|'unknownPlaces'",
+        "count": "number",
+        "choose": "number"
+      },
+      "docs": "docs/tcu-primitives.md#p213-cosmos-牌库",
+      "note": "面朝下地点牌库：抽 X 选 1、在场单位一并搬走、Void 地点可洗回。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/alt-decks.js",
+          "name": "buildScenarioLocationDeck",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/alt-decks.js",
+          "name": "drawScenarioLocationDeck",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/alt-decks.js",
+          "name": "chooseScenarioLocationDeck",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/alt-decks.js",
+          "name": "shuffleScenarioLocationIntoDeck",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/alt-decks.js",
+          "name": "scenarioLocationDeckInfo",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/alt-decks.js",
+          "name": "EXTRA_LOCATION_DECKS",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "cosmos",
+          "ok": true,
+          "detail": "155 keys"
+        },
+        {
+          "kind": "scenario-runtime",
+          "name": "locationDeck",
+          "ok": true,
+          "detail": "155 keys"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/alt-decks.js",
+          "sha256": "bb79246b2dce15f071c8a8e8cac1aef4070c85ed8db5f2b3c20209edf1f79aff",
+          "exists": true
+        },
+        {
+          "path": "src/engine/scenario-runtime.js",
+          "sha256": "c48bfcc63fa067f7055f9ddd3a27f0eeeda22737c9d9be543464b6d1ba08108e",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-primitives.md",
+          "sha256": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-primitives-cosmos.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 6,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 3
+    },
+    {
+      "id": "hunchDeck",
+      "step": "P6",
+      "title": "直觉牌库（调查员专属牌库）",
+      "mechanism": [
+        "hunchDeck"
+      ],
+      "layer": "investigator",
+      "status": "done",
+      "api": "hunchDeck.reveal / returnCard / playDiscount（读点：inv.hunchDeck / inv.hunchRevealed）",
+      "params": {
+        "size": "number",
+        "trait": "string",
+        "requiredCodes": "string[]",
+        "discount": "number=2"
+      },
+      "docs": "docs/tcu-investigators.md#31-直觉牌库乔戴蒙德",
+      "note": "11 张洞察事件（含悬案）；调查阶段开始揭示并视作手牌，打出 -2 资源；阶段结束仍未打出则洗回；悬案改为进入威胁区域。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/hunch-deck.js",
+          "name": "normalizeHunchDeckRule",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/hunch-deck.js",
+          "name": "createHunchDeck",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/hunch-deck.js",
+          "name": "projectHunch",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/setup.js",
+          "pattern": "hunchDeck\\.prepare",
+          "ok": true,
+          "detail": "冒险设置抽 11 张洞察事件在 prepareInvestigator"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/turn.js",
+          "pattern": "hunchDeck\\.reveal",
+          "ok": true,
+          "detail": "调查阶段开始揭示牌库顶"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/turn-flow.js",
+          "pattern": "hunchDeck\\.playDiscount",
+          "ok": true,
+          "detail": "打出费用 -2 在 playCost"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/deck/deckbuilding.js",
+          "pattern": "hunchRequirement",
+          "ok": true,
+          "detail": "牌组配额（至少 N 张洞察事件）在自动构筑"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/cards/campaign-view.js",
+          "pattern": "projectHunch",
+          "ok": true,
+          "detail": "公开投影（张数 + 已揭示的那张）在战役投影"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/hunch-deck.js",
+          "sha256": "3f29b9d12a01d82c784a1be79843e31eb0524c1bbb5a2622a57b62249aab557d",
+          "exists": true
+        },
+        {
+          "path": "src/engine/setup.js",
+          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "exists": true
+        },
+        {
+          "path": "src/engine/turn.js",
+          "sha256": "afa51d8e26bcdf4b74ea9b0833e8afdfada9a96e2484a8372ac33342528b859e",
+          "exists": true
+        },
+        {
+          "path": "src/engine/turn-flow.js",
+          "sha256": "319b803c012bde988760edb4ba65e9365a616fb7b36c9f512a5b42c158f7d1e8",
+          "exists": true
+        },
+        {
+          "path": "src/engine/api-misc.js",
+          "sha256": "1aacbef495782f05a8278f341ec3d6bbd8ecd9a69b5804ce10ab80f3adb764f7",
+          "exists": true
+        },
+        {
+          "path": "src/deck/deckbuilding.js",
+          "sha256": "d19a838e00fbbafb8273b830a5acd42db3204721c59cd6c3d23ed07656894a89",
+          "exists": true
+        },
+        {
+          "path": "src/cards/campaign-view.js",
+          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "exists": true
+        },
+        {
+          "path": "docs/tcu-investigators.md",
+          "sha256": "60b5d069b7302cd11443cf7bfdebdda2dc7b2937c379a3a2d17e7112c8592fc3",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tcu-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 43,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 8
+    }
+  ],
+  "escape": [
+    {
+      "card": "05346",
+      "stage": "P8",
+      "scope": "single-card",
+      "reason": "《黑色王座》阿撒托斯终局脚本：毁灭计时、Cosmos 抽取与结局判定绑在一张议程/敌人组合上，不构成可复用原语。",
+      "ok": true
+    },
+    {
+      "card": "05178a-05178l",
+      "stage": "P8",
+      "scope": "single-card",
+      "reason": "《罪恶报应》6 个异端者的单面特殊分支（未了之事翻面/放逐细节），只服务该章 6 张卡；通用部分走 P2.12。",
+      "ok": true
+    },
+    {
+      "card": "05258-05261",
+      "stage": "P8",
+      "scope": "single-card",
+      "reason": "《聚合幻灭》4 张命运故事卡的单卡分支：火盆点燃结果与阵营记录组合，每张只出现一次。",
+      "ok": true
+    }
+  ],
+  "coverage": [
+    {
+      "mechanism": "haunted",
+      "cards": 0,
+      "by": [
+        "resolveHaunted"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "resolveHaunted"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "spectral",
+      "cards": 0,
+      "by": [
+        "extraEncounterDeck",
+        "flipLocationToSpectral"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "extraEncounterDeck",
+        "flipLocationToSpectral"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "tarotDeck",
+      "cards": 0,
+      "by": [
+        "tarotDeck"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "tarotDeck"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "tarotSlot",
+      "cards": 0,
+      "by": [
+        "tarotSlotOpening",
+        "tarotSlotCapacity"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "tarotSlotOpening",
+        "tarotSlotCapacity"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "circle",
+      "cards": 0,
+      "by": [
+        "circleTest"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "circleTest"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "parley",
+      "cards": 0,
+      "by": [
+        "parley"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "parley"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "memento",
+      "cards": 0,
+      "by": [
+        "campaignRecordsAndAssets",
+        "recordUnion/recordRemove"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "campaignRecordsAndAssets",
+        "recordUnion/recordRemove"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "watcher",
+      "cards": 0,
+      "by": [
+        "campaignRecordsAndAssets",
+        "recordUnion/recordRemove",
+        "flow branch/record/includes"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "campaignRecordsAndAssets",
+        "recordUnion/recordRemove",
+        "flow branch/record/includes"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "storyInvestigator",
+      "cards": 0,
+      "by": [
+        "storyInvestigators"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "storyInvestigators"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "bonded",
+      "cards": 0,
+      "by": [
+        "bonded"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "bonded"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "breach",
+      "cards": 0,
+      "by": [
+        "locationState"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "locationState"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "hereticMultiface",
+      "cards": 0,
+      "by": [
+        "enemyFaces"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "enemyFaces"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "cosmos",
+      "cards": 0,
+      "by": [
+        "cosmosDeck"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "cosmosDeck"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "brazier",
+      "cards": 0,
+      "by": [
+        "locationState"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "locationState"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "campaignAssetDeck",
+      "cards": 0,
+      "by": [
+        "campaignRecordsAndAssets"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "campaignRecordsAndAssets"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "campaignRecords",
+      "cards": 0,
+      "by": [
+        "campaignRecordsAndAssets",
+        "recordUnion/recordRemove",
+        "flow branch/record/includes"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "campaignRecordsAndAssets",
+        "recordUnion/recordRemove",
+        "flow branch/record/includes"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "cardsBeneath",
+      "cards": 0,
+      "by": [
+        "cardsBeneath"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "cardsBeneath"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "unknownLocationDeck",
+      "cards": 0,
+      "by": [
+        "cosmosDeck"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "cosmosDeck"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "openingSetup",
+      "cards": 0,
+      "by": [
+        "tarotSlotOpening",
+        "storyInvestigators",
+        "effect:draw",
+        "permanentExceptionalExile"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "tarotSlotOpening",
+        "storyInvestigators",
+        "effect:draw",
+        "permanentExceptionalExile"
+      ],
+      "covered": true,
+      "deferred": false
+    },
+    {
+      "mechanism": "hunchDeck",
+      "cards": 0,
+      "by": [
+        "hunchDeck"
+      ],
+      "unknownReferences": [],
+      "doneReferences": [
+        "hunchDeck"
+      ],
+      "covered": true,
+      "deferred": false
+    }
+  ],
+  "gate": {
+    "newPrimitives": {
+      "expected": 14,
+      "done": 14,
+      "pending": 0,
+      "pass": true
+    },
+    "newPrimitivesHaveTests": {
+      "pass": true
+    },
+    "reuseReadPoints": {
+      "expected": 10,
+      "verified": 10,
+      "pass": true
+    },
+    "escapeRegistered": {
+      "expected": 3,
+      "pass": true
+    },
+    "mechanismCoverage": {
+      "total": 20,
+      "covered": 20,
+      "missing": [],
+      "pass": true
+    },
+    "engineBoundary": {
+      "codes": 0,
+      "campaignNames": 0,
+      "pass": true
+    },
+    "pass": true
+  }
+}

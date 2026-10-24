@@ -17,7 +17,8 @@ export default {
   code: '05063', scope: 'location', implemented: true,
   locationRule: {
     cluesRemoved(state, location, amount, api) {
-      if (location.clues > 0 || (amount || 0) <= 0) return
+      // 卡面是「任意数量的线索被发现后」——每次发现都触发，不能因 location.clues>0 提前返回。
+      if ((amount || 0) <= 0) return
       for (const inv of activeInvestigators(state).filter(entry => entry.location === location.id)) {
         api.discardRandom?.(inv.seat, amount)
         api.info?.(`🏚️ 隐士之家：${inv.name} 随机弃掉 ${amount} 张手牌。`)

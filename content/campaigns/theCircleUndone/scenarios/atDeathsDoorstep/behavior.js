@@ -12,7 +12,7 @@
 // 规则事实源：参考实现 `AtDeathsDoorstep.hs` 与 Cards 目录下的逐卡文件；中文卡文是文案事实源。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { entryFlags } from '../../../../../src/cards/card-rules.js'
-import { encounterRules, nearestEnemyWithTrait } from '../../encounter-rules.js'
+import { encounterRules, nearestEnemyWithTrait, parleyDifficultyBonus } from '../../encounter-rules.js'
 import { TCU_STORY_TEXT } from '../../story-text.js'
 import { chaosAfterTest, resolveChaosToken as resolveChaos } from './chaos.js'
 import {
@@ -43,11 +43,12 @@ const MISSING_PERSONS = Object.freeze([
   ['05049', 'balcony'],        // 彭妮·怀特
 ])
 
+// 05048 = Valentino（台球室）、05049 = Penny（露台）；参考 JusticeXI.hs:67-72。
 const TRAIL_RECORDS = Object.freeze([
   ['05046', 'entryHall', 'theInvestigatorsAreOnGavriellasTrail', '加弗瑞拉·米兹拉克', 'gavriella'],
   ['05047', 'office', 'theInvestigatorsAreOnJeromesTrail', '杰罗姆·戴维斯', 'jerome'],
-  ['05048', 'billiardsRoom', 'theInvestigatorsAreOnPennysTrail', '彭妮·怀特', 'penny'],
-  ['05049', 'balcony', 'theInvestigatorsAreOnValentinosTrail', '瓦伦蒂诺·里瓦斯', 'valentino'],
+  ['05048', 'billiardsRoom', 'theInvestigatorsAreOnValentinosTrail', '瓦伦蒂诺·里瓦斯', 'valentino'],
+  ['05049', 'balcony', 'theInvestigatorsAreOnPennysTrail', '彭妮·怀特', 'penny'],
 ])
 
 function takeFromSetAside(state, code) {
@@ -83,10 +84,13 @@ function bfsDistance(state, from, to) {
 // 所以按事件驱动把结果同步到敌人实例（`printedAloof` 在生成时由引擎写入）。
 function syncOfficeAloof(state) {
   const office = byCode(state, OFFICE)
+  const josefAloof = Boolean(flagsFor(state).josefPlanResolved)
   for (const enemy of state.enemies || []) {
     if (enemy.printedAloof === undefined) enemy.printedAloof = Boolean(enemy.aloof)
     const atOffice = Boolean(office) && enemy.location === office.id && isSilverTwilight(enemy)
-    enemy.aloof = Boolean(enemy.printedAloof) && !atOffice
+    // 05085b：约瑟夫·梅吉尔获得冷漠（本局剩余时间），且不受办公室「失去冷漠」影响。
+    const forcedAloof = josefAloof && String(original(enemy)) === String(JOSEF)
+    enemy.aloof = forcedAloof || (Boolean(enemy.printedAloof) && !atOffice)
   }
 }
 
@@ -157,10 +161,12 @@ function setupLocations(state) {
 // ---------------------------------------------------------------------------
 function locationFlipped(state, location, api) {
   const current = location.spectralFace === 'spectral' || location.spectral === true ? 'spectral' : 'normal'
+  // 胜利点在「剧本结束时该地点已揭示且无线索」才计入（campaign-flow.js:119-124 的幕末口径）；
+  // 这里只把当前面的印刷胜利点写到实例上，不再翻面即计分。
+  location.victory = Number(ALL_CARDS[original(location)]?.victory || 0)
   if (current === 'spectral') {
     const haunted = SPECTRAL_HAUNTED[location.id]
     if (haunted) location.haunted = structuredClone(haunted)
-    awardSpectralVictory(state, location, api)
   } else {
     delete location.haunted
   }
@@ -197,12 +203,15 @@ function findSpawnFarthestFromAll(state, api, excludeIds) {
     return { location, nearest }
   }).sort((left, right) => (right.nearest || 0) - (left.nearest || 0)
     || String(left.location.id).localeCompare(String(right.location.id)))
-  const answer = scored.length === 1 ? scored[0].location.id : api?.choose?.({
+  // 卡面/参考实现：只在与所有调查员距离「并列最远」的地点中选（不含入口大厅）。
+  const farthest = scored[0]?.nearest ?? 0
+  const pool = scored.filter(entry => (entry.nearest || 0) === farthest)
+  const answer = pool.length === 1 ? pool[0].location.id : api?.choose?.({
     kind: 'location', source: JOSEF, seat: state.campaign?.leadSeat ?? 0,
-    prompt: '选择生成约瑟夫·梅吉尔的地点（除入口大厅外离所有调查员最远）。',
-    options: scored.map(entry => ({ id: entry.location.id, label: entry.location.name })),
+    prompt: '选择生成约瑟夫·梅吉尔的地点（除入口大厅外离所有调查员最远的地点）。',
+    options: pool.map(entry => ({ id: entry.location.id, label: entry.location.name })),
   })
-  return (scored.find(entry => entry.location.id === answer) || scored[0]).location
+  return (pool.find(entry => entry.location.id === answer) || pool[0]).location
 }
 
 function totalSpendableClues(state) {
@@ -239,12 +248,14 @@ function advanceJusticeXI(state, agenda, api) {
     }
   }
   // 幕间故事 I：读失踪人口，逐个检查其最后出现的地点是否已无线索。
+  // 未揭示地点的线索只存放在 maxClues（揭示时按它重算），因此两者都要读。
   const records = state.campaign.records || {}
   const missing = Array.isArray(records.missingPersons) ? records.missingPersons : []
+  const locationClues = location => (location.revealed ? (location.clues || 0) : (location.maxClues || 0))
   for (const [code, locationId, recordKey, label, person] of TRAIL_RECORDS) {
     if (!missing.includes(code)) continue
     const location = loc(state, locationId)
-    if (location && (location.clues || 0) === 0) {
+    if (location && locationClues(location) === 0) {
       records[recordKey] = true
       // P9 幕间故事 I（失者名录）：正文来自导入生成物；记录先落账，再把该角色的独立段落读给全桌。
       const narrative = TCU_STORY_TEXT.interludes?.interludeOne?.sections?.[person] || []
@@ -252,7 +263,11 @@ function advanceJusticeXI(state, agenda, api) {
       for (const paragraph of narrative) api?.info?.(paragraph)
     }
   }
-  for (const location of state.locations || []) location.clues = 0
+  // 「移除所有地点的线索」：未揭示地点的线索在 maxClues 上，必须一并清空，否则日后揭示会复活。
+  for (const location of state.locations || []) {
+    location.clues = 0
+    location.maxClues = 0
+  }
   api?.advanceAct?.()
 }
 
@@ -288,14 +303,29 @@ function advanceHiddenAgendas(state, act, api) {
     if (!(location.spectralFace === 'spectral' || location.spectral === true)) {
       api?.flipSpectral?.(locationId)
     }
-    // 有调查员的地点揭示（05068b 第二句）。
-    if (alive(state).some(inv => inv.location === locationId)) api?.reveal?.(locationId)
+    // 7 张幽灵地点从「放一边」移出（区域账本与后续从放一边区找牌的语义一致）。
+    if (location.originalCode || location.code) takeFromSetAside(state, String(original(location)))
+    // 卡面：换面后「有调查员的地点揭示」；其余地点回到未揭示（引擎翻面不改 revealed）。
+    location.revealed = false
+    location.clues = location.clues || 0
+    if (alive(state).some(inv => inv.location === locationId)) {
+      api?.reveal?.(locationId)
+      location.revealed = true
+    }
   }
-  // 按玩家顺序循环生成放一边的[[怪物]]敌人，直到全部生成。
+  // 幽灵面入口大厅：若换面时无调查员在内，则处于「鬼灵迷雾封锁」状态（独立 flag，不依赖 revealed）。
+  const spectralEntryHall = loc(state, 'entryHall')
+  if (spectralEntryHall && original(spectralEntryHall) === SPECTRAL_LOCATION_CODES.entryHall) {
+    flagsFor(state).entryHallSealed = !alive(state).some(inv => inv.location === 'entryHall')
+  }
+  // 按玩家顺序（从队长起）循环生成放一边的[[怪物]]敌人，直到全部生成。
   const flags = flagsFor(state)
   const monsters = [...(flags.monsterSetAside || [])]
   flags.monsterSetAside = []
-  const order = [...(state.investigators || [])].sort((left, right) => left.seat - right.seat)
+  const lead = Number(state.campaign?.leadSeat ?? 0)
+  const count = state.investigators?.length || 1
+  const order = [...(state.investigators || [])].sort((left, right) =>
+    (((left.seat - lead) % count) + count) % count - ((((right.seat - lead) % count) + count) % count))
   let guard = 0
   while (monsters.length && order.length && guard++ < 100) {
     for (const inv of order) {
@@ -322,6 +352,7 @@ function advanceHiddenAgendas(state, act, api) {
 // 幕 2b（05069 背面）：揭示入口大厅；遭遇弃牌堆洗回牌库。
 function advanceTheSpectralRealm(state, act, api) {
   api?.reveal?.('entryHall')
+  flagsFor(state).entryHallSealed = false
   api?.shuffleDiscard?.()
   api?.info?.('🌫️ 挡住去路的迷雾散去：入口大厅被揭示，遭遇弃牌堆洗回牌库。')
 }
@@ -395,7 +426,8 @@ function applyResolution(state, key, events, api) {
 // ---------------------------------------------------------------------------
 function intellectIcons(code) {
   const icons = ALL_CARDS[code]?.icons || {}
-  return Number(icons.intellect) || 0
+  // 参考 SkillIconCost：Wild 图标也计入「至少 3 个[智力]图标」。
+  return (Number(icons.intellect) || 0) + (Number(icons.wild) || 0)
 }
 
 // Josef 翻面结算 05085b：移除他身上毁灭；本局银暮秘社敌人不能放毁灭、Josef 获冷漠；
@@ -500,9 +532,13 @@ export const behavior = {
   },
   investigatorEntryError(state, location) {
     if (!location) return null
-    // 幽灵面的入口大厅：迷雾屏障在揭示前封锁入口（05078 背面）。
+    // 幽灵面的入口大厅：迷雾屏障在揭示前封锁入口（05078 背面 / 05068b）。
+    // 引擎 flipLocationFace 不重置 revealed（全循环共享行为），因此用独立 flag 记录封印，
+    // 不依赖 revealed；05069 背面（advanceTheSpectralRealm）解除。
     const spectralEntry = original(location) === SPECTRAL_LOCATION_CODES.entryHall
-    if (spectralEntry && location.revealed !== true) return '鬼灵迷雾封锁了入口大厅：在它被揭示前，你不能进入。'
+    if (spectralEntry && (flagsFor(state).entryHallSealed === true || location.revealed !== true)) {
+      return '鬼灵迷雾封锁了入口大厅：在它被揭示前，你不能进入。'
+    }
     return null
   },
   locationFlipped(state, location, api) {
@@ -519,6 +555,8 @@ export const behavior = {
   },
   // 议程 1 强制：抽到[[怪物]]敌人 → 不生成、放一边、议程 +1 毁灭。
   // 引擎没有「抽到时不生成」的钩子；用「生成地点非法 → spawnFailed」等价实现。
+  // 只有真实遭遇抽牌走这条 spawnLocation 通道（剧本/效果生成用 ignoreSpawn=true，不经过本钩子），
+  // 因此「拦下任何生成」的范围等价于「抽到怪物」。
   spawnLocation(state, code, fallbackLoc) {
     if (agendaActive(state, '05066') && hasTrait({ code }, 'monster')) {
       const flags = flagsFor(state)
@@ -526,9 +564,10 @@ export const behavior = {
       addToSetAside(state, String(code))
       return '__setAside__'
     }
-    // 银暮秘社敌人不能生成在入口大厅（05078 背面）。
+    // 银暮秘社敌人不能生成在幽灵面入口大厅（05078 背面；普通面入口大厅不限制）。
     const entryHall = loc(state, 'entryHall')
-    if (entryHall && fallbackLoc === entryHall.id && isSilverTwilight({ code })) return '__nowhere__'
+    const spectralEntryHall = entryHall && original(entryHall) === SPECTRAL_LOCATION_CODES.entryHall
+    if (spectralEntryHall && fallbackLoc === entryHall.id && isSilverTwilight({ code })) return '__nowhere__'
     return fallbackLoc
   },
   spawnFailed(state, code, engagedSeat, api) {
@@ -549,6 +588,34 @@ export const behavior = {
     syncOfficeAloof(state)
     encounterRules.enemySpawned?.(state, enemy, api)
   },
+  // 05067 正面：「每个[[银暮秘社]]敌人获得胜利 0」——进入胜利区（0 点不改变比分，但幕间 II 分支
+  // 需要能在 victoryDisplay 里数到它们）。返回 false 以免替换引擎默认结算。
+  enemyDefeated(state, enemy, api) {
+    const replaced = encounterRules.enemyDefeated?.(state, enemy, api)
+    if (agendaActive(state, '05067') && isSilverTwilight(enemy)) {
+      state.victoryDisplay ||= []
+      const id = `enemy:${enemy.id}`
+      if (!state.victoryDisplay.some(card => card.id === id)) {
+        state.victoryDisplay.push({ id, code: original(enemy), originalCode: original(enemy), victory: 0 })
+        api?.info?.(`💠 「${enemy.name}」获得胜利 0（进入胜利区）。`)
+      }
+    }
+    return replaced
+  },
+  // 05085b 背面：「本局剩余时间，毁灭不能放在[[银暮秘社]]敌人上」。
+  // 引擎 placeDoomOnCard 先写后回调本钩子，因此在这里把误放的毁灭退回（净效果等价于不能放置）。
+  doomPlaced(state, payload, api) {
+    encounterRules.doomPlaced?.(state, payload, api)
+    if (!flagsFor(state).josefPlanResolved) return
+    const target = payload?.target
+    if (!target || payload.agenda) return
+    if (!isSilverTwilight(target) || !(state.enemies || []).includes(target)) return
+    const amount = Number(payload.amount) || 0
+    const removed = Math.min(Number(target.doom) || 0, amount)
+    if (!removed) return
+    target.doom = Math.max(0, (Number(target.doom) || 0) - removed)
+    api?.info?.(`📜 「约瑟夫的计划」：毁灭不能放在[[银暮秘社]]敌人「${target.name}」上（已移除 ${removed} 点）。`)
+  },
   enemyMoved(state, enemy, newLocationId, api) {
     syncOfficeAloof(state)
     encounterRules.enemyMoved?.(state, enemy, newLocationId, api)
@@ -556,6 +623,9 @@ export const behavior = {
   // 议程 2：银暮秘社敌人猎手移动时视作调查员（引擎在「无调查员同地点」时才调用本钩子）。
   hunterMove(state, enemy, api) {
     if (!agendaActive(state, '05067') || !enemy?.hunter) return false
+    // 若同地点已有「视作调查员」的银暮秘社敌人，则不需要移动（等价已与调查员同地点）。
+    if ((state.enemies || []).some(target => target !== enemy && isSilverTwilight(target)
+      && target.location === enemy.location)) return false
     const candidates = [
       ...alive(state).map(inv => inv.location),
       ...(state.enemies || []).filter(target => target !== enemy && isSilverTwilight(target)
@@ -575,9 +645,9 @@ export const behavior = {
     api?.info?.(`🧭 「${enemy.name}」被银暮秘社敌人的气息吸引，向「${api.locationName?.(next) || next}」移动。`)
     return true
   },
-  // 议程 2 强制（时点近似：引擎无「猎手移动后」钩子 → 放在敌人阶段结束，见 approximations）。
-  enemyPhaseEnd(state, api) {
-    encounterRules.enemyPhaseEnd?.(state, api)
+  // 议程 2 强制（卡面：猎手移动步骤后）——引擎在猎手循环后、交战/攻击前提供 enemyPhaseAfterHunters。
+  enemyPhaseAfterHunters(state, api) {
+    encounterRules.enemyPhaseAfterHunters?.(state, api)
     if (!agendaActive(state, '05067')) return
     for (const spectral of (state.enemies || []).slice()) {
       if (!hasTrait(spectral, 'spectral') || spectral.exhausted) continue
@@ -588,6 +658,9 @@ export const behavior = {
         api?.info?.(`👻 「${spectral.name}」对「${target.name}」造成 ${Number(spectral.damage) || 0} 点伤害。`)
       }
     }
+  },
+  enemyPhaseEnd(state, api) {
+    encounterRules.enemyPhaseEnd?.(state, api)
   },
 
   // ---- 行动 ----
@@ -613,14 +686,16 @@ export const behavior = {
       moves.push({ action: 'scenarioAction', rule: 'billiardsRoomAction', label: '🎱 与宾客来比一场：敏捷(3)（每轮一次）' })
     }
     if (code === BALCONY && !flags.balconyParleyUsed) {
-      moves.push({ action: 'scenarioAction', rule: 'balconyParley', label: '🤝 谈判：弃掉合计至少 3 个智识图标的手牌，获得 2 个线索（团队每场一次）' })
+      moves.push({ action: 'scenarioAction', rule: 'balconyParley', actionKind: 'parley',
+        label: '🤝 谈判：弃掉合计至少 3 个智识图标的手牌，获得 2 个线索（团队每场一次）' })
     }
     const josef = (state.enemies || []).find(enemy => original(enemy) === JOSEF && enemy.location === inv.location)
     if (josef && !flags.josefPlanResolved) {
       const otherDoom = (state.enemies || []).some(enemy => enemy !== josef && isSilverTwilight(enemy)
         && (Number(enemy.doom) || 0) > 0)
       if (!otherDoom) {
-        moves.push({ action: 'scenarioAction', rule: 'josefParley', label: '🤝 谈判：让约瑟夫相信这不是你干的（智识 4）' })
+        moves.push({ action: 'scenarioAction', rule: 'josefParley', actionKind: 'parley',
+          label: '🤝 谈判：让约瑟夫相信这不是你干的（智识 4）' })
       }
     }
     return moves
@@ -676,33 +751,49 @@ export const behavior = {
       return
     }
     if (move.rule === 'balconyParley') {
-      flagsFor(state).balconyParleyUsed = true
       const hand = Array.isArray(inv.hand) ? [...inv.hand] : []
-      const candidates = hand.map((code, index) => ({ code, index, icons: intellectIcons(code) }))
-        .sort((left, right) => right.icons - left.icons || left.index - right.index)
-      const discarded = []
+      // 玩家逐张选择要弃掉的牌，直到合计至少 3 个智识图标（Wild 计入）。
+      const chosen = []
       let icons = 0
-      for (const candidate of candidates) {
-        if (icons >= 3) break
-        icons += candidate.icons
-        discarded.push(candidate)
+      while (icons < 3) {
+        const options = hand
+          .map((code, index) => ({ id: String(index), code, index, icons: intellectIcons(code) }))
+          .filter(candidate => candidate.icons > 0 && !chosen.some(picked => picked.index === candidate.index))
+          .map(candidate => ({ id: candidate.id, label: `${ALL_CARDS[candidate.code]?.nameZh || candidate.code}（${candidate.icons} 智识图标）` }))
+        if (!options.length) break
+        const answer = api?.choose?.({
+          kind: 'card', source: BALCONY, seat: inv.seat, canSkip: true,
+          prompt: `露台谈判：选择要弃掉的手牌（当前 ${icons}/3 智识图标）。`,
+          options,
+        })
+        if (answer == null || answer === 'skip') break
+        const picked = hand
+          .map((code, index) => ({ code, index, icons: intellectIcons(code) }))
+          .filter(candidate => candidate.icons > 0 && !chosen.some(entry => entry.index === candidate.index))
+          .find(candidate => String(candidate.index) === String(answer))
+        if (!picked) break
+        chosen.push(picked)
+        icons += picked.icons
       }
       if (icons < 3) {
+        // 费用不足：无效且不消耗团队每场一次。
         api?.info?.(`🤝 露台谈判：手牌智识图标不足 3 个（只有 ${icons}），这次谈判无效。`)
         return
       }
-      for (const candidate of [...discarded].sort((left, right) => right.index - left.index)) {
-        inv.hand.splice(candidate.index, 1)
-        ;(inv.discard ||= []).push(candidate.code)
+      flagsFor(state).balconyParleyUsed = true
+      for (const picked of [...chosen].sort((left, right) => right.index - left.index)) {
+        inv.hand.splice(picked.index, 1)
+        ;(inv.discard ||= []).push(picked.code)
       }
       api?.gainClues?.(inv.seat, 2)
-      api?.info?.(`🤝 露台谈判成功：弃掉 ${discarded.length} 张手牌，获得 2 个线索。`)
+      api?.info?.(`🤝 露台谈判成功：弃掉 ${chosen.length} 张手牌，获得 2 个线索。`)
       return
     }
     if (move.rule === 'josefParley') {
       const josef = (state.enemies || []).find(enemy => original(enemy) === JOSEF)
       if (!josef) return
-      api?.test?.(inv.seat, 'intellect', 4, result => {
+      // 05097 秘社玄仪：直到一轮结束，对该敌人攻击/躲避/谈判难度 +2（实例标记，共享读点）。
+      api?.test?.(inv.seat, 'intellect', 4 + parleyDifficultyBonus(state, josef), result => {
         if (result?.success) flipJosef(state, josef, api)
         else api?.attack?.(josef, inv)
       }, 0, { type: 'scenario', name: '与约瑟夫·梅吉尔谈判' })
@@ -796,10 +887,10 @@ export const behavior = {
   scenarioApproximations: [
     '议程 1「抽到[[怪物]]敌人时不生成、放一边」→ spawnLocation 返回非法生成点，spawnFailed 把遭遇弃牌堆里的该卡移到 scenarioZones.setAside，并用 api.addDoom(1) 在议程上放毁灭（同一结算内完成，等价「该敌人不生成，改为放在一边」）。',
     '议程 2「猎手移动时把银暮秘社敌人视为调查员」→ 重写 hunterMove：目标候选 = 存活调查员所在地点 + 场上银暮秘社敌人所在地点，沿连接走一步（等价「将其视为调查员」的目标选择）。',
-    '议程 2 强制「猎手移动步骤后：重整幽灵敌人对同地点每个类人敌人造成伤害」→ 引擎没有独立的「猎手移动后」钩子，结算放在 enemyPhaseEnd（数值、目标、次数忠实；时点晚于敌人攻击）。',
-    '露台「弃掉合计至少 3 个智识图标的手牌：谈判」→ 通用谈判原语的实体描述子需登记在条目/能力层，本章在 behavior.actions/performAction 内实现（按手牌图标从高到低凑够 3 点，费用与结果与卡面一致）。',
+    '议程 2 强制「猎手移动步骤后：重整幽灵敌人对同地点每个类人敌人造成伤害」→ 引擎 enemyPhaseAfterHunters 钩子（猎手循环后、交战/攻击前）结算，时点与参考一致。',
+    '露台「弃掉合计至少 3 个智识图标的手牌：谈判」→ 本章在 behavior.actions/performAction 内实现（玩家逐张选择手牌，Wild 图标计入，费用不足不消耗团队次数；actionKind=parley 不引发趁乱攻击）。',
     '幽灵面的闹鬼能力 → flipSpectral 只替换印刷字段；locationFlipped 把幽灵面的 haunted 数组写入地点实例、翻回正常面时清除（与 P2.1 的 haunted 数据形状一致）。',
-    '幽灵面的胜利点（05081/05082/05084）→ 翻面时补一次「无线索则进胜利区」结算（与引擎 revealLocation 的 awardLocationVictory 同口径）。',
+    '幽灵面的胜利点（05081/05082/05084）→ locationFlipped 把印刷胜利点写到地点实例；幕末由引擎 campaign-flow「已揭示且无线索」口径计分（与参考实现结算时机一致）。',
     '幕间故事 I 的正文 → P9 起从 story-text.js 读入（幕 1b 写 trail 记录时逐段读出）；幕间故事 II 的分支（Josef 命运）在 P9 起落到战役记录（josefDisappearedIntoTheMist / theInvestigatorsRescuedJosef / josefIsAliveAndWell），供 campaign.flow 的 interludeTwoFate 分支使用；记录在关末写入（参考实现在幕间开始时写入，状态等价、观察时机略早）。',
     '「留下的证据」线索移除「尽量平均」→ 参考实现由队长逐个选择；本实现用确定性等价规则（每次从线索最多的地点移除，平手按地点 id）。',
     '办公室「位于办公室的银暮秘社敌人失去冷漠」→ 事件驱动把结果同步到 enemy.aloof（生成/移动/回合开始/幕议程推进后），引擎没有关键词修正词表。',

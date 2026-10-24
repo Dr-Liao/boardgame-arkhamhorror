@@ -45,7 +45,6 @@ export default {
               const n = Math.min(inv.clues, Math.max(1, Number(amount) || 1))
               inv.clues -= n
               location.clues = (location.clues || 0) + n
-              location.maxClues = Math.max(location.maxClues || 0, location.clues)
               api.info(`${inv.name} 把 ${n} 个线索放置在「${location.name || location.id}」。`)
             }
           }

@@ -169,8 +169,22 @@ function apiFor(state, overrides = {}) {
     giveAsset: (seat, code) => {
       state.investigators[seat].assets.push({ id: `asset:${code}:${seat}`, code, originalCode: code })
     },
-    giveClues: (seat, n) => { state.investigators[seat].clues += n },
+    gainClues: (seat, n) => { state.investigators[seat].clues += n },
+    damageEnemy: (enemyId, n) => {
+      const target = state.enemies.find(entry => entry.id === enemyId)
+      if (target) target.damageTaken = (target.damageTaken || 0) + n
+      return target
+    },
     spendClues: (seat, n) => { state.investigators[seat].clues = Math.max(0, state.investigators[seat].clues - n) },
+    // 引擎击败读点（05220 陷阱守卫者吞噬类人时走引擎击败结算）。
+    checkEnemyDefeat: enemy => {
+      const index = state.enemies.indexOf(enemy)
+      if (index < 0) return false
+      state.enemies.splice(index, 1)
+      state.victoryDisplay.push({ id: `victory:${enemy.id}`, code: enemy.code, originalCode: enemy.code })
+      calls.push(['checkEnemyDefeat', enemy.code])
+      return true
+    },
     damage: (seat, n) => { state.investigators[seat].damage += n },
     horror: (seat, n) => { state.investigators[seat].horror += n },
     directHorror: (seat, n) => { state.investigators[seat].horror += n },
@@ -740,4 +754,214 @@ test('同一路线在 JSON 往返后完全一致（存档/读档）', () => {
   assert.deepEqual(restored.scenarioZones, first.scenarioZones)
   assert.deepEqual(restored.locations.map(entry => entry.doom), first.locations.map(entry => entry.doom))
   assert.deepEqual(restored.enemies, first.enemies)
+})
+
+// ---------------------------------------------------------------------------
+// P11 修复回归（c3c4 high 条目：05208/05198/05199/05213/05222/05228）
+// ---------------------------------------------------------------------------
+
+test('05208 秘社地窖（我们一直在等你）：背面无进入限制，进入/揭示后放 1 把随机钥匙', () => {
+  const state = placedState(2, null, { theInvestigatorsAreMembersOfTheLodge: true })
+  const cellar = loc(state, 'lodgeCellarWeve')
+  assert.ok(cellar, '成员分支布置了 lodgeCellarWeve')
+  assert.equal(cellar.revealed, false)
+  assert.equal(fgg.behavior.investigatorEntryError(state, cellar), null, '背面为空：没有额外进入限制')
+  const api = apiFor(state)
+  api.reveal('lodgeCellarWeve')
+  assert.equal(cellar.revealed, true)
+  assert.equal(fgg.behavior.keysOnLocation(state, 'lodgeCellarWeve').length, 1, '揭示后放 1 把随机钥匙')
+})
+
+test('05213 地下墓穴：控制至少 1 把任意钥匙即可进入，揭示时放入圣堂内室与门廊', () => {
+  const state = placedState(1, ['lodgeGatesMembers', 'lodgeCatacombs'])
+  const catacombs = loc(state, 'lodgeCatacombs')
+  assert.match(fgg.behavior.investigatorEntryError(state, catacombs), /钥匙/, '无钥匙仍锁门')
+  state.scenarioKeys.skull.holder = 0
+  assert.equal(fgg.behavior.investigatorEntryError(state, catacombs), null, '持任意钥匙即放行')
+  const api = apiFor(state)
+  api.reveal('lodgeCatacombs')
+  assert.ok(loc(state, 'innerSanctum'), '圣堂内室入场')
+  assert.ok(loc(state, 'sanctumDoorwayCeremonyRoom'), '典礼室门廊入场')
+  assert.ok(loc(state, 'sanctumDoorwayHoldingCells'), '拘禁室门廊入场')
+})
+
+test('05198 正面：被弃置的银暮秘社敌人不移动毁灭（只认「击败」）', () => {
+  const state = placedState(1, ['lodgeGatesMembers'])
+  const dead = enemy(state, '05095', 'lobbyMembers')
+  dead.traits = ['Humanoid', 'Cultist', 'Silver Twilight']
+  const other = enemy(state, '05219', 'lobbyMembers')
+  other.doom = 2
+  fgg.behavior.enemyDiscarded(state, dead, apiFor(state))
+  assert.equal(other.doom, 2, '弃置不触发毁灭移动')
+  assert.equal(state.doom || 0, 0)
+  fgg.behavior.enemyDefeated(state, dead, apiFor(state))
+  assert.equal(other.doom, 1, '击败才触发毁灭移动')
+  assert.equal(state.doom, 1)
+})
+
+test('05198 背面：抽到的异教徒敌人生成在抽牌者地点并交战，且不重复进弃牌堆', () => {
+  const state = placedState(2, ['lodgeGatesMembers'])
+  state.encounterDeck = ['05223', '05095', '05224', '05096', '05225', '05226']
+  const api = apiFor(state, { choose: () => '0' })
+  fgg.behavior.agendaReveal(state, state.agendas[0], api)
+  const drawn = state.enemies.filter(entry => entry.code === '05095' || entry.code === '05096')
+  assert.equal(drawn.length, 2, '两位调查员各抽到 1 个异教徒敌人')
+  assert.equal(drawn[0].location, state.investigators[0].location)
+  assert.equal(drawn[1].location, state.investigators[1].location)
+  assert.equal(drawn[0].engagedSeat, 0, '与抽牌者交战')
+  assert.equal(drawn[1].engagedSeat, 1)
+  assert.ok(state.investigators[0].engaged.includes(drawn[0].id))
+  for (const entry of drawn) {
+    assert.equal(state.encounterDiscard.filter(code => code === entry.code).length <= 1, true,
+      '同一张牌不能既在场上又在弃牌堆出现副本')
+  }
+})
+
+test('05199 正面：圣堂地点的银暮秘社敌人失去冷漠；离开圣堂/议程翻面后还原', () => {
+  const state = placedState(1, ['lodgeGatesMembers', 'lodgeCatacombs', 'lounge'])
+  state.agendaIndex = 1
+  const sanctumCultist = enemy(state, '05221', 'lodgeCatacombs')
+  sanctumCultist.traits = ['Humanoid', 'Cultist', 'Silver Twilight']
+  sanctumCultist.aloof = true
+  sanctumCultist.printedAloof = true
+  const loungeCultist = enemy(state, '05219', 'lounge')
+  loungeCultist.traits = ['Humanoid', 'Cultist', 'Silver Twilight']
+  loungeCultist.aloof = true
+  fgg.behavior.roundEnded(state, apiFor(state))
+  assert.equal(sanctumCultist.aloof, false, '圣堂地点失冷漠')
+  assert.equal(loungeCultist.aloof, true, '非圣堂地点不受影响')
+  state.agendaIndex = 0
+  fgg.behavior.roundEnded(state, apiFor(state))
+  assert.equal(sanctumCultist.aloof, true, '议程翻面后还原印刷冷漠')
+})
+
+test('05199 背面：响应召唤的怪兽生成在机关盒所在地点（附在敌人身上时取敌人地点）', () => {
+  const state = placedState(1, ['lodgeGatesMembers', 'lodgeCatacombs', 'innerSanctum'])
+  const carrier = enemy(state, '05217b', 'innerSanctum')
+  state.storyAssets.push({ id: 'story:puzzleBox', code: '05228', originalCode: '05228', location: 'innerSanctum' })
+  state.scenarioFlags.puzzleBox = { holder: 'enemy', enemyId: carrier.id }
+  const api = apiFor(state)
+  fgg.behavior.agendaReveal(state, state.agendas[1], api)
+  const beast = state.enemies.find(entry => entry.code === '05220')
+  assert.ok(beast, '陷阱守卫者生成')
+  assert.equal(beast.location, 'innerSanctum', '生成在机关盒所在地点')
+  assert.equal(state.scenarioFlags.puzzleBox.removed, true)
+})
+
+test('05222 边缘虚空骑士谈判成功：移除 1 个毁灭并获得 1 个线索', () => {
+  const state = placedState(1, ['lodgeGatesMembers'])
+  const knight = enemy(state, '05222', 'lodgeGatesMembers')
+  knight.doom = 2
+  fgg.behavior.performAction(state, state.investigators[0], { rule: 'parleyKnightOuter' }, apiFor(state))
+  assert.equal(knight.doom, 1)
+  assert.equal(state.investigators[0].clues, 1, '毁灭翻成线索归谈判者')
+})
+
+test('05228 机关盒强制：控制者被击败时把控制权交给另一位调查员', () => {
+  const state = placedState(2, ['lodgeGatesMembers'])
+  state.scenarioFlags.puzzleBox = { holder: 'seat', seat: 0 }
+  state.investigators[0].assets.push({ id: 'box0', code: '05228', originalCode: '05228' })
+  state.investigators[0].defeated = true
+  fgg.behavior.investigatorEliminated(state, state.investigators[0], 0, apiFor(state))
+  assert.equal(fgg.behavior.puzzleBoxHolder(state), 1)
+  assert.equal(state.investigators[0].assets.some(asset => asset.code === '05228'), false)
+  assert.equal(state.investigators[1].assets.some(asset => asset.code === '05228'), true)
+})
+
+test('05228 机关盒 [action]：熄灭火盆 / 横置看守人 / 对已横置看守人造成 5 伤害，团队每场限一次', () => {
+  const state = placedState(1, ['lodgeGatesMembers', 'lounge'])
+  state.scenarioFlags.puzzleBox = { holder: 'seat', seat: 0 }
+  state.investigators[0].location = 'lounge'
+  loc(state, 'lounge').flags = { brazier: true }
+  const watcher = enemy(state, '05086', 'lodgeGatesMembers')
+  watcher.exhausted = false
+  // 1) 横置看守人
+  const moves = fgg.behavior.actions(state, state.investigators[0])
+  const action = moves.find(move => move.rule === 'puzzleBoxAction')
+  assert.ok(action, '控制者在场时列出机关盒行动')
+  fgg.behavior.performAction(state, state.investigators[0], action, apiFor(state, { choose: () => 'exhaust' }))
+  assert.equal(watcher.exhausted, true)
+  assert.equal(state.scenarioFlags.puzzleBox.actionUsed, true)
+  assert.equal(fgg.behavior.actions(state, state.investigators[0]).some(move => move.rule === 'puzzleBoxAction'), false,
+    '团队每场游戏限一次')
+  // 2) 已横置 → 5 点伤害
+  state.scenarioFlags.puzzleBox.actionUsed = false
+  fgg.behavior.performAction(state, state.investigators[0], { rule: 'puzzleBoxAction' },
+    apiFor(state, { choose: () => 'damage' }))
+  assert.equal(watcher.damageTaken, 5)
+  // 3) 熄灭火焰
+  state.scenarioFlags.puzzleBox.actionUsed = false
+  fgg.behavior.performAction(state, state.investigators[0], { rule: 'puzzleBoxAction' },
+    apiFor(state, { choose: () => 'unlight' }))
+  assert.equal(loc(state, 'lounge').flags.brazier, false)
+})
+
+// ---------------------------------------------------------------------------
+// P11 第三批修复回归（05220/05221）
+// ---------------------------------------------------------------------------
+
+test('05220 响应召唤的怪兽：敌军阶段开始击败同地点类人敌人并吸收其毁灭（走引擎击败结算）', () => {
+  const state = placedState(2, ['lodgeGatesMembers', 'lodgeCatacombs'])
+  state.phase = 'enemy'
+  const beast = enemy(state, '05220', 'lodgeCatacombs')
+  const cultistA = enemy(state, '05218', 'lodgeCatacombs')
+  cultistA.traits = ['Humanoid', 'Cultist', 'Silver Twilight']
+  cultistA.doom = 2
+  const cultistB = enemy(state, '05219', 'lodgeCatacombs')
+  cultistB.traits = ['Humanoid', 'Cultist', 'Silver Twilight']
+  cultistB.doom = 1
+  const api = apiFor(state)
+  fgg.behavior.enemyPhaseStart(state, api)
+  assert.equal(state.enemies.includes(cultistA), false, '类人敌人被击败（离场）')
+  assert.equal(state.enemies.includes(cultistB), false)
+  assert.equal(beast.doom, 3, '毁灭全部移动到响应召唤的怪兽身上')
+  assert.equal(api.calls.filter(call => call[0] === 'checkEnemyDefeat').length, 2, '不是直接 splice')
+  assert.ok(state.victoryDisplay.some(card => card.code === '05218'), '击败结算产生胜利区记录')
+})
+
+test('05221 核心圈骑士：骑士进入你所在地点后检定 agility(4)，失败则交战', () => {
+  const state = placedState(1, ['lodgeGatesMembers', 'lounge'])
+  const knight = enemy(state, '05221', 'lounge')
+  knight.traits = ['Humanoid', 'Cultist', 'Silver Twilight']
+  // 失败：交战。
+  fgg.behavior.enemyMoved(state, knight, 'lodgeGatesMembers', apiFor(state, {
+    testResult: { success: false, value: 1, difficulty: 4, drawn: [], cancelledTokens: [] },
+  }))
+  assert.equal(knight.engagedSeat, 0, '检定失败：骑士与你交战')
+  assert.ok(state.investigators[0].engaged.includes(knight.id))
+  // 成功：不交战。
+  knight.engagedSeat = null
+  state.investigators[0].engaged = []
+  fgg.behavior.enemyMoved(state, knight, 'lodgeGatesMembers', apiFor(state, {
+    testResult: { success: true, value: 6, difficulty: 4, drawn: [], cancelledTokens: [] },
+  }))
+  assert.equal(knight.engagedSeat, null, '检定成功：不交战')
+})
+
+// ---------------------------------------------------------------------------
+// task-42 回归：05097 秘社玄仪 → FGG 异教徒谈判难度 +2
+// ---------------------------------------------------------------------------
+test('05097 秘社玄仪：FGG 谈判（南森/狱卒/边缘虚空骑士）难度 +2', () => {
+  const cases = [
+    { rule: 'parleyNathan', code: '05217', base: 3 },
+    { rule: 'parleyJailor', code: '05218', base: 3 },
+    { rule: 'parleyKnightOuter', code: '05222', base: 4 },
+  ]
+  for (const { rule, code, base } of cases) {
+    const state = stateFor(1)
+    const inv = state.investigators[0]
+    const enemy = {
+      id: `enemy-${code}`, code, originalCode: code, name: code, location: inv.location,
+      doom: 1, damageTaken: 0, exhausted: false, engagedSeat: null, resources: 0,
+      roundFightEvadeBonus: { round: state.round, amount: 2 },
+    }
+    state.enemies.push(enemy)
+    const api = apiFor(state, {
+      testResult: { success: false, value: 0, difficulty: base, drawn: [], cancelledTokens: [] },
+    })
+    fgg.behavior.performAction(state, inv, { rule }, api)
+    const tested = api.calls.find(call => call[0] === 'test')
+    assert.ok(tested, `${rule} 应进行谈判检定`)
+    assert.equal(tested[1].difficulty, base + 2, `${rule} 难度应为 ${base}+2（05097）`)
+  }
 })

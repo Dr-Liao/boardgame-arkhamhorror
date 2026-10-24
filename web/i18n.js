@@ -17,11 +17,28 @@ export function normalizeLocale(value) {
 }
 
 let locale = DEFAULT_LOCALE
+const localeListeners = new Set()
 
 /** 切换界面词典（大厅 onLocaleChange 调用）；返回规范化后的 locale。 */
 export function setLocale(value) {
   locale = normalizeLocale(value)
+  // 通知长期存活的 DOM 组件（音乐播放器、规则书等）自行刷新文案；监听器抛错不影响切换。
+  for (const listener of localeListeners) {
+    try { listener(locale) } catch (error) {
+      console.warn('[i18n] locale listener 执行失败：' + (error?.message || error))
+    }
+  }
   return locale
+}
+
+/**
+ * 订阅语言切换（返回取消订阅函数）。供不在每次 render 内重建的组件使用；
+ * 监听器必须同步、幂等，只更新文案/属性，不重建对局或重发请求。
+ */
+export function subscribeLocaleChange(listener) {
+  if (typeof listener !== 'function') return () => {}
+  localeListeners.add(listener)
+  return () => localeListeners.delete(listener)
 }
 
 export function getLocale() {

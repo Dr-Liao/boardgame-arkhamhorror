@@ -1,4 +1,5 @@
 import { chaosTokenFace } from './chaos-token.js'
+import { t } from './i18n.js'
 
 // Read the live public bag, never the campaign's initial pool or draw order.
 export function groupedChaosTokens(tokens = []) {
@@ -26,8 +27,9 @@ export function createChaosBagView(h, render) {
     sessionId = null; cached=null; cachedKey=''; render()
     queueMicrotask(()=>document.querySelector('.ah-chaos-bag')?.focus({preventScroll:true}))
   }
+  // 令牌网格：组名走词典（chaos.token.*），枚数留在 aria-label 里。
   const tokens = (items, zone) => h('ul', {className:'ah-bag-token-grid', 'data-bag-zone':zone},
-    groupedChaosTokens(items).map(token=>h('li', {className:'ah-bag-token', 'data-token':token.key, 'aria-label':`${token.label}，${token.count} 枚`},
+    groupedChaosTokens(items).map(token=>h('li', {className:'ah-bag-token', 'data-token':token.key, 'aria-label':t('chaos.bag.tokenAria', { label: token.label, count: token.count })},
       token.src ? h('img', {src:token.src,alt:token.label,draggable:false}) : h('span',{className:'ah-bag-token-fallback'},token.label),
       h('strong',{},token.label),h('span',{className:'ah-bag-token-count'},'×'+token.count))))
   return {
@@ -47,19 +49,21 @@ export function createChaosBagView(h, render) {
         queueMicrotask(()=>{if(cached?.isConnected){cached.querySelector('.ah-bag-modal').scrollTop=scroll;focus?.focus({preventScroll:true})}})
         return cached
       }
-      const dismiss=h('button',{type:'button',className:'ah-bag-close','aria-label':'关闭混乱袋',onclick:close},'关闭')
+      const dismiss=h('button',{type:'button',className:'ah-bag-close','aria-label':t('chaos.bag.closeAria'),onclick:close},t('common.close'))
       const modal=h('div',{className:'bg-backdrop ah-bag-backdrop'},
-        h('section',{className:'ah-bag-modal',role:'dialog','aria-modal':'true','aria-label':'当前混乱袋',tabindex:-1,
+        h('section',{className:'ah-bag-modal',role:'dialog','aria-modal':'true','aria-label':t('chaos.bag.title'),tabindex:-1,
           onclick:event=>event.stopPropagation(),onkeydown:event=>{
             if(event.key==='Escape'){event.preventDefault();event.stopPropagation();close()}
             if(event.key==='Tab'){event.preventDefault();dismiss.focus({preventScroll:true})}
           }},
           h('header',{},h('img',{src:'/mods/arkhamhorror/img/ui/chaos-bag.webp',alt:''}),
-            h('div',{},h('small',{},'调查装备'),h('h2',{},'当前混乱袋'),h('p',{},`袋内 ${bag.length} 枚 · ${groupedChaosTokens(bag).length} 种标记`)),dismiss),
-          bag.length ? tokens(bag,'bag') : h('p',{className:'ah-bag-empty'},'当前袋中没有标记。'),
-          revealed.length ? h('section',{className:'ah-bag-outside'},h('h3',{},`已揭示 · ${revealed.length} 枚`),tokens(revealed,'revealed')) : null,
-          sealed.length ? h('section',{className:'ah-bag-outside'},h('h3',{},`已封印 · ${sealed.length} 枚`),tokens(sealed,'sealed')) : null,
-          h('footer',{},'特殊标记的效果请查阅桌面上的剧本提示卡。已揭示和已封印标记不计入袋内数量。')))
+            h('div',{},h('small',{},t('chaos.bag.eyebrow')),
+              h('h2',{},t('chaos.bag.title')),
+              h('p',{},t('chaos.bag.summary',{total:bag.length,kinds:groupedChaosTokens(bag).length}))),dismiss),
+          bag.length ? tokens(bag,'bag') : h('p',{className:'ah-bag-empty'},t('chaos.bag.empty')),
+          revealed.length ? h('section',{className:'ah-bag-outside'},h('h3',{},t('chaos.bag.revealed',{count:revealed.length})),tokens(revealed,'revealed')) : null,
+          sealed.length ? h('section',{className:'ah-bag-outside'},h('h3',{},t('chaos.bag.sealed',{count:sealed.length})),tokens(sealed,'sealed')) : null,
+          h('footer',{},t('chaos.bag.footer'))))
       cached=modal;cachedKey=key
       queueMicrotask(()=>{if(dismiss.isConnected){modal.querySelector('.ah-bag-modal').scrollTop=scroll;dismiss.focus({preventScroll:true})}})
       return modal

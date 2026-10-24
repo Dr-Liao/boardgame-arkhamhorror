@@ -22,7 +22,7 @@
     },
     "media": {
       "desktop": true,
-      "mobile": false
+      "mobile": true
     }
   },
   "release": {
@@ -37,8 +37,8 @@
   },
   "media": {
     "desktop": true,
-    "mobile": false,
-    "resources": 0
+    "mobile": true,
+    "resources": 37
   },
   "scenarios": [
     {
@@ -357,9 +357,35 @@
       "expectedStatus": "passed",
       "status": "passed",
       "retry": 0
+    },
+    {
+      "title": "四循环十张图片可解码，27 首本地音乐均可播放（mobile 视口）",
+      "spec": "tests/tcu-media.browser.mjs",
+      "file": "tests/tcu-media.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
     }
   ],
   "screenshots": [
+    {
+      "name": "gallery-desktop",
+      "path": "artifacts/tcu-media/gallery-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "spec": "tests/tcu-media.browser.mjs"
+    },
+    {
+      "name": "gallery-mobile",
+      "path": "artifacts/tcu-media/gallery-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "spec": "tests/tcu-media.browser.mjs"
+    },
     {
       "name": "p10-release-chapter-desktop",
       "path": "artifacts/tcu-migration/p10-release-chapter-desktop.png",

@@ -137,6 +137,8 @@ function placeLocation(state, id, events, seat = null) {
     || state.investigators.some(inv => inv.location === id)
   const loc = { ...def, id, revealed, clues: revealed ? clues : 0, maxClues: clues }
   state.locations.push(loc)
+  // 04306 有利位置等需要「最近一次有地点入场」的时点（即使入场时未揭示）。
+  state.lastLocationEntered = { id, round: state.round, phase: state.phase, seat: seat ?? null }
   linkLocationBySymbols(state, loc)
   info(state, events, `📍 「${loc.name}」进入游戏。`)
   // 印刷就是 0 线索的地点（如 04227 深入幽嘶）：入场即视为「已被完全调查」，
@@ -379,6 +381,10 @@ function discoverClueAt(state, inv, amount, events, opts = {}) {
 }
 
 function awardLocationVictory(state, loc, events) {
+  // 2026-10-25：幽灵面地点（05081/05082/05084）的胜利点按「剧本结束时已揭示且无线索」
+  // 结算（campaign-flow 的幕末口径），翻面瞬间不计分——否则 05082 的闹鬼之后把线索放回
+  // 地点时已计分无法撤销。普通地点的胜利点仍在翻面/揭示且无线索时立即进胜利区。
+  if (loc?.spectral === true || loc?.spectralFace === 'spectral') return
   const printed = ALL_CARDS[loc.originalCode || loc.code] || {}
   const victory = Number(loc.victory || printed.victory || 0)
   if (loc.clues <= 0 && victory && !loc.victoryAwarded) {

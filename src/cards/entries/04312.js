@@ -5,16 +5,16 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 04312 临时屏障：快速；躲避交战敌人（-1）；从弃牌堆打出时可额外躲避第二个敌人。
+// 04312 临时屏障：躲避交战敌人（-1）；从弃牌堆打出时可额外躲避第二个敌人。
+// 注意：卡面没有「快速」，不要加 fast（打出需 1 个行动点，且不能在任意窗口打出）。
 
 export default {
   code: '04312',
-  fast: true,
   playableFromDiscard: true,
   shuffleBackAfterPlay: true,
   abilities: [
     {
-      kind: 'played', fast: true, id: 'impromptuBarrier', label: '躲避一名交战敌人（-1）',
+      kind: 'played', id: 'impromptuBarrier', label: '躲避一名交战敌人（-1）',
       resolve: ({ state, inv, api }) => {
         const fromDiscard = api.fromDiscardCode() === '04312'
         const targets = state.enemies.filter(enemy => enemy.engagedSeat === inv.seat

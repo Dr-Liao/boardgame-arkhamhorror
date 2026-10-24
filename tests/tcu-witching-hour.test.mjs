@@ -261,6 +261,9 @@ test('介绍 2「避免命运」：记录接受命运、+2 tablet、队长获得
   const choices = ['avoidFate', 'takeCards']
   const api = apiStub(state, { choose: () => choices.shift() })
   witchingHour.behavior.preScenarioSetup(state, [], api)
+  assert.equal(state.chaosBag.filter(token => token === 'tablet').length, 0, '混乱袋重建前不直接加（会被 setupChaosBag 覆盖）')
+  assert.equal(state.scenarioFlags.fateChaosToken, 'tablet')
+  witchingHour.behavior.afterChaosBagSetup(state, [])
   assert.equal(state.campaign.records.youHaveAcceptedYourFate, true)
   assert.equal(state.chaosBag.filter(token => token === 'tablet').length, 2)
   assert.ok(state.campaign.investigators[0].deck.includes(CAMPAIGN_CARDS.towerXVI))
@@ -272,6 +275,7 @@ test('介绍 3「一派胡言」：记录拒绝命运、+2 elderthing、不拿�
   const state = stateFor(1)
   const api = apiStub(state, { choose: () => 'bullshit' })
   witchingHour.behavior.preScenarioSetup(state, [], api)
+  witchingHour.behavior.afterChaosBagSetup(state, [])
   assert.equal(state.campaign.records.youHaveRejectedYourFate, true)
   assert.equal(state.chaosBag.filter(token => token === 'elderthing').length, 2)
   assert.equal(state.campaign.investigators[0].deck.length, 0)
@@ -487,12 +491,20 @@ test('废弃矿山：3–10 资源不能调查；[free] 与另一处森林的调
   const moves = []
   mine.locationRule.actions({ moves, state, inv: owner, location })
   assert.deepEqual(moves.map(move => move.rule), ['mineSwapResources'])
+  assert.equal(moves[0].actions, 0, '[free] 不花行动')
+  // 同一地点的调查员不算「另一处女巫作祟之林」。
+  const otherLocation = other.location
+  other.location = owner.location
+  const blocked = []
+  mine.locationRule.actions({ moves: blocked, state, inv: owner, location })
+  assert.equal(blocked.length, 0, '同一地点不能触发交换')
+  other.location = otherLocation
   const answers = ['toThem', '2']
   const api = apiStub(state, { choose: () => answers.shift() })
   mine.locationRule.performAction(state, owner, { rule: 'mineSwapResources' }, api)
   assert.equal(owner.resources, 0)
   assert.equal(other.resources, 7)
-  assert.equal(state.scenarioFlags.mineSwapRound, state.round)
+  assert.equal(state.scenarioFlags.mineSwapRoundBySeat[owner.seat], state.round, '每名调查员每轮一次')
 })
 
 test('巨石堆与隐士之家：线索被发现后本地调查员失资源 / 随机弃手牌', () => {
@@ -536,10 +548,14 @@ test('独木：3–5 张手牌不能调查；[free] 弃牌换抽牌', () => {
 
   const other = state.investigators.find(inv => inv.seat !== owner.seat)
   other.hand = ['01004', '01005']
+  const moves = []
+  lonelyTree.locationRule.actions({ moves, state, inv: owner, location })
+  assert.equal(moves.length, 1)
+  assert.equal(moves[0].actions, 0, '[free] 不花行动')
   const answers = [String(other.seat), 'viceVersa']
   const api = apiStub(state, { choose: () => answers.shift() })
   lonelyTree.locationRule.performAction(state, owner, { rule: 'lonelyTreeSwap' }, api)
-  assert.equal(state.scenarioFlags.lonelyTreeRound, state.round)
+  assert.equal(state.scenarioFlags.lonelyTreeRoundBySeat[owner.seat], state.round, '每名调查员每轮一次')
 })
 
 // ---------------------------------------------------------------------------
@@ -674,4 +690,28 @@ test('剧本数据：scriptCards 只把 [fast] 推进挂在 act2 上，tokenMean
   assert.equal(witchingHour.behavior.tokenMeanings.standard.skull.delta, -1)
   assert.equal(witchingHour.behavior.tokenMeanings.hard.elderthing.delta, -4)
   assert.deepEqual(lostInTheWoodsAct.actRule, { chapterFlow: 'resolveLostInTheWoods' })
+})
+
+// 05062 被污染的井：跨地点投入（引擎 tests.js 的 crossLocationCommit 钩子）。
+test('05062 被污染的井：其他女巫作祟之林地点的调查员可对本地点的检定投入（同地点/非森林不允许）', () => {
+  const state = {
+    locations: [
+      { id: 'abandonedMine', code: '05058', connections: ['taintedWell'] },
+      { id: 'taintedWell', code: '05062', connections: ['abandonedMine'] },
+      { id: 'entryHall', code: '05071', connections: [] },
+    ],
+    investigators: [
+      { seat: 0, location: 'taintedWell' },
+      { seat: 1, location: 'abandonedMine' },
+      { seat: 2, location: 'entryHall' },
+    ],
+    skillTest: { skill: 'intellect' },
+  }
+  assert.equal(witchingHour.behavior.crossLocationCommit(state, state.investigators[1], state.investigators[0], ['intellect']), true,
+    '另一处森林的调查员可跨地点投入')
+  assert.equal(witchingHour.behavior.crossLocationCommit(state, state.investigators[2], state.investigators[0], ['intellect']), false,
+    '非森林地点不可跨地点投入')
+  state.investigators[1].location = 'taintedWell'
+  assert.equal(witchingHour.behavior.crossLocationCommit(state, state.investigators[1], state.investigators[0], ['intellect']), false,
+    '同一地点不触发跨地点投入（走普通协助通道）')
 })

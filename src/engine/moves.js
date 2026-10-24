@@ -7,6 +7,7 @@
 // 注入块用唯一标记定位，避免和 createCombat / createActions 的块混淆。
 import { investigatorRule } from '../cards/card-rules.js'
 import { scriptCardOwner } from './script-cards.js'
+import { enemyIgnoresInvestigator } from './trait-passives.js'
 import { locationEntryNotice } from './location-facts.js'
 import { all as matchAll } from './matcher.js'
 import { descriptorOfKind } from './ability.js'
@@ -334,7 +335,7 @@ export function createMoves(deps) {
     if (enemy.parleyCost && inv.resources >= enemy.parleyCost) {
       moves.push({ action: 'parley', enemyId: enemy.id, label: `🤝 谈判「${enemy.name}」（花 ${enemy.parleyCost} 资源弃掉）` })
     }
-    if (!enemy.massive && enemy.engagedSeat !== seat) {
+    if (!enemy.massive && enemy.engagedSeat !== seat && !enemyIgnoresInvestigator(state, inv, enemy)) {
       moves.push({ action: 'engage', enemyId: enemy.id, label: `与「${enemy.name}」交战` })
     }
     // 谈判盘问独特异教徒。

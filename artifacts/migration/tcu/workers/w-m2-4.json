@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "worker": "w-m2-4",
+  "shard": "M2-4",
+  "cycle": "tcu",
+  "milestone": "P7",
+  "startedAt": "2026-10-24T02:07:41+08:00",
+  "finishedAt": "2026-10-24T03:05:00+08:00",
+  "codes": [
+    "05275", "05276", "05277", "05278", "05279", "05280", "05281", "05282", "05283",
+    "05313", "05314", "05315", "05316", "05317", "05318", "05319", "05320", "05321",
+    "05322", "05323", "05324"
+  ],
+  "done": [
+    "05275", "05276", "05277", "05278", "05279", "05280", "05281", "05282", "05283",
+    "05313", "05314", "05315", "05316", "05317", "05318", "05319", "05320", "05321",
+    "05322", "05323", "05324"
+  ],
+  "blocked": [],
+  "simplified": [
+    {
+      "code": "05279",
+      "note": "「附属事件可当作手牌打出」改用能力通道（横置黛雅娜 + 1 秘密 + 印刷资源费 → api.replayPlayedCode）；因此不能在该事件的快速反应窗口里打出，需要预选目标的 played 事件不会自动选目标。附属、限 1 张、打出后仍附属已实现。"
+    },
+    {
+      "code": "05280",
+      "note": "只实现「受到伤害 / 受到恐惧」两个面向（harmDealt 取消该分量并反向治愈）；「弃掉手牌 / 失去资源 / 失去行动」三个面向未实现（缺遭遇卡结算前的按面向取消原语）。"
+    },
+    {
+      "code": "05319",
+      "note": "「查看另一位调查员的手牌」用公开日志呈现（缺私有信息投影读点）；其余效果（打出对方手牌、双方各抽 1）已实现。"
+    },
+    {
+      "code": "05321",
+      "note": "符号标记（skull/cultist/tablet/elder_thing）后的敌人 -1 攻击/-1 生命/-1 躲避 未实现（无临时敌人数值修正原语）；意志攻击 +2 主效果已实现。"
+    },
+    {
+      "code": "05322",
+      "note": "符号标记后的「同时在 2 格内另一已揭示地点调查、任选其中一个隐藏值」未实现（无两地二选一隐藏值原语）；意志调查 +2 主效果已实现。"
+    },
+    {
+      "code": "05324",
+      "note": "未实现：取消混乱标记并视作 [elder_sign] 的 interrupt（tokenReveal + replacementToken 原语请求已被 rejected）。只实现负修正标记令技能值降到 0 或以下时翻转成正修正的分支；auto_fail 与符号标记分支不可达。"
+    }
+  ],
+  "doneCount": 21,
+  "blockedCount": 0,
+  "testFile": "tests/tcu-player-m2-4.test.mjs",
+  "testsPassed": 33,
+  "primitiveRequests": [
+    {
+      "id": "w-m2-4-05276-opening-hand-bonus",
+      "primitive": "openingHandBonus",
+      "status": "done",
+      "usedBy": "05276",
+      "resolution": "条目字段 openingHandBonus + setup.js#drawOpeningHand 读点"
+    },
+    {
+      "id": "w-m2-4-05313-05316-leaves-play-resolve",
+      "primitive": "leavesPlayResolve",
+      "status": "done",
+      "usedBy": "05313/05316",
+      "resolution": "LIFECYCLE_RESOLVE_KINDS 加 leavesPlay；assets.js#leaveAsset 优先调用描述子 resolve"
+    },
+    {
+      "id": "w-m2-4-05320-event-played-window",
+      "primitive": "eventPlayedWindow",
+      "status": "done",
+      "usedBy": "05320",
+      "resolution": "windows.js 注册 eventPlayed，actions.js#doPlay 事件收尾开窗"
+    },
+    {
+      "id": "w-m2-4-05324-token-reveal-replacement",
+      "primitive": "tokenRevealReplacement",
+      "status": "rejected",
+      "usedBy": "05324",
+      "resolution": "本轮不做；05324 改为显式 simplified（翻转负修正标记的可观测分支）"
+    }
+  ],
+  "notes": "21/21 单卡文件与逐卡行为测试完成。重点：两组绑定卡 05313/05314、05316/05317 入场检索（ctx.api.bonded.retrieve）与离场收回（leavesPlay resolve + api.bonded.return）都已实现并测试；05276/05278 永久卡经真实 hub 开局通道验证（起始手牌 +1 / 资源 +2）；05320 卓越卡经 eventPlayed 窗口 + api.replayPlayedCode 重放；05283 安娜·卡斯洛 +2 塔罗槽位、开局入场（scenarioStarts）与检索塔罗入场均已测试；05279 黛雅娜用 replayPlayedCode 通道；05280/05315 走 harmDealt 窗口；05277 四模式附加费用；05275 线索交出/放置 + 自我击败与精神创伤；05313/05316 离场收回用引擎公开 returnAssetToHand 走真实离场路径。测试只用 validateMove/公开读点，无绕过许可 helper。"
+}

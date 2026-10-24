@@ -38,6 +38,18 @@ function isWoodsCode(code) {
   return WOOD_CODES.has(code)
 }
 
+// 「别人面前的地点」限制：move 行动与效果移动（relocateInvestigator→movementError）共用同一判定。
+function frontLocationError(state, inv, destLoc) {
+  const actIndex = state.actIndex ?? 0
+  if (actIndex >= 2) return undefined
+  const fronts = state.scenarioFlags?.frontOf
+  if (!fronts || !destLoc) return undefined
+  const owner = fronts[destLoc.id]
+  if (owner == null) return undefined
+  if (Number(owner) === Number(inv.seat)) return undefined
+  return `「${destLoc.name || destLoc.id}」在另一位调查员面前：本场冒险余下时间前不能进入。`
+}
+
 function woodsInPlay(state) {
   return state.locations.filter(location => isWoodsCode(codeOf(location)))
 }
@@ -123,7 +135,14 @@ export function resolveLostInTheWoods(state, act, api) {
     const goat = spawnGoat(state, inv, api, inv.seat === leadSeat)
     if (!goat) continue
     api?.info?.(`🐐 「${goat.name}」在 ${inv.name} 所在地点生成。`)
-    api?.test?.(inv.seat, ['willpower', 'agility'], 3, result => {
+    // 卡面「[willpower] 或 [agility](3)」：二选一单技能检定（不能把技能数组交给引擎求和）。
+    const chosen = api?.choose?.({
+      kind: 'skill', source: '05053', seat: inv.seat,
+      prompt: '森林迷途：选择本次检定使用的技能。',
+      options: [{ id: 'willpower', label: '意志' }, { id: 'agility', label: '敏捷' }],
+    })
+    const skill = chosen === 'agility' ? 'agility' : 'willpower'
+    api?.test?.(inv.seat, skill, 3, result => {
       if (!result?.success) return
       goat.exhausted = true
       api?.evadeEnemy?.(goat)
@@ -188,12 +207,14 @@ export const behavior = {
     })
     if (fate === 'bullshit') {
       records.youHaveRejectedYourFate = true
-      addChaosToken(state, 'elderthing', 2)
+      // 混乱袋此时尚未由 setupChaosBag 重建（initializeChaosBag 会覆盖 state.chaosBag），
+      // 因此先记录 flag，在 afterChaosBagSetup 里真正加入。
+      flags.fateChaosToken = 'elderthing'
       api.info?.('安娜笑了：「塔罗牌只会揭示和建议，不会影响，也不会强加。」记录「你拒绝了自己的命运」，混乱袋加入 2 个古神标记。')
       return
     }
     records.youHaveAcceptedYourFate = true
-    addChaosToken(state, 'tablet', 2)
+    flags.fateChaosToken = 'tablet'
     api.info?.('「别犹豫。别后悔。机会来临的时候，你必须行动起来改变命运。」记录「你接受了自己的命运」，混乱袋加入 2 个石板标记。')
     // 队长把「高塔·XVI」和「权杖王牌」加入牌组（不占 30 张）。
     const campaign = state.campaign
@@ -216,6 +237,15 @@ export const behavior = {
       flags.campaignReading = WITCHING_HOUR_DIVINATION.map(entry => ({ ...entry }))
       api.info?.(`🔮 战役占卜：${flags.campaignReading.map(entry => `${entry.scenarioName}「${entry.arcanaName}」`).join('·')}。`)
     }
+  },
+
+  // 混乱袋在 setupChaosBag 里由战役袋重建；命运选择的 +2 标记必须在这之后再加入。
+  afterChaosBagSetup(state) {
+    encounterRules.afterChaosBagSetup?.(state)
+    const flags = (state.scenarioFlags ||= {})
+    if (!flags.fateChaosToken || flags.fateChaosTokenApplied) return
+    flags.fateChaosTokenApplied = true
+    addChaosToken(state, flags.fateChaosToken, 2)
   },
 
   setupLocations(state, events, helper = {}) {
@@ -245,14 +275,11 @@ export const behavior = {
 
   // 「你面前的地点」：act1/act2 不能进入其他调查员面前的地点（act2 背面解锁）。
   moveError(state, inv, destLoc) {
-    const actIndex = state.actIndex ?? 0
-    if (actIndex >= 2) return undefined
-    const fronts = state.scenarioFlags?.frontOf
-    if (!fronts || !destLoc) return undefined
-    const owner = fronts[destLoc.id]
-    if (owner == null) return undefined
-    if (Number(owner) === Number(inv.seat)) return undefined
-    return `「${destLoc.name || destLoc.id}」在另一位调查员面前：本场冒险余下时间前不能进入。`
+    return frontLocationError(state, inv, destLoc)
+  },
+  // 效果移动也会被引擎的 movementError 读点拦下（05053/05054 的「不能进入别人面前地点」）。
+  movementError(state, inv, destLoc) {
+    return frontLocationError(state, inv, destLoc)
   },
 
   // ---- 幕的背面 ----
@@ -336,6 +363,8 @@ export const behavior = {
       if (clues >= required) {
         moves.push({
           action: 'scenarioAction', rule: advance.rule,
+          // 幕目标的线索推进不花行动（参考实现为 FastAbility；引擎标准 advanceAct 亦为 0 费）。
+          actions: 0,
           label: advance.label.replace('{required}', String(required)),
         })
       }
@@ -397,9 +426,24 @@ export const behavior = {
     return encounterRules.canCommitCard?.(state, inv, code) ?? true
   },
 
+  // 05062：其他[[女巫作祟之林]]地点的调查员可以对本地点的检定各投入 1 张牌（反之亦然）。
+  // 引擎 tests.js 只把返回 true 的调查员加入「可投入 owner」列表；每名调查员每次检定的 1 张
+  // 由引擎的协助投入循环保证（非执行者 owner 投入 1 张即停止）。
+  crossLocationCommit(state, committer, tester, skillContext) {
+    const locationOf = person => (state.locations || []).find(location => location.id === person?.location)
+    const committerLocation = locationOf(committer)
+    const testerLocation = locationOf(tester)
+    if (!committerLocation || !testerLocation) return false
+    if (committerLocation.id === testerLocation.id) return false
+    // 双方都必须位于[[女巫作祟之林]]（7 张森林，卡号 05058–05064）。
+    const isWoods = location => WOOD_CODES.has(String(original(location)))
+    return isWoods(committerLocation) && isWoods(testerLocation)
+  },
+
   commitIconMultiplier(state, owner, commitLocation) {
     const base = encounterRules.commitIconMultiplier?.(state, owner, commitLocation) || 1
-    // 05062：其他森林地点→本地点的检定，跨地点投入只算 1 个图标。
+    // 05062：其他森林地点→本地点的检定，跨地点投入只算 1 个图标（引擎只有倍率读点；
+    // 若玩家投入多图标卡仍按原图标数计入，属已知近似，见 scenarioApproximations）。
     const flags = state.scenarioFlags || {}
     if (!flags.taintedWellInPlay) return base
     return base
@@ -411,17 +455,34 @@ export const behavior = {
     // 安妮特·梅森（05057）：强制 - 敌军阶段开始后弃遭遇牌库顶 3 张。
     const anette = state.enemies.find(enemy => String(codeOf(enemy)) === ANETTE_MASON)
     if (anette) {
-      const discarded = []
-      for (let index = 0; index < 3 && state.encounterDeck.length; index++) {
-        const code = state.encounterDeck.pop()
-        state.encounterDiscard.push(code)
+      // 卡面/参考实现：弃遭遇牌库顶的牌，直到弃出至少 1 个女巫敌人；牌库不足时先把弃牌堆洗回。
+      const discardTop = () => {
+        if (!state.encounterDeck.length && state.encounterDiscard.length) {
+          state.encounterDeck = state.encounterDeck.concat(state.encounterDiscard.splice(0))
+        }
+        return state.encounterDeck.length ? state.encounterDeck.pop() : null
+      }
+      const isWitchEnemyCode = code => {
         const card = ALL_CARDS[code]
-        const isWitchEnemy = card?.type === 'enemy'
+        return card?.type === 'enemy'
           && (card.traits || []).some(trait => String(trait).toLowerCase() === 'witch')
-        if (isWitchEnemy) discarded.push(code)
+      }
+      const discarded = []
+      for (let index = 0; index < 200; index++) {
+        const code = discardTop()
+        if (code == null) break
+        state.encounterDiscard.push(code)
+        if (isWitchEnemyCode(code)) discarded.push(code)
+        // 已弃出女巫敌人且至少弃了 3 张：本轮强制结算完毕。
+        if (discarded.length && index + 1 >= 3) break
       }
       const location = anette.location
-      for (const code of discarded) api.spawn?.(code, location)
+      for (const code of discarded) {
+        // 生成的女巫敌人离开遭遇弃牌堆（它们已被「找出并生成」）。
+        const index = state.encounterDiscard.lastIndexOf(code)
+        if (index >= 0) state.encounterDiscard.splice(index, 1)
+        api.spawn?.(code, location)
+      }
       if (!discarded.length) {
         anette.exhausted = false
         api.info?.('🐐 没有弃出女巫敌人：安妮特·梅森重整。')
@@ -452,6 +513,14 @@ export const behavior = {
   enemySpawned(state, enemy, api) {
     encounterRules.enemySpawned?.(state, enemy, api)
     const flags = (state.scenarioFlags ||= {})
+    // 05064 杂草丛生的谷仓：敌人（含剧本 ignoreSpawn 路径生成者）若生成在另一处森林，改为生成在谷仓，
+    // 然后立即攻击谷仓的每位调查员。
+    const barnLocation = state.locations.find(location => String(codeOf(location)) === '05064')
+    if (!flags.barnRedirect && barnLocation && enemy.location && enemy.location !== barnLocation.id
+      && isWoodsCode(codeOf(state.locations.find(location => location.id === enemy.location)))) {
+      api.moveEnemy?.(enemy, barnLocation.id)
+      flags.barnRedirect = barnLocation.id
+    }
     if (!flags.barnRedirect || enemy.location !== flags.barnRedirect) return
     flags.barnRedirect = null
     const barn = state.locations.find(location => location.id === enemy.location)

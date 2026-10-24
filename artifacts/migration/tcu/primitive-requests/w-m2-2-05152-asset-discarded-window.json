@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "w-m2-2-05152-asset-discarded-window",
+  "cycle": "tcu",
+  "worker": "w-m2-2",
+  "card": "05152",
+  "primitive": "assetDiscardedWindow",
+  "params": {
+    "window": "assetDiscarded",
+    "context": [
+      "assetId",
+      "cardCode",
+      "ownerSeat",
+      "attachments"
+    ]
+  },
+  "cardText": "快速。只能在你回合期间打出。附属到你控制的一张[[道具]]支援。每个支援仅限1张。[reaction]所附属支援被弃掉后：将该支援返回其所有者手牌，附属到该支援的其他所有[[升级]]附属也返回各自所有者的手牌。",
+  "reason": "引擎没有任何「支援离场/被弃置后」的玩家卡窗口：leaveAsset（src/engine/assets.js）只调用章节钩子 scenarioBehavior.assetLeftPlay，不触发 reactionWindow/openAbilityWindow；因此所附属支援被弃掉后的返还反应无法实现。",
+  "proposedApi": "新增窗口 `assetDiscarded`（windows.js，reaction），在 leaveAsset 移除支援、结算 leavesPlay 钩子之后、把卡放进弃牌堆之前开窗；context = { assetId, cardCode, ownerSeat, attachments: [{id, code, ownerSeat}] }。卡面用 reaction 描述子读 context.attachments 并把宿主与其余 Upgrade 附属用 api.returnAssetToHand / api.moveCard 返回手牌。",
+  "status": "rejected",
+  "createdAt": "2026-10-24T02:40:00+08:00",
+  "claimedBy": "main",
+  "resolvedAt": "2026-10-23T18:39:00.291Z",
+  "resolution": {
+    "suggestion": "本轮保持简化（支援被弃置后的返还反应无窗口）；通用「卡牌离开场上」窗口与取消/替换窗口一起留 P10。",
+    "catalog": "P7 玩家卡批次（2026-10）：拒绝新增原语",
+    "notes": "同批取消/替换窗口一律不扩。"
+  }
+}

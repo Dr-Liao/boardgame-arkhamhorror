@@ -8,13 +8,15 @@ export default {
   locationRule: {
     actions({ moves, state, inv, location }) {
       if (inv.location !== location.id) return
-      if (state.scenarioFlags?.walterDrawUsed) return
-      moves.push({ action: 'scenarioAction', rule: 'walterDrawCards', label: '📜 沃尔特·吉尔曼的房间：抽 3 张卡牌并受到 1 点恐惧（每场一次）' })
+      // 卡面「[action] 每场一次」：每名调查员各一次（不是团队共享一次）。
+      const usedBySeat = state.scenarioFlags?.walterDrawUsedBySeat || {}
+      if (usedBySeat[inv.seat]) return
+      moves.push({ action: 'scenarioAction', rule: 'walterDrawCards', label: '📜 沃尔特·吉尔曼的房间：抽 3 张卡牌并受到 1 点恐惧（每名调查员每场一次）' })
     },
     performAction(state, inv, move, api) {
       if (move.rule !== 'walterDrawCards') return false
       state.scenarioFlags ||= {}
-      state.scenarioFlags.walterDrawUsed = true
+      state.scenarioFlags.walterDrawUsedBySeat = { ...(state.scenarioFlags.walterDrawUsedBySeat || {}), [inv.seat]: true }
       api.drawCards?.(inv.seat, 3)
       api.horror?.(inv.seat, 1)
       api.info?.(`📜 ${inv.name} 抽 3 张卡牌并受到 1 点恐惧。`)

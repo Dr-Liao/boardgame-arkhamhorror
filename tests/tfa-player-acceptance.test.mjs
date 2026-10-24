@@ -391,7 +391,12 @@ test('M2 script-mode weakness chain resolves and swaps cards', () => {
   enemy(pact, { id: 'pact-witness' })
   move(pact, { action: 'draw' })
   settle(pact)
-  assert.equal(me(pact).damage, 2, '黑暗契约造成 2 点伤害')
+  // 04038 黑暗契约：抽到后留在手牌（weaknessStaysInHand），不再按显现造成 2 点伤害。
+  assert.equal(me(pact).hand.includes('04038'), true, '黑暗契约抽到后留在手牌')
+  assert.equal(me(pact).damage, 0, '抽到时不结算显现伤害')
+  move(pact, { action: 'play', cardId: '04038' })
+  settle(pact)
+  assert.equal(me(pact).damage, 2, '从手牌打出「离体体验」造成 2 点伤害')
 
   const price = fixture('01001')
   me(price).deck = ['04039']
@@ -1619,11 +1624,12 @@ test('M2-B shrewd analysis upgrades a second unresolved copy at no experience', 
     return deck
   })
   const record = campaign.investigators[0]
+  // 04230/04231「研究完成」：必须先鉴定古代巨石（记录 identifiedTheAncientStone）才能升级。
+  campaign.records.identifiedTheAncientStone = 5
   assert.ok(replacementOptions(record, '04230', campaign.records).length, '失落的时代升级路径已开放')
-  purchaseCard(campaign, 0, '04230', '04022')
-  const second = shrewdAnalysisUpgrade(campaign, 0, '04022')
-  assert.ok(second, '第二张同名副本免费升级')
-  assert.equal(second.cost, 0, '不消耗经验')
+  const purchase = purchaseCard(campaign, 0, '04230', '04022')
+  assert.ok(purchase.shrewdAnalysisUpgrade, '老练分析在购买流程中自动完成第二张同名副本的 0 XP 升级')
+  assert.equal(purchase.shrewdAnalysisUpgrade.cost, 0, '不消耗经验')
   assert.equal(record.deck.filter(code => code === '04022').length, 0)
   assert.equal(record.deck.filter(code => ['04230', '04231'].includes(code)).length, 2, '两张升级版本')
 })

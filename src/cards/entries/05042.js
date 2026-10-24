@@ -17,10 +17,11 @@ export default {
   blocksCommitWhileInHand: true,
   cannotMulliganAway: true,
   weaknessStaysInHand: true,
+  // 引擎新增读点（setup.js drawOpeningHand）：起手抽到时不洗回牌库，直接留在起始手牌。
+  staysInOpeningHand: true,
   weaknessHandNote: '「高塔·XVI」留在手中：你不能在技能检定投入卡牌。',
-  simplified: true,
-  note: '未实现：开局抽取后「必须留在起始手牌」——setup 的起手抽牌把基础弱点洗回牌库，没有条目级读点；'
-    + '当前实现让它在抽到后留在手牌（weaknessStaysInHand），手牌封锁与换牌保护（blocksCommitWhileInHand / cannotMulliganAway）已接线。',
+  note: '「必须留在起始手牌」由条目级 staysInOpeningHand 实现（setup.drawOpeningHand）；'
+    + '手牌封锁/换牌保护/抽牌留手分别由 blocksCommitWhileInHand / cannotMulliganAway / weaknessStaysInHand 接线。',
   abilities: [
     // 兜底：若通过弱点结算通道直接揭示（例如剧本效果），卡面没有显现效果，只记录日志。
     {

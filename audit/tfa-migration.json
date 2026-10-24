@@ -165,9 +165,9 @@
           "r2"
         ],
         "fileHashes": {
-          "definition.js": "098c010bdd7317d6c1428bb9268ca23447e2c5b306a5ca17e462f315bf5aa6b5",
+          "definition.js": "28f4ec1a49b6ce358ae38e95548890ce86d2129182935831730de3a3fcd228a6",
           "layout.js": "105a8ad0b2e21650ba10fd1e8e4ca12ef791e542a832686f57805707f0f35974",
-          "behavior.js": "aed3c8ad595dcca3532ef4a5b22c3453cbc8dfd2fc2ba117f09294fa10e65ca6",
+          "behavior.js": "548d7fa64fe3b176743709e365682c0fce9a4e76e0f1ee8381389b92c3a0a93f",
           "index.js": "0731d736c8926fb865f1158b21717a03cd1c522166df077203d00bd6a99c7d0a"
         }
       },
@@ -190,7 +190,7 @@
         "fileHashes": {
           "definition.js": "7487d0aceb6b10aa2b0fb67593dc389b639e753b6017df0d0978aab85255c6a6",
           "layout.js": "0601569a7e8cd4cf334dbf2d20523ac8969892f0b5c3a347d132ff6ca8869106",
-          "behavior.js": "219827e137103ac527f2c34ed5af6407665c3aa36b213f1ed8f33a45a66bdd7c",
+          "behavior.js": "5865a1c312dac0cb5973f58cad6031b253e46b4bf3d5508ca20c804f1eee8a0e",
           "index.js": "9bafbf15f4a6c3df9a69432bdbc77fb2454f8957f74517acce366340e7c15a36"
         }
       },
@@ -209,7 +209,7 @@
         "fileHashes": {
           "definition.js": "bed1987bf1644265cd5d64f834e38ce089f5a855df3f9265918331e049791c60",
           "layout.js": "8b340c7a0418e8aa215feb685ad2a4e26ac846e4b18f4c284822a150c80e1583",
-          "behavior.js": "3047ecdcc3c6d13f2493650e04bf00c9ea81acf2db504a109f67243703bc9e57",
+          "behavior.js": "bfd72ec37278f2281b91edc210694b54019449689c73d4709e177c688b868380",
           "index.js": "ea2f400771d7c56487a3bf31c82bc988cbb2d1564934e62718e0b461ab7fcf9d"
         }
       },
@@ -229,7 +229,7 @@
         "fileHashes": {
           "definition.js": "e8bcfb93fa071244d57af34a2b4b7f00df1bf639b8e9731a7744333fdbf0137c",
           "layout.js": "bcd3de4e6b994fce9aaabbf098237ceba11ea4d6bda9b7ab7a4add17f23de082",
-          "behavior.js": "d62fab392cfc4b88f9bffeeee3a037f837a01bedc6e7f10d51da58940c3e5e4d",
+          "behavior.js": "b9459e62d027177bbed075df1b919e5248c2b74053d8e5d99da572156b18b44e",
           "index.js": "901dccd0a53428c8152cbd56b2ef3bc9a8050f12707de7802c2f375c6a948288"
         }
       },
@@ -249,7 +249,7 @@
         "fileHashes": {
           "definition.js": "92924c0b79e037416cbe2a299d322e134725c98992b0b2a6a563cbfdc0e2635e",
           "layout.js": "07bc6bcbbb4c03013b1fcc3bf62f0e6d68af801d0fdc2f4ab9c6fd02773b86a4",
-          "behavior.js": "2989b72523641a82277895d9b1faf09885170b1882b42c0a9282a6e0e7efe934",
+          "behavior.js": "6542ef16d91d092bd84ce122c4578ac5ae16a02abee5b2ca8843614de1f52b8f",
           "index.js": "9d79ecaaee4dd103bc2d824dcba78e7b5082d3db31d143e7ad57bb8fc6763e26"
         }
       },
@@ -269,7 +269,7 @@
         "fileHashes": {
           "definition.js": "2e3a061ef897ba8813e1b99753a076c5d906d27219ae27da86b901076ba63663",
           "layout.js": "303a6681b6de49077068aebb1f8fad4e8fb3c7b170ca9943b5658d3b7dbac3b7",
-          "behavior.js": "0eb88fb43062182905ea03aad1433c42d0100e68e80b7e32843dae5ea819768e",
+          "behavior.js": "6e8288d69b9005d48384ef8d1465f72c07dabb147d9d72eee8fa7b7a7624cfbb",
           "index.js": "5a17d4336c601279c39123927a2301ae672a4d20d97032d425458abb2b412491"
         }
       },
@@ -308,7 +308,7 @@
         "fileHashes": {
           "definition.js": "9022bb650e77fec354ff428ae86cc859d6616a2d7ef5b6181238ad07a96d5f6b",
           "layout.js": "e866c29f92658f93fc2063b1fa11d7c76bb824cae20bbc6385fd9d934371b1e4",
-          "behavior.js": "864337bd1ad91b438aedb26bfc83fa18a23db47b25a0695079dba4fbccadecd3",
+          "behavior.js": "34fa756ad9d101f0e5b93ff110875a92d04b4be756e3edd2aaa788c0b144e7b5",
           "index.js": "5dd3dc6f349d39f645bb15b0cafa88fdadab5936222892742ddc76f7c551d415"
         }
       },
@@ -318,8 +318,8 @@
         "locations": 11,
         "acts": 4,
         "agendas": 3,
-        "enemies": 7,
-        "treacheries": 10,
+        "enemies": 9,
+        "treacheries": 11,
         "resolutions": [
           "noResolution",
           "r1",
@@ -329,10 +329,10 @@
           "r5"
         ],
         "fileHashes": {
-          "definition.js": "8b24280a7268cdb3b0e8219c623abadffac829668d6c1a10ac196f26353931ad",
+          "definition.js": "53876c8df190598695504b7f134e066363ae52baa3fc4340dd31b61dada8a90f",
           "layout.js": "0bac4ad58d0ac21958e6953ea4285912b05d16040dd1ea639e3f49922d70c01b",
-          "behavior.js": "88ae50ea773cdfc303b176ada19cbb68d37525395a88f0888b1c2f3deace3deb",
-          "index.js": "b83cd0a0f58066e8eee3bdec6bb3313992dc91674229c1b91182d5d08454e037"
+          "behavior.js": "811ad83a986e84c6391af302353cf5b9bea3e4e309cec9fd3d86f59a60ae7825",
+          "index.js": "952cfea9adbe12ed56a30764ac0f8c787628a2110b22509824badcc29615ea4c"
         }
       },
       {
@@ -348,10 +348,10 @@
           "r1"
         ],
         "fileHashes": {
-          "definition.js": "379dc7c63d4f47abaa2a1c865a5b32b370ffc729736fd95fa893a0610db3b4de",
+          "definition.js": "b4b627111c6c7a7671a76e83071e2ba9d690f060b322a72d6cbcc4a35172669a",
           "layout.js": "9356d9faed24051c0d17ec21c620e1fa84b2eedcc4e70fcb4cd6b27120f47a7a",
           "behavior.js": "caf45c74bbed4bdd4f689d15816642d91ae6e152df678e9ef4bb44abcec5fe3e",
-          "index.js": "3aa17102dcfe2573945126f7c0d18a253fda56adbd726146c01d530bb8ce711c"
+          "index.js": "0e1b101fe1dc49341afa0984566b2ba68a0b999a2abe2910c75f3e6e8e2da30e"
         }
       }
     ]
@@ -526,6 +526,7 @@
     "theInvestigatorsRecoveredTheRelicOfAges": "boolean",
     "alejandroRecoveredTheRelicOfAges": "boolean",
     "theHarbingerIsStillAlive": "number",
+    "theHarbingerIsAlive": "boolean",
     "theInvestigatorsGaveCustodyOfTheRelicToAlejandro": "boolean",
     "theInvestigatorsHaveEarnedAlejandrosTrust": "boolean",
     "theInvestigatorsGaveCustodyOfTheRelicToHarlanEarnstone": "boolean",

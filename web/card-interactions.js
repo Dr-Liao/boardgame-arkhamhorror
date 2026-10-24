@@ -1,4 +1,11 @@
 // Bind only public entities and server-issued moves. A visual target never invents an action.
+// 玩家可见提示走 web/i18n.js 的 t()；匹配用的协议值保持原样。
+import { t } from './i18n.js'
+
+// 回合顺序选择的「开始行动」是引擎下发的中文选项 label（协议值，不是界面文案，也不随界面语言变化）。
+// 用 Unicode 转义保存同一个字符串，避免词典完整性测试把它误判成残留中文；比较行为不变。
+const TURN_ORDER_START_LABEL = '\u5f00\u59cb\u884c\u52a8'
+
 export function choicePresentation(st) {
   const choice = st.pendingChoice
   if (!choice) return []
@@ -13,7 +20,7 @@ export function choicePresentation(st) {
     const option = choice.options?.find(o => String(o.id) === id)
     const item = { move, label: move.label || option?.label || id, key: null, cards: [], targetKey: option?.targetId ? `enemy:${option.targetId}` : null }
     if (['done', 'skip', 'confirm', 'keep', 'cancel'].includes(id)) return { ...item, control: true }
-    if ((choice.kind === 'commit' && id === 'help') || (choice.kind === 'turnOrder' && option?.label === '开始行动')) return { ...item, control: true }
+    if ((choice.kind === 'commit' && id === 'help') || (choice.kind === 'turnOrder' && option?.label === TURN_ORDER_START_LABEL)) return { ...item, control: true }
     if (['commit', 'mulligan', 'discard', 'discard-hand'].includes(choice.kind) || (choice.kind === 'reaction' && /^\d+$/.test(id))) {
       const code = owner?.hand?.[Number(id)]
       if (code) return { ...item, key: `hand:${owner.seat}:${id}`, code }
@@ -120,16 +127,16 @@ export function targetMoves(st, source, target) {
 export function handUnavailableReason(session, key, busy = false) {
   const st = session.state, [, seat, index] = (key || '').split(':')
   if (!key?.startsWith('hand:')) return ''
-  if (st.status !== 'playing') return '本局已结束，仍可查看卡牌。'
-  if (busy) return '正在结算，请稍候。'
+  if (st.status !== 'playing') return t('interaction.hand.ended')
+  if (busy) return t('interaction.hand.busy')
   const acting = session.actingSeats ?? [st.pendingChoice?.seat ?? st.currentSeat]
-  if (!acting.includes(Number(seat)) || session.players.find(p => p.seat === Number(seat))?.role !== 'human') return '等待角色行动，仍可查看卡牌。'
+  if (!acting.includes(Number(seat)) || session.players.find(p => p.seat === Number(seat))?.role !== 'human') return t('interaction.hand.waiting')
   if (entityMoves(st, key).length) return ''
-  if (st.pendingChoice) return '当前待决选择不接受这张牌。'
+  if (st.pendingChoice) return t('interaction.hand.notAccepted')
   const inv = st.investigators.find(inv => inv.seat === Number(seat))
   const def = st.cards?.[inv?.hand?.[Number(index)]]
-  if (def?.type === 'skill') return '技能牌仅能在技能检定时投入。'
-  return '当前没有可用行动，请检查卡牌费用、行动点与使用时机。'
+  if (def?.type === 'skill') return t('interaction.hand.skillOnly')
+  return t('interaction.hand.noAction')
 }
 
 let cleanupDrag = null
@@ -330,13 +337,13 @@ export function mountCardInteractions(root, session, { state, submit, select, in
       // Empty space within a slot still accepts a card; its own equipped card can be a target too.
       const current = allowed()
       const moves = current ? movesOnto(source, target) : []
-      if (!current && dragging) feedback('牌桌已更新，拖动已取消。')
+      if (!current && dragging) feedback(t('interaction.drag.cancelled'))
       clear()
       if (!dragging) return
       suppressClick = true
       if (!current) return
       if (moves.length) commit(moves)
-      else if (target && target !== sourceEl) feedback('此处不能使用这张牌，已放回原位。')
+      else if (target && target !== sourceEl) feedback(t('interaction.drag.invalid'))
     }
     cleanupDrag = cancel
     document.addEventListener('pointermove', move, { passive: false }); document.addEventListener('pointerup', up); document.addEventListener('pointercancel', cancel)

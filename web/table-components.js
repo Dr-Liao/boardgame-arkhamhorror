@@ -1,4 +1,6 @@
 // Small monochrome UI marks stay crisp at every zoom level.
+// 标记文案在 cardMarkerData()/placedCardMarkers() 调用期取 t()（模块顶层不调用 t()）。
+import { t } from './i18n.js'
 const paths = {
   health: 'M12 20 3.6 11.6C-1 5 7 1 12 7c5-6 13-2 8.4 4.6Z',
   sanity: 'M12 3 3 12l9 9 9-9ZM12 7v10M7 12h10',
@@ -66,27 +68,27 @@ export function cardAttachmentReferences(card = {}) {
 // Enemy damage is its attack value; only damageTaken is a token on that card.
 export function cardMarkerData(card, { enemy = false, attachmentCount } = {}) {
   const counterType = {
-    clue: ['clue', '线索'], clues: ['clue', '线索'],
-    horror: ['sanity', '恐惧'], resource: ['resource', '资源'], resources: ['resource', '资源'],
-    doom: ['doom', '毁灭'], damage: ['health', '伤害'],
+    clue: ['clue', t('table.marker.clue')], clues: ['clue', t('table.marker.clue')],
+    horror: ['sanity', t('table.marker.horror')], resource: ['resource', t('table.marker.resource')], resources: ['resource', t('table.marker.resource')],
+    doom: ['doom', t('table.marker.doom')], damage: ['health', t('table.marker.damage')],
   }[card.counterType]
   const attached = attachmentCount ?? card.attachmentCount ?? cardAttachmentReferences(card).length
   return [
-    ['doom', 'doom', '毁灭', card.doom],
-    ['damage', 'health', '伤害', enemy ? card.damageTaken : card.damage],
-    ['horror', 'sanity', '恐惧', enemy ? 0 : card.horror],
-    ['clues', 'clue', '线索', card.clues],
-    ['resources', 'resource', '资源', card.resources],
-    ['uses', 'supply', '剩余使用次数', card.uses],
-    ['counters', counterType?.[0] || 'star', counterType?.[1] || '标记', card.counters],
-    ['attached', 'book', '附属卡', attached],
+    ['doom', 'doom', t('table.marker.doom'), card.doom],
+    ['damage', 'health', t('table.marker.damage'), enemy ? card.damageTaken : card.damage],
+    ['horror', 'sanity', t('table.marker.horror'), enemy ? 0 : card.horror],
+    ['clues', 'clue', t('table.marker.clue'), card.clues],
+    ['resources', 'resource', t('table.marker.resource'), card.resources],
+    ['uses', 'supply', t('table.marker.uses'), card.uses],
+    ['counters', counterType?.[0] || 'star', counterType?.[1] || t('table.marker.counter'), card.counters],
+    ['attached', 'book', t('table.marker.attached'), attached],
   ].filter(([, , , value]) => Number.isFinite(value) && value > 0)
 }
 
 export function placedCardMarkers(h, card, options = {}) {
   const markers = cardMarkerData(card, options)
   if (!markers.length) return null
-  return h('span', { className: 'ah-card-markers', 'aria-label': '卡牌上的标记' },
+  return h('span', { className: 'ah-card-markers', 'aria-label': t('table.marker.cardAria') },
     markers.map(([kind, icon, label, value]) => h('span', {
       className: 'ah-card-marker ah-card-marker-' + kind,
       'data-card-marker': kind, title: `${label} ${value}`, 'aria-label': `${label} ${value}`,

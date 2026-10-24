@@ -122,12 +122,23 @@ export function resolveEffect(state, seat, effect, rt) {
     case 'gainResource': {
       if (rt.canGainResources?.(seat) === false) break
       const n = effect.amount || 1
-      inv.resources += n
-      rt.info(`${inv.name} 获得 ${n} 资源（当前 ${inv.resources}）。`)
+      // 2026-10-25：05003/05011 普雷斯顿「卡牌效果获得的资源改为寄存」——效果 DSL 的
+      // gainResource 也必须走 runtime 统一入口（与 api.gainResources 同源）。
+      if (typeof rt.gainResources === 'function') {
+        rt.gainResources(seat, n)
+      } else {
+        inv.resources += n
+        rt.info(`${inv.name} 获得 ${n} 资源（当前 ${inv.resources}）。`)
+      }
       break
     }
     case 'loseResource': {
-      if (effect.all) {
+      // 2026-10-25：05280 的取消窗口走 runtime 的传统入口（makeRuntime / scenarioRuntime）；
+      // 没有该方法的旧 runtime 保持原行为。
+      const requested = effect.all ? inv.resources : (effect.amount || 1)
+      if (typeof rt.loseResources === 'function') {
+        rt.loseResources(inv.seat, requested, { all: effect.all === true })
+      } else if (effect.all) {
         const n = inv.resources
         inv.resources = 0
         rt.info(`${inv.name} 失去了全部 ${n} 资源。`)

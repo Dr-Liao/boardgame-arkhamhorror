@@ -4,26 +4,33 @@ import { cardRuleIds, matchingRules, ruleLink } from './rulebook-data.js'
 import { renderCardFilters } from './card-filters.js'
 import { t } from './i18n.js'
 
-export const TYPE_LABELS = { investigator: '调查员', asset: '支援', event: '事件', skill: '技能', treachery: '诡计', enemy: '敌人', location: '地点', scenario: '剧本', agenda: '密谋', act: '场景', story: '故事', key: '钥匙', enemy_location: '敌人地点' }
-// 可用性和规则验收分别展示；Core 验收不能推广到尚未验收的扩展牌。
-export const EFFECT_LABELS = { unimplemented: '未实现', unverified: '有实现，未验收', partial: '部分实现', simplified: '简化实现', implemented: '已实现，未验收', verified: '已验收', 'not-applicable': '不适用' }
-export const AVAILABILITY_LABELS = { 'catalog-only': '仅图鉴', simplified: '当前可玩', strict: '当前可玩，待规则审计', disabled: '禁用' }
-// 上面的常量是中文源文案（Node 侧的展示口径/旧调用方仍按中文取），界面展示走下面的函数按当前语言取。
 const TYPE_LABEL_KEYS = { investigator: 'card.type.investigator', asset: 'card.type.asset', event: 'card.type.event', skill: 'card.type.skill', treachery: 'card.type.treachery', enemy: 'card.type.enemy', location: 'card.type.location', scenario: 'card.type.scenario', agenda: 'card.type.agenda', act: 'card.type.act', story: 'card.type.story', key: 'card.type.key', enemy_location: 'card.type.enemyLocation' }
 const EFFECT_LABEL_KEYS = { unimplemented: 'card.effect.unimplemented', unverified: 'card.effect.unverified', partial: 'card.effect.partial', simplified: 'card.effect.simplified', implemented: 'card.effect.implemented', verified: 'card.effect.verified', 'not-applicable': 'card.effect.notApplicable' }
 const AVAILABILITY_LABEL_KEYS = { 'catalog-only': 'card.availability.catalogOnly', simplified: 'card.availability.simplified', strict: 'card.availability.strict', disabled: 'card.availability.disabled' }
+
+// 展示层按当前语言求值。导出的常量保持旧形状（对象、可取到标签）：用 getter 而不是模块顶层
+// t()，否则导入时就把语言固定成 zh-CN，英文界面不会更新。Node 侧 assets 回归只断言有标签。
+function localizedLabelMap(keys) {
+  const map = {}
+  for (const [value, key] of Object.entries(keys)) {
+    Object.defineProperty(map, value, { enumerable: true, configurable: false, get: () => t(key) })
+  }
+  return Object.freeze(map)
+}
+export const TYPE_LABELS = localizedLabelMap(TYPE_LABEL_KEYS)
+export const EFFECT_LABELS = localizedLabelMap(EFFECT_LABEL_KEYS)
+export const AVAILABILITY_LABELS = localizedLabelMap(AVAILABILITY_LABEL_KEYS)
 export function typeLabel(value) {
-  return TYPE_LABEL_KEYS[value] ? t(TYPE_LABEL_KEYS[value]) : (TYPE_LABELS[value] || value)
+  return TYPE_LABELS[value] || value
 }
 export function effectLabel(value) {
-  return EFFECT_LABEL_KEYS[value] ? t(EFFECT_LABEL_KEYS[value]) : (EFFECT_LABELS[value] || value)
+  return EFFECT_LABELS[value] || value
 }
 export function availabilityLabel(card) {
   return card.availability === 'strict' && card.effectStatus === 'verified'
-    ? t('card.availability.playable') : (AVAILABILITY_LABEL_KEYS[card.availability] ? t(AVAILABILITY_LABEL_KEYS[card.availability]) : card.availability)
+    ? t('card.availability.playable') : (AVAILABILITY_LABELS[card.availability] || card.availability)
 }
-const localizedLabels = (labels, keys) => Object.fromEntries(Object.keys(labels).map(value => [value, keys[value] ? t(keys[value]) : labels[value]]))
-const CLASS_LABELS = { guardian: '守卫者', seeker: '探求者', rogue: '游荡者', mystic: '秘术师', survivor: '幸存者', neutral: '中立', mythos: '神话' }
+const localizedLabels = labels => Object.fromEntries(Object.keys(labels).map(value => [value, labels[value]]))
 const imageCache = createImageCache()
 const responseCache = new Map()
 let metadata = null
@@ -131,7 +138,7 @@ async function request(path) {
   const pending = (async () => {
     const response = await fetch(API_ROOT + path, { signal: AbortSignal.timeout(10000) })
     const value = await response.json()
-    if (!response.ok || !value.ok) throw new Error(value.error || '目录加载失败')
+    if (!response.ok || !value.ok) throw new Error(value.error || t('misc.catalog.loadFailed'))
     return value
   })()
   responseCache.set(path, pending)
@@ -438,8 +445,8 @@ export function createCatalogUI({ h, onChange, openCard }) {
         h('section', { className: 'bg-modal ah-catalog-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('catalog.title'), onclick: event => event.stopPropagation(), onkeydown: event => { if (event.key === 'Escape') close() } },
           h('header', { className: 'ah-catalog-head' }, h('div', null, h('h2', null, t('catalog.title')), h('p', { className: 'ah-resource-note' }, t('catalog.note'))), h('button', { className: 'bg-btn secondary', onclick: close, 'aria-label': t('catalog.close') }, t('catalog.closeAction'))),
           renderCardFilters(h,{scope:'catalog',filters:state.filters,count:result?.total||0,searchLabel:t('catalog.searchLabel'),
-            options:{...metadata,typeLabels:localizedLabels(TYPE_LABELS, TYPE_LABEL_KEYS)},onChange:filters=>{state.filters=filters;state.offset=0;load()}}),
-          h('div', { className: 'ah-catalog-filters' }, h('button',{className:'bg-btn',onclick:()=>{state.offset=0;load()}},t('catalog.search')),choose('effectStatus', t('catalog.effectStatus'), metadata?.effectStatuses, localizedLabels(EFFECT_LABELS, EFFECT_LABEL_KEYS)), choose('availability', t('catalog.availability'), metadata?.availabilityStatuses, localizedLabels(AVAILABILITY_LABELS, AVAILABILITY_LABEL_KEYS))),
+            options:{...metadata,typeLabels:localizedLabels(TYPE_LABELS)},onChange:filters=>{state.filters=filters;state.offset=0;load()}}),
+          h('div', { className: 'ah-catalog-filters' }, h('button',{className:'bg-btn',onclick:()=>{state.offset=0;load()}},t('catalog.search')),choose('effectStatus', t('catalog.effectStatus'), metadata?.effectStatuses, localizedLabels(EFFECT_LABELS)), choose('availability', t('catalog.availability'), metadata?.availabilityStatuses, localizedLabels(AVAILABILITY_LABELS))),
           renderPresentationSettings(h, onChange),
           h('div', { className: 'ah-catalog-summary', role: 'status' }, state.loading ? t('catalog.loading') : state.error || t('catalog.summary', { total: result?.total || 0, limit: state.limit })),
           state.error ? h('button', { className: 'bg-btn secondary', onclick: load }, t('catalog.reload')) : null,

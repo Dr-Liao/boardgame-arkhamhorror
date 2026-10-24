@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "w-m2-1-commit-conditional-icons",
+  "cycle": "tcu",
+  "worker": "w-m2-1",
+  "card": "05022",
+  "cards": [
+    "05022",
+    "05026",
+    "05030",
+    "05034",
+    "05038"
+  ],
+  "primitive": "commitConditionalIcons",
+  "params": {
+    "readPoint": "src/engine/tests.js 的投入图标结算（`let icons = commitIcons(state, owner, code, skillList)` 之后）",
+    "shape": "commit 描述子的 skill 档案增加 `iconBonus: ({ state, inv, code }) => ({ willpower, intellect, combat, agility, wild })`，按本次检定的 skillList 求和；wild 只算一次"
+  },
+  "cardText": "05022 坚定不移：你剩余生命值和剩余神志值总和至少为5时，坚定不移获得[willpower][combat]（至少10时改为获得[willpower][willpower][combat][combat]。）/ 05026 好奇心：手牌≥4/≥7 时同理 / 05030 狡猾：资源≥5/≥10 时同理 / 05034 预见未来：毁灭≥3/≥6 时获得[wild]/[wild][wild] / 05038 体格强健：控制的[[道具]]≤2/≤1 时同理。",
+  "reason": "这 5 张技能卡的印刷效果是「投入时按调查员状态追加技能图标」。commit 档案目前只有静态图标读点（印刷图标 + 场上 add:skillIcon 授予），没有看调查员状态的条件图标读点；5 张卡的条件图标完全无法表达。当前 5 个条目以 simplified: true 兜底（只实现印刷图标的投入通道），已写入 worker 报告。",
+  "proposedApi": "commit 描述子 `skill: { iconBonus: ctx => ({ willpower: 2, combat: 2 }) }`；tests.js 在 commitIcons 后按 skillList 累加，wild 只加一次",
+  "status": "done",
+  "createdAt": "2026-10-24T02:30:00+08:00",
+  "claimedBy": "main",
+  "resolvedAt": "2026-10-23T18:39:00.291Z",
+  "resolution": {
+    "api": "commit 描述子的 skill.conditionalIcons: [{ when, icons }]；最后一个条件成立项叠加到印刷图标",
+    "implementedIn": [
+      "games/arkhamhorror/src/engine/stats.js",
+      "games/arkhamhorror/src/engine/ability.js"
+    ],
+    "tests": [
+      "games/arkhamhorror/tests/tcu-primitives-p7.test.mjs"
+    ],
+    "catalog": "P7 玩家卡批次（2026-10）：条件技能图标",
+    "notes": "条件键 remainingHealthSanityAtLeast / handAtLeast / resourcesAtLeast / doomAtLeast / controlledTraitAtMost；注册期校验未知键/非正整数。"
+  }
+}

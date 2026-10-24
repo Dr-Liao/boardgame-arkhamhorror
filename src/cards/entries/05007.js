@@ -6,9 +6,23 @@
 //
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
+//
+// 修复（task-22）：
+//   · [reaction] 旧 criteria 没有区分「调查员」与「盟友支援」，治疗盟友恐惧也会触发、且把额外 1 点
+//     治到调查员身上（卡面只对「治愈调查员的恐惧」生效）。现在 criteria 加 `context.assetId == null`，
+//     只在治疗调查员时触发（healHorrorFrom 对支援目标会带 assetId）。
+//   · [action] 旧实现「所在地点没有任何恐惧」时提前 return，既不询问目标也不让目标抽牌；卡面是治愈
+//     1 点恐惧（0 点时无事发生）后该调查员可以抽 1 张，所以现在总是先在所在地点选一位调查员、能治则治，
+//     再询问是否抽牌。
+//
+// 剩余近似（引擎原语，见 artifacts/tcu-fix/primitive-requests/fix-investigator.json）：
+//   「该效果治愈额外 1 点」现在通过再开一次 api.healHorror 实现，会为同一次治疗开第二个 horrorHealed
+//   窗口（卡洛琳的反应可能因此对同一次治疗结算两次）；需要引擎提供「在同一治疗里追加治疗量、不重开窗口」
+//   的原语。
 
 export default {
   code: '05007',
+  note: '「额外治愈 1 点」通过再开一次治疗窗口实现（同一次治疗可能出现第二个 horrorHealed 窗口），已登记 primitive request；其余条款按卡面实现。',
   abilities: [
     {
       kind: 'action',
@@ -18,16 +32,20 @@ export default {
         source: { label: '催眠疗法', code: '05007', name: '催眠疗法' },
         resolve: result => {
           if (!result.success) return
-          const targets = api.investigatorsAt(inv.location).filter(owner => (owner.horror || 0) > 0)
+          // 卡面允许选「你所在地点的一位调查员」（不要求对方有恐惧）；0 点时治疗无事发生。
+          const targets = api.investigatorsAt(inv.location)
           if (!targets.length) return
           const answer = targets.length === 1 ? String(targets[0].seat) : api.choice({
             kind: 'target', source: '05007', seat: inv.seat,
             prompt: '选择要治愈恐惧的调查员。',
-            options: targets.map(owner => ({ id: String(owner.seat), label: `${owner.name}（${owner.horror} 恐惧）` })),
+            options: targets.map(owner => ({
+              id: String(owner.seat),
+              label: `${owner.name}（${owner.horror || 0} 恐惧）`,
+            })),
           })
-          const target = targets.find(owner => String(owner.seat) === answer)
+          const target = targets.find(owner => String(owner.seat) === answer) || targets[0]
           if (!target) return
-          api.healHorror(target.seat, 1)
+          if ((target.horror || 0) > 0) api.healHorror(target.seat, 1)
           const draw = api.choice({
             kind: 'reaction', source: '05007-draw', seat: target.seat, canSkip: true,
             prompt: `${target.name}：是否抽取 1 张卡牌？`,
@@ -43,6 +61,8 @@ export default {
       label: '这次治疗额外治愈 1 点恐惧',
       cost: { exhaust: true },
       criteria: [({ inv, context }) => context?.cardSeat === inv.seat
+        // 只对「治疗调查员的恐惧」生效：治疗盟友支援时 healHorrorFrom 会带 assetId。
+        && context?.assetId == null
         && Number.isInteger(context?.healedSeat) && context.amount > 0],
       resolve: ({ api, context }) => {
         api.healHorror(context.healedSeat, 1)

@@ -27,38 +27,55 @@ function locationsWithinTwo(state, fromId) {
 
 export default {
   code: '05234',
+  // 卡面两项都以「躲避」为目标：没有任何可自动躲避的非精英敌人（所在地点或 2 次连接内）时不能打出。
+  playCondition: [{
+    when: ({ state, inv }) => {
+      const local = (state.enemies || []).some(enemy => !enemy.defeated && !enemy.elite && enemy.location === inv.location)
+      if (local) return true
+      return locationsWithinTwo(state, inv.location)
+        .some(id => (state.enemies || []).some(enemy => !enemy.defeated && !enemy.elite && enemy.location === id))
+    },
+    message: '附近没有可自动躲避的非[[精英]]敌人，不能打出「诱敌」',
+  }],
   abilities: [
     {
       kind: 'played',
       label: '诱敌：自动躲避非精英敌人',
       resolve: ({ state, inv, api }) => {
         const resources = inv.resources || 0
-        const modes = [
-          { id: 'base', label: '你所在地点的一个非精英敌人', extra: 0, upToTwo: false, far: false },
-          { id: 'pair', label: '最多 2 个非精英敌人（费用 +2）', extra: 2, upToTwo: true, far: false },
-          { id: 'far', label: '2 次连接内地点的一个非精英敌人（费用 +2）', extra: 2, upToTwo: false, far: true },
-          { id: 'farPair', label: '2 次连接内地点最多 2 个非精英敌人（费用 +4）', extra: 4, upToTwo: true, far: true },
-        ].filter(mode => resources >= mode.extra)
-        const modeId = modes.length === 1 ? 'base' : api.choice({
+        const nearIds = locationsWithinTwo(state, inv.location)
+        const localPool = () => state.enemies.filter(enemy => !enemy.defeated && !enemy.elite && enemy.location === inv.location)
+        const nearPool = () => state.enemies.filter(enemy => !enemy.defeated && !enemy.elite && nearIds.includes(enemy.location))
+        const hasLocal = localPool().length > 0
+        const hasNear = nearPool().length > 0
+        const candidatesModes = [
+          { id: 'base', label: '你所在地点的一个非精英敌人', extra: 0, upToTwo: false, far: false, available: hasLocal },
+          { id: 'pair', label: '最多 2 个非精英敌人（费用 +2）', extra: 2, upToTwo: true, far: false, available: hasLocal },
+          { id: 'far', label: '2 次连接内地点的一个非精英敌人（费用 +2）', extra: 2, upToTwo: false, far: true, available: hasNear },
+          { id: 'farPair', label: '2 次连接内地点最多 2 个非精英敌人（费用 +4）', extra: 4, upToTwo: true, far: true, available: hasNear },
+        ]
+        // 只提供「有合法目标且付得起额外费用」的模式（修复：范围模式不再在无远处目标时回落到本地）。
+        const modes = candidatesModes.filter(mode => mode.available && resources >= mode.extra)
+        if (!modes.length) { api.info('没有可自动躲避的非[[精英]]敌人。'); return }
+        const modeId = modes.length === 1 ? modes[0].id : api.choice({
           kind: 'effect', source: '05234', seat: inv.seat,
           prompt: '诱敌：选择结算方式（卡面的两条 [reaction] 用提升费用扩大目标范围）。',
           options: modes.map(mode => ({ id: mode.id, label: mode.label })),
         })
         const mode = modes.find(item => item.id === modeId) || modes[0]
-        // 目标地点：基础版本只限所在地点；「2 次连接内」版本可落在别处。
+        // 目标地点：基础版本只限所在地点；范围模式只在 2 次连接内地点里选。
         let targetLocation = inv.location
         if (mode.far) {
-          const withEnemies = locationsWithinTwo(state, inv.location)
-            .filter(id => state.enemies.some(enemy => enemy.location === id && !enemy.elite))
-          if (withEnemies.length) {
-            targetLocation = withEnemies.length === 1 ? withEnemies[0] : api.choice({
-              kind: 'location', source: '05234', seat: inv.seat,
-              prompt: '选择敌人所在的地点（与你相距不超过 2 次连接）。',
-              options: withEnemies.map(id => ({ id, label: api.locationName(id) })),
-            })
-          }
+          const withEnemies = nearIds.filter(id => state.enemies.some(enemy =>
+            !enemy.defeated && !enemy.elite && enemy.location === id))
+          if (!withEnemies.length) { api.info('「诱敌」：2 次连接内没有非[[精英]]敌人。'); return }
+          targetLocation = withEnemies.length === 1 ? withEnemies[0] : api.choice({
+            kind: 'location', source: '05234', seat: inv.seat,
+            prompt: '选择敌人所在的地点（与你相距不超过 2 次连接）。',
+            options: withEnemies.map(id => ({ id, label: api.locationName(id) })),
+          })
         }
-        let candidates = state.enemies.filter(enemy => enemy.location === targetLocation && !enemy.elite)
+        let candidates = state.enemies.filter(enemy => enemy.location === targetLocation && !enemy.defeated && !enemy.elite)
         if (!candidates.length) { api.info('没有可自动躲避的非[[精英]]敌人。'); return }
         if (mode.extra) {
           api.loseResources(inv.seat, mode.extra)

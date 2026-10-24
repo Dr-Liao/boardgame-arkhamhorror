@@ -23,6 +23,9 @@ export const GROUP_ALIASES = Object.freeze({
   guardiansOfTime: 'guardians_of_time',
   pnakoticBrotherhood: 'pnakotic_brotherhood',
   ancientEvils: 'ancient_evils',
+  // 核心包「黑暗教团 DarkCult」在目录里的 encounterCode 是 pentagram（01169–01171）；
+  // 破碎永世的布置按参考实现在混乱袋 [cultist]=[tablet]（本战役均为 0）时两组都收。
+  darkCult: 'pentagram',
   chillingCold: 'chilling_cold',
   strikingFear: 'striking_fear',
   lockedDoors: 'locked_doors',

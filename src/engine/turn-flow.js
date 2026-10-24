@@ -52,6 +52,8 @@ export function createTurnFlow(deps) {
     relicDiscountLocation,
     removeOne,
     requestChoice,
+    // 2026-10-25：05280 的「忽略弃手牌/失资源/失行动」窗口需要从这里开反应窗口。
+    reactionWindow,
     resolveCallOfTheUnknown,
     runBetweenInvestigationPhases,
     runThreatEndTurn,
@@ -197,12 +199,16 @@ export function createTurnFlow(deps) {
   function addVictory(state, enemy, events) {
     const originalCode = enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code
     const vengeance = enemy.vengeance || enemyDef(enemy.code)?.vengeance || 0
+    let addedToVictory = false
     // 复仇：带复仇点数的敌人被击败时同样进入胜利区（即使没有胜利点）。
     if (Object.hasOwn(ALL_CARDS[originalCode] || {}, 'victory') || enemy.victory > 0 || vengeance > 0 || enemy.uniqueCultist) {
-      if (!state.victoryDisplay.some(card => card.id === enemy.id)) state.victoryDisplay.push({
-        id: enemy.id, code: enemy.code, originalCode, victory: enemy.victory || 0,
-        ...(vengeance ? { vengeance } : {}),
-      })
+      if (!state.victoryDisplay.some(card => card.id === enemy.id)) {
+        state.victoryDisplay.push({
+          id: enemy.id, code: enemy.code, originalCode, victory: enemy.victory || 0,
+          ...(vengeance ? { vengeance } : {}),
+        })
+        addedToVictory = true
+      }
     } else if (isWeaknessCode(enemy.code)) {
       const owner = state.investigators[enemy.bearerSeat]
       if (!owner) throw new Error('弱点敌人缺少牌组归属')
@@ -218,6 +224,7 @@ export function createTurnFlow(deps) {
       state.cultistsInVictory.push(enemy.code)
       info(state, events, `🕵️ 「${enemy.name}」被盘问/击败，加入胜利区（${state.cultistsInVictory.length}/6）。`)
     }
+    return addedToVictory
   }
 
   function descriptorReactionSpec(descriptor, when) {
@@ -267,6 +274,15 @@ export function createTurnFlow(deps) {
 
   function discardHandTo(state, inv, keep, events) {
     while (inv.hand.length > keep) {
+      const amount = inv.hand.length - keep
+      const context = reactionWindow(state, 'wouldDiscardFromHand', {
+        when: 'wouldDiscardFromHand', seat: inv.seat, amount, what: 'discard', location: inv.location,
+        prompt: `${inv.name} 将要弃 ${amount} 张手牌（手牌上限）`,
+      }, events)
+      if (context.cancelled) {
+        info(state, events, `🛡️ ${inv.name} 忽略了弃掉手牌的效果。`)
+        return
+      }
       const options = inv.hand.map((code, index) => ({ code, index }))
         .filter(item => !isWeaknessCode(item.code) && canDiscardFromHand(inv, item.code))
         .map(item => ({ id: String(item.index), label: cardName(item.code) }))
@@ -279,6 +295,16 @@ export function createTurnFlow(deps) {
   }
 
   function discardChosenCards(state, inv, count, events, source, requiredIcon = null) {
+    // 2026-10-25：05280 的「忽略弃掉手牌的效果」窗口（按面向，条目用 criteria 限定
+    // 遭遇卡/敌人攻击来源；本函数也被手牌上限等调用，故窗口只提供事实）。
+    const context = reactionWindow(state, 'wouldDiscardFromHand', {
+      when: 'wouldDiscardFromHand', seat: inv.seat, amount: count, what: 'discard', location: inv.location,
+      prompt: `${inv.name} 将要弃掉 ${count} 张手牌`,
+    }, events)
+    if (context.cancelled) {
+      info(state, events, `🛡️ ${inv.name} 忽略了弃掉手牌的效果。`)
+      return 0
+    }
     let discarded = 0
     for (let i = 0; i < count && discardableHandCards(inv, requiredIcon).length; i++) {
       const answer = requestChoice(state, {

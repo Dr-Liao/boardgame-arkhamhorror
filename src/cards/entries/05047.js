@@ -5,10 +5,28 @@
 //
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
+//
+// 修复（task-22/task-41）：
+//   · 可用性：旧 criteria 只看「手牌非空」，智力图标不足时也给玩家一个点了才发现无效的反应选项。
+//     现在 criteria 在 state.cards 嵌入了手牌定义时先过滤（总数 <2 不出现在窗口里）；定义未嵌入时
+//     （剧本设置阶段才写入的固定手牌）退回 resolve 并用 api.cardIcons 精确判定。
+//   · 旧 resolve 在逐张弃牌途中仍提供「不弃牌（不取消）」，玩家弃 1 张后放弃会白丢牌且不取消。
+//     现在图标已校验 ≥2，弃牌阶段不再提供中断选项，按卡面一次性付清费用。
+//   · 手牌统计与弃牌都排除弱点卡（弱点不能主动弃掉）。
 
 import { investigatorSign } from './_shared.js'
 
 const sign = investigatorSign('05047')
+
+const handIconInfo = (state, inv) => {
+  const entries = (inv.hand || []).map((code, index) => {
+    const def = state?.cards?.[code]
+    const subtype = def?.subtype
+    const weakness = subtype === 'weakness' || subtype === 'basicweakness'
+    return { code, index, weakness, intellect: Number(def?.icons?.intellect || 0), known: Boolean(def) }
+  })
+  return { entries, discardable: entries.filter(entry => !entry.weakness) }
+}
 
 export default {
   code: '05047',
@@ -28,35 +46,50 @@ export default {
       trigger: 'treachery',
       label: '弃掉至少 2 个智力图标的手牌，取消该诡计的显现效果',
       limit: 'oncePerRound',
-      criteria: [({ inv, context, state }) => Boolean(context?.cardCode)
-        && (context?.location == null || context.location === inv.location)
-        && (state.investigators[context.seat]?.location === inv.location)
-        && (inv.hand || []).some(code => true)],
-      resolve: ({ inv, api, context }) => {
-        const total = (inv.hand || []).reduce((sum, code) => sum + (api.cardIcons(code)?.intellect || 0), 0)
-        if (total < 2) {
+      criteria: [({ inv, context, state }) => {
+        if (!context?.cardCode) return false
+        if (context.location != null && context.location !== inv.location) return false
+        if (state.investigators?.[context.seat]?.location !== inv.location) return false
+        const { discardable } = handIconInfo(state, inv)
+        if (!discardable.length) return false
+        // state.cards 有这些手牌的定义时先过滤；没有时留给 resolve 用 api.cardIcons 判定。
+        if (discardable.some(entry => entry.known)) {
+          return discardable.reduce((sum, entry) => sum + entry.intellect, 0) >= 2
+        }
+        return true
+      }],
+      resolve: ({ inv, state, api, context }) => {
+        const iconsOf = code => Number(api.cardIcons(code)?.intellect || 0)
+        const isWeakness = code => {
+          const subtype = state?.cards?.[code]?.subtype
+          return subtype === 'weakness' || subtype === 'basicweakness'
+        }
+        const handIcons = () => (inv.hand || []).reduce((sum, code) => sum + (isWeakness(code) ? 0 : iconsOf(code)), 0)
+        if (handIcons() < 2) {
           api.info(`${inv.name} 手牌上的智力图标不足 2 个。`)
           return
         }
-        // 逐张选择要弃掉的手牌，直到图标合计达到 2。
+        // 图标已校验 ≥2，逐张弃到足额；不再提供「放弃」分支（避免白弃牌）。
         let icons = 0
         let guard = 0
-        while (icons < 2 && (inv.hand || []).length && guard++ < 12) {
+        while (icons < 2 && guard++ < 16) {
+          const discardable = (inv.hand || [])
+            .map((code, index) => ({ code, index, intellect: iconsOf(code) }))
+            .filter(entry => !isWeakness(entry.code))
+          if (!discardable.length) break
           const answer = api.choice({
             kind: 'discard', source: '05047', seat: inv.seat,
             prompt: `「杰罗姆·戴维斯」：弃掉手牌以取消这次显现（还需要 ${2 - icons} 个智力图标）。`,
-            options: [{ id: 'skip', label: '不弃牌（不取消）' },
-              ...inv.hand.map((code, index) => ({
-                id: String(index), cardCode: code,
-                label: `${api.cardName(code)}（智力 ${api.cardIcons(code)?.intellect || 0}）`,
-              }))],
+            options: discardable.map(entry => ({
+              id: String(entry.index), cardCode: entry.code,
+              label: `${api.cardName(entry.code)}（智力 ${entry.intellect}）`,
+            })),
           })
-          if (answer === 'skip') return
           const index = Number(answer)
-          if (!Number.isInteger(index) || index < 0 || index >= inv.hand.length) return
+          if (!Number.isInteger(index) || index < 0 || index >= inv.hand.length) break
           const [code] = inv.hand.splice(index, 1)
           inv.discard.push(code)
-          icons += api.cardIcons(code)?.intellect || 0
+          icons += iconsOf(code)
         }
         if (icons < 2) return
         context.cancelled = true

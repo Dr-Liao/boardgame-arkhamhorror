@@ -125,10 +125,16 @@ test('TCU 05020 拷问 谈判战斗检定：难度=3+敌人伤害，成功发现
   assert.equal(state.locations.find(location => location.id === 'attic').clues, 0, '发现任意另一个地点 1 个线索')
   assert.equal(inv.clues, 2)
   assert.equal(inv.resources, resourcesBefore - 2, '打出费用 2 资源')
+  // 修复（审计 R2）：没有合法[[类人]]目标时不能打出。
+  const bare = fixture('01001')
+  bare.investigators[0].hand = ['05020']
+  enemy(bare, { traits: ['Humanoid'], location: 'attic' })
+  assert.match(String(validateMove(bare, 0, { action: 'play', cardId: '05020' })), /类人/,
+    '同地点没有[[类人]]敌人时打出被拒绝')
 })
 
 // ---------------------------------------------------------------------------
-// 05021 劫数延后（显式简化：只附属自己 / 神话结束直接弃置）
+// 05021 劫数延后（显式简化：只附属自己 / 神话结束直接弃置；investigator 附属待引擎修通）
 // ---------------------------------------------------------------------------
 
 test('TCU 05021 劫数延后 快速打出附属入场，受伤害/恐惧时弃掉并全部取消', () => {
@@ -303,6 +309,10 @@ test('TCU 05025 串联线索 发现最后线索后从手牌反应：发现低隐
   assert.equal(inv.clues, 3)
   assert.equal(inv.resources, resourcesBefore - 4, '打出费用 4 资源')
   assert.ok(inv.discard.includes('05025'))
+  // 修复（审计 R2）：只能在发现最后线索后的反应窗口打出，不能当普通事件用行动打出。
+  state.investigators[0].hand = ['05025']
+  assert.match(String(validateMove(state, 0, { action: 'play', cardId: '05025' })), /反应窗口/,
+    '普通出牌路径被拒绝（0 行动快速事件只能走反应窗口）')
 })
 
 // ---------------------------------------------------------------------------

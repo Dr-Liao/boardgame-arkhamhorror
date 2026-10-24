@@ -9,7 +9,22 @@
 
 export const hardSide = state => ['hard', 'expert'].includes(state?.difficulty)
 
-export const azathothDoomOf = state => Number(state?.scenarioFlags?.azathothDoom || 0)
+// 05328 背面：第三次议程推进后「场上所有毁灭标记视为在阿撒托斯上」。
+// behavior.agendaRevealFor 在 discardSelf 时置 flags.azathothAbsorbsAllDoom；
+// 此后的阿撒托斯毁灭 = 累积计数 + 场上所有卡牌/当前密谋上的毁灭（参考 Azathoth.hs:28-31 的 CountAllDoomInPlay）。
+export const azathothDoomOf = state => {
+  const flags = state?.scenarioFlags || {}
+  const base = Number(flags.azathothDoom || 0)
+  if (!flags.azathothAbsorbsAllDoom) return base
+  const cards = [
+    ...(state.locations || []),
+    ...(state.enemies || []),
+    ...(state.storyAssets || []),
+    ...(state.investigators || []).flatMap(inv => [...(inv.assets || []), ...(inv.threat || [])]),
+  ]
+  const onCards = cards.reduce((sum, card) => sum + (Number(card.doom) || 0), 0)
+  return base + onCards + Number(state.doom || 0)
+}
 
 // [skull]：X = max(2, ceil(毁灭/2))（简单/普通）；困难 = max(2, 毁灭)。
 export function skullX(state) {

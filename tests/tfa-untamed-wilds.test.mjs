@@ -376,8 +376,9 @@ test('04050 地图：1 张放底、其余 2 张按玩家选择顺序放顶', () 
     info: text => logs.push(text),
     choose: () => answers.shift(),
   })
-  // 顶 3 张 = ['d','c','b']（end 为顶）；选 '0'(d) 放底，然后 '1'(b) 先放顶。
-  assert.deepEqual(state.explorationDeck, ['a', 'c', 'b', 'd'])
+  // 牌库末位是顶；3 张按顺序为 d(顶),c,b。选 '0'(d) 放牌库底(index 0)，
+  // 其余 2 张按玩家顺序放回顶部：先 c 再 b（b 成为新的牌库顶）。
+  assert.deepEqual(state.explorationDeck, ['d', 'a', 'c', 'b'])
   assert.ok(logs.some(text => text.includes('按你选择的顺序')))
 })
 

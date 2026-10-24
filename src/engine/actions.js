@@ -108,9 +108,54 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     }
   } else if (!removeCardByCode(inv.hand, cardId)) return
 
+  // 2026-10-25 修复：把「打出费用」抽成可复用步骤，附属事件（attachTo）也必须付费。
+  // 之前附属分支在费用结算之前 return，05230「瞄准镜」等附属事件实测不扣资源。
+  function payPlayCost() {
+    // 「销赃贩子」（违法卡获得快速／已有快速则减 1 费用）与「自食其力」（幸存者事件减 2 费用）。
+    const playPreview = campaignPlayCostPreview(state, inv, cardId)
+    if (playPreview) {
+      campaignApplyPlayCost(state, inv, playPreview, events)
+      if (playPreview.noAction) noAction = true
+      if (playPreview.discount) inv.playDiscount = (inv.playDiscount || 0) + playPreview.discount
+    }
+    const usesLolaDiscount = inv.lolaDiscount?.round === state.round && inv.lolaDiscount?.turnSeat === state.currentSeat
+      && (playedDef.factions || [playedDef.klass, playedDef.klass2, playedDef.klass3].filter(Boolean)).includes(inv.lolaDiscount.role)
+    // Phase 5（5a-18）：「打出时自选花费若干资源」由条目级 chooseResourceCostOnPlay 声明。
+    const cost = registeredEntry(cardId)?.chooseResourceCostOnPlay
+      ? Number(requestChoice(state, { kind: 'resource', source: cardId, seat,
+        prompt: `选择花费多少资源，为「${cardName(cardId)}」装填等量弹药。`,
+        options: Array.from({ length: inv.resources + 1 }, (_, i) => ({ id: String(i), label: `${i} 资源／${i} 弹药` })),
+      })) : playCost(state, inv, playedDef)
+    campaignState.clearPlayDiscount(inv)
+    delete inv.playDiscount
+    let payer = inv
+    if (inv.resources < cost) {
+      const charles = charlesPayCandidate(state, inv, cost, playedDef)
+      if (charles && requestChoice(state, {
+        kind: 'resource', source: cardId, seat: charles.seat, canSkip: true,
+        prompt: `${inv.name} 资源不足，是否由查尔斯·罗斯代付 ${cost} 资源？`,
+        options: [{ id: 'skip', label: '不代付' }, { id: 'pay', label: '让查尔斯支付' }],
+      }) === 'pay') payer = charles
+    }
+    if (payer.resources < cost) {
+      info(state, events, `${inv.name} 资源不足，无法打出「${cardName(cardId)}」。`)
+      return { ok: false, cost }
+    }
+    payer.resources -= cost
+    if (def.type === 'asset' && (def.traits || []).some(trait => String(trait).toLowerCase() === 'item')) {
+      consumeItemDiscountAtLocation(state, inv)
+    }
+    consumePlayThreatResources(state, inv, events)
+    if (usesLolaDiscount) delete inv.lolaDiscount
+    info(state, events, `🃏 ${inv.name} 打出「${cardName(cardId)}」（花费 ${cost} 资源，剩余 ${inv.resources}）。`, { kind: 'play', seat: inv.seat, code: cardId })
+    return { ok: true, cost }
+  }
+
   // Phase 5（5b-10）：附属声明也可以写在能力层条目上。
+  // 2026-10-25：05021「附属到同地点任意调查员」——kind:'investigator' 也走这条通道
+  // （attachmentTargets 返回调查员对象，attachCardTo 写入 inv.attachments）。
   const attachSpec = registeredEntry(copyCode || cardId)?.attachTo
-  if (attachSpec && (attachSpec.kind === 'asset')) {
+  if (attachSpec && (attachSpec.kind === 'asset' || attachSpec.kind === 'investigator')) {
     const candidates = attachmentTargets(state, inv, attachSpec, cardId)
     if (!candidates.length) {
       // 没有合法宿主：把卡放回被取出的位置（P7 顺带修：这里原本引用从未存在的
@@ -120,6 +165,15 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       info(state, events, `没有可以附属「${cardName(cardId)}」的支援。`)
       return
     }
+    const paid = payPlayCost()
+    if (!paid.ok) {
+      if (fromDiscard) inv.discard.push(cardId)
+      else inv.hand.push(cardId)
+      return
+    }
+    // 2026-10-25：直觉牌库揭示的那张牌一旦真的被打出，就清掉 hunchRevealed，
+    // 否则调查阶段结束时会把已在弃牌堆/场上的它再洗回直觉牌库（05002 乔·戴蒙德与 05010 悬案同源问题）。
+    if (inv.hunchRevealed === cardId) delete inv.hunchRevealed
     const chosen = candidates.length === 1 ? candidates[0].id : requestChoice(state, { kind: 'target', source: cardId, seat,
       prompt: `选择要附属「${cardName(cardId)}」的支援。`, options: candidates.map(asset => ({ id: asset.id, label: cardName(asset.code) })) })
     const target = candidates.find(asset => asset.id === chosen) || candidates[0]
@@ -139,44 +193,11 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
 
   if (def.type === 'asset') replaceAssets(state, inv, def, events)
 
-  // 「销赃贩子」（违法卡获得快速／已有快速则减 1 费用）与「自食其力」（幸存者事件减 2 费用）。
-  const playPreview = campaignPlayCostPreview(state, inv, cardId)
-  if (playPreview) {
-    campaignApplyPlayCost(state, inv, playPreview, events)
-    if (playPreview.noAction) noAction = true
-    if (playPreview.discount) inv.playDiscount = (inv.playDiscount || 0) + playPreview.discount
-  }
-
-  const usesLolaDiscount = inv.lolaDiscount?.round === state.round && inv.lolaDiscount?.turnSeat === state.currentSeat
-    && (playedDef.factions || [playedDef.klass, playedDef.klass2, playedDef.klass3].filter(Boolean)).includes(inv.lolaDiscount.role)
-  // Phase 5（5a-18）：「打出时自选花费若干资源」由条目级 chooseResourceCostOnPlay 声明。
-  const cost = registeredEntry(cardId)?.chooseResourceCostOnPlay
-    ? Number(requestChoice(state, { kind: 'resource', source: cardId, seat,
-      prompt: `选择花费多少资源，为「${cardName(cardId)}」装填等量弹药。`,
-      options: Array.from({ length: inv.resources + 1 }, (_, i) => ({ id: String(i), label: `${i} 资源／${i} 弹药` })),
-    })) : playCost(state, inv, playedDef)
-  campaignState.clearPlayDiscount(inv)
-  delete inv.playDiscount
-  let payer = inv
-  if (inv.resources < cost) {
-    const charles = charlesPayCandidate(state, inv, cost, playedDef)
-    if (charles && requestChoice(state, {
-      kind: 'resource', source: cardId, seat: charles.seat, canSkip: true,
-      prompt: `${inv.name} 资源不足，是否由查尔斯·罗斯代付 ${cost} 资源？`,
-      options: [{ id: 'skip', label: '不代付' }, { id: 'pay', label: '让查尔斯支付' }],
-    }) === 'pay') payer = charles
-  }
-  if (payer.resources < cost) {
-    info(state, events, `${inv.name} 资源不足，无法打出「${cardName(cardId)}」。`)
-    return
-  }
-  payer.resources -= cost
-  if (def.type === 'asset' && (def.traits || []).some(trait => String(trait).toLowerCase() === 'item')) {
-    consumeItemDiscountAtLocation(state, inv)
-  }
-  consumePlayThreatResources(state, inv, events)
-  if (usesLolaDiscount) delete inv.lolaDiscount
-  info(state, events, `🃏 ${inv.name} 打出「${cardName(cardId)}」（花费 ${cost} 资源，剩余 ${inv.resources}）。`, { kind: 'play', seat: inv.seat, code: cardId })
+  const paid = payPlayCost()
+  if (!paid.ok) return
+  const cost = paid.cost
+  // 2026-10-25：直觉牌库揭示后被真正打出的牌清掉 hunchRevealed（见上方附属分支同因说明）。
+  if (inv.hunchRevealed === cardId) delete inv.hunchRevealed
 
   if (def.type === 'asset') {
     // Phase 5（5b-8）：资产入场时读的 passive（额外行动等）也要认条目。

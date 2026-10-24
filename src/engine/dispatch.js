@@ -35,6 +35,7 @@ export function createDispatch(deps) {
     basicWeaknessPool,
     buildDeck,
     buildDeckFromList,
+    campaignDiscardOnYourOwn,
     campaignFor,
     captureTableState,
     cardKeyword,
@@ -260,6 +261,8 @@ function executeAction(state, seat, move, events) {
     if (!inv.defeated && !inv.resigned && state.status === 'playing') {
       state.lastActionSnapshot = actionSnapshot
       applyMoveUnchecked(state, seat, move, events)
+      // 「自食其力」（04236）等持续强制：资产入场/换装后立刻检查，而不是等到重整阶段。
+      if (!inv.defeated && !inv.resigned) campaignDiscardOnYourOwn(state, inv, events)
       if (state._timeWarped) {
         delete state._timeWarped
         state.lastActionSnapshot = null

@@ -117,6 +117,8 @@ export function createScenarioRuntime(deps) {
     preyTarget,
     privateInfo,
     randomValue,
+    // 2026-10-25：05280 的按面向取消窗口（失去行动等）。
+    reactionWindow,
     recordVengeance,
     registeredEntry,
     relicOfAges,
@@ -226,11 +228,21 @@ function scenarioRuntime(state, events, testSource = null) {
     hunterStep: (enemy, options) => hunterStep(state, enemy, options),
     loseActions: (seat, n) => {
       const inv = state.investigators[seat]
+      if (!inv || !(n > 0)) return 0
+      const context = reactionWindow(state, 'wouldLoseActions', {
+        when: 'wouldLoseActions', seat, amount: n, what: 'actions', location: inv.location,
+        prompt: `${inv.name} 将要失去 ${n} 个行动`,
+      }, events)
+      if (context.cancelled) {
+        info(state, events, `🛡️ ${inv.name} 忽略了失去行动的效果。`)
+        return 0
+      }
       if (state.phase === 'investigation') inv.actionsLeft = Math.max(0, inv.actionsLeft - n)
       else {
         inv.pendingActionLoss ||= {}
         inv.pendingActionLoss[state.round] = (inv.pendingActionLoss[state.round] || 0) + n
       }
+      return n
     },
     removeAsset: (seat, assetId) => {
       const inv = state.investigators[seat], asset = inv.assets.find(item => item.id === assetId)
@@ -244,7 +256,7 @@ function scenarioRuntime(state, events, testSource = null) {
       asset.damage = (asset.damage || 0) + n
       if (asset.damage >= (cardDef(asset.code)?.health || Infinity)) {
         leaveAsset(state, inv, asset, events)
-        if (!asset.removedFromGame) inv.discard.push(asset.code)
+        if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
         const retaliationDamage = registeredEntry(asset.code)?.defeatedDamage
         if (retaliationDamage) defeatedAssetRetaliation(state, inv, retaliationDamage, events)
       }
@@ -255,7 +267,7 @@ function scenarioRuntime(state, events, testSource = null) {
       asset.horror = (asset.horror || 0) + n
       if (asset.horror >= (cardDef(asset.code)?.sanity || Infinity)) {
         leaveAsset(state, inv, asset, events)
-        if (!asset.removedFromGame) inv.discard.push(asset.code)
+        if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
         if (registeredEntry(asset.code)?.defeatedDamage) defeatedAssetRetaliation(state, inv, registeredEntry(asset.code).defeatedDamage, events)
       }
     },
@@ -263,7 +275,7 @@ function scenarioRuntime(state, events, testSource = null) {
       const inv = state.investigators[seat], asset = inv.assets.find(item => item.id === assetId)
       if (!asset) return null
       leaveAsset(state, inv, asset, events)
-      if (!asset.removedFromGame) inv.discard.push(asset.code)
+      if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
       return asset.code
     },
     shuffleAssetIntoDeck: (seat, assetId) => {
@@ -274,8 +286,16 @@ function scenarioRuntime(state, events, testSource = null) {
       inv.deck = shuffle(inv.deck, () => randomValue(state))
       return asset.code
     },
-    test: (seat, skill, difficulty, resolve, skillBonus = 0, source = null, options = {}) =>
-      performTest(state, seat, skill, difficulty, { ...options, resolve, skillBonus, source: source || testSource }),
+    // 剧本 runtime 发起的技能检定默认视为「冒险卡牌上印刷能力」的检定：
+    // 04153 参透真谛等「只能投入冒险卡能力检定」的卡以此为判据。调用方显式传
+    // source.ability=false 时不覆盖（保留旧行为）。
+    test: (seat, skill, difficulty, resolve, skillBonus = 0, source = null, options = {}) => {
+      const merged = source && typeof source === 'object'
+        ? { type: 'scenario', ability: true, ...source }
+        : { type: 'scenario', ability: true, label: source || testSource || undefined }
+      if (merged.ability === false) delete merged.ability
+      return performTest(state, seat, skill, difficulty, { ...options, resolve, skillBonus, source: merged })
+    },
     investigate: (seat, options = {}) => doInvestigate(state, seat, options, events, true),
     investigateTest: (seat, options = {}) => investigateTest(state, seat, options, events),
     endTurn: seat => {
@@ -343,7 +363,7 @@ function scenarioRuntime(state, events, testSource = null) {
     cosmos: (options = {}) => {
       const id = options.id || 'cosmos'
       if (options.build) return buildScenarioLocationDeck(state, id, options.build, { shuffle })
-      if (options.shuffle) return shuffleScenarioLocationIntoDeck(state, id, options.shuffle, { shuffle })
+      if (options.shuffle) return shuffleScenarioLocationIntoDeck(state, id, options.shuffle, { shuffle: list => shuffle(list, () => randomValue(state)) })
       if (options.discard) return discardScenarioLocation(state, id, options.discard)
       if (options.draw) return drawScenarioLocationDeck(state, id, options.draw)
       if (options.take) {

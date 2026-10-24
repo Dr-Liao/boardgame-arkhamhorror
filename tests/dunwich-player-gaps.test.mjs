@@ -736,11 +736,13 @@ test('幕间奖励的剧情支援在关卡开始时带上槽位定义（02040 �
   settle(s)
   assert.ok([...s.investigators[0].deck, ...s.investigators[0].hand].includes('02040'))
   assert.deepEqual(s.cards['02040']?.slots, ['Ally'])
-  // 旧对局（存档里还没有这张卡的定义）经视图投影也要补上；补回的是派生展示表，不是视图私有。
+  // 旧对局（存档里还没有这张卡的定义）经视图投影也要补上；按 P3.2 A1′ 设计，
+  // cards 是派生展示表，视图生成**只读权威 state**（view-shared-state.test.mjs 门禁），
+  // 自愈补回来的定义只进本视图的 cards 副本，不回写 state.cards。
   delete s.cards['02040']
   s.investigators[0].assets.push({ id: 'armitage', code: '02040', exhausted: false })
   const view = viewState(s, 0)
   assert.deepEqual(view.cards['02040']?.slots, ['Ally'])
-  assert.deepEqual(s.cards['02040']?.slots, ['Ally'])
+  assert.equal(s.cards['02040'], undefined, 'A1′：视图自愈不写回权威 state')
   assert.notEqual(view.cards['02040'], s.cards['02040'])
 })

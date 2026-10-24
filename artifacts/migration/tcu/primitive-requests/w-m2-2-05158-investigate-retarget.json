@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "w-m2-2-05158-investigate-retarget",
+  "cycle": "tcu",
+  "worker": "w-m2-2",
+  "card": "05158",
+  "primitive": "investigateSymbolRetarget",
+  "params": {
+    "trigger": "negativeSymbol",
+    "choices": "connectedRevealedLocations",
+    "shroudPolicy": "either"
+  },
+  "cardText": "如果本次检定期间揭示了[skull]、[cultist]、[tablet]或[elder_thing]符号，你可以选择与你所在地点连接的一个已揭示地点；改为如同你在所选地点调查，而不是在你当前所在地点(你可以使用两个地点中任意一个地点的隐藏值)。",
+  "reason": "doInvestigate（src/engine/actions.js）在检定开始前一次性固定 loc/difficulty/发现目标；检定结果回调里没有「把本次调查的目标地点换成连接地点、并可用两者任一隐藏值重算成功」的读点。用 api.test + api.discoverAt 手写会丢掉 doInvestigate 的完整管线（调查成功窗口、掩盖罪证、闹鬼、胜利点等），且难度替换时机仍无法表达。",
+  "proposedApi": "doInvestigate 的 options 增加 `symbolRetarget: { locations: 'connectedRevealed', shroud: 'either' }`：符号揭示后在结果回调里请求选择目标地点，若「原隐藏值/新隐藏值 + 已揭示标记」任一成功则按成功结算并把发现目标改到所选地点；选择与失败分支都写日志。读点仍是 actions.js#doInvestigate 的 resolve 回调（与 symbolEndsTurn 同一位置）。",
+  "status": "rejected",
+  "createdAt": "2026-10-24T02:40:00+08:00",
+  "claimedBy": "main",
+  "resolvedAt": "2026-10-23T18:39:00.291Z",
+  "resolution": {
+    "suggestion": "本轮保持简化（符号后改写调查地点无读点）；如后续有第二张同类卡再提升为通用原语。",
+    "catalog": "P7 玩家卡批次（2026-10）：拒绝新增原语",
+    "notes": "单卡一次性分支允许 resolve escape；此处连 resolve 也无法在中途改检定目标，保持简化。"
+  }
+}

@@ -12,9 +12,35 @@
 export default {
   code: '05280',
   simplified: true,
-  note: '只实现「受到伤害 / 受到恐惧」两个面向（harmDealt 窗口取消该分量并反向治愈）；'
-    + '「弃掉手牌 / 失去资源 / 失去行动」三个面向未实现（缺遭遇卡结算前的按面向取消原语）。',
+  note: '五个面向均已实现；剩余近似：引擎的 wouldDiscardFromHand/wouldLoseResources/wouldLoseActions 窗口'
+    + '对任何来源的弃牌/失资源/失行动都会打开（卡面限定「遭遇卡牌或敌人攻击」），条目无法区分来源。',
   abilities: [
+    {
+      kind: 'reaction',
+      trigger: ['wouldDiscardFromHand', 'wouldLoseResources', 'wouldLoseActions'],
+      fromHand: true,
+      label: '忽略弃手牌/失资源/失行动的效果，并执行相反效果',
+      criteria: ctx => {
+        const context = ctx.context || {}
+        if (context.seat !== ctx.inv?.seat) return false
+        if (context.cancelled) return false
+        return ['discard', 'resources', 'actions'].includes(context.what)
+      },
+      resolve: ({ inv, context, api }) => {
+        context.cancelled = true
+        const amount = Math.max(0, Number(context.amount) || 0)
+        if (context.what === 'discard') {
+          api.info(`${inv.name} 用「否决存在」忽略弃掉手牌的效果，改为抽 ${amount} 张。`)
+          api.drawCards(inv.seat, amount)
+        } else if (context.what === 'resources') {
+          api.info(`${inv.name} 用「否决存在」忽略失去资源的效果，改为获得 ${amount} 资源。`)
+          api.gainResources(inv.seat, amount)
+        } else if (context.what === 'actions') {
+          api.info(`${inv.name} 用「否决存在」忽略失去行动的效果，改为获得 ${amount} 次额外行动。`)
+          api.gainAction(inv.seat, amount)
+        }
+      },
+    },
     {
       kind: 'reaction',
       trigger: 'harmDealt',

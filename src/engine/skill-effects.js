@@ -95,6 +95,7 @@ export function createSkillEffects(deps) {
     // 第 5 步 P6：治疗恐惧的统一入口与取消记账（都要能开窗口）。
     healHorrorFrom,
     reactionWindow,
+    resourceBank,
   } = deps
 
 function applyTokenFx(state, seat, inv, fx, events) {
@@ -126,7 +127,7 @@ function applyTokenFx(state, seat, inv, fx, events) {
   }
 }
 
-function applySkillOnSuccess(state, inv, committed, success, successBy = 0) {
+function applySkillOnSuccess(state, inv, committed, success, successBy = 0, events = []) {
   const out = { damageBonus: 0, clueBonus: 0, evadeDisengage: false, mayMoveAfterEvade: false, homeFrontDamage: 0 }
   if (!success) {
     for (const code of committed) campaignState.clearWager(inv, code)
@@ -168,9 +169,11 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0) {
       campaignPlayerEffect(state, inv.seat, { action: 'placeChargeOrSecret' }, [])
     }
     if (o.healHorror) {
-      const h = Math.min(inv.horror, o.healHorror)
-      inv.horror -= h
-      info(state, null, `${inv.name} 的「${cardName(code)}」触发：治愈 ${h} 点恐惧。`)
+      // 2026-10-25 修复：治疗恐惧必须走统一入口 healHorrorFrom，才会打开 horrorHealed 窗口
+      // 并经过「理性思考」等威胁卡汇点；此前直接写 inv.horror，卡洛琳 05001 等「卡牌效果治愈恐惧后」
+      // 的触发点收不到事件。
+      const h = healHorrorFrom(state, inv, o.healHorror, events, { healerSeat: inv.seat })
+      if (h) info(state, null, `${inv.name} 的「${cardName(code)}」触发：治愈 ${h} 点恐惧。`)
     }
     if (o.gainAction) inv.actionsLeft += o.gainAction
     if (o.evadeDisengage) out.evadeDisengage = true
@@ -244,6 +247,46 @@ function makeRuntime(state, events) {
     },
     // 第 5 步 P6：治疗恐惧走统一入口（效果数据体 heal horror 也开 horrorHealed 窗口）。
     healHorror: (target, amount, options = {}) => healHorrorFrom(state, target, amount, events, options),
+    // 2026-10-25：05280「忽略失去资源的效果」窗口；effect DSL 的 loseResource 也走这里。
+    loseResources: (seat, amount, options = {}) => {
+      const inv = state.investigators[seat]
+      if (!inv || !(amount > 0)) return 0
+      const context = reactionWindow(state, 'wouldLoseResources', {
+        when: 'wouldLoseResources', seat: inv.seat, amount, what: 'resources', location: inv.location,
+        prompt: `${inv.name} 将要失去 ${amount} 资源`,
+      }, events)
+      if (context.cancelled) {
+        info(state, events, `🛡️ ${inv.name} 忽略了失去资源的效果。`)
+        return 0
+      }
+      const lost = Math.min(inv.resources, amount)
+      inv.resources -= lost
+      info(state, events, `${inv.name} 失去 ${lost} 资源。`)
+      return lost
+    },
+    loseActions: (seat, amount) => {
+      const inv = state.investigators[seat]
+      if (!inv || !(amount > 0)) return 0
+      const context = reactionWindow(state, 'wouldLoseActions', {
+        when: 'wouldLoseActions', seat: inv.seat, amount, what: 'actions', location: inv.location,
+        prompt: `${inv.name} 将要失去 ${amount} 个行动`,
+      }, events)
+      if (context.cancelled) {
+        info(state, events, `🛡️ ${inv.name} 忽略了失去行动的效果。`)
+        return 0
+      }
+      const lost = Math.min(inv.actionsLeft || 0, amount)
+      inv.actionsLeft = Math.max(0, (inv.actionsLeft || 0) - lost)
+      return lost
+    },
+    // 2026-10-25：05003/05011 卡牌效果获得资源也要经过资源寄存（家族遗产）。
+    gainResources: (seat, amount) => {
+      const inv = state.investigators[seat]
+      if (!inv || !(amount > 0)) return 0
+      resourceBank.gainResource(state, inv, amount, events)
+      info(state, events, `${inv.name} 获得 ${amount} 资源（当前 ${inv.resources}）。`)
+      return amount
+    },
     noteCancelled: (options = {}) => noteCardCancelled(reactionWindow, state, events, options),
     substituteSkill: (seat, from, to) => {
       const target = state.investigators[seat]

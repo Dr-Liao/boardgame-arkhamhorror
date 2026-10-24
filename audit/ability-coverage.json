@@ -7,12 +7,12 @@
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
     "descriptorEntries": 572,
-    "descriptorAbilities": 505,
+    "descriptorAbilities": 516,
     "abilityKinds": 12,
-    "windows": 62,
+    "windows": 66,
     "effectPrimitives": 56,
-    "nonPlayerCards": 21,
-    "behaviorLines": 20821,
+    "nonPlayerCards": 25,
+    "behaviorLines": 21878,
     "declaredScenarios": 3
   },
   "channels": {
@@ -22,7 +22,8 @@
   "nonPlayer": {
     "byScope": {
       "enemy": 15,
-      "location": 6
+      "location": 6,
+      "storyAsset": 4
     },
     "codes": [
       "03096",
@@ -41,14 +42,18 @@
       "04328",
       "04335",
       "05017",
+      "05258",
+      "05259",
+      "05260",
+      "05261",
       "goatSpawn",
       "relentlessDarkYoung",
       "screechingByakhee",
       "wolfManDrew",
       "youngDeepOne"
     ],
-    "abilities": 5,
-    "modifiers": 23
+    "abilities": 9,
+    "modifiers": 27
   },
   "declaration": {
     "abilityScopes": [
@@ -96,7 +101,7 @@
       "content/campaigns/thePathToCarcosa/scenarios/thePallidMask/behavior.js",
       "content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/behavior.js"
     ],
-    "behaviorLines": 20821,
+    "behaviorLines": 21878,
     "declaredScenarios": 3
   },
   "cards": [
@@ -2392,7 +2397,7 @@
     {
       "code": "04307",
       "channel": "descriptor",
-      "descriptors": 2
+      "descriptors": 3
     },
     {
       "code": "04308",
@@ -2472,7 +2477,7 @@
     {
       "code": "05010",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "05011",
@@ -2512,7 +2517,7 @@
     {
       "code": "05019",
       "channel": "descriptor",
-      "descriptors": 2
+      "descriptors": 4
     },
     {
       "code": "05020",
@@ -2712,7 +2717,7 @@
     {
       "code": "05152",
       "channel": "descriptor",
-      "descriptors": 0
+      "descriptors": 1
     },
     {
       "code": "05153",
@@ -2817,7 +2822,7 @@
     {
       "code": "05230",
       "channel": "descriptor",
-      "descriptors": 0
+      "descriptors": 1
     },
     {
       "code": "05231",
@@ -2892,7 +2897,7 @@
     {
       "code": "05280",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "05281",

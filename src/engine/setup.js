@@ -132,8 +132,12 @@ function drawOpeningHand(state, inv) {
     + (inv.assets || []).reduce((sum, asset) => sum + (registeredEntry(asset.code)?.openingHandBonus || 0), 0)
   while (inv.hand.length < target && inv.deck.length) {
     const code = inv.deck.pop()
-    if (isWeaknessCode(code)) weaknesses.push(code)
-    else inv.hand.push(code)
+    if (isWeaknessCode(code)) {
+      // 2026-10-25：05042「高塔·XVI」这类「必须留在起始手牌」的弱点由条目级字段声明，
+      // 不再洗回牌库（其余弱点仍按规则洗回）。
+      if (registeredEntry(code)?.staysInOpeningHand) inv.hand.push(code)
+      else weaknesses.push(code)
+    } else inv.hand.push(code)
   }
   inv.deck = shuffle([...inv.deck, ...weaknesses], () => randomValue(state))
 }

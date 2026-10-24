@@ -119,7 +119,7 @@ export function createClueApi(state, events, deps) {
       const owner = state.investigators[seat]
       if (!owner || !card) return false
       leaveAsset(state, owner, card, events)
-      if (!card.removedFromGame) owner.discard.push(card.code)
+      if (!card.removedFromGame && !card.returnedToHand) owner.discard.push(card.code)
       return true
     },
     // Phase 5（5c）：击败敌人（恐惧/战斗之外的效果，如「与你们同归于尽」）。

@@ -6,6 +6,7 @@
 //     反伤、击败资产）
 //   enemyHealth / enemyFightValue / enemyEvadeValue —— 敌人数值读点
 //   enemyAttack —— 敌人攻击流程（反应窗口、修正、结算）
+import { enemyIgnoresInvestigator } from './trait-passives.js'
 //   spawnEnemy / engageEnemy / disengageEnemy / defeatEnemy / damageEnemy —— 敌人生死与交战
 //
 // 它们被几乎所有 do* 与剧本运行时调用，拆出来后 engine.js 只剩状态机与「动作编排」。
@@ -50,6 +51,7 @@ export function createEnemies(deps) {
     randomValue,
     reactionWindow,
     registeredEntry,
+    releaseChaosTokens,
     removeOne,
     requestChoice,
     scenarioBehavior,
@@ -108,6 +110,13 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
   // 「在逃中」（01010）：直到本轮结束，非精英敌人不能攻击你——包括反击、警戒与效果发起的攻击。
   if (inv?.onTheLam && !enemy.elite) {
     info(state, events, `🕶️ 「在逃中」：非精英敌人「${enemy.name}」不能攻击 ${inv.name}。`)
+    return false
+  }
+  // 04325b/04326b：「[[蛇族]]/[[异教徒]]敌人不与你交战，也不攻击你」。
+  // 由调查员实例上的 enemyPassiveTraits 声明（内容层写入），引擎在此统一拦截所有攻击来源。
+  if (inv && enemyIgnoresInvestigator(state, inv, enemy)) {
+    info(state, events, `🕊️ 「${enemy.name}」不会攻击 ${inv.name}（调查员被动）。`)
+    attack.cancelled = true
     return false
   }
   // “狼人”德鲁「攻击时治愈 1 点伤害」由 01137 的 forced 描述子在 enemyAttack 窗口结算。
@@ -318,6 +327,8 @@ function engageEnemy(state, enemy, seat, events = []) {
   const prevented = enemy.preventEngageSeat
   if (prevented && prevented.seat === seat && prevented.round === state.round
     && prevented.turnSeat === state.currentSeat) return
+  // 04325b/04326b：「不与你交战」——该特性的敌人不能与这位调查员建立交战。
+  if (enemyIgnoresInvestigator(state, state.investigators[seat], enemy)) return
   if (enemy.engagedSeat != null) {
     const old = state.investigators[enemy.engagedSeat]
     if (old) removeOne(old.engaged, enemy.id)
@@ -341,6 +352,8 @@ function disengageEnemy(state, enemy) {
 }
 
 function defeatEnemy(state, enemy, events) {
+  // 敌人离场：把它身上封印的混乱标记归还混乱袋（04014 伊格蛇族的旧印等）。
+  releaseChaosTokens?.(state, enemy.id)
   const defeatedBy = enemy.defeatedBy ?? enemy.engagedSeat
   // 「煤油」等需要知道本地点本轮是否有敌人被击败。
   const defeatedAt = state.locations.find(location => location.id === enemy.location)
@@ -369,9 +382,9 @@ function defeatEnemy(state, enemy, events) {
       Number(state.campaign.records.chasingTheStranger || 0) + 1
   }
   const replaced = scenarioBehavior(state).enemyDefeated?.(state, enemy, scenarioRuntime(state, events))
-  if (!replaced) addVictory(state, enemy, events)
-  // 04147 伊塔卡：敌人加入胜利区后，可横置伊塔卡治愈自己与它各 1 点恐惧。
-  for (const holder of aliveInvestigators(state)) {
+  const addedToVictory = !replaced && addVictory(state, enemy, events)
+  // 04147 伊塔卡：只有敌人真正加入胜利区后，才可横置伊塔卡治愈自己与它各 1 点恐惧。
+  for (const holder of addedToVictory ? aliveInvestigators(state) : []) {
     // Phase 5（5a-29）：条目上的 exhaustOnEnemyDefeatedHealHorror 本身就是标记，不再写死卡号。
     const ichtaca = holder.assets.find(asset => !asset.exhausted
       && (registeredEntry(asset.code)?.exhaustOnEnemyDefeatedHealHorror))
@@ -494,7 +507,7 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
       const def = cardDef(asset.code)
       if ((def?.health > 0 && asset.damage >= def.health) || (def?.sanity > 0 && asset.horror >= def.sanity)) {
         leaveAsset(state, owner, asset)
-        if (!asset.removedFromGame) owner.discard.push(asset.code)
+        if (!asset.removedFromGame && !asset.returnedToHand) owner.discard.push(asset.code)
         info(state, events, `${cardName(asset.code)} 被击败并弃置。`)
         for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned && item.location === owner.location)) {
           triggerReaction(state, inv.seat, 'defeatAtLocation', events,

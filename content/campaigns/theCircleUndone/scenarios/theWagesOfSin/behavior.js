@@ -155,11 +155,17 @@ function setupLocations(state, events, helper = {}) {
 // ---------------------------------------------------------------------------
 // 议程 1b：所有地点翻到幽灵面；幽灵看守人放到绞刑者河；看守人组剩余卡 + 幽灵弃牌堆洗入幽灵遭遇牌库。
 function advanceTheHangedMan(state, agenda, api) {
-  for (const location of state.locations || []) {
-    if (isSpectralLocation(location)) continue
-    api.flipSpectral(location.id)
+  // 05164 正面：「地点不能被翻到[[幽灵]]面」。幕 1 期间议程先推进时不得翻面（FAQ v1.6）。
+  const locationsFrozen = actStep(state) === 1
+  if (!locationsFrozen) {
+    for (const location of state.locations || []) {
+      if (isSpectralLocation(location)) continue
+      api.flipSpectral(location.id)
+    }
+    api.info?.('🌫️ 绞刑者山丘被鬼灵迷雾吞没：每个地点翻到了幽灵面。')
+  } else {
+    api.info?.('🛡️ 「追寻死者」仍在进行：地点不能被翻到幽灵面。')
   }
-  api.info?.('🌫️ 绞刑者山丘被鬼灵迷雾吞没：每个地点翻到了幽灵面。')
   takeFromSetAside(state, SPECTRAL_WATCHER)
   api.spawn(SPECTRAL_WATCHER, 'hangmansBrook')
   api.info?.('👻 幽灵看守人在绞刑者河现身。')
@@ -321,6 +327,21 @@ function flipToUnfinishedBusiness(state, enemy, api, holderSeat = null) {
 }
 
 // 未了之事 → 敌人面（从威胁区移除剧情卡，重新进入战场）。
+// 引擎换面只换 code/name/战斗等印刷字段，但异端者的「+2×人数生命值」是章节定义
+// （definition hereticExtraRules.healthPerPlayerBonus），换面后需要由章节 handler 重置生命/伤害。
+function resetHereticFaceState(state, enemy) {
+  if (!enemy) return
+  const code = original(enemy)
+  const chapterDef = state.scenario?.enemies?.[code] || {}
+  const base = Number(chapterDef.health ?? ALL_CARDS[code]?.health ?? enemy.health) || 0
+  const bonus = Number(chapterDef.healthPerPlayerBonus || 0) * (Number(state.numInvestigators) || 1)
+  enemy.health = base + bonus
+  enemy.damageTaken = 0
+  enemy.doom = 0
+  enemy.exhausted = false
+  enemy.engagedSeat = null
+}
+
 function flipBackToHeretic(state, entry, api) {
   const snapshot = entry.enemySnapshot || {}
   const storyCode = entry.storyCode
@@ -334,6 +355,7 @@ function flipBackToHeretic(state, entry, api) {
   ensureHereticFaces(state, snapshot)
   api.flipEnemy(snapshot, enemyCode)
   snapshot.side = 'enemy'
+  resetHereticFaceState(state, snapshot)
   flagsFor(state).unfinishedBusiness = (flagsFor(state).unfinishedBusiness || [])
     .filter(candidate => candidate.storyCode !== storyCode)
   api.info?.('🎭 「未了之事」翻回异端者面，重新进入战场。')
@@ -411,7 +433,7 @@ const IMMEDIATE_RESOLVE = Object.freeze({
   },
 })
 
-function resolveImmediateUnfinishedBusiness(state, entry, api) {
+function resolveImmediateUnfinishedBusiness(state, entry, api, options = {}) {
   const holder = Number.isInteger(entry.holderSeat) ? state.investigators[entry.holderSeat] : null
   const rule = threatRule({ code: entry.storyCode })
   if (!rule?.immediate) return false
@@ -423,7 +445,10 @@ function resolveImmediateUnfinishedBusiness(state, entry, api) {
     api.attack(inPlay, holder)
     api.info?.(`👻 「${inPlay.name}」翻回敌人面并立即攻击 ${holder.name}。`)
   }
-  IMMEDIATE_RESOLVE[rule.immediate.kind]?.(state, inPlay, api, rule.immediate)
+  // 05178l（L 面）：「如果你通过谈判查看本面：翻回敌人面并立即攻击。不要结算本卡牌上的
+  // 其他任何文本。」——查看时只做翻回+攻击，不执行「下次击败即驱除」的注册。
+  const skipImmediate = options.fromParley && rule.immediate.kind === 'banishNextDefeat'
+  if (!skipImmediate) IMMEDIATE_RESOLVE[rule.immediate.kind]?.(state, inPlay, api, rule.immediate)
   return true
 }
 
@@ -535,7 +560,14 @@ const RESOLVE_RULES = Object.freeze({
     }
     const piles = extraDeckPiles(state, 'spectral')
     let found = null
-    while (piles.deck.length) {
+    let guard = 0
+    while (guard++ < 200) {
+      // 05185：「从幽灵遭遇牌库顶弃掉卡牌，直到弃掉一个灵怪敌人」；牌库弃空时把弃牌堆洗回继续。
+      if (!piles.deck.length) {
+        if (!piles.discard.length) break
+        piles.deck = api.shuffle ? api.shuffle([...piles.discard]) : [...piles.discard]
+        piles.discard = []
+      }
       const drawnCode = piles.deck.pop()
       if (ALL_CARDS[drawnCode]?.type === 'enemy' && hasTrait({ code: drawnCode }, 'geist')) {
         found = drawnCode
@@ -551,8 +583,10 @@ const RESOLVE_RULES = Object.freeze({
 
 // 涌动规则数据分派。
 const SURGE_RULES = Object.freeze({
-  noUnfinishedBusiness(state) {
-    return !alive(state).some(inv => (inv.threat || []).some(isStoryThreat))
+  // 05182：涌动条件按「你的」威胁区（引擎 encounter.js 把结算者作为第三参数传入）。
+  noUnfinishedBusiness(state, inv = null) {
+    const owners = inv ? [inv] : alive(state)
+    return !owners.some(owner => (owner.threat || []).some(isStoryThreat))
   },
   graveLightStandardDraw(state) {
     const mode = flagsFor(state).graveLight
@@ -562,7 +596,10 @@ const SURGE_RULES = Object.freeze({
       // 基础弃牌堆里的长明灯移入幽灵牌库顶（“洗入”的确定性近似）。
       const index = state.encounterDiscard.lastIndexOf('05184')
       if (index >= 0) state.encounterDiscard.splice(index, 1)
-      piles.deck.push('05184')
+      // 卡面：洗入幽灵遭遇牌库（随机位置）。本函数签名没有 api，用轮数+牌堆长度做确定性散布
+      // （不再是固定的牌堆顶；单测只断言包含该卡）。
+      const insertAt = (Number(state.round) + piles.deck.length) % (piles.deck.length + 1)
+      piles.deck.splice(insertAt, 0, '05184')
       return true
     }
     const spectralIndex = piles.discard.lastIndexOf('05184')
@@ -655,15 +692,19 @@ export const behavior = {
     if (handler) return handler(state, inv, api)
     return encounterRules.resolveEncounter?.(state, inv, treachery, api)
   },
-  encounterGainsSurge(state, code) {
+  encounterGainsSurge(state, code, resolvingInv = null) {
     const rule = rulesOf(state, code)
     const handler = SURGE_RULES[rule.surgeRule]
-    return handler ? handler(state) : undefined
+    return handler ? handler(state, resolvingInv) : undefined
   },
 
   // ---- 地点 ----
   locationFlipped(state, location, api) {
     renderLocationRule(location, api)
+    // 05166b 等双面地点的隐藏值：引擎换面只替换 code/name/subname/clues，不替换 shroud；
+    // 这里按「当前面」的印刷数据回填（05166b 幽灵面 shroud=1，正面 05166 为 4）。
+    const printed = ALL_CARDS[location.originalCode || location.code]
+    if (printed && Number.isFinite(printed.shroud)) location.shroud = printed.shroud
     syncHereticRestrictions(state)
     syncMalevolent(state)
   },
@@ -697,6 +738,14 @@ export const behavior = {
     if (!result?.success || !isAtAttic(state, location.id) || !hasAtticBelowRule(location)) return undefined
     const beneath = location.beneath || []
     if (!beneath.length) return undefined
+    // 05175/05176b：[reaction]「成功调查后」——给出是否发动的选择窗口（引擎没有逐反应窗口，
+    // 用一次 choose 近似；默认选项为「是」以兼容自动结算）。
+    const answer = api?.choose?.({
+      kind: 'option', source: original(location), seat: inv.seat,
+      prompt: '教堂阁楼：[反应] 成功调查后，把阁楼底下的卡牌加入手牌？',
+      options: [{ id: 'yes', label: '是' }, { id: 'no', label: '否' }],
+    })
+    if (answer === 'no') return undefined
     for (const entry of beneath) {
       const owner = state.investigators?.[entry.ownerSeat] || inv
       owner.hand.push(entry.code)
@@ -720,6 +769,12 @@ export const behavior = {
   },
 
   // ---- 目标限制 / 异端者限制 ----
+  // 05165 正面：「线索不能在非[[幽灵]]地点被发现」（幕 2 期间）。
+  canDiscoverClues(state, inv, location) {
+    if (encounterRules.canDiscoverClues?.(state, inv, location) === false) return false
+    if (actStep(state) === 2 && !isSpectralLocation(location)) return false
+    return true
+  },
   canFightEnemy(state, inv, enemy) {
     if (encounterRules.canFightEnemy?.(state, inv, enemy) === false) return false
     if (isHereticEnemy(state, enemy) && !isSpectralLocation(here(state, inv))) return false
@@ -748,6 +803,11 @@ export const behavior = {
     ensureHereticFaces(state, enemy)
     enemy.enemyRole ||= rulesOf(state, original(enemy))?.enemyRole || null
     if (isHereticEnemy(state, enemy)) enemy.printedAloof = false
+    // 05161 [cultist]：「直到一轮结束，场上每个异端者 +1 攻击/+1 躲避」——
+    // 同一轮稍后入场的异端者也应获得（chaos.js 记下本轮标记）。
+    if (enemy.hereticFace && flagsFor(state).wosCultistBuffRound === state.round) {
+      enemy.roundFightEvadeBonus = { round: state.round, amount: 1 }
+    }
     syncHereticRestrictions(state)
     syncMalevolent(state)
     encounterRules.enemySpawned?.(state, enemy, api)
@@ -786,11 +846,13 @@ export const behavior = {
   },
   // 敌人被击败：惩罚（威胁区强制）→ 复仇女巫（直接伤害/恐惧）→ 地点 defeatRule → 异端者翻面。
   enemyDefeated(state, enemy, api) {
-    // 惩罚（05181）：任意地点有敌人被击败后，威胁区里有它的调查员受到 1 点伤害。
+    // 惩罚（05181）：任意地点有敌人被击败后，威胁区里每张「惩罚」各触发 1 点伤害。
     for (const inv of alive(state)) {
-      if (!threatHasRule(inv, 'punishment')) continue
-      api.damage(inv.seat, 1)
-      api.info?.(`⛓️ 惩罚：有敌人被击败，${inv.name} 受到 1 点伤害。`)
+      const punishments = (inv.threat || []).filter(card =>
+        rulesOf(state, original(card))?.resolveRule === 'punishment').length
+      if (!punishments) continue
+      api.damage(inv.seat, punishments)
+      api.info?.(`⛓️ 惩罚：有敌人被击败，${inv.name} 受到 ${punishments} 点伤害（每张惩罚各触发一次）。`)
     }
     // 复仇女巫：被击败时对其地点每位调查员造成其伤害与恐惧（直接伤害/恐惧）。
     const role = enemyRoleOf(state, enemy)
@@ -854,8 +916,11 @@ export const behavior = {
     const moves = []
     const hereLocation = here(state, inv)
     if (!hereLocation) return moves
-    // [action] 撤退（地点数据声明 resignAction；幽灵面闹鬼会锁定本轮）。
-    if (hereLocation.resignAction && inv.wosResignLockedRound !== state.round) {
+    // [action] 撤退（地点数据声明 resignAction；05166b 背面闹鬼会锁定「该地点」本轮）。
+    const resignLock = flagsFor(state).resignLock
+    const resignLocked = Boolean(resignLock && resignLock.round === state.round
+      && resignLock.locationId === inv.location)
+    if (hereLocation.resignAction && !resignLocked) {
       moves.push({
         action: 'scenarioAction', rule: hereLocation.resignAction,
         label: '🚪 撤退：“这个好主意是谁想出来的？”',
@@ -869,25 +934,27 @@ export const behavior = {
         moves.push({ action: 'scenarioAction', rule: 'flipMyLocation', actions: 0, label: '🔄 将你所在地点翻面（本轮该地点首次）' })
       }
     }
-    // 幽灵迷网（05177）：[action] 团队花费 1–3 个线索攻击灵怪敌人。
+    // 幽灵迷网（05177）：[action] 你所在地点的调查员共同花费 1–3 个线索攻击灵怪敌人。
     const web = (inv.assets || []).find(asset => original(asset) === SPECTRAL_WEB)
     if (web) {
-      const groupClues = alive(state).reduce((sum, owner) => sum + (Number(owner.clues) || 0), 0)
+      const groupClues = alive(state).filter(owner => owner.location === inv.location)
+        .reduce((sum, owner) => sum + (Number(owner.clues) || 0), 0)
       if (groupClues >= 1) {
-        moves.push({ action: 'scenarioAction', rule: 'spectralWebAttack', label: '🕸️ 幽灵迷网：团队花费 1–3 个线索攻击灵怪敌人' })
+        moves.push({ action: 'scenarioAction', rule: 'spectralWebAttack', label: '🕸️ 幽灵迷网：你所在地点的调查员共同花费 1–3 个线索攻击灵怪敌人' })
       }
     }
-    // 异端者谈判：[fast] 花费线索查看另一面（J 之后费用/地点受限）。
+    // 异端者谈判：[fast] 花费线索查看另一面（线索由发起者支付；J 之后费用/地点受限）。
     for (const enemy of state.enemies || []) {
       if (!isHereticEnemy(state, enemy) || enemy.location !== inv.location) continue
       let cost = 1
       if (enemy.hereticJResolved) {
-        cost = Number(enemy.hereticParleyCost) || 2
+        // 05178j：「触发该能力花费 +1[per_investigator] 个线索」= 1 + 人数。
+        cost = Number(enemy.hereticParleyCost) || (1 + (Number(state.numInvestigators) || 1))
         if (enemy.hereticParleySpectralOnly && !isSpectralLocation(hereLocation)) continue
       }
-      const groupClues = alive(state).reduce((sum, owner) => sum + (Number(owner.clues) || 0), 0)
-      if (groupClues < cost) continue
-      moves.push({ action: 'scenarioAction', rule: 'hereticParley', enemyId: enemy.id, label: `🤝 谈判：花费 ${cost} 个线索查看异端者的另一面` })
+      if ((Number(inv.clues) || 0) < cost) continue
+      moves.push({ action: 'scenarioAction', rule: 'hereticParley', enemyId: enemy.id, actions: 0,
+        label: `🤝 [快速] 谈判：花费 ${cost} 个线索查看异端者的另一面` })
     }
     // 未了之事的 [action] 驱除（数据表给出地点名与技能）。
     for (const threat of inv.threat || []) {
@@ -907,6 +974,11 @@ export const behavior = {
   },
   performAction(state, inv, move, api) {
     if (move.rule === 'resignHangmansBrook') {
+      const lock = flagsFor(state).resignLock
+      if (lock && lock.round === state.round && lock.locationId === inv.location) {
+        api.info?.('本轮不能触发该地点的撤退能力。')
+        return
+      }
       api.resign(inv.seat)
       return
     }
@@ -974,9 +1046,18 @@ export const behavior = {
     '教堂阁楼的「放在阁楼底下」→ 地点实例 beneath 数组（{code, ownerSeat}，纯 JSON）；cardDrawn 强制与 investigateResult 的取回反应只对 beneathRule: atticBottom 的 175/175b 面生效。',
     '异端者墓地 171「调查时把意志值加入技能值」与教堂阁楼 176「把手牌张数加入技能值」→ 地点数据 investigateBonus，beforeInvestigate 登记 wosInvestigateBonus、statModifier 在本次检定中加值（引擎 statModifier 没有 investigation 上下文）。',
     '闹鬼农田/废弃教堂/绞刑架/教堂地下室/教堂阁楼/异端者墓地的常驻与闹鬼文本 → 地点数据字段（horrorAura/statRule/shroudRule/beneathRule/defeatRule）+ HAUNTED_BY_LOCATION 数据表 + hauntedScript 承载（闭集子句无法表达移动敌人/弃遭遇牌/生成敌人/设定基础值）。',
-    '「地点不能被翻到幽灵/非幽灵面」→ 引擎无 CannotBeFlipped 修正词表；behavior.actions 只在该幕允许的方向给出翻面行动（剧情脚本翻面不受影响）。',
+    '「地点不能被翻到幽灵/非幽灵面」→ 引擎无 CannotBeFlipped 修正词表；behavior.actions 只在该幕允许的方向给出翻面行动，且 behavior.advanceTheHangedMan 在幕 1（05164）期间跳过议程的「所有地点翻到幽灵面」（FAQ v1.6；幕 2 起正常翻面）。',
     '未了之事的强制在「如同此时是一轮结束」时触发 → 与 roundEnded 共用同一函数（行为一致，触发源不同）。',
     '逐卡规则键放在单卡条目 flags（entryFlags 读点）；条目索引尚未重建时 behavior 回退 definition.CARD_RULES 的同一份键，因此章节行为零卡号分支且离线单测可跑。',
+    '05165「线索不能在非幽灵地点被发现」→ behavior.canDiscoverClues（幕 2 且目标非幽灵地点时 false）。',
+    '05166b 幽灵面隐藏值 → 引擎换面只替换 code/name/subname/clues，behavior.locationFlipped 按当前面印刷数据回填 shroud（正面 4 ↔ 幽灵面 1）；闹鬼的「不能触发撤退能力」按「地点 + 轮」记账，对该地点所有调查员生效。',
+    '异端者/未了之事翻面 → 引擎只换印刷字段，behavior.flipBackToHeretic 之后由 resetHereticFaceState 按章节定义重置生命（2 + 2×人数）与伤害/毁灭。',
+    '05177 幽灵迷网 → 线索池为「你所在地点」的调查员、支付前先检查目标；攻击伤害为基础 1 + X（X=花费线索），自定义攻击 source 带 label「攻击」供 05161 的 [elderthing] 识别。',
+    '异端者谈判 → [fast]（0 行动）、线索由发起者支付；J 面费用 1 + 人数；查看 L 面只翻回+攻击，不注册「下次击败即驱除」（05178l）。',
+    '05185 祸害生者 → 幽灵牌库弃空时把弃牌堆洗回继续弃；翻回未了之事后按重置的生命取一半放置伤害。',
+    '05181 惩罚 → 威胁区每张「惩罚」各触发 1 点伤害（不再按调查员只结算一次）；05182 涌动按引擎传入的结算者威胁区判定。',
+    '05183 险兆的「获得险境且不能被取消」需要引擎 drawExtraEncounter 的 options（primitive request w-fix-c3c4-draw-extra-options），当前只做普通抽取。',
+    '05171/05176 调查加值仍用未修正基础值（引擎没有「地点/效果为调查检定追加技能」的读点：primitive request w-fix-c3c4-investigate-add-skill）。',
   ],
 }
 
@@ -998,27 +1079,31 @@ function canFlipHere(state, location) {
 }
 
 function performSpectralWebAttack(state, inv, api) {
-  const groupClues = alive(state).reduce((sum, owner) => sum + (Number(owner.clues) || 0), 0)
+  // 05177：「你所在地点的调查员共同花费 1–3 个线索：攻击。本能力只能用于攻击[[灵怪]]敌人。」
+  const hereInvestigators = alive(state).filter(owner => owner.location === inv.location)
+  const groupClues = hereInvestigators.reduce((sum, owner) => sum + (Number(owner.clues) || 0), 0)
+  const targets = (state.enemies || []).filter(enemy => enemy.location === inv.location
+    && hasTrait(enemy, 'geist') && canFightEnemyForWeb(state, inv, enemy))
+  // 支付前先确认有目标：无目标时不扣线索。
+  if (groupClues < 1 || !targets.length) {
+    api.info?.('🕸️ 幽灵迷网：这里没有可攻击的灵怪敌人（或没有线索），未结算。')
+    return
+  }
   const max = Math.min(3, groupClues)
   const choice = api.choose({
     kind: 'option', source: SPECTRAL_WEB, seat: inv.seat,
-    prompt: `幽灵迷网：团队花费几个线索（1–${max}）？`,
+    prompt: `幽灵迷网：你所在地点的调查员共同花费几个线索（1–${max}）？`,
     options: Array.from({ length: max }, (_, index) => ({
       id: String(index + 1), label: `花费 ${index + 1} 个线索（+${index + 1} 技能值/+${index + 1} 伤害）`,
     })),
   })
   const spent = Math.max(1, Math.min(max, Number(choice) || 1))
   let remaining = spent
-  for (const owner of alive(state)) {
+  for (const owner of hereInvestigators) {
     if (remaining <= 0) break
     const pay = Math.min(remaining, Number(owner.clues) || 0)
     owner.clues -= pay
     remaining -= pay
-  }
-  const targets = (state.enemies || []).filter(enemy => enemy.location === inv.location && hasTrait(enemy, 'geist'))
-  if (!targets.length) {
-    api.info?.('🕸️ 这里没有灵怪敌人，幽灵迷网没有目标（线索已花费）。')
-    return
   }
   const targetId = api.choose({
     kind: 'target', source: SPECTRAL_WEB, seat: inv.seat,
@@ -1033,28 +1118,31 @@ function performSpectralWebAttack(state, inv, api) {
   })
   const skill = skillChoice === 'willpower' ? 'willpower' : 'combat'
   api.test(inv.seat, skill, Number(target.fight) || 0, result => {
-    if (result.success) api.damageEnemy(target.id, spent, inv.seat, 'spectralWeb')
-  }, spent, { type: 'scenario', name: '幽灵迷网', ability: true })
+    // 卡面：本次攻击造成 +X 伤害（X=花费线索数），加上攻击的基础 1 点。
+    if (result.success) api.damageEnemy(target.id, spent + 1, inv.seat, 'spectralWeb')
+  }, spent, { type: 'scenario', name: '幽灵迷网', ability: true, label: '攻击' })
   api.info?.(`🕸️ ${inv.name} 用幽灵迷网攻击「${target.name}」（+${spent} 技能值/+${spent} 伤害）。`)
+}
+
+function canFightEnemyForWeb(state, inv, enemy) {
+  // 复用章节/共享的幽灵目标限制（非幽灵地点的幽灵敌人不能被攻击）。
+  if (typeof behavior.canFightEnemy === 'function') return behavior.canFightEnemy(state, inv, enemy) !== false
+  return true
 }
 
 function performHereticParley(state, inv, move, api) {
   const enemy = (state.enemies || []).find(candidate => candidate.id === move.enemyId)
   if (!enemy) return
   let cost = 1
-  if (enemy.hereticJResolved) cost = Number(enemy.hereticParleyCost) || 2
-  // 团队花费线索（尽量从线索多的人身上扣）。
-  let remaining = cost
-  for (const owner of [...alive(state)].sort((left, right) => (right.clues || 0) - (left.clues || 0))) {
-    if (remaining <= 0) break
-    const pay = Math.min(remaining, Number(owner.clues) || 0)
-    owner.clues -= pay
-    remaining -= pay
+  if (enemy.hereticJResolved) {
+    cost = Number(enemy.hereticParleyCost) || (1 + (Number(state.numInvestigators) || 1))
   }
-  if (remaining > 0) {
+  // [fast] 谈判：线索由发起者支付（不是团队池）。
+  if ((Number(inv.clues) || 0) < cost) {
     api.info?.('线索不足，谈判失败。')
     return
   }
+  inv.clues -= cost
   const storyCode = enemy.hereticStory
   const storyRule = threatRule({ code: storyCode })
   api.info?.(`🤝 谈判：查看「异端者」的另一面（${ALL_CARDS[storyCode]?.nameZh || storyCode}）。`)
@@ -1066,7 +1154,7 @@ function performHereticParley(state, inv, move, api) {
   if (storyRule?.immediate) {
     // J/L 的 Forced：如同你刚刚击败本异端者——翻回敌人面并立即攻击。
     const entry = flipToUnfinishedBusiness(state, enemy, api, inv.seat)
-    if (entry) resolveImmediateUnfinishedBusiness(state, entry, api)
+    if (entry) resolveImmediateUnfinishedBusiness(state, entry, api, { fromParley: true })
   } else {
     api.cardFlip?.(enemy.hereticFace || original(enemy), '异端者的另一面')
   }
@@ -1089,7 +1177,9 @@ function performBanish(state, inv, move, api) {
 // ---------------------------------------------------------------------------
 const HAUNTED_SCRIPTS = Object.freeze({
   lockResignThisRound(state, inv) {
-    inv.wosResignLockedRound = state.round
+    // 05166b 背面：「直到一轮结束，不能触发上述撤退能力」——按「地点 + 轮」记账，
+    // 对该地点的所有调查员生效（而不是只锁结算闹鬼的那一位）。
+    flagsFor(state).resignLock = { round: state.round, locationId: inv.location }
     return true
   },
   moveNearestSpectralToHere(state, inv, api) {

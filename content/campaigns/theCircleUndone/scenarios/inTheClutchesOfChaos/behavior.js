@@ -244,9 +244,19 @@ function startVariantLocations(state, variant) {
 // 本函数按 location 类型分派（数据驱动，不含卡号字面量分支）。
 // ---------------------------------------------------------------------------
 
-function spawnLocationFor(state, code) {
+function spawnLocationFor(state, code, api = {}) {
   const rule = enemySpawnRuleFor(code)
   if (!rule || !rule.location) return null
+  // 并列地点由队长选择（卡面同类规则用 choose；无 choose 注入时按稳定顺序取第一个，保持测试确定性）。
+  const pickAmong = (pool, prompt) => {
+    if (!pool.length) return null
+    if (pool.length === 1 || typeof api.choose !== 'function') return pool[0].id
+    const answer = api.choose({
+      kind: 'spawn', source: code, seat: state.campaign?.leadSeat ?? 0, prompt,
+      options: pool.map(location => ({ id: location.id, label: location.name })),
+    })
+    return (pool.find(location => location.id === answer) || pool[0]).id
+  }
   if (rule.location === 'mostBreaches') {
     // 秘社打手：裂口最多的地点；都没有裂口则回退到条目声明的银暮秘社 id。
     const withBreaches = (state.locations || []).filter(location => breachesOf(location) > 0)
@@ -257,14 +267,16 @@ function spawnLocationFor(state, code) {
       return fallback?.id || null
     }
     const most = Math.max(...withBreaches.map(location => breachesOf(location)))
-    return withBreaches.find(location => breachesOf(location) === most)?.id || null
+    return pickAmong(withBreaches.filter(location => breachesOf(location) === most),
+      `选择「${ALL_CARDS[code]?.nameZh || code}」的生成地点（裂口最多者并列）。`)
   }
   if (rule.location === 'fewestBreaches') {
-    // 混沌见证者：裂口最少的地点（并列时取第一个）。
+    // 混沌见证者：裂口最少的地点。
     const pool = state.locations || []
     if (!pool.length) return null
     const fewest = Math.min(...pool.map(location => breachesOf(location)))
-    return pool.find(location => breachesOf(location) === fewest)?.id || null
+    return pickAmong(pool.filter(location => breachesOf(location) === fewest),
+      `选择「${ALL_CARDS[code]?.nameZh || code}」的生成地点（裂口最少者并列）。`)
   }
   return null
 }
@@ -294,7 +306,8 @@ function resolvePrimordialGateway(state, inv, api) {
     if (placeBreachesAt(state, api, location.id, 1) === 0) break
   }
   api.info?.(`🌌 「元初通道」附属到「${location.name}」：裂口补到 3 个，文本视为空白。`)
-  return false
+  // 已在场上「附属」：返回 true 让引擎不再把它放进遭遇弃牌堆（关闭时只弃一次）。
+  return true
 }
 
 function resolveTerrorUnleashed(state, inv, api) {
@@ -323,14 +336,29 @@ function resolveSecretsOfTheBeyond(state, inv, api) {
     return false
   }
   const most = Math.max(...cultists.map(enemy => Number(enemy.doom || 0)))
-  const target = cultists.find(enemy => Number(enemy.doom || 0) === most)
+  const tied = cultists.filter(enemy => Number(enemy.doom || 0) === most)
+  // 卡面「找出毁灭标记最多的异教徒」：并列时由抽牌者选择（旧实现固定取第一张）。
+  let target = tied[0]
+  if (tied.length > 1) {
+    const answer = chooseOption(api, state, {
+      kind: 'enemy', source: '05310', seat: inv.seat,
+      prompt: '「异界之秘」：选择毁灭标记最多的异教徒敌人。',
+      options: tied.map(enemy => ({ id: enemy.id, label: enemy.name || original(enemy) })),
+    })
+    target = tied.find(enemy => enemy.id === answer) || tied[0]
+  }
   const location = target?.location ? locationById(state, target.location) : null
   if (!location) {
     flagsOf(state).pendingSurge = true
     return false
   }
-  placeBreachesAt(state, api, location.id, most)
-  api.info?.(`「异界之秘」：在「${location.name}」放置 ${most} 个裂口。`)
+  const placed = placeBreachesAt(state, api, location.id, most)
+  api.info?.(`「异界之秘」：在「${location.name}」放置 ${placed} 个裂口。`)
+  // 卡面「如果未因本效果放置裂口，获得涌动」：目标地点已满 3 裂口改为结算入侵时 placed=0。
+  if (placed === 0) {
+    flagsOf(state).pendingSurge = true
+    api.info?.('「异界之秘」：未因本效果放置裂口，获得涌动。')
+  }
   return false
 }
 
@@ -424,14 +452,16 @@ function skillTestBreach(state, inv, api, location, skill, difficulty, source) {
   if (typeof api.test !== 'function') return
   api.test(inv.seat, skill, difficulty, result => {
     if (!result?.success) return
-    const successBy = Math.max(1, Number(result.value || 0) - Number(result.difficulty || difficulty))
+    // 卡面「成功且每超过难度 1 点移 1 个」：恰好成功（差值 0）应移 0 个。
+    const successBy = Math.max(0, Number(result.value || 0) - Number(result.difficulty || difficulty))
+    if (successBy <= 0) return
     moveBreachesToAct(state, api, location, Math.min(breachesOf(location), successBy))
   }, 0, { code: source })
 }
 
 const LOCATION_HANDLERS = {
   '05290': {
-    actions: (state, inv, location) => withBreach(location)
+    actions: (state, inv, location) => withBreach(location) && (inv.hand || []).length
       ? [{ rule: 'locDiscardIconBreach', label: '🃏 弃 1 张手牌：移除裂口（每有 1 个意志/百搭图标多移除 1），移到当前幕' }]
       : [],
     perform: (state, inv, api, location) => {
@@ -446,7 +476,7 @@ const LOCATION_HANDLERS = {
     perform: (state, inv, api, location) => { skillTestBreach(state, inv, api, location, 'willpower', 2, '05291'); return true },
   },
   '05292': {
-    actions: (state, inv, location) => withBreach(location)
+    actions: (state, inv, location) => withBreach(location) && (inv.hand || []).length
       ? [{ rule: 'locDiscardIconBreach', label: '🃏 弃 1 张手牌：移除裂口（每有 1 个智识/百搭图标多移除 1），移到当前幕' }]
       : [],
     perform: (state, inv, api, location) => {
@@ -461,11 +491,17 @@ const LOCATION_HANDLERS = {
     perform: (state, inv, api, location) => { skillTestBreach(state, inv, api, location, 'intellect', 2, '05293'); return true },
   },
   '05294': {
-    // 南区（1）：fast，若此处有裂口且遭遇牌库非空：弃遭遇牌库顶 3 张，其中每张「力量」诡计可抽取，移除 1 个裂口并移 1 到幕。
-    actions: (state, inv, location) => withBreach(location) && (state.encounterDeck || []).length
+    // 南区（1）：[fast] 弃遭遇牌库顶 3 张，其中每张「力量」诡计可抽取；移除 1 个裂口并移到当前幕。
+    // 卡面的 [fast] 不要求此处有裂口（没有裂口时前半段照样结算），只要求遭遇牌库/弃牌堆有牌。
+    actions: (state, inv, location) => ((state.encounterDeck || []).length || (state.encounterDiscard || []).length)
       ? [{ rule: 'locSouthsideDiscard', label: '🎴 弃遭遇牌库顶 3 张：可抽取其中 1 张力量诡计；移除 1 个裂口并移到当前幕', actions: 0 }]
       : [],
     perform: (state, inv, api, location) => {
+      if (!(state.encounterDeck || []).length && (state.encounterDiscard || []).length) {
+        state.encounterDeck = typeof api.shuffle === 'function'
+          ? api.shuffle([...state.encounterDiscard]) : [...state.encounterDiscard]
+        state.encounterDiscard = []
+      }
       const discarded = []
       for (let index = 0; index < 3; index++) {
         const code = (state.encounterDeck || []).pop()
@@ -496,8 +532,9 @@ const LOCATION_HANDLERS = {
       : [],
     perform: (state, inv, api, location) => {
       const hand = (inv.hand || []).length
-      const limit = Math.min(hand, breachesOf(location))
-      let count = limit
+      // 卡面允许弃超过裂口数量的手牌（超出部分白弃），数量上限只由手牌数决定。
+      const limit = hand
+      let count = 0
       if (limit > 0) {
         count = Number(chooseOption(api, state, {
           kind: 'number', source: '05295', seat: inv.seat, prompt: `弃任意张手牌（最多 ${limit} 张）。`,
@@ -505,15 +542,14 @@ const LOCATION_HANDLERS = {
         }))
         if (!Number.isInteger(count) || count < 0 || count > limit) count = limit
       }
-      if (count > 0) {
-        ;(inv.discard ||= []).push(...inv.hand.splice(0, count))
-      }
-      moveBreachesToAct(state, api, location, count)
+      // 「选择并弃掉」：逐张让玩家选择，而不是按手牌顺序强弃前 N 张。
+      for (let index = 0; index < count; index++) discardOneFromHand(state, inv, api, '05295')
+      moveBreachesToAct(state, api, location, Math.min(count, breachesOf(location)))
       return true
     },
   },
   '05296': {
-    actions: (state, inv, location) => withBreach(location)
+    actions: (state, inv, location) => withBreach(location) && (inv.hand || []).length
       ? [{ rule: 'locDiscardIconBreach', label: '🃏 弃 1 张手牌：移除裂口（每有 1 个敏捷图标多移除 1），移到当前幕' }]
       : [],
     perform: (state, inv, api, location) => {
@@ -529,13 +565,13 @@ const LOCATION_HANDLERS = {
   },
   '05298': {
     actions: (state, inv, location) => [
-      ...(withBreach(location) && (state.encounterDeck || []).length
+      ...(((state.encounterDeck || []).length || (state.encounterDiscard || []).length)
         ? [{ rule: 'locSouthChurchDraw', label: '🎴 抽取 1 张遭遇牌：移除此处所有裂口并移到当前幕' }]
         : []),
       { rule: 'locResign', label: '🏳️ 撤退：你躲藏起来，熬过这一夜。' },
     ],
-    perform: (state, inv, api, location) => {
-      if (withBreach(location) && (state.encounterDeck || []).length) {
+    perform: (state, inv, api, location, move) => {
+      if (move?.rule === 'locSouthChurchDraw') {
         api.drawEncounter?.(inv.seat)
         moveBreachesToAct(state, api, location, breachesOf(location))
         return true
@@ -551,8 +587,13 @@ const LOCATION_HANDLERS = {
         : []),
       { rule: 'locResign', label: '🏳️ 撤退：你躲藏起来，熬过这一夜。' },
     ],
-    perform: (state, inv, api, location) => {
-      if (withBreach(location)) {
+    perform: (state, inv, api, location, move) => {
+      if (move?.rule === 'locSouthChurchAsset') {
+        // 费用必须支付：没有支援时不能结算后面的移裂口效果。
+        if (!(inv.assets || []).length) {
+          api.info?.('没有支援可弃：这次行动没有效果。')
+          return true
+        }
         chooseAssetToDiscard(state, inv, api, '05299')
         moveBreachesToAct(state, api, location, breachesOf(location))
         return true
@@ -562,18 +603,20 @@ const LOCATION_HANDLERS = {
     },
   },
   '05300': {
-    actions: (state, inv, location) => withBreach(location) && (inv.deck || []).length
+    // 卡面 [action]：弃牌库顶 5/10/15 张，每 5 张移 1 个裂口；没有「必须有裂口」的前置。
+    actions: (state, inv, location) => (inv.deck || []).length
       ? [{ rule: 'locMerchantDiscardTop', label: '🃏 弃牌库顶 5/10/15 张：每 5 张移除 1 个裂口，抽到弱点则入手' }]
       : [],
     perform: (state, inv, api, location) => {
       const available = (inv.deck || []).length
-      const choices = [5, 10, 15].filter(value => value <= available)
+      // 牌库不足 5 张时仍可选择 5/10/15（能弃多少弃多少，按实际弃牌数每 5 张移 1）。
+      const choices = [5, 10, 15]
       const picked = Number(chooseOption(api, state, {
         kind: 'number', source: '05300', seat: inv.seat, prompt: '选择弃掉牌库顶多少张。',
-        options: choices.map(value => ({ id: String(value), label: `弃 ${value} 张` })),
+        options: choices.map(value => ({ id: String(value), label: `弃 ${value} 张（牌库 ${available} 张）` })),
       }))
-      const count = choices.includes(picked) ? picked : (choices[0] || 0)
-      const discarded = (inv.deck || []).splice(Math.max(0, available - count))
+      const count = Math.min(choices.includes(picked) ? picked : choices[0], available)
+      const discarded = count > 0 ? (inv.deck || []).splice(Math.max(0, available - count)) : []
       ;(inv.discard ||= []).push(...discarded)
       const remove = Math.min(breachesOf(location), Math.floor(count / 5))
       moveBreachesToAct(state, api, location, remove)
@@ -643,22 +686,39 @@ const LOCATION_HANDLERS = {
 function drawEnemyByTrait(state, api, seat, trait) {
   const wanted = String(trait).toLowerCase()
   const isEnemy = code => ALL_CARDS[code]?.type === 'enemy' || (state.scenario.enemies || {})[code]
-  const findIn = pile => {
+  // 收集遭遇牌库与弃牌堆里的全部合法候选（自顶向下），卡面是「查找」，允许多张时选择。
+  const collect = (pile, kind) => {
+    const found = []
     for (let index = pile.length - 1; index >= 0; index--) {
       const code = pile[index]
-      if (isEnemy(code) && hasTraitCode(code, wanted)) return index
+      if (isEnemy(code) && hasTraitCode(code, wanted)) found.push({ kind, index, code })
     }
-    return -1
+    return found
   }
-  const deckIndex = findIn(state.encounterDeck || [])
-  const discardIndex = findIn(state.encounterDiscard || [])
-  if (deckIndex < 0 && discardIndex < 0) {
+  const candidates = [
+    ...collect(state.encounterDeck || [], 'deck'),
+    ...collect(state.encounterDiscard || [], 'discard'),
+  ]
+  if (!candidates.length) {
     api.info?.(`没有找到[[${trait}]]敌人。`)
     return null
   }
-  let code = null
-  if (deckIndex >= 0) code = (state.encounterDeck || []).splice(deckIndex, 1)[0]
-  else code = (state.encounterDiscard || []).splice(discardIndex, 1)[0]
+  let chosen = candidates[0]
+  if (candidates.length > 1 && typeof api.choose === 'function') {
+    const answer = api.choose({
+      kind: 'card', source: 'searchEnemy', seat,
+      prompt: `查找遭遇牌库和弃牌堆，选择要抽取的[[${trait}]]敌人。`,
+      options: candidates.map((entry, index) => ({
+        id: String(index),
+        label: `${ALL_CARDS[entry.code]?.nameZh || entry.code}（${entry.kind === 'deck' ? '遭遇牌库' : '遭遇弃牌堆'}）`,
+      })),
+    })
+    const picked = Number(answer)
+    if (Number.isInteger(picked) && picked >= 0 && picked < candidates.length) chosen = candidates[picked]
+  }
+  const pile = chosen.kind === 'deck' ? (state.encounterDeck ||= []) : (state.encounterDiscard ||= [])
+  const code = pile.splice(chosen.index, 1)[0]
+  if (code == null) return null
   state.encounterDeck.push(code)
   api.drawEncounter?.(seat)
   return code
@@ -667,11 +727,21 @@ function drawEnemyByTrait(state, api, seat, trait) {
 // 元初通道：附属地点的行动（关闭通道）。
 function gatewayActions(state, inv, location) {
   if (!location.primordialGateway || inv.location !== location.id) return []
-  return [{ rule: 'closeGateway', label: '🌀 检定意志(4) 关闭元初通道：成功则弃掉它' }]
+  return [{ rule: 'closeGateway', label: '🌀 检定智识或意志(4) 关闭元初通道：成功则弃掉它' }]
 }
 
 function performGateway(state, inv, api, location) {
-  api.test?.(inv.seat, 'willpower', 4, result => {
+  // 卡面「智识或意志(4)」：由玩家二选一（旧实现写死意志）。
+  let skill = 'willpower'
+  if (typeof api.choose === 'function') {
+    const answer = api.choose({
+      kind: 'skill', source: '05307', seat: inv.seat,
+      prompt: '选择关闭元初通道的检定技能。',
+      options: [{ id: 'willpower', label: '意志(4)' }, { id: 'intellect', label: '智识(4)' }],
+    })
+    if (answer === 'intellect' || answer === 'willpower') skill = answer
+  }
+  api.test?.(inv.seat, skill, 4, result => {
     if (!result?.success) return
     delete location.primordialGateway
     ;(state.encounterDiscard ||= []).push('05307')
@@ -884,23 +954,46 @@ export const behavior = {
   },
 
   // ---- 敌人 ----
-  spawnLocation(state, code) {
-    return spawnLocationFor(state, code)
+  spawnLocation(state, code, fallbackLoc, engagedSeat, api) {
+    // 引擎语义：spawnLocation 返回 null = 生成失败。未特判/无合法目标的 code 必须回退到引擎地点，
+    // 否则整关所有未列出的敌人都无法生成。并列地点选择需要 runtime api（队长 choose）。
+    return spawnLocationFor(state, code, api) || fallbackLoc || null
   },
 
   enemySpawned(state, enemy, api) {
     if (original(enemy) === '05311' && enemy.location) placeBreachesAt(state, api, enemy.location, 1)
   },
 
-  enemyMoved(state, enemy, newLocation, api) {
-    if (original(enemy) === '05311' && newLocation) placeBreachesAt(state, api, newLocation, 1)
+  // 引擎的第三参是「移动前地点」；新地点要读 enemy.location。
+  enemyMoved(state, enemy, previousLocation, api) {
+    if (original(enemy) === '05311' && enemy.location) placeBreachesAt(state, api, enemy.location, 1)
   },
 
   enemyStatModifier(state, enemy, stat) {
-    if (stat !== 'health') return 0
-    if (!BOSS_CODES.includes(original(enemy))) return 0
+    // 先转发共享钩子（05091 女祭司的弃牌堆女巫加成、05097 秘社玄仪的攻击/躲避 +2），
+    // 再叠加本章首领的生命修正；旧实现只处理 health，导致共享组加成在 ITC 全部失效。
+    const shared = encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
+    if (stat !== 'health') return shared
+    if (!BOSS_CODES.includes(original(enemy))) return shared
     const clues = active(state).reduce((sum, inv) => sum + Number(inv.clues || 0), 0)
-    return -2 * clues
+    return shared - 2 * clues
+  },
+
+  // 05286a/05288a：卡面「在调查员搜集的线索总计达到所需数量时，必须立即花费这些线索并推进场景」。
+  // 引擎把「花线索推进」实现为可选行动（回合末还可跳过），这里在每次 checkAct 前强制结算：
+  // 达到 3×人数就立即支付并推进，不给拖延窗口。
+  checkObjectives(state, api) {
+    const act = state.acts?.[state.actIndex]
+    const objective = act?.objective
+    if (!objective || objective.type !== 'clues') return
+    if (!ACT_CODES.includes(String(original(act)))) return
+    const required = Number(objective.perInvestigator || 0) * (Number(state.numInvestigators) || 1)
+    if (required <= 0) return
+    const available = active(state).reduce((sum, inv) => sum + Number(inv.clues || 0), 0)
+    if (available < required) return
+    api.payClues?.(required)
+    api.info?.(`目标达成：必须立即花费 ${required} 个线索并推进场景。`)
+    api.advanceAct?.()
   },
 
   // ---- 诡计 ----
@@ -957,7 +1050,7 @@ export const behavior = {
     if (handler) {
       const rules = handler.actions(state, inv, here).map(action => action.rule)
       if (rules.includes(move.rule)) {
-        handler.perform(state, inv, api, here)
+        handler.perform(state, inv, api, here, move)
         return
       }
     }
@@ -981,8 +1074,10 @@ export const behavior = {
     '「随机地点」：参考实现混洗开局移出的 8 张地点版本抽取 label，等价于在 8 个在场地点槽中洗牌抽取；用 randomLocationIds 从在场地点取样。',
     '05285 强制①（毁灭改为裂口）在引擎 doomPlaced 钩子里回退 state.doom 后再放裂口；引擎先放置后通知，时序等价但非「替换式」窗口。',
     '05307 元初通道的「地点文本视为空白」只屏蔽本章 behavior 提供的地点行动与关闭通道行动；引擎自带的调查/移动规则不受影响。',
-    '05312 不惮辛劳不惮烦的「重演遭遇弃牌堆最顶力量诡计」通过把该牌放回遭遇牌库顶再抽牌实现，走引擎完整显现管线。',
-    '05302/05305 的「查找遭遇牌库和弃牌堆的某特性敌人」只从两堆中按特性取最上面一张，洗牌走 engine 的 shuffleEncounterDeck（没有先让玩家浏览全部候选）。',
+    '05312 不惮辛劳不惮烦的「重演遭遇弃牌堆最顶力量诡计」通过把该牌放回遭遇牌库顶再抽牌实现，走引擎完整显现管线（引擎没有原地结算弃牌堆诡计的 API，见 primitive-requests/fix-c7shared.json）。',
+    '05302/05305 的「查找遭遇牌库和弃牌堆的某特性敌人」已改为列出两堆全部候选由玩家选择抽取哪张；「洗牌」仍走 engine 的 shuffleEncounterDeck。',
+    '05309/05311 的「裂口最多/最少地点并列」改由队长选择（spawnLocation 钩子拿到 runtime api）；无 choose 注入时按稳定顺序取第一个。',
+    '05310 的「未因本效果放置裂口→涌动」按 placeBreachesAt 实测放置数判断（目标地点满 3 裂口改结算入侵时 placed=0 → 涌动）；并列时由抽牌者选择目标异教徒。',
   ],
   scenarioGaps: [],
 }

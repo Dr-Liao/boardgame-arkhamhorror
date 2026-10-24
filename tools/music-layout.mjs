@@ -3,12 +3,14 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { defaultMusicConfig } from '../src/integration/music-library.js'
 import { MUSIC_TRACKS } from '../web/music-player.js'
+import { SCENARIO_MUSIC } from '../web/scenario-music.js'
 export function createMusicLayout(modRoot, { userConfig = false } = {}) {
   const root = path.join(modRoot, 'web/audio/music')
   const config = defaultMusicConfig()
   fs.mkdirSync(root, { recursive: true })
   fs.writeFileSync(path.join(root, 'playlists.example.json'), JSON.stringify(config, null, 2) + '\n')
   fs.writeFileSync(path.join(root, 'tracks.json'), JSON.stringify(MUSIC_TRACKS.map(({ id, title, file }) => ({ id, title, file })), null, 2) + '\n')
+  fs.writeFileSync(path.join(root, '目录索引.txt'), '关卡自定义歌曲目录（相对于本文件）\n\n' + Object.entries(SCENARIO_MUSIC).flatMap(([campaign, chapters]) => Object.entries(chapters).map(([id, chapter]) => `${chapter.name}\n  campaigns/${campaign}/${id}/\n`)).join('\n'))
   if (userConfig && !fs.existsSync(path.join(root, 'playlists.json'))) fs.writeFileSync(path.join(root, 'playlists.json'), JSON.stringify(config, null, 2) + '\n')
   const names = []
   for (const id of Object.keys(config.playlists)) {

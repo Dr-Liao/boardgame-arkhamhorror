@@ -1,0 +1,56 @@
+{
+  "chapterId": "beforeTheBlackThrone",
+  "milestone": "P8",
+  "status": "complete",
+  "files": [
+    "index.js", "definition.js", "layout.js", "behavior.js", "chaos.js",
+    "tests/tcu-black-throne.test.mjs",
+    "specs/beforeTheBlackThrone.md",
+    "entry:05326", "entry:05327", "entry:05328", "entry:05329", "entry:05330", "entry:05331",
+    "entry:05332", "entry:05333", "entry:05334", "entry:05335", "entry:05336", "entry:05337",
+    "entry:05338", "entry:05339", "entry:05340", "entry:05341", "entry:05342", "entry:05343",
+    "entry:05344", "entry:05345", "entry:05346"
+  ],
+  "checks": {
+    "sourceLocked": true,
+    "identityRegistered": true,
+    "setupAndZones": true,
+    "actsAndAgendas": true,
+    "locationsAndConnections": true,
+    "encounterBehaviors": true,
+    "literalCardBehavior": true,
+    "chaosEffects": true,
+    "resolutionsAndRecords": true,
+    "storyText": true,
+    "saveReplay": true
+  },
+  "inventory": {
+    "locations": 16,
+    "acts": 3,
+    "agendas": 3,
+    "enemies": 5,
+    "treacheries": 9,
+    "encounterCards": 30,
+    "resolutions": ["noResolution", "r1", "r2", "r3", "r4", "r5", "r6"]
+  },
+  "tests": { "file": "tests/tcu-black-throne.test.mjs", "cases": 34, "passing": 34 },
+  "gaps": [],
+  "approximations": [
+    "宇宙网格：P2.13 地点牌库 + scenarioFlags.cosmosOrder 放置顺序；右/下接最近放置者、上接最早放置者、任意方向由玩家选；无二维坐标/滑动。",
+    "「宇宙 -」放置指令表（definition.locations[*].cosmos 的 direction/cost）由 behavior.placeCosmosLocation 建连；付代价改方向选项已实现。",
+    "虚空格子：scenarioFlags.emptySpaceCount 计数，不参与移动/连接/猎手目标；盲目舞者子句近似为「离调查员最远的在场地点」。",
+    "阿撒托斯不建场上敌人实体：scenarioFlags.azathothDoom 计时（≥10 → R1），攻击 = 3 伤害 + 3 恐惧；免疫/不可击败自动成立。",
+    "冒险参考卡资源用 scenarioFlags.referenceResources；宇宙门扉的「任意数量调查员」实现为移动该处全部调查员；地点移动用放置顺序交换近似。",
+    "幕推进清场：把本幕宇宙地点洗回宇宙牌库、放新枢纽 + 抽 2/3 张新地点、调查员移到安全枢纽；不搬动虚空格子上的玩家卡。",
+    "命运之轮·X 的「向左移动」用放置顺序相邻位置承载；它在等待/最后的倒计时按卡面实现。",
+    "调查员被击败段落只记日志 + 1 点精神创伤（drivenInsane 的战役记录改写近似）。",
+    "DarkCult 组用 pentagram 组近似（本仓库卡表没有 dark_cult 分组）。",
+    "ReturnTo 专属内容（夜魇坐骑 54061 等）不在非 ReturnTo 剧本范围，未实现。"
+  ],
+  "remaining": [
+    "Lead：合并后重建 encounter-entries 索引（check-tcu-scenario 当前仅报「索引尚未重建」警告）并把本章接线进 content/registered.js / 战役 flow（P9）。",
+    "Lead：新增条目规则数据后跑 node tools/audit-abilities.mjs --write 更新 audit/ability-coverage.json（覆盖度产物归 Lead 独占）。",
+    "P9：把 zh locale 的 intro/setup/resolutions 全文导入 story-text（当前为等义中文摘要，>20 字、无 HTML）。"
+  ],
+  "notes": "参考实现：Scenario/Scenarios/TheCircleUndone/BeforeTheBlackThrone.hs + Helpers.hs + Cosmos.hs + 逐卡 Haskell 行为。Cosmos 用 P2.13 地点牌库（12 张宇宙地点，3/3/3/2/1 张）+ 放置顺序/方向表；阿撒托斯用 scenarioFlags.azathothDoom 计时；3 幕 16 地点（9 张卡展开）、3 议程（4/6/8 毁灭）、4 张诡计、R1–R6 结局与创伤/记录。逐卡规则已数据化：actRule.advance（05329/05330/05331）、agendaRule.advance（05326/05327/05328）、locationRule.onEnter.effect（05336/05339/05340）写在单卡条目，behavior 只读 actRuleFor/agendaRuleFor 与引擎直读 locationRule；架构守卫的 content 按卡号分支在本章为 0。"
+}

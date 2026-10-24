@@ -889,7 +889,9 @@ const releaseBrowserStatus = browserReport?.generatedBy
   && browserSpecsComplete ? 'verified' : 'pending'
 
 // 展示素材：战役主题引用的图片（9 张章节场景 + 桌面图 + 封面）+ 27 首 05 专属 BGM 必须实际存在且非空；
-// 每章歌单 2–3 首且全部能被 MUSIC_TRACKS 解析（P8 已接线，P10 落盘）。
+// BGM 的落盘口径：MUSIC_TRACKS 中 id 以 `tcu` 开头、file 指向 `common/*.mp3` 的条目
+// （2026-10 P10 复核：早期按 file 以 `campaigns/theCircleUndone/` 开头过滤会恒得 0，属判据与落盘不符）。
+// 每章歌单 2–3 首且全部能被上述 TCU 曲目解析（P8 已接线，P10 落盘）。
 const localAssetPath = url => 'web/' + String(url || '').replace(/^\/mods\/arkhamhorror\//, '')
 const themeAssetPaths = new Set()
 const collectThemeAssets = theme => {
@@ -903,7 +905,11 @@ const presentationImages = [...themeAssetPaths].filter(assetPath => {
   const url = new URL('../' + assetPath, import.meta.url)
   return assetPath && existsSync(url) && readFileSync(url).length > 0
 })
-const tcuTracks = MUSIC_TRACKS.filter(track => String(track.file || '').startsWith('campaigns/theCircleUndone/'))
+// TCU 27 首曲目：id 前缀 + 落盘到 web/audio/music/common/*.mp3 的双重校验，避免「素材在、判据前缀错」再次漏检。
+const TCU_TRACK_ID = /^tcu/
+const TCU_TRACK_FILE = /^common\/[^/]+\.mp3$/
+const tcuTracks = MUSIC_TRACKS.filter(track =>
+  TCU_TRACK_ID.test(String(track.id || '')) && TCU_TRACK_FILE.test(String(track.file || '')))
 const tcuTrackFiles = tcuTracks.filter(track => {
   const url = new URL('../web/audio/music/' + track.file, import.meta.url)
   return existsSync(url) && readFileSync(url).length > 0

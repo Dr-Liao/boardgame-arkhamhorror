@@ -234,6 +234,9 @@ export const scenario = {
   },
   ...definitions,
   storyAssets: storyCards([THE_BLACK_BOOK]),
+  // 卡面/参考实现：本章混乱袋含 1 个石板与 1 个古神标记（战役连续性下由死亡门前带入；
+  // 独立/战役重建袋都保证存在，避免 setupChaosBag 重建后丢失）。
+  chaosBagExtra: ['tablet', 'elderthing'],
   encounterDeck: encounterDeck(deckCards),
   resolutions: {
     noResolution: '你被拖行在肮脏的木质地板上，画面闪过脑海：污秽的仪式、那栋房子、那赫卜、盘旋的黑色漩涡。'

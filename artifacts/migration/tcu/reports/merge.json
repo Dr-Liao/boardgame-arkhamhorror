@@ -1,0 +1,569 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tcu",
+  "milestone": "P7",
+  "stage": "第 5 步：批量迁移内容 · M2 玩家卡",
+  "generatedBy": "lead + tcu-ledger",
+  "generatedAt": "2026-10-23T19:29:18.613Z",
+  "note": "ledger 段由 tcu-ledger 写；lead 段由 Lead（主进程）在独立复核后补写并收口。两个角色均以单写者身份写各自段。",
+  "ledger": {
+    "status": "done",
+    "owner": "tcu-ledger",
+    "summary": {
+      "playerCardsTotal": 87,
+      "playerCardsVerified": 87,
+      "constructible": 85,
+      "basicWeaknesses": 2,
+      "shardTestsPassed": 117,
+      "shardTestsByFile": {
+        "tests/tcu-player-m2-1.test.mjs": 26,
+        "tests/tcu-player-m2-2.test.mjs": 34,
+        "tests/tcu-player-m2-3.test.mjs": 24,
+        "tests/tcu-player-m2-4.test.mjs": 33
+      },
+      "ledgerTestsPassed": 4,
+      "primitivesP7TestsPassed": 5,
+      "explicitSimplifiedCards": 22,
+      "fast": {
+        "tests": 2648,
+        "pass": 2646,
+        "fail": 2
+      },
+      "replay": {
+        "fixtures": 13,
+        "steps": 786,
+        "changed": 0
+      },
+      "docLinks": {
+        "files": 26,
+        "links": 102,
+        "broken": 0
+      }
+    },
+    "deliveredFiles": [
+      {
+        "path": "tools/audit-tcu-player.mjs",
+        "kind": "tool",
+        "note": "实跑 4 个分片测试、按 `TCU <05xxx>` 前缀归集逐卡证据、生成账本与运行时模块；--write 后默认 check 逐字节比对"
+      },
+      {
+        "path": "audit/tcu-player-acceptance.json",
+        "kind": "generated",
+        "note": "逐卡账本：87 条证据 + 测试/实现文件 sha256 + summary"
+      },
+      {
+        "path": "src/cards/tcu-player-acceptance.js",
+        "kind": "generated",
+        "note": "profile、账本 sha256、verified 集合、基础弱点码表"
+      },
+      {
+        "path": "content/packs/tcuPlayer/manifest.js",
+        "kind": "manual",
+        "note": "status verified；rulesImplemented 87/87（来自生成模块）；deckbuilding 85；basicWeaknessCodes 05041/05042；behaviorIds 87"
+      },
+      {
+        "path": "src/deck/availability.js",
+        "kind": "manual",
+        "note": "87 张 strict；ALL_BUILDABLE_CODES +85；ALL_BASIC_WEAKNESS_CODES +2；reason 分支；默认玩家池不变"
+      },
+      {
+        "path": "src/campaign/campaign.js",
+        "kind": "manual",
+        "note": "tcuPool：升级候选只对 05 调查员记录可见（01–04 记录看不到 TCU 卡）"
+      },
+      {
+        "path": "tests/tcu-player-ledger.test.mjs",
+        "kind": "manual",
+        "note": "4 例：manifest 87/85/2、账本与生成模块同源、availability strict/默认池、campaign 升级池两侧"
+      },
+      {
+        "path": "tools/audit-tcu.mjs",
+        "kind": "manual",
+        "note": "milestone P7、stage M2、packsByPhase.player、gate.playerCardsVerified、verifiedScope.playerCards、confirmations.playerCards、evidence、remaining"
+      },
+      {
+        "path": "tests/suites.mjs",
+        "kind": "manual",
+        "note": "登记 4 个分片 + 账本 + tcu-primitives-p7；并补登记 3 个既有未登记文件（hall-static/view-shared-state/view-static）"
+      },
+      {
+        "path": "tests/node-suite.mjs",
+        "kind": "manual",
+        "note": "同 suites 的 import 登记"
+      },
+      {
+        "path": "package.json",
+        "kind": "manual",
+        "note": "新增 test:tcu:player / audit:tcu:player / audit:tcu:player:write"
+      },
+      {
+        "path": "tests/tcu-migration.test.mjs",
+        "kind": "manual",
+        "note": "P7 断言：milestone P7、玩家包 verified/87/85、gate.playerCardsVerified 与 packsByPhase.player.pass（Lead 授权）"
+      },
+      {
+        "path": "docs/tcu-player-cards.md",
+        "kind": "doc",
+        "note": "新增：逐卡验收口径、构筑/升级接线、4 个 P7 原语、22 张显式简化清单、门禁实测数字、P8/P9/P10 边界"
+      },
+      {
+        "path": "docs/tcu-migration-roadmap.md",
+        "kind": "doc",
+        "note": "§7.2 追加 P7 状态块（含实测数字）；文末下一步改为 P8/P9"
+      },
+      {
+        "path": "README.md",
+        "kind": "doc",
+        "note": "扩展包进度表万象无终行同步；新增 M2 交付段；构筑池 357 张；新增 test:tcu:player / audit:tcu:player 命令与手册链接"
+      },
+      {
+        "path": "ARCHITECTURE.md",
+        "kind": "doc",
+        "note": "当前边界加一行万象无终 M1/M2 状态；生成物表新增 tcu-player-acceptance 两件生成物"
+      },
+      {
+        "path": "audit/tcu-migration.json",
+        "kind": "generated",
+        "note": "P7 账本（--write 生成，--check 复算一致）"
+      },
+      {
+        "path": "audit/ability-coverage.json",
+        "kind": "generated",
+        "note": "descriptorEntries 572 / descriptorAbilities 505 / windows 62 / escapeCards 0"
+      },
+      {
+        "path": "audit/baseline.json",
+        "kind": "generated",
+        "note": "fast 2648/2646/2；docLinks 26/102/0；golden 13 局 786 步；15/16 审计通过（dunwichAcceptance 受既有 02040 连锁）"
+      },
+      {
+        "path": "artifacts/tcu-player/player-acceptance-results.json",
+        "kind": "generated",
+        "note": "分片测试的机器可读结果（test:pass/test:fail 事件）"
+      },
+      {
+        "path": "artifacts/migration/tcu/scope.json",
+        "kind": "generated",
+        "note": "manifest 哈希变化后重算：377 条记录、三包 237/19/87、21 个遭遇组"
+      }
+    ],
+    "gates": [
+      {
+        "command": "node tools/audit-tcu-player.mjs --write",
+        "result": "pass",
+        "detail": "87/87 verified · 85 可构筑 · 2 基础弱点 · 117 条证据"
+      },
+      {
+        "command": "node tools/audit-tcu-player.mjs --check",
+        "result": "pass",
+        "detail": "重跑 4 个分片 117 例并逐字节比对账本/生成模块一致"
+      },
+      {
+        "command": "node --test tests/tcu-player-m2-{1..4}.test.mjs",
+        "result": "pass",
+        "detail": "117 例 0 fail（26/34/24/33）"
+      },
+      {
+        "command": "node --test tests/tcu-player-ledger.test.mjs",
+        "result": "pass",
+        "detail": "4 例 0 fail"
+      },
+      {
+        "command": "node --test tests/tcu-primitives-p7.test.mjs",
+        "result": "pass",
+        "detail": "5 例 0 fail（4 个 P7 原语）"
+      },
+      {
+        "command": "node --test tests/tcu-migration.test.mjs",
+        "result": "pass",
+        "detail": "5 例 0 fail（含 P7 账本与 gate 断言）"
+      },
+      {
+        "command": "node tools/audit-tcu.mjs --check",
+        "result": "pass",
+        "detail": "milestone P7、gate pass、verifiedScope.playerCards=true"
+      },
+      {
+        "command": "node tools/scan-tcu-scope.mjs --check",
+        "result": "pass",
+        "detail": "377 条记录 / 237+19+87 / 21 个遭遇组"
+      },
+      {
+        "command": "node tools/audit-abilities.mjs --check",
+        "result": "pass",
+        "detail": "descriptorEntries 572、windows 62（P6 61 → P7 +1 eventPlayed）、escapeCards 0、engineCodes 0"
+      },
+      {
+        "command": "node tools/audit-baseline.mjs --write && --check",
+        "result": "pass",
+        "detail": "15/16 审计 ok；fast 2648/2646/2；docLinks 0 broken；golden 13/786"
+      },
+      {
+        "command": "node tools/run-tests.mjs fast",
+        "result": "pass-with-existing-failures",
+        "detail": "2648 tests / 2646 pass / 2 fail（既有：02040 槽位、米奇·布朗展示）"
+      },
+      {
+        "command": "node tools/replay-fixtures.mjs --compare artifacts/migration/tcu/replay-before.json",
+        "result": "pass",
+        "detail": "13 局 / 786 步逐条一致（行为零变化）"
+      },
+      {
+        "command": "node tools/check-doc-links.mjs",
+        "result": "pass",
+        "detail": "26 个文件、102 条本地链接全部可解析"
+      },
+      {
+        "command": "node tools/build-card-index.mjs --check",
+        "result": "pass",
+        "detail": "entries/index.js 与目录一致（573 张卡）"
+      }
+    ],
+    "auditLedger": {
+      "path": "audit/tcu-migration.json",
+      "milestone": "P7",
+      "stage": "第 5 步：批量迁移内容 · M2 玩家卡",
+      "gatePass": true,
+      "verifiedScope": {
+        "milestone": "P4–P7",
+        "keywords": true,
+        "rulebook": true,
+        "interactions": true,
+        "investigators": true,
+        "playerCards": true,
+        "scenarios": false,
+        "story": false
+      },
+      "gatePlayerCardsVerified": {
+        "total": 87,
+        "verified": 87,
+        "buildable": 85,
+        "basicWeaknesses": 2,
+        "pending": [],
+        "nodeAcceptance": true,
+        "ledgerTest": true,
+        "testFiles": [
+          "tests/tcu-player-m2-1.test.mjs",
+          "tests/tcu-player-m2-2.test.mjs",
+          "tests/tcu-player-m2-3.test.mjs",
+          "tests/tcu-player-m2-4.test.mjs"
+        ],
+        "pass": true
+      },
+      "packsByPhasePlayer": {
+        "status": "verified",
+        "cards": 87,
+        "implemented": 87,
+        "buildable": 85,
+        "pass": true
+      },
+      "confirmationsPlayerCards": {
+        "status": "verified",
+        "items": 87,
+        "checks": [
+          "printedEffects",
+          "packaged",
+          "availabilityGate",
+          "deckbuildingGate",
+          "dependencyOnlyGate",
+          "nodeAcceptance",
+          "ledgerFresh",
+          "ledgerTest",
+          "buildable85"
+        ],
+        "ledgerSha256": "见 audit/tcu-player-acceptance.json（生成模块以 TCU_PLAYER_ACCEPTANCE_SHA256 锁定）",
+        "simplified": 22
+      },
+      "remainingCount": 31,
+      "remainingKeyItems": [
+        "9 章仍是 catalog-only（P8 剧本）：逐章 12 项验收尚未建立",
+        "233 张战役卡没有单卡行为：M3（P8）逐章验收",
+        "战役记录只登记 4 个键（参考实现 64 个）：其余键、中文名与幕间结算属 P9",
+        "交互实机路径待 P8：9 章仍 catalog-only，序章与章节内容接通后才能在大厅里走完整条交互路径",
+        "22 条显式简化逐卡列出（见 docs/tcu-player-cards.md §5）"
+      ]
+    },
+    "explicitSimplified": [
+      "05021",
+      "05029",
+      "05032",
+      "05033",
+      "05036",
+      "05040",
+      "05042",
+      "05112",
+      "05152",
+      "05157",
+      "05158",
+      "05196",
+      "05230",
+      "05231",
+      "05236",
+      "05237",
+      "05279",
+      "05280",
+      "05319",
+      "05321",
+      "05322",
+      "05324"
+    ],
+    "primitiveQueue": {
+      "report": "artifacts/migration/tcu/reports/primitive-queue.json",
+      "requests": 17,
+      "done": 4,
+      "donePrimitives": [
+        "openingHandBonus",
+        "leavesPlayResolve",
+        "eventPlayedWindow",
+        "commitConditionalIcons"
+      ],
+      "rejected": 13,
+      "pending": 0,
+      "claimed": 0,
+      "testFile": "tests/tcu-primitives-p7.test.mjs",
+      "testsPassed": 5
+    },
+    "browserEvidence": {
+      "report": "audit/tcu-browser-acceptance.json",
+      "regeneratedBy": "Lead（runner 生成，非手工）",
+      "command": "node ../../node_modules/@playwright/test/cli.js test --config playwright.tcu.config.mjs tcu-rules.browser.mjs tcu-interactions.browser.mjs",
+      "cwd": "games/arkhamhorror",
+      "result": "6 passed / 31.0s；status passed、desktopBrowser/mobileBrowser true、4 张截图",
+      "environmentNote": "截图写入仓库根 artifacts/tcu-migration/（.gitignore，跨环境不提交）；干净检出需要重跑同一条命令才能复现 gate.rulebookVerified / gate.interactionsVerified。这是环境本地证据，不是 P7 新增内容。"
+    },
+    "incidentalFixes": [
+      {
+        "item": "actions.js 无宿主附属事件引用未定义变量 fromAttachmentAssetId",
+        "detail": "04193/05152 会 ReferenceError；改为放回来源位置（Lead 修复，P7 变化暴露的既有缺陷）"
+      },
+      {
+        "item": "05037 条目 import engine/card-lookup 造成 ESM 循环",
+        "detail": "worker 上报、Lead 修复（去环，行为不变）"
+      },
+      {
+        "item": "investigator-abilities 惰性化",
+        "detail": "Lead 修复：消除模块初始化顺序副作用"
+      },
+      {
+        "item": "tests/ability-layer.test.mjs 两处适配",
+        "detail": "05025 从手牌反应的助手盲选改为优先 skip/done；05112 槽位断言改为 P2.9 规范 add:slot + value（Lead 修复，20/20 通过）"
+      },
+      {
+        "item": "05231 注释/note 里的 api.resolveCardAbility 触发 p0-regressions 的 api.* 源码扫描误报",
+        "detail": "改为不带 api. 前缀的未实现建议 API 写法（Lead 修复，行为零变化）"
+      },
+      {
+        "item": "3 个 P7 前就存在但未登记的测试文件（hall-static / view-shared-state / view-static）",
+        "detail": "登记进 suites + node-suite，修掉既有 suite-manifest 失败（1+6+3 例全绿）"
+      },
+      {
+        "item": "tools/audit-baseline.mjs 的 testNumber 只认 ℹ reporter",
+        "detail": "Node 22.23 管道下 TAP reporter 输出 `# tests N`，改为同时接受 `ℹ|#`，基线恢复真实用例数 2648/2646/2"
+      },
+      {
+        "item": "audit-carcosa-player 账本与 audit-p6 行为账本因 P7 改 availability/campaign 而漂移",
+        "detail": "用官方生成器 --write 重算（只刷新实现文件哈希与行为账本，证据映射不变）"
+      },
+      {
+        "item": "availability 临时提前接线",
+        "detail": "P7 集成前为解 worker 阻塞，先把 87 张并入运行时 cards Set（不改构筑池/replay）；集成阶段替换为最终版（manifest 正式导出 + 85 张可构筑）"
+      }
+    ],
+    "existingFailures": [
+      {
+        "test": "幕间奖励的剧情支援在关卡开始时带上槽位定义（02040 画在盟友槽，而不是其他资产）",
+        "status": "pre-existing",
+        "note": "P7 开工基线已有，不在 P7 范围；导致 audit-dunwich-acceptance 审计 1 条失败"
+      },
+      {
+        "test": "旧存档的卡牌展示表会补上米奇·布朗的受限盟友槽字段",
+        "status": "pre-existing",
+        "note": "P7 开工基线已有，不在 P7 范围"
+      },
+      {
+        "test": "suite-manifest 分层一致性 / P1 TCU 账本",
+        "status": "fixed-by-p7",
+        "note": "两条 P7 开工基线失败已被 P7 修复（补登记 3 个既有文件、重算 scope/audit 账本）"
+      }
+    ],
+    "evidenceArtifacts": [
+      "audit/tcu-player-acceptance.json",
+      "src/cards/tcu-player-acceptance.js",
+      "artifacts/tcu-player/player-acceptance-results.json",
+      "audit/tcu-migration.json",
+      "audit/tcu-browser-acceptance.json",
+      "audit/ability-coverage.json",
+      "audit/baseline.json",
+      "artifacts/migration/tcu/scope.json"
+    ]
+  },
+  "lead": {
+    "status": "done",
+    "owner": "lead",
+    "orchestration": {
+      "shardsFile": "artifacts/migration/tcu/shards.json",
+      "shardCount": 4,
+      "cards": 87,
+      "disjointPass": true,
+      "workerBrief": "artifacts/migration/tcu/workers/P7-WORKER-BRIEF.md",
+      "workerInputs": [
+        "artifacts/migration/tcu/workers/w-m2-1.input.json",
+        "artifacts/migration/tcu/workers/w-m2-2.input.json",
+        "artifacts/migration/tcu/workers/w-m2-3.input.json",
+        "artifacts/migration/tcu/workers/w-m2-4.input.json"
+      ],
+      "protocol": "docs/arkham-content-migration.md §4.6（多子进程 + 原语队列）；无专用编排器，由 Agent Teams 的 4 个 worker + Lead 主进程按 shards.json 执行",
+      "indexPolicy": "entries/index.js 只由 Lead（主进程）重建。P7 期间按分片握手重建 8 次（试点/批次后让 worker 能跑测试），最终合并后再重建 1 次：573 张卡与目录一致；两次 --check 均通过。",
+      "workerReports": [
+        "artifacts/migration/tcu/workers/w-m2-1.json",
+        "artifacts/migration/tcu/workers/w-m2-2.json",
+        "artifacts/migration/tcu/workers/w-m2-3.json",
+        "artifacts/migration/tcu/workers/w-m2-4.json"
+      ],
+      "aggregateReport": "artifacts/migration/tcu/reports/workers.json"
+    },
+    "writeBoundary": {
+      "pass": true,
+      "outOfScopeWrites": [],
+      "detail": "4 个 worker 的写入仅限各自 22/22/22/21 个 entries、1 个分片测试文件、1 个 worker 报告、primitive-requests/；无重叠（shards.json disjoint 检查）；共享层/账本/文档改动均可归到 Lead 或 tcu-ledger。",
+      "preExistingDirtyFiles": 20,
+      "baselineGitStatus": "artifacts/migration/tcu/reports/baseline-git-status.txt",
+      "postGitStatus": "artifacts/migration/tcu/reports/post-p7-git-status.txt",
+      "note": "开工前 arkhamhorror 工作区已有 20 个未提交改动（engine/web/tests/audit），属 P6 后遗留、不计入 P7；P7 完成后这些文件仍按 baseline 口径记账。"
+    },
+    "primitiveQueueProcessing": {
+      "report": "artifacts/migration/tcu/reports/primitive-queue.json",
+      "requestFiles": 17,
+      "done": 4,
+      "rejected": 13,
+      "pending": 0,
+      "claimed": 0,
+      "deduped": 0,
+      "donePrimitives": [
+        {
+          "id": "openingHandBonus",
+          "cards": [
+            "05276"
+          ],
+          "implementedIn": [
+            "src/engine/setup.js",
+            "src/engine/ability.js"
+          ],
+          "test": "tests/tcu-primitives-p7.test.mjs"
+        },
+        {
+          "id": "leavesPlayResolve",
+          "cards": [
+            "05313",
+            "05316"
+          ],
+          "implementedIn": [
+            "src/engine/assets.js",
+            "src/engine/ability.js"
+          ],
+          "test": "tests/tcu-primitives-p7.test.mjs"
+        },
+        {
+          "id": "eventPlayedWindow",
+          "cards": [
+            "05320"
+          ],
+          "implementedIn": [
+            "src/engine/windows.js",
+            "src/engine/actions.js"
+          ],
+          "test": "tests/tcu-primitives-p7.test.mjs"
+        },
+        {
+          "id": "commitConditionalIcons",
+          "cards": [
+            "05022",
+            "05026",
+            "05030",
+            "05034",
+            "05038"
+          ],
+          "implementedIn": [
+            "src/engine/stats.js",
+            "src/engine/ability.js"
+          ],
+          "test": "tests/tcu-primitives-p7.test.mjs"
+        }
+      ],
+      "rejectedNote": "13 条 rejected 均折算为条目级 simplified:true + note，并汇总进 audit/tcu-migration.json 的 remaining 与 docs/tcu-player-cards.md §5；不静默通过。"
+    },
+    "independentVerification": {
+      "runBy": "lead",
+      "runAt": "2026-10-23T19:29:18.613Z",
+      "commands": [
+        {
+          "command": "node tools/audit-tcu.mjs --check",
+          "result": "pass：audit 复算一致，P7，关键词 16/16，规则书 verified，gate pass"
+        },
+        {
+          "command": "node tools/audit-tcu-player.mjs --check",
+          "result": "pass：87/85/2/117，重跑 4 分片并逐字节比对生成物"
+        },
+        {
+          "command": "node tools/scan-tcu-scope.mjs --check",
+          "result": "pass：377 条记录 / 237+19+87 / 21 遭遇组"
+        },
+        {
+          "command": "node tools/build-card-index.mjs --check",
+          "result": "pass：entries/index.js 与目录一致（573 张）"
+        },
+        {
+          "command": "node tests/card-entries.test.mjs",
+          "result": "pass：6/6"
+        },
+        {
+          "command": "node tools/audit-abilities.mjs --check",
+          "result": "pass：descriptorEntries 572 / windows 62 / escapeCards 0 / engineCodes 0"
+        },
+        {
+          "command": "node tools/audit-baseline.mjs --check",
+          "result": "pass：15/16 审计（唯一失败 dunwichAcceptance 为既有 02040 连锁）；docLinks 0；golden 786 步"
+        },
+        {
+          "command": "node tools/check-doc-links.mjs",
+          "result": "pass：26 文件 / 102 链接 / 0 失效"
+        },
+        {
+          "command": "node tools/replay-fixtures.mjs --compare artifacts/migration/tcu/replay-before.json",
+          "result": "pass：13 局 / 786 步逐条一致（行为零变化）"
+        },
+        {
+          "command": "node tools/run-tests.mjs fast",
+          "result": "pass-with-existing-failures：2648 tests / 2646 pass / 2 fail（既有 02040 槽位、米奇·布朗展示）"
+        },
+        {
+          "command": "node tests/tcu-migration.test.mjs",
+          "result": "pass：5/5"
+        },
+        {
+          "command": "node tests/tcu-player-ledger.test.mjs",
+          "result": "pass：4/4"
+        },
+        {
+          "command": "node tests/tcu-primitives-p7.test.mjs",
+          "result": "pass：5/5"
+        },
+        {
+          "command": "node tests/tcu-player-m2-{1..4}.test.mjs",
+          "result": "pass：117/117（26/34/24/33）"
+        }
+      ],
+      "log": "artifacts/migration/tcu/reports/final-fast.log"
+    },
+    "finalVerdict": {
+      "p7Done": true,
+      "scope": "P7（M2 玩家卡）完成：87/87 verified、85 张可构筑、2 张基础弱点只作依赖、117 条逐卡证据；P7 原语 4 项落地，17 条队列请求无悬挂；行为零变化（replay 13 局/786 步）。",
+      "notClaimed": [
+        "不宣称规则等价：22 张卡有显式简化的子句（逐条在条目 note / 文档 §5 / 账本 remaining）。",
+        "不宣称战役可玩：9 章仍 catalog-only（P8）；剧情与 64 个记录键属 P9；发布级门禁属 P10。",
+        "交互/规则书浏览器证据为组件级（沿用 P5 口径，实机路径待 P8）。"
+      ],
+      "next": "按路线图 §9 关键路径进入 P8（剧本 M3-1 垂直切片：序章 + 巫异时刻 + 死亡门前）；P9（剧情）可并行启动。"
+    }
+  }
+}

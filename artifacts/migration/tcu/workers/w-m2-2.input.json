@@ -1,0 +1,466 @@
+{
+  "shard": "M2-2",
+  "worker": "w-m2-2",
+  "source": "src/cards/cards-data.js（唯一卡面事实源；中文卡文优先 textZh）",
+  "referenceImplementation": "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham（只读）",
+  "count": 22,
+  "cards": [
+    {
+      "code": "05042",
+      "name": "The Tower • XVI",
+      "nameZh": "高塔·XVI",
+      "type": "asset",
+      "subtype": "basicweakness",
+      "klass": "neutral",
+      "cost": 4,
+      "slot": "Tarot",
+      "traits": [
+        "Omen",
+        "Tarot"
+      ],
+      "text": "You cannot commit cards to skill tests while The Tower • XVI is in your hand.\nIf The Tower • XVI is drawn in your opening hand during setup (before or after taking a mulligan), you cannot replace it. It must stay in your opening hand.",
+      "textZh": "高塔·XVI在你手牌中时，你不能在技能检定投入卡牌。\n如果冒险设置期间你抽取了高塔·XVI作为你起始手牌(不论在重调之前还是之后)，你不能将其替换。其必须留在你的起始手牌中。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "tcu",
+      "imagesrc": "/bundles/cards/05042.png"
+    },
+    {
+      "code": "05109",
+      "name": "Something Worth Fighting For",
+      "nameZh": "赴汤蹈火",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 0,
+      "cost": 3,
+      "traits": [
+        "Talent"
+      ],
+      "text": "Something Worth Fighting For may be assigned horror dealt to other investigators at your location.",
+      "textZh": "你所在地点的其他调查员受到的恐惧可以分配给赴汤蹈火。",
+      "sanity": 3,
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "tsn",
+      "imagesrc": "/bundles/cards/05109.png"
+    },
+    {
+      "code": "05110",
+      "name": "Crack the Case",
+      "nameZh": "水落石出",
+      "type": "event",
+      "klass": "seeker",
+      "xp": 0,
+      "cost": 0,
+      "traits": [
+        "Insight"
+      ],
+      "text": "Fast. Play after an investigator discovers the last remaining clue at your location.\nInvestigators at that location gain a total of X resources, distributed as you wish. X is that location's shroud value.",
+      "textZh": "快速。一位调查员发现你所在地点的最后一个线索后打出。\n位于该地点的调查员获得总计X资源，由你自行分配。X为该地点的隐藏值。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "tsn",
+      "imagesrc": "/bundles/cards/05110.png"
+    },
+    {
+      "code": "05111",
+      "name": "Intel Report",
+      "nameZh": "情报报告",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "cost": 2,
+      "traits": [
+        "Favor",
+        "Service"
+      ],
+      "text": "Discover 1 clue at your location.\n[reaction] When you play Intel Report, increase its cost by 2: Change \"Discover 1 clue\" to \"Discover 2 clues.\"\n[reaction] When you play Intel Report, increase its cost by 2: Change \"at your location\" to \"at a location up to 2 connections away.\"",
+      "textZh": "发现你所在地点的1个线索。\n[reaction]在你打出情报报告时，提升其费用2点：“发现……的1个线索”变为“发现……的2个线索”。\n[reaction]在你打出情报报告时，提升其费用2点：“你所在地点”变为“与你所在地点之间连接次数不超过2的地点”",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "tsn",
+      "imagesrc": "/bundles/cards/05111.png"
+    },
+    {
+      "code": "05112",
+      "name": "Sign Magick",
+      "nameZh": "魔法手势",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "cost": 3,
+      "slot": "Hand",
+      "traits": [
+        "Ritual",
+        "Talent"
+      ],
+      "text": "Fast.\nYou have 1 additional arcane slot, which can only be used to hold a [[Spell]] or [[Ritual]] asset.",
+      "textZh": "快速。\n你拥有额外1个法术槽位，只能用来携带一张[[法术]]或[[仪式]]支援。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "tsn",
+      "imagesrc": "/bundles/cards/05112.png"
+    },
+    {
+      "code": "05113",
+      "name": "Banish",
+      "nameZh": "驱除",
+      "type": "event",
+      "klass": "mystic",
+      "xp": 1,
+      "cost": 2,
+      "traits": [
+        "Spell"
+      ],
+      "text": "Evade. Use only on a non-[[Elite]] enemy. This evasion attempt uses [willpower] instead of [agility]. If you succeed, move the enemy just evaded to any location in play. If you succeed and a [skull], [cultist], [tablet], or [elder_thing] symbol was revealed during this evasion attempt, that enemy does not ready during the next upkeep phase.",
+      "textZh": "躲避。只用于非[[精英]]敌人。本次躲避尝试不使用[agility]，改为使用[willpower]。如果你检定成功，将刚才躲避的敌人移动到场上任意一个地点。如果你检定成功且本次躲避尝试期间揭示了[skull]、[cultist]、[tablet]或[elder_thing]符号，该敌人在下一个补给阶段期间不重整。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "tsn",
+      "imagesrc": "/bundles/cards/05113.png"
+    },
+    {
+      "code": "05114",
+      "name": "Meat Cleaver",
+      "nameZh": "切肉刀",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 0,
+      "cost": 3,
+      "slot": "Hand",
+      "traits": [
+        "Item",
+        "Weapon",
+        "Melee"
+      ],
+      "text": "[action]: Fight. You get +1 [combat] for this attack (+2 [combat] instead if you have 3 or fewer remaining sanity). If this attack defeats an enemy, you may heal 1 horror. As an additional cost to initiate this ability, you may take 1 horror to have this attack deal +1 damage.",
+      "textZh": "[action]：攻击。你本次攻击得到+1[combat](如果你剩余神智值不超过3，改为+2[combat])。如果本次攻击击败了敌人，你可以治愈1点恐惧。作为发动本能力的额外费用，你可以受到1点恐惧以使本次攻击造成+1伤害。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "tsn",
+      "imagesrc": "/bundles/cards/05114.png"
+    },
+    {
+      "code": "05115",
+      "name": ".45 Thompson",
+      "nameZh": ".45汤姆逊冲锋枪",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 0,
+      "cost": 6,
+      "slot": "Hand x2",
+      "traits": [
+        "Item",
+        "Weapon",
+        "Firearm",
+        "Illicit"
+      ],
+      "text": "Uses (5 ammo).\n[action] Spend 1 ammo: Fight. You get +2 [combat] and deal +1 damage for this attack.",
+      "textZh": "使用(5子弹)。\n[action]花费1子弹：攻击。本次攻击你得到+2[combat]并造成+1伤害。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "tsn",
+      "imagesrc": "/bundles/cards/05115.png"
+    },
+    {
+      "code": "05116",
+      "name": "Scroll of Secrets",
+      "nameZh": "秘密卷轴",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 0,
+      "cost": 1,
+      "slot": "Hand",
+      "traits": [
+        "Item",
+        "Tome"
+      ],
+      "text": "Uses (3 secrets).\n[action] Exhaust Scroll of Secrets and spend 1 secret: Look at the bottom card of any investigator's deck or the encounter deck. Then, either discard that card, add it to its owner's hand, place it on the bottom of its deck, or place it on the top of its deck.",
+      "textZh": "使用(3秘密)\n[action]横置秘密卷轴并花费1秘密：查看任意一位调查员的牌库底或遭遇牌库底1张卡牌。然后，弃掉该卡牌、将其加入其所有者手牌，或将其放到该牌库底或者牌库顶。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "tsn",
+      "imagesrc": "/bundles/cards/05116.png"
+    },
+    {
+      "code": "05117",
+      "name": "Tennessee Sour Mash",
+      "nameZh": "田纳西酸麦芽威士忌",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 0,
+      "cost": 3,
+      "traits": [
+        "Item",
+        "Illicit"
+      ],
+      "text": "Uses (2 supplies).\n[fast] Exhaust Tennessee Sour Mash and spend 1 supply: You get +2 [willpower] for a skill test on a treachery card.\n[action] Discard Tennessee Sour Mash: Fight. You get +3 [combat] for this attack.",
+      "textZh": "使用(2补给)\n[free]横置田纳西酸麦芽威士忌并花费1补给：你在诡计卡牌的一次技能检定中得到+2[willpower]。\n[action]弃掉田纳西酸麦芽威士忌：攻击。你本次攻击得到+3[combat]。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "tsn",
+      "imagesrc": "/bundles/cards/05117.png"
+    },
+    {
+      "code": "05118",
+      "name": "Enchanted Blade",
+      "nameZh": "附魔剑",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "cost": 3,
+      "slot": "Hand. Arcane",
+      "traits": [
+        "Item",
+        "Relic",
+        "Weapon",
+        "Melee"
+      ],
+      "text": "Uses (3 charges).\n[action]: Fight. You get +1 [combat] for this attack. As an additional cost to initiate this ability, you may spend 1 charge to empower the blade. If you do, you get +1 [combat] and deal +1 damage for this attack.",
+      "textZh": "使用(3充能)。\n[action]：攻击。你本次攻击得到+1[combat]。作为发动本能力的额外费用，你可以花费1充能来为剑附魔。如果你这么做，本次攻击你得到+1[combat]并造成+1伤害。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "tsn",
+      "imagesrc": "/bundles/cards/05118.png"
+    },
+    {
+      "code": "05119",
+      "name": "Grisly Totem",
+      "nameZh": "恐怖图腾",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 0,
+      "cost": 3,
+      "slot": "Accessory",
+      "traits": [
+        "Item",
+        "Charm"
+      ],
+      "text": "[reaction] After you commit a card to a skill test, exhaust Grisly Totem: That card gains another instance of one of its skill icons of your choice.",
+      "textZh": "[reaction]在你将卡牌投入技能检定后，横置恐怖图腾：你选择该卡牌已有的任意一个技能图标，该卡牌额外获得该图标。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "tsn",
+      "imagesrc": "/bundles/cards/05119.png"
+    },
+    {
+      "code": "05151",
+      "name": "Alice Luxley",
+      "nameZh": "爱丽丝·洛克斯雷",
+      "type": "asset",
+      "klass": "guardian",
+      "xp": 0,
+      "cost": 4,
+      "slot": "Ally",
+      "traits": [
+        "Ally",
+        "Detective",
+        "Police"
+      ],
+      "text": "You get +1 [intellect].\n[reaction] After you discover a clue, exhaust Alice Luxley: Deal 1 damage to an enemy at your location.",
+      "textZh": "你得到+1[intellect]。\n[reaction]在你发现线索后，横置爱丽丝·洛克斯雷：对你所在地点的一个敌人造成1点伤害。",
+      "health": 2,
+      "sanity": 2,
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "wos",
+      "imagesrc": "/bundles/cards/05151.png"
+    },
+    {
+      "code": "05152",
+      "name": "Well-Maintained",
+      "nameZh": "妥善养护",
+      "type": "event",
+      "klass": "guardian",
+      "xp": 1,
+      "cost": 0,
+      "traits": [
+        "Upgrade"
+      ],
+      "text": "Fast. Play only during your turn.\nAttach to an [[Item]] asset you control. Limit 1 per asset.\n[reaction] After attached asset is discarded: Return it to its owner's hand, along with each other [[Upgrade]] attachment that was attached to it.",
+      "textZh": "快速。只能在你回合期间打出。\n附属到你控制的一张[[道具]]支援。每个支援仅限1张。\n[reaction]所附属支援被弃掉后：将该支援返回其所有者手牌，附属到该支援的其他所有[[升级]]附属也返回各自所有者的手牌。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "wos",
+      "imagesrc": "/bundles/cards/05152.png"
+    },
+    {
+      "code": "05153",
+      "name": "Mr. \"Rook\"",
+      "nameZh": "“老千”先生",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 0,
+      "cost": 3,
+      "slot": "Ally",
+      "traits": [
+        "Ally"
+      ],
+      "text": "Uses (3 secrets).\n[fast] Exhaust Mr. \"Rook\" and spend 1 secret: Search the top 3, 6, or 9 cards of your deck for any card and draw it. If at least 1 weakness is among the searched cards, draw 1 of them, as well. Shuffle your deck.",
+      "textZh": "使用(3秘密)。\n[free]横置“老千”先生并花费1秘密：查找你牌库顶3张、6张或9张卡牌，找出任意一张卡牌并将其抽取。如果查找的卡牌中有至少1张弱点，也抽取其中1张弱点。混洗你的牌库。",
+      "health": 2,
+      "sanity": 2,
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "wos",
+      "imagesrc": "/bundles/cards/05153.png"
+    },
+    {
+      "code": "05154",
+      "name": "Hawk-Eye Folding Camera",
+      "nameZh": "鹰眼折叠相机",
+      "type": "asset",
+      "klass": "seeker",
+      "xp": 0,
+      "cost": 2,
+      "slot": "Hand",
+      "traits": [
+        "Item",
+        "Tool"
+      ],
+      "text": "[reaction] After the last clue is discovered from your location: Place 1 resource (from the token pool) on this card, as evidence. (Limit once per game at each location.)\nWhile Hawk-Eye Folding Camera has ...\n- ... 1 or more evidence, you get +1 [willpower].\n- ... 2 or more evidence, you get +1 [intellect].\n- ... 3 or more evidence, you get +1 sanity.",
+      "textZh": "[reaction]你所在地点的最后一个线索被发现后：在本卡牌上放置1个资源(从供应堆拿取)，作为证据。(每场游戏每个地点仅限一次。)\n鹰眼折叠相机上有·····\n- ……至少1个证据时，你得到+1[willpower]。\n- ……至少2个证据时，你得到+1[intellect]。\n- ……至少3个证据时，你得到+1神智值。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "wos",
+      "imagesrc": "/bundles/cards/05154.png"
+    },
+    {
+      "code": "05155",
+      "name": "Henry Wan",
+      "nameZh": "亨利·万",
+      "type": "asset",
+      "klass": "rogue",
+      "xp": 0,
+      "cost": 3,
+      "slot": "Ally",
+      "traits": [
+        "Ally",
+        "Criminal"
+      ],
+      "text": "[action] Exhaust Henry Wan: One at a time, reveal random tokens from the chaos bag until you choose to stop, or until you reveal a [skull], [cultist], [tablet], [elder_thing], or [auto_fail] symbol.\n- If you chose to stop, for each token revealed via this effect, you may either draw 1 card or gain 1 resource.\n- If you revealed a [skull], [cultist], [tablet], [elder_thing], or [auto_fail] symbol, do nothing.",
+      "textZh": "[action]横置亨利·万：依次从混乱袋随机揭示任意个混乱标记，直到你自己选择停下，或直到你揭示了[skull]、[cultist]、[tablet]、[elder_thing]或[auto_fail]符号。\n- 如果你选择停下，你通过本效果每揭示一个标记，你可以抽取1张卡牌或获得1资源。\n- 如果你揭示了[skull]、[cultist]、[tablet]、[elder_thing]或[auto_fail]符号，无事发生。",
+      "health": 1,
+      "sanity": 2,
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "wos",
+      "imagesrc": "/bundles/cards/05155.png"
+    },
+    {
+      "code": "05156",
+      "name": "Swift Reflexes",
+      "nameZh": "反应灵敏",
+      "type": "event",
+      "klass": "rogue",
+      "xp": 0,
+      "cost": 2,
+      "traits": [
+        "Gambit"
+      ],
+      "text": "Fast. Play during any investigator's turn, except during an action.\nImmediately take an action as if it were your turn. This action does not count toward the number of actions you can take each turn.",
+      "textZh": "快速。在任意调查员的回合期间(不含行动期间)打出。\n立即进行一次行动，如同现在是你的回合。此行动不计入你每回合能够进行的行动数量。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "wos",
+      "imagesrc": "/bundles/cards/05156.png"
+    },
+    {
+      "code": "05157",
+      "name": "Wither",
+      "nameZh": "凋零术",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "cost": 2,
+      "slot": "Arcane",
+      "traits": [
+        "Spell"
+      ],
+      "text": "[action]: Fight. This attack uses [willpower] instead of [combat]. If a [skull], [cultist], [tablet], or [elder_thing] symbol is revealed during this attack, the attacked enemy gets -1 fight and -1 evade for the remainder of the turn (to a minimum of 1).",
+      "textZh": "[action]：攻击。本次攻击不使用[combat]，改为使用[willpower]。如果本次攻击期间揭示了[skull]、[cultist]、[tablet]或[elder_thing]符号，被攻击敌人在本回合剩余时间内得到-1攻击值和-1躲避值，最低减至1。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "wos",
+      "imagesrc": "/bundles/cards/05157.png"
+    },
+    {
+      "code": "05158",
+      "name": "Sixth Sense",
+      "nameZh": "第六感",
+      "type": "asset",
+      "klass": "mystic",
+      "xp": 0,
+      "cost": 3,
+      "slot": "Arcane",
+      "traits": [
+        "Spell"
+      ],
+      "text": "[action]: Investigate. Investigate using [willpower] instead of [intellect]. If a [skull], [cultist], [tablet], or [elder_thing] symbol is revealed during this test, you may choose a revealed location connected to your location; you are now investigating as if you were at the chosen location instead of your location (you may use either shroud value).",
+      "textZh": "[action]：调查。本次调查不使用[intellect]，改为使用[willpower]。如果本次检定期间揭示了[skull]、[cultist]、[tablet]或[elder_thing]符号，你可以选择与你所在地点连接的一个已揭示地点；改为如同你在所选地点调查，而不是在你当前所在地点(你可以使用两个地点中任意一个地点的隐藏值)。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "wos",
+      "imagesrc": "/bundles/cards/05158.png"
+    },
+    {
+      "code": "05159",
+      "name": "Drawing Thin",
+      "nameZh": "险中求胜",
+      "type": "asset",
+      "klass": "survivor",
+      "xp": 0,
+      "cost": 0,
+      "traits": [
+        "Talent"
+      ],
+      "text": "[reaction] When you initiate a skill test, exhaust Drawing Thin: Increase the difficulty of this skill test by 2. Gain 2 resources or draw 1 card.",
+      "textZh": "[reaction]在你发动技能检定时，横置险中求胜：此次检定的难度提升2点。获得2资源或抽取1张卡牌。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "wos",
+      "imagesrc": "/bundles/cards/05159.png"
+    },
+    {
+      "code": "05160",
+      "name": "Belly of the Beast",
+      "nameZh": "勇闯虎穴",
+      "type": "event",
+      "klass": "survivor",
+      "xp": 0,
+      "cost": 1,
+      "traits": [
+        "Gambit",
+        "Trick"
+      ],
+      "text": "Fast. Play after you successfully evade an enemy by 2 or more.\nDiscover 1 clue at that enemy's location.",
+      "textZh": "快速。在你成功躲避一个敌人且超过难度至少2点后打出。\n发现该敌人所在地点的1个线索。",
+      "exceptional": false,
+      "permanent": false,
+      "myriad": false,
+      "pack": "wos",
+      "imagesrc": "/bundles/cards/05160.png"
+    }
+  ]
+}

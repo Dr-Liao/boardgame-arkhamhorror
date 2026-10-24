@@ -11,6 +11,8 @@ export default {
   code: '04276',
   abilities: [
     { kind: 'action', label: '挥砍（战斗 +2，伤害 +1）', cost: { action: true },
+    // 卡面：「如果古旧锈剑处于重整状态」。引擎不自动为资产能力检查重整状态，因此在条目上声明。
+    criteria: [({ source }) => source?.exhausted !== true],
     effect: { type: 'fight', combatBonus: 2, damageBonus: 1 } },
     {
       kind: 'action', label: '蓄力斩（加入意志，伤害 +3）', cost: { action: true, exhaust: true },

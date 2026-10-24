@@ -8,7 +8,6 @@ export default {
   encounterResolve(state, inv, card, api) {
     const extra = Math.floor((state.encounterDiscard?.length || 0) / 10)
     const difficulty = 2 + extra
-    let placed = false
     api.test?.(inv.seat, 'willpower', difficulty, result => {
       if (result?.success) return
       const assets = inv.assets || []
@@ -20,8 +19,8 @@ export default {
       })
       const asset = assets.find(entry => String(entry.id) === String(picked)) || assets[0]
       api.discardAsset?.(inv.seat, asset.id)
-      placed = true
     })
-    return placed
+    // 诡计结算后按引擎默认去向进入遭遇弃牌堆；返回 true 会被当作「已入场」而从场上消失。
+    return false
   },
 }

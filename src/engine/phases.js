@@ -73,7 +73,12 @@ function upkeepPhase(state) {
     inv.phaseStatBonus = null
     inv.phaseStatBonuses = []
     inv.fearExtraPaid = false
-    if (!assetsCannotReady(inv, state.round)) for (const a of inv.assets) a.exhausted = false
+    if (!assetsCannotReady(inv, state.round)) {
+      for (const a of inv.assets) a.exhausted = false
+      // 2026-10-25 修复：威胁区的卡（如 05019 安息日男爵这类「[fast] 横置」资产）也应在
+      // 重整阶段复位；旧实现只重置 inv.assets，导致威胁区卡的 exhaustion 永久保留、能力只能用一次。
+      for (const threat of inv.threat) threat.exhausted = false
+    }
     if (campaignState.cannotReadyRound(inv) === state.round) campaignState.clearCannotReadyRound(inv)
     for (const threat of inv.threat) if (getThreatEffect(threat)?.debt) threat.debtPaymentsThisRound = 0
   }

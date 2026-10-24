@@ -40,6 +40,7 @@ export const FAST_TESTS = Object.freeze([
   'card-entries.test.mjs', // 一卡一文件 / 索引 / 禁止批次大文件
   'encounter-entries.test.mjs', // 非玩家条目：一卡一文件 / 归属 / 索引 / 跨条目查询单独 import
   'architecture-guard.test.mjs',
+  'i18n-dict.test.mjs', // 界面词典完整性：中英 key/占位符/重复 key/裸 key/残留中文
   'phase6-guard.test.mjs', // Phase 6 门禁：引擎里无卡号 / 无战役名
   'phase6-implementation.test.mjs', // Phase 6（6e-1）实现账本：通道判定 / 摘要形状 / isPlayable 一致
   'phase6-campaign.test.mjs', // Phase 6（6e-17）战役插件化：公开投影 / agentHints / observation 守卫

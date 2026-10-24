@@ -3,7 +3,9 @@ import { renderRulesText } from './card-text.js'
 import { tableArt } from './table-art.js'
 import { t } from './i18n.js'
 
-const CLASS_LABELS = { guardian: '守卫者', seeker: '探求者', rogue: '游荡者', mystic: '秘术师', survivor: '幸存者', neutral: '中立', mythos: '神话' }
+// 职业标签只存 key，取词发生在渲染期：模块顶层不能调用 t()（导入时求值会让英文不生效）。
+const CLASS_LABEL_KEYS = { guardian: 'game.class.guardian', seeker: 'game.class.seeker', rogue: 'game.class.rogue', mystic: 'game.class.mystic', survivor: 'game.class.survivor', neutral: 'game.class.neutral', mythos: 'game.class.mythos' }
+const classLabel = klass => (CLASS_LABEL_KEYS[klass] ? t(CLASS_LABEL_KEYS[klass]) : klass)
 const LANDSCAPE_TYPES = ['investigator', 'location', 'act', 'agenda']
 // Elements that own a card picture; a hovered container only zooms the art it owns
 // directly, so a location never borrows an investigator standing on it.
@@ -43,8 +45,8 @@ export function installCardZoom(h) {
     // cardFaceText 负责背面关联面与卡背占位文本；名称/文本再统一走 cardDisplay*（§8.7 第二步）。
     const text = cardFaceText(card, linked, face)
     const traits = cardDisplayTraits(text).join(' · ')
-    const meta = face === 'back' ? t('card.zoom.back') : [typeLabel(text.type), CLASS_LABELS[text.klass] || text.klass,
-      text.cost != null ? `${text.cost} 资源` : null, text.xp ? `${text.xp} 级` : null, text.slot || null].filter(Boolean).join(' · ')
+    const meta = face === 'back' ? t('card.zoom.back') : [typeLabel(text.type), classLabel(text.klass),
+      text.cost != null ? t('game.zoom.resources', { cost: text.cost }) : null, text.xp ? t('game.zoom.level', { xp: text.xp }) : null, text.slot || null].filter(Boolean).join(' · ')
     const rules = cardDisplayText(text)
     const flavor = cardDisplayFlavor(text)
     const subname = cardDisplaySubname(text)

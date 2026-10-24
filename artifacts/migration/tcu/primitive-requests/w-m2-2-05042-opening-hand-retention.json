@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "w-m2-2-05042-opening-hand-retention",
+  "cycle": "tcu",
+  "worker": "w-m2-2",
+  "card": "05042",
+  "primitive": "openingHandWeaknessRetention",
+  "params": {
+    "entryFlag": "weaknessStaysInOpeningHand",
+    "readPoints": [
+      "src/engine/setup.js#drawOpeningHand",
+      "src/engine/table-decisions.js#runMulligans"
+    ]
+  },
+  "cardText": "如果冒险设置期间你抽取了高塔·XVI作为你起始手牌(不论在重调之前还是之后)，你不能将其替换。其必须留在你的起始手牌中。",
+  "reason": "setup 的 drawOpeningHand 把所有基础弱点从起手牌移出并洗回牌库（drawOpeningHand 里 isWeaknessCode 分支），引擎没有「条目声明必须留在起始手牌」的读点；因此 05042 的「开局保留」分支无法实现，只能在抽牌通道用 weaknessStaysInHand 让它抽到后留在手牌。",
+  "proposedApi": "条目级布尔 `weaknessStaysInOpeningHand: true`：setup.js 的 drawOpeningHand 在 isWeaknessCode 分支先查 registeredEntry(code)?.weaknessStaysInOpeningHand，为真则把这张卡 push 进 inv.hand（不洗回牌库）；table-decisions.js 的 runMulligans 复用同一判定（已有 cannotMulliganAway 保护换牌）。",
+  "status": "rejected",
+  "createdAt": "2026-10-24T02:40:00+08:00",
+  "claimedBy": "main",
+  "resolvedAt": "2026-10-23T18:39:00.291Z",
+  "resolution": {
+    "api": null,
+    "suggestion": "用既有条目读点表达：blocksCommitWhileInHand（手牌封锁）、cannotMulliganAway（换牌保护）、weaknessStaysInHand（弱点留手）；读点见 src/engine/tarot-slot.js。剩余「开局强制保留」分支若仍不合口径，保留 simplified + note 并登记 worker 报告。",
+    "catalog": "P7 玩家卡批次（2026-10）：拒绝新增原语",
+    "notes": "既有 tarot-slot 读点覆盖三件事，不新增原语。"
+  }
+}

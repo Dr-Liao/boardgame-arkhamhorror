@@ -86,6 +86,13 @@ function doFight(state, seat, opts, events, noSpend) {
   if (opts.requireNotEngagedTarget && enemy?.engagedSeat === seat) { info(state, events, '该武器不能攻击与你交战的敌人。'); return }
   if (!noSpend) payActionCost(state, inv, 'fight', events)
   const weapon = inv.assets.find(asset => asset.id === opts.assetId)
+  // 2026-10-25：05230 瞄准镜「所附属支援不能用于攻击与你交战的敌人」。
+  // 附属卡在条目级声明 hostCannotAttackEngaged；这里读一次，避免绕过 legalMoves 的读点。
+  if (weapon && enemy?.engagedSeat === seat
+    && (weapon.attachments || []).some(attachment => registeredEntry(attachment.code)?.hostCannotAttackEngaged)) {
+    info(state, events, `⛔ 「${cardName(weapon.code)}」上附属的卡牌禁止它攻击与 ${inv.name} 交战的敌人。`)
+    return
+  }
   const here = state.locations.find(item => item.id === inv.location)
   const connectingIds = here?.connections || []
   // 「枪法如神」（04104）：激活枪械/远程支援的攻击时打开的窗口。事件在那里改写本次攻击：
@@ -321,20 +328,24 @@ function doFight(state, seat, opts, events, noSpend) {
       } else if (opts.flamethrowerSpread) {
         // 火焰喷射器：可选择把 4 点伤害分配给所有交战敌人（简化：轮流分配）。
         const engaged = state.enemies.filter(item => item.engagedSeat === seat && !item.defeated)
-        const spread = engaged.length > 1 && requestChoice(state, { kind: 'effect', source: opts.sourceCode || weaponCode, seat,
-          prompt: `是否改为向 ${engaged.length} 个交战敌人分配 ${opts.flamethrowerSpread} 点伤害？`,
+        // 火焰喷射器（04305）：只要至少 1 个交战敌人就可选择「改为分配最多 4 点」，
+        // 并且允许少分（每 1 点都可选择 done 停止）。
+        const spread = engaged.length >= 1 && requestChoice(state, { kind: 'effect', source: opts.sourceCode || weaponCode, seat,
+          prompt: `是否改为向 ${engaged.length} 个交战敌人分配最多 ${opts.flamethrowerSpread} 点伤害？`,
           options: [{ id: 'focus', label: `只对「${enemy.name}」造成 ${dmg} 点伤害` },
-            { id: 'spread', label: `向所有交战敌人分配 ${opts.flamethrowerSpread} 点伤害` }] }) === 'spread'
+            { id: 'spread', label: `向所有交战敌人分配最多 ${opts.flamethrowerSpread} 点伤害` }] }) === 'spread'
         if (spread) {
           let remaining = opts.flamethrowerSpread + Math.max(0, dmg - 1)
           while (remaining > 0) {
             const living = engaged.filter(target => state.enemies.includes(target) && !target.defeated)
             if (!living.length) break
-            const chosen = living.length === 1 ? living[0].id : requestChoice(state, {
-              kind: 'assign-damage', source: opts.sourceCode || weaponCode, seat,
-              prompt: `火焰喷射器：分配 1 点伤害（剩余 ${remaining}）。`,
-              options: living.map(target => ({ id: target.id, label: target.name })),
+            const chosen = requestChoice(state, {
+              kind: 'assign-damage', source: opts.sourceCode || weaponCode, seat, canSkip: true,
+              prompt: `火焰喷射器：分配 1 点伤害（剩余 ${remaining}，可选择停止）。`,
+              options: [...living.map(target => ({ id: target.id, label: target.name })),
+                { id: 'done', label: '停止分配' }],
             })
+            if (chosen === 'done') break
             const target = living.find(item => item.id === chosen) || living[0]
             damageEnemy(state, target, 1, seat, events, opts.assetId || null)
             remaining -= 1
@@ -342,7 +353,9 @@ function doFight(state, seat, opts, events, noSpend) {
         } else if (state.enemies.includes(enemy)) enemy.damageTaken += dmg
       } else enemy.damageTaken += dmg
       if (!opts.stormOfSpirits) {
-        scenarioBehavior(state).enemyDamaged?.(state, enemy, scenarioRuntime(state, events))
+        // 2026-10-25 修复：把「伤害来源」传给 enemyDamaged（此前普通战斗路径不传，
+        // 导致 05180「除法术/遗物以外的伤害」这类按来源分支的规则失效）。
+        scenarioBehavior(state).enemyDamaged?.(state, enemy, scenarioRuntime(state, events), seat, opts.assetId || opts.sourceCode || null)
         enemy.defeatedBy = seat
       }
       // 「晕眩重击」：攻击成功时自动躲避被攻击敌人。
@@ -400,7 +413,7 @@ function doFight(state, seat, opts, events, noSpend) {
     }
     if (opts.discardOnTokens?.some(token => r.drawn.includes(token)) && opts.assetId) {
       const asset = inv.assets.find(item => item.id === opts.assetId)
-      if (asset) { leaveAsset(state, inv, asset); if (!asset.removedFromGame) inv.discard.push(asset.code) }
+      if (asset) { leaveAsset(state, inv, asset); if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code) }
     }
   } })
 }
@@ -528,6 +541,8 @@ function doEvade(state, seat, opts, events, noSpend) {
         info(state, events, `💥 「${enemy.name}」被躲避后受到 ${opts.damageOnSuccess} 点伤害（${enemy.damageTaken}/${enemy.health}）。`)
       }
       afterEvade(state, inv, enemy, events, r)
+      // 04265 手铐等：躲避成功后由调用方接管额外效果（例如把自身附属到该敌人）。
+      opts.onSuccess?.({ state, inv, enemy, result: r, events })
       if (opts.moveEnemyOnSuccess && !enemy.elite) {
         const current = state.locations.find(loc => loc.id === enemy.location)
         const destinations = (current?.connections || []).filter(id => locationExists(state, id))

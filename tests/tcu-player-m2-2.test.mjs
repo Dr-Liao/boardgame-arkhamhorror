@@ -12,8 +12,8 @@ import assert from 'node:assert/strict'
 
 import { fixture, asset, enemy, move, settle } from './core-fixture.mjs'
 import {
-  applyMove, canEquip, createGameState, decisionSeat, discoverClueAt, enemyEvadeValue, executeDescriptor,
-  getMaxHealth, getMaxSanity, getStat, legalMoves, performTest, playCost, validateMove,
+  applyMove, canEquip, createGameState, decisionSeat, discoverClueAt, drawOpeningHand, enemyEvadeValue, executeDescriptor,
+  getMaxHealth, getMaxSanity, getStat, leaveAsset, legalMoves, performTest, playCost, validateMove,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
@@ -112,6 +112,20 @@ test('TCU 05042 高塔·XVI 基础弱点抽到后留在手牌（不立刻结算�
   assert.equal(me(state).hand.includes('05042'), true, '抽到后留在手牌')
   assert.equal(me(state).discard.includes('05042'), false, '没有被弃掉')
   assert.equal(handCommitBlocker(me(state), registeredEntry), '05042')
+})
+
+test('TCU 05042 高塔·XVI 起手抽到必须留在起始手牌（其余弱点仍洗回）', () => {
+  const state = fixture('01001')
+  const inv = me(state)
+  inv.hand = []
+  // 牌库末位是牌库顶：先抽到 05042，再抽 1 张另一张弱点（05041），其余为普通牌。
+  inv.deck = ['01088', '01088', '01088', '01088', '01088', '05041', '05042']
+  drawOpeningHand(state, inv)
+  assert.equal(registeredEntry('05042')?.staysInOpeningHand, true, '引擎读点字段已声明')
+  assert.equal(inv.hand.includes('05042'), true, '起手抽到的高塔留在起始手牌')
+  assert.equal(inv.deck.includes('05042'), false, '高塔没有被洗回牌库')
+  assert.equal(inv.hand.includes('05041'), false, '其他基础弱点仍按规则洗回牌库')
+  assert.equal(inv.deck.includes('05041'), true, '05041 回到牌库')
 })
 
 // ---------------------------------------------------------------------------
@@ -462,6 +476,14 @@ test('TCU 05118 附魔剑 +1 战斗；花 1 充能附魔再 +1 战斗/+1 伤害'
   assert.equal(me(state).assets.find(item => item.id === blade.id).uses, 2, '不花充能时次数不变')
   assert.equal(state.enemies.find(item => item.id === 'blade-second').damageTaken, 1)
   assert.equal(state.lastTestResult.value, getStat(state, me(state), 'combat') + 1)
+  // 修复（审计 R2）：卡面「攻击。」= Fight 行动（countsAs:'fight'），与敌人交战时使用不引发借机攻击。
+  const engaged = enemy(state, { id: 'blade-engaged', fight: 2, evade: 1, health: 9, damage: 2, horror: 2 })
+  const damageBefore = me(state).damage
+  const horrorBefore = me(state).horror
+  move(state, { action: 'ability', assetId: blade.id, abilityIndex: 0, targetId: engaged.id })
+  settle(state, pending => (pending.kind === 'effect' ? 'skip' : null))
+  assert.equal(me(state).damage, damageBefore, 'Fight 行动不引发借机攻击（伤害）')
+  assert.equal(me(state).horror, horrorBefore, 'Fight 行动不引发借机攻击（恐惧）')
 })
 
 // ---------------------------------------------------------------------------
@@ -540,6 +562,34 @@ test('TCU 05152 妥善养护 快速附属到道具支援；每个支援仅限 1 
   const hostAfter = me(state).assets.find(asset => asset.id === item.id)
   assert.equal((hostAfter.attachments || []).filter(entry => entry.code === '05152').length, 1, '每个支援仅限 1 张')
   assert.equal(me(state).hand.includes('05152'), true, '第二张留在手牌')
+})
+
+test('TCU 05152 妥善养护 宿主被弃后宿主与其[[升级]]附属一起返回手牌', () => {
+  const state = fixture('01001')
+  const item = asset(state, '01030') // 放大镜：Item / Tool
+  me(state).hand = ['05152']
+  me(state).resources = 10
+  move(state, { action: 'play', cardId: '05152' })
+  settle(state)
+  const host = state.investigators[0].assets.find(asset => asset.id === item.id)
+  assert.equal((host.attachments || []).some(entry => entry.code === '05152'), true, '前置：已附属')
+  // 弃掉宿主 → assetLeavesPlay 窗口 → 05152 的反应返回宿主与升级（必须在规则事务里开窗）。
+  const run = current => {
+    const owner = current.investigators[0]
+    leaveAsset(current, owner, owner.assets.find(asset => asset.id === item.id), [])
+  }
+  resolveTransaction(state, 0, { action: 'tcuPlayerM22Test' }, run)
+  for (let guard = 0; state.pendingChoice && guard < 20; guard++) {
+    const pending = state.pendingChoice
+    const optionId = pending.kind === 'reaction'
+      ? (pending.options.find(option => option.cardCode === '05152')?.id ?? 'skip')
+      : (['done', 'skip', 'self'].find(id => pending.options.some(option => option.id === id)) ?? pending.options[0].id)
+    resolveTransaction(state, pending.seat, { action: 'choose', choiceId: pending.id, optionId }, run)
+  }
+  const inv = me(state)
+  assert.equal(inv.hand.includes('01030'), true, '宿主返回手牌')
+  assert.equal(inv.hand.includes('05152'), true, '附属的[[升级]]卡也返回手牌')
+  assert.equal(inv.discard.includes('01030'), false, '不再进弃牌堆（returnedToHand 守卫生效）')
 })
 
 // ---------------------------------------------------------------------------
@@ -679,6 +729,26 @@ test('TCU 05157 凋零术 用意志攻击；符号后敌人获得 -1 攻击值',
   assert.equal(after.fightReduction?.amount, 1, '敌人 -1 攻击值')
   assert.equal(state.enemies.find(item => item.id === target.id).damageTaken, 1)
   assert.equal(registeredEntry('05157').simplified, true, '躲避值部分显式简化')
+  // 修复（审计 R2）：卡面只要求「本次攻击期间揭示符号」，不要求检定成功。
+  const failState = fixture('01001')
+  const wither2 = asset(failState, '05157')
+  const tough = enemy(failState, { id: 'wither-tough', fight: 9, evade: 1, health: 20 })
+  failState.chaosBag = ['skull']
+  failState.investigators[0].willpower = 0
+  move(failState, { action: 'ability', assetId: wither2.id, abilityIndex: 0, targetId: tough.id })
+  settle(failState)
+  assert.equal(failState.lastTestResult.success, false, '本次攻击失败')
+  assert.equal(failState.enemies.find(item => item.id === tough.id).fightReduction?.amount, 1,
+    '攻击失败但揭示符号：仍 -1 攻击值')
+  // 修复（审计 R2）：卡面「攻击。」= Fight 行动（countsAs:'fight'），与敌人交战时使用不引发借机攻击。
+  const aooState = fixture('01001')
+  const wither3 = asset(aooState, '05157')
+  const engaged = enemy(aooState, { id: 'wither-aoo', fight: 0, evade: 1, health: 20, damage: 2, horror: 2 })
+  aooState.chaosBag = ['0']
+  const damageBefore = aooState.investigators[0].damage
+  move(aooState, { action: 'ability', assetId: wither3.id, abilityIndex: 0, targetId: engaged.id })
+  settle(aooState)
+  assert.equal(aooState.investigators[0].damage, damageBefore, 'Fight 行动不引发借机攻击')
 })
 
 // ---------------------------------------------------------------------------

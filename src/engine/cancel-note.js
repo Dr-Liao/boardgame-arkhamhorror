@@ -30,7 +30,10 @@ export function noteCardCancelled(reactionWindow, state, events, { seat = null, 
     what: what || null,
     prompt: `${owner?.name || '调查员'} 的「${cardCode}」取消了一项效果`,
   }
-  reactionWindow(state, 'cardCancelled', context, events)
+  // 2026-10-25 修复：取消记账窗口经常发生在「正在结算一张快速反应卡」的上下文里
+  // （playReactionCard 会先写 state._reaction），旧代码被嵌套保护吞掉，黛安娜 05004 的核心
+  // 反应因此永远不触发。cardCancelled 是卡牌取消后的独立时点，必须允许嵌套开窗。
+  reactionWindow(state, 'cardCancelled', context, events, { allowNested: true })
   return context
 }
 

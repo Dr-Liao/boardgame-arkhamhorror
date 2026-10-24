@@ -20,6 +20,7 @@ import {
   storyInvestigatorPickerModel, tarotPickerModel,
 } from './tcu-ui.js'
 // 界面文案统一走 web/i18n.js 的 t()（缺失时回退 zh-CN 源文案），见 docs/localization.md §8.7 第三步。
+// 模块顶层不能调用 t()（导入时求值会把语言固定在加载瞬间）；数据表只存 key，渲染期再取文案。
 const STAGE_KEYS = {
   campaignHub: 'hub.stage.campaignHub', scenarioSetup: 'hub.stage.scenarioSetup',
   inScenario: 'hub.stage.inScenario', scenario: 'hub.stage.inScenario',
@@ -29,17 +30,28 @@ const STAGE_KEYS = {
 const stageLabel = value => t(STAGE_KEYS[value] || STAGE_KEYS.inScenario)
 const DIFFICULTY_KEYS = { easy: 'hub.difficulty.easy', standard: 'hub.difficulty.standard', hard: 'hub.difficulty.hard', expert: 'hub.difficulty.expert' }
 const difficultyLabel = value => DIFFICULTY_KEYS[value] ? t(DIFFICULTY_KEYS[value]) : value
-const CLASSES = { guardian: '守护者', seeker: '探求者', rogue: '流浪者', mystic: '潜修者', survivor: '生存者', neutral: '中立' }
+const CLASS_KEYS = {
+  guardian: 'hub.class.guardian', seeker: 'hub.class.seeker', rogue: 'hub.class.rogue',
+  mystic: 'hub.class.mystic', survivor: 'hub.class.survivor', neutral: 'hub.class.neutral',
+}
+const classLabel = value => CLASS_KEYS[value] ? t(CLASS_KEYS[value]) : value
 // 选调查员时的扩展包署名：核心包沿用档案口径，其余循环复用卡牌筛选的系列表，
 // 所以新增循环（失落的时代、万象无终……）不必在两张表里各写一遍中文名。
-const PACKS = { core: '核心包' }
+const PACK_KEYS = { core: 'hub.pack.core' }
 function packLabel(pack, englishName = '') {
-  if (!pack) return '调查员'
-  if (PACKS[pack]) return PACKS[pack]
+  if (!pack) return t('hub.investigator.fallbackName')
+  if (PACK_KEYS[pack]) return t(PACK_KEYS[pack])
   const series = cardSource({ pack, packName: englishName }).packName
   return series && series !== pack ? series : englishName || pack
 }
-const outcomeName = value => ({ noResolution: '未达成结局', defeat: '调查失败', survived: '生还', victory: '调查成功' })[value] || String(value ?? '待结算').replace(/^r(\d+)$/, '结局 $1')
+const OUTCOME_KEYS = { noResolution: 'hub.outcome.noResolution', defeat: 'hub.outcome.defeat', survived: 'hub.outcome.survived', victory: 'hub.outcome.victory' }
+const outcomeName = value => OUTCOME_KEYS[value] ? t(OUTCOME_KEYS[value])
+  : String(value ?? t('hub.outcome.pending')).replace(/^r(\d+)$/, (_, number) => t('hub.outcome.resolution', { number }))
+const PACK_STATUS_KEYS = {
+  playable: 'hub.packStatus.playable', verified: 'hub.packStatus.verified',
+  development: 'hub.packStatus.development', 'catalog-only': 'hub.packStatus.catalogOnly',
+}
+const packStatusLabel = value => PACK_STATUS_KEYS[value] ? t(PACK_STATUS_KEYS[value]) : value
 // Arkham-only campaign shell. The hall provides transport and generic modal hosting.
 export function createHubUI({ h, api, render, state, startGame, loadSavedSession, renderOnlineSetup,
   rememberSession, leave, submitMove, refreshSession, catalogOpen, rulebookOpen, inspectCard, canAct = () => true,
@@ -56,8 +68,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     deck: 'book', upgrades: 'star', supplies: 'supply', records: 'leaf', story: 'book' }
   // 局外页面的反馈入口：宿主注入 openFeedback 时才出现，旧版大厅下自动隐藏。
   const feedbackEntry = () => typeof openFeedback === 'function'
-    ? h('button', { className: 'bg-btn secondary ah-feedback-entry', title: '反馈', 'aria-label': '反馈',
-      onclick: () => openFeedback() }, '💬 反馈')
+    ? h('button', { className: 'bg-btn secondary ah-feedback-entry', title: t('hub.feedback'), 'aria-label': t('hub.feedback'),
+      onclick: () => openFeedback() }, t('hub.feedback.button'))
     : null
   // 补给品是失落的时代的战役机制；标了 supplyLabels 的战役才会多出这一页。
   const supportsSupplies = campaign => Object.keys(campaign?.supplyLabels || {}).length > 0
@@ -72,7 +84,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     return s.state.campaignStory?.entries?.find(entry => entry.id === id)
   }
   const resultName = (s, result) => resultStory(s, result)?.resolutionTitle || outcomeName(result.resolution)
-  const nameOf = (g, code) => cardDisplayName(state.session?.state.cards?.[code]) || cardDisplayName(g.clientData?.deckBuilder?.cardPool.find(card => card.code === code)) || '调查卡牌'
+  const nameOf = (g, code) => cardDisplayName(state.session?.state.cards?.[code]) || cardDisplayName(g.clientData?.deckBuilder?.cardPool.find(card => card.code === code)) || t('hub.cardFallback')
   const art = (code, name) => tableArt(h, code, name)
   // 关卡内页面的插图必须带上已选关卡：不传 scenarioId 时只能拿到战役封面。
   const decor = (name, className = '', scenarioId = '') => {
@@ -84,7 +96,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   const portrait = inv => h('div', { className: 'ah-office-portrait' }, art(inv.code, inv.name))
   const playerBadge = (s, seat) => {
     const player = s.players.find(item => item.seat === seat)
-    const name = player?.name || `玩家 ${seat + 1}`, avatar = player?.avatar || '👤'
+    const name = player?.name || t('hub.player.name', { seat: seat + 1 }), avatar = player?.avatar || '👤'
     return h('span', { className: 'ah-office-player', 'data-player-seat': seat },
       h('span', { className: 'ah-office-player-avatar', 'aria-hidden': 'true' }, /^(data:image\/|blob:|https?:\/\/|\/)/i.test(avatar)
         ? h('img', { src: avatar, alt: '' }) : avatar), h('span', {}, name))
@@ -108,8 +120,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   const interludeBriefing = (s, compact = false) => {
     const entry = currentFlowStory(s)
     if (!entry) return null
-    return h('section', { className: 'ah-hub-interlude' + (compact ? ' is-compact' : ''), 'aria-label': '幕间纪事' },
-      h('small', {}, '幕间纪事'),
+    return h('section', { className: 'ah-hub-interlude' + (compact ? ' is-compact' : ''), 'aria-label': t('hub.interlude.title') },
+      h('small', {}, t('hub.interlude.title')),
       h('h2', {}, entry.title),
       ...(entry.paragraphs || []).map(paragraph =>
         h('p', { className: 'ah-hub-interlude-prose' }, renderRulesText(h, paragraph, { links: false }))))
@@ -118,32 +130,33 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   const investigatorInfo = inv => {
     const optionText = option => {
       const factions = option.factions || option.faction || []
-      const classes = factions.length ? factions.map(klass => CLASSES[klass] || klass).join('、') : '任意职业'
+      const classes = factions.length ? factions.map(klass => classLabel(klass)).join(t('hub.list.separator')) : t('hub.investigator.anyClass')
       const level = option.level || { min: 0, max: 0 }
-      return `${classes} ${level.min ?? 0}–${level.max ?? 0} 级${option.limit ? `（最多 ${option.limit} 张）` : ''}`
+      return t('hub.investigator.optionLevel', { classes, min: level.min ?? 0, max: level.max ?? 0 })
+        + (option.limit ? t('hub.investigator.optionLimit', { limit: option.limit }) : '')
     }
     const signatureLinks = cards => cards.flatMap((card, index) => [
-      index ? '、' : null,
+      index ? t('hub.list.separator') : null,
       h('button', {
         type: 'button',
         className: 'ah-investigator-signature-link',
-        'aria-label': `查看卡牌详情：${card.name}`,
+        'aria-label': t('hub.card.inspect', { name: card.name }),
         onclick: () => inspectCard(card.code),
       }, card.name),
     ])
     const signatures = [...(inv.signatureCards || []), ...(inv.signatureWeaknesses || [])]
     return h('div', { className: 'ah-investigator-info' },
-    h('div', { className: 'ah-investigator-vitals', 'aria-label': '生命与理智' },
-      metric('health', inv.health, '生命'), metric('sanity', inv.sanity, '理智'),
+    h('div', { className: 'ah-investigator-vitals', 'aria-label': t('hub.investigator.vitalsAria') },
+      metric('health', inv.health, t('hub.vital.health')), metric('sanity', inv.sanity, t('hub.vital.sanity')),
       inv.traits?.length ? h('span', { className: 'ah-investigator-traits' }, inv.traits.join(' · ')) : null),
-    inv.abilityText ? h('section', { className: 'ah-investigator-rules' }, h('h3', {}, '调查员能力'),
+    inv.abilityText ? h('section', { className: 'ah-investigator-rules' }, h('h3', {}, t('hub.investigator.abilityTitle')),
       h('p', {}, renderRulesText(h, inv.abilityText))) : null,
-    inv.rules ? h('details', { className: 'ah-investigator-disclosure' }, h('summary', {}, '查看构筑规则'),
-      h('p', {}, `牌库：${inv.deckSize || inv.rules.size || 30} 张普通卡。`),
+    inv.rules ? h('details', { className: 'ah-investigator-disclosure' }, h('summary', {}, t('hub.investigator.rulesTitle')),
+      h('p', {}, t('hub.investigator.deckSize', { count: inv.deckSize || inv.rules.size || 30 })),
       ...(inv.rules.options || []).map(option => h('p', {}, optionText(option))),
-      signatures.length ? h('p', {}, '专属卡牌：', signatureLinks(signatures), '。另加入 1 张随机基础弱点。') : null) : null,
+      signatures.length ? h('p', {}, t('hub.investigator.signatureCards'), signatureLinks(signatures), t('hub.investigator.signatureNote')) : null) : null,
     inv.code ? h('button', { className: 'ah-investigator-dossier-link', onclick: () => inspectCard(inv.code) },
-      tableIcon('book'), '查看完整人物档案') : null)
+      tableIcon('book'), t('hub.investigator.dossier')) : null)
   }
   const changeTab = tab => { state.arkhamHubTab = tab; render() }
   const cardFilters = scope => Object.fromEntries(['search','type','klass','cost','xp','campaign','pack','sort']
@@ -192,7 +205,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     return next
   }
   const team = s => h('div', { className: 'ah-office-team' }, s.state.investigators.map(inv => h('button', {
-    className: 'ah-office-teammate', onclick: () => changeTab('investigators'), 'aria-label': `查看调查员：${inv.name}`,
+    className: 'ah-office-teammate', onclick: () => changeTab('investigators'), 'aria-label': t('hub.investigator.inspectName', { name: inv.name }),
   }, portrait(inv), h('span', {}, h('strong', {}, inv.name), playerBadge(s, inv.seat)))))
 
   async function loadSaves() {
@@ -224,33 +237,33 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   }
 
   const cardPoolLabel = scope => CARD_POOL_SCOPE_LABELS[normalizeCardPoolScope(scope)]
-  const rollbackLabel = value => value === 'off' ? '禁止' : '允许'
+  const rollbackLabel = value => value === 'off' ? t('hub.rollback.disabled') : t('hub.rollback.enabled')
 
   function renderAiDialogueSettings(g) {
     const values = [
-      ['剧情', state.setup.form.aiStoryAwareness === 'on' ? '开' : '关'],
-      ['日常', state.setup.form.aiRoutineSpeechFrequency],
-      ['自身检定', state.setup.form.aiSelfTestSpeechFrequency],
-      ['他人检定', state.setup.form.aiOtherTestSpeechFrequency],
-      ['击败敌人', state.setup.form.aiEnemyDefeatSpeechFrequency],
+      [t('hub.ai.story'), state.setup.form.aiStoryAwareness === 'on' ? t('hub.toggle.on') : t('hub.toggle.off')],
+      [t('hub.ai.summary.routine'), state.setup.form.aiRoutineSpeechFrequency],
+      [t('hub.ai.summary.selfTest'), state.setup.form.aiSelfTestSpeechFrequency],
+      [t('hub.ai.summary.otherTest'), state.setup.form.aiOtherTestSpeechFrequency],
+      [t('hub.ai.summary.enemyDefeat'), state.setup.form.aiEnemyDefeatSpeechFrequency],
     ].map(([label, value]) => `${label} ${value}${typeof value === 'number' ? '%' : ''}`).join(' · ')
     return h('section', { className: 'ah-ai-dialogue-settings' },
-      h('span', {}, h('strong', {}, 'AI 高级设置'), h('small', {}, values)),
+      h('span', {}, h('strong', {}, t('hub.ai.title')), h('small', {}, values)),
       h('button', { type: 'button', className: 'bg-btn secondary',
-        onclick: () => { state.arkhamAiSettingsOpen = true; render() } }, '修改 AI 高级设置'))
+        onclick: () => { state.arkhamAiSettingsOpen = true; render() } }, t('hub.ai.edit')))
   }
 
   // 「游戏高级设置」与 AI 高级设置并列，都只在开局界面出现；值写进开局表单，
   // 由大厅 startGame 一并提交，服务端再落到 state（随存档保留）。
   function renderGameSettings() {
     const values = [
-      `卡牌范围 ${cardPoolLabel(state.setup.form.cardPoolScope)}`,
-      `回档 ${rollbackLabel(state.setup.form.allowRollback)}`,
+      t('hub.gameSettings.cardPoolValue', { value: cardPoolLabel(state.setup.form.cardPoolScope) }),
+      t('hub.gameSettings.rollbackValue', { value: rollbackLabel(state.setup.form.allowRollback) }),
     ].join(' · ')
     return h('section', { className: 'ah-ai-dialogue-settings' },
-      h('span', {}, h('strong', {}, '游戏高级设置'), h('small', {}, values)),
+      h('span', {}, h('strong', {}, t('hub.gameSettings.title')), h('small', {}, values)),
       h('button', { type: 'button', className: 'bg-btn secondary',
-        onclick: () => { state.arkhamGameSettingsOpen = true; render() } }, '修改游戏高级设置'))
+        onclick: () => { state.arkhamGameSettingsOpen = true; render() } }, t('hub.gameSettings.edit')))
   }
 
   function renderGameSettingsModal(g) {
@@ -259,25 +272,25 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const scope = spec('cardPoolScope'), rollback = spec('allowRollback')
     const close = () => { state.arkhamGameSettingsOpen = false; render() }
     return h('div', { className: 'ah-ai-dialogue-backdrop', onclick: event => { if (event.target === event.currentTarget) close() } },
-      h('section', { className: 'ah-ai-dialogue-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': '游戏高级设置',
+      h('section', { className: 'ah-ai-dialogue-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('hub.gameSettings.title'),
         onkeydown: modalKeys(close), onclick: event => event.stopPropagation() },
-        h('header', {}, h('div', {}, h('small', {}, 'ARKHAM HORROR'), h('h2', {}, '游戏高级设置')),
-          h('button', { type: 'button', className: 'bg-btn secondary', onclick: close, 'aria-label': '关闭游戏高级设置' }, '关闭')),
-        h('p', {}, '这些选项在开局后固定，并随存档保留。'),
+        h('header', {}, h('div', {}, h('small', {}, 'ARKHAM HORROR'), h('h2', {}, t('hub.gameSettings.title'))),
+          h('button', { type: 'button', className: 'bg-btn secondary', onclick: close, 'aria-label': t('hub.gameSettings.closeAria') }, t('common.close'))),
+        h('p', {}, t('hub.gameSettings.note')),
         h('div', { className: 'ah-ai-dialogue-group' },
           h('h3', {}, scope.label),
           h('div', { className: 'ah-game-settings-select' },
-            h('span', {}, '可用卡牌'),
+            h('span', {}, t('hub.gameSettings.cardPoolLabel')),
             select(scope.options, state.setup.form.cardPoolScope, value => { state.setup.form.cardPoolScope = value; render() },
               { 'aria-label': scope.label })),
           h('small', {}, scope.description)),
         h('div', { className: 'ah-ai-dialogue-group' },
-          h('h3', {}, '回档'),
+          h('h3', {}, t('hub.gameSettings.rollbackLabel')),
           h('label', { className: 'ah-ai-dialogue-toggle' },
             h('input', { type: 'checkbox', checked: state.setup.form.allowRollback !== 'off', 'aria-label': rollback.label,
               onchange: event => { state.setup.form.allowRollback = event.target.checked ? 'on' : 'off' } }),
             h('span', {}, rollback.label),
-            h('small', {}, '默认允许')),
+            h('small', {}, t('hub.gameSettings.defaultAllowed'))),
           h('small', {}, rollback.description))))
   }
 
@@ -297,7 +310,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
             } }),
           h('output', {}, `${value}%`)))
     }
-    const toggle = (key, hint = '开启后 100% 触发') => {
+    const toggle = (key, hint = t('hub.ai.hintFull')) => {
       const item = spec(key)
       return h('label', { className: 'ah-ai-dialogue-toggle' },
         h('input', { type: 'checkbox', checked: state.setup.form[key] === 'on', 'aria-label': item.label,
@@ -307,38 +320,38 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     }
     const close = () => { state.arkhamAiSettingsOpen = false; render() }
     return h('div', { className: 'ah-ai-dialogue-backdrop', onclick: event => { if (event.target === event.currentTarget) close() } },
-      h('section', { className: 'ah-ai-dialogue-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'AI 高级设置',
+      h('section', { className: 'ah-ai-dialogue-modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('hub.ai.title'),
         onkeydown: modalKeys(close), onclick: event => event.stopPropagation() },
-        h('header', {}, h('div', {}, h('small', {}, 'ARKHAM HORROR'), h('h2', {}, 'AI 高级设置')),
-          h('button', { type: 'button', className: 'bg-btn secondary', onclick: close, 'aria-label': '关闭 AI 高级设置' }, '关闭')),
-        h('p', {}, '剧情感知与回应概率都在这里设置。自身指该 AI 操控的调查员，其他角色包括真人与其他 AI。'),
+        h('header', {}, h('div', {}, h('small', {}, 'ARKHAM HORROR'), h('h2', {}, t('hub.ai.title'))),
+          h('button', { type: 'button', className: 'bg-btn secondary', onclick: close, 'aria-label': t('hub.ai.closeAria') }, t('common.close'))),
+        h('p', {}, t('hub.ai.note')),
         h('div', { className: 'ah-ai-dialogue-group' },
-          h('h3', {}, '剧情'),
-          toggle('aiStoryAwareness', '默认开启'),
+          h('h3', {}, t('hub.ai.story')),
+          toggle('aiStoryAwareness', t('hub.ai.defaultOn')),
           h('small', {}, spec('aiStoryAwareness').description)),
         h('div', { className: 'ah-ai-dialogue-group' },
-          h('h3', {}, '日常事件'),
+          h('h3', {}, t('hub.ai.groupRoutine')),
           range('aiRoutineSpeechFrequency'),
           range('aiEnemyDefeatSpeechFrequency')),
         h('div', { className: 'ah-ai-dialogue-group' },
-          h('h3', {}, '普通检定'),
+          h('h3', {}, t('hub.ai.groupTests')),
           range('aiSelfTestSpeechFrequency'),
           range('aiOtherTestSpeechFrequency')),
         h('div', { className: 'ah-ai-dialogue-group' },
-          h('h3', {}, '大成功'),
-          h('small', {}, '揭示大成功（古神印记）标记。'),
+          h('h3', {}, t('hub.ai.groupCriticalSuccess')),
+          h('small', {}, t('hub.ai.criticalSuccessHint')),
           range('aiSelfCriticalSuccessSpeechFrequency'),
           range('aiOtherCriticalSuccessSpeechFrequency')),
         h('div', { className: 'ah-ai-dialogue-group' },
-          h('h3', {}, '大失败'),
-          h('small', {}, '揭示大失败（自动失败）标记。'),
+          h('h3', {}, t('hub.ai.groupCriticalFailure')),
+          h('small', {}, t('hub.ai.criticalFailureHint')),
           range('aiSelfCriticalFailureSpeechFrequency'),
           range('aiOtherCriticalFailureSpeechFrequency')),
-        h('div', { className: 'ah-ai-dialogue-special', role: 'group', 'aria-label': '必定触发的特殊对话' },
-          h('strong', {}, '特殊事件'),
+        h('div', { className: 'ah-ai-dialogue-special', role: 'group', 'aria-label': t('hub.ai.specialAria') },
+          h('strong', {}, t('hub.ai.specialTitle')),
           toggle('aiInvestigatorExitDialogue'),
           toggle('aiScenarioEndDialogue')),
-        h('small', {}, '关卡结束回应会读取本次实际到达的完整剧情正文，不会读取其他结局分支。')))
+        h('small', {}, t('hub.ai.scenarioEndHint'))))
   }
 
   const modalKeys = close => event => {
@@ -363,13 +376,13 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     if (!checkpoint) return null
     // 「允许回档」在开局时固定：关闭后连队长也不能创建分支存档。
     if (checkpoint.rollbackAllowed === false || s.state.allowRollback === false) {
-      return h('p', { className: 'ah-checkpoint-note', role: 'status' }, '本局已关闭回档：不能从关卡检查点重新开始。')
+      return h('p', { className: 'ah-checkpoint-note', role: 'status' }, t('hub.checkpoint.disabled'))
     }
     if (!checkpoint.available) {
-      return h('p', { className: 'ah-checkpoint-note', role: 'status' }, '此关卡的历史开局与当前版本不兼容，无法重新开始。')
+      return h('p', { className: 'ah-checkpoint-note', role: 'status' }, t('hub.checkpoint.incompatible'))
     }
     if ((s.mySeat ?? s.observerSeat) !== s.state.campaign.leadSeat) {
-      return h('p', { className: 'ah-checkpoint-note', role: 'status' }, '只有当前队长可以从此关创建分支存档。')
+      return h('p', { className: 'ah-checkpoint-note', role: 'status' }, t('hub.checkpoint.leaderOnly'))
     }
     return h('button', {
       type: 'button',
@@ -384,7 +397,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         }
         render()
       },
-    }, '从此关重新开始')
+    }, t('hub.checkpoint.start'))
   }
 
   async function confirmCheckpointFork(s, pending) {
@@ -427,17 +440,17 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         className: 'ah-ai-dialogue-modal ah-checkpoint-modal',
         role: 'dialog',
         'aria-modal': 'true',
-        'aria-label': '确认重新开始关卡',
+        'aria-label': t('hub.checkpoint.confirmAria'),
         onkeydown: modalKeys(close),
         onclick: event => event.stopPropagation(),
       },
-      h('header', {}, h('div', {}, h('small', {}, '创建分支存档'), h('h2', {}, `重新开始「${pending.scenarioName}」？`))),
-      h('p', {}, '将恢复这次关卡刚开始时的完整状态，包括手牌、牌序、地图、战役记录、创伤与随机状态。'),
-      h('p', {}, '系统会创建一个新的分支存档；当前存档及其后续进度会完整保留。'),
+      h('header', {}, h('div', {}, h('small', {}, t('hub.checkpoint.branchTitle')), h('h2', {}, t('hub.checkpoint.question', { scenario: pending.scenarioName })))),
+      h('p', {}, t('hub.checkpoint.restoreNote')),
+      h('p', {}, t('hub.checkpoint.branchNote')),
       h('div', { className: 'ah-checkpoint-actions' },
-        h('button', { type: 'button', className: 'bg-btn secondary', disabled: state.busy, onclick: close }, '取消'),
+        h('button', { type: 'button', className: 'bg-btn secondary', disabled: state.busy, onclick: close }, t('common.cancel')),
         h('button', { type: 'button', className: 'bg-btn', disabled: state.busy, onclick: () => confirmCheckpointFork(s, pending) },
-          state.busy ? '正在创建…' : '确认并创建分支'))))
+          state.busy ? t('hub.checkpoint.creating') : t('hub.checkpoint.confirm')))))
   }
 
   const closeDeck = () => {
@@ -489,7 +502,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const lib = deckLibrary()
     if (lib.loading) return
     lib.loading = true; lib.error = ''; render()
-    try { lib.decks = await listLocalDecks(api) } catch (error) { lib.error = '读取卡组库失败：' + String(error?.message || error) }
+    try { lib.decks = await listLocalDecks(api) } catch (error) { lib.error = t('hub.deckLibrary.readFailed') + String(error?.message || error) }
     lib.loading = false; render()
   }
   async function storeLibraryDeck(inv, draft, overwrite) {
@@ -497,12 +510,12 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     if (lib.saving || !inv || !draft.length) return
     lib.saving = true; lib.error = ''; lib.notice = ''; lib.confirmDelete = null; render()
     try {
-      const deck = await saveLocalDeck(api, { id: overwrite ? lib.currentId : null, name: lib.name.trim() || `${inv.name}的牌组`,
+      const deck = await saveLocalDeck(api, { id: overwrite ? lib.currentId : null, name: lib.name.trim() || t('hub.deckLibrary.defaultName', { name: inv.name }),
         investigatorCode: inv.code, codes: draft })
       lib.currentId = deck.id; lib.name = deck.name
       lib.decks = [deck, ...(lib.decks || []).filter(item => item.id !== deck.id)]
-      lib.notice = `${overwrite ? '已覆盖' : '已存入'}卡组库：《${deck.name}》· ${draft.length} 张。`
-    } catch (error) { lib.error = '保存到卡组库失败：' + String(error?.message || error) }
+      lib.notice = t(overwrite ? 'hub.deckLibrary.overwritten' : 'hub.deckLibrary.saved', { deck: deck.name, count: draft.length })
+    } catch (error) { lib.error = t('hub.deckLibrary.saveFailed') + String(error?.message || error) }
     lib.saving = false; render()
   }
   async function removeLibraryDeck(deck) {
@@ -513,8 +526,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       await deleteLocalDeck(api, deck.id)
       lib.decks = (lib.decks || []).filter(item => item.id !== deck.id)
       if (lib.currentId === deck.id) lib.currentId = null
-      lib.notice = `已从卡组库删除《${deck.name}》。`
-    } catch (error) { lib.error = '删除失败：' + String(error?.message || error) }
+      lib.notice = t('hub.deckLibrary.deleted', { deck: deck.name })
+    } catch (error) { lib.error = t('hub.deckLibrary.deleteFailed') + String(error?.message || error) }
     lib.confirmDelete = null; lib.saving = false; render()
   }
   async function readArkhamDbDeck() {
@@ -532,8 +545,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     try {
       const result = await api('POST', '/session/repair', { sessionId: id })
       state.arkhamSaveNotice = result.repaired
-        ? `存档已修复：${result.changes.join('；')}${result.backup ? `（原档已备份为 ${result.backup}）` : ''}`
-        : '存档无需修复。'
+        ? t('hub.save.repaired', { changes: result.changes.join(t('hub.list.semicolon')) }) + (result.backup ? t('hub.save.repairedBackup', { backup: result.backup }) : '')
+        : t('hub.save.noRepair')
       state.busy = false
       await loadSaves()
     } catch (error) { state.busy = false; state.arkhamSaveError = String(error.message); render() }
@@ -564,49 +577,55 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         // 开局界面盖住了右下角的浮动规则书入口（会压到「开始新游戏」上），
         // 改为放在页脚左侧，仍然随时可查规则。
         rulebookOpen ? h('button', { type: 'button', className: 'bg-btn secondary ah-hub-setup-rulebook',
-          title: '规则书', 'aria-label': '规则书', onclick: rulebookOpen }, tableIcon('book'), '规则书') : null,
-        h('button', { className: 'bg-btn secondary', onclick: () => { state.setup = null; render() } }, '取消'),
-        h('button', { className: 'bg-btn', disabled: state.busy, onclick: startGame }, state.busy ? '创建中…' : '开始新游戏')))
+          title: t('table.rulebook'), 'aria-label': t('table.rulebook'), onclick: rulebookOpen }, tableIcon('book'), t('table.rulebook')) : null,
+        h('button', { className: 'bg-btn secondary', onclick: () => { state.setup = null; render() } }, t('common.cancel')),
+        h('button', { className: 'bg-btn', disabled: state.busy, onclick: startGame }, state.busy ? t('hub.setup.starting') : t('hub.setup.start'))))
     const saveList = h('div', { className: 'ah-save-list' },
-      h('div', { className: 'bg-play-modes', role: 'group', 'aria-label': '存档类型' },
-        [['solo', '单人存档'], ['online', '联机存档']].map(([mode, label]) => h('button', { type: 'button', 'aria-pressed': String((state.arkhamSaveMode || 'solo') === mode), onclick: () => { state.arkhamSaveMode = mode; render() } }, label))),
+      h('div', { className: 'bg-play-modes', role: 'group', 'aria-label': t('hub.saves.typeAria') },
+        [['solo', t('hub.saves.tabSolo')], ['online', t('hub.saves.tabOnline')]].map(([mode, label]) => h('button', { type: 'button', 'aria-pressed': String((state.arkhamSaveMode || 'solo') === mode), onclick: () => { state.arkhamSaveMode = mode; render() } }, label))),
       state.arkhamSaveError ? h('p', { role: 'alert' }, state.arkhamSaveError) : null,
       state.arkhamSaveNotice ? h('p', { role: 'status' }, state.arkhamSaveNotice) : null,
-      saves === null ? h('p', {}, '正在读取存档摘要…') : !saves?.length
-        ? h('p', {}, state.arkhamPersist === false ? '持久存档未启用。' : '暂无 Arkham 存档。')
+      saves === null ? h('p', {}, t('hub.saves.loading')) : !saves?.length
+        ? h('p', {}, state.arkhamPersist === false ? t('hub.saves.disabled') : t('hub.saves.empty'))
         : saves.map(item => h('article', { className: 'ah-save-item', 'data-session-id': item.sessionId },
-          h('strong', {}, `${item.online ? '联机' : '单人'} · ${item.campaignName || item.campaignId || '未知战役'}`),
-          item.online ? h('p', {}, `${item.humanCount} 个玩家席位 · ${item.aiCount} 个 AI 席位；读档后创建房间等待玩家加入。`) : null,
+          h('strong', {}, t('hub.saves.entry', {
+            mode: item.online ? t('hub.saves.modeOnline') : t('hub.saves.modeSolo'),
+            campaign: item.campaignName || item.campaignId || t('hub.saves.unknownCampaign'),
+          })),
+          item.online ? h('p', {}, t('hub.saves.onlineDetail', { humans: item.humanCount, ais: item.aiCount })) : null,
           h('div', { className: 'ah-save-portraits' }, item.investigators.map(inv => portrait(inv))),
-          h('div', {}, `${stageLabel(item.uiState)} · ${item.playerCount} 人 · ${item.investigators.map(inv => inv.name).join('、')}`),
+          h('div', {}, t('hub.saves.summary', {
+            stage: stageLabel(item.uiState), players: item.playerCount,
+            names: item.investigators.map(inv => inv.name).join(t('hub.list.separator')),
+          })),
           h('small', {}, new Date(item.savedAt).toLocaleString()),
-          !item.compatible ? h('p', { role: 'status' }, '不可读取：' + item.compatibilityError) : null,
-          item.needsMigration ? h('p', { role: 'status' }, `旧版本存档，读取时会自动升级并备份原档（${item.migrationChanges.join('；')}）`) : null,
+          !item.compatible ? h('p', { role: 'status' }, t('hub.saves.incompatible') + item.compatibilityError) : null,
+          item.needsMigration ? h('p', { role: 'status' }, t('hub.saves.migration', { changes: item.migrationChanges.join(t('hub.list.semicolon')) })) : null,
           h('div', { className: 'ah-save-actions' },
-            item.needsMigration ? h('button', { className: 'bg-btn secondary', disabled: state.busy, onclick: () => repairSave(item.sessionId) }, '修复存档') : null,
+            item.needsMigration ? h('button', { className: 'bg-btn secondary', disabled: state.busy, onclick: () => repairSave(item.sessionId) }, t('hub.saves.repair')) : null,
             h('button', { className: 'bg-btn', disabled: !item.compatible || state.busy, onclick: async () => {
               state.busy = true; render()
               try { await loadSavedSession(item.sessionId, item.mode || (item.online ? 'online' : 'solo')) } catch (error) { state.arkhamSaveError = String(error.message) }
               state.busy = false; render()
-            } }, item.online ? '创建房间继续' : '读取此存档'),
+            } }, item.online ? t('hub.saves.continueOnline') : t('hub.saves.load')),
             state.arkhamDeleteConfirmId === item.sessionId
-              ? h('button', { className: 'bg-btn', onclick: () => deleteSave(item.sessionId) }, '确认删除此存档')
-              : h('button', { className: 'bg-btn secondary', onclick: () => { state.arkhamDeleteConfirmId = item.sessionId; render() } }, '删除')))))
+              ? h('button', { className: 'bg-btn', onclick: () => deleteSave(item.sessionId) }, t('hub.saves.confirmDelete'))
+              : h('button', { className: 'bg-btn secondary', onclick: () => { state.arkhamDeleteConfirmId = item.sessionId; render() } }, t('hub.delete'))))))
     return h('div', { className: 'bg-backdrop' },
-      h('div', { className: 'bg-modal ah-hub-setup ah-office ah-theme', ...presentationAttributes({ campaign: { id: state.setup?.form?.campaignId } }), role: 'dialog', 'aria-modal': 'true', 'aria-label': '调查准备设置',
+      h('div', { className: 'bg-modal ah-hub-setup ah-office ah-theme', ...presentationAttributes({ campaign: { id: state.setup?.form?.campaignId } }), role: 'dialog', 'aria-modal': 'true', 'aria-label': t('hub.setup.dialogAria'),
         onkeydown: modalKeys(() => { state.setup = null; render() }), onclick: event => event.stopPropagation() },
         h('div', { className: 'ah-office-entry-art' },
           h('div', { className: 'ah-office-entry-hero' }, decor('manor'),
             h('span', { className: 'ah-office-entry-blur is-top', 'aria-hidden': 'true' }),
             h('span', { className: 'ah-office-entry-blur is-bottom', 'aria-hidden': 'true' })),
           decor('desk'),
-          h('div', { className: 'ah-office-entry-title' }, h('small', {}, 'ARKHAM HORROR'), h('h2', {}, '诡镇奇谈'), h('p', {}, '灯尚未熄灭，调查尚未结束。'))),
+          h('div', { className: 'ah-office-entry-title' }, h('small', {}, 'ARKHAM HORROR'), h('h2', {}, t('hub.setup.gameName')), h('p', {}, t('hub.setup.tagline')))),
         h('div', { className: 'ah-office-entry-controls' },
-        h('small', { className: 'ah-office-eyebrow' }, '调查事务所 / 案件档案'),
-        h('h2', {}, state.arkhamSetupTab === 'saves' ? '继续调查' : '开启一桩新案'),
+        h('small', { className: 'ah-office-eyebrow' }, t('hub.setup.eyebrow')),
+        h('h2', {}, state.arkhamSetupTab === 'saves' ? t('hub.setup.continueTitle') : t('hub.setup.newTitle')),
         h('div', { className: 'ah-hub-tabs' },
-          h('button', { className: state.arkhamSetupTab === 'new' ? 'active' : '', onclick: () => { state.arkhamSetupTab = 'new'; render() } }, '新游戏'),
-          h('button', { className: state.arkhamSetupTab === 'saves' ? 'active' : '', onclick: () => { state.arkhamSetupTab = 'saves'; loadSaves() } }, '存档管理')),
+          h('button', { className: state.arkhamSetupTab === 'new' ? 'active' : '', onclick: () => { state.arkhamSetupTab = 'new'; render() } }, t('hub.setup.tabNew')),
+          h('button', { className: state.arkhamSetupTab === 'saves' ? 'active' : '', onclick: () => { state.arkhamSetupTab = 'saves'; loadSaves() } }, t('hub.setup.tabSaves'))),
         state.arkhamSetupTab === 'saves' ? saveList : newGame,
         state.error ? h('p', { role: 'alert' }, state.error) : null)),
       renderGameSettingsModal(g),
@@ -614,7 +633,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   }
 
   function action(s, move, label = move.label, className = 'bg-btn') {
-    if (state.busy && move.action === 'hubDoneSeat' && state.arkhamHubPending?.sessionId === s.sessionId) label = '正在确认…'
+    if (state.busy && move.action === 'hubDoneSeat' && state.arkhamHubPending?.sessionId === s.sessionId) label = t('hub.action.confirming')
     return h('button', { className, disabled: locked(s), onclick: () => submitMove(move, s) }, renderRulesText(h,label,{links:false}))
   }
 
@@ -623,85 +642,85 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   const seatTask = (s, seat) => {
     const st = s.state, record = st.campaign.investigators[seat]
     if (st.uiState === 'interlude') {
-      if (record?.status !== 'active') return '选择替补调查员'
-      if (record.upgradeDraft) return '保存升级方案'
-      return '完成升级并确认席位'
+      if (record?.status !== 'active') return t('hub.task.replaceInvestigator')
+      if (record.upgradeDraft) return t('hub.task.saveUpgrades')
+      return t('hub.task.finishUpgrades')
     }
-    if (!seatSelected(s, seat)) return '选择调查员'
-    if (!recordDeckReady(record)) return '保存牌组'
-    return '确认准备'
+    if (!seatSelected(s, seat)) return t('hub.task.selectInvestigator')
+    if (!recordDeckReady(record)) return t('hub.task.saveDeck')
+    return t('hub.task.confirmReady')
   }
   const preparationMessage = s => {
     const st = s.state, mySeat = s.mySeat ?? 0
     if (st.campaign.leadConfirmed === false && st.hubReady) return mySeat === 0
-      ? '全队已就绪，请先确认一名真人玩家担任队长。'
-      : '全队已就绪，等待房主确认小队队长。'
+      ? t('hub.prep.leaderChoose')
+      : t('hub.prep.leaderWait')
     if (st.hubReady) return mySeat === 0
-      ? '全队已就绪。你是房主，现在可以开始关卡。'
-      : '全队已就绪，等待房主开始关卡；你无需继续操作。'
+      ? t('hub.prep.readyHost')
+      : t('hub.prep.readyWait')
     if (['scenarioSetup', 'interlude'].includes(st.uiState)) {
       const others = actingSeats(s).filter(seat => seat !== mySeat)
-        .map(seat => s.players.find(item => item.seat === seat)?.name || `玩家 ${seat + 1}`)
-      if (acting(s, mySeat)) return `请${seatTask(s, mySeat)}。` + (others.length ? `${others.join('、')}正在同时准备。` : '')
-      return `你的席位已确认，等待${others.join('、') || '队友'}完成准备；你现在无需操作。`
+        .map(seat => s.players.find(item => item.seat === seat)?.name || t('hub.player.name', { seat: seat + 1 }))
+      if (acting(s, mySeat)) return t('hub.prep.turn', { task: seatTask(s, mySeat) }) + (others.length ? t('hub.prep.othersPreparing', { names: others.join(t('hub.list.separator')) }) : '')
+      return t('hub.prep.selfReadyWaiting', { names: others.join(t('hub.list.separator')) || t('hub.prep.teammate') })
     }
-    return st.hubSelectedScenarioId ? '案件已选定，下一步是选择调查员。' : '请先选择开场案件。'
+    return st.hubSelectedScenarioId ? t('hub.prep.scenarioChosen') : t('hub.prep.chooseScenario')
   }
 
   function workflowGuide(s, activeTab) {
     const st = s.state, mySeat = s.mySeat ?? 0, record = st.campaign.investigators[mySeat]
     let steps, primary = null, message = preparationMessage(s)
     if (st.uiState === 'scenarioResult') {
-      steps = [['查看关卡结算', false], ['进入关间升级', false], ['确认下一关准备', false], ['开始下一关', false]]
+      steps = [[t('hub.workflow.stepResultReview'), false], [t('hub.workflow.stepInterludeUpgrade'), false], [t('hub.workflow.stepConfirmNext'), false], [t('hub.workflow.stepStartNext'), false]]
       const move = legal(s, 'hubContinue')[0]
-      if (move) primary = action(s, move, '查看结算，进入关间准备')
+      if (move) primary = action(s, move, t('hub.workflow.primaryResult'))
     } else if (st.uiState === 'interlude') {
       const upgraded = !!st.hubUpgradedSeats?.[mySeat]
         || record?.purchases?.some(item => item.scenarioIndex === st.campaign.scenarioIndex)
-      steps = [['可选：升级牌组', upgraded], ['保存升级方案', upgraded && !record?.upgradeDraft],
-        ['确认席位', !!st.hubSeatDone?.[mySeat]], ['开始下一关', false]]
+      steps = [[t('hub.workflow.stepUpgradeOptional'), upgraded], [t('hub.task.saveUpgrades'), upgraded && !record?.upgradeDraft],
+        [t('hub.workflow.stepConfirmSeat'), !!st.hubSeatDone?.[mySeat]], [t('hub.workflow.stepStartNext'), false]]
       if (acting(s, mySeat)) {
         const confirm = legal(s, 'hubConfirmUpgrades')[0], done = legal(s, 'hubDoneSeat')[0]
-        if (confirm) primary = action(s, confirm, '保存升级方案')
-        else if (done) primary = action(s, done, upgraded ? '完成升级，准备下一关' : '保留经验，准备下一关')
+        if (confirm) primary = action(s, confirm, t('hub.task.saveUpgrades'))
+        else if (done) primary = action(s, done, upgraded ? t('hub.workflow.primaryUpgradeDone') : t('hub.workflow.primaryKeepXp'))
         else primary = h('button', { className: 'bg-btn', onclick: () => changeTab(record?.status === 'active' ? 'upgrades' : 'investigators') },
-          record?.status === 'active' ? '查看升级选项' : '选择替补调查员')
+          record?.status === 'active' ? t('hub.workflow.stepViewUpgrades') : t('hub.task.replaceInvestigator'))
       }
     } else if (['campaignHub', 'scenarioSetup'].includes(st.uiState)) {
       const selected = seatSelected(s, mySeat), deckReady = recordDeckReady(record), ready = !!st.hubSeatDone?.[mySeat]
       const scenarioReady = !!st.hubSelectedScenarioId
-      steps = [['选择案件', scenarioReady], ['选择调查员', selected], ['保存牌组', deckReady], ['确认准备', ready], ['开始关卡', false]]
+      steps = [[t('hub.workflow.stepChooseCase'), scenarioReady], [t('hub.task.selectInvestigator'), selected], [t('hub.task.saveDeck'), deckReady], [t('hub.task.confirmReady'), ready], [t('hub.workflow.stepStartScenario'), false]]
       if (st.uiState === 'campaignHub') {
         const setup = legal(s, 'hubGoSetup')[0]
         primary = !scenarioReady
-          ? h('button', { className: 'bg-btn', onclick: () => changeTab('scenarios') }, '选择开场案件')
-          : setup ? action(s, setup, '选择调查员') : null
+          ? h('button', { className: 'bg-btn', onclick: () => changeTab('scenarios') }, t('hub.workflow.primaryChooseCase'))
+          : setup ? action(s, setup, t('hub.task.selectInvestigator')) : null
       } else if (st.hubReady) {
         const begin = legal(s, 'hubBeginScenario')[0]
-        if (begin) primary = action(s, begin, '开始当前关卡')
+        if (begin) primary = action(s, begin, t('hub.workflow.primaryStartScenario'))
       } else if (acting(s, mySeat)) {
-        if (!selected) primary = h('button', { className: 'bg-btn', onclick: () => changeTab('investigators') }, '选择调查员')
-        else if (!deckReady) primary = h('button', { className: 'bg-btn', onclick: () => changeTab('deck') }, '保存牌组')
+        if (!selected) primary = h('button', { className: 'bg-btn', onclick: () => changeTab('investigators') }, t('hub.task.selectInvestigator'))
+        else if (!deckReady) primary = h('button', { className: 'bg-btn', onclick: () => changeTab('deck') }, t('hub.task.saveDeck'))
         else {
           const done = legal(s, 'hubDoneSeat')[0]
-          if (done) primary = action(s, done, '确认准备')
+          if (done) primary = action(s, done, t('hub.task.confirmReady'))
         }
       }
     } else if (st.uiState === 'campaignResult') {
-      steps = [['战役已完成', true]]
-      message = '战役已经结束，记录与调查纪事仍可随时查看。'
+      steps = [[t('hub.workflow.campaignDone'), true]]
+      message = t('hub.workflow.campaignDoneMessage')
     } else return null
     if ((st.uiState === 'scenarioResult' && activeTab === 'story')
       || (st.uiState === 'scenarioSetup' && ['investigators', 'deck', 'departure'].includes(activeTab))
       || (st.uiState === 'interlude' && ['investigators', 'upgrades'].includes(activeTab))) primary = null
     const current = Math.max(0, steps.findIndex(([, done]) => !done))
-    return h('section', { className: 'ah-workflow-guide', 'aria-label': '当前准备步骤' },
+    return h('section', { className: 'ah-workflow-guide', 'aria-label': t('hub.workflow.aria') },
       h('ol', {}, steps.map(([label, done], index) => h('li', {
         className: done ? 'is-done' : index === current ? 'is-current' : '',
         'aria-current': index === current ? 'step' : null,
       }, h('span', {}, done ? '✓' : index + 1), h('b', {}, label)))),
       h('div', { className: 'ah-workflow-next', role: 'status' },
-        h('span', {}, h('strong', {}, `当前步骤：${steps[current]?.[0] || '已完成'}`), h('small', {}, message)),
+        h('span', {}, h('strong', {}, t('hub.workflow.current', { step: steps[current]?.[0] || t('hub.workflow.done') })), h('small', {}, message)),
         primary))
   }
 
@@ -709,9 +728,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const pending = state.arkhamHubPending
     if (!pending || pending.sessionId !== s.sessionId) return null
     const st = s.state, confirmed = st.hubSeatDone?.[pending.seat]
-    const message = !confirmed ? '正在确认你的席位…' : preparationMessage(s)
+    const message = !confirmed ? t('hub.workflow.preparing') : preparationMessage(s)
     return h('div', { className: 'ah-hub-preparing', role: 'status', 'aria-live': 'polite' },
-      tableIcon('action'), h('span', {}, h('strong', {}, message), h('small', {}, '队友准备进度会自动更新，无需重复点击。')))
+      tableIcon('action'), h('span', {}, h('strong', {}, message), h('small', {}, t('hub.workflow.preparingNote'))))
   }
 
   function overview(s, g) {
@@ -720,36 +739,45 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     return h('section', { className: 'ah-hub-pane ah-office-overview' },
       h('div', { className: 'ah-office-hero' }, decor('manor'),
         h('div', { className: 'ah-office-hero-copy' },
-          h('small', { className: 'ah-office-eyebrow' }, '战役档案'),
+          h('small', { className: 'ah-office-eyebrow' }, t('hub.overview.eyebrow')),
           h('h1', {}, selected?.name || cp.name),
-          h('p', {}, '整理线索，召集同伴，踏入未知。'),
-          h('div', { className: 'ah-office-metrics' }, metric('shield', s.players.length, '调查员'), metric('star', cp.victory, '胜利点'), metric('book', cp.xp, '未花经验')),
-          s.state.uiState === 'campaignHub' ? h('div', { className: 'ah-hub-actions ah-office-difficulty', 'aria-label': '调查难度' },
+          h('p', {}, t('hub.overview.tagline')),
+          h('div', { className: 'ah-office-metrics' }, metric('shield', s.players.length, t('hub.metric.investigators')), metric('star', cp.victory, t('hub.metric.victory')), metric('book', cp.xp, t('hub.metric.xp'))),
+          s.state.uiState === 'campaignHub' ? h('div', { className: 'ah-hub-actions ah-office-difficulty', 'aria-label': t('hub.overview.difficultyAria') },
             legal(s, 'hubSetDifficulty').map(move => h('button', {
               className: 'bg-btn secondary', 'aria-pressed': String(s.state.difficulty === move.difficulty),
               disabled: locked(s), onclick: () => submitMove(move, s),
             }, difficultyLabel(move.difficulty)))) : null,
           h('div', { className: 'ah-office-primary' },
             s.state.uiState === 'scenarioResult' ? h('div', { className: 'ah-office-result' },
-              h('h3', {}, '本关结算'), h('p', {}, `${cp.scenarioResults?.length ? resultName(s, cp.scenarioResults.at(-1)) : outcomeName(s.state.resolution)} · 本关胜利点 ${s.state.victory}`),
+              h('h3', {}, t('hub.overview.resultTitle')), h('p', {}, t('hub.overview.resultSummary', {
+                result: cp.scenarioResults?.length ? resultName(s, cp.scenarioResults.at(-1)) : outcomeName(s.state.resolution),
+                victory: s.state.victory,
+              })),
               legal(s, 'hubContinue').map(move => action(s, move))) : null,
-            s.state.uiState === 'campaignResult' ? h('div', { className: 'ah-office-result' }, h('h3', {}, '战役终章'), h('p', {}, outcomeName(cp.result))) : null))),
+            s.state.uiState === 'campaignResult' ? h('div', { className: 'ah-office-result' }, h('h3', {}, t('hub.stage.campaignResult')), h('p', {}, outcomeName(cp.result))) : null))),
       h('div', { className: 'ah-office-overview-grid' },
         h('article', { className: 'ah-office-dossier' }, decor('casefile'), h('div', { className: 'ah-office-dossier-copy' },
-          h('small', {}, '当前案件'), h('h2', {}, selected?.scenarios?.find(item => item.id === s.state.hubSelectedScenarioId)?.name || '待选择'),
-          h('p', {}, `${difficultyLabel(s.state.difficulty)} · 已完成 ${cp.scenarioResults.length}/${selected?.scenarios?.length || 0} 个剧本`),
-          h('button', { onclick: () => changeTab('scenarios') }, '展开案件路线 →'))),
-        h('section', { className: 'ah-office-team-panel' }, h('h3', {}, '调查小队'), team(s))),
-      h('details', { className: 'ah-content-packs', 'aria-label': '已注册内容与依赖' },
-        h('summary', {}, '内容包与规则范围'),
-        h('h3', {}, '已注册内容'),
-        h('p', {}, '当前为可玩规则子集；严格规则名称保持关闭，逐卡差异仍在审计。'),
+          h('small', {}, t('hub.overview.currentCase')), h('h2', {}, selected?.scenarios?.find(item => item.id === s.state.hubSelectedScenarioId)?.name || t('hub.overview.notChosen')),
+          h('p', {}, t('hub.overview.progress', { difficulty: difficultyLabel(s.state.difficulty), done: cp.scenarioResults.length, total: selected?.scenarios?.length || 0 })),
+          h('button', { onclick: () => changeTab('scenarios') }, t('hub.overview.openRoute')))),
+        h('section', { className: 'ah-office-team-panel' }, h('h3', {}, t('hub.overview.team')), team(s))),
+      h('details', { className: 'ah-content-packs', 'aria-label': t('hub.overview.contentAria') },
+        h('summary', {}, t('hub.overview.contentTitle')),
+        h('h3', {}, t('hub.overview.registered')),
+        h('p', {}, t('hub.overview.contentNote')),
         (selected?.contentPacks || []).map(pack => h('article', { className: 'ah-content-pack', 'data-pack-id': pack.id },
           h('strong', {}, pack.name),
-          h('span', { className: 'ah-content-status' }, `${({ playable: '可玩', verified: '已验证', development: '开发中', 'catalog-only': '仅图鉴' })[pack.status]} · ${pack.required ? '战役依赖' : '可选卡包'}`),
+          h('span', { className: 'ah-content-status' }, t('hub.overview.packSummary', {
+            status: packStatusLabel(pack.status),
+            dependency: pack.required ? t('hub.overview.packRequired') : t('hub.overview.packOptional'),
+          })),
           pack.description ? h('p', {}, pack.description) : null,
           pack.cards.map(card => h('div', { className: card.playable ? 'ah-content-ready' : 'ah-content-blocked' },
-            `${card.code} · ${card.name} — ${card.playable ? '可构筑' : card.blockedReason || '未开放'}`))))),
+            t('hub.overview.cardLine', {
+              code: card.code, name: card.name,
+              status: card.playable ? t('hub.overview.cardPlayable') : card.blockedReason || t('hub.overview.cardBlocked'),
+            })))))),
       null)
   }
 
@@ -757,7 +785,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const cp = s.state.campaign
     const manifest = g.clientData?.campaigns?.find(item => item.id === cp.id)
     const list = manifest?.scenarios || []
-    return h('section', { className: 'ah-hub-pane ah-office-routes' }, h('h2', {}, '关卡选择'),
+    return h('section', { className: 'ah-hub-pane ah-office-routes' }, h('h2', {}, t('hub.tab.scenarios')),
       h('div', { className: 'ah-office-cases' }, list.map((scenario, index) => {
         const completed = cp.scenarioResults.some(item => item.scenarioId === scenario.id)
         const move = legal(s, 'hubSelectScenario').find(item => item.scenarioId === scenario.id)
@@ -773,9 +801,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           h('small', { className: 'ah-office-case-number' }, `CASE / ${String(index + 1).padStart(2, '0')}`),
           h('div', { className: 'ah-office-case-copy' },
             h('strong', {}, `${index + 1}. ${scenario.name}`),
-            h('span', {}, tableIcon(completed ? 'star' : available ? 'clue' : 'lock'), completed ? '已完成' : selected ? '已选择' : available ? '可选择' : '未解锁')),
+            h('span', {}, tableIcon(completed ? 'star' : available ? 'clue' : 'lock'), completed ? t('hub.scenarios.completed') : selected ? t('hub.scenarios.selected') : available ? t('hub.scenarios.available') : t('hub.scenarios.locked'))),
           h('div', { className: 'ah-office-case-action' },
-            move ? action(s, move, selected ? '已选择' : '选择此关') : null))
+            move ? action(s, move, selected ? t('hub.scenarios.selected') : t('hub.scenarios.choose')) : null))
       })))
   }
 
@@ -785,18 +813,18 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const scenario = manifest?.scenarios?.find(item => item.id === st.hubSelectedScenarioId)
     const count = st.investigators.filter(inv => seatPrepared(s, inv)).length
     const hint = preparationMessage(s)
-    return h('section', { className: 'ah-hub-pane ah-office-departure', 'aria-label': '出发准备' },
+    return h('section', { className: 'ah-hub-pane ah-office-departure', 'aria-label': t('hub.departure.title') },
       h('div', { className: 'ah-departure-heading' }, decor('scene', '', st.hubSelectedScenarioId), h('div', {},
-        h('small', { className: 'ah-office-eyebrow' }, '出发准备'), h('h2', {}, scenario?.name || '下一场调查'),
-        h('p', {}, `${difficultyLabel(st.difficulty)} · ${count}/${st.investigators.length} 席位已准备`),
+        h('small', { className: 'ah-office-eyebrow' }, t('hub.departure.title')), h('h2', {}, scenario?.name || t('hub.departure.nextScenario')),
+        h('p', {}, t('hub.departure.readiness', { difficulty: difficultyLabel(st.difficulty), ready: count, total: st.investigators.length })),
         h('p', { id: 'ah-departure-hint', role: 'status' }, hint),
-        h('button', {className:'bg-btn secondary',onclick:()=>changeTab('story')}, '阅读本关导入'),
+        h('button', {className:'bg-btn secondary',onclick:()=>changeTab('story')}, t('hub.departure.readIntro')),
         h('button', { className: 'bg-btn ah-departure-start', disabled: !ready || locked(s) || !!s.saveError || !!s.saveDetached,
-          'aria-describedby': 'ah-departure-hint', onclick: () => { if (canDepart(s) && !state.busy && !s.saveError && !s.saveDetached) submitMove(legal(s, 'hubBeginScenario')[0], s) } }, '开始当前关卡'),
-        legal(s, 'hubReopenSetup').map(move => action(s, move, '重新准备调查员与牌组')),
+          'aria-describedby': 'ah-departure-hint', onclick: () => { if (canDepart(s) && !state.busy && !s.saveError && !s.saveDetached) submitMove(legal(s, 'hubBeginScenario')[0], s) } }, t('hub.workflow.primaryStartScenario')),
+        legal(s, 'hubReopenSetup').map(move => action(s, move, t('hub.departure.reopenSetup'))),
         legal(s, 'hubGoSetup').map(move => action(s, move)))),
-      h('section', { className: 'ah-leader-picker', 'aria-label': '选择队长' },
-        h('div', {}, h('strong', {}, '小队队长'), h('small', {}, '由真人玩家担任，猎物并列和剧情分歧时由队长决定')),
+      h('section', { className: 'ah-leader-picker', 'aria-label': t('hub.departure.leaderAria') },
+        h('div', {}, h('strong', {}, t('hub.departure.leaderTitle')), h('small', {}, t('hub.departure.leaderNote'))),
         s.players.filter(p => p.role === 'human').map(player => {
           const inv = st.investigators.find(i => i.seat === player.seat)
           const chosen = st.campaign.leadSeat === player.seat && st.campaign.leadConfirmed !== false
@@ -804,7 +832,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           return h('button', { className: 'ah-leader-candidate' + (chosen ? ' is-selected' : ''),
             'aria-pressed': String(chosen), disabled: !move || locked(s),
             onclick: () => { if (move && !state.busy) submitMove(move, s) } },
-            portrait(inv), h('span', {}, h('strong', {}, inv.name), playerBadge(s, player.seat)), h('b', {}, chosen ? '队长' : '设为队长'))
+            portrait(inv), h('span', {}, h('strong', {}, inv.name), playerBadge(s, player.seat)), h('b', {}, chosen ? t('hub.departure.leader') : t('hub.departure.setLeader')))
         })),
       h('div', { className: 'ah-departure-team' }, st.investigators.map(inv => {
         const record = st.campaign.investigators[inv.seat]
@@ -812,9 +840,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         const deckReady = recordDeckReady(record) && !record.upgradeDraft
         return h('article', { className: 'ah-departure-member' + (seatPrepared(s, inv) ? ' is-ready' : ''), 'data-seat': inv.seat },
           h('div', { className: 'ah-departure-identity' }, portrait(inv), h('div', {}, h('h3', {}, inv.name), playerBadge(s, inv.seat))),
-          h('ul', { className: 'ah-departure-checks' }, [[selected, '调查员已选定'], [deckReady, '合法牌组已保存'], [seatPrepared(s, inv), '席位已确认']].map(([done, label]) =>
+          h('ul', { className: 'ah-departure-checks' }, [[selected, t('hub.departure.checkInvestigator')], [deckReady, t('hub.departure.checkDeck')], [seatPrepared(s, inv), t('hub.departure.checkSeat')]].map(([done, label]) =>
             h('li', { className: done ? 'is-done' : '' }, h('span', { 'aria-hidden': 'true' }, done ? '✓' : '○'), label))),
-          !seatPrepared(s, inv) && ['scenarioSetup', 'interlude'].includes(st.uiState) ? h('button', { className: 'bg-btn secondary', onclick: () => changeTab(st.uiState === 'interlude' && record?.status === 'active' ? 'upgrades' : 'investigators') }, inv.seat === (s.mySeat ?? 0) && acting(s, inv.seat) ? '继续准备' : '查看准备') : null)
+          !seatPrepared(s, inv) && ['scenarioSetup', 'interlude'].includes(st.uiState) ? h('button', { className: 'bg-btn secondary', onclick: () => changeTab(st.uiState === 'interlude' && record?.status === 'active' ? 'upgrades' : 'investigators') }, inv.seat === (s.mySeat ?? 0) && acting(s, inv.seat) ? t('hub.departure.continuePrep') : t('hub.departure.viewPrep')) : null)
       })))
   }
 
@@ -825,7 +853,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const moves = legal(s, 'hubSelectInvestigator')
     const packOf = ({ investigator }) => investigator.pack || 'core'
     const candidates = moves.map(move => ({ move, investigator: builderInvestigators.find(item => item.code === move.code)
-      || { code: move.code, name: move.label.replace('选择调查员：', ''), pack: 'core' } }))
+      // 服务端 move.label 仍是中文「选择调查员：<name>」；名字兜底时只剥掉中文前缀，不翻译协议文本。
+      || { code: move.code, name: move.label.replace(/^[\u4e00-\u9fff]+\uFF1A\s*/, ''), pack: 'core' } }))
     // 候选调查员横跨四个循环，扩展包改用下拉框收束；下拉项跟随职业筛选，
     // 因此不会出现「职业 + 扩展包」组合下空名册的死路。
     const classCandidates = selectedClass === 'all' ? candidates
@@ -836,7 +865,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     }, {})
     const selectedPack = packs.includes(state.arkhamInvestigatorPack) ? state.arkhamInvestigatorPack : 'all'
     const packName = pack => packLabel(pack, candidates.find(item => packOf(item) === pack)?.investigator.packName)
-    const packOptions = [['all', '所有扩展包'], ...packs.map(pack => [pack, `${packName(pack)}（${counts[pack]}）`])]
+    const packOptions = [['all', t('hub.investigators.allPacks')], ...packs.map(pack => [pack, t('hub.investigators.packOption', { pack: packName(pack), count: counts[pack] })])]
     const groups = Object.entries(classCandidates
       .filter(item => selectedPack === 'all' || packOf(item) === selectedPack)
       .reduce((result, item) => {
@@ -844,7 +873,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         ;(result[pack] ||= []).push(item)
         return result
       }, {}))
-    return h('section', { className: 'ah-hub-pane ah-office-investigators' }, h('h2', {}, '调查员与席位'),
+    return h('section', { className: 'ah-hub-pane ah-office-investigators' }, h('h2', {}, t('hub.tab.investigators')),
       st.investigators.map(inv => {
         const record = st.campaign.investigators[inv.seat]
         const active = acting(s, inv.seat) && !st.hubReady
@@ -852,52 +881,52 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         const detail = builderInvestigators.find(item => item.code === inv.code) || inv
         return h('article', { className: 'ah-hub-seat ah-office-investigator' + (active ? ' active' : '') },
           portrait(inv), h('div', { className: 'ah-office-investigator-copy' },
-          h('small', { className: 'ah-office-eyebrow' }, `${CLASSES[inv.klass] || inv.klass} · ${packLabel(detail.pack, detail.packName)} / 席位 0${inv.seat + 1}`),
+          h('small', { className: 'ah-office-eyebrow' }, t('hub.investigators.eyebrow', { class: classLabel(inv.klass) || inv.klass || '', pack: packLabel(detail.pack, detail.packName), seat: inv.seat + 1 })),
           playerBadge(s, inv.seat),
           h('h2', {}, inv.name), detail.subname ? h('p', { className: 'ah-investigator-subname' }, detail.subname) : null,
-          h('div', { className: 'ah-office-metrics' }, metric('sword', inv.combat, '战斗'), metric('book', inv.intellect, '智识'), metric('star', inv.willpower, '意志'), metric('leaf', inv.agility, '敏捷')),
+          h('div', { className: 'ah-office-metrics' }, metric('sword', inv.combat, t('hub.skill.combat')), metric('book', inv.intellect, t('hub.skill.intellect')), metric('star', inv.willpower, t('hub.skill.willpower')), metric('leaf', inv.agility, t('hub.skill.agility'))),
           investigatorInfo(detail),
           !selected && !st.campaign.scenarioResults.length
-            ? h('p', { className: 'ah-investigator-selection-state', role: 'status' }, '还没有选择调查员。点击一位候选人后才能组牌。')
-            : h('p', { className: 'ah-investigator-selection-state is-selected', role: 'status' }, '调查员已选择'),
-          h('p', {}, recordDeckReady(record) ? `牌组 ${record.deckSize ?? record.deck?.length ?? 0} 张 · ${record.xp} XP` : '牌组尚未保存'),
+            ? h('p', { className: 'ah-investigator-selection-state', role: 'status' }, t('hub.investigators.notChosen'))
+            : h('p', { className: 'ah-investigator-selection-state is-selected', role: 'status' }, t('hub.investigators.chosen')),
+          h('p', {}, recordDeckReady(record) ? t('hub.investigators.deckSummary', { count: record.deckSize ?? record.deck?.length ?? 0, xp: record.xp }) : t('hub.investigators.deckNotSaved')),
           active && inv.seat === (s.mySeat ?? 0) && moves.length && !st.campaign.scenarioResults.length
-            ? h('p', { className: 'ah-investigator-reselect-note', role: 'note' }, '首关开始前可以更换调查员或重新组牌；已经生成的随机基础弱点会保留。') : null,
+            ? h('p', { className: 'ah-investigator-reselect-note', role: 'note' }, t('hub.investigators.reselectNote')) : null,
           // After the first scenario a living campaign investigator is locked in.
           active && inv.seat === (s.mySeat ?? 0) && !moves.length && record?.status === 'active' && (st.uiState === 'interlude' || st.campaign.scenarioResults?.length)
-            ? h('p', { className: 'ah-office-empty ah-investigator-locked', role: 'status' }, tableIcon('lock'), '调查员已锁定：关间不能更换仍在战役中的调查员，只有死亡或疯狂后才能挑选替补。') : null,
+            ? h('p', { className: 'ah-office-empty ah-investigator-locked', role: 'status' }, tableIcon('lock'), t('hub.investigators.lockedNote')) : null,
           active && inv.seat === (s.mySeat ?? 0) && moves.length ? h('div', { className: 'ah-investigator-browser' },
             h('div', { className: 'ah-investigator-browser-head' }, h('div', {},
-              h('h3', {}, record && record.status !== 'active' ? `${record.status === 'insane' ? '已疯狂' : '已死亡'}，请挑选替补调查员` : '选择调查员'),
-              h('p', {}, record && record.status !== 'active' ? '替补以全新 0 XP 牌组加入，不继承旧人物的创伤与卡牌。' : '按职业与扩展包筛选，再挑选一位调查员。点卡面右上角的书本图标先看完整人物档案；按住 Alt 悬停卡面可放大卡牌。')),
+              h('h3', {}, record && record.status !== 'active' ? t('hub.investigators.replacementTitle', { status: record.status === 'insane' ? t('hub.investigators.statusInsane') : t('hub.investigators.statusDead') }) : t('hub.task.selectInvestigator')),
+              h('p', {}, record && record.status !== 'active' ? t('hub.investigators.replacementNote') : t('hub.investigators.selectNote'))),
               h('div', { className: 'ah-investigator-filter-bar' },
-                h('label', { className: 'ah-investigator-pack-filter' }, '扩展包',
-                  h('select', { 'aria-label': '筛选扩展包', 'data-focus-key': 'investigator:pack',
+                h('label', { className: 'ah-investigator-pack-filter' }, t('hub.investigators.pack'),
+                  h('select', { 'aria-label': t('hub.investigators.packAria'), 'data-focus-key': 'investigator:pack',
                     onchange: event => { state.arkhamInvestigatorPack = event.target.value; render() },
                   }, packOptions.map(([value, label]) => h('option', { value, selected: value === selectedPack }, label)))),
-                h('div', { className: 'ah-investigator-class-filters', 'aria-label': '按职业颜色筛选调查员' },
-                  [['all', '全部'], ...Object.entries(CLASSES).filter(([key]) => key !== 'neutral')].map(([key, label]) => h('button', {
+                h('div', { className: 'ah-investigator-class-filters', 'aria-label': t('hub.investigators.classAria') },
+                  [['all', t('hub.investigators.allClasses')], ...Object.keys(CLASS_KEYS).filter(key => key !== 'neutral').map(key => [key, classLabel(key)])].map(([key, label]) => h('button', {
                     className: `ah-investigator-class-filter is-${key}`, 'aria-pressed': String(selectedClass === key),
                     onclick: () => { state.arkhamInvestigatorClass = key; render() },
                   }, key === 'all' ? null : tableIcon(classIcon(key)), label))))),
             groups.length ? groups.map(([pack, entries]) => h('section', { className: 'ah-investigator-pack', 'data-pack': pack },
-              h('header', {}, h('h4', {}, packName(pack)), h('small', {}, `${entries.length} 位调查员`)),
+              h('header', {}, h('h4', {}, packName(pack)), h('small', {}, t('hub.investigators.count', { count: entries.length }))),
               h('div', { className: 'ah-office-roster' }, entries.map(({ move, investigator: candidate }) =>
                 // 候选人卡 = 选择按钮 + 独立的档案按钮（不能把 button 嵌进 button）。
                 // 点卡直接选定（原有行为），点右上角 ⓘ 只看完整人物档案、不提交选择。
                 h('div', { className: 'ah-office-candidate-shell', 'data-code': candidate.code },
                   h('button', { className: `ah-office-candidate is-${candidate.klass || 'neutral'}`, 'data-class': candidate.klass || 'neutral',
-                    'aria-label': `${move.label}；${CLASSES[candidate.klass] || candidate.klass || ''}；${packName(pack)}`,
+                    'aria-label': t('hub.investigators.candidateAria', { move: move.label, class: classLabel(candidate.klass) || candidate.klass || '', pack: packName(pack) }),
                     'aria-pressed': String(selected && inv.code === move.code), disabled: locked(s), onclick: () => submitMove(move, s) },
-                  portrait(candidate), h('span', {}, candidate.name), h('small', {}, CLASSES[candidate.klass] || candidate.klass || '调查员')),
+                  portrait(candidate), h('span', {}, candidate.name), h('small', {}, classLabel(candidate.klass) || candidate.klass || t('hub.investigator.generic'))),
                   h('button', { type: 'button', className: 'ah-office-candidate-info', 'data-candidate-info': candidate.code,
-                    'aria-label': `查看调查员档案：${candidate.name}`, title: `查看 ${candidate.name} 的完整人物档案`,
+                    'aria-label': t('hub.investigator.inspectDossier', { name: candidate.name }), title: t('hub.investigator.dossierTitle', { name: candidate.name }),
                     onclick: () => inspectCard(candidate.code) }, tableIcon('book')))))))
-              : h('p', { className: 'ah-office-empty' }, '当前筛选下没有可选调查员')) : null,
+              : h('p', { className: 'ah-office-empty' }, t('hub.investigators.empty'))) : null,
           active && inv.seat === (s.mySeat ?? 0) ? h('div', { className: 'ah-hub-actions' },
             legal(s, 'hubAutoDeck').map(move => action(s, move)),
-            selected ? h('button', { className: 'bg-btn secondary', onclick: () => changeTab('deck') }, recordDeckReady(record) ? '查看与编辑卡组' : '前往卡组构筑') : null,
-            legal(s, 'hubDoneSeat').map(move => action(s, move, '确认准备'))) : null))
+            selected ? h('button', { className: 'bg-btn secondary', onclick: () => changeTab('deck') }, recordDeckReady(record) ? t('hub.investigators.editDeck') : t('hub.investigators.goDeck')) : null,
+            legal(s, 'hubDoneSeat').map(move => action(s, move, t('hub.task.confirmReady')))) : null))
       }))
   }
 
@@ -909,43 +938,46 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const draft = state.arkhamDeckDraftKey === deckDraftKey(s, inv) ? state.arkhamDeckDraft || [] : null
     const unsavedDraft = canEdit && draft && !sameCards(draft, savedDraft(s, inv))
     const editButton = () => canEdit ? h('button', { className: 'bg-btn', 'data-hub-action': 'edit-deck', disabled: locked(s), onclick: () => openDeck(s, g) },
-      unsavedDraft ? `手动构筑：继续编辑草稿，已有 ${draft.length} 张` : saved ? '手动构筑：编辑已保存牌组' : `手动构筑 ${inv?.deckSize || 30} 张普通卡`) : null
+      unsavedDraft ? t('hub.deck.manualDraft', { count: draft.length }) : saved ? t('hub.deck.manualSaved') : t('hub.deck.manualNew', { count: inv?.deckSize || 30 })) : null
     const importButton = () => canEdit ? h('button', { className: 'bg-btn secondary', 'data-hub-action': 'import-deck', disabled: locked(s),
-      onclick: () => openDeck(s, g, { importing: true }) }, tableIcon('book'), '从 ArkhamDB 导入') : null
+      onclick: () => openDeck(s, g, { importing: true }) }, tableIcon('book'), t('hub.deck.import')) : null
     const libraryButton = () => canEdit ? h('button', { className: 'bg-btn secondary', 'data-hub-action': 'deck-library', disabled: locked(s),
-      onclick: () => openDeck(s, g, { library: true }) }, tableIcon('book'), '本地卡组库') : null
-    return h('section', { className: 'ah-hub-pane' }, h('h2', {}, '卡组构筑'),
+      onclick: () => openDeck(s, g, { library: true }) }, tableIcon('book'), t('hub.deck.library')) : null
+    return h('section', { className: 'ah-hub-pane' }, h('h2', {}, t('hub.tab.deck')),
       h('div', { className: 'ah-office-deck-heading' }, portrait(s.state.investigators[s.mySeat ?? 0]), h('div', {},
         h('h3', {}, s.state.investigators[s.mySeat ?? 0].name),
-        saved ? h('p', {className:'ah-deck-save-status',role:'status'}, tableIcon('book'), `已保存 · ${record.deck.length} 张`, s.state.investigators[s.mySeat ?? 0].autoBuilt ? ' · 自动构筑' : '') : null)),
+        saved ? h('p', {className:'ah-deck-save-status',role:'status'}, tableIcon('book'), t('hub.deck.savedStatus', { count: record.deck.length }), s.state.investigators[s.mySeat ?? 0].autoBuilt ? t('hub.deck.autoBuilt') : '') : null)),
       saved && legal(s, 'hubDoneSeat').length ? h('section', { className: 'ah-deck-next-action', role: 'status' },
-        h('div', {}, h('strong', {}, '牌组已保存'), h('small', {}, '下一步确认准备；首关开始前仍可继续编辑，基础弱点不会重抽。')),
-        action(s, legal(s, 'hubDoneSeat')[0], '确认准备'),
-        h('button', { className: 'bg-btn secondary', disabled: !canEdit || locked(s), onclick: () => openDeck(s, g) }, '继续编辑')) : null,
+        h('div', {}, h('strong', {}, t('hub.deck.savedTitle')), h('small', {}, t('hub.deck.savedNote'))),
+        action(s, legal(s, 'hubDoneSeat')[0], t('hub.task.confirmReady')),
+        h('button', { className: 'bg-btn secondary', disabled: !canEdit || locked(s), onclick: () => openDeck(s, g) }, t('hub.deck.continueEdit'))) : null,
       h('div',{className:'ah-deck-toolbar'},editButton(),importButton(),libraryButton(),legal(s, 'hubAutoDeck').map(move => action(s, move)),
-        h('small',{},unsavedDraft ? '有尚未保存的草稿，打开构筑界面继续调整后保存。' : saved ? canEdit ? '可继续调整普通卡；签名卡与弱点保持不变。' : '点击卡牌查看详情。'
-          : canEdit ? '可自动构筑、手动挑选、从本地卡组库载入，或导入 ArkhamDB 牌组。导入的卡牌必须全部已实现。' : '先选择调查员，再自动或手动构筑牌组。')),
-      saved ? h('div', { className: 'ah-office-deck-gallery', 'aria-label':'已保存牌组预览' }, [...new Set(record.deck)].map(code => {
+        h('small',{},unsavedDraft ? t('hub.deck.hintUnsaved') : saved ? canEdit ? t('hub.deck.hintSaved') : t('hub.deck.hintView')
+          : canEdit ? t('hub.deck.hintCanBuild') : t('hub.deck.hintSelectFirst'))),
+      saved ? h('div', { className: 'ah-office-deck-gallery', 'aria-label': t('hub.deck.savedPreviewAria') }, [...new Set(record.deck)].map(code => {
         const card = s.state.cards?.[code] || g.clientData?.deckBuilder?.cardPool.find(c=>c.code===code) || {}
         const klass = String(card.klass || 'neutral').toLowerCase()
-        const type = ({asset:['supply','资产'],event:['action','事件'],skill:['star','技能'],treachery:['doom','诡计'],enemy:['sword','敌人']})[card.type] || ['book','卡牌']
-        return h('button', {className:'ah-deck-inspect',onclick:()=>inspectCard(code),'aria-label':'查看卡牌：'+nameOf(g,code),'data-deck-code':code,'data-zoom-code':code,'data-zoom-name':nameOf(g,code)},
+        const type = ({
+          asset: ['supply', t('hub.cardKind.asset')], event: ['action', t('hub.cardKind.event')], skill: ['star', t('hub.cardKind.skill')],
+          treachery: ['doom', t('hub.cardKind.treachery')], enemy: ['sword', t('hub.cardKind.enemy')],
+        })[card.type] || ['book', t('hub.cardKind.card')]
+        return h('button', {className:'ah-deck-inspect',onclick:()=>inspectCard(code),'aria-label':t('hub.card.inspectName', { name: nameOf(g, code) }),'data-deck-code':code,'data-zoom-code':code,'data-zoom-name':nameOf(g,code)},
           art(code,nameOf(g,code)),h('span',{className:'ah-deck-copy-count'},`×${record.deck.filter(c=>c===code).length}`),
           h('strong',{className:'ah-deck-card-name'},nameOf(g,code)),
           h('span',{className:'ah-deck-card-icons'},
-            h('span',{title:CLASSES[klass] || klass,'aria-label':CLASSES[klass] || klass},tableIcon(classIcon(klass))),
+            h('span',{title:classLabel(klass) || klass,'aria-label':classLabel(klass) || klass},tableIcon(classIcon(klass))),
             h('span',{title:type[1],'aria-label':type[1]},tableIcon(type[0])),
-            card.cost != null ? h('span',{title:`费用 ${card.cost}`,'aria-label':`费用 ${card.cost}`},tableIcon('resource'),String(card.cost)) : null))
-      })) : h('div', { className: 'ah-office-empty' }, tableIcon('book'), h('p', {}, '一副牌组，是调查的起点。')))
+            card.cost != null ? h('span',{title:t('hub.card.cost', { cost: card.cost }),'aria-label':t('hub.card.cost', { cost: card.cost })},tableIcon('resource'),String(card.cost)) : null))
+      })) : h('div', { className: 'ah-office-empty' }, tableIcon('book'), h('p', {}, t('hub.deck.empty'))))
   }
 
   function upgrades(s, g) {
     const st = s.state
-    const name = code => code ? cardDisplayName(st.cards?.[code]) || nameOf(g, code) : '无需替换'
+    const name = code => code ? cardDisplayName(st.cards?.[code]) || nameOf(g, code) : t('hub.upgrade.noReplacement')
     const card = code => code ? { ...g.clientData?.deckBuilder?.cardPool.find(item => item.code === code), ...st.cards?.[code] } : null
     const cardDescription = code => {
       const detail = card(code)
-      if (!detail) return h('p', { className: 'ah-upgrade-card-description' }, '不移除现有卡牌，直接加入牌组。')
+      if (!detail) return h('p', { className: 'ah-upgrade-card-description' }, t('hub.upgrade.addDirect'))
       const traits = cardDisplayTraits(detail).join(' · ')
       return h('div', { className: 'ah-upgrade-card-description' },
         traits ? h('small', {}, traits) : null,
@@ -973,26 +1005,26 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const upgraded = !!st.hubUpgradedSeats?.[s.mySeat ?? 0]
       || record?.purchases?.some(item => item.scenarioIndex === st.campaign.scenarioIndex)
     const inspectArt = code => h('button', {
-      type: 'button', className: 'ah-upgrade-card-art', 'aria-label': `查看卡牌详情：${name(code)}`,
+      type: 'button', className: 'ah-upgrade-card-art', 'aria-label': t('hub.card.inspect', { name: name(code) }),
       'data-zoom-code': code, 'data-zoom-name': name(code), onclick: () => inspectCard(code),
     }, art(code, name(code)))
-    return h('section', { className: 'ah-hub-pane' }, h('h2', {}, '升级与关间准备'),
-      st.uiState !== 'interlude' ? h('p', {}, '仅在关间开放升级。') : null,
+    return h('section', { className: 'ah-hub-pane' }, h('h2', {}, t('hub.upgrade.title')),
+      st.uiState !== 'interlude' ? h('p', {}, t('hub.upgrade.interludeOnly')) : null,
       st.investigators.map(inv => h('article', { className: 'ah-hub-seat ah-office-upgrade-seat' },
         h('div', { className: 'ah-office-deck-heading' }, portrait(inv), h('strong', {}, `${inv.name} · ${st.campaign.investigators[inv.seat]?.xp || 0} XP`)),
         st.campaign.investigators[inv.seat]?.upgradeAdvice ? h('p', {}, st.campaign.investigators[inv.seat].upgradeAdvice.reason) : null,
         acting(s, inv.seat) && inv.seat === (s.mySeat ?? 0) && s.players[inv.seat]?.role === 'human'
           ? h('div', { className: 'ah-hub-actions' },
             h('section', {className:'ah-upgrade-library'},
-            h('h3', {}, '① 选择新卡'), filterControls('upgrade', pool, shown),
-            shown.length ? h('div', { className: 'ah-office-upgrade-gallery', 'data-scroll-context': JSON.stringify([inv.seat,cardFilters('upgrade')]), 'aria-label': '选择要购入的卡牌' }, shown.map(({code}) => h('button', {
+            h('h3', {}, t('hub.upgrade.step1')), filterControls('upgrade', pool, shown),
+            shown.length ? h('div', { className: 'ah-office-upgrade-gallery', 'data-scroll-context': JSON.stringify([inv.seat,cardFilters('upgrade')]), 'aria-label': t('hub.upgrade.poolAria') }, shown.map(({code}) => h('button', {
               'data-focus-key': 'upgrade:' + code, 'data-zoom-code': code, 'data-zoom-name': name(code),
-              'aria-label': `查看升级：${name(code)}`, 'aria-pressed': String(state.arkhamUpgradeSelected === code),
+              'aria-label': t('hub.upgrade.inspectAria', { name: name(code) }), 'aria-pressed': String(state.arkhamUpgradeSelected === code),
               onclick: () => { state.arkhamUpgradeSelected = code; state.arkhamUpgradeNotice = null; render() },
-            }, art(code, name(code)), h('span', {}, name(code))))) : h('p', {className:'ah-office-empty'}, additions.length ? '没有符合筛选条件的卡牌，请调整或清除筛选。' : '当前没有可支付的合法升级，可以保留经验。')),
+            }, art(code, name(code)), h('span', {}, name(code))))) : h('p', {className:'ah-office-empty'}, additions.length ? t('hub.upgrade.emptyFiltered') : t('hub.upgrade.emptyNoMoves'))),
             selected ? h('section', {className:'ah-upgrade-workbench'},
-              h('h3', {}, '② 选择替换卡'),
-              h('div', { className:'ah-office-upgrade-options', 'data-scroll-context': `${inv.seat}:${state.arkhamUpgradeSelected}`, 'aria-label':'选择替换方案' },
+              h('h3', {}, t('hub.upgrade.step2')),
+              h('div', { className:'ah-office-upgrade-options', 'data-scroll-context': `${inv.seat}:${state.arkhamUpgradeSelected}`, 'aria-label': t('hub.upgrade.optionsAria') },
                 options.filter(move => move.removed == null).map(move => h('button', {
                   type: 'button', className: 'ah-upgrade-replacement',
                   'data-focus-key': 'replace:null', 'aria-pressed': String(move === selected),
@@ -1000,7 +1032,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
                 }, name(move.removed))),
                 deckCodes.map(code => {
                   const move = options.find(item => item.removed === code)
-                  const reason = move ? null : blockedReason.get(code) || '当前升级方案不能替换这张卡。'
+                  const reason = move ? null : blockedReason.get(code) || t('hub.upgrade.cannotReplace')
                   return h('button', {
                     type: 'button', className: 'ah-upgrade-replacement' + (move ? '' : ' is-locked'),
                     'data-focus-key': 'replace:' + code, 'data-zoom-code': code, 'data-zoom-name': name(code),
@@ -1008,8 +1040,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
                     'aria-disabled': move ? null : 'true',
                     // 置灰卡不写死文字标签：悬浮（title）或点按才说明为什么不能替换。
                     // 原生 title 需要按钮保持可用状态，所以用 aria-disabled 表达不可选。
-                    title: move ? `替换「${name(code)}」` : reason,
-                    'aria-label': move ? `替换 ${name(code)}` : `${name(code)}：${reason}`,
+                    title: move ? t('hub.upgrade.replaceTitle', { name: name(code) }) : reason,
+                    'aria-label': move ? t('hub.upgrade.replaceAria', { name: name(code) }) : t('hub.upgrade.blocked', { name: name(code), reason }),
                     onclick: () => {
                       if (move) { state.arkhamUpgradeRemoved = move.removed; state.arkhamUpgradeNotice = null }
                       else state.arkhamUpgradeNotice = code
@@ -1018,30 +1050,30 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
                   }, h('span', {}, name(code)), deckCount(code) > 1 ? h('i', {}, `×${deckCount(code)}`) : null)
                 })),
               h('p', { className: 'ah-upgrade-replacement-note' },
-                '牌组里的每张卡都列在这里；灰色的卡本次不能选中，悬停或点按可查看原因。'),
+                t('hub.upgrade.replacementNote')),
               blockedNotice ? h('p', { className: 'ah-upgrade-blocked-note', role: 'status' }, tableIcon('lock'),
-                `${name(state.arkhamUpgradeNotice)}：${blockedNotice}`) : null,
+                t('hub.upgrade.blocked', { name: name(state.arkhamUpgradeNotice), reason: blockedNotice })) : null,
               h('div', {className:'ah-upgrade-comparison'},
-                h('div',{}, selected.removed?inspectArt(selected.removed):h('span',{},'额外加入'),h('strong',{},name(selected.removed)),
+                h('div',{}, selected.removed?inspectArt(selected.removed):h('span',{},t('hub.upgrade.extraAdd')),h('strong',{},name(selected.removed)),
                   cardDescription(selected.removed)),
-                h('div',{className:'ah-upgrade-cost'},tableIcon('action'),h('b',{},`${cost} XP`),h('small',{},`暂存后剩余 ${(st.campaign.investigators[inv.seat]?.upgradeDraft?.record?.xp ?? st.campaign.investigators[inv.seat]?.xp ?? 0)-cost} XP`)),
+                h('div',{className:'ah-upgrade-cost'},tableIcon('action'),h('b',{},`${cost} XP`),h('small',{},t('hub.upgrade.remainingXp', { xp: (st.campaign.investigators[inv.seat]?.upgradeDraft?.record?.xp ?? st.campaign.investigators[inv.seat]?.xp ?? 0)-cost }))),
                 h('div',{},inspectArt(selected.added),h('strong',{},name(selected.added)),
                   cardDescription(selected.added))),
-              h('p',{},selected.explanation),action(s,selected,`加入升级方案，花费 ${cost} XP`)):null,
+              h('p',{},selected.explanation),action(s,selected,t('hub.upgrade.addMove', { cost }))):null,
             draft ? h('div', { className: 'ah-upgrade-preview' },
-              h('h3', {}, '③ 核对升级方案'),h('strong', {}, `已加入 ${draft.changes.length} 次升级 · 剩余 ${draft.record.xp} XP`),
+              h('h3', {}, t('hub.upgrade.step3')),h('strong', {}, t('hub.upgrade.addedSummary', { changes: draft.changes.length, xp: draft.record.xp })),
               draft.changes.map(change => h('p', {}, `${name(change.removed)} → ${name(change.added)} · ${change.cost} XP`))) : null,
-            h('section', { className: 'ah-upgrade-actions', 'aria-label': '升级操作' },
+            h('section', { className: 'ah-upgrade-actions', 'aria-label': t('hub.upgrade.actionsAria') },
               h('div', {},
-                h('strong', {}, draft ? '升级方案尚未保存' : upgraded ? '本轮升级已保存' : '不进行升级'),
-                h('small', {}, draft ? '保存后仍可继续进入下一关准备。'
-                  : upgraded ? '牌组和剩余经验已经更新，可以结束本轮升级。'
-                    : `保留当前 ${record?.xp || 0} XP，直接进入下一关准备。`)),
+                h('strong', {}, draft ? t('hub.upgrade.statusUnsaved') : upgraded ? t('hub.upgrade.statusSaved') : t('hub.upgrade.statusNone')),
+                h('small', {}, draft ? t('hub.upgrade.statusUnsavedNote')
+                  : upgraded ? t('hub.upgrade.statusSavedNote')
+                    : t('hub.upgrade.statusNoneNote', { xp: record?.xp || 0 }))),
               draft ? h('div', {},
-                legal(s, 'hubCancelUpgrades').map(move => action(s, move, '撤销所有更改', 'bg-btn secondary')),
-                legal(s, 'hubConfirmUpgrades').map(move => action(s, move, '保存升级方案')))
+                legal(s, 'hubCancelUpgrades').map(move => action(s, move, t('hub.upgrade.cancelAll'), 'bg-btn secondary')),
+                legal(s, 'hubConfirmUpgrades').map(move => action(s, move, t('hub.upgrade.save'))))
                 : h('div', {}, legal(s, 'hubDoneSeat').map(move => action(s, move,
-                  upgraded ? '完成升级，准备下一关' : `保留 ${record?.xp || 0} XP 并继续`,
+                  upgraded ? t('hub.upgrade.finish') : t('hub.upgrade.keepXp', { xp: record?.xp || 0 }),
                   upgraded ? 'bg-btn' : 'bg-btn secondary'))))) : null)))
   }
 
@@ -1058,24 +1090,24 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const leader = s.state.investigators.find(inv => inv.seat === cp.expeditionLeader)
     const hasSupply = s.state.investigators.some(inv => (cp.supplies?.[inv.seat] || []).length)
     return h('section', { className: 'ah-hub-pane ah-office-supplies' },
-      h('small', { className: 'ah-office-eyebrow' }, '远征装备'),
-      h('h2', {}, '补给品'),
+      h('small', { className: 'ah-office-eyebrow' }, t('hub.supplies.eyebrow')),
+      h('h2', {}, t('hub.tab.supplies')),
       h('p', { className: 'ah-supply-note' },
-        '补给品属于调查员个人；配给、药品与汽油可以重复携带。地点与诡计的「检查你们的补给品」核对同一地点的全队清单：任意一人持有即算通过。'),
-      leader ? h('p', { className: 'ah-supply-leader' }, tableIcon('supply'), `远征求领队：${leader.name}`) : null,
+        t('hub.supplies.note')),
+      leader ? h('p', { className: 'ah-supply-leader' }, tableIcon('supply'), t('hub.supplies.leader', { name: leader.name })) : null,
       !hasSupply && !s.state.investigators.some(inv => Number.isFinite(points[inv.seat]))
-        ? h('div', { className: 'ah-office-empty' }, tableIcon('supply'), h('p', {}, '序幕尚未购买补给品')) : null,
+        ? h('div', { className: 'ah-office-empty' }, tableIcon('supply'), h('p', {}, t('hub.supplies.empty'))) : null,
       s.state.investigators.map(inv => {
         const list = cp.supplies?.[inv.seat] || []
         const remaining = points[inv.seat]
         return h('article', { className: 'ah-supply-card', 'data-supply-seat': inv.seat },
           h('div', { className: 'ah-supply-head' }, h('strong', {}, inv.name),
             Number.isFinite(remaining) && remaining > 0
-              ? h('span', { className: 'ah-supply-points' }, `剩余补给品点数 ${remaining}`) : null),
+              ? h('span', { className: 'ah-supply-points' }, t('hub.supplies.points', { points: remaining })) : null),
           list.length
             ? h('ul', { className: 'ah-supply-list' }, grouped(list).map(([name, count]) =>
               h('li', {}, `${label(name)}${count > 1 ? ` ×${count}` : ''}`)))
-            : h('p', {}, '尚未携带补给品。'))
+            : h('p', {}, t('hub.supplies.noneCarried')))
       }))
   }
 
@@ -1103,7 +1135,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     if (story) return h('div', { className: 'ah-hub-pane ah-hub-tcu-panel' }, interludeBriefing(s, true), renderStoryInvestigatorPicker(h, story, panelProps))
     const haunted = hauntedChoiceModel(s)
     if (haunted) return h('div', { className: 'ah-hub-pane ah-hub-tcu-panel' }, interludeBriefing(s, true), renderHauntedChoice(h, haunted, panelProps))
-    return h('section', { className: 'ah-hub-pane', role: 'dialog', 'aria-label': '战役选择' },
+    return h('section', { className: 'ah-hub-pane', role: 'dialog', 'aria-label': t('hub.pendingChoice.aria') },
       interludeBriefing(s, true),
       h('h2', {}, renderRulesText(h, s.state.pendingChoice.prompt, { links: false })),
       legal(s, 'choose').map(move => action(s, move)))
@@ -1116,34 +1148,36 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const cardNames = cp.recordCardNames || {}
     const shownRecords = Object.entries(cp.records || {}).filter(([, value]) =>
       value !== false && value != null && value !== '' && !(Array.isArray(value) && !value.length))
-    return h('section', { className: 'ah-hub-pane ah-office-records' }, h('small', { className: 'ah-office-eyebrow' }, '调查档案'), h('h2', {}, '战役记录'),
-      h('div', { className: 'ah-office-metrics' }, metric('star', cp.victory, '总胜利点'), metric('book', cp.xp, '未花经验')),
-      !shownRecords.length && !cp.scenarioResults?.length ? h('div', { className: 'ah-office-empty' }, tableIcon('book'), h('p', {}, '尚未留下调查记录')) : null,
-      shownRecords.map(([key, value]) => h('div', {}, `${label(key)}：${recordValueText(value, cardNames)}`)),
+    return h('section', { className: 'ah-hub-pane ah-office-records' }, h('small', { className: 'ah-office-eyebrow' }, t('hub.records.eyebrow')), h('h2', {}, t('hub.tab.records')),
+      h('div', { className: 'ah-office-metrics' }, metric('star', cp.victory, t('hub.records.totalVictory')), metric('book', cp.xp, t('hub.metric.xp'))),
+      !shownRecords.length && !cp.scenarioResults?.length ? h('div', { className: 'ah-office-empty' }, tableIcon('book'), h('p', {}, t('hub.records.empty'))) : null,
+      shownRecords.map(([key, value]) => h('div', {}, t('hub.records.entry', { label: label(key), value: recordValueText(value, cardNames) }))),
       // 万象无终（P5）：遗留记忆与被看守人追捕都是公开记录，中文名由战役清单下发。
       (s.state.mementos || []).length
-        ? h('div', { className: 'ah-hub-records-block', role: 'group', 'aria-label': '已发现的遗留记忆' },
-          h('h3', {}, tableIcon('book'), `遗留记忆 ${s.state.mementos.length} 条`),
+        ? h('div', { className: 'ah-hub-records-block', role: 'group', 'aria-label': t('hub.records.mementosAria') },
+          h('h3', {}, tableIcon('book'), t('hub.records.mementos', { count: s.state.mementos.length })),
           h('ul', { className: 'ah-hub-record-chips' }, s.state.mementos.map(id =>
             h('li', { className: 'ah-hub-record-chip', 'data-memento': id },
               manifest?.mementoLabels?.[id] || cp.mementoLabels?.[id] || id))))
         : null,
       s.state.watcher
-        ? h('div', { className: 'ah-hub-records-block', role: 'group', 'aria-label': '看守人' },
-          h('h3', {}, tableIcon('eye'), '看守人'),
+        ? h('div', { className: 'ah-hub-records-block', role: 'group', 'aria-label': t('hub.records.watcherAria') },
+          h('h3', {}, tableIcon('eye'), t('hub.records.watcher')),
           h('p', {}, (s.state.watcher.huntedSeats || []).length
-            ? `正在追捕：${(s.state.watcher.huntedSeats || []).map(seat => s.state.investigators.find(inv => inv.seat === seat)?.name || `座位 ${seat + 1}`).join('、')}`
-            : '尚未盯上任何调查员。'),
+            ? t('hub.records.hunting', { names: (s.state.watcher.huntedSeats || []).map(seat => s.state.investigators.find(inv => inv.seat === seat)?.name || t('hub.seat.name', { seat: seat + 1 })).join(t('hub.list.separator')) })
+            : t('hub.records.noHunted')),
           (s.state.watcher.taken || []).length
-            ? h('p', {}, `已带走：${s.state.watcher.taken.map(code => cardNames[code] || s.state.investigators.find(inv => inv.code === code)?.name || code).join('、')}`)
+            ? h('p', {}, t('hub.records.taken', { names: s.state.watcher.taken.map(code => cardNames[code] || s.state.investigators.find(inv => inv.code === code)?.name || code).join(t('hub.list.separator')) }))
             : null)
         : null,
       (cp.scenarioResults || []).map(result => h('article', { className: 'ah-hub-scenario' },
         h('strong', {}, manifest?.scenarios.find(item => item.id === result.scenarioId)?.name || result.scenarioId),
-        h('span', {}, `${resultName(s, result)} · 胜利点 ${result.victory} · ${result.rounds} 回合`),
+        h('span', {}, t('hub.records.scenarioSummary', { result: resultName(s, result), victory: result.victory, rounds: result.rounds })),
         Object.entries(result.recordsAfter || {}).filter(([key, value]) => JSON.stringify(value) !== JSON.stringify(result.recordsBefore?.[key]))
-          .map(([key, value]) => h('p', {}, `${label(key)}：${recordChangeText(result.recordsBefore?.[key], value, cardNames)}`)))),
-      s.state.investigators.map(inv => h('p', {}, `${inv.name} · 创伤 肉体${cp.trauma[inv.seat]?.physical || 0} / 精神${cp.trauma[inv.seat]?.mental || 0}`)))
+          .map(([key, value]) => h('p', {}, t('hub.records.change', { label: label(key), value: recordChangeText(result.recordsBefore?.[key], value, cardNames) }))))),
+      s.state.investigators.map(inv => h('p', {}, t('hub.records.trauma', {
+        name: inv.name, physical: cp.trauma[inv.seat]?.physical || 0, mental: cp.trauma[inv.seat]?.mental || 0,
+      }))))
   }
 
   async function retrySave(s, asNew = false) {
@@ -1171,12 +1205,12 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const activeTab = campaignTabs.some(([id]) => id === state.arkhamHubTab) ? state.arkhamHubTab : 'overview'
     const panes = { departure, overview, scenarios, investigators, deck, upgrades, supplies, records,
       story:s=>renderStoryReader(h,s,state,render,action,g,checkpointAction) }
-    const saveNotice = s.saveDetached ? '当前存档已删除。另存为新存档后才能继续。'
-      : s.saveError ? '自动保存失败：' + s.saveError : null
+    const saveNotice = s.saveDetached ? t('hub.game.saveDetached')
+      : s.saveError ? t('hub.game.saveFailed', { error: s.saveError }) : null
     return h('div', { className: 'bg-game ah-hub ah-office ah-theme', ...presentationAttributes(s.state), 'data-ui-state': s.state.uiState,
       'data-scroll-context': `${s.sessionId}:${s.state.uiState}:${activeTab}` },
       h('header', { className: 'bg-game-head' },
-        h('div', { className: 'bg-game-title' }, '诡镇奇谈 · ' + s.state.campaign.name),
+        h('div', { className: 'bg-game-title' }, t('hub.game.title', { campaign: s.state.campaign.name })),
         h('div', { className: 'bg-game-status' }, stageLabel(s.state.uiState)),
         h('div', { className: 'bg-game-actions' },
           h('button', { className: 'bg-btn secondary', onclick: rulebookOpen }, t('table.rulebook')),
@@ -1185,14 +1219,14 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           h('button', { className: 'bg-btn secondary', onclick: leave }, t('table.leave')),
           feedbackEntry())),
       saveNotice ? h('div', { className: 'ah-hub-save-alert', role: 'alert' }, saveNotice,
-        s.online && s.mySeat !== 0 ? h('p', {}, '请房主处理存档问题。')
-          : h('button', { className: 'bg-btn', onclick: () => retrySave(s, !!s.saveDetached) }, s.saveDetached ? '另存为新存档' : '重试保存')) : null,
+        s.online && s.mySeat !== 0 ? h('p', {}, t('hub.game.hostNotice'))
+          : h('button', { className: 'bg-btn', onclick: () => retrySave(s, !!s.saveDetached) }, s.saveDetached ? t('hub.game.saveAsNew') : t('hub.game.retrySave'))) : null,
       state.error ? h('div', { className: 'ah-hub-save-alert', role: 'alert' }, state.error) : null,
-      h('nav', { className: 'ah-hub-tabs', 'aria-label': '战役局外页面' },
+      h('nav', { className: 'ah-hub-tabs', 'aria-label': t('hub.game.tabsAria') },
         campaignTabs.map(([id, label]) => h('button', { className: (activeTab === id ? 'active ' : '') + (id === 'departure' ? 'ah-departure-tab' + (canDepart(s) ? ' is-ready' : '') : ''),
           'aria-label': label, 'aria-current': activeTab === id ? 'page' : null, onclick: () => changeTab(id) },
           tableIcon(TAB_ICONS[id] || 'star'), label,
-          id === 'departure' ? h('small', {}, canDepart(s) ? '已就绪' : '待准备') : null))),
+          id === 'departure' ? h('small', {}, canDepart(s) ? t('hub.game.ready') : t('hub.game.pending')) : null))),
       workflowGuide(s, activeTab),
       preparationProgress(s),
       s.state.uiState === 'interlude' && !s.state.pendingChoice ? interludeBriefing(s) : null,
@@ -1216,7 +1250,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     state.arkhamDeckDraft = [...plan.codes]
     state.arkhamDeckDraftKey = deckDraftKey(s, inv)
     imp.open = false
-    imp.notice = `已切换为${inv.name}并载入《${imp.deck.name}》，确认后保存牌组。`
+    imp.notice = t('hub.import.switched', { name: inv.name, deck: imp.deck.name })
   }
 
   function importPanel(s, g, inv, draft, replaceDraft) {
@@ -1232,37 +1266,38 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       ? h('button', { className: 'bg-btn', disabled: state.busy, onclick: () => {
         replaceDraft(plan.codes)
         imp.open = false
-        imp.notice = `已载入《${deck.name}》${plan.errors.length ? '，请按提示调整后保存' : '，确认无误后保存牌组'}。`
+        imp.notice = plan.errors.length ? t('hub.import.loadedWithErrors', { deck: deck.name }) : t('hub.import.loadedOk', { deck: deck.name })
         render()
-      } }, draft.length ? `载入草稿（替换当前 ${draft.length} 张）` : '载入草稿')
+      } }, draft.length ? t('hub.import.loadDraftReplace', { count: draft.length }) : t('hub.import.loadDraft'))
       : switchMove ? h('button', { className: 'bg-btn', disabled: locked(s), onclick: () => {
         imp.pending = { sessionId: s.sessionId, code: plan.investigator.code }
         submitMove(switchMove, s)
-      } }, `切换为${plan.investigator.name}并载入`)
-      : h('p', { className: 'ah-deck-import-warn' }, `该牌组属于${plan.investigator.name}，当前调查员已锁定或不在你的操作时机，无法切换。`)
-    return h('section', { className: 'ah-deck-import', 'aria-label': '从 ArkhamDB 导入牌组' },
-      h('div', { className: 'ah-deck-import-head' }, h('h3', {}, '从 ArkhamDB 导入'),
-        h('small', {}, '粘贴已发布牌组或公开分享牌组的链接、牌组编号，或 ArkhamDB 导出的 JSON。牌组内所有普通卡必须已实现，签名卡与弱点将自动处理。')),
+      } }, t('hub.import.switchAndLoad', { name: plan.investigator.name }))
+      : h('p', { className: 'ah-deck-import-warn' }, t('hub.import.mismatch', { name: plan.investigator.name }))
+    const xpSuffix = deck?.xp ? t('hub.deck.xpSuffix', { xp: deck.xp }) : ''
+    return h('section', { className: 'ah-deck-import', 'aria-label': t('hub.import.aria') },
+      h('div', { className: 'ah-deck-import-head' }, h('h3', {}, t('hub.import.title')),
+        h('small', {}, t('hub.import.note'))),
       h('div', { className: 'ah-deck-import-form' },
-        h('input', { type: 'text', value: imp.text || '', placeholder: 'https://arkhamdb.com/decklist/view/12345', 'aria-label': 'ArkhamDB 牌组链接或编号',
+        h('input', { type: 'text', value: imp.text || '', placeholder: 'https://arkhamdb.com/decklist/view/12345', 'aria-label': t('hub.import.inputAria'),
           'data-focus-key': 'arkhamdb-input', spellcheck: 'false', autocomplete: 'off',
           oninput: event => { imp.text = event.target.value },
           onkeydown: event => { if (event.key === 'Enter') { event.preventDefault(); readArkhamDbDeck() } } }),
-        h('button', { className: 'bg-btn', disabled: !!imp.loading, onclick: readArkhamDbDeck }, imp.loading ? '读取中…' : '读取牌组'),
-        h('button', { className: 'bg-btn secondary', onclick: () => { imp.open = false; render() } }, '收起')),
+        h('button', { className: 'bg-btn', disabled: !!imp.loading, onclick: readArkhamDbDeck }, imp.loading ? t('hub.import.reading') : t('hub.import.read')),
+        h('button', { className: 'bg-btn secondary', onclick: () => { imp.open = false; render() } }, t('hub.import.collapse'))),
       imp.error ? h('p', { className: 'ah-deck-import-error', role: 'alert' }, imp.error) : null,
       plan ? h('div', { className: 'ah-deck-import-result' + (plan.ready ? ' is-ready' : ' is-blocked'), 'aria-live': 'polite' },
         h('header', {},
           h('strong', {}, deck.name),
-          h('small', {}, `${deck.investigatorName} · ${total} 张${deck.xp ? ` · ${deck.xp} XP` : ''}`),
-          deck.url ? h('a', { href: deck.url, target: '_blank', rel: 'noopener noreferrer' }, '在 ArkhamDB 查看') : null),
+          h('small', {}, t('hub.import.deckSummary', { investigator: deck.investigatorName, count: total }) + xpSuffix),
+          deck.url ? h('a', { href: deck.url, target: '_blank', rel: 'noopener noreferrer' }, t('hub.import.viewOnArkhamDb')) : null),
         plan.blocked.length ? h('div', { className: 'ah-deck-import-blocked' },
-          h('p', {}, `以下 ${plan.blocked.length} 项无法使用，整副牌组不能导入：`), list(plan.blocked, 'is-blocked')) : null,
-        plan.ready && plan.mismatch ? h('p', { className: 'ah-deck-import-warn' }, `牌组调查员为${plan.investigator.name}，与当前席位的${inv?.name || '调查员'}不同。`) : null,
+          h('p', {}, t('hub.import.blocked', { count: plan.blocked.length })), list(plan.blocked, 'is-blocked')) : null,
+        plan.ready && plan.mismatch ? h('p', { className: 'ah-deck-import-warn' }, t('hub.import.mismatchDetail', { name: plan.investigator.name, current: inv?.name || t('hub.cardFallback') })) : null,
         plan.ready && plan.errors.length ? h('div', { className: 'ah-deck-import-warn' },
-          h('p', {}, `卡牌均已实现，但载入后仍有 ${plan.errors.length} 项构筑问题需要调整：`), plan.errors.slice(0, 4).map(error => h('p', {}, '· ' + error))) : null,
-        plan.ready && !plan.errors.length && !plan.mismatch ? h('p', { className: 'ah-deck-import-ok' }, `全部 ${plan.codes.length} 张普通卡均已实现且符合构筑规则。`) : null,
-        plan.auto.length ? h('div', { className: 'ah-deck-import-auto' }, h('p', {}, '系统自动处理：'), list(plan.auto, 'is-auto')) : null,
+          h('p', {}, t('hub.import.errors', { count: plan.errors.length })), plan.errors.slice(0, 4).map(error => h('p', {}, '· ' + error))) : null,
+        plan.ready && !plan.errors.length && !plan.mismatch ? h('p', { className: 'ah-deck-import-ok' }, t('hub.import.ok', { count: plan.codes.length })) : null,
+        plan.auto.length ? h('div', { className: 'ah-deck-import-auto' }, h('p', {}, t('hub.import.auto')), list(plan.auto, 'is-auto')) : null,
         plan.notes.map(note => h('p', { className: 'ah-deck-import-note' }, note)),
         actions) : null)
   }
@@ -1280,13 +1315,13 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const fail = message => { lib.error = message; lib.notice = ''; render() }
     const load = deck => {
       const plan = deck.description && planArkhamDbImport(deck.description, { investigators: scoped?.investigators, cardPool: scoped?.cardPool, currentCode: inv?.code })
-      if (!plan) return fail(`《${deck.name}》中没有可载入的卡牌。`)
-      if (!plan.ready) return fail(`《${deck.name}》有 ${plan.blocked.length} 项无法使用：`
-        + plan.blocked.slice(0, 4).map(item => `${item.name}（${item.reason}）`).join('、') + (plan.blocked.length > 4 ? ' 等' : ''))
+      if (!plan) return fail(t('hub.library.loadFailedEmpty', { deck: deck.name }))
+      if (!plan.ready) return fail(t('hub.library.loadFailedBlocked', { deck: deck.name, count: plan.blocked.length })
+        + plan.blocked.slice(0, 4).map(item => t('hub.import.blockedItem', { name: item.name, reason: item.reason })).join(t('hub.list.separator')) + (plan.blocked.length > 4 ? t('hub.import.blockedMore') : ''))
       Object.assign(lib, { currentId: deck.id, name: deck.name, error: '', notice: '', confirmDelete: null })
       if (plan.mismatch) {
         const move = legal(s, 'hubSelectInvestigator').find(item => item.code === plan.investigator.code)
-        if (!move || locked(s)) return fail(`该牌组属于${plan.investigator.name}，当前调查员已锁定或不在你的操作时机，无法切换。`)
+        if (!move || locked(s)) return fail(t('hub.import.mismatch', { name: plan.investigator.name }))
         // applyPendingImport finishes the load once the investigator switch is committed.
         Object.assign(imp, { deck: deck.description, pending: { sessionId: s.sessionId, code: plan.investigator.code } })
         lib.open = false
@@ -1294,34 +1329,37 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         return
       }
       lib.open = false
-      imp.notice = `已从卡组库载入《${deck.name}》${plan.errors.length ? '，请按提示调整后保存' : '，确认无误后保存牌组'}。`
+      imp.notice = plan.errors.length ? t('hub.library.loadedWithErrors', { deck: deck.name }) : t('hub.library.loadedOk', { deck: deck.name })
       replaceDraft(plan.codes)
     }
-    return h('section', { className: 'ah-deck-import ah-deck-library', 'aria-label': '本地卡组库' },
-      h('div', { className: 'ah-deck-import-head' }, h('h3', {}, '本地卡组库'),
-        h('small', {}, '卡组库保存在本机，与战役存档相互独立。只收藏普通卡清单，签名卡与弱点在保存牌组时自动处理；未完成的草稿也可以先存起来。')),
+    return h('section', { className: 'ah-deck-import ah-deck-library', 'aria-label': t('hub.library.aria') },
+      h('div', { className: 'ah-deck-import-head' }, h('h3', {}, t('hub.library.title')),
+        h('small', {}, t('hub.library.note'))),
       h('div', { className: 'ah-deck-import-form' },
-        h('input', { type: 'text', value: lib.name || '', placeholder: `${inv?.name || '调查员'}的牌组`, maxlength: '60', 'aria-label': '卡组名称',
+        h('input', { type: 'text', value: lib.name || '', placeholder: t('hub.library.namePlaceholder', { name: inv?.name || t('hub.investigator.fallbackName') }), maxlength: '60', 'aria-label': t('hub.library.nameAria'),
           'data-focus-key': 'library-name', autocomplete: 'off', oninput: event => { lib.name = event.target.value } }),
         current ? h('button', { className: 'bg-btn', disabled: !!lib.saving || !draft.length, onclick: () => storeLibraryDeck(inv, draft, true) },
-          `覆盖《${current.name}》`) : null,
+          t('hub.library.overwrite', { deck: current.name })) : null,
         h('button', { className: current ? 'bg-btn secondary' : 'bg-btn', disabled: !!lib.saving || !draft.length || !inv,
-          title: draft.length ? '' : '草稿为空', onclick: () => storeLibraryDeck(inv, draft, false) }, `存为新卡组（${draft.length} 张）`),
-        h('button', { className: 'bg-btn secondary', onclick: () => { lib.open = false; render() } }, '收起')),
+          title: draft.length ? '' : t('hub.library.emptyDraftTitle'), onclick: () => storeLibraryDeck(inv, draft, false) }, t('hub.library.saveAsNew', { count: draft.length })),
+        h('button', { className: 'bg-btn secondary', onclick: () => { lib.open = false; render() } }, t('hub.import.collapse'))),
       lib.error ? h('p', { className: 'ah-deck-import-error', role: 'alert' }, lib.error) : null,
       lib.notice ? h('p', { className: 'ah-deck-import-ok', role: 'status' }, lib.notice) : null,
-      !lib.decks ? h('p', { className: 'ah-deck-import-note' }, lib.loading ? '正在读取卡组库…' : '卡组库暂不可用。')
-        : !decks.length ? h('p', { className: 'ah-deck-import-note' }, '卡组库还是空的，可以把当前草稿存进来。')
-          : h('ul', { className: 'ah-deck-library-list', 'aria-label': '已收藏的牌组' }, decks.map(deck => h('li', {
+      !lib.decks ? h('p', { className: 'ah-deck-import-note' }, lib.loading ? t('hub.library.loading') : t('hub.library.unavailable'))
+        : !decks.length ? h('p', { className: 'ah-deck-import-note' }, t('hub.library.empty'))
+          : h('ul', { className: 'ah-deck-library-list', 'aria-label': t('hub.library.listAria') }, decks.map(deck => h('li', {
             className: deck.investigator_code === inv?.code ? 'is-current-investigator' : '', 'data-library-deck': deck.id },
           h('div', {}, h('strong', {}, deck.name),
-            h('small', {}, `${investigatorName(deck.investigator_code)} · ${total(deck)} 张 · ${new Date(deck.updatedAt).toLocaleString('zh-CN', { dateStyle: 'short', timeStyle: 'short' })}`)),
+            h('small', {}, t('hub.library.entryMeta', {
+              investigator: investigatorName(deck.investigator_code), count: total(deck),
+              date: new Date(deck.updatedAt).toLocaleString('zh-CN', { dateStyle: 'short', timeStyle: 'short' }),
+            }))),
           h('div', {},
             h('button', { className: 'bg-btn', disabled: !!lib.saving || state.busy, onclick: () => load(deck) },
-              deck.investigator_code === inv?.code ? (draft.length ? '载入（替换草稿）' : '载入') : `切换为${investigatorName(deck.investigator_code)}并载入`),
+              deck.investigator_code === inv?.code ? (draft.length ? t('hub.library.loadReplace') : t('hub.library.load')) : t('hub.library.switchAndLoad', { name: investigatorName(deck.investigator_code) })),
             lib.confirmDelete === deck.id
-              ? h('button', { className: 'bg-btn', disabled: !!lib.saving, onclick: () => removeLibraryDeck(deck) }, '确认删除')
-              : h('button', { className: 'bg-btn secondary', disabled: !!lib.saving, onclick: () => { lib.confirmDelete = deck.id; render() } }, '删除'))))))
+              ? h('button', { className: 'bg-btn', disabled: !!lib.saving, onclick: () => removeLibraryDeck(deck) }, t('hub.library.confirmDelete'))
+              : h('button', { className: 'bg-btn secondary', disabled: !!lib.saving, onclick: () => { lib.confirmDelete = deck.id; render() } }, t('hub.delete')))))))
   }
 
   function renderDeckModal(s) {
@@ -1341,7 +1379,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const size = inv?.deckSize || 30
     if (inv?.rules) registerDeckRules(inv.code, inv.rules)
     const cardMap = Object.fromEntries(pool.map(card => [card.code, card]))
-    const checked = inv ? validateDeckRules(inv, draft, cardMap) : { errors: ['未选择调查员'], count: 0 }
+    const checked = inv ? validateDeckRules(inv, draft, cardMap) : { errors: [t('hub.builder.noInvestigator')], count: 0 }
     const distribution = draft.reduce((out, code) => {
       const card = cardMap[code]
       if (card) out[card.type] = (out[card.type] || 0) + 1
@@ -1350,8 +1388,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     // One partial validation per card and render; the pool asks several times.
     const addErrors = new Map()
     const addError = code => {
-      if (!addErrors.has(code)) addErrors.set(code, !inv ? '未选择调查员' : !cardMap[code] ? '该卡不可用于当前调查员'
-        : validateDeckRules(inv, [...draft, code], cardMap, { partial: true }).errors.join('；'))
+      if (!addErrors.has(code)) addErrors.set(code, !inv ? t('hub.builder.noInvestigator') : !cardMap[code] ? t('hub.builder.cardUnavailable')
+        : validateDeckRules(inv, [...draft, code], cardMap, { partial: true }).errors.join(t('hub.list.semicolon')))
       return addErrors.get(code)
     }
     const canAdd = code => !state.busy && !addError(code)
@@ -1371,11 +1409,11 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       return typeof value === 'number' && (cost === 5 ? value >= 5 : value === cost)
     }).length)
     const byCost = (a, b) => (cardMap[a]?.cost ?? 99) - (cardMap[b]?.cost ?? 99) || nameOf(g, a).localeCompare(nameOf(g, b), 'zh') || a.localeCompare(b)
-    const groups = [['asset', '资产'], ['event', '事件'], ['skill', '技能'], [null, '其他']].map(([type, label]) => {
+    const groups = [[ 'asset', t('hub.cardKind.asset')], ['event', t('hub.cardKind.event')], ['skill', t('hub.cardKind.skill')], [null, t('hub.cardKind.other')]].map(([type, label]) => {
       const codes = Object.keys(counts).filter(code => type ? cardMap[code]?.type === type : !['asset', 'event', 'skill'].includes(cardMap[code]?.type)).sort(byCost)
       return { label, codes, total: codes.reduce((sum, code) => sum + counts[code], 0) }
     }).filter(group => group.codes.length)
-    const fixed = [...(inv?.signatureCards || []).map(card => [card, '专属卡牌']), ...(inv?.signatureWeaknesses || []).map(card => [card, '专属弱点'])]
+    const fixed = [...(inv?.signatureCards || []).map(card => [card, t('hub.deck.fixedSignature')]), ...(inv?.signatureWeaknesses || []).map(card => [card, t('hub.deck.fixedWeakness')])]
     const keys = event => {
       const tag = event.target?.tagName
       if ((event.ctrlKey || event.metaKey) && !event.altKey && /^[zy]$/i.test(event.key) && !['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) {
@@ -1397,84 +1435,84 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       modalKeys(closeDeck)(event)
     }
     return h('div', { className: 'bg-backdrop' },
-      h('div', { className: 'bg-modal ah-db-modal ah-office', 'data-scroll-context': `${s.sessionId}:${inv?.seat}:${inv?.code}`, role: 'dialog', 'aria-modal': 'true', 'aria-label': '卡组构筑',
+      h('div', { className: 'bg-modal ah-db-modal ah-office', 'data-scroll-context': `${s.sessionId}:${inv?.seat}:${inv?.code}`, role: 'dialog', 'aria-modal': 'true', 'aria-label': t('hub.tab.deck'),
         onkeydown: keys, onclick: event => event.stopPropagation() },
         h('header', { className: 'ah-db-modal-head' },
-          h('h2', {}, `卡组构筑 · ${inv?.name || ''} · ${checked.count}/${size}`),
+          h('h2', {}, t('hub.builder.title', { name: inv?.name || '', count: checked.count, size })),
           h('div', { className: 'ah-db-modal-tools' },
             h('button', { className: 'bg-btn' + (imp.open ? '' : ' secondary'), 'data-deck-tool': 'import', 'aria-expanded': String(!!imp.open), onclick: () => {
               imp.open = !imp.open; if (imp.open) lib.open = false; render()
               if (imp.open) setTimeout(() => document.querySelector('.ah-deck-import:not(.ah-deck-library) input')?.focus({ preventScroll: true }), 0)
-            } }, '导入 ArkhamDB'),
+            } }, t('hub.builder.import')),
             h('button', { className: 'bg-btn' + (lib.open ? '' : ' secondary'), 'data-deck-tool': 'library', 'aria-expanded': String(!!lib.open), onclick: () => {
               lib.open = !lib.open
               if (lib.open) { imp.open = false; Object.assign(lib, { notice: '', error: '', confirmDelete: null }) }
               render()
               if (lib.open) refreshLibrary()
-            } }, '卡组库'),
-            h('small', { className: 'ah-db-modal-hint' }, '按住 Alt 悬停卡牌可放大查看'))),
+            } }, t('hub.builder.library')),
+            h('small', { className: 'ah-db-modal-hint' }, t('hub.builder.hint')))),
         imp.open ? importPanel(s, g, inv, draft, replaceDraft) : null,
         lib.open ? libraryPanel(s, g, inv, draft, replaceDraft) : null,
         h('div', { className: 'ah-office-builder' },
-        h('section', { className: 'ah-office-library', 'aria-label': '可用卡牌' },
+        h('section', { className: 'ah-office-library', 'aria-label': t('hub.builder.poolAria') },
         filterControls('deck', pool, shown),
         h('div', { className: 'ah-hub-card-pool', 'data-scroll-context': JSON.stringify([inv?.code, cardFilters('deck')]) }, shown.map(card => h('div', {
           className: 'ah-db-card' + (counts[card.code] ? ' is-in-deck' : '') + (remaining > 0 && addError(card.code) ? ' is-unavailable' : ''),
           'data-zoom-code': card.code, 'data-zoom-name': card.name },
-          h('button', { disabled: !canAdd(card.code), draggable: String(canAdd(card.code)), 'data-focus-key': 'add:' + card.code, 'aria-label': `加入 ${card.name} ${counts[card.code] || 0}/${card.deckLimit || 2}`,
-            title: addError(card.code) || '点击或拖入牌组',
+          h('button', { disabled: !canAdd(card.code), draggable: String(canAdd(card.code)), 'data-focus-key': 'add:' + card.code, 'aria-label': t('hub.builder.addAria', { name: card.name, count: counts[card.code] || 0, limit: card.deckLimit || 2 }),
+            title: addError(card.code) || t('hub.builder.addTitle'),
             ondragstart: event => { event.dataTransfer.setData('application/x-arkham-hub-card', card.code); event.dataTransfer.effectAllowed = 'copy' },
             onclick: () => add(card.code) },
             art(card.code, card.name), counts[card.code] ? h('i', { className: 'ah-db-card-count', 'aria-hidden': 'true' }, `×${counts[card.code]}`) : null,
-            h('span', {}, card.name), h('small', {}, `${counts[card.code] || 0}/${card.deckLimit || 2} · ${card.cost ?? '—'} 资源 · ${card.xp || 0} 级`)),
-          h('div',{className:'ah-builder-card-tools'},h('button',{'aria-label':'减少 '+card.name,disabled:state.busy || !counts[card.code],onclick:()=>remove(card.code)},'−'),
-            h('button',{'aria-label':'查看卡牌：'+card.name,onclick:()=>inspectCard(card.code)},'详情'),
-            h('button',{'aria-label':'增加 '+card.name,disabled:!canAdd(card.code),onclick:()=>add(card.code)},'+'))))),
-        !shown.length ? h('p', { className: 'ah-office-empty' }, '没有符合条件的卡牌') : null),
-        h('aside', { className: 'ah-office-deck-tray', 'aria-label': '当前牌组',
+            h('span', {}, card.name), h('small', {}, t('hub.builder.cardMeta', { count: counts[card.code] || 0, limit: card.deckLimit || 2, cost: card.cost ?? '—', xp: card.xp || 0 }))),
+          h('div',{className:'ah-builder-card-tools'},h('button',{'aria-label':t('hub.builder.decrease', { name: card.name }),disabled:state.busy || !counts[card.code],onclick:()=>remove(card.code)},'−'),
+            h('button',{'aria-label':t('hub.card.inspectName', { name: card.name }),onclick:()=>inspectCard(card.code)},t('hub.builder.detail')),
+            h('button',{'aria-label':t('hub.builder.increase', { name: card.name }),disabled:!canAdd(card.code),onclick:()=>add(card.code)},'+'))))),
+        !shown.length ? h('p', { className: 'ah-office-empty' }, t('hub.builder.emptyPool')) : null),
+        h('aside', { className: 'ah-office-deck-tray', 'aria-label': t('hub.builder.trayAria'),
           ondragover: event => { if (Array.from(event.dataTransfer.types).includes('application/x-arkham-hub-card')) { event.preventDefault(); event.dataTransfer.dropEffect = 'copy'; event.currentTarget.classList.add('is-dragover') } },
           ondragleave: event => { if (!event.currentTarget.contains(event.relatedTarget)) event.currentTarget.classList.remove('is-dragover') },
           ondrop: event => { event.preventDefault(); event.currentTarget.classList.remove('is-dragover'); add(event.dataTransfer.getData('application/x-arkham-hub-card')) },
-        }, h('h3', {}, `我的牌组 · ${checked.count}/${size}`),
+        }, h('h3', {}, t('hub.builder.trayTitle', { count: checked.count, size })),
         h('div', { className: 'ah-deck-progress' + (remaining === 0 ? ' is-full' : remaining < 0 ? ' is-over' : ''), 'aria-hidden': 'true' },
           h('i', { style: `width:${Math.min(100, Math.max(0, checked.count / size * 100))}%` })),
         h('small', { className: 'ah-deck-progress-text' + (dirty ? ' is-dirty' : '') },
-          remaining > 0 ? `还差 ${remaining} 张` : remaining < 0 ? `超出 ${-remaining} 张` : '张数已满',
-          dirty ? ' · 有未保存的修改' : saved ? ' · 与已保存牌组一致' : ''),
+          remaining > 0 ? t('hub.builder.remaining', { count: remaining }) : remaining < 0 ? t('hub.builder.over', { count: -remaining }) : t('hub.builder.full'),
+          dirty ? t('hub.builder.dirtySuffix') : saved ? t('hub.builder.savedSuffix') : ''),
         imp.notice ? h('p', { className: 'ah-deck-import-notice' }, imp.notice) : null,
-        h('small', {}, '点击或拖入加入 · 查看详情不改变牌组 · Ctrl+Z 撤销'),
-        h('div',{className:'ah-builder-tools'},h('button',{disabled:state.busy || !state.arkhamDeckUndo?.length,onclick:()=>restore('arkhamDeckUndo','arkhamDeckRedo')},'撤销'),
-          h('button',{disabled:state.busy || !state.arkhamDeckRedo?.length,onclick:()=>restore('arkhamDeckRedo','arkhamDeckUndo')},'重做'),
-          h('button',{disabled:state.busy || !draft.length,title:'清空当前草稿，可按 Ctrl+Z 撤销',onclick:()=>replaceDraft([])},'清空'),
-          saved ? h('button',{disabled:state.busy || !dirty,title:'放弃草稿修改，回到已保存牌组，可按 Ctrl+Z 撤销',onclick:()=>replaceDraft(baseline)},'恢复已保存') : null),
-        h('p', {}, `资产 ${distribution.asset || 0} · 事件 ${distribution.event || 0} · 技能 ${distribution.skill || 0}`),
-        h('div', { className: 'ah-office-cost-curve', 'aria-label': '资源费用分布' }, costCounts.map((count, cost) => h('div', { title: `${cost === 5 ? '5+' : cost} 资源：${count} 张` },
+        h('small', {}, t('hub.builder.hintDrag')),
+        h('div',{className:'ah-builder-tools'},h('button',{disabled:state.busy || !state.arkhamDeckUndo?.length,onclick:()=>restore('arkhamDeckUndo','arkhamDeckRedo')},t('hub.builder.undo')),
+          h('button',{disabled:state.busy || !state.arkhamDeckRedo?.length,onclick:()=>restore('arkhamDeckRedo','arkhamDeckUndo')},t('hub.builder.redo')),
+          h('button',{disabled:state.busy || !draft.length,title:t('hub.builder.clearTitle'),onclick:()=>replaceDraft([])},t('hub.builder.clear')),
+          saved ? h('button',{disabled:state.busy || !dirty,title:t('hub.builder.restoreTitle'),onclick:()=>replaceDraft(baseline)},t('hub.builder.restore')) : null),
+        h('p', {}, t('hub.builder.distribution', { asset: distribution.asset || 0, event: distribution.event || 0, skill: distribution.skill || 0 })),
+        h('div', { className: 'ah-office-cost-curve', 'aria-label': t('hub.builder.costCurveAria') }, costCounts.map((count, cost) => h('div', { title: t('hub.builder.costBarTitle', { cost: cost === 5 ? '5+' : cost, count }) },
           h('small', {}, String(count)), h('i', { style: `height:${Math.max(2, count / Math.max(1, ...costCounts) * 42)}px` }), h('span', {}, cost === 5 ? '5+' : String(cost))))),
-        h('div', { className: 'ah-hub-deck-list' }, !groups.length ? h('p', { className: 'ah-deck-list-empty' }, '从左侧挑选卡牌，或导入 ArkhamDB 牌组。') : null,
+        h('div', { className: 'ah-hub-deck-list' }, !groups.length ? h('p', { className: 'ah-deck-list-empty' }, t('hub.builder.emptyDeck')) : null,
           groups.flatMap(group => [
-            h('h4', { className: 'ah-deck-group' }, h('span', {}, group.label), h('small', {}, `${group.total} 张`)),
+            h('h4', { className: 'ah-deck-group' }, h('span', {}, group.label), h('small', {}, t('hub.builder.groupCount', { count: group.total }))),
             ...group.codes.map(code => h('div',{className:'ah-deck-row','data-zoom-code':code,'data-zoom-name':nameOf(g,code)},
-              h('button',{'aria-label':'查看卡牌：'+nameOf(g,code),onclick:()=>inspectCard(code)},art(code,nameOf(g,code)),
+              h('button',{'aria-label':t('hub.card.inspectName', { name: nameOf(g, code) }),onclick:()=>inspectCard(code)},art(code,nameOf(g,code)),
                 h('span',{},nameOf(g,code)), cardMap[code]?.cost != null ? h('small',{className:'ah-deck-row-cost'},String(cardMap[code].cost)) : null),
-              h('button',{'aria-label':`移除 ${nameOf(g,code)}`,disabled:state.busy,onclick:()=>remove(code)},'−'),h('b',{},String(counts[code])),
-              h('button',{'aria-label':'补入 '+nameOf(g,code),disabled:!canAdd(code),title:addError(code) || '',onclick:()=>add(code)},'+'))),
+              h('button',{'aria-label':t('hub.builder.remove', { name: nameOf(g, code) }),disabled:state.busy,onclick:()=>remove(code)},'−'),h('b',{},String(counts[code])),
+              h('button',{'aria-label':t('hub.builder.fill', { name: nameOf(g, code) }),disabled:!canAdd(code),title:addError(code) || '',onclick:()=>add(code)},'+'))),
           ])),
-        checked.errors.length ? h('div', { role: 'status', className: 'ah-office-deck-validation' }, checked.errors.map(error => h('p', {}, error))) : h('p', { role: 'status' }, '构筑规则检查通过'),
-        inv ? h('section', { className: 'ah-deck-fixed', 'aria-label': '保存时自动加入' },
-          h('h4', { className: 'ah-deck-group' }, h('span', {}, '保存时自动加入'), h('small', {}, `${fixed.length + 1} 张`)),
-          fixed.map(([card, label]) => h('button', { className: 'ah-deck-fixed-card', 'aria-label': `查看${label}：${card.name}`,
+        checked.errors.length ? h('div', { role: 'status', className: 'ah-office-deck-validation' }, checked.errors.map(error => h('p', {}, error))) : h('p', { role: 'status' }, t('hub.builder.valid')),
+        inv ? h('section', { className: 'ah-deck-fixed', 'aria-label': t('hub.builder.fixedTitle') },
+          h('h4', { className: 'ah-deck-group' }, h('span', {}, t('hub.builder.fixedTitle')), h('small', {}, t('hub.builder.groupCount', { count: fixed.length + 1 }))),
+          fixed.map(([card, label]) => h('button', { className: 'ah-deck-fixed-card', 'aria-label': t('hub.builder.fixedInspect', { label, name: card.name }),
             'data-zoom-code': card.code, 'data-zoom-name': card.name, onclick: () => inspectCard(card.code) },
             art(card.code, card.name), h('span', {}, card.name), h('small', {}, label))),
-          h('div', { className: 'ah-deck-fixed-card is-random' }, tableIcon('doom'), h('span', {}, '随机基础弱点'), h('small', {}, '保存时抽取'))) : null)),
+          h('div', { className: 'ah-deck-fixed-card is-random' }, tableIcon('doom'), h('span', {}, t('hub.builder.randomWeakness')), h('small', {}, t('hub.builder.randomWeaknessHint')))) : null)),
         h('div', { className: 'bg-modal-foot' },
-          dirty ? h('small', { className: 'ah-deck-foot-hint' }, '取消会保留草稿，下次打开可继续编辑。') : null,
-          h('button', { className: 'bg-btn secondary', onclick: closeDeck }, '取消'),
+          dirty ? h('small', { className: 'ah-deck-foot-hint' }, t('hub.builder.cancelHint')) : null,
+          h('button', { className: 'bg-btn secondary', onclick: closeDeck }, t('common.cancel')),
           h('button', { className: 'bg-btn', disabled: locked(s) || checked.errors.length > 0, title: checked.errors[0] || '',
             onclick: () => {
               state.arkhamDeckOpen = false
               if (state.arkhamDeckImport) state.arkhamDeckImport.notice = ''
               submitMove({ action: 'hubSetDeck', codes: [...draft] }, s)
-            } }, '保存牌组'))))
+            } }, t('hub.builder.save')))))
   }
 
   return { onOpenSetup,

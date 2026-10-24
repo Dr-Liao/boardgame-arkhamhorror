@@ -8,6 +8,8 @@
 // 入场毁灭走 enemySpawnRule.doomOnSpawn + 共享 enemySpawned 钩子；谈判行动由本条目声明，
 // encounter-rules.js 的 encounterActions / performEncounterAction 负责列项与执行。
 
+import { enemyParleyDifficultyBonus } from '../../../_shared.js'
+
 export default {
   code: '05095',
   scope: 'enemy',
@@ -24,9 +26,8 @@ export default {
     },
     performEncounterAction(state, inv, enemy, move, api) {
       if (move.rule !== 'parleyLodgeNeophyte') return false
-      // 05097 秘社玄仪的「直到一轮结束，对该敌人谈判难度 +2」存在实例标记上。
-      const bonus = enemy.roundFightEvadeBonus?.round === state.round
-        ? Number(enemy.roundFightEvadeBonus.amount) || 0 : 0
+      // 05097 秘社玄仪的「直到一轮结束，对该敌人谈判难度 +2」：与章节 behavior 共用读点。
+      const bonus = enemyParleyDifficultyBonus(enemy, state.round)
       api.test(inv.seat, 'willpower', 2 + bonus, result => {
         if (!result.success) return
         enemy.doom = 0

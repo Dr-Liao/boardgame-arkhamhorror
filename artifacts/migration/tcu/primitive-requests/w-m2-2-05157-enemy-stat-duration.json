@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "w-m2-2-05157-enemy-stat-duration",
+  "cycle": "tcu",
+  "worker": "w-m2-2",
+  "card": "05157",
+  "primitive": "enemyStatModifierForDuration",
+  "params": {
+    "targets": [
+      "enemyFight",
+      "enemyEvade"
+    ],
+    "amount": -1,
+    "duration": "endOfTurn",
+    "min": 1,
+    "sharedWith": [
+      "05321"
+    ]
+  },
+  "cardText": "如果本次攻击期间揭示了[skull]、[cultist]、[tablet]或[elder_thing]符号，被攻击敌人在本回合剩余时间内得到-1攻击值和-1躲避值，最低减至1。",
+  "reason": "敌方数值修正只有两条通道：1) 静态 card 条目的 entity modifiers（modifiers.js#entityModifierTotal，来源是卡号/地点/场景，不能按运行期实例临时加）；2) api.addEnemyFightReduction（只减攻击值，读点在下一次攻击后被消耗，且没有躲避值读点）。「持续到回合结束的 -1 攻击值/-1 躲避值」无法表达。M2-4 的 05321 凋零术升级同样需要。",
+  "proposedApi": "api.addEnemyStatModifier(enemy, { fight: -1, evade: -1, min: 1, duration: 'endOfTurn' })：写进 state.effects（纯 JSON，随存档往返），读点 enemyFightValue / enemyEvadeValue（src/engine/enemies.js）按实体 id 叠加并按 expireEffects('endOfTurn') 过期；min 作为下限。",
+  "status": "rejected",
+  "createdAt": "2026-10-24T02:40:00+08:00",
+  "claimedBy": "main",
+  "resolvedAt": "2026-10-23T18:39:00.291Z",
+  "resolution": {
+    "suggestion": "本轮保持简化；运行期敌方躲避/攻击值修正需要 state.effects 的敌方数值读点，P10 前统一评估。",
+    "catalog": "P7 玩家卡批次（2026-10）：拒绝新增原语",
+    "notes": "modifiers 目前只有 enemyHealth 一类敌方数值读点。"
+  }
+}

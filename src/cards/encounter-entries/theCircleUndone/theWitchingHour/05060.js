@@ -10,8 +10,10 @@ const isWitchHauntedWoods = card => {
   return data?.encounterCode === WOODS_ENCOUNTER && data?.type === 'location' && original !== '05055b'
 }
 const woodsInPlay = state => state.locations.filter(isWitchHauntedWoods)
+// 「另一处女巫作祟之林」：必须与自己在不同的森林地点（同地点不算）。
 const otherWoodsInvestigators = (state, inv) => activeInvestigators(state)
-  .filter(other => other.seat !== inv.seat && woodsInPlay(state).some(loc => loc.id === other.location))
+  .filter(other => other.seat !== inv.seat && other.location !== inv.location
+    && woodsInPlay(state).some(loc => loc.id === other.location))
 
 export default {
   code: '05060', scope: 'location', implemented: true,
@@ -23,10 +25,12 @@ export default {
     },
     actions({ moves, state, inv, location }) {
       if (inv.location !== location.id) return
-      if (state.scenarioFlags?.lonelyTreeRound === state.round) return
+      // [free]：不花行动；每名调查员每轮一次（不是团队共享）。
+      const usedBySeat = state.scenarioFlags?.lonelyTreeRoundBySeat || {}
+      if (usedBySeat[inv.seat] === state.round) return
       if (!otherWoodsInvestigators(state, inv).length) return
       moves.push({
-        action: 'scenarioAction', rule: 'lonelyTreeSwap',
+        action: 'scenarioAction', rule: 'lonelyTreeSwap', actions: 0,
         label: '🌳 独木：与另一处女巫作祟之林的调查员交换一张手牌（每轮一次）',
       })
     },
@@ -48,16 +52,15 @@ export default {
         ],
       })
       if (!direction) return false
-      state.scenarioFlags.lonelyTreeRound = state.round
-      if (direction === 'youDiscardTheyDraw') {
-        api.discardRandom?.(inv.seat, 1)
-        api.drawCards?.(picked.seat, 1)
-        api.info?.(`🌳 ${inv.name} 弃掉 1 张手牌，${picked.name} 抽取 1 张。`)
-      } else {
-        api.discardRandom?.(picked.seat, 1)
-        api.drawCards?.(inv.seat, 1)
-        api.info?.(`🌳 ${picked.name} 弃掉 1 张手牌，${inv.name} 抽取 1 张。`)
-      }
+      state.scenarioFlags ||= {}
+      state.scenarioFlags.lonelyTreeRoundBySeat = { ...(state.scenarioFlags.lonelyTreeRoundBySeat || {}), [inv.seat]: state.round }
+      // 弃哪张由该调查员选择（引擎 discardChosen）；无该 API 时退回随机弃。
+      const discarder = direction === 'youDiscardTheyDraw' ? inv : picked
+      if (typeof api.discardChosen === 'function') api.discardChosen(discarder.seat, 1)
+      else api.discardRandom?.(discarder.seat, 1)
+      const drawer = direction === 'youDiscardTheyDraw' ? picked : inv
+      api.drawCards?.(drawer.seat, 1)
+      api.info?.(`🌳 ${discarder.name} 弃掉 1 张手牌，${drawer.name} 抽取 1 张。`)
       return true
     },
   },

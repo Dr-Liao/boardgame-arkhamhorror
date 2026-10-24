@@ -205,7 +205,9 @@ test('旧存档的卡牌展示表会补上米奇·布朗的受限盟友槽字段
   delete s.cards['04006'].allySlotsForNonUnique
   const view = viewState(s, 0)
   assert.equal(view.cards['04006'].allySlotsForNonUnique, 2)
-  assert.equal(s.cards['04006'].allySlotsForNonUnique, 2)
+  // P3.2 A1′：viewState 只读权威 state（见 view-shared-state.test.mjs 门禁），
+  // 旧存档的展示字段自愈只进本视图的 cards 副本，不回写 state.cards。
+  assert.equal(s.cards['04006'].allySlotsForNonUnique, undefined, 'A1′：视图自愈不写回权威 state')
 })
 
 test('能力上限进入观察投影：用掉后标已用，换回合/换场后按作用域恢复', () => {

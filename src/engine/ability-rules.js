@@ -70,13 +70,13 @@ export function createAbilityRules(deps) {
       const def = cardDef(source.code)
       if (def?.health > 0 && source.damage >= def.health) {
         leaveAsset(state, inv, source)
-        if (!source.removedFromGame) inv.discard.push(source.code)
+        if (!source.removedFromGame && !source.returnedToHand) inv.discard.push(source.code)
         info(state, events, `${cardName(source.code)} 因自身伤害被弃置。`)
       }
     }
     if (cost.discardSelf && source) {
       leaveAsset(state, inv, source)
-      if (!source.removedFromGame) inv.discard.push(source.code)
+      if (!source.removedFromGame && !source.returnedToHand) inv.discard.push(source.code)
       info(state, events, `♻️ ${inv.name} 弃掉了「${cardName(source.code)}」。`)
     }
     if (cost.exileSelf && source) {
@@ -143,6 +143,21 @@ export function createAbilityRules(deps) {
     for (const card of controlledAbilityCards(inv)) {
       const entry = registeredEntry(card.code)
       if (entry?.abilities.length) out.push({ source: card, code: card.code, entry })
+      // 2026-10-25：附属在支援上的卡（05230 瞄准镜等升级附属）也作为能力来源；
+      // source 带 hostAssetId/hostCode，供卡面能力读「所附属支援」上下文。
+      for (const attachment of card.attachments || []) {
+        const attachedEntry = registeredEntry(attachment.code)
+        if (attachedEntry?.abilities.length) {
+          out.push({ source: { ...attachment, hostAssetId: card.id, hostCode: card.code }, code: attachment.code, entry: attachedEntry, attachedTo: card })
+        }
+      }
+    }
+    // 2026-10-25：05021「附属到调查员」的卡（attachTo.kind='investigator'）同样作为能力来源。
+    for (const attachment of inv.attachments || []) {
+      const attachedEntry = registeredEntry(attachment.code)
+      if (attachedEntry?.abilities.length) {
+        out.push({ source: { ...attachment, hostInvestigatorSeat: inv.seat }, code: attachment.code, entry: attachedEntry })
+      }
     }
     const investigatorEntry = registeredEntry(inv.code)
     if (investigatorEntry?.abilities.length) {

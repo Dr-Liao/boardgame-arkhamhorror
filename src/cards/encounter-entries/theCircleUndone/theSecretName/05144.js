@@ -16,7 +16,16 @@ export default {
       return false
     }
     nahab.exhausted = false
-    if (nahab.hunter) api.hunterStep?.(nahab, {})
+    // 卡面「结算她的猎手关键词」：实际向最近调查员移动一步（引擎 hunterStep 只计算不移动）。
+    if (nahab.hunter) {
+      let best = null
+      for (const inv of activeInvestigators(state)) {
+        const next = api.stepToward?.(nahab.location, inv.location)
+        if (!next || next === nahab.location) continue
+        if (!best) best = next
+      }
+      if (best) api.moveEnemy?.(nahab, best)
+    }
     for (const other of activeInvestigators(state).filter(entry => entry.location === nahab.location)) {
       api.attack?.(nahab, other)
     }

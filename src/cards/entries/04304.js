@@ -23,7 +23,8 @@ export default {
           const investigators = api.investigatorsAt(inv.location).filter(owner => (owner.horror || 0) > 0)
           const allies = api.investigatorsAt(inv.location).flatMap(owner =>
             (owner.assets || []).filter(card => api.cardTraits(card.code).some(trait => String(trait).toLowerCase() === 'ally')
-              && (api.cardSanity(card.code) || 0) > (card.horror || 0)))
+              // 治愈的是「已有恐惧」的盟友支援：0 恐惧时不可选，避免 api.addAssetHorror(-1) 写出负恐惧。
+              && (card.horror || 0) > 0))
           const options = [
             ...investigators.map(owner => ({ id: `inv:${owner.seat}`, label: owner.name })),
             ...allies.map(card => ({ id: `asset:${card.id}`, label: api.cardName(card.code) })),

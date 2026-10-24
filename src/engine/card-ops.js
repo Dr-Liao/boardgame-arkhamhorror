@@ -81,6 +81,13 @@ export function createCardOps(deps) {
 
   function preyTarget(state, enemy, candidates) {
     if (!candidates.length) return null
+    // 内容层写入的具体猎物（例如 04098「猎物 - 中毒的调查员」由失落时代 encounter-rules 写入
+    // enemy.preySeat）：若仍合法则直接作为猎物，不再进入 generic prey 选择。
+    if (!enemyTextBlanked(state, enemy) && Number.isInteger(enemy.preySeat)
+      && candidates.includes(enemy.preySeat)) {
+      const prey = state.investigators[enemy.preySeat]
+      if (prey && !prey.defeated && !prey.resigned) return enemy.preySeat
+    }
     if (enemy.prey === 'bearer' && !enemyTextBlanked(state, enemy)) {
       const bearer = enemy.bearerSeat
       const inv = bearer != null ? state.investigators[bearer] : null

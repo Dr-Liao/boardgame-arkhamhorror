@@ -66,8 +66,11 @@ export const scenario = {
   startLocation: 'expeditionCamp',
   locations,
   setAsideLocations: ['ruinsOfEztli', 'templeOfTheFang', 'overgrownRuins'],
+  // 伊格的使徒遭遇组按印刷份数列出（伊格之子×3、幽嘶蛇人×1、伊格的诅咒×2）。
+  // behavior.setupLocations 的「放在一边」与 scenario-manifest 的 zones.setAside 都从这份
+  // 数据派生份数，之前只列 1 份导致 manifest 声明 12 张而实际布置 15 张（runtime-1 审计 gap）。
   agentSets: {
-    agentsOfYig: ['04083', '04084', '04085'],
+    agentsOfYig: ['04083', '04083', '04083', '04084', '04085', '04085'],
   },
   acts: stages(['04046', '04047', '04048', '04049'], 'act').map((act, index) => ({
     ...act,

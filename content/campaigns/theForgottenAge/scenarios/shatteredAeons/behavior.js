@@ -3,6 +3,7 @@ import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
 import { actRuleFor, agendaRuleFor, entryFlags, locationRuleFor } from '../../../../../src/cards/card-rules.js'
+import { grantEnemyPassiveTrait } from '../../../../../src/engine/trait-passives.js'
 import {
   ALEJANDRO, ALTERNATE_ACTS, ANCIENT_EVILS, ANOTHER_WAY, BETWEEN_WORLDS,
   BETWEEN_WORLDS_LOCATION, CREEPING_DARKNESS, EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES,
@@ -137,17 +138,11 @@ function addToVictory(state, card, extra = {}) {
     victory: card.victory || 0, vengeance: card.vengeance || 0, ...extra })
 }
 
-// 04325b/04326b：让已在场的某类敌人立刻变成 passive（不主动交战），并解除已有交战。
+// 04325b/04326b：参考实现给每位调查员挂 CannotBeEngagedBy / CannotBeAttackedBy（按敌人特性）。
+// 这里写入调查员实例的 enemyPassiveTraits，由引擎的交战/攻击读点统一生效：
+// 该特性的敌人不再与这些调查员交战，也不会攻击他们（含已在场的敌人与新生成的敌人）。
 function markTraitPassive(state, trait) {
-  for (const enemy of state.enemies.filter(entry => hasTrait(entry, trait))) {
-    enemy.grantedAloof = true
-    enemy.aloof = true
-    if (enemy.engagedSeat != null) {
-      const holder = state.investigators[enemy.engagedSeat]
-      if (holder) holder.engaged = (holder.engaged || []).filter(id => id !== enemy.id)
-      enemy.engagedSeat = null
-    }
-  }
+  grantEnemyPassiveTrait(state, trait)
 }
 
 function doomAtNexus(state) {
@@ -571,19 +566,10 @@ export const behavior = {
     const location = here(state, inv)
     const flags = flagsFor(state)
     const actCode = currentActCode(state)
-    // 第 116 轮：04324/04327/04330/04334/04335 的场景行动在地点条目的 locationRule.actions。
+    // 04324/04327/04330/04334/04335 的场景行动在地点条目的 locationRule.actions。
     locationRuleFor(original(location))?.actions?.({ state, inv, location, moves })
-    // 04342 黑暗隐伏：[action][action] 检定意志(3)或检查补给（火把）弃掉 1 张。
-    {
-      const nexus = byId(state, NEXUS)
-      const creep = (nexus?.attachments || []).filter(entry => original(entry) === CREEPING_DARKNESS)
-      if (nexus && inv.location === nexus.id && creep.length) {
-        moves.push({
-          action: 'scenarioAction', rule: 'endCreepingDarkness', actions: 2,
-          label: '🔥 检定意志(3)或检查补给（火把）：弃掉 1 张「黑暗隐伏」',
-        })
-      }
-    }
+    // 04342 黑暗隐伏的 [action][action] 只由 encounterActions() 提供（附件式行动），
+    // 避免 scenarioAction 与 encounterAction 双入口重复列出同一行动。
     if (actCode === ACT_TYPES.relic) {
       if (relicInAnyDeck(state)) moves.push({
         action: 'scenarioAction', rule: 'searchRelic',
@@ -642,31 +628,6 @@ export const behavior = {
       }
       const flipped = flipClueToDoom(location, api)
       if (flipped) api.drawCards?.(inv.seat, 1)
-      return
-    }
-    if (move.rule === 'endCreepingDarkness') {
-      const nexus = byId(state, NEXUS)
-      const creep = (nexus?.attachments || []).filter(entry => original(entry) === CREEPING_DARKNESS)
-      if (!nexus || !creep.length) return
-      const discardOne = () => {
-        const removed = creep[creep.length - 1]
-        nexus.attachments = nexus.attachments.filter(entry => entry !== removed)
-        for (const enemy of state.enemies.filter(entry => original(entry) === FORMLESS_SPAWN)) {
-          const bonus = Math.min(removed.healthBonus || 0, enemy.creepingDarknessHealth || 0)
-          enemy.health -= bonus
-          enemy.creepingDarknessHealth = (enemy.creepingDarknessHealth || 0) - bonus
-        }
-        api.info?.('🔥 弃掉了 1 张「黑暗隐伏」，无形之子的生命值相应回退。')
-      }
-      // 卡面：检定意志(3)，成功则弃；或检查补给，带火把直接弃。
-      if (api.hasSupply?.(inv.seat, 'torches') ?? api.checkSupplies?.(inv.seat, 'torches')) {
-        discardOne()
-        return
-      }
-      api.test(inv.seat, 'willpower', 3, result => {
-        if (result.success) discardOne()
-        else api.info?.('检定失败：黑暗隐伏留在场上。')
-      })
       return
     }
     if (move.rule === 'pnakotusInsight') {
@@ -949,9 +910,8 @@ export const behavior = {
         enemy.creepingDarknessHealth = (enemy.creepingDarknessHealth || 0) + state.numInvestigators * creepCount
       }
     }
-    // 「我答应你」：蛇族/异教徒敌人不与你交战、也不攻击你（用常驻 aloof 表示）。
-    if (flags.cultistPassive && hasTrait(enemy, 'Cultist')) enemy.grantedAloof = true
-    if (flags.serpentPassive && hasTrait(enemy, 'Serpent')) enemy.grantedAloof = true
+    // 「我答应你」的「不与你交战，也不攻击你」由调查员实例的 enemyPassiveTraits 生效
+    // （见 markTraitPassive），新生成的敌人不需要再打 aloof 补丁。
   },
 
   enemyMoved(state, enemy, previous, api) {
@@ -1259,7 +1219,6 @@ function resolveParleyStory(state, inv, enemy, api) {
       // 04325b：接受伊塔卡的条件 → 换成场景 4a「失乐园」，放过蛇族。
       replaceActFour(state, PARADISE_LOST, api)
       flags.noParleyAlejandro = true
-      flags.serpentPassive = true
       markTraitPassive(state, 'Serpent')
       api.info?.('🐍 你答应了伊塔卡：场景 4a 换成「失乐园」，蛇族不再与你交战，也不能再与亚历山卓谈判。')
       return
@@ -1288,7 +1247,6 @@ function resolveParleyStory(state, inv, enemy, api) {
     // 04326b：接受亚历山卓的提议 → 换成场景 4a「锁定时间」，放过异教徒。
     replaceActFour(state, TIMELOCK, api)
     flags.noParleyIchtaca = true
-    flags.cultistPassive = true
     markTraitPassive(state, 'Cultist')
     api.info?.('👤 你答应了亚历山卓：场景 4a 换成「锁定时间」，异教徒不再与你交战，也不能再与伊塔卡谈判。')
     return

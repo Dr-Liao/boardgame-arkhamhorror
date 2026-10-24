@@ -18,7 +18,7 @@ export const manifest = scenarioManifest(scenario, identities, {
     'tfaYigsFury',
   ],
   setAsideLocations: ['chamberOfTime'],
-  setAsideAliases: ['04061', '04062', '04296', '04102', '04102', '04102', '04102'],
+  setAsideAliases: ['04303', '04062', '04296', '04102', '04102', '04102', '04102'],
   recordReads: [
     'theInvestigatorsWereForcedToWaitForAdditionalSupplies',
     'theInvestigatorsClearedAPathToTheEztliRuins',

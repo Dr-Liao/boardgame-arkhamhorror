@@ -10,7 +10,7 @@ export const manifest = scenarioManifest(scenario, identities, {
   layout,
   requiredPackIds: ['core', 'tfaCampaign'],
   requiredEncounterGroupIds: [
-    'shatteredAeons', 'pnakoticBrotherhood', 'flux', 'ancientEvils', 'agentsOfYig',
+    'shatteredAeons', 'pnakoticBrotherhood', 'flux', 'ancientEvils', 'agentsOfYig', 'darkCult',
   ],
   requiredMechanicIds: ['tfaExploration', 'tfaVengeance', 'tfaYigsFury', 'tfaRelicOfAges'],
   setAsideLocations: [

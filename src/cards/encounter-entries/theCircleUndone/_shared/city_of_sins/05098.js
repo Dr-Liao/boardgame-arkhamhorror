@@ -3,10 +3,10 @@
 // 卡面：显现 - 如果你的威胁区域里没有邪恶往昔，将邪恶往昔放置入场，位于你的威胁区域
 //   （如果已有邪恶往昔，改为将本卡牌弃掉并获得涌动）。
 // 卡面：强制 - 在遭遇牌库的卡牌耗尽时：受到 2 点恐惧并检定[willpower](3)。如果你检定成功，弃掉邪恶往昔。
-// 卡面：[action]：检定[willpower](3)。如果你检定成功，弃掉邪恶往昔。
 //
 // 威胁区规则：treacheryRule 的数据字段由 encounter-rules.js 的共享钩子半通用执行
-// （encounterDrawn → encounterDeckEmptyForced；encounterActions/performEncounterAction → threatAction）。
+// （encounterDrawn → resolveEncounterDeckEmptyForced；显现的涌动在本条目里处理）。
+// 注意：卡面没有 [action] 摆脱行动（旧实现多列了一个 scenarioAction，已删除）。
 
 export default {
   code: '05098',
@@ -15,13 +15,6 @@ export default {
   treacheryRule: {
     threatArea: true,
     encounterDeckEmptyForced: { horror: 2, test: { skill: 'willpower', difficulty: 3, discardOnSuccess: true } },
-  },
-  threatAction: {
-    rule: 'discardEvilPast',
-    label: '检定意志(3)摆脱邪恶往昔',
-    skills: ['willpower'],
-    difficulty: 3,
-    target: 'threat',
   },
   encounterResolve(state, inv, card, api) {
     const hasCopy = (inv.threat || []).some(item => (item.originalCode || item.code) === '05098')

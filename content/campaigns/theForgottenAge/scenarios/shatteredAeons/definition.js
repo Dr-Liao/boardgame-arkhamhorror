@@ -37,7 +37,9 @@ export const PARADISE_LOST = '04322'
 export const TIMELOCK = '04323'
 
 const deckGroups = [
-  'shattered_aeons', 'pnakotic_brotherhood', 'flux', 'ancient_evils', 'agents_of_yig',
+  // 参考实现 ShatteredAeons.hs：比较混乱袋 [cultist]/[tablet] 数量，本战役两者均为 0，
+  // 走 EQ 分支 → DarkCult 与 AgentsOfYig 两组都收。
+  'shattered_aeons', 'pnakotic_brotherhood', 'flux', 'ancient_evils', 'agents_of_yig', 'darkCult',
 ]
 const setAsideEnemies = [ICHTACA, ALEJANDRO, FORMLESS_SPAWN]
 // 三张进入探索牌库的诡计各占用一张实物，遭遇牌库里相应少一张（Haskell 的

@@ -11,7 +11,9 @@ export default {
       kind: 'free', label: '横置：意志/智识(4)，成功移除任一卡牌上的 1 毁灭',
       cost: { action: false, exhaust: true },
       resolve: ({ state, inv, api }) => {
-        if (api.gameFlag(inv.seat, 'relicDoomSuccess')) {
+        // 卡面：「每场游戏最多一次成功」——场景级（整队）标记，控制权转移后也不会再成功。
+        state.scenarioFlags ||= {}
+        if (state.scenarioFlags.relicOfAgesDoomSucceeded) {
           api.info('本场游戏已经成功使用过一次「古代遗物」。')
           return
         }
@@ -56,7 +58,8 @@ export default {
                 .find(item => item.id === id.slice(6))
               if (asset) asset.doom = Math.max(0, (asset.doom || 0) - 1)
             }
-            api.setGameFlag(inv.seat, 'relicDoomSuccess')
+            state.scenarioFlags ||= {}
+            state.scenarioFlags.relicOfAgesDoomSucceeded = true
             api.info('🏺 古代遗物：移除了 1 个毁灭标记。')
           },
         })

@@ -11,7 +11,7 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { encounterResolveFor, entryFlags } from '../../../../../src/cards/card-rules.js'
 import { campaignCardChange } from '../../../../../src/campaign/campaign.js'
-import { encounterRules, activeInvestigators, hasTrait, recordsFor } from '../../encounter-rules.js'
+import { encounterRules, activeInvestigators, hasTrait, recordsFor, parleyDifficultyBonus } from '../../encounter-rules.js'
 import { fggChaosToken, cultistEnemies } from './chaos.js'
 import {
   AGENDA_ENDS_AND_MEANS, AGENDA_HIEROPHANT, AUGUST_LINDQUIST, ACT_FOUR_KEYS, ACT_INFILTRATING,
@@ -31,11 +31,41 @@ const locById = (state, id) => (state.locations || []).find(location => location
 const locByCode = (state, code) => (state.locations || []).find(location => original(location) === code) || null
 const byCode = (state, code) => (state.storyAssets || []).find(asset => original(asset) === code) || null
 const here = (state, inv) => locById(state, inv?.location)
+// 场上全部毁灭（含当前密谋实例上的毁灭）。与引擎 agendaDoom 的口径一致：
+// state.doom（密谋上的毁灭）+ 当前密谋实例 doom + 敌人/地点/支援/威胁区上的 doom。
 const gameDoom = state => (Number(state.doom) || 0)
-  + [...(state.enemies || []), ...(state.locations || []), ...(state.storyAssets || [])]
+  + (Number(state.agendas?.[state.agendaIndex]?.doom) || 0)
+  + [...(state.enemies || []), ...(state.locations || []),
+    ...(state.investigators || []).flatMap(inv => [...(inv.assets || []), ...(inv.threat || [])])]
     .reduce((sum, card) => sum + (Number(card.doom) || 0), 0)
 const cluesAt = (state, id) => activeInvestigators(state).filter(inv => inv.location === id)
   .reduce((sum, inv) => sum + (inv.clues || 0), 0)
+
+// 圣堂地点（05213 地下墓穴 / 05216 圣堂内室 / 05214-05215 圣堂门廊）。
+const SANCTUM_LOCATION_IDS = [LOCATIONS.lodgeCatacombs, LOCATIONS.innerSanctum,
+  LOCATIONS.sanctumDoorwayCeremony, LOCATIONS.sanctumDoorwayHolding]
+
+// 05199 正面：「位于[[圣堂]]地点的每个[[银暮秘社]]敌人失去冷漠」。
+// 引擎在生成时按印刷数据写一次 enemy.aloof（src/engine/enemies.js:287），没有关键词修正读点；
+// 本章在生成/轮末/敌军阶段开始等时点同步：在圣堂地点时置 aloof=false，离开或议程翻面后还原。
+function syncSanctumCultistAloof(state) {
+  const agenda = state.agendas?.[state.agendaIndex]
+  const active = String(agenda?.originalCode || agenda?.code || '') === AGENDA_ENDS_AND_MEANS
+  for (const enemy of state.enemies || []) {
+    if (!hasTrait(enemy, 'Silver Twilight')) continue
+    const atSanctum = SANCTUM_LOCATION_IDS.some(id => enemy.location === id)
+    if (active && atSanctum) {
+      if (!enemy.lodgeAloofCleared) {
+        enemy.printedAloof = enemy.printedAloof ?? enemy.aloof === true
+        enemy.lodgeAloofCleared = true
+      }
+      enemy.aloof = false
+    } else if (enemy.lodgeAloofCleared) {
+      enemy.aloof = enemy.printedAloof === true
+      delete enemy.lodgeAloofCleared
+    }
+  }
+}
 
 function setFlags(state, patch) {
   state.scenarioFlags ||= {}
@@ -200,8 +230,36 @@ function givePuzzleBoxTo(state, api, seat) {
   return seat
 }
 
-function chooseInvestigator(state, api, prompt, options) {
-  const pool = options || activeInvestigators(state)
+// ---- 05228 机关盒 [action]：火盆 / 幽灵看守人 ---------------------------------
+// 火盆沿用《联合与幻灭》的 location.flags.brazier / location.litBrazier 读点（同一份场景数据）。
+function brazierLit(location) {
+  if (!location) return false
+  if (typeof location.flags?.brazier === 'boolean') return location.flags.brazier
+  return location.litBrazier === true
+}
+
+function unlightBrazier(location) {
+  if (!location) return
+  location.flags ||= {}
+  location.flags.brazier = false
+  location.litBrazier = false
+}
+
+function spectralWatcher(state) {
+  return (state.enemies || []).find(enemy => String(original(enemy)) === '05086') || null
+}
+
+function puzzleBoxActionOptions(state, inv) {
+  const options = []
+  const location = locById(state, inv?.location)
+  if (brazierLit(location)) options.push({ id: 'unlight', label: `熄灭火盆（${location?.name || inv?.location}）` })
+  const watcher = spectralWatcher(state)
+  if (watcher && !watcher.exhausted) options.push({ id: 'exhaust', label: '横置幽灵看守人' })
+  if (watcher && watcher.exhausted) options.push({ id: 'damage', label: '对已横置的幽灵看守人造成 5 点伤害' })
+  return options
+}
+
+function chooseInvestigator(state, api, prompt, options) {  const pool = options || activeInvestigators(state)
   if (!pool.length) return null
   if (pool.length === 1) return pool[0].seat
   if (typeof api?.choose !== 'function') return pool[0].seat
@@ -333,8 +391,11 @@ export const behavior = {
   // -------------------------------------------------------------------------
   investigatorEntryError(state, location) {
     const code = original(location)
-    if (code === LOBBY_WEVE || code === LODGE_CELLAR_WEVE || code === LODGE_CELLAR_MEMBERS) {
-      if (!location.revealed) return `「${location.name}」尚未开放：先在秘社大门谈判/支付线索。`
+    // 卡面背面：05206 前厅（成员版）与 05209 秘社地窖（成员版）有「不能进入」的限制；
+    // 05208 秘社地窖（「我们一直在等你」版）背面为空，没有进入限制——进入后正常揭示，
+    // 并由 locationRevealed 的随机钥匙分支结算「揭示后放 1 把钥匙」。
+    if ((code === LOBBY_WEVE || code === LODGE_CELLAR_MEMBERS) && !location.revealed) {
+      return `「${location.name}」尚未开放：先在秘社大门谈判/支付线索。`
     }
     if (code === VAULT && !location.revealed && !keysHeldBy(state, state.currentSeat ?? 0).some(key => key.id === 'elderthing')) {
       return '机密室的门锁上了：需要控制古神钥匙。'
@@ -342,7 +403,11 @@ export const behavior = {
     if (code === INNER_SANCTUM && !location.revealed && !keysHeldBy(state, state.currentSeat ?? 0).some(key => key.id === 'cultist')) {
       return '圣堂内室的门锁上了：需要控制异教徒钥匙。'
     }
-    if (code === LODGE_CATACOMBS && !location.revealed) return '地下墓穴的门锁上了：需要控制至少 1 把钥匙。'
+    // 05213 背面：控制至少 1 把任意钥匙即可进入（进入后由 locationRevealed 放圣堂内室与门廊）。
+    if (code === LODGE_CATACOMBS && !location.revealed
+      && keysHeldBy(state, state.currentSeat ?? 0).length === 0) {
+      return '地下墓穴的门锁上了：需要控制至少 1 把钥匙。'
+    }
     return null
   },
 
@@ -390,14 +455,18 @@ export const behavior = {
     // 核心圈骑士：进入骑士所在地点后检定 agility(4)，失败交战。
     const knight = state.enemies.find(enemy => original(enemy) === KNIGHT_INNER_CIRCLE && enemy.location === location.id)
     if (!knight) return
-    api?.test?.(inv.seat, 'agility', 4, result => {
-      if (result?.success) {
-        api.info?.(`${inv.name} 避开了核心圈骑士。`)
-        return
+    forceKnightTest(state, inv, knight, api)
+  },
+
+  // 05221 的另一半：「核心圈骑士进入你所在地点后」同样检定 agility(4)，失败交战。
+  // 引擎在移动管线里派发 enemyMoved（src/engine/locations.js:265 / movement.js:219,326）。
+  enemyMoved(state, enemy, newLocationId, api) {
+    if (enemy && String(original(enemy)) === KNIGHT_INNER_CIRCLE) {
+      for (const inv of activeInvestigators(state).filter(entry => entry.location === newLocationId)) {
+        forceKnightTest(state, inv, enemy, api)
       }
-      enemyEngage(state, inv, knight)
-      api.info?.(`${inv.name} 检定失败：核心圈骑士与你交战。`)
-    }, 0, { label: '核心圈骑士', code: KNIGHT_INNER_CIRCLE })
+    }
+    return encounterRules.enemyMoved?.(state, enemy, newLocationId, api)
   },
 
   locationShroudModifier(state, location, inv) {
@@ -408,6 +477,7 @@ export const behavior = {
   // 典礼室轮末：在其上的调查员与每个友方支援各受 1 点直接恐惧（有骷髅钥匙则取消）。
   roundEnded(state, api) {
     encounterRules.roundEnded?.(state, api)
+    syncSanctumCultistAloof(state)
     const room = locByCode(state, SANCTUM_DOORWAY_CEREMONY)
     if (!room || !room.revealed) return
     const occupants = activeInvestigators(state).filter(inv => inv.location === room.id)
@@ -471,6 +541,16 @@ export const behavior = {
         reason: cluesAt(state, location.id) >= needed ? null : `需要 ${needed} 个线索（当前 ${cluesAt(state, location.id)}）`,
       })
     }
+    // 05228 机关盒 [action]：只有控制者能用；团队每场游戏限一次。
+    if (puzzleBoxHolder(state) === inv.seat && !state.scenarioFlags?.puzzleBox?.actionUsed) {
+      const options = puzzleBoxActionOptions(state, inv)
+      if (options.length) {
+        moves.push({
+          action: 'scenarioAction', rule: 'puzzleBoxAction',
+          label: `机关盒：${options.map(option => option.label).join(' / ')}`,
+        })
+      }
+    }
     return moves
   },
 
@@ -478,6 +558,46 @@ export const behavior = {
     if (!move || !move.rule) return false
     const location = here(state, inv)
     switch (move.rule) {
+      case 'puzzleBoxAction': {
+        if (puzzleBoxHolder(state) !== inv.seat) return true
+        const box = state.scenarioFlags?.puzzleBox || {}
+        if (box.actionUsed) {
+          api?.info?.('「机关盒」的本场游戏行动已经用过了。')
+          return true
+        }
+        const options = puzzleBoxActionOptions(state, inv)
+        if (!options.length) return true
+        let answer = options[0].id
+        if (options.length > 1 && typeof api?.choose === 'function') {
+          answer = api.choose({
+            kind: 'effect', source: PUZZLE_BOX, seat: inv.seat,
+            prompt: '「机关盒」：选择一项结算。',
+            options: options.map(option => ({ id: option.id, label: option.label })),
+          })
+        }
+        const picked = options.find(option => option.id === answer) || options[0]
+        setFlags(state, { puzzleBox: { ...box, actionUsed: true } })
+        if (picked.id === 'unlight') {
+          unlightBrazier(location)
+          api?.info?.(`「机关盒」熄灭了「${location?.name || inv.location}」的火盆。`)
+          return true
+        }
+        const watcher = spectralWatcher(state)
+        if (!watcher) return true
+        if (picked.id === 'exhaust') {
+          watcher.exhausted = true
+          api?.info?.('「机关盒」横置了幽灵看守人。')
+          return true
+        }
+        if (picked.id === 'damage') {
+          // 非攻击伤害（卡面：对已横置的幽灵看守人造成 5 点伤害）。
+          if (typeof api?.damageEnemy === 'function') api.damageEnemy(watcher.id, 5, inv.seat)
+          else watcher.damageTaken = (watcher.damageTaken || 0) + 5
+          api?.info?.('「机关盒」对已横置的幽灵看守人造成 5 点伤害。')
+          return true
+        }
+        return true
+      }
       case 'resignGates':
         api?.resign?.(inv.seat)
         return true
@@ -509,7 +629,8 @@ export const behavior = {
       case 'parleyNathan': {
         const nathan = state.enemies.find(enemy => original(enemy) === NATHAN_WICK_INITIATION && enemy.location === inv.location)
         if (!nathan) return true
-        api?.test?.(inv.seat, 'willpower', 3, result => {
+        // 05097 秘社玄仪：直到一轮结束，对该敌人谈判难度 +2（实例标记，共享读点）。
+        api?.test?.(inv.seat, 'willpower', 3 + parleyDifficultyBonus(state, nathan), result => {
           if (result?.success) {
             nathan.resources = (nathan.resources || 0) + 1
             api.info?.(`南森·威克上现在有 ${nathan.resources} 点资源。`)
@@ -529,7 +650,8 @@ export const behavior = {
       case 'parleyJailor': {
         const jailor = state.enemies.find(enemy => original(enemy) === LODGE_JAILOR && enemy.location === inv.location)
         if (!jailor) return true
-        api?.test?.(inv.seat, 'intellect', 3, result => {
+        // 05097 秘社玄仪：谈判难度 +2。
+        api?.test?.(inv.seat, 'intellect', 3 + parleyDifficultyBonus(state, jailor), result => {
           if (!result?.success) {
             api.info?.('与秘社狱卒谈判失败。')
             return
@@ -560,11 +682,15 @@ export const behavior = {
       case 'parleyKnightOuter': {
         const knight = state.enemies.find(enemy => original(enemy) === KNIGHT_OUTER_VOID && enemy.location === inv.location)
         if (!knight) return true
-        api?.test?.(inv.seat, ['willpower', 'intellect'], 4, result => {
+        // 05097 秘社玄仪：谈判难度 +2。
+        api?.test?.(inv.seat, ['willpower', 'intellect'], 4 + parleyDifficultyBonus(state, knight), result => {
           if (result?.success) {
             if ((knight.doom || 0) > 0) {
               knight.doom -= 1
-              api?.giveClues?.(inv.seat, 1)
+              // 「控制其 1 个毁灭并翻至线索面」：毁灭翻转成线索，由谈判者取得 1 个线索
+              // （参考实现 KnightOfTheOuterVoid.hs:41-45 为 removeDoom + placeClues）。
+              if (typeof api?.gainClues === 'function') api.gainClues(inv.seat, 1)
+              else if (state.investigators[inv.seat]) state.investigators[inv.seat].clues += 1
               api.info?.('控制边缘虚空骑士的 1 个毁灭并翻成线索。')
             }
           } else {
@@ -644,9 +770,24 @@ export const behavior = {
       state.acts = []
       setFlags(state, { actsDiscarded: true })
       const box = describePuzzleBox(state)
-      const holder = box?.holder === 'seat' ? state.investigators[box.seat] : null
-      const sanctums = [LOCATIONS.lodgeCatacombs, LOCATIONS.innerSanctum, LOCATIONS.sanctumDoorwayCeremony, LOCATIONS.sanctumDoorwayHolding]
-      const spawnId = holder?.location || sanctums.map(id => locById(state, id)).find(Boolean)?.id
+      const sanctums = SANCTUM_LOCATION_IDS.map(id => locById(state, id)).filter(Boolean)
+      // 卡面：生成在「机关盒所在地点」。机关盒可能由调查员控制（含在敌人身上/已移出游戏）。
+      const boxLocationId = box?.holder === 'seat'
+        ? state.investigators[box.seat]?.location || null
+        : box?.holder === 'enemy'
+          ? ((state.enemies || []).find(enemy => enemy.id === box.enemyId)?.location
+            || puzzleBoxAsset(state)?.location || null)
+          : null
+      // 机关盒不在场时生成在任意一个圣堂地点（有多个时由玩家选；没有圣堂地点时 API 会如实失败）。
+      let spawnId = boxLocationId || (sanctums.length === 1 ? sanctums[0].id : null)
+      if (!spawnId && sanctums.length > 1 && typeof api?.choose === 'function') {
+        const answer = api.choose({
+          kind: 'location', source: AGENDA_ENDS_AND_MEANS, seat: state.campaign?.leadSeat ?? 0,
+          prompt: '选择「响应召唤的怪兽」的生成地点（任意一个[[圣堂]]地点）。',
+          options: sanctums.map(location => ({ id: location.id, label: location.name || location.id })),
+        })
+        spawnId = sanctums.some(location => location.id === answer) ? answer : sanctums[0].id
+      }
       takeFromSetAside(state, SUMMONED_BEAST)
       api?.spawn?.(SUMMONED_BEAST, spawnId)
       state.storyAssets = (state.storyAssets || []).filter(asset => original(asset) !== PUZZLE_BOX)
@@ -674,27 +815,63 @@ export const behavior = {
     if (code === ACT_FOUR_KEYS && fourKeysReady(state)) api?.advanceAct?.()
   },
 
+  // 05228 机关盒的强制：控制者被击败时把控制权交给另一位调查员。
+  // 引擎的击杀钩子只派发给当前章节（src/engine/harm-threat.js:236），所以本实现只覆盖《崇高利益》；
+  // 机关盒随牌组进入其它章节时需要各章自己的 investigatorEliminated 钩子（见 primitive request）。
+  investigatorEliminated(state, inv, clues, api) {
+    const box = describePuzzleBox(state)
+    if (!box || box.holder !== 'seat' || box.seat !== inv?.seat) return false
+    const owned = (inv.assets || []).find(item => original(item) === PUZZLE_BOX)
+    if (owned) inv.assets.splice(inv.assets.indexOf(owned), 1)
+    const others = activeInvestigators(state).filter(other => other.seat !== inv.seat)
+    if (!others.length) {
+      setFlags(state, { puzzleBox: { holder: 'removed', removed: true, seat: null, enemyId: null } })
+      api?.info?.('机关盒没有可接手的调查员，被移出游戏。')
+      return false
+    }
+    const seat = others.length === 1 ? others[0].seat
+      : chooseInvestigator(state, api, '选择一位调查员：接手「机关盒」。', others)
+    if (seat != null) givePuzzleBoxTo(state, api, seat)
+    return false
+  },
+
   // -------------------------------------------------------------------------
   // 敌人
   // -------------------------------------------------------------------------
-  spawnLocation(state, code) {
+  // 05204/05205 正面：「敌人不能生成在秘社大门」。引擎的 spawnLocation 语义：
+  // 返回 null = 生成失败，未特判的卡必须回落传入的 fallback 地点（不能返回 null 把普通生成也弄失败）。
+  spawnLocation(state, code, fallbackLocation, engagedSeat) {
+    const gatesIds = [LOCATIONS.lodgeGatesMembers, LOCATIONS.lodgeGatesWeve]
+    // 大门不能生成敌人：改到已入场的圣堂/秘社地点（优先前厅/地窖，其次休息室/地下墓穴）。
+    const avoidGates = id => {
+      if (!id || !gatesIds.includes(id)) return id || null
+      const placed = (state.locations || []).map(location => location.id).filter(locationId => !gatesIds.includes(locationId))
+      const preferred = [
+        LOCATIONS.lobbyMembers, LOCATIONS.lobbyWeve,
+        LOCATIONS.lodgeCellarMembers, LOCATIONS.lodgeCellarWeve,
+        LOCATIONS.lounge, LOCATIONS.lodgeCatacombs,
+      ].find(locationId => placed.includes(locationId))
+      return preferred || placed[0] || null
+    }
+    const fallback = fallbackLocation || activeInvestigators(state)[0]?.location || null
     if (code === KNIGHT_INNER_CIRCLE || code === KNIGHT_OUTER_VOID) {
-      const alive = activeInvestigators(state)
-      const origin = alive[0]?.location
-      const originLoc = locById(state, origin)
+      // 「生成 - 任意一个与你所在地点连接的地点」：取 fallback（抽牌者地点）的连接地点，避开大门。
+      const originLoc = locById(state, fallback)
       const connected = (originLoc?.connections || []).filter(id => locById(state, id))
-      return connected[0] || origin || null
+      const target = connected.map(avoidGates).find(Boolean) || avoidGates(fallback)
+      return target || null
     }
     if (code === LODGE_JAILOR || code === CELL_KEEPER) {
-      const sanctums = [LOCATIONS.lodgeCatacombs, LOCATIONS.innerSanctum, LOCATIONS.sanctumDoorwayCeremony, LOCATIONS.sanctumDoorwayHolding]
-        .map(id => locById(state, id)).find(Boolean)
-      return sanctums?.id || null
+      const sanctums = SANCTUM_LOCATION_IDS.map(id => locById(state, id)).filter(Boolean)
+      return sanctums[0]?.id || avoidGates(fallback)
     }
-    return null
+    // 未特判的卡：按引擎新语义返回 fallback 地点（仅大门需要替换）。
+    return avoidGates(fallback)
   },
 
   enemySpawned(state, enemy, api) {
     encounterRules.enemySpawned?.(state, enemy, api)
+    syncSanctumCultistAloof(state)
     const code = String(original(enemy))
     if (code === LODGE_JAILOR || code === CELL_KEEPER) {
       enemy.doom = (enemy.doom || 0) + 2
@@ -733,7 +910,7 @@ export const behavior = {
   },
 
   enemyDiscarded(state, enemy, api) {
-    if (hasTrait(enemy, 'Silver Twilight')) moveDoomToAgendaAt(state, enemy.location, api)
+    // 卡面只写「击败」：被弃置/移出游戏不触发「将 1 点毁灭移到当前密谋」。
     keysLeavingEnemy(state, enemy, null, enemy.location || null, api)
     return encounterRules.enemyDiscarded?.(state, enemy, api) || false
   },
@@ -779,6 +956,8 @@ export const behavior = {
   // 敌军阶段开始：陷阱守卫者击败同地点每个类人敌人并吸收其毁灭。
   enemyPhaseStart(state, api) {
     encounterRules.enemyPhaseStart?.(state, api)
+    // 02021 敌军阶段前后敌人才会移动：这里再同步一次「圣堂地点银暮秘社敌人失去冷漠」。
+    syncSanctumCultistAloof(state)
     const beast = state.enemies.find(enemy => String(original(enemy)) === SUMMONED_BEAST)
     if (!beast) return
     const humans = state.enemies.filter(enemy => enemy.id !== beast.id
@@ -787,7 +966,11 @@ export const behavior = {
     let doom = 0
     for (const human of humans) {
       doom += Number(human.doom) || 0
-      state.enemies.splice(state.enemies.indexOf(human), 1)
+      human.doom = 0
+      // 05220：「击败」而不是直接移出战场——走引擎击败结算（胜利区/离场触发/钥匙归属等）。
+      human.damageTaken = Math.max(Number(human.damageTaken) || 0, Number(human.health) || 0)
+      if (typeof api?.checkEnemyDefeat === 'function') api.checkEnemyDefeat(human, null, null)
+      else state.enemies.splice(state.enemies.indexOf(human), 1)
     }
     beast.doom = (beast.doom || 0) + doom
     api?.info?.(`陷阱守卫者吞噬了「${beast.location}」的 ${humans.length} 个类人敌人，吸收 ${doom} 点毁灭。`)
@@ -808,7 +991,11 @@ export const behavior = {
     const failed = !result.success
     if (drawn.includes('tablet') && failed) {
       const cultists = cultistEnemies(state)
-      if (!cultists.length) return
+      if (!cultists.length) {
+        // 困难/专家：场上没有异教徒敌人时改为「再揭示一个标记」（05197 卡面）。
+        if (hard) api?.revealToken?.(inv.seat)
+        return
+      }
       if (hard) {
         for (const target of cultists) target.doom = (target.doom || 0) + 1
         api?.info?.('石板失败：每个异教徒敌人各 +1 毁灭。')
@@ -822,7 +1009,11 @@ export const behavior = {
     }
     if (drawn.includes('elderthing') && failed) {
       const withDoom = cultistEnemies(state).filter(enemy => (enemy.doom || 0) > 0)
-      if (!withDoom.length) return
+      if (!withDoom.length) {
+        // 困难/专家：场上没有带毁灭的异教徒敌人时改为「再揭示一个标记」（05197 卡面）。
+        if (hard) api?.revealToken?.(inv.seat)
+        return
+      }
       if (hard) {
         const max = Math.max(...withDoom.map(enemy => enemy.doom || 0))
         const target = withDoom.find(enemy => (enemy.doom || 0) === max)
@@ -964,9 +1155,17 @@ function discardAndDrawCultists(state, api) {
       choice = Math.max(0, Math.min(remaining.length - 1, Number(answer) || 0))
     }
     const code = remaining.splice(choice, 1)[0]
-    api?.spawnEngaged?.(code, inv.location, inv.seat)
-    state.encounterDiscard.push(code)
-    api?.info?.(`${inv.name} 从弃牌中抽出了「${ALL_CARDS[code]?.nameZh || code}」。`)
+    // 不用 spawnEngaged：spawnEngaged 会经过本章 spawnLocation 的返回值（本章对未特判敌人返回 null），
+    // 导致「抽到的异教徒敌人」被放回遭遇弃牌堆。api.spawn 走 ignoreSpawn 通道，生成点不受覆盖影响。
+    const spawned = typeof api?.spawn === 'function' ? api.spawn(code, inv.location) : null
+    if (spawned) {
+      enemyEngage(state, inv, spawned)
+      api?.info?.(`${inv.name} 从弃牌中抽出了「${ALL_CARDS[code]?.nameZh || code}」并与其交战。`)
+    } else {
+      // 生成失败时引擎 spawnEnemy 已经把牌放进 encounterDiscard（src/engine/enemies.js:273-277），
+      // 这里不能再 push，否则同一张牌会出现两个副本。
+      api?.info?.(`${inv.name} 未能抽出「${ALL_CARDS[code]?.nameZh || code}」。`)
+    }
   }
   state.encounterDiscard.push(...remaining)
 }
@@ -977,6 +1176,19 @@ function enemyEngage(state, inv, enemy) {
   inv.engaged ||= []
   if (!inv.engaged.includes(enemy.id)) inv.engaged.push(enemy.id)
   return true
+}
+
+// 05221：「在你进入核心圈骑士所在地点（或骑士进入你所在地点）后：检定 agility(4)；
+// 失败则核心圈骑士与你交战。」两处入口共用本函数。
+function forceKnightTest(state, inv, knight, api) {
+  api?.test?.(inv.seat, 'agility', 4, result => {
+    if (result?.success) {
+      api.info?.(`${inv.name} 避开了核心圈骑士。`)
+      return
+    }
+    enemyEngage(state, inv, knight)
+    api.info?.(`${inv.name} 检定失败：核心圈骑士与你交战。`)
+  }, 0, { label: '核心圈骑士', code: KNIGHT_INNER_CIRCLE })
 }
 
 // 圣堂门廊（拘禁室）揭示：从遭遇牌库/弃牌堆找异教徒敌人生成。
@@ -1077,7 +1289,7 @@ function beneathTheLodge(state, inv, api) {
         api.info?.('秘社地底：受到 1 点恐惧。')
       }
     }
-  }, 0, { label: '秘社地底', code: '05225' })
+  }, 0, { label: '秘社地底', code: '05225' }, { peril: keys > 0 })
   return false
 }
 

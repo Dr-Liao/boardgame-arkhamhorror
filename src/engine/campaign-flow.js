@@ -30,6 +30,7 @@ export function createCampaignFlow(deps) {
     introduction,
     originalCardCode,
     randomValue,
+    refreshArcaneResearch,
     registeredEntry,
     requestChoice,
     resolutionStory,
@@ -71,6 +72,10 @@ function progressCampaign(state, events, launch = false, leaveRest = false) {
     if (launch) { startScenario(state, campaign.scenarioIndex, events); runMulligans(state, events) }
   } else {
     campaign.phase = 'interlude'; state.phase = 'interlude'; state.uiState = 'interlude'
+    // 04109 奥术研究：「每个冒险结束后、下一场冒险前」重置一次首张法术升级折扣。
+    // 进入关间窗口时统一刷新；重复调用不会增加创伤（创伤只在购买 04109 时结算）。
+    const refreshed = refreshArcaneResearch?.(campaign) || []
+    if (refreshed.length) info(state, events, `🔮 「奥术研究」：${refreshed.length} 位调查员恢复了本关间的首张法术升级折扣。`)
     const next = graph.nodes[node.next]
     if (next?.type === 'scenario') {
       campaign.scenarioIndex = manifest.scenarioIds.indexOf(next.scenarioId)

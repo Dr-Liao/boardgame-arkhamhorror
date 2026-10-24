@@ -88,9 +88,10 @@ test('卡型与描述子 kind 匹配：事件必须有 played，支援不得只�
     const kinds = new Set(abilities.map(ability => ability.kind))
     const weakness = card.type === 'event' && Boolean(card.subtype)
     // 快速事件有两种已支持写法：played+fast+trigger，或 reaction+fromHand（窗口内从手牌打出）。
+    // 2026-10-25：带 attachTo 的事件（05152/05230）由 doPlay 的附属通道打出，没有 played 描述子。
     const handReaction = abilities.some(ability => ability.fromHand === true
       && (ability.kind === 'reaction' || ability.kind === 'forced'))
-    if (card.type === 'event' && !weakness && !kinds.has('played') && !handReaction) {
+    if (card.type === 'event' && !weakness && !kinds.has('played') && !handReaction && !entry.attachTo) {
       problems.push(`${entry.code}（事件）缺少 kind:'played'：${[...kinds].join('/')}`)
     }
     if (card.type === 'asset' && kinds.size === 1 && kinds.has('played')) {

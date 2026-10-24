@@ -200,16 +200,28 @@ export function tfaChaosAfterTest(id, state, inv, result, api) {
   }
   if (id === 'theBoundaryBeyond') {
     const hard = hardSide(state)
+    const pickOne = (list, prompt, kind = 'target') => {
+      if (!list.length) return null
+      if (list.length === 1 || typeof api?.choose !== 'function') return list[0]
+      const answer = api.choose({
+        kind, source: 'theBoundaryBeyond', seat: inv.seat, prompt,
+        options: list.map((item, index) => ({ id: String(item.id ?? index), label: item.name || String(item) })),
+      })
+      return list.find((item, index) => String(item.id ?? index) === String(answer)) || list[0]
+    }
     // [cultist]：失败时在一个异教徒敌人上放 1 毁灭（困难/专家改为每个）。
     if (failed && has('cultist')) {
       const targets = cultists(state)
       if (hard) for (const enemy of targets) placeDoom(enemy)
-      else if (targets[0]) placeDoom(targets[0])
+      else {
+        const chosen = pickOne(targets, '选择要放置 1 个毁灭标记的异教徒敌人。', 'enemy')
+        if (chosen) placeDoom(chosen)
+      }
     }
     // [tablet]：失败时你所在地点的一个蛇族敌人攻击你（困难/专家改为每个）。
     if (failed && has('tablet')) {
       const serpents = state.enemies.filter(entry => entry.location === inv.location && traitsOf(entry, 'Serpent'))
-      const attackers = hard ? serpents : serpents.slice(0, 1)
+      const attackers = hard ? serpents : [pickOne(serpents, '选择攻击你的蛇族敌人。', 'enemy')].filter(Boolean)
       for (const enemy of attackers) api.attack(enemy, inv)
     }
     // [elderthing]：在最近的古代地点放 1 线索；简单/普通只在失败时，困难/专家总是。
@@ -218,7 +230,9 @@ export function tfaChaosAfterTest(id, state, inv, result, api) {
       if (!ancient.length) return
       const scored = ancient.map(entry => ({ entry, steps: distance(state, inv.location, entry.id) }))
         .sort((left, right) => left.steps - right.steps)
-      scored[0].entry.clues = (scored[0].entry.clues || 0) + 1
+      const nearest = scored.filter(item => item.steps === scored[0].steps)
+      const chosen = pickOne(nearest.map(item => item.entry), '选择要放置 1 个线索的古代地点。', 'location') || scored[0].entry
+      chosen.clues = (chosen.clues || 0) + 1
     }
     return
   }

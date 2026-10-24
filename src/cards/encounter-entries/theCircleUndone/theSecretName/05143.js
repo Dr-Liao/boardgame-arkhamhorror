@@ -37,19 +37,18 @@ export default {
   encounterResolve(state, inv, card, api) {
     const jenkin = state.enemies.find(enemy => String(originalOf(enemy)) === '05148')
     if (!jenkin) {
-      const target = spawnFromAside(state, api, '05148', inv.location)
-      if (target) {
-        api.damage?.(inv.seat, 1)
-        api.info?.(`🐀 「好事魔宠」：布朗·詹金在 ${inv.name} 所在地点生成，${inv.name} 受到 1 点伤害。`)
-      }
+      // 卡面：找出布朗·詹金并生成在你所在地点，然后你受到 1 点伤害（伤害无条件）。
+      spawnFromAside(state, api, '05148', inv.location)
+      api.damage?.(inv.seat, 1)
+      api.info?.(`🐀 「好事魔宠」：找出布朗·詹金并放在 ${inv.name} 所在地点，${inv.name} 受到 1 点伤害。`)
       return false
     }
-    const rats = findInEncounter(state, candidate => String(candidate) === '01159') || '01159'
-    const spawned = spawnFromAside(state, api, rats, inv.location)
-    if (spawned) spawnFromAside(state, api, '01159', inv.location)
-    api.engage?.(spawned, inv.seat)
+    // 卡面：找出鼠群并与你交战，然后你受到 1 点伤害。查找：遭遇牌库→弃牌堆，找不到时不凭空生成。
+    const rats = findInEncounter(state, candidate => String(candidate) === '01159')
+    const spawned = rats ? spawnFromAside(state, api, rats, inv.location) : null
+    if (spawned) api.engage?.(spawned, inv.seat)
     api.damage?.(inv.seat, 1)
-    api.info?.('🐀 「好事魔宠」：鼠群与你交战，然后你受到 1 点伤害。')
+    api.info?.('🐀 「好事魔宠」：找出鼠群与你交战，然后你受到 1 点伤害。')
     return false
   },
 }

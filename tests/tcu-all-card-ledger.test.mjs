@@ -234,7 +234,7 @@ test('TCU 全卡账本逐卡证据来自实跑测试（test:pass 形状 + 分区
       assert.equal(entry.evidence.length, 1)
       assert.equal(entry.evidence[0].file, 'games/arkhamhorror/tests/tcu-investigators.test.mjs')
       assert.equal(entry.evidence[0].profile, TCU_INVESTIGATOR_ACCEPTANCE_PROFILE.id)
-      assert.equal(entry.evidence[0].tests, 33)
+      assert.equal(entry.evidence[0].tests, 43)
       assert.equal(entry.status, 'verified')
     }
     if (entry.partition === 'player') {

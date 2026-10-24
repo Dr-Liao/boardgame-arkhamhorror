@@ -19,9 +19,47 @@
 export default {
   code: '05230',
   fast: true,
-  attachTo: { kind: 'asset', trait: 'firearm', maxPerTarget: 1 },
-  simplified: true,
-  note: '未实现：附属期间的 [reaction]（改指连接地点非精英敌人、忽略冷漠/反击）与「所附属支援不能攻击与你交战的敌人」'
-    + '——需要「附属卡能力/限制」枚举读点（proposedApi: attachedCardAbilities(host)）；已实现快速打出与附属到[[枪械]]支援。P10 前补。',
-  abilities: [],
+  // 卡面「附属到你控制的一张占用 2 个手部槽位的[[枪械]]支援」：引擎 attachmentTargets 已支持 handSlots 过滤。
+  // 卡面没有「每个支援仅限 1 张」的限制，因此不声明 maxPerTarget。
+  attachTo: { kind: 'asset', trait: 'firearm', handSlots: 2 },
+  // 引擎 combat.js 读点：宿主装备上挂有该字段的附属时，不能攻击与你交战的敌人。
+  hostCannotAttackEngaged: true,
+  abilities: [
+    {
+      kind: 'reaction',
+      trigger: 'activateFirearmFight',
+      label: '横置瞄准镜：本次攻击可指向连接地点的非精英敌人，忽略冷漠与反击',
+      // 费用：横置瞄准镜（附属实体上的 exhausted 标记）。
+      cost: { exhaust: true },
+      criteria: ctx => {
+        const context = ctx.context || {}
+        const source = ctx.source || {}
+        // 只在「用挂着这张瞄准镜的那把枪」发动攻击时可用。
+        if (source.hostAssetId == null || context.assetId !== source.hostAssetId) return false
+        // 卡面条件：你没有与任何敌人交战。
+        if ((ctx.state?.enemies || []).some(enemy => !enemy.defeated && enemy.engagedSeat === ctx.inv?.seat)) return false
+        // 目标合法性：连接地点上至少有一个非精英敌人。
+        const here = (ctx.state?.locations || []).find(location => location.id === ctx.inv?.location)
+        const links = here?.connections || []
+        return (ctx.state?.enemies || []).some(enemy => !enemy.defeated && !enemy.elite && links.includes(enemy.location))
+      },
+      resolve: ({ state, inv, source, context, api }) => {
+        const here = state.locations.find(location => location.id === inv.location)
+        const links = here?.connections || []
+        const candidates = state.enemies.filter(enemy => !enemy.defeated && !enemy.elite && links.includes(enemy.location))
+        if (!candidates.length) return
+        const pick = candidates.length === 1 ? candidates[0].id : api.choice({
+          kind: 'target', source: '05230', seat: inv.seat,
+          prompt: '选择连接地点上的非[[精英]]敌人作为本次攻击的对象。',
+          options: candidates.map(enemy => ({ id: enemy.id, label: `${enemy.name}（${api.locationName(enemy.location)}）` })),
+        })
+        // combat.js 的 activateFirearmFight 读点：这三个旗标交给本次攻击流程。
+        context.allowConnecting = true
+        context.redirectEnemyId = pick
+        context.ignoreAloof = true
+        context.ignoreRetaliate = true
+        api.info('「瞄准镜」：本次攻击可指向连接地点的非精英敌人，并忽略冷漠与反击。')
+      },
+    },
+  ],
 }

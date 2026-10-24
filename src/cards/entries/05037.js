@@ -17,9 +17,22 @@ import { ALL_CARDS } from '../../cards/cards-data.js'
 const isItem = traits => (traits || []).some(trait => String(trait).toLowerCase() === 'item')
 const handSlots = def => (Array.isArray(def?.slots) ? def.slots : def?.slot ? [def.slot] : [])
   .some(slot => /^hand/i.test(String(slot).trim()))
+const isSlotItem = code => isItem(ALL_CARDS[code]?.traits) && handSlots(ALL_CARDS[code])
 
 export default {
   code: '05037',
+  // 卡面的额外费用（弃一张占手部槽位的[[道具]]支援）与「攻击」目标都不是可选的：
+  // 没有合法费用卡或没有可攻击敌人时不能打出（否则会出现白付费用/白弃道具）。
+  playCondition: [{
+    when: ({ state, inv }) => {
+      const hasCostCard = (inv.hand || []).some(isSlotItem)
+        || (inv.assets || []).some(asset => isSlotItem(asset.code))
+      if (!hasCostCard) return false
+      return (state.enemies || []).some(enemy => !enemy.defeated && enemy.location === inv.location
+        && (!enemy.aloof || enemy.engagedSeat != null))
+    },
+    message: '没有可支付额外费用的占手部槽位[[道具]]支援，或所在地点没有可攻击的敌人',
+  }],
   abilities: [
     {
       kind: 'played',
@@ -28,8 +41,8 @@ export default {
       noOpportunityAttack: true,
       resolve: ({ state, inv, api }) => {
         // --- 额外费用：弃掉一张占手部槽位的[[道具]]支援（手牌或游戏区域） ---
-        const handItems = inv.hand.filter(code => isItem(api.cardTraits(code)) && handSlots(ALL_CARDS[code]))
-        const playItems = inv.assets.filter(asset => isItem(api.cardTraits(asset.code)) && handSlots(ALL_CARDS[asset.code]))
+        const handItems = inv.hand.filter(isSlotItem)
+        const playItems = inv.assets.filter(asset => isSlotItem(asset.code))
         const options = [
           ...handItems.map(code => ({ id: 'hand:' + code, label: `手牌：${api.cardName(code)}` })),
           ...playItems.map(asset => ({ id: 'play:' + asset.id, label: `场上：${api.cardName(asset.code)}` })),

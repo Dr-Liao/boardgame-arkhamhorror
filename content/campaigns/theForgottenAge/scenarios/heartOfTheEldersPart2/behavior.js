@@ -57,6 +57,57 @@ function locationHasSupply(state, locationId, name) {
     && ((state.campaign?.supplies || {})[inv.seat] || []).includes(name))
 }
 
+// ---------------------------------------------------------------------------
+// TFA 探索规则：只能翻出「连接地点」（与上部 behavior 同一口径）
+// ---------------------------------------------------------------------------
+// 参考实现（Campaigns/TheForgottenAge/Helpers.hs:239-335）：从探索牌库顶一直抽到
+// 「与当前地点连接符号相同的地点」或遭遇卡；不连接的地点先放一边，探索结束后洗回。
+// 引擎 doExplore 只抽 1 张，所以本章在 beforeExplore 里先把不连接的地点挪到一边，
+// 让引擎抽到合法目标；afterExplore 再把一边的牌洗回。04211/04212 的探索由此获得筛选。
+const scenarioLocations = state => state.scenario?.locations || {}
+
+const exploreLinks = (state, fromId) => scenarioLocations(state)[fromId]?.connections || []
+
+function connectsForExplore(state, fromId, code) {
+  // 04227 深入幽嘶（地点 id=descentToYoth）是从任意地点向下走的特殊地点，
+  // 不受「连接地点」筛选限制。
+  if (code === 'descentToYoth') return true
+  const target = scenarioLocations(state)[code]
+  if (!target) return true
+  if (original(target) === DESCENT_TO_YOTH) return true
+  const links = exploreLinks(state, fromId)
+  if (!links.length) return true
+  return links.includes(code)
+}
+
+function shuffleExplorationAsideBack(state, api) {
+  const aside = state.scenarioFlags?.exploreAside || []
+  if (!aside.length) return false
+  state.scenarioFlags.exploreAside = []
+  const merged = [...aside, ...(state.explorationDeck || [])]
+  state.explorationDeck = typeof api?.shuffle === 'function' ? api.shuffle(merged) : merged
+  return true
+}
+
+function prepareExplorationDraw(state, inv, api) {
+  const deck = state.explorationDeck || []
+  const aside = []
+  while (deck.length) {
+    const code = deck[deck.length - 1]
+    if (!scenarioLocations(state)[code]) break // 遭遇卡：本次探索停在它上面
+    if (connectsForExplore(state, inv.location, code)) break
+    deck.pop()
+    aside.push(code)
+  }
+  state.explorationDeck = deck
+  if (aside.length) {
+    state.scenarioFlags.exploreAside = [...(state.scenarioFlags.exploreAside || []), ...aside]
+  }
+  if (!state.explorationDeck.length && (state.scenarioFlags.exploreAside || []).length) {
+    shuffleExplorationAsideBack(state, api)
+  }
+}
+
 function removeOne(list, value) {  const index = (list || []).indexOf(value)
   if (index >= 0) list.splice(index, 1)
   return index >= 0
@@ -262,10 +313,24 @@ function resolvePoisonousSpores(state, inv, api) {
 function resolvePoisonousSporesEnd(state, location, attachment, api) {
   const targets = active(state).filter(inv => inv.location === location.id)
   for (const inv of targets.filter(isPoisoned)) api.horror(inv.seat, 2)
-  for (const inv of targets.filter(target => !isPoisoned(target))) api.poison(inv.seat)
+  for (const inv of targets.filter(target => !isPoisoned(target))) poisonFromSetAside(state, inv.seat, api)
   removeOne(location.attachments || [], attachment)
   state.encounterDiscard = state.encounterDiscard || []
   state.encounterDiscard.push('04216')
+}
+
+// 卡面「将放在一边的一张中毒弱点卡牌放置入场」：从 setAside 池里拿走一张 04102。
+// 与上部 behavior 的 poisonFromSetAside 同口径（修复下部池子只增不减的问题）。
+function poisonFromSetAside(state, seat, api) {
+  const setAside = state.scenarioZones?.setAside
+  const index = Array.isArray(setAside) ? setAside.indexOf('04102') : -1
+  if (index < 0) {
+    api.info?.('放在一边的中毒弱点已经用完，本次没有可放置的中毒弱点。')
+    return false
+  }
+  setAside.splice(index, 1)
+  api.poison?.(seat)
+  return true
 }
 
 // 无路可退（04228）：附属到你的地点或一个相连地点；被附属地点不能进出。
@@ -449,10 +514,18 @@ export const behavior = {
     return true
   },
 
+  // 引擎读点（src/cards/campaign-plugin.js 的 doExplore）：探索牌库抽到的地点必须
+  // 与当前地点相连（卡面 04211/04212 的「如果该卡牌是一个连接地点」）。
+  exploreConnects(state, fromId, code) {
+    return connectsForExplore(state, fromId, code)
+  },
+
   beforeExplore(state, inv, api) {
     // 第 117 轮：宽阔步道（04222）的双筒望远镜行动费在地点条目的 locationRule.beforeExplore。
     const rule = locationRuleFor(original(here(state, inv)))
     if (typeof rule?.beforeExplore === 'function' && rule.beforeExplore(state, inv, api) === false) return false
+    // TFA 探索：先把不连接的地点挪到一边，让引擎翻出的是「连接地点」。
+    prepareExplorationDraw(state, inv, api)
     // 记录本次探索，用于「落入陷阱」的「从探索牌库抽出」判断。
     flagsFor(state).exploringSeat = inv.seat
     return true
@@ -464,6 +537,10 @@ export const behavior = {
     const code = context?.code
     const kind = context?.kind
     delete flagsFor(state).exploringSeat
+    // TFA 探索：把本次探索时放一边的不连接地点洗回探索牌库。
+    if (shuffleExplorationAsideBack(state, api)) {
+      api?.info?.('🧭 与当前地点不连接的地点已洗回探索牌库。')
+    }
     if (kind !== 'location') return
     inv.tfaExploredThisTurn = true
     if (code === 'hallOfIdolatry') resolveHallOfIdolatry(state, inv, api)
@@ -706,10 +783,12 @@ export const behavior = {
     if (flagsFor(state).harbingerSpawned) {
       const inVictory = (state.victoryDisplay || []).some(card => original(card) === HARBINGER)
       if (inVictory) {
+        records.theHarbingerIsAlive = false
         records.theHarbingerIsStillAlive = 0
       } else {
         const enemy = (state.enemies || []).find(entry => original(entry) === HARBINGER)
         const damage = enemy ? enemy.damageTaken : records.theHarbingerIsStillAlive
+        records.theHarbingerIsAlive = true
         records.theHarbingerIsStillAlive = Math.max(0, Number(damage || 0))
       }
     }

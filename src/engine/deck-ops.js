@@ -407,6 +407,16 @@ function drawCards(state, inv, n, events) {
 // （Phase 5（5a-30）：原来按 04230 / 04231 两个卡号分支）。
 
 function discardRandomFromHand(state, inv, n, events) {
+  if (!n || !(inv?.hand || []).length) return
+  // 2026-10-25：05280「否决存在：忽略弃掉手牌的效果」的按面向取消窗口。
+  const context = reactionWindow(state, 'wouldDiscardFromHand', {
+    when: 'wouldDiscardFromHand', seat: inv.seat, amount: n, what: 'discard', location: inv.location,
+    prompt: `${inv.name} 将要随机弃 ${n} 张手牌`,
+  }, events)
+  if (context.cancelled) {
+    info(state, events, `🛡️ ${inv.name} 忽略了弃掉手牌的效果。`)
+    return
+  }
   for (let i = 0; i < n; i++) {
     const candidates = inv.hand.map((code, index) => ({ code, index }))
       .filter(item => canDiscardFromHand(inv, item.code))

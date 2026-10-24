@@ -8,13 +8,15 @@ export default {
   locationRule: {
     actions({ moves, state, inv, location }) {
       if (inv.location !== location.id) return
-      if (state.scenarioFlags?.salemUsed) return
-      moves.push({ action: 'scenarioAction', rule: 'salemIntellect', label: '⛓️ 检定智识(3)：移动到任意已揭示地点（每场一次）' })
+      // 每名调查员每场一次（不是团队共享一次）。
+      const usedBySeat = state.scenarioFlags?.salemUsedBySeat || {}
+      if (usedBySeat[inv.seat]) return
+      moves.push({ action: 'scenarioAction', rule: 'salemIntellect', label: '⛓️ 检定智识(3)：移动到任意已揭示地点（每名调查员每场一次）' })
     },
     performAction(state, inv, move, api) {
       if (move.rule !== 'salemIntellect') return false
       state.scenarioFlags ||= {}
-      state.scenarioFlags.salemUsed = true
+      state.scenarioFlags.salemUsedBySeat = { ...(state.scenarioFlags.salemUsedBySeat || {}), [inv.seat]: true }
       api.test?.(inv.seat, 'intellect', 3, result => {
         if (!result?.success) return
         const revealed = state.locations.filter(entry => entry.revealed && entry.id !== inv.location)

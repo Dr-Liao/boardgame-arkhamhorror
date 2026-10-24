@@ -128,6 +128,10 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'redirectOneHorrorToSelf', 'cannotLeavePlay',
   // Phase 5（5b-10）：入场封印 / 替换封印旧印 / 附属目标声明（`attachTo` + `onAttach`）。
   'sealOnEnter', 'substituteSealedElderSign', 'attachTo', 'onAttach',
+  // 2026-10-25：05042「必须留在起始手牌」与 05009「最多 2 张工具不占手槽」的条目级声明字段。
+  'staysInOpeningHand', 'toolHandSlotsExempt',
+  // 2026-10-25：05230 瞄准镜「所附属支援不能攻击与你交战的敌人」宿主限制读点。
+  'hostCannotAttackEngaged',
   // 地点计数器型障碍（奥术屏障 02102）：检定难度、取消/继续选项与「弃牌库顶 N 张」都由卡条目声明，
   // 引擎按 locationBarrier.counter 找规则，不再写死卡号（REPORT.md 第 1 批）。
   'locationBarrier',
@@ -558,6 +562,10 @@ export function registerCardAbilities(entries) {
       defeatedDamage: entry.defeatedDamage ?? null,
       redirectOneHorrorToSelf: entry.redirectOneHorrorToSelf === true,
       cannotLeavePlay: entry.cannotLeavePlay === true,
+      // 2026-10-25：05042 起始手牌弱点 / 05009 工具手槽豁免的注册表输出。
+      staysInOpeningHand: entry.staysInOpeningHand === true,
+      toolHandSlotsExempt: entry.toolHandSlotsExempt ?? null,
+      hostCannotAttackEngaged: entry.hostCannotAttackEngaged === true,
       sealOnEnter: entry.sealOnEnter ?? null,
       substituteSealedElderSign: entry.substituteSealedElderSign === true,
       attachTo: entry.attachTo ? Object.freeze({ ...entry.attachTo }) : null,

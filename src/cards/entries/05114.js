@@ -19,7 +19,9 @@ export default {
       resolve: ({ state, inv, target, api }) => {
         const enemy = target?.entity
         if (!enemy) return
-        const remainingSanity = (inv.maxSanity ?? inv.sanity ?? 0) - (inv.horror || 0)
+        // 「剩余神智值」走修正后的神智上限（api.maxSanity → getMaxSanity，含支援/威胁修正）。
+        const maxSanity = typeof api.maxSanity === 'function' ? api.maxSanity(inv.seat) : (inv.maxSanity ?? inv.sanity ?? 0)
+        const remainingSanity = maxSanity - (inv.horror || 0)
         const combatBonus = remainingSanity <= 3 ? 2 : 1
         let damageBonus = 0
         // 「作为发动本能力的额外费用，你可以受到 1 点恐惧」——可选，先付再攻击。

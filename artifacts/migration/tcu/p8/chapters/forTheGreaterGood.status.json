@@ -1,0 +1,57 @@
+{
+  "chapterId": "forTheGreaterGood",
+  "milestone": "P8",
+  "status": "complete",
+  "files": [
+    "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/index.js",
+    "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/definition.js",
+    "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/layout.js",
+    "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/behavior.js",
+    "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/chaos.js",
+    "content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/story-text.js",
+    "src/cards/encounter-entries/theCircleUndone/forTheGreaterGood/*.js（32 张：13 地点 + 4 幕 + 2 议程 + 7 敌人 + 4 诡计 + 2 剧情资产）",
+    "tests/tcu-greater-good.test.mjs",
+    "artifacts/migration/tcu/p8/specs/forTheGreaterGood.md",
+    "artifacts/migration/tcu/p8/chapters/forTheGreaterGood.status.json"
+  ],
+  "checks": {
+    "sourceLocked": true,
+    "identityRegistered": true,
+    "setupAndZones": true,
+    "actsAndAgendas": true,
+    "locationsAndConnections": true,
+    "encounterBehaviors": true,
+    "literalCardBehavior": true,
+    "chaosEffects": true,
+    "resolutionsAndRecords": true,
+    "storyText": true,
+    "saveReplay": true
+  },
+  "inventory": {
+    "locations": 13,
+    "acts": 3,
+    "agendas": 2,
+    "enemies": 9,
+    "treacheries": 7,
+    "encounterCards": 25,
+    "resolutions": [
+      "noResolution",
+      "r1",
+      "r2",
+      "r3"
+    ]
+  },
+  "tests": {
+    "file": "tests/tcu-greater-good.test.mjs",
+    "cases": 36,
+    "passing": 36
+  },
+  "gaps": [],
+  "remaining": [
+    "Lead 合并后重建 encounter-entries 索引（本章 32 条 implemented:true 才被审计读到）。",
+    "城市罪恶/银暮秘社两个共享组的逐卡行为由 W-shared 条目负责；本章 resolveEncounter 只实现本章 4 张诡计，其余回落 encounterResolveFor。",
+    "钥匙近似（state.scenarioKeys）按 Lead 批准执行；若未来加 Arkham.Key 原语，可替换 scenarioApproximations 中的钥匙记录。",
+    "结局 XP 与「远古恶魔/黑暗异教徒/上锁的门」三个核组的内容范围限制已写入 behavior.scenarioApproximations（development 要求 scenarioGaps 为空；两者都无害于卡面 literal 行为）。"
+  ],
+  "notes": "参考实现：Scenario/Scenarios/TheCircleUndone/ForTheGreaterGood.hs + Act/Agenda/Enemy/Treachery/Asset/Location CardDefs|Cards。按 theInvestigatorsAreMembersOfTheLodge 记录切换场景 1a、地点双版本与移除卡；南森·威克双面 + 机关盒（campaignCard 05228，不计 30 张）；四把钥匙用 state.scenarioKeys 纯 JSON 近似；陷阱守卫者在议程 2 背面生成、敌军阶段吞噬类人敌人、被击败走结局 3。章节自检 node tools/check-tcu-scenario.mjs forTheGreaterGood = PASS；node --test 36/36。 scenarioGaps 为空：未实现的两项（结局 XP 管线、三个核组不在包内）属于引擎/内容范围限制，按 Lead P8 策略登记在 scenarioApproximations 与 remaining。"
+}

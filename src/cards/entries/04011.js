@@ -9,6 +9,9 @@
 // 这批把「选目标」交给描述子的 target 枚举（B1），武器能力统一走 `api.fight`。
 // 04011 芬恩可靠的 .38 手枪：快速资产；花 1 子弹攻击（战斗 +2，未交战敌人额外 +1 伤害）。
 // `fast` 是**条目级**关键字（资产没有 played 钩子），读点 lifecycle.playFlag。
+//
+// 「是否与你交战」与引擎 enemiesEngagedWith 同口径：engagedSeat === 你，或（庞大 && 同地点 && 文本未空白）。
+// 不能只看 engagedSeat：庞大敌人的 engagedSeat 恒为 null，但与所在地点所有调查员交战。
 
 export default {
   code: '04011',
@@ -19,10 +22,14 @@ export default {
     {
       kind: 'action', label: '花费 1 子弹：攻击（战斗 +2，未交战敌人额外 +1 伤害）',
       cost: { action: true, uses: 1 }, countsAs: 'fight', target: { kind: 'enemy' },
-      resolve: ({ target, inv, api }) => {
+      resolve: ({ target, inv, api, state }) => {
         const enemy = target?.entity
         if (!enemy) return
-        api.fight(inv.seat, enemy.id, { combatBonus: 2, damageBonus: enemy.engagedSeat !== inv.seat ? 1 : 0 })
+        const blank = enemy.textBlanked
+        const textBlankedNow = !!blank && blank.round === state?.round && blank.phase === state?.phase
+        const engagedWithMe = enemy.engagedSeat === inv.seat
+          || (enemy.massive && enemy.location === inv.location && !textBlankedNow)
+        api.fight(inv.seat, enemy.id, { combatBonus: 2, damageBonus: engagedWithMe ? 0 : 1 })
       },
     },
   ],

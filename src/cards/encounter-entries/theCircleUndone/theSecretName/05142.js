@@ -10,7 +10,8 @@ export default {
       if (inv.location !== location.id) return
       if ((location.clues || 0) > 0) return
       if (!state.locations.some(entry => entry.revealed && entry.id !== location.id)) return
-      moves.push({ action: 'scenarioAction', rule: 'leaveStrangeGeometry', label: '🧩 移动到任意一个已揭示的地点（古怪图形上没有线索）' })
+      moves.push({ action: 'scenarioAction', rule: 'leaveStrangeGeometry', actions: 0,
+        label: '🧩 移动到任意一个已揭示的地点（古怪图形上没有线索，[free]）' })
     },
     performAction(state, inv, move, api) {
       if (move.rule !== 'leaveStrangeGeometry') return false
