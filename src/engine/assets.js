@@ -15,6 +15,7 @@ export function createAssets(deps) {
     enemyRuleFlags,
     enemyTextBlanked,
     executeDescriptor,
+    exilePlayerCard,
     getThreatEffect,
     info,
     leavesPlayEffect,
@@ -98,6 +99,32 @@ export function createAssets(deps) {
     return usage
   }
 
+  // 2026-10-25 第七轮修复 05112：受限额外槽——条目声明 restrictedSlots:[{slot,traitsAny,count}]，
+  // 只有特性命中的卡能使用该额外容量；受限占用不计入普通槽位。
+  function restrictedSlotInfo(inv, slot, cardCode) {
+    const controlled = [...(inv.assets || []), ...(inv.threat || [])]
+    const traitsOf = code => (cardDef(code)?.traits || []).map(trait => String(trait).toLowerCase())
+    let capacity = 0
+    const traitsAny = []
+    for (const holder of controlled) {
+      const spec = registeredEntry(holder.code)?.restrictedSlots
+      for (const entry of (Array.isArray(spec) ? spec : spec ? [spec] : [])) {
+        if (!entry || entry.slot !== slot) continue
+        capacity += Math.max(1, Number(entry.count) || 1)
+        for (const trait of entry.traitsAny || []) traitsAny.push(String(trait).toLowerCase())
+      }
+    }
+    if (!capacity) return { capacity: 0, occupancy: 0, eligible: false, traitsAny }
+    const eligible = Boolean(cardCode) && traitsOf(cardCode).some(trait => traitsAny.includes(trait))
+    let occupancy = 0
+    for (const asset of controlled) {
+      const slots = normalizedSlots(Array.isArray(asset.slots) && asset.slots.length ? asset : cardDef(asset.code))
+      if (!slots.includes(slot)) continue
+      if (traitsOf(asset.code).some(trait => traitsAny.includes(trait))) occupancy += 1
+    }
+    return { capacity, occupancy: Math.min(occupancy, capacity), eligible, traitsAny }
+  }
+
   function canEquip(inv, card) {
     const need = {}
     for (const s of normalizedSlots(card)) {
@@ -131,7 +158,12 @@ export function createAssets(deps) {
       cap += (inv.assets || []).reduce((sum, asset) => sum + (assetEffect(inv, asset)?.passive?.extraSlots?.[s] || 0), 0)
       // 能力层槽位修正（如 05112 魔法手势的额外法术槽位）。
       cap += slotBonus(inv, s)
-      if ((usage[s] || 0) + n > cap) return false
+      // 2026-10-25 第七轮修复 05112：受限额外槽（容量只给特性命中的卡；受限占用不占普通槽）。
+      const restricted = restrictedSlotInfo(inv, s, card.code)
+      if (restricted.eligible) cap += restricted.capacity
+      const ordinaryUsage = Math.max(0, (usage[s] || 0) - restricted.occupancy)
+      const totalUsage = ordinaryUsage + (restricted.eligible ? restricted.occupancy : 0)
+      if (totalUsage + n > cap) return false
     }
     return true
   }
@@ -193,8 +225,13 @@ export function createAssets(deps) {
     const { unrestricted, restricted } = typeof capacities === 'number'
       ? { unrestricted: allySlotCapacities(inv).unrestricted, restricted: capacities }
       : capacities
+    // 2026-10-25 修复战役（本循环修复 05262-05265）：剧情支援实例可以用 slots:['none'] 覆盖印表槽位，
+    // 与 slotUsage 同一优先级（实例 slots 优先于 cardDef），否则「不占盟友槽」的能力只影响容量统计、
+    // 不影响盟友槽校验（allySlotsOk 直接读 cardDef 的 Ally 槽）。
+    const slotsOf = item => normalizedSlots(
+      item && Array.isArray(item.slots) && item.slots.length ? item : cardDef(item?.code))
     const entries = [...inv.assets, ...(inv.threat || []), { code: card.code }]
-      .filter(item => normalizedSlots(cardDef(item.code)).includes('ally'))
+      .filter(item => slotsOf(item).includes('ally'))
     let unique = 0
     let nonUnique = 0
     for (const item of entries) {
@@ -238,10 +275,19 @@ export function createAssets(deps) {
     return weaknessProfile(code)?.type === 'threat'
   }
 
-  function leaveAsset(state, inv, asset, events = []) {
+  function leaveAsset(state, inv, asset, events = [], options = {}) {
     if (!inv.assets.includes(asset)) return
+    // 2026-10-25 第七轮修复 05019：「不能离场」的支援（动态条件）拒绝一切离场路径。
+    const leaveGuard = registeredEntry(asset.code)?.cannotLeavePlayWhile
+    if (typeof leaveGuard === 'function' && leaveGuard(state, inv, asset) === true) {
+      info(state, events, `「${cardName(asset.code)}」当前不能离场。`)
+      return false
+    }
     removeOne(inv.assets, asset)
     releaseChaosTokens(state, asset.id)
+    // 2026-10-25 第六轮修复 05152：离场原因（'discard'/'return'/'effect'），
+    // 供 assetLeavesPlay 窗口的「被弃掉后」类反应精确限定。
+    const reason = options.reason ?? 'discard'
     // 来源离场：绑定在这张卡上的持续效果一起消失（Phase 1 A1）。
     for (const effect of removeEffectsFromSource(state, asset.id)) {
       if (effect.label) info(state, events, `「${effect.label}」随「${cardName(asset.code)}」离场而结束。`)
@@ -275,7 +321,7 @@ export function createAssets(deps) {
     // context 带 asset 实例与附件数；调用方随后是否把卡放进弃牌堆由原逻辑决定。
     reactionWindow?.(state, 'assetLeavesPlay', {
       when: 'assetLeavesPlay', seat: inv.seat, location: inv.location,
-      assetCode: asset.code, assetId: asset.id, asset,
+      assetCode: asset.code, assetId: asset.id, asset, reason,
       upgrades: (asset.attachments || []).length,
       prompt: `「${cardName(asset.code)}」离场后`,
     }, events)
@@ -377,9 +423,27 @@ export function createAssets(deps) {
     if (copyCode && registeredEntry(code)?.copiesBeneathEvents) {
       state.removedFromGame ||= []
       state.removedFromGame.push(code)
-    } else if (context.eventToVictory === code) {
-      state.victoryDisplay.push({ id: nextInstanceId(state, 'c'), code, originalCode: code, victory: cardDef(code)?.victory || 0 })
-    } else disposePlayedEvent(inv, code)
+    } else {
+      // 2026-10-25 本循环修复 05018（fast-event-disposal）：快速反应事件与普通打出走同一份「打出后去向」口径。
+      // 之前这里固定 disposePlayedEvent，导致 exileAfterPlay 的快速事件（05018 神秘乐曲）进了弃牌堆。
+      const playedFlags = descriptorOfKind(copyCode || code, 'played') || {}
+      const entryFlags = registeredEntry(copyCode || code) || {}
+      const removeAfterPlay = playedFlags.removeAfterPlay === true || entryFlags.removeAfterPlay === true
+      const shuffleBackAfterPlay = playedFlags.shuffleBackAfterPlay === true || entryFlags.shuffleBackAfterPlay === true
+      const exileAfterPlay = playedFlags.exileAfterPlay === true || entryFlags.exileAfterPlay === true
+      const addToVictory = playedFlags.addToVictory === true || entryFlags.addToVictory === true
+      if (context.eventToVictory === code) {
+        state.victoryDisplay.push({ id: nextInstanceId(state, 'c'), code, originalCode: code, victory: cardDef(code)?.victory || 0 })
+      } else if (removeAfterPlay) {
+        state.removedFromGame ||= []
+        state.removedFromGame.push(code)
+      } else if (addToVictory) {
+        state.victoryDisplay.push({ id: nextInstanceId(state, 'c'), code, originalCode: code, victory: cardDef(code)?.victory || 0 })
+        info(state, events, `💎 「${cardName(code)}」被加入胜利展示区。`)
+      } else if (exileAfterPlay) exilePlayerCard(state, inv, code, events)
+      else if (shuffleBackAfterPlay) inv.deck = shuffle([...inv.deck, code], () => randomValue(state))
+      else if (entryFlags.keepOnPlay !== true) disposePlayedEvent(inv, code)
+    }
   }
 
   return { litaAuraAt, assetPassiveBonus, assetPassiveData, assetCannotLeavePlay, normalizedSlots, slotUsage, canEquip, assetReplacementPlans, replaceAssets, nonUniqueAllySlotsFor, allySlotCapacities, allySlotsOk, isTomeCard, handSlotsBonusFor, isWeaponCard, weaponHandSlotsFor, isThreatWeakness, leaveAsset, discardRandomAsset, placeLocationForEmptySpawn, farthestLocationsFor, discardLocked, hasPlayedEventsToDeckTop, topDiscardEvent, disposePlayedEvent, consumePlayThreatResources, playReactionCard }

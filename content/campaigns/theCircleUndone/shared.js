@@ -45,8 +45,11 @@ export const CHAOS_BAGS = Object.freeze({
   expert: Object.freeze(['0', '-1', '-1', '-2', '-2', '-3', '-4', '-6', '-8', 'skull', 'skull', 'autofail', 'eldersign']),
 })
 
-// 64 个战役记录键：参考实现 Campaigns/TheCircleUndone/Key.hs 逐键对齐。
+// 65 个战役记录键：参考实现 Campaigns/TheCircleUndone/Key.hs 逐键对齐 + 05134 的
+// ScenarioLogKey.MeddledWithThePast（沉湎过去，按调查员记录）。
 // 类型口径（路线图 §7.6）：以下 8 个用 string[]，2 个用 number，其余 boolean。
+// 2026-10-25 第四轮修复 05045：youAreBeingHunted 按参考实现改为 boolean（团队级「你被追捕」）；
+// 旧存档里的座位 string[] 仍可读（content/encounter-rules.js 的 watcherHuntedSeats/isHunted 兼容两种形状）。
 export const recordTypes = Object.freeze({
   missingPersons: 'string[]',
   wasTakenByTheWatcher: 'string[]',
@@ -54,7 +57,7 @@ export const recordTypes = Object.freeze({
   disappearedIntoTheMist: 'string[]',
   wasPulledIntoTheSpectralRealm: 'string[]',
   piecesOfEvidenceWereLeftBehind: 'number',
-  youAreBeingHunted: 'string[]',
+  youAreBeingHunted: 'boolean',
   youHaveAcceptedYourFate: 'boolean',
   youHaveRejectedYourFate: 'boolean',
   theWitchesSpellWasBroken: 'boolean',
@@ -112,6 +115,9 @@ export const recordTypes = Object.freeze({
   theInvestigatorsReversedTheIncantation: 'boolean',
   erynnJoinedTheInvestigators: 'boolean',
   theCovenOfKeziahHoldsTheWorldInItsGrasp: 'boolean',
+  // 隐秘之名 05134：每位「向过去的自己求助」的调查员记住「沉湎过去」
+  // （参考 ScenarioLogKey.MeddledWithThePast；按调查员卡号记录）。
+  meddledWithThePast: 'string[]',
 })
 
 export const recordDefaults = Object.freeze(Object.fromEntries(

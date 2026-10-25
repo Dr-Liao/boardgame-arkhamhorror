@@ -1,23 +1,30 @@
 // 《黑色王座》· 引擎钩子。
 //
 // 参考实现：Scenario/Scenarios/TheCircleUndone/BeforeTheBlackThrone.hs + Helpers.hs + Cosmos.hs。
-// 关键近似（全部登记在 scenarioApproximations）：
-//   · Cosmos 网格 → P2.13 地点牌库 + scenarioFlags.cosmosOrder 的「放置顺序 + 方向表」线性模型；
-//     右/下接最近放置的地点，上接最早放置的地点，任意方向由玩家选；
-//   · 虚空格子不建地点卡，只记 emptySpaceCount；
+// 宇宙模型：二维网格见 cosmos.js（格位/方向/四邻接连接/虚空格子携带玩家卡）；三张摆盘位置表见
+// definition.COSMOS_LAYOUTS（照搬参考实现的三幕固定摆盘）；「宇宙 -」放置指令的候选格位按参考
+// 各地点 RunCosmos 分支实现（DancersMist/FlightIntoOblivion/InfinityOfDarkness/CosmicGate/PathwayIntoVoid）。
+// 其余登记近似（见 scenarioApproximations）：
+//   · 虚空格子不建「地点卡」实体（参考实现用 xempty 特殊地点卡），只作为网格格位数据；
 //   · 阿撒托斯不建场上敌人实体：毁灭记 scenarioFlags.azathothDoom，「攻击你」= 3 伤害 + 3 恐惧；
-//   · 冒险参考卡资源记 scenarioFlags.referenceResources。
+//   · 冒险参考卡资源记 scenarioFlags.referenceResources；界面地图用静态 layout 坐标。
 // 卡面规则写在各单卡条目的 actRule / agendaRule / locationRule.onEnter 数据里；
 // 本文件只读 actRuleFor / agendaRuleFor 与引擎直读的 locationRule 分派，不含按卡号的规则分支。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { actRuleFor, agendaRuleFor } from '../../../../../src/cards/card-rules.js'
-import { buildScenarioLocationDeck } from '../../../../../src/engine/alt-decks.js'
+import { buildScenarioLocationDeck, drawScenarioLocationDeck } from '../../../../../src/engine/alt-decks.js'
 import { encounterRules } from '../../encounter-rules.js'
 import {
   A_WORLD_IN_DARKNESS, ACT_CODES, AZATHOTH, BLACK_THRONE, COSMIC_GATE, COSMIC_INGRESS, COSMOS_DECK_IDS,
-  COURT, DAEMONIC_PIPING, DANCERS_MIST, FLIGHT, HIDEOUS_PALACE, INFINITY, MIND_DANCER, PATHWAY, PIPER,
-  THE_END_IS_NIGH, ULTIMATE_CHAOS, WHISPERED_BARGAIN,
+  COSMOS_LAYOUTS, COURT, DAEMONIC_PIPING, DANCERS_MIST, FLIGHT, HIDEOUS_PALACE, INFINITY, MIND_DANCER,
+  PATHWAY, PIPER, THE_END_IS_NIGH, ULTIMATE_CHAOS, WHISPERED_BARGAIN,
 } from './definition.js'
+import {
+  ALL_DIRECTIONS, DIRECTIONS, OPPOSITE, adjacentLocationIds, bottommostRevealedPositions, cellAt, emptySpacePositionsInDirections,
+  gridOf, gridPositionKey, isLocationCell, isEmptySpaceCell, locationIdAt, openPositionsAroundRevealed,
+  openPositionsInDirections, parseKey, placedGridIds, positionOf, refreshConnections, removeLocationFromGrid,
+  returnEmptySpaceCard, setEmptySpace, setLocationPosition, takeDeckCards, topmostRevealedPositions,
+} from './cosmos.js'
 import { azathothDoomOf, bbtChaosToken, skullX } from './chaos.js'
 
 const original = card => card?.originalCode || card?.code
@@ -52,13 +59,25 @@ export function azathothDoom(state) {
   return azathothDoomOf(state)
 }
 
+// 05346 阿撒托斯：≥10 毁灭即吞食宇宙（→R1）。读 azathothDoom()（含 05328 后吸收的场上毁灭），
+// 避免旧实现只读 flags.azathothDoom 而漏掉 05328 之后的毁灭来源。
+function maybeDevoured(state, api) {
+  const flags = flagsOf(state)
+  if (flags.azathothDevoured) return false
+  if (azathothDoom(state) < 10) return false
+  flags.azathothDevoured = true
+  api?.info?.('💀 阿撒托斯上有至少 10 个毁灭标记：盲目痴愚之神吞食宇宙（→R1）。')
+  api?.finish?.('r1')
+  return true
+}
+
 export function addAzathothDoom(state, api, amount = 1) {
   const value = Math.max(0, Math.floor(amount))
   if (!value) return azathothDoom(state)
   const flags = flagsOf(state)
   flags.azathothDoom = Number(flags.azathothDoom || 0) + value
-  api.info?.(`🌌 在阿撒托斯上放置 ${value} 点毁灭（共 ${flags.azathothDoom} 点）。`)
-  if (flags.azathothDoom >= 10) api.finish?.('r1')
+  api.info?.(`🌌 在阿撒托斯上放置 ${value} 点毁灭（共 ${azathothDoom(state)} 点）。`)
+  maybeDevoured(state, api)
   return flags.azathothDoom
 }
 
@@ -71,16 +90,23 @@ export function azathothAttack(state, api, seat) {
 }
 
 // ---------------------------------------------------------------------------
-// 宇宙：地点牌库 + 放置顺序/方向表
+// 宇宙：二维网格（见 cosmos.js）与「宇宙 -」放置指令
 // ---------------------------------------------------------------------------
+// 兼容旧读点：网格模型没有「放置顺序」，返回当前已放置的宇宙地点 id。
 export function cosmosOrder(state) {
-  const flags = flagsOf(state)
-  flags.cosmosOrder ||= []
-  return flags.cosmosOrder
+  return placedGridIds(state)
 }
 
 export function placedCosmosIds(state) {
-  return cosmosOrder(state).filter(id => !!locationById(state, id))
+  return placedGridIds(state).filter(id => !!locationById(state, id))
+}
+
+// 宇宙牌库剩余张数（含弃牌堆，引擎的 drawScenarioLocationDeck 会在牌库空时把弃牌堆洗回）。
+function cosmosDeckSize(state) {
+  const piles = state.extraLocationDecks?.cosmos
+  const deck = Array.isArray(piles?.deck) ? piles.deck.length : 0
+  const discard = Array.isArray(piles?.discard) ? piles.discard.length : 0
+  return deck + discard
 }
 
 export function currentHubId(state) {
@@ -97,13 +123,145 @@ function hubInPlay(state) {
   return locationById(state, hub) ? hub : (locationById(state, HIDEOUS_PALACE)?.id || COSMIC_GATE)
 }
 
-// 「宇宙 -」放置指令表：方向 → 候选连接点（线性近似）。
-export function directionTargets(state, direction) {
-  const placed = placedCosmosIds(state)
-  if (!placed.length) return []
-  if (direction === 'up') return [placed[0]]
-  if (direction === 'down' || direction === 'right') return [placed[placed.length - 1]]
-  return [...placed]
+// 「宇宙面朝上」的隐藏身份：引擎 placeLocation 会合并 locationVariants 里的字段（名字显示为「宇宙」），
+// revealLocation 时再用 unrevealedActualName 恢复真名（src/engine/locations.js:227-252）。
+function prepareHiddenVariant(state, locationId) {
+  const id = String(locationId)
+  const base = state.scenario?.locations?.[id]
+  if (!base) return
+  state.locationVariants ||= {}
+  if (state.locationVariants[id]?.hiddenIdentity) return
+  state.locationVariants[id] = {
+    name: '宇宙',
+    hiddenIdentity: true,
+    unrevealedActualName: ALL_CARDS[original(base)]?.nameZh || ALL_CARDS[original(base)]?.name || base.name,
+  }
+}
+
+function actingPosition(state, seat) {
+  const inv = state.investigators?.[seat ?? leadSeat(state)]
+  return inv ? positionOf(state, inv.location) : null
+}
+
+// 参考 Cosmos.hs 与各地点条目 RunCosmos 分支：mode='default' 是按默认方向的候选格位，
+// mode='cost' 是支付代价后可选的候选格位。
+function instructionCandidates(state, locationId, { seat = null, mode = 'default' } = {}) {
+  const instruction = state.scenario?.locations?.[String(locationId)]?.cosmos || {}
+  const direction = instruction.direction || 'any'
+  const anchor = actingPosition(state, seat)
+  if (mode === 'cost') {
+    if (direction === 'up') {
+      // 参考 FlightIntoOblivion.hs：位置最靠上的已揭示地点周边的空格（不排除方向）。
+      return topmostRevealedPositions(state).flatMap(position => openPositionsInDirections(state, position))
+    }
+    if (direction === 'down') {
+      // 参考 InfinityOfDarkness.hs：位置最靠下的已揭示地点周边的空格。
+      return bottommostRevealedPositions(state).flatMap(position => openPositionsInDirections(state, position))
+    }
+    if (direction === 'right') {
+      // 参考 DancersMist.hs：行动者四方向上「有地点」的方向，取该相邻地点的空格（排除走回去的反方向）。
+      const out = []
+      for (const directionName of ALL_DIRECTIONS) {
+        const [dx, dy] = DIRECTIONS[directionName]
+        const neighbor = anchor ? { x: anchor.x + dx, y: anchor.y + dy } : null
+        if (!neighbor || !isLocationCell(cellAt(state, neighbor.x, neighbor.y))) continue
+        const exclude = OPPOSITE[directionName]
+        out.push(...openPositionsInDirections(state, neighbor, ALL_DIRECTIONS.filter(item => item !== exclude)))
+      }
+      return out
+    }
+    return instruction.mode === 'revealed'
+      ? openPositionsAroundRevealed(state)
+      : (anchor ? openPositionsInDirections(state, anchor) : [])
+  }
+  if (direction === 'any') {
+    // 05339 宇宙门扉：与「任意一个已揭示地点的任意方向」相邻的空格；
+    // 05340 虚空之路：与「行动者所在地点的任意方向」相邻的空格。
+    return instruction.mode === 'revealed'
+      ? openPositionsAroundRevealed(state)
+      : (anchor ? openPositionsInDirections(state, anchor) : [])
+  }
+  if (!anchor) return []
+  const [dx, dy] = DIRECTIONS[direction] || [0, 0]
+  return openPositionsInDirections(state, anchor, [direction])
+}
+
+function chooseGridPosition(api, { seat, prompt, candidates, source }) {
+  if (!candidates.length) return null
+  if (candidates.length === 1) return candidates[0]
+  const answer = chooseOption(api, {
+    kind: 'cosmos', source, seat, prompt,
+    options: candidates.map(position => ({
+      id: gridPositionKey(position.x, position.y),
+      label: `格位 (${position.x}, ${position.y})`,
+    })),
+  })
+  return candidates.find(position => gridPositionKey(position.x, position.y) === String(answer)) || candidates[0]
+}
+
+// 参考 cosmosFail：没有合法「宇宙 -」位置时，把该地点移出游戏并洗回宇宙牌库。
+function cosmosFail(state, api, locationId) {
+  const id = String(locationId)
+  const location = locationById(state, id)
+  api.remove?.(id)
+  removeLocationFromGrid(state, id)
+  refreshConnections(state)
+  api.cosmos?.({ shuffle: [id] })
+  api.info?.(`🌌 「${location?.unrevealedActualName || location?.name || id}」没有合法的「宇宙 -」放置位置：移出游戏并洗回宇宙。`)
+  return false
+}
+
+// 把一张地点卡放到网格的指定格位；目标格位是虚空格子时，其玩家卡先洗回所有者牌库。
+function placeLocationOnGrid(state, api, locationId, position, { hidden = false, seat = null } = {}) {
+  const id = String(locationId)
+  if (!position) return false
+  const existing = cellAt(state, position.x, position.y)
+  if (isLocationCell(existing)) return false
+  if (existing && existing.kind === 'empty' && returnEmptySpaceCard(state, existing)) {
+    const owner = state.investigators?.[existing.ownerSeat]
+    if (owner && typeof api?.shuffle === 'function') owner.deck = api.shuffle(owner.deck)
+  }
+  if (hidden) prepareHiddenVariant(state, id)
+  setLocationPosition(state, id, position.x, position.y)
+  refreshConnections(state)
+  const location = locationById(state, id)
+  const label = hidden ? '一个宇宙面朝上的地点' : `「${location?.unrevealedActualName || location?.name || id}」`
+  api?.info?.(`✨ ${label}进入宇宙 (${position.x}, ${position.y}) 格位。`)
+  return true
+}
+
+// 按卡面「宇宙 -」指令放置（含支付代价改方向的分支）；返回放置的格位或 null（失败=洗回宇宙）。
+export function placeCosmosByInstruction(state, api, locationId, { seat = null } = {}) {
+  const id = String(locationId)
+  const instruction = state.scenario?.locations?.[id]?.cosmos || {}
+  const actingSeat = seat ?? state.currentSeat ?? leadSeat(state)
+  const defaultCandidates = instructionCandidates(state, id, { seat: actingSeat, mode: 'default' })
+  const costCandidates = instruction.cost ? instructionCandidates(state, id, { seat: actingSeat, mode: 'cost' }) : []
+  const canPay = Boolean(instruction.cost) && costCandidates.length > 0 && canPayCost(state, actingSeat, instruction.cost)
+  let mode = 'default'
+  if (canPay) {
+    const costLabel = instruction.cost.resources
+      ? `${instruction.cost.resources} 资源`
+      : instruction.cost.damage ? `${instruction.cost.damage} 伤害` : `${instruction.cost.horror} 恐惧`
+    const options = []
+    if (defaultCandidates.length) options.push({ id: 'default', label: '按默认方向放置' })
+    options.push({ id: 'pay', label: `支付 ${costLabel}，改在相邻空位放置（方向自选）` })
+    const answer = chooseOption(api, {
+      kind: 'cosmos', source: `05325:${id}`, seat: actingSeat,
+      prompt: '「宇宙 -」：按默认方向放置，或支付代价改变连接方向。',
+      options,
+    })
+    mode = answer === 'pay' ? 'pay' : (defaultCandidates.length ? 'default' : 'pay')
+  }
+  const pool = mode === 'pay' ? costCandidates : defaultCandidates
+  if (!pool.length) { cosmosFail(state, api, id); return null }
+  const position = chooseGridPosition(api, {
+    seat: actingSeat, source: `05325:${id}`,
+    prompt: '「宇宙 -」：选择放置的格位。', candidates: pool,
+  })
+  if (!position) { cosmosFail(state, api, id); return null }
+  if (mode === 'pay' && !payCost(state, api, actingSeat, instruction.cost)) { cosmosFail(state, api, id); return null }
+  return placeLocationOnGrid(state, api, id, position, { seat: actingSeat }) ? position : null
 }
 
 function canPayCost(state, seat, cost) {
@@ -123,60 +281,48 @@ function payCost(state, api, seat, cost) {
   return true
 }
 
-// 放置一个宇宙地点：按卡面「宇宙 -」指令建立连接，写入放置顺序。
-export function placeCosmosLocation(state, api, locationId, { seat = null } = {}) {
-  const location = locationById(state, locationId)
-  if (!location) return []
-  const instruction = state.scenario.locations[locationId]?.cosmos || {}
-  const direction = instruction.direction || 'any'
-  const hub = hubInPlay(state)
-  let targets = directionTargets(state, direction).slice(0, 1)
-  const cost = instruction.cost
-  const actingSeat = seat ?? state.currentSeat ?? leadSeat(state)
-  if (cost && canPayCost(state, actingSeat, cost) && targets.length) {
-    const answer = chooseOption(api, {
-      kind: 'cosmos', source: `05325:${locationId}`, seat: actingSeat,
-      prompt: `「${location.name}」的「宇宙 -」：按默认方向连接，或支付代价后与任意已放置地点连接。`,
-      options: [
-        { id: 'default', label: `按默认方向连接（${locationById(state, targets[0])?.name || targets[0]}）` },
-        { id: 'pay', label: `支付代价（${cost.resources ? `${cost.resources} 资源` : cost.damage ? `${cost.damage} 伤害` : `${cost.horror} 恐惧`}），与任意已放置地点连接` },
-      ],
-    })
-    if (answer === 'pay' && payCost(state, api, actingSeat, cost)) {
-      const pool = unique([hub, ...placedCosmosIds(state)]).filter(id => locationById(state, id))
-      const picked = pool.length > 1
-        ? chooseOption(api, {
-            kind: 'location', source: `05325:${locationId}`, seat: actingSeat,
-            prompt: '选择连接的地点。', options: pool.map(id => ({ id, label: locationById(state, id).name })),
-          })
-        : pool[0]
-      targets = [pool.includes(picked) ? picked : pool[0]].filter(Boolean)
-    }
-  } else if (direction === 'any' && targets.length > 1) {
-    const picked = chooseOption(api, {
-      kind: 'location', source: `05325:${locationId}`, seat: actingSeat,
-      prompt: '「宇宙 -」：选择要连接的地点。',
-      options: targets.map(id => ({ id, label: locationById(state, id).name })),
-    })
-    targets = [targets.includes(picked) ? picked : targets[0]]
+// 兼容旧的读点/测试：显式格位放置或按「宇宙 -」指令自动放置，返回新连接的邻接地点。
+export function placeCosmosLocation(state, api, locationId, { seat = null, position = null } = {}) {
+  if (!locationById(state, locationId) && typeof api?.place === 'function') api.place(locationId)
+  const placedPosition = position
+    ? (placeLocationOnGrid(state, api, locationId, position, { seat }) ? position : null)
+    : placeCosmosByInstruction(state, api, locationId, { seat })
+  if (!placedPosition) return []
+  return adjacentLocationIds(state, locationId)
+}
+
+// 把宇宙地点向指定方向移动一格：原位置变成虚空格子，并放入一张移动者牌库顶的卡
+// （参考 WheelOfFortuneX.hs / FlightIntoOblivion.hs / PathwayIntoVoid.hs 的「draw 1 → EmptySpace」）。
+function slideCosmosLocation(state, api, locationId, direction, { seat = null } = {}) {
+  const id = String(locationId)
+  const position = positionOf(state, id)
+  if (!position) return false
+  const [dx, dy] = DIRECTIONS[direction]
+  const target = { x: position.x + dx, y: position.y + dy }
+  if (isLocationCell(cellAt(state, target.x, target.y))) return false
+  const overlaid = cellAt(state, target.x, target.y)
+  if (overlaid && overlaid.kind === 'empty' && returnEmptySpaceCard(state, overlaid)) {
+    const owner = state.investigators?.[overlaid.ownerSeat]
+    if (owner && typeof api.shuffle === 'function') owner.deck = api.shuffle(owner.deck)
   }
-  const links = unique([hub, ...targets]).filter(id => id !== locationId && locationById(state, id))
-  location.connections = unique([...(location.connections || []), ...links])
-  for (const id of links) {
-    const other = locationById(state, id)
-    if (other) other.connections = unique([...(other.connections || []), locationId])
-  }
-  cosmosOrder(state).push(locationId)
-  api.reveal?.(locationId)
-  api.info?.(`✨ 「${location.name}」从宇宙中入场，连接到${links.map(id => `「${locationById(state, id).name}」`).join('、') || '（无）'}。`)
-  return links
+  const mover = state.investigators?.[seat ?? state.currentSeat ?? leadSeat(state)]
+  const [cardCode] = takeDeckCards(mover, 1)
+  setLocationPosition(state, id, target.x, target.y)
+  setEmptySpace(state, position.x, position.y, {
+    cardCode: cardCode ?? null,
+    ownerSeat: mover?.seat ?? null,
+  })
+  refreshConnections(state)
+  const location = locationById(state, id)
+  api.info?.(`↔️ 「${location?.unrevealedActualName || location?.name || id}」向${direction}移动一格，原位置留下一个虚空格子。`)
+  return true
 }
 
 // 把地点从桌上收回宇宙牌库（虚空地点的行动 / 幕间清场）。
-function returnLocationToCosmos(state, api, locationId, destinationId) {
+function returnLocationToCosmos(state, api, locationId, destinationId = null) {
   const location = locationById(state, locationId)
   if (!location) return false
-  const destination = locationById(state, destinationId)
+  const destination = destinationId ? locationById(state, destinationId) : null
   if (destination) {
     for (const inv of active(state).filter(item => item.location === locationId)) {
       api.moveInvestigator?.(inv.seat, destinationId)
@@ -186,11 +332,10 @@ function returnLocationToCosmos(state, api, locationId, destinationId) {
     }
   }
   api.remove?.(locationId)
-  const order = cosmosOrder(state)
-  const index = order.indexOf(locationId)
-  if (index >= 0) order.splice(index, 1)
-  api.cosmos?.({ shuffle: [locationId] })
-  api.info?.(`🌀 「${location.name}」被洗回宇宙。`)
+  removeLocationFromGrid(state, locationId)
+  refreshConnections(state)
+  api.cosmos?.({ shuffle: [String(locationId)] })
+  api.info?.(`🌀 「${location.unrevealedActualName || location.name}」被洗回宇宙。`)
   return true
 }
 
@@ -236,54 +381,95 @@ function shuffleAbandonedEnemiesIntoEncounterDeck(state, api, removedIds) {
   return codes
 }
 
-// 幕推进的清场重建（05329/05330 背面）：移除旧枢纽、洗回宇宙、抛弃/阵亡、混洗敌人、
-// 放置新枢纽 + 抽 N 张宇宙地点、按玩家顺序抽遭遇。参数全部来自单卡条目 actRule.advance.rebuild。
-function rebuildForNextAct(state, api, { nextHub, drawCount, moveTo, emptySpaces = null }) {
-  const HUB_CHAIN = [COSMIC_INGRESS, HIDEOUS_PALACE, COURT, BLACK_THRONE]
-  const nextIndex = HUB_CHAIN.indexOf(nextHub)
-  // 卡面「移除 X 从游戏中」：上一幕的枢纽移出游戏；其余在场地点洗回宇宙。例外地点 = moveTo。
-  const oldHub = nextIndex >= 2 ? HUB_CHAIN[nextIndex - 2] : null
+// 从「放在一边」区取走一张卡（卡号）。
+function takeFromSetAside(state, code) {
+  const list = state.scenarioZones?.setAside || []
+  const index = list.indexOf(String(code))
+  if (index < 0) return false
+  list.splice(index, 1)
+  return true
+}
+
+// 幕推进的清场与重摆（05329/05330 背面）：按 definition.COSMOS_LAYOUTS 的摆盘表重建宇宙。
+// 卡面步骤：移除上一幕枢纽、虚空格子的卡洗回所有者牌库、其余地点洗回宇宙（其上调查员阵亡、
+// 敌人与遭遇牌库顶 5 张混洗）、把「放在一边的枢纽 + 宇宙顶 N 张」混洗后隐藏摆放、
+// 虚空格子（从 lead 牌库顶取卡）、按玩家顺序抽遭遇。
+function rebuildForNextAct(state, api, { scene, nextHub, moveTo }) {
+  const layout = COSMOS_LAYOUTS[scene]
+  if (!layout) throw new Error(`未知黑色王座摆盘：${scene}`)
+  const flags = flagsOf(state)
+  // 1) 虚空格子的卡洗入其所有者牌库。
+  const grid = gridOf(state)
+  for (const [key, cell] of Object.entries(grid.cells)) {
+    if (cell.kind !== 'empty') continue
+    if (returnEmptySpaceCard(state, cell)) {
+      const owner = state.investigators?.[cell.ownerSeat]
+      if (owner && typeof api.shuffle === 'function') owner.deck = api.shuffle(owner.deck)
+    }
+    delete grid.cells[key]
+  }
+  // 2) 旧枢纽移出游戏；其余地点洗回宇宙（其上调查员阵亡、敌人混洗进遭遇牌库顶）。
+  const kept = new Set(layout.kept.map(String))
   const removedIds = (state.locations || [])
-    .map(location => location.id)
-    .filter(id => id !== moveTo && id !== nextHub)
+    .map(location => String(location.id))
+    .filter(id => !kept.has(id))
   killAbandonedInvestigators(state, api, removedIds)
   shuffleAbandonedEnemiesIntoEncounterDeck(state, api, removedIds)
   for (const id of removedIds) {
-    if (id === oldHub) {
+    const location = locationById(state, id)
+    if (!location) continue
+    const code = String(original(location))
+    if (layout.removedFromGame.includes(code) || layout.removedFromGame.includes(String(id))) {
       api.remove?.(id)
-      api.info?.(`🌀 「${locationById(state, id)?.name || id}」被移出游戏。`)
-    } else if (locationById(state, id)) {
-      returnLocationToCosmos(state, api, id, moveTo)
+      removeLocationFromGrid(state, id)
+      api.info?.(`🌀 「${location.name}」被移出游戏。`)
+    } else {
+      returnLocationToCosmos(state, api, id)
     }
   }
-  flagsOf(state).cosmosOrder = (flagsOf(state).cosmosOrder || []).filter(id => locationById(state, id))
-  if (!locationById(state, nextHub)) {
-    api.place?.(nextHub)
-    const chain = nextHub === COURT ? [HIDEOUS_PALACE] : [COURT]
-    const hub = locationById(state, nextHub)
-    if (hub) hub.connections = unique([...(hub.connections || []), ...chain])
-    for (const id of chain) {
-      const other = locationById(state, id)
-      if (other) other.connections = unique([...(other.connections || []), nextHub])
-    }
-    api.info?.(`📍 「${locationById(state, nextHub)?.name || nextHub}」进入游戏。`)
+  refreshConnections(state)
+  // 3) 保留的枢纽放到本场景的枢纽格位 (0,0)。
+  const keptHub = locationById(state, String(layout.hub))
+  if (keptHub) setLocationPosition(state, String(layout.hub), layout.hubPosition.x, layout.hubPosition.y)
+  // 4) 「放在一边的枢纽 + 宇宙顶 N 张」洗混后按位置表隐藏放置。
+  const shuffledCards = []
+  for (const id of layout.shuffledCards) {
+    const base = state.scenario.locations?.[id]
+    takeFromSetAside(state, String(original(base) || id))
+    shuffledCards.push(String(id))
   }
-  const drawn = api.cosmos ? api.cosmos({ draw: drawCount }) || [] : []
-  for (const id of drawn) {
-    api.place?.(id)
-    placeCosmosLocation(state, api, id, { seat: leadSeat(state) })
+  const drawn = api.cosmos?.({ draw: layout.cosmosDraw }) || []
+  shuffledCards.push(...drawn.map(String))
+  const shuffled = typeof api.shuffle === 'function' ? api.shuffle(shuffledCards) : shuffledCards
+  for (const id of shuffled) {
+    prepareHiddenVariant(state, id)
+    if (!locationById(state, id)) api.place?.(id)
   }
+  shuffled.forEach((id, index) => {
+    const position = layout.shuffledPositions[index]
+    // hidden=true：播报只说「一个宇宙面朝上的地点」，不在日志里泄露摆的是哪张卡。
+    if (position) placeLocationOnGrid(state, api, id, position, { hidden: true })
+  })
+  // 5) 虚空格子：从 lead 牌库顶取卡（参考实现：draw N → EmptySpace 携带该卡）。
+  const lead = leadInvestigator(state)
+  const leadCards = takeDeckCards(lead, layout.emptyCards)
+  layout.emptyPositions.forEach((position, index) => {
+    setEmptySpace(state, position.x, position.y, {
+      cardCode: leadCards[index] ?? null,
+      ownerSeat: lead?.seat ?? 0,
+    })
+  })
+  refreshConnections(state)
+  // 6) 调查员移到保留的枢纽；按玩家顺序每位调查员抽取遭遇牌库顶 1 张。
   for (const inv of active(state)) api.moveInvestigator?.(inv.seat, moveTo)
-  const flags = flagsOf(state)
-  flags.emptySpaceCount = Number(emptySpaces ?? (drawCount + 5))
-  flags.stageHub = nextHub
-  api.info?.(`🌌 宇宙重新铺开：${drawn.length} 张新地点 + ${flags.emptySpaceCount} 个虚空格子（近似记账）。`)
-  // 卡面最后一步：按玩家顺序，每位调查员抽取遭遇牌库顶 1 张（阵亡/撤退者不再抽）。
   for (const seat of playerOrder(state)) {
     const inv = state.investigators?.[seat]
     if (!inv || inv.defeated || inv.resigned) continue
     api.drawEncounter?.(seat)
   }
+  flags.scene = scene
+  flags.stageHub = nextHub
+  api.info?.(`🌌 宇宙重新铺开（场景 ${scene}）：${shuffled.length} 张宇宙卡隐藏放置、${layout.emptyCards} 个虚空格子。`)
 }
 
 
@@ -353,7 +539,15 @@ function resolveUltimateChaos(state, inv, api) {
         options: [{ id: 'doom', label: '在阿撒托斯上放 1 点毁灭' }, { id: 'attack', label: '阿撒托斯攻击每位调查员' }],
       })
       if (answer === 'doom') addAzathothDoom(state, api, 1)
-      else for (const target of active(state)) azathothAttack(state, api, target.seat)
+      // 卡面：「…阿撒托斯按玩家顺序攻击每位调查员」——顺序从队长起算（参考 eachInvestigator），
+      // 不是座位顺序；被击败/撤退的调查员跳过。
+      else {
+        for (const seat of playerOrder(state)) {
+          const target = state.investigators?.[seat]
+          if (!target || target.defeated || target.resigned) continue
+          azathothAttack(state, api, seat)
+        }
+      }
     }
   }, 0, { code: ULTIMATE_CHAOS })
   return false
@@ -451,8 +645,9 @@ function actRevealFor(state, act, api) {
   if (advance.resolutionChoice) resolveActThreeAdvance(state, api)
 }
 
-// 必竟之事背面：满足两组条件之一时可前往 R2/R3；否则（→R4，独立结局卡，由 applyResolution('r4')
-// 结算「翻开黑书 → 签名(R5) 或拒绝(R1)」）。
+// 必竟之事背面：两组条件任一满足时可「前往」R2/R3；否则（→R4）。参考实现无条件提供
+// 「(→R4)」选项——满足条件时也可以拒绝前往 R2/R3 而选择 R4，因此 R4 始终在选项里，
+// 只由独立结局卡 applyResolution('r4') 结算「翻开黑书 → 签名(R5) 或拒绝(R1)」。
 function resolveActThreeAdvance(state, api) {
   const records = recordsFor(state)
   const mementos = new Set(records.mementosDiscovered || [])
@@ -463,15 +658,17 @@ function resolveActThreeAdvance(state, api) {
   const options = []
   if (accepted >= 2) options.push({ id: 'r2', label: '结局 2（你接受了自己的命运）' })
   if (rejected >= 2) options.push({ id: 'r3', label: '结局 3（你拒绝了自己的命运）' })
+  const r4 = { id: 'r4', label: '结局 4（你既未接受也未拒绝：翻开黑书）' }
   if (!options.length) {
     api.finish?.('r4')
     return
   }
+  options.push(r4)
   const answer = chooseOption(api, {
     kind: 'story', source: String(original(currentAct(state))), seat: leadSeat(state),
-    prompt: '「必竟之事」：选择要结算的结局。', options,
+    prompt: '「必竟之事」：选择要结算的结局（也可以拒绝前往 R2/R3，选择 R4）。', options,
   })
-  api.finish?.(answer === 'r3' ? 'r3' : 'r2')
+  api.finish?.(options.some(option => option.id === answer) ? answer : 'r4')
 }
 
 function agendaRevealFor(state, agenda, api) {
@@ -483,23 +680,32 @@ function agendaRevealFor(state, agenda, api) {
   const mementos = new Set(recordsFor(state).mementosDiscovered || [])
   if (advance.skipMemento && mementos.has(advance.skipMemento)) return
   if (advance.moveLeft) {
-    // 命运之轮·X 背面：每人在宇宙中向左移动一次，或把所在地点向左移动一次。
+    // 命运之轮·X 背面：每位在宇宙中的调查员「移动到其左方的地点」或「将其地点向左移动一次
+    // （在其原来的位置放置一个虚空格子）」；「一个地点不能通过本效果移动超过一次」→
+    // flags.cosmosMovedByWheel 记录本议程实例已移动过的地点。
+    const flags = flagsOf(state)
+    flags.cosmosMovedByWheel ||= []
     for (const inv of active(state)) {
-      const order = placedCosmosIds(state)
-      const index = order.indexOf(inv.location)
-      if (index < 0) continue
+      const position = positionOf(state, inv.location)
+      if (!position) continue
+      const leftPosition = { x: position.x - 1, y: position.y }
+      const leftLocationId = locationIdAt(state, leftPosition.x, leftPosition.y)
+      const canMoveLocationLeft = !isLocationCell(cellAt(state, leftPosition.x, leftPosition.y))
+        && !flags.cosmosMovedByWheel.includes(inv.location)
       const options = []
-      if (index > 0) options.push({ id: 'moveLeft', label: '移动到左侧的宇宙地点' })
-      options.push({ id: 'moveLocationLeft', label: '把所在地点向左移动一次' })
+      if (leftLocationId) options.push({ id: 'moveLeft', label: '移动到左方的宇宙地点' })
+      if (canMoveLocationLeft) options.push({ id: 'moveLocationLeft', label: '把所在地点向左移动一次（原位置放置虚空格子）' })
+      if (!options.length) continue
       const answer = chooseOption(api, {
         kind: 'agenda', source: String(original(agenda)), seat: inv.seat,
         prompt: '「命运之轮·X」：在宇宙中向左移动，或把你的地点向左移动一次。', options,
       })
-      if (answer === 'moveLeft' && index > 0) {
-        api.moveInvestigator?.(inv.seat, order[index - 1])
-      } else if (index > 0) {
-        ;[order[index - 1], order[index]] = [order[index], order[index - 1]]
-        api.info?.(`↔️ 「${locationById(state, inv.location)?.name || inv.location}」向左移动一格。`)
+      if (answer === 'moveLeft' && leftLocationId) {
+        api.moveInvestigator?.(inv.seat, leftLocationId)
+      } else if (canMoveLocationLeft) {
+        if (slideCosmosLocation(state, api, inv.location, 'left', { seat: inv.seat })) {
+          flags.cosmosMovedByWheel.push(inv.location)
+        }
       }
     }
     return
@@ -555,10 +761,185 @@ function distanceBetween(state, from, to) {
   return Number.POSITIVE_INFINITY
 }
 
+// ---------------------------------------------------------------------------
+// 05341 盲目舞者：用现有 cosmos 二维网格承载「虚空格子」
+// 虚空格子在本仓库只是网格格位数据（不是可站立的 location 实体）。参考实现里虚空格是
+// 特殊地点卡 xempty，猎手可以停在上面；本实现把「进入虚空格 → 再次结算猎手」折叠成
+// 一次穿越（虚空格 → 下一格），以覆盖参考实现的净移动结果；把「Spawn - Farthest empty
+// space」表达为「离所有调查员最远的虚空格旁边的在场地点」。仍登记为近似（见
+// scenarioApproximations）。
+// ---------------------------------------------------------------------------
+function gridNeighbourCells(state, position) {
+  const out = []
+  for (const direction of ALL_DIRECTIONS) {
+    const [dx, dy] = DIRECTIONS[direction]
+    const x = position.x + dx
+    const y = position.y + dy
+    const cell = cellAt(state, x, y)
+    if (cell) out.push({ x, y, cell })
+  }
+  return out
+}
+
+// 以若干格位为源，在 cosmos 网格上做多源 BFS（虚空格/地点都算可走格位）。
+function gridDistanceFromPositions(state, sources) {
+  const keyOfPos = position => gridPositionKey(position.x, position.y)
+  const distance = new Map()
+  const queue = []
+  for (const source of sources) {
+    if (!source) continue
+    const key = keyOfPos(source)
+    if (distance.has(key)) continue
+    distance.set(key, 0)
+    queue.push(source)
+  }
+  while (queue.length) {
+    const position = queue.shift()
+    const current = distance.get(keyOfPos(position))
+    for (const neighbour of gridNeighbourCells(state, position)) {
+      const key = keyOfPos(neighbour)
+      if (distance.has(key)) continue
+      distance.set(key, current + 1)
+      queue.push({ x: neighbour.x, y: neighbour.y })
+    }
+  }
+  return distance
+}
+
+function emptySpaceGridPositions(state) {
+  const cells = gridOf(state).cells || {}
+  return Object.keys(cells)
+    .map(key => ({ position: parseKey(key), cell: cells[key] }))
+    .filter(entry => entry.position && isEmptySpaceCell(entry.cell))
+}
+
+// 05341「Spawn - Farthest empty space」：找离所有调查员最远的虚空格，并返回离它最近的在场地点。
+function farthestEmptySpace(state) {
+  const empties = emptySpaceGridPositions(state)
+  if (!empties.length) return null
+  const keyOfPos = position => gridPositionKey(position.x, position.y)
+  const investigatorPositions = active(state).map(inv => positionOf(state, inv.location)).filter(Boolean)
+  if (!investigatorPositions.length) return null
+  const fromInvestigators = gridDistanceFromPositions(state, investigatorPositions)
+  let farthest = null
+  for (const empty of empties) {
+    const distance = fromInvestigators.get(keyOfPos(empty.position))
+    if (distance === undefined) continue
+    if (!farthest || distance > farthest.distance
+      || (distance === farthest.distance && keyOfPos(empty.position) < keyOfPos(farthest.position))) {
+      farthest = { position: empty.position, distance }
+    }
+  }
+  if (!farthest) return null
+  const fromEmptySpace = gridDistanceFromPositions(state, [farthest.position])
+  let pick = null
+  for (const location of state.locations || []) {
+    const position = positionOf(state, location.id)
+    if (!position) continue
+    const distance = fromEmptySpace.get(keyOfPos(position))
+    if (distance === undefined) continue
+    if (!pick || distance < pick.distance
+      || (distance === pick.distance && String(location.id) < String(pick.location.id))) {
+      pick = { location, distance }
+    }
+  }
+  return pick?.location ? { position: farthest.position, location: pick.location } : null
+}
+
+// 盲目舞者的网格猎手步：返回「朝最近调查员的下一格」候选。虚空格与地点都算可走格位。
+function gridHunterCandidates(state, startPosition) {
+  const keyOfPos = position => gridPositionKey(position.x, position.y)
+  const targetPositions = active(state)
+    .map(inv => (inv.location ? positionOf(state, inv.location) : null))
+    .filter(Boolean)
+  if (!targetPositions.length) return null
+  const fromStart = gridDistanceFromPositions(state, [startPosition])
+  const targetDistances = targetPositions
+    .map(position => fromStart.get(keyOfPos(position)))
+    .filter(value => value !== undefined)
+  if (!targetDistances.length) return null
+  const nearestDistance = Math.min(...targetDistances)
+  const nearestTargets = targetPositions.filter(position => fromStart.get(keyOfPos(position)) === nearestDistance)
+  const fromTargets = gridDistanceFromPositions(state, nearestTargets)
+  const candidates = gridNeighbourCells(state, startPosition)
+    .filter(neighbour => fromTargets.get(keyOfPos(neighbour)) === nearestDistance - 1)
+  if (!candidates.length) return null
+  return { candidates, nearestDistance }
+}
+
+// 05341：舞者「在虚空格中」用 scenarioFlags.dancerVoidCell 记录格位（虚空格不是可站立的
+// location 实体，仍以最近地点作为引擎侧的锚点位置；位置相关读点用本标记修正）。
+function dancerVoidCell(state) {
+  const cell = flagsOf(state).dancerVoidCell
+  if (!cell || !Number.isFinite(Number(cell.x)) || !Number.isFinite(Number(cell.y))) return null
+  return { x: Number(cell.x), y: Number(cell.y) }
+}
+function setDancerVoidCell(state, cell) {
+  const flags = flagsOf(state)
+  if (cell) flags.dancerVoidCell = { x: cell.x, y: cell.y }
+  else delete flags.dancerVoidCell
+}
+function dancerStartPosition(state, enemy) {
+  return dancerVoidCell(state) || positionOf(state, enemy.location)
+}
+
+// 05341 猎手移动：参考实现里舞者可进入虚空格（如同地点），若经猎手关键词进入虚空格则
+// 再结算一次猎手（每轮一次）。本模型用网格格位承载：
+//   · 进入虚空格 → 写 dancerVoidCell（可停留在虚空格中，直到下一次猎手移动）；
+//   · 强制再结算 → 同一结算内再走一格（可能落到地点并清标记，或落到第二个虚空格）；
+//   · 若本轮强制已用 → 进入虚空格后停住（不再移动）。
+// 只有最短路线涉及虚空格时才接管；纯地点的路线仍交回引擎 hunterStep（保留猎物/等距裁决）。
+function dancerHuntMove(state, enemy, api) {
+  const flags = flagsOf(state)
+  const start = dancerStartPosition(state, enemy)
+  if (!start) return false
+  const inVoid = Boolean(dancerVoidCell(state))
+  const firstPlan = gridHunterCandidates(state, start)
+  if (!firstPlan) return false
+  const firstHasLocation = firstPlan.candidates.some(candidate => isLocationCell(candidate.cell))
+  if (!inVoid && firstHasLocation) return false
+  let current = start
+  let moved = false
+  let forcedUsed = false
+  for (let step = 0; step < 2; step++) {
+    const plan = gridHunterCandidates(state, current)
+    if (!plan) break
+    // 同距时优先走到地点；否则进入虚空格。
+    const chosen = plan.candidates.find(candidate => isLocationCell(candidate.cell))
+      || plan.candidates[0]
+    if (!chosen) break
+    if (isLocationCell(chosen.cell)) {
+      api.moveEnemy?.(enemy, chosen.cell.id)
+      setDancerVoidCell(state, null)
+      api.info?.(`💃 盲目舞者移动到「${locationById(state, chosen.cell.id)?.name || chosen.cell.id}」。`)
+      return true
+    }
+    current = { x: chosen.x, y: chosen.y }
+    setDancerVoidCell(state, current)
+    moved = true
+    const alreadyUsed = forcedUsed || flags.dancerVoidRound === state.round
+    if (alreadyUsed) {
+      api.info?.('💃 盲目舞者停在虚空格中（cosmos 格位表达）：本轮「再次结算猎手」已用过。')
+      return true
+    }
+    flags.dancerVoidRound = state.round
+    forcedUsed = true
+    api.info?.('💃 盲目舞者进入虚空格（cosmos 格位表达）：再次结算猎手关键词（每轮一次）。')
+  }
+  return moved
+}
+
 function spawnLocationFor(state, code) {
   if (code !== MIND_DANCER) return null
   const pool = state.locations || []
   if (!pool.length) return null
+  // 05341「Spawn - Farthest empty space」：按网格找最远虚空格；生成时在 enemySpawned 里把
+  // 「舞者其实位于该虚空格」写进 flags.dancerVoidCell，锚点地点只作为引擎侧位置。
+  const gridSpawn = farthestEmptySpace(state)
+  if (gridSpawn) {
+    flagsOf(state).pendingDancerVoidCell = { x: gridSpawn.position.x, y: gridSpawn.position.y }
+    return gridSpawn.location.id
+  }
   const investigators = active(state)
   if (!investigators.length) return pool[pool.length - 1].id
   // 近似「最远的虚空格子」：离所有调查员最远的在场地点。
@@ -582,49 +963,58 @@ const LOCATION_ACTIONS = {
         candidate.id !== location.id && isVoidLocation(candidate))
       if (!voids.length) return []
       return [{
-        rule: 'gateMove', label: '🚪 移除冒险参考卡 1 资源：把宇宙门扉的调查员移到任意其他虚空地点',
+        rule: 'gateMove', label: '🚪 移除冒险参考卡 1 资源：把宇宙门扉的任意数量调查员移到任意其他虚空地点',
       }]
     },
+    // 参考 CosmicGate.hs:75-85：chooseSome1M——逐个选择要移动的调查员（可随时停止），
+    // 每个被选者由行动者选择目的地；不是把该处全部调查员搬走。
     perform: (state, inv, api, location) => {
       if (Number(flagsOf(state).referenceResources || 0) < 1) return
-      flagsOf(state).referenceResources -= 1
       const voids = (state.locations || []).filter(candidate =>
         candidate.id !== location.id && isVoidLocation(candidate))
       if (!voids.length) return
-      const picked = chooseOption(api, {
-        kind: 'location', source: COSMIC_GATE, seat: inv.seat,
-        prompt: '选择要移动到的其他虚空地点。',
-        options: voids.map(candidate => ({ id: candidate.id, label: candidate.name })),
-      })
-      const destination = voids.find(candidate => candidate.id === picked) || voids[0]
-      for (const target of active(state).filter(candidate => candidate.location === location.id)) {
-        api.moveInvestigator?.(target.seat, destination.id)
+      flagsOf(state).referenceResources -= 1
+      const remaining = active(state).filter(candidate => candidate.location === location.id).map(candidate => candidate.seat)
+      let moved = 0
+      while (remaining.length) {
+        const answer = chooseOption(api, {
+          kind: 'investigator', source: COSMIC_GATE, seat: inv.seat,
+          prompt: '选择要移动的调查员（可以停止，任意数量）。',
+          options: [
+            { id: 'done', label: '停止，不再移动调查员' },
+            ...remaining.map(seat => ({ id: String(seat), label: state.investigators[seat].name })),
+          ],
+        })
+        if (String(answer) === 'done' || answer == null) break
+        const seat = Number(answer)
+        if (!remaining.includes(seat)) break
+        const destPicked = chooseOption(api, {
+          kind: 'location', source: COSMIC_GATE, seat: inv.seat,
+          prompt: '选择该调查员要移动到的其他虚空地点。',
+          options: voids.map(candidate => ({ id: candidate.id, label: candidate.name })),
+        })
+        const destination = voids.find(candidate => candidate.id === destPicked) || voids[0]
+        api.moveInvestigator?.(seat, destination.id)
+        remaining.splice(remaining.indexOf(seat), 1)
+        moved += 1
+        api.info?.(`🚪 宇宙门扉把「${state.investigators[seat].name}」送到「${destination.name}」。`)
       }
-      api.info?.(`🚪 宇宙门扉把调查员送到「${destination.name}」。`)
+      if (!moved) api.info?.('🚪 宇宙门扉：没有调查员被移动。')
     },
   },
 }
 
-function moveLocationInOrder(state, api, locationId, offset, source) {
-  const order = cosmosOrder(state)
-  const index = order.indexOf(locationId)
-  if (index < 0) return false
-  const target = index + offset
-  if (target < 0 || target >= order.length) {
-    api.info?.('已经到宇宙的尽头，无法再移动。')
-    return false
+// 可把该宇宙地点移入的方向：目标格位不是另一个地点（空格或虚空格子都可，参考
+// PathwayIntoVoid.hs 的 validDirections = getLocationInDirection 为 Nothing 的方向）。
+function validSlideDirections(state, locationId) {
+  const position = positionOf(state, locationId)
+  if (!position) return []
+  const out = []
+  for (const direction of ALL_DIRECTIONS) {
+    const [dx, dy] = DIRECTIONS[direction]
+    if (!isLocationCell(cellAt(state, position.x + dx, position.y + dy))) out.push(direction)
   }
-  if (Number(flagsOf(state).referenceResources || 0) < 1) {
-    api.info?.('冒险参考卡上没有资源可移除。')
-    return false
-  }
-  flagsOf(state).referenceResources -= 1
-  ;[order[index], order[target]] = [order[target], order[index]]
-  const flags = flagsOf(state)
-  flags.teamUsed ||= {}
-  flags.teamUsed[`${source}:${locationId}`] = true
-  api.info?.(`↔️ 「${locationById(state, locationId)?.name || locationId}」在宇宙中移动一格（${source}）。`)
-  return true
+  return out
 }
 
 // ---------------------------------------------------------------------------
@@ -711,7 +1101,8 @@ export const behavior = {
   azathothAttack,
   commitRitualSuicide,
   placeCosmosLocation,
-  directionTargets,
+  placeCosmosByInstruction,
+  slideCosmosLocation,
   placedCosmosIds,
   cosmosOrder,
   currentHubId,
@@ -726,19 +1117,39 @@ export const behavior = {
     flags.pathWinds = Number(records.thePathWindsBeforeYou || 0)
     flags.referenceResources = flags.pathWinds
     flags.azathothDoom = 0
-    flags.emptySpaceCount = 6
-    flags.cosmosOrder = []
     flags.ultimateChaos = 0
     flags.pendingSurge = false
     flags.teamUsed = {}
-    flags.stageHub = HIDEOUS_PALACE
-    // 宇宙牌库：12 张地点（按印刷张数展开成 16 个地点 id 中的 12 个）。
+    flags.stageHub = null
+    flags.cosmos = { cells: {}, posOf: {}, scene: 'scene1' }
+    flags.cosmosMovedByWheel = []
+    // 宇宙牌库：12 张宇宙面地点（按印刷张数展开）；场景 1 顶 1 张与憎恶宫殿洗混后隐藏放置。
     // 引擎 setup 的 helper 是 { randomValue(state), shuffle(list, rng), info }：randomValue 必须带 state。
     buildScenarioLocationDeck(state, 'cosmos', COSMOS_DECK_IDS, {
       shuffle: list => (helper.shuffle
         ? helper.shuffle([...list], () => helper.randomValue(state))
         : [...list]),
     })
+    const layout = COSMOS_LAYOUTS.scene1
+    const topCosmosCard = drawScenarioLocationDeck(state, 'cosmos', 1)[0]
+    const shuffled = helper.shuffle
+      ? helper.shuffle([...layout.shuffledCards, topCosmosCard].filter(Boolean), () => helper.randomValue(state))
+      : [...layout.shuffledCards, topCosmosCard].filter(Boolean)
+    const placements = []
+    shuffled.forEach((id, index) => {
+      const position = layout.shuffledPositions[index]
+      if (!position) return
+      prepareHiddenVariant(state, id)
+      placements.push({ id: String(id), position })
+    })
+    const lead = leadInvestigator(state)
+    flags.pendingScene = {
+      scene: 'scene1',
+      placements,
+      emptyPositions: layout.emptyPositions,
+      emptyCards: takeDeckCards(lead, layout.emptyCards),
+      leadSeat: lead?.seat ?? 0,
+    }
     state.scenarioZones ||= {}
     state.scenarioZones.setAside = [
       state.scenario.locations[COURT]?.originalCode,
@@ -747,16 +1158,47 @@ export const behavior = {
     ].filter(Boolean)
     state.scenarioZones.removed = []
     flags.usedLocations = []
-    return [COSMIC_INGRESS, HIDEOUS_PALACE]
+    return [COSMIC_INGRESS, ...placements.map(entry => entry.id)]
+  },
+
+  // 引擎在放置地点之后、开局收尾时调用：把场景 1 的固定摆盘写进网格、放入虚空格子并重算连接。
+  afterChaosBagSetup(state) {
+    const flags = flagsOf(state)
+    const pending = flags.pendingScene
+    if (!pending) return
+    const layout = COSMOS_LAYOUTS[pending.scene] || COSMOS_LAYOUTS.scene1
+    // 场景 1 的起始枢纽固定在自己格位（(0,0)），且由调查员入场揭示。
+    if (locationById(state, String(layout.hub))) {
+      setLocationPosition(state, String(layout.hub), layout.hubPosition.x, layout.hubPosition.y)
+    }
+    for (const entry of pending.placements) {
+      const location = locationById(state, entry.id)
+      if (!location) continue
+      setLocationPosition(state, entry.id, entry.position.x, entry.position.y)
+      location.revealed = false
+      location.clues = 0
+      refreshConnections(state)
+    }
+    pending.emptyPositions.forEach((position, index) => {
+      setEmptySpace(state, position.x, position.y, {
+        cardCode: pending.emptyCards[index] ?? null,
+        ownerSeat: pending.leadSeat ?? 0,
+      })
+    })
+    refreshConnections(state)
+    flags.scene = pending.scene
+    delete flags.pendingScene
   },
 
   // ---- 幕 / 议程 ----
   actReveal(state, act, api) {
     actRevealFor(state, act, api)
+    maybeDevoured(state, api)
   },
 
   agendaReveal(state, agenda, api) {
     agendaRevealFor(state, agenda, api)
+    maybeDevoured(state, api)
   },
 
   checkObjectives(state, api) {
@@ -766,14 +1208,18 @@ export const behavior = {
     if (lead && throne && lead.location === BLACK_THRONE && (throne.clues || 0) === 0) api.advanceAct?.()
   },
 
-  // 没有议程时，神话阶段的毁灭直接落到阿撒托斯上（引擎先加 state.doom 再通知）。
+  // 没有议程时，神话阶段的毁灭直接落到阿撒托斯上（引擎先加 state.doom 再通知）；
+  // 无论毁灭放在哪里，都检查 05346「阿撒托斯上 ≥10 毁灭 → 吞食宇宙」。
   doomPlaced(state, payload, api) {
-    if (!payload || !payload.agenda || payload.target) return
-    if (currentAgenda(state)) return
-    const amount = Math.max(0, Number(payload.amount) || 0)
-    if (!amount) return
-    state.doom = Math.max(0, Number(state.doom || 0) - amount)
-    addAzathothDoom(state, api, amount)
+    if (!payload) return
+    if (payload.agenda && !payload.target && !currentAgenda(state)) {
+      const amount = Math.max(0, Number(payload.amount) || 0)
+      if (amount) {
+        state.doom = Math.max(0, Number(state.doom || 0) - amount)
+        addAzathothDoom(state, api, amount)
+      }
+    }
+    maybeDevoured(state, api)
   },
 
   // ---- 地点 ----
@@ -785,6 +1231,28 @@ export const behavior = {
     refillClues(state, api, COSMIC_INGRESS, 3)
     refillClues(state, api, HIDEOUS_PALACE, 4)
     refillClues(state, api, COURT, 6)
+    maybeDevoured(state, api)
+  },
+
+  // 05346 的毁灭可能来自这些时点的卡牌效果：低频轮询覆盖所有窗口（避免 state-based forced 原语）。
+  phaseBegan(state, phase, api) {
+    encounterRules.phaseBegan?.(state, phase, api)
+    maybeDevoured(state, api)
+  },
+
+  turnEnded(state, inv, api) {
+    encounterRules.turnEnded?.(state, inv, api)
+    maybeDevoured(state, api)
+  },
+
+  mythosEnded(state, api) {
+    encounterRules.mythosEnded?.(state, api)
+    maybeDevoured(state, api)
+  },
+
+  enemyPhaseEnd(state, api) {
+    encounterRules.enemyPhaseEnd?.(state, api)
+    maybeDevoured(state, api)
   },
 
   // 黑色王座：隐藏值 + ceil(阿撒托斯毁灭 / 2)（比较 definition 声明的地点 id，不比较卡号）。
@@ -807,6 +1275,53 @@ export const behavior = {
   },
 
   // ---- 敌人 ----
+  // 05346 阿撒托斯：免疫所有玩家卡牌效果/调查员行动，且不能被任何方式击败。
+  // 它不建场上敌人实体（见 spawnLocation）；参考实现用 Omnipotent 把普通「敌人」匹配器排除在
+  // 所有玩家卡效果之外，本引擎没有该匹配器语义，因此改用「不生成实体」表达免疫（不成为任何
+  // 卡牌效果的目标），并保留以下防御性钩子：即便被某个异常路径生成实体，也拒绝攻击/击败/伤害。
+  // 05341 盲目舞者在虚空格中时也无法被正常攻击/躲避（锚点地点只是引擎侧位置，见 dancerVoidCell）。
+  // 读点：enemyCanBeDefeated（hidden-rules.js:139-142）、enemyCannotBeAttacked/enemyCannotAttack/
+  // canOpportunityAttack（hidden-rules.js:136-138 对应的 scenarioBehavior 钩子）、enemyDamageAllowed
+  // （enemies.js:452-454）。
+  enemyCanBeDefeated(state, enemy) {
+    if (String(original(enemy)) === AZATHOTH) return false
+    return encounterRules.enemyCanBeDefeated?.(state, enemy)
+  },
+  canFightEnemy(state, inv, enemy) {
+    if (String(original(enemy)) === AZATHOTH) return false
+    if (String(original(enemy)) === MIND_DANCER && dancerVoidCell(state)) return false
+    return encounterRules.canFightEnemy?.(state, inv, enemy)
+  },
+  canEvadeEnemy(state, inv, enemy) {
+    if (String(original(enemy)) === AZATHOTH) return false
+    if (String(original(enemy)) === MIND_DANCER && dancerVoidCell(state)) return false
+    return encounterRules.canEvadeEnemy?.(state, inv, enemy)
+  },
+  // 盲目舞者在虚空格中时「如同地点」的进入权只属于它自己：调查员不能与锚点位置上的它交战
+  // （虚空格不是可进入的 location；参考实现里调查员需要 CanEnterEmptySpace 才能进入）。
+  canEngageEnemy(state, inv, enemy) {
+    if (String(original(enemy)) === AZATHOTH) return false
+    if (String(original(enemy)) === MIND_DANCER && dancerVoidCell(state)) return false
+    return encounterRules.canEngageEnemy?.(state, inv, enemy)
+  },
+  enemyCannotBeAttacked(state, enemy) {
+    if (String(original(enemy)) === AZATHOTH) return true
+    if (String(original(enemy)) === MIND_DANCER && dancerVoidCell(state)) return true
+    return encounterRules.enemyCannotBeAttacked?.(state, enemy)
+  },
+  enemyCannotAttack(state, enemy) {
+    if (String(original(enemy)) === AZATHOTH) return true
+    return encounterRules.enemyCannotAttack?.(state, enemy)
+  },
+  canOpportunityAttack(state, enemy) {
+    if (String(original(enemy)) === AZATHOTH) return false
+    return encounterRules.canOpportunityAttack?.(state, enemy)
+  },
+  enemyDamageAllowed(state, enemy) {
+    if (String(original(enemy)) === AZATHOTH) return false
+    return encounterRules.enemyDamageAllowed?.(state, enemy)
+  },
+
   spawnLocation(state, code, fallbackLoc) {
     // 05346 阿撒托斯：免疫所有玩家卡牌效果/调查员行动、不能被击败；它不建场上实体
     // （定义上 cannotBeDefeated/immuneToPlayerCards/omnipotent 已声明）。任何生成路径直接判失败。
@@ -816,24 +1331,29 @@ export const behavior = {
     return spawnLocationFor(state, code) || fallbackLoc || null
   },
 
-  // 05341 盲目舞者：卡面「可以进入虚空格子，如同其进入一个地点」+「经猎手关键词移动到虚空格子后
-  // 再次结算猎手关键词（每轮仅限一次）」。本剧本不建虚空格子实体（近似记账，见 scenarioApproximations），
-  // 用「进入非枢纽的宇宙地点」近似「进入虚空格子」：进入后同一轮再结算一次猎手移动，每轮一次。
+  // 05341 spawn 落在「最远虚空格」：spawnLocation 只能返回地点 id（引擎锚点），
+  // 真正的虚空格位置在敌人实体生成后补写进 flags.dancerVoidCell。
+  enemySpawned(state, enemy, api) {
+    const flags = flagsOf(state)
+    if (String(original(enemy)) === MIND_DANCER && flags.pendingDancerVoidCell) {
+      setDancerVoidCell(state, flags.pendingDancerVoidCell)
+      delete flags.pendingDancerVoidCell
+      api?.info?.(`💃 盲目舞者在最远的虚空格中生成（cosmos 格位表达；引擎锚点「${locationById(state, enemy.location)?.name || enemy.location}」）。`)
+    }
+    encounterRules.enemySpawned?.(state, enemy, api)
+  },
+
+  // 05341 盲目舞者：「可以进入虚空格子，如同其进入一个地点」+「经猎手关键词移动到虚空格子后
+  // 再次结算猎手关键词（每轮仅限一次）」。虚空格不是可站立的 location 实体，用
+  // flags.dancerVoidCell 记录实际格位（可停留在虚空格中，下一次猎手移动继续从该格位出发）；
+  // 只有最短路线涉及虚空格时接管（纯地点路线交回引擎 hunterStep 的猎物/等距裁决）。
   hunterMove(state, enemy, api) {
     if (String(original(enemy)) !== MIND_DANCER) return false
     if (enemy.exhausted || !enemy.hunter) return true
+    if (dancerHuntMove(state, enemy, api)) return true
     if (active(state).some(inv => inv.location === enemy.location)) return true
-    const step = () => {
-      const target = api.hunterStep?.(enemy, {})
-      if (!target || target === enemy.location) return false
-      api.moveEnemy?.(enemy, target)
-      return true
-    }
-    if (!step()) return true
-    if (!HUB_IDS.includes(enemy.location) && flagsOf(state).dancerVoidRound !== state.round) {
-      flagsOf(state).dancerVoidRound = state.round
-      if (step()) api.info?.('💃 盲目舞者进入虚空格子（近似）：再次结算猎手关键词（每轮一次）。')
-    }
+    const target = api.hunterStep?.(enemy, {})
+    if (target && target !== enemy.location) api.moveEnemy?.(enemy, target)
     return true
   },
 
@@ -858,6 +1378,7 @@ export const behavior = {
       addAzathothDoom(state, api, 1)
       api.info?.('古神标记：本次检定修正后的技能值为 0，在阿撒托斯上放置 1 个毁灭。')
     }
+    maybeDevoured(state, api)
   },
 
   encounterGainsSurge(state) {
@@ -881,7 +1402,7 @@ export const behavior = {
     const moves = [...(encounterRules.actions?.(state, inv) || [])]
     const actCode = String(original(currentAct(state)))
     // 三张幕都印 [action]：花费 X 个线索 → 抽取宇宙顶 X 张，选 1 按「宇宙 -」放置并移动过去。
-    if (ACT_CODES.includes(actCode) && (inv.clues || 0) >= 1) {
+    if (ACT_CODES.includes(actCode) && (inv.clues || 0) >= 1 && cosmosDeckSize(state) > 0) {
       moves.push({
         action: 'scenarioAction', rule: 'actCosmosTake',
         label: `🌌 花费 X 个线索：抽取宇宙顶 X 张，选 1 张按「宇宙 -」放置并移动过去（现有线索 ${inv.clues}）`,
@@ -889,7 +1410,7 @@ export const behavior = {
     }
     const here = locationById(state, inv.location)
     if (!here) return moves
-    // 每个虚空地点获得「洗入宇宙并搬到枢纽」的行动。
+    // 每个虚空地点获得「洗入宇宙并搬到枢纽」的行动（由在场的每个枢纽卡授予）。
     if (isVoidLocation(here)) {
       for (const hubId of [COSMIC_INGRESS, HIDEOUS_PALACE, COURT, BLACK_THRONE]) {
         const hub = locationById(state, hubId)
@@ -907,33 +1428,30 @@ export const behavior = {
         moves.push({ action: 'scenarioAction', locationId: here.id, ...action })
       }
     }
-    // 三个可移动的虚空地点：移除参考卡 1 资源把本地点移动一格（无网格的线性近似）。
-    if (FLIGHT.includes(here.id)) {
-      const flags = flagsOf(state)
-      if (Number(flags.referenceResources || 0) >= 1 && !flags.teamUsed?.[`up:${here.id}`]) {
-        moves.push({
-          action: 'scenarioAction', locationId: here.id, rule: 'moveLocationUp',
-          label: `⬆️ 移除冒险参考卡 1 资源：把「${here.name}」向上移动一格（团队每场一次）`,
-        })
-      }
+    const flags = flagsOf(state)
+    // 05337 飞入湮灭 / 05338 无尽黑暗：[action] 上/下移动一格（团队每场游戏仅限一次）。
+    if (FLIGHT.includes(here.id) && validSlideDirections(state, here.id).includes('up')
+      && Number(flags.referenceResources || 0) >= 1 && !flags.teamUsed?.[`up:${here.id}`]) {
+      moves.push({
+        action: 'scenarioAction', locationId: here.id, rule: 'moveLocationUp',
+        label: `⬆️ 移除冒险参考卡 1 资源：把「${here.name}」向上移动一格（原位置放置虚空格子，团队每场一次）`,
+      })
     }
-    if (INFINITY.includes(here.id)) {
-      const flags = flagsOf(state)
-      if (Number(flags.referenceResources || 0) >= 1 && !flags.teamUsed?.[`down:${here.id}`]) {
-        moves.push({
-          action: 'scenarioAction', locationId: here.id, rule: 'moveLocationDown',
-          label: `⬇️ 移除冒险参考卡 1 资源：把「${here.name}」向下移动一格（团队每场一次）`,
-        })
-      }
+    if (INFINITY.includes(here.id) && validSlideDirections(state, here.id).includes('down')
+      && Number(flags.referenceResources || 0) >= 1 && !flags.teamUsed?.[`down:${here.id}`]) {
+      moves.push({
+        action: 'scenarioAction', locationId: here.id, rule: 'moveLocationDown',
+        label: `⬇️ 移除冒险参考卡 1 资源：把「${here.name}」向下移动一格（原位置放置虚空格子，团队每场一次）`,
+      })
     }
-    if (PATHWAY.includes(here.id)) {
-      const flags = flagsOf(state)
-      if (Number(flags.referenceResources || 0) >= 1 && !flags.teamUsed?.[`roundAdjacent:${here.id}`]) {
-        moves.push({
-          action: 'scenarioAction', locationId: here.id, rule: 'moveLocationAdjacent',
-          label: `↔️ 移除冒险参考卡 1 资源：把「${here.name}」移动到任意相邻位置（团队每轮一次）`,
-        })
-      }
+    // 05340 虚空之路：[action] 移动到任意一个相邻位置（团队每轮仅限一次）。
+    if (PATHWAY.includes(here.id) && validSlideDirections(state, here.id).length > 0
+      && Number(flags.referenceResources || 0) >= 1
+      && flags.roundAdjacentUsed?.[here.id] !== state.round) {
+      moves.push({
+        action: 'scenarioAction', locationId: here.id, rule: 'moveLocationAdjacent',
+        label: `↔️ 移除冒险参考卡 1 资源：把「${here.name}」移动到任意相邻位置（原位置放置虚空格子，团队每轮一次）`,
+      })
     }
     return moves
   },
@@ -950,19 +1468,26 @@ export const behavior = {
         prompt: '花费 X 个线索抽取宇宙顶 X 张。', options,
       })
       const count = Math.max(1, Math.min(Number(answer) || 1, Math.floor(inv.clues)))
-      inv.clues -= count
-      // 注意：不传 from —— 卡面只要求「行动者本人移动到其上」；引擎的 cosmos({from}) 会把该地点的
-      // 所有调查员与敌人一起搬过去（src/engine/scenario-runtime.js:357-368），那会放大移动范围。
-      const placedId = api.cosmos?.({ take: count, prompt: '选择要放置入场的宇宙地点。' })
-      if (!placedId) {
+      const drawn = (api.cosmos?.({ draw: count }) || []).map(String)
+      if (!drawn.length) {
         api.info?.('宇宙牌库是空的。')
         return
       }
-      if (!locationById(state, placedId)) {
-        api.place?.(placedId)
-      }
-      placeCosmosLocation(state, api, placedId, { seat: inv.seat })
-      api.moveInvestigator?.(inv.seat, placedId)
+      inv.clues -= count
+      // 卡面：「选择其中一张卡牌，按照其『宇宙 -』指示放置入场，并移动到其上。将其余卡牌洗回『宇宙』。」
+      const picked = drawn.length === 1 ? drawn[0] : chooseOption(api, {
+        kind: 'cosmos', source: 'actCosmosTake', seat: inv.seat,
+        prompt: '选择 1 张要按「宇宙 -」放置入场的宇宙地点。',
+        options: drawn.map(id => ({ id, label: `宇宙地点（${id}）` })),
+      })
+      const chosenId = drawn.includes(String(picked)) ? String(picked) : drawn[0]
+      if (!locationById(state, chosenId)) api.place?.(chosenId)
+      // 注意：不传 from —— 卡面只要求「行动者本人移动到其上」；引擎的 cosmos({from}) 会把该地点的
+      // 所有调查员与敌人一起搬过去（src/engine/scenario-runtime.js:357-368），那会放大移动范围。
+      const position = placeCosmosByInstruction(state, api, chosenId, { seat: inv.seat })
+      if (position && locationById(state, chosenId)) api.moveInvestigator?.(inv.seat, chosenId)
+      const rejected = drawn.filter(id => id !== chosenId)
+      if (rejected.length) api.cosmos?.({ shuffle: rejected })
       return
     }
     if (move.rule?.startsWith('voidTo:')) {
@@ -978,22 +1503,50 @@ export const behavior = {
       return
     }
     if (move.rule === 'moveLocationUp') {
-      if (here && FLIGHT.includes(here.id)) moveLocationInOrder(state, api, here.id, -1, 'up')
+      if (!here || !FLIGHT.includes(here.id)) return
+      if (Number(flagsOf(state).referenceResources || 0) < 1) return
+      if (!validSlideDirections(state, here.id).includes('up')) {
+        api.info?.('「飞入湮灭」上方没有可移入的相邻位置。')
+        return
+      }
+      flagsOf(state).referenceResources -= 1
+      flagsOf(state).teamUsed ||= {}
+      flagsOf(state).teamUsed[`up:${here.id}`] = true
+      slideCosmosLocation(state, api, here.id, 'up', { seat: inv.seat })
       return
     }
     if (move.rule === 'moveLocationDown') {
-      if (here && INFINITY.includes(here.id)) moveLocationInOrder(state, api, here.id, 1, 'down')
+      if (!here || !INFINITY.includes(here.id)) return
+      if (Number(flagsOf(state).referenceResources || 0) < 1) return
+      if (!validSlideDirections(state, here.id).includes('down')) {
+        api.info?.('「无尽黑暗」下方没有可移入的相邻位置。')
+        return
+      }
+      flagsOf(state).referenceResources -= 1
+      flagsOf(state).teamUsed ||= {}
+      flagsOf(state).teamUsed[`down:${here.id}`] = true
+      slideCosmosLocation(state, api, here.id, 'down', { seat: inv.seat })
       return
     }
     if (move.rule === 'moveLocationAdjacent') {
-      if (here && PATHWAY.includes(here.id)) {
-        const direction = chooseOption(api, {
-          kind: 'location', source: here.id, seat: inv.seat,
-          prompt: '选择把虚空之路移动的方向。',
-          options: [{ id: 'up', label: '向上移动一格' }, { id: 'down', label: '向下移动一格' }],
-        })
-        moveLocationInOrder(state, api, here.id, direction === 'up' ? -1 : 1, 'roundAdjacent')
+      if (!here || !PATHWAY.includes(here.id)) return
+      if (Number(flagsOf(state).referenceResources || 0) < 1) return
+      const directions = validSlideDirections(state, here.id)
+      if (!directions.length) {
+        api.info?.('「虚空之路」没有可移入的相邻位置。')
+        return
       }
+      const labels = { up: '向上', down: '向下', left: '向左', right: '向右' }
+      const direction = directions.length === 1 ? directions[0] : chooseOption(api, {
+        kind: 'location', source: here.id, seat: inv.seat,
+        prompt: '选择把「虚空之路」移动的方向。',
+        options: directions.map(item => ({ id: item, label: `${labels[item] || item}移动一格` })),
+      })
+      if (!directions.includes(direction)) return
+      flagsOf(state).referenceResources -= 1
+      flagsOf(state).roundAdjacentUsed ||= {}
+      flagsOf(state).roundAdjacentUsed[here.id] = state.round
+      slideCosmosLocation(state, api, here.id, direction, { seat: inv.seat })
       return
     }
     if (encounterRules.performAction?.(state, inv, move, api)) return
@@ -1007,13 +1560,11 @@ export const behavior = {
 
   // ---- 诚实边界 ----
   scenarioApproximations: [
-    '宇宙网格：用 P2.13 地点牌库 + scenarioFlags.cosmosOrder「放置顺序」承载；「右/下」连接最近放置者、「上」连接最早放置者、「任意方向」由玩家选；没有二维坐标与滑动。',
-    '「宇宙 -」放置指令表在 definition.locations[*].cosmos（direction/cost），behavior.placeCosmosLocation 按表建立连接；支付代价后与任意已放置地点连接的替代选项已实现。',
-    '虚空格子：不建地点卡，只用 scenarioFlags.emptySpaceCount 记账（不参与移动/连接/猎手目标）。盲目舞者因此用「离所有调查员最远的在场地点」近似「最远的虚空格子」，并用「进入非枢纽宇宙地点」近似「进入虚空格子」，此时同轮再结算一次猎手（每轮一次）。',
-    '阿撒托斯不建场上敌人实体（参考实现里它也不在任何地点）：毁灭记 scenarioFlags.azathothDoom，「阿撒托斯攻击你」= 3 伤害 + 3 恐惧；免疫/不可击败因此自动成立。05328 背面推进后置 flags.azathothAbsorbsAllDoom，此时阿撒托斯毁灭 = 累积计数 + 场上所有卡牌/当前密谋上的毁灭（等价 CountAllDoomInPlay），skull X / 黑色王座隐藏值 / 05344·05345 都读同一口径。',
-    '冒险参考卡资源用 scenarioFlags.referenceResources 记账；宇宙门扉的「移动任意数量调查员」实现为移动该处全部调查员；三个地点的「把本地点上/下/左/右移动一格」用放置顺序交换近似。',
-    '幕推进时的清场重建（05329/05330 背面）：旧枢纽移出游戏、其余地点洗回宇宙、这些地点的调查员被 api.defeat 阵亡、这些地点的敌人与遭遇牌库顶 5 张混洗后放回牌库顶、新枢纽 + 宇宙顶 2/3 张入场、按玩家顺序每人抽 1 张遭遇均已实现；仍近似的是「宇宙顶 N 张与枢纽混洗至无法分辨后的具体格位摆放」与虚空格子实体——本实现按放置顺序放置，虚空格子只记数量（7/8 个）。',
-    '「命运之轮·X」的「在宇宙中向左移动 / 把地点向左移动」用放置顺序的相邻位置承载；「它在等待」的意志检定与「最后的倒计时」的娃娃效果按卡面实现。',
+    '宇宙用二维网格承载（见 cosmos.js）：格位/方向/四邻接连接/虚空格子（携带一张玩家卡）均按参考 Cosmos.hs 与各地点 RunCosmos 实现；虚空格子不建「地点卡」实体（参考实现用 xempty 特殊地点卡），因此敌我目标枚举里不会把虚空格子当地点（05341 盲目舞者的「进入虚空格子」用网格格位 flags.dancerVoidCell 承载，见下一行）。',
+    '盲目舞者（05341）的「可以进入虚空格子，如同其进入一个地点」用 cosmos 二维网格承载：最短路线下一格是虚空格时舞者进入并记录 flags.dancerVoidCell（可停留在虚空格中，下一次猎手移动从该格位继续），若经猎手进入虚空格则同一结算内再走一格（每轮一次，flags.dancerVoidRound）；生成时按网格取离所有调查员最远的虚空格，dancerVoidCell 记录该格位、引擎锚点取离它最近的在场地点（farthestEmptySpace/dancerHuntMove/spawnLocationFor/enemySpawned）。残余表示层：虚空格仍不是可站立的 location 实体——舞者在虚空格中时引擎侧位置仍锚定在最近地点（攻击/交战类读点已由 canFightEnemy/canEvadeEnemy/enemyCannotBeAttacked 按 dancerVoidCell 拒绝，但「按地点统计/检索敌人」的效果会把它算在锚点地点；引擎猎手循环在锚点地点有调查员时会跳过本卡，属同源残余）；等距多条路线仍取确定顺序而非队长选择。tests/tcu-black-throne.test.mjs 覆盖穿越/停留/连续两虚空格/生成。',
+    '阿撒托斯不建场上敌人实体（参考实现是 Omnipotent 的 Global 敌人；普通「敌人」匹配器在参考实现里会因 Omnipotent 被排除在玩家卡效果之外，本引擎没有该匹配器语义，故用「不生成实体」表达「免疫所有玩家卡牌效果/调查员行动」）。毁灭记 scenarioFlags.azathothDoom，「阿撒托斯攻击你」= 3 伤害 + 3 恐惧；免疫/不可击败由「不在场」成立，并已由 behavior.enemyCanBeDefeated/canFightEnemy/canEvadeEnemy/canEngageEnemy/enemyCannotBeAttacked/enemyCannotAttack/canOpportunityAttack/enemyDamageAllowed 防御性拒绝（即便被异常路径生成也不会被攻击/击败/躲避/交战/伤害）。唯一行为差异是「统计场上敌人」的效果会少算它：R6 评估过内容侧「替代计数读点」（behavior.enemyCountOverride 等）不可行——现有玩家卡/引擎效果直接读 state.enemies，没有可插入的引擎读点，内容钩子只会是死代码；要消除此差异需要引擎支持 Global/不在任何地点的真实敌人实体（本轮不做）。05328 背面推进后置 flags.azathothAbsorbsAllDoom，此时阿撒托斯毁灭 = 累积计数 + 场上所有卡牌/当前密谋上的毁灭（等价 CountAllDoomInPlay），skull X / 黑色王座隐藏值 / 05344·05345 都读同一口径；≥10 毁灭在 addAzathothDoom/doomPlaced/各阶段钩子末轮询判「吞食宇宙（→R1）」。',
+    '冒险参考卡资源用 scenarioFlags.referenceResources 记账；「移除参考卡 1 资源」的能力在资源不足时不出现。',
+    '幕推进时的清场重建（05329/05330 背面）按 definition.COSMOS_LAYOUTS 的固定摆盘表实现：旧枢纽移出游戏、虚空格子的卡洗回所有者牌库、其余地点洗回宇宙（其上调查员阵亡、敌人与遭遇牌库顶 5 张混洗）、「放在一边的枢纽 + 宇宙顶 N 张」洗混后隐藏摆放在手册位置、虚空格子从 lead 牌库顶取卡、按玩家顺序每人抽 1 张遭遇。仍属表示层近似：地点卡以「宇宙」面朝上摆放但引擎不区分卡背图案，二维坐标只存于 scenarioFlags（界面地图仍用静态 layout 坐标，不随移动变化）。',
     '调查员被击败的「调查员被击败」段落只记日志 + 1 点精神创伤（参考实现的 drivenInsane 会改写战役记录状态）。',
     'DarkCult 遭遇组：本仓库卡表把 Acolyte/Wizard of the Order/Mysterious Chanting 归在 pentagram 组，遭遇牌库用 pentagram 组近似。',
     'ReturnTo 专属内容（夜魇坐骑 54061 等 4 张变体卡）不在本次非 ReturnTo 剧本的卡表范围内，未实现。',

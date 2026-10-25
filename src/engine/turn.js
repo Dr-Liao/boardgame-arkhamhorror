@@ -51,6 +51,7 @@ export function createTurn(deps) {
     performTest,
     placeDoomOnCard,
     playerWindow,
+    openAbilityWindow,
     reactionWindow,
     registeredEntry,
     relocateEnemy,
@@ -97,12 +98,21 @@ function runMythos(state, repeated = false) {
     info(state, events, `🌑 神话阶段（第 ${state.round} 回合）：「${currentAgenda?.name || '当前密谋'}」跳过放置毁灭步骤（当前 ${state.doom}）。`,
       { kind: 'phase', phase: 'mythos', round: state.round, text: '跳过密谋毁灭 · 当前无变化', effect: 'doom', delta: 0 })
   } else {
-    state.doom += 1
-    info(state, events, `🌑 神话阶段（第 ${state.round} 回合）：密谋上放置 1 点毁灭（当前 ${state.doom}）。`,
-      { kind: 'phase', phase: 'mythos', round: state.round, text: `密谋增加 1 点毁灭 · 当前 ${state.doom}`, effect: 'doom', delta: 1 })
-    // 神话阶段的毁灭也是「放置毁灭」，剧本的强制要能看到（04282/04283）。
-    scenarioBehavior(state).doomPlaced?.(state,
-      { target: null, amount: 1, agenda: true }, scenarioRuntime(state, events))
+    // 2026-10-25 第四轮修复 05285：神话阶段的「在当前密谋放置 1 点毁灭」也走统一替换钩子
+    // （behavior.doomPlacementReplacement 可把这次放置替换成别的效果；05285 改为放裂口）。
+    const replacedByBehavior = scenarioBehavior(state).doomPlacementReplacement?.(
+      state, 1, scenarioRuntime(state, events)) === true
+    if (replacedByBehavior) {
+      info(state, events, `🌑 神话阶段（第 ${state.round} 回合）：「在当前密谋放置 1 点毁灭」被剧本效果替换。`,
+        { kind: 'phase', phase: 'mythos', round: state.round, text: '密谋毁灭被替换', effect: 'doom', delta: 0 })
+    } else {
+      state.doom += 1
+      info(state, events, `🌑 神话阶段（第 ${state.round} 回合）：密谋上放置 1 点毁灭（当前 ${state.doom}）。`,
+        { kind: 'phase', phase: 'mythos', round: state.round, text: `密谋增加 1 点毁灭 · 当前 ${state.doom}`, effect: 'doom', delta: 1 })
+      // 神话阶段的毁灭也是「放置毁灭」，剧本的强制要能看到（04282/04283）。
+      scenarioBehavior(state).doomPlaced?.(state,
+        { target: null, amount: 1, agenda: true }, scenarioRuntime(state, events))
+    }
   }
   phaseBeginningWindow(state, events)
   checkAgenda(state, events)
@@ -113,6 +123,17 @@ function runMythos(state, repeated = false) {
     drawEncounter(state, inv, events)
   }
   playerWindow(state, 'mythos.afterEncounter', events)
+  // 2026-10-25 第七轮修复 05021：神话阶段结束的 pay-or-discard 窗口。
+  // 仅当真的有带 mythosEnd 能力的卡时才开窗（避免空窗口改变重放指纹）。
+  for (const inv of aliveInvestigators(state)) {
+    const hasMythosEnd = [...(inv.assets || []), ...(inv.threat || []), ...(inv.attachments || [])]
+      .some(card => (registeredEntry(card.code)?.abilities || []).some(ability => ability.trigger === 'mythosEnd'))
+    if (!hasMythosEnd) continue
+    openAbilityWindow(state, 'mythosEnd', {
+      when: 'mythosEnd', seat: inv.seat, location: inv.location,
+      prompt: `${inv.name} 的神话阶段结束窗口`,
+    }, events)
+  }
   // 神话阶段结束强制：数据中的 mythosEndDoom。
   for (const enemy of state.enemies.slice()) {
     const doom = enemyTextBlanked(state, enemy) ? 0 : enemyDef(enemy.code)?.mythosEndDoom || 0
@@ -226,7 +247,18 @@ function hunterStep(state, enemy, options = {}) {
     return true
   })
   if (!neighbours.length) return null
-  const lure = state.locations.find(item => item.lure?.round === state.round)
+  // 2026-10-25 第七轮修复 05323：地点附属的 locationLure 是真实诱饵（多诱饵取最近）。
+  const lureAttachments = (state.playerLocationAttachments || [])
+    .filter(attachment => registeredEntry(attachment.code)?.locationLure === true
+      && (!(attachment.extra?.round ?? attachment.round) || (attachment.extra?.round ?? attachment.round) === state.round))
+  const lureByAttachment = lureAttachments.length
+    ? lureAttachments
+      .map(attachment => ({ location: attachment.location,
+        distance: distanceToInvestigator(state, enemy.location, [{ location: attachment.location }]) }))
+      .sort((a, b) => a.distance - b.distance)[0]
+    : null
+  const lure = lureByAttachment ? { id: lureByAttachment.location }
+    : state.locations.find(item => item.lure?.round === state.round)
   if (lure) {
     const target = [{ location: lure.id }]
     const distances = neighbours.map(id => distanceToInvestigator(state, id, target))
@@ -242,6 +274,18 @@ function hunterStep(state, enemy, options = {}) {
   const proximity = targets.map(i => distanceToInvestigator(state, enemy.location, [i]))
   const nearest = Math.min(...proximity)
   targets = targets.filter((_, index) => proximity[index] === nearest)
+  // 2026-10-25 本循环修复 hunter-step-prey-tiebreak（05087/05100）：敌人身上的猎物标记
+  // （preySeat）只在「与最近调查员并列」时用于裁决目标，否则仍朝最近的调查员移动。
+  // 2026-10-25 交叉复核修复 05221：并列时先问剧本 preyRank（如「猎物 - 控制最多钥匙的调查员」），
+  // 卡片自身的猎物定义优先于通用猎物标记。
+  if (targets.length > 1 && !enemyTextBlanked(state, enemy)) {
+    const ranked = scenarioBehavior(state).preyRank?.(state, enemy, targets)
+    if (Array.isArray(ranked) && ranked.length && ranked.length < targets.length) targets = ranked
+    else if (Number.isInteger(enemy.preySeat)) {
+      const preferred = targets.find(inv => inv.seat === enemy.preySeat)
+      if (preferred) targets = [preferred]
+    }
+  }
   const rank = PREY_RANK[enemy.prey]
   if (rank && targets.length) {
     const best = Math.min(...targets.map(i => rank(state, i)))
@@ -259,6 +303,15 @@ function hunterStep(state, enemy, options = {}) {
 }
 
 function runLocationRoundEnd(state, events) {
+  // 2026-10-25 第七轮修复 05323：轮末弃掉声明 discardAtRoundEnd 的地点附属。
+  for (const attachment of [...(state.playerLocationAttachments || [])]) {
+    if (registeredEntry(attachment.code)?.discardAtRoundEnd !== true) continue
+    const index = state.playerLocationAttachments.indexOf(attachment)
+    if (index >= 0) state.playerLocationAttachments.splice(index, 1)
+    const owner = state.investigators[attachment.ownerSeat]
+    if (owner) owner.discard.push(attachment.code)
+    info(state, events, `「${cardName(attachment.code)}」在轮末被弃掉。`)
+  }
   for (const loc of state.locations) {
     if (loc.lure?.round === state.round) { state.investigators[loc.lure.seat]?.discard.push(loc.lure.code); delete loc.lure }
     // 地点自己的「回合结束」规则（01156 仪式地：线索补至每人 2 个；05141 祭品场所：补到 3×人数）。

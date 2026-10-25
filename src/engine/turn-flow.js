@@ -277,6 +277,7 @@ export function createTurnFlow(deps) {
       const amount = inv.hand.length - keep
       const context = reactionWindow(state, 'wouldDiscardFromHand', {
         when: 'wouldDiscardFromHand', seat: inv.seat, amount, what: 'discard', location: inv.location,
+        source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },
         prompt: `${inv.name} 将要弃 ${amount} 张手牌（手牌上限）`,
       }, events)
       if (context.cancelled) {
@@ -299,6 +300,7 @@ export function createTurnFlow(deps) {
     // 遭遇卡/敌人攻击来源；本函数也被手牌上限等调用，故窗口只提供事实）。
     const context = reactionWindow(state, 'wouldDiscardFromHand', {
       when: 'wouldDiscardFromHand', seat: inv.seat, amount: count, what: 'discard', location: inv.location,
+      source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },
       prompt: `${inv.name} 将要弃掉 ${count} 张手牌`,
     }, events)
     if (context.cancelled) {
@@ -418,9 +420,9 @@ export function createTurnFlow(deps) {
     const charles = itemDiscountAtLocation(state, inv, def)
     // 能力层修正：例如 03142「黑玛瑙扣环」在手牌中时其他手牌 +1 费用（负数为折扣）。
     const abilityLayer = playCostDelta(state, inv, def.code)
-    // 第 5 步 P6：直觉牌库顶揭示的那一张可以少付 2 资源（「如同它是你的手牌」）。
-    const hunch = hunchDeck.playDiscount(state, inv, def.code)
-    return Math.max(0, (def.cost || 0) - discount - lola - cardDiscount - playDiscount + threatIncrease + locationIncrease - relicDiscount - charles + abilityLayer - hunch)
+    // 2026-10-25 第七轮修复 05002：揭示牌的 -2 折扣只通过 fromHunch 路径的 inv.playDiscount 生效，
+    // 不再按卡号在 playCost 里减（避免手中同名另一张也吃折扣）。
+    return Math.max(0, (def.cost || 0) - discount - lola - cardDiscount - playDiscount + threatIncrease + locationIncrease - relicDiscount - charles + abilityLayer)
   }
 
   function itemDiscountAtLocation(state, inv, def) {

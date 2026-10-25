@@ -81,7 +81,9 @@
 .ah-office-decor { display: block; object-fit: contain; pointer-events: none; user-select: none; }
 .ah-office-eyebrow { display: block; color: #b9a574; letter-spacing: 3px; font-size: 11px; }
 .ah-office-muted, .ah-office .ah-hub-setup-fields small, .ah-office .ah-save-item small { color: var(--office-muted); }
-.ah-office.ah-hub-setup { display: grid; grid-template-columns: 1.15fr 1fr; width: min(1180px, 95vw); padding: 0; max-height: 90vh; border: 1px solid #927b49; border-radius: 6px; overflow: auto; box-shadow: 0 35px 110px #000c; }
+/* min-height/max-height 由脚本按「新游戏」页的自然高度写入 --ah-entry-stable-h：存档页内容更短，
+   锁住高度后切换页签时居中的弹窗不再整体上下跳；存档很多时也不会把弹窗撑高。 */
+.ah-office.ah-hub-setup { display: grid; grid-template-columns: 1.15fr 1fr; width: min(1180px, 95vw); padding: 0; min-height: min(var(--ah-entry-stable-h, 0px), 90vh); max-height: min(90vh, var(--ah-entry-stable-h, 90vh)); border: 1px solid #927b49; border-radius: 6px; overflow: auto; box-shadow: 0 35px 110px #000c; }
 .ah-office-entry-art { position: relative; isolation: isolate; min-height: 610px; overflow: hidden; background: radial-gradient(ellipse at 50% 45%, #4b655740, transparent 70%), #091613; border-right: 1px solid var(--office-edge); }
 .ah-office-entry-art > .ah-office-decor { position: absolute; z-index: 0; width: 125%; left: -13%; bottom: 20%; opacity: .85; -webkit-mask-image: linear-gradient(to right, transparent 8%, #000 24%, #000 76%, transparent 92%); mask-image: linear-gradient(to right, transparent 8%, #000 24%, #000 76%, transparent 92%); }
 /* 封面主图（战役场景照）单独一层：照片是硬边矩形，不处理会在标题下方、桌面图上方各切出
@@ -101,8 +103,18 @@
 .ah-office-entry-title p { color: #bec2a8; font-family: SimSun, serif; letter-spacing: 3px; font-size: 13px; }
 .ah-office-entry-controls { padding: 42px 36px; min-width: 0; }
 .ah-office-entry-controls > h2 { margin: 16px 0 26px; font-size: 30px; color: #f2dfb2; }
-.ah-office-entry-controls .ah-hub-tabs { justify-content: flex-start; padding: 0; gap: 24px; background: transparent; margin-bottom: 20px; }
-.ah-office-entry-controls .ah-hub-tabs button { padding: 12px 4px; }
+/* 开局弹窗的页签：两页等宽、紧凑，只占自身宽度。主题色把整行铺成一条底色时，右侧空白
+   看起来就像「存档管理」页签异常巨大，所以这里用透明底 + 底部细线，间隔也压到 8px。
+   等宽用 inline-grid 的 1fr 列取两页签中较宽者，中英文和后续文案变化都无需另调；
+   显式清掉窄屏媒体查询里的 3 列模板，否则会多出一个看不见的空列把底线拉长。 */
+.ah-office.ah-hub-setup .ah-office-entry-controls .ah-hub-tabs {
+  display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr;
+  grid-template-columns: none; grid-template-rows: none;
+  justify-content: start; width: max-content; max-width: 100%;
+  padding: 0; gap: 8px; background: transparent;
+  border-bottom: 1px solid var(--office-edge); margin-bottom: 20px;
+}
+.ah-office.ah-hub-setup .ah-office-entry-controls .ah-hub-tabs button { justify-content: center; padding: 12px 18px; }
 .ah-office .ah-hub-setup-fields { gap: 18px; }
 .ah-office.ah-hub-setup .ah-hub-setup-fields { gap: 10px; padding: 8px 0; }
 .ah-office.ah-hub-setup .bg-seat-setup { margin: 0; }
@@ -385,10 +397,10 @@
   .ah-office .bg-game-head { padding: 12px; gap: 8px; }.ah-office .bg-game-title { font-size: 16px; letter-spacing: 1px; }.ah-office .bg-game-status { font-size: 11px; }
   .ah-office .bg-game-actions { width: 100%; margin: 0; }.ah-office .ah-hub-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 0 8px; }
   .ah-office .ah-hub-tabs button { justify-content: center; padding: 13px 3px; font-size: 11px; }.ah-office .ah-hub-tabs .ah-icon { width: 16px; height: 16px; }
-  .ah-office.ah-hub-setup { display: block; width: 95vw; max-height: 92vh; }.ah-office-entry-art { min-height: 230px; height: 230px; border-right: 0; border-bottom: 1px solid var(--office-edge); }
+  .ah-office.ah-hub-setup { display: block; width: 95vw; min-height: min(var(--ah-entry-stable-h, 0px), 92vh); max-height: min(92vh, var(--ah-entry-stable-h, 92vh)); }.ah-office-entry-art { min-height: 230px; height: 230px; border-right: 0; border-bottom: 1px solid var(--office-edge); }
   .ah-office-entry-art > .ah-office-entry-hero { width: 75%; left: 30%; bottom: -15%; }.ah-office-entry-art > .ah-office-decor:nth-child(2) { width: 70%; left: -13%; bottom: -18%; }
   .ah-office-entry-title { text-align: left; padding: 28px 22px; }.ah-office-entry-title small { letter-spacing: 4px; }.ah-office-entry-title h2 { font-size: 36px; letter-spacing: 5px; margin: 10px 0; }.ah-office-entry-title p { font-size: 10px; letter-spacing: 1px; }
-  .ah-office-entry-controls { padding: 24px; }.ah-office-entry-controls > h2 { font-size: 24px; margin: 12px 0; }.ah-office-entry-controls .ah-hub-tabs { display: flex; gap: 30px; }.ah-office-entry-controls .ah-hub-tabs button { font-size: 14px; }
+  .ah-office-entry-controls { padding: 24px; }.ah-office-entry-controls > h2 { font-size: 24px; margin: 12px 0; }.ah-office-entry-controls .ah-hub-tabs button { font-size: 14px; }
   .ah-office.ah-hub-setup .bg-modal-foot { margin-left: -24px; margin-right: -24px; padding-left: 24px; padding-right: 24px; }
   /* 手机上把页脚规则书收成图标，三个按钮才能留在一行。 */
   .ah-office .ah-hub-setup-rulebook { width: 44px; min-width: 44px; padding: 0; gap: 0; justify-content: center; font-size: 0; }

@@ -8,6 +8,8 @@
 //
 // P7：[action] 攻击走 api.fight({ combatBonus, damageBonus })；条件加值与「可选的额外费用」
 // 在 resolve 里结算（引擎没有 optionalCost 通道），击败后的治愈读 api.testResult()/敌人是否离场。
+// 卡面「攻击。」= Fight 行动关键字：countsAs:'fight' + noOpportunityAttack（05118 同一写法），
+// 与敌人交战时发动不引发借机攻击。
 
 export default {
   code: '05114',
@@ -15,6 +17,9 @@ export default {
     {
       kind: 'action', label: '攻击（剩余神智≤3 时 +2 战斗；可受 1 恐惧换 +1 伤害）',
       cost: { action: true },
+      // 卡面「攻击。」= Fight 行动：借机攻击豁免（dispatch.js 的 abilityNoAoO/actionKind 读点）。
+      countsAs: 'fight',
+      noOpportunityAttack: true,
       target: { kind: 'enemy' },
       resolve: ({ state, inv, target, api }) => {
         const enemy = target?.entity

@@ -59,6 +59,12 @@ export function createReveal(deps) {
     spendAction,
     spendClues,
     stepToward,
+    // 2026-10-25 第五轮修复 05004：直接写 context.cancelled 的取消也统一记账。
+    noteCardCancelled,
+    reactionWindow,
+    // 取消记账的进程内帧（不写 state，避免改变存档/重放指纹）。
+    beginCancelNoteFrame,
+    cancelNoteFrameNoted,
   } = deps
 
 function resolveTreacheryEffect(state, inv, fx, events) {
@@ -171,7 +177,37 @@ function runAgendaForced(state, when, events) {
   scenarioBehavior(state).agendaForced?.(state, when, scenarioRuntime(state, events), f.type)
 }
 
-function executeDescriptor(state, { inv, source, descriptor, context = {}, events, windowId = null, fromHandIndex = null, effect = null, legacyAbilityLog = false, alreadyPaid = false, silent = false }) {
+// 2026-10-25 第七轮修复 05004（交叉复核）：嵌套描述子结算深度。
+// deferredBeneath（黛安娜把取消的卡压到自身底下）必须等**最外层** executeDescriptor 把手牌处置完
+// （进弃牌堆）之后再冲刷，否则嵌套反应提前冲刷会造成同一张卡同时出现在 beneath 与 discard。
+let descriptorDepth = 0
+
+function flushDeferredBeneath(state, events = []) {
+  if (!Array.isArray(state.deferredBeneath) || !state.deferredBeneath.length) return
+  const pending = state.deferredBeneath
+  delete state.deferredBeneath
+  for (const item of pending) {
+    const owner = state.investigators[item.seat]
+    if (!owner) continue
+    const discardIndex = (owner.discard || []).indexOf(item.code)
+    if (discardIndex >= 0) owner.discard.splice(discardIndex, 1)
+    owner.beneath ||= []
+    owner.beneath.push(item.code)
+    if (item.log !== false) info(state, events, `「${cardName(item.code)}」被放在 ${owner.name} 底下。`)
+  }
+}
+
+function executeDescriptor(state, params) {
+  descriptorDepth += 1
+  try {
+    return runExecuteDescriptor(state, params)
+  } finally {
+    descriptorDepth -= 1
+    if (descriptorDepth === 0) flushDeferredBeneath(state, params?.events)
+  }
+}
+
+function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, events, windowId = null, fromHandIndex = null, effect = null, legacyAbilityLog = false, alreadyPaid = false, silent = false }) {
   const cost = descriptorCost(descriptor)
   // 手牌事件：先按打出规则付费并离开手牌，再结算效果。
   // noPlayCost 的描述子（如 05023 宝剑王牌「放置入场」）自己负责移动这张牌。
@@ -262,6 +298,11 @@ function executeDescriptor(state, { inv, source, descriptor, context = {}, event
   }
   // 第 5 步 P6：结算期间记录「正在结算的是哪张卡」——取消/忽略效果的记账（cardCancelled）
   // 与「放在黛安娜底下」都靠它，不要求每个取消路径各传一次卡号。
+  // 2026-10-25 第五轮修复 05004：取消自动记账的快照（见本函数末尾）。用进程内帧，不写 state
+  // （state 上放临时字段会改变存档/重放指纹）。
+  const cancelledBefore = context?.cancelled === true
+  beginCancelNoteFrame()
+  let cancelledByDescriptor = false
   const previousResolving = state._resolvingCardCode
   const previousResolvingSeat = state._resolvingSeat
   state._resolvingCardCode = descriptor.code
@@ -277,28 +318,18 @@ function executeDescriptor(state, { inv, source, descriptor, context = {}, event
       if (context?.optionIndex != null) effectData = { ...effectData, optionIndex: context.optionIndex }
       resolveEffect(state, inv.seat, effectData, makeRuntime(state, events))
     }
+    cancelledByDescriptor = !cancelledBefore && context?.cancelled === true && !cancelNoteFrameNoted()
   } finally {
+    // 2026-10-25 第五轮修复 05004：旧路径直接写 context.cancelled 时补记「卡牌取消效果」事实。
+    // 必须在恢复 _resolvingCardCode 之前记账（记账要从它取取消方卡号）。
+    if (cancelledByDescriptor) noteCardCancelled(reactionWindow, state, events, { seat: inv.seat })
     if (previousResolving === undefined) delete state._resolvingCardCode
     else state._resolvingCardCode = previousResolving
     if (previousResolvingSeat === undefined) delete state._resolvingSeat
     else state._resolvingSeat = previousResolvingSeat
   }
   if (handCode) disposePlayedEvent(inv, handCode)
-  // 「放在某张调查员底下」的延后结算（黛安娜·史丹利的反应）：
-  // 反应在取消的当刻结算，而取消方那张事件卡要到这里才进弃牌堆，所以先记账、再搬运。
-  if (Array.isArray(state.deferredBeneath) && state.deferredBeneath.length) {
-    const pending = state.deferredBeneath
-    delete state.deferredBeneath
-    for (const item of pending) {
-      const owner = state.investigators[item.seat]
-      if (!owner) continue
-      const discardIndex = (owner.discard || []).indexOf(item.code)
-      if (discardIndex >= 0) owner.discard.splice(discardIndex, 1)
-      owner.beneath ||= []
-      owner.beneath.push(item.code)
-      if (item.log !== false) info(state, events, `「${cardName(item.code)}」被放在 ${owner.name} 底下。`)
-    }
-  }
+  // deferredBeneath 的冲刷统一在最外层 executeDescriptor 的 finally 中执行（见上方 flushDeferredBeneath）。
   // Phase 5（D2）：discardWhenEmpty 也可以写在注册表条目上（与 uses/usesType 同层）。
   const entry = registeredEntry(descriptor.code)
   const discardWhenEmpty = entry?.discardWhenEmpty

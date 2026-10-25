@@ -12,20 +12,26 @@
 // 因此「先交战再走」的差别只在敌人已交战；② 「每位调查员仅限 1 张[[鞋子]]」没有按特性分组
 // 的场上限额读点，未校验。
 
+import { ALL_CARDS } from '../../cards/cards-data.js'
 import { ownSeat } from '../../engine/matcher.js'
 import { skillModifier } from './_shared.js'
 
 export default {
   code: '05036',
-  simplified: true,
-  note: '未实现：① 反应时机在敌人自动交战之后（卡面要求交战之前）；② 「每位调查员仅限1张[[鞋子]]」未校验（缺按特性分组的限额读点）。已实现 +1 敏捷、横置、敏捷(3)检定、成功移动到连接地点。',
+  note: 'R6：反应改挂 moveBeforeEngage 窗口（移动后、新地点敌人自动交战前），与卡面时机一致；「每位调查员仅限 1 张[[鞋子]]」由 playCondition 校验。已实现：+1 敏捷、横置、敏捷(3)检定、成功移动到连接地点。',
+  // 审计 R4：补「每位调查员仅限 1 张[[鞋子]]」——打出时校验控制者场上同特性资产数。
+  playCondition: [{
+    when: ({ inv }) => !(inv.assets || []).some(asset =>
+      (ALL_CARDS[asset.code]?.traits || []).some(trait => String(trait).toLowerCase() === 'footwear')),
+    message: '每位调查员仅限 1 张[[鞋子]]',
+  }],
   modifiers: [
     skillModifier('agility', 1),
   ],
   abilities: [
     {
       kind: 'reaction',
-      trigger: 'move',
+      trigger: 'moveBeforeEngage',
       label: '横置：敏捷(3)，成功后移动到连接地点',
       cost: { exhaust: true },
       criteria: [ownSeat()],

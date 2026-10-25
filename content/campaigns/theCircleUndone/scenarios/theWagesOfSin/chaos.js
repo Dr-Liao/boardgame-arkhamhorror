@@ -27,14 +27,11 @@ export function resolveChaosToken(state, inv, token, api = {}) {
     return chaosFx(-value, hard ? { drawAnother: true } : {})
   }
   if (token === 'cultist') {
-    // 本轮结束前场上每个异端者敌人 +1 攻击/+1 躲避（共享 enemyStatModifier 读这个实例字段）。
-    // 记下本轮标记：同一轮稍后生成的异端者也应获得（behavior.enemySpawned 读它）。
+    // 本轮结束前场上每个异端者敌人 +1 攻击/+1 躲避：只记本轮标记。
+    // behavior.enemyStatModifier 按「本轮标记 + isHereticEnemy」读取，因此本轮后生成或
+    // 由未了之事翻回敌人面的异端者也在覆盖范围内。
     state.scenarioFlags ||= {}
     state.scenarioFlags.wosCultistBuffRound = state.round
-    for (const enemy of state.enemies || []) {
-      if (!enemy.hereticFace) continue
-      enemy.roundFightEvadeBonus = { round: state.round, amount: 1 }
-    }
     return chaosFx(hard ? -4 : -3)
   }
   if (token === 'tablet') return chaosFx(hard ? -4 : -3)

@@ -7,6 +7,9 @@
 //
 // P7：+1 智识走修正管线；反应挂 clueDiscovered 窗口（02061 同一窗口），
 // 目标在 resolve 里选（反应窗口没有 legalMoves 的目标预选，05005 同一写法）。
+// 审计 R2：卡面要求「对你所在地点的一个敌人造成 1 点伤害」——没有合法目标时不该提供该
+// 反应（否则会白白横置）。可行性写在 criteria 里（反应窗口按 descriptorUsable 过滤），
+// 参照 Haskell 的 controlled a 1 (canDamageEnemyAt … YourLocation)。
 
 import { skillModifier } from './_shared.js'
 
@@ -19,7 +22,11 @@ export default {
     {
       kind: 'reaction', trigger: 'clueDiscovered',
       label: '横置：对同地点一个敌人造成 1 点伤害',
-      criteria: [({ inv, context }) => context?.seat === inv.seat],
+      criteria: [
+        ({ inv, context }) => context?.seat === inv.seat,
+        // 没有同地点敌人时反应不可用（避免横置白费）。
+        ({ state, inv }) => (state.enemies || []).some(enemy => !enemy.defeated && enemy.location === inv.location),
+      ],
       cost: { exhaust: true },
       resolve: ({ state, inv, api }) => {
         const enemies = state.enemies.filter(enemy => enemy.location === inv.location && !enemy.defeated)

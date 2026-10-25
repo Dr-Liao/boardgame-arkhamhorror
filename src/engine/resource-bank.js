@@ -83,6 +83,40 @@ export function createResourceBank(deps) {
     return amount
   }
 
+  // 2026-10-25 第七轮修复 05003/05011：v2 API（沿用合并模型，寄存量同时计入资源池）。
+  function bankResources(state, inv, amount, events = []) {
+    return gainResource(state, inv, amount, events)
+  }
+
+  function withdrawBanked(state, inv, amount, events = []) {
+    const asset = bankAsset(inv)
+    if (!asset) return 0
+    const banked = asset.resources || 0
+    const take = Number.isFinite(amount) ? Math.min(banked, Math.max(0, Math.floor(amount))) : banked
+    asset.resources = banked - take
+    if (!asset.resources) delete asset.resources
+    if (take) info(state, events, `💰 ${inv.name} 从「${cardName(asset.code)}」取出 ${take} 资源（剩余 ${asset.resources || 0}）。`)
+    return take
+  }
+
+  function spendBanked(state, inv, amount, events = []) {
+    return withdrawBanked(state, inv, amount, events)
+  }
+
+  function spendResources(state, inv, amount, events = []) {
+    const spend = Math.min(inv?.resources || 0, Math.max(0, Math.floor(Number(amount) || 0)))
+    if (!spend) return 0
+    inv.resources -= spend
+    // 支付优先消耗「寄存」部分（合并模型下，先花哪一份等价）。
+    const asset = bankAsset(inv)
+    if (asset && (asset.resources || 0) > 0) {
+      asset.resources = Math.max(0, asset.resources - spend)
+      if (!asset.resources) delete asset.resources
+    }
+    info(state, events, `💰 ${inv.name} 支付了 ${spend} 资源（剩余 ${inv.resources}）。`)
+    return spend
+  }
+
   // 回合开始（强制）：在寄存支援上放 perTurn 资源。
   function beginTurn(state, inv, events = []) {
     const rule = ruleOf(inv?.code)
@@ -124,5 +158,5 @@ export function createResourceBank(deps) {
     return { code: asset.code, banked: asset.resources || 0 }
   }
 
-  return { ruleOf, bankAsset, bankedOf, gainResource, beginTurn, endTurn, withdrawAll, projection }
+  return { ruleOf, bankAsset, bankedOf, gainResource, bankResources, withdrawBanked, spendBanked, spendResources, beginTurn, endTurn, withdrawAll, projection }
 }

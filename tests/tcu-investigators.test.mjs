@@ -12,11 +12,12 @@ import assert from 'node:assert/strict'
 
 import { fixture, move, settle, enemy } from './core-fixture.mjs'
 import {
-  createGameState, executeDescriptor, getStat, healHorrorFrom, isSpellAction, legalMoves, playCost,
-  performTest, reactionWindow, validateMove, applyDamage, applySkillOnSuccess, slotUsage, canEquip, enemyAttack,
+  applyMove, createGameState, eliminateInvestigator, evaluateCriteria, executeDescriptor, finishScenario, getStat, healHorrorFrom, isSpellAction, legalMoves, playCost,
+  performTest, playerWindow, reactionWindow, validateMove, applyDamage, applySkillOnSuccess, slotUsage, canEquip, enemyAttack,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { registeredEntry } from '../src/engine/ability.js'
+import { pushRevelation, popRevelation } from '../src/engine/resolution-scope.js'
 import { investigatorRule } from '../src/cards/card-rules.js'
 import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
 import {
@@ -291,7 +292,7 @@ test('P6 乔：冒险设置抽出 11 张洞察事件（含悬案）', () => {
   // 设置期间的「从牌库挑 11 张洞察事件」是一个待决选择（与重调同层），先结算它。
   settle(state)
   const inv = me(state)
-  // 调查阶段开始时已经揭示了牌库顶（那张已经进手牌），所以「直觉牌库总张数」要把揭示的算回来。
+  // 调查阶段开始时已经揭示了牌库顶（R7 起揭示牌不进手牌，只记 hunchRevealed），所以「直觉牌库总张数」要把揭示的算回来。
   const pool = [...inv.hunchDeck, ...(inv.hunchRevealed ? [inv.hunchRevealed] : [])]
   assert.equal(pool.length, 11)
   for (const code of pool) {
@@ -311,7 +312,7 @@ test('P6 乔：调查阶段开始揭示牌库顶，阶段结束洗回；悬案�
   inv.hunchRevealed = null
   run(state, current => hunchEngine.revealHunchCard(current, current.investigators[0], []))
   assert.equal(me(state).hunchRevealed, '01037')
-  assert.equal(me(state).hand.includes('01037'), true, '揭示的那张进手牌（如同手牌）')
+  assert.equal(me(state).hand.includes('01037'), false, '揭示牌不进手牌（R7：只记 inv.hunchRevealed）')
   assert.equal(me(state).hunchDeck.length, 1)
   run(state, current => hunchEngine.returnHunchCard(current, current.investigators[0], []))
   assert.equal(me(state).hunchRevealed, null)
@@ -329,18 +330,45 @@ test('P6 乔：调查阶段开始揭示牌库顶，阶段结束洗回；悬案�
   assert.equal(me(unsolved).threat.some(card => card.code === '05010'), true)
 })
 
-test('P6 乔：揭示的那张打出时少付 2 资源', () => {
+test('R7 05002：hunch 揭示牌可从直觉牌库打出（-2 费、清标记、正常弃置）', () => {
   const state = investigatorFixture('05002')
   const inv = me(state)
-  inv.hand = ['01037']
+  inv.hand = []
   inv.hunchDeck = []
-  inv.hunchRevealed = '01037'
+  inv.hunchRevealed = '02105'
   inv.resources = 10
-  const discounted = playCost(state, me(state), ALL_CARDS['01037'])
-  assert.equal(discounted, Math.max(0, (ALL_CARDS['01037'].cost || 0) - 2))
-  // 不是揭示的那张时没有折扣。
-  me(state).hunchRevealed = null
-  assert.equal(playCost(state, me(state), ALL_CARDS['01037']), ALL_CARDS['01037'].cost || 0)
+  inv.damage = 2
+  const playMove = legalMoves(state).find(option => option.action === 'play'
+    && option.cardId === '02105' && option.fromHunch === true)
+  assert.ok(playMove, '揭示牌应提供 fromHunch 打出候选（-2 费）')
+  move(state, playMove)
+  settle(state, pending => (pending.kind === 'target' ? pending.options[0].id : null))
+  const after = me(state)
+  assert.equal(after.resources, 10, '费用 2 - 2 = 0')
+  assert.equal(after.hunchRevealed ?? null, null, '打出后清掉 hunchRevealed')
+  assert.equal(after.hand.includes('02105'), false, '不留在手牌')
+  assert.ok(after.discard.includes('02105'), '打出后按普通事件进弃牌堆')
+  assert.equal(after.damage, 0, '事件正常结算（治愈 2 点伤害）')
+})
+
+test('R7 05002：手中同名另一张按普通价打出，不吃 hunch 折扣、不误清揭示标记', () => {
+  const state = investigatorFixture('05002')
+  const inv = me(state)
+  inv.hand = ['02105']
+  inv.hunchDeck = []
+  inv.hunchRevealed = '02105'
+  inv.resources = 10
+  inv.damage = 2
+  assert.equal(playCost(state, me(state), ALL_CARDS['02105']), 2, 'playCost 不再按卡号给 hunch 折扣')
+  const plays = legalMoves(state).filter(option => option.action === 'play' && option.cardId === '02105')
+  const hunchMove = plays.find(option => option.fromHunch === true)
+  const handMove = plays.find(option => !option.fromHunch)
+  assert.ok(hunchMove, '揭示副本仍提供 fromHunch 候选（与手牌同名牌并存）')
+  assert.ok(handMove, '手牌同名另一张按普通价单独列出')
+  move(state, handMove)
+  settle(state, pending => (pending.kind === 'target' ? pending.options[0].id : null))
+  assert.equal(me(state).resources, 8, '手牌那张按印刷费用 2 支付（无 -2）')
+  assert.equal(me(state).hunchRevealed, '02105', '同名手牌打出不会误清 hunchRevealed')
 })
 
 test('P6 乔旧印：+1，并把弃牌堆的一张洞察事件放到直觉牌库底', () => {
@@ -438,18 +466,21 @@ test('P6 黛安娜：底下每有一张卡牌 +1 意志；旧印可把一张底�
   const inv = me(state)
   inv.beneath = []
   const base = getStat(state, inv, 'willpower')
-  me(state).beneath = ['01088', '01088']
+  // 两张不同卡号：验证「加入手牌的是所选的那张」而不是 splice 后的下一张（选末张时曾为 undefined）。
+  me(state).beneath = ['01088', '01037']
   assert.equal(getStat(state, me(state), 'willpower'), base + 2)
   state.chaosBag = ['eldersign']
   const execute = current => performTest(current, 0, 'willpower', 3, {
     resolve: value => { current.testResult = value },
   })
   runTransaction(state, execute, pending => {
-    if (pending.kind === 'beneath' && pending.options.some(option => option.id === '0')) return '0'
+    if (pending.kind === 'beneath' && pending.options.some(option => option.id === '1')) return '1'
     return null
   })
-  assert.equal(me(state).beneath.length, 1)
-  assert.equal(me(state).hand.includes('01088'), true)
+  const after = me(state)
+  assert.deepEqual(after.beneath, ['01088'], '从底下移除所选的那张')
+  assert.equal(after.hand.includes('01037'), true, '加入手牌的是所选的卡牌')
+  assert.equal(after.hand.includes('01088'), false, '不会错拿下一张')
 })
 
 test('P6 黛安娜：自己的卡牌取消效果后，把那张卡压在底下并抽 1 张、获得 1 资源', () => {
@@ -596,6 +627,26 @@ test('P6 玛丽：控制卡牌上有毁灭标记时获得只能用于法术的�
   assert.equal(actionsAvailable(me(state), true), 1)
 })
 
+test('fix 05006 法术额度：先花法术专用行动后普通可用行动数正确（不残留额外行动）', () => {
+  const state = investigatorFixture('05006')
+  state.turnSerial = 7
+  const inv = me(state)
+  inv.assets = [{ id: 'doom-asset', code: '01088', exhausted: false, doom: 1 }]
+  inv.actionsLeft = 3
+  delete inv.spellOnlyActions
+  delete inv.spellCreditTurn
+  assert.equal(grantSpellCredit(state, inv, { info: () => {} }), true)
+  assert.equal(actionsAvailable(me(state), false), 3)
+  assert.equal(actionsAvailable(me(state), true), 4)
+  // 先花掉法术专用行动：总额与额度同步减少，不会残留 1 个额外行动（审计第三轮发现的算术 bug）。
+  consumeAction(me(state), 1, true)
+  assert.equal(me(state).actionsLeft, 3, '法术额度应从总行动数里扣除')
+  assert.equal(actionsAvailable(me(state), false), 3, '普通可用行动 = 3（3 普通 + 1 法术 = 4 行动）')
+  assert.equal(actionsAvailable(me(state), true), 3)
+  consumeAction(me(state), 3, false)
+  assert.equal(actionsAvailable(me(state), false), 0)
+})
+
 test('P6 玛丽：只剩法术额度时普通行动被拒绝（validateMove 与 legalMoves 同一口径）', () => {
   const state = investigatorFixture('05006')
   const inv = me(state)
@@ -682,9 +733,11 @@ test('P6 故事调查员：减弱检定难度的能力（瓦伦蒂诺）', () =>
     resolve: value => { current.testResult = value },
   })
   runTransaction(state, execute, pending => {
-    if (pending.kind === 'reaction' && pending.options.some(option => option.cardCode === '05048')) {
+    // player-window-fast-actions：调查员自身的 [free] 描述子现在以 playerWindow 选项出现。
+    if (pending.kind === 'playerWindow'
+      && pending.options.some(option => String(option.id).startsWith('free-descriptor:05048:'))) {
       reduced = true
-      return pending.options.find(option => option.cardCode === '05048').id
+      return pending.options.find(option => String(option.id).startsWith('free-descriptor:05048:')).id
     }
     return null
   })
@@ -767,44 +820,67 @@ test('task-22 05013 银暮匕首：攻击可以选择战斗或意志（原先固
   }
 })
 
-test('task-22 05019 安息日男爵：同地点调查员受到伤害时额外 +1 点', () => {
+test('R7 05019 安息日男爵：显现后进入支援区（doom=0，不占威胁区）', () => {
   const state = investigatorFixture('05006')
   const inv = me(state)
-  inv.threat = [{ id: 'baron', code: '05019', exhausted: false, doom: 0, counters: 3 }]
+  inv.assets = []
+  inv.threat = []
+  drawWeakness(state, '05019', pending => (pending.kind === 'reaction' ? 'skip' : null))
+  const after = me(state)
+  const baron = after.assets.find(card => card.code === '05019')
+  assert.ok(baron, '弱点资产作为真实支援进入支援区')
+  assert.equal(baron.doom || 0, 0, '入场没有毁灭标记')
+  assert.equal((after.threat || []).some(card => card.code === '05019'), false, '不进入威胁区域')
+})
+
+test('R7 05019 安息日男爵：少于 3 个毁灭标记时离场被拒', () => {
+  const state = investigatorFixture('05006')
+  const inv = me(state)
+  inv.assets = [{ id: 'baron', code: '05019', doom: 0, exhausted: false }]
+  inv.threat = []
+  inv.discard = []
+  run(state, current => {
+    const owner = current.investigators[0]
+    const asset = owner.assets.find(card => card.code === '05019')
+    executeDescriptor(current, {
+      inv: owner, source: null, events: [], context: {},
+      descriptor: { code: '01037', label: '测试弃置支援', resolve: ({ api }) => api.discardAsset(0, asset) },
+    })
+  })
+  const after = me(state)
+  assert.ok(after.assets.some(card => card.code === '05019'), '少于 3 毁灭时支援仍在场（离场被拒）')
+  assert.ok((state.log || []).some(line => String(line).includes('当前不能离场')), '给出「不能离场」日志')
+})
+
+test('R7 05019 安息日男爵：3 个毁灭标记后弃掉（真实离场）', () => {
+  const state = investigatorFixture('05006')
+  const inv = me(state)
+  inv.assets = [{ id: 'baron', code: '05019', doom: 2, exhausted: false }]
+  inv.threat = []
+  inv.discard = []
+  inv.actionsLeft = 5
+  let used = false
+  runTransaction(state, current => playerWindow(current, 'test.beforeCommit', []), pending => {
+    if (pending.kind !== 'playerWindow') return null
+    const option = pending.options.find(item => String(item.label || '').includes('安息日男爵'))
+    if (option) { used = true; return option.id }
+    return null
+  })
+  assert.equal(used, true, '[fast] 能力出现在玩家窗口')
+  const after = me(state)
+  assert.equal(after.assets.some(card => card.code === '05019'), false, '3 个毁灭后弃掉（从支援区移除）')
+  assert.ok((after.discard || []).includes('05019'), '进入弃牌堆')
+})
+
+test('R7 05019 安息日男爵：同地点调查员受到伤害时额外 +1 点', () => {
+  const state = investigatorFixture('05006')
+  const inv = me(state)
+  inv.assets = [{ id: 'baron', code: '05019', doom: 0, exhausted: false }]
+  inv.threat = []
   inv.damage = 0
   runTransaction(state, current => applyDamage(current, current.investigators[0], 1, []), null)
   assert.equal(me(state).damage, 2, '基础 1 点 + 男爵强制额外 1 点')
 })
-
-test('task-22 05019 安息日男爵：3 毁灭后弃掉；补给阶段重整并同步离场保护', () => {
-  // 3 个毁灭 → 弃掉（且 counters 归零解除保护）。
-  const state = investigatorFixture('05006')
-  me(state).threat = [{ id: 'baron', code: '05019', exhausted: false, doom: 2, counters: 1 }]
-  me(state).actionsLeft = 5
-  const ability = legalMoves(state).find(moveOption => moveOption.action === 'ability' && moveOption.assetId === 'baron')
-  assert.ok(ability, '男爵的免费能力应当可用')
-  move(state, ability)
-  settle(state)
-  assert.equal(me(state).threat.some(card => card.code === '05019'), false, '3 个毁灭后弃掉')
-
-  // 补给阶段：威胁区卡由引擎复位；counters 按 3 − doom 同步（少于 3 毁灭不能离场）。
-  const state2 = investigatorFixture('05006')
-  me(state2).threat = [{ id: 'baron2', code: '05019', exhausted: false, doom: 0, counters: 3 }]
-  me(state2).actionsLeft = 5
-  const ability2 = legalMoves(state2).find(moveOption => moveOption.action === 'ability' && moveOption.assetId === 'baron2')
-  assert.ok(ability2)
-  move(state2, ability2)
-  settle(state2)
-  const baron2 = () => me(state2).threat.find(card => card.code === '05019')
-  assert.equal(baron2()?.exhausted, true, '使用后横置')
-  assert.equal(baron2()?.doom, 1)
-  assert.equal(baron2()?.counters, 2, '离场保护镜像 counters = 3 − doom')
-  move(state2, { action: 'endTurn' })
-  settle(state2)
-  assert.equal(baron2()?.exhausted, false, '补给阶段威胁区卡复位（引擎 2026-10-25 修复）')
-  assert.equal(baron2()?.counters, 2, '补给阶段同步 counters')
-})
-
 test('task-22 05007 催眠疗法：治疗盟友恐惧不触发额外治疗；[action] 无恐惧也能让目标抽牌', () => {
   // 反应目标收窄：治疗盟友支援时不触发。
   const state = investigatorFixture('05001')
@@ -848,7 +924,28 @@ test('task-22 05007 催眠疗法：治疗盟友恐惧不触发额外治疗；[ac
   assert.equal((me(state2).hand || []).length, handBefore + 1, '目标抽 1 张')
 })
 
-test('task-30 05002 乔：打出的直觉牌会清 hunchRevealed（不再重复洗回、折扣不泄漏）', () => {
+test('R7 05002：手牌含同名另一张时，揭示副本仍可按 -2 费打出', () => {
+  const state = investigatorFixture('05002')
+  const inv = me(state)
+  inv.hand = ['02105']
+  inv.hunchDeck = []
+  inv.hunchRevealed = '02105'
+  inv.resources = 10
+  inv.damage = 2
+  inv.discard = []
+  const hunchMove = legalMoves(state).find(option => option.action === 'play'
+    && option.cardId === '02105' && option.fromHunch === true)
+  assert.ok(hunchMove, '揭示副本提供 fromHunch 候选')
+  move(state, hunchMove)
+  settle(state, pending => (pending.kind === 'target' ? pending.options[0].id : null))
+  const after = me(state)
+  assert.equal(after.resources, 10, '揭示副本按 -2 费打出（2-2=0）')
+  assert.equal(after.hunchRevealed ?? null, null, '打出揭示副本后 hunchRevealed 清除')
+  assert.ok(after.hand.includes('02105'), '手牌里的同名另一张仍在手')
+  assert.ok(after.discard.includes('02105'), '打出的揭示副本进弃牌堆')
+})
+
+test('R7 05002 乔：手牌同名另一张按普通价打出，hunchRevealed 保留并在阶段末洗回', () => {
   const state = investigatorFixture('05002')
   const inv = me(state)
   inv.hunchDeck = []
@@ -858,15 +955,15 @@ test('task-30 05002 乔：打出的直觉牌会清 hunchRevealed（不再重复�
   inv.deck = ['01088']
   inv.resources = 20
   inv.actionsLeft = 5
+  assert.equal(playCost(state, me(state), ALL_CARDS['01037']), ALL_CARDS['01037'].cost,
+    '同名手牌不吃 hunch 折扣（R7：折扣只走 fromHunch 路径）')
   move(state, { action: 'play', cardId: '01037' })
   settle(state)
-  assert.equal(me(state).hunchRevealed ?? null, null, '打出后清除 hunchRevealed')
-  assert.ok((me(state).discard || []).includes('01037'), '打出的牌进弃牌堆')
-  // 阶段末 returnHunchCard 不会把已打出的牌再洗回直觉牌库。
+  assert.equal(me(state).hunchRevealed, '01037', '同名手牌打出不会误清 hunchRevealed')
+  assert.ok((me(state).discard || []).includes('01037'), '打出的手牌进弃牌堆')
+  // 阶段末：仍然处于揭示状态的牌照常洗回直觉牌库。
   runTransaction(state, current => hunchEngine.returnHunchCard(current, current.investigators[0], []), () => null)
-  assert.equal((me(state).hunchDeck || []).includes('01037'), false, '不重复洗回直觉牌库')
-  // 不再有 -2 折扣泄漏到手上同名卡。
-  assert.equal(playCost(state, me(state), ALL_CARDS['01037']), ALL_CARDS['01037'].cost, '没有揭示牌时按印刷费用')
+  assert.equal((me(state).hunchDeck || []).includes('01037'), true, '揭示牌在阶段末洗回直觉牌库')
 })
 
 test('task-33 05001 卡洛琳：技能卡成功治愈恐惧也会触发「获得 1 资源」（引擎 events 修复回归）', () => {
@@ -990,4 +1087,763 @@ test('task-41 05047 杰罗姆：真实 treachery 窗口按智力图标弃牌取�
   assert.equal(discardHadSkip, false, '弃牌阶段不应再提供「不弃牌」选项')
   assert.ok((state.log || []).some(entry => String(entry?.text ?? entry).includes('取消了「') && String(entry?.text ?? entry).includes('显现效果')),
     '确认显现效果被取消（resolve 里设置 context.cancelled 后的日志）')
+})
+
+// ---------------------------------------------------------------------------
+// 12. TCU 修复 Wave1（包H 条目侧接线：05046 / 05010 / 05018）
+// ---------------------------------------------------------------------------
+
+test('fix 05046 加弗瑞拉：攻击被取消后仍触发反应并发现线索（有线索时）', () => {
+  const state = investigatorFixture('05046')
+  const inv = me(state)
+  inv.hand = ['01023']
+  inv.discard = []
+  inv.resources = 10
+  const here = state.locations.find(location => location.id === inv.location)
+  here.clues = 1
+  enemy(state, { id: 'gav-cancel-enemy', engagedSeat: 0, damage: 1, horror: 0, health: 5 })
+  state.chaosBag = ['0']
+  let offered = false
+  runTransaction(state, current => {
+    const target = current.enemies.find(item => item.id === 'gav-cancel-enemy')
+    enemyAttack(current, target, current.investigators[0], [], '测试攻击')
+  }, pending => {
+    if (pending.kind === 'reaction') {
+      const dodge = pending.options.find(option => option.cardCode === '01023')
+      if (dodge) return dodge.id
+      const gavriella = pending.options.find(option => option.cardCode === '05046')
+      if (gavriella) {
+        offered = true
+        return gavriella.id
+      }
+    }
+    return null
+  })
+  assert.equal(offered, true, '被取消的攻击也应开 enemyAttacked 窗口（engine enemies.js:140-146）')
+  // 事务提交后引擎会替换调查员/地点对象，断言前重新读取。
+  const after = me(state)
+  const hereAfter = state.locations.find(location => location.id === after.location)
+  assert.equal(after.damage, 0, '闪避取消了攻击')
+  assert.equal(hereAfter.clues, 0, '反应发现所在地点 1 个线索')
+})
+
+test('fix 05046 加弗瑞拉：所在地点没有线索时不提供反应（ClueOnLocation）', () => {
+  const state = investigatorFixture('05046')
+  const inv = me(state)
+  const here = state.locations.find(location => location.id === inv.location)
+  here.clues = 0
+  enemy(state, { id: 'gav-empty-enemy', engagedSeat: 0, damage: 1, horror: 0, health: 5 })
+  let offered = false
+  runTransaction(state, current => {
+    reactionWindow(current, 'enemyAttacked', {
+      when: 'enemyAttacked', seat: 0, location: current.investigators[0].location,
+      enemy: current.enemies.find(item => item.id === 'gav-empty-enemy'), cancelled: true,
+    }, [])
+  }, pending => {
+    if (pending.kind === 'reaction' && pending.options.some(option => option.cardCode === '05046')) offered = true
+    return null
+  })
+  assert.equal(offered, false, '地点无可发现线索时该触发式能力不能发动')
+})
+
+test('fix 05018 神秘乐曲：快速打出后移出游戏（exileAfterPlay 在快速窗口生效）', () => {
+  const state = investigatorFixture('05006')
+  const inv = me(state)
+  inv.hand = ['05018']
+  inv.resources = 10
+  inv.discard = []
+  state.removedFromGame = []
+  let played = false
+  runTransaction(state, current => {
+    reactionWindow(current, 'agendaWouldAdvance', {
+      when: 'agendaWouldAdvance', seat: 0, location: current.investigators[0].location,
+      prompt: '密谋将要推进', agendaId: current.agendas?.[0]?.id || null,
+    }, [])
+  }, pending => {
+    if (pending.kind === 'reaction') {
+      const song = pending.options.find(option => option.cardCode === '05018')
+      if (song) {
+        played = true
+        return song.id
+      }
+    }
+    return null
+  })
+  assert.equal(played, true, '密谋将推进窗口可以打出神秘乐曲')
+  // 「从游戏中移除」走引擎 exilePlayerCard：计入本关流放，战役层关末从牌组移除。
+  assert.ok((state.exiled || []).includes('05018'), '移出游戏（exileAfterPlay → 流放记账）')
+  assert.ok((state.exiledBySeat || []).some(record => record.code === '05018' && record.seat === 0),
+    '记录流放者座位（战役结算读点）')
+  const after = me(state)
+  assert.equal((after.discard || []).includes('05018'), false, '快速事件收尾不再固定进弃牌堆')
+  assert.equal((after.hand || []).includes('05018'), false, '已离开手牌')
+  assert.deepEqual(state.agendaDoomLock, { round: state.round, phase: state.phase }, '本阶段密谋锁定')
+})
+
+test('fix 05010 悬案：scenarioXpModifier 已登记，供结局 XP 结算读取', () => {
+  assert.equal(registeredEntry('05010').scenarioXpModifier, -2,
+    '条目级字段（引擎读点 src/engine/campaign-flow.js:252-260）')
+  assert.equal(registeredEntry('05010').avoidHunchShuffle, true)
+  assert.equal(registeredEntry('05010').playableWeakness, true)
+  assert.equal(registeredEntry('05010').removeAfterPlay, true)
+})
+
+// ---------------------------------------------------------------------------
+// Wave2（包H 条目侧接线）：05048 检定期间 [free]、05009 attackResult 判定
+// ---------------------------------------------------------------------------
+
+test('fix 05048 瓦伦蒂诺：[free] 检定期间花 2 资源降难度（投入前/投入后窗口都可用、每轮一次）', () => {
+  for (const useAt of ['beforeCommit', 'afterCommit']) {
+    const state = investigatorFixture('05048')
+    me(state).resources = 5
+    state.chaosBag = ['0']
+    let used = false
+    let seen = 0
+    const execute = current => performTest(current, 0, 'willpower', 2, {
+      resolve: value => { current.testResult = value },
+    })
+    runTransaction(state, execute, pending => {
+      if (pending.kind !== 'playerWindow') return null
+      const option = (pending.options || [])
+        .find(item => String(item.id).startsWith('free-descriptor:05048:'))
+      if (!option) return null
+      seen += 1
+      if ((useAt === 'beforeCommit' && seen === 1) || (useAt === 'afterCommit' && seen === 2)) {
+        used = true
+        return option.id
+      }
+      return null // 其它窗口让过（默认 skip），确保只在指定窗口发动
+    })
+    assert.equal(used, true, `${useAt} 窗口应提供「花 2 资源降难度」`)
+    assert.equal(state.testResult.success, true, `${useAt}：难度 2-1=1，标记 0 成功`)
+    assert.equal(me(state).resources, 3, `${useAt}：支付 2 资源`)
+    // 同一轮第二次检定：oncePerRound 已用，不应再提供。
+    let offeredAgain = false
+    runTransaction(state, current => performTest(current, 0, 'willpower', 1, {
+      resolve: value => { current.testResult = value },
+    }), pending => {
+      if (pending.kind === 'playerWindow'
+        && pending.options.some(item => String(item.id).startsWith('free-descriptor:05048:'))) offeredAgain = true
+      return null
+    })
+    assert.equal(offeredAgain, false, '每轮仅限一次，第二次检定不再提供')
+  }
+})
+
+test('fix 05009 柯尔特：本次攻击击败敌人时回收弃牌堆洞察事件（attackResult 判定）', () => {
+  const state = investigatorFixture('05002')
+  const inv = me(state)
+  inv.assets = [{ id: 'colt', code: '05009', exhausted: false, uses: 4, usesType: 'ammo' }]
+  inv.discard = ['01022']
+  inv.hunchDeck = ['01036']
+  inv.actionsLeft = 5
+  const target = enemy(state, { id: 'colt-foe', fight: 1, evade: 1, health: 2 })
+  state.chaosBag = ['0']
+  let recycled = false
+  move(state, { action: 'ability', assetId: 'colt', abilityIndex: 0, targetId: target.id })
+  settle(state, pending => {
+    if (pending.kind === 'card' && pending.source === '05009') {
+      recycled = true
+      return pending.options.find(option => option.id === '0')?.id
+    }
+    return null
+  })
+  assert.equal(recycled, true, '击败敌人后应提供回收洞察事件的选项')
+  assert.equal(me(state).hunchDeck.at(-1), '01022', '洞察事件被放到直觉牌库底')
+  assert.equal(me(state).discard.includes('01022'), false)
+})
+
+test('fix 05009 柯尔特：未击败敌人时不触发回收（不再用敌人是否离场近似）', () => {
+  const state = investigatorFixture('05002')
+  const inv = me(state)
+  inv.assets = [{ id: 'colt', code: '05009', exhausted: false, uses: 4, usesType: 'ammo' }]
+  inv.discard = ['01022']
+  inv.hunchDeck = ['01036']
+  inv.actionsLeft = 5
+  const target = enemy(state, { id: 'colt-tough', fight: 1, evade: 1, health: 8 })
+  state.chaosBag = ['0']
+  let recycled = false
+  move(state, { action: 'ability', assetId: 'colt', abilityIndex: 0, targetId: target.id })
+  settle(state, pending => {
+    if (pending.kind === 'card' && pending.source === '05009') recycled = true
+    return null
+  })
+  assert.equal(recycled, false, '未击败不提供回收')
+  assert.equal(state.enemies.find(item => item.id === target.id).damageTaken, 2, '命中造成 2 点伤害')
+})
+
+// ---------------------------------------------------------------------------
+// Wave4（包H）：05012 秘社“债务” —— 留在手牌 / 10 费打出移出游戏 / 游戏结束手牌创伤
+// ---------------------------------------------------------------------------
+
+// 引擎的 finishScenario 以 ScenarioEnded 异常作为「本关结算完成」的信号；测试里在事务内吞掉该异常，
+// 让 finishScenario 已写入的状态（含本卡的手牌创伤扫描）被提交，再断言结果。
+function finishScenarioForTest(state) {
+  // 用 r2 结局：本关 r1 自带「队长 +1 精神创伤」，会污染本卡的手牌创伤断言。
+  const swallow = current => {
+    try { finishScenario(current, 'r2', []) } catch (error) {
+      if (error?.constructor?.name !== 'ScenarioEnded') throw error
+    }
+  }
+  resolveTransaction(state, 0, { action: 'tcuFinishScenario' }, swallow)
+  for (let guard = 0; state.pendingChoice && guard < 200; guard++) {
+    const pending = state.pendingChoice
+    const optionId = ['done', 'skip', 'self', 'normal'].find(id => pending.options.some(option => option.id === id))
+      ?? pending.options[0].id
+    resolveTransaction(state, pending.seat, { action: 'choose', choiceId: pending.id, optionId }, swallow)
+  }
+}
+
+test('fix 05012 秘社“债务”：抽到后留在手牌（不立即结算、不进弃牌堆）', () => {
+  const state = investigatorFixture('05003')
+  me(state).hand = []
+  me(state).discard = []
+  state.removedFromGame = []
+  drawWeakness(state, '05012')
+  assert.ok(me(state).hand.includes('05012'), '事件弱点抽到后留在手牌')
+  assert.equal((me(state).discard || []).includes('05012'), false, '不进入弃牌堆')
+  assert.equal((state.removedFromGame || []).includes('05012'), false, '不立即移出游戏')
+})
+
+test('fix 05012 秘社“债务”：支付 10 资源打出后移出游戏', () => {
+  const state = investigatorFixture('05003')
+  const inv = me(state)
+  inv.hand = ['05012']
+  inv.resources = 10
+  inv.actionsLeft = 3
+  state.removedFromGame = []
+  const playMove = legalMoves(state).find(option => option.action === 'play' && option.cardId === '05012')
+  assert.ok(playMove, '弱点事件可以作为行动打出（playableWeakness）')
+  move(state, playMove)
+  settle(state)
+  assert.ok((state.removedFromGame || []).includes('05012'), '打出后移出游戏')
+  assert.equal((me(state).discard || []).includes('05012'), false, '不进入弃牌堆')
+  assert.equal((me(state).hand || []).includes('05012'), false, '已离开手牌')
+  assert.equal(me(state).resources, 0, '支付 10 资源')
+})
+
+test('fix 05012：游戏结束时仍在手牌 → 1 点精神创伤；已移出游戏则不触发', () => {
+  const inHand = investigatorFixture('05003')
+  me(inHand).hand = ['05012']
+  finishScenarioForTest(inHand)
+  assert.equal(inHand.campaign.trauma[0].mental, 1, '手牌中 → 游戏结束 +1 精神创伤')
+  assert.equal(inHand.campaign.trauma[0].physical, 0)
+  const played = investigatorFixture('05003')
+  me(played).hand = []
+  played.removedFromGame = ['05012']
+  finishScenarioForTest(played)
+  assert.equal(played.campaign.trauma[0].mental, 0, '已打出/移出游戏 → 不触发')
+})
+
+test('fix 05012：退场时仍在手牌 → 1 点精神创伤（eliminateInvestigator 读点）', () => {
+  const state = investigatorFixture('05003')
+  const inv = me(state)
+  inv.hand = ['05012']
+  inv.damage = 0
+  runTransaction(state, current => {
+    const target = current.investigators[0]
+    target.defeated = true
+    target.defeatCause = 'damage'
+    eliminateInvestigator(current, target, [])
+  }, null)
+  assert.equal(me(state).defeated, true, '调查员被击败/退场')
+  assert.equal(state.campaign.trauma[0].mental, 1, '退场时手牌中的弱点 → +1 精神创伤')
+  assert.equal(state.campaign.trauma[0].physical, 0, '不额外产生肉体创伤')
+})
+
+test('fix 05012：退场后再结算游戏结束不重复结算精神创伤（finishScenario 跳过已退场者）', () => {
+  const state = investigatorFixture('05003')
+  const inv = me(state)
+  inv.hand = ['05012']
+  inv.damage = 0
+  runTransaction(state, current => {
+    const target = current.investigators[0]
+    target.defeated = true
+    target.defeatCause = 'card'
+    eliminateInvestigator(current, target, [])
+  }, null)
+  assert.equal(state.campaign.trauma[0].mental, 1, '退场分支 +1')
+  // 再走一次游戏结束的手牌扫描：已退场/撤退者应被跳过，不得与退场分支重复。
+  finishScenarioForTest(state)
+  assert.equal(state.campaign.trauma[0].mental, 1, '游戏结束扫描跳过已退场者，不重复 +1')
+  assert.equal(state.campaign.trauma[0].physical, 0)
+})
+
+// ---------------------------------------------------------------------------
+// 第五轮（R5）：取消自动记账 + 显现作用域原语接线回归（05004 / 05049）
+// ---------------------------------------------------------------------------
+test('task-50 05004 黛安娜：01523 闪躲直接写 context.cancelled 取消攻击后触发反应（R5 自动记账）', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.hand = ['01523']
+  inv.deck = ['01088']
+  inv.discard = []
+  inv.resources = 10
+  inv.beneath = []
+  const dodgeCost = playCost(state, inv, ALL_CARDS['01523'])
+  enemy(state, { id: 'dodge-tcu', engagedSeat: 0, damage: 1, horror: 0, health: 5 })
+  state.chaosBag = ['0']
+  let offered = false
+  runTransaction(state, current => {
+    const target = current.enemies.find(item => item.id === 'dodge-tcu')
+    enemyAttack(current, target, current.investigators[0], [], '测试攻击')
+  }, pending => {
+    if (pending.kind === 'reaction') {
+      const dodge = pending.options.find(option => option.cardCode === '01523')
+      if (dodge) return dodge.id
+      const diana = pending.options.find(option => option.cardCode === '05004')
+      if (diana) { offered = true; return diana.id }
+    }
+    return null
+  })
+  assert.equal(offered, true, '01523 直接写 context.cancelled 也应自动记账并触发黛安娜反应')
+  assert.ok((me(state).beneath || []).includes('01523'), '取消方 01523 压在黛安娜底下')
+  assert.equal((me(state).hand || []).length, 1, '反应抽 1 张牌')
+  assert.equal(me(state).resources, 10 - dodgeCost + 1, '支付费用后由反应获得 1 资源')
+})
+
+test('R7 05004 黛安娜：05280 忽略伤害走 api.noteCancelled，触发 cardCancelled 并把卡压到黛安娜底下', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.hand = ['05280']
+  inv.beneath = []
+  inv.discard = []
+  inv.deck = ['01088']
+  inv.resources = 10
+  inv.damage = 0
+  const cancelCost = playCost(state, inv, ALL_CARDS['05280'])
+  const attacker = enemy(state, { id: '05280-enemy', engagedSeat: 0, damage: 1, horror: 0, health: 5 })
+  let used05280 = false
+  let usedDiana = false
+  runTransaction(state, current => {
+    const target = current.enemies.find(item => item.id === attacker.id)
+    enemyAttack(current, target, current.investigators[0], [], '测试攻击')
+  }, pending => {
+    if (pending.kind !== 'reaction') return null
+    const cancel = pending.options.find(option => option.cardCode === '05280'
+      || /否决存在/.test(String(option.label)))
+    if (cancel) { used05280 = true; return cancel.id }
+    const diana = pending.options.find(option => option.cardCode === '05004')
+    if (diana) { usedDiana = true; return diana.id }
+    return null
+  })
+  assert.equal(used05280, true, '05280 的忽略反应出现在 harmDealt 窗口')
+  assert.equal(me(state).damage, 0, '05280 把刚受到的伤害清零（未承受伤害）')
+  assert.equal(usedDiana, true, '05280 显式 noteCancelled 后触发黛安娜的 cardCancelled 反应')
+  assert.deepEqual(me(state).beneath, ['05280'], '05280 被压在黛安娜底下')
+  assert.equal((me(state).discard || []).includes('05280'), false, '不再进弃牌堆（已压到底下，R7 深度冲刷修复）')
+  assert.equal((me(state).hand || []).length, 1, '反应抽 1 张')
+  assert.equal(me(state).resources, 10 - cancelCost + 1, '支付 05280 费用后由反应获得 1 资源')
+})
+// 05049 佩妮的显现作用域测试辅助：造一个带线索、固定混乱袋的状态。
+const revelationTestState = () => {
+  const state = investigatorFixture('05049')
+  const inv = me(state)
+  const location = state.locations.find(item => item.id === inv.location)
+  location.clues = 2
+  inv.clues = 0
+  state.chaosBag = ['0']
+  return { state, location }
+}
+
+test('task-50 05049 佩妮：显现效果期间（弱点/诡计）的检定成功后反应发现 1 个线索', () => {
+  const { state, location } = revelationTestState()
+  let offered = false
+  runTransaction(state, current => {
+    pushRevelation('01013')
+    try {
+      performTest(current, 0, 'willpower', 1, { resolve: value => { current.testResult = value } })
+    } finally {
+      popRevelation()
+    }
+  }, pending => {
+    if (pending.kind === 'reaction') {
+      const penny = pending.options.find(option => option.cardCode === '05049')
+      if (penny) { offered = true; return penny.id }
+    }
+    return null
+  })
+  assert.equal(offered, true, '显现效果期间的检定成功应提供佩妮反应')
+  assert.equal(me(state).clues, 1, '发现所在地点的 1 个线索')
+  const locationAfter = state.locations.find(item => item.id === me(state).location)
+  assert.equal(locationAfter.clues, 1, '地点线索数减 1')
+})
+
+test('task-50 05049 佩妮：普通（非显现）检定成功后不提供反应', () => {
+  const { state } = revelationTestState()
+  let offered = false
+  runTransaction(state, current => {
+    performTest(current, 0, 'willpower', 1, { resolve: value => { current.testResult = value } })
+  }, pending => {
+    if (pending.kind === 'reaction'
+      && pending.options.some(option => option.cardCode === '05049')) {
+      offered = true
+      return pending.options.find(option => option.cardCode === '05049').id
+    }
+    return null
+  })
+  assert.equal(offered, false, '普通检定不应触发「显现效果期间」反应')
+  assert.equal(me(state).clues, 0)
+})
+
+test('task-50 05049 佩妮：显现效果期间的旧印给下回合额外行动，普通检定不给', () => {
+  const revealed = investigatorFixture('05049')
+  revealed.chaosBag = ['eldersign']
+  runTransaction(revealed, current => {
+    pushRevelation('01013')
+    try {
+      performTest(current, 0, 'willpower', 1, { resolve: value => { current.testResult = value } })
+    } finally {
+      popRevelation()
+    }
+  }, () => null)
+  assert.equal(me(revealed).extraActionNextTurn, true, '显现效果期间的旧印 → 下回合额外行动')
+
+  const normal = investigatorFixture('05049')
+  normal.chaosBag = ['eldersign']
+  runTransaction(normal, current => performTest(current, 0, 'willpower', 1, {
+    resolve: value => { current.testResult = value },
+  }), () => null)
+  assert.notEqual(me(normal).extraActionNextTurn, true, '普通检定的旧印不写额外行动')
+})
+
+// ---------------------------------------------------------------------------
+// 第六轮（R6）：05014 黑暗洞察 —— cardWouldBeDrawn 窗口取消抽到的弱点
+// ---------------------------------------------------------------------------
+test('R6 05014 黑暗洞察：抽到弱点时可取消并洗回牌库（不重抽）', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.hand = ['05014']
+  inv.resources = 10
+  inv.discard = []
+  const cost = playCost(state, inv, ALL_CARDS['05014'])
+  let offered = false
+  drawWeakness(state, '05015', pending => {
+    if (pending.kind === 'reaction') {
+      const dark = pending.options.find(option => option.cardCode === '05014')
+      if (dark) { offered = true; return dark.id }
+    }
+    return null
+  })
+  assert.equal(offered, true, '抽到弱点时应出现 05014 的取消窗口')
+  assert.equal((me(state).hand || []).includes('05015'), false, '弱点没有进入手牌')
+  assert.ok((me(state).deck || []).includes('05015'), '弱点洗回牌库')
+  assert.equal((me(state).discard || []).includes('05014'), true, '05014 使用后进弃牌堆')
+  assert.equal(me(state).hand.length, 0, '不重抽：没有替换牌进入手牌')
+  assert.equal(me(state).resources, 10 - cost, '支付 05014 的打出费用')
+})
+
+test('R6 05014 黑暗洞察：普通抽牌不触发（窗口只对弱点开）', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.hand = ['05014']
+  inv.deck = ['01088']
+  inv.resources = 10
+  let offered = false
+  run(state, current => {
+    executeDescriptor(current, {
+      inv: current.investigators[0], source: null, events: [], context: {},
+      descriptor: { code: '01037', label: '测试抽牌', resolve: ({ api }) => api.drawCards(0, 1) },
+    })
+  }, pending => {
+    if (pending.kind === 'reaction') {
+      const dark = pending.options.find(option => option.cardCode === '05014')
+      if (dark) { offered = true; return dark.id }
+    }
+    return null
+  })
+  assert.equal(offered, false, '普通抽牌不应出现 05014 的取消窗口')
+  assert.ok((me(state).hand || []).includes('01088'), '普通牌正常进手牌')
+  assert.ok((me(state).hand || []).includes('05014'), '05014 仍在手牌')
+})
+
+// ---------------------------------------------------------------------------
+// 第七轮（R7）：heal-pipeline v3 + resource-bank v2 接线回归
+// ---------------------------------------------------------------------------
+test('R7 05007+05001：同一治疗内追加 1 点，不重开 horrorHealed（卡洛琳只结算一次）', () => {
+  const state = investigatorFixture('05001')
+  const inv = me(state)
+  inv.horror = 3
+  inv.resources = 5
+  inv.assets = [{ id: 'hyp', code: '05007', exhausted: false }]
+  let hypnotismReactions = 0
+  let carolynReactions = 0
+  run(state, current => {
+    healHorrorFrom(current, current.investigators[0], 1, [], { healerSeat: 0, cardCode: '01019' })
+  }, pending => {
+    if (pending.kind !== 'reaction') return null
+    const hypnotism = pending.options.find(item => /催眠疗法/.test(String(item.label)))
+    if (hypnotism) { hypnotismReactions++; return hypnotism.id }
+    const carolyn = pending.options.find(item => item.cardCode === '05001' || /卡洛琳/.test(String(item.label)))
+    if (carolyn) { carolynReactions++; return carolyn.id }
+    return null
+  })
+  assert.equal(hypnotismReactions, 1, '催眠疗法的反应结算一次')
+  assert.equal(carolynReactions, 1, '卡洛琳对同一次治疗只结算一次（extend 不重开窗口）')
+  assert.equal(me(state).horror, 1, '原治疗 1 + 追加 1 = 共治愈 2 点')
+  assert.equal(me(state).resources, 6, '卡洛琳反应只获得 1 资源')
+})
+
+test('R7 05001：legacy effect-data 通道（急救）治他人恐惧时按发起者座位触发反应', () => {
+  const state = fixture('01001', 2)
+  const p0 = state.investigators[0]
+  const p1 = state.investigators[1]
+  Object.assign(p0, { code: '05001', name: '卡洛琳·弗恩', klass: 'seeker',
+    willpower: 3, intellect: 4, combat: 2, agility: 3 })
+  p0.assets = [{ id: 'firstaid', code: '01019', uses: 3, usesType: 'supplies', exhausted: false }]
+  p0.resources = 5
+  p1.horror = 2
+  p1.resources = 5
+  let carolynReactions = 0
+  move(state, { action: 'ability', assetId: 'firstaid', abilityIndex: 0 })
+  settle(state, pending => {
+    if (pending.kind === 'target') {
+      const seat1 = pending.options.find(item => String(item.id) === '1')
+      return (seat1 || pending.options[0]).id
+    }
+    if (pending.kind === 'effect' || pending.kind === 'choice') {
+      const horror = pending.options.find(item => /恐惧/.test(String(item.label)))
+      return horror ? horror.id : null
+    }
+    if (pending.kind === 'reaction') {
+      const carolyn = pending.options.find(item => item.id !== 'skip')
+      if (carolyn) { carolynReactions++; return carolyn.id }
+    }
+    return null
+  })
+  assert.equal(state.investigators[1].horror, 1, '急救治愈了 1 点恐惧')
+  assert.equal(carolynReactions, 1, '发起者（seat0）的「治愈恐惧后」反应被触发')
+  assert.equal(state.investigators[1].resources, 6, '被治愈的调查员获得 1 资源')
+})
+
+test('R7 05008：改道可选（redirect 治汇点 / skip 治原目标）', () => {
+  const redirectState = investigatorFixture('05001')
+  const inv = me(redirectState)
+  inv.horror = 2
+  inv.threat = [{ id: 'rt', code: '05008', counters: 4, exhausted: false }]
+  let healed = null
+  run(redirectState, current => {
+    healed = healHorrorFrom(current, current.investigators[0], 1, [], { healerSeat: 0, cardCode: '01019' })
+  }, pending => {
+    if (pending.kind === 'reaction' && pending.options.some(option => option.id === 'redirect')) return 'redirect'
+    if (pending.kind === 'reaction') return 'skip'
+    return null
+  })
+  assert.equal(healed, 1)
+  assert.equal(me(redirectState).threat[0].counters, 3, 'redirect：治愈的是理性思考上的恐惧')
+  assert.equal(me(redirectState).horror, 2, 'redirect：本人恐惧不变')
+
+  const skipState = investigatorFixture('05001')
+  const inv2 = me(skipState)
+  inv2.horror = 2
+  inv2.threat = [{ id: 'rt', code: '05008', counters: 4, exhausted: false }]
+  let healed2 = null
+  run(skipState, current => {
+    healed2 = healHorrorFrom(current, current.investigators[0], 1, [], { healerSeat: 0, cardCode: '01019' })
+  }, pending => (pending.kind === 'reaction' && pending.options.some(option => option.id === 'skip') ? 'skip' : null))
+  assert.equal(healed2, 1)
+  assert.equal(me(skipState).horror, 1, 'skip：治疗原目标（本人）')
+  assert.equal(me(skipState).threat[0].counters, 4, 'skip：汇点恐惧不变')
+})
+
+test('R7 05008：超出汇点剩余恐惧的治疗量按 overflow:"discard" 丢弃', () => {
+  const state = investigatorFixture('05001')
+  const inv = me(state)
+  inv.horror = 5
+  inv.threat = [{ id: 'rt', code: '05008', counters: 2, exhausted: false }]
+  let healed = null
+  run(state, current => {
+    healed = healHorrorFrom(current, current.investigators[0], 5, [], { healerSeat: 0, cardCode: '01019' })
+  }, pending => (pending.kind === 'reaction' && pending.options.some(option => option.id === 'redirect') ? 'redirect' : null))
+  assert.equal(healed, 2, '只治愈汇点剩余的 2 点')
+  assert.equal(me(state).horror, 5, '多余 3 点丢弃、不回流到本人')
+  assert.ok(!me(state).threat.some(card => card.code === '05008'), '汇点恐惧清空后弃掉')
+})
+
+test('R7 05008：blockHealOtherCards 阻止治疗其它卡牌，但不阻止治疗调查员', () => {
+  const state = investigatorFixture('05001')
+  const inv = me(state)
+  inv.horror = 2
+  inv.threat = [{ id: 'rt', code: '05008', counters: 4, exhausted: false }]
+  const ally = { id: 'ally1', code: '01021', horror: 2, damage: 0, exhausted: false }
+  inv.assets = [ally]
+  let blocked = null
+  run(state, current => {
+    const target = current.investigators[0].assets.find(item => item.id === 'ally1')
+    blocked = healHorrorFrom(current, target, 1, [], { owner: current.investigators[0], healerSeat: 0, cardCode: '01019' })
+  }, () => null)
+  assert.equal(blocked, 0, '不能治愈其它卡牌上的恐惧')
+  const allyAfter = me(state).assets.find(item => item.id === 'ally1')
+  assert.equal(allyAfter.horror, 2, '盟友支援上的恐惧不变')
+
+  let healedSelf = null
+  run(state, current => {
+    healedSelf = healHorrorFrom(current, current.investigators[0], 1, [], { healerSeat: 0, cardCode: '01019' })
+  }, pending => (pending.kind === 'reaction' && pending.options.some(option => option.id === 'skip') ? 'skip' : null))
+  assert.equal(healedSelf, 1, '治疗调查员本人不受 blockHealOtherCards 限制')
+  assert.equal(me(state).horror, 1)
+})
+
+test('R7 05011：withdrawBanked 清掉寄存标记（合并模型：资源池不变）', () => {
+  const state = investigatorFixture('05003')
+  const inv = me(state)
+  inv.resources = 10
+  inv.actionsLeft = 3
+  inv.assets = [{ id: 'inh', code: '05011', exhausted: false, resources: 4 }]
+  const ability = legalMoves(state).find(option => option.action === 'ability' && option.assetId === 'inh')
+  assert.ok(ability, '家族遗产有 [action] 能力')
+  move(state, ability)
+  settle(state)
+  const asset = me(state).assets.find(item => item.code === '05011')
+  assert.equal(asset?.resources || 0, 0, '寄存标记被清空')
+  assert.equal(me(state).resources, 10, '合并模型下资源池数值不变（这些资源不会在回合末流失）')
+})
+
+// ---------------------------------------------------------------------------
+// 第七轮（R7）：05013 银暮匕首 beneath 通道
+// ---------------------------------------------------------------------------
+test('R7 05013 beneath 通道：从底下打出事件（横置匕首、按手牌费用）', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.resources = 10
+  inv.hand = []
+  inv.beneath = ['01052']
+  inv.assets = [{ id: 'dagger', code: '05013', exhausted: false }]
+  const target = enemy(state, { id: 'sneak-target', fight: 1, evade: 1, health: 5, exhausted: true })
+  // 直接走 dispatch 的 fromBeneath 分支（legalMoves 候选过滤见下方 skip 用例：引擎 validateMove 仍要求卡在手牌）。
+  applyMove(state, 0, { action: 'play', cardId: '01052', fromBeneath: true, channelAssetId: 'dagger' })
+  settle(state, pending => (pending.kind === 'target' ? pending.options[0].id : null))
+  const after = me(state)
+  assert.equal(after.assets.find(item => item.id === 'dagger')?.exhausted, true, '额外费用：横置银暮匕首')
+  assert.deepEqual(after.beneath, [], '卡从 beneath 移出')
+  assert.equal(after.resources, 8, '按手牌费用支付 2 资源')
+  assert.equal(state.enemies.find(item => item.id === target.id)?.damageTaken, 2, '事件正常结算（偷袭 2 点伤害）')
+  assert.ok(after.discard.includes('01052'), '打出后按普通事件进弃牌堆')
+})
+
+test('R7 05013 beneath 通道：投入底下技能（横置匕首、图标生效、检定后进弃牌堆）', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.hand = []
+  inv.beneath = ['01025']
+  inv.assets = [{ id: 'dagger', code: '05013', exhausted: false }]
+  state.chaosBag = ['0']
+  let committed = false
+  runTransaction(state, current => performTest(current, 0, 'combat', 1, {
+    resolve: value => { current.testResult = value },
+  }), pending => {
+    if (pending.kind === 'commit') {
+      const option = pending.options.find(item => String(item.id) === 'beneath:01025')
+      if (option) { committed = true; return option.id }
+      if (pending.options.some(item => item.id === 'done')) return 'done'
+    }
+    return null
+  })
+  assert.equal(committed, true, '投入候选包含 beneath 的技能')
+  assert.equal(me(state).assets.find(item => item.id === 'dagger')?.exhausted, true, '额外费用：横置银暮匕首')
+  assert.deepEqual(me(state).beneath, [], '卡从 beneath 移出')
+  assert.ok(me(state).discard.includes('01025'), '检定后技能进弃牌堆')
+  assert.equal(state.testResult.success, true)
+})
+
+test('R7 05013 beneath 通道：匕首横置时不提供 beneath 打出/投入选项', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.resources = 10
+  inv.hand = []
+  inv.beneath = ['01052', '01025']
+  inv.assets = [{ id: 'dagger', code: '05013', exhausted: true }]
+  enemy(state, { id: 'sneak-target-2', fight: 1, evade: 1, health: 5, exhausted: true })
+  assert.equal(legalMoves(state).some(option => option.action === 'play' && option.fromBeneath), false,
+    '通道支援横置后不提供 beneath 打出候选')
+  let offered = false
+  runTransaction(state, current => performTest(current, 0, 'combat', 1, {
+    resolve: value => { current.testResult = value },
+  }), pending => {
+    if (pending.kind === 'commit' && pending.options.some(item => String(item.id).startsWith('beneath:'))) offered = true
+    if (pending.kind === 'commit' && pending.options.some(item => item.id === 'done')) return 'done'
+    return null
+  })
+  assert.equal(offered, false, '通道支援横置后不提供 beneath 投入候选')
+})
+
+test('R7 05013+05004：beneath 通道结算期间黛安娜 reaction 被排除', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.beneath = []
+  const entry = registeredEntry('05004')
+  const ability = entry.abilities.find(item => [].concat(item.trigger).includes('cardCancelled'))
+  assert.ok(ability, '05004 有 cardCancelled reaction')
+  const ctx = {
+    state, inv, source: null, windowId: 'cardCancelled',
+    context: { when: 'cardCancelled', seat: 0, cardSeat: 0, cardCode: '01052',
+      location: inv.location },
+  }
+  assert.equal(evaluateCriteria(ability.criteria, ctx), true, '普通结算时 criteria 允许反应')
+  state._playedFromBeneath = { seat: 0, cardCode: '01052' }
+  assert.equal(evaluateCriteria(ability.criteria, ctx), false, 'beneath 通道结算期间 criteria 排除反应')
+  state._playedFromBeneath = { seat: 1, cardCode: '01052' }
+  assert.equal(evaluateCriteria(ability.criteria, ctx), true, '别的座位的 beneath 结算不影响本人')
+  delete state._playedFromBeneath
+})
+
+test('R7 05013 beneath 打出候选：legalMoves/validateMove 应提供 fromBeneath 候选', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.resources = 10
+  inv.hand = []
+  inv.beneath = ['01052']
+  inv.assets = [{ id: 'dagger', code: '05013', exhausted: false }]
+  enemy(state, { id: 'sneak-target', fight: 1, evade: 1, health: 5, exhausted: true })
+  const playMove = legalMoves(state).find(option => option.action === 'play'
+    && option.cardId === '01052' && option.fromBeneath === true)
+  assert.ok(playMove, '持有未横置通道支援时，底下的事件应可打出（fromBeneath 候选）')
+})
+
+// ---------------------------------------------------------------------------
+// 第七轮（R7）：05006 玛丽·朗博 —— 毁灭→法术专用额度联动
+// ---------------------------------------------------------------------------
+test('R7 05006：入场即带毁灭的支援获得 1 个法术专用行动', () => {
+  const state = investigatorFixture('05006')
+  const inv = me(state)
+  inv.hand = ['01063']
+  inv.resources = 10
+  const actionsBefore = inv.actionsLeft
+  const playMove = legalMoves(state).find(option => option.action === 'play' && option.cardId === '01063')
+  assert.ok(playMove, '新晋术士可以从手牌打出')
+  move(state, playMove)
+  settle(state)
+  const after = me(state)
+  const asset = after.assets.find(item => item.code === '01063')
+  assert.equal(asset?.doom, 1, '入场即带 1 个毁灭标记（onPlayDoom）')
+  assert.equal(after.spellOnlyActions, 1, '获得 1 个法术专用行动')
+  assert.equal(spellOnlyActionsOf(after), 1)
+  assert.equal(after.actionsLeft, actionsBefore, '打出花费 1 行动 + 额度补 1 = 净不变')
+})
+
+test('R7 05006：旧印移除毁灭到 0 时收回未使用的法术专用额度', () => {
+  const state = investigatorFixture('05006')
+  const inv = me(state)
+  inv.hand = ['01063']
+  inv.resources = 10
+  const playMove = legalMoves(state).find(option => option.action === 'play' && option.cardId === '01063')
+  move(state, playMove)
+  settle(state)
+  assert.equal(me(state).spellOnlyActions, 1, '打出后先获得额度')
+  const actionsBefore = me(state).actionsLeft
+  state.chaosBag = ['eldersign']
+  runTransaction(state, current => performTest(current, 0, 'willpower', 1, {
+    resolve: value => { current.testResult = value },
+  }), pending => {
+    if (pending.kind === 'effect') {
+      const remove = pending.options.find(option => String(option.id).startsWith('remove:'))
+      if (remove) return remove.id
+    }
+    return null
+  })
+  const after = me(state)
+  assert.equal(after.assets.find(item => item.code === '01063')?.doom || 0, 0, '旧印移除了毁灭标记')
+  assert.equal(after.spellOnlyActions ?? 0, 0, '额度收回（spellOnlyActions 清除）')
+  assert.equal(spellOnlyActionsOf(after), 0)
+  assert.equal(after.actionsLeft, actionsBefore - 1, 'actionsLeft 相应减少 1')
 })

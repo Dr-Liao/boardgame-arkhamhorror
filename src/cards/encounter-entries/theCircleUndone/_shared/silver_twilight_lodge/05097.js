@@ -30,9 +30,12 @@ export default {
   scope: 'treachery',
   implemented: true,
   encounterResolve(state, inv, card, api) {
-    const candidates = (state.enemies || []).filter(enemy => hasTrait(enemy, 'Cultist'))
+    // 参考实现用 EnemyWithTrait Cultist <> EnemyWithoutModifier CannotPlaceDoomOnThis 过滤目标：
+    // 「最近的一个[[异教徒]]」不含当前不能放置毁灭的敌人（如 05085b 生效后的银暮秘社敌人）。
+    const canHost = enemy => api.canPlaceDoomOn?.(enemy) !== false
+    const candidates = (state.enemies || []).filter(enemy => hasTrait(enemy, 'Cultist') && canHost(enemy))
     if (!candidates.length) {
-      api.info?.('没有异教徒敌人：秘社玄仪获得涌动。')
+      api.info?.('没有可放置毁灭的异教徒敌人：秘社玄仪获得涌动。')
       api.drawEncounter?.(inv.seat)
       return false
     }
@@ -44,7 +47,13 @@ export default {
       prompt: '选择最近的异教徒敌人放置 1 个毁灭标记。',
       options: pool.map(enemy => ({ id: enemy.id, label: enemy.name })),
     })) || pool[0]
-    api.doomOn?.(chosen, 1)
+    // 引擎 placeDoomOnCard 返回实际放置数（0 = 被「不能放置」规则拦下）。
+    const placed = api.doomOn?.(chosen, 1)
+    if (placed === 0) {
+      api.info?.('毁灭未能放置：秘社玄仪获得涌动。')
+      api.drawEncounter?.(inv.seat)
+      return false
+    }
     chosen.roundFightEvadeBonus = { round: state.round, amount: 2 }
     api.info?.(`秘社玄仪：在「${chosen.name}」上放置 1 个毁灭标记；直到一轮结束，对其攻击、躲避或谈判的难度 +2。`)
     return false

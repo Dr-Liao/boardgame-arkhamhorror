@@ -4,6 +4,7 @@
 
 import { investigatorRule } from '../cards/card-rules.js'
 import { registeredEntry } from './ability.js'
+import { clearForcedRevelation, forcedRevelationOf, popRevelation, pushRevelation } from './resolution-scope.js'
 
 export function createTreacheryTokens(deps) {
   const {
@@ -59,18 +60,31 @@ export function createTreacheryTokens(deps) {
     }
     const previousTreachery = state._treacheryResolving
     state._treacheryResolving = t.code
+    // 2026-10-25 第五轮修复 05049：「正在结算显现效果」的统一读点（进程内作用域，不写 state）。
+    pushRevelation(t.code)
     try {
       return resolveTreacheryBody(state, inv, t, events)
     } finally {
       if (previousTreachery === undefined) delete state._treacheryResolving
       else state._treacheryResolving = previousTreachery
+      popRevelation()
+      // 2026-10-25 第五轮修复 05183：强制 peril / 不可取消是「本次揭示」一次性标记。
+      clearForcedRevelation(t.code)
     }
   }
 
   function resolveTreacheryBody(state, inv, t, events) {
+    // 2026-10-25 第五轮修复 05183：抽牌时被强制「获得险境/不可取消」的卡，在真正揭示期间同样生效。
+    const forced = forcedRevelationOf(t.code)
+    const forcedPeril = forced?.peril === true
+    const forcedCannotCancel = forced?.cannotCancel === true
     const context = reactionWindow(state, 'treachery',
-      { when: 'treachery', seat: inv.seat, location: inv.location, cardCode: t.code, peril: !!t.peril,
-        weakness: isWeaknessCard(t) || isWeaknessCode(t.code), prompt: `${inv.name} 抽到「${t.name}」` }, events)
+      { when: 'treachery', seat: inv.seat, location: inv.location, cardCode: t.code, peril: !!t.peril || forcedPeril,
+        weakness: isWeaknessCard(t) || isWeaknessCode(t.code), prompt: `${inv.name} 抽到「${t.name}」`,
+        // 2026-10-25 第四轮修复 cannot-cancel-card-flag（05342）。
+        cannotCancel: forcedCannotCancel
+          || registeredEntry(t.code)?.cannotBeCanceledRevelation === true
+          || state.scenario?.treacheries?.[t.code]?.cannotBeCanceledRevelation === true }, events)
     if (context.cancelled) {
       info(state, events, t.hidden ? '一张隐私诡计的显现效果被取消。' : `「${t.name}」的显现效果被取消。`)
       return
@@ -103,7 +117,7 @@ export function createTreacheryTokens(deps) {
       return
     }
     if (t.test) {
-      performTest(state, inv.seat, t.test.skill, t.test.difficulty, { source: { type: 'encounter', name: t.name, code: t.originalCode || t.code, label: '遭遇检定', scenarioAbility: true }, peril: !!t.peril, resolve: r => {
+      performTest(state, inv.seat, t.test.skill, t.test.difficulty, { source: { type: 'encounter', name: t.name, code: t.originalCode || t.code, label: '遭遇检定', scenarioAbility: true }, peril: !!t.peril || forcedPeril, resolve: r => {
         if (r.success) {
           info(state, events, `✔️ ${inv.name} 通过「${t.name}」检定（${SKILL_NAMES[t.test.skill]} ${r.value} vs ${t.test.difficulty}）。`)
         } else {

@@ -25,6 +25,9 @@ export default {
         const result = api.fight(inv.seat, enemy.id, { combatBonus: 2, damageBonus: 1 })
         if (!result?.success) return
         if ((source?.uses || 0) < 1) return
+        // 「本次攻击的伤害」以引擎写入的 attackResult.damage 为准（含所有伤害修正）。
+        const attackDamage = Math.max(0, Number(result.attackResult?.damage ?? 0))
+        if (attackDamage <= 0) return
         const successBy = result.value - result.difficulty
         // X = 另一名敌人的攻击值：只有成功点数够高时才能把本次攻击的伤害转给它。
         const candidates = state.enemies.filter(other => other.id !== enemy.id
@@ -42,9 +45,8 @@ export default {
         const target = candidates.find(other => other.id === answer)
         if (!target) return
         api.addUses(source, -1)
-        // 本次攻击的伤害 = 基础 1 + 卡面 +1。
-        api.damageEnemy(target, 2, inv.seat)
-        api.info(`💥 「.45汤姆逊冲锋枪」把本次攻击的伤害转给「${target.name}」（2 点）。`)
+        api.damageEnemy(target, attackDamage, inv.seat)
+        api.info(`💥 「.45汤姆逊冲锋枪」把本次攻击的伤害转给「${target.name}」（${attackDamage} 点）。`)
       },
     },
   ],

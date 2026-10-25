@@ -3,16 +3,36 @@
 // 卡面：显现 - 治愈幽灵看守人的 3 点伤害。重整幽灵看守人。
 //   其移动、交战并攻击，如同此刻是敌军阶段。结算本效果期间，幽灵看守人获得「猎物 - 你」。
 //
-// 结算口径（按敌军阶段三步）：
-//   1) 猎手移动：只有「重整、未交战、且所在地点没有调查员」时才移动一步；目标按「猎物 - 你」
-//      （抽到本卡的调查员）计算——与 engine/turn.js 的 hunter 步一致；
-//   2) 交战：未交战则在其所在地点交战一位调查员（优先抽到本卡的调查员，即「猎物 - 你」）；
-//   3) 攻击：攻击其交战对象一次（如同敌军阶段；未交战/无目标则不攻击）。
-// 结算期间把 preySeat 临时写成抽牌者，结束后恢复，供其它读取 prey 的效果看到这次临时猎物。
+// 结算口径 = 引擎敌军阶段的三个步骤（src/engine/turn.js 的 enemyPhase）：
+//   1) 猎手移动：与敌军阶段同一门控（猎手、未交战、非横置/immobile、所在地点没有调查员），
+//      调 api.hunterStep(enemy) **不传 targets**，由引擎按「最近调查员」选路；
+//      并列时引擎读 enemy.preySeat（src/engine/turn.js 的 hunterStep）——本效果期间写「你」。
+//   2) 交战：等价 autoEngageAll（src/engine/engine.js:620-632）：未交战时对所在地点调查员
+//      调 api.preyTarget(enemy, seats)，优先采用结算期的 preySeat（=「你」）。
+//   3) 攻击：等价敌军阶段攻击（非横置、非 massive 攻击后横置）。
+// 结算期间把 preySeat 临时写成抽牌者，结束后恢复原值。
 
 import { activeInvestigators, originalOf } from '../../../_shared.js'
 
 const WATCHER = '05086'
+
+function locationOf(state, inv) {
+  return (state.locations || []).find(location => location.id === inv?.location) || null
+}
+
+function activeInvestigatorsAt(state, locationId) {
+  return activeInvestigators(state).filter(target => target.location === locationId)
+}
+
+function engageWatcher(state, watcher, seat, api) {
+  if (typeof api.engage === 'function') {
+    api.engage(watcher, seat)
+    return
+  }
+  const target = state.investigators[seat]
+  watcher.engagedSeat = seat
+  if (target) target.engaged = [...new Set([...(target.engaged || []), watcher.id])]
+}
 
 export default {
   code: '05087',
@@ -26,15 +46,18 @@ export default {
     }
     watcher.damageTaken = Math.max(0, (watcher.damageTaken || 0) - 3)
     watcher.exhausted = false
+    const here = locationOf(state, inv)
     const hadPreySeat = Object.prototype.hasOwnProperty.call(watcher, 'preySeat')
     const savedPreySeat = watcher.preySeat
-    watcher.preySeat = inv.seat // 结算期间「猎物 - 你」。
+    // 结算期间「猎物 - 你」：写实例读点，供 hunterStep 的并列裁决与 preyTarget 的交战选择读取。
+    watcher.preySeat = inv.seat
     try {
-      // 1) 猎手移动：与敌军阶段同条件——已交战/所在地点已有调查员时不移动。
-      const hereBefore = activeInvestigators(state).filter(target => target.location === watcher.location)
-      const canHunt = watcher.hunter !== false && watcher.engagedSeat == null && hereBefore.length === 0
+      // 1) 猎手移动（与敌军阶段同一门控与目标选择，不强制朝抽牌者）。
+      const hereBefore = activeInvestigatorsAt(state, watcher.location)
+      const canHunt = Boolean(watcher.hunter) && watcher.engagedSeat == null
+        && !watcher.exhausted && !watcher.immobile && hereBefore.length === 0
       if (canHunt && typeof api.hunterStep === 'function') {
-        const destination = api.hunterStep(watcher, { targets: [inv] })
+        const destination = api.hunterStep(watcher)
         if (destination && destination !== watcher.location) {
           api.moveEnemy(watcher, destination)
           api.info?.(`👁️ 幽灵看守人向「${destination}」移动。`)
@@ -42,27 +65,28 @@ export default {
       } else if (hereBefore.length > 0) {
         api.info?.('👁️ 幽灵看守人所在地点已有调查员：跳过猎手移动。')
       }
-      // 2) 交战：未交战时在其所在地点交战一位调查员（优先抽牌者 = 猎物 - 你）。
+      // 2) 交战（等价 enemy phase 的 autoEngageAll）。
       if (watcher.engagedSeat == null) {
-        const here = activeInvestigators(state).filter(target => target.location === watcher.location)
-        const target = here.find(candidate => candidate.seat === inv.seat) || here[0] || null
-        if (target) {
-          watcher.engagedSeat = target.seat
-          target.engaged = [...new Set([...(target.engaged || []), watcher.id])]
-          api.info?.(`👁️ 幽灵看守人与 ${target.name} 交战。`)
+        const seats = activeInvestigatorsAt(state, watcher.location).map(target => target.seat)
+        const targetSeat = api.preyTarget?.(watcher, seats)
+        if (Number.isInteger(targetSeat)) {
+          engageWatcher(state, watcher, targetSeat, api)
+          api.info?.(`👁️ 幽灵看守人与 ${state.investigators[targetSeat]?.name || targetSeat} 交战。`)
         }
       }
-      // 3) 攻击：敌军阶段一名敌人攻击其交战调查员一次。
+      // 3) 攻击（等价敌军阶段：横置的敌人不攻击；攻击后非 massive 横置）。
       const engaged = watcher.engagedSeat != null ? state.investigators[watcher.engagedSeat] : null
-      if (engaged && !engaged.defeated && !engaged.resigned) {
+      if (engaged && !engaged.defeated && !engaged.resigned && !watcher.exhausted) {
         if (api.cannotAttack?.(watcher)) return false
         api.attack(watcher, engaged)
+        if (!watcher.massive) watcher.exhausted = true
       }
       api.info?.('👁️ 幽灵看守人治愈 3 点伤害、重整，并移动、交战、攻击。')
     } finally {
       if (hadPreySeat) watcher.preySeat = savedPreySeat
       else delete watcher.preySeat
     }
+    if (here) api.info?.(`👁️ 「${here.name || inv.location}」的幽灵看守人结算完毕。`)
     return false // 本卡进遭遇弃牌堆
   },
 }

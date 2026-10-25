@@ -30,6 +30,8 @@ export function createMovement(deps) {
     processPlayerEnemyEntry,
     registeredEntry,
     requestChoice,
+    // 2026-10-25 第六轮修复 05036：「移动后、将要自动交战前」的玩家反应窗口。
+    reactionWindow,
     resolveEffect,
     revealLocation,
     scenarioBehavior,
@@ -168,17 +170,17 @@ function doMove(state, seat, locationId, events) {
   if (!locationExists(state, locationId) && (state.scenario.setAsideLocations || []).includes(locationId)) {
     placeLocation(state, locationId, events, seat)
   }
-  relocateInvestigator(state, seat, locationId, events)
+  relocateInvestigator(state, seat, locationId, events, null, { reason: 'move' })
 }
 
 // Entering a location has the same consequences for an action or a card effect.
 // Action payment and effect-specific disengagement stay with the caller.
 
-function relocateInvestigator(state, seat, locationId, events, message = null) {
+function relocateInvestigator(state, seat, locationId, events, message = null, options = {}) {
   const inv = state.investigators[seat]
   if (!inv || inv.defeated || inv.resigned || inv.location === locationId || !locationExists(state, locationId)) return
   if (inv.steamImmobileRound === state.round) return
-  const moveError = movementError(state, inv)
+  const moveError = movementError(state, inv, locationId)
   if (moveError) { info(state, events, moveError); return }
   const entryError = investigatorEntryError(state, locationId, seat)
   if (entryError) { info(state, events, entryError); return }
@@ -220,6 +222,16 @@ function relocateInvestigator(state, seat, locationId, events, message = null) {
   }
   const alreadyRevealed = state.locations.find(l => l.id === locationId)?.revealed
   revealLocation(state, locationId, events, seat)
+  // 2026-10-25 第六轮修复 05036：进入地点后、自动交战前开反应窗口（05236 钉鞋等）。
+  const engageCandidates = state.enemies.filter(enemy => enemy.location === locationId
+    && !enemy.defeated && !enemy.engagedSeat && !enemy.massive)
+  {
+    reactionWindow(state, 'moveBeforeEngage', {
+      when: 'moveBeforeEngage', seat: inv.seat, location: locationId,
+      enemy: engageCandidates[0], enemies: engageCandidates.map(enemy => enemy.id),
+      prompt: `${inv.name} 进入「${locName(state, locationId)}」并将与 ${engageCandidates.length} 个敌人交战`,
+    }, events)
+  }
   autoEngageAt(state, locationId, events)
   const loc = state.locations.find((l) => l.id === locationId)
   scenarioBehavior(state).locationEntered?.(state, inv, loc, scenarioRuntime(state, events), companions)
@@ -253,7 +265,10 @@ function relocateInvestigator(state, seat, locationId, events, message = null) {
   }
   }
   const moveAfterCosts = () => {
-  scenarioBehavior(state).beforeMove?.(state, inv, state.locations.find(loc => loc.id === locationId), scenarioRuntime(state, events))
+  // 2026-10-25 本循环修复 05254：beforeMove 第 5 参携带位移来源 { reason: 'move' | 'effect' }，
+  // 使「下一次移动行动额外花费」只对移动行动生效、效果位移不加价。
+  scenarioBehavior(state).beforeMove?.(state, inv, state.locations.find(loc => loc.id === locationId), scenarioRuntime(state, events),
+    { reason: options.reason === 'move' ? 'move' : 'effect' })
   // 离开地点的检定由地点卡条目声明（locationRule.onLeave.test），引擎不再按地点 id 分支。
   const leaveRule = locationRuleOf(prevLoc)?.onLeave || prevLoc?.onLeave
   const leaveDestination = state.locations.find(loc => loc.id === locationId)

@@ -6,8 +6,11 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// P7：牌库顶 N 张用 api.topDeckCodes 读、api.moveCard 抽到手、api.shuffleDeck 洗回；
-// 弱点判定用 api.isNonWeakness。弱点也与选中的那张一起结算（若选中的正是弱点则不再额外抽）。
+// P7：牌库顶 N 张用 api.topDeckCodes 读、api.shuffleDeck 洗回；
+// 弱点判定用 api.isNonWeakness。
+// 审计 R2：「找出任意一张卡牌并将其抽取」必须是真实抽牌（会触发抽牌窗口、弱点按显现结算），
+// 因此选中的牌先移到牌库顶再 api.drawCards(1)（与下方额外弱点的通道一致），不再直接 moveCard 进手牌。
+// 若选中的正是弱点，它就是「抽取的弱点」，不再额外抽 1 张（参考实现同一口径）。
 
 export default {
   code: '05153',
@@ -31,9 +34,21 @@ export default {
             prompt: `“老千”先生：从牌库顶 ${count} 张中找出任意 1 张并抽取。`,
             options: top.map((code, index) => ({ id: String(index), cardCode: code, label: api.cardName(code) })) }))
         const chosenCode = top[chosenIndex] || top[0]
-        api.moveCard({ code: chosenCode, from: 'deck', to: 'hand', ownerSeat: inv.seat })
+        // 「抽取」走真实抽牌通道：先移到牌库顶，再 api.drawCards(1)。
+        api.moveCard({ code: chosenCode, from: 'deck', to: 'deckTop', ownerSeat: inv.seat })
+        api.drawCards(inv.seat, 1)
         api.info(`“老千”先生：抽取「${api.cardName(chosenCode)}」。`)
-        const weakness = top.find(code => !api.isNonWeakness(code) && code !== chosenCode)
+        // 选中的是弱点时它就是「抽取的弱点」，不再额外抽 1 张。
+        const chosenIsWeakness = !api.isNonWeakness(chosenCode)
+        // 审计 R4：查找结果里有多张弱点时，由玩家选择抽其中 1 张（此前 top.find 自动取第一张）。
+        const weaknessCandidates = chosenIsWeakness ? [] : top.filter(code => !api.isNonWeakness(code))
+        const weakness = weaknessCandidates.length <= 1 ? weaknessCandidates[0]
+          : (() => {
+            const index = Number(api.choice({ kind: 'search', source: '05153', seat: inv.seat,
+              prompt: '“老千”先生：查找结果中有多张弱点，选择抽其中 1 张。',
+              options: weaknessCandidates.map((code, i) => ({ id: String(i), cardCode: code, label: api.cardName(code) })) }))
+            return weaknessCandidates[index] || weaknessCandidates[0]
+          })()
         if (weakness) {
           // 「抽取 1 张弱点」走真实抽牌通道：先把它移到牌库顶，再用 api.drawCards 抽 1 张，
           // 这样弱点按引擎的抽牌/弱点结算路径处理（而不是只塞进手牌）。

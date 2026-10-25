@@ -6,20 +6,11 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 05277 帮个小忙：4 种模式（基础 / +2 费改 2 伤害 / +2 费改 2 格内地点 / +4 费两者），
-// 额外费用用 api.loseResources 支付，伤害走 api.damageEnemy（非精英敌人筛在候选内）。
-//
-// 修正（审计 R2）：
-//   · 「与你所在地点之间连接次数不超过 2 的地点」不含自身地点（把 fromId 移出集合）；
-//   · 先算出每种模式的目标池，只提供「有合法目标且付得起」的模式，再扣额外费用，避免白扣费；
-//   · 增加打出条件：没有任何可伤害目标时不能打出（基础模式无目标时至少要能选范围模式）。
+// R7：两条 [reaction] 改为挂在引擎 beforePlayCost 窗口（正在打出的卡自身条目的 reaction 可作候选来源）：
+// 窗口内把选择记到 inv.playUpgrades05277 并累加 context.costIncrease（引擎支付前加费）；
+// played 的 resolve 只读该选择决定伤害/目标范围，不再在 resolve 内补付资源。
 
-const MODES = [
-  { id: 'base', extra: 0, damage: 1, range: false, label: '造成 1 点伤害（你所在地点，非精英）' },
-  { id: 'damage', extra: 2, damage: 2, range: false, label: '费用 +2：造成 2 点伤害' },
-  { id: 'range', extra: 2, damage: 1, range: true, label: '费用 +2：目标改为连接次数不超过 2 的地点' },
-  { id: 'both', extra: 4, damage: 2, range: true, label: '费用 +4：2 点伤害，且目标在连接次数不超过 2 的地点' },
-]
+const UPGRADE_COST = 2
 
 // 「与你所在地点之间连接次数不超过 2 的地点」：距离 1–2，不含自身地点。
 function locationsWithinTwo(state, fromId) {
@@ -35,46 +26,70 @@ function locationsWithinTwo(state, fromId) {
   return within
 }
 
-function targetsFor(state, inv, mode) {
-  const locations = mode.range ? locationsWithinTwo(state, inv.location) : new Set([inv.location])
+function targetsAt(state, inv, range) {
+  const locations = range ? locationsWithinTwo(state, inv.location) : new Set([inv.location])
   return state.enemies.filter(enemy => !enemy.defeated && !enemy.elite && locations.has(enemy.location))
+}
+
+function canAffordUpgrade(inv, context) {
+  const base = Number(context?.cost || 0)
+  const extra = Number(context?.costIncrease || 0)
+  return (inv.resources || 0) >= base + extra + UPGRADE_COST
 }
 
 export default {
   code: '05277',
   playCondition: [{
     when: ({ state, inv }) => {
-      const local = targetsFor(state, inv, MODES[0])
-      if (local.length) return true
-      // 本地没有目标时只能靠「+2 费改范围」打法，至少要付得起这笔额外费用。
-      return targetsFor(state, inv, MODES[2]).length > 0 && (inv.resources || 0) >= 2
+      if (targetsAt(state, inv, false).length) return true
+      // 本地没有目标时只能靠「+2 费改范围」打法：基础 2 + 额外 2 = 4，必须付得起。
+      return targetsAt(state, inv, true).length > 0 && (Number(inv.resources) || 0) >= 4
     },
-    message: '连接次数不超过 2 的地点内没有非[[精英]]敌人，不能打出「帮个小忙」',
+    message: '连接次数不超过 2 的地点内没有非[[精英]]敌人（或资源不足 4：基础 2 + 提升费用 2），不能打出「帮个小忙」',
   }],
   abilities: [
     {
+      kind: 'reaction', trigger: 'beforePlayCost',
+      label: '打出帮个小忙时：提升费用 2 点（造成 2 点伤害）',
+      criteria: [({ state, inv, context }) => context?.cardCode === '05277'
+        && !(inv.playUpgrades05277 || []).includes('damage')
+        && canAffordUpgrade(inv, context)
+        && targetsAt(state, inv, false).length > 0],
+      resolve: ({ inv, api, context }) => {
+        inv.playUpgrades05277 = [...(inv.playUpgrades05277 || []), 'damage']
+        context.costIncrease = Number(context.costIncrease || 0) + UPGRADE_COST
+        api.info('帮个小忙：提升费用 2 点，改为造成 2 点伤害。')
+      },
+    },
+    {
+      kind: 'reaction', trigger: 'beforePlayCost',
+      label: '打出帮个小忙时：提升费用 2 点（目标改为 2 次连接内的地点）',
+      criteria: [({ state, inv, context }) => context?.cardCode === '05277'
+        && !(inv.playUpgrades05277 || []).includes('range')
+        && canAffordUpgrade(inv, context)
+        && targetsAt(state, inv, true).length > 0],
+      resolve: ({ inv, api, context }) => {
+        inv.playUpgrades05277 = [...(inv.playUpgrades05277 || []), 'range']
+        context.costIncrease = Number(context.costIncrease || 0) + UPGRADE_COST
+        api.info('帮个小忙：提升费用 2 点，目标改为与你所在地点连接次数不超过 2 的地点。')
+      },
+    },
+    {
       kind: 'played',
-      label: '对一个非精英敌人造成 1 点伤害',
+      label: '对一个非精英敌人造成 1 点伤害（升级在打出费用窗口选择）',
       resolve: ({ state, inv, api }) => {
-        // 只保留「有合法目标且额外费用付得起」的模式；再从中选择。
-        const usable = MODES.filter(mode => (inv.resources || 0) >= mode.extra && targetsFor(state, inv, mode).length > 0)
-        if (!usable.length) { api.info('「帮个小忙」：没有符合条件的非精英敌人。'); return }
-        const modeId = usable.length === 1 ? usable[0].id : api.choice({ kind: 'effect', source: '05277', seat: inv.seat,
-          prompt: '选择「帮个小忙」的结算模式。',
-          options: usable.map(mode => ({ id: mode.id, label: mode.label })) })
-        const mode = usable.find(item => item.id === modeId) || usable[0]
-        if (!mode) return
-        if (mode.extra) api.loseResources(inv.seat, mode.extra)
-        const pool = targetsFor(state, inv, mode)
+        const upgrades = Array.isArray(inv.playUpgrades05277) ? inv.playUpgrades05277.slice() : []
+        delete inv.playUpgrades05277
+        const range = upgrades.includes('range')
+        const damage = upgrades.includes('damage') ? 2 : 1
+        const pool = targetsAt(state, inv, range)
+        if (!pool.length) { api.info('「帮个小忙」：没有符合条件的非精英敌人。'); return }
         const chosen = pool.length === 1 ? pool[0].id : api.choice({ kind: 'target', source: '05277', seat: inv.seat,
           prompt: '选择要伤害的非精英敌人。', options: pool.map(enemy => ({ id: enemy.id, label: enemy.name })) })
         const enemy = pool.find(item => item.id === chosen) || pool[0]
-        api.damageEnemy(enemy, mode.damage, inv.seat)
-        api.info(`「帮个小忙」对「${enemy.name}」造成 ${mode.damage} 点伤害。`)
+        api.damageEnemy(enemy, damage, inv.seat)
+        api.info(`「帮个小忙」对「${enemy.name}」造成 ${damage} 点伤害。`)
       },
     },
-  ],
-  modifiers: [
-
   ],
 }

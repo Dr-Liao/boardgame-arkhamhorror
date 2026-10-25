@@ -23,6 +23,7 @@ const define = (id, label, kind = 'reaction', order = 100) => DEFS.set(id, Objec
 // 既有窗口：engine.js 的 reactionWindow 调用点与 card-effects.js 的 reaction.when。
 for (const [id, label, kind] of [
   ['encounterDrawn', '抽取遭遇卡后', 'reaction'],
+  ['beforePlayCost', '打出一张卡牌支付费用前', 'interrupt'],
   ['treachery', '抽取诡计卡后（显现前）', 'interrupt'],
   ['testBegins', '技能检定开始时', 'reaction'],
   ['tokenReveal', '揭示混乱标记时', 'interrupt'],
@@ -52,6 +53,14 @@ define('assetLeavesPlay', '支援离场后', 'reaction')
 define('wouldDiscardFromHand', '将要弃掉手牌时', 'interrupt')
 define('wouldLoseResources', '将要失去资源时', 'interrupt')
 define('wouldLoseActions', '将要失去行动时', 'interrupt')
+// 2026-10-25 第六轮新增窗口（05036/05119/05014/05237/05324）。
+define('moveBeforeEngage', '移动后将要自动交战前', 'interrupt')
+define('committedCard', '卡牌进入投入区后', 'reaction')
+define('cardWouldBeDrawn', '将要抽到卡牌时', 'interrupt')
+define('doomWouldBePlaced', '将要放置毁灭时', 'interrupt')
+define('doomPlaced', '毁灭放置后', 'reaction')
+define('mythosEnd', '神话阶段结束时', 'reaction')
+define('tokenWouldResolve', '混乱标记将要结算时', 'interrupt')
 
 // 旧式 triggerReaction 通道使用的窗口（engine.js 与战役 behavior 的调用点）。
 // 它们与 reactionWindow 的窗口共享同一份注册表，能力层描述子因此也能挂在这些时机上。

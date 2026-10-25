@@ -5,10 +5,11 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 这是「检定期间」的触发能力：挂在引擎的 testBegins 反应窗口上（检定开始、投入之前），
-// 读点是 openAbilityWindow 的 reaction 通道；降低难度的 api 是 reduceTestDifficulty。
-// （调查员卡自己的 free 能力目前没有枚举点——legalMoves/playerWindow 只枚举场上支援，
-//   因此这里用同一时机的反应通道，行为等价且不新增引擎分支。）
+// [free]「检定期间」：引擎现在把调查员自身的 free 描述子也送进玩家窗口
+// （encounter.playerWindow 的 player-window-fast-actions 原语；执行入口 doFreeDescriptor），
+// 技能检定内的两个玩家窗口时机是 test.beforeCommit（投入前）与 test.afterCommit（投入后、判定前），
+// 两处都在 ST.6 统一扣减难度之前，因此 reduceTestDifficulty 都能生效。
+// duringOwnSkillTest: true 保证只在本人执行的检定期间可选。
 
 import { investigatorSign } from './_shared.js'
 
@@ -28,12 +29,13 @@ export default {
   },
   abilities: [
     {
-      kind: 'reaction',
-      trigger: 'testBegins',
+      kind: 'free',
+      // 技能检定期间的玩家窗口（tests.js:182/347 的 playerWindow 调用点）。
+      trigger: ['test.beforeCommit', 'test.afterCommit'],
+      duringOwnSkillTest: true,
       label: '花 2 资源：本次检定难度 -1',
       cost: { resources: 2 },
       limit: 'oncePerRound',
-      criteria: [({ inv, context }) => context?.seat === inv.seat && Number.isFinite(context?.difficulty)],
       resolve: ({ inv, api }) => {
         api.reduceTestDifficulty(1)
         api.info(`${inv.name} 花费 2 资源，本次检定难度 -1。`)

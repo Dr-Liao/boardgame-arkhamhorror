@@ -10,10 +10,9 @@
 // 05196 委员会的保险箱：锁头 = 调查员人数；[行动][行动]检定任意技能(5)移除 1 锁头；
 // 锁头清零后全队各免费打出 1 张任意卡，然后放逐自身。
 //
-// 显式简化：
-//   · 「你所在地点的任何调查员均可以激活本能力」未接线——能力层按「支援控制者」枚举主动能力，
-//     没有「同地点队友代为激活」的读点。单/多调查员下仍由控制者激活。
-//   · 「每个剧本最多一次」依赖战役层放逐结算（state.exiledBySeat），本条目在场景内只做一次。
+// R7：团队激活已接线——引擎把同地点队友的 teamActivatable 支援加入合法行动（move 带 ownerSeat），
+// validateMove / actionCost / doAbility 三处同口径：费用由激活者支付，能力读写真实资产实例。
+// 「每个剧本最多一次」依赖战役层放逐结算（state.exiledBySeat），本条目在场景内只做一次。
 
 const SKILL_OPTIONS = [
   { id: 'willpower', label: '意志' },
@@ -26,9 +25,7 @@ export default {
   code: '05196',
   uses: 1,
   usesType: 'locks',
-  simplified: true,
-  note: '「你所在地点的任何调查员均可激活本能力」未实现（能力层只枚举控制者的主动能力）；'
-    + '其余（按人数放置锁头、双行动检定任意技能移除锁头、无锁头时全队免费打出 1 张牌、放逐自身）已实现。',
+  teamActivatable: true,
   abilities: [
     {
       // 锁头数 = 每位调查员 1 个。
@@ -43,17 +40,11 @@ export default {
     {
       kind: 'action',
       label: '[行动][行动]：检定任意技能(5)，成功移除 1 锁头',
-      // 双行动费用：能力层没有 number 型的 action 费用。引擎先按 action 费用扣 1 点，
-      // resolve 里检查「还有没有第 2 点」：有就再扣 1 点；没有就把引擎扣的那点退回去
-      // （能力当次不结算，避免出现「付了 1 点却什么都没发生」的静默扣费）。
-      cost: { action: true },
+      // 双行动费用：能力描述子的 cost.action 支持数值（引擎 actionCost：
+      // src/engine/turn-flow.js 的 `typeof ability?.cost?.action === 'number'` 分支），
+      // dispatch 会在结算前一次扣 2 点、行动点不足直接抛「行动点不足」。
+      cost: { action: 2 },
       resolve: ({ state, inv, source, api }) => {
-        if ((inv.actionsLeft ?? 0) < 1) {
-          api.gainAction(inv.seat, 1)
-          api.info('「委员会的保险箱」需要 2 个行动点才能启动。')
-          return
-        }
-        api.gainAction(inv.seat, -1)
         const skill = api.choice({
           kind: 'skill', source: '05196', seat: inv.seat,
           prompt: '选择本次检定使用的技能。', options: SKILL_OPTIONS,

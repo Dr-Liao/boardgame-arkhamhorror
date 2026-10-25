@@ -6,39 +6,48 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 05237 幸运或是注定：快速；取消 1 个毁灭标记；每场游戏最多 1 张；放逐自身。
-//
-// 显式简化（详见 worker 报告）：
-//   未实现：①「在毁灭标记将要放到任意冒险卡牌上时打出」的精确时点——引擎只有 addDoom /
-//   placeDoomOnCard 的写入点，没有 doomWouldBePlaced 窗口；本批改为「自己的回合内快速打出」，
-//   结算时取消当前密谋上已有的 1 点毁灭（净效果同为「少 1 点毁灭」）。
-//   ② 「每场游戏最多 1 张」按调查员 gameFlags 记账（多调查员时不是团队级）。
-//   proposedApi: window doomWouldBePlaced(interrupt) + context { card, amount, cancelled }；
-//   见 artifacts/migration/tcu/primitive-requests/w-m2-3-05237-doom-placement-window.json。P10 前补。
+// 05237 幸运或是注定：走引擎 doomPlaced 窗口——
+//   · 卡上毁灭：placeDoomOnCard 写入后开窗（context.card）；
+//   · 密谋/议程毁灭：addDoom 写入后开窗（context.card=null, agenda=true；R7 修复 hasDoomPlaced 的数组 trigger 预检）。
+// 内容用 api.cancelDoomPlacement(card) 撤销刚放的 1 点（card 为 null 时取消 state.doom 1 点；原语在
+// scenarioRuntime，abilityApi 未透传/返回 0 时按同一语义回退）。快速打出（fast+trigger 的 played 描述子即
+// reactionOnly，只能在该窗口打出）、放逐自身由 playReactionCard 的 exileAfterPlay 口径处理；团队级
+// 「每场游戏 1 张」用所有调查员的 gameFlags.fortuneOrFate 记账。
 
 export default {
   code: '05237',
-  simplified: true,
-  note: '未实现：「毁灭标记将要放到冒险卡牌上时」的精确时点（引擎缺 doomWouldBePlaced 窗口，改为自己回合快速打出、'
-    + '取消当前密谋上的 1 点毁灭）与团队级「每场游戏最多 1 张」（按调查员 gameFlags 记账）；'
-    + '快速、放逐自身已实现。P10 前补。',
-  playCondition: [
-    { when: ({ state }) => (state.doom || 0) > 0, message: '当前密谋上没有可以取消的毁灭标记' },
-    {
-      when: ({ state }) => !state.investigators.some(owner => owner.gameFlags?.fortuneOrFate),
-      message: '每场游戏最多打出 1 张「幸运或是注定」',
-    },
-  ],
   abilities: [
     {
       kind: 'played',
       fast: true,
+      trigger: 'doomPlaced',
       exileAfterPlay: true,
-      label: '取消当前密谋上 1 点毁灭并放逐自身',
-      resolve: ({ inv, api }) => {
-        const removed = api.removeDoom(1)
+      criteria: [({ state, context }) => {
+        if (state.investigators.some(owner => owner.gameFlags?.fortuneOrFate)) return false
+        if (context?.card) return Number(context.card.doom || 0) > 0
+        return Boolean(context?.agenda)
+      }],
+      label: '取消刚放到该卡牌/密谋上的 1 点毁灭并放逐自身',
+      resolve: ({ state, inv, api, context }) => {
+        const card = context?.card
+        let removed = 0
+        if (card) {
+          if (typeof api.cancelDoomPlacement === 'function') removed = api.cancelDoomPlacement(card)
+          if (!removed && (card.doom || 0) > 0) {
+            card.doom -= 1
+            removed = 1
+          }
+        } else if (context?.agenda) {
+          // 密谋毁灭（state.doom）：取消刚放到当前议程上的 1 点。
+          if (typeof api.cancelDoomPlacement === 'function') removed = api.cancelDoomPlacement(null) || 0
+          if (!removed && (state.doom || 0) > 0) {
+            state.doom = Math.max(0, (state.doom || 0) - 1)
+            removed = 1
+          }
+        }
+        if (!removed) return
         api.setGameFlag(inv.seat, 'fortuneOrFate')
-        api.info(`🌑 ${inv.name} 用「幸运或是注定」取消了密谋上的 ${removed} 点毁灭。`)
+        api.info(`🌑 ${inv.name} 用「幸运或是注定」取消了刚放置的 ${removed} 点毁灭。`)
       },
     },
   ],

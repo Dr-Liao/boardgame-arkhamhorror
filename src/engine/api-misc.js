@@ -6,6 +6,9 @@
 //
 // 依赖注入同前几批；doFight 是工厂产物，用惰性 thunk 注入避免 TDZ。
 
+import { currentRevelation, investigationFrameRef } from './resolution-scope.js'
+import { syncSpellCredit } from './spell-actions.js'
+
 export function createMiscApi(state, events, deps) {
   const {
     SKILL_NAMES,
@@ -65,6 +68,8 @@ export function createMiscApi(state, events, deps) {
     investigatorMoveDestinations,
     doResign,
     doFightRaw,
+    playCardFromDiscardForced,
+    playCardFromOtherHandForced,
     // 第 5 步 P6：治疗恐惧的统一入口 / 资源寄存 / 取消记账（都要能开窗口）。
     healHorrorFrom,
     resourceBank,
@@ -73,6 +78,11 @@ export function createMiscApi(state, events, deps) {
     noteCardCancelled,
     getMaxSanity,
     privateInfo,
+    // 2026-10-25 第五轮修复 05186。
+    registeredEntry,
+    // 2026-10-25 第五轮：通用读点（敌人运行期修正 / 地点帷幕 / 显现作用域）。
+    scenarioRuntime,
+    extendHealHorror,
   } = deps
 
   const doFight = (...args) => doFightRaw(...args)
@@ -101,6 +111,33 @@ export function createMiscApi(state, events, deps) {
       // 第 5 步 P6：卡牌效果获得的资源可能被「家族遗产」寄存（resourceBank 规则）。
       if (inv) resourceBank.gainResource(state, inv, amount, events)
     },
+    // 2026-10-25 第七轮修复 05003/05011：资源寄存 v2 读写点。
+    bankResources: (seat, amount) => {
+      const inv = state.investigators[seat]
+      return inv ? resourceBank.bankResources(state, inv, amount, events) : 0
+    },
+    bankedResources: target => {
+      const inv = Number.isInteger(target) ? state.investigators[target]
+        : (target?.seat != null ? state.investigators[target.seat] : target)
+      return inv ? resourceBank.bankedOf(inv) : 0
+    },
+    withdrawBanked: (seat, amount) => {
+      const inv = state.investigators[seat]
+      return inv ? resourceBank.withdrawBanked(state, inv, amount, events) : 0
+    },
+    spendBanked: (seat, amount) => {
+      const inv = state.investigators[seat]
+      return inv ? resourceBank.spendBanked(state, inv, amount, events) : 0
+    },
+    availableResources: target => {
+      const inv = Number.isInteger(target) ? state.investigators[target]
+        : (target?.seat != null ? state.investigators[target.seat] : target)
+      return inv ? (inv.resources || 0) : 0
+    },
+    spendResources: (seat, amount) => {
+      const inv = state.investigators[seat]
+      return inv ? resourceBank.spendResources(state, inv, amount, events) : 0
+    },
     // 第 5 步 P6：资源寄存的两条卡面读写点（家族遗产）。
     resourceBank: {
       bankedOf: inv => resourceBank.bankedOf(inv),
@@ -124,6 +161,7 @@ export function createMiscApi(state, events, deps) {
       // 2026-10-25：05280「否决存在：忽略失去资源的效果」需要一个按面向取消的窗口。
       const context = reactionWindow(state, 'wouldLoseResources', {
         when: 'wouldLoseResources', seat: inv.seat, amount, what: 'resources', location: inv.location,
+        source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },
         prompt: `${inv.name} 将要失去 ${amount} 资源`,
       }, events)
       if (context.cancelled) {
@@ -141,6 +179,7 @@ export function createMiscApi(state, events, deps) {
       if (!inv || !(amount > 0)) return 0
       const context = reactionWindow(state, 'wouldLoseActions', {
         when: 'wouldLoseActions', seat: inv.seat, amount, what: 'actions', location: inv.location,
+        source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },
         prompt: `${inv.name} 将要失去 ${amount} 个行动`,
       }, events)
       if (context.cancelled) {
@@ -170,16 +209,68 @@ export function createMiscApi(state, events, deps) {
     },
     // 2026-10-25：05152「所附属支援被弃掉后：把该支援与其升级附属返回各自所有者手牌」。
     // 标记 returnedToHand 让后续弃牌守卫跳过；升级（attachments）一并返回。
-    returnAssetAndAttachmentsToHand: (seat, asset) => {
-      const owner = state.investigators[seat]
-      if (!owner || !asset) return false
-      const codes = [asset.code]
-      for (const attachment of asset.attachments || []) if (attachment?.code) codes.push(attachment.code)
-      for (const code of codes) if (!(owner.hand || []).includes(code)) owner.hand.push(code)
+    returnAssetAndAttachmentsToHand: (seat, asset, options = {}) => {
+      const controller = state.investigators[seat]
+      if (!controller || !asset) return false
+      // 2026-10-25 第六轮修复 05152：options 支持 onlyUpgrades（只返回 [[Upgrade]] 附属）、
+      // byOwnerSeat（各归其所有者手牌，而不是全部给控制器）。
+      const label = cardName(asset.code)
+      const targets = []
+      const mainOwner = options.byOwnerSeat && Number.isInteger(asset.ownerSeat)
+        ? (state.investigators[asset.ownerSeat] || controller) : controller
+      targets.push({ code: asset.code, owner: mainOwner })
+      for (const attachment of asset.attachments || []) {
+        if (!attachment?.code) continue
+        const traits = cardDef(attachment.code)?.traits || []
+        if (options.onlyUpgrades && !traits.some(trait => String(trait).toLowerCase() === 'upgrade')) continue
+        const owner = options.byOwnerSeat && Number.isInteger(attachment.ownerSeat)
+          ? (state.investigators[attachment.ownerSeat] || controller) : controller
+        targets.push({ code: attachment.code, owner })
+      }
+      for (const { code, owner } of targets) {
+        if (owner && !(owner.hand || []).includes(code)) owner.hand.push(code)
+      }
       asset.returnedToHand = true
-      info(state, events, `♻️ ${owner.name} 把「${cardName(asset.code)}」及其升级附属返回手牌。`)
+      const countText = targets.length > 1 ? `及其 ${targets.length - 1} 张附属` : ''
+      info(state, events, `♻️ ${controller.name} 把「${label}」${countText}返回手牌。`)
       return true
     },
+    // 2026-10-25 第七轮修复 05021：把能力来源卡从当前区域移入其所有者弃牌堆（assets/attachments/threat）。
+    discardSelf: (code = null) => {
+      const targetCode = code || state._resolvingCardCode
+      if (!targetCode) return false
+      for (const owner of state.investigators || []) {
+        const asset = (owner.assets || []).find(item => item.code === targetCode)
+        if (asset) {
+          leaveAsset(state, owner, asset, events)
+          if (!asset.returnedToHand && !asset.removedFromGame) owner.discard.push(asset.code)
+          info(state, events, `「${cardName(targetCode)}」被弃掉。`)
+          return true
+        }
+      }
+      for (const owner of state.investigators || []) {
+        const attachments = owner.attachments || []
+        const index = attachments.findIndex(item => item.code === targetCode)
+        if (index < 0) continue
+        const [attachment] = attachments.splice(index, 1)
+        const discardOwner = state.investigators[Number.isInteger(attachment.ownerSeat) ? attachment.ownerSeat : owner.seat] || owner
+        discardOwner.discard.push(targetCode)
+        info(state, events, `「${cardName(targetCode)}」被弃掉。`)
+        return true
+      }
+      for (const owner of state.investigators || []) {
+        const index = (owner.threat || []).findIndex(item => item.code === targetCode)
+        if (index < 0) continue
+        owner.threat.splice(index, 1)
+        owner.discard.push(targetCode)
+        info(state, events, `「${cardName(targetCode)}」被弃掉。`)
+        return true
+      }
+      return false
+    },
+    // 2026-10-25 第七轮修复 05235：强制从弃牌堆打出事件（结算后可从游戏移除）。
+    playCardFromDiscard: (seat, code, options = {}) =>
+      playCardFromDiscardForced(state, seat, code, events, options),
     // 第三个参数用于「发现任意地点的线索」（02224）：判定仍按目标地点走剧情的 canDiscoverClues。
     discoverClue: (seat, amount = 1, locationId = null) =>
       discoverClueAt(state, state.investigators[seat], amount, events, { locationId: locationId ?? undefined }),
@@ -201,11 +292,124 @@ export function createMiscApi(state, events, deps) {
     // 移除一张场上卡上的全部/指定数量毁灭标记（月光仪式这类卡用）。
     setAssetDoom: (card, amount = 0) => {
       if (!card) return 0
+      const before = card.doom || 0
       card.doom = Math.max(0, amount)
+      // 2026-10-25 第七轮修复 05006：毁灭被移除到阈值以下时收回未使用的法术额度。
+      if (card.doom < before) {
+        const owner = (state.investigators || []).find(inv => (inv.assets || []).includes(card))
+        if (owner) syncSpellCredit(state, owner)
+      }
       return card.doom
     },
-    addUses: (card, amount) => { if (card) card.uses = (card.uses || 0) + amount },
+    addUses: (card, amount) => {
+      if (!card) return
+      card.uses = (card.uses || 0) + amount
+      // 2026-10-25 第五轮修复 05186：条目声明「花费充能/弹药时获得等量资源」。
+      if (amount < 0 && registeredEntry(card.code)?.spentUsesGainResources === true) {
+        const owner = state.investigators.find(inv => (inv.assets || []).includes(card) || (inv.threat || []).includes(card))
+        if (owner) {
+          owner.resources = (owner.resources || 0) + (-amount)
+          info(state, events, `「${cardName(card.code)}」花费 ${-amount} 个标记：${owner.name} 获得 ${-amount} 资源。`)
+        }
+      }
+    },
+    // 2026-10-25 第五轮修复（05281）：把某项技能的基础值临时设为 value（until: 'endOfRound'|'endOfTurn'|'endOfPhase'）。
+    setBaseSkillValue: (seat, skill, value, options = {}) => {
+      const inv = state.investigators[seat]
+      if (!inv || !Object.hasOwn(SKILL_NAMES, skill)) return null
+      inv.statOverrides ||= {}
+      inv.statOverrides[skill] ||= []
+      const entry = { value: Number(value) || 0 }
+      if (options.until === 'endOfRound') entry.round = state.round
+      else if (options.until === 'endOfTurn') entry.turnSerial = state.turnSerial
+      else if (options.until === 'endOfPhase') { entry.round = state.round; entry.phase = state.phase }
+      inv.statOverrides[skill].push(entry)
+      return entry
+    },
     addDoom: (amount = 1) => addDoom(state, amount, events),
+    // 2026-10-25 第七轮修复 05158：调查中把目标改到连接地点（可选新/原隐藏值）。
+    retargetInvestigation: (locationId, options = {}) => {
+      const frame = investigationFrameRef()
+      const test = state.skillTest
+      if (!frame || !test) return null
+      const inv = state.investigators[test.seat]
+      const original = state.locations.find(loc => loc.id === frame.locationId)
+      const target = state.locations.find(loc => loc.id === locationId)
+      if (!target || !original || !target.revealed) return null
+      if (!(original.connections || []).includes(locationId)) return null
+      const shroudValue = options.shroud === 'original'
+        ? (Number(test.difficulty) || 0)
+        : (scenarioRuntime(state, events).locationShroud(locationId) ?? (target.shroud + (target.shroudMod || 0)))
+      frame.retarget = { locationId, shroudValue }
+      test.difficulty = shroudValue
+      info(state, events, `🔎 ${inv?.name || '调查员'} 改为在「${target.name}」调查（隐藏值 ${shroudValue}）。`)
+      return { locationId, shroudValue }
+    },
+    // 2026-10-25 第七轮修复 05322：把本次调查变成「原地点 + 所选地点」双地点调查（≤2 连接、已揭示）。
+    chooseDualInvestigation: (locationId, options = {}) => {
+      const frame = investigationFrameRef()
+      const test = state.skillTest
+      if (!frame || !test) return null
+      const original = state.locations.find(loc => loc.id === frame.locationId)
+      const target = state.locations.find(loc => loc.id === locationId)
+      if (!target || !original || !target.revealed) return null
+      let distance = Infinity
+      {
+        let frontier = [original.id]
+        const seen = new Set(frontier)
+        for (let depth = 1; depth <= 3 && distance === Infinity; depth++) {
+          const next = []
+          for (const id of frontier) {
+            const loc = state.locations.find(l => l.id === id)
+            for (const conn of loc?.connections || []) {
+              if (seen.has(conn)) continue
+              seen.add(conn)
+              if (conn === locationId) { distance = depth; break }
+              next.push(conn)
+            }
+            if (distance !== Infinity) break
+          }
+          frontier = next
+        }
+      }
+      if (distance > 2) return null
+      const shroudValue = options.shroud === 'original'
+        ? (Number(test.difficulty) || 0)
+        : (scenarioRuntime(state, events).locationShroud(locationId) ?? (target.shroud + (target.shroudMod || 0)))
+      frame.dual = { locationId, shroudValue }
+      test.difficulty = shroudValue
+      info(state, events, `🔎 ${state.investigators[test.seat]?.name || '调查员'} 同时在「${target.name}」调查（使用隐藏值 ${shroudValue}）。`)
+      return { locationId, shroudValue }
+    },
+    // 2026-10-25 第七轮修复 05033：本次符号效果「取消某个候选 / 让某个候选再结算一次」。
+    setSymbolEffect: (effect = null) => {
+      if (!state.skillTest) return null
+      state.skillTest.symbolEffect = effect || null
+      return state.skillTest.symbolEffect
+    },
+    symbolEffect: () => state.skillTest?.symbolEffect || null,
+    // 2026-10-25 第七轮修复 05319：看另一名调查员手牌后，从其手牌打出一张（由本调查员控制/付费）。
+    playCardFromOtherHand: (fromSeat, code) =>
+      playCardFromOtherHandForced(state, state.currentSeat, fromSeat, code, events),
+    // 2026-10-25 第七轮修复 05320：把刚打出的事件「再次打出」（从实际落点取出、完整付费/窗口/目标）。
+    replayEventAsHand: (seat, code) =>
+      playCardFromDiscardForced(state, Number.isInteger(seat) ? seat : state.currentSeat, code, events, { exileAfter: false }),
+    // 2026-10-25 第七轮修复 05040：把「下一次行动期间生效」的持续效果排队（dispatch 在行动开始时挂上）。
+    scheduleActionEffects: (records = []) => {
+      if (!Array.isArray(records) || !records.length) return 0
+      state.pendingActionEffects ||= []
+      for (const record of records) if (record) state.pendingActionEffects.push({ ...record })
+      return state.pendingActionEffects.length
+    },
+    // 2026-10-25 第七轮修复 05004：「忽略」路径也可显式记一次取消事实（黛安娜反应读点）。
+    noteCancelled: (what = null) => noteCardCancelled(reactionWindow, state, events, { seat: state.currentSeat, what }),
+    // 2026-10-25 第七轮修复 05007：向当前 horrorHealed 窗口追加治疗（不新开窗口）。
+    extendHealHorror: (seat, amount) => extendHealHorror(state, seat, amount, events),
+    // 2026-10-25 第五轮：条目 API 的通用读点。
+    addEnemyStatModifier: (enemy, mods, options) => scenarioRuntime(state, events).addEnemyStatModifier(enemy, mods, options),
+    locationShroud: locationId => scenarioRuntime(state, events).locationShroud(locationId),
+    revelationResolving: () => currentRevelation() != null || Boolean(state._treacheryResolving),
+    cancelDoomPlacement: (card, amount = 1) => scenarioRuntime(state, events).cancelDoomPlacement(card, amount),
     // Phase 1（A1）：持续效果的唯一创建接口。修正与能力都从 state.effects 读，
     // 到期由引擎的统一过期点处理，内容层不需要（也不允许）自己记时间戳。
     addEffect: (record, ownerSeat = null) => createEffect(state, {
@@ -699,6 +903,11 @@ export function createMiscApi(state, events, deps) {
       const context = state._reaction?.context || state._reaction
       const when = context?.when || state._reaction?.when
       if (!context || when !== 'encounterDrawn') return false
+      // 2026-10-25 第四轮修复 cannot-cancel-card-flag（05342）：卡面「不能被取消」时拒绝取消。
+      if (context.cannotCancel) {
+        info(state, events, '这张遭遇牌的效果不能被取消。')
+        return false
+      }
       context.cancelled = true
       if (options.redraw === true) context.redraw = true
       if (options.shuffleBack === true) context.shuffleBack = true

@@ -10,8 +10,8 @@ import { encounterRules, activeInvestigators, original, here, recordsFor } from 
 import { addChaosToken } from '../../tcu-chaos.js'
 import { WITCHING_HOUR_DIVINATION } from '../../tarot.js'
 import {
-  ANETTE_MASON, ARKHAM_WOODS, DAEMONIC_PIPING, GOAT_SPAWN, PIPER_OF_AZATHOTH,
-  RELENTLESS_DARK_YOUNG, WITCHES_CIRCLE, WOODS,
+  ANETTE_MASON, ARKHAM_WOODS, DAEMONIC_PIPING, GOAT_SPAWN, OvergrownBarnCode, PIPER_OF_AZATHOTH,
+  RELENTLESS_DARK_YOUNG, TaintedWellCode, WITCHES_CIRCLE, WOODS,
 } from './definition.js'
 import {
   WITCHING_HOUR_TOKEN_MEANINGS, witchingHourChaosAfterTest, witchingHourChaosToken,
@@ -36,6 +36,43 @@ function takeFromSetAside(state, code) {
 
 function isWoodsCode(code) {
   return WOOD_CODES.has(code)
+}
+
+// 05064 杂草丛生的谷仓：地点在场才提供「改为生成在本地点」的可选[reaction]。
+function barnInPlay(state) {
+  return (state.locations || []).find(location => String(codeOf(location)) === OvergrownBarnCode) || null
+}
+
+// 能触发反应的调查员=谷仓所在地点上的存活调查员，按玩家顺序（从队长起）。
+function barnReactionOrder(state, barn) {
+  const lead = Number(state.campaign?.leadSeat ?? 0)
+  const count = state.investigators?.length || 1
+  return [...(state.investigators || [])]
+    .filter(inv => !inv.defeated && !inv.resigned && inv.location === barn.id)
+    .sort((left, right) => (((left.seat - lead) % count) + count) % count
+      - ((((right.seat - lead) % count) + count) % count))
+}
+
+// 返回触发该反应的谷仓地点；无人可触发或全部放弃时返回 null。
+// 没有 api.choose 的旧调用方（hook 直调/历史测试）保持「自动触发」的历史行为。
+function triggerBarnReaction(state, api) {
+  const barn = barnInPlay(state)
+  if (!barn) return null
+  const reactors = barnReactionOrder(state, barn)
+  if (!reactors.length) return null
+  if (typeof api?.choose !== 'function') return barn
+  for (const inv of reactors) {
+    const answer = api.choose({
+      kind: 'reaction', source: OvergrownBarnCode, seat: inv.seat,
+      prompt: `「${barn.name}」：有敌人将生成在另一处[[女巫作祟之林]]。是否改为在谷仓生成？`,
+      options: [
+        { id: 'trigger', label: '触发：改为生成在谷仓，然后它立即攻击本地点的每位调查员' },
+        { id: 'skip', label: '不触发' },
+      ],
+    })
+    if (String(answer) === 'trigger') return barn
+  }
+  return null
 }
 
 // 「别人面前的地点」限制：move 行动与效果移动（relocateInvestigator→movementError）共用同一判定。
@@ -168,8 +205,8 @@ export function resolveLostInTheWoods(state, act, api) {
 
 export const scenarioApproximations = Object.freeze([
   '05062 被污染的井：引擎没有「跨地点投入」的修正目标；用 canCommitCard/commitIconMultiplier 近似——其他森林地点的调查员对本地点检定各可投入 1 张并只算 1 个图标。',
-  '05058/05060 的 [free] 交换能力：用 api.choose 逐段选择对象与张数（0–3 / 0–1），团队每轮一次用 scenarioFlags 记录；语义与卡面一致，交互是本章自定义。',
-  '「面前的地点」：引擎没有 LocationInFrontOf 概念；setup 把 5 张森林按玩家顺序记到 scenarioFlags.frontOf，moveError 在 act1–2 拒绝进入别人面前的地点。静态连线使用印刷符号图（森林本就互连）。',
+  '05058/05060 的 [free] 交换能力：用 api.choose 逐段选择对象与张数（0–3 / 0–1）；团队每轮一次（05058）/每人每轮一次（05060）用 scenarioFlags 记录，并通过 behavior.fastActions 接入引擎 playerWindow（player-window-fast-actions 原语），任意玩家窗口可发动、经 behavior.performAction 分派到地点条目。',
+  '「面前的地点」：引擎没有 LocationInFrontOf 概念；setup 把 5 张森林按玩家顺序记到 scenarioFlags.frontOf，moveError/movementError 在 act1–2 拒绝进入别人面前的地点（引擎 movementError 已在所有阶段传目标地点，效果移动与神话/剧情阶段同样受限；act2 背面解锁）。静态连线使用印刷符号图（森林本就互连）。',
   '核心包地点 01150–01155（阿卡姆密林）没有共享单卡条目：本章在 definition 里声明并以 investigateSkill 表达 01152/01153/01154，behavior 实现 01150 入地点检定与 01155 治疗行动；01151 走既有条目。',
   '05052 背面「从收藏随机找基础征兆/诅咒弱点」：引擎没有收藏检索接口；近似为 api.addBasicWeakness(seat, [omen, curse])，找不到对应弱点时按卡面 1 点精神创伤兜底。',
   '05051 背面「女性敌人从遭遇弃牌堆顶抽取」：直接读 encounterDiscard 的诡计/敌人数组并按 api.spawn 生成（与卡面一致，少了「由谁抽」的额外交互）。',
@@ -376,6 +413,18 @@ export const behavior = {
     return moves
   },
 
+  // 引擎 encounter.playerWindow（player-window-fast-actions 原语）在任意玩家窗口列出 [fast] 剧本行动。
+  // 本章的 05058/05060 是地点条目的 [free] 行动（actions:0、fast:true）——在任意玩家窗口都能发动，
+  // 选中后引擎调 behavior.performAction，再分派到地点条目的 performAction。
+  fastActions(state, inv) {
+    const moves = []
+    const location = here(state, inv)
+    if (location) {
+      locationRuleFor(String(codeOf(location)))?.actions?.({ moves, state, inv, location })
+    }
+    return moves.filter(move => move.actions === 0 && move.fast === true)
+  },
+
   performAction(state, inv, move, api) {
     const act = state.acts?.[state.actIndex]
     const advance = act?.advanceRule
@@ -429,6 +478,7 @@ export const behavior = {
   // 05062：其他[[女巫作祟之林]]地点的调查员可以对本地点的检定各投入 1 张牌（反之亦然）。
   // 引擎 tests.js 只把返回 true 的调查员加入「可投入 owner」列表；每名调查员每次检定的 1 张
   // 由引擎的协助投入循环保证（非执行者 owner 投入 1 张即停止）。
+  // 触发面必须收窄到「本地点（被污染的井 05062）为其中一端」：两处其他森林之间不开放跨地点投入。
   crossLocationCommit(state, committer, tester, skillContext) {
     const locationOf = person => (state.locations || []).find(location => location.id === person?.location)
     const committerLocation = locationOf(committer)
@@ -437,7 +487,12 @@ export const behavior = {
     if (committerLocation.id === testerLocation.id) return false
     // 双方都必须位于[[女巫作祟之林]]（7 张森林，卡号 05058–05064）。
     const isWoods = location => WOOD_CODES.has(String(original(location)))
-    return isWoods(committerLocation) && isWoods(testerLocation)
+    if (!isWoods(committerLocation) || !isWoods(testerLocation)) return false
+    // 本卡能力挂在地点 05062 上：它必须在场，且恰有一端位于它（XOR），两端都在其它森林不触发。
+    const isTaintedWell = location => String(original(location)) === TaintedWellCode
+    const taintedWellInPlay = (state.locations || []).some(isTaintedWell)
+    if (!taintedWellInPlay) return false
+    return isTaintedWell(testerLocation) !== isTaintedWell(committerLocation)
   },
 
   commitIconMultiplier(state, owner, commitLocation) {
@@ -451,45 +506,8 @@ export const behavior = {
 
   // ---- 敌军阶段 ----
   enemyPhaseStart(state, api) {
+    // 05057 安妮特·梅森的强制已移入单卡条目 enemyScript.onEnemyPhaseStart（跨章复用）。
     encounterRules.enemyPhaseStart?.(state, api)
-    // 安妮特·梅森（05057）：强制 - 敌军阶段开始后弃遭遇牌库顶 3 张。
-    const anette = state.enemies.find(enemy => String(codeOf(enemy)) === ANETTE_MASON)
-    if (anette) {
-      // 卡面/参考实现：弃遭遇牌库顶的牌，直到弃出至少 1 个女巫敌人；牌库不足时先把弃牌堆洗回。
-      const discardTop = () => {
-        if (!state.encounterDeck.length && state.encounterDiscard.length) {
-          state.encounterDeck = state.encounterDeck.concat(state.encounterDiscard.splice(0))
-        }
-        return state.encounterDeck.length ? state.encounterDeck.pop() : null
-      }
-      const isWitchEnemyCode = code => {
-        const card = ALL_CARDS[code]
-        return card?.type === 'enemy'
-          && (card.traits || []).some(trait => String(trait).toLowerCase() === 'witch')
-      }
-      const discarded = []
-      for (let index = 0; index < 200; index++) {
-        const code = discardTop()
-        if (code == null) break
-        state.encounterDiscard.push(code)
-        if (isWitchEnemyCode(code)) discarded.push(code)
-        // 已弃出女巫敌人且至少弃了 3 张：本轮强制结算完毕。
-        if (discarded.length && index + 1 >= 3) break
-      }
-      const location = anette.location
-      for (const code of discarded) {
-        // 生成的女巫敌人离开遭遇弃牌堆（它们已被「找出并生成」）。
-        const index = state.encounterDiscard.lastIndexOf(code)
-        if (index >= 0) state.encounterDiscard.splice(index, 1)
-        api.spawn?.(code, location)
-      }
-      if (!discarded.length) {
-        anette.exhausted = false
-        api.info?.('🐐 没有弃出女巫敌人：安妮特·梅森重整。')
-      } else {
-        api.info?.(`🕯️ 安妮特·梅森弃出 ${discarded.length} 个女巫敌人并在「${api.locName?.(location) || location}」生成。`)
-      }
-    }
     // 女巫圆环（05055b）：重整且未交战的女巫敌人向圆环移动一次。
     const circle = state.locations.find(location => String(codeOf(location)) === WITCHES_CIRCLE)
     if (!circle) return
@@ -500,26 +518,28 @@ export const behavior = {
   },
 
   // ---- 05064 杂草丛生的谷仓：敌人将要生成在另一处森林时改为生成在此，然后攻击 ----
-  spawnLocation(state, code, fallbackLoc, engagedSeat) {
-    const barn = state.locations.find(location => String(codeOf(location)) === '05064')
-    const flags = (state.scenarioFlags ||= {})
+  // 卡面是可选 [reaction]：由谷仓上的调查员按玩家顺序决定是否触发；无人在谷仓时不触发。
+  spawnLocation(state, code, fallbackLoc, engagedSeat, api) {
+    const barn = barnInPlay(state)
     if (!barn || !fallbackLoc || fallbackLoc === barn.id) return fallbackLoc
     const target = state.locations.find(location => location.id === fallbackLoc)
     if (!target || !isWoodsCode(codeOf(target))) return fallbackLoc
-    flags.barnRedirect = barn.id
+    if (!triggerBarnReaction(state, api)) return fallbackLoc
+    ;(state.scenarioFlags ||= {}).barnRedirect = barn.id
     return barn.id
   },
 
   enemySpawned(state, enemy, api) {
     encounterRules.enemySpawned?.(state, enemy, api)
     const flags = (state.scenarioFlags ||= {})
-    // 05064 杂草丛生的谷仓：敌人（含剧本 ignoreSpawn 路径生成者）若生成在另一处森林，改为生成在谷仓，
-    // 然后立即攻击谷仓的每位调查员。
-    const barnLocation = state.locations.find(location => String(codeOf(location)) === '05064')
-    if (!flags.barnRedirect && barnLocation && enemy.location && enemy.location !== barnLocation.id
-      && isWoodsCode(codeOf(state.locations.find(location => location.id === enemy.location)))) {
-      api.moveEnemy?.(enemy, barnLocation.id)
-      flags.barnRedirect = barnLocation.id
+    // 剧本 api.spawn（ignoreSpawn）生成路径不经过 spawnLocation：这里同样先问可选反应，再决定是否改道。
+    const barnLocation = barnInPlay(state)
+    if (!flags.barnRedirect && barnLocation && enemy.location && enemy.location !== barnLocation.id) {
+      const spawnedAt = state.locations.find(location => location.id === enemy.location)
+      if (spawnedAt && isWoodsCode(codeOf(spawnedAt)) && triggerBarnReaction(state, api)) {
+        api.moveEnemy?.(enemy, barnLocation.id)
+        flags.barnRedirect = barnLocation.id
+      }
     }
     if (!flags.barnRedirect || enemy.location !== flags.barnRedirect) return
     flags.barnRedirect = null

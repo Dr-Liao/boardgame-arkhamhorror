@@ -6,7 +6,7 @@ import {
 } from '../../../../../src/cards/card-rules.js'
 import { recordMemento } from '../../../../../src/campaign/mementos.js'
 import { symbolConnections } from '../../card-data.js'
-import { encounterRules, activeInvestigators, original, here, recordsFor, discardThreatCard } from '../../encounter-rules.js'
+import { encounterRules, activeInvestigators, original, here, recordsFor, discardThreatCard, discardEncounterTop, watchEncounterDeckEmpty } from '../../encounter-rules.js'
 import { addChaosToken } from '../../tcu-chaos.js'
 import {
   BROWN_JENKIN, KEZIAHS_ROOM, MOLDY_HALLS, NAHAB, SITE_OF_THE_SACRIFICE, STRANGE_GEOMETRY,
@@ -26,6 +26,31 @@ function takeFromSetAside(state, code) {
   const list = state.scenarioZones?.setAside || []
   const index = list.indexOf(code)
   if (index >= 0) list.splice(index, 1)
+  return index >= 0
+}
+
+// 参考实现的 findEncounterCard 只搜「遭遇牌库 + 遭遇弃牌堆」（默认 FromEncounterDeck/Discard），
+// 找不到时整段无效果——绝不凭空生成新副本。
+// 从遭遇牌库中段取牌也可能把牌库取空：用共享 watchEncounterDeckEmpty 在改动后补通知（05091/05098）。
+function findInEncounter(state, predicate, api = null) {
+  const discardIndex = (state.encounterDiscard || []).findIndex(predicate)
+  if (discardIndex >= 0) return state.encounterDiscard.splice(discardIndex, 1)[0]
+  const deckIndex = [...(state.encounterDeck || [])].reverse().findIndex(predicate)
+  if (deckIndex >= 0) {
+    const watch = watchEncounterDeckEmpty(state)
+    const realIndex = state.encounterDeck.length - 1 - deckIndex
+    const found = state.encounterDeck.splice(realIndex, 1)[0]
+    if (api) watch(api)
+    return found
+  }
+  return null
+}
+
+// 「找出某张卡（即使不在场）」：场外区域（set aside/弃牌堆/牌库）。参考 findUniqueCard。
+function findAnywhere(state, code, api = null) {
+  const wanted = String(code)
+  if (takeFromSetAside(state, wanted)) return wanted
+  return findInEncounter(state, candidate => String(candidate) === wanted, api)
 }
 
 const inPlay = (state, code) => state.enemies.find(enemy => String(codeOf(enemy)) === code) || null
@@ -82,13 +107,13 @@ export const scenarioApproximations = Object.freeze([
   '「未知地点」的未揭示面：引擎只认识 unrevealedActualName/hiddenIdentity；本章 locationRevealed 里应用 definition 的 unrevealed 数据（名称/副标题/traits/符号）并按符号重算连线，等价于翻面。',
   '未知地点牌库：buildScenarioLocationDeck 只负责洗牌；本章按参考实现 splitAt 3 自行拼 state.extraLocationDecks.unknownPlaces 的上下 3/4 张（仍是原语的纯 JSON 堆结构，可存档）。',
   '黑书加入战役牌组：用 api.campaignCard（P2.10 原语）；「混乱袋 +1 骷髅」按卡面永久化，P8 只验证本局袋（P9 再接战役袋持久化）。',
-  '黑书（05150）的 [reaction] 打牌减费：被动 +1 意志/+1 智识已接线，减费需要费用支付窗口的反应修饰，P8 未接线（P9 交互窗口）；卡面其余语义（入牌组、+1 骷髅）已实现。',
-  '05123 背面「密谋 4a 入场时放 4 毁灭」：引擎的密谋揭示只触发一次背面，没有「4a 入场」窗口；本章在 05123 揭示时直接把 4 毁灭放到下一张密谋（05124）实例上，数字与卡面一致。',
-  '05121/05122 背面「查找遭遇牌库/弃牌堆/收藏找敌人」：直接操作 state.encounterDeck/encounterDiscard/场外定义（纯数据），再用 api.spawn 生成；找不到时按卡面「找出」= 从 set aside 生成。',
+  '05123 背面「密谋 4a 入场时放 4 毁灭」：用 state.scenarioFlags.pendingAgendaDoom + behavior.agendaChain 在 05124 成为当前议程的同一结算里放（对照参考实现 advanceAgendaDeck 后 placeDoomOnAgenda 4），没有「4a 入场」独立窗口。',
+  '05121/05122/05126 的「找出」按参考实现的 findEncounterCard（遭遇牌库+弃牌堆）或 findUniqueCard（场外任意区域）实现；找不到时整段无效果（不凭空生成）。',
   'Rats（01159，核心包 rats 组）由本章写单卡条目（只声明 implemented，猎手关键词由 definition 印刷数据解析）。',
-  '05129/05133 的闹鬼 script 子句由 behavior.hauntedScript 实现；05140 的「下一行动必须是调查」引擎无行动限制读点，近似为 scenarioFlags.mustInvestigateSeat 提示（不阻止其他行动）。',
-  'Nahab 在 act3 的「被击败时不弃掉，改为治愈/横置/本轮不重整」用 enemyCanBeDefeated=false 表达（保留在场上、伤害清零），并手动给击败者议程奖励线索。',
-  '布朗·詹金/那赫卜的「击败奖励线索」反应由 behavior.enemyDefeated 手动结算（引擎的 enemyDefeated 已经在击退流程末端，无法作为反应窗口）。',
+  '05129/05133 的闹鬼 script 子句由 behavior.hauntedScript 实现；05133 的「成功调查」反应已可由 0 线索地点触发（behavior.investigateWithoutClues + 引擎 investigate-empty-location 读点）；05140 的「下一行动必须是调查」已由引擎 action-legality-hook 强制（behavior.actionBlocked，非调查行动被拒、调查后清标记）。',
+  'Nahab 在 act3 的「被击败时不弃掉，改为治愈/横置/解除交战/本轮不重整」走正常击败流程后在 behavior.enemyDefeated 里回填（damageTaken=0、exhausted、preventReady={rounds:1}），「不能离开献祭场所」用引擎既有 enemy.immobile。',
+  '布朗·詹金/那赫卜的「击败奖励线索」反应：在 behavior.enemyDefeated 里用 canSkip 选择窗询问击败者（defeatedBy），取代旧实现的「队长询问 + act3 自动发放」。',
+  '05120 [elder_thing] 的「结算场上每个敌人的猎手关键词」用 api.hunterStep（引擎单步解算：Prey/等距选择/barricade）逐个敌人移动一步；与引擎敌人阶段的完整猎手流程同一解算入口。',
   '古怪图形（05142）从遭遇牌库翻出时用 drawLocation 放置两条预定义地点 id（strangeGeometry1/2，一卡两副本）；静态邻接给 moldyHalls，场景推进后该连接失效属展示层近似。',
 ])
 
@@ -143,7 +168,7 @@ export const behavior = {
     ]
     for (const inv of state.investigators) inv.location = 'moldyHalls'
     zones.setAside = [
-      NAHAB, BROWN_JENKIN, THE_BLACK_BOOK,
+      NAHAB, THE_BLACK_BOOK,
       '05144', '05144',
       '05141', '05133', STRANGE_GEOMETRY, STRANGE_GEOMETRY,
     ]
@@ -172,19 +197,37 @@ export const behavior = {
   // ---- 幕 / 议程 ----
   actReveal(state, act, api) {
     const rule = actRuleFor(String(codeOf(act)))
-    if (rule?.onReveal) return rule.onReveal(state, act, api)
-    return undefined
+    const result = rule?.onReveal ? rule.onReveal(state, act, api) : undefined
+    syncNahabImmobile(state)
+    return result
   },
 
   agendaReveal(state, agenda, api) {
     const rule = agendaRuleFor(String(codeOf(agenda)))
-    if (rule?.onReveal) return rule.onReveal(state, agenda, api)
+    const result = rule?.onReveal ? rule.onReveal(state, agenda, api) : undefined
+    syncNahabImmobile(state)
+    return result
+  },
+
+  // 议程推进到下一张后的钩子（引擎 act-agenda.js 在 agendaIndex++ 之后调用）。
+  // 05123 背面「密谋 4a 入场时放 4 毁灭」：5 1 2 3 揭示时只留 pending 标记，等 05124 成为
+  // 当前议程的同一结算里再放，对照参考实现 advanceAgendaDeck 后的 placeDoomOnAgenda 4。
+  agendaChain(state, agenda, api) {
+    const pending = state.scenarioFlags?.pendingAgendaDoom
+    if (!pending || String(codeOf(agenda)) !== String(pending.code)) return undefined
+    delete state.scenarioFlags.pendingAgendaDoom
+    const amount = Math.max(0, Number(pending.amount) || 0)
+    if (amount) {
+      api.doomOn?.(agenda, amount)
+      api.info?.(`🌑 密谋 4a 入场：在其上放置 ${amount} 个毁灭标记。`)
+    }
     return undefined
   },
 
   // act3 目标：那赫卜上没有毁灭标记（她在场外/不在场也满足「找出她并推进」的写法差异，
   // 参考实现要求 Nahab 存在且无毁灭；这里按卡面：不在场说明尚未被放置，不推进）。
   checkObjectives(state, api) {
+    syncNahabImmobile(state)
     if ((state.actIndex ?? 0) !== 2) return
     const nahab = inPlay(state, NAHAB)
     if (!nahab) return
@@ -192,18 +235,9 @@ export const behavior = {
     api.advanceAct?.()
   },
 
-  // act3 背面：「那赫卜不能离开献祭场所」——覆写猎手移动，使其原地不动。
-  hunterMove(state, enemy, api) {
-    if (encounterRules.hunterMove?.(state, enemy, api)) return true
-    if ((state.actIndex ?? 0) === 2 && String(codeOf(enemy)) === NAHAB) {
-      api?.info?.(`⛓️ 「${enemy.name}」不能离开献祭场所。`)
-      return true
-    }
-    return false
-  },
-
   // ---- 玩家行动：幕数据声明的团队线索推进（advanceRule）+ 地点/威胁行动 ----
   actions(state, inv) {
+    syncNahabImmobile(state)
     const moves = encounterRules.actions?.(state, inv) || []
     const advance = state.acts?.[state.actIndex]?.advanceRule
     if (advance) {
@@ -283,23 +317,65 @@ export const behavior = {
     if (!location.revealed || !face) return
     if (face.nameZh) location.name = face.nameZh
     if (face.subnameZh) location.subname = face.subnameZh
-    if (face.traitsZh) location.traits = [...face.traitsZh]
+    // 特性保持印刷英文特性（chaos.js 的 [[异次元]] 判定与共享组 trait 读点都依赖英文特性名）；
+    // unrevealed.traitsZh 只作兜底显示数据，不写进实例 traits。
+    const printedTraits = ALL_CARDS[location.originalCode || location.code]?.traits
+    if (printedTraits?.length) location.traits = [...printedTraits]
+    else if (face.traitsZh) location.traits = [...face.traitsZh]
     if (face.symbol) {
       location.symbols = { front: { symbol: face.symbol, links: [...(face.links || [])],
         label: location.symbols?.front?.label } }
     }
-    // 揭示后按当前所有地点（含未揭示正面的符号）重算符号连线。
+    // 揭示后按当前所有地点（含未揭示正面的符号）重算符号连线；再并上卡面效果建立的
+    // 「本场冒险持续连接」（05136 City of Elder Things 等，存 scenarioFlags.extraConnections）。
     const wanted = symbolConnections(state.locations)
+    const extra = state.scenarioFlags?.extraConnections || {}
     for (const entry of state.locations) {
-      if (wanted[entry.id]) entry.connections = [...wanted[entry.id]]
+      if (!wanted[entry.id]) continue
+      const merged = [...wanted[entry.id]]
+      for (const id of extra[entry.id] || []) {
+        if (!merged.includes(id) && state.locations.some(candidate => candidate.id === id)) merged.push(id)
+      }
+      entry.connections = merged
     }
     api.info?.(`🌫️ 「${location.name}${location.subname ? `·${location.subname}` : ''}」揭示。`)
   },
 
   investigateResult(state, inv, location, result, api) {
     if (!location) return undefined
+    // 05140 旧日支配者皇廷闹鬼：「你本轮执行的下一个行动必须是调查行动」——
+    // 调查行动一旦结算（无论成败），该限制即完成，清掉标记（引擎 actionBlocked 读点）。
+    const flags = state.scenarioFlags || {}
+    if (flags.mustInvestigateSeat === inv?.seat) {
+      delete flags.mustInvestigateSeat
+      delete flags.mustInvestigateRound
+    }
     const rule = locationRuleFor(String(codeOf(location)))
     return rule?.onInvestigateSuccess?.({ state, location, inv, result, api })
+  },
+
+  // 05133 凯夏的房间：印刷线索为 0，但「成功调查的 [reaction]」要求它在线索被取空后仍可被标准调查。
+  // 引擎读点：moves.js legalMoves / validateMove 的 investigate-empty-location。
+  investigateWithoutClues(state, inv, location) {
+    return Boolean(location) && String(codeOf(location)) === KEZIAHS_ROOM
+  },
+
+  // 05140 旧日支配者皇廷闹鬼：「你本轮执行的下一个行动必须是调查行动」。
+  // 引擎读点：moves.js validateMove 的 action-legality-hook（返回字符串=拒绝理由）。
+  // 快速打出（不占行动）与「确实没有可调查地点时的结束回合」放行，避免不可行动软锁。
+  actionBlocked(state, inv, move) {
+    const flags = state.scenarioFlags || {}
+    if (flags.mustInvestigateSeat == null || flags.mustInvestigateSeat !== inv?.seat) return undefined
+    if (flags.mustInvestigateRound != null && flags.mustInvestigateRound !== state.round) return undefined
+    if (!move || typeof move.action !== 'string') return undefined
+    if (move.action === 'investigate') return undefined
+    if (move.action === 'endTurn') {
+      const here = (state.locations || []).find(location => location.id === inv.location)
+      const canInvestigate = here && !here.locked && (Number(here.clues) > 0
+        || String(codeOf(here)) === KEZIAHS_ROOM)
+      return canInvestigate ? '👑 皇廷闹鬼：你本轮的下一个行动必须是调查行动' : undefined
+    }
+    return '👑 皇廷闹鬼：你本轮的下一个行动必须是调查行动'
   },
 
   hauntedScript(state, payload, api) {
@@ -313,8 +389,11 @@ export const behavior = {
       else {
         const deckIndex = [...state.encounterDeck].reverse().findIndex(isRats)
         if (deckIndex >= 0) {
+          // 从牌库中段找出「鼠群」可能把牌库取空：用共享钩子补「遭遇牌库耗尽」通知。
+          const watch = watchEncounterDeckEmpty(state)
           const realIndex = state.encounterDeck.length - 1 - deckIndex
           code = state.encounterDeck.splice(realIndex, 1)[0]
+          watch(api)
         }
       }
       const target = locationIdByCode(state, MOLDY_HALLS) || state.investigators[seat]?.location
@@ -328,18 +407,22 @@ export const behavior = {
       return true
     }
     if (scriptId === 'keziahsRoomHex') {
+      // 弃牌过程中遭遇牌库可能由有到无：共享钩子在该情况下立即结算「遭遇牌库耗尽」强制。
+      const watch = watchEncounterDeckEmpty(state)
       const hex = []
       while (state.encounterDeck.length) {
         const top = state.encounterDeck.pop()
         if (hasTrait(top, 'Hex')) {
           state.encounterDeck.push(top)
           api.drawEncounter?.(seat)
+          watch(api)
           api.info?.(`🔮 闹鬼：弃到「${ALL_CARDS[top]?.nameZh || top}」并抽取它。`)
           return true
         }
         state.encounterDiscard.push(top)
         hex.push(top)
       }
+      watch(api)
       api.info?.('🔮 闹鬼：遭遇牌库里没有巫术卡牌。')
       return true
     }
@@ -351,9 +434,8 @@ export const behavior = {
       return true
     }
     if (scriptId === 'walterGilmansRoomDiscard') {
-      for (let index = 0; index < 2 && state.encounterDeck.length; index++) {
-        state.encounterDiscard.push(state.encounterDeck.pop())
-      }
+      // 弃顶 2 张：牌库中途耗尽不洗回（不是「弃到某张」类效果）；耗尽时由共享钩子通知。
+      discardEncounterTop?.(state, api, 2, { reshuffle: false, notifyEmpty: true })
       api.info?.('📜 闹鬼：弃掉遭遇牌库顶的 2 张卡牌。')
       return true
     }
@@ -411,22 +493,17 @@ export const behavior = {
     }
   },
 
-  // act3：那赫卜被击败时不弃掉，改为治愈全部伤害/解除交战/横置/本轮不重整。
+  // 敌人入场：act3 起把「那赫卜不能离开献祭场所」同步成引擎既有 immobile（所有移动来源统一拦截）。
+  enemySpawned(state, enemy, api) {
+    encounterRules.enemySpawned?.(state, enemy, api)
+    syncNahabImmobile(state)
+  },
+
+  // act3：那赫卜被击败时不弃掉（参考 insteadOfDiscarding：治愈全部伤害/解除交战/横置/本轮不重整）。
+  // 允许正常击败流程（这样 enemyDefeated/议程反应都会触发），在 enemyDefeated 里回填敌人。
   enemyCanBeDefeated(state, enemy, source, seat) {
     if (encounterRules.enemyCanBeDefeated?.(state, enemy, source, seat) === false) return false
-    if (String(codeOf(enemy)) !== NAHAB || (state.actIndex ?? 0) !== 2) return true
-    enemy.damageTaken = 0
-    enemy.exhausted = true
-    if (enemy.engagedSeat != null) {
-      const inv = state.investigators[enemy.engagedSeat]
-      if (inv) inv.engaged = (inv.engaged || []).filter(id => id !== enemy.id)
-    }
-    enemy.engagedSeat = null
-    enemy.doesNotReadyRound = state.round
-    state.scenarioFlags ||= {}
-    state.scenarioFlags.nahabDefeated = true
-    grantAgendaClue(state, seat ?? enemy.defeatedBy, null)
-    return false
+    return true
   },
 
   enemyDefeated(state, enemy, api) {
@@ -435,28 +512,39 @@ export const behavior = {
     state.scenarioFlags ||= {}
     if (code === BROWN_JENKIN) state.scenarioFlags.brownJenkinDefeated = true
     if (code === NAHAB) state.scenarioFlags.nahabDefeated = true
-    if (code === BROWN_JENKIN || code === NAHAB) {
-      // 05121/05122/05124 的 [reaction]：击败后获得线索，可以发动或放弃。
-      const answer = api?.choose?.({
-        kind: 'reaction', source: code, seat: state.campaign?.leadSeat ?? 0, canSkip: true,
-        prompt: `「${enemy.name}」被击败：是否发动反应，发现 1 个线索？`,
-        options: [{ id: 'use', label: '发动：发现 1 个线索' }, { id: 'skip', label: '不发动' }],
-      })
-      if (answer !== 'skip') grantAgendaClue(state, enemy.defeatedBy, api)
+    syncNahabImmobile(state)
+    // act3 那赫卜：不弃掉，改为治愈/横置/解除交战/本轮补给阶段不重整（preventReady 引擎读点）。
+    if (code === NAHAB && (state.actIndex ?? 0) === 2) {
+      enemy.damageTaken = 0
+      enemy.exhausted = true
+      enemy.preventReady = { from: state.round, rounds: 1 }
+      enemy.immobile = true
+      for (const inv of state.investigators || []) {
+        if (Array.isArray(inv.engaged)) inv.engaged = inv.engaged.filter(id => id !== enemy.id)
+      }
+      enemy.engagedSeat = null
+      if (!state.enemies.includes(enemy)) state.enemies.push(enemy)
+      offerAgendaDefeatClue(state, enemy, api)
+      api?.info?.(`⛓️ 「${enemy.name}」被击败：不弃掉，改为治愈全部伤害、解除交战并横置（本轮不重整）。`)
+      return true
     }
+    offerAgendaDefeatClue(state, enemy, api)
     return false
   },
 
   roundEnded(state, api) {
     encounterRules.roundEnded?.(state, api)
-    // 布朗·詹金/那赫卜的「本轮补给阶段不重整」用实例标记表达。
-    for (const enemy of state.enemies) {
-      if (enemy.doesNotReadyRound === state.round) enemy.exhausted = true
-    }
   },
 
   turnEnded(state, inv, api) {
     encounterRules.turnEnded?.(state, inv, api)
+    // 05140 皇廷闹鬼的「下一个行动必须是调查」只在本轮内有效；回合结束即失效。
+    const flags = state.scenarioFlags || {}
+    if (flags.mustInvestigateSeat === inv?.seat) {
+      delete flags.mustInvestigateSeat
+      delete flags.mustInvestigateRound
+    }
+    syncNahabImmobile(state)
     const threats = inv.threat || []
     for (const threat of [...threats]) {
       const code = String(codeOf(threat))
@@ -468,35 +556,19 @@ export const behavior = {
         api.horror?.(inv.seat, 2)
         api.info?.(`🌌 群星牵引：${inv.name} 本回合未移动过，受到 2 点恐惧。`)
       }
-      // 不安的梦：回合结束弃遭遇牌库顶 1 张。
-      if (kind === 'disquietingDreams') {
-        if (state.encounterDeck.length) {
-          state.encounterDiscard.push(state.encounterDeck.pop())
-          api.info?.('😴 不安的梦：弃掉遭遇牌库顶 1 张卡牌。')
-        }
-        // 遭遇牌库耗尽：弃掉本卡并揭示牌库顶 10 张，抽取其中的弱点。
-        if (state.encounterDeck.length === 0) {
-          const index = inv.threat.indexOf(threat)
-          if (index >= 0) {
-            inv.threat.splice(index, 1)
-            inv.discard.push(code)
-          }
-          const revealed = []
-          for (let count = 0; count < 10 && inv.deck.length; count++) revealed.push(inv.deck.pop())
-          const weaknesses = []
-          for (const card of revealed) {
-            if (isWeakness(card)) weaknesses.push(card)
-            else inv.discard.push(card)
-          }
-          for (const card of weaknesses) inv.hand.push(card)
-          api.info?.(`😴 不安的梦：遭遇牌库耗尽，${inv.name} 揭示牌库顶 ${revealed.length} 张，抽到 ${weaknesses.length} 张弱点。`)
-        }
+      // 不安的梦：回合结束弃遭遇牌库顶 1 张（牌库耗尽的强制由共享 encounter-rules 通道立即结算）。
+      if (kind === 'disquietingDreams' && state.encounterDeck.length) {
+        discardEncounterTop?.(state, api, 1, { notifyEmpty: true })
+        api.info?.('😴 不安的梦：弃掉遭遇牌库顶 1 张卡牌。')
       }
     }
     inv.tcuMovedThisTurn = false
   },
 
+  // 「本回合」移动计数：只统计该调查员自己回合内的移动（神话阶段/别人回合的效果位移不算，
+  // 对照参考实现 InvestigatorThatMovedDuringTurn）。
   locationEntered(state, inv) {
+    if (!inv || state.phase !== 'investigation' || state.currentSeat !== inv.seat) return
     inv.tcuMovedThisTurn = true
   },
 
@@ -524,21 +596,40 @@ export const behavior = {
     return undefined
   },
 
-  // ---- 调查阶段结束：古怪图形的强制 ----
+  // ---- 调查阶段结束：古怪图形的强制（参考 PhaseEnds #after #investigation，即敌人阶段开始）----
   phaseBegan(state, phase, api) {
     encounterRules.phaseBegan?.(state, phase, api)
-    if (phase !== 'mythos') return
+    syncNahabImmobile(state)
+    if (phase !== 'enemy') return
     const geometries = state.locations.filter(location => String(codeOf(location)) === STRANGE_GEOMETRY)
     for (const geometry of geometries) {
       const occupants = activeInvestigators(state).filter(inv => inv.location === geometry.id)
-      const enemies = state.enemies.filter(enemy => enemy.location === geometry.id)
+      // 参考只移动「未交战」的敌人（UnengagedEnemy）。
+      const enemies = state.enemies.filter(enemy => enemy.location === geometry.id && enemy.engagedSeat == null)
       const candidates = state.locations
         .filter(location => location.id !== geometry.id && (location.clues || 0) > 0)
         .sort((left, right) => (right.clues || 0) - (left.clues || 0)
           || String(codeOf(left)).localeCompare(String(codeOf(right))))
-      const target = candidates[0]
+      let target = null
+      if (candidates.length) {
+        const most = candidates[0].clues
+        const tied = candidates.filter(location => location.clues === most)
+        if (tied.length === 1) target = tied[0]
+        else {
+          const picked = api?.choose?.({
+            kind: 'location', source: STRANGE_GEOMETRY, seat: state.campaign?.leadSeat ?? 0,
+            prompt: '古怪图形崩塌：选择线索最多的地点（并列，由主持选择）。',
+            options: tied.map(location => ({ id: location.id, label: location.name })),
+          })
+          target = tied.find(location => location.id === picked) || tied[0]
+        }
+      }
       api.remove?.(geometry.id)
-      if (!target) continue
+      state.encounterDiscard = [...(state.encounterDiscard || []), STRANGE_GEOMETRY]
+      if (!target) {
+        api.info?.('🧩 古怪图形崩塌：场上没有带线索的其他地点，无人被抛走。')
+        continue
+      }
       for (const inv of occupants) {
         api.moveInvestigator?.(inv.seat, target.id)
         api.damage?.(inv.seat, 1)
@@ -566,6 +657,35 @@ export const behavior = {
 }
 
 function apiFor(state) { return { info: () => {} } }
+
+const AGENDA_DEFEAT_REACTION_CODES = new Set(['05121', '05122', '05123', '05124'])
+
+// 议程正面反应（05121-05124 同一条）：击败布朗·詹金/那赫卜后，由「击败者」选择是否获得
+// 1 个线索（≥3 人改为 2 个）。参考 TheHermitIX.hs 的 freeReaction「You」。
+function offerAgendaDefeatClue(state, enemy, api) {
+  const code = String(codeOf(enemy))
+  if (code !== BROWN_JENKIN && code !== NAHAB) return
+  const agendaCode = String(codeOf((state.agendas || [])[state.agendaIndex]))
+  if (!AGENDA_DEFEAT_REACTION_CODES.has(agendaCode)) return
+  const seat = enemy.defeatedBy ?? enemy.engagedSeat ?? null
+  let answer = 'use'
+  if (typeof api?.choose === 'function') {
+    answer = api.choose({
+      kind: 'reaction', source: agendaCode, seat: seat ?? state.campaign?.leadSeat ?? 0, canSkip: true,
+      prompt: `「${enemy.name}」被你击败：是否发动反应，从供应堆获得线索？`,
+      options: [{ id: 'use', label: '发动：获得线索' }, { id: 'skip', label: '不发动' }],
+    })
+  }
+  if (answer !== 'skip') grantAgendaClue(state, seat, api)
+}
+
+// act3 起那赫卜不能离开献祭场所：参考实现给 Nahab 的 CannotMove 修饰语，引擎既有 enemy.immobile
+// 在 relocateEnemy（所有移动来源）与猎手移动前统一拦截。
+function syncNahabImmobile(state) {
+  const nahab = inPlay(state, NAHAB)
+  if (!nahab) return
+  nahab.immobile = (state.actIndex ?? 0) === 2
+}
 
 // 议程正面反应：击败布朗·詹金/那赫卜后获得 1 线索（≥3 人改为 2）。
 // 纯数据写入（enemyCanBeDefeated 没有 api 参数），线索总额同步到 state.clues。

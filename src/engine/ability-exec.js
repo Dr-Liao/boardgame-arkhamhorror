@@ -89,9 +89,17 @@ function doEntityAbility(state, seat, move, events) {
   return true
 }
 
-function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, events) {
+function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, events, ownerSeat = null) {
   const inv = state.investigators[seat]
-  const asset = controlledAbilityCard(inv, assetId)
+  let asset = controlledAbilityCard(inv, assetId)
+  // 2026-10-25 第七轮修复 05196：同地点队友的 teamActivatable 支援由本调查员激活（actor 支付费用）。
+  if (!asset && Number.isInteger(ownerSeat)) {
+    const owner = state.investigators[ownerSeat]
+    const candidate = owner?.assets?.find(item => item.id === assetId)
+    if (candidate && registeredEntry(candidate.code)?.teamActivatable === true && owner.location === inv.location) {
+      asset = candidate
+    }
+  }
   if (!asset) return
   // Phase 2（C1）：capability:triggerAbilities。
   if (capabilityBlocked(state, inv, 'triggerAbilities')) return
@@ -158,8 +166,16 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
     inv.usedAbilities[`${asset.id}:${abilityIndex}:${state.round}:${state.phase}`] = true
   }
   if (cost.discardSelf) {
-    leaveAsset(state, inv, asset)
-    if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
+    if ((inv.assets || []).includes(asset)) {
+      leaveAsset(state, inv, asset)
+      if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
+    } else {
+      // 2026-10-25 第七轮修复 05021：附属到调查员的条目自身也能以 discardSelf 真实离场。
+      const attachments = inv.attachments || []
+      const at = attachments.indexOf(asset)
+      if (at >= 0) attachments.splice(at, 1)
+      if (!inv.discard.includes(asset.code)) inv.discard.push(asset.code)
+    }
     info(state, events, `♻️ ${inv.name} 弃掉了「${cardName(asset.code)}」。`)
   }
   if (cost.exileSelf) {
@@ -194,20 +210,24 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
   // 2026-10-25：cardCancelled 这类「取消后」时点可能发生在结算另一张反应卡的嵌套上下文里
   // （playReactionCard 会先写 state._reaction）。允许调用方传 allowNested 放行；仍用
   // _abilityWindow 防止能力窗口自身递归。
-  if (state._abilityWindow || (state._reaction && !opts.allowNested)) return context
+  // 2026-10-25 第五轮修复 05004（cardCancelled 嵌套开窗）：allowNested 也要能穿透 _abilityWindow，
+  // 否则「取消后在取消方结算过程中触发的 cardCancelled 窗口」会被吞掉；用保存/恢复支持嵌套。
+  if ((state._abilityWindow && !opts.allowNested) || (state._reaction && !opts.allowNested)) return context
   // 印刷文本被清空的实体不结算它自己的描述子能力（与 enemyTextBlanked 同一口径）。
   const entityBlanked = source => {
     const blank = source?.textBlanked
     return Boolean(blank && blank.round === state.round && blank.phase === state.phase)
   }
+  const previousAbilityWindow = state._abilityWindow
   state._abilityWindow = true
   try {
     // 1) 强制能力：无条件结算，不询问。
     //    先玩家卡（逐座位），再非玩家卡（每张实体卡一次，由决定座位代表执行）。
     for (const inv of aliveInvestigators(state)) {
-      for (const { source, code, fromHandIndex, entry, effect } of descriptorSources(state, inv)) {
-        // 非玩家实体由下面的专用块按「每张实体卡一次」结算，避免逐座位重复执行。
-        if (NON_PLAYER_SCOPES.includes(entry.scope)) continue
+      for (const { source, code, fromHandIndex, entry, effect, controlled } of descriptorSources(state, inv)) {
+        // 非玩家实体由下面的专用块按「每张实体卡一次」结算，避免逐座位重复执行；
+        // 受控的剧情支援（controlled）按玩家卡来源处理。
+        if (NON_PLAYER_SCOPES.includes(entry.scope) && !controlled) continue
         for (const descriptor of descriptorsInEntry(entry, windowId, 'forced')) {
           if (!descriptorUsable(state, inv, source, descriptor, { windowId, context })) continue
           if (descriptor.fromHand && fromHandIndex == null) continue
@@ -246,9 +266,9 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
     for (const inv of aliveInvestigators(state)) {
       if (context?.cancelled) break
       const candidates = []
-      for (const { source, code, fromHandIndex, entry, effect } of descriptorSources(state, inv)) {
-        // 非玩家实体的反应在下面的专用块里统一询问一次。
-        if (NON_PLAYER_SCOPES.includes(entry.scope)) continue
+      for (const { source, code, fromHandIndex, entry, effect, controlled } of descriptorSources(state, inv)) {
+        // 非玩家实体的反应在下面的专用块里统一询问一次；受控剧情支援按玩家卡来源询问。
+        if (NON_PLAYER_SCOPES.includes(entry.scope) && !controlled) continue
         for (const descriptor of descriptorsInEntry(entry, windowId, 'reaction')) {
           // Phase 5（5b-6）：从旧式 reactions 搬来的反应由 triggerReaction 用旧式询问结算，
           // 这里跳过，避免同一张卡在两个提示里各出现一次。
@@ -275,6 +295,19 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
           }
         }
       }
+      // 2026-10-25 第五轮修复（05111/05234/05277）：beforePlayCost 窗口里，正在被打出的卡已在
+      // actions.js 先移出手牌、到窗口才枚举，descriptorSources 找不到它；把它的条目能力补成候选来源。
+      if (windowId === 'beforePlayCost' && context?.cardCode && inv.seat === context.seat) {
+        const playedEntry = registeredEntry(context.cardCode)
+        if (playedEntry?.abilities?.length) {
+          const playedSource = { code: context.cardCode, id: context.playedCardId ?? context.cardCode, playedCard: true }
+          for (const descriptor of descriptorsInEntry(playedEntry, windowId, 'reaction')) {
+            if (descriptor.fromHand) continue
+            if (!descriptorUsable(state, inv, playedSource, descriptor, { windowId, context })) continue
+            candidates.push({ source: playedSource, code: context.cardCode, descriptor })
+          }
+        }
+      }
       if (!candidates.length) continue
       let guard = 0
       while (guard++ < 12) {
@@ -296,6 +329,19 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
         if (answer === 'skip') break
         const chosen = usable.find(item => candidateKey(item) === answer)
         if (!chosen) break
+        // 2026-10-25 第七轮修复 05033：符号效果的「取消 / 再一次」标志（05033 在窗口内写入 state.skillTest.symbolEffect）。
+        if (windowId === 'symbolRevealed' && state.skillTest?.symbolEffect) {
+          const symbolEffect = state.skillTest.symbolEffect
+          const affectedCode = chosen.source?.code ?? chosen.code
+          if (symbolEffect.cancelCard && symbolEffect.cancelCard === affectedCode) continue
+          if (symbolEffect.repeatCard && symbolEffect.repeatCard === affectedCode) {
+            executeDescriptor(state, { inv, source: chosen.source, descriptor: chosen.descriptor, context, events,
+              windowId, fromHandIndex: chosen.fromHandIndex, effect: chosen.effect })
+            executeDescriptor(state, { inv, source: chosen.source, descriptor: chosen.descriptor, context, events,
+              windowId, fromHandIndex: chosen.fromHandIndex, effect: chosen.effect, alreadyPaid: true })
+            continue
+          }
+        }
         executeDescriptor(state, { inv, source: chosen.source, descriptor: chosen.descriptor, context, events,
           windowId, fromHandIndex: chosen.fromHandIndex, effect: chosen.effect })
       }
@@ -336,7 +382,8 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
       }
     }
   } finally {
-    delete state._abilityWindow
+    if (previousAbilityWindow === undefined) delete state._abilityWindow
+    else state._abilityWindow = previousAbilityWindow
   }
   return context
 }
@@ -447,5 +494,26 @@ function effectError(state, inv, effect) {
   return null
 }
 
-  return { doAbility, doEntityAbility, openAbilityWindow, effectError }
+// 2026-10-25 本循环修复 player-window-fast-actions：在玩家窗口里结算一个 kind:'free' 描述子。
+// 用于调查员/附属的 [free] 能力（legalMoves 只枚举场上支援，playerWindow 需要显式执行入口）。
+function doFreeDescriptor(state, seat, code, index, targetId, events) {
+  const inv = state.investigators[seat]
+  if (!inv) return false
+  for (const row of descriptorSources(state, inv)) {
+    if (row.code !== code) continue
+    const descriptor = (row.entry?.abilities || [])[index]
+    if (!descriptor || descriptor.kind !== 'free') continue
+    if (descriptor.fromHand) continue
+    executeDescriptor(state, {
+      inv, source: row.source, descriptor,
+      context: { seat, targetId: targetId ?? null, window: state.timingWindow },
+      events, windowId: state.timingWindow, fromHandIndex: row.fromHandIndex,
+      effect: descriptor.effect || null,
+    })
+    return true
+  }
+  return false
+}
+
+  return { doAbility, doEntityAbility, doFreeDescriptor, openAbilityWindow, effectError }
 }

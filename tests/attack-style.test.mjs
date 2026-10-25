@@ -12,7 +12,7 @@ test('攻击演出按卡牌覆盖 → 特性种类 → 默认解析', () => {
   assert.equal(style('02301'), 'lightning', '闪电枪覆盖枪械类')
   assert.equal(style('04305'), 'default', '火焰喷射器覆盖枪械类')
   assert.equal(style('04276'), 'blade', '古旧锈剑名称不含刀剑词，由覆盖指定')
-  assert.equal(style('01060'), 'default', '法术不属于已实现种类')
+  for (const code of ['01060', '02154', '60407']) assert.equal(style(code), 'spell', code)
   assert.equal(attackStyle(null), 'default')
   for (const card of Object.values(ALL_CARDS)) assert.ok(ATTACK_STYLES.includes(attackStyle(card)), card.code)
 })
@@ -46,6 +46,8 @@ test('出手攻击事件公开武器卡号与演出样式', () => {
   const bare = run(null)
   assert.equal(bare.weaponCode, null); assert.equal(bare.attackStyle, 'default')
   assert.equal(run('02301').attackStyle, 'lightning')
+  assert.equal(run('01060').attackStyle, 'spell')
+  assert.equal(run('01060', false).attackStyle, 'spell', '落空同样使用法术样式')
 })
 
 test('炸药爆破在伤害前公开爆破演出，列出地点内全部目标', () => {

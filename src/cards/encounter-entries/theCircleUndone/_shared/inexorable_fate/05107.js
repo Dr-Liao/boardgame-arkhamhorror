@@ -5,10 +5,25 @@
 //   如果密谋牌库旁有 3 张恐怖夜色，将其全部弃掉，每位调查员受到 3 点恐惧。
 //
 // 「放在密谋牌库旁边」与 05089 共用 state.scenarioZones.agendaAside（纯 JSON）。
-// 第三张触发时：牌库旁的前 2 张 + 当前这张共 3 张一起弃掉。当前这张由引擎在 encounterResolve
-// 返回 false 后丢进「本次抽牌的遭遇牌堆」弃牌堆；本条目只把牌库旁的 2 张推进同一个主弃牌堆
-// （幽灵牌堆归属是已知近似，见 primitive-requests/fix-c7shared.json）。
+// 第三张触发时：牌库旁的前 2 张 + 当前这张共 3 张一起弃掉。每张放牌库旁时记录「来源牌堆」
+// （《恶罪报应》有基础/幽灵两套遭遇牌堆，来源由该章 encounterDeckFor 写在 scenarioFlags.
+// lastEncounterDeck）；当前这张由引擎在 encounterResolve 返回 false 后丢进本次抽牌的牌堆弃牌堆。
 // 涌动在结算末尾抽取（不再在放置/触发之前插入，避免新抽到的牌先于本卡结算）。
+
+function encounterDeckId(state) {
+  if (state.scenarioFlags?.lastEncounterDeck === 'spectral' && state.extraEncounterDecks?.spectral) return 'spectral'
+  return 'encounter'
+}
+
+function discardAsideCopy(state, deckId) {
+  if (deckId === 'spectral' && state.extraEncounterDecks?.spectral) {
+    const piles = state.extraEncounterDecks.spectral
+    if (!Array.isArray(piles.discard)) piles.discard = []
+    piles.discard.push('05107')
+    return
+  }
+  state.encounterDiscard.push('05107')
+}
 
 export default {
   code: '05107',
@@ -27,9 +42,9 @@ export default {
     let placed = true
     let surge = failedBy >= 3
     if (existing.length >= 2) {
-      // 第三张：牌库旁 2 张 + 当前这张共 3 张全部弃掉；当前这张交给引擎弃置。
+      // 第三张：牌库旁 2 张 + 当前这张共 3 张全部弃掉；当前这张交给引擎弃置（会进本次抽牌牌堆的弃牌堆）。
       zones.agendaAside = aside.filter(entry => entry.code !== '05107')
-      state.encounterDiscard.push('05107', '05107')
+      for (const entry of existing) discardAsideCopy(state, entry.deck === 'spectral' ? 'spectral' : 'encounter')
       api.info?.('密谋牌库旁集齐 3 张「恐怖夜色」：全部弃掉，每位调查员受到 3 点恐惧。')
       for (const target of state.investigators || []) {
         if (target.defeated) continue
@@ -37,7 +52,7 @@ export default {
       }
       placed = false
     } else {
-      aside.push({ id: `05107:${state.round}:${aside.length}`, code: '05107' })
+      aside.push({ id: `05107:${state.round}:${aside.length}`, code: '05107', deck: encounterDeckId(state) })
       api.info?.('「恐怖夜色」被放到密谋牌库旁边。')
     }
     if (surge) {

@@ -10,9 +10,11 @@
 // 实现位置：
 //   · 1a 的两条强制都由章节 behavior 结算（`doomPlaced` / `investigatorEliminated`）——
 //     被击败者与击败来源是章节级上下文，单卡条目拿不到；
-//   · 1b 的「翻回 1a」由 behavior.actIndexAfterAdvance 之外的议程逻辑保持 agendaIndex=0 实现；
+//   · 1b 的「推进→翻回 1a」由 behavior.investigatorEliminated 调 agenda-in-place-flip 原语
+//     `api.flipAgendaInPlace('back')`（播报背面正文）→ 记录命运 → `('front')` 实现：
+//     不推进 agendaIndex、不移除毁灭、不触发议程阈值/离场钩子；
 //   · 本条目保留 agendaRule.onReveal 作为「引擎自行推进议程」时的兜底文案，
-//     并声明 implemented: true（卡面两条强制均已有行为，见 behavior.js 的 scenarioGaps/scenarioApproximations）。
+//     并声明 implemented: true（卡面两条强制均已有行为）。
 //
 // 一卡一文件：本卡规则只在这里声明；不 import 引擎/content。
 export const JUDGEMENT_FATE_RECORDS = Object.freeze([

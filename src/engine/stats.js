@@ -122,8 +122,23 @@ export function createStats(deps) {
       || scenarioBehavior(state).canPlayScenarioCard?.(state, inv, code) === true
   }
 
+  // 2026-10-25 第五轮修复（05281）：「把某项基础技能值设为 X」的临时覆盖（替换印刷基值，再走修正管线）。
+  function runtimeBaseStat(state, inv, skill) {
+    const entries = inv.statOverrides?.[skill]
+    if (!Array.isArray(entries) || !entries.length) return null
+    const active = entries.filter(entry => {
+      if (entry.round != null && entry.round !== state.round) return false
+      if (entry.turnSerial != null && entry.turnSerial !== state.turnSerial) return false
+      if (entry.phase != null && entry.phase !== state.phase) return false
+      return true
+    })
+    return active.length ? active[active.length - 1].value : null
+  }
+
   function getStat(state, inv, skill, skipSubstitute) {
     let v = inv[skill] || 0
+    const baseOverride = runtimeBaseStat(state, inv, skill)
+    if (baseOverride != null) v = baseOverride
     if (inv.handlingEncounter?.bonus) v += inv.handlingEncounter.bonus
     // 修正管线（modifiers.js）：声明式修正 + 旧式 passive 字段的桥接。
     // 迁移完成的卡牌分支已从引擎删除，新的修正请写在 src/cards/entries/<code>.js 的 modifiers 里。
@@ -137,6 +152,13 @@ export function createStats(deps) {
       v = Math.max(v, getStat(state, inv, substitute.to, true))
     }
     return v
+  }
+
+  // 2026-10-25 第五轮修复 05281（交叉复核）：只取「印刷基值 + 临时基值覆盖」，不叠任何修正。
+  // 用于「倍化基础技能值」类地点规则（03213/03130/03132）等直接读基值的路径。
+  function baseStatValue(state, inv, skill) {
+    const runtime = runtimeBaseStat(state, inv, skill)
+    return runtime != null ? runtime : (inv[skill] || 0)
   }
 
   function getMaxHealth(inv) {
@@ -314,5 +336,5 @@ export function createStats(deps) {
     return cards
   }
 
-  return { assetEffect, controlledAbilityCards, controlledAbilityCard, lolaCanUseCard, chooseLolaRole, runtimeCardAvailable, getStat, getMaxHealth, getMaxSanity, extraActionBonus, exploreOnlyActionBonus, normalActionsLeft, investigateBonus, handSize, getHandSize, cardPlayFlag, iconValue, effectiveTraits, cardHasTrait, cardKeyword, commitIcons, enemyStatMods, abilityUsage }
+  return { assetEffect, controlledAbilityCards, controlledAbilityCard, lolaCanUseCard, chooseLolaRole, runtimeCardAvailable, getStat, baseStatValue, getMaxHealth, getMaxSanity, extraActionBonus, exploreOnlyActionBonus, normalActionsLeft, investigateBonus, handSize, getHandSize, cardPlayFlag, iconValue, effectiveTraits, cardHasTrait, cardKeyword, commitIcons, enemyStatMods, abilityUsage }
 }

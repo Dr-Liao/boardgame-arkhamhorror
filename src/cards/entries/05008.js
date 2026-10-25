@@ -14,6 +14,13 @@ export default {
   code: '05008',
   threatHorrorSink: true,
   blocksHealReward: true,
+  // R7 heal v3 条目字段（引擎 healHorrorFrom 已按 healer 的 threat 条目读取）：
+  // · redirectHeal.optional ——「可以如同在卡洛琳身上一样治愈」= 可选改道；
+  // · overflow:'discard'   —— 超出其剩余恐惧的治疗量丢弃（不回流）；
+  // · blockHealOtherCards  ——「你不能治愈理性思考以外卡牌上的恐惧」（调查员本人不受限）。
+  redirectHeal: { optional: true },
+  overflow: 'discard',
+  blockHealOtherCards: true,
   abilities: [
     { kind: 'weakness', label: '理性思考', weakness: { type: 'threat', horror: 4 } },
   ],

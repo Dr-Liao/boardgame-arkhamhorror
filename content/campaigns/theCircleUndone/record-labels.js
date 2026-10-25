@@ -70,6 +70,7 @@ export const RECORD_LABELS = Object.freeze({
   theInvestigatorsReversedTheIncantation: "调查员逆转了咒语",
   erynnJoinedTheInvestigators: "艾琳加入了调查员",
   theCovenOfKeziahHoldsTheWorldInItsGrasp: "凯齐亚的女巫集会掌控世界",
+  meddledWithThePast: "沉湎过去",
 })
 
 // 10 个遗留记忆的中文名（Campaigns/TheCircleUndone/Memento.hs 的枚举顺序）。

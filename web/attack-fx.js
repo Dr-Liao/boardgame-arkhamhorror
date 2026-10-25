@@ -72,6 +72,23 @@ const STYLES = {
       [burst, [{ scale: '.3', opacity: 1 }, { scale: '1.6', opacity: 0 }], 420]],
     }
   },
+  spell({ node, start, end, ux, uy, miss }) {
+    const aim = miss ? { x: end.x + ux * 72 - uy * 42, y: end.y + uy * 72 + ux * 42 } : end
+    const dx = aim.x - start.x, dy = aim.y - start.y
+    const sigil = place(node('div', 'ah-combat-sigil'), { left: start.x + 'px', top: start.y + 'px' })
+    const orb = place(node('div', 'ah-combat-orb'), { left: start.x + 'px', top: start.y + 'px' })
+    const ward = place(node('div', 'ah-combat-ward'), { left: end.x + 'px', top: end.y + 'px' })
+    return {
+      elements: [sigil, orb, ward], strikeSound: { synth: 'spellCast' }, impactSound: { synth: 'spellHit' },
+      strike: source => [[source, [{ filter: 'brightness(1)' }, { filter: 'brightness(1.5) hue-rotate(70deg)', offset: .45 }, { filter: 'brightness(1)' }], 480],
+        [sigil, [{ scale: '.2', rotate: '-35deg', opacity: 0 }, { scale: '1', rotate: '20deg', opacity: 1, offset: .4 }, { scale: '1.25', rotate: '90deg', opacity: 0 }], 480],
+        [orb, [{ translate: '0 0', scale: '.3', opacity: 0 }, { translate: '0 0', scale: '1', opacity: 1, offset: .23 },
+          { translate: `${dx}px ${dy}px`, scale: '.8', opacity: 1, offset: .82 }, { translate: `${dx}px ${dy}px`, scale: '.2', opacity: 0 }], 480]],
+      impact: target => [[target, miss ? dodge : shake, 340],
+        [ward, [{ scale: '.2', rotate: '-35deg', opacity: 0 }, { scale: '.7', rotate: '10deg', opacity: miss ? .45 : 1, offset: .18 },
+          { scale: '1.55', rotate: '80deg', opacity: 0 }], 490]],
+    }
+  },
   blade({ node, end, box, ux, uy, miss }) {
     const size = Math.max(80, Math.min(240, Math.max(box.width, box.height) * 1.1))
     const cuts = [-36, 24].map(deg => place(node('div', 'ah-combat-cut'), { left: end.x + 'px', top: end.y + 'px', width: size + 'px', rotate: deg + 'deg' }))

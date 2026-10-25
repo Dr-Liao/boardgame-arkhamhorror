@@ -6,12 +6,21 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 05323 诱敌深入：打出时在「所在地点 / 连接地点」里选一个，走 api.setLocationLure 写地点诱饵标记；
-// 猎手移动读点见 src/engine/turn.js 的 hunterStep（朝诱饵最短路径移动），
-// 回合结束弃置由 turn.js 的 runLocationRoundEnd 统一处理。
+// 第七轮：改走真实地点附属（state.playerLocationAttachments）——
+//   api.attachToLocation(locationId, { code:'05323', ownerSeat, extra:{ round } })；
+//   条目字段 locationLure / discardAtRoundEnd 由引擎读点消费：
+//   · turn.js hunterStep：对声明 locationLure 的真实地点附属按最短路径拉近（多诱饵取最近）；
+//   · turn.js runLocationRoundEnd：声明 discardAtRoundEnd 的附属轮末把 code 推入 ownerSeat 弃牌堆并移除（恰好 1 次）。
+//   keepOnPlay 防止事件结算时默认进弃牌堆，与轮末弃置配合只产生 1 张物理卡。
+//
+// 残余近似（如实登记）：「敌军阶段期间所有要移动的敌人」目前引擎只有 hunterStep 读诱饵；
+// 剧本/效果发起的敌人移动（非猎手步）不读诱饵，仍按原目的地移动。
 
 export default {
   code: '05323',
+  keepOnPlay: true,
+  locationLure: true,
+  discardAtRoundEnd: true,
   abilities: [
     {
       kind: 'played',
@@ -25,7 +34,10 @@ export default {
           ...connected.map(location => ({ id: location.id, label: api.locationName(location.id) }))]
         const locationId = options.length === 1 ? inv.location : api.choice({ kind: 'target', source: '05323', seat: inv.seat,
           prompt: '选择「诱敌深入」附属的地点（所在地点或连接地点）。', options })
-        if (!api.setLocationLure(locationId, inv.seat, '05323')) return
+        const attached = api.attachToLocation(locationId, {
+          code: '05323', ownerSeat: inv.seat, extra: { round: state.round },
+        })
+        if (!attached) return
         api.info(`「诱敌深入」附属到「${api.locationName(locationId)}」：本轮敌人向这里移动。`)
       },
     },

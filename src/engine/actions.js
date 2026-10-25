@@ -5,6 +5,8 @@
 // 依赖清单由「engine 顶层声明 ∪ 全部 import 绑定」与函数体对比生成，
 // 并**先剥掉注释**再匹配——否则注释里的「Phase 5」「C1」之类会被当成标识符混进来。
 
+import { beginInvestigationFrame, endInvestigationFrame, investigationFrameRef } from './resolution-scope.js'
+import { grantSpellCredit } from './spell-actions.js'
 export function createActions(deps) {
   const {
     campaignState,
@@ -35,6 +37,7 @@ export function createActions(deps) {
     executeDescriptor,
     exilePlayerCard,
     getStat,
+    baseStatValue,
     hauntedAfterFail,
     info,
     investigateBonus,
@@ -121,11 +124,29 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     const usesLolaDiscount = inv.lolaDiscount?.round === state.round && inv.lolaDiscount?.turnSeat === state.currentSeat
       && (playedDef.factions || [playedDef.klass, playedDef.klass2, playedDef.klass3].filter(Boolean)).includes(inv.lolaDiscount.role)
     // Phase 5（5a-18）：「打出时自选花费若干资源」由条目级 chooseResourceCostOnPlay 声明。
-    const cost = registeredEntry(cardId)?.chooseResourceCostOnPlay
+    let cost = registeredEntry(cardId)?.chooseResourceCostOnPlay
       ? Number(requestChoice(state, { kind: 'resource', source: cardId, seat,
         prompt: `选择花费多少资源，为「${cardName(cardId)}」装填等量弹药。`,
         options: Array.from({ length: inv.resources + 1 }, (_, i) => ({ id: String(i), label: `${i} 资源／${i} 弹药` })),
       })) : playCost(state, inv, playedDef)
+    // 2026-10-25 第四轮修复 play-cost-interrupt（05150 黑书 / 05111 / 05277 / 05234 等）：
+    // 「打出一张卡牌时」的支付前窗口。反应可在 context.costReduction 里给出减免；
+    // 卡面费用本身（资源/行动）仍由条目自己结算。
+    {
+      const playCostContext = { when: 'beforePlayCost', seat: inv.seat, location: inv.location,
+        cardCode: cardId, playedCardId: cardId, cost, costReduction: 0, costIncrease: 0,
+        prompt: `打出「${cardName(cardId)}」的支付前窗口` }
+      triggerReaction(state, inv.seat, 'beforePlayCost', events, playCostContext)
+      reactionWindow(state, 'beforePlayCost', playCostContext, events)
+      if (playCostContext.costIncrease > 0) {
+        cost += playCostContext.costIncrease
+        info(state, events, `「${cardName(cardId)}」的费用增加 ${playCostContext.costIncrease}（支付 ${cost} 资源）。`)
+      }
+      if (playCostContext.costReduction > 0) {
+        cost = Math.max(0, cost - playCostContext.costReduction)
+        info(state, events, `「${cardName(cardId)}」的费用减少 ${playCostContext.costReduction}（支付 ${cost} 资源）。`)
+      }
+    }
     campaignState.clearPlayDiscount(inv)
     delete inv.playDiscount
     let payer = inv
@@ -139,6 +160,19 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     }
     if (payer.resources < cost) {
       info(state, events, `${inv.name} 资源不足，无法打出「${cardName(cardId)}」。`)
+      // 2026-10-25 第五轮：支付失败时把已离手的牌放回原处（否则「合法性靠潜在减费放行、
+      // 但玩家放弃/减不够」会让牌凭空消失）。
+      if (fromBackpackId) {
+        const bag = inv.assets.find(asset => asset.id === fromBackpackId)
+        if (bag) { bag.attachedCards ||= []; bag.attachedCards.push(cardId) }
+      } else if (fromPlanAssetId) {
+        const planAsset = inv.assets.find(asset => asset.id === fromPlanAssetId)
+        if (planAsset) { planAsset.attached ||= []; planAsset.attached.push(cardId); planAsset.exhausted = false }
+      } else if (fromDiscard) {
+        inv.discard.push(cardId)
+      } else {
+        inv.hand.push(cardId)
+      }
       return { ok: false, cost }
     }
     payer.resources -= cost
@@ -171,12 +205,16 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       else inv.hand.push(cardId)
       return
     }
-    // 2026-10-25：直觉牌库揭示的那张牌一旦真的被打出，就清掉 hunchRevealed，
-    // 否则调查阶段结束时会把已在弃牌堆/场上的它再洗回直觉牌库（05002 乔·戴蒙德与 05010 悬案同源问题）。
-    if (inv.hunchRevealed === cardId) delete inv.hunchRevealed
+    const isInvestigatorTarget = attachSpec.kind === 'investigator'
     const chosen = candidates.length === 1 ? candidates[0].id : requestChoice(state, { kind: 'target', source: cardId, seat,
-      prompt: `选择要附属「${cardName(cardId)}」的支援。`, options: candidates.map(asset => ({ id: asset.id, label: cardName(asset.code) })) })
-    const target = candidates.find(asset => asset.id === chosen) || candidates[0]
+      prompt: `选择要附属「${cardName(cardId)}」的${isInvestigatorTarget ? '调查员' : '支援'}。`,
+      options: candidates.map(asset => ({ id: asset.id, label: isInvestigatorTarget ? (asset.label || asset.name || cardName(asset.code)) : cardName(asset.code) })) })
+    const candidate = candidates.find(asset => asset.id === chosen) || candidates[0]
+    // 2026-10-25 第七轮修复 05021：attachmentTargets 对 investigator 返回包装对象，必须取真实调查员实例；
+    // 此前把 attachments 写在临时包装上，commit 后丢失。
+    const target = isInvestigatorTarget
+      ? (candidate.investigator || state.investigators[candidate.seat] || candidate)
+      : candidate
     attachCardTo(state, seat, cardId, target)
     // Phase 5（5b-10）：附带来的加值也可以写在能力层条目上。
     const onAttach = registeredEntry(cardId)?.onAttach || {}
@@ -196,8 +234,6 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   const paid = payPlayCost()
   if (!paid.ok) return
   const cost = paid.cost
-  // 2026-10-25：直觉牌库揭示后被真正打出的牌清掉 hunchRevealed（见上方附属分支同因说明）。
-  if (inv.hunchRevealed === cardId) delete inv.hunchRevealed
 
   if (def.type === 'asset') {
     // Phase 5（5b-8）：资产入场时读的 passive（额外行动等）也要认条目。
@@ -218,6 +254,10 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     if (eff.onPlayDoom) asset.doom = eff.onPlayDoom
     if (eff.passive && eff.passive.extraAction && state.currentSeat === seat) inv.actionsLeft += eff.passive.extraAction
     inv.assets.push(asset)
+    // 2026-10-25 第七轮修复 05006：入场即带毁灭的卡也应触发「毁灭→法术专用额度」。
+    if ((asset.doom || 0) > 0) {
+      grantSpellCredit(state, inv, { info: text => info(state, events, text) })
+    }
     scenarioBehavior(state).assetEntered?.(state, inv, asset, scenarioRuntime(state, events))
     if (eff.sealOnEnter && state.chaosBag.includes(eff.sealOnEnter)) {
       sealChaosToken(state, eff.sealOnEnter, asset.id)
@@ -376,15 +416,19 @@ function doInvestigate(state, seat, opts, events, noSpend) {
   const difficulty = keyed ? 1
     : loc.shroud + (loc.shroudMod || 0) + (loc.peabodyShroud || 0) + temporaryShroud + scenarioShroud + (state.fogMod || 0) + (opts.shroudMod || 0)
   const noIntellectBoost = skill === 'intellect' && loc.noIntellectBoost
-  const baseValue = opts.baseValue ?? (loc.doubleBaseSkill ? (inv[skill] || 0) * 2
-    : noIntellectBoost ? (inv[skill] || 0) : undefined)
+  // 2026-10-25 第五轮修复 05281（交叉复核）：倍化/限制基值时用「印刷基值 + 临时基值覆盖」读点，
+  // 不再直读 inv[skill]，使「把基础技能值设为 X」对 doubleBaseSkill/noIntellectBoost 也生效。
+  const baseValue = opts.baseValue ?? (loc.doubleBaseSkill ? baseStatValue(state, inv, skill) * 2
+    : noIntellectBoost ? baseStatValue(state, inv, skill) : undefined)
 
   // 「值得信赖」：结算宿主支援的触发能力时每项技能 +1。
   const trustedHost = inv.assets.find(item => item.id === opts.assetId)
   // Phase 5（5a-24）：「值得信赖」授予的每项技能 +1 由附属卡的条目字段声明。
   const trustedFreshBonus = (trustedHost?.attachments || [])
     .reduce((sum, entry) => sum + (registeredEntry(entry.code)?.attachedSkillBonus || 0), 0)
-  return performTest(state, seat, skill, difficulty, { source: { label: '调查', name: loc.name, code: loc.originalCode || loc.code }, baseValue,
+  beginInvestigationFrame({ locationId: loc.id, retarget: null })
+  const testResult = performTest(state, seat, skill, difficulty, { source: { label: '调查', name: loc.name, code: loc.originalCode || loc.code }, baseValue,
+    investigation: { locationId: loc.id },
     skillBonus: (noIntellectBoost ? 0 : skill === 'intellect' ? investigateBonus(inv) : 0) + (opts.bonus || 0)
       + (opts.addSkill ? getStat(state, inv, opts.addSkill) : 0) + trustedFreshBonus, resolve: r => {
     const negativeSymbol = r.drawn.some(token => ['skull', 'cultist', 'tablet', 'elderthing', 'autofail'].includes(token))
@@ -416,7 +460,25 @@ function doInvestigate(state, seat, opts, events, noSpend) {
       triggerReaction(state, seat, 'investigateSuccess', events, { location: loc.id, successBy: r.value - difficulty })
       // 「改为不发现线索」的调查（02282/02283/02287）先走完调查成功窗口，再交给卡面回调。
       if (opts.onInvestigateSuccess) opts.onInvestigateSuccess(r, { state, inv, loc })
-      if (!opts.noClueDiscovery && !investigationReplaced) discoverClueAt(state, inv, gain, events)
+      // 2026-10-25 第七轮修复 05158：可在检定中把调查重定向到连接地点（改用该地点的隐藏值）。
+      const retarget = investigationFrameRef()?.retarget || null
+      const dual = investigationFrameRef()?.dual || null
+      if (!opts.noClueDiscovery && !investigationReplaced) {
+        if (retarget?.locationId) {
+          const targetLoc = state.locations.find(l => l.id === retarget.locationId)
+          discoverClueAt(state, inv, gain, events, { locationId: retarget.locationId })
+          info(state, events, `🔎 ${inv.name} 改为在「${targetLoc?.name || retarget.locationId}」调查，线索在该地点被发现。`)
+        } else if (dual?.locationId) {
+          // 2026-10-25 第七轮修复 05322：双地点调查——原地点与所选地点各发现一次。
+          discoverClueAt(state, inv, gain, events)
+          discoverClueAt(state, inv, gain, events, { locationId: dual.locationId })
+          const dualLoc = state.locations.find(l => l.id === dual.locationId)
+          info(state, events, `🔎 ${inv.name} 同时在「${dualLoc?.name || dual.locationId}」调查，线索在该地点也被发现。`)
+        } else discoverClueAt(state, inv, gain, events)
+      }
+      // 2026-10-25 第四轮修复 after-investigate-hook（05175 教堂阁楼等）：卡面「成功调查后」
+      // 的窗口必须在发现线索之后触发（此前只有 investigateResult = 发现线索之前）。
+      scenarioBehavior(state).afterInvestigate?.(state, inv, loc, r, scenarioRuntime(state, events))
       // 「古代巨石」：成功时额外发现 1 个线索、弃置自身并记录鉴定难度。
       if (opts.ancientStone) {
         discoverClueAt(state, inv, 1, events)
@@ -462,6 +524,8 @@ function doInvestigate(state, seat, opts, events, noSpend) {
       hauntedAfterFail(state, seat, 'investigate', scenarioRuntime(state, events), events, { locationId: loc.id })
     }
   } })
+  endInvestigationFrame()
+  return testResult
 }
 
   return { doPlay, doInvestigate }

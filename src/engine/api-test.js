@@ -73,6 +73,31 @@ export function createTestApi(state, events, deps) {
       }
       return added
     },
+    // 2026-10-25 第七轮修复 05029：把进行中的检定改为「资源技能检定」。
+    convertTestToResourceSkill: (seat) => {
+      const test = state.skillTest
+      if (!test) return null
+      const inv = state.investigators[Number.isInteger(seat) ? seat : test.seat]
+      if (!inv) return null
+      const base = Math.floor((inv.resources || 0) / 2)
+      const previousBase = Number(test.baseValue || 0)
+      const kept = (Number(test.value || 0) - previousBase)
+      test.baseValue = base
+      test.printedValue = base
+      test.value = base + kept
+      test.resourceSkill = true
+      test.skill = []
+      return { base, value: test.value, kept }
+    },
+    // 2026-10-25 第六轮修复 05119：「投入卡后」的反应可以给本次检定追加图标。
+    addCommittedCardIcons: (seat, count = 1) => {
+      if (!state.skillTest) return 0
+      const amount = Math.max(0, Number(count) || 0)
+      state.skillTest.extraCommittedIcons = (state.skillTest.extraCommittedIcons || 0) + amount
+      const owner = state.investigators[seat]
+      if (owner && amount > 0) info(state, events, `${owner.name} 因投入卡牌获得 ${amount} 个检定图标。`)
+      return state.skillTest.extraCommittedIcons
+    },
     // Phase 2（B5）：看牌与检索。
     lookAt: (seat, options) => lookAt(state, seat, options, events),
     searchDeck: (seat, options) => searchDeck(state, seat, options, events),

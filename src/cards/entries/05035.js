@@ -11,7 +11,6 @@ import { skillModifier } from './_shared.js'
 
 export default {
   code: '05035',
-  entersPlayFromOpeningHand: true,
   modifiers: [
     skillModifier('willpower', 1),
   ],
@@ -21,6 +20,9 @@ export default {
       fromHand: true, noPlayCost: true,
       resolve: ({ inv, api }) => {
         if (!inv.hand.includes('05035')) return
+        // 卡面 [reaction] 是「可以」放置：塔罗槽不足时保留在手牌，不自动入场。
+        const slot = api.tarotSlotInfo(inv)
+        if (slot.free <= 0) { api.info('塔罗槽已满，保留在手牌。'); return }
         api.putIntoPlay(inv.seat, '05035')
       },
     },

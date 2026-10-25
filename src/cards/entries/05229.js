@@ -7,12 +7,19 @@
 //
 // 05229 鸣枪示警：花 1 子弹（[[枪械]]支援）→ 把所在地点所有非精英敌人移到一个连接地点，不引发借机攻击。
 //
-// 实现备注：额外费用在 resolve 开头支付（找不到带子弹的枪械支援时整张牌不结算）。
-// 枪械判定用「使用类型是子弹」的支援（usesType=ammo）——现有卡池里仅[[枪械]]带该使用类型。
+// 实现备注：额外费用在 resolve 开头支付（找不到带子弹的[[枪械]]支援时整张牌不结算）。
+// [[枪械]]判定读印刷特性 Firearm（cards-data），且该支援要有子弹（uses + usesType=ammo）。
+// 只有 usesType=ammo 不够：04204 华饰弓也是 ammo 但不是[[枪械]]，不能用来支付本费用。
 
-// 你控制的、还有子弹的支援（= [[枪械]]）。
+import { ALL_CARDS } from '../../cards/cards-data.js'
+
+const isFirearm = code => (ALL_CARDS[code]?.traits || [])
+  .some(trait => String(trait).toLowerCase() === 'firearm')
+
+// 你控制的、还有子弹的[[枪械]]。
 function firearmWithAmmo(inv) {
-  return (inv.assets || []).filter(card => (card.uses || 0) >= 1 && /ammo/i.test(String(card.usesType || '')))
+  return (inv.assets || []).filter(card => isFirearm(card.code)
+    && (card.uses || 0) >= 1 && /ammo/i.test(String(card.usesType || '')))
 }
 
 export default {

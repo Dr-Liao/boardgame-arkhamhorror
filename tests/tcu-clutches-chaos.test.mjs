@@ -10,6 +10,14 @@ import { addBreach, removeBreach, breachTotal, locationSkullValue } from '../src
 
 const clone = value => structuredClone(value)
 
+// 第七轮：幕上裂口存 state.acts[i].breaches（引擎 actBreach 容器）。
+const actBreaches = state => Number(state.acts?.[state.actIndex]?.breaches || 0)
+const setActBreaches = (state, value) => {
+  const act = state.acts?.[state.actIndex]
+  if (act) act.breaches = Math.max(0, Math.floor(value))
+  return actBreaches(state)
+}
+
 function setupApi(seed = 1) {
   let value = seed >>> 0
   const randomValue = () => {
@@ -113,10 +121,46 @@ function apiFor(state, options = {}) {
       resolve(result)
       return result
     },
-    breach: (id, amount = 1) => addBreach(state, id, amount),
+    breach: (id, amount = 1) => { log.push(`breach:${id}`); addBreach(state, id, amount) },
     removeBreach: (id, amount = 1) => removeBreach(state, id, amount),
     breachTotal: () => breachTotal(state),
     skullValue: id => locationSkullValue(state, id),
+    // 05307：地点附属真实实例（与 scenario-runtime.js:326-344 同形状）。
+    attachEncounterToLocation: (code, locationId, extra = {}) => {
+      const location = state.locations.find(item => item.id === locationId)
+      if (!location) return null
+      location.attachments ||= []
+      const attachment = { id: `locatt-${location.id}-${location.attachments.length + 1}-${code}`, code, ...extra }
+      location.attachments.push(attachment)
+      return attachment
+    },
+    detachLocationAttachment: (locationId, attachmentId) => {
+      const location = state.locations.find(item => item.id === locationId)
+      if (!location?.attachments) return null
+      const index = location.attachments.findIndex(item => item.id === attachmentId)
+      if (index < 0) return null
+      return location.attachments.splice(index, 1)[0]
+    },
+    locationAttachments: locationId => {
+      const location = state.locations.find(item => item.id === locationId)
+      return location?.attachments ? [...location.attachments] : []
+    },
+    // 引擎统一离场入口与抽牌管线（Wave 1 修复 05299/05300 的读点）。
+    discardAsset: (seat, assetId) => {
+      const inv = state.investigators[seat]
+      const index = (inv.assets || []).findIndex(asset => asset.id === assetId)
+      if (index < 0) return null
+      const [asset] = inv.assets.splice(index, 1)
+      ;(inv.discard ||= []).push(asset.code)
+      return asset
+    },
+    drawDiscard: (seat, index) => {
+      const inv = state.investigators[seat]
+      const [code] = inv.discard.splice(index, 1)
+      inv.deck.push(code)
+      inv.hand.push(inv.deck.pop())
+      return code
+    },
     spawn: (code, locationId) => {
       const enemy = { id: `enemy-${state.enemies.length}`, code, originalCode: code, location: locationId, doom: 0 }
       state.enemies.push(enemy)
@@ -135,6 +179,7 @@ function apiFor(state, options = {}) {
     moveInvestigator: (seat, destination) => { state.investigators[seat].location = destination },
     place: id => { if (!loc(state, id)) placeLocations(state, [id]) },
     remove: id => { const index = state.locations.findIndex(item => item.id === id); if (index >= 0) state.locations.splice(index, 1) },
+    ...(options.api || {}),
   }
   return api
 }
@@ -166,6 +211,8 @@ test('混沌魔掌：playable 清单、原卡身份与幕/议程/结局', () => 
   assert.deepEqual(clutches.manifest.resolutionIds, Object.keys(clutches.scenario.resolutions))
   assert.deepEqual(clutches.manifest.zones.setAside, [{ cardCode: '05088', count: 1 }])
   assert.equal(clutches.manifest.recordWrites.includes('doomDrawsEverCloser'), true)
+  // 05284 的符号表需要 [tablet]/[elder_thing]（基础袋只有骷髅×2）：章节追加这两种标记。
+  assert.deepEqual(definition.chaosBagExtra, ['tablet', 'elderthing'])
   for (const group of clutches.manifest.requiredEncounterGroupIds) {
     assert.match(group, /^[a-z][A-Za-z0-9]+$/, `组 id 必须是 camelCase：${group}`)
   }
@@ -341,19 +388,31 @@ test('骷髅值 = 地点裂口 + 毁灭；困难难度骷髅标记再 -1', () =>
   }
 })
 
-test('异教徒标记：再揭示 1 个，裂口 < 3 时在所在地点补 1 裂口', () => {
+test('异教徒标记：再揭示 1 个；裂口在检定结算后补 1（第二个骷髅不把它算进 X）', () => {
   const state = stateFor(2)
   setup(state)
   const inv = state.investigators[0]
   const target = loc(state, inv.location)
   fillBreaches(state, target, 2)
+  state.skillTest = { actionKind: 'willpower' } // 检定进行中：侧效延迟到 afterTest
   const api = apiFor(state)
   const result = clutches.behavior.resolveChaosToken(state, inv, 'cultist', api)
   assert.equal(result.delta, 0)
   assert.equal(result.drawAnother, true)
+  // 卡面顺序：先「再揭示一个标记」，之后才放裂口 —— 此时裂口还没放下。
+  assert.equal(target.breaches, 2)
+  // 额外揭示的第二个标记是骷髅：X 只按当前的 2 个裂口算，不含待放的 1 个。
+  assert.deepEqual(clutches.behavior.resolveChaosToken(state, inv, 'skull', api), { delta: -2 })
+  // 检定结算（afterTest）时补上那 1 个裂口。
+  clutches.behavior.afterTest(state, inv, {
+    success: false, difficulty: 3, value: 1, drawn: ['cultist', 'skull'], cancelledTokens: [],
+  }, api)
   assert.equal(target.breaches, 3)
   // 已有 3 个裂口时不再放置。
   clutches.behavior.resolveChaosToken(state, inv, 'cultist', api)
+  clutches.behavior.afterTest(state, inv, {
+    success: false, difficulty: 3, value: 1, drawn: ['cultist'], cancelledTokens: [],
+  }, api)
   assert.equal(target.breaches, 3)
 })
 
@@ -361,7 +420,7 @@ test('石板/古神标记按难度取值；石板失败按低于难度点数移�
   const state = stateFor(2)
   setup(state)
   const inv = state.investigators[0]
-  state.scenarioFlags.actBreaches = 2
+  setActBreaches(state, 2)
   for (const difficulty of ['easy', 'hard']) {
     state.difficulty = difficulty
     assert.equal(clutches.behavior.resolveChaosToken(state, inv, 'tablet', apiFor(state)).delta,
@@ -372,7 +431,7 @@ test('石板/古神标记按难度取值；石板失败按低于难度点数移�
   clutches.behavior.afterTest(state, inv, {
     success: false, difficulty: 3, value: 1, drawn: ['tablet'], cancelledTokens: [],
   }, apiFor(state))
-  assert.equal(state.scenarioFlags.actBreaches, 0)
+  assert.equal(actBreaches(state), 0)
 })
 
 test('古神标记失败后在随机地点放 1 裂口', () => {
@@ -386,16 +445,19 @@ test('古神标记失败后在随机地点放 1 裂口', () => {
   assert.equal(breachTotal(state), before + 1)
 })
 
-test('议程 05285：毁灭将要放到密谋时改为在「人数+1」个随机地点各放 1 裂口', () => {
+test('议程 05285：毁灭将要放置时改为在「人数+1」个随机地点各放 1 裂口（引擎替换窗口）', () => {
   const state = stateFor(2)
   setup(state)
   const api = apiFor(state)
   const before = breachTotal(state)
   state.doom = 1
-  clutches.behavior.doomPlaced(state, { target: null, amount: 1, agenda: true }, api)
-  assert.equal(state.doom, 0, '毁灭被回退')
+  const replaced = clutches.behavior.doomPlacementReplacement(state, 1, api)
+  assert.equal(replaced, true, '返回 true = 引擎不写毁灭、不触发 doomPlaced/checkAgenda')
+  assert.equal(state.doom, 1, '引擎在自增前调用本钩子，state.doom 保持不变')
   assert.equal(breachTotal(state), before + 3, '2 人局 = 人数 + 1 = 3 个裂口')
   assert.equal(state.locations.filter(location => (location.breaches || 0) > 0).length >= 3, true)
+  // amount=0 时不应替换（返回 false 交回引擎）。
+  assert.equal(clutches.behavior.doomPlacementReplacement(state, 0, api), false)
 })
 
 // ---------------------------------------------------------------------------
@@ -405,14 +467,14 @@ test('议程 05285：毁灭将要放到密谋时改为在「人数+1」个随机
 test('黑暗知识(一)背面：生成安妮特于绞刑者山丘并把幕裂口移到下一张幕', () => {
   const state = stateFor(2, { anetteMasonIsPossessedByEvil: true })
   setup(state)
-  state.scenarioFlags.actBreaches = 2
+  setActBreaches(state, 2)
   const api = apiFor(state)
   clutches.behavior.actReveal(state, state.acts[0], api)
   const boss = state.enemies.find(enemy => enemy.originalCode === '05286b')
   assert.ok(boss, '安妮特应生成')
   assert.equal(boss.location, clutches.behavior && state.locations.find(location =>
     location.originalCode === '05302')?.id)
-  assert.equal(state.scenarioFlags.actBreaches, 2, '幕裂口随当前幕保留（移到下一张幕）')
+  assert.equal(actBreaches(state), 2, '幕裂口随当前幕保留（移到下一张幕）')
 })
 
 test('黑暗知识(二)背面：生成卡尔于银暮秘社(终焉之地)', () => {
@@ -441,14 +503,14 @@ test('幕 [fast]：移除本幕 3 个裂口 → 随机地点放 1 线索', () =>
   const state = stateFor(2)
   setup(state)
   const inv = state.investigators[0]
-  state.scenarioFlags.actBreaches = 4
+  setActBreaches(state, 4)
   const moves = clutches.behavior.actions(state, inv)
   const move = moves.find(candidate => candidate.rule === 'removeActBreaches')
   assert.ok(move, '幕上有 ≥3 裂口时应出现 [fast] 行动')
   assert.equal(move.actions, 0)
   const beforeClues = state.locations.reduce((sum, location) => sum + (location.clues || 0), 0)
   clutches.behavior.performAction(state, inv, move, apiFor(state))
-  assert.equal(state.scenarioFlags.actBreaches, 1)
+  assert.equal(actBreaches(state), 1)
   assert.equal(state.locations.reduce((sum, location) => sum + (location.clues || 0), 0), beforeClues + 1)
   assert.equal(clutches.behavior.actions(state, inv).some(candidate => candidate.rule === 'removeActBreaches'), false)
 })
@@ -475,6 +537,32 @@ test('敌人生成位置：秘社打手去裂口最多的地点，混沌见证�
   assert.equal(clutches.behavior.spawnLocation(state, '05311'), fewest.id)
 })
 
+test('enemySpawned 转发共享钩子：05095 在本章入场同样放置 1 个毁灭（旧实现静默失效）', () => {
+  const state = stateFor(2)
+  setup(state)
+  const enemy = { id: 'neophyte', code: '05095', originalCode: '05095', location: state.locations[0].id, doom: 0 }
+  state.enemies.push(enemy)
+  clutches.behavior.enemySpawned(state, enemy, apiFor(state, {
+    api: { doomOn: (card, amount = 1) => { card.doom = (Number(card.doom) || 0) + amount } },
+  }))
+  assert.equal(enemy.doom, 1, '共享组入场毁灭通过 ICC enemySpawned 转发生效')
+})
+
+test('enemyMoved 转发共享钩子：05100 移动后闹鬼授予跟随新地点', () => {
+  const state = stateFor(1)
+  setup(state)
+  const [from, to] = state.locations
+  state.investigators[0].location = from.id
+  const enemy = { id: 'mist', code: '05100', originalCode: '05100', location: from.id, hunter: true }
+  state.enemies.push(enemy)
+  const api = apiFor(state, { api: { grantHaunted: grant => { (state.hauntedGrants ||= []).push(grant) } } })
+  clutches.behavior.enemySpawned(state, enemy, api)
+  const before = (state.hauntedGrants || []).length
+  enemy.location = to.id
+  clutches.behavior.enemyMoved(state, enemy, from.id, api)
+  assert.ok((state.hauntedGrants || []).length > before, '移动后重新授予幽灵面的闹鬼能力')
+})
+
 // ---------------------------------------------------------------------------
 // 地点能力
 // ---------------------------------------------------------------------------
@@ -488,14 +576,14 @@ test('法兰西山：弃手牌/检定成功把裂口移到当前幕', () => {
   inv.location = hill.id
   fillBreaches(state, hill, 2)
   inv.hand.push('01020')
-  state.scenarioFlags.actBreaches = 0
+  setActBreaches(state, 0)
   const beforeBreaches = hill.breaches || 0
   const moves = clutches.behavior.actions(state, inv)
   const move = moves.find(candidate => candidate.rule.startsWith('loc'))
   assert.ok(move, '有裂口时应出现地点行动')
   clutches.behavior.performAction(state, inv, move, apiFor(state))
   assert.equal((hill.breaches || 0) < beforeBreaches, true, '裂口应被移除')
-  assert.equal(state.scenarioFlags.actBreaches >= 1, true, '裂口应被移到当前幕')
+  assert.equal(actBreaches(state) >= 1, true, '裂口应被移到当前幕')
 })
 
 test('南区教堂：提供撤退行动', () => {
@@ -527,7 +615,7 @@ test('商人区(3/0)：支付 2 资源把 1 个裂口移到当前幕', () => {
   clutches.behavior.performAction(state, inv, move, apiFor(state))
   assert.equal(inv.resources, 3)
   assert.equal(market.breaches, 1)
-  assert.equal(state.scenarioFlags.actBreaches, 1)
+  assert.equal(actBreaches(state), 1)
 })
 
 // ---------------------------------------------------------------------------
@@ -573,14 +661,20 @@ test('05312 不惮辛劳不惮烦：选择结算所在地点入侵', () => {
   assert.equal(hereLoc.doom, 1)
 })
 
-test('05312：选择重演遭遇弃牌堆最顶部的力量诡计', () => {
+test('05312：选择重演遭遇弃牌堆最顶部的力量诡计（就地结算，不经过抽牌）', () => {
   const state = stateFor(2)
   setup(state)
   const inv = state.investigators[0]
   state.encounterDiscard.push('05306')
-  const api = apiFor(state, { choices: ['power'] })
+  const replayed = []
+  const api = apiFor(state, {
+    choices: ['power'],
+    api: { replayEncounterRevelation: (seat, code) => replayed.push(code) },
+  })
   clutches.behavior.resolveEncounter(state, inv, { originalCode: '05312' }, api)
   assert.equal(api.log.some(text => text.includes('重演遭遇弃牌堆')), true)
+  assert.deepEqual(replayed, ['05306'], '调 api.replayEncounterRevelation 就地结算显现')
+  assert.equal(state.encounterDeck.includes('05306'), false, '不再把牌压回牌库顶重抽')
 })
 
 test('05310 异界之秘：按异教徒敌人上的毁灭放裂口；无目标时获得涌动', () => {
@@ -601,22 +695,23 @@ test('05310 异界之秘：按异教徒敌人上的毁灭放裂口；无目标�
   assert.equal(clutches.behavior.encounterGainsSurge(state), false)
 })
 
-test('05307 元初通道：附属随机地点并把裂口补到 3，可用意志检定关闭', () => {
+test('05307 元初通道：附属随机地点并把裂口补到 3，可用意志检定关闭（真实附属实例）', () => {
   const state = stateFor(2)
   setup(state)
   const inv = state.investigators[0]
   clutches.behavior.resolveEncounter(state, inv, { originalCode: '05307' }, apiFor(state))
-  const gateway = state.locations.find(location => location.primordialGateway === '05307')
-  assert.ok(gateway, '应附属到一个地点')
+  const gateway = state.locations.find(location =>
+    (location.attachments || []).some(item => item.code === '05307'))
+  assert.ok(gateway, '应有一个地点带有 05307 附属实例')
   assert.equal(gateway.breaches, 3)
+  assert.equal(gateway.primordialGateway, undefined, '不再用地点标记承载')
   inv.location = gateway.id
   const move = clutches.behavior.actions(state, inv).find(candidate => candidate.rule === 'closeGateway')
-  assert.ok(move)
-  clutches.behavior.performAction(state, inv, move, apiFor(state, {
-    testResult: { success: true, value: 4, difficulty: 4 },
-  }))
-  assert.equal(gateway.primordialGateway, undefined)
-  assert.ok(state.encounterDiscard.includes('05307'))
+  assert.ok(move, '文本空白期间仍可执行关闭通道行动')
+  const closeApi = apiFor(state, { testResult: { success: true, value: 4, difficulty: 4 } })
+  clutches.behavior.performAction(state, inv, move, closeApi)
+  assert.equal((gateway.attachments || []).some(item => item.code === '05307'), false, '关闭后附属实例被移除')
+  assert.ok(state.encounterDiscard.includes('05307'), '关闭后 05307 进入遭遇弃牌堆')
 })
 
 // ---------------------------------------------------------------------------
@@ -675,7 +770,7 @@ test('同一路线确定性 + 存档往返（JSON.stringify / deepEqual）', () 
       testResult: { success: false, value: 2, difficulty: 3 },
       random: rng.randomValue,
     }))
-    state.scenarioFlags.actBreaches = 2
+    setActBreaches(state, 2)
     clutches.behavior.actReveal(state, state.acts[0], apiFor(state))
     return state
   }
@@ -695,4 +790,250 @@ test('同一路线确定性 + 存档往返（JSON.stringify / deepEqual）', () 
   assert.doesNotThrow(() => clutches.behavior.afterTest(restored, inv, {
     success: false, difficulty: 3, value: 2, drawn: ['tablet'], cancelledTokens: [],
   }, apiFor(restored)))
+})
+
+// ---------------------------------------------------------------------------
+// Wave 1 修复回归：05285 / 05290 / 05292 / 05299 / 05300 / 05306 / 05309
+// ---------------------------------------------------------------------------
+const breachOrder = log => log.filter(text => text.startsWith('breach:')).map(text => text.slice(7))
+
+test('05285：人数+1 个裂口按队长选择的顺序逐处放置', () => {
+  const probeState = stateFor(2)
+  setup(probeState, { breaches: false })
+  const probeApi = apiFor(probeState)
+  probeState.doom = 1
+  clutches.behavior.doomPlacementReplacement(probeState, 1, probeApi)
+  const sampled = breachOrder(probeApi.log)
+  assert.equal(sampled.length, 3)
+
+  const state = stateFor(2)
+  setup(state, { breaches: false })
+  state.doom = 1
+  const reversed = [...sampled].reverse()
+  const api = apiFor(state, { choices: reversed })
+  clutches.behavior.doomPlacementReplacement(state, 1, api)
+  assert.deepEqual(breachOrder(api.log), reversed, '按队长每次选择的顺序放置')
+})
+
+test('05290 法兰西山（弃牌版）：只按意志图标计数，wild 图标不算', () => {
+  const state = stateFor(2)
+  setup(state)
+  const inv = state.investigators[0]
+  const hill = state.locations[0]
+  hill.originalCode = '05290'
+  hill.revealed = true
+  hill.breaches = 2
+  inv.location = hill.id
+  inv.hand = ['10133'] // 只有 1 个 wild 图标
+  setActBreaches(state, 0)
+  const move = clutches.behavior.actions(state, inv).find(candidate => candidate.rule === 'locDiscardIconBreach')
+  assert.ok(move)
+  clutches.behavior.performAction(state, inv, move, apiFor(state))
+  assert.equal(actBreaches(state), 1, 'wild 不加成：只移 1 个裂口')
+})
+
+test('05292 法兰西山（检定版）：只按智识图标计数，wild 图标不算', () => {
+  const state = stateFor(2)
+  setup(state)
+  const inv = state.investigators[0]
+  const hill = state.locations[1]
+  hill.originalCode = '05292'
+  hill.revealed = true
+  hill.breaches = 2
+  inv.location = hill.id
+  inv.hand = ['10133']
+  setActBreaches(state, 0)
+  const move = clutches.behavior.actions(state, inv).find(candidate => candidate.rule === 'locDiscardIconBreach')
+  assert.ok(move)
+  clutches.behavior.performAction(state, inv, move, apiFor(state))
+  assert.equal(actBreaches(state), 1, 'wild 不加成：只移 1 个裂口')
+})
+
+test('05299 南区教堂（弃支援版）：通过 leaveAsset 弃支援；无支援时行动不出现', () => {
+  const state = stateFor(2)
+  setup(state)
+  const inv = state.investigators[0]
+  const church = state.locations.find(location => location.originalCode === '05299')
+  const target = church || state.locations[2]
+  target.originalCode = '05299'
+  target.revealed = true
+  target.breaches = 2
+  inv.location = target.id
+  inv.assets.push({ id: 'asset-a', code: '01020' })
+  setActBreaches(state, 0)
+  const discarded = []
+  const api = apiFor(state, {
+    api: {
+      discardAsset: (seat, assetId) => {
+        discarded.push(assetId)
+        const holder = state.investigators[seat]
+        holder.assets = holder.assets.filter(asset => asset.id !== assetId)
+        return { id: assetId }
+      },
+    },
+  })
+  const move = clutches.behavior.actions(state, inv).find(candidate => candidate.rule === 'locSouthChurchAsset')
+  assert.ok(move)
+  clutches.behavior.performAction(state, inv, move, api)
+  assert.deepEqual(discarded, ['asset-a'], '弃支援走 api.discardAsset（引擎 leaveAsset 入口）')
+  assert.equal(actBreaches(state), 2, '此处裂口全部移到当前幕')
+  // 没有支援时：费用不可支付 → 行动不列出。
+  const moves = clutches.behavior.actions(state, inv)
+  assert.equal(moves.some(candidate => candidate.rule === 'locSouthChurchAsset'), false)
+  assert.ok(moves.some(candidate => candidate.rule === 'locResign'), '撤退仍可用')
+})
+
+test('05300 商人区（弃牌版）：弃到的弱点走抽牌管线（drawDiscard）结算', () => {
+  const state = stateFor(2)
+  setup(state)
+  const inv = state.investigators[0]
+  const market = state.locations.find(location => location.originalCode === '05300')
+  const target = market || state.locations[3]
+  target.originalCode = '05300'
+  target.revealed = true
+  target.breaches = 1
+  inv.location = target.id
+  inv.deck = ['10685', '01020', '01021', '01022', '01023'] // 弱点在牌库顶 5 张内
+  inv.discard = []
+  setActBreaches(state, 0)
+  const drawn = []
+  const api = apiFor(state, {
+    choices: ['5'],
+    api: {
+      drawDiscard: (seat, index) => {
+        const holder = state.investigators[seat]
+        const [code] = holder.discard.splice(index, 1)
+        holder.hand.push(code)
+        drawn.push(code)
+        return code
+      },
+    },
+  })
+  const move = clutches.behavior.actions(state, inv).find(candidate => candidate.rule === 'locMerchantDiscardTop')
+  assert.ok(move)
+  clutches.behavior.performAction(state, inv, move, api)
+  assert.deepEqual(drawn, ['10685'], '弱点经抽牌管线结算')
+  assert.ok(inv.hand.includes('10685'))
+  assert.equal((inv.discard || []).includes('10685'), false)
+  assert.equal(actBreaches(state), 1, '每 5 张移 1 个裂口')
+})
+
+test('05306 混沌幽现：失败者在 X 个不同地点里选择放置裂口的顺序', () => {
+  const probeState = stateFor(2)
+  setup(probeState, { breaches: false })
+  const probeApi = apiFor(probeState, { testResult: { success: false, value: 1, difficulty: 3 } })
+  clutches.behavior.resolveEncounter(probeState, probeState.investigators[0], { originalCode: '05306' }, probeApi)
+  const sampled = breachOrder(probeApi.log)
+  assert.equal(sampled.length, 2)
+
+  const state = stateFor(2)
+  setup(state, { breaches: false })
+  const reversed = [...sampled].reverse()
+  const api = apiFor(state, {
+    choices: reversed,
+    testResult: { success: false, value: 1, difficulty: 3 },
+  })
+  clutches.behavior.resolveEncounter(state, state.investigators[0], { originalCode: '05306' }, api)
+  assert.deepEqual(breachOrder(api.log), reversed, '按失败者选择的顺序放置')
+})
+
+test('05309 秘社打手：其所在地点的印刷文本视为空白（行动消失且不能执行）', () => {
+  const state = stateFor(2)
+  setup(state)
+  const inv = state.investigators[0]
+  const hill = state.locations[0]
+  hill.originalCode = '05290'
+  hill.revealed = true
+  hill.breaches = 2
+  inv.location = hill.id
+  inv.hand = ['01020']
+  assert.ok(clutches.behavior.actions(state, inv).some(candidate => candidate.rule === 'locDiscardIconBreach'))
+  const enforcer = { id: 'enforcer', code: '05309', originalCode: '05309', location: hill.id, doom: 0 }
+  state.enemies.push(enforcer)
+  assert.equal(clutches.behavior.actions(state, inv).some(candidate => candidate.rule === 'locDiscardIconBreach'),
+    false, '文本空白：地点行动不再列出')
+  assert.throws(() => clutches.behavior.performAction(state, inv, { rule: 'locDiscardIconBreach' }, apiFor(state)),
+    /未知混沌魔掌行动/)
+  // 敌人离开后恢复。
+  enforcer.location = state.locations[5].id
+  assert.ok(clutches.behavior.actions(state, inv).some(candidate => candidate.rule === 'locDiscardIconBreach'))
+})
+
+test('05284 异教徒标记（非检定揭示）：没有 afterTest 窗口时当场放裂口', () => {
+  const state = stateFor(2)
+  setup(state)
+  const inv = state.investigators[0]
+  const target = loc(state, inv.location)
+  fillBreaches(state, target, 2)
+  assert.equal(state.skillTest, undefined)
+  clutches.behavior.resolveChaosToken(state, inv, 'cultist', apiFor(state))
+  assert.equal(target.breaches, 3, '独立揭示（无检定）时立即放置，不丢失侧效')
+})
+
+test('05294 南区（弃牌版）：就地结算力量诡计的显现；无牌可弃时行动不可用', () => {
+  const state = stateFor(2)
+  setup(state)
+  const inv = state.investigators[0]
+  const south = state.locations.find(location => ['05294', '05295'].includes(location.originalCode))
+  const target = south || state.locations[0]
+  target.originalCode = '05294'
+  target.revealed = true
+  target.breaches = 1
+  inv.location = target.id
+  state.encounterDeck = ['01020', '05306', '01021', '01022'] // 牌库顶 = 末位，弃 3 张含 05306
+  state.encounterDiscard = []
+  setActBreaches(state, 0)
+  const replayed = []
+  const api = apiFor(state, {
+    api: { replayEncounterRevelation: (seat, code) => replayed.push(code) },
+  })
+  const move = clutches.behavior.actions(state, inv).find(candidate => candidate.rule === 'locSouthsideDiscard')
+  assert.ok(move)
+  clutches.behavior.performAction(state, inv, move, api)
+  assert.deepEqual(replayed, ['05306'], '选中的力量诡计就地结算显现（不经过抽牌窗口）')
+  assert.equal(actBreaches(state), 1, '南区 1 个裂口移到当前幕')
+  // 遭遇牌库空时不可用（即使弃牌堆有牌，也不再洗回牌库）。
+  state.encounterDeck = []
+  state.encounterDiscard = ['05306']
+  assert.equal(clutches.behavior.actions(state, inv).some(candidate => candidate.rule === 'locSouthsideDiscard'),
+    false)
+})
+
+test('05307 元初通道：地点本阶段已入侵过也照样补到正好 3 个裂口（不吃阶段保护提前停）', () => {
+  const state = stateFor(2)
+  setup(state)
+  const inv = state.investigators[0]
+  // 让本阶段所有在场地点都「已结算过入侵」，模拟旧实现会提前停的边界。
+  clutches.behavior.phaseBegan(state, state.phase)
+  state.scenarioFlags.incursionGuard = {
+    round: state.round, phase: state.phase, ids: state.locations.map(location => location.id),
+  }
+  clutches.behavior.resolveEncounter(state, inv, { originalCode: '05307' }, apiFor(state))
+  const gateway = state.locations.find(location =>
+    (location.attachments || []).some(item => item.code === '05307'))
+  assert.ok(gateway, '应有一个地点带有 05307 附属实例')
+  assert.equal(gateway.breaches, 3, '即使该地点本阶段已入侵过，也补到正好 3 个裂口')
+})
+
+// 05285：神话阶段的毁灭同样走 doomPlacementReplacement。runMythos 直接构造需要完整规则事务
+// （requestChoice 会因缺少 _resolution 抛「选择必须在规则事务中执行」），因此这里用
+// 「章节 hook 返回值契约 + turn.js 神话分支的代码契约断言」组合覆盖引擎集成点。
+test('05285：神话阶段「在当前密谋放 1 毁灭」走 doomPlacementReplacement（引擎契约 + 行为契约）', async () => {
+  const { readFileSync } = await import('node:fs')
+  const source = readFileSync('src/engine/turn.js', 'utf8')
+  const hookIndex = source.indexOf('doomPlacementReplacement?.(')
+  assert.ok(hookIndex > 0, '神话阶段必须询问章节替换钩子')
+  const branchStart = source.lastIndexOf('const skipMythosDoom', hookIndex)
+  const incrementIndex = source.indexOf('state.doom += 1', hookIndex)
+  assert.ok(incrementIndex > hookIndex, '先问替换钩子；只有返回 false 才执行 state.doom += 1')
+  assert.ok(branchStart > 0 && branchStart < hookIndex, '替换钩子位于神话阶段放置毁灭分支内')
+  // 行为契约：hook 返回 true、state.doom 不变、裂口已放（与引擎 addDoom 分支同一实现）。
+  const state = stateFor(2)
+  setup(state)
+  state.doom = 1
+  const before = breachTotal(state)
+  const api = apiFor(state)
+  assert.equal(clutches.behavior.doomPlacementReplacement(state, 1, api), true)
+  assert.equal(state.doom, 1, 'hook 返回 true 时引擎不写 state.doom')
+  assert.equal(breachTotal(state), before + 3, '替换为「人数+1」个地点的裂口')
 })

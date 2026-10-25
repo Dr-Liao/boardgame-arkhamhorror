@@ -13,7 +13,7 @@
 - 《敦威治遗产》状态为 `playable`，八章组成可从大厅启动的完整战役；规则仍采用本 Mod 的简化实现边界。
 - 《卡尔克萨之路》为 `playable`，沿用敦威治的卡包、章节、资源与验收目录契约；逐卡字面核对仍在迁移账本中跟踪。
 - 《失落的时代》为 `playable`（账本 `earlyAccess`）：十章组成可从大厅启动的战役，序幕按补给品点数购买补给、幕间按卡面划掉补给；逐张卡面字面核对仍在 `audit/tfa-migration.json` 的 `remaining` 清单与 `confirmations.scenarios[].checks.literalCardBehavior` 下跟踪。
-- 《万象无终》M0–M5 已交付（发布口径 `playable` + `earlyAccess`）：战役、9 章与 `tcuCampaign` 包可从大厅启动，`assertLaunchable` 通过；六位正式调查员可选人/可构筑，87 张玩家卡逐卡验收（85 张可构筑，83 张可入牌组进构筑界面与 TCU 战役起始牌组池；05314/05317 绑定副本与 2 张基础弱点只作依赖）。逐卡自动账本 `audit/tcu-all-card-acceptance.json` 377/377 verified；P10 逐卡行为审计 `audit/tcu-card-behavior-audit.json` 记录 143 match / 174 approximation / 60 gap，因此 `equivalenceCertified: false`、60 条 gap 逐卡在总账 remaining 中，未宣称规则等价。发布级证据（大厅→序章→章节实机路径、媒体资源、展示素材与 27 首 BGM）见 [docs/tcu-release.md](docs/tcu-release.md)；逐章证据见 `audit/tcu-scenario-acceptance.json`，整轮账本见 `audit/tcu-migration.json`。
+- 《万象无终》M0–M5 已交付（发布口径 `playable` + `earlyAccess`）：战役、9 章与 `tcuCampaign` 包可从大厅启动，`assertLaunchable` 通过；六位正式调查员可选人/可构筑，87 张玩家卡逐卡验收（85 张可构筑，83 张可入牌组进构筑界面与 TCU 战役起始牌组池；05314/05317 绑定副本与 2 张基础弱点只作依赖）。逐卡自动账本 `audit/tcu-all-card-acceptance.json` 377/377 verified；逐卡行为审计 `audit/tcu-card-behavior-audit.json` 在 2026-10-25 完成第七轮全量重跑（继续修复后重审 + 交叉复核 + Lead 裁决）：377 条记录 **363 match（登记已验收）/ 14 approximation / 0 gap**，因此 `equivalenceCertified: false`、14 条非 match 逐卡在总账 remaining 中，未宣称规则等价（已验收清单见 [docs/tcu-card-audit-round7.md](docs/tcu-card-audit-round7.md)；前几轮基线见 [round4](docs/tcu-card-audit-round4.md)、[round3](docs/tcu-card-audit-round3.md)）。发布级证据（大厅→序章→章节实机路径、媒体资源、展示素材与 27 首 BGM）见 [docs/tcu-release.md](docs/tcu-release.md)；逐章证据见 `audit/tcu-scenario-acceptance.json`，整轮账本见 `audit/tcu-migration.json`。
 - 目录收录不等于规则已实现；可选人、可构筑和可启动状态必须经过服务端许可与内容注册表校验。
 
 ## 2. 目录结构

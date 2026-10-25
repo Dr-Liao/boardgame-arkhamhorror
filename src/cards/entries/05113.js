@@ -11,6 +11,8 @@
 // 成功后的「移动到任意地点」用 api.moveEnemy；符号 → 下个补给阶段不重整写引擎已有的
 // enemy.preventReady 读点（phases.js 的重整段；引擎暂未提供 ctx.api 包装）。
 // 「只用于非精英」写成 playCondition：没有可躲避的非精英敌人时打不出去。
+// 卡面「躲避。」= Evade 行动关键字：按 05020/05118 同一写法在 played 描述子上声明
+// countsAs:'evade' + noOpportunityAttack（dispatch 的 playFlag 读点），不引发借机攻击。
 
 const TOWER_SYMBOLS = ['skull', 'cultist', 'tablet', 'elderthing']
 
@@ -28,6 +30,10 @@ export default {
   abilities: [
     {
       kind: 'played', label: '意志躲避非精英敌人，成功后移动到任意地点',
+      // 卡面「躲避。」= Evade 行动：本次打出不引发借机攻击（生命周期钩子的关键字读点是
+      // lifecycle.playFlag → dispatch.js 的 playNoAoO）。
+      countsAs: 'evade',
+      noOpportunityAttack: true,
       resolve: ({ state, inv, api }) => {
         const targets = evadableNonElite(state, inv)
         if (!targets.length) { api.info('没有可躲避的非精英敌人。'); return }

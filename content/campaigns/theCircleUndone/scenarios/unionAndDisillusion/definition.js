@@ -58,8 +58,9 @@ export const TREACHERY_CODES = Object.freeze({
 export const FATE_ENEMIES = Object.freeze({
   加弗瑞拉: { story: '05262', enemy: '05262b', ally: '05258', person: '05046', trail: 'theInvestigatorsAreOnGavriellasTrail', alive: 'gavriellaIsAlive', dead: 'gavriellaIsDead' },
   杰罗姆: { story: '05263', enemy: '05263b', ally: '05259', person: '05047', trail: 'theInvestigatorsAreOnJeromesTrail', alive: 'jeromeIsAlive', dead: 'jeromeIsDead' },
-  佩妮: { story: '05264', enemy: '05264b', ally: '05260', person: '05048', trail: 'theInvestigatorsAreOnPennysTrail', alive: 'pennyIsAlive', dead: 'pennyIsDead' },
-  瓦伦蒂诺: { story: '05265', enemy: '05265b', ally: '05261', person: '05049', trail: 'theInvestigatorsAreOnValentinosTrail', alive: 'valentinoIsAlive', dead: 'valentinoIsDead' },
+  // 05048 = 瓦伦蒂诺·里瓦斯、05049 = 佩妮·怀特（旧实现把两张失踪人口的记录键对调了）。
+  佩妮: { story: '05264', enemy: '05264b', ally: '05260', person: '05049', trail: 'theInvestigatorsAreOnPennysTrail', alive: 'pennyIsAlive', dead: 'pennyIsDead' },
+  瓦伦蒂诺: { story: '05265', enemy: '05265b', ally: '05261', person: '05048', trail: 'theInvestigatorsAreOnValentinosTrail', alive: 'valentinoIsAlive', dead: 'valentinoIsDead' },
 })
 export const FATE_LIST = Object.freeze(Object.entries(FATE_ENEMIES).map(([name, data]) => ({ name, ...data })))
 export const THE_SPECTRAL_WATCHER = '05086'

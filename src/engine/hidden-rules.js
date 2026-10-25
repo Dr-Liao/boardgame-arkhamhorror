@@ -1,4 +1,4 @@
-// hidden-rules.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
+﻿// hidden-rules.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 「隐私卡 / 文本空白 / 布尔规则」的读点：隐藏卡（hidden）、被清空的调查员/敌人文本、
 // 敌人能否攻击/被攻击/引发借机攻击，以及移动前的禁止判定。
 export function createHiddenRules(deps) {
@@ -73,7 +73,7 @@ export function createHiddenRules(deps) {
       item.rule.cannotFightTraits?.some(trait => traits.includes(String(trait).toLowerCase())))
   }
 
-  function movementError(state, inv) {
+  function movementError(state, inv, destinationId = null) {
     // Phase 2（C1）：capability:move —— 「不能移动」由卡面声明，引擎只问读点。
     if (capabilityBlocked(state, inv, 'move')) return '当前效果禁止你移动'
     // 「本轮不能离开本地点」（03256 堵塞通道）：地点实例上的轮次标记是全阶段读点。
@@ -81,12 +81,18 @@ export function createHiddenRules(deps) {
     if (currentLocation?.cannotLeaveRound === state.round) {
       return `本轮不能离开「${currentLocation.name || currentLocation.id}」`
     }
+    // 2026-10-25 本循环修复 movement-error-destination-all-phases（05053/05054）：
+    // 剧本级移动限制在任何阶段都生效（含效果位移），并携带目标地点；此前只在调查阶段、
+    // 且不传目标地点，导致「不能移动到某调查员所在地点」在效果移动/神话阶段被绕过。
+    const destination = destinationId == null
+      ? null : state.locations?.find(location => location.id === destinationId) || null
+    const scenarioError = scenarioBehavior(state).movementError?.(state, inv, destination, destinationId) || null
+    if (scenarioError) return scenarioError
     if (state.phase !== 'investigation' || !state.turnSerial) return null
     const maximum = Math.min(...activeHiddenRules(state, inv)
       .map(item => item.rule.maxMovesPerTurn).filter(Number.isFinite), Infinity)
     return Number.isFinite(maximum) && inv.hiddenMoves?.turnSerial === state.turnSerial
-      && inv.hiddenMoves.count >= maximum ? '隐私牌限制你本回合不能再次移动'
-      : scenarioBehavior(state).movementError?.(state, inv) || null
+      && inv.hiddenMoves.count >= maximum ? '隐私牌限制你本回合不能再次移动' : null
   }
 
   function currentInv(state) {

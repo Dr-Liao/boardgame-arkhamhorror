@@ -117,7 +117,12 @@ export function createHarmThreat(deps) {
     const soaks = direct ? [] : state.investigators
       .filter(other => other !== inv && !other.defeated && !other.resigned && other.location === inv.location)
       .flatMap(other => other.assets
-        .filter(asset => assetEffect(other, asset)?.passive?.assignHarmAtLocation)
+        // 2026-10-25 第四轮修复 05109：assignHarmAtLocation 可限定只接伤害或只接恐惧
+        // （true = 两者都接；'damage' / 'horror' = 只接对应类型）。
+        .filter(asset => {
+          const passive = assetEffect(other, asset)?.passive?.assignHarmAtLocation
+          return passive === true || passive === kind
+        })
         .map(asset => ({ asset, owner: other })))
     let locked = null
     for (let i = 0; i < amount; i++) {
@@ -141,7 +146,8 @@ export function createHarmThreat(deps) {
       // Phase 5（5b-7）：「沉静」与「redirectOneHorrorToSelf」也可以写在能力层条目上（读点走 assetEffect）。
       const mandatory = kind === 'horror' && assets.filter(asset => (assetEffect(inv, asset)?.composure)
         || ((assetEffect(inv, asset)?.redirectOneHorrorToSelf) && !(assignments.get(asset) > 0)))
-      if (mandatory?.length) assets = mandatory
+      // 2026-10-25 第七轮修复 05236：不再把候选收窄到「沉静」支援本身——其他己方支援也可先承接，
+      // 只需保证在调查员卡之前（mandatory 存在时不提供「由调查员承受」选项）。
       const candidates = assets.length || soaks.length
         ? requestChoice(state, { kind: 'assign-' + kind, source: 'harm', seat: inv.seat,
           prompt: `分配 1 点${kind === 'damage' ? '伤害' : '恐惧'}（剩余 ${amount - i}）。`,
@@ -216,6 +222,12 @@ export function createHarmThreat(deps) {
       inv.deck.push(entry.replacementCode)
       info(state, events, `📜 「${cardName(code)}」仍在你手中：移出牌库，换成「${cardName(entry.replacementCode)}」。`)
     }
+    // 2026-10-25 第四轮修复 05012：退场时仍在手牌中的弱点 → 1 点精神创伤
+    // （卡面「游戏结束或你退场时」；游戏结束分支在 campaign-flow.finishScenario 里）。
+    if ((inv.hand || []).some(code => registeredEntry(code)?.traumaAtGameEndWhenInHand === true)) {
+      if (state.campaign?.trauma?.[inv.seat]) state.campaign.trauma[inv.seat].mental += 1
+      info(state, events, `${inv.name} 退场时手牌中的弱点令其承受 1 点精神创伤。`)
+    }
     // 本地点有调查员被击败（04026 彩饰骷髅），其他调查员可触发。
     for (const other of state.investigators.filter(item =>
       item !== inv && !item.defeated && !item.resigned && item.location === inv.location)) {
@@ -287,7 +299,11 @@ export function createHarmThreat(deps) {
     }
     if (damageLethal || horrorLethal) {
       inv.defeated = true
-      inv.defeatCause = damageLethal && horrorLethal ? 'both' : damageLethal ? 'damage' : 'horror'
+      // 2026-10-25 第四轮修复 05275：内容可以在致败伤害前预设 defeatCause（如 'card'），
+      // 此时不要用伤害/恐惧类型覆盖（否则战役结局会补算错误的创伤类型）。
+      if (!inv.defeatCause) {
+        inv.defeatCause = damageLethal && horrorLethal ? 'both' : damageLethal ? 'damage' : 'horror'
+      }
       eliminateInvestigator(state, inv, events)
       info(state, events, `💀 ${inv.name} 被击败了！`)
       checkOutcome(state, events)
@@ -539,16 +555,58 @@ export function createHarmThreat(deps) {
   //     「它上面的恐惧可以如同在卡洛琳身上一样被治愈 / 你不能治愈其他卡牌上的恐惧」；
   //   · 真正治疗了 ≥1 点时开 `horrorHealed` 窗口，只有治疗方（healerSeat）的卡面反应会响应。
   // -------------------------------------------------------------------------
+  // 2026-10-25 第七轮修复 05007：当前正在开的 horrorHealed 窗口帧（追加治疗不重开窗口）。
+  let healFrame = null
+
+  function extendHealHorror(state, seat, amount, events = []) {
+    const extra = Math.max(0, Math.floor(Number(amount) || 0))
+    if (!healFrame || extra <= 0) return 0
+    if (Number.isInteger(seat) && healFrame.seat !== seat) return 0
+    let healed = 0
+    if (healFrame.useSink && healFrame.sink && (healFrame.sink.counters || 0) > 0) {
+      healed = Math.min(healFrame.sink.counters, extra)
+      healFrame.sink.counters -= healed
+      info(state, events, `💚 追加治疗「${cardName(healFrame.sink.code)}」上的 ${healed} 点恐惧。`)
+      if (!healFrame.sink.counters) removeThreat(state, healFrame.owner, healFrame.sink, events)
+    } else {
+      const target = healFrame.target
+      const before = target?.horror || 0
+      healed = Math.min(before, extra)
+      if (healed > 0) {
+        target.horror = before - healed
+        info(state, events, `💚 追加治疗 ${healed} 点恐惧。`)
+      }
+    }
+    healFrame.context.amount = (healFrame.context.amount || 0) + healed
+    return healed
+  }
+
   function healHorrorFrom(state, target, amount, events, options = {}) {
     const healedAmount = Math.max(0, Math.floor(Number(amount) || 0))
     if (!target || !healedAmount) return 0
     const isInvestigator = target.seat != null && target.name != null
     const owner = isInvestigator ? target : options.owner
     if (!owner) return 0
-    const healerSeat = options.healerSeat ?? owner.seat
-    // 「理性思考」（05008）：威胁卡上的恐惧优先被治疗，且其他卡牌的恐惧不能被治疗。
+    const healerSeat = options.healerSeat ?? (Number.isInteger(state._resolvingSeat) ? state._resolvingSeat : owner.seat)
+    // 2026-10-25 第七轮修复 05008：治疗发起者的「不能治愈其它卡牌恐惧」限制。
+    const healer = state.investigators?.[healerSeat]
+    const blockedByHealer = (healer?.threat || []).some(card => registeredEntry(card.code)?.blockHealOtherCards === true)
     const sink = (owner.threat || []).find(card => registeredEntry(card.code)?.threatHorrorSink)
-    if (sink && (sink.counters || 0) > 0 && !options.ignoreSink) {
+    if (blockedByHealer && !isInvestigator && (!sink || target.id !== sink.id)) {
+      if (options.log !== false) info(state, events, `⛔ ${healer?.name || '治疗者'} 不能治愈其他卡牌上的恐惧。`)
+      return 0
+    }
+    // 05008：「如同在卡洛琳身上一样治愈」是可选的改道。
+    let useSink = Boolean(sink && (sink.counters || 0) > 0 && !options.ignoreSink)
+    if (useSink && registeredEntry(sink.code)?.redirectHeal?.optional === true && healer) {
+      const answer = requestChoice(state, {
+        kind: 'reaction', source: sink.code, seat: healerSeat, canSkip: true,
+        prompt: `${healer.name}：是否把本次治疗改为治愈「${cardName(sink.code)}」上的恐惧？`,
+        options: [{ id: 'skip', label: '不，治疗原目标' }, { id: 'redirect', label: `改为治愈「${cardName(sink.code)}」` }],
+      })
+      useSink = answer === 'redirect'
+    }
+    if (sink && useSink) {
       const healed = Math.min(sink.counters, healedAmount)
       sink.counters -= healed
       if (options.log !== false) info(state, events, `💚 ${owner.name} 治疗了「${cardName(sink.code)}」上的 ${healed} 点恐惧（剩 ${sink.counters}）。`)
@@ -556,7 +614,11 @@ export function createHarmThreat(deps) {
         removeThreat(state, owner, sink, events)
         if (options.log !== false) info(state, events, `「${cardName(sink.code)}」上的恐惧被治愈，弃掉它。`)
       }
-      openHealedWindow(healed)
+      // 05008 overflow:'discard'：超出该汇点的治疗量直接丢弃（不回流到其它目标）。
+      if (healed < healedAmount && registeredEntry(sink.code)?.overflow === 'discard') {
+        if (options.log !== false) info(state, events, `超出「${cardName(sink.code)}」剩余恐惧的 ${healedAmount - healed} 点治疗被丢弃。`)
+      }
+      openHealedWindow(healed, true)
       return healed
     }
     if (sink && !isInvestigator) return 0
@@ -565,25 +627,32 @@ export function createHarmThreat(deps) {
     if (!healed) return 0
     target.horror = before - healed
     if (options.log !== false) info(state, events, `💚 ${targetLabel()} 治疗了 ${healed} 点恐惧。`)
-    openHealedWindow(healed)
+    openHealedWindow(healed, false)
     return healed
 
     function targetLabel() {
       return isInvestigator ? target.name : `${owner.name} 的「${cardName(target.code)}」`
     }
 
-    function openHealedWindow(amountHealed) {
-      reactionWindow(state, 'horrorHealed', {
+    function openHealedWindow(amountHealed, usedSink = false) {
+      const context = {
         when: 'horrorHealed',
         seat: healerSeat,
         cardSeat: healerSeat,
         location: owner.location,
-        cardCode: options.cardCode || null,
+        cardCode: options.cardCode ?? state._resolvingCardCode ?? null,
         healedSeat: owner.seat,
         assetId: isInvestigator ? null : target.id,
         amount: amountHealed,
         prompt: `${owner.name} 的恐惧被治疗 ${amountHealed} 点`,
-      }, events)
+      }
+      const previousFrame = healFrame
+      healFrame = { seat: healerSeat, owner, target, sink: usedSink ? sink : null, useSink: usedSink, context }
+      try {
+        reactionWindow(state, 'horrorHealed', context, events)
+      } finally {
+        healFrame = previousFrame
+      }
     }
   }
 
@@ -600,5 +669,5 @@ export function createHarmThreat(deps) {
     return doInvestigate(state, seat, { baseValue: 4 }, events, true)
   }
 
-  return { hasTomeAsset, getThreatEffect, availableThreatAbilities, assetsCannotReady, drawBlocked, removeThreat, HARM_STRATEGIES, assignHarm, triggerThreatForced, applyThreatForced, unpaidExtraActionThreats, payActionCost, defeatAll, eliminateInvestigator, checkDefeated, checkOutcome, disengageAll, canDisengage, targetedTest, investigateForResources, dealDamageAll, dealDamageExhausted, blankEnemy, ignoreChaos, returnAssetToHand, shuffleIntoEncounter, moveHorrorToInvestigator, damagedTargetsAtLocation, healDamageAtLocation, recordResearch, researchSolution, healHorrorNearby, healHorrorFrom, dukeInvestigate }
+  return { hasTomeAsset, getThreatEffect, availableThreatAbilities, assetsCannotReady, drawBlocked, removeThreat, HARM_STRATEGIES, assignHarm, triggerThreatForced, applyThreatForced, unpaidExtraActionThreats, payActionCost, defeatAll, eliminateInvestigator, checkDefeated, checkOutcome, disengageAll, canDisengage, targetedTest, investigateForResources, dealDamageAll, dealDamageExhausted, blankEnemy, ignoreChaos, returnAssetToHand, shuffleIntoEncounter, moveHorrorToInvestigator, damagedTargetsAtLocation, healDamageAtLocation, recordResearch, researchSolution, healHorrorNearby, healHorrorFrom, extendHealHorror, dukeInvestigate }
 }

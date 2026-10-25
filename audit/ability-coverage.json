@@ -7,12 +7,12 @@
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
     "descriptorEntries": 572,
-    "descriptorAbilities": 516,
+    "descriptorAbilities": 527,
     "abilityKinds": 12,
-    "windows": 66,
+    "windows": 74,
     "effectPrimitives": 56,
-    "nonPlayerCards": 25,
-    "behaviorLines": 21878,
+    "nonPlayerCards": 26,
+    "behaviorLines": 23377,
     "declaredScenarios": 3
   },
   "channels": {
@@ -23,7 +23,7 @@
     "byScope": {
       "enemy": 15,
       "location": 6,
-      "storyAsset": 4
+      "storyAsset": 5
     },
     "codes": [
       "03096",
@@ -42,6 +42,7 @@
       "04328",
       "04335",
       "05017",
+      "05150",
       "05258",
       "05259",
       "05260",
@@ -52,7 +53,7 @@
       "wolfManDrew",
       "youngDeepOne"
     ],
-    "abilities": 9,
+    "abilities": 10,
     "modifiers": 27
   },
   "declaration": {
@@ -101,7 +102,7 @@
       "content/campaigns/thePathToCarcosa/scenarios/thePallidMask/behavior.js",
       "content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/behavior.js"
     ],
-    "behaviorLines": 21878,
+    "behaviorLines": 23377,
     "declaredScenarios": 3
   },
   "cards": [
@@ -2487,7 +2488,7 @@
     {
       "code": "05012",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "05013",
@@ -2517,7 +2518,7 @@
     {
       "code": "05019",
       "channel": "descriptor",
-      "descriptors": 4
+      "descriptors": 3
     },
     {
       "code": "05020",
@@ -2582,7 +2583,7 @@
     {
       "code": "05032",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "05033",
@@ -2627,7 +2628,7 @@
     {
       "code": "05041",
       "channel": "descriptor",
-      "descriptors": 2
+      "descriptors": 1
     },
     {
       "code": "05042",
@@ -2667,7 +2668,7 @@
     {
       "code": "05111",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 3
     },
     {
       "code": "05112",
@@ -2742,12 +2743,12 @@
     {
       "code": "05157",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "05158",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "05159",
@@ -2842,7 +2843,7 @@
     {
       "code": "05234",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 3
     },
     {
       "code": "05235",
@@ -2852,7 +2853,7 @@
     {
       "code": "05236",
       "channel": "descriptor",
-      "descriptors": 0
+      "descriptors": 1
     },
     {
       "code": "05237",
@@ -2882,7 +2883,7 @@
     {
       "code": "05277",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 3
     },
     {
       "code": "05278",
@@ -2892,7 +2893,7 @@
     {
       "code": "05279",
       "channel": "descriptor",
-      "descriptors": 2
+      "descriptors": 1
     },
     {
       "code": "05280",
@@ -2957,12 +2958,12 @@
     {
       "code": "05321",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "05322",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "05323",

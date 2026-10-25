@@ -159,9 +159,10 @@ export const UNKNOWN_PLACES_WITH_RUINS = Object.freeze([...UNKNOWN_PLACES, 'witc
 const DECK_GROUPS = [
   'theSecretName', 'cityOfSins', 'inexorableFate', 'realmOfDeath', 'witchcraft',
 ]
-// 放一边：那赫卜、黑书、2 张鬼影骤现（章节 05144 全部副本）。布朗·詹金也可被「找出」，
-// 因此定义里保留他的印刷数据，但同样列在 set aside 区（manifest 张数一致）。
-const SET_ASIDE_CODES = new Set([NAHAB, BROWN_JENKIN, THE_BLACK_BOOK, GHOSTLY_PRESENCE])
+// 放一边：那赫卜、黑书、2 张鬼影骤现（章节 05144 全部副本）。布朗·詹金在遭遇牌库
+// （参考 setupTheSecretName：只把 Nahab placeEnemy OutOfPlay SetAsideZone；第 43/46 行
+// 的「找出」用 findEncounterCard/findUniqueCard 从牌库/弃牌堆/场外取）。
+const SET_ASIDE_CODES = new Set([NAHAB, THE_BLACK_BOOK, GHOSTLY_PRESENCE])
 // 老鼠遭遇组只有 Swarm of Rats（01159，数量 3）：encounterDeck 会按印刷 quantity 展开。
 const rats = ALL_CARDS[SWARM_OF_RATS]
 const deckCards = [
@@ -170,7 +171,7 @@ const deckCards = [
 ]
 const definitions = encounterDefinitions([
   ...deckCards,
-  ALL_CARDS[NAHAB], ALL_CARDS[BROWN_JENKIN],
+  ALL_CARDS[NAHAB],
   // 2 张鬼影骤现：背面/后续效果把它们洗入遭遇牌库，因此定义里必须有它们。
   ALL_CARDS[GHOSTLY_PRESENCE], ALL_CARDS[GHOSTLY_PRESENCE],
 ])

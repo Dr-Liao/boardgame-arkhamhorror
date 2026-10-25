@@ -9,5 +9,5 @@ export default {
   "code": "05228",
   "scope": "storyAsset",
   "implemented": true,
-  "note": "behavior.js:attachPuzzleBox/givePuzzleBoxTo/investigatorEliminated/actions(rule=puzzleBoxAction)/resolution(campaignCard)"
+  "note": "behavior.js:attachPuzzleBox/givePuzzleBoxTo/investigatorEliminated/actions(rule=puzzleBoxAction, noOpportunityAttackFrom=[05086])/resolution(campaignCard)"
 };

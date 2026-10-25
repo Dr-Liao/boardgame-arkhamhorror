@@ -64,25 +64,64 @@ export function factionOf(state) {
   return 'coven'
 }
 
+// 05241/05242：「火盆已点燃」用地点实例上的 [资源标记] 承载（markers = ['brazier']）；
+// 引擎 api.addMarker/removeMarker 写同一份实例数据（src/engine/scenario-runtime.js）。
+const BRAZIER_MARKER = 'brazier'
+
 export function brazierLit(state, locationId) {
   const location = locById(state, locationId)
   if (!location) return false
+  if (Array.isArray(location.markers) && location.markers.includes(BRAZIER_MARKER)) return true
+  // 旧存档/旧测试的 flags 回退读点（markers 为权威）。
   if (typeof location.flags?.brazier === 'boolean') return location.flags.brazier
   return location.litBrazier === true
 }
 
 export function setBrazier(state, api, locationId, lit) {
   const location = locById(state, locationId)
-  if (typeof api?.setLocationFlag === 'function') api.setLocationFlag(locationId, 'brazier', lit)
-  else if (location) {
-    location.flags ||= {}
-    location.flags.brazier = lit
+  if (!location) return lit
+  // 先清空旧的「已点燃」标记，再按目标状态放置 1 个资源标记。
+  while (Array.isArray(location.markers) && location.markers.includes(BRAZIER_MARKER)) {
+    if (typeof api?.removeMarker === 'function') api.removeMarker(location, BRAZIER_MARKER)
+    else location.markers.splice(location.markers.indexOf(BRAZIER_MARKER), 1)
   }
+  if (lit) {
+    if (typeof api?.addMarker === 'function') api.addMarker(location, BRAZIER_MARKER)
+    else { location.markers ||= []; location.markers.push(BRAZIER_MARKER) }
+  }
+  // 旧读点镜像（净状态同一份；markers 为权威载体）。
+  location.flags ||= {}
+  location.flags.brazier = lit
   return lit
 }
 
 function brazierVariant(lit) {
-  return lit ? { flags: { brazier: true } } : {}
+  if (!lit) return {}
+  // 入场即点燃：variant 会展开到地点实例，直接带 1 个火盆资源标记。
+  return { markers: [BRAZIER_MARKER], flags: { brazier: true } }
+}
+
+// 05239：「被偷走的灵魂」= 看守人身上的 [资源标记]（markers = ['stolenSoul']），
+// 与 enemy.lostSouls 数值同源；看守人不在场时先记 scenarioFlags.watcherSouls，入场时补标记。
+const SOUL_MARKER = 'stolenSoul'
+
+function soulMarkersOf(enemy) {
+  return (enemy?.markers || []).filter(label => label === SOUL_MARKER).length
+}
+
+function syncWatcherSoulMarkers(state, watcher, count, api) {
+  if (!watcher) return 0
+  const target = Math.max(0, Number(count) || 0)
+  while (Array.isArray(watcher.markers) && watcher.markers.includes(SOUL_MARKER)) {
+    if (typeof api?.removeMarker === 'function') api.removeMarker(watcher, SOUL_MARKER)
+    else watcher.markers.splice(watcher.markers.indexOf(SOUL_MARKER), 1)
+  }
+  for (let index = 0; index < target; index += 1) {
+    if (typeof api?.addMarker === 'function') api.addMarker(watcher, SOUL_MARKER)
+    else { watcher.markers ||= []; watcher.markers.push(SOUL_MARKER) }
+  }
+  watcher.lostSouls = target
+  return target
 }
 
 // 放置未访之岛 / 灵怪陷阱：入场时未揭示，附加火盆初始状态（女巫集会点燃）。
@@ -138,6 +177,10 @@ function spawnFateEnemy(state, api, fate, inv, exhausted) {
       if (holder) holder.engaged = (holder.engaged || []).filter(id => id !== enemy.id)
     }
     enemy.engagedSeat = null
+  } else if (enemy && inv && typeof api?.engage === 'function') {
+    // 05262-05265 背面：翻回敌人面的命运敌人「与你交战」——引擎生成时的 autoEngageAt 按猎物关键词
+    // 选人，可能选到别人；这里显式与「结算这张命运卡的调查员」交战（engageEnemy 会清理旧交战者）。
+    api.engage(enemy, inv.seat)
   }
   return enemy
 }
@@ -212,23 +255,38 @@ export const CIRCLE_ACTIONS = Object.freeze({
 })
 
 // 05243–05248 正面 [fast]：阵法行动期间花 1 线索，使本次技能检定难度 -2。
+// R4：改为真正的 [fast] 玩家窗口能力——由 behavior.fastActions 在任何玩家窗口提供
+// （playerWindow 读点 src/engine/encounter.js:469-476）。这里保留函数签名（两处 api.test 仍调用），
+// 只返回基础难度，实际降难度在 performAction('circleFast') 里结算。
 function circleTestDifficulty(state, inv, base, api) {
-  if (!FAST_CIRCLE_ACTS.includes(actCodeOf(state)) || (inv?.clues || 0) < 1) return base
-  let answer = 'skip'
-  if (typeof api?.choose === 'function') {
-    answer = api.choose({
-      kind: 'circle', source: actCodeOf(state), seat: inv.seat,
-      prompt: '阵法行动期间：花 1 个线索使本次技能检定难度 -2？',
-      options: [
-        { id: 'spend', label: '花 1 个线索（难度 -2）' },
-        { id: 'skip', label: '不花线索' },
-      ],
-    })
-  }
-  if (answer !== 'spend') return base
-  inv.clues -= 1
-  api?.info?.('花 1 个线索：本次阵法检定的难度 -2。')
-  return Math.max(0, base - 2)
+  return base
+}
+
+// [fast] 的可用性：存在进行中的阵法行动检定、当前幕是本轮修复的六个 [fast] 幕、该调查员有线索，
+// 且本次检定尚未由该调查员触发过（同一检定每人一次，避免同一窗口反复询问）。
+function circleFastAvailable(state, inv) {
+  const test = state.skillTest
+  if (!test || String(test.actionKind || '') !== 'circle') return false
+  if (!FAST_CIRCLE_ACTS.includes(actCodeOf(state))) return false
+  if (!inv || (inv.clues || 0) < 1) return false
+  return !test.circleFastUsed?.[inv.seat]
+}
+
+function markCircleFastUsed(state, inv) {
+  state.skillTest ||= {}
+  state.skillTest.circleFastUsed ||= {}
+  state.skillTest.circleFastUsed[inv.seat] = true
+}
+
+// 「本次技能检定难度 -N」：优先走引擎 api；没有时写引擎同名读点
+// （tests.js:837-838 在判定前统一扣减 state.skillTest.difficultyReduction）。
+function reduceCurrentTestDifficulty(state, api, amount) {
+  if (typeof api?.reduceTestDifficulty === 'function') return api.reduceTestDifficulty(amount)
+  const test = state.skillTest
+  if (!test) return 0
+  test.difficultyReduction = (test.difficultyReduction || 0) + amount
+  test.difficulty = Math.max(0, (test.difficulty || 0) - amount)
+  return test.difficulty
 }
 
 export const implementedEncounterCodes = [
@@ -248,6 +306,7 @@ export const behavior = {
   // 读点（测试 / UI / 其它 worker）
   factionOf,
   brazierLit,
+  setBrazier,
   litIsles,
   actVersionFor,
   CIRCLE_ACTIONS,
@@ -300,6 +359,9 @@ export const behavior = {
       THE_SPECTRAL_WATCHER, '05087', '05087',
       COVEN_INITIATE, COVEN_INITIATE, COVEN_INITIATE, '05091',
       LODGE_NEOPHYTE, LODGE_NEOPHYTE, LODGE_NEOPHYTE, KEEPER_OF_SECRETS, '05097', '05097',
+      // 参考 setup 还把安妮特与约瑟夫放在一边：05243 背面按记录生成安妮特/把剩余女巫敌人洗回，
+      // 05245 背面按「约瑟夫依然健在」生成他。spawnPrinted 会同步从 setAside 消耗对应卡。
+      ANETTE_MASON, JOSEF_MEIGER,
       ...FATE_LIST.map(fate => fate.ally).filter(code => {
         const fate = FATE_LIST.find(entry => entry.ally === code)
         return !Array.isArray(records.missingPersons) || records.missingPersons.length === 0
@@ -351,8 +413,8 @@ export const behavior = {
   },
 
   // 05242「每位调查员不能离开自己面前的地点」：以 05241 背面记录的 flags.frontOf 为准。
-  // 引擎在移动行动（moves.js:649-656）与合法动作列表读这个钩子；效果位移由 movementError 通道处理
-  // （本仓库没有对效果位移的章节钩子，登记为近似）。
+  // 引擎在移动行动（moves.js）与合法动作列表读 moveError；任何位移（含效果位移）读 movementError
+  // （src/engine/hidden-rules.js:85-91 → src/engine/movement.js:181），第四轮起全阶段生效。
   moveError(state, inv, destLoc) {
     if (actCodeOf(state) !== ACT_FATED_SOULS) return undefined
     const fronts = state.scenarioFlags?.frontOf || {}
@@ -361,9 +423,39 @@ export const behavior = {
     return '你被钉在自己面前的地点：本幕你不能离开它。'
   },
 
+  movementError(state, inv) {
+    if (actCodeOf(state) !== ACT_FATED_SOULS) return undefined
+    const fronts = state.scenarioFlags?.frontOf || {}
+    if (Number(fronts[inv?.location]) !== Number(inv?.seat)) return undefined
+    return '你被钉在自己面前的地点：本幕你不能离开它。'
+  },
+
+  // 05246/05248 的 [fast]：任意调查员在「阵法行动」的检定期可花自己的 1 个线索，使本次难度 -2。
+  // R4：引擎 playerWindow 支持 behavior.fastActions(state, inv, timing)（src/engine/encounter.js:469-476），
+  // 检定者本人与其他玩家的通用窗口统一走 fastActions；非检定者在检定进行中没有通用玩家窗口，
+  // 仍由引擎 testOtherInvestigatorTrigger 固定时点询问（src/engine/tests.js:181-193）。
+  // 两条路径共用 circleFastUsed 标记，同一检定每人只触发一次。
+  fastActions(state, inv, timing) {
+    if (!circleFastAvailable(state, inv)) return []
+    return [{
+      action: 'scenarioAction', rule: 'circleFast', actions: 0, fast: true,
+      label: '⚡ 阵法行动：花你自己的 1 个线索，本次技能检定难度 -2',
+    }]
+  },
+
   // 阵法行动：任何有火盆且已揭示的地点。
   actions(state, inv) {
     const moves = []
+    // 05246 背面：「本局剩余时间，调查员不能与约瑟夫·梅吉尔谈判」——谈判行动只在未封锁时列出，
+    // 封锁标记以 flags.noParleyJosef 为唯一读点（生成约瑟夫时写入）。
+    const josef = (state.enemies || []).find(enemy =>
+      String(original(enemy)) === JOSEF_MEIGER && enemy.location === inv?.location)
+    if (josef && !state.scenarioFlags?.noParleyJosef) {
+      moves.push({
+        action: 'scenarioAction', rule: 'parleyJosef', actions: 1,
+        label: '🕊️ 谈判约瑟夫·梅吉尔（智识 4）：成功翻面结算「约瑟夫的计划」',
+      })
+    }
     const location = here(state, inv)
     if (!location || !location.revealed) return moves
     const code = original(location)
@@ -377,6 +469,43 @@ export const behavior = {
   },
 
   performAction(state, inv, move, api) {
+    if (move?.rule === 'circleFast') {
+      // [fast]：只在「进行中的阵法行动检定」期间可结算；由玩家窗口/固定时点两条路径进来。
+      const test = state.skillTest
+      if (!test || String(test.actionKind || '') !== 'circle') {
+        api?.info?.('只有在阵法行动的技能检定期间才能使用这个 [fast] 能力。')
+        return true
+      }
+      if (test.circleFastUsed?.[inv.seat]) {
+        api?.info?.('本次阵法检定你已经花过线索了。')
+        return true
+      }
+      if ((inv.clues || 0) < 1) {
+        api?.info?.('没有线索可以花费。')
+        return true
+      }
+      markCircleFastUsed(state, inv)
+      if (typeof api?.spendClues === 'function') api.spendClues(inv.seat, 1)
+      else inv.clues = Math.max(0, (inv.clues || 0) - 1)
+      reduceCurrentTestDifficulty(state, api, 2)
+      api?.info?.(`${inv.name} 花 1 个线索：本次阵法检定难度 -2。`)
+      return true
+    }
+    if (move?.rule === 'parleyJosef') {
+      const josef = (state.enemies || []).find(enemy => String(original(enemy)) === JOSEF_MEIGER)
+      if (!josef || state.scenarioFlags?.noParleyJosef) {
+        api?.info?.('📜 本局剩余时间里，调查员不能与约瑟夫·梅吉尔谈判。')
+        return true
+      }
+      api?.test?.(inv.seat, 'intellect', 4, result => {
+        if (!result?.success) {
+          api?.attack?.(josef, inv)
+          return
+        }
+        flipJosef(state, josef, api)
+      }, 0, { label: '与约瑟夫·梅吉尔谈判', code: JOSEF_MEIGER })
+      return true
+    }
     if (!move || move.rule !== 'circle') {
       if (encounterRules.performAction?.(state, inv, move, api)) return true
       throw new Error(`未知聚合幻灭行动：${move?.rule}`)
@@ -419,12 +548,12 @@ export const behavior = {
       }
       if (!spec.skills.includes(skill)) skill = spec.skills[0]
       api?.test?.(inv.seat, skill, circleTestDifficulty(state, inv, spec.difficulty, api),
-        finish, 0, { label: '阵法', code: original(location) }, { actionKind: 'circle' })
+        finish, 0, { label: '阵法', code: original(location), actionKind: 'circle' }, { actionKind: 'circle' })
       return true
     }
     // P2.5：2–4 个技能求和检定。
     api?.test?.(inv.seat, [...spec.skills], circleTestDifficulty(state, inv, spec.difficulty, api),
-      finish, 0, { label: '阵法', code: original(location) }, { actionKind: 'circle' })
+      finish, 0, { label: '阵法', code: original(location), actionKind: 'circle' }, { actionKind: 'circle' })
     return true
   },
 
@@ -433,6 +562,36 @@ export const behavior = {
     const isCircle = source?.label === '阵法' || state.skillTest?.actionKind === 'circle'
     if (isCircle && (state.scenarioFlags?.circleDifficultyRound || 0) === state.round) return 2
     return 0
+  },
+
+  // 05246/05248 的 [fast]：任意调查员在「阵法行动」的检定期可花自己的 1 个线索，使本次难度 -2。
+  // R4：通用玩家窗口统一由 behavior.fastActions 提供（src/engine/encounter.js:469-476）；
+  // 非检定者在检定进行中没有通用窗口，故保留本引擎固定时点钩子（src/engine/tests.js:181-193）。
+  // 两条路径共用 circleFastUsed 标记，同一检定每人一次。
+  testOtherInvestigatorTrigger(state, other, tester, context, api) {
+    if (!context || !other || other.seat === tester?.seat) return
+    const isCircle = String(context.actionKind || '') === 'circle' || context.source?.label === '阵法'
+    if (!isCircle) return
+    if (!FAST_CIRCLE_ACTS.includes(actCodeOf(state))) return
+    if ((other.clues || 0) < 1) return
+    if (state.skillTest?.circleFastUsed?.[other.seat]) return
+    let answer = 'skip'
+    if (typeof api?.choose === 'function') {
+      answer = api.choose({
+        kind: 'effect', source: actCodeOf(state), seat: other.seat,
+        prompt: `${other.name}：阵法行动期间，花你自己的 1 个线索使本次技能检定难度 -2？`,
+        options: [
+          { id: 'spend', label: '花 1 个线索（难度 -2）' },
+          { id: 'skip', label: '不花线索' },
+        ],
+      })
+    }
+    if (answer !== 'spend') return
+    markCircleFastUsed(state, other)
+    if (typeof api?.spendClues === 'function') api.spendClues(other.seat, 1)
+    else other.clues = Math.max(0, (other.clues || 0) - 1)
+    reduceCurrentTestDifficulty(state, api, 2)
+    api?.info?.(`${other.name} 在阵法行动期间花 1 个线索：本次技能检定难度 -2。`)
   },
 
   // 闹鬼脚本（P2.1 的 escape 子句：需要跨牌堆/跨检定状态的能力）。
@@ -479,14 +638,16 @@ export const behavior = {
     }
     if (scriptId === 'forsakenWoods') {
       const ravens = state.enemies.filter(enemy => original(enemy) === WHIPPOORWILL)
-      // 「最近的夜鹰」：优先同地点的夜鹰；仍有多只时由玩家选择。
-      const localRavens = ravens.filter(enemy => enemy.location === locationId)
-      const pool = localRavens.length ? localRavens : ravens
+      // 卡面「最近的夜鹰」：按地点连接距离取最近的一只（同地点距离 0 自然最近）；并列时由玩家选择。
+      const distances = ravens.map(enemy => ({ enemy, distance: hopDistance(state, locationId, enemy.location) }))
+        .filter(entry => Number.isFinite(entry.distance))
+      const nearestDistance = distances.length ? Math.min(...distances.map(entry => entry.distance)) : Infinity
+      const pool = distances.filter(entry => entry.distance === nearestDistance).map(entry => entry.enemy)
       let nearby = pool[0] || null
       if (pool.length > 1 && typeof api?.choose === 'function') {
         const picked = api.choose({
           kind: 'enemy', source: 'forsakenWoods', seat: payload?.seat,
-          prompt: '选择要攻击你的夜鹰。',
+          prompt: '选择要攻击你的夜鹰（最近距离并列）。',
           options: pool.map(enemy => ({ id: enemy.id, label: enemy.name })),
         })
         nearby = pool.find(enemy => String(enemy.id) === String(picked)) || pool[0]
@@ -516,9 +677,10 @@ export const behavior = {
     return false
   },
 
-  // 苔藓阶梯：下一次移动额外 1 行动。
-  beforeMove(state, inv, destination, api) {
+  // 苔藓阶梯：下一次「移动行动」额外 1 行动（效果位移不加价，见引擎 beforeMove 第 5 参 reason）。
+  beforeMove(state, inv, destination, api, context) {
     if ((state.scenarioFlags?.mossStepsRound || 0) !== state.round) return
+    if (context && context.reason !== 'move') return
     const paid = (state.scenarioFlags.mossStepsPaid ||= {})
     if (paid[inv.seat]) return
     paid[inv.seat] = true
@@ -565,16 +727,22 @@ export const behavior = {
         watcher.health = (Number(state.scenario?.enemies?.[watcherCode]?.health) || Number(ALL_CARDS[watcherCode]?.health) || 5) + watcher.lostSouls * (state.numInvestigators || 1)
       }
       setFlags(state, { watcherSpawned: true })
-      // 看守人的注视洗入遭遇牌库 + 洗回弃牌堆。
+      // 看守人的攫噬 ×2 与看守人的注视一起洗入遭遇牌库 + 洗回弃牌堆（卡面 05242 背面原文）。
+      const shuffledFromAside = []
       const gaze = TREACHERY_CODES.watchersGaze
-      if (takeFromSetAside(state, gaze)) {
+      if (takeFromSetAside(state, gaze)) shuffledFromAside.push(gaze)
+      for (let index = 0; index < 2; index++) {
+        if (takeFromSetAside(state, '05087')) shuffledFromAside.push('05087')
+      }
+      if (shuffledFromAside.length) {
         state.encounterDeck ||= []
-        state.encounterDeck.push(gaze)
+        state.encounterDeck.push(...shuffledFromAside)
         if (typeof api?.shuffle === 'function') state.encounterDeck = api.shuffle(state.encounterDeck)
       }
       state.encounterDeck = [...(state.encounterDeck || []), ...(state.encounterDiscard || [])]
       state.encounterDiscard = []
       if (typeof api?.shuffle === 'function') state.encounterDeck = api.shuffle(state.encounterDeck)
+      api?.info?.('命数已定背面：看守人的攫噬 ×2 与看守人的注视连同弃牌堆洗入遭遇牌库。')
       // 灵怪陷阱入场（未揭示）；女巫集会则点燃火盆。
       const lit = factionOf(state) === 'coven'
       placeUnrevealedLocation(state, api, 'geistTrap', { lit })
@@ -591,18 +759,35 @@ export const behavior = {
           const count = (state.numInvestigators || 1) > 2 ? 2 : 1
           for (let index = 0; index < count; index++) spawnPrinted(state, api, COVEN_INITIATE, 'geistTrap')
         }
-        shuffleAsideIntoDeck(state, api, [COVEN_INITIATE, '05091'])
+        // 卡面：「将放在一边的每张剩余[[女巫]]敌人与遭遇弃牌堆一起洗入遭遇牌库」——
+        // 生成之后从 setAside 取剩余女巫敌人（安妮特若未被生成则也在其中），不能写死张数。
+        shuffleAsideIntoDeck(state, api, remainingSetAsideWitchEnemies(state))
       } else if (code === ACT_BEYOND_V2) {
+        // 卡面：所有 [cultist] 标记从混乱袋移除（含封印在场上卡牌上的），直到剧本结束。
         state.chaosBag = (state.chaosBag || []).filter(token => token !== 'cultist')
-        api?.info?.('迷雾彼端（版本二）：所有异教徒标记从混乱袋中移除。')
+        const chaos = (state.chaos ||= { revealed: [], sealed: [], removed: [], frames: [] })
+        chaos.sealed = (chaos.sealed || []).filter(item => item?.token !== 'cultist')
+        state.sealedTokens = chaos.sealed.map(item => item.token)
+        // 「直到剧本结束」：同步从战役袋移除，下一关 setupChaosBag 用它重建时不会回来。
+        if (Array.isArray(state.campaign?.chaosBag)) {
+          state.campaign.chaosBag = state.campaign.chaosBag.filter(token => token !== 'cultist')
+        }
+        api?.info?.('迷雾彼端（版本二）：所有异教徒标记从混乱袋（含封印）与战役袋中移除，直到剧本结束。')
       } else {
         const count = (state.numInvestigators || 1) > 2 ? 2 : 1
-        for (let index = 0; index < count; index++) spawnPrinted(state, api, LODGE_NEOPHYTE, 'geistTrap')
+        for (let index = 0; index < count; index++) {
+          // 生成的秘社新信徒来自「放在一边」的银暮秘社组：spawnPrinted 会同步从 setAside 移除。
+          spawnPrinted(state, api, LODGE_NEOPHYTE, 'geistTrap')
+        }
         if (recordsFor(state).josefIsAliveAndWell) {
           setFlags(state, { noParleyJosef: true })
           spawnPrinted(state, api, JOSEF_MEIGER, 'geistTrap')
         }
-        shuffleAsideIntoDeck(state, api, [LODGE_NEOPHYTE, KEEPER_OF_SECRETS, '05097', '05097'])
+        // 卡面：将放在一边的「银暮秘社」遭遇组剩余卡牌与遭遇弃牌堆一起洗入遭遇牌库。
+        const aside = state.scenarioZones?.setAside || []
+        const remainingLodge = aside.filter(code =>
+          [LODGE_NEOPHYTE, KEEPER_OF_SECRETS, '05097'].includes(code))
+        shuffleAsideIntoDeck(state, api, remainingLodge)
       }
       return
     }
@@ -623,7 +808,7 @@ export const behavior = {
       setFlags(state, { watcherSouls: taken })
       const watcher = watcherOf(state)
       if (watcher) {
-        watcher.lostSouls = taken
+        syncWatcherSoulMarkers(state, watcher, taken, api)
         watcher.health = (Number(state.scenario?.enemies?.[THE_SPECTRAL_WATCHER]?.health) || Number(ALL_CARDS[THE_SPECTRAL_WATCHER]?.health) || 5) + taken * (state.numInvestigators || 1)
       }
       api?.info?.(`恋人·VI 背面：洗回弃牌堆；${taken} 个灵魂被偷走（看守人 +${taken} 攻击 / +${taken * (state.numInvestigators || 1)} 生命）。`)
@@ -652,9 +837,16 @@ export const behavior = {
       return
     }
     if (code === ACT_BINDING_RITE || code === ACT_BROKEN_RITE) {
-      const watchedGoal = brazierLit(state, 'geistTrap') === (code === ACT_BINDING_RITE)
-      const defeatedAtTrap = Boolean(state.scenarioFlags?.watcherDefeatedAt)
-      if (defeatedAtTrap && watchedGoal) api?.advanceAct?.()
+      const flags = state.scenarioFlags || {}
+      const defeatedAtTrap = Boolean(flags.watcherDefeatedAt)
+      if (!defeatedAtTrap) return
+      const wantLit = code === ACT_BINDING_RITE
+      // 用击败瞬间记下的火盆状态判定；旧存档没有该登记时退回当前值。
+      const recordedLit = flags.watcherDefeatedBrazierLit
+      const matched = recordedLit == null
+        ? brazierLit(state, 'geistTrap') === wantLit
+        : Boolean(recordedLit) === wantLit
+      if (matched) api?.advanceAct?.()
     }
   },
 
@@ -676,8 +868,11 @@ export const behavior = {
     syncWatcherRetaliate(state)
     const code = String(original(enemy))
     if (code === THE_SPECTRAL_WATCHER) {
-      enemy.lostSouls = Number(enemy.lostSouls) || Number(state.scenarioFlags?.watcherSouls) || 0
-      enemy.health = (Number(enemy.health) || 5) + enemy.lostSouls * (state.numInvestigators || 1)
+      // 05239：被偷走的灵魂现为看守人身上的真实资源标记；不在场期间先记 watcherSouls，
+      // 入场时按记账数补标记（数值读点同步 enemy.lostSouls）。
+      const souls = Number(enemy.lostSouls) || Number(state.scenarioFlags?.watcherSouls) || 0
+      syncWatcherSoulMarkers(state, enemy, souls, api)
+      enemy.health = (Number(enemy.health) || 5) + souls * (state.numInvestigators || 1)
       setFlags(state, { watcherSpawned: true })
       return
     }
@@ -716,11 +911,18 @@ export const behavior = {
       if (!state.enemies.includes(enemy)) state.enemies.push(enemy)
       const atTrap = String(original(locById(state, enemy.location))) === GEIST_TRAP
       if (atTrap) {
-        setFlags(state, { watcherDefeatedAt: enemy.location })
+        // 05247/05248 目标要求「被击败时该处火盆点燃/未点燃」同时成立：击败瞬间把火盆状态
+        // 一并记下，之后火盆再变也不能改变已经达成的条件（旧实现 checkObjectives 读当前值，
+        // 存在点亮再熄灭后仍推进的漏洞）。
+        const brazierAtDefeat = brazierLit(state, 'geistTrap')
+        setFlags(state, {
+          watcherDefeatedAt: enemy.location,
+          watcherDefeatedBrazierLit: brazierAtDefeat,
+        })
         api?.info?.('幽灵看守人在灵怪陷阱被击败：它没有被弃掉，治愈伤害并横置。')
         const actCode = String(original(state.acts?.[state.actIndex]))
         if ((actCode === ACT_BINDING_RITE || actCode === ACT_BROKEN_RITE)
-          && brazierLit(state, 'geistTrap') === (actCode === ACT_BINDING_RITE)) api?.advanceAct?.()
+          && brazierAtDefeat === (actCode === ACT_BINDING_RITE)) api?.advanceAct?.()
       } else {
         api?.info?.('幽灵看守人被击败：它没有被弃掉，治愈伤害并横置。')
       }
@@ -780,9 +982,13 @@ export const behavior = {
     }
   },
 
-  enemyAttackedSuccessfully(state, inv, enemy, api) {
+  // 05262b「强制 - 在你成功攻击加弗瑞拉后，如果她处于重整状态：受到 1 点恐惧」。
+  // 引擎第 5 参给出本次攻击是否已击败她（combat.js:374-380 在判定击败之后、真正移除之前调用）；
+  // 被击败/已横置/已离场时都不再是「重整状态」，不触发。
+  enemyAttackedSuccessfully(state, inv, enemy, api, info) {
     encounterRules.enemyAttackedSuccessfully?.(state, inv, enemy, api)
-    if (entryFlags(String(original(enemy)))?.onAttackedHorrorIfReady && !enemy.exhausted) {
+    const stillReady = !info?.defeated && !enemy.exhausted && (state.enemies || []).includes(enemy)
+    if (entryFlags(String(original(enemy)))?.onAttackedHorrorIfReady && stillReady) {
       api?.horror?.(inv.seat, 1)
       api?.info?.(`你成功攻击${enemy.name}：她仍处于重整状态，受到 1 点恐惧。`)
     }
@@ -800,9 +1006,9 @@ export const behavior = {
   enemyStatModifier(state, enemy, stat) {
     let delta = encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
     const code = String(original(enemy))
-    // 05239：恋人·VI 只给看守人 +1 攻击值（旧实现连躲避一起加）。
+    // 05239：恋人·VI 只给看守人 +1 攻击值（旧实现连躲避一起加）。灵魂数读资源标记（旧存档回退 lostSouls）。
     if (code === THE_SPECTRAL_WATCHER && stat === 'fight') {
-      delta += Number(enemy.lostSouls) || 0
+      delta += soulMarkersOf(enemy) || Number(enemy.lostSouls) || 0
     }
     // 05267：+2 攻击/+2 躲避直到调查阶段结束（敌人阶段触发 → 下一轮调查阶段末）。
     if (code === SPECTRAL_RAVEN && (stat === 'fight' || stat === 'evade')) {
@@ -832,11 +1038,16 @@ export const behavior = {
     const has = code => (inv.threat || []).some(card => original(card) === code)
     if (damage > 0 && has(TREACHERY_CODES.psychopompsSong)) {
       inv.threat = inv.threat.filter(card => original(card) !== TREACHERY_CODES.psychopompsSong)
+      // 卡面「弃掉灵魂之歌」：威胁区的诡计离场要进遭遇弃牌堆（否则这张牌会从牌局循环里消失）。
+      state.encounterDiscard ||= []
+      state.encounterDiscard.push(TREACHERY_CODES.psychopompsSong)
       damage += 2
       api?.info?.('灵魂之歌：你额外受到 2 点伤害，然后弃掉灵魂之歌。')
     }
     if (horror > 0 && has(TREACHERY_CODES.deathApproaches)) {
       inv.threat = inv.threat.filter(card => original(card) !== TREACHERY_CODES.deathApproaches)
+      state.encounterDiscard ||= []
+      state.encounterDiscard.push(TREACHERY_CODES.deathApproaches)
       horror += 2
       api?.info?.('死期临近：你额外受到 2 点恐惧，然后弃掉死期临近。')
     }
@@ -875,7 +1086,12 @@ export const behavior = {
         api?.info?.(`石板失败：所在地点的幽灵敌人「${target.name}」攻击你（不论是否横置）。`)
       }
     }
-    if (drawn.includes('elderthing') && state.skillTest?.actionKind === 'circle') {
+    // 引擎在调 afterTest 前已 closeTest 恢复 state.skillTest（tests.js:354-371,412,954），
+    // 所以「本次检定是否是阵法行动」必须从 result.source 读（内容层在 api.test 的 source 里
+    // 显式写了 actionKind:'circle'）；state.skillTest 仅在旧测试直接调用本钩子时兜底。
+    const isCircleTest = result.source?.actionKind === 'circle'
+      || state.skillTest?.actionKind === 'circle'
+    if (drawn.includes('elderthing') && isCircleTest) {
       if (typeof api?.haunted === 'function') api.haunted(inv.seat, { locationId: inv.location })
       api?.info?.('古神标记失败：结算你所在地点的所有闹鬼能力。')
     }
@@ -1034,6 +1250,8 @@ function idOfIsle(code) {
 }
 
 function spawnPrinted(state, api, code, locationId) {
+  // 从「放在一边」生成：同步消耗账本（对不在 setAside 的卡是无操作）。
+  takeFromSetAside(state, code)
   const card = ALL_CARDS[code] || {}
   const printed = state.scenario?.enemies?.[code] || {}
   if (typeof api?.spawnStoryEnemy === 'function') {
@@ -1083,15 +1301,44 @@ function shuffleAsideIntoDeck(state, api, codes) {
   api?.info?.(`银暮秘社/女巫集会的卡牌与弃牌堆一起洗入遭遇牌库。`)
 }
 
+// setAside 里剩余的[[女巫]]敌人（05057/05090/05091 等）：05243 背面按「每张剩余」洗回。
+function remainingSetAsideWitchEnemies(state) {
+  return (state.scenarioZones?.setAside || []).filter(code => {
+    const card = ALL_CARDS[code]
+    return card?.type === 'enemy'
+      && (card.traits || []).some(trait => String(trait).toLowerCase() === 'witch')
+  })
+}
+
+// 05246 的本地谈判：成功结算 05085b（翻转敌人面 → 移除毁灭 → 翻回并解除交战）。
+// 05085 的完整长期效果属该卡自身条目（另包审计），本章只需要「谈判成功后翻面」这一可观察结果。
+function flipJosef(state, josef, api) {
+  if (state.scenarioFlags?.josefPlanResolved) return false
+  setFlags(state, { josefPlanResolved: true })
+  api?.flipEnemy?.(josef, '05085b')
+  josef.doom = 0
+  api?.info?.('📜 「约瑟夫的计划」：他身上的毁灭被移除。')
+  api?.flipEnemy?.(josef, JOSEF_MEIGER)
+  for (const inv of state.investigators || []) {
+    if (Array.isArray(inv.engaged)) inv.engaged = inv.engaged.filter(id => id !== josef.id)
+    if (Array.isArray(inv.threat)) inv.threat = inv.threat.filter(card => original(card) !== '05085b')
+  }
+  josef.engagedSeat = null
+  return true
+}
+
 function dealFateCards(state, api) {
   const cards = state.scenarioFlags?.fateCards || []
-  const investigators = activeInvestigators(state)
+  const investigators = [...activeInvestigators(state)].sort((left, right) => left.seat - right.seat)
   if (!cards.length || !investigators.length) return
-  // 参考实现：洗混冒险参考牌底的命运卡，按玩家顺序随机发放，直到发完并逐张结算。
+  // 参考实现：洗混冒险参考牌底的命运卡，按玩家顺序随机发放，直到发完；随后按玩家顺序结算每张。
   const shuffled = typeof api?.shuffle === 'function' ? api.shuffle(cards) : [...cards]
+  const dealt = investigators.map(() => [])
   for (const [index, fate] of shuffled.entries()) {
-    const inv = investigators[index % investigators.length]
-    resolveFate(state, api, fate, inv)
+    dealt[index % investigators.length].push(fate)
+  }
+  for (const [index, inv] of investigators.entries()) {
+    for (const fate of dealt[index]) resolveFate(state, api, fate, inv)
   }
 }
 
@@ -1104,6 +1351,25 @@ function findWhippoorwill(state) {
     }
   }
   return null
+}
+
+// 地点间最短步数（BFS；不可达返回 Infinity）。卡面「最近的夜鹰」按连接距离计算。
+function hopDistance(state, fromId, toId) {
+  if (!fromId || !toId) return Infinity
+  if (fromId === toId) return 0
+  const seen = new Set([toId])
+  const queue = [[toId, 0]]
+  while (queue.length) {
+    const [id, steps] = queue.shift()
+    const location = (state.locations || []).find(entry => entry.id === id)
+    for (const next of location?.connections || []) {
+      if (next === fromId) return steps + 1
+      if (seen.has(next)) continue
+      seen.add(next)
+      queue.push([next, steps + 1])
+    }
+  }
+  return Infinity
 }
 
 function removeEncounterCard(state, found) {

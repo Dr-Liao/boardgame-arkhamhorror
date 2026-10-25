@@ -104,28 +104,43 @@ export function createBonded(deps) {
     const set = setFor(state, inv, mainCode)
     if (!set) return []
     const copyCodes = new Set(set.cards.concat(bondedCardList(ALL_CARDS?.[mainCode]).flatMap(entry => [entry.code])))
+    // 2026-10-25 第四轮修复 05313/05316：绑定副本可能被移到任意调查员的区域（手牌/牌库/
+    // 弃牌堆/场外下方/场上/威胁区），收回场外集合时要遍历所有调查员的全部区域。
     const collected = []
+    // 列表元素可能是卡号字符串，也可能是带 code 的实例对象（放在地点/场上等）。
+    const codeOf = entry => typeof entry === 'string' ? entry : entry?.code
     const take = list => {
+      if (!Array.isArray(list)) return
       for (let i = list.length - 1; i >= 0; i--) {
-        if (!copyCodes.has(list[i])) continue
-        collected.push(list[i])
+        const code = codeOf(list[i])
+        if (!copyCodes.has(code)) continue
+        collected.push(code)
         list.splice(i, 1)
       }
     }
-    take(inv.hand)
-    take(inv.deck)
-    take(inv.discard)
-    if (Array.isArray(inv.beneath)) take(inv.beneath)
-    for (const asset of inv.assets.slice()) {
-      if (!copyCodes.has(asset.code)) continue
-      collected.push(asset.code)
-      inv.assets.splice(inv.assets.indexOf(asset), 1)
+    for (const owner of state.investigators || [inv]) {
+      take(owner.hand)
+      take(owner.deck)
+      take(owner.discard)
+      if (Array.isArray(owner.beneath)) take(owner.beneath)
+      for (const asset of owner.assets.slice()) {
+        if (!copyCodes.has(asset.code)) continue
+        collected.push(asset.code)
+        owner.assets.splice(owner.assets.indexOf(asset), 1)
+      }
+      for (const threat of owner.threat.slice()) {
+        if (!copyCodes.has(threat.code)) continue
+        collected.push(threat.code)
+        owner.threat.splice(owner.threat.indexOf(threat), 1)
+      }
     }
-    for (const threat of inv.threat.slice()) {
-      if (!copyCodes.has(threat.code)) continue
-      collected.push(threat.code)
-      inv.threat.splice(inv.threat.indexOf(threat), 1)
+    // 2026-10-25 第四轮修复 05313/05316（交叉复核）：卡面要求「找到所有副本（即使在场外）」，
+    // 地点下方/移出游戏/放逐区同样要扫；05175b 阁楼会把非弱点牌放到 location.beneath。
+    for (const location of state.locations || []) {
+      if (Array.isArray(location.beneath)) take(location.beneath)
     }
+    take(state.removedFromGame)
+    take(state.exiled)
     set.cards.push(...collected)
     if (!collected.length) set.retrieved = false
     if (collected.length) info?.(state, options.events, `🎴 「${cardName(mainCode)}」离场：${collected.length} 张绑定卡收回场外集合。`)

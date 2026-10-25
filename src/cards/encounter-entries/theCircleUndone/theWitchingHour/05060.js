@@ -25,12 +25,19 @@ export default {
     },
     actions({ moves, state, inv, location }) {
       if (inv.location !== location.id) return
-      // [free]：不花行动；每名调查员每轮一次（不是团队共享）。
+      // [free]：不花行动，可在任意玩家窗口触发（behavior.fastActions → 引擎 playerWindow）。
+      // 卡面「每轮仅限一次」→ 按座位记录，每位调查员每轮各一次。
       const usedBySeat = state.scenarioFlags?.lonelyTreeRoundBySeat || {}
       if (usedBySeat[inv.seat] === state.round) return
-      if (!otherWoodsInvestigators(state, inv).length) return
+      const others = otherWoodsInvestigators(state, inv)
+      if (!others.length) return
+      // 卡面两个方向都有「选择并弃掉 1 张手牌」：行动者与可选的另一处森林调查员都没有手牌时不能发动
+      // （否则 discardChosen 会静默跳过，变成「不弃牌白抽 1 张」）。
+      const anyDirection = (inv.hand || []).length > 0
+        || others.some(other => (other.hand || []).length > 0)
+      if (!anyDirection) return
       moves.push({
-        action: 'scenarioAction', rule: 'lonelyTreeSwap', actions: 0,
+        action: 'scenarioAction', rule: 'lonelyTreeSwap', actions: 0, fast: true,
         label: '🌳 独木：与另一处女巫作祟之林的调查员交换一张手牌（每轮一次）',
       })
     },
@@ -43,14 +50,22 @@ export default {
         prompt: '选择另一处女巫作祟之林的一位调查员。',
         options: others.map(other => ({ id: String(other.seat), label: other.name })),
       }))) || others[0]
-      const direction = api.choose?.({
+      // 卡面两个方向都要求「选择并弃掉 1 张手牌」再由对方抽 1 张：只列出弃牌者有手牌的方向；
+      // 两个方向都不可行时拒绝，避免无手牌时静默跳过弃牌、白抽 1 张。
+      const directions = []
+      if ((inv.hand || []).length > 0) directions.push('youDiscardTheyDraw')
+      if ((picked.hand || []).length > 0) directions.push('viceVersa')
+      if (!directions.length) return false
+      const directionLabels = {
+        youDiscardTheyDraw: '你弃 1 张手牌，对方抽 1 张',
+        viceVersa: '对方弃 1 张手牌，你抽 1 张',
+      }
+      const answer = directions.length === 1 ? directions[0] : api.choose?.({
         kind: 'story', source: '05060', seat: inv.seat, canSkip: true,
         prompt: '由谁弃牌？',
-        options: [
-          { id: 'youDiscardTheyDraw', label: '你弃 1 张手牌，对方抽 1 张' },
-          { id: 'viceVersa', label: '对方弃 1 张手牌，你抽 1 张' },
-        ],
+        options: directions.map(id => ({ id, label: directionLabels[id] })),
       })
+      const direction = directions.includes(answer) ? answer : null
       if (!direction) return false
       state.scenarioFlags ||= {}
       state.scenarioFlags.lonelyTreeRoundBySeat = { ...(state.scenarioFlags.lonelyTreeRoundBySeat || {}), [inv.seat]: state.round }

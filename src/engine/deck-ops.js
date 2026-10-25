@@ -364,6 +364,16 @@ function drawCards(state, inv, n, events) {
     drawnCount++
     const def = cardDef(code)
     if (isWeaknessCard(def)) {
+      // 2026-10-25 第六轮修复 05014：抽到弱点前的取消窗口（取消后洗回牌库、不重抽）。
+      const weaknessDrawContext = { when: 'cardWouldBeDrawn', seat: inv.seat, location: inv.location,
+        cardCode: code, weakness: true, from: 'deck', cancelled: false,
+        prompt: `${inv.name} 将要抽到弱点「${cardName(code)}」` }
+      reactionWindow(state, 'cardWouldBeDrawn', weaknessDrawContext, events)
+      if (weaknessDrawContext.cancelled) {
+        inv.deck = shuffle([...inv.deck, code], () => randomValue(state))
+        info(state, events, `🛡️ ${inv.name} 取消了抽到的弱点「${cardName(code)}」，并将其洗回牌库。`)
+        continue
+      }
       texts.push(`⚠️ ${inv.name} 抽到了弱点「${cardName(code)}」：${def.textZh || def.text || ''}`)
       // Phase 5（5a-22）：「黑暗回忆」这类抽到后留在手里的弱点由条目级 weaknessStaysInHand 声明。
       if (registeredEntry(def.code)?.weaknessStaysInHand) {
@@ -411,6 +421,8 @@ function discardRandomFromHand(state, inv, n, events) {
   // 2026-10-25：05280「否决存在：忽略弃掉手牌的效果」的按面向取消窗口。
   const context = reactionWindow(state, 'wouldDiscardFromHand', {
     when: 'wouldDiscardFromHand', seat: inv.seat, amount: n, what: 'discard', location: inv.location,
+    // 2026-10-25 第六轮修复 05032：窗口来源标记（enemyAttack/encounter/other）。
+    source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },
     prompt: `${inv.name} 将要随机弃 ${n} 张手牌`,
   }, events)
   if (context.cancelled) {

@@ -43,6 +43,17 @@ let mapResizeObserver
 let musicPlayer
 let chaosBagView
 let situationView
+
+// 挂在牌桌之外的浮层（音乐盒）拿不到 .ah-table 上的主题变量：把当前战役色板
+// 直接写到浮层根节点，样式与牌桌共用同一组 --ah-theme-* / --ah-material-*。
+function applyPresentationAttributes(node, attributes) {
+  for (const [key, value] of Object.entries(attributes)) {
+    if (key === 'style') continue
+    if (value == null) node.removeAttribute(key)
+    else node.setAttribute(key, value)
+  }
+  for (const [name, value] of Object.entries(attributes.style || {})) node.style.setProperty(name, value)
+}
 // The session last painted on the table (after presentation/reaction views).
 let tableSession = null
 let rulebook
@@ -165,7 +176,11 @@ export function createUI(host) {
   musicPlayer ||= createMusicPlayer(h)
   chaosBagView ||= createChaosBagView(h,render)
   rulebook ||= createRulebook(h,render)
-  presentation ||= createTablePresentation({ art: (code, name, options) => tableArt(h, code, name, options), onChange: () => render() })
+  presentation ||= createTablePresentation({
+    art: (code, name, options) => tableArt(h, code, name, options),
+    onChange: () => render(),
+    themeAttributes: () => state.session?.state ? presentationAttributes(state.session.state) : null,
+  })
   const openChaosBag = () => { if (state.session) chaosBagView.open(state.session.sessionId) }
   tableRegions = createTableRegions(h, { openDetail: (def, options) => openCardDetailDef(def, options), openChaosBag })
   situationView ||= createSituationView(h, { render: () => render(), openChaosBag: () => openChaosBag(),
@@ -205,19 +220,35 @@ export function createUI(host) {
       restoreScrollWhenMounted(next, scroll)
       return next
     },
-    renderOverlays: () => [
-      chaosBagView.render(state.view==='game'?viewSession():null,false),
-      rulebook.render(state.setup?.game?.id === 'arkhamhorror' || (state.view === 'game' && state.session?.modId === 'arkhamhorror')),
-      musicPlayer.render(state.view === 'game' && state.session?.modId === 'arkhamhorror'
-        && (!state.session.state?.hubFlow || state.session.state.uiState === 'inScenario'),
-        campaignPlaylistId(state.session?.state)),
-      situationView.render(state.view === 'game' ? tableSession : null, {
-        sync: tableSession && state.arkhamSync?.sessionId === tableSession.sessionId ? state.arkhamSync.message : null }),
-      !presentation.isBlocking && state.arkhamZoneOpen && tableSession ? renderCardZoneModal(tableSession) : null,
-      !presentation.isBlocking && state.arkhamDeckOpen && state.session ? hubUi.renderDeckModal(state.session) : null,
-      arkhamCatalog.isOpen ? arkhamCatalog.render() : null,
-      state.cardDetail ? renderCardDetailModal(state.cardDetail) : null,
-    ].filter(Boolean),
+    renderOverlays: () => {
+      const overlaySession = state.session
+      const overlayTheme = overlaySession?.modId === 'arkhamhorror' && overlaySession.state
+        ? presentationAttributes(overlaySession.state) : null
+      // 弹窗/浮层挂在牌桌与局外面板之外，收不到 .ah-theme 上的战役色板：
+      // 给每个浮层根节点补上主题类与变量，样式仍只消费 --ah-theme-*。
+      const themed = node => {
+        if (!node || !overlayTheme) return node
+        node.classList.add('ah-theme')
+        applyPresentationAttributes(node, overlayTheme)
+        return node
+      }
+      const musicSession = state.session
+      const musicActive = state.view === 'game' && musicSession?.modId === 'arkhamhorror'
+        && (!musicSession.state?.hubFlow || musicSession.state.uiState === 'inScenario')
+      const music = musicPlayer.render(musicActive, campaignPlaylistId(musicSession?.state))
+      if (music && musicSession?.state) applyPresentationAttributes(music, presentationAttributes(musicSession.state))
+      return [
+        themed(chaosBagView.render(state.view==='game'?viewSession():null,false)),
+        themed(rulebook.render(state.setup?.game?.id === 'arkhamhorror' || (state.view === 'game' && state.session?.modId === 'arkhamhorror'))),
+        music,
+        themed(situationView.render(state.view === 'game' ? tableSession : null, {
+          sync: tableSession && state.arkhamSync?.sessionId === tableSession.sessionId ? state.arkhamSync.message : null })),
+        themed(!presentation.isBlocking && state.arkhamZoneOpen && tableSession ? renderCardZoneModal(tableSession) : null),
+        themed(!presentation.isBlocking && state.arkhamDeckOpen && state.session ? hubUi.renderDeckModal(state.session) : null),
+        themed(arkhamCatalog.isOpen ? arkhamCatalog.render() : null),
+        themed(state.cardDetail ? renderCardDetailModal(state.cardDetail) : null),
+      ].filter(Boolean)
+    },
   }
 }
 

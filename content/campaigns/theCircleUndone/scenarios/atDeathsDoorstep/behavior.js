@@ -12,7 +12,7 @@
 // 规则事实源：参考实现 `AtDeathsDoorstep.hs` 与 Cards 目录下的逐卡文件；中文卡文是文案事实源。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { entryFlags } from '../../../../../src/cards/card-rules.js'
-import { encounterRules, nearestEnemyWithTrait, parleyDifficultyBonus } from '../../encounter-rules.js'
+import { encounterRules, discardEncounterTop, nearestEnemyWithTrait, parleyDifficultyBonus } from '../../encounter-rules.js'
 import { TCU_STORY_TEXT } from '../../story-text.js'
 import { chaosAfterTest, resolveChaosToken as resolveChaos } from './chaos.js'
 import {
@@ -297,20 +297,39 @@ function advanceHiddenAgendas(state, act, api) {
       api?.moveEnemy?.(enemy, victorianHalls.id)
     }
   }
+  const perInvestigator = Number(state.numInvestigators) || 1
   for (const locationId of Object.keys(SPECTRAL_LOCATION_CODES)) {
     const location = loc(state, locationId)
     if (!location) continue
+    const normalCode = String(original(location))
+    const wasRevealed = location.revealed !== false
+    const carriedTokens = Number(location.clues || 0)
+    // 05068 背面：「原地点上的所有标记和卡牌视为位于新版本地点」——已放置的线索随翻面携带；
+    // 未揭示地点没有 token，只在 maxClues 上记着「失踪人口 +6 / 留下的证据」等加成。
+    const normalPrinted = Number(ALL_CARDS[normalCode]?.clues || 0) * perInvestigator
+    const carriedBonus = Math.max(0, Number(location.maxClues || 0) - normalPrinted)
     if (!(location.spectralFace === 'spectral' || location.spectral === true)) {
       api?.flipSpectral?.(locationId)
     }
     // 7 张幽灵地点从「放一边」移出（区域账本与后续从放一边区找牌的语义一致）。
     if (location.originalCode || location.code) takeFromSetAside(state, String(original(location)))
+    // 幽灵面的印刷线索值（05080=1、05081=1、05083=1、05084=2，正面分别是 0/0/0/1）：
+    // 翻面后按幽灵面卡面重算 maxClues，同时保留原地点已携带的线索加成。
+    const spectralPrinted = Number(ALL_CARDS[String(original(location))]?.clues || 0) * perInvestigator
+    location.maxClues = spectralPrinted + carriedBonus
     // 卡面：换面后「有调查员的地点揭示」；其余地点回到未揭示（引擎翻面不改 revealed）。
     location.revealed = false
-    location.clues = location.clues || 0
-    if (alive(state).some(inv => inv.location === locationId)) {
+    location.clues = carriedTokens
+    const hasInvestigator = alive(state).some(inv => inv.location === locationId)
+    if (wasRevealed && !hasInvestigator) {
+      // 此前已揭示且仍有线索 token 的地点：之后再次揭示时保留携带的 token，不重复按新卡面放置。
+      location.preservedClues = carriedTokens
+    }
+    if (hasInvestigator) {
       api?.reveal?.(locationId)
       location.revealed = true
+      // 已揭示地点翻面时 token 视为携带；只在首次揭示时按幽灵面线索值放置。
+      if (wasRevealed) location.clues = carriedTokens
     }
   }
   // 幽灵面入口大厅：若换面时无调查员在内，则处于「鬼灵迷雾封锁」状态（独立 flag，不依赖 revealed）。
@@ -319,6 +338,8 @@ function advanceHiddenAgendas(state, act, api) {
     flagsFor(state).entryHallSealed = !alive(state).some(inv => inv.location === 'entryHall')
   }
   // 按玩家顺序（从队长起）循环生成放一边的[[怪物]]敌人，直到全部生成。
+  // 卡面：每位调查员「将 1 个放在一边的[[怪物]]敌人生成在自己地点」——由该调查员从放一边怪物里自选
+  // （参考 HiddenAgendas.hs:82-87 的 ForInvestigator chooseTargetM），而不是按固定顺序派发。
   const flags = flagsFor(state)
   const monsters = [...(flags.monsterSetAside || [])]
   flags.monsterSetAside = []
@@ -326,11 +347,21 @@ function advanceHiddenAgendas(state, act, api) {
   const count = state.investigators?.length || 1
   const order = [...(state.investigators || [])].sort((left, right) =>
     (((left.seat - lead) % count) + count) % count - ((((right.seat - lead) % count) + count) % count))
+  const chooseMonster = (inv, pool) => {
+    if (pool.length === 1) return pool[0]
+    const answer = api?.choose?.({
+      kind: 'spawn', source: '05068', seat: inv.seat,
+      prompt: `「秘密阴谋」：选择 1 个放在一边的[[怪物]]敌人，在你的地点生成。`,
+      options: pool.map(code => ({ id: String(code), label: ALL_CARDS[code]?.nameZh || code })),
+    })
+    return pool.find(code => String(code) === String(answer)) ?? pool[0]
+  }
   let guard = 0
   while (monsters.length && order.length && guard++ < 100) {
     for (const inv of order) {
       if (!monsters.length) break
-      const code = monsters.shift()
+      const code = chooseMonster(inv, monsters)
+      monsters.splice(monsters.indexOf(code), 1)
       takeFromSetAside(state, code)
       api?.spawn?.(code, inv.location)
       api?.info?.(`👹 放在一边的怪物「${ALL_CARDS[code]?.nameZh || code}」在 ${inv.name} 所在地点生成。`)
@@ -544,6 +575,14 @@ export const behavior = {
   locationFlipped(state, location, api) {
     locationFlipped(state, location, api)
   },
+  // 05068 背面替换地点时携带的线索 token：换面后回到未揭示的地点再次揭示时，
+  // 按携带的 token 数放置（不重复叠加新卡面的线索值；首次揭示仍按幽灵面印刷值）。
+  cluesOnReveal(state, location) {
+    if (location?.preservedClues == null) return undefined
+    const clues = Math.max(0, Number(location.preservedClues) || 0)
+    delete location.preservedClues
+    return clues
+  },
 
   // ---- 敌人 ----
   // 议程 1：银暮秘社敌人不能受伤/被击败。
@@ -554,32 +593,52 @@ export const behavior = {
     return !(agendaActive(state, '05066') && isSilverTwilight(enemy))
   },
   // 议程 1 强制：抽到[[怪物]]敌人 → 不生成、放一边、议程 +1 毁灭。
-  // 引擎没有「抽到时不生成」的钩子；用「生成地点非法 → spawnFailed」等价实现。
-  // 只有真实遭遇抽牌走这条 spawnLocation 通道（剧本/效果生成用 ignoreSpawn=true，不经过本钩子），
-  // 因此「拦下任何生成」的范围等价于「抽到怪物」。
+  // 引擎没有 draw-cancel 钩子：内容层用「遭遇抽牌标记」精确限定来源——encounterDrawn 在
+  // spawnEnemy 之前被引擎调用（src/engine/encounter.js:134 早于 :177），这里只给「本次抽到的怪物」
+  // 打标记，spawnLocation 仅在该标记命中时拦截；效果/弱点等其它生成路径没有标记、照常放行。
+  encounterDrawn(state, inv, code, api) {
+    encounterRules.encounterDrawn?.(state, inv, code, api)
+    const flags = flagsFor(state)
+    flags.pendingDrawEnemy = null
+    if (!agendaActive(state, '05066')) return
+    const card = ALL_CARDS[String(code)]
+    if (card?.type !== 'enemy') return
+    if (!(card.traits || []).some(trait => String(trait).toLowerCase() === 'monster')) return
+    flags.pendingDrawEnemy = { code: String(code), round: Number(state.round || 0), seat: inv?.seat ?? null }
+  },
   spawnLocation(state, code, fallbackLoc) {
-    if (agendaActive(state, '05066') && hasTrait({ code }, 'monster')) {
-      const flags = flagsFor(state)
+    const flags = flagsFor(state)
+    const pending = flags.pendingDrawEnemy
+    const fromDraw = Boolean(pending && String(pending.code) === String(code)
+      && Number(pending.round) === Number(state.round || 0))
+    flags.pendingDrawEnemy = null
+    if (fromDraw && agendaActive(state, '05066') && hasTrait({ code }, 'monster')) {
+      flags.pendingSetAsideMonster = String(code)
       flags.monsterSetAside = [...(flags.monsterSetAside || []), String(code)]
       addToSetAside(state, String(code))
       return '__setAside__'
     }
     // 银暮秘社敌人不能生成在幽灵面入口大厅（05078 背面；普通面入口大厅不限制）。
+    // 该封锁文本只出现在「未揭示/封印」侧：幕 2b 揭示入口大厅后（entryHallSealed=false）限制失效。
     const entryHall = loc(state, 'entryHall')
     const spectralEntryHall = entryHall && original(entryHall) === SPECTRAL_LOCATION_CODES.entryHall
-    if (spectralEntryHall && fallbackLoc === entryHall.id && isSilverTwilight({ code })) return '__nowhere__'
+    const entryHallSealed = flagsFor(state).entryHallSealed === true
+    if (spectralEntryHall && entryHallSealed && fallbackLoc === entryHall.id && isSilverTwilight({ code })) return '__nowhere__'
     return fallbackLoc
   },
   spawnFailed(state, code, engagedSeat, api) {
     const id = String(code)
+    const flags = flagsFor(state)
     // 引擎已把「无法生成」的遭遇卡放进遭遇弃牌堆：先取回。
     const index = state.encounterDiscard.lastIndexOf(id)
     if (index >= 0) state.encounterDiscard.splice(index, 1)
-    if (!(flagsFor(state).monsterSetAside || []).includes(id)) {
+    // 只有「本次抽到怪物被强制放一边」这条路径由本章接管；其它生成失败维持引擎默认弃置。
+    if (flags.pendingSetAsideMonster !== id) {
       api?.info?.(`⛔ 「${ALL_CARDS[id]?.nameZh || id}」没有合法生成地点，被弃置。`)
       state.encounterDiscard.push(id)
       return
     }
+    flags.pendingSetAsideMonster = null
     // 议程 1 的怪物：放在一边，并在本密谋上放置 1 点毁灭（api.addDoom 会检查阈值推进）。
     api?.addDoom?.(1)
     api?.info?.(`🌑 「${ALL_CARDS[id]?.nameZh || id}」被放在一边：在本密谋上放置 1 点毁灭。`)
@@ -589,7 +648,10 @@ export const behavior = {
     encounterRules.enemySpawned?.(state, enemy, api)
   },
   // 05067 正面：「每个[[银暮秘社]]敌人获得胜利 0」——进入胜利区（0 点不改变比分，但幕间 II 分支
-  // 需要能在 victoryDisplay 里数到它们）。返回 false 以免替换引擎默认结算。
+  // 需要能在 victoryDisplay 里数到它们）。
+  // R4 交叉复核修复（reaudit-b dispute，Lead 裁决）：本分支手动 push 后必须返回 true——
+  // 引擎 src/engine/enemies.js:404-405 `const addedToVictory = !replaced && addVictory(...)`，
+  // 返回 true 才跳过 addVictory 的 else 分支，避免同一敌人同时进胜利区与遭遇弃牌堆（还会被后续洗回）。
   enemyDefeated(state, enemy, api) {
     const replaced = encounterRules.enemyDefeated?.(state, enemy, api)
     if (agendaActive(state, '05067') && isSilverTwilight(enemy)) {
@@ -599,51 +661,87 @@ export const behavior = {
         state.victoryDisplay.push({ id, code: original(enemy), originalCode: original(enemy), victory: 0 })
         api?.info?.(`💠 「${enemy.name}」获得胜利 0（进入胜利区）。`)
       }
+      return true
     }
     return replaced
   },
   // 05085b 背面：「本局剩余时间，毁灭不能放在[[银暮秘社]]敌人上」。
-  // 引擎 placeDoomOnCard 先写后回调本钩子，因此在这里把误放的毁灭退回（净效果等价于不能放置）。
-  doomPlaced(state, payload, api) {
-    encounterRules.doomPlaced?.(state, payload, api)
-    if (!flagsFor(state).josefPlanResolved) return
-    const target = payload?.target
-    if (!target || payload.agenda) return
-    if (!isSilverTwilight(target) || !(state.enemies || []).includes(target)) return
-    const amount = Number(payload.amount) || 0
-    const removed = Math.min(Number(target.doom) || 0, amount)
-    if (!removed) return
-    target.doom = Math.max(0, (Number(target.doom) || 0) - removed)
-    api?.info?.(`📜 「约瑟夫的计划」：毁灭不能放在[[银暮秘社]]敌人「${target.name}」上（已移除 ${removed} 点）。`)
+  // 引擎在写入前询问本钩子（src/engine/act-agenda.js 的 placeDoomOnCard → canPlaceDoomOn），
+  // 返回 false 时不写入、也不触发 doomPlaced；不再用「先放后扣」的等价实现。
+  canPlaceDoomOn(state, card) {
+    if (!flagsFor(state).josefPlanResolved) return true
+    if (!card || !isSilverTwilight(card)) return true
+    return !(state.enemies || []).includes(card)
   },
   enemyMoved(state, enemy, newLocationId, api) {
     syncOfficeAloof(state)
     encounterRules.enemyMoved?.(state, enemy, newLocationId, api)
   },
-  // 议程 2：银暮秘社敌人猎手移动时视作调查员（引擎在「无调查员同地点」时才调用本钩子）。
+  // 议程 2：把[[银暮秘社]]敌人视作调查员参与猎手移动。
+  // 引擎 hunterMove 钩子只在「无调查员同地点」时调用；返回 true 表示本章已处理、引擎不再默认移动。
+  // 语义对齐参考实现 hunter-extra-targets：
+  //   · 同地点已有「视作调查员」的银暮秘社敌人 → 本猎手不移动（返回 true）；
+  //   · 额外目标最近距离严格更近 → 向该地点移动；
+  //   · 调查员更近 → 返回 false，交给引擎默认 hunterStep（保留 PREY_RANK/猎物标记/等距裁决的完整语义）；
+  //   · 并列 → 调查员侧用引擎 hunterStep 得到（已含猎物优先级的）下一步，与额外目标路线合并后由 lead 选。
   hunterMove(state, enemy, api) {
     if (!agendaActive(state, '05067') || !enemy?.hunter) return false
-    // 若同地点已有「视作调查员」的银暮秘社敌人，则不需要移动（等价已与调查员同地点）。
-    if ((state.enemies || []).some(target => target !== enemy && isSilverTwilight(target)
-      && target.location === enemy.location)) return false
-    const candidates = [
-      ...alive(state).map(inv => inv.location),
-      ...(state.enemies || []).filter(target => target !== enemy && isSilverTwilight(target)
-        && target.location).map(target => target.location),
-    ].filter(Boolean)
-    const scored = candidates
-      .map(id => ({ id, steps: bfsDistance(state, enemy.location, id) }))
-      .filter(entry => Number.isFinite(entry.steps) && entry.steps > 0)
-      .sort((left, right) => left.steps - right.steps)
-    if (!scored.length) return false
-    const destination = scored[0].id
-    const next = typeof api?.stepToward === 'function'
-      ? api.stepToward(enemy.location, destination)
-      : (loc(state, enemy.location)?.connections || [])[0]
-    if (!next || next === enemy.location) return false
-    api?.moveEnemy?.(enemy, next)
-    api?.info?.(`🧭 「${enemy.name}」被银暮秘社敌人的气息吸引，向「${api.locationName?.(next) || next}」移动。`)
-    return true
+    const silver = (state.enemies || []).filter(target => target !== enemy && isSilverTwilight(target)
+      && target.location)
+    if (!silver.length) return false
+    if (silver.some(target => target.location === enemy.location)) {
+      api?.info?.(`🧭 「${enemy.name}」把同地点的银暮秘社敌人视作调查员，不移动。`)
+      return true
+    }
+    const distance = id => bfsDistance(state, enemy.location, id)
+    const silverPositions = [...new Set(silver.map(target => target.location))]
+      .filter(id => Number.isFinite(distance(id)))
+    const silverNearest = silverPositions.length
+      ? Math.min(...silverPositions.map(distance))
+      : Infinity
+    const invTargets = alive(state).filter(investigator =>
+      enemy.prey !== 'bearer' || investigator.seat === enemy.bearerSeat)
+    const invNearest = invTargets.length
+      ? Math.min(...invTargets.map(investigator => distance(investigator.location)))
+      : Infinity
+    const routeToward = ids => {
+      const steps = []
+      for (const id of ids) {
+        const next = typeof api?.stepToward === 'function'
+          ? api.stepToward(enemy.location, id)
+          : (loc(state, enemy.location)?.connections || [])[0]
+        if (next && next !== enemy.location && !steps.includes(next)) steps.push(next)
+      }
+      return steps
+    }
+    const pickRoute = (steps, prompt) => {
+      if (!steps.length) return null
+      if (steps.length === 1) return steps[0]
+      const answer = api?.choose?.({
+        kind: 'hunter', source: { type: 'enemy', code: original(enemy) }, seat: state.campaign?.leadSeat ?? 0,
+        prompt,
+        options: steps.map(id => ({ id, label: loc(state, id)?.name || id })),
+      })
+      return steps.includes(answer) ? answer : steps[0]
+    }
+    const moveAlong = (next, reason) => {
+      if (!next) return true
+      api?.moveEnemy?.(enemy, next)
+      api?.info?.(`🧭 「${enemy.name}」${reason}，向「${loc(state, next)?.name || next}」移动。`)
+      return true
+    }
+    if (silverNearest < invNearest) {
+      const nearestIds = silverPositions.filter(id => distance(id) === silverNearest)
+      return moveAlong(pickRoute(routeToward(nearestIds), `选择「${enemy.name}」向银暮秘社敌人移动的路线。`),
+        '被银暮秘社敌人的气息吸引')
+    }
+    if (invNearest < silverNearest) return false
+    // 并列：调查员侧走引擎 hunterStep（猎物优先级完整），额外目标侧按路线合并，由 lead 选一条。
+    const invStep = typeof api?.hunterStep === 'function' ? api.hunterStep(enemy, {}) : null
+    const silverSteps = routeToward(silverPositions.filter(id => distance(id) === silverNearest))
+    const steps = [...new Set([...(invStep ? [invStep] : []), ...silverSteps])].filter(Boolean)
+    if (!steps.length) return false
+    return moveAlong(pickRoute(steps, `「${enemy.name}」的猎手目标并列，选择移动路线。`), '朝并列的猎手目标')
   },
   // 议程 2 强制（卡面：猎手移动步骤后）——引擎在猎手循环后、交战/攻击前提供 enemyPhaseAfterHunters。
   enemyPhaseAfterHunters(state, api) {
@@ -711,9 +809,10 @@ export const behavior = {
       let found = null
       let guard = 0
       while (state.encounterDeck?.length && guard++ < 200) {
-        const code = state.encounterDeck.pop()
+        // 逐张走共享弃顶入口：牌库由有到无时通知「遭遇牌库耗尽」相关强制（05091/05098 等）。
+        const [code] = discardEncounterTop(state, api, 1, { reshuffle: false, notifyEmpty: true })
+        if (!code) break
         if (isSilverTwilight({ code }) && ALL_CARDS[code]?.type === 'enemy') { found = code; break }
-        state.encounterDiscard.push(code)
       }
       if (!found) {
         api?.info?.('遭遇牌库被弃空，也没有出现银暮秘社敌人。')
@@ -885,8 +984,8 @@ export const behavior = {
   scenarioGaps: [],
   // 用战役 JSON 状态/单章逻辑忠实承载、但不是引擎通用原语的部分（不阻塞 literalCardBehavior）。
   scenarioApproximations: [
-    '议程 1「抽到[[怪物]]敌人时不生成、放一边」→ spawnLocation 返回非法生成点，spawnFailed 把遭遇弃牌堆里的该卡移到 scenarioZones.setAside，并用 api.addDoom(1) 在议程上放毁灭（同一结算内完成，等价「该敌人不生成，改为放在一边」）。',
-    '议程 2「猎手移动时把银暮秘社敌人视为调查员」→ 重写 hunterMove：目标候选 = 存活调查员所在地点 + 场上银暮秘社敌人所在地点，沿连接走一步（等价「将其视为调查员」的目标选择）。',
+    '议程 1「抽到[[怪物]]敌人时不生成、放一边」→ 引擎没有 draw-cancel 钩子；本章用 encounterDrawn（引擎在 spawnEnemy 之前调用）给「本次抽到的怪物」打 source 标记，spawnLocation 只在该标记命中时返回非法生成点，spawnFailed 把遭遇弃牌堆里的该卡移到 scenarioZones.setAside 并用 api.addDoom(1) 放毁灭。效果/弱点等非抽牌 Monster 生成没有标记、照常放行（触发面与卡面「抽取」一致）。',
+    '议程 2「猎手移动时把银暮秘社敌人视为调查员」→ 内容层按参考 hunter-extra-targets 语义重写 hunterMove：同地点有「视作调查员」的银暮秘社敌人则不移动；额外目标最近距离严格更近则向它移动；调查员更近时返回 false 交回引擎默认 hunterStep（PREY_RANK/猎物标记/等距裁决完整）；并列时合并「引擎 hunterStep 的（猎物优先级）下一步」与额外目标路线，由 lead 选择。',
     '议程 2 强制「猎手移动步骤后：重整幽灵敌人对同地点每个类人敌人造成伤害」→ 引擎 enemyPhaseAfterHunters 钩子（猎手循环后、交战/攻击前）结算，时点与参考一致。',
     '露台「弃掉合计至少 3 个智识图标的手牌：谈判」→ 本章在 behavior.actions/performAction 内实现（玩家逐张选择手牌，Wild 图标计入，费用不足不消耗团队次数；actionKind=parley 不引发趁乱攻击）。',
     '幽灵面的闹鬼能力 → flipSpectral 只替换印刷字段；locationFlipped 把幽灵面的 haunted 数组写入地点实例、翻回正常面时清除（与 P2.1 的 haunted 数据形状一致）。',

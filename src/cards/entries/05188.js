@@ -80,16 +80,27 @@ export default {
             api.info(`✋ 「${api.cardName(toHand)}」加入 ${state.investigators[zone.seat].name} 的手牌。`)
           }
         }
-        // 3) 其余以任意顺序放到牌库顶或牌库底（这里保持原相对顺序）。
-        if (remaining.length) {
+        // 3) 其余卡牌以任意顺序放到该牌库顶或牌库底（逐张选择：先选下一张牌，再选这一张放顶/放底）。
+        while (remaining.length) {
+          let pickIndex = 0
+          if (remaining.length > 1) {
+            const answer = api.choice({
+              kind: 'card', source: '05188', seat: inv.seat,
+              prompt: '选择下一张要放回的卡牌（先选牌，再选放顶或放底）。',
+              options: remaining.map((code, index) => ({ id: String(index), cardCode: code, label: api.cardName(code) })),
+            })
+            pickIndex = Number(answer)
+            if (!Number.isInteger(pickIndex) || pickIndex < 0 || pickIndex >= remaining.length) pickIndex = 0
+          }
+          const code = remaining.splice(pickIndex, 1)[0]
           const where = api.choice({
             kind: 'effect', source: '05188', seat: inv.seat,
-            prompt: '将其余的卡牌放到该牌库的哪一端？',
+            prompt: `将「${api.cardName(code)}」放到该牌库的哪一端？`,
             options: [{ id: 'top', label: '牌库顶' }, { id: 'bottom', label: '牌库底' }],
           })
-          if (where === 'bottom') zone.pile.unshift(...remaining)
-          else zone.pile.push(...remaining)
-          api.info(`📚 其余 ${remaining.length} 张放回「${zone.label}」${where === 'bottom' ? '底' : '顶'}。`)
+          if (where === 'bottom') zone.pile.unshift(code)
+          else zone.pile.push(code)
+          api.info(`📚 「${api.cardName(code)}」放回「${zone.label}」${where === 'bottom' ? '底' : '顶'}。`)
         }
       },
     },

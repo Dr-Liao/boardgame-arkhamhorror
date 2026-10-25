@@ -5,17 +5,20 @@
 // 卡面：[action]：检定[willpower](3)。如果你检定成功，弃掉苦痛折磨。
 //   如果你所在地点有处于横置状态的[[女巫]]敌人，本次检定自动成功。
 //
-// 显式简化：引擎只有「禁止免费能力 / 禁止地点能力」两种禁止读点，没有「禁止资产 [action]
-// 能力」的钩子（moves.js 的 legalMoves 不区分 [action] 来源）；该句记入 status.json gaps。
-// 威胁区与摆脱行动照常实现。
+// 「不能触发你控制的卡牌上的 [action] 能力」用条目级威胁数据 threatEffect 声明：
+// 引擎 moves.js 的 actionAbilityBlocked 读 registeredEntry(card.code)?.threatEffect?
+// .cannotTriggerActionAbilities，在 legalMoves 过滤行动型（cost.action !== false）的资产能力、
+// 在 validateMove 的同名校验里拒绝；免费/快速能力（cost.action === false）与地点/敌人行动、
+// 威胁区的摆脱行动不受影响（测试见 tests/tcu-prologue.test.mjs 的 legalMoves 用例）。
+// 威胁区、摆脱行动与「横置女巫时自动成功」由共享 encounter-rules 的威胁行动读点实现。
 
 export default {
   code: '05094',
   scope: 'treachery',
   implemented: true,
-  simplified: true,
-  note: '「你不能触发你控制的卡牌上的 [action] 能力」没有引擎读点（只有免费能力/地点能力禁止），只实现威胁区与摆脱行动。',
-  treacheryRule: { threatArea: true, cannotTriggerActionAbilities: true },
+  // 引擎读点：受影响的调查员不能触发其控制卡牌上的 [action] 能力（moves.js）。
+  threatEffect: { cannotTriggerActionAbilities: true },
+  treacheryRule: { threatArea: true },
   threatAction: {
     rule: 'discardBedeviled',
     label: '检定意志(3)摆脱苦痛折磨',

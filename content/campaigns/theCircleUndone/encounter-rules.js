@@ -30,6 +30,17 @@ import {
 
 export const original = card => card?.originalCode || card?.code
 export const activeInvestigators = state => (state?.investigators || []).filter(inv => !inv.defeated && !inv.resigned)
+// 玩家顺序：从队长座位起按座位环绕（章节抽牌/选择顺序用；参考 beforeTheBlackThrone 的同名 helper）。
+export const playerOrder = state => {
+  const count = Number(state?.numInvestigators) || (state?.investigators || []).length
+  const lead = Number(state?.campaign?.leadSeat) || 0
+  const seats = []
+  for (let offset = 0; offset < count; offset++) {
+    const seat = (lead + offset) % count
+    if (state?.investigators?.[seat]) seats.push(seat)
+  }
+  return seats
+}
 export const here = (state, inv) => (state?.locations || []).find(location => location.id === inv?.location) || null
 export const recordsFor = state => {
   state.campaign ||= {}
@@ -125,12 +136,37 @@ export const enemyRuleReads = Object.freeze({
 
 // ---------------------------------------------------------------------------
 // 看守人（watcher）：跨章记录读点。记录本身由 src/campaign/mementos.js 维护
-//（youAreBeingHunted = 被追捕座位 string[]；wasTakenByTheWatcher = 调查员卡号 string[]）。
+//（youAreBeingHunted：新形态为 boolean「团队被追捕」（05045 参考实现口径）；旧存档/按座位
+//  追踪的机制仍是 string[] 座位数组，两个形状都要兼容。wasTakenByTheWatcher = 调查员卡号 string[]。）
 // ---------------------------------------------------------------------------
-export const watcherHuntedSeats = state => (recordsFor(state).youAreBeingHunted || []).map(Number)
-export const isHunted = (state, seat) => isBeingHunted(state, seat)
-export const markHuntedSeat = (state, seat) => markHunted(state, seat)
-export const clearHuntedSeat = (state, seat) => clearHunted(state, seat)
+const huntedRecordValue = state => recordsFor(state).youAreBeingHunted
+const aliveSeats = state => (state.investigators || [])
+  .filter(inv => !inv.defeated && !inv.resigned)
+  .map(inv => Number(inv.seat))
+export const watcherHuntedSeats = state => {
+  const value = huntedRecordValue(state)
+  if (Array.isArray(value)) return value.map(Number)
+  return value === true ? aliveSeats(state) : []
+}
+export const isHunted = (state, seat) => {
+  const value = huntedRecordValue(state)
+  if (Array.isArray(value)) return value.map(String).includes(String(seat))
+  return value === true
+}
+// 座位级写入：boolean（团队）已为 true 时维持团队语义；否则继续用座位数组。
+export const markHuntedSeat = (state, seat) => {
+  if (huntedRecordValue(state) === true) return watcherHuntedSeats(state)
+  return markHunted(state, seat)
+}
+// 座位级清除：boolean 团队记录无法按座位清除，转成「除该座位外的显式座位数组」保持净语义。
+export const clearHuntedSeat = (state, seat) => {
+  if (huntedRecordValue(state) === true) {
+    const remaining = watcherHuntedSeats(state).filter(value => value !== Number(seat))
+    recordsFor(state).youAreBeingHunted = remaining.map(String)
+    return remaining
+  }
+  return clearHunted(state, seat)
+}
 export const watcherTaken = state => takenByWatcher(state)
 export const markWatcherTaken = (state, code) => markTakenByWatcher(state, code)
 export const watcherSummary = state => ({
@@ -202,7 +238,15 @@ export function resolveEncounterDeckEmptyForced(state, api) {
   }
   for (const owner of activeInvestigators(state)) {
     for (const threat of [...(owner.threat || [])]) {
-      const forced = treacheryRuleFor(original(threat))?.encounterDeckEmptyForced
+      const rule = treacheryRuleFor(original(threat))
+      // 数据声明式：条目 treacheryRule.encounterDeckEmpty 是一段纯 JSON（不能放函数——
+      // 条目规则会并进场景定义并被 structuredClone），语义由这里统一解释。
+      const data = rule?.encounterDeckEmpty
+      if (data) {
+        applyEncounterDeckEmptyData(state, owner, threat, data, api)
+        continue
+      }
+      const forced = rule?.encounterDeckEmptyForced
       if (!forced) continue
       if (forced.horror) api.horror(owner.seat, Number(forced.horror))
       if (forced.test) {
@@ -211,6 +255,57 @@ export function resolveEncounterDeckEmptyForced(state, api) {
         })
       }
     }
+  }
+}
+
+// 05147 不安的梦：「弃掉本卡，揭示你牌库顶 10 张牌，抽取其中的弱点」。
+// revealTop：从拥有者牌库顶揭示张数；drawWeaknesses：把其中的弱点按揭示顺序抽到手牌
+// （非弱点进弃牌堆）。弱点先压回牌库顶再走 api.drawCards，保持正常抽牌管线/钩子。
+function applyEncounterDeckEmptyData(state, owner, threat, data, api) {
+  const code = String(original(threat))
+  if (data.discardSelf !== false) {
+    const index = (owner.threat || []).indexOf(threat)
+    if (index >= 0) owner.threat.splice(index, 1)
+    state.encounterDiscard.push(code)
+  }
+  if (!data.revealTop) return
+  const count = Math.max(0, Math.floor(data.revealTop))
+  const revealed = []
+  for (let index = 0; index < count && owner.deck.length; index++) revealed.push(owner.deck.pop())
+  const isWeakness = card => ['weakness', 'basicweakness'].includes(ALL_CARDS[card]?.subtype)
+  const weaknesses = []
+  for (const card of revealed) {
+    if (data.drawWeaknesses && isWeakness(card)) weaknesses.push(card)
+    else owner.discard.push(card)
+  }
+  // 按揭示顺序压回牌库顶（数组尾 = 顶），再正常抽回来。
+  for (let index = weaknesses.length - 1; index >= 0; index--) owner.deck.push(weaknesses[index])
+  if (weaknesses.length && typeof api?.drawCards === 'function') api.drawCards(owner.seat, weaknesses.length)
+  else for (const card of weaknesses) owner.hand.push(card)
+  api?.info?.(`😴 「${ALL_CARDS[code]?.nameZh || code}」：揭示牌库顶 ${revealed.length} 张，抽取 ${weaknesses.length} 张弱点。`)
+}
+
+// 当前正在结算的遭遇牌堆：《恶罪报应》有两套牌堆，来源由该章 encounterDeckFor 写在
+// scenarioFlags.lastEncounterDeck；其余章节只有基础牌堆。
+function activeEncounterDeckLength(state) {
+  const spectral = state?.scenarioFlags?.lastEncounterDeck === 'spectral'
+    ? state?.extraEncounterDecks?.spectral
+    : null
+  return spectral ? (spectral.deck || []).length : (state?.encounterDeck || []).length
+}
+
+// 弃牌效果把当前遭遇牌堆「由有牌弃到 0」时，立即结算「牌库耗尽」强制（05091/05090/05098）。
+// 引擎没有「遭遇牌堆变空」的通用窗口；05090 的 onSpawn 与 05099 的弃牌都会直接改 state，
+// 因此共享钩子用调用前后对比补上通知（卡面语义：牌库一旦耗尽立即结算一次）。
+export function watchEncounterDeckEmpty(state) {
+  const before = activeEncounterDeckLength(state)
+  let fired = false
+  return api => {
+    if (fired) return
+    if (before <= 0) return
+    if (activeEncounterDeckLength(state) !== 0) return
+    fired = true
+    resolveEncounterDeckEmptyForced(state, api)
   }
 }
 
@@ -347,6 +442,22 @@ export const encounterRules = Object.freeze({
     if (inv) inv.firstTestRound = state.round
   },
 
+  // ---- 05104 被困的灵魂：本次技能检定中「在闹鬼地点投入卡牌」的额外费用 ----
+  // 条目在自身检定期间写 state.hauntedCommitCost = { locationId, paidSeats }（检定结束清除）；
+  // 引擎在投入循环前调用本钩子（src/engine/tests.js 第四轮新增 commit-extra-cost-hook，
+  // 第 4 参为场景运行时）。每位 owner（本人/协助/远程投入者）每次检定只结算一次。
+  beforeCommitCard(state, owner, context = {}, api) {
+    const cost = state?.hauntedCommitCost
+    if (!cost || !owner) return false
+    if (typeof api?.haunted !== 'function') return false
+    if (!hauntedAt(state, cost.locationId).length) return false
+    const paid = (cost.paidSeats ||= [])
+    if (paid.includes(owner.seat)) return false
+    paid.push(owner.seat)
+    api.haunted(owner.seat, { locationId: cost.locationId, kind: 'effect', source: '05104' })
+    return true
+  },
+
   // ---- 幽灵界：幽灵敌人在非幽灵地点的目标限制 ----
   canFightEnemy(state, inv, enemy) {
     return !spectralEnemyTargetBlocked(state, inv, enemy)
@@ -358,9 +469,12 @@ export const encounterRules = Object.freeze({
   // ---- 敌人条目脚本分派（函数只写在单卡条目的 enemyScript 里，不进场景定义） ----
   enemySpawned(state, enemy, api) {
     const code = original(enemy)
+    // 05090 的显现会弃遭遇牌库顶：若把牌库弃空，立即结算「牌库耗尽」强制。
+    const watchDeckEmpty = watchEncounterDeckEmpty(state)
     const rule = enemySpawnRuleFor(code)
     if (rule?.doomOnSpawn) api.doomOn?.(enemy, rule.doomOnSpawn)
     enemyScriptFor(code)?.onSpawn?.(state, enemy, api)
+    watchDeckEmpty(api)
   },
 
   // ---- 敌人移动：第三参兼容两种引擎语义 ----
@@ -503,7 +617,11 @@ export const encounterRules = Object.freeze({
     const code = original(treachery)
     const entryResolve = encounterResolveFor(code)
     if (!entryResolve) return false
-    return entryResolve(state, inv, treachery, api, { location: here(state, inv) })
+    // 05099 这类「弃遭遇牌库顶」的条目会直接改 state：结算后对比牌库长度，弃空则立即结算强制。
+    const watchDeckEmpty = watchEncounterDeckEmpty(state)
+    const result = entryResolve(state, inv, treachery, api, { location: here(state, inv) })
+    watchDeckEmpty(api)
+    return result
   },
 
   // ---- 威胁区「行动：检定 X 弃掉本卡」 + 敌人谈判/遭遇行动 ----

@@ -29,11 +29,12 @@ import { modifierTargetKind } from './modifiers.js'
 const LIMIT_VALUES = new Set(['oncePerTest', 'oncePerPhase', 'oncePerRound', 'oncePerTurn', 'oncePerGame'])
 
 export const EFFECT_DURATIONS = Object.freeze([
-  'endOfTest', 'endOfTurn', 'endOfPhase', 'endOfRound', 'whilstAttached', 'untilLeavesPlay',
+  'endOfAction', 'endOfTest', 'endOfTurn', 'endOfPhase', 'endOfRound', 'whilstAttached', 'untilLeavesPlay',
 ])
 
 // 时长链：在 timing 过期时，把「等长或更短」的时长一起清掉。
 const DURATION_ORDER = Object.freeze({
+  endOfAction: 0,
   endOfTest: 1,
   endOfTurn: 2,
   endOfPhase: 3,
@@ -41,6 +42,7 @@ const DURATION_ORDER = Object.freeze({
 })
 
 export const EFFECT_DURATION_LABELS = Object.freeze({
+  endOfAction: '本次行动结束',
   endOfTest: '本次检定结束',
   endOfTurn: '本回合结束',
   endOfPhase: '本阶段结束',

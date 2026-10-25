@@ -36,11 +36,9 @@ function chooseCommittedCard(state, inv, api) {
 
 function chooseCommittedIcon(state, inv, api, cardCode) {
   const icons = api.cardIcons(cardCode)
-  const available = Object.keys(icons).filter(key => (icons[key] || 0) > 0)
-  if (!available.length) return null
-  const skills = testSkillList(state)
-  const matching = available.filter(key => key === 'wild' || skills.includes(key))
-  const options = matching.length ? matching : available
+  // 卡面：「你选择该卡牌已有的任意一个技能图标」——不限于与本次检定匹配的图标。
+  const options = Object.keys(icons).filter(key => (icons[key] || 0) > 0)
+  if (!options.length) return null
   if (options.length === 1) return options[0]
   return api.choice({
     kind: 'skill', source: '05195', seat: inv.seat,
@@ -55,7 +53,6 @@ export default {
     {
       kind: 'free',
       trigger: 'test.afterCommit',
-      duringOwnSkillTest: true,
       label: '横置：投入的卡牌再获得 1 个技能图标；检定失败则该卡返回手牌',
       cost: { action: false, exhaust: true },
       resolve: ({ state, inv, api, source }) => {
@@ -63,11 +60,13 @@ export default {
         if (!committed) { api.info('本次检定中你没有投入卡牌。'); return }
         const icon = chooseCommittedIcon(state, inv, api, committed.code)
         if (!icon) { api.info(`「${api.cardName(committed.code)}」没有可选技能图标。`); return }
+        // 「该卡牌额外获得该图标」：记录在刚投入的卡牌条目上（本次检定内可见）。
+        committed.extraIcons = [...(committed.extraIcons || []), icon]
         const matched = icon === 'wild' || testSkillList(state).includes(icon)
         if (matched) api.addPendingTestBonus(1)
         if (source) source.grislyReturn = committed.code
         api.info(`🪬 「恐怖图腾」让「${api.cardName(committed.code)}」再获得 1 个图标`
-          + `${matched ? '（本次检定 +1）' : ''}；本次检定失败时该卡返回手牌。`)
+          + `${matched ? '（本次检定 +1）' : '（不匹配本次检定技能，数值不变）'}；本次检定失败时该卡返回手牌。`)
       },
     },
     {

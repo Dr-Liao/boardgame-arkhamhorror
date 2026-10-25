@@ -208,13 +208,14 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     className: 'ah-office-teammate', onclick: () => changeTab('investigators'), 'aria-label': t('hub.investigator.inspectName', { name: inv.name }),
   }, portrait(inv), h('span', {}, h('strong', {}, inv.name), playerBadge(s, inv.seat)))))
 
-  async function loadSaves() {
-    state.arkhamSaves = null
-    render()
+  // keepCurrent：刷新存档时保留已显示的列表（页签切换用），避免先闪一帧「读取中」再重排弹窗。
+  async function loadSaves({ keepCurrent = false } = {}) {
+    if (!keepCurrent) { state.arkhamSaves = null; render() }
     try {
       const response = await api('GET', '/sessions')
       state.arkhamSaves = response.sessions.filter(item => item.modId === 'arkhamhorror')
       state.arkhamPersist = response.persist
+      state.arkhamSaveError = null
     } catch (error) {
       state.arkhamSaves = []
       state.arkhamSaveError = String(error.message)
@@ -228,7 +229,26 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     state.arkhamDeleteConfirmId = null
     state.arkhamAiSettingsOpen = false
     state.arkhamGameSettingsOpen = false
+    // 两页内容高度不同：记录「新游戏」页自然高度，切到存档页时用它锁住弹窗。
+    state.arkhamSetupStableHeight = null
+    state.arkhamSaveError = null
+    state.arkhamSaveNotice = null
     loadSaves()
+  }
+
+  // 存档页比新游戏页矮：切换前先量下当前弹窗高度，交给 CSS 的 --ah-entry-stable-h 锁住，
+  // 否则居中的弹窗会随着内容变矮整体下跳。已加载过存档时保留列表并后台刷新，不再闪加载态。
+  function openSavesTab() {
+    const modal = document.querySelector('.ah-hub-setup')
+    // 取亚像素高度：整数 offsetHeight 会让锁定值与自然高度差半像素。
+    if (modal && state.arkhamSetupTab !== 'saves') {
+      state.arkhamSetupStableHeight = Math.round(modal.getBoundingClientRect().height * 100) / 100
+    }
+    state.arkhamSetupTab = 'saves'
+    if (state.arkhamSaves === null) { render(); return }
+    const loaded = Array.isArray(state.arkhamSaves)
+    if (loaded) render()
+    loadSaves({ keepCurrent: loaded })
   }
 
   function select(options, value, onChange, attrs = {}) {
@@ -562,6 +582,10 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
 
   function renderSetupModal(g) {
     if (state.arkhamSaves === undefined) onOpenSetup()
+    const savesTab = state.arkhamSetupTab === 'saves'
+    // 存档页内容更短：用切换前记录的「新游戏」页高度锁住弹窗（见 openSavesTab）。
+    const stableEntryHeight = savesTab && state.arkhamSetupStableHeight ? `${state.arkhamSetupStableHeight}px` : null
+    const themeAttributes = presentationAttributes({ campaign: { id: state.setup?.form?.campaignId } })
     const saves = state.arkhamSaves?.filter(item => (item.mode || (item.online ? 'online' : 'solo')) === (state.arkhamSaveMode || 'solo')) ?? state.arkhamSaves
     const newGame = h('div', { className: 'ah-hub-setup-fields' },
       g.settingsSpec.filter(spec => spec.type === 'select' && !['playerCount', 'teammates', 'cardPoolScope'].includes(spec.key)).map(spec => {
@@ -612,7 +636,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
               ? h('button', { className: 'bg-btn', onclick: () => deleteSave(item.sessionId) }, t('hub.saves.confirmDelete'))
               : h('button', { className: 'bg-btn secondary', onclick: () => { state.arkhamDeleteConfirmId = item.sessionId; render() } }, t('hub.delete'))))))
     return h('div', { className: 'bg-backdrop' },
-      h('div', { className: 'bg-modal ah-hub-setup ah-office ah-theme', ...presentationAttributes({ campaign: { id: state.setup?.form?.campaignId } }), role: 'dialog', 'aria-modal': 'true', 'aria-label': t('hub.setup.dialogAria'),
+      h('div', { className: 'bg-modal ah-hub-setup ah-office ah-theme', ...themeAttributes,
+        style: stableEntryHeight ? { ...themeAttributes.style, '--ah-entry-stable-h': stableEntryHeight } : themeAttributes.style,
+        role: 'dialog', 'aria-modal': 'true', 'aria-label': t('hub.setup.dialogAria'),
         onkeydown: modalKeys(() => { state.setup = null; render() }), onclick: event => event.stopPropagation() },
         h('div', { className: 'ah-office-entry-art' },
           h('div', { className: 'ah-office-entry-hero' }, decor('manor'),
@@ -624,9 +650,11 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         h('small', { className: 'ah-office-eyebrow' }, t('hub.setup.eyebrow')),
         h('h2', {}, state.arkhamSetupTab === 'saves' ? t('hub.setup.continueTitle') : t('hub.setup.newTitle')),
         h('div', { className: 'ah-hub-tabs' },
-          h('button', { className: state.arkhamSetupTab === 'new' ? 'active' : '', onclick: () => { state.arkhamSetupTab = 'new'; render() } }, t('hub.setup.tabNew')),
-          h('button', { className: state.arkhamSetupTab === 'saves' ? 'active' : '', onclick: () => { state.arkhamSetupTab = 'saves'; loadSaves() } }, t('hub.setup.tabSaves'))),
-        state.arkhamSetupTab === 'saves' ? saveList : newGame,
+          h('button', { className: state.arkhamSetupTab === 'new' ? 'active' : '', 'data-focus-key': 'setup-tab:new',
+            onclick: () => { state.arkhamSetupTab = 'new'; render() } }, t('hub.setup.tabNew')),
+          h('button', { className: state.arkhamSetupTab === 'saves' ? 'active' : '', 'data-focus-key': 'setup-tab:saves',
+            onclick: openSavesTab }, t('hub.setup.tabSaves'))),
+        savesTab ? saveList : newGame,
         state.error ? h('p', { role: 'alert' }, state.error) : null)),
       renderGameSettingsModal(g),
       renderAiDialogueModal(g))

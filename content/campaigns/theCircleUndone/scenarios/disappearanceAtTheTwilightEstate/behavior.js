@@ -84,20 +84,28 @@ function placeThreat(state, inv, code) {
 
 // 「放在密谋牌库旁」：共享 agendaAside 区（05102/05107 与 W-shared 的条目共用同一份表示）。
 
-// 记录「这是被谁/什么击败的」：引擎不保留击败来源，用最近一次敌人攻击 + 议程强制伤害标记近似。
+// 记录「这是被谁/什么击败的」：引擎不保留击败来源，本章用两层读点精确定位「致命的那次伤害」：
+//   · beforeEnemyHarm（敌人攻击）：写 pendingAttackHarm（同时保留 lastAttacker 供旧调用方兜底）；
+//   · beforeHarm（所有伤害/恐惧的落点）：把 pending 固化成 lastHarmSource[seat]（enemyAttack/agenda/other）。
+// 这样同一轮有多个来源时只认最后一次实际造成伤害的来源，而不是「本轮最近一次攻击」。
 function rememberAttacker(state, enemy, inv) {
   if (!inv || inv.seat == null) return
-  flagsFor(state).lastAttacker ||= {}
-  flagsFor(state).lastAttacker[inv.seat] = {
+  const flags = flagsFor(state)
+  const attacker = {
     code: String(original(enemy)),
     traits: [...monsterTraits(enemy)],
     round: Number(state.round || 0),
   }
+  flags.lastAttacker ||= {}
+  flags.lastAttacker[inv.seat] = attacker
+  flags.pendingAttackHarm = { seat: Number(inv.seat), ...attacker }
 }
 
 function clearRoundMarkers(state) {
   const flags = flagsFor(state)
   flags.lastAttacker = {}
+  flags.pendingAttackHarm = null
+  flags.lastHarmSource = {}
   flags.agendaHarmSeat = null
 }
 
@@ -106,22 +114,28 @@ export function recordFateForElimination(state, inv) {
   const records = ensurePrologueRecords(state)
   const flags = flagsFor(state)
   const code = String(inv.code)
-  const attacker = flags.lastAttacker?.[inv.seat]
-  const sameRound = attacker && Number(attacker.round) === Number(state.round || 0)
+  const precise = flags.lastHarmSource?.[inv.seat] || null
+  const legacy = flags.lastAttacker?.[inv.seat]
+  const sameRoundLegacy = Boolean(legacy && Number(legacy.round) === Number(state.round || 0))
   let key = null
-  if (sameRound && attacker.code === THE_SPECTRAL_WATCHER) {
-    key = 'wasTakenByTheWatcher'
-  } else if (sameRound && hasMonsterTrait(attacker)) {
-    key = 'wasClaimedBySpecters'
-  } else if (flags.agendaHarmSeat === inv.seat && totalDoomInPlay(state) >= 7) {
-    key = 'disappearedIntoTheMist'
-  } else {
-    key = 'wasPulledIntoTheSpectralRealm'
+  if (precise?.type === 'enemyAttack') {
+    if (precise.code === THE_SPECTRAL_WATCHER) key = 'wasTakenByTheWatcher'
+    else if ((precise.traits || []).map(trait => String(trait).toLowerCase()).includes('monster')) key = 'wasClaimedBySpecters'
   }
+  if (!key && !precise && sameRoundLegacy) {
+    if (legacy.code === THE_SPECTRAL_WATCHER) key = 'wasTakenByTheWatcher'
+    else if (hasMonsterTrait(legacy)) key = 'wasClaimedBySpecters'
+  }
+  if (!key && (precise?.type === 'agenda' || (!precise && flags.agendaHarmSeat === inv.seat))) {
+    if (totalDoomInPlay(state) >= 7) key = 'disappearedIntoTheMist'
+  }
+  if (!key) key = 'wasPulledIntoTheSpectralRealm'
   const list = Array.isArray(records[key]) ? records[key] : []
   if (!list.includes(code)) list.push(code)
   records[key] = list
-  return { key, code, attacker: sameRound ? attacker : null }
+  if (flags.lastHarmSource) delete flags.lastHarmSource[inv.seat]
+  flags.agendaHarmSeat = null
+  return { key, code, attacker: precise?.type === 'enemyAttack' ? precise : (sameRoundLegacy ? legacy : null) }
 }
 
 // ---------------------------------------------------------------------------
@@ -257,13 +271,11 @@ export const behavior = {
   // 卡面子句全部接行为；近似实现（等价但改了承载方式）单独列在 scenarioApproximations。
   scenarioGaps: [],
   scenarioApproximations: [
-    '议程 1b 的「推进后翻回 1a 且不移除毁灭」：引擎议程没有 revert 原语，改为在 investigatorEliminated 里直接结算 1b 记录，agendaIndex 保持 0、毁灭不移除（1a 始终显示）',
     '「失踪人口」没有 crossedOut 字段：string[] 只记录已选故事调查员卡号，未选者缺席即等于划掉（后续章节读到的语义与参考实现 getRecordedCardCodes 一致）',
-    '击败来源判定：引擎不保留「被谁击败」，用最近一次敌人攻击（beforeEnemyHarm）与议程 1a 强制伤害标记近似 1b 的四分支记录',
+    '击败来源判定：用 beforeEnemyHarm + beforeHarm 两层读点精确定位「致命那次伤害」的来源（敌人攻击/议程 1a 强制/其它），同一轮多来源时不会误归；仅当外部直接调用 investigatorEliminated（无 harm 记录）时退回「同轮最近攻击者」兜底',
     '卡背固定起手牌直接写入 inv.hand（卡号数组），不经引擎抓牌管线，因此不触发「抽牌」窗口',
     '朦胧之雾(01168) 的附属按核心共享条目的 location.fog/shroudMod 语义近似，不建独立附属实例',
     '「放在密谋牌库旁」的 05102/05107 存共享区 state.scenarioZones.agendaAside（纯 JSON），持续效果与轮末清理由 encounterRules 的通用钩子读取',
-    '幕 1b 的「记录你被追捕」把全队座位写入 youAreBeingHunted（参考实现是 boolean 记录，本仓库该键类型为 string[]）',
   ],
 
   // ---- 设置 ---------------------------------------------------------------
@@ -410,10 +422,28 @@ export const behavior = {
     }
   },
 
-  // 敌人攻击：记住最近攻击者（1b 的四分支记录需要来源）。
+  // 敌人攻击：先记「本次攻击」来源；真正的来源固化在 beforeHarm（伤害落点）里。
   beforeEnemyHarm(state, enemy, inv, harm, api) {
     encounterRules.beforeEnemyHarm?.(state, enemy, inv, harm, api)
     rememberAttacker(state, enemy, inv)
+  },
+
+  // 每次伤害/恐惧落点：把「致命那次伤害」的真实来源固化为 lastHarmSource[seat]：
+  // enemyAttack（含来源敌人与 traits）/ agenda（本密谋 1a 强制）/ other。1b 的四分支记录据此判定。
+  beforeHarm(state, inv, harm, api) {
+    encounterRules.beforeHarm?.(state, inv, harm, api)
+    if (!inv || inv.seat == null) return
+    const flags = flagsFor(state)
+    const pending = flags.pendingAttackHarm
+    let source = { type: 'other' }
+    if (pending && Number(pending.seat) === Number(inv.seat) && Number(pending.round) === Number(state.round || 0)) {
+      source = { type: 'enemyAttack', code: pending.code, traits: [...(pending.traits || [])] }
+      flags.pendingAttackHarm = null
+    } else if (flags.agendaHarmSeat === inv.seat) {
+      source = { type: 'agenda' }
+    }
+    flags.lastHarmSource ||= {}
+    flags.lastHarmSource[inv.seat] = source
   },
 
   // 幕 1a 强制 + 议程 1a 强制②：调查员被消除时（含撤退）。
@@ -429,13 +459,18 @@ export const behavior = {
       api?.info?.(`📜 ${inv.name} 被消除：${amount} 个线索放到「${act.name}」上（场景共 ${act.clues} 个）。`)
     }
     // 「当任何调查员被击败时，该调查员必须推进此议程」——撤退 ≠ 被击败，不触发。
+    // 用 agenda-in-place-flip 原语真实翻到 1b（播报背面正文），记录该调查员命运后再翻回 1a；
+    // 不推进 agendaIndex、不移除任何毁灭标记（卡面「在本密谋推进时，不要移除其上任何毁灭标记」）。
     if (!inv.resigned && state.agendaIndex === 0 && String(original(state.agendas?.[0])) === AGENDA_CARD) {
+      const hasFlip = typeof api?.flipAgendaInPlace === 'function'
+      if (hasFlip) api.flipAgendaInPlace('back')
+      else api?.info?.(`📖 密谋 1b「审判·XX」：翻开背面并按指示记录 ${inv.name} 的命运。`)
       const fate = recordFateForElimination(state, inv)
       const backText = ALL_CARDS[AGENDA_CARD]?.backTextZh || ALL_CARDS[AGENDA_CARD]?.backText || ''
-      api?.info?.(`📖 密谋 1b「审判·XX」：${inv.name} 的命运已记录（${fate.key}）。`
-        + (backText ? `\n${backText}` : ''))
-      // 参考实现 advanceAgenda 后立刻 revertAgenda：这里保持 agendaIndex=0、不移除毁灭。
-      api?.info?.('🌑 密谋翻回 1a；本次推进不移除其上任何毁灭标记。')
+      if (!hasFlip && backText) api?.info?.(backText)
+      api?.info?.(`📖 ${inv.name} 的命运已记录（${fate.key}）。`)
+      if (hasFlip) api.flipAgendaInPlace('front')
+      else api?.info?.('🌑 密谋翻回 1a；本次推进不移除其上任何毁灭标记。')
       if (fate.attacker) api?.info?.(`🩸 击败来源：${ALL_CARDS[fate.attacker.code]?.nameZh || fate.attacker.code}。`)
     }
     // 本 hook 接管了「线索放在地点」的默认行为。

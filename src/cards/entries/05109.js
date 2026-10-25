@@ -10,7 +10,8 @@
 
 export default {
   code: '05109',
-  passive: { assignHarmAtLocation: true },
+  // 审计 R4：卡面只允许「其他调查员受到的恐惧」分配给它（伤害不接），passive 限定 'horror'。
+  passive: { assignHarmAtLocation: 'horror' },
   abilities: [],
   modifiers: [],
 }

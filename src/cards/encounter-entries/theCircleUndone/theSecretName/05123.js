@@ -1,7 +1,7 @@
 // 05123 巫异光芒（The Witch Light）
 // 归属：关卡专用 · theSecretName（P8 w-witch）。卡面：每个非弱点敌人 +3 生命；反应同上。背面 - 幕 3：那赫卜放 1 毁灭；否则放回场外并为密谋 4a 预留 4 毁灭。
 // 一卡一文件：规则只在这里维护；跨章共享规则在 content/campaigns/theCircleUndone/encounter-rules.js。
-import { ALL_CARDS, activeInvestigators, originalOf } from '../../_shared.js'
+import { ALL_CARDS, originalOf } from '../../_shared.js'
 
 export default {
   code: '05123', scope: 'agenda', implemented: true,
@@ -22,11 +22,12 @@ export default {
         state.scenarioZones.setAside = [...(state.scenarioZones.setAside || []), '05149']
         api.info?.('🌑 那赫卜被放回场外（set aside）。')
       }
-      const nextAgenda = state.agendas?.[(state.agendaIndex ?? 0) + 1]
-      if (nextAgenda) {
-        nextAgenda.doom = (nextAgenda.doom || 0) + 4
-        api.info?.('🌑 密谋 4a 入场时将带有 4 个毁灭标记。')
-      }
+      // 「密谋 4a 入场时在其上放 4 毁灭」：此刻 4a 尚未成为当前议程（引擎没有「议程入场」钩子）。
+      // 只登记待放标记，由 behavior.agendaChain 在 05124 真正成为当前议程的同一结算里放
+      // （对照参考实现 advanceAgendaDeck 后的 placeDoomOnAgenda 4）。
+      state.scenarioFlags ||= {}
+      state.scenarioFlags.pendingAgendaDoom = { code: '05124', amount: 4 }
+      api.info?.('🌑 密谋 4a 入场时将带有 4 个毁灭标记。')
       return true
     },
   },

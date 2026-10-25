@@ -14,6 +14,9 @@ import {
   STRANGE_GEOMETRY, SWARM_OF_RATS, UNKNOWN_PLACES,
 } from '../content/campaigns/theCircleUndone/scenarios/theSecretName/definition.js'
 import act1 from '../src/cards/encounter-entries/theCircleUndone/theSecretName/05125.js'
+import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { createHaunted } from '../src/engine/haunted.js'
+import { fixture, asset, legalMoves, validateMove, move, settle } from './core-fixture.mjs'
 import act2 from '../src/cards/encounter-entries/theCircleUndone/theSecretName/05126.js'
 import act3 from '../src/cards/encounter-entries/theCircleUndone/theSecretName/05127.js'
 import hermit from '../src/cards/encounter-entries/theCircleUndone/theSecretName/05121.js'
@@ -138,8 +141,23 @@ function apiStub(state, overrides = {}) {
         left -= spend
       }
     },
-    drawCards: (seat, n) => { state.investigators[seat].hand.push(...Array(n).fill('01001')) },
+    drawCards: (seat, n) => {
+      const inv = state.investigators[seat]
+      for (let index = 0; index < (n || 0); index++) {
+        const card = inv.deck.length ? inv.deck.pop() : '01001'
+        inv.hand.push(card)
+      }
+    },
     discardRandom: (seat, n) => { state.investigators[seat].hand.splice(0, n) },
+    // 05137：参考实现用 investigateAbility（标准调查管线）；测试默认成功并回调 onInvestigateSuccess。
+    investigate: (seat, options = {}) => {
+      if (typeof options?.onInvestigateSuccess === 'function') {
+        options.onInvestigateSuccess({ success: true, value: 9, difficulty: 4, skill: 'intellect' })
+      }
+      return true
+    },
+    // 05120/05144 的猎手移动：引擎 hunterStep 是纯计算；默认无目标，测试按需覆盖。
+    hunterStep: () => null,
     discardAsset: (seat, assetId) => {
       const inv = state.investigators[seat]
       inv.assets = inv.assets.filter(asset => String(asset.id) !== String(assetId))
@@ -196,7 +214,7 @@ test('身份登记：地点/幕/议程/敌人/剧情资产都有原卡身份且 
 // ---------------------------------------------------------------------------
 // 2. setup / 未知地点牌库 / 锁
 // ---------------------------------------------------------------------------
-test('setup：未知地点牌库 7 张（底部巫宅遗址 + 3 随机，顶部 3 随机），放一边 9 张', () => {
+test('setup：未知地点牌库 7 张（底部巫宅遗址 + 3 随机，顶部 3 随机），放一边 8 张（詹金在遭遇牌库）', () => {
   const state = setup(stateFor(2), 5)
   const deck = state.extraLocationDecks.unknownPlaces.deck
   assert.equal(deck.length, 7)
@@ -204,10 +222,12 @@ test('setup：未知地点牌库 7 张（底部巫宅遗址 + 3 随机，顶部 
   assert.ok(deck.slice(0, 4).includes('witchHouseRuins'), '巫宅遗址在牌库底部 4 张里')
   assert.deepEqual([...[...UNKNOWN_PLACES, 'witchHouseRuins']].sort(), [...deck].sort())
   const aside = state.scenarioZones.setAside
-  for (const code of [NAHAB, BROWN_JENKIN, THE_BLACK_BOOK, GHOSTLY_PRESENCE, GHOSTLY_PRESENCE, '05141', '05133', STRANGE_GEOMETRY, STRANGE_GEOMETRY]) {
+  for (const code of [NAHAB, THE_BLACK_BOOK, GHOSTLY_PRESENCE, GHOSTLY_PRESENCE, '05141', '05133', STRANGE_GEOMETRY, STRANGE_GEOMETRY]) {
     assert.ok(aside.includes(code), `放一边缺少 ${code}`)
   }
-  assert.deepEqual(state.investigators.map(inv => inv.location), ['moldyHalls', 'moldyHalls'])
+  // 参考 setupTheSecretName：布朗·詹金不在 set aside，随遭遇牌库入场（findEncounterCard 找）。
+  assert.equal(aside.includes(BROWN_JENKIN), false)
+  assert.equal(state.investigators.map(inv => inv.location).join(','), 'moldyHalls,moldyHalls')
 })
 
 test('setup 确定性：同种子未知地点牌库一致、不同种子不同', () => {
@@ -248,13 +268,30 @@ test('印刷符号图与揭示面：破旧房门揭示后换符号；未知地�
 // ---------------------------------------------------------------------------
 // 3. 幕
 // ---------------------------------------------------------------------------
-test('act1 背面：换成凯夏的房间、移除其他地点、黑书归属、洗入 2 张古怪图形', () => {
+test('act1 背面：换成凯夏的房间（带上标记/卡牌）、移除其他地点、黑书归属、洗入 2 张古怪图形', () => {
   const state = setup(stateFor(2), 23)
   state.encounterDeck = []
+  const walter = loc(state, 'walterGilmansRoom')
+  walter.clues = 2
+  walter.doom = 1
+  walter.attachments = ['05093']
+  state.playerLocationAttachments = [{ location: 'walterGilmansRoom', code: '05146', ownerSeat: 0 }]
+  const atWalter = { id: 'e1', code: '05090', originalCode: '05090', name: '敌人A', location: 'walterGilmansRoom', engagedSeat: null }
+  const atMoldy = { id: 'e2', code: '05090', originalCode: '05090', name: '敌人B', location: 'moldyHalls', engagedSeat: null }
+  state.enemies.push(atWalter, atMoldy)
   const api = apiStub(state)
   act1.actRule.onReveal(state, state.acts[0], api)
   assert.deepEqual(state.locations.map(location => location.id), ['keziahsRoom'])
   assert.ok(state.investigators.every(inv => inv.location === 'keziahsRoom'))
+  // swapLocation：原地点上的 token 与卡牌一起带到新地点。
+  assert.equal(loc(state, 'keziahsRoom').clues, 2)
+  assert.equal(loc(state, 'keziahsRoom').doom, 1)
+  assert.deepEqual(loc(state, 'keziahsRoom').attachments, ['05093'])
+  assert.equal(state.playerLocationAttachments[0].location, 'keziahsRoom')
+  // 原地点上的敌人搬到新地点；其他被移除地点上的敌人弃到遭遇弃牌堆。
+  assert.equal(atWalter.location, 'keziahsRoom')
+  assert.equal(state.enemies.includes(atMoldy), false)
+  assert.ok(state.encounterDiscard.includes('05090'))
   const owner = state.investigators.find(inv => (inv.assets || []).some(asset => codeOf(asset) === THE_BLACK_BOOK))
   assert.ok(owner, '有调查员控制了黑书')
   assert.equal(state.encounterDeck.filter(code => code === STRANGE_GEOMETRY).length, 2)
@@ -286,12 +323,14 @@ test('act1/act2 团队线索推进：满足条件时出现脚本行动并支付�
 test('act2 背面：放置献祭场所、那赫卜 +2 毁灭、布朗·詹金放在那赫卜所在地点', () => {
   const state = setup(stateFor(2), 31)
   state.actIndex = 1
+  state.encounterDeck.push(BROWN_JENKIN)
   const taken = []
   const api = apiStub(state, { spawn: (code, location) => { taken.push({ code, location }); return null } })
   act2.actRule.onReveal(state, state.acts[1], api)
   assert.ok(loc(state, 'siteOfTheSacrifice'))
   assert.deepEqual(taken.map(entry => entry.code), [NAHAB, BROWN_JENKIN])
   assert.equal(taken[0].location, 'siteOfTheSacrifice')
+  assert.equal(state.encounterDeck.includes(BROWN_JENKIN), false, '詹金从遭遇牌库被找出')
 })
 
 test('act3 目标：那赫卜上有毁灭时不推进，无毁灭时推进', () => {
@@ -318,21 +357,69 @@ test('act3 背面 → 结局 2；act4 议程背面 → 结局 1', () => {
 // ---------------------------------------------------------------------------
 // 4. 议程
 // ---------------------------------------------------------------------------
-test('agenda1 背面：布朗·詹金在场时把鼠群生成在他所在地点；≥3 人再在巫宅地点生成一只', () => {
+test('agenda1 背面：詹金在场找鼠群生成在他地点；不在场则从牌库找出詹金；≥3 人再在巫宅地点生成一只', () => {
   const state = setup(stateFor(3), 43)
   placeFromDefinition(state, 'witchHouseRuins')
   state.enemies.push({ id: 'bj', code: BROWN_JENKIN, originalCode: BROWN_JENKIN, name: '布朗·詹金', location: 'moldyHalls', engagedSeat: null })
-  state.encounterDiscard = ['01166', SWARM_OF_RATS]
+  state.encounterDiscard = ['01166', SWARM_OF_RATS, SWARM_OF_RATS]
   const spawned = []
   const api = apiStub(state, { spawn: (code, location) => { spawned.push({ code, location }); return null } })
   hermit.agendaRule.onReveal(state, state.agendas[0], api)
   assert.equal(spawned.filter(entry => entry.code === SWARM_OF_RATS).length, 2)
-  assert.equal(spawned[0].location, 'moldyHalls')
+  assert.equal(spawned[0].location, 'moldyHalls', '第一只鼠群在詹金所在地点')
+  assert.ok(spawned[1].location === 'moldyHalls' || spawned[1].location === 'witchHouseRuins',
+    '3–4 人的第二只鼠群生成在某个巫宅地点')
+
+  // 布朗·詹金不在场：从遭遇牌库找出他（不是从 set aside 凭空生成），找到后 2 人局不再额外找鼠群。
+  const missing = setup(stateFor(2), 44)
+  missing.encounterDeck = ['01166', BROWN_JENKIN]
+  const leadLocation = missing.investigators[0].location
+  const found = []
+  hermit.agendaRule.onReveal(missing, missing.agendas[0], apiStub(missing, {
+    spawn: (code, location) => { found.push({ code, location }); return null },
+  }))
+  assert.deepEqual(found, [{ code: BROWN_JENKIN, location: leadLocation }])
+  assert.equal(missing.encounterDeck.includes(BROWN_JENKIN), false)
+
+  // 詹金与鼠群都不在牌库/弃牌堆：什么都不生成（参考 findEncounterCard 语义）。
+  const empty = setup(stateFor(2), 45)
+  const none = []
+  hermit.agendaRule.onReveal(empty, empty.agendas[0], apiStub(empty, {
+    spawn: (code, location) => { none.push({ code, location }); return null },
+  }))
+  assert.deepEqual(none, [])
+})
+
+test('议程反应：击败詹金/那赫卜后由击败者选择是否获得线索（1 或 ≥3 人 2）', () => {
+  const state = setup(stateFor(2), 46)
+  const jenkin = { id: 'bj', code: BROWN_JENKIN, originalCode: BROWN_JENKIN, name: '布朗·詹金',
+    location: 'moldyHalls', defeatedBy: 1, engagedSeat: null }
+  state.enemies.push(jenkin)
+  state.enemies = state.enemies.filter(enemy => enemy !== jenkin)
+  secretName.behavior.enemyDefeated(state, jenkin, apiStub(state, { choose: () => 'use' }))
+  assert.equal(state.investigators[1].clues, 1, '线索给击败者（座位 1）')
+  assert.equal(state.investigators[0].clues, 0)
+
+  // 可以放弃。
+  const pass = setup(stateFor(2), 47)
+  const nahab = { id: 'n1', code: NAHAB, originalCode: NAHAB, name: '那赫卜',
+    location: 'moldyHalls', defeatedBy: 0, engagedSeat: null }
+  pass.enemies.push(nahab)
+  secretName.behavior.enemyDefeated(pass, nahab, apiStub(pass, { choose: () => 'skip' }))
+  assert.equal(pass.investigators[0].clues, 0)
+
+  // 3 人局：2 个线索。
+  const three = setup(stateFor(3), 48)
+  const jenkin3 = { id: 'bj', code: BROWN_JENKIN, originalCode: BROWN_JENKIN, name: '布朗·詹金',
+    location: 'moldyHalls', defeatedBy: 2, engagedSeat: null }
+  three.enemies.push(jenkin3)
+  secretName.behavior.enemyDefeated(three, jenkin3, apiStub(three, { choose: () => 'use' }))
+  assert.equal(three.investigators[2].clues, 2)
 })
 
 test('agenda2 背面：按幕放置那赫卜、洗入 2 张鬼影骤现、布朗·詹金放到那赫卜地点', () => {
-  const state = setup(stateFor(2), 47)
-  state.encounterDeck = []
+  const state = setup(stateFor(2), 51)
+  state.encounterDeck = [BROWN_JENKIN]
   const api = apiStub(state)
   familiar.agendaRule.onReveal(state, state.agendas[1], api)
   assert.ok(state.enemies.some(enemy => codeOf(enemy) === NAHAB && enemy.location === 'walterGilmansRoom'))
@@ -340,6 +427,7 @@ test('agenda2 背面：按幕放置那赫卜、洗入 2 张鬼影骤现、布朗
   const jenkin = state.enemies.find(enemy => codeOf(enemy) === BROWN_JENKIN)
   const nahab = state.enemies.find(enemy => codeOf(enemy) === NAHAB)
   assert.equal(jenkin.location, nahab.location)
+  assert.equal(state.encounterDeck.includes(BROWN_JENKIN), false, '詹金从遭遇牌库被找出')
 })
 
 test('agenda3 背面：幕 1/2 把那赫卜放回场外并为密谋 4a 预留 4 毁灭；幕 3 放 1 毁灭', () => {
@@ -348,7 +436,18 @@ test('agenda3 背面：幕 1/2 把那赫卜放回场外并为密谋 4a 预留 4 
   early.enemies.push({ id: 'n1', code: NAHAB, originalCode: NAHAB, name: '那赫卜', location: 'moldyHalls', doom: 0, engagedSeat: null })
   witchLight.agendaRule.onReveal(early, early.agendas[2], apiStub(early))
   assert.equal(early.enemies.some(enemy => codeOf(enemy) === NAHAB), false)
+  // 4 毁灭不在揭示时预写（密谋 4a 尚未入场），而是留待 agendaChain 在其入场时放。
+  assert.deepEqual(early.scenarioFlags.pendingAgendaDoom, { code: '05124', amount: 4 })
+  assert.equal(early.agendas[3].doom || 0, 0)
+  secretName.behavior.agendaChain(early, early.agendas[3], apiStub(early))
   assert.equal(early.agendas[3].doom, 4)
+  assert.equal(early.scenarioFlags.pendingAgendaDoom, undefined)
+  // 非 05124 的议程入场不会错误消费标记。
+  const other = setup(stateFor(1), 54)
+  other.scenarioFlags.pendingAgendaDoom = { code: '05124', amount: 4 }
+  secretName.behavior.agendaChain(other, other.agendas[2], apiStub(other))
+  assert.equal(other.agendas[2].doom || 0, 0)
+  assert.ok(other.scenarioFlags.pendingAgendaDoom)
 
   const late = setup(stateFor(1), 59)
   late.actIndex = 2
@@ -371,19 +470,30 @@ test('Nahab：攻击值 + 密谋编号；敌军阶段开始若重整放 1 毁灭
   assert.equal(nahab.doom, 1)
 })
 
-test('act3：那赫卜被击败时不弃掉，改为治愈/横置/解除交战并给击败者奖励线索', () => {
+test('act3：那赫卜被击败时不弃掉，改为治愈/横置/解除交战/本轮不重整并给击败者奖励线索', () => {
   const state = setup(stateFor(2), 67)
   state.actIndex = 2
   const nahab = { id: 'n1', code: NAHAB, originalCode: NAHAB, name: '那赫卜', location: 'moldyHalls',
     doom: 2, exhausted: false, engagedSeat: 0, damageTaken: 3, defeatedBy: 0, traits: ['Witch'] }
   state.investigators[0].engaged = ['n1']
   state.enemies.push(nahab)
-  const blocked = secretName.behavior.enemyCanBeDefeated(state, nahab, null, 0)
-  assert.equal(blocked, false)
+  // 允许正常击败（引擎随后移除敌人并调用 enemyDefeated，由章节实现「替代弃掉」）。
+  assert.equal(secretName.behavior.enemyCanBeDefeated(state, nahab, null, 0), true)
+  state.enemies = state.enemies.filter(enemy => enemy !== nahab)
+  const api = apiStub(state, { choose: () => 'use' })
+  const replaced = secretName.behavior.enemyDefeated(state, nahab, api)
+  assert.equal(replaced, true, '不走胜利区')
+  assert.ok(state.enemies.includes(nahab), '放回场上')
   assert.equal(nahab.damageTaken, 0)
   assert.equal(nahab.exhausted, true)
   assert.equal(nahab.engagedSeat, null)
+  assert.deepEqual(nahab.preventReady, { from: state.round, rounds: 1 })
   assert.equal(state.investigators[0].clues, 1, '2 人时奖励 1 线索（≥3 人才是 2）')
+  // act3 起 immobile（不能离开献祭场所），离开 act3 后恢复。
+  assert.equal(nahab.immobile, true)
+  state.actIndex = 1
+  secretName.behavior.checkObjectives(state, apiStub(state, { advanceAct: () => {} }))
+  assert.equal(nahab.immobile, false)
 })
 
 test('Brown Jenkin：非弱点敌人 + 当前密谋编号生命；重整生物敌人 +2 攻击；敌军阶段结束弃手牌再抽', () => {
@@ -412,29 +522,58 @@ test('条目声明：布朗·詹金/那赫卜/鼠群/黑书 implemented', () => 
 // ---------------------------------------------------------------------------
 // 6. 诡计（单卡条目）
 // ---------------------------------------------------------------------------
-test('05143 好事魔宠：布朗·詹金不在场时找出他并造成 1 伤', () => {
+test('05143 好事魔宠：布朗·詹金不在场时从遭遇牌库找出他并造成 1 伤；找不到时只造成 1 伤', () => {
   const state = setup(stateFor(1), 73)
-  state.scenarioZones.setAside.push(BROWN_JENKIN)
+  state.encounterDeck.push(BROWN_JENKIN)
   const api = apiStub(state)
   meddlesome.encounterResolve(state, state.investigators[0], { code: '05143' }, api)
   assert.equal(state.enemies.some(enemy => codeOf(enemy) === BROWN_JENKIN), true)
   assert.equal(state.investigators[0].damage, 1)
+
+  // 牌库/弃牌堆都没有詹金：不凭空生成，伤害照常。
+  const missing = setup(stateFor(1), 74)
+  meddlesome.encounterResolve(missing, missing.investigators[0], { code: '05143' }, apiStub(missing))
+  assert.equal(missing.enemies.length, 0)
+  assert.equal(missing.investigators[0].damage, 1)
 })
 
-test('05144 鬼影骤现：那赫卜不在场时生成在你地点；在场时重整并攻击同地点调查员', () => {
-  const first = setup(stateFor(1), 79)
-  first.scenarioZones.setAside.push(NAHAB)
-  ghostly.encounterResolve(first, first.investigators[0], { code: '05144' }, apiStub(first))
-  assert.ok(first.enemies.some(enemy => codeOf(enemy) === NAHAB && enemy.location === first.investigators[0].location))
+test('05144 鬼影骤现：那赫卜只从遭遇牌库/弃牌堆找出；在场时重整、结算猎手并攻击同地点调查员', () => {
+  // 仅 set aside 中的那赫卜：不在「遭遇牌库和弃牌堆」里，不生成（参考 findEncounterCard 语义）。
+  const asideOnly = setup(stateFor(1), 79)
+  asideOnly.scenarioZones.setAside.push(NAHAB)
+  ghostly.encounterResolve(asideOnly, asideOnly.investigators[0], { code: '05144' }, apiStub(asideOnly))
+  assert.equal(asideOnly.enemies.length, 0)
 
-  const second = setup(stateFor(2), 79)
-  const nahab = { id: 'n1', code: NAHAB, originalCode: NAHAB, name: '那赫卜', location: 'moldyHalls',
+  // 弃牌堆中的那赫卜：取出并生成在你所在地点。
+  const fromDiscard = setup(stateFor(1), 80)
+  fromDiscard.encounterDiscard.push(NAHAB)
+  ghostly.encounterResolve(fromDiscard, fromDiscard.investigators[0], { code: '05144' }, apiStub(fromDiscard))
+  assert.ok(fromDiscard.enemies.some(enemy => codeOf(enemy) === NAHAB
+    && enemy.location === fromDiscard.investigators[0].location))
+
+  // 在场：重整 + 猎手移动一步（api.hunterStep 纯计算，内容执行移动）+ 攻击同地点每位调查员。
+  const state = setup(stateFor(2), 81)
+  const nahab = { id: 'n1', code: NAHAB, originalCode: NAHAB, name: '那赫卜', location: 'walterGilmansRoom',
     exhausted: true, engagedSeat: null, hunter: true, doom: 0, traits: ['Witch'] }
-  second.enemies.push(nahab)
+  state.enemies.push(nahab)
   apiForAttack.length = 0
-  ghostly.encounterResolve(second, second.investigators[0], { code: '05144' }, apiStub(second))
+  ghostly.encounterResolve(state, state.investigators[0], { code: '05144' }, apiStub(state, {
+    hunterStep: enemy => (enemy === nahab ? 'moldyHalls' : null),
+  }))
   assert.equal(nahab.exhausted, false)
+  assert.equal(nahab.location, 'moldyHalls', '结算猎手关键词：向调查员移动一步后再攻击')
   assert.equal(apiForAttack.length, 2, '攻击同地点每位调查员')
+
+  // immobile（act3 不能离开献祭场所）时不移动。
+  const pinned = setup(stateFor(1), 82)
+  const chained = { id: 'n2', code: NAHAB, originalCode: NAHAB, name: '那赫卜', location: 'siteOfTheSacrifice',
+    exhausted: false, engagedSeat: null, hunter: true, immobile: true, doom: 0, traits: ['Witch'] }
+  pinned.enemies.push(chained)
+  ghostly.encounterResolve(pinned, pinned.investigators[0], { code: '05144' }, apiStub(pinned, {
+    hunterStep: () => 'moldyHalls',
+  }))
+  assert.equal(chained.location, 'siteOfTheSacrifice')
+  assert.equal(chained.doom, 1, '位于献祭场所再放 1 毁灭')
 })
 
 test('05145 异次元幻象：难度 = 2 + 遭遇弃牌堆每 10 张 +1，失败弃支援', () => {
@@ -451,19 +590,29 @@ test('05145 异次元幻象：难度 = 2 + 遭遇弃牌堆每 10 张 +1，失败
   assert.equal(state.investigators[0].assets.length, 0)
 })
 
-test('05146 群星牵引：进入威胁区；本回合未移动则回合结束受 2 恐惧', () => {
+test('05146 群星牵引：进入威胁区；本回合未移动则回合结束受 2 恐惧（只算自己回合内的移动）', () => {
   const state = setup(stateFor(1), 89)
   const inv = state.investigators[0]
   const api = apiStub(state)
   pulledByStars.encounterResolve(state, inv, { code: '05146' }, api)
   assert.equal(inv.threat.length, 1)
-  inv.tcuMovedThisTurn = false
+  // 神话阶段/别人回合的效果位移不计入「本回合移动过」。
+  state.phase = 'mythos'
+  secretName.behavior.locationEntered(state, inv)
+  assert.ok(!inv.tcuMovedThisTurn)
   secretName.behavior.turnEnded(state, inv, api)
   assert.equal(inv.horror, 2)
   assert.equal(pulledByStars.threatAction.rule, 'discardPulledByTheStars')
+  // 自己回合内的移动才计入：本回合移动过 → 回合结束不受。
+  state.phase = 'investigation'
+  state.currentSeat = inv.seat
+  secretName.behavior.locationEntered(state, inv)
+  assert.equal(inv.tcuMovedThisTurn, true)
+  secretName.behavior.turnEnded(state, inv, api)
+  assert.equal(inv.horror, 2, '移动过则不再受 2 恐惧')
 })
 
-test('05147 不安的梦：意志(5)失败放入威胁区；回合结束弃遭遇牌库顶', () => {
+test('05147 不安的梦：意志(5)失败放入威胁区；回合结束弃遭遇牌库顶；牌库耗尽时弃本卡并揭示牌堆顶 10 张', () => {
   const state = setup(stateFor(1), 97)
   const inv = state.investigators[0]
   const api = apiStub(state)
@@ -473,6 +622,29 @@ test('05147 不安的梦：意志(5)失败放入威胁区；回合结束弃遭�
   secretName.behavior.turnEnded(state, inv, api)
   assert.equal(state.encounterDeck.length, 1)
   assert.equal(state.encounterDiscard.length, 1)
+
+  // 遭遇牌库由有到无 → 强制：弃本卡 + 揭示拥有者牌库顶 10 张，弱点进手牌、其余进弃牌堆。
+  const exhausted = setup(stateFor(1), 98)
+  const owner = exhausted.investigators[0]
+  disquieting.encounterResolve(exhausted, owner, { code: '05147' }, apiStub(exhausted, {
+    test: (seat, skill, difficulty, resolve) => resolve({ success: false, value: 0, difficulty, skill }),
+  }))
+  owner.deck = ['01001', '01165', '01020', '01021', '01022', '01023', '01024', '01025', '01026', '10135']
+  exhausted.encounterDeck = ['01166']
+  const drainApi = apiStub(exhausted, {
+    drawCards: (seat, n) => {
+      for (let index = 0; index < n; index++) owner.hand.push(owner.deck.pop())
+    },
+  })
+  // 抽牌后遭遇牌库为 0：behavior.encounterDrawn（共享钩子）立即结算「牌库耗尽」。
+  exhausted.encounterDeck.pop()
+  secretName.behavior.encounterDrawn(exhausted, owner, '01166', drainApi)
+  assert.equal(owner.threat.some(threat => codeOf(threat) === '05147'), false, '弃掉不安的梦')
+  assert.ok(exhausted.encounterDiscard.includes('05147'))
+  assert.equal(owner.hand.filter(code => ALL_CARDS[code]?.subtype === 'weakness'
+    || ALL_CARDS[code]?.subtype === 'basicweakness').length, 1, '10 张里的 1 张弱点进手牌')
+  assert.equal(owner.hand.length, 1)
+  assert.equal(owner.deck.length, 0, '弱点被抽走后牌库恢复为 0')
 })
 
 // ---------------------------------------------------------------------------
@@ -500,7 +672,7 @@ test('05130 乔的房间：每场一次检索祝福/道具支援加入手牌', (
   assert.ok(inv.hand.length <= 1)
 })
 
-test('05134 今晚早些时候：向过去的自己求助把弃牌堆顶返回手牌并记住', () => {
+test('05134 今晚早些时候：向过去的自己求助把弃牌返回手牌并把「沉湎过去」写进战役记录', () => {
   const state = setup(stateFor(1), 107)
   const inv = state.investigators[0]
   placeFromDefinition(state, 'moldyHallsEarlierTonight')
@@ -509,7 +681,7 @@ test('05134 今晚早些时候：向过去的自己求助把弃牌堆顶返回�
   earlierTonight.locationRule.performAction(state, inv, { rule: 'requestPastSelf' },
     apiStub(state, { choose: () => 'request' }))
   assert.equal(inv.hand.length, 1)
-  assert.deepEqual(state.scenarioFlags.meddledWithThePast, [inv.name])
+  assert.deepEqual(state.campaign.records.meddledWithThePast, [inv.code])
 })
 
 test('05137/05138/05141/05142 的行动：治愈/移动/移除毁灭/离开古怪图形', () => {
@@ -518,9 +690,24 @@ test('05137/05138/05141/05142 的行动：治愈/移动/移除毁灭/离开古�
   placeFromDefinition(state, 'witchHouseRuins')
   inv.location = 'witchHouseRuins'
   inv.horror = 3
+  let investigate = null
   ruinsRoom.locationRule.performAction(state, inv, { rule: 'investigateRuins' },
-    apiStub(state, { test: (seat, skill, difficulty, resolve) => resolve({ success: true, value: 5, difficulty, skill }) }))
+    apiStub(state, {
+      investigate: (seat, options = {}) => {
+        investigate = { seat, options }
+        options.onInvestigateSuccess?.({ success: true, value: 9, difficulty: 4, skill: 'intellect' })
+      },
+    }))
+  // 参考 WitchHouseRuins.hs：走标准调查管线（api.investigate），成功时治愈 2 恐惧、不发现线索。
+  assert.equal(investigate?.seat, inv.seat)
+  assert.equal(investigate?.options.allowNoClues, true)
+  assert.equal(investigate?.options.noClueDiscovery, true)
   assert.equal(inv.horror, 1)
+  assert.equal(state.scenarioFlags.ruinsHealUsedBySeat[inv.seat], true, '使用即消耗每场一次（失败也算）')
+  // 失败也消耗：直接再调用一次不会清掉已消耗的标记。
+  ruinsRoom.locationRule.performAction(state, inv, { rule: 'investigateRuins' },
+    apiStub(state, { investigate: () => {} }))
+  assert.equal(state.scenarioFlags.ruinsHealUsedBySeat[inv.seat], true)
 
   placeFromDefinition(state, 'salemGaol1692')
   inv.location = 'salemGaol1692'
@@ -542,6 +729,26 @@ test('05137/05138/05141/05142 的行动：治愈/移动/移除毁灭/离开古�
   geometryRoom.locationRule.performAction(state, inv, { rule: 'leaveStrangeGeometry' },
     apiStub(state, { choose: () => 'moldyHalls' }))
   assert.equal(inv.location, 'moldyHalls')
+
+  // 05141：卡面「此行动不会引发那赫卜的借机攻击」= 定向豁免（noOpportunityAttackFrom），
+  // 不是把行动伪装成 Parley（否则其它敌人的借机攻击也会被跳过）。
+  inv.location = 'siteOfTheSacrifice'
+  state.enemies[0].doom = 1
+  const sacrificeMoves = []
+  sacrificeRoom.locationRule.actions({ moves: sacrificeMoves, state, inv, location: loc(state, 'siteOfTheSacrifice') })
+  const removeDoom = sacrificeMoves.find(move => move.rule === 'removeNahabDoom')
+  assert.deepEqual(removeDoom.noOpportunityAttackFrom, ['05149'])
+  assert.equal(removeDoom.actionKind, undefined, '不得用 parley 伪装免借机攻击')
+  assert.equal(removeDoom.action, 'scenarioAction')
+
+  // 05142：无线索的古怪图形上，[free] 移动项必须带 fast:true（引擎 playerWindow 只收
+  // behavior.actions() 里 actions===0 && fast===true 的剧本行动）。
+  inv.location = 'strangeGeometry1'
+  const geometryMoves = []
+  geometryRoom.locationRule.actions({ moves: geometryMoves, state, inv, location: loc(state, 'strangeGeometry1') })
+  const leave = geometryMoves.find(move => move.rule === 'leaveStrangeGeometry')
+  assert.equal(leave.actions, 0)
+  assert.equal(leave.fast, true, '玩家窗口需要 fast:true 才能使用 [free] 行动')
 })
 
 test('05139 物理教室：成功超难度 ≥2 时在另一地点发现 1 线索（每轮一次）', () => {
@@ -567,6 +774,26 @@ test('05139 物理教室：成功超难度 ≥2 时在另一地点发现 1 线�
   physicsRoom.locationRule.onInvestigateSuccess({ state, location: loc(state, 'physicsClassroom'), inv: other,
     result: { success: true, value: 6, difficulty: 4 }, api: otherApi })
   assert.equal(state.scenarioFlags.physicsRoundBySeat[1], state.round, '每名调查员独立记录')
+})
+
+test('05136 古老者之城：放置未知地点并建立本场冒险持续连接（不被后续揭示重算覆盖）', () => {
+  const state = setup(stateFor(1), 117)
+  const inv = state.investigators[0]
+  const city = placeFromDefinition(state, 'cityOfElderThings', { revealed: false })
+  city.revealed = true
+  state.extraLocationDecks = { unknownPlaces: { deck: ['twilightAbyss'] } }
+  cityRoom.locationRule.onReveal(state, city, apiStub(state, { choose: () => 'takeHorror' }), inv.seat)
+  const placed = loc(state, 'twilightAbyss')
+  assert.ok(placed)
+  assert.equal(inv.horror, 2)
+  assert.ok(city.connections.includes('twilightAbyss'))
+  assert.ok(placed.connections.includes('cityOfElderThings'))
+  // 再揭示另一个未知地点：locationRevealed 按符号重算连线后仍保留持续连接。
+  const other = placeFromDefinition(state, 'salemGaol1692', { revealed: false })
+  other.revealed = true
+  secretName.behavior.locationRevealed(state, other, apiStub(state, {}))
+  assert.ok(city.connections.includes('twilightAbyss'), '持续连接不被符号重算覆盖')
+  assert.ok(placed.connections.includes('cityOfElderThings'))
 })
 
 // ---------------------------------------------------------------------------
@@ -613,12 +840,49 @@ test('混乱标记失败后果：cultist 弃 3/5 张；tablet 那赫卜攻击；
     { success: false, value: 0, difficulty: 2, drawn: ['tablet'], cancelledTokens: [] }, apiStub(state))
   assert.equal(apiForAttack.length, 1, '简单模式：那赫卜与调查员同地点时攻击')
 
-  // 那赫卜远离调查员所在地点：elderthing 应真的把它沿连接移动一步（旧实现只调用纯计算 hunterStep）。
+  // 那赫卜远离调查员所在地点：elderthing 用引擎单步解算 hunterStep 后由内容执行移动。
   state.enemies[0].hunter = true
   state.enemies[0].location = 'walterGilmansRoom'
   secretName.behavior.afterTest(state, inv,
-    { success: false, value: 0, difficulty: 2, drawn: ['elderthing'], cancelledTokens: [] }, apiStub(state))
+    { success: false, value: 0, difficulty: 2, drawn: ['elderthing'], cancelledTokens: [] },
+    apiStub(state, { hunterStep: enemy => (enemy.location === 'walterGilmansRoom' ? 'moldyHalls' : null) }))
   assert.equal(state.enemies[0].location, 'moldyHalls', 'elderthing 结算猎手关键词：向调查员移动一步')
+})
+
+test('05120 混乱标记与猎手结算：异次元按印刷英文特性判定；交战/横置/immobile 的敌人不结算猎手', () => {
+  const state = setup(stateFor(1), 133)
+  const inv = state.investigators[0]
+  const abyss = placeFromDefinition(state, 'twilightAbyss', { revealed: false })
+  abyss.revealed = true
+  secretName.behavior.locationRevealed(state, abyss, apiStub(state))
+  // 揭示后实例 traits 保持印刷英文特性（不能用 unrevealed.traitsZh 中文，否则 [[Extradimensional]] 判定失效）。
+  assert.deepEqual(abyss.traits, ['Extradimensional', 'Otherworld'])
+  assert.equal(abyss.name, '暮光深渊')
+  inv.location = abyss.id
+  assert.equal(secretName.behavior.resolveChaosToken(state, inv, 'skull', apiStub(state)).delta, -3)
+  state.difficulty = 'hard'
+  assert.equal(secretName.behavior.resolveChaosToken(state, inv, 'skull', apiStub(state)).delta, -4)
+  state.difficulty = 'standard'
+
+  // 只在场的 hunter 且未交战、未横置、未 immobile 的敌人才结算猎手关键词。
+  const free = { id: 'h1', code: '05090', originalCode: '05090', name: '猎手A', location: 'walterGilmansRoom',
+    engagedSeat: null, exhausted: false, hunter: true }
+  const engaged = { id: 'h2', code: '05090', originalCode: '05090', name: '猎手B', location: 'walterGilmansRoom',
+    engagedSeat: 0, exhausted: false, hunter: true }
+  const tired = { id: 'h3', code: '05090', originalCode: '05090', name: '猎手C', location: 'walterGilmansRoom',
+    engagedSeat: null, exhausted: true, hunter: true }
+  const pinned = { id: 'h4', code: '05149', originalCode: '05149', name: '那赫卜', location: 'walterGilmansRoom',
+    engagedSeat: null, exhausted: false, hunter: true, immobile: true }
+  state.enemies.push(free, engaged, tired, pinned)
+  inv.location = 'moldyHalls'
+  const moved = []
+  secretName.behavior.afterTest(state, inv,
+    { success: false, value: 0, difficulty: 2, drawn: ['elderthing'], cancelledTokens: [] },
+    apiStub(state, {
+      hunterStep: enemy => (enemy === free ? 'moldyHalls' : 'moldyHalls'),
+      moveEnemy: (enemy, destination) => { moved.push(enemy.id); enemy.location = destination },
+    }))
+  assert.deepEqual(moved, ['h1'], '只有未交战、未横置、未 immobile 的猎手移动')
 })
 
 // ---------------------------------------------------------------------------
@@ -692,7 +956,8 @@ test('古怪图形：作为遭遇地点放置并移动到其上；调查阶段�
   loc(state, 'moldyHalls').clues = 3
   placeFromDefinition(state, 'landlordsQuarters')
   loc(state, 'landlordsQuarters').clues = 1
-  secretName.behavior.phaseBegan(state, 'mythos', apiStub(state))
+  // 参考实现是 PhaseEnds #after #investigation（= 敌人阶段开始）；引擎用 phaseBegan('enemy')。
+  secretName.behavior.phaseBegan(state, 'enemy', apiStub(state))
   assert.equal(inv.location, 'moldyHalls')
   assert.equal(inv.damage, 1)
   assert.equal(inv.horror, 1)
@@ -774,3 +1039,184 @@ test('05093 崩毁离析：无横置女巫时检定 意志(3)，成功弃入遭�
   assert.ok(state.encounterDiscard.includes('05093'))
   assert.ok(!inv.discard.includes('05093'))
 })
+
+// 第四轮内容侧接线：05133 0 线索可调查、05140 行动限制、05150 支付前减费能力。
+test('第四轮接线：05133 investigateWithoutClues / 05140 actionBlocked / 05150 beforePlayCost 条目', async () => {
+  const state = setup(stateFor(1))
+  const inv = state.investigators[0]
+  // 05133 凯夏的房间：0 线索也允许标准调查（引擎读点 investigate-empty-location）。
+  const keziahsRoom = state.locations.find(location => location.id === 'keziahsRoom')
+    || { id: 'keziahsRoom', code: '05133', name: '凯夏的房间' }
+  assert.equal(secretName.behavior.investigateWithoutClues(state, inv, keziahsRoom), true)
+  assert.equal(secretName.behavior.investigateWithoutClues(state, inv,
+    state.locations.find(location => location.id === 'moldyHalls') || { id: 'moldyHalls', code: '05127' }), false)
+
+  // 05140 旧日支配者皇廷：闹鬼生效时，非调查行动被拒；调查行动放行；调查结算后清标记。
+  secretName.behavior.hauntedScript(state, { scriptId: 'courtMustInvestigate', seat: inv.seat },
+    apiStub(state))
+  assert.equal(state.scenarioFlags.mustInvestigateSeat, inv.seat)
+  assert.match(secretName.behavior.actionBlocked(state, inv, { action: 'fight' }), /调查/)
+  assert.match(secretName.behavior.actionBlocked(state, inv, { action: 'move' }), /调查/)
+  assert.equal(secretName.behavior.actionBlocked(state, inv, { action: 'investigate' }), undefined)
+  secretName.behavior.investigateResult(state, inv,
+    state.locations.find(location => location.id === inv.location) || state.locations[0],
+    { success: true, value: 5, difficulty: 2 }, apiStub(state))
+  assert.equal(state.scenarioFlags.mustInvestigateSeat, undefined)
+
+  // 05150 黑书：条目声明 beforePlayCost 反应（横置 + 自选 X 恐惧 → context.costReduction）。
+  const blackBook = (await import('../src/cards/encounter-entries/theCircleUndone/theSecretName/05150.js')).default
+  assert.equal(blackBook.passive.stats.willpower, 1)
+  const ability = blackBook.abilities.find(candidate => candidate.trigger === 'beforePlayCost')
+  assert.ok(ability, '黑书应有 beforePlayCost 反应')
+  assert.equal(ability.cost.exhaust, true)
+  const context = { cost: 3, costReduction: 0, cardCode: '01020', seat: inv.seat }
+  const api = apiStub(state, { choice: () => '2', horror: () => {}, info: () => {} })
+  ability.resolve({ inv: { ...inv, sanity: 6, horror: 1 }, source: { code: '05150' }, context, api })
+  assert.equal(context.costReduction, 2)
+  assert.equal(ability.criteria[0]({ inv: { ...inv, sanity: 6, horror: 6 }, context }), false,
+    '没有剩余恐惧可付时不可发动')
+  // 多人局：卡面是「当你打出一张卡牌时」——只有黑书持有者本人打牌时响应，他人打牌不触发
+  // （引擎 beforePlayCost 窗口会对每名存活调查员枚举受控卡反应，必须由 criteria 限定座位）。
+  assert.equal(ability.criteria[0]({ inv: { ...inv, seat: 0, sanity: 6, horror: 1 },
+    context: { ...context, seat: 1 } }), false, '其他调查员打牌时黑书不响应')
+  assert.equal(ability.criteria[0]({ inv: { ...inv, seat: 0, sanity: 6, horror: 1 },
+    context: { ...context, seat: 0 } }), true, '黑书持有者本人打牌时响应')
+})
+
+test('05130/05131 闹鬼 choice 按选项可结算性过滤：无支援只剩恐惧、0 线索只剩放毁灭', () => {
+  const runHaunted = ({ locationId, investigator, choices = [] }) => {
+    const calls = []
+    const log = []
+    const haunted = createHaunted({
+      reactionWindow: () => {},
+      requestChoice: (state, request) => {
+        calls.push(request)
+        return choices.shift() ?? request.options[0].id
+      },
+      scenarioBehavior: () => ({ hauntedScript: () => true }),
+      cardDef: code => ALL_CARDS[code],
+    })
+    const inv = { seat: 0, name: '调查员1', location: locationId, horror: 0, clues: 0,
+      hand: [], assets: [], threat: [], deck: [], discard: [], ...investigator }
+    const state = {
+      investigators: [inv],
+      locations: [{ ...clone(definition.locations[locationId]), id: locationId, clues: 0 }],
+      scenarioFlags: {}, round: 1, phase: 'investigation', currentSeat: 0, log: [],
+    }
+    const api = {
+      info: text => log.push(String(text)),
+      cardName: code => ALL_CARDS[code]?.nameZh || code,
+      damage: () => {}, horror: (seat, amount) => { inv.horror += amount },
+      discardAsset: (seat, assetId) => {
+        inv.assets = inv.assets.filter(asset => String(asset.id) !== String(assetId))
+      },
+      spendClues: (seat, amount) => { inv.clues = Math.max(0, inv.clues - amount) },
+      addDoom: amount => { state.doom = (state.doom || 0) + amount },
+      doomOn: () => {},
+    }
+    const result = haunted.resolveHaunted(state, 0, { locationId }, api)
+    return { result, inv, state, calls, location: state.locations[0], log }
+  }
+
+  // 05130：无支援 → 只剩「受到 1 点恐惧」，自动结算，无选择窗。
+  const joeEmpty = runHaunted({ locationId: 'joeMazurewiczsRoom', investigator: {} })
+  assert.equal(joeEmpty.inv.horror, 1)
+  assert.equal(joeEmpty.calls.length, 0, '唯一可用选项直接结算')
+
+  // 05130：有支援 → 两个选项；选择弃支援后支援被弃、不受恐惧。
+  const joeAsset = runHaunted({
+    locationId: 'joeMazurewiczsRoom',
+    investigator: { assets: [{ id: 'a1', code: '01001' }] },
+    choices: ['discardAsset'],
+  })
+  assert.equal(joeAsset.calls.length, 1)
+  assert.deepEqual(joeAsset.calls[0].options.map(option => option.id), ['horror', 'discardAsset'])
+  assert.equal(joeAsset.inv.assets.length, 0)
+  assert.equal(joeAsset.inv.horror, 0)
+
+  // 05131：0 线索 → 只剩「放 1 个毁灭」，自动结算。
+  const frankEmpty = runHaunted({ locationId: 'frankElwoodsRoom', investigator: {} })
+  assert.equal(frankEmpty.state.doom, 1)
+  assert.equal(frankEmpty.calls.length, 0, '0 线索时候选窗不出「放线索」选项')
+
+  // 05131：1 线索 → 两个选项；选择放线索后消耗自己 1 线索、地点 +1。
+  const frankClue = runHaunted({
+    locationId: 'frankElwoodsRoom',
+    investigator: { clues: 1 },
+    choices: ['placeClue'],
+  })
+  assert.equal(frankClue.calls.length, 1)
+  assert.deepEqual(frankClue.calls[0].options.map(option => option.id), ['placeClue', 'agendaDoom'])
+  assert.equal(frankClue.inv.clues, 0)
+  assert.equal(frankClue.location.clues, 1)
+})
+
+// 第四轮 E 收口：章节直接弃遭遇牌库（Walter 房间弃顶 2）把牌库弃空时，必须补触发
+// 「遭遇牌库耗尽」强制（05098/05147 类）。
+test('第四轮：沃尔特房间弃顶 2 张把遭遇牌库弃空 → 触发 05147 的「遭遇牌库耗尽」强制', () => {
+  const state = setup(stateFor(1))
+  const inv = state.investigators[0]
+  state.encounterDeck = ['01001', '01002']
+  state.encounterDiscard = []
+  inv.threat = [{ id: 'threat-05147', code: '05147', originalCode: '05147' }]
+  const api = apiStub(state)
+  assert.equal(secretName.behavior.hauntedScript(state,
+    { scriptId: 'walterGilmansRoomDiscard', seat: inv.seat }, api), true)
+  assert.equal(state.encounterDeck.length, 0)
+  assert.equal(inv.threat.length, 0, '05147 的强制在牌库耗尽时结算并弃掉自己')
+  assert.ok(state.encounterDiscard.includes('05147'))
+})
+
+// 第五轮：05150 黑书的减费要参与「打出合法性」判定（引擎 play-cost-interrupt + playCostReductionProvider
+// + 受控剧情支援的窗口枚举修复）。用 core-fixture 走真实引擎事务：
+// 资源 1、打出 3 费大砍刀 → legalMoves 出现 → beforePlayCost 触发黑书、选 X=2 →
+// 费用降为 1、资源归 0、黑书横置、受到 2 点恐惧。
+test('05150 黑书：资源不足但减费后够 → 可打出（引擎合法性 + beforePlayCost 反应）', () => {
+  const state = fixture('01001')
+  const inv = state.investigators[0]
+  const book = asset(state, '05150')
+  inv.resources = 1
+  inv.hand.push('01020')
+  assert.equal(validateMove(state, 0, { action: 'play', cardId: '01020' }), null,
+    '引擎把黑书的潜在减费计入打出合法性')
+  assert.ok(legalMoves(state, 0).some(move => move.action === 'play' && move.cardId === '01020'))
+  move(state, { action: 'play', cardId: '01020' })
+  // 第一个窗口：横置黑书（可选反应）；第二个窗口：自选 X（合法性要求至少减到付得起，故从 2 起）。
+  let guard = 0
+  const seenKinds = []
+  while (state.pendingChoice && guard++ < 10) {
+    const pending = state.pendingChoice
+    seenKinds.push(pending.kind)
+    let optionId
+    if (pending.kind === 'reaction') {
+      optionId = pending.options.find(option => option.id !== 'skip')?.id
+      assert.ok(optionId, '应出现黑书的 beforePlayCost 反应选项')
+    } else if (pending.kind === 'number') {
+      assert.deepEqual(pending.options.map(option => option.id), ['2', '3'],
+        'X 的下限是减到付得起（2），上限是剩余恐惧/费用（3）')
+      optionId = '2'
+    } else {
+      optionId = pending.options.find(option => ['done', 'skip', 'self'].includes(option.id))?.id
+        ?? pending.options[0]?.id
+    }
+    move(state, { action: 'choose', choiceId: pending.id, optionId })
+  }
+  const played = state.investigators[0]
+  assert.deepEqual(seenKinds, ['reaction', 'number'])
+  assert.equal(played.resources, 0, '费用 3 减 2 → 只付 1')
+  assert.equal(played.horror, 2, '受到 X=2 点恐惧')
+  assert.equal(played.assets.find(card => card.code === '05150')?.exhausted, true, '黑书横置')
+  assert.ok(played.assets.some(card => card.code === '01020'), '大砍刀已打出并装备')
+  assert.equal(book.id, played.assets.find(card => card.code === '05150')?.id)
+})
+
+test('05150 黑书：已横置时不提供潜在减费 → 资源不足仍不能打出', () => {
+  const state = fixture('01001')
+  const inv = state.investigators[0]
+  asset(state, '05150', { exhausted: true })
+  inv.resources = 1
+  inv.hand.push('01020')
+  assert.equal(validateMove(state, 0, { action: 'play', cardId: '01020' }), '资源不足')
+  assert.equal(legalMoves(state, 0).some(move => move.action === 'play' && move.cardId === '01020'), false)
+})
+

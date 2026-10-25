@@ -16,10 +16,14 @@
 //
 // 约定：只在**卡牌效果**取消时记账；「跳过」类（不取消任何东西）不记账。
 
+import { noteCancelInFrame } from './resolution-scope.js'
+
 export function noteCardCancelled(reactionWindow, state, events, { seat = null, what = null } = {}) {
   const cardCode = state?._resolvingCardCode || null
   const cardSeat = state?._resolvingSeat ?? seat
   if (!cardCode) return null
+  // 2026-10-25 第五轮修复 05004：标记「本次描述子结算内已经记过账」（进程内帧，不写 state）。
+  noteCancelInFrame()
   const owner = numberSeat(state, cardSeat)
   const context = {
     when: 'cardCancelled',

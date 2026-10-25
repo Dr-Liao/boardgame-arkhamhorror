@@ -4,6 +4,7 @@
 // 放在 `afterTest`（引擎会分别在自动失败与正常路径各调一次，本文件按 result 幂等）。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { chaosFx, hardSide } from '../../tcu-chaos.js'
+import { discardEncounterTop } from '../../encounter-rules.js'
 
 const original = card => card?.originalCode || card?.code || card
 const traitsOf = card => (ALL_CARDS[original(card)]?.traits || card?.traits || [])
@@ -18,27 +19,15 @@ export function witchingHourChaosToken(state, inv, token, api) {
     // 困难/专家：「从遭遇牌堆顶弃牌，弃掉的张数等于本次检定的难度」（揭示时立即结算）。
     if (hard) {
       const difficulty = Number(state.skillTest?.difficulty ?? api?.testDifficulty?.() ?? 0)
-      discardEncounterTop(state, inv, difficulty, api)
+      // 走共享弃顶入口：牌库由有到无时通知「遭遇牌库耗尽」相关强制（encounterDeckEmpty 通道）。
+      const discarded = discardEncounterTop(state, api, difficulty, { reshuffle: false, notifyEmpty: true })
+      if (discarded.length) api?.info?.(`「${inv?.name || '调查员'}」弃掉遭遇牌库顶 ${discarded.length} 张牌。`)
     }
     return value
   }
   if (token === 'tablet') return chaosFx(hard ? -2 : -1)
   if (token === 'elderthing') return chaosFx(hard ? -4 : -3)
   return null
-}
-
-function discardEncounterTop(state, inv, amount, api) {
-  let left = Math.max(0, Math.floor(Number(amount) || 0))
-  const discarded = []
-  while (left-- > 0 && Array.isArray(state.encounterDeck) && state.encounterDeck.length) {
-    const code = state.encounterDeck.pop()
-    state.encounterDiscard.push(code)
-    discarded.push(code)
-  }
-  if (discarded.length) {
-    api?.info?.(`「${inv?.name || '调查员'}」弃掉遭遇牌库顶 ${discarded.length} 张牌。`)
-  }
-  return discarded
 }
 
 // 技能检定后的后果（参考 FailedSkillTest 分支）。
@@ -66,7 +55,8 @@ export function witchingHourChaosAfterTest(state, inv, result, api) {
   // [skull] 简单/普通失败：每低于难度 1 点，弃遭遇牌库顶 1 张。
   if (failed && !hard && has('skull')) {
     const failedBy = Math.max(0, Number(result.difficulty || 0) - Number(result.value || 0))
-    discardEncounterTop(state, inv, failedBy, api)
+    const discarded = discardEncounterTop(state, api, failedBy, { reshuffle: false, notifyEmpty: true })
+    if (discarded.length) api?.info?.(`「${inv?.name || '调查员'}」弃掉遭遇牌库顶 ${discarded.length} 张牌。`)
   }
 
   // [elderthing] 失败：选择（简单/普通）/全部（困难/专家）重整并治愈女巫敌人。
@@ -75,16 +65,21 @@ export function witchingHourChaosAfterTest(state, inv, result, api) {
     const candidates = (state.enemies || []).filter(enemy => isWitch(enemy)
       && (enemy.location === locationId
         || (state.locations.find(loc => loc.id === locationId)?.connections || []).includes(enemy.location)))
-    if (!candidates.length) {
-      api?.info?.('[elderthing]：所在地点与连接地点没有女巫敌人。')
+    // 简单/普通：卡面只允许选「已横置或已受到伤害」的女巫；困难/专家：所在地点与连接地点的全部女巫。
+    const eligible = hard ? candidates : candidates.filter(enemy =>
+      enemy.exhausted === true || (Number(enemy.damageTaken) || 0) > 0)
+    if (!eligible.length) {
+      api?.info?.(hard
+        ? '[elderthing]：所在地点与连接地点没有女巫敌人。'
+        : '[elderthing]：所在地点与连接地点没有已横置或已受到伤害的女巫敌人。')
       return
     }
-    const targets = hard ? candidates : [candidates.length === 1 ? candidates[0] : candidates.find(enemy =>
+    const targets = hard ? eligible : [eligible.length === 1 ? eligible[0] : eligible.find(enemy =>
       String(enemy.id) === String(api?.choose?.({
         kind: 'enemy', source: '05050-elderthing', seat: inv.seat,
         prompt: '选择要重整并治愈的女巫敌人。',
-        options: candidates.map(enemy => ({ id: String(enemy.id), label: enemy.name })),
-      }))) || candidates[0]]
+        options: eligible.map(enemy => ({ id: String(enemy.id), label: enemy.name })),
+      }))) || eligible[0]]
     for (const enemy of targets.filter(Boolean)) {
       enemy.exhausted = false
       enemy.damageTaken = 0

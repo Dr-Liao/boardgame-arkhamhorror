@@ -87,7 +87,7 @@ export function presentationChanges(before, after, events = []) {
   return changes
 }
 
-export function createTablePresentation({ art, onChange = () => {} } = {}) {
+export function createTablePresentation({ art, onChange = () => {}, themeAttributes = null } = {}) {
   preloadChaosTokens()
   let prefs = { sound: true, fast: false }
   try { prefs = { ...prefs, ...JSON.parse(localStorage.getItem('arkham-presentation') || '{}') } } catch { /* optional storage */ }
@@ -97,6 +97,19 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
   let blocking = false, cancelScene = null
   let latest = null, displayed = null
   let cardTransits = [], maskedCards = new Set()
+  // 演出层挂在 body 上，收不到牌桌根节点的战役色板：由 game-ui 传入读取函数，
+  // 在创建 .ah-fx-layer 时写入主题类与 --ah-theme-* 变量，供剧情导入/阶段演出使用。
+  const applyTheme = el => {
+    const theme = typeof themeAttributes === 'function' ? themeAttributes() : themeAttributes
+    if (!theme) return
+    el.classList.add('ah-theme')
+    for (const [key, value] of Object.entries(theme)) {
+      if (key === 'style') continue
+      if (value == null) el.removeAttribute(key)
+      else el.setAttribute(key, value)
+    }
+    for (const [name, value] of Object.entries(theme.style || {})) el.style.setProperty(name, value)
+  }
   const interaction = key => [...document.querySelectorAll('.ah-table [data-interaction]')].find(el => el.dataset.interaction === key)
   const maskArrivals = changes => {
     for (const c of changes.filter(c=>c.kind==='draw')) {
@@ -170,6 +183,7 @@ export function createTablePresentation({ art, onChange = () => {} } = {}) {
   const ensureLayer = () => {
     if (layer?.isConnected) return layer
     layer = document.createElement('div'); layer.className = 'ah-fx-layer'; layer.setAttribute('aria-live', 'polite'); layer.setAttribute('aria-atomic', 'true')
+    applyTheme(layer)
     document.body.append(layer)
     return layer
   }

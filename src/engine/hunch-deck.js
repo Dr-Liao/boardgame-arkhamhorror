@@ -145,7 +145,8 @@ export function createHunchDeck(deps) {
     return inv.hunchDeck
   }
 
-  // 调查阶段开始：揭示牌库顶一张，放进手牌（「可以打出，如同它是你的手牌」）。
+  // 调查阶段开始：揭示牌库顶一张。揭示牌**不进手牌**，只记在 inv.hunchRevealed；
+  // 打出示意由 legalMoves 的 fromHunch 通道提供（如同在手牌中、-2 费用）。
   function revealHunchCard(state, inv, events = []) {
     const rule = hunchRuleOf(inv.code)
     if (!rule || state.storyInvestigators) return null
@@ -154,7 +155,6 @@ export function createHunchDeck(deps) {
     if (inv.hunchRevealed) returnHunchCard(state, inv, events)
     const code = inv.hunchDeck.pop()
     inv.hunchRevealed = code
-    inv.hand.push(code)
     info(state, events, `🔮 ${inv.name} 揭示直觉牌库顶的「${cardName(code)}」：本阶段可以少付 ${rule.discount} 资源打出它。`)
     return code
   }

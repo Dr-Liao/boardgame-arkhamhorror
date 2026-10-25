@@ -8,8 +8,9 @@
 // 实现位置：
 //   · 正面两条都在章节 behavior：`investigatorEliminated` 接管「线索放到幕上」（返回 truthy，
 //     引擎因此不再把线索放到地点）；幕没有可推进目标（序章不推进）。
-//   · 背面 1b 的 onReveal 把「你被追捕」写进战役记录（本仓库 `youAreBeingHunted` 为座位 string[]），
-//     并依赖 behavior.actIndexAfterAdvance 返回 0 实现「翻回场景 1a」。
+//   · 背面 1b 的 onReveal 把「你被追捕」写进战役记录（参考实现是团队级 boolean 记录；
+//     recordSchema 已改 boolean，旧存档的座位 string[] 由 encounter-rules.watcherHuntedSeats/isHunted
+//     兼容读取），并依赖 behavior.actIndexAfterAdvance 返回 0 实现「翻回场景 1a」。
 //
 // 一卡一文件：本卡规则只在这里声明；不 import 引擎/content。
 export default {
@@ -19,15 +20,9 @@ export default {
   actRule: {
     onReveal(state, act, api) {
       const records = (state.campaign && (state.campaign.records ||= {})) || {}
-      if (!Array.isArray(records.youAreBeingHunted)) records.youAreBeingHunted = []
-      // 「记录下你被追捕」：本仓库该记录类型是「被追捕的座位」，把所有仍在场的座位写入。
-      for (const inv of state.investigators || []) {
-        if (inv.defeated || inv.resigned) continue
-        const seat = String(inv.seat)
-        if (!records.youAreBeingHunted.includes(seat)) records.youAreBeingHunted.push(seat)
-      }
+      // 「记录下你被追捕」：写团队级 boolean true（参考实现口径）。
+      records.youAreBeingHunted = true
       api?.info?.('📖 场景 1b「失踪事件」：在剧本日志中记录「你被追捕」，然后翻回场景 1a。')
-      api?.info?.(`被追捕的座位：${records.youAreBeingHunted.join('、') || '无'}。`)
     },
   },
 }

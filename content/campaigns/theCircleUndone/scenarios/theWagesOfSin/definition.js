@@ -54,7 +54,9 @@ export const UNFINISHED_BUSINESS_RULES = Object.freeze({
   },
   '05178j': {
     enemyCode: '05178i',
-    immediate: { kind: 'cannotBeDefeated', parleyClueBonus: 1, spectralParleyOnly: true },
+    // 卡面：谈判「花费 +1[per_investigator] 个线索」= 基础 1 + 人数；不再另加 parleyClueBonus
+    // （旧数据额外 +1 导致人数+2，05178j 审计近似修复）。
+    immediate: { kind: 'cannotBeDefeated', spectralParleyOnly: true },
   },
   '05178l': {
     enemyCode: '05178k',
@@ -196,6 +198,9 @@ const locations = {
   chapelAttic175: makeSpectralLocation('chapelAttic175', '05175', {
     symbol: 'moon', links: ['plus', 'diamond'],
     hauntedGroup: 'chapelAttic175', beneathRule: 'atticBottom',
+    // 卡面 [reaction]「在你成功调查教堂阁楼后」：此地印刷 0 线索，引擎默认禁止调查 0 线索地点；
+    // 用引擎第四轮地点字段 investigateWithoutClues 允许（src/engine/moves.js:318-321,712-716）。
+    investigateWithoutClues: true,
   }),
   chapelAttic176: makeSpectralLocation('chapelAttic176', '05176', {
     symbol: 'moon', links: ['plus', 'diamond'],
@@ -206,6 +211,8 @@ const locations = {
 // 这里按参考实现 withXShroud 归零，由 behavior.locationShroudModifier 给出 X。
 locations.theGallows170.shroud = 0
 locations.theGallows170.back = { ...locations.theGallows170.back, shroud: 0 }
+// 这两面的印表 shroud 是“X”的 -2 占位；翻面回填 shroud 时必须跳过（否则幽灵面变成 -2 + X）。
+export const X_SHROUD_PLACEHOLDER_CODES = Object.freeze(['05170', '05170b'])
 linkSymbolLocations(locations)
 
 // 遭遇组：参考实现 gather（The Watcher 是 gatherAndSetAside）。

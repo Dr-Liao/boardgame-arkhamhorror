@@ -27,6 +27,11 @@ if errorlevel 1 goto git_missing
 where node >nul 2>nul
 if errorlevel 1 goto node_missing
 
+for /f "usebackq delims=" %%I in (`node -p "require('./boardgame-mod.json').version"`) do set "CURRENT=%%I"
+if not defined CURRENT set "CURRENT=?"
+echo 当前诡镇奇谈版本：v%CURRENT%
+echo.
+
 git rev-parse --is-inside-work-tree >nul 2>nul
 if errorlevel 1 goto not_repo
 if not exist "..\..\tools\release\set-version.mjs" goto hall_tools_missing
@@ -76,7 +81,7 @@ goto version_ready
 
 :prompt_version
 set "VERSION="
-set /p "VERSION=请输入诡镇奇谈版本号（x.y.z，例如 0.3.0）: "
+set /p "VERSION=请输入诡镇奇谈版本号（当前 v%CURRENT%；x.y.z，例如 0.3.0）: "
 
 :version_ready
 if not defined VERSION goto version_cancelled
@@ -97,6 +102,7 @@ if not defined NOTES set "NOTES=Release v%VERSION%"
 
 echo.
 echo 即将发布诡镇奇谈 v%VERSION%
+echo   当前版本：v%CURRENT%
 echo   更新说明：%NOTES%
 echo.
 

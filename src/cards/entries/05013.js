@@ -12,15 +12,19 @@
 // （黛安娜基础意志 1、战斗 3，低底下牌数时是净亏）。现在 resolve 里先用 api.choice 询问技能，
 // 默认战斗、可选意志，再按所选技能 api.fight。
 //
-// 剩余未实现（引擎原语，见 artifacts/tcu-fix/primitive-requests/fix-investigator.json）：
-//   「可以打出或投入黛安娜底下的事件和技能，如同其在你的手牌中；额外费用横置银暮匕首；
-//    以此方式打出/投入时不能触发黛安娜的[reaction]」——需要 beneath 区打出/投入通道
-//   （现有 cardBackpack 只覆盖支援的 attached）。
+// 第七轮（2026-10-25）：beneath 通道已接引擎——
+//   · 打出：legalMoves 为「持有未横置通道支援」的调查员生成 {action:'play', fromBeneath:true}
+//     （moves.js:255-270），validateMove 校验通道/卡在底下（:569-575）；dispatch 横置通道支援、
+//     从 beneath 取出、置 state._playedFromBeneath 后走 doPlay（dispatch.js:436-450）；
+//   · 投入：技能检定投入候选包含 beneath 的 event/skill（tests.js:278-322），选中后横置通道支援、
+//     从 beneath 移出并进入正常投入/弃牌流程；
+//   · 以此方式结算期间 05004 的 reaction criteria 排除（state._playedFromBeneath）。
 
 export default {
   code: '05013',
-  simplified: true,
-  note: '「可以把黛安娜底下的事件/技能当作手牌打出或投入」未实现（需要 beneath 打出/投入通道，已登记 primitive request）；[action] 已按卡面支持战斗/意志二选一。',
+  // R7 beneath 通道：引擎读点已落地（见文件头注释）；额外费用=横置本卡，
+  // 结算期间 state._playedFromBeneath 供 05004 排除 reaction。
+  beneathPlayAsIfInHand: true,
   abilities: [
     {
       kind: 'action',

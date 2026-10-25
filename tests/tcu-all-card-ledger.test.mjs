@@ -100,8 +100,8 @@ test('TCU 全卡账本：377 条记录全覆盖且分区唯一（343 主卡三�
     const relation = ALL_CARDS[card.code].linkedCardCode || ALL_CARDS[card.code].linkedToCode || null
     const reverse = Object.values(ALL_CARDS).find(other => other.linkedCardCode === card.code)?.code || null
     assert.equal(entry.linkedTo, relation || reverse, `${card.code} 关联面 linkedTo 不一致`)
-    // 关联面必须有可读说明：要么写明「关联面/主卡」，要么是 P10 逐卡行为审计的直接结论。
-    assert.ok(/关联面|P10 逐卡行为审计/.test(entry.note || ''), `${card.code} 关联面证据说明缺失`)
+    // 关联面必须有可读说明：要么写明「关联面/主卡」，要么是逐卡行为审计（P10 或 2026-10-25 第二轮）的直接结论。
+    assert.ok(/关联面|逐卡行为审计/.test(entry.note || ''), `${card.code} 关联面证据说明缺失`)
   }
 
   // 不存在以关联面冒充主卡、或非 05 记录混入。
@@ -234,7 +234,9 @@ test('TCU 全卡账本逐卡证据来自实跑测试（test:pass 形状 + 分区
       assert.equal(entry.evidence.length, 1)
       assert.equal(entry.evidence[0].file, 'games/arkhamhorror/tests/tcu-investigators.test.mjs')
       assert.equal(entry.evidence[0].profile, TCU_INVESTIGATOR_ACCEPTANCE_PROFILE.id)
-      assert.equal(entry.evidence[0].tests, 43)
+      // 2026-10-25 第三轮：调查员批次用例数随修复增加（本轮 51），只要求覆盖不少于 M1 基础
+      // 用例数（43 例：19 位调查员 + 专属卡/弱点），不锁死精确条数。
+      assert.ok(entry.evidence[0].tests >= 43)
       assert.equal(entry.status, 'verified')
     }
     if (entry.partition === 'player') {

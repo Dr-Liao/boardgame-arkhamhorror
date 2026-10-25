@@ -120,10 +120,17 @@ function stubApi(overrides = {}) {
     doomOn: record('doomOn'),
     gainClues: record('gainClues'),
     giveAsset: record('giveAsset'),
-    spawn: (code, location, seat) => { calls.push({ name: 'spawn', args: [code, location, seat] }); return null },
+    spawn: (code, location, seat) => {
+      calls.push({ name: 'spawn', args: [code, location, seat] })
+      return { id: `spawn:${code}`, code, location }
+    },
+    engage: (enemy, seat) => calls.push({ name: 'engage', args: [enemy?.id || enemy, seat] }),
     spawnEngaged: (code, location, seat) => { calls.push({ name: 'spawnEngaged', args: [code, location, seat] }); return null },
-    spawnStoryEnemy: (code, location, stats, extra) =>
-      calls.push({ name: 'spawnStoryEnemy', args: [code, location, stats, extra] }),
+    spawnStoryEnemy: (code, location, stats, extra) => {
+      const enemy = { id: `spawn:${code}`, code, location }
+      calls.push({ name: 'spawnStoryEnemy', args: [code, location, stats, extra], enemy })
+      return enemy
+    },
     moveEnemy: record('moveEnemy'),
     moveInvestigator: record('moveInvestigator'),
     attack: record('attack'),
@@ -160,6 +167,19 @@ function apiFor(state, overrides = {}) {
   api.threat = (seat, code) => {
     api.calls.push({ name: 'threat', args: [seat, code] })
     state.investigators[seat].threat.push({ id: `threat:${code}:${api.calls.length}`, code })
+  }
+  // 与引擎 groupPayment 净效果等价的测试替身：按在场座位顺序逐人扣减，记录调用。
+  api.payClues = (amount, locationId) => {
+    api.calls.push({ name: 'payClues', args: [amount, locationId] })
+    let remaining = amount
+    for (const payer of state.investigators) {
+      if (remaining <= 0) break
+      if (payer.defeated || payer.resigned || payer.location !== locationId) continue
+      const paid = Math.min(remaining, payer.clues || 0)
+      payer.clues -= paid
+      remaining -= paid
+    }
+    return amount - remaining
   }
   api.flipSpectral = id => {
     api.calls.push({ name: 'flipSpectral', args: [id] })
@@ -398,11 +418,18 @@ test('地点常驻规则：绞刑架 169/170 隐藏值、教堂地下室 -3、�
   const inv = state.investigators[0]
   inv.location = graves.id
   behavior.beforeInvestigate(state, inv, graves)
+  // 模拟引擎调查检定的 source（actions.js:387：label 调查 + 目标面 code）。
+  state.skillTest = { source: { label: '调查', code: graves.originalCode || graves.code } }
   if (graves.originalCode === '05171') {
     assert.equal(behavior.statModifier(state, inv, 'intellect'), inv.willpower)
+    // 05171 的加值也适用于非智力调查（卡面：加入本次调查的技能值）。
+    assert.equal(behavior.statModifier(state, inv, 'willpower'), inv.willpower)
   } else {
     assert.equal(behavior.statModifier(state, inv, 'intellect'), 0, '172 面没有调查加成')
   }
+  // 与本次调查目标面不匹配的检定不应获得加值（无线索/被拦下时 marker 不再泄漏）。
+  state.skillTest = { source: { label: '攻击', code: '05178a' } }
+  assert.equal(behavior.statModifier(state, inv, 'intellect'), 0)
   behavior.afterTest(state, inv, { drawn: [], success: true }, stubApi())
   assert.equal(behavior.statModifier(state, inv, 'intellect'), 0)
 })
@@ -430,7 +457,7 @@ test('教堂阁楼：抽到非弱点卡放在阁楼底下，成功调查后返�
   if (attic.originalCode === '05175') {
     assert.equal(inv.hand.length, 0)
     assert.deepEqual(attic.beneath, [{ code: '01020', ownerSeat: 0 }])
-    behavior.investigateResult(state, inv, attic, { success: true }, api)
+    behavior.afterInvestigate(state, inv, attic, { success: true }, api)
     assert.equal(inv.hand.includes('01020'), true)
     assert.deepEqual(attic.beneath, [])
   } else {
@@ -464,10 +491,21 @@ test('hauntedScript 覆盖全部幽灵面脚本（含遭遇牌库弃牌与牌库
   state.encounterDiscard = []
   behavior.hauntedScript(state, { scriptId: 'discardStandardForWitch', seat: 0 }, api)
   assert.ok(api.calls.some(call => call.name === 'spawnEngaged' && call.args[0] === '05090'))
-  // 牌库顶生成苏生亡者。
+  // 牌库顶生成苏生亡者：1/1/1/1、只有[[怪物]]特性；该牌移出游戏；与结算闹鬼的调查员交战。
   inv.deck = ['01026']
+  inv.discard = []
+  state.removedFromGame = []
   behavior.hauntedScript(state, { scriptId: 'spawnReanimatedDead', seat: 0 }, api)
-  assert.ok(api.calls.some(call => call.name === 'spawnStoryEnemy' && call.args[0] === 'xreanimated'))
+  const reanimated = api.calls.find(call => call.name === 'spawnStoryEnemy' && call.args[0] === 'xreanimated')
+  assert.ok(reanimated, '生成苏生亡者')
+  assert.deepEqual(reanimated.args[2].traits, ['Monster'], '只有[[怪物]]特性（不得带 Spectral）')
+  assert.equal(reanimated.args[2].fight, 1)
+  assert.equal(reanimated.args[2].health, 1)
+  assert.equal(reanimated.args[3], undefined, '不再携带无读取点的 underlyingCard，改为移出游戏')
+  assert.deepEqual(state.removedFromGame, ['01026'], '牌库顶的牌移出游戏，不回弃牌堆')
+  assert.deepEqual(inv.discard, [])
+  const reanimatedEngage = api.calls.find(call => call.name === 'engage' && call.args[0] === reanimated.enemy?.id)
+  assert.deepEqual(reanimatedEngage?.args, [reanimated.enemy.id, 0], '与结算闹鬼的调查员交战')
   // 巫术诡计从遭遇弃牌堆进入威胁区。
   state.encounterDiscard = ['01020', '05093']
   behavior.hauntedScript(state, { scriptId: 'hexFromDiscardToThreat', seat: 0 }, api)
@@ -766,19 +804,33 @@ test('混乱标记 skull：-X（X=胜利区未了之事张数+1，困难面为�
   assert.equal(hard.drawAnother, true)
 })
 
-test('混乱标记 cultist：本轮异端者 +1 攻击/躲避（实例标记由共享 enemyStatModifier 读取）', () => {
+test('混乱标记 cultist：本轮异端者 +1 攻击/躲避（轮标记 + isHereticEnemy 读取）', () => {
   const state = setup(stateFor())
   const inv = state.investigators[0]
   const heretic = {
     id: 'h', code: '05178a', name: '异端者', location: inv.location,
-    traits: ['Monster', 'Spectral', 'Elite'], hereticFace: '05178a', roundFightEvadeBonus: null,
+    traits: ['Monster', 'Spectral', 'Elite'], hereticFace: '05178a',
   }
   state.enemies.push(heretic)
   assert.equal(resolveChaosToken(state, inv, 'cultist', {}).delta, -3)
-  assert.deepEqual(heretic.roundFightEvadeBonus, { round: 1, amount: 1 })
+  assert.equal(state.scenarioFlags.wosCultistBuffRound, state.round)
   assert.equal(behavior.enemyStatModifier(state, heretic, 'fight'), 1)
   assert.equal(behavior.enemyStatModifier(state, heretic, 'evade'), 1)
   assert.equal(behavior.enemyStatModifier(state, heretic, 'health'), 0)
+  // 本轮稍后「不经 enemySpawned」入场的异端者（例如由未了之事翻回敌人面）同样获得 +1。
+  const flippedBack = {
+    id: 'h2', code: '05178a', name: '异端者', location: inv.location,
+    traits: ['Monster', 'Spectral', 'Elite'], enemyRole: 'heretic',
+  }
+  state.enemies.push(flippedBack)
+  assert.equal(behavior.enemyStatModifier(state, flippedBack, 'fight'), 1, '翻回的异端者也吃到 +1')
+  // 非异端者不受影响。
+  const witch = { id: 'w', code: '05179', name: '复仇女巫', location: inv.location, traits: ['Humanoid', 'Witch'] }
+  assert.equal(behavior.enemyStatModifier(state, witch, 'fight'), 0)
+  // 轮结束后失效。
+  state.round = 2
+  assert.equal(behavior.enemyStatModifier(state, heretic, 'fight'), 0)
+  state.round = 1
   assert.equal(resolveChaosToken({ ...state, difficulty: 'expert' }, inv, 'cultist', {}).delta, -4)
 })
 
@@ -1017,8 +1069,10 @@ test('05185 祸害生者：从幽灵牌库顶弃到灵怪敌人并生成交战',
   const piles = state.extraEncounterDecks.spectral
   piles.deck = ['05180', '05183'] // 牌库顶是数组末尾：先抽到 05183，再抽到灵怪敌人 05180
   behavior.resolveEncounter(state, inv, { code: '05185', originalCode: '05185' }, api)
-  const spawn = api.calls.find(call => call.name === 'spawnEngaged')
-  assert.deepEqual(spawn.args, ['05180', inv.location, 0])
+  const spawn = api.calls.find(call => call.name === 'spawn')
+  assert.deepEqual(spawn.args, ['05180', inv.location, undefined], '用 ignoreSpawn 的 api.spawn 生成在抽牌者地点')
+  const engage = api.calls.find(call => call.name === 'engage')
+  assert.deepEqual(engage.args, ['spawn:05180', inv.seat], '生成后与你交战')
   assert.ok(piles.discard.includes('05183'))
 })
 
@@ -1092,7 +1146,7 @@ test('05161 [cultist]：本轮后入场的异端者也 +1 攻击/+1 躲避；tab
   }
   state.enemies.push(late)
   behavior.enemySpawned(state, late, api)
-  assert.deepEqual(late.roundFightEvadeBonus, { round: state.round, amount: 1 })
+  assert.equal(behavior.enemyStatModifier(state, late, 'fight'), 1, '本轮后入场的异端者也获得 +1')
   // 双标记：threat 区的未了之事被触发 + 攻击检定失败时结算闹鬼（走 behavior.afterTest 的真实 handlers）。
   inv.threat.push({ id: 't', code: '05178b' })
   behavior.afterTest(state, inv, {
@@ -1167,8 +1221,9 @@ test('05185 祸害生者：幽灵牌库弃空时把弃牌堆洗回再继续弃',
   piles.deck = ['05182']
   piles.discard = ['05103'] // 怨灵：灵怪敌人
   behavior.resolveEncounter(state, inv, { code: '05185', originalCode: '05185' }, api)
-  const spawn = api.calls.find(call => call.name === 'spawnEngaged')
+  const spawn = api.calls.find(call => call.name === 'spawn')
   assert.deepEqual(spawn.args.slice(0, 2), ['05103', inv.location], '洗回后抽到灵怪敌人并生成')
+  assert.ok(api.calls.some(call => call.name === 'engage'), '生成后与你交战')
   assert.deepEqual(piles.discard, [])
 })
 
@@ -1255,10 +1310,400 @@ test('05175 教堂阁楼：[反应] 可以选择不归还底下的卡牌', () =>
   attic.beneath = [{ code: '01026', ownerSeat: 0 }]
   const inv = state.investigators[0]
   inv.location = attic.id
-  behavior.investigateResult(state, inv, attic, { success: true }, apiFor(state, { choose: () => 'no' }))
-  assert.deepEqual(attic.beneath, [{ code: '01026', ownerSeat: 0 }], '选择不发动的反应不结算')
+  // 旧时点（发现线索之前的 investigateResult）不再结算该反应。
   behavior.investigateResult(state, inv, attic, { success: true }, apiFor(state))
+  assert.deepEqual(attic.beneath, [{ code: '01026', ownerSeat: 0 }], '调查结果窗口（发现线索前）不结算反应')
+  behavior.afterInvestigate(state, inv, attic, { success: true }, apiFor(state, { choose: () => 'no' }))
+  assert.deepEqual(attic.beneath, [{ code: '01026', ownerSeat: 0 }], '选择不发动的反应不结算')
+  behavior.afterInvestigate(state, inv, attic, { success: true }, apiFor(state))
   assert.deepEqual(attic.beneath, [])
   assert.ok(inv.hand.includes('01026'))
 })
 
+
+// ===========================================================================
+// Wave1 包C 新增回归（05170/05176/05177/05180/05183/05184/05170b 双面）
+// ===========================================================================
+
+test('05170 绞刑架：翻面后 shroud 仍是 X（灵怪数量），而不是 -2+X', () => {
+  const state = setup(stateFor())
+  const gallows = state.locations.find(entry => ['theGallows169', 'theGallows170'].includes(entry.id))
+  assert.ok(gallows)
+  state.enemies.push({ id: 'g1', code: '05180', traits: ['Monster', 'Geist', 'Spectral'], location: gallows.id })
+  state.enemies.push({ id: 'g2', code: '05180', traits: ['Monster', 'Geist', 'Spectral'], location: gallows.id })
+  const api = apiFor(state)
+  const before = behavior.locationShroudModifier(state, gallows)
+  assert.equal(before, 2)
+  // 翻到幽灵面：behavior.locationFlipped 不得把 -2 占位写回实例。
+  assert.equal(gallows.back?.code, '05170b')
+  gallows.code = '05170b'
+  gallows.originalCode = '05170b'
+  behavior.locationFlipped(state, gallows, api)
+  assert.equal(gallows.shroud, 0, '翻面后实例 shroud 保持 0（不写 -2 占位）')
+  assert.equal(behavior.locationShroudModifier(state, gallows), 2, '隐藏值仍为灵怪数')
+  // 翻回正面同样不写 -2。
+  gallows.code = '05170'
+  gallows.originalCode = '05170'
+  behavior.locationFlipped(state, gallows, api)
+  assert.equal(gallows.shroud, 0)
+  assert.equal(behavior.locationShroudModifier(state, gallows), 2)
+})
+
+test('05176 教堂阁楼：把当前手牌数加入本次调查技能值（任意技能，且不泄漏到无关检定）', () => {
+  const state = setup(stateFor())
+  const inv = state.investigators[0]
+  const attic = state.locations.find(entry => entry.investigateBonus === 'handCount')
+    || state.locations.find(entry => ['chapelAttic175', 'chapelAttic176'].includes(entry.id))
+  assert.ok(attic)
+  attic.investigateBonus = 'handCount'
+  inv.location = attic.id
+  inv.hand = ['a', 'b', 'c', 'd']
+  behavior.beforeInvestigate(state, inv, attic)
+  state.skillTest = { source: { label: '调查', code: attic.originalCode || attic.code } }
+  assert.equal(behavior.statModifier(state, inv, 'intellect'), 4, '手牌 4 张 → +4')
+  assert.equal(behavior.statModifier(state, inv, 'willpower'), 4, '卡面未限定技能类型')
+  // 不是本次调查的检定不加值。
+  state.skillTest = { source: { label: '攻击', code: '05178a' } }
+  assert.equal(behavior.statModifier(state, inv, 'intellect'), 0)
+  // 回合结束清理。
+  behavior.turnEnded(state, inv, apiFor(state))
+  assert.equal(inv.wosInvestigateBonus, undefined)
+})
+
+test('05177 幽灵迷网：没有灵怪敌人时不列出行动（避免白花 1 行动）', () => {
+  const state = setup(stateFor())
+  loc(state, 'hangmansBrook').spectral = true
+  loc(state, 'hangmansBrook').spectralFace = 'spectral'
+  const inv = state.investigators[0]
+  inv.location = 'hangmansBrook'
+  inv.clues = 2
+  inv.assets.push({ id: 'web', code: '05177' })
+  assert.equal(behavior.actions(state, inv).some(move => move.rule === 'spectralWebAttack'), false, '无目标不列行动')
+  state.enemies.push({ id: 'geist', code: '05180', name: '恶毒邪灵', location: inv.location, traits: ['Monster', 'Geist', 'Spectral'], fight: 2 })
+  assert.equal(behavior.actions(state, inv).some(move => move.rule === 'spectralWebAttack'), true, '有目标才列行动')
+})
+
+test('05180 恶毒邪灵：幽灵地点 +1 伤害/+1 恐惧与闹鬼农田 horrorAura 叠加', () => {
+  const state = setup(stateFor())
+  loc(state, 'hauntedFields').spectral = true
+  loc(state, 'hauntedFields').spectralFace = 'spectral'
+  loc(state, 'hauntedFields').horrorAura = true
+  const spirit = {
+    id: 'm', code: '05180', originalCode: '05180', name: '恶毒邪灵',
+    location: 'hauntedFields', traits: ['Monster', 'Geist', 'Spectral'], enemyRole: 'malevolentSpirit',
+  }
+  state.enemies.push(spirit)
+  assert.deepEqual(behavior.enemyAttackModifier(state, spirit), { damage: 1, horror: 2 }, '两处修正叠加而不是提前 return')
+  loc(state, 'hauntedFields').horrorAura = false
+  assert.deepEqual(behavior.enemyAttackModifier(state, spirit), { damage: 1, horror: 1 })
+})
+
+test('05183 凶兆：抽幽灵遭遇牌库时带 peril 与「不能被取消」选项', () => {
+  const state = setup(stateFor())
+  const inv = state.investigators[0]
+  const api = apiFor(state, { choose: request => (request.kind === 'option' ? 'draw' : request.options?.[0]?.id) })
+  behavior.resolveEncounter(state, inv, { code: '05183', originalCode: '05183' }, api)
+  const call = api.calls.find(entry => entry.name === 'drawExtra')
+  assert.ok(call, '走 drawExtra')
+  assert.equal(call.args[1], 'spectral')
+  assert.deepEqual(call.args[2], { peril: true, cannotCancel: true, sourceCode: '05183' })
+})
+
+test('05184 长明灯：洗入幽灵牌库的位置由随机源决定（不是固定位置）', () => {
+  const build = rngState => {
+    const state = setup(stateFor())
+    state.rngState = rngState
+    state.encounterDiscard.push('05184')
+    state.scenarioFlags.graveLight = 'standard'
+    behavior.encounterGainsSurge(state, '05184', state.investigators[0])
+    const deck = state.extraEncounterDecks.spectral.deck
+    return { deck, index: deck.indexOf('05184') }
+  }
+  const first = build(11)
+  const second = build(987654321)
+  assert.ok(first.deck.includes('05184'))
+  assert.ok(second.deck.includes('05184'))
+  assert.notEqual(first.index, second.index, '不同随机源得到不同洗入位置')
+})
+
+// ---------------------------------------------------------------------------
+// Wave2（包H）：05178a/c/e/g/i/k 不能交战 + [fast] 谈判进玩家窗口
+// ---------------------------------------------------------------------------
+test('Wave2 异端者：非幽灵地点不能被交战、幽灵地点可以（canEngageEnemy）', () => {
+  const state = setup(stateFor())
+  const api = apiFor(state)
+  const inv = state.investigators[0]
+  const spectral = state.locations[0]
+  const normal = state.locations[1]
+  spectral.spectral = true
+  spectral.spectralFace = 'spectral'
+  normal.spectral = false
+  normal.spectralFace = 'normal'
+  const heretic = {
+    id: 'h-engage', code: '05178a', originalCode: '05178a', location: normal.id,
+    traits: ['Monster', 'Spectral'], health: 6, damageTaken: 0, exhausted: false,
+  }
+  state.enemies.push(heretic)
+  behavior.enemySpawned(state, heretic, api)
+  inv.location = normal.id
+  assert.equal(behavior.canEngageEnemy(state, inv, heretic), false, '非幽灵地点不能被交战（CannotBeEngaged）')
+  inv.location = spectral.id
+  heretic.location = spectral.id
+  assert.equal(behavior.canEngageEnemy(state, inv, heretic), true, '幽灵地点可以交战')
+  // 普通敌人不受限制。
+  const witch = { id: 'w-engage', code: '05090', location: normal.id, traits: ['Witch'], health: 3, damageTaken: 0 }
+  state.enemies.push(witch)
+  inv.location = normal.id
+  assert.equal(behavior.canEngageEnemy(state, inv, witch), true)
+})
+
+test('Wave2 异端者 [fast] 谈判：进入任意玩家窗口的 fastActions（线索由发起者支付）', () => {
+  const state = setup(stateFor())
+  const api = apiFor(state)
+  const inv = state.investigators[0]
+  inv.location = state.locations[0].id
+  inv.clues = 3
+  const heretic = {
+    id: 'h-fast', code: '05178a', originalCode: '05178a', location: inv.location,
+    traits: ['Monster', 'Spectral'], health: 6, damageTaken: 0, exhausted: false,
+  }
+  state.enemies.push(heretic)
+  behavior.enemySpawned(state, heretic, api)
+  const fast = behavior.fastActions(state, inv, 'investigation.afterAction')
+  assert.equal(fast.length, 1, '[fast] 谈判项出现在玩家窗口')
+  assert.equal(fast[0].rule, 'hereticParley')
+  assert.equal(fast[0].enemyId, 'h-fast')
+  assert.equal(fast[0].fast, true)
+  assert.equal(fast[0].actions, 0, '[fast] 行动不消耗行动点')
+  assert.match(fast[0].label, /快速/)
+  // 线索不足（费用由发起者支付）时不列出。
+  inv.clues = 0
+  assert.deepEqual(behavior.fastActions(state, inv, 'investigation.afterAction'), [])
+  // 行动列表与玩家窗口共用同一份生成逻辑（actions() 里同样带 fast:true）。
+  inv.clues = 3
+  const listed = behavior.actions(state, inv).filter(move => move.rule === 'hereticParley')
+  assert.equal(listed.length, 1)
+  assert.equal(listed[0].fast, true)
+})
+
+// ---------------------------------------------------------------------------
+// Wave1（包H）修复回归：05170b / 05171b / 05176b / 05173b / 05178b,d,f,h / 05178j
+// ---------------------------------------------------------------------------
+test('05170b 绞刑架幽灵面：隐藏值 X = 灵怪数量，翻面不回填印表占位 -2', () => {
+  const state = setup(stateFor())
+  const api = apiFor(state)
+  const base = state.scenario.locations.theGallows170
+  const gallows = {
+    ...structuredClone(base), id: 'theGallows170', revealed: true, clues: 0,
+    code: '05170b', originalCode: '05170b', spectral: true, spectralFace: 'spectral',
+    shroud: base.back?.shroud ?? 0,
+  }
+  state.locations.push(gallows)
+  state.enemies.push(
+    { id: 'g1', code: '05180', traits: ['Geist', 'Spectral'], location: 'hangmansBrook' },
+    { id: 'g2', code: '05180', traits: ['Geist', 'Spectral'], location: 'hangmansBrook' },
+  )
+  behavior.locationFlipped(state, gallows, api)
+  assert.equal(gallows.shroud, 0, '印表 -2 占位不得回填（X 由 locationShroudModifier 提供）')
+  assert.equal(behavior.locationShroudModifier(state, gallows), 2, 'X = 场上灵怪数量')
+  // 翻回正面（05170）同样保持 X，切面不改变隐藏值。
+  gallows.code = '05170'
+  gallows.originalCode = '05170'
+  gallows.spectral = false
+  behavior.locationFlipped(state, gallows, api)
+  assert.equal(gallows.shroud, 0)
+  assert.equal(behavior.locationShroudModifier(state, gallows), 2)
+})
+
+test('05171b/05176b 幽灵面调查加成：任意调查技能都加值（意志 / 手牌数）', () => {
+  const state = setup(stateFor())
+  const inv = state.investigators[0]
+  // 171b：加入意志值，且对本次调查的任意技能生效。
+  const gravesB = {
+    ...structuredClone(state.scenario.locations.hereticsGraves171), id: 'hereticsGraves171',
+    revealed: true, clues: 0, code: '05171b', originalCode: '05171b', spectral: true,
+  }
+  state.locations.push(gravesB)
+  inv.location = gravesB.id
+  behavior.beforeInvestigate(state, inv, gravesB)
+  state.skillTest = { seat: inv.seat, source: { label: '调查', code: '05171b' } }
+  assert.equal(behavior.statModifier(state, inv, 'intellect'), inv.willpower)
+  assert.equal(behavior.statModifier(state, inv, 'agility'), inv.willpower, '非智力技能也加值')
+  // 172 面没有调查加成。
+  const graves172 = {
+    ...structuredClone(state.scenario.locations.hereticsGraves172), id: 'hereticsGraves172',
+    revealed: true, clues: 0, code: '05172', originalCode: '05172',
+  }
+  state.locations.push(graves172)
+  inv.location = graves172.id
+  behavior.beforeInvestigate(state, inv, graves172)
+  state.skillTest = { seat: inv.seat, source: { label: '调查', code: '05172' } }
+  assert.equal(behavior.statModifier(state, inv, 'agility'), 0)
+  // 176b：把手牌张数加入调查技能值。
+  const atticB = {
+    ...structuredClone(state.scenario.locations.chapelAttic176), id: 'chapelAttic176',
+    revealed: true, clues: 0, code: '05176b', originalCode: '05176b',
+  }
+  state.locations.push(atticB)
+  inv.location = atticB.id
+  inv.hand = ['01020', '01026', '01037']
+  behavior.beforeInvestigate(state, inv, atticB)
+  state.skillTest = { seat: inv.seat, source: { label: '调查', code: '05176b' } }
+  assert.equal(behavior.statModifier(state, inv, 'combat'), 3, '非智力调查也加手牌数')
+  // 非调查检定不获得加成（marker 不泄漏）。
+  state.skillTest = { seat: inv.seat, source: { label: '攻击', code: '05178a' } }
+  assert.equal(behavior.statModifier(state, inv, 'combat'), 0)
+})
+
+test('未了之事：持有者退场时翻回异端者面并清理威胁区与记录（05178b/d/f/h）', () => {
+  const state = setup(stateFor())
+  const api = apiFor(state)
+  const [inner, other] = state.investigators
+  const snapshot = (enemyCode, storyCode) => ({
+    id: `e:${enemyCode}`, code: enemyCode, originalCode: enemyCode, name: '异端者',
+    location: 'chapelCrypt173', traits: ['Monster'], hereticFace: enemyCode, hereticStory: storyCode,
+    enemyRole: 'heretic',
+    faces: [{ code: enemyCode, side: 'enemy' }, { code: storyCode, side: 'unfinishedBusiness' }],
+    side: 'unfinishedBusiness', health: 6, damageTaken: 2, engagedSeat: null, exhausted: false,
+  })
+  inner.threat.push({ id: 'tB', code: '05178b' }, { id: 'tD', code: '05178d' })
+  other.threat.push({ id: 'tF', code: '05178f' })
+  state.scenarioFlags.unfinishedBusiness = [
+    { storyCode: '05178b', enemyCode: '05178a', holderSeat: 0, locationId: 'chapelCrypt173', enemySnapshot: snapshot('05178a', '05178b') },
+    { storyCode: '05178d', enemyCode: '05178c', holderSeat: 0, locationId: 'theGallows169', enemySnapshot: snapshot('05178c', '05178d') },
+    { storyCode: '05178f', enemyCode: '05178e', holderSeat: 1, locationId: 'chapelAttic175', enemySnapshot: snapshot('05178e', '05178f') },
+  ]
+  inner.engaged = []
+  const handled = behavior.investigatorEliminated(state, inner, 2, api)
+  assert.equal(handled, false, '返回 false：引擎按常规把线索放到该地点')
+  assert.deepEqual(inner.threat.map(card => card.code), [], '该调查员威胁区的未了之事被翻面清理')
+  assert.deepEqual(other.threat.map(card => card.code), ['05178f'], '别人的未了之事不受影响')
+  assert.deepEqual(state.scenarioFlags.unfinishedBusiness.map(entry => entry.storyCode), ['05178f'])
+  const returned = state.enemies.filter(enemy =>
+    String(enemy.originalCode) === '05178a' || String(enemy.originalCode) === '05178c')
+  assert.equal(returned.length, 2, '两张未了之事都翻回异端者面并回到战场')
+  for (const enemy of returned) {
+    assert.equal(enemy.damageTaken, 0, '翻回后重置伤害')
+    assert.equal(enemy.engagedSeat, null, '回场时不与任何人交战')
+  }
+})
+
+test('05178j：I→J 立即结算后谈判费用 = 1 + 人数（不再额外 +1）', () => {
+  const state = setup(stateFor(3))
+  const api = apiFor(state)
+  const inv = state.investigators[0]
+  const iEnemy = {
+    id: 'i', code: '05178i', originalCode: '05178i', location: inv.location, traits: ['Monster', 'Spectral'],
+    health: 6, damageTaken: 0, engagedSeat: 0, exhausted: false, enemyRole: 'heretic',
+    faces: [{ code: '05178i', side: 'enemy' }, { code: '05178j', side: 'unfinishedBusiness' }],
+  }
+  state.enemies.push(iEnemy)
+  behavior.enemyDefeated(state, iEnemy, api)
+  const jEnemy = state.enemies.find(enemy => String(enemy.originalCode) === '05178i')
+  assert.ok(jEnemy, 'J 面立即翻回敌人面')
+  assert.equal(jEnemy.hereticParleyCost, 1 + 3, '费用 = 基础 1 + 人数（旧实现会多 +1）')
+  assert.equal(jEnemy.hereticParleySpectralOnly, true)
+  assert.equal(jEnemy.cannotBeDefeated, true)
+})
+
+// ---------------------------------------------------------------------------
+// Wave4（包H）：05171b 幽灵面「基础意志值减至 1」的解除时点
+// ---------------------------------------------------------------------------
+test('05171b 幽灵面：基础意志减至 1 持续到该调查员下个回合结束（按 turnSerial 清理）', () => {
+  const state = setup(stateFor())
+  const inv = state.investigators[0]
+  state.turnSerial = 5
+  behavior.hauntedScript(state, { scriptId: 'baseWillpowerOne', seat: 0 }, apiFor(state))
+  assert.equal(behavior.statModifier(state, inv, 'willpower'), 1 - inv.willpower, '本回合基础意志减至 1')
+  // 施加当回合结束时仍保留（卡面：直到你下个回合结束）。
+  behavior.turnEnded(state, inv, apiFor(state))
+  assert.ok(inv.wosBaseWillpower, '施加当回合结束时仍保留')
+  // 下个回合结束（turnSerial 已推进）时清理。
+  state.turnSerial = 7
+  behavior.turnEnded(state, inv, apiFor(state))
+  assert.equal(inv.wosBaseWillpower, undefined, '下一回合结束时解除')
+  assert.equal(behavior.statModifier(state, inv, 'willpower'), 0)
+})
+
+test('05175：引擎在发现线索之后调用 afterInvestigate（顺序契约）', async () => {
+  const { readFileSync } = await import('node:fs')
+  const source = readFileSync('src/engine/actions.js', 'utf8')
+  const discover = source.indexOf('discoverClueAt(state, inv, gain, events)')
+  const hook = source.indexOf('scenarioBehavior(state).afterInvestigate?.')
+  assert.ok(discover > 0, '引擎成功调查分支必须发现线索')
+  assert.ok(hook > discover, 'afterInvestigate 必须在发现线索之后调用（卡面「成功调查后」）')
+})
+
+// ---------------------------------------------------------------------------
+// Wave4（包H）：05171b 调查加成取「含修改」的意志值（engine investigatorStat）
+// ---------------------------------------------------------------------------
+test('05171b 调查加成：意志值取含修正的当前值（scenarioRuntime.investigatorStat）', () => {
+  const build = () => {
+    const state = setup(stateFor())
+    const inv = state.investigators[0]
+    const gravesB = {
+      ...structuredClone(state.scenario.locations.hereticsGraves171), id: 'hereticsGraves171',
+      revealed: true, clues: 0, code: '05171b', originalCode: '05171b', spectral: true,
+    }
+    state.locations.push(gravesB)
+    inv.location = gravesB.id
+    return { state, inv, gravesB }
+  }
+  // 引擎传入的 scenarioRuntime：意志值含被动/效果修正（印刷 3 → 实际 7）。
+  {
+    const { state, inv, gravesB } = build()
+    const runtime = { investigatorStat: (seat, skill) => (seat === inv.seat && skill === 'willpower' ? 7 : 0) }
+    behavior.beforeInvestigate(state, inv, gravesB, runtime)
+    assert.equal(inv.wosInvestigateBonus.amount, 7, '登记的是含修正的意志值')
+    state.skillTest = { seat: inv.seat, source: { label: '调查', code: '05171b' } }
+    assert.equal(behavior.statModifier(state, inv, 'willpower'), 7)
+    assert.equal(behavior.statModifier(state, inv, 'agility'), 7, '任意技能都加该意志值')
+  }
+  // 无 runtime（旧调用/离线单测）时回落印刷值，行为不变。
+  {
+    const { state, inv, gravesB } = build()
+    behavior.beforeInvestigate(state, inv, gravesB)
+    assert.equal(inv.wosInvestigateBonus.amount, inv.willpower)
+  }
+})
+
+test('05175：教堂阁楼定义带 investigateWithoutClues，0 线索也可成功调查并触发 afterInvestigate 反应', async () => {
+  // 引擎读点契约：moves.js 的「可调查」判定必须读地点字段 investigateWithoutClues。
+  const { readFileSync: read } = await import('node:fs')
+  const movesSource = read('src/engine/moves.js', 'utf8')
+  const legalMoveGate = movesSource.includes('loc.investigateWithoutClues === true')
+  assert.equal(legalMoveGate, true, '引擎 moves.js 必须读 investigateWithoutClues 字段')
+  // 地点定义：175 面（含 175b 幽灵面，同一地点 id）带该字段。
+  assert.equal(definition.locations.chapelAttic175.investigateWithoutClues, true)
+  // 行为：0 线索阁楼调查成功（发现线索之后）→ afterInvestigate 归还 beneath 卡牌。
+  const state = setup(stateFor())
+  const attic = { ...structuredClone(definition.locations.chapelAttic175), id: 'chapelAttic175', revealed: true, clues: 0 }
+  state.locations.push(attic)
+  const inv = state.investigators[0]
+  inv.location = 'chapelAttic175'
+  attic.beneath = [{ code: '01026', ownerSeat: 0 }]
+  behavior.afterInvestigate(state, inv, attic, { success: true }, apiFor(state))
+  assert.deepEqual(attic.beneath, [])
+  assert.ok(inv.hand.includes('01026'))
+})
+
+test('05183：抽到的卡在真正揭示期间按 peril/不可取消处理（第五轮引擎揭示标记）', async () => {
+  const { readFileSync: read } = await import('node:fs')
+  // 引擎侧（第五轮）：drawExtra 的 peril/cannotCancel 写成「本次揭示」一次性标记，真正的揭示期间读取并清理。
+  const encounter = read('src/engine/encounter.js', 'utf8')
+  assert.match(encounter, /markForcedRevelation\(code, \{/, '抽到时写入「本次揭示」强制标记')
+  assert.match(encounter, /perilOverride === true \? \{ peril: true \}/)
+  assert.match(encounter, /options\.cannotCancel === true \? \{ cannotCancel: true \}/)
+  const scope = read('src/engine/resolution-scope.js', 'utf8')
+  assert.match(scope, /export function markForcedRevelation/)
+  assert.match(scope, /export function forcedRevelationOf/)
+  assert.match(scope, /export function clearForcedRevelation/)
+  const tokens = read('src/engine/treachery-tokens.js', 'utf8')
+  assert.match(tokens, /const forced = forcedRevelationOf\(t\.code\)/, '揭示期间读取本次强制标记')
+  assert.match(tokens, /const forcedPeril = forced\?\.peril === true/)
+  assert.match(tokens, /const forcedCannotCancel = forced\?\.cannotCancel === true/)
+  assert.match(tokens, /peril: !!t\.peril \|\| forcedPeril/, '诡计窗口按 peril 处理')
+  assert.match(tokens, /peril: !!t\.peril \|\| forcedPeril, resolve:/, '其显现检定按 peril 处理')
+  assert.match(tokens, /cannotCancel: forcedCannotCancel/, '显现不可取消')
+  assert.match(tokens, /clearForcedRevelation\(t\.code\)/, '揭示结束清理标记')
+})

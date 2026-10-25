@@ -165,13 +165,13 @@ test('P0-A 修正管线：声明式修正、条件、槽位与打出费用', () 
   state.locations[0].traits = []
   assert.equal(getStat(state, inv, 'agility'), ancientBase)
 
-  // 05112 额外法术槽位；03142 在手牌中时其他手牌费用 +1。
+  // 05112 额外法术槽位：第七轮起改为受限槽（restrictedSlots），容量只在特性命中时由 canEquip 计入。
   asset(state, '05112')
-  assert.equal(slotBonus(inv, 'arcane'), 1)
+  assert.equal(slotBonus(inv, 'arcane'), 0)
+  assert.deepEqual(registeredEntry('05112').restrictedSlots.map(entry => [entry.slot, entry.count]),
+    [['arcane', 1]])
   inv.hand = ['03142', '01086']
   assert.equal(playCostDelta(state, inv, '01086'), 1)
-  // P7：P2.9 起槽位授予的规范写法是 add:slot + value（旧写法 slot:arcane 也能生效，但不再作为口径）。
-  assert.deepEqual(registeredEntry('05112').modifiers.map(modifier => [modifier.target, modifier.value]), [['add:slot', 'arcane']])
 })
 
 // ---------------------------------------------------------------------------
@@ -264,16 +264,18 @@ test('P0-A 05028 良好人脉只在检定窗口内可用并横置', () => {
 test('P0-A 被动与槽位卡：05112 提供额外法术槽位', () => {
   const state = fixture('01001')
   const inv = state.investigators[0]
-  // 两个法术槽默认占满后，第三个法术支援应当因为 05112 而可以入场。
+  // 第七轮起槽位授予走受限槽字段（restrictedSlots），不再叠加 slotBonus。
   asset(state, '01060')
   asset(state, '01061')
   inv.assets[0].slot = 'arcane'
   inv.assets[1].slot = 'arcane'
   inv.assets.push({ id: 'spell-1', code: '01060', exhausted: false })
-  // canEquip 是内部函数，这里用槽位修正的读点间接验证。
   assert.equal(slotBonus(inv, 'arcane'), 0)
   asset(state, '05112')
-  assert.equal(slotBonus(inv, 'arcane'), 1)
+  assert.equal(slotBonus(inv, 'arcane'), 0)
+  const restricted = registeredEntry('05112').restrictedSlots
+  assert.deepEqual(restricted.map(entry => [entry.slot, entry.count]), [['arcane', 1]])
+  assert.deepEqual(restricted[0].traitsAny, ['Spell', 'Ritual'])
 })
 
 test('P0-A 主动能力：02140 资源、05115 子弹、07017 治愈与赐福', () => {
@@ -452,7 +454,12 @@ test('P0-A 05023 宝剑王牌在冒险开始时放置入场', () => {
   let placed = null
   descriptor.resolve({
     state: {}, inv, seat: 0, descriptor, window: 'scenarioStarts', context: {}, events: [],
-    api: { putIntoPlay: (seat, code) => { placed = { seat, code }; inv.hand = inv.hand.filter(item => item !== code) } },
+    api: {
+      // 2026-10-25：开局入场改为可选的 [reaction] + 塔罗槽校验（不再走自动放置钩子）。
+      tarotSlotInfo: () => ({ capacity: 1, usage: 0, free: 1 }),
+      info: () => {},
+      putIntoPlay: (seat, code) => { placed = { seat, code }; inv.hand = inv.hand.filter(item => item !== code) },
+    },
   })
   assert.deepEqual(placed, { seat: 0, code: '05023' })
   assert.deepEqual(inv.hand, [])

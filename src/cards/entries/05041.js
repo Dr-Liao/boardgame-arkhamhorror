@@ -8,28 +8,19 @@
 //
 // 05041 第十三幻象：
 //   1. 显现：威胁区弱点的通用数据通道（weakness.type = 'threat'，resolveWeakness 把卡放进威胁区域）；
-//   2. 光环：强制 - 「技能值等于难度」的检定改为失败。读点用引擎的 wouldSucceedTest 窗口：
-//      把窗口上下文的 testBonus 减 1，原本平局的检定因此落到难度之下。
-//      作用范围读 context.seat 的所在地点 = 本卡持有者的地点（「你所在地点的调查员」）。
+//   2. 光环：条目字段 failTies=true。引擎在技能检定成功判定处（src/engine/tests.js:846-851）
+//      扫描「同地点任意调查员威胁区里的 failTies 条目」，平局按失败结算且 failedBy=0（不再用
+//      wouldSucceedTest 的 testBonus-1 近似）。
 //   3. [action][action]：威胁区弃置行动由 discardCost.action = 2 声明（读点 moves.js / doDiscardThreat）。
 
 export default {
   code: '05041',
+  // 审计 R4：光环读点（engine tests.js:846-851 读同地点威胁区条目的 failTies 字段）。
+  failTies: true,
   abilities: [
     {
       kind: 'weakness',
       weakness: { type: 'threat', discardCost: { action: 2 } },
-    },
-    {
-      kind: 'forced',
-      trigger: 'wouldSucceedTest',
-      label: '技能值等于检定难度时改为失败',
-      criteria: [({ state, inv, context }) => context?.testValue != null
-        && context.testValue === context.difficulty
-        && state.investigators[context.seat]?.location === inv.location],
-      resolve: ({ context }) => {
-        context.testBonus = (context.testBonus || 0) - 1
-      },
     },
   ],
   modifiers: [

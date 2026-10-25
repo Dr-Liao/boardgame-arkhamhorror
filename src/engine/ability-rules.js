@@ -2,6 +2,9 @@
 // 能力层的规则侧：描述子的可用性 / 费用 / 目标枚举 / 修正来源枚举。
 // 读点：canAffordAbility + payAbilityCost（legalMoves 与 doAbility 共用）、
 // descriptorSources（窗口枚举）、nonPlayerAbilitySources（D1 非玩家卡）。
+
+import { currentRevelation } from './resolution-scope.js'
+
 export function createAbilityRules(deps) {
   const {
     all,
@@ -127,6 +130,8 @@ export function createAbilityRules(deps) {
         cardType: code => cardDef(code)?.type || null,
         cardTraits: code => cardDef(code)?.traits || [],
         canGainResources: () => scenarioBehavior(state).canGainResources?.(state, inv) !== false,
+        // 2026-10-25 第五轮修复 05049：「是否正在结算显现效果」的只读判定（进程内作用域）。
+        revelationResolving: () => currentRevelation() != null || Boolean(state._treacheryResolving),
       },
     })) return false
     return true
@@ -142,13 +147,20 @@ export function createAbilityRules(deps) {
     const out = []
     for (const card of controlledAbilityCards(inv)) {
       const entry = registeredEntry(card.code)
-      if (entry?.abilities.length) out.push({ source: card, code: card.code, entry })
+      // 2026-10-25 第五轮修复 05150：受控的剧情支援（scope:'storyAsset'）也要按玩家卡来源
+      // 参与窗口询问；controlled 标记供 ability-exec 区分「受控」与「场上非玩家实体」。
+      if (entry?.abilities.length) out.push({ source: card, code: card.code, entry, controlled: true })
       // 2026-10-25：附属在支援上的卡（05230 瞄准镜等升级附属）也作为能力来源；
       // source 带 hostAssetId/hostCode，供卡面能力读「所附属支援」上下文。
       for (const attachment of card.attachments || []) {
         const attachedEntry = registeredEntry(attachment.code)
         if (attachedEntry?.abilities.length) {
-          out.push({ source: { ...attachment, hostAssetId: card.id, hostCode: card.code }, code: attachment.code, entry: attachedEntry, attachedTo: card })
+          // 2026-10-25 第七轮修复 05230：附属能力必须写回真实附件实例；
+          // hostAssetId/hostCode 设为不可枚举，避免进入存档 JSON / stateHash。
+          const attachmentSource = attachment
+          Object.defineProperty(attachmentSource, 'hostAssetId', { value: card.id, enumerable: false, writable: true, configurable: true })
+          Object.defineProperty(attachmentSource, 'hostCode', { value: card.code, enumerable: false, writable: true, configurable: true })
+          out.push({ source: attachmentSource, code: attachment.code, entry: attachedEntry, attachedTo: card })
         }
       }
     }

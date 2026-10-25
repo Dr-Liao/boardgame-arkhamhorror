@@ -8,9 +8,9 @@
 // 05039 星币五：塔罗槽支援；生命上限 +1、神智上限 +1（读点是 assetEffect 的 passive
 // healthBonus/sanityBonus，与 03143/03269 同一条被动数据通道）；开局起始手牌中放置入场。
 
+
 export default {
   code: '05039',
-  entersPlayFromOpeningHand: true,
   passive: {
     healthBonus: 1,
     sanityBonus: 1,
@@ -21,6 +21,9 @@ export default {
       fromHand: true, noPlayCost: true,
       resolve: ({ inv, api }) => {
         if (!inv.hand.includes('05039')) return
+        // 卡面 [reaction] 是「可以」放置：塔罗槽不足时保留在手牌，不自动入场。
+        const slot = api.tarotSlotInfo(inv)
+        if (slot.free <= 0) { api.info('塔罗槽已满，保留在手牌。'); return }
         api.putIntoPlay(inv.seat, '05039')
       },
     },

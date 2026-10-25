@@ -1,5 +1,6 @@
 import { investigatorRule } from '../cards/card-rules.js'
 import { extraDeckPiles } from './alt-decks.js'
+import { markForcedRevelation } from './resolution-scope.js'
 // 遭遇牌与反应窗口（drawEncounter / reactionWindow / triggerReaction / playerWindow）
 // 从 engine.js 拆出的模块（Phase 6 · 6d-20）。
 //
@@ -36,8 +37,11 @@ export function createEncounter(deps) {
     controlledAbilityCards,
     descriptorOfKind,
     descriptorReactionSpec,
+    descriptorSources,
+    descriptorUsable,
     descriptorsForWindow,
     doAbility,
+    doFreeDescriptor,
     doPlay,
     effectError,
     enemyDef,
@@ -95,14 +99,35 @@ function drawEncounter(state, inv, events, options = {}) {
   }
   const code = deck().pop()
   const encounter = ALL_ENEMIES[code] || ALL_TREACHERIES[code]
+  // 2026-10-25 本循环修复 05183：drawExtra/抽牌管线支持给「本次抽到的卡」附加选项：
+  //   · options.peril：强制本次遭遇视为险境（peril），影响投入/队友协助等窗口；
+  //   · options.cannotCancel：本卡的取消/重抽效果不生效（其它非取消类反应照常结算）。
+  const perilOverride = options.peril === true ? true : options.peril === false ? false : null
+  // 2026-10-25 第四轮修复 cannot-cancel-card-flag（05342）：卡面「不能被取消」的显现效果。
+  const cancellationLocked = options.cannotCancel === true
+    || registeredEntry(code)?.cannotBeCanceledRevelation === true
+    || state.scenario?.treacheries?.[code]?.cannotBeCanceledRevelation === true
+  // 2026-10-25 第五轮修复 05183：把「本次抽到的卡获得 peril / 不可取消」记成一次性揭示标记
+  // （进程内，不写 state），真正揭示期间（treachery 窗口/检定/取消）也按它判定。
+  if (perilOverride === true || options.cannotCancel === true) {
+    markForcedRevelation(code, {
+      ...(perilOverride === true ? { peril: true } : {}),
+      ...(options.cannotCancel === true ? { cannotCancel: true } : {}),
+    })
+  }
   const redrawContext = { when: 'encounterDrawn', seat: inv.seat, location: inv.location, cardCode: code,
-    weakness: isWeaknessCode(code), peril: !!encounter?.peril, cancelled: false,
+    weakness: isWeaknessCode(code), peril: perilOverride ?? !!encounter?.peril, cancelled: false,
+    cannotCancel: cancellationLocked,
     prompt: `${inv.name} 抽到「${encounter?.name || code}」` }
   for (const owner of aliveInvestigators(state).filter(owner => owner.location === inv.location)) {
     triggerReaction(state, owner.seat, 'encounterDrawn', events, redrawContext)
     if (redrawContext.cancelled) break
   }
   if (!redrawContext.cancelled) reactionWindow(state, 'encounterDrawn', redrawContext, events)
+  if (redrawContext.cancelled && redrawContext.cannotCancel) {
+    redrawContext.cancelled = false
+    info(state, events, `「${encounter?.name || code}」的效果不能被取消。`)
+  }
   if (redrawContext.cancelled) {
     // 02302：被取消的遭遇卡应混洗回遭遇牌库，而不是进入弃牌堆。
     if (redrawContext.shuffleBack) {
@@ -209,8 +234,22 @@ function reactionWindow(state, when, context, events, opts = {}) {
       const planCandidates = inv.assets.filter(asset => registeredEntry(asset.code)?.cardPlan && !asset.exhausted)
         .flatMap(asset => (asset.attached || []).map((code, index) =>
           ({ code, index, fromPlanAssetId: asset.id, id: `plan:${asset.id}:${index}` })))
+      // 2026-10-25 第七轮修复 05279：宿主 playAttachedEvents 的附属事件也能在对应反应窗口打出
+      // （「如同其在你手牌中」；reactionOnly 的事件同样适用）。
+      const attachedCandidates = inv.assets
+        .filter(asset => registeredEntry(asset.code)?.playAttachedEvents === true)
+        // 2026-10-25 第七轮修复 05279：反应窗口候选也要检查宿主附加费可支付性（避免幽灵候选/重复付费）。
+        .filter(asset => {
+          const cost = registeredEntry(asset.code)?.playAttachedEventCost || {}
+          return !(cost.exhaustHost && asset.exhausted) && !(cost.uses && (asset.uses || 0) < cost.uses)
+        })
+        .flatMap(asset => (asset.attachments || []).map(attachment => ({
+          code: attachment.code, fromAttachedEventOf: asset.id,
+          id: `attached:${asset.id}:${attachment.code}:${attachment.id ?? ''}`,
+        })))
       const candidates = [...handCandidates,
         ...planCandidates,
+        ...attachedCandidates,
         ...(discardEvent ? [{ code: discardEvent, fromDiscard: true, id: 'discard' }] : [])]
         .filter(({ code, copyCode }) => {
           // Phase 5（5c-8）：快速事件也可以在能力层声明——`kind:'played'` + `fast` + `trigger:<窗口>`，
@@ -267,6 +306,27 @@ function reactionWindow(state, when, context, events, opts = {}) {
       })
       if (answer === 'skip') break
       const chosen = candidates.find(item => item.id === answer)
+      if (chosen.fromAttachedEventOf) {
+        const host = (inv.assets || []).find(asset => asset.id === chosen.fromAttachedEventOf)
+        const hostEntry = registeredEntry(host?.code)
+        const attachmentIndex = (host?.attachments || []).findIndex(entry => entry.code === chosen.code)
+        if (!host || attachmentIndex < 0) break
+        const hostCost = hostEntry?.playAttachedEventCost || {}
+        host.attachments.splice(attachmentIndex, 1)
+        if (hostCost.exhaustHost) host.exhausted = true
+        if (hostCost.uses) host.uses = Math.max(0, (host.uses || 0) - hostCost.uses)
+        inv.hand.push(chosen.code)
+        playReactionCard(state, inv, inv.hand.length - 1, context, events)
+        if (hostEntry?.playAttachedEventStaysAttached) {
+          for (const pile of [inv.discard, inv.hand]) {
+            const index = pile.lastIndexOf(chosen.code)
+            if (index >= 0) pile.splice(index, 1)
+          }
+          host.attachments ||= []
+          host.attachments.push({ id: `${host.id}:att:${chosen.code}:${state.round ?? 0}:${(host.attachments.length + 1)}`, code: chosen.code, ownerSeat: inv.seat })
+        }
+        continue
+      }
       playReactionCard(state, inv, chosen.index, context, events, chosen.fromDiscard, chosen.copyCode, chosen.fromPlanAssetId)
     }
   }
@@ -437,6 +497,32 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
         }
       }
     }
+    // 2026-10-25 本循环修复 player-window-fast-actions（一）：调查员/附属的 [free] 描述子也进玩家窗口。
+    // legalMoves 只枚举场上支援的主动能力；这里用与 openAbilityWindow 同一份 descriptorSources/
+    // descriptorUsable 读点，按当前 timingWindow 过滤 kind:'free' 的能力。
+    if (!cannotTriggerFreeAbility(state, inv)) {
+      for (const row of descriptorSources(state, inv)) {
+        const descriptors = row.entry?.abilities || []
+        for (const [index, descriptor] of descriptors.entries()) {
+          if (descriptor.kind !== 'free' || descriptor.fromHand) continue
+          if (!descriptorUsable(state, inv, row.source, descriptor, { windowId: timing, mode: 'free' })) continue
+          if (descriptor.effect && effectError(state, inv, descriptor.effect)) continue
+          options.push({
+            id: `free-descriptor:${row.code}:${index}`,
+            label: `${cardName(row.code)}：${descriptor.label}`,
+            freeCode: row.code, freeIndex: index, targetId: null,
+          })
+        }
+      }
+    }
+    // 2026-10-25 本循环修复 player-window-fast-actions（二）：剧本层 [fast] 行动
+    // （如异端者「[fast] 花线索谈判查看另一面」）在任何玩家窗口可选，经 behavior.performAction 结算。
+    const scenarioFast = scenarioBehavior(state).fastActions?.(state, inv, timing)
+      || (scenarioBehavior(state).actions?.(state, inv) || [])
+        .filter(move => !move.reason && move.actions === 0 && move.fast === true)
+    for (const move of scenarioFast || []) {
+      options.push({ id: `scenario-fast:${move.rule}:${move.enemyId || ''}`, label: move.label, scenarioMove: move })
+    }
     if (inv.seat === fastCardSeat) {
       for (const move of fastHandPlays(state, inv)) {
         if (blockedFast.has(move.cardId)) continue
@@ -462,15 +548,40 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
       if (after >= before) blockedFast.add(chosen.cardCode)
       continue
     }
+    if (chosen.freeCode) {
+      doFreeDescriptor(state, inv.seat, chosen.freeCode, chosen.freeIndex, chosen.targetId, events)
+      continue
+    }
+    if (chosen.scenarioMove) {
+      scenarioBehavior(state).performAction(state, inv, chosen.scenarioMove, scenarioRuntime(state, events))
+      continue
+    }
     doAbility(state, inv.seat, chosen.assetId, chosen.index, chosen.targetId, null, events)
   }
   state.timingWindow = null
 }
 
 // 第 2 步 P2.2：从第二遭遇牌堆抽一张并走同一条显现管线。
-function drawExtraEncounter(state, inv, events, deckId) {
-  return drawEncounter(state, inv, events, { deck: deckId })
+// 2026-10-25 本循环修复 05183：可传 options（peril / cannotCancel / sourceCode）给抽牌管线。
+function drawExtraEncounter(state, inv, events, deckId, options = {}) {
+  return drawEncounter(state, inv, events, { ...options, deck: deckId })
 }
 
-  return { drawEncounter, drawExtraEncounter, reactionWindow, triggerReaction, playerWindow }
+// 2026-10-25 本循环修复 05294/05312：在遭遇弃牌堆里「就地结算」一张诡计的显现。
+// 不经过 drawEncounter 的抽牌/encounterDrawn 取消/涌动窗口；按 resolveTreachery 的 placed
+// 决定去向（placed 为真表示该卡已被放置/附属，不回弃牌堆）。
+function replayEncounterRevelation(state, inv, events, code) {
+  const treachery = ALL_TREACHERIES[code]
+  if (!treachery) return false
+  const index = state.encounterDiscard.indexOf(code)
+  if (index < 0) return false
+  state.encounterDiscard.splice(index, 1)
+  info(state, events, `${inv.name} 结算遭遇弃牌堆中的「${treachery.name || code}」。`)
+  const resolution = resolveTreachery(state, inv, treachery, events)
+  const placed = typeof resolution === 'object' ? resolution.placed : resolution
+  if (!placed) state.encounterDiscard.push(code)
+  return true
+}
+
+  return { drawEncounter, drawExtraEncounter, replayEncounterRevelation, reactionWindow, triggerReaction, playerWindow }
 }

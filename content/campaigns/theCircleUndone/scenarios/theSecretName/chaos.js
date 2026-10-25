@@ -3,6 +3,7 @@
 // 引擎只消费 resolveChaosToken 的 delta/autoFail/drawAnother/onDraw/onFail；
 // 失败后的弃牌/Nahab 攻击/猎手移动按参考实现放在 afterTest（按 result 幂等）。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { activeInvestigators, discardEncounterTop as sharedDiscardEncounterTop } from '../../encounter-rules.js'
 import { chaosFx, hardSide } from '../../tcu-chaos.js'
 
 export const NAHAB_CODE = '05149'
@@ -11,12 +12,13 @@ const traitsOf = card => (ALL_CARDS[original(card)]?.traits || card?.traits || [
   .map(trait => String(trait).toLowerCase())
 const hasTrait = (card, trait) => traitsOf(card).includes(trait)
 
+// 卡面「[[Extradimensional]] 地点」按印刷英文特性判断：实例 traits 在揭示时可能被写成中文
+// （behavior.locationRevealed 用 unrevealed.traitsZh），所以优先读 ALL_CARDS 的印刷 traits。
 function isExtradimensional(state, inv) {
   const location = (state.locations || []).find(entry => entry.id === inv?.location)
   if (!location) return false
-  const traits = location.traits
-    || ALL_CARDS[location.originalCode || location.code]?.traits
-    || []
+  const printed = ALL_CARDS[location.originalCode || location.code]?.traits
+  const traits = printed?.length ? printed : (location.traits || [])
   return traits.some(trait => String(trait).toLowerCase() === 'extradimensional')
 }
 
@@ -32,50 +34,25 @@ export function secretNameChaosToken(state, inv, token, api) {
 }
 
 function discardEncounterTop(state, inv, amount, api) {
-  const discarded = []
-  for (let index = 0; index < Math.max(0, Math.floor(amount || 0)); index++) {
-    if (!state.encounterDeck.length) break
-    const code = state.encounterDeck.pop()
-    state.encounterDiscard.push(code)
-    discarded.push(code)
-  }
+  // 走章节共享的弃顶入口：牌库由有到无时通知「遭遇牌库耗尽」相关强制（05147）。
+  const discarded = sharedDiscardEncounterTop(state, api, amount, { reshuffle: false, notifyEmpty: true })
   if (discarded.length) api?.info?.(`「${inv?.name || '调查员'}」弃掉遭遇牌库顶 ${discarded.length} 张牌。`)
   return discarded
 }
 
-const connectionsOf = (state, id) => (state.locations || []).find(location => location.id === id)?.connections || []
-
-// 到目标地点的一步（BFS；返回 { next, distance }）。引擎的 hunterStep 是纯计算，移动要由调用方执行。
-function stepToward(state, from, to) {
-  if (!from || !to || from === to) return null
-  const seen = new Set([from])
-  const queue = [[from, null, 0]]
-  while (queue.length) {
-    const [id, first, distance] = queue.shift()
-    for (const next of connectionsOf(state, id)) {
-      if (next === to) return { next: first || next, distance: distance + 1 }
-      if (seen.has(next)) continue
-      seen.add(next)
-      queue.push([next, first || next, distance + 1])
-    }
-  }
-  return null
-}
-
-// [elderthing]：结算场上每个敌人的猎手关键词（向最近调查员移动一步）。
+// [elderthing]：结算场上每个敌人的猎手关键词。
+// 单步解算走引擎已有的 api.hunterStep（内部含 Prey 排序/等距 chooseAmong/barricade 过滤），
+// 由内容层执行实际移动；已交战/横置/不可移动（act3 的 Nahab immobile）的敌人不结算。
 function moveHunters(state, api) {
-  const alive = (state.investigators || []).filter(inv => !inv.defeated && !inv.resigned && inv.location)
+  const investigators = activeInvestigators(state)
   for (const enemy of [...(state.enemies || [])]) {
     if (!enemy.hunter || !enemy.location) continue
-    let best = null
-    for (const inv of alive) {
-      const step = stepToward(state, enemy.location, inv.location)
-      if (!step) continue
-      if (!best || step.distance < best.distance) best = step
-    }
-    if (!best) continue
-    api?.moveEnemy?.(enemy, best.next)
-    api?.info?.(`[elderthing]：「${enemy.name}」向「${best.next}」移动。`)
+    if (enemy.exhausted || enemy.engagedSeat != null || enemy.immobile) continue
+    if (investigators.some(inv => inv.location === enemy.location)) continue
+    const target = api?.hunterStep?.(enemy, {})
+    if (!target || target === enemy.location) continue
+    api?.moveEnemy?.(enemy, target)
+    api?.info?.(`[elderthing]：「${enemy.name}」结算猎手关键词，移动到「${target}」。`)
   }
 }
 

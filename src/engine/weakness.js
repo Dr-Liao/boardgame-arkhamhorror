@@ -6,6 +6,8 @@
 //
 // 依赖注入同前几批；abilityApi 是工厂产物，用惰性调用。
 
+import { popRevelation, pushRevelation } from './resolution-scope.js'
+
 export function createWeakness(deps) {
   const {
     CLASS_NAMES,
@@ -47,6 +49,16 @@ export function createWeakness(deps) {
   } = deps
 
 function resolveWeakness(state, inv, def, events, texts) {
+  // 2026-10-25 第五轮修复 05049：弱点显现也属于「正在结算显现效果」——与遭遇诡计共用读点。
+  pushRevelation(def.code)
+  try {
+    return resolveWeaknessBody(state, inv, def, events, texts)
+  } finally {
+    popRevelation()
+  }
+}
+
+function resolveWeaknessBody(state, inv, def, events, texts) {
   // Phase 5（5a-12）：弱点描述子可以带 resolve，优先走能力层；旧的数据体分支仍作为回退。
   const weakDescriptor = descriptorOfKind(def.code, 'weakness')
   if (weakDescriptor?.resolve) {
@@ -258,6 +270,13 @@ function resolveWeakness(state, inv, def, events, texts) {
       applyHarm(state, inv, 1, 1, events)
     }
     if (shouldShuffle) inv.shuffleWeaknessAfterResolution = def.code
+    return
+  }
+  // 2026-10-25 第七轮修复 05019：卡面「放置入场」的弱点资产进支援区（而不是威胁区）。
+  if (eff.weakness.type === 'threat' && def.type === 'asset' && registeredEntry(def.code)?.weaknessPlaysAsAsset) {
+    if (registeredEntry(def.code)?.weaknessExhaustsAssets) for (const asset of inv.assets) asset.exhausted = true
+    inv.assets.push(newCardInstance(state, def.code, { doom: 0 }))
+    info(state, events, `⚠️ 「${cardName(def.code)}」进入 ${inv.name} 的支援区域。`)
     return
   }
   if (eff.weakness.type === 'threat') {

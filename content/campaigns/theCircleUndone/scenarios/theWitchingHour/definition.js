@@ -19,6 +19,8 @@ export const GOAT_SPAWN = '01180'
 export const RELENTLESS_DARK_YOUNG = '01179'
 
 // 7 张「女巫作祟之林」：印刷正面同名，背面（unrevealed 数据）给出具体副标题。
+export const TaintedWellCode = '05062'
+export const OvergrownBarnCode = '05064'
 export const WOODS = Object.freeze([
   { id: 'abandonedMine', code: '05058' },
   { id: 'cairnStones', code: '05059' },

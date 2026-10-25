@@ -110,6 +110,7 @@ import {
   doomAmongControlled, grantSpellCredit, spellOnlyActionsOf,
 } from './spell-actions.js'
 import { noteCardCancelled } from './cancel-note.js'
+import { beginCancelNoteFrame, cancelNoteFrameNoted, currentRevelation } from './resolution-scope.js'
 import { cardIdentityFields } from '../cards/card-identity.js'
 import { captureTableState } from '../integration/presentation-state.js'
 import { attackStyle } from '../integration/attack-style.js'
@@ -299,6 +300,7 @@ import {
   banishEnemyToVictory, currentFaceCode, enemyCannotBeDefeated, enemyFacesOf, faceOf, flipEnemyFace,
 } from './enemy-faces.js'
 import { enterOpeningHandCards as enterOpeningHandCardsImpl } from './tarot-slot.js'
+import { tarotSlotInfo } from './tarot-slot.js'
 import { createHaunted, isLocationHaunted, normalizeScenarioHaunted } from './haunted.js'
 import { hauntedAbilitiesAt } from './haunted.js'
 import { isSpectralLocation, spectralFaceOf } from './locations.js'
@@ -972,6 +974,10 @@ const resourceBank = {
   beginTurn: (state, inv, events) => resourceBankApi().beginTurn(state, inv, events),
   endTurn: (state, inv, events) => resourceBankApi().endTurn(state, inv, events),
   withdrawAll: (state, inv, events) => resourceBankApi().withdrawAll(state, inv, events),
+  bankResources: (state, inv, amount, events) => resourceBankApi().bankResources(state, inv, amount, events),
+  withdrawBanked: (state, inv, amount, events) => resourceBankApi().withdrawBanked(state, inv, amount, events),
+  spendBanked: (state, inv, amount, events) => resourceBankApi().spendBanked(state, inv, amount, events),
+  spendResources: (state, inv, amount, events) => resourceBankApi().spendResources(state, inv, amount, events),
   projection: inv => resourceBankApi().projection(inv),
 }
 
@@ -1045,8 +1051,10 @@ const commonDeps = {
   getMaxHealth,
   getMaxSanity,
   getStat,
+  baseStatValue,
   getThreatEffect,
   healHorrorFrom,
+  extendHealHorror,
   hunchDeck,
   resourceBank,
   inHub,
@@ -1102,6 +1110,9 @@ const commonDeps = {
 
 const apiDeps = { ...commonDeps,
   chooseLolaRole,
+  canEquip,
+  // 塔罗槽读数需要卡面查询函数才能把「实例只有 code」的支援算进 usage。
+  tarotSlotInfo: (state, inv) => tarotSlotInfo(state, inv, cardDef),
   disengageAll,
   farthestLocationsFor,
   itemDiscountAtLocation,
@@ -1134,6 +1145,10 @@ const apiTestDeps = { ...commonDeps,
   testStage, }
 
 const apiMiscDeps = { ...commonDeps,
+  SKILL_NAMES,
+  // 2026-10-25 第五轮：条目 API 里的通用读点（敌人运行期修正 / 地点帷幕 / 显现作用域）。
+  scenarioRuntime,
+  extendHealHorror,
   activeEffects,
   cardHasTrait,
   createEffect,
@@ -1150,7 +1165,11 @@ const apiMiscDeps = { ...commonDeps,
   noteCardCancelled,
   // 第 5 步 P6：直觉牌库与资源寄存的卡面读取点（乔·戴蒙德的旧印 / 家族遗产的行动）。
   hunchDeck,
-  doFightRaw: (...args) => doFight(...args), }
+  // 2026-10-25 第五轮：api.addUses 需要条目字段（05186「花费充能/弹药时获得资源」）。
+  registeredEntry,
+  doFightRaw: (...args) => doFight(...args),
+  playCardFromDiscardForced: (...args) => playCardFromDiscardForced(...args),
+  playCardFromOtherHandForced: (...args) => playCardFromOtherHandForced(...args), }
 
 function abilityApi(state, events) {
   return {
@@ -1320,6 +1339,64 @@ const { doFight, doEvade } = createCombat({
 })
 
 // Phase 6（6d-4）：打牌 / 调查搬进 actions.js；依赖一次性注入。
+// 2026-10-25 第七轮修复 05235：不经过「弃牌堆顶/playableFromDiscard」限制，强制从弃牌堆打出事件。
+export function playCardFromDiscardForced(state, seat, code, events, options = {}) {
+  const inv = state.investigators[seat]
+  if (!inv || !cardDef(code) || !Array.isArray(inv.discard) || !inv.discard.includes(code)) return false
+  const index = inv.discard.indexOf(code)
+  inv.discard.splice(index, 1)
+  inv.hand.push(code)
+  if (options.discount) inv.playDiscount = (inv.playDiscount || 0) + options.discount
+  // 2026-10-25 第七轮修复 05320：用「手牌张数是否减少」判定是否真的打出；
+  // 手里还有同名第二张时 includes(code) 会误判为未打出。
+  const handAfterPush = inv.hand.length
+  doPlay(state, seat, code, events, false)
+  if (inv.hand.length >= handAfterPush) {
+    // 未实际打出：撤回临时 push 的那一张并退回弃牌堆。
+    const at = inv.hand.lastIndexOf(code)
+    if (at >= 0) inv.hand.splice(at, 1)
+    inv.discard.push(code)
+    return false
+  }
+  if (options.exileAfter !== false) {
+    // 结算后从实际落点移出游戏（卡面：「该事件结算后，将其从游戏中移除」）。
+    for (const pile of [inv.discard, inv.deck, inv.hand]) {
+      const at = pile.indexOf(code)
+      if (at >= 0) pile.splice(at, 1)
+    }
+    state.removedFromGame ||= []
+    if (!state.removedFromGame.includes(code)) state.removedFromGame.push(code)
+    info(state, events, `${inv.name} 的「${cardName(code)}」结算后从游戏中移除。`)
+  }
+  return true
+}
+
+// 2026-10-25 第七轮修复 05319：从另一名调查员手牌打出卡牌（由本调查员控制/付费）。
+export function playCardFromOtherHandForced(state, seat, fromSeat, code, events) {
+  const actor = state.investigators[seat]
+  const owner = state.investigators[fromSeat]
+  if (!actor || !owner || !Array.isArray(owner.hand) || !owner.hand.includes(code)) return false
+  const def = cardDef(code)
+  if (!def || isWeaknessCard(def)) return false
+  owner.hand.splice(owner.hand.indexOf(code), 1)
+  actor.hand.push(code)
+  state._playedUnderControl = { fromSeat, code }
+  // 2026-10-25 第七轮修复 05319：同 playCardFromDiscardForced，用张数变化判定是否真的打出。
+  const actorHandAfterPush = actor.hand.length
+  try {
+    doPlay(state, seat, code, events)
+  } finally {
+    delete state._playedUnderControl
+  }
+  if (actor.hand.length >= actorHandAfterPush) {
+    const at = actor.hand.lastIndexOf(code)
+    if (at >= 0) actor.hand.splice(at, 1)
+    owner.hand.push(code)
+    return false
+  }
+  return true
+}
+
 const { doPlay, doInvestigate } = createActions({
   ...commonDeps,
   hauntedAfterFail: (...args) => hauntedApi().resolveAfterFailedAction(...args),
@@ -1504,10 +1581,15 @@ function scenarioRuntime(state, events, testSource = null) {
   // 第 2 步 P2.12：异端者多面/放逐（deps 注入卡面定义与胜利区结算）。
   flipEnemyFace: (state2, enemy, nextCode, deps) => flipEnemyFace(state2, enemy, nextCode, { ...deps, defOf: code => enemyDef(code) }),
   banishEnemyToVictory: (state2, enemy, deps) => banishEnemyToVictory(state2, enemy, { addVictory, ...deps }),
+  // 2026-10-25 本循环修复 05294/05312：遭遇弃牌堆就地结算显现（不经过抽牌窗口）。
+  replayEncounterRevelation,
   enemyFace: enemy => faceOf(enemy),
   enemyFaces: enemy => enemyFacesOf(enemy),
   ...commonDeps,
   addBasicWeakness,
+  // 2026-10-25 第五轮：剧情资产附属到敌人 / 地点当前帷幕读点。
+  attachCardTo: (...args) => attachCardTo(...args),
+  entityModifierTotal,
   addToExplorationDeck,
   addYigsFury,
   advanceAgenda,
@@ -1639,8 +1721,9 @@ function abilityExec() {
 })
   return abilityExecution
 }
-function doAbility(state, seat, assetId, index, targetId, choice, events) {
-  return abilityExec().doAbility(state, seat, assetId, index, targetId, choice, events)
+function doAbility(state, seat, assetId, index, targetId, choice, events, ownerSeat = null) {
+  // 2026-10-25 第七轮修复 05196：透传 ownerSeat（同地点队友的 teamActivatable 支援由本调查员激活）。
+  return abilityExec().doAbility(state, seat, assetId, index, targetId, choice, events, ownerSeat)
 }
 function openAbilityWindow(state, when, context, events, opts) {
   // 2026-10-25：必须把 opts（allowNested）透传给能力层实现；否则 reactionWindow 的
@@ -1685,7 +1768,7 @@ function campaignFlowApi() {
 }
 function progressCampaign(...args) { return campaignFlowApi().progressCampaign(...args) }
 function restartScenario(...args) { return campaignFlowApi().restartScenario(...args) }
-function finishScenario(...args) { return campaignFlowApi().finishScenario(...args) }
+export function finishScenario(...args) { return campaignFlowApi().finishScenario(...args) }
 function applyResolutionEffects(...args) { return campaignFlowApi().applyResolutionEffects(...args) }
 function addTrauma(...args) { return campaignFlowApi().addTrauma(...args) }
 function applyDefeatTrauma(...args) { return campaignFlowApi().applyDefeatTrauma(...args) }
@@ -1838,8 +1921,11 @@ function encounterApi() {
   chooseAmong,
   controlledAbilityCards,
   descriptorReactionSpec,
+  descriptorSources,
+  descriptorUsable,
   descriptorsForWindow,
   doAbility,
+  doFreeDescriptor,
   doPlay: (...args) => doPlay(...args),
   evaluateCriteria,
   isAutomaticReward,
@@ -1856,7 +1942,7 @@ function encounterApi() {
   return encounterImpl
 }
 // encounterApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
-export function drawEncounter(...args) { return encounterApi().drawEncounter(...args) } export function drawExtraEncounter(...args) { return encounterApi().drawExtraEncounter(...args) } export function reactionWindow(...args) { return encounterApi().reactionWindow(...args) } export function triggerReaction(...args) { return encounterApi().triggerReaction(...args) }
+export function drawEncounter(...args) { return encounterApi().drawEncounter(...args) } export function drawExtraEncounter(...args) { return encounterApi().drawExtraEncounter(...args) } export function replayEncounterRevelation(...args) { return encounterApi().replayEncounterRevelation(...args) } export function reactionWindow(...args) { return encounterApi().reactionWindow(...args) } export function triggerReaction(...args) { return encounterApi().triggerReaction(...args) }
 export function playerWindow(...args) { return encounterApi().playerWindow(...args) }
 
 // Phase 6（6d-21）：移动与位置搬进 movement.js；惰性装配保持调用点与导出。
@@ -1871,6 +1957,8 @@ function movementApi() {
   movementError,
   payActionCost,
   processPlayerEnemyEntry,
+  // 2026-10-25 第六轮修复 05036。
+  reactionWindow,
 })
   return movementImpl
 }
@@ -2002,6 +2090,7 @@ function turnApi() {
   runAgendaForced,
   campaignBorrowedTimeTurnStart,
   useGoldPocketWatch,
+  openAbilityWindow,
 })
   return turnImpl
 }
@@ -2032,6 +2121,11 @@ function revealApi() {
   ruleCodeForOriginal,
   spawnStoryAsset,
   stepToward,
+  // 2026-10-25 第五轮修复 05004：取消自动记账。
+  noteCardCancelled,
+  reactionWindow,
+  beginCancelNoteFrame,
+  cancelNoteFrameNoted,
 })
   return revealImpl
 }
@@ -2039,6 +2133,7 @@ function revealApi() {
 export function resolveTreacheryEffect(...args) { return revealApi().resolveTreacheryEffect(...args) } export function runActReveal(...args) { return revealApi().runActReveal(...args) } export function runAgendaForced(...args) { return revealApi().runAgendaForced(...args) }
 export function executeDescriptor(...args) { return revealApi().executeDescriptor(...args) }
 export function doEntityAbility(...args) { return abilityExec().doEntityAbility(...args) }
+export function doFreeDescriptor(...args) { return abilityExec().doFreeDescriptor(...args) }
 export function enterOpeningHandCards(...args) { return enterOpeningHandCardsImpl(...args) }
 export function bondedGroupOf(code) { return bondedApi().groupOf(code) }
 export function retrieveBonded(state, inv, mainCode, options = {}) {
@@ -2385,7 +2480,7 @@ export function targetedTest(...args) { return createHarmThreatApi().targetedTes
 export function dealDamageExhausted(...args) { return createHarmThreatApi().dealDamageExhausted(...args) } export function blankEnemy(...args) { return createHarmThreatApi().blankEnemy(...args) } export function ignoreChaos(...args) { return createHarmThreatApi().ignoreChaos(...args) }
 export function returnAssetToHand(...args) { return createHarmThreatApi().returnAssetToHand(...args) } export function shuffleIntoEncounter(...args) { return createHarmThreatApi().shuffleIntoEncounter(...args) } export function moveHorrorToInvestigator(...args) { return createHarmThreatApi().moveHorrorToInvestigator(...args) }
 export function damagedTargetsAtLocation(...args) { return createHarmThreatApi().damagedTargetsAtLocation(...args) } export function healDamageAtLocation(...args) { return createHarmThreatApi().healDamageAtLocation(...args) } export function recordResearch(...args) { return createHarmThreatApi().recordResearch(...args) }
-export function researchSolution(...args) { return createHarmThreatApi().researchSolution(...args) } export function healHorrorNearby(...args) { return createHarmThreatApi().healHorrorNearby(...args) } export function healHorrorFrom(...args) { return createHarmThreatApi().healHorrorFrom(...args) } export function dukeInvestigate(...args) { return createHarmThreatApi().dukeInvestigate(...args) }
+export function researchSolution(...args) { return createHarmThreatApi().researchSolution(...args) } export function healHorrorNearby(...args) { return createHarmThreatApi().healHorrorNearby(...args) } export function healHorrorFrom(...args) { return createHarmThreatApi().healHorrorFrom(...args) } export function extendHealHorror(...args) { return createHarmThreatApi().extendHealHorror(...args) } export function dukeInvestigate(...args) { return createHarmThreatApi().dukeInvestigate(...args) }
 
 
 // ---------------------------------------------------------------------------
@@ -2449,7 +2544,7 @@ function createStatsApi() {
 export function assetEffect(...args) { return createStatsApi().assetEffect(...args) } export function controlledAbilityCards(...args) { return createStatsApi().controlledAbilityCards(...args) } export function controlledAbilityCard(...args) { return createStatsApi().controlledAbilityCard(...args) }
 export function abilityUsage(...args) { return createStatsApi().abilityUsage(...args) }
 export function lolaCanUseCard(...args) { return createStatsApi().lolaCanUseCard(...args) } export function chooseLolaRole(...args) { return createStatsApi().chooseLolaRole(...args) } export function runtimeCardAvailable(...args) { return createStatsApi().runtimeCardAvailable(...args) }
-export function getStat(...args) { return createStatsApi().getStat(...args) } export function getMaxHealth(...args) { return createStatsApi().getMaxHealth(...args) } export function getMaxSanity(...args) { return createStatsApi().getMaxSanity(...args) }
+export function getStat(...args) { return createStatsApi().getStat(...args) } export function baseStatValue(...args) { return createStatsApi().baseStatValue(...args) } export function getMaxHealth(...args) { return createStatsApi().getMaxHealth(...args) } export function getMaxSanity(...args) { return createStatsApi().getMaxSanity(...args) }
 export function extraActionBonus(...args) { return createStatsApi().extraActionBonus(...args) } export function exploreOnlyActionBonus(...args) { return createStatsApi().exploreOnlyActionBonus(...args) } export function normalActionsLeft(...args) { return createStatsApi().normalActionsLeft(...args) }
 export function investigateBonus(...args) { return createStatsApi().investigateBonus(...args) } export function handSize(...args) { return createStatsApi().handSize(...args) } export function getHandSize(...args) { return createStatsApi().getHandSize(...args) }
 export function cardPlayFlag(...args) { return createStatsApi().cardPlayFlag(...args) } export function iconValue(...args) { return createStatsApi().iconValue(...args) } export function effectiveTraits(...args) { return createStatsApi().effectiveTraits(...args) }

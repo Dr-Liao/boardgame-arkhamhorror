@@ -5,8 +5,8 @@
 // 由 UAD 的 resolveFate 把「放一边的剧情支援」交给调查员控制（api.giveAsset）；
 // 受控后与玩家卡走同一套描述子通道：+1 技能走 modifiers，反应走 abilities（引擎
 // descriptorSources 会枚举受控卡条目的 abilities）。
-// 已知缺口（见 primitive-requests/fix-c7shared.json）：引擎对被取消的攻击仍在
-// enemyAttacked 窗口前提前 return，因此「攻击被取消」这半句当前不可观察。
+// 「即便该次攻击被取消」由引擎修复（src/engine/enemies.js:137-146：取消分支也开一次
+// enemyAttacked 窗口，context.cancelled=true），条目本身无需额外判据。
 
 export default {
   code: '05258',

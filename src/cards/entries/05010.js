@@ -16,11 +16,15 @@
 //   · 条目级 removeAfterPlay: true → 打出结算后进入 state.removedFromGame，不进弃牌堆
 //     （src/engine/actions.js:243-292 读点）。
 //
-// 剩余未实现（引擎原语，见 artifacts/tcu-fix/primitive-requests/fix-investigator.json）：
-//   · 「游戏结束时乔少取得 2 点经验」需要结局/经验结算读点；现在只在（抽到弱点的兜底路径）
-//     记 inv.unsolvedCasePenalty 标记。
-//   · 「改为加入威胁区域」由直觉牌库的 avoidHunchShuffle 读点落实（src/engine/hunch-deck.js），
-//     但该路径目前不会写 unsolvedCasePenalty 标记，需要引擎在 avoidHunchShuffle 分支补记。
+// 剩余实现说明（本轮修复）：
+//   · 「在游戏结束时少取得 2 点经验」→ 条目级 scenarioXpModifier: -2；引擎结局 XP 结算
+//     （src/engine/campaign-flow.js:252-260）会扫描威胁区条目并套用该修正。字段已登记
+//     src/engine/ability.js:323。因此只有「改为加入威胁区域」的路径会真正扣经验（打出的
+//     路径已移出游戏，符合卡面）。
+//   · 「改为加入威胁区域」由直觉牌库的 avoidHunchShuffle 读点落实（src/engine/hunch-deck.js）。
+//
+// 说明：兜底路径（非直觉牌库直接抽到该弱点）按普通弱点结算并移出游戏，此时不进入威胁区、
+// 不触发少经验（卡面同样要求先在威胁区才获得该强制）。
 
 const highestShroudLocations = state => {
   const locations = (state.locations || []).filter(location => location && typeof location.shroud === 'number')
@@ -56,8 +60,10 @@ export default {
   avoidHunchShuffle: true,
   playableWeakness: true,
   removeAfterPlay: true,
-  simplified: true,
-  note: '「游戏结束时少取得 2 点经验」需要结局/经验结算读点（已登记 primitive request）；打出「放线索+移出游戏」与直觉牌库→威胁区两条路径已实现。',
+  // 「强制 - 在游戏结束时：乔·戴蒙德本场冒险少取得 2 点经验值」：威胁区条目字段，
+  // 由 src/engine/campaign-flow.js 的结局 XP 结算统一读取（不写死卡号）。
+  scenarioXpModifier: -2,
+  note: '「游戏结束时少取得 2 点经验」由条目级 scenarioXpModifier 在结局 XP 结算处生效（仅在威胁区时）；打出「放线索+移出游戏」与直觉牌库→威胁区两条路径已实现。',
   abilities: [
     {
       kind: 'played',
@@ -78,7 +84,6 @@ export default {
         placeClueOnHighestShroud({ inv, state, api })
         state.removedFromGame ||= []
         state.removedFromGame.push('05010')
-        inv.unsolvedCasePenalty = true
         api.info('「悬案」被移出游戏。')
       },
     },

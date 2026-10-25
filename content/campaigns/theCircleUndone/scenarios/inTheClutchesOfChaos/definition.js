@@ -183,6 +183,9 @@ export const scenario = {
   ...definitions,
   storyAssets: {},
   encounterDeck: encounterDeck(gathered),
+  // 05284 的符号表用到 [tablet]/[elder_thing]：TCU 基础袋只有骷髅×2，需按章节追加
+  // （与 UAD/ATD/SecretName 同口径）。[cultist] 由幕间故事 II 的同意/撒谎永久加入战役袋，本章不重复加。
+  chaosBagExtra: ['tablet', 'elderthing'],
   resolutions: {
     noResolution: '你们没能阻止裂口继续扩大：每一位调查员都撤退或被击败。检查剧本日志——'
       + '如果安妮特·梅森被魔鬼附身，转至结局 3；如果卡尔·桑福德知晓了宇宙之秘，转至结局 4。',

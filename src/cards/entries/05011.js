@@ -19,7 +19,20 @@ export default {
       label: '把家族遗产上的所有资源移进资源池',
       cost: { action: true },
       resolve: ({ inv, api }) => {
-        const moved = api.resourceBank.withdraw(inv)
+        // R7 resource-bank v2 预接线：v2 把寄存资源放进独立池；优先用 bankedResources/spendBanked，
+        // 未落地时回落 v1 的 resourceBank.withdraw（行为不变，注册期不抛错）。
+        const banked = typeof api.bankedResources === 'function'
+          ? Number(api.bankedResources(inv.seat) || 0)
+          : Number(api.resourceBank?.bankedOf?.(inv) ?? (inv.assets || []).find(card => card.code === '05011')?.resources ?? 0)
+        if (!banked) {
+          api.info('家族遗产上没有资源。')
+          return
+        }
+        // R7 resource-bank v2：withdrawBanked 把寄存标记清掉（合并模型下资源池不变，
+        // 效果=这些资源不再于回合结束流失）。
+        const moved = typeof api.withdrawBanked === 'function'
+          ? api.withdrawBanked(inv.seat, banked)
+          : api.resourceBank.withdraw(inv)
         if (!moved) api.info('家族遗产上没有资源。')
       },
     },

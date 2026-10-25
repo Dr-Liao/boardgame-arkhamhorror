@@ -6,11 +6,11 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 05234 诱敌：自动躲避 1 个非精英敌人；可支付 +2/+4 资源把范围扩到「最多 2 个」与「2 次连接内」。
-//
-// 实现备注：两条 [reaction] 都是「打出时提升费用以改变目标范围」。引擎没有「打出费用反应」通道，
-// 这里在 resolve 开头一次询问结算方式并立即支付额外资源（费用数值与净效果与卡面一致；差异只是
-// 支付发生在打出之后，而不是打出前的反应窗口里）。
+// R7：两条 [reaction] 改为挂在引擎 beforePlayCost 窗口（正在打出的卡自身条目的 reaction 可作候选来源）：
+// 窗口内把选择记到 inv.playUpgrades05234 并累加 context.costIncrease（引擎在支付前加费）；
+// played 的 resolve 只读该选择决定躲避数量/目标范围，不再在 resolve 内补付资源。
+
+const UPGRADE_COST = 2
 
 // 与 fromId 相距不超过 2 次连接的地点（含直接连接与二段连接），不含自身。
 function locationsWithinTwo(state, fromId) {
@@ -25,63 +25,83 @@ function locationsWithinTwo(state, fromId) {
   return out
 }
 
+const localTargets = (state, inv) => state.enemies.filter(enemy =>
+  !enemy.defeated && !enemy.elite && enemy.location === inv.location)
+const nearTargets = (state, inv) => {
+  const near = locationsWithinTwo(state, inv.location)
+  return state.enemies.filter(enemy => !enemy.defeated && !enemy.elite && near.includes(enemy.location))
+}
+
+function canAffordUpgrade(inv, context) {
+  const base = Number(context?.cost || 0)
+  const extra = Number(context?.costIncrease || 0)
+  return (inv.resources || 0) >= base + extra + UPGRADE_COST
+}
+
 export default {
   code: '05234',
   // 卡面两项都以「躲避」为目标：没有任何可自动躲避的非精英敌人（所在地点或 2 次连接内）时不能打出。
   playCondition: [{
     when: ({ state, inv }) => {
-      const local = (state.enemies || []).some(enemy => !enemy.defeated && !enemy.elite && enemy.location === inv.location)
-      if (local) return true
-      return locationsWithinTwo(state, inv.location)
-        .some(id => (state.enemies || []).some(enemy => !enemy.defeated && !enemy.elite && enemy.location === id))
+      if (localTargets(state, inv).length) return true
+      // 本地无目标、只能靠范围模式：至少要有 4 资源（基础 2 + 提升费用 2）才能打出并支付升级。
+      return nearTargets(state, inv).length > 0 && (Number(inv.resources) || 0) >= 4
     },
-    message: '附近没有可自动躲避的非[[精英]]敌人，不能打出「诱敌」',
+    message: '附近没有可自动躲避的非[[精英]]敌人（或资源不足 4：基础 2 + 提升费用 2），不能打出「诱敌」',
   }],
   abilities: [
     {
+      kind: 'reaction', trigger: 'beforePlayCost',
+      label: '打出诱敌时：提升费用 2 点（「一个非精英敌人」→「最多 2 个」）',
+      criteria: [({ state, inv, context }) => context?.cardCode === '05234'
+        && !(inv.playUpgrades05234 || []).includes('pair')
+        && canAffordUpgrade(inv, context)
+        && localTargets(state, inv).length > 0],
+      resolve: ({ inv, api, context }) => {
+        inv.playUpgrades05234 = [...(inv.playUpgrades05234 || []), 'pair']
+        context.costIncrease = Number(context.costIncrease || 0) + UPGRADE_COST
+        api.info('诱敌：提升费用 2 点，改为最多 2 个非精英敌人。')
+      },
+    },
+    {
+      kind: 'reaction', trigger: 'beforePlayCost',
+      label: '打出诱敌时：提升费用 2 点（「你所在地点」→「2 次连接内的地点」）',
+      criteria: [({ state, inv, context }) => context?.cardCode === '05234'
+        && !(inv.playUpgrades05234 || []).includes('far')
+        && canAffordUpgrade(inv, context)
+        && nearTargets(state, inv).length > 0],
+      resolve: ({ inv, api, context }) => {
+        inv.playUpgrades05234 = [...(inv.playUpgrades05234 || []), 'far']
+        context.costIncrease = Number(context.costIncrease || 0) + UPGRADE_COST
+        api.info('诱敌：提升费用 2 点，改为与你所在地点连接次数不超过 2 的地点。')
+      },
+    },
+    {
       kind: 'played',
-      label: '诱敌：自动躲避非精英敌人',
+      label: '诱敌：自动躲避非精英敌人（升级在打出费用窗口选择）',
       resolve: ({ state, inv, api }) => {
-        const resources = inv.resources || 0
+        const upgrades = Array.isArray(inv.playUpgrades05234) ? inv.playUpgrades05234.slice() : []
+        delete inv.playUpgrades05234
+        const upToTwo = upgrades.includes('pair')
+        const far = upgrades.includes('far')
         const nearIds = locationsWithinTwo(state, inv.location)
-        const localPool = () => state.enemies.filter(enemy => !enemy.defeated && !enemy.elite && enemy.location === inv.location)
-        const nearPool = () => state.enemies.filter(enemy => !enemy.defeated && !enemy.elite && nearIds.includes(enemy.location))
-        const hasLocal = localPool().length > 0
-        const hasNear = nearPool().length > 0
-        const candidatesModes = [
-          { id: 'base', label: '你所在地点的一个非精英敌人', extra: 0, upToTwo: false, far: false, available: hasLocal },
-          { id: 'pair', label: '最多 2 个非精英敌人（费用 +2）', extra: 2, upToTwo: true, far: false, available: hasLocal },
-          { id: 'far', label: '2 次连接内地点的一个非精英敌人（费用 +2）', extra: 2, upToTwo: false, far: true, available: hasNear },
-          { id: 'farPair', label: '2 次连接内地点最多 2 个非精英敌人（费用 +4）', extra: 4, upToTwo: true, far: true, available: hasNear },
-        ]
-        // 只提供「有合法目标且付得起额外费用」的模式（修复：范围模式不再在无远处目标时回落到本地）。
-        const modes = candidatesModes.filter(mode => mode.available && resources >= mode.extra)
-        if (!modes.length) { api.info('没有可自动躲避的非[[精英]]敌人。'); return }
-        const modeId = modes.length === 1 ? modes[0].id : api.choice({
-          kind: 'effect', source: '05234', seat: inv.seat,
-          prompt: '诱敌：选择结算方式（卡面的两条 [reaction] 用提升费用扩大目标范围）。',
-          options: modes.map(mode => ({ id: mode.id, label: mode.label })),
-        })
-        const mode = modes.find(item => item.id === modeId) || modes[0]
-        // 目标地点：基础版本只限所在地点；范围模式只在 2 次连接内地点里选。
-        let targetLocation = inv.location
-        if (mode.far) {
+        let candidates
+        if (far) {
           const withEnemies = nearIds.filter(id => state.enemies.some(enemy =>
             !enemy.defeated && !enemy.elite && enemy.location === id))
           if (!withEnemies.length) { api.info('「诱敌」：2 次连接内没有非[[精英]]敌人。'); return }
-          targetLocation = withEnemies.length === 1 ? withEnemies[0] : api.choice({
+          const targetLocation = withEnemies.length === 1 ? withEnemies[0] : api.choice({
             kind: 'location', source: '05234', seat: inv.seat,
             prompt: '选择敌人所在的地点（与你相距不超过 2 次连接）。',
             options: withEnemies.map(id => ({ id, label: api.locationName(id) })),
           })
+          candidates = state.enemies.filter(enemy =>
+            enemy.location === targetLocation && !enemy.defeated && !enemy.elite)
+        } else {
+          candidates = localTargets(state, inv)
         }
-        let candidates = state.enemies.filter(enemy => enemy.location === targetLocation && !enemy.defeated && !enemy.elite)
         if (!candidates.length) { api.info('没有可自动躲避的非[[精英]]敌人。'); return }
-        if (mode.extra) {
-          api.loseResources(inv.seat, mode.extra)
-          api.info(`🎭 ${inv.name} 为「诱敌」额外支付 ${mode.extra} 资源。`)
-        }
-        const limit = mode.upToTwo ? 2 : 1
+        const limit = upToTwo ? 2 : 1
         const evaded = []
         for (let count = 0; count < limit && candidates.length; count++) {
           const options = [

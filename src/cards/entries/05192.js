@@ -8,8 +8,9 @@
 //
 // 05192 附魔剑（守护者）：攻击 +2 战斗；成功后可花 1 充能附魔（+1 伤害），附魔击败敌人时抽 1 治愈 1 恐惧。
 //
-// 实现备注：+1 伤害必须在攻击检定开始前就并入战斗结算，因此「是否花费 1 充能附魔」在检定前询问；
-// 充能只在检定成功后才真正扣除（与卡面「如果你检定成功，你可以花费」的净结果一致）。
+// 第六轮：走引擎新原语 api.fight 的 maySpendUsesForDamage（combat.js:298-316）——引擎在检定成功后
+// 询问是否花费 1 充能、扣充能、+1 伤害，并给 sourceAsset.empowered += 1。条目不再在检定前预问、
+// 也不手动扣充能；「剑已附魔」读 source.empowered（持久状态，多回合有效）。
 
 export default {
   code: '05192',
@@ -24,19 +25,17 @@ export default {
       resolve: ({ state, inv, api, source, targetId }) => {
         const enemy = state.enemies.find(item => item.id === targetId)
         if (!enemy) return
-        let empower = false
-        if ((source?.uses || 0) > 0) {
-          empower = api.choice({
-            kind: 'reaction', source: '05192', seat: inv.seat, canSkip: true,
-            prompt: '如果你检定成功，是否花费 1 充能为剑附魔，使本次攻击 +1 伤害？',
-            options: [{ id: 'skip', label: '不附魔' }, { id: 'empower', label: '花费 1 充能附魔（+1 伤害）' }],
-          }) === 'empower'
-        }
-        const result = api.fight(inv.seat, enemy.id, { combatBonus: 2, damageBonus: empower ? 1 : 0 })
-        if (!result?.success || !empower) return
-        api.addUses(source, -1)
-        api.info(`🔮 「附魔剑」花费 1 充能附魔（剩余 ${source.uses || 0}）。`)
-        if (state.enemies.includes(enemy)) return
+        const result = api.fight(inv.seat, enemy.id, {
+          combatBonus: 2,
+          assetId: source?.id,
+          maySpendUsesForDamage: { uses: 1, damage: 1 },
+        })
+        if (!result?.success) return
+        const empowered = Number(source?.empowered || 0) > 0
+        const defeated = result.attackResult?.defeated === true
+          || !state.enemies.includes(enemy)
+          || enemy.defeated === true
+        if (!empowered || !defeated) return
         // 剑已附魔且本次攻击击败了敌人。
         api.drawCards(inv.seat, 1)
         api.healHorror(inv.seat, 1)

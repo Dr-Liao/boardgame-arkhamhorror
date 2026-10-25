@@ -22,6 +22,9 @@ export function createScenarioRuntime(deps) {
     addBasicWeakness,
     addDoom,
     addToExplorationDeck,
+    // 2026-10-25 第五轮：剧情资产附属到敌人 / 地点当前帷幕读点。
+    attachCardTo,
+    entityModifierTotal,
     addTrauma,
     addYigsFury,
     advanceAct,
@@ -71,6 +74,7 @@ export function createScenarioRuntime(deps) {
     drawChaosToken,
     drawEncounter,
     drawExtraEncounter,
+    replayEncounterRevelation,
     drawMadnessWeakness,
     eliminateInvestigator,
     endChaosTest,
@@ -92,6 +96,8 @@ export function createScenarioRuntime(deps) {
     flipScenarioLocation,
     grantSupplies,
     groupPayment,
+    // 2026-10-25 第四轮修复 05171b：把修改后的技能值暴露给内容层（区别于印刷基值）。
+    getStat,
     // 第四循环P2.1：闹鬼结算（印刷 + 授予能力、顺序询问、可取消、可重复）。
     clearHauntedGrants,
     grantHaunted,
@@ -168,6 +174,11 @@ function scenarioRuntime(state, events, testSource = null) {
     discardUntilEnemyTrait: trait => discardUntilEnemyTrait(state, trait, events),
     decideSeat: () => leadDecisionSeat(state),
     preyTarget: (rule, seats) => preyTarget(state, rule, seats),
+    // 2026-10-25 第四轮修复 05171b：读取「修改后」的技能值（含被动/效果修正，区别于印刷基值）。
+    investigatorStat: (seat, skill) => {
+      const inv = state.investigators[seat]
+      return inv ? getStat(state, inv, skill) : 0
+    },
     ruleCode: original => ruleCodeForOriginal(original),
     basicWeaknesses: trait => basicWeaknessPool().filter(code =>
       (cardDef(code)?.traits || []).some(value => String(value).toLowerCase() === String(trait).toLowerCase())),
@@ -311,14 +322,140 @@ function scenarioRuntime(state, events, testSource = null) {
     resign: seat => doResign(state, seat, events),
     advanceAct: () => advanceAct(state, events),
     advanceAgenda: () => advanceAgenda(state, events),
+    // 2026-10-25 第四轮修复 05044（agenda-in-place-flip）：只翻当前议程的展示面并播报该面正文，
+    // 不推进 agendaIndex、不清 state.doom、不触发议程推进阈值/离场钩子。
+    flipAgendaInPlace: face => {
+      const target = face === 'back' ? 'back' : 'front'
+      state.agendaFace = target
+      const agenda = state.agendas?.[state.agendaIndex]
+      const text = target === 'back' ? (agenda?.backText || agenda?.text || '') : (agenda?.text || '')
+      info(state, events, `🃏 密谋「${agenda?.name || ''}」翻至${target === 'back' ? '背面' : '正面'}。`, {
+        kind: 'automatic', face: target, card: agenda?.code || null, text,
+      })
+      scenarioBehavior(state).agendaFlipped?.(state, target, scenarioRuntime(state, events))
+      return target
+    },
     clearDoom: () => {
       state.doom = 0
       for (const card of doomCards(state)) card.doom = 0
       scenarioBehavior(state).doomCleared?.(state, scenarioRuntime(state, events))
     },
     addDoom: n => addDoom(state, n, events),
+    // 2026-10-25 第六轮修复 05237：撤销「刚放置的」毁灭（只作用于传入的卡实例）。
+    cancelDoomPlacement: (card, amount = 1) => {
+      // card=null 表示密谋/议程上的毁灭（05237 的神话阶段主用例）。
+      if (!card) {
+        const removed = Math.min(Math.max(0, amount), state.doom || 0)
+        if (!removed) return 0
+        state.doom = Math.max(0, (state.doom || 0) - removed)
+        info(state, events, `🛡️ 取消了密谋上刚放置的 ${removed} 点毁灭（当前 ${state.doom}）。`)
+        return removed
+      }
+      const removed = Math.min(Math.max(0, amount), card.doom || 0)
+      if (!removed) return 0
+      card.doom = Math.max(0, (card.doom || 0) - removed)
+      info(state, events, `🛡️ 取消了「${card.name || cardName(card.code)}」刚放置的 ${removed} 点毁灭。`)
+      scenarioBehavior(state).doomRemoved?.(state, { target: card, amount: removed }, scenarioRuntime(state, events))
+      return removed
+    },
+    // 2026-10-25 第五轮修复（05321/05157）：敌人运行期数值修正（fight/evade/health，可带 floor；
+    // until: 'endOfRound' | 'endOfTurn' | 'endOfPhase'）。
+    addEnemyStatModifier: (enemy, mods = {}, options = {}) => {
+      if (!enemy) return null
+      enemy.statMods ||= []
+      const until = {}
+      if (options.until === 'endOfRound') until.round = state.round
+      else if (options.until === 'endOfTurn') until.turnSerial = state.turnSerial
+      else if (options.until === 'endOfPhase') { until.round = state.round; until.phase = state.phase }
+      const entry = { until }
+      for (const key of ['fight', 'evade', 'health']) {
+        if (Number.isFinite(mods[key])) entry[key] = mods[key]
+      }
+      if (Number.isFinite(mods.floor)) entry.floor = mods.floor
+      enemy.statMods.push(entry)
+      return entry
+    },
+    // 2026-10-25 第七轮修复 05286a/05288a：按幕搬运的「裂口」容器（state.acts[i].breaches）。
+    actBreaches: (target = null) => {
+      const act = target || state.acts?.[state.actIndex]
+      return act?.breaches || 0
+    },
+    addActBreach: (target = null, amount = 1) => {
+      const act = target || state.acts?.[state.actIndex]
+      if (!act) return 0
+      act.breaches = Math.max(0, (act.breaches || 0) + Math.max(0, Math.floor(amount) || 0))
+      return act.breaches
+    },
+    removeActBreach: (target = null, amount = 1) => {
+      const act = target || state.acts?.[state.actIndex]
+      if (!act) return 0
+      const removed = Math.min(act.breaches || 0, Math.max(0, Math.floor(amount) || 0))
+      act.breaches = Math.max(0, (act.breaches || 0) - removed)
+      return removed
+    },
+    // 2026-10-25 第七轮修复 05201：幕牌库旁的提醒实体（纯提醒载体，不影响规则状态）。
+    addActReminder: (code, actIndex = null) => {
+      if (!code) return null
+      state.actReminders ||= []
+      const reminder = { code, actIndex: Number.isInteger(actIndex) ? actIndex : (state.actIndex ?? 0) }
+      state.actReminders.push(reminder)
+      return reminder
+    },
+    actReminders: (actIndex = null) => {
+      const list = state.actReminders || []
+      if (!Number.isInteger(actIndex)) return [...list]
+      return list.filter(item => item.actIndex === actIndex)
+    },
+    removeActReminder: (code, actIndex = null) => {
+      const list = state.actReminders || []
+      const index = list.findIndex(item => item.code === code
+        && (!Number.isInteger(actIndex) || item.actIndex === actIndex))
+      if (index < 0) return null
+      return list.splice(index, 1)[0]
+    },
+    // 2026-10-25 第七轮修复 05222：把目标上的 1 个毁灭标记「翻至线索面」（语义等价载体）。
+    flipMarker: (target, options = {}) => {
+      const amount = Math.max(1, Math.floor(options.amount || 1))
+      if (!target) return 0
+      const labels = target.markers || []
+      let flipped = 0
+      for (let i = 0; i < amount; i++) {
+        if ((target.doom || 0) <= 0) break
+        target.doom -= 1
+        target.clues = (target.clues || 0) + 1
+        flipped += 1
+      }
+      if (flipped) {
+        labels.push(`doomToClue:${flipped}`)
+        target.markers = labels
+        info(state, events, `🔄 把「${target.name || cardName(target.code)}」上的 ${flipped} 个毁灭标记翻至线索面。`)
+      }
+      return flipped
+    },
     // 在「某一张卡」上放毁灭的统一入口（敌人在内）：走 doomPlaced 钩子与 04265 手铐拦截。
     doomOn: (card, amount = 1) => placeDoomOnCard(state, card, amount, events, { silent: true }),
+    // 2026-10-25 本循环修复 doom-placement-prevention：内容可先问「这张卡此刻能不能被放置毁灭」。
+    canPlaceDoomOn: card => scenarioBehavior(state).canPlaceDoomOn?.(state, card) !== false,
+    // 2026-10-25 第四轮修复 05307：地点遭遇附属的真实实例承载（显示/文本空白/关闭行动读同一份数据）。
+    attachEncounterToLocation: (code, locationId, extra = {}) => {
+      const location = state.locations.find(loc => loc.id === locationId)
+      if (!location) return null
+      location.attachments ||= []
+      const attachment = { id: `locatt-${location.id}-${location.attachments.length + 1}-${code}`, code, ...extra }
+      location.attachments.push(attachment)
+      return attachment
+    },
+    detachLocationAttachment: (locationId, attachmentId) => {
+      const location = state.locations.find(loc => loc.id === locationId)
+      if (!location?.attachments) return null
+      const index = location.attachments.findIndex(item => item.id === attachmentId)
+      if (index < 0) return null
+      return location.attachments.splice(index, 1)[0]
+    },
+    locationAttachments: locationId => {
+      const location = state.locations.find(loc => loc.id === locationId)
+      return location?.attachments ? [...location.attachments] : []
+    },
     payClues: (n, location) => groupPayment(state, n, location, events),
     spendClues: (seat, n) => { const inv = state.investigators[seat]; if (inv.clues < n) throw new Error('线索不足'); inv.clues -= n; syncClues(state) },
     trauma: (seat, kind, n) => addTrauma(state, seat, kind, n, events),
@@ -352,7 +489,9 @@ function scenarioRuntime(state, events, testSource = null) {
     extraDecks: () => extraEncounterDecksInfo(state),
     addExtra: (id, codes, options) => addToExtraEncounterDeck(state, id, codes, options),
     shuffleExtra: (id, codes) => shuffleIntoExtraEncounterDeck(state, id, codes, { shuffle: list => shuffle(list, () => randomValue(state)) }),
-    drawExtra: (seat, id) => drawExtraEncounter(state, state.investigators[seat], events, id),
+    drawExtra: (seat, id, options = {}) => drawExtraEncounter(state, state.investigators[seat], events, id, options),
+    // 2026-10-25 本循环修复 05294/05312：遭遇弃牌堆就地结算显现（不经过抽牌/取消/涌动窗口）。
+    replayEncounterRevelation: (seat, code) => replayEncounterRevelation(state, state.investigators[seat], events, code),
     discardExtra: (id, count) => discardTopOfExtraEncounterDeck(state, id, count),
     discardExtraCards: (id, codes) => discardFromExtraEncounterDeck(state, id, codes),
     explore: seat => doExplore(state, seat, events),
@@ -395,10 +534,55 @@ function scenarioRuntime(state, events, testSource = null) {
     tarotInfo: () => tarotInfo(state),
     tarotOrientation: raw => tarotOrientation(raw),
     drawCards: (seat, n) => drawCards(state, state.investigators[seat], n, events),
+    // 2026-10-25 本循环修复 testOtherInvestigatorTrigger（05246/05248）：剧本钩子在检定中
+    // 替非检定者降难度（与 api-test.js 同一份状态字段口径）。
+    reduceTestDifficulty: (amount = 1) => {
+      if (!state.skillTest) return 0
+      state.skillTest.difficultyReduction = (state.skillTest.difficultyReduction || 0) + amount
+      state.skillTest.difficulty = Math.max(0, (state.skillTest.difficulty || 0) - amount)
+      return state.skillTest.difficulty
+    },
     drawMadnessWeakness: seat => drawMadnessWeakness(state, state.investigators[seat], events),
     // 04165 穿越界限：从收藏里随机获得一张基础[[疯狂]]或[[损伤]]弱点并洗入牌库。
     addBasicWeakness: (seat, traits = ['madness', 'injury']) =>
       addBasicWeakness(state, state.investigators[seat], events, traits),
+    // 2026-10-25 第五轮修复（05200/05201）：剧情资产附属到敌人（复用 attachCardTo 的实例结构）。
+    attachStoryAssetToEnemy: (code, enemyId, extra = {}) => {
+      const enemy = state.enemies.find(item => item.id === enemyId)
+      if (!enemy || !code) return null
+      return attachCardTo(state, null, code, enemy, extra)
+    },
+    detachEnemyAttachment: (enemyId, attachmentId) => {
+      const enemy = state.enemies.find(item => item.id === enemyId)
+      if (!enemy?.attachments) return null
+      const index = enemy.attachments.findIndex(item => item.id === attachmentId)
+      if (index < 0) return null
+      return enemy.attachments.splice(index, 1)[0]
+    },
+    // 2026-10-25 第五轮修复（05239/05241/05242）：通用「资源标记」载体（记在敌人/地点/卡实例上）。
+    addMarker: (target, label = 'resource') => {
+      if (!target) return null
+      target.markers ||= []
+      target.markers.push(label)
+      return target.markers.length
+    },
+    removeMarker: (target, label = 'resource') => {
+      if (!target?.markers) return 0
+      const index = target.markers.indexOf(label)
+      if (index >= 0) target.markers.splice(index, 1)
+      return target.markers.length
+    },
+    markers: target => (target?.markers ? [...target.markers] : []),
+    // 2026-10-25 第五轮修复（05110）：地点当前帷幕的完整读点（含剧本/地点修正与雾）。
+    locationShroud: locationId => {
+      const location = state.locations.find(loc => loc.id === locationId)
+      if (!location) return null
+      const inv = state.investigators[state.currentSeat]
+      const scenarioShroud = (scenarioBehavior(state).locationShroudModifier?.(state, location, inv) || 0)
+        + entityModifierTotal(state, location, 'locationShroud')
+      return location.shroud + (location.shroudMod || 0) + (location.peabodyShroud || 0)
+        + (state.fogMod || 0) + scenarioShroud
+    },
     gainClues: (seat, n) => { const inv = state.investigators[seat]; inv.clues += n; syncClues(state); scenarioBehavior(state).cluesGained?.(state, inv, n, scenarioRuntime(state, events)) },
     // 02224「发现任意地点的 1 个线索」：按目标地点走 canDiscoverClues（02213 学校只能靠调查）。
     discoverClue: (seat, amount = 1, locationId = null) =>

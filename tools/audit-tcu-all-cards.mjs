@@ -124,7 +124,9 @@ if (campaignByCode.size !== expectedCampaignEvidence) {
   throw new Error(`战役卡/关联面证据不完整：${campaignByCode.size}/${expectedCampaignEvidence}`)
 }
 const investigatorResults = results.filter(result => relativeFile(result) === files[0])
-if (investigatorResults.length !== 43) {
+// 2026-10-25 第三轮审计修复：调查员批次用例数会随修复增加（本轮 51），这里只要求
+// 覆盖不少于 19 位调查员 + 专属卡/弱点的基础用例数（43），不再锁死精确条数。
+if (investigatorResults.length < 43) {
   throw new Error(`M1 调查员逐人验收用例数异常：${investigatorResults.length}`)
 }
 
@@ -233,7 +235,7 @@ if (deckable !== 83) throw new Error(`Unexpected TCU deckable count: ${deckable}
 const profile = {
   id: 'original-circle-undone-all-cards-2026-10',
   scope: '万象无终原始循环 377 条印刷记录：343 张主卡（战役 237 / 调查员 19 / 玩家 87）与 34 个关联面（05xxxa/b/c…）。',
-  basis: '逐卡运行测试：237 张战役主卡的卡面印刷数据与 9 章 definition/behavior 逐字段对照（tests/tcu-campaign-card-acceptance.test.mjs 275 例）、87 张玩家卡 4 个分片（tests/tcu-player-m2-{1..4}.test.mjs 123 例）、19 张调查员/专属卡 M1 逐人验收（tests/tcu-investigators.test.mjs 43 例）；证据只从实跑 node --test 的 test:pass 事件归集。',
+  basis: `逐卡运行测试：237 张战役主卡的卡面印刷数据与 9 章 definition/behavior 逐字段对照（tests/tcu-campaign-card-acceptance.test.mjs 275 例）、87 张玩家卡 4 个分片（tests/tcu-player-m2-{1..4}.test.mjs 123 例）、19 张调查员/专属卡 M1 逐人验收（tests/tcu-investigators.test.mjs ${investigatorResults.length} 例）；证据只从实跑 node --test 的 test:pass 事件归集。`,
   partitionPolicy: '主卡按 content/packs/tcu*/manifest.js 的 verified 函数切成 investigator/player/campaign 三分区且唯一；34 个关联面不是独立主卡，按 linkedCardCode/linkedToCode 归到主卡或成对关联面，账本 partition 记 face，证据取主卡定义/行为链接（逐面 test）。',
   pendingPolicy: '目录存在、卡号被源码引用、rulesPending:false 或文本非空都不构成通过；未被逐卡 test 标记「已验收」的卡保持 pending 并计入 summary.pending。',
   notePolicy: '人工行为审计的近似实现说明登记在 content/campaigns/theCircleUndone/card-acceptance.js 的 TCU_CARD_ACCEPTANCE_NOTES；未登记默认 verified。',

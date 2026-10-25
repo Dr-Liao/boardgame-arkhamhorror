@@ -21,8 +21,9 @@ import { buildTarotDeck, drawTarot } from '../src/engine/tarot.js'
 import { normalizeScenarioHaunted } from '../src/engine/haunted.js'
 import { normalizeScenarioSpectralLocations } from '../src/engine/locations.js'
 import { selectStoryInvestigators } from '../src/engine/story-investigators.js'
-import { applyMove, createGameState } from '../src/engine/engine.js'
+import { applyMove, createGameState, legalMoves } from '../src/engine/engine.js'
 import { recordDefaults } from '../content/campaigns/theCircleUndone/shared.js'
+import { watcherHuntedSeats } from '../content/campaigns/theCircleUndone/encounter-rules.js'
 import { layoutFor } from '../content/scenario-manifest.js'
 import { layout as scenarioLayout } from '../content/campaigns/theCircleUndone/scenarios/disappearanceAtTheTwilightEstate/layout.js'
 
@@ -109,6 +110,13 @@ function runtimeApi(state, seed = 1, { tarot = true } = {}) {
     random: randomValue,
     shuffle,
     info: text => calls.info.push(String(text)),
+    // agenda-in-place-flip（05044 原语）的测试替身：记录翻面顺序并打 face 日志标记。
+    flipAgendaInPlace: face => {
+      calls.flipAgenda ||= []
+      calls.flipAgenda.push(face)
+      state.agendaFace = face
+      calls.info.push(`face:${face}`)
+    },
     privateInfo: () => {},
     damage: (seat, amount) => { calls.damage.push({ seat, amount }); const inv = state.investigators[seat]; if (inv) inv.damage += amount },
     horror: (seat, amount) => { calls.horror.push({ seat, amount }); const inv = state.investigators[seat]; if (inv) inv.horror += amount },
@@ -460,21 +468,28 @@ test('议程 1b：被幽灵看守人击败 → 记录「被看守人抓走」，
   const { state, api } = setupGame({ count: 1, picks: ['05046'], skipTarot: true })
   state.round = 2
   state.doom = 4
+  const inv = state.investigators[0]
   prologue.behavior.beforeEnemyHarm(state,
     { code: THE_SPECTRAL_WATCHER, originalCode: THE_SPECTRAL_WATCHER, traits: ['Ancient One', 'Spectral'] },
-    state.investigators[0], { damage: 2, horror: 0 }, api)
-  prologue.behavior.investigatorEliminated(state, state.investigators[0], 0, api)
+    inv, { damage: 2, horror: 0 }, api)
+  prologue.behavior.beforeHarm(state, inv, { damage: 2, horror: 0 }, api)
+  prologue.behavior.investigatorEliminated(state, inv, 0, api)
   assert.deepEqual(state.campaign.records.wasTakenByTheWatcher, ['05046'])
-  assert.equal(state.agendaIndex, 0, '议程翻回 1a')
+  assert.equal(state.agendaIndex, 0, '议程索引不变（就地翻面，不推进）')
   assert.equal(state.doom, 4, '推进不移除毁灭')
+  assert.deepEqual(api.calls.flipAgenda, ['back', 'front'], '推进 1b 后翻回 1a（agenda-in-place-flip）')
+  assert.ok(api.calls.info.includes('face:back'), '播报背面正文（face 标记）')
+  assert.ok(api.calls.info.includes('face:front'), '翻回正面（face 标记）')
 })
 
 test('议程 1b：被怪物敌人击败 → 记录「被幽灵夺走性命」', () => {
   const { state, api } = setupGame({ count: 1, picks: ['05049'], skipTarot: true })
   state.round = 1
+  const inv = state.investigators[0]
   prologue.behavior.beforeEnemyHarm(state, { code: '05103', originalCode: '05103', traits: ['Monster', 'Geist', 'Spectral'] },
-    state.investigators[0], { damage: 2, horror: 0 }, api)
-  prologue.behavior.investigatorEliminated(state, state.investigators[0], 0, api)
+    inv, { damage: 2, horror: 0 }, api)
+  prologue.behavior.beforeHarm(state, inv, { damage: 2, horror: 0 }, api)
+  prologue.behavior.investigatorEliminated(state, inv, 0, api)
   assert.deepEqual(state.campaign.records.wasClaimedBySpecters, ['05049'])
 })
 
@@ -482,13 +497,43 @@ test('议程 1b：其他效果击败且场上毁灭 ≥7 → 记录「消失在�
   const { state, api } = setupGame({ count: 1, picks: ['05047'], skipTarot: true })
   state.doom = 7
   const inv = state.investigators[0]
-  // 议程 1a 强制的伤害/恐惧（不是敌人攻击）。
-  prologue.behavior.doomPlaced(state, { target: null, amount: 0, agenda: true }, api)
-  // 手动模拟「议程强制伤害击败」：先标记来源，再调用被击败 hook。
+  // 议程 1a 强制伤害/恐惧：content 自己在 api.damage 周围置 agendaHarmSeat；这里直接模拟落点。
   state.scenarioFlags.agendaHarmSeat = inv.seat
-  prologue.behavior.investigatorEliminated(state, inv, 0, api)
+  prologue.behavior.beforeHarm(state, inv, { damage: 2, horror: 0 }, api)
   state.scenarioFlags.agendaHarmSeat = null
+  prologue.behavior.investigatorEliminated(state, inv, 0, api)
   assert.deepEqual(state.campaign.records.disappearedIntoTheMist, ['05047'])
+})
+
+test('议程 1b：击败来源精确到「致命那次伤害」——同轮先被攻击、随后被其他效果击败 → 记「被拉入幽灵国度」', () => {
+  const { state, api } = setupGame({ count: 1, picks: ['05046'], skipTarot: true })
+  state.round = 2
+  const inv = state.investigators[0]
+  // 同轮先发生一次看守人攻击（beforeEnemyHarm 标记），但它没有击败；随后一个非攻击效果造成致命伤害。
+  prologue.behavior.beforeEnemyHarm(state,
+    { code: THE_SPECTRAL_WATCHER, originalCode: THE_SPECTRAL_WATCHER, traits: ['Ancient One', 'Spectral'] },
+    inv, { damage: 1, horror: 0 }, api)
+  prologue.behavior.beforeHarm(state, inv, { damage: 1, horror: 0 }, api)
+  prologue.behavior.beforeHarm(state, inv, { damage: 1, horror: 0 }, api)
+  prologue.behavior.investigatorEliminated(state, inv, 0, api)
+  assert.deepEqual(state.campaign.records.wasPulledIntoTheSpectralRealm, ['05046'], '以致命那次伤害的来源为准，不误归看守人')
+  assert.deepEqual(state.campaign.records.wasTakenByTheWatcher, [])
+})
+
+test('议程 1b：同轮先被攻击、随后被议程 1a 强制伤害击败且毁灭 ≥7 → 记「消失在迷雾之中」', () => {
+  const { state, api } = setupGame({ count: 1, picks: ['05046'], skipTarot: true })
+  state.round = 2
+  state.doom = 7
+  const inv = state.investigators[0]
+  prologue.behavior.beforeEnemyHarm(state,
+    { code: '05103', originalCode: '05103', traits: ['Monster', 'Geist'] }, inv, { damage: 1, horror: 0 }, api)
+  prologue.behavior.beforeHarm(state, inv, { damage: 1, horror: 0 }, api)
+  state.scenarioFlags.agendaHarmSeat = inv.seat
+  prologue.behavior.beforeHarm(state, inv, { horror: 2 }, api)
+  state.scenarioFlags.agendaHarmSeat = null
+  prologue.behavior.investigatorEliminated(state, inv, 0, api)
+  assert.deepEqual(state.campaign.records.disappearedIntoTheMist, ['05046'])
+  assert.deepEqual(state.campaign.records.wasClaimedBySpecters, [])
 })
 
 test('议程 1b：其他效果击败 → 记录「被拉入幽灵国度」', () => {
@@ -595,7 +640,9 @@ test('遭遇分派：未知卡号返回 false（共享组条目由 W-shared 提�
 test('幕/议程条目：1b 文案记录写进战役记录', () => {
   const { state, api } = setupGame({ count: 2 })
   act05045.actRule.onReveal(state, state.acts[0], api)
-  assert.deepEqual(state.campaign.records.youAreBeingHunted, ['0', '1'])
+  // 参考实现是团队级 boolean 记录（recordSchema 已改 boolean；旧座位 string[] 由 watcherHuntedSeats 兼容）。
+  assert.equal(state.campaign.records.youAreBeingHunted, true)
+  assert.deepEqual(watcherHuntedSeats(state), [0, 1], 'boolean 记录视为全体存活调查员被追捕')
   agenda05044.agendaRule.onReveal(state, state.agendas[0], api)
   for (const key of JUDGEMENT_FATE_RECORDS) {
     assert.ok(Array.isArray(state.campaign.records[key]), key)
@@ -686,4 +733,50 @@ test('开局：故事调查员按卡面写入职业与四项技能，不继承�
       health: inv.maxHealth, sanity: inv.maxSanity,
     }, printed[inv.code], inv.code)
   }
+})
+
+// 05094 苦痛折磨的引擎读点：威胁区威胁数据 threatEffect.cannotTriggerActionAbilities 使受影响的
+// 调查员不能触发其控制卡牌上的 [action] 能力（src/engine/moves.js 的 actionAbilityBlocked）。
+// 用真实 createGameState 状态 + legalMoves 验证：行动型能力消失、免费/快速能力仍在、摆脱行动仍在。
+test('05094 苦痛折磨：威胁区禁制资产 [action] 能力，免费能力与摆脱行动不受影响', () => {
+  const state = createGameState(
+    { campaignId: 'theCircleUndone', campaignHub: false, seed: 'tcu-05094-legal-moves', playerInvestigator: '01001' },
+    [{ seat: 0 }],
+  )
+  let guard = 0
+  while (state.pendingChoice && guard++ < 400) {
+    const pending = state.pendingChoice
+    const optionId = pending.options.find(option => ['done', 'skip'].includes(option.id))?.id
+      || pending.options[0].id
+    applyMove(state, pending.seat, { action: 'choose', choiceId: pending.id, optionId })
+  }
+  assert.equal(Boolean(state.pendingChoice), false, '开局选择没有收敛')
+  state.phase = 'investigation'
+  state.currentSeat = 0
+  state.pendingChoice = null
+  const inv = state.investigators[0]
+  // 同地点敌人：让攻击型 [action] 能力有合法目标。
+  state.enemies.push({
+    id: 'test-enemy', code: '01167', originalCode: '01167', name: '测试敌人',
+    location: inv.location, engagedSeat: inv.seat, exhausted: false, damageTaken: 0,
+    fight: 1, evade: 1, health: 3, doom: 0, traits: [],
+  })
+  // 01020：行动型 [action] 攻击能力；01018：免费（cost.action=false）能力。
+  inv.assets.push({ id: 'test-knife', code: '01020', originalCode: '01020', exhausted: false })
+  inv.assets.push({ id: 'test-guard', code: '01018', originalCode: '01018', exhausted: false })
+  const abilityMovesOf = (moves, assetId) => moves.filter(move => move.action === 'ability' && move.assetId === assetId)
+
+  let moves = legalMoves(state, 0)
+  assert.equal(abilityMovesOf(moves, 'test-knife').length > 0, true, '未受禁制时 [action] 出现在合法行动里')
+  assert.equal(abilityMovesOf(moves, 'test-guard').length > 0, true, '免费能力正常出现')
+
+  inv.threat.push({ id: 'threat:05094', code: '05094', originalCode: '05094' })
+  moves = legalMoves(state, 0)
+  assert.equal(abilityMovesOf(moves, 'test-knife').length, 0, '05094 在威胁区时 [action] 能力被禁制')
+  assert.equal(abilityMovesOf(moves, 'test-guard').length > 0, true, '免费/快速能力不受禁制')
+  assert.equal(moves.some(move => move.action === 'encounterAction'), true, '威胁区的摆脱行动仍可用')
+
+  inv.threat = []
+  moves = legalMoves(state, 0)
+  assert.equal(abilityMovesOf(moves, 'test-knife').length > 0, true, '弃掉 05094 后恢复')
 })

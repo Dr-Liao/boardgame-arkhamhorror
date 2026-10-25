@@ -4,5 +4,5 @@ export default {
   "code": "05205",
   "scope": "location",
   "implemented": true,
-  "note": "behavior.js:actions/performAction(resignGates)/investigatorEntryError"
+  "note": "behavior.js:actions/performAction(resignGates)/investigatorEntryError/spawnForbiddenAt(05204+05205 大门)"
 };

@@ -62,9 +62,35 @@ export function createEnemies(deps) {
     tryAquinnahRedirect,
   } = deps
 
+// 2026-10-25 第五轮修复（05321/05157 等）：敌人「本回合/本轮」的运行期数值修正。
+// 条目在 api.addEnemyStatModifier 写入 {fight,evade,health,floor,until}；这里按当前轮/回合过滤。
+function activeRuntimeEnemyMods(state, enemy) {
+  const mods = enemy?.statMods
+  if (!Array.isArray(mods) || !mods.length) return []
+  return mods.filter(mod => {
+    const until = mod.until || {}
+    if (until.round != null && state.round !== until.round) return false
+    if (until.turnSerial != null && state.turnSerial !== until.turnSerial) return false
+    if (until.phase != null && state.phase !== until.phase) return false
+    return true
+  })
+}
+
+function runtimeEnemyStat(state, enemy, kind) {
+  let delta = 0
+  let floor = 0
+  for (const mod of activeRuntimeEnemyMods(state, enemy)) {
+    if (Number.isFinite(mod[kind])) delta += mod[kind]
+    if (Number.isFinite(mod.floor)) floor = Math.max(floor, mod.floor)
+  }
+  return { delta, floor }
+}
+
 function enemyHealth(state, enemy) {
   // 印刷值 + 剧本常驻修正 + 能力层声明式修正（例如 02255 的「文本空白时按人数扣血」）。
-  return enemyHealthValue(state, enemy, scenarioBehavior(state)) + enemyHealthDelta(state, enemy)
+  const runtime = runtimeEnemyStat(state, enemy, 'health')
+  const value = enemyHealthValue(state, enemy, scenarioBehavior(state)) + enemyHealthDelta(state, enemy) + runtime.delta
+  return Math.max(runtime.floor || 1, value)
 }
 
 function enemyFightValue(state, enemy, inv) {
@@ -77,6 +103,9 @@ function enemyFightValue(state, enemy, inv) {
   if (enemy.kingsEdictRound === state.round) value += (enemy.clues || 0) + (enemy.doom || 0)
   const reduction = enemy.fightReduction
   if (reduction && reduction.round === state.round && reduction.phase === state.phase) value = Math.max(0, value - (reduction.amount || 0))
+  // 2026-10-25 第五轮：本回合/本轮的运行期战斗值修正（可带 floor）。
+  const runtime = runtimeEnemyStat(state, enemy, 'fight')
+  value = Math.max(runtime.floor || 0, value + runtime.delta)
   return value
 }
 
@@ -84,6 +113,9 @@ function enemyEvadeValue(state, enemy, inv) {
   let value = enemy.evade + (enemyStatMods(state).enemyEvade || 0)
   value += scenarioBehavior(state).enemyStatModifier?.(state, enemy, 'evade') || 0
   value += entityModifierTotal(state, enemy, 'enemyEvade')
+  // 2026-10-25 第五轮：本回合/本轮的运行期躲避值修正（卡面「最低 1」由条目给 floor:1）。
+  const runtime = runtimeEnemyStat(state, enemy, 'evade')
+  value = Math.max(runtime.floor || 0, value + runtime.delta)
   return value
 }
 
@@ -137,6 +169,15 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
   if (context.cancelled) {
     info(state, events, `「${enemy.name}」对 ${inv.name} 的攻击被取消。`)
     attack.cancelled = true
+    // 2026-10-25 本循环修复 05258：「敌人攻击你后，即便该次攻击被取消」也必须开一次 enemyAttacked 窗口；
+    // 未取消路径仍在攻击结算后开唯一一次窗口（见本函数末尾），不会重复。
+    // 注意：这里用 attackCancelled 而不是 cancelled 表达「攻击被取消」——cancelled 是
+    // openAbilityWindow 的「本窗口取消」语义，写成 cancelled 会导致窗口里不再枚举反应。
+    reactionWindow(state, 'enemyAttacked', {
+      when: 'enemyAttacked', seat: inv.seat, location: inv.location, enemy, attack,
+      attackCancelled: true, cancelled: false,
+      prompt: `「${enemy.name}」攻击 ${inv.name} 后（该次攻击被取消）`,
+    }, events)
     return false
   }
   let extraDamage = 0
@@ -167,9 +208,18 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
   const excessHorrorDamage = !enemyTextBlanked(state, enemy)
     && enemyRuleFlags(enemy.code).excessHorrorDamage === true
   const remainingSanityBefore = excessHorrorDamage ? getMaxSanity(inv) - (inv.horror || 0) : 0
-  if (!inv.defeated && !tryAquinnahRedirect(state, enemy, inv, events, extraDamage, extraHorror)) {
-    applyHarm(state, inv, enemy.damage + extraDamage, enemy.horror + extraHorror, events, false, { enemy, location: inv.location },
-      false, enemyRuleFlags(enemy.code).harmStrategy || null)
+  // 2026-10-25 第六轮修复 05032：敌人攻击期间打开 wouldDiscardFromHand/wouldLoseResources/
+  // wouldLoseActions 窗口时，context.source 可标出来源（enemyAttack）。
+  const previousEnemyAttackResolving = state._enemyAttackResolving
+  state._enemyAttackResolving = { enemy, inv, kind: attack.kind }
+  try {
+    if (!inv.defeated && !tryAquinnahRedirect(state, enemy, inv, events, extraDamage, extraHorror)) {
+      applyHarm(state, inv, enemy.damage + extraDamage, enemy.horror + extraHorror, events, false, { enemy, location: inv.location },
+        false, enemyRuleFlags(enemy.code).harmStrategy || null)
+    }
+  } finally {
+    if (previousEnemyAttackResolving === undefined) delete state._enemyAttackResolving
+    else state._enemyAttackResolving = previousEnemyAttackResolving
   }
   // 实际落到调查员身上的伤害/恐惧（被取消、被防止或转移时为 0）。
   attack.damage = Math.max(0, (inv.damage || 0) - damageBefore)
@@ -271,6 +321,14 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
     }
   }
   if (!ignoreSpawn && scenarioBehavior(state).spawnLocation) loc = scenarioBehavior(state).spawnLocation(state, code, loc, engagedSeat, scenarioRuntime(state, []))
+  // 2026-10-25 本循环修复 05204/05205：剧本级「此地不能生成敌人」限制统一咨询（含 api.spawn 的 ignoreSpawn 路径）；
+  // 被禁止时按生成失败处理（进遭遇弃牌堆 + spawnFailed），与参考实现 noSpawn 语义一致。
+  if (scenarioBehavior(state).spawnForbiddenAt?.(state, code, loc, engagedSeat)) {
+    info(state, [], `⛔ 「${def?.name || code}」不能在「${state.locations.find(item => item.id === loc)?.name || loc}」生成。`)
+    state.encounterDiscard.push(code)
+    scenarioBehavior(state).spawnFailed?.(state, code, engagedSeat, scenarioRuntime(state, []))
+    return null
+  }
   if (!locationExists(state, loc)) {
     state.encounterDiscard.push(code)
     scenarioBehavior(state).spawnFailed?.(state, code, engagedSeat, scenarioRuntime(state, []))
@@ -322,6 +380,9 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
 
 function engageEnemy(state, enemy, seat, events = []) {
   if (enemy.engagedSeat === seat) return
+  // 2026-10-25 修复 05178a/c：剧本级「该敌人不能被交战」也要拦卡牌效果的强制交战
+  // （此前只在 moves.js 的交战行动层过滤，api.engage 等效果路径可强行交战）。
+  if (scenarioBehavior(state).canEngageEnemy?.(state, state.investigators[seat], enemy) === false) return
   // 「潜行」等：直到你的回合结束，该敌人不能与你交战（效果体 preventEngageThisTurn 写入的标记）。
   // 到期判定沿用引擎「本回合」的统一写法：同一 round 且轮到的还是同一个座位。
   const prevented = enemy.preventEngageSeat
@@ -467,6 +528,8 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
   state.lastHarmContext = { seat: inv.seat, damage: damage || 0, horror: horror || 0, direct: !!direct,
     round: state.round, turnSerial: state.turnSerial ?? null }
   const harmContext = reactionWindow(state, 'harmDealt', { when: 'harmDealt', seat: inv.seat, location: inv.location,
+    // 2026-10-25 第七轮修复 05032：伤害/恐惧来源标记（遭遇 / 敌人攻击 / 其它）。
+    source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },
     damage: damage || 0, horror: horror || 0, direct: !!direct, attack, prompt: `${inv.name} 将受到伤害或恐惧` }, events)
   damage = Math.max(0, harmContext.damage || 0)
   horror = Math.max(0, harmContext.horror || 0)

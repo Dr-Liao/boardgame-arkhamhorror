@@ -8,7 +8,7 @@
   "docs": "docs/tcu-migration-roadmap.md",
   "scope": {
     "path": "artifacts/migration/tcu/scope.json",
-    "sha256": "b4e03da464c3855612d7a1c664f4849859fe9d3b16eb02e987586fd63ba7464f"
+    "sha256": "faf59d8602de51c146a281d54fcbdb9328dd896e1ed808c70db5ca3f2e9d94bb"
   },
   "campaign": {
     "id": "theCircleUndone",
@@ -30,7 +30,7 @@
   "playable": true,
   "launchEnabled": true,
   "earlyAccess": true,
-  "earlyAccessReason": "逐卡行为审计发现 60 张卡存在未实现子句（gap）、174 张为显式近似；三组确认按 P8/P9 口径 verified，但不等价于印刷规则，故按 earlyAccess 发布并逐条列入 remaining。",
+  "earlyAccessReason": "逐卡行为审计发现 0 张卡存在未实现子句（gap）、14 张为显式近似；三组确认按 P8/P9 口径 verified，但不等价于印刷规则，故按 earlyAccess 发布并逐条列入 remaining。",
   "equivalenceCertified": false,
   "verifiedScope": {
     "milestone": "P4–P10",
@@ -42,7 +42,7 @@
     "playerCards": true,
     "story": true,
     "allCards": true,
-    "cardBehaviorAudit": false,
+    "cardBehaviorAudit": true,
     "launch": true,
     "presentation": true,
     "releaseBrowser": true
@@ -484,6 +484,7 @@
     "jeromeIsDead": "boolean",
     "josefDisappearedIntoTheMist": "boolean",
     "josefIsAliveAndWell": "boolean",
+    "meddledWithThePast": "string[]",
     "mementosDiscovered": "string[]",
     "missingPersons": "string[]",
     "pennyIsAlive": "boolean",
@@ -529,7 +530,7 @@
     "wasClaimedBySpecters": "string[]",
     "wasPulledIntoTheSpectralRealm": "string[]",
     "wasTakenByTheWatcher": "string[]",
-    "youAreBeingHunted": "string[]",
+    "youAreBeingHunted": "boolean",
     "youHaveAcceptedYourFate": "boolean",
     "youHaveRejectedYourFate": "boolean"
   },
@@ -685,7 +686,7 @@
     },
     {
       "path": "content/campaigns/theCircleUndone/shared.js",
-      "sha256": "34cde2694cfc6819ab4719d05f4bda998af8ffe048f477a71b97348363e4ae54"
+      "sha256": "f7af3ba552af7d251a332859e7150cb05e2f7e280c2c5eeb7bdc438421a85dfc"
     }
   ],
   "confirmations": {
@@ -855,8 +856,8 @@
             "enemies": 3,
             "treacheries": 14,
             "storyAssets": 1,
-            "encounterCards": 34,
-            "setAsideCards": 9,
+            "encounterCards": 35,
+            "setAsideCards": 8,
             "resolutions": [
               "noResolution",
               "resolution1",
@@ -1082,7 +1083,7 @@
       ],
       "ledger": {
         "path": "audit/tcu-scenario-acceptance.json",
-        "sha256": "31ce7f6cf034732638e155c2a7eb934830d0fd24835636f25a441ba20e7bd1ea"
+        "sha256": "fd9c1d71cb7b9089855b8ce7949c5ee67da573f33b9423c9dbd6a7d324dbc9fe"
       },
       "sourceLock": {
         "path": "audit/tcu-scenario-source-lock.json",
@@ -1585,7 +1586,7 @@
         "幕间四 twistOfFate 的 expert 混乱标记按参考代码 -6（卡面写 -7）",
         "尾声展示 survivedTheWatchersEmbrace 后不真正划掉该记录（留待 P10 复评）",
         "重返版（returnTo）内容不导入：D2 排除 returnToResolution4 与重返版占卜",
-        "P8 已有的 109 条 scenarioApproximations 继续有效（P9 不减少）"
+        "P8 已有的 93 条 scenarioApproximations 继续有效（P9 不减少）"
       ],
       "evidence": [
         "tools/import-tcu-story.mjs",
@@ -2800,28 +2801,7 @@
           "problems": []
         }
       ],
-      "simplified": [
-        {
-          "code": "05010",
-          "name": "悬案",
-          "note": "「游戏结束时少取得 2 点经验」需要结局/经验结算读点（已登记 primitive request）；打出「放线索+移出游戏」与直觉牌库→威胁区两条路径已实现。"
-        },
-        {
-          "code": "05012",
-          "name": "秘社“债务”",
-          "note": "「游戏结束时仍在你手牌中则承受 1 点精神创伤」在本引擎里没有可达状态（弱点抽到即结算），只实现「移出游戏」。"
-        },
-        {
-          "code": "05013",
-          "name": "银暮匕首",
-          "note": "「可以把黛安娜底下的事件/技能当作手牌打出或投入」未实现（需要 beneath 打出/投入通道，已登记 primitive request）；[action] 已按卡面支持战斗/意志二选一。"
-        },
-        {
-          "code": "05019",
-          "name": "安息日男爵",
-          "note": "「显现放置入场（支援区）」与「[fast] 任意窗口」需要引擎原语；「少于 3 毁灭不能离场」用 counters 镜像 + 补给阶段同步实现；强制额外伤害已实现。"
-        }
-      ],
+      "simplified": [],
       "evidence": [
         "content/packs/tcuInvestigators/manifest.js",
         "tests/tcu-investigators.test.mjs",
@@ -2867,7 +2847,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 102,
+              "line": 130,
               "test": "TCU 05020 拷问 谈判战斗检定：难度=3+敌人伤害，成功发现两处线索"
             }
           ]
@@ -2891,8 +2871,18 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 140,
-              "test": "TCU 05021 劫数延后 快速打出附属入场，受伤害/恐惧时弃掉并全部取消"
+              "line": 182,
+              "test": "TCU 05021 劫数延后 快速打出可附属同地点队友；受伤害/恐惧时弃掉并真实离场"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+              "line": 212,
+              "test": "TCU 05021 劫数延后 神话阶段结束：资源≥2 可支付保留（附属来源）"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+              "line": 227,
+              "test": "TCU 05021 劫数延后 神话阶段结束：资源不足或选择弃掉时弃掉附属"
             }
           ]
         },
@@ -2915,7 +2905,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 168,
+              "line": 247,
               "test": "TCU 05022 坚定不移 剩余生命+神志 ≥5 / ≥10 时追加意志与战斗图标"
             }
           ]
@@ -2939,8 +2929,13 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 233,
-              "test": "TCU 05023 宝剑王牌 塔罗槽 +1 战斗并在开局起始手牌中放置入场"
+              "line": 312,
+              "test": "TCU 05023 宝剑王牌 塔罗槽 +1 战斗；开局 [reaction] 可选放置入场"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+              "line": 336,
+              "test": "TCU 05023 宝剑王牌 塔罗槽已满时开局 [reaction] 不放置入场（保留手牌）"
             }
           ]
         },
@@ -2963,12 +2958,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 251,
+              "line": 350,
               "test": "TCU 05024 指纹采集工具 横置花补给调查：+1 智识且成功额外发现 1 线索"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 271,
+              "line": 370,
               "test": "TCU 05024 指纹采集工具 补给耗尽后弃置且不能再使用"
             }
           ]
@@ -2992,7 +2987,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 287,
+              "line": 386,
               "test": "TCU 05025 串联线索 发现最后线索后从手牌反应：发现低隐藏值地点 2 线索"
             }
           ]
@@ -3016,7 +3011,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 184,
+              "line": 263,
               "test": "TCU 05026 好奇心 手牌 ≥4 / ≥7 时追加意志与智识图标"
             }
           ]
@@ -3040,7 +3035,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 322,
+              "line": 421,
               "test": "TCU 05027 死神·XIII 塔罗槽 +1 智识并在开局入场"
             }
           ]
@@ -3064,7 +3059,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 364,
+              "line": 463,
               "test": "TCU 05028 良好人脉 横置获得每 5 资源 +1 技能值，且每位调查员仅限 1 张"
             }
           ]
@@ -3088,8 +3083,8 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 387,
-              "test": "TCU 05029 金钱万能 检定开始时打出：基础技能值改为资源数的一半"
+              "line": 486,
+              "test": "TCU 05029 金钱万能 检定开始时打出：改为资源技能检定（基础值 floor(资源/2)，只吃万能图标）"
             }
           ]
         },
@@ -3112,7 +3107,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 196,
+              "line": 275,
               "test": "TCU 05030 狡猾 资源 ≥5 / ≥10 时追加智识与敏捷图标"
             }
           ]
@@ -3136,7 +3131,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 331,
+              "line": 430,
               "test": "TCU 05031 月亮·XVIII 塔罗槽 +1 敏捷并在开局入场"
             }
           ]
@@ -3160,8 +3155,18 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 408,
-              "test": "TCU 05032 否决存在 快速打出取消本次伤害与恐惧"
+              "line": 522,
+              "test": "TCU 05032 否决存在 遭遇卡伤害/恐惧可取消"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+              "line": 540,
+              "test": "TCU 05032 否决存在 敌人攻击的伤害可取消"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+              "line": 555,
+              "test": "TCU 05032 否决存在 玩家卡自伤不能取消（source=other）"
             }
           ]
         },
@@ -3184,8 +3189,18 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 427,
-              "test": "TCU 05033 恐怖灵感 符号揭示窗口打出：取消该符号标记的效果"
+              "line": 572,
+              "test": "TCU 05033 恐怖灵感 取消凋零术的符号效果"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+              "line": 596,
+              "test": "TCU 05033 恐怖灵感 让凋零术的符号效果再结算一次"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+              "line": 626,
+              "test": "TCU 05033 恐怖灵感 auto_fail 窗口也能打出（凋零术不因 auto_fail 产生修正）"
             }
           ]
         },
@@ -3208,7 +3223,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 207,
+              "line": 286,
               "test": "TCU 05034 预见未来 场上毁灭 ≥3 / ≥6 时追加万能图标"
             }
           ]
@@ -3232,7 +3247,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 340,
+              "line": 439,
               "test": "TCU 05035 圣杯四 塔罗槽 +1 意志并在开局入场"
             }
           ]
@@ -3256,7 +3271,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 448,
+              "line": 653,
               "test": "TCU 05036 钉鞋 +1 敏捷；移动后横置敏捷(3)检定，成功再移动到连接地点"
             }
           ]
@@ -3280,12 +3295,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 471,
+              "line": 678,
               "test": "TCU 05037 绝望之举 弃掉场上的手部道具：+X 战斗 +1 伤害，成功获得 X 资源"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 488,
+              "line": 695,
               "test": "TCU 05037 绝望之举 从手牌弃掉手部道具：获得 +X 战斗但不返还资源"
             }
           ]
@@ -3309,7 +3324,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 218,
+              "line": 297,
               "test": "TCU 05038 体格强健 控制[[道具]] ≤2 / ≤1 时追加战斗与敏捷图标"
             }
           ]
@@ -3333,7 +3348,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 349,
+              "line": 448,
               "test": "TCU 05039 星币五 塔罗槽 +1 生命上限 +1 神智上限并在开局入场"
             }
           ]
@@ -3357,8 +3372,8 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 507,
-              "test": "TCU 05040 权杖王牌 流放自身换本回合额外 1 行动且每项技能 +2"
+              "line": 714,
+              "test": "TCU 05040 权杖王牌 流放自身换额外 1 行动；该次行动期间每项技能 +2"
             }
           ]
         },
@@ -3381,12 +3396,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 529,
+              "line": 747,
               "test": "TCU 05041 第十三幻象 显现进入威胁区域并用[action][action]弃掉"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-              "line": 545,
+              "line": 763,
               "test": "TCU 05041 第十三幻象 技能值等于难度时检定改为失败（本人 + 同地点队友）"
             }
           ]
@@ -3455,6 +3470,11 @@
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
               "line": 161,
+              "test": "TCU 05109 赴汤蹈火 只接恐惧：同地点其他调查员受到的伤害不能分配给它"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+              "line": 185,
               "test": "TCU 05109 赴汤蹈火 不同地点的其他调查员不能把恐惧分配给它"
             }
           ]
@@ -3478,7 +3498,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 255,
+              "line": 286,
               "test": "TCU 05110 水落石出 最后线索被发现后，该地点调查员获得 X=隐藏值的资源"
             }
           ]
@@ -3502,12 +3522,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 280,
+              "line": 311,
               "test": "TCU 05111 情报报告 提升费用 2 点：发现 2 个线索"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 299,
+              "line": 333,
               "test": "TCU 05111 情报报告 提升费用 2 点：改为发现 2 个连接内的地点"
             }
           ]
@@ -3531,8 +3551,8 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 330,
-              "test": "TCU 05112 魔法手势 额外 1 个法术槽位（add:slot）"
+              "line": 365,
+              "test": "TCU 05112 魔法手势 受限额外法术槽：只有 Spell/Ritual 可用且只有 1 个"
             }
           ]
         },
@@ -3555,17 +3575,17 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 186,
+              "line": 210,
               "test": "TCU 05113 驱除 意志躲避成功后把敌人移动到任意地点"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 200,
+              "line": 231,
               "test": "TCU 05113 驱除 揭示符号后敌人在下一个补给阶段不重整"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 211,
+              "line": 242,
               "test": "TCU 05113 驱除 只能用于非精英敌人：只有精英敌人时打不出"
             }
           ]
@@ -3589,12 +3609,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 348,
+              "line": 388,
               "test": "TCU 05114 切肉刀 剩余神智充足时 +1 战斗；可受 1 恐惧换 +1 伤害并在击败后治愈"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 365,
+              "line": 415,
               "test": "TCU 05114 切肉刀 剩余神智不超过 3 时改为 +2 战斗"
             }
           ]
@@ -3618,7 +3638,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 227,
+              "line": 258,
               "test": "TCU 05115 .45汤姆逊冲锋枪 花 1 子弹攻击：战斗 +2、伤害 +1"
             }
           ]
@@ -3642,12 +3662,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 381,
+              "line": 431,
               "test": "TCU 05116 秘密卷轴 查看任意调查员牌库底并加入手牌"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 399,
+              "line": 449,
               "test": "TCU 05116 秘密卷轴 查看遭遇牌库底并弃掉"
             }
           ]
@@ -3671,12 +3691,17 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 417,
-              "test": "TCU 05117 田纳西酸麦芽威士忌 诡计意志检定 +2 意志（横置 + 1 补给）"
+              "line": 467,
+              "test": "TCU 05117 田纳西酸麦芽威士忌 诡计意志检定 +2 意志（投入前窗口，横置 + 1 补给）"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 445,
+              "line": 496,
+              "test": "TCU 05117 田纳西酸麦芽威士忌 投入后窗口同样可用（不再只在检定开始）"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+              "line": 526,
               "test": "TCU 05117 田纳西酸麦芽威士忌 弃掉自身攻击：战斗 +3"
             }
           ]
@@ -3700,7 +3725,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 462,
+              "line": 543,
               "test": "TCU 05118 附魔剑 +1 战斗；花 1 充能附魔再 +1 战斗/+1 伤害"
             }
           ]
@@ -3724,7 +3749,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 493,
+              "line": 574,
               "test": "TCU 05119 恐怖图腾 投入后横置：该卡额外获得一个技能图标（检定 +1）"
             }
           ]
@@ -3748,8 +3773,13 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 522,
+              "line": 610,
               "test": "TCU 05151 爱丽丝·洛克斯雷 +1 智识；发现线索后横置对同地点敌人造成 1 点伤害"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+              "line": 632,
+              "test": "TCU 05151 爱丽丝·洛克斯雷 同地点没有敌人时不提供反应（不白横置）"
             }
           ]
         },
@@ -3772,12 +3802,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 548,
+              "line": 656,
               "test": "TCU 05152 妥善养护 快速附属到道具支援；每个支援仅限 1 张"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 567,
+              "line": 675,
               "test": "TCU 05152 妥善养护 宿主被弃后宿主与其[[升级]]附属一起返回手牌"
             }
           ]
@@ -3801,8 +3831,13 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 599,
+              "line": 707,
               "test": "TCU 05153 “老千”先生 从牌库顶 3 张找 1 张抽取；有弱点时也抽 1 张"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+              "line": 735,
+              "test": "TCU 05153 “老千”先生 找出的卡走真实抽牌通道：选中的弱点按显现结算"
             }
           ]
         },
@@ -3825,7 +3860,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 631,
+              "line": 763,
               "test": "TCU 05154 鹰眼折叠相机 最后线索后放证据；证据给意志/智识/神智加值"
             }
           ]
@@ -3849,12 +3884,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 665,
+              "line": 797,
               "test": "TCU 05155 亨利·万 选择停下后，每揭示 1 枚标记抽 1 张或获得 1 资源"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 686,
+              "line": 818,
               "test": "TCU 05155 亨利·万 揭示符号标记时无事发生"
             }
           ]
@@ -3878,7 +3913,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 703,
+              "line": 835,
               "test": "TCU 05156 反应灵敏 立即获得 1 个不计入行动数的行动"
             }
           ]
@@ -3902,7 +3937,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 718,
+              "line": 850,
               "test": "TCU 05157 凋零术 用意志攻击；符号后敌人获得 -1 攻击值"
             }
           ]
@@ -3926,8 +3961,23 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 758,
-              "test": "TCU 05158 第六感 用意志调查（不用智力）"
+              "line": 909,
+              "test": "TCU 05158 第六感 符号后改为在连接的已揭示地点调查（使用新地点隐藏值）"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+              "line": 938,
+              "test": "TCU 05158 第六感 符号后可选使用原调查地点的隐藏值"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+              "line": 966,
+              "test": "TCU 05158 第六感 未揭示/不相连的地点不可选（无合法目标时不触发）"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
+              "line": 986,
+              "test": "TCU 05158 第六感 非符号不触发"
             }
           ]
         },
@@ -3950,7 +4000,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 777,
+              "line": 1009,
               "test": "TCU 05159 险中求胜 检定开始时横置：难度 +2，并获得 2 资源"
             }
           ]
@@ -3974,12 +4024,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 807,
+              "line": 1039,
               "test": "TCU 05160 勇闯虎穴 成功躲避超过难度 2 点后，发现该敌人所在地点的线索"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
-              "line": 828,
+              "line": 1060,
               "test": "TCU 05160 勇闯虎穴 躲避未超过难度 2 点时打不出"
             }
           ]
@@ -4003,7 +4053,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 100,
+              "line": 106,
               "test": "TCU 05186 .45汤姆逊冲锋枪 花 1 子弹攻击 +2 战斗 +1 伤害，子弹换成资源"
             }
           ]
@@ -4027,8 +4077,13 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 119,
+              "line": 125,
               "test": "TCU 05187 .45汤姆逊冲锋枪 命中超出另一敌人攻击值时可花 1 子弹转伤"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+              "line": 143,
+              "test": "TCU 05187 .45汤姆逊冲锋枪 转伤等于本次攻击的实际伤害（投入致命打击使伤害 +1 后转 3 点）"
             }
           ]
         },
@@ -4051,8 +4106,8 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 141,
-              "test": "TCU 05188 秘密卷轴 查看牌库底 3 张：可弃 1、可拿 1、其余放顶或底"
+              "line": 166,
+              "test": "TCU 05188 秘密卷轴 查看牌库底 3 张：可弃 1、可拿 1、其余逐张任意顺序放顶/底"
             }
           ]
         },
@@ -4075,7 +4130,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 165,
+              "line": 197,
               "test": "TCU 05189 秘密卷轴 查看任意牌库顶或底 1 张，然后弃/拿/放顶/放底"
             }
           ]
@@ -4099,13 +4154,18 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 187,
+              "line": 219,
               "test": "TCU 05190 田纳西酸麦芽威士忌 弃掉：攻击 +3 战斗 +1 伤害"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 198,
+              "line": 230,
               "test": "TCU 05190 田纳西酸麦芽威士忌 诡计卡牌检定 +3 意志（横置并花 1 补给）"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+              "line": 249,
+              "test": "TCU 05190 田纳西酸麦芽威士忌 非意志的诡计检定不获得 +3 意志"
             }
           ]
         },
@@ -4128,8 +4188,18 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 221,
+              "line": 273,
               "test": "TCU 05191 田纳西酸麦芽威士忌 弃掉：攻击 +3 战斗，命中非精英敌人后自动躲避"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+              "line": 285,
+              "test": "TCU 05191 田纳西酸麦芽威士忌 诡计卡牌意志检定 +2 意志（横置并花 1 补给）"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+              "line": 305,
+              "test": "TCU 05191 田纳西酸麦芽威士忌 非意志的诡计检定不获得 +2 意志"
             }
           ]
         },
@@ -4152,7 +4222,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 237,
+              "line": 329,
               "test": "TCU 05192 附魔剑 成功花 1 充能附魔 +1 伤害，附魔击杀后抽 1 治愈 1 恐惧"
             }
           ]
@@ -4176,7 +4246,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 257,
+              "line": 349,
               "test": "TCU 05193 附魔剑 额外花 2 充能：+2 战斗 +2 伤害"
             }
           ]
@@ -4200,8 +4270,13 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 271,
+              "line": 363,
               "test": "TCU 05194 恐怖图腾 投入后横置：投入卡再获得 1 个图标，检定成功抽 1 张"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+              "line": 385,
+              "test": "TCU 05194 恐怖图腾 可选非匹配图标：可选择但不改变检定值"
             }
           ]
         },
@@ -4224,8 +4299,13 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 293,
+              "line": 410,
               "test": "TCU 05195 恐怖图腾 投入后横置：检定失败时把投入的卡牌返回手牌"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+              "line": 431,
+              "test": "TCU 05195 恐怖图腾 可选非匹配图标：不加值、失败仍返回手牌"
             }
           ]
         },
@@ -4248,8 +4328,18 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 318,
+              "line": 463,
               "test": "TCU 05196 委员会的保险箱 双行动检定任意技能移除锁头，无锁时全队免费打出并放逐"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+              "line": 489,
+              "test": "TCU 05196 委员会的保险箱 同地点队友可激活：费用由激活者支付、能力读写真实资产 uses"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+              "line": 520,
+              "test": "TCU 05196 委员会的保险箱 非队友支援/异地队友不可激活"
             }
           ]
         },
@@ -4272,7 +4362,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 347,
+              "line": 543,
               "test": "TCU 05229 鸣枪示警 花 1 子弹把所在地点所有非精英敌人赶去连接地点"
             }
           ]
@@ -4296,8 +4386,18 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 368,
+              "line": 570,
               "test": "TCU 05230 瞄准镜 快速附属到[[枪械]]支援（引擎已支持手槽过滤；附属期能力见条目 note）"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+              "line": 609,
+              "test": "TCU 05230 瞄准镜 对与你交战的敌人：所附属枪械不出现在攻击列表，直接结算也被拦截"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+              "line": 625,
+              "test": "TCU 05230 瞄准镜 反应横置写回宿主 attachments 实体（不能反复触发）"
             }
           ]
         },
@@ -4320,7 +4420,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 407,
+              "line": 663,
               "test": "TCU 05231 知识就是力量 结算所选[[书籍]]支援的[行动]能力（忽略费用）"
             }
           ]
@@ -4344,7 +4444,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 424,
+              "line": 680,
               "test": "TCU 05232 绝密地图集 花秘密横置移动到距离正好为 2 的已揭示地点"
             }
           ]
@@ -4368,7 +4468,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 445,
+              "line": 701,
               "test": "TCU 05233 投资 横置放置补给（上限 10），兑现时把全部补给换成资源"
             }
           ]
@@ -4392,12 +4492,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 472,
+              "line": 728,
               "test": "TCU 05234 诱敌 自动躲避非精英敌人；可支付 +2 资源改为最多 2 个"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 489,
+              "line": 748,
               "test": "TCU 05234 诱敌 修复：没有可躲避的非精英敌人时打不出（含连接地点判定）"
             }
           ]
@@ -4421,7 +4521,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 505,
+              "line": 769,
               "test": "TCU 05235 蠕虫的秘密 横置并放 1 毁灭：从弃牌堆免费-1 费打出法术/洞察事件，之后移出游戏"
             }
           ]
@@ -4445,8 +4545,13 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 525,
+              "line": 800,
               "test": "TCU 05236 指路鬼魂 +1 智慧；非直接恐惧必须先分给它，因恐惧离场时移出游戏"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+              "line": 836,
+              "test": "TCU 05236 沉静：其他己方支援也可先分恐惧，但必须排在调查员卡之前"
             }
           ]
         },
@@ -4469,8 +4574,13 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 548,
-              "test": "TCU 05237 幸运或是注定 取消密谋上 1 点毁灭、放逐自身；每场游戏最多 1 张"
+              "line": 859,
+              "test": "TCU 05237 幸运或是注定 毁灭放到卡上时反应取消 1 点并放逐自身；每场游戏最多 1 张"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+              "line": 892,
+              "test": "TCU 05237 幸运或是注定 密谋毁灭也能取消（addDoom 的 doomPlaced 窗口）"
             }
           ]
         },
@@ -4493,7 +4603,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 563,
+              "line": 909,
               "test": "TCU 05273 MK1手榴弹 命中后对所在地点每个敌人造成 2 点伤害，补给耗尽后弃置"
             }
           ]
@@ -4517,12 +4627,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 585,
+              "line": 931,
               "test": "TCU 05274 特工支援 两条[快速]能力：对敌人 1 伤害 / 发现 1 线索"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-              "line": 604,
+              "line": 950,
               "test": "TCU 05274 特工支援 可以替同地点其他调查员承伤"
             }
           ]
@@ -4546,18 +4656,23 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 67,
+              "line": 68,
               "test": "TCU 05275 恐怖揭露 发现 3 线索后自我击败并受 1 点精神创伤"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 84,
+              "line": 87,
               "test": "TCU 05275 恐怖揭露 可把线索交给另一位调查员"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 100,
+              "line": 103,
               "test": "TCU 05275 恐怖揭露 修复：把线索放到地点不改变地点 maxClues"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 119,
+              "test": "TCU 05275 恐怖揭露 最后一名存活调查员：结算中断也不补肉体创伤，只结算 1 点精神创伤"
             }
           ]
         },
@@ -4580,7 +4695,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 580,
+              "line": 996,
               "test": "TCU 05276 苦心钻研 永久卡让起始手牌多 1 张"
             }
           ]
@@ -4604,22 +4719,22 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 120,
+              "line": 142,
               "test": "TCU 05277 帮个小忙 对所在地点非精英敌人造成 1 点伤害"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 131,
+              "line": 153,
               "test": "TCU 05277 帮个小忙 额外付 2 费改成 2 点伤害"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 141,
+              "line": 164,
               "test": "TCU 05277 帮个小忙 额外付 2 费可指向连接 2 次内的地点"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 155,
+              "line": 179,
               "test": "TCU 05277 帮个小忙 修复：范围模式不含自身地点；没有可伤害目标时打不出"
             }
           ]
@@ -4643,7 +4758,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 569,
+              "line": 985,
               "test": "TCU 05278 干一天活计拿一天钱 永久卡在开局多给 2 资源"
             }
           ]
@@ -4667,13 +4782,23 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 181,
+              "line": 221,
               "test": "TCU 05279 黛雅娜·艾丝帕伦斯 把手牌中的法术事件附属到自身"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 192,
-              "test": "TCU 05279 黛雅娜·艾丝帕伦斯 横置并花 1 秘密打出附属事件（打出后仍附属）"
+              "line": 232,
+              "test": "TCU 05279 黛雅娜·艾丝帕伦斯 附属事件可如同手牌打出（横置+1秘密，打出后仍附属）"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 258,
+              "test": "TCU 05279 黛雅娜·艾丝帕伦斯 宿主已横置或没有秘密时打不出附属事件"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 285,
+              "test": "TCU 05279 黛雅娜·艾丝帕伦斯 反应窗口从附属打出 05033（Spell 事件）并支付附加费、结算后仍附属"
             }
           ]
         },
@@ -4696,12 +4821,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 218,
+              "line": 329,
               "test": "TCU 05280 否决存在 忽略敌人攻击的伤害并反向治愈"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 231,
+              "line": 345,
               "test": "TCU 05280 否决存在 忽略遭遇卡造成的恐惧并反向治愈"
             }
           ]
@@ -4725,7 +4850,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 250,
+              "line": 364,
               "test": "TCU 05281 勇闯火线 把选定技能的基础值设为 5 直到回合结束"
             }
           ]
@@ -4749,18 +4874,23 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 266,
+              "line": 387,
               "test": "TCU 05282 偷梁换柱 修复：没有可躲避的敌人时打不出"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 273,
+              "line": 394,
               "test": "TCU 05282 偷梁换柱 躲避交战敌人成功后把它移到连接地点"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 287,
+              "line": 408,
               "test": "TCU 05282 偷梁换柱 躲避连接地点的非精英敌人并交换地点"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 427,
+              "test": "TCU 05282 偷梁换柱 选项 B 走真实躲避（含躲避支援加值/evadeSuccess 窗口）"
             }
           ]
         },
@@ -4783,17 +4913,17 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 306,
+              "line": 445,
               "test": "TCU 05283 安娜·卡斯洛 额外 2 个塔罗槽位"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 313,
+              "line": 452,
               "test": "TCU 05283 安娜·卡斯洛 入场后检索一张塔罗支援并放置入场"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 325,
+              "line": 464,
               "test": "TCU 05283 安娜·卡斯洛 游戏开始时从起始手牌放置入场"
             }
           ]
@@ -4817,13 +4947,13 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 343,
+              "line": 482,
               "test": "TCU 05313 圣化之镜 入场检索 3 张舒缓旋律（1 张入手，其余洗回牌库）"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 592,
-              "test": "TCU 05313 圣化之镜 离场时把所有舒缓旋律收回场外集合"
+              "line": 1008,
+              "test": "TCU 05313 圣化之镜 离场时把所有舒缓旋律收回场外集合（含其他调查员区域与场外区域）"
             }
           ]
         },
@@ -4846,12 +4976,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 371,
+              "line": 510,
               "test": "TCU 05314 舒缓旋律 两点治疗可分配给伤害/恐惧并抽 1 张"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 388,
+              "line": 527,
               "test": "TCU 05314 舒缓旋律 恐惧与盟友支援同样是治疗目标"
             }
           ]
@@ -4875,7 +5005,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 408,
+              "line": 547,
               "test": "TCU 05315 “我见过更糟的……” 取消最多 2 点伤害并换成同等资源"
             }
           ]
@@ -4899,13 +5029,13 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 356,
+              "line": 495,
               "test": "TCU 05316 密教辞典 入场检索 3 张鲜血仪式（1 张入手，其余洗回牌库）"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 607,
-              "test": "TCU 05316 密教辞典 离场时把所有鲜血仪式收回场外集合"
+              "line": 1032,
+              "test": "TCU 05316 密教辞典 离场时把所有鲜血仪式收回场外集合（含其他调查员区域与移出游戏区）"
             }
           ]
         },
@@ -4928,12 +5058,12 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 432,
+              "line": 571,
               "test": "TCU 05317 鲜血仪式 抽 2 张、弃 1 张换资源"
             },
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 450,
+              "line": 589,
               "test": "TCU 05317 鲜血仪式 弃牌后可花 1 资源对敌人造成伤害"
             }
           ]
@@ -4957,7 +5087,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 473,
+              "line": 612,
               "test": "TCU 05318 窥看不思议之事 非弱点手牌洗回牌库并补抽到手牌上限、自身移出游戏"
             }
           ]
@@ -4981,8 +5111,23 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 494,
+              "line": 633,
               "test": "TCU 05319 “你欠我一次” 打出另一位调查员手牌并双方各抽 1"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 655,
+              "test": "TCU 05319 “你欠我一次” 打出对方手牌中的支援后置于自己控制之下"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 677,
+              "test": "TCU 05319 “你欠我一次” 对方手里有同名两张时只拿走一张"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 695,
+              "test": "TCU 05319 “你欠我一次” 技能/弱点/付不起的卡不作为可打出候选"
             }
           ]
         },
@@ -5005,8 +5150,13 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 625,
+              "line": 1060,
               "test": "TCU 05320 超级加倍 打出一张事件后横置自身再次打出该事件"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 1079,
+              "test": "TCU 05320 超级加倍 再次打出时支付该事件自己的费用（2 费事件结算两次）"
             }
           ]
         },
@@ -5029,8 +5179,23 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 520,
+              "line": 717,
               "test": "TCU 05321 凋零术 用意志代替战斗攻击并 +2 意志"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 729,
+              "test": "TCU 05321 凋零术 攻击揭示符号标记后敌人本回合 -1 攻/-1 血/-1 躲（最低 1）"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 753,
+              "test": "TCU 05321 凋零术 05033「恐怖灵感」可取消符号窗口里的凋零术效果"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 777,
+              "test": "TCU 05321 凋零术 05033「恐怖灵感」可让符号窗口里的凋零术效果再结算一次"
             }
           ]
         },
@@ -5053,8 +5218,28 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 536,
+              "line": 809,
               "test": "TCU 05322 第六感 用意志代替智力调查并 +2 意志"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 837,
+              "test": "TCU 05322 第六感 符号后同时在 2 次连接内的已揭示地点调查（新隐藏值分支）"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 867,
+              "test": "TCU 05322 第六感 符号后双地点调查可选原隐藏值分支"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 888,
+              "test": "TCU 05322 第六感 没有 2 次连接内的已揭示地点时符号窗口不提供双地点调查"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 917,
+              "test": "TCU 05322 第六感 未揭示符号标记时不做双地点调查"
             }
           ]
         },
@@ -5077,8 +5262,13 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 552,
-              "test": "TCU 05323 诱敌深人 附属到地点后敌人阶段朝这里移动、回合结束弃掉"
+              "line": 939,
+              "test": "TCU 05323 诱敌深人 附属到地点：敌人阶段朝附属地点移动、轮末恰好弃 1 张"
+            },
+            {
+              "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+              "line": 963,
+              "test": "TCU 05323 诱敌深人 多诱饵取最近：两个地点附属时猎手走向最近的一个"
             }
           ]
         },
@@ -5101,7 +5291,7 @@
           "evidence": [
             {
               "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-              "line": 646,
+              "line": 1100,
               "test": "TCU 05324 美满结局 负修正标记将要令技能值降到 0 时翻转为正修正"
             }
           ]
@@ -5109,54 +5299,9 @@
       ],
       "simplified": [
         {
-          "code": "05021",
-          "name": "劫数延后",
-          "note": "未实现：卡面允许附属到同地点任意调查员（本实现只附属到自己；引擎 doPlay 虽放行 investigator 附属，但事务提交后 inv.attachments 读不到，无法被能力枚举）；神话阶段结束的「花 2 资源或弃掉」简化为直接弃掉。已实现快速打出、受伤害/恐惧时弃掉并取消该次全部伤害与恐惧。"
-        },
-        {
-          "code": "05029",
-          "name": "金钱万能",
-          "note": "未实现：把本次检定的技能类型改为「资源技能检定」（没有替换技能类型/投入图标的读点）。已实现基础技能值改为 floor(资源/2)。"
-        },
-        {
           "code": "05032",
           "name": "否决存在",
-          "note": "未实现：取消「弃手牌 / 失资源 / 失行动」三项（引擎缺通用取消读点）；触发范围放宽为任意伤害/恐惧来源。已实现快速打出并取消本次伤害和/或恐惧。"
-        },
-        {
-          "code": "05033",
-          "name": "恐怖灵感",
-          "note": "未实现：① 「额外结算一次该效果」；② 「取消该效果」近似为取消该符号标记本次的效果（含修正值）——没有「卡牌符号触发效果」的通用取消窗口；③ [auto_fail] 符号没有可打出的窗口。"
-        },
-        {
-          "code": "05036",
-          "name": "钉鞋",
-          "note": "未实现：① 反应时机在敌人自动交战之后（卡面要求交战之前）；② 「每位调查员仅限1张[[鞋子]]」未校验（缺按特性分组的限额读点）。已实现 +1 敏捷、横置、敏捷(3)检定、成功移动到连接地点。"
-        },
-        {
-          "code": "05040",
-          "name": "权杖王牌",
-          "note": "未实现：技能 +2 的作用域是「该次额外行动期间」，本实现放宽为「本回合结束前」（持续效果没有单次行动作用域）。已实现流放自身、本回合额外 1 次行动、开局起始手牌放置入场。"
-        },
-        {
-          "code": "05112",
-          "name": "魔法手势",
-          "note": "未实现：额外法术槽位未限制只能携带[[法术]]/[[仪式]]支援；槽位读点只按容量计算（现有槽位原语不支持按特性分组，05009 同口径）。"
-        },
-        {
-          "code": "05157",
-          "name": "凋零术",
-          "note": "未实现：符号触发时被攻击敌人的「-1 躲避值（最低 1）」，以及「-1 攻击值持续到本回合结束」的时长——引擎没有运行期敌方数值修正的通用读点（addEnemyFightReduction 只作用于下一次攻击，且没有躲避值修正读点）；主要效果（本次攻击改用意志）与攻击值 -1（下一次攻击口径）已实现。"
-        },
-        {
-          "code": "05158",
-          "name": "第六感",
-          "note": "未实现：符号揭示后「改为如同在连接的已揭示地点调查（可用两者任一隐藏值）」——需要在检定进行中改写本次调查地点/难度，现有 investigate 效果原语没有该读点；主要效果（用意志调查）已实现。"
-        },
-        {
-          "code": "05196",
-          "name": "委员会的保险箱",
-          "note": "「你所在地点的任何调查员均可激活本能力」未实现（能力层只枚举控制者的主动能力）；其余（按人数放置锁头、双行动检定任意技能移除锁头、无锁头时全队免费打出 1 张牌、放逐自身）已实现。"
+          "note": "R7：五类可选项均按 context.source（enemyAttack/encounter/other）限定来源，伤害/恐惧面（harmDealt）也已接；「你忽略该效果（其他效果如常）」按取消当次窗口实现（其余窗口独立结算）。"
         },
         {
           "code": "05231",
@@ -5166,37 +5311,7 @@
         {
           "code": "05236",
           "name": "指路鬼魂",
-          "note": "未实现：「因恐惧被击败时放逐」的离场原因判定与战役放逐记账（state.exiled）——用条目级 removeFromGameOnLeave 近似为「离场即移出游戏」；+1 智慧与「沉静」（非直接恐惧必须先分给本支援）已实现。P10 前补。"
-        },
-        {
-          "code": "05237",
-          "name": "幸运或是注定",
-          "note": "未实现：「毁灭标记将要放到冒险卡牌上时」的精确时点（引擎缺 doomWouldBePlaced 窗口，改为自己回合快速打出、取消当前密谋上的 1 点毁灭）与团队级「每场游戏最多 1 张」（按调查员 gameFlags 记账）；快速、放逐自身已实现。P10 前补。"
-        },
-        {
-          "code": "05279",
-          "name": "黛雅娜·艾丝帕伦斯",
-          "note": "「附属事件可当作手牌打出」改用能力通道实现（横置黛雅娜 + 1 秘密 + 印刷资源费 → replayPlayedCode）；因此不能在该事件的快速反应窗口里打出，且需要预选目标的 played 事件不会自动选目标。其余效果（附属、限 1 张、打出后仍附属）已实现。"
-        },
-        {
-          "code": "05280",
-          "name": "否决存在",
-          "note": "五个面向均已实现；剩余近似：引擎的 wouldDiscardFromHand/wouldLoseResources/wouldLoseActions 窗口对任何来源的弃牌/失资源/失行动都会打开（卡面限定「遭遇卡牌或敌人攻击」），条目无法区分来源。"
-        },
-        {
-          "code": "05319",
-          "name": "“你欠我一次”",
-          "note": "「查看另一位调查员的手牌」已用私有信息投影（privateInfo，不进公开日志）；剩余近似：打出对方手牌时 doPlay 不校验其 playCondition/窗口时机。其余效果已实现。"
-        },
-        {
-          "code": "05321",
-          "name": "凋零术",
-          "note": "符号标记（skull/cultist/tablet/elder_thing）后敌人 -1 攻击/-1 生命/-1 躲避 未实现：现有 entityModifier 读点只认实体自身条目/地点/剧本行，没有「临时敌人数值修正」的通用写入口；意志攻击主效果已实现。"
-        },
-        {
-          "code": "05322",
-          "name": "第六感",
-          "note": "符号标记后的「视同同时在 2 格内另一已揭示地点调查、任选其中一个隐藏值」未实现：调查的难度/线索归属在 doInvestigate 内部一次结算，没有「两个地点二选一隐藏值」的通用原语；意志调查主效果已实现。"
+          "note": "「因恐惧被击败时放逐」已改为 leavesPlay 钩子：仅在离场时 horror ≥ 卡面神智(3) 时判为「因恐惧被击败」，写 removeFromGame 与 state.exiled/exiledBySeat（不再用 removeFromGameOnLeave 的「任何离场都移出游戏」近似）。残余近似：「沉静」的分配由引擎 harm-threat.js:146-149 把候选收窄到本支援（其他己方支援也不能先分），卡面只要求先于调查员卡。"
         },
         {
           "code": "05324",
@@ -5206,11 +5321,11 @@
       ],
       "ledger": {
         "path": "audit/tcu-player-acceptance.json",
-        "sha256": "47390a2ff5fe7fc9f453839418d4dbdf080a107f2c9b825cad71e3a624bbdc60"
+        "sha256": "203bbe8a36afcec3ccc54a11d07b580774eb5556ae5a9ba1eaff59b74a738b15"
       },
       "generatedModule": {
         "path": "src/cards/tcu-player-acceptance.js",
-        "sha256": "ed61785e34f03f51694d70212c1f8c713490d7f913a3e9873328c0b2ebd77baf"
+        "sha256": "da951c29d05792de99ed12378d24c81974230344f2654d0d1ff4a4aa6b15f66b"
       },
       "evidence": [
         "content/packs/tcuPlayer/manifest.js",
@@ -5262,17 +5377,17 @@
           "face": 34,
           "constructible": 85,
           "deckable": 83,
-          "simplified": 234,
-          "testsPassed": 441,
+          "simplified": 14,
+          "testsPassed": 520,
           "testFiles": 6
         },
         "ledger": {
           "path": "audit/tcu-all-card-acceptance.json",
-          "sha256": "f70dcd396b23413583d34a6f5553fbf46f47da02597f6d866d8e80c5638317e8"
+          "sha256": "834f3a29d89e506e0a99b008b91cb1c75d470e9d109afa131e703332ce1cf20d"
         },
         "module": {
           "path": "src/cards/tcu-campaign-acceptance.js",
-          "sha256": "090959a3d6dd0e0b9e8c831dd5fcc19a169b093853bc022d65f25c1067ba564d"
+          "sha256": "91c583d990b7f431c09a10508a4a1d2547bc1b7adcd5c7876d123e63de9726d5"
         }
       },
       "browser": {
@@ -5392,261 +5507,40 @@
       ]
     },
     "cardBehavior": {
-      "status": "pending",
+      "status": "verified",
       "milestone": "M5",
       "covered": true,
       "counts": {
         "total": 377,
         "mainCards": 343,
         "faces": 34,
-        "match": 143,
-        "approximation": 174,
-        "gap": 60,
+        "match": 363,
+        "approximation": 14,
+        "gap": 0,
         "notApplicable": 0
       },
-      "gapCodes": [
-        "05014",
-        "05018",
-        "05019",
-        "05036",
-        "05046",
-        "05059",
-        "05062",
-        "05063",
-        "05078",
-        "05085",
-        "05094",
-        "05104",
-        "05120",
-        "05127",
-        "05141",
-        "05144",
-        "05150",
-        "05165",
-        "05183",
-        "05197",
-        "05198",
-        "05199",
-        "05204",
-        "05205",
-        "05213",
-        "05221",
-        "05222",
-        "05225",
-        "05228",
-        "05242",
-        "05243",
-        "05244",
-        "05245",
-        "05246",
-        "05247",
-        "05248",
-        "05249",
-        "05257",
-        "05258",
-        "05259",
-        "05260",
-        "05261",
+      "gapCodes": [],
+      "approximationCodes": [
+        "05003",
+        "05011",
+        "05052",
+        "05156",
+        "05231",
+        "05241",
         "05262",
         "05263",
         "05264",
         "05265",
-        "05298",
-        "05299",
-        "05309",
-        "05328",
-        "05329",
-        "05330",
-        "05341",
-        "05342",
-        "05085b",
-        "05178b",
-        "05178d",
-        "05178f",
-        "05178h",
-        "05178l"
-      ],
-      "approximationCodes": [
-        "05001",
-        "05002",
-        "05003",
-        "05007",
-        "05008",
-        "05009",
-        "05010",
-        "05011",
-        "05012",
-        "05013",
-        "05021",
-        "05029",
-        "05032",
-        "05033",
-        "05037",
-        "05040",
-        "05041",
-        "05042",
-        "05044",
-        "05045",
-        "05047",
-        "05048",
-        "05049",
-        "05050",
-        "05051",
-        "05052",
-        "05053",
-        "05054",
-        "05057",
-        "05058",
-        "05060",
-        "05064",
-        "05066",
-        "05067",
-        "05068",
-        "05076",
-        "05087",
-        "05089",
-        "05090",
-        "05091",
-        "05095",
-        "05096",
-        "05097",
-        "05098",
-        "05100",
-        "05103",
-        "05107",
-        "05110",
-        "05112",
-        "05114",
-        "05117",
-        "05119",
-        "05121",
-        "05122",
-        "05123",
-        "05124",
-        "05125",
-        "05133",
-        "05134",
-        "05135",
-        "05136",
-        "05137",
-        "05140",
-        "05142",
-        "05143",
-        "05145",
-        "05147",
-        "05152",
-        "05156",
-        "05157",
-        "05158",
-        "05161",
-        "05164",
-        "05170",
-        "05171",
-        "05175",
-        "05176",
-        "05177",
-        "05180",
-        "05181",
-        "05182",
-        "05184",
-        "05185",
-        "05186",
-        "05187",
-        "05188",
-        "05190",
-        "05191",
-        "05192",
-        "05194",
-        "05195",
-        "05196",
-        "05200",
-        "05201",
-        "05210",
-        "05214",
-        "05215",
-        "05218",
-        "05219",
-        "05220",
-        "05223",
-        "05224",
-        "05227",
-        "05229",
-        "05230",
-        "05231",
-        "05234",
-        "05235",
-        "05236",
-        "05237",
-        "05238",
-        "05239",
-        "05241",
-        "05253",
-        "05254",
-        "05266",
-        "05267",
-        "05269",
-        "05270",
-        "05272",
-        "05275",
-        "05279",
-        "05280",
-        "05281",
-        "05285",
-        "05290",
-        "05291",
-        "05292",
-        "05293",
-        "05294",
-        "05295",
-        "05297",
-        "05300",
-        "05302",
-        "05303",
-        "05304",
-        "05305",
-        "05307",
-        "05310",
-        "05311",
-        "05312",
-        "05319",
-        "05320",
-        "05321",
-        "05322",
         "05323",
         "05324",
-        "05325",
-        "05326",
-        "05327",
-        "05331",
-        "05336",
-        "05337",
-        "05338",
-        "05339",
-        "05340",
-        "05344",
-        "05346",
-        "05166b",
-        "05170b",
-        "05171b",
-        "05173b",
-        "05175b",
-        "05176b",
-        "05178a",
-        "05178c",
-        "05178e",
-        "05178g",
-        "05178i",
-        "05178j",
-        "05178k",
-        "05217b",
-        "05286a",
-        "05288a"
+        "05341",
+        "05346"
       ],
       "ledger": {
         "path": "audit/tcu-card-behavior-audit.json",
-        "sha256": "aac167cfde3e09113c414abefe9cf807b7d8ee04939e8eb5ab7a8a7631646d47"
+        "sha256": "e70ae3283dc2e47ca49a1753bad50a814be462616dbb913aab02da28bf434f2e"
       },
-      "method": "每张 05 主卡（含 34 个关联面）对照卡面印刷文本与实现逐条核对：实现证据给到文件/函数，近似实现与未实现子句逐条记录；关联面按主卡翻面/结算逻辑继承结论。该账本记录的是行为审计结论，自动测试证据在 audit/tcu-all-card-acceptance.json；任何 gap/approximation 都进 audit/tcu-migration.json 的 remaining，不宣称规则等价。",
+      "method": "每张 05 主卡（含 34 个关联面）对照卡面印刷文本与当前 HEAD（2276b97）实现逐条核对：每个印刷子句给 implemented / approximation / missing 与 file:line 证据；match（全部子句 implemented）判定为「通过」并登记为已验收（accepted=true），approximation（有显式偏差）与 gap（有未实现子句）不列入已验收，逐条记录差异；关联面本轮全部直接审计。该账本记录的是行为审计结论，自动测试证据在 audit/tcu-all-card-acceptance.json；任何 gap/approximation 都进 audit/tcu-migration.json 的 remaining，不宣称规则等价。",
       "evidence": [
         "audit/tcu-card-behavior-audit.json",
         "content/campaigns/theCircleUndone/card-acceptance.js",
@@ -5669,36 +5563,36 @@
       "audit/tcu-browser-acceptance.json": "c627a2ff3d96143c72ed05044b76e5d7707b850f5e53cd4c021c5a51789540a6",
       "artifacts/migration/tcu/mechanism-scan.json": "deaa41c8f9993c499877746ccb83b65eb30e91c44990dcd92b53fcd9e589281b",
       "content/packs/tcuInvestigators/manifest.js": "d23d6ed977a3a9dcca24336e10428c484979178feeae0e7265944a757b60f76e",
-      "tests/tcu-investigators.test.mjs": "226ec330ec4af8806320249da1a160e3a39c8cb8fb0b183df136206a99c795ca",
-      "src/engine/hunch-deck.js": "3f29b9d12a01d82c784a1be79843e31eb0524c1bbb5a2622a57b62249aab557d",
-      "src/engine/resource-bank.js": "976c65389c961ebefb1115f3ec021c6470e3fe8ebccc95f0ec04754e2324c712",
-      "src/engine/spell-actions.js": "32037d7fd8e967db8b3eed5c8902ae1e2dcdb8aeefd681878d4ac78bd7eb6c47",
-      "src/engine/cancel-note.js": "cdcaba78d9182c042dc6b0b0ad547082e7544de3c77807fcfa06b8614e8b06cf",
+      "tests/tcu-investigators.test.mjs": "b81e2ba3697213d4a94d5ffdabecf0da7249d6be4872f2ef02f285609a0b3ba2",
+      "src/engine/hunch-deck.js": "2fa87293306171a83c5ecb272e47f186d487019740fa94da5455790afee1e5d7",
+      "src/engine/resource-bank.js": "ce48b670dc7a4bea726056f48b6c5a948ab58125241b11b642c95d9c61052419",
+      "src/engine/spell-actions.js": "ec4d984b358e208de60ff7df283cb6fb1f7ad22a3a68fd39d075dbd8ee6813ae",
+      "src/engine/cancel-note.js": "85dd9adf1f7b72a963dc682e2ab8b441c8cf3e6ec08b27d0de7c4f50f7b6d1f2",
       "content/packs/tcuPlayer/manifest.js": "865cd9db5f0839d8c01e03ba61b058625253355a5a1a02f22591ba5538a928fe",
       "tools/audit-tcu-player.mjs": "abb4638a880cf20940435454d518cfd31007f89cac95280e62c7318639c54054",
-      "audit/tcu-player-acceptance.json": "47390a2ff5fe7fc9f453839418d4dbdf080a107f2c9b825cad71e3a624bbdc60",
-      "src/cards/tcu-player-acceptance.js": "ed61785e34f03f51694d70212c1f8c713490d7f913a3e9873328c0b2ebd77baf",
+      "audit/tcu-player-acceptance.json": "203bbe8a36afcec3ccc54a11d07b580774eb5556ae5a9ba1eaff59b74a738b15",
+      "src/cards/tcu-player-acceptance.js": "da951c29d05792de99ed12378d24c81974230344f2654d0d1ff4a4aa6b15f66b",
       "tests/tcu-player-ledger.test.mjs": "d99b4f0a99654232995d5cf11b941df0c847cc504e2a54fd10fb65d726b7a9ba",
       "src/deck/availability.js": "69bfa51dfe1d44480d640e99c6708109642d6109b671556258fbfffe5687469b",
       "src/campaign/campaign.js": "1dcc7117f4d9c0ac050d97f92642c5c921be54682535146b8f36b2eff3b09344",
-      "tests/tcu-player-m2-1.test.mjs": "e2199be9a6b1ea1347850591630807cab8b9a7469a11176e059747df7bb2fe6d",
-      "tests/tcu-player-m2-2.test.mjs": "7bb56ff027f9b6f205f35d87caaf9e76d036347714263ba1924761070bc2f3f4",
-      "tests/tcu-player-m2-3.test.mjs": "e4efef1a44eeece5c4b880827a4d52e5319b45da963d9d59ac871852094feb6c",
-      "tests/tcu-player-m2-4.test.mjs": "da43d176ba7f428f3722e7b84f3d18e79d710f9b1e42bd4188db98bfa867fbfd",
+      "tests/tcu-player-m2-1.test.mjs": "42edf1bf7c8b7d3dae6fb65b6704b90d213e59e145d602807e6e8e07aa81fe9d",
+      "tests/tcu-player-m2-2.test.mjs": "ce85711da688564a587b01e10b580e19494a36494b3f549764f049b380417961",
+      "tests/tcu-player-m2-3.test.mjs": "5e6b338eaeb29b5fb31d056af449bb60c8afa96ce0483338fcc5011a31abdaeb",
+      "tests/tcu-player-m2-4.test.mjs": "bbd4c970301832cb2056355e9b298b938d06c67a5bf5e3d086bba2d53db2aff3",
       "tools/audit-tcu-scenarios.mjs": "a0db2bbdc07138a5ce402bf8b649fc6a246de1ae211fc428e6045b3df7440534",
-      "audit/tcu-scenario-acceptance.json": "31ce7f6cf034732638e155c2a7eb934830d0fd24835636f25a441ba20e7bd1ea",
+      "audit/tcu-scenario-acceptance.json": "fd9c1d71cb7b9089855b8ce7949c5ee67da573f33b9423c9dbd6a7d324dbc9fe",
       "audit/tcu-scenario-source-lock.json": "b018cf3daf7573aebb489248af0c1f2b21041d846ef762353124dce3eb0e0c8e",
       "tests/tcu-scenario-acceptance.test.mjs": "143dba78052e960bb731fa33b11cb61bcbea33038b6b11eaf0c4f98823736450",
       "tests/tcu-scenarios.browser.mjs": "e48dd898a8987ff4122e4319fcc58ad7a41fd2582cef9213612e4ea75cde3cbf",
-      "tests/tcu-prologue.test.mjs": "ded9f98d95831a8ebbe39863907f02e71781820cf170f2e6c726ee34b37a7881",
-      "tests/tcu-witching-hour.test.mjs": "6802ceecfb408ec9e20ee1460d7d8ece0971fcca94406b39b734d7c9dfe1c73d",
-      "tests/tcu-deaths-doorstep.test.mjs": "4f663aa73a6a070be8c91612faf61bbd0154b8a7380586926cfa2f51f73ccece",
-      "tests/tcu-secret-name.test.mjs": "b282d8a9b48a9709252b2f43b21d86fad4bad130fb4a50787963d1ee8d5eb09e",
-      "tests/tcu-wages-of-sin.test.mjs": "8249e5f470a5e4e6e77856710e2a30b697db2f2736002d9776d1f7998c7e6041",
-      "tests/tcu-greater-good.test.mjs": "55d935cd08065322ab050b8f9e60179a327da0b2617c7ee24749b9b3a085b1f5",
-      "tests/tcu-union-disillusion.test.mjs": "7d9a2759bdd1cde2d1809958c7c86b829c41d84b9a4a6ae51d2c44e69493e50c",
-      "tests/tcu-clutches-chaos.test.mjs": "6f4eafd3be21791225ea27875217fee8e798f9a2b0134ebdd131da76bd143413",
-      "tests/tcu-black-throne.test.mjs": "c38ee8621a0c7e3f57637a07838b698866d018f973092e0bc3409369c7dd3bcc",
+      "tests/tcu-prologue.test.mjs": "6e1b4dc7aa0696ade43929f47215ac46de5e430f762a5532a79ad24872b8da19",
+      "tests/tcu-witching-hour.test.mjs": "42682eb4d7eff5885ff2f798867f80d684790d4dd1f200462f9ec7067a5d8788",
+      "tests/tcu-deaths-doorstep.test.mjs": "57215141da3c879b9e8baaec8e94d8860dad35847b91a9afeb03cf69af81e3f8",
+      "tests/tcu-secret-name.test.mjs": "3618326c679d7b6a1e6f444cbe9b3860aec4790ae8bfa02cd2b262361bda7423",
+      "tests/tcu-wages-of-sin.test.mjs": "f3a422e4785d5cdb26dfeef48ba70f088a7d9a0a5dcdd4ae86edebc2e2a41417",
+      "tests/tcu-greater-good.test.mjs": "4216d59bd14c0e233a5719ce851a999b4ca0807335fe2eb32686d380945972ff",
+      "tests/tcu-union-disillusion.test.mjs": "f606083a02677463d199b3aaf9b2855a5b01e24c4716ee88fc9fd1e6bdc35988",
+      "tests/tcu-clutches-chaos.test.mjs": "2e12c58331085bbd318592fb41bb3d1c4fbcf09467073eb63dd06f2b41da23ea",
+      "tests/tcu-black-throne.test.mjs": "7d10217bfc2ae9f02d72fae58fc7a7fbee40066008e5dcf0cd2dbba8c870ab04",
       "tools/import-tcu-story.mjs": "fa69f0287d3a5d1db1dff2fec6534622c530175b8c5620ad705e7b1d081d1b9c",
       "content/campaigns/theCircleUndone/story-text.js": "efc45073488a072e8d9a18064c1713da9e7d6fc1e3bcf11fdb9c7b3f7969e36a",
       "tests/tcu-story.test.mjs": "50fb077e6dc971c5fc764dff30f5ad495c727ea49ee7c5622178a3ee391e3527",
@@ -5707,13 +5601,13 @@
       "src/campaign/story.js": "a4cd91c8738261253355b50b67bf235f7429014ce16c637c7f8df0e5c2edf383",
       "src/campaign/campaign-effects.js": "759eb1eb119ac1c1c202f2415da67af94c2e5f34f0277ff5ff454445954beada",
       "src/campaign/campaign-flow.js": "6f18ab2516b916e5a3e524a8870f0d86bd1a646ef214994f73d3526bdecb0e00",
-      "tools/audit-tcu-all-cards.mjs": "5fd7472d3b4f7601b37262c70c6c4bf7669c369ccfc1310b8ed8f13e042155e4",
-      "audit/tcu-all-card-acceptance.json": "f70dcd396b23413583d34a6f5553fbf46f47da02597f6d866d8e80c5638317e8",
-      "src/cards/tcu-campaign-acceptance.js": "090959a3d6dd0e0b9e8c831dd5fcc19a169b093853bc022d65f25c1067ba564d",
-      "tests/tcu-all-card-ledger.test.mjs": "08292766ba6853b5daabdc377f327147d3c43d9d08dcc5bb46a4ca47712f2b94",
+      "tools/audit-tcu-all-cards.mjs": "b434697282c38233eb284a5b5fb3fddf1e132385491bec5b71ca809cbd7ce4be",
+      "audit/tcu-all-card-acceptance.json": "834f3a29d89e506e0a99b008b91cb1c75d470e9d109afa131e703332ce1cf20d",
+      "src/cards/tcu-campaign-acceptance.js": "91c583d990b7f431c09a10508a4a1d2547bc1b7adcd5c7876d123e63de9726d5",
+      "tests/tcu-all-card-ledger.test.mjs": "7589b56d582af7c856356975b0a460d6d0e9975b7a0b4908c3fcb94739c3a638",
       "tests/tcu-campaign-card-acceptance.test.mjs": "bfccf38913dc74e1ffd05fb7a426f1379e03b91ee1bcadbc781ff0a0067b25fa",
-      "content/campaigns/theCircleUndone/card-acceptance.js": "c7a677a25865685eaaf20cc0287426e29b586c94bff83b47cad1c7686155aae4",
-      "audit/tcu-card-behavior-audit.json": "aac167cfde3e09113c414abefe9cf807b7d8ee04939e8eb5ab7a8a7631646d47",
+      "content/campaigns/theCircleUndone/card-acceptance.js": "59fe104fa93536261787462b9009cdcbd66b22b559bc0ff65eb45e63744953ea",
+      "audit/tcu-card-behavior-audit.json": "e70ae3283dc2e47ca49a1753bad50a814be462616dbb913aab02da28bf434f2e",
       "tests/tcu-release.browser.mjs": "2e667ac0449088b12563f83afea8087c928c527b3426e2f35295f77d324a6ff2",
       "tests/tcu-media.browser.mjs": "fdd003c5d9e1518d6e6ebc4a9f03476c25bbc956deaadc657b990516d9a54e63",
       "web/campaign-presentation.js": "78855624090d80a31e3f08af1d7f07759b91060fd0b989cfc156d96099fa479b",
@@ -5750,8 +5644,8 @@
     "investigatorAcceptance": {
       "command": "node --test tests/tcu-investigators.test.mjs",
       "status": 0,
-      "tests": 43,
-      "passed": 43,
+      "tests": 80,
+      "passed": 80,
       "failed": 0,
       "ok": true
     },
@@ -5765,7 +5659,7 @@
         "basicWeaknesses": 2,
         "verified": 87,
         "unverified": 0,
-        "testsPassed": 123
+        "testsPassed": 165
       }
     },
     "playerLedgerAcceptance": {
@@ -5785,10 +5679,10 @@
         "verified": 9,
         "development": 0,
         "pending": 0,
-        "totalEncounterCards": 274,
+        "totalEncounterCards": 275,
         "pendingEncounterCards": 0,
         "gaps": 0,
-        "testCases": 354
+        "testCases": 445
       }
     },
     "scenarioLedgerAcceptance": {
@@ -5873,92 +5767,12 @@
     "P9 显式近似：幕间四 twistOfFate 的 expert 混乱标记按参考代码 -6（卡面写 -7）",
     "P9 显式近似：尾声展示 survivedTheWatchersEmbrace 后不真正划掉该记录（留待 P10 复评）",
     "P9 显式近似：重返版（returnTo）内容不导入：D2 排除 returnToResolution4 与重返版占卜",
-    "P9 显式近似：P8 已有的 109 条 scenarioApproximations 继续有效（P9 不减少）",
-    "显式简化：05010 悬案——「游戏结束时少取得 2 点经验」需要结局/经验结算读点（已登记 primitive request）；打出「放线索+移出游戏」与直觉牌库→威胁区两条路径已实现。",
-    "显式简化：05012 秘社“债务”——「游戏结束时仍在你手牌中则承受 1 点精神创伤」在本引擎里没有可达状态（弱点抽到即结算），只实现「移出游戏」。",
-    "显式简化：05013 银暮匕首——「可以把黛安娜底下的事件/技能当作手牌打出或投入」未实现（需要 beneath 打出/投入通道，已登记 primitive request）；[action] 已按卡面支持战斗/意志二选一。",
-    "显式简化：05019 安息日男爵——「显现放置入场（支援区）」与「[fast] 任意窗口」需要引擎原语；「少于 3 毁灭不能离场」用 counters 镜像 + 补给阶段同步实现；强制额外伤害已实现。",
-    "显式简化：05021 劫数延后——未实现：卡面允许附属到同地点任意调查员（本实现只附属到自己；引擎 doPlay 虽放行 investigator 附属，但事务提交后 inv.attachments 读不到，无法被能力枚举）；神话阶段结束的「花 2 资源或弃掉」简化为直接弃掉。已实现快速打出、受伤害/恐惧时弃掉并取消该次全部伤害与恐惧。",
-    "显式简化：05029 金钱万能——未实现：把本次检定的技能类型改为「资源技能检定」（没有替换技能类型/投入图标的读点）。已实现基础技能值改为 floor(资源/2)。",
-    "显式简化：05032 否决存在——未实现：取消「弃手牌 / 失资源 / 失行动」三项（引擎缺通用取消读点）；触发范围放宽为任意伤害/恐惧来源。已实现快速打出并取消本次伤害和/或恐惧。",
-    "显式简化：05033 恐怖灵感——未实现：① 「额外结算一次该效果」；② 「取消该效果」近似为取消该符号标记本次的效果（含修正值）——没有「卡牌符号触发效果」的通用取消窗口；③ [auto_fail] 符号没有可打出的窗口。",
-    "显式简化：05036 钉鞋——未实现：① 反应时机在敌人自动交战之后（卡面要求交战之前）；② 「每位调查员仅限1张[[鞋子]]」未校验（缺按特性分组的限额读点）。已实现 +1 敏捷、横置、敏捷(3)检定、成功移动到连接地点。",
-    "显式简化：05040 权杖王牌——未实现：技能 +2 的作用域是「该次额外行动期间」，本实现放宽为「本回合结束前」（持续效果没有单次行动作用域）。已实现流放自身、本回合额外 1 次行动、开局起始手牌放置入场。",
-    "显式简化：05112 魔法手势——未实现：额外法术槽位未限制只能携带[[法术]]/[[仪式]]支援；槽位读点只按容量计算（现有槽位原语不支持按特性分组，05009 同口径）。",
-    "显式简化：05157 凋零术——未实现：符号触发时被攻击敌人的「-1 躲避值（最低 1）」，以及「-1 攻击值持续到本回合结束」的时长——引擎没有运行期敌方数值修正的通用读点（addEnemyFightReduction 只作用于下一次攻击，且没有躲避值修正读点）；主要效果（本次攻击改用意志）与攻击值 -1（下一次攻击口径）已实现。",
-    "显式简化：05158 第六感——未实现：符号揭示后「改为如同在连接的已揭示地点调查（可用两者任一隐藏值）」——需要在检定进行中改写本次调查地点/难度，现有 investigate 效果原语没有该读点；主要效果（用意志调查）已实现。",
-    "显式简化：05196 委员会的保险箱——「你所在地点的任何调查员均可激活本能力」未实现（能力层只枚举控制者的主动能力）；其余（按人数放置锁头、双行动检定任意技能移除锁头、无锁头时全队免费打出 1 张牌、放逐自身）已实现。",
+    "P9 显式近似：P8 已有的 93 条 scenarioApproximations 继续有效（P9 不减少）",
+    "显式简化：05032 否决存在——R7：五类可选项均按 context.source（enemyAttack/encounter/other）限定来源，伤害/恐惧面（harmDealt）也已接；「你忽略该效果（其他效果如常）」按取消当次窗口实现（其余窗口独立结算）。",
     "显式简化：05231 知识就是力量——未实现：「忽略所有费用」的引擎费用管线执行（费用校验/上限记账）——改为直接调用所选支援首个 action/free 描述子的 resolve（效果结算正确、不付费用，但不走引擎费用/上限，且只覆盖 resolve 型能力）；其余（选择场上或手牌的书籍/法术支援、手牌支援弃掉抽 1）已实现。 需要通用原语 resolveCardAbility(code, { abilityIndex, ignoreCosts })（未实现的建议 API，不写 api. 前缀）；P10 前补。",
-    "显式简化：05236 指路鬼魂——未实现：「因恐惧被击败时放逐」的离场原因判定与战役放逐记账（state.exiled）——用条目级 removeFromGameOnLeave 近似为「离场即移出游戏」；+1 智慧与「沉静」（非直接恐惧必须先分给本支援）已实现。P10 前补。",
-    "显式简化：05237 幸运或是注定——未实现：「毁灭标记将要放到冒险卡牌上时」的精确时点（引擎缺 doomWouldBePlaced 窗口，改为自己回合快速打出、取消当前密谋上的 1 点毁灭）与团队级「每场游戏最多 1 张」（按调查员 gameFlags 记账）；快速、放逐自身已实现。P10 前补。",
-    "显式简化：05279 黛雅娜·艾丝帕伦斯——「附属事件可当作手牌打出」改用能力通道实现（横置黛雅娜 + 1 秘密 + 印刷资源费 → replayPlayedCode）；因此不能在该事件的快速反应窗口里打出，且需要预选目标的 played 事件不会自动选目标。其余效果（附属、限 1 张、打出后仍附属）已实现。",
-    "显式简化：05280 否决存在——五个面向均已实现；剩余近似：引擎的 wouldDiscardFromHand/wouldLoseResources/wouldLoseActions 窗口对任何来源的弃牌/失资源/失行动都会打开（卡面限定「遭遇卡牌或敌人攻击」），条目无法区分来源。",
-    "显式简化：05319 “你欠我一次”——「查看另一位调查员的手牌」已用私有信息投影（privateInfo，不进公开日志）；剩余近似：打出对方手牌时 doPlay 不校验其 playCondition/窗口时机。其余效果已实现。",
-    "显式简化：05321 凋零术——符号标记（skull/cultist/tablet/elder_thing）后敌人 -1 攻击/-1 生命/-1 躲避 未实现：现有 entityModifier 读点只认实体自身条目/地点/剧本行，没有「临时敌人数值修正」的通用写入口；意志攻击主效果已实现。",
-    "显式简化：05322 第六感——符号标记后的「视同同时在 2 格内另一已揭示地点调查、任选其中一个隐藏值」未实现：调查的难度/线索归属在 doInvestigate 内部一次结算，没有「两个地点二选一隐藏值」的通用原语；意志调查主效果已实现。",
+    "显式简化：05236 指路鬼魂——「因恐惧被击败时放逐」已改为 leavesPlay 钩子：仅在离场时 horror ≥ 卡面神智(3) 时判为「因恐惧被击败」，写 removeFromGame 与 state.exiled/exiledBySeat（不再用 removeFromGameOnLeave 的「任何离场都移出游戏」近似）。残余近似：「沉静」的分配由引擎 harm-threat.js:146-149 把候选收窄到本支援（其他己方支援也不能先分），卡面只要求先于调查员卡。",
     "显式简化：05324 美满结局——未实现：取消混乱标记并视作 [elder_sign] 的 interrupt（tokenReveal + replacementToken 原语请求已被 rejected）。现只实现负修正标记令技能值降到 0 或以下时翻转成正修正的分支；auto_fail 与符号标记分支不可达。",
-    "P10 逐卡行为缺口（未实现子句，60 张卡）：发布口径按 earlyAccess，逐卡差异见 audit/tcu-card-behavior-audit.json",
-    "P10 卡面未实现：05014 黑暗洞察——缺一条子句：卡面『抽遭遇卡或弱点』里只有遭遇卡分支有实现（encounterDrawn 窗口）；从玩家牌库抽到弱点没有任何可取消窗口（src/engine/weakness.js:49 resolveWeakness 直接结算，src/engine/encounter.js 只对遭遇牌库开窗），因此『抽到弱点时打出黑暗洞察』打不出来。条目注释（src/cards/entries/05014.js:9-11）自称『该分支登记在 remaining 里』，但 audit/tcu-",
-    "P10 卡面未实现：05018 神秘乐曲（Mystifying Song）——第 4 句没有实现路径：05018 是 reactionOnly，只能在 agendaWouldAdvance 反应窗口打出，走 assets.js:329-359 的 playReactionCard；该路径结算完固定 disposePlayedEvent(inv, code)（assets.js:358）把事件放进弃牌堆，descriptor.exileAfterPlay 完全不会被读（只有 actions.js:246-292 的 doPlay 收尾段读它并调 exil",
-    "P10 卡面未实现：05019 安息日男爵（Baron Samedi）——两条缺失：①「强制 - 任意数量伤害放到同地点调查员时额外 1 点伤害」完全没有实现（条目无 forced，引擎无 05019 读点）；②「少于 3 个毁灭标记时不能离场」条目 note 已登记未实现（cannotLeavePlay 是布尔常量，且 removeThreat 不读它，01009 式 counters 保护也不适用）。另两处近似：③「放置入场」被实现为进入威胁区而非支援区（盟友槽仍计入）；④威胁区卡在重整阶段不复位（phases.js:76 仅 inv.asse",
-    "P10 卡面未实现：05036 钉鞋（Track Shoes）——缺第 1 句：「每位调查员仅限 1 张[[鞋子]]」没有实现路径——条目未声明限额（src/cards/entries/05036.js:19-24），引擎限额读点只按同名卡号判定（src/engine/moves.js:545-546、src/engine/play-condition.js:102），全仓没有按特性分组的场上限额原语（grep Footwear 只命中 cards-data 文本），条目 note 亦自述「未校验」。另：反应时机在自动交战之后（src/en",
-    "P10 卡面未实现：05046 加弗瑞拉·米兹拉克（Gavriella Mizrah）——缺口一条：「即便该次攻击被取消」。攻击在 enemyAttack 窗口被取消（src/engine/enemies.js:128-132，如 01023 闪躲）或敌人「不能攻击」（:115-119）时直接 return，而 enemyAttacked 窗口只在攻击正常结算后于 :172-177 打开，所以被取消的攻击不会让加弗瑞拉发现线索（实测打出 01023 取消后无 05046 选项、线索未加）。docs/tcu-investigators.md:134 把该窗口写成「被",
-    "P10 卡面未实现：05059 Witch-Haunted Woods · Cairn Stones / 女巫作祟之林·巨石堆——缺「任意数量线索被发现后」这条触发：实现用 `location.clues > 0` 提前返回（05059.js:20），只有把本地点最后一个线索也发现（clues 归零）后才结算；卡面要求每次从本地点发现线索都结算（发现 1 个就失去 1 点资源，即使地点还有线索）。测试 tests/tcu-witching-hour.test.mjs:498-505 也先把 clues 置 0 再调用，未覆盖非最后一批。其余部分（本地每位调查员、失去等量资源、资源不足时扣到 0）与卡面一",
-    "P10 卡面未实现：05062 Witch-Haunted Woods · Tainted Well / 女巫作祟之林·被污染的井——两条子句都没有实现路径：05062 条目只登记了两个数据字段，behavior.canCommitCard/commitIconMultiplier 是直通/恒返回 base 的空转（comment 声称已接线，实际 `encounterRules.canCommitCard`/`commitIconMultiplier` 在 content/campaigns/theCircleUndone/encounter-rules.js 中不存在，`flags.taintedWel",
-    "P10 卡面未实现：05063 Witch-Haunted Woods · Hermit's House / 女巫作祟之林·隐士之家——与 05059 同一缺陷：`location.clues > 0` 提前返回（05063.js:20），强制只在清空本地点的最后一次发现后结算；卡面要求每次从本地点发现线索都结算（发现 N 个就让本地每位调查员随机弃 N 张）。随机弃牌与「at random」一致，数量取本次发现的线索数。测试 tests/tcu-witching-hour.test.mjs:498-513 也是先把 clues 置 0 再调用，未覆盖非最后一批。",
-    "P10 卡面未实现：05078 入口大厅——封锁子句没有可用路径：幕 1b 用 flipSpectral 换幽灵面（behavior.js:285-293），引擎翻面只换 code/名字并保留 revealed（src/engine/locations.js:172-223，全仓库无任何 revealed=false 写入点），而入口大厅开局因全员在场即 revealed=true（src/engine/locations.js:136-138 placeLocation；setup 先放调查员再放地点）。结果：幽灵面",
-    "P10 卡面未实现：05085 约瑟夫·梅吉尔——05085 正面文本全部有路径，缺的是「成功 → 翻面结算的 05085b 文本」中的两条长期效果：①本局不能再把毁灭放到银暮秘社敌人上（只有日志，无任何拦截读点）；②约瑟夫获得冷漠（同步函数只能减不能加）。翻转本身用 flipEnemy 连续两次实现（05085b 面在威胁区瞬时出现），与实体翻面等价。05085b 是独立卡号（不在本批卡表内），建议在其条目/审计里补这两条；scenarioApproximations（behavior.js:806）声称「记录本局限制」，",
-    "P10 卡面未实现：05094 Bedeviled（苦痛折磨）——缺『你不能触发你控制的卡牌上的 [action] 能力』一条：只有数据字段、没有引擎读点（条目 simplified:true + status.json gaps 已登记）；参考实现 Bedeviled.hs 用 CannotTriggerAbilityMatching (AbilityIsActionAbility <> AbilityOnCardControlledBy iid) 表达同一条，本仓库没有对应原语。其余段落已实现。另：theSecretName 的 per",
-    "P10 卡面未实现：05104 Trapped Spirits（被困的灵魂）——缺第二段『如果你所在地点闹鬼，一位调查员如要在本次技能检定投入 1 张或多张卡牌，作为额外费用必须结算该地点的每个闹鬼能力』：参考实现 TrappedSpirits.hs 用 `CommitCost (ResolveEachHauntedAbility lid)` 表达，本仓库没有投入费用原语（commit 只提供 canCommitCard 过滤，src/engine/tests.js:219 只能整卡允许/禁止；beforeCommit 只是玩家窗口 tests.js:1",
-    "P10 卡面未实现：05120 The Secret Name——缺 2 条。① 困难/专家在异次元地点的 [skull] 应为 -4：chaos.js:secretNameChaosToken L27 写成 `isExtradimensional ? (hard ? -3 : -3) : (hard ? -2 : -1)`，两个分支同值，-4 没有任何路径；SECRET_NAME_TOKEN_MEANINGS.hard.skull L89 与 tests/tcu-secret-name.test.mjs L580-584 也按 -3 写死",
-    "P10 卡面未实现：05127 Stopping the Ritual——缺主动面的「那赫卜不能离开献祭场所」。那赫卜带猎手关键词（05149.js:enemyRule L8），敌军阶段会按 src/engine/turn.js:enemyPhase L149-160 正常猎手移动离开献祭场所；本章既没有覆写 hunterMove（该钩子在 turn.js L152，TCU 其他章如 atDeathsDoorstep/behavior.js L557 有先例），也没有给实例设 immobile，全仓 grep 不到任何「禁止该敌人移动」的读点，be",
-    "P10 卡面未实现：05141 Site of the Sacrifice——缺两条。① 强制「轮末把线索补到 3×人数」没有执行路径：05141.js:onRoundEnd L28-33 写成了函数，但 src/engine/turn.js:runLocationRoundEnd L259-272 只认 `cluesPerInvestigator` 数据字段（唯一同类 01156 就是数据写法），全仓也没有别处调用 locationRule.onRoundEnd，因此这条永远不会触发。②「本行动不会引起那赫卜的趁乱攻击」无豁免：scenarioAct",
-    "P10 卡面未实现：05144 Ghostly Presence——「结算她的猎手关键词」没有移动：05144.js:L19 只调用 api.hunterStep（src/engine/turn.js:hunterStep L217-257 仅计算并返回目标地点 id，敌人 relocate 由 enemyPhase L153-159 的调用方执行），行为里没有消费返回值，那赫卜不会向调查员移动。其余子句（重整、攻击同地点每位调查员、献祭场所再放 1 毁灭、不在场时从放一边区生成）实现正确。同一缺陷也出现在本章 [elderthing] 混乱",
-    "P10 卡面未实现：05150 The Black Book——缺 [reaction] 打牌减费：05150.js:note L13 自述未接线，全仓没有「打出卡牌时横置自身、承受 X 恐惧以降低该卡费用」的费用支付窗口，卡面只剩被动 +1 意志/+1 智识（05150.js:passive L12；modifiers.js:legacyStatDelta L333-335 与 card-defs.js L116-118 已接线）。",
-    "P10 卡面未实现：05165 In Pursuit of the Living（追寻生者）——缺「Clues cannot be discovered at non-Spectral locations」一条：引擎在 src/engine/locations.js:306-318 提供 canDiscoverClues 读点，但 theWagesOfSin/behavior.js 未定义该钩子（同战役其它章也没有；其它战役已有先例，如 content/campaigns/theForgottenAge/encounter-rules.js:247），幕 2 期间在非幽",
-    "P10 卡面未实现：05183 Ominous Portents（凶兆）——缺『抽到的那张幽灵遭遇卡获得险境，且其效果不能被取消』：引擎没有给本次抽牌附加 peril/不可取消的参数或状态，抽到的卡仍按自身印刷文本判定险境，其他调查员可以参与，也仍可被取消/重抽类反应取消（src/engine/encounter.js:105-118）。另外『险境』只作用于本卡的两个选项，意志(3) 检定本身未按险境结算（他人仍可协助投入），待人工复核：险境是否还需覆盖该检定。",
-    "P10 卡面未实现：05197 For the Greater Good（崇高利益·混乱标记）——缺 2 条（都在困难/专家面）：①[tablet]『如果场上没有 [[异教徒]] 敌人，再揭示一个标记』——behavior.js:afterTest:810-811 在 cultistEnemies 为空时直接 return；②[elder_thing]『如果场上没有带毁灭的异教徒敌人，再揭示一个标记』——afterTest:824-825 同样直接 return。两处都没有调用引擎现成的 api.revealToken（src/engine/scenario-runtim",
-    "P10 卡面未实现：05198 05198 THE HIEROPHANT · V（教皇·V）——缺『抽取』的落地：弃 5 张、筛异教徒敌人、按玩家顺序逐个选择（多张时 api.choose）都写了（behavior.js:discardAndDrawCultists:939-972），但生成走 api.spawnEngaged（src/engine/scenario-runtime.js:198 → src/engine/enemies.js:spawnEnemy），而 spawnEnemy 在 src/engine/enemies.js:264-268 会用剧本钩子 ",
-    "P10 卡面未实现：05199 05199 Ends and Means（目的与手段）——缺 1 条：『位于 [[圣堂]] 地点的每个 [[银暮秘社]] 敌人失去冷漠』没有任何路径——本章 behavior.js 没有 aloof 读点，也没有在敌人入场/移动/幕议程推进后同步关键词的钩子（引擎 src/engine/enemies.js:278 只按印刷数据赋一次 enemy.aloof）。参考实现 EndsAndMeans.hs:22-27 用 modifySelect (EnemyWithTrait SilverTwilight <> at_ (Locati",
-    "P10 卡面未实现：05204 05204 Lodge Gates（秘社大门·我们一直在等你）——缺 1 条：没有任何『大门不能生成敌人』的路径（behavior.js:spawnLocation:680-694 没有地点判断，引擎侧也只有本钩子能改生成点）。附带一个更严重的发现：该钩子对未特判的 code 一律 return null，而 src/engine/enemies.js:264-268 把 null 当作『无合法生成点』→ 把遭遇卡塞进弃牌堆并调 spawnFailed，于是本章遭遇牌库里的 05095 Lodge Neophyte、05096 Keeper",
-    "P10 卡面未实现：05205 05205 Lodge Gates（秘社大门·秘社成员方可入内）——缺 1 条，缺法同 05204：『敌人不能生成在秘社大门』没有地点级生成限制路径。同时 behavior.js:spawnLocation:680-694 对未特判 code 返回 null 会被 src/engine/enemies.js:264-268 当成无合法生成点而弃卡（详见 05204 的 note，受影响的是 05095/05096 这两个普通敌人）。待人工复核：spawnLocation 未命中时应 return fallbackLoc。",
-    "P10 卡面未实现：05213 05213 Lodge Catacombs（秘社地下墓穴）——缺『控制至少 1 把钥匙即可进入』这一半：behavior.js:investigatorEntryError:345 对未揭示的地下墓穴无条件 return『地下墓穴的门锁上了：需要控制至少 1 把钥匙。』，从不检查调用者是否真的持有 skull/cultist/tablet/elderthing 钥匙（对照同函数 339-344 的机密室/圣堂内室都有 keysHeldBy 判 key；参考 LodgeCatacombs.hs:21-27 是 whenUnrevealed",
-    "P10 卡面未实现：05221 Knight of the Inner Circle（核心圈骑士）——①『（或反之）』这半句没有路径：只有你走进骑士地点时才开敏捷检定（behavior.js:locationEntered:389-401，调用点 src/engine/movement.js:225、src/engine/locations.js:265）；骑士自己移动到你的地点走的是 enemyMoved，而共享 enemyMoved（encounter-rules.js:297-299）只派发单卡条目的 onMoved，05221 条目没有脚本，于是不会检定、不会交战。②",
-    "P10 卡面未实现：05222 Knight of the Outer Void（边缘虚空骑士）——①谈判成功只把怪兽毁灭 -1，卡面『翻至线索面』实际不发生：behavior.js:performAction:564-569 调用的是 api.giveClues，而 src/engine/scenario-runtime.js 里没有 giveClues（正确读点是 gainClues:382），可选链让调用静默失败、线索永远不发放。章节测试 tests/tcu-greater-good.test.mjs:172 自己补了同名 giveClues 桩，所以测试全绿也发现不",
-    "P10 卡面未实现：05225 Beneath the Lodge（秘社地底）——①『获得险境』完全没有实现路径：beneathTheLodge（behavior.js:1062-1082）只加难度；定义层的 peril 来自印刷识别，而 content/campaigns/theCircleUndone/card-data.js:printedKeywordText:220-226 会删掉含 gains 的句子（实测 definition 里 05225.peril=false）；即便置了 peril，本卡走 api.test 直接开检定，也拿不到遭遇卡",
-    "P10 卡面未实现：05228 Puzzle Box（机关盒）——只实现了剧情资产归属这一层：附属到南森（behavior.js:attachPuzzleBox:146-158）、幕 2 目标交给调查员（checkObjectives:667-670 → givePuzzleBoxTo:184-201）、结局加入战役牌组（resolution:862-888）。两个可执行子句都没有路径：①『当你被击败时交给另一位调查员』——引擎有 investigatorEliminated 钩子（src/engine/harm-threat.js:226",
-    "P10 卡面未实现：05242 Fated Souls / 命数已定——缺两条：①正面『每位调查员不能离开自己面前的地点』完全没有实现——本章 behavior 没有 moveError/movementError，未访之岛之间按印刷符号（squiggle/moon/plus）互连，调查员可以自由离开所在岛；②背面『把放在一边的每张看守人的攫噬和看守人的注视洗入遭遇牌库』只做了注视 05272，看守人的攫噬 05087×2 在 setup 被放进 setAside（behavior.js:259）后再没有任何洗入路径（notes.js:14 还把",
-    "P10 卡面未实现：05243 Beyond the Mist (v. I)（迷雾彼端·版本一）——缺正面 [fast]：这条能力没有声明也没有接线——单卡条目 05243.js 只有 code/scope/implemented/note，definition.js:166-174 的 actStage 只给 objective/reveal，behavior.actions:313-325 只出『阵法』场景行动。引擎通道其实存在（幕卡可进能力源 src/engine/ability-rules.js:198；同类写法见 entries/05048.js 用 testBe",
-    "P10 卡面未实现：05244 Beyond the Mist (v. II)（迷雾彼端·版本二）——缺 3 条：①[fast]『阵法行动期间花 1 线索使本次技能检定难度 -2』——同 05243，条目没有声明、behavior 也没有入口（引擎通道存在但本章未接），『阵法检定期间』上没有任何挂载；②『包括封印在场上卡牌上的[cultist]标记』——只 filter 了 state.chaosBag（behavior.js:502-504），封印标记单独存在 state.chaos.sealed（chaos-bag.js:84-98），释放时会回袋；③『直到战役结束』——",
-    "P10 卡面未实现：05245 Beyond the Mist (v. III)（迷雾彼端·版本三）——缺 2 条、近似 1 条：①[fast]『阵法行动期间花 1 线索使本次技能检定难度 -2』没有实现路径（条目未声明、behavior 无入口、阵法检定窗口无挂载；引擎通道存在但本章未接）；②背面『本局剩余时间不能与约瑟夫·梅吉尔谈判』只写了 state.scenarioFlags.noParleyJosef（behavior.js:509），全仓库没有任何读取点（谈判读取点 src/engine/parley.js:38-94；05085 条目无 abilities；本章 ",
-    "P10 卡面未实现：05246 Beyond the Mist (v. IV) / 迷雾彼端（版本四）——缺两条：①正面 [fast]『阵法行动期间花 1 个线索，使本次技能检定难度 -2』没有实现路径（引擎没有幕卡/剧本卡免费能力通道，也没有『花线索降难度』原语）；②背面『调查员不能与约瑟夫·梅吉尔谈判』只写了 state.scenarioFlags.noParleyJosef，全仓库没有任何读取点，谈判入口 src/engine/parley.js 不查该标志（对照 content/campaigns/theForgottenAge/scenarios/shatteredAe",
-    "P10 卡面未实现：05247 The Binding Rite（咒缚仪式）——缺正面 [fast]『阵法行动期间花 1 个线索，使本次技能检定难度 -2』：条目未声明、behavior 无入口、『阵法检定期间』也没有任何挂载（引擎的能力通道存在但本章未接，同 05243）。目标子句用『永久粘住』近似：enemyDefeated:608-614 在击败瞬间的判定是正确的，但 checkObjectives:561-565 只读 state.scenarioFlags.watcherDefeatedAt 与当前火盆状态，因此看守人先在火盆未点燃时于灵怪陷阱",
-    "P10 卡面未实现：05248 The Broken Rite / 仪式遭毁——缺正面 [fast]『阵法行动期间花 1 个线索，使本次技能检定难度 -2』：本章没有幕卡能力实现，引擎也没有线索换难度的原语。目标子句基本实现，但用 state.scenarioFlags.watcherDefeatedAt 把『在灵怪陷阱被击败』粘住：看守人先在火盆点燃时于灵怪陷阱被击败，之后再用阵法熄灭火盆同样会推进，而卡面要求两个条件在击败时同时成立（enemyDefeated 里的即时判定是准确的，问题在 checkObjectives 也接受旧标记）。背面 (→结",
-    "P10 卡面未实现：05249 Miskatonic River / 米斯卡塔尼克河——缺 [action]：撤退。引擎的撤退行动只在 location.resign 或 state.scenario.resignAnywhere 时出现（src/engine/moves.js:451、773；turn-flow.js:scenarioResignAvailable:367-372），本章 definition.js 的 miskatonicRiver 没有 resign 字段，behavior.actions 也只推『阵法』行动，因此米斯卡塔尼克河没有撤退入口",
-    "P10 卡面未实现：05257 The Geist-Trap / 灵怪陷阱——缺『幽灵看守人位于灵怪陷阱时获得反击』：全章没有任何按地点给敌人授予 retaliate 的地方——definition.js:96 只设 spectral，behavior.js 只有数值型 enemyStatModifier，src/engine/combat.js:395 的反击只读 enemy.retaliate，而看守人 05086 自身关键词只有 Alert/Hunter。其余（四技能合计 20 的阵法、成功可点燃/熄灭此处火盆、闹鬼 1 伤害 1 恐惧、背面迷雾",
-    "P10 卡面未实现：05258 Gavriella Mizrah（加弗瑞拉·米兹拉克）——卡面两条能力都没有实现路径：注册条目 abilities=0、modifiers=0，所以 +1[combat] 不进入 getStat；reaction 也没有描述子，全仓库没有 05258 的行为分支（entrySource 自称「卡面能力由玩家卡条目层处理」，但 src/cards/entries/05258.js 不存在）。附带缺口：卡面写「即便该次攻击被取消」也能反应，而引擎在 src/engine/enemies.js:128-132 对被取消攻击提前返回，ene",
-    "P10 卡面未实现：05259 Jerome Davids（杰罗姆·戴维斯）——卡面两条能力均未实现：+1[intellect] 无 modifiers，取消显现的 reaction 无能力描述子，behavior.js 里也没有杰罗姆·戴维斯的分支。引擎侧其实已具备所需原语——src/engine/encounter.js:98-119 的 encounterDrawn 窗口支持取消、且对抽牌者同地点的调查员开放，缺的是 05259 的条目与「弃手牌合计至少 2 个[智力]图标」的自定义成本。待人工复核：这两条是否计划由后续批次补。",
-    "P10 卡面未实现：05260 Penny White（佩妮·怀特）——卡面两条能力均未实现：没有 modifiers（+1[willpower]），也没有 abilities（显现期间的检定成功反应）。引擎侧已有对应触发点——src/engine/tests.js:816-820 在 state._treacheryResolving 期间检定成功时触发 treacheryTestSuccess，正是卡面「显现效果期间的技能检定成功后」；缺的是 05260 的条目（含发现线索的 resolve）。待人工复核：这两条是否计划由后续批次补。",
-    "P10 卡面未实现：05261 Valentino Rivas（瓦伦蒂诺·里瓦斯）——卡面两条能力均未实现：没有 modifiers（+1[agility]），也没有 [fast] 检定中降难度的能力。引擎已有 testBegins 窗口与 api.reduceTestDifficulty（src/cards/entries/05159.js:14-31 是同一原语的使用示例，src/engine/tests.js:126 统一用 difficulty - difficultyReduction 判定），缺的是 05261 的条目与「花费 2 资源 + 横置」",
-    "P10 卡面未实现：05262 Gavriella's Fate（加弗瑞拉的命运）——命运分支本身齐全（控制剧情支援、记录还活着、被夺走时以敌人面生成、追查时横置不交战、否则交战），唯一缺口是「本场冒险不占盟友槽」：支援由 giveAsset 直接进 inv.assets（src/engine/scenario-runtime.js:474-483），但 05258 的 cardDef 仍是 slots=['Ally']、unique=true，会计入 slotUsage/allySlotsOk——实测在已有 05258 时 canEquip(01021)=f",
-    "P10 卡面未实现：05263 Jerome's Fate（杰罗姆的命运）——与 05262 同构：命运结算齐全，缺口是「本场冒险不占盟友槽」——05259 由 giveAsset 直接入场，但 cardDef 仍是 slots=['Ally']、unique=true（src/engine/assets.js:slotUsage:73-84 / allySlotsOk:177-192），实测已有 05259 时 canEquip(01021)=false。另：翻回敌人面直接生成 05263b（notes.js:9 已声明）；日志标记用记录数组承载（n",
-    "P10 卡面未实现：05264 Penny's Fate（佩妮的命运）——与 05262 同构：命运结算齐全，缺口是「本场冒险不占盟友槽」——05260 由 giveAsset 直接入场，但 cardDef 仍是 slots=['Ally']、unique=true（src/engine/assets.js:slotUsage:73-84 / allySlotsOk:177-192），实测已有 05260 时 canEquip(01021)=false。另：翻回敌人面直接生成 05264b（notes.js:9 已声明）；日志标记用记录数组承载（n",
-    "P10 卡面未实现：05265 Valentino's Fate（瓦伦蒂诺的命运）——与 05262 同构：命运结算齐全，缺口是「本场冒险不占盟友槽」——05261 由 giveAsset 直接入场，但 cardDef 仍是 slots=['Ally']、unique=true（src/engine/assets.js:slotUsage:73-84 / allySlotsOk:177-192），实测已有 05261 时 canEquip(01021)=false。另：翻回敌人面直接生成 05265b（notes.js:9 已声明）；日志标记用记录数组承载（n",
-    "P10 卡面未实现：05298 South Church（南区教堂）——缺 1 条：「撤退」在南区教堂有裂口且遭遇牌库非空时不可用。本地复现（构造 05298 地点 breaches=2、encounterDeck 非空，move.rule='locResign'）：实际执行 drawEncounter + 「把南区教堂的 2 个裂口移到当前幕」，inv.resigned 仍为 undefined；裂口为 0 或遭遇牌库为空时撤退才正常（tests/tcu-clutches-chaos.test.mjs:501-512 只在无裂口状态测撤退，所以",
-    "P10 卡面未实现：05299 South Church（南区教堂）——缺 1 条：「撤退」被「弃 1 个支援」分支吞掉——裂口>0 时选中 locResign 会执行「选支援弃掉 + 移全部裂口」，inv.resigned 不成立（本地复现）。另有两处简化：①「弃 1 个支援」是费用，但无支援时行动照样列出并照移全部裂口（:208-213 只打日志「没有支援可弃」；本地复现 0 支援仍把 2 个裂口移到幕），卡面费用未强制。② 弃支援用 inv.assets.splice + inv.discard.push(asset.code)（:223-",
-    "P10 卡面未实现：05309 Lodge Enforcer / 秘社打手——缺第三条（文本框空白）：地点上只要有 05309，该地点的印刷能力仍照常提供——例如 05305 的 [action] 搜索敌人/移裂口、05303/05304 的 [fast] 受伤害移裂口、05302 的同款行动，全部还在 behavior.js:432-641 LOCATION_HANDLERS 里可选，与卡面冲突（src/cards/encounter-entries/.../05309.js:3 的注释声称「由章节 behavior 的动作屏蔽近似」，实际没有这段代",
-    "P10 卡面未实现：05328 The Final Countdown（最后的倒计时）——缺 1 条：背面第 3 段的『只要冒险没有结束，场上所有毁灭标记视为在阿撒托斯上』没有任何实现路径——阿撒托斯的毁灭只记在 scenarioFlags.azathothDoom（behavior.js:50-62、chaos.js:azathothDoomOf:12），敌人/地点/支援/威胁上的 doom 不会被算作『在阿撒托斯上』。因此第三次密谋推进之后，若场上还有带 doom 的敌人或地点（例如异教徒以外的敌人、或后续放 doom 的卡），[skull] 的 X（chao",
-    "P10 卡面未实现：05329 The Cosmos Beckons（宇宙的呼唤）——正面两条都落地（[action] 抽 X 选 1 走引擎地点牌库，唯一近似是『其余洗回宇宙』实现成放回牌库底，见 src/engine/alt-decks.js:190-192；目标限定憎恶宫殿 + 共同支付由 canAdvanceWithClues/groupPayment 强制）。背面缺 4 条、近似 2 条：①『将宇宙入口移出游戏』完全没有实现——rebuildForNextAct 只收回宇宙地点，宇宙入口仍留在地图上并继续给虚空地点授予行动（05332 的『每个虚空地",
-    "P10 卡面未实现：05330 In Azathoth's Domain（阿撒托斯的领域）——与 05329 同构：正面 [action]/目标都落地（目标改为皇廷、2 线索/人，definition.js:96），背面同样缺 4 条、近似 2 条——①『将憎恶宫殿移出游戏』未实现，旧枢纽留在场上并继续授予虚空地点行动；②『位于这些地点的调查员被抛弃并阵亡』被换成全体搬到皇廷（rebuildForNextAct:216），不会有人阵亡；③『敌人与遭遇牌库顶 5 张混洗』没有路径（敌人被搬到皇廷，returnLocationToCosmos:183-185）；④『每人抽",
-    "P10 卡面未实现：05341 Mindless Dancer（盲目舞者）——缺两条、近似一条：①『生成 - 最远的虚空格子』实现为『离所有调查员最远的在场地点』（behavior.js:483-500 → src/engine/enemies.js:264），与卡面的『最远虚空格子』不等价；②『盲目舞者可以进入虚空格子，如同其进入一个地点』与③『强制 - 通过其猎手关键词移动到虚空格子后：再次结算其猎手关键词（每轮仅限一次）』没有任何实现路径——本剧本不建虚空格子（behavior.js:7,905 明确登记为只记账），引擎的猎手移动也不提供『移动到",
-    "P10 卡面未实现：05342 Ultimate Chaos（究极混沌）——除『不能被取消』外全部对上：意志(4) 检定、失败附属（用 scenarioFlags.ultimateChaos 计数承载『附属到阿撒托斯』）、失败≥2 的 1 伤害+1 恐惧、失败≥3 的涌动（pendingSurge → src/engine/encounter.js:174）、3 张时弃掉并二选一（放 1 毁灭，或攻击每位调查员）都有实现路径。缺第一段的『不能被取消』：引擎没有『本卡不可取消』标志，抽牌窗口（src/engine/encounter.js:98-119",
-    "P10 卡面未实现：05085b Josef's Plan（约瑟夫的计划）——缺两条长期效果：①「本局毁灭不能再放到银暮秘社敌人上」没有任何拦截读点（只有一条日志 + 一个用于隐藏谈判的 flag），chapter 的 status.json approximations 也未登记；②「约瑟夫获得冷漠」无法实现（同步函数只能移除冷漠，不能新增）。翻面/移除毁灭/解除交战三段已实现；翻面用 flipEnemy 连续两次等价模拟正反面结算。与 shared:encounters#1 对 05085 的结论一致。",
-    "P10 卡面未实现：05178b Unfinished Business（未了之事·B）——缺一条可执行子句：「如果你退场，将其翻面」。章节没有 investigatorEliminated 钩子，引擎消除流程（harm-threat.js:208-228）只处理隐藏卡/离场支援/交战，威胁区的剧情卡既不移除也不翻回敌人面；按该代码路径，未了之事会滞留在已退场调查员的威胁区（异端者永不回场）。其余四段（威胁区保留、轮末 2 选 1、[action] 检定(4)、驱除进胜利区）均实现。",
-    "P10 卡面未实现：05178d Unfinished Business（未了之事·D）——缺「如果你退场，将其翻面」：与 05178b 同因——章节无 investigatorEliminated 实现，引擎消除流程不会把威胁区的未了之事翻回敌人面，卡片会滞留在退场调查员的威胁区。其余四段均实现（轮末为 1 点伤害、地点为绞刑架、检定[意志]或[敏捷]）。",
-    "P10 卡面未实现：05178f Unfinished Business（未了之事·F 面）——缺「If you are eliminated, flip it over」一条：f/h 两张未了之事没有退场处理——引擎在 src/engine/harm-threat.js:226 提供 investigatorEliminated 读点（本章未定义），调查员被击败/撤退后该剧情卡仍留在其威胁区（inv.threat 未清理），异端者不会翻回敌人面；轮末强制（behavior.js:830-836）还会跳过已退场调查员，等于这张卡彻底失效。其余子句（威胁区保留、轮末二选一",
-    "P10 卡面未实现：05178h Unfinished Business（未了之事·H 面）——缺「If you are eliminated, flip it over」一条（F 面同病）：本章没有 investigatorEliminated 处理，调查员退场时 05178h 这张威胁区剧情卡既不会被翻回敌人面、也不会被清理，异端者 05178g 永久离场；轮末强制会跳过已退场调查员（behavior.js:831），因此这条卡也失去作用。弃 2 张手牌分支用 api.discardChosen（:375）实现，与「选择并弃掉」一致；其余子句完整。",
-    "P10 卡面未实现：05178l Unfinished Business（未了之事·L 面）——缺「(Do not resolve any other text on this card.)」的守卫：L 的强制只应「翻回敌人面 + 立即攻击」，但 performHereticParley（behavior.js:1066-1069）对 J/L 一视同仁，都会调用 resolveImmediateUnfinishedBusiness，于是 IMMEDIATE_RESOLVE.banishNextDefeat（:408-411）也会执行，把 enemy.hereticBan",
-    "P10 逐卡显式近似（行为等价但非逐条实现，174 张卡）：05001、05002、05003、05007、05008、05009、05010、05011、05012、05013、05021、05029、05032、05033、05037、05040、05041、05042、05044、05045、05047、05048、05049、05050、05051、05052、05053、05054、05057、05058、05060、05064、05066、05067、05068、05076、05087、05089、05090、05091、05095、05096、05097、05098、05100、05103、05107、05110、05112、05114、05117、05119、05121、05122、05123、05124、05125、05133、05134、05135、05136、05137、05140、05142、05143、05145、05147、05152、05156、05157、05158、05161、05164、05170、05171、05175、05176、05177、05180、05181、05182、05184、05185、05186、05187、05188、05190、05191、05192、05194、05195、05196、05200、05201、05210、05214、05215、05218、05219、05220、05223、05224、05227、05229、05230、05231、05234、05235、05236、05237、05238、05239、05241、05253、05254、05266、05267、05269、05270、05272、05275、05279、05280、05281、05285、05290、05291、05292、05293、05294、05295、05297、05300、05302、05303、05304、05305、05307、05310、05311、05312、05319、05320、05321、05322、05323、05324、05325、05326、05327、05331、05336、05337、05338、05339、05340、05344、05346、05166b、05170b、05171b、05173b、05175b、05176b、05178a、05178c、05178e、05178g、05178i、05178j、05178k、05217b、05286a、05288a",
+    "P10 逐卡显式近似（行为等价但非逐条实现，14 张卡）：05003、05011、05052、05156、05231、05241、05262、05263、05264、05265、05323、05324、05341、05346",
     "P10 发布口径：占位美术——web/img/campaigns/theCircleUndone 为确定性 ffmpeg 生成图（非官方美术），后续同名替换并更新 assets.json，不改装备局",
     "P10 发布口径：自动构筑只在《万象无终》战役追加 83 张 05 卡；其它循环战役保持既有自动牌组产出（golden replay/AI 零变化），手动构筑与关间升级按卡牌范围与记录开放",
     "P10 发布口径：三组确认按 P8/P9 口径 verified；逐卡行为审计仍发现 gap/approximation，因此按 earlyAccess 发布（equivalenceCertified=false），不宣称与印刷规则完全等价"
@@ -5966,7 +5780,7 @@
   "gate": {
     "scopeLedger": {
       "path": "artifacts/migration/tcu/scope.json",
-      "sha256": "b4e03da464c3855612d7a1c664f4849859fe9d3b16eb02e987586fd63ba7464f",
+      "sha256": "faf59d8602de51c146a281d54fcbdb9328dd896e1ed808c70db5ca3f2e9d94bb",
       "pass": true
     },
     "records": {
@@ -6153,12 +5967,7 @@
       "signatures": 13,
       "signaturesImplemented": 13,
       "nodeAcceptance": true,
-      "simplified": [
-        "05010",
-        "05012",
-        "05013",
-        "05019"
-      ],
+      "simplified": [],
       "pass": true
     },
     "playerCardsVerified": {
@@ -6186,7 +5995,7 @@
       "browserPending": [],
       "pendingEncounterCards": 0,
       "gaps": 0,
-      "encounterCards": 274,
+      "encounterCards": 275,
       "testFiles": [
         "tests/tcu-prologue.test.mjs",
         "tests/tcu-witching-hour.test.mjs",
@@ -6200,7 +6009,7 @@
       ],
       "ledger": {
         "path": "audit/tcu-scenario-acceptance.json",
-        "sha256": "31ce7f6cf034732638e155c2a7eb934830d0fd24835636f25a441ba20e7bd1ea"
+        "sha256": "fd9c1d71cb7b9089855b8ce7949c5ee67da573f33b9423c9dbd6a7d324dbc9fe"
       },
       "sourceLock": {
         "path": "audit/tcu-scenario-source-lock.json",
@@ -6238,20 +6047,20 @@
         "face": 34,
         "constructible": 85,
         "deckable": 83,
-        "simplified": 234,
-        "testsPassed": 441,
+        "simplified": 14,
+        "testsPassed": 520,
         "testFiles": 6
       },
       "ledger": {
         "path": "audit/tcu-all-card-acceptance.json",
-        "sha256": "f70dcd396b23413583d34a6f5553fbf46f47da02597f6d866d8e80c5638317e8"
+        "sha256": "834f3a29d89e506e0a99b008b91cb1c75d470e9d109afa131e703332ce1cf20d"
       },
       "module": {
         "path": "src/cards/tcu-campaign-acceptance.js",
-        "sha256": "090959a3d6dd0e0b9e8c831dd5fcc19a169b093853bc022d65f25c1067ba564d"
+        "sha256": "91c583d990b7f431c09a10508a4a1d2547bc1b7adcd5c7876d123e63de9726d5"
       },
       "badEvidence": [],
-      "simplified": 234,
+      "simplified": 14,
       "pass": true
     },
     "releaseBrowser": {
@@ -6348,258 +6157,425 @@
       "total": 377,
       "mainCards": 343,
       "faces": 34,
-      "match": 143,
-      "approximation": 174,
-      "gap": 60,
+      "match": 363,
+      "approximation": 14,
+      "gap": 0,
       "notApplicable": 0,
-      "gapCodes": [
-        "05014",
-        "05018",
-        "05019",
-        "05036",
-        "05046",
-        "05059",
-        "05062",
-        "05063",
-        "05078",
-        "05085",
-        "05094",
-        "05104",
-        "05120",
-        "05127",
-        "05141",
-        "05144",
-        "05150",
-        "05165",
-        "05183",
-        "05197",
-        "05198",
-        "05199",
-        "05204",
-        "05205",
-        "05213",
-        "05221",
-        "05222",
-        "05225",
-        "05228",
-        "05242",
-        "05243",
-        "05244",
-        "05245",
-        "05246",
-        "05247",
-        "05248",
-        "05249",
-        "05257",
-        "05258",
-        "05259",
-        "05260",
-        "05261",
+      "gapCodes": [],
+      "approximationCodes": [
+        "05003",
+        "05011",
+        "05052",
+        "05156",
+        "05231",
+        "05241",
         "05262",
         "05263",
         "05264",
         "05265",
-        "05298",
-        "05299",
-        "05309",
-        "05328",
-        "05329",
-        "05330",
-        "05341",
-        "05342",
-        "05085b",
-        "05178b",
-        "05178d",
-        "05178f",
-        "05178h",
-        "05178l"
-      ],
-      "approximationCodes": [
-        "05001",
-        "05002",
-        "05003",
-        "05007",
-        "05008",
-        "05009",
-        "05010",
-        "05011",
-        "05012",
-        "05013",
-        "05021",
-        "05029",
-        "05032",
-        "05033",
-        "05037",
-        "05040",
-        "05041",
-        "05042",
-        "05044",
-        "05045",
-        "05047",
-        "05048",
-        "05049",
-        "05050",
-        "05051",
-        "05052",
-        "05053",
-        "05054",
-        "05057",
-        "05058",
-        "05060",
-        "05064",
-        "05066",
-        "05067",
-        "05068",
-        "05076",
-        "05087",
-        "05089",
-        "05090",
-        "05091",
-        "05095",
-        "05096",
-        "05097",
-        "05098",
-        "05100",
-        "05103",
-        "05107",
-        "05110",
-        "05112",
-        "05114",
-        "05117",
-        "05119",
-        "05121",
-        "05122",
-        "05123",
-        "05124",
-        "05125",
-        "05133",
-        "05134",
-        "05135",
-        "05136",
-        "05137",
-        "05140",
-        "05142",
-        "05143",
-        "05145",
-        "05147",
-        "05152",
-        "05156",
-        "05157",
-        "05158",
-        "05161",
-        "05164",
-        "05170",
-        "05171",
-        "05175",
-        "05176",
-        "05177",
-        "05180",
-        "05181",
-        "05182",
-        "05184",
-        "05185",
-        "05186",
-        "05187",
-        "05188",
-        "05190",
-        "05191",
-        "05192",
-        "05194",
-        "05195",
-        "05196",
-        "05200",
-        "05201",
-        "05210",
-        "05214",
-        "05215",
-        "05218",
-        "05219",
-        "05220",
-        "05223",
-        "05224",
-        "05227",
-        "05229",
-        "05230",
-        "05231",
-        "05234",
-        "05235",
-        "05236",
-        "05237",
-        "05238",
-        "05239",
-        "05241",
-        "05253",
-        "05254",
-        "05266",
-        "05267",
-        "05269",
-        "05270",
-        "05272",
-        "05275",
-        "05279",
-        "05280",
-        "05281",
-        "05285",
-        "05290",
-        "05291",
-        "05292",
-        "05293",
-        "05294",
-        "05295",
-        "05297",
-        "05300",
-        "05302",
-        "05303",
-        "05304",
-        "05305",
-        "05307",
-        "05310",
-        "05311",
-        "05312",
-        "05319",
-        "05320",
-        "05321",
-        "05322",
         "05323",
         "05324",
-        "05325",
-        "05326",
-        "05327",
-        "05331",
-        "05336",
-        "05337",
-        "05338",
-        "05339",
-        "05340",
-        "05344",
-        "05346",
-        "05166b",
-        "05170b",
-        "05171b",
-        "05173b",
-        "05175b",
-        "05176b",
-        "05178a",
-        "05178c",
-        "05178e",
-        "05178g",
-        "05178i",
-        "05178j",
-        "05178k",
-        "05217b",
-        "05286a",
-        "05288a"
+        "05341",
+        "05346"
       ],
       "summary": {
         "mainCards": 343,
         "faces": 34,
         "total": 377,
         "covered": 377,
-        "match": 143,
-        "approximation": 174,
-        "gap": 60,
+        "match": 363,
+        "accepted": 363,
+        "acceptedMainCards": 329,
+        "acceptedFaces": 34,
+        "approximation": 14,
+        "gap": 0,
         "notApplicable": 0,
-        "faceInherited": 34,
+        "failed": 14,
+        "failedMainCards": 14,
+        "failedFaces": 0,
+        "acceptedCodes": [
+          "05001",
+          "05002",
+          "05004",
+          "05005",
+          "05006",
+          "05007",
+          "05008",
+          "05009",
+          "05010",
+          "05012",
+          "05013",
+          "05014",
+          "05015",
+          "05016",
+          "05017",
+          "05018",
+          "05019",
+          "05020",
+          "05021",
+          "05022",
+          "05023",
+          "05024",
+          "05025",
+          "05026",
+          "05027",
+          "05028",
+          "05029",
+          "05030",
+          "05031",
+          "05032",
+          "05033",
+          "05034",
+          "05035",
+          "05036",
+          "05037",
+          "05038",
+          "05039",
+          "05040",
+          "05041",
+          "05042",
+          "05043",
+          "05044",
+          "05045",
+          "05046",
+          "05047",
+          "05048",
+          "05049",
+          "05050",
+          "05051",
+          "05053",
+          "05054",
+          "05055",
+          "05055b",
+          "05056",
+          "05057",
+          "05058",
+          "05059",
+          "05060",
+          "05061",
+          "05062",
+          "05063",
+          "05064",
+          "05065",
+          "05066",
+          "05067",
+          "05068",
+          "05069",
+          "05070",
+          "05071",
+          "05072",
+          "05073",
+          "05074",
+          "05075",
+          "05076",
+          "05077",
+          "05078",
+          "05079",
+          "05080",
+          "05081",
+          "05082",
+          "05083",
+          "05084",
+          "05085",
+          "05085b",
+          "05086",
+          "05087",
+          "05088",
+          "05089",
+          "05090",
+          "05091",
+          "05092",
+          "05093",
+          "05094",
+          "05095",
+          "05096",
+          "05097",
+          "05098",
+          "05099",
+          "05100",
+          "05101",
+          "05102",
+          "05103",
+          "05104",
+          "05105",
+          "05106",
+          "05107",
+          "05108",
+          "05109",
+          "05110",
+          "05111",
+          "05112",
+          "05113",
+          "05114",
+          "05115",
+          "05116",
+          "05117",
+          "05118",
+          "05119",
+          "05120",
+          "05121",
+          "05122",
+          "05123",
+          "05124",
+          "05125",
+          "05126",
+          "05127",
+          "05128",
+          "05129",
+          "05130",
+          "05131",
+          "05132",
+          "05133",
+          "05134",
+          "05135",
+          "05136",
+          "05137",
+          "05138",
+          "05139",
+          "05140",
+          "05141",
+          "05142",
+          "05143",
+          "05144",
+          "05145",
+          "05146",
+          "05147",
+          "05148",
+          "05149",
+          "05150",
+          "05151",
+          "05152",
+          "05153",
+          "05154",
+          "05155",
+          "05157",
+          "05158",
+          "05159",
+          "05160",
+          "05161",
+          "05162",
+          "05163",
+          "05164",
+          "05165",
+          "05166",
+          "05166b",
+          "05167",
+          "05167b",
+          "05168",
+          "05168b",
+          "05169",
+          "05169b",
+          "05170",
+          "05170b",
+          "05171",
+          "05171b",
+          "05172",
+          "05172b",
+          "05173",
+          "05173b",
+          "05174",
+          "05174b",
+          "05175",
+          "05175b",
+          "05176",
+          "05176b",
+          "05177",
+          "05178a",
+          "05178b",
+          "05178c",
+          "05178d",
+          "05178e",
+          "05178f",
+          "05178g",
+          "05178h",
+          "05178i",
+          "05178j",
+          "05178k",
+          "05178l",
+          "05179",
+          "05180",
+          "05181",
+          "05182",
+          "05183",
+          "05184",
+          "05185",
+          "05186",
+          "05187",
+          "05188",
+          "05189",
+          "05190",
+          "05191",
+          "05192",
+          "05193",
+          "05194",
+          "05195",
+          "05196",
+          "05197",
+          "05198",
+          "05199",
+          "05200",
+          "05201",
+          "05202",
+          "05203",
+          "05204",
+          "05205",
+          "05206",
+          "05207",
+          "05208",
+          "05209",
+          "05210",
+          "05211",
+          "05212",
+          "05213",
+          "05214",
+          "05215",
+          "05216",
+          "05217",
+          "05217b",
+          "05218",
+          "05219",
+          "05220",
+          "05221",
+          "05222",
+          "05223",
+          "05224",
+          "05225",
+          "05226",
+          "05227",
+          "05228",
+          "05229",
+          "05230",
+          "05232",
+          "05233",
+          "05234",
+          "05235",
+          "05236",
+          "05237",
+          "05238",
+          "05239",
+          "05240",
+          "05242",
+          "05243",
+          "05244",
+          "05245",
+          "05246",
+          "05247",
+          "05248",
+          "05249",
+          "05250",
+          "05251",
+          "05252",
+          "05253",
+          "05254",
+          "05255",
+          "05256",
+          "05257",
+          "05258",
+          "05259",
+          "05260",
+          "05261",
+          "05262b",
+          "05263b",
+          "05264b",
+          "05265b",
+          "05266",
+          "05267",
+          "05268",
+          "05269",
+          "05270",
+          "05271",
+          "05272",
+          "05273",
+          "05274",
+          "05275",
+          "05276",
+          "05277",
+          "05278",
+          "05279",
+          "05280",
+          "05281",
+          "05282",
+          "05283",
+          "05284",
+          "05285",
+          "05286a",
+          "05286b",
+          "05287",
+          "05288a",
+          "05288b",
+          "05289",
+          "05290",
+          "05291",
+          "05292",
+          "05293",
+          "05294",
+          "05295",
+          "05296",
+          "05297",
+          "05298",
+          "05299",
+          "05300",
+          "05301",
+          "05302",
+          "05303",
+          "05304",
+          "05305",
+          "05306",
+          "05307",
+          "05308",
+          "05309",
+          "05310",
+          "05311",
+          "05312",
+          "05313",
+          "05314",
+          "05315",
+          "05316",
+          "05317",
+          "05318",
+          "05319",
+          "05320",
+          "05321",
+          "05322",
+          "05325",
+          "05326",
+          "05327",
+          "05328",
+          "05329",
+          "05330",
+          "05331",
+          "05332",
+          "05333",
+          "05334",
+          "05335",
+          "05336",
+          "05337",
+          "05338",
+          "05339",
+          "05340",
+          "05342",
+          "05343",
+          "05344",
+          "05345"
+        ],
+        "failedCodes": [
+          "05003",
+          "05011",
+          "05052",
+          "05156",
+          "05231",
+          "05241",
+          "05262",
+          "05263",
+          "05264",
+          "05265",
+          "05323",
+          "05324",
+          "05341",
+          "05346"
+        ],
+        "faceDirect": 34,
+        "faceInherited": 0,
         "batches": [
           "campaign:other",
           "chapter:atDeathsDoorstep",
@@ -6636,7 +6612,7 @@
       },
       "ledger": {
         "path": "audit/tcu-card-behavior-audit.json",
-        "sha256": "aac167cfde3e09113c414abefe9cf807b7d8ee04939e8eb5ab7a8a7631646d47"
+        "sha256": "e70ae3283dc2e47ca49a1753bad50a814be462616dbb913aab02da28bf434f2e"
       },
       "covered": true,
       "pass": true

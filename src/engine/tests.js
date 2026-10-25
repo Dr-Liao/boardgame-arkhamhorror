@@ -111,8 +111,8 @@ function runLocationTestFail(state, inv, result, events) {
 function performTest(state, seat, skill, difficulty, options = {}) {
   beginChaosTest(state)
   // P2.5：多技能合成检定。单技能时 skillList=[skill]，所有求和退化为原值，行为逐字不变。
-  const skillList = normalizeTestSkills(skill)
-  const skillContext = skillList.length === 1 ? skillList[0] : [...skillList]
+  let skillList = normalizeTestSkills(skill)
+  let skillContext = skillList.length === 1 ? skillList[0] : [...skillList]
   const skillLabel = testSkillLabel(skillList)
   const skillTotal = () => skillList.reduce((sum, name) => sum + getStat(state, inv, name), 0)
   const previousTest = state.skillTest || null
@@ -133,7 +133,8 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     delete inv.nextTestNoTokens
     state.skillTest.skipTokens = true
   }
-  const statReference = skillTotal()
+  // 2026-10-25 第七轮修复 05029：资源技能检定——以当前资源数作为基值。
+  let statReference = options.resourceSkill === true ? Math.floor((inv.resources || 0) / 2) : skillTotal()
   const startingStat = options.baseValue ?? statReference
   // Phase 5（5a-8）：「谈判」检定难度降低由条目级 negotiationDifficultyReduction 声明。
   const negotiationReduction = inv.assets.reduce((sum, asset) => sum + (registeredEntry(asset.code)?.negotiationDifficultyReduction || 0), 0)
@@ -158,7 +159,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     inv.testBonus = 0
   }
 
-  state.skillTest.printedValue = options.baseValue ?? skillList.reduce((sum, name) => sum + (inv[name] || 0), 0)
+  state.skillTest.printedValue = options.baseValue ?? (options.resourceSkill === true ? Math.floor((inv.resources || 0) / 2) : skillList.reduce((sum, name) => sum + (inv[name] || 0), 0))
   state.skillTest.baseValue = startingStat
   state.skillTest.value = value
 
@@ -169,12 +170,35 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     triggerReaction(state, seat, 'testBegins', events, context)
     reactionWindow(state, 'testBegins', { ...context, prompt: `${inv.name} 的${skillLabel}检定开始` }, events)
   }
+  // 2026-10-25 第七轮修复 05029：testBegins 窗口里把检定改成资源技能检定后，
+  // 重新同步 performTest 的局部变量（投入候选/最终值/成功判定都读它们）。
+  if (state.skillTest.resourceSkill) {
+    skillList = []
+    skillContext = []
+    statReference = 0
+    value = state.skillTest.value
+    state.skillTest.value = value
+  }
   // 「手稿」等：显现效果期间的检定可以提前取消混乱标记。
   if (state._treacheryResolving) {
     const context = { when: 'revelationTest', seat, location: inv.location, skill: skillContext, difficulty }
     triggerReaction(state, seat, 'revelationTest', events, context)
     for (const other of aliveInvestigators(state).filter(owner => owner.location === inv.location)) {
       if (other.seat !== seat) triggerReaction(state, other.seat, 'revelationTestAlly', events, context)
+    }
+  }
+
+  // 2026-10-25 本循环修复 testOtherInvestigatorTrigger（05246/05248）：在揭示混乱标记前，
+  // 让同地点的「非检定者」各自决定是否花自己的线索降低本次检定难度（peril 检定不开放）。
+  // 钩子内可用 api.choose({ seat: other.seat }) 单独询问、api.spendClues / api.reduceTestDifficulty 结算。
+  if (!options.peril) {
+    const otherRuntime = scenarioRuntime(state, events)
+    for (const other of aliveInvestigators(state)) {
+      if (other.seat === seat || other.defeated || other.resigned) continue
+      scenarioBehavior(state).testOtherInvestigatorTrigger?.(state, other, inv, {
+        skill: skillContext, difficulty, source: options.source || null,
+        actionKind: options.actionKind ? String(options.actionKind) : null,
+      }, otherRuntime)
     }
   }
 
@@ -208,10 +232,17 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     let count = 0
     while (true) {
       state.skillTest.value = value + skillTotal() - statReference
+      // 2026-10-25 第四轮修复 commit-extra-cost-hook（05104 被困的灵魂）：
+      // 「在闹鬼地点投入手牌」的额外费用由剧本钩子结算（内容自行保证每场/每次只结算一次）。
+      scenarioBehavior(state).beforeCommitCard?.(state, owner, {
+        skill: skillContext, difficulty, committed: state.skillTest.committed || [],
+      }, scenarioRuntime(state, events))
       const candidates = owner.hand.map((code, index) => ({ code, index }))
         .filter(() => !(cannotCommit && owner === inv))
         // 第 2 步 P2.9：手牌里有「不能投入」的卡（高塔）时，本人不能投入任何卡牌。
-        .filter(() => !(owner === inv && handCommitBlocker(inv, registeredEntry)))
+        // 2026-10-25 本循环修复 05042：按「手牌所有者」判定，而不是只查检定发起者——
+        // 卡面「你不能在技能检定投入卡牌」不区分是谁的检定（本人/协助/远程投入都受限）。
+        .filter(() => !handCommitBlocker(owner, registeredEntry))
         .filter(item => {
           const rule = hiddenRule(state, item.code)
           if (hasHiddenCard(owner, item.code)) return rule?.allowCommit === true
@@ -243,6 +274,20 @@ function performTest(state, seat, skill, difficulty, options = {}) {
           || options.source?.scenarioAbility === true || options.source?.ability === true
           || options.ability === true || options.scenarioAbility === true)
         .filter(item => !committedCodes.has(item.code) || !String(cardDef(item.code)?.textZh || '').includes('最多投入1张'))
+      // 2026-10-25 第七轮修复 05013：beneath 通道也能投入事件/技能（额外费用：横置通道支援）。
+      {
+        const beneathChannel = (owner.assets || []).find(asset =>
+          registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
+        if (beneathChannel) {
+          for (const code of (owner.beneath || [])) {
+            const def = cardDef(code)
+            if (!def || !['event', 'skill'].includes(def.type)) continue
+            if (!runtimeCardAvailable(state, owner, code) || isWeaknessCode(code) || hasHiddenCard(owner, code)) continue
+            if (!commitProfile(code)?.anySkill && commitIcons(state, owner, code, skillList) === 0) continue
+            candidates.push({ code, index: null, beneath: true })
+          }
+        }
+      }
       const kingInYellow = investigatorRule(owner.code)?.wildCommitCompanionBonus
         && owner.threat.some(card => registeredEntry(card.code)?.kingInYellowThreat)
       if (kingInYellow && count === 0 && candidates.length < 3) candidates.length = 0
@@ -253,7 +298,8 @@ function performTest(state, seat, skill, difficulty, options = {}) {
           : `${inv.name} 请求协助${skillLabel}检定；你可以投入一张牌，或放弃协助。`, canSkip: true,
         options: [...(canFinish ? [{ id: 'done', label: owner === inv ? '开始检定' : '放弃协助' }] : []),
           ...(owner === inv && helpers.length ? [{ id: 'help', label: '求助' }] : []),
-          ...candidates.map(item => ({ id: String(item.index), label: '投入：' + cardName(item.code) }))] })
+          ...candidates.map(item => ({ id: item.beneath ? `beneath:${item.code}` : String(item.index),
+            label: (item.beneath ? '投入（底下）：' : '投入：') + cardName(item.code) }))] })
       if (answer === 'done') break
       if (answer === 'help') {
         state.skillTest.helpRequested = true
@@ -261,7 +307,16 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         info(state, null, `${inv.name} 请求同地点队友协助投入。`)
         break
       }
-      const code = owner.hand.splice(Number(answer), 1)[0]
+      const chosenCandidate = candidates.find(item => item.beneath ? `beneath:${item.code}` === answer : Number(item.index) === Number(answer))
+      let code = null
+      if (chosenCandidate?.beneath) {
+        const at = (owner.beneath || []).indexOf(chosenCandidate.code)
+        code = at >= 0 ? owner.beneath.splice(at, 1)[0] : null
+        const channel = (owner.assets || []).find(asset =>
+          registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
+        if (channel) channel.exhausted = true
+      } else code = owner.hand.splice(Number(answer), 1)[0]
+      if (!code) break
       if (hasHiddenCard(owner, code)) removeHiddenMarker(owner, code)
       let icons = commitIcons(state, owner, code, skillList)
       // 「殊死一搏」：手牌越多失去越多万能图标；「占据先机」：本阶段每个行动减少 1 个万能图标。
@@ -316,6 +371,12 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       committedCodes.add(code)
       commitments.push({ seat: owner.seat, code, icons })
       count++
+      // 2026-10-25 第六轮修复 05119：卡牌进入投入区后的窗口（可追加本次检定图标）。
+      {
+        const commitContext = { when: 'committedCard', seat: owner.seat, location: owner.location, cardCode: code, card: code, icons }
+        triggerReaction(state, owner.seat, 'committedCard', events, commitContext)
+        reactionWindow(state, 'committedCard', { ...commitContext, prompt: `${owner.name} 投入「${cardName(code)}」后` }, events)
+      }
       info(state, null, `${owner.name} 投入「${cardName(code)}」。`, null, { public: true })
     }
     const analyticalMind = owner.assets.find(asset => !asset.exhausted
@@ -331,7 +392,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     }
   }
 
-  state.skillTest.value = value + skillTotal() - statReference
+  state.skillTest.value = value + skillTotal() - statReference + (state.skillTest.extraCommittedIcons || 0)
   const doubleOrNothing = commitments.some(item => commitProfile(item.code)?.doubleDifficultyAndRewards)
   if (doubleOrNothing) {
     difficulty *= 2
@@ -609,9 +670,12 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       delete state.skillTest.namedToken
     }
     // 「反击法术」：在符号标记结算前取消它（不揭示替代标记）。
-    if (['skull', 'cultist', 'tablet', 'elderthing'].includes(token) && !ignoreSymbolEffects) {
+    if (['skull', 'cultist', 'tablet', 'elderthing', 'autofail'].includes(token) && !ignoreSymbolEffects) {
       reactionWindow(state, 'symbolRevealed', { when: 'symbolRevealed', seat, location: inv.location, token,
+        sourceCard: state.skillTest?.source?.code ?? null,
         prompt: `${inv.name} 的检定揭示了 ${tokenLabel(token)}` }, events)
+      // 2026-10-25 第七轮修复 05158：符号窗口里重定向调查目标后，难度以 skillTest.difficulty 为准。
+      if (Number.isFinite(state.skillTest.difficulty)) difficulty = state.skillTest.difficulty
     }
     if (state.skillTest.cancelledSymbol === token) {
       info(state, events, `「${cardName(state.skillTest.cancelledSymbolSource)}」取消了 ${tokenLabel(token)}。`)
@@ -822,7 +886,17 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     difficulty = Math.max(0, difficulty - state.skillTest.difficultyReduction)
     state.skillTest.difficulty = difficulty
   }
-  const success = elderAutoSuccess || value >= difficulty
+  // 2026-10-25 第六轮修复 05119：「投入卡后」窗口追加的图标进入最终检定值。
+  if (state.skillTest.extraCommittedIcons) {
+    value += state.skillTest.extraCommittedIcons
+    state.skillTest.value = value
+  }
+  // 2026-10-25 第四轮修复 failTies（05041 第十三幻象）：检定值恰好等于难度时按失败结算。
+  // 除本次检定的 options.failTies 外，同地点威胁区里声明 failTies 的光环条目也生效。
+  const failTiesAura = state.investigators.some(owner => owner.location === inv.location
+    && (owner.threat || []).some(card => registeredEntry(card.code)?.failTies === true))
+  const failTies = (options.failTies === true || failTiesAura) && !elderAutoSuccess
+  const success = elderAutoSuccess || (value > difficulty || (value === difficulty && !failTies))
   // 任意技能检定成功的统一反应窗口（04107 幸运烟盒等）。
   if (success) triggerReaction(state, seat, 'skillTestSuccess', events,
     { skill: skillContext, successBy: value - difficulty, difficulty, value })
@@ -985,6 +1059,9 @@ function performTest(state, seat, skill, difficulty, options = {}) {
     clueBonus: skillFx.clueBonus,
     evadeDisengage: skillFx.evadeDisengage,
     mayMoveAfterEvade: skillFx.mayMoveAfterEvade,
+    // 2026-10-25 本循环修复 attack-resolution-context：攻击/躲避等 resolve 回调可把结构化结果
+    // （如 r.attackResult={defeated,...}）写在 result 上，供 api.fight 的返回值读取。
+    ...(result.attackResult ? { attackResult: result.attackResult } : {}),
     // Phase 2（B3）：标准化结果（同步结算时直接可用；异步/多次选择的检定读 state.lastTestResult）。
     summary,
   }

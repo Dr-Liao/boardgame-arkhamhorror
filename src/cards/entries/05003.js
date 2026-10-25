@@ -25,14 +25,18 @@ export default {
     resolve: ({ inv, api }) => {
       const bonus = Number(sign.bonus ?? 0)
       const cost = Number(sign.autoSuccessCost ?? 2)
-      if ((inv.resources || 0) < cost) return { delta: bonus }
+      // R7 resource-bank v2 预接线：寄存资源「可以被花费，如同在你的资源池中」，
+      // 所以旧印的 2 资源门槛/支付应看统一可用资源；原语未落地时回落资源池。
+      const available = typeof api.availableResources === 'function' ? Number(api.availableResources(inv) || 0) : (inv.resources || 0)
+      if (available < cost) return { delta: bonus }
       const answer = api.choice({
         kind: 'effect', source: 'prestonElderSign', seat: inv.seat,
         prompt: `旧印：是否花费 ${cost} 资源改为自动成功？`,
         options: [{ id: 'pay', label: `花费 ${cost} 资源自动成功` }, { id: 'skip', label: `仅 ${bonus > 0 ? '+' : ''}${bonus}` }],
       })
       if (answer !== 'pay') return { delta: bonus }
-      api.loseResources(inv.seat, cost)
+      if (typeof api.spendResources === 'function') api.spendResources(inv.seat, cost)
+      else api.loseResources(inv.seat, cost)
       api.info(`${inv.name} 花费 ${cost} 资源，旧印改为自动成功。`)
       return { delta: bonus, autoSuccess: true }
     },

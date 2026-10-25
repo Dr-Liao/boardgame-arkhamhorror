@@ -54,6 +54,18 @@ export default {
         if (!target) return
         const origin = inv.location
         const destination = target.location
+        // 第六轮准备：引擎给 doEvade 加 allowConnecting/notEngaged 后，选项 B 走真实躲避流程
+        // （躲避检定加成 + 揭示/成功窗口都与普通躲避一致）；原语未落地时 doEvade 会因
+        // canEvade=false 返回 undefined（api-clue 的 evade 以 noSpend 调用），回落到窄口径 api.test。
+        const realEvade = api.evade(inv.seat, { enemyId: target.id, sourceCode: '05282', allowConnecting: true, notEngaged: true })
+        if (realEvade && typeof realEvade === 'object') {
+          if (!realEvade.success) return
+          api.exhaust(target)
+          api.moveEnemy(target, origin)
+          api.moveInvestigator(inv.seat, destination)
+          api.info(`${inv.name} 躲避了「${target.name}」并与其交换了地点。`)
+          return
+        }
         const result = api.test(inv.seat, 'agility', api.enemyEvade(target), {
           source: { label: '躲避', name: target.name, code: '05282' },
         })

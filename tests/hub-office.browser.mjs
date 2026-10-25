@@ -265,6 +265,81 @@ test('开局页脚的规则书入口不再压住「开始新游戏」，按钮�
   await expect(footer.getByRole('button', { name: '开始新游戏' })).toBeVisible()
 })
 
+test('开局页签等宽紧凑，切换存档管理时弹窗不跳变', async ({ page }) => {
+  for (const { width, height, saves } of [{ width: 1440, height: 1000, saves: 14 }, { width: 390, height: 844, saves: 0 }]) {
+    await page.setViewportSize({ width, height })
+    // 固定返回存档列表：只验证页签几何与弹窗稳定性，不依赖本机存档。
+    const sessions = Array.from({ length: saves }, (_, index) => ({
+      sessionId: `tabs-save-${index}`, modId: 'arkhamhorror', mode: 'solo', online: false,
+      campaignId: 'nightOfTheZealot', campaignName: '夜之狂热', uiState: 'campaignHub',
+      playerCount: 1, humanCount: 1, aiCount: 0, savedAt: new Date(1790000000000 - index * 1000).toISOString(),
+      compatible: true, needsMigration: false,
+      investigators: [{ code: '01001', name: `罗兰·班克斯 ${index + 1}` }],
+    }))
+    await page.route('**/api/sessions', route => route.fulfill({ json: { ok: true, persist: true, sessions } }))
+    await page.goto('/index.html')
+    await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
+    const setup = page.locator('.ah-hub-setup')
+    await expect(setup).toBeVisible()
+    const newTab = setup.getByRole('button', { name: '新游戏', exact: true })
+    const savesTab = setup.getByRole('button', { name: '存档管理', exact: true })
+
+    const row = await page.evaluate(() => {
+      const tabs = document.querySelector('.ah-hub-setup .ah-hub-tabs')
+      const controls = document.querySelector('.ah-hub-setup .ah-office-entry-controls')
+      const buttons = [...tabs.children]
+      const box = el => { const r = el.getBoundingClientRect(); return { x: r.x, width: r.width, height: r.height } }
+      return {
+        controlsWidth: controls.getBoundingClientRect().width,
+        rowWidth: tabs.getBoundingClientRect().width,
+        rowBackground: getComputedStyle(tabs).backgroundColor,
+        buttons: buttons.map(box),
+        gap: buttons[1].getBoundingClientRect().x - buttons[0].getBoundingClientRect().right,
+      }
+    })
+    // 两个页签等宽等高、间隔紧凑；页签行只包住两个页签（没有多余空列拉长底线），
+    // 也不再被主题底色铺成一条长带。
+    expect(Math.abs(row.buttons[0].width - row.buttons[1].width)).toBeLessThanOrEqual(1)
+    expect(row.buttons[0].height).toBe(row.buttons[1].height)
+    expect(row.gap).toBeLessThanOrEqual(10)
+    expect(row.rowBackground).toBe('rgba(0, 0, 0, 0)')
+    expect(Math.abs(row.rowWidth - (row.buttons[0].width + row.buttons[1].width + row.gap))).toBeLessThanOrEqual(1.5)
+    expect(row.rowWidth).toBeLessThan(row.controlsWidth)
+
+    // 逐帧记录弹窗位置：切换页签时居中的弹窗不应上下跳，也不应被存档撑高/压矮。
+    const switchTab = async click => {
+      const before = await setup.boundingBox()
+      await page.evaluate(() => {
+        window.__setupBoxes = []
+        const until = performance.now() + 900
+        const tick = () => {
+          const modal = document.querySelector('.ah-hub-setup')
+          if (modal) { const r = modal.getBoundingClientRect(); window.__setupBoxes.push([r.y, r.height]) }
+          if (performance.now() < until) requestAnimationFrame(tick)
+        }
+        requestAnimationFrame(tick)
+      })
+      await click()
+      await page.waitForTimeout(400)
+      const during = await page.evaluate(() => window.__setupBoxes)
+      return [[before.y, before.height], ...during]
+    }
+    const toSaves = await switchTab(() => savesTab.click())
+    await expect(setup.locator('.ah-save-list')).toBeVisible()
+    await expect(setup.locator('.ah-save-item')).toHaveCount(saves)
+    expect(Math.max(...toSaves.map(b => b[0])) - Math.min(...toSaves.map(b => b[0]))).toBeLessThanOrEqual(1.5)
+    expect(Math.max(...toSaves.map(b => b[1])) - Math.min(...toSaves.map(b => b[1]))).toBeLessThanOrEqual(1.5)
+    await expect(savesTab).toBeFocused()
+    await expect(setup.locator('.ah-office-entry-controls > h2')).toHaveText('继续调查')
+
+    const toNew = await switchTab(() => newTab.click())
+    expect(Math.max(...toNew.map(b => b[1])) - Math.min(...toNew.map(b => b[1]))).toBeLessThanOrEqual(1.5)
+    await expect(newTab).toBeFocused()
+    await expect(setup.locator('.ah-office-entry-controls > h2')).toHaveText('开启一桩新案')
+    await page.unrouteAll()
+  }
+})
+
 test('素材提供真实透明通道，减少动态效果设置生效', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   const setup = await open(page)

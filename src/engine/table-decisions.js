@@ -205,7 +205,15 @@ export function createTableDecisions(deps) {
 
   function abilityOfMove(state, inv, move) {
     if (move.action !== 'ability') return null
-    const card = controlledAbilityCard(inv, move.assetId)
+    let card = controlledAbilityCard(inv, move.assetId)
+    // 2026-10-25 第七轮修复 05196：团队激活时资产属于同地点队友（与 moves/validate/doAbility 同一口径）。
+    if (!card && Number.isInteger(move.ownerSeat)) {
+      const owner = state.investigators[move.ownerSeat]
+      const candidate = owner?.assets?.find(item => item.id === move.assetId)
+      if (candidate && registeredEntry(candidate.code)?.teamActivatable === true && owner.location === inv.location) {
+        card = candidate
+      }
+    }
     return assetEffect(inv, card)?.abilities?.[move.abilityIndex] || null
   }
 

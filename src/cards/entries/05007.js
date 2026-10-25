@@ -22,7 +22,6 @@
 
 export default {
   code: '05007',
-  note: '「额外治愈 1 点」通过再开一次治疗窗口实现（同一次治疗可能出现第二个 horrorHealed 窗口），已登记 primitive request；其余条款按卡面实现。',
   abilities: [
     {
       kind: 'action',
@@ -65,8 +64,10 @@ export default {
         && context?.assetId == null
         && Number.isInteger(context?.healedSeat) && context.amount > 0],
       resolve: ({ api, context }) => {
-        api.healHorror(context.healedSeat, 1)
-        api.info('催眠疗法让这次治疗额外治愈了 1 点恐惧。')
+        // R7 heal v3：向当前正开的 horrorHealed 窗口追加治疗（同一目标/汇点，不重开窗口；
+        // 窗口外调用返回 0）。卡洛琳等「治愈恐惧后」反应因此对同一次治疗只结算一次。
+        const healed = api.extendHealHorror(context.healedSeat, 1)
+        api.info(`催眠疗法让这次治疗额外治愈了 ${healed} 点恐惧。`)
       },
     },
   ],

@@ -1,4 +1,4 @@
-// card-ops.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
+﻿// card-ops.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 卡与目标的具体操作：补充使用次数、装弹、按特性检索、选择调查员/敌人/猎物。
 // 读点：搜索类效果（api.searchDeck / lookAt）与敌人目标解析。
 export function createCardOps(deps) {
@@ -27,6 +27,7 @@ export function createCardOps(deps) {
     remainingHealth,
     removeOne,
     requestChoice,
+    scenarioBehavior,
     searchDeck,
     shuffle,
   } = deps
@@ -96,7 +97,14 @@ export function createCardOps(deps) {
     }
     const rank = !enemyTextBlanked(state, enemy) && PREY_RANK[enemy.prey]
     let pool = candidates
-    if (rank) {
+    // 2026-10-25 本循环修复 05221：剧本级猎物排序钩子（如「猎物 - 控制最多钥匙的调查员」）。
+    // 返回非空候选池时优先于通用 PREY_RANK；并列仍走 chooseAmong 由队长选择。
+    const scenarioPool = !enemyTextBlanked(state, enemy)
+      ? scenarioBehavior(state).preyRank?.(state, enemy, candidates)
+      : null
+    if (Array.isArray(scenarioPool) && scenarioPool.length) {
+      pool = candidates.filter(seat => scenarioPool.includes(seat))
+    } else if (rank) {
       const scores = candidates.map(seat => rank(state, state.investigators[seat]))
       const best = Math.min(...scores)
       pool = candidates.filter((_, index) => scores[index] === best)

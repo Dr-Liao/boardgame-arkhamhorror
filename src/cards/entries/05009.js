@@ -10,6 +10,11 @@
 // 修复（task-33）：「最多 2 张[[工具]]支援不占用手部槽位」现在由条目级 toolHandSlotsExempt: 2 声明，
 // 读点是 src/engine/assets.js 的 slotUsage（2026-10-25 引擎新增）：统计手槽占用时按特性 [[工具]]
 // 扣掉最多 2 个手部槽位，canEquip 的容量比较因此自动生效。
+//
+// 修复（2026-10-25 reaudit-h）：「如果本次攻击击败了敌人」改读 doFight 写入检定结果的
+// `attackResult.defeated`（引擎在 defeatEnemy 之前判定，见 src/engine/combat.js:371-382），
+// 不再用「攻击后目标不在 state.enemies」近似——后者对被击败后仍回场的敌人（如 05086 幽灵看守人）
+// 会漏判。api.fight 的返回值经 performTest 返回的 result 透出 attackResult。
 
 import { entryFlag } from './_shared.js'
 
@@ -27,9 +32,11 @@ export default {
       resolve: ({ inv, api, state, targetId }) => {
         const enemy = state.enemies.find(item => item.id === targetId)
         if (!enemy) return
-        api.fight(inv.seat, enemy.id, { combatBonus: 1, damageBonus: 1 })
-        // 「如果本次攻击击败了敌人」：攻击结算完敌人已离场即视为被击败。
-        if (state.enemies.includes(enemy)) return
+        const result = api.fight(inv.seat, enemy.id, { combatBonus: 1, damageBonus: 1 })
+        // 「如果本次攻击击败了敌人」：读引擎 doFight 写入检定结果的 r.attackResult
+        // （src/engine/combat.js:371-382：defeated 在 defeatEnemy 之前判定，因此「被击败后
+        // 回到场上」的敌人（如 05086）也会被正确记为击败）；不再用 state.enemies.includes 近似。
+        if (!result?.attackResult?.defeated) return
         const insights = api.hunchDeck.insightsInDiscard(inv)
         if (!insights.length) return
         const answer = api.choice({

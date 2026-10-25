@@ -1641,8 +1641,9 @@ const audit = {
   launchEnabled: !launchBlocked,
   // P10 逐卡行为审计发现未实现子句（gap）时，发布口径按路线图 §8.4 的 earlyAccess 退路：
   // playable + earlyAccess + equivalenceCertified=false + 完整 remaining；不得描述为规则等价。
-  earlyAccess: cardBehaviorGaps.length > 0,
-  earlyAccessReason: cardBehaviorGaps.length > 0
+  // 2026-10-25 第七轮：gap 已清零，但仍有显式近似（approximation）→ 仍按 earlyAccess 发布，不宣称等价。
+  earlyAccess: cardBehaviorGaps.length > 0 || cardBehaviorApproximations.length > 0,
+  earlyAccessReason: (cardBehaviorGaps.length > 0 || cardBehaviorApproximations.length > 0)
     ? `逐卡行为审计发现 ${cardBehaviorGaps.length} 张卡存在未实现子句（gap）、`
       + `${cardBehaviorApproximations.length} 张为显式近似；三组确认按 P8/P9 口径 verified，`
       + '但不等价于印刷规则，故按 earlyAccess 发布并逐条列入 remaining。'

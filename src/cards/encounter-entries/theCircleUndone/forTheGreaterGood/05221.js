@@ -4,5 +4,5 @@ export default {
   "code": "05221",
   "scope": "enemy",
   "implemented": true,
-  "note": "behavior.js:spawnLocation/locationEntered(agility 4)"
+  "note": "behavior.js:spawnLocation/preyRank(mostKeys)/locationEntered/enemyMoved(agility 4)"
 };

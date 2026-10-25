@@ -13,9 +13,10 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, move, asset, enemy, settle, use, decisionSeat, legalMoves, validateMove } from './core-fixture.mjs'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
-import { registeredEntry } from '../src/engine/ability.js'
+import { registeredEntry, descriptorsInEntry } from '../src/engine/ability.js'
 import {
-  actionPreview, applyHarm, commitIcons, drawCards, enterOpeningHandCards, getMaxHealth, getMaxSanity, getStat, performTest,
+  actionPreview, applyHarm, commitIcons, descriptorUsable, drawCards, enterOpeningHandCards, executeDescriptor,
+  getMaxHealth, getMaxSanity, getStat, performTest,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { tarotSlotUsage, TAROT_SLOT } from '../src/engine/tarot-slot.js'
@@ -84,8 +85,9 @@ function commitCardOnce(code, skill) {
   return { state, result }
 }
 
-// 开局入场的读点：起始手牌里声明过 entersPlayFromOpeningHand 的塔罗被放置入场。
-function openingHandPlacement(code) {
+// 旧的 P2.9 自动放置钩子：审计 R2 后塔罗条目不再声明 entersPlayFromOpeningHand，
+// 这个读点必须返回空（自动放置发生在 scenarioStarts 窗口之前，会吞掉可选性）。
+function openingHandAutoPlacement(code) {
   const state = fixture('01001')
   state.investigators[0].hand = [code, '01088']
   const placed = enterOpeningHandCards(state, state.investigators[0], {
@@ -93,6 +95,32 @@ function openingHandPlacement(code) {
     createAsset: (target, owner, placedCode) => ({ id: 'placed-' + placedCode, code: placedCode, exhausted: false }),
   })
   return { state, placed }
+}
+
+// 开局入场的真实读点：setup 在 scenarioStarts 用 openAbilityWindow 询问手牌里的 [reaction]。
+// 这里复用同一份窗口收集读点（descriptorsInEntry + descriptorUsable）后执行该描述子；
+// placed 记录「确实结算了」，offered 记录「窗口会提供这个反应」。skip=true 时只验证提供、不结算。
+function scenarioStartsPlacement(code, { preplaced = [], skip = false } = {}) {
+  const state = fixture('01001')
+  const inv = state.investigators[0]
+  inv.hand = [code, '01088']
+  inv.assets = []
+  for (const target of preplaced) asset(state, target)
+  const placed = []
+  let offered = false
+  runTest(state, draft => {
+    const current = draft.investigators[0]
+    const context = { when: 'scenarioStarts' }
+    const candidates = descriptorsInEntry(registeredEntry(code), 'scenarioStarts', 'reaction')
+      .filter(descriptor => descriptor.fromHand
+        && descriptorUsable(draft, current, null, descriptor, { windowId: 'scenarioStarts', context }))
+    offered = candidates.length > 0
+    if (!candidates.length || skip) return
+    placed.push(code)
+    executeDescriptor(draft, { inv: current, source: null, descriptor: candidates[0], context,
+      events: [], windowId: 'scenarioStarts', fromHandIndex: current.hand.indexOf(code) })
+  })
+  return { state, placed, offered }
 }
 
 // ---------------------------------------------------------------------------
@@ -137,28 +165,79 @@ test('TCU 05020 拷问 谈判战斗检定：难度=3+敌人伤害，成功发现
 // 05021 劫数延后（显式简化：只附属自己 / 神话结束直接弃置；investigator 附属待引擎修通）
 // ---------------------------------------------------------------------------
 
-test('TCU 05021 劫数延后 快速打出附属入场，受伤害/恐惧时弃掉并全部取消', () => {
-  const state = fixture('01001')
-  const resourcesBefore = state.investigators[0].resources
-  state.investigators[0].hand = ['05021']
-  move(state, { action: 'play', cardId: '05021' })
-  resolveChoices(state)
-  let inv = state.investigators[0]
-  const attachment = inv.assets.find(item => item.code === '05021')
-  assert.ok(attachment, '快速事件放置入场（附属）')
-  assert.equal(inv.resources, resourcesBefore - 2, '打出费用 2 资源')
-  assert.equal(registeredEntry('05021').forcedMythosEndDiscard, true, '神话阶段结束弃置（条目级读点）')
+// 神话阶段结束窗口：直接开窗驱动 forced mythosEnd（turn.js 只在有候选时开同一窗口）：
+// 门控同时扫 inv.assets 与 inv.attachments（R7 修复），source 也按两处查找。
+function runMythosEndWindow(state, choose, seat = 0) {
+  runTest(state, draft => {
+    const inv = draft.investigators[seat]
+    const descriptor = descriptorsInEntry(registeredEntry('05021'), 'mythosEnd', 'forced')[0]
+    const source = [...(inv.assets || []), ...(inv.attachments || [])].find(item => item.code === '05021')
+    executeDescriptor(draft, {
+      inv, source, descriptor, events: [],
+      context: { when: 'mythosEnd', seat, location: inv.location },
+    })
+  }, choose)
+}
 
-  // 受到 2 伤害 + 1 恐惧：触发反应，弃掉附属并全部取消。
-  runTest(state, draft => { applyHarm(draft, draft.investigators[0], 2, 1, []) }, pending => {
+test('TCU 05021 劫数延后 快速打出可附属同地点队友；受伤害/恐惧时弃掉并真实离场', () => {
+  const state = fixture('01001', 2)
+  // 两个座位都设为「人类」座位：否则非当前座位的可选反应会被引擎按 AI 自动跳过。
+  state.humanSeats = [0, 1]
+  const [first] = state.investigators
+  first.hand = ['05021']
+  move(state, { action: 'play', cardId: '05021' })
+  resolveChoices(state, pending => {
+    const option = pending.options.find(item => String(item.id) === 'seat:1')
+    if (option) return option.id
+    return null
+  })
+  const host = state.investigators[1]
+  const attachment = (host.attachments || []).find(item => item.code === '05021')
+  assert.ok(attachment, '可附属到同地点队友')
+  assert.equal(attachment.ownerSeat, 0, '置于打出者拥有、宿主控制')
+  assert.equal(host.assets.some(item => item.code === '05021'), false, '不在宿主的 assets 区')
+
+  // 宿主受到 2 伤害 + 1 恐惧：反应弃掉自身并取消该次全部伤害/恐惧。
+  runTest(state, draft => { applyHarm(draft, draft.investigators[1], 2, 1, []) }, pending => {
     const option = pending.options.find(item => /劫数延后/.test(String(item.label)))
     return option ? option.id : null
   })
-  inv = state.investigators[0]
-  assert.equal(inv.damage, 0, '刚受到的伤害被取消')
-  assert.equal(inv.horror, 0, '刚受到的恐惧被取消')
-  assert.ok(!inv.assets.some(item => item.code === '05021'), '反应费用：弃掉自身')
-  assert.ok(inv.discard.includes('05021'))
+  const after = state.investigators[1]
+  assert.equal(after.damage, 0, '刚受到的伤害被取消')
+  assert.equal(after.horror, 0, '刚受到的恐惧被取消')
+  assert.equal((after.attachments || []).some(item => item.code === '05021'), false, '反应后真实从附属离场')
+  assert.ok(state.investigators.some(item => item.discard.includes('05021')), '进所有者弃牌堆')
+})
+
+test('TCU 05021 劫数延后 神话阶段结束：资源≥2 可支付保留（附属来源）', () => {
+  const state = fixture('01001')
+  const inv = state.investigators[0]
+  inv.attachments = [{ id: 'att-5021', code: '05021', ownerSeat: 0 }]
+  inv.resources = 5
+  let asked = false
+  runMythosEndWindow(state, pending => {
+    if (pending.options.some(option => option.id === 'pay')) { asked = true; return 'pay' }
+    return null
+  })
+  assert.equal(asked, true, '资源≥2 时应询问「花费 2 资源 / 弃掉」')
+  assert.equal(state.investigators[0].resources, 3, '花费 2 资源')
+  assert.ok((state.investigators[0].attachments || []).some(item => item.code === '05021'), '劫数延后留在场上')
+})
+
+test('TCU 05021 劫数延后 神话阶段结束：资源不足或选择弃掉时弃掉附属', () => {
+  const poor = fixture('01001')
+  poor.investigators[0].attachments = [{ id: 'att-poor', code: '05021', ownerSeat: 0 }]
+  poor.investigators[0].resources = 1
+  runMythosEndWindow(poor, () => null)
+  assert.equal((poor.investigators[0].attachments || []).some(item => item.code === '05021'), false, '资源<2 直接弃掉')
+  assert.ok(poor.investigators[0].discard.includes('05021'))
+
+  const choose = fixture('01001')
+  choose.investigators[0].attachments = [{ id: 'att-choose', code: '05021', ownerSeat: 0 }]
+  choose.investigators[0].resources = 5
+  runMythosEndWindow(choose, pending => (pending.options.some(option => option.id === 'discard') ? 'discard' : null))
+  assert.equal((choose.investigators[0].attachments || []).some(item => item.code === '05021'), false, '选择弃掉时弃掉')
+  assert.equal(choose.investigators[0].resources, 5, '选择弃掉不花资源')
 })
 
 // ---------------------------------------------------------------------------
@@ -230,18 +309,38 @@ test('TCU 05038 体格强健 控制[[道具]] ≤2 / ≤1 时追加战斗与敏�
 // 05023 宝剑王牌（塔罗槽；已有样本复核）
 // ---------------------------------------------------------------------------
 
-test('TCU 05023 宝剑王牌 塔罗槽 +1 战斗并在开局起始手牌中放置入场', () => {
+test('TCU 05023 宝剑王牌 塔罗槽 +1 战斗；开局 [reaction] 可选放置入场', () => {
   const state = fixture('01001')
   const combatBefore = getStat(state, state.investigators[0], 'combat')
   asset(state, '05023')
   assert.equal(getStat(state, state.investigators[0], 'combat'), combatBefore + 1, '卡面：你得到 +1[combat]')
   assert.equal(tarotSlotUsage(state.investigators[0], code => ALL_CARDS[code]), 1, '宝剑王牌占 1 个塔罗槽')
   assert.equal(TAROT_SLOT, 'tarot')
+  // 审计 R2：不再保留引擎自动放置钩子（自动放置会吞掉 [reaction] 的可选性、也不校验槽位）。
+  assert.notEqual(registeredEntry('05023').entersPlayFromOpeningHand, true, '条目不再声明自动放置')
+  assert.deepEqual(openingHandAutoPlacement('05023').placed, [], '旧自动放置读点不再放任何牌')
 
-  const { state: opening, placed } = openingHandPlacement('05023')
-  assert.deepEqual(placed, ['05023'], '起始手牌里的塔罗应被放置入场')
-  assert.deepEqual(opening.investigators[0].hand, ['01088'])
-  assert.deepEqual(opening.investigators[0].assets.map(item => item.code), ['05023'])
+  // 开局窗口里的 [reaction]：可以选择放置入场。
+  const { state: opening, placed } = scenarioStartsPlacement('05023')
+  assert.deepEqual(placed, ['05023'], '开局窗口提供并结算放置入场')
+  assert.deepEqual(opening.investigators[0].hand, ['01088'], '放置后离开起始手牌')
+  assert.deepEqual(opening.investigators[0].assets.map(item => item.code), ['05023'], '放入场上')
+
+  // 「可以」= 可选：跳过反应时保留在起始手牌。
+  const { state: kept, offered } = scenarioStartsPlacement('05023', { skip: true })
+  assert.equal(offered, true, '窗口会询问 [reaction]')
+  assert.deepEqual(kept.investigators[0].hand, ['05023', '01088'], '跳过反应时保留在手牌')
+  assert.equal(kept.investigators[0].assets.length, 0, '没有自动入场')
+})
+
+test('TCU 05023 宝剑王牌 塔罗槽已满时开局 [reaction] 不放置入场（保留手牌）', () => {
+  // 场上已有 1 张塔罗（capacity=1、usage=1 → free=0）。
+  const { state, placed } = scenarioStartsPlacement('05023', { preplaced: ['05027'] })
+  assert.deepEqual(placed, ['05023'], '窗口仍询问 [reaction]')
+  const inv = state.investigators[0]
+  assert.equal(inv.hand.includes('05023'), true, '槽满：保留在手牌')
+  assert.equal(inv.assets.some(item => item.code === '05023'), false, '槽满：不放入场')
+  assert.ok(state.log.some(line => String(line).includes('塔罗槽已满')), '给出槽满提示')
 })
 
 // ---------------------------------------------------------------------------
@@ -324,8 +423,8 @@ test('TCU 05027 死神·XIII 塔罗槽 +1 智识并在开局入场', () => {
   const before = getStat(state, state.investigators[0], 'intellect')
   asset(state, '05027')
   assert.equal(getStat(state, state.investigators[0], 'intellect'), before + 1)
-  const { placed } = openingHandPlacement('05027')
-  assert.deepEqual(placed, ['05027'])
+  const { placed } = scenarioStartsPlacement('05027')
+  assert.deepEqual(placed, ['05027'], '开局窗口可选放置入场')
 })
 
 test('TCU 05031 月亮·XVIII 塔罗槽 +1 敏捷并在开局入场', () => {
@@ -333,8 +432,8 @@ test('TCU 05031 月亮·XVIII 塔罗槽 +1 敏捷并在开局入场', () => {
   const before = getStat(state, state.investigators[0], 'agility')
   asset(state, '05031')
   assert.equal(getStat(state, state.investigators[0], 'agility'), before + 1)
-  const { placed } = openingHandPlacement('05031')
-  assert.deepEqual(placed, ['05031'])
+  const { placed } = scenarioStartsPlacement('05031')
+  assert.deepEqual(placed, ['05031'], '开局窗口可选放置入场')
 })
 
 test('TCU 05035 圣杯四 塔罗槽 +1 意志并在开局入场', () => {
@@ -342,8 +441,8 @@ test('TCU 05035 圣杯四 塔罗槽 +1 意志并在开局入场', () => {
   const before = getStat(state, state.investigators[0], 'willpower')
   asset(state, '05035')
   assert.equal(getStat(state, state.investigators[0], 'willpower'), before + 1)
-  const { placed } = openingHandPlacement('05035')
-  assert.deepEqual(placed, ['05035'])
+  const { placed } = scenarioStartsPlacement('05035')
+  assert.deepEqual(placed, ['05035'], '开局窗口可选放置入场')
 })
 
 test('TCU 05039 星币五 塔罗槽 +1 生命上限 +1 神智上限并在开局入场', () => {
@@ -353,8 +452,8 @@ test('TCU 05039 星币五 塔罗槽 +1 生命上限 +1 神智上限并在开局�
   asset(state, '05039')
   assert.equal(getMaxHealth(state.investigators[0]), healthBefore + 1)
   assert.equal(getMaxSanity(state.investigators[0]), sanityBefore + 1)
-  const { placed } = openingHandPlacement('05039')
-  assert.deepEqual(placed, ['05039'])
+  const { placed } = scenarioStartsPlacement('05039')
+  assert.deepEqual(placed, ['05039'], '开局窗口可选放置入场')
 })
 
 // ---------------------------------------------------------------------------
@@ -381,34 +480,52 @@ test('TCU 05028 良好人脉 横置获得每 5 资源 +1 技能值，且每位�
 })
 
 // ---------------------------------------------------------------------------
-// 05029 金钱万能（显式简化：只换基础值，不换技能类型）
+// 05029 金钱万能（R7：资源技能检定）
 // ---------------------------------------------------------------------------
 
-test('TCU 05029 金钱万能 检定开始时打出：基础技能值改为资源数的一半', () => {
+test('TCU 05029 金钱万能 检定开始时打出：改为资源技能检定（基础值 floor(资源/2)，只吃万能图标）', () => {
   const state = fixture('01001')
-  state.investigators[0].hand = ['05029']
+  // 01090 洞察力（2 个智力图标，普通图标）；01053 机会主义者（1 个万能图标，技能卡）。
+  state.investigators[0].hand = ['05029', '01090', '01053']
   state.investigators[0].resources = 14
   state.chaosBag = ['0']
   let result = null
+  let commitCards = null
   runTest(state, draft => { result = performTest(draft, 0, 'willpower', 6, {}) }, pending => {
-    const option = pending.options.find(item => item.cardCode === '05029')
-    return option ? option.id : null
+    if (pending.kind === 'reaction') {
+      const option = pending.options.find(item => item.cardCode === '05029')
+      if (option) return option.id
+    }
+    if (pending.kind === 'commit') {
+      const options = pending.options.filter(item => item.id !== 'done')
+      if (commitCards == null && options.length) commitCards = options
+      const wild = options.find(item => /机会主义者|01053/.test(String(item.label)))
+      if (wild) return wild.id
+    }
+    return null
   })
   assert.ok(result, '检定应有结果')
-  assert.equal(result.value, 7, '基础值 = floor(14/2)=7')
-  assert.equal(result.success, true, '7 对难度 6：原本意志 3 不可能成功')
-  assert.ok(state.investigators[0].discard.includes('05029'))
-  assert.equal(registeredEntry('05029').simplified, true)
+  assert.equal(result.value, 7 + 1, 'floor(14/2)=7 + 投入的 1 个万能图标')
+  assert.equal(result.success, true, '8 对难度 6：原本意志 3 不可能成功')
+  assert.ok(state.investigators[0].discard.includes('05029'), '事件结算后进弃牌堆')
+  // 普通图标（01090 洞察力）不进投入候选：只能投入万能图标。
+  assert.ok(Array.isArray(commitCards), '应有投入窗口')
+  assert.equal(commitCards.length, 1, '只有万能图标卡可以投入')
+  assert.ok(/机会主义者|01053/.test(String(commitCards[0].label)), '可投入的是万能图标卡')
+  assert.ok(!commitCards.some(item => /洞察力|01090/.test(String(item.label))), '普通智力图标不可投入')
 })
 
 // ---------------------------------------------------------------------------
 // 05032 否决存在（显式简化：只实现伤害/恐惧的取消）
 // ---------------------------------------------------------------------------
 
-test('TCU 05032 否决存在 快速打出取消本次伤害与恐惧', () => {
+test('TCU 05032 否决存在 遭遇卡伤害/恐惧可取消', () => {
   const state = fixture('01001')
   state.investigators[0].hand = ['05032']
-  runTest(state, draft => { applyHarm(draft, draft.investigators[0], 2, 1, []) }, pending => {
+  runTest(state, draft => {
+    draft._treacheryResolving = '01165'
+    try { applyHarm(draft, draft.investigators[0], 2, 1, []) } finally { delete draft._treacheryResolving }
+  }, pending => {
     const cardOption = pending.options.find(item => item.cardCode === '05032')
     if (cardOption) return cardOption.id
     const cancel = pending.options.find(item => /取消 2 伤害、1 恐惧/.test(String(item.label)))
@@ -420,27 +537,115 @@ test('TCU 05032 否决存在 快速打出取消本次伤害与恐惧', () => {
   assert.ok(inv.discard.includes('05032'))
 })
 
-// ---------------------------------------------------------------------------
-// 05033 恐怖灵感（显式简化：只实现「取消该符号标记本次的效果」）
-// ---------------------------------------------------------------------------
-
-test('TCU 05033 恐怖灵感 符号揭示窗口打出：取消该符号标记的效果', () => {
+test('TCU 05032 否决存在 敌人攻击的伤害可取消', () => {
   const state = fixture('01001')
-  state.investigators[0].hand = ['05033']
-  // 核心剧本：cultist = -2；不取消时意志 3 → 1，取消后保持 3。
-  state.chaosBag = ['cultist']
-  let result = null
-  runTest(state, draft => { result = performTest(draft, 0, 'willpower', 1, {}) }, pending => {
-    const option = pending.options.find(item => item.cardCode === '05033')
-    return option ? option.id : null
+  state.investigators[0].hand = ['05032']
+  runTest(state, draft => {
+    draft._enemyAttackResolving = true
+    try { applyHarm(draft, draft.investigators[0], 2, 0, []) } finally { delete draft._enemyAttackResolving }
+  }, pending => {
+    const cardOption = pending.options.find(item => item.cardCode === '05032')
+    if (cardOption) return cardOption.id
+    const cancel = pending.options.find(item => /取消 2 伤害/.test(String(item.label)))
+    return cancel ? cancel.id : null
   })
-  assert.ok(result, '检定应有结果')
-  assert.equal(result.value, 3, '符号标记的 -2 被取消，检定值保持基础 3')
-  assert.ok(result.drawn.includes('cultist'))
-  assert.ok(state.investigators[0].discard.includes('05033'))
-  assert.equal(registeredEntry('05033').simplified, true)
+  assert.equal(state.investigators[0].damage, 0, '敌人攻击的伤害被取消')
 })
 
+test('TCU 05032 否决存在 玩家卡自伤不能取消（source=other）', () => {
+  const state = fixture('01001')
+  state.investigators[0].hand = ['05032']
+  let offered = false
+  runTest(state, draft => { applyHarm(draft, draft.investigators[0], 2, 0, []) }, pending => {
+    if (pending.options.some(item => item.cardCode === '05032')) offered = true
+    return null
+  })
+  assert.equal(offered, false, '非遭遇/敌人攻击来源不提供')
+  assert.equal(state.investigators[0].damage, 2, '自伤照常结算')
+  assert.ok(state.investigators[0].hand.includes('05032'), '卡仍在手牌')
+})
+
+// ---------------------------------------------------------------------------
+// 05033 恐怖灵感（R7：取消 / 额外结算 Mystic 卡的符号效果）
+// ---------------------------------------------------------------------------
+
+test('TCU 05033 恐怖灵感 取消凋零术的符号效果', () => {
+  const state = fixture('01001')
+  state.investigators[0].hand = ['05033']
+  const wither = asset(state, '05157')
+  const target = enemy(state, { id: 'inspire-target', fight: 3, evade: 3, health: 20 })
+  state.chaosBag = ['skull']
+  let offered = false
+  move(state, { action: 'ability', assetId: wither.id, abilityIndex: 0, targetId: target.id })
+  settle(state, pending => {
+    if (pending.kind === 'reaction') {
+      const option = pending.options.find(item => item.cardCode === '05033')
+      if (option) { offered = true; return option.id }
+    }
+    if (pending.kind === 'effect') {
+      const option = pending.options.find(item => item.id === 'cancel')
+      if (option) return option.id
+    }
+    return null
+  })
+  assert.equal(offered, true, '符号揭示窗口可打出恐怖灵感')
+  const after = state.enemies.find(item => item.id === target.id)
+  assert.equal((after.statMods || []).length, 0, '凋零术的符号效果被取消：敌人没有获得修正')
+})
+
+test('TCU 05033 恐怖灵感 让凋零术的符号效果再结算一次', () => {
+  const state = fixture('01001')
+  state.investigators[0].hand = ['05033']
+  const wither = asset(state, '05157')
+  const target = enemy(state, { id: 'inspire-repeat', fight: 3, evade: 3, health: 20 })
+  state.chaosBag = ['skull']
+  let offered = false
+  let pickedWither = false
+  move(state, { action: 'ability', assetId: wither.id, abilityIndex: 0, targetId: target.id })
+  settle(state, pending => {
+    if (pending.kind === 'reaction') {
+      const option = pending.options.find(item => item.cardCode === '05033')
+      if (option) { offered = true; return option.id }
+    }
+    if (pending.kind === 'reaction') {
+      const option = pending.options.find(item => /凋零术/.test(String(item.label)))
+      if (option && !pickedWither) { pickedWither = true; return option.id }
+    }
+    if (pending.kind === 'effect') {
+      const option = pending.options.find(item => item.id === 'repeat')
+      if (option) return option.id
+    }
+    return null
+  })
+  assert.equal(offered, true, '符号揭示窗口可打出恐怖灵感')
+  const after = state.enemies.find(item => item.id === target.id)
+  const mods = (after.statMods || []).filter(item => item.fight === -1)
+  assert.equal(mods.length, 2, '凋零术的 -1 攻击值效果结算了两次（额外结算一次，免费）')
+})
+
+test('TCU 05033 恐怖灵感 auto_fail 窗口也能打出（凋零术不因 auto_fail 产生修正）', () => {
+  const state = fixture('01001')
+  state.investigators[0].hand = ['05033']
+  const wither = asset(state, '05157')
+  const target = enemy(state, { id: 'inspire-autofail', fight: 3, evade: 3, health: 20 })
+  state.chaosBag = ['autofail']
+  let offered = false
+  move(state, { action: 'ability', assetId: wither.id, abilityIndex: 0, targetId: target.id })
+  settle(state, pending => {
+    if (pending.kind === 'reaction') {
+      const option = pending.options.find(item => item.cardCode === '05033')
+      if (option) { offered = true; return option.id }
+    }
+    if (pending.kind === 'effect') {
+      const option = pending.options.find(item => item.id === 'cancel')
+      if (option) return option.id
+    }
+    return null
+  })
+  assert.equal(offered, true, 'auto_fail 也在 symbolRevealed 窗口内')
+  const after = state.enemies.find(item => item.id === target.id)
+  assert.equal((after.statMods || []).length, 0, '凋零术不因 auto_fail 触发符号效果')
+})
 // ---------------------------------------------------------------------------
 // 05036 钉鞋
 // ---------------------------------------------------------------------------
@@ -451,6 +656,8 @@ test('TCU 05036 钉鞋 +1 敏捷；移动后横置敏捷(3)检定，成功再移
   const shoes = asset(state, '05036')
   assert.equal(getStat(state, state.investigators[0], 'agility'), agilityBefore + 1)
   threeLocations(state)
+  // moveBeforeEngage 窗口只在「新地点有敌人、即将自动交战」时开（卡面场景即此）。
+  enemy(state, { id: 'shoes-blocker', fight: 1, evade: 1, health: 9, location: 'attic', engagedSeat: null })
   state.chaosBag = ['0']
   move(state, { action: 'move', locationId: 'attic' })
   resolveChoices(state, pending => {
@@ -504,24 +711,35 @@ test('TCU 05037 绝望之举 从手牌弃掉手部道具：获得 +X 战斗但�
 // 05040 权杖王牌（塔罗槽；额外行动 + 技能加值）
 // ---------------------------------------------------------------------------
 
-test('TCU 05040 权杖王牌 流放自身换本回合额外 1 行动且每项技能 +2', () => {
+test('TCU 05040 权杖王牌 流放自身换额外 1 行动；该次行动期间每项技能 +2', () => {
   const state = fixture('01001')
   const ace = asset(state, '05040')
-  const combatBefore = getStat(state, state.investigators[0], 'combat')
-  const actionsBefore = state.investigators[0].actionsLeft
+  const inv = state.investigators[0]
+  const combatBefore = getStat(state, inv, 'combat')
+  const actionsBefore = inv.actionsLeft
   use(state, ace)
   resolveChoices(state)
-  const inv = state.investigators[0]
-  assert.equal(inv.actionsLeft, actionsBefore + 1, '本回合额外 1 次行动')
-  assert.equal(getStat(state, inv, 'combat'), combatBefore + 2, '每项技能 +2')
-  assert.equal(inv.assets.some(item => item.code === '05040'), false, '费用：从游戏中移除自身')
+  assert.equal(state.investigators[0].actionsLeft, actionsBefore + 1, '本回合额外 1 次行动')
+  assert.equal(getStat(state, state.investigators[0], 'combat'), combatBefore, '行动开始前 +2 尚未生效')
+  assert.equal((state.pendingActionEffects || []).length, 1, '「该次行动期间」效果已排队到下一次行动')
+  assert.equal(state.investigators[0].assets.some(item => item.code === '05040'), false, '费用：从游戏中移除自身')
   assert.ok((state.exiled || []).includes('05040'), '流放记账进 state.exiled')
-  assert.equal(registeredEntry('05040').simplified, true, '+2 的作用域是显式简化项')
-  // 它同时是塔罗：开局起始手牌中放置入场。
-  const { placed } = openingHandPlacement('05040')
-  assert.deepEqual(placed, ['05040'])
+  // 下一次行动：调查检定吃到 +2（智识 3 + 2 = 5）。
+  state.locations[0].clues = 3
+  state.chaosBag = ['0']
+  move(state, { action: 'investigate' })
+  resolveChoices(state)
+  assert.equal(state.lastTestResult.value, 5, '该次行动期间：智识 3 + 2 = 5')
+  assert.equal(getStat(state, state.investigators[0], 'combat'), combatBefore, '行动结束 +2 过期')
+  // 再下一次行动：没有 +2。
+  state.locations[0].clues = 2
+  move(state, { action: 'investigate' })
+  resolveChoices(state)
+  assert.equal(state.lastTestResult.value, 3, '再下一次行动没有 +2')
+  // 它同时是塔罗：开局 [reaction] 可选放置入场。
+  const { placed } = scenarioStartsPlacement('05040')
+  assert.deepEqual(placed, ['05040'], '开局窗口可选放置入场')
 })
-
 // ---------------------------------------------------------------------------
 // 05041 第十三幻象（基础弱点）
 // ---------------------------------------------------------------------------
@@ -552,7 +770,32 @@ test('TCU 05041 第十三幻象 技能值等于难度时检定改为失败（本
   move(state, { action: 'investigate' })
   settle(state)
   assert.equal(state.lastTestResult?.success, false, '平局应改为失败')
+  assert.equal(state.lastTestResult?.failedBy, 0, 'failTies：failedBy 记为 0（不再是被 -1 的近似的 1）')
+  assert.equal(state.lastTestResult?.value, state.lastTestResult?.difficulty, '记录值仍等于难度')
   assert.equal(state.locations[0].clues, 1, '失败不发现线索')
+
+  // 高于难度时仍成功（光环只影响平局）。
+  const above = fixture('01001')
+  above.investigators[0].threat.push({ id: 'threat-05041a', code: '05041' })
+  above.locations[0].clues = 1
+  above.locations[0].shroud = getStat(above, above.investigators[0], 'intellect') - 1
+  above.chaosBag = ['0']
+  move(above, { action: 'investigate' })
+  settle(above)
+  assert.equal(above.lastTestResult?.success, true, '高于难度仍成功')
+
+  // 不同地点：光环只作用于持有者所在地点（持有者留在书房，队友在阁楼检定平局仍成功）。
+  const far = fixture('01001', 2)
+  const [bearer2, tester2] = far.investigators
+  bearer2.threat.push({ id: 'threat-05041c', code: '05041' })
+  twoLocations(far)
+  tester2.location = 'attic'
+  const tie2 = getStat(far, tester2, 'willpower')
+  far.chaosBag = ['0']
+  let result2 = null
+  runTest(far, draft => { result2 = performTest(draft, tester2.seat, 'willpower', tie2, {}) })
+  assert.ok(result2, '检定应有结果')
+  assert.equal(result2?.success, true, '持有者在另一地点时，本地点的平局不受影响')
 
   // 同地点队友的检定同样失败（光环跨调查员）。
   const two = fixture('01001', 2)

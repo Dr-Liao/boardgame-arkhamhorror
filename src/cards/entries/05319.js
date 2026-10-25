@@ -6,15 +6,12 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 05319 “你欠我一次”：选另一位调查员 → 查看其手牌 → 选一张付得起的非弱点击牌 →
-// 临时移到自己的手牌后用 api.playCard 正常打出（费用/结算按打出规则，不额外花行动）→ 双方各抽 1。
-// 若打不出去则把牌放回对方手牌。
+// api.playCardFromOtherHand(fromSeat, code)：把对方手牌真实打进本调查员控制区（费用由本调查员支付、
+// 走 doPlay 的入场/结算与去向规则；打不出去时引擎把牌放回对方手牌）→ 双方各抽 1。
 // 「查看手牌」走 api.privateInfo 私密投影（只给查看者座位，不进公开日志）。
 
 export default {
   code: '05319',
-  simplified: true,
-  note: '「查看另一位调查员的手牌」已用私有信息投影（privateInfo，不进公开日志）；'
-    + '剩余近似：打出对方手牌时 doPlay 不校验其 playCondition/窗口时机。其余效果已实现。',
   abilities: [
     {
       kind: 'played',
@@ -38,14 +35,8 @@ export default {
           prompt: '选择要打出的卡牌（或放弃）。',
           options: [{ id: 'done', label: '不打出' }, ...playable.map(code => ({ id: code, cardCode: code, label: api.cardName(code) }))] })
         if (answer === 'done' || answer === undefined || !playable.includes(answer)) return
-        const index = other.hand.indexOf(answer)
-        if (index < 0) return
-        other.hand.splice(index, 1)
-        inv.hand.push(answer)
-        const played = api.playCard(inv.seat, answer, { noAction: true })
+        const played = api.playCardFromOtherHand(other.seat, answer)
         if (!played) {
-          const still = state.investigators[inv.seat].hand.indexOf(answer)
-          if (still >= 0) { state.investigators[inv.seat].hand.splice(still, 1); other.hand.push(answer) }
           api.info(`「${api.cardName(answer)}」没能打出，放回 ${other.name} 的手牌。`)
           return
         }

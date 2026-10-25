@@ -50,8 +50,13 @@ export default {
           }
         }
         if (!inv.defeated && !inv.resigned) {
-          api.lethalSelfDamage(inv.seat)
+          // 卡面「你被击败并承受 1 点精神创伤」是确定的（与检定/掷骰无关），因此先记账再结算
+          // 致死伤害：若这是最后一名存活调查员，lethalSelfDamage 触发结局并抛 ScenarioEnded，
+          // 后面的语句不会执行——先写 trauma/defeatCause 才能保证结局按「卡牌效果」而非肉体创伤结算。
+          // 引擎已支持保留预设 defeatCause（harm-threat.js checkDefeated 的 `if (!inv.defeatCause)`）。
+          state.investigators[inv.seat].defeatCause = 'card'
           api.addTrauma(inv.seat, 'mental', 1)
+          api.lethalSelfDamage(inv.seat)
           api.info(`${inv.name} 被「恐怖揭露」击败，承受 1 点精神创伤。`)
         }
       },

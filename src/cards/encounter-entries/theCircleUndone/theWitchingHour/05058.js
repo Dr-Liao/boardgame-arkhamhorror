@@ -27,19 +27,20 @@ export default {
     },
     actions({ moves, state, inv, location }) {
       if (inv.location !== location.id) return
-      // [free]：不花行动；每名调查员每轮一次（不是团队共享）。
-      const usedBySeat = state.scenarioFlags?.mineSwapRoundBySeat || {}
-      if (usedBySeat[inv.seat] === state.round) return
+      // [free]：不花行动，可在任意玩家窗口触发（behavior.fastActions → 引擎 playerWindow）。
+      // 卡面「团队每轮仅限一次」→ 全队共享的 mineSwapRound（不是按座位）。
+      if (state.scenarioFlags?.mineSwapRound === state.round) return
       if (!otherWoodsInvestigators(state, inv).length) return
       moves.push({
-        action: 'scenarioAction', rule: 'mineSwapResources', actions: 0,
-        label: '⛏️ 废弃矿山：与另一处女巫作祟之林的调查员交换最多 3 点资源（每轮一次）',
+        action: 'scenarioAction', rule: 'mineSwapResources', actions: 0, fast: true,
+        label: '⛏️ 废弃矿山：与另一处女巫作祟之林的调查员交换最多 3 点资源（团队每轮一次）',
       })
     },
     performAction(state, inv, move, api) {
       if (move.rule !== 'mineSwapResources') return false
       const others = otherWoodsInvestigators(state, inv)
       if (!others.length) return false
+      if (state.scenarioFlags?.mineSwapRound === state.round) return false
       const picked = others.length === 1 ? others[0] : others.find(other => String(other.seat) === String(api.choose?.({
         kind: 'investigator', source: '05058', seat: inv.seat,
         prompt: '选择另一处女巫作祟之林的一位调查员。',
@@ -64,7 +65,8 @@ export default {
       if (direction === 'toThem') { inv.resources -= amount; picked.resources = (picked.resources || 0) + amount }
       else { picked.resources -= amount; inv.resources = (inv.resources || 0) + amount }
       state.scenarioFlags ||= {}
-      state.scenarioFlags.mineSwapRoundBySeat = { ...(state.scenarioFlags.mineSwapRoundBySeat || {}), [inv.seat]: state.round }
+      // 团队每轮仅限一次：全队共享一个轮次标记。
+      state.scenarioFlags.mineSwapRound = state.round
       api.info?.(`⛏️ ${inv.name} 与 ${picked.name} 交换了 ${amount} 点资源。`)
       return true
     },

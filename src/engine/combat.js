@@ -1,4 +1,4 @@
-// 战斗与躲避（进战斗 / 躲敌人）从 engine.js 拆出的第三个模块（Phase 6 · 6d-3）。
+﻿// 战斗与躲避（进战斗 / 躲敌人）从 engine.js 拆出的第三个模块（Phase 6 · 6d-3）。
 //
 // 这一对动作是「按域拆分」的第一个示例：roadmap 里规划的 combat/ 域。
 // 两个函数都会写 state（伤害、交战、击败、移动），所以依赖清单比 describe 长得多；
@@ -84,15 +84,17 @@ function doFight(state, seat, opts, events, noSpend) {
   const invulnSource = enemyRuleFlags(enemy?.code).damageOnlyFrom
   if (invulnSource && opts.assetId !== invulnSource && !enemyTextBlanked(state, enemy)) return
   if (opts.requireNotEngagedTarget && enemy?.engagedSeat === seat) { info(state, events, '该武器不能攻击与你交战的敌人。'); return }
+  // 2026-10-25 第七轮修复 05230：hostCannotAttackEngaged 必须在扣行动点之前检查。
+  {
+    const weaponBefore = inv.assets.find(asset => asset.id === opts.assetId)
+    if (weaponBefore && enemy?.engagedSeat === seat
+      && (weaponBefore.attachments || []).some(attachment => registeredEntry(attachment.code)?.hostCannotAttackEngaged)) {
+      info(state, events, `⛔ 「${cardName(weaponBefore.code)}」上附属的卡牌禁止它攻击与 ${inv.name} 交战的敌人。`)
+      return
+    }
+  }
   if (!noSpend) payActionCost(state, inv, 'fight', events)
   const weapon = inv.assets.find(asset => asset.id === opts.assetId)
-  // 2026-10-25：05230 瞄准镜「所附属支援不能用于攻击与你交战的敌人」。
-  // 附属卡在条目级声明 hostCannotAttackEngaged；这里读一次，避免绕过 legalMoves 的读点。
-  if (weapon && enemy?.engagedSeat === seat
-    && (weapon.attachments || []).some(attachment => registeredEntry(attachment.code)?.hostCannotAttackEngaged)) {
-    info(state, events, `⛔ 「${cardName(weapon.code)}」上附属的卡牌禁止它攻击与 ${inv.name} 交战的敌人。`)
-    return
-  }
   const here = state.locations.find(item => item.id === inv.location)
   const connectingIds = here?.connections || []
   // 「枪法如神」（04104）：激活枪械/远程支援的攻击时打开的窗口。事件在那里改写本次攻击：
@@ -184,7 +186,8 @@ function doFight(state, seat, opts, events, noSpend) {
   const rangedReduction = enemyRuleFlags(enemy.code).rangedAttackDifficultyReduction || 0
   if (rangedReduction && !enemyTextBlanked(state, enemy)
     && cardDef(weapon?.code)?.traits?.some(trait => ['Ranged', 'Firearm', 'Spell'].includes(trait))) difficulty = Math.max(0, difficulty - rangedReduction)
-  const weaponCode = weapon?.code || (opts.assetId && cardDef(opts.assetId) ? opts.assetId : null)
+  // Events pass their printed code through effect.code/sourceCode rather than an asset instance.
+  const weaponCode = weapon?.code || [opts.assetId, opts.sourceCode, opts.code].find(code => code && cardDef(code)) || null
   const attackFx = { weaponCode, attackStyle: attackStyle(weaponCode && cardDef(weaponCode)) }
   // 「值得信赖」：结算宿主支援的触发能力时每项技能 +1。
   const trustedHost = inv.assets.find(item => item.id === opts.assetId)
@@ -295,6 +298,26 @@ function doFight(state, seat, opts, events, noSpend) {
         info(state, events, `「特制弹药」：攻击怪物 +${monsterBonus} 伤害。`)
       }
 
+      // 2026-10-25 第六轮修复 05192：「成功后可选花费充能/弹药强化本次攻击」。
+      if (opts.maySpendUsesForDamage) {
+        const spec = opts.maySpendUsesForDamage
+        const sourceAsset = (inv.assets || []).find(asset => asset.id === opts.assetId)
+        const useCost = Math.max(1, Number(spec.uses ?? 1))
+        if (sourceAsset && (sourceAsset.uses || 0) >= useCost && Number(spec.damage) > 0) {
+          const spend = requestChoice(state, {
+            kind: 'reaction', source: sourceAsset.code, seat, canSkip: true,
+            prompt: `${inv.name}：是否花费 ${useCost} 个${sourceAsset.usesType === 'ammo' ? '子弹' : '充能'}，使本次攻击 +${spec.damage} 伤害？`,
+            options: [{ id: 'skip', label: '不花费' }, { id: 'spend', label: `花费 ${useCost} 个（+${spec.damage} 伤害）` }],
+          }) === 'spend'
+          if (spend) {
+            sourceAsset.uses -= useCost
+            sourceAsset.empowered = (sourceAsset.empowered || 0) + 1
+            dmg += Number(spec.damage)
+            info(state, events, `「${cardName(sourceAsset.code)}」花费 ${useCost} 个标记：本次攻击 +${spec.damage} 伤害。`)
+          }
+        }
+      }
+
       // 03240 苍白面具 [cultist]：攻击期间揭示且检定成功时，本次攻击伤害 -1
       //（困难/专家为不造成伤害，token 结算时写入 999）。读点与 token 表同一个字段。
       const attackReduction = Number(state.skillTest?.attackDamageReduction || 0)
@@ -368,10 +391,18 @@ function doFight(state, seat, opts, events, noSpend) {
         info(state, events, `「${cardName(code)}」：上次攻击命中后自动躲避了「${enemy.name}」。`)
       }
       info(state, events, `⚔️ ${inv.name} 攻击成功（${SKILL_NAMES[skill]} ${r.value} vs ${difficulty}），对「${enemy.name}」造成 ${dmg} 点伤害（${enemy.damageTaken}/${enemy.health}）。`)
-      scenarioBehavior(state).enemyAttackedSuccessfully?.(state, inv, enemy, scenarioRuntime(state, events))
+      // 2026-10-25 本循环修复 attack-resolution-context（05009/05262b）：本次攻击是否击败目标
+      // 必须在 defeatEnemy 之前判定（「被击败后回场」的敌人如 05086 也要记为击败），
+      // 作为第 5 参传给章节钩子，并写进检定结果供卡面效果（api.fight 返回值）读取。
       if (opts.defeatNonEliteOnSuccess && !enemy.elite) enemy.damageTaken = enemyHealth(state, enemy)
-      if (state.enemies.includes(enemy) && enemy.damageTaken >= enemyHealth(state, enemy)
-        && enemyCanBeDefeated(state, enemy, opts.assetId || null, seat)) defeatEnemy(state, enemy, events)
+      const attackDefeated = state.enemies.includes(enemy)
+        && enemy.damageTaken >= enemyHealth(state, enemy)
+        && enemyCanBeDefeated(state, enemy, opts.assetId || opts.sourceCode || null, seat)
+      scenarioBehavior(state).enemyAttackedSuccessfully?.(state, inv, enemy, scenarioRuntime(state, events),
+        { defeated: attackDefeated, enemyId: enemy.id, damage: dmg })
+      if (attackDefeated) defeatEnemy(state, enemy, events)
+      r.attackResult = { enemyId: enemy.id, damage: dmg, defeated: attackDefeated,
+        enemyCode: enemy.originalCode || enemy.code }
       if (opts.autoEvadeOnSuccessBy != null && state.enemies.includes(enemy)
         && r.value - difficulty >= opts.autoEvadeOnSuccessBy) {
         enemy.exhausted = true
@@ -428,7 +459,10 @@ function doEvade(state, seat, opts, events, noSpend) {
   const enemy = state.enemies.find((e) => e.id === opts.enemyId)
   if (!noSpend) payActionCost(state, inv, 'evade', events)
   if (!enemy) { info(state, events, `${inv.name} 找不到可躲避的敌人。`); return }
+  // 2026-10-25 第六轮修复 05282：可躲避连接地点上未与任何调查员交战的敌人。
+  const connectingLocation = state.locations.find(loc => loc.id === inv.location)?.connections?.includes(enemy.location)
   const canEvade = enemy.engagedSeat === seat || (enemy.massive && enemy.location === inv.location)
+    || (opts.allowConnecting === true && connectingLocation)
   if (!canEvade) { info(state, events, `${inv.name} 找不到可躲避的交战敌人。`); return }
   const mods = enemyStatMods(state)
   if (opts.auto) {

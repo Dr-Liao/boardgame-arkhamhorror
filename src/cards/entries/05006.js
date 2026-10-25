@@ -47,7 +47,8 @@ export default {
       } else if (verb === 'remove') {
         const item = removable[Number(rawIndex)]
         if (item) {
-          item.card.doom = Math.max(0, (item.card.doom || 0) - 1)
+          // R7：走 api.setAssetDoom（毁灭减少到阈值以下时引擎会 syncSpellCredit 收回未使用的额度）。
+          api.setAssetDoom(item.card, Math.max(0, (item.card.doom || 0) - 1))
           api.info(`${inv.name} 从「${item.label}」移除 1 个毁灭标记。`)
         }
       }

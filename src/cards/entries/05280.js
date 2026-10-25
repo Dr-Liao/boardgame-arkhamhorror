@@ -11,9 +11,7 @@
 
 export default {
   code: '05280',
-  simplified: true,
-  note: '五个面向均已实现；剩余近似：引擎的 wouldDiscardFromHand/wouldLoseResources/wouldLoseActions 窗口'
-    + '对任何来源的弃牌/失资源/失行动都会打开（卡面限定「遭遇卡牌或敌人攻击」），条目无法区分来源。',
+  note: '',
   abilities: [
     {
       kind: 'reaction',
@@ -24,6 +22,8 @@ export default {
         const context = ctx.context || {}
         if (context.seat !== ctx.inv?.seat) return false
         if (context.cancelled) return false
+        // 卡面限定「遭遇卡牌或敌人攻击」：引擎窗口 context.source.kind 区分来源。
+        if (!['encounter', 'enemyAttack'].includes(context.source?.kind)) return false
         return ['discard', 'resources', 'actions'].includes(context.what)
       },
       resolve: ({ inv, context, api }) => {
@@ -39,6 +39,8 @@ export default {
           api.info(`${inv.name} 用「否决存在」忽略失去行动的效果，改为获得 ${amount} 次额外行动。`)
           api.gainAction(inv.seat, amount)
         }
+        // 显式记 cardCancelled 事实（05004 黛安娜的「取消或忽略」反应读点）。
+        api.noteCancelled?.('05280')
       },
     },
     {
@@ -50,8 +52,8 @@ export default {
         const context = ctx.context || {}
         if (context.seat !== ctx.inv?.seat) return false
         if (!((context.damage || 0) > 0 || (context.horror || 0) > 0)) return false
-        // 只对「敌人攻击」或「遭遇卡」造成的伤害/恐惧生效。
-        return Boolean(context.attack) || Boolean(ctx.state?._treacheryResolving)
+        // 只对「敌人攻击」或「遭遇卡」造成的伤害/恐惧生效（引擎窗口 context.source.kind）。
+        return ['encounter', 'enemyAttack'].includes(context.source?.kind)
       },
       resolve: ({ inv, api, context }) => {
         const damage = Math.max(0, context?.damage || 0)
@@ -71,6 +73,7 @@ export default {
           api.info(`${inv.name} 用「否决存在」忽略了 ${horror} 点恐惧。`)
           api.healHorror(inv.seat, horror)
         }
+        api.noteCancelled?.('05280')
       },
     },
   ],

@@ -244,6 +244,29 @@ test('面前地点限制：act1/act2 不能进入别人的地点，act3 起解�
   assert.equal(witchingHour.behavior.moveError(state, inv, loc(state, ownFront), ownFront), undefined)
 })
 
+test('05053/05054 面前地点限制：movementError 读点覆盖效果移动与所有阶段，act2 背面解锁', () => {
+  const state = setup(stateFor(2), 17)
+  const fronts = state.scenarioFlags.frontOf
+  const othersFront = Object.keys(fronts).find(id => fronts[id] === 1)
+  const inv = state.investigators[0]
+  // 引擎 movementError 现在传目标地点并在所有阶段询问章节：效果移动（relocateInvestigator 等）同样被拦。
+  assert.equal(typeof witchingHour.behavior.movementError(state, inv, loc(state, othersFront)), 'string',
+    '调查阶段的效果移动被拒')
+  state.phase = 'mythos'
+  assert.equal(typeof witchingHour.behavior.movementError(state, inv, loc(state, othersFront)), 'string',
+    '神话阶段的效果移动同样被拒')
+  state.phase = 'investigation'
+  const ownFront = Object.keys(fronts).find(id => fronts[id] === 0)
+  assert.equal(witchingHour.behavior.movementError(state, inv, loc(state, ownFront)), undefined, '自己的地点可进')
+  // 没有「面前」归属的地点不拦（例如非森林/女巫圆环）。
+  const ownerless = ensureWoodInPlay(state, '05058')
+  assert.equal(witchingHour.behavior.movementError(state, state.investigators[1], ownerless), undefined,
+    '无主地点可进')
+  assert.equal(witchingHour.behavior.movementError(state, inv, undefined), undefined, '无目标地点不拦')
+  state.actIndex = 2
+  assert.equal(witchingHour.behavior.movementError(state, inv, loc(state, othersFront)), undefined, 'act2 背面解锁')
+})
+
 test('印刷符号图：森林彼此相连，女巫圆环连到所有森林', () => {
   const mineLoc = definition.locations.abandonedMine
   assert.ok(mineLoc.connections.includes('cairnStones'))
@@ -441,9 +464,43 @@ test('安妮特：没有弃出女巫敌人时重整她自己', () => {
   assert.equal(state.enemies.find(enemy => enemy.id === 'anette').exhausted, false)
 })
 
+test('安妮特：只弃遭遇牌库顶 3 张（第 4 张是女巫也不多弃、不洗回弃牌堆）', () => {
+  const state = setup(stateFor(1), 61)
+  state.enemies.push({ id: 'anette', code: ANETTE_MASON, originalCode: ANETTE_MASON, name: '安妮特',
+    location: state.investigators[0].location, exhausted: true, engagedSeat: null, damageTaken: 0, traits: ['Witch'] })
+  // pop 从末端取：顶 3 张 = 05099、05098、01166（都不是女巫），第 4 张 05090 是女巫。
+  state.encounterDeck = ['05090', '01166', '05098', '05099']
+  state.encounterDiscard = ['05091']
+  const spawned = []
+  const api = apiStub(state, { spawn: code => { spawned.push(code); return null } })
+  witchingHour.behavior.enemyPhaseStart(state, api)
+  assert.deepEqual(spawned, [], '顶 3 张没有女巫 → 不生成、不多弃第 4 张')
+  assert.deepEqual(state.encounterDeck, ['05090'], '第 4 张（女巫）留在牌库顶')
+  assert.deepEqual(state.encounterDiscard.slice(-3), ['05099', '05098', '01166'], '只弃 3 张进弃牌堆')
+  assert.equal(state.encounterDiscard[0], '05091', '不把弃牌堆洗回')
+  assert.equal(state.enemies.find(enemy => enemy.id === 'anette').exhausted, false, '没有女巫 → 重整')
+})
+
+test('安妮特：牌库不足 3 张时只弃现有张数（不洗回）', () => {
+  const state = setup(stateFor(1), 67)
+  state.enemies.push({ id: 'anette', code: ANETTE_MASON, originalCode: ANETTE_MASON, name: '安妮特',
+    location: state.investigators[0].location, exhausted: true, engagedSeat: null, damageTaken: 0, traits: ['Witch'] })
+  state.encounterDeck = ['05090']
+  state.encounterDiscard = ['05091', '05098']
+  const spawned = []
+  const api = apiStub(state, { spawn: code => { spawned.push(code); return null } })
+  witchingHour.behavior.enemyPhaseStart(state, api)
+  assert.deepEqual(spawned, ['05090'], '顶 1 张是女巫 → 生成')
+  assert.equal(state.encounterDeck.length, 0)
+  assert.equal(state.encounterDiscard.includes('05090'), false, '生成的女巫离开弃牌堆')
+  assert.deepEqual(state.encounterDiscard.slice(-2), ['05091', '05098'], '弃牌堆不被洗回牌库')
+})
+
 test('安妮特条目与黑山羊条目：implemented 声明 + 按 code 的卡面规则', () => {
   assert.equal(anetteEntry.implemented, true)
   assert.equal(anetteEntry.enemyRule.retaliate, true)
+  // 强制能力已移入条目（跨章生效），不再由章节 behavior 硬编码。
+  assert.equal(typeof anetteEntry.enemyScript?.onEnemyPhaseStart, 'function')
   assert.equal(goatSpawnEntry.implemented, true)
   assert.equal(darkYoungEntry.implemented, true)
 
@@ -459,25 +516,50 @@ test('安妮特条目与黑山羊条目：implemented 声明 + 按 code 的卡�
   assert.equal(state.enemies.find(enemy => enemy.id === 'young').damageTaken, 2, '轮末治愈 2 点伤害')
 })
 
-test('杂草丛生的谷仓：敌人改为生成在此并攻击本地每位调查员', () => {
-  const state = setup(stateFor(2), 61)
-  const barn = ensureWoodInPlay(state, '05064')
-  assert.ok(barn, '谷仓必须已入场')
-  const target = state.locations.find(location => location.code !== '05064' && location.code.startsWith('050'))
-  assert.ok(target)
-  const code = 'enemyWithoutEntry'
-  const redirected = witchingHour.behavior.spawnLocation(state, code, target.id, null)
-  assert.equal(redirected, barn.id)
+test('杂草丛生的谷仓：可选[reaction]改为生成在此并攻击（可放弃/无人不触发/含 api.spawn 路径）', () => {
+  const woodsLocation = code => WOODS.some(entry => entry.code === code)
+  const make = choose => {
+    const state = setup(stateFor(2), 61)
+    const barn = ensureWoodInPlay(state, '05064')
+    const other = state.locations.find(location => location.code !== '05064' && woodsLocation(location.code))
+    assert.ok(barn && other, '谷仓与另一处森林都必须已入场')
+    return { state, barn, other, api: apiStub(state, { choose }) }
+  }
+  // 触发：改为在谷仓生成，然后攻击谷仓本地点的每位调查员。
+  const a = make(() => 'trigger')
+  assert.equal(witchingHour.behavior.spawnLocation(a.state, 'enemyWithoutEntry', a.other.id, null, a.api), a.barn.id)
+  a.state.investigators[1].location = a.barn.id
   const attacks = []
-  const enemy = { id: 'e1', code, location: barn.id, engagedSeat: null }
-  witchingHour.behavior.enemySpawned(state, enemy, apiStub(state, { attack: (entry, inv) => attacks.push(inv.seat) }))
-  assert.deepEqual(attacks, [state.investigators.find(inv => inv.location === barn.id)?.seat ?? 0])
+  const enemyA = { id: 'e1', code: 'enemyWithoutEntry', location: a.barn.id, engagedSeat: null }
+  witchingHour.behavior.enemySpawned(a.state, enemyA,
+    apiStub(a.state, { attack: (entry, inv) => attacks.push(inv.seat) }))
+  assert.deepEqual(attacks.sort(), [0, 1], '谷仓本地每位调查员都被攻击')
+  // 放弃：不改道。
+  const b = make(() => 'skip')
+  assert.equal(witchingHour.behavior.spawnLocation(b.state, 'enemyWithoutEntry', b.other.id, null, b.api), b.other.id)
+  // 谷仓没有调查员：没有人能触发反应，不改道。
+  const c = make(() => 'trigger')
+  c.state.investigators[0].location = c.other.id
+  assert.equal(witchingHour.behavior.spawnLocation(c.state, 'enemyWithoutEntry', c.other.id, null, c.api), c.other.id)
+  // 生成地点本来就是谷仓：不询问、不追加攻击。
+  let asked = 0
+  const d = make(() => { asked += 1; return 'trigger' })
+  assert.equal(witchingHour.behavior.spawnLocation(d.state, 'enemyWithoutEntry', d.barn.id, null, d.api), d.barn.id)
+  assert.equal(asked, 0)
+  // 剧本 api.spawn（ignoreSpawn）路径：enemySpawned 里同样先问可选反应再改道+攻击。
+  const e = make(() => 'trigger')
+  const moved = { id: 'e2', code: 'enemyWithoutEntry2', location: e.other.id, engagedSeat: null }
+  const attacks2 = []
+  witchingHour.behavior.enemySpawned(e.state, moved,
+    apiStub(e.state, { choose: () => 'trigger', attack: (entry, inv) => attacks2.push(inv.seat) }))
+  assert.equal(moved.location, e.barn.id, 'ignoreSpawn 生成路径也会被改道到谷仓')
+  assert.ok(attacks2.length >= 1, '改道后攻击谷仓本地调查员')
 })
 
 // ---------------------------------------------------------------------------
 // 6. 地点
 // ---------------------------------------------------------------------------
-test('废弃矿山：3–10 资源不能调查；[free] 与另一处森林的调查员交换最多 3 资源', () => {
+test('废弃矿山：3–10 资源不能调查；[free] 与另一处森林的调查员交换最多 3 资源（团队每轮一次）', () => {
   const state = setup(stateFor(2), 67)
   const location = ensureWoodInPlay(state, '05058')
   const owner = state.investigators.find(inv => inv.location === location.id)
@@ -492,6 +574,9 @@ test('废弃矿山：3–10 资源不能调查；[free] 与另一处森林的调
   mine.locationRule.actions({ moves, state, inv: owner, location })
   assert.deepEqual(moves.map(move => move.rule), ['mineSwapResources'])
   assert.equal(moves[0].actions, 0, '[free] 不花行动')
+  assert.equal(moves[0].fast, true, '标记 fast 以便引擎 playerWindow 在任意玩家窗口列出')
+  // player-window-fast-actions：behavior.fastActions 提供与任意玩家窗口共用的同一份生成逻辑。
+  assert.deepEqual(witchingHour.behavior.fastActions(state, owner).map(move => move.rule), ['mineSwapResources'])
   // 同一地点的调查员不算「另一处女巫作祟之林」。
   const otherLocation = other.location
   other.location = owner.location
@@ -501,10 +586,20 @@ test('废弃矿山：3–10 资源不能调查；[free] 与另一处森林的调
   other.location = otherLocation
   const answers = ['toThem', '2']
   const api = apiStub(state, { choose: () => answers.shift() })
-  mine.locationRule.performAction(state, owner, { rule: 'mineSwapResources' }, api)
+  assert.equal(mine.locationRule.performAction(state, owner, { rule: 'mineSwapResources' }, api), true)
   assert.equal(owner.resources, 0)
   assert.equal(other.resources, 7)
-  assert.equal(state.scenarioFlags.mineSwapRoundBySeat[owner.seat], state.round, '每名调查员每轮一次')
+  assert.equal(state.scenarioFlags.mineSwapRound, state.round, '团队每轮仅限一次（全队共享）')
+  // 用过后：行动列表与玩家窗口都不再出现；下一轮恢复。
+  const afterUse = []
+  mine.locationRule.actions({ moves: afterUse, state, inv: owner, location })
+  assert.equal(afterUse.length, 0, '同轮不再出现')
+  assert.equal(witchingHour.behavior.fastActions(state, owner).length, 0, '同轮玩家窗口不再出现')
+  assert.equal(mine.locationRule.performAction(state, owner, { rule: 'mineSwapResources' }, apiStub(state)), false)
+  state.round += 1
+  const nextRound = []
+  mine.locationRule.actions({ moves: nextRound, state, inv: owner, location })
+  assert.equal(nextRound.length, 1, '下一轮恢复')
 })
 
 test('巨石堆与隐士之家：线索被发现后本地调查员失资源 / 随机弃手牌', () => {
@@ -537,7 +632,7 @@ test('孩童的树屋：最后一个线索被发现时把遭遇弃牌堆顶的�
   assert.deepEqual(state.encounterDiscard, ['05098', '01166'])
 })
 
-test('独木：3–5 张手牌不能调查；[free] 弃牌换抽牌', () => {
+test('独木：3–5 张手牌不能调查；[free] 弃牌换抽牌（每名调查员每轮一次、fast 窗口）', () => {
   const state = setup(stateFor(2), 79)
   const location = ensureWoodInPlay(state, '05060')
   const owner = state.investigators.find(inv => inv.location === location.id)
@@ -552,10 +647,47 @@ test('独木：3–5 张手牌不能调查；[free] 弃牌换抽牌', () => {
   lonelyTree.locationRule.actions({ moves, state, inv: owner, location })
   assert.equal(moves.length, 1)
   assert.equal(moves[0].actions, 0, '[free] 不花行动')
-  const answers = [String(other.seat), 'viceVersa']
+  assert.equal(moves[0].fast, true, '标记 fast 以便引擎 playerWindow 在任意玩家窗口列出')
+  assert.deepEqual(witchingHour.behavior.fastActions(state, owner).map(move => move.rule), ['lonelyTreeSwap'])
+  const answers = ['viceVersa']
   const api = apiStub(state, { choose: () => answers.shift() })
-  lonelyTree.locationRule.performAction(state, owner, { rule: 'lonelyTreeSwap' }, api)
+  assert.equal(lonelyTree.locationRule.performAction(state, owner, { rule: 'lonelyTreeSwap' }, api), true)
   assert.equal(state.scenarioFlags.lonelyTreeRoundBySeat[owner.seat], state.round, '每名调查员每轮一次')
+  assert.equal(witchingHour.behavior.fastActions(state, owner).length, 0, '同轮玩家窗口不再出现')
+  state.round += 1
+  assert.equal(witchingHour.behavior.fastActions(state, owner).length, 1, '下一轮恢复')
+})
+
+test('独木：两个方向都必须真的弃 1 张手牌——双方都无手牌时不列出/被拒，不白抽', () => {
+  const state = setup(stateFor(2), 89)
+  const location = ensureWoodInPlay(state, '05060')
+  const owner = state.investigators.find(inv => inv.location === location.id)
+  const other = state.investigators.find(inv => inv.seat !== owner.seat)
+  owner.hand = []
+  other.hand = []
+  const none = []
+  lonelyTree.locationRule.actions({ moves: none, state, inv: owner, location })
+  assert.equal(none.length, 0, '双方都无手牌时不列出能力')
+  assert.equal(witchingHour.behavior.fastActions(state, owner).length, 0, '玩家窗口同样不出现')
+  assert.equal(lonelyTree.locationRule.performAction(state, owner, { rule: 'lonelyTreeSwap' }, apiStub(state, { choose: () => String(other.seat) })), false,
+    '直接调用 performAction 也必须被拒（不能无弃牌白抽）')
+  // 行动者无手牌、另一处森林调查员有手牌：仍可发动，但方向只剩「对方弃 1 张」。
+  owner.hand = []
+  other.hand = ['01009']
+  const only = []
+  lonelyTree.locationRule.actions({ moves: only, state, inv: owner, location })
+  assert.equal(only.length, 1, '只要有一个方向可弃牌仍可发动')
+  const sideApi = apiStub(state, { choose: () => String(other.seat) })
+  assert.equal(lonelyTree.locationRule.performAction(state, owner, { rule: 'lonelyTreeSwap' }, sideApi), true)
+  assert.deepEqual(other.hand, [], '对方确实弃掉 1 张手牌')
+  assert.equal(owner.hand.length, 1, '行动者获得抽到的那 1 张')
+  // 两侧都有手牌时两个方向都可选（行动者选「自己弃」也真的弃自己 1 张）。
+  owner.hand = ['01001']
+  other.hand = ['01010']
+  const bothApi = apiStub(state, { choose: (request) => (request?.kind === 'story' ? 'youDiscardTheyDraw' : String(other.seat)) })
+  assert.equal(lonelyTree.locationRule.performAction(state, owner, { rule: 'lonelyTreeSwap' }, bothApi), true)
+  assert.deepEqual(owner.hand, [], '选「你弃」时行动者弃掉 1 张')
+  assert.equal(other.hand.length, 2, '对方抽到 1 张')
 })
 
 // ---------------------------------------------------------------------------
@@ -594,22 +726,40 @@ test('混乱标记失败后果：tablet 抽弃牌堆底部诡计；skull 简单�
   assert.equal(state.encounterDeck.length, 1, '失败差额 3 点 → 弃 3 张')
 })
 
-test('混乱标记失败后果：elderthing 简单模式选择 1 个、困难模式全部重整治愈女巫', () => {
+test('混乱标记失败后果：elderthing 简单模式只可选已横置/已受伤女巫、困难模式全部重整治愈', () => {
   const make = () => {
     const state = setup(stateFor(1), 97)
     const here = state.investigators[0].location
     state.enemies.push(
       { id: 'w1', code: '05090', name: '女巫甲', location: here, exhausted: true, damageTaken: 2, traits: ['Witch'], engagedSeat: null },
       { id: 'w2', code: '05091', name: '女巫乙', location: here, exhausted: true, damageTaken: 1, traits: ['Witch'], engagedSeat: null },
+      // 已重整且没有任何伤害：卡面简单/普通不可选。
+      { id: 'w3', code: '05092', name: '女巫丙', location: here, exhausted: false, damageTaken: 0, traits: ['Witch'], engagedSeat: null },
     )
     return state
   }
   const easy = make()
-  const chosen = []
+  const offered = []
   witchingHour.behavior.afterTest(easy, easy.investigators[0],
     { success: false, value: 0, difficulty: 2, drawn: ['elderthing'], cancelledTokens: [] },
-    apiStub(easy, { choose: () => { chosen.push(1); return 'w1' } }))
-  assert.equal(easy.enemies.filter(enemy => enemy.exhausted === false).length, 1, '简单模式只重整 1 个')
+    apiStub(easy, { choose: request => { offered.push(...request.options.map(option => option.id)); return 'w1' } }))
+  assert.deepEqual(offered.sort(), ['w1', 'w2'], '简单/普通只提供已横置或已受到伤害的女巫')
+  assert.equal(easy.enemies.find(enemy => enemy.id === 'w1').exhausted, false, '被选中的女巫被重整')
+  assert.equal(easy.enemies.find(enemy => enemy.id === 'w1').damageTaken, 0, '被选中的女巫被治愈')
+  assert.equal(easy.enemies.find(enemy => enemy.id === 'w2').exhausted, true, '未选中的候选保持原状')
+  assert.equal(easy.enemies.find(enemy => enemy.id === 'w3').exhausted, false)
+  assert.equal(easy.enemies.find(enemy => enemy.id === 'w3').damageTaken, 0)
+  // 没有合规候选（只剩已重整无伤害者）：不提供选择、不改状态。
+  const none = make()
+  none.enemies.find(enemy => enemy.id === 'w1').exhausted = false
+  none.enemies.find(enemy => enemy.id === 'w1').damageTaken = 0
+  none.enemies.find(enemy => enemy.id === 'w2').exhausted = false
+  none.enemies.find(enemy => enemy.id === 'w2').damageTaken = 0
+  let asked = 0
+  witchingHour.behavior.afterTest(none, none.investigators[0],
+    { success: false, value: 0, difficulty: 2, drawn: ['elderthing'], cancelledTokens: [] },
+    apiStub(none, { choose: () => { asked += 1; return 'w1' } }))
+  assert.equal(asked, 0, '没有已横置/已受伤女巫时不开选择窗口')
   const hard = make()
   hard.difficulty = 'hard'
   witchingHour.behavior.afterTest(hard, hard.investigators[0],
@@ -693,25 +843,42 @@ test('剧本数据：scriptCards 只把 [fast] 推进挂在 act2 上，tokenMean
 })
 
 // 05062 被污染的井：跨地点投入（引擎 tests.js 的 crossLocationCommit 钩子）。
-test('05062 被污染的井：其他女巫作祟之林地点的调查员可对本地点的检定投入（同地点/非森林不允许）', () => {
+test('05062 被污染的井：仅「本地点↔其他森林」双向可跨地点投入（其他森林之间/非森林/不在场不可）', () => {
   const state = {
     locations: [
       { id: 'abandonedMine', code: '05058', connections: ['taintedWell'] },
-      { id: 'taintedWell', code: '05062', connections: ['abandonedMine'] },
+      { id: 'taintedWell', code: '05062', connections: ['abandonedMine', 'cairnStones'] },
+      { id: 'cairnStones', code: '05059', connections: ['taintedWell'] },
       { id: 'entryHall', code: '05071', connections: [] },
     ],
     investigators: [
       { seat: 0, location: 'taintedWell' },
       { seat: 1, location: 'abandonedMine' },
       { seat: 2, location: 'entryHall' },
+      { seat: 3, location: 'cairnStones' },
     ],
     skillTest: { skill: 'intellect' },
   }
+  // 本地点（被污染的井）上的检定 ← 其他森林的投入者。
   assert.equal(witchingHour.behavior.crossLocationCommit(state, state.investigators[1], state.investigators[0], ['intellect']), true,
-    '另一处森林的调查员可跨地点投入')
+    '另一处森林的调查员可对本地点的检定跨地点投入')
+  // 反过来：本地点上的调查员可对另一处森林的检定投入。
+  assert.equal(witchingHour.behavior.crossLocationCommit(state, state.investigators[0], state.investigators[1], ['intellect']), true,
+    '本地点的调查员可对其他森林的检定跨地点投入（反之亦然）')
+  // 两处其他森林之间（不含被污染的井）：不开放。
+  assert.equal(witchingHour.behavior.crossLocationCommit(state, state.investigators[3], state.investigators[1], ['intellect']), false,
+    '两处其他女巫作祟之林之间不可跨地点投入')
   assert.equal(witchingHour.behavior.crossLocationCommit(state, state.investigators[2], state.investigators[0], ['intellect']), false,
     '非森林地点不可跨地点投入')
   state.investigators[1].location = 'taintedWell'
   assert.equal(witchingHour.behavior.crossLocationCommit(state, state.investigators[1], state.investigators[0], ['intellect']), false,
     '同一地点不触发跨地点投入（走普通协助通道）')
+  // 被污染的井不在场：卡面能力不生效。
+  const withoutWell = {
+    ...state,
+    locations: state.locations.filter(location => location.id !== 'taintedWell'),
+    investigators: state.investigators.map(inv => inv.seat === 0 ? { ...inv, location: 'abandonedMine' } : inv),
+  }
+  assert.equal(witchingHour.behavior.crossLocationCommit(withoutWell, withoutWell.investigators[3], withoutWell.investigators[1], ['intellect']), false,
+    '被污染的井不在场时不能跨地点投入')
 })

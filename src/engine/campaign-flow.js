@@ -158,6 +158,14 @@ function finishScenario(state, resolutionKey, events) {
     }
     if (state.enemies.some(enemy => enemy.smiteTheWickedSeat === inv.seat)
       || state.locations.some(loc => loc.searchingForIzzieSeat === inv.seat)) addTrauma(state, inv.seat, 'mental', 1, events)
+    // 2026-10-25 第四轮修复 05012：弱点「游戏结束时仍在你手牌中则承受 1 点精神创伤」。
+    // 已退场/撤退者的手牌已不满足「游戏结束时仍在手牌」（且退场分支已在 eliminateInvestigator
+    // 结算过），这里跳过，避免跨分支重复触发。
+    if (!inv.defeated && !inv.resigned
+      && inv.hand.some(code => registeredEntry(code)?.traumaAtGameEndWhenInHand === true)) {
+      addTrauma(state, inv.seat, 'mental', 1, events)
+      info(state, events, `${inv.name} 手牌中的弱点在游戏结束时令其承受 1 点精神创伤。`)
+    }
     updateCampaignStatus(campaign, inv.seat)
   }
   // 第 124 轮：关末的「战役弱点转交」由战役清单声明记录键
@@ -248,6 +256,15 @@ function applyResolutionEffects(state, resolutionKey, events) {
       const penalty = getThreatEffect(debt)?.xpPenalty || 2
       amount = Math.max(0, amount - penalty)
       info(state, events, `${inv.name} 的医院债务少于 6 资源，本场冒险少获得 ${penalty} XP。`)
+    }
+    // 2026-10-25 本循环修复 05010：通用「本场冒险少取得 N 点经验」的威胁条目字段（scenarioXpModifier）。
+    // 威胁区里每张声明该字段的卡都参与 XP 结算（如悬案在「改为加入威胁区域」后生效）。
+    for (const threat of inv.threat.slice()) {
+      const modifier = Number(registeredEntry(threat.code)?.scenarioXpModifier || 0)
+      if (!modifier) continue
+      amount = Math.max(0, amount + modifier)
+      const label = ALL_CARDS[threat.code]?.nameZh || ALL_CARDS[threat.code]?.name || threat.code
+      info(state, events, `「${label}」：${inv.name} 本场冒险少取得 ${Math.abs(modifier)} 点经验值。`)
     }
     awardExperience(campaign, inv.seat, amount)
     info(state, events, `${inv.name} 获得 ${amount} XP，未花费 ${campaign.investigators[inv.seat].xp} XP。`)

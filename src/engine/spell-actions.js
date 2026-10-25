@@ -43,17 +43,19 @@ export function actionsAvailable(inv, spell) {
 }
 
 // 花掉行动之后的收窄：法术行动优先消耗「法术专用额度」，用完后才动普通行动。
-// 2026-10-25 修复 05006：旧实现只收窄不扣减，先打法术会残留 1 个法术额度，
-// 导致普通行动少 1 个（3 普通 + 1 法术的卡面实际只剩 2 普通）。
+// 2026-10-25 修复 05006（审计第三轮发现真算术 bug）：只扣 spellOnlyActions 不扣 actionsLeft 时，
+// 「先花法术专用行动」会让 actionsLeft 残留 1（5 个行动可用），必须把用掉的法术额度同时从
+// actionsLeft 里扣掉——因为额度在 grantSpellCredit 时已经加到 actionsLeft 上。
 export function consumeAction(inv, cost, spell) {
   if (!inv) return
   let remaining = Math.max(0, Number(cost) || 0)
+  let fromCredit = 0
   if (spell && inv.spellOnlyActions) {
-    const used = Math.min(remaining, inv.spellOnlyActions)
-    inv.spellOnlyActions -= used
-    remaining -= used
+    fromCredit = Math.min(remaining, inv.spellOnlyActions)
+    inv.spellOnlyActions -= fromCredit
+    remaining -= fromCredit
   }
-  inv.actionsLeft = Math.max(0, (inv.actionsLeft || 0) - remaining)
+  inv.actionsLeft = Math.max(0, (inv.actionsLeft || 0) - fromCredit - remaining)
   if (inv.spellOnlyActions) inv.spellOnlyActions = Math.min(inv.spellOnlyActions, inv.actionsLeft)
   if (!inv.spellOnlyActions) delete inv.spellOnlyActions
 }
@@ -70,6 +72,18 @@ export function grantSpellCredit(state, inv, { info = () => {}, blanked = false 
   inv.spellCreditTurn = state.turnSerial
   info(`${inv.name} 因控制的卡牌上有毁灭标记，获得 1 个只能用于法术的额外行动。`)
   return true
+}
+
+// 2026-10-25 第七轮修复 05006：卡上毁灭减少到阈值以下时，收回尚未使用的「只能用于法术」额度。
+export function syncSpellCredit(state, inv) {
+  const rule = spellCreditRule(inv?.code)
+  if (!rule) return false
+  if (doomAmongControlled(inv) >= (rule.doomAtLeast ?? 1)) return false
+  const unused = Math.max(0, spellOnlyActionsOf(inv))
+  if (unused > 0) inv.actionsLeft = Math.max(0, (inv.actionsLeft || 0) - unused)
+  delete inv.spellOnlyActions
+  delete inv.spellCreditTurn
+  return unused > 0
 }
 
 // 回合/阶段重置：上一回合的授权标记随之失效（额度本身由 actionsLeft 重置带走）。

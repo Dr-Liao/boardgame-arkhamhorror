@@ -253,6 +253,11 @@
 .ah-combat-charge{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:radial-gradient(circle,#ffffff 0 14%,#bfe6ff 28%,#4aa8ff88 52%,transparent 72%);box-shadow:0 0 22px #6cbcff;opacity:0}
 .ah-combat-burst.is-electric{border-color:#9fd8ff;background:radial-gradient(circle,#ffffffd0,#7cc4ff40 45%,transparent 65%);box-shadow:0 0 26px #4aa8ff}
 .ah-combat-fx[data-style='lightning']{--strike:#bfe6ff}
+.ah-combat-fx[data-style='spell']{--strike:#d8a8ff}
+.ah-combat-sigil,.ah-combat-ward{position:absolute;width:86px;height:86px;margin:-43px 0 0 -43px;border:3px solid #d8a8ff;border-radius:50%;box-shadow:0 0 18px #a64cff,inset 0 0 16px #a64cff;opacity:0}
+.ah-combat-sigil::before,.ah-combat-ward::before{content:'';position:absolute;inset:12px;border:2px dashed #f0d5ff;border-radius:50%;box-shadow:0 0 12px #c773ff}
+.ah-combat-ward{width:112px;height:112px;margin:-56px 0 0 -56px;border-color:#f0d5ff}
+.ah-combat-orb{position:absolute;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;background:radial-gradient(circle,#fff 0 12%,#edc7ff 30%,#a64cffaa 55%,transparent 75%);box-shadow:0 0 22px #c773ff,0 0 38px #7f35d7;opacity:0}
 .ah-combat-fx.is-miss .ah-combat-hole{display:none}
 .ah-blast-fx{--strike:#ffb066}
 .ah-blast-stick{position:absolute;width:30px;height:9px;margin:-4.5px 0 0 -15px;border-radius:2px;background:linear-gradient(#e0473a,#9b1d16);box-shadow:inset 0 0 0 1px #5c0f0b,0 0 6px #0008}
@@ -266,4 +271,4 @@
 .ah-blast-debris{position:absolute;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:1px;background:#ffcf7a;box-shadow:0 0 6px #ff8a2a;opacity:0}
 .ah-combat-burst.is-fire{width:80px;height:80px;border-color:#ffb066;background:radial-gradient(circle,#fff1c8c0,#ff8a2a50 45%,transparent 65%);box-shadow:0 0 22px #ff7a2a}
 .ah-combat-fx.is-miss .ah-combat-cut{background:linear-gradient(90deg,transparent,#e6efe9 30%,var(--strike) 60%,transparent)}
-@media(prefers-reduced-motion:reduce){.ah-combat-slash,.ah-combat-burst,.ah-combat-muzzle,.ah-combat-tracer,.ah-combat-hole,.ah-combat-cut,.ah-combat-bolts,.ah-combat-charge,.ah-blast-stick,.ah-blast-flash,.ah-blast-fireball,.ah-blast-ring,.ah-blast-smoke,.ah-blast-debris{display:none}}
+@media(prefers-reduced-motion:reduce){.ah-combat-slash,.ah-combat-burst,.ah-combat-muzzle,.ah-combat-tracer,.ah-combat-hole,.ah-combat-cut,.ah-combat-bolts,.ah-combat-charge,.ah-combat-sigil,.ah-combat-orb,.ah-combat-ward,.ah-blast-stick,.ah-blast-flash,.ah-blast-fireball,.ah-blast-ring,.ah-blast-smoke,.ah-blast-debris{display:none}}

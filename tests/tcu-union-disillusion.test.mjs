@@ -109,6 +109,22 @@ function apiFor(state, overrides = {}) {
       if (overrides.choose) return overrides.choose(request)
       return request.options?.[0]?.id
     },
+    // 05239/05241/05242：引擎通用资源标记 API（写到 target.markers，与 scenario-runtime.js 同形状）。
+    addMarker: (target, label = 'resource') => {
+      if (!target) return null
+      target.markers ||= []
+      target.markers.push(label)
+      calls.push(['addMarker', target, label])
+      return target.markers.length
+    },
+    removeMarker: (target, label = 'resource') => {
+      if (!target?.markers) return 0
+      const index = target.markers.indexOf(label)
+      if (index >= 0) target.markers.splice(index, 1)
+      calls.push(['removeMarker', target, label])
+      return target.markers.length
+    },
+    markers: target => (target?.markers ? [...target.markers] : []),
     test: (seat, skill, difficulty, resolve, skillBonus = 0, source = null, options = {}) => {
       calls.push(['test', { seat, skill, difficulty, source, options }])
       const result = overrides.testResult || {
@@ -225,11 +241,11 @@ test('聚合幻灭：章节已是 playable，地点/幕/议程/结局/身份齐�
   }
 })
 
-test('诚实登记：gaps 与 approximations 都存在且覆盖命运卡/火盆/看守人', () => {
+test('诚实登记：gaps 与 approximations 都存在且覆盖命运卡/共享规则', () => {
   assert.deepEqual(uad.behavior.scenarioGaps, [], 'playable 要求卡面子句无未实现 gap')
   assert.ok(uad.behavior.scenarioApproximations.length >= 5)
   const text = uad.behavior.scenarioApproximations.join(' ')
-  for (const keyword of ['fateCards', '火盆', '看守人']) assert.ok(text.includes(keyword), keyword)
+  for (const keyword of ['fateCards', 'spawnStoryEnemy', '失踪人口']) assert.ok(text.includes(keyword), keyword)
 })
 
 test('幕 3/4 版本按战役记录选择：v1 秘社、v2/v3/v4 女巫集会', () => {
@@ -285,6 +301,8 @@ test('布置：女巫集会阵营点燃危险河岸与 2 张未访之岛的火�
   placeAll(coven, placed)
   assert.equal(uad.behavior.brazierLit(coven, 'forbiddingShore'), true)
   assert.equal(uad.behavior.brazierLit(coven, placed[2]), true)
+  assert.deepEqual(loc(coven, 'forbiddingShore').markers, ['brazier'], '火盆用真实资源标记承载')
+  assert.ok(loc(coven, placed[2]).markers.includes('brazier'), '点亮的未访之岛带火盆资源标记')
   assert.equal(uad.behavior.litIsles(coven).length, 2)
   assert.equal(uad.behavior.brazierLit(coven, MISKATONIC_RIVER), false)
 
@@ -292,6 +310,7 @@ test('布置：女巫集会阵营点燃危险河岸与 2 张未访之岛的火�
   const lodgePlaced = uad.behavior.setupLocations(lodge, [], setupApi())
   placeAll(lodge, lodgePlaced)
   assert.equal(uad.behavior.brazierLit(lodge, 'forbiddingShore'), false)
+  assert.deepEqual(loc(lodge, 'forbiddingShore').markers || [], [], '秘社阵营没有火盆标记')
   assert.equal(uad.behavior.litIsles(lodge).length, 0)
 })
 
@@ -312,7 +331,7 @@ test('鬼灵迷雾：未揭示的未访之岛按阵营火盆状态挡路，灵�
   assert.equal(uad.behavior.brazierLit(state, 'forbiddingShore'), true)
   const blockedByLit = uad.behavior.investigatorEntryError(state, isle)
   assert.ok(blockedByLit && blockedByLit.includes('鬼灵迷雾'), '女巫集会 + 危险河岸火盆点燃 → 不能进入')
-  loc(state, 'forbiddingShore').flags = { brazier: false }
+  uad.behavior.setBrazier(state, apiFor(state), 'forbiddingShore', false)
   assert.equal(uad.behavior.investigatorEntryError(state, isle), null, '熄灭危险河岸后才能进入')
   isle.revealed = true
   assert.equal(uad.behavior.investigatorEntryError(state, isle), null, '已揭示的岛可以进入')
@@ -334,7 +353,9 @@ test('阵法行动：未访之岛用 2 个技能求和检定 + actionKind=circle
   assert.equal(testCall[1].skill.length, 2, '2–4 个技能求和')
   assert.equal(testCall[1].options.actionKind, 'circle')
   assert.equal(uad.behavior.brazierLit(state, isle.id), false, '成功后可选择熄灭火盆')
-  assert.ok(api.calls.some(call => call[0] === 'setLocationFlag' && call[1] === isle.id && call[2] === 'brazier'))
+  assert.equal(loc(state, isle.id).markers.includes('brazier'), false, '熄灭 = 移除火盆资源标记')
+  assert.ok(api.calls.some(call => call[0] === 'removeMarker' && call[1] === isle && call[2] === 'brazier'),
+    '通过引擎资源标记 API 移除火盆标记')
 })
 
 test('阵法行动：危险河岸先选择技能，只有 1 个技能；灵怪陷阱四技能难度 20', () => {
@@ -413,13 +434,16 @@ test('幕 2 背面：幽灵看守人生成在米斯卡塔尼克河、被偷走�
   assert.ok(watcher)
   assert.equal(watcher.location, 'miskatonicRiver')
   assert.equal(watcher.lostSouls, 2)
+  assert.equal(watcher.markers.filter(label => label === 'stolenSoul').length, 2,
+    '05239：被偷走的灵魂 = 看守人身上的 2 个资源标记')
   assert.equal(watcher.health, 5 + 2 * 2, '灵魂让生命 +1×人数/个')
   assert.ok(loc(state, 'geistTrap'), '灵怪陷阱入场')
   assert.equal(state.scenarioFlags.geistTrapPlaced, true)
   assert.equal(uad.behavior.brazierLit(state, 'geistTrap'), true, '女巫集会：灵怪陷阱火盆点燃')
+  assert.deepEqual(loc(state, 'geistTrap').markers, ['brazier'], '05242：点燃的火盆 = 地点上的资源标记')
 })
 
-test('幕 2 背面：看守人的注视从放在一边洗入遭遇牌库，弃牌堆洗回', () => {
+test('幕 2 背面：看守人的攫噬×2 与注视从放在一边洗入遭遇牌库，弃牌堆洗回', () => {
   const state = placedState(2, RECORD_COVEN)
   state.encounterDeck = ['05266']
   state.encounterDiscard = ['05268']
@@ -427,6 +451,9 @@ test('幕 2 背面：看守人的注视从放在一边洗入遭遇牌库，弃�
   assert.equal(state.encounterDiscard.length, 0)
   assert.ok(state.encounterDeck.length >= 2)
   assert.equal(state.scenarioZones.setAside.includes('05272'), false)
+  // 卡面原文：放在一边的每张看守人的攫噬（05087×2）也要一起洗入（旧实现只搬了注视）。
+  assert.equal(state.scenarioZones.setAside.includes('05087'), false)
+  assert.equal(state.encounterDeck.filter(code => code === '05087').length, 2)
 })
 
 test('幕 3（版本四）背面：揭示灵怪陷阱、把岛上的调查员拉进去、生成秘社新信徒/约瑟夫并洗牌', () => {
@@ -443,6 +470,10 @@ test('幕 3（版本四）背面：揭示灵怪陷阱、把岛上的调查员拉
   assert.ok(state.enemies.some(entry => entry.code === '05085'), '约瑟夫健在 → 生成约瑟夫')
   assert.equal(state.scenarioFlags.noParleyJosef, true)
   assert.ok(state.scenarioZones.setAside.filter(code => code === '05097').length < 2, '银暮秘社卡洗入牌库')
+  // 卡面：把放在一边的银暮秘社组「剩余」卡牌全部洗入——生成过的新信徒不能再留在 setAside。
+  const lodgeLeft = state.scenarioZones.setAside.filter(code =>
+    ['05095', '05096', '05097'].includes(code))
+  assert.deepEqual(lodgeLeft, [], '银暮秘社组剩余卡牌全部洗入，无残留')
 })
 
 function api1(state) {
@@ -454,14 +485,39 @@ function idOfIsle(state, key) {
   return key
 }
 
-test('幕 3（版本一）背面：女巫的法术成功 → 安妮特·梅森，否则生成女巫集会学徒', () => {
+test('幕 3（版本一）背面：法术成功 → 安妮特，否则生成学徒；每张剩余的女巫敌人与弃牌堆洗入', () => {
   const cast = placedState(2, { ...RECORD_LODGE, theWitchesSpellWasCast: true })
   uad.behavior.actReveal(cast, ACT_DECKS.v1[2], apiFor(cast))
-  assert.ok(cast.enemies.some(entry => entry.code === '05057'))
+  assert.ok(cast.enemies.some(entry => entry.code === '05057'), '法术成功 → 生成安妮特')
+  // 参考 setup：3×05090 学徒 + 1×05091 女祭司 + 安妮特都在 setAside；成功分支生成安妮特后，
+  // 剩下的每张女巫敌人（3 学徒 + 女祭司）都要与遭遇弃牌堆一起洗入遭遇牌库。
+  assert.deepEqual(cast.scenarioZones.setAside.filter(code => ['05057', '05090', '05091'].includes(code)), [],
+    '法术成功分支：剩余女巫敌人全部洗入')
+  assert.equal(cast.encounterDeck.filter(code => code === '05090').length >= 3, true, '3 张学徒洗入牌库')
+  assert.equal(cast.encounterDeck.includes('05091'), true, '女祭司洗入牌库')
+
   const broken = placedState(2, RECORD_LODGE)
   uad.behavior.actReveal(broken, ACT_DECKS.v1[2], apiFor(broken))
-  assert.ok(broken.enemies.some(entry => entry.code === '05090'))
+  assert.ok(broken.enemies.some(entry => entry.code === '05090'), '法术被破坏 → 生成女巫集会学徒')
   assert.equal(broken.enemies.some(entry => entry.code === '05057'), false)
+  // 2 人局生成 1 张学徒：剩余 2 学徒 + 女祭司 + 安妮特（未被生成，仍是「剩余放在一边的女巫敌人」）全部洗入。
+  assert.deepEqual(broken.scenarioZones.setAside.filter(code => ['05057', '05090', '05091'].includes(code)), [],
+    '破坏分支：剩余女巫敌人（含安妮特）全部洗入')
+  assert.equal(broken.encounterDeck.filter(code => code === '05090').length, 2, '剩余 2 张学徒洗入')
+  assert.equal(broken.encounterDeck.includes('05057'), true, '安妮特作为剩余女巫敌人被洗入')
+})
+
+test('幕 3（版本二）背面：cultist 标记从混乱袋、封印区与战役袋中移除（直到剧本结束）', () => {
+  const state = placedState(2, RECORD_LODGE)
+  state.chaosBag = ['cultist', 'cultist', 'skull', 'tablet']
+  state.chaos = { revealed: [], sealed: [{ token: 'cultist', source: '05125' }, { token: 'tablet', source: 'x' }], removed: [], frames: [] }
+  state.sealedTokens = ['cultist', 'tablet']
+  state.campaign.chaosBag = ['cultist', 'cultist', 'skull']
+  uad.behavior.actReveal(state, ACT_DECKS.v2[2], apiFor(state))
+  assert.deepEqual(state.chaosBag, ['skull', 'tablet'], '混乱袋里的 cultist 全部移除')
+  assert.deepEqual(state.chaos.sealed.map(item => item.token), ['tablet'], '封印的 cultist 也被移除')
+  assert.deepEqual(state.sealedTokens, ['tablet'], '封印读数同步')
+  assert.deepEqual(state.campaign.chaosBag, ['skull'], '战役袋持久移除（下一关不会回来）')
 })
 
 test('幕 3 目标：场上每个未访之岛都已翻开且火盆状态一致才推进', () => {
@@ -470,7 +526,7 @@ test('幕 3 目标：场上每个未访之岛都已翻开且火盆状态一致�
   const api = apiFor(state)
   for (const location of state.locations.filter(entry => ISLE_CODES.includes(entry.originalCode))) {
     location.revealed = true
-    location.flags = { brazier: false }
+    uad.behavior.setBrazier(state, api, location.id, false)
   }
   uad.behavior.checkObjectives(state, api)
   assert.ok(api.calls.some(call => call[0] === 'advanceAct'), '版本四要求火盆全灭')
@@ -481,7 +537,7 @@ test('幕 3 目标：场上每个未访之岛都已翻开且火盆状态一致�
   const v1api = apiFor(v1)
   for (const location of v1.locations.filter(entry => ISLE_CODES.includes(entry.originalCode))) {
     location.revealed = false
-    location.flags = { brazier: true }
+    uad.behavior.setBrazier(v1, v1api, location.id, true)
   }
   uad.behavior.checkObjectives(v1, v1api)
   assert.equal(v1api.calls.some(call => call[0] === 'advanceAct'), false, '未全部翻开不推进')
@@ -496,7 +552,7 @@ test('幽灵看守人被击败：不弃掉、治愈伤害并横置，在灵怪�
   state.actIndex = 3
   placeAll(state, ['geistTrap'])
   loc(state, 'geistTrap').revealed = true
-  loc(state, 'geistTrap').flags = { brazier: true }
+  uad.behavior.setBrazier(state, apiFor(state), 'geistTrap', true)
   const watcher = enemy(state, '05086', 'geistTrap', { damageTaken: 3, fight: 3 })
   const api = apiFor(state)
   const replaced = uad.behavior.enemyDefeated(state, watcher, api)
@@ -514,7 +570,7 @@ test('结局 8 判定：看守人不在灵怪陷阱或火盆不匹配时幕 4 �
   state.actIndex = 3
   placeAll(state, ['geistTrap'])
   loc(state, 'geistTrap').revealed = true
-  loc(state, 'geistTrap').flags = { brazier: false }
+  uad.behavior.setBrazier(state, apiFor(state), 'geistTrap', false)
   const watcher = enemy(state, '05086', 'geistTrap')
   const api = apiFor(state)
   uad.behavior.enemyDefeated(state, watcher, api)
@@ -620,6 +676,9 @@ test('诡计：渴望死亡难度随伤害提高、死亡记号随恐惧提高�
   assert.equal(adjusted.damage, 3, '灵魂之歌 +2 伤害')
   assert.equal(adjusted.horror, 3, '死期临近 +2 恐惧')
   assert.equal(inv.threat.length, 0, '两张威胁卡都已弃掉')
+  // 卡面「弃掉」：威胁区的诡计要进遭遇弃牌堆（否则这张牌从牌局循环里消失）。
+  assert.ok(state.encounterDiscard.includes('05269'), '灵魂之歌进入遭遇弃牌堆')
+  assert.ok(state.encounterDiscard.includes('05270'), '死期临近进入遭遇弃牌堆')
 })
 
 test('结局：noResolution 按结局 5 分流；桑福德/安妮特记录链最终走结局 8', () => {
@@ -711,4 +770,268 @@ test('幽灵看守人被击败：本轮补给阶段不重整（preventReady）�
   assert.deepEqual(holder.engaged, [], '交战调查员的 engaged 数组已清理')
   assert.equal(watcher.damageTaken, 0, '治愈所有伤害')
   assert.equal(watcher.horror, 2, '恐惧不在卡面治愈范围内')
+})
+
+// ---------------------------------------------------------------------------
+// Wave 1 修复回归：05238 / 05241 / 05246 / 05248 / 05253
+// ---------------------------------------------------------------------------
+test('05238 [elder_thing]：真实流程里 state.skillTest 已关闭，从 result.source 识别阵法行动', () => {
+  const state = placedState(2, RECORD_COVEN)
+  const inv = state.investigators[0]
+  assert.equal(state.skillTest, null)
+  const circleApi = apiFor(state)
+  uad.behavior.afterTest(state, inv, {
+    success: false, value: 1, difficulty: 3, drawn: ['elderthing'], cancelledTokens: [],
+    source: { label: '阵法', code: 'miskatonicRiver', actionKind: 'circle' },
+  }, circleApi)
+  assert.ok(circleApi.calls.some(call => call[0] === 'haunted'), '阵法失败 + 古神标记 → 结算闹鬼')
+  const plainApi = apiFor(state)
+  uad.behavior.afterTest(state, inv, {
+    success: false, value: 1, difficulty: 3, drawn: ['elderthing'], cancelledTokens: [],
+    source: { label: '调查', code: 'miskatonicRiver' },
+  }, plainApi)
+  assert.equal(plainApi.calls.some(call => call[0] === 'haunted'), false, '非阵法检定不结算')
+  // 成功时也不结算（卡面条件含「失败」）。
+  const successApi = apiFor(state)
+  uad.behavior.afterTest(state, inv, {
+    success: true, value: 5, difficulty: 3, drawn: ['elderthing'], cancelledTokens: [],
+    source: { label: '阵法', code: 'miskatonicRiver', actionKind: 'circle' },
+  }, successApi)
+  assert.equal(successApi.calls.some(call => call[0] === 'haunted'), false)
+})
+
+test('05241 命运卡：按玩家顺序分组结算（不是按发牌顺序）', () => {
+  const state = placedState(2, RECORD_COVEN)
+  // 4 张命运卡：按 0,1,2,3 顺序发放 → 座位 0 拿 [A,C]、座位 1 拿 [B,D]；
+  // 结算顺序必须是 座位 0 的 A、C 再座位 1 的 B、D（旧实现按 A,B,C,D 洗牌顺序结算）。
+  state.scenarioFlags.fateCards = ['A', 'B', 'C', 'D'].map(name => ({
+    code: `fate${name}`, ally: `ally${name}`, enemy: `enemy${name}`, person: name,
+    trail: `trail${name}`, alive: `${name}Alive`, dead: `${name}Dead`, name, resolved: false, seat: null,
+  }))
+  const api = apiFor(state, { shuffle: list => [...list] })
+  uad.behavior.actReveal(state, state.acts[0], api)
+  const resolvedNames = api.calls
+    .filter(call => call[0] === 'info' && /“([A-D])”的命运/.test(call[1]))
+    .map(call => call[1].match(/“([A-D])”/)[1])
+  assert.deepEqual(resolvedNames, ['A', 'C', 'B', 'D'], '座位 0 的两张先结算，再座位 1')
+})
+
+test('05246 谈判：只有未被封锁且与约瑟夫同地点时才列出，performAction 再校验一次', () => {
+  const state = placedState(2, RECORD_COVEN)
+  const inv = state.investigators[0]
+  const josef = enemy(state, '05085', inv.location)
+  const api = apiFor(state)
+  assert.ok(uad.behavior.actions(state, inv).some(move => move.rule === 'parleyJosef'),
+    '未封锁时列出谈判行动')
+  state.scenarioFlags.noParleyJosef = true
+  assert.equal(uad.behavior.actions(state, inv).some(move => move.rule === 'parleyJosef'), false,
+    '封锁后不再列出（本局剩余时间不能谈判）')
+  const blockedApi = apiFor(state)
+  uad.behavior.performAction(state, inv, { rule: 'parleyJosef' }, blockedApi)
+  assert.ok(blockedApi.calls.some(call => call[0] === 'info' && call[1].includes('不能与约瑟夫')))
+  // 未封锁时：检定成功 → 翻面结算 05085b 并记录。
+  state.scenarioFlags.noParleyJosef = false
+  const okApi = apiFor(state)
+  uad.behavior.performAction(state, inv, { rule: 'parleyJosef' }, okApi)
+  assert.equal(state.scenarioFlags.josefPlanResolved, true)
+  assert.equal(josef.doom, 0)
+})
+
+test('05253 最近的夜鹰：按地点连接距离取最近，而不是第一个/同地点', () => {
+  const state = placedState(2, RECORD_COVEN)
+  const inv = state.investigators[0]
+  const origin = state.scenarioFlags.placedIsles.length
+    ? Object.keys(UNVISITED_ISLES).find(key => UNVISITED_ISLES[key] === state.scenarioFlags.placedIsles[0])
+    : 'miskatonicRiver'
+  // origin -- near -- far 三点一线；两只夜鹰分别在 near（1 步）与 far（2 步）。
+  placeAll(state, [origin])
+  const originLoc = loc(state, origin)
+  const nearId = 'forbiddingShore'
+  const farId = 'miskatonicRiver'
+  originLoc.connections = [nearId]
+  loc(state, nearId).connections = [origin, farId]
+  loc(state, farId).connections = [nearId]
+  const farRaven = enemy(state, '05266', farId, { name: '远夜鹰' })
+  const nearRaven = enemy(state, '05266', nearId, { name: '近夜鹰' })
+  const attacked = []
+  const api = apiFor(state, { attack: target => attacked.push(target.id) })
+  uad.behavior.hauntedScript(state, { scriptId: 'forsakenWoods', locationId: origin, seat: inv.seat }, api)
+  assert.deepEqual(attacked, [nearRaven.id], '最近的夜鹰（1 步）攻击，而不是更远的或第一个')
+  assert.equal(attacked.includes(farRaven.id), false)
+})
+
+test('05248 目标：火盆状态以看守人被击败瞬间为准，之后变化不影响判定', () => {
+  // 版本四（05248 仪式遭毁）：目标要求「被击败时火盆未点燃」。
+  const broken = placedState(2, RECORD_COVEN)
+  broken.acts = ACT_DECKS.v4
+  broken.actIndex = 3
+  placeAll(broken, ['geistTrap'])
+  loc(broken, 'geistTrap').revealed = true
+  uad.behavior.setBrazier(broken, apiFor(broken), 'geistTrap', false)
+  const brokenWatcher = enemy(broken, '05086', 'geistTrap')
+  const brokenApi = apiFor(broken)
+  uad.behavior.enemyDefeated(broken, brokenWatcher, brokenApi)
+  assert.equal(broken.scenarioFlags.watcherDefeatedBrazierLit, false)
+  assert.ok(brokenApi.calls.some(call => call[0] === 'advanceAct'), '未点燃时击败 → 推进')
+  // 典型旧漏洞：在火盆点燃时击败（条件不满足），之后熄灭也不应该补推进。
+  const stale = placedState(2, RECORD_COVEN)
+  stale.acts = ACT_DECKS.v4
+  stale.actIndex = 3
+  placeAll(stale, ['geistTrap'])
+  loc(stale, 'geistTrap').revealed = true
+  uad.behavior.setBrazier(stale, apiFor(stale), 'geistTrap', true)
+  const staleWatcher = enemy(stale, '05086', 'geistTrap')
+  const staleApi = apiFor(stale)
+  uad.behavior.enemyDefeated(stale, staleWatcher, staleApi)
+  assert.equal(staleApi.calls.some(call => call[0] === 'advanceAct'), false, '点燃时击败不满足版本四')
+  uad.behavior.setBrazier(stale, apiFor(stale), 'geistTrap', false)
+  const laterApi = apiFor(stale)
+  uad.behavior.checkObjectives(stale, laterApi)
+  assert.equal(laterApi.calls.some(call => call[0] === 'advanceAct'), false, '之后熄灭也不能补推进')
+})
+
+test('05254 苔藓阶梯：只有移动行动加价，效果位移不扣行动', () => {
+  const state = placedState(2, RECORD_COVEN)
+  const inv = state.investigators[0]
+  uad.behavior.hauntedScript(state, { scriptId: 'mossSteps', locationId: 'mossCoveredSteps', seat: 0 }, apiFor(state))
+  inv.actionsLeft = 3
+  uad.behavior.beforeMove(state, inv, 'forbiddingShore', apiFor(state), { reason: 'effect' })
+  assert.equal(inv.actionsLeft, 3, '效果位移不加价')
+  assert.equal(state.scenarioFlags.mossStepsPaid?.[0], undefined, '加价仍留给下一次移动行动')
+  uad.behavior.beforeMove(state, inv, 'forbiddingShore', apiFor(state), { reason: 'move' })
+  assert.equal(inv.actionsLeft, 2, '移动行动扣 1 行动')
+  uad.behavior.beforeMove(state, inv, 'forbiddingShore', apiFor(state), { reason: 'move' })
+  assert.equal(inv.actionsLeft, 2, '同一轮只额外扣一次')
+})
+
+test('05262-05265：翻回敌人面的命运敌人与「结算这张卡的调查员」交战；person 记录键正确', () => {
+  // 失踪人口记录键：05048 = 瓦伦蒂诺、05049 = 佩妮（旧实现把两张对调）。
+  assert.equal(FATE_LIST.find(fate => fate.name === '佩妮').person, '05049')
+  assert.equal(FATE_LIST.find(fate => fate.name === '瓦伦蒂诺').person, '05048')
+  const state = placedState(2, { ...RECORD_COVEN, missingPersons: FATE_LIST.map(fate => fate.person) })
+  state.campaign.records.wasClaimedBySpecters = FATE_LIST.map(fate => fate.person)
+  const engaged = []
+  const api = apiFor(state, {
+    engage: (target, seat) => { target.engagedSeat = seat; engaged.push(seat) },
+  })
+  uad.behavior.actReveal(state, state.acts[0], api)
+  for (const fate of state.scenarioFlags.fateCards) {
+    assert.equal(fate.resolved, true)
+    const spawned = state.enemies.find(entry => entry.code === fate.enemy)
+    assert.ok(spawned, `${fate.name}的敌人面应生成`)
+    assert.equal(spawned.engagedSeat, fate.seat, `${fate.name}应与结算其命运卡的调查员交战`)
+  }
+  assert.equal(engaged.length, FATE_LIST.length, '每张命运敌人都显式交战一次')
+})
+
+test('05246/05248 [fast]：任一调查员可在阵法检定期花自己的线索降难度（逐人询问）', () => {
+  const state = placedState(2, RECORD_COVEN)
+  state.acts[0].originalCode = '05246' // 本回合的幕是带 [fast] 的版本
+  const tester = state.investigators[0]
+  const other = state.investigators[1]
+  other.clues = 2
+  state.skillTest = { actionKind: 'circle', difficulty: 4, difficultyReduction: 0 }
+  const spent = []
+  const reductions = []
+  const api = apiFor(state, {
+    choose: request => {
+      assert.equal(request.kind, 'effect', '以「效果」面板询问该调查员本人')
+      assert.equal(request.seat, other.seat)
+      return 'spend'
+    },
+    spendClues: (seat, amount) => { state.investigators[seat].clues -= amount; spent.push(seat) },
+    reduceTestDifficulty: amount => { reductions.push(amount) },
+  })
+  uad.behavior.testOtherInvestigatorTrigger(state, other, tester, {
+    actionKind: 'circle', difficulty: 4, source: { label: '阵法' },
+  }, api)
+  assert.deepEqual(spent, [other.seat], '由非检定者自己付费')
+  assert.deepEqual(reductions, [2], '通过引擎 api 降低本次难度 2')
+  assert.equal(other.clues, 1)
+  assert.equal(state.skillTest.difficultyReduction, 0, '走 api 分支时不再直接改 skillTest')
+  // 同一检定同一人只触发一次（circleFastUsed 标记挡掉第二次）。
+  uad.behavior.testOtherInvestigatorTrigger(state, other, tester, {
+    actionKind: 'circle', difficulty: 4, source: { label: '阵法' },
+  }, apiFor(state, { choose: () => 'spend' }))
+  assert.equal(other.clues, 1, '同一检定已触发过，不再扣线索')
+  // 非阵法检定不询问；不是 [fast] 幕不询问；没有线索不询问。
+  const skipApi = apiFor(state, { choose: () => 'spend' })
+  uad.behavior.testOtherInvestigatorTrigger(state, other, tester, { actionKind: null, difficulty: 4 }, skipApi)
+  assert.equal(other.clues, 1)
+  state.acts[0].originalCode = '05239' // 不带 [fast] 的幕
+  uad.behavior.testOtherInvestigatorTrigger(state, other, tester, { actionKind: 'circle' }, apiFor(state, { choose: () => 'spend' }))
+  assert.equal(other.clues, 1, '非 [fast] 幕不触发')
+  other.clues = 0
+  uad.behavior.testOtherInvestigatorTrigger(state, other, tester, { actionKind: 'circle' }, apiFor(state, { choose: () => 'spend' }))
+  assert.equal(other.clues, 0, '没有线索不触发')
+})
+
+test('05262b 加弗瑞拉：成功攻击后只有「未被击败且重整」才受 1 点恐惧', () => {
+  const state = placedState(2, RECORD_COVEN)
+  const inv = state.investigators[0]
+  const gavriella = enemy(state, '05262b', inv.location, { name: '加弗瑞拉' })
+  const readyApi = apiFor(state)
+  uad.behavior.enemyAttackedSuccessfully(state, inv, gavriella, readyApi, { defeated: false, enemyId: gavriella.id })
+  assert.equal(inv.horror, 1, '重整状态 → 受到 1 点恐惧')
+  // 本次攻击直接击败她（引擎在判定击败之后、移除之前调用钩子）→ 不再是重整状态，不触发。
+  const defeatedApi = apiFor(state)
+  uad.behavior.enemyAttackedSuccessfully(state, inv, gavriella, defeatedApi, { defeated: true, enemyId: gavriella.id })
+  assert.equal(inv.horror, 1, '被击败时不额外加恐惧')
+  // 已横置（如被躲避）→ 不是重整状态，不触发。
+  const exhausted = enemy(state, '05262b', inv.location, { name: '加弗瑞拉', exhausted: true })
+  uad.behavior.enemyAttackedSuccessfully(state, inv, exhausted, apiFor(state), { defeated: false, enemyId: exhausted.id })
+  assert.equal(inv.horror, 1, '横置时不触发')
+})
+
+test('05246/05248 [fast]：任意玩家窗口出现（behavior.fastActions），使用后同一检定每人一次', () => {
+  const state = placedState(2, RECORD_COVEN)
+  state.acts[0].originalCode = '05246' // 本回合的幕是带 [fast] 的版本
+  const tester = state.investigators[0]
+  const other = state.investigators[1]
+  tester.clues = 2
+  other.clues = 1
+  // 没有进行中的检定 → 任何窗口都不提供。
+  assert.deepEqual(uad.behavior.fastActions(state, tester, 'test.beforeCommit'), [])
+  state.skillTest = { actionKind: 'circle', difficulty: 5, difficultyReduction: 0, seat: tester.seat }
+  const moves = uad.behavior.fastActions(state, tester, 'test.beforeCommit')
+  assert.equal(moves.length, 1, '检定者本人在 test 窗口可选')
+  assert.equal(moves[0].rule, 'circleFast')
+  assert.equal(moves[0].actions, 0)
+  assert.equal(moves[0].fast, true)
+  assert.equal(uad.behavior.fastActions(state, other, 'test.afterCommit').length, 1, '其他玩家窗口也可选')
+  const spent = []
+  const reductions = []
+  const api = apiFor(state, {
+    spendClues: (seat, amount) => { state.investigators[seat].clues -= amount; spent.push(seat) },
+    reduceTestDifficulty: amount => { reductions.push(amount) },
+  })
+  uad.behavior.performAction(state, tester, moves[0], api)
+  assert.deepEqual(spent, [tester.seat], '由触发者自己付费')
+  assert.deepEqual(reductions, [2], '本次检定难度 -2')
+  assert.equal(tester.clues, 1)
+  assert.deepEqual(uad.behavior.fastActions(state, tester, 'test.afterCommit'), [], '同一检定同一人只一次')
+  // 非阵法检定不提供；非 [fast] 幕不提供。
+  state.skillTest = { actionKind: 'willpower' }
+  assert.deepEqual(uad.behavior.fastActions(state, other, 'test.afterCommit'), [])
+  state.skillTest = { actionKind: 'circle', seat: tester.seat }
+  state.acts[0].originalCode = '05239'
+  assert.deepEqual(uad.behavior.fastActions(state, other, 'test.afterCommit'), [])
+})
+
+test('05239 被偷走的灵魂：看守人不在场先记账，入场时补成真实资源标记并折算攻击/生命', () => {
+  const state = placedState(2, { ...RECORD_COVEN, wasTakenByTheWatcher: ['05046', '05047'] })
+  state.scenarioFlags.watcherSouls = 2
+  const api = apiFor(state)
+  // 看守人此时尚未在场：没有可写标记的实例，先记 watcherSouls。
+  assert.equal(state.enemies.some(entry => entry.code === '05086'), false)
+  const watcher = api.spawn('05086', 'miskatonicRiver')
+  assert.equal(watcher.markers.filter(label => label === 'stolenSoul').length, 2,
+    '入场时按记账补 2 个 stolenSoul 资源标记（不论之前是否在场）')
+  assert.equal(watcher.lostSouls, 2)
+  assert.equal(watcher.health, 5 + 2 * 2, '每人 +1 生命折算自灵魂数')
+  assert.equal(uad.behavior.enemyStatModifier(state, watcher, 'fight'), 2, '每个灵魂 +1 攻击值')
+  assert.equal(uad.behavior.enemyStatModifier(state, watcher, 'evade'), 0, '躲避不加')
+  // 之后重新同步（如恋人背面再次记录）时标记数跟随数值、不重复叠加。
+  uad.behavior.agendaReveal(state, state.agendas[0], api)
+  assert.equal(watcher.markers.filter(label => label === 'stolenSoul').length, 2, '重复同步不叠加')
 })

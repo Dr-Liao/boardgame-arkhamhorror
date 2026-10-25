@@ -192,7 +192,7 @@ export function resolveEffect(state, seat, effect, rt) {
       const amount = effect.amount || 1
       const enemy = rt.enemyForTarget(seat, effect.target || 'engaged')
       if (enemy) {
-        if (rt.damageEnemy(enemy, amount, seat)) rt.info(`对「${enemy.name}」造成 ${amount} 点伤害（${enemy.damageTaken}/${enemy.health}）。`)
+        if (rt.damageEnemy(enemy, amount, seat, effect.code || null)) rt.info(`对「${enemy.name}」造成 ${amount} 点伤害（${enemy.damageTaken}/${enemy.health}）。`)
       } else {
         rt.info('没有可攻击的敌人。')
       }
@@ -347,9 +347,15 @@ export function resolveEffect(state, seat, effect, rt) {
       // Ward of Protection is played on the encounter-draw window (before the
       // revelation) as well as on the treachery window itself.
       if (state._reaction && ['encounterDrawn', 'treachery'].includes(state._reaction.when)) {
-        state._reaction.cancelled = true
-        if (state._reaction.when === 'encounterDrawn') state._reaction.redraw = false
-        rt.info(`${inv.name} 取消了这张遭遇牌的效果。`)
+        // 2026-10-25 第四轮修复 cannot-cancel-card-flag（05342）：本卡不能被取消时，
+        // 取消声明失败（费用照付、显现照常结算）。
+        if (state._reaction.cannotCancel) {
+          rt.info(`${inv.name} 试图取消这张遭遇牌，但它的显现效果不能被取消。`)
+        } else {
+          state._reaction.cancelled = true
+          if (state._reaction.when === 'encounterDrawn') state._reaction.redraw = false
+          rt.info(`${inv.name} 取消了这张遭遇牌的效果。`)
+        }
       } else if (rt.cancelPending) rt.cancelPending('treachery')
       if (effect.horror) rt.applyHorror(seat, effect.horror)
       break

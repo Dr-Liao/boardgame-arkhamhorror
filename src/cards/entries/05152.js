@@ -21,11 +21,16 @@ export default {
         const context = ctx.context || {}
         // 只在宿主属于本卡控制者时触发，且宿主身上确实挂着这张「妥善养护」。
         if (context.seat !== ctx.inv?.seat) return false
+        // R6：只在「所附属支援被弃掉」时触发（引擎 leaveAsset 弃置路径传 reason:'discard'）。
+        if (context.reason !== 'discard') return false
         const upgrades = context.asset?.attachments || []
         return upgrades.some(entry => entry.code === '05152')
       },
       resolve: ({ context, inv, api }) => {
-        api.returnAssetAndAttachmentsToHand(inv.seat, context.asset)
+        // R6 准备：原语扩展 options 后按卡面只返回 [[升级]] 附属、并各自返回所有者手牌（当前引擎忽略第 3 参，行为不变）。
+        api.returnAssetAndAttachmentsToHand(inv.seat, context.asset, {
+          onlyUpgrades: true, byOwnerSeat: true, reason: 'discard',
+        })
       },
     },
   ],

@@ -17,6 +17,8 @@ import {
   actionsAvailable as spellActionsAvailable, consumeAction as consumeSpellAction, spellOnlyActionsOf,
 } from './spell-actions.js'
 
+import { createEffect } from './effect-state.js'
+import { nextInstanceId } from './rules-state.js'
 export function createDispatch(deps) {
   const {
     ALL_CARDS,
@@ -103,6 +105,8 @@ export function createDispatch(deps) {
     recommendUpgrade,
     registerCampaignInvestigator,
     registeredEntry,
+    // 2026-10-25 第六轮修复 05040：行动结束统一清 endOfAction 时长的效果。
+    expireEffects,
     resolveTransaction,
     ruleIgnored,
     runInterlude,
@@ -236,11 +240,20 @@ function executeAction(state, seat, move, events) {
     // 03147 双刃短刀：控制者的「交战」行动不引发借机攻击。
     const engageNoAoO = kind === 'engage'
       && inv.assets.some(item => registeredEntry(item.code)?.engageNoOpportunityAttack === true)
-    if (totalCost && !noOpportunityAttack && !playNoAoO && !abilityNoAoO && !engageNoAoO && !ruleIgnored(state, inv, 'opportunityAttack')
+    // 2026-10-25 本循环修复 05228：剧本行动（behavior.actions）可以声明不引发借机攻击，
+    // 支持全豁免（noOpportunityAttack: true）与按敌人卡号豁免（noOpportunityAttackFrom: [卡号…]）。
+    const scenarioNoAoOAll = move.action === 'scenarioAction' && move.noOpportunityAttack === true
+    const scenarioNoAoOFrom = move.action === 'scenarioAction' && Array.isArray(move.noOpportunityAttackFrom)
+      ? move.noOpportunityAttackFrom.map(String)
+      : []
+    if (totalCost && !noOpportunityAttack && !playNoAoO && !abilityNoAoO && !engageNoAoO && !scenarioNoAoOAll
+      && !ruleIgnored(state, inv, 'opportunityAttack')
       && !jakeSkipsOpportunityAttack(state, inv, kind)
       && !['fight', 'evade', 'resign', 'parley', 'parleyCultist', 'parleyLita'].includes(kind)) {
+      const scenarioExempt = enemy => scenarioNoAoOFrom.includes(String(enemy.originalCode || enemy.code))
+        || scenarioNoAoOFrom.includes(String(enemy.code))
       const pending = enemiesEngagedWith(state, inv).filter(enemy => !enemy.exhausted
-        && enemyCanOpportunityAttack(state, enemy)).map(e => e.id)
+        && enemyCanOpportunityAttack(state, enemy) && !scenarioExempt(enemy)).map(e => e.id)
       while (pending.length) {
         const candidates = pending.map(id => state.enemies.find(e => e.id === id)).filter(e => e && !e.exhausted)
         if (!candidates.length) break
@@ -413,6 +426,15 @@ function executeHubMove(state, seat, move, events) {
 function applyMoveUnchecked(state, seat, move, events) {
   const inv = state.investigators[seat]
   if (!inv || inv.defeated || inv.resigned) return events
+  // 2026-10-25 第七轮修复 05040：「下一次行动期间生效」的排队效果在行动开始时挂上（endOfAction 到期）。
+  if (state.pendingActionEffects?.length) {
+    const pending = state.pendingActionEffects
+    delete state.pendingActionEffects
+    for (const record of pending) {
+      createEffect(state, { ...record, duration: 'endOfAction', controllerSeat: record.controllerSeat ?? seat })
+    }
+    info(state, events, `⏳ 本行动期间生效：${pending.map(record => record.label).filter(Boolean).join('、')}`)
+  }
 
   const m = move || {}
   switch (m.action) {
@@ -421,13 +443,72 @@ function applyMoveUnchecked(state, seat, move, events) {
     case 'shortcutMove': doShortcutMove(state, seat, m, events); break
     case 'detachLocationAttachment': doDetachLocationAttachment(state, seat, m, events); break
     case 'encounterAction': scenarioBehavior(state).performEncounterAction(state, inv, m, scenarioRuntime(state, events)); break
-    case 'play': doPlay(state, seat, m.cardId, events, !!m.fromDiscard, false, m.copyCode, m.fromPlanAssetId, m.fromBackpackId); break
+    case 'play': {
+      if (m.fromAttachedEventOf) {
+        const hostInv = state.investigators[seat]
+        const host = (hostInv.assets || []).find(asset => asset.id === m.fromAttachedEventOf)
+        const at = (host?.attachments || []).findIndex(entry => entry.code === m.cardId)
+        if (!host || at < 0) break
+        const hostEntry = registeredEntry(host.code)
+        const hostCost = hostEntry?.playAttachedEventCost || {}
+        // 2026-10-25 第七轮修复 05279：附加费在打出前支付。
+        if (hostCost.exhaustHost) host.exhausted = true
+        if (hostCost.uses) {
+          host.uses = Math.max(0, (host.uses || 0) - hostCost.uses)
+          if (!host.uses && hostEntry?.discardWhenEmpty) {
+            leaveAsset(state, hostInv, host)
+            hostInv.discard.push(host.code)
+          }
+        }
+        host.attachments.splice(at, 1)
+        hostInv.hand.push(m.cardId)
+        doPlay(state, seat, m.cardId, events)
+        // 2026-10-25 第七轮修复 05279：宿主声明「打出后仍附属」→ 事件结算后从弃牌堆/手牌移回附属。
+        if (hostEntry?.playAttachedEventStaysAttached) {
+          for (const pile of [hostInv.discard, hostInv.hand]) {
+            const index = pile.lastIndexOf(m.cardId)
+            if (index >= 0) pile.splice(index, 1)
+          }
+          host.attachments ||= []
+          host.attachments.push({ id: nextInstanceId(state, 'a'), code: m.cardId, ownerSeat: seat })
+          info(state, events, `「${m.cardId}」结算后仍附属在「${host.code}」上。`)
+        }
+        break
+      }
+      if (m.fromHunch) {
+        const hunchInv = state.investigators[seat]
+        if (hunchInv.hunchRevealed !== m.cardId) break
+        delete hunchInv.hunchRevealed
+        hunchInv.hand.push(m.cardId)
+        hunchInv.playDiscount = (hunchInv.playDiscount || 0) + 2
+        doPlay(state, seat, m.cardId, events)
+        break
+      }
+      if (m.fromBeneath) {
+        const under = state.investigators[seat]
+        const channel = (under.assets || []).find(asset =>
+          registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
+        if (!channel || !(under.beneath || []).includes(m.cardId)) break
+        channel.exhausted = true
+        under.beneath.splice(under.beneath.indexOf(m.cardId), 1)
+        under.hand.push(m.cardId)
+        const previousBeneath = state._playedFromBeneath
+        state._playedFromBeneath = { seat, cardCode: m.cardId }
+        try { doPlay(state, seat, m.cardId, events) } finally {
+          if (previousBeneath === undefined) delete state._playedFromBeneath
+          else state._playedFromBeneath = previousBeneath
+        }
+        break
+      }
+      doPlay(state, seat, m.cardId, events, !!m.fromDiscard, false, m.copyCode, m.fromPlanAssetId, m.fromBackpackId)
+      break
+    }
     case 'draw': doDraw(state, seat, events); break
     case 'resource': doResource(state, seat, events); break
     case 'freeAction': doFreeAction(state, seat, events); break
     case 'hiddenAction': doHiddenAction(state, seat, m, events); break
     case 'move': doMove(state, seat, m.locationId, events); break
-    case 'investigate': doInvestigate(state, seat, {}, events); break
+    case 'investigate': doInvestigate(state, seat, m.allowNoClues ? { allowNoClues: true } : {}, events); break
     case 'explore': doExplore(state, seat, events); break
     case 'searchIzzie': doSearchIzzie(state, seat, events); break
     case 'locationAbility': doLocationAbility(state, seat, m.locationId, events); break
@@ -443,7 +524,7 @@ function applyMoveUnchecked(state, seat, move, events) {
     case 'breakDoor': doBreakDoor(state, seat, m.skill, events); break
     // 第 2 步 P2.7：地点/敌人/剧情资产上的通用行动（谈判）——与玩家卡能力同一条描述子管线。
     case 'entityAbility': doEntityAbility(state, seat, m, events); break
-    case 'ability': doAbility(state, seat, m.assetId, m.abilityIndex, m.targetId, m.optionIndex, events); break
+    case 'ability': doAbility(state, seat, m.assetId, m.abilityIndex, m.targetId, m.optionIndex, events, m.ownerSeat); break
     case 'discardThreat': doDiscardThreat(state, seat, m.threatId, events); break
     case 'purgeThreat': doPurgeThreat(state, seat, m.threatId, events); break
     case 'payDebt': doPayDebt(state, seat, m.threatId, events); break
@@ -456,6 +537,9 @@ function applyMoveUnchecked(state, seat, move, events) {
   checkAct(state, events)
   checkDefeated(state, seat, events)
   checkOutcome(state, events)
+
+  // 2026-10-25 第六轮修复 05040：「本次行动期间」的持续效果在行动结算结束时到期。
+  expireEffects(state, 'endOfAction')
 
   if (state.status === 'playing') {
     // 行动点已经用完（或刚点了结束回合）时，收尾窗口里仍然可以打出快速卡：

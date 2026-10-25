@@ -22,7 +22,8 @@ export default {
           api.info('只有在一位调查员发现你所在地点最后一个线索后，才能打出水落石出。')
           return
         }
-        const X = Math.max(0, Number(context.shroud ?? location.shroud) || 0)
+        // R5：用引擎的完整「当前隐藏值」读点（含 shroudMod/雾/剧本与地点修正）。
+      const X = Math.max(0, Number(api.locationShroud?.(location.id) ?? context.shroud ?? location.shroud) || 0)
         const recipients = state.investigators.filter(other => !other.defeated && !other.resigned
           && other.location === location.id)
         if (!recipients.length || !X) {

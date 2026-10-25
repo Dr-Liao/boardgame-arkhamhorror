@@ -14,8 +14,11 @@ export default {
       const available = activeInvestigators(state).filter(entry => entry.location === location.id)
         .reduce((sum, entry) => sum + (entry.clues || 0), 0)
       if (available < required) return
-      moves.push({ action: 'scenarioAction', rule: 'removeNahabDoom', actionKind: 'parley',
-        label: `🩸 团队花费 ${required} 个线索移除那赫卜的 1 个毁灭标记（不引发那赫卜的趁乱攻击）` })
+      moves.push({ action: 'scenarioAction', rule: 'removeNahabDoom',
+        // 卡面「此行动不会引发那赫卜的借机攻击」：定向豁免（dispatch.js 的 noOpportunityAttackFrom），
+        // 不是 Parley——其它敌人的借机攻击仍正常结算。
+        noOpportunityAttackFrom: ['05149'],
+        label: `🩸 团队花费 ${required} 个线索移除那赫卜的 1 个毁灭标记（不引发那赫卜的借机攻击）` })
     },
     performAction(state, inv, move, api) {
       if (move.rule !== 'removeNahabDoom') return false

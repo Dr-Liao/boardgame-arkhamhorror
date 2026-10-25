@@ -73,7 +73,7 @@
       "id": "workorder",
       "command": "node tools/audit-workorder.mjs --check",
       "status": 0,
-      "lastLine": "参考：EFFECTS 0 条、逃生卡 0 张、窗口 66 个"
+      "lastLine": "参考：EFFECTS 0 条、逃生卡 0 张、窗口 74 个"
     },
     {
       "id": "deadPrimitives",
@@ -101,8 +101,8 @@
     }
   ],
   "docLinks": {
-    "files": 31,
-    "links": 258,
+    "files": 36,
+    "links": 288,
     "broken": 0
   },
   "goldenReplay": {
@@ -115,8 +115,8 @@
   "tests": {
     "command": "node tools/run-tests.mjs fast",
     "status": 0,
-    "tests": 3388,
-    "pass": 3388,
+    "tests": 3567,
+    "pass": 3567,
     "fail": 0
   },
   "notes": [

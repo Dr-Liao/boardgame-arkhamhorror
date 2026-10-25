@@ -220,7 +220,9 @@ export function createHaunted(deps) {
   function clauseAvailable(state, inv, loc, clause) {
     switch (clause.kind) {
       case 'damageAssets':
-        return inv.assets.some(asset => (cardDef(asset.code)?.health || 0) > 0)
+        // 2026-10-25 第四轮修复 05083：「你每张带有生命值的卡牌」按参考实现包含调查员本人
+        // （BalconySpectral：调查员与带 health 的支援各自受 1 点直接伤害）。
+        return true
       case 'discardRandom':
       case 'discardChosen':
         return inv.hand.length > 0
@@ -259,10 +261,12 @@ export function createHaunted(deps) {
       case 'directDamage': api.directDamage(seat, clause.amount); return true
       case 'directHorror': api.directHorror(seat, clause.amount); return true
       case 'damageAssets': {
+        // 2026-10-25 第四轮修复 05083：调查员本人也在这条闹鬼的伤害范围内。
+        api.directDamage(seat, clause.amount)
         const targets = inv.assets.filter(asset => (cardDef(asset.code)?.health || 0) > 0)
         for (const asset of targets) api.damageAsset(seat, asset.id, clause.amount)
-        if (targets.length) api.info(`👻 闹鬼：${inv.name} 的 ${targets.length} 张带生命值的卡牌各受到 ${clause.amount} 点直接伤害。`)
-        return targets.length > 0
+        api.info(`👻 闹鬼：${inv.name} 与其 ${targets.length} 张带生命值的卡牌各受到 ${clause.amount} 点直接伤害。`)
+        return true
       }
       case 'loseAction':
         api.loseActions(seat, clause.amount)
@@ -288,6 +292,9 @@ export function createHaunted(deps) {
         api.discardChosen(seat, clause.amount, 'haunted')
         return true
       case 'discardAsset': {
+        // 2026-10-25 第四轮修复 05081：无支援时该条款不可结算（返回 false，由选择项过滤剔除，
+        // 而不是进 requestChoice 空 options 抛错）。
+        if (!inv.assets.length) return false
         const options = inv.assets.map(asset => ({ id: asset.id, cardCode: asset.code, label: api.cardName(asset.code) }))
         const chosen = options.length === 1 ? options[0].id : requestChoice(state, {
           kind: 'target', source: 'haunted', seat,
@@ -300,6 +307,8 @@ export function createHaunted(deps) {
       case 'placeClue': {
         const target = state.locations.find(location => location.id === loc.id)
         if (!target) return false
+        // 2026-10-25 第四轮修复 05131：0 线索时不能选择「放线索」条款（避免 spendClues 抛错）。
+        if ((inv.clues || 0) < (clause.amount || 1)) return false
         api.spendClues(seat, clause.amount)
         target.clues += clause.amount
         target.maxClues = Math.max(target.maxClues || 0, target.clues)
@@ -334,14 +343,21 @@ export function createHaunted(deps) {
       }
       case 'choice': {
         const prompt = clause.prompt || `闹鬼：${inv.name} 选择一项结算${suffix}。`
-        const options = clause.options.map(option => ({ id: option.id, label: option.label }))
+        // 2026-10-25 第四轮修复 haunted-choice-option-validation（05081/05130/05131）：
+        // 只列出「此刻确实能结算」的选项——每个选项的 effect 子句都要通过可用性检查，
+        // 否则「无可弃支援 / 0 线索」的选项仍会出现并在结算时抛错。
+        const usableOptions = clause.options.filter(option =>
+          Array.isArray(option.effect) && option.effect.length
+          && option.effect.every(nested => clauseAvailable(state, inv, loc, nested)))
+        if (!usableOptions.length) return false
+        const options = usableOptions.map(option => ({ id: option.id, label: option.label }))
         // `source` 带地点与能力身份：界面据此高亮「这是哪条闹鬼能力」，回放时也逐字比对。
         const picked = options.length === 1 ? options[0].id : requestChoice(state, {
           kind: 'haunted',
           source: { kind: 'haunted', locationId: loc.id, abilityId: ability.id, text: ability.text },
           seat, prompt, options,
         })
-        const option = clause.options.find(candidate => candidate.id === String(picked)) || clause.options[0]
+        const option = usableOptions.find(candidate => candidate.id === String(picked)) || usableOptions[0]
         let resolved = false
         for (const nested of option.effect) resolved = applyClause(state, seat, loc, ability, nested, api, events) || resolved
         return resolved

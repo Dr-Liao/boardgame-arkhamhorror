@@ -9,7 +9,8 @@
 // 05040 权杖王牌（塔罗槽）：
 //   1. 自己回合内的免费能力：流放自身（exileSelf 费用）→ 本回合 +1 行动，并获得「本回合每项技能 +2」
 //      的持续效果（state.effects，回合结束由引擎统一过期）；
-//   2. 开局起始手牌中放置入场（P2.9 读点 + 同一时机的反应）。
+//   2. 开局起始手牌中放置入场：只走 scenarioStarts 的 [reaction]（不使用引擎自动放置钩子，
+//      保留「可以放置」的可选性；塔罗槽满时保留在手牌）。
 // 显式简化：卡面写「该次额外行动期间 +2」，这里放宽为「本回合结束前 +2」（持续效果的到期点
 // 只能按阶段/回合表达，没有「一次行动」的作用域）。
 
@@ -17,9 +18,6 @@ import { ownTurn } from '../../engine/matcher.js'
 
 export default {
   code: '05040',
-  simplified: true,
-  note: '未实现：技能 +2 的作用域是「该次额外行动期间」，本实现放宽为「本回合结束前」（持续效果没有单次行动作用域）。已实现流放自身、本回合额外 1 次行动、开局起始手牌放置入场。',
-  entersPlayFromOpeningHand: true,
   abilities: [
     {
       kind: 'action',
@@ -28,12 +26,12 @@ export default {
       criteria: [ownTurn()],
       resolve: ({ inv, api }) => {
         api.gainAction(inv.seat, 1)
-        api.addEffect({
-          duration: 'endOfTurn',
-          label: '权杖王牌：本回合每项技能 +2',
+        // R7：把「该次行动期间每项技能 +2」排到下一次行动开始时挂上（duration endOfAction，行动结束统一过期）。
+        api.scheduleActionEffects([{
+          label: '权杖王牌：该次行动每项技能 +2',
           modifiers: [{ target: 'skill:*', amount: 2 }],
-        })
-        api.info(`🃏 ${inv.name} 将「${api.cardName('05040')}」移出游戏：本回合额外 1 次行动，且每项技能 +2。`)
+        }])
+        api.info(`🃏 ${inv.name} 将「${api.cardName('05040')}」移出游戏：本回合额外 1 次行动，该次行动期间每项技能 +2。`)
       },
     },
     {
@@ -41,6 +39,9 @@ export default {
       fromHand: true, noPlayCost: true,
       resolve: ({ inv, api }) => {
         if (!inv.hand.includes('05040')) return
+        // 卡面 [reaction] 是「可以」放置：塔罗槽不足时保留在手牌，不自动入场。
+        const slot = api.tarotSlotInfo(inv)
+        if (slot.free <= 0) { api.info('塔罗槽已满，保留在手牌。'); return }
         api.putIntoPlay(inv.seat, '05040')
       },
     },

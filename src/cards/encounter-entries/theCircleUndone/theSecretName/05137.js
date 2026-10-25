@@ -15,13 +15,20 @@ export default {
     },
     performAction(state, inv, move, api) {
       if (move.rule !== 'investigateRuins') return false
-      const location = state.locations.find(entry => entry.id === inv.location)
-      api.test?.(inv.seat, 'intellect', location?.shroud || 2, result => {
-        if (!result?.success) return
-        state.scenarioFlags ||= {}
-        state.scenarioFlags.ruinsHealUsedBySeat = { ...(state.scenarioFlags.ruinsHealUsedBySeat || {}), [inv.seat]: true }
-        api.healHorror?.(inv.seat, 2)
-        api.info?.(`🏚️ ${inv.name} 在巫宅遗址挖掘出往事：治愈 2 点恐惧。`)
+      // 「每场游戏仅限一次」：能力一旦使用就消耗次数（失败也算），不是只在成功时置位。
+      state.scenarioFlags ||= {}
+      state.scenarioFlags.ruinsHealUsedBySeat = {
+        ...(state.scenarioFlags.ruinsHealUsedBySeat || {}), [inv.seat]: true,
+      }
+      // 参考 WitchHouseRuins.hs：investigateAbility（标准调查管线）+ 成功时治愈 2 恐惧。
+      // 地点 0 线索，所以 allowNoClues；成功改为不发现线索。
+      api.investigate?.(inv.seat, {
+        allowNoClues: true,
+        noClueDiscovery: true,
+        onInvestigateSuccess: () => {
+          api.healHorror?.(inv.seat, 2)
+          api.info?.(`🏚️ ${inv.name} 在巫宅遗址挖掘出往事：治愈 2 点恐惧。`)
+        },
       })
       return true
     },

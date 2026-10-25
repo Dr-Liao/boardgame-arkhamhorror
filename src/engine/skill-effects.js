@@ -1,4 +1,4 @@
-import { investigatorRule } from '../cards/card-rules.js'
+﻿import { investigatorRule } from '../cards/card-rules.js'
 import { noteCardCancelled } from './cancel-note.js'
 // 技能检定效果（applyTokenFx / applySkillOnSuccess / makeRuntime）从 engine.js 拆出的模块
 // （Phase 6 · 6d-24）。
@@ -172,7 +172,7 @@ function applySkillOnSuccess(state, inv, committed, success, successBy = 0, even
       // 2026-10-25 修复：治疗恐惧必须走统一入口 healHorrorFrom，才会打开 horrorHealed 窗口
       // 并经过「理性思考」等威胁卡汇点；此前直接写 inv.horror，卡洛琳 05001 等「卡牌效果治愈恐惧后」
       // 的触发点收不到事件。
-      const h = healHorrorFrom(state, inv, o.healHorror, events, { healerSeat: inv.seat })
+      const h = healHorrorFrom(state, inv, o.healHorror, events, { healerSeat: inv.seat, cardCode: code })
       if (h) info(state, null, `${inv.name} 的「${cardName(code)}」触发：治愈 ${h} 点恐惧。`)
     }
     if (o.gainAction) inv.actionsLeft += o.gainAction
@@ -305,7 +305,9 @@ function makeRuntime(state, events) {
     addDoom: (amount) => addDoom(state, amount, events),
     enemyForTarget: (seat, target) => enemyForTarget(state, seat, target),
     defeatEnemy: (enemy) => defeatEnemy(state, enemy, events),
-    damageEnemy: (enemy, amount, seat) => damageEnemy(state, enemy, amount, seat, events),
+    // 2026-10-25 本循环修复 05180：效果 DSL 的 dealDamage 透传来源卡号，使「法术/[[遗物]]伤害」
+    // 之类的来源判定（enemyDamaged / enemyCanBeDefeated 的 source）对卡牌效果伤害也成立。
+    damageEnemy: (enemy, amount, seat, source = null) => damageEnemy(state, enemy, amount, seat, events, source),
     canGainResources: seat => scenarioBehavior(state).canGainResources?.(state, state.investigators[seat]) !== false,
     canReadyAssets: seat => !assetsCannotReady(state.investigators[seat], state.round),
     investigate: (seat, opts) => doInvestigate(state, seat, opts || {}, events, true),

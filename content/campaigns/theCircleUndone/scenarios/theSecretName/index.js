@@ -16,14 +16,14 @@ export const manifest = scenarioManifest(scenario, identities, {
     'tcuChaos', 'tcuHaunted', 'tcuSpectral', 'tcuMemento', 'tcuCampaignAssets', 'tcuCosmos',
   ],
   setAsideLocations: scenario.setAsideLocations,
-  setAsideAliases: ['05149', '05148', '05150', '05144', '05144'],
+  setAsideAliases: ['05149', '05150', '05144', '05144'],
   recordReads: [
     'theInvestigatorsAreMembersOfTheLodge', 'theInvestigatorsAreEnemiesOfTheLodge',
     'theInvestigatorsLearnedNothingOfTheLodgesSchemes', 'theInvestigatorsAreNeverSeenOrHeardFromAgain',
   ],
   recordWrites: [
     'theInvestigatorsToldTheLodgeAboutTheCoven', 'theInvestigatorsHidTheirKnowledgeOfTheCoven',
-    'mementosDiscovered',
+    'mementosDiscovered', 'meddledWithThePast',
   ],
   behaviorIds: [behavior.id],
 })

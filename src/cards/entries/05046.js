@@ -32,7 +32,13 @@ export default {
       trigger: 'enemyAttacked',
       label: '敌人攻击你后：发现你所在地点的 1 个线索',
       limit: 'oncePerRound',
-      criteria: [({ inv, context }) => context?.seat === inv.seat && Boolean(context?.enemy)],
+      // 卡面「敌人攻击你后，即便该次攻击被取消」：引擎的 enemyAttack 取消分支也会开
+      // enemyAttacked 窗口（src/engine/enemies.js:140-146，context.cancelled=true），因此本条目
+      // 无需读取 cancelled 即可在两种路径触发。无「取消」子句差异。
+      // 「发现 1 个线索」需要地点上确实有线索：无可发现时该能力不能触发（参考实现
+      // GavriellaMizrah.hs 的 ClueOnLocation 限制；触发后不改变状态的触发式能力不允许发动）。
+      criteria: [({ inv, context, state }) => context?.seat === inv.seat && Boolean(context?.enemy)
+        && (Number(state?.locations?.find(location => location.id === inv.location)?.clues) || 0) > 0],
       resolve: ({ inv, api }) => {
         api.discoverClue(inv.seat, 1)
         api.info(`${inv.name} 遭到攻击后发现了 1 个线索。`)

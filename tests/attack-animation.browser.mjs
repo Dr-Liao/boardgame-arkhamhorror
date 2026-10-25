@@ -62,12 +62,13 @@ test('攻击使用场上卡牌，受击后更新生命，锁定操作且重绘�
   expect(await page.locator('.ah-map-investigator').evaluate(el=>el.getAnimations().length)).toBe(0)
 })
 
-test('枪械与刀类攻击使用专属动效和音效，未知样式回落默认',async({page})=>{
+test('枪械、刀和法术攻击使用专属动效和音效，未知样式回落默认',async({page})=>{
   await fixture(page)
   const styles=[
     ['firearm',['.ah-combat-muzzle','.ah-combat-tracer','.ah-combat-hole'],['firearm-shot.wav'],1],
     ['blade',['.ah-combat-cut'],['blade-slash.ogg','blade-hit.ogg'],0],
     ['lightning',['.ah-combat-bolts','.ah-combat-charge'],['lightning-zap.wav'],1],
+    ['spell',['.ah-combat-sigil','.ah-combat-orb','.ah-combat-ward'],[],2],
     ['laser',['.ah-combat-slash','.ah-combat-burst'],[],2],
   ]
   for(const [style,parts,samples,oscillators] of styles) {
@@ -85,6 +86,17 @@ test('枪械与刀类攻击使用专属动效和音效，未知样式回落默�
   await page.evaluate(()=>window.attack('incoming',true,'firearm'))
   await expect(page.locator('.ah-combat-fx')).toHaveAttribute('data-style','default')
   await expect(page.locator('.ah-combat-fx')).toHaveCount(0)
+})
+
+test('法术攻击落空仍播放施法，静音时不发声',async({page})=>{
+  await fixture(page,{muted:true})
+  await page.evaluate(()=>window.attack('outgoing',false,'spell'))
+  const fx=page.locator('.ah-combat-fx')
+  await expect(fx).toHaveAttribute('data-style','spell')
+  await expect(fx.locator('.ah-combat-orb')).toHaveCount(1)
+  await expect(page.locator('.ah-combat-caption')).toContainText('攻击落空')
+  await expect(fx).toHaveCount(0)
+  expect(await page.evaluate(()=>window.soundStarts)).toBe(0)
 })
 
 test('炸药爆破投掷后在地点爆炸，波及目标并在结束后结算伤害',async({page})=>{

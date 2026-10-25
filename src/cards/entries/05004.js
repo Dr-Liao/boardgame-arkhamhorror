@@ -10,6 +10,11 @@
 // 「压在她底下」用调查员自带的 beneath 区域（与 P2.6 无牌组调查员同一块状态）。
 // 反应挂在 cardCancelled 窗口上：引擎在取消/忽略效果时用 src/engine/cancel-note.js 记账，
 // 取消方的卡号由 executeDescriptor 在结算期间写在 state._resolvingCardCode 上。
+// 已知缺口（第三轮审计仍判 approximation）：直接写 context.cancelled 的旧取消路径
+// （如 01523 闪避、05280 否决存在）不经过 noteCardCancelled，cardCancelled 窗口不会打开。
+// 第五轮修复（2026-10-25）：引擎已在 executeDescriptor 结算后检测「直接写 context.cancelled」
+// 并自动补记 cardCancelled（src/engine/reveal.js:285-299），上述旧路径现在也能触发本反应；
+// 回归用例见 tests/tcu-investigators.test.mjs 的本卡段。
 
 import { investigatorSign } from './_shared.js'
 
@@ -41,9 +46,12 @@ export default {
       if (answer === 'skip') return { delta: bonus }
       const index = Number(answer)
       if (Number.isInteger(index) && index >= 0 && index < beneath.length) {
-        inv.beneath.splice(index, 1)
-        inv.hand.push(beneath[index])
-        api.info(`${inv.name} 把「${api.cardName(beneath[index])}」加入手牌。`)
+        // 先取出所选卡号再 splice：旧实现先 `inv.beneath.splice(index, 1)` 再读
+        // `beneath[index]`，会把「所选卡牌的下一张」加入手牌（选最后一张时是 undefined）。
+        // 审计第三轮（reaudit-h）修复；回归用例见 tests/tcu-investigators.test.mjs 旧印段。
+        const [cardCode] = inv.beneath.splice(index, 1)
+        inv.hand.push(cardCode)
+        api.info(`${inv.name} 把「${api.cardName(cardCode)}」加入手牌。`)
       }
       return { delta: bonus }
     },
@@ -55,8 +63,11 @@ export default {
       id: 'dianaBeneathCancelledCard',
       label: '取消效果后：把那张卡压在黛安娜底下，抽 1 张并获得 1 资源',
       limit: 'oncePerPhase',
-      criteria: [({ inv, context }) => context?.cardSeat === inv.seat
+      criteria: [({ inv, state, context }) => context?.cardSeat === inv.seat
         && typeof context?.cardCode === 'string'
+        // 05013 银暮匕首：「以此方式打出/投入卡牌时，你不能触发黛安娜的[reaction]能力」。
+        // 引擎在 beneath 通道打出/投入结算期间置 state._playedFromBeneath（dispatch.js:444-448）。
+        && !(state?._playedFromBeneath && state._playedFromBeneath.seat === inv.seat)
         && (inv.beneath || []).length < beneathLimit],
       resolve: ({ state, inv, api, context }) => {
         const code = context.cardCode

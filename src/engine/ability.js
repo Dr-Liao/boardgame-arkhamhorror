@@ -154,6 +154,9 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'hiddenRule',
   'threatEffect',
   'treacheryRule',
+  // 2026-10-25 第四轮修复 cannot-cancel-card-flag（05342）：「本卡的显现效果不能被取消」。
+  // 读点：encounter.js 抽牌取消窗口、treachery-tokens.js 显现窗口、api.cancelEncounterDraw。
+  'cannotBeCanceledRevelation',
   // 幕/议程揭示规则（第 7 批从章节 behavior.js 的 originalCode 分支搬来）。
   'actRule',
   'agendaRule',
@@ -301,6 +304,16 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // Phase 6（6e-14）：「入场时放毁灭」与「回合结束弃置自己」也是条目级规则字段，
   // 读点分别是 doPlay 的入场段（assetEffect 合并后读 eff.onPlayDoom）与回合结束扫描。
   'onPlayDoom', 'discardAtRoundEnd',
+  // 2026-10-25 第五轮修复 05186：花费充能/弹药时获得等量资源。
+  'spentUsesGainResources',
+  // 2026-10-25 第五轮修复 05150：打出一张牌时「场上来源」可能有的减费上限（number 或函数）。
+  'playCostReductionProvider',
+  // 2026-10-25 第六轮新增条目字段（05112/05019/05013/05196/05279/05323/05021）。
+  'restrictedSlots', 'cannotLeavePlayWhile', 'beneathPlayAsIfInHand', 'teamActivatable',
+  'playAsHand', 'lureAttachment', 'payOrDiscardSelf', 'ignoreCosts',
+  // 2026-10-25 第七轮（05008/05021/05323 内容准备需要）：
+  'redirectHeal', 'overflow', 'blockHealOtherCards', 'locationLure', 'discardAtRoundEnd',
+  'playAttachedEvents', 'weaknessPlaysAsAsset', 'playAttachedEventCost', 'playAttachedEventStaysAttached',
   // Phase 6（6e-15）：起始资源修正（02037 负债）、使用次数取自战役记录（04230/04231）、
   // 「入场时封印若干标记」的选择式封印（04030/04031）、标记当结算结果（04030）、
   // 回合结束付费或弃置（04031）、符号标记充能（04311）、用尽移出游戏（04311）。
@@ -318,6 +331,13 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // - `blocksHealReward`：在场时不能从「治愈恐惧后获得资源」的能力获利（05008）；
   // - `avoidHunchShuffle`：本应洗入直觉牌库时改为进入威胁区域（05010 悬案）。
   'threatHorrorSink', 'blocksHealReward', 'avoidHunchShuffle',
+  // 2026-10-25 本循环修复 05010：「本场冒险少取得 N 点经验」的通用条目字段，读点在
+  // campaign-flow.applyResolutionEffects 的 XP 结算循环（威胁区里有该卡时生效）。
+  'scenarioXpModifier',
+  // 2026-10-25 第四轮修复 05012：游戏结束时仍在手牌中则承受 1 点精神创伤。
+  'traumaAtGameEndWhenInHand',
+  // 2026-10-25 第四轮修复 05041：威胁区光环——同地点调查员的检定平局按失败结算。
+  'failTies',
   'fast', 'noOpportunityAttack'])
 
 // 条目级「能不能打出」条件：函数式 predicate，或 { when, message }（message 直接展示给玩家）。
@@ -638,6 +658,25 @@ export function registerCardAbilities(entries) {
       // Phase 5（5c-35）：结算时静默（不写 `使用「X」：…`）。
       quietPlay: entry.quietPlay === true,
       onPlayDoom: entry.onPlayDoom ?? null,
+      spentUsesGainResources: entry.spentUsesGainResources === true,
+      // 2026-10-25 第六轮新增条目字段（读点分散在 moves/assets/dispatch/tests 等处）。
+      restrictedSlots: entry.restrictedSlots ?? null,
+      cannotLeavePlayWhile: entry.cannotLeavePlayWhile ?? null,
+      beneathPlayAsIfInHand: entry.beneathPlayAsIfInHand === true,
+      teamActivatable: entry.teamActivatable === true,
+      playAsHand: entry.playAsHand === true,
+      lureAttachment: entry.lureAttachment ?? null,
+      payOrDiscardSelf: entry.payOrDiscardSelf ?? null,
+      ignoreCosts: entry.ignoreCosts === true,
+      redirectHeal: entry.redirectHeal ?? null,
+      overflow: entry.overflow ?? null,
+      blockHealOtherCards: entry.blockHealOtherCards === true,
+      locationLure: entry.locationLure === true,
+      discardAtRoundEnd: entry.discardAtRoundEnd === true,
+      playAttachedEvents: entry.playAttachedEvents === true,
+      playAttachedEventCost: entry.playAttachedEventCost || null,
+      playAttachedEventStaysAttached: entry.playAttachedEventStaysAttached === true,
+      weaknessPlaysAsAsset: entry.weaknessPlaysAsAsset === true,
       discardAtRoundEnd: entry.discardAtRoundEnd === true,
       startingResources: entry.startingResources ?? null,
       openingHandBonus: entry.openingHandBonus ?? null,
@@ -697,6 +736,10 @@ export function registerCardAbilities(entries) {
       }) : null,
       actRule: entry.actRule ? Object.freeze({ ...entry.actRule }) : null,
       agendaRule: entry.agendaRule ? Object.freeze({ ...entry.agendaRule }) : null,
+      // 2026-10-25 第四轮修复 cannot-cancel-card-flag（05342）。
+      cannotBeCanceledRevelation: entry.cannotBeCanceledRevelation === true,
+      // 2026-10-25 第五轮修复 05150：打出一张牌时，场上来源可提供的减费上限（数字或函数）。
+      playCostReductionProvider: entry.playCostReductionProvider ?? null,
       // 第 120 轮：按剧本的议程变体（浅冻结每一份规则对象）。
       agendaRuleByScenario: entry.agendaRuleByScenario
         ? Object.freeze(Object.fromEntries(Object.entries(entry.agendaRuleByScenario)
@@ -762,6 +805,12 @@ export function registerCardAbilities(entries) {
       threatHorrorSink: entry.threatHorrorSink === true,
       blocksHealReward: entry.blocksHealReward === true,
       avoidHunchShuffle: entry.avoidHunchShuffle === true,
+      // 2026-10-25 本循环修复 05010：XP 修正字段必须进入规范化对象，campaign-flow 的读点才拿得到。
+      scenarioXpModifier: Number.isSafeInteger(entry.scenarioXpModifier) ? entry.scenarioXpModifier : null,
+      // 2026-10-25 第四轮修复 05041：平局失败光环（威胁区条目让同地点调查员的检定平局按失败结算）。
+      failTies: entry.failTies === true,
+      // 2026-10-25 第四轮修复 05012：游戏结束时手牌中的创伤读点（campaign-flow.finishScenario）。
+      traumaAtGameEndWhenInHand: entry.traumaAtGameEndWhenInHand === true,
       // 条目级的「简化声明」：审计把 simplified + note 汇总进 remaining，不静默放过。
       simplified: entry.simplified === true,
       note: entry.note ? String(entry.note) : null,

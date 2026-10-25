@@ -6,52 +6,58 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 05021 劫数延后：
-//   1. 快速打出后自身放置入场（事件变场上卡，becomesAsset 通道），在场上时其反应由资产来源枚举；
-//   2. 受伤害/恐惧时弃掉自身并取消该次结算（harmDealt 上下文的 damage/horror 归零）；
-//   3. 神话阶段结束时弃置：条目级 forcedMythosEndDiscard。
-//
-// 引擎缺口（task-46 复核）：doPlay 已放行 attachTo.kind:'investigator'，但打出后写入的
-// inv.attachments 在事务提交后读取不到（探针：日志显示「附属到 X」，state.investigators[i].attachments
-// 仍为 undefined，draft 内亦同），因此 investigator 附属无法被 descriptorSources 枚举。
-// 本卡暂保持「只附属自己」的近似；已把复现与建议写入 primitive-requests/fix-player.json。
+// R7：附属对象走条目字段 attachTo.kind='investigator'（controllerScope='location'：同地点任意调查员，
+// 含自己）；引擎在 doPlay 里完成目标选择与附属写入，能力从宿主的 inv.attachments 枚举。
+// reaction 的「弃掉劫数延后」在 resolve 里调 api.discardSelf（真实从 inv.attachments 移除并进所有者弃牌堆）；
+// 神话阶段结束的 forced mythosEnd 由 turn.js 开窗（门控已含 inv.attachments），资源≥2 询问 pay/discard，否则强弃。
 
 import { ownSeat, ownTurn } from '../../engine/matcher.js'
 
 export default {
   code: '05021',
-  simplified: true,
-  note: '未实现：卡面允许附属到同地点任意调查员（本实现只附属到自己；引擎 doPlay 虽放行 investigator 附属，但事务提交后 inv.attachments 读不到，无法被能力枚举）；神话阶段结束的「花 2 资源或弃掉」简化为直接弃掉。已实现快速打出、受伤害/恐惧时弃掉并取消该次全部伤害与恐惧。',
-  forcedMythosEndDiscard: true,
+  fast: true,
+  attachTo: { kind: 'investigator', controllerScope: 'location' },
   playCondition: [
     { when: ownTurn(), message: '只能在你回合期间打出' },
   ],
   abilities: [
     {
-      kind: 'played',
-      fast: true,
-      becomesAsset: true,
-      label: '附属到场上：准备取消下一次伤害/恐惧',
-      resolve: ({ inv, api }) => {
-        api.putSelfIntoPlay(inv.seat, '05021')
-        api.info(`🎭 ${inv.name} 打出「${api.cardName('05021')}」，将它放置入场。`)
-      },
-    },
-    {
       kind: 'reaction',
       trigger: 'harmDealt',
       label: '弃掉劫数延后：取消刚受到的全部伤害和/或恐惧',
-      cost: { discardSelf: true },
       criteria: [ownSeat()],
       resolve: ({ context, api }) => {
+        // 弃掉自身（附属来源真实离场）。
+        api.discardSelf('05021')
         const cancelled = { damage: context.damage || 0, horror: context.horror || 0 }
         context.damage = 0
         context.horror = 0
         api.info(`🎭 「${api.cardName('05021')}」取消了 ${cancelled.damage} 点伤害与 ${cancelled.horror} 点恐惧。`)
       },
     },
+    {
+      kind: 'forced',
+      trigger: 'mythosEnd',
+      label: '神话阶段结束：花费 2 资源，或弃掉劫数延后',
+      // 非持有者跳过（窗口按调查员逐个打开）。
+      criteria: [ownSeat()],
+      resolve: ({ inv, api }) => {
+        if ((inv.resources || 0) >= 2) {
+          const answer = api.choice({
+            kind: 'effect', source: '05021', seat: inv.seat,
+            prompt: '神话阶段结束：「劫数延后」要花费 2 资源保留，还是弃掉？',
+            options: [{ id: 'pay', label: '花费 2 资源' }, { id: 'discard', label: '弃掉「劫数延后」' }],
+          })
+          if (answer === 'pay') {
+            api.loseResources(inv.seat, 2)
+            api.info(`🌑 ${inv.name} 花费 2 资源保留「劫数延后」。`)
+            return
+          }
+        }
+        api.discardSelf('05021')
+        api.info(`🌑 「劫数延后」在神话阶段结束时被弃掉。`)
+      },
+    },
   ],
-  modifiers: [
-
-  ],
+  modifiers: [],
 }

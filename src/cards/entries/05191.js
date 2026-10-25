@@ -8,13 +8,9 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 05191 田纳西酸麦芽威士忌（幸存者）：诡计检定 +2 意志；弃掉：攻击 +3 战斗，命中非精英敌人时自动躲避。
-
-// 当前技能检定是否针对一张诡计卡（performTest 的 source.code 就是诡计的卡号）。
-function onTreacheryTest({ state, helpers }) {
-  const code = state.skillTest?.source?.code
-  if (!code) return false
-  return helpers?.cardType?.(code) === 'treachery'
-}
+//
+// 注意：不要把条件写成能力 criteria——免费能力在玩家窗口的枚举不读 criteria（引擎侧只在执行时校验），
+// 条件不成立时会出现「选项可点但点了没反应」的空转。条件放进 resolve 里判定。
 
 export default {
   code: '05191',
@@ -28,8 +24,17 @@ export default {
       duringOwnSkillTest: true,
       label: '横置并花 1 补给：诡计卡牌的检定 +2[willpower]',
       cost: { action: false, exhaust: true, uses: 1 },
-      criteria: [onTreacheryTest],
-      resolve: ({ inv, api }) => {
+      resolve: ({ state, inv, api }) => {
+        // 卡面「在诡计卡牌的一次技能检定中得到 +2[willpower]」：
+        // 检定不是诡计 or 不使用意志时，+意志没有可加的技能值（能力可合法触发，但不产生效果）。
+        const sourceCode = state.skillTest?.source?.code
+        const onTreachery = sourceCode != null && api.cardType(sourceCode) === 'treachery'
+        const skill = state.skillTest?.skill
+        const usesWillpower = Array.isArray(skill) ? skill.includes('willpower') : skill === 'willpower'
+        if (!onTreachery || !usesWillpower) {
+          api.info('本次检定不是诡计卡牌的意志检定，田纳西酸麦芽威士忌的 +意志不生效。')
+          return
+        }
         api.addPendingTestBonus(2)
         api.info(`🥃 ${inv.name} 喝下一口田纳西酸麦芽威士忌：本次检定 +2[意志]。`)
       },

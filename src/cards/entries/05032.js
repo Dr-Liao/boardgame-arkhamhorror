@@ -10,15 +10,27 @@
 // 显式简化：卡面还可取消「弃手牌 / 失资源 / 失行动」三项，引擎没有这三类效果的通用取消读点；
 // 且触发范围放宽为任意伤害/恐惧（不限于遭遇卡或敌人攻击）。
 
+// R6 准备：would* 窗口带 context.source={kind} 后按卡面限定「遭遇卡或敌人攻击」；
+// 原语未落地时回退旧近似（state._treacheryResolving）。
+function sourceAllowed(state, context) {
+  const kind = context?.source?.kind
+  if (kind) return kind === 'encounter' || kind === 'enemyAttack'
+  return Boolean(state._treacheryResolving)
+}
+
 export default {
   code: '05032',
   simplified: true,
-  note: '未实现：取消「弃手牌 / 失资源 / 失行动」三项（引擎缺通用取消读点）；触发范围放宽为任意伤害/恐惧来源。已实现快速打出并取消本次伤害和/或恐惧。',
+  note: 'R7：五类可选项均按 context.source（enemyAttack/encounter/other）限定来源，伤害/恐惧面（harmDealt）也已接；「你忽略该效果（其他效果如常）」按取消当次窗口实现（其余窗口独立结算）。',
   abilities: [
     {
       kind: 'played',
       fast: true,
       trigger: 'harmDealt',
+      // R7：与三面向同一来源判定——只对「遭遇卡或敌人攻击」造成的伤害/恐惧提供。
+      criteria: [({ state, inv, context }) => context?.seat === inv.seat
+        && sourceAllowed(state, context)
+        && ((context.damage || 0) > 0 || (context.horror || 0) > 0)],
       label: '否决存在：忽略本次伤害/恐惧',
       resolve: ({ inv, api }) => {
         api.cancelHarm(inv.seat, {
@@ -26,6 +38,21 @@ export default {
           source: '05032',
           prompt: '选择「否决存在」要取消的伤害与恐惧。',
         })
+      },
+    },
+    // 审计 R4：补挂「弃掉手牌 / 失去资源 / 失去行动」三个取消窗口（05280 同一写法）。
+    // 来源仍按「遭遇卡结算期间」近似（state._treacheryResolving）；敌人攻击造成这三类效果较少见。
+    {
+      kind: 'reaction',
+      trigger: ['wouldDiscardFromHand', 'wouldLoseResources', 'wouldLoseActions'],
+      fromHand: true,
+      label: '否决存在：忽略弃掉手牌/失去资源/失去行动',
+      criteria: [({ state, inv, context }) => context?.seat === inv.seat
+        && sourceAllowed(state, context) && !context?.cancelled],
+      resolve: ({ context, api }) => {
+        context.cancelled = true
+        const what = context.what === 'discard' ? '弃掉手牌' : context.what === 'resources' ? '失去资源' : '失去行动'
+        api.info(`🛡️ 「否决存在」忽略了这次${what}的效果。`)
       },
     },
   ],

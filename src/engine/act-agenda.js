@@ -69,6 +69,11 @@ export function createActAgenda(deps) {
       checkOutcome(state, events)
       return
     }
+    // 2026-10-25 第七轮修复 05286a/05288a：幕推进时旧幕的「裂口」搬到新幕（不累加两份）。
+    if (Number.isInteger(cur.breaches) && cur.breaches > 0) {
+      next.breaches = cur.breaches
+      cur.breaches = 0
+    }
     info(state, events, `📜 场景推进：${next.stage}「${next.name}」—— ${next.text}`,
       { kind: 'story', title: '新的场景', code: next.originalCode || next.code, name: next.name, text: next.text })
     if (state.status === 'playing') autoEngageAll(state, events)
@@ -310,6 +315,14 @@ export function createActAgenda(deps) {
 
   function placeDoomOnCard(state, card, amount, events, options = {}) {
     if (!card || !(amount > 0)) return 0
+    // 2026-10-25 本循环修复 doom-placement-prevention（05085/05095/05096/05097）：
+    // 写入前询问剧本「这张卡能否被放置毁灭」；返回 false 时既不写也不触发 doomPlaced。
+    if (scenarioBehavior(state).canPlaceDoomOn?.(state, card) === false) {
+      if (options.silent !== true) {
+        info(state, events, `🔒 「${card.name || cardName(card.code)}」当前不能放置毁灭标记。`)
+      }
+      return 0
+    }
     // Phase 5（5a-28）：「手铐」这类禁止放毁灭的附属由条目级 restrainsDoom 声明。
     const cuffed = (card.attachments || []).some(attachment => registeredEntry(attachment.originalCode || attachment.code)?.restrainsDoom)
     if (cuffed && !card.elite) {
@@ -330,15 +343,37 @@ export function createActAgenda(deps) {
     }
     scenarioBehavior(state).doomPlaced?.(state,
       { target: card, amount, agenda: false }, scenarioRuntime(state, events))
+    // 2026-10-25 第六轮修复 05237：刚放置的毁灭可被反应取消（内容调用 api.cancelDoomPlacement）。
+    reactionWindow(state, 'doomPlaced', {
+      when: 'doomPlaced', seat: state.currentSeat, card, amount,
+      prompt: `「${card.name || cardName(card.code)}」放置了 ${amount} 点毁灭`,
+    }, events)
     return amount
   }
 
   function addDoom(state, amount, events) {
+    // 2026-10-25 第四轮修复 05285：放置前的替换钩子（如「改为在多个地点放裂口」）。
+    // 返回 true 表示内容已替换本次放置：不写 state.doom、不触发 doomPlaced、不检查议程。
+    if (amount > 0 && scenarioBehavior(state).doomPlacementReplacement?.(
+      state, amount, scenarioRuntime(state, events)) === true) {
+      return
+    }
     state.doom += amount
     info(state, events, `🌑 密谋上增加 ${amount} 点毁灭（当前 ${state.doom}）。`)
     if (amount > 0) {
       scenarioBehavior(state).doomPlaced?.(state,
         { target: null, amount, agenda: true }, scenarioRuntime(state, events))
+      // 2026-10-25 第七轮修复 05237：密谋毁灭的取消窗口（仅当有 doomPlaced 候选时开）。
+      const hasDoomPlaced = (state.investigators || []).some(inv => [...(inv.assets || []), ...(inv.threat || []), ...(inv.hand || [])]
+        .some(card => (registeredEntry(typeof card === 'string' ? card : card.code)?.abilities || [])
+          .some(ability => ability.trigger === 'doomPlaced'
+            || (Array.isArray(ability.trigger) && ability.trigger.includes('doomPlaced')))))
+      if (hasDoomPlaced) {
+        reactionWindow(state, 'doomPlaced', {
+          when: 'doomPlaced', seat: state.currentSeat, card: null, agenda: true, amount,
+          prompt: `密谋上放置了 ${amount} 点毁灭`,
+        }, events)
+      }
     }
     checkAgenda(state, events)
   }

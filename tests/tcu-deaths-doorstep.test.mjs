@@ -381,9 +381,12 @@ test('议程 1 在场时：银暮秘社敌人不能受伤/被击败，其他敌�
   assert.equal(behavior.enemyDamageAllowed(state, rst), true)
 })
 
-test('议程 1 强制：抽到怪物敌人时改放一边，并在议程上放 1 毁灭', () => {
+test('议程 1 强制：抽到怪物敌人时改放一边，并在议程上放 1 毁灭；非抽牌生成不受影响', () => {
   const state = stateFor()
   const fallback = 'entryHall'
+  // 引擎在 drawEncounter 里先调 encounterDrawn（:134）再 spawnEnemy（:177）：只有「本次抽到的怪物」
+  // 会打上 pendingDrawEnemy 标记，spawnLocation 仅在该标记命中时拦截。
+  behavior.encounterDrawn(state, state.investigators[0], '05101', stubApi())
   assert.equal(behavior.spawnLocation(state, '05101', fallback), '__setAside__')
   assert.deepEqual(state.scenarioFlags.monsterSetAside, ['05101'])
   assert.ok(state.scenarioZones.setAside.includes('05101'))
@@ -393,8 +396,14 @@ test('议程 1 强制：抽到怪物敌人时改放一边，并在议程上放 1
   behavior.spawnFailed(state, '05101', null, api)
   assert.equal(state.encounterDiscard.includes('05101'), false)
   assert.deepEqual(api.calls.filter(call => call.name === 'addDoom'), [{ name: 'addDoom', args: [1] }])
-  // 非怪物照常生成。
+  // 非怪物抽牌照常生成。
+  behavior.encounterDrawn(state, state.investigators[0], '05095', stubApi())
   assert.equal(behavior.spawnLocation(state, '05095', fallback), fallback)
+  // 效果/弱点等「非抽牌」路径的怪物生成不经过标记 → 照常生成（不再按触发面更宽的代理拦截）。
+  behavior.encounterDrawn(state, state.investigators[0], '05090', stubApi())
+  assert.equal(behavior.spawnLocation(state, '05101', fallback), fallback, '非本次抽到的怪物生成不受议程 1 强制影响')
+  // 真实抽到的怪物即使被取消/重抽后同回合的其它生成也不误伤：标记已被消费。
+  assert.equal(behavior.spawnLocation(state, '05101', fallback), fallback, '标记消费后同卡效果生成放行')
   // 银暮秘社敌人不能生成在「幽灵面入口大厅」（05078 背面）；普通面入口大厅不限制。
   placed(state, ['entryHall'])
   const hall = state.locations.find(location => location.id === 'entryHall')
@@ -405,7 +414,10 @@ test('议程 1 强制：抽到怪物敌人时改放一边，并在议程上放 1
   hall.code = '05078'
   hall.originalCode = '05078'
   hall.spectralFace = 'spectral'
+  state.scenarioFlags.entryHallSealed = true
   assert.equal(behavior.spawnLocation(state, '05095', 'entryHall'), '__nowhere__')
+  state.scenarioFlags.entryHallSealed = false
+  assert.equal(behavior.spawnLocation(state, '05095', 'entryHall'), 'entryHall')
 })
 
 test('办公室：银暮秘社敌人失去冷漠，离开后恢复', () => {
@@ -472,6 +484,88 @@ test('幕 1b：全员移到维多利亚式宴会厅、7 地点翻到幽灵面、
     assert.ok(state.encounterDeck.includes(code), `${code} 应洗入遭遇牌库`)
   }
   assert.equal(state.scenarioFlags.monsterSetAside.length, 0)
+})
+
+test('幕 1b：每位调查员从放一边怪物中自选 1 个生成在自己地点（按玩家顺序循环到全部生成）', () => {
+  const state = setup(stateFor(2))
+  state.locations.forEach(location => { location.revealed = true })
+  state.scenarioFlags.monsterSetAside = ['05101', '05105', '05106']
+  const picks = []
+  const api = stubApi({
+    isSpectral: () => false,
+    locate: null,
+    choose: request => {
+      if (request.kind === 'spawn') picks.push({ seat: request.seat, ids: request.options.map(option => option.id) })
+      return request.options[request.options.length - 1].id
+    },
+    moveInvestigator: (seat, destination) => {
+      state.investigators[seat].location = destination
+      api.calls.push({ name: 'moveInvestigator', args: [seat, destination] })
+    },
+    flipSpectral: id => {
+      const location = state.locations.find(entry => entry.id === id)
+      location.code = SPECTRAL_LOCATION_CODES[id]
+      location.originalCode = SPECTRAL_LOCATION_CODES[id]
+      location.spectralFace = 'spectral'
+      api.calls.push({ name: 'flipSpectral', args: [id] })
+      return true
+    },
+  })
+  behavior.actReveal(state, state.acts[0], api)
+  const monsterSpawns = api.calls.filter(call => call.name === 'spawn'
+    && ['05101', '05105', '05106'].includes(call.args[0]))
+  assert.deepEqual(monsterSpawns.map(call => call.args[0]), ['05106', '05105', '05101'],
+    '每位调查员分别自选（自选顺序＝玩家顺序），剩余的最后 1 张直接生成')
+  assert.ok(monsterSpawns.every(call => call.args[1] === 'victorianHalls'), '生成在各自调查员的地点')
+  assert.deepEqual(picks.map(pick => pick.seat), [0, 1], '第一轮按玩家顺序各询问一次；只剩 1 张时不再询问')
+  assert.deepEqual(picks[0].ids, ['05101', '05105', '05106'])
+  assert.deepEqual(picks[1].ids, ['05101', '05105'], '已被选走的怪物不再出现在选择里')
+  assert.equal(state.scenarioFlags.monsterSetAside.length, 0, '放一边怪物全部生成')
+})
+
+test('幕 1b：翻到幽灵面后按幽灵面印刷线索值重算（05080/81/83/84 与正面的差异），携带线索保留', () => {
+  const state = stateFor()
+  state.campaign.records.missingPersons = ['05046'] // 入口大厅 +6
+  state.campaign.records.piecesOfEvidenceWereLeftBehind = 0
+  behavior.setupLocations(state, [], setupApi(1))
+  placed(state, Object.keys(state.scenario.locations))
+  behavior.afterChaosBagSetup(state, [])
+  // 真实开局：入口大厅因全员在场而揭示并有 6 个线索 token。
+  const entryHallInit = loc(state, 'entryHall')
+  entryHallInit.revealed = true
+  entryHallInit.clues = 6
+  // 模拟一个「已揭示且有剩余线索」的普通地点（露台），验证 token 携带。
+  const balconyInit = loc(state, 'balcony')
+  balconyInit.revealed = true
+  balconyInit.clues = 2
+  const api = stubApi({
+    moveInvestigator: (seat, destination) => { state.investigators[seat].location = destination },
+    reveal: id => { // 模拟引擎 revealLocation：按 maxClues 放置线索。
+      const location = loc(state, id)
+      location.revealed = true
+      location.clues = location.maxClues || 0
+    },
+    flipSpectral: id => {
+      const location = loc(state, id)
+      location.code = SPECTRAL_LOCATION_CODES[id]
+      location.originalCode = SPECTRAL_LOCATION_CODES[id]
+      location.spectralFace = 'spectral'
+      return true
+    },
+  })
+  behavior.actReveal(state, state.acts[0], api)
+  // 幽灵面印刷线索值（每人）：05080=1、05081=1、05083=1、05084=2；05079/05082 与正面相同（0/1）。
+  assert.equal(loc(state, 'trophyRoom').maxClues, 1 * 2, '05080 幽灵面 1/人')
+  assert.equal(loc(state, 'billiardsRoom').maxClues, 1 * 2, '05081 幽灵面 1/人')
+  assert.equal(loc(state, 'balcony').maxClues, 1 * 2, '05083 幽灵面 1/人')
+  assert.equal(loc(state, 'office').maxClues, 2 * 2, '05084 幽灵面 2/人')
+  assert.equal(loc(state, 'victorianHalls').maxClues, 0, '05079 幽灵面 0/人')
+  // 入口大厅：6 个携带 token 的加成仍保留（幽灵面 0/人 + 6）。
+  assert.equal(loc(state, 'entryHall').maxClues, 6, '入口大厅 05078 幽灵面 0/人 + 携带的 6')
+  // 已揭示过且当时无人的露台：之后再次揭示时保留携带的 2 个 token，不重复按新卡面放置。
+  assert.equal(loc(state, 'balcony').preservedClues, 2, '携带 token 记录在 preservedClues')
+  assert.equal(behavior.cluesOnReveal(state, loc(state, 'balcony')), 2, '再次揭示按携带 token 数放置')
+  assert.equal(loc(state, 'balcony').preservedClues, undefined, '用后清除')
 })
 
 test('幕 2b：揭示入口大厅并把遭遇弃牌堆洗回牌库（同时解除封印 flag）', () => {
@@ -565,14 +659,32 @@ test('议程 2 正面：银暮秘社敌人被击败后带胜利 0 进入胜利�
     traits: ['Humanoid', 'Silver Twilight'], victory: undefined }
   state.enemies.push(enemy)
   const api = stubApi()
-  behavior.enemyDefeated(state, enemy, api)
+  // 必须返回 true：引擎 defeatEnemy 的 `!replaced && addVictory(...)` 才会跳过默认结算，
+  // 否则同一敌人会再被 addVictory 压进遭遇弃牌堆（R4 交叉复核 dispute / Lead 裁决）。
+  const replaced = behavior.enemyDefeated(state, enemy, api)
+  assert.equal(replaced, true, '返回 true 让引擎跳过 addVictory')
   const entry = state.victoryDisplay.find(card => card.id === 'enemy:rst1')
   assert.ok(entry, '进入胜利区')
   assert.equal(entry.victory, 0, '胜利 0 不改变比分')
+  assert.equal(state.encounterDiscard.includes('05095'), false, '不再同时进入遭遇弃牌堆')
+  // 后续「洗回遭遇弃牌堆」也不会把它洗回（它不在 discard 里）。
+  state.encounterDeck.push(...state.encounterDiscard)
+  assert.equal(state.encounterDeck.includes('05095'), false)
   const found = state.victoryDisplay.filter(card => card.originalCode === '05095').length
-  // 之后再被同一个敌人触发也不会重复入区。
-  behavior.enemyDefeated(state, enemy, api)
+  // 之后再被同一个敌人触发也不会重复入区（仍返回 true 保持引擎跳过）。
+  assert.equal(behavior.enemyDefeated(state, enemy, api), true)
   assert.equal(state.victoryDisplay.filter(card => card.originalCode === '05095').length, found)
+  assert.equal(state.encounterDiscard.includes('05095'), false)
+})
+
+test('议程 2 正面：非银暮秘社敌人仍交回引擎默认（不返回 true）', () => {
+  const state = stateFor()
+  state.agendaIndex = 1
+  const monster = { id: 'mon1', code: '05101', name: '暗影猎犬', location: 'entryHall',
+    traits: ['Monster', 'Spectral'], victory: 1 }
+  state.enemies.push(monster)
+  assert.notEqual(behavior.enemyDefeated(state, monster, stubApi()), true, '非银暮秘社敌人不接管')
+  assert.equal(state.victoryDisplay.some(card => card.id === 'enemy:mon1'), false)
 })
 
 test('05085b 背面：本局毁灭不能放在银暮秘社敌人上；约瑟夫获得冷漠', () => {
@@ -584,10 +696,18 @@ test('05085b 背面：本局毁灭不能放在银暮秘社敌人上；约瑟夫�
   state.scenarioFlags.josefPlanResolved = true
   behavior.enemySpawned(state, josef, stubApi())
   assert.equal(josef.aloof, true, '约瑟夫获得冷漠')
-  // 引擎 placeDoomOnCard 先写后回调 doomPlaced：模拟「已放 1 点」后应被退回。
-  josef.doom = 1
-  behavior.doomPlaced(state, { target: josef, amount: 1, agenda: false }, stubApi())
-  assert.equal(josef.doom, 0, '银暮秘社敌人不能保留毁灭')
+  // 引擎 placeDoomOnCard 在写入前询问 behavior.canPlaceDoomOn：结算后银暮秘社敌人返回 false（不写入）。
+  const other = { id: 'cultist1', code: '05095', originalCode: '05095', name: '秘社新信徒',
+    location: 'entryHall', doom: 0, traits: ['Humanoid', 'Silver Twilight'] }
+  const monster = { id: 'monster1', code: '05101', originalCode: '05101', name: '暗影猎犬',
+    location: 'entryHall', doom: 0, traits: ['Monster'] }
+  state.enemies.push(other, monster)
+  assert.equal(behavior.canPlaceDoomOn(state, other), false, '05085b 生效后银暮秘社敌人不能再被放置毁灭')
+  assert.equal(behavior.canPlaceDoomOn(state, josef), false, '约瑟夫本人同样被拦截')
+  assert.equal(behavior.canPlaceDoomOn(state, monster), true, '非银暮秘社敌人不受限')
+  // 结算前不限制。
+  state.scenarioFlags.josefPlanResolved = false
+  assert.equal(behavior.canPlaceDoomOn(state, other), true, '05085b 未结算前可以放置毁灭')
 })
 
 test('议程 2b：幕 2 → 结局 3；幕 3 → 未撤退者被击败并承受 1 点肉体创伤', () => {
@@ -619,7 +739,7 @@ test('幕 3 目标与全员撤退：未击败者全部撤退 → 推进幕', () 
   assert.equal(api.calls.filter(call => call.name === 'advanceAct').length, 2)
 })
 
-test('议程 2：猎手把银暮秘社敌人视作调查员（重写 hunterMove）', () => {
+test('议程 2：猎手把银暮秘社敌人视作调查员（同地点不移动/更近则转向/更远交回引擎/并列 lead 选路）', () => {
   const state = setup(stateFor())
   state.agendaIndex = 1
   state.investigators.forEach(inv => { inv.location = 'office' })
@@ -629,10 +749,40 @@ test('议程 2：猎手把银暮秘社敌人视作调查员（重写 hunterMove�
   const api = stubApi({ stepToward: () => 'trophyRoom' })
   assert.equal(behavior.hunterMove(state, enemy, api), true)
   const moves = api.calls.filter(call => call.name === 'moveEnemy')
-  assert.deepEqual(moves[0].args, [enemy, 'trophyRoom'])
+  assert.deepEqual(moves[0].args, [enemy, 'trophyRoom'], '银暮秘社敌人严格更近 → 向它移动')
+  // 同地点已有「视作调查员」的银暮秘社敌人 → 本猎手不移动（返回 true 阻止引擎默认 hunterStep）。
+  const same = { id: 'hunter2', name: '幽灵猎手', code: '05101', location: 'trophyRoom', traits: ['Monster', 'Spectral'], hunter: true, exhausted: false }
+  state.enemies.push(same)
+  const sameApi = stubApi({ stepToward: () => 'entryHall' })
+  assert.equal(behavior.hunterMove(state, same, sameApi), true)
+  assert.equal(sameApi.calls.filter(call => call.name === 'moveEnemy').length, 0, '同地点有视作调查员的敌人时不移动')
+  assert.ok(sameApi.calls.some(call => call.name === 'info' && /不移动/.test(call.args[0])))
+  // 调查员更近 → 本章不接管，交回引擎默认 hunterStep（保留 PREY_RANK）。
+  const farSilver = state.enemies.find(target => target.id === 'rst')
+  farSilver.location = 'balcony'
+  state.investigators.forEach(inv => { inv.location = 'victorianHalls' })
+  const defApi = stubApi()
+  assert.equal(behavior.hunterMove(state, enemy, defApi), false, '调查员更近 → 返回 false 交回引擎')
+  assert.equal(defApi.calls.filter(call => call.name === 'moveEnemy').length, 0)
+  // 并列：调查员侧用引擎 hunterStep 的下一步与额外目标路线合并，由 lead 选。
+  state.investigators.forEach(inv => { inv.location = 'trophyRoom' })
+  const tied = { id: 'hunter3', name: '幽灵猎手', code: '05101', location: 'victorianHalls', traits: ['Monster', 'Spectral'], hunter: true, exhausted: false }
+  state.enemies.push(tied)
+  farSilver.location = 'masterBedroom' // 距 victorianHalls 1
+  // 调查员在 trophyRoom 也距 1 → 并列；stepToward 按目标返回真实下一格。
+  const routeChoices = []
+  const routeApi = stubApi({
+    stepToward: (from, to) => to,
+    hunterStep: () => 'trophyRoom',
+    choose: request => { routeChoices.push(request); return request.options?.[0]?.id },
+  })
+  assert.equal(behavior.hunterMove(state, tied, routeApi), true)
+  const routeMoves = routeApi.calls.filter(call => call.name === 'moveEnemy')
+  assert.deepEqual(routeMoves[0].args, [tied, 'trophyRoom'], '并列时默认选引擎给出的调查员路线（lead 可改）')
+  assert.ok(routeChoices.some(request => request.kind === 'hunter'), '并列路线由 lead 选择')
   // 议程 1 时不用本章路由。
   state.agendaIndex = 0
-  assert.equal(behavior.hunterMove(state, enemy, api), false)
+  assert.equal(behavior.hunterMove(state, enemy, stubApi()), false)
 })
 
 test('议程 2 强制：重整幽灵敌人对同地点类人敌人造成伤害', () => {

@@ -1,4 +1,4 @@
-// 能力 API · 卡牌与状态写入口（Phase 6 · 6d-7 第一批）。
+﻿// 能力 API · 卡牌与状态写入口（Phase 6 · 6d-7 第一批）。
 //
 // `abilityApi(state, events)` 是个 179 个方法的巨型对象，按域拆开的第一块：
 // 「按 id 查/取、把牌放进弃牌堆、遭遇牌库顶敌人、最远地点、生成敌人、标记弱点、
@@ -18,6 +18,7 @@ export function createCardApi(state, events, deps) {
     cardName,
     checkDefeated,
     chooseLolaRole,
+    canEquip,
     descriptorOfKind,
     disengageAll,
     drawChaosToken,
@@ -41,6 +42,7 @@ export function createCardApi(state, events, deps) {
     scenarioRuntime,
     spawnEnemy,
     syncClues,
+    tarotSlotInfo,
   } = deps
 
   return {
@@ -52,6 +54,11 @@ export function createCardApi(state, events, deps) {
       return: (seat, mainCode) => returnBonded(state, state.investigators[seat], mainCode, { events }),
     },
     locationById: id => state.locations.find(location => location.id === id) || null,
+    // 2026-10-25 本循环修复 abilityApi.canEquip（05023/05027/05031/05035/05039 等「放置入场」查槽位）：
+    // 暴露与打出管线同一个槽位读点，内容层的放置入场能力可据此决定是否可选/是否需要替换。
+    canEquip: (inv, card) => canEquip(inv, card),
+    // 塔罗槽读数：{ capacity, usage }（开局 [reaction] 放置入场前判断槽位是否已满）。
+    tarotSlotInfo: inv => tarotSlotInfo(state, inv),
     // Phase 5（5a-15）：把一张牌直接放进弃牌堆（附着型弱点没找到目标时用）。
     putIntoDiscard: (seat, code) => {
       const owner = state.investigators[seat]

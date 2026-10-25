@@ -34,6 +34,8 @@ export default {
     cost: { exhaust: true },
     criteria: [({ inv, context, state }) => {
       if (!context?.cardCode) return false
+      // 卡面只取消「从遭遇牌库抽出的诡计卡」的显现：遭遇敌人/地点不适用。
+      if (ALL_CARDS[context.cardCode]?.type !== 'treachery') return false
       if (state.investigators?.[context.seat]?.location !== inv.location) return false
       if (context.weakness) return false
       return discardableHandIcons(inv) >= 2

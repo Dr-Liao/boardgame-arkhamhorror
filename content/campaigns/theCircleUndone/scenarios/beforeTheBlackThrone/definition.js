@@ -39,7 +39,65 @@ export const COSMOS_DECK_IDS = Object.freeze([
   ...INFINITY, COSMIC_GATE, ...PATHWAY, ...DANCERS_MIST, ...FLIGHT,
 ])
 
-// 四个「枢纽」地点（宇宙入口/憎恶宫殿/皇廷/黑王座）：进入时被放置，互相串联成主链。
+// 三张摆盘位置表（参考实现 BeforeTheBlackThrone.hs:140-160 场景 1、
+// Act/Cards/.../TheCosmosBeckons.hs:96-140 场景 2、InAzathothsDomain.hs:100-180 场景 3）。
+//   hub：本场景入场时就在场、并且位于 hubPosition 的枢纽地点（场景 2/3 = 上一幕保留下来的枢纽）。
+//   shuffledCards：放在一边、要与「宇宙顶抽出的 N 张」洗混至无法分辨后放置的卡。
+//   shuffledPositions：洗混后逐张放置的固定格位（隐藏身份）。
+//   emptyPositions/emptyCards：虚空格子的格位与「从 lead 牌库顶取的卡数」。
+//   removedFromGame：在本幕背面被移出游戏的上一幕枢纽。
+export const COSMOS_LAYOUTS = Object.freeze({
+  scene1: Object.freeze({
+    scene: 'scene1',
+    hub: COSMIC_INGRESS,
+    hubPosition: Object.freeze({ x: 0, y: 0 }),
+    kept: Object.freeze([COSMIC_INGRESS]),
+    shuffledCards: Object.freeze([HIDEOUS_PALACE]),
+    cosmosDraw: 1,
+    shuffledPositions: Object.freeze([{ x: 2, y: 1 }, { x: 2, y: -1 }]),
+    emptyPositions: Object.freeze([
+      { x: 0, y: 1 }, { x: 0, y: -1 }, { x: 1, y: 1 },
+      { x: 1, y: 0 }, { x: 1, y: -1 }, { x: 2, y: 0 },
+    ]),
+    emptyCards: 6,
+    removedFromGame: Object.freeze([]),
+  }),
+  scene2: Object.freeze({
+    scene: 'scene2',
+    hub: HIDEOUS_PALACE,
+    hubPosition: Object.freeze({ x: 0, y: 0 }),
+    kept: Object.freeze([HIDEOUS_PALACE]),
+    shuffledCards: Object.freeze([COURT]),
+    cosmosDraw: 2,
+    shuffledPositions: Object.freeze([{ x: 1, y: 2 }, { x: 1, y: -2 }, { x: 2, y: 0 }]),
+    emptyPositions: Object.freeze([
+      { x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 0 },
+      { x: 0, y: -1 }, { x: 1, y: -1 }, { x: 2, y: -1 },
+    ]),
+    emptyCards: 7,
+    removedFromGame: Object.freeze([COSMIC_INGRESS]),
+  }),
+  scene3: Object.freeze({
+    scene: 'scene3',
+    hub: COURT,
+    hubPosition: Object.freeze({ x: 0, y: 0 }),
+    kept: Object.freeze([COURT]),
+    shuffledCards: Object.freeze([BLACK_THRONE]),
+    cosmosDraw: 3,
+    shuffledPositions: Object.freeze([
+      { x: 1, y: 2 }, { x: 1, y: -2 }, { x: 3, y: 1 }, { x: 3, y: -1 },
+    ]),
+    emptyPositions: Object.freeze([
+      { x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 0 },
+      { x: 2, y: 0 }, { x: 0, y: -1 }, { x: 1, y: -1 }, { x: 2, y: -1 },
+    ]),
+    emptyCards: 8,
+    removedFromGame: Object.freeze([HIDEOUS_PALACE]),
+  }),
+})
+
+// 四个「枢纽」地点（宇宙入口/憎恶宫殿/皇廷/黑王座）的初始主链；进入宇宙网格后会由
+// behavior.afterChaosBagSetup / placeLocationOnGrid 用网格四邻接重算 connections 替代。
 const HUB_CONNECTIONS = {
   [COSMIC_INGRESS]: [HIDEOUS_PALACE],
   [HIDEOUS_PALACE]: [COSMIC_INGRESS, COURT],
@@ -48,10 +106,14 @@ const HUB_CONNECTIONS = {
 }
 
 // 宇宙地点（未揭示面 = 印刷的「宇宙 -」连接指令；direction 是 placement 指令表的方向）。
-function cosmosLocation(id, code, { direction, cost = null } = {}) {
+// mode：
+//   'self'（默认）   —— 与「放置者所在地点的任意方向」相邻的空格连接（「与任意方向连接」）。
+//   'revealed'       —— 与「任意一个已揭示地点的任意方向」相邻的空格连接
+//                        （05339 宇宙门扉：「与任意一个已揭示地点的任意方向连接」）。
+function cosmosLocation(id, code, { direction, cost = null, mode = 'self' } = {}) {
   return location(id, code, {
     connections: [],
-    cosmos: { direction, ...(cost ? { cost } : {}) },
+    cosmos: { direction, mode, ...(cost ? { cost } : {}) },
   })
 }
 
@@ -72,7 +134,7 @@ const locations = {
   ...Object.fromEntries(INFINITY.map((id, index) => [id,
     cosmosLocation(id, '05338', { direction: 'down', cost: { damage: 2 } })])),
   // 宇宙门扉（1）：宇宙 - 与任意一个已揭示地点的任意方向连接。
-  cosmicGate: cosmosLocation(COSMIC_GATE, '05339', { direction: 'any' }),
+  cosmicGate: cosmosLocation(COSMIC_GATE, '05339', { direction: 'any', mode: 'revealed' }),
   // 虚空之路（2）：宇宙 - 与任意方向连接。
   ...Object.fromEntries(PATHWAY.map(id => [id, cosmosLocation(id, '05340', { direction: 'any' })])),
   // 舞者之雾（3）：宇宙 - 必须与右方连接，或失去 2 资源与相邻地点任意方向连接。
@@ -120,6 +182,13 @@ Object.assign(definitions.enemies[AZATHOTH], {
   immuneToPlayerCards: true,
   omnipotent: true,
   spawnAt: null,
+})
+// 05342 究极混沌：卡面「不能被取消」（第一段）。引擎读点：
+// src/engine/encounter.js:105-118（encounterDrawn 取消）、src/engine/treachery-tokens.js:74-76
+// （显现效果取消）；api.cancelEncounterDraw 与 effects.cancelTreachery 均读同一份
+// state.scenario.treacheries[卡号].cannotBeCanceledRevelation。
+Object.assign(definitions.treacheries[ULTIMATE_CHAOS], {
+  cannotBeCanceledRevelation: true,
 })
 
 export const scenario = {

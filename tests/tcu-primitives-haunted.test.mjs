@@ -28,10 +28,10 @@ function harness(options = {}) {
     log: [],
     investigators: [{
       seat: 0, name: '测试调查员', location: 'loc-a', clues: options.clues ?? 2,
-      resources: options.resources ?? 3, hand: options.hand ?? ['01088'], assets: [], engaged: [],
+      resources: options.resources ?? 3, hand: options.hand ?? ['01088'], assets: options.assets ?? [], engaged: [],
       damage: 0, horror: 0, actionsLeft: 3,
     }],
-    locations: [{ id: 'loc-a', name: '测试地点', connections: ['loc-b'], haunted: options.haunted || [] },
+    locations: [{ id: 'loc-a', name: '测试地点', connections: ['loc-b'], clues: 0, haunted: options.haunted || [] },
       { id: 'loc-b', name: '邻街', connections: ['loc-a'] }],
     enemies: options.enemies || [],
     scenario: options.scenario || {},
@@ -209,6 +209,78 @@ test('P2.1 结算：资源不足按卡面转为恐惧（loseResource.overflowHor
   primitive.resolveHaunted(state, 0, {}, api)
   assert.equal(state.investigators[0].resources, 0)
   assert.equal(state.investigators[0].horror, 1)
+})
+
+// 第四轮 haunted-choice-option-validation（05081 / 05130 同形）：choice 只列可结算选项。
+test('第四轮修复：无支援时「弃掉一个支援」选项被过滤，自动结算「受到 1 点恐惧」（05130/05081 同形）', () => {
+  const data = [{
+    text: '闹鬼 - 你必须受到 1 点恐惧，或选择并弃掉 1 个你控制的支援。',
+    effect: [{
+      kind: 'choice',
+      options: [
+        { id: 'horror', label: '受到 1 点恐惧', effect: [{ kind: 'horror', amount: 1 }] },
+        { id: 'discardAsset', label: '弃掉一个你控制的支援', effect: [{ kind: 'discardAsset', amount: 1 }] },
+      ],
+    }],
+  }]
+  const noAsset = harness({ haunted: data, assets: [] })
+  noAsset.primitive.resolveHaunted(noAsset.state, 0, {}, noAsset.api)
+  assert.equal(noAsset.state.investigators[0].horror, 1, '唯一可结算选项自动结算')
+  assert.equal((noAsset.stub.requests || []).length, 0, '只有 1 个可结算选项时不再询问（弃支援已过滤）')
+  assert.equal(noAsset.api.discarded, undefined, '没有执行弃支援')
+  // 有支援时两个选项都应出现，且选择弃支援会真正弃掉它。
+  const withAsset = harness({ haunted: data, assets: [{ id: 'asset-1', code: '01088' }], answers: ['discardAsset'] })
+  withAsset.primitive.resolveHaunted(withAsset.state, 0, {}, withAsset.api)
+  assert.equal(withAsset.stub.requests.length, 1, '有支援时出现二选一')
+  assert.deepEqual(withAsset.stub.requests[0].options.map(option => option.id), ['horror', 'discardAsset'])
+  assert.deepEqual(withAsset.api.discarded, ['asset-1'])
+  assert.equal(withAsset.state.investigators[0].horror, 0)
+})
+
+// 第四轮 haunted-choice-option-validation（05131 同形）：0 线索时「放线索」选项被过滤。
+test('第四轮修复：0 线索时「将 1 个线索放在此地点」选项被过滤，自动放毁灭（05131 同形）', () => {
+  const data = [{
+    text: '闹鬼 - 你必须将你的 1 个线索放在此地点，或在当前密谋上放置 1 个毁灭标记。',
+    effect: [{
+      kind: 'choice',
+      options: [
+        { id: 'placeClue', label: '将 1 个线索放在此地点', effect: [{ kind: 'placeClue', amount: 1 }] },
+        { id: 'agendaDoom', label: '在当前密谋上放置 1 个毁灭标记', effect: [{ kind: 'doom', target: 'agenda', amount: 1 }] },
+      ],
+    }],
+  }]
+  const noClue = harness({ haunted: data, clues: 0 })
+  noClue.primitive.resolveHaunted(noClue.state, 0, {}, noClue.api)
+  assert.equal(noClue.state.doom, 1, '唯一可结算选项（放毁灭）自动结算')
+  assert.equal((noClue.stub.requests || []).length, 0, '0 线索时不再询问')
+  assert.equal(noClue.state.investigators[0].clues, 0)
+  // 有线索时两个选项都出现，选择放线索走 spendClues + 地点线索。
+  const withClue = harness({ haunted: data, clues: 2, answers: ['placeClue'] })
+  withClue.primitive.resolveHaunted(withClue.state, 0, {}, withClue.api)
+  assert.deepEqual(withClue.stub.requests[0].options.map(option => option.id), ['placeClue', 'agendaDoom'])
+  assert.equal(withClue.state.investigators[0].clues, 1)
+  assert.equal(withClue.state.locations[0].clues, 1)
+  assert.equal(withClue.state.doom, undefined)
+})
+
+// 第四轮 damageAssets-investigator（05083 露台）：调查员本人也受直接伤害，带 health 的支援各受 1 点。
+test('第四轮修复：damageAssets 含调查员本人 + 带生命值支援各受 1 点直接伤害（05083 同形）', () => {
+  const data = [{
+    text: '闹鬼 - 你每张带有生命值的卡牌受到 1 点直接伤害。',
+    effect: [{ kind: 'damageAssets', amount: 1 }],
+  }]
+  const withAssets = harness({
+    haunted: data,
+    assets: [{ id: 'health-1', code: 'withHealth' }, { id: 'no-health', code: 'noHealth' }],
+  })
+  withAssets.primitive.resolveHaunted(withAssets.state, 0, {}, withAssets.api)
+  assert.equal(withAssets.state.investigators[0].damage, 1, '调查员本人受到 1 点直接伤害')
+  assert.deepEqual(withAssets.api.damaged, [['health-1', 1]], '只有带 health 的支援各受 1 点')
+  // 没有任何支援时调查员仍然要受 1 点（clauseAvailable 恒真）。
+  const noAssets = harness({ haunted: data, assets: [] })
+  noAssets.primitive.resolveHaunted(noAssets.state, 0, {}, noAssets.api)
+  assert.equal(noAssets.state.investigators[0].damage, 1)
+  assert.equal(noAssets.api.damaged, undefined)
 })
 
 test('P2.1 结算：script 子句缺少章节实现时记账，不静默通过', () => {

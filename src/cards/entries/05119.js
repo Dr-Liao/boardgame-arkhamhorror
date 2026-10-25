@@ -19,18 +19,17 @@ export default {
   code: '05119',
   abilities: [
     {
-      kind: 'free', trigger: 'test.afterCommit',
-      label: '横置：给刚投入的卡牌再加 1 个技能图标',
-      cost: { action: false, exhaust: true },
-      criteria: [({ state }) => (state.skillTest?.committed || []).length > 0],
-      resolve: ({ state, inv, api }) => {
-        const test = state.skillTest
-        if (!test) return
-        const mine = [...(test.committed || [])].reverse().find(item => item.seat === inv.seat)
-        if (!mine) { api.info('本次检定没有恐怖图腾的控制者投入的卡牌。'); return }
-        const icons = Object.entries(api.cardIcons(mine.code) || {}).filter(([, count]) => count > 0)
-        if (!icons.length) { api.info(`「${api.cardName(mine.code)}」没有技能图标。`); return }
-        const skills = skillListOf(test)
+      kind: 'reaction', trigger: 'committedCard',
+      label: '横置：你刚投入的卡牌额外获得 1 个它已有的技能图标',
+      cost: { exhaust: true },
+      criteria: [({ state, inv, context }) => context?.seat === inv.seat
+        && Boolean(context?.cardCode) && (state.skillTest?.committed || []).length > 0],
+      resolve: ({ state, inv, context, api }) => {
+        const code = context?.cardCode
+        if (!code) return
+        const icons = Object.entries(api.cardIcons(code) || {}).filter(([, count]) => count > 0)
+        if (!icons.length) { api.info(`「${api.cardName(code)}」没有技能图标。`); return }
+        const skills = skillListOf(state.skillTest)
         const useful = icons.filter(([icon]) => icon === 'wild' || skills.includes(icon))
         const pool = useful.length ? useful : icons
         const chosen = pool.length === 1 ? pool[0][0]
@@ -38,8 +37,9 @@ export default {
             prompt: '恐怖图腾：选择该卡牌已有的一个技能图标，它额外获得该图标。',
             options: pool.map(([icon]) => ({ id: icon, label: icon })) })
         const icon = pool.find(([name]) => name === chosen)?.[0] || pool[0][0]
-        if (icon === 'wild' || skills.includes(icon)) api.addPendingTestBonus(1)
-        api.info(`恐怖图腾：「${api.cardName(mine.code)}」额外获得 1 个 ${icon} 图标。`)
+        // R6：把额外图标真正记到本次检定（引擎追加到投入区，而非折算成 pendingBonus）。
+        api.addCommittedCardIcons(inv.seat, 1)
+        api.info(`恐怖图腾：「${api.cardName(code)}」额外获得 1 个 ${icon} 图标。`)
       },
     },
   ],
