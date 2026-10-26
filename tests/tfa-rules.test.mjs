@@ -1,4 +1,4 @@
-import test from 'node:test'
+﻿import test from 'node:test'
 import assert from 'node:assert/strict'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { RULES, RULE_INDEX, cardRuleIds, matchingRules, ruleById } from '../web/rulebook-data.js'
@@ -153,23 +153,26 @@ test('M4 规则书包含九条失落的时代条目并进入拼音索引', () =>
   }
 })
 
-test('M4 规则条目的描述与实现边界一致', () => {
+test('M4 规则条目的描述只写规则本身', () => {
   const campaign = ruleById('tfaCampaign')
   const text = campaign.body.join('')
-  // 战役已在大厅开放，但必须同时写明仍是 earlyAccess、还有未完成项。
-  assert.match(text, /playable/)
-  assert.match(text, /earlyAccess/)
-  assert.match(text, /audit\/tfa-migration\.json/)
-  // 不能把未实现的内容写成已可用。
-  for (const rule of TFA_RULES) {
-    const body = rule.body.join('')
-    assert.equal(/M5 已完成/.test(body), false, rule.id)
-    assert.equal(/已发布的完整战役/.test(body), false, rule.id)
-  }
+  // 战役结构、幕间与补给点属于规则内容。
+  assert.match(text, /失落的时代/)
+  assert.match(text, /五个幕间/)
+  assert.match(text, /补给点/)
+  assert.equal(/playable|earlyAccess|audit\/tfa-migration|本 Mod|引擎|实现/.test(text), false, '战役正文不应写实现状态')
   // 补给语义必须与卡牌使用次数区分。
   assert.match(ruleById('tfaSupplies').body.join(''), /Uses \(N supplies\)/)
-  // 领队属于战役元数据，不能写成卡牌能力。
-  assert.match(ruleById('tfaRelic').body.join(''), /战役元数据/)
+  // 领队是战役角色与规则，不是代码里的座位指针。
+  assert.match(ruleById('tfaRelic').body.join(''), /远征领队/)
+  assert.match(ruleById('tfaRelic').body.join(''), /厄休拉·唐斯/)
+  const forbidden = /本局|本 Mod|引擎|实现|界面|按钮|面板|拖动|点击|悬浮|右键|动画|演出|存档|投影|原语|读点|接线|字段|验收|审计|playable|earlyAccess|audit|src\/|content\/|behavior|scenarioRuntime|hiddenGaps|hauntedGaps|CHAOS_BAGS/
+  for (const rule of TFA_RULES) {
+    const body = rule.body.join('')
+    const hit = body.match(forbidden)
+    assert.equal(hit, null, `${rule.id} 正文含引擎或实现内容：${hit?.[0]}`)
+    assert.equal(/M5 已完成|已发布的完整战役/.test(body), false, rule.id)
+  }
 })
 
 test('M4 每个失落的时代章节卡都能跳到对应规则条目', async () => {

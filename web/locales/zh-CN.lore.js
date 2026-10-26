@@ -45,12 +45,13 @@ export default {
   'rulebook.searchAria': '搜索规则',
   'rulebook.searchPlaceholder': '搜索关键字或英文名称…',
   'rulebook.indexLabel': '拼音索引 · A–Z',
+  'rulebook.pinnedGroup': '入门',
   'rulebook.navAria': '规则目录',
   'rulebook.groupAria': '{initial} 组',
   'rulebook.empty': '没有找到规则，试试“交战”或“投入”。',
   'rulebook.back': '← 返回上一条',
   'rulebook.related': '相关规则',
-  'rulebook.footer': '本页为当前游戏的操作与机制指南。原版完整规则、时机表和勘误可从下方查阅；本局可执行动作以桌面提示为准。',
+  'rulebook.footer': '本页为规则速查。原版完整规则、时机表和勘误可从下方查阅。',
 
   // 剧情阅读器（story-reader.js）：章节标题、结局名、记录标签来自战役数据，保留原文。
   'story.reader.aria': '战役故事',

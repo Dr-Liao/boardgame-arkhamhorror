@@ -21,6 +21,7 @@ import { contentRegistry } from './content/registered.js'
 import { META } from './src/cards/cards-data.js'
 import { stateCompatibilityError } from './src/engine/rules-state.js'
 import { migrateState } from './src/engine/save-migration.js'
+import { setAutoReactionHosted } from './src/engine/resolution.js'
 import { campaignListForUi } from './content/registry.js'
 import { deckBuilderData } from './src/deck/deckbuilding.js'
 import {
@@ -346,10 +347,40 @@ export default {
   validateMove,
   applyMove,
 
-  // P0 自动跳过（大厅可选钩子）：房主在命令发布前替人类座位补一条普通 choose/skip。
-  // disabledCodes 来自该玩家本机「反应关」的卡号集合，随 move 的 client.autoPass 上行；
-  // 判定与浏览器 reactionPassPlan 共用 reactionSkipPlan，映射不出卡号时 fail-closed。
-  // 返回的是普通 move，仍要过大厅的 validateMove/applyMove、进 actionLog——回放与手点一致。
+  // 大厅加载 Mod 时调用一次：从此自动奖励窗口对真人可见，由大厅代答。
+  // 纯引擎消费者（单测 / replay-fixtures / 审计工具）不调用，保持旧的直接领取。
+  enableAutoReactionHosted() { setAutoReactionHosted(true) },
+
+  // 三态自动结算（大厅可选钩子）：发布前把该座位的待决窗口代答成 trigger / skip。
+  // states 只含该座位「动过的卡」；没有覆盖时按 autoByDefault 取内置默认：
+  // 纯收益自动奖励 = auto，其余（如罗兰的线索反应）= ask。返回普通 move，仍过 validateMove。
+  autoChoice({ state, seat, states }) {
+    const choice = state?.pendingChoice
+    if (!choice || choice.seat !== seat) return null
+    const stateOf = code => states?.[code]
+      ?? (state?.cards?.[code]?.autoByDefault ? 'auto' : 'ask')
+    // 自动优先：默认自动奖励或玩家手动切到 auto 的旧式反应，都可以补 trigger。
+    const triggerOptionId = choice.autoOptionId || choice.autoTriggerOptionId
+    if (triggerOptionId && choice.canSkip !== false && stateOf(choice.cardCode) === 'auto') {
+      return { action: 'choose', choiceId: choice.id, optionId: triggerOptionId, auto: true }
+    }
+    // 新式反应窗口（ability-exec）：一个窗口里每张候选卡是一个 option，没有单一 trigger id。
+    // 只有恰好一个候选卡设为 auto 时才代答；多个候选让玩家自己选，避免替玩家排序。
+    if (!triggerOptionId && choice.kind === 'reaction' && Array.isArray(choice.options)) {
+      const autoOptions = choice.options.filter(option => option.cardCode
+        && state?.cards?.[option.cardCode]?.hasAutoReaction
+        && stateOf(option.cardCode) === 'auto')
+      if (autoOptions.length === 1) {
+        return { action: 'choose', choiceId: choice.id, optionId: autoOptions[0].id, auto: true }
+      }
+    }
+    if (!choice.canSkip) return null
+    const plan = reactionSkipPlan(state, code => stateOf(code) === 'skip')
+    if (!plan) return null
+    return { action: 'choose', choiceId: plan.choice.id, optionId: 'skip', auto: true }
+  },
+
+  // 旧协议兼容：只按 disabledCodes 做 skip（不再被大厅优先调用）。
   autoPassChoice({ state, seat, disabledCodes }) {
     if (!Array.isArray(disabledCodes) || !disabledCodes.length) return null
     const choice = state?.pendingChoice

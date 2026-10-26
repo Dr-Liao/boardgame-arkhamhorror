@@ -24,7 +24,7 @@ import { mapGeometry, hunterRouteEdges, MAP_CARD_WIDTH, MAP_CARD_HEIGHT } from '
 import { createTablePresentation } from './table-presentation.js'
 import { tableIcon, classIcon, cardAttachmentReferences, cardMarkerData, placedCardMarkers } from './table-components.js'
 import { choicePresentation, entityMoves, mountCardInteractions, cancelTableGesture, handUnavailableReason } from './card-interactions.js'
-import { reactionEnabled, setReactionEnabled, reactionChoices, reactionView, reactionPassPlan, reactionDisabledCodes } from './reaction-preferences.js'
+import { reactionEnabled, setReactionEnabled, reactionChoices, reactionView, reactionAutoPlan, reactionState, setReactionState, reactionStates, reactionPrefsSeq, defaultReactionState, hydrateReactionStates } from './reaction-preferences.js'
 import { presentationAttributes, campaignPlaylistId } from './campaign-presentation.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
 // 第 4 步 P5：万象无终的专用交互面板（塔罗抽牌 / 序章选人 / 闹鬼来源 / 地点标记 / 多技能检定）。
@@ -58,11 +58,10 @@ function applyPresentationAttributes(node, attributes) {
 let tableSession = null
 let rulebook
 let lastReactionPass = null
-// P1：把本机「反应关」集合异步同步给房主（房主据此代答任意座位的窗口）。
-// 只在本局/本进程/集合变化时发送；失败按错误类型冷却，下一次渲染或开关变化再试。
-// 额外两种「房主缓存可能丢了」的情况会强制重发：连接断开后恢复、房主从离线变在线；
-// 以及每 2 分钟一次的低频刷新（防止房主进程重启后缓存清空但客人客户端 key 未变）。
+// 三态覆盖异步同步：本地立即生效，250ms 去抖合并后上行；失败按错误类型冷却。
+// 断线→恢复、房主离线→在线、每 2 分钟各强制重发一次，覆盖房主进程重启丢缓存的情况。
 const REACTION_SYNC_REFRESH_MS = 120000
+const REACTION_SYNC_DEBOUNCE_MS = 250
 let reactionSyncKey = ''
 let reactionSyncFailed = ''
 let reactionSyncing = ''
@@ -70,40 +69,59 @@ let reactionSyncAfter = 0
 let reactionSyncedAt = 0
 let reactionSyncConnected = null
 let reactionSyncHostOnline = null
-// 偏好序号：每次上报单调递增（跨页面刷新也增大），房主据此丢弃乱序到达的旧偏好。
-let reactionPrefsSeq = 0
-const nextReactionPrefsSeq = () => (reactionPrefsSeq = Math.max(reactionPrefsSeq + 1, Date.now()))
+let reactionSyncTimer = null
+let reactionSyncPending = null
 const resetReactionSync = () => {
   reactionSyncKey = ''; reactionSyncFailed = ''; reactionSyncing = ''; reactionSyncAfter = 0; reactionSyncedAt = 0
+  reactionSyncPending = null
+  if (reactionSyncTimer) { clearTimeout(reactionSyncTimer); reactionSyncTimer = null }
 }
-function syncReactionPreferences(session) {
-  const connected = !!(session?.online && state.online?.room && state.online?.connected)
-  // 断线→恢复：房主可能经历了重启/缓存重建，强制重发。
-  if (reactionSyncConnected === false && connected) resetReactionSync()
-  reactionSyncConnected = connected
-  if (!connected) return
-  const hostOnline = state.online.room.members?.some(member => member.host && member.online) === true
-  // 房主离线→在线：同样视为缓存可能已重建。
-  if (reactionSyncHostOnline === false && hostOnline) resetReactionSync()
-  reactionSyncHostOnline = hostOnline
-  // 房主不在线时命令无法被处理；等 hostOnline 由 false→true 时强制重发。
-  if (!hostOnline) return
-  const seat = mySeat(session)
-  const codes = reactionDisabledCodes(session, seat)
-  const key = [state.online.instanceId || '', session.sessionId, seat, codes.slice().sort().join(',')].join('|')
-  if (key === reactionSyncing) return
-  if (key === reactionSyncKey && Date.now() - reactionSyncedAt < REACTION_SYNC_REFRESH_MS) return
-  if (key === reactionSyncFailed && Date.now() < reactionSyncAfter) return
-  reactionSyncing = key
+
+function flushReactionPreferences() {
+  reactionSyncTimer = null
+  const pending = reactionSyncPending
+  reactionSyncPending = null
+  if (!pending || pending.key === reactionSyncing) return
+  reactionSyncing = pending.key
   reactionSyncAfter = Date.now() + 5000
-  api('POST', '/prefs', { sessionId: session.sessionId, codes, seq: nextReactionPrefsSeq() })
-    .then(() => { reactionSyncKey = key; reactionSyncedAt = Date.now(); reactionSyncFailed = '' })
+  api('POST', '/prefs', { sessionId: pending.sessionId, states: pending.states, seq: pending.seq })
+    .then(() => { reactionSyncKey = pending.key; reactionSyncedAt = Date.now(); reactionSyncFailed = '' })
     .catch(error => {
-      // 房主忙碌（SESSION_BUSY）很快重试；旧房主不支持该命令时拉长冷却，避免每帧重发。
-      reactionSyncFailed = key
+      // 房主忙碌（SESSION_BUSY）很快重试；旧房主不支持该命令时拉长冷却。
+      reactionSyncFailed = pending.key
       reactionSyncAfter = Date.now() + (error?.code === 'SESSION_BUSY' ? 800 : 30000)
     })
-    .finally(() => { if (reactionSyncing === key) reactionSyncing = '' })
+    .finally(() => { if (reactionSyncing === pending.key) reactionSyncing = '' })
+}
+
+function syncReactionPreferences(session) {
+  const onlineRoom = !!(session?.online && state.online?.room)
+  const connected = !!(onlineRoom && state.online?.connected)
+  if (onlineRoom) {
+    // 断线→恢复：房主可能经历了重启/缓存重建，强制重发。
+    if (reactionSyncConnected === false && connected) resetReactionSync()
+    reactionSyncConnected = connected
+    if (!connected) return
+    const hostOnline = state.online.room.members?.some(member => member.host && member.online) === true
+    // 房主离线→在线：同样视为缓存可能已重建。
+    if (reactionSyncHostOnline === false && hostOnline) resetReactionSync()
+    reactionSyncHostOnline = hostOnline
+    if (!hostOnline) return
+  } else {
+    // 单机没有联机房间：仍然异步写本机大厅，让 sidecar 及时落盘。
+    reactionSyncConnected = null
+    reactionSyncHostOnline = null
+  }
+  const seat = mySeat(session)
+  const states = reactionStates(session.sessionId, seat)
+  const seq = reactionPrefsSeq(session.sessionId, seat)
+  const key = [onlineRoom ? (state.online.instanceId || '') : 'local', session.sessionId, seat,
+    JSON.stringify(states), seq].join('|')
+  if (key === reactionSyncKey && Date.now() - reactionSyncedAt < REACTION_SYNC_REFRESH_MS) return
+  if (key === reactionSyncFailed && Date.now() < reactionSyncAfter) return
+  if (reactionSyncPending?.key === key) return
+  reactionSyncPending = { key, sessionId: session.sessionId, states, seq }
+  if (!reactionSyncTimer) reactionSyncTimer = setTimeout(flushReactionPreferences, REACTION_SYNC_DEBOUNCE_MS)
 }
 const mySeat = s => s.mySeat ?? s.observerSeat ?? 0
 
@@ -125,13 +143,13 @@ const viewSession = () => (presentation?.isBlocking && tableSession?.sessionId =
 
 function scheduleReactionPass(session) {
   const seat = mySeat(session)
-  // 「该不该自动过」与「现在能不能提交」分开判定：联机的忙碌快照（房主还在结算
+  // 「该不该自动结算」与「现在能不能提交」分开判定：联机的忙碌快照（房主还在结算
   // 上一步）不能提交，但窗口必须继续藏住，否则会先画出反应内容再消失。
   const ready = !state.busy && !presentation.isBlocking && canAct(session, seat)
-  const pass = reactionPassPlan(session, seat, ready)
+  const pass = reactionAutoPlan(session, seat, ready)
   if (!pass) return false
   if (!pass.submit) return true
-  const { choice, items, skip, key } = pass
+  const { choice, key } = pass
   if (key === lastReactionPass) return state.movePending?.sessionId === session.sessionId
   lastReactionPass = key
   queueMicrotask(() => {
@@ -143,17 +161,23 @@ function scheduleReactionPass(session) {
       render()
       return
     }
-    if (items.some(item => reactionEnabled(session.sessionId, choice.seat, item.code))) return
-    cardMove(skip, session, { auto: true })
+    // 排队期间玩家可能改了开关：按最新状态重算，只有仍可自动结算才提交。
+    const fresh = reactionAutoPlan(state.session, choice.seat, true)
+    if (!fresh?.move || fresh.choice.id !== choice.id) { lastReactionPass = null; return }
+    cardMove(fresh.move, state.session, { auto: true })
   })
   return true
 }
 
 function renderReactionToggle(s, code) {
-  if (!s || !ahCardDef(s,code).hasReactionPrompt) return null
+  if (!s) return null
+  const def = ahCardDef(s, code)
+  if (!def.hasReactionPrompt && !def.hasAutoReaction) return null
   const seat = s.observerSeat ?? s.players.find(player => player.role === 'human')?.seat
   const inv = s.state.investigators.find(inv => inv.seat === seat)
   if (!inv || !(inv.code === code || inv.hand?.includes(code) || [...(inv.assets || []),...(inv.threat || [])].some(card => card.code === code))) return null
+  // 有旧式反应窗口的卡用三态按钮（含米兰这类默认 auto 的资产）；只有快速开关的卡保留旧文字按钮。
+  if (def.hasAutoReaction) return renderReactionModeButton(s, seat, code, def)
   const enabled = reactionEnabled(s.sessionId,seat,code)
   return h('button', { className:'ah-reaction-toggle'+(enabled?' is-on':''), 'data-reaction-toggle':code,
     role:'switch', 'aria-checked':String(enabled), 'aria-label':t('game.reaction.aria', { name: cardDisplayName(ahCardDef(s,code)) || code }),
@@ -162,6 +186,48 @@ function renderReactionToggle(s, code) {
     onpointerdown:event=>event.stopPropagation(), onkeydown:event=>event.stopPropagation(),
     onclick:event=>{event.stopPropagation();setReactionEnabled(s.sessionId,seat,[code],!enabled);lastReactionPass=null;resetReactionSync();render()},
   },tableIcon('action'),enabled?t('game.reaction.on'):t('game.reaction.off'))
+}
+
+// 三态按钮：skip → ask → auto → skip。一个命中区，图标随状态变化：
+// skip=暗闪电+斜杠，ask=亮闪电，auto=亮齿轮（旋转）。hover/aria 都描述当前状态与下一档。
+// 没有自动资格的卡只有 skip/ask 两态，始终用闪电图标。
+const REACTION_MODE_NEXT = { skip: 'ask', ask: 'auto', auto: 'skip' }
+const REACTION_MODE_NEXT_NO_AUTO = { skip: 'ask', ask: 'skip', auto: 'skip' }
+// 显式 key 表：i18n 守卫只认 t(字面量)，不要用模板拼接。
+const REACTION_MODE_KEY = { skip: 'game.reaction.mode.skip', ask: 'game.reaction.mode.ask', auto: 'game.reaction.mode.auto' }
+const REACTION_MODE_TITLE_KEY = { skip: 'game.reaction.mode.skip.title', ask: 'game.reaction.mode.ask.title', auto: 'game.reaction.mode.auto.title' }
+function reactionModeOf(s, seat, code) {
+  return reactionState(s.sessionId, seat, code) ?? defaultReactionState(ahCardDef(s, code))
+}
+function renderReactionModeButton(s, seat, code, def) {
+  const raw = reactionModeOf(s, seat, code)
+  const mode = !def.hasAutoReaction && raw === 'auto' ? 'ask' : raw
+  const next = (def.hasAutoReaction ? REACTION_MODE_NEXT : REACTION_MODE_NEXT_NO_AUTO)[mode]
+  return h('button', {
+    className: `ah-reaction-mode is-${mode}`,
+    type: 'button',
+    'data-reaction-mode': mode,
+    'data-reaction-code': code,
+    title: t(REACTION_MODE_TITLE_KEY[mode]),
+    'aria-label': t('game.reaction.mode.aria', {
+      state: t(REACTION_MODE_KEY[mode]), next: t(REACTION_MODE_KEY[next]),
+    }),
+    onpointerdown: event => event.stopPropagation(),
+    onkeydown: event => event.stopPropagation(),
+    onclick: event => {
+      event.stopPropagation()
+      setReactionState(s.sessionId, seat, code, next)
+      lastReactionPass = null
+      resetReactionSync()
+      render()
+    },
+  }, tableIcon(def.hasAutoReaction && mode === 'auto' ? 'gear' : 'action'),
+    mode === 'skip' ? h('i', { className: 'ah-reaction-slash', 'aria-hidden': 'true' }) : null)
+}
+function renderReactionModes(s, inv) {
+  const def = ahCardDef(s, inv.code)
+  if (!def.hasReactionPrompt && !def.hasAutoReaction) return null
+  return renderReactionModeButton(s, inv.seat, inv.code, def)
 }
 
 /** 大厅在加载 Mod 时调用一次，注入宿主能力并拿回本 Mod 的 UI 接口。 */
@@ -207,6 +273,8 @@ export function createUI(host) {
       if (session.state.hubFlow && ['interlude', 'scenarioSetup'].includes(session.state.uiState)) preloadScenarioImages(session.state.hubSelectedScenarioId)
       if (session.state.hubFlow && session.state.uiState !== 'inScenario') { tableSession = null; return hubUi.renderGame(session) }
       // P1：每次进局/重连/开关变化时把「反应关」集合同步给房主；房主据此代答任意座位的窗口。
+      // 重连/换设备先从视图恢复本座位覆盖，再把本机最新的三态同步给房主。
+      hydrateReactionStates(session, mySeat(session))
       syncReactionPreferences(session)
       const autoPassing = scheduleReactionPass(session)
       session = reactionView(session)
@@ -345,8 +413,25 @@ function renderRuntimeCardState(detail) {
   const markers = cardMarkerData(card, { enemy, attachmentCount: attachments.length })
   const host = card.attachedTo
   const usage = card.id ? abilityUsageFor(s.state, card.id) : null
-  if (!markers.length && !attachments.length && !host && !card.exhausted && !usage) return null
-  const hostLabel = host && (host.name || ({ location: t('game.host.location'), enemy: t('game.host.enemy'), act: t('game.host.act'), agenda: t('game.host.agenda') })[host.type] || t('detail.type.card'))
+  // 压在调查员底下的牌（戴安娜·史丹利 / 赛菲娜·卢梭 / 画中世界）：本人拿到卡号，
+  // 别人的观察投影只有 beneathCount——公开信息只有「几张」，所以这里两种都画。
+  const beneath = Array.isArray(card.beneath) ? card.beneath.map(code => ({ code })) : []
+  // 本人视图同时带 beneath 与 beneathCount；别人的只有 beneathCount。取两者较大值，
+  // 避免旧投影/注入状态里 beneathCount 落后于 beneath 时把段落整段吃掉。
+  const beneathCount = Math.max(beneath.length, Number.isFinite(card.beneathCount) ? card.beneathCount : 0)
+  if (!markers.length && !attachments.length && !host && !card.exhausted && !usage && !beneathCount) return null
+  const hostLabel = host && (host.name || ({ location: t('game.host.location'), enemy: t('game.host.enemy'), act: t('game.host.act'), agenda: t('game.host.agenda'), investigator: t('game.host.investigator') })[host.type] || t('detail.type.card'))
+  const beneathCard = code => {
+    const def = ahCardDef(s, code)
+    const resolved = def.name ? def : Object.values(s.state.cards || {}).find(entry => entry.originalCode === code) || def
+    const name = cardDisplayName(resolved) || code
+    return h('button', { type: 'button', className: 'ah-detail-attachment-card ah-detail-beneath-card',
+      'data-beneath-code': code, 'aria-label': t('game.runtime.viewBeneath', { name }),
+      onclick: () => openCardDetail(s, { ...resolved, code, attachedTo: {
+        type: 'investigator', name: cardDisplayName(card) || card.name || card.code,
+      } }) },
+      tableArt(h, resolved.originalCode || code, name), h('span', {}, name))
+  }
   return h('section', { className: 'ah-runtime-card-state', 'aria-label': t('game.runtime.title') },
     h('h3', {}, t('game.runtime.title')),
     markers.length ? h('div', { className: 'ah-runtime-markers' }, markers.map(([kind, icon, label, value]) =>
@@ -354,6 +439,11 @@ function renderRuntimeCardState(detail) {
         title: `${label} ${value}`, 'aria-label': `${label} ${value}` }, tableIcon(icon), h('b', {}, value), h('small', {}, label)))) : null,
     card.exhausted ? h('p', { className: 'ah-runtime-host' }, t('game.runtime.exhausted')) : null,
     hostLabel ? h('p', { className: 'ah-runtime-host' }, t('game.runtime.attachedTo', { host: hostLabel })) : null,
+    beneathCount ? h('div', { className: 'ah-detail-attachments ah-detail-beneath' },
+      h('h4', {}, t('game.runtime.beneath', { count: beneathCount })),
+      beneath.length
+        ? beneath.map(item => beneathCard(item.code))
+        : h('p', { className: 'ah-detail-beneath-hidden' }, t('game.runtime.beneathHidden'))) : null,
     usage ? h('div', { className: 'ah-detail-usage', 'aria-label': t('game.runtime.usage') },
       h('h4', {}, t('game.runtime.usage')),
       usage.abilities.map(ability => h('p', {
@@ -365,11 +455,21 @@ function renderRuntimeCardState(detail) {
       h('h4', {}, t('game.runtime.attachments', { count: attachments.length })),
       attachments.map(attachment => {
         const name = cardDisplayName(attachment) || attachment.code
-        return h('button', { type: 'button', className: 'ah-detail-attachment-card',
-          'data-attachment-code': attachment.code, 'aria-label': t('game.runtime.viewAttachment', { name }),
-          onclick: () => openCardDetail(s, { ...attachment, attachedTo: {
-            type: card.type || (enemy ? 'enemy' : 'card'), name: cardDisplayName(card) || card.code,
-          } }) }, tableArt(h, attachment.originalCode || attachment.code, name), h('span', {}, name))
+        // 「如同手牌打出」的附属（原定计划 / 背包 / 宿主附属）：详情面板也给出打出按钮，
+        // 否则玩家只能在牌桌上点宿主才能发现这些牌可以打。
+        const playMove = card.id
+          ? entityMoves(s.state, 'asset:' + card.id).find(move => move.action === 'play' && move.cardId === attachment.code)
+          : null
+        return h('div', { className: 'ah-detail-attachment-row' },
+          h('button', { type: 'button', className: 'ah-detail-attachment-card',
+            'data-attachment-code': attachment.code, 'aria-label': t('game.runtime.viewAttachment', { name }),
+            onclick: () => openCardDetail(s, { ...attachment, attachedTo: {
+              type: card.type || (enemy ? 'enemy' : 'card'), name: cardDisplayName(card) || card.code,
+            } }) }, tableArt(h, attachment.originalCode || attachment.code, name), h('span', {}, name)),
+          playMove ? h('button', { type: 'button', className: 'ah-detail-attachment-play',
+            'data-attachment-play': attachment.code, title: playMove.label, 'aria-label': playMove.label,
+            disabled: !!state.busy, onclick: event => { event.stopPropagation(); cardMove(playMove, s) } },
+            t('game.detail.playAttached')) : null)
       })) : null)
 }
 
@@ -798,11 +898,12 @@ async function cardMove(move, displayedSession, options = {}) {
   try {
     const { label, ...mv } = move
     const version = Number.isSafeInteger(st.revision) ? { revision: st.revision } : {}
-    // P0/P1：把本机「反应关」的卡号集合随 move 带给房主并刷新缓存（空集合=清除缓存），
-    // seq 让房主丢弃乱序到达的旧偏好。旧房主会忽略未知的 client 字段，行为与以前一致。
-    const autoPassCodes = reactionDisabledCodes(session, mySeat(session))
+    // 三态覆盖随 move 捎带：切完马上行动也不会丢；空对象=清除本座位覆盖。
+    // seq 让房主丢弃乱序到达的旧偏好；旧房主会忽略未知的 client 字段。
+    const seat = mySeat(session)
+    const autoStates = reactionStates(session.sessionId, seat)
     const r = await api('POST', '/move', { sessionId: session.sessionId, ...version,
-      client: { autoPass: { codes: autoPassCodes, seq: nextReactionPrefsSeq() } }, ...(batchChoices
+      client: { autoPrefs: { states: autoStates, seq: reactionPrefsSeq(session.sessionId, seat) } }, ...(batchChoices
         ? { batchChoices } : { move: { ...mv, ...version } }) })
     if (sameSession()) {
       // P1.2：联机客人拿到的命令响应只有摘要（无 session），权威状态随后由快照 + 长轮询送达；
@@ -892,6 +993,8 @@ function selectedMoves(s, selection) {
 function entityDefinition(s, key) {
   const [kind, ...parts] = key.split(':'); const id = parts.join(':')
   if (kind === 'hand') return ahCardDef(s, s.state.investigators.find(inv => inv.seat === Number(parts[0]))?.hand?.[Number(parts[1])])
+  // 压在调查员底下的牌 / 直觉牌库揭示的牌：key 的第二段就是卡号本身。
+  if (kind === 'beneath' || kind === 'hunch') return ahCardDef(s, id)
   if (kind === 'asset') {
     const asset = s.state.investigators.flatMap(inv => [...inv.assets, ...(inv.threat || [])]).find(a => a.id === id)
     return asset ? { ...ahCardDef(s, asset.code), ...asset } : {}
@@ -1331,6 +1434,10 @@ function renderPlayerDock(s, inv, humanTurn) {
   const preview = selected ? entityDefinition(s, selected.key) : null
   // Match the engine's enemiesEngagedWith rule, including co-located massive enemies.
   const engaged = s.state.enemies.filter(enemy => enemy.engagedSeat === inv.seat || (enemy.massive && enemy.location === inv.location))
+  // 「压在调查员底下」与「直觉牌库」：服务端只把本人的卡号下发（别人的只有张数），
+  // 所以这里画的是本人视角；公开张数在调查员详情里另给（见 renderRuntimeCardState）。
+  const beneath = Array.isArray(inv.beneath) ? inv.beneath : []
+  const hunch = (s.state.hunch || []).find(entry => entry.seat === inv.seat) || null
   return h('div', { className: 'ah-player-board' },
     !engaged.length ? h('div', { className: 'ah-engage-drop', 'data-interaction': 'zone:engage', role: 'region', 'aria-label': t('game.dock.engageAria') },
       tableIcon('sword'), h('strong', {}, t('game.dock.engage')), h('span', {}, t('game.dock.engageHint'))) : null,
@@ -1340,13 +1447,26 @@ function renderPlayerDock(s, inv, humanTurn) {
       renderEquipmentSlots(s, inv, humanTurn),
       inv.threat?.length ? h('div', { className: 'ah-threat-row', 'aria-label': t('game.dock.threatAria', { count: inv.threat.length }) },
         h('span', { className: 'ah-threat-label' }, t('game.dock.threat')),
-        h('div', { className: 'ah-threat-cards' }, inv.threat.map(card => renderMiniCard(s, card, false, { asset: true })))) : null),
+        h('div', { className: 'ah-threat-cards' }, inv.threat.map(card => renderMiniCard(s, card, false, { asset: true })))) : null,
+      beneath.length ? h('div', { className: 'ah-threat-row ah-beneath-row', 'data-beneath-count': beneath.length,
+        'aria-label': t('game.beneath.aria', { count: beneath.length }) },
+        h('span', { className: 'ah-threat-label' }, tableIcon('book'), t('game.beneath.label')),
+        h('div', { className: 'ah-threat-cards' }, beneath.map(code => renderMiniCard(s, code, false, { beneath: true })))) : null,
+      hunch ? h('div', { className: 'ah-threat-row ah-hunch-row', 'data-hunch-deck': hunch.deck,
+        'aria-label': t('game.hunch.aria', { count: hunch.deck }) },
+        h('span', { className: 'ah-threat-label' }, tableIcon('eye'), t('game.hunch.label', { count: hunch.deck })),
+        hunch.revealed
+          ? h('div', { className: 'ah-threat-cards' }, renderMiniCard(s, hunch.revealed, false, { hunch: true }))
+          : h('span', { className: 'ah-hunch-empty' }, t('game.hunch.empty'))) : null),
     h('div', { className: 'ah-player-dock' },
     h('div', { className: 'ah-dock-investigator' },
       h('span', { className: 'ah-dock-portrait', 'aria-hidden': 'true' }, tableArt(h, inv.code, inv.name)),
       h('span', { className: 'ah-dock-kicker', title: t('game.dock.investigatorOwner', { name: s.players[inv.seat]?.name || 'player' }) }, renderPlayerAvatar(s.players[inv.seat]), t('game.dock.investigatorOwner', { name: s.players[inv.seat]?.name || 'player' })),
-      h('button', { className: 'ah-dock-name', 'data-interaction': `investigator:${inv.seat}`, onclick: () => openCardDetailDef({ ...s.state.investigatorDefs[inv.code], ...inv, type: 'investigator' }) },
-        tableIcon(classIcon(inv.klass)), ' ', inv.name),
+      h('div', { className: 'ah-dock-name-row' },
+        h('button', { className: 'ah-dock-name', title: inv.name, 'data-interaction': `investigator:${inv.seat}`, onclick: () => openCardDetailDef({ ...s.state.investigatorDefs[inv.code], ...inv, type: 'investigator' }) },
+          tableIcon(classIcon(inv.klass)),
+          h('span', { className: 'ah-dock-name-text' }, inv.name)),
+        renderReactionModes(s, inv)),
       h('div', { className: 'ah-dock-vitals' }, [['health',t('game.vital.health'),inv.maxHealth,inv.damage],['sanity',t('game.vital.sanity'),inv.maxSanity,inv.horror]].map(([kind,label,max,loss])=>{
         const current=Math.max(0,max-(loss || 0)), fill=max>0 ? Math.min(100,current/max*100) : 0
         return h('div',{className:'ah-vital ah-vital-'+kind,'aria-label':t('game.vital.aria', { label, current, max })},
@@ -1428,8 +1548,13 @@ function renderMiniCard(s, reference, exhausted, opts = {}) {
   }
   const draggable = !!opts.draggable
   const selected = currentSelection(s)
+  // 非手牌、非槽位的小卡也要能被选中/查看：压在调查员底下的牌与直觉牌库揭示的牌用卡号当 key。
+  const interactionKey = opts.source === 'hand' ? `hand:${opts.seat ?? 0}:${opts.handIndex}`
+    : opts.asset ? `asset:${reference?.id}`
+    : opts.beneath ? `beneath:${code}`
+    : opts.hunch ? `hunch:${code}` : null
   const staged = opts.source === 'hand' && choiceDraft(s)?.selected.some(item => item.index === opts.handIndex)
-  const isSelected = !!staged || selected?.code === code && (opts.source === 'hand' ? selected.handIndex === opts.handIndex : selected.assetId === reference?.id)
+  const isSelected = !!staged || (selected?.code === code && (opts.source === 'hand' ? selected.handIndex === opts.handIndex : opts.asset ? selected.assetId === reference?.id : !!interactionKey && selected.key === interactionKey))
   const fan = opts.source === 'hand' ? fanStyle(opts.handCount, opts.handIndex) : null
   const commit = opts.source === 'hand' ? handCommitMove(s, opts.handIndex) : null
   // 「每回合/每场游戏一次」的能力用掉后，按钮会从合法行动里消失；卡面留一个角标，
@@ -1439,7 +1564,6 @@ function renderMiniCard(s, reference, exhausted, opts = {}) {
   const assetStats = opts.asset ? [
     cd.cost != null ? t('game.card.cost', { cost: cd.cost }) : '',
     cd.health != null ? t('game.card.healthValue', { value: cd.health }) : '',
-    cd.sanity != null ? t('game.card.sanityValue', { value: cd.sanity }) : '',
     d.courage ? t('game.card.noSkillIcons') : '',
   ].filter(Boolean).join(' · ') : ''
   const activate = (focusActions = false) => {
@@ -1448,17 +1572,18 @@ function renderMiniCard(s, reference, exhausted, opts = {}) {
     if (s.state.pendingChoice) return openCardDetail(s, reference)
     if (opts.source === 'hand') return selectCard(s, { code, handIndex: opts.handIndex }, focusActions)
     if (opts.asset) return selectCard(s, { code, assetId: reference.id }, focusActions)
+    if (interactionKey) return selectCard(s, { code, key: interactionKey }, focusActions)
     openCardDetail(s, reference)
   }
   return h('div', {
-    className: 'ah-minicard' + (opts.source === 'hand' ? ' ah-hand-card' : '') + (d.courage ? ' ah-minicard-courage' : '') + (exhausted ? ' ah-minicard-exhausted' : '') + (draggable ? ' ah-minicard-draggable' : '') + (isSelected ? ' is-selected' : ''),
+    className: 'ah-minicard' + (opts.source === 'hand' ? ' ah-hand-card' : '') + (d.courage ? ' ah-minicard-courage' : '') + (exhausted ? ' ah-minicard-exhausted' : '') + (draggable ? ' ah-minicard-draggable' : '') + (opts.beneath ? ' ah-minicard-beneath' : '') + (opts.hunch ? ' ah-minicard-hunch' : '') + (isSelected ? ' is-selected' : ''),
     style: fan,
     title: cd.name + (assetStats ? '\n' + assetStats : '') + (usedLines.length ? '\n' + usedLines.join('\n') : '') + (cd.text ? '\n\n' + cd.text : '') + '\n\n' + t('game.mini.clickHint'),
     role: 'button', tabindex: 0,
     'aria-label': cd.name + (assetStats ? t('game.mini.assetStats', { stats: assetStats }) : '') + (usedLines.length ? t('game.mini.used', { list: usedLines.join(t('game.list.semicolon')) }) : '') + (commit ? t('game.mini.commit') : opts.asset ? t('game.mini.assetAbility') : opts.source === 'hand' ? t('game.mini.selectHand') : t('game.mini.view')),
-    'aria-pressed': opts.source === 'hand' || opts.asset ? String(!!isSelected) : null,
+    'aria-pressed': opts.source === 'hand' || opts.asset || opts.beneath || opts.hunch ? String(!!isSelected) : null,
     draggable: 'false',
-    'data-interaction': opts.source === 'hand' ? `hand:${opts.seat ?? 0}:${opts.handIndex}` : opts.asset ? `asset:${reference.id}` : null,
+    'data-interaction': interactionKey,
     'data-card-code': code,
     'data-resource-cost': opts.source === 'hand' ? Math.max(0,Number(cd.cost)||0) : null,
     'data-draggable': draggable ? 'true' : null,
@@ -1474,11 +1599,6 @@ function renderMiniCard(s, reference, exhausted, opts = {}) {
     tableArt(h, d.originalCode || ahArtCode(s, code), cd.name),
     renderReactionToggle(s,code),
     h('div', { className: 'ah-minicard-cost' }, cd.cost != null ? cd.cost : ''),
-    opts.asset && cd.sanity != null ? h('div', {
-      className: 'ah-minicard-capacity ah-minicard-sanity',
-      title: t('game.card.sanityValue', { value: cd.sanity }),
-      'aria-label': t('game.card.sanityValue', { value: cd.sanity }),
-    }, tableIcon('sanity'), h('b', {}, String(cd.sanity))) : null,
     cd.xp ? h('div', { className: 'ah-minicard-xp' }, '✦' + cd.xp) : null,
     cd.isWeakness ? h('div', { className: 'ah-minicard-weakness' }, '⚠') : null,
     cd.doubleSided ? h('div', { className: 'ah-minicard-ds' }, '⇄') : null,

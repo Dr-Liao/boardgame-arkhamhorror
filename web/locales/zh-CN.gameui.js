@@ -13,12 +13,21 @@ export default {
   'game.reaction.off': '反应关',
   'game.reaction.muteTitle': '关闭本次可选卡牌的反应提示，可在卡牌上的开关重新开启',
   'game.reaction.mute': '本局不再询问',
+  // 三态按钮（角色面板）
+  'game.reaction.mode.aria': '反应设置：{state}。点按切换到{next}',
+  'game.reaction.mode.skip': '自动跳过',
+  'game.reaction.mode.ask': '每次询问',
+  'game.reaction.mode.auto': '自动触发',
+  'game.reaction.mode.skip.title': '反应设置：自动跳过（快速反应关、自动反应关）。点按 → 每次询问。',
+  'game.reaction.mode.ask.title': '反应设置：每次询问（快速反应开、自动反应关）。点按 → 自动触发。',
+  'game.reaction.mode.auto.title': '反应设置：自动触发（快速反应开、自动反应开；目标/后续选择仍会询问）。点按 → 自动跳过。',
 
   // 运行中卡牌状态（renderRuntimeCardState）
   'game.host.location': '地点',
   'game.host.enemy': '敌人',
   'game.host.act': '当前场景',
   'game.host.agenda': '当前密谋',
+  'game.host.investigator': '调查员',
   'game.runtime.title': '当前卡牌状态',
   'game.runtime.exhausted': '状态：已横置',
   'game.runtime.attachedTo': '附着于：{host}',
@@ -28,6 +37,16 @@ export default {
   'game.runtime.limit': '{limit} · {state}',
   'game.runtime.attachments': '附属卡（{count}）',
   'game.runtime.viewAttachment': '查看附属卡 {name}',
+  'game.runtime.beneath': '下方卡牌（{count}）',
+  'game.runtime.beneathHidden': '其他调查员只能看到张数：这些牌正面朝下。',
+  'game.runtime.viewBeneath': '查看下方卡牌 {name}',
+
+  // 压在调查员底下的牌 / 直觉牌库（牌桌与调查员详情共用）
+  'game.beneath.aria': '压在调查员底下的牌，共 {count} 张',
+  'game.beneath.label': '下方',
+  'game.hunch.aria': '直觉牌库，剩余 {count} 张',
+  'game.hunch.label': '直觉 {count}',
+  'game.hunch.empty': '本阶段未揭示',
 
   // 卡牌缩放（card-zoom.js）
   'game.zoom.resources': '{cost} 资源',
@@ -195,6 +214,7 @@ export default {
   'game.detail.aria': '卡牌详情',
   'game.detail.closeAria': '关闭卡牌详情',
   'game.detail.targetAction': '对该目标行动',
+  'game.detail.playAttached': '打出',
 
   // 行动提交与刷新提示（cardMove / refreshCardSession）
   'game.move.confirmed': '行动已确认',

@@ -84,6 +84,8 @@ export default {
   'situation.deck.discard': '弃 {count}',
   'situation.hand.count': '手牌（{count}）',
   'situation.hand.private': '手牌内容未公开',
+  'situation.beneath': '下方 {count}',
+  'situation.hunch': '直觉 {count}',
   'situation.engaged': '交战：{names}',
   'situation.listSeparator': '、',
   'situation.trauma': '创伤 · 肉体 {physical} / 精神 {mental}',

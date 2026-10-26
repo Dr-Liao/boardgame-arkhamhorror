@@ -1,9 +1,10 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createGameState, allCardDefs, applyMove, embeddedCardDefs, legalMoves } from '../src/engine/engine.js'
-import { isAutomaticReward } from '../src/cards/card-effects.js'
+import { isAutomaticReward, EFFECTS } from '../src/cards/card-effects.js'
+import { investigatorRule } from '../src/cards/investigator-abilities.js'
 import { allDescriptors, registeredCodes, registeredEntry } from '../src/engine/ability.js'
-import { requestChoice, resolveTransaction } from '../src/engine/resolution.js'
+import { requestChoice, resolveTransaction, setAutoReactionHosted } from '../src/engine/resolution.js'
 import { reactionChoices, reactionView, reactionEnabled, setReactionEnabled, reactionPassPlan } from '../web/reaction-preferences.js'
 
 test('免费且不限次的资源反应自动领取，有成本、目标或次数限制的反应保留选择',()=>{
@@ -146,7 +147,13 @@ test('米兰调查奖励不询问，后续反应读档恢复不重复领取',()=
   const resources=inv.resources,events=applyMove(st,0,{action:'investigate'})
   for(let i=0;st.pendingChoice?.source!=='scavenging';i++){
     assert.ok(i<20);assert.ok(st.pendingChoice)
-    assert.notEqual(st.pendingChoice.source,'milan')
+    if(st.pendingChoice.source==='milan'){
+      // 真人现在拿到带 autoOptionId 的窗口，由大厅在发布前代答成 trigger。
+      assert.equal(st.pendingChoice.autoOptionId,'trigger')
+      assert.equal(st.pendingChoice.cardCode,'01033')
+      events.push(...answer(st,'trigger'))
+      continue
+    }
     events.push(...answer(st,['done','skip'].find(id=>st.pendingChoice.options.some(o=>o.id===id))))
   }
   assert.equal(st.investigators[0].resources,resources+1)
@@ -162,7 +169,7 @@ test('自动奖励保留 AI 非本人回合跳过策略和已保存答案',()=>{
   for(const currentSeat of [0,1]){
     const st={revision:0,currentSeat,phase:'investigation',humanSeats:[0],resources:0}
     const execute=draft=>{
-      const answer=requestChoice(draft,{kind:'reaction',source:'milan',seat:1,canSkip:true,automaticOptionId:'trigger',options:[{id:'skip'},{id:'trigger'}]})
+      const answer=requestChoice(draft,{kind:'reaction',source:'milan',seat:1,canSkip:true,autoOptionId:'trigger',options:[{id:'skip'},{id:'trigger'}]})
       if(answer==='trigger')draft.resources++
       requestChoice(draft,{kind:'target',source:'next',seat:1,options:[{id:'done'}]})
     }
@@ -174,7 +181,7 @@ test('自动奖励保留 AI 非本人回合跳过策略和已保存答案',()=>{
     assert.equal(restored.resources,st.resources)
   }
   const st={revision:0,currentSeat:0,phase:'investigation',humanSeats:[0]}
-  const execute=auto=>draft=>{draft.answer=requestChoice(draft,{kind:'reaction',source:'milan',seat:0,canSkip:true,automaticOptionId:auto?'trigger':null,options:[{id:'skip'},{id:'trigger'}]})}
+  const execute=auto=>draft=>{draft.answer=requestChoice(draft,{kind:'reaction',source:'milan',seat:0,canSkip:true,autoOptionId:auto?'trigger':null,options:[{id:'skip'},{id:'trigger'}]})}
   resolveTransaction(st,0,{action:'test'},execute(false))
   resolveTransaction(st,0,{optionId:'skip'},execute(true))
   assert.equal(st.answer,'skip','已存储的选择仍按原答案恢复')
@@ -223,3 +230,65 @@ test('人类跨回合反应和强制结算不被 AI 策略关闭',()=>{
     assert.equal(st.pendingChoice.kind,kind)
   }
 })
+
+test('反应入口由卡面数据自动推导：新增 legacy 反应会自带快速/自动入口',()=>{
+  const defs=allCardDefs({runtimeOnly:false})
+  for(const [code,def] of Object.entries(defs)){
+    if(!['asset','event','skill','investigator'].includes(def.type)) continue
+    const abilities=registeredEntry(code)?.abilities||[]
+    if(abilities.some(ability=>ability.kind==='reaction')){
+      assert.ok(def.hasReactionPrompt||def.hasAutoReaction,`${code} 反应描述子没有生成入口`)
+    }
+    if(abilities.some(ability=>ability.kind==='reaction'&&ability.legacyReaction)){
+      assert.ok(def.hasAutoReaction,`${code} legacy 反应没有生成自动入口`)
+    }
+    if(abilities.some(ability=>ability.kind==='reaction'&&!ability.legacyReaction
+      &&ability.fromHand!==true&&def.type!=='event')){
+      assert.ok(def.hasAutoReaction,`${code} 新式非手牌反应没有生成自动入口`)
+    }
+    if(abilities.some(ability=>ability.kind==='reaction'&&!ability.legacyReaction&&ability.fromHand===true)){
+      assert.equal(def.hasAutoReaction,false,`${code} 手牌快速事件不应自动打出`)
+    }
+    if(def.hasAutoReaction) assert.equal(typeof def.autoByDefault,'boolean',`${code} 缺少 autoByDefault`)
+    if(def.autoByDefault) assert.equal(def.hasAutoReaction,true,`${code} 默认 auto 但没有自动入口`)
+  }
+})
+
+test('安全口径的纯收益反应会默认 auto（新增卡也不能漏）',()=>{
+  const defs=allCardDefs({runtimeOnly:false})
+  const safeEffects=new Set(['gainResource','discoverClue','draw','addCurrentTest','dealDamage'])
+  const targetKind=value=>typeof value==='string'?value:value?.kind
+  const hasTarget=value=>{const kind=targetKind(value);return !!kind&&kind!=='none'}
+  for(const d of Object.values(defs)){
+    if(!d.hasAutoReaction) continue
+    const reactions=[
+      ...(registeredEntry(d.code)?.abilities||[]).filter(ability=>ability.kind==='reaction'),
+      ...(EFFECTS[d.code]?.reactions||[]),
+      ...(investigatorRule(d.code)?.reactions||[]),
+    ]
+    const safe=reactions.some(reaction=>{
+      if(!reaction.effect||reaction.resolve) return false
+      const cost=reaction.cost
+      if(cost&&(typeof cost!=='object'||Object.keys(cost).some(key=>key!=='exhaust'))) return false
+      if(hasTarget(reaction.target)||hasTarget(reaction.effect.target)) return false
+      return safeEffects.has(reaction.effect.type)
+    })
+    if(safe) assert.equal(d.autoByDefault,true,`${d.code} 符合安全口径但没有默认 auto`)
+  }
+})
+
+test('托管模式下旧式反应窗口带 autoTriggerOptionId/cardCode，且不默认 auto',()=>{
+  setAutoReactionHosted(true)
+  try{
+    const st={revision:0,currentSeat:0,phase:'investigation',humanSeats:[0],cards:{}}
+    resolveTransaction(st,0,{action:'test'},draft=>requestChoice(draft,{
+      kind:'reaction',source:'rolandClue',seat:0,canSkip:true,
+      autoTriggerOptionId:'trigger',cardCode:'01001',
+      options:[{id:'skip'},{id:'trigger'}],
+    }))
+    assert.equal(st.pendingChoice.autoTriggerOptionId,'trigger')
+    assert.equal(st.pendingChoice.cardCode,'01001')
+    assert.equal(st.pendingChoice.autoOptionId,undefined,'罗兰不是默认自动奖励')
+  }finally{setAutoReactionHosted(false)}
+})
+

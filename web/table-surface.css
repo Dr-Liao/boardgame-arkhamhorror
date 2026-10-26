@@ -7,7 +7,7 @@
 .ah-card-marker-damage { color: #fff3e5; background: #6c211bf5; border-color: #eaa48a; }
 .ah-card-marker-horror { color: #edf2ff; background: #253e68f5; border-color: #b1c6ef; }
 .ah-card-marker-attached { color: #fbe9f3; background: #3d2234f5; border-color: #bd8eae; }
-.ah-minicard > .ah-card-markers { top: 22px; right: 2px; bottom: auto; left: auto; flex-direction: column; flex-wrap: nowrap; align-items: flex-end; padding: 0; }
+.ah-minicard > .ah-card-markers { top: 24px; left: 2px; right: auto; bottom: auto; flex-direction: column; flex-wrap: nowrap; align-items: flex-start; padding: 0; }
 .ah-minicard > .ah-card-markers .ah-card-marker { flex: none; min-width: 27px; }
 .ah-script-card > .ah-card-markers { top: 2px; right: 2px; bottom: auto; left: auto; max-width: 45%; }
 .ah-location-entities .ah-card-markers { gap: 0; padding: 0; }

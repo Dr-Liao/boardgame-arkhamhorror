@@ -1,4 +1,4 @@
-// 万象无终（TCU）第 3 步 P4 验收：关键词与规则书。
+﻿// 万象无终（TCU）第 3 步 P4 验收：关键词与规则书。
 //
 // 路线图 §5 要求每条关键词同时具备：卡面来源、引擎行为、Node 验收、规则书条目与卡文直达；
 // 规则书还要桌面 1440 / 移动 390 可读可跳转（浏览器部分在 tests/tcu-rules.browser.mjs）。
@@ -159,44 +159,41 @@ test('P4 规则书 16 条：分组、拼音索引与相关跳转', () => {
   }
 })
 
-test('P4 规则描述与当前实现边界一致（不得把未实现写成可用）', () => {
+test('P4 规则描述只写规则本身（不含引擎、实现、界面或审计状态）', () => {
   const body = id => ruleById(id).body.join('')
   const campaign = body('tcuCampaign')
-  // 战役总览：九章中文名、战役 P10 起从大厅开放（playable）、审计账本位置、袋数与记录键现状。
+  // 战役总览：章节中文名、四个难度与基础袋构成必须写清。
   for (const chapter of chapters) assert.ok(campaign.includes(chapter.name), `战役条目缺少章节「${chapter.name}」`)
-  assert.match(campaign, /playable/)
-  assert.match(campaign, /tcu-all-card-acceptance\.json/)
-  assert.match(campaign, /audit\/tcu-migration\.json/)
+  assert.match(campaign, /四个难度/)
   assert.match(campaign, /13 枚/)
-  assert.match(campaign, /377/)
-  assert.match(campaign, /64 个键/)
-  // P8：逐章混乱符号已接线；规则书必须写清实现位置，不得再把未实现写成可用或反过来。
-  assert.match(body('tcuChaos'), /resolveChaosToken/)
-  assert.match(body('tcuChaos'), /tcu-chaos\.js/)
-  assert.match(body('tcuChaos'), /changeChaosBag/)
-  // 关键实现细节必须写对，避免规则书与代码各说一套。
+  assert.match(campaign, /骷髅×2/)
+  assert.match(campaign, /尾声/)
+  // 关键词条目要覆盖实际规则，而不是实现位置。
   assert.match(body('tcuHaunted'), /调查检定/)
-  assert.match(body('tcuHaunted'), /hauntedAbilitiesAt/)
+  assert.match(body('tcuHaunted'), /闹鬼能力/)
   assert.match(body('tcuSpectral'), /第二遭遇牌堆/)
-  assert.match(body('tcuSpectral'), /isSpectral/)
+  assert.match(body('tcuSpectral'), /幽灵地点/)
   assert.match(body('tcuCircle'), /相加/)
   assert.match(body('tcuTarot'), /剧本级/)
-  assert.match(body('tcuTarotSlot'), /add:slot/)
-  assert.match(body('tcuTarotSlot'), /slot:tarot/)
+  assert.match(body('tcuTarotSlot'), /塔罗槽/)
   assert.match(body('tcuBonded'), /场外/)
-  assert.match(body('tcuMemento'), /10 条/)
-  assert.match(body('tcuWatcher'), /youAreBeingHunted/)
-  assert.match(body('tcuPrologue'), /05046/)
+  assert.match(body('tcuMemento'), /遗留记忆/)
+  assert.match(body('tcuWatcher'), /追捕/)
   assert.match(body('tcuPrologue'), /无牌组/)
-  assert.match(body('tcuBreaches'), /上限 3/)
+  assert.match(body('tcuPrologue'), /加弗瑞拉/)
+  assert.match(body('tcuBreaches'), /最多 3 个裂口/)
+  assert.match(body('tcuChaos'), /13 枚/)
+  assert.match(body('tcuChaos'), /骷髅/)
   assert.match(body('tcuHeretics'), /放逐/)
   assert.match(body('tcuCosmos'), /宇宙牌库|地点牌库/)
-  assert.match(body('tcuBraziers'), /brazier/)
+  assert.match(body('tcuBraziers'), /火盆/)
   assert.match(body('tcuCampaignAssets'), /不占 30 张/)
-  // 不得出现「已发布 / 规则等价」这类越界说法，也不得写 Markdown（规则书按纯文本渲染）。
+  // 规则书不给玩家看代码：引擎入口、实现状态、审计路径、界面操作都不得出现。
+  const forbidden = /本局|本 Mod|引擎|实现|界面|按钮|面板|拖动|点击|悬浮|右键|动画|演出|存档|投影|原语|读点|接线|字段|验收|审计|playable|earlyAccess|audit|src\/|content\/|behavior|isSpectral|hauntedAbilitiesAt|resolveChaosToken|changeChaosBag|add:slot|slot:tarot|youAreBeingHunted|scenarioRuntime|CHAOS_BAGS|hauntedGaps/
   for (const rule of RULES.filter(candidate => candidate.group === '万象无终')) {
     const text = rule.body.join('')
-    assert.equal(/M5 已完成|规则等价|完全还原|已发布的完整战役/.test(text), false, rule.id)
+    const hit = text.match(forbidden)
+    assert.equal(hit, null, `${rule.id} 正文含引擎或实现内容：${hit?.[0]}`)
     assert.equal(/\*\*|__/.test(text), false, `${rule.id} 正文含 Markdown 强调符`)
   }
 })

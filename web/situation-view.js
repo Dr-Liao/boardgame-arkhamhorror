@@ -162,6 +162,8 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
     const trauma = st.campaign?.trauma?.[inv.seat] || {}
     const hand = inv.handSize ?? inv.hand?.length ?? 0
     const deck = inv.deckSize ?? inv.deck?.length ?? 0
+    // 直觉牌库是公开信息（张数 + 已揭示的那张）；压在底下的牌只有公开张数。
+    const hunch = (st.hunch || []).find(item => item.seat === inv.seat) || null
     const avatar = player.avatar || ''
     return h('article', { className: 'ah-situ-inv' + (active ? ' is-active' : '') + (out ? ' is-out' : ''), 'data-seat': inv.seat,
       style: { '--ah-class': st.classColors?.[inv.klass] || '#a58c56' }, 'aria-label': t('situation.investigator.aria', { name: inv.name, status }) },
@@ -194,7 +196,12 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
           h('span', {}, h('b', {}, t('situation.deck.library', { count: deck })), h('small', {}, t('situation.deck.discard', { count: inv.discard?.length || 0 })))),
         h('span', { className: 'ah-situ-hand' },
           h('span', { className: 'ah-situ-fan', 'aria-hidden': 'true' }, Array.from({ length: Math.min(hand, 5) }, () => h('img', { src: IMG + 'backs/back_player.webp', alt: '' }))),
-          h('span', {}, h('b', {}, t('situation.hand.count', { count: hand })), inv.seat === mySeat(s) ? null : h('small', {}, t('situation.hand.private'))))),
+          h('span', {}, h('b', {}, t('situation.hand.count', { count: hand })), inv.seat === mySeat(s) ? null : h('small', {}, t('situation.hand.private')))),
+        // 压在调查员底下的牌与直觉牌库都是桌面公开信息，但只有张数（内容按座位投影）。
+        (inv.beneathCount || 0) ? h('span', { className: 'ah-situ-deck ah-situ-beneath', 'data-beneath-count': inv.beneathCount },
+          tableIcon('book'), h('span', {}, h('b', {}, t('situation.beneath', { count: inv.beneathCount })))) : null,
+        (hunch?.deck || hunch?.revealed) ? h('span', { className: 'ah-situ-deck ah-situ-hunch', 'data-hunch-deck': hunch.deck },
+          tableIcon('eye'), h('span', {}, h('b', {}, t('situation.hunch', { count: hunch.deck })))) : null),
       engaged.length ? h('div', { className: 'ah-situ-engaged' }, tableIcon('sword'), t('situation.engaged', { names: engaged.join(separator()) })) : null,
       trauma.physical || trauma.mental ? h('div', { className: 'ah-situ-trauma' }, t('situation.trauma', { physical: trauma.physical || 0, mental: trauma.mental || 0 })) : null)
   }

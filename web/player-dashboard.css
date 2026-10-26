@@ -4,8 +4,22 @@
 .ah-table.ah-calm.ah-noir.ah-direct-table .ah-player-dock { grid-template-columns: 250px 92px minmax(0,1fr) 78px; gap: 14px; }
 .ah-table.ah-calm.ah-noir .ah-dock-investigator { min-width: 0; position: relative; }
 .ah-table.ah-calm.ah-noir .ah-dock-investigator .ah-dock-portrait { position: absolute; top: 0; right: 0; width: 30px; height: 35px; }
-.ah-table.ah-calm.ah-noir .ah-dock-investigator .ah-dock-name { margin-right: 36px; }
+.ah-table.ah-calm.ah-noir .ah-dock-investigator .ah-dock-name { margin-right: 0; }
 .ah-table.ah-calm.ah-noir .ah-dock-kicker { margin-bottom: 4px; font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* 角色面板名字行：名字可截断，三态按钮固定尺寸，头像绝对定位在右侧。 */
+.ah-dock-name-row { display: flex; align-items: center; gap: 6px; min-width: 0; margin-right: 36px; }
+.ah-dock-name-row .ah-dock-name { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 6px; overflow: hidden; margin-right: 0; }
+.ah-dock-name-row .ah-dock-name .ah-icon { flex: 0 0 auto; }
+.ah-dock-name-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ah-reaction-mode { position: relative; flex: 0 0 auto; width: 24px; height: 24px; display: grid; place-items: center; padding: 0; border: 1px solid #827c65; border-radius: 5px; background: #202923f2; color: #b3b3a0; cursor: pointer; }
+.ah-reaction-mode .ah-icon { width: 15px; height: 15px; }
+.ah-reaction-mode.is-ask, .ah-reaction-mode.is-auto { color: #ffe5a6; border-color: #d1ae5a; background: #3d3c21f2; }
+.ah-reaction-mode.is-auto { box-shadow: 0 0 8px #e1b95055; }
+.ah-reaction-mode.is-auto .ah-icon { animation: ah-gear-spin 7s linear infinite; transform-origin: 50% 50%; }
+.ah-reaction-mode.is-skip { color: #7d7a6c; }
+.ah-reaction-slash { position: absolute; width: 16px; height: 1.5px; background: currentColor; transform: rotate(-45deg); pointer-events: none; }
+@keyframes ah-gear-spin { to { transform: rotate(1turn); } }
+@media (prefers-reduced-motion: reduce) { .ah-reaction-mode.is-auto .ah-icon { animation: none; } }
 .ah-table.ah-calm.ah-noir .ah-dock-counters { display: flex; margin-top: 5px; gap: 14px; }
 .ah-table.ah-calm.ah-noir .ah-dock-counters .ah-dock-token { flex-direction: row; gap: 4px; }
 .ah-table.ah-calm.ah-noir .ah-dock-counters .ah-counter-face { width: 33px; height: 33px; }
@@ -56,7 +70,23 @@
 }
 @media(prefers-reduced-motion:reduce) { .ah-token-pool { transition: none; } }
 .ah-engage-drop { display: none; }
-.is-engaging .ah-engage-drop.ah-drop-valid { position: absolute; display: grid; place-items: center; gap: 10px; right: 0; bottom: calc(100% + 18px); width: min(280px,85vw); min-height: 140px; padding: 18px; z-index: 20; border: 2px dashed #d3a476; border-radius: 6px; background: #1c2f25f2; color: #ffe0a7; box-shadow: 0 0 30px #b3954a44; }
+/* 「压在调查员底下」与「直觉牌库」：沿用威胁栏的横向卡槽，换成各自的配色与小尺寸卡。 */
+.ah-threat-row.ah-beneath-row, .ah-threat-row.ah-hunch-row { --surface-card-w: 48px; --surface-card-h: 68px; max-width: none; flex: 0 1 auto; }
+.ah-threat-row.ah-beneath-row { border-color: #8f7fc0aa; background: #1d234052; }
+.ah-threat-row.ah-beneath-row .ah-threat-label { color: #cfc2f0; }
+.ah-threat-row.ah-hunch-row { border-color: #7fa8c0aa; background: #16283a52; }
+.ah-threat-row.ah-hunch-row .ah-threat-label { color: #bcd9ec; }
+.ah-threat-row.ah-beneath-row .ah-threat-label, .ah-threat-row.ah-hunch-row .ah-threat-label { display: inline-flex; align-items: center; gap: 4px; }
+.ah-threat-row.ah-beneath-row .ah-threat-label .ah-icon, .ah-threat-row.ah-hunch-row .ah-threat-label .ah-icon { width: 11px; height: 11px; }
+.ah-hunch-empty { align-self: center; padding: 0 7px; font-size: 10px; line-height: 1.4; color: #a8c2d4; }
+.ah-minicard-beneath { outline: 1px dashed #8f7fc077; outline-offset: 1px; }
+.ah-minicard-hunch { outline: 1px solid #7fa8c099; outline-offset: 1px; }
+/* 窄屏时战场是横向滚动条：把「下方」与「直觉」排到装备槽前面，否则它们会被挤到视口外。 */
+@media (max-width: 700px) {
+  .ah-table.ah-calm.ah-noir .ah-equipment-battlefield .ah-play-surface { order: -3; }
+  .ah-table.ah-calm.ah-noir .ah-equipment-battlefield .ah-beneath-row { order: -2; }
+  .ah-table.ah-calm.ah-noir .ah-equipment-battlefield .ah-hunch-row { order: -1; }
+}.is-engaging .ah-engage-drop.ah-drop-valid { position: absolute; display: grid; place-items: center; gap: 10px; right: 0; bottom: calc(100% + 18px); width: min(280px,85vw); min-height: 140px; padding: 18px; z-index: 20; border: 2px dashed #d3a476; border-radius: 6px; background: #1c2f25f2; color: #ffe0a7; box-shadow: 0 0 30px #b3954a44; }
 .ah-engage-drop .ah-icon { width: 32px; height: 32px; }.ah-engage-drop span { font-size: 11px; }
 .ah-location-notice { position: fixed; z-index: 4; display: grid; gap: 7px; width: max-content; max-width: min(380px,calc(100vw - 24px)); padding: 14px 20px; border: 1px solid #b89b61; background: #122920f2; color: #ebd5a6; box-shadow: 0 8px 28px #0008; font-size: 14px; pointer-events: none; }
 .ah-location-notice span { font-size: 12px; color: #ccbaa0; }.ah-location-arrival { filter: drop-shadow(0 0 16px #d2b264); }

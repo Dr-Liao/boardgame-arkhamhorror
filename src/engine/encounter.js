@@ -384,9 +384,13 @@ function triggerReaction(state, seat, when, events, context = {}) {
     const key = (r.id || (asset?.code || inv.code)) + ':' + scope
     inv.usedReactions ||= {}
     if (r.limit && inv.usedReactions[key]) continue
+    const auto = isAutomaticReward(r)
+    // 自动领取资格（AI 直接领 / 真人默认 auto）与「可切到自动触发」的提示分开：
+    // 后者覆盖所有旧式反应窗口，让玩家把罗兰这类线索反应也切成 auto。
+    const cardCode = asset?.code || inv.code
     const answer = requestChoice(state, { kind: 'reaction', source: r.id || asset?.code || inv.code, seat,
       prompt: r.prompt || `是否触发 ${asset ? cardName(asset.code) : inv.name} 的反应？`, canSkip: true,
-      automaticOptionId: isAutomaticReward(r) ? 'trigger' : null,
+      autoOptionId: auto ? 'trigger' : null, autoTriggerOptionId: 'trigger', cardCode,
       options: [{ id: 'skip', label: '跳过反应' }, { id: 'trigger', label: '触发反应' }] })
     if (answer === 'skip') continue
     if (r.limit) inv.usedReactions[key] = true

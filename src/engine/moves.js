@@ -356,9 +356,16 @@ export function createMoves(deps) {
   }
 
   const skids = investigatorRule(inv.code)
-  if (skids && skids.freeAction && !investigatorTextBlanked(state, inv) && inv.resources >= (skids.freeAction.cost.resources || 0)
-    && (skids.freeAction.repeatable || !inv.usedReactions[skids.freeAction.id + ':' + state.turnSerial])) {
-    moves.push({ action: 'freeAction', label: skids.freeAction.label || '⚡ 花 2 资源获得 1 额外行动' })
+  const freeAction = skids?.freeAction || null
+  // 「预览 = 校验 = 扣费」：付得起但当前无从执行的免费行动不该出现在列表里——否则牌桌会给出
+  // 一个点了必被 validateMove 拒绝的死按钮（赛菲娜下方没有事件、皮特没有可重整的支援、
+  // 换行动却连一张能弃的手牌都没有）。
+  if (freeAction && !investigatorTextBlanked(state, inv) && inv.resources >= (freeAction.cost.resources || 0)
+    && (!freeAction.cost.discardHand
+      || inv.hand.some(code => !isWeaknessCode(code) && canDiscardFromHand(inv, code)))
+    && (freeAction.repeatable || !inv.usedReactions[freeAction.id + ':' + state.turnSerial])
+    && !effectError(state, inv, freeAction.effect)) {
+    moves.push({ action: 'freeAction', label: freeAction.label || '⚡ 花 2 资源获得 1 额外行动' })
   }
 
   for (const nb of new Set(loc ? loc.connections.filter(id => !movementError(state, inv, id)) : [])) {

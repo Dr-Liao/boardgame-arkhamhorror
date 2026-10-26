@@ -63,6 +63,12 @@ export function choicePresentation(st) {
       const code = option?.cardCode || (st.cards?.[id] ? id : null)
       if (code) return { ...item, code, cards: [{ ...(st.cards?.[code] || { name: item.label }), code }] }
     }
+    // 其余带 cardCode 的选择同样画卡面：`beneath`（黛安娜旧印／赛菲娜下方）、
+    // `openingHand`（赛菲娜开局压牌）、`hunchDeck`（乔·戴蒙德的直觉牌库）此前只有一行卡名。
+    if (option?.cardCode) {
+      const code = option.cardCode
+      return { ...item, code, cards: [{ ...(st.cards?.[code] || { name: item.label }), code }] }
+    }
     return item
   })
 }
@@ -74,7 +80,16 @@ export function entityMoves(st, key) {
   const inv = st.investigators.find(inv => inv.seat === st.currentSeat)
   return (st.legalMoves || []).filter(move => {
     if (kind === 'hand') return move.action === 'play' && !move.fromDiscard && move.cardId === inv?.hand?.[Number(parts[1])] && String(inv?.seat) === parts[0]
+    // 支援身上的能力/威胁，以及「这张支援是打出的载体」的通道：
+    // 原定计划 fromPlanAssetId、背包 fromBackpackId、宿主附属 fromAttachedEventOf、
+    // 银暮匕首的 beneath 通道 channelAssetId。缺了后半段，附属在卡下面的牌在牌桌上无处可点。
     if (kind === 'asset') return move.assetId === id || move.threatId === id
+      || move.fromPlanAssetId === id || move.fromBackpackId === id
+      || move.fromAttachedEventOf === id || move.channelAssetId === id
+    // 压在调查员底下的牌（戴安娜/赛菲娜/画中世界）：id 是卡号。
+    if (kind === 'beneath') return move.fromBeneath === true && move.cardId === id
+    // 直觉牌库本阶段揭示的那张（乔·戴蒙德）：id 是卡号。
+    if (kind === 'hunch') return move.fromHunch === true && move.cardId === id
     if (kind === 'enemy') return move.enemyId === id
     if (kind === 'location') return move.locationId === id || (inv?.location === id && ['investigate', 'breakDoor', 'parleyLita'].includes(move.action))
     if (kind === 'investigator') return String(inv?.seat) === id && move.action === 'freeAction'
@@ -224,7 +239,7 @@ export function mountCardInteractions(root, session, { state, submit, select, in
       event.preventDefault(); event.stopImmediatePropagation(); selectWithActions(key)
     } else if (el.dataset.inspectDefault === 'true') {
       event.preventDefault(); event.stopImmediatePropagation(); inspect(key)
-    } else if (['asset', 'enemy', 'location', 'investigator', 'discard', 'act', 'agenda'].some(type => key.startsWith(type + ':')) && moves.length) {
+    } else if (['asset', 'enemy', 'location', 'investigator', 'discard', 'act', 'agenda', 'beneath', 'hunch'].some(type => key.startsWith(type + ':')) && moves.length) {
       event.preventDefault(); event.stopImmediatePropagation(); selectWithActions(key)
     }
   }
@@ -235,7 +250,7 @@ export function mountCardInteractions(root, session, { state, submit, select, in
   }, true)
   root.addEventListener('contextmenu', event => {
     const el = event.target.closest('[data-interaction]')
-    if (el && ['hand:', 'asset:', 'enemy:', 'investigator:', 'location:'].some(prefix => el.dataset.interaction.startsWith(prefix))) {
+    if (el && ['hand:', 'asset:', 'enemy:', 'investigator:', 'location:', 'beneath:', 'hunch:'].some(prefix => el.dataset.interaction.startsWith(prefix))) {
       event.preventDefault(); inspect(el.dataset.interaction)
     }
   })

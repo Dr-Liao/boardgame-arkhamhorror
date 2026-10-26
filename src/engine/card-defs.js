@@ -55,6 +55,44 @@ export function createCardDefs(deps) {
     }
   }
 
+  // 「这张卡的反应可以切到自动触发」：旧式 triggerReaction 窗口，以及新式非手牌反应
+  // （ability-exec 的 reaction 窗口）。fast 事件（fromHand）和 event 卡仍只给快速开关，
+  // 因为 auto 会替玩家从手牌打出/花钱，风险不同。
+  function hasAutoReactionFor(code, eff = null, descriptorEntry = registeredEntry(code)) {
+    if ((eff?.reactions || []).length) return true
+    if ((investigatorRule(code)?.reactions || []).length) return true
+    const cardType = ALL_CARDS[code]?.type
+    return (descriptorEntry?.abilities || []).some(descriptor =>
+      descriptor.kind === 'reaction' && (descriptor.legacyReaction === true
+        || (descriptor.fromHand !== true && cardType !== 'event')))
+  }
+
+  // 默认 auto 的安全口径：无目标、无费用（允许横置）、效果属于无目标纯收益。
+  // 资源/弃牌/充能成本、有目标、chooseOne/搜索/resolve 反应仍默认 ask。
+  const AUTO_DEFAULT_EFFECTS = new Set(['gainResource', 'discoverClue', 'draw', 'addCurrentTest', 'dealDamage'])
+  const targetKind = value => (typeof value === 'string' ? value : value?.kind)
+  const hasTarget = value => {
+    const kind = targetKind(value)
+    return !!kind && kind !== 'none'
+  }
+  function isSafeAutoDefault(reaction) {
+    if (!reaction || reaction.resolve || !reaction.effect) return false
+    const cost = reaction.cost
+    if (cost && (typeof cost !== 'object' || Object.keys(cost).some(key => key !== 'exhaust'))) return false
+    if (hasTarget(reaction.target) || hasTarget(reaction.effect.target)) return false
+    return AUTO_DEFAULT_EFFECTS.has(reaction.effect.type)
+  }
+
+  // 「没有覆盖时默认 auto」：纯收益自动奖励，或安全口径内的无目标/无费用反应
+  // （例如罗兰的线索、幸运兔脚的横置抽牌）。有目标/有资源成本/需要后续选择的仍默认 ask。
+  function autoByDefaultFor(code, eff = null, descriptorEntry = registeredEntry(code)) {
+    const reactions = [...(eff?.reactions || []), ...(investigatorRule(code)?.reactions || [])]
+    if (reactions.some(reaction => isAutomaticReward(reaction) || isSafeAutoDefault(reaction))) return true
+    return (descriptorEntry?.abilities || []).some(descriptor => descriptor.kind === 'reaction'
+      && (isAutomaticReward({ effect: descriptor.effect, cost: descriptor.cost, limit: descriptor.limit, id: descriptor.id })
+        || isSafeAutoDefault(descriptor)))
+  }
+
   // 「卡面是否需要快速反应开关」的统一口径：旧 DSL（EFFECTS）与迁移后的条目/描述子一起看。
   // 只有会让玩家做选择的窗口才需要开关（reaction / playerWindow / boost 三类）；
   // 自动领取的资源奖励不打扰玩家。两个出卡分支（目录卡 / 规则卡）共用同一份判定。
@@ -75,7 +113,7 @@ export function createCardDefs(deps) {
       || descriptorAbilities.some(descriptor =>
         (descriptor.kind === 'played' && descriptor.fast && descriptor.trigger.length > 0)
         || (descriptor.kind === 'reaction'
-          && !(descriptor.legacyReaction && isAutomaticReward({ effect: descriptor.effect, cost: descriptor.cost, id: descriptor.id })))))
+          && !(descriptor.legacyReaction && isAutomaticReward({ effect: descriptor.effect, cost: descriptor.cost, limit: descriptor.limit, id: descriptor.id })))))
   }
 
   function allCardDefs({ runtimeOnly = false, campaignId = null, playerCodes = null } = {}) {
@@ -103,6 +141,8 @@ export function createCardDefs(deps) {
         if (descriptor.kind === 'reaction' && descriptor.id) copy.reactionIds.push(descriptor.id)
       }
       copy.hasReactionPrompt = hasReactionPromptFor(code, eff, descriptorEntry)
+      copy.hasAutoReaction = hasAutoReactionFor(code, eff, descriptorEntry)
+      copy.autoByDefault = autoByDefaultFor(code, eff, descriptorEntry)
       const entryPassive = !eff?.passive ? registeredEntry(code)?.passive : null
       if (eff && eff.passive) {
         if (eff.passive.stats) copy.statBonus = eff.passive.stats
@@ -138,6 +178,7 @@ export function createCardDefs(deps) {
       out[code] = { ...def, name: def.nameZh || def.name, availability: 'strict', strictAccepted: true,
         // 剧情资产也会进玩家的控制区（例如救下的盟友），开关口径与目录卡一致。
         ...(hasReactionPromptFor(code) ? { hasReactionPrompt: true } : {}),
+        ...(hasAutoReactionFor(code) ? { hasAutoReaction: true, autoByDefault: autoByDefaultFor(code) } : {}),
         effectStatus: catalog?.effectStatus || 'unverified', acceptanceProfile: catalog?.acceptanceProfile || null }
     }
     return out
@@ -147,20 +188,45 @@ export function createCardDefs(deps) {
   //   不传 options：包含全场所有人的手牌/牌组/压牌（建局与存档快照用，权威且完整）。
   //   传 { observerSeat }：按观察者收窄，别人的手牌/牌组/压牌不进来（观察投影用）。
   //     observerSeat = null 表示没有观察者，只保留公共可见的卡。
+  //
+  // 「离开手牌/牌库但仍在场上某处」的牌必须逐类扫描：03264 原定计划的 attached、
+  // 04037 背包的 attachedCards、05279 宿主附属的 attachments、调查员的 beneath（压牌）、
+  // 直觉牌库的 hunchDeck/hunchRevealed、地点附属的 attachments/playerLocationAttachments。
+  // 漏一类，读档重建展示表后前端就只能显示裸卡号（详见 tests/cards-under-ui.test.mjs）。
   function embeddedCardDefs(state, campaignId, options = {}) {
     const filtered = Object.hasOwn(options, 'observerSeat')
     const seatVisible = seat => !filtered || seat === options.observerSeat
     const codes = new Set()
+    // 附属可能是卡号字符串，也可能是 { code } / 卡实例；两种都收。
+    const addAttached = list => {
+      for (const item of list || []) {
+        const code = typeof item === 'string' ? item : item?.code
+        if (code) codes.add(code)
+      }
+    }
     for (const inv of state.investigators || []) {
       const own = seatVisible(inv.seat)
       codes.add(inv.code)
       for (const code of [...(own ? inv.hand || [] : []), ...(own ? inv.deck || [] : []), ...(inv.discard || [])]) codes.add(code)
       for (const card of [...(inv.assets || []), ...(inv.threat || [])]) {
         codes.add(card.code)
-        for (const code of card.attached || []) codes.add(code)
+        addAttached(card.attached)
+        addAttached(card.attachedCards)
+        addAttached(card.attachments)
       }
-      if (own) for (const code of inv.beneath || []) codes.add(code)
+      if (own) {
+        addAttached(inv.beneath)
+        addAttached(inv.hunchDeck)
+      }
+      // 直觉牌库「已揭示」的那张是桌面公开信息（projectHunch 对所有座位下发），卡面不能只给本人。
+      addAttached([inv.hunchRevealed])
     }
+    // 地点上的附属与「玩家卡附属到地点」（03199 等）都是桌面公开信息，不分观察者。
+    for (const location of state.locations || []) addAttached(location.attachments)
+    for (const enemy of state.enemies || []) addAttached(enemy.attachments)
+    addAttached(state.playerLocationAttachments)
+    // 场外绑定集合：观察投影会把卡号下发给牌桌，卡面定义必须同口径带上。
+    for (const set of Object.values(state.bondedSets || {})) addAttached(set?.cards)
     for (const record of Object.values(state.campaign?.investigators || {})) {
       if (!seatVisible(record.seat)) continue
       for (const code of record.deck || []) codes.add(code)

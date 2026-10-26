@@ -46,12 +46,13 @@ export default {
   'rulebook.searchAria': 'Search rules',
   'rulebook.searchPlaceholder': 'Search keywords or English names…',
   'rulebook.indexLabel': 'Index · A–Z',
+  'rulebook.pinnedGroup': 'Getting started',
   'rulebook.navAria': 'Rule index',
   'rulebook.groupAria': 'Group {initial}',
   'rulebook.empty': 'No rules found. Try "Engage" or "Commit".',
   'rulebook.back': '← Previous rule',
   'rulebook.related': 'Related rules',
-  'rulebook.footer': 'This page is the action and mechanics guide for this game. The original full rules, timing chart and errata are linked below; the actions available in this session are defined by the prompts on the table.',
+  'rulebook.footer': 'This page is a rules quick reference. The original full rules, timing chart and errata are linked below.',
 
   // Story reader (story-reader.js): chapter titles, resolution names and record labels come from campaign data.
   'story.reader.aria': 'Campaign story',

@@ -29,6 +29,25 @@ test('当前版本存档无需迁移，返回原对象且不复制', () => {
   assert.deepEqual(forced.changes, [], '健康存档强制修复检查不产生改动')
 })
 
+test('旧卡面缺少自动反应字段时刷新内嵌卡牌定义', () => {
+  const old = restore(create())
+  for (const [code, def] of Object.entries(old.cards)) {
+    if (!def || typeof def !== 'object') continue
+    old.cards[code] = { ...def }
+    delete old.cards[code].hasAutoReaction
+    delete old.cards[code].autoByDefault
+  }
+  const { state, changes } = migrateState(old)
+  assert.ok(changes.includes('刷新内嵌卡牌定义'), JSON.stringify(changes))
+  assert.equal(state.cards['01001'].hasAutoReaction, true)
+  assert.equal(state.cards['01001'].autoByDefault, true, '罗兰无目标纯收益，默认 auto')
+  const reactionCards = Object.values(state.cards).filter(def => def && typeof def === 'object'
+    && (def.type === 'investigator' || def.hasReactionPrompt
+      || (Array.isArray(def.reactionIds) && def.reactionIds.length)))
+  assert.ok(reactionCards.length > 0)
+  assert.ok(reactionCards.every(def => Object.hasOwn(def, 'autoByDefault')), '刷新后有反应的卡面都带新字段')
+})
+
 test('结构 v6 / 规则 n5.1 存档可逐级升级到当前规则并继续行动', () => {
   const old = restore(create())
   // 旧存档是结构 v6 + 旧规则版本；只改 rulesVersion 会造出"当前结构 + 旧规则"这种不存在的版本对。

@@ -115,11 +115,14 @@ body:has(.ah-table):not(:has(.ah-db-modal,.ah-carddetail-modal)) .ah-rulebook-la
 .ah-rule-index-group { display: grid; gap: 5px; min-width: 0; }
 .ah-rule-index-group > h3 { color: #e6c882; font: 600 15px/1.4 Georgia,serif; margin: 10px 0 3px; padding: 0 10px; border-left: 2px solid #bda064; }
 .ah-rule-index-group > button { width: 100%; }
+.ah-rule-index-group.ah-rule-index-pinned { padding-bottom: 8px; border-bottom: 1px solid #bda06444; }
+.ah-rule-index-group.ah-rule-index-pinned > h3 { color: #f2d99f; }
 @media(max-width:650px) {
   .ah-rulebook { height: min(760px,96dvh); }
   .ah-rulebook .ah-rule-index-group { display: flex; flex: 0 0 auto; align-items: center; gap: 5px; }
   .ah-rule-index-group > h3 { margin: 0; padding: 0 6px; }
   .ah-rule-index-group > button { width: auto; white-space: nowrap; }
+  .ah-rule-index-group.ah-rule-index-pinned { padding-bottom: 0; border-bottom: 0; }
   .ah-office .ah-office-upgrade-seat .ah-hub-actions { display: block; }.ah-office .ah-office-upgrade-gallery { display: flex; max-height: none; overflow-x: auto; }.ah-office .ah-upgrade-workbench { padding: 15px 0 0; border-left: 0; border-top: 1px solid #aa97584d; }
   .ah-upgrade-actions { align-items: stretch; flex-direction: column; margin-top: 16px; }.ah-upgrade-actions > div:last-child { justify-content: stretch; }.ah-upgrade-actions .bg-btn { flex: 1 1 100%; width: 100%; }
   .ah-story-layout { grid-template-columns: minmax(0,1fr); gap: 18px; }.ah-story-layout > nav { display: flex; overflow-x: auto; }.ah-story-layout > nav button { flex: 0 0 150px; padding: 12px; }.ah-story-page { min-height: 340px; padding: 32px 24px; }.ah-office .ah-story-page .ah-story-prose { font-size: 15px; line-height: 2; }

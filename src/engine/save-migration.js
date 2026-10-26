@@ -191,6 +191,17 @@ function upgradeResources(state, changes, force) {
   else if (JSON.stringify([state.cards, state.investigatorDefs]) !== before) changes.push('刷新内嵌卡牌定义')
 }
 
+// 三态自动反应给卡面加了 hasAutoReaction / autoByDefault。旧存档的资源版本可能没变，
+// 但内嵌卡牌仍是旧定义；检测到缺字段就强制刷新一次，避免读档后按钮/默认值缺失。
+function needsAutoReactionFlags(state) {
+  const cards = state.cards
+  if (!cards || typeof cards !== 'object') return false
+  return Object.values(cards).some(def => def && typeof def === 'object'
+    && (def.type === 'investigator' || def.hasReactionPrompt
+      || (Array.isArray(def.reactionIds) && def.reactionIds.length))
+    && !Object.hasOwn(def, 'autoByDefault'))
+}
+
 // 以同一战役新开局的状态为模板，只补齐缺失且模板值为空的字段（[]、{}、null、0、false）。
 function fillMissingFields(state, changes) {
   const players = (state.investigators || []).map(inv => ({ seat: inv.seat, role: state.humanSeats?.includes(inv.seat) ? 'human' : 'ai' }))
@@ -243,14 +254,15 @@ function smokeCheck(state) {
  */
 export function migrateState(state, { force = false, migrations = STATE_MIGRATIONS } = {}) {
   if (!state || typeof state !== 'object' || Array.isArray(state)) throw new Error('存档缺少合法的对局状态')
-  if (!force && !stateCompatibilityError(state, META.resourceVersion)) return { state, changes: [] }
+  const needsReactionFlags = needsAutoReactionFlags(state)
+  if (!force && !needsReactionFlags && !stateCompatibilityError(state, META.resourceVersion)) return { state, changes: [] }
   if (typeof state.schemaVersion !== 'number') throw new Error('存档缺少结构版本，无法识别，请重新开局')
   if (state.schemaVersion > STATE_SCHEMA_VERSION) throw new Error(`存档来自更新版本（结构 v${state.schemaVersion}），请升级游戏后再读取`)
   if (!state.campaign?.id) throw new Error('存档缺少战役信息，无法修复')
   const next = structuredClone(state)
   const changes = []
   migrateVersions(next, migrations, changes)
-  upgradeResources(next, changes, force)
+  upgradeResources(next, changes, force || needsReactionFlags)
   fillMissingFields(next, changes)
   const moves = legalMoves(next)
   if (JSON.stringify(moves) !== JSON.stringify(next.legalMoves)) {

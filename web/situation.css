@@ -264,3 +264,8 @@
 @media (max-width: 640px) {
   .ah-campaign-tfa li { font-size: 11px; }
 }
+
+/* 压在调查员底下的牌与直觉牌库：公开的只有张数，固定成第四行的两个小格。 */
+.ah-situ-decks .ah-situ-beneath, .ah-situ-decks .ah-situ-hunch { font-size: 11px; }
+.ah-situ-decks .ah-situ-beneath .ah-icon { flex: none; width: 20px; height: 20px; color: #cfc2f0; }
+.ah-situ-decks .ah-situ-hunch .ah-icon { flex: none; width: 20px; height: 20px; color: #bcd9ec; }

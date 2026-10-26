@@ -428,17 +428,16 @@ const chapterChecks = chapters.map(chapter => {
   }
 })
 
-// campaignOverview：战役条目必须写清九天章节的中文名、当前状态与审计账本位置。
+// campaignOverview：规则书的战役条目只写规则：章节名、混乱袋构成、战役记录与相关跳转。
 const campaignRule = RULES.find(rule => rule.id === 'tcuCampaign') || null
 const campaignBody = campaignRule ? campaignRule.body.join('') : ''
-const expectedStatusWord = ['playable', 'verified'].includes(campaign?.status) ? 'playable' : 'catalog-only'
 const campaignOverviewChecks = {
   entryPresent: Boolean(campaignRule) && campaignRule.group === '万象无终',
   listsEveryChapter: chapters.every(chapter => campaignBody.includes(chapter.name)),
-  statesCurrentStatus: campaignBody.includes(expectedStatusWord),
-  namesAuditLedger: campaignBody.includes('audit/tcu-migration.json'),
+  statesCampaignRecords: campaignBody.includes('战役记录'),
   statesChaosBagShape: campaignBody.includes('13 枚'),
   relatedRulesExist: (campaignRule?.related || []).every(id => ruleIds.has(id)),
+  rulesOnly: !/本局|本 Mod|引擎|实现|界面|按钮|面板|拖动|点击|演出|存档|投影|原语|读点|接线|验收|审计|playable|earlyAccess|audit|src\/|content\/|behavior/.test(campaignBody),
 }
 
 // scenarioMechanics：每章都要有剧本参考卡、提示卡映射与两条卡文直达。

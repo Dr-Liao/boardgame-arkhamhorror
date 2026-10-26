@@ -12,12 +12,21 @@ export default {
   'game.reaction.off': 'Reactions off',
   'game.reaction.muteTitle': 'Dismiss the reaction prompts for these cards; turn them back on with the switch on the card.',
   'game.reaction.mute': 'Do not ask again this game',
+  // Tri-state control (investigator panel)
+  'game.reaction.mode.aria': 'Reaction mode: {state}. Press to switch to {next}.',
+  'game.reaction.mode.skip': 'Auto skip',
+  'game.reaction.mode.ask': 'Ask each time',
+  'game.reaction.mode.auto': 'Auto trigger',
+  'game.reaction.mode.skip.title': 'Reaction mode: auto skip (quick off, auto off). Press to switch to ask each time.',
+  'game.reaction.mode.ask.title': 'Reaction mode: ask each time (quick on, auto off). Press to switch to auto trigger.',
+  'game.reaction.mode.auto.title': 'Reaction mode: auto trigger (quick on, auto on; targets/follow-up choices still ask). Press to switch to auto skip.',
 
   // Runtime card state (renderRuntimeCardState)
   'game.host.location': 'Location',
   'game.host.enemy': 'Enemy',
   'game.host.act': 'Current act',
   'game.host.agenda': 'Current agenda',
+  'game.host.investigator': 'Investigator',
   'game.runtime.title': 'Current card state',
   'game.runtime.exhausted': 'Status: exhausted',
   'game.runtime.attachedTo': 'Attached to: {host}',
@@ -27,6 +36,16 @@ export default {
   'game.runtime.limit': '{limit} · {state}',
   'game.runtime.attachments': 'Attachments ({count})',
   'game.runtime.viewAttachment': 'View attachment {name}',
+  'game.runtime.beneath': 'Cards beneath ({count})',
+  'game.runtime.beneathHidden': 'Other investigators only see the count: these cards are facedown.',
+  'game.runtime.viewBeneath': 'View card beneath {name}',
+
+  // Cards beneath an investigator / hunch deck (table and investigator detail)
+  'game.beneath.aria': 'Cards beneath this investigator ({count})',
+  'game.beneath.label': 'Beneath',
+  'game.hunch.aria': 'Hunch deck, {count} card(s) left',
+  'game.hunch.label': 'Hunch {count}',
+  'game.hunch.empty': 'Not revealed this phase',
 
   // Card zoom (card-zoom.js)
   'game.zoom.resources': 'Cost {cost}',
@@ -194,6 +213,7 @@ export default {
   'game.detail.aria': 'Card details',
   'game.detail.closeAria': 'Close card details',
   'game.detail.targetAction': 'Act on this target',
+  'game.detail.playAttached': 'Play',
 
   // Move submission and refresh messages (cardMove / refreshCardSession)
   'game.move.confirmed': 'Action confirmed',

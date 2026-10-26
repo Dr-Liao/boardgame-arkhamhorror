@@ -61,6 +61,7 @@ export const FAST_TESTS = Object.freeze([
   'ai-story.test.mjs',
   'ai-dialogue.test.mjs',
   'card-interactions.test.mjs',
+  'cards-under-ui.test.mjs', // 压在卡下面/附属在卡上的牌：卡面表、打出通道、选择面板卡图、免费行动死按钮
   'turn-end-window.test.mjs', // 收尾窗口的快速卡 / 被击败前的救命卡窗口
   'script-actions.test.mjs',
   'script-card-ownership.test.mjs',

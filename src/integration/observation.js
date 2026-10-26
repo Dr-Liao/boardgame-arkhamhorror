@@ -277,7 +277,7 @@ export function viewState(state, observerSeat = null, options = {}) {
   // answer a mandatory effect. Keep that recipient's own decision visible.
   const responder = choiceSeats(choice).includes(observer)
   view.pendingChoice = choice && (!privateTest || responder) ? {
-    ...pick(choice, ['id', 'kind', 'seat', 'seats', 'prompt', 'canSkip', 'min', 'max', 'payment'], copyField),
+    ...pick(choice, ['id', 'kind', 'seat', 'seats', 'prompt', 'canSkip', 'min', 'max', 'payment', 'autoOptionId', 'autoTriggerOptionId', 'cardCode'], copyField),
     source: typeof choice.source === 'string' ? choice.source : pick(choice.source || {}, [
       'id', 'code', 'label', 'name', 'type',
       // 补给选购要区分序幕与补给点：两处的清单和点数不同，前端据此列出完整卡面。

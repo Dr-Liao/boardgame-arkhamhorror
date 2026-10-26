@@ -1,15 +1,15 @@
-import { RULE_INDEX, RULE_SOURCES, ruleById } from './rulebook-data.js'
+import { DEFAULT_RULE_ID, RULE_INDEX, RULE_SOURCES, ruleById } from './rulebook-data.js'
 import { tableIcon } from './table-components.js'
 import { getLocale, t } from './i18n.js'
 export function createRulebook(h,render) {
-  let opened=false, selected='round', query='', history=[], returnFocus=null, returnRuleId=null
+  let opened=false, selected=DEFAULT_RULE_ID, query='', history=[], returnFocus=null, returnRuleId=null
   let cachedNode=null,cachedKey='',cachedQuery=''
   let directoryScroll={top:0,left:0}
   const rememberDirectory=()=>{const nav=cachedNode?.querySelector('nav');if(nav?.isConnected)directoryScroll={top:nav.scrollTop,left:nav.scrollLeft}}
   const restoreDirectory=(node,scroll)=>queueMicrotask(()=>{const nav=node?.querySelector('nav');if(nav?.isConnected){nav.scrollTop=scroll.top;nav.scrollLeft=scroll.left}})
   const show = id => { if(!opened){returnFocus=document.activeElement;returnRuleId=returnFocus?.dataset?.ruleId||null;directoryScroll={top:0,left:0}}else rememberDirectory(); opened=true; selected=ruleById(id).id;query='';render();queueMicrotask(()=>document.querySelector('.ah-rulebook-close')?.focus()) }
   window.addEventListener('arkham-open-rule',event=>{if(opened)history.push(selected);show(event.detail)})
-  window.addEventListener('keydown',event=>{if(event.key==='F1' && document.querySelector('.ah-rulebook-launcher')){event.preventDefault();show('round')}})
+  window.addEventListener('keydown',event=>{if(event.key==='F1' && document.querySelector('.ah-rulebook-launcher')){event.preventDefault();show(DEFAULT_RULE_ID)}})
   const close=()=>{opened=false;history=[];render();queueMicrotask(()=>{
     const restored=returnFocus?.isConnected ? returnFocus
       : returnRuleId ? [...document.querySelectorAll('.ah-carddetail-modal [data-rule-id]')].find(node=>node.dataset.ruleId===returnRuleId) : null
@@ -29,9 +29,17 @@ export function createRulebook(h,render) {
     const scroll={...directoryScroll}
     cachedKey=key;cachedQuery=query
     const matches=RULE_INDEX.filter(r=>`${r.title} ${r.aliases.join(' ')} ${r.body.join(' ')}`.toLowerCase().includes(query.trim().toLowerCase()))
+    const pinned=matches.filter(r=>r.pinned)
     const groups=new Map()
-    for(const rule of matches){if(!groups.has(rule.initial))groups.set(rule.initial,[]);groups.get(rule.initial).push(rule)}
+    for(const rule of matches){if(rule.pinned)continue;if(!groups.has(rule.initial))groups.set(rule.initial,[]);groups.get(rule.initial).push(rule)}
     const current=ruleById(selected)
+    const ruleButton=r=>h('button',{'data-rule-id':r.id,'aria-current':r.id===selected?'page':null,onclick:()=>select(r.id)},h('small',{},r.group),r.title)
+    const directory=matches.length?[
+      ...(pinned.length?[h('section',{className:'ah-rule-index-group ah-rule-index-pinned','aria-label':t('rulebook.pinnedGroup')},
+        h('h3',{},t('rulebook.pinnedGroup')),pinned.map(ruleButton))]:[]),
+      ...[...groups].map(([initial,rules])=>h('section',{className:'ah-rule-index-group','data-rule-initial':initial,'aria-label':t('rulebook.groupAria',{initial})},
+        h('h3',{},initial),rules.map(ruleButton))),
+    ]:h('p',{role:'status'},t('rulebook.empty'))
     cachedNode=h('div',{className:'ah-rulebook-layer'},
       h('button',{className:'ah-rulebook-launcher',title:t('table.rulebook.title'),onclick:()=>show(selected)},tableIcon('book'),t('table.rulebook')),
       opened ? h('div',{className:'ah-rulebook-backdrop'},h('section',{className:'ah-rulebook',role:'dialog','aria-modal':'true','aria-label':t('rulebook.title'),onclick:e=>e.stopPropagation(),onkeydown:e=>{
@@ -42,8 +50,7 @@ export function createRulebook(h,render) {
       h('div',{className:'ah-rulebook-layout'},
         h('aside',{},h('input',{type:'search',value:query,'aria-label':t('rulebook.searchAria'),placeholder:t('rulebook.searchPlaceholder'),oninput:e=>{const cursor=e.target.selectionStart;query=e.target.value;render();queueMicrotask(()=>{const input=document.querySelector('.ah-rulebook input');input?.focus();input?.setSelectionRange(cursor,cursor)})}}),
           h('small',{className:'ah-rule-index-label'},t('rulebook.indexLabel')),
-          h('nav',{'aria-label':t('rulebook.navAria'),onscroll:rememberDirectory},matches.length?[...groups].map(([initial,rules])=>h('section',{className:'ah-rule-index-group','data-rule-initial':initial,'aria-label':t('rulebook.groupAria',{initial})},
-            h('h3',{},initial),rules.map(r=>h('button',{'data-rule-id':r.id,'aria-current':r.id===selected?'page':null,onclick:()=>select(r.id)},h('small',{},r.group),r.title)))):h('p',{role:'status'},t('rulebook.empty')))),
+          h('nav',{'aria-label':t('rulebook.navAria'),onscroll:rememberDirectory},directory)),
         h('article',{className:'ah-rulebook-article',tabindex:-1,'data-rule-topic':selected},
           h('button',{className:'ah-rulebook-back',disabled:!history.length,onclick:()=>{rememberDirectory();selected=history.pop();render()}},t('rulebook.back')),
           h('small',{},current.group),h('h1',{},current.title),current.body.map(p=>h('p',{},p)),

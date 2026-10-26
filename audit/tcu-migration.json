@@ -2299,10 +2299,10 @@
         "campaignOverview": {
           "entryPresent": true,
           "listsEveryChapter": true,
-          "statesCurrentStatus": true,
-          "namesAuditLedger": true,
+          "statesCampaignRecords": true,
           "statesChaosBagShape": true,
-          "relatedRulesExist": true
+          "relatedRulesExist": true,
+          "rulesOnly": true
         },
         "scenarioMechanics": {
           "chapters": 9,
@@ -2341,7 +2341,7 @@
           "interactionsMobile": true,
           "desktop": true,
           "mobile": true,
-          "screenshots": 28,
+          "screenshots": 30,
           "screenshotsComplete": true
         }
       },
@@ -5321,11 +5321,11 @@
       ],
       "ledger": {
         "path": "audit/tcu-player-acceptance.json",
-        "sha256": "203bbe8a36afcec3ccc54a11d07b580774eb5556ae5a9ba1eaff59b74a738b15"
+        "sha256": "5d8146c97971819e76042545eb78dc09f8bd4df075f90449fd31c995bbd3b7ed"
       },
       "generatedModule": {
         "path": "src/cards/tcu-player-acceptance.js",
-        "sha256": "da951c29d05792de99ed12378d24c81974230344f2654d0d1ff4a4aa6b15f66b"
+        "sha256": "96a93c88a97a0f7ee319feb292db7e594d70d558ca21f4353f508dbe99ce263a"
       },
       "evidence": [
         "content/packs/tcuPlayer/manifest.js",
@@ -5551,16 +5551,16 @@
   "evidence": {
     "files": {
       "content/campaigns/theCircleUndone/keywords.js": "4505567dd5c59872093410a4eb171264b607f28ea39b13abdeba9a45bccf5287",
-      "web/rulebook-data.js": "259c62f9c836e0617a6ad29295cf2de847db54a6b6d2879d92355063de449bc1",
+      "web/rulebook-data.js": "e815d458217bfbfa8416941d0d868a3fa82eae3123e777d8ff86cb781c68e35c",
       "web/ui-cards.js": "2b95a685962737d535b29885e4178fcb0f30478ec2b690b86b76e852928bada0",
       "content/mechanics.js": "cd238d687a30f08bcdb56c10f59a345d233ff23c315a75aba9a7a157cbd886f7",
-      "tests/tcu-rules.test.mjs": "b1fa0f1ef6ea01a01c6cc017bba5cd087d747956249e4f70c4f76d723e211c0d",
-      "tests/tcu-rules.browser.mjs": "457d8ca30b8b05692a96a11d67cdac61de436383b8e0a589537cbc6102a03ba8",
+      "tests/tcu-rules.test.mjs": "f0ca99664abf96629f8f6959d09ebd22ec08873397ab3158189990743870cf6c",
+      "tests/tcu-rules.browser.mjs": "d117eef15ff4917d618c609d5cfce39d492e1804943afe4c24eb3c7b6dbe106a",
       "web/tcu-ui.js": "9537f41540530c9134f7316b0f050be7fb3d981057b386bdcb1ee6df4be3fca4",
       "web/tcu-panels.css": "de9fdc79321d67c427a9e802a8557a35b8dbedc6207f1cfd706acd18df26f17f",
       "tests/tcu-interactions.test.mjs": "4c3bbaf8c0fbfcb23b202f2b79f2febaff37f86e50d7b5b08e944045a2500006",
       "tests/tcu-interactions.browser.mjs": "3f0811cd1dc335b1cbc1ea2f78184d8bad9d3ace439f09c6056eda2e7ca6c88a",
-      "audit/tcu-browser-acceptance.json": "c627a2ff3d96143c72ed05044b76e5d7707b850f5e53cd4c021c5a51789540a6",
+      "audit/tcu-browser-acceptance.json": "0b8a9b34d5772212b6e1f4aada0de9fa2527ba3b258666be7afba1580b1fab99",
       "artifacts/migration/tcu/mechanism-scan.json": "deaa41c8f9993c499877746ccb83b65eb30e91c44990dcd92b53fcd9e589281b",
       "content/packs/tcuInvestigators/manifest.js": "d23d6ed977a3a9dcca24336e10428c484979178feeae0e7265944a757b60f76e",
       "tests/tcu-investigators.test.mjs": "b81e2ba3697213d4a94d5ffdabecf0da7249d6be4872f2ef02f285609a0b3ba2",
@@ -5570,8 +5570,8 @@
       "src/engine/cancel-note.js": "85dd9adf1f7b72a963dc682e2ab8b441c8cf3e6ec08b27d0de7c4f50f7b6d1f2",
       "content/packs/tcuPlayer/manifest.js": "865cd9db5f0839d8c01e03ba61b058625253355a5a1a02f22591ba5538a928fe",
       "tools/audit-tcu-player.mjs": "abb4638a880cf20940435454d518cfd31007f89cac95280e62c7318639c54054",
-      "audit/tcu-player-acceptance.json": "203bbe8a36afcec3ccc54a11d07b580774eb5556ae5a9ba1eaff59b74a738b15",
-      "src/cards/tcu-player-acceptance.js": "da951c29d05792de99ed12378d24c81974230344f2654d0d1ff4a4aa6b15f66b",
+      "audit/tcu-player-acceptance.json": "5d8146c97971819e76042545eb78dc09f8bd4df075f90449fd31c995bbd3b7ed",
+      "src/cards/tcu-player-acceptance.js": "96a93c88a97a0f7ee319feb292db7e594d70d558ca21f4353f508dbe99ce263a",
       "tests/tcu-player-ledger.test.mjs": "d99b4f0a99654232995d5cf11b941df0c847cc504e2a54fd10fb65d726b7a9ba",
       "src/deck/availability.js": "69bfa51dfe1d44480d640e99c6708109642d6109b671556258fbfffe5687469b",
       "src/campaign/campaign.js": "1dcc7117f4d9c0ac050d97f92642c5c921be54682535146b8f36b2eff3b09344",

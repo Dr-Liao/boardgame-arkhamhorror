@@ -1,5 +1,13 @@
 import { isDeepStrictEqual } from 'node:util'
 
+// 回滚开关：BOARDGAME_AUTOREACTION=0 时恢复「引擎对真人直接领取自动奖励」的旧行为。
+// 正常路径由大厅在发布前代答（autoOptionId 让窗口对真人可见）。
+const AUTO_REACTION_LEGACY = typeof process !== 'undefined' && process.env?.BOARDGAME_AUTOREACTION === '0'
+// 「有人负责代答」模式：只有大厅进程会打开它。纯引擎消费者（单测、replay-fixtures、审计工具）
+// 不打开，保持「自动奖励直接领取」的旧行为，避免把大厅策略带进规则指纹。
+let autoReactionHosted = false
+export function setAutoReactionHosted(value = true) { autoReactionHosted = !!value }
+
 // 续算时这些字段取自当前状态而非事务快照：存档迁移只会刷新顶层状态，
 // 若从 base 恢复版本号，旧存档回答待决选择后会退回旧版本而无法继续行动。
 const STATIC_FIELDS = ['cards', 'investigatorDefs', 'classNames', 'classColors', 'skillNames', 'tokenLabels',
@@ -34,7 +42,10 @@ export function resolutionCheckpoint(state, seat, move) {
 
 // `seats` lets several seats race to answer; `seat` stays the primary responder used for replay.
 // An option carrying `responderSeat` may only be picked by that seat.
-export function requestChoice(state, { kind, source, seat, seats = null, prompt, options, canSkip = false, automaticOptionId = null, payment = null }) {
+// `autoOptionId` 是「默认自动领取」的选项：AI 仍直接领取（旧行为）；真人由大厅在发布前
+// 按三态覆盖代答。`autoTriggerOptionId` 是「可切到自动触发」的提示：不改变 AI 的询问，
+// 只让大厅在玩家选了 auto 时补 choose/trigger。
+export function requestChoice(state, { kind, source, seat, seats = null, prompt, options, canSkip = false, autoOptionId = null, autoTriggerOptionId = null, cardCode = null, payment = null }) {
   const context = state._resolution
   if (!context) throw new Error('选择必须在规则事务中执行')
   if (!options?.length) throw new Error('选择没有合法选项')
@@ -71,14 +82,25 @@ export function requestChoice(state, { kind, source, seat, seats = null, prompt,
     context.answers.push(clone({ choiceId: id, kind, source, seat, optionId: 'skip' }))
     return 'skip'
   }
-  // Preserve the answer in the transaction journal, so subsequent decisions
-  // and JSON save/resume keep their indices and never award the benefit twice.
-  if (automaticOptionId != null && options.some(option => option.id === automaticOptionId)) {
-    context.answers.push(clone({ choiceId: id, kind, source, seat, optionId: automaticOptionId }))
-    return automaticOptionId
+  // 自动反应：AI 座位保持「同一事务内直接领取」；真人只在「有人代答」模式下把窗口留给大厅。
+  // 纯引擎消费者和回滚开关都维持旧行为（直接领取）。
+  const auto = autoOptionId != null && options.some(option => option.id === autoOptionId)
+  const human = (state.humanSeats || [0]).includes(seat)
+  if (auto && (!human || !autoReactionHosted || AUTO_REACTION_LEGACY)) {
+    context.answers.push(clone({ choiceId: id, kind, source, seat, optionId: autoOptionId }))
+    return autoOptionId
   }
   const responders = seats?.length > 1 ? { seats: [...seats] } : {}
-  throw new ChoicePause(clone({ id, kind, source, seat, ...responders, prompt, options, canSkip, ...(payment ? {payment} : {}) }))
+  // 这些提示只在「大厅托管模式」下进 state：纯引擎消费者/迁移对比保持旧窗口形状与指纹。
+  const hosted = autoReactionHosted && !AUTO_REACTION_LEGACY
+  throw new ChoicePause(clone({ id, kind, source, seat, ...responders, prompt, options, canSkip,
+    ...(hosted ? {
+      ...(auto ? { autoOptionId } : {}),
+      ...(autoTriggerOptionId && options.some(option => option.id === autoTriggerOptionId)
+        ? { autoTriggerOptionId } : {}),
+      ...(cardCode ? { cardCode } : {}),
+    } : {}),
+    ...(payment ? { payment } : {}) }))
 }
 
 export function choiceSeats(choice) {

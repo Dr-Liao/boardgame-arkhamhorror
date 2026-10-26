@@ -28,6 +28,16 @@
 .ah-detail-attachments{display:flex;flex-wrap:wrap;gap:8px}.ah-detail-attachments h4{flex-basis:100%}
 .ah-detail-attachment-card{display:flex;align-items:center;gap:8px;max-width:220px;padding:4px 9px 4px 4px;border:1px solid #bd8eae;border-radius:4px;background:#2b1a25;color:#f6e2ec;cursor:pointer}
 .ah-detail-attachment-card .ah-table-art{position:relative;flex:0 0 30px;width:30px;height:42px;border:0;border-radius:2px;overflow:hidden}.ah-detail-attachment-card span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* 附属卡右侧的「打出」按钮：只有引擎给出 from* 通道时才出现。 */
+.ah-detail-attachment-row{display:flex;align-items:center;gap:6px;max-width:100%}
+.ah-detail-attachment-play{padding:5px 10px;border:1px solid #9db885;border-radius:4px;background:#22392c;color:#dff0cf;font-size:12px;cursor:pointer}
+.ah-detail-attachment-play:hover:not(:disabled){border-color:#cfe4b6;background:#2c4a37;color:#f2ffe2}
+.ah-detail-attachment-play:disabled{opacity:.45;cursor:default}
+/* 压在调查员底下的牌：与「附属卡」分开配色，别人的投影只有张数时给一行说明。 */
+.ah-detail-beneath{margin-top:14px;padding:10px;border:1px dashed #8f7fc055;border-radius:4px;background:#1b20331f}
+.ah-detail-beneath h4{color:#cfc2f0}
+.ah-detail-beneath-card{border-color:#8f7fc0;background:#211d33;color:#e7e0ff}
+.ah-detail-beneath-hidden{margin:0;font-size:12px;color:#b0a9c9;line-height:1.6}
 .ah-carddetail-modal .ah-detail-meta{margin-top:18px;border-top:1px solid var(--line);padding-top:13px;font-size:12px;color:#9eac96}.ah-carddetail-modal summary{cursor:pointer;color:#b5bc9f;font-size:12px}
 .ah-carddetail-modal .ah-resource-note,.ah-carddetail-modal .ah-art-caption{color:#a8b29b;font-size:11px;line-height:1.7}
 .ah-carddetail-modal .ah-presentation-settings{border-color:var(--line);border-radius:4px}.ah-carddetail-modal input,.ah-carddetail-modal select,.ah-catalog-modal input,.ah-catalog-modal select{color:#e5d8b9;background:#10231c;border-color:#af965955}

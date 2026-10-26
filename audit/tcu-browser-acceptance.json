@@ -419,6 +419,22 @@
       "spec": "tests/tcu-release.browser.mjs"
     },
     {
+      "name": "p4-rulebook-basics-desktop",
+      "path": "artifacts/tcu-migration/p4-rulebook-basics-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "spec": "tests/tcu-rules.browser.mjs"
+    },
+    {
+      "name": "p4-rulebook-basics-mobile",
+      "path": "artifacts/tcu-migration/p4-rulebook-basics-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "spec": "tests/tcu-rules.browser.mjs"
+    },
+    {
       "name": "p4-rulebook-desktop",
       "path": "artifacts/tcu-migration/p4-rulebook-desktop.png",
       "base": "repo-root",

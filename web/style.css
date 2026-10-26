@@ -647,7 +647,7 @@ button:focus-visible, [role='button']:focus-visible, summary:focus-visible { out
   .ah-calm .ah-table-shell { padding: 0 9px; grid-template-rows: 76px minmax(0, 1fr) 127px 70px; }
   .ah-calm .ah-script-card { width: 47px; height: 66px; }
   .ah-calm .ah-player-dock { grid-template-columns: 95px minmax(0, 1fr) 62px; gap: 4px; }
-  .ah-calm .ah-dock-name { width: 95px; overflow: hidden; text-overflow: ellipsis; font-size: 10px; }
+  .ah-calm .ah-dock-name { width: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 10px; }
   .ah-calm .ah-dock-counters { gap: 4px; font-size: 10px; }
   .ah-calm .ah-dock-deck { display: none; }
   .ah-calm .ah-dock-equipment { padding: 7px 4px; font-size: 10px; }

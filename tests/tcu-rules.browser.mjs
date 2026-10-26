@@ -37,6 +37,15 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     const search = book.getByRole('searchbox', { name: '搜索规则' })
     const nav = book.getByRole('navigation', { name: '规则目录' })
     const article = book.locator('[data-rule-topic]')
+    // 规则书默认打开置顶的基础规则，且「入门」分组排在 A–Z 之前。
+    await expect(article).toHaveAttribute('data-rule-topic', 'basics')
+    await expect(article).toContainText('基础规则')
+    await expect(nav.locator('.ah-rule-index-group').first()).toHaveClass(/ah-rule-index-pinned/)
+    await expect(nav.locator('.ah-rule-index-pinned [data-rule-id="basics"]')).toBeVisible()
+    // 置顶基础规则本身就是默认阅读页，单独留一张桌面/移动证据。
+    const basicsShot = `${output}p4-rulebook-basics-${label}.png`
+    await page.screenshot({ path: basicsShot, animations: 'disabled' })
+    test.info().annotations.push({ type: 'screenshot', description: basicsShot })
     // 目录完整性：16 条万象无终条目全部进入目录（拼音索引）。
     await expect(nav.locator('[data-rule-id^="tcu"]')).toHaveCount(TCU_TOPICS.length)
     // 搜索：印刷词 → 条目。
@@ -45,7 +54,7 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     await nav.locator('[data-rule-id="tcuHaunted"]').click()
     await expect(article).toHaveAttribute('data-rule-topic', 'tcuHaunted')
     await expect(article).toContainText('调查检定')
-    await expect(article).toContainText('05043')
+    await expect(article).toContainText('闹鬼能力')
     // 关联跳转：闹鬼 → 幽灵界。
     await book.locator('.ah-rulebook-related').getByRole('button', { name: '幽灵界、幽灵地点与第二遭遇牌堆' }).click()
     await expect(article).toHaveAttribute('data-rule-topic', 'tcuSpectral')
@@ -53,18 +62,18 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     // 返回上一条（移动端的主要回退路径）。
     await book.getByRole('button', { name: '← 返回上一条' }).click()
     await expect(article).toHaveAttribute('data-rule-topic', 'tcuHaunted')
-    // 搜索另一条：火盆；确认条目内容来自当前实现（05228 机关盒）。
+    // 搜索另一条：火盆；确认条目写的是规则，而不是实现位置。
     await search.fill('火盆')
     await nav.locator('[data-rule-id="tcuBraziers"]').click()
-    await expect(article).toContainText('05228')
-    await expect(article).toContainText('brazier')
-    // 战役总览要写明当前状态与章节中文名。
+    await expect(article).toContainText('机关盒')
+    await expect(article).toContainText('火盆')
+    // 战役总览要写明章节中文名与基础袋构成。
     await search.fill('万象无终')
     await nav.locator('[data-rule-id="tcuCampaign"]').click()
-    // P10：战役已从「仅图鉴」升为 playable（可从大厅启动），规则书状态文案同步更新。
-    await expect(article).toContainText('从大厅开放')
+    // 规则书只写规则：四个难度与 13 枚基础袋，不写发布状态或实现账本。
+    await expect(article).toContainText('四个难度')
     await expect(article).toContainText('聚合幻灭')
-    await expect(article).toContainText('377')
+    await expect(article).toContainText('13 枚')
     // 移动端不能横向溢出（桌面同样按 1px 容差检查）。
     expect(await book.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true)
     const shot = `${output}p4-rulebook-${label}.png`

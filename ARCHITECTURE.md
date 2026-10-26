@@ -171,6 +171,13 @@ games/arkhamhorror/
 
 `presentation/` 只处理媒体选择和卡图回退；`web/` 只处理交互与渲染。前端提交服务端已经公开的合法动作，不复制规则判定。反馈弹窗属于大厅能力（`createUI(host)` 注入的 `openFeedback()`），`web/` 只在战役局外页和牌桌标题栏放入口，不重复实现表单。
 
+**卡牌承载区**（牌离开手牌/牌库、仍附着在支援、调查员或地点上）是这条边界上最容易漏的一段：
+`asset.attached` / `attachedCards` / `attachments`、`inv.beneath`、`inv.hunchDeck`+`hunchRevealed`、
+地点附属与 `state.bondedSets` 必须同时被 `engine/card-defs.js`（卡面表）、`integration/observation.js`
+（按座位投影）与 `web/`（显示与打出入口）覆盖。新增一种承载区时这三处一起改，并在
+[`docs/card-model.md`](docs/card-model.md) §7.1 登记；否则症状是读档后卡名退化成卡号，
+或牌在桌上却没有任何可点的动作（回归见 `tests/cards-under-ui.test.mjs` / `tests/cards-under.browser.mjs`）。
+
 ## 4. 依赖方向
 
 ```mermaid

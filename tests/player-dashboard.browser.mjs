@@ -128,3 +128,109 @@ test('米奇·布朗的额外盟友槽单独显示，且只放非独特盟友',a
   expect(errors).toEqual([])
 })
 
+test('米兰资产卡有三态按钮；不显示神智角标，恐惧扣除标记在左侧', async ({page}) => {
+  const errors=[];page.on('pageerror',e=>errors.push(e.message))
+  await page.setViewportSize({width:1440,height:900})
+  const f=await fixture(page)
+  await f.update(session=>{
+    session.state.cards['01033']={code:'01033',name:'米兰·克里斯托弗',type:'asset',cost:4,sanity:2,
+      klass:'seeker',text:'你获得+1[willpower]。',hasAutoReaction:true,autoByDefault:true,hasReactionPrompt:false}
+    session.state.investigators[0].assets=[{id:'milan',code:'01033',exhausted:false,horror:1,damage:0}]
+  })
+  const card=page.locator('.ah-minicard[data-card-code="01033"]')
+  await expect(card).toHaveCount(1)
+  await expect(card.locator('.ah-minicard-sanity')).toHaveCount(0)
+  const mode=card.locator('.ah-reaction-mode')
+  await expect(mode).toHaveCount(1)
+  await expect(mode).toHaveAttribute('data-reaction-mode','auto')
+  const marker=card.locator('.ah-card-marker-horror')
+  await expect(marker).toBeVisible()
+  const markerBox=await marker.boundingBox(),cardBox=await card.boundingBox()
+  expect(markerBox).not.toBeNull();expect(cardBox).not.toBeNull()
+  expect(markerBox.x).toBeLessThan(cardBox.x+cardBox.width/2)
+  expect(markerBox.y).toBeGreaterThan(cardBox.y+18)
+  await page.screenshot({path:output+'milan-card-reaction.png',animations:'disabled'})
+  await mode.click()
+  await expect(mode).toHaveAttribute('data-reaction-mode','skip')
+  await expect(mode.locator('.ah-reaction-slash')).toHaveCount(1)
+  expect(errors).toEqual([])
+})
+
+test('带经验角标的资产卡：三态按钮与经验角标不重叠', async ({page}) => {
+  const errors=[];page.on('pageerror',e=>errors.push(e.message))
+  await page.setViewportSize({width:1440,height:900})
+  const f=await fixture(page)
+  await f.update(session=>{
+    session.state.cards['01041']={code:'01041',name:'伊察姆纳圆盘',type:'asset',cost:3,xp:2,klass:'seeker',
+      text:'你获得+1[willpower]。',hasAutoReaction:true,autoByDefault:true,hasReactionPrompt:false}
+    session.state.investigators[0].assets=[{id:'disc',code:'01041',exhausted:false}]
+  })
+  const card=page.locator('.ah-minicard[data-card-code="01041"]')
+  await expect(card).toHaveCount(1)
+  const mode=card.locator('.ah-reaction-mode')
+  const xp=card.locator('.ah-minicard-xp')
+  await expect(mode).toBeVisible();await expect(xp).toBeVisible()
+  const modeBox=await mode.boundingBox(),xpBox=await xp.boundingBox()
+  expect(modeBox).not.toBeNull();expect(xpBox).not.toBeNull()
+  expect(markerOverlap(modeBox,xpBox)).toBe(false)
+  await page.screenshot({path:output+'xp-card-reaction.png',animations:'disabled'})
+  expect(errors).toEqual([])
+})
+function markerOverlap(a,b){return !(a.x+a.width<=b.x+1||b.x+b.width<=a.x+1||a.y+a.height<=b.y+1||b.y+b.height<=a.y+1)}
+
+test('升级版米兰 01533 也有三态按钮（默认 ask，可切 auto）', async ({page}) => {
+  const errors=[];page.on('pageerror',e=>errors.push(e.message))
+  await page.setViewportSize({width:1440,height:900})
+  const f=await fixture(page)
+  await f.update(session=>{
+    session.state.cards['01533']={code:'01533',name:'米兰·克里斯托弗博士',type:'asset',cost:4,sanity:2,
+      klass:'seeker',text:'你获得+1[intellect]。',hasReactionPrompt:true,hasAutoReaction:true,autoByDefault:false}
+    session.state.investigators[0].assets=[{id:'milan2',code:'01533',exhausted:false}]
+  })
+  const card=page.locator('.ah-minicard[data-card-code="01533"]')
+  await expect(card).toHaveCount(1)
+  const mode=card.locator('.ah-reaction-mode')
+  await expect(mode).toHaveCount(1)
+  await expect(mode).toHaveAttribute('data-reaction-mode','ask')
+  await mode.click()
+  await expect(mode).toHaveAttribute('data-reaction-mode','auto')
+  await expect(mode).toHaveClass(/is-auto/)
+  await page.screenshot({path:output+'milan2-card-reaction.png',animations:'disabled'})
+  expect(errors).toEqual([])
+})
+
+test('角色面板三态按钮：循环 skip/ask/auto、齿轮旋转与长名字省略',async({page})=>{
+  const errors=[];page.on('pageerror',e=>errors.push(e.message))
+  await page.setViewportSize({width:1440,height:900})
+  const f=await fixture(page)
+  const mode=page.locator('.ah-reaction-mode')
+  await expect(mode).toHaveCount(1)
+  await expect(mode).toHaveAttribute('data-reaction-mode','auto')
+  await expect(mode).toHaveAttribute('title',/自动触发/)
+  await f.update(session=>{
+    session.players[0].name='DrLiao'
+    session.state.investigators[0].name='普雷斯顿·费尔蒙特·超长名字测试'
+  })
+  const name=page.locator('.ah-dock-name')
+  await expect(name).toHaveAttribute('title','普雷斯顿·费尔蒙特·超长名字测试')
+  const text=name.locator('.ah-dock-name-text')
+  expect(await text.evaluate(el=>el.scrollWidth>el.clientWidth)).toBe(true)
+  await expect(mode).toBeVisible()
+  // 罗兰的无目标纯收益反应默认 auto；三态循环 auto → skip → ask → auto。
+  await expect(mode).toHaveClass(/is-auto/)
+  expect(await mode.locator('.ah-icon').evaluate(el=>getComputedStyle(el).animationName)).toBe('ah-gear-spin')
+  await mode.click()
+  await expect(mode).toHaveAttribute('data-reaction-mode','skip')
+  await expect(mode.locator('.ah-reaction-slash')).toHaveCount(1)
+  await mode.click()
+  await expect(mode).toHaveAttribute('data-reaction-mode','ask')
+  // 再切到 auto 留一张截图；名字恢复成罗兰，避免截图里是测试用的超长名。
+  await mode.click()
+  await expect(mode).toHaveAttribute('data-reaction-mode','auto')
+  await f.update(session=>{ session.state.investigators[0].name='罗兰·班克斯' })
+  await expect(mode).toHaveAttribute('data-reaction-mode','auto')
+  await page.screenshot({path:output+'reaction-mode.png',animations:'disabled'})
+  expect(errors).toEqual([])
+})
+
+

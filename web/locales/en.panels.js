@@ -83,6 +83,8 @@ export default {
   'situation.deck.discard': 'Discard {count}',
   'situation.hand.count': 'Hand ({count})',
   'situation.hand.private': 'Hand contents hidden',
+  'situation.beneath': 'Beneath {count}',
+  'situation.hunch': 'Hunch {count}',
   'situation.engaged': 'Engaged: {names}',
   'situation.listSeparator': ', ',
   'situation.trauma': 'Trauma · Physical {physical} / Mental {mental}',

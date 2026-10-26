@@ -5,7 +5,7 @@ import { campaignStory, introduction } from '../src/campaign/story.js'
 import { contentRegistry } from '../content/registered.js'
 import { viewState } from '../src/integration/observation.js'
 import { PLAYER_CARD_CODES } from '../src/deck/availability.js'
-import { RULES, cardRuleIds, matchingRules, ruleById } from '../web/rulebook-data.js'
+import { DEFAULT_RULE_ID, RULES, RULE_INDEX, cardRuleIds, matchingRules, ruleById } from '../web/rulebook-data.js'
 import { renderRulesText } from '../web/card-text.js'
 import { recordValueText, recordChangeText } from '../web/campaign-records.js'
 import { renderStoryReader } from '../web/story-reader.js'
@@ -191,6 +191,21 @@ test('规则索引无断链，卡牌关键字及行动符号可跳转，保留�
   assert.equal(ruleById('retaliate').title,'反击')
   assert.equal(ruleById('surge').title,'涌动')
   assert.ok(nodes.includes('。普通文字'))
+})
+test('基础规则置顶为默认条目，规则正文不出现引擎、实现或界面操作文案',()=>{
+  const first=RULE_INDEX[0]
+  assert.equal(first.id,'basics')
+  assert.equal(first.pinned,true)
+  assert.equal(DEFAULT_RULE_ID,'basics')
+  assert.ok(first.body.length>=8,'基础规则应覆盖目标、准备、阶段、行动、检定、伤害、敌人与线索')
+  assert.ok(first.aliases.includes('新手入门'))
+  const forbidden=/本局|本 Mod|引擎|实现|界面|按钮|面板|拖动|点击|悬浮|右键|动画|演出|存档|投影|原语|读点|接线|字段|验收|审计|playable|earlyAccess|audit|src\/|content\/|behavior|scenarioRuntime|hiddenGaps|hauntedGaps|CHAOS_BAGS|M[0-9]|P[0-9]|档案页|结算页|调查纪事|战役层状态/
+  for(const rule of RULES){
+    const text=rule.body.join('')
+    const hit=text.match(forbidden)
+    assert.equal(hit,null,`${rule.id} 正文含引擎或实现内容：${hit?.[0]}`)
+    assert.equal(/<[^>]+>/.test(text),false,`${rule.id} 正文含 HTML`)
+  }
 })
 test('敦威治新机制列入规则书，剧本卡与地点卡可直达对应条目',()=>{
   const ids=new Set(RULES.map(r=>r.id))

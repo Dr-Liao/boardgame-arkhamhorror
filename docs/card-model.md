@@ -305,6 +305,36 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 已从旧散字段迁到效果实体的机制：`addStatPhase`（02185 的「本阶段 +1」）与 `fightOrFlight`（03155 的「本轮 +
 恐惧值」）。`inv.phaseStatBonus`（单数）只作为旧存档兼容读取点保留。
 
+### 7.1 卡牌承载区（压在卡下面 / 附属在卡上）
+
+「牌离开手牌与牌库、但仍属于某张卡或某位调查员」有五种存储形状，**新增一种必须同时改三处**，
+否则表现是「读档后卡名变卡号」或「牌在场上但界面上无处可点」：
+
+| 形状 | 谁在用 | 卡面表（`embeddedCardDefs`） | 观察投影 | 前端 |
+| --- | --- | --- | --- | --- |
+| `asset.attached` | 03264 原定计划 | 扫 | 随支援实例下发（`publicCardInstance`） | 角标计数 + 详情「附属卡」+ 宿主弹出「打出」 |
+| `asset.attachedCards` | 04037 背包 | 扫 | 同上 | 同上 |
+| `asset.attachments` | 05279 黛雅娜·艾丝帕伦斯、05230 | 扫 | 同上 | 同上 |
+| `inv.beneath` | 05004 黛安娜、03003 赛菲娜、03012 画中世界 | 只给本人 | 本人 `beneath: string[]`，全桌 `beneathCount: number` | 牌桌「下方」行 + 调查员详情「下方卡牌」+ 银暮匕首弹出「从底下打出」 |
+| `inv.hunchDeck` / `inv.hunchRevealed` | 05002 乔·戴蒙德 | 牌库只给本人；已揭示那张给全桌 | `view.hunch[] = { seat, deck, revealed }`（顺序不外泄） | 牌桌「直觉 N」行 + 揭示那张的「从直觉牌库打出」 |
+
+其余相关位置：`state.locations[].attachments`、`state.enemies[].attachments`、
+`state.playerLocationAttachments`（玩家卡附属到地点，如 03199）与 `state.bondedSets[].cards`（场外绑定集合）
+都按公开信息带卡面；`inv.hiddenCards`（隐私牌）是**手牌上的标记**，牌本身仍在 `inv.hand` 里，
+因此前端照常按手牌显示，不需要第二个区域。
+
+两条读点约定：
+
+1. **打出通道**：`legalMoves` 里这些牌的动作带 `fromPlanAssetId` / `fromBackpackId` /
+   `fromAttachedEventOf` / `fromBeneath` / `channelAssetId` / `fromHunch`，**没有 `assetId`**。
+   `web/card-interactions.js` 的 `entityMoves()` 必须按这些字段把动作挂回宿主（`asset:<id>`）
+   或压牌本身（`beneath:<code>`、`hunch:<code>`），否则牌桌永远点不出这些动作。
+2. **能力不上桌**：`beneath` / `attachedCards` / `attachments` 上的牌不参与 `cardAbility` 枚举，
+   只有宿主声明的通道（如 `beneathPlayAsIfInHand`、`playAttachedEvents`）能把它们变成可打出的动作。
+
+回归护栏：`tests/cards-under-ui.test.mjs`（卡面表 / 动作匹配 / 选择面板卡图 / 免费行动死按钮）与
+`tests/cards-under.browser.mjs`（桌面 1440 与移动 390 的可见性与点选）。
+
 ---
 
 ## 8. 迁移一张卡的标准动作
