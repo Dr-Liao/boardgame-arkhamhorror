@@ -1,4 +1,4 @@
-﻿# 诡镇奇谈：卡牌版（arkhamhorror）
+# 诡镇奇谈：卡牌版（arkhamhorror）
 
 [桌游大厅](../../README.md) 的合作卡牌 Mod，实现《诡镇奇谈：卡牌版》（Arkham Horror: The Card Game）的规则引擎、战役内容、AI 队友和浏览器牌桌。玩家与 0~3 名 AI 队友一起扮演调查员，合作完成战役。
 
@@ -119,6 +119,7 @@ HTTP 和浏览器回归会加载大厅的 `lib/server.js`，所以需要在大�
 - [docs/card-entry-files.md](docs/card-entry-files.md)：一卡一文件的行为目录与 **agent 一次执行清单**（新增/修改/迁移卡的固定流程，含非玩家卡的通用 / 战役共用 / 关卡专用落点）
 - [docs/encounter-entry-split-plan.md](docs/encounter-entry-split-plan.md)：非玩家条目现状扫描与拆分方案（529 条 → 单卡文件、归属算法、工具与验收门槛）
 - [docs/arkham-content-migration.md](docs/arkham-content-migration.md)：扩展战役的迁移流程与验收门槛——六步顺序、原语拆分、关键字/规则书、交互一致性、多子进程批量迁移与原语队列
+- [docs/tde-migration-roadmap.md](docs/tde-migration-roadmap.md)：五循环《食梦者》迁移路线图（draft，规划中）——范围与来源锁、六步执行计划 P0–P10、双战役架构决策、验收门禁与风险清单
 - [docs/tcu-migration-roadmap.md](docs/tcu-migration-roadmap.md)：四循环《万象无终》迁移路线图——范围、机制扫描、原语与交互、批次依赖、验收门禁与风险
 - [docs/tcu-primitives.md](docs/tcu-primitives.md)：四循环第 2 步原语手册——已接线原语的读写点、测试与证据，以及尚未实现的原语清单
 - [docs/tcu-rules.md](docs/tcu-rules.md)：四循环第 3 步关键词与规则书手册——16 行关键词台账、16 条规则条目、卡文直达判据与由 runner 生成的浏览器证据
