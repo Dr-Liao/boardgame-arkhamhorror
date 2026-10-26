@@ -79,6 +79,8 @@ export default {
     {
       kind: 'played',
       label: '诱敌：自动躲避非精英敌人（升级在打出费用窗口选择）',
+      // 卡面「躲避。」= Evade 行动：打出按躲避结算，不引发借机攻击。
+      countsAs: 'evade',
       resolve: ({ state, inv, api }) => {
         const upgrades = Array.isArray(inv.playUpgrades05234) ? inv.playUpgrades05234.slice() : []
         delete inv.playUpgrades05234

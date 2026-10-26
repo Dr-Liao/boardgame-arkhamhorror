@@ -253,9 +253,14 @@ export function viewState(state, observerSeat = null, options = {}) {
   }
   // 旧存档的 cards 快照可能缺少后来新增的展示字段（例如 04006 的 allySlotsForNonUnique），
   // 前端据此画不出受限盟友槽。可见卡按当前条目补一次；A1′：只补本视图（copy-on-write），
-  // 不回写共享副本或权威状态。
+  // 不回写共享副本或权威状态。2026-10-26 起该字段由 restrictedSlots（slot:ally, unique:false）派生，
+  // 与 card-defs 的展示派生同一口径。
   for (const code of visibleCodes) {
-    const nonUniqueSlots = code ? registeredEntry(code)?.passive?.allySlotsForNonUnique : null
+    const nonUniqueSlots = code
+      ? (registeredEntry(code)?.restrictedSlots || [])
+        .filter(spec => spec && spec.slot === 'ally' && spec.unique === false)
+        .reduce((sum, spec) => sum + Math.max(1, Number(spec.count) || 1), 0) || null
+      : null
     if (!nonUniqueSlots) continue
     if (!slim) {
       if (!view.cards?.[code] || view.cards[code].allySlotsForNonUnique === nonUniqueSlots) continue

@@ -12,6 +12,7 @@ import assert from 'node:assert/strict'
 
 import { fixture, move, settle, enemy } from './core-fixture.mjs'
 import {
+  actionPreview,
   applyMove, createGameState, eliminateInvestigator, evaluateCriteria, executeDescriptor, finishScenario, getStat, healHorrorFrom, isSpellAction, legalMoves, playCost,
   performTest, playerWindow, reactionWindow, validateMove, applyDamage, applySkillOnSuccess, slotUsage, canEquip, enemyAttack,
 } from '../src/engine/engine.js'
@@ -1798,6 +1799,48 @@ test('R7 05013 beneath 打出候选：legalMoves/validateMove 应提供 fromBene
   const playMove = legalMoves(state).find(option => option.action === 'play'
     && option.cardId === '01052' && option.fromBeneath === true)
   assert.ok(playMove, '持有未横置通道支援时，底下的事件应可打出（fromBeneath 候选）')
+})
+
+// 借机攻击回归（2026-10-26）：卡面「攻击。」= Fight 行动，发起攻击不引发借机攻击。
+test('R7 05013 银暮匕首：卡面「攻击。」→ 攻击行动不引发借机攻击', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.assets = [{ id: 'blade', code: '05013', exhausted: false }]
+  inv.actionsLeft = 5
+  enemy(state, { id: 'aoo-enemy', fight: 1, evade: 1, health: 6, damage: 2, engagedSeat: 0 })
+  state.chaosBag = ['0']
+  const ability = legalMoves(state).find(moveOption =>
+    moveOption.action === 'ability' && moveOption.assetId === 'blade' && moveOption.targetId === 'aoo-enemy')
+  assert.ok(ability, '银暮匕首应当有可选目标的攻击行动')
+  assert.deepEqual(actionPreview(state, 0, ability).opportunityAttacks, [], '攻击行动不应预览借机攻击')
+  move(state, ability)
+  settle(state, pending => (pending.options.some(option => option.id === 'combat') ? 'combat' : null))
+  assert.equal(me(state).damage, 0, '攻击行动不引发借机攻击')
+  assert.equal(state.enemies.find(item => item.id === 'aoo-enemy')?.damageTaken, 1, '攻击正常结算 1 点伤害')
+})
+
+test('R7 05013 beneath：从底下打出 03153 灵力风暴不引发借机攻击', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.resources = 10
+  inv.hand = []
+  inv.beneath = ['03153']
+  inv.assets = [{ id: 'dagger', code: '05013', exhausted: false }]
+  inv.actionsLeft = 5
+  enemy(state, { id: 'storm-enemy', fight: 1, evade: 1, health: 6, damage: 2, engagedSeat: 0 })
+  state.chaosBag = ['0']
+  const playMove = legalMoves(state).find(option => option.action === 'play'
+    && option.cardId === '03153' && option.fromBeneath === true)
+  assert.ok(playMove, '底下的事件应可打出（fromBeneath 候选）')
+  assert.deepEqual(actionPreview(state, 0, playMove).opportunityAttacks, [], '「攻击。」事件打出不应预览借机攻击')
+  move(state, playMove)
+  settle(state)
+  const after = me(state)
+  assert.equal(after.damage, 0, '从底下打出攻击事件不引发借机攻击')
+  assert.equal(after.assets.find(item => item.id === 'dagger')?.exhausted, true, '额外费用：横置银暮匕首')
+  assert.deepEqual(after.beneath, [], '卡从 beneath 移出')
+  assert.ok(after.discard.includes('03153'), '打出后按普通事件进弃牌堆')
+  assert.equal(state.enemies.find(item => item.id === 'storm-enemy')?.damageTaken, 2, '灵力风暴正常结算 2 点伤害')
 })
 
 // ---------------------------------------------------------------------------

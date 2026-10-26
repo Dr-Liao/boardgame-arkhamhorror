@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createGameState, performTest, getStat, getMaxSanity, describeState } from '../src/engine/engine.js'
+import { createGameState, enemyAttack, performTest, getStat, getMaxSanity, describeState } from '../src/engine/engine.js'
 import { markLimitUsed, registeredEntry } from '../src/engine/ability.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { viewState, viewEvents } from '../src/integration/observation.js'
@@ -119,6 +119,25 @@ test('演出快照不泄露牌堆顺序与其他人的手牌，时间线保留�
   const events=[{seq:1,type:'info',text:'敌军攻击',presentation:{phase:'enemy'}},{seq:2,type:'chat',text:'台词'}, {seq:3,type:'speech',text:'另一句台词'}, {seq:4,type:'info',text:'队友调查'},event]
   assert.deepEqual(timelineEntries({state:s,events}).map(e=>e.text),['敌军攻击','队友调查'])
   assert.deepEqual(viewEvents([{type:'info',text:'个人投入',privateSeat:0}],1),[])
+})
+
+test('演出快照保留本人「下方」牌，其他座位只拿到公开张数', () => {
+  const s=createGameState({playerInvestigator:'01001',seed:'beneath-snapshot'},[{seat:0},{seat:1}])
+  s.investigators[0].beneath=['01016','01087']
+  s.investigators[1].beneath=['01025']
+  const snapshot=captureTableState(s,getStat,getMaxSanity)
+  // 演出中间态（客户端 table-presentation.js applyStep）直接用 tableState 重绘：
+  // 本人视角必须仍带 beneath，否则「下方」栏会在演出播放期间整排消失再出现。
+  assert.deepEqual(snapshot.investigators[0].beneath,['01016','01087'])
+  assert.equal(snapshot.investigators[0].beneathCount,2)
+  assert.deepEqual(snapshot.investigators[1].beneath,['01025'])
+  assert.equal(snapshot.investigators[1].beneathCount,1)
+  const projected=viewEvents([{seq:1,type:'presentation',kind:'checkpoint',tableState:snapshot}],0)[0].tableState
+  assert.deepEqual(projected.investigators[0].beneath,['01016','01087'],'本人能看到下方牌卡号')
+  assert.deepEqual(projected.investigators[1].beneath,[],'别人的下方牌卡号不公开')
+  assert.equal(projected.investigators[1].beneathCount,1,'公开张数照常投影')
+  const spectator=viewEvents([{seq:1,type:'presentation',kind:'checkpoint',tableState:snapshot}],null)[0].tableState
+  assert.deepEqual(spectator.investigators[0].beneath,[])
 })
 
 test('时间线补上剧情事件的卡面正文，已写进日志的段落不重复', () => {
@@ -249,3 +268,31 @@ test('能力上限进入观察投影：用掉后标已用，换回合/换场后�
   assert.equal(nextTurn[0].abilities[0].used, false)
   assert.equal(nextTurn[1].abilities[0].used, true)
 })
+
+test('个人检定结算里的公开演出（如敌人攻击）不按 privateSeat 隐藏', () => {
+  // 旧逻辑把「个人检定期间的所有 info」都标成 privateSeat=检定者；AI 座位没有界面，
+  // 于是它在检定结算里触发的攻击/翻面/剧本演出，人类玩家完全看不到。演出提示是桌面公开事实。
+  const s = createGameState({ playerInvestigator: '01001', seed: 'public-presentation' },
+    [{ seat: 0, role: 'human' }, { seat: 1 }])
+  s.pendingChoice = null
+  s.continuation = null
+  s.uiState = 'inScenario'
+  const inv = s.investigators[0]
+  const enemy = {
+    id: 'enemy-public-cue', code: 'ghoulMinion', name: '测试敌人', location: inv.location,
+    damage: 1, horror: 1, health: 5, damageTaken: 0, exhausted: false, traits: ['Monster'], engagedSeat: 0,
+  }
+  s.enemies = [enemy]
+  inv.engaged = [enemy.id]
+  s.skillTest = { seat: 0, helpRequested: false, committed: [], publicLog: [] }
+  s.phase = 'mythos'
+  const events = []
+  enemyAttack(s, enemy, inv, events, '测试攻击')
+  const attackCues = seat => viewEvents(events, seat)
+    .filter(event => event.type === 'info' && event.presentation?.kind === 'attack')
+  for (const seat of [0, 1, null]) {
+    assert.equal(attackCues(seat).length, 1, `观察者 ${seat} 应看到攻击演出`)
+    assert.equal(attackCues(seat)[0].privateSeat, undefined, '演出事件不能带 privateSeat')
+  }
+})
+

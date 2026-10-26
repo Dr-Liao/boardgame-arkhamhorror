@@ -19,6 +19,7 @@ export function createTableDecisions(deps) {
     applyHorror,
     assetEffect,
     assetPassiveData,
+    availablePlayerPool,
     basicWeaknessPool,
     buildDeckFromList,
     campaignGraph,
@@ -31,7 +32,6 @@ export function createTableDecisions(deps) {
     chooseLolaRole,
     chooseTurn,
     controlledAbilityCard,
-    corePlayerPool,
     discardRandomFromHand,
     drawOpeningHand,
     enemiesEngagedWith,
@@ -127,8 +127,12 @@ export function createTableDecisions(deps) {
     if (move.action === 'hubSetDeck') {
       if (!hubLegalMoves(state, seat).some(m => m.action === 'hubSetDeck')) return '当前不能保存牌组'
       if (!Array.isArray(move.codes)) return '牌组必须是卡号数组'
+      // 预校验的许可池必须与实际落库口径一致：dispatch 的 hubSetDeck 用 availablePlayerPool
+      // （开放玩家池按「卡牌范围」收窄）。旧实现用 corePlayerPool（战役起始池），会把构筑界面
+      // 里能选的卡（例如当前战役内容包之外的已开放循环卡）误报成
+      // 「未获运行时许可 / 不在 playerPool 白名单内」，玩家保存自定义牌组被假阳性挡住。
       const built = buildDeckFromList(ALL_INVESTIGATORS[state.investigators[seat].code], move.codes,
-        { seat, seed: 1, playerPool: corePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state) })
+        { seat, seed: 1, playerPool: availablePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state) })
       return built.errors?.length ? `自定义卡组无效：${built.errors.join('；')}` : null
     }
     return hubLegalMoves(state, seat).some(legal => Object.entries(legal)
@@ -251,6 +255,14 @@ export function createTableDecisions(deps) {
     const actionEffect = move.action === 'play' ? playedEffect(move.copyCode || move.cardId)
       : move.action === 'ability' ? abilityOfMove(state, inv, move)?.effect : null
     if (actionEffect?.noOpportunityAttack) return 'evade'
+    // Phase 6（2026-10-26）：played 描述子的 countsAs 同样决定「按哪种行动结算」——旧实现只对
+    // [action] 能力读它，事件卡写了 countsAs（卡面「攻击。/躲避。/谈判。/撤退。」）等于没写，
+    // 打出时照样引发借机攻击。现在与 action 能力走同一读点。
+    if (move.action === 'play') {
+      const playedDescriptor = (registeredEntry(move.copyCode || move.cardId)?.abilities || [])
+        .find(descriptor => descriptor.kind === 'played' && descriptor.countsAs)
+      if (playedDescriptor) return playedDescriptor.countsAs
+    }
     // Phase 5：描述子用 resolve 实现时没有 effect 数据体，「按哪种行动结算」写在 countsAs 上
     // （旧式能力写在 effect.kind 上，见「意志闪避」）。
     const ability = move.action === 'ability' ? abilityOfMove(state, inv, move) : null

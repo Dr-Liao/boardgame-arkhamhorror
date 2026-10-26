@@ -82,21 +82,15 @@
 .ah-visual-choices { position: absolute; bottom: calc(100% + 285px); left: 50%; transform: translateX(-50%); box-sizing: border-box; width: min(1180px,calc(100vw - 32px)); display: grid; grid-template-columns: repeat(auto-fit,minmax(min(210px,100%),1fr)); justify-content: center; gap: 18px; padding: 20px; border: 1px solid #c2a665; background: linear-gradient(145deg,#173029fa,#091c18fc); border-radius: 12px; max-height: 50vh; overflow-x: hidden; overflow-y: auto; box-shadow: 0 18px 54px #000b,inset 0 1px #fff1bf18; }
 .ah-visual-choices:not(:has(.ah-visual-option:not([hidden]))) { display: none; }
 .ah-visual-option[hidden] { display: none !important; }
-.ah-reaction-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 2px; border: 1px solid #827c65; border-radius: 3px; background: #202923f2; color: #b3b3a0; padding: 3px 5px; cursor: pointer; font: inherit; font-size: 10px; white-space: nowrap; }
-.ah-reaction-toggle.is-on { color: #ffe5a6; border-color: #d1ae5a; background: #3d3c21f2; }
-.ah-reaction-toggle .ah-icon { width: 11px; height: 11px; }
-.ah-minicard > .ah-reaction-toggle { position: absolute; right: 1px; top: 3px; z-index: 5; }
+/* 反应提示开关：卡面/详情/角色面板统一成一颗闪电图标按钮（无文字）。
+   定位/配色见 player-dashboard.css 的 .ah-reaction-mode，这里只补小卡与详情里的尺寸。 */
 .ah-minicard > .ah-reaction-mode { position: absolute; right: 1px; top: 3px; z-index: 6; width: 22px; height: 22px; border-radius: 4px; }
 .ah-minicard > .ah-reaction-mode .ah-icon { width: 14px; height: 14px; }
-/* 右上角已有经验/弱点角标时，把反应按钮/旧开关左移，避免两层叠在一起。 */
+/* 右上角已有经验/弱点角标时，把反应按钮左移，避免两层叠在一起（22px 按钮 + 8px 间距）。 */
 .ah-minicard:has(> .ah-minicard-xp) > .ah-reaction-mode,
-.ah-minicard:has(> .ah-minicard-weakness) > .ah-reaction-mode { right: 34px; }
-.ah-minicard:has(> .ah-minicard-xp) > .ah-reaction-toggle,
-.ah-minicard:has(> .ah-minicard-weakness) > .ah-reaction-toggle { right: 34px; }
-.ah-minicard:has(> .ah-reaction-mode) > .ah-minicard-ds,
-.ah-minicard:has(> .ah-reaction-toggle) > .ah-minicard-ds { top: 28px; }
-.ah-reaction-toggle:focus-visible { outline: 2px solid #ffe0a1; outline-offset: 2px; }
-.ah-carddetail-modal > .ah-reaction-toggle { margin-top: 12px; padding: 9px 14px; font-size: 13px; }
+.ah-minicard:has(> .ah-minicard-weakness) > .ah-reaction-mode { right: 30px; }
+.ah-minicard:has(> .ah-reaction-mode) > .ah-minicard-ds { top: 28px; }
+.ah-reaction-mode:focus-visible { outline: 2px solid #ffe0a1; outline-offset: 2px; }
 .ah-carddetail-modal > .ah-reaction-mode { margin-top: 12px; }
 .ah-direct-prompt:is([data-choice-kind='assign-damage'],[data-choice-kind='assign-horror']) .ah-visual-option { flex-direction: row; }
 .ah-direct-prompt:is([data-choice-kind='assign-damage'],[data-choice-kind='assign-horror']) .ah-offer-cards .ah-table-art { width: 28px; height: 39px; }

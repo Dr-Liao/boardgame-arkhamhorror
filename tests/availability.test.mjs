@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { CORE_INVESTIGATOR_CODES, PLAYABLE_INVESTIGATOR_CODES, CORE_PLAYER_CODES, PLAYER_CARD_CODES, CORE_UPGRADE_CODES, CORE_SIGNATURE_CODES, CORE_BASIC_WEAKNESS_CODES, SIGNATURES_BY_INVESTIGATOR, canSelectInvestigator, isCardAvailable, getAvailability } from '../src/deck/availability.js'
-import { corePlayablePool, isPlayable, buildDeck, buildDeckFromList, deckBuilderData, EXPANDED_PLAYER_CARD_CODES } from '../src/deck/deckbuilding.js'
+import { corePlayablePool, isPlayable, buildDeck, buildDeckFromList, deckBuilderData, expandedPlayablePool, EXPANDED_PLAYER_CARD_CODES } from '../src/deck/deckbuilding.js'
 import { CARD_ABILITY_CODES } from '../src/cards/card-abilities.js'
 
 const roland = INVESTIGATORS['01001']
@@ -136,4 +136,18 @@ test('界面构筑元数据与服务端清单一致', () => {
   assert.equal(roland.deckSize, 30)
   assert.equal(roland.signatureCards[0].code, '01006')
   assert.ok(roland.allowedCards.includes('05020'), 'TCU 调查员/普通调查员的构筑界面都应看到已开放的 05 卡（全部范围）')
+})
+
+test('手动构筑的许可判定跟随本局放行的玩家池（05 卡不再误报未获运行时许可）', () => {
+  // 传入开放玩家池（TCU 战役起始牌组 / 构筑界面口径）时，05 卡是已开放的合法构筑卡；
+  // 旧实现拿默认池的 PLAYER_CODE_SET 判许可，会把 05110 水落石出这类卡误报「未获运行时许可」。
+  const joe = INVESTIGATORS['05002']
+  const pool = expandedPlayablePool()
+  const built = buildDeck(joe, { seed: 'p10-manual', playerPool: pool })
+  assert.ok(built.playerCards.some(code => code.startsWith('05')), '开放玩家池应能构筑 05 卡')
+  const manual = buildDeckFromList(joe, built.playerCards, { playerPool: pool })
+  assert.deepEqual(manual.errors, [])
+  assert.equal(manual.playerCards.length, 40)
+  // 不传 playerPool（默认池）时仍然拒绝池外的 05 卡，但不再把「池外」说成「未获运行时许可」以外的错。
+  assert.ok(buildDeckFromList(joe, built.playerCards).errors.length)
 })

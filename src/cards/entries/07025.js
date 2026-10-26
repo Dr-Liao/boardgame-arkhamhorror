@@ -14,9 +14,13 @@ export default {
   code: '07025',
   uses: 4,
   usesType: 'ammo',
+  // 卡面「快速。」：打出不花行动、不引发借机攻击（资产关键字写在条目级，读点 lifecycle.playFlag）。
+  fast: true,
   abilities: [
     {
       kind: 'action', label: '花 1 子弹攻击（目标横置时战斗 +2、伤害 +1）',
+      // 卡面「攻击。」= Fight 行动：发动不引发借机攻击。
+      countsAs: 'fight',
       cost: { uses: 1 },
       target: { kind: 'enemy' },
       resolve: ({ inv, target, api, source }) => {

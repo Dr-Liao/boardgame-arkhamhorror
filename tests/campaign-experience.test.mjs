@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createGameState, applyMove, legalMoves, validateMove, decisionSeat } from '../src/engine/engine.js'
+import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { campaignStory, introduction } from '../src/campaign/story.js'
 import { contentRegistry } from '../content/registered.js'
 import { viewState } from '../src/integration/observation.js'
@@ -9,6 +10,7 @@ import { DEFAULT_RULE_ID, RULES, RULE_INDEX, cardRuleIds, matchingRules, ruleByI
 import { renderRulesText } from '../web/card-text.js'
 import { recordValueText, recordChangeText } from '../web/campaign-records.js'
 import { renderStoryReader } from '../web/story-reader.js'
+import { UI_CARDS } from '../web/ui-cards.js'
 import { STORY_TEXT } from '../content/campaigns/nightOfTheZealot/story-text.js'
 import { midnightConclusion } from './fixtures/midnight-story.mjs'
 const move=(s,m)=>{const seat=decisionSeat(s);assert.equal(validateMove(s,seat,m),null);return applyMove(s,seat,m)}
@@ -218,4 +220,97 @@ test('敦威治新机制列入规则书，剧本卡与地点卡可直达对应�
   const h=(tag,props,...children)=>({tag,props,children})
   const nodes=renderRulesText(h,'在卡牌室赌博。放在一边的剧情资产。').flat(Infinity)
   for(const id of ['clubGambling','dunwichZones','storyGuests'])assert.ok(nodes.some(n=>n.props?.['data-rule-id']===id),id)
+})
+test('万象无终的自定义牌组：05 卡可保存，缺直觉牌库配额时提示用中文特性',()=>{
+  // 玩家实际路径：大厅 → 乔·戴蒙德 → 自动牌组 → 改成自定义清单 → hubSetDeck。
+  const s=createGameState({campaignHub:true,campaignId:'theCircleUndone',seed:'tcu-custom-deck'},[{seat:0,role:'human'}])
+  move(s,{action:'hubGoSetup'})
+  move(s,{action:'hubSelectInvestigator',code:'05002'})
+  move(s,{action:'hubAutoDeck'})
+  const ordinary=s.campaign.investigators[0].deck.filter(code=>{
+    const card=ALL_CARDS[code]
+    return card&&!card.signatureFor&&!card.subtype&&['asset','event','skill'].includes(card.type)
+  })
+  assert.ok(ordinary.some(code=>code.startsWith('05')),'本战役自动牌组应包含已开放的 05 卡')
+  // 合法清单必须能保存：旧实现用默认池判许可，05 卡会误报「未获运行时许可」。
+  assert.equal(validateMove(s,0,{action:'hubSetDeck',codes:ordinary}),null)
+  // 缺[[洞察]]事件时，校验消息给玩家看的特性必须与卡面中文写法一致。
+  const short=ordinary.filter(code=>!(ALL_CARDS[code].traits||[]).some(trait=>String(trait).toLowerCase()==='insight'))
+  const error=validateMove(s,0,{action:'hubSetDeck',codes:short})
+  assert.match(error,/自定义卡组无效/)
+  assert.match(error,/\[\[洞察\]\]/)
+  assert.doesNotMatch(error,/Insight/)
+})
+test('自定义牌组的预校验池与实际落库一致：开放池里的 05 卡在其它战役也不再被误拒',()=>{
+  // 回归：validateHubMove 旧实现用 corePlayerPool（战役起始池）预校验，而 dispatch 的
+  // hubSetDeck 实际用 availablePlayerPool（开放玩家池）落库。两者不一致时，构筑界面能选的
+  // 05 卡在保存时会被误报「未获运行时许可 / 不在 playerPool 白名单内」。
+  const s=createGameState({campaignHub:true,campaignId:'thePathToCarcosa',seed:'carcosa-custom-pool'},[{seat:0,role:'human'}])
+  move(s,{action:'hubGoSetup'})
+  move(s,{action:'hubSelectInvestigator',code:'05002'})
+  move(s,{action:'hubAutoDeck'})
+  const ordinary=s.campaign.investigators[0].deck.filter(code=>{
+    const card=ALL_CARDS[code]
+    return card&&!card.signatureFor&&!card.subtype&&['asset','event','skill'].includes(card.type)
+  })
+  // 用 05025（乔·戴蒙德的探求者选项内、05 循环事件）替换一张，模拟导入的 ArkhamDB 牌组。
+  const mixed=[...ordinary.slice(1),'05025']
+  assert.equal(validateMove(s,0,{action:'hubSetDeck',codes:mixed}),null)
+})
+test('每一章的桌面剧本提示卡都已登记（缺映射时提示卡整块不显示）',()=>{
+  // 回归：UI_CARDS.scenarioCards 漏登记卡尔克萨 / 失落时代时，桌面上那张「剧本提示」
+  // 参考卡整块不渲染（referenceCard() 取不到卡号直接返回 null），而当时没有任何测试会红。
+  // 章节数据里的 originalCode 就是该章的剧本参考卡（见 content/campaigns/*/shared.js）；
+  // 用注册表遍历全部战役，新增战役/章节漏登记会在这里失败。
+  const scenarioIds=[]
+  for(const campaign of contentRegistry.listCampaigns()){
+    for(const id of campaign.scenarioIds||[]){
+      const scenario=contentRegistry.getScenarioData(id)
+      const card=ALL_CARDS[scenario.originalCode]
+      assert.ok(card,`${id} 的剧本参考卡 ${scenario.originalCode} 不存在`)
+      assert.equal(card.type,'scenario',`${id} 的 ${scenario.originalCode} 不是剧本参考卡`)
+      assert.equal(UI_CARDS.scenarioCards[id],scenario.originalCode,`${id} 缺桌面提示卡映射`)
+      scenarioIds.push(id)
+    }
+  }
+  // 反向：映射表里不能混进注册表没有的章节 id（章节改名/删除后提示卡会挂到旧卡上）。
+  const known=new Set(scenarioIds)
+  assert.deepEqual(Object.keys(UI_CARDS.scenarioCards).filter(id=>!known.has(id)),[])
+})
+test('剧本区渲染：剧本提示卡随难度取面，卡尔克萨 / 失落时代的章节不再整块缺失',async()=>{
+  // 直接渲染剧本区（不经浏览器）：提示卡节点由 table-regions.referenceCard() 生成，
+  // 正面=简单/普通，背面=困难/专家。缺 scenarioCards 映射时整个节点是 null。
+  const previous=globalThis.document
+  globalThis.document={createElementNS:(namespaceURI)=>({namespaceURI,setAttribute(){},append(){}})}
+  try{
+    const {createTableRegions}=await import('../web/table-regions.js')
+    const h=(tag,props,...children)=>({tag,props:props||{},children:children.flat(Infinity).filter(Boolean)})
+    const findAll=(node,predicate,found=[])=>{
+      if(!node||typeof node!=='object')return found
+      if(predicate(node))found.push(node)
+      for(const child of Array.isArray(node.children)?node.children:[])findAll(child,predicate,found)
+      return found
+    }
+    const regions=createTableRegions(h,{openDetail(){},openChaosBag(){}})
+    const stateOf=(id,difficulty)=>({
+      scenario:{id,name:id},difficulty,investigators:[],clues:0,doom:0,agendaDoom:0,
+      encounterDeckSize:0,encounterDiscard:[],chaosBag:[],status:'playing',phase:'investigation',
+    })
+    const referenceCard=(id,difficulty)=>{
+      const tree=regions.script(stateOf(id,difficulty),null,null,[],null,{},null,{})
+      const [node]=findAll(tree,candidate=>String(candidate.props?.className||'').split(/\s+/).includes('ah-reference-card'))
+      return node||null
+    }
+    const easy=referenceCard('curtainCall','standard')
+    assert.ok(easy,'卡尔克萨·谢幕 的桌面剧本提示卡没有渲染')
+    assert.equal(easy.props['data-reference-code'],'03043')
+    assert.equal(easy.props['data-reference-face'],'front')
+    assert.equal(referenceCard('theUntamedWilds','standard').props['data-reference-code'],'04043')
+    assert.equal(referenceCard('heartOfTheEldersPart2','standard').props['data-reference-code'],'04205','久远腹地上下两篇共用一张提示卡')
+    // 困难/专家面：同一张提示卡翻到背面。
+    assert.equal(referenceCard('curtainCall','hard').props['data-reference-face'],'back')
+    assert.equal(referenceCard('curtainCall','expert').props['data-reference-face'],'back')
+  }finally{
+    globalThis.document=previous
+  }
 })

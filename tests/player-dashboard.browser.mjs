@@ -3,10 +3,10 @@ import { scenario } from '../content/campaigns/nightOfTheZealot/scenarios/theGat
 import { mkdirSync } from 'node:fs'
 const output='artifacts/arkham-polish/'
 mkdirSync(output,{recursive:true})
-async function fixture(page) {
+async function fixture(page,{investigator='01001'}={}) {
   let session
   await page.route('**/api/start',async route=>{
-    const response=await route.fetch({postData:JSON.stringify({modId:'arkhamhorror',settings:{legacyAutoStart:true,playerCount:1,playerInvestigator:'01001',seed:'player-dashboard'}})})
+    const response=await route.fetch({postData:JSON.stringify({modId:'arkhamhorror',settings:{legacyAutoStart:true,playerCount:1,playerInvestigator:investigator,seed:'player-dashboard'}})})
     const body=await response.json();session=body.session;const s=session.state
     s.pendingChoice=null;s.currentSeat=0;s.phase='investigation';s.enemies=[]
     s.locations=['hallway','attic','cellar','parlor'].map(id=>({...scenario.locations[id],revealed:true,clues:id==='cellar'?2:0,maxClues:2}))
@@ -143,6 +143,10 @@ test('米兰资产卡有三态按钮；不显示神智角标，恐惧扣除标�
   const mode=card.locator('.ah-reaction-mode')
   await expect(mode).toHaveCount(1)
   await expect(mode).toHaveAttribute('data-reaction-mode','auto')
+  // 三态按钮同样只有图标、没有「反应开/反应关」文字；三态读屏走 aria-label 而非 switch。
+  await expect(mode).toHaveText('')
+  await expect(mode.locator('.ah-icon')).toHaveCount(1)
+  expect(await mode.getAttribute('role')).toBeNull()
   const marker=card.locator('.ah-card-marker-horror')
   await expect(marker).toBeVisible()
   const markerBox=await marker.boundingBox(),cardBox=await card.boundingBox()
@@ -174,6 +178,13 @@ test('带经验角标的资产卡：三态按钮与经验角标不重叠', async
   expect(modeBox).not.toBeNull();expect(xpBox).not.toBeNull()
   expect(markerOverlap(modeBox,xpBox)).toBe(false)
   await page.screenshot({path:output+'xp-card-reaction.png',animations:'disabled'})
+  // 窄屏（手机 390）装备卡更窄：按钮仍要在卡内且不压经验角标。
+  await page.setViewportSize({width:390,height:844})
+  await expect(mode).toBeVisible()
+  const modeMobile=await mode.boundingBox(),xpMobile=await xp.boundingBox()
+  expect(modeMobile).not.toBeNull();expect(xpMobile).not.toBeNull()
+  expect(markerOverlap(modeMobile,xpMobile)).toBe(false)
+  expect(modeMobile.x).toBeGreaterThanOrEqual(0)
   expect(errors).toEqual([])
 })
 function markerOverlap(a,b){return !(a.x+a.width<=b.x+1||b.x+b.width<=a.x+1||a.y+a.height<=b.y+1||b.y+b.height<=a.y+1)}
@@ -192,6 +203,7 @@ test('升级版米兰 01533 也有三态按钮（默认 ask，可切 auto）', a
   const mode=card.locator('.ah-reaction-mode')
   await expect(mode).toHaveCount(1)
   await expect(mode).toHaveAttribute('data-reaction-mode','ask')
+  await expect(mode).toHaveText('')
   await mode.click()
   await expect(mode).toHaveAttribute('data-reaction-mode','auto')
   await expect(mode).toHaveClass(/is-auto/)
@@ -203,7 +215,8 @@ test('角色面板三态按钮：循环 skip/ask/auto、齿轮旋转与长名字
   const errors=[];page.on('pageerror',e=>errors.push(e.message))
   await page.setViewportSize({width:1440,height:900})
   const f=await fixture(page)
-  const mode=page.locator('.ah-reaction-mode')
+  // 角色面板的三态按钮；牌桌上的反应卡（如巡警）也有同名按钮，按名字行限定。
+  const mode=page.locator('.ah-dock-investigator .ah-reaction-mode')
   await expect(mode).toHaveCount(1)
   await expect(mode).toHaveAttribute('data-reaction-mode','auto')
   await expect(mode).toHaveAttribute('title',/自动触发/)
@@ -230,6 +243,61 @@ test('角色面板三态按钮：循环 skip/ask/auto、齿轮旋转与长名字
   await f.update(session=>{ session.state.investigators[0].name='罗兰·班克斯' })
   await expect(mode).toHaveAttribute('data-reaction-mode','auto')
   await page.screenshot({path:output+'reaction-mode.png',animations:'disabled'})
+  expect(errors).toEqual([])
+})
+
+test('两态调查员（温蒂）角色面板开关只在 skip/ask 间循环，没有 auto 档',async({page})=>{
+  const errors=[];page.on('pageerror',e=>errors.push(e.message))
+  await page.setViewportSize({width:1440,height:900})
+  await fixture(page,{investigator:'01005'})
+  // 01005 温蒂·亚当斯只有快速反应入口（hasReactionPrompt，没有自动资格）。
+  const mode=page.locator('.ah-dock-investigator .ah-reaction-mode')
+  await expect(mode).toHaveCount(1)
+  await expect(mode).toHaveAttribute('data-reaction-mode','ask')
+  await expect(mode).toHaveAttribute('role','switch')
+  await expect(mode).toHaveAttribute('aria-checked','true')
+  await expect(mode).toHaveAttribute('title','快速反应已开启，点击关闭本局提示')
+  await expect(mode).toHaveText('')
+  await expect(mode.locator('.ah-icon')).toHaveCount(1)
+  await mode.click()
+  await expect(mode).toHaveAttribute('data-reaction-mode','skip')
+  await expect(mode).toHaveAttribute('aria-checked','false')
+  await expect(mode).toHaveAttribute('title','快速反应已关闭，点击恢复提示')
+  await expect(mode.locator('.ah-reaction-slash')).toHaveCount(1)
+  await expect(mode).toHaveText('')
+  // 再点只回到 ask；两态卡不会进入 auto（不出齿轮、不播旋转动画）。
+  await mode.click()
+  await expect(mode).toHaveAttribute('data-reaction-mode','ask')
+  await expect(mode).toHaveAttribute('aria-checked','true')
+  await expect(mode.locator('.ah-icon')).toHaveCount(1)
+  expect(await mode.locator('.ah-icon').evaluate(el=>getComputedStyle(el).animationName)).toBe('none')
+  expect(errors).toEqual([])
+})
+
+test('角色面板头像与三态齿轮同排垂直居中，窄屏不留空白',async({page})=>{
+  const errors=[];page.on('pageerror',e=>errors.push(e.message))
+  await page.setViewportSize({width:1440,height:900})
+  await fixture(page)
+  const gear=page.locator('.ah-dock-investigator .ah-reaction-mode')
+  const portrait=page.locator('.ah-dock-investigator .ah-dock-portrait')
+  const inv=page.locator('.ah-dock-investigator')
+  const row=page.locator('.ah-dock-name-row')
+  await expect(gear).toHaveCount(1)
+  await expect(portrait).toBeVisible()
+  const b={gear:await gear.boundingBox(),portrait:await portrait.boundingBox(),inv:await inv.boundingBox(),row:await row.boundingBox()}
+  for(const box of Object.values(b))expect(box).not.toBeNull()
+  // 用户反馈「头像和齿轮要对齐」：两者的竖直中心线偏差不超过 1px。
+  expect(Math.abs((b.portrait.y+b.portrait.height/2)-(b.gear.y+b.gear.height/2))).toBeLessThanOrEqual(1)
+  // 头像在齿轮右侧、不重叠，也不越出调查员列（不压到资源/线索托盘）。
+  expect(b.portrait.x).toBeGreaterThanOrEqual(b.gear.x+b.gear.width)
+  expect(b.portrait.x+b.portrait.width).toBeLessThanOrEqual(b.inv.x+b.inv.width+0.5)
+  // 同排对齐不能把名字行撑高（否则整块面板会向下溢出）。
+  expect(b.row.height).toBeLessThanOrEqual(25)
+  await page.screenshot({path:output+'dock-avatar-gear-aligned.png',animations:'disabled'})
+  // ≤1000px 头像隐藏（noir.css），名字行不能再预留头像位。
+  await page.setViewportSize({width:900,height:900})
+  await expect(portrait).toBeHidden()
+  expect(await row.evaluate(el=>getComputedStyle(el).paddingRight)).toBe('0px')
   expect(errors).toEqual([])
 })
 

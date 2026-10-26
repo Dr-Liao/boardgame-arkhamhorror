@@ -11,6 +11,8 @@ export default {
   code: '07027',
   uses: 3,
   usesType: 'charges',
+  // 卡面「快速。」：打出不花行动、不引发借机攻击（资产关键字写在条目级，读点 lifecycle.playFlag）。
+  fast: true,
   abilities: [
     {
       kind: 'reaction', trigger: 'opportunityAttack', label: '花 1 充能：取消该次攻击',

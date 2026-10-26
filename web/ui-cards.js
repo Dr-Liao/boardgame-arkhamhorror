@@ -17,7 +17,6 @@
 // - `story`：剧情资产/弱点，表格用它把「座位标记」渲染成一张卡；
 // - `locationMarkers`：地点上的附属标记卡；
 // - `enemyDisplay`：敌人卡面数字的特殊显示规则；
-// - `handSlots`：支援卡给的手牌位加成（卡号 → 加成值）；
 // - `deckRules`：两组**构筑规则**用的调查员集合（敦威治五人 / 黛西的「命运」限制）；
 // - `rulebookActAgenda`：规则书里当作「幕/议程」展示的卡；
 // - `rulebookReferences`：卡名不在卡文里的「按卡号归类」（序章调查员、专属设置卡、战役资产），
@@ -37,6 +36,28 @@ export const UI_CARDS = Object.freeze({
     undimensionedAndUnseen: '02236',
     whereDoomAwaits: '02274',
     lostInTimeAndSpace: '02311',
+    // 卡尔克萨之路（三循环）：id / 卡号与 content/campaigns/thePathToCarcosa/shared.js 的 chapters 一致；
+    // 卡号是各章桌面上那张剧本参考卡（简单/普通看正面，困难/专家看背面）。
+    curtainCall: '03043',
+    theLastKing: '03061',
+    echoesOfThePast: '03120',
+    theUnspeakableOath: '03159',
+    aPhantomOfTruth: '03200',
+    thePallidMask: '03240',
+    blackStarsRise: '03274',
+    dimCarcosa: '03316',
+    // 失落的时代（五循环）：id / 卡号与 content/campaigns/theForgottenAge/shared.js 的 chapters 一致。
+    // 久远腹地分上下两篇，但两篇共用同一张剧本参考卡 04205。
+    theUntamedWilds: '04043',
+    theDoomOfEztli: '04054',
+    threadsOfFate: '04113',
+    theBoundaryBeyond: '04161',
+    heartOfTheEldersPart1: '04205',
+    heartOfTheEldersPart2: '04205',
+    theCityOfArchives: '04237',
+    theDepthsOfYoth: '04277',
+    shatteredAeons: '04314',
+    turnBackTime: '04344',
     // 万象无终（四循环，P4 补）：id 与 content/campaigns/theCircleUndone/chapters.js 的章节 id 一致，
     // 卡号是各章的剧本参考卡；章节未开放时只作为提示卡素材，不影响任何既有战役。
     disappearanceAtTheTwilightEstate: '05043',
@@ -62,9 +83,6 @@ export const UI_CARDS = Object.freeze({
   }),
   enemyDisplay: Object.freeze({
     fightMinusTwo: '03103',
-  }),
-  handSlots: Object.freeze({
-    '01008': 2,
   }),
   deckRules: Object.freeze({
     dunwichInvestigators: Object.freeze(['02001', '02002', '02003', '02004', '02005']),

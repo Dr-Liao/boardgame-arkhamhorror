@@ -614,6 +614,9 @@ function scenarioRuntime(state, events, testSource = null) {
     grantHaunted: grant => grantHaunted(state, grant),
     clearHauntedGrants: predicate => clearHauntedGrants(state, predicate),
     privateInfo: (seat, text) => privateInfo(state, events, seat, text),
+    // 揭示/翻面是把卡牌正面朝上摆到桌上给全桌看：即使发生在某人的个人检定结算内
+    // （如「最后的王者」AI 完成会谈触发翻面），演出也不能按 privateSeat 只发给执行者，
+    // 否则其他玩家看不到翻开的卡面。
     cardReveal: (code, title = '卡牌结算') => {
       const card = cardDef(code)
       const name = card?.nameZh || card?.name || cardName(code)
@@ -623,7 +626,7 @@ function scenarioRuntime(state, events, testSource = null) {
       ].filter(Boolean).join('\n\n') || '揭示卡牌并结算其效果。'
       info(state, events, `揭示「${name}」并结算其效果。`, {
         kind: 'story', title, code, face: 'front', name, text, flip: true,
-      })
+      }, { public: true })
     },
     cardFlip: (code, title = '卡牌翻面') => {
       const front = cardDef(code)
@@ -636,7 +639,7 @@ function scenarioRuntime(state, events, testSource = null) {
       ].filter(Boolean).join('\n\n') || '翻开卡牌并结算背面的效果。'
       info(state, events, `翻开「${cardName(code)}」并结算「${reverseName}」。`, {
         kind: 'story', title, code, face: 'back', name: reverseName, text: reverseText, flip: true,
-      })
+      }, { public: true })
     },
     flipLocation: (id, seat) => flipScenarioLocation(state, id, seat, events),
     // 第 2 步 P2.12：异端者多面与放逐（面的代码/属性来自关卡数据与卡面定义）。

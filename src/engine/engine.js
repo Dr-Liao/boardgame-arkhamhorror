@@ -251,12 +251,18 @@ class ScenarioRestarted extends Error {
 // 个人检定期间的日志默认只对执行者可见（投入窗口会暴露手牌与牌库顺序）。
 // `{ public: true }` 给「规则书里本来就正面朝上」的事实开口子：投入的牌摆在检定旁，
 // 其他座位都看得见，不该在别人的时间线里消失（见 performTest 的投入循环）。
+//
+// 显式演出提示（第 4 参数 presentation）一律视为桌面公开事实：翻面、揭示、攻击、
+// 地点、剧本推进、阶段播报等本来就要全桌看到，即使发生在 AI/玩家的个人检定结算内，
+// 也不能按 privateSeat 只发给检定者（否则 AI 触发时没有界面可看，所有玩家都看不到）。
+// 确实只该给一个座位看的演出走 privateInfo（它始终按座位过滤）。
 function info(state, events, text, presentation = null, { public: isPublic = false } = {}) {
   state.log.push(text)
   if (state.log.length > 120) state.log.splice(0, state.log.length - 120)
   const cue = presentation || (['enemy', 'upkeep', 'mythos'].includes(state.phase)
     ? { kind: 'automatic', phase: state.phase, round: state.round, text } : null)
-  const privateSeat = state.skillTest && !state.skillTest.helpRequested && !isPublic ? state.skillTest.seat : null
+  const privateSeat = presentation == null && state.skillTest && !state.skillTest.helpRequested && !isPublic
+    ? state.skillTest.seat : null
   const event = { type: 'info', text, ...(privateSeat == null ? {} : { privateSeat }), ...(cue ? { presentation: { ...cue, tableState: captureTableState(state, getStat, getMaxSanity) } } : {}) }
   if (events) events.push(event)
   if (state._resolution) state._resolution.events.push(event)
@@ -2293,7 +2299,7 @@ function createTableDecisionsApi() {
     choiceSeats,
     chooseLolaRole,
     chooseTurn,
-    corePlayerPool,
+    availablePlayerPool,
     drawOpeningHand,
     enemyCanOpportunityAttack,
     groupClues,
@@ -2507,8 +2513,7 @@ function createAssetsApi() {
 export function litaAuraAt(...args) { return createAssetsApi().litaAuraAt(...args) } export function assetPassiveBonus(...args) { return createAssetsApi().assetPassiveBonus(...args) } export function assetPassiveData(...args) { return createAssetsApi().assetPassiveData(...args) }
 export function assetCannotLeavePlay(...args) { return createAssetsApi().assetCannotLeavePlay(...args) } export function normalizedSlots(...args) { return createAssetsApi().normalizedSlots(...args) } export function slotUsage(...args) { return createAssetsApi().slotUsage(...args) }
 export function canEquip(...args) { return createAssetsApi().canEquip(...args) } export function assetReplacementPlans(...args) { return createAssetsApi().assetReplacementPlans(...args) } export function replaceAssets(...args) { return createAssetsApi().replaceAssets(...args) }
-export function nonUniqueAllySlotsFor(...args) { return createAssetsApi().nonUniqueAllySlotsFor(...args) } export function allySlotsOk(...args) { return createAssetsApi().allySlotsOk(...args) } export function isTomeCard(...args) { return createAssetsApi().isTomeCard(...args) }
-export function handSlotsBonusFor(...args) { return createAssetsApi().handSlotsBonusFor(...args) } export function isWeaponCard(...args) { return createAssetsApi().isWeaponCard(...args) } export function weaponHandSlotsFor(...args) { return createAssetsApi().weaponHandSlotsFor(...args) }
+export function isWeaponCard(...args) { return createAssetsApi().isWeaponCard(...args) }
 export function isThreatWeakness(...args) { return createAssetsApi().isThreatWeakness(...args) } export function leaveAsset(...args) { return createAssetsApi().leaveAsset(...args) } export function discardRandomAsset(...args) { return createAssetsApi().discardRandomAsset(...args) }
 export function placeLocationForEmptySpawn(...args) { return createAssetsApi().placeLocationForEmptySpawn(...args) } export function farthestLocationsFor(...args) { return createAssetsApi().farthestLocationsFor(...args) } export function discardLocked(...args) { return createAssetsApi().discardLocked(...args) }
 export function hasPlayedEventsToDeckTop(...args) { return createAssetsApi().hasPlayedEventsToDeckTop(...args) } export function topDiscardEvent(...args) { return createAssetsApi().topDiscardEvent(...args) } export function disposePlayedEvent(...args) { return createAssetsApi().disposePlayedEvent(...args) }

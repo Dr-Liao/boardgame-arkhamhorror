@@ -9,6 +9,7 @@
 
 import { hasTrait } from '../../engine/matcher.js'
 import { ALL_CARDS } from '../cards-data.js'
+import { traitLabel } from '../trait-labels.js'
 
 export { hasTrait, ALL_CARDS }
 
@@ -316,7 +317,7 @@ export function spawnTraitEnemyAtVillage(state, loc, api, trait) {
   if (!matches.length) return
   const chosen = chooseCandidateEntry(api, {
     kind: 'card', source: originalOf(loc), seat: state.currentSeat ?? state.campaign.leadSeat,
-    prompt: `选择要生成在村公所的 ${trait} 敌人。`,
+    prompt: `选择要生成在村公所的 ${traitLabel(trait)} 敌人。`,
   }, matches, {
     key: match => `${match.pileName}:${match.index}`,
     cardCode: match => match.code,

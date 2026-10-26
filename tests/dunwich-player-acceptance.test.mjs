@@ -60,7 +60,7 @@ const contracts = {
   '02115': ['event.type', 'resolve', 'exileAfterPlay', true],
   '02116': ['uses', 3, 'abilities.0.effect.effects', [{ type: 'takeDamage', amount: 1 }, { type: 'heal', amount: 1, what: 'horror' }]],
   '02117': ['uses', 3, 'abilities.0.effect.effects', [{ type: 'takeHorror', amount: 1 }, { type: 'heal', amount: 1, what: 'damage' }]],
-  '02147': ['passive.extraSlots.handWeapon', 1],
+  '02147': ['restrictedSlots.0', { slot: 'hand', traitsAny: ['Weapon'], count: 1 }],
   '02148': ['event.type', 'resolve'],
   '02149': ['reactions.0', { when: 'assetEnteredPlay', assetCode: '02149', effect: { type: 'discoverClue', amount: 1 } }],
   '02150': ['skill', { onSuccess: { clueBonus: 1 }, successBy: { threshold: 2, clueBonus: 1 } }],
@@ -70,8 +70,8 @@ const contracts = {
   '02154': ['uses', 4, 'abilities.0.effect', { type: 'fight', skill: 'willpower', combatBonus: 2, damageBonus: 1, onChaosSymbolHorror: 1 }],
   '02155': ['passive.investigateBonusIfNoClues', 2],
   '02156': ['event.type', 'resolve'],
-  '02157': ['passive.extraSlots.accessory', 1],
-  '02158': ['passive.extraSlots.ally', 1],
+  '02157': ['modifiers.0', { target: 'add:slot', value: 'accessory', amount: 1 }],
+  '02158': ['modifiers.0', { target: 'add:slot', value: 'ally', amount: 1 }],
   '02184': ['event', { type: 'searchTop', amount: 9, trait: 'Weapon', choose: 1 }],
   '02185': ['abilities.0.effect', { type: 'addStatPhase', skill: 'intellect', amount: 1 }, 'abilities.1.effect', { type: 'addStatPhase', skill: 'combat', amount: 1 }],
   '02186': ['playCondition.0', '当前地点没有线索', 'event', { type: 'draw', amount: 3 }],
@@ -203,6 +203,7 @@ function behaviorOf(code) {
       && typeof modifier.amount === 'number') stats[modifier.target.slice('skill:'.length)] = modifier.amount
   }
   if (!legacy && !event && !commit && !weakness && !entry?.passive
+    && !entry?.restrictedSlots?.length && !entry?.modifiers?.length
     && !entry?.healSelfHorrorAfterTurn && !entry?.forcedUpkeepPayOrDiscard && !entry?.defeatedDamage && !entry?.freeTriggers?.length && !entry?.fast
     && !entry?.redirectAttackToAsset && !entry?.forcedMythosEndDiscard && !entry?.skipOrRepeatPhase
     && !fromDescriptors.length && !fromReactions.length && !Object.keys(stats).length
@@ -229,6 +230,10 @@ function behaviorOf(code) {
     ...(entry?.adaptableSwaps ? { adaptableSwaps: entry.adaptableSwaps } : {}),
     ...(entry?.uses != null ? { uses: entry.uses } : {}),
     ...(entry?.usesType ? { usesType: entry.usesType } : {}),
+    // 2026-10-26：受限额外槽统一由 restrictedSlots 声明（书位/武器位/法术位），契约层同口径暴露。
+    ...(entry?.restrictedSlots?.length ? { restrictedSlots: entry.restrictedSlots } : {}),
+    // 2026-10-26：通用额外槽收敛到 add:slot 修正，契约层直接看修正声明（02157/02158）。
+    ...(entry?.modifiers?.length ? { modifiers: entry.modifiers } : {}),
     ...(playCondition?.length ? { playCondition } : {}),
   }
   if (fromDescriptors.length) merged.abilities = [...(legacy?.abilities || []), ...fromDescriptors]

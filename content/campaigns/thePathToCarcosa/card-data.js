@@ -35,10 +35,14 @@ export function stages(codes, type) {
   return codes.map((code, index) => {
     const card = ALL_CARDS[code]
     if (!card) throw new Error(`卡尔克萨${type === 'act' ? '幕' : '议程'}不存在：${code}`)
+    // 阶段号是卡面印的：同一阶段会印多张版本卡（谢幕的 3 张「场景 2a·陌生人」、
+    // 真相幻影的 2 张 1a / 2 张 2a……），用数组下标 +1 会把第二张起错标成下一阶段，
+    // 场景推进日志就会显示「3a·陌生人」而不是卡面的 2a。
+    const printedStage = Number(card.stage)
     return {
       ...printed(code),
       id: `${type}${index + 1}`,
-      stage: `${index + 1}a`,
+      stage: `${Number.isInteger(printedStage) && printedStage > 0 ? printedStage : index + 1}a`,
       ...(type === 'agenda' ? { doomThreshold: card.doom } : {}),
       ...(type === 'agenda' && doomPerInvestigatorFor(code)
         ? { doomThresholdPerInvestigator: card.doom } : {}),

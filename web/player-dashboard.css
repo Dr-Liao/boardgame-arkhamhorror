@@ -3,11 +3,12 @@
 .ah-table.ah-calm.ah-noir.ah-direct-table .ah-player-board { position: relative; }
 .ah-table.ah-calm.ah-noir.ah-direct-table .ah-player-dock { grid-template-columns: 250px 92px minmax(0,1fr) 78px; gap: 14px; }
 .ah-table.ah-calm.ah-noir .ah-dock-investigator { min-width: 0; position: relative; }
-.ah-table.ah-calm.ah-noir .ah-dock-investigator .ah-dock-portrait { position: absolute; top: 0; right: 0; width: 30px; height: 35px; }
+/* 头像与名字行里的三态齿轮同排垂直居中（名字行负责预留 30px 头像位）。 */
+.ah-table.ah-calm.ah-noir .ah-dock-investigator .ah-dock-portrait { position: absolute; top: 50%; right: 0; transform: translateY(-50%); float: none; width: 30px; height: 35px; }
 .ah-table.ah-calm.ah-noir .ah-dock-investigator .ah-dock-name { margin-right: 0; }
 .ah-table.ah-calm.ah-noir .ah-dock-kicker { margin-bottom: 4px; font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-/* 角色面板名字行：名字可截断，三态按钮固定尺寸，头像绝对定位在右侧。 */
-.ah-dock-name-row { display: flex; align-items: center; gap: 6px; min-width: 0; margin-right: 36px; }
+/* 角色面板名字行：名字可截断，三态按钮固定尺寸，头像绝对定位在右侧并与按钮垂直居中。 */
+.ah-dock-name-row { position: relative; display: flex; align-items: center; gap: 6px; min-width: 0; padding-right: 36px; }
 .ah-dock-name-row .ah-dock-name { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 6px; overflow: hidden; margin-right: 0; }
 .ah-dock-name-row .ah-dock-name .ah-icon { flex: 0 0 auto; }
 .ah-dock-name-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -56,6 +57,8 @@
 .ah-engagement-alert { position: fixed; top: 27%; left: 50%; transform: translateX(-50%); display: grid; gap: 8px; min-width: 260px; max-width: calc(100vw - 30px); padding: 18px 26px; border: 1px solid #cb8966; border-top: 3px solid #df9c6e; color: #efd0a7; background: linear-gradient(135deg,#42271ff5,#15251df5); box-shadow: 0 12px 40px #000a; text-align: center; }.ah-engagement-alert strong { font: 25px SimSun,serif; letter-spacing: 4px; }.ah-engagement-alert span { font-size: 12px; }
 @media(max-width:1000px) {
   .ah-table.ah-calm.ah-noir.ah-direct-table .ah-player-dock { grid-template-columns: 198px 80px minmax(0,1fr) 58px; gap: 8px; }
+  /* 窄屏不显示调查员头像（noir.css），名字行不再预留头像位。 */
+  .ah-table.ah-calm.ah-noir .ah-dock-investigator .ah-dock-name-row { padding-right: 0; }
   .ah-table.ah-calm.ah-noir .ah-engagement-zone { width: 232px; padding: 9px; }.ah-engaged-enemy { flex-basis: 99px; }.ah-table.ah-calm.ah-noir .ah-engagement-cards .ah-enemy { width: 99px; height: 139px; }
 }
 @media(max-width:700px) {

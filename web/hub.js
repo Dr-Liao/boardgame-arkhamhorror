@@ -1,5 +1,5 @@
 import { renderRulesText } from './card-text.js'
-import { registerDeckRules, validateDeckRules, cardAllowedByScope, campaignCycle, normalizeCardPoolScope, CARD_POOL_SCOPE_LABELS } from './deck-rules.js'
+import { registerDeckRules, validateDeckRules, cardAllowedByScope, campaignCycle, normalizeCardPoolScope, CARD_POOL_SCOPE_LABELS, CARD_POOL_RESTRICTION_ENABLED } from './deck-rules.js'
 import { parseArkhamDbInput, loadArkhamDbDeck, planArkhamDbImport } from './arkhamdb-import.js'
 import { listLocalDecks, saveLocalDeck, deleteLocalDeck } from './deck-library.js'
 import { tableArt } from './table-art.js'
@@ -277,7 +277,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   // 由大厅 startGame 一并提交，服务端再落到 state（随存档保留）。
   function renderGameSettings() {
     const values = [
-      t('hub.gameSettings.cardPoolValue', { value: cardPoolLabel(state.setup.form.cardPoolScope) }),
+      ...(CARD_POOL_RESTRICTION_ENABLED
+        ? [t('hub.gameSettings.cardPoolValue', { value: cardPoolLabel(state.setup.form.cardPoolScope) })]
+        : []),
       t('hub.gameSettings.rollbackValue', { value: rollbackLabel(state.setup.form.allowRollback) }),
     ].join(' · ')
     return h('section', { className: 'ah-ai-dialogue-settings' },
@@ -297,13 +299,13 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         h('header', {}, h('div', {}, h('small', {}, 'ARKHAM HORROR'), h('h2', {}, t('hub.gameSettings.title'))),
           h('button', { type: 'button', className: 'bg-btn secondary', onclick: close, 'aria-label': t('hub.gameSettings.closeAria') }, t('common.close'))),
         h('p', {}, t('hub.gameSettings.note')),
-        h('div', { className: 'ah-ai-dialogue-group' },
+        CARD_POOL_RESTRICTION_ENABLED ? h('div', { className: 'ah-ai-dialogue-group' },
           h('h3', {}, scope.label),
           h('div', { className: 'ah-game-settings-select' },
             h('span', {}, t('hub.gameSettings.cardPoolLabel')),
             select(scope.options, state.setup.form.cardPoolScope, value => { state.setup.form.cardPoolScope = value; render() },
               { 'aria-label': scope.label })),
-          h('small', {}, scope.description)),
+          h('small', {}, scope.description)) : null,
         h('div', { className: 'ah-ai-dialogue-group' },
           h('h3', {}, t('hub.gameSettings.rollbackLabel')),
           h('label', { className: 'ah-ai-dialogue-toggle' },

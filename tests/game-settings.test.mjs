@@ -11,7 +11,7 @@ import { captureReplayLog, replayLog, stateHash } from '../src/engine/replay.js'
 import { buildDeck } from '../src/deck/deckbuilding.js'
 import { INVESTIGATORS } from '../src/cards/cards-data.js'
 import {
-  CAMPAIGN_CYCLES, cardAllowedByScope, cardCycle, campaignCycle, normalizeCardPoolScope,
+  CAMPAIGN_CYCLES, CARD_POOL_RESTRICTION_ENABLED, cardAllowedByScope, cardCycle, campaignCycle, normalizeCardPoolScope,
 } from '../src/deck/card-pool.js'
 import { checkpointView, forkSessionCheckpoint } from '../src/integration/hall-integration.js'
 
@@ -48,7 +48,7 @@ test('开局设置：AI 感知剧情在 AI 高级选项里且默认开启，游�
   assert.equal(arkham.defaults.allowRollback, 'on')
 })
 
-test('每个可启动战役都登记了循环，渐进式按卡号循环过滤', () => {
+test('每个可启动战役都登记了循环；卡牌范围按当前开关行为过滤', () => {
   for (const campaign of campaignListForUi(contentRegistry)) {
     assert.ok(Number.isInteger(CAMPAIGN_CYCLES[campaign.id]), `战役缺少循环登记：${campaign.id}`)
   }
@@ -62,10 +62,16 @@ test('每个可启动战役都登记了循环，渐进式按卡号循环过滤',
   assert.equal(cardCycle('obscuringFog'), null)
   assert.equal(normalizeCardPoolScope('weird'), 'all')
   assert.equal(cardAllowedByScope('02016', 'all', 1), true)
-  assert.equal(cardAllowedByScope('02016', 'progressive', 1), false)
-  assert.equal(cardAllowedByScope('02016', 'progressive', 2), true)
-  assert.equal(cardAllowedByScope('01038', 'progressive', 1), true)
-  assert.equal(cardAllowedByScope('01038', 'progressive', null), true, '未知循环不限制')
+  if (CARD_POOL_RESTRICTION_ENABLED) {
+    assert.equal(cardAllowedByScope('02016', 'progressive', 1), false)
+    assert.equal(cardAllowedByScope('02016', 'progressive', 2), true)
+    assert.equal(cardAllowedByScope('01038', 'progressive', 1), true)
+    assert.equal(cardAllowedByScope('01038', 'progressive', null), true, '未知循环不限制')
+  } else {
+    // 2026-10-26 临时取消卡牌范围限制：渐进式也不再按循环过滤。
+    assert.equal(cardAllowedByScope('02016', 'progressive', 1), true, '卡牌范围限制已临时取消')
+    assert.equal(cardAllowedByScope('02016', 'progressive', 2), true)
+  }
 })
 
 test('默认局不写新状态字段，渐进式与禁止回档才落盘（旧存档与重放基线不受影响）', () => {
@@ -80,7 +86,7 @@ test('默认局不写新状态字段，渐进式与禁止回档才落盘（旧�
   assert.equal(normalizeCardPoolScope(progressive.cardPoolScope), 'progressive')
 })
 
-test('渐进式收窄可选调查员与自动牌组：核心战役只能拿核心包卡', () => {
+test('渐进式收窄可选调查员与自动牌组：核心战役只能拿核心包卡', { skip: !CARD_POOL_RESTRICTION_ENABLED }, () => {
   const state = hubGame({ cardPoolScope: 'progressive' })
   const choices = state.legalMoves.filter(move => move.action === 'hubSelectInvestigator').map(move => move.code)
   assert.ok(choices.length >= 5)
@@ -92,14 +98,14 @@ test('渐进式收窄可选调查员与自动牌组：核心战役只能拿核�
   assert.deepEqual([...new Set(record.deck.map(code => code.slice(0, 2)))], ['01'])
 })
 
-test('渐进式的 AI 队友不会因职业人设选到当前循环外的调查员', () => {
+test('渐进式的 AI 队友不会因职业人设选到当前循环外的调查员', { skip: !CARD_POOL_RESTRICTION_ENABLED }, () => {
   const state = createGameState({ campaignHub: true, campaignId: 'nightOfTheZealot', cardPoolScope: 'progressive', seed: 'scope-persona' },
     [{ seat: 0, role: 'human' }, { seat: 1, role: 'ai', persona: '你是秘术，擅长法术与意志' }])
   assert.deepEqual(state.investigators.map(inv => inv.code.slice(0, 2)), ['01', '01'])
   assert.equal(state.investigators[1].klass, 'mystic')
 })
 
-test('渐进式拒绝超过当前循环的卡牌，全部模式照常接受', () => {
+test('渐进式拒绝超过当前循环的卡牌，全部模式照常接受', { skip: !CARD_POOL_RESTRICTION_ENABLED }, () => {
   const progressive = choseRoland(hubGame({ cardPoolScope: 'progressive' }))
   const coreDeck = buildDeck(INVESTIGATORS['01001'], { seat: 0, seed: 1, playerPool: corePlayerPool(progressive) }).playerCards
   assert.equal(coreDeck.length, 30)
@@ -112,6 +118,20 @@ test('渐进式拒绝超过当前循环的卡牌，全部模式照常接受', ()
   const all = choseRoland(hubGame())
   applyMove(all, 0, { action: 'hubSetDeck', codes: outOfCycle })
   assert.equal(all.campaign.investigators[0].startingDeckReady, true)
+})
+
+// 卡牌范围限制临时取消期间的行为：不按战役循环收窄调查员，也不拒绝循环外的已开放卡。
+test('卡牌范围限制临时取消：渐进式同样接受循环外卡牌', { skip: CARD_POOL_RESTRICTION_ENABLED }, () => {
+  const progressive = hubGame({ cardPoolScope: 'progressive' })
+  const choices = progressive.legalMoves.filter(move => move.action === 'hubSelectInvestigator').map(move => move.code)
+  assert.ok(choices.includes('05002'), '限制取消后调查员不应再按循环收窄')
+  choseRoland(progressive)
+  const coreOnly = corePlayerPool(progressive).filter(card => card.code.startsWith('01'))
+  const coreDeck = buildDeck(INVESTIGATORS['01001'], { seat: 0, seed: 1, playerPool: coreOnly }).playerCards
+  assert.equal(coreDeck.length, 30)
+  // 02016《金属棒》是第二循环、罗兰可用的 0 级守护者卡；限制取消后带它保存不再被拒。
+  applyMove(progressive, 0, { action: 'hubSetDeck', codes: [...coreDeck.slice(0, -1), '02016'] })
+  assert.equal(progressive.campaign.investigators[0].startingDeckReady, true)
 })
 
 test('重放日志记录卡牌范围与回档开关，重放指纹一致', () => {

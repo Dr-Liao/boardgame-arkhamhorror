@@ -11,7 +11,7 @@
 //   · 逐卡规则写在单卡条目的 actRule / enemySpawnRule 等字段里；本文件只读
 //     actRuleFor / enemySpawnRuleFor 数据分派，不写按卡号字面量的分支（架构守卫口径）。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { actRuleFor, enemySpawnRuleFor } from '../../../../../src/cards/card-rules.js'
+import { actRuleFor, enemySpawnRuleFor, traitLabel } from '../../../../../src/cards/card-rules.js'
 import { addBreach, removeBreach, breachOf as breachCount } from '../../../../../src/engine/location-state.js'
 import { encounterRules } from '../../encounter-rules.js'
 import {
@@ -762,14 +762,14 @@ function drawEnemyByTrait(state, api, seat, trait) {
     ...collect(state.encounterDiscard || [], 'discard'),
   ]
   if (!candidates.length) {
-    api.info?.(`没有找到[[${trait}]]敌人。`)
+    api.info?.(`没有找到[[${traitLabel(trait)}]]敌人。`)
     return null
   }
   let chosen = candidates[0]
   if (candidates.length > 1 && typeof api.choose === 'function') {
     const answer = api.choose({
       kind: 'card', source: 'searchEnemy', seat,
-      prompt: `查找遭遇牌库和弃牌堆，选择要抽取的[[${trait}]]敌人。`,
+      prompt: `查找遭遇牌库和弃牌堆，选择要抽取的[[${traitLabel(trait)}]]敌人。`,
       options: candidates.map((entry, index) => ({
         id: String(index),
         label: `${ALL_CARDS[entry.code]?.nameZh || entry.code}（${entry.kind === 'deck' ? '遭遇牌库' : '遭遇弃牌堆'}）`,

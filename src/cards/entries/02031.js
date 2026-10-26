@@ -11,6 +11,8 @@ export default {
     // Phase 5（5a-25）：卡号随效果数据走；第 4 批改成条目 resolve。
     {
       kind: 'played', label: '困兽之笼',
+      // 卡面「躲避。」= Evade 行动：打出按躲避结算，不引发借机攻击。
+      countsAs: 'evade',
       resolve: ({ state, inv, api }) => {
         // 卡面：任何敌人均可尝试躲避；只有非精英才会被附属。
         const candidates = state.enemies.filter(enemy =>

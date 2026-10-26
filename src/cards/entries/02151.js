@@ -13,7 +13,12 @@ export default {
     { when: resignAvailable(), message: '场上没有带「撤退」能力的剧本卡' },
   ],
   abilities: [
-    { kind: 'played', label: '“我要走了！”', resolve: ({ inv, api }) => api.resign(inv.seat) },
+    {
+      kind: 'played', label: '“我要走了！”',
+      // 卡面「撤退。」= Resign 行动：打出按撤退结算，不引发借机攻击。
+      countsAs: 'resign',
+      resolve: ({ inv, api }) => api.resign(inv.seat),
+    },
   ],
   modifiers: [
 

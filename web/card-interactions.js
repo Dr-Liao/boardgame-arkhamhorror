@@ -217,7 +217,7 @@ export function mountCardInteractions(root, session, { state, submit, select, in
   }
   const activate = event => {
     if (suppressClick) { event.preventDefault(); event.stopImmediatePropagation(); suppressClick = false; return }
-    if (event.target.closest('[data-map-info],[data-reaction-toggle]')) return
+    if (event.target.closest('[data-map-info],[data-reaction-mode]')) return
     const el = event.target.closest('[data-interaction]')
     if (!el || !root.contains(el)) return
     if (!allowed()) {
@@ -291,7 +291,7 @@ export function mountCardInteractions(root, session, { state, submit, select, in
   root.addEventListener('pointerout', event => { if (!event.target.closest('[data-card-code],.ah-enemy,.ah-script-card,.ah-reference-card')?.contains(event.relatedTarget)) hidePreview() })
   root.addEventListener('focusin', previewCard); root.addEventListener('focusout', hidePreview)
   root.addEventListener('pointerdown', event => {
-    if (event.target.closest('[data-reaction-toggle]')) return
+    if (event.target.closest('[data-reaction-mode]')) return
     hidePreview()
     const sourceEl = event.target.closest('[data-interaction]')
     if (!sourceEl || !allowed() || event.button !== 0 || event.target.closest('.ah-map-node-handle')) return

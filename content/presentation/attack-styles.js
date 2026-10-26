@@ -6,6 +6,7 @@
 
 export const ATTACK_STYLE_OVERRIDES = Object.freeze({
   '02301': 'lightning', // Lightning Gun
+  '03153': 'spiritStorm', // Storm of Spirits
   '04305': 'default', // Flamethrower
   '09119': 'default', // Hyperphysical Shotcaster
   '04276': 'blade', // Timeworn Brand

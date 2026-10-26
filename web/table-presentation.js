@@ -96,6 +96,7 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
   let presentedPlays = []
   let blocking = false, cancelScene = null
   let latest = null, displayed = null
+  let skipNextSync = false
   let cardTransits = [], maskedCards = new Set()
   // 演出层挂在 body 上，收不到牌桌根节点的战役色板：由 game-ui 传入读取函数，
   // 在创建 .ah-fx-layer 时写入主题类与 --ah-theme-* 变量，供剧情导入/阶段演出使用。
@@ -217,6 +218,10 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
     const a=rect(source)||rect(fallback),b=rect(target)||rect(fallback)
     if(!a||!b)return
     const start=center(a),end=center(b),dx=end.x-start.x,dy=end.y-start.y,length=Math.hypot(dx,dy)||1
+    const secondaryTargets=(c.enemyIds||[]).filter(id=>id!==c.enemyId).map(id=>{
+      const nodes=[...document.querySelectorAll('.ah-table [data-interaction]')].filter(el=>el.dataset.interaction===`enemy:${id}`)
+      return nodes.find(el=>el.closest('.ah-engagement-cards'))||nodes[0]
+    }).filter(Boolean).map(el=>center(rect(el)))
     const damageText=c.horror?t('table.combat.damageHorror',{damage:c.damage||0,horror:c.horror}):t('table.combat.damage',{damage:c.damage||0})
     const label=miss?t('table.combat.miss'):incoming?damageText:(c.defeated?t('table.combat.hitDefeated',{damage:c.damage||0}):t('table.combat.hit',{damage:c.damage||0}))
     const who=displayed?.state.investigators.find(inv=>inv.seat===c.seat)?.name||t('table.investigator')
@@ -225,7 +230,7 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
     const caption=node('div','ah-combat-caption',incoming?t('table.combat.incomingCaption',{who,enemy:c.name||t('table.enemy'),label}):t('table.combat.outgoingCaption',{who,enemy:c.name||t('table.enemy'),label}))
     const captionMargin=Math.min(380,innerWidth-28)/2+14
     Object.assign(caption.style,{left:Math.max(captionMargin,Math.min(innerWidth-captionMargin,end.x))+'px',top:Math.max(85,Math.min(innerHeight-100,b.y-54))+'px'})
-    const plan=attackChoreography(incoming?'default':c.attackStyle,{node,start,end,box:b,length,angle:Math.atan2(dy,dx),ux:dx/length,uy:dy/length,miss})
+    const plan=attackChoreography(incoming?'default':c.attackStyle,{node,start,end,box:b,length,angle:Math.atan2(dy,dx),ux:dx/length,uy:dy/length,miss,secondaryTargets})
     fx.dataset.style=plan.style
     fx.append(...plan.elements,caption);ensureLayer().append(fx)
     const cue=({sample,synth})=>{if(!prefs.sound||!unlocked)return;if(sample)sound(sample);else combatSound.play(synth)}
@@ -746,12 +751,23 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
     get preferences() { return prefs },
     toggleSound() { prefs.sound = !prefs.sound; if (!prefs.sound) stopAudio(); save() },
     toggleFast() { prefs.fast = !prefs.fast; save() },
+    // 大厅「强制同步」入口：丢弃进行中的演出队列并解除牌桌锁定；下一次 sync 把当前视图
+    // 当作全新基线（不补播卡住前排队的旧动画）。
+    reset() { skipNextSync = true; clear(); displayed = latest; blocking = false },
     sync(session) {
         let seq = -1
         for (const event of session.events || []) seq = Math.max(seq, event.seq ?? -1)
         const sameSession = session.sessionId === sessionId
         const sameRevision = sameSession && last && session.state.revision === last.revision && session.state.uiState === last.uiState
         latest = session
+        // 强制同步后的首帧：清空队列、以当前视图重建 diff 基线，避免重播卡住前的演出。
+        if (skipNextSync) {
+          skipNextSync = false
+          clear(); lastSeq = seq; sessionId = session.sessionId; anchors = collect()
+          last = { revision: session.state.revision, uiState: session.state.uiState, investigators: structuredClone(session.state.investigators), enemies: structuredClone(session.state.enemies || []), locations: structuredClone(session.state.locations), skillTest: structuredClone(session.state.skillTest), agendaIndex: session.state.agendaIndex, actIndex: session.state.actIndex }
+          displayed = session
+          return session
+        }
         if (sameRevision) {
           lastSeq = Math.max(lastSeq, seq)
           if (queue.length || running) {

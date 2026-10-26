@@ -1,5 +1,5 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
-import { actRuleFor, agendaRuleFor, assetRuleFor, encounterResolveCampaignsFor, encounterResolveFor, enemyRuleFor, enemyScriptFor, foundCardRuleFor, locationRuleFor, threatEffectFor, treacheryRuleFor } from '../../../src/cards/card-rules.js'
+import { actRuleFor, agendaRuleFor, assetRuleFor, encounterResolveCampaignsFor, encounterResolveFor, enemyRuleFor, enemyScriptFor, foundCardRuleFor, locationRuleFor, threatEffectFor, traitLabels, treacheryRuleFor } from '../../../src/cards/card-rules.js'
 // 第 81 轮：跨卡限制统一读条目标志，不再按卡号查资产/威胁。
 const hasThreatFlag = (inv, flag) => (inv?.threat || []).some(item => threatEffectFor(original(item))?.[flag] === true)
 import { changeChaosBag } from '../../../src/engine/chaos-bag.js'
@@ -644,7 +644,7 @@ export function laterBehavior(id) {
         const definition = ALL_CARDS[code] || {}
         const stats = `帷幕 ${definition.shroud ?? '?'}，线索 ${definition.clues ?? '?'}`
           + (definition.victory ? `，胜利 ${definition.victory}` : '')
-          + (definition.traits?.length ? `，特性 ${definition.traits.join('/')}` : '')
+          + (definition.traits?.length ? `，特性 ${traitLabels(definition.traits).join('/')}` : '')
         api.choose({ kind: 'inspect', source: '02129', seat: inv.seat, prompt: '查看完毕后确认。',
           options: [{ id: 'done', label: `${definition.nameZh || definition.name || code}：${stats}。${definition.textZh || definition.text || ''}` }] })
         state.scenarioFlags[`security:${inv.seat}`] = state.round

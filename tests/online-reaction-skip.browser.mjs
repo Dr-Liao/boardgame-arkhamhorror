@@ -39,7 +39,7 @@ test('联机忙碌快照不会先画出已关闭的快速反应窗口', async ({
 
   await page.addInitScript(({ sessionId }) => {
     localStorage.setItem('arkham-presentation', JSON.stringify({ sound: false, fast: true }))
-    // 本机把这张卡的反应关掉（等同玩家点了卡面上的「反应开/关」）。
+    // 本机把这张卡的反应关掉（等同玩家点了卡面上的闪电开关）。
     localStorage.setItem(`arkham-reactions:${sessionId}:0`, JSON.stringify(['01073']))
     window.__reactionPanels = 0
     new MutationObserver(() => {

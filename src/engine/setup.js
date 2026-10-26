@@ -45,6 +45,7 @@ export function createSetup(deps) {
     buildDeckFromList,
     campaignFor,
     campaignManifestFor,
+    campaignState,
     canSelectInvestigator,
     cardDef,
     cardName,
@@ -176,8 +177,77 @@ function applyStoryInvestigatorStats(inv, def) {
   inv.agility = def.agility
 }
 
+// 只在新关卡开局调用：清掉「一关之内」的调查员临时记账（与 beneath/attachments 同类跨关残留）。
+// 新关卡从 round=1、新的 game 作用域重新计数，残留的「每场游戏/每轮/每阶段一次」标记会与
+// 新关卡的序号重名而被误判成「已经用过」；没花掉的临时代价/加成也会直接作用到新关卡第一张牌。
+// 刻意不清：牌面属性、战役身份（campaignId/storyInvestigator/noDeck/role）与牌组信息。
+const TRANSIENT_INVESTIGATOR_FIELDS = Object.freeze([
+  // 「每场游戏一次 / 每阶段 / 每轮一次」的能力记账
+  'gameFlags', 'usedAbilities', 'weaknessCounters', 'phaseStatBonuses',
+  // 没在上一关用掉的开局/下一张牌代价减免与升级
+  'playDiscount', 'lolaDiscount', 'itemDiscountAtLocation',
+  'playUpgrades05111', 'playUpgrades05234', 'playUpgrades05277',
+  // 临时属性/检定标记与关内剧情记账
+  'statOverrides', 'enemyPassiveTraits', 'nextTestNoTokens',
+  'shuffleWeaknessAfterResolution', 'turnEnded',
+  // 按轮/按回合记账、但字段名不带 Round/Turn 后缀的散标记（读点都带轮次比较，
+  // 新关卡 round=1 会与上一关第 1 轮撞号）：
+  'fieldwork', 'infighting', 'narrowEscape', 'jakeFree', 'ritaEvadeUses',
+  'pendingActionLoss', 'hiddenMoves', 'spellOnlyActions',
+])
+
+function clearInvestigatorTransients(campaignState, inv) {
+  for (const key of TRANSIENT_INVESTIGATOR_FIELDS) if (inv[key] !== undefined) delete inv[key]
+  // 战役专属的调查员临时记账（打出折扣/押注/演出奖励行动/禁重整回合……）由战役状态切片负责，
+  // 字段名只允许出现在 src/cards/campaign-state.js（Phase 6 门禁）。
+  campaignState.clearScenarioTransients(inv)
+  // 轮次/回合作用域的散标记（*Round / *Turn / *ThisTurn / *Used）：round 在新关卡从 1 重数，
+  // 上一关第 1 轮留下的值会与新关卡第 1 轮相等而误判（例如丽塔的每轮躲避次数、05016 的
+  // 本轮「躲避改为伤害」、调查员的「下个回合额外行动」）。内容层今后新增的同名标记也一并覆盖。
+  for (const key of Object.keys(inv)) {
+    if (/(?:Round|Turn|ThisTurn|Used)$/.test(key)) delete inv[key]
+  }
+}
+
+// 只在新关卡开局调用：清掉上一关遗留的、不属于任何一张卡的全局场面/记账。
+// 牌本身仍在战役牌组记录里（prepareInvestigator 会按记录重建牌组），地点/遭遇牌堆也会重新
+// 布置；不清掉这些「关内临时区」会与新一关叠成两份，或被本关的效果误读。
+function clearScenarioSceneLeftovers(state) {
+  // 玩家卡附属在地点上（「捷径」「埋伏」等）：旧附属会让新关卡同名地点直接可点/可移动。
+  if (state.playerLocationAttachments?.length) state.playerLocationAttachments = []
+  // 「放到一边」「移出游戏」：关内临时区；旧卡会被区域检索找到，也会残留在移出区（牌组重建后
+  // 同一张卡同时存在于牌库与移出区）。
+  if (state.setAside?.length) state.setAside = []
+  if (state.removedFromGame?.length) state.removedFromGame = []
+  // 备用地点牌堆（alt-decks.js）：逐关重建。
+  if (state.extraLocationDecks) state.extraLocationDecks = {}
+  // 闹鬼地点的临时授权/本次投入记费。
+  if (state.hauntedGrants?.length) state.hauntedGrants = []
+  if (state.hauntedCommitCost) delete state.hauntedCommitCost
+  // 幕旁提醒条与议程翻面展示状态。
+  if (state.actReminders?.length) state.actReminders = []
+  if (state.agendaFace) delete state.agendaFace
+  // 本回合/本阶段锁与排队中的「下一次行动期间生效」效果。
+  if (state.agendaDoomLock) delete state.agendaDoomLock
+  if (state.pendingActionEffects?.length) delete state.pendingActionEffects
+  // 上一关最后一次失败检定的重试上下文（「学无止境」等会直接重试它）。
+  if (state.lastFailedTest) delete state.lastFailedTest
+  // 内容层的关卡临时键（部分战役把自己的关卡记账写在这里）：只在该关有效。
+  if (state.scenarioKeys) delete state.scenarioKeys
+  // 上限记账（limits.js）：perCampaign 的键（...|campaign）要跨关保留；其余键里带着
+  // round/phase/game，新的 round=1 会与上一关第 1 轮同号键重名，误判「已经用过」。
+  if (state.abilityLimits) {
+    const kept = Object.fromEntries(Object.entries(state.abilityLimits).filter(([key]) => key.endsWith('|campaign')))
+    if (Object.keys(kept).length) state.abilityLimits = kept
+    else delete state.abilityLimits
+  }
+}
+
 function prepareInvestigator(state, inv, events, startLocation) {
   const def = ALL_INVESTIGATORS[inv.code]
+  // 先清上一关的临时记账，再按本关重设规范字段：这样像 tomeActionUsed 这种「开局显式
+  // 重置为 false」的字段不会在清理阶段被删掉（否则状态形状会随加载路径抖动）。
+  clearInvestigatorTransients(campaignState, inv)
   // 第 2 步 P2.6：无牌组故事调查员——不登记战役身份、不建牌库、不受创伤。
   const story = isStoryInvestigator(state, inv)
   let record = story ? null : state.campaign.investigators[inv.seat]
@@ -216,6 +286,13 @@ function prepareInvestigator(state, inv, events, startLocation) {
   inv.assets = []
   inv.threat = []
   inv.engaged = []
+  // 压在调查员底下的牌（黛安娜·史丹利 05004 / 赛菲娜 05002）与附属在调查员身上的牌是上一关的
+  // 场面状态；牌本身仍在战役牌组记录里（本关会按记录重建牌组），若不清空，同一张卡会同时留在
+  // 「下方」或附属区和牌库里——玩家可见的症状就是「平白多出几张底下的牌」。
+  // 只在确有残留时才置空：旧局/重放里这两个字段本来就缺省，别凭空改变状态形状（指纹）。
+  // 回归用例见 tests/scenario-reset.test.mjs。
+  if (inv.beneath?.length) inv.beneath = []
+  if (inv.attachments?.length) inv.attachments = []
   inv.defeated = false
   inv.resigned = false
   inv.defeatCause = null
@@ -584,6 +661,9 @@ function startScenario(state, index, events) {
 
   // 第 2 步 P2.8：上一章散落在手牌/牌库/场上的绑定副本先收回场外集合，再重建牌库。
   if (state.bondedSets) returnAllBonded(state, { events })
+  // 上一关的临时区（地点附属/放到一边/移出游戏/闹鬼授权/上限记账……）不能带进新关卡；
+  // 放在 returnAllBonded 之后：绑定副本会从 removedFromGame 等区域回收。
+  clearScenarioSceneLeftovers(state)
 
   // 第 2 步 P2.6：故事调查员——本章声明了就选人（每座位各选一次，其余划掉），
   // 没有声明就换回原本的调查员；两者都必须在 prepareInvestigator 之前完成。

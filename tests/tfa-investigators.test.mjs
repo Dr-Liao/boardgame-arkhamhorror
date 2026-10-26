@@ -78,7 +78,8 @@ test('M1 exposes five selectable investigators whose signatures are dependency-o
   assert.deepEqual(INVESTIGATOR_ABILITIES['04005'].statsPerHarm,
     { horror: { willpower: 1, intellect: 1 }, damage: { combat: 1, agility: 1 } })
   // Phase 5（5b-8a）：04006 的被动搬到能力层条目（读点 registeredEntry）。
-  assert.equal(registeredEntry('04006').passive.allySlotsForNonUnique, 2)
+  // 2026-10-26 原语收敛：非独特盟友受限槽并入 restrictedSlots。
+  assert.deepEqual(registeredEntry('04006').restrictedSlots, [{ slot: 'ally', unique: false, count: 2 }])
   // Phase 5：04011 已迁到能力层（uses/usesType 在条目上，read 点是 registeredEntry）。
   assert.equal(registeredEntry('04011').usesType, 'ammo')
   // Phase 5（5b-10）：封印声明搬到能力层条目。

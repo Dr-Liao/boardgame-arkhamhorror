@@ -93,18 +93,16 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     await expect(page.locator('.ah-script-card[data-interaction="agenda:current"]')).toHaveClass(/ah-card-ready/)
     await expect(page.locator('.ah-script-card[data-interaction="act:current"]')).not.toHaveClass(/ah-card-ready/)
 
-    // 剧本区从左到右：剧本书 →（提示卡）→ 剧本行动；行动仍在视口内。
-    // 《失落的时代》目前没有登记剧本提示卡（SCENARIO_REFERENCE），所以提示卡是可选的。
+    // 剧本区从左到右：剧本书 → 剧本提示卡 → 剧本行动；行动仍在视口内。
+    // 失落时代已登记各章剧本参考卡（web/ui-cards.js 的 scenarioCards），提示卡必须真切渲染出来。
     const book = await page.locator('.ah-story-book').boundingBox()
     const actions = await page.locator('.ah-script-actions').boundingBox()
     const reference = page.locator('.ah-reference-card')
-    if (await reference.count()) {
-      const box = await reference.boundingBox()
-      expect(book.x + book.width).toBeLessThanOrEqual(box.x + 1)
-      expect(box.x + box.width).toBeLessThanOrEqual(actions.x + 1)
-    } else {
-      expect(book.x + book.width).toBeLessThanOrEqual(actions.x + 1)
-    }
+    await expect(reference).toHaveAttribute('data-reference-code', '04043')
+    await expect(reference).toHaveAttribute('data-reference-face', 'front')
+    const box = await reference.boundingBox()
+    expect(book.x + book.width).toBeLessThanOrEqual(box.x + 1)
+    expect(box.x + box.width).toBeLessThanOrEqual(actions.x + 1)
     await expect(explore).toBeInViewport({ ratio: 1 })
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await page.screenshot({ path: `${output}script-actions-tfa-${label}.png`, animations: 'disabled' })

@@ -12,6 +12,8 @@ export default {
   abilities: [
     {
       kind: 'played', label: '鲜血失色',
+      // 卡面「攻击。」= Fight 行动：打出按攻击结算，不引发借机攻击。
+      countsAs: 'fight',
       resolve: ({ inv, api }) => {
         const max = Math.min(3, api.maxHealth(inv.seat) - inv.damage > 0 ? 3 : 0)
         const amount = Number(api.choice({ kind: 'resource', source: '04266', seat: inv.seat,

@@ -29,6 +29,9 @@ const entryWith = (field, value) => allEntries().find(entry => entry[field] === 
 // 调查员卡面规则（第 6 批）：数据在 entries/<code>.js 的 `investigator` 字段。
 export { investigatorRule }
 
+// 印刷特性 → 中文写法（给内容层消息复用）：判定仍用印刷英文特性，只有提示/日志文本需要中文。
+export { traitLabel, traitLabels } from './trait-labels.js'
+
 // 第 7 批：内容层从 card-data.js 的表改成读条目。
 export function hiddenRuleFor(code) {
   return (code && entryOf(code)?.hiddenRule) || null

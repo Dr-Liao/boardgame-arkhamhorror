@@ -2,7 +2,17 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import * as curtain from '../content/campaigns/thePathToCarcosa/scenarios/curtainCall/index.js'
 import * as lastKing from '../content/campaigns/thePathToCarcosa/scenarios/theLastKing/index.js'
+import * as echoes from '../content/campaigns/thePathToCarcosa/scenarios/echoesOfThePast/index.js'
+import * as oath from '../content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/index.js'
+import * as phantom from '../content/campaigns/thePathToCarcosa/scenarios/aPhantomOfTruth/index.js'
+import * as pallid from '../content/campaigns/thePathToCarcosa/scenarios/thePallidMask/index.js'
+import * as blackStars from '../content/campaigns/thePathToCarcosa/scenarios/blackStarsRise/index.js'
+import * as dim from '../content/campaigns/thePathToCarcosa/scenarios/dimCarcosa/index.js'
+import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { manifest as campaign } from '../content/campaigns/thePathToCarcosa/manifest.js'
+import { applyMove, createGameState, decisionSeat, legalMoves, startScenario } from '../src/engine/engine.js'
+import { viewEvents } from '../src/integration/observation.js'
+import { settle } from './core-fixture.mjs'
 
 const clone = value => structuredClone(value)
 
@@ -86,8 +96,26 @@ test('Curtain Call setup is deterministic, selects one original act II and start
   assert.deepEqual(first, second)
   assert.equal(first.acts.length, 3)
   assert.ok(['03047a', '03047b', '03047c'].includes(first.acts[1].originalCode))
+  // 卡面三张都是「场景 2a·陌生人」，剧本收尾是「场景 3a·谢幕」：推进日志里的阶段号
+  // 必须来自卡面，不能被定义数组的下标（会把 03047b/c 标成 3a/4a、03048 标成 5a）带偏。
+  assert.deepEqual(first.acts.map(act => act.stage), ['1a', '2a', '3a'])
   assert.equal(first.investigators[0].location, 'backstage')
   assert.equal(first.investigators[1].location, 'theatre')
+})
+
+test('Carcosa 幕/议程的 stage 编号与卡面一致（版本卡按印刷阶段号，不按数组下标）', () => {
+  const scenarios = [curtain, lastKing, echoes, oath, phantom, pallid, blackStars, dim]
+    .map(entry => entry.scenario)
+  for (const scenario of scenarios) {
+    for (const kind of ['acts', 'agendas']) {
+      for (const card of scenario[kind] || []) {
+        const printed = ALL_CARDS[card.originalCode || card.code]
+        assert.ok(printed?.stage, `${scenario.id} ${kind} ${card.originalCode} 缺卡面 stage`)
+        assert.equal(card.stage, `${printed.stage}a`,
+          `${scenario.id} ${kind} ${card.originalCode}「${card.name}」应显示 ${printed.stage}a，实际 ${card.stage}`)
+      }
+    }
+  }
 })
 
 test('Curtain Call uses the printed chaos table and persists its resolution records', () => {
@@ -227,3 +255,52 @@ test('The Last King R3 crosses out only interviews completed in this play', () =
   lastKing.behavior.resolution(state, 'r3')
   assert.deepEqual(state.campaign.records.vipsInterviewed, ['03077'])
 })
+
+test('AI 完成会谈触发的翻面是公开演出，所有座位都能收到翻开的卡面', () => {
+  // 翻面发生在技能检定的成功结算内；info() 在检定期间默认按 privateSeat 只发给执行者，
+  // AI 座位没有界面，人类玩家就完全看不到这张翻开的贵宾卡。翻面/揭示是摆在桌上的公开事实。
+  const state = createGameState({
+    campaignId: 'thePathToCarcosa',
+    playerInvestigator: '05004',
+    seed: 'last-king-ai-flip-public',
+    seatInvestigators: ['05004', '01001'],
+  }, [{ seat: 0, role: 'human' }, { seat: 1 }])
+  settle(state)
+  startScenario(state, 1, [])
+  assert.equal(state.scenario.id, 'theLastKing')
+
+  const ai = state.investigators[1]
+  ai.actionsLeft = 3
+  ai.intellect = 99
+  ai.hand = []
+  state.investigators[0].hand = []
+  const guest = state.storyAssets.find(asset => asset.code === '03076a')
+  assert.ok(guest, '康斯坦丝在场上')
+  guest.location = ai.location
+  guest.clues = 1
+  state.currentSeat = 1
+  state.phase = 'investigation'
+  state.chaosBag = ['0']
+  state.encounterDeck = []
+
+  const move = legalMoves(state).find(candidate => candidate.rule === 'interviewGuest')
+  assert.ok(move, 'AI 可以发起最后一次会谈')
+  const events = [...applyMove(state, 1, move)]
+  for (let index = 0; index < 20 && state.pendingChoice; index++) {
+    const choice = state.pendingChoice
+    const optionId = ['done', 'skip', 'self'].find(id => choice.options.some(option => option.id === id))
+      ?? choice.options[0]?.id
+    events.push(...applyMove(state, decisionSeat(state), { action: 'choose', choiceId: choice.id, optionId }))
+  }
+  assert.deepEqual(state.scenarioFlags.interviewed, ['03076a'], '会谈已完成并触发翻面')
+
+  for (const observerSeat of [0, 1, null]) {
+    const cue = viewEvents(events, observerSeat)
+      .find(event => event.type === 'info' && event.presentation?.flip && event.presentation.code === '03076a')
+    assert.ok(cue, `观察者 ${observerSeat} 应收到翻面演出`)
+    assert.equal(cue.presentation.face, 'back')
+    assert.equal(cue.presentation.name, '英格兰姆的誓约')
+    assert.equal(cue.privateSeat, undefined, '翻面演出不能带 privateSeat')
+  }
+})
+

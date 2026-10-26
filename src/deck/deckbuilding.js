@@ -11,6 +11,7 @@ import { deckRules, matchesCardRule, deckCardLimit, validateDeckRules, optionExc
 // 本引擎只读数据、可复现（种子随机），供 engine.js 调用。
 
 import { PLAYER_CARDS, ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
+import { traitLabel } from '../cards/trait-labels.js'
 import { legacyEntry, implementation } from '../cards/card-implementation.js'
 import { PHASE5_MIGRATED_CODES } from '../cards/card-abilities.js'
 import { abilityShim, modifiersFor, registeredEntry } from '../engine/ability.js'
@@ -111,10 +112,17 @@ function expandedPlayerCardDefinition(code) {
   return cardDefinitionIn(EXPANDED_PLAYER_CODE_SET, code)
 }
 
+// 本次构筑实际放行的卡号集合：显式传 playerPool 时是开放玩家池（含 05 循环等已验收卡），
+// 否则是默认池。许可判定必须与「本局实际允许的池」一致——如果拿默认池的 PLAYER_CODE_SET
+// 判许可，TCU 战役里自动牌组能用的 05 卡会在手动牌组里被误报「未获运行时许可」。
+function allowedPlayerCodeSet(options) {
+  return options.playerPool !== undefined ? EXPANDED_PLAYER_CODE_SET : PLAYER_CODE_SET
+}
+
 function allowedPlayerPool(options) {
   const provided = options.playerPool !== undefined
   const source = provided ? options.playerPool : PLAYER_CARD_CODES
-  const allowed = provided ? EXPANDED_PLAYER_CODE_SET : PLAYER_CODE_SET
+  const allowed = allowedPlayerCodeSet(options)
   if (!Array.isArray(source)) throw new Error('playerPool 必须为玩家卡数组')
   const codes = source.map((card) => typeof card === 'string' ? card : card?.code)
   if (codes.some((code) => typeof code !== 'string')) throw new Error('playerPool 包含无效卡牌编号')
@@ -290,7 +298,7 @@ export function buildDeck(invDef, options = {}) {
   if (hunch) {
     const insights = deck.filter(code => isTraitCard(ALL_CARDS[code], hunch.trait) && ALL_CARDS[code]?.type === 'event')
     if (insights.length < hunch.required) {
-      throw new Error(`许可卡池不足以构筑直觉牌库：需要 ${hunch.required} 张[[${hunch.trait}]]事件，当前 ${insights.length} 张`)
+      throw new Error(`许可卡池不足以构筑直觉牌库：需要 ${hunch.required} 张[[${traitLabel(hunch.trait)}]]事件，当前 ${insights.length} 张`)
     }
   }
 
@@ -350,11 +358,12 @@ export function signatureAndWeaknesses(invDef, rng, options = {}) {
 // cardCodes：30 张玩家卡（不含签名卡/弱点，这些会自动加入）。
 export function buildDeckFromList(invDef, cardCodes, options = {}) {
   const errors = []
-  let pool, budget
+  let pool, budget, licensed
   try {
     validateInvestigator(invDef)
     budget = xpBudget(options)
     pool = new Set(allowedPlayerPool(options).map((card) => card.code))
+    licensed = allowedPlayerCodeSet(options)
   } catch (error) {
     return emptyDeck([error.message])
   }
@@ -377,7 +386,7 @@ export function buildDeckFromList(invDef, cardCodes, options = {}) {
     if (!PLAYER_TYPES.has(card.type) || card.subtype === 'weakness' || card.subtype === 'basicweakness') {
       errors.push(name + ' 不是可手动加入的普通玩家卡'); continue
     }
-    if (!PLAYER_CODE_SET.has(code) || !isPlayable(card)) { errors.push(name + ' 未获运行时许可'); continue }
+    if (!licensed.has(code) || !isPlayable(card)) { errors.push(name + ' 未获运行时许可'); continue }
     if (!pool.has(code)) { errors.push(name + ' 不在 playerPool 白名单内'); continue }
     if (!matchesDeckOptions(invDef, card)) { errors.push(name + ' 不符合构筑限制'); continue }
     if (n > cardLimit(card)) errors.push(name + ' 超过张数上限（' + cardLimit(card) + '）')
@@ -389,7 +398,7 @@ export function buildDeckFromList(invDef, cardCodes, options = {}) {
   if (hunch) {
     const insights = codes.filter(code => isTraitCard(ALL_CARDS[code], hunch.trait) && ALL_CARDS[code]?.type === 'event')
     if (insights.length < hunch.required) {
-      errors.push(`牌组需要至少 ${hunch.required} 张[[${hunch.trait}]]事件作为直觉牌库，当前 ${insights.length} 张`)
+      errors.push(`牌组需要至少 ${hunch.required} 张[[${traitLabel(hunch.trait)}]]事件作为直觉牌库，当前 ${insights.length} 张`)
     }
   }
   if (spentXp > budget) errors.push('牌组需要 ' + spentXp + ' XP，超过预算 ' + budget + ' XP')

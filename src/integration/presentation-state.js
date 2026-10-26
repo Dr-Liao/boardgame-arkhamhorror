@@ -81,6 +81,9 @@ export function captureTableState(state, getStat, getMaxSanity) {
       assets: (inv.assets || []).map(publicCardInstance),
       threat: (inv.threat || []).map(publicCardInstance),
       hand: [...inv.hand], handSize: inv.hand.length, deck: [], deckSize: inv.deck.length,
+      // 压在调查员底下的牌（黛安娜／赛菲娜）与手牌同为本人私有区：演出快照里必须带走，
+      // 否则 applyStep 用中间态渲染时整排「下方」栏会消失一瞬，drain 结束才恢复。
+      beneath: [...(inv.beneath || [])], beneathCount: (inv.beneath || []).length,
       maxSanity: getMaxSanity(inv), effectiveStats: Object.fromEntries(['willpower','intellect','combat','agility'].map(s => [s, getStat(state, inv, s)])),
     })),
   }
@@ -88,7 +91,7 @@ export function captureTableState(state, getStat, getMaxSanity) {
 export function projectTableState(snapshot, observer) {
   const copy = structuredClone(snapshot)
   copy.locations = maskHiddenLocations(copy.locations || [])
-  for (const inv of copy.investigators || []) if (inv.seat !== observer) inv.hand = []
+  for (const inv of copy.investigators || []) if (inv.seat !== observer) { inv.hand = []; inv.beneath = [] }
   if (copy.privateTest && copy.privateTest.seat !== observer) copy.log = copy.privateTest.publicLog
   delete copy.privateTest
   return copy

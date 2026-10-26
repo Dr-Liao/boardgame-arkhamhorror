@@ -7,9 +7,14 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 修复（task-33）：「最多 2 张[[工具]]支援不占用手部槽位」现在由条目级 toolHandSlotsExempt: 2 声明，
-// 读点是 src/engine/assets.js 的 slotUsage（2026-10-25 引擎新增）：统计手槽占用时按特性 [[工具]]
-// 扣掉最多 2 个手部槽位，canEquip 的容量比较因此自动生效。
+// 修复（task-33）：「最多 2 张[[工具]]支援不占用手部槽位」由占用豁免原语声明：
+// slotExemptions: [{ slot:'hand', traitsAny:['Tool'], count:2 }]。读点是 src/engine/assets.js 的
+// slotExemptionRelief / slotUsage：统计占用时按槽位扣掉豁免数量，canEquip 的容量比较自动生效。
+//
+// 修复（2026-10-26）：豁免还必须覆盖「正在打出的那张[[工具]]」——slotUsage 只统计已控制的支援，
+// 旧实现里第一张工具进场前不算进豁免，仍会被要求弃置资产腾槽（放大镜回归）。现在
+// slotExemptionRelief(inv, extraCards) 统一读数，canEquip 通过 candidateRelief 扣掉待打出卡的豁免；
+// 回归用例见 tests/slot-rules.test.mjs。
 //
 // 修复（2026-10-25 reaudit-h）：「如果本次攻击击败了敌人」改读 doFight 写入检定结果的
 // `attackResult.defeated`（引擎在 defeatEnemy 之前判定，见 src/engine/combat.js:371-382），
@@ -22,11 +27,15 @@ export default {
   code: '05009',
   uses: 4,
   usesType: 'ammo',
-  toolHandSlotsExempt: 2,
+  slotExemptions: [
+    { slot: 'hand', traitsAny: ['Tool'], count: 2 },
+  ],
   abilities: [
     {
       kind: 'action',
       label: '射击（战斗 +1，伤害 +1；击败敌人可回收洞察事件）',
+      // 卡面「攻击。」= Fight 行动：发动不引发借机攻击（与 05114 同一写法）。
+      countsAs: 'fight',
       cost: { action: true, uses: 1 },
       target: { kind: 'enemy' },
       resolve: ({ inv, api, state, targetId }) => {

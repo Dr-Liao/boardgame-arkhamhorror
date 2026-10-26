@@ -128,8 +128,9 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'redirectOneHorrorToSelf', 'cannotLeavePlay',
   // Phase 5（5b-10）：入场封印 / 替换封印旧印 / 附属目标声明（`attachTo` + `onAttach`）。
   'sealOnEnter', 'substituteSealedElderSign', 'attachTo', 'onAttach',
-  // 2026-10-25：05042「必须留在起始手牌」与 05009「最多 2 张工具不占手槽」的条目级声明字段。
-  'staysInOpeningHand', 'toolHandSlotsExempt',
+  // 2026-10-25：05042「必须留在起始手牌」的条目级声明字段。
+  // 2026-10-26：占用豁免泛化为 slotExemptions:[{ slot, traitsAny?, count }]（05009 工具手槽）。
+  'staysInOpeningHand', 'slotExemptions',
   // 2026-10-25：05230 瞄准镜「所附属支援不能攻击与你交战的敌人」宿主限制读点。
   'hostCannotAttackEngaged',
   // 地点计数器型障碍（奥术屏障 02102）：检定难度、取消/继续选项与「弃牌库顶 N 张」都由卡条目声明，
@@ -241,8 +242,7 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'adaptableSwaps',
   // Phase 5（5b-9）：结局结算时的「卡戎的银币」契约（+2 经验、被击败即死亡）；读点在结局发经验段。
   'obolContract',
-  // Phase 5（5a-6）：书虫每份占用的书位（手部槽位分配）。
-  'tomeHandSlotsPerCopy',
+  // 2026-10-26：书位已并入 restrictedSlots（受限额外槽原语），不再单独注册 tomeHandSlotsPerCopy。
   // Phase 5（5a-6）：回合开始把卡上的 clicks 换成额外行动（时间借取）。
   'clicksToActions',
   // Phase 5（5a-7）：控制占用盟友槽位的支援时自我弃掉（自食其力）。
@@ -582,9 +582,9 @@ export function registerCardAbilities(entries) {
       defeatedDamage: entry.defeatedDamage ?? null,
       redirectOneHorrorToSelf: entry.redirectOneHorrorToSelf === true,
       cannotLeavePlay: entry.cannotLeavePlay === true,
-      // 2026-10-25：05042 起始手牌弱点 / 05009 工具手槽豁免的注册表输出。
+      // 2026-10-25：05042 起始手牌弱点；2026-10-26：占用豁免读 slotExemptions。
       staysInOpeningHand: entry.staysInOpeningHand === true,
-      toolHandSlotsExempt: entry.toolHandSlotsExempt ?? null,
+      slotExemptions: entry.slotExemptions ?? null,
       hostCannotAttackEngaged: entry.hostCannotAttackEngaged === true,
       sealOnEnter: entry.sealOnEnter ?? null,
       substituteSealedElderSign: entry.substituteSealedElderSign === true,
@@ -610,8 +610,7 @@ export function registerCardAbilities(entries) {
       // Phase 5（5b-9）：关间免费替换次数 / 结局契约。
       adaptableSwaps: entry.adaptableSwaps ?? null,
       obolContract: entry.obolContract === true,
-      // Phase 5（5a-6）：书位与「滴答换行动」。
-      tomeHandSlotsPerCopy: entry.tomeHandSlotsPerCopy ?? null,
+      // Phase 5（5a-6）：「滴答换行动」；书位已并入 restrictedSlots（见 ENTRY_KEYS）。
       clicksToActions: entry.clicksToActions === true,
       discardIfControllingAlly: entry.discardIfControllingAlly === true,
       // Phase 5（5a-8）：结局创伤与谈判降难度。

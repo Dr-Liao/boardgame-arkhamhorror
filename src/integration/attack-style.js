@@ -4,7 +4,7 @@
 // 第 125 轮（第 8 批）：卡号 → 风格的覆盖表搬进内容层 `content/presentation/attack-styles.js`。
 import { ATTACK_STYLE_OVERRIDES } from '../../content/presentation/attack-styles.js'
 
-export const ATTACK_STYLES = Object.freeze(['default', 'firearm', 'blade', 'lightning', 'spell'])
+export const ATTACK_STYLES = Object.freeze(['default', 'firearm', 'blade', 'lightning', 'spell', 'spiritStorm'])
 
 // Melee covers blunt tools too (bats, crowbars, hammers), so blades are the
 // Melee cards whose English name names an edged weapon.

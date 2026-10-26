@@ -147,27 +147,30 @@ export function createCardDefs(deps) {
       if (eff && eff.passive) {
         if (eff.passive.stats) copy.statBonus = eff.passive.stats
         if (eff.passive.fightDamage) copy.fightDamageBonus = eff.passive.fightDamage
-        if (eff.passive.extraSlots || eff.passive.handSlotsBonus) {
-          copy.extraSlots = { ...eff.passive.extraSlots }
-          if (eff.passive.handSlotsBonus) copy.extraSlots.hand = (copy.extraSlots.hand || 0) + eff.passive.handSlotsBonus
-        }
-        // 米奇·布朗：额外盟友槽只放非独特盟友，前端需要单独渲染这组受限槽位。
-        if (eff.passive.allySlotsForNonUnique) copy.allySlotsForNonUnique = eff.passive.allySlotsForNonUnique
       } else if (entryPassive) {
         if (entryPassive.stats) copy.statBonus = entryPassive.stats
         if (entryPassive.fightDamage) copy.fightDamageBonus = entryPassive.fightDamage
-        if (entryPassive.extraSlots || entryPassive.handSlotsBonus) {
-          copy.extraSlots = { ...entryPassive.extraSlots }
-          if (entryPassive.handSlotsBonus) copy.extraSlots.hand = (copy.extraSlots.hand || 0) + entryPassive.handSlotsBonus
-        }
-        if (entryPassive.allySlotsForNonUnique) copy.allySlotsForNonUnique = entryPassive.allySlotsForNonUnique
       } else if (descriptorEntry?.modifiers.length) {
         // Phase 5：passive.stats 迁成 modifiers 后，图鉴字段从声明式修正反推，
         // 否则前端会丢掉 statBonus / extraSlots（§7 迁移清单第 4 条）。
+        // 2026-10-26 起通用额外槽统一走 add:slot 修正，也从这个读点派生展示容量。
         const display = declarativeDisplayBonuses(descriptorEntry.modifiers)
         if (display.statBonus) copy.statBonus = display.statBonus
         if (display.extraSlots) copy.extraSlots = display.extraSlots
       }
+      // 受限额外槽（restrictedSlots）也要反映到展示容量：装备面板只按「槽位类型 + 容量」排格子，
+      // 具体哪张卡能占用受限槽仍由服务端 canEquip 判定（01008 书位 / 02147 武器位 / 05112 法术位）。
+      // 盟友受限槽（unique:false）由前端单独渲染成「受限盟友槽」，所以不进 extraSlots.ally。
+      let restrictedAllySlots = 0
+      for (const spec of descriptorEntry?.restrictedSlots || []) {
+        const slot = String(spec?.slot || '')
+        if (!slot) continue
+        const amount = Math.max(1, Number(spec.count) || 1)
+        if (slot === 'ally' && spec.unique === false) { restrictedAllySlots += amount; continue }
+        copy.extraSlots = { ...(copy.extraSlots || {}) }
+        copy.extraSlots[slot] = (copy.extraSlots[slot] || 0) + amount
+      }
+      if (restrictedAllySlots) copy.allySlotsForNonUnique = restrictedAllySlots
       out[code] = copy
     }
     const ruleCodes = campaignId ? campaignRuleCodes(campaignId)

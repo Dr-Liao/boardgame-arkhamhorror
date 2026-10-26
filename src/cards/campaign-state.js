@@ -93,5 +93,16 @@ export function createCampaignState() {
     // 支援的回合末弃置时刻（写入方是效果数据）。
     roundEndDiscardRound: asset => (asset?.tfaRoundEndDiscard ?? null),
     setRoundEndDiscard: (asset, round) => { if (asset) asset.tfaRoundEndDiscard = round },
+
+    // 关卡切换：清掉「一关之内」的战役专属调查员记账。未花掉的折扣/押注/演出奖励行动属于
+    // 上一关的场面（这一关的牌与资源都会按战役记录重建），`tfaNoReadyRound` 引用的是上一关的
+    // 轮次。字段名只能出现在本文件（src/engine 不得直接读写战役字段，见 phase6-campaign 守卫）。
+    clearScenarioTransients: inv => {
+      if (!inv) return
+      delete inv.carcosaPlayDiscount
+      delete inv.carcosaActionGains
+      delete inv.carcosaWagers
+      delete inv.tfaNoReadyRound
+    },
   }
 }

@@ -362,12 +362,22 @@ test('5c-5：03034 星界旅行移动到已揭示地点，符号标记才付代�
   assert.equal(state.investigators[0].damage, 0, '非符号标记不受伤害')
 })
 
-test('5c-5：03153 灵魂风暴用意志攻击交战敌人', () => {
+test('5c-5：03153 灵力风暴用意志攻击交战敌人', () => {
   const state = fixture()
   enemy(state, { engagedSeat: 0, health: 20 })
   play(state, '03153')
   assert.equal(state.skillTest?.skill, 'willpower', '用意志攻击')
   settle(state)
+})
+
+test('5c-5：03153 灵力风暴（卡面「攻击。」）打出不引发借机攻击', () => {
+  const state = fixture()
+  enemy(state, { engagedSeat: 0, health: 20, damage: 2 })
+  state.chaosBag = ['0']
+  play(state, '03153')
+  settle(state)
+  assert.equal(state.investigators[0].damage, 0, '「攻击。」事件按攻击行动结算，不引发借机攻击')
+  assert.equal(state.enemies[0].damageTaken, 2, '灵力风暴正常结算 2 点伤害')
 })
 
 test('5c-5：03197 充能给法术支援补 3 点充能', () => {
@@ -951,7 +961,8 @@ test('5a-8：结局创伤与谈判降难度由条目声明，古代遗物默认�
 // ---- 5a-7：又三处卡号分支 → 条目级标记 / 能力数据（01008、04236、03004）----
 
 test('5a-7：01008 书位不平移、04236 自我弃掉、03004 入场额外充能都改成数据驱动', () => {
-  assert.equal(registeredEntry('01008')?.tomeHandSlotsPerCopy, 2, '书位仍由条目声明')
+  assert.deepEqual(registeredEntry('01008')?.restrictedSlots,
+    [{ slot: 'hand', traitsAny: ['Tome'], count: 2 }], '书位由受限额外槽原语声明')
   assert.equal(registeredEntry('04236')?.discardIfControllingAlly, true, '自食其力的自我弃掉标记')
 
   // 04236：控制一个占盟友槽位的支援后，在 upkeep 末自我弃掉。
@@ -967,7 +978,8 @@ test('5a-7：01008 书位不平移、04236 自我弃掉、03004 入场额外充�
 // ---- 5a-6：卡号分支 → 条目级规则标记（01008 书位、04308 滴答换行动）----
 
 test('5a-6：01008 书虫的书位与 04308 的「滴答换行动」改用条目级标记', () => {
-  assert.equal(registeredEntry('01008')?.tomeHandSlotsPerCopy, 2, '每份书虫占 2 个书位')
+  assert.deepEqual(registeredEntry('01008')?.restrictedSlots,
+    [{ slot: 'hand', traitsAny: ['Tome'], count: 2 }], '每份书虫的 2 个书位由受限额外槽原语声明')
   assert.equal(registeredEntry('04308')?.clicksToActions, true, '回合开始把滴答换成额外行动')
 
   // 04308 的行为：卡上有 3 声滴答，回合结束再开始时应拿到 3 次额外行动。

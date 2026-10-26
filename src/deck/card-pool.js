@@ -8,7 +8,7 @@
 import { cardAllowedByScope, campaignCycle, normalizeCardPoolScope } from '../../web/deck-rules.js'
 
 export {
-  CARD_POOL_SCOPES, CARD_POOL_SCOPE_LABELS, CAMPAIGN_CYCLES, campaignCycle, cardCycle,
+  CARD_POOL_SCOPES, CARD_POOL_SCOPE_LABELS, CARD_POOL_RESTRICTION_ENABLED, CAMPAIGN_CYCLES, campaignCycle, cardCycle,
   cardAllowedByScope, normalizeCardPoolScope,
 } from '../../web/deck-rules.js'
 

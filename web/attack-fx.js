@@ -89,6 +89,25 @@ const STYLES = {
           { scale: '1.55', rotate: '80deg', opacity: 0 }], 490]],
     }
   },
+  spiritStorm({ node, start, end, box, miss, secondaryTargets = [] }) {
+    const size = Math.max(150, Math.min(280, Math.max(box.width, box.height) * 1.4))
+    const sigil = place(node('div', 'ah-storm-sigil'), { left: start.x + 'px', top: start.y + 'px' })
+    const vortex = place(node('div', 'ah-storm-vortex'), { left: end.x + 'px', top: end.y + 'px', width: size + 'px', height: size + 'px' })
+    const core = place(node('div', 'ah-storm-core'), { left: end.x + 'px', top: end.y + 'px' })
+    const wave = place(node('div', 'ah-storm-wave'), { left: end.x + 'px', top: end.y + 'px', width: size + 'px', height: size + 'px' })
+    const echoes = secondaryTargets.map(at => place(node('div', 'ah-storm-echo'), { left: at.x + 'px', top: at.y + 'px' }))
+    return {
+      elements: [sigil, vortex, core, wave, ...echoes], strikeSound: { synth: 'stormRise' }, impactSound: { synth: 'stormBurst' },
+      strike: source => [[source, [{ filter: 'brightness(1)' }, { filter: 'brightness(1.7) hue-rotate(95deg)', offset: .5 }, { filter: 'brightness(1)' }], 650],
+        [sigil, [{ scale: '.25', rotate: '-60deg', opacity: 0 }, { scale: '1', rotate: '100deg', opacity: 1, offset: .45 }, { scale: '1.35', rotate: '210deg', opacity: 0 }], 650],
+        [vortex, [{ scale: '.2', rotate: '-90deg', opacity: 0 }, { scale: '.65', rotate: '100deg', opacity: .8, offset: .5 }, { scale: '1', rotate: '270deg', opacity: 1 }], 650]],
+      impact: target => [[target, miss ? dodge : shake, 400],
+        [vortex, [{ scale: '1', rotate: '270deg', opacity: 1 }, { scale: '1.45', rotate: '520deg', opacity: .85, offset: .55 }, { scale: '1.8', rotate: '690deg', opacity: 0 }], 620],
+        [core, [{ scale: '.3', opacity: 0 }, { scale: '1', opacity: miss ? .3 : 1, offset: .2 }, { scale: '2.2', opacity: 0 }], 520],
+        [wave, [{ scale: '.35', opacity: 0 }, { scale: '.8', opacity: miss ? .25 : 1, offset: .2 }, { scale: '2', opacity: 0 }], 620],
+        ...echoes.map(el => [el, [{ scale: '.25', opacity: 0 }, { scale: '1', opacity: miss ? 0 : 1, offset: .35 }, { scale: '2', opacity: 0 }], 540])],
+    }
+  },
   blade({ node, end, box, ux, uy, miss }) {
     const size = Math.max(80, Math.min(240, Math.max(box.width, box.height) * 1.1))
     const cuts = [-36, 24].map(deg => place(node('div', 'ah-combat-cut'), { left: end.x + 'px', top: end.y + 'px', width: size + 'px', rotate: deg + 'deg' }))

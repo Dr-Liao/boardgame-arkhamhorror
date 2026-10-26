@@ -671,8 +671,15 @@ test('快速反应不再询问、卡面开关恢复与刷新记忆，关闭不�
     st.investigators[0].hand=['01023'];st.legalMoves=[]
   })
   await expect(page.locator('.ah-table')).not.toHaveClass(/ah-presenting/)
-  const toggle=page.locator('.ah-hand-card [data-reaction-toggle="01023"]')
+  // 卡面开关只有一颗可开关的闪电图标（不再显示「反应开/反应关」文字）。
+  const toggle=page.locator('.ah-hand-card [data-reaction-code="01023"]')
+  await expect(toggle).toHaveAttribute('data-reaction-mode','ask')
+  await expect(toggle).toHaveAttribute('role','switch')
   await expect(toggle).toHaveAttribute('aria-checked','true')
+  await expect(toggle).toHaveText('')
+  await expect(toggle.locator('.ah-icon')).toHaveCount(1)
+  mkdirSync(output,{recursive:true})
+  await page.screenshot({path:output+'reaction-lightning-card.png',animations:'disabled'})
   const reaction=async id=>f.update(st=>{
     st.pendingChoice={id,seat:0,kind:'reaction',source:{type:'window',when:'enemyAttack'},canSkip:true,prompt:'是否打出快速反应卡？',options:[{id:'skip',label:'不打出'},{id:'0',label:'闪躲'}]}
     st.legalMoves=st.pendingChoice.options.map(o=>({action:'choose',choiceId:id,optionId:o.id,label:o.label}))
@@ -681,8 +688,11 @@ test('快速反应不再询问、卡面开关恢复与刷新记忆，关闭不�
   await page.getByRole('button',{name:'本局不再询问'}).click()
   await expect.poll(()=>f.submitted.length).toBe(1)
   expect(f.submitted[0].move).toMatchObject({action:'choose',optionId:'skip'})
+  await expect(toggle).toHaveAttribute('data-reaction-mode','skip')
   await expect(toggle).toHaveAttribute('aria-checked','false')
+  await expect(toggle.locator('.ah-reaction-slash')).toHaveCount(1)
   await page.reload()
+  await expect(toggle).toHaveAttribute('data-reaction-mode','skip')
   await expect(toggle).toHaveAttribute('aria-checked','false')
   await page.evaluate(()=>{
     window.autoPassPromptAdds=0
@@ -700,12 +710,18 @@ test('快速反应不再询问、卡面开关恢复与刷新记忆，关闭不�
   await expect(page.locator('.ah-direct-prompt')).toHaveCount(0)
   expect(await page.evaluate(()=>{window.autoPassPromptObserver.disconnect();return window.autoPassPromptAdds})).toBe(0)
   await toggle.click()
+  await expect(toggle).toHaveAttribute('data-reaction-mode','ask')
   await expect(toggle).toHaveAttribute('aria-checked','true')
+  // 点开关只切反应状态：不选中手牌、不弹行动浮层、也不触发拖动。
+  await expect(page.locator('.ah-carddetail-modal')).toHaveCount(0)
+  await expect(page.locator('.ah-minicard.is-selected')).toHaveCount(0)
+  await expect(page.locator('.ah-card-action-popover')).toHaveCount(0)
   expect(f.submitted.length).toBe(2)
   await reaction('r3')
   await expect(page.getByRole('button',{name:'本局不再询问'})).toBeVisible()
   await page.getByRole('button',{name:'不打出',exact:true}).click()
   await expect.poll(()=>f.submitted.length).toBe(3)
+  await expect(toggle).toHaveAttribute('data-reaction-mode','ask')
   await expect(toggle).toHaveAttribute('aria-checked','true')
 })
 
@@ -714,14 +730,62 @@ test('场上的体能训练保留快速反应开关，可关掉再打开',async(
   // 01017 的天赋档位在 Phase 5 搬到条目层：卡定义必须仍带 hasReactionPrompt，
   // 否则「不再询问」之后没有入口恢复提示。
   expect(f.session.state.cards['01017'].hasReactionPrompt).toBe(true)
-  await f.update(st=>{st.investigators[0].assets=[{id:'pt',code:'01017',exhausted:false}];st.legalMoves=[]})
-  const toggle=page.locator('.ah-table [data-reaction-toggle="01017"]').first()
+  await f.update(st=>{
+    st.investigators[0].assets=[{id:'pt',code:'01017',exhausted:false}]
+    st.investigators[0].threat=[{id:'cop',code:'01018'}]
+    st.legalMoves=[]
+  })
+  const toggle=page.locator('.ah-table [data-reaction-code="01017"]').first()
   await expect(toggle).toBeVisible()
+  await expect(toggle).toHaveAttribute('data-reaction-mode','ask')
+  await expect(toggle).toHaveAttribute('role','switch')
   await expect(toggle).toHaveAttribute('aria-checked','true')
+  await expect(toggle).toHaveText('')
   await toggle.click()
+  await expect(toggle).toHaveAttribute('data-reaction-mode','skip')
   await expect(toggle).toHaveAttribute('aria-checked','false')
+  await expect(toggle.locator('.ah-reaction-slash')).toHaveCount(1)
+  // 点开关不能把这张资产卡打开成详情或选中。
+  await expect(page.locator('.ah-carddetail-modal')).toHaveCount(0)
+  await expect(page.locator('.ah-minicard.is-selected')).toHaveCount(0)
+  // 威胁区的小卡走同一个组件：同样只有闪电、可开关。
+  const threat=page.locator('.ah-threat-row [data-reaction-code="01018"]').first()
+  await expect(threat).toBeVisible()
+  await expect(threat).toHaveAttribute('data-reaction-mode','ask')
+  await expect(threat).toHaveText('')
+  await threat.click()
+  await expect(threat).toHaveAttribute('data-reaction-mode','skip')
+  await expect(threat.locator('.ah-reaction-slash')).toHaveCount(1)
+  mkdirSync(output,{recursive:true})
+  await page.screenshot({path:output+'reaction-lightning-asset.png',animations:'disabled'})
   await toggle.click()
+  await expect(toggle).toHaveAttribute('data-reaction-mode','ask')
   await expect(toggle).toHaveAttribute('aria-checked','true')
+})
+
+test('卡牌详情里的反应开关同样只有可开关的闪电',async({page})=>{
+  const f=await fixture(page)
+  await f.update(st=>{
+    st.cards['01023']={...(st.cards['01023']||{}),code:'01023',name:'闪躲',hasReactionPrompt:true}
+    st.investigators[0].hand=['01023'];st.legalMoves=[]
+  })
+  await page.locator('.ah-hand-card[data-card-code="01023"]').first().click({button:'right'})
+  const dialog=page.getByRole('dialog',{name:'卡牌详情'})
+  await expect(dialog).toBeVisible()
+  const toggle=dialog.locator('[data-reaction-mode][data-reaction-code="01023"]')
+  await expect(toggle).toHaveCount(1)
+  await expect(toggle).toHaveAttribute('data-reaction-mode','ask')
+  await expect(toggle).toHaveText('')
+  await expect(toggle.locator('.ah-icon')).toHaveCount(1)
+  await toggle.click()
+  await expect(toggle).toHaveAttribute('data-reaction-mode','skip')
+  await expect(toggle.locator('.ah-reaction-slash')).toHaveCount(1)
+  // 开关在详情里是同一个控件，点完详情仍然打开。
+  await expect(dialog).toBeVisible()
+  mkdirSync(output,{recursive:true})
+  await page.screenshot({path:output+'reaction-lightning-detail.png',animations:'disabled'})
+  await page.getByRole('button',{name:'关闭卡牌详情'}).click()
+  await expect(dialog).toHaveCount(0)
 })
 
 test('伤害分配常驻显示并可选择巡警，不会落入更多行动或被零行动点阻止',async({page})=>{

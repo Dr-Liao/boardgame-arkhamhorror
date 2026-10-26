@@ -11,6 +11,8 @@ export default {
   abilities: [
     {
       kind: 'played', label: '劝服',
+      // 卡面「谈判。」= Parley 行动：打出按谈判结算，不引发借机攻击。
+      countsAs: 'parley',
       resolve: ({ state, inv, api }) => {
         const targets = state.enemies.filter(enemy => enemy.location === inv.location
           && (enemy.traits || []).some(trait => String(trait).toLowerCase() === 'humanoid')

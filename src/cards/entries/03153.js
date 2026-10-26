@@ -4,13 +4,21 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 03153 灵魂风暴：用意志攻击一名交战敌人（没有交战时攻击同地点的敌人）。
+// 03153 灵力风暴：用意志攻击一名交战敌人（没有交战时攻击同地点的敌人）。
+//
+// 2026-10-26 修复（借机攻击判定）：卡面「攻击。」是 Fight 行动关键字。旧 played 描述子只用
+// resolve 结算，没有声明行动种类/免借机，引擎按普通「打出」行动结算 → 打出时先吃一次借机攻击。
+// 补 countsAs:'fight' + noOpportunityAttack（与 05113/05118 同一写法；读点 lifecycle.playFlag →
+// dispatch.js 的 playNoAoO，规则见 docs/card-model.md §5b）。
 
 export default {
   code: '03153',
   abilities: [
     {
-      kind: 'played', label: '灵魂风暴',
+      kind: 'played', label: '灵力风暴',
+      // 卡面「攻击。」= Fight 行动：打出它按攻击行动结算，不引发借机攻击。
+      countsAs: 'fight',
+      noOpportunityAttack: true,
       resolve: ({ state, inv, api }) => {
         const candidates = state.enemies.filter(enemy => enemy.location === inv.location)
         if (!candidates.length) { api.info('这里没有可攻击的敌人。'); return }
@@ -19,7 +27,7 @@ export default {
           options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name })),
         })
         const target = candidates.find(enemy => enemy.id === targetId) || candidates[0]
-        api.fight(inv.seat, target.id, { skill: 'willpower', stormOfSpirits: true })
+        api.fight(inv.seat, target.id, { skill: 'willpower', stormOfSpirits: true, presentationCardCode: '03153' })
       },
     },
   ],

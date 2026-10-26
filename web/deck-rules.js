@@ -230,6 +230,12 @@ export function validateDeckRules(investigator, codes, cards, { partial = false 
 // 02 敦威治遗产、03 卡尔克萨之路、04 失落的时代……），与官方产品循环一致。
 // 浏览器与服务器共用这份纯规则：新战役必须登记循环，否则渐进式视为不限制。
 export const CARD_POOL_SCOPES = Object.freeze(['all', 'progressive'])
+// 2026-10-26 临时取消卡牌范围限制：所有战役都按「全部」处理，渐进式不再按循环过滤卡牌，
+// 界面也不显示「卡牌范围」选项。当前发布版手动牌组的许可校验还有误伤（见
+// src/deck/deckbuilding.js 的开放池许可），先把卡牌来源限制整体放开；待那份修复
+// 合入后，把本常量改回 true 即恢复限制——过滤逻辑、高级设置入口与
+// tests/game-settings.test.mjs / tests/hall-setup.browser.mjs 的对应断言都会一起回来。
+export const CARD_POOL_RESTRICTION_ENABLED = false
 // getter：取到时按当前语言求值（不能在这里直接 t()，那会在导入时固定成 zh-CN）。
 export const CARD_POOL_SCOPE_LABELS = Object.freeze({
   get all() { return t('misc.cardPool.all') },
@@ -255,6 +261,7 @@ export function cardCycle(code) {
   return cycle >= 1 && cycle <= 9 ? cycle : null
 }
 export function cardAllowedByScope(code, scope, currentCycle) {
+  if (!CARD_POOL_RESTRICTION_ENABLED) return true
   if (normalizeCardPoolScope(scope) !== 'progressive' || !currentCycle) return true
   const cycle = cardCycle(code)
   return cycle == null || cycle <= currentCycle

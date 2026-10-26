@@ -4,7 +4,7 @@ import {
   actPlacesLocationForEmptySpawn, agendaHandSizePenalty, blanksTraits, counterTreacheryCode,
   enemyRuleFlags, enemyWeaknessExtra, hasExplicitReactionPrompt, investigateExtraActionsFor,
   isPoisonThreat, isTextBlankEnemy, locationCounterTreacheries, pallidMaskCode, poisonThreatCode,
-  relocateDestinationCode, relicDiscountLocation, weaknessUpgradeCode,
+  relocateDestinationCode, relicDiscountLocation, traitLabel, traitLabels, weaknessUpgradeCode,
 } from '../src/cards/card-rules.js'
 
 // Phase 5（5a）/ Phase 3（第 3 批）：卡号级规则的读点必须仍然可用，但数据已经搬进卡条目。
@@ -49,4 +49,17 @@ nodeTest('5a 卡号级规则数据：读点与数据形状', () => {
   assert.equal(pallidMaskCode(), '03059')
   assert.equal(relicDiscountLocation('04142'), true)
   assert.equal(relocateDestinationCode(), '02320')
+})
+
+// 第 130 轮：特性中文名读点。判定仍用印刷英文特性，但消息层必须与卡面写法一致。
+nodeTest('印刷特性 → 中文写法：常见特性、大小写与未知特性回退', () => {
+  assert.equal(traitLabel('Insight'), '洞察')
+  assert.equal(traitLabel('insight'), '洞察')
+  assert.equal(traitLabel('Cultist'), '异教徒')
+  assert.equal(traitLabel('Humanoid'), '类人')
+  assert.equal(traitLabel('Nightgaunt'), '夜魇')
+  // 没有译名时不编造：原样返回，消息层永远拿得到字符串。
+  assert.equal(traitLabel('NonexistentTrait'), 'NonexistentTrait')
+  assert.equal(traitLabel(null), '')
+  assert.deepEqual(traitLabels(['Insight', 'Mystery']), ['洞察', '神秘'])
 })

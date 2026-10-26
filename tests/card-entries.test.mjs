@@ -17,6 +17,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import { CARD_ABILITY_ENTRIES, CARD_ABILITY_CODES } from '../src/cards/card-abilities.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { actionPreview } from '../src/engine/engine.js'
+import { fixture, enemy } from './core-fixture.mjs'
 import { buildCardIndex, entryFiles } from '../tools/build-card-index.mjs'
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
@@ -99,4 +101,104 @@ test('卡型与描述子 kind 匹配：事件必须有 played，支援不得只�
     }
   }
   assert.deepEqual(problems, [], `描述子 kind 与卡型不匹配：\n  ${problems.join('\n  ')}`)
+})
+
+// ---------------------------------------------------------------------------
+// 行动指示（Action Designator）→ 借机攻击豁免守卫（2026-10-26）
+//
+// 规则：卡面粗体「攻击。/躲避。/谈判。/撤退。」= 按对应行动结算；这四类行动不引发借机攻击
+// （Rules Reference「Attack of Opportunity / Action Designators」）。实现上靠描述子的
+// countsAs（resolve 能力）或 effect.kind/type，显式写「不引发」的卡用 noOpportunityAttack；
+// 快速卡不花行动、也不引发。
+//
+// 背景：05013 银暮匕首、03153 灵力风暴 曾因为只写了 resolve、没写 countsAs，被引擎当成普通
+// 行动 → 与敌人交战时发动/打出先吃一次借机攻击。这里把「卡面指示 ↔ 描述子声明」固化成门禁，
+// 同类漏写会在 fast tier 直接失败，而不是等玩家踩到。
+// ---------------------------------------------------------------------------
+
+const EXEMPT_DESIGNATORS = {
+  fight: ['Fight.', '攻击。'],
+  evade: ['Evade.', '躲避。'],
+  parley: ['Parley.', '谈判。'],
+  resign: ['Resign.', '撤退。'],
+}
+const escapeRegExp = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+// 指示可以出现在行首，也可以出现在「[action] …:」/「[action] …：」之后（中英文冒号）。
+const hasDesignator = (text, label) => new RegExp(`(^|[\\n:：])\\s*(\\*\\*)?(${escapeRegExp(label)})(\\*\\*)?`, 'u')
+  .test(String(text || ''))
+const printedExemptKinds = card => Object.entries(EXEMPT_DESIGNATORS)
+  .filter(([, labels]) => labels.some(label => hasDesignator(card.text, label) || hasDesignator(card.textZh, label)))
+  .map(([kind]) => kind)
+const isExemptKind = kind => ['fight', 'evade', 'parley', 'resign'].includes(kind)
+const declaredKinds = ability => [ability.countsAs, ability.effect?.kind, ability.effect?.type].filter(Boolean)
+
+test('卡面「攻击/躲避/谈判/撤退」指示必须在描述子上声明（借机攻击豁免）', () => {
+  const problems = []
+  for (const entry of CARD_ABILITY_ENTRIES) {
+    const card = ALL_CARDS[entry.code]
+    if (!card) continue
+    const abilities = (entry.abilities || []).filter(ability => ['action', 'played', 'free'].includes(ability.kind))
+    // 只守护「能力层真的可打出/可发动」的卡；纯数据/剧情条目（如弱点敌人、剧情支援）没有 played/action。
+    if (!abilities.length) continue
+    for (const kind of printedExemptKinds(card)) {
+      const covered = abilities.some(ability => declaredKinds(ability).includes(kind)
+        || ability.noOpportunityAttack === true || ability.fast === true)
+      if (!covered) {
+        problems.push(`${entry.code}（${card.name}）卡面有「${kind}」指示，但描述子没写 countsAs:'${kind}' / noOpportunityAttack / fast`)
+      }
+    }
+  }
+  assert.deepEqual(problems, [], `借机攻击豁免声明缺失：\n  ${problems.join('\n  ')}`)
+})
+
+test('带豁免类行动指示的事件卡：打出预览不出现借机攻击', () => {
+  const problems = []
+  for (const entry of CARD_ABILITY_ENTRIES) {
+    const card = ALL_CARDS[entry.code]
+    if (!card || card.type !== 'event' || !printedExemptKinds(card).length) continue
+    const state = fixture()
+    state.investigators[0].hand = [entry.code]
+    state.investigators[0].resources = 30
+    enemy(state, { damage: 2 })
+    const preview = actionPreview(state, 0, { action: 'play', cardId: entry.code })
+    if (preview?.opportunityAttacks?.length) problems.push(`${entry.code}（${card.name}）打出预览仍出现借机攻击`)
+  }
+  assert.deepEqual(problems, [], `事件卡借机攻击豁免失效：\n  ${problems.join('\n  ')}`)
+})
+
+test('带豁免类行动指示的 [action] 能力：发动预览不出现借机攻击', () => {
+  const problems = []
+  for (const entry of CARD_ABILITY_ENTRIES) {
+    const card = ALL_CARDS[entry.code]
+    if (!card) continue
+    ;(entry.abilities || []).forEach((ability, index) => {
+      if (ability.kind !== 'action') return
+      const kind = declaredKinds(ability).find(isExemptKind)
+      if (!kind) return
+      const state = fixture()
+      state.investigators[0].assets = [{ id: 'preview-asset', code: entry.code, exhausted: false }]
+      enemy(state, { damage: 2 })
+      const preview = actionPreview(state, 0, { action: 'ability', assetId: 'preview-asset', abilityIndex: index })
+      if (preview?.opportunityAttacks?.length) problems.push(`${entry.code}（${card.name}）第 ${index} 条能力预览仍出现借机攻击`)
+    })
+  }
+  assert.deepEqual(problems, [], `[action] 能力借机攻击豁免失效：\n  ${problems.join('\n  ')}`)
+})
+
+test('卡面「快速。」必须落在条目（资产）或 played 描述子（事件）上', () => {
+  const problems = []
+  for (const entry of CARD_ABILITY_ENTRIES) {
+    const card = ALL_CARDS[entry.code]
+    if (!card) continue
+    if (!/(^|\n)\s*(\*\*)?Fast\./.test(String(card.text || ''))) continue
+    const abilities = entry.abilities || []
+    const hasFast = entry.fast === true || abilities.some(ability => ability.fast === true)
+    const hasPlayed = abilities.some(ability => ability.kind === 'played')
+    if (card.type === 'asset' && !hasFast) {
+      problems.push(`${entry.code}（${card.name}）是快速资产，条目缺少 fast: true`)
+    } else if (card.type === 'event' && hasPlayed && !hasFast) {
+      problems.push(`${entry.code}（${card.name}）是快速事件，played 描述子缺少 fast: true`)
+    }
+  }
+  assert.deepEqual(problems, [], `快速关键字未落数据：\n  ${problems.join('\n  ')}`)
 })

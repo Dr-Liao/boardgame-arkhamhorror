@@ -187,8 +187,11 @@ function doFight(state, seat, opts, events, noSpend) {
   if (rangedReduction && !enemyTextBlanked(state, enemy)
     && cardDef(weapon?.code)?.traits?.some(trait => ['Ranged', 'Firearm', 'Spell'].includes(trait))) difficulty = Math.max(0, difficulty - rangedReduction)
   // Events pass their printed code through effect.code/sourceCode rather than an asset instance.
-  const weaponCode = weapon?.code || [opts.assetId, opts.sourceCode, opts.code].find(code => code && cardDef(code)) || null
+  // Direct card API attacks may provide a presentation-only code without changing damage attribution.
+  const weaponCode = weapon?.code || [opts.presentationCardCode, opts.assetId, opts.sourceCode, opts.code].find(code => code && cardDef(code)) || null
   const attackFx = { weaponCode, attackStyle: attackStyle(weaponCode && cardDef(weaponCode)) }
+  const affectedEnemyIds = opts.stormOfSpirits
+    ? state.enemies.filter(item => item.location === enemy.location).map(item => item.id) : undefined
   // 「值得信赖」：结算宿主支援的触发能力时每项技能 +1。
   const trustedHost = inv.assets.find(item => item.id === opts.assetId)
   // Phase 5（5a-24）：同上（攻击流程里的那处）。
@@ -285,7 +288,7 @@ function doFight(state, seat, opts, events, noSpend) {
         info(state, events, `⛔ 「${enemy.name}」免疫这次攻击造成的伤害。`)
       }
       ;(state._resolution?.events || events).push({ type: 'presentation', kind: 'attack', direction: 'outgoing', seat, enemyId: enemy.id,
-        assetId: opts.assetId, ...attackFx, name: enemy.name, location: enemy.location, damage: dmg, success: true,
+        assetId: opts.assetId, ...attackFx, enemyIds: affectedEnemyIds, name: enemy.name, location: enemy.location, damage: dmg, success: true,
         defeated: enemy.damageTaken + dmg >= enemyHealth(state, enemy)
           && enemyCanBeDefeated(state, enemy, opts.assetId || null, seat),
         tableState: captureTableState(state, getStat, getMaxSanity) })
@@ -412,7 +415,7 @@ function doFight(state, seat, opts, events, noSpend) {
       }
     } else {
       ;(state._resolution?.events || events).push({ type: 'presentation', kind: 'attack', direction: 'outgoing', seat, enemyId: enemy.id,
-        assetId: opts.assetId, ...attackFx, name: enemy.name, location: enemy.location, damage: 0, success: false,
+        assetId: opts.assetId, ...attackFx, enemyIds: affectedEnemyIds, name: enemy.name, location: enemy.location, damage: 0, success: false,
         tableState: captureTableState(state, getStat, getMaxSanity) })
       info(state, events, `⚔️ ${inv.name} 攻击失败（${SKILL_NAMES[skill]} ${r.value} vs ${difficulty}，标记 ${tokenLabel(r.token)}）。`)
       const attackFail = reactionWindow(state, 'attackFail', { when: 'attackFail', seat, location: inv.location, enemy,

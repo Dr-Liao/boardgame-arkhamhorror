@@ -14,6 +14,8 @@ export default {
   abilities: [
     {
       kind: 'played', label: '临时武器',
+      // 卡面「攻击。」= Fight 行动：打出按攻击结算，不引发借机攻击。
+      countsAs: 'fight',
       resolve: ({ state, inv, api }) => {
         const fromDiscard = api.fromDiscardCode() === '04033'
         const targets = state.enemies.filter(enemy => enemy.location === inv.location)

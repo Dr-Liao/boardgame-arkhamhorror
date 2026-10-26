@@ -24,7 +24,7 @@ import { mapGeometry, hunterRouteEdges, MAP_CARD_WIDTH, MAP_CARD_HEIGHT } from '
 import { createTablePresentation } from './table-presentation.js'
 import { tableIcon, classIcon, cardAttachmentReferences, cardMarkerData, placedCardMarkers } from './table-components.js'
 import { choicePresentation, entityMoves, mountCardInteractions, cancelTableGesture, handUnavailableReason } from './card-interactions.js'
-import { reactionEnabled, setReactionEnabled, reactionChoices, reactionView, reactionAutoPlan, reactionState, setReactionState, reactionStates, reactionPrefsSeq, defaultReactionState, hydrateReactionStates } from './reaction-preferences.js'
+import { setReactionEnabled, reactionChoices, reactionView, reactionAutoPlan, reactionState, setReactionState, reactionStates, reactionPrefsSeq, defaultReactionState, hydrateReactionStates } from './reaction-preferences.js'
 import { presentationAttributes, campaignPlaylistId } from './campaign-presentation.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
 // 第 4 步 P5：万象无终的专用交互面板（塔罗抽牌 / 序章选人 / 闹鬼来源 / 地点标记 / 多技能检定）。
@@ -169,6 +169,8 @@ function scheduleReactionPass(session) {
   return true
 }
 
+// 反应提示开关统一成一颗可开关的闪电图标（卡面/详情/角色面板同一个控件，不再显示「反应开/反应关」文字）。
+// 有自动资格的卡（hasAutoReaction）用三态按钮；只有快速开关的卡是两态 skip ↔ ask，图标仍是同一颗闪电。
 function renderReactionToggle(s, code) {
   if (!s) return null
   const def = ahCardDef(s, code)
@@ -176,16 +178,7 @@ function renderReactionToggle(s, code) {
   const seat = s.observerSeat ?? s.players.find(player => player.role === 'human')?.seat
   const inv = s.state.investigators.find(inv => inv.seat === seat)
   if (!inv || !(inv.code === code || inv.hand?.includes(code) || [...(inv.assets || []),...(inv.threat || [])].some(card => card.code === code))) return null
-  // 有旧式反应窗口的卡用三态按钮（含米兰这类默认 auto 的资产）；只有快速开关的卡保留旧文字按钮。
-  if (def.hasAutoReaction) return renderReactionModeButton(s, seat, code, def)
-  const enabled = reactionEnabled(s.sessionId,seat,code)
-  return h('button', { className:'ah-reaction-toggle'+(enabled?' is-on':''), 'data-reaction-toggle':code,
-    role:'switch', 'aria-checked':String(enabled), 'aria-label':t('game.reaction.aria', { name: cardDisplayName(ahCardDef(s,code)) || code }),
-    title:enabled?t('game.reaction.on.title'):t('game.reaction.off.title'),
-    disabled:presentation.isBlocking,
-    onpointerdown:event=>event.stopPropagation(), onkeydown:event=>event.stopPropagation(),
-    onclick:event=>{event.stopPropagation();setReactionEnabled(s.sessionId,seat,[code],!enabled);lastReactionPass=null;resetReactionSync();render()},
-  },tableIcon('action'),enabled?t('game.reaction.on'):t('game.reaction.off'))
+  return renderReactionModeButton(s, seat, code, def)
 }
 
 // 三态按钮：skip → ask → auto → skip。一个命中区，图标随状态变化：
@@ -196,6 +189,8 @@ const REACTION_MODE_NEXT_NO_AUTO = { skip: 'ask', ask: 'skip', auto: 'skip' }
 // 显式 key 表：i18n 守卫只认 t(字面量)，不要用模板拼接。
 const REACTION_MODE_KEY = { skip: 'game.reaction.mode.skip', ask: 'game.reaction.mode.ask', auto: 'game.reaction.mode.auto' }
 const REACTION_MODE_TITLE_KEY = { skip: 'game.reaction.mode.skip.title', ask: 'game.reaction.mode.ask.title', auto: 'game.reaction.mode.auto.title' }
+// 两态卡（无 auto 档）沿用「开启/关闭」的 hover 文案；三态卡的标题在 ask 档会说明下一档是 auto。
+const REACTION_TOGGLE_TITLE_KEY = { skip: 'game.reaction.off.title', ask: 'game.reaction.on.title' }
 function reactionModeOf(s, seat, code) {
   return reactionState(s.sessionId, seat, code) ?? defaultReactionState(ahCardDef(s, code))
 }
@@ -203,15 +198,21 @@ function renderReactionModeButton(s, seat, code, def) {
   const raw = reactionModeOf(s, seat, code)
   const mode = !def.hasAutoReaction && raw === 'auto' ? 'ask' : raw
   const next = (def.hasAutoReaction ? REACTION_MODE_NEXT : REACTION_MODE_NEXT_NO_AUTO)[mode]
+  // 三态卡说明当前档位与下一档；两态卡就是开关，读屏用 switch + aria-checked。
+  const threeWay = !!def.hasAutoReaction
+  const title = threeWay ? t(REACTION_MODE_TITLE_KEY[mode]) : t(REACTION_TOGGLE_TITLE_KEY[mode])
+  const ariaLabel = threeWay
+    ? t('game.reaction.mode.aria', { state: t(REACTION_MODE_KEY[mode]), next: t(REACTION_MODE_KEY[next]) })
+    : t('game.reaction.aria', { name: cardDisplayName(ahCardDef(s, code)) || code })
   return h('button', {
     className: `ah-reaction-mode is-${mode}`,
     type: 'button',
     'data-reaction-mode': mode,
     'data-reaction-code': code,
-    title: t(REACTION_MODE_TITLE_KEY[mode]),
-    'aria-label': t('game.reaction.mode.aria', {
-      state: t(REACTION_MODE_KEY[mode]), next: t(REACTION_MODE_KEY[next]),
-    }),
+    role: threeWay ? null : 'switch',
+    'aria-checked': threeWay ? null : String(mode !== 'skip'),
+    title,
+    'aria-label': ariaLabel,
     onpointerdown: event => event.stopPropagation(),
     onkeydown: event => event.stopPropagation(),
     onclick: event => {
@@ -221,7 +222,7 @@ function renderReactionModeButton(s, seat, code, def) {
       resetReactionSync()
       render()
     },
-  }, tableIcon(def.hasAutoReaction && mode === 'auto' ? 'gear' : 'action'),
+  }, tableIcon(threeWay && mode === 'auto' ? 'gear' : 'action'),
     mode === 'skip' ? h('i', { className: 'ah-reaction-slash', 'aria-hidden': 'true' }) : null)
 }
 function renderReactionModes(s, inv) {
@@ -316,6 +317,25 @@ export function createUI(host) {
         themed(arkhamCatalog.isOpen ? arkhamCatalog.render() : null),
         themed(state.cardDetail ? renderCardDetailModal(state.cardDetail) : null),
       ].filter(Boolean)
+    },
+    // 大厅「强制同步」钩子：任何操作/演出看起来卡住时，由玩家手动点「强制同步」清掉本 Mod 的
+    // 本地演出、选择与行动门闩，再用房主的全量快照重画。只重置展示状态，不提交动作、不改对局。
+    recoverAfterStall: () => {
+      state.busy = false
+      state.movePending = null
+      state.error = ''
+      state.arkhamSelection = null
+      state.arkhamDirectActions = null
+      state.arkhamTargetAbility = null
+      state.arkhamChoiceDraft = null
+      state.arkhamHubPending = null
+      state.arkhamAcceptedFx = null
+      lastReactionPass = null
+      cancelTableGesture()
+      clearCardDrag()
+      presentation?.reset?.()
+      tableSession = null
+      render()
     },
   }
 }
@@ -1460,13 +1480,14 @@ function renderPlayerDock(s, inv, humanTurn) {
           : h('span', { className: 'ah-hunch-empty' }, t('game.hunch.empty'))) : null),
     h('div', { className: 'ah-player-dock' },
     h('div', { className: 'ah-dock-investigator' },
-      h('span', { className: 'ah-dock-portrait', 'aria-hidden': 'true' }, tableArt(h, inv.code, inv.name)),
       h('span', { className: 'ah-dock-kicker', title: t('game.dock.investigatorOwner', { name: s.players[inv.seat]?.name || 'player' }) }, renderPlayerAvatar(s.players[inv.seat]), t('game.dock.investigatorOwner', { name: s.players[inv.seat]?.name || 'player' })),
       h('div', { className: 'ah-dock-name-row' },
         h('button', { className: 'ah-dock-name', title: inv.name, 'data-interaction': `investigator:${inv.seat}`, onclick: () => openCardDetailDef({ ...s.state.investigatorDefs[inv.code], ...inv, type: 'investigator' }) },
           tableIcon(classIcon(inv.klass)),
           h('span', { className: 'ah-dock-name-text' }, inv.name)),
-        renderReactionModes(s, inv)),
+        renderReactionModes(s, inv),
+        // 头像与三态齿轮同排居中：早先绝对定位在名字行右上角，和齿轮上下错开半个按钮高。
+        h('span', { className: 'ah-dock-portrait', 'aria-hidden': 'true' }, tableArt(h, inv.code, inv.name))),
       h('div', { className: 'ah-dock-vitals' }, [['health',t('game.vital.health'),inv.maxHealth,inv.damage],['sanity',t('game.vital.sanity'),inv.maxSanity,inv.horror]].map(([kind,label,max,loss])=>{
         const current=Math.max(0,max-(loss || 0)), fill=max>0 ? Math.min(100,current/max*100) : 0
         return h('div',{className:'ah-vital ah-vital-'+kind,'aria-label':t('game.vital.aria', { label, current, max })},
@@ -1801,10 +1822,10 @@ function ahSlotBonuses(s, inv) {
   const bonus = {}
   for (const asset of inv.assets || []) {
     // 只在这里读取运行时展示数据；真正的槽位合法性仍由服务端 validateMove 决定。
+    // 展示容量统一来自服务端静态表（card-defs 从 add:slot / restrictedSlots 派生），
+    // 不再按卡号兜底（旧 UI_CARDS.handSlots 表已删除，2026-10-26 原语收敛）。
     const def = ahCardDef(s, asset.code)
-    // Older sessions only exposed Daisy's tote bag by card code.
-    const extra = def.extraSlots || { ...def.passive?.extraSlots,
-      hand: def.passive?.handSlotsBonus || UI_CARDS.handSlots[asset.code] || 0 }
+    const extra = def.extraSlots || {}
     for (const [slot, amount] of Object.entries(extra)) bonus[slot] = (bonus[slot] || 0) + amount
     // 米奇·布朗：额外盟友槽只放非独特盟友，和普通 extraSlots 分开记账。
     if (def.allySlotsForNonUnique) {

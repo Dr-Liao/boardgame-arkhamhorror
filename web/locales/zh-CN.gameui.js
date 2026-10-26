@@ -5,13 +5,12 @@ export default {
   // 反馈入口（feedbackEntry）
   'game.feedback': '反馈',
 
-  // 反应提示开关（renderReactionToggle / renderPendingChoice）
+  // 反应提示开关（renderReactionToggle / renderPendingChoice）：卡面/详情只有可开关的闪电图标，
+  // 不再显示「反应开/反应关」文字；两态卡的 hover 用下面两条开启/关闭说明。
   'game.reaction.aria': '{name}的快速反应',
   'game.reaction.on.title': '快速反应已开启，点击关闭本局提示',
   'game.reaction.off.title': '快速反应已关闭，点击恢复提示',
-  'game.reaction.on': '反应开',
-  'game.reaction.off': '反应关',
-  'game.reaction.muteTitle': '关闭本次可选卡牌的反应提示，可在卡牌上的开关重新开启',
+  'game.reaction.muteTitle': '关闭本次可选卡牌的反应提示，可在卡牌上的闪电重新开启',
   'game.reaction.mute': '本局不再询问',
   // 三态按钮（角色面板）
   'game.reaction.mode.aria': '反应设置：{state}。点按切换到{next}',

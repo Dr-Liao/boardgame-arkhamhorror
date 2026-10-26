@@ -183,6 +183,26 @@ api.addEffect({
 授予**只作用于声明它的那张卡**（`collectGrants(state, inv, kind, { code })` 会比对来源 code），
 并合并进原本的读点：`effectiveTraits()`、`cardKeyword()`、`commitIcons()`、`slotBonus()`。
 
+### 4.3 槽位容量（2026-10-26 原语收敛）
+
+槽位判定只有两个读点：占用是 `assets.slotUsage(inv)`，装备判定是 `assets.canEquip(inv, card)`。
+卡面只声明数据，不写判定；**候选卡（正在打出的那张）必须与在场卡走同一套口径**。
+
+| 需求 | 声明字段 | 读点 / 语义 |
+| --- | --- | --- |
+| 通用额外槽（任何卡都能用） | 修正 `add:slot`（唯一入口；`slot:<slot>` 是同一读点的布尔形式） | `slotBonus()` → canEquip 容量；展示容量由 `card-defs` 从同一修正反推 |
+| 受限额外槽（只放命中的卡） | `restrictedSlots: [{ slot, traitsAny?, unique?, count }]` | `restrictedSlotInfo`：容量只给命中谓词的候选；在场受限卡可移入受限槽，因此其占用要从普通槽里扣掉。`traitsAny` 按特性（01008 书位 / 02147 武器位 / 05112 法术位），`unique:false` 按独特性（04006 米奇「只放非独特盟友」） |
+| 占用豁免（最多 N 张命中卡不占槽） | `slotExemptions: [{ slot, traitsAny?, count }]`（05009） | `slotExemptionRelief(inv, extraCards)`：在场卡与候选卡一起算豁免；字段/特性都可泛化，不再有「工具手槽」专用读点 |
+| 实例不占槽（剧情支援改印表槽位） | 实例字段 `slots: []` | `slotUsage` / `restrictedSlotInfo` 优先读实例槽位 |
+
+曾有 4 套并行写法（`extraSlots.handWeapon`、`tomeHandSlotsPerCopy`、`passive.handSlotsBonus`、以及只写不读的
+`passive.handSlotsTrait`），盟友槽另有 `allySlotsForNonUnique` + `allySlotsOk` 旁路。它们各自在 `canEquip` 里写旁路，
+导致 05009（工具豁免漏掉候选卡）、02147（武器专用槽漏掉「在场武器可让出普通槽」）两个 bug，并让
+04006/01070/02157/02158 的展示与规则各写一份。现在：01008/02147/05112/04006 → `restrictedSlots`；
+05009 → `slotExemptions`；01070/02157/02158 → `add:slot`；旧字段与 `allySlotsOk` 读路全部删除。
+**不要**再为某张卡新增槽位专用字段，新卡按上表选择原语。展示侧的容量（装备面板格子）由
+`card-defs.js` 从同一批声明派生 `extraSlots`（盟友受限槽派生 `allySlotsForNonUnique`），前端不再按卡号兜底。
+
 ---
 
 ## 5. 条件的唯一写法
@@ -349,7 +369,9 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
    读点是引擎的 `cardPlayFlag()`），不要留在 `EFFECTS` 顶层；
 5b. 用 `resolve` 实现的能力如果**不按普通行动结算**（例如「意志闪避」按躲避结算、不引发借机攻击），
    必须写 `countsAs: 'evade'`（或 `'fight'` 等）：旧式能力把这件事写在 `effect.kind` 上，描述子没有
-   effect 数据体时会退化成普通行动。读点是 `actionKind()`（`actionPreview` 的借机攻击提示也读它）；
+   effect 数据体时会退化成普通行动。读点是 `actionKind()`（`actionPreview` 的借机攻击提示也读它）。
+   2026-10-26 起 `played` 描述子的 `countsAs` 也进入同一读点（事件卡「攻击。/躲避。/谈判。/撤退。」
+   打出即按对应行动结算）；`tests/card-entries.test.mjs` 会扫描卡面粗体行动指示，漏写会让 fast tier 失败；
 5c. **反应（`kind: 'reaction'`）的两种写法**：
    - 从 `EFFECTS[code].reactions` 搬过来的：`legacyReaction: true` + `trigger` + `criteria`（旧条件字段）
      + `cost` + `effect`（数据体）。引擎用旧式询问（`是否触发「X」的反应？`）加同一套费用/效果解释器结算，

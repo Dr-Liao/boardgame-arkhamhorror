@@ -72,6 +72,46 @@ export function createAssets(deps) {
     })
   }
 
+  // 占用豁免原语（05009 柯尔特）：「最多 N 张满足条件的支援不占用某类槽位」。
+  // 条目声明 slotExemptions:[{ slot, traitsAny?, count }]；豁免读点只在这里。
+  // extraCards 传入「正在尝试打出/装备的卡」——它还没有被控制，但装备判定必须把它
+  // 一起算进豁免，否则第一张[[工具]]会按「手槽已满」被要求先弃置资产
+  // （2026-10-26 修复：玩家报告柯尔特在场时打出放大镜仍触发腾槽弃牌）。
+  function slotExemptionRelief(inv, extraCards = []) {
+    const controlled = [...(inv.assets || []), ...(inv.threat || [])]
+    const specs = []
+    for (const holder of controlled) {
+      const spec = registeredEntry(holder.code)?.slotExemptions
+      for (const entry of (Array.isArray(spec) ? spec : spec ? [spec] : [])) {
+        if (entry && entry.slot) specs.push(entry)
+      }
+    }
+    if (!specs.length) return {}
+    const items = [...controlled, ...extraCards]
+    const defOf = item => (item.code ? cardDef(item.code) : item)
+    const matches = (item, entry) => {
+      const def = defOf(item)
+      if (!def) return false
+      const wanted = (entry.traitsAny || []).map(trait => String(trait).toLowerCase())
+      if (!wanted.length) return true
+      return (def.traits || []).some(trait => wanted.includes(String(trait).toLowerCase()))
+    }
+    const unitsIn = (item, slot) => {
+      const def = defOf(item)
+      const slots = normalizedSlots(Array.isArray(item.slots) && item.slots.length ? item : def)
+      return slots.reduce((sum, s) => sum + (s === slot ? 1 : s === `${slot}x2` ? 2 : 0), 0)
+    }
+    const relief = {}
+    for (const spec of specs) {
+      const slot = String(spec.slot)
+      const limit = Math.max(1, Number(spec.count) || 1)
+      let used = 0
+      for (const item of items) if (matches(item, spec)) used += unitsIn(item, slot)
+      relief[slot] = (relief[slot] || 0) + Math.min(limit, used)
+    }
+    return relief
+  }
+
   function slotUsage(inv) {
     const usage = {}
     for (const a of [...inv.assets, ...(inv.threat || [])]) {
@@ -82,47 +122,44 @@ export function createAssets(deps) {
         else usage[s] = (usage[s] || 0) + 1
       }
     }
-    // 2026-10-25：05009「最多 2 张[[工具]]支援不占用手部槽位」由条目级 toolHandSlotsExempt 声明。
-    // 在占用统计里扣掉对应数量的工具手槽；canEquip 的容量比较因此自动生效。
-    const exemptLimit = [...inv.assets, ...(inv.threat || [])]
-      .reduce((sum, a) => sum + (registeredEntry(a.code)?.toolHandSlotsExempt || 0), 0)
-    if (exemptLimit > 0 && usage.hand) {
-      const toolHandSlots = [...inv.assets, ...(inv.threat || [])].reduce((sum, a) => {
-        const def = cardDef(a.code)
-        const isTool = (def?.traits || []).some(trait => String(trait).toLowerCase() === 'tool')
-        if (!isTool) return sum
-        return sum + normalizedSlots(Array.isArray(a.slots) && a.slots.length ? a : def)
-          .reduce((count, slot) => count + (slot === 'handx2' ? 2 : slot === 'hand' ? 1 : 0), 0)
-      }, 0)
-      usage.hand = Math.max(0, usage.hand - Math.min(exemptLimit, toolHandSlots))
+    // 槽位占用豁免（slotExemptions）：按槽位扣掉豁免数量，canEquip 的容量比较因此自动生效。
+    for (const [slot, count] of Object.entries(slotExemptionRelief(inv))) {
+      if (count > 0 && usage[slot]) usage[slot] = Math.max(0, usage[slot] - count)
     }
     return usage
   }
 
-  // 2026-10-25 第七轮修复 05112：受限额外槽——条目声明 restrictedSlots:[{slot,traitsAny,count}]，
-  // 只有特性命中的卡能使用该额外容量；受限占用不计入普通槽位。
+  // 受限额外槽的唯一读点：条目声明 restrictedSlots:[{ slot, traitsAny?, unique?, count }]。
+  // 只有命中谓词的候选能使用该额外容量；受限占用不计入普通槽位。
+  // - traitsAny：候选需拥有其中任一特性（01008 书位 / 02147 武器位 / 05112 法术位）；
+  // - unique: false：候选必须是非独特（04006 米奇「只能放非独特盟友」这类盟友受限槽）。
   function restrictedSlotInfo(inv, slot, cardCode) {
     const controlled = [...(inv.assets || []), ...(inv.threat || [])]
-    const traitsOf = code => (cardDef(code)?.traits || []).map(trait => String(trait).toLowerCase())
-    let capacity = 0
-    const traitsAny = []
+    const specs = []
     for (const holder of controlled) {
       const spec = registeredEntry(holder.code)?.restrictedSlots
       for (const entry of (Array.isArray(spec) ? spec : spec ? [spec] : [])) {
-        if (!entry || entry.slot !== slot) continue
-        capacity += Math.max(1, Number(entry.count) || 1)
-        for (const trait of entry.traitsAny || []) traitsAny.push(String(trait).toLowerCase())
+        if (entry && entry.slot === slot) specs.push(entry)
       }
     }
-    if (!capacity) return { capacity: 0, occupancy: 0, eligible: false, traitsAny }
-    const eligible = Boolean(cardCode) && traitsOf(cardCode).some(trait => traitsAny.includes(trait))
+    if (!specs.length) return { capacity: 0, occupancy: 0, eligible: false }
+    const defOf = code => cardDef(code)
+    const matches = (def, entry) => {
+      if (!def) return false
+      if (entry.unique != null && Boolean(def.unique) !== Boolean(entry.unique)) return false
+      const wanted = (entry.traitsAny || []).map(trait => String(trait).toLowerCase())
+      if (!wanted.length) return true
+      return (def.traits || []).some(trait => wanted.includes(String(trait).toLowerCase()))
+    }
+    const capacity = specs.reduce((sum, entry) => sum + Math.max(1, Number(entry.count) || 1), 0)
+    const eligible = Boolean(cardCode) && specs.some(entry => matches(defOf(cardCode), entry))
     let occupancy = 0
     for (const asset of controlled) {
       const slots = normalizedSlots(Array.isArray(asset.slots) && asset.slots.length ? asset : cardDef(asset.code))
       if (!slots.includes(slot)) continue
-      if (traitsOf(asset.code).some(trait => traitsAny.includes(trait))) occupancy += 1
+      if (specs.some(entry => matches(cardDef(asset.code), entry))) occupancy += 1
     }
-    return { capacity, occupancy: Math.min(occupancy, capacity), eligible, traitsAny }
+    return { capacity, occupancy: Math.min(occupancy, capacity), eligible }
   }
 
   function canEquip(inv, card) {
@@ -132,37 +169,30 @@ export function createAssets(deps) {
       else if (s === 'arcanex2') need.arcane = (need.arcane || 0) + 2
       else need[s] = (need[s] || 0) + 1
     }
-    // 米奇·布朗：额外 2 个只能携带非独特盟友的盟友槽位。
-    // 盟友槽要区分「不受限」与「只能放非独特盟友」两类：独特盟友只能占前者，
-    // 总数则两类都能用；否则与「魅力超凡」这类通用加槽叠加时会误判槽位已满。
-    if (need.ally && !allySlotsOk(inv, card, allySlotCapacities(inv))) return false
     const usage = slotUsage(inv)
-    // Allocate Tomes to Daisy's restricted slots before counting ordinary hands.
-    // Otherwise playing a non-Tome after two books incorrectly forces a discard.
-    const tomeHands = [...inv.assets, ...(inv.threat || []), { code: card.code }]
-      .reduce((n, item) => {
-        const def = cardDef(item.code)
-        return n + (isTomeCard(def) ? normalizedSlots(def).reduce((v, slot) => v + (slot === 'handx2' ? 2 : slot === 'hand' ? 1 : 0), 0) : 0)
-      }, 0)
-    // Phase 5（5a-6）：「书虫」这类「每份占用 2 个书位」的规则由条目级 tomeHandSlotsPerCopy 声明。
-    const restrictedHands = inv.assets.reduce((sum, asset) => sum + (registeredEntry(asset.code)?.tomeHandSlotsPerCopy || 0), 0)
+    // 占用豁免也要把候选卡一起算：05009 柯尔特在场打出第一张[[工具]]时，待打出的
+    // 那张同样不占手槽（slotExemptionRelief 负责「在场 + 候选」的统一口径）。
+    const reliefNow = slotExemptionRelief(inv)
+    const reliefWithCard = slotExemptionRelief(inv, [card])
+    const candidateRelief = {}
+    for (const slot of new Set([...Object.keys(reliefNow), ...Object.keys(reliefWithCard)])) {
+      const delta = (reliefWithCard[slot] || 0) - (reliefNow[slot] || 0)
+      if (delta > 0) candidateRelief[slot] = delta
+    }
     for (const [s, n] of Object.entries(need)) {
-      // 盟友槽已在上面按「独特 / 非独特」分类校验，不再走通用容量比较。
-      if (s === 'ally') continue
       let cap = SLOT_CAPACITY[s] ?? 0
-      if (s === 'hand') {
-        cap += handSlotsBonusFor(inv, card) + Math.min(tomeHands, restrictedHands)
-        // Bandolier: an extra hand slot that may only hold a [[Weapon]] asset.
-        if (isWeaponCard(card)) cap += weaponHandSlotsFor(inv)
-      }
-      cap += (inv.assets || []).reduce((sum, asset) => sum + (assetEffect(inv, asset)?.passive?.extraSlots?.[s] || 0), 0)
-      // 能力层槽位修正（如 05112 魔法手势的额外法术槽位）。
+      // 地点类「手槽惩罚」；额外槽由通用修正 + 受限额外槽两条原语统一叠加。
+      if (s === 'hand') cap -= inv.handSlotsPenalty || 0
+      // 通用额外槽：add:slot / slot:<slot> 修正（如 02158 魅力超凡、05283 安娜的塔罗槽）。
       cap += slotBonus(inv, s)
-      // 2026-10-25 第七轮修复 05112：受限额外槽（容量只给特性命中的卡；受限占用不占普通槽）。
+      // 受限额外槽的唯一读点：restrictedSlots（书位 / 武器位 / 法术位 / 非独特盟友槽）。
+      // 容量只给命中谓词的候选；受限占用不占普通槽，因此还要从普通占用里扣掉 occupancy
+      // （同时覆盖「候选卡是受限类型」与「在场受限卡可移入受限槽、把普通槽让给候选」）。
       const restricted = restrictedSlotInfo(inv, s, card.code)
       if (restricted.eligible) cap += restricted.capacity
       const ordinaryUsage = Math.max(0, (usage[s] || 0) - restricted.occupancy)
-      const totalUsage = ordinaryUsage + (restricted.eligible ? restricted.occupancy : 0)
+      let totalUsage = ordinaryUsage + (restricted.eligible ? restricted.occupancy : 0)
+      if (candidateRelief[s] > 0) totalUsage = Math.max(0, totalUsage - candidateRelief[s])
       if (totalUsage + n > cap) return false
     }
     return true
@@ -204,71 +234,14 @@ export function createAssets(deps) {
     inv.assets = inv.assets.filter(a => !removed.includes(a.id))
   }
 
-  function nonUniqueAllySlotsFor(inv) {
-    return (inv.assets || []).reduce((sum, asset) =>
-      sum + (assetEffect(inv, asset)?.passive?.allySlotsForNonUnique || 0), 0)
-  }
-
-  // 盟友槽容量拆成两组：
-  // - unrestricted：基础槽 + 「额外盟友槽」（如 02158 魅力超凡）+ 能力层 add:slot，独特/非独特都能用；
-  // - restricted：米奇·布朗这类「只可携带非独特盟友」的额外槽。
-  // 读点与 canEquip 的通用容量一致：支援被动 + 能力层修正。
-  function allySlotCapacities(inv) {
-    const unrestricted = (SLOT_CAPACITY.ally ?? 1)
-      + (inv.assets || []).reduce((sum, asset) =>
-        sum + (assetEffect(inv, asset)?.passive?.extraSlots?.ally || 0), 0)
-      + slotBonus(inv, 'ally')
-    return { unrestricted, restricted: nonUniqueAllySlotsFor(inv) }
-  }
-
-  function allySlotsOk(inv, card, capacities = allySlotCapacities(inv)) {
-    const { unrestricted, restricted } = typeof capacities === 'number'
-      ? { unrestricted: allySlotCapacities(inv).unrestricted, restricted: capacities }
-      : capacities
-    // 2026-10-25 修复战役（本循环修复 05262-05265）：剧情支援实例可以用 slots:['none'] 覆盖印表槽位，
-    // 与 slotUsage 同一优先级（实例 slots 优先于 cardDef），否则「不占盟友槽」的能力只影响容量统计、
-    // 不影响盟友槽校验（allySlotsOk 直接读 cardDef 的 Ally 槽）。
-    const slotsOf = item => normalizedSlots(
-      item && Array.isArray(item.slots) && item.slots.length ? item : cardDef(item?.code))
-    const entries = [...inv.assets, ...(inv.threat || []), { code: card.code }]
-      .filter(item => slotsOf(item).includes('ally'))
-    let unique = 0
-    let nonUnique = 0
-    for (const item of entries) {
-      if (cardDef(item.code)?.unique) unique++
-      else nonUnique++
-    }
-    // 独特盟友只能占不受限槽；所有盟友合计不能超过两类槽位之和。
-    return unique <= unrestricted && unique + nonUnique <= unrestricted + restricted
-  }
-
-  function isTomeCard(card) {
-    return (card?.traits || []).some(trait => {
-      const key = String(trait).toLowerCase()
-      return key === 'tome' || String(trait) === '书籍'
-    })
-  }
-
-  function handSlotsBonusFor(inv, card) {
-    let v = -(inv.handSlotsPenalty || 0)
-    for (const a of inv.assets) {
-      const eff = assetEffect(inv, a)
-      // Phase 5（5a-7）：带「书位」的支援（书虫）不参与普通手部加成，书位单独结算。
-      if (registeredEntry(a.code)?.tomeHandSlotsPerCopy) continue
-      if (eff && eff.passive && eff.passive.handSlotsBonus) v += eff.passive.handSlotsBonus
-    }
-    return v
-  }
-
+  // 2026-10-26 原语收敛：盟友受限槽并入 restrictedSlots（unique: false），
+  // 原 nonUniqueAllySlotsFor / allySlotCapacities / allySlotsOk 三条旁路删除；
+  // 独特盟友只能占不受限槽的规则由 restrictedSlotInfo 的谓词 + canEquip 通用容量比较覆盖。
   function isWeaponCard(card) {
     return (card?.traits || []).some(trait => {
       const key = String(trait).toLowerCase()
       return key === 'weapon' || String(trait) === '武器'
     })
-  }
-
-  function weaponHandSlotsFor(inv) {
-    return (inv.assets || []).reduce((sum, asset) => sum + (assetEffect(inv, asset)?.passive?.extraSlots?.handWeapon || 0), 0)
   }
 
   function isThreatWeakness(code) {
@@ -446,5 +419,5 @@ export function createAssets(deps) {
     }
   }
 
-  return { litaAuraAt, assetPassiveBonus, assetPassiveData, assetCannotLeavePlay, normalizedSlots, slotUsage, canEquip, assetReplacementPlans, replaceAssets, nonUniqueAllySlotsFor, allySlotCapacities, allySlotsOk, isTomeCard, handSlotsBonusFor, isWeaponCard, weaponHandSlotsFor, isThreatWeakness, leaveAsset, discardRandomAsset, placeLocationForEmptySpawn, farthestLocationsFor, discardLocked, hasPlayedEventsToDeckTop, topDiscardEvent, disposePlayedEvent, consumePlayThreatResources, playReactionCard }
+  return { litaAuraAt, assetPassiveBonus, assetPassiveData, assetCannotLeavePlay, normalizedSlots, slotUsage, canEquip, assetReplacementPlans, replaceAssets, isWeaponCard, isThreatWeakness, leaveAsset, discardRandomAsset, placeLocationForEmptySpawn, farthestLocationsFor, discardLocked, hasPlayedEventsToDeckTop, topDiscardEvent, disposePlayedEvent, consumePlayThreatResources, playReactionCard }
 }

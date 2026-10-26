@@ -6,6 +6,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createServer } from '../../../lib/server.js'
 import { loadMods } from '../../../lib/mods.js'
+import { CARD_POOL_RESTRICTION_ENABLED } from '../web/deck-rules.js'
 
 test('Arkham 开局可逐席选择 AI，人数切换保留选择且实际座位匹配', async ({ page }) => {
   const previousHome = process.env.DSH_HOME
@@ -80,15 +81,24 @@ test('Arkham 开局可逐席选择 AI，人数切换保留选择且实际座位�
     await page.getByRole('button', { name: '修改游戏高级设置', exact: true }).click()
     const gameSettings = page.getByRole('dialog', { name: '游戏高级设置' })
     await expect(gameSettings).toBeVisible()
-    const scopeSelect = gameSettings.getByLabel('卡牌范围', { exact: true })
-    await expect(scopeSelect).toHaveValue('all')
-    await scopeSelect.selectOption('progressive')
+    if (CARD_POOL_RESTRICTION_ENABLED) {
+      const scopeSelect = gameSettings.getByLabel('卡牌范围', { exact: true })
+      await expect(scopeSelect).toHaveValue('all')
+      await scopeSelect.selectOption('progressive')
+    } else {
+      // 2026-10-26 临时取消卡牌范围限制：高级设置里不再提供渐进式入口。
+      await expect(gameSettings.getByLabel('卡牌范围', { exact: true })).toHaveCount(0)
+    }
     const rollback = gameSettings.getByLabel('允许回档', { exact: true })
     await expect(rollback).toBeChecked()
     await rollback.uncheck()
     await page.getByRole('button', { name: '关闭游戏高级设置', exact: true }).click()
     await expect(page.getByRole('dialog', { name: '游戏高级设置' })).toHaveCount(0)
-    await expect(page.locator('.ah-ai-dialogue-settings').filter({ hasText: '游戏高级设置' })).toContainText('渐进式')
+    if (CARD_POOL_RESTRICTION_ENABLED) {
+      await expect(page.locator('.ah-ai-dialogue-settings').filter({ hasText: '游戏高级设置' })).toContainText('渐进式')
+    } else {
+      await expect(page.locator('.ah-ai-dialogue-settings').filter({ hasText: '游戏高级设置' })).not.toContainText('渐进式')
+    }
     await expect(page.locator('.ah-ai-dialogue-settings').filter({ hasText: '游戏高级设置' })).toContainText('禁止')
 
     const teammates = page.getByRole('combobox', { name: /^AI 队友/ })
@@ -114,7 +124,8 @@ test('Arkham 开局可逐席选择 AI，人数切换保留选择且实际座位�
     expect(result.ok, result.error).toBe(true)
     expect(result.session.settings).toMatchObject({
       aiStoryAwareness: 'on',
-      cardPoolScope: 'progressive',
+      // 卡牌范围限制临时取消时界面不提供「渐进式」，开局表单保留默认「全部」。
+      cardPoolScope: CARD_POOL_RESTRICTION_ENABLED ? 'progressive' : 'all',
       allowRollback: 'off',
       aiRoutineSpeechFrequency: 0,
       aiSelfTestSpeechFrequency: 100,

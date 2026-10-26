@@ -15,6 +15,8 @@ export default {
   abilities: [
     {
       kind: 'played', id: 'impromptuBarrier', label: '躲避一名交战敌人（-1）',
+      // 卡面「躲避。」= Evade 行动：打出按躲避结算，不引发借机攻击。
+      countsAs: 'evade',
       resolve: ({ state, inv, api }) => {
         const fromDiscard = api.fromDiscardCode() === '04312'
         const targets = state.enemies.filter(enemy => enemy.engagedSeat === inv.seat

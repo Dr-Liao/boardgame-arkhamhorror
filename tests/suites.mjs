@@ -45,6 +45,7 @@ export const FAST_TESTS = Object.freeze([
   'phase6-implementation.test.mjs', // Phase 6（6e-1）实现账本：通道判定 / 摘要形状 / isPlayable 一致
   'phase6-campaign.test.mjs', // Phase 6（6e-17）战役插件化：公开投影 / agentHints / observation 守卫
   'card-lifecycle.test.mjs',
+  'slot-rules.test.mjs', // 槽位规则回归：05009/02147 的候选卡与受限槽判定（含全槽位卡矩阵）
   'phase1-state.test.mjs', // A1 效果实体 / B1 目标枚举 / playCondition / schema v7
   'phase2-primitives.test.mjs', // C1-C4 语义原语 / B2-B6 / 逃生卡迁移门禁
   'phase3-content.test.mjs', // D1 非玩家卡通道 / D3 剧本声明 / D4 战役结果声明
@@ -94,6 +95,7 @@ export const FAST_TESTS = Object.freeze([
   'carcosa-investigators.test.mjs',
   'carcosa-player-acceptance.test.mjs',
   'carcosa-opening.test.mjs',
+  'scenario-reset.test.mjs', // 关卡切换清空压牌/调查员附属：黛安娜「下方」不跨关残留重复卡
   'carcosa-middle-a.test.mjs',
   'carcosa-middle-b.test.mjs',
   'carcosa-final.test.mjs',

@@ -19,6 +19,11 @@
 //   · 投入：技能检定投入候选包含 beneath 的 event/skill（tests.js:278-322），选中后横置通道支援、
 //     从 beneath 移出并进入正常投入/弃牌流程；
 //   · 以此方式结算期间 05004 的 reaction criteria 排除（state._playedFromBeneath）。
+//
+// 2026-10-26 修复（借机攻击判定）：卡面「攻击。」是 Fight 行动关键字。旧实现只用 resolve 结算，
+// 没有声明「按哪种行动结算」，被 actionKind 归为普通行动 → 发动攻击前先吃一次借机攻击。
+// 补 countsAs:'fight' + noOpportunityAttack（与 05114 切肉刀同一写法；读点见 actionKind /
+// dispatch.js 的 abilityNoAoO，规则见 docs/card-model.md §5b）。
 
 export default {
   code: '05013',
@@ -30,6 +35,9 @@ export default {
       kind: 'action',
       label: '攻击（可选择用意志代替战斗）',
       cost: { action: true },
+      // 卡面「攻击。」= Fight 行动：本次行动按攻击结算，与敌人交战时发动不引发借机攻击。
+      countsAs: 'fight',
+      noOpportunityAttack: true,
       target: { kind: 'enemy' },
       resolve: ({ inv, api, targetId }) => {
         if (!targetId) return

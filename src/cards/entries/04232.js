@@ -11,6 +11,8 @@ export default {
   abilities: [
     {
       kind: 'played', label: '悄然遁去',
+      // 卡面「躲避。」= Evade 行动：打出按躲避结算，不引发借机攻击。
+      countsAs: 'evade',
       resolve: ({ state, inv, api }) => {
         const targets = state.enemies.filter(enemy => enemy.engagedSeat === inv.seat)
         if (!targets.length) { api.info('没有可躲避的交战敌人。'); return }

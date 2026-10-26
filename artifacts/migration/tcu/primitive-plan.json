@@ -340,7 +340,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "e9898acd6417441e98a7b3f22b5648a9f9636fa43bd82d9559ed7283281fc9e3",
+          "sha256": "817742c9e38c101b9b7ad35b4bf47c498744bff68ad95871e0d5d34b6309b010",
           "exists": true
         },
         {
@@ -350,12 +350,12 @@
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "sha256": "3e423f5bfe4916e3dfbf40e70374c53b77af13d6fa1bfc63be3d9dd59fd394bd",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "304ee0ac0450f03734e0526ed7512ef3950a1f70b67a40d2585d619f9bbb5922",
+          "sha256": "071c26a1c707eca210145a2f7c506fa37ba63150db5259802d3d2cfba1a0d593",
           "exists": true
         },
         {
@@ -529,27 +529,27 @@
         },
         {
           "path": "src/engine/encounter.js",
-          "sha256": "7493490950812c4a8920a1762b839a2ef06a46561c9d49cf08472c8ff03922a2",
+          "sha256": "ae7d52bf26d0377ac97f749e1536ff05f16d423cf73249dcf876cc2dedf366ee",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "e9898acd6417441e98a7b3f22b5648a9f9636fa43bd82d9559ed7283281fc9e3",
+          "sha256": "817742c9e38c101b9b7ad35b4bf47c498744bff68ad95871e0d5d34b6309b010",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "304ee0ac0450f03734e0526ed7512ef3950a1f70b67a40d2585d619f9bbb5922",
+          "sha256": "071c26a1c707eca210145a2f7c506fa37ba63150db5259802d3d2cfba1a0d593",
           "exists": true
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "sha256": "3e423f5bfe4916e3dfbf40e70374c53b77af13d6fa1bfc63be3d9dd59fd394bd",
           "exists": true
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
           "exists": true
         },
         {
@@ -659,12 +659,12 @@
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "304ee0ac0450f03734e0526ed7512ef3950a1f70b67a40d2585d619f9bbb5922",
+          "sha256": "071c26a1c707eca210145a2f7c506fa37ba63150db5259802d3d2cfba1a0d593",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "e9898acd6417441e98a7b3f22b5648a9f9636fa43bd82d9559ed7283281fc9e3",
+          "sha256": "817742c9e38c101b9b7ad35b4bf47c498744bff68ad95871e0d5d34b6309b010",
           "exists": true
         },
         {
@@ -674,7 +674,7 @@
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
           "exists": true
         },
         {
@@ -798,22 +798,22 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "e9898acd6417441e98a7b3f22b5648a9f9636fa43bd82d9559ed7283281fc9e3",
+          "sha256": "817742c9e38c101b9b7ad35b4bf47c498744bff68ad95871e0d5d34b6309b010",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "304ee0ac0450f03734e0526ed7512ef3950a1f70b67a40d2585d619f9bbb5922",
+          "sha256": "071c26a1c707eca210145a2f7c506fa37ba63150db5259802d3d2cfba1a0d593",
           "exists": true
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "sha256": "3e423f5bfe4916e3dfbf40e70374c53b77af13d6fa1bfc63be3d9dd59fd394bd",
           "exists": true
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
           "exists": true
         },
         {
@@ -896,12 +896,12 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "e9898acd6417441e98a7b3f22b5648a9f9636fa43bd82d9559ed7283281fc9e3",
+          "sha256": "817742c9e38c101b9b7ad35b4bf47c498744bff68ad95871e0d5d34b6309b010",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "304ee0ac0450f03734e0526ed7512ef3950a1f70b67a40d2585d619f9bbb5922",
+          "sha256": "071c26a1c707eca210145a2f7c506fa37ba63150db5259802d3d2cfba1a0d593",
           "exists": true
         },
         {
@@ -1029,7 +1029,7 @@
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "sha256": "3e423f5bfe4916e3dfbf40e70374c53b77af13d6fa1bfc63be3d9dd59fd394bd",
           "exists": true
         },
         {
@@ -1039,7 +1039,7 @@
         },
         {
           "path": "src/engine/table-decisions.js",
-          "sha256": "80a47cd202e17644588b5b8efa5ed4af54af44e69cd1886c7a2c99de4a05405a",
+          "sha256": "094fa13867c5e61c81f5867e201624eef2efae65eaf1299afb88a75fab945804",
           "exists": true
         },
         {
@@ -1054,7 +1054,7 @@
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
           "exists": true
         },
         {
@@ -1180,7 +1180,7 @@
         },
         {
           "path": "src/engine/moves.js",
-          "sha256": "48396ab463730b31375386e1fde7346207bd4faa98593dfacbba64b47d5140fd",
+          "sha256": "9ec5670d7e8c1f115abac56334d48f460586b3959f9c8151fd820330b65c76b7",
           "exists": true
         },
         {
@@ -1195,17 +1195,17 @@
         },
         {
           "path": "src/engine/ability.js",
-          "sha256": "fab5b5f57fc666a7c01a9d1d47db5f0a0fac48b39c617acea38311eece9d5b81",
+          "sha256": "9d2dc5dabc3da65d3ffd18b0b2db3071cd6171554bc4d8c1a1b70244732be6e7",
           "exists": true
         },
         {
           "path": "src/engine/table-decisions.js",
-          "sha256": "80a47cd202e17644588b5b8efa5ed4af54af44e69cd1886c7a2c99de4a05405a",
+          "sha256": "094fa13867c5e61c81f5867e201624eef2efae65eaf1299afb88a75fab945804",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "304ee0ac0450f03734e0526ed7512ef3950a1f70b67a40d2585d619f9bbb5922",
+          "sha256": "071c26a1c707eca210145a2f7c506fa37ba63150db5259802d3d2cfba1a0d593",
           "exists": true
         },
         {
@@ -1349,17 +1349,17 @@
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "sha256": "3e423f5bfe4916e3dfbf40e70374c53b77af13d6fa1bfc63be3d9dd59fd394bd",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "304ee0ac0450f03734e0526ed7512ef3950a1f70b67a40d2585d619f9bbb5922",
+          "sha256": "071c26a1c707eca210145a2f7c506fa37ba63150db5259802d3d2cfba1a0d593",
           "exists": true
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
           "exists": true
         },
         {
@@ -1493,7 +1493,7 @@
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "sha256": "3e423f5bfe4916e3dfbf40e70374c53b77af13d6fa1bfc63be3d9dd59fd394bd",
           "exists": true
         },
         {
@@ -1503,17 +1503,17 @@
         },
         {
           "path": "src/engine/table-decisions.js",
-          "sha256": "80a47cd202e17644588b5b8efa5ed4af54af44e69cd1886c7a2c99de4a05405a",
+          "sha256": "094fa13867c5e61c81f5867e201624eef2efae65eaf1299afb88a75fab945804",
           "exists": true
         },
         {
           "path": "src/engine/ability.js",
-          "sha256": "fab5b5f57fc666a7c01a9d1d47db5f0a0fac48b39c617acea38311eece9d5b81",
+          "sha256": "9d2dc5dabc3da65d3ffd18b0b2db3071cd6171554bc4d8c1a1b70244732be6e7",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "304ee0ac0450f03734e0526ed7512ef3950a1f70b67a40d2585d619f9bbb5922",
+          "sha256": "071c26a1c707eca210145a2f7c506fa37ba63150db5259802d3d2cfba1a0d593",
           "exists": true
         },
         {
@@ -1653,12 +1653,12 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "e9898acd6417441e98a7b3f22b5648a9f9636fa43bd82d9559ed7283281fc9e3",
+          "sha256": "817742c9e38c101b9b7ad35b4bf47c498744bff68ad95871e0d5d34b6309b010",
           "exists": true
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
           "exists": true
         },
         {
@@ -1788,12 +1788,12 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "e9898acd6417441e98a7b3f22b5648a9f9636fa43bd82d9559ed7283281fc9e3",
+          "sha256": "817742c9e38c101b9b7ad35b4bf47c498744bff68ad95871e0d5d34b6309b010",
           "exists": true
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
           "exists": true
         },
         {
@@ -1903,12 +1903,12 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "e9898acd6417441e98a7b3f22b5648a9f9636fa43bd82d9559ed7283281fc9e3",
+          "sha256": "817742c9e38c101b9b7ad35b4bf47c498744bff68ad95871e0d5d34b6309b010",
           "exists": true
         },
         {
           "path": "src/engine/engine.js",
-          "sha256": "304ee0ac0450f03734e0526ed7512ef3950a1f70b67a40d2585d619f9bbb5922",
+          "sha256": "071c26a1c707eca210145a2f7c506fa37ba63150db5259802d3d2cfba1a0d593",
           "exists": true
         },
         {
@@ -2013,7 +2013,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "e9898acd6417441e98a7b3f22b5648a9f9636fa43bd82d9559ed7283281fc9e3",
+          "sha256": "817742c9e38c101b9b7ad35b4bf47c498744bff68ad95871e0d5d34b6309b010",
           "exists": true
         },
         {
@@ -2127,7 +2127,7 @@
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "578a7e4157776c8b02c6ca491362aae804959d1a59cb31da10aa48c8c36d1740",
+          "sha256": "3e423f5bfe4916e3dfbf40e70374c53b77af13d6fa1bfc63be3d9dd59fd394bd",
           "exists": true
         },
         {
@@ -2147,17 +2147,17 @@
         },
         {
           "path": "src/deck/deckbuilding.js",
-          "sha256": "d19a838e00fbbafb8273b830a5acd42db3204721c59cd6c3d23ed07656894a89",
+          "sha256": "c794d55ee50f57e79b03d6d88f8df28e7ca8208f33e0e86cd6433e55e78ac374",
           "exists": true
         },
         {
           "path": "src/cards/campaign-view.js",
-          "sha256": "4cc97f7f19d93b6dc1bef2541a46d6bf2e895ffffde8d15aefc11a8df7f3dd0a",
+          "sha256": "b17b896bf8952f77755f38af84ad635354150d570cbf9cce0aab19bc7992a8d0",
           "exists": true
         },
         {
           "path": "docs/tcu-investigators.md",
-          "sha256": "d2c9a3eb434b01c47d8681d2df9e1f4dcfb49b62a81d9b3d7a7df9d1bcd68e88",
+          "sha256": "60b5d069b7302cd11443cf7bfdebdda2dc7b2937c379a3a2d17e7112c8592fc3",
           "exists": true
         }
       ],
@@ -2166,7 +2166,7 @@
           "path": "tests/tcu-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 80,
+          "tests": 82,
           "fail": 0,
           "exitCode": 0,
           "skipped": false

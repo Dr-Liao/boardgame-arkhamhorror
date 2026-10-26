@@ -12,9 +12,37 @@ test('攻击演出按卡牌覆盖 → 特性种类 → 默认解析', () => {
   assert.equal(style('02301'), 'lightning', '闪电枪覆盖枪械类')
   assert.equal(style('04305'), 'default', '火焰喷射器覆盖枪械类')
   assert.equal(style('04276'), 'blade', '古旧锈剑名称不含刀剑词，由覆盖指定')
+  assert.equal(style('03153'), 'spiritStorm', '灵力风暴覆盖通用法术样式')
   for (const code of ['01060', '02154', '60407']) assert.equal(style(code), 'spell', code)
   assert.equal(attackStyle(null), 'default')
   for (const card of Object.values(ALL_CARDS)) assert.ok(ATTACK_STYLES.includes(attackStyle(card)), card.code)
+})
+
+test('灵力风暴公开独立演出样式与同地点目标', () => {
+  const state = createGameState({ playerInvestigator: '01001', seed: 'spirit-storm-style' }, [{ seat: 0, name: 'P0' }])
+  for (let i = 0; state.pendingChoice && i < 20; i++) {
+    const choice = state.pendingChoice
+    const option = choice.options.find(o => ['done', 'skip', 'self'].includes(o.id)) || choice.options[0]
+    applyMove(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId: option.id })
+  }
+  const inv = state.investigators[0]
+  inv.hand = ['03153']; inv.resources = 5; inv.actionsLeft = 3; state.chaosBag = ['0']
+  for (const id of ['e1', 'e2']) state.enemies.push({
+    id, code: 'ghoulMinion', name: `测试敌人${id}`, fight: 2, evade: 2, health: 10,
+    damageTaken: 0, damage: 1, horror: 0, exhausted: false, location: inv.location,
+    engagedSeat: id === 'e1' ? 0 : null,
+  })
+  inv.engaged.push('e1')
+  const events = [...applyMove(state, 0, { action: 'play', cardId: '03153' })]
+  for (let i = 0; state.pendingChoice && i < 30; i++) {
+    const choice = state.pendingChoice
+    const option = choice.options.find(o => o.id === 'e1') || choice.options.find(o => ['done', 'skip', 'self'].includes(o.id)) || choice.options[0]
+    events.push(...applyMove(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId: option.id }))
+  }
+  const attack = events.map(e => e.presentation || e).find(e => e.kind === 'attack' && e.direction === 'outgoing')
+  assert.equal(attack?.weaponCode, '03153')
+  assert.equal(attack?.attackStyle, 'spiritStorm')
+  assert.deepEqual(attack?.enemyIds, ['e1', 'e2'])
 })
 
 test('出手攻击事件公开武器卡号与演出样式', () => {
