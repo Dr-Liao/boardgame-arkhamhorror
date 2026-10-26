@@ -9,6 +9,8 @@
 //
 // 追寻者（03144）：神话阶段结束时把所在地点的 1 个线索移到它身上；不能则放 1 毁灭。
 
+import { flipEnemyCluesToDoom } from '../../_shared.js'
+
 export default {
   code: '03144', scope: 'enemy',
   enemyScript: {
@@ -17,6 +19,8 @@ export default {
       if (location?.clues > 0) {
         location.clues--
         enemy.clues = (enemy.clues || 0) + 1
+        // 03121/03122/03123：放到敌人身上的线索立刻翻成毁灭面。
+        flipEnemyCluesToDoom(state, enemy)
       } else enemy.doom = (enemy.doom || 0) + 1
     },
   },

@@ -10,7 +10,7 @@
 //
 // 误入歧途（03145）：把 1 个线索移到异教徒身上，或在当前议程放 1 个毁灭。
 
-import { originalOf } from '../../_shared.js'
+import { flipEnemyCluesToDoom, originalOf } from '../../_shared.js'
 
 export default {
   code: '03145', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['carcosa'],
@@ -24,9 +24,11 @@ export default {
     const answer = api.choose({ kind: 'encounter', source: code, seat: inv.seat, prompt: '误入歧途', options })
     const enemy = cultists.find(candidate => candidate.id === answer)
     if (enemy) {
+      // 卡面是「把线索放到敌人上」；若当前议程是 03121/03122/03123，再由其强制效果翻成毁灭。
       inv.clues--
-      enemy.doom = (enemy.doom || 0) + 1
-    } else state.doom++
+      enemy.clues = (enemy.clues || 0) + 1
+      flipEnemyCluesToDoom(state, enemy)
+    } else api.addDoom(1)
     return false
   },
 }

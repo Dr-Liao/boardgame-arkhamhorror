@@ -157,6 +157,13 @@ export function setupPlan(state, helper = {}) {
   return { awokeInside, startCode, catacombsDeck }
 }
 
+// 03257：只有男子「位于暗影坟墓」时才不能被他的 [action] 击败；离开即解除。
+function syncTombProtection(state, enemy) {
+  const location = state.locations.find(item => item.id === enemy.location)
+  if (entryFlags(original(location))?.tombEntrance) enemy.cannotBeDefeatedByAction = true
+  else delete enemy.cannotBeDefeatedByAction
+}
+
 export const behavior = {
   ...encounterRules,
   id: 'thePallidMask',
@@ -213,15 +220,12 @@ export const behavior = {
     return placed
   },
   afterDeckSetup(state) {
-    for (const id of state.scenarioFlags.setupRevealSlots || []) {
-      const location = state.locations.find(candidate => candidate.id === id)
-      if (!location) continue
-      location.revealed = true
-      location.name = location.unrevealedActualName || location.name
-      delete location.unrevealedActualName
-      delete location.hiddenIdentity
-      location.clues = location.maxClues || 0
-    }
+    // 哈露子密道（ interviewing 03078）：把揭晓面交给引擎的 revealLocation，
+    // 才会派发该地点的 Reveal 强制效果、继续铺地下墓穴、并结算胜利点。
+    // 旧实现直接改 revealed/name/clues，跳过了所有揭示结算。
+    const slots = (state.scenarioFlags.setupRevealSlots || [])
+      .filter(id => state.locations.some(location => location.id === id))
+    if (slots.length) state.scenarioFlags.pendingSetupReveals = slots
     updateConnections(state)
   },
   resolveChaosToken(state, inv, token, api) {
@@ -232,13 +236,41 @@ export const behavior = {
     carcosaChaosAfterTest('thePallidMask', state, inv, result, api)
   },
   beforeMove(state, inv, destination, api) {
+    state.scenarioFlags ||= {}
+    // 每次移动重新判定；进入费在真正入场后结算（离开检定可能取消本次移动）。
+    delete state.scenarioFlags.catacombsEntry
     const source = state.locations.find(location => location.id === inv.location)
     // 第 114 轮：石铺拱道（03248）的豁免由地点条目声明。
     if (!destination?.revealed && !locationRuleFor(source?.originalCode)?.waivesEnterClueCost) {
-      api.payClues(state.numInvestigators, source.id)
+      // 卡背：由「你所在地点」的调查员共同支付 1[per_investigator] 线索。
+      // 移动完成后付款人可能已不在原地点，先记下座位，入场时按座位结算。
+      const payers = state.investigators
+        .filter(candidate => !candidate.defeated && !candidate.resigned
+          && candidate.location === source?.id && (candidate.clues || 0) > 0)
+        .map(candidate => candidate.seat)
+      state.scenarioFlags.catacombsEntry = {
+        seat: inv.seat, destination: destination.id, source: source?.id || null, payers,
+      }
     }
   },
   // 第 114 轮：惧怖地窖（03254）的离开检定改由地点条目的 locationRule.onLeave 声明。
+  locationEntered(state, inv, location, api) {
+    const pending = state.scenarioFlags?.catacombsEntry
+    if (!pending || pending.seat !== inv.seat || pending.destination !== location?.id) return
+    delete state.scenarioFlags.catacombsEntry
+    // 共同支付 1[per_investigator] 线索：按入场前记录的原地点付款人依次扣。
+    // 先结算再跑该地点的揭示强制效果（与「进入的额外费用」时机一致）。
+    let remaining = state.numInvestigators
+    for (const seat of pending.payers || []) {
+      if (remaining <= 0) break
+      const payer = state.investigators[seat]
+      if (!payer || (payer.clues || 0) <= 0) continue
+      const pay = Math.min(remaining, payer.clues)
+      api.spendClues(seat, pay)
+      remaining -= pay
+    }
+    if (remaining > 0) api.info?.(`进入地下墓穴还差 ${remaining} 点共同线索（按现有线索结算）。`)
+  },
   locationRevealed(state, location, api) {
     updateConnections(state)
     // 第 114 轮：暗影坟墓（03257）与堵塞通道（03256）的揭示规则在地点条目声明。
@@ -251,10 +283,11 @@ export const behavior = {
     registeredEntry(act.originalCode)?.actRule?.onReveal?.(state, act, api)
   },
   // 03257：苍白面具下的男子在暗影坟墓时 +每人 1 生命值。
+  // `flags` 在条目根上，读点必须走 entryFlags；旧实现读 locationRule.flags 永远是 undefined。
   enemyStatModifier(state, enemy, stat) {
     if (stat !== 'health' || original(enemy) !== pallidMaskCode()) return 0
     const location = state.locations.find(item => item.id === enemy.location)
-    return locationRuleFor(original(location))?.flags?.tombEntrance ? state.numInvestigators : 0
+    return entryFlags(original(location))?.tombEntrance ? state.numInvestigators : 0
   },
   agendaReveal(state, agenda, api) {
     registeredEntry(agenda.originalCode)?.agendaRule?.onReveal?.(state, agenda, api)
@@ -262,10 +295,12 @@ export const behavior = {
   enemySpawned(state, enemy, api) {
     encounterRules.enemySpawned?.(state, enemy, api)
     // 第 114 轮：苍白面具下的男子由条目 storyRole/pallidMask 读点识别（pallidMaskCode）。
-    if (isPallidMaskMan(enemy) && enemy.location === state.scenarioFlags.tombLocationId) {
-      enemy.health += state.numInvestigators
-      enemy.cannotBeDefeatedByAction = true
-    }
+    // 生命值加成走 enemyStatModifier（随所在地点动态生效），这里只维护「不能被 [action] 击败」。
+    if (isPallidMaskMan(enemy)) syncTombProtection(state, enemy)
+  },
+  enemyMoved(state, enemy, from, api) {
+    encounterRules.enemyMoved?.(state, enemy, from, api)
+    if (isPallidMaskMan(enemy)) syncTombProtection(state, enemy)
   },
   enemyCanBeDefeated(state, enemy, source) {
     if (isPallidMaskMan(enemy) && enemy.cannotBeDefeatedByAction && source === pallidMaskCode()) return false

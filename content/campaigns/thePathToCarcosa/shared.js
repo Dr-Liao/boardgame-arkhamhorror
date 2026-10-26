@@ -60,6 +60,8 @@ export const recordTypes = {
   theInvestigatorsPreventedHasturFromEscapingHisPrison: 'boolean',
   hasturHasYouInHisGrasp: 'boolean',
   possessed: 'string[]',
+  // 卡城幽影：知晓卡尔克萨的秘密（dimCarcosa/behavior.js 写入并决定结局分支）。
+  knowTheSecret: 'boolean',
 }
 
 export const recordDefaults = Object.freeze(Object.fromEntries(Object.entries(recordTypes).map(([key, type]) =>

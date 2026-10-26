@@ -8,7 +8,7 @@
 import { syncCluesInEntry } from '../../_shared.js'
 
 export default {
-  code: '01136', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['tfa'],
+  code: '01136', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['tfa', 'carcosa'],
   encounterResolve(state, inv, card, api) {
     if ((inv.clues || 0) === 0) { api.drawEncounter(inv.seat); return false }
     api.test(inv.seat, 'intellect', 4, result => {

@@ -106,7 +106,8 @@ export function setupPlan(state) {
   const kept = state.scenarioFlags?.echoesFloors || state.scenario.floorPools
   return {
     locations: ['entryHall', 'quietHallsSecond', 'quietHallsThird', ...Object.values(kept).flat()],
-    setAside: ['03139', '03140', '03141', '03142', '03143'],
+    // 03144 探求者的 3 张实体卡开局按人数生成，其余放在一边（不洗进遭遇牌库）。
+    setAside: ['03139', '03140', '03141', '03142', '03143', '03144', '03144', '03144'],
     removed: state.scenarioZones?.removed || [],
   }
 }
@@ -127,6 +128,9 @@ export const behavior = {
   setupLocations(state, _events, api) {
     state.scenarioFlags = { firstRoundBonus: !!state.campaign.records.youFledTheDinnerParty }
     state.scenarioZones.removed = []
+    // 03139/03140/03141-03143 与 03144 的未使用副本都放在一边；
+    // 以前 `setupPlan().setAside` 只是导出数据，引擎的 setAside 区一直是空的。
+    state.scenarioZones.setAside = [...setupPlan(state).setAside]
     state.scenarioFlags.echoesFloors = {}
     for (const [floor, ids] of Object.entries(state.scenario.floorPools)) {
       const shuffled = shuffleWithSetup(state, ids, api)

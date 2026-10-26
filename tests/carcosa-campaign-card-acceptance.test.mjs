@@ -352,8 +352,11 @@ test('C5 mid-cycle privacy and Behind You ownership rules execute precisely', ()
   owner.hiddenCards = ['03341']
   owner.hand = ['03341']
   owner.resources = 0
+  // 手牌里只有不能被普通效果弃掉的隐私卡：不存在可弃的资源/手牌时不得弹出无效选择，
+  // 但卡面的「然后，弃掉身后暗影」仍然执行（旧实现会把这张强制牌永久留在威胁区）。
   encounterRules.turnEnded(state, owner, { choose: () => { throw new Error('不应要求无效选择') } })
-  assert.equal(owner.threat.length, 1)
+  assert.deepEqual(owner.hand, ['03341'])
+  assert.equal(owner.threat.length, 0)
 
   let privateText = ''
   state.scenarioFlags = {}

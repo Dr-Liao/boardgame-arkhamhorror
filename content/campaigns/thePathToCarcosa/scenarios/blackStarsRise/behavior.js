@@ -7,6 +7,8 @@ import { agendaVariants } from './definition.js'
 
 const clone = value => structuredClone(value)
 const MONSTER_BONUS_AGENDAS = ['03279a', '03279b', '03280']
+// 印着「[fast] 团队花费线索放 1 毁灭」的两条密谋牌堆的 1a/2a(2c) 卡。
+const HASTEN_AGENDA_CODES = new Set(['03275', '03276a', '03276b', '03278', '03279a', '03279b'])
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
 const codeOf = card => card?.originalCode || card?.code
 const interviewedAshleigh = state =>
@@ -108,11 +110,11 @@ export function advanceAgendaDeck(state, deckId, api) {
   const code = deck.cards[deck.index]
   if (deck.index === 0) {
     const opposing = decks[deckId === 'a' ? 'c' : 'a']
-    // 卡面：对立密谋上的毁灭 ≥3 记疑惑，否则记确信；团队每轮仅限一次。
-    if (state.round == null || state.scenarioFlags.bsrMarkRound !== state.round) {
-      if (state.round != null) state.scenarioFlags.bsrMarkRound = state.round
-      addCampaignMark(state, opposing.doom >= 3 ? 'doubt' : 'conviction')
-    }
+    // 03275/03278 背面：检查「另一条密谋」当前是否仍是 1a/1c。
+    //  - 对立密谋上的毁灭 ≤2 记确信，≥3 记疑惑；
+    //  - 若对立密谋已不是 1a/1c（index ≠ 0），本次不记任何疑惑/确信。
+    // 卡面没有「每轮一次」限制，旧实现的 bsrMarkRound 守卫会吞掉合法记录，已移除。
+    if (opposing.index === 0) addCampaignMark(state, opposing.doom >= 3 ? 'doubt' : 'conviction')
     const additions = deckId === 'a' ? ['03300', '03300'] : ['03301', '03301']
     state.encounterDeck.push(...state.encounterDiscard.splice(0), ...additions)
     api.shuffleEncounterDeck?.()
@@ -125,19 +127,33 @@ export function advanceAgendaDeck(state, deckId, api) {
     const route = state.scenarioFlags.route
     const routeAct = stageCards[route].act
     const otherAct = stageCards[route === 'below' ? 'above' : 'below'].act
-    const setAside = state.scenarioFlags.setAside || (state.scenarioFlags.setAside = [])
+    // 放在一边的卡由引擎的 scenarioZones.setAside 承载（旧实现误写 scenarioFlags.setAside，
+    // 那份数组从不存在，导致 removeSetAside 永远删不到东西）。
+    const setAside = state.scenarioZones?.setAside || (state.scenarioZones.setAside = [])
     const removeSetAside = target => {
       const index = setAside.indexOf(target)
       if (index >= 0) setAside.splice(index, 1)
     }
     if (String(code).endsWith('b')) {
+      // 正确路线（03276b/03279b「The Path to Carcosa」）：本密谋牌堆移出游戏，
+      // 换成放在一边的 act 3a/3c，并「开启道路」——此后幕的目标才能被检查。
       removeSetAside(routeAct)
-      const actIndex = (state.acts || []).findIndex(act => original(act) === routeAct)
+      const actIndex = (state.acts || []).findIndex(act => codeOf(act) === routeAct)
       if (actIndex >= 0) state.actIndex = actIndex
+      state.scenarioFlags.openPath = true
+      state.scenarioFlags.pathOpenedBy = deckId
       deck.index = 3
       deck.removed = true
       deck.doom = 0
-      api.info?.(`🌑 本密谋牌堆移出游戏，改用场景卡「${routeAct}」继续。`)
+      if (deckId === 'a') {
+        state.doom = 0
+        // 卡面：把本密谋牌堆剩下的部分移出游戏。换成克隆数组可让
+        // advanceAgenda 的「reveal 期间牌堆被替换」判据生效，不再翻出已移除的 3a。
+        // （与 TFA《边界之外》同类替换写法一致。）
+        state.agendas = (state.agendas || []).slice(0, state.agendaIndex + 1)
+          .map(card => structuredClone(card))
+      }
+      api.info?.(`🌑 本密谋牌堆移出游戏，改用场景卡「${routeAct}」继续；道路已经开启。`)
     } else {
       removeSetAside(otherAct)
       spawnAshleighAndBeast(state, deckId, api)
@@ -159,6 +175,9 @@ export function advanceAgendaDeck(state, deckId, api) {
 export function placeAgendaDoom(state, deckId, amount, api) {
   if (!Number.isSafeInteger(amount) || amount < 0) throw new Error('毁灭标记数量无效')
   syncMainAgenda(state)
+  // 道路开启后两张密谋牌堆都已被替换，毁灭不再落在这两条牌堆上
+  // （否则 03301/03284 等效果仍可把已移出的 3a/3c 推成 R3）。
+  if (state.scenarioFlags?.openPath) return 0
   const deck = state.scenarioFlags.agendaDecks?.[deckId]
   if (!deck) throw new Error(`未知黑星升起密谋牌堆：${deckId}`)
   deck.doom += amount
@@ -187,6 +206,47 @@ export const behavior = {
   ...encounterRules,
   id: 'blackStarsRise',
   setupPlan,
+  // 场景卡：每名调查员从收藏里随机获得 1 张「疯狂/契约/异教徒/侦探」基础弱点。
+  preScenarioSetup(state, events, api) {
+    const campaign = state.campaign ||= {}
+    if (campaign.bsrWeaknessAdded) return
+    campaign.bsrWeaknessAdded = true
+    const traits = ['madness', 'pact', 'cultist', 'detective']
+    for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned)) {
+      const code = api?.addBasicWeakness?.(inv.seat, traits)
+      if (!code) continue
+      // 与幻影的 03227 同口径：这次加入的弱点留在战役牌组里。
+      const record = campaign.investigators?.[inv.seat]
+      if (record && Array.isArray(record.deck) && !record.deck.includes(code)) record.deck.push(code)
+    }
+  },
+  // 场景卡：按难度调整混乱袋（Easy -3 / Standard -5 / Hard -6 / Expert -7）。
+  afterChaosBagSetup(state) {
+    const extra = { easy: '-3', standard: '-5', hard: '-6', expert: '-7' }[state.difficulty] || '-5'
+    state.chaosBag.push(extra)
+    state.scenarioFlags ||= {}
+    state.scenarioFlags.temporaryChaosToken = extra
+  },
+  // 「在当前议程上放置毁灭」：本关有 a/c 两套密谋，由玩家选择其中一套
+  // （参考实现同样用 PlaceDoomOnAgenda 询问）。返回 true = 本次放置已由本关接管。
+  doomPlacementReplacement(state, amount, api) {
+    if (!(amount > 0)) return false
+    if (state.scenarioFlags?.openPath) return true
+    const decks = Object.values(state.scenarioFlags?.agendaDecks || {}).filter(deck => deck && !deck.removed)
+    if (!decks.length) return false
+    if (decks.length === 1) {
+      placeAgendaDoom(state, decks[0].id, amount, api)
+      return true
+    }
+    const answer = api.choose({
+      kind: 'agenda', source: 'blackStarsRise-doom',
+      seat: state.currentSeat ?? state.campaign?.leadSeat ?? 0,
+      prompt: '在当前议程上放置毁灭：选择 a 或 c 密谋。',
+      options: decks.map(deck => ({ id: deck.id, label: `“${deck.id}” 密谋（毁灭 ${deck.doom}）` })),
+    })
+    placeAgendaDoom(state, answer === 'c' ? 'c' : 'a', amount, api)
+    return true
+  },
   resolveChaosToken(state, inv, token, api) {
     const base = carcosaChaosToken('blackStarsRise', state, inv, token, api)
     if (!base) return null
@@ -219,6 +279,15 @@ export const behavior = {
     state.agendas = definitionsFor(plan.route, 'a')
     state.scenario.agendas = clone(state.agendas)
     state.agendaIndex = 0
+    // 两张 act 3a/3c 在官方布置里都放在一边；只有「The Path to Carcosa」背面
+    // 才会把路线对应的那张换成当前幕。旧实现把两张一起塞进 acts，导致上方路线
+    // 开局显示的是「开辟下方通路」，且 checkObjectives 永远没有可完成的幕。
+    // 这里只保留路线对应的 act（仍未开启，由 openPath 把关目标检查）。
+    const routeAct = stageCards[plan.route].act
+    const actCard = (state.scenario.acts || []).find(act => codeOf(act) === routeAct)
+    state.acts = actCard ? [clone(actCard)] : []
+    state.scenario.acts = clone(state.acts)
+    state.actIndex = 0
     return plan.locations
   },
   locationRevealed(state, location, api) {
@@ -303,16 +372,31 @@ export const behavior = {
     // 第 106 轮：03283/03292/03293 的行动在地点条目声明。
     locationRuleFor(code)?.actions?.({ state, inv, location, moves })
     const teamClues = active(state).reduce((sum, investigator) => sum + (investigator.clues || 0), 0)
-    for (const deckId of ['a', 'c']) moves.push({
-      action: 'scenarioAction',
-      rule: 'hastenAgenda',
-      deckId,
-      actions: 0,
-      label: `共同花费 ${state.numInvestigators} 线索，在“${deckId}”密谋上放置1毁灭`,
-      reason: teamClues >= state.numInvestigators ? null
-        : `需要共同花费 ${state.numInvestigators} 个线索（当前 ${teamClues}）`,
-    })
-    if (state.scenarioFlags.ashleighDoomAbility && !state.scenarioFlags.ashleighDoomUsed) {
+    // 道路开启后两条密谋牌堆都已被替换，卡面上的 [fast] 不复存在：
+    // 不再提供「花线索放毁灭」，否则会变成只拿奖励、不付代价的行动。
+    if (!state.scenarioFlags.openPath) {
+      const usedThisRound = state.scenarioFlags.hastenRound || {}
+      for (const deckId of ['a', 'c']) {
+        const deck = decks[deckId]
+        if (!deck || deck.removed) continue
+        // 卡面 [fast] 只印在 03275/03276a/b/03278/03279a/b 上；其它阶段的卡没有这条能力。
+        if (!HASTEN_AGENDA_CODES.has(deck.cards?.[deck.index])) continue
+        const used = usedThisRound[deckId] === state.round
+        moves.push({
+          action: 'scenarioAction',
+          rule: 'hastenAgenda',
+          deckId,
+          actions: 0,
+          used: used || undefined,
+          label: `共同花费 ${state.numInvestigators} 线索，在“${deckId}”密谋上放置1毁灭`,
+          reason: used ? '这张密谋卡本轮的团队能力已使用（团队每轮仅限一次）'
+            : teamClues >= state.numInvestigators ? null
+              : `需要共同花费 ${state.numInvestigators} 个线索（当前 ${teamClues}）`,
+        })
+      }
+    }
+    if (!state.scenarioFlags.openPath
+      && state.scenarioFlags.ashleighDoomAbility && !state.scenarioFlags.ashleighDoomUsed) {
       moves.push({ action: 'scenarioAction', rule: 'ashleighDoom', actions: 0, label: '阿什莉提供的信息：移除1毁灭',
         reason: agendaDoom ? null : '“a”“c”两张密谋上都没有毁灭' })
     }
@@ -348,11 +432,19 @@ export const behavior = {
       if (rule.heal === 'damage') api.healDamage(inv.seat, 2)
       else api.healHorror(inv.seat, 2)
     } else if (move.rule === 'hastenAgenda') {
+      if (state.scenarioFlags.openPath) throw new Error('密谋牌堆已被替换，卡面能力不可用')
+      const deck = state.scenarioFlags.agendaDecks?.[move.deckId]
+      if (!deck || deck.removed) throw new Error('该密谋牌堆已不在场上')
+      if (!HASTEN_AGENDA_CODES.has(deck.cards?.[deck.index])) throw new Error('当前密谋卡没有这条能力')
+      const used = state.scenarioFlags.hastenRound ||= {}
+      if (used[move.deckId] === state.round) throw new Error('这张密谋卡本轮的团队能力已使用')
       api.payClues(state.numInvestigators)
+      used[move.deckId] = state.round
       placeAgendaDoom(state, move.deckId, 1, api)
       if (move.deckId === 'a') for (const target of active(state)) target.resources += 2
       else for (const target of active(state)) api.drawCards(target.seat, 1)
     } else if (move.rule === 'ashleighDoom') {
+      if (state.scenarioFlags.openPath) throw new Error('密谋牌堆已被替换，卡面能力不可用')
       const decks = state.scenarioFlags.agendaDecks
       const candidates = Object.values(decks).filter(deck => deck.doom > 0)
       if (!candidates.length || state.scenarioFlags.ashleighDoomUsed) throw new Error('阿什莉的能力当前不可用')
@@ -467,11 +559,18 @@ export const behavior = {
     }
   },
   checkObjectives(state, api) {
+    // 只有「The Path to Carcosa」背面换成 act 3a/3c 之后（openPath）幕目标才可检查。
     if (!state.scenarioFlags.openPath) return
+    const alive = active(state)
+    if (!alive.length) return
     const route = stageCards[state.scenarioFlags.route]
     const location = state.locations.find(item => item.id === route.pathLocation)
-    if (!location || location.clues > 0) return
-    if (active(state).every(inv => inv.location === route.pathLocation)) api.finish(route.resolution)
+    if (!location || (location.clues || 0) > 0) return
+    if (alive.every(inv => inv.location === route.pathLocation)) api.finish(route.resolution)
+  },
+  // 道路开启后密谋牌堆已被场景卡替换：不再因毁灭阈值推进（否则 3a/3c 会把人送进 R3）。
+  agendaWouldAdvance(state) {
+    return state.scenarioFlags?.openPath === true
   },
   storyResolutionKey(_state, key) {
     return key === 'noResolution' ? 'r3' : key

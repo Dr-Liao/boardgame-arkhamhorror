@@ -239,6 +239,7 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
       cp.phase === 'interlude' ? h('p', { className: 'ah-campaign-note' }, t('situation.campaign.interludeNote')) : null,
       suppliesPanel(cp),
       tfaStatusPanel(st),
+      carcosaStatusPanel(st),
       renderTcuCampaignPanel(h, tcuCampaignModel(st)),
       h('ul', { className: 'ah-campaign-records' }, Object.values(cp.investigators || {}).map(record => {
         const trauma = cp.trauma?.[record.seat] || {}
@@ -327,6 +328,56 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
     ]
     return h('div', { className: 'ah-campaign-tfa', role: 'group', 'aria-label': t('situation.tfa.aria') },
       h('h4', {}, tableIcon('tarot'), t('situation.tfa.title')),
+      h('ul', {}, rows.map(([label, value, icon]) => h('li', {},
+        h('span', {}, tableIcon(icon), label), h('strong', {}, value)))))
+  }
+
+  // 卡尔克萨之路的公开剧本状态：疑惑/确信、黑星升起的两套密谋与「道路」、
+  // 苍白面具的地下墓穴牌库、邪秽誓约的钥匙。数据来自 campaign-view.js 的公开投影，
+  // 不含未翻开牌序或未揭示地点身份。
+  const carcosaStatusPanel = st => {
+    const cp = st.campaign
+    if (cp?.id !== 'thePathToCarcosa') return null
+    const records = cp.records || {}
+    const doubt = Number(records.doubt || 0), conviction = Number(records.conviction || 0)
+    const bsr = st.blackStarsRise
+    const pallid = st.thePallidMask
+    const oath = st.theUnspeakableOath
+    const rows = []
+    if (doubt || conviction) {
+      rows.push([t('situation.carcosa.doubtConviction'),
+        t('situation.carcosa.doubtConvictionValue', { doubt, conviction }), 'star'])
+    }
+    if (bsr) {
+      rows.push([t('situation.carcosa.route'), bsr.route === 'below' ? t('situation.carcosa.routeBelow')
+        : bsr.route === 'above' ? t('situation.carcosa.routeAbove') : t('situation.carcosa.unknown'), 'action'])
+      rows.push([t('situation.carcosa.path'),
+        bsr.openPath ? t('situation.carcosa.pathOpen') : t('situation.carcosa.pathClosed'), 'book'])
+      for (const [id, labelKey] of [['a', 'situation.carcosa.deckA'], ['c', 'situation.carcosa.deckC']]) {
+        const deck = bsr.decks?.[id]
+        if (!deck) continue
+        if (deck.removed) rows.push([t(labelKey), t('situation.carcosa.deckRemoved'), 'doom'])
+        else {
+          const name = deck.current ? (cardName({ state: st }, deck.current) || deck.current) : t('situation.carcosa.unknown')
+          rows.push([t(labelKey), t('situation.carcosa.deckValue', {
+            card: name, doom: deck.doom, index: Math.min(deck.index + 1, deck.size || 1), size: deck.size || 1,
+          }), 'doom'])
+        }
+      }
+    }
+    if (pallid) {
+      rows.push([t('situation.carcosa.catacombs'),
+        t('situation.carcosa.catacombsValue', { count: pallid.catacombs }), 'clue'])
+      rows.push([t('situation.carcosa.tomb'), pallid.tombRevealed
+        ? t('situation.carcosa.tombRevealed', { name: pallid.tombName || t('situation.carcosa.unknown') })
+        : t('situation.carcosa.tombHidden'), 'eye'])
+    }
+    if (oath) {
+      rows.push([t('situation.carcosa.keys'), t('situation.carcosa.keysValue', { count: oath.keysFound }), 'action'])
+    }
+    if (!rows.length) return null
+    return h('div', { className: 'ah-campaign-tfa ah-campaign-carcosa', role: 'group', 'aria-label': t('situation.carcosa.aria') },
+      h('h4', {}, tableIcon('eye'), t('situation.carcosa.title')),
       h('ul', {}, rows.map(([label, value, icon]) => h('li', {},
         h('span', {}, tableIcon(icon), label), h('strong', {}, value)))))
   }

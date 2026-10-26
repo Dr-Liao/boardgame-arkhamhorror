@@ -35,7 +35,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
-      "sha256": "a48d7b49cf0282ceed791aabf5abe0d23663eb4bcd066b51e54130657258d8cc"
+      "sha256": "a2e1947de35c28a97562023258a17cf90bf29508ae947385e5f6734aae606bec"
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-literal-behavior.test.mjs",

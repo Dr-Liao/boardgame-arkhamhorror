@@ -60,12 +60,17 @@ export const scenario = {
     },
   })),
   agendas: stages(['03121', '03122', '03123'], 'agenda').map(agenda => ({
-    ...agenda, reveal: { type: 'campaignRule' },
+    ...agenda,
+    reveal: { type: 'campaignRule' },
+    // 卡面强制效果：有线索放到敌人身上后翻成毁灭面（见 _shared.flipEnemyCluesToDoom）。
+    clueToDoom: true,
   })),
   ...definitions,
   storyAssets: storyCards(['03141', '03142', '03143']),
   encounterDeck: [
-    ...encounterDeck(gathered.filter(card => card.code !== '03140')),
+    // 03144 的 3 张是开局按人数生成用的实体卡，不能再洗进遭遇牌库
+    // （否则 3 张实体最多会出现 6 个探求者实例）。
+    ...encounterDeck(gathered.filter(card => !['03140', '03144'].includes(card.code))),
     ...Array(2).fill('01136'),
     ...Array(3).fill('01135'),
   ],

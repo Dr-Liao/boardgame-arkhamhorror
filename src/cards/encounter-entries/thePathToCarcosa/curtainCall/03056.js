@@ -8,9 +8,11 @@
 export default {
   code: '03056', scope: 'location',
   locationRule: {
-    actions({ inv, moves }) {
+    actions({ moves }) {
+      // 卡面写的是「[action][action][action]：治愈3点恐惧」，没有前置条件；
+      // 恐惧不足 3 点时仍可花 3 行动治愈（最多到 0）。
       moves.push({ action: 'scenarioAction', rule: 'dressingRoomHeal', actions: 3,
-        label: '花费3行动，治愈3点恐惧', reason: inv.horror > 0 ? null : '没有需要治愈的恐惧' })
+        label: '花费3行动，治愈3点恐惧' })
     },
     performAction(state, inv, move) {
       if (move.rule !== 'dressingRoomHeal') return false

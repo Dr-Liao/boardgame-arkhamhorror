@@ -7,7 +7,7 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { chooseEntryOption } from '../../../_shared.js'
+import { chooseEntryOption, flipEnemyCluesToDoom } from '../../../_shared.js'
 
 export default {
   code: '03098', scope: 'enemy', implemented: true,
@@ -26,6 +26,7 @@ export default {
       if (location?.clues > 0) {
         location.clues--
         enemy.clues = (enemy.clues || 0) + 1
+        flipEnemyCluesToDoom(state, enemy)
       }
     },
     onDefeated(state, enemy, api) {

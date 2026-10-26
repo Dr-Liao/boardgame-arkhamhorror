@@ -694,6 +694,17 @@ function setupScenarioDecks(state, events) {
   }
 
   scenarioBehavior(state).afterDeckSetup?.(state, events, { info, randomValue, shuffle })
+
+  // 内容层可以在布置结束后声明「需要按正常揭示流程翻开的地点」：
+  // 例如《苍白面具》的哈露子密道，揭示时必须派发 locationRule.onReveal、
+  // locationRevealed 造图与胜利点，直接改字段会漏掉这些结算。
+  const pendingReveals = state.scenarioFlags?.pendingSetupReveals
+  if (Array.isArray(pendingReveals) && pendingReveals.length) {
+    delete state.scenarioFlags.pendingSetupReveals
+    for (const id of pendingReveals) {
+      if (state.locations.some(location => location.id === id)) scenarioRuntime(state, events).reveal(id)
+    }
+  }
 }
 
 function setupChaosBag(state, events) {

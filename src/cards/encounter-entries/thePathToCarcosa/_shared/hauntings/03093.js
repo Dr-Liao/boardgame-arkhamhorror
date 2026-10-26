@@ -18,10 +18,13 @@ export default {
       }
     },
     onDamageAllowed(state, enemy, source, seat) {
+      // 遭遇卡自己造成的伤害（`encounter` 来源）总是允许。
       if (source === 'encounter') return true
-      const inv = state.investigators[seat]
-      const sourceCard = inv?.assets.find(asset => asset.id === source)
-      const list = (ALL_CARDS[originalOf(sourceCard)]?.traits || sourceCard?.traits || [])
+      const inv = Number.isInteger(seat) ? state.investigators[seat] : null
+      // 引擎传的是「来源卡号」：支援传实例 id（用 id 找卡），事件/法术牌传 code。
+      const sourceAsset = inv?.assets.find(asset => asset.id === source)
+      const sourceCode = originalOf(sourceAsset) || (ALL_CARDS[source] ? source : null)
+      const list = (ALL_CARDS[sourceCode]?.traits || sourceAsset?.traits || [])
         .map(trait => String(trait).toLowerCase())
       return list.some(trait => ['spell', 'relic'].includes(trait))
     },

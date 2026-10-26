@@ -1,5 +1,5 @@
 import { contentRegistry } from '../../content/registered.js'
-import { HIDDEN_LOCATION_ART } from '../../content/campaigns/thePathToCarcosa/presentation.js'
+import { HIDDEN_LOCATION_ART, PRIVATE_DOORWAY_NAMES } from '../../content/campaigns/thePathToCarcosa/presentation.js'
 import { agendaDoom, totalDoom, enemyHealthValue } from '../engine/rules-state.js'
 
 // Use the same scenario gate as movement, independently of remaining actions,
@@ -46,18 +46,32 @@ export function publicCardInstance(card) {
 // 第 125 轮（第 8 批）：隐藏地点的背面图案分组表在内容层（`content/campaigns/thePathToCarcosa/presentation.js`）。
 const hiddenLocationArtCode = loc => loc.artCode
   || HIDDEN_LOCATION_ART[loc.originalCode || loc.code]
+// 双面私人地点（谢幕的楼座 / 后台）：未揭示时显示「门口」那一面的印名，
+// 否则地点名称会直接告诉玩家这扇门后面是什么。仅影响投影副本，不改引擎状态。
+const doorwayMask = loc => {
+  if (!loc || loc.revealed) return loc
+  const names = PRIVATE_DOORWAY_NAMES[loc.originalCode || loc.code]
+  if (!names) return loc
+  // 只给「门口」这一面的公开信息：名称、连接、已有的毁灭。正面文本/帷幕/线索都不投影，
+  // 否则点开详情就能提前看到「揭示时」的强制效果。
+  return {
+    id: loc.id, originalCode: loc.originalCode || loc.code,
+    name: names.zh, nameEn: names.en, revealed: false,
+    clues: 0, doom: loc.doom || 0, connections: [...(loc.connections || [])],
+  }
+}
 export function maskHiddenLocations(locations) {
-  return locations.map(loc => loc.hiddenIdentity && !loc.revealed
+  return locations.map(loc => doorwayMask(loc.hiddenIdentity && !loc.revealed
     ? { id: loc.id, name: '未知小径', artCode: hiddenLocationArtCode(loc), revealed: false, clues: 0,
         connections: [...loc.connections], doom: loc.doom || 0 }
-    : structuredClone(loc))
+    : structuredClone(loc)))
 }
 export function captureTableState(state, getStat, getMaxSanity) {
   const attachments = publicAttachments(state)
   // 敌人生命值要走剧本钩子（失落时代 P2：04124/04132/04140 等常驻 +生命）。
   const behavior = state.scenario ? contentRegistry.getBehavior(state.scenario.id) : null
   return {
-    ...pick(state, FIELDS), locations: attachLocationCards(structuredClone(state.locations || []), attachments.locations),
+    ...pick(state, FIELDS), locations: attachLocationCards(structuredClone(state.locations || []), attachments.locations).map(doorwayMask),
     scriptAttachments: { act: attachments.act, agenda: attachments.agenda }, enemies: state.enemies.map(enemy => ({ ...structuredClone(enemy), health: enemyHealthValue(state, enemy, behavior) })), encounterDeckSize: state.encounterDeck.length,
     locationEntryErrors: locationEntryErrors(state),
     privateTest: state.skillTest && !state.skillTest.helpRequested ? { seat: state.skillTest.seat, publicLog: [...(state.skillTest.publicLog || [])] } : null,

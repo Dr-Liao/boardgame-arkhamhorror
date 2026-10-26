@@ -211,9 +211,6 @@ export function carcosaChaosAfterTest(id, state, inv, result, api) {
     // [elder_thing]：失败时查找遭遇牌库与弃牌堆，抽一张[[食尸鬼]]或[[灵怪]]。
     if (!result.success && has('elderthing')) searchGhoulOrGeist(state, inv, api)
   }
-  if (id === 'blackStarsRise' && !result.success && has('elderthing')) state.doom++
-  if (id === 'dimCarcosa' && !result.success) {
-    if (has('cultist')) api.horror(inv.seat, 1)
-    if (has('tablet')) for (const target of active(state)) api.horror(target.seat, hard ? 2 : 1)
-  }
+  // 黑星升起 / 卡城幽影的 afterTest 由各自 behavior.js 接管（各自需要双密谋或哈斯塔在场判定），
+  // 不经过这里；此前这里还留着两份只加 state.doom / 全体恐惧的旧分支，已删除以免再次被误当成实现。
 }

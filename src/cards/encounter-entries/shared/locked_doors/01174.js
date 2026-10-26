@@ -8,7 +8,7 @@
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
 export default {
-  code: '01174', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['tfa'],
+  code: '01174', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['tfa', 'carcosa'],
   encounterResolve(state, inv, card, api) {
     const code = card.originalCode || card.code
     // 上锁的门：附属到线索最多且没有锁的地点；引擎已负责禁止调查与「破门」行动。

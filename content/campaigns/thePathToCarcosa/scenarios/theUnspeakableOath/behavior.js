@@ -131,12 +131,8 @@ export const behavior = {
   locationShroudModifier(state, location, inv) {
     return original(location) === '03175' && inv ? (inv.horror || 0) : 0
   },
-  // 03052 后台：手牌中的每张隐私诡计按 3 张计算手牌上限。
-  handSizePenalty(state, inv) {
-    const location = state.locations.find(candidate => candidate.id === inv.location)
-    if (!registeredEntry(original(location))?.flags?.backstage) return 0
-    return 2 * (inv.hiddenCards || []).length
-  },
+  // 注：03052 后台的「隐私诡计算 3 张手牌」属于谢幕，已移到 curtainCall/behavior.js；
+  // 本关没有带 flags.backstage 的地点，原实现是永不执行的死代码。
   ...encounterRules,
   id: 'theUnspeakableOath',
   spawnOverrides: { '03183': 'basementHall' },

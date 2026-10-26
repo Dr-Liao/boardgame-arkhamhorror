@@ -5,11 +5,13 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
+import { doomInPlayInEntry } from '../../../_shared.js'
+
 export default {
   code: '03092', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['carcosa'],
   encounterResolve(state, inv, card, api) {
-    const doom = state.doom + state.locations.reduce((sum, location) => sum + (location.doom || 0), 0)
-      + state.enemies.reduce((sum, enemy) => sum + (enemy.doom || 0), 0)
+    // 「场上的毁灭标记总数」包括密谋/地点/敌人与调查员支援、威胁区上的毁灭。
+    const doom = doomInPlayInEntry(state)
     if (!doom) {
       api.drawEncounter(inv.seat)
       return false

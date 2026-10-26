@@ -1,5 +1,5 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
-import { encounterResolveCampaignsFor, encounterResolveFor, enemyScriptFor, locationRuleFor, treacheryRuleFor } from '../../../src/cards/card-rules.js'
+import { encounterResolveCampaignsFor, encounterResolveFor, enemyScriptFor, entryFlags, locationRuleFor, treacheryRuleFor } from '../../../src/cards/card-rules.js'
 
 const original = card => card?.originalCode || card?.code
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
@@ -74,6 +74,20 @@ export const encounterRules = {
       && traits(enemy).includes('cultist')) return (enemy.clues || 0) + (enemy.doom || 0)
     return 0
   },
+  // 03187「疯狂礼物（悲惨）」：隐私卡在场时不能触发地点上的 [action] 能力。
+  // 引擎只拦了 `loc.ability` 通道；地点条目自己推出的 scenarioAction 也在这里拦下。
+  actionBlocked(state, inv, move) {
+    if (move?.action !== 'scenarioAction') return null
+    const hidden = (inv.hiddenCards || []).filter(code =>
+      state.scenario?.treacheries?.[code]?.hiddenRule?.cannotTriggerLocationAbilities)
+    if (!hidden.length) return null
+    const location = state.locations.find(item => item.id === inv.location)
+    const rule = locationRuleFor(original(location))
+    if (!rule?.actions) return null
+    const produced = []
+    rule.actions({ state, inv, location, moves: produced, facts: state.scenarioFlags?.remembered || [] })
+    return produced.some(candidate => candidate.rule === move.rule) ? '隐私牌禁止你触发地点能力' : null
+  },
   spawnLocation(state, code, fallback, seat, api) {
     const script = enemyScriptFor(code)
     if (script?.onSpawnLocation) return script.onSpawnLocation(state, code, fallback, seat, api)
@@ -92,6 +106,11 @@ export const encounterRules = {
   },
   enemySpawned(state, enemy, api) {
     enemyScriptFor(original(enemy))?.onSpawn?.(state, enemy, api)
+    // 03100「王之法令」：本轮入场较晚的异教徒也要吃到 +1 攻击的持续修正
+    // （引擎按 enemy.kingsEdictRound === state.round 读）。
+    if (state.scenarioFlags?.kingsEdictRound === state.round && traits(enemy).includes('cultist')) {
+      enemy.kingsEdictRound = state.round
+    }
   },
   enemyDefeated(state, enemy, api) {
     const script = enemyScriptFor(original(enemy))
@@ -180,7 +199,7 @@ export const encounterRules = {
       api.test(inv.seat, 'intellect', difficulty, result => {
         if (!result.success) return
         // 03257：苍白面具下的男子位于暗影坟墓时，不能被他的 [action] 能力击败。
-        if (locationRuleFor(original(location))?.flags?.tombEntrance) {
+        if (entryFlags(original(location))?.tombEntrance) {
           api.info('「暗影坟墓」中的苍白面具下的男子不能被这次行动击败。')
           return
         }
@@ -223,8 +242,13 @@ export const encounterRules = {
   },
   resolveEncounter(state, inv, card, api) {
     const code = original(card)
-    if (encounterResolveCampaignsFor(code).includes('carcosa')) {
-      return encounterResolveFor(code)(state, inv, card, api, { location: here(state, inv) })
+    // 与 TFA 同口径：条目没有声明战役（`encounterResolveCampaigns: []`）表示「通用」，
+    // 任何战役都应结算；只有显式声明了其它战役的卡才跳过。此前只认 'carcosa'，
+    // 导致 01163–01168、01171 这类通用遭遇组在卡尔克萨整包空转。
+    const campaigns = encounterResolveCampaignsFor(code)
+    const resolve = encounterResolveFor(code)
+    if (resolve && (!campaigns.length || campaigns.includes('carcosa'))) {
+      return resolve(state, inv, card, api, { location: here(state, inv) })
     }
     if (code.startsWith('03084')) {
       inv.hand.push(code)
@@ -242,19 +266,25 @@ export const encounterRules = {
       }
       const options = []
       if (inv.resources > 0) options.push({ id: 'resources', label: `弃掉所有资源（${inv.resources}）` })
-      if (inv.hand.length > 0 && !inv.hand.some(code => inv.hiddenCards?.includes(code))) {
-        options.push({ id: 'hand', label: `弃掉所有手牌（${inv.hand.length}）` })
-      }
-      if (!options.length) continue
-      const choice = api.choose({
+      // 手牌里的隐私卡不能被普通效果弃掉；只要还有非隐私手牌，就保留「弃掉所有手牌」选项。
+      const discardable = inv.hand.filter(code => !(inv.hiddenCards || []).includes(code))
+      if (discardable.length > 0) options.push({ id: 'hand', label: `弃掉所有手牌（${discardable.length}）` })
+      // 没有可弃的资源/手牌时，卡面的「然后，弃掉身后暗影」仍然执行；
+      // 旧实现直接 continue，会把这张强制牌永久留在威胁区。
+      const choice = options.length ? api.choose({
         kind: 'encounter', source: '03261', seat: inv.seat,
         prompt: '身后暗影：选择弃掉所有资源或所有手牌。',
         options,
-      })
+      }) : null
       if (choice === 'resources') inv.resources = 0
-      else inv.discard.push(...inv.hand.splice(0))
+      else if (choice === 'hand') {
+        for (const code of discardable) {
+          const index = inv.hand.indexOf(code)
+          if (index >= 0) (inv.discard ||= []).push(inv.hand.splice(index, 1)[0])
+        }
+      }
       inv.threat.splice(inv.threat.indexOf(threat), 1)
-      state.encounterDiscard.push(threat.code)
+      ;(state.encounterDiscard ||= []).push(threat.code)
     }
   },
   doomCleared(state) {
@@ -277,8 +307,12 @@ export const encounterRules = {
   },
   roundEnded(state, api) {
     if (state.scenarioFlags?.decayRound === state.round) {
-      state.fogMod = Math.max(0, (state.fogMod || 0) - 1)
+      // 03101「淤泥与污物」：每张 +1 帷幕，轮末全部弃掉（可能同轮入场多张）。
+      const copies = Math.max(1, state.scenarioFlags.decayCount || 1)
+      state.fogMod = Math.max(0, (state.fogMod || 0) - copies)
+      for (let index = 0; index < copies; index++) state.encounterDiscard.push('03101')
       delete state.scenarioFlags.decayRound
+      delete state.scenarioFlags.decayCount
     }
     for (const location of state.locations) {
       const pits = (location.attachments || []).filter(attachment =>
@@ -291,5 +325,6 @@ export const encounterRules = {
       }
     }
     delete state.scenarioFlags?.kingsEdict
+    delete state.scenarioFlags?.kingsEdictRound
   },
 }

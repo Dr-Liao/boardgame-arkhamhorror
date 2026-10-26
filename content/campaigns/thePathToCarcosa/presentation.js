@@ -15,3 +15,11 @@ export const HIDDEN_LOCATION_ART = Object.freeze({
   '02291': '02289',
   '02292': '02289',
 })
+
+// 双面私人地点（谢幕的楼座 / 后台）在未揭示时是「门口」那一面。
+// 卡面数据里只有正面（Revealed）的名称，直接显示会向玩家泄露「这扇门通向后台」，
+// 因此未揭示时改为显示另一面印的名字（与实体卡放在桌上的那一面一致）。
+export const PRIVATE_DOORWAY_NAMES = Object.freeze({
+  '03051': { zh: '楼座门口', en: 'Balcony Doorway' },
+  '03052': { zh: '后台门口', en: 'Backstage Doorway' },
+})

@@ -6,8 +6,12 @@ import {
 
 const groups = ['a_phantom_of_truth', 'evil_portents', 'byakhee', 'the_stranger', 'agents_of_hastur']
 const gathered = encounterCards(groups)
+// 03227「失魂落魄」是本关专用的玩家弱点：定义要注册（被揭示/结算时按弱点处理），
+// 但绝不洗进遭遇牌库——开局由 preScenarioSetup 每人发 1 张，剩下的放在一边。
+const weaknessCards = encounterCards(groups, { includeWeaknesses: true })
+  .filter(card => ['weakness', 'basicweakness'].includes(card.subtype))
 const extra = ['01135', '01136', '03066b'].map(code => ALL_CARDS[code])
-const definitions = encounterDefinitions([...gathered, ...extra])
+const definitions = encounterDefinitions([...gathered, ...weaknessCards, ...extra])
 
 const paris = {
   montparnasse: location('montparnasse', '03208', ['gareDOrsay', 'gardensOfLuxembourg', 'notreDame']),

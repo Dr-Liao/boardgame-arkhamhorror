@@ -12,8 +12,8 @@ export default {
   encounterResolve(state, inv, card, api) {
     const code = card.originalCode || card.code
     const location = state.locations.find(candidate => candidate.id === inv.location)
-    // X = 所在地点的隐藏值（含本回合的隐藏值修正，与调查检定读同一份数值）。
-    const x = Math.max(0, (location?.shroud || 0) + (location?.shroudMod || 0))
+    // X = 所在地点的隐藏值（含本回合的隐藏值修正与 03101 的全局 +1 帷幕）。
+    const x = Math.max(0, (location?.shroud || 0) + (location?.shroudMod || 0) + (state.fogMod || 0))
     const isItem = candidate => ALL_CARDS[candidate]?.traits?.includes('Item')
     const assets = inv.assets.filter(asset => isItem(asset.code)
       && !asset.cannotLeavePlay && !ALL_CARDS[asset.code]?.permanent)

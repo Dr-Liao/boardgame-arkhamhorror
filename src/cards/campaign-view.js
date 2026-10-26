@@ -76,6 +76,41 @@ export function campaignProjection(state) {
       agendaAttachments: (agenda?.attachments || []).map(entry => entry.code || entry.originalCode),
     }
   }
+  // 卡尔克萨之路：黑星升起的双密谋牌堆、苍白面具的地下墓穴牌库、邪秽誓约的钥匙
+  // 都是桌面公开信息。以前只有 a 牌堆通过 state.doom 间接可见，c 牌堆完全看不到，
+  // 玩家无法判断该把毁灭放到哪套密谋上、另一套推进到了第几张。
+  // 只投影公开字段：牌堆张数、当前（已翻开的）卡号、毁灭、是否已移出游戏；
+  // 未翻开的牌序不投影（否则客户端能提前看到下一张密谋）。
+  if (state.scenario?.id === 'blackStarsRise') {
+    const flags = state.scenarioFlags || {}
+    const deckInfo = deck => deck ? {
+      size: Array.isArray(deck.cards) ? deck.cards.length : 0,
+      index: Number(deck.index || 0),
+      doom: Number(deck.doom || 0),
+      removed: deck.removed === true,
+      current: deck.cards?.[deck.index] ?? null,
+    } : null
+    out.blackStarsRise = {
+      route: flags.route || null,
+      openPath: flags.openPath === true,
+      openedDeck: flags.pathOpenedBy || null,
+      decks: { a: deckInfo(flags.agendaDecks?.a), c: deckInfo(flags.agendaDecks?.c) },
+    }
+  }
+  if (state.scenario?.id === 'thePallidMask') {
+    const flags = state.scenarioFlags || {}
+    const tomb = (state.locations || []).find(location => location.id === flags.tombLocationId)
+    out.thePallidMask = {
+      catacombs: Array.isArray(state.scenarioZones?.catacombsDeck)
+        ? state.scenarioZones.catacombsDeck.length : 0,
+      // 暗影坟墓只在已揭示后才公开具体是哪一张，避免泄露未揭示地点的身份。
+      tombRevealed: tomb?.revealed === true,
+      tombName: tomb?.revealed ? tomb.name : null,
+    }
+  }
+  if (state.scenario?.id === 'theUnspeakableOath') {
+    out.theUnspeakableOath = { keysFound: Number(state.scenarioFlags?.keysFound || 0) }
+  }
   // 遗留记忆 / 看守人（第四循环 P2.10）：记录里的公开信息，非空时才出现。
   Object.assign(out, watcherAndMementoProjection(state))
   // 裂口/火盆（第四循环 P2.11）：只投影有标记的地点，公开值。

@@ -5,6 +5,8 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
+import { flipEnemyCluesToDoom } from '../../../_shared.js'
+
 export default {
   code: '03100', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['carcosa'],
   encounterResolve(state, inv, card, api) {
@@ -15,9 +17,13 @@ export default {
         location.clues--
         enemy.clues = (enemy.clues || 0) + 1
         moved++
+        flipEnemyCluesToDoom(state, enemy)
       }
       enemy.kingsEdictRound = state.round
     }
+    // 本轮内后入场的异教徒也要获得 +1 攻击（encounter-rules.enemySpawned 读这个标记）。
+    state.scenarioFlags ||= {}
+    state.scenarioFlags.kingsEdictRound = state.round
     if (!moved) api.drawEncounter(inv.seat)
     return false
   },

@@ -8,9 +8,10 @@
 export default {
   code: '03075', scope: 'location',
   locationRule: {
-    actions({ inv, moves }) {
-      moves.push({ action: 'scenarioAction', rule: 'diningRoomHeal', label: '治愈1点恐惧并揭示一个混乱标记',
-        reason: inv.horror > 0 ? null : '没有需要治愈的恐惧' })
+    actions({ moves }) {
+      // 卡面没有「必须有恐惧才能用」的限制：治愈 0 点后仍要揭示混乱标记（可能吃惩罚），
+      // 所以恐惧为 0 时也保留这个行动。
+      moves.push({ action: 'scenarioAction', rule: 'diningRoomHeal', label: '治愈1点恐惧并揭示一个混乱标记' })
     },
     performAction(state, inv, move, api) {
       if (move.rule !== 'diningRoomHeal') return false

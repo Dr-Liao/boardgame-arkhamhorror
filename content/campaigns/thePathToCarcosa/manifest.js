@@ -1,6 +1,7 @@
 import { CONTENT_SCHEMA_VERSION } from '../../schema.js'
 import { CHAOS_BAGS, chapters, recordTypes } from './shared.js'
 import { storyText } from './story-text.js'
+import { CARCOSA_RECORD_LABELS } from './records.js'
 import { RESEARCH_RECORD_LABELS, RESEARCH_RECORD_TYPES } from '../research-records.js'
 
 const record = (key, value = true) => ({ type: 'record', key, value })
@@ -26,7 +27,7 @@ export const manifest = {
   unlock: Object.fromEntries(chapters.map((chapter, index) =>
     [chapter.id, index ? [chapters[index - 1].id] : []])),
   chaosBags: CHAOS_BAGS,
-  recordLabels: RESEARCH_RECORD_LABELS,
+  recordLabels: { ...RESEARCH_RECORD_LABELS, ...CARCOSA_RECORD_LABELS },
   recordSchema: { ...recordTypes, ...RESEARCH_RECORD_TYPES },
   interludeHandlerId: 'carcosaInterlude',
   resolutionIds: ['victory', 'defeat'],

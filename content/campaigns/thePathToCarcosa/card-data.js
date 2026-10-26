@@ -1,5 +1,5 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
-import { enemyRuleFor, hiddenRuleFor, threatEffectFor, doomPerInvestigatorFor } from '../../../src/cards/card-rules.js'
+import { enemyRuleFor, hiddenRuleFor, threatEffectFor, treacheryRuleFor, doomPerInvestigatorFor } from '../../../src/cards/card-rules.js'
 
 const CARCOSA_PACKS = new Set(['ptc', 'eotp', 'tuo', 'apot', 'tpm', 'bsr', 'dca'])
 
@@ -47,14 +47,19 @@ export function stages(codes, type) {
   })
 }
 
-export function encounterCards(groups) {
+export function encounterCards(groups, options = {}) {
   const aliases = { the_stranger: 'stranger' }
   const normalized = groups.map(group => aliases[group] || group)
+  // 弱点（subtype `weakness` / `basicweakness`）永不洗入遭遇牌库：
+  // 03227「失魂落魄」虽然是 a_phantom_of_truth 组的卡，但它只以玩家弱点的形式
+  // 进入每人的牌库（见 aPhantomOfTruth/behavior.js 的 preScenarioSetup）。
+  // `includeWeaknesses` 只用于「注册定义」的场景（定义要存在，但不能进牌堆）。
+  const isWeakness = card => ['weakness', 'basicweakness'].includes(card.subtype)
+  const usable = card => ['enemy', 'treachery'].includes(card.type) && (options.includeWeaknesses || !isWeakness(card))
   const missing = normalized.filter(group => !Object.values(ALL_CARDS).some(card =>
-    card.encounterCode === group && ['enemy', 'treachery'].includes(card.type)))
+    card.encounterCode === group && usable(card)))
   if (missing.length) throw new Error(`缺少卡尔克萨遭遇组：${missing.join(', ')}`)
-  return Object.values(ALL_CARDS).filter(card =>
-    normalized.includes(card.encounterCode) && ['enemy', 'treachery'].includes(card.type))
+  return Object.values(ALL_CARDS).filter(card => normalized.includes(card.encounterCode) && usable(card))
 }
 
 function hasPrintedSurge(text = '') {
@@ -90,6 +95,14 @@ export function encounterDefinitions(cards) {
         hidden: /\bHidden\./i.test(card.text || ''),
         ...(hiddenRuleFor(card.code) ? { hiddenRule: structuredClone(hiddenRuleFor(card.code)) } : {}),
         ...(threatEffectFor(card.code) ? { threatEffect: structuredClone(threatEffectFor(card.code)) } : {}),
+        // 威胁区诡计（01164/01165 等）的持续规则：引擎的 getThreatEffect 读
+        // `ALL_TREACHERIES[code].threat`，与 TFA/TCU 的 encounterDefinitions 口径一致。
+        // 只搬纯数据字段，`treacheryRule` 里的 attachmentAction/encounterAction 是函数，
+        // 不能进入会被 structuredClone 的关卡定义。
+        ...(treacheryRuleFor(card.code)?.threat
+          ? { threatArea: treacheryRuleFor(card.code).threatArea === true,
+              threat: structuredClone(treacheryRuleFor(card.code).threat) }
+          : {}),
         effect: { kind: 'campaignRule' },
       }),
     }

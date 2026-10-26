@@ -9,7 +9,7 @@
 import { originalOf, syncCluesInEntry } from '../../_shared.js'
 
 export default {
-  code: '01135', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['tfa'],
+  code: '01135', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['tfa', 'carcosa'],
   encounterResolve(state, inv, card, api) {
     const code = originalOf(card)
     const answer = api.choose?.({

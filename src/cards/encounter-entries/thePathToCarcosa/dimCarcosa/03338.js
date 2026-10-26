@@ -24,14 +24,18 @@ export default {
           label: `${api.cardName(asset.code)}（${ALL_CARDS[asset.code]?.cost || 0}资源）`, cost: ALL_CARDS[asset.code]?.cost || 0 })),
       ]
       if (!options.length) break
-      const answer = options.length === 1 ? options[0].id : api.choice({
+      const answer = options.length === 1 ? options[0].id : api.choose({
         kind: 'card', source: code, seat: inv.seat,
         prompt: `弃掉游戏区域/手牌中的卡牌，直到印刷费用合计至少 ${x}（当前 ${total}）。`,
         options: options.map(option => ({ id: option.id, label: option.label })),
       })
       const picked = options.find(option => option.id === answer) || options[0]
-      if (picked.kind === 'hand') api.discardFromHand(inv.seat, picked.code)
-      else api.discardAsset(inv.seat, picked.asset)
+      // scenarioRuntime 没有 discardFromHand / choice：手牌直接进弃牌堆，支援走 discardAsset(id)。
+      if (picked.kind === 'hand') {
+        const handIndex = inv.hand.indexOf(picked.code)
+        if (handIndex >= 0) inv.hand.splice(handIndex, 1)
+        inv.discard.push(picked.code)
+      } else api.discardAsset(inv.seat, picked.asset.id)
       total += picked.cost
       discarded += 1
     }

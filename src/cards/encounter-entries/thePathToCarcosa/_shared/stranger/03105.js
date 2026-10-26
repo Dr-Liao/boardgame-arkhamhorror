@@ -5,7 +5,7 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { originalOf } from '../../../_shared.js'
+import { originalOf, shuffleDeckWith } from '../../../_shared.js'
 import { pallidMaskCode } from '../../../_lookup.js'
 
 export default {
@@ -19,8 +19,9 @@ export default {
       }
     } else {
       // 不在场：在承受者的牌库/弃牌堆与全部场外区域找出他，抽取并混洗承受者牌库。
+      // 调查员对象没有 `id` 字段：承受者记录里存的是战役调查员 ID，对应 `campaignId`。
       const bearerId = state.campaign?.records?.pallidMaskBearer
-      const owner = state.investigators.find(item => item.id === bearerId)
+      const owner = state.investigators.find(item => item.campaignId === bearerId || item.id === bearerId)
       const zones = state.scenarioZones || {}
       const piles = [owner?.deck, owner?.discard, zones.setAside, state.removedFromGame,
         state.encounterDeck, state.encounterDiscard].filter(Array.isArray)
@@ -33,8 +34,30 @@ export default {
         break
       }
       if (found) {
-        api.spawn(manCode, inv.location)
-        if (owner) api.shuffleDeck(owner.seat)
+        // 「抽取」= 按 03059 的生成规则放到「距离所有调查员最远的地点」。
+        // scenarioRuntime 的 spawn 带 ignoreSpawn，不会自动套用该规则，这里自行计算。
+        const alive = state.investigators.filter(item => !item.defeated && !item.resigned)
+        let best = -1
+        let farthest = []
+        for (const location of state.locations) {
+          let nearest = Infinity
+          for (const witness of alive) {
+            const distance = api.locationDistance?.(witness.location, [location.id])
+            if (typeof distance === 'number' && distance >= 0 && distance < nearest) nearest = distance
+          }
+          if (!Number.isFinite(nearest)) continue
+          if (nearest > best) { best = nearest; farthest = [location.id] }
+          else if (nearest === best) farthest.push(location.id)
+        }
+        const spawnAt = farthest.length > 1
+          ? api.choose({
+            kind: 'location', source: manCode, seat: inv.seat,
+            prompt: '苍白面具下的男子生成：选择距离所有调查员最远的地点。',
+            options: farthest.map(id => ({ id, label: api.locName?.(id) || id })),
+          })
+          : farthest[0]
+        api.spawn(manCode, spawnAt || inv.location)
+        if (owner) shuffleDeckWith(state, owner, api)
       }
     }
     return false

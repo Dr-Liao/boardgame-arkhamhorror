@@ -1496,6 +1496,9 @@ function renderMiniCard(s, reference, exhausted, opts = {}) {
 
 function renderLocationNode(s, loc, opts = {}) {
   const st = s.state
+  // 投影可能给未揭示的双面私人地点换上「门口」那一面的印名（name/nameEn），
+  // 统一走卡牌显示名，避免英文界面显示中文占位名。
+  const locName = cardDisplayName(loc) || loc.name || ''
   const current = st.investigators[st.currentSeat]?.location === loc.id
   const move = findLocationMove(s, loc.id)
   const choiceMove = choiceTargetMove(s, loc.id)
@@ -1506,7 +1509,7 @@ function renderLocationNode(s, loc, opts = {}) {
   const attachedCards = locationAttachments(s, loc)
   const attachments = [...attachedCards, ...storyHere.map(asset => ({ ...ahCardDef(s,asset.code), ...asset }))]
   const resourceBadge = (kind, label, value, text) => h('button', {
-    className: `ah-loc-badge ah-loc-${kind}`, 'data-map-info': kind, title: `${label} ${value ?? ''}`, 'aria-label': `${loc.name} · ${label} ${value ?? ''}`,
+    className: `ah-loc-badge ah-loc-${kind}`, 'data-map-info': kind, title: `${label} ${value ?? ''}`, 'aria-label': `${locName} · ${label} ${value ?? ''}`,
     onclick: event => { event.stopPropagation(); openCardDetailDef({ ...loc, type: 'location' }, { focusInfo: kind }) },
     onkeydown: event => event.stopPropagation(),
   }, tableIcon(kind === 'clues' ? 'clue' : kind === 'locked' ? 'lock' : kind === 'attached' ? 'book'
@@ -1532,9 +1535,9 @@ function renderLocationNode(s, loc, opts = {}) {
   return h('div', {
     className: 'ah-loc ah-loc-map-card' + (current ? ' ah-loc-current' : '') + (adjacent ? ' ah-loc-adjacent' : '') + (choiceMove ? ' ah-choice-target' : '') + (view.selectedId === loc.id ? ' is-selected' : ''),
     style: opts.style || null,
-    title: loc.name + (loc.revealed ? '' : t('game.location.hiddenSuffix')) + (adjacent ? t('game.location.movableSuffix') : ''),
+    title: locName + (loc.revealed ? '' : t('game.location.hiddenSuffix')) + (adjacent ? t('game.location.movableSuffix') : ''),
     role: 'button', tabindex: 0,
-    'aria-label': loc.name, 'aria-pressed': String(view.selectedId === loc.id),
+    'aria-label': locName, 'aria-pressed': String(view.selectedId === loc.id),
     'data-location-id': loc.id,
     'data-interaction': `location:${loc.id}`,
     'data-current-location': current ? 'true' : 'false',
@@ -1549,13 +1552,13 @@ function renderLocationNode(s, loc, opts = {}) {
     onfocus: () => opts.onPreview?.(loc.id),
     onblur: () => opts.onPreview?.(null),
   },
-    tableArt(h, loc.originalCode || loc.code || loc.artCode, loc.name, { face: loc.revealed ? 'front' : 'back' }),
+    tableArt(h, loc.originalCode || loc.code || loc.artCode, locName, { face: loc.revealed ? 'front' : 'back' }),
     opts.onDragStart ? h('button', { className: 'ah-map-node-handle', type: 'button',
-      'aria-label': t('game.map.moveNodeAria', { name: loc.name }), title: t('game.map.dragNodeTitle'),
+      'aria-label': t('game.map.moveNodeAria', { name: locName }), title: t('game.map.dragNodeTitle'),
       onpointerdown: event => { event.stopPropagation(); opts.onDragStart(event, loc.id) },
       onclick: event => event.stopPropagation(),
     }, '⠿') : null,
-    h('div', { className: 'ah-location-caption' }, loc.name),
+    h('div', { className: 'ah-location-caption' }, locName),
     badges.length ? h('div', { className: 'ah-loc-badges' }, badges) : null,
     here.length ? h('div', { className: 'ah-location-investigators' }, here.map(inv => h('button', {
       className: 'ah-map-investigator', title: inv.name, 'aria-label': t('game.map.viewInvestigator', { name: inv.name }),
@@ -1572,9 +1575,9 @@ function renderLocationNode(s, loc, opts = {}) {
       const attached = index < attachedCards.length
       return h('button', { className: 'ah-map-story-marker' + (attached ? ' ah-map-attachment' : ''), 'data-map-info': attached ? 'attachment' : 'story',
         'data-attachment-code': attached ? asset.code : null,
-        title: attached ? t('game.map.attachedTo', { location: loc.name, name }) : name, 'aria-label': attached ? t('game.map.viewAttachment', { name }) : t('game.map.viewStoryCard', { name }),
-        onclick: event => { event.stopPropagation(); openCardDetail(s, { ...asset, attachedTo: attached ? { type: 'location', name: loc.name } : undefined }) }, onkeydown: event => event.stopPropagation(),
-        oncontextmenu: event => { event.preventDefault(); event.stopPropagation(); openCardDetail(s,{ ...asset, attachedTo: attached ? { type: 'location', name: loc.name } : undefined }) },
+        title: attached ? t('game.map.attachedTo', { location: locName, name }) : name, 'aria-label': attached ? t('game.map.viewAttachment', { name }) : t('game.map.viewStoryCard', { name }),
+        onclick: event => { event.stopPropagation(); openCardDetail(s, { ...asset, attachedTo: attached ? { type: 'location', name: locName } : undefined }) }, onkeydown: event => event.stopPropagation(),
+        oncontextmenu: event => { event.preventDefault(); event.stopPropagation(); openCardDetail(s,{ ...asset, attachedTo: attached ? { type: 'location', name: locName } : undefined }) },
       }, tableArt(h, asset.originalCode || def.originalCode || asset.code, name), placedCardMarkers(h, asset))
     })) : null
   )

@@ -12,10 +12,13 @@ export default {
     onReveal(state, agenda, api) {
       const records = state.campaign.records || {}
       if (Number(records.doubt || 0) >= Number(records.conviction || 0)) { api.finish('r3'); return }
-      // 卡背：确信高于疑惑时直接推进到场景 2b（不要先翻 2a 的背面）。
-      const index = state.acts.findIndex(act => act?.stage === '2b')
-      if (index >= 0) state.actIndex = index
-      else api.advanceAct()
+      // 卡背：确信高于疑惑时「推进到场景 2b」（直接翻 act 2 的背面并结算），
+      // 不是「推进当前幕」。act 2 的卡号随路线不同（03206/03207），按卡号找而不是按路线，
+      // 两条路线的背面效果都由 act 条目自己的 onReveal 处理。
+      const actTwoCodes = ['03206', '03207']
+      const index = (state.acts || []).findIndex(act => actTwoCodes.includes(act?.originalCode || act?.code))
+      if (index >= 0 && state.actIndex <= index) state.actIndex = index
+      api.advanceAct()
     },
   },
 }

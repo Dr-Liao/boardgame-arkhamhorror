@@ -79,7 +79,25 @@ export const behavior = {
     for (const inv of state.investigators) {
       if (entryFlags(inv.code)?.backstageStart) inv.location = 'backstage'
     }
-    return setupPlan(state).locations
+    // 03052 后台的揭示效果：若有调查员开局就在后台，引擎在 placeLocation 时
+    // 直接把它建成已揭示，不会再走 revealLocation → locationRule.onReveal。
+    // 这里按同一效果（随机 2 张后台走廊门口入场）补齐，随机走引擎 RNG 以保持可重放。
+    const placed = [...setupPlan(state).locations]
+    if (state.investigators.some(inv => inv.location === 'backstage')) {
+      const pool = state.scenarioFlags.backstageDoorways
+      for (let count = 0; count < 2 && pool.length; count++) {
+        const id = pool.splice(Math.floor(api.randomValue(state) * pool.length), 1)[0]
+        if (id) placed.push(id)
+      }
+    }
+    return placed
+  },
+
+  // 03052：你位于后台时，每张隐私诡计在手牌上限计算中视为 3 张。
+  handSizePenalty(state, inv) {
+    const location = state.locations.find(candidate => candidate.id === inv.location)
+    if (!entryFlags(location?.originalCode)?.backstage) return 0
+    return 2 * (inv.hiddenCards || []).length
   },
 
   resolveChaosToken(state, inv, token, api) {

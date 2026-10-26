@@ -648,3 +648,28 @@ export function threadActDecksInPlay(state) {
 export function syncCluesInEntry(state) {
   state.clues = (state.investigators || []).reduce((sum, inv) => sum + (inv.clues || 0), 0)
 }
+
+// 往事回声 03121/03122/03123 的强制效果：有线索放到敌人身上后，把它翻成毁灭面。
+// 判定读当前议程定义上的 `clueToDoom`（由 echoesOfThePast/definition.js 写入），
+// 因此在其他关卡里调用是安全的空操作。返回翻面的数量。
+export function flipEnemyCluesToDoom(state, enemy) {
+  if (!enemy || !((enemy.clues || 0) > 0)) return 0
+  const agenda = state.agendas?.[state.agendaIndex]
+  if (!agenda?.clueToDoom) return 0
+  const flipped = enemy.clues
+  enemy.doom = (enemy.doom || 0) + flipped
+  enemy.clues = 0
+  return flipped
+}
+
+// 「场上的毁灭标记总数」：密谋 + 敌人 + 地点 + 调查员的支援/威胁区。
+// 与 carcosa-chaos.js 的 skull 计算同口径，供 03092 等卡复用。
+export function doomInPlayInEntry(state) {
+  return (state.doom || 0)
+    + (state.enemies || []).reduce((sum, enemy) => sum + (enemy.doom || 0), 0)
+    + (state.locations || []).reduce((sum, location) => sum + (location.doom || 0), 0)
+    + (state.investigators || []).reduce((sum, inv) => sum
+      + [...(inv.assets || []), ...(inv.threat || [])]
+        .reduce((inner, card) => inner + (card.doom || 0), 0), 0)
+}
+

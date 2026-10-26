@@ -17,7 +17,8 @@ export default {
     target: 'enemyFight',
     amount: ({ state, entity }) => {
       const location = (state.locations || []).find(candidate => candidate.id === entity.location)
-      return (location?.shroud || 0) + (location?.shroudMod || 0) - (entity.fight || 0)
+      // X = 所在地点的隐藏值（含帷幕修正与 03101 的全局 +1 帷幕）。
+      return (location?.shroud || 0) + (location?.shroudMod || 0) + (state.fogMod || 0) - (entity.fight || 0)
     },
   }],
 }

@@ -123,7 +123,9 @@ test('behavior.js 总行数不超过 Phase 3 基线，且至少一个关卡已�
 // ADDS 的共享钩子转发），实测 21,878，按实测重锁；后续新增流程仍要求走 scenario-declaration。
 // 2026-10-25 第三轮（全卡审计修复）：各章补齐 spawnLocation/preyRank/parleyBlocked/agenda 反应/
 // 宇宙网格重写等，实测 22,784；再次按实测重锁（+现有余量），仍要求后续只减不增。
-const BUDGET = 23500
+// 2026-10-26 卡尔克萨审计修复：P0/P1 与交互层修复（黑星升起双密谋/威胁区诡计/线索翻毁灭/
+// 03052 揭示、地下墓穴入场费、共享遭遇组轮末结算等），实测 23,529，按实测重锁。
+const BUDGET = 23529
   assert.ok(data.phase3.behaviorLines <= BUDGET,
     `behavior.js 总行数 ${data.phase3.behaviorLines} 超过基线 ${BUDGET}：新增关卡流程请写 `
     + 'content/scenario-declaration.js 的声明，不要往 behavior.js 加命令式钩子。')

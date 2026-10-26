@@ -47,6 +47,7 @@ export default {
         api.drawEncounter(inv.seat)
       }
     })
-    return true
+    // 结算完成后本卡进入遭遇弃牌堆；返回 true 会被引擎当成「已放置」而永久离场。
+    return false
   },
 }
