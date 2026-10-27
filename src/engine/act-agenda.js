@@ -188,6 +188,45 @@ export function createActAgenda(deps) {
     info(state, events, `剧情资产「${def.name}」出现在「${locName(state, locationId)}」，尚无人控制。`)
   }
 
+  // 2026-10-27 修复：议程推进时按规则清空「场上每张卡」的毁灭标记。
+  // Rules Reference, "Act Deck and Agenda Deck"（推进步骤 1）：
+  //   "If the agenda deck is advancing, remove all doom from each card in play."
+  // 旧实现只清零 state.doom（密谋计数器），敌人/地点/支援/剧情资产上的毁灭会残留，
+  // 继续计入新密谋的阈值；往事回声里「邪教的搜查」(03146) 随后又把残留毁灭搬到新密谋，
+  // 于是密谋刚结算完毁灭就显示很高（例如 2a 阈值 6 时直接显示 9/6）。
+  //
+  // 卡面可以覆盖这一步（金科玉律）。条目用 `doomKeptOnAgendaAdvance` 声明：
+  //   'locations'：04055/04211「在本密谋推进时：不要从场上任何地点移除毁灭标记」
+  //   'enemies'：05326/05327/05328「在本密谋推进时，不要移除敌人的毁灭标记」
+  //   'self'：05044「推进时不要移除其上任何毁灭标记」、05149 那赫卜「推进时不移除其毁灭」
+  const doomKeepOf = card => registeredEntry(card?.originalCode || card?.code)?.doomKeptOnAgendaAdvance || null
+
+  function clearDoomInPlay(state, agenda = state.agendas?.[state.agendaIndex]) {
+    const agendaKeep = doomKeepOf(agenda)
+    const keepSelf = card => doomKeepOf(card) === 'self'
+    const keepKind = (card, kind) => keepSelf(card) || agendaKeep === kind
+    if (agendaKeep !== 'self') {
+      state.doom = 0
+      if (agenda) agenda.doom = 0
+    }
+    for (const enemy of state.enemies || []) if (!keepKind(enemy, 'enemies')) enemy.doom = 0
+    for (const location of state.locations || []) {
+      if (!keepKind(location, 'locations')) location.doom = 0
+      for (const attachment of location.attachments || []) {
+        if (!keepSelf(attachment)) attachment.doom = 0
+      }
+    }
+    for (const inv of state.investigators || []) {
+      for (const card of [...(inv.assets || []), ...(inv.threat || [])]) {
+        if (!keepSelf(card)) card.doom = 0
+      }
+    }
+    for (const asset of state.storyAssets || []) if (!keepSelf(asset)) asset.doom = 0
+    for (const attachment of state.playerLocationAttachments || []) {
+      if (!keepSelf(attachment)) attachment.doom = 0
+    }
+  }
+
   function advanceAgenda(state, events, reason = 'objective') {
     if (state.status !== 'playing') return
     if (reason === 'doom' && scenarioBehavior(state).agendaWouldAdvance?.(state, scenarioRuntime(state, events))) return
@@ -199,9 +238,8 @@ export function createActAgenda(deps) {
       const advanceText = advanceStoryText(cur, '翻开密谋，结算背面的剧情与效果。')
       info(state, events, `翻开密谋「${cur.name}」的背面。`, { kind: 'story', title: '密谋推进',
         code: cur.originalCode || cur.code, face: 'back', name: cur.name, text: advanceText, flip: true })
-      // Only the agenda's own doom is discarded; doom on enemies/locations/assets
-      // stays in play (Rules Reference, "Doom").
-      state.doom = 0
+      // 议程推进：移除场上每张卡上的所有毁灭（Rules Reference，见 clearDoomInPlay）。
+      clearDoomInPlay(state, cur)
       scenarioBehavior(state).doomCleared?.(state, scenarioRuntime(state, events))
       if (cur.reveal) runAgendaReveal(state, cur, events)
       // 若 reveal 触发了剧本切换，立即返回。
@@ -283,8 +321,9 @@ export function createActAgenda(deps) {
       return
     }
     if (ag.doomThreshold == null) return
-    // Only doom on the current agenda advances it. Doom on enemies/locations/assets
-    // stays in play when the agenda advances (see rules-state.js).
+    // 阈值比较的是「场上毁灭总数」：密谋自身（state.doom / 议程实例）加上
+    // 敌人、地点、支援、威胁区等所有卡牌上的毁灭（Rules Reference, "Act Deck and Agenda Deck"）。
+    // 注意：推进时这些毁灭会被一起清除（clearDoomInPlay），不会残留到下一张密谋。
     if (agendaDoom(state) < ag.doomThreshold) return
     // 第 5 步 P6：「当密谋将要因达到毁灭阈值而推进时」的窗口（05018 神秘乐曲）。
     // 只在没有其它窗口正在结算时开，避免推进 → 放毁灭 → 再推进的递归。

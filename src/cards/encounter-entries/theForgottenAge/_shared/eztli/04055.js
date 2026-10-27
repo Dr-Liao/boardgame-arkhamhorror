@@ -10,6 +10,8 @@ import { takeFromSetAsideInEntry, spawnHarbingerAtDoomInEntry } from '../../../_
 
 export default {
   code: '04055', scope: 'agenda',
+  // 卡面「强制 - 在本密谋推进时：不要从场上任何地点移除毁灭标记。」（引擎 advanceAgenda 读点）
+  doomKeptOnAgendaAdvance: 'locations',
   agendaRule: { onReveal(state, agenda, api) { spawnHarbingerAtDoomInEntry(state, api) } },
   // 第 120 轮：时间倒流沿用同一张卡但文案/结局不同，用按剧本的变体（章节读点带 scenarioId）。
   agendaRuleByScenario: {

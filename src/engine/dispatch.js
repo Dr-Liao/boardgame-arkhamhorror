@@ -89,6 +89,8 @@ export function createDispatch(deps) {
     getStat,
     hubActingSeats,
     hubPendingSeats,
+    // 2026-10-27 修复 05002：直觉牌库揭示牌的折扣值走规则读点（不再写死 2）。
+    hunchDeck,
     inHub,
     info,
     initialHubPreparation,
@@ -478,9 +480,12 @@ function applyMoveUnchecked(state, seat, move, events) {
       if (m.fromHunch) {
         const hunchInv = state.investigators[seat]
         if (hunchInv.hunchRevealed !== m.cardId) break
+        // 2026-10-27 修复 05002：折扣值由直觉牌库规则给出（05002 的 discount 默认 2），
+        // 与 moves.js 的候选预览、validateMove 的资源校验共用同一读点。
+        const hunchDiscount = hunchDeck.playDiscount(state, hunchInv, m.cardId) || 0
         delete hunchInv.hunchRevealed
         hunchInv.hand.push(m.cardId)
-        hunchInv.playDiscount = (hunchInv.playDiscount || 0) + 2
+        hunchInv.playDiscount = (hunchInv.playDiscount || 0) + hunchDiscount
         doPlay(state, seat, m.cardId, events)
         break
       }
@@ -498,6 +503,11 @@ function applyMoveUnchecked(state, seat, move, events) {
           if (previousBeneath === undefined) delete state._playedFromBeneath
           else state._playedFromBeneath = previousBeneath
         }
+        break
+      }
+      // 2026-10-27：从威胁区打出（条目级 playableFromThreat，05010 悬案「改为加入威胁区域」后仍可打出）。
+      if (m.threatId) {
+        doPlay(state, seat, m.cardId, events, false, false, null, null, null, m.threatId)
         break
       }
       doPlay(state, seat, m.cardId, events, !!m.fromDiscard, false, m.copyCode, m.fromPlanAssetId, m.fromBackpackId)

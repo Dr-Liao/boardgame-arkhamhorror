@@ -369,15 +369,24 @@ export function createAssets(deps) {
     }
   }
 
-  function playReactionCard(state, inv, index, context, events, fromDiscard = false, copyCode = null, fromPlanAssetId = null) {
-    const plan = fromPlanAssetId && inv.assets.find(asset => asset.id === fromPlanAssetId && registeredEntry(asset.code)?.cardPlan)
-    const code = plan ? plan.attached.splice(index, 1)[0]
-      : fromDiscard ? inv.discard.splice(inv.discard.lastIndexOf(topDiscardEvent(state, inv)), 1)[0] : inv.hand.splice(index, 1)[0]
+  function playReactionCard(state, inv, index, context, events, fromDiscard = false, copyCode = null, fromPlanAssetId = null, fromHunchDiscount = null) {
+    // 2026-10-27 修复 05002：直觉牌库揭示的那张「如同手牌」（乔·戴蒙德）。反应窗口把它作为
+    // 候选送进来时用 `fromHunchDiscount` 传 -2 折扣（规则值由 hunch-deck 的读点给出）：
+    // 只清 inv.hunchRevealed（牌本来就不在任何区域里），付费、结算、去向与手牌快速事件同一路径。
+    const hunch = fromHunchDiscount != null
+    if (hunch && !inv.hunchRevealed) return
+    const plan = !hunch && fromPlanAssetId && inv.assets.find(asset => asset.id === fromPlanAssetId && registeredEntry(asset.code)?.cardPlan)
+    const code = hunch ? inv.hunchRevealed
+      : plan ? plan.attached.splice(index, 1)[0]
+        : fromDiscard ? inv.discard.splice(inv.discard.lastIndexOf(topDiscardEvent(state, inv)), 1)[0] : inv.hand.splice(index, 1)[0]
+    if (hunch) inv.hunchRevealed = null
     if (plan) plan.exhausted = true
     const def = cardDef(copyCode || code)
-    inv.resources -= playCost(state, inv, def)
+    inv.resources -= Math.max(0, playCost(state, inv, def) - (hunch ? fromHunchDiscount : 0))
     consumePlayThreatResources(state, inv, events)
-    info(state, events, `⚡ ${inv.name} 快速打出「${copyCode ? `彩绘世界／${cardName(copyCode)}` : cardName(code)}」。`, { kind: 'play', seat: inv.seat, code })
+    info(state, events, hunch
+      ? `🔮 ${inv.name} 从直觉牌库快速打出「${cardName(code)}」。`
+      : `⚡ ${inv.name} 快速打出「${copyCode ? `彩绘世界／${cardName(copyCode)}` : cardName(code)}」。`, { kind: 'play', seat: inv.seat, code })
     state._reaction = context
     try {
       // Phase 5（5c-8）：能力层的快速事件由描述子结算（alreadyPaid：费用与「快速打出」日志已在上面付过/写过）。

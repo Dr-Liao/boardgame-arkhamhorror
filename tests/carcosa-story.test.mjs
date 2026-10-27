@@ -38,6 +38,9 @@ test('萝拉与各章条件信息只投影实际到达分支', () => {
   const withSebastien = introduction(echoes, { vipsInterviewed: ['03079'] })
   assert.ok(!withoutSebastien.paragraphs.includes(CARCOSA_STORY_TEXT.introductions.echoesOfThePast.sebastiensInformation[0]))
   assert.ok(withSebastien.paragraphs.includes(CARCOSA_STORY_TEXT.introductions.echoesOfThePast.sebastiensInformation[0]))
+  // 「入口大厅放置线索」的设置说明也随塞巴斯蒂安信息投影，玩家才看得懂开局线索的来源。
+  assert.ok(!withoutSebastien.paragraphs.includes(CARCOSA_STORY_TEXT.introductions.echoesOfThePast.sebastiensInformation[1]))
+  assert.ok(withSebastien.paragraphs.includes(CARCOSA_STORY_TEXT.introductions.echoesOfThePast.sebastiensInformation[1]))
 
   const oath = contentRegistry.getScenarioData('theUnspeakableOath')
   const defaultRoute = introduction(oath, {})

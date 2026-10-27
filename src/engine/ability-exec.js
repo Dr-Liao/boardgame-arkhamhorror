@@ -266,18 +266,20 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
     for (const inv of aliveInvestigators(state)) {
       if (context?.cancelled) break
       const candidates = []
-      for (const { source, code, fromHandIndex, entry, effect, controlled } of descriptorSources(state, inv)) {
+      for (const { source, code, fromHandIndex, entry, effect, controlled, fromHunch } of descriptorSources(state, inv)) {
         // 非玩家实体的反应在下面的专用块里统一询问一次；受控剧情支援按玩家卡来源询问。
         if (NON_PLAYER_SCOPES.includes(entry.scope) && !controlled) continue
         for (const descriptor of descriptorsInEntry(entry, windowId, 'reaction')) {
           // Phase 5（5b-6）：从旧式 reactions 搬来的反应由 triggerReaction 用旧式询问结算，
           // 这里跳过，避免同一张卡在两个提示里各出现一次。
           if (descriptor.legacyReaction) continue
-          if (descriptor.fromHand && !(inv.hand || []).includes(code)) continue
+          // 2026-10-27 修复 05002：直觉牌库揭示牌「如同手牌」，只有 fromHand 描述子才走这个合成来源。
+          if (fromHunch && !descriptor.fromHand) continue
+          if (descriptor.fromHand && !(inv.hand || []).includes(code) && !(fromHunch && inv.hunchRevealed === code)) continue
           // 手牌来源（source 为 null）只允许显式 fromHand 描述子；资产/调查员能力不能从手里发动。
           if (!source && !descriptor.fromHand) continue
-          if (!descriptorUsable(state, inv, source, descriptor, { windowId, context })) continue
-          candidates.push({ source, code, descriptor, fromHandIndex, effect })
+          if (!descriptorUsable(state, inv, source, descriptor, { windowId, context, fromHunch })) continue
+          candidates.push({ source, code, descriptor, fromHandIndex, effect, fromHunch })
         }
       }
       // 2026-10-25：05152 这类「所附属支援离场后」的附属卡反应——宿主已从 inv.assets 移除，
@@ -292,6 +294,25 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
             if (descriptor.legacyReaction) continue
             if (!descriptorUsable(state, inv, source, descriptor, { windowId, context })) continue
             candidates.push({ source, code: attachment.code, descriptor })
+          }
+        }
+      }
+      // 2026-10-27 修复 05013（银暮匕首）：卡面「你可以打出或投入黛安娜·史丹利底下的事件和技能，
+      // 如同其在你的手牌中」。fromHand 的反应/免费描述子（如 05280 否决存在）此前只从手牌枚举，
+      // 底下的牌永远进不了能力窗口。这里补 beneath 通道：通道支援未横置时，把底下事件的
+      // fromHand 反应描述子加成候选；可用性由 descriptorUsable 的 fromBeneath 分支判定，
+      // 结算时再把卡移进手牌走 executeDescriptor 的同一套付费/结算/弃牌口径。
+      {
+        const beneathChannel = (inv.assets || []).find(asset =>
+          registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
+        if (beneathChannel) {
+          for (const [index, code] of (inv.beneath || []).entries()) {
+            const beneathEntry = registeredEntry(code)
+            if (!beneathEntry?.abilities.length) continue
+            for (const descriptor of descriptorsInEntry(beneathEntry, windowId, 'reaction')) {
+              if (!descriptor.fromHand || descriptor.legacyReaction) continue
+              candidates.push({ source: null, code, descriptor, fromBeneathIndex: index })
+            }
           }
         }
       }
@@ -313,13 +334,19 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
       while (guard++ < 12) {
         // 窗口上下文被取消（如「建议」取消攻击）后不再枚举同一窗口的后续反应。
         if (context?.cancelled) break
-        const usable = candidates.filter(item => descriptorUsable(state, inv, item.source, item.descriptor, { windowId, context }))
+        const usable = candidates.filter(item => descriptorUsable(state, inv, item.source, item.descriptor,
+          { windowId, context, fromBeneath: item.fromBeneathIndex != null, fromHunch: item.fromHunch === true }))
         if (!usable.length) break
         const options = [{ id: 'skip', label: '不触发' }]
-        // 手牌里的两张同名卡是不同候选：id 必须带上 fromHandIndex，否则重复。
+        // 手牌里的两张同名卡是不同候选：id 必须带上 fromHandIndex，否则重复；
+        // 底下的同名卡同理带上 fromBeneathIndex（且与手牌候选区分开）；直觉牌库揭示的再带 :hunch。
         const candidateKey = item => `desc:${item.descriptor.id}:${item.source?.id ?? item.effect?.id ?? 'hand'}:${item.fromHandIndex ?? ''}`
+          + (item.fromBeneathIndex != null ? `:beneath:${item.fromBeneathIndex}` : '')
+          + (item.fromHunch === true ? ':hunch' : '')
         for (const item of usable) {
-          options.push({ id: candidateKey(item), label: `【能力】${cardName(item.code)}：${item.descriptor.label}`, cardCode: item.code })
+          options.push({ id: candidateKey(item), label: `【能力】${cardName(item.code)}：${item.descriptor.label}${
+            item.fromBeneathIndex != null ? '（银暮匕首：下方）' : ''}${
+            item.fromHunch === true ? '（直觉牌库）' : ''}`, cardCode: item.code })
         }
         const answer = requestChoice(state, {
           kind: 'reaction', source: { type: 'window', when: windowId }, seat: inv.seat, canSkip: true,
@@ -329,6 +356,35 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
         if (answer === 'skip') break
         const chosen = usable.find(item => candidateKey(item) === answer)
         if (!chosen) break
+        // 2026-10-27 修复 05013（银暮匕首）：beneath 通道触发的 fromHand 描述子——横置通道支援、
+        // 把卡从底下移进手牌，再交给 executeDescriptor 走与「从手牌打出」完全相同的付费/结算/弃牌口径；
+        // 结算期间置 state._playedFromBeneath（以此方式打出时不能触发 05004 黛安娜的 reaction）。
+        if (chosen.fromBeneathIndex != null) {
+          const beneathChannel = (inv.assets || []).find(asset =>
+            registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
+          const at = (inv.beneath || []).indexOf(chosen.code)
+          if (!beneathChannel || at < 0) break
+          beneathChannel.exhausted = true
+          inv.beneath.splice(at, 1)
+          inv.hand.push(chosen.code)
+          const previousBeneath = state._playedFromBeneath
+          state._playedFromBeneath = { seat: inv.seat, cardCode: chosen.code }
+          try {
+            executeDescriptor(state, { inv, source: chosen.source, descriptor: chosen.descriptor, context, events,
+              windowId, fromHandIndex: inv.hand.length - 1, effect: chosen.effect })
+          } finally {
+            if (previousBeneath === undefined) delete state._playedFromBeneath
+            else state._playedFromBeneath = previousBeneath
+          }
+          continue
+        }
+        // 2026-10-27 修复 05002：直觉牌库揭示的 fromHand 快速事件——清标记/按 -2 费支付/结算/
+        // 弃置全部在 executeDescriptor 的 fromHunch 分支里完成，这里只把来源标出来。
+        if (chosen.fromHunch === true) {
+          executeDescriptor(state, { inv, source: chosen.source, descriptor: chosen.descriptor, context, events,
+            windowId, fromHunch: true, effect: chosen.effect })
+          continue
+        }
         // 2026-10-25 第七轮修复 05033：符号效果的「取消 / 再一次」标志（05033 在窗口内写入 state.skillTest.symbolEffect）。
         if (windowId === 'symbolRevealed' && state.skillTest?.symbolEffect) {
           const symbolEffect = state.skillTest.symbolEffect

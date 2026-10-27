@@ -751,10 +751,12 @@ test('P6 故事调查员：减弱检定难度的能力（瓦伦蒂诺）', () =>
 // 11. task-22 / task-30 修复回归（调查员与专属卡）
 // ---------------------------------------------------------------------------
 
-test('task-22 05010 悬案：作为弱点事件打出，放线索到最高隐藏值地点并移出游戏', () => {
+test('fix 05010 悬案：直觉牌库揭示时作为弱点事件打出，放线索到最高隐藏值地点并移出游戏', () => {
   const state = investigatorFixture('05002')
   const inv = me(state)
-  inv.hand = ['05010']
+  // 真实流程：揭示牌不进手牌，只记 inv.hunchRevealed（旧测试靠 hand 兜底，掩盖了 fromHunch 通道
+  // 用 !isWeaknessCard 一刀切、弱点事件打不出的问题）。
+  inv.hand = []
   inv.hunchRevealed = '05010'
   inv.clues = 2
   inv.resources = 10
@@ -764,14 +766,46 @@ test('task-22 05010 悬案：作为弱点事件打出，放线索到最高隐藏
   const maxShroud = Math.max(...numeric.map(location => location.shroud || 0))
   const candidates = numeric.filter(location => (location.shroud || 0) === maxShroud)
   const before = Object.fromEntries(state.locations.map(location => [location.id, location.clues || 0]))
-  const playMove = legalMoves(state).find(moveOption => moveOption.action === 'play' && moveOption.cardId === '05010')
-  assert.ok(playMove, '悬案应当可以作为弱点事件打出（playableWeakness + played 描述子）')
+  const playMove = legalMoves(state).find(moveOption => moveOption.action === 'play'
+    && moveOption.cardId === '05010' && moveOption.fromHunch === true)
+  assert.ok(playMove, '悬案应当能从直觉牌库揭示通道打出（playableWeakness 放行弱点事件）')
   move(state, playMove)
   settle(state, pending => (pending.kind === 'location' ? pending.options[0].id : null))
   const after = me(state)
+  assert.equal(after.resources, 8, '揭示窗口 -2 费用：4 - 2 = 2')
   assert.ok((state.removedFromGame || []).includes('05010'), '打出后移出游戏（removeAfterPlay）')
   assert.equal((after.discard || []).includes('05010'), false, '不进入弃牌堆')
   assert.equal(after.hunchRevealed ?? null, null, '打出后清掉直觉牌库揭示标记（避免阶段末重复洗回）')
+  assert.equal(after.clues, 1, '消耗 1 个线索')
+  const placed = candidates.some(location =>
+    (state.locations.find(item => item.id === location.id)?.clues || 0) === (before[location.id] || 0) + 1)
+  assert.equal(placed, true, '1 个线索放到隐藏值最高的地点之一')
+})
+
+test('fix 05010 悬案：在威胁区也能打出（playableFromThreat），放线索并移出游戏', () => {
+  const state = investigatorFixture('05002')
+  const inv = me(state)
+  inv.hand = []
+  inv.hunchRevealed = null
+  inv.threat = [{ id: 'threat-05010', code: '05010' }]
+  inv.clues = 2
+  inv.resources = 10
+  inv.discard = []
+  state.removedFromGame = []
+  const numeric = state.locations.filter(location => typeof location.shroud === 'number')
+  const maxShroud = Math.max(...numeric.map(location => location.shroud || 0))
+  const candidates = numeric.filter(location => (location.shroud || 0) === maxShroud)
+  const before = Object.fromEntries(state.locations.map(location => [location.id, location.clues || 0]))
+  const playMove = legalMoves(state).find(moveOption => moveOption.action === 'play'
+    && moveOption.cardId === '05010' && moveOption.threatId === 'threat-05010')
+  assert.ok(playMove, '威胁区里的悬案应当可以打出（条目级 playableFromThreat）')
+  move(state, playMove)
+  settle(state, pending => (pending.kind === 'location' ? pending.options[0].id : null))
+  const after = me(state)
+  assert.equal(after.resources, 6, '威胁区打出按印刷费用 4 支付（没有揭示窗口的 -2 折扣）')
+  assert.equal((after.threat || []).some(card => card.code === '05010'), false, '打出后离开威胁区')
+  assert.ok((state.removedFromGame || []).includes('05010'), '打出后移出游戏（removeAfterPlay）')
+  assert.equal((after.discard || []).includes('05010'), false, '不进入弃牌堆')
   assert.equal(after.clues, 1, '消耗 1 个线索')
   const placed = candidates.some(location =>
     (state.locations.find(item => item.id === location.id)?.clues || 0) === (before[location.id] || 0) + 1)
@@ -1186,6 +1220,7 @@ test('fix 05010 悬案：scenarioXpModifier 已登记，供结局 XP 结算读�
     '条目级字段（引擎读点 src/engine/campaign-flow.js:252-260）')
   assert.equal(registeredEntry('05010').avoidHunchShuffle, true)
   assert.equal(registeredEntry('05010').playableWeakness, true)
+  assert.equal(registeredEntry('05010').playableFromThreat, true)
   assert.equal(registeredEntry('05010').removeAfterPlay, true)
 })
 
@@ -1841,6 +1876,93 @@ test('R7 05013 beneath：从底下打出 03153 灵力风暴不引发借机攻击
   assert.deepEqual(after.beneath, [], '卡从 beneath 移出')
   assert.ok(after.discard.includes('03153'), '打出后按普通事件进弃牌堆')
   assert.equal(state.enemies.find(item => item.id === 'storm-enemy')?.damageTaken, 2, '灵力风暴正常结算 2 点伤害')
+})
+
+// ---------------------------------------------------------------------------
+// 2026-10-27：05013「如同其在你的手牌中」——反应窗口里的 beneath 通道
+// （旧实现只给普通行动与技能检定投入接了 beneath；快速事件/fromHand 反应窗口没有接，
+//   玩家看到黛安娜底下有牌、匕首在场却始终点不出可用动作。）
+// ---------------------------------------------------------------------------
+test('05013 beneath 通道：底下的快速事件出现在反应窗口，选中后横置匕首并正常进弃牌堆', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.hand = []
+  inv.resources = 10
+  inv.deck = ['01088', '01088']
+  inv.beneath = ['05014']
+  inv.assets = [{ id: 'dagger', code: '05013', exhausted: false }]
+  let offered = null
+  let answered = false
+  run(state, current => {
+    reactionWindow(current, 'encounterDrawn', {
+      when: 'encounterDrawn', seat: 0, location: current.investigators[0].location,
+      cardCode: '01037', prompt: '测试遭遇',
+    }, [])
+  }, pending => {
+    if (pending.kind !== 'reaction') return null
+    const option = pending.options.find(item => item.cardCode === '05014')
+    if (option && !answered) { offered = option; answered = true; return option.id }
+    if (pending.options.some(item => item.id === 'skip')) return 'skip'
+    return null
+  })
+  assert.ok(offered, '底下的快速事件（05014 黑暗洞察）必须出现在反应窗口候选里')
+  assert.match(offered.label, /银暮匕首/, '候选要标出「从下方用银暮匕首打出」')
+  const after = me(state)
+  assert.equal(after.assets.find(item => item.id === 'dagger')?.exhausted, true, '额外费用：横置银暮匕首')
+  assert.deepEqual(after.beneath, [], '卡从 beneath 移出')
+  assert.ok(after.discard.includes('05014'), '打出后按普通快速事件进弃牌堆')
+  assert.equal(after.hand.length, 0, '不会重复加入手牌')
+  assert.equal(state._playedFromBeneath, undefined, '结算后恢复 beneath 结算标记')
+})
+
+test('05013 beneath 通道：底下的 fromHand 反应描述子（05324）在能力窗口可触发', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.hand = []
+  inv.resources = 10
+  inv.beneath = ['05324']
+  inv.assets = [{ id: 'dagger', code: '05013', exhausted: false }]
+  let offered = null
+  let flipped = false
+  run(state, current => {
+    const ctx = {
+      when: 'negativeTokenRevealed', seat: 0, location: current.investigators[0].location,
+      token: '-2', testValue: 0, flipTokenSign: false, prompt: '测试负修正',
+    }
+    reactionWindow(current, 'negativeTokenRevealed', ctx, [])
+    if (ctx.flipTokenSign) flipped = true
+  }, pending => {
+    if (pending.kind !== 'reaction') return null
+    const option = pending.options.find(item => item.cardCode === '05324')
+    if (option && !offered) { offered = option; return option.id }
+    if (pending.options.some(item => item.id === 'skip')) return 'skip'
+    return null
+  })
+  assert.ok(offered, '底下的 fromHand 反应（05324 美满结局）必须出现在能力窗口候选里')
+  assert.match(offered.label, /银暮匕首/)
+  assert.equal(flipped, true, '从底下触发的反应正常结算（把负修正翻成正修正）')
+  const after = me(state)
+  assert.equal(after.assets.find(item => item.id === 'dagger')?.exhausted, true, '额外费用：横置银暮匕首')
+  assert.deepEqual(after.beneath, [], '卡从 beneath 移出')
+  assert.ok(after.discard.includes('05324'), '反应事件结算后进弃牌堆')
+  assert.equal(after.resources, 8, '按手牌口径支付 05324 的 2 资源')
+})
+
+test('05013 beneath 通道：匕首横置时底下的牌也不出现在反应窗口', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.hand = []
+  inv.resources = 10
+  inv.beneath = ['05014']
+  inv.assets = [{ id: 'dagger', code: '05013', exhausted: true }]
+  run(state, current => {
+    reactionWindow(current, 'encounterDrawn', {
+      when: 'encounterDrawn', seat: 0, location: current.investigators[0].location,
+      cardCode: '01037', prompt: '测试遭遇',
+    }, [])
+  }, () => null)
+  assert.equal(state.pendingChoice, null, '通道支援横置后不再给出 beneath 候选（窗口直接关闭）')
+  assert.deepEqual(me(state).beneath, ['05014'], '底下的牌保持不动')
 })
 
 // ---------------------------------------------------------------------------

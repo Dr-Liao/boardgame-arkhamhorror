@@ -8,8 +8,9 @@ import { cardDisplayName } from './catalog.js'
 // 第 127 轮：剧本 → 剧本参考卡的卡号表搬到 web/ui-cards.js。
 import { UI_CARDS } from './ui-cards.js'
 
-// Only doom on the current agenda counts toward its threshold; doom sitting on
-// enemies/locations/assets is a separate pool and is shown as a side note.
+// 毁灭时钟显示「场上毁灭总数」：密谋上的毁灭 + 敌人/地点/支援/威胁区上的毁灭，
+// 与当前密谋的阈值比较（Rules Reference, "Act Deck and Agenda Deck"）。
+// 议程推进时这些毁灭会全部被移除（引擎 advanceAgenda → clearDoomInPlay）。
 const agendaDoomValue = state => state.agendaDoom ?? state.doom ?? 0
 const doomClockLabel = (state, agenda) => {
   const doom = agendaDoomValue(state)

@@ -72,11 +72,14 @@ export function createActions(deps) {
     withEffectCode,
   } = deps
 
-function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = false, copyCode = null, fromPlanAssetId = null, fromBackpackId = null) {
+function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = false, copyCode = null, fromPlanAssetId = null, fromBackpackId = null, fromThreatId = null) {
   const inv = state.investigators[seat]
   const def = cardDef(cardId)
   const copiedDef = copyCode && registeredEntry(cardId)?.copiesBeneathEvents ? cardDef(copyCode) : null
   const playedDef = copiedDef || def
+  // 2026-10-27：从威胁区打出的那张实体（05010 悬案的 playableFromThreat 通道）。
+  // 支付失败/没有合法宿主/唯一冲突时原样放回威胁区。
+  let removedThreatCard = null
   if (!def) return
   if (!lolaCanUseCard(inv, cardId)) return
   if (def.type === 'skill' || (isWeaknessCard(def) && !playAccess(cardId).playableWeakness)) return
@@ -109,6 +112,11 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       leaveAsset(state, inv, bag, events)
       info(state, events, '🎒 背包里的最后一张牌被打出，弃掉背包。')
     }
+  } else if (fromThreatId) {
+    // 2026-10-27：从威胁区打出（条目级 playableFromThreat，05010 悬案）。
+    const index = (inv.threat || []).findIndex(card => card.id === fromThreatId)
+    if (index < 0 || inv.threat[index].code !== cardId) return
+    removedThreatCard = inv.threat.splice(index, 1)[0]
   } else if (!removeCardByCode(inv.hand, cardId)) return
 
   // 2026-10-25 修复：把「打出费用」抽成可复用步骤，附属事件（attachTo）也必须付费。
@@ -168,6 +176,9 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       } else if (fromPlanAssetId) {
         const planAsset = inv.assets.find(asset => asset.id === fromPlanAssetId)
         if (planAsset) { planAsset.attached ||= []; planAsset.attached.push(cardId); planAsset.exhausted = false }
+      } else if (removedThreatCard) {
+        inv.threat ||= []
+        inv.threat.push(removedThreatCard)
       } else if (fromDiscard) {
         inv.discard.push(cardId)
       } else {
@@ -194,15 +205,21 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     if (!candidates.length) {
       // 没有合法宿主：把卡放回被取出的位置（P7 顺带修：这里原本引用从未存在的
       // fromAttachmentAssetId，任何无宿主的附属事件都会 ReferenceError；004193 / 05152 会踩）。
-      if (fromDiscard) inv.discard.push(cardId)
+      if (removedThreatCard) {
+        inv.threat ||= []
+        inv.threat.push(removedThreatCard)
+      } else if (fromDiscard) inv.discard.push(cardId)
       else inv.hand.push(cardId)
       info(state, events, `没有可以附属「${cardName(cardId)}」的支援。`)
       return
     }
     const paid = payPlayCost()
     if (!paid.ok) {
-      if (fromDiscard) inv.discard.push(cardId)
-      else inv.hand.push(cardId)
+      // fromThreat 的复位已在 payPlayCost 内完成（见 removedThreatCard）。
+      if (!fromThreatId) {
+        if (fromDiscard) inv.discard.push(cardId)
+        else inv.hand.push(cardId)
+      }
       return
     }
     const isInvestigatorTarget = attachSpec.kind === 'investigator'
@@ -226,7 +243,12 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
 
   if (def.unique) {
     const exists = state.investigators.some((i) => i.assets.some((a) => cardDef(a.code)?.name === def.name))
-    if (exists) { inv.hand.push(cardId); info(state, events, `「${cardName(cardId)}」已在场上，不能重复打出。`); return }
+    if (exists) {
+      if (removedThreatCard) { inv.threat ||= []; inv.threat.push(removedThreatCard) }
+      else inv.hand.push(cardId)
+      info(state, events, `「${cardName(cardId)}」已在场上，不能重复打出。`)
+      return
+    }
   }
 
   if (def.type === 'asset') replaceAssets(state, inv, def, events)

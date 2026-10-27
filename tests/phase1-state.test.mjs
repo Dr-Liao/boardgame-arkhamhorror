@@ -160,6 +160,7 @@ test('playCondition：描述子与旧字段都由单一读点判定，文案不�
   assert.deepEqual([...LEGACY_PLAY_CONDITION_FIELDS], [
     'ownTurnOnly', 'duringOwnTurn', 'firstActionOnly', 'requiresClue', 'requiresClueAtLocation',
     'requiresNoEnemies', 'requiresRemainingSanity', 'requiresResign', 'playableFromDiscard', 'playableWeakness',
+    'playableFromThreat',
   ])
 
   // 描述子化卡牌（02186）：条件写在条目上，不再有 EFFECTS 顶层字段。
@@ -178,9 +179,9 @@ test('playCondition：描述子与旧字段都由单一读点判定，文案不�
   legacy.phase = 'mythos'
   assert.equal(playConditionError(legacy, legacy.investigators[0], '__legacyPlayConditionSample'), null)
   assert.deepEqual(describePlayCondition('__legacyPlayConditionSample'), [])
-  // 区域许可与条件分开：03315 不是「弃牌堆可打出」的卡。
+  // 区域许可与条件分开：03315 不是「弃牌堆/威胁区可打出」的卡。
   assert.deepEqual(playAccess('03315'), {
-    fromDiscard: false, playableWeakness: false, reactionOnly: false, limitPerInvestigator: false,
+    fromDiscard: false, playableWeakness: false, fromThreat: false, reactionOnly: false, limitPerInvestigator: false,
   })
 })
 

@@ -43,13 +43,23 @@ test('Core 01102 银暮祭司攻击后放毁灭，达到阈值立即推进密谋
   assert.equal(s.agendaIndex,1); assert.equal(s.doom,0)
 })
 
-test('Core 01143 01169 场上毁灭计入密谋阈值，推进时仍保留',()=>{
+test('Core 01143 01169 场上毁灭计入密谋阈值，推进密谋时清除场上所有毁灭',()=>{
   const s=fixture(); const threshold=s.agendas[0].doomThreshold
   enemy(s,{code:'acolyte',engagedSeat:null,doom:threshold-1})
+  asset(s,'01063',{doom:1})
+  s.locations[0].doom=1
+  s.agendas[0].doom=1
   s.doom=1
   move(s,{action:'endTurn'}); settle(s)
   assert.equal(s.agendaIndex,1)
-  assert.equal(s.enemies.find(e=>e.code==='acolyte').doom,threshold-1,'推进密谋不清除场上毁灭')
+  // Rules Reference, "Act Deck and Agenda Deck" 推进步骤 1：
+  // "If the agenda deck is advancing, remove all doom from each card in play."
+  // 事务会重建实例，所以全部按牌号重新查询。
+  assert.equal(s.doom,0,'议程计数器清零')
+  assert.equal((s.enemies.find(e=>e.code==='acolyte')?.doom || 0),0,'敌人上的毁灭被清除')
+  assert.equal((s.investigators[0].assets.find(c=>c.code==='01063')?.doom || 0),0,'支援上的毁灭被清除')
+  assert.equal(s.locations[0].doom,0,'地点上的毁灭被清除')
+  assert.equal(s.agendas[0].doom,0,'议程实例上的毁灭被清除')
 })
 
 test('Core 01105 全员空手时仍可选择随机弃掉 1 张手牌的分支',()=>{

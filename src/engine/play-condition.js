@@ -26,6 +26,8 @@ import {
 export const LEGACY_PLAY_CONDITION_FIELDS = Object.freeze([
   'ownTurnOnly', 'duringOwnTurn', 'firstActionOnly', 'requiresClue', 'requiresClueAtLocation',
   'requiresNoEnemies', 'requiresRemainingSanity', 'requiresResign', 'playableFromDiscard', 'playableWeakness',
+  // 2026-10-27：威胁区可打出（05010 悬案）。
+  'playableFromThreat',
 ])
 
 // 判定顺序与 engine 原实现一致：同样的多处条件同时不满足时，报错文案不变。
@@ -89,6 +91,12 @@ function entryPlayableFromDiscard(code) {
   return entry?.playableFromDiscard === true
 }
 
+// 2026-10-27：威胁区可打出（05010 悬案在「改为加入威胁区域」之后仍能打出）。
+function entryPlayableFromThreat(code) {
+  const entry = registeredEntry(code)
+  return entry?.playableFromThreat === true
+}
+
 export function playAccess(code) {
   const effect = legacyPlayFields(code)
   // 快速事件搬到能力层后，fast + trigger 的 played 描述子同样只能在反应窗口打出。
@@ -98,6 +106,8 @@ export function playAccess(code) {
     fromDiscard: effect.playableFromDiscard === true || descriptor?.playableFromDiscard === true
       || (descriptorOfKind(code, 'played') ? false : false) || entryPlayableFromDiscard(code),
     playableWeakness: registeredEntry(code)?.playableWeakness === true || effect.playableWeakness === true,
+    // 2026-10-27：威胁区里的这张牌可被「打出」（05010 悬案）。读点：moves.js / actions.js。
+    fromThreat: entryPlayableFromThreat(code) || effect.playableFromThreat === true,
     reactionOnly,
     limitPerInvestigator: Boolean(registeredEntry(code)?.limitPerInvestigator ?? effect.limitPerInvestigator),
   }

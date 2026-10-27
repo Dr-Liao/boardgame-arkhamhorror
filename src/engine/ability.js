@@ -172,6 +172,10 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'doomPerInvestigator',
   // 卡面「跳过神话阶段的放毁灭步骤」（03121/03122/03123）：引擎在 runMythos 读当前议程条目。
   'skipMythosDoom',
+  // 卡面「在本密谋推进时，不要移除……毁灭标记」（04055/04211 地点、05326/05327/05328 敌人、
+  // 05044/05149 自身）：引擎在 advanceAgenda 的 clearDoomInPlay 读这个条目字段。
+  // 'locations' | 'enemies' | 'self'
+  'doomKeptOnAgendaAdvance',
   // 卡面「离场时从游戏中移除」（03182a 丹尼尔·契斯特菲尔德）。
   'removeFromGameOnLeave',
   // 卡面「受到恐惧时，只要有 1 点没有分配给这张支援就受到 1 点伤害」（03182a）。
@@ -331,6 +335,10 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // - `blocksHealReward`：在场时不能从「治愈恐惧后获得资源」的能力获利（05008）；
   // - `avoidHunchShuffle`：本应洗入直觉牌库时改为进入威胁区域（05010 悬案）。
   'threatHorrorSink', 'blocksHealReward', 'avoidHunchShuffle',
+  // 2026-10-27：区域许可——声明后这张牌在威胁区里也能被「打出」（05010 悬案被改为加入威胁区域后
+  // 仍可结算「放 1 个线索 + 移出游戏」）。读点：play-condition.playAccess().fromThreat、
+  // moves.js 的合法行动/validateMove、actions.js 的 doPlay（fromThreatId）。
+  'playableFromThreat',
   // 2026-10-25 本循环修复 05010：「本场冒险少取得 N 点经验」的通用条目字段，读点在
   // campaign-flow.applyResolutionEffects 的 XP 结算循环（威胁区里有该卡时生效）。
   'scenarioXpModifier',
@@ -752,6 +760,8 @@ export function registerCardAbilities(entries) {
       cannotMulliganAway: entry.cannotMulliganAway === true,
       doomPerInvestigator: entry.doomPerInvestigator === true,
       skipMythosDoom: entry.skipMythosDoom === true,
+      doomKeptOnAgendaAdvance: ['locations', 'enemies', 'self'].includes(entry.doomKeptOnAgendaAdvance)
+        ? entry.doomKeptOnAgendaAdvance : null,
       removeFromGameOnLeave: entry.removeFromGameOnLeave === true,
       horrorOverflowDamage: Number.isSafeInteger(entry.horrorOverflowDamage) ? entry.horrorOverflowDamage : null,
       threatCannotLeaveWhileCounters: entry.threatCannotLeaveWhileCounters === true,
@@ -804,6 +814,8 @@ export function registerCardAbilities(entries) {
       threatHorrorSink: entry.threatHorrorSink === true,
       blocksHealReward: entry.blocksHealReward === true,
       avoidHunchShuffle: entry.avoidHunchShuffle === true,
+      // 2026-10-27：威胁区可打出（05010 悬案的「改为加入威胁区域」之后仍能打出结算）。
+      playableFromThreat: entry.playableFromThreat === true,
       // 2026-10-25 本循环修复 05010：XP 修正字段必须进入规范化对象，campaign-flow 的读点才拿得到。
       scenarioXpModifier: Number.isSafeInteger(entry.scenarioXpModifier) ? entry.scenarioXpModifier : null,
       // 2026-10-25 第四轮修复 05041：平局失败光环（威胁区条目让同地点调查员的检定平局按失败结算）。

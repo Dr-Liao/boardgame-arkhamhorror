@@ -5,6 +5,8 @@ export default {
   code: '05327',
   scope: 'agenda',
   implemented: true,
+  // 卡面「在本密谋推进时，不要移除敌人的毁灭标记。」（引擎 advanceAgenda 读点）
+  doomKeptOnAgendaAdvance: 'enemies',
   agendaRule: {
     advance: {
       ritualSuicide: true,

@@ -5,5 +5,7 @@ import { ALL_CARDS, activeInvestigators, originalOf } from '../../_shared.js'
 
 export default {
   code: '05149', scope: 'enemy', implemented: true,
+  // 卡面「在密谋推进时，不要移除那赫卜的毁灭标记。」（引擎 advanceAgenda 读点）
+  doomKeptOnAgendaAdvance: 'self',
   enemyRule: { hunter: true, retaliate: true },
 }

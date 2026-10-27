@@ -383,7 +383,7 @@ test('N3 集结幕二限制走廊贡献和轮末窗口', () => {
   assert.equal(state.clues, 6)
 })
 
-test('N3 场上毁灭也计入密谋阈值，议程推进保留场上毁灭', () => {
+test('N3 场上毁灭也计入密谋阈值，议程推进时清除场上所有毁灭', () => {
   const state = fixture()
   const threshold = state.agendas[0].doomThreshold
   enemy(state, { engagedSeat: null, exhausted: true, doom: threshold - 1 })
@@ -397,9 +397,10 @@ test('N3 场上毁灭也计入密谋阈值，议程推进保留场上毁灭', ()
   answer(state, 'horror')
   settle(state)
   assert.equal(state.agendaIndex, 1)
-  // 密谋上的毁灭清空，敌人/支援上的毁灭保留。
-  assert.equal(agendaDoom(state), threshold)
-  assert.equal(totalDoom(state), threshold)
+  // Rules Reference, "Act Deck and Agenda Deck" 推进步骤 1：
+  // 议程推进时移除场上每张卡上的所有毁灭标记（敌人/支援/地点都不保留）。
+  assert.equal(agendaDoom(state), 0)
+  assert.equal(totalDoom(state), 0)
 })
 
 test('N3 地点进入时揭示且再次进入不重复补充线索', () => {

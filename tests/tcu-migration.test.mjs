@@ -240,7 +240,8 @@ test('P1 基线：scope 记录来源哈希、规则版本与 golden replay 计�
   for (const source of scope.sources) assert.match(source.sha256, /^[0-9a-f]{64}$/)
   assert.equal(scope.baseline.rulesVersion, 'n6.0')
   assert.equal(scope.baseline.goldenReplay.fixtures, 13)
-  assert.equal(scope.baseline.goldenReplay.steps, 786)
+  // 2026-10-27「议程推进清除场上毁灭」规则修复后重录基线：786 → 782 步（notz-midnight-masks 少 4 步）。
+  assert.equal(scope.baseline.goldenReplay.steps, 782)
   // 分片草案覆盖全部三包：调查员 + 4 波玩家卡 + 9 章。
   assert.equal(scope.shards.investigators.formal.length, 6)
   assert.equal(scope.shards.investigators.story.length, 4)

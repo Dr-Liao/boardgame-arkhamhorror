@@ -41,7 +41,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
-      "sha256": "52d7384275b1b37c60acf5a6bce195d90dd93db46169c9eb427179ce84f2317e"
+      "sha256": "a136f1600ee06d3448acad91b84f65a0d59bd26d93382ff0297d41fc3c2c77ee"
     },
     {
       "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
@@ -53,7 +53,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/rules-n3.test.mjs",
-      "sha256": "c9da583ccf8421c1f42cd2c404fdcba5287d4e51950ce0212ec9874176f6ff9b"
+      "sha256": "0204b15ee2781aacee72a9c18b545815a4deda08992c2dc0e75506aab83a6083"
     },
     {
       "file": "games/arkhamhorror/tests/core-n4.test.mjs",

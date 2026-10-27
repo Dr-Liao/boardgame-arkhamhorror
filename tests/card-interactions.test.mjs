@@ -48,8 +48,7 @@ test('drop targets obey legal actions and slot requirements; skills never become
   assert.equal(targetMoves(st,'investigator:1','location:hall').length,0)
 })
 
-test('weapon with one enemy exposes an explicit legal target and resolves through the normal test', () => {
-  const st=createGameState({playerInvestigator:'01001',seed:'direct-target'},[{seat:0,name:'玩家'}])
+test('weapon with one enemy exposes an explicit legal target and resolves through the normal test', () => {  const st=createGameState({playerInvestigator:'01001',seed:'direct-target'},[{seat:0,name:'玩家'}])
   for(let i=0;st.pendingChoice;i++) {
     assert.ok(i<20)
     const choice=st.pendingChoice,option=choice.options.find(o=>['done','skip'].includes(o.id))||choice.options[0]
@@ -69,4 +68,34 @@ test('weapon with one enemy exposes an explicit legal target and resolves throug
   }
   assert.equal(st.investigators[0].assets.find(a=>a.id==='ui-gun').uses,3)
   assert.equal(st.enemies.find(e=>e.id==='ui-enemy').damageTaken,2)
+})
+
+test('hunch deck revealed card binds choice options back to the table hunch row (05002)', () => {
+  // 2026-10-27 修复 05002：乔·戴蒙德的直觉牌库揭示牌「如同手牌」——反应窗口的快速事件用
+  // option id 'hunch'，收尾玩家窗口用 'fast-card:hunch:<卡号>'；两者都要能映射回直觉区那张牌。
+  const st = { investigators: [{ seat: 0, hand: [], assets: [], beneath: [] }],
+    hunch: [{ seat: 0, deck: 5, revealed: '01022' }],
+    cards: { '01022': { code: '01022', name: '证据！' } },
+    pendingChoice: { id: 'q', kind: 'reaction', seat: 0, canSkip: true, options: [
+      { id: 'skip', label: '不打出' }, { id: 'hunch', cardCode: '01022', label: '证据！（直觉牌库）' }] },
+    legalMoves: [{ action: 'choose', choiceId: 'q', optionId: 'skip' },
+      { action: 'choose', choiceId: 'q', optionId: 'hunch' }] }
+  const hunchItem = choicePresentation(st).find(item => item.move.optionId === 'hunch')
+  assert.equal(hunchItem.key, 'hunch:01022')
+  assert.equal(hunchItem.code, '01022')
+  assert.equal(entityMoves(st, 'hunch:01022').length, 1, '点直觉区那张牌 = 回答反应窗口')
+  // 已揭示的卡号对不上时不绑定，避免把别的牌映射到直觉区。
+  st.hunch[0].revealed = '01037'
+  assert.equal(choicePresentation(st).find(item => item.move.optionId === 'hunch').key, null)
+
+  const st2 = { investigators: [{ seat: 0, hand: [], assets: [] }],
+    hunch: [{ seat: 0, deck: 3, revealed: '01037' }],
+    cards: { '01037': { code: '01037', name: '专业的直觉' } },
+    pendingChoice: { id: 'w', kind: 'playerWindow', seat: 0, canSkip: true, options: [
+      { id: 'skip', label: '让过' }, { id: 'fast-card:hunch:01037', label: '⚡ 快速打出「专业的直觉」（直觉牌库）' }] },
+    legalMoves: [{ action: 'choose', choiceId: 'w', optionId: 'skip' },
+      { action: 'choose', choiceId: 'w', optionId: 'fast-card:hunch:01037' }] }
+  const fast = choicePresentation(st2).find(item => item.move.optionId === 'fast-card:hunch:01037')
+  assert.equal(fast.key, 'hunch:01037')
+  assert.equal(entityMoves(st2, 'hunch:01037').length, 1, '点直觉区那张牌 = 回答收尾窗口')
 })

@@ -7,10 +7,13 @@
 //      手牌里的快速卡永远没有打出的时机（旧窗口只列装备上的免费能力）。
 //   2. 致命伤害发生在快速卡结算内部时，reactionWindow 的嵌套保护直接返回，
 //      调查员被直接判定击败并结束回合，来不及打出「死里逃生」这类救命卡。
+//
+// 2026-10-27 追加：乔·戴蒙德（05002）的直觉牌库揭示牌「如同你的手牌」——快速事件
+// （01022 证据！等）同样必须出现在反应窗口/收尾窗口里，并按 -2 费用结算。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { fixture, asset, enemy, answer, move } from './core-fixture.mjs'
-import { checkDefeated } from '../src/engine/engine.js'
+import { fixture, asset, enemy, answer, move, legalMoves, settle } from './core-fixture.mjs'
+import { checkDefeated, playerWindow } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 
 const me = state => state.investigators[0]
@@ -150,3 +153,118 @@ test('致命伤害发生在反应结算内部时仍会开「将要被击败」�
   assert.equal(me(state).damage, me(state).maxHealth - 2)
   assert.equal(state._reaction?.when, 'customReaction', '嵌套窗口结束后必须恢复外层反应上下文')
 })
+
+// ---------------------------------------------------------------------------
+// 直觉牌库（乔·戴蒙德 05002）：「如同手牌」的快速事件
+// ---------------------------------------------------------------------------
+
+// 05002 走真实开局（含直觉牌库设置），再把手牌/资源摆成测试需要的形状。
+function joeState(revealed, { resources = 0 } = {}) {
+  const state = fixture('05002')
+  const inv = me(state)
+  inv.hunchDeck = []
+  inv.hunchRevealed = revealed
+  inv.hand = []
+  inv.resources = resources
+  inv.discard = []
+  const loc = state.locations.find(location => location.id === inv.location)
+  loc.clues = Math.max(1, loc.clues || 0)
+  return state
+}
+
+// 与 tcu-investigators 同一套事务循环：直接调窗口函数时，待决选择要靠同一份 execute 续算。
+function runTransaction(state, execute, choose) {
+  resolveTransaction(state, 0, { action: 'hunchFastTest' }, execute)
+  for (let guard = 0; state.pendingChoice; guard++) {
+    assert.ok(guard < 120, `Choice loop: ${state.pendingChoice.kind}`)
+    const pending = state.pendingChoice
+    const optionId = choose?.(pending, state)
+      ?? ['done', 'skip', 'self', 'normal'].find(id => pending.options.some(option => option.id === id))
+      ?? pending.options[0].id
+    resolveTransaction(state, pending.seat, { action: 'choose', choiceId: pending.id, optionId }, execute)
+  }
+}
+
+test('直觉牌库揭示的快速反应事件（01022 证据！）能在「击败敌人后」窗口按 -2 费打出', () => {
+  const state = joeState('01022')
+  const before = me(state).clues
+  state.chaosBag = ['0']
+  const target = enemy(state, { id: 'hunch-target', fight: 0, evade: 1, health: 1, damageTaken: 0, engagedSeat: 0 })
+  move(state, { action: 'fight', enemyId: target.id })
+  let offered = null
+  settle(state, pending => {
+    if (pending.kind !== 'reaction') return null
+    const option = pending.options.find(option => option.id === 'hunch' && option.cardCode === '01022')
+    if (option) { offered = option; return option.id }
+    return null
+  })
+  assert.ok(offered, '击败敌人后的反应窗口必须列出直觉牌库揭示的「证据！」')
+  assert.match(offered.label, /直觉牌库/)
+  const inv = me(state)
+  assert.equal(inv.hunchRevealed ?? null, null, '打出后清掉揭示标记，阶段结束不再洗回')
+  assert.equal(inv.resources, 0, '印刷费用 1 - 2 = 0')
+  assert.ok(inv.discard.includes('01022'), '打出的快速事件正常进弃牌堆')
+  assert.equal(inv.clues, before + 1, '「证据！」结算发现 1 个线索')
+})
+
+test('直觉牌库揭示的快速事件按 -2 费用通过资源校验（01037 印刷 2 费、0 资源仍可打出）', () => {
+  const state = joeState('01037')
+  const before = me(state).clues
+  const play = legalMoves(state).find(move => move.action === 'play'
+    && move.fromHunch === true && move.cardId === '01037')
+  assert.ok(play, '折扣后费用 0：fromHunch 候选必须通过 validateMove（旧实现按印刷费用误判资源不足）')
+  assert.match(play.label, /0 资源/)
+  move(state, play)
+  settle(state)
+  const inv = me(state)
+  assert.equal(inv.hunchRevealed ?? null, null, '打出后清掉揭示标记')
+  assert.equal(inv.resources, 0, '2 - 2 = 0：不多扣也不过扣')
+  assert.ok(inv.discard.includes('01037'), '打出的快速事件正常进弃牌堆')
+  assert.equal(inv.clues, before + 1, '「专业的直觉」结算发现 1 个线索')
+})
+
+test('收尾窗口可打出直觉牌库揭示的快速卡（-2 费、清标记、正常弃置）', () => {
+  const state = joeState('01037')
+  const before = me(state).clues
+  me(state).actionsLeft = 0
+  let offered = null
+  runTransaction(state, current => {
+    playerWindow(current, 'investigation.afterAction', [], null, { fastCards: true })
+  }, pending => {
+    if (pending.kind !== 'playerWindow') return null
+    const option = pending.options.find(item => item.id === 'fast-card:hunch:01037')
+    if (option) { offered = option; return option.id }
+    return null
+  })
+  assert.ok(offered, '收尾窗口必须列出直觉牌库揭示的快速卡')
+  assert.match(offered.label, /直觉牌库/)
+  const inv = me(state)
+  assert.equal(inv.hunchRevealed ?? null, null, '打出后清掉揭示标记')
+  assert.equal(inv.resources, 0, '2 - 2 = 0')
+  assert.ok(inv.discard.includes('01037'), '打出的快速事件正常进弃牌堆')
+  assert.equal(inv.clues, before + 1, '「专业的直觉」结算发现 1 个线索')
+})
+
+test('能力层写法（fromHand 反应描述子）的直觉牌库快速事件同样能打出（01522 证据！）', () => {
+  // 01022 是 played+fast 写法，01522 是能力层 fromHand 反应写法；同一张卡名、两条实现通道，
+  // 「如同手牌」对两者必须一致。
+  const state = joeState('01522')
+  const before = me(state).clues
+  state.chaosBag = ['0']
+  const target = enemy(state, { id: 'hunch-target-2', fight: 0, evade: 1, health: 1, damageTaken: 0, engagedSeat: 0 })
+  move(state, { action: 'fight', enemyId: target.id })
+  let offered = null
+  settle(state, pending => {
+    if (pending.kind !== 'reaction') return null
+    const option = pending.options.find(option => option.cardCode === '01522' && /直觉牌库/.test(option.label || ''))
+    if (option) { offered = option; return option.id }
+    return null
+  })
+  assert.ok(offered, '能力层 fromHand 快速事件也必须作为直觉牌库候选列出')
+  const inv = me(state)
+  assert.equal(inv.hunchRevealed ?? null, null, '打出后清掉揭示标记')
+  assert.equal(inv.resources, 0, '印刷费用 1 - 2 = 0')
+  assert.ok(inv.discard.includes('01522'), '打出的快速事件正常进弃牌堆')
+  assert.equal(inv.clues, before + 1, '「证据！」结算发现 1 个线索')
+})
+

@@ -582,8 +582,8 @@
     "rulesVersion": "n6.0",
     "goldenReplay": {
       "fixtures": 13,
-      "steps": 786,
-      "hashes": 799
+      "steps": 782,
+      "hashes": 795
     },
     "gitHead": null,
     "gitNote": "本机 PATH 没有 git；基线以规则版本 + golden replay 计数 + 来源哈希固定，具体提交由审阅者补记。"

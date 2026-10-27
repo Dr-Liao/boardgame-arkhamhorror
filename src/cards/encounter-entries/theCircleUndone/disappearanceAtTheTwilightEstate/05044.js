@@ -28,6 +28,9 @@ export default {
   code: '05044',
   scope: 'agenda',
   implemented: true,
+  // 卡面「在本密谋推进时，不要移除其上任何毁灭标记。」（正常流程走 flipAgendaInPlace；
+  // 引擎兜底推进时由 advanceAgenda 的 clearDoomInPlay 保留 state.doom）
+  doomKeptOnAgendaAdvance: 'self',
   agendaRule: {
     // 引擎因毁灭阈值/效果推进本议程时的兜底（正常流程不会发生：doomThreshold 被章节置为 null）。
     onReveal(state, agenda, api) {

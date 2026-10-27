@@ -16,7 +16,6 @@ export function createDescribeState(deps) {
     actingSeats,
     legalMoves,
     actObjectiveContext,
-    totalDoom,
     agendaDoom,
     scenarioBehavior,
     locLabel,
@@ -90,9 +89,8 @@ export function createDescribeState(deps) {
   lines.push('【场景 ' + (act ? act.stage : '?') + '】' + (act ? act.name + '：' + act.text : '（已通关）'))
   const objective = actObjectiveContext(state)
   if (objective) lines.push('【当前场景推进条件】' + JSON.stringify(objective))
-  const onBoardDoom = totalDoom(state) - agendaDoom(state)
-  lines.push('【密谋 ' + (ag ? ag.stage : '?') + '】' + (ag ? ag.name + '：' + ag.text : '（已失败）') + ' 密谋毁灭 ' + agendaDoom(state) + '/' + (ag ? ag.doomThreshold : '?')
-    + (onBoardDoom > 0 ? `（场上另有毁灭 ${onBoardDoom}，不计入阈值）` : '') + '。')
+  lines.push('【密谋 ' + (ag ? ag.stage : '?') + '】' + (ag ? ag.name + '：' + ag.text : '（已失败）') + ' 毁灭 ' + agendaDoom(state) + '/' + (ag ? ag.doomThreshold : '?')
+    + '（场上毁灭总数，含密谋、敌人、地点、支援与威胁区）。')
   lines.push('队内线索：' + state.clues + '；本关胜利点：' + state.victory + '。')
 
   // 战役进度：经验 / 累计胜利点 / 创伤（跨关继承）。

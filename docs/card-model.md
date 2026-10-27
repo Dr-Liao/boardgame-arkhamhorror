@@ -351,6 +351,14 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
    或压牌本身（`beneath:<code>`、`hunch:<code>`），否则牌桌永远点不出这些动作。
 2. **能力不上桌**：`beneath` / `attachedCards` / `attachments` 上的牌不参与 `cardAbility` 枚举，
    只有宿主声明的通道（如 `beneathPlayAsIfInHand`、`playAttachedEvents`）能把它们变成可打出的动作。
+3. **「如同其在你的手牌中」要接满所有出牌通道**：`beneathPlayAsIfInHand`（05013 银暮匕首）目前覆盖
+   四类窗口——普通行动 `legalMoves`（`fromBeneath`）、技能检定投入（`tests.js` 的 `beneath:<卡号>`）、
+   快速事件的反应窗口（`encounter.js` 的 `reactionWindow`，候选 id `beneath:<序号>`）与
+   `fromHand` 反应描述子的能力窗口（`ability-exec.js` 的 `openAbilityWindow`，候选 id
+   `…:beneath:<序号>`）。新增「如同手牌」的通道时这几类窗口都要接，否则表现是「底下的牌看得见但
+   在某个窗口里用不了」；反应/能力窗口的两类候选带 `cardCode`，`choicePresentation` 会把它们挂回
+   `beneath:<卡号>`，玩家点牌桌「下方」的牌与点手牌同义。（收尾玩家窗口的 0 费快速卡目前仍只枚举
+   手牌；底下的快速事件按规则走各自的反应窗口。）
 
 回归护栏：`tests/cards-under-ui.test.mjs`（卡面表 / 动作匹配 / 选择面板卡图 / 免费行动死按钮）与
 `tests/cards-under.browser.mjs`（桌面 1440 与移动 390 的可见性与点选）。

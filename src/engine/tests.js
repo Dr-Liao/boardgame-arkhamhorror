@@ -298,8 +298,11 @@ function performTest(state, seat, skill, difficulty, options = {}) {
           : `${inv.name} 请求协助${skillLabel}检定；你可以投入一张牌，或放弃协助。`, canSkip: true,
         options: [...(canFinish ? [{ id: 'done', label: owner === inv ? '开始检定' : '放弃协助' }] : []),
           ...(owner === inv && helpers.length ? [{ id: 'help', label: '求助' }] : []),
-          ...candidates.map(item => ({ id: item.beneath ? `beneath:${item.code}` : String(item.index),
-            label: (item.beneath ? '投入（底下）：' : '投入：') + cardName(item.code) }))] })
+          // 2026-10-27 修复 05013：beneath 候选也带 cardCode，界面据此把选项画成卡面，
+          // 并让牌桌「下方」的牌成为可点的投入入口（web/card-interactions.js 的 choicePresentation）。
+          ...candidates.map(item => (item.beneath
+            ? { id: `beneath:${item.code}`, cardCode: item.code, label: '投入（底下）：' + cardName(item.code) }
+            : { id: String(item.index), label: '投入：' + cardName(item.code) }))] })
       if (answer === 'done') break
       if (answer === 'help') {
         state.skillTest.helpRequested = true

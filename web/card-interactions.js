@@ -25,6 +25,33 @@ export function choicePresentation(st) {
       const code = owner?.hand?.[Number(id)]
       if (code) return { ...item, key: `hand:${owner.seat}:${id}`, code }
     }
+    // 2026-10-27 修复 05013：银暮匕首「如同其在你的手牌中」——反应窗口（快速事件）、能力窗口
+    // （fromHand 反应）与技能检定投入里的 beneath 候选用「beneath:<卡号>」或「…:beneath:<序号>」
+    // 作 id，并带 cardCode。这里把它们挂回牌桌「下方」的牌：点下方的牌与点手牌同义，
+    // 直接回答当前窗口，而不是像修复前那样只能从底部选项面板里找。
+    if (option?.cardCode && (choice.kind === 'commit' ? id.startsWith('beneath:') : id.includes('beneath:'))
+      && (owner?.beneath || []).includes(option.cardCode)) {
+      return { ...item, key: `beneath:${option.cardCode}`, code: option.cardCode,
+        cards: [{ ...(st.cards?.[option.cardCode] || {}), code: option.cardCode }] }
+    }
+    // 2026-10-27 修复 05002：乔·戴蒙德的直觉牌库揭示牌「如同你的手牌」——快速事件在反应窗口里
+    // option id 固定为 'hunch'，在收尾玩家窗口里是 'fast-card:hunch:<卡号>'。挂回牌桌直觉区的
+    // 那张牌：点它等于点手牌，直接回答当前窗口（牌桌上没有实体时仍可点底部选项按钮）。
+    if (id === 'hunch' && option?.cardCode) {
+      const hunch = (st.hunch || []).find(entry => entry.seat === choice.seat)
+      if (hunch?.revealed === option.cardCode) {
+        return { ...item, key: `hunch:${option.cardCode}`, code: option.cardCode,
+          cards: [{ ...(st.cards?.[option.cardCode] || {}), code: option.cardCode }] }
+      }
+    }
+    if (choice.kind === 'playerWindow' && id.startsWith('fast-card:hunch:')) {
+      const code = id.slice('fast-card:hunch:'.length)
+      const hunch = (st.hunch || []).find(entry => entry.seat === choice.seat)
+      if (hunch?.revealed === code) {
+        return { ...item, key: `hunch:${code}`, code,
+          cards: [{ ...(st.cards?.[code] || {}), code }] }
+      }
+    }
     if (['turnOrder', 'investigator', 'prey', 'storyCard'].includes(choice.kind)) {
       const inv = st.investigators.find(inv => String(inv.seat) === id)
       if (inv) return { ...item, key: `investigator:${inv.seat}`, code: inv.code }

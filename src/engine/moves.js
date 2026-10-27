@@ -67,6 +67,8 @@ export function createMoves(deps) {
     hiddenFightBlocked,
     hiddenRule,
     hubLegalMoves,
+    // 2026-10-27 修复 05002：直觉牌库揭示牌的 -2 折扣（校验与实付同一读点）。
+    hunchDeck,
     inHub,
     investigatorEntryError,
     investigatorTextBlanked,
@@ -270,13 +272,35 @@ export function createMoves(deps) {
   if (inv.hunchRevealed) {
     const hunchCode = inv.hunchRevealed
     const hunchDef = cardDef(hunchCode)
-    if (hunchDef && !isWeaknessCard(hunchDef) && !blocked.has(hunchDef.type)) {
-      const hunchCost = Math.max(0, playCost(state, inv, hunchDef) - 2)
+    // 2026-10-27 修复 05010：揭示的弱点事件（playableWeakness）也能打出——「如同它是你的手牌」
+    // 不因弱点点数而失效；此前 !isWeaknessCard 一刀切让「悬案」的打出路径不可达。
+    if (hunchDef && (!isWeaknessCard(hunchDef) || playAccess(hunchCode).playableWeakness)
+      && !blocked.has(hunchDef.type)) {
+      // 2026-10-27 修复 05002：折扣走直觉牌库规则读点（05002 的 discount 默认 2），不再写死。
+      const hunchDiscount = hunchDeck.playDiscount(state, inv, hunchCode) || 0
+      const hunchCost = Math.max(0, playCost(state, inv, hunchDef) - hunchDiscount)
       if (inv.resources >= hunchCost) {
         moves.push({ action: 'play', cardId: hunchCode, fromHunch: true,
-          label: `🔮 从直觉牌库打出「${cardName(hunchCode)}」(${hunchCost} 资源，-2 费用)` })
+          label: `🔮 从直觉牌库打出「${cardName(hunchCode)}」(${hunchCost} 资源，-${hunchDiscount} 费用)` })
       }
     }
+  }
+  // 2026-10-27：威胁区里声明 playableFromThreat 的牌也能打出（05010「悬案」被强制改为加入威胁区域后，
+  // 仍可结算「放 1 个线索 + 移出游戏」）。条目级开关，不写死卡号。
+  for (const threatCard of inv.threat || []) {
+    if (registeredEntry(threatCard.code)?.playableFromThreat !== true) continue
+    const def = cardDef(threatCard.code)
+    if (!def || !runtimeCardAvailable(state, inv, threatCard.code) || def.dataStatus === 'quarantined') continue
+    if (def.type === 'skill') continue
+    if (isWeaknessCard(def) && !playAccess(threatCard.code).playableWeakness) continue
+    if (!lolaCanUseCard(inv, threatCard.code)) continue
+    if (scenarioBehavior(state).canPlayCard?.(state, inv, def) === false) continue
+    if (activeHiddenRules(state, inv).some(hidden => hidden.rule.cannotPlayTypes?.includes(def.type))) continue
+    if (blocked.has(def.type) || cardPlayBlockedReason(state, inv, def)) continue
+    const cost = playCost(state, inv, def)
+    if (inv.resources < cost) continue
+    moves.push({ action: 'play', cardId: threatCard.code, threatId: threatCard.id,
+      label: `🃏 从威胁区打出「${cardName(threatCard.code)}」(${cost} 资源)` })
   }
   // 2026-10-25 第七轮修复 05013：beneath 通道——持有 beneathPlayAsIfInHand 且未横置的支援时，
   // 「底下」的事件可以按手牌打出（额外费用：横置该支援）。
@@ -633,6 +657,12 @@ export function createMoves(deps) {
         if (!channel) return '没有可用的 beneath 通道支援'
         if (!(inv.beneath || []).includes(move.cardId)) return '底下没有这张牌'
       }
+      // 2026-10-27：从威胁区打出（条目级 playableFromThreat，05010 悬案）。
+      if (move.threatId) {
+        const threatCard = (inv.threat || []).find(card => card.id === move.threatId)
+        if (!threatCard || threatCard.code !== move.cardId) return '威胁区没有这张牌'
+        if (!playAccess(move.cardId).fromThreat) return '这张牌不能从威胁区打出'
+      }
       const playBlocked = cardPlayBlockedReason(state, inv, def)
       if (playBlocked) return playBlocked
       if (activeHiddenRules(state, inv).some(hidden => hidden.rule.cannotPlayTypes?.includes(def.type))) return '隐私牌禁止你打出该类型卡牌'
@@ -668,10 +698,13 @@ export function createMoves(deps) {
       } else if (move.fromBackpackId) {
         const bag = inv.assets.find(asset => asset.id === move.fromBackpackId && registeredEntry(asset.code)?.cardBackpack)
         if (!bag || !(bag.attachedCards || []).includes(move.cardId)) return '背包里没有这张牌'
-      } else if (!move.fromBeneath && !move.fromHunch && !move.fromAttachedEventOf && !inv.hand.includes(move.cardId)) return '手牌中没有这张牌'
+      } else if (!move.threatId && !move.fromBeneath && !move.fromHunch && !move.fromAttachedEventOf && !inv.hand.includes(move.cardId)) return '手牌中没有这张牌'
       if (playAccess(move.cardId).reactionOnly) return '该牌只能在对应的反应窗口打出'
       if (cannotPlayTypes(inv).has(def.type)) return '当前禁止打出该类型卡牌'
-      if (inv.resources < playCost(state, inv, def)
+      // 2026-10-27 修复 05002：直觉牌库揭示牌按 -2 费用支付（dispatch 的 fromHunch 打出通道会写入
+      // playDiscount），校验必须与实付同口径，否则「印刷费用 > 资源 ≥ 折扣后费用」会被误判为资源不足。
+      const hunchDiscount = move.fromHunch ? (hunchDeck.playDiscount(state, inv, move.cardId) || 0) : 0
+      if (inv.resources < playCost(state, inv, def) - hunchDiscount
         - (campaignPlayCostPreview(state, inv, move.cardId)?.discount || 0)
         - Math.max(0,
           Number(typeof registeredEntry(move.cardId)?.playCostReductionProvider === 'function'

@@ -10,6 +10,8 @@
 
 export default {
   code: '04211', scope: 'agenda',
+  // 卡面「强制 - 在本密谋推进时：不要从场上任何地点移除毁灭标记。」（引擎 advanceAgenda 读点）
+  doomKeptOnAgendaAdvance: 'locations',
   agendaRule: {
     onReveal(state, agenda, api, hooks) {
       hooks.spawnHarbinger()

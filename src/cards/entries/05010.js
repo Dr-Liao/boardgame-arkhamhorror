@@ -6,25 +6,25 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// 修复（task-22）：悬案是「弱点事件」，乔的直觉牌库会在调查阶段把它揭示进手牌；旧实现只有
-// weakness 描述子、没有 playableWeakness，标准流程里它永远不能被打出（validateMove 返回
-// 「该牌不能作为行动打出」），第一段「放 1 个线索 + 移出游戏」不可达。现在：
-//   · playableWeakness: true → 允许作为弱点事件打出（src/engine/actions.js:79 读点）；
-//   · played 描述子实现第一段：把 1 个线索放到隐藏值最高的地点（平局由玩家选择），
-//     随后清掉直觉牌库的 hunchRevealed，避免阶段末被当成「未打出」重复洗回（05002 引擎
-//     原语修好前先在本卡兜底）；
-//   · 条目级 removeAfterPlay: true → 打出结算后进入 state.removedFromGame，不进弃牌堆
-//     （src/engine/actions.js:243-292 读点）。
+// 打出通道（两条，都由条目级字段声明，引擎不写死卡号）：
+//   · 直觉牌库揭示（2026-10-27 修复）：乔的直觉牌库在调查阶段开始时揭示悬案，05002 允许
+//     「以 -2 费用打出该卡牌，如同它是你的手牌」。moves.js 的 fromHunch 通道按
+//     playableWeakness 放行弱点事件；此前该通道用 !isWeaknessCard 一刀切，导致第一段
+//     「放线索 + 移出游戏」在真实流程里不可达（测试靠 hand 兜底才通过）。
+//   · 威胁区打出（playableFromThreat）：被「改为加入威胁区域」之后，这张牌在威胁区里
+//     仍可打出（条目级区域许可，读点 play-condition.playAccess().fromThreat / moves.js /
+//     actions.js 的 doPlay(fromThreatId)）。威胁区打出没有 -2 折扣（那不是揭示窗口），按印刷费用支付。
 //
-// 剩余实现说明（本轮修复）：
+// 其余行为：
+//   · playableWeakness: true → 允许作为弱点事件打出（src/engine/actions.js:82 读点）；
+//   · played 描述子实现第一段：把 1 个线索放到隐藏值最高的地点（平局由玩家选择）；
+//   · 条目级 removeAfterPlay: true → 打出结算后进入 state.removedFromGame，不进弃牌堆；
+//   · 「改为加入威胁区域」由直觉牌库的 avoidHunchShuffle 读点落实（src/engine/hunch-deck.js）；
 //   · 「在游戏结束时少取得 2 点经验」→ 条目级 scenarioXpModifier: -2；引擎结局 XP 结算
-//     （src/engine/campaign-flow.js:252-260）会扫描威胁区条目并套用该修正。字段已登记
-//     src/engine/ability.js:323。因此只有「改为加入威胁区域」的路径会真正扣经验（打出的
-//     路径已移出游戏，符合卡面）。
-//   · 「改为加入威胁区域」由直觉牌库的 avoidHunchShuffle 读点落实（src/engine/hunch-deck.js）。
+//     （src/engine/campaign-flow.js:262-270）会扫描威胁区条目并套用该修正；从威胁区打出后
+//     卡牌移出游戏，该获得性能力随之消失（威胁区结算只统计仍留在威胁区的条目）。
 //
-// 说明：兜底路径（非直觉牌库直接抽到该弱点）按普通弱点结算并移出游戏，此时不进入威胁区、
-// 不触发少经验（卡面同样要求先在威胁区才获得该强制）。
+// 说明：兜底路径（非直觉牌库直接抽到该弱点，正常流程不会发生）按普通弱点结算并移出游戏。
 
 const highestShroudLocations = state => {
   const locations = (state.locations || []).filter(location => location && typeof location.shroud === 'number')
@@ -59,19 +59,22 @@ export default {
   code: '05010',
   avoidHunchShuffle: true,
   playableWeakness: true,
+  // 2026-10-27：被「改为加入威胁区域」后仍可在威胁区打出（区域许可原语，读点
+  // play-condition.playAccess().fromThreat / moves.js / actions.js:doPlay(fromThreatId)）。
+  playableFromThreat: true,
   removeAfterPlay: true,
   // 「强制 - 在游戏结束时：乔·戴蒙德本场冒险少取得 2 点经验值」：威胁区条目字段，
   // 由 src/engine/campaign-flow.js 的结局 XP 结算统一读取（不写死卡号）。
   scenarioXpModifier: -2,
-  note: '「游戏结束时少取得 2 点经验」由条目级 scenarioXpModifier 在结局 XP 结算处生效（仅在威胁区时）；打出「放线索+移出游戏」与直觉牌库→威胁区两条路径已实现。',
+  note: '打出通道：直觉牌库揭示（playableWeakness + fromHunch）与威胁区（playableFromThreat）均可打出；打出结算「放线索 + 移出游戏」。未打出时由 avoidHunchShuffle 改为进入威胁区，并由 scenarioXpModifier 在结局 XP 结算扣 2 点经验（仅在仍在威胁区时）。',
   abilities: [
     {
       kind: 'played',
       label: '悬案：放 1 个线索到隐藏值最高的地点，将悬案移出游戏',
       resolve: ({ inv, state, api }) => {
         placeClueOnHighestShroud({ inv, state, api })
-        // 05002 的引擎原语（打出的 hunchRevealed 未清理）修好前，本卡自己兜底：
-        // 避免本阶段结束 returnHunchCard 把已移出游戏的悬案再洗回直觉牌库。
+        // 防御性兜底：fromHunch 通道已在 dispatch 里清掉 hunchRevealed（威胁区通道本来就没有它），
+        // 这里再清一次，避免阶段末 returnHunchCard 把已移出游戏的悬案当成「未打出」处理。
         if (inv.hunchRevealed === '05010') inv.hunchRevealed = null
         api.info('「悬案」被移出游戏。')
       },

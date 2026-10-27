@@ -24,6 +24,18 @@
 // 没有声明「按哪种行动结算」，被 actionKind 归为普通行动 → 发动攻击前先吃一次借机攻击。
 // 补 countsAs:'fight' + noOpportunityAttack（与 05114 切肉刀同一写法；读点见 actionKind /
 // dispatch.js 的 abilityNoAoO，规则见 docs/card-model.md §5b）。
+//
+// 2026-10-27 修复（反应窗口通道）：卡面「如同其在你的手牌中」此前只在三条路径接了 beneath：
+// 普通行动打出（moves.js）、技能检定投入（tests.js）、旧印加入手牌（05004）。玩家实际最常用的
+// 两条窗口没有接——
+//   · 快速事件的反应窗口（encounter.js 的 reactionWindow）：底下的 05014 黑暗洞察 / 01023 闪躲
+//     等取消卡永远不出现在窗口候选里；现在候选带 fromBeneath，选中后横置匕首、从底下移进手牌、
+//     走 playReactionCard 的同一套付费/结算/弃牌路径，期间置 state._playedFromBeneath；
+//   · fromHand 反应描述子的能力窗口（ability-exec.js 的 openAbilityWindow / ability-rules.js 的
+//     descriptorUsable）：05280 否决存在这类「快速。在遭遇/攻击造成伤害时打出」的卡只从手牌枚举，
+//     现在同一通道补 beneath 候选，执行时把卡移进手牌走 executeDescriptor 的手牌口径。
+// 界面侧 web/card-interactions.js 的 choicePresentation 把两类候选挂回牌桌「下方」的牌，
+// 技能检定投入的 beneath 选项也带 cardCode（src/engine/tests.js），点下方的牌与点手牌同义。
 
 export default {
   code: '05013',

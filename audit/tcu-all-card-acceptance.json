@@ -4,7 +4,7 @@
   "profile": {
     "id": "original-circle-undone-all-cards-2026-10",
     "scope": "万象无终原始循环 377 条印刷记录：343 张主卡（战役 237 / 调查员 19 / 玩家 87）与 34 个关联面（05xxxa/b/c…）。",
-    "basis": "逐卡运行测试：237 张战役主卡的卡面印刷数据与 9 章 definition/behavior 逐字段对照（tests/tcu-campaign-card-acceptance.test.mjs 275 例）、87 张玩家卡 4 个分片（tests/tcu-player-m2-{1..4}.test.mjs 123 例）、19 张调查员/专属卡 M1 逐人验收（tests/tcu-investigators.test.mjs 82 例）；证据只从实跑 node --test 的 test:pass 事件归集。",
+    "basis": "逐卡运行测试：237 张战役主卡的卡面印刷数据与 9 章 definition/behavior 逐字段对照（tests/tcu-campaign-card-acceptance.test.mjs 275 例）、87 张玩家卡 4 个分片（tests/tcu-player-m2-{1..4}.test.mjs 123 例）、19 张调查员/专属卡 M1 逐人验收（tests/tcu-investigators.test.mjs 86 例）；证据只从实跑 node --test 的 test:pass 事件归集。",
     "partitionPolicy": "主卡按 content/packs/tcu*/manifest.js 的 verified 函数切成 investigator/player/campaign 三分区且唯一；34 个关联面不是独立主卡，按 linkedCardCode/linkedToCode 归到主卡或成对关联面，账本 partition 记 face，证据取主卡定义/行为链接（逐面 test）。",
     "pendingPolicy": "目录存在、卡号被源码引用、rulesPending:false 或文本非空都不构成通过；未被逐卡 test 标记「已验收」的卡保持 pending 并计入 summary.pending。",
     "notePolicy": "人工行为审计的近似实现说明登记在 content/campaigns/theCircleUndone/card-acceptance.js 的 TCU_CARD_ACCEPTANCE_NOTES；未登记默认 verified。",
@@ -31,13 +31,13 @@
     "constructible": 85,
     "deckable": 83,
     "simplified": 14,
-    "testsPassed": 522,
+    "testsPassed": 526,
     "testFiles": 6
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
-      "sha256": "081405f4f93c76fcf6b01f8227bf7bbde80c0e7f5e192310002b457d8c2f5f34"
+      "sha256": "9d3130a29568333634630083fcb9d3f09249ddf12170ce1bae3ccc4eacb9d623"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
@@ -74,7 +74,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -92,7 +92,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -110,7 +110,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -128,7 +128,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -146,7 +146,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -164,7 +164,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -182,7 +182,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -200,7 +200,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -218,7 +218,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -236,7 +236,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -254,7 +254,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -272,7 +272,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -290,7 +290,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -308,7 +308,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -326,7 +326,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -344,7 +344,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -362,7 +362,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -380,7 +380,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -398,7 +398,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 82,
+          "tests": 86,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]

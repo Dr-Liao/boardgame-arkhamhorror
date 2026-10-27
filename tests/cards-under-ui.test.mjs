@@ -89,6 +89,39 @@ test('带 cardCode 的选择（beneath / openingHand / hunchDeck）会画出候�
   }
 })
 
+// ---- 3b. 银暮匕首：反应/能力/投入窗口的 beneath 候选挂回「下方」的牌 -----------------
+
+// 2026-10-27 修复 05013 的桌面读点：匕首「如同其在你的手牌中」的候选（快速事件窗口 id
+// `beneath:<序号>`、fromHand 能力窗口 id `…:beneath:<序号>`、技能检定投入 id `beneath:<卡号>`）
+// 都要能把动作挂回调查员下方的牌；否则玩家点下方的牌没有任何反应，只能翻底部选项面板。
+test('银暮匕首的 beneath 候选在反应/能力/投入窗口都挂回「下方」的牌', () => {
+  const cards = {
+    '05014': { code: '05014', name: '黑暗洞察', nameZh: '黑暗洞察', type: 'event' },
+    '05324': { code: '05324', name: '美满结局', nameZh: '美满结局', type: 'event' },
+    '01025': { code: '01025', name: '急救', nameZh: '急救', type: 'skill' },
+  }
+  const base = {
+    currentSeat: 0, cards,
+    investigators: [{ seat: 0, code: '05004', hand: [], beneath: ['05014', '05324', '01025'], assets: [] }],
+  }
+  const cases = [
+    ['reaction', 'beneath:0', '05014'],                     // 快速事件反应窗口
+    ['reaction', 'desc:05324#0:hand::beneath:1', '05324'],  // fromHand 反应能力窗口
+    ['commit', 'beneath:01025', '01025'],                   // 技能检定投入
+  ]
+  for (const [kind, optionId, code] of cases) {
+    const st = { ...base,
+      pendingChoice: { id: 'q', kind, seat: 0, canSkip: true,
+        options: [{ id: 'skip', label: '跳过' }, { id: optionId, cardCode: code, label: '候选' }] },
+      legalMoves: [{ action: 'choose', choiceId: 'q', optionId, label: '候选' }] }
+    const items = choicePresentation(st)
+    assert.equal(items.find(item => item.key === 'beneath:' + code)?.code, code,
+      kind + '：' + code + ' 的候选要挂回「下方」的牌')
+    assert.equal(entityMoves(st, 'beneath:' + code).length, 1,
+      kind + '：点下方的牌应能直接回答当前窗口')
+  }
+})
+
 // ---- 4. 免费行动的「预览 = 校验」 --------------------------------------------------
 
 function withInvestigator(code) {

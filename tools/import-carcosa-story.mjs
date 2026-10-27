@@ -1,6 +1,8 @@
 // Import complete reached narrative from the bundled Chinese translation.
 // Setup, routing, rewards, and campaign-log instructions stay in the engine;
 // this generated data contains reader-facing prose only.
+// 例外：塞巴斯蒂安信息里的「入口大厅放线索」是玩家可见的设置说明（也是入口大厅
+// 开局线索的来源），参考文本写在 <li> 里且带 {perPlayer} 占位，这里改写为纯文本随正文导入。
 import { readFile, writeFile } from 'node:fs/promises'
 
 const sourceRoot = new URL('../../../参考资源/ArkhamHorror-main/frontend/src/locales/zh/thePathToCarcosa/', import.meta.url)
@@ -39,6 +41,9 @@ const scenarios = Object.fromEntries(await Promise.all(scenarioIds.map(async id 
   [id, await readJson(`scenarios/${id}.json`)])))
 const prose = value => narrativeParagraphs(value?.body || value || '')
 const intro = id => scenarios[id].intro
+// 参考文本：<li>游戏设置时，在你将入口大厅放置入场后，在其上方放置1{perPlayer}线索。</li>
+// 列表项不会被 narrativeParagraphs 抓取；这条是设置说明而非叙事，单独改写为纯文本。
+const echoesSebastienSetup = '游戏设置时，在你将入口大厅放置入场后，在其上方放置每位调查员 1 个线索。'
 
 const introductions = {
   curtainCall: { title: intro('curtainCall').title, common: prose(intro('curtainCall')) },
@@ -46,7 +51,7 @@ const introductions = {
   echoesOfThePast: {
     title: intro('echoesOfThePast').title,
     common: prose(intro('echoesOfThePast')),
-    sebastiensInformation: prose(intro('echoesOfThePast').sebastiensInformation),
+    sebastiensInformation: [...prose(intro('echoesOfThePast').sebastiensInformation), echoesSebastienSetup],
   },
   theUnspeakableOath: {
     title: intro('theUnspeakableOath').title,
