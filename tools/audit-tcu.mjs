@@ -1238,7 +1238,7 @@ const gate = {
     assigned: (scope?.gate?.records?.assigned ?? 0),
     pass: scope?.counts?.records === 377 && scope?.gate?.records?.pass === true,
   },
-  // P6：卡包按里程碑各自的状态。调查员包 M1 已 verified；P7 起玩家包 M2 也已 verified（87/87 + 85 可构筑）。
+  // P6：卡包按里程碑各自的状态。P11：调查员包、玩家包与战役包一并升为 playable（开放大厅口径）。
   packsByPhase: {
     investigators: {
       status: packs.find(pack => pack.id === 'tcuInvestigators')?.status ?? null,
@@ -1257,15 +1257,15 @@ const gate = {
       cards: playerPackInfo?.cards ?? 0,
       implemented: playerPackInfo?.rulesImplemented ?? 0,
       buildable: playerPackInfo?.deckbuildingOpen ?? 0,
-      pass: playerPackInfo?.status === 'verified'
+      pass: playerPackInfo?.status === 'playable'
         && playerPackInfo?.rulesImplemented === 87
         && playerPackInfo?.deckbuildingOpen === 85,
     },
-    pass: packs.find(pack => pack.id === 'tcuInvestigators')?.status === 'verified'
+    pass: packs.find(pack => pack.id === 'tcuInvestigators')?.status === 'playable'
       && packs.find(pack => pack.id === 'tcuInvestigators')?.rulesImplemented === 19
       && packs.find(pack => pack.id === 'tcuCampaign')?.status === 'playable'
       && packs.find(pack => pack.id === 'tcuCampaign')?.rulesImplemented === CAMPAIGN_CARD_CODES.length
-      && playerPackInfo?.status === 'verified'
+      && playerPackInfo?.status === 'playable'
       && playerPackInfo?.rulesImplemented === 87
       && playerPackInfo?.deckbuildingOpen === 85,
   },

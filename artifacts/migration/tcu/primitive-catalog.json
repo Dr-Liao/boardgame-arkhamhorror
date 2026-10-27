@@ -919,7 +919,7 @@
     "src/engine/actions.js": "4ba114d9896dd4cf088805bbf203e88758033b5284f74f147f2c9b33fb2f3bce",
     "src/engine/setup.js": "3e423f5bfe4916e3dfbf40e70374c53b77af13d6fa1bfc63be3d9dd59fd394bd",
     "src/engine/engine.js": "071c26a1c707eca210145a2f7c506fa37ba63150db5259802d3d2cfba1a0d593",
-    "content/registry.js": "7e0946569fbe8ca7b6872763fc007cea3ad30b30db8759de154c670e6658066e",
+    "content/registry.js": "0c83a332f99b9515205597d0b81c2b3350629bc10a74a0f08f7179d6578c4eed",
     "docs/tcu-primitives.md": "54ecd7fb96daf093e63ed49be41656cf2626c8a9b7e9c3724e1a681630df83a5",
     "src/engine/alt-decks.js": "bb79246b2dce15f071c8a8e8cac1aef4070c85ed8db5f2b3c20209edf1f79aff",
     "src/engine/encounter.js": "ae7d52bf26d0377ac97f749e1536ff05f16d423cf73249dcf876cc2dedf366ee",

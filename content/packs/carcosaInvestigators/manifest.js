@@ -36,7 +36,7 @@ export const manifest = {
   name: '卡尔克萨之路 · 调查员',
   contentVersion: '1.0.0',
   minRulesVersion: 'n4.2',
-  status: 'verified',
+  status: 'playable',
   dependencies: ['core'],
   description: 'C1 六位调查员的能力、构筑、专属卡、专属弱点与存档回放已通过逐人验收。',
   cardRanges: [{ from: '03001', to: '03342' }],

@@ -71,7 +71,7 @@ export const manifest = {
   name: '失落的时代 · 玩家卡',
   contentVersion: '0.2.0',
   minRulesVersion: 'n4.2',
-  status: 'development',
+  status: 'playable',
   dependencies: ['core'],
   description: `${IMPLEMENTED_PLAYER_CODES.length} 张玩家卡已全部完成逐卡主要印刷效果验收（含两张战役层永久卡；弱点只能作为依赖卡牌）。`,
   cardRanges: [{ from: '04001', to: '04347' }],

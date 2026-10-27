@@ -62,8 +62,8 @@ function settleExecution(state, execute, choose) {
   }
 }
 
-test('C1 Mark is implemented inside the verified Carcosa investigator boundary', () => {
-  assert.equal(investigatorPack.status, 'verified')
+test('C1 Mark is implemented inside the playable Carcosa investigator boundary', () => {
+  assert.equal(investigatorPack.status, 'playable')
   assert.equal(canSelectInvestigator('03001'), true)
   assert.deepEqual(INVESTIGATOR_ABILITIES['03001'].startsWith, ['03009'])
   assert.equal(INVESTIGATOR_ABILITIES['03001'].elderSign.kind, 'perDamage')

@@ -46,7 +46,7 @@ test('M1 partitions every 04-cycle main code exactly once and opens only the inv
   assert.deepEqual([...packedCodes].sort(), mainCodes)
   assert.equal(new Set(packedCodes).size, packedCodes.length)
   assert.deepEqual(packs.map(pack => pack.cards.length), [231, 16, 91])
-  assert.deepEqual(packs.map(pack => pack.status), ['playable', 'verified', 'development'])
+  assert.deepEqual(packs.map(pack => pack.status), ['playable', 'playable', 'playable'])
   assert.ok(packs[1].cards.every(card => card.cataloged && card.rulesImplemented))
   assert.ok(packs[0].cards.every(card => card.cataloged && !card.rulesImplemented && !card.deckbuilding))
   assert.ok(packs[2].cards.every(card => card.cataloged))
@@ -184,7 +184,7 @@ test('M5 records the catalogue baseline, the scenario ledger, keywords and ruleb
   assert.equal(report.remaining.some(item => item.includes('web/img/campaigns/theForgottenAge')), false,
     '展示图与音频目录已随仓库提供，不再列为待办')
   assert.equal(report.mechanics.status, 'verified')
-  assert.equal(report.playerCards.status, 'development')
+  assert.equal(report.playerCards.status, 'playable')
   assert.equal(report.playerCards.verified, IMPLEMENTED_PLAYER_CODES.length)
   assert.equal(IMPLEMENTED_PLAYER_CODES.length, 91, 'M2 收尾：91 张玩家卡全部验收')
   assert.equal(report.playerCards.total, 91)

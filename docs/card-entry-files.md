@@ -2,7 +2,7 @@
 
 > 日期：2026-10。状态：**玩家卡与非玩家卡均已执行**。468 个玩家卡能力条目已从
 > `card-abilities.js` / `ability-migration-batches.js` 拆到 `src/cards/entries/<code>.js`；
-> 529 个非玩家条目已按 [`encounter-entry-split-plan.md`](encounter-entry-split-plan.md) 迁到
+> 529 个非玩家条目已按拆分方案迁到
 > `src/cards/encounter-entries/`（通用 / 战役共用 / 关卡专用三档）。本文是**当前规矩**，
 > 不是历史记录；原阶段文档（phase5-migration.md、architecture-refactor-roadmap.md）已在 2026-10 的
 > 拆分迁移后删除，现行架构与演进规矩见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md)。
@@ -105,8 +105,7 @@ export default {
 }
 ```
 
-归属判定（扫描器、脚手架与守卫共用同一算法，细则见
-[`encounter-entry-split-plan.md`](encounter-entry-split-plan.md) §3）：
+归属判定（扫描器、脚手架与守卫共用同一算法）：
 
 1. 用条目 `code`、`cards-data.originalCode`、`scenarioReferences.ruleId` 在全部关卡的
    `definition.js` 与 manifest zones 里匹配；
@@ -197,8 +196,8 @@ npm run test:fast
 node tools/audit-abilities.mjs --write
 ```
 
-迁移完成后，`encounter-abilities.js` 只作为 facade 读取；**任何新增都进单卡文件**。529 条存量条目的
-一次性迁移顺序、快照对账与验收证据见 [`encounter-entry-split-plan.md`](encounter-entry-split-plan.md)。
+迁移完成后，`encounter-abilities.js` 只作为 facade 读取；**任何新增都进单卡文件**。529 条存量条目
+已完成一次性迁移，快照对账与验收证据保留在 `artifacts/` 与 git 历史中。
 
 ### 3.1 批量迁移时：索引只由主进程重建
 
@@ -343,4 +342,4 @@ node tools/migrate-card.mjs --verify          # 账本/文件一致性
 - 行为：`replay-fixtures --compare` 13 局 / 784 步逐条一致；`npm run test:fast` 2311 例全绿。
 - 硬编码：`cardLayerCodes` 642 → 100（白名单只降）；`engineCodes` / `engineEntityHits` 保持 0。
 - 旧源快照：`artifacts/legacy/encounter-abilities.js`（`artifacts/` 不签入；需要时从 git 历史取）。
-  对账门槛、执行步骤与工具说明见 [`encounter-entry-split-plan.md`](encounter-entry-split-plan.md)。
+  对账门槛、执行步骤与工具说明原载于拆分方案（方案已归档，需要时从 git 历史取）。

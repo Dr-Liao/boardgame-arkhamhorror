@@ -45,7 +45,7 @@
   "implementationFiles": [
     {
       "file": "games/arkhamhorror/content/packs/tcuPlayer/manifest.js",
-      "sha256": "865cd9db5f0839d8c01e03ba61b058625253355a5a1a02f22591ba5538a928fe"
+      "sha256": "0586f51b0199a5c4e392e7343e14341d10e62e335cd3b75178c7256c4e3e2bee"
     },
     {
       "file": "games/arkhamhorror/src/deck/availability.js",
@@ -61,7 +61,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/suites.mjs",
-      "sha256": "cff90d7114111e1cbbd95e554c920c56352d0e19acc177004d3d67637263e2b0"
+      "sha256": "9cb5e00165c1340b05cae22e886bc304811de280d1d7377e8c7dd3f58de27061"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",

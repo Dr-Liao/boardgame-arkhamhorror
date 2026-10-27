@@ -280,7 +280,7 @@ test('C2 all three basic weaknesses execute and remain outside normal deckbuildi
 })
 
 test('C2 runtime gate contains exactly 92 constructible cards and three dependency-only weaknesses', () => {
-  assert.equal(manifest.status, 'verified')
+  assert.equal(manifest.status, 'playable')
   assert.equal(manifest.cards.filter(card => card.deckbuilding).length, 92)
   assert.equal(manifest.cards.filter(card => !card.deckbuilding).length, 3)
   for (const code of codes.filter(code => !basicWeaknesses.has(code))) {

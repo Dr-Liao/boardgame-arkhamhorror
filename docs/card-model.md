@@ -235,7 +235,7 @@ api.addEffect({
 | 剧本层机制 | `behavior.js`（命令式） | D3/D4 声明化（Phase 3） |
 
 非玩家条目的归属与目录规则见 [`card-entry-files.md`](card-entry-files.md) §2.1；529 条存量条目的
-迁移记录与对账证据见 [`encounter-entry-split-plan.md`](encounter-entry-split-plan.md)。
+迁移记录与对账证据保留在 `artifacts/` 与 git 历史中。
 `encounter-abilities.js` 现在只是 facade，新条目不得再写回该文件。
 
 ---

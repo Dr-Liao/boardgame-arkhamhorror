@@ -51,7 +51,7 @@ test('P1/P6/P7/P8/P10 卡包：调查员 M1 与玩家包 M2 已验收，战役�
   // P6（M1 调查员）：调查员包 19 张全部有单卡行为，6 位调查员进入选人。
   const investigators = contentRegistry.getPack('tcuInvestigators')
   assert.ok(investigators, 'tcuInvestigators 应已注册')
-  assert.equal(investigators.status, 'verified')
+  assert.equal(investigators.status, 'playable')
   assert.equal(investigators.cards.filter(card => card.rulesImplemented).length, 19)
   assert.equal(investigators.cards.filter(card => card.deckbuilding).length, 13, '13 张专属卡作为依赖标记')
   // P8/P10（M3 剧本）：战役包 237 张全部有实现声明；三组确认 + 逐卡账本 + 大厅入口落账后升 playable。
@@ -61,7 +61,7 @@ test('P1/P6/P7/P8/P10 卡包：调查员 M1 与玩家包 M2 已验收，战役�
   assert.equal(campaignPack.cards.filter(card => card.rulesImplemented).length, 237)
   // P7（M2）：玩家包 87 张玩家卡已全部逐卡验收，85 张可构筑，2 张基础弱点只作依赖。
   const player = contentRegistry.getPack('tcuPlayer')
-  assert.equal(player.status, 'verified')
+  assert.equal(player.status, 'playable')
   assert.equal(player.cards.length, 87)
   assert.equal(player.cards.filter(card => card.rulesImplemented).length, 87)
   assert.equal(player.cards.filter(card => card.deckbuilding).length, 85)
@@ -140,7 +140,7 @@ test('P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一�
   assert.equal(audit.gate.playerCardsVerified.verified, 87)
   assert.equal(audit.gate.playerCardsVerified.buildable, 85)
   assert.equal(audit.gate.playerCardsVerified.basicWeaknesses, 2)
-  assert.equal(audit.gate.packsByPhase.player.status, 'verified')
+  assert.equal(audit.gate.packsByPhase.player.status, 'playable')
   assert.equal(audit.gate.packsByPhase.player.pass, true)
   // P8 追加的剧本确认组：9 章逐章 12 项检查（含来源锁/逐卡/存档/实机浏览器），由 tool 实跑计算。
   assert.equal(audit.verifiedScope.scenarios, true)

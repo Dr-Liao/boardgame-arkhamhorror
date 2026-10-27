@@ -16,7 +16,7 @@ test('P6 注册批次、发布状态和研究机制阻断在真实局外面板�
   await expect(pack).toContainText('可玩 · 可选卡包')
   await expect(pack).toContainText('02020 · 实验室助理 — 可构筑')
   await expect(pack).toContainText('02030 · 澄明心智 — 可构筑')
-  await expect(pack).toContainText('02021 · 奇异溶液 — 缺少机制')
+  await expect(pack).toContainText('02021 · 奇异溶液 — 可构筑')
   await expect(hub).toContainText('严格规则名称保持关闭')
   await page.screenshot({ path: fileURLToPath(new URL('../../../artifacts/arkham-p6-acceptance.png', import.meta.url)), fullPage: true })
   const response = await request.get('/api/catalog')

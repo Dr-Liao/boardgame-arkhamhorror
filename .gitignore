@@ -21,6 +21,17 @@ artifacts/*
 artifacts/migration/*
 !artifacts/migration/tcu/
 
+# TDE（食梦者）逐文件白名单：只放行 4 个复算输入，供干净检出直接复算
+# `scan:tde:scope:check` / `scan:tde:check` / `audit:tde:primitives`；
+# reports/、workers/、primitive-requests/、日志与截图继续忽略。
+# 负向规则要求先放开父目录，再多级 ignore + 逐文件取反，见 docs/arkham-content-migration.md §3。
+!artifacts/migration/tde/
+artifacts/migration/tde/*
+!artifacts/migration/tde/scope.json
+!artifacts/migration/tde/mechanism-scan.json
+!artifacts/migration/tde/primitive-plan.json
+!artifacts/migration/tde/primitive-catalog.json
+
 # Player-owned playlist settings and music additions (directory markers stay tracked).
 web/audio/music/playlists.json
 web/audio/music/campaigns/**/*.mp3

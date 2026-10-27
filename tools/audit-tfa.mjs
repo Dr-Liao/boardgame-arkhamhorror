@@ -110,8 +110,8 @@ try { contentRegistry.assertLaunchable('theForgottenAge') } catch { launchable =
 if (!launchable) throw new Error('失落的时代战役在大厅已开放，不能再变成不可启动')
 if (campaign.status !== 'playable') throw new Error('战役状态必须是 playable')
 if (packs[0].status !== 'playable') throw new Error('战役内容包必须是 playable')
-if (packs[1].status !== 'verified') throw new Error('调查员包必须已逐人验收')
-if (!['catalog-only', 'development'].includes(packs[2].status)) throw new Error('玩家卡包只能处于 development')
+if (packs[1].status !== 'playable') throw new Error('调查员包必须已逐人验收并开放（playable）')
+if (packs[2].status !== 'playable') throw new Error('玩家卡包必须已逐卡验收并开放（playable）')
 if (packs[1].cards.filter(card => !card.rulesImplemented).length) throw new Error('调查员包仍有未实现卡牌')
 for (const card of packs[2].cards) {
   if (!card.rulesImplemented) continue
@@ -239,7 +239,7 @@ const report = {
     + 'M5 入口开放（十个剧本 playable、战役可启动、序幕补给品购买与幕间划补给）。'
     + 'literalCardBehavior 与章节浏览器验收仍未完成，因此按 earlyAccess 记录，不宣称规则等价。',
   playerCards: {
-    status: 'development',
+    status: packs[2].status,
     verified: IMPLEMENTED_PLAYER_CODES.length,
     total: packs[2].cards.length,
     evidence: 'games/arkhamhorror/tests/tfa-player-acceptance.test.mjs',

@@ -36,9 +36,9 @@ export const manifest = {
   name: '万象无终 · 调查员',
   contentVersion: '1.0.0',
   minRulesVersion: 'n6.0',
-  status: 'verified',
+  status: 'playable',
   dependencies: ['core'],
-  description: 'M1 六位调查员的能力、构筑、旧印、专属卡与专属弱点已逐人验收；玩家卡与剧本仍未开放。',
+  description: 'M1 六位调查员的能力、构筑、旧印、专属卡与专属弱点已逐人验收；玩家卡已进入构筑池，剧本按 earlyAccess 口径开放。',
   cardRanges: [{ from: '05001', to: '05019' }],
   cards: investigatorCards.map(card => ({
     code: card.code,

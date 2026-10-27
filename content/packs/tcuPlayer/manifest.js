@@ -32,7 +32,7 @@ export const manifest = {
   name: '万象无终 · 玩家卡',
   contentVersion: '1.0.0',
   minRulesVersion: 'n6.0',
-  status: 'verified',
+  status: 'playable',
   dependencies: ['core'],
   description: 'M2 87 张玩家卡（含 2 张基础弱点）已全部完成逐卡主要印刷效果验收；85 张可构筑，05041/05042 只作基础弱点依赖。',
   cardRanges: [{ from: '05020', to: '05324' }],

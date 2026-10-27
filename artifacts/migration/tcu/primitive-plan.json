@@ -360,7 +360,7 @@
         },
         {
           "path": "content/registry.js",
-          "sha256": "7e0946569fbe8ca7b6872763fc007cea3ad30b30db8759de154c670e6658066e",
+          "sha256": "0c83a332f99b9515205597d0b81c2b3350629bc10a74a0f08f7179d6578c4eed",
           "exists": true
         },
         {
@@ -669,7 +669,7 @@
         },
         {
           "path": "content/registry.js",
-          "sha256": "7e0946569fbe8ca7b6872763fc007cea3ad30b30db8759de154c670e6658066e",
+          "sha256": "0c83a332f99b9515205597d0b81c2b3350629bc10a74a0f08f7179d6578c4eed",
           "exists": true
         },
         {
@@ -1044,7 +1044,7 @@
         },
         {
           "path": "content/registry.js",
-          "sha256": "7e0946569fbe8ca7b6872763fc007cea3ad30b30db8759de154c670e6658066e",
+          "sha256": "0c83a332f99b9515205597d0b81c2b3350629bc10a74a0f08f7179d6578c4eed",
           "exists": true
         },
         {

@@ -61,7 +61,7 @@ test('P7 玩家包：87 张全部登记并逐卡 verified，85 张可构筑、2 
   assert.deepEqual([...TCU_PLAYER_CODES].sort(), scope, '包清单与 05 段玩家卡口径一致')
   assert.equal(scope.length, 87)
   assert.equal(playerPack.cards.length, 87)
-  assert.equal(playerPack.status, 'verified')
+  assert.equal(playerPack.status, 'playable')
   assert.match(playerPack.description, /87 张/)
   assert.match(playerPack.description, /85 张/)
   assert.deepEqual([...playerPack.basicWeaknessCodes].sort(), BASIC)

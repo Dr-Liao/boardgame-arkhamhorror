@@ -172,6 +172,13 @@ export const FAST_TESTS = Object.freeze([
   'tcu-secret-name.test.mjs', // 万象无终 P8：章节/共享组/账本测试
   'tcu-wages-of-sin.test.mjs', // 万象无终 P8：章节/共享组/账本测试
   'tcu-union-disillusion.test.mjs', // 万象无终 P8：章节/共享组/账本测试
+  'tde-campaign-parts.test.mjs', // 食梦者 P3 批次 1：双 part 数据模型（纯数据，不建局）
+  'tde-primitives-counters.test.mjs', // 食梦者 P3 批次 2：按调查员计数器
+  'tde-primitives-swarming.test.mjs', // 食梦者 P3 批次 2：Swarming X 求值
+  'tde-primitives-swarm.test.mjs', // 食梦者 P3 批次 2：蜂拥卡放置与击败判定
+  'tde-primitives-veiled.test.mjs', // 食梦者 P3 批次 2：掩藏地点
+  'tde-primitives-token-bag.test.mjs', // 食梦者 P3 批次 2：蛛群滋生袋
+  'tde-primitives-vertical-chain.test.mjs', // 食梦者 P3 批次 2：纵向地点链
 ])
 
 export const SLOW_TESTS = Object.freeze([

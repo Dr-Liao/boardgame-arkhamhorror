@@ -42,7 +42,7 @@ test('C2 partitions every 03-cycle card exactly once and opens verified investig
   assert.deepEqual([...packedCodes].sort(), cycleCodes)
   assert.equal(new Set(packedCodes).size, packedCodes.length)
   assert.deepEqual(packs.map(pack => pack.cards.length), [215, 19, 95])
-  assert.deepEqual(packs.map(pack => pack.status), ['playable', 'verified', 'verified'])
+  assert.deepEqual(packs.map(pack => pack.status), ['playable', 'playable', 'playable'])
   assert.ok(packs.every(pack => pack.cards.every(card => card.cataloged)))
   assert.equal(playerPack.cards.filter(card => card.deckbuilding).length, 92)
   assert.deepEqual(playerPack.cards.filter(card => !card.deckbuilding).map(card => card.code), ['03040', '03041', '03042'])
