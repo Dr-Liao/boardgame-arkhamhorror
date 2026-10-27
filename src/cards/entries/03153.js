@@ -10,9 +10,33 @@
 // resolve 结算，没有声明行动种类/免借机，引擎按普通「打出」行动结算 → 打出时先吃一次借机攻击。
 // 补 countsAs:'fight' + noOpportunityAttack（与 05113/05118 同一写法；读点 lifecycle.playFlag →
 // dispatch.js 的 playNoAoO，规则见 docs/card-model.md §5b）。
+//
+// 2026-10-27 修复（白吞卡）：卡面「攻击。」要求结算时必须有一名可攻击的敌人。旧实现直接从
+// 「同地点所有敌人」里选目标，选中未交战的冷漠敌人时 api.fight 才拒绝（⛔ 需要先主动交战），
+// 但打出的费用/行动已经付掉、事件照样进弃牌堆——玩家看到的就是「牌被吞了」。
+// 现在：
+//   · playCondition 要求同地点至少有一个可攻击的敌人（未交战的冷漠敌人不算）；
+//   · resolve 的目标候选与 playCondition 共用 attackableEnemies，避免多敌人时选中冷漠敌人白打。
+// 冷漠口径与引擎 hidden-rules.js 的 aloofPreventsAttack 一致：文本被清空时冷漠失效，
+// 庞大敌人视为与同地点每位调查员交战。
+
+function attackableEnemies(state, inv) {
+  return (state.enemies || []).filter(enemy => {
+    if (enemy.location !== inv.location) return false
+    if (!enemy.aloof) return true
+    if (enemy.engagedSeat != null) return true
+    if (enemy.massive) return true
+    const blank = enemy.textBlanked
+    return Boolean(blank && blank.round === state.round && blank.phase === state.phase)
+  })
+}
 
 export default {
   code: '03153',
+  playCondition: [{
+    when: ({ state, inv }) => attackableEnemies(state, inv).length > 0,
+    message: '所在地点没有可攻击的敌人（冷漠敌人需要先主动交战，或使用忽略冷漠的攻击）',
+  }],
   abilities: [
     {
       kind: 'played', label: '灵力风暴',
@@ -20,7 +44,7 @@ export default {
       countsAs: 'fight',
       noOpportunityAttack: true,
       resolve: ({ state, inv, api }) => {
-        const candidates = state.enemies.filter(enemy => enemy.location === inv.location)
+        const candidates = attackableEnemies(state, inv)
         if (!candidates.length) { api.info('这里没有可攻击的敌人。'); return }
         const targetId = candidates.length === 1 ? candidates[0].id : api.choice({
           kind: 'enemy', source: '03153', seat: inv.seat, prompt: '选择灵力风暴攻击的敌人。',

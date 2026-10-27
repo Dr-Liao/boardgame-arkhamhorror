@@ -380,6 +380,50 @@ test('5c-5：03153 灵力风暴（卡面「攻击。」）打出不引发借机�
   assert.equal(state.enemies[0].damageTaken, 2, '灵力风暴正常结算 2 点伤害')
 })
 
+// 2026-10-27 修复（白吞卡）：只有未交战的冷漠敌人时，「攻击。」事件没有合法目标，
+// 不能进入打出流程；否则费用/行动已付、api.fight 才拒绝，事件照样弃掉 = 白吞一张牌。
+test('5c-5：03153 灵力风暴在只有未交战冷漠敌人时不能打出（不白吞卡）', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  const seeker = enemy(state, { engagedSeat: null, aloof: true, printedAloof: true,
+    name: '卡尔克萨探求者', fight: 4, evade: 2, health: 8 })
+  inv.hand = ['03153']
+  inv.resources = 10
+  const before = { hand: [...inv.hand], resources: inv.resources, actions: inv.actionsLeft }
+  assert.ok(!legalMoves(state, 0).some(move => move.action === 'play' && move.cardId === '03153'),
+    '没有可攻击的敌人时不应列出「灵力风暴」')
+  assert.match(String(validateMove(state, 0, { action: 'play', cardId: '03153' })),
+    /没有可攻击的敌人/)
+  assert.deepEqual(inv.hand, before.hand, '被拒绝的打出不能把牌移出手牌')
+  assert.equal(inv.resources, before.resources, '被拒绝的打出不能扣资源')
+  assert.equal(inv.actionsLeft, before.actions, '被拒绝的打出不能扣行动')
+  assert.equal(seeker.damageTaken, 0)
+})
+
+test('5c-5：03153 灵力风暴的目标候选排除未交战的冷漠敌人，溅射仍命中它', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  const engaged = enemy(state, { engagedSeat: 0, health: 20, name: '交战敌人' })
+  const bystander = enemy(state, { engagedSeat: null, aloof: false, health: 20, name: '同地点普通敌人' })
+  const seeker = enemy(state, { engagedSeat: null, aloof: true, printedAloof: true,
+    name: '卡尔克萨探求者', fight: 4, evade: 2, health: 8 })
+  inv.hand = ['03153']
+  inv.resources = 10
+  state.chaosBag = ['0']
+  play(state, '03153')
+  const pending = state.pendingChoice
+  assert.equal(pending?.kind, 'enemy', '多名可攻击敌人时先选目标')
+  const optionIds = pending.options.map(option => option.id).sort()
+  assert.deepEqual(optionIds, [engaged.id, bystander.id].sort(), '冷漠敌人不是可选目标')
+  assert.ok(!optionIds.includes(seeker.id))
+  answer(state, engaged.id)
+  settle(state)
+  // 事务提交会替换 state 快照，断言按 id 重新取实例。
+  const after = id => state.enemies.find(item => item.id === id)
+  assert.equal(after(engaged.id).damageTaken, 2, '被攻击的敌人照常结算 2 点伤害')
+  assert.equal(after(seeker.id).damageTaken, 2, '冷漠敌人不能成为目标，但仍在同地点溅射范围内')
+})
+
 test('5c-5：03197 充能给法术支援补 3 点充能', () => {
   const state = fixture()
   const spell = asset(state, '01068') // 法术支援（书籍）
