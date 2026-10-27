@@ -567,11 +567,11 @@
     },
     {
       "path": "content/packs/tcuInvestigators/manifest.js",
-      "sha256": "d23d6ed977a3a9dcca24336e10428c484979178feeae0e7265944a757b60f76e"
+      "sha256": "9d405c622f407f5b07222e41c857452cacd0c0cb6e3f4538588058042a0920b3"
     },
     {
       "path": "content/packs/tcuPlayer/manifest.js",
-      "sha256": "865cd9db5f0839d8c01e03ba61b058625253355a5a1a02f22591ba5538a928fe"
+      "sha256": "0586f51b0199a5c4e392e7343e14341d10e62e335cd3b75178c7256c4e3e2bee"
     },
     {
       "path": "content/campaigns/theCircleUndone/shared.js",

@@ -7,6 +7,7 @@
 // 依赖注入同前几批；被多个 api 依赖表引用的 doPlay / performTest 用惰性 thunk。
 
 import { linkLocationBySymbols } from './locations.js'
+import { scenarioRuntimeExtras } from './scenario-runtime-extras.js'
 import {
   buildScenarioLocationDeck, chooseScenarioLocationDeck, discardScenarioLocation,
   drawScenarioLocationDeck, scenarioLocationDeckInfo, shuffleScenarioLocationIntoDeck,
@@ -786,6 +787,9 @@ function scenarioRuntime(state, events, testSource = null) {
       removeLocation(state, id, events)
       for (const asset of lost) scenarioBehavior(state).storyAssetLeftPlay?.(state, asset, scenarioRuntime(state, events))
     },
+    // P3 批次 2：6 个纯数据原语（counters / swarming / swarm / veiled / tokenBag / verticalChain）。
+    // 只读函数不建字段，既有循环不会因这行扩展产生行为或字节变化。
+    ...scenarioRuntimeExtras(state),
   }
 }
 

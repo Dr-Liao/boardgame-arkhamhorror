@@ -11,7 +11,7 @@
 - 卡牌字段：`参考资源/ArkhamHorror-main/frontend/public/cards*.json`，通过现有卡牌导入管线进入 `catalog/` 和 `src/cards/cards-data.js`。
 - 规则行为：`参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/`。
 - 中文剧情：`参考资源/ArkhamHorror-main/frontend/src/locales/zh/<campaign>/`。
-- 卡图：统一使用 `games/arkhamhorror/web/img/arkham/cards/` 和 `web/img/arkham/zh/cards/`，并保留现有远程回退；不得创建循环专属卡图目录或手工改名副本。
+- 卡图：统一使用 `games/arkhamhorror/web/img/cards/`（英文）与 `games/arkhamhorror/web/img/zh/cards/`（中文），并保留现有远程回退（卡面 `imagesrc`／`backimagesrc`）；不得创建循环专属卡图目录或手工改名副本。
 
 审计报告必须记录来源根目录、相对路径、哈希和资源策略。来源发生变化时，`--check` 必须失败，人工审阅后才能重写报告。
 
@@ -69,7 +69,7 @@ games/arkhamhorror/
 └─ tools/audit-<cycle>.mjs
 ```
 
-迁移运行目录放在仓库根目录 `artifacts/migration/<cycle>/`（不签入）：
+迁移运行目录放在仓库根目录 `artifacts/migration/<cycle>/`。默认不签入；若某个 `--check` 在干净检出中必须读取生成前的范围/机制/原语输入，可以在 `.gitignore` 中**逐文件白名单**最小复算集（通常仅 `scope.json`、`mechanism-scan.json`、`primitive-plan.json`、`primitive-catalog.json`）。不得放开整个循环目录，`workers/`、`primitive-requests/`、日志、截图、临时报告与 replay 过程文件始终不签入：
 
 ```text
 artifacts/migration/<cycle>/
@@ -83,6 +83,22 @@ artifacts/migration/<cycle>/
 ```
 
 阶段说明、截图和执行日志放在仓库根目录 `artifacts/`；不得放入游戏运行目录。历史试点包只在确有独立行为边界时保留，不为保持目录数量而创建空包。
+
+逐文件白名单的实际写法（TDE 起采用；git 的负向规则要求先放开父目录，再只放行 4 个复算输入）：
+
+```gitignore
+artifacts/*
+!artifacts/migration/
+artifacts/migration/*
+!artifacts/migration/tde/
+artifacts/migration/tde/*
+!artifacts/migration/tde/scope.json
+!artifacts/migration/tde/mechanism-scan.json
+!artifacts/migration/tde/primitive-plan.json
+!artifacts/migration/tde/primitive-catalog.json
+```
+
+改完必须用 `git check-ignore -v <path>` 逐条验证：4 个复算输入不应命中忽略规则，`reports/`、`workers/`、`primitive-requests/`、日志与截图必须仍被忽略。
 
 ## 4. 迁移执行顺序（唯一）
 
@@ -101,7 +117,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 - 把战役牌、调查员依赖和玩家卡做无重叠分区；每张卡只属于一个批次分片。
 - 记录迁移前基线：`node tools/replay-fixtures.mjs --baseline artifacts/migration/<cycle>/replay-before.json`，并保存当前 `git rev-parse HEAD`。
 - 产物：`artifacts/migration/<cycle>/scope.json`（范围、来源哈希、基线、分片草案）。
-- 门禁：来源哈希可复现；基线 10 局 / 529 步通过；范围外卡不得进入本轮。
+- 门禁：来源哈希可复现；迁移前 golden replay 基线逐条一致。局数／步数／指纹数以 `--baseline` 实测写入 `replay-before.json` 的值为准，**不在文档里手写**（TDE P0 实测为 13 局 / 786 步 / 799 指纹，规则 `n6.0`）；范围外卡不得进入本轮。
 
 ### 4.2 第 1 步：扫描新增机制
 
@@ -355,7 +371,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 | 单卡文件 | 文件名=`code`、单一 default、无禁止 import；非玩家卡归属目录符合扫描规则 |
 | 索引 | 主进程重建两个索引各一次，`cards:check` 与 `cards:encounter-check` 全绿 |
 | 原语队列 | 无 `pending`/`claimed` 悬挂；`done` 的原语都有测试；`rejected` 都有替代方案 |
-| 行为 | `replay-fixtures --compare` 一致；`test:fast` 无新增失败（既有 7 条除外） |
+| 行为 | `replay-fixtures --compare` 一致；`test:fast` 无新增失败（既有失败以 `artifacts/migration/<cycle>/reports/baseline.md` 的记录为准，未记录按 0 条计；TDE P0 实测 0 条） |
 | 审计 | `audit/<cycle>-migration.json` 的通道/证据更新；`cards:audit` 指标不倒退 |
 | 报告 | `reports/workers.json`、`reports/primitive-queue.json`、`reports/merge.json` |
 

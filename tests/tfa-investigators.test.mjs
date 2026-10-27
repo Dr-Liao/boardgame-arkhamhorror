@@ -60,7 +60,7 @@ function signTest(state, skill = 'willpower', difficulty = 6, choose) {
 }
 
 test('M1 exposes five selectable investigators whose signatures are dependency-only', () => {
-  assert.equal(investigatorPack.status, 'verified')
+  assert.equal(investigatorPack.status, 'playable')
   const signatures = ['04006', '04007', '04008', '04009', '04010', '04011', '04012', '04013', '04014', '04015', '04016']
   for (const code of Object.keys(TFA_STATS)) {
     assert.equal(canSelectInvestigator(code), true, code)

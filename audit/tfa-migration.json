@@ -9,7 +9,7 @@
   "equivalenceCertified": false,
   "verifiedScope": "M0 目录基线、M1 五名调查员与 11 张专属卡、M2 91 张玩家卡、M3-A 七项循环机制、M3-B 十个剧本的布置/幕议/地点/遭遇/混乱标记/结局与跨章记录、M3-C 完整剧情导入与座位级过滤、M4 八个关键词（explore/vengeance/yigsFury/supplies/poisoned/relicOfAges/expeditionLeader/elderThing）与九条规则书条目、拼音索引、卡文直达及桌面/移动端浏览器验收、M5 入口开放（十个剧本 playable、战役可启动、序幕补给品购买与幕间划补给）。literalCardBehavior 与章节浏览器验收仍未完成，因此按 earlyAccess 记录，不宣称规则等价。",
   "playerCards": {
-    "status": "development",
+    "status": "playable",
     "verified": 91,
     "total": 91,
     "evidence": "games/arkhamhorror/tests/tfa-player-acceptance.test.mjs",

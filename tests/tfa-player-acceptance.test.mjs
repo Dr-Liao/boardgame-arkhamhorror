@@ -76,7 +76,7 @@ test('M2 implements the announced player-card wave and keeps the rest catalog-on
     .map(card => card.code)
   assert.equal(allPlayerCodes.filter(code => getAvailability(code).availability !== 'strict').length, 0)
   assert.equal(ALL_PLAYER_CARD_CODES.length, 91)
-  assert.equal(manifest.status, 'development')
+  assert.equal(manifest.status, 'playable')
   assert.match(manifest.description, /91 张玩家卡/)
 })
 

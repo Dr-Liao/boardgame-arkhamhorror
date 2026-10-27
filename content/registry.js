@@ -82,7 +82,7 @@ export function campaignListForUi(registry) {
     contentPacks: registry.listPacks().map(pack => ({
       id: pack.id, name: pack.name || pack.id, status: pack.status, description: pack.description,
       required: campaign.requiredPackIds.includes(pack.id),
-      cards: pack.cards.filter(card => card.requiredMechanicIds).map(card => ({
+      cards: pack.cards.filter(card => card.requiredMechanicIds && !card.dependencyOnly).map(card => ({
         code: card.code, name: card.name, playable: card.deckbuilding && card.rulesImplemented && !card.blockedReason && !missingMechanics(card.requiredMechanicIds).length,
         blockedReason: card.blockedReason || (missingMechanics(card.requiredMechanicIds).length ? '缺少机制：' + missingMechanics(card.requiredMechanicIds).join('、') : null), requiredMechanicIds: card.requiredMechanicIds,
       })),

@@ -23,12 +23,22 @@ const deferred = () => {
   return { promise, resolve }
 }
 
+// 大厅 2026-10-27 起要求「同一局里每个 AI 按 id 与名字唯一」（lib/ai-seats.js），
+// 因此 mock 的 AI 名单必须给出足够多的不同角色，4 座位用例才能凑齐 3 个 AI。
+const PROTOCOL_AIS = [
+  { id: 'protocol-test-ai', name: '测试 AI 一' },
+  { id: 'protocol-test-ai-2', name: '测试 AI 二' },
+  { id: 'protocol-test-ai-3', name: '测试 AI 三' },
+  { id: 'protocol-test-ai-4', name: '测试 AI 四' },
+]
+const protocolOpponents = count => PROTOCOL_AIS.slice(0, Math.max(0, count - 1)).map(ai => ai.id)
+
 test('N3 大厅通用决策协议：真实 HTTP、模型与旧 Mod 回归', { timeout: 30000 }, async t => {
   const envKeys = ['DSH_HOME', 'AI_API_KEY', 'AI_BASE_URL', 'AI_MAX_RETRIES', 'AI_TIMEOUT_MS']
   const previousEnv = Object.fromEntries(envKeys.map(key => [key, process.env[key]]))
   const read = fs.readFileSync
   t.mock.method(fs, 'readFileSync', (file, ...args) => String(file).endsWith('ais.json')
-    ? JSON.stringify([{ id: 'protocol-test-ai', name: '测试 AI' }])
+    ? JSON.stringify(PROTOCOL_AIS)
     : String(file).endsWith('boardgame.config.json') ? '{}' : read(file, ...args))
   // 数据目录（AI 角色、配置、决策日志）指向临时目录，避免测试往项目根目录写文件。
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'arkham-protocol-'))
@@ -402,7 +412,7 @@ test('N3 大厅通用决策协议：真实 HTTP、模型与旧 Mod 回归', { ti
         settings: {
           legacyAutoStart: true,
           teammates: count - 1,
-          opponents: Array(count - 1).fill('protocol-test-ai'),
+          opponents: protocolOpponents(count),
           playerInvestigator: '01001', difficulty: 'standard', seed: 'protocol-arkham-' + count,
         },
       })
@@ -471,7 +481,7 @@ test('N3 大厅通用决策协议：真实 HTTP、模型与旧 Mod 回归', { ti
         settings: {
           legacyAutoStart: true,
           teammates: count - 1,
-          opponents: Array(count - 1).fill('protocol-test-ai'),
+          opponents: protocolOpponents(count),
           playerInvestigator: '01001', difficulty: 'standard', seed: 'protocol-arkham-' + count,
         },
       })

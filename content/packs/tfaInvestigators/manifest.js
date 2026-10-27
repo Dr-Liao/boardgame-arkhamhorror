@@ -39,7 +39,7 @@ export const manifest = {
   name: '失落的时代 · 调查员',
   contentVersion: '1.0.0',
   minRulesVersion: 'n4.2',
-  status: 'verified',
+  status: 'playable',
   dependencies: ['core'],
   description: 'M1 五位调查员的能力、构筑、旧印、专属卡与专属弱点已逐人验收。',
   cardRanges: [{ from: '04001', to: '04016' }],

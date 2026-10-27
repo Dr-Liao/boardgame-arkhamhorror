@@ -5,6 +5,8 @@ import { effects } from './effects.js'
 export { effects }
 
 const pilot = new Set(['02020', '02021', '02030'])
+// 基础弱点只作依赖：包页不把它们当"可构筑卡"，也不显示成被阻断。
+const basicWeaknesses = new Set(['02037', '02038', '02039'])
 // 行为已迁到能力层（src/cards/card-abilities.js 的 played/commit 描述子）的卡：
 // 它们不再是 effects.js 的条目，但仍算"有实现、可构筑"，由 expansions.js 一并放行。
 // Phase 1 追加：02105 / 02186 / 02271 / 02273（played / commit + playCondition）。
@@ -115,6 +117,7 @@ export const manifest = {
       code: card.code, name: card.nameZh || card.name, type: 'player', cataloged: true, imageAvailable: !!card.imagesrc,
       rulesImplemented: dunwichCardVerified(card.code),
       deckbuilding: !!effects[card.code] || abilityLayerCodes.includes(card.code), requiredMechanicIds: [],
+      ...(basicWeaknesses.has(card.code) ? { dependencyOnly: true } : {}),
     })),
   encounterGroupIds: [], behaviorIds: [],
 }

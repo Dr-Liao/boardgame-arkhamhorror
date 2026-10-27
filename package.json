@@ -129,7 +129,15 @@
     "scan:tcu:scope": "node tools/scan-tcu-scope.mjs --write",
     "scan:tcu:scope:check": "node tools/scan-tcu-scope.mjs --check",
     "audit:tcu": "node tools/audit-tcu.mjs --write",
-    "audit:tcu:check": "node tools/audit-tcu.mjs --check"
+    "audit:tcu:check": "node tools/audit-tcu.mjs --check",
+    "scan:tde:scope": "node tools/scan-tde-scope.mjs --write",
+    "scan:tde:scope:check": "node tools/scan-tde-scope.mjs --check",
+    "scan:tde:images": "node tools/scan-tde-scope.mjs --images",
+    "scan:tde": "node tools/scan-tde-mechanisms.mjs --write",
+    "scan:tde:check": "node tools/scan-tde-mechanisms.mjs --check",
+    "scan:tde:review": "node tools/scan-tde-mechanisms.mjs --review",
+    "plan:tde:primitives": "node tools/audit-tde-primitives.mjs --write",
+    "audit:tde:primitives": "node tools/audit-tde-primitives.mjs --check"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

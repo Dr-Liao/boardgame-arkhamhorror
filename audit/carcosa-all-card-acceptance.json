@@ -27,11 +27,11 @@
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/carcosa-investigators.test.mjs",
-      "sha256": "570cdd0d3a004176ca16d447b28e765e618124ae1654717aaf9048701ea00f61"
+      "sha256": "1d47d20ebd036261a07a9b4f5fe11a38499238bd71c2f0df4809a59be4f0db15"
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
-      "sha256": "2609e8a6ee52bb2c490c4031192eb83bfc81b6139baca62c34c8bfebaa2a431c"
+      "sha256": "ccbe1b49af2bdf9f94ce2a48fbf85355f1072d64f118a5c0042cd71b4011bb49"
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",

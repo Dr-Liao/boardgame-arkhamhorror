@@ -123,7 +123,7 @@ export const manifest = {
   name: '卡尔克萨之路 · 玩家卡',
   contentVersion: '1.0.0',
   minRulesVersion: 'n4.2',
-  status: 'verified',
+  status: 'playable',
   dependencies: ['core'],
   description: 'C2 卡尔克萨玩家卡与基础弱点已完成逐卡主要印刷效果验收。',
   cardRanges: [{ from: '03001', to: '03342' }],
