@@ -424,6 +424,114 @@ test('5c-5：03153 灵力风暴的目标候选排除未交战的冷漠敌人，�
   assert.equal(after(seeker.id).damageTaken, 2, '冷漠敌人不能成为目标，但仍在同地点溅射范围内')
 })
 
+// ---------------------------------------------------------------------------
+// 2026-10-27「白吞卡」批次：需要敌人目标的打出事件，没有合法目标时不能打出。
+//
+// 以前这些卡在无目标时照付费用/行动，resolve 只写一行日志，事件照样弃置——玩家看到的
+// 就是「牌被吞了」。playCondition 与 resolve 的候选过滤都写在各单卡文件里，这里逐张核对。
+// ---------------------------------------------------------------------------
+const NO_TARGET_PLAY_CONDITION_CASES = [
+  ['02031', '困兽之笼', /没有可绑定的敌人/],
+  ['02228', '暴露弱点', /没有可选择弱点的敌人/],
+  ['03152', '偷袭', /没有未与你交战的敌人/],
+  ['03237', '中途伏击', /没有已横置的非精英敌人/],
+  ['04027', '窃听', /没有未交战的敌人/],
+  ['04033', '临时武器', /没有可攻击的敌人/],
+  ['04105', '劝服', /没有可劝服的非弱点/],
+  ['04195', '暴露弱点', /没有可选择弱点的敌人/],
+  ['04232', '悄然遁去', /没有可躲避的交战敌人/],
+  ['04266', '鲜血失色', /没有可攻击的敌人/],
+  ['04269', '最后的枪击', /没有可射击的敌人/],
+  ['04312', '临时路障', /没有可躲避的交战敌人/],
+]
+
+test('2026-10-27：需要敌人目标的打出事件在没有合法目标时不能打出（不白吞卡）', () => {
+  for (const [code, name, message] of NO_TARGET_PLAY_CONDITION_CASES) {
+    const state = fixture()
+    const inv = state.investigators[0]
+    inv.hand = [code]
+    inv.resources = 30
+    assert.ok(!legalMoves(state, 0).some(move => move.action === 'play' && move.cardId === code),
+      `${name}（${code}）没有目标时不应出现在可出牌列表`)
+    assert.match(String(validateMove(state, 0, { action: 'play', cardId: code })), message,
+      `${name}（${code}）的拒绝原因`)
+    assert.deepEqual(inv.hand, [code], `${name}（${code}）被拒绝后应留在手里`)
+    assert.equal(inv.resources, 30, `${name}（${code}）被拒绝后不应扣资源`)
+  }
+  // 05037 的额外费用是占手部槽位的[[道具]]：费用卡具备时才轮到目标条件。
+  const state = fixture()
+  const inv = state.investigators[0]
+  inv.hand = ['05037', '01020']
+  inv.resources = 30
+  assert.ok(!legalMoves(state, 0).some(move => move.action === 'play' && move.cardId === '05037'))
+  assert.match(String(validateMove(state, 0, { action: 'play', cardId: '05037' })), /可攻击的敌人/)
+  assert.deepEqual(inv.hand, ['05037', '01020'], '额外费用卡不能被白弃')
+})
+
+test('2026-10-27：攻击事件只有未交战冷漠敌人时不能打出（04033/04266/05037）', () => {
+  for (const [code, extraHand] of [['04033', []], ['04266', []], ['05037', ['01020']]]) {
+    const state = fixture()
+    const inv = state.investigators[0]
+    enemy(state, { engagedSeat: null, aloof: true, printedAloof: true, name: '卡尔克萨探求者', health: 8 })
+    inv.hand = [code, ...extraHand]
+    inv.resources = 30
+    const damageBefore = inv.damage
+    assert.ok(!legalMoves(state, 0).some(move => move.action === 'play' && move.cardId === code), code)
+    assert.match(String(validateMove(state, 0, { action: 'play', cardId: code })), /可攻击的敌人/, code)
+    assert.equal(state.investigators[0].damage, damageBefore, `${code} 不能白付额外伤害`)
+  }
+})
+
+test('2026-10-27：攻击事件的目标候选排除未交战的冷漠敌人（04033）', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  const engaged = enemy(state, { engagedSeat: 0, health: 20, name: '交战敌人' })
+  const bystander = enemy(state, { engagedSeat: null, aloof: false, health: 20, name: '同地点普通敌人' })
+  const aloof = enemy(state, { engagedSeat: null, aloof: true, printedAloof: true, health: 20, name: '冷漠敌人' })
+  inv.hand = ['04033']
+  inv.resources = 10
+  state.chaosBag = ['0']
+  play(state, '04033')
+  const pending = state.pendingChoice
+  assert.equal(pending?.kind, 'target', '两名可攻击敌人时应询问目标')
+  const optionIds = pending.options.map(option => option.id).sort()
+  assert.deepEqual(optionIds, [engaged.id, bystander.id].sort(), '冷漠敌人不是可选目标')
+  assert.ok(!optionIds.includes(aloof.id))
+  answer(state, engaged.id)
+  settle(state)
+  const after = id => state.enemies.find(item => item.id === id)
+  assert.equal(after(engaged.id).damageTaken, 1, '被攻击的敌人照常结算 1 点伤害')
+  assert.equal(after(aloof.id).damageTaken, 0, '冷漠敌人不会被误伤')
+})
+
+test('2026-10-27：02115 照明弹无敌人时只提供「盟友」选项，不再抛错', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  inv.hand = ['02115']
+  inv.resources = 10
+  play(state, '02115')
+  settle(state)
+  assert.ok(!state.pendingChoice, '没有待决选择残留')
+  assert.ok(state.exiled.includes('02115'), '照明弹结算后放逐')
+  assert.ok(!inv.discard.includes('02115'))
+})
+
+test('2026-10-27：02115 照明弹有可攻击敌人时提供「战斗」选项并正常攻击', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  const target = enemy(state, { engagedSeat: 0, health: 20, name: '交战敌人' })
+  inv.hand = ['02115']
+  inv.resources = 10
+  state.chaosBag = ['0']
+  play(state, '02115')
+  assert.equal(state.pendingChoice?.kind, 'effect', '有敌人时提供两种效果')
+  answer(state, 'fight')
+  settle(state)
+  const after = state.enemies.find(item => item.id === target.id)
+  assert.equal(after.damageTaken, 3, '基础 1 点 + 卡面 +2 伤害')
+  assert.ok(state.exiled.includes('02115'), '照明弹结算后放逐')
+})
+
 test('5c-5：03197 充能给法术支援补 3 点充能', () => {
   const state = fixture()
   const spell = asset(state, '01068') // 法术支援（书籍）

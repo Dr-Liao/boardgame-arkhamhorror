@@ -7,11 +7,23 @@
 //
 // 04312 临时屏障：躲避交战敌人（-1）；从弃牌堆打出时可额外躲避第二个敌人。
 // 注意：卡面没有「快速」，不要加 fast（打出需 1 个行动点，且不能在任意窗口打出）。
+//
+// 2026-10-27 修复（白吞卡）：「躲避。」事件必须有可躲避的敌人才能结算。旧实现无目标时只写
+// 一行日志就弃牌，费用/行动照付。补 playCondition，并与 resolve 共用同一份候选。
+
+function evadeTargets(state, inv) {
+  return state.enemies.filter(enemy => enemy.engagedSeat === inv.seat
+    || (enemy.massive && enemy.location === inv.location))
+}
 
 export default {
   code: '04312',
   playableFromDiscard: true,
   shuffleBackAfterPlay: true,
+  playCondition: [{
+    when: ({ state, inv }) => evadeTargets(state, inv).length > 0,
+    message: '没有可躲避的交战敌人',
+  }],
   abilities: [
     {
       kind: 'played', id: 'impromptuBarrier', label: '躲避一名交战敌人（-1）',
@@ -19,8 +31,7 @@ export default {
       countsAs: 'evade',
       resolve: ({ state, inv, api }) => {
         const fromDiscard = api.fromDiscardCode() === '04312'
-        const targets = state.enemies.filter(enemy => enemy.engagedSeat === inv.seat
-          || (enemy.massive && enemy.location === inv.location))
+        const targets = evadeTargets(state, inv)
         if (!targets.length) { api.info('没有可躲避的交战敌人。'); return }
         const chosen = targets.length === 1 ? targets[0].id : api.choice({ kind: 'target', source: '04312',
           seat: inv.seat, prompt: '选择要躲避的敌人。',

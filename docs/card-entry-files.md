@@ -250,6 +250,7 @@ node tools/migrate-card.mjs --verify          # 账本/文件一致性
 - `investigatorSign` / `skillModifier` / `allSkillModifiers`
 - `SKILL_NAMES_ZH` / `CHAOS_SYMBOLS`
 - `searchInvestigatorDeck` / `attachToChosenLocation` / `healWithTrauma`
+- `attackableEnemies`（「攻击。」事件的可攻击目标过滤：排除未交战的冷漠敌人；文本清空/庞大敌人按引擎口径放行）
 
 规则：
 

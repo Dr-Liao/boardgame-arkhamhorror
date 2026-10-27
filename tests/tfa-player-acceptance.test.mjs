@@ -1502,6 +1502,8 @@ test('M2-B on your own discounts survivor events and is discarded by an ally', (
   const state = fixture('01001')
   playCard(state, '04236')
   const resources = me(state).resources
+  // 04033「攻击。」需要合法目标（2026-10-27 起无目标不能打出），这里只验证费用折扣。
+  enemy(state, { id: 'on-your-own-target', engagedSeat: 0, health: 10 })
   me(state).hand.push('04033')
   move(state, { action: 'play', cardId: '04033' })
   settle(state)

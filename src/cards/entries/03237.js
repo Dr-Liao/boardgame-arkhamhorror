@@ -5,15 +5,25 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 03237 伏击：敏捷检定对抗一名已横置的非精英敌人的躲避值；成功则击败它。
+//
+// 2026-10-27 修复（白吞卡）：这张事件必须选择一名已横置的非精英敌人才能结算。旧实现无目标
+// 时只写一行日志就弃牌，费用/行动照付。补 playCondition，并与 resolve 共用同一份候选。
+
+function ambushTargets(state, inv) {
+  return state.enemies.filter(enemy => enemy.location === inv.location && enemy.exhausted && !enemy.elite)
+}
 
 export default {
   code: '03237',
+  playCondition: [{
+    when: ({ state, inv }) => ambushTargets(state, inv).length > 0,
+    message: '所在地点没有已横置的非精英敌人',
+  }],
   abilities: [
     {
       kind: 'played', label: '伏击',
       resolve: ({ state, inv, api }) => {
-        const candidates = state.enemies.filter(enemy => enemy.location === inv.location
-          && enemy.exhausted && !enemy.elite)
+        const candidates = ambushTargets(state, inv)
         if (!candidates.length) { api.info('这里没有已横置的非精英敌人。'); return }
         const chosen = candidates.length === 1 ? candidates[0].id
           : api.choice({ kind: 'target', source: '03237', seat: inv.seat, prompt: '选择要伏击的敌人。',

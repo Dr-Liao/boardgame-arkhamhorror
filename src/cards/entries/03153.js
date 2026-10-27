@@ -16,20 +16,9 @@
 // 但打出的费用/行动已经付掉、事件照样进弃牌堆——玩家看到的就是「牌被吞了」。
 // 现在：
 //   · playCondition 要求同地点至少有一个可攻击的敌人（未交战的冷漠敌人不算）；
-//   · resolve 的目标候选与 playCondition 共用 attackableEnemies，避免多敌人时选中冷漠敌人白打。
-// 冷漠口径与引擎 hidden-rules.js 的 aloofPreventsAttack 一致：文本被清空时冷漠失效，
-// 庞大敌人视为与同地点每位调查员交战。
-
-function attackableEnemies(state, inv) {
-  return (state.enemies || []).filter(enemy => {
-    if (enemy.location !== inv.location) return false
-    if (!enemy.aloof) return true
-    if (enemy.engagedSeat != null) return true
-    if (enemy.massive) return true
-    const blank = enemy.textBlanked
-    return Boolean(blank && blank.round === state.round && blank.phase === state.phase)
-  })
-}
+//   · resolve 的目标候选与 playCondition 共用 _shared.js 的 attackableEnemies（冷漠口径见该函数），
+//     避免多敌人时选中冷漠敌人白打。
+import { attackableEnemies } from './_shared.js'
 
 export default {
   code: '03153',

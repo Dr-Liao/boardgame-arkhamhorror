@@ -4,9 +4,20 @@
 //
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
+//
+// 2026-10-27 修复（白吞卡）：「躲避。」事件必须有可绑定的敌人才能结算。旧实现无目标时只写
+// 一行日志就弃牌，费用/行动照付。补 playCondition，并与 resolve 共用同一份候选。
+
+function bindableEnemies(state, inv) {
+  return state.enemies.filter(enemy => enemy.location === inv.location && !enemy.bindMonster)
+}
 
 export default {
   code: '02031',
+  playCondition: [{
+    when: ({ state, inv }) => bindableEnemies(state, inv).length > 0,
+    message: '所在地点没有可绑定的敌人',
+  }],
   abilities: [
     // Phase 5（5a-25）：卡号随效果数据走；第 4 批改成条目 resolve。
     {
@@ -15,8 +26,7 @@ export default {
       countsAs: 'evade',
       resolve: ({ state, inv, api }) => {
         // 卡面：任何敌人均可尝试躲避；只有非精英才会被附属。
-        const candidates = state.enemies.filter(enemy =>
-          enemy.location === inv.location && !enemy.bindMonster)
+        const candidates = bindableEnemies(state, inv)
         if (!candidates.length) { api.info('本地点没有可绑定的敌人。'); return }
         const id = candidates.length === 1 ? candidates[0].id : api.choice({
           kind: 'target', source: '02031', seat: inv.seat, prompt: '选择要绑定的敌人。',

@@ -13,6 +13,7 @@
 // 第 5 步 P7：不能用 engine/card-lookup.js —— entries → card-lookup → content/registered 会绕回
 // card-abilities/entries，形成 ESM 循环（CARD_ABILITY_ENTRIES TDZ）。cards-data 是纯数据表，无环。
 import { ALL_CARDS } from '../../cards/cards-data.js'
+import { attackableEnemies } from './_shared.js'
 
 const isItem = traits => (traits || []).some(trait => String(trait).toLowerCase() === 'item')
 const handSlots = def => (Array.isArray(def?.slots) ? def.slots : def?.slot ? [def.slot] : [])
@@ -23,13 +24,13 @@ export default {
   code: '05037',
   // 卡面的额外费用（弃一张占手部槽位的[[道具]]支援）与「攻击」目标都不是可选的：
   // 没有合法费用卡或没有可攻击敌人时不能打出（否则会出现白付费用/白弃道具）。
+  // 2026-10-27：「可攻击敌人」也用 _shared.js 的 attackableEnemies，排除未交战的冷漠敌人，
+  // 与 resolve 的目标候选共用同一份过滤。
   playCondition: [{
     when: ({ state, inv }) => {
       const hasCostCard = (inv.hand || []).some(isSlotItem)
         || (inv.assets || []).some(asset => isSlotItem(asset.code))
-      if (!hasCostCard) return false
-      return (state.enemies || []).some(enemy => !enemy.defeated && enemy.location === inv.location
-        && (!enemy.aloof || enemy.engagedSeat != null))
+      return hasCostCard && attackableEnemies(state, inv).length > 0
     },
     message: '没有可支付额外费用的占手部槽位[[道具]]支援，或所在地点没有可攻击的敌人',
   }],
@@ -68,7 +69,7 @@ export default {
           api.discardAsset(inv.seat, asset)
         }
         // --- 攻击：+X 战斗、+1 伤害 ---
-        const targets = state.enemies.filter(enemy => enemy.location === inv.location && !enemy.defeated)
+        const targets = attackableEnemies(state, inv)
         if (!targets.length) { api.info('这里没有可攻击的敌人。'); return }
         const targetId = targets.length === 1 ? targets[0].id
           : api.choice({ kind: 'target', source: '05037', seat: inv.seat, prompt: '选择攻击的敌人。',

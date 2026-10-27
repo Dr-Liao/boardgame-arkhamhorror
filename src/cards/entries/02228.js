@@ -4,16 +4,27 @@
 //
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
+//
+// 2026-10-27 修复（白吞卡）：这张快速事件必须选择同地点一名敌人才能结算。旧实现无目标时
+// 只写一行日志就弃牌。补 playCondition，并与 resolve 共用同一份候选。
+
+function enemiesHere(state, inv) {
+  return state.enemies.filter(enemy => enemy.location === inv.location)
+}
 
 export default {
   code: '02228',
+  playCondition: [{
+    when: ({ state, inv }) => enemiesHere(state, inv).length > 0,
+    message: '所在地点没有可选择弱点的敌人',
+  }],
   abilities: [
     {
       kind: 'played',
       label: '暴露弱点',
       fast: true,
       resolve: ({ state, inv, api }) => {
-        const enemies = state.enemies.filter(enemy => enemy.location === inv.location)
+        const enemies = enemiesHere(state, inv)
         if (!enemies.length) { api.info('本地点没有可选择弱点的敌人。'); return }
         const enemy = enemies.length === 1 ? enemies[0] : enemies.find(item => item.id === api.choice({
           kind: 'target', source: '02228', seat: inv.seat, prompt: '选择要暴露弱点的敌人。',

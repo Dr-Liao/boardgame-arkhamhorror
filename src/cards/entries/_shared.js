@@ -27,6 +27,21 @@ export const SKILL_NAMES_ZH = Object.freeze({
 
 export const CHAOS_SYMBOLS = ['skull', 'cultist', 'tablet', 'elderthing', 'autofail']
 
+// 「攻击。」事件的目标过滤：未与调查员交战的冷漠敌人不能被攻击——必须先主动交战，或使用
+// 写明「忽略冷漠」的攻击。口径与引擎 hidden-rules.js 的 aloofPreventsAttack 一致：
+// 文本被清空时冷漠失效；庞大敌人视为与同地点每位调查员交战。
+// 03153 / 04033 / 04266 / 05037 用同一份过滤，避免打出条件与结算目标各写一套。
+export function attackableEnemies(state, inv) {
+  return (state.enemies || []).filter(enemy => {
+    if (enemy.location !== inv.location) return false
+    if (!enemy.aloof) return true
+    if (enemy.engagedSeat != null) return true
+    if (enemy.massive) return true
+    const blank = enemy.textBlanked
+    return Boolean(blank && blank.round === state.round && blank.phase === state.phase)
+  })
+}
+
 // 03026 / 03307 共用：选择同地点一名调查员并搜索其牌库（amount 为 'all' 时搜索整个牌库）。
 // 询问与检索的 source 保持旧原语的 'noStoneUnturned'，日志与存档字段因此不变。
 export function searchInvestigatorDeck(inv, api, amount, state = null) {

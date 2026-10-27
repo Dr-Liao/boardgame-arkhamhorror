@@ -5,14 +5,25 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 04027 窃听：对抗一名未交战敌人的躲避值；成功发现 2 个线索。
+//
+// 2026-10-27 修复（白吞卡）：这张事件必须选择一名未交战的敌人才能结算。旧实现无目标时只写
+// 一行日志就弃牌，费用/行动照付。补 playCondition，并与 resolve 共用同一份候选。
+
+function eavesdropTargets(state, inv) {
+  return state.enemies.filter(enemy => enemy.location === inv.location && enemy.engagedSeat == null)
+}
 
 export default {
   code: '04027',
+  playCondition: [{
+    when: ({ state, inv }) => eavesdropTargets(state, inv).length > 0,
+    message: '所在地点没有未交战的敌人',
+  }],
   abilities: [
     {
       kind: 'played', label: '窃听',
       resolve: ({ state, inv, api }) => {
-        const targets = state.enemies.filter(enemy => enemy.location === inv.location && enemy.engagedSeat == null)
+        const targets = eavesdropTargets(state, inv)
         if (!targets.length) { api.info('这里没有未交战的敌人。'); return }
         const chosen = targets.length === 1 ? targets[0].id
           : api.choice({ kind: 'target', source: '04027', seat: inv.seat, prompt: '选择要窃听的敌人。',

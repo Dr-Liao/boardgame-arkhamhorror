@@ -5,16 +5,27 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 04232 悄然遁去：躲避时加入智识；成功超过 2 点且非精英时下个补给阶段不重整。
+//
+// 2026-10-27 修复（白吞卡）：「躲避。」事件必须有可躲避的交战敌人才能结算。旧实现无目标时
+// 只写一行日志就弃牌，费用/行动照付。补 playCondition，并与 resolve 共用同一份候选。
+
+function evadableEnemies(state, inv) {
+  return state.enemies.filter(enemy => enemy.engagedSeat === inv.seat)
+}
 
 export default {
   code: '04232',
+  playCondition: [{
+    when: ({ state, inv }) => evadableEnemies(state, inv).length > 0,
+    message: '没有可躲避的交战敌人',
+  }],
   abilities: [
     {
       kind: 'played', label: '悄然遁去',
       // 卡面「躲避。」= Evade 行动：打出按躲避结算，不引发借机攻击。
       countsAs: 'evade',
       resolve: ({ state, inv, api }) => {
-        const targets = state.enemies.filter(enemy => enemy.engagedSeat === inv.seat)
+        const targets = evadableEnemies(state, inv)
         if (!targets.length) { api.info('没有可躲避的交战敌人。'); return }
         const chosen = targets.length === 1 ? targets[0].id
           : api.choice({ kind: 'target', source: '04232', seat: inv.seat,
