@@ -1,4 +1,4 @@
-﻿// 架构守卫（重构路线 Phase 0）：把"五件唯一"里可机械判定的部分钉死。
+// 架构守卫（重构路线 Phase 0）：把"五件唯一"里可机械判定的部分钉死。
 //
 // 守住四件事：
 //   1. 冻结集合——engine.js 的 5 位码、EFFECTS 的键、描述子 kind，都只减不增；
@@ -125,7 +125,16 @@ test('behavior.js 总行数不超过 Phase 3 基线，且至少一个关卡已�
 // 宇宙网格重写等，实测 22,784；再次按实测重锁（+现有余量），仍要求后续只减不增。
 // 2026-10-26 卡尔克萨审计修复：P0/P1 与交互层修复（黑星升起双密谋/威胁区诡计/线索翻毁灭/
 // 03052 揭示、地下墓穴入场费、共享遭遇组轮末结算等），实测 23,529，按实测重锁。
-const BUDGET = 23529
+// 2026-10-27 卡尔克萨「往事回声」修复：用户报告「隐藏的图书馆一开始就连接了 / 皮博迪先生
+// 改不了其他地点的通道属性 / 通道没有关键字」。修正需要把静态 passagewayLocations 改成按
+// [[通道]] 特性动态维护的双向连接网络（隐藏的图书馆只在敌人移动/皮博迪授予时连通），
+// 净 +112 行落在该章 behavior.js；实测 23,641，按实测重锁。新增关卡流程仍要求走
+// scenario-declaration，不因此放开。
+// 2026-10-28 把上述机制收敛成引擎原语 `src/engine/location-traits.js`（运行期特性授予 +
+// actRule/agendaRule.locationTraitLinks 连接规则，引擎在幕/密谋进出与地点进出时自动接线）：
+// 该章 behavior.js 改为只调 `api.addLocationTrait/removeLocationTrait/setShroudMod`，
+// 私有连接/清理代码删除，实测 23,551（-90 行），按实测下锁；后续同类机制请用该原语。
+const BUDGET = 23551
   assert.ok(data.phase3.behaviorLines <= BUDGET,
     `behavior.js 总行数 ${data.phase3.behaviorLines} 超过基线 ${BUDGET}：新增关卡流程请写 `
     + 'content/scenario-declaration.js 的声明，不要往 behavior.js 加命令式钩子。')

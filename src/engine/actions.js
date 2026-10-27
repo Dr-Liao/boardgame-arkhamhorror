@@ -72,7 +72,7 @@ export function createActions(deps) {
     withEffectCode,
   } = deps
 
-function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = false, copyCode = null, fromPlanAssetId = null, fromBackpackId = null, fromThreatId = null) {
+function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = false, copyCode = null, fromPlanAssetId = null, fromBackpackId = null, fromThreatId = null, playDiscount = 0) {
   const inv = state.investigators[seat]
   const def = cardDef(cardId)
   const copiedDef = copyCode && registeredEntry(cardId)?.copiesBeneathEvents ? cardDef(copyCode) : null
@@ -137,6 +137,9 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
         prompt: `选择花费多少资源，为「${cardName(cardId)}」装填等量弹药。`,
         options: Array.from({ length: inv.resources + 1 }, (_, i) => ({ id: String(i), label: `${i} 资源／${i} 弹药` })),
       })) : playCost(state, inv, playedDef)
+    // 2026-10-27「如同手牌」通道：折扣由 play-channels 原语显式传入（直觉牌库等），
+    // 不再写 inv.playDiscount；预览/校验/扣费同源，支付前窗口看到的也是折后费用。
+    if (playDiscount) cost = Math.max(0, cost - playDiscount)
     // 2026-10-25 第四轮修复 play-cost-interrupt（05150 黑书 / 05111 / 05277 / 05234 等）：
     // 「打出一张卡牌时」的支付前窗口。反应可在 context.costReduction 里给出减免；
     // 卡面费用本身（资源/行动）仍由条目自己结算。
@@ -436,7 +439,7 @@ function doInvestigate(state, seat, opts, events, noSpend) {
   // 「骷髅钥匙」：附属地点的帷幕设为 1（现在是附属条目上的声明式标记 shroudAsOne）。
   const keyed = (loc.attachments || []).some(entry => entry.shroudAsOne === true)
   const difficulty = keyed ? 1
-    : loc.shroud + (loc.shroudMod || 0) + (loc.peabodyShroud || 0) + temporaryShroud + scenarioShroud + (state.fogMod || 0) + (opts.shroudMod || 0)
+    : loc.shroud + (loc.shroudMod || 0) + temporaryShroud + scenarioShroud + (state.fogMod || 0) + (opts.shroudMod || 0)
   const noIntellectBoost = skill === 'intellect' && loc.noIntellectBoost
   // 2026-10-25 第五轮修复 05281（交叉复核）：倍化/限制基值时用「印刷基值 + 临时基值覆盖」读点，
   // 不再直读 inv[skill]，使「把基础技能值设为 X」对 doubleBaseSkill/noIntellectBoost 也生效。

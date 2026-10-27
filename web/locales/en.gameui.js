@@ -179,6 +179,9 @@ export default {
   'game.location.hiddenSuffix': ' · unrevealed',
   'game.location.movableSuffix': ' · can move',
   'game.location.contextSuffix': ' · shroud {shroud} · clues {clues}',
+  'game.location.traits': 'Traits',
+  'game.location.traitBadgeTitle': 'Trait: {trait}',
+  'game.location.traitBadgeAria': '{location} · trait {trait}',
 
   // Location badges and local map (renderLocationNode / renderLocationMap)
   'game.badge.locked': 'Locked',

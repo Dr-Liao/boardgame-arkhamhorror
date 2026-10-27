@@ -98,6 +98,8 @@ export function createLocations(deps) {
     locationCounterTreacheries,
     locationExists,
     locationRevealCue,
+    // 地点特性原语（location-traits.js）：地点入场 / 移出后重算「特性连接规则」。
+    locationTraits,
     requestChoice,
     reactionWindow,
     scenarioBehavior,
@@ -151,6 +153,8 @@ function placeLocation(state, id, events, seat = null) {
       triggerReaction(state, seat, 'locationRevealed', events, { when: 'locationRevealed', seat, location: id })
     }
   }
+  // 特性连接规则（如「带[[通道]]特性的地点互相连接」）：新地点入场后加入连通网络。
+  locationTraits?.sync(state)
 }
 
 function flipScenarioLocation(state, id, seat, events) {
@@ -277,6 +281,8 @@ function removeLocation(state, id, events) {
     state.encounterDiscard.push(...locationCounterTreacheries(loc))
     info(state, events, `📍 「${loc.name}」被移出游戏。`)
     for (const inv of departing) scenarioBehavior(state).investigatorMovedByEncounterCard?.(state, inv, scenarioRuntime(state, events))
+    // 地点移出后从特性连通网络里摘掉（只撤销规则自己加过的边）。
+    locationTraits?.sync(state)
   }
 }
 
@@ -380,6 +386,14 @@ function discoverClueAt(state, inv, amount, events, opts = {}) {
   return false
 }
 
+// 地点帷幕的通用临时修正（+ / - 可叠加，撤销时反向调用即可）：
+// 「直到某张卡重整，该地点 -1 帷幕」这类效果不必再在引擎里留卡号专用字段。
+function setLocationShroudMod(location, amount) {
+  if (!location || !Number.isFinite(amount)) return location || null
+  location.shroudMod = (location.shroudMod || 0) + amount
+  return location
+}
+
 function awardLocationVictory(state, loc, events) {
   // 2026-10-25：幽灵面地点（05081/05082/05084）的胜利点按「剧本结束时已揭示且无线索」
   // 结算（campaign-flow 的幕末口径），翻面瞬间不计分——否则 05082 的闹鬼之后把线索放回
@@ -399,5 +413,5 @@ function awardLocationVictory(state, loc, events) {
   }
 }
 
-  return { locName, locLabel, placeLocation, flipScenarioLocation, flipLocationFace, revealLocation, removeLocation, syncClues, placeCluesOnLocation, notifyCluesRemoved, canDiscoverClueAt, discoverClueAt, awardLocationVictory }
+  return { locName, locLabel, placeLocation, flipScenarioLocation, flipLocationFace, revealLocation, removeLocation, syncClues, placeCluesOnLocation, notifyCluesRemoved, canDiscoverClueAt, discoverClueAt, awardLocationVictory, setLocationShroudMod }
 }

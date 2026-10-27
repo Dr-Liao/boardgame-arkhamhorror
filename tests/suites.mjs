@@ -64,6 +64,8 @@ export const FAST_TESTS = Object.freeze([
   'card-interactions.test.mjs',
   'cards-under-ui.test.mjs', // 压在卡下面/附属在卡上的牌：卡面表、打出通道、选择面板卡图、免费行动死按钮
   'turn-end-window.test.mjs', // 收尾窗口的快速卡 / 被击败前的救命卡窗口
+  'play-channels.test.mjs', // 「如同手牌」通道统一原语：各存储形状 × 反应/收尾/能力窗口 + uiKey 映射
+  'location-traits.test.mjs', // 地点特性原语：运行期授予/撤销 + 「带某特性的地点互相连接」阶段规则
   'script-actions.test.mjs',
   'script-card-ownership.test.mjs',
   'engagement-flow.test.mjs',
@@ -97,6 +99,7 @@ export const FAST_TESTS = Object.freeze([
   'carcosa-opening.test.mjs',
   'scenario-reset.test.mjs', // 关卡切换清空压牌/调查员附属：黛安娜「下方」不跨关残留重复卡
   'carcosa-middle-a.test.mjs',
+  'echoes-passageways.test.mjs', // 往事回声：隐藏的图书馆 / [[通道]] 动态连接与关键字（用户 bug 回归）
   'carcosa-middle-b.test.mjs',
   'carcosa-final.test.mjs',
   'carcosa-campaign.test.mjs',

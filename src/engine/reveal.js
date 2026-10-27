@@ -29,8 +29,6 @@ export function createReveal(deps) {
     drawCards,
     drawEnemyByTrait,
     finishScenario,
-    // 2026-10-27 修复 05002：直觉牌库揭示牌的 -2 折扣（能力层 fromHand 快速事件同用）。
-    hunchDeck,
     info,
     isWeaknessCode,
     leadDecisionSeat,
@@ -209,44 +207,31 @@ function executeDescriptor(state, params) {
   }
 }
 
-function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, events, windowId = null, fromHandIndex = null, effect = null, legacyAbilityLog = false, alreadyPaid = false, silent = false, fromHunch = false }) {
+function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, events, windowId = null, fromHandIndex = null, effect = null, legacyAbilityLog = false, alreadyPaid = false, silent = false, channelDiscount = 0, fromChannel = null }) {
   const cost = descriptorCost(descriptor)
   // 手牌事件：先按打出规则付费并离开手牌，再结算效果。
   // noPlayCost 的描述子（如 05023 宝剑王牌「放置入场」）自己负责移动这张牌。
   // Phase 5（5c-8）：反应窗口打出的快速事件由 playReactionCard 先付费/离手，
   // 此时用 alreadyPaid 跳过这一段（费用与日志都在那边，保持逐字一致）。
+  // 2026-10-27「如同手牌」通道统一原语：窗口用 takeToHand 把来源取进手牌后再调用这里，
+  // 折扣（直觉牌库 -2 等）由 channelDiscount 显式给出，不再写 inv.playDiscount。
   let handCode = null
-  let hunchCode = null
   if (!alreadyPaid && descriptor.fromHand && !descriptor.noPlayCost) {
-    if (fromHunch) {
-      // 2026-10-27 修复 05002：乔·戴蒙德的直觉牌库揭示牌「如同你的手牌」——能力层 fromHand
-      // 快速事件（01522 证据！/ 05025 串联线索）从直觉区打出：清标记、按 -2 费用、结算后正常弃置。
-      // 牌本来就不在任何区域里，因此不 splice 手牌。
-      if (inv.hunchRevealed !== descriptor.code) return false
-      const def = cardDef(descriptor.code)
-      if (!def) return false
-      const price = Math.max(0, playCost(state, inv, def) - (hunchDeck.playDiscount(state, inv, descriptor.code) || 0))
-      if (inv.resources < price) return false
-      inv.hunchRevealed = null
-      inv.resources -= price
-      consumePlayThreatResources(state, inv, events)
-      info(state, events, `🔮 ${inv.name} 从直觉牌库快速打出「${cardName(descriptor.code)}」。`)
-      hunchCode = descriptor.code
-    } else {
-      const index = Number.isInteger(fromHandIndex) && inv.hand[fromHandIndex] === descriptor.code
-        ? fromHandIndex
-        : (inv.hand || []).indexOf(descriptor.code)
-      if (index < 0) return false
-      handCode = inv.hand[index]
-      const def = cardDef(handCode)
-      if (!def) return false
-      const price = playCost(state, inv, def)
-      if (inv.resources < price) return false
-      inv.hand.splice(index, 1)
-      inv.resources -= price
-      consumePlayThreatResources(state, inv, events)
-      info(state, events, `⚡ ${inv.name} 快速打出「${cardName(handCode)}」。`)
-    }
+    const index = Number.isInteger(fromHandIndex) && inv.hand[fromHandIndex] === descriptor.code
+      ? fromHandIndex
+      : (inv.hand || []).indexOf(descriptor.code)
+    if (index < 0) return false
+    handCode = inv.hand[index]
+    const def = cardDef(handCode)
+    if (!def) return false
+    const price = Math.max(0, playCost(state, inv, def) - (channelDiscount || 0))
+    if (inv.resources < price) return false
+    inv.hand.splice(index, 1)
+    inv.resources -= price
+    consumePlayThreatResources(state, inv, events)
+    info(state, events, fromChannel?.channel === 'hunch'
+      ? `🔮 ${inv.name} 从直觉牌库快速打出「${cardName(handCode)}」。`
+      : `⚡ ${inv.name} 快速打出「${cardName(handCode)}」。`)
   }
   if (!alreadyPaid && !payAbilityCost(state, inv, source, cost, events, descriptor)) return false
   // 只有 kind 'action' 的描述子消耗行动点：free / reaction / forced 都是 0 费，
@@ -348,8 +333,6 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
     else state._resolvingSeat = previousResolvingSeat
   }
   if (handCode) disposePlayedEvent(inv, handCode)
-  // 2026-10-27 修复 05002：直觉牌库揭示牌的结算后去向与手牌快速事件一致（正常弃置）。
-  if (hunchCode) disposePlayedEvent(inv, hunchCode)
   // deferredBeneath 的冲刷统一在最外层 executeDescriptor 的 finally 中执行（见上方 flushDeferredBeneath）。
   // Phase 5（D2）：discardWhenEmpty 也可以写在注册表条目上（与 uses/usesType 同层）。
   const entry = registeredEntry(descriptor.code)

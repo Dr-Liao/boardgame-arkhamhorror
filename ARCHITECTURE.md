@@ -89,6 +89,7 @@ games/arkhamhorror/
 - `test-result.js`：**检定结果契约（B3，Phase 2）**。阶段词表（beforeCommit/afterCommit/tokens/results）+ 标准结果形状；`performTest().summary`、`state.lastTestResult`、窗口 `ctx.result` 与 `api.retryTest`/`api.commitCards` 共用同一份数据。
 - `look.js`：**看牌与检索（B5，Phase 2）**。看顶 N 张/排列/放回顶底洗回、看弃牌堆、搜索整副牌库的选项形状与校验；真正的读写走引擎的 `lookAt()`/`searchDeck()`（随机与询问必须经过事务，才能重放）。
 - `zones.js`：**区域与牌的去向（B6，Phase 2）**。`hand / deckTop / deckBottom / discard / play / threat / attached / beneath / setAside / removedFromGame / victoryDisplay` 的词表与移动规格校验；搬动由引擎的 `moveCardTo()` 执行（场上卡离开仍走 `leaveAsset`，离场钩子照旧）。
+- `location-traits.js`：**地点特性原语**。① 运行期授予/撤销地点特性：按来源记账（`location.traitGrants`），同一特性可多来源同时授予，印刷特性永不删除；② 阶段声明的特性连接规则：当前幕/密谋条目写 `actRule.locationTraitLinks: ['Passageway']` / `agendaRule.locationTraitLinks` 即声明「带该特性的在场地点互相连接」，引擎在幕/密谋进出、地点入场/移出、特性授予/撤销时重算自动连接（`state.locationTraitLinks`，只撤销自己加过的边）。`ctx.api.addLocationTrait/removeLocationTrait/setShroudMod` 是内容层唯一入口；观察投影的 `grantedTraits` 只从这里派生。首个使用方：03126 誓约 + 03139/03141（往事回声）。
 
 执行动作必须保持原子性：校验失败、错误回答者、过期版本或结算异常都不能留下部分状态修改。
 

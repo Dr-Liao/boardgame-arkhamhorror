@@ -33,6 +33,8 @@ export function createAbilityRules(deps) {
     hiddenFightBlocked,
     // 2026-10-27 修复 05002：直觉牌库揭示牌的 -2 折扣（能力层 fromHand 快速事件同用）。
     hunchDeck,
+    // 2026-10-27：「如同手牌」通道统一原语（能力窗口的通道来源与折扣）。
+    playChannels,
     info,
     isWeaknessCode,
     leaveAsset,
@@ -95,7 +97,7 @@ export function createAbilityRules(deps) {
     return descriptor.kind === 'free' ? { ...descriptor.cost, action: false } : descriptor.cost
   }
 
-  function descriptorUsable(state, inv, source, descriptor, { windowId = null, context = {}, mode = 'window', fromBeneath = false, fromHunch = false } = {}) {
+  function descriptorUsable(state, inv, source, descriptor, { windowId = null, context = {}, mode = 'window', fromChannel = null } = {}) {
     const timing = state.timingWindow
     if (mode === 'free') {
       if (descriptor.kind !== 'free') return false
@@ -117,24 +119,18 @@ export function createAbilityRules(deps) {
     if (limitUsed(state, inv, descriptor, context, windowId, source)) return false
     // 手牌事件按打出费用结算，不套用资产的「横置/充能」检查。
     if (descriptor.fromHand) {
-      let fromHunchDiscount = 0
-      // 2026-10-27 修复 05013（银暮匕首）：「如同其在你的手牌中」——底下的 fromHand 描述子
-      // （如 05280 否决存在）也要能在同一个窗口里可选。fromBeneath 由调用方（能力窗口）标记，
-      // 这里把「牌必须在手牌」换成「牌仍在底下 + 通道支援未横置」，其余费用/条件判定完全复用。
-      if (fromBeneath) {
-        if (!(inv.beneath || []).includes(descriptor.code)) return false
-        if (!(inv.assets || []).some(asset =>
-          registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)) return false
-      } else if (fromHunch) {
-        // 2026-10-27 修复 05002：乔·戴蒙德的直觉牌库揭示牌「如同你的手牌」——能力层 fromHand
-        // 快速事件（01522 证据！/ 05025 串联线索）同样可选，费用按 -2 折扣判定。
-        if (inv.hunchRevealed !== descriptor.code) return false
-        fromHunchDiscount = hunchDeck.playDiscount(state, inv, descriptor.code) || 0
+      let channelDiscount = 0
+      // 2026-10-27「如同手牌」通道统一原语（play-channels.js）：fromChannel 由窗口标记
+      // （弃牌堆/威胁区/宿主附属/背包/原定计划/银暮匕首下方/直觉牌库），
+      // 通道可用性与 -2 之类的折扣都由原语给出；没有通道标记时必须是手牌。
+      if (fromChannel) {
+        if (playChannels.entryError(state, inv, fromChannel, fromChannel.def)) return false
+        channelDiscount = playChannels.discountOf(fromChannel)
       } else if (!(inv.hand || []).includes(descriptor.code)) return false
       const def = cardDef(descriptor.code)
       if (!def) return false
       if (cannotPlayTypes(inv).has(def.type)) return false
-      if (!descriptor.noPlayCost && inv.resources < playCost(state, inv, def) - fromHunchDiscount) return false
+      if (!descriptor.noPlayCost && inv.resources < playCost(state, inv, def) - channelDiscount) return false
     } else if (!canAffordAbility(state, inv, source, { cost: descriptorCost(descriptor), descriptor })) return false
     if (descriptor.criteria && !evaluateCriteria(descriptor.criteria, {
       state, inv, source, windowId, context,
@@ -194,14 +190,13 @@ export function createAbilityRules(deps) {
       if (!entry?.abilities.length) continue
       out.push({ source: null, code, entry, fromHandIndex: index })
     }
-    // 2026-10-27 修复 05002：直觉牌库揭示的那张也「如同手牌」——能力层 fromHand 快速事件
-    // （01522 证据！/ 05025 串联线索）要在对应反应窗口里作为合成手牌来源列出。
-    // 只有确实声明了 fromHand 的条目才补，避免把事件卡的其它描述子当成手牌能力。
-    if (inv.hunchRevealed) {
-      const hunchEntry = registeredEntry(inv.hunchRevealed)
-      if (hunchEntry?.abilities.some(descriptor => descriptor.fromHand === true)) {
-        out.push({ source: null, code: inv.hunchRevealed, entry: hunchEntry, fromHunch: true })
-      }
+    // 2026-10-27「如同手牌」通道统一原语：能力层 fromHand 反应描述子（01522 证据！/05025 串联线索等）
+    // 从所有通道枚举（弃牌堆/威胁区/宿主附属/背包/原定计划/银暮匕首下方/直觉牌库），
+    // 与手牌同一套窗口判定；新增通道不需要再改本函数。
+    for (const candidate of playChannels.entries(state, inv)) {
+      const channelEntry = registeredEntry(candidate.code)
+      if (!channelEntry?.abilities.some(descriptor => descriptor.fromHand === true)) continue
+      out.push({ source: null, code: candidate.code, entry: channelEntry, fromChannel: candidate })
     }
     // Phase 1（A1）：持续效果也可以挂反应/强制能力（"本阶段内每当……"类卡面）。
     // 它们只在效果有效期内出现，来源是效果记录本身（上限/条件读点与卡片一致）。

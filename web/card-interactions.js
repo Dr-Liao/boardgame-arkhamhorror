@@ -25,6 +25,13 @@ export function choicePresentation(st) {
       const code = owner?.hand?.[Number(id)]
       if (code) return { ...item, key: `hand:${owner.seat}:${id}`, code }
     }
+    // 2026-10-27「如同手牌」通道统一原语：服务端在选项上下发 uiKey（hunch:<卡号> / beneath:<卡号> /
+    // asset:<宿主 id>），这里直接挂回牌桌实体（直觉区那张、下方那张、宿主支援），与 legalMoves 的
+    // move.uiKey 同一协议；点牌即回答当前窗口。旧 id 推导作为兼容回退保留在下面。
+    if (option?.uiKey && option.cardCode) {
+      return { ...item, key: option.uiKey, code: option.cardCode,
+        cards: [{ ...(st.cards?.[option.cardCode] || {}), code: option.cardCode }] }
+    }
     // 2026-10-27 修复 05013：银暮匕首「如同其在你的手牌中」——反应窗口（快速事件）、能力窗口
     // （fromHand 反应）与技能检定投入里的 beneath 候选用「beneath:<卡号>」或「…:beneath:<序号>」
     // 作 id，并带 cardCode。这里把它们挂回牌桌「下方」的牌：点下方的牌与点手牌同义，
@@ -100,12 +107,34 @@ export function choicePresentation(st) {
   })
 }
 
+// 2026-10-28：卡面「快速反应开关」（闪电图标）的准入判定——这张卡是否在玩家可操作的范围里。
+// 手牌 / 场上支援 / 威胁区之外，「如同手牌」通道里的卡（直觉区揭示那张、下方、背包/原定计划
+// 附属、宿主附属）也要能开/关快速反应；否则反应窗口里只能「本窗口全部关闭」，无法按卡记忆偏好。
+// 数据形状与引擎通道一致：`view.hunch[]`（直觉区已揭示）、`inv.beneath`、`asset.attachedCards` /
+// `asset.attached` / `asset.attachments`。快速事件本身只有开/关两档（见 card-defs.js 的
+// hasAutoReactionFor：auto 会替玩家从手牌打出并付费，所以快速事件不提供自动档）。
+export function investigatorHoldsCard(inv, st, code) {
+  if (!inv || !code) return false
+  if (inv.code === code || (inv.hand || []).includes(code)) return true
+  if ([...(inv.assets || []), ...(inv.threat || [])].some(card => card?.code === code)) return true
+  const hunch = (st?.hunch || []).find(entry => entry.seat === inv.seat)
+  if (hunch?.revealed === code) return true
+  if ((inv.beneath || []).includes(code)) return true
+  return (inv.assets || []).some(asset =>
+    (asset.attachedCards || []).includes(code)
+    || (asset.attached || []).includes(code)
+    || (asset.attachments || []).some(item => (item?.code ?? item) === code))
+}
+
 export function entityMoves(st, key) {
   if (!key) return []
   if (st.pendingChoice) return choicePresentation(st).filter(item => item.key === key).map(item => item.move)
   const [kind, ...parts] = key.split(':'); const id = parts.join(':')
   const inv = st.investigators.find(inv => inv.seat === st.currentSeat)
   return (st.legalMoves || []).filter(move => {
+    // 2026-10-27「如同手牌」通道统一原语：legalMoves 带上 move.uiKey（hunch:<卡号> / beneath:<卡号> /
+    // asset:<宿主 id>），直接按挂载键挂回牌桌实体；下面各通道字段的分支保留为兼容回退。
+    if (move.uiKey && move.uiKey === key) return true
     if (kind === 'hand') return move.action === 'play' && !move.fromDiscard && move.cardId === inv?.hand?.[Number(parts[1])] && String(inv?.seat) === parts[0]
     // 支援身上的能力/威胁，以及「这张支援是打出的载体」的通道：
     // 原定计划 fromPlanAssetId、背包 fromBackpackId、宿主附属 fromAttachedEventOf、

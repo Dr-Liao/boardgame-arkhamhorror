@@ -180,6 +180,9 @@ export default {
   'game.location.hiddenSuffix': ' · 未揭示',
   'game.location.movableSuffix': ' · 可移动',
   'game.location.contextSuffix': ' · 帷幕 {shroud} · 线索 {clues}',
+  'game.location.traits': '特性',
+  'game.location.traitBadgeTitle': '特性：{trait}',
+  'game.location.traitBadgeAria': '{location} · 特性 {trait}',
 
   // 地点徽章与本地地图（renderLocationNode / renderLocationMap）
   'game.badge.locked': '上锁',

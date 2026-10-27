@@ -7,6 +7,8 @@ import { actingSeats, decisionSeat, embeddedCardDefs, enemyEvadeValue, enemyFigh
 import { contentRegistry } from '../../content/registered.js'
 import { projectTableState, locationEntryErrors, maskHiddenLocations, publicAttachments, attachLocationCards, publicCardInstance } from './presentation-state.js'
 import { campaignStory } from '../campaign/story.js'
+import { traitLabels } from '../cards/trait-labels.js'
+import { grantedTraitsOf } from '../engine/location-traits.js'
 import { choiceOptionsFor, choiceSeats } from '../engine/resolution.js'
 // Phase 6（战役插件化第二批）：战役专属状态的公开投影收进内容层
 // （探索牌库 / 古代遗物 / 领队 / 复仇 / 伊格之怒 / 两个剧本的公开标记）。
@@ -135,17 +137,30 @@ export function viewState(state, observerSeat = null, options = {}) {
   const view = pick(state, slim ? PUBLIC_STATE_FIELDS_SLIM : PUBLIC_STATE_FIELDS, copyField)
   const attachments = publicAttachments(state)
   view.locations = maskHiddenLocations(attachLocationCards(view.locations || [], attachments.locations))
-  // 投影有效帷幕：印刷值 + shroudMod + 迷雾 + 剧本常驻修正（04294 的「X=深度」等），
-  // 否则前端会一直显示印刷的 0/负数。
+  // 投影有效帷幕：印刷值 + shroudMod（含「直到某张卡重整」的临时修正，如皮博迪先生的 -1）
+  // + 迷雾 + 剧本常驻修正（04294 的「X=深度」等），否则前端会一直显示印刷的 0/负数。
+  // 特性：`traits` 保留英文（规则判定读它），`traitsZh` 是逐位对应的中文写法（只用于显示，
+  // 由 src/cards/trait-labels.js 的卡池译名表生成）；`grantedTraits` 是引擎地点特性原语
+  // （src/engine/location-traits.js）记账的运行期授予特性（未揭示地点只显示这一份）。
   const observerInv = (state.investigators || []).find(inv => inv.seat === observerSeat)
   const shroudBehavior = state.scenario ? contentRegistry.getBehavior(state.scenario.id) : null
   view.locations = view.locations.map(location => {
     const source = (state.locations || []).find(entry => entry.id === location.id)
-    if (!source) return location
+    const traits = Array.isArray(location.traits) ? location.traits : []
+    // 运行期授予的特性由引擎原语记账（location.traitGrants，见 src/engine/location-traits.js）。
+    const grantedTraits = grantedTraitsOf(source || location)
+    const projected = {
+      ...location,
+      traitsZh: traitLabels(traits),
+      grantedTraits: [...grantedTraits],
+      grantedTraitsZh: traitLabels(grantedTraits),
+    }
+    if (!source) return projected
     const scenarioShroud = shroudBehavior?.locationShroudModifier?.(state, source, observerInv) || 0
     return {
-      ...location,
-      shroud: (source.shroud || 0) + (source.shroudMod || 0) + (state.fogMod || 0) + scenarioShroud,
+      ...projected,
+      shroud: (source.shroud || 0) + (source.shroudMod || 0)
+        + (state.fogMod || 0) + scenarioShroud,
     }
   })
   view.scriptAttachments = { act: attachments.act, agenda: attachments.agenda }
@@ -290,11 +305,13 @@ export function viewState(state, observerSeat = null, options = {}) {
     ], copyField),
     // cardCode 只下发给该选择的应答者（非应答者 options 为空），供界面显示候选卡面；
     // 它不包含牌库顺序等隐藏信息，且卡名此前已通过 label 公开给应答者。
+    // uiKey：2026-10-27「如同手牌」通道统一原语给出的牌桌挂载键（hunch:/beneath:/asset:<id>），
+    // 界面据此把选项挂回直觉区/下方/宿主支援，点牌即打出（与 legalMoves 的 move.uiKey 同协议）。
     options: responder ? choiceOptionsFor(choice, observer).map(option => pick(option, [
-      'id', 'label', 'cardCode',
+      'id', 'label', 'cardCode', 'uiKey',
       // 序章故事调查员：额外放行公开印刷卡面身份（职业、职业名、副标题、四维、生命/理智），
       // 选人界面据此画出卡面。这些字段只放宽给 storyInvestigator 的应答座位，其他 kind
-      // 仍只保留 id/label/cardCode，避免把无关选择里的内部数据顺带带出。
+      // 仍只保留 id/label/cardCode/uiKey，避免把无关选择里的内部数据顺带带出。
       ...(choice.kind === 'storyInvestigator' ? ['klass', 'classLabel', 'subtitle', 'stats', 'health', 'sanity'] : []),
     ], copyField)) : [],
   } : null

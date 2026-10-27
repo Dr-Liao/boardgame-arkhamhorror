@@ -85,7 +85,7 @@ API `flipLocationToSpectral(id, seat)` / `locationIsSpectral(id)`；落点 `loca
 
 ### 3.1 直觉牌库（乔·戴蒙德）
 
-第 14 个原语（P6/M1）：[`src/engine/hunch-deck.js`](../src/engine/hunch-deck.js)。冒险设置抽 11 张洞察事件；调查阶段开始揭示并视作手牌；打出费用 -2；阶段结束洗回。与卡洛琳的资源寄存（[`resource-bank.js`](../src/engine/resource-bank.js)）、黛安娜的法术专用额外行动（[`spell-actions.js`](../src/engine/spell-actions.js)）同为调查员专属读点；`cancel-note.js` 承接「取消后记录」类反应。测试 [tests/tcu-investigators.test.mjs](../tests/tcu-investigators.test.mjs)。
+第 14 个原语（P6/M1）：[`src/engine/hunch-deck.js`](../src/engine/hunch-deck.js)。冒险设置抽 11 张洞察事件；调查阶段开始揭示并视作手牌；打出费用 -2；阶段结束洗回。「如同你的手牌」已收敛到引擎级统一原语 [`src/engine/play-channels.js`](../src/engine/play-channels.js) 的 `hunch` 通道：普通行动、快速事件的反应窗口、收尾玩家窗口、能力层 `fromHand` 窗口共用同一套条目/门控/折扣/取牌，折扣读点 `hunchDeck.playDiscount`（05002 默认 -2）与实付同源；服务端下发 `uiKey`（`hunch:<卡号>`）供牌桌把选项挂回直觉区那张牌。与卡洛琳的资源寄存（[`resource-bank.js`](../src/engine/resource-bank.js)）、黛安娜的法术专用额外行动（[`spell-actions.js`](../src/engine/spell-actions.js)）同为调查员专属读点；`cancel-note.js` 承接「取消后记录」类反应。测试 [tests/tcu-investigators.test.mjs](../tests/tcu-investigators.test.mjs)、[tests/turn-end-window.test.mjs](../tests/turn-end-window.test.mjs)、[tests/play-channels.test.mjs](../tests/play-channels.test.mjs)。
 
 ## 4. 复用的 10 个原语
 

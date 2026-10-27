@@ -69,6 +69,8 @@ export function createMoves(deps) {
     hubLegalMoves,
     // 2026-10-27 修复 05002：直觉牌库揭示牌的 -2 折扣（校验与实付同一读点）。
     hunchDeck,
+    // 2026-10-27：「如同手牌」通道统一原语（弃牌堆/威胁区/背包/原定计划/宿主附属/下方/直觉牌库）。
+    playChannels,
     inHub,
     investigatorEntryError,
     investigatorTextBlanked,
@@ -127,6 +129,27 @@ export function createMoves(deps) {
 
   function steadfastInPlay(state) {
     return state.investigators.some(inv => (inv.assets || []).some(asset => isSteadfastCard(cardDef(asset.code))))
+  }
+
+  // 打出一张牌的「潜在减费」预估：campaign 预览 + 条目/场上支援的 playCostReductionProvider。
+  // 预览 = 校验 = 扣费同源：legalMoves（手牌与如同手牌通道）与 validateMove 都读这一份。
+  function potentialPlayReduction(state, inv, code, def) {
+    return campaignPlayCostPreview(state, inv, code)?.discount || 0
+      || Math.max(0,
+        Number(typeof registeredEntry(code)?.playCostReductionProvider === 'function'
+          ? registeredEntry(code).playCostReductionProvider(state, inv, def)
+          : registeredEntry(code)?.playCostReductionProvider) || 0,
+        ...inv.assets.map(asset => {
+          const provider = registeredEntry(asset.code)?.playCostReductionProvider
+          const value = typeof provider === 'function' ? provider(state, inv, def, asset) : provider
+          return Number(value) || 0
+        }))
+  }
+
+  // 打出一张牌的最终资源费用：基础费用 - 如同手牌通道折扣。预览/校验/实付同源。
+  function playCostFor(state, inv, def, candidate = null) {
+    const base = playCost(state, inv, def)
+    return candidate ? playChannels.discountedCost(base, candidate) : base
   }
 
   // 「枪法如神」（04104）：持有 activateFirearmFight 窗口的快速事件时，枪械/远程支援的攻击
@@ -234,19 +257,7 @@ export function createMoves(deps) {
       continue
     }
     const cost = playCost(state, inv, def)
-    // 2026-10-25 第五轮修复 05150：条目可通过 playCostReductionProvider 声明「支付前窗口最多能减多少」，
-    // 打出合法性按「印刷费用 - 潜在减费」估算（例如资源不足但可横置黑书减费）。
-    // 减费来源可以是「被打出的牌自己」或「场上受控支援」（取两者最大，保守不求和）。
-    const potentialReduction = campaignPlayCostPreview(state, inv, code)?.discount || 0
-      || Math.max(0,
-        Number(typeof registeredEntry(code)?.playCostReductionProvider === 'function'
-          ? registeredEntry(code).playCostReductionProvider(state, inv, def)
-          : registeredEntry(code)?.playCostReductionProvider) || 0,
-        ...inv.assets.map(asset => {
-          const provider = registeredEntry(asset.code)?.playCostReductionProvider
-          const value = typeof provider === 'function' ? provider(state, inv, def, asset) : provider
-          return Number(value) || 0
-        }))
+    const potentialReduction = potentialPlayReduction(state, inv, code, def)
     if (inv.resources < cost - potentialReduction
       && !charlesPayCandidate(state, inv, cost, def)) continue
     if (isSteadfastCard(def) && steadfastInPlay(state)) continue
@@ -254,118 +265,29 @@ export function createMoves(deps) {
     const kindLabel = def.type === 'asset' ? '装备' : '打出'
     moves.push({ action: 'play', cardId: code, label: `🃏 ${kindLabel}「${cardName(code)}」(${cost} 资源)` })
   }
-  // 2026-10-25 第七轮修复 05279：宿主附属的事件可如同手牌打出（横置/费用由宿主条目内容决定）。
-  for (const host of (inv.assets || [])) {
-    if (registeredEntry(host.code)?.playAttachedEvents !== true) continue
-    for (const attachment of host.attachments || []) {
-      const def = cardDef(attachment.code)
-      if (!def || !['event', 'skill'].includes(def.type) || isWeaknessCard(def)) continue
-      // 2026-10-25 第七轮修复 05279：宿主声明的附加费（横置宿主 / 花 uses）必须先可支付。
-      const hostCost = registeredEntry(host.code)?.playAttachedEventCost || {}
-      if (hostCost.exhaustHost && host.exhausted) continue
-      if (hostCost.uses && (host.uses || 0) < hostCost.uses) continue
-      moves.push({ action: 'play', cardId: attachment.code, fromAttachedEventOf: host.id,
-        label: `📎 从「${cardName(host.code)}」的附属打出「${cardName(attachment.code)}」` })
-    }
-  }
-  // 2026-10-25 第七轮修复 05002：hunch 揭示牌可「如同在手牌中」以 -2 费用打出。
-  if (inv.hunchRevealed) {
-    const hunchCode = inv.hunchRevealed
-    const hunchDef = cardDef(hunchCode)
-    // 2026-10-27 修复 05010：揭示的弱点事件（playableWeakness）也能打出——「如同它是你的手牌」
-    // 不因弱点点数而失效；此前 !isWeaknessCard 一刀切让「悬案」的打出路径不可达。
-    if (hunchDef && (!isWeaknessCard(hunchDef) || playAccess(hunchCode).playableWeakness)
-      && !blocked.has(hunchDef.type)) {
-      // 2026-10-27 修复 05002：折扣走直觉牌库规则读点（05002 的 discount 默认 2），不再写死。
-      const hunchDiscount = hunchDeck.playDiscount(state, inv, hunchCode) || 0
-      const hunchCost = Math.max(0, playCost(state, inv, hunchDef) - hunchDiscount)
-      if (inv.resources >= hunchCost) {
-        moves.push({ action: 'play', cardId: hunchCode, fromHunch: true,
-          label: `🔮 从直觉牌库打出「${cardName(hunchCode)}」(${hunchCost} 资源，-${hunchDiscount} 费用)` })
-      }
-    }
-  }
-  // 2026-10-27：威胁区里声明 playableFromThreat 的牌也能打出（05010「悬案」被强制改为加入威胁区域后，
-  // 仍可结算「放 1 个线索 + 移出游戏」）。条目级开关，不写死卡号。
-  for (const threatCard of inv.threat || []) {
-    if (registeredEntry(threatCard.code)?.playableFromThreat !== true) continue
-    const def = cardDef(threatCard.code)
-    if (!def || !runtimeCardAvailable(state, inv, threatCard.code) || def.dataStatus === 'quarantined') continue
-    if (def.type === 'skill') continue
-    if (isWeaknessCard(def) && !playAccess(threatCard.code).playableWeakness) continue
-    if (!lolaCanUseCard(inv, threatCard.code)) continue
+  // 2026-10-27「如同手牌」通道统一原语（play-channels.js）：宿主附属 / 直觉牌库 / 威胁区 /
+  // 银暮匕首下方 / 背包 / 弃牌堆 / 原定计划。
+  // 新增通道只在原语里声明即可，这里不再逐个通道写 if；通道级门控（区域/弱点/附加费/可用性）
+  // 与费用折扣都由原语给出，最终仍统一过一遍 validateMove（与手牌同一条校验路径）。
+  for (const candidate of playChannels.entries(state, inv)) {
+    const def = candidate.def
+    if (!def) continue
+    if (playChannels.entryError(state, inv, candidate, def)) continue
     if (scenarioBehavior(state).canPlayCard?.(state, inv, def) === false) continue
     if (activeHiddenRules(state, inv).some(hidden => hidden.rule.cannotPlayTypes?.includes(def.type))) continue
-    if (blocked.has(def.type) || cardPlayBlockedReason(state, inv, def)) continue
-    const cost = playCost(state, inv, def)
-    if (inv.resources < cost) continue
-    moves.push({ action: 'play', cardId: threatCard.code, threatId: threatCard.id,
-      label: `🃏 从威胁区打出「${cardName(threatCard.code)}」(${cost} 资源)` })
-  }
-  // 2026-10-25 第七轮修复 05013：beneath 通道——持有 beneathPlayAsIfInHand 且未横置的支援时，
-  // 「底下」的事件可以按手牌打出（额外费用：横置该支援）。
-  {
-    const beneathChannel = (inv.assets || []).find(asset =>
-      registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
-    if (beneathChannel) {
-      for (const code of unique(inv.beneath || [])) {
-        const def = cardDef(code)
-        if (!def || def.type !== 'event' || isWeaknessCard(def) || blocked.has(def.type)) continue
-        if (!runtimeCardAvailable(state, inv, code) || playAccess(code).reactionOnly) continue
-        const cost = playCost(state, inv, def)
-        if (inv.resources < cost || effectError(state, inv, playedEffect(code))) continue
-        moves.push({ action: 'play', cardId: code, fromBeneath: true, channelAssetId: beneathChannel.id,
-          label: `🕯️ 从底下打出「${cardName(code)}」(${cost} 资源，横置「${cardName(beneathChannel.code)}」)` })
-      }
-    }
-  }
-
-  // 04037 背包：附属的牌可以当作手牌打出。
-  for (const bag of inv.assets.filter(asset => registeredEntry(asset.code)?.cardBackpack)) {
-    for (const code of unique(bag.attachedCards || [])) {
-      const def = cardDef(code)
-      if (!def || def.type === 'skill'
-        || (isWeaknessCard(def) && !playAccess(code).playableWeakness)) continue
-      if (blocked.has(def.type) || cardPlayBlockedReason(state, inv, def)) continue
-      const cost = playCost(state, inv, def)
-      if (inv.resources < cost) continue
-      moves.push({
-        action: 'play', cardId: code, fromBackpackId: bag.id,
-        label: `🎒 从背包打出「${cardName(code)}」(${cost} 资源)`,
-      })
-    }
-  }
-
-  // 「临时武器」「将就一下」等：可从自己的弃牌堆打出。
-  for (const code of unique(inv.discard)) {
-    if (!playAccess(code).fromDiscard || !isCardAvailable(code)) continue
-    if (inv.discard.includes(code) === false) continue
-    const def = cardDef(code)
-    if (!def || def.type !== 'event' || isWeaknessCard(def) || blocked.has(def.type)) continue
-    if (inv.resources < playCost(state, inv, def) || effectError(state, inv, playedEffect(code))) continue
-    moves.push({ action: 'play', cardId: code, fromDiscard: true,
-      label: `🃏 从弃牌堆打出「${cardName(code)}」(${playCost(state, inv, def)} 资源)` })
-  }
-
-  if (hasPlayedEventsToDeckTop(inv) && inv.discard.length) {
-    const code = topDiscardEvent(state, inv)
-    const def = cardDef(code)
-    if (def && def.type === 'event' && isCardAvailable(code) && !isWeaknessCard(def)
-        && !blocked.has(def.type) && inv.resources >= playCost(state, inv, def)
-        && !effectError(state, inv, playedEffect(code))) {
-      moves.push({ action: 'play', cardId: code, fromDiscard: true, label: `🃏 温蒂的护身符：打出弃牌堆顶事件「${cardName(code)}」(${playCost(state, inv, def)} 资源)` })
-    }
-  }
-
-  for (const plan of inv.assets.filter(asset => registeredEntry(asset.code)?.cardPlan && !asset.exhausted)) {
-    for (const code of unique(plan.attached || [])) {
-      const def = cardDef(code)
-      if (!def || def.type !== 'event' || playAccess(code).reactionOnly || blocked.has(def.type)
-          || !runtimeCardAvailable(state, inv, code) || inv.resources < playCost(state, inv, def)
-          || effectError(state, inv, playedEffect(code))) continue
-      moves.push({ action: 'play', cardId: code, fromPlanAssetId: plan.id,
-        label: `🃏 原定计划：打出「${cardName(code)}」(${playCost(state, inv, def)} 资源)` })
-    }
+    if (isSteadfastCard(def) && steadfastInPlay(state)) continue
+    const cost = playCostFor(state, inv, def, candidate)
+    const potentialReduction = potentialPlayReduction(state, inv, candidate.code, def)
+    if (inv.resources < cost - potentialReduction
+      && !charlesPayCandidate(state, inv, cost, def)) continue
+    if (registeredEntry(candidate.code)?.limitPerInvestigator
+      && inv.assets.some(asset => asset.code === candidate.code)) continue
+    if (def.type === 'asset' && normalizedSlots(def).length && !assetReplacementPlans(inv, def).length) continue
+    moves.push({
+      ...candidate.move,
+      ...(candidate.uiKey ? { uiKey: candidate.uiKey } : {}),
+      label: playChannels.actionLabel(candidate, cost),
+    })
   }
 
   // 「残酷拷问」（04261）等：威胁区域禁止抽取行动。
@@ -410,7 +332,7 @@ export function createMoves(deps) {
     const skill = loc.investigateSkill || 'intellect'
     const scenarioShroud = (scenarioBehavior(state).locationShroudModifier?.(state, loc, inv) || 0)
       + entityModifierTotal(state, loc, 'locationShroud')
-    const shroud = loc.shroud + (loc.shroudMod || 0) + (loc.peabodyShroud || 0) + (state.fogMod || 0) + scenarioShroud
+    const shroud = loc.shroud + (loc.shroudMod || 0) + (state.fogMod || 0) + scenarioShroud
     moves.push({ action: 'investigate', ...(emptyInvestigate ? { allowNoClues: true } : {}),
       label: `🔍 调查「${loc.name}」（${SKILL_NAMES[skill]} vs 帷幕 ${shroud}）` })
   }
@@ -635,33 +557,16 @@ export function createMoves(deps) {
       if (!def) return '未知卡牌'
       if (!lolaCanUseCard(inv, move.cardId)) return '罗拉只能使用中立或当前角色阵营的卡牌'
       if (scenarioBehavior(state).canPlayCard?.(state, inv, def) === false) return '当前效果禁止你打出卡牌'
-      // 2026-10-25 第七轮修复 05279：宿主附属的事件可如同手牌打出。
-      if (move.fromAttachedEventOf) {
-        const host = (inv.assets || []).find(asset => asset.id === move.fromAttachedEventOf
-          && registeredEntry(asset.code)?.playAttachedEvents === true)
-        if (!host || !(host.attachments || []).some(entry => entry.code === move.cardId)) return '该附属事件不在这里'
-        const hostCost = registeredEntry(host.code)?.playAttachedEventCost || {}
-        if (hostCost.exhaustHost && host.exhausted) return '宿主已横置，不能打出附属事件'
-        if (hostCost.uses && (host.uses || 0) < hostCost.uses) return '宿主使用次数不足'
+      // 2026-10-27「如同手牌」通道统一读点（play-channels.js）：宿主附属 / 直觉牌库 / 银暮匕首下方 /
+      // 威胁区 / 背包 / 原定计划 / 弃牌堆。通道级门控（来源是否还在、附加费、区域许可、弱点许可）
+      // 全部由原语给出；下面不再逐通道写 if。
+      const channelCandidate = playChannels.entryOf(state, inv, move)
+      if (playChannels.isChannelMove(move) && !channelCandidate) {
+        return playChannels.channelMissingReason(state, inv, move)
       }
-      // 2026-10-25 第七轮修复 05002：hunch 揭示牌打出校验。
-      if (move.fromHunch) {
-        // 2026-10-25 第七轮修复 05002（交叉复核 dispute）：揭示副本与手牌同名另一张是两份可互换的牌，
-        // 允许揭示副本按 -2 费打出（手里同名另一张仍按普通价单独列出）。
-        if (inv.hunchRevealed !== move.cardId) return '直觉牌库没有揭示这张牌'
-      }
-      // 2026-10-25 第七轮修复 05013：beneath 打出需要未横置的通道支援且卡在底下。
-      if (move.fromBeneath) {
-        const channel = (inv.assets || []).find(asset =>
-          registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
-        if (!channel) return '没有可用的 beneath 通道支援'
-        if (!(inv.beneath || []).includes(move.cardId)) return '底下没有这张牌'
-      }
-      // 2026-10-27：从威胁区打出（条目级 playableFromThreat，05010 悬案）。
-      if (move.threatId) {
-        const threatCard = (inv.threat || []).find(card => card.id === move.threatId)
-        if (!threatCard || threatCard.code !== move.cardId) return '威胁区没有这张牌'
-        if (!playAccess(move.cardId).fromThreat) return '这张牌不能从威胁区打出'
+      if (channelCandidate) {
+        const channelError = playChannels.entryError(state, inv, channelCandidate, def)
+        if (channelError) return channelError
       }
       const playBlocked = cardPlayBlockedReason(state, inv, def)
       if (playBlocked) return playBlocked
@@ -687,34 +592,13 @@ export function createMoves(deps) {
         return copiedPlayed ? effectError(state, inv, copiedPlayed) : null
       }
       if (def.type === 'skill' || (isWeaknessCard(def) && !playAccess(move.cardId).playableWeakness)) return '该牌不能作为行动打出'
-      if (move.fromDiscard) {
-        if (!playAccess(move.cardId).fromDiscard && !hasPlayedEventsToDeckTop(inv)) return '你没有温蒂的护身符'
-        // 卡面允许从弃牌堆任意位置打出的卡（「临时武器」等）不受牌库顶限制。
-        if (!playAccess(move.cardId).fromDiscard
-          && (def.type !== 'event' || topDiscardEvent(state, inv) !== move.cardId)) return '不是弃牌堆中最上方的事件'
-      } else if (move.fromPlanAssetId) {
-        const plan = inv.assets.find(asset => asset.id === move.fromPlanAssetId && registeredEntry(asset.code)?.cardPlan)
-        if (!plan || plan.exhausted || !plan.attached?.includes(move.cardId) || def.type !== 'event') return '原定计划下没有可打出的这张事件'
-      } else if (move.fromBackpackId) {
-        const bag = inv.assets.find(asset => asset.id === move.fromBackpackId && registeredEntry(asset.code)?.cardBackpack)
-        if (!bag || !(bag.attachedCards || []).includes(move.cardId)) return '背包里没有这张牌'
-      } else if (!move.threatId && !move.fromBeneath && !move.fromHunch && !move.fromAttachedEventOf && !inv.hand.includes(move.cardId)) return '手牌中没有这张牌'
+      // 2026-10-27：如同手牌通道的来源校验已在上方由原语统一完成；这里只剩「必须是手牌」的基础判定。
+      if (!channelCandidate && !inv.hand.includes(move.cardId)) return '手牌中没有这张牌'
       if (playAccess(move.cardId).reactionOnly) return '该牌只能在对应的反应窗口打出'
       if (cannotPlayTypes(inv).has(def.type)) return '当前禁止打出该类型卡牌'
-      // 2026-10-27 修复 05002：直觉牌库揭示牌按 -2 费用支付（dispatch 的 fromHunch 打出通道会写入
-      // playDiscount），校验必须与实付同口径，否则「印刷费用 > 资源 ≥ 折扣后费用」会被误判为资源不足。
-      const hunchDiscount = move.fromHunch ? (hunchDeck.playDiscount(state, inv, move.cardId) || 0) : 0
-      if (inv.resources < playCost(state, inv, def) - hunchDiscount
-        - (campaignPlayCostPreview(state, inv, move.cardId)?.discount || 0)
-        - Math.max(0,
-          Number(typeof registeredEntry(move.cardId)?.playCostReductionProvider === 'function'
-            ? registeredEntry(move.cardId).playCostReductionProvider(state, inv, def)
-            : registeredEntry(move.cardId)?.playCostReductionProvider) || 0,
-          ...inv.assets.map(asset => {
-            const provider = registeredEntry(asset.code)?.playCostReductionProvider
-            const value = typeof provider === 'function' ? provider(state, inv, def, asset) : provider
-            return Number(value) || 0
-          }))
+      // 预览 = 校验 = 扣费同源：基础费用 - 如同手牌通道折扣 - 潜在减费（campaign/条目/场上 provider）。
+      const channelDiscount = channelCandidate ? playChannels.discountOf(channelCandidate) : 0
+      if (inv.resources < playCost(state, inv, def) - channelDiscount - potentialPlayReduction(state, inv, move.cardId, def)
         && !charlesPayCandidate(state, inv, playCost(state, inv, def), def)) return '资源不足'
       if (def.unique && state.investigators.some(item => item.assets.some(asset => cardDef(asset.code)?.name === def.name))) return '唯一资产已经在场'
       if (def.type === 'asset' && normalizedSlots(def).length && !assetReplacementPlans(inv, def).length) return '槽位已满'

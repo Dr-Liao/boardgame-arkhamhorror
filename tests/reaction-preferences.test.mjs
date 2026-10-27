@@ -5,7 +5,7 @@ import { isAutomaticReward, EFFECTS } from '../src/cards/card-effects.js'
 import { investigatorRule } from '../src/cards/investigator-abilities.js'
 import { allDescriptors, registeredCodes, registeredEntry } from '../src/engine/ability.js'
 import { requestChoice, resolveTransaction, setAutoReactionHosted } from '../src/engine/resolution.js'
-import { reactionChoices, reactionView, reactionEnabled, setReactionEnabled, reactionPassPlan } from '../web/reaction-preferences.js'
+import { reactionChoices, reactionView, reactionEnabled, setReactionEnabled, reactionPassPlan, reactionAutoPlan, setReactionState } from '../web/reaction-preferences.js'
 
 test('免费且不限次的资源反应自动领取，有成本、目标或次数限制的反应保留选择',()=>{
   // Phase 5（5b-6）：01033 的反应搬到能力层，读点改成描述子（数据形状不变）。
@@ -290,5 +290,35 @@ test('托管模式下旧式反应窗口带 autoTriggerOptionId/cardCode，且不
     assert.equal(st.pendingChoice.cardCode,'01001')
     assert.equal(st.pendingChoice.autoOptionId,undefined,'罗兰不是默认自动奖励')
   }finally{setAutoReactionHosted(false)}
+})
+
+test('「如同手牌」通道快速事件：关闭=整窗跳过，auto 档不代打（2026-10-28）',()=>{
+  // 通道候选（直觉区/下方/背包等）在窗口里只带 cardCode/uiKey，偏好链路必须按卡号生效。
+  const session={
+    sessionId:'channel-fast-probe',
+    players:[{seat:0,role:'human'}],
+    state:{
+      revision:7,
+      cards:{'01022':{code:'01022',hasReactionPrompt:true,hasAutoReaction:false,autoByDefault:false}},
+      investigators:[{seat:0,code:'05002',hand:[],assets:[],threat:[]}],
+      pendingChoice:{id:'q',kind:'reaction',seat:0,canSkip:true,source:{type:'window'},
+        options:[{id:'skip',label:'不打出'},
+          {id:'hunch',label:'证据！（直觉牌库）',cardCode:'01022',uiKey:'hunch:01022'}]},
+      legalMoves:[{action:'choose',choiceId:'q',optionId:'skip'},
+        {action:'choose',choiceId:'q',optionId:'hunch'}],
+    },
+  }
+  assert.deepEqual(reactionChoices(session.state).map(item=>item.code),['01022'],'通道选项能映射回卡号')
+  // 关：窗口里所有候选都关闭 → 自动提交跳过（浏览器与大厅代答同一条链路）。
+  setReactionState(session.sessionId,0,'01022','skip')
+  assert.equal(reactionAutoPlan(session,0,true)?.move?.optionId,'skip')
+  assert.deepEqual(reactionView(session).state.legalMoves.map(move=>move.optionId),['skip'],'关闭后只剩跳过')
+  // 开（ask）：保持询问。
+  setReactionState(session.sessionId,0,'01022','ask')
+  assert.equal(reactionAutoPlan(session,0,true),null)
+  // auto：快速事件按设计不自动替玩家打出/付费，保持询问。
+  setReactionState(session.sessionId,0,'01022','auto')
+  assert.equal(reactionAutoPlan(session,0,true),null)
+  setReactionState(session.sessionId,0,'01022',null)
 })
 

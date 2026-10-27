@@ -23,7 +23,7 @@ import { renderTableLog } from './table-timeline.js'
 import { mapGeometry, hunterRouteEdges, MAP_CARD_WIDTH, MAP_CARD_HEIGHT } from './map-layout.js'
 import { createTablePresentation } from './table-presentation.js'
 import { tableIcon, classIcon, cardAttachmentReferences, cardMarkerData, placedCardMarkers } from './table-components.js'
-import { choicePresentation, entityMoves, mountCardInteractions, cancelTableGesture, handUnavailableReason } from './card-interactions.js'
+import { choicePresentation, entityMoves, mountCardInteractions, cancelTableGesture, handUnavailableReason, investigatorHoldsCard } from './card-interactions.js'
 import { setReactionEnabled, reactionChoices, reactionView, reactionAutoPlan, reactionState, setReactionState, reactionStates, reactionPrefsSeq, defaultReactionState, hydrateReactionStates } from './reaction-preferences.js'
 import { presentationAttributes, campaignPlaylistId } from './campaign-presentation.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
@@ -177,7 +177,9 @@ function renderReactionToggle(s, code) {
   if (!def.hasReactionPrompt && !def.hasAutoReaction) return null
   const seat = s.observerSeat ?? s.players.find(player => player.role === 'human')?.seat
   const inv = s.state.investigators.find(inv => inv.seat === seat)
-  if (!inv || !(inv.code === code || inv.hand?.includes(code) || [...(inv.assets || []),...(inv.threat || [])].some(card => card.code === code))) return null
+  // 2026-10-28：手牌/场上之外，「如同手牌」通道里的卡（直觉区揭示那张、下方、背包/原定计划
+  // 附属、宿主附属）也要显示开关，开关按 cardCode 生效（ask=提示，skip=本局不再询问）。
+  if (!inv || !investigatorHoldsCard(inv, s.state, code)) return null
   return renderReactionModeButton(s, seat, code, def)
 }
 
@@ -736,6 +738,44 @@ function openCardDetailDef(def, { runtime = !!state.session && !state.setup, sid
   })
 }
 
+// 地点特性（trait）的显示模型：已揭示地点显示印刷特性；未揭示地点只显示效果在运行时授予的
+// 特性（03141 皮博迪先生可让未揭示地点获得 [[通道]]，玩家必须能在地图上看见）。中英标签都由
+// 观察投影给出（traits/traitsZh、grantedTraits/grantedTraitsZh 逐位对应），缺失时逐项回退，
+// 浏览器不导入 src/ 的卡池译名表。
+function locationTraitPairs(loc) {
+  if (!loc) return []
+  const pairs = []
+  const seen = new Set()
+  const add = (english, localized) => {
+    const en = Array.isArray(english) ? english : []
+    const zh = Array.isArray(localized) ? localized : []
+    const length = Math.max(en.length, zh.length)
+    for (let index = 0; index < length; index++) {
+      const enLabel = typeof en[index] === 'string' ? en[index].trim() : ''
+      const zhLabel = typeof zh[index] === 'string' ? zh[index].trim() : ''
+      if (!enLabel && !zhLabel) continue
+      const key = (enLabel || zhLabel).toLowerCase()
+      if (seen.has(key)) continue
+      seen.add(key)
+      pairs.push({ en: enLabel, zh: zhLabel })
+    }
+  }
+  if (loc.revealed) add(loc.traits, loc.traitsZh)
+  add(loc.grantedTraits, loc.grantedTraitsZh)
+  return pairs
+}
+
+function locationTraitLabel(pair) {
+  return currentLanguage() === 'en' ? (pair.en || pair.zh) : (pair.zh || pair.en)
+}
+
+// 地图上只给「通道」这一个规则关键字做徽记（一楼/二楼/三楼这类楼层特性只在地点档案里列出，
+// 否则地图会被特性胶囊塞满）。
+function locationTraitBadges(loc) {
+  return locationTraitPairs(loc).filter(pair =>
+    String(pair.en || pair.zh).toLowerCase() === 'passageway')
+}
+
 function renderLocationDetail(detail) {
   const s = viewSession(), st = s.state
   const loc = st.locations.find(item => item.id === detail.locationId) || detail.def
@@ -747,10 +787,17 @@ function renderLocationDetail(detail) {
   const entryEffect = loc.onEnter
   const entering = [entryEffect?.damage ? t('game.location.enterDamage', { amount: entryEffect.damage }) : '', entryEffect?.horror ? t('game.location.enterHorror', { amount: entryEffect.horror }) : '',
     entryEffect?.test ? t('game.location.enterTest', { skill: st.skillNames?.[entryEffect.test.skill] || ahSkillLabel(entryEffect.test.skill), difficulty: entryEffect.test.difficulty }) : ''].filter(Boolean)
+  // loc 是观察投影后的地点：`shroud` 已经含 shroudMod / 迷雾 / 剧本修正 / 皮博迪先生的 -1，
+  // 这里不能再叠一次（旧实现重复计算 shroudMod 与 fogMod，皮博迪的 -1 也进不了弹窗）。
   const counters = [
-    ['shroud','eye',t('game.stat.shroud'),loc.revealed ? (loc.shroud ?? 0) + (loc.shroudMod || 0) + (st.fogMod || 0) : t('game.value.unknown')],
+    ['shroud','eye',t('game.stat.shroud'),loc.revealed ? (loc.shroud ?? 0) : t('game.value.unknown')],
     ['clues','clue',t('game.token.clue'),loc.clues || 0],['doom','doom',t('game.token.doom'),loc.doom || 0],['resources','resource',t('game.token.resource'),loc.resources || 0],
   ]
+  // 地点特性/关键字：已揭示显示印刷特性，未揭示只显示效果授予的特性（皮博迪先生的 [[通道]]）。
+  const traitPairs = locationTraitPairs(loc)
+  const traitChips = traitPairs.length ? h('section',{className:'ah-location-traits'+(detail.focusInfo === 'traits' ? ' is-focused' : '')},
+    h('h3',{},t('game.location.traits')),
+    h('div',{},traitPairs.map(pair => h('span',{className:'ah-kw','data-trait':pair.en || pair.zh},locationTraitLabel(pair))))) : null
   const decision = decisionSeatOf(s)
   const moves = !state.busy && !presentation.isBlocking && canAct(s, decision) ? entityMoves(st,'location:' + loc.id) : []
   const usedHints = !state.busy && !presentation.isBlocking && canAct(s, decision) ? usedActionHints(st, loc.id) : []
@@ -770,6 +817,7 @@ function renderLocationDetail(detail) {
         h('div',{className:'ah-location-counters','aria-label':t('game.location.statusAria')},counters.map(([key,icon,label,value]) => h('div',{
           className:detail.focusInfo === key ? 'is-focused' : '', 'data-location-stat':key,
         },tableIcon(icon),h('strong',{},value),h('small',{},label)))),
+        traitChips,
         front ? h('section',{className:'ah-location-entry-effect'},h('h3',{},t('game.location.enterTitle')),h('p',{},entering.length ? entering.join(t('game.list.semicolon')) : t('game.location.noEntryPenalty')))
           : h('section',{className:'ah-location-entry-effect'},h('h3',{},t('game.location.exploreTitle')),h('p',{},loc.revealed ? t('game.location.previewBack') : t('game.location.previewBackHint'))),
         h('section',{className:'ah-location-rules'},h('h3',{},front ? t('game.location.rulesEffects') : t('game.location.rulesDescription')),
@@ -1657,6 +1705,18 @@ function renderLocationNode(s, loc, opts = {}) {
     : kind === 'resources' ? 'resource' : kind === 'breach' ? 'doom' : kind === 'brazier' ? 'star'
     : kind === 'spectral' ? 'eye' : kind), value == null ? null : String(value))
   const badges = []
+  // [[通道]] 关键字徽记：已揭示地点的印刷特性，或皮博迪先生授予未揭示地点的运行时特性。
+  // 放在徽记列表最前，默认主题的徽记区只有两行高度，避免被裁掉；点击打开地点档案并高亮特性。
+  for (const pair of locationTraitBadges(loc)) {
+    const label = locationTraitLabel(pair)
+    badges.push(h('button', {
+      className: 'ah-loc-badge ah-loc-trait', 'data-map-info': 'traits', 'data-trait': pair.en || pair.zh,
+      title: t('game.location.traitBadgeTitle', { trait: label }),
+      'aria-label': t('game.location.traitBadgeAria', { location: locName, trait: label }),
+      onclick: event => { event.stopPropagation(); openCardDetailDef({ ...loc, type: 'location' }, { focusInfo: 'traits' }) },
+      onkeydown: event => event.stopPropagation(),
+    }, label))
+  }
   if (loc.clues) badges.push(resourceBadge('clues', t('game.token.clue'), loc.clues, t('game.location.badgeClues', { count: loc.clues })))
   if (loc.locked) badges.push(resourceBadge('locked', t('game.badge.locked'), null, t('game.location.badgeLocked')))
   if (loc.doom) badges.push(resourceBadge('doom', t('game.token.doom'), loc.doom, t('game.location.badgeDoom', { count: loc.doom })))

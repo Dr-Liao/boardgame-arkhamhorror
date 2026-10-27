@@ -157,6 +157,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 把上一步的机制拆成**窄原语**，先实现通用层，不写卡：
 
 - 先盘点已有原语：`src/engine/effects.js` 的 `EFFECT_PRIMITIVES`、`ctx.api` 的 `api-*.js`、`ability.js` 的 `kind`、`matcher.js` 组合子、`targets.js` 的目标枚举、`play-condition.js` 的打出条件。能在现有原语里组合出来的，不新增。
+- 「牌不在手牌里、但可以当作手牌打出/投入」这类效果不必逐卡逐窗口实现：统一原语是 `src/engine/play-channels.js`（通道的枚举 / 门控 / 折扣 / 取牌 / `uiKey` 挂载只在这一处声明）。新增存储形状只在通道表加一条，新增窗口只遍历 `entries()`；契约、现有通道清单（弃牌堆/威胁区/宿主附属/背包/原定计划/银暮匕首下方/直觉牌库）与 `uiKey` 协议见 `docs/card-model.md` §7.1，验收护栏 `tests/play-channels.test.mjs`。
 - 需要新增时，一个原语只做一件事：动词 + 参数 + 目标 + 持续时间 + 成功/失败分支；不要把整张卡的规则塞进一个 `carcosaPlayer` 式大原语。
 - 每个新原语必须同时具备：
   1. 通用实现（`effects.js` / `api-*.js` / `ability.js` / `modifiers.js` 等，按所属层）；

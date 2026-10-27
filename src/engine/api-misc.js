@@ -46,6 +46,9 @@ export function createMiscApi(state, events, deps) {
     isWeaknessCard,
     leaveAsset,
     locName,
+    // 2026-10-28：地点特性原语与地点帷幕临时修正（location-traits.js / locations.js）。
+    locationTraits,
+    setLocationShroudMod,
     newCardInstance,
     newPlayerAssetInstance,
     performTest,
@@ -424,12 +427,11 @@ export function createMiscApi(state, events, deps) {
       return index >= 0
     },
     test: (seat, skill, difficulty, options = {}) => performTest(state, seat, skill, difficulty, options),
-    setShroudMod: (location, amount) => { if (location) location.shroudMod = (location.shroudMod || 0) + amount },
-    addLocationTrait: (location, trait) => {
-      if (!location) return
-      location.traits ||= []
-      if (!location.traits.some(value => String(value).toLowerCase() === String(trait).toLowerCase())) location.traits.push(trait)
-    },
+    setShroudMod: (location, amount) => setLocationShroudMod(location, amount),
+    // 2026-10-28：地点特性原语（运行期授予/撤销；连接重算与投影 grantedTraits 由原语统一处理）。
+    addLocationTrait: (location, trait, options = {}) => locationTraits.add(state, location, trait, options),
+    removeLocationTrait: (location, trait, options = {}) => locationTraits.remove(state, location, trait, options),
+    grantedLocationTraits: location => locationTraits.granted(location),
     // 「诱敌深入」：把附属地点标记为敌人本轮的移动目标；回合结束由 turn.js 弃掉。
     setLocationLure: (locationId, seat, code = null) => {
       const location = state.locations.find(item => item.id === locationId)

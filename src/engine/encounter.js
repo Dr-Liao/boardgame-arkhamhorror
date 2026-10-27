@@ -65,6 +65,8 @@ export function createEncounter(deps) {
     playConditionError,
     playConditionHelpers,
     playCost,
+    // 2026-10-27：「如同手牌」通道统一原语（反应窗口/收尾玩家窗口的候选与取牌）。
+    playChannels,
     playReactionCard,
     playedEffect,
     playerWindowLabel,
@@ -222,7 +224,6 @@ function reactionWindow(state, when, context, events, opts = {}) {
   for (const inv of aliveInvestigators(state)) {
     if (context.peril && inv.seat !== context.seat) continue
     while (!context.cancelled) {
-      const discardEvent = topDiscardEvent(state, inv)
       // Phase 5（5a-26）：「彩绘世界」这类能复制牌库下方事件的卡由条目级 copiesBeneathEvents 声明。
       const handCandidates = inv.hand.flatMap((code, index) => registeredEntry(code)?.copiesBeneathEvents
         ? (inv.beneath || []).flatMap(copyCode => {
@@ -233,49 +234,20 @@ function reactionWindow(state, when, context, events, opts = {}) {
             ? [{ code, copyCode, index, id: `${index}:${copyCode}` }] : []
         })
         : [{ code, index, id: String(index) }])
-      const planCandidates = inv.assets.filter(asset => registeredEntry(asset.code)?.cardPlan && !asset.exhausted)
-        .flatMap(asset => (asset.attached || []).map((code, index) =>
-          ({ code, index, fromPlanAssetId: asset.id, id: `plan:${asset.id}:${index}` })))
-      // 2026-10-25 第七轮修复 05279：宿主 playAttachedEvents 的附属事件也能在对应反应窗口打出
-      // （「如同其在你手牌中」；reactionOnly 的事件同样适用）。
-      const attachedCandidates = inv.assets
-        .filter(asset => registeredEntry(asset.code)?.playAttachedEvents === true)
-        // 2026-10-25 第七轮修复 05279：反应窗口候选也要检查宿主附加费可支付性（避免幽灵候选/重复付费）。
-        .filter(asset => {
-          const cost = registeredEntry(asset.code)?.playAttachedEventCost || {}
-          return !(cost.exhaustHost && asset.exhausted) && !(cost.uses && (asset.uses || 0) < cost.uses)
-        })
-        .flatMap(asset => (asset.attachments || []).map(attachment => ({
-          code: attachment.code, fromAttachedEventOf: asset.id,
-          id: `attached:${asset.id}:${attachment.code}:${attachment.id ?? ''}`,
-        })))
-      // 2026-10-27 修复 05013（银暮匕首）：卡面「你可以打出或投入黛安娜·史丹利底下的事件和技能，
-      // 如同其在你的手牌中」。旧实现只给普通行动（legalMoves）与技能检定投入接了 beneath 通道，
-      // **快速事件的反应窗口**没有接：底下的快速事件（含 reactionOnly 的取消卡，如 05014 黑暗洞察 /
-      // 01023 闪躲）永远不会出现在反应窗口里，玩家只看到「底下有牌但点不了」。
-      // 这里补同一通道：额外费用=横置通道支援；结算走 playReactionCard（与手牌快速事件同一份
-      // 付费/结算/去向口径），结算期间置 state._playedFromBeneath（05004 的 reaction 不得触发）。
-      const beneathCandidates = []
-      {
-        const beneathChannel = (inv.assets || []).find(asset =>
-          registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
-        if (beneathChannel) {
-          for (const [index, code] of (inv.beneath || []).entries()) {
-            if (cardDef(code)?.type !== 'event') continue
-            beneathCandidates.push({ code, fromBeneath: true, beneathIndex: index, id: `beneath:${index}` })
-          }
-        }
-      }
+      // 2026-10-27「如同手牌」通道统一原语（play-channels.js）：弃牌堆 / 威胁区 / 宿主附属 /
+      // 背包 / 原定计划 / 银暮匕首下方 / 直觉牌库。哪个窗口支持哪个通道由原语一处声明，
+      // 这里只把条目映射成反应窗口候选；新增通道不需要再改本窗口。
+      const channelCandidates = playChannels.windowEntries(state, inv)
+        .map(candidate => ({ code: candidate.code, entry: candidate, id: playChannels.candidateId(candidate) }))
       const candidates = [...handCandidates,
-        ...planCandidates,
-        ...attachedCandidates,
-        ...beneathCandidates,
-        // 2026-10-27 修复 05002：乔·戴蒙德的直觉牌库揭示牌「如同你的手牌」——快速事件
-        // （如 01022 证据！：击败一个敌人后打出）也要出现在对应反应窗口里。打出走
-        // playReactionCard 的 fromHunch 通道（清 hunchRevealed、按 -2 费用支付）。
-        ...(inv.hunchRevealed ? [{ code: inv.hunchRevealed, fromHunch: true, id: 'hunch' }] : []),
-        ...(discardEvent ? [{ code: discardEvent, fromDiscard: true, id: 'discard' }] : [])]
-        .filter(({ code, copyCode, fromHunch }) => {
+        ...channelCandidates]
+        .filter(item => {
+          if (item.entry) {
+            // 通道级门控（区域/弱点/附加费/来源是否还在）由原语给出，与 legalMoves 同源。
+            if (playChannels.entryError(state, inv, item.entry, item.entry.def)) return false
+          }
+          const code = item.code
+          const copyCode = item.copyCode
           // Phase 5（5c-8）：快速事件也可以在能力层声明——`kind:'played'` + `fast` + `trigger:<窗口>`，
           // 条件写在 criteria 的旧字段里。两条通道共用下面同一份条件判定。
           const descriptor = descriptorOfKind(copyCode || code, 'played')
@@ -308,9 +280,9 @@ function reactionWindow(state, when, context, events, opts = {}) {
             && !(Number(context.difficulty) > Number(context.baseValue ?? 0))) return false
           if (cannotPlayTypes(inv).has(cardDef(copyCode || code)?.type)) return false
           if (scenarioBehavior(state).canPlayCard?.(state, inv, cardDef(copyCode || code)) === false) return false
-          // 2026-10-27 修复 05002：直觉牌库揭示牌按 -2 费用支付，候选可用性与实付共用同一折扣。
-          const hunchDiscount = fromHunch ? (hunchDeck.playDiscount(state, inv, code) || 0) : 0
-          if (inv.resources < Math.max(0, playCost(state, inv, cardDef(copyCode || code)) - hunchDiscount)) return false
+          // 2026-10-27「如同手牌」通道：折扣由原语统一给出（直觉牌库 -2 等），候选可用性与实付同源。
+          const baseCost = playCost(state, inv, cardDef(copyCode || code))
+          if (inv.resources < (item.entry ? playChannels.discountedCost(baseCost, item.entry) : baseCost)) return false
           // 04111 坚韧不拔等：criteria 写成函数/数组的新通道（旧的对象形字段展开保持原样）。
           if (descriptor?.criteria
             && (Array.isArray(descriptor.criteria) || typeof descriptor.criteria === 'function')
@@ -326,65 +298,31 @@ function reactionWindow(state, when, context, events, opts = {}) {
         kind: 'reaction', source: { type: 'window', when }, seat: inv.seat, canSkip: true,
         prompt: `是否打出快速反应卡？（${context.prompt}）`,
         options: [{ id: 'skip', label: '不打出' },
-          ...candidates.map(({ code, copyCode, id, fromDiscard, fromBeneath, fromHunch }) => ({ id, cardCode: code,
-            label: (copyCode ? `彩绘世界复制「${cardName(copyCode)}」` : cardName(code))
-              + (fromDiscard ? '（护身符：弃牌）' : '') + (fromBeneath ? '（银暮匕首：下方）' : '')
-              + (fromHunch ? '（直觉牌库）' : '') }))],
+          ...candidates.map(item => ({ id: item.id, cardCode: item.code,
+            ...(item.entry?.uiKey ? { uiKey: item.entry.uiKey } : {}),
+            label: item.entry
+              ? cardName(item.code) + (item.entry.labelSuffix || '')
+              : (item.copyCode ? `彩绘世界复制「${cardName(item.copyCode)}」` : cardName(item.code)) }))],
       })
       if (answer === 'skip') break
       const chosen = candidates.find(item => item.id === answer)
-      if (chosen.fromAttachedEventOf) {
-        const host = (inv.assets || []).find(asset => asset.id === chosen.fromAttachedEventOf)
-        const hostEntry = registeredEntry(host?.code)
-        const attachmentIndex = (host?.attachments || []).findIndex(entry => entry.code === chosen.code)
-        if (!host || attachmentIndex < 0) break
-        const hostCost = hostEntry?.playAttachedEventCost || {}
-        host.attachments.splice(attachmentIndex, 1)
-        if (hostCost.exhaustHost) host.exhausted = true
-        if (hostCost.uses) host.uses = Math.max(0, (host.uses || 0) - hostCost.uses)
-        inv.hand.push(chosen.code)
-        playReactionCard(state, inv, inv.hand.length - 1, context, events)
-        if (hostEntry?.playAttachedEventStaysAttached) {
-          for (const pile of [inv.discard, inv.hand]) {
-            const index = pile.lastIndexOf(chosen.code)
-            if (index >= 0) pile.splice(index, 1)
-          }
-          host.attachments ||= []
-          host.attachments.push({ id: `${host.id}:att:${chosen.code}:${state.round ?? 0}:${(host.attachments.length + 1)}`, code: chosen.code, ownerSeat: inv.seat })
-        }
-        continue
-      }
-      // 2026-10-27 修复 05013：beneath 通道打出的快速事件——横置通道支援、从底下移进手牌，
-      // 再交给 playReactionCard 走与手牌快速事件完全相同的付费/结算/弃牌路径。
-      // 「以此方式打出或投入卡牌时，你不能触发黛安娜的 reaction」由 _playedFromBeneath 表达。
-      if (chosen.fromBeneath) {
-        const channel = (inv.assets || []).find(asset =>
-          registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
-        const at = (inv.beneath || []).indexOf(chosen.code)
-        if (!channel || at < 0) break
-        channel.exhausted = true
-        inv.beneath.splice(at, 1)
-        inv.hand.push(chosen.code)
-        const previousBeneath = state._playedFromBeneath
-        state._playedFromBeneath = { seat: inv.seat, cardCode: chosen.code }
+      if (chosen?.entry) {
+        // 2026-10-27：统一通道执行——先把来源取进手牌（宿主附加费/通道上下文在原语里处理），
+        // 再走与手牌快速事件完全相同的付费/结算/弃牌路径。
+        const taken = playChannels.takeToHand(state, inv, chosen.entry, events)
+        if (!taken.ok) break
+        taken.apply?.()
         try {
-          playReactionCard(state, inv, inv.hand.length - 1, context, events)
+          playReactionCard(state, inv, taken.handIndex, context, events,
+            { discount: taken.discount, fromChannel: chosen.entry })
         } finally {
-          if (previousBeneath === undefined) delete state._playedFromBeneath
-          else state._playedFromBeneath = previousBeneath
+          taken.restore?.()
         }
+        taken.finish?.()
         continue
       }
-      // 2026-10-27 修复 05002：直觉牌库揭示的快速事件——折扣在清标记前读取，结算走
-      // playReactionCard 的 fromHunch 通道（与手牌快速事件共用付费/结算/弃牌路径）。
-      if (chosen.fromHunch) {
-        const code = inv.hunchRevealed
-        if (!code || code !== chosen.code) break
-        const discount = hunchDeck.playDiscount(state, inv, code) || 0
-        playReactionCard(state, inv, null, context, events, false, null, null, discount)
-        continue
-      }
-      playReactionCard(state, inv, chosen.index, context, events, chosen.fromDiscard, chosen.copyCode, chosen.fromPlanAssetId)
+      // 手牌（含彩绘世界复制）：index 是手牌下标。
+      playReactionCard(state, inv, chosen.index, context, events, { copyCode: chosen.copyCode || null })
     }
   }
   // 能力层：同一个窗口下，声明式反应/强制能力也在这里结算。
@@ -509,20 +447,19 @@ function triggerReaction(state, seat, when, events, context = {}) {
 }
 
 // 行动点用尽后的收尾窗口里仍然可以打出的快速卡。
-// 候选直接复用 legalMoves，保证打出条件、资源、槽位与「快速」判定和普通出牌同源
-// （卡面 0 费、可支付、非弱点、非反应专属……都在同一处判定）。
+// 候选直接复用 legalMoves（手牌与「如同手牌」通道都在同一份列表里），保证打出条件、资源、
+// 槽位与「快速」判定和普通出牌同源；通道条目附带来源信息，执行时统一走 takeToHand。
 function fastHandPlays(state, inv) {
   if (inv.seat !== state.currentSeat) return []
   const helpers = playConditionHelpers(state)
-  return legalMoves(state).filter(move => move.action === 'play' && move.cardId
-    && !move.fromDiscard && !move.fromPlanAssetId && !move.fromBackpackId && !move.copyCode
-    && !move.fromBeneath && !move.fromAttachedEventOf
-    // 2026-10-27 修复 05002：直觉牌库揭示牌也「如同手牌」，同样要出现在收尾窗口里。
-    && (move.fromHunch === true ? inv.hunchRevealed === move.cardId : inv.hand.includes(move.cardId))
-    && actionCost(state, inv, move) === 0
-    // legalMoves 只做「区域/类型/费用」级筛选，打出条件由 validateMove 读；
-    // 窗口里的快速卡必须同样过一遍，否则会绕过「只能在你回合期间打出」这类限制。
-    && !playConditionError(state, inv, move.cardId, helpers))
+  return legalMoves(state)
+    .filter(move => move.action === 'play' && move.cardId && !move.copyCode
+      && (inv.hand.includes(move.cardId) || playChannels.isChannelMove(move))
+      && actionCost(state, inv, move) === 0
+      // legalMoves 只做「区域/类型/费用」级筛选，打出条件由 validateMove 读；
+      // 窗口里的快速卡必须同样过一遍，否则会绕过「只能在你回合期间打出」这类限制。
+      && !playConditionError(state, inv, move.cardId, helpers))
+    .map(move => ({ move, entry: playChannels.entryOf(state, inv, move) }))
 }
 
 // 玩家窗口（免费触发能力）。行动点花完时（opts.fastCards）额外列出 0 费的快速卡：
@@ -568,9 +505,9 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
         const descriptors = row.entry?.abilities || []
         for (const [index, descriptor] of descriptors.entries()) {
           if (descriptor.kind !== 'free' || descriptor.fromHand) continue
-          // 2026-10-27 修复 05002：直觉牌库揭示牌的合成来源只用于反应窗口的 fromHand 描述子，
+          // 2026-10-27「如同手牌」通道的合成来源只用于反应窗口的 fromHand 描述子，
           // 不把事件卡上的其它描述子当成免费能力。
-          if (row.fromHunch) continue
+          if (row.fromChannel) continue
           if (!descriptorUsable(state, inv, row.source, descriptor, { windowId: timing, mode: 'free' })) continue
           if (descriptor.effect && effectError(state, inv, descriptor.effect)) continue
           options.push({
@@ -590,16 +527,19 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
       options.push({ id: `scenario-fast:${move.rule}:${move.enemyId || ''}`, label: move.label, scenarioMove: move })
     }
     if (inv.seat === fastCardSeat) {
-      for (const move of fastHandPlays(state, inv)) {
-        // 2026-10-27 修复 05002：直觉牌库揭示的快速卡用 `fast-card:hunch:<卡号>` 作 option id，
-        // 牌桌据此把选项映射回直觉区那张牌；费用同样按 -2 折扣预览（与实付同源）。
-        const optionId = move.fromHunch ? `fast-card:hunch:${move.cardId}` : `fast-card:${move.cardId}`
+      for (const { move, entry } of fastHandPlays(state, inv)) {
+        // 2026-10-27「如同手牌」通道统一：option id 保留手牌/直觉牌库的旧格式，其余通道用
+        // `fast-card:<通道id>`；同时下发 uiKey，牌桌据此把选项挂回直觉区/下方/宿主支援。
+        const optionId = entry
+          ? (entry.channel === 'hunch' ? `fast-card:hunch:${move.cardId}` : `fast-card:${playChannels.candidateId(entry)}`)
+          : `fast-card:${move.cardId}`
         if (blockedFast.has(optionId)) continue
-        const discount = move.fromHunch ? (hunchDeck.playDiscount(state, inv, move.cardId) || 0) : 0
-        const resourceCost = Math.max(0, playCost(state, inv, cardDef(move.cardId)) - discount)
+        const resourceCost = entry
+          ? playChannels.discountedCost(playCost(state, inv, cardDef(move.cardId)), entry)
+          : playCost(state, inv, cardDef(move.cardId))
         options.push({ id: optionId,
-          label: `⚡ 快速打出「${cardName(move.cardId)}」${move.fromHunch ? '（直觉牌库）' : ''}${resourceCost ? `（${resourceCost} 资源）` : ''}`,
-          cardCode: move.cardId, fromHunch: move.fromHunch === true })
+          label: `⚡ 快速打出「${cardName(move.cardId)}」${entry?.labelSuffix || ''}${resourceCost ? `（${resourceCost} 资源）` : ''}`,
+          cardCode: move.cardId, ...(entry?.uiKey ? { uiKey: entry.uiKey } : {}), fromChannel: entry })
       }
     }
     if (!options.length) { passed++; continue }
@@ -607,30 +547,34 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
       prompt: inv.seat === fastCardSeat && options.some(option => option.cardCode)
         ? '回合结束前：可以打出快速卡或使用免费触发能力，或让过。'
         : `${playerWindowLabel(timing)}：可以使用免费触发能力，或让过。`, canSkip: true,
-      options: [{ id: 'skip', label: '让过' }, ...options.map(({ id, label, assetId, index, targetId }) => ({ id, label, assetId, abilityIndex: index, targetId }))] })
+      options: [{ id: 'skip', label: '让过' }, ...options.map(({ id, label, assetId, index, targetId, cardCode, uiKey, fromChannel }) => ({
+        id, label, assetId, abilityIndex: index, targetId,
+        // 只有「如同手牌」通道候选才补 cardCode/uiKey（手牌快速卡保持原有选择负载，
+        // 避免改变既有对局的待决选择形状/重放指纹）。
+        ...(fromChannel ? { ...(cardCode ? { cardCode } : {}), ...(uiKey ? { uiKey } : {}) } : {}),
+      }))] })
     if (answer === 'skip') { passed++; continue }
     passed = 0
     const chosen = options.find(option => option.id === answer)
     if (chosen.cardCode) {
-      // 2026-10-27 修复 05002：直觉牌库揭示的快速卡——把揭示牌临时当手牌打进，
-      // -2 折扣经 playDiscount 走与 dispatch.fromHunch 完全相同的付费口径。
-      if (chosen.fromHunch) {
+      if (chosen.fromChannel) {
+        // 2026-10-27：通道快速卡——统一由原语取到手里，再按手牌 0 行动打出的同一路径结算。
         const before = inv.hand.filter(code => code === chosen.cardCode).length
-        const discount = hunchDeck.playDiscount(state, inv, chosen.cardCode) || 0
-        inv.hunchRevealed = null
-        inv.hand.push(chosen.cardCode)
-        inv.playDiscount = (inv.playDiscount || 0) + discount
+        const taken = playChannels.takeToHand(state, inv, chosen.fromChannel, events)
+        if (!taken.ok) { blockedFast.add(chosen.id); continue }
+        taken.apply?.()
         try {
-          doPlay(state, inv.seat, chosen.cardCode, events, false, true)
+          doPlay(state, inv.seat, chosen.cardCode, events, false, true, null, null, null, null, taken.discount || 0)
         } finally {
-          delete inv.playDiscount
+          taken.restore?.()
         }
         const after = state.investigators[inv.seat]
         if (after.hand.filter(code => code === chosen.cardCode).length > before) {
-          // 没能真正打出（例如结算前条件变化）：还原临时手牌与揭示标记，避免窗口反复询问。
-          after.hand.splice(after.hand.indexOf(chosen.cardCode), 1)
-          if (after.hunchRevealed == null) after.hunchRevealed = chosen.cardCode
+          // 没能真正打出（例如结算前条件变化）：放回通道并停止重复询问。
+          playChannels.putBack(state, inv, chosen.fromChannel, after.hand.lastIndexOf(chosen.cardCode))
           blockedFast.add(chosen.id)
+        } else {
+          taken.finish?.()
         }
         continue
       }

@@ -441,13 +441,6 @@ export function stashRandomMonsterInEntry(state, api) {
   return code
 }
 
-export function connectPassagewaysInEntry(state) {
-  const inPlay = state.scenario.passagewayLocations.filter(id => state.locations.some(location => location.id === id))
-  for (const location of state.locations.filter(candidate => inPlay.includes(candidate.id))) {
-    location.connections = [...new Set([...location.connections, ...inPlay.filter(id => id !== location.id)])]
-  }
-}
-
 // 「埃兹特里覆灭」的时间石室 / 古代遗物 / 预示者（第 7 批从章节 behavior 搬来）。
 export function doomLocation(state, code) {
   return state.locations.find(location => originalOf(location) === code)

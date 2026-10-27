@@ -325,43 +325,108 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 已从旧散字段迁到效果实体的机制：`addStatPhase`（02185 的「本阶段 +1」）与 `fightOrFlight`（03155 的「本轮 +
 恐惧值」）。`inv.phaseStatBonus`（单数）只作为旧存档兼容读取点保留。
 
-### 7.1 卡牌承载区（压在卡下面 / 附属在卡上）
+### 7.1 卡牌承载区（压在卡下面 / 附属在卡上）与「如同手牌」通道
 
-「牌离开手牌与牌库、但仍属于某张卡或某位调查员」有五种存储形状，**新增一种必须同时改三处**，
-否则表现是「读档后卡名变卡号」或「牌在场上但界面上无处可点」：
+「牌离开手牌与牌库、但仍属于某张卡或某位调查员」有这些存储形状。**「可以当作手牌打出/投入」
+的语义统一由 `src/engine/play-channels.js` 一个原语声明**；新增存储形状时先看它能否落进
+通道表，再补卡面表/观察投影/前端三处，否则表现是「读档后卡名变卡号」或「牌在场上但界面上无处可点」：
 
 | 形状 | 谁在用 | 卡面表（`embeddedCardDefs`） | 观察投影 | 前端 |
 | --- | --- | --- | --- | --- |
-| `asset.attached` | 03264 原定计划 | 扫 | 随支援实例下发（`publicCardInstance`） | 角标计数 + 详情「附属卡」+ 宿主弹出「打出」 |
-| `asset.attachedCards` | 04037 背包 | 扫 | 同上 | 同上 |
-| `asset.attachments` | 05279 黛雅娜·艾丝帕伦斯、05230 | 扫 | 同上 | 同上 |
-| `inv.beneath` | 05004 黛安娜、03003 赛菲娜、03012 画中世界 | 只给本人 | 本人 `beneath: string[]`，全桌 `beneathCount: number` | 牌桌「下方」行 + 调查员详情「下方卡牌」+ 银暮匕首弹出「从底下打出」 |
-| `inv.hunchDeck` / `inv.hunchRevealed` | 05002 乔·戴蒙德 | 牌库只给本人；已揭示那张给全桌 | `view.hunch[] = { seat, deck, revealed }`（顺序不外泄） | 牌桌「直觉 N」行 + 揭示那张的「从直觉牌库打出」 |
+| `asset.attached` | 03264 原定计划（`cardPlan`） | 扫 | 随支援实例下发（`publicCardInstance`） | 角标计数 + 详情「附属卡」+ 宿主弹出「打出」 |
+| `asset.attachedCards` | 04037 背包（`cardBackpack`） | 扫 | 同上 | 同上 |
+| `asset.attachments` | 05279 黛雅娜·艾丝帕伦斯（`playAttachedEvents`）、05230 | 扫 | 同上 | 同上 |
+| `inv.beneath` | 05004 黛安娜、03003 赛菲娜、03012 画中世界、05013 银暮匕首（`beneathPlayAsIfInHand`） | 只给本人 | 本人 `beneath: string[]`，全桌 `beneathCount: number` | 牌桌「下方」行 + 调查员详情「下方卡牌」+ 银暮匕首弹出「从底下打出」 |
+| `inv.hunchDeck` / `inv.hunchRevealed` | 05002 乔·戴蒙德（`investigator.hunchDeck`，规则在 `hunch-deck.js`） | 牌库只给本人；已揭示那张给全桌 | `view.hunch[] = { seat, deck, revealed }`（顺序不外泄） | 牌桌「直觉 N」行 + 揭示那张的「从直觉牌库打出」 |
+| `inv.discard` / `inv.threat` | `playableFromDiscard`（临时武器/温蒂的护身符）、`playableFromThreat`（05010 悬案） | 公开 | 弃牌堆/威胁区本来就公开 | 弃牌堆入口 / 威胁区小卡 |
 
 其余相关位置：`state.locations[].attachments`、`state.enemies[].attachments`、
 `state.playerLocationAttachments`（玩家卡附属到地点，如 03199）与 `state.bondedSets[].cards`（场外绑定集合）
 都按公开信息带卡面；`inv.hiddenCards`（隐私牌）是**手牌上的标记**，牌本身仍在 `inv.hand` 里，
 因此前端照常按手牌显示，不需要第二个区域。
 
-两条读点约定：
+三条读点约定：
 
-1. **打出通道**：`legalMoves` 里这些牌的动作带 `fromPlanAssetId` / `fromBackpackId` /
-   `fromAttachedEventOf` / `fromBeneath` / `channelAssetId` / `fromHunch`，**没有 `assetId`**。
-   `web/card-interactions.js` 的 `entityMoves()` 必须按这些字段把动作挂回宿主（`asset:<id>`）
-   或压牌本身（`beneath:<code>`、`hunch:<code>`），否则牌桌永远点不出这些动作。
-2. **能力不上桌**：`beneath` / `attachedCards` / `attachments` 上的牌不参与 `cardAbility` 枚举，
-   只有宿主声明的通道（如 `beneathPlayAsIfInHand`、`playAttachedEvents`）能把它们变成可打出的动作。
-3. **「如同其在你的手牌中」要接满所有出牌通道**：`beneathPlayAsIfInHand`（05013 银暮匕首）目前覆盖
-   四类窗口——普通行动 `legalMoves`（`fromBeneath`）、技能检定投入（`tests.js` 的 `beneath:<卡号>`）、
-   快速事件的反应窗口（`encounter.js` 的 `reactionWindow`，候选 id `beneath:<序号>`）与
-   `fromHand` 反应描述子的能力窗口（`ability-exec.js` 的 `openAbilityWindow`，候选 id
-   `…:beneath:<序号>`）。新增「如同手牌」的通道时这几类窗口都要接，否则表现是「底下的牌看得见但
-   在某个窗口里用不了」；反应/能力窗口的两类候选带 `cardCode`，`choicePresentation` 会把它们挂回
-   `beneath:<卡号>`，玩家点牌桌「下方」的牌与点手牌同义。（收尾玩家窗口的 0 费快速卡目前仍只枚举
-   手牌；底下的快速事件按规则走各自的反应窗口。）
+1. **「如同手牌」通道统一原语**：`src/engine/play-channels.js` 是这类效果的唯一声明与读取点。
+   一个通道 = 一种「牌不在手牌里、但可以当作手牌打出/投入」的存储形状。每个通道在那一处声明：
+   - **枚举**（`entries` / `windowEntries`）：当前有哪些可打出的牌、对应的 legalMoves 片段
+     （`fromHunch` / `fromBeneath` / `fromAttachedEventOf` / `fromBackpackId` / `fromPlanAssetId` /
+     `fromThreatId` / `fromDiscard`）与牌桌挂载键 `uiKey`（`hunch:<卡号>` / `beneath:<卡号>` /
+     `asset:<宿主 id>`）；`windowEntries` 保留旧窗口的候选顺序，新增通道追加在末尾；
+   - **门控与折扣**（`entryError` / `discountOf`）：区域许可、弱点许可、宿主附加费、直觉牌库 -2 等，
+     拒绝文案与旧 validateMove 逐字一致；`validateMove` 与各窗口共用（预览 = 校验 = 扣费同源）；
+   - **取牌与回滚**（`takeToHand` / `actionTake` / `takeCommit` / `putBack`）：把来源变成手里的牌、
+     支付附加费（横置宿主/花 uses/横置通道支援）、记录通道上下文（如 `state._playedFromBeneath`），
+     打出被拒时放回原处。
+   引擎四类窗口只遍历这个原语，不再各写一遍通道分支：
+   - 普通行动：`moves.js` 枚举 → `validateMove`（`entryOf` 还原通道）→ `dispatch.js`（`actionTake`）；
+   - 快速事件反应窗口：`encounter.js` 的 `reactionWindow`（`windowEntries`）+ `assets.js` 的
+     `playReactionCard`（牌已在手牌里的执行器；付费/结算/去向与手牌快速事件同源）；
+   - 收尾玩家窗口：`encounter.js` 的 `playerWindow`（`fastHandPlays` 复用 legalMoves 的通道候选）；
+   - 能力层 fromHand 窗口与技能检定投入：`ability-rules.js`（`descriptorSources` 的 `fromChannel`、
+     `descriptorUsable` 的通道折扣）、`ability-exec.js`（`openAbilityWindow` + `takeToHand`）、
+     `reveal.js`（`executeDescriptor` 的 `channelDiscount`）、`tests.js`（`commitEntries` / `takeCommit`）。
+2. **`uiKey` 是服务端下发的牌桌挂载协议**：`legalMoves` 的动作带 `move.uiKey`，选择选项带
+   `option.uiKey`（观察投影白名单 `pendingChoice.options` 已放行 `uiKey`/`cardCode`）。
+   `web/card-interactions.js` 的 `entityMoves()` / `choicePresentation()` 优先用它把动作/选项挂回
+   直觉区那张、下方那张或宿主支援实体，点牌即打出；旧的按字段/id 推导保留为兼容回退。
+   「能力不上桌」的约定不变：`beneath` / `attachedCards` / `attachments` 上的牌不参与 `cardAbility`
+   枚举，只有通道声明能把它们变成可打出的动作。
+   **快速反应开关与 auto 档**：通道里的卡在牌桌小卡上也显示同一颗闪电开关（准入判定
+   `investigatorHoldsCard`，覆盖手牌/场上/威胁区/直觉区/下方/背包/原定计划/宿主附属），
+   开关按 `cardCode` 记忆（ask=提示，skip=本局不再询问），`reactionView` / `reactionSkipPlan` /
+   大厅 `autoChoice` 的 skip 分支都按同一卡号过滤；窗口内所有候选都关闭时整窗自动跳过。
+   **快速事件（played+fast 或 fromHand 反应）只有开/关两档，没有「自动触发」**：按
+   `card-defs.js` 的 `hasAutoReactionFor` 口径，auto 会替玩家从手牌付费打出，风险不同，所以
+   手牌、直觉区与其它通道的快速事件同一处理；非事件反应（场上支援/调查员能力）的 auto 档不变。
+3. **新增通道或新增窗口都只改一处**：新增通道 = 在 `play-channels.js` 的 `entriesOf` /
+   `CHANNEL_ORDER` / `WINDOW_CHANNEL_ORDER` 加一条并补 `entryError`/`takeToHand`/`actionTake` 的
+   switch 分支；新增窗口 = 遍历 `entries()` / `windowEntries()`。窗口、validate、dispatch、UI 不需要
+   再改。**例外**：画中世界（`copiesBeneathEvents`）打出的物理牌是手牌宿主、被复制的是下方事件，
+   仍走手牌通道的专用 `copyCode` 分支。
+   回归护栏：`tests/play-channels.test.mjs`（通道 × 窗口矩阵 + uiKey 端到端）、
+   `tests/cards-under-ui.test.mjs`、`tests/cards-under.browser.mjs`、`tests/turn-end-window.test.mjs`。
 
-回归护栏：`tests/cards-under-ui.test.mjs`（卡面表 / 动作匹配 / 选择面板卡图 / 免费行动死按钮）与
-`tests/cards-under.browser.mjs`（桌面 1440 与移动 390 的可见性与点选）。
+原语登记：直觉牌库在 `tools/tcu-primitive-spec.mjs` 的 `hunchDeck`（checks 覆盖 channel 读点）；
+其余通道是引擎级通用基础设施，登记在本节。`docs/tcu-primitives.md` §3.1 与
+`docs/tcu-investigators.md` §3.1 同步描述。
+
+### 7.2 地点特性与「特性连接」原语
+
+地点的「特性」有时是动态的：卡牌效果可以让地点获得/失去特性，阶段规则可以让「带某特性的地点
+互相连接」。这两件事统一由 `src/engine/location-traits.js` 一个原语声明与记账，内容层只写数据 /
+调 `api`，不要在章节 behavior 里各自维护连接或 `flags`（旧实现的教训：隐藏的图书馆一入场就被
+静态连上、清理时会误删印刷特性/印刷连接）。
+
+状态形状（只在真正用到的关卡出现，不给其它关卡新增存档字段）：
+
+| 状态 | 形状 | 说明 |
+| --- | --- | --- |
+| 运行期授予 | `location.traitGrants = { Passageway: ['03141', '03139'] }` | 按来源记账；同一特性可多来源同时授予，撤销一个来源不误删其它来源；印刷特性（关卡定义 / 变体 / 卡面）永不删除。授予时若实例没有该特性，会补进 `location.traits`。 |
+| 特性连接规则 | `state.locationTraitLinks = { rules: [{ id: 'act:03126:Passageway', trait: 'Passageway' }], added: [['meetingRoom','secondLibrary'], …] }` | `rules` 是当前生效的阶段声明；`added` 是引擎自己加过的**有向**连接（排序固定）。规则失效只撤销 `added` 里的边，印刷连接（含单向）不受影响。 |
+
+三条读点约定：
+
+1. **声明在条目里，不在 behavior 里**：当前幕/密谋条目的 `actRule.locationTraitLinks` /
+   `agendaRule.locationTraitLinks` 是纯数据（字符串数组）。引擎在 `advanceAct` / `advanceAgenda`
+   换阶段、`placeLocation` / `removeLocation`、以及每次特性授予/撤销后调用 `syncLocationTraitLinks()`
+   重算；没有声明且没有历史时不写状态键，因此其它战役的存档/重放零变化。
+2. **授予/撤销只经 `ctx.api`**：`api.addLocationTrait(location, trait, { source })` /
+   `api.removeLocationTrait(location, trait, { source })` / `api.grantedLocationTraits(location)`；
+   临时帷幕修正用既有 `api.setShroudMod(location, ±n)`（不要给引擎加卡号专用字段——
+   旧 `peabodyShroud` 已删除）。`source` 是稳定字符串（卡号 / 情景 id），同一 source 重复授予幂等。
+3. **投影是派生值**：观察投影的 `view.locations[].grantedTraits`（含 `grantedTraitsZh`）只由
+   `grantedTraitsOf(location)` 从 `traitGrants` 派生；浏览器不读引擎。未揭示地点只显示授予特性
+   （印刷特性仍隐藏），地图只给 [[通道]] 之类规则关键字做徽记，地点档案列出全部可见特性。
+
+首个使用方（往事回声）：
+- 03126 誓约：`actRule.locationTraitLinks: ['Passageway']` —— 幕 3 当前时印刷[[通道]]地点互相连接；
+- 03141 皮博迪先生：横置 → `api.setShroudMod(loc, -1)` + `api.addLocationTrait(loc, 'Passageway', { source: '03141' })`，他重整时反向撤销（可指向隐藏的图书馆，打通入口）；
+- 03139 隐藏的图书馆：敌人移动窗口（`enemyPhaseStart` → `enemyPhaseAfterHunters`）临时以
+  `source: '03139'` 授予，猎手因此能追进图书馆；窗口结束撤销。
+
+回归护栏：`tests/location-traits.test.mjs`（授予/多来源/撤销/幂等/存档往返/声明接线）、
+`tests/echoes-passageways.test.mjs`（真实引擎的往事回声端到端）、`tests/carcosa-middle-a.test.mjs`。
 
 ---
 

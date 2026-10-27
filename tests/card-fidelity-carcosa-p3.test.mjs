@@ -68,7 +68,6 @@ test('03291 修道院教堂：双密谋 +2 帷幕；进入需在垮塌的台阶�
 test('03124/03125：每个已揭示历史协会地点 +每人 1 线索，上限为线索值', () => {
   for (const code of ['03124', '03125']) {
     const state = fixture('01001', 2)
-    state.scenario = { ...state.scenario, passagewayLocations: [] }
     state.campaign = { ...state.campaign, leadSeat: 0 }
     state.locations = [
       { id: 'museum', originalCode: '03134', code: '03134', revealed: true, clues: 0, cluesPerInvestigator: 2, maxClues: 4 },

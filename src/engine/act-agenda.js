@@ -30,6 +30,7 @@ export function createActAgenda(deps) {
     preyTarget,
     reactionWindow,
     registeredEntry,
+    locationTraits,
     requestChoice,
     runActReveal,
     runAgendaReveal,
@@ -64,6 +65,9 @@ export function createActAgenda(deps) {
       state, cur, scenarioRuntime(state, events))
     if (Number.isInteger(advanceIndex)) state.actIndex = advanceIndex
     else state.actIndex++
+    // 幕进出会改变「当前幕声明的特性连接规则」（actRule.locationTraitLinks）：
+    // 旧幕的规则失效、新幕的规则生效（03126「带有[[通道]]特性的地点互相连接」）。
+    locationTraits?.sync(state)
     const next = state.acts[state.actIndex]
     if (!next) {
       checkOutcome(state, events)
@@ -247,6 +251,8 @@ export function createActAgenda(deps) {
       if (state.agendas[state.agendaIndex] !== cur) return
       scenarioBehavior(state).agendaLeftPlay?.(state, cur, scenarioRuntime(state, events))
       state.agendaIndex++
+      // 密谋进出同样会改变 agendaRule.locationTraitLinks 声明的特性连接规则。
+      locationTraits?.sync(state)
       const next = state.agendas[state.agendaIndex]
       if (!next) {
         checkOutcome(state, events)

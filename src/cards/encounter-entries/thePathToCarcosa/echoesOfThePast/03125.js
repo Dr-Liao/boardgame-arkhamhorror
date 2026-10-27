@@ -4,7 +4,7 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { originalOf, connectPassagewaysInEntry } from '../../_shared.js'
+import { originalOf } from '../../_shared.js'
 import { someNonPlayerEntry } from '../../_lookup.js'
 
 export default {
@@ -24,7 +24,10 @@ export default {
       }))
       api.giveAsset(seat, '03141')
       api.place('hiddenLibrary')
-      connectPassagewaysInEntry(state)
+      // 幕 3（03126）的「带[[通道]]特性的地点互相连接」由 03126 条目的
+      // actRule.locationTraitLinks 声明，引擎在幕 3 成为当前幕时自动安装/撤销
+      // （见 src/engine/location-traits.js）；本条目只负责放置隐藏的图书馆。
+      // 这里不能静态连线：隐藏的图书馆印刷无特性/无连接，只能在特性真的被授予时打通。
     },
   },
 }

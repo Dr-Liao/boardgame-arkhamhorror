@@ -193,6 +193,27 @@
 .ah-loc:hover { border-color: #5b8cff; }
 .ah-loc-badges { display: flex; gap: 6px; margin-top: 6px; }
 .ah-loc-badge { font-size: 11px; border-radius: 6px; padding: 2px 8px; }
+/* 地点特性徽记（地图）：目前只有 [[通道]]/Passageway 这一个规则关键字。文字胶囊必须放得下
+   两个汉字，所以单独放开宽度/内边距；其他资源徽记仍保持主题里的小圆点形状。 */
+.ah-loc-badge.ah-loc-trait {
+  display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
+  padding: 2px 9px; border-radius: 999px; font-size: 10px; font-weight: 700; letter-spacing: .5px;
+  white-space: nowrap; color: #cfe0ff; background: rgba(91,140,255,.16); border: 1px solid rgba(120,170,255,.55);
+}
+.ah-calm .ah-loc-badge.ah-loc-trait {
+  width: auto; min-width: 0; height: auto; min-height: 23px; padding: 0 8px; border-radius: 999px;
+  color: #e2dbc9; background: #242630; border: 1px solid #b1a78b;
+}
+.ah-table.ah-calm.ah-noir .ah-map-node .ah-loc-badge.ah-loc-trait {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: auto; min-width: 0; height: 28px; padding: 0 10px; border-radius: 999px; font-size: 11px;
+  color: #ffe9b8; background: #26382f; border: 1px solid #bfa875;
+}
+/* 地点档案「特性」小节：沿用卡面特性胶囊 .ah-kw 的外观，只补排列与档案的羊皮纸配色。 */
+.ah-location-traits > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.ah-location-detail .ah-location-traits .ah-kw {
+  font-size: 11px; color: #d6bf89; background: #ae794519; border-color: #ac935e50;
+}
 .ah-loc-locked { color: #ffb3bc; background: rgba(255,130,144,.14); }
 .ah-loc-victory { color: #ffe08a; background: rgba(245,158,11,.12); }
 .ah-loc-conn { font-size: 11px; color: #9aa6bf; margin-top: 5px; }

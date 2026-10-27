@@ -114,6 +114,9 @@ export function createScenarioRuntime(deps) {
     leaveAsset,
     leadDecisionSeat,
     locName,
+    // 2026-10-28：地点特性原语与地点帷幕临时修正（见 location-traits.js / locations.js）。
+    locationTraits,
+    setLocationShroudMod,
     moveRelicOfAges,
     newCardInstance,
     notifyCluesRemoved,
@@ -204,6 +207,13 @@ function scenarioRuntime(state, events, testSource = null) {
       return -1
     },
     locationName: id => state.locations.find(location => location.id === id)?.name || id,
+    // 2026-10-28：地点特性原语（location-traits.js）。内容层（章节 behavior / 地点条目）用它
+    // 授予/撤销运行时特性；连接重算与投影的 grantedTraits 都由原语内部完成。
+    addLocationTrait: (location, trait, options = {}) => locationTraits.add(state, location, trait, options),
+    removeLocationTrait: (location, trait, options = {}) => locationTraits.remove(state, location, trait, options),
+    grantedLocationTraits: location => locationTraits.granted(location),
+    // 地点帷幕的临时修正（如「直到皮博迪先生重整，该地点 -1 帷幕」）；撤销时反向调用。
+    setShroudMod: (location, amount) => setLocationShroudMod(location, amount),
     autoEngageAll: () => autoEngageAll(state, events),
     place: id => placeLocation(state, id, events),
     reveal: id => revealLocation(state, id, events),
@@ -581,7 +591,7 @@ function scenarioRuntime(state, events, testSource = null) {
       const inv = state.investigators[state.currentSeat]
       const scenarioShroud = (scenarioBehavior(state).locationShroudModifier?.(state, location, inv) || 0)
         + entityModifierTotal(state, location, 'locationShroud')
-      return location.shroud + (location.shroudMod || 0) + (location.peabodyShroud || 0)
+      return location.shroud + (location.shroudMod || 0)
         + (state.fogMod || 0) + scenarioShroud
     },
     gainClues: (seat, n) => { const inv = state.investigators[seat]; inv.clues += n; syncClues(state); scenarioBehavior(state).cluesGained?.(state, inv, n, scenarioRuntime(state, events)) },

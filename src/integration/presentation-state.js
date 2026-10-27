@@ -1,5 +1,7 @@
 import { contentRegistry } from '../../content/registered.js'
 import { HIDDEN_LOCATION_ART, PRIVATE_DOORWAY_NAMES } from '../../content/campaigns/thePathToCarcosa/presentation.js'
+import { traitLabels } from '../cards/trait-labels.js'
+import { grantedTraitsOf } from '../engine/location-traits.js'
 import { agendaDoom, totalDoom, enemyHealthValue } from '../engine/rules-state.js'
 
 // Use the same scenario gate as movement, independently of remaining actions,
@@ -46,6 +48,14 @@ export function publicCardInstance(card) {
 // 第 125 轮（第 8 批）：隐藏地点的背面图案分组表在内容层（`content/campaigns/thePathToCarcosa/presentation.js`）。
 const hiddenLocationArtCode = loc => loc.artCode
   || HIDDEN_LOCATION_ART[loc.originalCode || loc.code]
+// 隐藏身份/私人门后地点被换名时，效果授予的特性仍是全桌公开信息（03141 皮博迪先生
+// 可以让未揭示地点获得[[通道]]），所以跟着掩码一起保留；印刷 traits 仍然不投影。
+// 授予记录的唯一来源是引擎原语（location.traitGrants，见 src/engine/location-traits.js）。
+const publicGrantedTraits = loc => {
+  const granted = [...grantedTraitsOf(loc)]
+  const grantedZh = traitLabels(granted)
+  return { grantedTraits: granted, ...(grantedZh.length ? { grantedTraitsZh: grantedZh } : {}) }
+}
 // 双面私人地点（谢幕的楼座 / 后台）：未揭示时显示「门口」那一面的印名，
 // 否则地点名称会直接告诉玩家这扇门后面是什么。仅影响投影副本，不改引擎状态。
 const doorwayMask = loc => {
@@ -58,20 +68,42 @@ const doorwayMask = loc => {
     id: loc.id, originalCode: loc.originalCode || loc.code,
     name: names.zh, nameEn: names.en, revealed: false,
     clues: 0, doom: loc.doom || 0, connections: [...(loc.connections || [])],
+    ...publicGrantedTraits(loc),
   }
 }
 export function maskHiddenLocations(locations) {
   return locations.map(loc => doorwayMask(loc.hiddenIdentity && !loc.revealed
     ? { id: loc.id, name: '未知小径', artCode: hiddenLocationArtCode(loc), revealed: false, clues: 0,
-        connections: [...loc.connections], doom: loc.doom || 0 }
+        connections: [...loc.connections], doom: loc.doom || 0, ...publicGrantedTraits(loc) }
     : structuredClone(loc)))
 }
 export function captureTableState(state, getStat, getMaxSanity) {
   const attachments = publicAttachments(state)
   // 敌人生命值要走剧本钩子（失落时代 P2：04124/04132/04140 等常驻 +生命）。
   const behavior = state.scenario ? contentRegistry.getBehavior(state.scenario.id) : null
+  // 演出快照会被客户端当作「当场状态」重绘地点地图与地点档案，所以帷幕值要和 viewState
+  // 用同一口径（印刷 + shroudMod 临时修正 + 迷雾 + 剧本修正），特性也同样补中文对照；
+  // 快照没有观察者，剧本修正钩子按无此次调查员调用。未揭示/隐藏身份地点的 traits 仍被
+  // doorwayMask 清空（印刷特性不外泄），引擎原语记账的授予特性则来自权威地点、始终保留。
+  const locationSource = loc => (state.locations || []).find(entry => entry.id === loc.id)
+  const projectLocation = loc => {
+    const source = locationSource(loc)
+    const grantedTraits = grantedTraitsOf(source || loc)
+    const projected = {
+      ...loc,
+      traitsZh: traitLabels(Array.isArray(loc.traits) ? loc.traits : []),
+      grantedTraits: [...grantedTraits],
+      grantedTraitsZh: traitLabels(grantedTraits),
+    }
+    if (!source) return projected
+    return {
+      ...projected,
+      shroud: (source.shroud || 0) + (source.shroudMod || 0)
+        + (state.fogMod || 0) + (behavior?.locationShroudModifier?.(state, source) || 0),
+    }
+  }
   return {
-    ...pick(state, FIELDS), locations: attachLocationCards(structuredClone(state.locations || []), attachments.locations).map(doorwayMask),
+    ...pick(state, FIELDS), locations: attachLocationCards(structuredClone(state.locations || []), attachments.locations).map(doorwayMask).map(projectLocation),
     scriptAttachments: { act: attachments.act, agenda: attachments.agenda }, enemies: state.enemies.map(enemy => ({ ...structuredClone(enemy), health: enemyHealthValue(state, enemy, behavior) })), encounterDeckSize: state.encounterDeck.length,
     locationEntryErrors: locationEntryErrors(state),
     privateTest: state.skillTest && !state.skillTest.helpRequested ? { seat: state.skillTest.seat, publicLog: [...(state.skillTest.publicLog || [])] } : null,

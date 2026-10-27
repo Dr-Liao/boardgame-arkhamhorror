@@ -13,7 +13,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, asset, enemy, answer, move, legalMoves, settle } from './core-fixture.mjs'
-import { checkDefeated, playerWindow } from '../src/engine/engine.js'
+import { checkDefeated, playerWindow, reactionWindow } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 
 const me = state => state.investigators[0]
@@ -245,26 +245,34 @@ test('收尾窗口可打出直觉牌库揭示的快速卡（-2 费、清标记�
   assert.equal(inv.clues, before + 1, '「专业的直觉」结算发现 1 个线索')
 })
 
-test('能力层写法（fromHand 反应描述子）的直觉牌库快速事件同样能打出（01522 证据！）', () => {
-  // 01022 是 played+fast 写法，01522 是能力层 fromHand 反应写法；同一张卡名、两条实现通道，
-  // 「如同手牌」对两者必须一致。
-  const state = joeState('01522')
+test('能力层写法（fromHand 反应描述子）的直觉牌库快速事件同样能打出（05025 串联线索）', () => {
+  // 01022 是 played+fast 写法，05025 是能力层 fromHand 反应写法；两条实现通道的「如同手牌」
+  // 必须一致（01522 是同一张「证据！」的替印，默认卡池仅 catalog-only，不能作为运行时用例）。
+  const state = joeState('05025', { resources: 2 })
+  const here = state.locations.find(location => location.id === me(state).location)
+  state.locations.push({
+    id: 'probe-low-shroud', name: '低帷幕地点', shroud: Math.max(0, (here.shroud || 0) - 1),
+    clues: 2, connections: [here.id], revealed: true,
+  })
   const before = me(state).clues
-  state.chaosBag = ['0']
-  const target = enemy(state, { id: 'hunch-target-2', fight: 0, evade: 1, health: 1, damageTaken: 0, engagedSeat: 0 })
-  move(state, { action: 'fight', enemyId: target.id })
   let offered = null
-  settle(state, pending => {
-    if (pending.kind !== 'reaction') return null
-    const option = pending.options.find(option => option.cardCode === '01522' && /直觉牌库/.test(option.label || ''))
+  runTransaction(state, current => {
+    reactionWindow(current, 'clueDiscovered', {
+      when: 'clueDiscovered', seat: 0, location: current.investigators[0].location,
+      lastClue: true, prompt: '发现了本地点最后一个线索',
+    }, [])
+  }, pending => {
+    const option = pending.options.find(item => item.cardCode === '05025' && /直觉牌库/.test(item.label || ''))
     if (option) { offered = option; return option.id }
     return null
   })
   assert.ok(offered, '能力层 fromHand 快速事件也必须作为直觉牌库候选列出')
   const inv = me(state)
   assert.equal(inv.hunchRevealed ?? null, null, '打出后清掉揭示标记')
-  assert.equal(inv.resources, 0, '印刷费用 1 - 2 = 0')
-  assert.ok(inv.discard.includes('01522'), '打出的快速事件正常进弃牌堆')
-  assert.equal(inv.clues, before + 1, '「证据！」结算发现 1 个线索')
+  assert.equal(inv.resources, 0, '印刷费用 4 - 2 = 2')
+  assert.ok(inv.discard.includes('05025'), '打出的快速事件正常进弃牌堆')
+  const low = state.locations.find(location => location.id === 'probe-low-shroud')
+  assert.equal(low.clues, 0, '「串联线索」发现低帷幕地点的 2 个线索')
+  assert.equal(inv.clues, before + 2)
 })
 

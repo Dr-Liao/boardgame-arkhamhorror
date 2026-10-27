@@ -369,24 +369,22 @@ export function createAssets(deps) {
     }
   }
 
-  function playReactionCard(state, inv, index, context, events, fromDiscard = false, copyCode = null, fromPlanAssetId = null, fromHunchDiscount = null) {
-    // 2026-10-27 修复 05002：直觉牌库揭示的那张「如同手牌」（乔·戴蒙德）。反应窗口把它作为
-    // 候选送进来时用 `fromHunchDiscount` 传 -2 折扣（规则值由 hunch-deck 的读点给出）：
-    // 只清 inv.hunchRevealed（牌本来就不在任何区域里），付费、结算、去向与手牌快速事件同一路径。
-    const hunch = fromHunchDiscount != null
-    if (hunch && !inv.hunchRevealed) return
-    const plan = !hunch && fromPlanAssetId && inv.assets.find(asset => asset.id === fromPlanAssetId && registeredEntry(asset.code)?.cardPlan)
-    const code = hunch ? inv.hunchRevealed
-      : plan ? plan.attached.splice(index, 1)[0]
-        : fromDiscard ? inv.discard.splice(inv.discard.lastIndexOf(topDiscardEvent(state, inv)), 1)[0] : inv.hand.splice(index, 1)[0]
-    if (hunch) inv.hunchRevealed = null
-    if (plan) plan.exhausted = true
+  // 2026-10-27「如同手牌」通道统一原语接入后，这个执行器只处理「牌已经在手牌里」的快速事件：
+  //   · 手牌候选：index 是手牌下标；
+  //   · 通道候选：play-channels 的 takeToHand 先把牌放进手牌（beneath 通道上下文由调用方包裹）；
+  //   · 画中世界复制：index 是宿主手牌，copyCode 是被复制的事件。
+  // 折扣由通道显式传入（不再写 inv.playDiscount），付费/结算/去向与普通事件同一口径。
+  function playReactionCard(state, inv, index, context, events, opts = {}) {
+    const { copyCode = null, discount = 0, fromChannel = null } = opts
+    const code = inv.hand.splice(index, 1)[0]
+    if (!code) return
     const def = cardDef(copyCode || code)
-    inv.resources -= Math.max(0, playCost(state, inv, def) - (hunch ? fromHunchDiscount : 0))
+    inv.resources -= Math.max(0, playCost(state, inv, def) - (discount || 0))
     consumePlayThreatResources(state, inv, events)
-    info(state, events, hunch
+    const fastLabel = fromChannel?.channel === 'hunch'
       ? `🔮 ${inv.name} 从直觉牌库快速打出「${cardName(code)}」。`
-      : `⚡ ${inv.name} 快速打出「${copyCode ? `彩绘世界／${cardName(copyCode)}` : cardName(code)}」。`, { kind: 'play', seat: inv.seat, code })
+      : `⚡ ${inv.name} 快速打出「${copyCode ? `彩绘世界／${cardName(copyCode)}` : cardName(code)}」。`
+    info(state, events, fastLabel, { kind: 'play', seat: inv.seat, code })
     state._reaction = context
     try {
       // Phase 5（5c-8）：能力层的快速事件由描述子结算（alreadyPaid：费用与「快速打出」日志已在上面付过/写过）。

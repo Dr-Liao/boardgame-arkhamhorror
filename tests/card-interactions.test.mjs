@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { choicePresentation, entityMoves, targetMoves } from '../web/card-interactions.js'
+import { choicePresentation, entityMoves, targetMoves, investigatorHoldsCard } from '../web/card-interactions.js'
 import { createGameState, legalMoves, validateMove, applyMove } from '../src/engine/engine.js'
 
 test('card bindings distinguish duplicate hand positions, candidate indices, and other investigators', () => {
@@ -70,8 +70,7 @@ test('weapon with one enemy exposes an explicit legal target and resolves throug
   assert.equal(st.enemies.find(e=>e.id==='ui-enemy').damageTaken,2)
 })
 
-test('hunch deck revealed card binds choice options back to the table hunch row (05002)', () => {
-  // 2026-10-27 修复 05002：乔·戴蒙德的直觉牌库揭示牌「如同手牌」——反应窗口的快速事件用
+test('hunch deck revealed card binds choice options back to the table hunch row (05002)', () => {  // 2026-10-27 修复 05002：乔·戴蒙德的直觉牌库揭示牌「如同手牌」——反应窗口的快速事件用
   // option id 'hunch'，收尾玩家窗口用 'fast-card:hunch:<卡号>'；两者都要能映射回直觉区那张牌。
   const st = { investigators: [{ seat: 0, hand: [], assets: [], beneath: [] }],
     hunch: [{ seat: 0, deck: 5, revealed: '01022' }],
@@ -98,4 +97,26 @@ test('hunch deck revealed card binds choice options back to the table hunch row 
   const fast = choicePresentation(st2).find(item => item.move.optionId === 'fast-card:hunch:01037')
   assert.equal(fast.key, 'hunch:01037')
   assert.equal(entityMoves(st2, 'hunch:01037').length, 1, '点直觉区那张牌 = 回答收尾窗口')
+})
+
+test('卡面快速反应开关覆盖「如同手牌」通道里的卡（2026-10-28）', () => {
+  // 直觉区揭示那张 / 下方 / 背包 / 原定计划 / 宿主附属里的牌，也要能在卡面开/关快速反应；
+  // 否则反应窗口里只能「本窗口全部关闭」，无法按卡记忆偏好。
+  const base = { seat: 0, code: '05002', hand: [], assets: [], threat: [], beneath: [] }
+  const st = { hunch: [{ seat: 0, deck: 5, revealed: '01022' }] }
+  assert.equal(investigatorHoldsCard(base, st, '01022'), true, '直觉区揭示那张')
+  assert.equal(investigatorHoldsCard({ ...base, beneath: ['01037'] }, st, '01037'), true, '银暮匕首下方')
+  assert.equal(investigatorHoldsCard({
+    ...base, assets: [{ id: 'bag', code: '04037', attachedCards: ['01036'] }],
+  }, st, '01036'), true, '背包附属')
+  assert.equal(investigatorHoldsCard({
+    ...base, assets: [{ id: 'plan', code: '03264', attached: ['01037'] }],
+  }, st, '01037'), true, '原定计划附属')
+  assert.equal(investigatorHoldsCard({
+    ...base, assets: [{ id: 'host', code: '05279', attachments: [{ id: 'a1', code: '05032' }] }],
+  }, st, '05032'), true, '宿主附属事件')
+  assert.equal(investigatorHoldsCard({ ...base, hand: ['01036'] }, st, '01036'), true, '手牌')
+  assert.equal(investigatorHoldsCard(base, st, '01036'), false, '不在任何可操作区域')
+  // 别的座位揭示的直觉牌不会把开关挂到本机角色上。
+  assert.equal(investigatorHoldsCard(base, { hunch: [{ seat: 1, deck: 3, revealed: '01037' }] }, '01037'), false)
 })

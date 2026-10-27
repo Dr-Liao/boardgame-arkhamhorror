@@ -23,7 +23,6 @@ const floor = {
   second: ['secondMuseum', 'secondLibrary', 'readingRoom'],
   third: ['thirdLibrary', 'peabodysOffice', 'thirdRecordOffice'],
 }
-const passageways = ['meetingRoom', 'secondLibrary', 'thirdLibrary', 'peabodysOffice', 'hiddenLibrary']
 
 export const scenario = {
   id: 'echoesOfThePast',
@@ -34,7 +33,6 @@ export const scenario = {
   startLocation: 'entryHall',
   setAsideLocations: ['hiddenLibrary'],
   floorPools: floor,
-  passagewayLocations: passageways,
   locations: {
     entryHall: location('entryHall', '03127', floor.ground, { resign: true }),
     meetingRoom: location('meetingRoom', '03128', ['entryHall', 'quietHallsSecond']),

@@ -389,6 +389,9 @@ export const PRIMITIVES = Object.freeze([
     // 第 5 步 M1（P6）交付：原本标为 deferredTo: 'P6' 的「直觉牌库」。
     // 它不是通用第三牌库，而是「调查员专属牌库」这一层的读点：卡面只声明
     // `investigator.hunchDeck = { size, trait, requiredCodes }`，结算集中在 hunch-deck.js。
+    // 「如同你的手牌」（卡面原文）这一语义已收敛到引擎级原语 src/engine/play-channels.js：
+    // 直觉牌库只是该原语的 hunch 通道之一，与弃牌堆/威胁区/宿主附属/背包/原定计划/银暮匕首下方
+    // 共用同一套枚举、费用、取牌与窗口挂载（见 docs/card-model.md §7.1）。
     id: 'hunchDeck',
     step: 'P6',
     title: '直觉牌库（调查员专属牌库）',
@@ -397,31 +400,54 @@ export const PRIMITIVES = Object.freeze([
     params: {
       size: 'number', trait: 'string', requiredCodes: 'string[]', discount: 'number=2',
     },
-    api: "hunchDeck.reveal / returnCard / playDiscount（读点：inv.hunchDeck / inv.hunchRevealed）",
+    api: 'hunchDeck.reveal / returnCard / playDiscount（读点：inv.hunchDeck / inv.hunchRevealed）；'
+      + '「如同手牌」由 play-channels 原语的 hunch 通道统一处理：'
+      + 'entries/windowEntries（普通行动+反应/收尾/能力窗口）、entryError（区域/弱点/费用门控）、'
+      + 'takeToHand（清标记+折扣取牌）、actionTake（dispatch 普通行动）',
     checks: [
       { kind: 'module-export', file: `${ENGINE}/hunch-deck.js`, name: 'normalizeHunchDeckRule', type: 'function' },
       { kind: 'module-export', file: `${ENGINE}/hunch-deck.js`, name: 'createHunchDeck', type: 'function' },
       { kind: 'module-export', file: `${ENGINE}/hunch-deck.js`, name: 'projectHunch', type: 'function' },
       { kind: 'source-pattern', file: `${ENGINE}/setup.js`, pattern: 'hunchDeck\\.prepare', why: '冒险设置抽 11 张洞察事件在 prepareInvestigator' },
       { kind: 'source-pattern', file: `${ENGINE}/turn.js`, pattern: 'hunchDeck\\.reveal', why: '调查阶段开始揭示牌库顶' },
-      { kind: 'source-pattern', file: `${ENGINE}/moves.js`, pattern: 'fromHunch', why: '揭示牌「如同手牌」打出候选与 -2 折扣（R7 起不按卡号在 playCost 打折）' },
-      { kind: 'source-pattern', file: `${ENGINE}/dispatch.js`, pattern: 'fromHunch', why: '打出：清 hunchRevealed + playDiscount +2 后走真实 doPlay' },
+      { kind: 'source-pattern', file: `${ENGINE}/play-channels.js`, pattern: 'hunchRevealed', why: 'hunch 通道枚举：本阶段揭示的那张（如同手牌）' },
+      { kind: 'source-pattern', file: `${ENGINE}/play-channels.js`, pattern: "channel: 'hunch'", why: 'hunch 通道条目与 move 片段（action 走 dispatch）' },
+      { kind: 'source-pattern', file: `${ENGINE}/play-channels.js`, pattern: 'hunchDeck\\.playDiscount', why: '折扣读点：直觉牌库规则值（05002 默认 -2）与候选/校验/实付同源' },
+      { kind: 'source-pattern', file: `${ENGINE}/moves.js`, pattern: 'playChannels\\.entries', why: '普通行动列表从统一通道原语枚举（含 hunch）' },
+      { kind: 'source-pattern', file: `${ENGINE}/dispatch.js`, pattern: 'playChannels\\.actionTake', why: '普通行动取牌：清 hunchRevealed + 折扣后走 doPlay' },
+      { kind: 'source-pattern', file: `${ENGINE}/encounter.js`, pattern: 'playChannels\\.windowEntries', why: '快速事件的反应窗口/收尾玩家窗口从统一通道原语枚举' },
+      { kind: 'source-pattern', file: `${ENGINE}/ability-rules.js`, pattern: 'fromChannel', why: '能力层 fromHand 事件的通道来源（含 hunch）' },
+      { kind: 'source-pattern', file: `${ENGINE}/ability-exec.js`, pattern: 'playChannels\\.takeToHand', why: '能力窗口取牌后走 executeDescriptor（同手牌口径）' },
+      { kind: 'source-pattern', file: `${ENGINE}/reveal.js`, pattern: 'channelDiscount', why: 'executeDescriptor 的 fromHand 付费按通道折扣（与实付同源）' },
+      { kind: 'source-pattern', file: 'web/card-interactions.js', pattern: 'uiKey', why: '牌桌把窗口选项挂回直觉区/下方/宿主实体（点牌即打出）' },
       { kind: 'source-pattern', file: 'src/deck/deckbuilding.js', pattern: 'hunchRequirement', why: '牌组配额（至少 N 张洞察事件）在自动构筑' },
       { kind: 'source-pattern', file: 'src/cards/campaign-view.js', pattern: 'projectHunch', why: '公开投影（张数 + 已揭示的那张）在战役投影' },
     ],
     files: [
       `${ENGINE}/hunch-deck.js`,
+      `${ENGINE}/play-channels.js`,
       `${ENGINE}/setup.js`,
       `${ENGINE}/turn.js`,
       `${ENGINE}/turn-flow.js`,
+      `${ENGINE}/moves.js`,
+      `${ENGINE}/dispatch.js`,
+      `${ENGINE}/actions.js`,
+      `${ENGINE}/encounter.js`,
+      `${ENGINE}/assets.js`,
+      `${ENGINE}/ability-exec.js`,
+      `${ENGINE}/ability-rules.js`,
+      `${ENGINE}/reveal.js`,
       `${ENGINE}/api-misc.js`,
       'src/deck/deckbuilding.js',
       'src/cards/campaign-view.js',
+      'web/card-interactions.js',
       'docs/tcu-investigators.md',
     ],
-    tests: ['tests/tcu-investigators.test.mjs'],
+    tests: ['tests/tcu-investigators.test.mjs', 'tests/turn-end-window.test.mjs', 'tests/play-channels.test.mjs', 'tests/card-interactions.test.mjs'],
     docs: 'docs/tcu-investigators.md#31-直觉牌库乔戴蒙德',
-    note: '11 张洞察事件（含悬案）；调查阶段开始揭示并视作手牌，打出 -2 资源；阶段结束仍未打出则洗回；悬案改为进入威胁区域。',
+    note: '11 张洞察事件（含悬案）；调查阶段开始揭示并视作手牌，打出 -2 资源；快速事件在对应反应窗口'
+      + '（如「证据！」击败敌人后）与收尾玩家窗口同样按 -2 资源打出；能力层 fromHand 事件同样可打出；'
+      + '阶段结束仍未打出则洗回；悬案改为进入威胁区域。',
   },
 ])
 

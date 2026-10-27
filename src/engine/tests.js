@@ -76,6 +76,8 @@ export function createPerformTest(deps) {
     makeRuntime,
     minhCommitWildBonus,
     pendingTestResult,
+    // 2026-10-27：「如同手牌」通道统一原语（技能检定投入的 beneath 通道）。
+    playChannels,
     playerWindow,
     randomValue,
     reactionWindow,
@@ -274,19 +276,16 @@ function performTest(state, seat, skill, difficulty, options = {}) {
           || options.source?.scenarioAbility === true || options.source?.ability === true
           || options.ability === true || options.scenarioAbility === true)
         .filter(item => !committedCodes.has(item.code) || !String(cardDef(item.code)?.textZh || '').includes('最多投入1张'))
-      // 2026-10-25 第七轮修复 05013：beneath 通道也能投入事件/技能（额外费用：横置通道支援）。
-      {
-        const beneathChannel = (owner.assets || []).find(asset =>
-          registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
-        if (beneathChannel) {
-          for (const code of (owner.beneath || [])) {
-            const def = cardDef(code)
-            if (!def || !['event', 'skill'].includes(def.type)) continue
-            if (!runtimeCardAvailable(state, owner, code) || isWeaknessCode(code) || hasHiddenCard(owner, code)) continue
-            if (!commitProfile(code)?.anySkill && commitIcons(state, owner, code, skillList) === 0) continue
-            candidates.push({ code, index: null, beneath: true })
-          }
-        }
+      // 2026-10-27「如同手牌」通道统一原语：技能检定投入也从通道枚举（目前 beneath 声明支持投入，
+      // 新增通道只要在 playChannels.commitEntries 里返回条目；进入/取牌也由原语统一）。
+      for (const channelCandidate of playChannels.commitEntries(state, owner)) {
+        if (hasHiddenCard(owner, channelCandidate.code)) continue
+        if (!commitProfile(channelCandidate.code)?.anySkill
+          && commitIcons(state, owner, channelCandidate.code, skillList) === 0) continue
+        candidates.push({
+          code: channelCandidate.code, index: null, channelEntry: channelCandidate,
+          optionId: channelCandidate.optionId, uiKey: channelCandidate.uiKey,
+        })
       }
       const kingInYellow = investigatorRule(owner.code)?.wildCommitCompanionBonus
         && owner.threat.some(card => registeredEntry(card.code)?.kingInYellowThreat)
@@ -298,10 +297,11 @@ function performTest(state, seat, skill, difficulty, options = {}) {
           : `${inv.name} 请求协助${skillLabel}检定；你可以投入一张牌，或放弃协助。`, canSkip: true,
         options: [...(canFinish ? [{ id: 'done', label: owner === inv ? '开始检定' : '放弃协助' }] : []),
           ...(owner === inv && helpers.length ? [{ id: 'help', label: '求助' }] : []),
-          // 2026-10-27 修复 05013：beneath 候选也带 cardCode，界面据此把选项画成卡面，
+          // 2026-10-27「如同手牌」通道统一：通道候选带 uiKey，界面据此把选项画成卡面，
           // 并让牌桌「下方」的牌成为可点的投入入口（web/card-interactions.js 的 choicePresentation）。
-          ...candidates.map(item => (item.beneath
-            ? { id: `beneath:${item.code}`, cardCode: item.code, label: '投入（底下）：' + cardName(item.code) }
+          ...candidates.map(item => (item.channelEntry
+            ? { id: item.optionId, cardCode: item.code, uiKey: item.uiKey,
+              label: item.channelEntry.label }
             : { id: String(item.index), label: '投入：' + cardName(item.code) }))] })
       if (answer === 'done') break
       if (answer === 'help') {
@@ -310,14 +310,13 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         info(state, null, `${inv.name} 请求同地点队友协助投入。`)
         break
       }
-      const chosenCandidate = candidates.find(item => item.beneath ? `beneath:${item.code}` === answer : Number(item.index) === Number(answer))
+      const chosenCandidate = candidates.find(item => item.channelEntry
+        ? item.optionId === answer
+        : Number(item.index) === Number(answer))
       let code = null
-      if (chosenCandidate?.beneath) {
-        const at = (owner.beneath || []).indexOf(chosenCandidate.code)
-        code = at >= 0 ? owner.beneath.splice(at, 1)[0] : null
-        const channel = (owner.assets || []).find(asset =>
-          registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
-        if (channel) channel.exhausted = true
+      if (chosenCandidate?.channelEntry) {
+        // 通道取牌（横置通道支援 / 从下方移出）由原语统一处理。
+        code = playChannels.takeCommit(state, owner, chosenCandidate.channelEntry)
       } else code = owner.hand.splice(Number(answer), 1)[0]
       if (!code) break
       if (hasHiddenCard(owner, code)) removeHiddenMarker(owner, code)

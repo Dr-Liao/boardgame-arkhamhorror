@@ -113,12 +113,6 @@ export function setupPlan(state) {
 }
 
 export const behavior = {
-  // 03139 隐藏的图书馆：只在敌人移动时获得[[通道]]特性（提供到其他通道的连接）。
-  enemyConnections(state, enemy, location) {
-    if (location.id !== 'hiddenLibrary') return null
-    return (state.scenario.passagewayLocations || []).filter(id =>
-      id !== location.id && state.locations.some(candidate => candidate.id === id))
-  },
   ...encounterRules,
   id: 'echoesOfThePast',
   setupPlan,
@@ -189,17 +183,30 @@ export const behavior = {
   enemyPhaseStart(state, api) {
     // 第 119 轮：敌军阶段开始的敌人脚本统一按条目派发（03140 的毁灭/重整选择）。
     for (const enemy of state.enemies) enemyScriptFor(original(enemy))?.onPhaseStart?.(state, enemy, api)
+    // 03139 隐藏的图书馆：「敌人移动时，隐藏的图书馆获得[[通道]]特性」。
+    // 在猎手移动循环前临时授予，移动结束后（enemyPhaseAfterHunters）撤销。
+    // 特性授予按来源记账（source: '03139'），皮博迪先生授予的同一特性不会被覆盖。
+    const library = state.locations.find(location => location.id === 'hiddenLibrary')
+    if (library) api.addLocationTrait(library, 'Passageway', { source: '03139' })
+  },
+  enemyPhaseAfterHunters(state, api) {
+    // 猎手移动窗口结束：撤掉 03139 的临时[[通道]]（只撤销本来源，皮博迪先生的授予保留）。
+    const library = state.locations.find(location => location.id === 'hiddenLibrary')
+    if (library) api.removeLocationTrait(library, 'Passageway', { source: '03139' })
   },
   roundEnded(state, api) {
     encounterRules.roundEnded?.(state, api)
     // 第 119 轮：03144 追寻者的轮末线索/毁灭在条目的 enemyScript.onRoundEnd。
     for (const enemy of state.enemies) enemyScriptFor(original(enemy))?.onRoundEnd?.(state, enemy, api)
-    const temporary = state.scenarioFlags.peabodyPassage
-    if (temporary) {
-      const location = state.locations.find(candidate => candidate.id === temporary)
+    // 03141 皮博迪先生：重整阶段已把他重置，因此「直到他重整」的效果到此结束。
+    // 只撤销本次授予（来源 '03141'）：印刷[[通道]]特性与其它来源的授予都不受影响。
+    const temporary = state.scenarioFlags?.peabodyPassage
+    if (temporary?.locationId) {
+      const location = state.locations.find(candidate => candidate.id === temporary.locationId)
       if (location) {
-        delete location.peabodyShroud
-        location.traits = (location.traits || []).filter(trait => trait !== 'Passageway')
+        api.setShroudMod(location, 1)
+        api.removeLocationTrait(location, 'Passageway', { source: '03141' })
+        api.info?.('🎩 「皮博迪先生」重整，通道效果结束。')
       }
       delete state.scenarioFlags.peabodyPassage
     }
@@ -274,21 +281,36 @@ export const behavior = {
       })
     } else if (move.rule === 'peabodyPassage') {
       // 第 119 轮：皮博迪先生的身份读条目的 assetRule.peabody。
+      // 卡面：[action]横置皮博迪先生：选择一个地点。直到皮博迪先生重整，该地点隐藏值 -1
+      // 并获得[[通道]]特性。目标可以是场上任意地点（含隐藏的图书馆与调查员所在地点）。
       const peabody = inv.assets.find(asset => assetRuleFor(original(asset))?.peabody && !asset.exhausted)
       if (!peabody) throw new Error('皮博迪先生必须处于重整状态')
-      const locations = state.locations.filter(location => location.id !== inv.location)
+      const locations = state.locations.slice()
+      if (!locations.length) throw new Error('场上没有可选择的地点')
       const id = api.choose({
-        kind: 'target', source: '03141', seat: inv.seat, prompt: '选择一个地点获得通道特性。',
-        options: locations.map(location => ({ id: location.id, label: location.name })),
+        kind: 'target', source: '03141', seat: inv.seat,
+        prompt: '选择一处获得[[通道]]特性并减少 1 点隐藏值的地点。',
+        options: locations.map(location => ({ id: location.id, label: location.name || location.id })),
       })
-      peabody.exhausted = true
-      state.scenarioFlags.peabodyPassage = id
       const location = state.locations.find(candidate => candidate.id === id)
-      // 卡面：直到皮博迪先生重整，该地点 -1 帷幕并获得[[通道]]特性。
-      if (location) {
-        location.peabodyShroud = -1
-        if (!(location.traits || []).includes('Passageway')) location.traits = [...(location.traits || []), 'Passageway']
+      if (!location) throw new Error('必须选择一处场上地点')
+      peabody.exhausted = true
+      state.scenarioFlags ||= {}
+      // 皮博迪先生每次重整后的新效果会顶掉旧效果（现实中他必须先重整才能再次行动，
+      // 而「直到他重整」的旧效果在那一刻就已结束；这里对非常规的中途重整也保持一致）。
+      // 撤销旧效果时用原语的反向操作：隐藏值 +1、只撤销本来源的[[通道]]授予。
+      const previous = state.scenarioFlags.peabodyPassage
+      if (previous?.locationId) {
+        const previousLocation = state.locations.find(candidate => candidate.id === previous.locationId)
+        if (previousLocation) {
+          api.setShroudMod(previousLocation, 1)
+          api.removeLocationTrait(previousLocation, 'Passageway', { source: '03141' })
+        }
       }
+      state.scenarioFlags.peabodyPassage = { locationId: location.id }
+      api.setShroudMod(location, -1)
+      api.addLocationTrait(location, 'Passageway', { source: '03141' })
+      api.info?.(`🎩 「皮博迪先生」让「${location.name}」获得[[通道]]特性（隐藏值 -1），直到他重整。`)
     } else throw new Error(`未知往事回声行动：${move.rule}`)
   },
   afterTest(state, inv, result, api) {

@@ -100,6 +100,8 @@ export function createDispatch(deps) {
     normalActionsLeft,
     payAndAdvanceAct,
     playFlag,
+    // 2026-10-27：如同手牌通道统一取牌（宿主附属 / 直觉牌库 / 银暮匕首下方 / 其余通道片段）。
+    playChannels,
     playerWindow,
     progressCampaign,
     randomValue,
@@ -446,71 +448,27 @@ function applyMoveUnchecked(state, seat, move, events) {
     case 'detachLocationAttachment': doDetachLocationAttachment(state, seat, m, events); break
     case 'encounterAction': scenarioBehavior(state).performEncounterAction(state, inv, m, scenarioRuntime(state, events)); break
     case 'play': {
-      if (m.fromAttachedEventOf) {
-        const hostInv = state.investigators[seat]
-        const host = (hostInv.assets || []).find(asset => asset.id === m.fromAttachedEventOf)
-        const at = (host?.attachments || []).findIndex(entry => entry.code === m.cardId)
-        if (!host || at < 0) break
-        const hostEntry = registeredEntry(host.code)
-        const hostCost = hostEntry?.playAttachedEventCost || {}
-        // 2026-10-25 第七轮修复 05279：附加费在打出前支付。
-        if (hostCost.exhaustHost) host.exhausted = true
-        if (hostCost.uses) {
-          host.uses = Math.max(0, (host.uses || 0) - hostCost.uses)
-          if (!host.uses && hostEntry?.discardWhenEmpty) {
-            leaveAsset(state, hostInv, host)
-            hostInv.discard.push(host.code)
-          }
-        }
-        host.attachments.splice(at, 1)
-        hostInv.hand.push(m.cardId)
-        doPlay(state, seat, m.cardId, events)
-        // 2026-10-25 第七轮修复 05279：宿主声明「打出后仍附属」→ 事件结算后从弃牌堆/手牌移回附属。
-        if (hostEntry?.playAttachedEventStaysAttached) {
-          for (const pile of [hostInv.discard, hostInv.hand]) {
-            const index = pile.lastIndexOf(m.cardId)
-            if (index >= 0) pile.splice(index, 1)
-          }
-          host.attachments ||= []
-          host.attachments.push({ id: nextInstanceId(state, 'a'), code: m.cardId, ownerSeat: seat })
-          info(state, events, `「${m.cardId}」结算后仍附属在「${host.code}」上。`)
-        }
-        break
-      }
-      if (m.fromHunch) {
-        const hunchInv = state.investigators[seat]
-        if (hunchInv.hunchRevealed !== m.cardId) break
-        // 2026-10-27 修复 05002：折扣值由直觉牌库规则给出（05002 的 discount 默认 2），
-        // 与 moves.js 的候选预览、validateMove 的资源校验共用同一读点。
-        const hunchDiscount = hunchDeck.playDiscount(state, hunchInv, m.cardId) || 0
-        delete hunchInv.hunchRevealed
-        hunchInv.hand.push(m.cardId)
-        hunchInv.playDiscount = (hunchInv.playDiscount || 0) + hunchDiscount
-        doPlay(state, seat, m.cardId, events)
-        break
-      }
-      if (m.fromBeneath) {
-        const under = state.investigators[seat]
-        const channel = (under.assets || []).find(asset =>
-          registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
-        if (!channel || !(under.beneath || []).includes(m.cardId)) break
-        channel.exhausted = true
-        under.beneath.splice(under.beneath.indexOf(m.cardId), 1)
-        under.hand.push(m.cardId)
+      // 2026-10-27「如同手牌」通道统一原语（play-channels.js）：宿主附属 / 直觉牌库 / 银暮匕首下方
+      // 旧实现会先把牌放进手牌再走 doPlay；其余通道保留 move 片段交给 doPlay 从来源取牌。
+      // 取牌规则、附加费与折扣都在原语里，dispatch 不再逐通道写分支。
+      const channelTaken = playChannels.actionTake(state, inv, m, events)
+      if (channelTaken?.toHand) {
         const previousBeneath = state._playedFromBeneath
-        state._playedFromBeneath = { seat, cardCode: m.cardId }
-        try { doPlay(state, seat, m.cardId, events) } finally {
-          if (previousBeneath === undefined) delete state._playedFromBeneath
-          else state._playedFromBeneath = previousBeneath
+        if (channelTaken.playedFromBeneath) state._playedFromBeneath = { seat, cardCode: m.cardId }
+        try {
+          doPlay(state, seat, m.cardId, events, false, false, null, null, null, null, channelTaken.playDiscount || 0)
+        } finally {
+          if (channelTaken.playedFromBeneath) {
+            if (previousBeneath === undefined) delete state._playedFromBeneath
+            else state._playedFromBeneath = previousBeneath
+          }
         }
+        playChannels.actionFinish(state, inv, channelTaken, events)
         break
       }
-      // 2026-10-27：从威胁区打出（条目级 playableFromThreat，05010 悬案「改为加入威胁区域」后仍可打出）。
-      if (m.threatId) {
-        doPlay(state, seat, m.cardId, events, false, false, null, null, null, m.threatId)
-        break
-      }
-      doPlay(state, seat, m.cardId, events, !!m.fromDiscard, false, m.copyCode, m.fromPlanAssetId, m.fromBackpackId)
+      // 手牌 / 彩绘世界复制 / 弃牌堆顶事件等：沿用原参数传递（通道 move 的片段也走这里）。
+      doPlay(state, seat, m.cardId, events, !!m.fromDiscard, false, m.copyCode,
+        m.fromPlanAssetId, m.fromBackpackId, m.threatId)
       break
     }
     case 'draw': doDraw(state, seat, events); break

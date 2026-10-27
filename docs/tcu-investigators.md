@@ -31,6 +31,8 @@
 
 [`src/engine/hunch-deck.js`](../src/engine/hunch-deck.js)：冒险设置抽 11 张[[洞察]]事件正面朝下作为直觉牌库；调查阶段开始时揭示并视作手牌；打出直觉牌库的卡费用 -2；阶段结束洗回。旧印可把弃牌堆的一张[[洞察]]事件移到直觉牌库底。读点不暴露牌库顺序给其他座位。
 
+「如同你的手牌」的语义已收敛到引擎级统一原语 [`src/engine/play-channels.js`](../src/engine/play-channels.js)：直觉牌库只是该原语的 `hunch` 通道，与弃牌堆/威胁区/宿主附属/背包/原定计划/银暮匕首下方共用同一套枚举、门控、折扣与取牌。普通行动、快速事件的反应窗口、收尾玩家窗口、能力层 `fromHand` 窗口都遍历这一份条目；折扣来自直觉牌库规则（`hunchDeck.playDiscount`，05002 默认 -2），预览与实付同源。服务端随 legalMoves/选项下发 `uiKey`（`hunch:<卡号>`），牌桌把「打出」挂回直觉区那张牌，点它即打出。新增「如同手牌」的存储形状或新窗口都只改这一处，契约见 [`docs/card-model.md`](card-model.md) §7.1；回归见 `tests/play-channels.test.mjs` 与 `tests/turn-end-window.test.mjs`。
+
 ### 3.2 资源寄存（普雷斯顿·费尔蒙特）
 
 [`src/engine/resource-bank.js`](../src/engine/resource-bank.js)：「家族遗产」每回合寄存 4 点资源，回合结束弃掉；此后获得的资源改为寄存（不在常规资源池）。寄存数进入观察投影的公开面，超上限/结束清理由通用回合钩子处理。

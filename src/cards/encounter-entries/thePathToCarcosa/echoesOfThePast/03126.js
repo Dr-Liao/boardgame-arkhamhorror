@@ -9,6 +9,10 @@
 export default {
   code: '03126', scope: 'act',
   actRule: {
+    // 幕 3 正面「带有[[通道]]特性的地点互相连接」：内容层只声明数据，
+    // 引擎（src/engine/location-traits.js）在当前幕为 03126 时自动安装该规则、
+    // 离开时只撤销自己加过的连接（印刷连接含单向连接都不受影响）。
+    locationTraitLinks: ['Passageway'],
     onReveal(state, act, api) {
       const answer = api.choose({
         kind: 'story', source: act.id, seat: state.campaign.leadSeat,

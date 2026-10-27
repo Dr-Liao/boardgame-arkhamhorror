@@ -105,6 +105,12 @@ import { all } from './matcher.js'
 // 第 5 步 M1 调查员批次（P6）：直觉牌库 / 资源寄存 / 法术专用额外行动。
 import { createHunchDeck } from './hunch-deck.js'
 import { createResourceBank } from './resource-bank.js'
+// 2026-10-27：「如同手牌」通道（弃牌堆/威胁区/背包/原定计划/宿主附属/银暮匕首下方/直觉牌库）
+// 收敛成唯一原语，窗口与 validate/dispatch 都从这里取条目（见 play-channels.js）。
+import { createPlayChannels } from './play-channels.js'
+// 2026-10-28：地点特性原语（运行期授予 + 「带某特性的地点互相连接」阶段规则）。
+// 细节见 location-traits.js 文件头；本文件只做惰性装配与 commonDeps/serio API 接线。
+import { createLocationTraits, grantedTraitsOf } from './location-traits.js'
 import {
   actionsAvailable as spellActionsAvailable, clearSpellCredit, consumeAction as consumeSpellAction,
   doomAmongControlled, grantSpellCredit, spellOnlyActionsOf,
@@ -987,6 +993,39 @@ const resourceBank = {
   projection: inv => resourceBankApi().projection(inv),
 }
 
+// 2026-10-27「如同手牌」通道原语（play-channels.js）的惰性门面。
+// 工厂在文件后部才初始化，这里只转发；调用发生在对局/校验里，模块初始化顺序不受影响。
+const playChannels = {
+  entries: (state, inv) => playChannelsApi().entries(state, inv),
+  windowEntries: (state, inv) => playChannelsApi().windowEntries(state, inv),
+  byChannel: (state, inv, channel) => playChannelsApi().byChannel(state, inv, channel),
+  entryOf: (state, inv, move) => playChannelsApi().entryOf(state, inv, move),
+  isChannelMove: move => playChannelsApi().isChannelMove(move),
+  entryError: (...args) => playChannelsApi().entryError(...args),
+  channelMissingReason: (...args) => playChannelsApi().channelMissingReason(...args),
+  discountOf: candidate => playChannelsApi().discountOf(candidate),
+  discountedCost: (...args) => playChannelsApi().discountedCost(...args),
+  takeToHand: (...args) => playChannelsApi().takeToHand(...args),
+  putBack: (...args) => playChannelsApi().putBack(...args),
+  actionTake: (...args) => playChannelsApi().actionTake(...args),
+  actionFinish: (...args) => playChannelsApi().actionFinish(...args),
+  commitEntries: (...args) => playChannelsApi().commitEntries(...args),
+  takeCommit: (...args) => playChannelsApi().takeCommit(...args),
+  actionLabel: (...args) => playChannelsApi().actionLabel(...args),
+  candidateId: candidate => playChannelsApi().candidateId(candidate),
+}
+
+// 2026-10-28：地点特性原语（location-traits.js）的惰性门面。
+// 同 hunchDeck / resourceBank / playChannels：工厂在文件后部才初始化，这里只放转发函数，
+// 调用发生在对局里，模块初始化顺序不受影响。
+const locationTraits = {
+  add: (...args) => locationTraitsApi().addLocationTrait(...args),
+  remove: (...args) => locationTraitsApi().removeLocationTrait(...args),
+  sync: state => locationTraitsApi().syncLocationTraitLinks(state),
+  active: state => locationTraitsApi().activeLocationTraitLinks(state),
+  granted: location => locationTraitsApi().grantedTraitsOf(location),
+}
+
 const commonDeps = {
   campaignState,
   ALL_CARDS,
@@ -1063,6 +1102,7 @@ const commonDeps = {
   extendHealHorror,
   hunchDeck,
   resourceBank,
+  playChannels,
   inHub,
   info,
   investigatorMoveDestinations,
@@ -1074,6 +1114,9 @@ const commonDeps = {
   locLabel,
   locName,
   locationExists,
+  // 2026-10-28：地点特性原语（location-traits.js）与地点帷幕临时修正读点。
+  locationTraits,
+  setLocationShroudMod,
   lolaCanUseCard,
   makeRuntime,
   newCardInstance,
@@ -1547,6 +1590,41 @@ let resourceBankImpl = null
 function resourceBankApi() {
   resourceBankImpl ||= createResourceBank({ cardName, info })
   return resourceBankImpl
+}
+
+// 2026-10-27：「如同手牌」通道原语（play-channels.js）。依赖都是 commonDeps 里的读点；
+// 工厂惰性装配，窗口/validate/dispatch 都通过上面的 playChannels 门面调用。
+let playChannelsImpl = null
+function playChannelsApi() {
+  playChannelsImpl ||= createPlayChannels({
+    cardDef,
+    cardName,
+    registeredEntry,
+    hunchDeck,
+    isCardAvailable,
+    isWeaknessCard,
+    isWeaknessCode,
+    runtimeCardAvailable,
+    lolaCanUseCard,
+    cannotPlayTypes,
+    playAccess,
+    cardPlayBlockedReason,
+    // assets 门面在本文件后部才初始化，这里用转发函数包一层，避免 TDZ。
+    hasPlayedEventsToDeckTop: (...args) => hasPlayedEventsToDeckTop(...args),
+    topDiscardEvent: (...args) => topDiscardEvent(...args),
+    leaveAsset: (...args) => leaveAsset(...args),
+    info,
+    unique,
+  })
+  return playChannelsImpl
+}
+
+// 2026-10-28：地点特性原语（location-traits.js）。只依赖注册表与卡面定义；
+// 工厂惰性装配，地点/幕密谋/开局与 scenarioRuntime 都通过上面的 locationTraits 门面调用。
+let locationTraitsImpl = null
+function locationTraitsApi() {
+  locationTraitsImpl ||= createLocationTraits({ registeredEntry, cardDef })
+  return locationTraitsImpl
 }
 
 // Phase 6（6d-12）：技能检定主流程搬进 tests.js。
@@ -2025,6 +2103,16 @@ export function flipLocationFace(...args) { return locationsApi().flipLocationFa
 export function revealLocation(...args) { return locationsApi().revealLocation(...args) } export function removeLocation(...args) { return locationsApi().removeLocation(...args) } export function syncClues(...args) { return locationsApi().syncClues(...args) }
 export function placeCluesOnLocation(...args) { return locationsApi().placeCluesOnLocation(...args) } export function notifyCluesRemoved(...args) { return locationsApi().notifyCluesRemoved(...args) } export function canDiscoverClueAt(...args) { return locationsApi().canDiscoverClueAt(...args) } export function discoverClueAt(...args) { return locationsApi().discoverClueAt(...args) }
 export function awardLocationVictory(...args) { return locationsApi().awardLocationVictory(...args) }
+export function setLocationShroudMod(...args) { return locationsApi().setLocationShroudMod(...args) }
+
+// 2026-10-28：地点特性原语（location-traits.js）的对外入口。
+// 场景 behavior 的 api 走 scenarioRuntime（addLocationTrait/removeLocationTrait/setShroudMod），
+// 这里额外导出纯函数入口，供测试、工具与后续内容复用。
+export function addLocationTrait(...args) { return locationTraits.add(...args) }
+export function removeLocationTrait(...args) { return locationTraits.remove(...args) }
+export function syncLocationTraitLinks(...args) { return locationTraits.sync(...args) }
+export function activeLocationTraitLinks(state) { return locationTraits.active(state) }
+export function grantedLocationTraits(location) { return grantedTraitsOf(location) }
 
 // Phase 6（6d-24）：检定的效果侧搬进 skill-effects.js；惰性装配保持导出与调用点。
 let skillEffectsImpl = null

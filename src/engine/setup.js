@@ -69,6 +69,8 @@ export function createSetup(deps) {
     isWeaknessCode,
     legalMoves,
     locName,
+    // 地点特性原语（location-traits.js）：布置完地点后让当前幕声明的特性连接规则生效。
+    locationTraits,
     newPlayerAssetInstance,
     openAbilityWindow,
     placeLocation,
@@ -714,6 +716,8 @@ function startScenario(state, index, events) {
   setupScenarioEnemies(state, events)
   setupScenarioDecks(state, events)
   setupChaosBag(state, events)
+  // 开局即生效的特性连接规则（actRule.locationTraitLinks）：地点已全部入场，重算一次自动连接。
+  locationTraits?.sync(state)
   scenarioBehavior(state).afterChaosBagSetup?.(state, events)
 
   state.currentSeat = firstAliveSeat(state)
