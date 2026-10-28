@@ -127,7 +127,7 @@ test('无目标纯收益反应默认 auto：罗兰、米兰、幸运兔脚；有
   assert.equal(defs['01075'].autoByDefault, true, '幸运兔脚只横置，允许默认 auto')
   assert.equal(defs['01073'].autoByDefault, false, '拾荒要选弃牌，默认 ask')
   assert.equal(defs['01004'].autoByDefault, false, '艾格尼丝要选敌人，默认 ask')
-  assert.equal(defs['01533'].autoByDefault, false, '新式 resolve 不自动判断')
+  assert.equal(defs['01533'].autoByDefault, true, '重印别名与 canonical 同口径：纯收益反应自动领取')
   const choice = (over = {}) => ({ id: 'reaction', kind: 'reaction', seat: 0, canSkip: true,
     source: 'rolandClue', cardCode: '01001', autoTriggerOptionId: 'trigger',
     options: [{ id: 'skip', label: '跳过' }, { id: 'trigger', label: '触发' }], ...over })
@@ -150,37 +150,28 @@ test('无目标纯收益反应默认 auto：罗兰、米兰、幸运兔脚；有
   assert.equal(arkham.autoChoice({ state: milan, seat: 0, states: { '01033': 'ask' } }), null)
 })
 
-test('升级版米兰这类新式非手牌反应也能 auto；快速事件仍不行', () => {
+test('升级版米兰是重印别名：与 01033 同口径（自动领取）；快速事件仍无自动资格', () => {
   const defs = allCardDefs({ runtimeOnly: false })
-  assert.equal(defs['01533'].hasReactionPrompt, true)
+  // 01533（Revised Core 重印）与 01033 是同一张印刷卡、共用一份实现：
+  // 无目标纯收益反应 ⇒ 有自动资格、默认 auto、不弹「是否触发」窗口。
+  assert.equal(defs['01533'].hasReactionPrompt, false, '自动领取的反应不弹询问窗口')
   assert.equal(defs['01533'].hasAutoReaction, true)
-  assert.equal(defs['01533'].autoByDefault, false)
+  assert.equal(defs['01533'].autoByDefault, true)
   assert.equal(defs['01522'].hasAutoReaction, false, '快速事件不从手牌自动打出')
-  const choice = { id: 'new', kind: 'reaction', seat: 0, canSkip: true,
-    source: { type: 'window', when: 'investigateSuccess' },
-    options: [{ id: 'skip', label: '不触发' }, { id: 'desc:milan', label: '米兰：获得 1 资源', cardCode: '01533' }] }
+  assert.equal(defs['01523'].hasAutoReaction, false, '快速事件不从手牌自动打出')
+  // 旧式反应窗口：autoOptionId/autoTriggerOptionId 与三态代答仍按 canonical 卡号工作。
+  const choice = { id: 'legacy', kind: 'reaction', seat: 0, canSkip: true,
+    source: 'milan', cardCode: '01533', autoOptionId: 'trigger', autoTriggerOptionId: 'trigger',
+    options: [{ id: 'skip', label: '跳过反应' }, { id: 'trigger', label: '触发反应' }] }
   const base = { pendingChoice: choice, cards: defs,
     investigators: [{ seat: 0, code: '01001', hand: [], assets: [], threat: [] }],
-    legalMoves: [{ action: 'choose', choiceId: 'new', optionId: 'skip' },
-      { action: 'choose', choiceId: 'new', optionId: 'desc:milan' }] }
-  assert.equal(arkham.autoChoice({ state: base, seat: 0, states: {} }), null)
+    legalMoves: [{ action: 'choose', choiceId: 'legacy', optionId: 'skip' },
+      { action: 'choose', choiceId: 'legacy', optionId: 'trigger' }] }
+  assert.deepEqual(arkham.autoChoice({ state: base, seat: 0, states: {} }),
+    { action: 'choose', choiceId: 'legacy', optionId: 'trigger', auto: true })
   assert.equal(arkham.autoChoice({ state: base, seat: 0, states: { '01533': 'ask' } }), null)
-  assert.deepEqual(arkham.autoChoice({ state: base, seat: 0, states: { '01533': 'auto' } }),
-    { action: 'choose', choiceId: 'new', optionId: 'desc:milan', auto: true })
   assert.deepEqual(arkham.autoChoice({ state: base, seat: 0, states: { '01533': 'skip' } }),
-    { action: 'choose', choiceId: 'new', optionId: 'skip', auto: true })
-  // 同一张卡出现两个候选时，不替玩家排序，保持询问。
-  const two = { ...base,
-    pendingChoice: { ...choice, options: [...choice.options, { id: 'desc:milan-2', label: '第二个候选', cardCode: '01533' }] },
-    legalMoves: [...base.legalMoves, { action: 'choose', choiceId: 'new', optionId: 'desc:milan-2' }] }
-  assert.equal(arkham.autoChoice({ state: two, seat: 0, states: { '01533': 'auto' } }), null)
-  // 快速事件没有自动资格；即使有 auto 覆盖也不代答。
-  const fast = { ...base,
-    pendingChoice: { ...choice, options: [{ id: 'skip', label: '不触发' },
-      { id: 'desc:evidence', label: '证据！', cardCode: '01522' }] },
-    legalMoves: [{ action: 'choose', choiceId: 'new', optionId: 'skip' },
-      { action: 'choose', choiceId: 'new', optionId: 'desc:evidence' }] }
-  assert.equal(arkham.autoChoice({ state: fast, seat: 0, states: { '01522': 'auto' } }), null)
+    { action: 'choose', choiceId: 'legacy', optionId: 'skip', auto: true })
 })
 
 test('auto 只代答反应触发，不会替玩家选目标', () => {

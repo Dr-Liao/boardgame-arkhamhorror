@@ -569,11 +569,6 @@ import e01022 from './01022.js'
 import e01023 from './01023.js'
 import e01027 from './01027.js'
 import e01033 from './01033.js'
-import e01518 from './01518.js'
-import e01522 from './01522.js'
-import e01523 from './01523.js'
-import e01527 from './01527.js'
-import e01533 from './01533.js'
 
 export const CARD_ENTRY_LIST = [
   e01001,
@@ -1144,11 +1139,6 @@ export const CARD_ENTRY_LIST = [
   e01023,
   e01027,
   e01033,
-  e01518,
-  e01522,
-  e01523,
-  e01527,
-  e01533,
 ]
 
 export const CARD_ENTRY_BY_CODE = new Map(CARD_ENTRY_LIST.map(entry => [entry.code, entry]))

@@ -16,7 +16,7 @@
 //   · 文案就是玩家/AI 看到的拒绝原因，迁移时必须逐字保留。
 
 import { EFFECTS } from '../cards/card-effects.js'
-import { descriptorOfKind, playConditionFor, registeredEntry } from './ability.js'
+import { descriptorOfKind, playConditionFor, quickEventView, registeredEntry } from './ability.js'
 import {
   clueAtLocation, investigatorClues, noEnemiesHere, ownFirstAction, ownTurn,
   remainingSanityAtLeast, resignAvailable,
@@ -100,8 +100,10 @@ function entryPlayableFromThreat(code) {
 export function playAccess(code) {
   const effect = legacyPlayFields(code)
   // 快速事件搬到能力层后，fast + trigger 的 played 描述子同样只能在反应窗口打出。
+  // P2-4：reaction+fromHand+quickEvent 走统一候选视图，同样不算普通出牌（reactionOnly）。
   const descriptor = descriptorOfKind(code, 'played')
-  const reactionOnly = Boolean(effect.reaction) || (descriptor?.fast === true && descriptor.trigger.length > 0)
+  const reactionOnly = Boolean(effect.reaction) || Boolean(quickEventView(code))
+    || (descriptor?.fast === true && descriptor.trigger.length > 0)
   return {
     fromDiscard: effect.playableFromDiscard === true || descriptor?.playableFromDiscard === true
       || (descriptorOfKind(code, 'played') ? false : false) || entryPlayableFromDiscard(code),

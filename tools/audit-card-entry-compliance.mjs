@@ -24,7 +24,7 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url))
 const LEDGER = path.join(ROOT, 'audit', 'card-entry-compliance.json')
 const ENTRY_DIR = path.join(ROOT, 'src', 'cards', 'entries')
 const ENCOUNTER_DIR = path.join(ROOT, 'src', 'cards', 'encounter-entries')
-const IGNORED = new Set(['index.js', '_shared.js', '_lookup.js'])
+const IGNORED = new Set(['index.js', '_shared.js', '_lookup.js', '_reprint-aliases.js'])
 
 const { ALL_CARDS } = await import(pathToFileURL(path.join(ROOT, 'src', 'cards', 'cards-data.js')).href)
 

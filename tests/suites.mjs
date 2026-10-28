@@ -20,6 +20,7 @@ export const FAST_TESTS = Object.freeze([
   'content-registry.test.mjs',
   'hall-boundary.test.mjs',
   'card-identity.test.mjs',
+  'reprint-aliases.test.mjs', // P2-4：重印别名（015xx → 01xx）+ 快速事件统一通道候选视图
   'state-presentation.test.mjs',
   'view-privacy.test.mjs', // 观察投影隐私边界（阶段 A 拆分护栏：手牌/牌组/选项/私人检定）
   'hall-static.test.mjs', // 大厅静态资源（P7 前就存在但漏登记，P7 合并时补入并实测全绿）

@@ -160,7 +160,7 @@ test('米兰资产卡有三态按钮；不显示神智角标，恐惧扣除标�
   expect(errors).toEqual([])
 })
 
-test('带经验角标的资产卡：三态按钮与经验角标不重叠', async ({page}) => {
+test('带经验角标的资产卡：经验角标在左、反应按钮贴最右且互不重叠', async ({page}) => {
   const errors=[];page.on('pageerror',e=>errors.push(e.message))
   await page.setViewportSize({width:1440,height:900})
   const f=await fixture(page)
@@ -174,39 +174,72 @@ test('带经验角标的资产卡：三态按钮与经验角标不重叠', async
   const mode=card.locator('.ah-reaction-mode')
   const xp=card.locator('.ah-minicard-xp')
   await expect(mode).toBeVisible();await expect(xp).toBeVisible()
-  const modeBox=await mode.boundingBox(),xpBox=await xp.boundingBox()
-  expect(modeBox).not.toBeNull();expect(xpBox).not.toBeNull()
+  const cardBox=await card.boundingBox(),modeBox=await mode.boundingBox(),xpBox=await xp.boundingBox()
+  for(const box of [cardBox,modeBox,xpBox])expect(box).not.toBeNull()
   expect(markerOverlap(modeBox,xpBox)).toBe(false)
+  // 2026-10-28：经验角标与反应按钮换位——按钮固定在卡面最右，角标排在它左侧。
+  expect(xpBox.x).toBeLessThan(modeBox.x)
+  expect(modeBox.x+modeBox.width).toBeGreaterThan(xpBox.x+xpBox.width)
+  expect(cardBox.x+cardBox.width-(modeBox.x+modeBox.width)).toBeLessThanOrEqual(2)
+  expect(xpBox.x).toBeGreaterThanOrEqual(cardBox.x-0.5)
   await page.screenshot({path:output+'xp-card-reaction.png',animations:'disabled'})
-  // 窄屏（手机 390）装备卡更窄：按钮仍要在卡内且不压经验角标。
+  // 窄屏（手机 390）装备卡更窄：按钮仍在最右，经验角标压缩后也要完整在卡内、不压按钮。
   await page.setViewportSize({width:390,height:844})
   await expect(mode).toBeVisible()
-  const modeMobile=await mode.boundingBox(),xpMobile=await xp.boundingBox()
-  expect(modeMobile).not.toBeNull();expect(xpMobile).not.toBeNull()
+  const cardMobile=await card.boundingBox(),modeMobile=await mode.boundingBox(),xpMobile=await xp.boundingBox()
+  for(const box of [cardMobile,modeMobile,xpMobile])expect(box).not.toBeNull()
   expect(markerOverlap(modeMobile,xpMobile)).toBe(false)
-  expect(modeMobile.x).toBeGreaterThanOrEqual(0)
+  expect(xpMobile.x).toBeLessThan(modeMobile.x)
+  expect(xpMobile.x).toBeGreaterThanOrEqual(cardMobile.x-0.5)
+  expect(cardMobile.x+cardMobile.width-(modeMobile.x+modeMobile.width)).toBeLessThanOrEqual(2)
+  expect(errors).toEqual([])
+})
+
+test('压在调查员底下的 48px 小卡：经验角标在左、反应按钮贴最右', async ({page}) => {
+  const errors=[];page.on('pageerror',e=>errors.push(e.message))
+  await page.setViewportSize({width:1440,height:900})
+  const f=await fixture(page)
+  await f.update(session=>{
+    session.state.cards['01041']={code:'01041',name:'伊察姆纳圆盘',type:'asset',cost:3,xp:2,klass:'seeker',
+      text:'你获得+1[willpower]。',hasAutoReaction:true,autoByDefault:true,hasReactionPrompt:false}
+    session.state.investigators[0].beneath=['01041']
+  })
+  const card=page.locator('.ah-beneath-row .ah-minicard[data-card-code="01041"]')
+  await expect(card).toHaveCount(1)
+  const mode=card.locator('.ah-reaction-mode')
+  const xp=card.locator('.ah-minicard-xp')
+  await expect(mode).toBeVisible();await expect(xp).toBeVisible()
+  const cardBox=await card.boundingBox(),modeBox=await mode.boundingBox(),xpBox=await xp.boundingBox()
+  for(const box of [cardBox,modeBox,xpBox])expect(box).not.toBeNull()
+  expect(markerOverlap(modeBox,xpBox)).toBe(false)
+  // 48px 窄卡：换位后按钮仍贴最右，压缩过的经验胶囊完整落在卡内（不被 overflow:hidden 裁掉）。
+  expect(xpBox.x).toBeLessThan(modeBox.x)
+  expect(xpBox.x).toBeGreaterThanOrEqual(cardBox.x-0.5)
+  expect(cardBox.x+cardBox.width-(modeBox.x+modeBox.width)).toBeLessThanOrEqual(2)
+  await page.screenshot({path:output+'xp-beneath-reaction.png',animations:'disabled'})
   expect(errors).toEqual([])
 })
 function markerOverlap(a,b){return !(a.x+a.width<=b.x+1||b.x+b.width<=a.x+1||a.y+a.height<=b.y+1||b.y+b.height<=a.y+1)}
 
-test('升级版米兰 01533 也有三态按钮（默认 ask，可切 auto）', async ({page}) => {
+test('升级版米兰 01533 是重印别名（与 01033 同口径：默认 auto，可切 skip）', async ({page}) => {
   const errors=[];page.on('pageerror',e=>errors.push(e.message))
   await page.setViewportSize({width:1440,height:900})
   const f=await fixture(page)
   await f.update(session=>{
     session.state.cards['01533']={code:'01533',name:'米兰·克里斯托弗博士',type:'asset',cost:4,sanity:2,
-      klass:'seeker',text:'你获得+1[intellect]。',hasReactionPrompt:true,hasAutoReaction:true,autoByDefault:false}
+      klass:'seeker',text:'你获得+1[intellect]。',hasAutoReaction:true,autoByDefault:true,hasReactionPrompt:false}
     session.state.investigators[0].assets=[{id:'milan2',code:'01533',exhausted:false}]
   })
   const card=page.locator('.ah-minicard[data-card-code="01533"]')
   await expect(card).toHaveCount(1)
   const mode=card.locator('.ah-reaction-mode')
   await expect(mode).toHaveCount(1)
-  await expect(mode).toHaveAttribute('data-reaction-mode','ask')
+  // P2-4 口径裁决：重印号与 canonical 共用一份实现，纯收益反应默认自动领取（三态默认 auto）。
+  await expect(mode).toHaveAttribute('data-reaction-mode','auto')
   await expect(mode).toHaveText('')
   await mode.click()
-  await expect(mode).toHaveAttribute('data-reaction-mode','auto')
-  await expect(mode).toHaveClass(/is-auto/)
+  await expect(mode).toHaveAttribute('data-reaction-mode','skip')
+  await expect(mode.locator('.ah-reaction-slash')).toHaveCount(1)
   await page.screenshot({path:output+'milan2-card-reaction.png',animations:'disabled'})
   expect(errors).toEqual([])
 })

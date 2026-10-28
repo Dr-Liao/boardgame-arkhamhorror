@@ -23,7 +23,7 @@ import { buildCardIndex, entryFiles } from '../tools/build-card-index.mjs'
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
 const ENTRY_DIR = path.join(ROOT, 'src/cards/entries')
-const IGNORED = new Set(['index.js', '_shared.js'])
+const IGNORED = new Set(['index.js', '_shared.js', '_reprint-aliases.js'])
 
 test('每张卡一个文件：文件名 = 条目 code，且只 export default 一个条目', async () => {
   const files = await readdir(ENTRY_DIR)

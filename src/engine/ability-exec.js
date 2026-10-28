@@ -275,6 +275,9 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
           // Phase 5（5b-6）：从旧式 reactions 搬来的反应由 triggerReaction 用旧式询问结算，
           // 这里跳过，避免同一张卡在两个提示里各出现一次。
           if (descriptor.legacyReaction) continue
+          // P2-4：reactionWindow 的快速事件出口已经枚举过带 quickEvent 的候选（统一通道），
+          // 这里跳过，避免同一次触发被问两遍。
+          if (opts.quickEventWindow && descriptor.quickEvent) continue
           // 2026-10-27「如同手牌」通道（play-channels）：通道来源只允许 fromHand 描述子；
           // 手牌/资产来源的判定保持不变。
           if (fromChannel && !descriptor.fromHand) continue
@@ -295,6 +298,7 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
           const source = { ...attachment, hostAssetId: orphanHost.id, hostCode: orphanHost.code, orphanHost }
           for (const descriptor of descriptorsInEntry(attachedEntry, windowId, 'reaction')) {
             if (descriptor.legacyReaction) continue
+            if (opts.quickEventWindow && descriptor.quickEvent) continue
             if (!descriptorUsable(state, inv, source, descriptor, { windowId, context })) continue
             candidates.push({ source, code: attachment.code, descriptor })
           }

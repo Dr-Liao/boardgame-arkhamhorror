@@ -428,6 +428,18 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 回归护栏：`tests/location-traits.test.mjs`（授予/多来源/撤销/幂等/存档往返/声明接线）、
 `tests/echoes-passageways.test.mjs`（真实引擎的往事回声端到端）、`tests/carcosa-middle-a.test.mjs`。
 
+### 7.3 快速事件统一通道与重印别名（P2-4，2026-10-28）
+
+- **快速事件只有一条通道**：`quickEventView(code)` 把 `played + fast + trigger`（旧）与
+  `reaction + fromHand + quickEvent`（新）归一；候选只从 `reactionWindow` 出（旧展示方言），
+  执行只走 `playReactionCard`（费用/日志/去向同一口径）。`openAbilityWindow` 在
+  `quickEventWindow` 下跳过 `quickEvent` 候选（不双问），`playerWindow` 对「旧 shim + free 描述子」
+  两条枚举路径去重。
+- **重印只实现一次**：canonical（`01xx`）文件是唯一实现；`entries/_reprint-aliases.js` 白名单 +
+  `card-identity.js` 出口 + `registerCardAbilities` 注册期克隆（`reprintOf`）让别名号复用同一行为与
+  运行时可用性，R2 清零。5 对合并与米兰 auto 口径裁决见
+  [`p2-4-quick-event-channel.md`](p2-4-quick-event-channel.md)。
+
 ---
 
 ## 8. 迁移一张卡的标准动作
@@ -452,6 +464,13 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
    - 新写的：`resolve(ctx)`，走 `openAbilityWindow` 的「【能力】…」询问。
    同一张卡只用一种；`legacyReaction` 是 Phase 5 的过渡标记，Phase 6 删掉旧式询问后一起移除。
    读点是 `triggerReaction`（`descriptorReactionSpec`）与 `openAbilityWindow`（跳过 `legacyReaction`）；
+   5d. **快速事件（P2-4，2026-10-28）**：`played + fast + trigger`（旧写法）与
+   `reaction + fromHand + quickEvent`（新写法）是快速事件的两种合法数据形状，但只有一条通道：
+   `ability.js#quickEventView` 归一候选视图 → `encounter.js#reactionWindow` 是唯一候选出口
+   （保留旧展示方言）→ `assets.js#playReactionCard` 是唯一执行器（费用/⚡日志/`state._reaction`/
+   去向旗标同一口径）。`quickEvent` 只能写在 `reaction` 描述子上并隐式 `fromHand`；
+   `playAccess().reactionOnly` 用同一视图判定，快速事件不能当普通行动打出。
+   设计、重印别名与口径裁决见 [`p2-4-quick-event-channel.md`](p2-4-quick-event-channel.md)；
 6. 测试从"断言 `EFFECTS[code]` 的形状"改成"断言行为"，参照 `tests/card-lifecycle.test.mjs` 的三段式；
    已迁移的 21 张逃生卡另有一层通道断言（`tests/phase2-primitives.test.mjs` 的最后三条）；
 7. 跑 `npm run cards:audit:write`（白名单收缩）+ `npm run test:fast`，指标下降即迁移成立的证据；

@@ -43,6 +43,9 @@ import { normalizeTrigger, isKnownWindow, windowKind } from './windows.js'
 import { normalizeTarget } from './targets.js'
 import { normalizeLimit } from './limits.js'
 import { NUMERIC_COST_KEYS, validateCostValue } from './cost.js'
+// P2-4：重印别名数据（015xx → 01xx，事实源 cards-data）。注册期按这份映射生成「只改 code」的别名条目。
+import { ALL_CARDS } from '../cards/cards-data.js'
+import { reprintAliasesFor } from '../cards/card-identity.js'
 // Phase 2（C4）：上限的作用域与归属从 ability.js 搬进 limits.js，这里只保留再导出，
 // 引擎与测试的 import 位置因此不需要改（引擎仍从 ability.js 取 limitUsed）。
 export { describeLimit, limitKey, limitUsed, markLimitUsed } from './limits.js'
@@ -105,6 +108,11 @@ const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'crit
   // （`是否触发「X」的反应？` + skip/trigger）结算它，保证迁移前后玩家看到的提示与状态指纹一致。
   // Phase 6 删掉旧式询问后，这个标记随之消失。
   'legacyReaction',
+  // P2-4（2026-10-28）：「快速事件统一通道」标记（只能写在 reaction + fromHand 描述子上）。
+  // reactionWindow 用 ability.js#quickEventView 把 played+fast 与 reaction+fromHand+quickEvent
+  // 归一成同一份候选视图：唯一候选出口（反应窗口的旧手牌下标 id/卡名 label/⚡ 日志/去向旗标）
+  // 与唯一执行器（assets.js#playReactionCard）。这样两种写法不再各走一条窗口/弃牌口径。
+  'quickEvent',
   // 强制/反应描述子默认会写一行「✨ 使用「X」…」；印在敌人卡上的强制效果通常没有这行，
   // 用 silent 保持迁移前后的日志逐字一致（读点在 openAbilityWindow -> executeDescriptor）。
   'silent'])
@@ -112,6 +120,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // 第 2 步 P2.9：塔罗的开局入场 / 手牌封锁 / 不能换掉（只有布尔值，无行为代码）。
   'entersPlayFromOpeningHand', 'blocksCommitWhileInHand', 'cannotMulliganAway',
   'uses', 'usesType', 'playCondition', 'simplified', 'note', 'onFound', 'assetRule', 'flags',
+  // P2-4：重印别名条目（注册期由 canonical 克隆生成）记录 canonical 卡号，供指标/审计去重。
+  'reprintOf',
   // Phase 5（D2）：「用完弃置」是使用次数元数据，与 uses/usesType 同层。
   // 读点仍是 assetEffect / executeDescriptor 两处，旧 DSL 字段逐渐消失。
   'discardWhenEmpty',
@@ -414,6 +424,13 @@ export function normalizeDescriptor(raw, { code, index }) {
   assertKnownKeys(raw, DESCRIPTOR_KEYS, origin)
   const kind = raw.kind
   if (!ABILITY_KINDS.includes(kind)) throw new Error(`${origin}: 未知 kind ${JSON.stringify(kind)}`)
+  // P2-4：quickEvent 是 reaction+fromHand 的快速事件统一通道标记；其它 kind 不合法。
+  if (raw.quickEvent != null && typeof raw.quickEvent !== 'boolean') {
+    throw new Error(`${origin}: quickEvent 必须是布尔值`)
+  }
+  if (raw.quickEvent === true && kind !== 'reaction') {
+    throw new Error(`${origin}: quickEvent 只能写在 reaction 描述子上（fromHand 快速事件）`)
+  }
   const trigger = normalizeTrigger(raw.trigger)
   if (KINDS_NEEDING_TRIGGER.has(kind) && !trigger.length) throw new Error(`${origin}: ${kind} 必须声明 trigger`)
   for (const id of trigger) {
@@ -473,7 +490,9 @@ export function normalizeDescriptor(raw, { code, index }) {
     target,
     cost: Object.freeze({ ...(raw.cost || {}) }),
     limit,
-    fromHand: raw.fromHand === true,
+    fromHand: raw.fromHand === true || raw.quickEvent === true,
+    // P2-4：快速事件统一通道标记（reaction+fromHand 写法；读点 reactionWindow / playReactionCard）。
+    quickEvent: raw.quickEvent === true,
     noPlayCost: raw.noPlayCost === true,
     // Phase 2：事件卡的"快速"/"不引发借机攻击"是卡面关键字，跟着描述子走。
     fast: raw.fast === true,
@@ -523,6 +542,7 @@ function windowKindMatches(descriptor, windowId) {
 
 export function registerCardAbilities(entries) {
   const list = Array.isArray(entries) ? entries : [entries]
+  const batchCodes = new Set(list.map(entry => entry?.code))
   for (const entry of list) {
     if (!entry || typeof entry !== 'object') throw new Error('能力条目必须是对象')
     const origin = `能力条目 ${entry.code || '<无 code>'}`
@@ -892,13 +912,29 @@ export function registerCardAbilities(entries) {
       traumaAtGameEndWhenInHand: entry.traumaAtGameEndWhenInHand === true,
       // 条目级的「简化声明」：审计把 simplified + note 汇总进 remaining，不静默放过。
       simplified: entry.simplified === true,
+      // P2-4：重印别名条目的 canonical 卡号（null = 自己就是唯一实现）。
+      reprintOf: entry.reprintOf || null,
       note: entry.note ? String(entry.note) : null,
       source: entry.source || null,
       registered: true,
     }
     REGISTRY.set(entry.code, normalized)
   }
-  return list.length
+  // P2-4：重印别名注册（015xx → 01xx，数据在 src/cards/reprint-aliases.js）。
+  // canonical 条目已经在本次批量里注册、且别名号没有自己的条目文件时，生成「只改 code」的别名条目；
+  // 同一张印刷卡因此仍只有一份实现，别名号也能被 registeredEntry / 窗口枚举 / 卡面开关读到。
+  // 注册期校验 cards-data 的双向重印关系，防止手写真号与印刷数据漂移。
+  const aliasEntries = []
+  for (const entry of list) {
+    for (const alias of reprintAliasesFor(entry.code) || []) {
+      if (batchCodes.has(alias) || REGISTRY.has(alias)) continue
+      if (ALL_CARDS[alias]?.duplicateOfCode !== entry.code) {
+        throw new Error(`重印别名 ${entry.code} → ${alias}：cards-data 的 duplicateOfCode 不匹配`)
+      }
+      aliasEntries.push({ ...entry, code: alias, reprintOf: entry.code })
+    }
+  }
+  return list.length + (aliasEntries.length ? registerCardAbilities(aliasEntries) : 0)
 }
 
 export function registeredEntry(code) {
@@ -917,7 +953,11 @@ export function registeredEntries() {
 
 export function declaredAbilityCount() {
   let total = 0
-  for (const entry of REGISTRY.values()) total += entry.abilities.length
+  // P2-4：重印别名是 canonical 的注册副本，不重复计入「已实现能力数」（指标只减不增）。
+  for (const entry of REGISTRY.values()) {
+    if (entry.reprintOf) continue
+    total += entry.abilities.length
+  }
   return total
 }
 
@@ -1026,6 +1066,24 @@ export function descriptorOfKind(code, kind) {
 
 export function weaknessDescriptor(code) {
   return descriptorOfKind(code, 'weakness')
+}
+
+// P2-4「快速事件统一通道」的唯一候选视图：把两种合法写法归一成同一份形状。
+//   · 旧写法：`kind:'played', fast:true, trigger:[...], effect|resolve`（47 张 A 支卡，日志/指纹已锁）
+//   · 新写法：`kind:'reaction', fromHand:true, quickEvent:true, trigger:[...], criteria, effect|resolve`
+// 读点只有两个：encounter.js#reactionWindow（候选出口）与 assets.js#playReactionCard（执行器）。
+// 返回值：{ style:'played'|'reaction', descriptor, trigger, criteria }；不是快速事件时返回 null。
+export function quickEventView(code) {
+  const played = descriptorOfKind(code, 'played')
+  if (played?.fast && played.trigger.length) {
+    return { style: 'played', descriptor: played, trigger: played.trigger, criteria: played.criteria }
+  }
+  const reaction = (REGISTRY.get(code)?.abilities || []).find(descriptor =>
+    descriptor.kind === 'reaction' && descriptor.fromHand && descriptor.quickEvent)
+  if (reaction && reaction.trigger.length) {
+    return { style: 'reaction', descriptor: reaction, trigger: reaction.trigger, criteria: reaction.criteria }
+  }
+  return null
 }
 
 export function modifiersFor(code) {

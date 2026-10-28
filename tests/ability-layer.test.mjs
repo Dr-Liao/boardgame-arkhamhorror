@@ -208,14 +208,16 @@ test('P0-A 02040 抽牌后弃掉该牌并换 3 资源', () => {
   assert.ok(state.investigators[0].discard.includes('01086'))
 })
 
-test('P0-A 01523 闪躲取消敌人攻击；01522 证据！击败敌人后发现线索', () => {
+test('P0-A 01523 闪躲取消敌人攻击；01522 证据！击败敌人后发现线索（重印别名）', () => {
+  // P2-4：01522/01523 是 01022/01023 的重印别名，行为由 canonical 唯一实现提供，
+  // 走「快速事件统一通道」——反应窗口里以 cardCode 选项出现（旧方言，与 golden 一致）。
   // 闪躲：敌人阶段攻击同地点调查员时取消。
   const dodge = fixture('01001')
   dodge.investigators[0].hand = ['01523']
   enemy(dodge, { fight: 1, evade: 1, health: 5, damage: 3, horror: 3, engagedSeat: 0 })
   move(dodge, { action: 'endTurn' })
-  assert.ok(passUntilAbility(dodge), '敌人攻击时应出现 01523 的反应窗口')
-  chooseAbility(dodge, '取消该次攻击')
+  assert.ok(passUntilCard(dodge, '01523'), '敌人攻击时应出现 01523 的快速事件选项')
+  chooseCard(dodge, '01523')
   passAll(dodge)
   assert.equal(dodge.investigators[0].damage, 0)
   assert.equal(dodge.investigators[0].horror, 0)
@@ -228,8 +230,8 @@ test('P0-A 01523 闪躲取消敌人攻击；01522 证据！击败敌人后发现
   const target = enemy(evidence, { fight: 0, evade: 0, health: 1 })
   evidence.chaosBag = ['0']
   move(evidence, { action: 'fight', enemyId: target.id })
-  assert.ok(passUntilAbility(evidence), '击败敌人后应出现 01522 的反应窗口')
-  chooseAbility(evidence, '发现同地点 1 个线索')
+  assert.ok(passUntilCard(evidence, '01522'), '击败敌人后应出现 01522 的快速事件选项')
+  chooseCard(evidence, '01522')
   passAll(evidence)
   assert.equal(evidence.investigators[0].clues, 1)
   assert.equal(evidence.locations[0].clues, 1)
@@ -386,16 +388,17 @@ test('P0-A 04051 亚历山卓·维拉：在[[古代]]地点横置抽 2', () => {
 })
 
 test('P0-A 反应卡：01533 调查成功获资源、02061 最后线索抽牌、02218 躲避成功抽牌', () => {
-  // 01533 米兰·克里斯托弗博士：成功调查后获得 1 资源（无横置费用）。
+  // 01533 米兰·克里斯托弗博士是 01033 的重印别名：canonical 是「无目标纯收益反应」，
+  // 按本项目口径默认自动领取（golden 13 局锁定了这条行为），因此调查成功后资源直接 +1、
+  // 不产生反应窗口。口径见 docs/card-model.md「重印与自动领取」。
   const milan = fixture('01001')
   asset(milan, '01533')
   milan.locations[0].clues = 2
   milan.chaosBag = ['0']
   const resourcesBefore = milan.investigators[0].resources
   move(milan, { action: 'investigate' })
-  assert.ok(passUntilAbility(milan), '成功调查后应出现 01533 的反应窗口')
-  chooseAbility(milan, '获得 1 资源')
   passAll(milan)
+  assert.equal(milan.pendingChoice, null, '纯收益反应自动领取，不产生待决选择')
   assert.equal(milan.investigators[0].resources, resourcesBefore + 1)
 
   // 02061 沃伦·莱斯教授：发现所在地点最后 1 个线索后横置抽 1。

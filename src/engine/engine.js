@@ -77,7 +77,7 @@ import {
 } from './lifecycle.js'
 import {
   abilityShim, descriptorOfKind, descriptorsForWindow, descriptorsInEntry, elderSignDescriptor, limitUsed, markLimitUsed,
-  modifiersFor, registeredCodes, registeredEntry, registerCardAbilities, weaknessDescriptor,
+  modifiersFor, quickEventView, registeredCodes, registeredEntry, registerCardAbilities, weaknessDescriptor,
   // Phase 3（D1）：非玩家卡通道的枚举点。
   hasNonPlayerBehavior,
 } from './ability.js'
@@ -1070,6 +1070,8 @@ const commonDeps = {
   damageEnemy,
   defeatEnemy,
   descriptorOfKind,
+  // P2-4：快速事件统一通道的候选视图（encounter.js#reactionWindow / assets.js#playReactionCard 读点）。
+  quickEventView,
   discardRandomFromHand,
   discoverClueAt,
   disengageEnemy,

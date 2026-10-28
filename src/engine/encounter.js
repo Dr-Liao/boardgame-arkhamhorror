@@ -36,6 +36,7 @@ export function createEncounter(deps) {
     chooseAmong,
     controlledAbilityCards,
     descriptorOfKind,
+  quickEventView,
     descriptorReactionSpec,
     descriptorSources,
     descriptorUsable,
@@ -224,12 +225,12 @@ function reactionWindow(state, when, context, events, opts = {}) {
   for (const inv of aliveInvestigators(state)) {
     if (context.peril && inv.seat !== context.seat) continue
     while (!context.cancelled) {
-      // Phase 5（5a-26）：「彩绘世界」这类能复制牌库下方事件的卡由条目级 copiesBeneathEvents 声明。
+      // Phase 6（6e-8）/ P2-4：快速事件统一通道——played+fast 与 reaction+fromHand+quickEvent
+      // 走同一份候选视图（quickEventView），复制/通道候选都用它判定「是快速事件」。
       const handCandidates = inv.hand.flatMap((code, index) => registeredEntry(code)?.copiesBeneathEvents
         ? (inv.beneath || []).flatMap(copyCode => {
           const copied = cardDef(copyCode)
-          // Phase 6（6e-8）：快速反应事件搬成 `played` + `fast` + `trigger`，复制时同样算可打出。
-          const copyReactive = descriptorOfKind(copyCode, 'played')?.fast === true
+          const copyReactive = quickEventView(copyCode) != null
           return copied?.type === 'event' && !copied.exceptional && copyReactive
             ? [{ code, copyCode, index, id: `${index}:${copyCode}` }] : []
         })
@@ -248,13 +249,16 @@ function reactionWindow(state, when, context, events, opts = {}) {
           }
           const code = item.code
           const copyCode = item.copyCode
-          // Phase 5（5c-8）：快速事件也可以在能力层声明——`kind:'played'` + `fast` + `trigger:<窗口>`，
-          // 条件写在 criteria 的旧字段里。两条通道共用下面同一份条件判定。
-          const descriptor = descriptorOfKind(copyCode || code, 'played')
-          const reaction = (descriptor?.fast && descriptor.trigger?.includes(when)
-              ? { when, ...(descriptor.criteria && typeof descriptor.criteria === 'object' && !Array.isArray(descriptor.criteria)
-                ? descriptor.criteria : {}) }
-              : null)
+          // P2-4 快速事件统一通道（唯一候选出口）：两种写法在这里归一成同一份视图。
+          //   · played + fast + trigger（旧写法，日志/指纹已锁）——criteria 用旧对象方言；
+          //   · reaction + fromHand + quickEvent（新写法）——criteria 用 matcher。
+          const quick = quickEventView(copyCode || code)
+          const reaction = (quick?.trigger.includes(when)
+            ? (quick.style === 'played'
+              ? { when, ...(quick.criteria && typeof quick.criteria === 'object' && !Array.isArray(quick.criteria)
+                ? quick.criteria : {}) }
+              : { when })
+            : null)
           if (!reaction || reaction.when !== when || !runtimeCardAvailable(state, inv, code)) return false
           if (!lolaCanUseCard(inv, code)) return false
           if (!reaction.anyLocation && context.location != null && inv.location !== context.location) return false
@@ -284,14 +288,11 @@ function reactionWindow(state, when, context, events, opts = {}) {
           const baseCost = playCost(state, inv, cardDef(copyCode || code))
           if (inv.resources < (item.entry ? playChannels.discountedCost(baseCost, item.entry) : baseCost)) return false
           // 04111 坚韧不拔等：criteria 写成函数/数组的新通道（旧的对象形字段展开保持原样）。
-          if (descriptor?.criteria
-            && (Array.isArray(descriptor.criteria) || typeof descriptor.criteria === 'function')
-            && !evaluateCriteria(descriptor.criteria, { state, inv, source: null, windowId: when, context })) return false
-          if (descriptor) {
-            // resolve 型描述子自己判断可行性；数据体走效果解释器的校验。
-            return Boolean(descriptor.resolve) || !effectError(state, inv, descriptor.effect)
-          }
-          return !effectError(state, inv, playedEffect(copyCode || code))
+          if (quick.criteria
+            && (Array.isArray(quick.criteria) || typeof quick.criteria === 'function')
+            && !evaluateCriteria(quick.criteria, { state, inv, source: null, windowId: when, context })) return false
+          // resolve 型描述子自己判断可行性；数据体走效果解释器的校验。
+          return Boolean(quick.descriptor.resolve) || !effectError(state, inv, quick.descriptor.effect)
         })
       if (!candidates.length) break
       const answer = requestChoice(state, {
@@ -326,7 +327,9 @@ function reactionWindow(state, when, context, events, opts = {}) {
     }
   }
   // 能力层：同一个窗口下，声明式反应/强制能力也在这里结算。
-  return openAbilityWindow(state, when, context, events, opts)
+  // P2-4：把「已在快速事件出口枚举过」这一事实传下去，openAbilityWindow 会跳过
+  // reaction+fromHand+quickEvent 候选，避免同一次触发被问两遍（旧写法本来就不会进能力窗口）。
+  return openAbilityWindow(state, when, context, events, { ...opts, quickEventWindow: true })
 }
 
 // Phase 5（5a-25）：「离某调查员最远的地点」——弱点生成与 api 共用一份实现。
@@ -476,6 +479,9 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
     const inv = participants[cursor++ % participants.length]
     if (inv.defeated || inv.resigned) { passed++; continue }
     const options = []
+    // P2-4：免费能力有两条枚举路径（旧式 shim + 能力层 free 描述子）。同一张卡同一条描述子
+    // 只能出现一次，否则窗口选项顺序/id 会变（重放指纹敏感）且同一能力被列两遍。
+    const shimOffered = new Set()
     if (!cannotTriggerFreeAbility(state, inv)) {
       for (const asset of controlledAbilityCards(inv)) {
         for (const [index, ability] of (assetEffect(inv, asset)?.abilities || []).entries()) {
@@ -494,6 +500,7 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
             id: `${asset.id}:${index}:${targetId || ''}`, label: `${cardName(asset.code)}：${ability.label}`,
             assetId: asset.id, index, targetId,
           })
+          if (ability.descriptor) shimOffered.add(ability.descriptor)
         }
       }
     }
@@ -505,6 +512,8 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
         const descriptors = row.entry?.abilities || []
         for (const [index, descriptor] of descriptors.entries()) {
           if (descriptor.kind !== 'free' || descriptor.fromHand) continue
+          // 旧式 shim 路径已经列过同一条描述子（同一张卡只列一次）。
+          if (shimOffered.has(descriptor)) continue
           // 2026-10-27「如同手牌」通道的合成来源只用于反应窗口的 fromHand 描述子，
           // 不把事件卡上的其它描述子当成免费能力。
           if (row.fromChannel) continue

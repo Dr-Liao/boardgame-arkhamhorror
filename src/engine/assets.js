@@ -11,6 +11,7 @@ export function createAssets(deps) {
     cardDef,
     cardName,
     descriptorOfKind,
+    quickEventView,
     distanceToInvestigator,
     enemyRuleFlags,
     enemyTextBlanked,
@@ -385,10 +386,12 @@ export function createAssets(deps) {
       ? `🔮 ${inv.name} 从直觉牌库快速打出「${cardName(code)}」。`
       : `⚡ ${inv.name} 快速打出「${copyCode ? `彩绘世界／${cardName(copyCode)}` : cardName(code)}」。`
     info(state, events, fastLabel, { kind: 'play', seat: inv.seat, code })
+    // P2-4 快速事件统一通道：无论旧写法（played+fast）还是新写法（reaction+fromHand+quickEvent），
+    // 都由这里的同一执行器结算（alreadyPaid：费用与「快速打出」日志已在上面付过/写过）。
+    const quick = quickEventView(copyCode || code)
+    const descriptor = quick?.descriptor || null
     state._reaction = context
     try {
-      // Phase 5（5c-8）：能力层的快速事件由描述子结算（alreadyPaid：费用与「快速打出」日志已在上面付过/写过）。
-      const descriptor = descriptorOfKind(copyCode || code, 'played')
       if (descriptor) {
         executeDescriptor(state, {
           inv, source: { code }, descriptor, context, events, windowId: context.when ?? null,
@@ -406,7 +409,7 @@ export function createAssets(deps) {
     } else {
       // 2026-10-25 本循环修复 05018（fast-event-disposal）：快速反应事件与普通打出走同一份「打出后去向」口径。
       // 之前这里固定 disposePlayedEvent，导致 exileAfterPlay 的快速事件（05018 神秘乐曲）进了弃牌堆。
-      const playedFlags = descriptorOfKind(copyCode || code, 'played') || {}
+      const playedFlags = quick?.descriptor || {}
       const entryFlags = registeredEntry(copyCode || code) || {}
       const removeAfterPlay = playedFlags.removeAfterPlay === true || entryFlags.removeAfterPlay === true
       const shuffleBackAfterPlay = playedFlags.shuffleBackAfterPlay === true || entryFlags.shuffleBackAfterPlay === true

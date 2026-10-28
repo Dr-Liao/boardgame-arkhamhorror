@@ -19,8 +19,7 @@ export function getScenarioCardIdentity(scenarioId, category, ruleId) {
   return { scenarioId, category, ...structuredClone(categories[category][ruleId]) }
 }
 
-export function resolveCardIdentity(value, { scenarioId, category } = {}) {
-  const object = value && typeof value === 'object' ? value : null
+export function resolveCardIdentity(value, { scenarioId, category } = {}) {  const object = value && typeof value === 'object' ? value : null
   const ruleId = typeof value === 'string' ? value : object?.ruleId || object?.code || object?.id
   if (typeof ruleId !== 'string') return null
   const candidates = []
@@ -45,3 +44,10 @@ export function resolveCardIdentity(value, { scenarioId, category } = {}) {
     approximation: !!identity.approximation,
   }
 }
+
+// ---------------------------------------------------------------------------
+// P2-4（2026-10-28）重印别名：同一张印刷卡只保留 01xx canonical 实现，
+// 015xx（Revised Core）/60xxx 等重印号在注册期生成「只改 code 的别名条目」。
+// 别名表放在 src/cards/entries/_reprint-aliases.js（硬编码守卫只允许 entries/** 出现卡号），
+// 这里只做对外出口；注册期在 engine/ability.js#registerCardAbilities。
+export { REPRINT_ALIASES, reprintAliasesFor } from './entries/_reprint-aliases.js'

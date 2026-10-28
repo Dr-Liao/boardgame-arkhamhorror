@@ -70,6 +70,9 @@ test('普通牌与付不起的快速卡不会出现在收尾窗口', () => {
 test('免费触发能力与快速卡并列在同一个收尾窗口', () => {
   const state = fixture('01001')
   asset(state, '01518')
+  // P2-4：巡警的免费能力带必需目标（同地点 1 个敌人）；可行性检查与 legalMoves 同源，
+  // 同地点没有敌人时窗口不列它（见 phase1-state B1）。这里放一个敌人代表可结算局面。
+  enemy(state, { fight: 1, evade: 1, health: 3, engagedSeat: null })
   me(state).actionsLeft = 1
   me(state).hand = ['01036']
   me(state).resources = 5

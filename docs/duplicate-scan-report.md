@@ -331,19 +331,27 @@ node temp/dup-scan/14-playcondition.mjs
 
 ### P2 执行记录（2026-10-28）
 
-**P2-4 重印别名：已试点，暂列阻塞。** 试过「只留一份条目 + 运行时别名」（`duplicateOfCode`/`duplicatedBy` 双向解析、生成只改 code 的注册条目、删除 5 个重印文件）。结果暴露两处**引擎通道不收敛**，不能靠删文件完成：
+**P2-4 重印别名：已落地（2026-10-28 晚，第三次尝试成功）。** 设计、裁决与证据见
+[`p2-4-quick-event-channel.md`](p2-4-quick-event-channel.md)。这次先补原语、再合并，而不是再试一次删文件：
 
-- `01022` / `01023`（快速事件）存在两套合法通道：`played + fast + trigger + effect`（旧，背包/直觉牌库/`play-channels` 在用）与 `reaction + fromHand + resolve`（新，`card-fidelity-p1` / `ability-layer` 在用）。任选一套都会改动另一套的窗口/弃牌/日志，并让 `notz-*`、`tfa-*` golden 指纹漂移。
-- `01033`（米兰）旧实现是「纯收益自动领取」（`legacyReaction` + `effect`），新实现是普通询问窗口；两版测试各自锁定了相反口径。
-
-已回滚试点（`entries/` 恢复 573 个文件、`test:fast` 恢复全绿），结论写入本节：**先补「快速事件统一通道」原语（让 `played` 与 `reaction` 共用同一套手牌/背包/直觉/收尾窗口与弃牌口径），再合并重印**；否则不是重印问题，而是通道分叉问题。
-
-**2026-10-28 第二次试点（反向：以 01xx 为 canonical）**：同样补了双向别名与生成注册条目，删除 5 个 015xx 文件。剩余 6 个测试冲突，证明不能只换方向：
-- `01022`/`01023` 的 `played` 描述子不打开 `reaction` 手牌窗口（`ability-layer` 的 01523/01522 用例失败）；
-- `01033` 的 `legacyReaction` 不产生新式反应窗口（`ability-layer` 的 01533 用例失败）；
-- `01018` 缺 `target`（`phase1-state` 的 B1 接线用例失败）；
-- `card-fidelity-p1` 要求 01522/01523 有 `reaction` 描述子，`auto-pass` 对米兰自动/询问的口径与旧实现相反。
-再次回滚并保持全绿。结论不变：先做「快速事件/反应窗口统一通道」原语，再谈重印合并；否则只能改测试口径，等于把行为分叉固化。
+- **快速事件统一通道**：`ability.js#quickEventView` 把 `played + fast + trigger`（旧，43 张）与
+  `reaction + fromHand + quickEvent`（新写法）归一成同一份候选视图；唯一候选出口仍是
+  `encounter.js#reactionWindow`（旧展示方言：手牌下标 optionId / 卡名 / `不打出` / `⚡ 快速打出` /
+  `state._reaction` / 去向旗标），唯一执行器是 `assets.js#playReactionCard`。两条通道不再各写一套
+  窗口/弃牌口径；`playAccess.reactionOnly` 用同一视图封住 fromHand 事件的普通出牌漏洞。
+- **重印别名进注册期**：数据表 `src/cards/entries/_reprint-aliases.js`（事实源是 cards-data 的
+  `duplicateOfCode`/`duplicatedBy`，出口 `card-identity.js`），`registerCardAbilities` 为白名单别名号
+  生成「只改 code + `reprintOf`」的注册副本；运行时可用性沿 canonical（catalog-only 的 015xx 因此能进
+  反应窗口），构筑可用性仍在 deck 层。删除 `01518/01522/01523/01527/01533.js` 五个双实现文件。
+- **口径裁决**：米兰（01033/01533）统一为「纯收益自动领取」——golden 3 局把
+  `⚡ 触发「米兰」的反应。` 与资源 +1 写进指纹，规则可选性让位于零漂移；01533 的新式询问口径作废。
+  01522/01523 行为随 canonical（旧方言），旧「能力窗口【能力】label」断言改别名一致性断言。
+  01018 定型 `action + cost.action:false + target + effect`：`free+resolve` 会让收尾窗口多空候选
+  （`notz-strict-random-3p` 第 80 步漂移），`action+resolve` 会让无敌人时也列出能力
+  （`dunwich-extracurricular-hub` 第 15 步漂移）。
+- **证据**：`replay:fixtures` 13/13 指纹不变；`audit/card-entry-compliance.json` R1 152→151、
+  **R2 5→0**、R3 0、单卡字段 0；`audit/ability-coverage.json` descriptorEntries 572→567、
+  descriptorAbilities 531→526（只降不升）；新增 `tests/reprint-aliases.test.mjs`。
 
 **P2-5 结构完成度（2026-10-28）**：9 个 TCU 章节的 `behavior.js` 已**没有按卡号分支**
 （`code === '05xxx'` / `codeOf(...) === '05xxx'` / `original(...) === '05xxx'` 扫描为 0）；

@@ -35,15 +35,15 @@
   }
  ],
  "scope": {
-  "entries": 1352,
-  "player": 573,
+  "entries": 1347,
+  "player": 568,
   "encounter": 779,
-  "cycles01to05": 1340
+  "cycles01to05": 1335
  },
  "counts": {
-  "directStateWrite": 152,
+  "directStateWrite": 151,
   "singleCardField": 0,
-  "reprintDuplicate": 5,
+  "reprintDuplicate": 0,
   "playConditionGap": 0,
   "testWrapper": 15,
   "revelationTestCards": 45
@@ -54,7 +54,6 @@
    "01136",
    "01171",
    "01173",
-   "01527",
    "02045",
    "02058",
    "02064",
@@ -203,13 +202,7 @@
    "05339",
    "05340"
   ],
-  "reprintDuplicate": [
-   "01518",
-   "01522",
-   "01523",
-   "01527",
-   "01533"
-  ],
+  "reprintDuplicate": [],
   "playConditionGap": []
  },
  "watch": {
@@ -581,7 +574,6 @@
    "04316"
   ],
   "target.actionsLeft": [
-   "01527",
    "02081",
    "02181"
   ],

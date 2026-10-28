@@ -1,4 +1,5 @@
 import { investigatorRule } from '../cards/card-rules.js'
+import { ALL_CARDS } from '../cards/cards-data.js'
 import { describeLimitShort, limitUsed } from './limits.js'
 import { totalDoom } from './rules-state.js'
 // stats.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
@@ -118,7 +119,11 @@ export function createStats(deps) {
 
   function runtimeCardAvailable(state, inv, code) {
     const signatures = cardDef(code)?.signatureFor || []
-    return isCardAvailable(code) || signatures.includes(inv.code)
+    // P2-4：重印别名号与 canonical 是同一张印刷卡（cards-data 的 duplicateOfCode）。
+    // canonical 已实现并可用时，别名号在运行时也视为可用；构筑/牌池可用性仍在 deck 层判定。
+    const canonical = ALL_CARDS[code]?.duplicateOfCode
+    return isCardAvailable(code) || (canonical != null && isCardAvailable(canonical))
+      || signatures.includes(inv.code)
       || scenarioBehavior(state).canPlayScenarioCard?.(state, inv, code) === true
   }
 

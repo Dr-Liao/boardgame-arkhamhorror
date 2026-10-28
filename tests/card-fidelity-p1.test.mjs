@@ -114,11 +114,21 @@ test('03067b 石丸春子：非攻击伤害后抽遭遇牌，攻击伤害不触�
   assert.deepEqual(drawn, [], '攻击造成的伤害不触发')
 })
 
-test('01522 / 01523 / 05025：快速事件走「手牌反应」通道，且各自声明正确窗口', () => {
-  for (const [code, trigger] of [['01522', 'defeatEnemy'], ['01523', 'enemyAttack'], ['05025', 'clueDiscovered']]) {
-    const reaction = registeredEntry(code).abilities.find(ability => ability.kind === 'reaction')
-    assert.ok(reaction, `${code} 必须有 reaction 描述子`)
-    assert.equal(reaction.fromHand, true)
-    assert.deepEqual(reaction.trigger, [trigger])
+test('P2-4 重印别名：01522/01523 与 01022/01023 共用一份实现；05025 仍是手牌反应写法', () => {
+  // 同一张印刷卡只保留 canonical 实现；015xx 在注册期由 card-identity 的重印别名表生成，
+  // 行为与 canonical 完全一致（快速事件统一通道：played+fast 与 reaction+fromHand 同一条执行器）。
+  for (const [alias, canonical] of [['01522', '01022'], ['01523', '01023']]) {
+    const aliasEntry = registeredEntry(alias)
+    const canonicalEntry = registeredEntry(canonical)
+    assert.ok(aliasEntry, `${alias} 必须通过重印别名注册`)
+    assert.ok(canonicalEntry, `${canonical} 必须仍有自己的实现`)
+    assert.deepEqual(aliasEntry.abilities.map(ability => [ability.kind, ability.trigger, ability.fast]),
+      canonicalEntry.abilities.map(ability => [ability.kind, ability.trigger, ability.fast]),
+      `${alias} 的能力形状必须与 ${canonical} 相同`)
   }
+  // 05025 声明的是统一通道接受的第二种数据写法：reaction + fromHand + trigger。
+  const reaction = registeredEntry('05025').abilities.find(ability => ability.kind === 'reaction')
+  assert.ok(reaction, '05025 必须有 reaction 描述子')
+  assert.equal(reaction.fromHand, true)
+  assert.deepEqual(reaction.trigger, ['clueDiscovered'])
 })

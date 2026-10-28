@@ -22,7 +22,8 @@ import { renderIndexModule } from './card-entry-source.mjs'
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
 const ENTRY_DIR = path.join(ROOT, 'src/cards/entries')
 const INDEX_FILE = path.join(ENTRY_DIR, 'index.js')
-const IGNORED = new Set(['index.js', '_shared.js'])
+// `_reprint-aliases.js` 是卡号数据表（entries/ 下允许出现卡号），不是卡条目。
+const IGNORED = new Set(['index.js', '_shared.js', '_reprint-aliases.js'])
 
 export async function entryFiles() {
   if (!existsSync(ENTRY_DIR)) return []

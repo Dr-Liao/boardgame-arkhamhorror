@@ -6,8 +6,8 @@
     "effectsEntries": 0,
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
-    "descriptorEntries": 572,
-    "descriptorAbilities": 531,
+    "descriptorEntries": 567,
+    "descriptorAbilities": 526,
     "abilityKinds": 12,
     "windows": 74,
     "effectPrimitives": 56,
@@ -16,7 +16,7 @@
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 572,
+    "descriptor": 567,
     "data": 4
   },
   "nonPlayer": {
@@ -636,31 +636,6 @@
       "code": "01117",
       "channel": "descriptor",
       "descriptors": 0
-    },
-    {
-      "code": "01518",
-      "channel": "descriptor",
-      "descriptors": 1
-    },
-    {
-      "code": "01522",
-      "channel": "descriptor",
-      "descriptors": 1
-    },
-    {
-      "code": "01523",
-      "channel": "descriptor",
-      "descriptors": 1
-    },
-    {
-      "code": "01527",
-      "channel": "descriptor",
-      "descriptors": 1
-    },
-    {
-      "code": "01533",
-      "channel": "descriptor",
-      "descriptors": 1
     },
     {
       "code": "02001",
