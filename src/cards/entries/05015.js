@@ -15,7 +15,7 @@ export default {
       resolve: ({ inv, api }) => {
         const beneath = inv.beneath || []
         if (!beneath.length) {
-          inv.shuffleWeaknessAfterResolution = '05015'
+          api.scheduleWeaknessShuffle(inv.seat, '05015')
           api.info('黛安娜底下没有卡牌：「可怕的秘密」洗回牌库。')
           return
         }

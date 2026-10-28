@@ -28,22 +28,13 @@ export default {
         api.info?.('检查补给品：队伍中没有火把，这次行动没有效果。')
         return true
       }
-      const deck = state.explorationDeck || []
-      const top = deck.slice(-2)
+      const top = api.takeExplorationTop?.(2) || []
       if (!top.length) return true
-      state.explorationDeck = deck.slice(0, deck.length - top.length)
-      state.explorationDiscard ||= []
       for (const code of top) {
-        if (ALL_CARDS[code]?.type === 'treachery') state.explorationDiscard.push(code)
-        else state.explorationDeck.push(code)
+        if (ALL_CARDS[code]?.type === 'treachery') api.discardExploration?.(code)
+        else api.addExplorationTop?.(code)
       }
-      const rng = typeof api.random === 'function' ? api.random : () => 0
-      const copy = [...state.explorationDeck]
-      for (let index = copy.length - 1; index > 0; index--) {
-        const target = Math.floor(rng() * (index + 1))
-        ;[copy[index], copy[target]] = [copy[target], copy[index]]
-      }
-      state.explorationDeck = copy
+      api.shuffleExploration?.()
       api.info?.('火把照亮了探索牌库顶：诡计被弃掉，其余卡牌洗回牌库。')
       return true
     },

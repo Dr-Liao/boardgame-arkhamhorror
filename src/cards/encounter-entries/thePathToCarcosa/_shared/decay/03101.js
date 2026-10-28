@@ -13,7 +13,7 @@ export default {
     // 卡面：放置入场、每个地点 +1 帷幕；强制 - 一轮结束时弃掉本卡。
     // 因此这里返回 true（不立即进弃牌堆），轮末由章节的 roundEnded 统一撤销
     // 并按份数把卡放回遭遇弃牌堆（多张同轮入场时逐张撤销 +1）。
-    state.fogMod = (state.fogMod || 0) + 1
+    api.addFog(1)
     state.scenarioFlags ||= {}
     state.scenarioFlags.decayRound = state.round
     state.scenarioFlags.decayCount = (state.scenarioFlags.decayCount || 0) + 1

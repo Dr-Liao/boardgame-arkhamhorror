@@ -7,7 +7,7 @@
 //
 // 双生太阳（03223）：智识（4）失败后移除 1 个毁灭或按差额受到恐惧。
 
-import { originalOf } from '../../_shared.js'
+import { failedBy, originalOf } from '../../_shared.js'
 
 export default {
   code: '03223', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['carcosa'],
@@ -15,15 +15,15 @@ export default {
     const code = originalOf(card)
     api.test(inv.seat, 'intellect', 4, result => {
       if (result.success) return
-      const failedBy = Math.max(1, result.difficulty - result.value)
+      const amount = failedBy(result, 4)
       const options = state.doom > 0
-        ? [{ id: 'doom', label: '从当前密谋移除 1 个毁灭' }, { id: 'horror', label: `承受 ${failedBy} 点恐惧` }]
-        : [{ id: 'horror', label: `承受 ${failedBy} 点恐惧` }]
+        ? [{ id: 'doom', label: '从当前密谋移除 1 个毁灭' }, { id: 'horror', label: `承受 ${amount} 点恐惧` }]
+        : [{ id: 'horror', label: `承受 ${amount} 点恐惧` }]
       const choice = options.length === 1 ? 'horror' : api.choose({
         kind: 'encounter', source: code, seat: inv.seat, prompt: '双生太阳：移除毁灭或承受恐惧。', options,
       })
-      if (choice === 'doom') state.doom = Math.max(0, state.doom - 1)
-      else api.horror(inv.seat, failedBy)
+      if (choice === 'doom') api.removeDoom(1)
+      else api.horror(inv.seat, amount)
     })
     return false
   },

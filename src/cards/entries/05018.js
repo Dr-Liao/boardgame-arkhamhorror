@@ -19,7 +19,7 @@ export default {
       exileAfterPlay: true,
       label: '本阶段密谋不能因毁灭阈值推进',
       resolve: ({ inv, state, api }) => {
-        state.agendaDoomLock = { round: state.round, phase: state.phase }
+        api.lockAgendaDoomThisPhase()
         api.info(`${inv.name} 奏起神秘乐曲：本阶段密谋不能因达到毁灭阈值而推进。`)
       },
     },

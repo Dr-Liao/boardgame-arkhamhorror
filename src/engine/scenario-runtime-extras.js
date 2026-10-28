@@ -1,8 +1,8 @@
-// P3 批次 2 的运行时扩展：把 6 个新原语挂到 scenarioRuntime 上。
+// P3 批次 2/3 的运行时扩展：把新原语挂到 scenarioRuntime 上。
 //
 // 只做「纯数据 → 内容层窄接口」的转发，不改变任何既有行为：
 // 没有用到这些原语的战役（全部既有循环）调用它们也不会写状态（只读函数不建字段）。
-// 口径：docs/-migration-roadmap.md §5.2；账本 primitive-plan.json 的 batch P3-2。
+// 口径：docs/arkham-content-migration.md 与食梦者迁移路线的原语拆分；账本 primitive-plan.json。
 
 import {
   addCounter, counterAtLeast, counterOf, counterSummary, highestCounter, resetCounter,
@@ -22,6 +22,11 @@ import {
   resetTokenBag, returnTokenToBag, revealTokenFromBag, tokenBagInfo,
 } from './token-bag.js'
 import { chainNeighbors, linkVerticalChain, moveAlongChain, orderVerticalChain } from './vertical-chain.js'
+import { bondedPartnerOf, placeBondedLocation, removeBondedLocation } from './bonded-location.js'
+import {
+  addLocationDoom, destroyLocation, locationDoomOf, locationDoomThreshold, totalLocationDoom,
+} from './location-doom.js'
+import { addMarker, markerCountOf, markerSummary, referenceMarkerCount, resetMarkerCount, setMarkerCount } from './marker-count.js'
 
 export function scenarioRuntimeExtras(state) {
   return {
@@ -83,6 +88,29 @@ export function scenarioRuntimeExtras(state) {
       link: ids => linkVerticalChain(state, ids),
       neighbors: id => chainNeighbors(state, id),
       move: (id, delta) => moveAlongChain(state, id, delta),
+    },
+    // 地点型 Bonded（梦境之门成对放置/移除）
+    bondedLocation: {
+      place: (hostDef, options) => placeBondedLocation(state, hostDef, options),
+      partnerOf: locationId => bondedPartnerOf(state, locationId),
+      remove: locationId => removeBondedLocation(state, locationId),
+    },
+    // 地点毁灭（大网堆叠）
+    locationDoom: {
+      get: location => locationDoomOf(location),
+      threshold: location => locationDoomThreshold(location),
+      add: (location, delta = 1) => addLocationDoom(location, delta),
+      destroy: (locationId, options) => destroyLocation(state, locationId, options),
+      total: () => totalLocationDoom(state),
+    },
+    // 剧本参考卡计数（神迹 / 参考卡 X）
+    markers: {
+      get: (id = 'reference') => markerCountOf(state, id),
+      set: (id, value) => setMarkerCount(state, id, value),
+      add: (id, delta = 1) => addMarker(state, id, delta),
+      reset: id => resetMarkerCount(state, id),
+      reference: () => referenceMarkerCount(state),
+      summary: () => markerSummary(state),
     },
   }
 }

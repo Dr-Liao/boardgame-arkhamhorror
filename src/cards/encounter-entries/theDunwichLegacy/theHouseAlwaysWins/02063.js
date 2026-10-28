@@ -14,7 +14,7 @@ export default {
     criminalDamagedAdvancesAgenda: true,
     onReveal(state, agenda, api) {
       for (const enemy of state.enemies) {
-        if (enemy.traits?.some(trait => trait.toLowerCase() === 'criminal')) enemy.aloof = false
+        if (enemy.traits?.some(trait => trait.toLowerCase() === 'criminal')) api.clearEnemyAloof(enemy)
       }
       api.shuffleDiscard()
       if (state.campaign.scenarioResults?.some(result => result.scenarioId === 'extracurricularActivity')) {

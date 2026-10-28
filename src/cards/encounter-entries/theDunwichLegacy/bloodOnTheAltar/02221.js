@@ -9,7 +9,9 @@
 
 export default {
   code: '02221', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['dunwich'],
-  treacheryRule: { song: true },
+  // 卡面强制「当你将受到伤害时：额外受到 2 点伤害并弃掉本卡」：数据化声明，
+  // 读点是 enemies.js 的 applyHarm（威胁区 harmInterceptor），不再用没人读的 treacheryRule.song。
+  harmInterceptor: { trigger: 'damage', extra: 2, discard: true },
   encounterResolve(state, inv, card, api) {
     const code = card.originalCode || card.code
     const candidates = state.investigators.filter(target => !target.defeated && !target.resigned)

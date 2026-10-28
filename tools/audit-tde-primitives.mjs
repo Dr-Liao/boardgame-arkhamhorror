@@ -339,7 +339,7 @@ async function buildPlan() {
       ? [{ path: rel(MECHANISM_SCAN), sha256: sha256(scanBuffered), gatePass: scan?.gate?.pass === true }]
       : [],
     summary: {
-      batch: 'P3-1+2',
+      batch: 'P3-1+2+3',
       newTotal: newPrimitives.length,
       done: done.length,
       pending: newPrimitives.length - done.length,
@@ -367,7 +367,7 @@ async function buildPlan() {
     cycle: CYCLE.id,
     generatedBy: 'tools/audit-tde-primitives.mjs',
     note: '主进程维护；worker 只读。状态由 tools/audit-tde-primitives.mjs 从代码与测试复算，不手写。',
-    batch: 'P3-1+2',
+    batch: 'P3-1+2+3',
     primitives: {
       new: newPrimitives.map(item => ({
         id: item.id,

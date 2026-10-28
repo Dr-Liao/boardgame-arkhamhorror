@@ -17,7 +17,7 @@ export default {
       // 两条路线的背面效果都由 act 条目自己的 onReveal 处理。
       const actTwoCodes = ['03206', '03207']
       const index = (state.acts || []).findIndex(act => actTwoCodes.includes(act?.originalCode || act?.code))
-      if (index >= 0 && state.actIndex <= index) state.actIndex = index
+      if (index >= 0 && state.actIndex <= index) api.setActIndex(index)
       api.advanceAct()
     },
   },

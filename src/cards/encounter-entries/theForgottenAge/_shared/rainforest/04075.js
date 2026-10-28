@@ -15,8 +15,7 @@ export default {
     onEnter: {
       effect(state, location, api, inv) {
         if (!isPoisonedInvestigator(inv)) return
-        inv.actionsLeft = 0
-        inv.turnEnded = true
+        api.endTurn(inv.seat)
         api?.info?.(`🕳️ ${inv.name} 已中毒：进入漆黑洞穴后立即失去所有行动并结束回合。`)
       },
     },

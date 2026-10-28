@@ -76,7 +76,7 @@ export default {
         const asset = (inv.assets || []).find(item => item.code === code)
         if (asset) api.discardAsset(inv.seat, asset)
         inv.beneath ||= []
-        state.deferredBeneath = [...(state.deferredBeneath || []), { seat: inv.seat, code }]
+        api.deferCardBeneath(inv.seat, code)
         api.drawCards(inv.seat, 1)
         api.gainResources(inv.seat, 1)
         api.info(`${inv.name} 把「${api.cardName(code)}」压在黛安娜·史丹利底下。`)

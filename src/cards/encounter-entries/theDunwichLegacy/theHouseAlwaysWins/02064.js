@@ -21,9 +21,11 @@ export default {
       state.encounterDeck.push(...aside.splice(0))
       api.shuffleDiscard()
       for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned && item.location === 'laBellaLuna')) {
-        inv.location = 'cloverClubLounge'
+        api.moveInvestigator?.(inv.seat, 'cloverClubLounge')
       }
-      for (const enemy of state.enemies.filter(item => item.location === 'laBellaLuna')) enemy.location = 'cloverClubLounge'
+      for (const enemy of state.enemies.filter(item => item.location === 'laBellaLuna')) {
+        api.moveEnemy?.(enemy, 'cloverClubLounge')
+      }
       api.remove('laBellaLuna')
     },
   },

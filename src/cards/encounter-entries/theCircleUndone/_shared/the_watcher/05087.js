@@ -24,16 +24,6 @@ function activeInvestigatorsAt(state, locationId) {
   return activeInvestigators(state).filter(target => target.location === locationId)
 }
 
-function engageWatcher(state, watcher, seat, api) {
-  if (typeof api.engage === 'function') {
-    api.engage(watcher, seat)
-    return
-  }
-  const target = state.investigators[seat]
-  watcher.engagedSeat = seat
-  if (target) target.engaged = [...new Set([...(target.engaged || []), watcher.id])]
-}
-
 export default {
   code: '05087',
   scope: 'treachery',
@@ -44,13 +34,13 @@ export default {
       api.info?.('幽灵看守人不在场：看守人的攫噬没有效果。')
       return false
     }
-    watcher.damageTaken = Math.max(0, (watcher.damageTaken || 0) - 3)
-    watcher.exhausted = false
+    api.healEnemy?.(watcher, 3)
+    api.readyEnemy?.(watcher)
     const here = locationOf(state, inv)
     const hadPreySeat = Object.prototype.hasOwnProperty.call(watcher, 'preySeat')
     const savedPreySeat = watcher.preySeat
     // 结算期间「猎物 - 你」：写实例读点，供 hunterStep 的并列裁决与 preyTarget 的交战选择读取。
-    watcher.preySeat = inv.seat
+    api.setEnemyPreySeat?.(watcher, inv.seat)
     try {
       // 1) 猎手移动（与敌军阶段同一门控与目标选择，不强制朝抽牌者）。
       const hereBefore = activeInvestigatorsAt(state, watcher.location)
@@ -70,7 +60,7 @@ export default {
         const seats = activeInvestigatorsAt(state, watcher.location).map(target => target.seat)
         const targetSeat = api.preyTarget?.(watcher, seats)
         if (Number.isInteger(targetSeat)) {
-          engageWatcher(state, watcher, targetSeat, api)
+          api.engage(watcher, targetSeat)
           api.info?.(`👁️ 幽灵看守人与 ${state.investigators[targetSeat]?.name || targetSeat} 交战。`)
         }
       }
@@ -79,12 +69,11 @@ export default {
       if (engaged && !engaged.defeated && !engaged.resigned && !watcher.exhausted) {
         if (api.cannotAttack?.(watcher)) return false
         api.attack(watcher, engaged)
-        if (!watcher.massive) watcher.exhausted = true
+        if (!watcher.massive) api.exhaustEnemy?.(watcher)
       }
       api.info?.('👁️ 幽灵看守人治愈 3 点伤害、重整，并移动、交战、攻击。')
     } finally {
-      if (hadPreySeat) watcher.preySeat = savedPreySeat
-      else delete watcher.preySeat
+      api.setEnemyPreySeat?.(watcher, hadPreySeat ? savedPreySeat : null)
     }
     if (here) api.info?.(`👁️ 「${here.name || inv.location}」的幽灵看守人结算完毕。`)
     return false // 本卡进遭遇弃牌堆

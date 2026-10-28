@@ -3,6 +3,7 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
 import {
   cluesFromSurvivorsFor, encounterResolveCampaignsFor, encounterResolveFor, enemyRuleFor, enemyScriptFor, enemySpawnRuleFor, scenarioPlayableFor, threatEffectFor, assetRuleFor, treacheryRuleFor,
+  resolveDeclarativeTreacheryTest, treacheryTestFor,
 } from '../../../src/cards/card-rules.js'
 import { registeredEntry } from '../../../src/engine/ability.js'
 import { changeChaosBag } from '../../../src/engine/chaos-bag.js'
@@ -128,6 +129,9 @@ export const encounterRules = {
         location: state.locations.find(item => item.id === inv.location),
       })
     }
+    // 声明式「显现 - 检定」（treacheryRule.test）：共享读点在 card-rules.js，与旧 DSL 同口径。
+    const declarative = treacheryTestFor(code)
+    if (declarative) return resolveDeclarativeTreacheryTest(state, inv, card, api, declarative)
     return false
   },
   deckEmptied(state, inv, api) {

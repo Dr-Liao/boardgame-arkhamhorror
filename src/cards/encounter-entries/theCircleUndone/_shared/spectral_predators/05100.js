@@ -1,4 +1,4 @@
-// 05100 冥府之雾
+﻿// 05100 冥府之雾
 // 归属：战役共用 · theCircleUndone；遭遇组：spectral_predators
 // 卡面：猎物 - 所在地点线索最多的调查员。冷漠。猎手。
 // 卡面：冥府之雾所在地点获得：「闹鬼 - 冥府之雾攻击你。」
@@ -29,19 +29,19 @@ function grantAt(enemy, locationId, api) {
 export function refreshNetherMistPrey(state, enemy, api) {
   const investigators = activeInvestigators(state)
   if (!investigators.length) {
-    delete enemy.preySeat
+    api.setEnemyPreySeat?.(enemy, null)
     return null
   }
   const locations = (state.locations || []).filter(entry => investigators.some(inv => inv.location === entry.id))
   if (!locations.length) {
-    delete enemy.preySeat
+    api.setEnemyPreySeat?.(enemy, null)
     return null
   }
   const most = Math.max(...locations.map(entry => Number(entry.clues) || 0))
   const pools = locations.filter(entry => (Number(entry.clues) || 0) === most)
   const candidates = investigators.filter(inv => pools.some(entry => entry.id === inv.location))
   if (!candidates.length) {
-    delete enemy.preySeat
+    api.setEnemyPreySeat?.(enemy, null)
     return null
   }
   let chosen = candidates[0]
@@ -53,7 +53,7 @@ export function refreshNetherMistPrey(state, enemy, api) {
     })
     chosen = candidates.find(inv => String(inv.seat) === String(answer)) || candidates[0]
   }
-  enemy.preySeat = chosen.seat
+  api.setEnemyPreySeat?.(enemy, chosen.seat)
   return chosen
 }
 

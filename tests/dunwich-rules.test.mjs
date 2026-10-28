@@ -743,6 +743,18 @@ test('D8 Train weakness and Hill rites discard deck cards; altered investigators
   second.deck = ['01088', '01089', '01090', '01091']
   hb.resolveEncounter(hill, first, { code: '02296' }, {
     discardTop: (seat, n) => discardTop(hill, seat, n), random: () => 0,
+    shuffleDiscardWeaknessesIntoDeck: seat => {
+      const owner = hill.investigators[seat]
+      const weaknesses = owner.discard.filter(code =>
+        ['weakness', 'basicweakness'].includes(ALL_CARDS[code]?.subtype))
+      owner.discard = owner.discard.filter(code => !weaknesses.includes(code))
+      owner.deck.push(...weaknesses)
+      for (let index = owner.deck.length - 1; index > 0; index--) {
+        const swap = 0
+        ;[owner.deck[index], owner.deck[swap]] = [owner.deck[swap], owner.deck[index]]
+      }
+      return weaknesses.length
+    },
   })
   assert.equal(first.deck.length, 2)
   assert.ok(first.deck.includes('01096'))
@@ -772,10 +784,20 @@ test('D8 Terror from Beyond expands to two card types on the second draw of a ph
   assert.ok(cardRuleIds(ALL_CARDS['02101']).includes('dunwichEncounters'))
   first.hand = ['01016', '01088', '01092']
   second.hand = ['01030', '01088', '01089']
-  const optionCounts = [], api = { choose: request => {
-    optionCounts.push(request.options.length)
-    return optionCounts.length === 1 ? 'asset' : 'event,skill'
-  } }
+  const optionCounts = [], api = {
+    choose: request => {
+      optionCounts.push(request.options.length)
+      return optionCounts.length === 1 ? 'asset' : 'event,skill'
+    },
+    discardHandOfTypes: (seat, types) => {
+      const owner = s.investigators[seat]
+      const wanted = new Set(types)
+      const discarded = owner.hand.filter(code => wanted.has(ALL_CARDS[code]?.type))
+      owner.hand = owner.hand.filter(code => !wanted.has(ALL_CARDS[code]?.type))
+      owner.discard.push(...discarded)
+      return discarded.length
+    },
+  }
   b.encounterDrawn(s, first, '02101', {})
   b.resolveEncounter(s, first, { code: '02101' }, api)
   assert.deepEqual(first.hand, ['01088', '01092'])
@@ -795,9 +817,19 @@ test('D8 a cancelled Terror from Beyond still counts as the first drawn copy', (
   b.encounterDrawn(s, inv, '02101', {}) // Its revelation was cancelled.
   b.encounterDrawn(s, inv, '02101', {})
   let offered
-  b.resolveEncounter(s, inv, { code: '02101' }, { choose: request => {
-    offered = request.options.map(option => option.id); return 'asset,event'
-  } })
+  b.resolveEncounter(s, inv, { code: '02101' }, {
+    choose: request => {
+      offered = request.options.map(option => option.id); return 'asset,event'
+    },
+    discardHandOfTypes: (seat, types) => {
+      const owner = s.investigators[seat]
+      const wanted = new Set(types)
+      const discarded = owner.hand.filter(code => wanted.has(ALL_CARDS[code]?.type))
+      owner.hand = owner.hand.filter(code => !wanted.has(ALL_CARDS[code]?.type))
+      owner.discard.push(...discarded)
+      return discarded.length
+    },
+  })
   assert.ok(offered.includes('asset,event'))
   assert.deepEqual(inv.hand, ['01092'])
 })
@@ -1138,6 +1170,7 @@ test('D8 Museum treacheries ready and attack with Horror, lose actions on a fail
   const api = { drawEncounter: seat => drawn.push(seat), engage: () => {},
     attack: (enemy, target) => attacked.push(target.seat),
     test: (seat, skill, difficulty, resolve) => resolve({ success: false, value: 1 }),
+    loseActions: (seat, amount) => { s.investigators[seat].actionsLeft = Math.max(0, s.investigators[seat].actionsLeft - amount) },
     shuffleEncounterDeck: () => { shuffleCount++ } }
   b.resolveEncounter(s, inv, { code: '02143' }, api)
   assert.deepEqual(drawn, [inv.seat])
@@ -1173,7 +1206,14 @@ test('D8 Altar, Hill and Beyond treacheries apply each printed test and surge co
   const inv = altar.investigators[0], loc = altar.locations.find(item => item.id === inv.location)
   const damage = [], horror = []
   const testApi = { test: (seat, skill, difficulty, resolve) => resolve({ success: false, value: 1 }),
-    damage: (seat, amount) => damage.push([seat, amount]), horror: (seat, amount) => horror.push([seat, amount]) }
+    damage: (seat, amount) => damage.push([seat, amount]), horror: (seat, amount) => horror.push([seat, amount]),
+    // 声明式检定（treacheryRule.test）的失败分支走 api.applyPenalty。
+    applyPenalty: (seat, fail, failedBy) => {
+      if (fail.kind === 'horrorByAmount') horror.push([seat, failedBy])
+      else if (fail.kind === 'damageByAmount') damage.push([seat, failedBy])
+      else if (fail.kind === 'takeHorror') horror.push([seat, fail.amount])
+      else if (fail.kind === 'takeDamage') damage.push([seat, fail.amount])
+    } }
   const before = loc.clues
   ab.resolveEncounter(altar, inv, { code: '02222' }, testApi)
   assert.equal(loc.clues, before + 1)

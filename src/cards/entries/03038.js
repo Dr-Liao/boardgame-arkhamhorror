@@ -24,8 +24,7 @@ export default {
         if (!attachment) return
         // 已在场的非精英敌人也立刻获得冷漠。
         for (const enemy of state.enemies.filter(item => item.location === attachment.location && !item.elite)) {
-          enemy.aloof = true
-          enemy.hidingSpotAloof = true
+          api.grantHidingSpotAloof(enemy)
         }
       },
     },

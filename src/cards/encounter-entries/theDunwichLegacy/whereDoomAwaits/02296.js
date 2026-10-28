@@ -14,13 +14,7 @@ export default {
     for (const target of activeInvestigators(state).filter(other =>
       state.locations.find(loc => loc.id === other.location)?.traits
         ?.some(trait => trait.toLowerCase() === 'altered'))) {
-      const weaknesses = target.discard.filter(item => ['weakness', 'basicweakness'].includes(ALL_CARDS[item]?.subtype))
-      target.discard = target.discard.filter(item => !weaknesses.includes(item))
-      target.deck.push(...weaknesses)
-      for (let index = target.deck.length - 1; index > 0; index--) {
-        const swap = Math.floor(api.random() * (index + 1))
-        ;[target.deck[index], target.deck[swap]] = [target.deck[swap], target.deck[index]]
-      }
+      api.shuffleDiscardWeaknessesIntoDeck?.(target.seat)
     }
     return false
   },

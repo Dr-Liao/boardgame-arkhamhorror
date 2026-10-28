@@ -16,16 +16,13 @@ export default {
       const candidates = state.locations.filter(entry => entry.revealed && entry.id !== location.id && (entry.clues || 0) > 0)
       if (!candidates.length) return undefined
       // 卡面 [reaction] 是可选能力：先问是否发动，跳过则照常结算（且不消耗每轮一次）。
-      let answer = 'trigger'
-      if (typeof api.choose === 'function') {
-        answer = api.choose({
-          kind: 'reaction', source: '05139', seat: inv.seat, canSkip: true,
-          prompt: '物理教室：是否改为在另一地点发现 1 个线索？',
-          options: [{ id: 'trigger', label: '发动：在另一地点发现 1 个线索' }, { id: 'skip', label: '不发动' }],
-        })
-      }
+      const answer = api.choose({
+        kind: 'reaction', source: '05139', seat: inv.seat, canSkip: true,
+        prompt: '物理教室：是否改为在另一地点发现 1 个线索？',
+        options: [{ id: 'trigger', label: '发动：在另一地点发现 1 个线索' }, { id: 'skip', label: '不发动' }],
+      })
       if (answer === 'skip') return undefined
-      const picked = api.choose?.({
+      const picked = api.choose({
         kind: 'location', source: '05139', seat: inv.seat,
         prompt: '选择另一个已揭示、有线索的地点发现 1 个线索。',
         options: candidates.map(entry => ({ id: entry.id, label: entry.name })),

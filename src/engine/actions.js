@@ -143,12 +143,16 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     // 2026-10-25 第四轮修复 play-cost-interrupt（05150 黑书 / 05111 / 05277 / 05234 等）：
     // 「打出一张卡牌时」的支付前窗口。反应可在 context.costReduction 里给出减免；
     // 卡面费用本身（资源/行动）仍由条目自己结算。
+    // 2026-10-28 P2：窗口对象继续传给 played 描述子的 context（playCost），
+    // 「打出时选择升级」的卡不再把选择写进调查员字段（05111/05234/05277）。
+    let playCostWindow = null
     {
       const playCostContext = { when: 'beforePlayCost', seat: inv.seat, location: inv.location,
-        cardCode: cardId, playedCardId: cardId, cost, costReduction: 0, costIncrease: 0,
+        cardCode: cardId, playedCardId: cardId, cost, costReduction: 0, costIncrease: 0, playUpgrades: null,
         prompt: `打出「${cardName(cardId)}」的支付前窗口` }
       triggerReaction(state, inv.seat, 'beforePlayCost', events, playCostContext)
       reactionWindow(state, 'beforePlayCost', playCostContext, events)
+      playCostWindow = playCostContext
       if (playCostContext.costIncrease > 0) {
         cost += playCostContext.costIncrease
         info(state, events, `「${cardName(cardId)}」的费用增加 ${playCostContext.costIncrease}（支付 ${cost} 资源）。`)
@@ -196,7 +200,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     consumePlayThreatResources(state, inv, events)
     if (usesLolaDiscount) delete inv.lolaDiscount
     info(state, events, `🃏 ${inv.name} 打出「${cardName(cardId)}」（花费 ${cost} 资源，剩余 ${inv.resources}）。`, { kind: 'play', seat: inv.seat, code: cardId })
-    return { ok: true, cost }
+    return { ok: true, cost, playCostContext: playCostWindow }
   }
 
   // Phase 5（5b-10）：附属声明也可以写在能力层条目上。
@@ -353,7 +357,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
         // Phase 5（5c-35）：quietPlay 的条目复刻「数据体事件卡」的日志——旧数据体不写
         // 「使用「X」：…」这一行，迁移后若照写会改玩家可见日志、重放指纹立刻对不上（03189）。
         executeDescriptor(state, { inv, source: { code: cardId, id: cardId }, descriptor: playedDescriptor,
-          context: { fromDiscard, copyCode: copyCode || null, cardId }, events,
+          context: { fromDiscard, copyCode: copyCode || null, cardId, playCost: paid.playCostContext || null }, events,
           silent: registeredEntry(cardId)?.quietPlay === true })
       } else if (played) resolveEffect(state, seat, played, makeRuntime(state, events))
     } finally {

@@ -14,7 +14,7 @@ const factory = () => {
     const es = investigatorSign('02005')
     return ({ inv, api }) => {
       const asset = inv.assets.find(item => item.code === es.code)
-      if (asset && !api.assetsCannotReady(inv)) asset.exhausted = false
+      if (asset && !api.assetsCannotReady(inv)) api.ready(asset)
       return { delta: es.bonus || 2 }
     }
   }

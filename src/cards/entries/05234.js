@@ -54,11 +54,11 @@ export default {
       kind: 'reaction', trigger: 'beforePlayCost',
       label: '打出诱敌时：提升费用 2 点（「一个非精英敌人」→「最多 2 个」）',
       criteria: [({ state, inv, context }) => context?.cardCode === '05234'
-        && !(inv.playUpgrades05234 || []).includes('pair')
+        && !context?.playUpgrades?.pair
         && canAffordUpgrade(inv, context)
         && localTargets(state, inv).length > 0],
-      resolve: ({ inv, api, context }) => {
-        inv.playUpgrades05234 = [...(inv.playUpgrades05234 || []), 'pair']
+      resolve: ({ api, context }) => {
+        context.playUpgrades = { ...(context.playUpgrades || {}), pair: true }
         context.costIncrease = Number(context.costIncrease || 0) + UPGRADE_COST
         api.info('诱敌：提升费用 2 点，改为最多 2 个非精英敌人。')
       },
@@ -67,11 +67,11 @@ export default {
       kind: 'reaction', trigger: 'beforePlayCost',
       label: '打出诱敌时：提升费用 2 点（「你所在地点」→「2 次连接内的地点」）',
       criteria: [({ state, inv, context }) => context?.cardCode === '05234'
-        && !(inv.playUpgrades05234 || []).includes('far')
+        && !context?.playUpgrades?.far
         && canAffordUpgrade(inv, context)
         && nearTargets(state, inv).length > 0],
-      resolve: ({ inv, api, context }) => {
-        inv.playUpgrades05234 = [...(inv.playUpgrades05234 || []), 'far']
+      resolve: ({ api, context }) => {
+        context.playUpgrades = { ...(context.playUpgrades || {}), far: true }
         context.costIncrease = Number(context.costIncrease || 0) + UPGRADE_COST
         api.info('诱敌：提升费用 2 点，改为与你所在地点连接次数不超过 2 的地点。')
       },
@@ -81,11 +81,10 @@ export default {
       label: '诱敌：自动躲避非精英敌人（升级在打出费用窗口选择）',
       // 卡面「躲避。」= Evade 行动：打出按躲避结算，不引发借机攻击。
       countsAs: 'evade',
-      resolve: ({ state, inv, api }) => {
-        const upgrades = Array.isArray(inv.playUpgrades05234) ? inv.playUpgrades05234.slice() : []
-        delete inv.playUpgrades05234
-        const upToTwo = upgrades.includes('pair')
-        const far = upgrades.includes('far')
+      resolve: ({ state, inv, api, context }) => {
+        const upgrades = context?.playCost?.playUpgrades || {}
+        const upToTwo = Boolean(upgrades.pair)
+        const far = Boolean(upgrades.far)
         const nearIds = locationsWithinTwo(state, inv.location)
         let candidates
         if (far) {

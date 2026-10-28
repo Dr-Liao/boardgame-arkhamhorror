@@ -254,6 +254,8 @@ test('03223 Twin Suns resolves its test and choice', () => {
     choose: request => { calls.push(['choose', request.prompt]); return request.options[0].id },
     horror: (seat, amount) => { calls.push(['horror', amount]) },
     damage: (seat, amount) => { calls.push(['damage', amount]) },
+    // 03223 现在用 api.removeDoom（原语）代替直写 state.doom。
+    removeDoom: amount => { state.doom = Math.max(0, state.doom - amount) },
   }
   phantom.resolveEncounter(state, state.investigators[0], { code: '03223', originalCode: '03223' }, api)
   assert.equal(calls[0][0], 'test')

@@ -22,6 +22,7 @@ import { normalizeScenarioHaunted } from '../src/engine/haunted.js'
 import { normalizeScenarioSpectralLocations } from '../src/engine/locations.js'
 import { selectStoryInvestigators } from '../src/engine/story-investigators.js'
 import { applyMove, createGameState, legalMoves } from '../src/engine/engine.js'
+import { addLocationShroud } from '../src/engine/location-attachments.js'
 import { recordDefaults } from '../content/campaigns/theCircleUndone/shared.js'
 import { watcherHuntedSeats } from '../content/campaigns/theCircleUndone/encounter-rules.js'
 import { layoutFor } from '../content/scenario-manifest.js'
@@ -121,6 +122,8 @@ function runtimeApi(state, seed = 1, { tarot = true } = {}) {
     damage: (seat, amount) => { calls.damage.push({ seat, amount }); const inv = state.investigators[seat]; if (inv) inv.damage += amount },
     horror: (seat, amount) => { calls.horror.push({ seat, amount }); const inv = state.investigators[seat]; if (inv) inv.horror += amount },
     haunted: (seat, options) => calls.haunted.push({ seat, ...options }),
+    // 01168 朦胧之雾：帷幕/雾写入走引擎原语。
+    attachShroud: (locationId, amount, code) => addLocationShroud(state, locationId, amount, code),
     choose(request) {
       calls.choose.push(request)
       return request.options[0].id

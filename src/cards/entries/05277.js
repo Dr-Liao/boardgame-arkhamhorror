@@ -52,11 +52,11 @@ export default {
       kind: 'reaction', trigger: 'beforePlayCost',
       label: '打出帮个小忙时：提升费用 2 点（造成 2 点伤害）',
       criteria: [({ state, inv, context }) => context?.cardCode === '05277'
-        && !(inv.playUpgrades05277 || []).includes('damage')
+        && !context?.playUpgrades?.damage
         && canAffordUpgrade(inv, context)
         && targetsAt(state, inv, false).length > 0],
-      resolve: ({ inv, api, context }) => {
-        inv.playUpgrades05277 = [...(inv.playUpgrades05277 || []), 'damage']
+      resolve: ({ api, context }) => {
+        context.playUpgrades = { ...(context.playUpgrades || {}), damage: true }
         context.costIncrease = Number(context.costIncrease || 0) + UPGRADE_COST
         api.info('帮个小忙：提升费用 2 点，改为造成 2 点伤害。')
       },
@@ -65,11 +65,11 @@ export default {
       kind: 'reaction', trigger: 'beforePlayCost',
       label: '打出帮个小忙时：提升费用 2 点（目标改为 2 次连接内的地点）',
       criteria: [({ state, inv, context }) => context?.cardCode === '05277'
-        && !(inv.playUpgrades05277 || []).includes('range')
+        && !context?.playUpgrades?.range
         && canAffordUpgrade(inv, context)
         && targetsAt(state, inv, true).length > 0],
-      resolve: ({ inv, api, context }) => {
-        inv.playUpgrades05277 = [...(inv.playUpgrades05277 || []), 'range']
+      resolve: ({ api, context }) => {
+        context.playUpgrades = { ...(context.playUpgrades || {}), range: true }
         context.costIncrease = Number(context.costIncrease || 0) + UPGRADE_COST
         api.info('帮个小忙：提升费用 2 点，目标改为与你所在地点连接次数不超过 2 的地点。')
       },
@@ -77,11 +77,10 @@ export default {
     {
       kind: 'played',
       label: '对一个非精英敌人造成 1 点伤害（升级在打出费用窗口选择）',
-      resolve: ({ state, inv, api }) => {
-        const upgrades = Array.isArray(inv.playUpgrades05277) ? inv.playUpgrades05277.slice() : []
-        delete inv.playUpgrades05277
-        const range = upgrades.includes('range')
-        const damage = upgrades.includes('damage') ? 2 : 1
+      resolve: ({ state, inv, api, context }) => {
+        const upgrades = context?.playCost?.playUpgrades || {}
+        const range = Boolean(upgrades.range)
+        const damage = upgrades.damage ? 2 : 1
         const pool = targetsAt(state, inv, range)
         if (!pool.length) { api.info('「帮个小忙」：没有符合条件的非精英敌人。'); return }
         const chosen = pool.length === 1 ? pool[0].id : api.choice({ kind: 'target', source: '05277', seat: inv.seat,

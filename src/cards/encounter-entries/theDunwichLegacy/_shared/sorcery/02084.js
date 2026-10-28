@@ -15,10 +15,9 @@ export default {
     if (!exists) api.threat(inv.seat, code)
     // 牌库为空的强制（原 encounter-rules.deckEmptied）：弃掉本卡并受到 10 点伤害。
     if (!inv.deck?.length && !inv.defeated && !inv.resigned) {
-      const index = inv.threat.findIndex(t => t.code === code)
-      if (index >= 0) {
-        inv.threat.splice(index, 1)
-        state.encounterDiscard.push(code)
+      const threat = inv.threat.find(entry => entry.code === code)
+      if (threat) {
+        api.removeThreat(threat)
         api.damage(inv.seat, 10)
       }
     }

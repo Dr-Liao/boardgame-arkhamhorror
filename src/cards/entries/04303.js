@@ -46,17 +46,17 @@ export default {
               prompt: '选择要移除 1 个毁灭标记的卡牌。', options,
             })
             const id = String(chosen)
-            if (id === 'agenda') state.doom = Math.max(0, (state.doom || 0) - 1)
+            if (id === 'agenda') api.removeDoom(1)
             else if (id.startsWith('location:')) {
               const location = state.locations.find(item => item.id === id.slice(9))
-              if (location) location.doom = Math.max(0, (location.doom || 0) - 1)
+              if (location) api.removeDoomFromCard(location, 1)
             } else if (id.startsWith('enemy:')) {
               const enemy = state.enemies.find(item => item.id === id.slice(6))
-              if (enemy) enemy.doom = Math.max(0, (enemy.doom || 0) - 1)
+              if (enemy) api.removeDoomFromCard(enemy, 1)
             } else if (id.startsWith('asset:')) {
               const asset = state.investigators.flatMap(owner => owner.assets || [])
                 .find(item => item.id === id.slice(6))
-              if (asset) asset.doom = Math.max(0, (asset.doom || 0) - 1)
+              if (asset) api.removeDoomFromCard(asset, 1)
             }
             state.scenarioFlags ||= {}
             state.scenarioFlags.relicOfAgesDoomSucceeded = true

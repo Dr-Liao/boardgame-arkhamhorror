@@ -75,7 +75,7 @@ export default {
         placeClueOnHighestShroud({ inv, state, api })
         // 防御性兜底：fromHunch 通道已在 dispatch 里清掉 hunchRevealed（威胁区通道本来就没有它），
         // 这里再清一次，避免阶段末 returnHunchCard 把已移出游戏的悬案当成「未打出」处理。
-        if (inv.hunchRevealed === '05010') inv.hunchRevealed = null
+        if (inv.hunchRevealed === '05010') api.clearHunchRevealed(inv.seat)
         api.info('「悬案」被移出游戏。')
       },
     },

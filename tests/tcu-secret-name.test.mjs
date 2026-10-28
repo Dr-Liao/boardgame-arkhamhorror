@@ -125,6 +125,23 @@ function apiStub(state, overrides = {}) {
       state.locations.push(location)
       return location
     },
+    connectLocations: (aId, bId) => {
+      const a = state.locations.find(location => location.id === aId)
+      const b = state.locations.find(location => location.id === bId)
+      if (!a || !b) return false
+      a.connections ||= []
+      b.connections ||= []
+      if (!a.connections.includes(bId)) a.connections.push(bId)
+      if (!b.connections.includes(aId)) b.connections.push(aId)
+      return true
+    },
+    campaignRecord: key => state.campaign?.records?.[key] ?? null,
+    setCampaignRecord: (key, value) => {
+      state.campaign ||= {}
+      state.campaign.records ||= {}
+      state.campaign.records[key] = value
+      return value
+    },
     remove: (id) => {
       const index = state.locations.findIndex(location => location.id === id)
       if (index >= 0) state.locations.splice(index, 1)

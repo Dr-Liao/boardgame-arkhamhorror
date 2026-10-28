@@ -7,7 +7,7 @@
 //
 // 危墙迫近（03188）：意志检定失败后，把随机怪物塞到场景牌库底下，或每差 1 点受到 1 点恐惧。
 
-import { originalOf, stashMonsterFromZones } from '../../_shared.js'
+import { failedBy, originalOf, stashMonsterFromZones } from '../../_shared.js'
 
 export default {
   code: '03188', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['carcosa'],
@@ -18,7 +18,7 @@ export default {
     const location = state.locations.find(candidate => candidate.id === inv.location)
     api.test(inv.seat, 'willpower', location?.shroud || 0, result => {
       if (result.success) return
-      const amount = Math.max(1, result.difficulty - result.value)
+      const amount = failedBy(result, location?.shroud || 0)
       const options = [{ id: 'horror', label: `受到 ${amount} 点恐惧` }]
       if ((state.scenarioZones?.monsters || []).length) {
         options.push({ id: 'monster', label: '将随机怪物放到场景牌库底下' })

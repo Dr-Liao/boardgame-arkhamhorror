@@ -14,7 +14,7 @@ export default {
       if (state.acts?.[state.actIndex]?.originalCode === '03246') return
       const inv = state.investigators[state.currentSeat]
       if (inv?.location === location.id) api.damage(inv.seat, 2)
-      location.cannotLeaveRound = state.round
+      api.lockLocationThisRound(location)
     },
   },
 }

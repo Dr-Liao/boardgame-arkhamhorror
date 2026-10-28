@@ -6,7 +6,7 @@ import { commitProfile } from '../engine/lifecycle.js'
 import { playablePool, matchesDeckOptions } from '../deck/deckbuilding.js'
 import { deckRules } from '../deck/deck-rules.js'
 import { upgradeRecord } from '../campaign/campaign.js'
-import { legalMoves, actionPreview, getStat, actingSeats, actObjectiveContext, investigatorEntryError, locationAbilityStatus, locationInvestigateStatus, abilityUsage } from '../engine/engine.js'
+import { legalMoves, actionPreview, combatOdds, getStat, actingSeats, actObjectiveContext, investigatorEntryError, locationAbilityStatus, locationInvestigateStatus, abilityUsage } from '../engine/engine.js'
 import { locationEntryNotice } from '../engine/location-facts.js'
 import { investigatorAssigned, investigatorParticipation } from './ai-participation.js'
 import { CLASS_NAMES } from '../engine/presentation-constants.js'
@@ -24,8 +24,24 @@ const card = code => {
     printedText: c.textZh || c.text, implemented: implementationSummary(code) }
 }
 
+// 地点卡面原文。桌面上的地点是明牌，卡面文字属于公开信息；entry/ability/investigate 只覆盖
+// 本实现声明过的读点，卡面上还有「位于此地的调查员不能获得资源」「[action]：撤退」这类没进
+// 描述子的句子。与 entry 的进入提示、条目常驻规则重复的**整句**先剔掉，只留净增信息。
+function locationPrintedText(loc, ...known) {
+  const card = ALL_CARDS[loc.originalCode || loc.code]
+  const raw = String(loc.text || card?.textZh || card?.text || '').replace(/\s+/g, ' ').trim()
+  if (!raw) return ''
+  // 卡面与读点文案的空格不一致（「受到 1 点恐惧」vs「受到1点恐惧」），按「字间允许空白」匹配。
+  const patterns = known.map(value => String(value || '').replace(/\s+/g, '').trim()).filter(Boolean)
+    .map(normalized => new RegExp(normalized.split('').map(ch => ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('\\s*')))
+  if (!patterns.length) return raw
+  const keep = raw.split(/(?<=[。！？])/).map(sentence => sentence.trim()).filter(Boolean)
+    .filter(sentence => !patterns.some(pattern => pattern.test(sentence)))
+  return keep.join(' ').trim()
+}
+
 // 已揭示地点：把本实现真正声明过的内容交给 AI——进入代价、地点能力、调查门槛、
-// 剧本 notice、注册条目里的常驻规则，以及当前不能触发的原因。
+// 剧本 notice、注册条目里的常驻规则、卡面原文，以及当前不能触发的原因。
 // 未揭示地点只给地图层字段，不泄露背面文本或能力。
 function locationRow(state, loc, inv) {
   const subname = locationSubname(loc)
@@ -56,6 +72,9 @@ function locationRow(state, loc, inv) {
   // 非玩家卡通道里声明的常驻规则（如 04072 的蛇族敌人 +1 战斗）。
   const rule = registeredEntry(loc.originalCode || loc.code)?.text
   if (rule) row.rules = rule
+  // 卡面原文放在最后：与上面的 entry/rules 重复的句子已经剔除（子串不同则保留原文）。
+  const printedText = locationPrintedText(loc, entryText, rule)
+  if (printedText) row.text = printedText
   const traits = loc.traitsZh?.length ? loc.traitsZh : loc.traits
   if (Array.isArray(traits) && traits.length) row.traits = [...traits]
   if (loc.investigateSkill && loc.investigateSkill !== 'intellect') row.investigateSkill = loc.investigateSkill
@@ -210,10 +229,17 @@ export function aiDecisionContext(state, seat) {
             effect: commitProfile(code) }
         }) : []
     }
-    data.actionCosts = state.pendingChoice ? [] : moves.map(m => ({ move: Object.fromEntries(Object.entries(m).filter(([k]) => k !== 'label')), ...actionPreview(state, seat, m) }))
+    // AI 专用：攻击/躲避行动附带单标记成功率预估（src/engine/combat-odds.js）。
+    // 这个字段只出现在决策资料里——viewState / legalMoves / 牌桌都不会带它，
+    // 因为它是给模型做取舍用的推演，不是已实现给玩家看的界面信息。
+    data.actionCosts = state.pendingChoice ? [] : moves.map(m => {
+      const odds = combatOdds(state, seat, m)
+      return { move: Object.fromEntries(Object.entries(m).filter(([k]) => k !== 'label')), ...actionPreview(state, seat, m), ...(odds ? { odds } : {}) }
+    })
   }
   const story = storyDecisionContext(state, seat)
   if (story) data.story = story
   data.cards = [...known].sort().map(card)
-  return '\n【决策资料】\n' + JSON.stringify(data) + '\nprintedText 是原卡参考；implemented 和当前合法选项才是本实现的效果依据。地点条目里 entry / ability / investigate 是本实现已声明的效果，available 为 false 时 reason 说明当前为什么不能触发；reason 为 null 表示没有额外门槛。available 只反映地点本身的门槛（揭示、位置、次数、费用、目标），不代表现在轮到你或有行动点；能否提交仍以合法行动列表为准。不要猜测未提供的隐藏信息。'
+  return '\n【决策资料】\n' + JSON.stringify(data) + '\nprintedText 是原卡参考；implemented 和当前合法选项才是本实现的效果依据。地点条目里 entry / ability / investigate 是本实现已声明的效果，available 为 false 时 reason 说明当前为什么不能触发；reason 为 null 表示没有额外门槛。地点条目的 text 是该地点卡面原文（已经剔除与 entry / rules 重复的句子），卡面写明的进入限制、撤退、谈判与强制规则都在里面，判断「值不值得来」时先看它。available 只反映地点本身的门槛（揭示、位置、次数、费用、目标），不代表现在轮到你或有行动点；能否提交仍以合法行动列表为准。不要猜测未提供的隐藏信息。'
+    + 'actionCosts 里行动若带 odds，是本次攻击/躲避的单标记成功率预估（不是结算结果）：value 是你这次检定的总值，target 是敌人的战斗/躲避值，need 是需要混乱标记至少提供的修正，chance 是 0~1 的成功率，tokens 是当前袋中标记数；攻击还带 damage（命中伤害）与 hits（还需命中几次才能击败它），onFail 是失败时对方的反击/警戒，note 说明哪些成分没算进预估（例如旧印效果未知）。有 odds 时优先按 chance 与 hits 取舍，不要自己从混乱袋心算；没有 odds 的行动仍按卡面与规则判断。'
 }

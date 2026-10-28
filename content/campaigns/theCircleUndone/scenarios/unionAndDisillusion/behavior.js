@@ -4,7 +4,7 @@
 // 约定：随机只走 helper.randomValue / api.random / api.shuffle；本章状态写
 // state.scenarioFlags / state.scenarioZones（纯 JSON）；火盆走 P2.11 locationFlag。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { encounterResolveFor, entryFlags } from '../../../../../src/cards/card-rules.js'
+import { entryFlags, enemySpawnRuleFor } from '../../../../../src/cards/card-rules.js'
 import { campaignCardChange } from '../../../../../src/campaign/campaign.js'
 import { encounterRules, activeInvestigators, hasTrait, recordsFor } from '../../encounter-rules.js'
 import { uadChaosToken, uadCultistReveal } from './chaos.js'
@@ -853,10 +853,10 @@ export const behavior = {
   // -------------------------------------------------------------------------
   // 敌人
   // -------------------------------------------------------------------------
+  // 单卡生成地点由条目 enemySpawnRule 声明（05266/05267：生成在首位调查员所在地点）。
   spawnLocation(state, code, fallbackLoc) {
-    if (code === WHIPPOORWILL || code === SPECTRAL_RAVEN) {
-      const alive = activeInvestigators(state)
-      return alive[0]?.location || fallbackLoc || null
+    if (enemySpawnRuleFor(String(code))?.spawnAtFirstInvestigator) {
+      return activeInvestigators(state)[0]?.location || fallbackLoc || null
     }
     // 引擎语义：spawnLocation 返回 null = 生成失败。未特判的 code 必须回退到引擎给定的地点，
     // 否则整关所有未列出的敌人都无法生成（含共享组敌人与放一边的 05100 等）。
@@ -950,27 +950,7 @@ export const behavior = {
       api?.info?.(`${enemy.name}与你交战：失去 2 个资源。`)
       return
     }
-    if (code === SPECTRAL_RAVEN) {
-      const haunted = hasHauntedAt(state, inv.location)
-      let answer = 'modify'
-      if (typeof api?.choose === 'function') {
-        answer = api.choose({
-          kind: 'enemy', source: SPECTRAL_RAVEN, seat: inv.seat,
-          prompt: '幽灵乌鸦与你交战：结算所在地点的闹鬼能力，或让它 +2 攻击/+2 躲避直到调查阶段结束。',
-          options: [
-            ...(haunted ? [{ id: 'haunted', label: '结算所在地点的闹鬼能力' }] : []),
-            { id: 'modify', label: '幽灵乌鸦 +2 攻击与 +2 躲避' },
-          ],
-        })
-      }
-      if (answer === 'haunted') api?.haunted?.(inv.seat, { locationId: inv.location })
-      else {
-        // 卡面「直到调查阶段结束」：敌人阶段/补给阶段触发时指向下一轮的调查阶段结束。
-        enemy.ravenBoostUntilRound = (state.phase === 'enemy' || state.phase === 'upkeep')
-          ? state.round + 1 : state.round
-        api?.info?.('幽灵乌鸦得到 +2 攻击与 +2 躲避直到调查阶段结束。')
-      }
-    }
+    // 05267 幽灵乌鸦的交战二选一在条目的 enemyScript.onEngaged（共享 enemyEngaged 已派发）。
   },
 
   afterEvade(state, inv, enemy, result, api) {
@@ -994,30 +974,14 @@ export const behavior = {
     }
   },
 
-  // 夜鹰：所在地点的调查员每有 1 张夜鹰 -1 全部技能（横置不影响；多张叠加）。
+  // 夜鹰的「所在地点调查员 -1 全技能」在条目 enemyStatRule.skillAura（共享读点 encounterRules.statModifier）。
   statModifier(state, inv, skill) {
-    let delta = encounterRules.statModifier?.(state, inv, skill) || 0
-    const whippoorwillsHere = state.enemies.filter(enemy =>
-      String(original(enemy)) === WHIPPOORWILL && enemy.location === inv.location).length
-    if (whippoorwillsHere) delta -= whippoorwillsHere
-    return delta
+    return encounterRules.statModifier?.(state, inv, skill) || 0
   },
 
+  // 单卡战斗修正都在条目 enemyStatRule（05086 每个 stolenSoul +1、05267 boostUntilRound），共享读点统一汇总。
   enemyStatModifier(state, enemy, stat) {
-    let delta = encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
-    const code = String(original(enemy))
-    // 05239：恋人·VI 只给看守人 +1 攻击值（旧实现连躲避一起加）。灵魂数读资源标记（旧存档回退 lostSouls）。
-    if (code === THE_SPECTRAL_WATCHER && stat === 'fight') {
-      delta += soulMarkersOf(enemy) || Number(enemy.lostSouls) || 0
-    }
-    // 05267：+2 攻击/+2 躲避直到调查阶段结束（敌人阶段触发 → 下一轮调查阶段末）。
-    if (code === SPECTRAL_RAVEN && (stat === 'fight' || stat === 'evade')) {
-      const until = Number(enemy.ravenBoostUntilRound)
-      const active = Number.isFinite(until) && (state.round < until
-        || (state.round === until && (state.phase === 'mythos' || state.phase === 'investigation')))
-      if (active) delta += 2
-    }
-    return delta
+    return encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
   },
 
   // 共享 encounter-rules 的幽灵敌人地点限制不适用于本章（UAD 幽灵敌人卡面无此限制）。
@@ -1032,28 +996,6 @@ export const behavior = {
   },
 
   // 05269/05270 威胁区的强制：在将受到伤害/恐惧时额外 2 点并弃掉本卡。
-  beforeHarm(state, inv, harm, api) {
-    if (!inv || !harm) return harm
-    let { damage = 0, horror = 0 } = harm
-    const has = code => (inv.threat || []).some(card => original(card) === code)
-    if (damage > 0 && has(TREACHERY_CODES.psychopompsSong)) {
-      inv.threat = inv.threat.filter(card => original(card) !== TREACHERY_CODES.psychopompsSong)
-      // 卡面「弃掉灵魂之歌」：威胁区的诡计离场要进遭遇弃牌堆（否则这张牌会从牌局循环里消失）。
-      state.encounterDiscard ||= []
-      state.encounterDiscard.push(TREACHERY_CODES.psychopompsSong)
-      damage += 2
-      api?.info?.('灵魂之歌：你额外受到 2 点伤害，然后弃掉灵魂之歌。')
-    }
-    if (horror > 0 && has(TREACHERY_CODES.deathApproaches)) {
-      inv.threat = inv.threat.filter(card => original(card) !== TREACHERY_CODES.deathApproaches)
-      state.encounterDiscard ||= []
-      state.encounterDiscard.push(TREACHERY_CODES.deathApproaches)
-      horror += 2
-      api?.info?.('死期临近：你额外受到 2 点恐惧，然后弃掉死期临近。')
-    }
-    return { ...harm, damage, horror }
-  },
-
   // -------------------------------------------------------------------------
   // 混乱标记 / 检定
   // -------------------------------------------------------------------------
@@ -1108,82 +1050,11 @@ export const behavior = {
   },
 
   // -------------------------------------------------------------------------
-  // 诡计（本章 5 张；共享组诡计回落到 W-shared 的单条条目）
+  // 诡计（本章 5 张）的规则都在单卡条目：05268/05271 走 treacheryRule.test，
+  // 05269/05270/05272 走 encounterResolve；章节只委托共享 encounterRules 统一分派。
   // -------------------------------------------------------------------------
   resolveEncounter(state, inv, treachery, api) {
-    const code = String(original(treachery))
-    if (code === TREACHERY_CODES.eagerForDeath) {
-      const difficulty = 2 + (Number(inv.damage) || 0)
-      api?.test?.(inv.seat, 'willpower', difficulty, result => {
-        if (result?.success) return
-        api.horror?.(inv.seat, 2)
-        api.info?.('渴望死亡：检定失败，受到 2 点恐惧。')
-      }, 0, { label: '渴望死亡', code })
-      return false
-    }
-    if (code === TREACHERY_CODES.psychopompsSong || code === TREACHERY_CODES.deathApproaches) {
-      // 卡面「任意调查员的威胁区」：由结算玩家选择目标调查员（旧实现固定给抽牌者）。
-      let target = inv
-      const pool = activeInvestigators(state)
-      if (pool.length > 1 && typeof api?.choose === 'function') {
-        const picked = api.choose({
-          kind: 'investigator', source: code, seat: inv.seat,
-          prompt: `选择「${ALL_CARDS[code]?.nameZh || code}」放入其威胁区的调查员。`,
-          options: pool.map(candidate => ({ id: String(candidate.seat), label: candidate.name })),
-        })
-        target = pool.find(candidate => String(candidate.seat) === String(picked)) || inv
-      }
-      target.threat ||= []
-      if (!target.threat.some(card => original(card) === code)) {
-        target.threat.push({ id: `threat:${code}:${target.seat}`, code, originalCode: code, name: ALL_CARDS[code]?.nameZh || code })
-      }
-      api?.info?.(`「${ALL_CARDS[code]?.nameZh || code}」进入 ${target.name} 的威胁区域。`)
-      // 卡牌已在威胁区（不是弃牌堆）：返回 true 让引擎不再把它弃进遭遇弃牌堆（避免重复记账）。
-      return true
-    }
-    if (code === TREACHERY_CODES.markedForDeath) {
-      const difficulty = 2 + (Number(inv.horror) || 0)
-      api?.test?.(inv.seat, 'agility', difficulty, result => {
-        if (result?.success) return
-        api.damage?.(inv.seat, 2)
-        api.info?.('死亡记号：检定失败，受到 2 点伤害。')
-      }, 0, { label: '死亡记号', code })
-      return false
-    }
-    if (code === TREACHERY_CODES.watchersGaze) {
-      for (const target of activeInvestigators(state)) {
-        api?.test?.(target.seat, 'willpower', 5, result => {
-          if (result?.success) return
-          const watcher = watcherOf(state)
-          const watcherLocation = watcher?.location
-          // 卡面两条二选一：先校验两个地点是否真的有闹鬼能力，没有就不给该选项。
-          const options = []
-          if (hasHauntedAt(state, target.location)) options.push({ id: 'here', label: '结算你所在地点的闹鬼能力' })
-          if (watcherLocation && hasHauntedAt(state, watcherLocation)) {
-            options.push({ id: 'watcher', label: '结算幽灵看守人所在地点的闹鬼能力' })
-          }
-          if (!options.length) {
-            api?.info?.('看守人的注视：两个地点都没有闹鬼能力，效果结束。')
-            return
-          }
-          let answer = options[0].id
-          if (typeof api?.choose === 'function' && options.length > 1) {
-            answer = api.choose({
-              kind: 'treachery', source: TREACHERY_CODES.watchersGaze, seat: target.seat,
-              prompt: '看守人的注视：检定失败，选择结算哪个地点的闹鬼能力。', options,
-            })
-          }
-          const locationId = answer === 'watcher' ? watcherLocation : target.location
-          if (typeof api?.haunted === 'function' && locationId) api.haunted(target.seat, { locationId })
-          api?.info?.('看守人的注视：结算闹鬼能力。')
-        }, 0, { label: '看守人的注视', code })
-      }
-      return false
-    }
-    const entryResolve = encounterResolveFor(code)
-    if (entryResolve) return entryResolve(state, inv, treachery, api, { location: here(state, inv) })
-    api?.info?.(`（共享遭遇「${ALL_CARDS[code]?.nameZh || code}」由战役共享条目结算。）`)
-    return false
+    return encounterRules.resolveEncounter?.(state, inv, treachery, api) ?? false
   },
 
   // -------------------------------------------------------------------------

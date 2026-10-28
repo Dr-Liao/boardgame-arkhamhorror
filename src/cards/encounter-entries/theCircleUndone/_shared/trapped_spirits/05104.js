@@ -25,7 +25,7 @@ export default {
     let failedBy = 0
     // 闹鬼地点的额外费用只在「本次技能检定」期间有效：结算入口写入，finally 清除。
     if (hauntedAbilitiesAt(state, inv, api).length) {
-      state.hauntedCommitCost = { locationId: inv.location, paidSeats: [] }
+      api.setHauntedCommitCost(inv.location)
     }
     try {
       api.test(inv.seat, 'agility', 3, result => {
@@ -37,7 +37,7 @@ export default {
         api.damage(inv.seat, failedBy)
       }
     } finally {
-      delete state.hauntedCommitCost
+      api.clearHauntedCommitCost()
     }
     return false // 进遭遇弃牌堆
   },

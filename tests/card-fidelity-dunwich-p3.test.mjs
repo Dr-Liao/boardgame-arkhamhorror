@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 
 import { fixture, asset, enemy, move, answer, settle, validateMove, legalMoves } from './core-fixture.mjs'
 import { laterBehavior } from '../content/campaigns/theDunwichLegacy/later-behaviors.js'
+import { applyPenalty } from '../src/engine/engine.js'
 
 const me = state => state.investigators[0]
 
@@ -89,5 +90,28 @@ test('02188 孤狼：独自一人时回合开始获得 1 资源', () => {
   settle(state)
   // 补给阶段本身也会 +1 资源；只看是否有孤狼的触发日志。
   assert.ok(state.log.some(line => String(line).includes('孤狼')) || me(state).resources > before)
+})
+
+test('02221 灵魂之歌：受到伤害时额外 2 点并弃掉本卡（harmInterceptor 读点）', () => {
+  const state = fixture('01001')
+  me(state).damage = 0
+  me(state).threat = [{ id: 'song-1', code: '02221', originalCode: '02221' }]
+  state.encounterDiscard = []
+  applyPenalty(state, me(state), { kind: 'takeDamage', amount: 1 }, 0, [])
+  assert.equal(me(state).damage, 3, '1 点基础伤害 + 2 点额外伤害')
+  assert.deepEqual(me(state).threat, [], '结算后离开威胁区')
+  assert.deepEqual(state.encounterDiscard, ['02221'], '弃进遭遇弃牌堆，而不是消失')
+})
+
+test('02221 灵魂之歌：没有伤害时不触发、也不弃卡', () => {
+  const state = fixture('01001')
+  me(state).damage = 0
+  me(state).threat = [{ id: 'song-2', code: '02221', originalCode: '02221' }]
+  state.encounterDiscard = []
+  applyPenalty(state, me(state), { kind: 'takeHorror', amount: 1 }, 0, [])
+  assert.equal(me(state).damage, 0)
+  assert.equal(me(state).horror, 1)
+  assert.equal(me(state).threat.length, 1, '只有伤害才触发')
+  assert.deepEqual(state.encounterDiscard, [])
 })
 

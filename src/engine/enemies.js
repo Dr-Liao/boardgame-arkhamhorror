@@ -514,6 +514,31 @@ function autoEvadeEnemy(state, enemy, events) {
 // 冷漠（aloof）敌人不会主动与调查员交战；未交战时也不能被攻击，需要调查员主动交战
 // （或使用写明「忽略冷漠」的攻击，见 hidden-rules.js 的 aloofPreventsAttack）。
 
+// 威胁区卡面的「当你将受到伤害/恐惧时」强制（02221 灵魂之歌 / 05269 同文重印）。
+// 数据由条目的 harmInterceptor 声明（注册期校验，ability.js），引擎不写卡号分支；
+// 「额外 N 点并弃掉本卡」在分配伤害之前生效，弃掉的遭遇卡进遭遇弃牌堆。
+function applyThreatHarmInterceptors(state, inv, damage, horror, events) {
+  let next = null
+  for (const card of (inv.threat || []).slice()) {
+    const rule = registeredEntry(card.originalCode || card.code)?.harmInterceptor
+    if (!rule) continue
+    if (rule.trigger === 'damage' && !(damage > 0)) continue
+    if (rule.trigger === 'horror' && !(horror > 0)) continue
+    next ||= { damage, horror }
+    if (rule.trigger === 'damage') next.damage += rule.extra
+    else next.horror += rule.extra
+    if (rule.discard) {
+      const index = inv.threat.indexOf(card)
+      if (index >= 0) inv.threat.splice(index, 1)
+      state.encounterDiscard.push(card.code)
+      info(state, events, `「${cardName(card.code)}」：你额外受到 ${rule.extra} 点${rule.trigger === 'damage' ? '伤害' : '恐惧'}，然后弃掉它。`)
+    } else {
+      info(state, events, `「${cardName(card.code)}」：你额外受到 ${rule.extra} 点${rule.trigger === 'damage' ? '伤害' : '恐惧'}。`)
+    }
+  }
+  return next
+}
+
 function applyHarm(state, inv, damage, horror, events, direct, attack = null, assetsFirst = false, strategy = null) {
   // 「在你受到恐惧时，如果这些恐惧中至少有 1 点没有分配给 X，受到 1 点伤害」（03182a 丹尼尔）。
   // 在分配前记下带这条强制的支援，分配后按分配结果判定。
@@ -523,6 +548,9 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
   const changed = scenarioBehavior(state).beforeHarm?.(state, inv,
     { damage: damage || 0, horror: horror || 0, direct: !!direct }, scenarioRuntime(state, events))
   if (changed) { damage = changed.damage; horror = changed.horror; direct = changed.direct }
+  // 条目声明的威胁区强制（02221 灵魂之歌）：在战役钩子之后、分配之前追加并弃卡。
+  const intercepted = applyThreatHarmInterceptors(state, inv, damage || 0, horror || 0, events)
+  if (intercepted) { damage = intercepted.damage; horror = intercepted.horror }
   if (!(damage > 0 || horror > 0)) return
   // 「这次伤害/恐惧是否足以击败你」（04111 坚韧不拔）：窗口开始前写入，供反应条件读取。
   state.lastHarmContext = { seat: inv.seat, damage: damage || 0, horror: horror || 0, direct: !!direct,

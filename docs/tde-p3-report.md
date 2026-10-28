@@ -95,9 +95,29 @@
 - 关键语义（全部有测试）：Swarming 的四种 X 口径（缺 `x` 抛错而不是按 0）；蜂拥卡清空前头领不可击败、溢出伤害逐张扣；Veiled 的「未揭示限制 / 翻面 / 洗回」三件事分开；蛛群袋可注入 rng 做确定性；纵向链越界返回 `null` 不夹端点；计数器只读不建字段。
 - 账本：`primitive-plan.json` 的 `newPrimitives` 现在 **12/12 done**；`mechanismCoverage` 9 条 primitive 机制：7 覆盖 + 2 显式延后（epilogueMatrix、dreamGate）。
 - 事务边界：真实敌人实体生成、调查动作拦截、infestation test、布局渲染都留 P8/P5；本批只保证原语可被内容层调用且有 Node 证据。
-- 全量 	est:fast：**3674 tests / 3671 pass / 3 skipped / 0 fail**（p3b2-fast.log，含本批 46 例）。	ests/suites.mjs 新增 6 个测试文件再次触发 TCU 玩家卡账本 stale，按同一 remedy 重算（udit-tcu-player --write → udit-tcu --write），diff 只有哈希；重算后 udit:tcu:check 与 	cu-migration.test.mjs 6/6 通过。
+- 全量 `test:fast`：**3674 tests / 3671 pass / 3 skipped / 0 fail**（`p3b2-fast.log`，含本批 46 例）。`tests/suites.mjs` 新增 6 个测试文件再次触发 TCU 玩家卡账本 stale，按同一 remedy 重算（`audit-tcu-player --write` → `audit-tcu --write`），diff 只有哈希；重算后 `audit:tcu:check` 与 `tcu-migration.test.mjs` 6/6 通过。
 
-## 9. 仍未完成（诚实清单）
+## 9. 批次 3（2026-10-28）：最后 5 条原语
+
+| # | 原语 | 机制 | 落点 | 测试例数 |
+| ---: | --- | --- | --- | ---: |
+| P3.13 | `location.placeBondedLocation` | dreamGate 4 | `src/engine/bonded-location.js` | 6 |
+| P3.14 | `campaign.epilogueMatrix` | epilogueMatrix 0 | `src/campaign/epilogue-matrix.js` | 6 |
+| P3.15 | `deck.myriadLimit` | myriad 14 | `src/engine/myriad.js` | 7 |
+| P3.16 | `location.doom` | locationDoom 7 | `src/engine/location-doom.js` | 8 |
+| P3.17 | `scenario.markerCount` | signsOfTheGods 8 | `src/engine/marker-count.js` | 6 |
+
+- 账本：`batch: "P3-1+2+3"`、`newPrimitives` **17/17 done**、`deferredPrimitives` 空、`mechanismCoverage` 9/9 覆盖、`gate.pass=true`。
+- 语义要点（全部有测试）：Bonded 成对放置/成对移除、伙伴已在场时复用并互链；结局矩阵 16 格完整性点名缺格/多格；Myriad 按**标题**跨卡号共享 3 张额度、超限拒绝并给原因；地点毁灭与全桌 `doom` 分开、达到阈值才移除并记入 `destroyedLocations`；参考卡计数只读不建字段。
+- 接线：`bondedLocation` / `locationDoom` / `markers` 挂到 `scenarioRuntime`；`myriad`（构筑期）与 `epilogueMatrix`（战役层）只在模块层。
+- **replay 基线重采（外部原因）**：开工时发现 `stateHash` 从第 28 步起与旧基线（2026-10-27 16:02）不一致；用 HEAD 版 `scenario-runtime-extras.js` 复跑仍同样漂移，证明与本批无关。原因是同日外部提交 `6f60771 修bug`（引擎修正，13 局从 786 步变 782 步）。处置：旧基线留档 `replay-before-2026-10-27.json`（sha `d99eec4d…`），按当前 HEAD 重采 `replay-before.json`（sha `4bb28daa…`），复跑 `--compare` 零漂移。本批未改任何既有行为。
+- 全量 `test:fast`：**3750 tests / 3747 pass / 3 skipped / 0 fail**（`p3b3-fast.log`，含本批 33 例；总数为三条流水线 100 例原语测试 + 外部提交新增用例）。
+
+- **外部提交还删除了账本**：`6f60771 修bug` 之后 `artifacts/migration/tcu/**` 与 `artifacts/migration/tde/{scope,mechanism-scan}.json` 消失，
+  `audit-tcu` / `scan-tcu-scope` 因 ENOENT 无法运行。按工具确定性重算恢复（`scan-tcu-mechanisms` → `scan-tcu-scope` → `audit-tcu-primitives` → `audit-tcu`，
+  TDE 侧 `scan:tde:scope` / `scan:tde`），`--check` 全部一致；golden 期望同步重锁为 13 局 / 782 步 / 795 指纹。
+
+## 10. 仍未完成（诚实清单）
 
 | 项 | 归属 |
 | --- | --- |

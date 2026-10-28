@@ -155,6 +155,12 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'hiddenRule',
   'threatEffect',
   'treacheryRule',
+  // 威胁区卡面的「当你将受到伤害/恐惧时」强制修正（02221 灵魂之歌 / 05269 同文重印）。
+  // 形状 `{ trigger: 'damage' | 'horror', extra: number, discard?: boolean }`；
+  // 读点：enemies.js 的 applyHarm，在 scenarioBehavior.beforeHarm 之后、分配伤害之前。
+  'harmInterceptor',
+  // 敌人入场/移动后在该地点放裂口（05311 混沌见证者）：数据声明，章节按字段统一执行。
+  'breachOnEnter',
   // 2026-10-25 第四轮修复 cannot-cancel-card-flag（05342）：「本卡的显现效果不能被取消」。
   // 读点：encounter.js 抽牌取消窗口、treachery-tokens.js 显现窗口、api.cancelEncounterDraw。
   'cannotBeCanceledRevelation',
@@ -526,6 +532,57 @@ export function registerCardAbilities(entries) {
       && (!Number.isInteger(entry.openingHandBonus) || entry.openingHandBonus < 1)) {
       throw new Error(`${origin}: openingHandBonus 必须是正整数`)
     }
+    // 威胁区强制修正：形状在注册期校验，避免对局中途静默失效（「声明即接线」）。
+    if (entry.harmInterceptor != null) {
+      const harm = entry.harmInterceptor
+      if (!harm || typeof harm !== 'object' || Array.isArray(harm)) {
+        throw new Error(`${origin}: harmInterceptor 必须是对象`)
+      }
+      assertKnownKeys(harm, new Set(['trigger', 'extra', 'discard']), `${origin} harmInterceptor`)
+      if (!['damage', 'horror'].includes(harm.trigger)) {
+        throw new Error(`${origin}: harmInterceptor.trigger 必须是 damage 或 horror`)
+      }
+      if (!Number.isInteger(harm.extra) || harm.extra < 1) {
+        throw new Error(`${origin}: harmInterceptor.extra 必须是正整数`)
+      }
+      if (harm.discard != null && typeof harm.discard !== 'boolean') {
+        throw new Error(`${origin}: harmInterceptor.discard 必须是布尔值`)
+      }
+    }
+    if (entry.breachOnEnter != null) {
+      if (!Number.isInteger(entry.breachOnEnter) || entry.breachOnEnter < 1) {
+        throw new Error(`${origin}: breachOnEnter 必须是正整数`)
+      }
+    }
+    // 声明式「显现 - 检定」：形状在注册期校验；读点 treachery-tokens.js。
+    if (entry.treacheryRule?.test != null) {
+      const test = entry.treacheryRule.test
+      if (!test || typeof test !== 'object' || Array.isArray(test)) {
+        throw new Error(`${origin}: treacheryRule.test 必须是对象`)
+      }
+      assertKnownKeys(test, new Set(['skill', 'difficulty', 'fail', 'penaltyKind']), `${origin} treacheryRule.test`)
+      if (!['willpower', 'intellect', 'combat', 'agility'].includes(test.skill)) {
+        throw new Error(`${origin}: treacheryRule.test.skill 必须是四项技能之一`)
+      }
+      const difficulty = test.difficulty
+      if (difficulty && typeof difficulty === 'object') {
+        assertKnownKeys(difficulty, new Set(['base', 'plus']), `${origin} treacheryRule.test.difficulty`)
+        if (!Number.isInteger(difficulty.base) || difficulty.base < 0) {
+          throw new Error(`${origin}: treacheryRule.test.difficulty.base 必须是非负整数`)
+        }
+        if (!['damage', 'horror', 'doom', 'clues', 'depth', 'investigators', 'shroud'].includes(difficulty.plus)) {
+          throw new Error(`${origin}: treacheryRule.test.difficulty.plus 不受支持`)
+        }
+      } else if (!Number.isInteger(difficulty) || difficulty < 0) {
+        throw new Error(`${origin}: treacheryRule.test.difficulty 必须是非负整数或 { base, plus }`)
+      }
+      if (!test.fail || typeof test.fail !== 'object' || Array.isArray(test.fail)) {
+        throw new Error(`${origin}: treacheryRule.test.fail 必须是对象`)
+      }
+      if (!test.fail.kind && !test.penaltyKind) {
+        throw new Error(`${origin}: treacheryRule.test.fail.kind 或 penaltyKind 必填`)
+      }
+    }
     if (REGISTRY.has(entry.code) && REGISTRY.get(entry.code).registered !== false) {
       throw new Error(`${origin}: 重复注册（能力层同一卡号只允许一个条目）`)
     }
@@ -735,12 +792,23 @@ export function registerCardAbilities(entries) {
       }) : null,
       treacheryRule: entry.treacheryRule ? Object.freeze({
         ...entry.treacheryRule,
+        // 声明式「显现 - 检定」：读点 src/cards/card-rules.js 的 resolveDeclarativeTreacheryTest。
+        // 形状 `{ skill, difficulty: number | { base, plus }, fail, penaltyKind? }`。
+        test: entry.treacheryRule.test ? Object.freeze({
+          ...entry.treacheryRule.test,
+          difficulty: entry.treacheryRule.test.difficulty && typeof entry.treacheryRule.test.difficulty === 'object'
+            ? Object.freeze({ ...entry.treacheryRule.test.difficulty })
+            : entry.treacheryRule.test.difficulty,
+          fail: entry.treacheryRule.test.fail ? Object.freeze({ ...entry.treacheryRule.test.fail }) : null,
+        }) : null,
         threat: entry.treacheryRule.threat ? Object.freeze({
           ...entry.treacheryRule.threat,
           extraActionCost: Object.freeze([...(entry.treacheryRule.threat.extraActionCost || [])]),
           cannotPlay: Object.freeze([...(entry.treacheryRule.threat.cannotPlay || [])]),
         }) : null,
       }) : null,
+      // 威胁区「当你将受到伤害/恐惧时」的强制修正（读点：enemies.js applyHarm）。
+      harmInterceptor: entry.harmInterceptor ? Object.freeze({ ...entry.harmInterceptor }) : null,
       actRule: entry.actRule ? Object.freeze({ ...entry.actRule }) : null,
       agendaRule: entry.agendaRule ? Object.freeze({ ...entry.agendaRule }) : null,
       // 2026-10-25 第四轮修复 cannot-cancel-card-flag（05342）。

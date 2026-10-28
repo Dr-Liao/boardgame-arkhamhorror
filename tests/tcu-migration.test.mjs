@@ -26,7 +26,12 @@ const audit = JSON.parse(readFileSync(new URL('../audit/tcu-migration.json', imp
 
 function run(script, args = []) {
   // P9 起 audit-tcu --check 会实跑剧情测试（与 P8 的逐章账本同口径），放宽到 300s 防慢机误报。
-  return spawnSync(process.execPath, [script, ...args], { cwd: ROOT, encoding: 'utf8', timeout: 300000 })
+  // 去掉 NODE_TEST_CONTEXT：node --test 会给测试文件注入该变量，子进程里的 audit-tcu
+  // 若继承它，玩家卡验收的复算口径会与直接运行不一致（--check 误报账本不一致）。
+  const env = { ...process.env }
+  delete env.NODE_TEST_CONTEXT
+  delete env.NODE_TEST_WORKER_ID
+  return spawnSync(process.execPath, [script, ...args], { cwd: ROOT, encoding: 'utf8', timeout: 300000, env })
 }
 
 test('P1 范围：343 主卡 + 34 关联面 = 377 条记录，三包 237/19/87 无重叠无遗漏', () => {

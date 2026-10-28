@@ -5,6 +5,9 @@
 // 幽灵看守人、混乱标记、诡计、结局记录、存档往返（JSON.stringify + deepEqual）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
+// 引擎装配点注册全部单卡条目（本章诡计 05268–05272 的规则已回条目）。
+import '../src/engine/engine.js'
+import { registeredEntry } from '../src/engine/ability.js'
 import * as uad from '../content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/index.js'
 import {
   scenario as definition, FATE_LIST, ISLE_CODES, UNVISITED_ISLES,
@@ -188,6 +191,33 @@ function apiFor(state, overrides = {}) {
     trauma: (seat, kind, n) => { state.investigators[seat].trauma = { kind, n } },
     defeat: (seat, cause) => { state.investigators[seat].defeated = true; calls.push(['defeat', seat, cause]) },
     haunted: (seat, options) => calls.push(['haunted', seat, options]),
+    // 05267 幽灵乌鸦：+2 攻/躲持续到某轮。
+    boostEnemyUntil: (enemy, key, round) => {
+      if (!enemy || !key) return false
+      enemy[key] = round
+      calls.push(['boostEnemyUntil', enemy.code, key, round])
+      return true
+    },
+    // 05272 看守人的注视：判断两个地点是否有闹鬼能力。
+    hauntedAt: locationId => {
+      const location = state.locations.find(item => item.id === locationId)
+      const data = state.scenario?.locations?.[locationId]?.haunted || location?.haunted
+      return Array.isArray(data) ? data : []
+    },
+    // 05269/05270：放入任意调查员的威胁区。
+    threat: (seat, code) => {
+      const owner = state.investigators[seat]
+      owner.threat ||= []
+      owner.threat.push({ id: `threat:${code}:${seat}`, code, originalCode: code, name: code })
+      calls.push(['threat', seat, code])
+      return owner.threat.at(-1)
+    },
+    // 05268/05271 的声明式检定失败分支。
+    applyPenalty: (seat, fail) => {
+      if (fail.kind === 'takeHorror') state.investigators[seat].horror += fail.amount
+      if (fail.kind === 'takeDamage') state.investigators[seat].damage += fail.amount
+      calls.push(['applyPenalty', seat, fail])
+    },
     discardChosen: (seat, n, source) => calls.push(['discardChosen', seat, n, source]),
     addDoom: n => { state.doom = (state.doom || 0) + n },
     advanceAct: () => { calls.push(['advanceAct']); return true },
@@ -672,13 +702,9 @@ test('诡计：渴望死亡难度随伤害提高、死亡记号随恐惧提高�
   uad.behavior.resolveEncounter(state, inv, { code: '05269', originalCode: '05269' }, api3)
   uad.behavior.resolveEncounter(state, inv, { code: '05270', originalCode: '05270' }, api3)
   assert.equal(inv.threat.length, 2)
-  const adjusted = uad.behavior.beforeHarm(state, inv, { damage: 1, horror: 1 }, apiFor(state))
-  assert.equal(adjusted.damage, 3, '灵魂之歌 +2 伤害')
-  assert.equal(adjusted.horror, 3, '死期临近 +2 恐惧')
-  assert.equal(inv.threat.length, 0, '两张威胁卡都已弃掉')
-  // 卡面「弃掉」：威胁区的诡计要进遭遇弃牌堆（否则这张牌从牌局循环里消失）。
-  assert.ok(state.encounterDiscard.includes('05269'), '灵魂之歌进入遭遇弃牌堆')
-  assert.ok(state.encounterDiscard.includes('05270'), '死期临近进入遭遇弃牌堆')
+  // 引擎 applyHarm 的威胁区拦截读点（02221 同款）：条目只声明数据。
+  assert.deepEqual(registeredEntry('05269').harmInterceptor, { trigger: 'damage', extra: 2, discard: true })
+  assert.deepEqual(registeredEntry('05270').harmInterceptor, { trigger: 'horror', extra: 2, discard: true })
 })
 
 test('结局：noResolution 按结局 5 分流；桑福德/安妮特记录链最终走结局 8', () => {

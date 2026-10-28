@@ -6,6 +6,7 @@ import {
   RUINS_LOCATIONS,
 } from '../content/campaigns/theForgottenAge/scenarios/turnBackTime/definition.js'
 import { implementedEncounterCodes } from '../content/campaigns/theForgottenAge/scenarios/turnBackTime/behavior.js'
+import { addLocationShroud } from '../src/engine/location-attachments.js'
 
 const clone = value => structuredClone(value)
 const behavior = chapter.behavior
@@ -83,8 +84,18 @@ function runtimeApi(state, overrides = {}) {
     checkSupplies: () => false,
     loseActions: () => {},
     endTurn: () => {},
+    takeExplorationTop: count => {
+      const deck = state.explorationDeck || []
+      const n = Math.min(Math.max(0, count), deck.length)
+      return n ? deck.splice(deck.length - n, n) : []
+    },
+    addExplorationTop: code => { (state.explorationDeck ||= []).push(code) },
+    discardExploration: code => { (state.explorationDiscard ||= []).push(code) },
+    shuffleExploration: () => {},
     moveInvestigator: (seat, destination) => { state.investigators[seat].location = destination },
     resign: seat => { state.investigators[seat].resigned = true },
+    // 01168 朦胧之雾：帷幕/雾写入走引擎原语。
+    attachShroud: (locationId, amount, code) => addLocationShroud(state, locationId, amount, code),
     defeat: (inv) => {
       const target = typeof inv === 'number' ? state.investigators[inv] : inv
       if (target) target.defeated = true

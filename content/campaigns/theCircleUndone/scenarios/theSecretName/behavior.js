@@ -457,40 +457,24 @@ export const behavior = {
   },
 
   // ---- 敌人 ----
+  // 章节级：所有非弱点敌人的生命 + 当前密谋编号。
+  // 单卡的战斗修正（05149 那赫卜 + 密谋编号、05148 布朗·詹金的生物光环）已迁到条目的 enemyStatRule。
   enemyStatModifier(state, enemy, stat) {
     const base = encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
-    const agendaNumber = (state.agendaIndex ?? 0) + 1
-    if (stat === 'health') {
-      if (ALL_CARDS[codeOf(enemy)]?.subtype) return base
-      return base + agendaNumber
-    }
-    if (stat === 'fight') {
-      if (String(codeOf(enemy)) === NAHAB) return base + agendaNumber
-      if (inPlay(state, BROWN_JENKIN) && hasTrait(enemy, 'Creature') && !enemy.exhausted) return base + 2
+    if (stat === 'health' && !ALL_CARDS[codeOf(enemy)]?.subtype) {
+      return base + (state.agendaIndex ?? 0) + 1
     }
     return base
   },
 
+  // 敌军阶段开始/结束的逐卡强制在条目的 enemyScript.onEnemyPhaseStart / onEnemyPhaseEnd，
+  // 共享 encounterRules 已统一派发；章节只保留转发。
   enemyPhaseStart(state, api) {
     encounterRules.enemyPhaseStart?.(state, api)
-    const nahab = inPlay(state, NAHAB)
-    if (nahab && !nahab.exhausted) {
-      api.doomOn?.(nahab, 1)
-      api.info?.('🌑 那赫卜处于重整状态：在其上放置 1 个毁灭标记。')
-    }
   },
 
   enemyPhaseEnd(state, api) {
     encounterRules.enemyPhaseEnd?.(state, api)
-    const jenkin = inPlay(state, BROWN_JENKIN)
-    if (!jenkin || jenkin.exhausted) return
-    for (const inv of activeInvestigators(state).filter(entry => entry.location === jenkin.location)) {
-      const count = (inv.hand || []).length
-      if (!count) continue
-      api.discardRandom?.(inv.seat, count)
-      api.drawCards?.(inv.seat, count)
-      api.info?.(`🐀 布朗·詹金：${inv.name} 弃掉全部 ${count} 张手牌后抽取等量卡牌。`)
-    }
   },
 
   // 敌人入场：act3 起把「那赫卜不能离开献祭场所」同步成引擎既有 immobile（所有移动来源统一拦截）。
@@ -509,9 +493,6 @@ export const behavior = {
   enemyDefeated(state, enemy, api) {
     encounterRules.enemyDefeated?.(state, enemy, api)
     const code = String(codeOf(enemy))
-    state.scenarioFlags ||= {}
-    if (code === BROWN_JENKIN) state.scenarioFlags.brownJenkinDefeated = true
-    if (code === NAHAB) state.scenarioFlags.nahabDefeated = true
     syncNahabImmobile(state)
     // act3 那赫卜：不弃掉，改为治愈/横置/解除交战/本轮补给阶段不重整（preventReady 引擎读点）。
     if (code === NAHAB && (state.actIndex ?? 0) === 2) {
@@ -545,23 +526,8 @@ export const behavior = {
       delete flags.mustInvestigateRound
     }
     syncNahabImmobile(state)
-    const threats = inv.threat || []
-    for (const threat of [...threats]) {
-      const code = String(codeOf(threat))
-      // 回合结束强制的规则 id 由 definition.threatTurnEnd 声明（不按卡号写分支）。
-      const kind = state.scenario?.threatTurnEnd?.[code]
-      if (!kind) continue
-      // 群星牵引：本回合未移动过 → 受到 2 点恐惧。
-      if (kind === 'pulledByTheStars' && !inv.tcuMovedThisTurn) {
-        api.horror?.(inv.seat, 2)
-        api.info?.(`🌌 群星牵引：${inv.name} 本回合未移动过，受到 2 点恐惧。`)
-      }
-      // 不安的梦：回合结束弃遭遇牌库顶 1 张（牌库耗尽的强制由共享 encounter-rules 通道立即结算）。
-      if (kind === 'disquietingDreams' && state.encounterDeck.length) {
-        discardEncounterTop?.(state, api, 1, { notifyEmpty: true })
-        api.info?.('😴 不安的梦：弃掉遭遇牌库顶 1 张卡牌。')
-      }
-    }
+    // 威胁区卡的回合结束强制在条目的 treacheryRule.turnEnd（05146/05147），
+    // 由共享 encounterRules.turnEnded 统一解释；本章只负责重置「本回合移动」标记。
     inv.tcuMovedThisTurn = false
   },
 

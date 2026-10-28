@@ -149,16 +149,21 @@ export function createTreacheryTokens(deps) {
     return candidates.find(e => e.id === id)
   }
 
-  function applyPenalty(state, inv, fail, failedBy, events) {
+  // 声明式遭遇检定的难度解算在 src/cards/card-rules.js（内容层共用读点），引擎不再各留一份。
+
+  // `options.silent`：条目声明式检定（treacheryRule.test）走同一条失败结算，但不再补一行
+  // 「受到 N 点伤害/恐惧」——保持与迁移前的手写条目日志逐字一致（golden replay 不漂移）。
+  function applyPenalty(state, inv, fail, failedBy, events, options = {}) {
     if (!fail) return
-    if (fail.kind === 'takeDamage') { info(state, events, `${inv.name} 受到 ${fail.amount} 点伤害。`); applyDamage(state, inv, fail.amount, events) }
-    else if (fail.kind === 'takeHorror') { info(state, events, `${inv.name} 受到 ${fail.amount} 点恐惧。`); applyHorror(state, inv, fail.amount, events) }
-    else if (fail.kind === 'damageByAmount') { const n = failedBy; info(state, events, `${inv.name} 受到 ${n} 点伤害。`); applyDamage(state, inv, n, events) }
-    else if (fail.kind === 'horrorByAmount') { const n = failedBy; info(state, events, `${inv.name} 受到 ${n} 点恐惧。`); applyHorror(state, inv, n, events) }
-    else if (fail.kind === 'discardAsset') { discardRandomAsset(state, inv, events); info(state, events, `${inv.name} 弃掉了一件资产。`) }
+    const log = options.silent ? () => {} : text => info(state, events, text)
+    if (fail.kind === 'takeDamage') { log(`${inv.name} 受到 ${fail.amount} 点伤害。`); applyDamage(state, inv, fail.amount, events) }
+    else if (fail.kind === 'takeHorror') { log(`${inv.name} 受到 ${fail.amount} 点恐惧。`); applyHorror(state, inv, fail.amount, events) }
+    else if (fail.kind === 'damageByAmount') { const n = failedBy; log(`${inv.name} 受到 ${n} 点伤害。`); applyDamage(state, inv, n, events) }
+    else if (fail.kind === 'horrorByAmount') { const n = failedBy; log(`${inv.name} 受到 ${n} 点恐惧。`); applyHorror(state, inv, n, events) }
+    else if (fail.kind === 'discardAsset') { discardRandomAsset(state, inv, events); log(`${inv.name} 弃掉了一件资产。`) }
     else if (fail.kind === 'discardAssetOrDamage') {
       if (inv.assets.length) discardRandomAsset(state, inv, events)
-      else { info(state, events, `${inv.name} 没有资产可弃，受到 ${fail.damage} 点伤害。`); applyDamage(state, inv, fail.damage, events) }
+      else { log(`${inv.name} 没有资产可弃，受到 ${fail.damage} 点伤害。`); applyDamage(state, inv, fail.damage, events) }
     }
     else if (fail.kind === 'horrorAndDrawMadness') {
       applyHorror(state, inv, fail.horror, events)
@@ -168,7 +173,7 @@ export function createTreacheryTokens(deps) {
     else if (fail.kind === 'damageHorrorDisengageAndMoveCentral') {
       // 「乘着黑暗之翼」这类：受伤/恐惧、与非夜魇敌人解除交战、被带到中心地点。
       // 规则的数值与走向由卡面数据声明，kind 不再用卡名。
-      info(state, events, `${inv.name} 受到 ${fail.damage} 点伤害和 ${fail.horror} 点恐惧。`)
+      log(`${inv.name} 受到 ${fail.damage} 点伤害和 ${fail.horror} 点恐惧。`)
       applyHarm(state, inv, fail.damage, fail.horror, events)
       if (inv.defeated || inv.resigned) return
       for (const enemyId of inv.engaged.slice()) {
@@ -182,7 +187,7 @@ export function createTreacheryTokens(deps) {
     }
     else if (fail.kind === 'cluesByAmount') { placeCluesOnLocation(state, inv, failedBy, events) }
     else if (fail.kind === 'damageAndHorror') {
-      info(state, events, `${inv.name} 受到 ${fail.damage} 点伤害和 ${fail.horror} 点恐惧。`)
+      log(`${inv.name} 受到 ${fail.damage} 点伤害和 ${fail.horror} 点恐惧。`)
       applyHarm(state, inv, fail.damage, fail.horror, events)
     }
     else if (fail.kind === 'wrathByAmount') {
@@ -195,7 +200,7 @@ export function createTreacheryTokens(deps) {
         if (answer === 'harm') applyHarm(state, inv, 1, 1, events)
         else {
           const code = inv.hand.splice(Number(answer), 1)[0]; inv.discard.push(code)
-          info(state, events, `${inv.name} 弃掉了「${cardName(code)}」。`)
+          log(`${inv.name} 弃掉了「${cardName(code)}」。`)
         }
         if (inv.defeated || inv.resigned) break
       }

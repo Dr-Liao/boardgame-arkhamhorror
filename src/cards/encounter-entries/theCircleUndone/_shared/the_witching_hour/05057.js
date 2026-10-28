@@ -47,5 +47,10 @@ export default {
         api.info?.(`🕯️ 安妮特·梅森弃出 ${discarded.length} 个女巫敌人并在「${api.locName?.(location) || location}」生成。`)
       }
     },
+    // 幕 4 目标之一：安妮特被击败记录到剧本标记（章节 checkObjectives 只读标记，不再按卡号分支）。
+    onDefeated(state, enemy, api) {
+      api.setScenarioFlag?.('anetteDefeated', true)
+      return false
+    },
   },
 }

@@ -195,12 +195,6 @@ const ACT_EXTRA = Object.freeze({
   },
 })
 
-// 威胁区卡的「回合结束强制」由 definition 声明规则 id（behavior.turnEnded 通用分派）。
-const THREAT_TURN_END = Object.freeze({
-  '05146': 'pulledByTheStars',
-  '05147': 'disquietingDreams',
-})
-
 export const scenario = {
   id: 'theSecretName',
   originalCode: '05120',
@@ -224,8 +218,6 @@ export const scenario = {
   agendas: stages(['05121', '05122', '05123', '05124'], 'agenda').map(agenda => ({
     ...agenda, reveal: { type: 'campaignRule' },
   })),
-  // 威胁区卡的回合结束强制（behavior.turnEnded 读数据分派，不按卡号写分支）。
-  threatTurnEnd: THREAT_TURN_END,
   // act1/act2 的团队线索推进（回合中，同地点团队支付）归幕脚本卡。
   scriptCards: {
     rules: {

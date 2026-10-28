@@ -2,6 +2,7 @@ import { ALL_CARDS } from '../../../src/cards/cards-data.js'
 import {
   encounterResolveCampaignsFor, encounterResolveFor, enemyScriptFor, enemySpawnRuleFor, enemyStatRuleFor,
   isPoisonThreat, threatActionByRule, threatActionFor, vengeanceWhileFor,
+  resolveDeclarativeTreacheryTest, treacheryTestFor,
 } from '../../../src/cards/card-rules.js'
 
 // 失落的时代的跨章遭遇规则。共享遭遇组（Rainforest / Serpents / Expedition /
@@ -284,6 +285,9 @@ export const encounterRules = {
     if (entryResolve && (!campaigns.length || campaigns.includes('tfa'))) {
       return entryResolve(state, inv, t, api, { location })
     }
+    // 声明式「显现 - 检定」（treacheryRule.test）：与旧 DSL 同口径，读点在 card-rules.js。
+    const declarative = treacheryTestFor(code)
+    if (declarative) return resolveDeclarativeTreacheryTest(state, inv, t, api, declarative)
     return false
   },
 

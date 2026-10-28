@@ -9,7 +9,7 @@ export default {
   code: '02180', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['dunwich'],
   encounterResolve(state, inv, card, api) {
     api.test(inv.seat, 'willpower', 3, result => {
-      if (!result.success) { inv.steamImmobileRound = state.round; api.assetsFirstDamage(inv.seat, 2) }
+      if (!result.success) { api.lockMovementThisRound(inv.seat); api.assetsFirstDamage(inv.seat, 2) }
     })
     return false
   },

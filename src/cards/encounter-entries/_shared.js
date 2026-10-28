@@ -13,6 +13,13 @@ import { traitLabel } from '../trait-labels.js'
 
 export { hasTrait, ALL_CARDS }
 
+// 「你检定失败且每低于难度 1 点」的唯一读法：难度优先取本次检定的实际难度（含难度修正），
+// 检定的 result 没带 difficulty 时（老测试桩 / 部分外部调用）回落到卡面声明的难度。
+// 差值下限 0，与引擎旧 DSL 的 applyPenalty（src/engine/treachery-tokens.js）同一口径。
+// 用法：api.test(..., result => { if (result.success) return; api.horror(inv.seat, failedBy(result, 3)) })
+export const failedBy = (result, fallbackDifficulty = 0) =>
+  Math.max(0, Number(result?.difficulty ?? fallbackDifficulty) - Number(result?.value ?? 0))
+
 // 05097 秘社玄仪「直到一轮结束，对该敌人攻击、躲避或谈判的难度 +2」的通用读点。
 // 攻击/躲避由 encounter-rules.js 的 enemyStatModifier 汇总；谈判由各谈判条目/章节
 // behavior 调用这一个口径（内容层 encounter-rules.parleyDifficultyBonus 是它的别名）。

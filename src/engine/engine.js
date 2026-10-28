@@ -38,6 +38,7 @@ import { createCampaignState } from '../cards/campaign-state.js'
 import { createDescribeAi } from './describe-ai.js'
 import { createActionsExtra } from './actions-extra.js'
 import { createTableDecisions } from './table-decisions.js'
+import { createCombatOdds } from './combat-odds.js'
 import { createAbilityRules } from './ability-rules.js'
 import {
   SKILL_NAMES, CLASS_NAMES, CLASS_EMOJI, CLASS_COLOR, TOKEN_LABEL,
@@ -1043,6 +1044,8 @@ const commonDeps = {
   applyDamage,
   applyHarm,
   applyHorror,
+  // 2026-10-28 P1：内容层的声明式遭遇检定（treacheryRule.test）失败分支复用同一份 applyPenalty。
+  applyPenalty,
   assetEffect,
   assetsCannotReady,
   attachCardTo,
@@ -1539,7 +1542,7 @@ export const { legalMoves, validateMove } = createMoves({
 })
 
 // Phase 6（6d-2）：状态描述搬进 describe.js（纯投影 + 依赖注入）。
-export const describeState = createDescribeState({
+const describeApi = createDescribeState({
   ...commonDeps,
   describeTeamParticipation,
   actingSeats,
@@ -1560,6 +1563,20 @@ export const describeState = createDescribeState({
   enemyCanOpportunityAttack,
   abilityUsage,
 })
+export const describeState = describeApi.describeState
+// 观察分段：body 是局势、tail 是决策块。Mod 入口用它在两段之间插入【决策资料】JSON，
+// 让「推进条件 / 敌人 / 借机攻击 / 可执行行动」落在提示词末尾（见 index.js 的 describeState）。
+export const describeParts = describeApi.describeParts
+
+// 2026-10-28：AI 专用战斗/躲避预估（combat-odds.js）。只被 src/ai/ai-context.js 读取——
+// 不进 viewState / legalMoves / actionPreview，牌桌与浏览器拿不到，避免「AI 看到的概率」
+// 变成玩家界面上没实现的提示。
+let combatOddsImpl = null
+function combatOddsApi() {
+  combatOddsImpl ||= createCombatOdds({ ...commonDeps, abilityOfMove, enemyHealth })
+  return combatOddsImpl
+}
+export function combatOdds(...args) { return combatOddsApi()(...args) }
 
 // 第四循环P2.1：闹鬼原语的核心在 haunted.js；数据规范化与读取是纯函数直接导入，
 // 需要窗口/询问/剧本钩子的部分在这里惰性装配（依赖表在模块顶层立即求值）。

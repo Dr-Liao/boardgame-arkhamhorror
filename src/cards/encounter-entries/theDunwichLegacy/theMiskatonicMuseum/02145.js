@@ -5,11 +5,13 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
+import { failedBy } from '../../_shared.js'
+
 export default {
   code: '02145', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['dunwich'],
   encounterResolve(state, inv, card, api) {
     api.test(inv.seat, 'intellect', 3, result => {
-      if (!result.success) inv.actionsLeft = Math.max(0, inv.actionsLeft - Math.max(0, 3 - result.value))
+      if (!result.success) api.loseActions(inv.seat, failedBy(result, 3))
     })
     return false
   },

@@ -13,9 +13,8 @@ export default {
   code: '02089', implemented: true, name: '忍气吞声', scope: 'treachery', text: '地点计数器型障碍。',
   locationCounter: 'sordidAndSilent',
   encounterResolveCampaigns: ['dunwich'],
-  encounterResolve(state, inv) {
-    const location = state.locations.find(item => item.id === inv.location)
-    location.sordidAndSilent = (location.sordidAndSilent || 0) + 1
+  encounterResolve(state, inv, card, api) {
+    api.markLocationCounter?.(inv.location, 'sordidAndSilent', 1)
     return true
   },
 }

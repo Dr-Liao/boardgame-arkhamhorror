@@ -5,16 +5,18 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
+import { failedBy } from '../../../_shared.js'
+
 export default {
   code: '04090', scope: 'treachery', implemented: true,
   encounterResolve(state, inv, card, api) {
     api.test(inv.seat, 'willpower', 3, result => {
       if (result.success) return
-      const failedBy = Math.max(0, 3 - result.value)
-      for (let index = 0; index < failedBy; index++) {
+      const amount = failedBy(result, 3)
+      for (let index = 0; index < amount; index++) {
         const answer = api.choose({
           kind: 'harm', source: '04090', seat: inv.seat,
-          prompt: `时间裂缝：第 ${index + 1}/${failedBy} 点差额，选择失去 1 个行动或受到 1 点恐惧。`,
+          prompt: `时间裂缝：第 ${index + 1}/${amount} 点差额，选择失去 1 个行动或受到 1 点恐惧。`,
           options: [{ id: 'action', label: '失去 1 个行动' }, { id: 'horror', label: '受到 1 点恐惧' }],
         })
         if (answer === 'horror') api.horror(inv.seat, 1)

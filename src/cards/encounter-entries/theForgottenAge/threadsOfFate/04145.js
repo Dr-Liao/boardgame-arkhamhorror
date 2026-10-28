@@ -18,11 +18,14 @@ export default {
       api.drawEncounter(inv.seat)
       return false
     }
-    location.attachments ||= []
-    if (!location.attachments.some(entry => originalOf(entry) === '04145')) {
-      location.investigateExtraActions = (location.investigateExtraActions || 0) + 1
-    }
-    location.attachments.push({ id: `nobodys-home:${state.round}:${location.id}`, code: '04145', originalCode: '04145' })
+    // 卡面没有「每个地点仅限 1 张」：第二张仍会附属，但「额外 1 行动」只算一次（与旧实现一致）。
+    const copies = (location.attachments || []).filter(entry => originalOf(entry) === '04145').length
+    const attachment = api.attachToLocation?.(location.id, {
+      id: `nobodys-home:${state.round}:${location.id}`,
+      code: '04145', originalCode: '04145',
+      extra: { investigateExtraActions: copies ? 0 : 1 },
+    })
+    if (!attachment) return false
     api.info?.('「屋中无人」附属到此地点：调查它需要额外 1 个行动。')
     return true
   },

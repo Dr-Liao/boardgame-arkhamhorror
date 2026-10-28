@@ -17,14 +17,12 @@ export default {
         })
         if (answer === 'discard' && (inv.hand || []).length) {
           let index = 0
-          if (typeof api.choose === 'function') {
-            const picked = api.choose({
-              kind: 'card', source: location.id, seat: inv.seat, prompt: '选择并弃掉 1 张手牌。',
-              options: inv.hand.map((code, position) => ({ id: String(position), label: code })),
-            })
-            const parsed = Number(picked)
-            if (Number.isInteger(parsed) && parsed >= 0 && parsed < inv.hand.length) index = parsed
-          }
+          const picked = api.choose({
+            kind: 'card', source: location.id, seat: inv.seat, prompt: '选择并弃掉 1 张手牌。',
+            options: inv.hand.map((code, position) => ({ id: String(position), label: code })),
+          })
+          const parsed = Number(picked)
+          if (Number.isInteger(parsed) && parsed >= 0 && parsed < inv.hand.length) index = parsed
           const [code] = inv.hand.splice(index, 1)
           ;(inv.discard ||= []).push(code)
         } else {

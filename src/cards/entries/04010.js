@@ -40,7 +40,7 @@ export default {
         }
         api.searchTop(inv.seat, { amount: 9, trait: 'Illicit', traitZh: '违法', source: '04010', mandatory: true })
         // 查找了牌库：结算后把走私货物洗回牌库，而不是进弃牌堆。
-        state._playDisposal = 'shuffleBack'
+        api.shufflePlayedCardBack()
       },
     },
   ],

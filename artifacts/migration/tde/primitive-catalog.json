@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tde",
+  "generatedBy": "tools/audit-tde-primitives.mjs",
+  "note": "主进程维护；worker 只读。状态由 tools/audit-tde-primitives.mjs 从代码与测试复算，不手写。",
+  "batch": "P3-1+2+3",
+  "primitives": {
+    "new": [
+      {
+        "id": "campaignPart",
+        "step": "P3.1",
+        "status": "done",
+        "api": "createPartsState({ mode, seatParts, activeParts, currentPart }) / setPart(state, part)",
+        "readPoints": [
+          "module-export:createPartsState",
+          "module-export:setPart",
+          "module-export:validateModeSeats",
+          "module-export:MODES",
+          "module-export:PARTS",
+          "module-export:PART_SCOPED_FIELDS"
+        ]
+      },
+      {
+        "id": "recordInPart",
+        "step": "P3.2",
+        "status": "done",
+        "api": "partRecord(campaign, part, key) / recordInPart(campaign, part, key, value) / crossOutInPart(campaign, part, key)",
+        "readPoints": [
+          "module-export:partRecord",
+          "module-export:recordInPart",
+          "module-export:crossOutInPart",
+          "module-export:partScope",
+          "module-export:ensurePartSnapshot"
+        ]
+      },
+      {
+        "id": "seatPartMap",
+        "step": "P3.3",
+        "status": "done",
+        "api": "seatPartMap(seatParts) / laneSeatOf(seatParts, roomSeat) / roomSeatOf(seatParts, lane, laneSeat)",
+        "readPoints": [
+          "module-export:seatPartMap",
+          "module-export:laneSeatOf",
+          "module-export:roomSeatOf",
+          "module-export:seatsOfLane",
+          "module-export:laneCounts",
+          "module-export:normalizeSeatParts"
+        ]
+      },
+      {
+        "id": "chaosBag.multiPart",
+        "step": "P3.4",
+        "status": "done",
+        "api": "partChaosBag(state, part) / mutateBothBags(state, mutate)",
+        "readPoints": [
+          "module-export:partChaosBag",
+          "module-export:mutateBothBags"
+        ]
+      },
+      {
+        "id": "inPart",
+        "step": "P3.5",
+        "status": "done",
+        "api": "inPart(state, part, fn)",
+        "readPoints": [
+          "module-export:inPart",
+          "module-export:defaultPartScope"
+        ]
+      },
+      {
+        "id": "partFlowCondition",
+        "step": "P3.6",
+        "status": "done",
+        "api": "partFlowCondition(campaign, condition)",
+        "readPoints": [
+          "module-export:partFlowCondition"
+        ]
+      },
+      {
+        "id": "counter.investigator",
+        "step": "P3-7",
+        "status": "done",
+        "api": "counterOf / addCounter / setCounter / setCounterMax / highestCounter / counterAtLeast / counterSummary",
+        "readPoints": [
+          "module-export:counterOf",
+          "module-export:addCounter",
+          "module-export:setCounterMax",
+          "module-export:highestCounter",
+          "module-export:counterAtLeast",
+          "scenario-runtime:counters"
+        ]
+      },
+      {
+        "id": "enemy.swarmingValue",
+        "step": "P3-8",
+        "status": "done",
+        "api": "swarmingSpec(text) / swarmingCount(spec, { numInvestigators, x }) / swarmingCountForText(state, text, options)",
+        "readPoints": [
+          "module-export:swarmingSpec",
+          "module-export:swarmingCount",
+          "module-export:swarmingCountForText",
+          "scenario-runtime:swarming"
+        ]
+      },
+      {
+        "id": "swarm.placeCards",
+        "step": "P3-9",
+        "status": "done",
+        "api": "placeSwarmCards / swarmCardsOf / removeSwarmCard / clearSwarmCards / swarmCanBeDefeated / splitSwarmingDamage / swarmHostOf",
+        "readPoints": [
+          "module-export:placeSwarmCards",
+          "module-export:swarmCanBeDefeated",
+          "module-export:splitSwarmingDamage",
+          "module-export:swarmHostOf",
+          "scenario-runtime:swarm"
+        ]
+      },
+      {
+        "id": "location.veiled",
+        "step": "P3-10",
+        "status": "done",
+        "api": "isVeiledLocation / veiledBlocksInvestigation / revealVeiledLocation / shuffleVeiledIntoDeck / normalizeVeiledScenario",
+        "readPoints": [
+          "module-export:isVeiledLocation",
+          "module-export:veiledBlocksInvestigation",
+          "module-export:revealVeiledLocation",
+          "module-export:shuffleVeiledIntoDeck",
+          "module-export:normalizeVeiledScenario",
+          "scenario-runtime:veiled"
+        ]
+      },
+      {
+        "id": "tokenBag",
+        "step": "P3-11",
+        "status": "done",
+        "api": "createTokenBag / revealTokenFromBag / addTokenToBag / returnTokenToBag / tokenBagInfo / markInfested / infestedCount",
+        "readPoints": [
+          "module-export:createTokenBag",
+          "module-export:revealTokenFromBag",
+          "module-export:addTokenToBag",
+          "module-export:markInfested",
+          "module-export:isInfestedLocation",
+          "scenario-runtime:tokenBag"
+        ]
+      },
+      {
+        "id": "location.verticalChain",
+        "step": "P3-12",
+        "status": "done",
+        "api": "linkVerticalChain / orderVerticalChain / chainNeighbors / moveAlongChain / normalizeVerticalChain",
+        "readPoints": [
+          "module-export:linkVerticalChain",
+          "module-export:orderVerticalChain",
+          "module-export:chainNeighbors",
+          "module-export:moveAlongChain",
+          "module-export:normalizeVerticalChain",
+          "scenario-runtime:verticalChain"
+        ]
+      },
+      {
+        "id": "location.placeBondedLocation",
+        "step": "P3.13",
+        "status": "done",
+        "api": "bondedCodesOf / placeBondedLocation / bondedPartnerOf / removeBondedLocation / normalizeBondedLocations",
+        "readPoints": [
+          "module-export:bondedCodesOf",
+          "module-export:placeBondedLocation",
+          "module-export:bondedPartnerOf",
+          "module-export:removeBondedLocation",
+          "module-export:normalizeBondedLocations",
+          "scenario-runtime:bondedLocation"
+        ]
+      },
+      {
+        "id": "campaign.epilogueMatrix",
+        "step": "P3.14",
+        "status": "done",
+        "api": "normalizeEpilogueMatrix / epilogueFor / flattenEpilogueMatrix / locateEpilogue",
+        "readPoints": [
+          "module-export:normalizeEpilogueMatrix",
+          "module-export:epilogueFor",
+          "module-export:flattenEpilogueMatrix",
+          "module-export:locateEpilogue"
+        ]
+      },
+      {
+        "id": "deck.myriadLimit",
+        "step": "P3.15",
+        "status": "done",
+        "api": "isMyriad / validateMyriadLimit / addCardRespectingMyriad / myriadUsage",
+        "readPoints": [
+          "module-export:isMyriad",
+          "module-export:validateMyriadLimit",
+          "module-export:addCardRespectingMyriad",
+          "module-export:myriadUsage",
+          "module-export:MYRIAD_LIMIT"
+        ]
+      },
+      {
+        "id": "location.doom",
+        "step": "P3.16",
+        "status": "done",
+        "api": "locationDoomOf / addLocationDoom / shouldDestroyLocation / destroyLocation / normalizeLocationDoom",
+        "readPoints": [
+          "module-export:locationDoomOf",
+          "module-export:addLocationDoom",
+          "module-export:shouldDestroyLocation",
+          "module-export:destroyLocation",
+          "module-export:normalizeLocationDoom",
+          "scenario-runtime:locationDoom"
+        ]
+      },
+      {
+        "id": "scenario.markerCount",
+        "step": "P3.17",
+        "status": "done",
+        "api": "markerCountOf / addMarker / setMarkerCount / referenceMarkerCount / resetMarkerCount / markerSummary",
+        "readPoints": [
+          "module-export:markerCountOf",
+          "module-export:addMarker",
+          "module-export:referenceMarkerCount",
+          "module-export:resetMarkerCount",
+          "scenario-runtime:markers"
+        ]
+      }
+    ],
+    "reuse": [
+      {
+        "primitive": "campaign.awardStoryCard",
+        "api": "awardStoryCard(state, code, reason)",
+        "ok": true
+      },
+      {
+        "primitive": "campaign.recordUnion",
+        "api": "campaign.records[key] 的并集写入（content 侧 effect.records / recordUnion）",
+        "ok": true
+      }
+    ],
+    "deferred": []
+  },
+  "files": {
+    "src/campaign/campaign-parts.js": "43628d68591bd8fbf2d020f4b400a40b6aeede3d7fad7bbb357898d79c56ae7f",
+    "tests/tde-campaign-parts.test.mjs": "bf1ccab8618258c13467f7690a0862630506edbc217bc4e63fb56c16f2e1da33",
+    "docs/tde-primitives.md": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+    "docs/tde-migration-roadmap.md": "5ab20faf1714992113904c917c6d99d4dd93d8d0a1700e5802c3686296ceb0d9",
+    "src/engine/counters.js": "246f3f93c3f65e034bc185bb3664de62f1c5653bc6ea95c3d972dac0497cae6d",
+    "src/engine/scenario-runtime-extras.js": "16b85948c42feba3f467c708daf226174e5804ac2d732f000ec52c1f357b6b55",
+    "src/engine/scenario-runtime.js": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+    "tests/tde-primitives-counters.test.mjs": "fbd004e8b47ddb805322a87bba80dd302452363f6767401d051175096febeaa6",
+    "src/engine/swarming.js": "76b1a7156961a613e9f7910827b82a746e5bb898e3eb182bcfaa407ab7f10b9f",
+    "tests/tde-primitives-swarming.test.mjs": "1afac20069eda6217c24165c00ce160f59f375e0bcacf9476458b356d2fa2cef",
+    "src/engine/swarm.js": "82b1025909b585a4734ce2aaf67cd8273e8c2f1e159e6a120ae77d644b49ac86",
+    "tests/tde-primitives-swarm.test.mjs": "a5d350aff642ef995ff8eca1a1e6305afd173bd82921f4c66eab9afcc0e1c7ce",
+    "src/engine/veiled.js": "2a3fcbd631fcc0980303c3aa1acc3249b3f258e955c4fcb6bb1959720e31dab5",
+    "tests/tde-primitives-veiled.test.mjs": "d524c6dd350ee6a04fe07795e8d3a414e9ed2756de517131b7b399d41c4cdc32",
+    "src/engine/token-bag.js": "f189e38ec60b3f5422238ab8c571add679fe564bacc1e7281fad577a08936497",
+    "tests/tde-primitives-token-bag.test.mjs": "614efeaba2ab191f3c125e8cc76bc5f451edb411c6816f9cb575baa53f0e3406",
+    "src/engine/vertical-chain.js": "0e319b1c97ead9d2560a3790dd64d3d4d6cf84d90a015dfbca09257ce8ec075f",
+    "tests/tde-primitives-vertical-chain.test.mjs": "ccc22babeccce7bf1a10971aeda675f413979b149fc93e5660cf82c91a548818",
+    "src/engine/bonded-location.js": "4f97ea98a92f52fc3cf2a3fc09bc42aac4fb105eceb90faa7db3cd76d8ab7d1c",
+    "tests/tde-primitives-bonded-location.test.mjs": "27e21e4cfcd32d2f84f61d222f62682da0de70c0a126e30ca1d85599ff8f9972",
+    "src/campaign/epilogue-matrix.js": "3f03fe57431cb0128dfcec1b717d090c7f9b0ecaff7927dc6cca50d68b44e2dd",
+    "tests/tde-primitives-epilogue-matrix.test.mjs": "380515c44ec90c2d4ca2fb1f33acee12ad1312a5f7b8219dbf1a4483b9106aa0",
+    "src/engine/myriad.js": "67ec1fcb5e22ee48bb71374bc2407d8d8c07cc1500890dd53688a88b94796278",
+    "tests/tde-primitives-myriad.test.mjs": "83e7e22158ff9817cd9a5203a71cb13c774d67462bd26313dd13c9ace438e5ef",
+    "src/engine/location-doom.js": "cba81dface9a427561e1d68cf3ed491b9c094b83a0d578dcbcecc51cd9b20b92",
+    "tests/tde-primitives-location-doom.test.mjs": "a36735cd58ff14ed43b908c229ee3eba81df9b4f944f8f05a64eb80eb215a2c6",
+    "src/engine/marker-count.js": "fa87d630d4d3de8fe516212f12985a1eb59d5b7403497c259d8945d92c11ec3d",
+    "tests/tde-primitives-marker-count.test.mjs": "bbb6b523425b8f947ffe70a2478f8f627b30626b83da26246d96f9feb0b81eee"
+  },
+  "gate": {
+    "newPrimitives": {
+      "expected": 17,
+      "done": 17,
+      "pending": 0,
+      "pass": true
+    },
+    "newPrimitivesHaveTests": {
+      "pass": true
+    },
+    "docsPresent": {
+      "pass": true
+    },
+    "reuseReadPoints": {
+      "expected": 2,
+      "verified": 2,
+      "pass": true
+    },
+    "escapeRegistered": {
+      "expected": 3,
+      "pass": true
+    },
+    "mechanismCoverage": {
+      "total": 9,
+      "covered": 11,
+      "missing": [],
+      "pass": true
+    },
+    "engineBoundary": {
+      "codes": 0,
+      "campaignNames": 0,
+      "pass": true
+    },
+    "replayZeroDrift": {
+      "pass": true,
+      "detail": "✔ 与基线逐条一致（行为零变化）"
+    }
+  }
+}

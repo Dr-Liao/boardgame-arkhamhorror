@@ -1,8 +1,16 @@
-// 05271 · 归属：关卡专用 05238《聚合幻灭》（uad）
-// 规则实现：卡面效果由章节 behavior.js 的钩子分派（本章单卡规则集中在 behavior，见 spec）。
+// 05271 死亡记号
+// 归属：关卡专用 05238《聚合幻灭》（uad）。卡面：显现 - 检定敏捷(2+你已受到的恐惧)。
+// 如果你检定失败，受到 2 点伤害。
+// 一卡一文件：规则只在这里维护；失败分支由 card-rules 的声明式检定统一结算。
 export default {
-  "code": "05271",
-  "scope": "treachery",
-  "implemented": true,
-  "note": "behavior.js:resolveEncounter(敏捷 2+恐惧，失败 2 伤害)"
-};
+  code: '05271',
+  scope: 'treachery',
+  implemented: true,
+  treacheryRule: {
+    test: {
+      skill: 'agility',
+      difficulty: { base: 2, plus: 'horror' },
+      fail: { kind: 'takeDamage', amount: 2 },
+    },
+  },
+}

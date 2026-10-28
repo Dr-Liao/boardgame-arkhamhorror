@@ -19,8 +19,8 @@ export default {
   text: '不能发动借机攻击；在其猎手关键词移动的同一阶段不能攻击。',
   modifiers: [{ target: 'cannot:opportunityAttack' }],
   enemyScript: {
-    onMoved(state, enemy) {
-      if (state.phase === 'enemy') enemy.hunterMovedRound = state.round
+    onMoved(state, enemy, api) {
+      if (state.phase === 'enemy') api.markHunterMoved(enemy)
     },
     attackModifier(state, enemy) {
       if (enemy.hunterMovedRound !== state.round) return null

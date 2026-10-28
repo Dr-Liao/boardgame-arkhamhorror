@@ -101,7 +101,11 @@ function makeApi(state, options = {}) {
       const inv = state.investigators[seat]
       inv.actionsLeft = Math.max(0, (inv.actionsLeft || 0) - n)
     },
-    endTurn: seat => { state.investigators[seat].turnEnded = true },
+    endTurn: seat => {
+      const inv = state.investigators[seat]
+      inv.actionsLeft = 0
+      if (state.currentSeat === undefined || state.currentSeat === seat) inv.turnEnded = true
+    },
     moveInvestigator: (seat, destination) => { state.investigators[seat].location = destination },
     moveEnemy: (enemy, destination) => { enemy.location = destination },
     place: id => {

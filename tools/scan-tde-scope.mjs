@@ -458,7 +458,7 @@ const gate = {
     hashesMatch: replayHashesMatch,
     pass: Boolean(replayBefore) && replayIdsMatch && replayHashesMatch
       && JSON.stringify(replayCounts) === JSON.stringify(goldenCounts)
-      && replayCounts?.fixtures === 13 && replayCounts?.steps === 786 && replayCounts?.hashes === 799,
+      && replayCounts?.fixtures === 13 && replayCounts?.steps === 782 && replayCounts?.hashes === 795,
   },
   crossCycleGroups: {
     total: crossCycleGroups.length,

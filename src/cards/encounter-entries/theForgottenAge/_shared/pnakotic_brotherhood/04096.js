@@ -20,7 +20,7 @@ export default {
     const nearest = Math.min(...scored.map(entry => entry.steps))
     const tied = scored.filter(entry => entry.steps === nearest).map(entry => entry.enemy)
     let target = tied[0]
-    if (tied.length > 1 && typeof api.choose === 'function') {
+    if (tied.length > 1) {
       const answer = api.choose({
         kind: 'target', source: '04096', seat: inv.seat,
         prompt: '选择离你最近的异教徒敌人。',

@@ -10,7 +10,7 @@ export default {
   code: '02198', scope: 'agenda',
   agendaRule: {
     onReveal(state, agenda, api) {
-      for (const inv of activeInvestigators(state)) inv.resigned = true
+      for (const inv of activeInvestigators(state)) api.markResigned(inv.seat)
       api.finish('noResolution')
     },
   },

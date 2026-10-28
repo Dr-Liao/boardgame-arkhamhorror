@@ -38,7 +38,7 @@ export default {
           resolve: result => {
             if (result.success) {
               // 引擎已有 exposeWeakness 读点：本阶段下一次对该敌人的攻击攻击值视为 0。
-              enemy.exposeWeakness = { round: state.round, phase: state.phase }
+              api.exposeEnemyWeakness(enemy)
               api.info(`「${enemy.name}」本阶段下一次被攻击时攻击值视为 0。`)
             }
             // 卡面「抽取 1 张卡牌」在「如果你检定成功」之外：成功或失败都无条件结算。

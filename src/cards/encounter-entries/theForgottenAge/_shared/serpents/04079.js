@@ -8,5 +8,5 @@
 
 export default {
   code: '04079', implemented: true, scope: 'enemy', enemyRule: { vengeance: 2 },
-  enemyScript: { onAttackResolved(state, enemy, inv) { inv.tfaNoReadyRound = state.round } },
+  enemyScript: { onAttackResolved(state, enemy, inv, api) { api.preventReadyNextUpkeep(inv.seat) } },
 }

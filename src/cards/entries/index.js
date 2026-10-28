@@ -29,16 +29,11 @@ import e04051 from './04051.js'
 import e05115 from './05115.js'
 import e07025 from './07025.js'
 import e07017 from './07017.js'
-import e01518 from './01518.js'
-import e01527 from './01527.js'
-import e01522 from './01522.js'
-import e01523 from './01523.js'
 import e05028 from './05028.js'
 import e05112 from './05112.js'
 import e07027 from './07027.js'
 import e02040 from './02040.js'
 import e02061 from './02061.js'
-import e01533 from './01533.js'
 import e03142 from './03142.js'
 import e05025 from './05025.js'
 import e05023 from './05023.js'
@@ -120,7 +115,6 @@ import e02302 from './02302.js'
 import e02309 from './02309.js'
 import e01021 from './01021.js'
 import e01032 from './01032.js'
-import e01033 from './01033.js'
 import e01041 from './01041.js'
 import e02269 from './02269.js'
 import e02308 from './02308.js'
@@ -403,8 +397,6 @@ import e01082 from './01082.js'
 import e02310 from './02310.js'
 import e02110 from './02110.js'
 import e03308 from './03308.js'
-import e01018 from './01018.js'
-import e01027 from './01027.js'
 import e01028 from './01028.js'
 import e03143 from './03143.js'
 import e04236 from './04236.js'
@@ -421,8 +413,6 @@ import e02139 from './02139.js'
 import e02179 from './02179.js'
 import e02178 from './02178.js'
 import e01010 from './01010.js'
-import e01022 from './01022.js'
-import e01023 from './01023.js'
 import e01056 from './01056.js'
 import e01065 from './01065.js'
 import e01068 from './01068.js'
@@ -574,6 +564,16 @@ import e05274 from './05274.js'
 import e05276 from './05276.js'
 import e05320 from './05320.js'
 import e05324 from './05324.js'
+import e01018 from './01018.js'
+import e01022 from './01022.js'
+import e01023 from './01023.js'
+import e01027 from './01027.js'
+import e01033 from './01033.js'
+import e01518 from './01518.js'
+import e01522 from './01522.js'
+import e01523 from './01523.js'
+import e01527 from './01527.js'
+import e01533 from './01533.js'
 
 export const CARD_ENTRY_LIST = [
   e01001,
@@ -604,16 +604,11 @@ export const CARD_ENTRY_LIST = [
   e05115,
   e07025,
   e07017,
-  e01518,
-  e01527,
-  e01522,
-  e01523,
   e05028,
   e05112,
   e07027,
   e02040,
   e02061,
-  e01533,
   e03142,
   e05025,
   e05023,
@@ -695,7 +690,6 @@ export const CARD_ENTRY_LIST = [
   e02309,
   e01021,
   e01032,
-  e01033,
   e01041,
   e02269,
   e02308,
@@ -978,8 +972,6 @@ export const CARD_ENTRY_LIST = [
   e02310,
   e02110,
   e03308,
-  e01018,
-  e01027,
   e01028,
   e03143,
   e04236,
@@ -996,8 +988,6 @@ export const CARD_ENTRY_LIST = [
   e02179,
   e02178,
   e01010,
-  e01022,
-  e01023,
   e01056,
   e01065,
   e01068,
@@ -1149,6 +1139,16 @@ export const CARD_ENTRY_LIST = [
   e05276,
   e05320,
   e05324,
+  e01018,
+  e01022,
+  e01023,
+  e01027,
+  e01033,
+  e01518,
+  e01522,
+  e01523,
+  e01527,
+  e01533,
 ]
 
 export const CARD_ENTRY_BY_CODE = new Map(CARD_ENTRY_LIST.map(entry => [entry.code, entry]))

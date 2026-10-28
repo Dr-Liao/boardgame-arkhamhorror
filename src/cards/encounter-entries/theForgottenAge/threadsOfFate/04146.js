@@ -12,9 +12,8 @@ export default {
   encounterResolve(state, inv, card, api) {
     const agenda = state.agendas?.[state.agendaIndex]
     if (!agenda) return false
-    agenda.doomThreshold = Math.max(1, (agenda.doomThreshold || 0) - 1)
-    agenda.attachments ||= []
-    agenda.attachments.push({ id: `conspiracy:${state.round}`, code: '04146', originalCode: '04146' })
+    api.addAgendaDoomThreshold?.(-1)
+    api.attachToAgenda?.('04146')
     api.info?.('「鲜血阴谋」附属到当前密谋：毁灭阈值 -1。')
     return true
   },

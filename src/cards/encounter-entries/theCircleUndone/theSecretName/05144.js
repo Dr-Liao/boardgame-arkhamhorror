@@ -45,7 +45,7 @@ export default {
     const remaining = [...targets]
     while (remaining.length) {
       let picked = remaining[0]
-      if (remaining.length > 1 && typeof api.choose === 'function') {
+      if (remaining.length > 1) {
         const answer = api.choose({
           kind: 'target', source: '05144', seat: lead?.seat ?? 0,
           prompt: '鬼影骤现：选择下一个被那赫卜攻击的调查员。',

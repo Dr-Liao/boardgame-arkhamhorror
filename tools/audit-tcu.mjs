@@ -221,8 +221,11 @@ const tcuCards = Object.entries(ALL_CARDS).filter(([code]) => /^05\d{3}[a-z]?$/.
 // Node 验收：实跑一次，所有关键词与规则书条目共用同一份结果（不读源码猜结论）。
 // 清掉 NODE_TEST_CONTEXT：从 `node --test` 里再 spawn `node --test` 时，继承的上下文会让子进程
 // 走测试子进程模式（不输出 ℹ pass/ℹ fail 汇总），账本就与直接运行的结果不一致。
+// 同理清掉 NODE_TEST_WORKER_ID：node --test 的多文件运行会给每个测试文件注入 worker id，
+// 子进程的验收工具继承后同样会切到 worker 输出格式，--check 会误报账本不一致。
 const testEnv = { ...process.env }
 delete testEnv.NODE_TEST_CONTEXT
+delete testEnv.NODE_TEST_WORKER_ID
 const testRun = spawnSync(process.execPath, ['--test', RULES_TEST_PATH], { cwd: fileURLToPath(new URL('../', import.meta.url)), encoding: 'utf8', env: testEnv })
 const testOutput = `${testRun.stdout || ''}\n${testRun.stderr || ''}`
 const numberFrom = (label, output) => {

@@ -1,4 +1,5 @@
 import { investigatorRule } from '../cards/card-rules.js'
+import { locationAttachmentTotal } from './location-attachments.js'
 // turn-flow.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 调查员回合内的推进与代价：advanceInvestigator（行动/结束回合的推进）、
 // 打出费用与折扣、旧印结算、反应规格与条件评估、以及「支付/选择」的共用小函数。
@@ -482,9 +483,10 @@ export function createTurnFlow(deps) {
     const investigateLoc = state.locations.find(loc => loc.id === (move.locationId || inv.location))
     // Phase 5（5a-11）：某些地点调查要多花行动，映射在卡号规则数据里。
     if (move.action === 'investigate') cost += investigateExtraActionsFor(investigateLoc?.originalCode || investigateLoc?.code)
-    // 04145「屋中无人」：附属地点调查额外 +1 行动（剧本往地点上写计数）。
-    if (move.action === 'investigate' && investigateLoc?.investigateExtraActions) {
-      cost += investigateLoc.investigateExtraActions
+    // 04145「屋中无人」：附属地点调查额外 +1 行动（附属数据读点；地点实例上的旧字段继续兼容）。
+    const attachmentInvestigateCost = locationAttachmentTotal(investigateLoc, 'investigateExtraActions')
+    if (move.action === 'investigate' && (investigateLoc?.investigateExtraActions || attachmentInvestigateCost)) {
+      cost += (investigateLoc?.investigateExtraActions || 0) + attachmentInvestigateCost
     }
     if (move.action === 'searchIzzie') cost = 2
     if (move.action === 'hiddenAction') cost = hiddenRule(state, move.cardId)?.discard?.actions ?? 1

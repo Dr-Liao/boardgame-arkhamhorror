@@ -27,7 +27,7 @@ export default {
     label: '旧印：+1；若在显现效果期间，下个回合额外行动一次',
     resolve: ({ inv, api }) => {
       if (api.revelationResolving?.()) {
-        inv.extraActionNextTurn = true
+        api.grantExtraActionNextTurn(inv.seat)
         api.info(`${inv.name} 下个回合期间可以额外行动一次。`)
       }
       return { delta: Number(sign.bonus ?? 1) }

@@ -5,6 +5,8 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
+import { failedBy } from '../../_shared.js'
+
 export default {
   code: '02257', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['dunwich'],
   encounterResolve(state, inv, card, api) {
@@ -13,7 +15,7 @@ export default {
       !target.defeated && !target.resigned && brood.some(enemy => enemy.location === target.location))
     if (!exposed.length) api.drawEncounter(inv.seat)
     else for (const target of exposed) api.test(target.seat, 'agility', 3, result => {
-      if (!result.success) api.damage(target.seat, Math.max(0, 3 - result.value))
+      if (!result.success) api.damage(target.seat, failedBy(result, 3))
     })
     return false
   },

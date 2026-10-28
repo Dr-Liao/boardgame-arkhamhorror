@@ -8,6 +8,8 @@
 
 import { currentRevelation, investigationFrameRef } from './resolution-scope.js'
 import { syncSpellCredit } from './spell-actions.js'
+import { setLocationShroudMod } from './location-attachments.js'
+import { loseResources as applyResourceLoss } from './resource-loss.js'
 
 export function createMiscApi(state, events, deps) {
   const {
@@ -48,7 +50,6 @@ export function createMiscApi(state, events, deps) {
     locName,
     // 2026-10-28：地点特性原语与地点帷幕临时修正（location-traits.js / locations.js）。
     locationTraits,
-    setLocationShroudMod,
     newCardInstance,
     newPlayerAssetInstance,
     performTest,
@@ -90,11 +91,36 @@ export function createMiscApi(state, events, deps) {
 
   const doFight = (...args) => doFightRaw(...args)
 
+  // 卡上毁灭标记的唯一写点（setAssetDoom / removeDoomFromCard 共用）：
+  // 移除到阈值以下时回收未使用的法术额度（05006）。
+  const setCardDoom = (card, amount) => {
+    if (!card) return 0
+    const before = card.doom || 0
+    card.doom = Math.max(0, amount)
+    if (card.doom < before) {
+      const owner = (state.investigators || []).find(inv => (inv.assets || []).includes(card))
+      if (owner) syncSpellCredit(state, owner)
+    }
+    return card.doom
+  }
+
   return {
     info: text => info(state, events, text),
     // 「撤退」类事件/能力的统一入口（02151 “我要走了！”）。
-    resign: seat => doResign(state, seat, events),    random: () => randomValue(state),
+    resign: seat => doResign(state, seat, events),
+    random: () => randomValue(state),
+    // 剧本标记（state.scenarioFlags）的读写：卡文件不直接写 state（审计 R1），统一走这里。
+    scenarioFlag: key => state.scenarioFlags?.[key] ?? null,
+    setScenarioFlag: (key, value = true) => {
+      state.scenarioFlags ||= {}
+      if (value === undefined || value === null) delete state.scenarioFlags[key]
+      else state.scenarioFlags[key] = value
+      return state.scenarioFlags[key] ?? null
+    },
     choice: options => requestChoice(state, options),
+    // 兼容别名（2026-10-28 收口）：遭遇侧内容历史上用 `choose`，玩家侧用 `choice`。
+    // 两者最终都落到同一个 requestChoice；canonical 名字是 `choice`，新卡只用 `choice`。
+    choose: options => requestChoice(state, options),
     damage: (seat, amount) => applyDamage(state, state.investigators[seat], amount, events),
     horror: (seat, amount) => applyHorror(state, state.investigators[seat], amount, events),
     directDamage: (seat, amount) => applyDamage(state, state.investigators[seat], amount, events, true),
@@ -161,19 +187,7 @@ export function createMiscApi(state, events, deps) {
     loseResources: (seat, amount) => {
       const inv = state.investigators[seat]
       if (!inv || !(amount > 0)) return 0
-      // 2026-10-25：05280「否决存在：忽略失去资源的效果」需要一个按面向取消的窗口。
-      const context = reactionWindow(state, 'wouldLoseResources', {
-        when: 'wouldLoseResources', seat: inv.seat, amount, what: 'resources', location: inv.location,
-        source: { kind: state._enemyAttackResolving ? 'enemyAttack' : state._treacheryResolving ? 'encounter' : 'other' },
-        prompt: `${inv.name} 将要失去 ${amount} 资源`,
-      }, events)
-      if (context.cancelled) {
-        info(state, events, `🛡️ ${inv.name} 忽略了失去资源的效果。`)
-        return 0
-      }
-      const lost = Math.min(inv.resources, amount)
-      inv.resources -= lost
-      return lost
+      return applyResourceLoss(state, inv, amount, { reactionWindow, events, info })
     },
     // 2026-10-25：05280 的「失去行动」面向。卡面把「弃手牌/失资源/失行动/受伤/受恐惧」
     // 统一成同一个替换效果；窗口名与 what 字段供条目按面向分派。
@@ -280,6 +294,68 @@ export function createMiscApi(state, events, deps) {
     canDiscoverClueAt: (seat, locationId) =>
       canDiscoverClueAt(state, state.investigators[seat], state.locations.find(loc => loc.id === locationId)),
     placeClues: (seat, amount = 1) => placeCluesOnLocation(state, state.investigators[seat], amount, events),
+    // 05016「我不会再逃了！」：本回合躲避成功可改为造成伤害（读点 combat.js 的 evadeDamageInsteadRound）。
+    evadeDamageInstead: seat => {
+      const inv = state.investigators[seat]
+      if (!inv) return false
+      inv.evadeDamageInsteadRound = state.round
+      return true
+    },
+    // 05049 佩妮：下个回合额外一次行动（读点 beginInvestigationPhase 的 inv.extraActionNextTurn）。
+    grantExtraActionNextTurn: seat => {
+      const inv = state.investigators[seat]
+      if (!inv) return false
+      inv.extraActionNextTurn = true
+      return true
+    },
+    // 05010 悬案：fromHunch 通道打出后清掉直觉牌库揭示标记（读点 hunch-deck 的 returnHunchCard）。
+    clearHunchRevealed: seat => {
+      const inv = state.investigators[seat]
+      if (!inv) return false
+      inv.hunchRevealed = null
+      return true
+    },
+    // 05015 可怕的秘密：弱点结算后洗回牌库（deck-ops.js 按 shuffleWeaknessAfterResolution 读点）。
+    scheduleWeaknessShuffle: (seat, code) => {
+      const inv = state.investigators[seat]
+      if (!inv || !code) return false
+      inv.shuffleWeaknessAfterResolution = String(code)
+      return true
+    },
+    // 04195 暴露弱点：本阶段下一次对该敌人的攻击攻击值视为 0（combat.js 读点）。
+    exposeEnemyWeakness: enemy => {
+      if (!enemy) return false
+      enemy.exposeWeakness = { round: state.round, phase: state.phase }
+      return true
+    },
+    // 05018 神秘乐曲：本阶段密谋不能因毁灭阈值推进（act-agenda.js 读点）。
+    lockAgendaDoomThisPhase: () => {
+      state.agendaDoomLock = { round: state.round, phase: state.phase }
+      return true
+    },
+    // 04010 走私货物：本次打出的卡结算后洗回牌库（actions.js 的 _playDisposal 读点）。
+    shufflePlayedCardBack: () => {
+      state._playDisposal = 'shuffleBack'
+      return true
+    },
+    // 05004 黛安娜：取消效果的那张卡在本次结算结束后压到她底下（reveal.js 的 flushDeferredBeneath 读点）。
+    deferCardBeneath: (seat, code) => {
+      if (!code) return false
+      state.deferredBeneath = [...(state.deferredBeneath || []), { seat, code }]
+      return true
+    },
+    // 03038 藏身地点：已在场的非精英敌人立即获得藏身地点提供的冷漠（敌人移动/入场时由引擎重算）。
+    grantHidingSpotAloof: enemy => {
+      if (!enemy || enemy.elite) return false
+      enemy.hidingSpotAloof = true
+      enemy.aloof = true
+      return true
+    },
+    clearEnemyAloof: enemy => {
+      if (!enemy) return false
+      enemy.aloof = false
+      return true
+    },
     moveInvestigator: (seat, locationId) => relocateInvestigator(state, seat, locationId, events),
     damageEnemy: (enemy, amount, seat, source = null) => damageEnemy(state, enemy, amount, seat, events, source),
     // 敌人自愈（狼人德鲁这类「攻击时治愈 1 点伤害」）。只改实例，不触发击败/胜利结算。
@@ -293,16 +369,14 @@ export function createMiscApi(state, events, deps) {
     exhaust: card => { if (card) card.exhausted = true },
     ready: card => { if (card) card.exhausted = false },
     // 移除一张场上卡上的全部/指定数量毁灭标记（月光仪式这类卡用）。
-    setAssetDoom: (card, amount = 0) => {
+    setAssetDoom: (card, amount = 0) => setCardDoom(card, amount),
+    // 「移除任意卡牌上的 N 个毁灭标记」（04303 古代遗物）：地点 / 敌人 / 支援都走同一条写点。
+    removeDoomFromCard: (card, amount = 1) => {
       if (!card) return 0
-      const before = card.doom || 0
-      card.doom = Math.max(0, amount)
-      // 2026-10-25 第七轮修复 05006：毁灭被移除到阈值以下时收回未使用的法术额度。
-      if (card.doom < before) {
-        const owner = (state.investigators || []).find(inv => (inv.assets || []).includes(card))
-        if (owner) syncSpellCredit(state, owner)
-      }
-      return card.doom
+      const removed = Math.min(Math.max(0, Number(amount) || 0), Number(card.doom) || 0)
+      if (!removed) return 0
+      setCardDoom(card, (Number(card.doom) || 0) - removed)
+      return removed
     },
     addUses: (card, amount) => {
       if (!card) return
@@ -427,11 +501,17 @@ export function createMiscApi(state, events, deps) {
       return index >= 0
     },
     test: (seat, skill, difficulty, options = {}) => performTest(state, seat, skill, difficulty, options),
-    setShroudMod: (location, amount) => setLocationShroudMod(location, amount),
-    // 2026-10-28：地点特性原语（运行期授予/撤销；连接重算与投影 grantedTraits 由原语统一处理）。
+    setShroudMod: (location, amount) => setLocationShroudMod(location, amount),    // 2026-10-28：地点特性原语（运行期授予/撤销；连接重算与投影 grantedTraits 由原语统一处理）。
     addLocationTrait: (location, trait, options = {}) => locationTraits.add(state, location, trait, options),
     removeLocationTrait: (location, trait, options = {}) => locationTraits.remove(state, location, trait, options),
     grantedLocationTraits: location => locationTraits.granted(location),
+    // 调查员获得特性（04085 伊格的诅咒「获得蛇族特性」）：写 inv.traits，读点 effectiveTraits / 投影。
+    addInvestigatorTrait: (seat, trait) => {
+      const owner = state.investigators[seat]
+      if (!owner || !trait) return false
+      owner.traits = [...new Set([...(owner.traits || []), String(trait)])]
+      return true
+    },
     // 「诱敌深入」：把附属地点标记为敌人本轮的移动目标；回合结束由 turn.js 弃掉。
     setLocationLure: (locationId, seat, code = null) => {
       const location = state.locations.find(item => item.id === locationId)

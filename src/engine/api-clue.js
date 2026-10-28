@@ -4,6 +4,8 @@
 // 抽取遭遇、结束回合、资产恐惧/使用次数与牌库顶弃置、帷幕临时修正、附属到地点。
 // 与 api-card / api-enemy 相同的工厂形状。
 
+import { addLocationShroud, attachLocationCard } from './location-attachments.js'
+
 export function createClueApi(state, events, deps) {
   const {
     campaignState,
@@ -41,6 +43,14 @@ export function createClueApi(state, events, deps) {
       if (!card) return 0
       placeDoomOnCard(state, card, amount, events, { silent: false })
       return card.doom || 0
+    },
+    // 「移除该卡上的所有毁灭标记」（05095 秘社新信徒 / 05096 守密人的谈判）。
+    // 卡上的毁灭标记不是调查员的资源，统一走这里，卡文件不再直写 `enemy.doom = 0`。
+    clearDoomOnCard: card => {
+      if (!card) return 0
+      const removed = Number(card.doom || 0)
+      delete card.doom
+      return removed
     },
     removeThreat: card => {
       const owner = state.investigators.find(item => (item.threat || []).includes(card))
@@ -83,18 +93,16 @@ export function createClueApi(state, events, deps) {
     tempCampaignShroudMod: (location, amount) => campaignState.setTurnShroudModifier(location, state, amount),
     // Phase 5（5c）：把玩家卡作为「地点附属」放到场上（隐藏处 / 伏击 / 陷阱 / 捷径）。
     // 数据形状与引擎的读点一致（state.playerLocationAttachments），内容层不碰 state 内部结构。
+    // 剧本卡的 `scope: 'location'` 存储与写入口见 location-attachments.js / scenario-runtime。
     attachToLocation: (locationId, fields = {}) => {
       if (!locationId) return null
-      state.playerLocationAttachments ||= []
-      const attachment = {
-        code: fields.code, location: locationId,
-        ownerSeat: fields.ownerSeat ?? state.currentSeat ?? 0, exhausted: false,
-        ...(fields.extra || {}),
-      }
-      state.playerLocationAttachments.push(attachment)
+      const attachment = attachLocationCard(state, locationId, { scope: 'player', ...fields })
+      if (!attachment) return null
       info(state, events, `📌 「${cardName(fields.code)}」附属到「${locName(state, locationId)}」。`)
       return attachment
     },
+    // 「附属到地点，帷幕 +N」（01168 朦胧之雾一类，可叠加）：读点见 location-attachments.js。
+    attachShroud: (locationId, amount = 2, code = null) => addLocationShroud(state, locationId, amount, code),
     // Phase 5（5c）：按打出规则直接打出另一张牌（折扣 / 免行动由选项决定）。
     playCard: (seat, code, options = {}) => {
       const owner = state.investigators[seat]

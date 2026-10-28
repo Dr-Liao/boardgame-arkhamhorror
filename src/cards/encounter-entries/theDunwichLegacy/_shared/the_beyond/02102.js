@@ -27,8 +27,7 @@ export default {
   },
   encounterResolveCampaigns: ['dunwich'],
   encounterResolve(state, inv, card, api) {
-    const location = state.locations.find(item => item.id === inv.location)
-    location.arcaneBarriers = (location.arcaneBarriers || 0) + 1
+    api.markLocationCounter?.(inv.location, 'arcaneBarriers', 1)
     return true
   },
 }

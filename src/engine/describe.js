@@ -16,6 +16,10 @@ export function createDescribeState(deps) {
     actingSeats,
     legalMoves,
     actObjectiveContext,
+    // 敌人卡面文本与「文本空白」读点（见下方 enemyRuleText）：两者都在 engine.js 的
+    // commonDeps 里，描述层只多做一次投影，不新增装配。
+    cardDef,
+    enemyTextBlanked,
     agendaDoom,
     scenarioBehavior,
     locLabel,
@@ -59,7 +63,20 @@ export function createDescribeState(deps) {
     }), { damage: 0, horror: 0 })
   }
 
-  function describeState(state, observerSeat = decisionSeat(state)) {
+  // 敌人卡面的规则文本。桌面上的敌人是明牌，卡面文字属于公开信息；不给的话 AI 读不到
+  // 「冷漠」「不能被击败」「重整的[[生物]]敌人 +2 攻击」这类只写在卡面上的规则，只能靠
+  // validateMove 报错试错。条目层的 `text` 只有极少数敌人条目有（多数写成
+  // enemyRule / enemyScript），所以这里取印刷卡面：cardDef 会把剧本敌人定义与卡表合并。
+  function enemyRuleText(enemy) {
+    const def = cardDef(enemy.code) || cardDef(enemy.originalCode || enemy.code)
+    return String(def?.textZh || def?.text || '').replace(/\s+/g, ' ').trim()
+  }
+
+  // 观察分两段：body 是「局势」，tail 是「这次要点什么」。
+  // 决策块（当前场景推进条件 / 敌人意图 / 借机攻击 / 待决选择 / 可执行行动）放最后，
+  // 因为 Mod 入口会把【决策资料】JSON 夹在 body 与 tail 之间（见 index.js 的 describeState）：
+  // 关键信息因此离输出要求最近，不会被上万 token 的卡面资料隔开。
+  function describeParts(state, observerSeat) {
   const CAMPAIGN = campaignFor(state)
   if (inHub(state)) {
     const lines = [...describeTeamParticipation(state, observerSeat), `【战役局外】${state.campaign.name} · ${state.uiState} · 难度 ${state.difficulty}`]
@@ -74,9 +91,10 @@ export function createDescribeState(deps) {
     }
     lines.push('【可执行行动】')
     if (actingSeats(state).includes(observerSeat)) for (const move of legalMoves(state, observerSeat)) lines.push(JSON.stringify(move))
-    return lines.join('\n')
+    return { body: lines.join('\n'), tail: '' }
   }
   const lines = describeTeamParticipation(state, observerSeat)
+  const tail = []
   const act = state.acts[state.actIndex]
   const ag = state.agendas[state.agendaIndex]
   const scIdx = state.campaign ? state.campaign.scenarioIndex : 0
@@ -88,7 +106,7 @@ export function createDescribeState(deps) {
   lines.push('')
   lines.push('【场景 ' + (act ? act.stage : '?') + '】' + (act ? act.name + '：' + act.text : '（已通关）'))
   const objective = actObjectiveContext(state)
-  if (objective) lines.push('【当前场景推进条件】' + JSON.stringify(objective))
+  if (objective) tail.push('【当前场景推进条件】' + JSON.stringify(objective))
   lines.push('【密谋 ' + (ag ? ag.stage : '?') + '】' + (ag ? ag.name + '：' + ag.text : '（已失败）') + ' 毁灭 ' + agendaDoom(state) + '/' + (ag ? ag.doomThreshold : '?')
     + '（场上毁灭总数，含密谋、敌人、地点、支援与威胁区）。')
   lines.push('队内线索：' + state.clues + '；本关胜利点：' + state.victory + '。')
@@ -160,20 +178,40 @@ export function createDescribeState(deps) {
   }
 
   if (state.enemies.length) {
-    lines.push('')
-    lines.push('【敌人意图】')
+    tail.push('')
+    tail.push('【敌人意图】')
+    // 同一份卡面文本只打一次：同名牌在场上常常有两张（祭司 ×2），逐张重复会把这一段体量翻倍。
+    const rulePrintedFor = new Map()
     for (const e of state.enemies) {
       const eng = e.massive ? '与所在地点所有人交战' : (e.engagedSeat != null ? state.investigators[e.engagedSeat]?.name : '无')
-      const kw = [e.hunter && '猎手', e.retaliate && '反击', e.alert && '警戒', e.elite && '精英', e.massive && '庞大'].filter(Boolean).join(' ')
+      const kw = [e.hunter && '猎手', e.retaliate && '反击', e.alert && '警戒', e.elite && '精英', e.massive && '庞大',
+        e.aloof && '冷漠'].filter(Boolean).join(' ')
       const intent = [
         e.hunter && '会主动向最近调查员移动',
         e.prey && ('猎物「' + describePrey(e.prey) + '」'),
         e.retaliate && '攻击落空会反击',
       ].filter(Boolean).join('；')
+      // 胜利/复仇点决定「该不该打」；特性是卡面效果的判定依据（「此地每个[[蛇族]]敌人 +1」）。
+      const points = [e.victory ? `胜利${e.victory}` : null, e.vengeance ? `复仇${e.vengeance}` : null].filter(Boolean).join('、')
+      const traits = (e.traits || []).join('/')
       const healthText = enemyHealth(state, e) > 0
         ? `生命 ${enemyHealth(state, e) - e.damageTaken}/${enemyHealth(state, e)}`
         : '生命 无'
-      lines.push(`- ${e.name}：战斗${enemyFightValue(state, e, state.investigators[observerSeat])} 躲避${enemyEvadeValue(state, e, state.investigators[observerSeat])} 伤害${e.damage ?? 0} 恐惧${e.horror ?? 0} ${healthText}${e.doom ? ` 毁灭${e.doom}` : ''}${kw ? '（' + kw + '）' : ''}，交战「${eng}」${e.exhausted ? '（已横置）' : ''}${intent ? '；意图：' + intent : ''}`)
+      tail.push(`- ${e.name}：战斗${enemyFightValue(state, e, state.investigators[observerSeat])} 躲避${enemyEvadeValue(state, e, state.investigators[observerSeat])} 伤害${e.damage ?? 0} 恐惧${e.horror ?? 0} ${healthText}${e.doom ? ` 毁灭${e.doom}` : ''}${kw ? '（' + kw + '）' : ''}，交战「${eng}」，位于「${locLabel(state, e.location)}」${points ? `，${points}` : ''}${traits ? `，特性 ${traits}` : ''}${e.exhausted ? '（已横置）' : ''}${intent ? '；意图：' + intent : ''}`)
+      const rule = enemyRuleText(e)
+      if (!rule) continue
+      // 「文本空白」（剧本效果抹掉卡面）期间卡面规则不生效，不能把印刷文本当成有效规则喂给 AI。
+      if (enemyTextBlanked(state, e)) {
+        tail.push('  规则：文本空白（本回合/本阶段不生效）')
+        continue
+      }
+      const printedFor = rulePrintedFor.get(rule)
+      if (printedFor) {
+        tail.push(`  规则：（同「${printedFor}」）`)
+        continue
+      }
+      rulePrintedFor.set(rule, e.name)
+      tail.push(`  规则：${rule}`)
     }
   }
 
@@ -182,25 +220,25 @@ export function createDescribeState(deps) {
   if (opportunityAttackersNow.length) {
     const totals = opportunityTotals(opportunityAttackersNow)
     const names = opportunityAttackersNow.map(e => `${e.name}（伤害 ${e.damage ?? 0}／恐惧 ${e.horror ?? 0}）`).join('、')
-    lines.push('')
-    lines.push(`【借机攻击】你正与「${names}」交战：每次非攻击行动结算前，会先被每个未横置的敌人各攻击一次（合计 ${totals.damage} 伤害／${totals.horror} 恐惧）。`)
-    lines.push('会引发：抽牌、获得资源、移动、调查、打出卡牌、使用普通资产能力等花费行动点的行动。不会引发：攻击、躲避、谈判、撤退、结束回合、免费行动，以及卡面写明「不引发借机攻击」的效果。行动列表中标 ⚠ 的选项都会先受到上述攻击。')
+    tail.push('')
+    tail.push(`【借机攻击】你正与「${names}」交战：每次非攻击行动结算前，会先被每个未横置的敌人各攻击一次（合计 ${totals.damage} 伤害／${totals.horror} 恐惧）。`)
+    tail.push('会引发：抽牌、获得资源、移动、调查、打出卡牌、使用普通资产能力等花费行动点的行动。不会引发：攻击、躲避、谈判、撤退、结束回合、免费行动，以及卡面写明「不引发借机攻击」的效果。行动列表中标 ⚠ 的选项都会先受到上述攻击。')
     const remainingHealth = getMaxHealth(me) - (me.damage || 0)
     const remainingSanity = getMaxSanity(me) - (me.horror || 0)
     if (totals.damage >= remainingHealth || totals.horror >= remainingSanity) {
-      lines.push(`按基础值计算，这次借机攻击足以击败你（剩余生命 ${remainingHealth}／理智 ${remainingSanity}）。除非能取消或转移这次攻击，否则不要执行标 ⚠ 的行动。`)
+      tail.push(`按基础值计算，这次借机攻击足以击败你（剩余生命 ${remainingHealth}／理智 ${remainingSanity}）。除非能取消或转移这次攻击，否则不要执行标 ⚠ 的行动。`)
     }
   } else if (me && !me.defeated && !me.resigned
     && (me.engaged?.length || state.enemies.some(e => e.massive && e.location === me.location))) {
-    lines.push('')
-    lines.push('【借机攻击】当前与你交战的敌人不会发动借机攻击。')
+    tail.push('')
+    tail.push('【借机攻击】当前与你交战的敌人不会发动借机攻击。')
   }
 
-  if (state.pendingChoice && (state.pendingChoice.seat === observerSeat || !state.skillTest || state.skillTest.helpRequested || state.skillTest.seat === observerSeat)) lines.push(`待决选择：${state.pendingChoice.prompt}；回答座位 ${state.pendingChoice.seat}。`)
+  if (state.pendingChoice && (state.pendingChoice.seat === observerSeat || !state.skillTest || state.skillTest.helpRequested || state.skillTest.seat === observerSeat)) tail.push(`待决选择：${state.pendingChoice.prompt}；回答座位 ${state.pendingChoice.seat}。`)
   const legal = observerSeat === decisionSeat(state) ? legalMoves(state) : []
   if (legal.length) {
-    lines.push('')
-    lines.push('【可执行行动】（从下列选择一项，用其 JSON 表示）')
+    tail.push('')
+    tail.push('【可执行行动】（从下列选择一项，用其 JSON 表示）')
     legal.forEach((m, i) => {
       // 风险直接贴在行动旁，避免 AI 只在末尾 actionCosts 里自己推算。
       // actionPreview 只读，且与 dispatch 共用 actionKind/actionCost 的判定。
@@ -209,17 +247,17 @@ export function createDescribeState(deps) {
       const risk = attacks.length
         ? `  ⚠借机 ${attacks.reduce((n, a) => n + (a.damage || 0), 0)}/${attacks.reduce((n, a) => n + (a.horror || 0), 0)}`
         : ''
-      lines.push(`${i + 1}. ${m.label}${risk}  →  ${JSON.stringify(stripLabel(m))}`)
+      tail.push(`${i + 1}. ${m.label}${risk}  →  ${JSON.stringify(stripLabel(m))}`)
     })
   }
 
   // 卡面赋予却暂时走不通的行动：只讲清缺哪个条件，让 AI 能反过来做准备。
-  // 未满足条件时该行动不在 legalMoves 里，AI 无从得知它存在；能执行时已在上面的列表，不重复列出。
+  // 未满足条件时该行动不在 legalMoves 里，AI 无从得知它存在；能执行时已在行动列表里，不重复列出。
   if (observerSeat === decisionSeat(state) && !state.pendingChoice) {
     const blocked = scriptActionHints(state, observerSeat).filter(hint => hint.reason)
     if (blocked.length) {
       lines.push('')
-      lines.push('【暂时不可执行的卡面行动】（不能直接提交；条件满足后才会出现在上面的可执行列表）')
+      lines.push('【暂时不可执行的卡面行动】（不能直接提交；条件满足后才会出现在可执行行动列表里）')
       blocked.forEach(hint => lines.push(`- ${hint.label}：${hint.reason}`))
     }
   }
@@ -243,7 +281,14 @@ export function createDescribeState(deps) {
     lines.push(log.slice(-12).map((t) => '· ' + (narrative.has(t) ? '（剧情文本已省略）' : t)).join('\n'))
   }
 
-  return lines.join('\n')
-}
-  return describeState
+  return { body: lines.join('\n'), tail: tail.join('\n') }
+  }
+
+  /** 完整观察（body + tail）。给不需要在中间插决策资料的消费者用。 */
+  function describeState(state, observerSeat = decisionSeat(state)) {
+    const parts = describeParts(state, observerSeat)
+    return parts.tail ? [parts.body, parts.tail].join('\n') : parts.body
+  }
+
+  return { describeState, describeParts }
 }

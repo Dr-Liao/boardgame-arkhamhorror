@@ -7,7 +7,7 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { originalOf } from '../../../_shared.js'
+import { failedBy, originalOf } from '../../../_shared.js'
 
 export default {
   code: '04081', scope: 'treachery', implemented: true,
@@ -17,8 +17,8 @@ export default {
     let placed = false
     api.test(inv.seat, 'willpower', 3, result => {
       if (result.success) return
-      const failedBy = Math.max(0, 3 - result.value)
-      for (let index = 0; index < failedBy; index++) api.horror(inv.seat, 1)
+      const amount = failedBy(result, 3)
+      for (let index = 0; index < amount; index++) api.horror(inv.seat, 1)
       if (!(inv.threat || []).some(item => originalOf(item) === '04081')) {
         api.threat(inv.seat, '04081', { forcedEndTurnDiscard: true })
         placed = true

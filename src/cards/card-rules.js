@@ -49,6 +49,51 @@ export function treacheryRuleFor(code) {
   return (code && entryOf(code)?.treacheryRule) || null
 }
 
+// 声明式「显现 - 检定」：数据在条目的 `treacheryRule.test`。
+// 形状 `{ skill, difficulty: number | { base, plus }, fail, penaltyKind? }`；
+// 读点与结算入口是下面的 resolveDeclarativeTreacheryTest（各战役 encounter-rules 共用）。
+export function treacheryTestFor(code) {
+  return (code && entryOf(code)?.treacheryRule?.test) || null
+}
+
+// 难度解算：数字，或 `{ base, plus }` 按当前状态累加（02091「每有 1 点伤害难度 +1」这类）。
+export function declarativeTestDifficulty(state, inv, spec) {
+  if (typeof spec === 'number') return spec
+  const base = Number(spec?.base ?? 0)
+  const plus = spec?.plus
+  const extra = plus === 'damage' ? (inv?.damage || 0)
+    : plus === 'horror' ? (inv?.horror || 0)
+    : plus === 'doom' ? (state?.doom || 0)
+    : plus === 'clues' ? (inv?.clues || 0)
+    : plus === 'depth' ? Number(state?.scenarioFlags?.depthLevel || 0)
+    : plus === 'investigators' ? (state?.numInvestigators || (state?.investigators || []).length || 1)
+    : plus === 'shroud' ? (state?.locations?.find(location => location.id === inv?.location)?.shroud || 0)
+    : 0
+  return Math.max(0, base + Number(extra || 0))
+}
+
+// 结算一条声明式遭遇检定：`api.test` 走引擎的检定生命周期，失败分支交给引擎的 applyPenalty
+// （与旧 DSL 的 t.test 同一口径：失败差值下限 0、拒绝/取消/伤害分配全在引擎里）。
+// 各战役的 encounter-rules.resolveEncounter 在条目没有 encounterResolve 时调用这里。
+export function resolveDeclarativeTreacheryTest(state, inv, card, api, rule = null) {
+  const code = card?.originalCode || card?.code
+  const test = rule || treacheryTestFor(code)
+  if (!test) return false
+  if (typeof api?.applyPenalty !== 'function') {
+    throw new Error(`声明式遭遇检定 ${code} 需要 api.applyPenalty（剧本运行时未接线）`)
+  }
+  const difficulty = declarativeTestDifficulty(state, inv, test.difficulty)
+  // 不传自定义 source：与结算前的手写 `api.test(seat, skill, difficulty, cb)` 完全同形，
+  // 检定来源仍由剧本运行时注入（type=scenario / ability=true），重放指纹与日志不变。
+  api.test(inv.seat, test.skill, difficulty, result => {
+    if (result.success) return
+    const failedBy = Math.max(0, difficulty - Number(result.value || 0))
+    const fail = test.penaltyKind ? { ...test.fail, kind: test.penaltyKind } : test.fail
+    api.applyPenalty(inv.seat, fail, failedBy, { silent: true })
+  })
+  return false
+}
+
 // 第 7 批：遭遇卡是否已声明「规则已实现」（替代 encounter-rules 的卡号集合）。
 export function implementedFor(code) {
   return (code && entryOf(code)?.implemented) === true

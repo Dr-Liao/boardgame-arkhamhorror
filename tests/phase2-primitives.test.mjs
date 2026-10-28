@@ -28,6 +28,7 @@ import {
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { CARD_ENTRY_LIST } from '../src/cards/entries/index.js'
+import { failedBy } from '../src/cards/encounter-entries/_shared.js'
 import { resolveEffect } from '../src/engine/effects.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import {
@@ -557,4 +558,17 @@ test('Phase 2 转发：investigate / fight / evade 的每个数据字段都会�
       assert.equal(received[key], value, `${type}.${key} 在 effects.js 的转发中被丢掉了`)
     }
   }
+})
+
+// 2026-10-28 P0：同一句「每低于难度 1 点」在卡条目里有 0 / 1 两种下限写法（02223 vs 03223），
+// 现在统一到 shared 的 failedBy：难度取本次检定的实际难度（含修正），差值下限 0。
+test('failedBy：失败差值的唯一口径', () => {
+  assert.equal(failedBy({ difficulty: 4, value: 2, success: false }), 2)
+  assert.equal(failedBy({ difficulty: 3, value: 3, success: true }), 0, '成功（差值 0）按 0')
+  assert.equal(failedBy({ difficulty: 3, value: 4, success: true }), 0, '成功且不为负')
+  assert.equal(failedBy({ difficulty: 5 }), 5, '缺 value 时按 0 兜底')
+  // 难度被卡面/效果抬高时按实际难度算，而不是印表数字。
+  assert.equal(failedBy({ difficulty: 6, value: 3, success: false }), 3)
+  // 检定结果没带 difficulty（老测试桩/部分外部调用）时回落到卡面难度。
+  assert.equal(failedBy({ value: 1, success: false }, 3), 2)
 })

@@ -27,8 +27,7 @@ export default {
       const extra = (state.scenarioFlags.extraConnections ||= {})
       extra[location.id] = [...new Set([...(extra[location.id] || []), id])]
       extra[id] = [...new Set([...(extra[id] || []), location.id])]
-      if (!location.connections.includes(id)) location.connections.push(id)
-      if (!placed.connections.includes(location.id)) placed.connections.push(location.id)
+      api.connectLocations?.(location.id, id)
       api.info?.(`🌫️ 古老者之城与「${api.locName?.(id) || id}」互相连接。`)
     },
   },

@@ -57,11 +57,11 @@
     },
     {
       "file": "games/arkhamhorror/src/cards/entries/_shared.js",
-      "sha256": "c6edb784e8af7d08929036afa4a7cc9a46f29921a0cf1316686e0b296ea429cc"
+      "sha256": "6c1edd1e491c6450acb3c50db029315638cbec77d8c82d0513082161ca406665"
     },
     {
       "file": "games/arkhamhorror/tests/suites.mjs",
-      "sha256": "9cb5e00165c1340b05cae22e886bc304811de280d1d7377e8c7dd3f58de27061"
+      "sha256": "b1551a1e24e0c2cf22d72e48cfad3d9d8b9737120c5da0b451e53a89fd3ec168"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",

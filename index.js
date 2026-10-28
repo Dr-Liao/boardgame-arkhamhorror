@@ -25,7 +25,7 @@ import { setAutoReactionHosted } from './src/engine/resolution.js'
 import { campaignListForUi } from './content/registry.js'
 import { deckBuilderData } from './src/deck/deckbuilding.js'
 import {
-  createGameState, applyMove, validateMove, describeState, legalMoves, moveToText, decisionSeat, actingSeats, seatLocalMove,
+  createGameState, applyMove, validateMove, describeParts, legalMoves, moveToText, decisionSeat, actingSeats, seatLocalMove,
   decisionSeed, moveCost, autoHubMove,
 } from './src/engine/engine.js'
 
@@ -321,7 +321,15 @@ export default {
   // —— 给 AI 的接口 ——
   moveFormat: MOVE_FORMAT,
   moveToText,
-  describeState: (state, seat) => describeState(state, seat) + aiDecisionContext(state, seat ?? decisionSeat(state)),
+  // 观察顺序：局势 body → 【决策资料】JSON → 决策块 tail。
+  // 决策块（当前场景推进条件 / 敌人意图 / 借机攻击 / 待决选择 / 可执行行动）必须留在最后：
+  // 大厅会在观察后面接「回合进度 + 对局进程 + 输出要求」，把决策块放在 JSON 之前会让它离
+  // 输出要求差上 1.4 万 token，满场局面下模型容易被中间的卡面资料稀释。
+  describeState: (state, seat) => {
+    const observer = seat ?? decisionSeat(state)
+    const parts = describeParts(state, observer)
+    return parts.body + aiDecisionContext(state, observer) + (parts.tail ? '\n' + parts.tail : '')
+  },
   chatContext: state => storyChatContext(state),
   legalMoves,
   decisionSeat,

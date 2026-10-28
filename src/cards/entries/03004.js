@@ -19,7 +19,7 @@ const factory = () => {
           options: [{ id: 'skip', label: '不放置充能' },
             ...candidates.map(asset => ({ id: asset.id, label: api.cardName(asset.code) }))] })
         const asset = candidates.find(item => item.id === answer)
-        if (asset) asset.uses = (asset.uses || 0) + 1
+        if (asset) api.addUses(asset, 1)
       }
       return { delta: es.bonus || 1 }
     }

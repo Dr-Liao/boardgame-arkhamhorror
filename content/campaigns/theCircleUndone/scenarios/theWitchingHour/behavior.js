@@ -360,31 +360,14 @@ export const behavior = {
   },
 
   // 安妮特被击败：act4 的目标之一（也记录在 scenarioFlags，供无 victoryDisplay 的测试使用）。
-  // 01180 黑山羊眷族：被击败时它所在地点的每位调查员受到 1 点恐惧（核心包卡面）。
+  // 敌人被击败的逐卡强制（01180 恐惧、05057 目标标记）在各自条目的 enemyScript.onDefeated。
   enemyDefeated(state, enemy, api) {
-    encounterRules.enemyDefeated?.(state, enemy, api)
-    const code = String(codeOf(enemy))
-    if (code === ANETTE_MASON) {
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.anetteDefeated = true
-    }
-    if (code === GOAT_SPAWN) {
-      for (const inv of activeInvestigators(state).filter(entry => entry.location === enemy.location)) {
-        api.horror?.(inv.seat, 1)
-      }
-      api.info?.('🐐 「黑山羊眷族」被击败：本地点的每位调查员受到 1 点恐惧。')
-    }
-    return false
+    return encounterRules.enemyDefeated?.(state, enemy, api) || false
   },
 
-  // 01179 坚韧的黑山羊幼崽：强制 - 轮末治愈它 2 点伤害（核心包卡面）。
+  // 敌人轮末强制（01179 治愈 2 点）在条目的 enemyScript.onRoundEnd；共享 encounterRules.roundEnded 已统一派发。
   roundEnded(state, api) {
     encounterRules.roundEnded?.(state, api)
-    for (const enemy of state.enemies.filter(entry => String(codeOf(entry)) === RELENTLESS_DARK_YOUNG)) {
-      if ((enemy.damageTaken || 0) <= 0) continue
-      enemy.damageTaken = Math.max(0, enemy.damageTaken - 2)
-      api.info?.(`🐐 「坚韧的黑山羊幼崽」治愈 2 点伤害（剩余 ${enemy.damageTaken}）。`)
-    }
   },
 
   // ---- 玩家行动：幕数据声明的推进（advanceRule）+ 当前地点条目的行动 ----

@@ -39,12 +39,12 @@ export default {
         if ((state.agendaIndex ?? 0) === 3) {
           // 幕 4a 上的真实毁灭记在 state.doom（当前议程）；议程实例 .doom 只用于「下一张议程」的预付。
           const carried = (Number(state.doom) || 0) + (Number(agenda?.doom) || 0)
-          state.doom = 0
-          if (agenda) agenda.doom = 0
-          nahab.doom = (nahab.doom || 0) + carried
+          api.removeDoom?.(Number(state.doom) || 0)
+          if (agenda) api.clearDoomOnCard?.(agenda)
+          api.doomOn?.(nahab, carried)
           api.info?.(`🌑 密谋 4a 上的 ${carried} 个毁灭标记移动到那赫卜身上。`)
         } else {
-          nahab.doom = (nahab.doom || 0) + 2
+          api.doomOn?.(nahab, 2)
           api.info?.('🌑 那赫卜被放在献祭场所，并获得 2 个毁灭标记。')
         }
       }

@@ -15,7 +15,7 @@ export default {
     },
     performAction(state, inv, move, api) {
       if (move.rule !== 'leaveParty') return false
-      state.actClues = Number(state.actClues || 0) + inv.clues
+      api.placeCluesOnAct(inv.clues)
       api.spendClues(inv.seat, inv.clues)
       api.resign(inv.seat)
       return true

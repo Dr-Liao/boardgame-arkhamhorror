@@ -6,6 +6,7 @@ import { fixture, asset, enemy, move, answer, settle, use, validateMove } from '
 import {
   blankEnemy, newPlayerAssetInstance, removeThreat, startScenario,
 } from '../src/engine/engine.js'
+import { playConditionError } from '../src/engine/play-condition.js'
 import { SCENARIOS } from '../src/cards/scenarios-data.js'
 
 const me = state => state.investigators[0]
@@ -111,4 +112,23 @@ test('01150–01156 地底噬魔地图：连接与特性按印张', () => {
     assert.deepEqual(map[id].traits, ['Woods'])
   }
   assert.deepEqual(map.ritualSite.traits, ['Cave'])
+})
+
+// 2026-10-28 合规审计 R3：5 张核心包的「快速。只能在你回合期间打出」过去没有 playCondition，
+// 对手回合也能打出。这里同时守住「对手回合被拒绝」和「自己回合仍可打出」两端。
+test('01036 / 01037 / 01043 / 01050 / 01085：只能在自己回合打出', () => {
+  for (const code of ['01036', '01037', '01043', '01050', '01085']) {
+    const state = fixture('01001', 2)
+    state.currentSeat = 1
+    me(state).hand = [code]
+    me(state).resources = 30
+    assert.match(playConditionError(state, me(state), code, {}) || '', /只能在你回合期间打出/,
+      `${code} 在对手回合必须被拒绝`)
+
+    const own = fixture('01001')
+    me(own).hand = [code]
+    me(own).resources = 30
+    assert.equal(playConditionError(own, me(own), code, {}), null, `${code} 在自己回合通过打出条件`)
+    assert.equal(validateMove(own, 0, { action: 'play', cardId: code }), null, `${code} 在自己回合可打出`)
+  }
 })

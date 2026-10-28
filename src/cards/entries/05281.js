@@ -29,18 +29,8 @@ export default {
         const answer = api.choice({ kind: 'skill', source: '05281', seat: inv.seat,
           prompt: '选择要设为 5 的技能。', options: SKILLS.map(skill => ({ id: skill, label: api.skillName(skill) })) })
         const skill = SKILLS.includes(answer) ? answer : 'willpower'
-        // 原语 api.setBaseSkillValue 写 inv.statOverrides[skill]（读点 stats.js:125-141 runtimeBaseStat）。
-        // 引擎小 bug 未修：api-misc.js:228 用 `SKILL_NAMES.includes(skill)` 校验，但 SKILL_NAMES 是
-        // skill→中文名 的对象映射（presentation-constants.js:13），会抛 “SKILL_NAMES.includes is not a function”。
-        // 正确写法示例：`!Object.hasOwn(SKILL_NAMES, skill)`。修好前用 try/catch + 同数据形状 fallback。
-        try {
-          if (typeof api.setBaseSkillValue !== 'function') throw new Error('missing primitive')
-          api.setBaseSkillValue(inv.seat, skill, 5, { until: 'endOfTurn' })
-        } catch {
-          inv.statOverrides ||= {}
-          inv.statOverrides[skill] ||= []
-          inv.statOverrides[skill].push({ value: 5, turnSerial: state.turnSerial })
-        }
+        // 原语 api.setBaseSkillValue 写 inv.statOverrides[skill]（读点 stats.js 的 runtimeBaseStat）。
+        api.setBaseSkillValue(inv.seat, skill, 5, { until: 'endOfTurn' })
         api.info(`${inv.name} 本回合的${api.skillName(skill)}基础值视为 5。`)
       },
     },

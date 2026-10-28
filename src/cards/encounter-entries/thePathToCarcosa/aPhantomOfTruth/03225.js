@@ -9,6 +9,8 @@
 //
 // 威胁区卡（03225 / 03226）。
 
+import { failedBy } from '../../_shared.js'
+
 export default {
   code: '03225', implemented: true, scope: 'treachery', threatEffect: { playCostIncrease: 1, consumeResourceAfterPlay: true },
   encounterResolveCampaigns: ['carcosa'],
@@ -17,7 +19,7 @@ export default {
     api.test(inv.seat, 'willpower', 5, result => {
       if (result.success) return
       api.threat(inv.seat, '03225', {
-        resources: Math.max(1, result.difficulty - result.value),
+        resources: failedBy(result, 5),
         threatEffect: { playCostIncrease: 1, consumeResourceAfterPlay: true },
       })
       placed = true

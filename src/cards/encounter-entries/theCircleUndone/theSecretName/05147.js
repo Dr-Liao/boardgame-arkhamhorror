@@ -7,6 +7,8 @@ export default {
   code: '05147', scope: 'treachery', implemented: true,
   treacheryRule: {
     threatArea: true,
+    // 强制 - 回合结束：弃遭遇牌库顶 1 张（读点 TCU encounter-rules.turnEnded）。
+    turnEnd: { kind: 'discardEncounterTop', amount: 1 },
     // 参考 DisquietingDreams.hs 的第二条强制（EncounterDeckRunsOutOfCards）：
     // 数据声明式，由 encounter-rules.resolveEncounterDeckEmptyForced 统一解释。
     encounterDeckEmpty: { discardSelf: true, revealTop: 10, drawWeaknesses: true },

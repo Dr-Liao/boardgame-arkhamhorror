@@ -20,8 +20,12 @@ export default {
       api.info?.('疯狂生长：此地点已有 1 张，第二张不再附属。')
       return false
     }
-    location.attachments ||= []
-    location.attachments.push({ id: `overgrowth:${state.round}:${location.id}`, code: '04076', originalCode: '04076' })
+    // 附属写入走引擎原语（scenario-runtime 的 attachToLocation，落 location.attachments）。
+    const attachment = api.attachToLocation?.(location.id, {
+      id: `overgrowth:${state.round}:${location.id}`,
+      code: '04076', originalCode: '04076', dedupe: true,
+    })
+    if (!attachment) return false
     api.info?.('疯狂生长附属到此地点：此处不能探索。')
     return true
   },

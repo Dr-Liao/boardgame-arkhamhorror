@@ -28,23 +28,11 @@ export default {
         return Boolean(context?.agenda)
       }],
       label: '取消刚放到该卡牌/密谋上的 1 点毁灭并放逐自身',
-      resolve: ({ state, inv, api, context }) => {
+      resolve: ({ inv, api, context }) => {
         const card = context?.card
-        let removed = 0
-        if (card) {
-          if (typeof api.cancelDoomPlacement === 'function') removed = api.cancelDoomPlacement(card)
-          if (!removed && (card.doom || 0) > 0) {
-            card.doom -= 1
-            removed = 1
-          }
-        } else if (context?.agenda) {
-          // 密谋毁灭（state.doom）：取消刚放到当前议程上的 1 点。
-          if (typeof api.cancelDoomPlacement === 'function') removed = api.cancelDoomPlacement(null) || 0
-          if (!removed && (state.doom || 0) > 0) {
-            state.doom = Math.max(0, (state.doom || 0) - 1)
-            removed = 1
-          }
-        }
+        const removed = card
+          ? api.removeDoomFromCard(card, 1)
+          : (context?.agenda ? api.removeDoom(1) : 0)
         if (!removed) return
         api.setGameFlag(inv.seat, 'fortuneOrFate')
         api.info(`🌑 ${inv.name} 用「幸运或是注定」取消了刚放置的 ${removed} 点毁灭。`)

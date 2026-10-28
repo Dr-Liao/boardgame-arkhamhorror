@@ -25,6 +25,22 @@
   → `npm run test:fast`；行为改动还要 `replay-fixtures --baseline/--compare`。
 - 卡文件不得 import `engine.js` / `card-abilities.js` / `encounter-abilities.js` / 批次文件 / `content/`；
   只通过描述子和 `ctx.api` 改状态。非玩家卡的跨条目查询走 `encounter-entries/_lookup.js`。
+- **卡条目只读状态，写入只走 `ctx.api`**：不得直接写 `state.*` / `inv.*` / `location.*` / `enemy.*` /
+  `act.*` / `agenda.*` / `asset.*` / `target.*` / `card.*` 的字段或数组，也不得为单张卡新造状态字段
+  （`inv.ritaEvadeRound`、`location.sordidAndSilent` 这类）。表达不了就先补原语
+  （`ctx.api` / `modifiers` / `effect` / 声明式规则键），**不要**「先直写、后补请求」。
+  机械检查：`npm run audit:entries`（已并入 `cards:check` / `cards:encounter-check`），存量基线
+  `audit/card-entry-compliance.json` **只减不增**。
+- **同句规则只写一次**：同一句卡文模板（显现检定、失败差值、附属到地点/威胁区、谈判、撤退、搜索牌库、
+  额外行动……）出现第二张卡时按「原语候选」处理，出现第三张时**停止写卡**、回
+  [`docs/arkham-content-migration.md`](docs/arkham-content-migration.md) §4.3 补原语。
+  逐卡手写第二遍不算完成，不能靠 `test:fast` 全绿过关。
+- **重印只实现一次**：`cards-data` 里 `duplicateOfCode` / `duplicatedBy` 指向同一张印刷卡的两个卡号，
+  只保留一份行为实现，另一号走 `card-identity.js` 的别名；跨战役重印（同名同文、不同号）同样处理。
+- **声明即接线**：条目上新增的任何字段 / flag（`treacheryRule.*`、`locationRule.*`、`flags.*` …）
+  必须在同一轮有引擎读点与测试；「声明了没人读」按未实现计，不得写进账本或报 `verified`。
+- **口径冲突先裁决**：同一规则的多张卡实现口径不一致时（失败差值下限、回合限制、伤害分配顺序等），
+  先改 [`docs/card-model.md`](docs/card-model.md) / 规则书并全局对齐，不允许每张卡各自解释。
 - 5,930 张卡面数据仍在 `src/cards/cards-data.js`，**不要**按卡拆；未实现的卡不要预建空文件。
 - **先原语、后卡牌**：卡只能使用已登记原语；需要新原语时按
   [`docs/arkham-content-migration.md`](docs/arkham-content-migration.md) §4.6.3 排队给主进程，子进程**不得**改 `src/engine/**`、任一本 `_shared.js` / `_lookup.js`、两个 `index.js`、`content/**`、`docs/**`、`audit/**`。
@@ -63,6 +79,10 @@ node tools/audit-abilities.mjs --write
 
 > `--encounter` 会按归属算法把骨架落到 `shared/`、`<campaign>/_shared/` 或 `<campaign>/<scenario>/`；
 > 批量 worker 加 `--no-index`，索引只由主进程重建。
+>
+> `cards:check` / `cards:encounter-check` 末尾已包含条目合规审计（R1 直写状态 / R2 重印双实现 /
+> R3 回合限制缺失）。单独复核用 `npm run audit:entries`；修掉存量违规后跑 `npm run audit:entries:write`
+> 收紧基线（基线只能删、不能为了过门禁手工加）。口径见迁移规范 §4.6.10。
 
 `fast` / `slow` / `assets` 应全绿；**用例数与耗时不要写死在文档里**（会随迁移与引擎变化失真），以
 `node tools/test-timings.mjs <tier>` 的实时输出和 `npm run baseline:check` 为准。新增失败必须为 0。
@@ -78,7 +98,7 @@ node tools/audit-abilities.mjs --write
 - **子进程**：只写自己分到的单卡文件（玩家卡 `entries/<code>.js`，非玩家卡 `encounter-entries/<归属目录>/<code>.js`）和 `artifacts/migration/<cycle>/primitive-requests/*.json`；用 `scaffold-card --entry --no-index` 或 `--encounter --no-index`，不跑任何 `build-*-index`，不写 `_shared.js`/引擎/文档。
 - **新原语**：子进程写请求（`pending`）→ 继续其他卡 → 主进程去重、实现、补测试、更新原语目录并回写 `done` → 子进程轮询后继续。不得由子进程改引擎。
 - **卡牌只能用已登记原语**；单卡一次性逻辑可以 `resolve`，但要在 `primitive-plan.json` 的 `escape` 登记理由。
-- 合并门禁：分片无交集、worker 无越界写入、`cards:check` 与 `cards:encounter-check` 通过、replay 一致、`test:fast` 无新增失败、队列无悬挂。
+- 合并门禁：分片无交集、worker 无越界写入、`cards:check` 与 `cards:encounter-check` 通过（含条目合规审计：本批新增卡 0 条 R1/R2/R3）、replay 一致、`test:fast` 无新增失败、队列无悬挂。
 
 ## 旧 DSL 迁移
 

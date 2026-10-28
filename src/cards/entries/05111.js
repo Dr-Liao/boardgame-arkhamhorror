@@ -51,9 +51,9 @@ export default {
       kind: 'reaction', trigger: 'beforePlayCost',
       label: '打出情报报告时：提升费用 2 点（改为发现 2 个线索）',
       criteria: [({ inv, context }) => context?.cardCode === '05111'
-        && !(inv.playUpgrades05111 || []).includes('clues') && canAffordUpgrade(inv, context)],
-      resolve: ({ inv, api, context }) => {
-        inv.playUpgrades05111 = [...(inv.playUpgrades05111 || []), 'clues']
+        && !context?.playUpgrades?.clues && canAffordUpgrade(inv, context)],
+      resolve: ({ api, context }) => {
+        context.playUpgrades = { ...(context.playUpgrades || {}), clues: true }
         context.costIncrease = Number(context.costIncrease || 0) + DESTINATION_UPGRADE_COST
         api.info('情报报告：提升费用 2 点，改为发现 2 个线索。')
       },
@@ -62,10 +62,10 @@ export default {
       kind: 'reaction', trigger: 'beforePlayCost',
       label: '打出情报报告时：提升费用 2 点（改为距离 0..2 的有线索地点）',
       criteria: [({ state, inv, context }) => context?.cardCode === '05111'
-        && !(inv.playUpgrades05111 || []).includes('range') && canAffordUpgrade(inv, context)
+        && !context?.playUpgrades?.range && canAffordUpgrade(inv, context)
         && rangeTargetsFor(state, inv).length > 0],
-      resolve: ({ inv, api, context }) => {
-        inv.playUpgrades05111 = [...(inv.playUpgrades05111 || []), 'range']
+      resolve: ({ api, context }) => {
+        context.playUpgrades = { ...(context.playUpgrades || {}), range: true }
         context.costIncrease = Number(context.costIncrease || 0) + DESTINATION_UPGRADE_COST
         api.info('情报报告：提升费用 2 点，改为与你连接次数不超过 2 的地点。')
       },
@@ -73,11 +73,10 @@ export default {
     {
       kind: 'played',
       label: '情报报告：发现线索（升级在打出费用窗口选择）',
-      resolve: ({ state, inv, api }) => {
-        const upgrades = Array.isArray(inv.playUpgrades05111) ? inv.playUpgrades05111.slice() : []
-        delete inv.playUpgrades05111
+      resolve: ({ state, inv, api, context }) => {
+        const upgrades = context?.playCost?.playUpgrades || {}
         let locationId = inv.location
-        if (upgrades.includes('range')) {
+        if (upgrades.range) {
           const targets = rangeTargetsFor(state, inv)
           if (targets.length) {
             locationId = targets.length === 1 ? targets[0]
@@ -86,7 +85,7 @@ export default {
                 options: targets.map(id => ({ id, label: api.locName(id) })) })
           }
         }
-        const amount = upgrades.includes('clues') ? 2 : 1
+        const amount = upgrades.clues ? 2 : 1
         api.discoverClue(inv.seat, amount, locationId)
         api.info(`情报报告：「${api.locName(locationId)}」发现 ${amount} 个线索。`)
       },

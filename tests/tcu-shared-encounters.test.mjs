@@ -12,6 +12,7 @@ import assert from 'node:assert/strict'
 // 只注册本测试要用的 23 个条目：不 import engine.js，避免并行 worker 尚未合并的
 // 其他 TCU 章节条目（引擎在 import 时会全局注册全部条目）影响本文件的独立验收。
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
+import { entityParleyDescriptors, parleyMovesFor } from '../src/engine/parley.js'
 
 import {
   encounterRules, resolveHauntedOnFailure, testActionKind, isSpectralLocation,
@@ -142,6 +143,29 @@ function makeApi(state, options = {}) {
       const location = state.locations.find(entry => entry.id === locationId)
       return location?.haunted || []
     },
+    setEnemyPreySeat(enemy, seat) {
+      if (seat == null) delete enemy.preySeat
+      else enemy.preySeat = seat
+      return enemy.preySeat ?? null
+    },
+    setHauntedCommitCost(locationId) {
+      state.hauntedCommitCost = { locationId, paidSeats: [] }
+      return state.hauntedCommitCost
+    },
+    clearHauntedCommitCost() {
+      delete state.hauntedCommitCost
+      return true
+    },
+    markLocationCounter(locationId, key, amount = 1) {
+      const location = state.locations.find(item => item.id === locationId)
+      location[key] = Math.max(0, (Number(location[key]) || 0) + amount)
+      return location[key]
+    },
+    recordEnemyDamageSource(enemy, source, round = state.round) {
+      enemy.lastDamageSource = source ?? null
+      enemy.lastDamagedRound = round
+      return { source: enemy.lastDamageSource, round }
+    },
     damage(seat, amount) {
       const inv = state.investigators[seat]
       inv.damage += Number(amount) || 0
@@ -225,6 +249,19 @@ function makeApi(state, options = {}) {
       const target = state.investigators[seat]
       if (target) target.engaged = [...new Set([...(target.engaged || []), enemy.id])]
       calls.push({ type: 'engage', seat, enemyId: enemy.id })
+    },
+    healEnemy(enemy, amount = 1) {
+      const before = Number(enemy.damageTaken) || 0
+      enemy.damageTaken = Math.max(0, before - Math.max(0, Number(amount) || 0))
+      return before - enemy.damageTaken
+    },
+    readyEnemy(enemy) {
+      enemy.exhausted = false
+      return true
+    },
+    exhaustEnemy(enemy) {
+      enemy.exhausted = true
+      return true
     },
     drawEncounter(seat) {
       calls.push({ type: 'drawEncounter', seat })
@@ -549,18 +586,27 @@ test('05095 秘社新信徒：任意无人地点生成、入场毁灭与谈判�
   const api = makeApi(state)
   encounterRules.enemySpawned(state, enemy, api)
   assert.equal(enemy.doom, 1, '入场后放置 1 个毁灭标记')
-  const moves = encounterRules.encounterActions(state, inv(state))
-  assert.equal(moves.length, 1)
-  assert.equal(moves[0].rule, 'parleyLodgeNeophyte')
-  encounterRules.performEncounterAction(state, inv(state), moves[0], api)
+  // 谈判由通用 Parley 原语枚举（src/engine/parley.js），条目只声明 actionKind:'parley' 的描述子。
+  const parleys = parleyMovesFor(state, inv(state)).filter(move => move.entityId === enemy.id)
+  assert.equal(parleys.length, 1)
+  assert.equal(parleys[0].actionKind, 'parley')
+  const descriptor = entityParleyDescriptors(enemy)[0]
+  assert.equal(descriptor.actionKind, 'parley')
+  const callParley = () => {
+    let difficulty = null
+    descriptor.resolve({ state, inv: inv(state), source: enemy, api: {
+      test: (_seat, _skill, value, options) => { difficulty = value; options.resolve({ success: true }) },
+      clearDoomOnCard: card => { card.doom = 0 },
+      info: () => {},
+    } })
+    return difficulty
+  }
+  assert.equal(callParley(), 2)
   assert.equal(enemy.doom, 0, '谈判成功移除所有毁灭标记')
   // 05097 的「直到一轮结束 +2 难度」生效。
   enemy.doom = 2
   enemy.roundFightEvadeBonus = { round: state.round, amount: 2 }
-  const before = api.calls.filter(call => call.type === 'test').length
-  encounterRules.performEncounterAction(state, inv(state), moves[0], api)
-  const lastTest = api.calls.filter(call => call.type === 'test')[before]
-  assert.equal(lastTest.difficulty, 4)
+  assert.equal(callParley(), 4)
   assert.equal(enemy.doom, 0)
 })
 
@@ -571,10 +617,14 @@ test('05096 守密人：神话阶段结束放置毁灭，谈判用智识(3)', ()
   const api = makeApi(state)
   encounterRules.mythosEnded(state, api)
   assert.equal(keeper.doom, 1)
-  const moves = encounterRules.encounterActions(state, inv(state))
-  assert.equal(moves[0].rule, 'parleyKeeperOfSecrets')
-  encounterRules.performEncounterAction(state, inv(state), moves[0], api)
-  assert.equal(api.calls.find(call => call.type === 'test').skill, 'intellect')
+  const descriptor = entityParleyDescriptors(keeper)[0]
+  let skill = null
+  descriptor.resolve({ state, inv: inv(state), source: keeper, api: {
+    test: (_seat, value, difficulty, options) => { skill = value; options.resolve({ success: true }) },
+    clearDoomOnCard: card => { card.doom = 0 },
+    info: () => {},
+  } })
+  assert.equal(skill, 'intellect')
   assert.equal(keeper.doom, 0)
 })
 

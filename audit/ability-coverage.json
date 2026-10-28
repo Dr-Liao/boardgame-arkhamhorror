@@ -7,12 +7,12 @@
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
     "descriptorEntries": 572,
-    "descriptorAbilities": 527,
+    "descriptorAbilities": 531,
     "abilityKinds": 12,
     "windows": 74,
     "effectPrimitives": 56,
-    "nonPlayerCards": 26,
-    "behaviorLines": 23551,
+    "nonPlayerCards": 30,
+    "behaviorLines": 23373,
     "declaredScenarios": 3
   },
   "channels": {
@@ -21,11 +21,12 @@
   },
   "nonPlayer": {
     "byScope": {
-      "enemy": 15,
+      "enemy": 19,
       "location": 6,
       "storyAsset": 5
     },
     "codes": [
+      "03093",
       "03096",
       "03103",
       "03137",
@@ -34,6 +35,7 @@
       "03221",
       "03221b",
       "03222",
+      "03258",
       "04072",
       "04074",
       "04086",
@@ -42,6 +44,8 @@
       "04328",
       "04335",
       "05017",
+      "05095",
+      "05096",
       "05150",
       "05258",
       "05259",
@@ -53,7 +57,7 @@
       "wolfManDrew",
       "youngDeepOne"
     ],
-    "abilities": 10,
+    "abilities": 14,
     "modifiers": 27
   },
   "declaration": {
@@ -102,7 +106,7 @@
       "content/campaigns/thePathToCarcosa/scenarios/thePallidMask/behavior.js",
       "content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/behavior.js"
     ],
-    "behaviorLines": 23551,
+    "behaviorLines": 23373,
     "declaredScenarios": 3
   },
   "cards": [

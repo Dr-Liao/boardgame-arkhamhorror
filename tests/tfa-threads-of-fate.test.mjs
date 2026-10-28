@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import * as fate from '../content/campaigns/theForgottenAge/scenarios/threadsOfFate/index.js'
 import { scenario as definition, ACTS_BY_CODE, SPECIAL_ACT_OBJECTIVES } from '../content/campaigns/theForgottenAge/scenarios/threadsOfFate/definition.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../content/campaigns/theForgottenAge/tfa-chaos.js'
+import { attachLocationCard, locationAttachmentTotal } from '../src/engine/location-attachments.js'
 
 const clone = value => structuredClone(value)
 const originals = state => state.acts.map(act => act.originalCode)
@@ -24,6 +25,19 @@ function makeApi(state, overrides = {}) {
     cleanups,
     info: text => log.push(text),
     random: () => 0.5,
+    attachToAgenda(code) {
+      const agenda = state.agendas?.[state.agendaIndex]
+      if (!agenda) return null
+      agenda.attachments ||= []
+      agenda.attachments.push({ id: `a-${code}-${agenda.attachments.length + 1}`, code, originalCode: code })
+      return agenda.attachments.at(-1)
+    },
+    addAgendaDoomThreshold(delta = 1) {
+      const agenda = state.agendas?.[state.agendaIndex]
+      if (!agenda) return null
+      agenda.doomThreshold = Math.max(1, (agenda.doomThreshold || 0) + Number(delta || 0))
+      return agenda.doomThreshold
+    },
     place(id) {
       const base = state.scenario.locations[id]
       if (!base) throw new Error(`未声明地点 ${id}`)
@@ -808,20 +822,24 @@ test('04126b 警局：多张武器由玩家选，且只拿走一张同名副本'
   assert.equal(inv.deck.length, 5)
 })
 
-test('04145 屋中无人：调查 +1 行动，地点无线索时轮末弃掉', () => {
+test('04145 屋中无人：调查 +1 行动（附属数据读点），地点无线索时轮末弃掉', () => {
   const state = stateFor(1)
   const inv = state.investigators[0]
   state.locations = [{ id: 'easttown', name: '东城', clues: 2, connections: [], attachments: [] }]
   inv.location = 'easttown'
   state.encounterDiscard = []
-  const api = { info: () => {}, drawEncounter: () => {} }
+  // 剧本卡的附属写入走引擎原语（scenario-runtime.attachToLocation），这里复用同一个写入口。
+  const api = {
+    info: () => {}, drawEncounter: () => {},
+    attachToLocation: (locationId, fields) => attachLocationCard(state, locationId, { scope: 'location', ...fields }),
+  }
   fate.behavior.resolveEncounter(state, inv, { code: '04145', originalCode: '04145' }, api)
   const location = state.locations[0]
   assert.equal(location.attachments.filter(entry => entry.code === '04145').length, 1)
-  assert.equal(location.investigateExtraActions, 1)
+  assert.equal(locationAttachmentTotal(location, 'investigateExtraActions'), 1, '额外 +1 行动由附属数据声明')
   location.clues = 0
   fate.behavior.roundEnded(state, api)
   assert.equal(location.attachments.filter(entry => entry.code === '04145').length, 0)
-  assert.equal(location.investigateExtraActions, 0)
+  assert.equal(locationAttachmentTotal(location, 'investigateExtraActions'), 0)
   assert.equal(state.encounterDiscard.filter(code => code === '04145').length, 1)
 })

@@ -20,12 +20,14 @@ export default {
     },
   },
   encounterResolve(state, inv, card, api, { location }) {
-    location.attachments ||= []
-    location.attachments.push({
-      id: `torment:${state.round}:${state.moveCount}:${location.attachments.length}`,
+    if (!location) return false
+    // 附属写入走引擎原语（scenario-runtime 的 attachToLocation，落 location.attachments）。
+    // 旧实现还额外写 `location.haunted = true`（布尔），但引擎的闹鬼读点只认关卡定义/授予能力，
+    // 这个布尔没有任何读取方；本次一并删除，离场强制由 Carcosa 的 locationLeft 按附属判定。
+    const attachment = api.attachToLocation?.(location.id, {
+      id: `torment:${state.round}:${state.moveCount}:${(location.attachments || []).length}`,
       code: '03094', originalCode: '03094',
     })
-    location.haunted = true
-    return true
+    return Boolean(attachment)
   },
 }

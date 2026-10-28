@@ -28,7 +28,7 @@ export default {
         api.moveEnemy(enemy, next)
         moved++
       }
-      if (moved > 1) enemy.skipAttackRound = state.round
+      if (moved > 1) api.skipEnemyAttackThisRound(enemy)
       return true
     },
   },

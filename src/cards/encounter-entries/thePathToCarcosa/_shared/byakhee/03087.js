@@ -5,14 +5,14 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { ALL_CARDS } from '../../../_shared.js'
+import { ALL_CARDS, failedBy } from '../../../_shared.js'
 
 export default {
   code: '03087', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['carcosa'],
   encounterResolve(state, inv, card, api) {
     api.test(inv.seat, 'agility', 6, result => {
       if (result.success) return
-      const count = Math.max(0, result.difficulty - result.value)
+      const count = failedBy(result, 6)
       const revealed = state.encounterDeck.splice(Math.max(0, state.encounterDeck.length - count))
       const cardOf = candidate => ALL_CARDS[typeof candidate === 'string'
         ? candidate : candidate?.originalCode || candidate?.code]

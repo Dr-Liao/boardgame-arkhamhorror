@@ -34,13 +34,18 @@
    `encounter-abilities.js`、批次文件或 `content/`；不得直接改 `state`。需要新机制时先扩 `ability.js` /
    `windows.js` / `matcher.js` / `modifiers.js` / `targets.js` / `play-condition.js` / `effect-state.js`。
    非玩家卡需要跨条目查询时只走 `encounter-entries/_lookup.js`。
+   「不得直接改 state」包含：不得写 `state/inv/location/enemy/act/agenda/asset/target/card` 的字段或数组，
+   不得为单卡新造状态字段；重印卡（`duplicateOfCode` / `duplicatedBy`）只实现一次；同句模板第三张出现时回
+   迁移规范 §4.3 补原语。合规口径与机械检查见 [`arkham-content-migration.md`](arkham-content-migration.md)
+   §4.6.10 与 `npm run audit:entries`（已并入 `cards:check` / `cards:encounter-check`）。
 7. **新增/删除/改名卡牌文件后必须重建索引**：玩家卡 `node tools/build-card-index.mjs --write`
    （`npm run cards:index`），非玩家卡 `node tools/build-encounter-index.mjs --write`
    （`npm run cards:encounter-index`）。两个索引都是签入仓库的生成物，运行时不做目录扫描。
 
 以上 1–4、6 由 [`tests/card-entries.test.mjs`](../tests/card-entries.test.mjs) 与
 [`tests/encounter-entries.test.mjs`](../tests/encounter-entries.test.mjs) 守住；索引一致性由两个
-`build-*-index.mjs` 与对应用例守住。
+`build-*-index.mjs` 与对应用例守住；条目合规（直写状态 / 重印双实现 / 回合限制缺失）由
+`npm run audit:entries` 守住（账本 `audit/card-entry-compliance.json`，基线只减不增）。
 
 ---
 
@@ -301,6 +306,7 @@ node tools/migrate-card.mjs --verify          # 账本/文件一致性
 | [`tools/encounter-entry-placement.mjs`](../tools/encounter-entry-placement.mjs) | 归属算法：扫描器、`scaffold --encounter` 与守卫共用，0 unresolved |
 | [`tools/scaffold-card.mjs`](../tools/scaffold-card.mjs) | `--entry` 生成玩家卡骨架；`--encounter` 生成非玩家卡骨架并按归属落点；默认同时重建索引，批量迁移加 `--no-index`；同时生成 `develop/scaffolds/<code>.test.mjs` |
 | [`tools/migrate-card.mjs`](../tools/migrate-card.mjs) | 旧 DSL → 单卡文件；`--verify` 校验账本与文件 |
+| [`tools/audit-card-entry-compliance.mjs`](../tools/audit-card-entry-compliance.mjs) | **条目合规审计**：R1 直写状态 / R2 重印双实现 / R3 回合限制缺失（阻断，基线 `audit/card-entry-compliance.json` 只减不增），并记录单卡字段与手写 test 包装；`--check` / `--write` |
 | [`tools/split-card-entries.mjs`](../tools/split-card-entries.mjs) | **一次性**玩家卡拆分工具；旧源码在拆分时备份到 `artifacts/legacy/`，不要重跑 |
 | [`tools/split-encounter-entries.mjs`](../tools/split-encounter-entries.mjs) | **一次性**非玩家条目拆分工具；源码切片 + 顺序快照对账，已执行，不要重跑 |
 | [`tests/card-entries.test.mjs`](../tests/card-entries.test.mjs) | 玩家卡：文件名/`code`/单一 default/索引顺序/禁止批次/禁止 import |
@@ -309,7 +315,8 @@ node tools/migrate-card.mjs --verify          # 账本/文件一致性
 
 `npm run cards:index` = `build-card-index.mjs --write`；`npm run cards:index:check` = `--check`。
 `npm run cards:encounter-index` = `build-encounter-index.mjs --write`；
-`npm run cards:encounter-check` = 索引校验 + `tests/encounter-entries.test.mjs`。
+`npm run cards:encounter-check` = 索引校验 + `tests/encounter-entries.test.mjs` + `audit:entries`。
+`npm run audit:entries` = 条目合规审计 `--check`；`npm run audit:entries:write` = 收紧基线。
 
 ---
 

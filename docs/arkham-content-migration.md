@@ -22,6 +22,11 @@
 
 - **行为唯一入口**：新卡行为写在单卡文件里（一张卡一个文件，`export default` 恰好一个条目）。玩家卡写 `src/cards/entries/<code>.js`；非玩家卡按归属写 `src/cards/encounter-entries/`（通用 `shared/`、战役共用 `<campaign>/_shared/`、关卡专用 `<campaign>/<scenario>/`）。不得向 `card-effects.js` 的 `EFFECTS` 增加新条目，不得在 `engine.js` 按卡号、关卡名或战役名新增分支，不得恢复 `card-abilities.js` / `encounter-abilities.js` 条目或 `BATCH_*` / `MIGRATED_*` 批次大数组。
 - **先原语、后卡牌**：每轮迁移先扫描新增机制并拆分原语，再批量写卡。卡牌只能使用已登记的原语；需要新原语时按 §4.6.3 的队列向主进程申请，不得由子进程直接改引擎。
+- **卡条目只读状态，写入只走 `ctx.api`**：单卡文件不得直接写运行时状态（`state.*` / `inv.*` / `location.*` / `enemy.*` / `act.*` / `agenda.*` / `asset.*` / `target.*` / `card.*` 的字段或数组），也不得为单张卡新造状态字段（`inv.ritaEvadeRound`、`location.sordidAndSilent` 这类）。数据表达不了时先补原语（`ctx.api` / `modifiers` / `effect` / 声明式规则键）再写卡；确属单卡一次性、且只读的计算可以留在 `resolve`，但必须在 `primitive-plan.json` 的 `escape` 登记卡号与理由。
+- **同句规则只写一次**：同一句卡文模板（显现检定、失败差值、附属到地点/威胁区、谈判、撤退、搜索牌库、额外行动、结束回合检定……）出现第二张卡时按「原语候选」处理；出现第三张同模板卡时**停止写卡**、回 §4.3 补原语。逐卡手写第二遍即视为迁移未完成，不得以「先能跑再说」通过验收。
+- **重印只实现一次**：`cards-data` 里 `duplicateOfCode` / `duplicatedBy` 指向同一张印刷卡的两个卡号，只能有一份行为实现，另一号走 `card-identity.js` 的别名映射；跨战役重印（同名同文、不同卡号）同样按此处理。
+- **声明即接线**：条目上新增的任何字段（`treacheryRule.*`、`locationRule.*`、`flags.*`、`enemySpawnRule.*` …）必须在同一轮有引擎读点与测试；「声明了没人读」按未实现计，不得写进账本或写成 `verified`。
+- **口径冲突先裁决**：同一规则的多张卡实现口径不一致时（失败差值下限 0/1、回合限制、伤害分配顺序等），先改 [`card-model.md`](card-model.md) / 规则书并全局对齐，不得每张卡各自解释。
 - **新机制先走通用层**：卡面写不下时，先扩 `ability.js` / `windows.js` / `matcher.js` / `modifiers.js` / `targets.js` / `play-condition.js` / `effect-state.js` 的通用能力，再写卡。新窗口必须同时完成注册、调用点接线与测试——注册不等于接线。
 - **新增交互先于批量卡牌**：新的选择、目标、提示、面板与动画必须在卡牌批量迁移前完成，并复用 `web/` 的现有组件、CSS 变量与交互模式；不允许在卡牌批次里边写卡边临时拼界面。验收必须覆盖桌面 1440 与移动端 390，见 §4.5。
 - **剧本卡行动必须标明归属**：幕／议程卡面上印着的 `[action]` / `[free]` 行动（包括引擎自带的「探索」）必须通过关卡数据的 `scenario.scriptCards` 或显式 `scriptCard` 标成 `act` / `agenda`，牌桌才会把它放在剧本书对应卡片旁；只出现在通用动作栏视为迁移缺口。声明方式与验收见 §4.5.1。
@@ -32,7 +37,7 @@
 - **可重放**：迁移新增的状态字段必须进 `save-migration.js` 的版本迁移，并保证 JSON 存读档往返一致；行为改动要用 replay 基线证明"行为零变化"——迁移前 `node tools/replay-fixtures.mjs --baseline <文件>`，迁移后 `--compare <文件>`（见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md#53-重放撤销与迁移对比)）。
 - **简化必须显式**：未逐条还原的卡写 `simplified: true` + `note` 并留在待实现清单，不得用"看起来一样"的实现静默通过验收。
 
-迁移完成的证据是三个指标**不增加**（已经为 0 的保持 0）：`engine.js` 的卡号字面量、`EFFECTS` 条目数、战役逃生原语卡数。当前基线见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §9。
+迁移完成的证据是四个指标**不增加**（已经为 0 的保持 0）：`engine.js` 的卡号字面量、`EFFECTS` 条目数、战役逃生原语卡数、`audit/card-entry-compliance.json` 的阻断项基线（R1 直写状态 / R2 重印双实现 / R3 回合限制缺失）。前三项基线见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §9，第四项见 §4.6.10。
 
 ## 3. 目标目录
 
@@ -370,6 +375,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 | 分片完整性 | 每个 `code` 恰好一个 worker；无交集、无遗漏 |
 | 写入边界 | worker 只改自己的单卡文件与自己的 `artifacts/migration/` 记录；无 `index.js`/engine/docs/audit 变更 |
 | 单卡文件 | 文件名=`code`、单一 default、无禁止 import；非玩家卡归属目录符合扫描规则 |
+| 条目合规 | `npm run audit:entries` 通过：本批新增卡 0 条 R1 直写状态、0 条 R2 重印双实现、0 条 R3 回合限制缺失（口径见 §4.6.10） |
 | 索引 | 主进程重建两个索引各一次，`cards:check` 与 `cards:encounter-check` 全绿 |
 | 原语队列 | 无 `pending`/`claimed` 悬挂；`done` 的原语都有测试；`rejected` 都有替代方案 |
 | 行为 | `replay-fixtures --compare` 一致；`test:fast` 无新增失败（既有失败以 `artifacts/migration/<cycle>/reports/baseline.md` 的记录为准，未记录按 0 条计；TDE P0 实测 0 条） |
@@ -383,6 +389,102 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 3. worker 轮询到 `done`，按 `resolution.api` 写 `entries/04029.js`，`node --check` 通过，标 `done`。
 4. 主进程合并全部分片，重建索引，跑 `cards:check`、replay、fast，写批次报告。
 
+#### 4.6.10 卡条目合规口径（每张卡、每个 worker 都适用）
+
+> 背景（2026-10-28 全量扫描）：1340 条已实现条目里，204 个文件直接写运行时状态、60 个状态字段只被
+> 单张卡使用、5 对重印卡两号各写一套、7 张「只能在你回合打出」没落 `playCondition`、45 张「显现 -
+> 检定」里 35 张是逐卡手写的 `api.test` 包装。根因不是规矩没写，而是规矩只写在手册里、没进流程门禁：
+> 账本只记「有条目 / 可玩」，`test:fast` 全绿也允许命令式写法。本节把口径变成可执行检查
+> （`node tools/audit-card-entry-compliance.mjs --check`，已并入 `cards:check` / `cards:encounter-check`）。
+>
+> 同轮修复（P0/P1）：7 张补 `playCondition`（R3 已清零）；「每失败 1 点」统一到
+> `failedBy(result, 难度)`；`02221` 的无效 `treacheryRule.song` 换成可读的 `harmInterceptor`；
+> 4 张「显现 - 检定」改用 `treacheryRule.test`；`api.choice` / `api.choose` 互设别名并确定
+> `choice` 为唯一新写法。修复后账本：R1 196 / R2 5 / R3 0 / 手写 test 包装 15。
+> P1-3/P1-4（2026-10-28）：谈判改用引擎既有的通用 Parley 描述子（`kind:'action'` +
+> `actionKind:'parley'`），4 张敌人谈判条目已迁、Carcosa 的两条章节分支删除；地点附属统一走
+> `api.attachToLocation`（剧本卡 `scope:'location'`、玩家卡默认 `state.playerLocationAttachments`）
+> 与 `api.attachShroud`，01168 / 03094 / 04076 / 04145 已迁。仍未做：`scenarioAction.resign` 只是
+> 把「地点定义已有 `resign: true`」的手写重复收口，涉及 golden 录像锁定，未在本轮改。
+
+**① 允许 / 禁止**
+
+| 想做的事 | 允许的写法 | 禁止的写法 |
+| --- | --- | --- |
+| 读状态 | `state.*` 只读、`ctx.context`、`api.cardName` 等读接口 | — |
+| 改数值 | `api.damage/horror/heal/*`、`modifiers`、`effect` DSL | `inv.damage -= 1`、`location.shroudMod = 2`、`enemy.health = ...` |
+| 转移 / 附属 | `api.threat`、`api.attachToLocation`（剧本卡传 `scope:'location'`）、`api.moveCardTo`（`zones.js` 词表） | `location.attachments.push(...)`、`target.threat.push(...)` |
+| 毁灭 / 帷幕 / 特性 / 幕线索 | `api.removeDoomFromCard`、`api.setAssetDoom`、`api.removeDoom`、`api.addFog`、`api.setShroudMod`、`api.addInvestigatorTrait`、`api.placeCluesOnAct`、`api.healEnemy` | `card.doom -= 1`、`state.fogMod += 1`、`inv.traits.push(...)`、`state.actClues += n`、`enemy.damageTaken -= n` |
+| 剧本标记 | `api.scenarioFlag` / `api.setScenarioFlag` | `state.scenarioFlags[key] = value` |
+| 抽 / 弃 / 洗 | `api.drawCards`、`api.discardFromHand`、`api.shuffleDeck`、`api.moveCardTo` | `inv.hand.push(code)`、`state.encounterDeck.push(code)` |
+| 单卡私有状态 | 先提原语请求；确属一次性只读计算才留 `resolve`，并在 `primitive-plan.json` 的 `escape` 登记 | 新造 `inv.<卡名>Round`、`location.<卡名>Flag`、`state._<卡名>` 这类字段 |
+
+**② 常见模板 → 唯一入口**
+
+| 卡面模板 | 唯一入口 | 现状 |
+| --- | --- | --- |
+| 显现 - 检定 X(N) | 首选声明式 `treacheryRule: { test: { skill, difficulty, fail } }`（读点 `card-rules.js` 的 `resolveDeclarativeTreacheryTest`，各战役 `encounter-rules.resolveEncounter` 统一调用）；`difficulty` 支持 `{ base, plus: 'damage'\|'horror'\|'doom'\|'clues'\|'depth'\|'investigators'\|'shroud' }`；数据表达不了的才在 `encounterResolve` 里写一次 `api.test` | 已迁移 6 张（01162 / 01163 / 02223 / 02091 / 05268 / 05271）；其余手写包装按 R5 账本递减 |
+| 每失败 1 点 | `failedBy(result, 卡面难度)`（`encounter-entries/_shared.js`）：优先用检定结果里的实际难度，缺省回落到卡面难度，下限 0 | 14 处旧写法已统一；卡里不再出现 `Math.max(0/1, …)` |
+| 当你将受到伤害/恐惧时 | 威胁区卡声明 `harmInterceptor: { trigger: 'damage' | 'horror', extra, discard }`（读点 `enemies.js` 的 `applyHarm`） | 02221 / 05269 / 05270 已接 |
+| 附属到你所在地点 | 玩家卡 `api.attachToLocation`（默认 `state.playerLocationAttachments`）；剧本卡同一 API 传 `scope:'location'`（落 `location.attachments`，唯一写入口 `location-attachments.js`）；障碍 `locationBarrier`；威胁区 `treacheryRule.threatArea` | 01168 / 03094 / 04076 / 04145 已迁（01168 的雾/帷幕走 `api.attachShroud`） |
+| 谈判 Parley | 敌人/地点/剧情资产在条目里声明 `kind:'action'` + `actionKind:'parley'`（读点 `src/engine/parley.js`；行动点/借机攻击豁免/目标校验由引擎统一处理） | 4 张敌人谈判已迁（03093 / 03258 / 05095 / 05096）；剧情资产的 `assetRule.parley` 是旧声明，保留兼容 |
+| 撤退 | 地点定义 `resign: true`（引擎 `moves.js` 统一列项、`doResign` 结算）；带前置效果（转线索/查补给）的卡才写 `locationRule.actions` | 多数地点已用定义声明；4 张带前置效果的卡留在 `locationRule.actions`（golden 录像锁定，未改） |
+| 敌人光环 / 攻击随密谋 | 条目 `enemyStatRule: { aura: { stat, amount, trait, readyOnly } }` / `{ skillAura: { amount, locationBound } }` / `{ fightPerAgenda: true }` / `{ fightPerMarker: { label } }` / `{ boostUntilRound: { key, stats, amount } }`（读点 TCU `encounter-rules.enemyStatModifier` / `statModifier`）；生成地点用 `enemySpawnRule.spawnAtFirstInvestigator`，持续增益写 `api.boostEnemyUntil`，入场/移动放裂口用 `breachOnEnter` | 05148 / 05149 / 05266 / 05267 / 05086 / 05311 已迁；章节不再按卡号算战斗/技能修正或写生成分支 |
+| 本轮/本阶段标记 | `api.evadeDamageInstead`、`api.lockLocationThisRound`、`api.markHunterMoved`、`api.skipEnemyAttackThisRound` | 05016 / 03256 / 03183 / 03086 已迁；卡里不再写 `*Round` 字段 |
+| 牌堆 / 连接 / 幕指针 | `api.connectLocations`、`api.setActIndex`、`api.discardHandOfTypes`、`api.shuffleDiscardWeaknessesIntoDeck`、`api.grantExtraActionNextTurn`、`api.setBaseSkillValue` | 05136 / 03203 / 02101 / 02296 / 05049 / 05281 已迁 |
+| 探索牌库 / 战役记录 / 威胁区 | `api.takeExplorationTop`、`api.addExplorationTop`、`api.discardExploration`、`api.shuffleExploration`、`api.campaignRecord`、`api.setCampaignRecord`、`api.clearHunchRevealed`、`api.removeThreat` | 04060 / 05134 / 05010 / 02084 已迁；卡里不写 `state.explorationDeck` / `state.campaign.records` / `inv.threat` |
+| 敌人实例 / 密谋附属 | `api.setEnemyPreySeat`、`api.setEnemyResources`、`api.recordEnemyDamageSource`、`api.attachToAgenda`、`api.addAgendaDoomThreshold`、`api.moveInvestigator` / `api.moveEnemy` | 05100 / 04055 / 05103 / 04146 / 02064 已迁 |
+| 战斗/资源/回合收尾 | `api.engage`、`api.healEnemy`、`api.readyEnemy`、`api.exhaustEnemy`、`api.loseResources`（`src/engine/resource-loss.js`，玩家/遭遇共用）、`api.endTurn` | 05087 / 04082 / 04075 已迁；卡里不写 `engagedSeat` / `resources` / `actionsLeft` / `turnEnded` |
+| 地点计数器 / 回合锁 / 密谋锁 | `api.markLocationCounter`、`api.lockMovementThisRound`、`api.preventReadyNextUpkeep`（经 `campaign-state.setCannotReadyRound`）、`api.exposeEnemyWeakness`、`api.lockAgendaDoomThisPhase`、`api.scheduleWeaknessShuffle`、`api.setHauntedCommitCost` / `api.clearHauntedCommitCost` | 02102 / 02089 / 02180 / 04079 / 04195 / 05018 / 05015 / 05104 已迁 |
+| 打出处置 / 压牌 / 冷漠 | `api.shufflePlayedCardBack`、`api.deferCardBeneath`、`api.grantHidingSpotAloof`、`api.clearEnemyAloof` | 04010 / 05004 / 03038 / 02063 已迁 |
+| 打出时选择升级 | `beforePlayCost` 窗口写 `context.playUpgrades` + `context.costIncrease`；`played` 读 `context.playCost.playUpgrades`（引擎在 `doPlay` 里把支付窗口上下文传下去） | 05111 / 05234 / 05277 已迁；不写 `inv.playUpgrades05xxx` |
+| 回合结束强制 | 威胁区条目 `treacheryRule.turnEnd: { kind: 'horrorIfNotMoved' \| 'discardEncounterTop', amount }`（读点 TCU `encounter-rules.turnEnded`） | 05146 / 05147 已迁；章节不再维护 `threatTurnEnd` 映射 |
+| 只能在你回合打出 | `playCondition: [ownTurn()]` | 已清零（7 张本轮补齐，R3 只防新增） |
+| 每场游戏一次 / 每阶段一次 | `limit` / `teamOnce()` | 已统一 |
+| 重印卡 | 一个文件实现 + `card-identity.js` 别名 | 5 对双实现（R2 阻断；需先统一快速事件/反应窗口通道，见报告 §九 P2-4） |
+
+**API 命名**：`api.choice` 与 `api.choose` 现在是同一个 `requestChoice` 的别名（玩家侧 / 遭遇侧的历史命名），
+新代码统一写 `api.choice`；不要再写 `typeof api.choose === 'function'` 这类防御（运行时两个名字都在）。
+
+**③ 重印的唯一实现**
+
+- `duplicateOfCode` / `duplicatedBy` 成对的卡号只能有一个文件带行为，另一号走别名。
+- 跨战役重印（同名同文、不同号，如 `02221`↔`05269`、`02090`↔`05266`）按同一口径：先建别名，再写卡。
+- 检查：`npm run audit:entries`（R2），基线 `audit/card-entry-compliance.json` 的 `baseline.reprintDuplicate` 只减不增。
+
+**④ escape 的边界**
+
+`escape` 只接受「单卡一次性逻辑」。以下情况一律不算 escape，必须补原语：
+
+- 两张以上卡能复用的读取 / 写入；
+- 任何新的状态字段（存档结构变更必须同时进 `save-migration.js`）；
+- 任何「同句规则」的第二份实现；
+- 任何「声明了却没接线」的字段（`treacheryRule.song`、`onEnter.failChoice` 这类）。
+
+**⑤ 交付前自检（worker 与主进程同一清单）**
+
+```bash
+npm run cards:check            # 索引 + 一卡一文件 + 合规审计（R1 直写状态 / R2 重印 / R3 回合限制）
+npm run cards:encounter-check  # 同上，非玩家卡
+npm run test:fast
+node tools/replay-fixtures.mjs --compare artifacts/…    # 行为改动时
+```
+
+- 失败信息会给出卡号与规则号；新卡需要新原语时先写 `primitive-requests/*.json`，**不要**先直写状态再补请求。
+- 基线只允许收紧：修好一张卡后跑 `npm run audit:entries:write` 更新账本；禁止为了让门禁通过而手工删除违规卡号（下次会以「新增违规」再次失败）。
+- 违规存量逐卡记在 `audit/card-entry-compliance.json`，新循环（食梦者等）从第一天起必须 0 违规。
+
+**⑥ 反例（2026-10 扫描，已冻结进基线，不得再新增）**
+
+| 反例 | 现场 | 正确做法 |
+| --- | --- | --- |
+| 同一张重印卡两套实现 | `entries/01018.js`（`passive.stats` + `effect`）vs `entries/01518.js`（`modifiers` + `resolve`）；`01022` / `01522` 连触发通道都不同 | 只留一份行为，另一号走 `card-identity.js` 别名 |
+| 单卡自造地点字段（已修，保留为历史反例） | `encounter-entries/shared/chilling_cold/01168.js` 曾直接写 `location.fog` / `fogCode` / `shroudMod` | `api.attachShroud`（P1-4 已迁，读点 `location-attachments.js`） |
+| 卡规则搬进章节 | `05269.js` 只有 `note`，规则在 `scenarios/unionAndDisillusion/behavior.js` 的 `resolveEncounter` / `beforeHarm` | 规则回卡条目；章节只保留跨卡流程 |
+| 声明了没人读（已修） | `02221.js` 的 `treacheryRule: { song: true }` 没有读取方 | 已换成 `harmInterceptor`（读点 `enemies.js`）；新字段必须同时有读点 + 测试 |
+| 回合限制漏声明 | `01037` 等 7 张写了「只能在你回合打出」却没 `playCondition` | `playCondition: [ownTurn()]` |
+| 单卡私有状态 | `05005` 的 `inv.ritaEvadeRound`、`02089` 的 `location.sordidAndSilent` | 先提原语；确属一次性再登记 `escape` |
+
 ### 4.7 第 6 步：测试与验收
 
 按阶段跑，不要等最后一次性补：
@@ -392,7 +494,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 | 原语 | 新原语单测 + `npm run test:fast` | 新原语覆盖正常/无目标/费用不足/存档往返；无新增失败 |
 | 关键字/规则书 | `npm run audit:<cycle>` + 规则书浏览器 | 关键词/规则条目 `verified`；桌面/移动端可读、可跳转 |
 | 交互 | Playwright 桌面 1440 / 移动 390 | 新交互可用、不可用原因、空状态、取消/重试；视觉与既有界面一致 |
-| 批量卡牌 | `cards:check` + replay + `test:fast` | 索引一致；行为零变化；无新增失败 |
+| 批量卡牌 | `cards:check` + `cards:encounter-check` + replay + `test:fast` | 索引一致；**条目合规审计无基线外新增**（§4.6.10）；行为零变化；无新增失败 |
 | 发布 | `npm run test:<cycle>`、`npm run replay:fixtures`、`npm test`、`npm run presentation:check`、浏览器回归 | 三组确认 `verified`；无新增失败；既有失败单独记账 |
 
 最终报告必须区分：本轮新增失败、可复现的既有失败、`blocked` 卡与未完成原语。任何 `blocked`/`rejected` 都不能写成“已迁移”。
@@ -516,6 +618,8 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 
 状态只有 `pending` 和 `verified`。校验器根据检查项计算应有状态，拒绝手工把不完整项目写成 `verified`；任何确认组未完成时，拒绝 `playable: true`。
 
+「有条目 / 有测试」不等于「合规」：迁移报告必须同时附 `npm run audit:entries` 的结果，声明本批新增卡的 R1/R2/R3 违规为 0；存量违规逐卡记在 `audit/card-entry-compliance.json`，只能减少不能增加。把 `implemented: true` 或 `verified` 写在直写状态、重印双实现或回合限制缺失的卡上，视为账本失真，审计工具应拒绝。
+
 新增交互（目标/卡牌/地点选择、多选、排列、确认、空状态、不可用原因）还必须有桌面 1440 与移动 390 的浏览器用例和截图；只有 Node 测试不能算交互完成。原语队列、分片报告和交互截图路径应在迁移报告里可查。
 
 ## 9. 最低验证命令
@@ -523,7 +627,9 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 每轮至少提供并执行（按 §4.7 的阶段顺序）：
 
 ```powershell
-npm run cards:check                         # 单卡文件 / 索引 / 禁止批次大文件
+npm run cards:check                         # 单卡文件 / 索引 / 禁止批次大文件 / 条目合规审计
+npm run cards:encounter-check               # 非玩家卡同上（归属 + 合规）
+npm run audit:entries                       # 条目合规账本（R1 直写状态 / R2 重印 / R3 回合限制）
 npm run test:fast                           # 原语、关键字、卡牌逻辑；新增失败必须为 0
 node tools/replay-fixtures.mjs --baseline artifacts/migration/<cycle>/replay-before.json
 node tools/replay-fixtures.mjs --compare  artifacts/migration/<cycle>/replay-before.json

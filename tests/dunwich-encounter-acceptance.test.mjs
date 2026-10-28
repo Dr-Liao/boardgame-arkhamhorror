@@ -399,7 +399,13 @@ const treacheryChecks = {
     const state = simpleState()
     let damage = 0, surge = 0
     encounterRules.resolveEncounter(state, state.investigators[0], { code: '02084' },
-      { threat: (seat, code) => state.investigators[seat].threat.push({ code }), damage: (_seat, n) => { damage += n }, drawEncounter: () => surge++ })
+      { threat: (seat, code) => state.investigators[seat].threat.push({ code }), damage: (_seat, n) => { damage += n }, drawEncounter: () => surge++,
+        removeThreat: threat => {
+          const inv = state.investigators[0]
+          const index = inv.threat.indexOf(threat)
+          if (index >= 0) inv.threat.splice(index, 1)
+          state.encounterDiscard.push(threat.code)
+        } })
     assert.equal(state.investigators[0].threat.length, 0)
     assert.equal(damage, 10)
     assert.equal(surge, 1)
@@ -426,7 +432,13 @@ const treacheryChecks = {
   '02089'() {
     const state = simpleState(2)
     const behavior = laterBehavior('bloodOnTheAltar')
-    behavior.resolveEncounter(state, state.investigators[0], { code: '02089' }, {})
+    behavior.resolveEncounter(state, state.investigators[0], { code: '02089' }, {
+      markLocationCounter: (locationId, key) => {
+        const location = state.locations.find(item => item.id === locationId)
+        location[key] = (location[key] || 0) + 1
+        return location[key]
+      },
+    })
     assert.equal(state.locations[0].sordidAndSilent, 1)
     const horror = []
     behavior.roundEnded(state, { horror: (seat, n) => horror.push([seat, n]) })
@@ -442,6 +454,8 @@ const treacheryChecks = {
     encounterRules.resolveEncounter(state, state.investigators[0], { code: '02091' }, {
       test: (_seat, skill, difficulty, resolve) => { assert.equal(skill, 'willpower'); assert.equal(difficulty, 4); resolve({ success: false }) },
       horror: (_seat, n) => { horror += n },
+      // 声明式检定（treacheryRule.test）的失败分支走 api.applyPenalty；引擎实测由 applyPenalty 用例覆盖。
+      applyPenalty: (_seat, fail) => { horror += fail.amount || 0 },
     })
     assert.equal(horror, 2)
   },
@@ -507,12 +521,24 @@ const treacheryChecks = {
     const state = simpleState()
     const inv = state.investigators[0]
     inv.hand = ['01016', '01088', '01092']
+    // 条目调用原语 api.discardHandOfTypes（真实引擎由 scenario-runtime 实现）。
+    const discardHandOfTypes = (seat, types) => {
+      const owner = state.investigators[seat]
+      const wanted = new Set(types)
+      const discarded = owner.hand.filter(code => wanted.has(ALL_CARDS[code]?.type))
+      owner.hand = owner.hand.filter(code => !wanted.has(ALL_CARDS[code]?.type))
+      owner.discard.push(...discarded)
+      return discarded.length
+    }
     encounterRules.encounterDrawn(state, inv, '02101', {})
-    encounterRules.resolveEncounter(state, inv, { code: '02101' }, { choose: () => 'asset' })
+    encounterRules.resolveEncounter(state, inv, { code: '02101' }, { choose: () => 'asset', discardHandOfTypes })
     assert.deepEqual(inv.hand, ['01088', '01092'])
     encounterRules.encounterDrawn(state, inv, '02101', {})
     let options
-    encounterRules.resolveEncounter(state, inv, { code: '02101' }, { choose: request => { options = request.options.map(option => option.id); return 'event,skill' } })
+    encounterRules.resolveEncounter(state, inv, { code: '02101' }, {
+      choose: request => { options = request.options.map(option => option.id); return 'event,skill' },
+      discardHandOfTypes,
+    })
     assert.ok(options.every(option => option.includes(',')))
     assert.deepEqual(inv.hand, [])
   },
@@ -577,6 +603,7 @@ const treacheryChecks = {
     const state = simpleState()
     laterBehavior('theMiskatonicMuseum').resolveEncounter(state, state.investigators[0], { code: '02145' }, {
       test: (_seat, skill, difficulty, resolve) => { assert.equal(skill, 'intellect'); assert.equal(difficulty, 3); resolve({ success: false, value: 1 }) },
+      loseActions: (seat, n) => { state.investigators[seat].actionsLeft = Math.max(0, state.investigators[seat].actionsLeft - n) },
     })
     assert.equal(state.investigators[0].actionsLeft, 1)
   },
@@ -602,6 +629,7 @@ const treacheryChecks = {
     laterBehavior('theEssexCountyExpress').resolveEncounter(state, state.investigators[0], { code: '02180' }, {
       test: (_seat, _skill, difficulty, resolve) => { assert.equal(difficulty, 3); resolve({ success: false }) },
       assetsFirstDamage: (_seat, n) => { assetsFirst = n },
+      lockMovementThisRound: seat => { state.investigators[seat].steamImmobileRound = state.round },
     })
     assert.equal(state.investigators[0].steamImmobileRound, state.round)
     assert.equal(assetsFirst, 2)
@@ -655,6 +683,8 @@ const treacheryChecks = {
     laterBehavior('bloodOnTheAltar').resolveEncounter(state, state.investigators[0], { code: '02223' }, {
       test: (_seat, skill, difficulty, resolve) => { assert.equal(skill, 'willpower'); assert.equal(difficulty, 3); resolve({ success: false, value: 1 }) },
       horror: (_seat, n) => { horror = n },
+      // 声明式检定：失败差值 2 → horrorByAmount。
+      applyPenalty: (_seat, fail, failedBy) => { horror = fail.kind === 'horrorByAmount' ? failedBy : (fail.amount || 0) },
     })
     assert.equal(horror, 2)
   },
@@ -720,6 +750,18 @@ const treacheryChecks = {
     const milled = []
     laterBehavior('whereDoomAwaits').resolveEncounter(state, state.investigators[0], { code: '02296' }, {
       discardTop: (seat, n) => milled.push([seat, n]), random: () => 0,
+      shuffleDiscardWeaknessesIntoDeck: seat => {
+        const owner = state.investigators[seat]
+        const weaknesses = owner.discard.filter(code =>
+          ['weakness', 'basicweakness'].includes(ALL_CARDS[code]?.subtype))
+        owner.discard = owner.discard.filter(code => !weaknesses.includes(code))
+        owner.deck.push(...weaknesses)
+        for (let index = owner.deck.length - 1; index > 0; index--) {
+          const swap = Math.floor(0 * (index + 1))
+          ;[owner.deck[index], owner.deck[swap]] = [owner.deck[swap], owner.deck[index]]
+        }
+        return weaknesses.length
+      },
     })
     assert.deepEqual(milled, [[0, 3], [1, 3]])
     assert.ok(state.investigators[0].deck.includes('01096'))

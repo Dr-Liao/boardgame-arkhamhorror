@@ -167,3 +167,45 @@ API `createPartsState({ mode, seatParts, activeParts, currentPart })` 与 `setPa
 
 `location.placeBondedLocation` / `campaign.epilogueMatrix` / `deck.myriadLimit` / `location.doom` / `scenario.markerCount`（批次 3）。
 清单与理由同时写在 `tools/tde-primitive-spec.mjs` 的 `DEFERRED_PRIMITIVES` 与账本 `deferredPrimitives`。
+
+## 8. P3 批次 3 落地清单（2026-10-28）：最后 5 条原语
+
+> 账本：`batch: "P3-1+2+3"`，`newPrimitives` 合计 **17 条**，`deferredPrimitives` 为空。
+> `bondedLocation` / `locationDoom` / `markers` 挂到 `scenarioRuntime`；`myriad`（构筑期）与 `epilogueMatrix`（战役层）只在模块层。
+
+| # | 原语 | 机制 | 落点 | 测试 |
+| ---: | --- | --- | --- | --- |
+| P3.13 | `location.placeBondedLocation` | dreamGate（4） | [`bonded-location.js`](../src/engine/bonded-location.js) | [`tde-primitives-bonded-location.test.mjs`](../tests/tde-primitives-bonded-location.test.mjs) |
+| P3.14 | `campaign.epilogueMatrix` | epilogueMatrix（0） | [`epilogue-matrix.js`](../src/campaign/epilogue-matrix.js) | [`tde-primitives-epilogue-matrix.test.mjs`](../tests/tde-primitives-epilogue-matrix.test.mjs) |
+| P3.15 | `deck.myriadLimit` | myriad（14） | [`myriad.js`](../src/engine/myriad.js) | [`tde-primitives-myriad.test.mjs`](../tests/tde-primitives-myriad.test.mjs) |
+| P3.16 | `location.doom` | locationDoom（7） | [`location-doom.js`](../src/engine/location-doom.js) | [`tde-primitives-location-doom.test.mjs`](../tests/tde-primitives-location-doom.test.mjs) |
+| P3.17 | `scenario.markerCount` | signsOfTheGods（8） | [`marker-count.js`](../src/engine/marker-count.js) | [`tde-primitives-marker-count.test.mjs`](../tests/tde-primitives-marker-count.test.mjs) |
+
+### P3.13 地点型 Bonded（梦境之门）
+
+`bondedCodesOf`（卡文 `Bonded (06126)` / 字段）/ `placeBondedLocation`（成对放置、互链、可复用已在场的伙伴）/ `bondedPartnerOf` /
+`removeBondedLocation`（成对移除）/ `normalizeBondedLocations`（注册期点名缺伙伴）。地点实体由内容层注入 `spawnLocation`。
+
+### P3.14 双线结局矩阵
+
+`normalizeEpilogueMatrix`（4×4=16 格完整性：缺格/多格点名）/ `epilogueFor`（未知组合返回 null）/ `epilogueRows` 等查表与反查。
+正文与分支接线属 P8-T。
+
+### P3.15 多重构筑限制
+
+`isMyriad` / `validateMyriadLimit`（按标题跨卡号共享 3 张额度）/ `addCardRespectingMyriad`（超限拒绝并给原因）/ `myriadUsage`（UI 显示 n/3）。
+只拦 Myriad；普通同名上限属别的校验。
+
+### P3.16 地点毁灭
+
+`locationDoomOf` / `addLocationDoom`（0 下限）/ `shouldDestroyLocation`（阈值）/ `destroyLocation`（满足阈值才移除、记入 `destroyedLocations`、
+可按注入的 `addDoom` 加到议程）/ `normalizeLocationDoom`（阈值必须正整数）。与全桌 `state.doom` 分开记账。
+
+### P3.17 剧本参考卡计数
+
+`markerCountOf` / `addMarker` / `setMarkerCount` / `referenceMarkerCount` / `resetMarkerCount` / `markerSummary`。
+通用命名计数（默认 `reference`），A2 神迹与 B3 的参考卡 X 共用；只读函数不建字段。
+
+### 8.6 批次 3 之后
+
+`DEFERRED_PRIMITIVES` 已清空；后续新候选（如 P4 关键词、P5 交互需要的新原语）重新登记进该数组与账本，不直接写引擎。

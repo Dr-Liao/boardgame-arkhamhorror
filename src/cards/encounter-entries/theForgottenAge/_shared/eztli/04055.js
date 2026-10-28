@@ -24,7 +24,7 @@ export default {
         const enemy = api.spawn('04062', target)
         if (!enemy) return
         enemy.damageTaken = Number(state.scenarioFlags?.harbingerDamage || 0)
-        enemy.resources = 0
+        api.setEnemyResources?.(enemy, 0)
         api.info?.(`🐍 瓦卢西亚的预示者在「${enemy.location}」苏醒。`)
       },
     },

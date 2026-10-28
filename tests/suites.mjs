@@ -48,6 +48,7 @@ export const FAST_TESTS = Object.freeze([
   'slot-rules.test.mjs', // 槽位规则回归：05009/02147 的候选卡与受限槽判定（含全槽位卡矩阵）
   'phase1-state.test.mjs', // A1 效果实体 / B1 目标枚举 / playCondition / schema v7
   'phase2-primitives.test.mjs', // C1-C4 语义原语 / B2-B6 / 逃生卡迁移门禁
+  'parley-primitive.test.mjs', // P2.7 通用谈判：4 张敌人谈判条目改走描述子（05095/05096/03093/03258）
   'phase3-content.test.mjs', // D1 非玩家卡通道 / D3 剧本声明 / D4 战役结果声明
   'migration-tools.test.mjs', // Phase 5 迁移账本 / 读点一致 / 工具纯函数
   'card-rules.test.mjs', // Phase 5（5a）卡号级规则数据读点
@@ -59,6 +60,10 @@ export const FAST_TESTS = Object.freeze([
   'replay-golden-campaigns.test.mjs', // golden replay 分组 3：卡尔克萨 / 敦威治 / 失落时代 5 局
   'decision-http.test.mjs',
   'ai-completion.test.mjs',
+  'ai-combat-odds.test.mjs', // AI 决策资料里的战斗/躲避预估（combat-odds.js）：只给 AI 读
+  'ai-enemy-visibility.test.mjs', // AI 敌人观察：卡面规则文本 / 冷漠 / 胜利复仇 / 特性 / 所在地点
+  'ai-location-visibility.test.mjs', // AI 地点资料：卡面原文 + 与 entry 提示去重 + 未揭示不泄露
+  'ai-prompt-order.test.mjs', // AI 观察顺序：局势 → 决策资料 → 决策块（推进条件/敌人/行动）必须收尾
   'ai-story.test.mjs',
   'ai-dialogue.test.mjs',
   'card-interactions.test.mjs',
@@ -182,6 +187,11 @@ export const FAST_TESTS = Object.freeze([
   'tde-primitives-veiled.test.mjs', // 食梦者 P3 批次 2：掩藏地点
   'tde-primitives-token-bag.test.mjs', // 食梦者 P3 批次 2：蛛群滋生袋
   'tde-primitives-vertical-chain.test.mjs', // 食梦者 P3 批次 2：纵向地点链
+  'tde-primitives-bonded-location.test.mjs', // 食梦者 P3 批次 3：地点型 Bonded
+  'tde-primitives-epilogue-matrix.test.mjs', // 食梦者 P3 批次 3：双线结局矩阵
+  'tde-primitives-myriad.test.mjs', // 食梦者 P3 批次 3：多重构筑限制
+  'tde-primitives-location-doom.test.mjs', // 食梦者 P3 批次 3：地点毁灭
+  'tde-primitives-marker-count.test.mjs', // 食梦者 P3 批次 3：剧本参考卡计数
 ])
 
 export const SLOW_TESTS = Object.freeze([

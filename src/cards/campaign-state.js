@@ -88,6 +88,7 @@ export function createCampaignState() {
 
     // 「蟒蛇」：下个补给阶段不能重整。
     cannotReadyRound: inv => (Number.isInteger(inv?.tfaNoReadyRound) ? inv.tfaNoReadyRound : null),
+    setCannotReadyRound: (inv, round) => { if (inv) inv.tfaNoReadyRound = round },
     clearCannotReadyRound: inv => { if (inv) delete inv.tfaNoReadyRound },
 
     // 支援的回合末弃置时刻（写入方是效果数据）。

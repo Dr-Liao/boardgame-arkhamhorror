@@ -7,15 +7,16 @@
 // 依赖注入同前几批；被多个 api 依赖表引用的 doPlay / performTest 用惰性 thunk。
 
 import { linkLocationBySymbols } from './locations.js'
+import { attachLocationCard, addLocationShroud, setLocationShroudMod } from './location-attachments.js'
 import { scenarioRuntimeExtras } from './scenario-runtime-extras.js'
 import {
   buildScenarioLocationDeck, chooseScenarioLocationDeck, discardScenarioLocation,
   drawScenarioLocationDeck, scenarioLocationDeckInfo, shuffleScenarioLocationIntoDeck,
 } from './alt-decks.js'
-import {
-  LOCATION_FLAGS as LOCATION_FLAG_KEYS,
+import { LOCATION_FLAGS as LOCATION_FLAG_KEYS,
   addBreach, breachOf, breachTotal, locationFlagOf, locationSkullValue, removeBreach, setLocationFlag,
 } from './location-state.js'
+import { loseResources as applyResourceLoss } from './resource-loss.js'
 
 export function createScenarioRuntime(deps) {
   const {
@@ -35,6 +36,8 @@ export function createScenarioRuntime(deps) {
     applyDamage,
     applyHarm,
     applyHorror,
+    // 2026-10-28 P1：声明式遭遇检定（treacheryRule.test）的失败分支复用引擎同一份 applyPenalty。
+    applyPenalty,
     autoEngageAll,
     autoEvadeEnemy,
     beginChaosTest,
@@ -42,6 +45,7 @@ export function createScenarioRuntime(deps) {
     buildExplorationDeck,
     buildTarotDeck,
     campaignCardChange,
+    campaignState,
     chooseTarot,
     discardDrawnTarot,
     drawTarot,
@@ -173,6 +177,14 @@ function scenarioRuntime(state, events, testSource = null) {
     // 混乱标记的中文名：「旧印」「骷髅」…（条目写日志时用，不要复制标签表）。
     tokenLabel: token => tokenLabel(token),
     random: () => randomValue(state),
+    // 剧本标记：内容层与卡条目共用同一个 API（卡文件不得直接写 state.scenarioFlags）。
+    scenarioFlag: key => state.scenarioFlags?.[key] ?? null,
+    setScenarioFlag: (key, value = true) => {
+      state.scenarioFlags ||= {}
+      if (value === undefined || value === null) delete state.scenarioFlags[key]
+      else state.scenarioFlags[key] = value
+      return state.scenarioFlags[key] ?? null
+    },
     shuffle: list => shuffle(list, () => randomValue(state)),
     defeatAll: () => defeatAll(state, events),
     discardUntilEnemyTrait: trait => discardUntilEnemyTrait(state, trait, events),
@@ -300,6 +312,11 @@ function scenarioRuntime(state, events, testSource = null) {
       if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
       return asset.code
     },
+    // 04082 补给短缺：与玩家卡 api.loseResources 共用同一实现（含 wouldLoseResources 窗口）。
+    loseResources: (seat, amount) => {
+      const inv = state.investigators[seat]
+      return applyResourceLoss(state, inv, amount, { reactionWindow, events, info })
+    },
     shuffleAssetIntoDeck: (seat, assetId) => {
       const inv = state.investigators[seat], asset = inv.assets.find(item => item.id === assetId)
       if (!asset) return null
@@ -319,6 +336,9 @@ function scenarioRuntime(state, events, testSource = null) {
       return performTest(state, seat, skill, difficulty, { ...options, resolve, skillBonus, source: merged })
     },
     investigate: (seat, options = {}) => doInvestigate(state, seat, options, events, true),
+    // 失败惩罚的唯一结算入口：效果种类与数值仍由 applyPenalty（treachery-tokens.js）实现，
+    // 内容层只传 `{ kind, ... }` 与失败差值（声明式遭遇检定用）。
+    applyPenalty: (seat, fail, failedBy, options) => applyPenalty(state, state.investigators[seat], fail, failedBy, events, options),
     investigateTest: (seat, options = {}) => investigateTest(state, seat, options, events),
     endTurn: seat => {
       const target = state.investigators[seat]
@@ -352,6 +372,206 @@ function scenarioRuntime(state, events, testSource = null) {
       scenarioBehavior(state).doomCleared?.(state, scenarioRuntime(state, events))
     },
     addDoom: n => addDoom(state, n, events),
+    // 移除当前密谋上的 N 点毁灭（05126 把议程毁灭转移到那赫卜）。
+    removeDoom: (amount = 1) => {
+      const removed = Math.min(Math.max(0, Number(amount) || 0), Number(state.doom) || 0)
+      if (!removed) return 0
+      state.doom = Math.max(0, (Number(state.doom) || 0) - removed)
+      return removed
+    },
+    // 移除某张卡上的全部毁灭（05126 清零议程实例 .doom；05237 也可用 cancelDoomPlacement）。
+    clearDoomOnCard: card => {
+      if (!card) return 0
+      const removed = Number(card.doom) || 0
+      delete card.doom
+      return removed
+    },
+    // 全局帷幕修正（03101 淤泥与污物：每个地点 +1）。
+    addFog: (amount = 1) => {
+      state.fogMod = (Number(state.fogMod) || 0) + Number(amount || 0)
+      return state.fogMod
+    },
+    // 03256 堵塞通道：「本轮不能离开该地点」（读点 hidden-rules.js 的 cannotLeaveRound）。
+    lockLocationThisRound: location => {
+      if (!location) return false
+      location.cannotLeaveRound = state.round
+      return true
+    },
+    // 03183 疯人院暴食怪：记录「本阶段猎手移动过」（读点 attackModifier / hunterMovedRound）。
+    markHunterMoved: enemy => {
+      if (!enemy) return false
+      enemy.hunterMovedRound = state.round
+      return true
+    },
+    // 03086 迅捷的拜亚基：本阶段不攻击（读点 turn.js 的 skipAttackRound）。
+    skipEnemyAttackThisRound: enemy => {
+      if (!enemy) return false
+      enemy.skipAttackRound = state.round
+      return true
+    },
+    // 05267 幽灵乌鸦：给敌人挂一个「持续到某轮」的数值增益标记（读点 encounter-rules 的 enemyStatModifier）。
+    boostEnemyUntil: (enemy, key, round) => {
+      if (!enemy || !key) return false
+      enemy[key] = round
+      return true
+    },
+    // 05100 冥府之雾：引擎 preyTarget 优先读实例上的 preySeat（null = 清掉）。
+    setEnemyPreySeat: (enemy, seat) => {
+      if (!enemy) return null
+      if (seat == null) delete enemy.preySeat
+      else enemy.preySeat = seat
+      return enemy.preySeat ?? null
+    },
+    // 04055 暗起波澜：敌人资源计数（卡面初始化为 0）。
+    setEnemyResources: (enemy, amount) => {
+      if (!enemy) return null
+      enemy.resources = Math.max(0, Number(amount) || 0)
+      return enemy.resources
+    },
+    // 05103 怨灵：记录最近一次伤害来源与轮次，供击败时的「法术/遗物」判定读取。
+    recordEnemyDamageSource: (enemy, source, round = state.round) => {
+      if (!enemy) return null
+      enemy.lastDamageSource = source ?? null
+      enemy.lastDamagedRound = round
+      return { source: enemy.lastDamageSource, round }
+    },
+    // 04146 鲜血阴谋：附属到当前密谋（唯一写点）并调整毁灭阈值。
+    attachToAgenda: (code, extra = {}) => {
+      const agenda = state.agendas?.[state.agendaIndex]
+      if (!agenda || !code) return null
+      return attachCardTo(state, null, code, agenda, extra)
+    },
+    addAgendaDoomThreshold: (delta = 1) => {
+      const agenda = state.agendas?.[state.agendaIndex]
+      if (!agenda) return null
+      agenda.doomThreshold = Math.max(1, (agenda.doomThreshold || 0) + Number(delta || 0))
+      return agenda.doomThreshold
+    },
+    // 02102/02089：地点计数器型障碍（引擎按地点字段读数量，卡只声明计数键）。
+    markLocationCounter: (locationId, key, amount = 1) => {
+      const location = (state.locations || []).find(entry => entry.id === locationId)
+      if (!location || !key) return null
+      location[key] = Math.max(0, (Number(location[key]) || 0) + Number(amount || 0))
+      return location[key]
+    },
+    // 02180 蒸汽之爪：本轮不能移动离开本地点（movement.js 读 inv.steamImmobileRound）。
+    lockMovementThisRound: seat => {
+      const inv = state.investigators[seat]
+      if (!inv) return false
+      inv.steamImmobileRound = state.round
+      return true
+    },
+    // 04079 蟒蛇：下一个补给阶段不能重整（phases 读 campaign-state 的 cannotReadyRound）。
+    preventReadyNextUpkeep: seat => {
+      const inv = state.investigators[seat]
+      if (!inv) return false
+      campaignState.setCannotReadyRound(inv, state.round)
+      return true
+    },
+    // 04195 暴露弱点：本阶段下一次对该敌人的攻击攻击值视为 0（combat.js 读点）。
+    exposeEnemyWeakness: enemy => {
+      if (!enemy) return false
+      enemy.exposeWeakness = { round: state.round, phase: state.phase }
+      return true
+    },
+    // 03038 藏身地点：已在场的非精英敌人立即获得藏身地点提供的冷漠（敌人移动/入场时由引擎重算）。
+    grantHidingSpotAloof: enemy => {
+      if (!enemy || enemy.elite) return false
+      enemy.hidingSpotAloof = true
+      enemy.aloof = true
+      return true
+    },
+    // 02063 四叶草俱乐部：剧本让特定敌人失去冷漠（章节规则读条目数据后统一调用）。
+    clearEnemyAloof: enemy => {
+      if (!enemy) return false
+      enemy.aloof = false
+      return true
+    },
+    // 05018 神秘乐曲：本阶段密谋不能因毁灭阈值推进（act-agenda.js 读点）。
+    lockAgendaDoomThisPhase: () => {
+      state.agendaDoomLock = { round: state.round, phase: state.phase }
+      return true
+    },
+    // 05104 被困的灵魂：本次检定投入卡牌的额外费用（tests.js 的 beforeCommitCard 读点）。
+    setHauntedCommitCost: locationId => {
+      state.hauntedCommitCost = { locationId, paidSeats: [] }
+      return state.hauntedCommitCost
+    },
+    clearHauntedCommitCost: () => {
+      delete state.hauntedCommitCost
+      return true
+    },
+    // 03203 第三夜：把当前幕指针移到指定幕（随后由卡片调用 advanceAct）。
+    setActIndex: index => {
+      const acts = state.acts || []
+      if (!Number.isInteger(index) || index < 0 || index >= acts.length) return false
+      state.actIndex = index
+      return true
+    },
+    // 05136 古老者之城：让两个地点互相连接（连接是双向的，写点唯一）。
+    connectLocations: (aId, bId) => {
+      const a = (state.locations || []).find(location => location.id === aId)
+      const b = (state.locations || []).find(location => location.id === bId)
+      if (!a || !b) return false
+      a.connections ||= []
+      b.connections ||= []
+      if (!a.connections.includes(bId)) a.connections.push(bId)
+      if (!b.connections.includes(aId)) b.connections.push(aId)
+      return true
+    },
+    // 02101 世外诡影：每位调查员弃掉手牌中指定类型的每张卡牌。
+    discardHandOfTypes: (seat, types = []) => {
+      const owner = state.investigators[seat]
+      if (!owner) return 0
+      const wanted = new Set(types)
+      const discarded = owner.hand.filter(code => wanted.has(cardDef(code)?.type))
+      if (!discarded.length) return 0
+      owner.hand = owner.hand.filter(code => !wanted.has(cardDef(code)?.type))
+      owner.discard.push(...discarded)
+      return discarded.length
+    },
+    // 02296 哭嚎仪式：把弃牌堆里的弱点洗回牌库。
+    shuffleDiscardWeaknessesIntoDeck: seat => {
+      const owner = state.investigators[seat]
+      if (!owner) return 0
+      const weaknesses = owner.discard.filter(code =>
+        ['weakness', 'basicweakness'].includes(cardDef(code)?.subtype))
+      if (!weaknesses.length) return 0
+      owner.discard = owner.discard.filter(code => !weaknesses.includes(code))
+      owner.deck.push(...weaknesses)
+      owner.deck = shuffle(owner.deck, () => randomValue(state))
+      return weaknesses.length
+    },
+    // 幕上线索（03070 带着情报撤退）：读点 act-agenda.js 的 state.actClues。
+    placeCluesOnAct: (amount = 1) => {
+      state.actClues = (Number(state.actClues) || 0) + Number(amount || 0)
+      return state.actClues
+    },
+    // 敌人治愈 N 点伤害（01179 坚韧的黑山羊幼崽「轮末治愈 2 点」）：写 damageTaken，读点同伤害。
+    healEnemy: (enemy, amount = 1) => {
+      if (!enemy) return 0
+      const before = Number(enemy.damageTaken) || 0
+      enemy.damageTaken = Math.max(0, before - Math.max(0, Number(amount) || 0))
+      return before - enemy.damageTaken
+    },
+    // 05267/05087：敌人的横置/重整（敌人阶段与「如同敌军阶段」的结算共用读点）。
+    readyEnemy: enemy => {
+      if (!enemy) return false
+      enemy.exhausted = false
+      return true
+    },
+    exhaustEnemy: enemy => {
+      if (!enemy) return false
+      enemy.exhausted = true
+      return true
+    },
+    // 剧本强制全员撤退（02198「怪兽的美餐」）：只写 resigned 标记，不走个人撤退日志/提前结算。
+    markResigned: seat => {
+      const inv = state.investigators[seat]
+      if (!inv) return false
+      inv.resigned = true
+      return true
+    },
     // 2026-10-25 第六轮修复 05237：撤销「刚放置的」毁灭（只作用于传入的卡实例）。
     cancelDoomPlacement: (card, amount = 1) => {
       // card=null 表示密谋/议程上的毁灭（05237 的神话阶段主用例）。
@@ -493,6 +713,31 @@ function scenarioRuntime(state, events, testSource = null) {
     addToExplorationDeck: (codes, options) => addToExplorationDeck(state, codes, options),
     explorationDeck: () => [...(state.explorationDeck || [])],
     shuffleExploration: () => { state.explorationDeck = shuffle(state.explorationDeck || [], () => randomValue(state)) },
+    // 04060 检查补给品：查看/取走探索牌库顶、弃掉诡计、其余洗回。
+    takeExplorationTop: (count = 1) => {
+      const deck = state.explorationDeck || []
+      const n = Math.min(Math.max(0, Math.floor(count)), deck.length)
+      return n ? deck.splice(deck.length - n, n) : []
+    },
+    addExplorationTop: code => {
+      state.explorationDeck ||= []
+      state.explorationDeck.push(code)
+      return state.explorationDeck.length
+    },
+    discardExploration: code => {
+      state.explorationDiscard ||= []
+      state.explorationDiscard.push(code)
+      return code
+    },
+    // 战役记录：卡文件不直写 state.campaign.records（05134 沉湎过去）。
+    campaignRecord: key => state.campaign?.records?.[key] ?? null,
+    setCampaignRecord: (key, value) => {
+      state.campaign ||= {}
+      state.campaign.records ||= {}
+      if (value == null) delete state.campaign.records[key]
+      else state.campaign.records[key] = value
+      return state.campaign.records[key] ?? null
+    },
     // 第 2 步 P2.2：第二遭遇牌堆（幽灵界）。建堆/加牌/抽牌/洗回/弃牌 + 公开读数；
     // 抽牌走与普通遭遇牌同一条显现管线；牌堆顺序不进入观察投影，只公开张数与弃牌堆。
     extraDeck: (id, codes) => setExtraEncounterDeck(state, id, codes, { shuffle: list => shuffle(list, () => randomValue(state)) }),
@@ -563,6 +808,20 @@ function scenarioRuntime(state, events, testSource = null) {
       if (!enemy || !code) return null
       return attachCardTo(state, null, code, enemy, extra)
     },
+    // 2026-10-28 P1：剧本/遭遇卡附属到地点（疯狂生长 04076 / 屋中无人 04145 / 怨灵作祟 03094 …）。
+    // 走 location-attachments.js 的唯一写入口（location.attachments），卡文件不再直接 push。
+    attachToLocation: (locationId, fields = {}) => attachLocationCard(state, locationId, { scope: 'location', ...fields }),
+    // 「附属到地点，帷幕 +N」的雾/阴影诡计（01168 朦胧之雾）：与 api-clue 的同一实现。
+    attachShroud: (locationId, amount = 2, code = null) => addLocationShroud(state, locationId, amount, code),
+    // 地点帷幕临时修正（03262 地下深坑「附属地点隐藏值 +1」）：与 api-misc 的同一实现。
+    setShroudMod: (location, amount) => setLocationShroudMod(location, amount),
+    // 调查员获得特性（04085 伊格的诅咒）：与 api-misc 的同一实现。
+    addInvestigatorTrait: (seat, trait) => {
+      const owner = state.investigators[seat]
+      if (!owner || !trait) return false
+      owner.traits = [...new Set([...(owner.traits || []), String(trait)])]
+      return true
+    },
     detachEnemyAttachment: (enemyId, attachmentId) => {
       const enemy = state.enemies.find(item => item.id === enemyId)
       if (!enemy?.attachments) return null
@@ -616,6 +875,9 @@ function scenarioRuntime(state, events, testSource = null) {
       return replacement ?? token
     },
     choose: request => requestChoice(state, request),
+    // 兼容别名（2026-10-28 收口）：与 `choose` 同一个 requestChoice；canonical 是 `choice`
+    // （玩家侧一直用这个名），遭遇侧旧代码继续用 `choose`，新代码只用 `choice`。
+    choice: request => requestChoice(state, request),
     // 第四循环P2.1：闹鬼。`haunted(seat, { locationId, times, kind })` 结算一次（可重复）；
     // `hauntedAt(id)` 读「这个地点是否闹鬼」；`grantHaunted/grantHauntedClear` 管理授予的能力
     // （05102「每个地点获得：闹鬼 - 受到 1 点恐惧」这类）。参数形状由 haunted.js 在登记期校验。

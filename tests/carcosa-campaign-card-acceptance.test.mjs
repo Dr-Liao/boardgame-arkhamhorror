@@ -16,9 +16,11 @@ import { requestChoice, resolveTransaction } from '../src/engine/resolution.js'
 // 本文件不 import 引擎（只做账本校验），因此在这里完成最小的装配：
 // 注册能力条目 + 把注册表注入修正管线，entityModifierTotal 才有内容可读。
 import { registerCardAbilities, registeredCodes, registeredEntry } from '../src/engine/ability.js'
+import { entityParleyDescriptors } from '../src/engine/parley.js'
 import { entityModifierTotal, setModifierRegistry } from '../src/engine/modifiers.js'
 import { CARD_ABILITY_ENTRIES } from '../src/cards/card-abilities.js'
 import { NON_PLAYER_ABILITY_ENTRIES } from '../src/cards/encounter-abilities.js'
+import { attachLocationCard } from '../src/engine/location-attachments.js'
 if (!registeredCodes().length) registerCardAbilities([...CARD_ABILITY_ENTRIES, ...NON_PLAYER_ABILITY_ENTRIES])
 setModifierRegistry(registeredEntry)
 
@@ -196,6 +198,8 @@ test('C5 threat treacheries enter play and resolve their printed upkeep boundari
     threat: (_seat, code, extra = {}) => inv.threat.push({ id: `t${inv.threat.length}`, code, ...extra }),
     choose: request => request.options[0].id,
     drawEncounter() {},
+    attachToLocation: (locationId, fields = {}) => attachLocationCard(state, locationId, { scope: 'location', ...fields }),
+    setShroudMod: (location, amount) => { location.shroudMod = (location.shroudMod || 0) + amount },
   }
   assert.equal(encounterRules.resolveEncounter(state, inv, { code: '03225' }, api), true)
   assert.equal(inv.threat[0].resources, 2)
@@ -360,12 +364,16 @@ test('C5 mid-cycle privacy and Behind You ownership rules execute precisely', ()
 
   let privateText = ''
   state.scenarioFlags = {}
-  encounterRules.performEncounterAction(state, helper, {
-    rule: 'parleyLecturer', enemyId: 'lecturer',
-  }, {
-    test: (_seat, _skill, _difficulty, resolve) => resolve({ success: true }),
-    choose: () => 'catacomb',
-    privateInfo: (_seat, text) => { privateText = text },
+  // 谈判是引擎通用 Parley 原语：条目声明 actionKind:'parley' 的描述子，章节不再按 rule 分支。
+  const lecturer = entityParleyDescriptors(state.enemies[0])[0]
+  lecturer.resolve({
+    state, inv: helper, source: state.enemies[0],
+    api: {
+      test: (_seat, _skill, _difficulty, options) => options.resolve({ success: true }),
+      choose: () => 'catacomb',
+      privateInfo: (_seat, text) => { privateText = text },
+      setScenarioFlag: (key, value = true) => { state.scenarioFlags[key] = value },
+    },
   })
   assert.match(privateText, /墓穴/)
   assert.equal(state.scenarioFlags.catacombsLecturerUsed, true)

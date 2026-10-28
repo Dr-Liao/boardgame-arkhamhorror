@@ -13,13 +13,11 @@ export default {
       const active = state.investigators.filter(inv => !inv.defeated && !inv.resigned)
       if (!active.length) return
       const answer = active.length === 1 ? String(active[0].seat)
-        : (typeof api.choose === 'function'
-          ? api.choose({
-            kind: 'investigator', source: '04207', seat: state.campaign?.leadSeat ?? active[0].seat,
-            prompt: '选择一位调查员担任瞭望员。',
-            options: active.map(inv => ({ id: String(inv.seat), label: inv.name })),
-          })
-          : String(active[0].seat))
+        : api.choose({
+          kind: 'investigator', source: '04207', seat: state.campaign?.leadSeat ?? active[0].seat,
+          prompt: '选择一位调查员担任瞭望员。',
+          options: active.map(inv => ({ id: String(inv.seat), label: inv.name })),
+        })
       const lookout = active.find(inv => String(inv.seat) === String(answer)) || active[0]
       if (api.hasSupply?.(lookout.seat, 'binoculars') ?? api.checkSupplies?.(lookout.seat, 'binoculars')) {
         api.info?.(`${lookout.name} 带着双筒望远镜，避开了逼近的生物。`)

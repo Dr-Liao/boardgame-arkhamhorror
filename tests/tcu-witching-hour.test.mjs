@@ -129,6 +129,15 @@ function apiStub(state, overrides = {}) {
     },
     moveEnemy: (enemy, destination) => { enemy.location = destination },
     moveInvestigator: (seat, destination) => { state.investigators[seat].location = destination },
+    healEnemy: (enemy, amount = 1) => {
+      const before = enemy.damageTaken || 0
+      enemy.damageTaken = Math.max(0, before - amount)
+      return before - enemy.damageTaken
+    },
+    setScenarioFlag: (key, value = true) => {
+      state.scenarioFlags ||= {}
+      state.scenarioFlags[key] = value
+    },
     place: (id) => {
       const base = state.scenario.locations[id]
       if (!base) return null

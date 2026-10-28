@@ -24,7 +24,7 @@ export default {
       ],
     })
     for (const target of state.investigators.filter(item => !item.defeated && !item.resigned)) {
-      if (answer === 'resources') target.resources = Math.max(0, (target.resources || 0) - 2)
+      if (answer === 'resources') api.loseResources(target.seat, 2)
       else if (answer === 'damage') api.damage(target.seat, 1)
       else if (target.assets.length) {
         const picked = api.choose({

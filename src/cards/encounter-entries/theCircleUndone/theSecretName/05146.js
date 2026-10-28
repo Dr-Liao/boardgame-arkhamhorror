@@ -5,7 +5,11 @@ import { ALL_CARDS, activeInvestigators, originalOf } from '../../_shared.js'
 
 export default {
   code: '05146', scope: 'treachery', implemented: true,
-  treacheryRule: { threatArea: true },
+  treacheryRule: {
+    threatArea: true,
+    // 强制 - 回合结束且本回合未移动过：受到 2 点恐惧（读点 TCU encounter-rules.turnEnded）。
+    turnEnd: { kind: 'horrorIfNotMoved', amount: 2 },
+  },
   threatAction: {
     rule: 'discardPulledByTheStars', label: '⭐ 检定意志(3)弃掉群星牵引',
     skills: ['willpower'], difficulty: 3, target: 'threat',

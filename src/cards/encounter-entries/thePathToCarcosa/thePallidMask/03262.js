@@ -18,8 +18,11 @@ export default {
       api.drawEncounter(inv.seat)
       return false
     }
-    location.attachments.push({ id: `pit:${state.round}:${state.moveCount}`, code: '03262', originalCode: '03262' })
-    location.shroudMod = (location.shroudMod || 0) + 1
+    const attachment = api.attachToLocation?.(location.id, {
+      id: `pit:${state.round}:${state.moveCount}`, code: '03262', originalCode: '03262',
+    })
+    if (!attachment) return false
+    api.setShroudMod(location, 1)
     return true
   },
 }

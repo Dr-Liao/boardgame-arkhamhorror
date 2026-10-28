@@ -14,6 +14,8 @@ export default {
   code: '05086',
   scope: 'enemy',
   implemented: true,
+  // 恋人·VI 背面：看守人身上每 1 个被偷走的灵魂（stolenSoul 标记）使攻击 +1。
+  enemyStatRule: { fightPerMarker: { label: 'stolenSoul' } },
   enemyScript: {
     onDefeated(state, enemy, api) {
       if (originalOf(enemy) !== '05086') return false

@@ -2269,7 +2269,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
-          "test": "Core 01143 01169 场上毁灭计入密谋阈值，推进时仍保留"
+          "test": "Core 01143 01169 场上毁灭计入密谋阈值，推进密谋时清除场上所有毁灭"
         },
         {
           "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
@@ -2601,7 +2601,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/core-scenario-acceptance.test.mjs",
-          "test": "Core 01143 01169 场上毁灭计入密谋阈值，推进时仍保留"
+          "test": "Core 01143 01169 场上毁灭计入密谋阈值，推进密谋时清除场上所有毁灭"
         },
         {
           "file": "games/arkhamhorror/tests/core-encounter-acceptance.test.mjs",

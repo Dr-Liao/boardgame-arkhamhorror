@@ -21,7 +21,7 @@ export default {
       threatEffect: { statModifiers: { combat: -1 }, healthModifier: -1 },
       grantedTrait: 'Serpent',
     })
-    inv.traits = [...new Set([...(inv.traits || []), 'Serpent'])]
+    api.addInvestigatorTrait(inv.seat, 'Serpent')
     return true
   },
 }

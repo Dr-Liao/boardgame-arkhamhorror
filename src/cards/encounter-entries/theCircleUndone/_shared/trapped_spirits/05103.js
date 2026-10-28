@@ -49,8 +49,7 @@ export default {
   enemyScript: {
     onDamaged(state, enemy, api, seat, source) {
       // 保留原始来源（字符串或对象），击败时用共享口径判定法术/遗物。
-      enemy.lastDamageSource = source ?? null
-      enemy.lastDamagedRound = state.round
+      api.recordEnemyDamageSource?.(enemy, source, state.round)
     },
     onDefeated(state, enemy, api) {
       if (originalOf(enemy) !== WRAITH) return false

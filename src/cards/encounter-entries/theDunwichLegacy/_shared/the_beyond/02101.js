@@ -23,9 +23,7 @@ export default {
       prompt: `世外诡影：选择 ${needed} 种牌型，所有调查员弃掉手中对应卡牌。`, options })
     const chosen = new Set(answer.split(','))
     for (const target of state.investigators.filter(other => !other.defeated && !other.resigned)) {
-      const discarded = target.hand.filter(item => chosen.has(ALL_CARDS[item]?.type))
-      target.hand = target.hand.filter(item => !chosen.has(ALL_CARDS[item]?.type))
-      target.discard.push(...discarded)
+      api.discardHandOfTypes?.(target.seat, [...chosen])
     }
     return false
   },

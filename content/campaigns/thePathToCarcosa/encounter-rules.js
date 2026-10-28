@@ -1,5 +1,5 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
-import { encounterResolveCampaignsFor, encounterResolveFor, enemyScriptFor, entryFlags, locationRuleFor, treacheryRuleFor } from '../../../src/cards/card-rules.js'
+import { encounterResolveCampaignsFor, encounterResolveFor, enemyScriptFor, entryFlags, locationRuleFor, treacheryRuleFor, resolveDeclarativeTreacheryTest, treacheryTestFor } from '../../../src/cards/card-rules.js'
 
 const original = card => card?.originalCode || card?.code
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
@@ -207,33 +207,6 @@ export const encounterRules = {
       }, 0, { type: 'scenario', action: 'investigate', label: '调查苍白面具下的男子', code: '03059' })
       return
     }
-    if (move.rule === 'parleyPoltergeist') {
-      const enemy = state.enemies.find(candidate => candidate.id === move.enemyId)
-      if (enemy) api.test(inv.seat, 'intellect', 3, result => {
-        if (result.success) api.damageEnemy(enemy.id, 1, inv.seat, 'encounter')
-      })
-      return
-    }
-    if (move.rule === 'parleyLecturer') {
-      const enemy = state.enemies.find(candidate => candidate.id === move.enemyId)
-      if (!enemy) return
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.catacombsLecturerUsed = true
-      api.test(inv.seat, 'intellect', 4, result => {
-        if (!result.success) return
-        const locations = state.locations.filter(location =>
-          String(location.originalCode || '').startsWith('0324') && !location.revealed)
-        const location = chooseOne(api, {
-          kind: 'location', source: '03258', seat: inv.seat,
-          prompt: '选择查看一处地下墓穴地点的揭示面。',
-        }, locations)
-        if (location) api.privateInfo(inv.seat,
-          `地下墓穴讲师：你查看了「${location.name}」（${location.originalCode}）的揭示面：`
-          + `帷幕 ${(location.shroud || 0) + (location.shroudMod || 0)}，线索 ${location.clues || 0}`
-          + `，连接 ${(location.connections || []).map(id => state.locations.find(item => item.id === id)?.name || id).join('、') || '无'}。`)
-      })
-      return
-    }
     if (move.rule === 'lookBehindYou') {
       const owner = state.investigators[move.threatOwnerSeat ?? inv.seat]
       const threat = owner?.threat.find(card => card.id === move.threatId)
@@ -256,6 +229,9 @@ export const encounterRules = {
       inv.hiddenCards.push(code)
       return true
     }
+    // 声明式「显现 - 检定」（treacheryRule.test）：与旧 DSL 同口径，读点在 card-rules.js。
+    const declarative = treacheryTestFor(code)
+    if (declarative) return resolveDeclarativeTreacheryTest(state, inv, card, api, declarative)
     return false
   },
   turnEnded(state, inv, api) {

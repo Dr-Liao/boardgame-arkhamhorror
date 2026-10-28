@@ -26,7 +26,7 @@ export default {
           api.ready(enemy)
           if (enemy.engagedSeat !== inv.seat) api.engage(enemy, inv.seat)
         }
-        inv.evadeDamageInsteadRound = state.round
+        api.evadeDamageInstead(inv.seat)
         api.info(enemies.length
           ? `${inv.name} 地点的 ${enemies.length} 个敌人重整并与其交战；本回合躲避成功可以改为造成 1 点伤害。`
           : `${inv.name} 地点没有敌人；本回合躲避成功可以改为造成 1 点伤害。`)

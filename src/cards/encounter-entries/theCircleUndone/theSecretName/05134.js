@@ -37,14 +37,11 @@ export default {
         other.hand.push(other.discard.splice(index2, 1)[0])
         // 参考实现 `remember $ MeddledWithThePast $ Name.labeled name iid`：写入战役记录
         // （按调查员卡号；后续章节/结局可读）。
-        state.campaign ||= {}
-        state.campaign.records ||= {}
-        const meddled = Array.isArray(state.campaign.records.meddledWithThePast)
-          ? state.campaign.records.meddledWithThePast
-          : []
         const key = String(other.code || other.name)
+        const current = api.campaignRecord?.('meddledWithThePast')
+        const meddled = Array.isArray(current) ? [...current] : []
         if (!meddled.includes(key)) meddled.push(key)
-        state.campaign.records.meddledWithThePast = meddled
+        api.setCampaignRecord?.('meddledWithThePast', meddled)
         api.info?.(`⏳ ${other.name} 向过去的自己求助。`)
       }
       return true

@@ -23,6 +23,7 @@ import { ALL_CARDS } from '../../../src/cards/cards-data.js'
 import {
   encounterResolveFor, enemyScriptFor, enemySpawnRuleFor, enemyStatRuleFor,
   threatActionFor, threatActionByRule, treacheryRuleFor,
+  resolveDeclarativeTreacheryTest, treacheryTestFor,
 } from '../../../src/cards/card-rules.js'
 import {
   clearHunted, isBeingHunted, markHunted, markTakenByWatcher, takenByWatcher,
@@ -506,6 +507,12 @@ export const encounterRules = Object.freeze({
     return script.onDefeated(state, enemy, api) === true
   },
 
+  // 敌人与调查员交战：逐卡强制（05267 幽灵乌鸦二选一）走 enemyScript.onEngaged。
+  enemyEngaged(state, enemy, inv, api) {
+    const script = enemyScriptFor(original(enemy))
+    if (typeof script?.onEngaged === 'function') script.onEngaged(state, enemy, inv, api)
+  },
+
   enemyAttackResolved(state, enemy, inv, api) {
     enemyScriptFor(original(enemy))?.onAttackResolved?.(state, enemy, inv, api)
   },
@@ -533,6 +540,33 @@ export const encounterRules = Object.freeze({
       const cap = Number(rule.fightEvadePerWitchInDiscard.cap ?? 3)
       bonus += Math.min(cap, witchEnemyEncountersInDiscard(state))
     }
+    // 单卡数据：攻击随当前密谋编号提高（05149 那赫卜）。
+    if (rule?.fightPerAgenda && stat === 'fight') bonus += (state.agendaIndex ?? 0) + 1
+    // 单卡数据：攻击随卡上某种标记数量提高（05086 幽灵看守人：每个 stolenSoul +1）。
+    if (rule?.fightPerMarker && stat === 'fight') {
+      const label = rule.fightPerMarker.label
+      bonus += (enemy.markers || []).filter(marker => marker === label).length
+    }
+    // 单卡数据：场上某个敌人给「某类敌人」的光环修正（05148 布朗·詹金：重整的生物 +2 攻击）。
+    for (const source of state.enemies || []) {
+      const aura = enemyStatRuleFor(original(source))?.aura
+      if (!aura || aura.stat !== stat) continue
+      if (aura.readyOnly && enemy.exhausted) continue
+      if (aura.trait) {
+        const traits = [...(ALL_CARDS[original(enemy)]?.traits || []), ...(enemy.traits || [])]
+          .map(trait => String(trait).toLowerCase())
+        if (!traits.includes(String(aura.trait).toLowerCase())) continue
+      }
+      bonus += Number(aura.amount) || 0
+    }
+    // 单卡数据：持续到某轮的攻击/躲避增益（05267 幽灵乌鸦 +2 攻/躲到调查阶段结束）。
+    const boost = enemyStatRuleFor(original(enemy))?.boostUntilRound
+    if (boost && (boost.stats || []).includes(stat)) {
+      const until = Number(enemy[boost.key])
+      const active = Number.isFinite(until) && (state.round < until
+        || (state.round === until && (state.phase === 'mythos' || state.phase === 'investigation')))
+      if (active) bonus += Number(boost.amount) || 0
+    }
     const instance = enemy.roundFightEvadeBonus
     if (instance && instance.round === state.round) bonus += Number(instance.amount) || 0
     return bonus
@@ -547,6 +581,13 @@ export const encounterRules = Object.freeze({
       if (!amount) continue
       if (inv.firstTestRound === state.round) continue
       total += amount
+    }
+    // 敌人光环：所在地点的调查员全技能修正（05266 夜鹰：每张 -1，可叠加）。
+    for (const enemy of state.enemies || []) {
+      const aura = enemyStatRuleFor(original(enemy))?.skillAura
+      if (!aura) continue
+      if (aura.locationBound && enemy.location !== inv.location) continue
+      total += Number(aura.amount) || 0
     }
     return total
   },
@@ -566,6 +607,24 @@ export const encounterRules = Object.freeze({
   turnEnded(state, inv, api) {
     for (const threat of [...(inv.threat || [])]) {
       const rule = treacheryRuleFor(original(threat))
+      // 数据声明的回合结束强制（05146 未移动则 2 恐惧 / 05147 弃遭遇牌库顶 1 张）：
+      // 章节不再按卡号分支；新卡只需在条目写 treacheryRule.turnEnd。
+      const turnEnd = rule?.turnEnd
+      if (turnEnd) {
+        const name = ALL_CARDS[original(threat)]?.nameZh || original(threat)
+        if (turnEnd.kind === 'horrorIfNotMoved') {
+          if (!inv.tcuMovedThisTurn) {
+            const amount = Number(turnEnd.amount ?? 2)
+            api.horror?.(inv.seat, amount)
+            api.info?.(`🌌 ${name}：${inv.name} 本回合未移动过，受到 ${amount} 点恐惧。`)
+          }
+        } else if (turnEnd.kind === 'discardEncounterTop' && (state.encounterDeck || []).length) {
+          const amount = Number(turnEnd.amount ?? 1)
+          discardEncounterTop?.(state, api, amount, { notifyEmpty: true })
+          api.info?.(`😴 ${name}：弃掉遭遇牌库顶 ${amount} 张卡牌。`)
+        }
+        continue
+      }
       const test = rule?.turnEndTest
       if (!test) continue
       api.test(inv.seat, test.skill || 'willpower', Number(test.difficulty ?? 3), result => {
@@ -616,7 +675,11 @@ export const encounterRules = Object.freeze({
   resolveEncounter(state, inv, treachery, api) {
     const code = original(treachery)
     const entryResolve = encounterResolveFor(code)
-    if (!entryResolve) return false
+    if (!entryResolve) {
+      // 声明式「显现 - 检定」（treacheryRule.test）：与旧 DSL 同口径，读点在 card-rules.js。
+      const declarative = treacheryTestFor(code)
+      return declarative ? resolveDeclarativeTreacheryTest(state, inv, treachery, api, declarative) : false
+    }
     // 05099 这类「弃遭遇牌库顶」的条目会直接改 state：结算后对比牌库长度，弃空则立即结算强制。
     const watchDeckEmpty = watchEncounterDeckEmpty(state)
     const result = entryResolve(state, inv, treachery, api, { location: here(state, inv) })

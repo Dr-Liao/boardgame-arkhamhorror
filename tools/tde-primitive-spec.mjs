@@ -290,18 +290,114 @@ export const PRIMITIVES = Object.freeze([
     docs: `${DOC}#p312-纵向地点链`,
     note: '用 verticalIndex + 既有 connections 表达上下层，不新建循环专属布局；布局渲染属 P5。',
   },
+  // ── 批次 3：其余候选（2026-10-28）────────────────────────────────────────
+  {
+    id: 'location.placeBondedLocation',
+    step: 'P3.13',
+    title: '地点型 Bonded（梦境之门）',
+    mechanism: ['dreamGate'],
+    layer: 'engine',
+    params: { hostDef: 'locationDef', spawnLocation: '(def) => location' },
+    api: 'bondedCodesOf / placeBondedLocation / bondedPartnerOf / removeBondedLocation / normalizeBondedLocations',
+    checks: [
+      { kind: 'module-export', file: `${ENGINE}/bonded-location.js`, name: 'bondedCodesOf', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/bonded-location.js`, name: 'placeBondedLocation', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/bonded-location.js`, name: 'bondedPartnerOf', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/bonded-location.js`, name: 'removeBondedLocation', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/bonded-location.js`, name: 'normalizeBondedLocations', type: 'function' },
+      { kind: 'scenario-runtime', name: 'bondedLocation' },
+    ],
+    files: [`${ENGINE}/bonded-location.js`, `${ENGINE}/scenario-runtime-extras.js`, `${ENGINE}/scenario-runtime.js`, 'tests/tde-primitives-bonded-location.test.mjs', DOC],
+    tests: ['tests/tde-primitives-bonded-location.test.mjs'],
+    docs: `${DOC}#p313-地点型-bonded梦境之门`,
+    note: '只负责成对放置/链接/成对移除；地点定义与实体构造由内容层注入（spawnLocation）。',
+  },
+  {
+    id: 'campaign.epilogueMatrix',
+    step: 'P3.14',
+    title: '双线结局矩阵',
+    mechanism: ['epilogueMatrix'],
+    layer: 'campaign',
+    params: { matrix: '{ a: [{id}], b: [{id}], entries: { "aId|bId": entry } }' },
+    api: 'normalizeEpilogueMatrix / epilogueFor / flattenEpilogueMatrix / locateEpilogue',
+    checks: [
+      { kind: 'module-export', file: `${CAMPAIGN}/epilogue-matrix.js`, name: 'normalizeEpilogueMatrix', type: 'function' },
+      { kind: 'module-export', file: `${CAMPAIGN}/epilogue-matrix.js`, name: 'epilogueFor', type: 'function' },
+      { kind: 'module-export', file: `${CAMPAIGN}/epilogue-matrix.js`, name: 'flattenEpilogueMatrix', type: 'function' },
+      { kind: 'module-export', file: `${CAMPAIGN}/epilogue-matrix.js`, name: 'locateEpilogue', type: 'function' },
+    ],
+    files: [`${CAMPAIGN}/epilogue-matrix.js`, 'tests/tde-primitives-epilogue-matrix.test.mjs', DOC],
+    tests: ['tests/tde-primitives-epilogue-matrix.test.mjs'],
+    docs: `${DOC}#p314-双线结局矩阵`,
+    note: '4×4=16 段；完整性校验（缺格/多格点名）与查表分开；正文接线属 P8-T。',
+  },
+  {
+    id: 'deck.myriadLimit',
+    step: 'P3.15',
+    title: '多重构筑限制',
+    mechanism: ['myriad'],
+    layer: 'engine',
+    params: { deck: 'string[]', cardDefs: '(code) => def' },
+    api: 'isMyriad / validateMyriadLimit / addCardRespectingMyriad / myriadUsage',
+    checks: [
+      { kind: 'module-export', file: `${ENGINE}/myriad.js`, name: 'isMyriad', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/myriad.js`, name: 'validateMyriadLimit', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/myriad.js`, name: 'addCardRespectingMyriad', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/myriad.js`, name: 'myriadUsage', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/myriad.js`, name: 'MYRIAD_LIMIT' },
+    ],
+    files: [`${ENGINE}/myriad.js`, 'tests/tde-primitives-myriad.test.mjs', DOC],
+    tests: ['tests/tde-primitives-myriad.test.mjs'],
+    docs: `${DOC}#p315-多重构筑限制`,
+    note: '按标题共享 3 张额度（跨卡号同名的 Myriad）；只拦 Myriad，普通同名上限属别的校验。',
+  },
+  {
+    id: 'location.doom',
+    step: 'P3.16',
+    title: '地点毁灭',
+    mechanism: ['locationDoom'],
+    layer: 'engine',
+    params: { location: 'location', delta: 'number', addDoom: '(state, n) => void' },
+    api: 'locationDoomOf / addLocationDoom / shouldDestroyLocation / destroyLocation / normalizeLocationDoom',
+    checks: [
+      { kind: 'module-export', file: `${ENGINE}/location-doom.js`, name: 'locationDoomOf', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/location-doom.js`, name: 'addLocationDoom', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/location-doom.js`, name: 'shouldDestroyLocation', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/location-doom.js`, name: 'destroyLocation', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/location-doom.js`, name: 'normalizeLocationDoom', type: 'function' },
+      { kind: 'scenario-runtime', name: 'locationDoom' },
+    ],
+    files: [`${ENGINE}/location-doom.js`, `${ENGINE}/scenario-runtime-extras.js`, `${ENGINE}/scenario-runtime.js`, 'tests/tde-primitives-location-doom.test.mjs', DOC],
+    tests: ['tests/tde-primitives-location-doom.test.mjs'],
+    docs: `${DOC}#p316-地点毁灭`,
+    note: '地点毁灭与全桌 doom 分开记账；是否加到议程由 addDoom 注入决定，模块不猜。',
+  },
+  {
+    id: 'scenario.markerCount',
+    step: 'P3.17',
+    title: '剧本参考卡计数',
+    mechanism: ['signsOfTheGods'],
+    layer: 'engine',
+    params: { id: 'string', delta: 'number' },
+    api: 'markerCountOf / addMarker / setMarkerCount / referenceMarkerCount / resetMarkerCount / markerSummary',
+    checks: [
+      { kind: 'module-export', file: `${ENGINE}/marker-count.js`, name: 'markerCountOf', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/marker-count.js`, name: 'addMarker', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/marker-count.js`, name: 'referenceMarkerCount', type: 'function' },
+      { kind: 'module-export', file: `${ENGINE}/marker-count.js`, name: 'resetMarkerCount', type: 'function' },
+      { kind: 'scenario-runtime', name: 'markers' },
+    ],
+    files: [`${ENGINE}/marker-count.js`, `${ENGINE}/scenario-runtime-extras.js`, `${ENGINE}/scenario-runtime.js`, 'tests/tde-primitives-marker-count.test.mjs', DOC],
+    tests: ['tests/tde-primitives-marker-count.test.mjs'],
+    docs: `${DOC}#p317-剧本参考卡计数`,
+    note: '通用命名计数（默认 reference），A2 神迹与 B3 的参考卡 X 共用；只读不建字段。',
+  },
 ])
 
 // ---------------------------------------------------------------------------
-// 批次 1/2 之后再落地的原语（显式登记，避免「漏了没人知道」）
+// 延后原语（批次 1/2/3 已全部落地；此数组保留为空，后续新候选在此登记）
 // ---------------------------------------------------------------------------
-export const DEFERRED_PRIMITIVES = Object.freeze([
-  { id: 'location.placeBondedLocation', mechanism: 'dreamGate', cards: 4, batch: 'P3-3', note: '地点型 Bonded（06015a/b 梦境之门）' },
-  { id: 'campaign.epilogueMatrix', mechanism: 'epilogueMatrix', cards: 0, batch: 'P3-3', note: 'A4×B4 16 段结局矩阵' },
-  { id: 'deck.myriadLimit', mechanism: 'myriad', cards: 14, batch: 'P3-3', note: '构筑期同名至多 3 张' },
-  { id: 'location.doom', mechanism: 'locationDoom', cards: 7, batch: 'P3-3', note: 'B4 地点毁灭与 agenda 阈值' },
-  { id: 'scenario.markerCount', mechanism: 'signsOfTheGods', cards: 8, batch: 'P3-3', note: 'A2 神迹 / B3 剧本参考卡伤害数' },
-])
+export const DEFERRED_PRIMITIVES = Object.freeze([])
 
 // ---------------------------------------------------------------------------
 // 复用（已存在于通用层）
@@ -335,7 +431,7 @@ export const ESCAPE = Object.freeze([
 ])
 
 // ---------------------------------------------------------------------------
-// 机制覆盖（P2 账本的 type=primitive 机制 → 批次 1 的原语）
+// 机制覆盖（P2 账本的 type=primitive 机制 → 三批落地的原语）
 // ---------------------------------------------------------------------------
 export const COVERAGE = Object.freeze([
   { mechanism: 'campaignPart', by: ['campaignPart', 'partFlowCondition'] },
@@ -347,6 +443,6 @@ export const COVERAGE = Object.freeze([
   { mechanism: 'verticalChain', by: ['location.verticalChain'] },
   { mechanism: 'swarming', by: ['enemy.swarmingValue', 'swarm.placeCards'] },
   { mechanism: 'veiled', by: ['location.veiled'] },
-  { mechanism: 'epilogueMatrix', by: [], deferredTo: 'P3-3', reason: 'A4×B4 16 段结局矩阵依赖 P8-T 自译正文。' },
-  { mechanism: 'dreamGate', by: [], deferredTo: 'P3-3', reason: '地点型 Bonded 与门之匣联动，属 M1（Luke）批次。' },
+  { mechanism: 'epilogueMatrix', by: ['campaign.epilogueMatrix'] },
+  { mechanism: 'dreamGate', by: ['location.placeBondedLocation'] },
 ])

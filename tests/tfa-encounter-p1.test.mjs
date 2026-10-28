@@ -4,6 +4,7 @@ import { createGameState, applyMove, legalMoves, getStat, getMaxHealth, actionPr
 import { EFFECTS } from '../src/cards/card-effects.js'
 import { registeredEntry } from '../src/engine/ability.js'
 import { encounterRules } from '../content/campaigns/theForgottenAge/encounter-rules.js'
+import { addLocationShroud } from '../src/engine/location-attachments.js'
 
 // P1 遭遇与威胁区修复：多技能选择、影响引擎读取点的威胁字段、禁止换牌。
 // 与 tfa-player-p1 分开：这些是剧本/威胁层的规则，不是玩家卡。
@@ -145,6 +146,19 @@ function coreHarness(state, inv = state.investigators[0]) {
     addDoom: n => { record.doom += n },
     damage: (seat, n) => { record.damage += n },
     horror: (seat, n) => { record.horror += n },
+    // 声明式检定（treacheryRule.test）的失败分支走 api.applyPenalty。
+    applyPenalty: (seat, fail, failedBy) => {
+      if (fail.kind === 'horrorByAmount') record.horror += failedBy
+      else if (fail.kind === 'damageByAmount') record.damage += failedBy
+      else if (fail.kind === 'takeHorror') record.horror += fail.amount
+      else if (fail.kind === 'takeDamage') record.damage += fail.amount
+    },
+    // 01168 朦胧之雾：帷幕/雾写入走引擎原语。
+    attachShroud: (locationId, amount, code) => addLocationShroud(state, locationId, amount, code),
+    addInvestigatorTrait: (seat, trait) => {
+      const owner = state.investigators[seat]
+      owner.traits = [...new Set([...(owner.traits || []), trait])]
+    },
     discardAsset: (seat, id) => { record.discarded = id },
     spawn: (code, location) => { record.spawned.push({ code, location }) },
     drawEncounter: () => { record.draws += 1 },
@@ -327,7 +341,10 @@ test('01168 朦胧之雾：可叠加，每张 +2 帷幕', () => {
   const state = launchTfa()
   const inv = me(state)
   const location = state.locations.find(entry => entry.id === inv.location)
-  const api = { info: () => {}, drawEncounter: () => {}, choose: request => request.options[0].id }
+  const api = {
+    info: () => {}, drawEncounter: () => {}, choose: request => request.options[0].id,
+    attachShroud: (locationId, amount, code) => addLocationShroud(state, locationId, amount, code),
+  }
   encounterRules.resolveEncounter(state, inv, { code: '01168', originalCode: '01168' }, api)
   encounterRules.resolveEncounter(state, inv, { code: '01168', originalCode: '01168' }, api)
   assert.equal(location.fog, 2, '两张雾都附属上')

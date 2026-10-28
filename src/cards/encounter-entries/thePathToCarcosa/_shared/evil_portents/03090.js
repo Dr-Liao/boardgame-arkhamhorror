@@ -5,12 +5,14 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
+import { failedBy } from '../../../_shared.js'
+
 export default {
   code: '03090', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['carcosa'],
   encounterResolve(state, inv, card, api) {
     api.test(inv.seat, 'intellect', 4, result => {
       if (result.success) return
-      const deficit = Math.max(1, result.difficulty - result.value)
+      const deficit = failedBy(result, 4)
       const choice = api.choose({
         kind: 'encounter', source: '03090', seat: inv.seat,
         prompt: '黑星升起：选择在当前议程放置 1 毁灭，或承受等同失败差值的恐惧。',

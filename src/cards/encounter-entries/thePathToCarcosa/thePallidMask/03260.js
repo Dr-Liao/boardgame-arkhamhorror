@@ -5,14 +5,14 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { ALL_CARDS, chooseEntryOption } from '../../_shared.js'
+import { ALL_CARDS, chooseEntryOption, failedBy } from '../../_shared.js'
 
 export default {
   code: '03260', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['carcosa'],
   encounterResolve(state, inv, card, api) {
     api.test(inv.seat, 'willpower', 3, result => {
       if (result.success) return
-      const amount = Math.max(0, result.difficulty - result.value)
+      const amount = failedBy(result, 3)
       const recipients = [{ id: `inv:${inv.seat}`, kind: 'investigator', name: inv.name,
         capacity: Math.max(0, (inv.maxSanity || 0) - inv.horror), assigned: 0 },
       ...inv.assets.flatMap(asset => {

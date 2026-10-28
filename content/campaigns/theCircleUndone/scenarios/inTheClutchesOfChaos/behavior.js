@@ -11,7 +11,7 @@
 //   · 逐卡规则写在单卡条目的 actRule / enemySpawnRule 等字段里；本文件只读
 //     actRuleFor / enemySpawnRuleFor 数据分派，不写按卡号字面量的分支（架构守卫口径）。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { actRuleFor, enemySpawnRuleFor, traitLabel } from '../../../../../src/cards/card-rules.js'
+import { actRuleFor, enemySpawnRuleFor, entryFlags, traitLabel } from '../../../../../src/cards/card-rules.js'
 import { addBreach, removeBreach, breachOf as breachCount } from '../../../../../src/engine/location-state.js'
 import { encounterRules } from '../../encounter-rules.js'
 import {
@@ -1067,13 +1067,15 @@ export const behavior = {
   enemySpawned(state, enemy, api) {
     // 共享组的入场效果（05095 入场毁灭、05090 显现弃牌等）必须转发，否则在本章静默失效。
     encounterRules.enemySpawned?.(state, enemy, api)
-    if (original(enemy) === '05311' && enemy.location) placeBreachesAt(state, api, enemy.location, 1)
+    const breach = Number(entryFlags(original(enemy))?.breachOnEnter) || 0
+    if (breach && enemy.location) placeBreachesAt(state, api, enemy.location, breach)
   },
 
   // 引擎的第三参是「移动前地点」；新地点要读 enemy.location。
   enemyMoved(state, enemy, previousLocation, api) {
     encounterRules.enemyMoved?.(state, enemy, previousLocation, api)
-    if (original(enemy) === '05311' && enemy.location) placeBreachesAt(state, api, enemy.location, 1)
+    const breach = Number(entryFlags(original(enemy))?.breachOnEnter) || 0
+    if (breach && enemy.location) placeBreachesAt(state, api, enemy.location, breach)
   },
 
   enemyStatModifier(state, enemy, stat) {
