@@ -474,10 +474,14 @@ function defeatEnemy(state, enemy, events) {
     }, events)
   }
   // 本地点有敌人被击败（04026 彩饰骷髅）：同地点每位调查员都能触发。
+  // 这里必须开独立的 `defeatAtLocation` 窗口，不能复用 `defeatEnemy`：
+  //   · `defeatEnemy` 是「你击败敌人后」，带 selfOnly 的快速事件（01022 证据！等）只属于击败者；
+  //   · 第二个窗口把 context.seat 换成了同地点的其他调查员，若沿用 `defeatEnemy` 会让他们
+  //     通过 reactionWindow 的 selfOnly 判定位（inv.seat === context.seat），从而错误地打出「证据！」。
   for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned && item.location === enemy.location)) {
     if (inv.seat !== defeatedBy) {
-      reactionWindow(state, 'defeatEnemy',
-        { when: 'defeatEnemy', seat: inv.seat, location: enemy.location, enemy,
+      reactionWindow(state, 'defeatAtLocation',
+        { when: 'defeatAtLocation', seat: inv.seat, location: enemy.location, enemy,
           prompt: `「${enemy.name}」在本地点被击败后` }, events)
     }
   }

@@ -45,7 +45,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/core-story-acceptance.test.mjs",
-      "sha256": "ff83a277470965fbaecce9636d06f67ae72ff5d1cc790a295a017201ee7db20c"
+      "sha256": "6cbce659b2a720ac85eb2750f76bbb24dc8d28f45d7296f8f5af31a6a08d3948"
     },
     {
       "file": "games/arkhamhorror/tests/core-final-acceptance.test.mjs",

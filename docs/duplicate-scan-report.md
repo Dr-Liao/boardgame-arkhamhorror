@@ -560,6 +560,22 @@ golden 13 局零漂移；新增 `tests/tcu-location-api.test.mjs`（4 例，已�
 > `artifacts/migration/tcu/primitive-{catalog,plan}.json` 的浏览器/规划产物也属该环境缺口，
 > 重新 `--write` 只会把 verified 降级为 development，因此**未提交**这些降级结果，与 P2 改动无关。
 
+**补漏（2026-10-28，01022「证据！」被同地点队友误用，已修复）**：
+- 现象：调查员 A 击败敌人后，同地点的队友（联机真人/AI 同伴）却能从直觉牌库把「证据！」当作
+  自己击败敌人打出。卡面是「快速。在你击败一个敌人后打出」，规则上只有击败者能响应。
+- 根因：`src/engine/enemies.js#defeatEnemy` 在击败者窗口之后，还会给同地点其他调查员各开一次
+  `reactionWindow('defeatEnemy', { seat: 其他调查员 })`。该窗口把 `context.seat` 换成了其他调查员，
+  使 `criteria.selfOnly` 的判定 `inv.seat === context.seat` 通过；`reactionWindow` 的快速事件候选
+  因此把 01022 发给队友（同一通道对能力层 selfOnly 反应也有同类口径风险）。
+- 修复：该「本地点有卡牌被击败」窗口改用独立窗口 id `defeatAtLocation`（`04026 彩饰骷髅` 条目本就同时
+  挂在 `defeatEnemy` / `defeatAtLocation` 上，无需改卡）。`defeatEnemy` 只保留击败者语义，
+  selfOnly 快速事件/能力不再经同地点窗口串给队友；golden 13 局零漂移。
+- 证据：`tests/core-story-acceptance.test.mjs` 的 01022 用例改为断言 `humanSeats` 队友不会被询问
+  「证据！」；`tests/tfa-player-acceptance.test.mjs` 新增 04026 在 `defeatAtLocation` 窗口仍可给
+  同地点队友充能的回归；`audit/core-acceptance.json` / `src/cards/core-acceptance.js` 已按新测试重生成
+  （183/183 verified、377 项）。`test:fast` 3792 通过；余下 2 条失败与本修复无关：Carcosa 账本因工作区
+  并发改动尚未重生成、TCU 既有浏览器证据缺口。
+
 
 
 

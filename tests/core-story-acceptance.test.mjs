@@ -153,8 +153,16 @@ test('Core 01010 在逃中只在自己回合开始打出，当轮非精英不交
 })
 
 test('Core 01022 证据只在自己击败后发现线索，不在队友击败后响应',()=>{
-  const s=fixture('01005',2); s.investigators[0].hand=['01022']; s.investigators[1].hand=['01022']; const e=enemy(s,{health:1})
-  move(s,{action:'fight',enemyId:e.id}); answer(s,'done'); settle(s,c=>c.kind==='reaction'&&c.seat===0&&c.options.some(o=>o.cardCode==='01022')?'0':null)
+  const s=fixture('01005',2); s.humanSeats=[0,1]; s.investigators[0].hand=['01022']; s.investigators[1].hand=['01022']; const e=enemy(s,{health:1})
+  move(s,{action:'fight',enemyId:e.id}); answer(s,'done')
+  let teammateOffered=false
+  // 击败后的「本地点」窗口属于同地点的其他调查员，但「证据！」只响应「你击败」，
+  // 不能把 01022 列为该窗口的快速事件候选（修复前同地点窗口会把它错递给队友）。
+  settle(s,c=>{
+    if(c.kind==='reaction'&&c.seat===1&&c.options.some(o=>o.cardCode==='01022')) teammateOffered=true
+    return c.kind==='reaction'&&c.seat===0&&c.options.some(o=>o.cardCode==='01022')?'0':null
+  })
+  assert.equal(teammateOffered,false,'队友不应在本地点被击败后被询问「证据！」')
   assert.equal(s.investigators[0].clues,1); assert.deepEqual(s.investigators[1].hand,['01022'])
 })
 

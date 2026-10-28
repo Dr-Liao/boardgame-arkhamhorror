@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { fixture, enemy, move, settle, legalMoves, validateMove } from './core-fixture.mjs'
+import { fixture, enemy, move, settle, asset, legalMoves, validateMove } from './core-fixture.mjs'
 import { getStat, performTest } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
@@ -113,6 +113,25 @@ test('M2 ornate skull charges after a defeat and converts charges into cards', (
   settle(state)
   assert.equal(me(state).resources, 1)
   assert.equal(me(state).hand.length, 1)
+})
+
+test('M2 ornate skull charges from a teammate defeat at the same location (defeatAtLocation window)', () => {
+  const state = fixture('01001', 2)
+  state.humanSeats = [0, 1]
+  asset(state, '04026', {}, 1)
+  const victim = enemy(state, { id: 'skull-teammate-target', fight: 0, evade: 0, health: 1 })
+  state.chaosBag = ['0']
+  move(state, { action: 'fight', enemyId: victim.id })
+  settle(state, pending => {
+    if (pending.kind !== 'reaction' || pending.seat !== 1) return null
+    // 「本地点有敌人被击败」现在是独立的 defeatAtLocation 窗口，不再借用 defeatEnemy
+    // （后者属于击败者，会误把 selfOnly 快速事件/能力递给队友）。这里只在该窗口触发支援。
+    if (pending.source?.when !== 'defeatAtLocation') return null
+    return pending.options.find(option => option.cardCode === '04026')?.id ?? null
+  })
+  // 规则事务会克隆状态，拿到充能后要从当前状态重新取这张支援。
+  const skull = state.investigators[1].assets.find(item => item.code === '04026')
+  assert.equal(skull.uses, 1, '同地点队友击败敌人后，彩饰骷髅仍应通过 defeatAtLocation 窗口充能')
 })
 
 test('M2 lucky cigarette case draws after a strong investigate success', () => {
