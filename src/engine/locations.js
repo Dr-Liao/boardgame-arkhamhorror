@@ -79,6 +79,11 @@ export function linkLocationBySymbols(state, loc) {
   }
 }
 
+// 线索总账（各调查员线索之和）的唯一同步点；enemy-clues.js 等模块也直接 import 这里。
+export function syncClues(state) {
+  state.clues = state.investigators.reduce((sum, inv) => sum + inv.clues, 0)
+}
+
 export function createLocations(deps) {
   const {
     entityModifierTotal,
@@ -255,7 +260,9 @@ function revealLocation(state, id, events, seat = null) {
   }
 }
 
-function removeLocation(state, id, events) {
+// options.silent：只跳过「被移出游戏」日志（05125 地点交换用：旧地点的离场不是一次独立结算，
+// 日志由换入地点自己承担）。清理逻辑（附件/屏障/计数器/特性连线）不跳过，避免换地点时漏结算。
+function removeLocation(state, id, events, options = {}) {
   const i = state.locations.findIndex((l) => l.id === id)
   if (i >= 0) {
     // Phase 5（5a-32）：移出地点时的默认去向在卡号规则数据里。
@@ -279,15 +286,11 @@ function removeLocation(state, id, events) {
     discardBarricades(state, loc)
     // Phase 5（5a-14）：地点上的计数对应哪张遭遇卡在卡号规则数据里。
     state.encounterDiscard.push(...locationCounterTreacheries(loc))
-    info(state, events, `📍 「${loc.name}」被移出游戏。`)
+    if (!options.silent) info(state, events, `📍 「${loc.name}」被移出游戏。`)
     for (const inv of departing) scenarioBehavior(state).investigatorMovedByEncounterCard?.(state, inv, scenarioRuntime(state, events))
     // 地点移出后从特性连通网络里摘掉（只撤销规则自己加过的边）。
     locationTraits?.sync(state)
   }
-}
-
-function syncClues(state) {
-  state.clues = state.investigators.reduce((sum, inv) => sum + inv.clues, 0)
 }
 
 function placeCluesOnLocation(state, inv, amount, events) {

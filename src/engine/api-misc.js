@@ -10,6 +10,7 @@ import { currentRevelation, investigationFrameRef } from './resolution-scope.js'
 import { syncSpellCredit } from './spell-actions.js'
 import { setLocationShroudMod } from './location-attachments.js'
 import { loseResources as applyResourceLoss } from './resource-loss.js'
+import { ignoreLimitForRound } from './limits.js'
 
 export function createMiscApi(state, events, deps) {
   const {
@@ -487,6 +488,9 @@ export function createMiscApi(state, events, deps) {
     locationShroud: locationId => scenarioRuntime(state, events).locationShroud(locationId),
     revelationResolving: () => currentRevelation() != null || Boolean(state._treacheryResolving),
     cancelDoomPlacement: (card, amount = 1) => scenarioRuntime(state, events).cancelDoomPlacement(card, amount),
+    // 2026-10-28 P2-6（05005 丽塔·杨的旧印）：「直到本轮结束，忽略某条能力的限制」。
+    // 上限本身仍由引擎 limits.js 记账；忽略期间只在同一窗口实例内去重（见 limitUsed）。
+    ignoreLimitForRound: descriptorId => ignoreLimitForRound(state, descriptorId),
     // Phase 1（A1）：持续效果的唯一创建接口。修正与能力都从 state.effects 读，
     // 到期由引擎的统一过期点处理，内容层不需要（也不允许）自己记时间戳。
     addEffect: (record, ownerSeat = null) => createEffect(state, {
@@ -505,6 +509,10 @@ export function createMiscApi(state, events, deps) {
     addLocationTrait: (location, trait, options = {}) => locationTraits.add(state, location, trait, options),
     removeLocationTrait: (location, trait, options = {}) => locationTraits.remove(state, location, trait, options),
     grantedLocationTraits: location => locationTraits.granted(location),
+    // 2026-10-28 P2-6：地点交换 / 移出游戏（05125 探访巫宅的地点原语）。
+    // 与遭遇面 scenario-runtime 共用同一份实现（src/engine/location-swap.js），这里只是能力面入口。
+    swapLocation: (fromId, toId, options = {}) => scenarioRuntime(state, events).swapLocation(fromId, toId, options),
+    removeLocationFromGame: (id, options = {}) => scenarioRuntime(state, events).removeLocationFromGame(id, options),
     // 调查员获得特性（04085 伊格的诅咒「获得蛇族特性」）：写 inv.traits，读点 effectiveTraits / 投影。
     addInvestigatorTrait: (seat, trait) => {
       const owner = state.investigators[seat]

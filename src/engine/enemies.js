@@ -99,8 +99,8 @@ function enemyFightValue(state, enemy, inv) {
   // D1：敌人的战斗值修正来自它自己的卡面声明，或它所在地点的卡面声明
   // （「此处的每个蛇族敌人 +1」不再需要章节 behavior）。
   value += entityModifierTotal(state, enemy, 'enemyFight')
-  // 03100 王之法令：本轮每有 1 个线索/毁灭，攻击 +1。
-  if (enemy.kingsEdictRound === state.round) value += (enemy.clues || 0) + (enemy.doom || 0)
+  // 03100 王之法令一类的「本轮全局战斗修正」已由战役内容 enemyStatModifier 读条目数据结算
+  // （P2-6：不再用 enemy 实例上的单卡字段）。
   const reduction = enemy.fightReduction
   if (reduction && reduction.round === state.round && reduction.phase === state.phase) value = Math.max(0, value - (reduction.amount || 0))
   // 2026-10-25 第五轮：本回合/本轮的运行期战斗值修正（可带 floor）。

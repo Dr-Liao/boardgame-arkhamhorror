@@ -37,7 +37,7 @@
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
-      "sha256": "9d3130a29568333634630083fcb9d3f09249ddf12170ce1bae3ccc4eacb9d623"
+      "sha256": "ff3312b47e01b0aaff34963822d81eff53a306b632a52c810eb2d219513d08bb"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",

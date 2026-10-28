@@ -41,8 +41,8 @@
   "cycles01to05": 1340
  },
  "counts": {
-  "directStateWrite": 161,
-  "singleCardField": 8,
+  "directStateWrite": 152,
+  "singleCardField": 0,
   "reprintDuplicate": 5,
   "playConditionGap": 0,
   "testWrapper": 15,
@@ -93,17 +93,11 @@
    "03085",
    "03087",
    "03091",
-   "03096",
-   "03098",
-   "03099",
-   "03100",
    "03101",
    "03102",
    "03124",
    "03125",
    "03140",
-   "03144",
-   "03145",
    "03146",
    "03160",
    "03161",
@@ -151,7 +145,6 @@
    "04281",
    "04282",
    "04283",
-   "04289",
    "04293",
    "04302",
    "04303",
@@ -161,7 +154,6 @@
    "04345",
    "04346",
    "05004",
-   "05005",
    "05010",
    "05012",
    "05015",
@@ -188,7 +180,6 @@
    "05121",
    "05122",
    "05123",
-   "05125",
    "05126",
    "05129",
    "05130",
@@ -222,40 +213,7 @@
   "playConditionGap": []
  },
  "watch": {
-  "singleCardField": [
-   {
-    "field": "enemy.kingsEdictRound",
-    "code": "03100"
-   },
-   {
-    "field": "enemy.puppetFightBonuses",
-    "code": "03096"
-   },
-   {
-    "field": "inv.ritaEvadeRound",
-    "code": "05005"
-   },
-   {
-    "field": "inv.ritaEvadeUses",
-    "code": "05005"
-   },
-   {
-    "field": "inv.ritaIgnoreLimitRound",
-    "code": "05005"
-   },
-   {
-    "field": "inv.tfaPrecipiceResuming",
-    "code": "04289"
-   },
-   {
-    "field": "inv.tfaPrecipiceStage",
-    "code": "04289"
-   },
-   {
-    "field": "state.locations",
-    "code": "05125"
-   }
-  ],
+  "singleCardField": [],
   "testWrapperCodes": [
    "01167",
    "01173",
@@ -324,13 +282,6 @@
   ]
  },
  "fields": {
-  "enemy.clues": [
-   "03098",
-   "03099",
-   "03100",
-   "03144",
-   "03145"
-  ],
   "enemy.damageTaken": [
    "02280",
    "03140",
@@ -342,7 +293,6 @@
    "02082",
    "02330",
    "03140",
-   "03144",
    "03146"
   ],
   "enemy.engagedSeat": [
@@ -366,21 +316,14 @@
    "02259",
    "02314"
   ],
-  "enemy.kingsEdictRound": [
-   "03100"
-  ],
   "enemy.preventReady": [
    "05086",
    "05113"
   ],
-  "enemy.puppetFightBonuses": [
-   "03096"
-  ],
   "inv.actionsLeft": [
    "02135",
    "03085",
-   "04222",
-   "04289"
+   "04222"
   ],
   "inv.beneath": [
    "05004",
@@ -464,21 +407,6 @@
    "05058",
    "05059"
   ],
-  "inv.ritaEvadeRound": [
-   "05005"
-  ],
-  "inv.ritaEvadeUses": [
-   "05005"
-  ],
-  "inv.ritaIgnoreLimitRound": [
-   "05005"
-  ],
-  "inv.tfaPrecipiceResuming": [
-   "04289"
-  ],
-  "inv.tfaPrecipiceStage": [
-   "04289"
-  ],
   "inv.weaknessCounters": [
    "04040",
    "04041"
@@ -540,7 +468,6 @@
    "05099",
    "05121",
    "05122",
-   "05125",
    "05126",
    "05129",
    "05133",
@@ -566,7 +493,6 @@
    "05116",
    "05121",
    "05122",
-   "05125",
    "05126",
    "05129",
    "05133",
@@ -578,8 +504,7 @@
    "03244",
    "04047",
    "05086",
-   "05123",
-   "05125"
+   "05123"
   ],
   "state.exiled": [
    "05196",
@@ -598,9 +523,6 @@
    "04319",
    "04345"
   ],
-  "state.locations": [
-   "05125"
-  ],
   "state.relicOfAges": [
    "04122b",
    "04319",
@@ -612,7 +534,6 @@
    "05236"
   ],
   "state.scenarioFlags": [
-   "03100",
    "03101",
    "03215",
    "03218",
@@ -632,7 +553,6 @@
    "05060",
    "05090",
    "05123",
-   "05125",
    "05130",
    "05132",
    "05134",

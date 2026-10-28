@@ -182,17 +182,22 @@ export function createCampaignPlugin(deps) {
     return state.explorationDeck.length
   }
 
-  function doExplore(state, seat, events) {
+  // options.resumed（2026-10-28 P2-6 · 04289 岌岌可危的悬崖）：同一次探索的续算。
+  // 检定链在 beforeExplore 里异步结算完后，由地点规则调用 api.resumeExplore 回到这里继续
+  // 放置/移动；此时行动已在首次尝试时支付、beforeExplore 也只应跑一次。
+  function doExplore(state, seat, events, options = {}) {
     const inv = state.investigators[seat]
     if (!inv || inv.defeated || inv.resigned) return
     if (!state.explorationDeck?.length) {
       info(state, events, '🧭 探索牌库已经空了。')
       return
     }
-    payActionCost(state, inv, 'explore', events)
-    // 剧本可以在探索开始前拦截（如「索桥」要求先检定，失败则取消本次探索）。
-    const blocked = scenarioBehavior(state).beforeExplore?.(state, inv, scenarioRuntime(state, events))
-    if (blocked === false) return
+    if (!options.resumed) {
+      payActionCost(state, inv, 'explore', events)
+      // 剧本可以在探索开始前拦截（如「索桥」要求先检定，失败则取消本次探索）。
+      const blocked = scenarioBehavior(state).beforeExplore?.(state, inv, scenarioRuntime(state, events))
+      if (blocked === false) return
+    }
     if (!state.explorationDeck?.length) {
       info(state, events, '🧭 探索牌库已经空了。')
       return

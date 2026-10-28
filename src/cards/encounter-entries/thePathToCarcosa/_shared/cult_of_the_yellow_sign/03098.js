@@ -7,7 +7,7 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { chooseEntryOption, flipEnemyCluesToDoom } from '../../../_shared.js'
+import { chooseEntryOption } from '../../../_shared.js'
 
 export default {
   code: '03098', scope: 'enemy', implemented: true,
@@ -22,18 +22,13 @@ export default {
       }, revealed.filter(location => (location.clues || 0) === most))?.id || null
     },
     onSpawn(state, enemy, api) {
-      const location = state.locations.find(candidate => candidate.id === enemy.location)
-      if (location?.clues > 0) {
-        location.clues--
-        enemy.clues = (enemy.clues || 0) + 1
-        flipEnemyCluesToDoom(state, enemy)
-      }
+      api.moveClueToEnemy(enemy)
     },
     onDefeated(state, enemy, api) {
       if (!enemy.clues) return false
+      const clues = api.clearCluesOnEnemy(enemy)
       const inv = state.investigators[enemy.defeatedBy]
-      if (inv) api.gainClues(inv.seat, enemy.clues)
-      enemy.clues = 0
+      if (inv) api.gainClues(inv.seat, clues)
       return false
     },
   },

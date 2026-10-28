@@ -1,5 +1,5 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
-import { encounterResolveCampaignsFor, encounterResolveFor, enemyScriptFor, entryFlags, locationRuleFor, treacheryRuleFor, resolveDeclarativeTreacheryTest, treacheryTestFor } from '../../../src/cards/card-rules.js'
+import { encounterResolveCampaignsFor, encounterResolveFor, enemyScriptFor, enemyStatRuleFor, entryFlags, locationRuleFor, treacheryRuleFor, resolveDeclarativeTreacheryTest, treacheryTestFor } from '../../../src/cards/card-rules.js'
 
 const original = card => card?.originalCode || card?.code
 const active = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
@@ -69,10 +69,16 @@ export const encounterRules = {
   },
   // 03103 蟑螂群 / 03222 潜行的拜亚基 / 03096 哈斯塔的傀儡的战斗修正已迁到
   // src/cards/encounter-abilities.js 的对应敌人条目；本章只保留「国王敕令」的全局规则。
+  // P2-6（2026-10-28）：03100 的数据在条目 `enemyStatRule.kingsEdict`，这里只读数据 + 轮次标记，
+  // 不再写 `enemy.kingsEdictRound` 实例字段（旧存档里由旧卡写入的轮次标记仍可结算）。
   enemyStatModifier(state, enemy, stat) {
-    if (stat === 'fight' && state.scenarioFlags?.kingsEdict
-      && traits(enemy).includes('cultist')) return (enemy.clues || 0) + (enemy.doom || 0)
-    return 0
+    if (state.scenarioFlags?.kingsEdictRound !== state.round) return 0
+    const edict = enemyStatRuleFor('03100')?.kingsEdict
+    if (!edict || stat !== edict.stat) return 0
+    const traitsOfEnemy = traits(enemy)
+    if (edict.trait && !traitsOfEnemy.includes(String(edict.trait).toLowerCase())) return 0
+    const amount = Number(edict.amount) || 0
+    return (edict.perMarkers || []).reduce((sum, marker) => sum + (Number(enemy[marker]) || 0) * amount, 0)
   },
   // 03187「疯狂礼物（悲惨）」：隐私卡在场时不能触发地点上的 [action] 能力。
   // 引擎只拦了 `loc.ability` 通道；地点条目自己推出的 scenarioAction 也在这里拦下。
@@ -106,11 +112,6 @@ export const encounterRules = {
   },
   enemySpawned(state, enemy, api) {
     enemyScriptFor(original(enemy))?.onSpawn?.(state, enemy, api)
-    // 03100「王之法令」：本轮入场较晚的异教徒也要吃到 +1 攻击的持续修正
-    // （引擎按 enemy.kingsEdictRound === state.round 读）。
-    if (state.scenarioFlags?.kingsEdictRound === state.round && traits(enemy).includes('cultist')) {
-      enemy.kingsEdictRound = state.round
-    }
   },
   enemyDefeated(state, enemy, api) {
     const script = enemyScriptFor(original(enemy))
@@ -300,7 +301,7 @@ export const encounterRules = {
         state.encounterDiscard.push('03262')
       }
     }
-    delete state.scenarioFlags?.kingsEdict
+    // 03100 王之法令的轮次标记：本轮结束即失效（战斗修正读点见 enemyStatModifier）。
     delete state.scenarioFlags?.kingsEdictRound
   },
 }

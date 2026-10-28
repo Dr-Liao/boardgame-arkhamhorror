@@ -22,7 +22,7 @@
     "investigator": 20,
     "player": 95,
     "campaign": 268,
-    "testsPassed": 421
+    "testsPassed": 424
   },
   "testFiles": [
     {
@@ -35,7 +35,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-campaign-card-acceptance.test.mjs",
-      "sha256": "2b0d8cc31e0bca567c01f6480ad14d3a8cf5fa6438d75f2270d19d99353843cb"
+      "sha256": "7802f760d00e0b9bc3db302a44136721fccc52da2f74c34d2990930b9a383edc"
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-literal-behavior.test.mjs",

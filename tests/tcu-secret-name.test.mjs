@@ -146,6 +146,61 @@ function apiStub(state, overrides = {}) {
       const index = state.locations.findIndex(location => location.id === id)
       if (index >= 0) state.locations.splice(index, 1)
     },
+    // 05125 地点原语（实现见 src/engine/location-swap.js；这里是与引擎语义一致的最小替身）。
+    swapLocation: (fromId, toId, options = {}) => {
+      const from = state.locations.find(location => location.id === fromId)
+      const base = state.scenario.locations[toId]
+      if (!from || !base || fromId === toId || state.locations.some(location => location.id === toId)) return null
+      const printed = base.cluesFixed ?? (base.cluesPerInvestigator || 0) * state.numInvestigators
+      const location = {
+        ...clone(base), id: toId,
+        revealed: options.reveal === 'revealed' ? true : options.reveal === 'unrevealed' ? false : from.revealed === true,
+        clues: from.clues || 0, doom: from.doom || 0,
+        maxClues: Math.max(printed, from.clues || 0),
+      }
+      if (from.attachments) { location.attachments = [...from.attachments]; from.attachments = [] }
+      state.locations.push(location)
+      for (const attachment of state.playerLocationAttachments || []) {
+        if (attachment.location === fromId) attachment.location = toId
+      }
+      const code = String(location.originalCode || location.code || '')
+      const setAside = state.scenarioZones?.setAside
+      if (Array.isArray(setAside)) {
+        const index = setAside.indexOf(code)
+        if (index >= 0) setAside.splice(index, 1)
+      }
+      for (const enemy of state.enemies) if (enemy.location === fromId) enemy.location = toId
+      for (const inv of state.investigators) if (inv.location === fromId) inv.location = toId
+      state.locations = state.locations.filter(item => item !== from)
+      return location
+    },
+    removeLocationFromGame: id => {
+      const index = state.locations.findIndex(location => location.id === id)
+      if (index < 0) return null
+      const [location] = state.locations.splice(index, 1)
+      for (const enemy of [...state.enemies]) {
+        if (enemy.location !== id) continue
+        state.enemies = state.enemies.filter(candidate => candidate !== enemy)
+        state.encounterDiscard.push(String(codeOf(enemy)))
+      }
+      return location
+    },
+    takeFromSetAside: code => {
+      const list = state.scenarioZones?.setAside || []
+      const index = list.indexOf(code)
+      if (index < 0) return false
+      list.splice(index, 1)
+      return true
+    },
+    shuffleIntoEncounterDeck: codes => {
+      for (const code of (Array.isArray(codes) ? codes : [codes])) state.encounterDeck.push(code)
+    },
+    setScenarioFlag: (key, value = true) => {
+      state.scenarioFlags ||= {}
+      if (value === undefined || value === null) delete state.scenarioFlags[key]
+      else state.scenarioFlags[key] = value
+      return state.scenarioFlags[key] ?? null
+    },
     moveInvestigator: (seat, destination) => { state.investigators[seat].location = destination },
     moveEnemy: (enemy, destination) => { enemy.location = destination },
     giveAsset: (seat, code) => { state.investigators[seat].assets.push({ id: `asset-${code}`, code }) },
@@ -287,6 +342,8 @@ test('印刷符号图与揭示面：破旧房门揭示后换符号；未知地�
 // ---------------------------------------------------------------------------
 test('act1 背面：换成凯夏的房间（带上标记/卡牌）、移除其他地点、黑书归属、洗入 2 张古怪图形', () => {
   const state = setup(stateFor(2), 23)
+  // 幕目标要求所有未击败调查员都在沃尔特·吉尔曼的房间；先摆到合法状态再做背面结算。
+  for (const inv of state.investigators) inv.location = 'walterGilmansRoom'
   state.encounterDeck = []
   const walter = loc(state, 'walterGilmansRoom')
   walter.clues = 2
@@ -300,19 +357,28 @@ test('act1 背面：换成凯夏的房间（带上标记/卡牌）、移除其�
   act1.actRule.onReveal(state, state.acts[0], api)
   assert.deepEqual(state.locations.map(location => location.id), ['keziahsRoom'])
   assert.ok(state.investigators.every(inv => inv.location === 'keziahsRoom'))
-  // swapLocation：原地点上的 token 与卡牌一起带到新地点。
+  // swapLocation：原地点上的 token 与卡牌一起带到新地点（揭示状态保留，附属移动而非复制）。
+  assert.equal(loc(state, 'keziahsRoom').revealed, true)
   assert.equal(loc(state, 'keziahsRoom').clues, 2)
+  assert.equal(loc(state, 'keziahsRoom').maxClues, 2)
   assert.equal(loc(state, 'keziahsRoom').doom, 1)
   assert.deepEqual(loc(state, 'keziahsRoom').attachments, ['05093'])
+  assert.equal(loc(state, 'keziahsRoom').spectral, true)
+  assert.ok(Array.isArray(loc(state, 'keziahsRoom').haunted), '凯夏的房间保留定义里的闹鬼数据')
   assert.equal(state.playerLocationAttachments[0].location, 'keziahsRoom')
-  // 原地点上的敌人搬到新地点；其他被移除地点上的敌人弃到遭遇弃牌堆。
+  // 原地点上的敌人搬到新地点；其他被移除地点上的敌人弃到遭遇弃牌堆（不留在 state.enemies）。
   assert.equal(atWalter.location, 'keziahsRoom')
   assert.equal(state.enemies.includes(atMoldy), false)
   assert.ok(state.encounterDiscard.includes('05090'))
+  // 换地点后旧地点不在场，新地点卡号从「放一边」取走。
+  assert.equal(loc(state, 'walterGilmansRoom'), undefined)
+  assert.equal(state.scenarioZones.setAside.includes('05133'), false)
   const owner = state.investigators.find(inv => (inv.assets || []).some(asset => codeOf(asset) === THE_BLACK_BOOK))
   assert.ok(owner, '有调查员控制了黑书')
+  assert.equal(state.scenarioFlags.blackBookSeat, owner.seat)
   assert.equal(state.encounterDeck.filter(code => code === STRANGE_GEOMETRY).length, 2)
   assert.equal(state.scenarioZones.setAside.includes(THE_BLACK_BOOK), false)
+  assert.equal(state.scenarioZones.setAside.filter(code => code === STRANGE_GEOMETRY).length, 0)
 })
 
 test('act1/act2 团队线索推进：满足条件时出现脚本行动并支付推进', () => {

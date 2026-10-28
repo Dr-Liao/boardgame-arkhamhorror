@@ -430,7 +430,11 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 | 谈判 Parley | 敌人/地点/剧情资产在条目里声明 `kind:'action'` + `actionKind:'parley'`（读点 `src/engine/parley.js`；行动点/借机攻击豁免/目标校验由引擎统一处理） | 4 张敌人谈判已迁（03093 / 03258 / 05095 / 05096）；剧情资产的 `assetRule.parley` 是旧声明，保留兼容 |
 | 撤退 | 地点定义 `resign: true`（引擎 `moves.js` 统一列项、`doResign` 结算）；带前置效果（转线索/查补给）的卡才写 `locationRule.actions` | 多数地点已用定义声明；4 张带前置效果的卡留在 `locationRule.actions`（golden 录像锁定，未改） |
 | 敌人光环 / 攻击随密谋 | 条目 `enemyStatRule: { aura: { stat, amount, trait, readyOnly } }` / `{ skillAura: { amount, locationBound } }` / `{ fightPerAgenda: true }` / `{ fightPerMarker: { label } }` / `{ boostUntilRound: { key, stats, amount } }`（读点 TCU `encounter-rules.enemyStatModifier` / `statModifier`）；生成地点用 `enemySpawnRule.spawnAtFirstInvestigator`，持续增益写 `api.boostEnemyUntil`，入场/移动放裂口用 `breachOnEnter` | 05148 / 05149 / 05266 / 05267 / 05086 / 05311 已迁；章节不再按卡号算战斗/技能修正或写生成分支 |
-| 本轮/本阶段标记 | `api.evadeDamageInstead`、`api.lockLocationThisRound`、`api.markHunterMoved`、`api.skipEnemyAttackThisRound` | 05016 / 03256 / 03183 / 03086 已迁；卡里不再写 `*Round` 字段 |
+| 场景级敌人数值修正（本轮内后入场也生效） | 条目声明 `enemyStatRule.<key>: { stat, trait, perMarkers, amount }`（读点：战役 `encounter-rules.enemyStatModifier` 用 `enemyStatRuleFor(code)` 读数据 + 轮次标记，例如 `scenarioFlags.kingsEdictRound`）；修正按轮次现算，不写敌人实例快照字段 | 03100 已迁；不写 `enemy.kingsEdictRound` 这类单卡字段 |
+| 敌人身上的线索 | `api.moveClueToEnemy(enemy, { from: 'location' \| 'investigator', seat })`（`src/engine/enemy-clues.js`：线索来源只能是敌人所在地点或调查员线索池，含「往事回声」议程 `clueToDoom` 的翻毁灭面）、`api.clearCluesOnEnemy(enemy)`（击败时控制其所有线索） | 03098 / 03099 / 03100 / 03144 / 03145 已迁；卡里不写 `enemy.clues` / `location.clues` |
+| 地点交换 / 移出游戏 / 放一边 / 洗入遭遇牌库 | `api.swapLocation(fromId, toId, options)`（`src/engine/location-swap.js`：保留 revealed/token/附属，敌人/调查员随地点迁移，旧地点静默离场）、`api.removeLocationFromGame(id)`（离场地点上的敌人进遭遇弃牌堆）、`api.takeFromSetAside(code)`、`api.shuffleIntoEncounterDeck(codes)` | 05125 已迁；卡里不写 `state.locations` / 不手写地点实例字段 |
+| 探索前检定链 → 恢复同一次探索 | `beforeExplore` 启动 `api.test` 链并返回 false（本次探索先暂停；行动已在引擎支付）；任一成功在回调里 `api.resumeExplore(seat)` 继续同一次探索，全失败用 `api.defeat(inv, 'killed')`（引擎统一写阵亡与战役记录）。引擎侧 `doExplore(state, seat, events, { resumed: true })` 跳过重复扣费与 `beforeExplore` | 04289 已迁；卡里不写 `inv.*Resuming` / `inv.*Stage` 这类过渡字段 |
+| 本轮/本阶段标记 | `api.evadeDamageInstead`、`api.lockLocationThisRound`、`api.markHunterMoved`、`api.skipEnemyAttackThisRound`；敌人数值增益用 `api.addEnemyStatModifier(enemy, { fight: 3 }, { until: 'endOfRound' \| 'endOfTurn' \| 'endOfPhase' \| 'investigationEnd' })` | 05016 / 03256 / 03183 / 03086 / 03096 已迁；卡里不再写 `*Round` 字段 |
 | 牌堆 / 连接 / 幕指针 | `api.connectLocations`、`api.setActIndex`、`api.discardHandOfTypes`、`api.shuffleDiscardWeaknessesIntoDeck`、`api.grantExtraActionNextTurn`、`api.setBaseSkillValue` | 05136 / 03203 / 02101 / 02296 / 05049 / 05281 已迁 |
 | 探索牌库 / 战役记录 / 威胁区 | `api.takeExplorationTop`、`api.addExplorationTop`、`api.discardExploration`、`api.shuffleExploration`、`api.campaignRecord`、`api.setCampaignRecord`、`api.clearHunchRevealed`、`api.removeThreat` | 04060 / 05134 / 05010 / 02084 已迁；卡里不写 `state.explorationDeck` / `state.campaign.records` / `inv.threat` |
 | 敌人实例 / 密谋附属 | `api.setEnemyPreySeat`、`api.setEnemyResources`、`api.recordEnemyDamageSource`、`api.attachToAgenda`、`api.addAgendaDoomThreshold`、`api.moveInvestigator` / `api.moveEnemy` | 05100 / 04055 / 05103 / 04146 / 02064 已迁 |
@@ -439,6 +443,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 | 打出处置 / 压牌 / 冷漠 | `api.shufflePlayedCardBack`、`api.deferCardBeneath`、`api.grantHidingSpotAloof`、`api.clearEnemyAloof` | 04010 / 05004 / 03038 / 02063 已迁 |
 | 打出时选择升级 | `beforePlayCost` 窗口写 `context.playUpgrades` + `context.costIncrease`；`played` 读 `context.playCost.playUpgrades`（引擎在 `doPlay` 里把支付窗口上下文传下去） | 05111 / 05234 / 05277 已迁；不写 `inv.playUpgrades05xxx` |
 | 回合结束强制 | 威胁区条目 `treacheryRule.turnEnd: { kind: 'horrorIfNotMoved' \| 'discardEncounterTop', amount }`（读点 TCU `encounter-rules.turnEnded`） | 05146 / 05147 已迁；章节不再维护 `threatTurnEnd` 映射 |
+| 每轮一次 / 临时忽略限制 | 「每轮仅限一次」用描述子 `limit: { scope: 'perRound', owner: 'player' }` 走引擎上限账本（读点 `limits.js`）；「直到本轮结束忽略该能力限制」用 `api.ignoreLimitForRound('<描述子 id>')`（忽略期间同一窗口实例内仍只结算一次，跨续算/存档稳定） | 05005 已迁；卡里不写 `inv.<卡名>Round` / `inv.<卡名>Uses` 这类私有账本 |
 | 只能在你回合打出 | `playCondition: [ownTurn()]` | 已清零（7 张本轮补齐，R3 只防新增） |
 | 每场游戏一次 / 每阶段一次 | `limit` / `teamOnce()` | 已统一 |
 | 重印卡 | 一个文件实现 + `card-identity.js` 别名 | 5 对双实现（R2 阻断；需先统一快速事件/反应窗口通道，见报告 §九 P2-4） |
@@ -483,7 +488,7 @@ node tools/replay-fixtures.mjs --compare artifacts/…    # 行为改动时
 | 卡规则搬进章节 | `05269.js` 只有 `note`，规则在 `scenarios/unionAndDisillusion/behavior.js` 的 `resolveEncounter` / `beforeHarm` | 规则回卡条目；章节只保留跨卡流程 |
 | 声明了没人读（已修） | `02221.js` 的 `treacheryRule: { song: true }` 没有读取方 | 已换成 `harmInterceptor`（读点 `enemies.js`）；新字段必须同时有读点 + 测试 |
 | 回合限制漏声明 | `01037` 等 7 张写了「只能在你回合打出」却没 `playCondition` | `playCondition: [ownTurn()]` |
-| 单卡私有状态 | `05005` 的 `inv.ritaEvadeRound`、`02089` 的 `location.sordidAndSilent` | 先提原语；确属一次性再登记 `escape` |
+| 单卡私有状态 | `05005` 的 `inv.ritaEvadeRound`（已修，保留为历史反例）、`02089` 的 `location.sordidAndSilent` | 先提原语；确属一次性再登记 `escape` |
 
 ### 4.7 第 6 步：测试与验收
 

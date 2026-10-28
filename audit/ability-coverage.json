@@ -11,7 +11,7 @@
     "abilityKinds": 12,
     "windows": 74,
     "effectPrimitives": 56,
-    "nonPlayerCards": 30,
+    "nonPlayerCards": 29,
     "behaviorLines": 23373,
     "declaredScenarios": 3
   },
@@ -21,13 +21,12 @@
   },
   "nonPlayer": {
     "byScope": {
-      "enemy": 19,
+      "enemy": 18,
       "location": 6,
       "storyAsset": 5
     },
     "codes": [
       "03093",
-      "03096",
       "03103",
       "03137",
       "03183",
@@ -58,7 +57,7 @@
       "youngDeepOne"
     ],
     "abilities": 14,
-    "modifiers": 27
+    "modifiers": 26
   },
   "declaration": {
     "abilityScopes": [

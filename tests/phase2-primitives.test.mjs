@@ -39,6 +39,7 @@ import { createEffect } from '../src/engine/effect-state.js'
 import { COST_EXPRESSION_KEYS, PER_SOURCES, describeCost, evaluateCost, normalizeCostValues, validateCostValue } from '../src/engine/cost.js'
 import {
   LIMIT_OWNERS, LIMIT_SCOPES, LEGACY_LIMIT_NAMES, describeLimit, limitUsed, markLimitUsed, normalizeLimit,
+  ignoreLimitForRound, limitIgnored,
 } from '../src/engine/limits.js'
 import { LOOK_ZONES, RETURN_STRATEGIES, describeLook, normalizeLookOptions, normalizeSearchOptions } from '../src/engine/look.js'
 import { CARD_DESTINATIONS, describeCardMove, normalizeCardMove, normalizeDestination } from '../src/engine/zones.js'
@@ -278,6 +279,36 @@ test('C4 记账：不同归属各自独立，用完后 limitUsed 生效', () => 
   const perInstance = { id: 'x#1', code: '01586', limit: normalizeLimit({ scope: 'perTurn', owner: 'instance', count: 1 }) }
   markLimitUsed(s, inv, perInstance, null, null, first)
   assert.equal(limitUsed(s, inv, perInstance, null, null, second), false, '按实例记账时副本各算各的')
+})
+
+test('C4 忽略上限：ignoreLimitForRound 本轮放开，但同一窗口实例内仍只一次', () => {
+  const s = fixture()
+  const inv = s.investigators[0]
+  const descriptor = { id: 'ritaEvadeReaction', code: '05005', limit: normalizeLimit({ scope: 'perRound', owner: 'player' }) }
+  s.round = 3
+  s.moveCount = 10
+  // 两次躲避 = 两个窗口实例：窗口名相同，用窗口主体（敌人）区分。
+  const windowA = [{ enemy: { id: 'e1' } }, 'evadeSuccess']
+  const windowB = [{ enemy: { id: 'e2' } }, 'evadeSuccess']
+  assert.equal(limitUsed(s, inv, descriptor, ...windowA), false)
+  markLimitUsed(s, inv, descriptor, ...windowA)
+  assert.equal(limitUsed(s, inv, descriptor, ...windowA), true, '本轮用过后上限生效')
+  assert.equal(limitIgnored(s, descriptor), false)
+
+  assert.equal(ignoreLimitForRound(s, 'ritaEvadeReaction'), true)
+  assert.equal(limitIgnored(s, descriptor), true, '旧印写入「本轮忽略」')
+  assert.equal(limitUsed(s, inv, descriptor, ...windowA), true, '同一窗口实例内仍然只结算一次')
+  assert.equal(limitUsed(s, inv, descriptor, ...windowB), false, '新的触发窗口放开')
+  markLimitUsed(s, inv, descriptor, ...windowB)
+  assert.equal(limitUsed(s, inv, descriptor, ...windowB), true, '新窗口用过后只挡本窗口')
+
+  // 轮次前进后忽略开关自动失效，恢复每轮一次。
+  s.round = 4
+  assert.equal(limitIgnored(s, descriptor), false, '上一轮的忽略不跨轮')
+  assert.equal(limitUsed(s, inv, descriptor, ...windowA), false, '新一轮的上限账本重新可用')
+  markLimitUsed(s, inv, descriptor, ...windowA)
+  assert.equal(limitUsed(s, inv, descriptor, ...windowA), true, '新一轮用过后照常生效')
+  assert.equal(ignoreLimitForRound(s, ''), false, '空描述子 id 不记账')
 })
 
 // ---------------------------------------------------------------------------

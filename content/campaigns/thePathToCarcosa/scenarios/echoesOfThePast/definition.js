@@ -60,7 +60,7 @@ export const scenario = {
   agendas: stages(['03121', '03122', '03123'], 'agenda').map(agenda => ({
     ...agenda,
     reveal: { type: 'campaignRule' },
-    // 卡面强制效果：有线索放到敌人身上后翻成毁灭面（见 _shared.flipEnemyCluesToDoom）。
+    // 卡面强制效果：有线索放到敌人身上后翻成毁灭面（读点：引擎原语 moveClueToEnemy）。
     clueToDoom: true,
   })),
   ...definitions,

@@ -31,7 +31,7 @@ test('C4 全卡账本逐条驱动383条03循环记录的“已验收”标记', 
     investigator: 20,
     player: 95,
     campaign: 268,
-    testsPassed: 421,
+    testsPassed: 424,
   })
 
   for (const entry of ledger.entries) {

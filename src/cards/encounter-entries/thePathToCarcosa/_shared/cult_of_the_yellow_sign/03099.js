@@ -8,22 +8,18 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { flipEnemyCluesToDoom } from '../../../_shared.js'
-
 export default {
   code: '03099', implemented: true, scope: 'enemy', enemyRule: { prey: 'mostClues' },
   enemyScript: {
     onAttackResolved(state, enemy, inv, api) {
-      if (inv.clues < 1) return
-      api.spendClues(inv.seat, 1)
-      enemy.clues = (enemy.clues || 0) + 1
-      flipEnemyCluesToDoom(state, enemy)
+      // 来源是自己的线索池；原语同时负责线索翻毁灭面与 state.clues 总账。
+      api.moveClueToEnemy(enemy, { from: 'investigator', seat: inv.seat })
     },
     onDefeated(state, enemy, api) {
       if (!enemy.clues) return false
+      const clues = api.clearCluesOnEnemy(enemy)
       const inv = state.investigators[enemy.defeatedBy]
-      if (inv) api.gainClues(inv.seat, enemy.clues)
-      enemy.clues = 0
+      if (inv) api.gainClues(inv.seat, clues)
       return false
     },
   },

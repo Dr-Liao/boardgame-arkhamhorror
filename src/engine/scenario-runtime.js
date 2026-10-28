@@ -17,6 +17,10 @@ import { LOCATION_FLAGS as LOCATION_FLAG_KEYS,
   addBreach, breachOf, breachTotal, locationFlagOf, locationSkullValue, removeBreach, setLocationFlag,
 } from './location-state.js'
 import { loseResources as applyResourceLoss } from './resource-loss.js'
+import { clearCluesOnEnemy, moveClueToEnemy } from './enemy-clues.js'
+import { ignoreLimitForRound } from './limits.js'
+// 2026-10-28 P2-6：地点交换 / 移出游戏原语（05125 收口；实现与依赖注入见 location-swap.js）。
+import { removeLocationFromGame, swapLocationInPlay } from './location-swap.js'
 
 export function createScenarioRuntime(deps) {
   const {
@@ -230,6 +234,32 @@ function scenarioRuntime(state, events, testSource = null) {
     place: id => placeLocation(state, id, events),
     reveal: id => revealLocation(state, id, events),
     remove: id => removeLocation(state, id, events),
+    // 2026-10-28 P2-6：地点交换 / 移出游戏（05125 探访巫宅）。旧地点上的线索/毁灭/地点附属/
+    // 玩家地点附属/敌人/调查员迁移语义由原语统一处理，卡条目不再写 state.locations。
+    swapLocation: (fromId, toId, options = {}) => swapLocationInPlay(state, events, fromId, toId, options, {
+      placeLocation, removeLocation, relocateInvestigator, relocateEnemy,
+    }),
+    removeLocationFromGame: (id, options = {}) => removeLocationFromGame(state, events, id, options, {
+      removeLocation, discardEnemyCard,
+    }),
+    // 「放进遭遇牌库并洗牌」：把牌洗回遭遇牌库（地点 / 诡计卡通用模板）。
+    // 逐字等价于「encounterDeck.push(...codes) 后 api.shuffleEncounterDeck()」：只消耗一次洗牌随机。
+    shuffleIntoEncounterDeck: (codes, options = {}) => {
+      const list = Array.isArray(codes) ? codes.filter(Boolean) : [codes].filter(Boolean)
+      if (!list.length) return (state.encounterDeck || []).length
+      state.encounterDeck = [...(state.encounterDeck || []), ...list]
+      if (options.shuffle !== false) state.encounterDeck = shuffle(state.encounterDeck, () => randomValue(state))
+      return state.encounterDeck.length
+    },
+    // 场景区「放一边」取卡（地点入场 / 洗入遭遇牌库；同类写法散落在多张循环卡里）。
+    takeFromSetAside: code => {
+      const setAside = state.scenarioZones?.setAside
+      if (!Array.isArray(setAside)) return false
+      const index = setAside.indexOf(String(code))
+      if (index < 0) return false
+      setAside.splice(index, 1)
+      return true
+    },
     spawn: (code, location) => spawnEnemy(state, code, location, null, true),
     spawnEngaged: (code, location, seat) => spawnEnemy(state, code, location, seat),
     // 从玩家牌/无目录数据生成的敌人（04331 飞天水螅：把牌库顶的牌视为敌人）。
@@ -349,6 +379,13 @@ function scenarioRuntime(state, events, testSource = null) {
     discardUntilEnemy: (seat, predicate) => discardUntilEnemyFromEncounter(state, seat, predicate, events),
     discardAnyEnemy: () => discardUntilEnemy(state, events),
     clueRemoved: (loc, n) => notifyCluesRemoved(state, loc, n, events),
+    // 敌人身上的线索（03098 / 03099 / 03100 / 03144 / 03145）：唯一写入口。
+    // from: 'location'（默认，敌人所在地点）| 'investigator'（该座位的线索池）。
+    // 「往事回声」议程的 clueToDoom 翻面由原语统一处理，条目不再 import 条目辅助函数。
+    moveClueToEnemy: (enemy, options = {}) => moveClueToEnemy(state, enemy, options),
+    clearCluesOnEnemy: enemy => clearCluesOnEnemy(enemy),
+    // 「直到本轮结束，忽略某条能力的限制」（与玩家面同一实现，见 api-misc）。
+    ignoreLimitForRound: descriptorId => ignoreLimitForRound(state, descriptorId),
     finish: key => finishScenario(state, key, events),
     resign: seat => doResign(state, seat, events),
     advanceAct: () => advanceAct(state, events),
@@ -590,7 +627,9 @@ function scenarioRuntime(state, events, testSource = null) {
       return removed
     },
     // 2026-10-25 第五轮修复（05321/05157）：敌人运行期数值修正（fight/evade/health，可带 floor；
-    // until: 'endOfRound' | 'endOfTurn' | 'endOfPhase'）。
+    // until: 'endOfRound' | 'endOfTurn' | 'endOfPhase' | 'investigationEnd'）。
+    // 'investigationEnd'（2026-10-28 P2-6，03096 哈斯塔的傀儡）：本轮调查阶段结束。
+    // 在调查阶段内即当前轮；神话/敌人/维持阶段交战则顺延到下一轮的调查阶段。
     addEnemyStatModifier: (enemy, mods = {}, options = {}) => {
       if (!enemy) return null
       enemy.statMods ||= []
@@ -598,6 +637,10 @@ function scenarioRuntime(state, events, testSource = null) {
       if (options.until === 'endOfRound') until.round = state.round
       else if (options.until === 'endOfTurn') until.turnSerial = state.turnSerial
       else if (options.until === 'endOfPhase') { until.round = state.round; until.phase = state.phase }
+      else if (options.until === 'investigationEnd') {
+        until.round = state.round + (['enemy', 'upkeep'].includes(state.phase) ? 1 : 0)
+        until.phase = 'investigation'
+      }
       const entry = { until }
       for (const key of ['fight', 'evade', 'health']) {
         if (Number.isFinite(mods[key])) entry[key] = mods[key]
@@ -751,6 +794,9 @@ function scenarioRuntime(state, events, testSource = null) {
     discardExtra: (id, count) => discardTopOfExtraEncounterDeck(state, id, count),
     discardExtraCards: (id, codes) => discardFromExtraEncounterDeck(state, id, codes),
     explore: seat => doExplore(state, seat, events),
+    // 04289 岌岌可危的悬崖：探索前的多检定链结算完后，继续同一次探索
+    // （行动已支付、beforeExplore 已执行，不再重复扣费/重复拦截）。
+    resumeExplore: seat => doExplore(state, seat, events, { resumed: true }),
     // 第 2 步 P2.4：塔罗牌组（22 张大阿卡纳，剧本级牌组，不是 05 卡）。
     // 随机只走 randomValue；正逆位、抽牌、N 选 1、洗回、弃置都在这里，状态是纯 JSON。
     // 第 2 步 P2.13：地点牌库（Cosmos / 未知地点）。面朝下抽 X 选 1 → 放置入场 →
@@ -970,7 +1016,18 @@ function scenarioRuntime(state, events, testSource = null) {
       doPlay(state, seat, code, events, false, true)
       return inv.assets.findLast(asset => asset.code === code)
     },
-    defeat: (inv, cause = null) => { inv.defeated = true; inv.defeatCause = cause; eliminateInvestigator(state, inv, events) },
+    // 击败/退场：`cause === 'killed'` 时把战役记录同步标记为 killed（「被击败后结算」的
+    // 卡——如 04289 坠崖——只声明结果，账本字段由引擎统一写，卡条目不再直写 campaign 记录）。
+    defeat: (inv, cause = null) => {
+      if (!inv) return
+      inv.defeated = true
+      inv.defeatCause = cause
+      eliminateInvestigator(state, inv, events)
+      if (cause === 'killed') {
+        const record = state.campaign?.investigators?.[inv.seat]
+        if (record) record.status = 'killed'
+      }
+    },
     drawEncounterLocation: seat => {
       if (!scenarioBehavior(state).drawEncounterLocation) throw new Error('当前剧本没有遭遇地点处理器')
       return scenarioBehavior(state).drawEncounterLocation(state, seat, scenarioRuntime(state, events))

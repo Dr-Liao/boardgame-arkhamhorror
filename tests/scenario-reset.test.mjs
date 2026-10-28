@@ -57,14 +57,12 @@ test('进入新关卡会清空上一关的压牌与调查员附属，牌库重�
     carcosaPlayDiscount: 1,
     extraActionNextTurn: true,
     turnEnded: true,
-    ritaIgnoreLimitRound: 1,
     shuffleWeaknessAfterResolution: '05015',
     // 读点靠轮次/回合比较、但字段名不带后缀的散标记
     fieldwork: { round: 1, phase: 'investigation', amount: 2 },
     infighting: { round: 1, phase: 'enemy' },
     narrowEscape: { amount: 1, round: 1, turnSeat: 0 },
     jakeFree: { round: 1, used: true },
-    ritaEvadeUses: 1,
     pendingActionLoss: { 1: 1 },
     hiddenMoves: { turnSerial: 0, maximum: 1 },
     spellOnlyActions: 2,
@@ -82,6 +80,8 @@ test('进入新关卡会清空上一关的压牌与调查员附属，牌库重�
     'descRound|seat:0:desc|round:1': { used: 1, round: 1, phase: 'investigation', turn: 0 },
     'descCampaign|seat:0:desc|campaign': { used: 1 },
   }
+  // 上限的「本轮忽略」开关（05005 丽塔的旧印）：只在本轮有效，跨关必须清。
+  state.limitOverrides = { ritaEvadeReaction: { round: 1 } }
 
   startScenario(state, 1, [])
   assert.equal(state.scenario.id, 'theLastKing', '第二关是最后的王者')
@@ -90,9 +90,9 @@ test('进入新关卡会清空上一关的压牌与调查员附属，牌库重�
   assert.deepEqual(after.beneath, [], '上一关压在黛安娜底下的牌不带进新关卡')
   assert.deepEqual(after.attachments, [], '上一关附属在调查员身上的牌不带进新关卡')
   for (const field of ['gameFlags', 'usedAbilities', 'weaknessCounters', 'playDiscount',
-    'carcosaPlayDiscount', 'extraActionNextTurn', 'turnEnded', 'ritaIgnoreLimitRound',
+    'carcosaPlayDiscount', 'extraActionNextTurn', 'turnEnded',
     'shuffleWeaknessAfterResolution', 'fieldwork', 'infighting', 'narrowEscape', 'jakeFree',
-    'ritaEvadeUses', 'pendingActionLoss', 'hiddenMoves', 'spellOnlyActions']) {
+    'pendingActionLoss', 'hiddenMoves', 'spellOnlyActions']) {
     assert.equal(after[field], undefined, `调查员的跨关临时字段应清空：${field}`)
   }
   // 全局关内临时区/记账同样不能跨关。
@@ -107,6 +107,7 @@ test('进入新关卡会清空上一关的压牌与调查员附属，牌库重�
   // 上限记账：按轮/阶段/局的作用域清空；战役级（|campaign）必须保留。
   assert.deepEqual(Object.keys(state.abilityLimits || {}), ['descCampaign|seat:0:desc|campaign'],
     '只保留战役级上限记账')
+  assert.equal(state.limitOverrides, undefined, '上一关的上限忽略开关应清空')
   // 牌面/战役身份不能被清理误伤。
   assert.equal(after.code, '05004')
   assert.equal(after.name, '黛安娜·史丹利')

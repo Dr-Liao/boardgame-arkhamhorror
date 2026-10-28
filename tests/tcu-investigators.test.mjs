@@ -18,6 +18,8 @@ import {
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { registeredEntry } from '../src/engine/ability.js'
+// P2-6（2026-10-28）：丽塔的「每轮一次」走 limits.js 的通用上限账本，旧印用 ignoreLimitForRound。
+import { ignoreLimitForRound, limitIgnored } from '../src/engine/limits.js'
 import { pushRevelation, popRevelation } from '../src/engine/resolution-scope.js'
 import { investigatorRule } from '../src/cards/card-rules.js'
 import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
@@ -583,12 +585,21 @@ test('P6 丽塔：躲避后可以对敌人造成 1 点伤害（每轮一次）',
   settle(state, choose)
   assert.equal(offers, 1, '每轮只询问一次')
 
-  // 旧印放开本轮的限制：换一个仍然交战的新敌人再躲一次。
-  me(state).ritaIgnoreLimitRound = state.round
+  // 旧印放开本轮的限制（走条目接线：elderSign.resolve → api.ignoreLimitForRound）：
+  // 换一个仍然交战的新敌人再躲一次。
+  const elderSign = registeredEntry('05005').elderSign
+  const elderResult = elderSign.resolve({
+    state, inv: me(state),
+    api: { info() {}, ignoreLimitForRound: id => ignoreLimitForRound(state, id) },
+  })
+  assert.equal(elderResult?.delta, 2, '旧印仍给 +2')
+  assert.equal(limitIgnored(state, { id: 'ritaEvadeReaction' }), true, '本轮忽略反应上限')
   const third = enemy(state, { id: 'rita-third', fight: 1, evade: 1, health: 4 })
   move(state, { action: 'evade', enemyId: third.id })
   settle(state, choose)
   assert.equal(offers, 2, '旧印后再次询问')
+  // 同一触发窗口内不会重复结算：第三次躲避只询问一次。
+  assert.equal(me(state).ritaEvadeRound, undefined, '不再写单卡私有字段')
 })
 
 test('P6 丽塔专属事件：重整并交战此地点的所有敌人', () => {

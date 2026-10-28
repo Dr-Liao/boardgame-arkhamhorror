@@ -156,6 +156,7 @@ export const FAST_TESTS = Object.freeze([
   'tcu-primitives-enemy-faces.test.mjs', // 第 2 步原语 P2.12（异端者多面/放逐）
   'tcu-primitives-cosmos.test.mjs', // 第 2 步原语 P2.13（Cosmos/未知地点牌库）
   'tcu-primitives-p7.test.mjs', // P7 玩家卡批次新增原语（openingHandBonus / leavesPlay resolve / eventPlayed / conditionalIcons）
+  'tcu-location-api.test.mjs', // P2-6 05125 地点原语（swapLocation / removeLocationFromGame / 放一边 / 洗入遭遇牌库）
   'tcu-migration.test.mjs', // 万象无终 P1：范围/三包/9 章占位/不可启动
   'tcu-scenario-acceptance.test.mjs', // 万象无终 P8：逐章账本/来源锁/内容结构接线
   'tcu-story.test.mjs', // 万象无终 P9：剧情导入/分支/幕间/隐私

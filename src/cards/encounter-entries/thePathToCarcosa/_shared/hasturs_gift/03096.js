@@ -5,21 +5,14 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 //
-// 哈斯塔的傀儡（03096）：调查阶段，它的战斗值获得本轮累积的傀儡加值。
+// P2-6（2026-10-28）：+3 攻击改为引擎运行期敌人修正（enemy.statMods，读点 enemies.js 的
+// runtimeEnemyStat），不再写 `enemy.puppetFightBonuses` 单卡字段、也不再在条目里声明 modifiers。
 
 export default {
   code: '03096', implemented: true,
   name: '哈斯塔的傀儡',
   scope: 'enemy',
   text: '调查阶段，它的战斗值获得本轮累积的加值。',
-  modifiers: [{
-    target: 'enemyFight',
-    amount: ({ state, entity }) => (state.phase === 'investigation'
-      ? (entity.puppetFightBonuses || [])
-        .filter(bonus => bonus.investigationRound === state.round)
-        .reduce((sum, bonus) => sum + bonus.amount, 0)
-      : 0),
-  }],
   enemyScript: {
     onEngage(state, enemy, inv, api) {
       const choice = api.choose({
@@ -28,11 +21,7 @@ export default {
         options: [{ id: 'horror', label: '承受1点恐惧' }, { id: 'fight', label: '本调查阶段战斗+3' }],
       })
       if (choice === 'horror') api.horror(inv.seat, 1)
-      else {
-        const investigationRound = ['enemy', 'upkeep'].includes(state.phase) ? state.round + 1 : state.round
-        enemy.puppetFightBonuses ||= []
-        enemy.puppetFightBonuses.push({ amount: 3, investigationRound })
-      }
+      else api.addEnemyStatModifier(enemy, { fight: 3 }, { until: 'investigationEnd' })
     },
   },
 }

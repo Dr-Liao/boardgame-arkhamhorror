@@ -5,6 +5,7 @@
 // 与 api-card / api-enemy 相同的工厂形状。
 
 import { addLocationShroud, attachLocationCard } from './location-attachments.js'
+import { clearCluesOnEnemy, moveClueToEnemy } from './enemy-clues.js'
 
 export function createClueApi(state, events, deps) {
   const {
@@ -137,6 +138,10 @@ export function createClueApi(state, events, deps) {
       defeatEnemy(state, enemy, events)
       return true
     },
+    // 敌人身上的线索（03098 / 03099 / 03100 / 03144 / 03145）：唯一写入口。
+    // from: 'location'（默认，敌人所在地点）| 'investigator'（该座位的线索池）。
+    moveClueToEnemy: (enemy, options = {}) => moveClueToEnemy(state, enemy, options),
+    clearCluesOnEnemy: enemy => clearCluesOnEnemy(enemy),
     moveClueToLocation: (fromId, toId, amount = 1) => {
       const from = state.locations.find(location => location.id === fromId)
       const to = state.locations.find(location => location.id === toId)

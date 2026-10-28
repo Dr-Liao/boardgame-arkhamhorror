@@ -6,6 +6,10 @@ import {
 } from '../content/campaigns/theForgottenAge/scenarios/theDepthsOfYoth/definition.js'
 import { placePursuitEnemies, totalVengeance } from '../content/campaigns/theForgottenAge/scenarios/theDepthsOfYoth/behavior.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
+// P2-6（2026-10-28）：04289 的检定链改用引擎「检定后继续同一次探索」原语，
+// 这里补真实引擎（performTest / doExplore / resumeExplore）的验收。
+import { applyMove, createGameState, legalMoves, placeLocation, startScenario } from '../src/engine/engine.js'
+import { contentRegistry } from '../content/registered.js'
 
 const clone = value => structuredClone(value)
 
@@ -86,6 +90,7 @@ function apiFor(state, options = {}) {
   const calls = {
     spawned: [], drawn: [], finished: [], placed: [], removed: [], moved: [], defeated: [],
     damage: [], horror: [], trauma: [], tests: [], info: [], crossedOff: [], clues: [], attacked: [],
+    resumed: [],
   }
   const outcomes = [...(options.outcomes || [])]
   const supplies = new Set(options.supplies || [])
@@ -137,7 +142,18 @@ function apiFor(state, options = {}) {
     damage: (seat, amount) => { state.investigators[seat].damage += amount; calls.damage.push({ seat, amount }) },
     horror: (seat, amount) => { state.investigators[seat].horror += amount; calls.horror.push({ seat, amount }) },
     trauma: (seat, kind, amount) => calls.trauma.push({ seat, kind, amount }),
-    defeat: (inv, cause) => { inv.defeated = true; inv.defeatCause = cause ?? null; calls.defeated.push(inv.seat) },
+    defeat: (inv, cause) => {
+      inv.defeated = true
+      inv.defeatCause = cause ?? null
+      calls.defeated.push(inv.seat)
+      // 与真实引擎一致：killed 时同步战役记录状态。
+      if (cause === 'killed') {
+        const record = state.campaign?.investigators?.[inv.seat]
+        if (record) record.status = 'killed'
+      }
+    },
+    // 04289：检定链成功后引擎回到同一次探索。
+    resumeExplore: seat => calls.resumed.push(seat),
     moveInvestigator: (seat, destination) => { calls.moved.push({ seat, destination }); state.investigators[seat].location = destination },
     drawEncounter: seat => calls.drawn.push(seat),
     gainClues: (seat, amount) => { state.investigators[seat].clues += amount; calls.clues.push({ seat, amount }) },
@@ -511,12 +527,15 @@ test('地点效果：岌岌可危的悬崖三级检定，全失败则坠崖身�
     [['willpower', 4], ['agility', 3], ['combat', 2]])
   assert.equal(inv.defeated, true)
   assert.equal(allowed, false)
+  assert.deepEqual(died.calls.resumed, [], '全失败不恢复探索')
   const survived = prepared(73, 1)
   const lucky = survived.investigators[0]
   putIntoPlay(survived, 'crumblingPrecipice')
   lucky.location = 'crumblingPrecipice'
   const second = apiFor(survived, { outcomes: [false, true] })
-  assert.equal(yoth.behavior.beforeExplore(survived, lucky, second), true, '任一次检定成功就能照常探索')
+  assert.equal(yoth.behavior.beforeExplore(survived, lucky, second), false, '检定链交给引擎恢复同一次探索')
+  assert.deepEqual(second.calls.tests.map(entry => entry.skill), ['willpower', 'agility'], '首项失败后继续第二项')
+  assert.deepEqual(second.calls.resumed, [0], '任一次检定成功就能照常探索')
   assert.notEqual(lucky.defeated, true)
 })
 
@@ -767,6 +786,91 @@ test('04289 岌岌可危的悬崖：三次失败 = 阵亡并写进战役记录',
   assert.equal(inv.defeatCause, 'killed')
   assert.equal(state.campaign.investigators[0].status, 'killed')
   assert.equal(api.calls.trauma.length, 0, '不折算成创伤')
+  assert.deepEqual(api.calls.resumed, [], '全失败不恢复探索')
+})
+
+// ---------------------------------------------------------------------------
+// 04289 真实引擎验收：beforeExplore 的检定链 + api.resumeExplore（P2-6）。
+// 手搭 api 的用例只证明“链怎么走”，这里证明真实 performTest/doExplore 里
+// “检定 → 回调 → 同一次探索继续”整条链真的能跑完且行动只付一次。
+// ---------------------------------------------------------------------------
+
+function settleChoices(state) {
+  for (let guard = 0; state.pendingChoice && guard < 300; guard++) {
+    const pending = state.pendingChoice
+    const optionId = ['done', 'skip', 'self'].find(id => pending.options.some(option => option.id === id))
+      ?? pending.options[0].id
+    applyMove(state, pending.seat, { action: 'choose', choiceId: pending.id, optionId })
+  }
+}
+
+function launchYothPrecipice(seed) {
+  const state = createGameState({ campaignId: 'theForgottenAge', campaignHub: true, seed }, [{ seat: 0, role: 'human' }])
+  const scenarioIds = contentRegistry.getCampaign('theForgottenAge').scenarioIds
+  startScenario(state, scenarioIds.indexOf('theDepthsOfYoth'), [])
+  settleChoices(state)
+  // 用引擎的 placeLocation 入场，实例带上定义里的符号连接（探索连接限制读它）。
+  placeLocation(state, 'crumblingPrecipice', [], 0)
+  const precipice = state.locations.find(location => location.id === 'crumblingPrecipice')
+  precipice.revealed = true
+  precipice.clues = 0
+  precipice.maxClues = 0
+  const inv = state.investigators[0]
+  inv.actionsLeft = 3
+  inv.location = 'crumblingPrecipice'
+  // 悬崖的符号连接里有桥（heart），从悬崖探索不会触发「不相连」拦截。
+  state.explorationDeck = ['bridgeOverNKai']
+  return state
+}
+
+function exploreAtPrecipice(state) {
+  const explore = legalMoves(state, 0).find(move => move.action === 'explore')
+  assert.ok(explore, '探索应出现在合法行动里')
+  applyMove(state, 0, explore)
+  settleChoices(state)
+}
+
+test('04289 真实引擎：检定通过 → 同一次探索继续，行动只付一次', () => {
+  const state = launchYothPrecipice('tfa-precipice-success')
+  const before = state.investigators[0]
+  before.willpower = 20; before.agility = 20; before.combat = 20; before.intellect = 20
+  state.chaosBag = ['0', '0', '0']
+  exploreAtPrecipice(state)
+  const inv = state.investigators[0]
+  assert.equal(inv.location, 'bridgeOverNKai', '检定通过后照常放置并移动')
+  assert.equal(state.locations.some(location => location.id === 'bridgeOverNKai'), true)
+  assert.equal(state.explorationDeck.length, 0)
+  assert.equal(inv.actionsLeft, 2, '整条链只消耗 1 个探索行动')
+  assert.notEqual(inv.defeated, true)
+})
+
+test('04289 真实引擎：首项失败 → 继续第二项，成功后恢复探索', () => {
+  const state = launchYothPrecipice('tfa-precipice-chain')
+  const before = state.investigators[0]
+  // 意志 0：任何标记都失败；敏捷 20：任何标记都成功。链应停在第二项。
+  before.willpower = 0; before.agility = 20; before.combat = 20
+  state.chaosBag = ['0', '-8', '0']
+  exploreAtPrecipice(state)
+  const inv = state.investigators[0]
+  assert.notEqual(inv.defeated, true)
+  assert.equal(inv.location, 'bridgeOverNKai', '第二项检定成功后继续同一次探索')
+  assert.equal(inv.actionsLeft, 2, '多次检定不额外扣行动')
+})
+
+test('04289 真实引擎：三次失败 → 坠崖身亡且不放置地点', () => {
+  const state = launchYothPrecipice('tfa-precipice-death')
+  const before = state.investigators[0]
+  before.willpower = 0; before.agility = 0; before.combat = 0
+  state.chaosBag = ['0', '0', '0']
+  const deckBefore = state.explorationDeck.length
+  exploreAtPrecipice(state)
+  const inv = state.investigators[0]
+  assert.equal(inv.defeated, true)
+  assert.equal(inv.defeatCause, 'killed')
+  assert.equal(state.campaign.investigators[0].status, 'killed', '引擎统一写战役记录状态')
+  assert.equal(state.explorationDeck.length, deckBefore, '未进行探索放置')
+  assert.equal(inv.location, 'crumblingPrecipice')
+  assert.equal(inv.actionsLeft, 2, '尝试探索仍消耗 1 个行动')
 })
 
 test('04285 探索只能放置与当前地点相连的地点', () => {

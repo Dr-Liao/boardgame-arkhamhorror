@@ -481,6 +481,77 @@ node temp/dup-scan/14-playcondition.mjs
   `context.playUpgrades`（费用窗口写入、played 读取），删除 `inv.playUpgrades05xxx` 三个字段。
 账本：R1 164→161、单卡字段 11→8，golden 13 局零漂移。
 
+**P2-6 第十批（2026-10-28，敌人身上的线索 / 王之法令数据化，已落地）**：
+- 新增原语 `src/engine/enemy-clues.js`：`moveClueToEnemy(enemy, { from: 'location' | 'investigator', seat })`
+  与 `clearCluesOnEnemy(enemy)`，能力面 `api-clue.js`、遭遇面 `scenario-runtime.js` 同时登记；
+  「往事回声」议程的 `clueToDoom` 翻毁灭面收进原语，条目不再 import `_shared.js` 的
+  `flipEnemyCluesToDoom`（该辅助函数删除）。
+- 03098 狂徒 / 03099 王之特使 / 03100 王之法令 / 03144 卡尔克萨探求者 / 03145 引入歧途 5 张卡的
+  线索搬运全部改为原语（按「同一句卡文出现第二张就提原语」处理，5 份实现收成 1 份）。
+- 03100 的本轮攻击修正改为条目数据 `enemyStatRule.kingsEdict`（`{ stat, trait, perMarkers, amount }`）+ 
+  `scenarioFlags.kingsEdictRound` 轮次标记，读点是 Carcosa `encounter-rules.enemyStatModifier`；
+  删除引擎 `enemyFightValue` 里的 `enemy.kingsEdictRound` 分支与 `enemySpawned` 的实例标记——
+  本轮内后入场的异教徒同样按轮次现算，不再写「进场快照」字段。
+账本：R1 161→156、单卡字段 8→7（`enemy.kingsEdictRound` 消失），golden 13 局零漂移；
+Carcosa 全卡账本 383 张重生成、`tests/carcosa-campaign-card-acceptance.test.mjs` 278 项全绿。
+
+> 基线备注（2026-10-28 接手复核）：`test:fast` 有 1 条**既有**失败
+> `tcu-migration.test.mjs`「P1 账本：scope.json 与 audit/tcu-migration.json 可复算」，
+> 原因是工作区缺少 gitignore 的 `artifacts/tcu-migration/*.png` 浏览器证据（本机未装 Playwright 浏览器），
+> 与 P2 改动无关；其余 3776 项通过、replay 13 局零漂移。
+
+**P2-6 第十一批（2026-10-28，哈斯塔的傀儡，已落地）**：
+- 03096 的「+3 攻击直到调查阶段结束」改为运行期敌人修正
+  `api.addEnemyStatModifier(enemy, { fight: 3 }, { until: 'investigationEnd' })`：原语新增
+  `investigationEnd` 时长（神话/调查阶段交战按当前轮，敌人/维持阶段交战顺延到下一轮；
+  `src/engine/scenario-runtime.js`），读点是 `enemies.js` 的 `runtimeEnemyStat`；
+  删除条目里的 `modifiers` 与 `enemy.puppetFightBonuses` 单卡字段。
+账本：R1 156→155、单卡字段 7→6，golden 13 局零漂移；Carcosa 全卡账本 383 张重生成（424 项）。
+
+**P2-6 第十二批（2026-10-28，丽塔·杨的每轮上限，已落地）**：
+- 05005 的「每轮仅限一次」改用引擎通用上限账本 `limit: { scope: 'perRound', owner: 'player' }`
+  （`src/engine/limits.js`），删除 `inv.ritaEvadeRound` / `inv.ritaEvadeUses` / `inv.ritaIgnoreLimitRound`
+  三个单卡字段；
+- 新增通用原语 `api.ignoreLimitForRound(descriptorId)`（`limits.js` 的 `ignoreLimitForRound` /
+  `limitIgnored`，玩家面 `api-misc` 与遭遇面 `scenario-runtime` 同时登记）：旧印「直到本轮结束忽略该能力限制」。
+  忽略期间**同一窗口实例内仍只结算一次**（`abilityLimits[].windowInstance` = 窗口名+轮/阶段/回合+行动序号+窗口主体），
+  跨续算稳定、可重放；新关卡 `clearScenarioSceneLeftovers` 清 `limitOverrides`。
+账本：R1 155→154、单卡字段 6→3（丽塔三字段消失），golden 13 局零漂移；
+`tests/tcu-investigators.test.mjs` 的丽塔用例（真实躲避流程）全绿。
+
+**P2-6 第十三批（2026-10-28，地点交换 / 移出游戏原语，已落地）**：
+- 新增 `src/engine/location-swap.js`（唯一实现，依赖注入、不 import engine）：
+  `swapLocationInPlay(state, events, fromId, toId, options, deps)` = `placeLocation` 入场 →
+  搬 revealed / 线索 / 毁灭 / maxClues → 地点附属与 beneath **移动** → `playerLocationAttachments` 改 id →
+  从 `scenarioZones.setAside` 取走新地点卡号 → 先敌人后调查员迁移（与迁移前 05125 同序）→
+  旧地点 `removeLocation(…, { silent: true })` 静默离场；`removeLocationFromGame(state, events, id)` =
+  地点上的敌人经 `discardEnemyCard` 进遭遇弃牌堆，其余清理与「被移出游戏」日志沿用 `removeLocation`。
+- 遭遇面 `scenario-runtime` 新增 `swapLocation` / `removeLocationFromGame` / `takeFromSetAside` /
+  `shuffleIntoEncounterDeck`（push 后洗一次，RNG 消耗与旧写法逐位一致）；能力面 `api-misc` 委托两项地点 API；
+  `locations.js` 的 `removeLocation` 增加可选 `{ silent }` 日志开关（默认行为不变）。
+- 05125 探访巫宅重写为纯 API 调用（0 直写）：换地点 / 移除其余地点 / 黑书归属 / 2 张古怪图形洗入全部走原语。
+账本：R1 155→153、单卡字段 6→2（只剩 04289 的 TFA 两级嵌套检定字段），`fields['state.locations']` 消失；
+golden 13 局零漂移；新增 `tests/tcu-location-api.test.mjs`（4 例，已在 `tests/suites.mjs` 与
+`tests/node-suite.mjs` 双向登记），`tests/tcu-secret-name.test.mjs` 46 项全绿。
+
+**P2-6 第十四批（2026-10-28，04289 嵌套检定链 · 单卡字段清零，已落地）**：
+- 引擎新增「检定链后继续同一次探索」原语：`doExplore(state, seat, events, { resumed })`；
+  遭遇面 `scenario-runtime` 暴露 `api.resumeExplore(seat)`（跳过重复的行动支付与 `beforeExplore`）；
+  `api.defeat(inv, 'killed')` 统一把战役记录状态写成 `killed`（卡条目不再直写 campaign 记录）。
+  嵌套检定本身由引擎已有的混乱袋帧栈（`chaos.frames`）与 `performTest` 的 `previousTest` 恢复支持，
+  本轮用真实引擎验收证明「检定 → 回调 → 下一检定 → 恢复探索」整条链可跑通、且行动只付一次。
+- 04289 岌岌可危的悬崖改为：`beforeExplore` 启动三级检定链并返回 false（本次探索先暂停），
+  任一成功在回调里 `api.resumeExplore` 继续同一次探索，全失败 `api.defeat(inv,'killed')`；
+  删除 `inv.tfaPrecipiceResuming` / `inv.tfaPrecipiceStage` 两个过渡字段与手动回退行动点。
+账本：**单卡字段 2→0（清零）**、R1 153→152；golden 13 局零漂移；
+`tests/tfa-depths-of-yoth.test.mjs` 新增 3 条真实引擎验收（检定通过 / 首项失败续链 / 三次失败坠亡），44 项全绿。
+
+> 基线备注（2026-10-28 接手复核，续）：`test:fast` 仍有 1 条**既有**失败
+> `tcu-migration.test.mjs`「P1 账本：scope.json 与 audit/tcu-migration.json 可复算」（浏览器截图证据缺失，
+> 本机未装 Playwright 浏览器）；`audit/tcu-scenario-acceptance.json` 与
+> `artifacts/migration/tcu/primitive-{catalog,plan}.json` 的浏览器/规划产物也属该环境缺口，
+> 重新 `--write` 只会把 verified 降级为 development，因此**未提交**这些降级结果，与 P2 改动无关。
+
 
 
 

@@ -21,6 +21,13 @@ import { entityModifierTotal, setModifierRegistry } from '../src/engine/modifier
 import { CARD_ABILITY_ENTRIES } from '../src/cards/card-abilities.js'
 import { NON_PLAYER_ABILITY_ENTRIES } from '../src/cards/encounter-abilities.js'
 import { attachLocationCard } from '../src/engine/location-attachments.js'
+// P2-6（2026-10-28）：敌人身上的线索走引擎原语，条目不再直写 enemy.clues / location.clues。
+import { clearCluesOnEnemy, moveClueToEnemy } from '../src/engine/enemy-clues.js'
+// 03096 的「+3 攻击直到调查阶段结束」走运行期敌人修正（enemy.statMods）：
+// 这里用真实 runtime 原语 + 引擎读点验证到期语义。
+import { fixture } from './core-fixture.mjs'
+import { enemyFightValue } from '../src/engine/engine.js'
+import { createScenarioRuntime } from '../src/engine/scenario-runtime.js'
 if (!registeredCodes().length) registerCardAbilities([...CARD_ABILITY_ENTRIES, ...NON_PLAYER_ABILITY_ENTRIES])
 setModifierRegistry(registeredEntry)
 
@@ -292,12 +299,23 @@ test('C5 shared enemies preserve stacked timing, spawn selection and King Edict 
     round: 4, phase: 'enemy', campaign: { leadSeat: 0 }, investigators: [{ seat: 0 }],
     enemies: [puppet], locations: [], scenarioFlags: {},
   }
-  const api = { choose: () => 'fight', horror() {} }
+  // P2-6：+3 攻击是「直到调查阶段结束」的运行期敌人修正（读点 enemies.js 的 runtimeEnemyStat），
+  // 不再写 enemy.puppetFightBonuses；这里断言条目交给引擎的是统一原语与正确时长。
+  const statModifiers = []
+  const api = {
+    choose: () => 'fight', horror() {},
+    addEnemyStatModifier: (enemy, mods, options) => {
+      statModifiers.push({ enemyId: enemy.id, mods, options })
+      return null
+    },
+  }
   encounterRules.enemyEngaged(state, puppet, state.investigators[0], api)
   encounterRules.enemyEngaged(state, puppet, state.investigators[0], api)
-  state.round = 5
-  state.phase = 'investigation'
-  assert.equal(entityModifierTotal(state, puppet, 'enemyFight'), 6)
+  assert.deepEqual(statModifiers, [
+    { enemyId: 'puppet', mods: { fight: 3 }, options: { until: 'investigationEnd' } },
+    { enemyId: 'puppet', mods: { fight: 3 }, options: { until: 'investigationEnd' } },
+  ], '两次交战各叠一条 +3 攻击（敌人/维持阶段 → 顺延到下一轮调查阶段）')
+  assert.equal(puppet.puppetFightBonuses, undefined, '不再写单卡字段')
 
   const spawn = {
     revision: 0, rngState: 12345, round: 1,
@@ -322,9 +340,138 @@ test('C5 shared enemies preserve stacked timing, spawn selection and King Edict 
   assert.deepEqual(restored, spawn)
   assert.equal(spawn.spawnResult, 'b')
 
-  const cultist = { code: '03098', traits: ['Cultist'], clues: 2, doom: 1 }
-  spawn.scenarioFlags.kingsEdict = true
+  // 03100「王之法令」：数据在条目的 enemyStatRule.kingsEdict，读点是本章 enemyStatModifier；
+  // 轮次标记由卡结算时写入（P2-6：不再写 enemy.kingsEdictRound 实例字段）。
+  const cultist = { id: 'cultist', code: '03098', traits: ['Cultist'], clues: 2, doom: 1 }
+  spawn.scenarioFlags.kingsEdictRound = spawn.round
   assert.equal(encounterRules.enemyStatModifier(spawn, cultist, 'fight'), 3)
+  spawn.scenarioFlags.kingsEdictRound = spawn.round - 1
+  assert.equal(encounterRules.enemyStatModifier(spawn, cultist, 'fight'), 0, '轮次不匹配时不再加成')
+})
+
+test('C5 King Edict resolves through the clue-on-enemy primitive and the entry data', () => {
+  const cultist = { id: 'c1', code: '03098', originalCode: '03098', traits: ['Cultist'], location: 'hall', clues: 0 }
+  const bystander = { id: 'n1', code: '03086', originalCode: '03086', location: 'hall', clues: 0 }
+  const state = {
+    round: 3, phase: 'mythos', campaign: { leadSeat: 0 },
+    investigators: [{ seat: 0, name: '甲', location: 'hall' }],
+    locations: [{ id: 'hall', name: '大厅', revealed: true, clues: 2 }],
+    enemies: [cultist, bystander], scenarioFlags: {},
+    // 往事回声的议程强制效果：放到敌人身上的线索立刻翻成毁灭面。
+    agendas: [{ originalCode: '03121', clueToDoom: true }],
+    agendaIndex: 0, encounterDeck: [], encounterDiscard: [], numInvestigators: 1,
+  }
+  let surges = 0
+  const api = {
+    moveClueToEnemy: (enemy, options) => moveClueToEnemy(state, enemy, options),
+    setScenarioFlag: (key, value = true) => { state.scenarioFlags[key] = value; return value },
+    drawEncounter: () => { surges += 1 },
+  }
+  registeredEntry('03100').encounterResolve(state, state.investigators[0], { code: '03100' }, api)
+  assert.equal(state.locations[0].clues, 1, '只有异教徒所在地点移走 1 个线索')
+  assert.equal(cultist.clues, 0)
+  assert.equal(cultist.doom, 1, '线索按当前议程的 clueToDoom 翻成毁灭面')
+  assert.equal(surges, 0, '移动过线索就不涌动')
+  assert.equal(state.scenarioFlags.kingsEdictRound, 3, '写入本轮轮次标记')
+
+  assert.equal(encounterRules.enemyStatModifier(state, cultist, 'fight'), 1, '每个线索/毁灭 +1 攻击')
+  assert.equal(encounterRules.enemyStatModifier(state, bystander, 'fight'), 0, '非异教徒不加成')
+  // 本轮内后入场的异教徒：没有实例标记也能吃到（读点只看轮次 + 特性）。
+  const late = { id: 'c2', code: '03099', originalCode: '03099', traits: ['Cultist'], location: 'hall', clues: 1, doom: 2 }
+  state.enemies.push(late)
+  assert.equal(encounterRules.enemyStatModifier(state, late, 'fight'), 3)
+
+  // 轮末清理：标记失效后不再加成。
+  encounterRules.roundEnded(state, {})
+  assert.equal(state.scenarioFlags.kingsEdictRound, undefined)
+  assert.equal(encounterRules.enemyStatModifier(state, late, 'fight'), 0)
+})
+
+test('C5 clue movement on enemies: 03098 / 03099 / 03144 / 03145 use the shared primitive', () => {
+  const state = {
+    round: 2, phase: 'mythos', campaign: { leadSeat: 0 },
+    investigators: [{ seat: 0, name: '甲', location: 'hall', clues: 2 }],
+    locations: [{ id: 'hall', name: '大厅', revealed: true, clues: 1 }],
+    enemies: [], encounterDeck: [], encounterDiscard: [], scenarioFlags: {},
+    agendas: [{}], agendaIndex: 0, numInvestigators: 1,
+  }
+  const gained = []
+  const api = {
+    moveClueToEnemy: (enemy, options) => moveClueToEnemy(state, enemy, options),
+    clearCluesOnEnemy: enemy => clearCluesOnEnemy(enemy),
+    gainClues: (seat, amount) => { state.investigators[seat].clues += amount; gained.push(amount) },
+    doomOn: (card, amount = 1) => { card.doom = (card.doom || 0) + amount },
+    choose: request => request.options[0].id,
+    addDoom: amount => { state.doom = (state.doom || 0) + amount },
+  }
+
+  // 03098 狂徒：入场移 1 个地点线索；击败时控制其所有线索。
+  const mob = { id: 'mob', code: '03098', originalCode: '03098', traits: ['Cultist'], location: 'hall' }
+  state.enemies.push(mob)
+  registeredEntry('03098').enemyScript.onSpawn(state, mob, api)
+  assert.equal(state.locations[0].clues, 0)
+  assert.equal(mob.clues, 1)
+  mob.defeatedBy = 0
+  registeredEntry('03098').enemyScript.onDefeated(state, mob, api)
+  assert.equal(mob.clues, 0)
+  assert.deepEqual(gained, [1])
+
+  // 03099 王之特使：攻击后把自己的 1 个线索移过去（state.clues 总账同步）。
+  const envoy = { id: 'envoy', code: '03099', originalCode: '03099', traits: ['Cultist'], location: 'hall' }
+  state.enemies.push(envoy)
+  registeredEntry('03099').enemyScript.onAttackResolved(state, envoy, state.investigators[0], api)
+  assert.equal(state.investigators[0].clues, 2)
+  assert.equal(envoy.clues, 1)
+  assert.equal(state.clues, 2, '调查员线索总账同步')
+
+  // 03144 卡尔克萨探求者：神话阶段结束优先移地点线索，不能则放 1 毁灭。
+  const seeker = { id: 'seeker', code: '03144', originalCode: '03144', location: 'hall' }
+  state.locations[0].clues = 1
+  registeredEntry('03144').enemyScript.onMythosEnd(state, seeker, api)
+  assert.equal(seeker.clues, 1)
+  state.locations[0].clues = 0
+  registeredEntry('03144').enemyScript.onMythosEnd(state, seeker, api)
+  assert.equal(seeker.doom, 1)
+
+  // 03145 引入歧途：选择异教徒 → 从自己的线索池移 1 个过去。
+  const inv = state.investigators[0]
+  inv.clues = 1
+  const target = { id: 'target', code: '03099', originalCode: '03099', traits: ['Cultist'], location: 'hall' }
+  state.enemies = [target]
+  registeredEntry('03145').encounterResolve(state, inv, { code: '03145' }, api)
+  assert.equal(inv.clues, 0)
+  assert.equal(target.clues, 1)
+})
+
+test('C5 哈斯塔的傀儡：+3 攻击是直到调查阶段结束的运行期敌人修正', () => {
+  const state = fixture()
+  state.round = 4
+  state.phase = 'enemy'
+  const inv = state.investigators[0]
+  const puppet = {
+    id: 'puppet', code: '03096', originalCode: '03096', name: '哈斯塔的傀儡',
+    location: inv.location, fight: 2, evade: 2, health: 5, damageTaken: 0, exhausted: false,
+  }
+  state.enemies.push(puppet)
+  const proxy = new Proxy({}, { get: () => () => {} })
+  const runtime = createScenarioRuntime(proxy)(state, [], null)
+  // 敌人阶段交战 → 加成顺延到下一轮调查阶段结束（与旧 puppetFightBonuses 的 investigationRound 同口径）。
+  runtime.addEnemyStatModifier(puppet, { fight: 3 }, { until: 'investigationEnd' })
+  assert.deepEqual(puppet.statMods[0].until, { round: 5, phase: 'investigation' })
+  assert.equal(enemyFightValue(state, puppet, inv), 2, '敌人阶段不生效')
+  state.round = 5
+  state.phase = 'investigation'
+  assert.equal(enemyFightValue(state, puppet, inv), 5, '下一轮调查阶段 +3')
+  state.round = 6
+  state.phase = 'mythos'
+  assert.equal(enemyFightValue(state, puppet, inv), 2, '过期后恢复印刷值')
+  // 调查阶段内交战：立即生效，同轮调查阶段结束。
+  state.round = 7
+  state.phase = 'investigation'
+  const fresh = { ...puppet, id: 'puppet2', statMods: undefined }
+  runtime.addEnemyStatModifier(fresh, { fight: 3 }, { until: 'investigationEnd' })
+  assert.deepEqual(fresh.statMods[0].until, { round: 7, phase: 'investigation' })
+  assert.equal(enemyFightValue(state, fresh, inv), 5)
 })
 
 test('C5 mid-cycle privacy and Behind You ownership rules execute precisely', () => {

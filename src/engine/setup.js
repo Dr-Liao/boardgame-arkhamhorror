@@ -194,7 +194,7 @@ const TRANSIENT_INVESTIGATOR_FIELDS = Object.freeze([
   'shuffleWeaknessAfterResolution', 'turnEnded',
   // 按轮/按回合记账、但字段名不带 Round/Turn 后缀的散标记（读点都带轮次比较，
   // 新关卡 round=1 会与上一关第 1 轮撞号）：
-  'fieldwork', 'infighting', 'narrowEscape', 'jakeFree', 'ritaEvadeUses',
+  'fieldwork', 'infighting', 'narrowEscape', 'jakeFree',
   'pendingActionLoss', 'hiddenMoves', 'spellOnlyActions',
 ])
 
@@ -243,6 +243,8 @@ function clearScenarioSceneLeftovers(state) {
     if (Object.keys(kept).length) state.abilityLimits = kept
     else delete state.abilityLimits
   }
+  // 上限忽略开关（limits.js 的 ignoreLimitForRound）：只在本轮有效，跨关必须清。
+  if (state.limitOverrides) delete state.limitOverrides
 }
 
 function prepareInvestigator(state, inv, events, startLocation) {
