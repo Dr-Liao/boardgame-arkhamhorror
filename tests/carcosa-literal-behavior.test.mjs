@@ -38,6 +38,40 @@ test('03185 约束衣进入威胁区、占槽且提供双行动弃除能力', ()
   assert.equal(threat.threatEffect.sameLocationAction, true)
 })
 
+test('03185 约束衣把双手武器（Hand x2）也返回手牌', () => {
+  const inv = investigator({
+    assets: [
+      { id: 'shotgun', code: '01029' },   // 猎枪：Hand x2
+      { id: 'bat', code: '01074' },       // 球棒：Hand x2
+      { id: 'pistol', code: '01016' },    // .45自动手枪：Hand
+      { id: 'coat', code: '01072' },      // 皮大衣：Body
+      { id: 'amulet', code: '01095' },    // 远古印记护身符：Accessory
+      { id: 'training', code: '01017' },  // 体能训练：无槽位
+    ],
+  })
+  const state = { investigators: [inv], locations: [{ id: 'hall', name: '大厅' }] }
+  const returned = []
+  let threat = null
+  const resolved = oathBehavior.resolveEncounter(state, inv, { code: '03185' }, {
+    removeAsset(_seat, id) {
+      const index = inv.assets.findIndex(asset => asset.id === id)
+      if (index < 0) return
+      returned.push(inv.assets.splice(index, 1)[0].code)
+    },
+    threat(_seat, code, extra) {
+      threat = { id: 'straitjacket', code, ...extra }
+      inv.threat.push(threat)
+    },
+  })
+  assert.equal(resolved, true)
+  // 双手武器写成 "Hand x2"，同样是手部槽位里的支援，必须一起返回手牌。
+  assert.deepEqual(returned.sort(), ['01016', '01029', '01072', '01074'])
+  assert.deepEqual(inv.hand.sort(), ['01016', '01029', '01072', '01074'])
+  // 配件与无槽位支援不在身体/手部槽位里，不应被返回。
+  assert.deepEqual(inv.assets.map(asset => asset.code).sort(), ['01017', '01095'])
+  assert.deepEqual(threat.slots, ['Body', 'Hand x2'])
+})
+
 test('03091 与 03094 的地点附属行动和离开地点强制效果按卡面结算', () => {
   const inv = investigator()
   const location = {
@@ -175,4 +209,21 @@ test('03332 黄衣之王哈斯塔允许任意地点调查员检定意志并将�
     },
   })
   assert.equal(enemy.exhausted, true)
+})
+
+test('卡城幽影：击败苍白面具下的男子跳过默认弃牌结算，并把 03059 记为移出游戏', () => {
+  const inv = investigator()
+  const state = {
+    actIndex: 1, investigators: [inv], enemies: [],
+    scenarioFlags: {}, removedFromGame: [], encounterDiscard: [],
+    campaign: { records: {} },
+  }
+  const man = { id: 'stranger', code: '03059', originalCode: '03059', name: '苍白面具下的男子' }
+  // 返回 true = 已由剧本接管，引擎不再把弱点牌放进弃牌堆/胜利区。
+  assert.equal(dimBehavior.enemyDefeated(state, man, {}), true)
+  assert.equal(state.scenarioFlags.strangerDefeated, true)
+  assert.deepEqual(state.removedFromGame, ['03059'])
+  assert.ok(!state.encounterDiscard.includes('03059'))
+  // 普通敌人仍然走默认结算。
+  assert.equal(dimBehavior.enemyDefeated(state, { code: '03088' }, {}), false)
 })

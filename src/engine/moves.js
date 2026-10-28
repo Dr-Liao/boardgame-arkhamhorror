@@ -14,6 +14,8 @@ import { descriptorOfKind } from './ability.js'
 import { entityParleyDescriptors, parleyMovesFor, parleyTargetError } from './parley.js'
 // 第 5 步 P6：法术专用额外行动的算术（与 dispatch 共用同一份读点）。
 import { actionsAvailable, spellOnlyActionsOf } from './spell-actions.js'
+// 2026-10-28 调试控制台（CONTRACT §3）：纯函数直接 import，不新增工厂依赖。
+import { debugMoveError, isDebugMove } from './debug.js'
 
 export function createMoves(deps) {
   const {
@@ -26,6 +28,7 @@ export function createMoves(deps) {
     actionKind,
     isSpellAction,
     activeHiddenRules,
+    playTypeBlocked,
     advanceAct,
     aliveInvestigators,
     aloofPreventsAttack,
@@ -236,7 +239,7 @@ export function createMoves(deps) {
     if (!def || !runtimeCardAvailable(state, inv, code) || def.dataStatus === 'quarantined' || def.type === 'skill' || (isWeaknessCard(def) && !playAccess(code).playableWeakness)) continue
     if (!lolaCanUseCard(inv, code)) continue
     if (scenarioBehavior(state).canPlayCard?.(state, inv, def) === false) continue
-    if (activeHiddenRules(state, inv).some(hidden => hidden.rule.cannotPlayTypes?.includes(def.type))) continue
+    if (playTypeBlocked(state, inv, def.type)) continue
     if (blocked.has(def.type)) continue
     if (cardPlayBlockedReason(state, inv, def)) continue
     // 「每个地点仅限 1 张」的附属（03199）：同一地点已有同码附属时不能再打。
@@ -274,7 +277,7 @@ export function createMoves(deps) {
     if (!def) continue
     if (playChannels.entryError(state, inv, candidate, def)) continue
     if (scenarioBehavior(state).canPlayCard?.(state, inv, def) === false) continue
-    if (activeHiddenRules(state, inv).some(hidden => hidden.rule.cannotPlayTypes?.includes(def.type))) continue
+    if (playTypeBlocked(state, inv, def.type)) continue
     if (isSteadfastCard(def) && steadfastInPlay(state)) continue
     const cost = playCostFor(state, inv, def, candidate)
     const potentialReduction = potentialPlayReduction(state, inv, candidate.code, def)
@@ -507,6 +510,12 @@ export function createMoves(deps) {
   const compatibility = stateCompatibilityError(state, META.resourceVersion)
   if (compatibility) return compatibility
   if (!move || Array.isArray(move) || typeof move.action !== 'string') return '无效行动'
+  // 调试 move（CONTRACT §3.1）：可在任意时机提交，所以分支放在 actingSeats / pendingChoice
+  // 之前，也不经过行动点与行动类型校验；规则全部收敛在 debug.js 的纯函数里。
+  if (isDebugMove(move)) {
+    if (Object.hasOwn(move, 'revision') && (!Number.isSafeInteger(move.revision) || move.revision !== state.revision)) return '对局版本已过期'
+    return debugMoveError(state, seat, move)
+  }
   if (!Number.isInteger(seat) || !actingSeats(state).includes(seat)) return '现在不是你的应答时机'
   if (Object.hasOwn(move, 'revision') && (!Number.isSafeInteger(move.revision) || move.revision !== state.revision)) return '对局版本已过期'
   if (state.status !== 'playing') return '对局已结束'
@@ -570,7 +579,7 @@ export function createMoves(deps) {
       }
       const playBlocked = cardPlayBlockedReason(state, inv, def)
       if (playBlocked) return playBlocked
-      if (activeHiddenRules(state, inv).some(hidden => hidden.rule.cannotPlayTypes?.includes(def.type))) return '隐私牌禁止你打出该类型卡牌'
+      if (playTypeBlocked(state, inv, def.type)) return '隐私牌禁止你打出该类型卡牌'
       if (def.permanent) return '永久卡在开局时入场'
       // 打出条件的唯一读点（Phase 1）：描述子 playCondition + 旧 DSL 的 10 个字段
       // 都在 src/engine/play-condition.js 里收敛，引擎不再逐字段判断。

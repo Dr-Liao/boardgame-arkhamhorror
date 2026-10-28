@@ -59,6 +59,19 @@ export function isWeaknessCode(code) {
   return isWeaknessCard(cardDef(code))
 }
 
+// 弱点牌的牌组归属：战役牌组记录里持有该卡号的调查员座位。
+//
+// 弱点敌人的 `bearerSeat` 通常等于「抽到它的座位」。但剧本也可能直接从「放到一边」
+// 或承受者牌库生成弱点敌人（例如 03059 苍白面具下的男子），这条路径没有交战座位，
+// 于是生成时补查战役牌组；击败结算据此把弱点牌放回归属者的弃牌堆，而不是报错/进遭遇弃牌堆。
+export function weaknessOwnerSeat(state, code) {
+  for (const record of Object.values(state?.campaign?.investigators || {})) {
+    if (!(record?.deck || []).includes(code)) continue
+    return Number.isInteger(record.seat) ? record.seat : null
+  }
+  return null
+}
+
 // 敌人定义：优先剧本敌人（合并注册表），其次 cards-data.js 的敌人型卡（弱化敌人）。
 export function enemyDef(code) {
   if (ALL_ENEMIES[code]) return ALL_ENEMIES[code]

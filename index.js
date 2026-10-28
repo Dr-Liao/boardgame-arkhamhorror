@@ -16,6 +16,7 @@ import {
 } from './src/integration/hall-integration.js'
 import { agentPlanning } from './src/ai/agent-plans.js'
 import { commitChoiceBatch } from './src/integration/choice-batch.js'
+import { buildDebugCommand } from './src/integration/debug-console.js'
 
 import { contentRegistry } from './content/registered.js'
 import { META } from './src/cards/cards-data.js'
@@ -354,6 +355,13 @@ export default {
   },
   validateMove,
   applyMove,
+
+  // —— 调试控制台（大厅可选钩子，见 lib/mods.js 与 artifacts/debug-console/CONTRACT.md §4）——
+  // isDebugMove 让大厅拒绝经由普通 /move、自动代答或批量选择夹带调试动作；
+  // debugCommand 只在 host-only 调试通道调用：解析由本 Mod 完成（只读），返回的 move 仍走
+  // commitMove 事务（validateMove/applyMove/revision/actionLog/事件/快照与普通行动一致）。
+  isDebugMove(move) { return move?.action === 'debug' },
+  debugCommand(session, seat, command) { return buildDebugCommand(session, seat, command) },
 
   // 大厅加载 Mod 时调用一次：从此自动奖励窗口对真人可见，由大厅代答。
   // 纯引擎消费者（单测 / replay-fixtures / 审计工具）不调用，保持旧的直接领取。

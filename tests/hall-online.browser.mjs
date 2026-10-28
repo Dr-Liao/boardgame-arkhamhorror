@@ -16,6 +16,13 @@ async function api(index, route, body) {
   return (await fetch(halls[index].url + '/api/online/' + route, { method: body ? 'POST' : 'GET', headers: { 'x-boardgame-online': '1', 'content-type': 'application/json' }, body: body ? JSON.stringify(body) : undefined })).json()
 }
 const command = (index, action, body = {}) => api(index, 'command', { action, body: { operationId: randomUUID(), ...body } })
+// 大厅的联机栏是默认收起的悬浮胶囊；需要复制邀请等操作按钮时先点开。
+async function expandOnlineBanner(page) {
+  const toggle = page.locator('.bg-online-banner .bg-online-toggle')
+  await toggle.waitFor()
+  if (await toggle.getAttribute('aria-expanded') === 'false') await toggle.click()
+  await expect(page.locator('.bg-online-banner .bg-online-actions')).toBeVisible()
+}
 test.beforeAll(async () => {
   previousHome = process.env.DSH_HOME
   home = fs.mkdtempSync(path.join(os.tmpdir(), 'hall-online-browser-')); process.env.DSH_HOME = home
@@ -179,6 +186,7 @@ test('Arkham setup reserves AI slots and copying an invitation never shifts the 
   await expect(host.getByRole('button', { name: '开始联机对局' })).toBeDisabled()
   const status = await api(0, 'status')
   expect(status.relayUrl).toContain(relayUrl.replace('http:', 'ws:'))
+  await expandOnlineBanner(host)
   await host.evaluate(() => Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async text => { window.testInvite = text } } }))
   for (const width of [1400, 390]) {
     await host.setViewportSize({ width, height: 950 })

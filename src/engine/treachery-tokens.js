@@ -45,6 +45,7 @@ export function createTreacheryTokens(deps) {
     reactionWindow,
     relocateInvestigator,
     requestChoice,
+    resourceBank,
     resolveTreacheryEffect,
     scenarioBehavior,
     scenarioRuntime,
@@ -277,7 +278,7 @@ export function createTreacheryTokens(deps) {
               : `是否花 ${resourceCost} 资源提高${SKILL_NAMES[skill]}？`, canSkip: true,
             options: [{ id: 'skip', label: '不再支付' }, { id: 'pay', label: `${doomCost ? `放置 ${doomCost} 毁灭` : `支付 ${resourceCost} 资源`}，+${ft.bonus}` }] })
           if (answer === 'skip') break
-          inv.resources -= resourceCost
+          resourceBank.spendFromPool(inv, resourceCost)
           if (doomCost) placeDoomOnCard(state, a, doomCost, events, { silent: true })
           if (exhaustCost) a.exhausted = true
           if (doomCost) state.skillTest.freeTriggerUses[triggerKey] = true

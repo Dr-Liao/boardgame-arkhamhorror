@@ -13,7 +13,7 @@ import assert from 'node:assert/strict'
 import { fixture, move, settle, enemy } from './core-fixture.mjs'
 import {
   actionPreview,
-  applyMove, createGameState, eliminateInvestigator, evaluateCriteria, executeDescriptor, finishScenario, getStat, healHorrorFrom, isSpellAction, legalMoves, playCost,
+  applyMove, createGameState, eliminateInvestigator, evaluateCriteria, executeDescriptor, finishScenario, getStat, healHorrorFrom, isSpellAction, legalMoves, payAbilityCost, playCost,
   performTest, playerWindow, reactionWindow, validateMove, applyDamage, applySkillOnSuccess, slotUsage, canEquip, enemyAttack,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
@@ -425,7 +425,7 @@ test('P6 普雷斯顿：家族遗产开局入场，卡牌效果获得的资源�
   assert.equal(me(state).assets.find(asset => asset.code === '05011').resources, 3, '资源寄存到家族遗产')
 })
 
-test('P6 普雷斯顿：回合开始放 4 资源，回合结束弃掉寄存的部分', () => {
+test('P6 普雷斯顿：回合开始放 4 资源，支付先扣寄存部分，回合结束弃掉剩下的寄存', () => {
   const bank = bankEngine
   const state = investigatorFixture('05003')
   const inv = me(state)
@@ -435,14 +435,50 @@ test('P6 普雷斯顿：回合开始放 4 资源，回合结束弃掉寄存的�
   assert.equal(inv.resources, 10)
   assert.equal(bank.bankedOf(inv), 4)
   assert.equal(bank.projection(inv).banked, 4)
-  // 花掉 2 点：寄存标记不变；回合结束时按 min(寄存, 现有) 扣回。
-  inv.resources -= 2
+  // 花掉 2 点：走统一支付入口，先扣寄存标记；回合结束时只剩 2 点寄存被弃回。
+  bank.spendResources(state, inv, 2, [])
+  assert.equal(inv.resources, 8)
+  assert.equal(bank.bankedOf(inv), 2, '支付先扣家族遗产上的寄存资源')
   bank.endTurn(state, inv, [])
-  assert.equal(inv.resources, 4)
+  assert.equal(inv.resources, 6)
   assert.equal(bank.bankedOf(inv), 0)
   // [action]：把寄存的资源转成永久资源。
   inv.assets[0].resources = 0
   assert.equal(bank.withdrawAll(state, inv, []), 0)
+})
+
+test('P6 普雷斯顿：普通支付（打牌）先扣家族遗产上的寄存资源，回合结束不再重复流失', () => {
+  const state = fixture('01001')
+  const inv = me(state)
+  const card = ALL_CARDS['05003']
+  Object.assign(inv, {
+    code: '05003', name: card.nameZh, nameEn: card.name, klass: card.klass,
+    willpower: card.willpower, intellect: card.intellect, combat: card.combat, agility: card.agility,
+    baseHealth: card.health, baseSanity: card.sanity, health: card.health, sanity: card.sanity,
+  })
+  // 模拟「回合已开始」：自己的 2 点 + 家族遗产上的寄存 4 点。
+  inv.assets = [{ id: 'family', code: '05011', exhausted: false, resources: 4 }]
+  inv.resources = 6
+  inv.hand = ['01087'] // 手电筒，费用 2
+  move(state, { action: 'play', cardId: '01087' })
+  settle(state)
+  const after = me(state)
+  const family = after.assets.find(asset => asset.code === '05011')
+  assert.equal(after.resources, 4, '资源池 6 → 4')
+  assert.equal(family.resources, 2, '先扣家族遗产上的寄存资源，而不是留到回合末白弃')
+  bankEngine.endTurn(state, after, [])
+  assert.equal(me(state).resources, 2, '自己的 2 点保留；剩下 2 点寄存被弃')
+  assert.equal(me(state).assets.find(asset => asset.code === '05011')?.resources ?? 0, 0)
+})
+
+test('P6 普雷斯顿：能力层费用（payAbilityCost）同样先扣寄存资源', () => {
+  const state = investigatorFixture('05003')
+  const inv = me(state)
+  inv.assets = [{ id: 'family', code: '05011', exhausted: false, resources: 4 }]
+  inv.resources = 6
+  assert.equal(payAbilityCost(state, inv, null, { resources: 2 }, []), true)
+  assert.equal(inv.resources, 4)
+  assert.equal(inv.assets[0].resources, 2, '能力费用也先扣寄存资源')
 })
 
 test('P6 普雷斯顿旧印：+0，可花 2 资源改为自动成功', () => {

@@ -2,6 +2,8 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { resolveTransaction, requestChoice } from '../src/engine/resolution.js'
 import { randomValue } from '../src/engine/rules-state.js'
+import { advanceAct, applyMove, createGameState, startScenario } from '../src/engine/engine.js'
+import { settle } from './core-fixture.mjs'
 import { manifest as campaignManifest } from '../content/campaigns/thePathToCarcosa/manifest.js'
 import * as blackStars from '../content/campaigns/thePathToCarcosa/scenarios/blackStarsRise/index.js'
 import {
@@ -266,4 +268,49 @@ test('Dim Carcosa failure tie routes to R4, otherwise doubt leads to R5', () => 
   const doubt = state({ doubt: 5, conviction: 4 })
   dimCarcosa.behavior.resolution(doubt, 'noResolution')
   assert.equal(doubt.campaign.records.hasturHasYouInHisGrasp, true)
+})
+
+test('卡城幽影：版本三击败苍白面具下的男子推进场景并移出游戏（不再中止行动）', () => {
+  // 03059 是从「放到一边」生成的弱点敌人，没有交战座位；此前击败时 addVictory
+  // 找不到牌组归属会抛错，整次攻击行动中止。版本三的幕背面要求把它移出游戏。
+  const game = createGameState({
+    campaignId: 'thePathToCarcosa',
+    playerInvestigator: '05004',
+    seed: 'dim-carcosa-defeat-regression',
+    seatInvestigators: ['05004'],
+  }, [{ seat: 0, role: 'human' }])
+  settle(game)
+  game.campaign.records.conviction = 6 // 确信高于疑惑且总数 > 5：幕二使用版本三（只能因伤害被击败）
+  game.campaign.investigators[0].deck.push('03059')
+  startScenario(game, 7, [])
+  settle(game)
+  assert.equal(game.scenarioFlags.actTwoVersion, 3)
+  // 03320 的背面在王之宫殿生成苍白面具下的男子。
+  game.actIndex = 0
+  advanceAct(game, [])
+  settle(game)
+  const man = game.enemies.find(enemy => enemy.code === '03059')
+  assert.ok(man, '第一幕背面应生成苍白面具下的男子')
+  assert.equal(man.bearerSeat, 0, '生成时按战役牌组补上弱点归属')
+
+  const inv = game.investigators[0]
+  inv.location = man.location
+  inv.combat = 99
+  inv.actionsLeft = 10
+  game.currentSeat = 0
+  game.phase = 'investigation'
+  game.chaosBag = ['0']
+  game.encounterDeck = []
+  man.engagedSeat = 0
+  inv.engaged.push(man.id)
+  man.damageTaken = man.health - 1
+  applyMove(game, 0, { action: 'fight', enemyId: man.id })
+  settle(game)
+
+  assert.equal(game.scenarioFlags.strangerDefeated, true)
+  assert.equal(game.actIndex, 2)
+  assert.equal(game.acts[2].originalCode, '03324', '推进到「褴褛之王」')
+  assert.ok(game.enemies.some(enemy => enemy.code === '03333'), '版本三背面生成哈斯塔（卡尔克萨领主）')
+  assert.ok(game.removedFromGame.includes('03059'), '男子按幕背移出游戏')
+  assert.ok(!game.encounterDiscard.includes('03059'), '不再掉进遭遇弃牌堆')
 })

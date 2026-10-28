@@ -13,7 +13,9 @@ import { UI_CARDS } from './ui-cards.js'
 import { createHubUI } from './hub.js'
 import { createMusicPlayer } from './music-player.js'
 import { createChaosBagView } from './chaos-bag-view.js'
+import { chaosTokenFaceByLabel } from './chaos-token.js'
 import { createSituationView } from './situation-view.js'
+import { createDebugConsole } from './debug-console.js'
 import { createRulebook } from './rulebook.js'
 import { cardRuleIds, openRule, ruleLink } from './rulebook-data.js'
 import { renderRulesText, cardSymbol } from './card-text.js'
@@ -43,6 +45,8 @@ let mapResizeObserver
 let musicPlayer
 let chaosBagView
 let situationView
+// 调试控制台：单机本机可用 / 联机房主可见（契约 artifacts/debug-console/CONTRACT.md §7）。
+let debugConsole
 
 // 挂在牌桌之外的浮层（音乐盒）拿不到 .ah-table 上的主题变量：把当前战役色板
 // 直接写到浮层根节点，样式与牌桌共用同一组 --ah-theme-* / --ah-material-*。
@@ -256,11 +260,13 @@ export function createUI(host) {
     effStat: (s, inv, skill) => ahEffStat(s, inv, skill), mySeat: s => mySeat(s),
     openDetail: (def, options) => openCardDetailDef(def, options), openCard: (s, reference) => openCardDetail(s, reference),
     cardName: (s, code) => cardDisplayName(ahCardDef(s, code)) })
+  // 宿主能力（h/t/api/render/state）注入；面板只在牌桌且 canUse 时渲染入口。
+  debugConsole ||= createDebugConsole({ h, t, api, render, state })
   hubUi = createHubUI({ ...host, canAct, submitMove: cardMove, refreshSession: refreshCardSession,
     catalogOpen: () => arkhamCatalog.open(), rulebookOpen: () => openRule(), inspectCard: code => openCardDetailDef({...ahCardDef(state.session,code),code}, {runtime:false}) })
   return {
     onOpenSetup: game => { state.cardDetail = null; state.arkhamZoneOpen = null; state.arkhamDeckOpen = false; if (arkhamCatalog.isOpen) arkhamCatalog.close(); hubUi.onOpenSetup(game) },
-    onDeactivate: () => { musicPlayer.render(false); rulebook.render(false); chaosBagView.reset(); situationView.reset(); state.arkhamZoneOpen = null; tableSession = null },
+    onDeactivate: () => { musicPlayer.render(false); rulebook.render(false); chaosBagView.reset(); situationView.reset(); debugConsole.close({ render: false }); state.arkhamZoneOpen = null; tableSession = null },
     // 大厅切换语言后调用（§8.3）：幂等、同步，只换词典与卡牌语言并重绘；
     // 不重置对局、不重新请求存档、不 location.reload()、不触发 AI 回合。
     onLocaleChange(next) {
@@ -269,7 +275,7 @@ export function createUI(host) {
       setHostLocale(locale)
       render()
     },
-    isModalOpen: () => !!(state.cardDetail || state.arkhamZoneOpen || state.arkhamDeckOpen || arkhamCatalog.isOpen || chaosBagView.opened || situationView.opened),
+    isModalOpen: () => !!(state.cardDetail || state.arkhamZoneOpen || state.arkhamDeckOpen || arkhamCatalog.isOpen || chaosBagView.opened || situationView.opened || debugConsole.opened),
     renderSetupModal: game => hubUi.renderSetupModal(game),
     renderGame: session => {
       session = presentation.sync(session)
@@ -318,6 +324,7 @@ export function createUI(host) {
         themed(!presentation.isBlocking && state.arkhamDeckOpen && state.session ? hubUi.renderDeckModal(state.session) : null),
         themed(arkhamCatalog.isOpen ? arkhamCatalog.render() : null),
         themed(state.cardDetail ? renderCardDetailModal(state.cardDetail) : null),
+        themed(debugConsole.render()),
       ].filter(Boolean)
     },
     // 大厅「强制同步」钩子：任何操作/演出看起来卡住时，由玩家手动点「强制同步」清掉本 Mod 的
@@ -1246,16 +1253,21 @@ function renderPendingChoice(s, humanTurn) {
     ordering ? renderScryOrder(s, humanTurn) : null,
     offers.length ? h('div', { className: 'ah-visual-choices', 'aria-label': t('game.choice.offersAria') }, offers.map(item => {
       const cards = item.cards.length ? item.cards : item.code ? [{ code: item.code, name: item.label }] : []
+      // 混乱标记选项：引擎只下发展示名（emoji / ±数字），按 state.tokenLabels 反查回标记类型，
+      // 显示真正的标记图案与名称，而不是把 emoji 当图标。
+      const token = !cards.length && choice.kind === 'token' ? chaosTokenFaceByLabel(s.state.tokenLabels, item.label) : null
       const optionIcon = ({ intellect: 'book', combat: 'sword', agility: 'leaf', willpower: 'star' })[item.move.optionId]
         || (choice.kind === 'token' ? 'star' : choice.kind === 'payment' ? 'clue' : 'book')
-      return h('button', { className: 'ah-choice-option ah-visual-option' + (cards.length ? ' has-art' : ' ah-effect-option'),
-        'aria-label': item.label,
+      const label = token ? token.label : item.label
+      return h('button', { className: 'ah-choice-option ah-visual-option' + (cards.length ? ' has-art' : token ? ' ah-effect-option ah-token-option' : ' ah-effect-option'),
+        'aria-label': label,
         'data-option-id': item.move.optionId, 'data-choice-offer': item.key, 'data-keep-offer': choice.kind === 'prey' || assigningHarm ? 'true' : null,
         'data-interaction': choice.kind === 'prey' ? item.key : null, disabled: state.busy || !humanTurn,
-        title: item.label, onclick: () => cardMove(item.move, s) },
+        title: label, onclick: () => cardMove(item.move, s) },
         cards.length ? h('span', { className: 'ah-offer-cards' }, cards.map(card => tableArt(h, card.originalCode || ahArtCode(s, card.code), cardDisplayName(card)))) :
-          tableIcon(optionIcon),
-        h('span', {}, renderChoiceText(h,item.label)))
+          token ? h('img', { className: 'ah-choice-token', src: token.src, alt: '', draggable: false })
+            : tableIcon(optionIcon),
+        h('span', {}, token ? label : renderChoiceText(h,item.label)))
     })) : null)
 }
 
@@ -1462,6 +1474,11 @@ function renderCardGame(s, autoPassing = false) {
         !st.hubFlow ? h('button', { className: 'bg-btn secondary', disabled: state.busy, onclick: reset }, t('table.restart')) : null,
         h('button', { className: 'bg-btn secondary', disabled: state.busy, onclick: leave }, t('table.leave'))
         )),
+        // 调试控制台入口：单机本机显示；联机只有房主显示（客人由服务端硬拒绝）。
+        debugConsole.canUse(s) ? h('button', { className: 'bg-btn secondary ah-debug-launcher', 'data-debug-launcher': 'true',
+          'aria-haspopup': 'dialog', 'aria-expanded': String(debugConsole.opened),
+          title: t('debug.button'), 'aria-label': t('debug.button'),
+          onclick: () => debugConsole.open(s) }, '🛠️ ' + t('debug.button')) : null,
         feedbackEntry()
       )
     ),

@@ -50,10 +50,12 @@ export function createActionsExtra(deps) {
     normalizedSlots,
     performTest,
     playCost,
+    playTypeBlocked,
     registeredEntry,
     removeOne,
     removeThreat,
     requestChoice,
+    resourceBank,
     resolveEffect,
     runtimeCardAvailable,
     scenarioBehavior,
@@ -70,7 +72,7 @@ export function createActionsExtra(deps) {
     if (!runtimeCardAvailable(state, inv, code) || !lolaCanUseCard(inv, code)) return '当前调查员不能打出该支援'
     if (cannotPlayTypes(inv).has(def.type)
       || scenarioBehavior(state).canPlayCard?.(state, inv, def) === false
-      || activeHiddenRules(state, inv).some(hidden => hidden.rule.cannotPlayTypes?.includes(def.type))) {
+      || playTypeBlocked(state, inv, def.type)) {
       return '当前效果禁止打出支援'
     }
     if (inv.resources < playCost(state, inv, def)) return '资源不足'
@@ -177,7 +179,7 @@ export function createActionsExtra(deps) {
     const inv = state.investigators[seat]
     const skids = investigatorRule(inv.code)
     if (!skids || !skids.freeAction || investigatorTextBlanked(state, inv)) return
-    inv.resources -= skids.freeAction.cost.resources || 0
+    resourceBank.spendFromPool(inv, skids.freeAction.cost.resources || 0)
     if (skids.freeAction.cost.discardHand) {
       const index = requestChoice(state, { kind: 'discard', source: skids.freeAction.id, seat, prompt: '选择弃掉的手牌。',
         options: inv.hand.flatMap((code, i) => isWeaknessCode(code) || !canDiscardFromHand(inv, code)
@@ -194,7 +196,7 @@ export function createActionsExtra(deps) {
     const rule = hiddenRule(state, move.cardId)
     const discard = rule?.discard
     if (!discard || !hasHiddenCard(inv, move.cardId)) return
-    inv.resources -= discard.resources || 0
+    resourceBank.spendFromPool(inv, discard.resources || 0)
     if (discard.damageInvestigator) {
       const target = state.investigators.find(other => other.seat === move.targetSeat
         && !other.defeated && !other.resigned && other.location === inv.location)
@@ -209,7 +211,7 @@ export function createActionsExtra(deps) {
     const enemy = state.enemies.find((e) => e.id === enemyId)
     if (!enemy || enemy.engagedSeat !== seat || !enemy.parleyCost) return
     spendAction(state, inv)
-    inv.resources -= enemy.parleyCost
+    resourceBank.spendFromPool(inv, enemy.parleyCost)
     info(state, events, `🤝 ${inv.name} 花费 ${enemy.parleyCost} 资源谈判，「${enemy.name}」被弃掉。`)
     removeOne(state.enemies, enemy)
     removeOne(inv.engaged, enemy.id)
@@ -230,7 +232,7 @@ export function createActionsExtra(deps) {
     if (cost.discardHand && inv.hand.length < cost.discardHand) { info(state, events, '手牌不足，无法谈判。'); return }
     spendAction(state, inv)
     if (cost.clues) spendClues(state, inv, cost.clues)
-    if (cost.resources) inv.resources -= cost.resources
+    if (cost.resources) resourceBank.spendFromPool(inv, cost.resources)
     if (cost.discardHand) discardChosenCards(state, inv, cost.discardHand, events, 'parley')
     info(state, events, `🤝 ${inv.name} 谈判盘问「${enemy.name}」，将其加入胜利区。`)
     interrogateCultist(state, enemy, events)
@@ -460,7 +462,7 @@ export function createActionsExtra(deps) {
     const loc = state.locations.find(item => item.id === locationId)
     if (!loc || !loc.ability || inv.location !== locationId) return
     const ab = loc.ability
-    if (ab.cost && ab.cost.resources) inv.resources -= ab.cost.resources
+    if (ab.cost && ab.cost.resources) resourceBank.spendFromPool(inv, ab.cost.resources)
     markLocationAbilityUsed(state, loc, inv)
     info(state, events, `📍 ${inv.name} 使用「${loc.name}」的能力：${ab.label}。`)
     resolveEffect(state, seat, ab.effect, makeRuntime(state, events))

@@ -15,10 +15,11 @@ export default {
       const key = defeated ? 'conviction' : 'doubt'
       records[key] = Number(records[key] || 0) + 2
       const stranger = state.enemies.find(enemy => enemy.code === '03059')
-      if (stranger) {
-        state.enemies.splice(state.enemies.indexOf(stranger), 1)
-        state.scenarioZones.removed.push('03059')
-      }
+      if (stranger) state.enemies.splice(state.enemies.indexOf(stranger), 1)
+      // 卡背两个分支都「将苍白面具下的男子从游戏中移除」。击败分支里引擎已经先把他
+      // 移出 state.enemies（再走本幕的背面），所以不能只在找到敌人时才记录移出游戏。
+      state.scenarioZones.removed ||= []
+      if (!state.scenarioZones.removed.includes('03059')) state.scenarioZones.removed.push('03059')
       const nextCode = defeated ? '03245' : '03246'
       state.acts = [
         ...state.acts.slice(0, 2),

@@ -14,6 +14,17 @@ export function chaosTokenFace(value) {
   const key = face(value)
   return { key: key || String(value), label: tokenLabel(key) || String(value), src: key ? ROOT + 'ct-' + key + '.png' : null }
 }
+// 引擎给「选择混乱标记」类选项下发的 label 是 state.tokenLabels 里的展示名
+// （💀 / 🕯️ / ±数字，见 src/engine/presentation-constants.js 的 TOKEN_LABEL）。
+// 选项面板要显示真正的标记图案，就得用这份展示名反查回标记 key；
+// 反查不到（旧存档 / 自定义文案）时返回 null，调用方回退到原来的图标。
+export function chaosTokenFaceByLabel(labels, label) {
+  if (!labels || typeof label !== 'string') return null
+  const key = Object.keys(labels).find(candidate => labels[candidate] === label)
+  if (!key) return null
+  const face = chaosTokenFace(key)
+  return face.src ? face : null
+}
 function preload(key) {
   if (!images.has(key)) {
     const image = new Image(); image.src = ROOT + 'ct-' + key + '.png'

@@ -86,9 +86,22 @@
    定位/配色见 player-dashboard.css 的 .ah-reaction-mode，这里只补小卡与详情里的尺寸。 */
 .ah-minicard > .ah-reaction-mode { position: absolute; right: 1px; top: 3px; z-index: 6; width: 22px; height: 22px; border-radius: 4px; }
 .ah-minicard > .ah-reaction-mode .ah-icon { width: 14px; height: 14px; }
-/* 右上角已有经验/弱点角标时，把反应按钮左移，避免两层叠在一起（22px 按钮 + 8px 间距）。 */
-.ah-minicard:has(> .ah-minicard-xp) > .ah-reaction-mode,
-.ah-minicard:has(> .ah-minicard-weakness) > .ah-reaction-mode { right: 30px; }
+/* 反应按钮固定贴右上角最右；已有经验/弱点角标时改为把角标排到按钮左侧（22px 按钮 + 4px 间距）。 */
+.ah-minicard:has(> .ah-reaction-mode) > .ah-minicard-xp,
+.ah-minicard:has(> .ah-reaction-mode) > .ah-minicard-weakness { right: 27px; }
+/* 44–48px 的小卡位（下方/直觉/威胁栏，以及 ≤700px 的装备槽）：角标再压缩一点、贴紧按钮，
+   否则经验胶囊左缘会被卡边裁掉。 */
+.ah-beneath-row .ah-minicard:has(> .ah-reaction-mode) > .ah-minicard-xp,
+.ah-beneath-row .ah-minicard:has(> .ah-reaction-mode) > .ah-minicard-weakness,
+.ah-hunch-row .ah-minicard:has(> .ah-reaction-mode) > .ah-minicard-xp,
+.ah-hunch-row .ah-minicard:has(> .ah-reaction-mode) > .ah-minicard-weakness { right: 25px; font-size: 9px; padding: 0 3px; }
+@media (max-width: 700px) {
+  /* 手机 390 下装备槽/威胁栏的小卡也只有 48px：与下方/直觉栏同样压缩角标。 */
+  .ah-equipment-battlefield .ah-minicard:has(> .ah-reaction-mode) > .ah-minicard-xp,
+  .ah-equipment-battlefield .ah-minicard:has(> .ah-reaction-mode) > .ah-minicard-weakness,
+  .ah-threat-row .ah-minicard:has(> .ah-reaction-mode) > .ah-minicard-xp,
+  .ah-threat-row .ah-minicard:has(> .ah-reaction-mode) > .ah-minicard-weakness { right: 25px; font-size: 9px; padding: 0 3px; }
+}
 .ah-minicard:has(> .ah-reaction-mode) > .ah-minicard-ds { top: 28px; }
 .ah-reaction-mode:focus-visible { outline: 2px solid #ffe0a1; outline-offset: 2px; }
 .ah-carddetail-modal > .ah-reaction-mode { margin-top: 12px; }
@@ -100,6 +113,9 @@
 .ah-visual-option:disabled { cursor: default; filter: saturate(.55); }
 .ah-offer-cards { display: flex; gap: 8px; }.ah-offer-cards .ah-table-art { width: 124px; height: 174px; border-color: #d3ba7f88; box-shadow: 0 5px 13px #0007; }.ah-visual-option > span:last-child { max-width: 320px; }
 .ah-effect-option { justify-content: center; min-height: 104px; }.ah-effect-option .ah-icon { width: 38px; height: 38px; color: #efd38e; }
+/* 混乱标记选项（逆反 / 蔑视等）：显示真实标记图案与名称，不再把 emoji 当图标。 */
+.ah-token-option .ah-choice-token { width: 54px; height: 54px; object-fit: contain; filter: drop-shadow(0 5px 7px #0009); }
+.ah-token-option > span:last-child { font-size: 14px; }
 .ah-discard-tray { position: absolute; right: 0; bottom: 100%; display: flex; gap: 8px; max-width: 90vw; overflow: auto; background: #10231ffa; border: 1px solid #c2a86b; padding: 12px; z-index: 30; }
 .ah-discard-tray .ah-minicard { width: 80px; min-width: 80px; height: 112px; }
 .ah-threat-row { box-sizing: border-box; position: relative; flex: 0 0 auto; min-width: calc(var(--surface-card-w,44px) + 14px); max-width: calc(var(--surface-card-w,44px) * 2 + 22px); height: calc(var(--surface-card-h,98px) + 18px); overflow: hidden; border: 1px dashed #af685b99; border-radius: 5px; padding: 15px 5px 3px; background: #351b1b52; }
@@ -131,6 +147,7 @@
   .ah-table.ah-calm.ah-noir .ah-direct-prompt > .ah-action { min-height: 40px; padding: 8px 12px; font-size: 12px; }
   .ah-visual-choices { bottom: calc(100% + 240px); width: calc(100vw - 16px); grid-template-columns: repeat(auto-fit,minmax(min(150px,100%),1fr)); gap: 9px; padding: 10px; }
   .ah-visual-option { padding: 8px; font-size: 12px; }
+  .ah-token-option .ah-choice-token { width: 40px; height: 40px; }
   .ah-offer-cards .ah-table-art { width: 80px; height: 112px; }
   .ah-scry-order { bottom: calc(100% + 238px); padding: 8px; font-size: 10px; }.ah-scry-card .ah-table-art { width: 78px; height: 109px; }
 }

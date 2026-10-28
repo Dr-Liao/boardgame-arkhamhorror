@@ -84,6 +84,8 @@ export function createDispatch(deps) {
     enemiesEngagedWith,
     enemyAttack,
     enemyCanOpportunityAttack,
+    // 2026-10-28 调试控制台（CONTRACT §3）：由 engine.js 注入的调试执行器。
+    executeDebugMove,
     finishUpgradeDraft,
     getMaxSanity,
     getStat,
@@ -149,6 +151,9 @@ function applyMove(state, seat, move) {
 }
 
 function executeCommand(state, seat, move, events) {
+  // 调试 move（CONTRACT §3.1）：在局外分支之前分发，完全绕过行动点 / 借机攻击 /
+  // 行动类型；校验已由 applyMove → validateMove 完成。
+  if (move.action === 'debug') return executeDebugMove(state, seat, move, events)
   if (inHub(state)) {
     executeHubMove(state, seat, move, events)
     return
@@ -328,6 +333,9 @@ function executeHubMove(state, seat, move, events) {
       } else if (previous && previous.status !== 'active') {
         campaign.retired.push(structuredClone(previous))
         delete campaign.investigators[seat]
+        // 关间替补：新调查员的 0 XP 起始牌组在确认席位前仍可反复调整（自动构筑/手动/
+        // 卡组库/ArkhamDB）。只标记本关间换人的席位，现役调查员仍不能在关间重建牌组。
+        if (state.uiState === 'interlude') state.hubReplacementSeats = { ...(state.hubReplacementSeats || {}), [seat]: true }
       }
       state.investigators[seat] = makeInvestigator(ALL_INVESTIGATORS[move.code], seat)
       if (campaign.investigators[seat]) state.investigators[seat].campaignId = campaign.investigators[seat].id
@@ -383,6 +391,11 @@ function executeHubMove(state, seat, move, events) {
     }
     case 'hubDoneSeat': {
       state.hubSeatDone[seat] = true
+      // 席位确认后关间不再开放起始牌组重构（与首关准备一致）。
+      if (state.hubReplacementSeats) {
+        delete state.hubReplacementSeats[seat]
+        if (!Object.keys(state.hubReplacementSeats).length) delete state.hubReplacementSeats
+      }
       if (hubPendingSeats(state).length) state.currentSeat = hubActingSeats(state)[0]
       else {
         state.currentSeat = 0
@@ -419,6 +432,8 @@ function executeHubMove(state, seat, move, events) {
       state.hubReady = false
       state.hubSeatDone = {}
       state.hubUpgradedSeats = {}
+      // 新关间从零开始：替换席位标记只在换人的那一轮关间有效。
+      delete state.hubReplacementSeats
       state.hubSelectedScenarioId = CAMPAIGN.scenarioOrder[campaign.scenarioIndex]
       break
     }

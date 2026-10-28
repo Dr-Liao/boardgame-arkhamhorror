@@ -1,0 +1,214 @@
+/* 诡镇奇谈 · 调试控制台浮层（web/debug-console.js）
+ *
+ * 浮层挂在牌桌/大厅之外，收不到 .ah-table 的战役色板：game-ui.js 的 renderOverlays 会给根节点
+ * 补 .ah-theme 与 --ah-theme-* 变量，所以这里只消费主题变量并给出中性回退色。
+ * 面板自身是 fixed 浮层 + 内部滚动：桌面与 390×844 下都不撑破视口。
+ */
+.ah-debug-backdrop {
+  position: fixed;
+  inset: 0;
+  /* 层次对齐现有浮层：高于局势（38）/牌桌弹层，低于大厅通用错误 toast（.bg-toast=50）、
+   * 反馈弹窗（1000）与复制提示（1100），避免调试面板把大厅报错压住。 */
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(2, 8, 6, .74);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+.ah-debug-backdrop[hidden] { display: none; }
+.ah-debug-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(600px, 100%);
+  max-height: calc(100dvh - 32px);
+  min-height: 0;
+  border: 1px solid var(--ah-theme-edge, #b09658);
+  border-radius: 8px;
+  overflow: hidden;
+  color: #e7d6af;
+  background: linear-gradient(160deg, var(--ah-theme-panel, #1b332b) 0%, var(--ah-theme-bg, #0a1712) 100%);
+  box-shadow: 0 24px 80px #000c, inset 0 0 0 4px #b0965812;
+  font-family: 'Microsoft YaHei', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+.ah-debug-panel * { box-sizing: border-box; }
+.ah-debug-panel button { font: inherit; cursor: pointer; }
+.ah-debug-panel button:focus-visible,
+.ah-debug-panel input:focus-visible,
+.ah-debug-panel select:focus-visible {
+  outline: 2px solid #f2d68c;
+  outline-offset: 2px;
+}
+
+.ah-debug-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: none;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--ah-theme-edge, #b09658) 60%, transparent);
+}
+.ah-debug-heading { flex: 1; min-width: 0; }
+.ah-debug-title {
+  margin: 0;
+  font: 500 19px/1.3 Georgia, 'Noto Serif SC', SimSun, serif;
+  letter-spacing: 2px;
+  color: var(--ah-theme-accent-strong, #f0dcaa);
+}
+.ah-debug-hint {
+  margin: 4px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--ah-theme-muted, #a9b49e);
+}
+.ah-debug-close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 4px 10px;
+  border: 1px solid #a58c5666;
+  border-radius: 5px;
+  background: #152b23;
+  color: #e7d6af;
+}
+.ah-debug-close:hover { border-color: #ddc68d; background: #20372e; }
+.ah-debug-close-icon { font-size: 17px; line-height: 1; }
+
+.ah-debug-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 18px 18px;
+  overflow-y: auto;
+  /* 软键盘弹出时浏览器把聚焦控件滚进可视区：输入/下拉在面板最上方并预留滚动余量，
+   * 滚动链隔离在面板内部，不会带着牌桌一起滚。 */
+  overscroll-behavior: contain;
+  scroll-padding-block: 14px;
+  scrollbar-color: #a78d58 #10231d;
+  scrollbar-width: thin;
+}
+.ah-debug-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #c9b681;
+}
+.ah-debug-field[hidden] { display: none; }
+.ah-debug-select,
+.ah-debug-input {
+  width: 100%;
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid #8d754566;
+  border-radius: 5px;
+  background: #0d1f19;
+  color: #eee2c2;
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: 0;
+  scroll-margin-block: 52px;
+}
+.ah-debug-select:disabled,
+.ah-debug-input:disabled { opacity: .55; cursor: default; }
+.ah-debug-input::placeholder { color: #7f8f7d; }
+
+.ah-debug-actions { display: flex; align-items: center; gap: 10px; }
+.ah-debug-panel .ah-debug-run {
+  min-height: 36px;
+  padding: 8px 22px;
+  border: 1px solid #d7ba7b;
+  border-radius: 5px;
+  background: linear-gradient(#8b7139, #554522);
+  color: #fff2c3;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+.ah-debug-panel .ah-debug-run:hover:not(:disabled) { background: linear-gradient(#a08345, #67542a); }
+.ah-debug-panel .ah-debug-run:disabled { opacity: .55; cursor: default; }
+
+.ah-debug-help,
+.ah-debug-log-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid #b0965826;
+}
+.ah-debug-section-title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--ah-theme-accent, #cfb57a);
+}
+.ah-debug-help-examples,
+.ah-debug-help-server {
+  margin: 0;
+  font: 12px/1.7 ui-monospace, Consolas, 'Courier New', monospace;
+  color: #b9c4ae;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ah-debug-help-server {
+  padding-left: 8px;
+  border-left: 2px solid #b0965866;
+  color: #d9c9a1;
+}
+.ah-debug-help-server[hidden] { display: none; }
+
+.ah-debug-log {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 168px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: #a78d58 #10231d;
+  scrollbar-width: thin;
+}
+.ah-debug-log[hidden] { display: none; }
+.ah-debug-log-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 0;
+  padding: 5px 8px;
+  border-radius: 4px;
+  border-left: 2px solid transparent;
+  background: #0d1f19b3;
+  font: 12px/1.6 'Microsoft YaHei', system-ui, sans-serif;
+}
+.ah-debug-log-entry.is-success { border-left-color: #9fbf86; }
+.ah-debug-log-entry.is-error { border-left-color: #e2857a; background: #2a1512b3; color: #f0c4bb; }
+.ah-debug-log-tone { flex: none; font-weight: 700; color: #b8d69c; }
+.ah-debug-log-entry.is-error .ah-debug-log-tone { color: #ea9a90; }
+.ah-debug-log-text { min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.ah-debug-empty { margin: 0; font-size: 12px; color: #8f9d8e; }
+
+@media (max-width: 700px) {
+  .ah-debug-backdrop { padding: 8px; }
+  .ah-debug-panel { width: 100%; max-height: calc(100dvh - 16px); }
+  .ah-debug-head { padding: 12px 14px 10px; gap: 8px; }
+  .ah-debug-title { font-size: 17px; letter-spacing: 1px; }
+  .ah-debug-hint { font-size: 10px; }
+  .ah-debug-body { padding: 12px 14px 14px; gap: 10px; }
+  .ah-debug-log { max-height: 132px; }
+}
+/* 竖屏 + 软键盘 / 横屏手机这类矮视口：压缩 chrome，把目标下拉与输入框留在首屏。 */
+@media (max-width: 700px) and (max-height: 560px) {
+  .ah-debug-head { padding: 8px 10px 6px; }
+  .ah-debug-title { font-size: 15px; }
+  .ah-debug-close-text { display: none; }
+  .ah-debug-body { padding: 8px 10px 10px; gap: 8px; }
+  .ah-debug-help-examples { max-height: 88px; overflow-y: auto; overscroll-behavior: contain; }
+  .ah-debug-log { max-height: 96px; }
+}

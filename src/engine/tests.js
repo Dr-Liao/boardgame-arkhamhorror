@@ -86,6 +86,7 @@ export function createPerformTest(deps) {
     removeHiddenMarker,
     removeOne,
     requestChoice,
+    resourceBank,
     resolveEffect,
     resolveSpecialToken,
     returnChaosToken,
@@ -333,7 +334,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         const maximum = Math.min(skillEffect.wagerResources, owner.resources)
         const wager = maximum ? Number(requestChoice(state, { kind: 'resource', source: code, seat: owner.seat,
           prompt: '选择为本次检定押注的资源。', options: Array.from({ length: maximum + 1 }, (_, amount) => ({ id: String(amount), label: `${amount}资源` })) })) : 0
-        owner.resources -= wager
+        resourceBank.spendFromPool(owner, wager)
         campaignState.addWager(owner, code, wager)
       }
       if (skillEffect?.spendChargesForIcons) {
@@ -404,7 +405,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   let defiedToken = null
   const defied = commitments.find(item => commitProfile(item.code)?.defiance)
   if (defied) {
-    defiedToken = requestChoice(state, { kind: 'token', source: defied.code, seat, prompt: '蔑视：选择本次检定要忽略的混乱符号。',
+    defiedToken = requestChoice(state, { kind: 'token', source: defied.code, seat, prompt: `${cardName(defied.code)}：选择本次检定要忽略的混乱符号。`,
       options: ['skull', 'cultist', 'tablet', 'elderthing'].map(id => ({ id, label: tokenLabel(id) })) })
   }
   playerWindow(state, 'test.afterCommit', events, options.peril || !state.skillTest.helpRequested ? seat : null)
@@ -608,7 +609,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         prompt: `幸运骰：是否支付 2 资源，取消并归还 ${tokenLabel(token)}，然后重新揭示？`,
         options: [{ id: 'skip', label: '保留该标记' }, { id: 'trigger', label: '支付 2 资源并重抽' }] })
       if (answer !== 'trigger') break
-      inv.resources -= 2
+      resourceBank.spendFromPool(inv, 2)
       cancelledTokens.push(token)
       returnChaosToken(state, token)
       token = drawChaosToken(state)
@@ -691,7 +692,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       value += symbolContext.testBonus || 0
     }
     if (token === defiedToken) {
-      info(state, events, `「蔑视」忽略了 ${tokenLabel(token)} 的修正值与效果。`)
+      info(state, events, `「${cardName(defied.code)}」忽略了 ${tokenLabel(token)} 的修正值与效果。`)
       lastTokenDelta = 0
       break
     }

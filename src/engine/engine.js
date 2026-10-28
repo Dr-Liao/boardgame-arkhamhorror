@@ -339,6 +339,8 @@ import { createAbilityExecution } from './ability-exec.js'
 import { createCampaignFlow } from './campaign-flow.js'
 import { createSetup } from './setup.js'
 import { createDispatch } from './dispatch.js'
+// 2026-10-28 调试控制台（CONTRACT §3）：引擎侧调试 move 的校验/执行原语。
+import { createDebugExecutor } from './debug.js'
 import { createEncounter } from './encounter.js'
 import { createMovement } from './movement.js'
 import { createEnemies } from './enemies.js'
@@ -991,6 +993,8 @@ const resourceBank = {
   withdrawBanked: (state, inv, amount, events) => resourceBankApi().withdrawBanked(state, inv, amount, events),
   spendBanked: (state, inv, amount, events) => resourceBankApi().spendBanked(state, inv, amount, events),
   spendResources: (state, inv, amount, events) => resourceBankApi().spendResources(state, inv, amount, events),
+  // 引擎内所有「支付资源」路径的统一入口：合并池扣款时先扣寄存量（家族遗产）。
+  spendFromPool: (inv, amount) => resourceBankApi().spendFromPool(inv, amount),
   projection: inv => resourceBankApi().projection(inv),
 }
 
@@ -1131,6 +1135,8 @@ const commonDeps = {
   placeDoomOnCard,
   placeLocation,
   playCost,
+  // 隐私牌的「不能打出某类型卡牌」读点（03084d 等）；普通出牌与快速事件共用。
+  playTypeBlocked,
   playedEffect,
   playerWindow,
   randomValue,
@@ -1646,6 +1652,32 @@ function locationTraitsApi() {
   return locationTraitsImpl
 }
 
+// 2026-10-28：调试控制台（CONTRACT §3；v1.1 追加批次见 §10）。惰性装配的原因同其它工厂：
+// 依赖里的 startScenario / spawnEnemy / defeatEnemy / info / locName / syncClues 等都在本文件
+// 后部用函数声明定义，模块顶层立即求值会 TDZ；调用发生在对局/校验里，初始化顺序不受影响。
+let debugImpl = null
+function debugApi() {
+  debugImpl ||= createDebugExecutor({
+    campaignGraph,
+    campaignManifestFor,
+    startScenario,
+    spawnEnemy,
+    defeatEnemy,
+    // v1.1（契约 §10.1）：抽牌 / 传送 / 揭示 / 败退检查 / 地点查询。
+    drawCards,
+    relocateInvestigator,
+    revealLocation,
+    checkDefeated,
+    locationExists,
+    info,
+    locName,
+    cardName,
+    syncClues,
+    awardExperience,
+  })
+  return debugImpl
+}
+
 // Phase 6（6d-12）：技能检定主流程搬进 tests.js。
 // 用惰性装配的原因：performTest 被多个 api 依赖表引用，而那些表在模块顶层立即求值；
 // 若这里用 const 初始化会 TDZ（Cannot access 'performTest' before initialization）。
@@ -1981,6 +2013,8 @@ function dispatchApi() {
   doDetachLocationAttachment,
   endCampaign,
   enemyCanOpportunityAttack,
+  // 2026-10-28 调试控制台（CONTRACT §3）：executeCommand 在 inHub 之前分发到它。
+  executeDebugMove: (...args) => debugApi().executeDebugMove(...args),
   finishUpgradeDraft,
   hubActingSeats,
   hubPendingSeats,
@@ -2766,7 +2800,8 @@ function createHiddenRulesApi() {
 // createHiddenRulesApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
 export function hiddenDefinition(...args) { return createHiddenRulesApi().hiddenDefinition(...args) } export function hiddenRule(...args) { return createHiddenRulesApi().hiddenRule(...args) } export function hasHiddenCard(...args) { return createHiddenRulesApi().hasHiddenCard(...args) }
 export function removeHiddenMarker(...args) { return createHiddenRulesApi().removeHiddenMarker(...args) } export function canDiscardFromHand(...args) { return createHiddenRulesApi().canDiscardFromHand(...args) } export function discardHiddenCard(...args) { return createHiddenRulesApi().discardHiddenCard(...args) }
-export function placeHiddenCard(...args) { return createHiddenRulesApi().placeHiddenCard(...args) } export function activeHiddenRules(...args) { return createHiddenRulesApi().activeHiddenRules(...args) } export function cannotTriggerFreeAbility(...args) { return createHiddenRulesApi().cannotTriggerFreeAbility(...args) }
+export function placeHiddenCard(...args) { return createHiddenRulesApi().placeHiddenCard(...args) } export function activeHiddenRules(...args) { return createHiddenRulesApi().activeHiddenRules(...args) } export function playTypeBlocked(...args) { return createHiddenRulesApi().playTypeBlocked(...args) }
+export function cannotTriggerFreeAbility(...args) { return createHiddenRulesApi().cannotTriggerFreeAbility(...args) }
 export function hiddenFightBlocked(...args) { return createHiddenRulesApi().hiddenFightBlocked(...args) } export function movementError(...args) { return createHiddenRulesApi().movementError(...args) } export function currentInv(...args) { return createHiddenRulesApi().currentInv(...args) }
 export function investigatorTextBlanked(...args) { return createHiddenRulesApi().investigatorTextBlanked(...args) } export function enemyTextBlanked(...args) { return createHiddenRulesApi().enemyTextBlanked(...args) } export function enemyCannotAttack(...args) { return createHiddenRulesApi().enemyCannotAttack(...args) }
 export function enemyCannotBeAttacked(...args) { return createHiddenRulesApi().enemyCannotBeAttacked(...args) } export function aloofPreventsAttack(...args) { return createHiddenRulesApi().aloofPreventsAttack(...args) } export function enemyCanOpportunityAttack(...args) { return createHiddenRulesApi().enemyCanOpportunityAttack(...args) } export function enemyCanBeDefeated(...args) { return createHiddenRulesApi().enemyCanBeDefeated(...args) }

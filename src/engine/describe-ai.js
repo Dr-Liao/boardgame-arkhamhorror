@@ -127,6 +127,8 @@ export function createDescribeAi(deps) {
       case 'purgeThreat': return '净化威胁'
       case 'play': return '打出' + (move.cardId ? '「' + cardName(move.cardId) + '」' : '')
       case 'ability': return '使用能力'
+      // 调试 move 不进 legalMoves，这里只兜底 AI/日志文案（CONTRACT §3.1）。
+      case 'debug': return '调试：' + (move.label || move.kind)
       default: return move.action
     }
   }

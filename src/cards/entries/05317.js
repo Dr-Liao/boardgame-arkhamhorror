@@ -39,7 +39,8 @@ export default {
             if (inv.resources < 1) { api.info(`资源不足，无法用「${api.cardName(code)}」造成伤害。`); continue }
             const enemies = state.enemies.filter(enemy => enemy.location === inv.location)
             if (!enemies.length) { api.info('这里没有可伤害的敌人。'); continue }
-            api.loseResources(inv.seat, 1)
+            // 卡面「花费 1 资源」= 支付费用：走统一的支付入口（合并池先扣寄存量）。
+            api.spendResources(inv.seat, 1)
             const target = enemies.length === 1 ? enemies[0] : state.enemies.find(enemy => enemy.id === api.choice({
               kind: 'target', source: '05317', seat: inv.seat, prompt: '选择要伤害的敌人。',
               options: enemies.map(enemy => ({ id: enemy.id, label: enemy.name })),

@@ -69,11 +69,13 @@ export function createEncounter(deps) {
     // 2026-10-27：「如同手牌」通道统一原语（反应窗口/收尾玩家窗口的候选与取牌）。
     playChannels,
     playReactionCard,
+    playTypeBlocked,
     playedEffect,
     playerWindowLabel,
     randomValue,
     registeredEntry,
     requestChoice,
+    resourceBank,
     resolveEffect,
     resolveTreachery,
     runtimeCardAvailable,
@@ -283,6 +285,9 @@ function reactionWindow(state, when, context, events, opts = {}) {
           if (reaction.requiresDifficultyAboveBase
             && !(Number(context.difficulty) > Number(context.baseValue ?? 0))) return false
           if (cannotPlayTypes(inv).has(cardDef(copyCode || code)?.type)) return false
+          // 隐私弱点（03084d「你不能打出事件」）同样禁止快速事件；普通出牌在 moves.js 已挡，
+          // 快速事件只走本窗口，这里与执行器 assets.js#playReactionCard 共用同一读点。
+          if (playTypeBlocked(state, inv, cardDef(copyCode || code)?.type)) return false
           if (scenarioBehavior(state).canPlayCard?.(state, inv, cardDef(copyCode || code)) === false) return false
           // 2026-10-27「如同手牌」通道：折扣由原语统一给出（直觉牌库 -2 等），候选可用性与实付同源。
           const baseCost = playCost(state, inv, cardDef(copyCode || code))
@@ -394,7 +399,7 @@ function triggerReaction(state, seat, when, events, context = {}) {
     if (r.limit) inv.usedReactions[key] = true
     if (cost.exhaust && asset) asset.exhausted = true
     if (cost.uses && asset) asset.uses = Math.max(0, (asset.uses || 0) - cost.uses)
-    if (cost.resources) inv.resources -= cost.resources
+    if (cost.resources) resourceBank.spendFromPool(inv, cost.resources)
     if (cost.clues) {
       inv.clues -= cost.clues
       if (cost.returnClue) {

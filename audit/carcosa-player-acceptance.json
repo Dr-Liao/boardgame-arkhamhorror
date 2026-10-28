@@ -25,7 +25,7 @@
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/carcosa-player-acceptance.test.mjs",
-      "sha256": "2609e8a6ee52bb2c490c4031192eb83bfc81b6139baca62c34c8bfebaa2a431c"
+      "sha256": "ccbe1b49af2bdf9f94ce2a48fbf85355f1072d64f118a5c0042cd71b4011bb49"
     }
   ],
   "implementationFiles": [

@@ -876,6 +876,43 @@ test('剧情技能选项自适应窗口并显示对应技能图标',async({page}
   expect(new Set(iconPaths).size).toBe(3)
 })
 
+test('混乱标记选项显示真实标记图案与名称，不再把 emoji 当图标',async({page})=>{
+  await page.setViewportSize({width:1440,height:960})
+  const f=await fixture(page)
+  await f.update(st=>{
+    choice(st,'token',['skull','cultist','tablet','elderthing'])
+    st.pendingChoice.prompt='逆反：选择本次检定要忽略的混乱符号。'
+    for(const option of st.pendingChoice.options)option.label=st.tokenLabels[option.id]
+    for(const move of st.legalMoves)move.label=st.tokenLabels[move.optionId]
+  })
+  const choices=page.locator('.ah-visual-choices'), offers=choices.locator('.ah-visual-option')
+  await expect(offers).toHaveCount(4)
+  await expect(offers.locator('img.ah-choice-token')).toHaveCount(4)
+  await expect(offers.locator('.ah-icon')).toHaveCount(0)
+  for(const [id,name,file] of [['skull','骷髅','ct-skull'],['cultist','异教徒','ct-cultist'],['tablet','石板','ct-tablet'],['elderthing','古神','ct-elderthing']]){
+    const option=choices.locator(`.ah-visual-option[data-option-id="${id}"]`)
+    await expect(option).toHaveAttribute('aria-label',name)
+    await expect(option).toContainText(name)
+    await expect(option.locator('img.ah-choice-token')).toHaveAttribute('src',new RegExp(file+'\\.png$'))
+  }
+  for(const emoji of ['💀','🕯️','🗿','👁️'])await expect(choices).not.toContainText(emoji)
+  await expect.poll(()=>page.evaluate(()=>[...document.querySelectorAll('.ah-choice-token')].every(img=>img.complete&&img.naturalWidth>0))).toBe(true)
+  mkdirSync(output,{recursive:true})
+  await page.screenshot({path:output+'/token-choice-desktop.png',animations:'disabled'})
+  // 移动端 390：面板不越出视口、不横向滚动，图案与名称仍完整。
+  await page.setViewportSize({width:390,height:844})
+  await expect(offers).toHaveCount(4)
+  const layout=await choices.evaluate(element=>{const box=element.getBoundingClientRect();return {left:box.left,right:box.right,viewport:innerWidth,overflow:element.scrollWidth-element.clientWidth}})
+  expect(layout.left).toBeGreaterThanOrEqual(0)
+  expect(layout.right).toBeLessThanOrEqual(layout.viewport)
+  expect(layout.overflow).toBe(0)
+  await page.screenshot({path:output+'/token-choice-mobile.png',animations:'disabled'})
+  await page.setViewportSize({width:1440,height:960})
+  await choices.locator('.ah-visual-option[data-option-id="skull"]').click()
+  await expect.poll(()=>f.submitted.length).toBe(1)
+  expect(f.submitted[0].move.optionId).toBe('skull')
+})
+
 test('常驻槽位：错槽不提交、拖动装备与事件、点击替代拖动', async ({ page }) => {
   const f = await fixture(page)
   await expect(page.locator('.ah-equip-slot')).toHaveCount(9)

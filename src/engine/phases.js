@@ -45,6 +45,7 @@ export function createPhases(deps) {
     registeredEntry,
     removeOne,
     requestChoice,
+    resourceBank,
     runAgendaForced,
     runEnemyRoundEnd,
     runLocationRoundEnd,
@@ -120,7 +121,7 @@ function upkeepPhase(state) {
       const keep = inv.resources >= payment && requestChoice(state, { kind: 'upkeep', source: asset.id, seat: inv.seat,
         prompt: `是否支付 ${payment} 资源保留「${cardName(asset.code)}」？`,
         options: [{ id: 'pay', label: '支付资源' }, { id: 'discard', label: '弃置支援' }] }) === 'pay'
-      if (keep) inv.resources -= payment
+      if (keep) resourceBank.spendFromPool(inv, payment)
       else { leaveAsset(state, inv, asset); inv.discard.push(asset.code) }
     }
     if (!scenarioBehavior(state).skipUpkeepIncome?.(state, inv)) {

@@ -24,6 +24,7 @@ export function createAssets(deps) {
     nextInstanceId,
     placeLocation,
     playCost,
+    playTypeBlocked,
     playedEffect,
     randomValue,
     reactionWindow,
@@ -32,6 +33,7 @@ export function createAssets(deps) {
     removeEffectsFromSource,
     removeOne,
     requestChoice,
+    resourceBank,
     resolveEffect,
     scenarioBehavior,
     scenarioRuntime,
@@ -377,10 +379,14 @@ export function createAssets(deps) {
   // 折扣由通道显式传入（不再写 inv.playDiscount），付费/结算/去向与普通事件同一口径。
   function playReactionCard(state, inv, index, context, events, opts = {}) {
     const { copyCode = null, discount = 0, fromChannel = null } = opts
+    const peek = inv.hand[index]
+    if (!peek) return
+    // 隐私弱点（03084d「你不能打出事件」）兜底：候选窗口已按同一读点过滤，
+    // 这里再拦一次，避免内容层/通道直接调用执行器时绕过窗口。
+    if (playTypeBlocked(state, inv, cardDef(copyCode || peek)?.type)) return false
     const code = inv.hand.splice(index, 1)[0]
-    if (!code) return
     const def = cardDef(copyCode || code)
-    inv.resources -= Math.max(0, playCost(state, inv, def) - (discount || 0))
+    resourceBank.spendFromPool(inv, Math.max(0, playCost(state, inv, def) - (discount || 0)))
     consumePlayThreatResources(state, inv, events)
     const fastLabel = fromChannel?.channel === 'hunch'
       ? `🔮 ${inv.name} 从直觉牌库快速打出「${cardName(code)}」。`

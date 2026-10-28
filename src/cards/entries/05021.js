@@ -49,7 +49,8 @@ export default {
             options: [{ id: 'pay', label: '花费 2 资源' }, { id: 'discard', label: '弃掉「劫数延后」' }],
           })
           if (answer === 'pay') {
-            api.loseResources(inv.seat, 2)
+            // 卡面「花费 2 资源」= 支付费用：走统一的支付入口（合并池先扣寄存量）。
+            api.spendResources(inv.seat, 2)
             api.info(`🌑 ${inv.name} 花费 2 资源保留「劫数延后」。`)
             return
           }

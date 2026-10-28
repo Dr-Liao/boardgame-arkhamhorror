@@ -27,7 +27,8 @@ export default {
         const picked = candidates[Number(answer)]
         if (!picked) return
         const copyCost = api.playCostOf(inv.seat, picked.code)
-        api.loseResources(inv.seat, copyCost)
+        // 卡面「包括其资源费用」= 支付费用：走统一的支付入口（合并池先扣寄存量）。
+        api.spendResources(inv.seat, copyCost)
         api.exileFromDiscard(picked.seat, picked.code)
         api.replayPlayedCode(inv.seat, picked.code)
       },

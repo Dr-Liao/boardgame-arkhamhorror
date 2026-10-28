@@ -1,7 +1,8 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
-import { applyMove, createGameState } from '../src/engine/engine.js'
+import { advanceAct, applyMove, createGameState, startScenario } from '../src/engine/engine.js'
+import { settle } from './core-fixture.mjs'
 import * as phantom from '../content/campaigns/thePathToCarcosa/scenarios/aPhantomOfTruth/index.js'
 import * as mask from '../content/campaigns/thePathToCarcosa/scenarios/thePallidMask/index.js'
 
@@ -254,4 +255,59 @@ test('The Pallid Mask stores Act II readers as stable campaign investigator ids'
     choose({ seat }) { return seat === 0 ? 'read' : 'skip' },
   })
   assert.deepEqual(state.campaign.records.readActII, ['investigator-1'])
+})
+
+test('苍白面具：击败苍白面具下的男子推进场景并移出游戏（不再抛「弱点敌人缺少牌组归属」）', () => {
+  // 复现：03059 是第一幕背面从「放到一边」生成的弱点敌人，没有交战座位。
+  // 此前击败时 addVictory 找不到 bearerSeat 会抛错，整次行动中止（截图里的报错）。
+  const state = createGameState({
+    campaignId: 'thePathToCarcosa',
+    playerInvestigator: '05004',
+    seed: 'pallid-mask-defeat-regression',
+    seatInvestigators: ['05004'],
+  }, [{ seat: 0, role: 'human' }])
+  settle(state)
+  // 《谢幕》结尾会把 03059 作为战役弱点放进承受者牌组。
+  state.campaign.investigators[0].deck.push('03059')
+  startScenario(state, 5, [])
+  settle(state)
+  assert.deepEqual(state.scenarioZones.setAside, ['03059'])
+  assert.ok(!state.investigators[0].deck.includes('03059'), '本关把 03059 从牌库拿出来放到一边')
+
+  // 暗影坟墓揭示会推进第一幕；03243 的背面在暗影坟墓生成苍白面具下的男子。
+  state.locations.push({
+    id: 'tomb', name: '暗影坟墓', originalCode: '03257', revealed: true, clues: 0,
+    connections: [], grid: { x: 9, y: 9 },
+  })
+  state.actIndex = 0
+  advanceAct(state, [])
+  settle(state)
+  const man = state.enemies.find(enemy => enemy.code === '03059')
+  assert.ok(man, '第一幕背面应生成苍白面具下的男子')
+  assert.equal(man.bearerSeat, 0, '生成时按战役牌组补上弱点归属')
+  assert.equal(man.location, 'tomb')
+
+  const inv = state.investigators[0]
+  inv.location = man.location
+  inv.combat = 99
+  inv.actionsLeft = 10
+  state.currentSeat = 0
+  state.phase = 'investigation'
+  state.chaosBag = ['0']
+  state.encounterDeck = []
+  // 暗影坟墓让男子生命值 +每位调查员 1；这里只保留最后一次攻击。
+  man.engagedSeat = 0
+  inv.engaged.push(man.id)
+  man.damageTaken = 3
+  applyMove(state, 0, { action: 'fight', enemyId: man.id })
+  settle(state)
+
+  assert.ok(!state.enemies.some(enemy => enemy.code === '03059'), '男子已被击败')
+  assert.equal(state.scenarioFlags.actTwoAdvancedWith, 'defeat')
+  assert.equal(state.actIndex, 2)
+  assert.deepEqual(state.acts.map(act => act.originalCode), ['03243', '03244', '03245'])
+  assert.equal(state.campaign.records.conviction, 2, '击败分支记 2 点确信')
+  assert.deepEqual(state.scenarioZones.removed, ['03059'], '按幕背面把男子移出游戏')
+  assert.ok(!state.encounterDiscard.includes('03059'), '不再掉进遭遇弃牌堆')
+  assert.ok(!inv.discard.includes('03059'))
 })

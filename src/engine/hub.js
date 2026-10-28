@@ -297,6 +297,15 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   if (state.uiState === 'scenarioSetup' && !state.campaign.scenarioResults.length && !state.hubSeatDone?.[seat] && record?.status === 'active') {
     moves.push({ action: 'hubSetDeck', label: '调整起始牌组' })
   }
+  // 关间替补：死亡/疯狂席位在关间换上的新调查员，0 XP 起始牌组和首关准备一样属于
+  // 「可反复调整」的阶段。自动构筑后仍要能手动编辑、从本地卡组库载入或导入 ArkhamDB
+  // 清单，直到该席位确认准备（hubSeatDone）为止；已经买过升级就不再退回起始牌组编辑。
+  if (state.uiState === 'interlude' && state.hubReplacementSeats?.[seat]
+    && record?.status === 'active' && hubStartingDeckReady(record)
+    && !state.hubSeatDone?.[seat] && !record.upgradeDraft
+    && !record.purchases?.length && !record.removedCards?.length) {
+    moves.push({ action: 'hubSetDeck', label: '调整替补调查员的起始牌组' })
+  }
   return moves
 }
 

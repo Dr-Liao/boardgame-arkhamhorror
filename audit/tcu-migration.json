@@ -5321,11 +5321,11 @@
       ],
       "ledger": {
         "path": "audit/tcu-player-acceptance.json",
-        "sha256": "f5875529e40f0136cb7a38c14063f5dabf72bace804c59f10d2c2bf8ba1a8802"
+        "sha256": "0f18711a587a0b229eaa10095603d8c4e5dfb58681927d7efb6e2863db66b45c"
       },
       "generatedModule": {
         "path": "src/cards/tcu-player-acceptance.js",
-        "sha256": "ff66dc76d9c50d85d7c1ae98ac0663688bc23701100891a2f43f7e49deb6c163"
+        "sha256": "aee0d2370d47b3dcd2d98f9501092286158a1f4fa93d7092f4606ee68fa20354"
       },
       "evidence": [
         "content/packs/tcuPlayer/manifest.js",
@@ -5378,16 +5378,16 @@
           "constructible": 85,
           "deckable": 83,
           "simplified": 14,
-          "testsPassed": 526,
+          "testsPassed": 528,
           "testFiles": 6
         },
         "ledger": {
           "path": "audit/tcu-all-card-acceptance.json",
-          "sha256": "083cde6fc6ecfb111c019283e19a0e2687f7fc6830485da17ef4d98ebc006603"
+          "sha256": "e805269dd8b83fb629b90795d5bf78d265537b5d8b8ce81e76309eb0516e9918"
         },
         "module": {
           "path": "src/cards/tcu-campaign-acceptance.js",
-          "sha256": "9b8fc559806434a2bf0f9976a4a8113594f58182b47d28c44640bdc152f47af2"
+          "sha256": "413f482993ffc1c64e734d79fa63b4532055dbd67861892a733a02915ed92f06"
         }
       },
       "browser": {
@@ -5563,15 +5563,15 @@
       "audit/tcu-browser-acceptance.json": "0b8a9b34d5772212b6e1f4aada0de9fa2527ba3b258666be7afba1580b1fab99",
       "artifacts/migration/tcu/mechanism-scan.json": "deaa41c8f9993c499877746ccb83b65eb30e91c44990dcd92b53fcd9e589281b",
       "content/packs/tcuInvestigators/manifest.js": "9d405c622f407f5b07222e41c857452cacd0c0cb6e3f4538588058042a0920b3",
-      "tests/tcu-investigators.test.mjs": "9d3130a29568333634630083fcb9d3f09249ddf12170ce1bae3ccc4eacb9d623",
+      "tests/tcu-investigators.test.mjs": "2d1c4c00014ea1b668f9193b98d81ddff133beda0d7e9ea4834573d2a1582ff7",
       "src/engine/hunch-deck.js": "2fa87293306171a83c5ecb272e47f186d487019740fa94da5455790afee1e5d7",
-      "src/engine/resource-bank.js": "ce48b670dc7a4bea726056f48b6c5a948ab58125241b11b642c95d9c61052419",
+      "src/engine/resource-bank.js": "2eac37801cb81e449b5a1e797465206f917d37ff0b2e93aa70e24abbb9fa3701",
       "src/engine/spell-actions.js": "ec4d984b358e208de60ff7df283cb6fb1f7ad22a3a68fd39d075dbd8ee6813ae",
       "src/engine/cancel-note.js": "85dd9adf1f7b72a963dc682e2ab8b441c8cf3e6ec08b27d0de7c4f50f7b6d1f2",
       "content/packs/tcuPlayer/manifest.js": "0586f51b0199a5c4e392e7343e14341d10e62e335cd3b75178c7256c4e3e2bee",
       "tools/audit-tcu-player.mjs": "abb4638a880cf20940435454d518cfd31007f89cac95280e62c7318639c54054",
-      "audit/tcu-player-acceptance.json": "f5875529e40f0136cb7a38c14063f5dabf72bace804c59f10d2c2bf8ba1a8802",
-      "src/cards/tcu-player-acceptance.js": "ff66dc76d9c50d85d7c1ae98ac0663688bc23701100891a2f43f7e49deb6c163",
+      "audit/tcu-player-acceptance.json": "0f18711a587a0b229eaa10095603d8c4e5dfb58681927d7efb6e2863db66b45c",
+      "src/cards/tcu-player-acceptance.js": "aee0d2370d47b3dcd2d98f9501092286158a1f4fa93d7092f4606ee68fa20354",
       "tests/tcu-player-ledger.test.mjs": "a858a50a144b718a4387b38d18dc23f57879aaac087a15d2e86ced4d3db9051e",
       "src/deck/availability.js": "69bfa51dfe1d44480d640e99c6708109642d6109b671556258fbfffe5687469b",
       "src/campaign/campaign.js": "1dcc7117f4d9c0ac050d97f92642c5c921be54682535146b8f36b2eff3b09344",
@@ -5587,7 +5587,7 @@
       "tests/tcu-prologue.test.mjs": "10773765e911e2e95876ca11274af4b0200218a7ba036071e3c602fac1739725",
       "tests/tcu-witching-hour.test.mjs": "ec3fb68894e61481cde7add595df40294eeecf48176551453e97350275775cf5",
       "tests/tcu-deaths-doorstep.test.mjs": "57215141da3c879b9e8baaec8e94d8860dad35847b91a9afeb03cf69af81e3f8",
-      "tests/tcu-secret-name.test.mjs": "4001a3a5ae798f79d1bebcfee6f1ee776d5b9f4d8ea94e4d5e5ba038894a5c00",
+      "tests/tcu-secret-name.test.mjs": "67ccf3843a43fe1bd7d1d258c85c906c631e41385e46ad2a773615a4e111d56d",
       "tests/tcu-wages-of-sin.test.mjs": "f3a422e4785d5cdb26dfeef48ba70f088a7d9a0a5dcdd4ae86edebc2e2a41417",
       "tests/tcu-greater-good.test.mjs": "4216d59bd14c0e233a5719ce851a999b4ca0807335fe2eb32686d380945972ff",
       "tests/tcu-union-disillusion.test.mjs": "49dd9c81961228d48192809859325d802fbc3d31155972d05eb8ed8b3dfb344c",
@@ -5602,8 +5602,8 @@
       "src/campaign/campaign-effects.js": "759eb1eb119ac1c1c202f2415da67af94c2e5f34f0277ff5ff454445954beada",
       "src/campaign/campaign-flow.js": "6f18ab2516b916e5a3e524a8870f0d86bd1a646ef214994f73d3526bdecb0e00",
       "tools/audit-tcu-all-cards.mjs": "b434697282c38233eb284a5b5fb3fddf1e132385491bec5b71ca809cbd7ce4be",
-      "audit/tcu-all-card-acceptance.json": "083cde6fc6ecfb111c019283e19a0e2687f7fc6830485da17ef4d98ebc006603",
-      "src/cards/tcu-campaign-acceptance.js": "9b8fc559806434a2bf0f9976a4a8113594f58182b47d28c44640bdc152f47af2",
+      "audit/tcu-all-card-acceptance.json": "e805269dd8b83fb629b90795d5bf78d265537b5d8b8ce81e76309eb0516e9918",
+      "src/cards/tcu-campaign-acceptance.js": "413f482993ffc1c64e734d79fa63b4532055dbd67861892a733a02915ed92f06",
       "tests/tcu-all-card-ledger.test.mjs": "7589b56d582af7c856356975b0a460d6d0e9975b7a0b4908c3fcb94739c3a638",
       "tests/tcu-campaign-card-acceptance.test.mjs": "bfccf38913dc74e1ffd05fb7a426f1379e03b91ee1bcadbc781ff0a0067b25fa",
       "content/campaigns/theCircleUndone/card-acceptance.js": "59fe104fa93536261787462b9009cdcbd66b22b559bc0ff65eb45e63744953ea",
@@ -5644,8 +5644,8 @@
     "investigatorAcceptance": {
       "command": "node --test tests/tcu-investigators.test.mjs",
       "status": 0,
-      "tests": 86,
-      "passed": 86,
+      "tests": 88,
+      "passed": 88,
       "failed": 0,
       "ok": true
     },
@@ -5723,6 +5723,7 @@
     "tests/tcu-greater-good.test.mjs",
     "tests/tcu-interactions.test.mjs",
     "tests/tcu-investigators.test.mjs",
+    "tests/tcu-location-api.test.mjs",
     "tests/tcu-media.test.mjs",
     "tests/tcu-migration.test.mjs",
     "tests/tcu-player-ledger.test.mjs",
@@ -6048,16 +6049,16 @@
         "constructible": 85,
         "deckable": 83,
         "simplified": 14,
-        "testsPassed": 526,
+        "testsPassed": 528,
         "testFiles": 6
       },
       "ledger": {
         "path": "audit/tcu-all-card-acceptance.json",
-        "sha256": "083cde6fc6ecfb111c019283e19a0e2687f7fc6830485da17ef4d98ebc006603"
+        "sha256": "e805269dd8b83fb629b90795d5bf78d265537b5d8b8ce81e76309eb0516e9918"
       },
       "module": {
         "path": "src/cards/tcu-campaign-acceptance.js",
-        "sha256": "9b8fc559806434a2bf0f9976a4a8113594f58182b47d28c44640bdc152f47af2"
+        "sha256": "413f482993ffc1c64e734d79fa63b4532055dbd67861892a733a02915ed92f06"
       },
       "badEvidence": [],
       "simplified": 14,

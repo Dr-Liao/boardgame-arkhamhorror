@@ -6,14 +6,16 @@
 //   3. addBasicWeakness 从全目录抽弱点，会抽到未实现的基础弱点；
 //   4. 条目调用 api.locName，但能力 API 只有 locationName；
 //   5. 杜克调查能力引用了未定义的 effect；
-//   6. 《苍白面具》进入未揭示地下墓穴时，线索不足的移动仍被列为合法动作。
+//   6. 《苍白面具》进入未揭示地下墓穴时，线索不足的移动仍被列为合法动作；
+//   7. 弱点敌人（03059 苍白面具下的男子）从「放到一边」生成时缺少牌组归属，
+//      被击败时 addVictory 抛错，整次行动中止（联机还会提示强制同步）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readdirSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 import { fixture, move, settle } from './core-fixture.mjs'
-import { createGameState, addBasicWeakness } from '../src/engine/engine.js'
+import { createGameState, addBasicWeakness, spawnEnemy } from '../src/engine/engine.js'
 import { weaknessProfile } from '../src/engine/lifecycle.js'
 import { requestChoice } from '../src/engine/resolution.js'
 import { contentRegistry } from '../content/registered.js'
@@ -136,4 +138,43 @@ test('P0 苍白面具：线索不足时通往未揭示地下墓穴的移动不�
   state.investigators[1].clues = 1
   assert.equal(behavior.moveError(state, state.investigators[0], destination), null)
   assert.equal(behavior.moveError(state, state.investigators[0], { id: 'catacomb', revealed: true }), null)
+})
+
+// 03059 苍白面具下的男子是 subtype=weakness 的剧本敌人：剧本会绕过「抽到者=归属者」的
+// 牌库路径，直接把它从「放到一边」/承受者牌库生成。没有交战座位时必须从战役牌组补归属，
+// 否则击败结算会抛「弱点敌人缺少牌组归属」，整次行动中止（大厅只看到一行报错）。
+function fightWeaknessEnemyToDeath(state, code = '03059') {
+  const inv = state.investigators[0]
+  inv.combat = 99
+  inv.actionsLeft = 10
+  state.chaosBag = ['0']
+  state.phase = 'investigation'
+  state.currentSeat = 0
+  const man = spawnEnemy(state, code, inv.location, null, true)
+  assert.equal(man.bearerSeat, state.campaign.investigators[0].deck.includes(code) ? 0 : null)
+  // 直接建立交战（冷漠敌人正常要先花行动交战；这里只测击败结算）。
+  man.engagedSeat = 0
+  inv.engaged.push(man.id)
+  man.damageTaken = 2
+  move(state, { action: 'fight', enemyId: man.id })
+  settle(state)
+  return man
+}
+
+test('P0 弱点敌人从「放到一边」生成时按战役牌组补归属，击败后进入归属者弃牌堆', () => {
+  const state = fixture('01001')
+  state.campaign.investigators[0].deck.push('03059')
+  fightWeaknessEnemyToDeath(state)
+  assert.ok(!state.enemies.some(enemy => enemy.code === '03059'), '男子已被击败')
+  assert.ok(state.investigators[0].discard.includes('03059'), '弱点牌进入归属者弃牌堆')
+  assert.ok(!state.encounterDiscard.includes('03059'))
+})
+
+test('P0 弱点敌人没有牌组归属时被击败不再抛错，改为进入遭遇弃牌堆', () => {
+  // 旧存档或剧本中途生成的弱点敌人可能既没有 bearerSeat、战役牌组里也没有这张牌。
+  const state = fixture('01001')
+  assert.doesNotThrow(() => fightWeaknessEnemyToDeath(state))
+  assert.ok(!state.enemies.some(enemy => enemy.code === '03059'))
+  assert.ok(state.encounterDiscard.includes('03059'))
+  assert.ok(!state.investigators[0].discard.includes('03059'))
 })

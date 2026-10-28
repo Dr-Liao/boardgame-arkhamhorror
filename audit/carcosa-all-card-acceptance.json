@@ -39,7 +39,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-literal-behavior.test.mjs",
-      "sha256": "461e7130651b9193ec6d00c5b1fc1c14217379b57c0c225d9a889d0fe9c27883"
+      "sha256": "0ecb799f96805623d3788bcfeefc6f600c8cec605090a34d08f46286192e4bed"
     },
     {
       "file": "games/arkhamhorror/tests/carcosa-pending-encounters.test.mjs",

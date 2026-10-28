@@ -60,6 +60,14 @@ export function createHiddenRules(deps) {
       .filter(item => item.rule)
   }
 
+  // 隐私牌的「不能打出某类卡」限制（03084d 疑惑：你不能打出事件）。
+  // 唯一的类型级读点：普通出牌（moves.js）、快速事件反应窗口（encounter.js）、
+  // fromHand 描述子（ability-rules.js）与快速事件执行器（assets.js）都问这里，
+  // 避免「普通事件被挡、快速事件漏打」的两套口径。
+  function playTypeBlocked(state, inv, type) {
+    return activeHiddenRules(state, inv).some(item => item.rule.cannotPlayTypes?.includes(type))
+  }
+
   function cannotTriggerFreeAbility(state, inv) {
     // Phase 2（C1）：能力禁止走声明式修正（capability:triggerAbilities），
     // 不再需要给「不能触发能力」类卡面加引擎字段。
@@ -142,5 +150,5 @@ export function createHiddenRules(deps) {
     return scenarioBehavior(state).enemyCanBeDefeated?.(state, enemy, source, seat) !== false
   }
 
-  return { hiddenDefinition, hiddenRule, hasHiddenCard, removeHiddenMarker, canDiscardFromHand, discardHiddenCard, placeHiddenCard, activeHiddenRules, cannotTriggerFreeAbility, hiddenFightBlocked, movementError, currentInv, investigatorTextBlanked, enemyTextBlanked, enemyCannotAttack, enemyCannotBeAttacked, aloofPreventsAttack, enemyCanOpportunityAttack, enemyCanBeDefeated }
+  return { hiddenDefinition, hiddenRule, hasHiddenCard, removeHiddenMarker, canDiscardFromHand, discardHiddenCard, placeHiddenCard, activeHiddenRules, playTypeBlocked, cannotTriggerFreeAbility, hiddenFightBlocked, movementError, currentInv, investigatorTextBlanked, enemyTextBlanked, enemyCannotAttack, enemyCannotBeAttacked, aloofPreventsAttack, enemyCanOpportunityAttack, enemyCanBeDefeated }
 }

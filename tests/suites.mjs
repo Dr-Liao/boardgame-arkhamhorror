@@ -194,6 +194,8 @@ export const FAST_TESTS = Object.freeze([
   'tde-primitives-myriad.test.mjs', // 食梦者 P3 批次 3：多重构筑限制
   'tde-primitives-location-doom.test.mjs', // 食梦者 P3 批次 3：地点毁灭
   'tde-primitives-marker-count.test.mjs', // 食梦者 P3 批次 3：剧本参考卡计数
+  'debug-engine.test.mjs', // 调试控制台：引擎 debug move 校验/执行/重放（7 种指令）
+  'debug-console.test.mjs', // 调试控制台：服务端命令解析器 + Mod 钩子（中文指令/别名/名称匹配）
 ])
 
 export const SLOW_TESTS = Object.freeze([

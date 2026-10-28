@@ -10,6 +10,14 @@
 
 import { ALL_CARDS, originalOf } from '../../_shared.js'
 
+// 卡面「占用 1 个身体槽位和 2 个手部槽位」：双手卡在卡面数据里写作 "Hand x2"，
+// 和单手的 "Hand" 同属手部槽位（引擎 normalizedSlots 把 "Hand x2" 归一为 handx2）。
+// 只比较 'Body'/'Hand' 会漏掉双手武器，导致猎枪、球棒这类卡没有被返回手牌。
+function takesBodyOrHandSlot(slot) {
+  const key = String(slot).trim().toLowerCase()
+  return key === 'body' || key === 'hand' || key === 'hand x2' || key === 'handx2'
+}
+
 export default {
   code: '03185', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['carcosa'],
   // 第 124 轮：旧存档迁移按这个标志找「束身衣」（原 card-rules.js 常量）。
@@ -20,9 +28,13 @@ export default {
     const code = originalOf(card)
     if (inv.threat.some(threat => threat.code === code)) return false
     for (const asset of [...inv.assets]) {
-      const slots = ALL_CARDS[asset.code]?.slots || []
-      if (!slots.some(slot => ['Body', 'Hand'].includes(slot))) continue
+      // 槽位以卡面数据为准；个别实例覆盖 slots 时（与引擎 slotUsage 同口径）优先读实例。
+      const def = ALL_CARDS[asset.code]
+      const slots = (Array.isArray(asset.slots) && asset.slots.length ? asset.slots : def?.slots) || []
+      if (!slots.some(takesBodyOrHandSlot)) continue
       api.removeAsset(inv.seat, asset.id)
+      // 被「不能离场」等离场钩子挡下的支援仍留在场上；已由离场反应送回手/移出游戏的也不再重复塞一次。
+      if (inv.assets.includes(asset) || asset.removedFromGame || asset.returnedToHand) continue
       inv.hand.push(asset.code)
     }
     api.threat(inv.seat, code, {

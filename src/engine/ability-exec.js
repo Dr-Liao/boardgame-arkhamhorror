@@ -59,6 +59,7 @@ export function createAbilityExecution(deps) {
     registeredEntry,
     reloadAmmo,
     requestChoice,
+    resourceBank,
     resolveEffect,
     returnAssetToHand,
     searchTop,
@@ -135,7 +136,7 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
   }
   if (cost.resources) {
     if (inv.resources < cost.resources) return
-    inv.resources -= cost.resources
+    resourceBank.spendFromPool(inv, cost.resources)
   }
   // 「一目十行」等：以个人线索作为能力费用。
   if (cost.clues) {

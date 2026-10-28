@@ -47,6 +47,7 @@ export function createReveal(deps) {
     removeLocation,
     removeOne,
     requestChoice,
+    resourceBank,
     resolveEffect,
     resolveTarget,
     revealLocation,
@@ -227,7 +228,7 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
     const price = Math.max(0, playCost(state, inv, def) - (channelDiscount || 0))
     if (inv.resources < price) return false
     inv.hand.splice(index, 1)
-    inv.resources -= price
+    resourceBank.spendFromPool(inv, price)
     consumePlayThreatResources(state, inv, events)
     info(state, events, fromChannel?.channel === 'hunch'
       ? `🔮 ${inv.name} 从直觉牌库快速打出「${cardName(handCode)}」。`

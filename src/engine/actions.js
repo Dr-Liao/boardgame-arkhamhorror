@@ -57,6 +57,7 @@ export function createActions(deps) {
     removeCardByCode,
     replaceAssets,
     requestChoice,
+    resourceBank,
     resolveEffect,
     scenarioBehavior,
     scenarioRuntime,
@@ -193,7 +194,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       }
       return { ok: false, cost }
     }
-    payer.resources -= cost
+    resourceBank.spendFromPool(payer, cost)
     if (def.type === 'asset' && (def.traits || []).some(trait => String(trait).toLowerCase() === 'item')) {
       consumeItemDiscountAtLocation(state, inv)
     }

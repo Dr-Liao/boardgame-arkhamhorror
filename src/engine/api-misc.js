@@ -765,7 +765,7 @@ export function createMiscApi(state, events, deps) {
       const picked = affordable[Number(answer)]
       if (!picked) return false
       const cost = cardDef(picked.code)?.cost || 0
-      owner.resources -= cost
+      resourceBank.spendFromPool(owner, cost)
       removeOne(picked.owner.discard, picked.code)
       owner.assets.push(newPlayerAssetInstance(state, owner, picked.code))
       return true

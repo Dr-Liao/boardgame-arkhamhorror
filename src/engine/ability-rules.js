@@ -43,7 +43,9 @@ export function createAbilityRules(deps) {
     normalizeCostValues,
     openAbilityWindow,
     playCost,
+    playTypeBlocked,
     registeredEntry,
+    resourceBank,
     scenarioBehavior,
     scenarioResignAvailable,
     syncClues,
@@ -64,7 +66,7 @@ export function createAbilityRules(deps) {
     if (cost.discardHand && discardableHandCards(inv, cost.discardHandIcon).length < cost.discardHand) return false
     if (cost.exhaust) source.exhausted = true
     if (cost.uses) source.uses -= cost.uses
-    if (cost.resources) inv.resources -= cost.resources
+    if (cost.resources) resourceBank.spendFromPool(inv, cost.resources)
     if (cost.clues) {
       inv.clues -= cost.clues
       syncClues(state)
@@ -130,6 +132,8 @@ export function createAbilityRules(deps) {
       const def = cardDef(descriptor.code)
       if (!def) return false
       if (cannotPlayTypes(inv).has(def.type)) return false
+      // 隐私弱点（03084d「你不能打出事件」）：fromHand 描述子与普通出牌同一读点。
+      if (playTypeBlocked(state, inv, def.type)) return false
       if (!descriptor.noPlayCost && inv.resources < playCost(state, inv, def) - channelDiscount) return false
     } else if (!canAffordAbility(state, inv, source, { cost: descriptorCost(descriptor), descriptor })) return false
     if (descriptor.criteria && !evaluateCriteria(descriptor.criteria, {

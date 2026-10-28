@@ -420,7 +420,16 @@ export const behavior = {
   },
   enemyDefeated(state, enemy, api) {
     if (isHastur(enemy)) state.scenarioFlags.defeatedHastur = enemy.code
-    if (isPallidMaskMan(enemy) && state.actIndex === 1) state.scenarioFlags.strangerDefeated = true
+    if (isPallidMaskMan(enemy)) {
+      if (state.actIndex === 1) state.scenarioFlags.strangerDefeated = true
+      // 幕 2 的背面（版本二/三）会把他「从游戏中移除」；击败结算已经先把他移出场上，
+      // 这里补记移出游戏并返回 true，跳过默认的弃牌堆/胜利区结算——否则他会掉进
+      // 遭遇弃牌堆，甚至可能被洗回遭遇牌库再次生成。
+      const code = pallidMaskCode()
+      state.removedFromGame ||= []
+      if (code && !state.removedFromGame.includes(code)) state.removedFromGame.push(code)
+      return true
+    }
     return encounterRules.enemyDefeated?.(state, enemy, api) || false
   },
   // 03321a/03322a/03323a：每位调查员均不能发现线索。

@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { contentRegistry, registerContentBundle } from '../content/registered.js'
-import { createGameState, applyMove, validateMove, legalMoves, performTest } from '../src/engine/engine.js'
+import { createGameState, applyMove, validateMove, legalMoves, performTest, reactionWindow } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { viewState, viewEvents } from '../src/integration/observation.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
@@ -251,6 +251,34 @@ test('M4 Delusions enforce event, skill, free-trigger and once-per-turn movement
   assert.ok(first)
   applyMove(dread, 0, first)
   assert.ok(legalMoves(dread).every(action => action.action !== 'move'))
+})
+
+test('M4 Hidden event restriction also covers fast event reaction windows', () => {
+  // 03084d「你不能打出事件」：普通出牌由 validateMove 挡住；快速事件（闪躲）只出现在
+  // 反应窗口里，窗口候选必须读同一个隐私牌读点，否则快速事件会绕过限制。
+  const attackWindow = current => reactionWindow(current, 'enemyAttack', {
+    when: 'enemyAttack', seat: 0, location: current.investigators[0].location,
+    enemy: { id: 'ald', code: '03088', name: '毕宿五的野兽', damage: 2, horror: 2 },
+    attackKind: 'enemy', prompt: '测试敌人攻击',
+  }, [])
+  const openAttack = state => {
+    resolveTransaction(state, 0, { action: 'm4AttackWindowProbe' }, attackWindow)
+    return state.pendingChoice
+  }
+
+  const control = fixture('oath')
+  control.investigators[0].resources = 5
+  control.investigators[0].hand.push('01023')
+  assert.ok(openAttack(control)?.options.some(option => option.cardCode === '01023'),
+    '对照组：没有隐私牌时闪躲应进入快速反应窗口')
+
+  const doubt = fixture('oath')
+  doubt.investigators[0].resources = 5
+  drawHidden(doubt, '03084d')
+  doubt.investigators[0].hand.push('01023')
+  const pending = openAttack(doubt)
+  assert.ok(!pending || pending.options.every(option => option.cardCode !== '01023'),
+    '隐私牌「你不能打出事件」必须同样挡住快速事件')
 })
 
 test('M4 Gift of Madness restrictions and discard action execute from the private hand', () => {

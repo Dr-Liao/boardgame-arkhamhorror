@@ -6,6 +6,7 @@
 //     反伤、击败资产）
 //   enemyHealth / enemyFightValue / enemyEvadeValue —— 敌人数值读点
 //   enemyAttack —— 敌人攻击流程（反应窗口、修正、结算）
+import { weaknessOwnerSeat } from './card-lookup.js'
 import { enemyIgnoresInvestigator } from './trait-passives.js'
 //   spawnEnemy / engageEnemy / disengageEnemy / defeatEnemy / damageEnemy —— 敌人生死与交战
 //
@@ -337,6 +338,12 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
   const health = def.healthPerInvestigator
     ? def.healthPerInvestigator * state.numInvestigators
     : def.health + (def.healthPerPlayerBonus || 0) * state.numInvestigators
+  // 弱点敌人的牌组归属：从调查员牌库抽出的由抽出者持有（engagedSeat 就是归属座位）；
+  // 剧本直接从「放到一边」或承受者牌库生成的弱点敌人（03059 苍白面具下的男子等）没有
+  // 交战座位，这里回退到「战役牌组里持有该弱点牌」的座位，免得击败时找不到弃牌堆。
+  const bearerSeat = isWeaknessCode(code) || def.prey === 'bearer'
+    ? (engagedSeat ?? weaknessOwnerSeat(state, code))
+    : null
   const enemy = {
     id: newEnemyId(state), code, name: def.name,
     ...cardIdentityFields(def),
@@ -352,7 +359,7 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
     immobile: !!def.immobile,
     massive: def.massive, prey: def.prey, forcedDoom: def.forcedDoom, parleyCost: def.parleyCost || 0,
     uniqueCultist: !!def.uniqueCultist, evadeToVictory: !!def.evadeToVictory,
-    bearerSeat: isWeaknessCode(code) || def.prey === 'bearer' ? engagedSeat : null,
+    bearerSeat,
     drawnBySeat: engagedSeat,
     victory: def.victory || 0, vengeance: def.vengeance || 0,
     traits: def.traits || [],

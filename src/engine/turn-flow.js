@@ -1,4 +1,5 @@
 import { investigatorRule } from '../cards/card-rules.js'
+import { weaknessOwnerSeat } from './card-lookup.js'
 import { locationAttachmentTotal } from './location-attachments.js'
 // turn-flow.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 调查员回合内的推进与代价：advanceInvestigator（行动/结束回合的推进）、
@@ -211,9 +212,14 @@ export function createTurnFlow(deps) {
         addedToVictory = true
       }
     } else if (isWeaknessCode(enemy.code)) {
+      // 弱点牌属于某位调查员的牌组：优先用生成时记录的 bearerSeat，其次查战役牌组记录
+      // （剧本从「放到一边」生成、旧存档里没有 bearerSeat 的弱点敌人）。
+      // 都找不到时按剧本敌人处理进遭遇弃牌堆——击败结算发生在一次行动中途，不能因为
+      // 「缺归属」抛错中止整次行动（联机下还会把客户端留在需要强制同步的错误状态）。
       const owner = state.investigators[enemy.bearerSeat]
-      if (!owner) throw new Error('弱点敌人缺少牌组归属')
-      owner.discard.push(enemy.code)
+        ?? state.investigators[weaknessOwnerSeat(state, enemy.code)]
+      if (owner) owner.discard.push(enemy.code)
+      else state.encounterDiscard.push(enemy.code)
     } else state.encounterDiscard.push(enemy.code)
     if (enemy.victory) {
       state.victory += enemy.victory
@@ -345,7 +351,7 @@ export function createTurnFlow(deps) {
           ],
         })
         if (answer === 'pay' && (inv.resources || 0) >= pay) {
-          inv.resources -= pay
+          resourceBank.spendFromPool(inv, pay)
           info(state, events, `💸 ${inv.name} 为「${cardName(asset.code)}」支付 ${pay} 资源。`)
         } else {
           inv.discard.push(asset.code)

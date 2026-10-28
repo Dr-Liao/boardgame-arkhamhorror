@@ -188,6 +188,16 @@ export const behavior = {
       removed: [],
       catacombStartCode: plan.startCode,
     }
+    // 03059 在《谢幕》结尾作为战役弱点进入承受者牌组；本关把它从牌库/弃牌堆里拿出来
+    // 「放到一边」（第一幕背面会在暗影坟墓生成它）。不拿走的话牌库里还留着一份，
+    // 抽到会再生成一只，和剧本生成的这只重复。
+    for (const inv of state.investigators) {
+      for (const pile of [inv.deck, inv.discard]) {
+        for (let index = (pile?.length || 0) - 1; index >= 0; index--) {
+          if (pile[index] === '03059') pile.splice(index, 1)
+        }
+      }
+    }
     state.scenarioFlags.startLocationId = 'catacomb0'
     state.scenarioFlags.setupRevealSlots = []
     state.locationVariants.catacomb0 = variantFor(state, 'catacomb0', plan.startCode, { x: 0, y: 0 }, true)
@@ -310,6 +320,9 @@ export const behavior = {
     if (isPallidMaskMan(enemy) && state.actIndex === 1) {
       state.scenarioFlags.actTwoAdvancedWith = 'defeat'
       api.advanceAct()
+      // 幕 2 的背面会把苍白面具下的男子「从游戏中移除」；击败结算已经先把他移出场上，
+      // 这里返回 true 让引擎跳过默认的弃牌堆/胜利区结算（03244 会把他记进移出游戏区）。
+      return true
     }
     return encounterRules.enemyDefeated?.(state, enemy, api) || false
   },

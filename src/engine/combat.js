@@ -1,4 +1,4 @@
-﻿// 战斗与躲避（进战斗 / 躲敌人）从 engine.js 拆出的第三个模块（Phase 6 · 6d-3）。
+// 战斗与躲避（进战斗 / 躲敌人）从 engine.js 拆出的第三个模块（Phase 6 · 6d-3）。
 //
 // 这一对动作是「按域拆分」的第一个示例：roadmap 里规划的 combat/ 域。
 // 两个函数都会写 state（伤害、交战、击败、移动），所以依赖清单比 describe 长得多；
@@ -57,6 +57,7 @@ export function createCombat(deps) {
     relocateEnemy,
     relocateInvestigator,
     requestChoice,
+    resourceBank,
     ruleIgnored,
     scenarioBehavior,
     scenarioRuntime,
@@ -152,7 +153,7 @@ function doFight(state, seat, opts, events, noSpend) {
     const max = Math.min(inv.resources, 3)
     const spend = max ? Number(requestChoice(state, { kind: 'resource', source: opts.assetId || 'fireAxe', seat,
       prompt: '消防斧：选择为本次攻击花费的资源（每次攻击最多 3 点）。', options: Array.from({ length: max + 1 }, (_, i) => ({ id: String(i), label: `${i} 资源（战斗 +${i * 2}）` })) })) : 0
-    inv.resources -= spend; opts.combatBonus = (opts.combatBonus || 0) + spend * 2
+    resourceBank.spendFromPool(inv, spend); opts.combatBonus = (opts.combatBonus || 0) + spend * 2
     if (inv.resources === 0) opts.damageBonus = (opts.damageBonus || 0) + 1
   }
   if (opts.additionalActionCombatBonus) {

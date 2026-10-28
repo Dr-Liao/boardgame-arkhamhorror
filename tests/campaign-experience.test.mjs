@@ -157,6 +157,35 @@ test('起始牌组允许准备前修改，保留弱点与身份，准备后以�
   s.uiState='interlude';s.hubReady=false
   assert.ok(validateMove(s,0,{action:'hubSetDeck',codes:ordinary}))
 })
+test('关间死亡替补：自动组卡后仍可继续编辑或换用卡组，确认席位后关闭',()=>{
+  const s=createGameState({campaignHub:true,seed:'interlude-replacement-deck'},[{seat:0,role:'human'}])
+  move(s,{action:'hubGoSetup'});move(s,{action:'hubSelectInvestigator',code:'01001'})
+  move(s,{action:'hubAutoDeck'});move(s,{action:'hubDoneSeat'})
+  // 一关结束：原调查员死亡，进入关间。
+  s.campaign.investigators[0].status='killed'
+  s.investigators[0].defeated=true
+  s.uiState='interlude';s.phase='interlude';s.campaign.phase='interlude'
+  s.hubReady=false;s.hubSeatDone={};s.currentSeat=0;s.hubUpgradedSeats={}
+  // 死亡席位挑选替补后先自动构筑。
+  move(s,{action:'hubSelectInvestigator',code:'01002'})
+  move(s,{action:'hubAutoDeck'})
+  const record=s.campaign.investigators[0],identity=record.id
+  const deck=record.deck.filter(code=>PLAYER_CARD_CODES.includes(code))
+  assert.equal(deck.length,30)
+  // 回归：自动构筑后必须保留 hubSetDeck，前端才有「编辑已保存牌组 / 本地卡组库 / ArkhamDB 导入」入口。
+  assert.ok(legalMoves(s).some(m=>m.action==='hubSetDeck'),'自动组卡后仍可编辑或换用卡组')
+  assert.ok(viewState(s,0).legalMoves.some(m=>m.action==='hubSetDeck'),'前端投影里保留编辑入口')
+  // 换一副普通卡清单（真实界面里手动编辑、卡组库与 ArkhamDB 导入最终都提交 hubSetDeck）。
+  move(s,{action:'hubSetDeck',codes:[...deck].reverse()})
+  assert.equal(record.id,identity);assert.equal(record.deck.length,33)
+  assert.deepEqual(record.deck.filter(code=>PLAYER_CARD_CODES.includes(code)).sort(),[...deck].sort())
+  // 确认席位后关闭；下一关间的现役调查员仍不能重构起始牌组。
+  move(s,{action:'hubDoneSeat'})
+  assert.equal(s.hubReplacementSeats,undefined)
+  s.uiState='interlude';s.phase='interlude';s.campaign.phase='interlude'
+  s.hubReady=false;s.hubSeatDone={};s.currentSeat=0;s.hubUpgradedSeats={}
+  assert.ok(!legalMoves(s).some(m=>m.action==='hubSetDeck'))
+})
 test('首关开始前可以重选调查员并重新开放准备，且不会重抽基础弱点',()=>{
   const s=createGameState({campaignHub:true,seed:'reselect-before-start'},[{seat:0,role:'human'}])
   move(s,{action:'hubGoSetup'});move(s,{action:'hubSelectInvestigator',code:'01001'});move(s,{action:'hubAutoDeck'})

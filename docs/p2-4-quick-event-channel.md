@@ -61,7 +61,12 @@ Playwright 证据缺失类失败外全绿。
   （旧写法本来就不会进能力窗口）；
 - `playerWindow` 的免费能力有「旧 shim + 能力层 free 描述子」两条枚举路径，同一条描述子只列一次
   （`shimOffered` 去重），否则窗口选项顺序/id 变化会改重放指纹；
-- fromHand 事件 `reactionOnly` 收紧后，`050xx` 系列不再能被当普通行动打出。
+- fromHand 事件 `reactionOnly` 收紧后，`050xx` 系列不再能被当普通行动打出；
+- 隐私弱点（`hiddenRule.cannotPlayTypes`，如 03084d「你不能打出事件」）此前只挡普通出牌，
+  快速事件反应窗口的候选没读它，导致「手里有 03084d 仍能快速打出闪躲」。现在
+  `hidden-rules.js#playTypeBlocked` 是唯一的类型级读点：`reactionWindow` 候选、
+  `ability-rules.js#descriptorUsable`（fromHand）与 `assets.js#playReactionCard` 执行器共用，
+  普通出牌（`moves.js`）也改走同一读点；回归在 `tests/carcosa-rules.test.mjs`。
 
 ### 1.5 迁移边界
 
