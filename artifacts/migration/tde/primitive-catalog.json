@@ -3,7 +3,7 @@
   "cycle": "tde",
   "generatedBy": "tools/audit-tde-primitives.mjs",
   "note": "主进程维护；worker 只读。状态由 tools/audit-tde-primitives.mjs 从代码与测试复算，不手写。",
-  "batch": "P3-1+2+3",
+  "batch": "P3-1+2+3+P6",
   "primitives": {
     "new": [
       {
@@ -119,11 +119,12 @@
         "id": "location.veiled",
         "step": "P3-10",
         "status": "done",
-        "api": "isVeiledLocation / veiledBlocksInvestigation / revealVeiledLocation / shuffleVeiledIntoDeck / normalizeVeiledScenario",
+        "api": "isVeiledLocation / veiledFlipBlockedReason / canFlipVeiledLocation / flipVeiledLocation / shuffleVeiledIntoDeck / normalizeVeiledScenario",
         "readPoints": [
           "module-export:isVeiledLocation",
-          "module-export:veiledBlocksInvestigation",
-          "module-export:revealVeiledLocation",
+          "module-export:veiledFlipBlockedReason",
+          "module-export:canFlipVeiledLocation",
+          "module-export:flipVeiledLocation",
           "module-export:shuffleVeiledIntoDeck",
           "module-export:normalizeVeiledScenario",
           "scenario-runtime:veiled"
@@ -200,12 +201,13 @@
         "id": "location.doom",
         "step": "P3.16",
         "status": "done",
-        "api": "locationDoomOf / addLocationDoom / shouldDestroyLocation / destroyLocation / normalizeLocationDoom",
+        "api": "locationDoomOf / addLocationDoom / removeLocationDoom / totalLocationDoom / highestLocationDoom / normalizeLocationDoom",
         "readPoints": [
           "module-export:locationDoomOf",
           "module-export:addLocationDoom",
-          "module-export:shouldDestroyLocation",
-          "module-export:destroyLocation",
+          "module-export:removeLocationDoom",
+          "module-export:totalLocationDoom",
+          "module-export:highestLocationDoom",
           "module-export:normalizeLocationDoom",
           "scenario-runtime:locationDoom"
         ]
@@ -222,6 +224,106 @@
           "module-export:resetMarkerCount",
           "scenario-runtime:markers"
         ]
+      },
+      {
+        "id": "assetDefeat",
+        "step": "P6-1",
+        "status": "done",
+        "api": "isAssetDefeated / assetHarmCapacity / checkAssetDefeated（窗口 assetDefeated）",
+        "readPoints": [
+          "module-export:isAssetDefeated",
+          "module-export:assetHarmCapacity",
+          "module-export:checkAssetDefeated",
+          "window:assetDefeated"
+        ]
+      },
+      {
+        "id": "harm.moveBetween",
+        "step": "P6-2",
+        "status": "done",
+        "api": "harmOf / harmRoom / moveHarm（ctx.api.moveHarm / harmRoomOf）",
+        "readPoints": [
+          "module-export:harmRoom",
+          "module-export:moveHarm",
+          "ctx-api:moveHarm",
+          "ctx-api:harmRoomOf"
+        ]
+      },
+      {
+        "id": "counter.card",
+        "step": "P6-3",
+        "status": "done",
+        "api": "cardCounterOf / addCardCounter / setCardCounter / moveCardCounters / totalCardCounters",
+        "readPoints": [
+          "module-export:cardCounterOf",
+          "module-export:addCardCounter",
+          "module-export:moveCardCounters",
+          "ctx-api:addCardCounter",
+          "ctx-api:moveCardCounters"
+        ]
+      },
+      {
+        "id": "investigator.restrictedAction",
+        "step": "P6-4",
+        "status": "done",
+        "api": "grantRestrictedAction / actionsAvailable / consumeAction / clearRestrictedAction / restrictedActionRule",
+        "readPoints": [
+          "module-export:grantRestrictedAction",
+          "module-export:actionsAvailable",
+          "module-export:consumeAction",
+          "module-export:restrictedActionRule",
+          "source-pattern:restrictedKindOfMove"
+        ]
+      },
+      {
+        "id": "search.modify",
+        "step": "P6-5",
+        "status": "done",
+        "api": "窗口 searchWouldResolve（context.extraCards / context.extraTargets）",
+        "readPoints": [
+          "window:searchWouldResolve",
+          "source-pattern:extraCards"
+        ]
+      },
+      {
+        "id": "search.cardInPile",
+        "step": "P6-6",
+        "status": "done",
+        "api": "条目标 `searchedCardRule`（读点 deck-ops.js 的 searchedCardsWindow）",
+        "readPoints": [
+          "source-pattern:searchedCardRule",
+          "source-pattern:searchedCardRule"
+        ]
+      },
+      {
+        "id": "upkeep.replaceDraw",
+        "step": "P6-7",
+        "status": "done",
+        "api": "investigatorRule(code).upkeepDraw",
+        "readPoints": [
+          "source-pattern:upkeepDraw"
+        ]
+      },
+      {
+        "id": "investigator.cardRules",
+        "step": "P6-8",
+        "status": "done",
+        "api": "investigator.handSizeModifier / investigator.startsWith / elderSign.shuffleDiscardAfterTest",
+        "readPoints": [
+          "source-pattern:handSizeModifier",
+          "source-pattern:startsWith",
+          "source-pattern:shuffleDiscardAfterTest"
+        ]
+      },
+      {
+        "id": "play.fromHandFree",
+        "step": "P6-9",
+        "status": "done",
+        "api": "ctx.api.playCardFromHandFree(seat, code, { discount })",
+        "readPoints": [
+          "ctx-api:playCardFromHandFree",
+          "source-pattern:playCardFromHandFree"
+        ]
       }
     ],
     "reuse": [
@@ -236,23 +338,54 @@
         "ok": true
       }
     ],
-    "deferred": []
+    "deferred": [
+      {
+        "id": "play.asIfAtLocation",
+        "mechanism": [
+          "standardRules"
+        ]
+      },
+      {
+        "id": "location.bondedDreamGate",
+        "mechanism": [
+          "dreamGate"
+        ]
+      },
+      {
+        "id": "enemy.hiddenInHand",
+        "mechanism": [
+          "hidden"
+        ]
+      },
+      {
+        "id": "window.afterAlarmRaised",
+        "mechanism": [
+          "alarmLevel"
+        ]
+      },
+      {
+        "id": "api.bonded.swap",
+        "mechanism": [
+          "dreamGate"
+        ]
+      }
+    ]
   },
   "files": {
-    "src/campaign/campaign-parts.js": "43628d68591bd8fbf2d020f4b400a40b6aeede3d7fad7bbb357898d79c56ae7f",
+    "src/campaign/campaign-parts.js": "daf1a6d1256aade438a579e404bba1fd6ca4100dfcc0fba81688d2188bcc06a1",
     "tests/tde-campaign-parts.test.mjs": "bf1ccab8618258c13467f7690a0862630506edbc217bc4e63fb56c16f2e1da33",
-    "docs/tde-primitives.md": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
-    "docs/tde-migration-roadmap.md": "5ab20faf1714992113904c917c6d99d4dd93d8d0a1700e5802c3686296ceb0d9",
+    "docs/tde-primitives.md": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+    "docs/tde-migration-roadmap.md": "090ccc29103712ff72052ec208756e08fd81f409ee7e45a52349e406e7ffec39",
     "src/engine/counters.js": "246f3f93c3f65e034bc185bb3664de62f1c5653bc6ea95c3d972dac0497cae6d",
-    "src/engine/scenario-runtime-extras.js": "16b85948c42feba3f467c708daf226174e5804ac2d732f000ec52c1f357b6b55",
-    "src/engine/scenario-runtime.js": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+    "src/engine/scenario-runtime-extras.js": "9335652d4aa30b201f306dd1c0ebe57deae4dc3f01d8de45121d2cf9e313cacd",
+    "src/engine/scenario-runtime.js": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
     "tests/tde-primitives-counters.test.mjs": "fbd004e8b47ddb805322a87bba80dd302452363f6767401d051175096febeaa6",
     "src/engine/swarming.js": "76b1a7156961a613e9f7910827b82a746e5bb898e3eb182bcfaa407ab7f10b9f",
     "tests/tde-primitives-swarming.test.mjs": "1afac20069eda6217c24165c00ce160f59f375e0bcacf9476458b356d2fa2cef",
     "src/engine/swarm.js": "82b1025909b585a4734ce2aaf67cd8273e8c2f1e159e6a120ae77d644b49ac86",
     "tests/tde-primitives-swarm.test.mjs": "a5d350aff642ef995ff8eca1a1e6305afd173bd82921f4c66eab9afcc0e1c7ce",
-    "src/engine/veiled.js": "2a3fcbd631fcc0980303c3aa1acc3249b3f258e955c4fcb6bb1959720e31dab5",
-    "tests/tde-primitives-veiled.test.mjs": "d524c6dd350ee6a04fe07795e8d3a414e9ed2756de517131b7b399d41c4cdc32",
+    "src/engine/veiled.js": "d90d4995fa635fe755bc4251969211d239b1ffa47e614d4b678a8918e155ac76",
+    "tests/tde-primitives-veiled.test.mjs": "5ff286b26c58a18fc103642cc0bd5998eca9091682096ced1e81926a6ca1415f",
     "src/engine/token-bag.js": "f189e38ec60b3f5422238ab8c571add679fe564bacc1e7281fad577a08936497",
     "tests/tde-primitives-token-bag.test.mjs": "614efeaba2ab191f3c125e8cc76bc5f451edb411c6816f9cb575baa53f0e3406",
     "src/engine/vertical-chain.js": "0e319b1c97ead9d2560a3790dd64d3d4d6cf84d90a015dfbca09257ce8ec075f",
@@ -263,15 +396,34 @@
     "tests/tde-primitives-epilogue-matrix.test.mjs": "380515c44ec90c2d4ca2fb1f33acee12ad1312a5f7b8219dbf1a4483b9106aa0",
     "src/engine/myriad.js": "67ec1fcb5e22ee48bb71374bc2407d8d8c07cc1500890dd53688a88b94796278",
     "tests/tde-primitives-myriad.test.mjs": "83e7e22158ff9817cd9a5203a71cb13c774d67462bd26313dd13c9ace438e5ef",
-    "src/engine/location-doom.js": "cba81dface9a427561e1d68cf3ed491b9c094b83a0d578dcbcecc51cd9b20b92",
-    "tests/tde-primitives-location-doom.test.mjs": "a36735cd58ff14ed43b908c229ee3eba81df9b4f944f8f05a64eb80eb215a2c6",
+    "src/engine/location-doom.js": "05bdebcafb589d3d6657408445c29bc847eced611f40ec4fad8d0bd8697c1ebb",
+    "tests/tde-primitives-location-doom.test.mjs": "ca9b11504e2da98262b77aa20617f484004854e9c5a0f9c6760fc6fc2ce75325",
     "src/engine/marker-count.js": "fa87d630d4d3de8fe516212f12985a1eb59d5b7403497c259d8945d92c11ec3d",
-    "tests/tde-primitives-marker-count.test.mjs": "bbb6b523425b8f947ffe70a2478f8f627b30626b83da26246d96f9feb0b81eee"
+    "tests/tde-primitives-marker-count.test.mjs": "bbb6b523425b8f947ffe70a2478f8f627b30626b83da26246d96f9feb0b81eee",
+    "src/engine/asset-defeat.js": "32a74fdb39f9aefd043bb05385cb53ec173df75ef7fdce00714a6f999a75666b",
+    "src/engine/enemies.js": "104b39058cedba4dfa075a4bedc767391ec73ee51f07f31df454648bddda20e6",
+    "src/engine/windows.js": "ef8fbd64a8cee3026ee465fdfbb2401365d222ef09481af6da55fd5ae560bb6f",
+    "tests/tde-investigators.test.mjs": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+    "src/engine/harm-transfer.js": "6b58b4156f03ae12beb94a2cb16800d68afcae7223d9b0116a80207b5d37d1f8",
+    "src/engine/api-misc.js": "40380b434340af4edc5661f4b6ceb425f1ad24cdccc8cb0948db4ffc7166afbd",
+    "src/engine/card-counters.js": "62ff1ce3d00bc267be2f9a5bb318e8787022afb6323d70cfc5a26e49f8e2e384",
+    "src/engine/restricted-actions.js": "7be7d6e89382fbe2e552329e7a1c9a12f0a2556b1398ef3d9d5a28d36f6ebd2f",
+    "src/engine/spell-actions.js": "1df1497d2df8ac621206fb09c8c9824d19ad3c2f1962b195ae97c97b18739eb7",
+    "src/engine/turn.js": "3199bd1f3369111df3ba7822749baa7c0d0d4cfc1e13bf63bbad9aebffb84254",
+    "src/engine/moves.js": "01bc1199cbed268c57610708d8b8d05f1d47cff9285a5e700fe30ff30090c461",
+    "src/engine/dispatch.js": "e77bffc0c4fefbf5b1a987fc06ef8b36d84ac588e267bcbf39464c5977ebc566",
+    "src/engine/table-decisions.js": "586cc3ff4b1a8cab9cd2923ea066ca6712ce5ae4a5fdbac6c54c9e409511af15",
+    "src/engine/deck-ops.js": "545a46ab08dcee393948344747d64df8aa5bd787dcc1a9fbefc8af2927f50e23",
+    "src/engine/ability.js": "e9ccc01e532482439fad97c0536883abad4e9e416c8e60d2a90aeda2d5397d02",
+    "src/engine/phases.js": "06927038494a6fc26c72fce8ad7047372fff911fb59462129cfd5147ec1258b1",
+    "src/engine/stats.js": "cbbf30a02f7acb0ad966117da81019734c2b2de99dc204e8fdaf7dce83ee2f11",
+    "src/engine/setup.js": "735d52d00815f39815a3bb3668e9979e4a89d86a642a49689723b157fc8abd6f",
+    "src/engine/tests.js": "06857bb903ea3d3af6870026fcb2a345e14b05d29b0289f51777ba5087887c8f"
   },
   "gate": {
     "newPrimitives": {
-      "expected": 17,
-      "done": 17,
+      "expected": 26,
+      "done": 26,
       "pending": 0,
       "pass": true
     },

@@ -11,6 +11,11 @@
 
 // 第 5 步 P6：法术专用额外行动的授权/清理只走 spell-actions 的算术（纯函数，无依赖）。
 import { clearSpellCredit, grantSpellCredit } from './spell-actions.js'
+// P6（食梦者）：受限额外行动（托尼·摩尔根的赏金行动）的授权与清理。
+import {
+  clearRestrictedAction, grantRestrictedAction, restrictedActionRule,
+} from './restricted-actions.js'
+import { investigatorRule } from '../cards/card-rules.js'
 
 export function createTurn(deps) {
   const {
@@ -384,6 +389,13 @@ function turnBeginningWindow(state, events) {
       blanked: investigatorTextBlanked(state, inv),
       info: text => info(state, events, text),
     })
+    // P6（食梦者 · 托尼·摩尔根）：回合开始时授予「只能用于交战/攻击带赏金敌人」的额外行动。
+    const restrictedRule = restrictedActionRule(inv.code, investigatorRule)
+    if (restrictedRule && !investigatorTextBlanked(state, inv)) {
+      clearRestrictedAction(inv, restrictedRule.kind)
+      grantRestrictedAction(state, inv, restrictedRule.kind)
+      info(state, events, `${inv.name} 获得 1 个${restrictedRule.kind === 'bounty' ? '只能用于交战或攻击带赏金敌人' : '受限'}的额外行动。`)
+    }
     scenarioBehavior(state).turnBegins?.(state, inv, scenarioRuntime(state, events))
     // 「时间借取」：回合开始时移除所有滴答，换取等量额外行动。
     campaignBorrowedTimeTurnStart(state, inv, events)
@@ -417,6 +429,9 @@ function beginInvestigationPhase(state, events, repeated = false) {
       delete inv.extraActionNextTurn
     }
     clearSpellCredit(inv)
+    // P6（食梦者）：上一轮的受限额外行动额度一并清掉（回合开始会重新授予）。
+    const rule = investigatorRule(inv.code)?.restrictedAction
+    if (rule?.kind) clearRestrictedAction(inv, rule.kind)
     if (inv.pendingActionLoss) delete inv.pendingActionLoss[state.round]
   }
   // Phase 1（A1）：阶段级临时修正改由 state.effects 承载，上面的 expireEffects 已经清掉，

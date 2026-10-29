@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "playwright + tools/playwright-tde-ui-reporter.mjs",
+  "milestone": "P5",
+  "campaignId": "dualHubDemo",
+  "status": "passed",
+  "screenshotBase": "repo-root",
+  "checks": {
+    "desktopBrowser": true,
+    "mobileBrowser": true
+  },
+  "tests": [
+    {
+      "title": "M5 并行出发准备左右分屏与双线队长在desktop端可用",
+      "spec": "tests/tde-modes.browser.mjs",
+      "viewport": "desktop",
+      "expectedStatus": "passed",
+      "status": "passed"
+    },
+    {
+      "title": "M5 并行出发准备左右分屏与双线队长在mobile端可用",
+      "spec": "tests/tde-modes.browser.mjs",
+      "viewport": "mobile",
+      "expectedStatus": "passed",
+      "status": "passed"
+    },
+    {
+      "title": "M5 并行双线自由分线与人数相等门在desktop端可用",
+      "spec": "tests/tde-modes.browser.mjs",
+      "viewport": "desktop",
+      "expectedStatus": "passed",
+      "status": "passed"
+    },
+    {
+      "title": "M5 并行双线自由分线与人数相等门在mobile端可用",
+      "spec": "tests/tde-modes.browser.mjs",
+      "viewport": "mobile",
+      "expectedStatus": "passed",
+      "status": "passed"
+    },
+    {
+      "title": "M5 并行开局后局内不做分屏：两条线在后台同时运行，画面只显示本线",
+      "spec": "tests/tde-modes.browser.mjs",
+      "viewport": "desktop",
+      "expectedStatus": "passed",
+      "status": "passed"
+    },
+    {
+      "title": "M5 非双线战役不出现开局模式门，页签照常可用",
+      "spec": "tests/tde-modes.browser.mjs",
+      "viewport": "desktop",
+      "expectedStatus": "passed",
+      "status": "passed"
+    },
+    {
+      "title": "M5 食梦者开局模式面板与座位分线在desktop端可用",
+      "spec": "tests/tde-modes.browser.mjs",
+      "viewport": "desktop",
+      "expectedStatus": "passed",
+      "status": "passed"
+    },
+    {
+      "title": "M5 食梦者开局模式面板与座位分线在mobile端可用",
+      "spec": "tests/tde-modes.browser.mjs",
+      "viewport": "mobile",
+      "expectedStatus": "passed",
+      "status": "passed"
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "departure-parallel-desktop",
+      "path": "artifacts/tde-migration/departure-parallel-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "exists": true
+    },
+    {
+      "name": "departure-parallel-mobile-lanes",
+      "path": "artifacts/tde-migration/departure-parallel-mobile-lanes.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "exists": true
+    },
+    {
+      "name": "departure-parallel-mobile",
+      "path": "artifacts/tde-migration/departure-parallel-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "exists": true
+    },
+    {
+      "name": "mode-gate-desktop",
+      "path": "artifacts/tde-migration/mode-gate-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "exists": true
+    },
+    {
+      "name": "mode-gate-mobile",
+      "path": "artifacts/tde-migration/mode-gate-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "exists": true
+    },
+    {
+      "name": "modes-desktop-seats",
+      "path": "artifacts/tde-migration/modes-desktop-seats.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "exists": true
+    },
+    {
+      "name": "modes-desktop",
+      "path": "artifacts/tde-migration/modes-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "exists": true
+    },
+    {
+      "name": "modes-mobile-seats",
+      "path": "artifacts/tde-migration/modes-mobile-seats.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "exists": true
+    },
+    {
+      "name": "modes-mobile",
+      "path": "artifacts/tde-migration/modes-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "exists": true
+    },
+    {
+      "name": "parallel-in-game-desktop",
+      "path": "artifacts/tde-migration/parallel-in-game-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "exists": true
+    },
+    {
+      "name": "parallel-seats-desktop-unbalanced",
+      "path": "artifacts/tde-migration/parallel-seats-desktop-unbalanced.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "exists": true
+    },
+    {
+      "name": "parallel-seats-desktop",
+      "path": "artifacts/tde-migration/parallel-seats-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "exists": true
+    },
+    {
+      "name": "parallel-seats-mobile-unbalanced",
+      "path": "artifacts/tde-migration/parallel-seats-mobile-unbalanced.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "exists": true
+    },
+    {
+      "name": "parallel-seats-mobile",
+      "path": "artifacts/tde-migration/parallel-seats-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "exists": true
+    }
+  ]
+}

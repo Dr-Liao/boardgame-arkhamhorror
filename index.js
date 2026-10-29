@@ -1,13 +1,13 @@
 // 桌游 Mod：诡镇奇谈 · 卡牌版（Arkham Horror: The Card Game）
 //
-// 这是一个「合作类卡牌桌游」Mod：1 名人类玩家 + 1~3 名 AI 队友，共同组成调查队，
+// 这是一个「合作类卡牌桌游」Mod：1~4 个真人或 AI 席位共同组成调查队，
 // 对抗剧本（敌人 + 遭遇牌 + 密谋/毁灭）。规则引擎见 src/engine/engine.js。
 //
 // 模块分层见 ARCHITECTURE.md：src/ 放服务端领域代码，content/ 放内容包，web/ 放浏览器资源。
 //
 // 与经典双人 Mod（五子棋/井字棋）不同：
 //   - cooperative = true：AI 是「队友」而非「对手」；
-//   - 支持可变数量的 AI 队友（settings.teammates）；
+//   - 支持可变席位数，以及本地 AI / 联机真人混合队伍；
 //   - AI 队友由模型选择调查员、构筑和升级；确定性策略只作失败兜底。
 
 import {
@@ -24,6 +24,10 @@ import { stateCompatibilityError } from './src/engine/rules-state.js'
 import { migrateState } from './src/engine/save-migration.js'
 import { setAutoReactionHosted } from './src/engine/resolution.js'
 import { campaignListForUi } from './content/registry.js'
+import { laneBalance } from './src/campaign/campaign-modes.js'
+// 双线开闸是逐战役的：P5 只验证机制（演示/夹具可置 dualLineGate: 'open'），
+// 真实 TDE 要等 P9.5 的 4 人 2+2 / 2 人 1+1 矩阵验收后再打开。
+import { contentRegistry as campaignRegistry } from './content/registered.js'
 import { deckBuilderData } from './src/deck/deckbuilding.js'
 import {
   createGameState, applyMove, validateMove, describeParts, legalMoves, moveToText, decisionSeat, actingSeats, seatLocalMove,
@@ -39,6 +43,12 @@ import { handleMusicLibrary } from './src/integration/music-library.js'
 import { cacheWebAsset as cacheImageAsset } from './src/integration/image-cache.js'
 import { cacheMusicAsset } from './src/integration/music-cache.js'
 import { viewState, viewEvents, staticTables } from './src/integration/observation.js'
+import { laneToRoomSeat, laneSeatForRoom } from './src/engine/lane-runtime.js'
+import {
+  isParallelState, launchParallelLanes, parallelActingSeats, parallelApplyMove, parallelAutoChoice, parallelDecisionSeat,
+  parallelDescribe, parallelLegalMoves, parallelPendingChoice, parallelPublicView, parallelSeatLocalMove,
+  parallelValidateMove, parallelView, syncParallelStatus,
+} from './src/integration/parallel-runtime.js'
 import { aiDecisionContext } from './src/ai/ai-context.js'
 import { storyChatContext } from './src/ai/ai-story.js'
 import {
@@ -92,7 +102,7 @@ const MOVE_FORMAT = [
 const AGENT_HINT = [
   '这是一款【合作】桌游：你和所有其他调查员是队友，共同对抗剧本，而不是互相竞争。',
   '【离场与聊天】先核对座位身份和当前队伍参与状态。被击败、撤退、永久死亡、永久疯狂必须区分；被击败不等于永久死亡。已离场调查员不能继续本关行动或提供投入、支援，不得要求其调查、战斗、移动或等待其行动，也不得臆造治疗复活。真人仍能聊天和讨论策略；玩家继续发言不代表调查员恢复行动。回应其倒下或讨论分工时，应承认当前状态并由仍在场队友接手。当前状态优先于旧聊天、备忘和计划；准备、结算及更换调查员仍以当前合法选项为准。',
-  '【简化模式】当前开放部分 Core 卡牌及《夜之狂热》三关流程，不是严格规则等价实现；全卡图鉴收录不等于可玩。以当前状态和合法行动为准，不根据原版卡文臆造效果。',
+  '【实现边界】当前可启动《夜之狂热》《敦威治遗产》《卡尔克萨之路》《失落的时代》和《万象无终》；部分内容带 earlyAccess 或明确登记的近似实现，不是严格规则等价认证。全卡图鉴收录不等于可玩，以当前战役状态、合法行动和服务端结算为准，不根据原版卡文臆造效果。',
   '你们正在推进当前战役；关卡顺序、可用机制和结局以服务端状态与合法动作列表为准。',
   '【线索与移动】按当前场景推进条件核对所需线索、支付地点和时机，不从剧情文字猜测开门或触发条件。以收集线索为目标时选择仍有线索且可调查的地点；零线索地点仍可用于必经路线、支付推进、战斗、支援或撤退，但移动必须有具体目的。不要在条件未变化时反复往返两个空地点来试探剧情；每步核对线索缺口，旧计划声称“线索带齐”不能覆盖当前数值。要求回合结束支付时，凑齐后留在指定地点等支付窗口，不要因当前没有 advanceAct 就离开。',
   '【战役目标与合作】胜利点、创伤与冒险日志会跨关继承。请以团队整体利益为重：让高智识者调查、高战斗者处理敌人，配合队友推进场景目标；奖励、创伤及后续布置以当前实现的结算状态为准。',
@@ -103,6 +113,87 @@ const AGENT_HINT = [
   '【交战与借机攻击】被敌人交战时，先看局面里的「借机攻击」提示和行动列表的 ⚠ 标记：抽牌、获得资源、移动、调查、打出卡牌、普通资产能力都会在效果结算前先被每个未横置的交战敌人攻击一次。除非这一手能立刻解除威胁（例如装上武器后马上攻击）或你已确认承受得起，否则先用攻击、躲避、谈判或撤退，或改用免费/「不引发借机攻击」的效果；不要被缠住时习惯性抽牌、攒资源或来回移动。',
   '请结合当前局势与队友状态做最优决策：缺线索就调查、被敌人纠缠就攻击或躲避、受伤/受惊就治疗或撤退、资源足够就打出强力卡牌；能推进「场景」目标时优先推进，同时盯住「密谋」的毁灭进度避免灭团。',
 ].join('\n')
+
+// ---------------------------------------------------------------------------
+// P5 批次 3：双线（pick / singleA / singleB）的大厅边界适配器
+//
+// 规则引擎在关卡内只认线内连续座位（laneSeat）；大厅命令、观察投影与 AI 用房间座位
+// （roomSeat）。这里按 state.laneRuntime 做一次双向转换，非双线战役全部原样透传。
+// viewEvents 没有 state 参数，本轮暂不做座位转换（只影响私密事件的过滤，不会泄密；
+// 已在 docs/tde-p5-report.md 记为剩余项）。
+// ---------------------------------------------------------------------------
+const laneSeatOfRoom = (state, roomSeat) => (state?.laneRuntime ? laneSeatForRoom(state, roomSeat) : roomSeat)
+const roomSeatOfLane = (state, laneSeat) => (state?.laneRuntime ? laneToRoomSeat(state, laneSeat) : laneSeat)
+const seatIsWaiting = (state, seat) => state?.laneRuntime != null && laneSeatOfRoom(state, seat) == null
+
+const hostedLegalMoves = (state, seat = null) => {
+  if (isParallelState(state)) return seat == null ? [] : parallelLegalMoves(state, seat)
+  if (seat == null) return legalMoves(state)
+  if (seatIsWaiting(state, seat)) return []
+  return legalMoves(state, laneSeatOfRoom(state, seat))
+}
+const dualLineGateOpen = state => campaignRegistry.getCampaign(state?.campaign?.id)?.dualLineGate === 'open'
+const parallelLaunchReason = state => {
+  if (!dualLineGateOpen(state)) return '双线开闸属于 P9.5：该战役还没有在 manifest 打开 dualLineGate'
+  const balance = laneBalance(state.campaign.seatParts)
+  if (!balance.balanced) return `两线人数必须相等（A ${balance.A} / B ${balance.B}）`
+  return null
+}
+const parallelLaunchMove = (state, move) => state?.campaign?.mode === 'parallel'
+  && !isParallelState(state) && move?.action === 'hubBeginScenario'
+const hostedValidateMove = (state, seat, move) => {
+  if (parallelLaunchMove(state, move)) return parallelLaunchReason(state)
+  if (isParallelState(state)) return parallelValidateMove(state, seat, move)
+  if (seatIsWaiting(state, seat)) return '现在不是你的行动时机（另一条线）'
+  return validateMove(state, laneSeatOfRoom(state, seat), move)
+}
+const hostedApplyMove = (state, seat, move) => {
+  if (isParallelState(state)) return parallelApplyMove(state, seat, move)
+  // 并行开闸：hub 的「开始第一关」直接启动两份运行时（容器进入局内态，
+  // 各座位的视图/可用动作由 parallelView / parallelLegalMoves 按线投影）。
+  if (parallelLaunchMove(state, move)) {
+    const reason = parallelLaunchReason(state)
+    if (reason) throw new Error(reason)
+    const launched = launchParallelLanes(state)
+    if (!launched.ok) throw new Error('并行双线已经在运行')
+    state.currentSeat = parallelDecisionSeat(state) ?? 0
+    state.legalMoves = []
+    syncParallelStatus(state)
+    return [{ type: 'info', text: '两条线同时进入梦境。', lane: null }]
+  }
+  if (seatIsWaiting(state, seat)) throw new Error('现在不是你的行动时机（另一条线）')
+  return applyMove(state, laneSeatOfRoom(state, seat), move)
+}
+const hostedDecisionSeat = state => {
+  if (isParallelState(state)) return parallelDecisionSeat(state)
+  const seat = decisionSeat(state)
+  return seat == null ? seat : roomSeatOfLane(state, seat)
+}
+const hostedActingSeats = state => (isParallelState(state)
+  ? parallelActingSeats(state)
+  : actingSeats(state).map(seat => roomSeatOfLane(state, seat)).filter(seat => seat != null))
+const hostedSeatLocalMove = (state, seat, move) => {
+  if (isParallelState(state)) return parallelSeatLocalMove(state, seat, move)
+  if (seatIsWaiting(state, seat)) return false
+  return seatLocalMove(state, laneSeatOfRoom(state, seat), move)
+}
+const hostedViewState = (state, seat = null, options = {}) => {
+  if (isParallelState(state)) return seat == null ? parallelPublicView(state) : parallelView(state, seat)
+  const observer = seat == null || !state?.laneRuntime ? seat
+    : (seatIsWaiting(state, seat) ? null : laneSeatOfRoom(state, seat))
+  return viewState(state, observer, options)
+}
+const describeStateFor = (state, observer) => {
+  const parts = describeParts(state, observer)
+  return parts.body + aiDecisionContext(state, observer) + (parts.tail ? '\n' + parts.tail : '')
+}
+const hostedDescribeState = (state, seat) => {
+  if (isParallelState(state)) return seat == null ? '' : parallelDescribe(state, seat)
+  if (seat == null) return describeStateFor(state, decisionSeat(state))
+  if (!state?.laneRuntime) return describeStateFor(state, seat)
+  if (seatIsWaiting(state, seat)) return describeStateFor(state, null)
+  return describeStateFor(state, laneSeatOfRoom(state, seat))
+}
 
 export default {
   id: 'arkhamhorror',
@@ -117,6 +208,8 @@ export default {
   participantDescription,
   createSessionCheckpoint,
   checkpointView,
+  // P0 联机：大厅按这个钩子取并行线的待决选择（房间座位）。
+  pendingChoice(state) { return parallelPendingChoice(state) },
   migrateSessionCheckpoints,
   forkSessionCheckpoint,
   commitChoiceBatch,
@@ -326,22 +419,18 @@ export default {
   // 决策块（当前场景推进条件 / 敌人意图 / 借机攻击 / 待决选择 / 可执行行动）必须留在最后：
   // 大厅会在观察后面接「回合进度 + 对局进程 + 输出要求」，把决策块放在 JSON 之前会让它离
   // 输出要求差上 1.4 万 token，满场局面下模型容易被中间的卡面资料稀释。
-  describeState: (state, seat) => {
-    const observer = seat ?? decisionSeat(state)
-    const parts = describeParts(state, observer)
-    return parts.body + aiDecisionContext(state, observer) + (parts.tail ? '\n' + parts.tail : '')
-  },
+  describeState: hostedDescribeState,
   chatContext: state => storyChatContext(state),
-  legalMoves,
-  decisionSeat,
-  actingSeats,
-  seatLocalMove,
+  legalMoves: hostedLegalMoves,
+  decisionSeat: hostedDecisionSeat,
+  actingSeats: hostedActingSeats,
+  seatLocalMove: hostedSeatLocalMove,
   decisionSeed,
   moveCost,
   saveCompatibilityError: state => stateCompatibilityError(state, META.resourceVersion),
   saveCompatibilityFromState: true,
   migrateState,
-  viewState,
+  viewState: hostedViewState,
   viewEvents,
   // P3.2 A1′：viewState 不修改入参 state（含嵌套对象），因此大厅可以每 revision 只把权威 state
   // structuredClone 一次，作为隔离副本交给各席位视图共用；不声明该能力时大厅保持逐席位拷贝。
@@ -353,8 +442,8 @@ export default {
   createState(settings, players) {
     return createGameState({ ...settings, campaignHub: settings.legacyAutoStart !== true }, players)
   },
-  validateMove,
-  applyMove,
+  validateMove: hostedValidateMove,
+  applyMove: hostedApplyMove,
 
   // —— 调试控制台（大厅可选钩子，见 lib/mods.js 与 artifacts/debug-console/CONTRACT.md §4）——
   // isDebugMove 让大厅拒绝经由普通 /move、自动代答或批量选择夹带调试动作；
@@ -371,8 +460,10 @@ export default {
   // states 只含该座位「动过的卡」；没有覆盖时按 autoByDefault 取内置默认：
   // 纯收益自动奖励 = auto，其余（如罗兰的线索反应）= ask。返回普通 move，仍过 validateMove。
   autoChoice({ state, seat, states }) {
+    if (isParallelState(state)) return parallelAutoChoice({ state, seat, states })
     const choice = state?.pendingChoice
-    if (!choice || choice.seat !== seat) return null
+    const laneSeat = seatIsWaiting(state, seat) ? null : laneSeatOfRoom(state, seat)
+    if (!choice || laneSeat == null || choice.seat !== laneSeat) return null
     const stateOf = code => states?.[code]
       ?? (state?.cards?.[code]?.autoByDefault ? 'auto' : 'ask')
     // 自动优先：默认自动奖励或玩家手动切到 auto 的旧式反应，都可以补 trigger。

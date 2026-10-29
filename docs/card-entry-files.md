@@ -1,11 +1,8 @@
-# 一卡一文件：卡牌行为目录（agent 执行手册）
+# 一卡一文件：卡牌行为操作手册
 
-> 日期：2026-10。状态：**玩家卡与非玩家卡均已执行**。468 个玩家卡能力条目已从
-> `card-abilities.js` / `ability-migration-batches.js` 拆到 `src/cards/entries/<code>.js`；
-> 529 个非玩家条目已按拆分方案迁到
-> `src/cards/encounter-entries/`（通用 / 战役共用 / 关卡专用三档）。本文是**当前规矩**，
-> 不是历史记录；原阶段文档（phase5-migration.md、architecture-refactor-roadmap.md）已在 2026-10 的
-> 拆分迁移后删除，现行架构与演进规矩见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md)。
+> 玩家卡与非玩家卡都采用一卡一文件。本文只记录脚手架、索引和日常执行步骤；
+> schema 以 [`card-model.md`](card-model.md) 为准，分层约束以
+> [`../ARCHITECTURE.md`](../ARCHITECTURE.md) 为准，当前数量与迁移结果以 `audit/` 账本为准。
 
 ---
 
@@ -13,7 +10,7 @@
 
 1. **一张有行为的卡 = 一个文件**，玩家卡与非玩家卡同一原则：
    - 玩家卡：`src/cards/entries/<code>.js`，`export default` 恰好一个条目；范围是
-     `CARD_ABILITY_ENTRIES`（468 个条目），`entries/` 只放玩家卡。
+     `CARD_ABILITY_ENTRIES`，`entries/` 只放玩家卡。
    - 通用非玩家卡（跨战役复用）：`src/cards/encounter-entries/shared/<encounterGroup>/<code>.js`。
    - 战役内跨关卡复用：`src/cards/encounter-entries/<campaign>/_shared/<encounterGroup>/<code>.js`。
    - 关卡专用（地点/幕/议程/专属敌人/诡计/剧情资产）：`src/cards/encounter-entries/<campaign>/<scenario>/<code>.js`。
@@ -28,8 +25,8 @@
    并保留旧导出。两个文件都不得再放条目。
 4. **不恢复批次大文件**：不得新建 `BATCH_*`、`MIGRATED_*` 数组或 `ability-migration-batches.js`。
    迁移账本 `audit/migration-batches.json` 只记「哪张卡属于哪一批」，不是行为存放处。
-5. **目录卡不等于行为卡**：`cards-data.js` 里的 5,930 张卡面数据仍由导入器生成，不按卡拆文件；
-   只有已经实现行为的 468 张玩家卡与 529 条非玩家条目有单卡文件。未实现的卡不要预建空文件。
+5. **目录卡不等于行为卡**：`cards-data.js` 的卡面数据由导入器生成，不按卡拆文件；
+   只有已经实现行为的玩家卡与非玩家条目有单卡文件。未实现的卡不要预建空文件。
 6. **卡只能经描述子与 `ctx.api` 结算**：不得 import `src/engine/engine.js`、`card-abilities.js`、
    `encounter-abilities.js`、批次文件或 `content/`；不得直接改 `state`。需要新机制时先扩 `ability.js` /
    `windows.js` / `matcher.js` / `modifiers.js` / `targets.js` / `play-condition.js` / `effect-state.js`。
@@ -121,7 +118,8 @@ export default {
 4. 运行时别名条目跟随同名印刷卡条目（要求唯一匹配），避免同一张卡被分到两处。
 
 非玩家文件的硬约束：`export default` 恰好一个条目，`code` 等于文件名，`scope` 必须是
-`enemy | location | act | agenda | treachery | storyAsset | threat` 之一；跨卡 helper 只从
+`enemy | location | act | agenda | storyAsset | treachery` 之一；威胁区是 `treachery` 卡可能所在的
+运行区域，不是独立 scope。跨卡 helper 只从
 `encounter-entries/_shared.js` 取，跨条目查询只从 `encounter-entries/_lookup.js` 取。
 
 ### 2.2 「每场游戏一次」的行动：用掉后要给 `used` 提示
@@ -280,20 +278,17 @@ node tools/migrate-card.mjs --verify          # 账本/文件一致性
 
 ---
 
-## 5. 为什么不是 5,930 个文件
+## 5. 哪些内容需要一卡一文件
 
-| 层 | 数量 | 存放 | 是否一卡一文件 |
-| --- | --- | --- | --- |
-| 卡面数据（名字/类型/费用/文本） | 5,930 | `src/cards/cards-data.js`（导入器生成） | 否；生成物，按循环拆也没有收益 |
-| 玩家卡行为描述子 | 468 | `src/cards/entries/<code>.js` | 是 |
-| 非玩家条目（敌人/诡计/地点/幕/议程/剧情资产/威胁） | 529 | `src/cards/encounter-entries/`（通用 / 战役共用 / 关卡专用） | 是 |
-| 战役/关卡内容 | 按章节 | `content/campaigns/` | 按章节文件 |
+| 层 | 存放 | 组织方式 |
+| --- | --- | --- |
+| 卡面数据（名字/类型/费用/文本） | `src/cards/cards-data.js` | 导入生成的目录，不按卡拆分 |
+| 玩家卡行为描述子 | `src/cards/entries/<code>.js` | 一卡一文件 |
+| 非玩家行为条目 | `src/cards/encounter-entries/` | 一卡一文件，按使用范围归档 |
+| 战役/关卡内容 | `content/campaigns/` | 按章节与规则职责拆分 |
 
-实测（Node 24，热缓存）：468 个玩家卡模块约 +165 ms/新进程；5,930 个模块约 +1.9 s/新进程。
-测试按文件独立进程运行，后者会把启动成本乘以用例数量，且商店清单/增量更新也会变大。
-所以目录卡保持单文件；只给**已经实现行为**的卡建文件，未实现的卡用脚手架按需生成。
-玩家卡 468 个模块 + 非玩家条目 529 个模块 ≈ 1,000 个，仍远低于 5,930，启动成本可接受；真正的收益是
-文件级并行迁移与 review 边界。
+只有已实现行为的卡创建条目文件。目录数据保持生成物，避免把纯展示记录扩展成大量无行为模块；
+单卡文件的收益是明确的 review、并行迁移和回滚边界，而不是复制整份卡牌目录。
 
 ---
 
@@ -320,33 +315,7 @@ node tools/migrate-card.mjs --verify          # 账本/文件一致性
 
 ---
 
-## 7. 拆分记录（可复现）
+## 7. 历史迁移证据
 
-- 旧源：`src/cards/card-abilities.js`（3,871 行） + `src/cards/ability-migration-batches.js`（1,781 行）。
-- 生成：459 个文件，其中 21 个旧印、22 个快速反应事件、2 个 `.map` 生成的意志闪避、1 个加尔文；
-  28 个卡号在旧 `byCode` 里由多条合并（abilities/modifiers 拼接、同名字段后者覆盖）。
-- 顺序：`entries/index.js` 保持旧 `byCode` 的首次出现顺序；`CARD_ABILITY_ENTRIES` 直接等于索引列表。
-- 证据：
-  - `node tools/split-card-entries.mjs --check` → 代码集合/字段集合/abilities/modifiers 条数与运行时一致；
-  - 逐条递归对比（函数按源码归一化）→ 0 处差异；
-  - `node tools/replay-fixtures.mjs --compare artifacts/card-split-baseline.json` → 10 局 / 529 步逐条一致。
-- 旧源快照：拆分时写到 `artifacts/legacy/card-abilities.js` 与
-  `artifacts/legacy/ability-migration-batches.js`（`artifacts/` 不签入；需要时从 git 历史取）。
-  它们只作证据/回滚，不是运行时输入。
-
-### 7.1 非玩家条目（529 条，2026-10-22）
-
-- 旧源：`src/cards/encounter-abilities.js`（7,082 行；条目区 659–7067，顶部 52 个 helper）。
-- 生成：529 个条目文件 / 72 个目录；`shared/` 23、`<campaign>/_shared/` 97、`<campaign>/<scenario>/` 409；
-  最大目录 26 个文件（不可言说的誓约）。归属算法见 `tools/encounter-entry-placement.mjs`，0 unresolved。
-- 顺序与内容：`encounter-entries/index.js` 保持拆分前数组顺序；条目 code 顺序、对象 key 顺序、
-  `abilities`/`modifiers` 条数与运行时一致；`JSON.stringify(NON_PLAYER_ABILITY_ENTRIES)` 快照
-  `48,468 bytes / sha256 fb3cc3ac…` 与迁移前一致；函数源码逐条归一化对比 0 差异。
-- 唯一源码改写：03124 / 03125 的 `NON_PLAYER_ABILITY_ENTRIES.some(...)` 改走 `_lookup.js` 的
-  `someNonPlayerEntry(...)`（语义相同；对账时按旧函数名归一化）。
-- ESM：`_lookup.js` 改为「index 求值完成后注册 + 运行时惰性建表」，单独 import 02043 / 03137 /
-  03124 / 03125 / 03059 不抛错（守卫逐文件起新进程验证）。
-- 行为：`replay-fixtures --compare` 13 局 / 784 步逐条一致；`npm run test:fast` 2311 例全绿。
-- 硬编码：`cardLayerCodes` 642 → 100（白名单只降）；`engineCodes` / `engineEntityHits` 保持 0。
-- 旧源快照：`artifacts/legacy/encounter-abilities.js`（`artifacts/` 不签入；需要时从 git 历史取）。
-  对账门槛、执行步骤与工具说明原载于拆分方案（方案已归档，需要时从 git 历史取）。
+玩家卡和非玩家卡的一次性拆分已经完成。历史文件数量、源码快照、哈希和逐步 replay 结果不属于当前
+操作契约，需要追溯时从 `audit/`、对应提交和 git 历史读取；不要把历史基线复制回本文。

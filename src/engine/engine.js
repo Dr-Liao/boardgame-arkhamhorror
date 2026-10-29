@@ -113,10 +113,16 @@ import { createPlayChannels } from './play-channels.js'
 // 细节见 location-traits.js 文件头；本文件只做惰性装配与 commonDeps/serio API 接线。
 import { createLocationTraits, grantedTraitsOf } from './location-traits.js'
 import {
-  actionsAvailable as spellActionsAvailable, clearSpellCredit, consumeAction as consumeSpellAction,
-  doomAmongControlled, grantSpellCredit, spellOnlyActionsOf,
+  clearSpellCredit, doomAmongControlled, grantSpellCredit, spellOnlyActionsOf,
 } from './spell-actions.js'
+// P6（食梦者）：受限额外行动（法术 / 赏金）的算术与授权。
+import {
+  actionsAvailable as restrictedActionsAvailable, consumeAction as consumeRestrictedAction,
+  grantRestrictedAction, restrictedActionRule, restrictedGrantedThisTurn,
+} from './restricted-actions.js'
 import { noteCardCancelled } from './cancel-note.js'
+// P6（食梦者）：支援被击败的唯一判定点（含 assetDefeated 窗口）。
+import { checkAssetDefeated } from './asset-defeat.js'
 import { beginCancelNoteFrame, cancelNoteFrameNoted, currentRevelation } from './resolution-scope.js'
 import { cardIdentityFields } from '../cards/card-identity.js'
 import { captureTableState } from '../integration/presentation-state.js'
@@ -127,6 +133,8 @@ import { STATE_SCHEMA_VERSION, RULES_VERSION, randomValue, nextInstanceId, state
 import { requestChoice, choiceMoves, choiceSeats, choiceError, resolveTransaction, resolutionCheckpoint } from './resolution.js'
 import { introduction, resolutionStory } from '../campaign/story.js'
 import { campaignGraph, enterCampaignNode, walkCampaign } from '../campaign/campaign-flow.js'
+import { roomSeatForEvent } from './lane-runtime.js'
+import { partManifest } from '../campaign/part-flow.js'
 import { applyCampaignEffect, applyResolutionResults } from '../campaign/campaign-effects.js'
 import { initializeChaosBag, beginChaosTest, drawChaosToken, returnChaosToken, endChaosTest, releaseChaosTokens, sealChaosToken } from './chaos-bag.js'
 import { registerCampaignInvestigator, updateCampaignStatus, replacementCandidates, awardExperience, campaignCardChange, settleExiledCards, availablePurchases, replacementOptions, purchaseCard, upgradeRecord, stagePurchase, finishUpgradeDraft, recommendUpgrade, campaignEnding, refreshArcaneResearch } from '../campaign/campaign.js'
@@ -162,7 +170,13 @@ if (!registeredCodes().length) registerCardAbilities([...CARD_ABILITY_ENTRIES, .
 const SCENARIOS = Object.fromEntries(contentRegistry.listScenarios()
   .filter(entry => ['playable', 'verified'].includes(entry.status))
   .map(entry => [entry.id, contentRegistry.getScenarioData(entry.id)]))
-const campaignManifestFor = state => contentRegistry.getCampaign(state.campaign.id)
+// P5 批次 2：声明了 parts 的战役在选定模式后按模式返回 flow/scenarioIds；
+// 未声明 parts（或尚未选模式）的战役原样返回，既有循环字节不变。
+const campaignManifestFor = state => {
+  const manifest = contentRegistry.getCampaign(state.campaign.id)
+  const mode = state.campaign?.mode
+  return manifest?.parts && mode ? partManifest(manifest, mode) : manifest
+}
 const campaignFor = state => ({ ...campaignManifestFor(state), scenarioOrder: campaignManifestFor(state).scenarioIds })
 const scenarioBehavior = state => state.scenario ? contentRegistry.getBehavior(state.scenario.id) || {} : {}
 
@@ -269,7 +283,7 @@ function info(state, events, text, presentation = null, { public: isPublic = fal
   const cue = presentation || (['enemy', 'upkeep', 'mythos'].includes(state.phase)
     ? { kind: 'automatic', phase: state.phase, round: state.round, text } : null)
   const privateSeat = presentation == null && state.skillTest && !state.skillTest.helpRequested && !isPublic
-    ? state.skillTest.seat : null
+    ? roomSeatForEvent(state, state.skillTest.seat) : null
   const event = { type: 'info', text, ...(privateSeat == null ? {} : { privateSeat }), ...(cue ? { presentation: { ...cue, tableState: captureTableState(state, getStat, getMaxSanity) } } : {}) }
   if (events) events.push(event)
   if (state._resolution) state._resolution.events.push(event)
@@ -277,7 +291,7 @@ function info(state, events, text, presentation = null, { public: isPublic = fal
 }
 
 function privateInfo(state, events, seat, text, presentation = null) {
-  const event = { type: 'info', text, privateSeat: seat,
+  const event = { type: 'info', text, privateSeat: roomSeatForEvent(state, seat),
     ...(presentation ? { presentation } : {}) }
   if (events) events.push(event)
   if (state._resolution && events !== state._resolution.events) state._resolution.events.push(event)
@@ -419,6 +433,8 @@ const LOLA_ROLES = ['guardian', 'seeker', 'rogue', 'mystic', 'survivor', 'neutra
 let currentActionKind = null
 // 第 5 步 P6：正在结算的行动是不是「法术行动」（法术专用额外行动的唯一判据，由 dispatch 写入）。
 let currentSpellAction = false
+// P6（食梦者）：当前行动可用的受限额外行动类型（'spell' | 'bounty' | null，由 dispatch 写入）。
+let currentRestrictedKind = null
 
 
 // 手牌上限：8 + 剧本修正（handSizeModifier，失落时代 P2）+ 支援/威胁修正。
@@ -846,12 +862,15 @@ function spendAction(state, inv) {
     inv.actionsLeft--
   } else {
     // 第 5 步 P6：法术专用额外行动（玛丽·朗博）——最后一个行动只能花在法术卡/法术能力上。
-    if (spellActionsAvailable(inv, currentSpellAction) < 1) {
-      throw new Error(spellOnlyActionsOf(inv)
-        ? '行动点不足（额外行动只能用于探索或法术）'
-        : '行动点不足（额外行动只能用于探索）')
+    // P6（食梦者）：托尼·摩尔根的赏金行动走同一读点（受限 kind 由 dispatch 写入）。
+    if (restrictedActionsAvailable(inv, currentRestrictedKind) < 1) {
+      throw new Error(currentRestrictedKind === 'bounty'
+        ? '行动点不足（额外行动只能用于交战或攻击带赏金的敌人）'
+        : spellOnlyActionsOf(inv)
+          ? '行动点不足（额外行动只能用于探索或法术）'
+          : '行动点不足（额外行动只能用于探索）')
     }
-    consumeSpellAction(inv, 1, currentSpellAction)
+    consumeRestrictedAction(inv, 1, currentRestrictedKind)
   }
   inv.exploreOnlyActions = Math.min(inv.exploreOnlyActions || 0, Math.max(0, inv.actionsLeft))
   state.moveCount++
@@ -867,7 +886,8 @@ const HUB_SEAT_ACTIONS = new Set(['hubSelectInvestigator', 'hubAutoDeck', 'hubSe
 
 const HUB_DIFFICULTIES = ['easy', 'standard', 'hard', 'expert']
 const inHub = state => state.hubFlow && state.uiState !== 'inScenario'
-const hubConcurrentPhase = state => (state.uiState === 'scenarioSetup' && !state.hubReady) || state.uiState === 'interlude'
+const hubConcurrentPhase = state => (state.uiState === 'scenarioSetup'
+  && (!state.hubReady || state.campaign?.mode === 'parallel')) || state.uiState === 'interlude'
 const hubPendingSeats = state => state.investigators.map(inv => inv.seat).filter(seat => !state.hubSeatDone?.[seat])
 // AI teammates prepare after every human has confirmed: they pick from what is left,
 // and their model latency never holds the session while humans are still choosing.
@@ -1206,6 +1226,12 @@ const apiTestDeps = { ...commonDeps,
 
 const apiMiscDeps = { ...commonDeps,
   SKILL_NAMES,
+  // P6（食梦者）：支援被击败判定（applyHarm 与「移动伤害」共用同一实现）。
+  checkAssetDefeated: (state, owner, asset, events) => checkAssetDefeated(state, owner, asset, events, {
+    cardDef, cardName, leaveAsset, info, reactionWindow, triggerReaction,
+    registeredEntry, defeatedAssetRetaliation,
+    shuffleIntoDeck: (target, code) => { target.deck = shuffle([...target.deck, code], () => randomValue(state)) },
+  }),
   // 2026-10-25 第五轮：条目 API 里的通用读点（敌人运行期修正 / 地点帷幕 / 显现作用域）。
   scenarioRuntime,
   extendHealHorror,
@@ -1223,6 +1249,8 @@ const apiMiscDeps = { ...commonDeps,
   investigatorMoveDestinations,
   // 第 5 步 P6：取消/忽略效果的记账（黛安娜·史丹利的反应挂在 cardCancelled 窗口上）。
   noteCardCancelled,
+  // P6（食梦者 · 托尼的 .38）：从手牌免费打出第二张同名卡。
+  doPlay: (...args) => doPlay(...args),
   // 第 5 步 P6：直觉牌库与资源寄存的卡面读取点（乔·戴蒙德的旧印 / 家族遗产的行动）。
   hunchDeck,
   // 2026-10-25 第五轮：api.addUses 需要条目字段（05186「花费充能/弹药时获得资源」）。
@@ -1508,6 +1536,7 @@ export const { legalMoves, validateMove } = createMoves({
   actionCost,
   actionKind,
   isSpellAction,
+  restrictedKindOfMove,
   activeHiddenRules,
   assetReplacementPlans,
   availableThreatAbilities,
@@ -1967,12 +1996,18 @@ function dispatchApi() {
   getCurrentActionKind: () => currentActionKind,
   setCurrentActionKind: value => { currentActionKind = value },
   setCurrentSpellAction: value => { currentSpellAction = value === true },
+  setCurrentRestrictedKind: value => {
+    currentRestrictedKind = value ?? null
+    // 法术 kind 与既有全局标志保持同步（第四循环读点不变）。
+    currentSpellAction = value === 'spell'
+  },
   ALL_INVESTIGATORS,
   ScenarioRestarted,
   abilityOfMove,
   actionCost,
   actionKind,
   isSpellAction,
+  restrictedKindOfMove,
   advanceInvestigator,
   buildDeck,
   buildDeckFromList,
@@ -2328,6 +2363,9 @@ function deckOpsApi() {
     resolveWeakness,
     campaignCardDrawReaction,
     weaknessProfile,
+    // P6（食梦者）：被查找到的那张牌自己的规则（searchedCardRule）。
+    discoverClueAt,
+    drawEncounter,
   })
   return deckOpsImpl
 }
@@ -2454,7 +2492,7 @@ function createTableDecisionsApi() {
 }
 // createTableDecisionsApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
 export function validateHubMove(...args) { return createTableDecisionsApi().validateHubMove(...args) } export function autoHubMove(...args) { return createTableDecisionsApi().autoHubMove(...args) } export function decisionSeed(...args) { return createTableDecisionsApi().decisionSeed(...args) }
-export function moveCost(...args) { return createTableDecisionsApi().moveCost(...args) } export function cardPlayBlockedReason(...args) { return createTableDecisionsApi().cardPlayBlockedReason(...args) } export function actionKind(...args) { return createTableDecisionsApi().actionKind(...args) } export function isSpellAction(...args) { return createTableDecisionsApi().isSpellAction(...args) }
+export function moveCost(...args) { return createTableDecisionsApi().moveCost(...args) } export function cardPlayBlockedReason(...args) { return createTableDecisionsApi().cardPlayBlockedReason(...args) } export function actionKind(...args) { return createTableDecisionsApi().actionKind(...args) } export function isSpellAction(...args) { return createTableDecisionsApi().isSpellAction(...args) } export function restrictedKindOfMove(...args) { return createTableDecisionsApi().restrictedKindOfMove(...args) }
 export function actionPreview(...args) { return createTableDecisionsApi().actionPreview(...args) } export function consumeStartingAdjustments(...args) { return createTableDecisionsApi().consumeStartingAdjustments(...args) } export function consumeMulliganBlock(...args) { return createTableDecisionsApi().consumeMulliganBlock(...args) }
 export function runMulligans(...args) { return createTableDecisionsApi().runMulligans(...args) } export function useGoldPocketWatch(...args) { return createTableDecisionsApi().useGoldPocketWatch(...args) } export function resolveCallOfTheUnknown(...args) { return createTableDecisionsApi().resolveCallOfTheUnknown(...args) }
 export function hubStartingDeckReady(...args) { return createTableDecisionsApi().hubStartingDeckReady(...args) } export function initialHubScenarioMoves(...args) { return createTableDecisionsApi().initialHubScenarioMoves(...args) } export function hubInvestigatorChoices(...args) { return createTableDecisionsApi().hubInvestigatorChoices(...args) }

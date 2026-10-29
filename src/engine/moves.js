@@ -13,7 +13,9 @@ import { all as matchAll } from './matcher.js'
 import { descriptorOfKind } from './ability.js'
 import { entityParleyDescriptors, parleyMovesFor, parleyTargetError } from './parley.js'
 // 第 5 步 P6：法术专用额外行动的算术（与 dispatch 共用同一份读点）。
-import { actionsAvailable, spellOnlyActionsOf } from './spell-actions.js'
+// P6（食梦者）：受限行动的 kind 由 table-decisions 的 restrictedKindOfMove 统一判定。
+import { spellOnlyActionsOf } from './spell-actions.js'
+import { actionsAvailable } from './restricted-actions.js'
 // 2026-10-28 调试控制台（CONTRACT §3）：纯函数直接 import，不新增工厂依赖。
 import { debugMoveError, isDebugMove } from './debug.js'
 
@@ -27,6 +29,7 @@ export function createMoves(deps) {
     actionCost,
     actionKind,
     isSpellAction,
+    restrictedKindOfMove,
     activeHiddenRules,
     playTypeBlocked,
     advanceAct,
@@ -534,10 +537,13 @@ export function createMoves(deps) {
   {
     const cost = actionCost(state, inv, move)
     const kind = actionKind(state, inv, move)
-    if (kind === 'explore' ? inv.actionsLeft < cost : actionsAvailable(inv, isSpellAction(state, inv, move)) < cost) {
+    const restricted = restrictedKindOfMove(state, inv, move)
+    if (kind === 'explore' ? inv.actionsLeft < cost : actionsAvailable(inv, restricted) < cost) {
       return kind === 'explore' ? '行动点不足'
-        : spellOnlyActionsOf(inv) && !isSpellAction(state, inv, move) ? '行动点不足（额外行动只能用于探索或法术）'
-          : '行动点不足（额外行动只能用于探索）'
+        : restricted === 'bounty' ? '行动点不足（额外行动只能用于交战或攻击带赏金的敌人）'
+          : inv.bountyOnlyActions && restricted !== 'bounty' ? '行动点不足（额外行动只能用于交战或攻击带赏金的敌人）'
+            : spellOnlyActionsOf(inv) && restricted !== 'spell' ? '行动点不足（额外行动只能用于探索或法术）'
+              : '行动点不足（额外行动只能用于探索）'
     }
   }
 

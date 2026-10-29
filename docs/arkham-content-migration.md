@@ -24,7 +24,7 @@
 - **先原语、后卡牌**：每轮迁移先扫描新增机制并拆分原语，再批量写卡。卡牌只能使用已登记的原语；需要新原语时按 §4.6.3 的队列向主进程申请，不得由子进程直接改引擎。
 - **卡条目只读状态，写入只走 `ctx.api`**：单卡文件不得直接写运行时状态（`state.*` / `inv.*` / `location.*` / `enemy.*` / `act.*` / `agenda.*` / `asset.*` / `target.*` / `card.*` 的字段或数组），也不得为单张卡新造状态字段（`inv.ritaEvadeRound`、`location.sordidAndSilent` 这类）。数据表达不了时先补原语（`ctx.api` / `modifiers` / `effect` / 声明式规则键）再写卡；确属单卡一次性、且只读的计算可以留在 `resolve`，但必须在 `primitive-plan.json` 的 `escape` 登记卡号与理由。
 - **同句规则只写一次**：同一句卡文模板（显现检定、失败差值、附属到地点/威胁区、谈判、撤退、搜索牌库、额外行动、结束回合检定……）出现第二张卡时按「原语候选」处理；出现第三张同模板卡时**停止写卡**、回 §4.3 补原语。逐卡手写第二遍即视为迁移未完成，不得以「先能跑再说」通过验收。
-- **重印只实现一次**：`cards-data` 里 `duplicateOfCode` / `duplicatedBy` 指向同一张印刷卡的两个卡号，只能有一份行为实现，另一号走 `card-identity.js` 的重印别名映射（数据表 `src/cards/entries/_reprint-aliases.js`，注册期在 `engine/ability.js#registerCardAbilities` 生成只改 code 的别名条目）；跨战役重印（同名同文、不同卡号）同样按此处理。口径见 [`p2-4-quick-event-channel.md`](p2-4-quick-event-channel.md)。
+- **重印只实现一次**：`cards-data` 里 `duplicateOfCode` / `duplicatedBy` 指向同一张印刷卡的两个卡号，只能有一份行为实现，另一号走 `card-identity.js` 的重印别名映射（数据表 `src/cards/entries/_reprint-aliases.js`，注册期在 `engine/ability.js#registerCardAbilities` 生成只改 code 的别名条目）；跨战役重印（同名同文、不同卡号）同样按此处理。口径见 [`card-model.md`](card-model.md) 的 §7.3。
 - **声明即接线**：条目上新增的任何字段（`treacheryRule.*`、`locationRule.*`、`flags.*`、`enemySpawnRule.*` …）必须在同一轮有引擎读点与测试；「声明了没人读」按未实现计，不得写进账本或写成 `verified`。
 - **口径冲突先裁决**：同一规则的多张卡实现口径不一致时（失败差值下限 0/1、回合限制、伤害分配顺序等），先改 [`card-model.md`](card-model.md) / 规则书并全局对齐，不得每张卡各自解释。
 - **新机制先走通用层**：卡面写不下时，先扩 `ability.js` / `windows.js` / `matcher.js` / `modifiers.js` / `targets.js` / `play-condition.js` / `effect-state.js` 的通用能力，再写卡。新窗口必须同时完成注册、调用点接线与测试——注册不等于接线。
@@ -446,7 +446,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 | 每轮一次 / 临时忽略限制 | 「每轮仅限一次」用描述子 `limit: { scope: 'perRound', owner: 'player' }` 走引擎上限账本（读点 `limits.js`）；「直到本轮结束忽略该能力限制」用 `api.ignoreLimitForRound('<描述子 id>')`（忽略期间同一窗口实例内仍只结算一次，跨续算/存档稳定） | 05005 已迁；卡里不写 `inv.<卡名>Round` / `inv.<卡名>Uses` 这类私有账本 |
 | 只能在你回合打出 | `playCondition: [ownTurn()]` | 已清零（7 张本轮补齐，R3 只防新增） |
 | 每场游戏一次 / 每阶段一次 | `limit` / `teamOnce()` | 已统一 |
-| 重印卡 | 一个文件实现 + `card-identity.js` 别名（数据表 `entries/_reprint-aliases.js`，注册期生成别名条目） | 5 对双实现已合并（R2 5→0，2026-10-28）；口径见 [`p2-4-quick-event-channel.md`](p2-4-quick-event-channel.md) |
+| 重印卡 | 一个文件实现 + `card-identity.js` 别名（数据表 `entries/_reprint-aliases.js`，注册期生成别名条目） | 5 对双实现已合并（R2 5→0，2026-10-28）；口径见 [`card-model.md`](card-model.md) 的 §7.3 |
 
 **API 命名**：`api.choice` 与 `api.choose` 现在是同一个 `requestChoice` 的别名（玩家侧 / 遭遇侧的历史命名），
 新代码统一写 `api.choice`；不要再写 `typeof api.choose === 'function'` 这类防御（运行时两个名字都在）。
@@ -461,7 +461,7 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
   可用性仍在 deck 层判定；`declaredAbilityCount()` 不重复计入别名，指标只减不增。
 - 快速事件（`played + fast` 与 `reaction + fromHand + quickEvent`）必须走同一份候选视图
   （`ability.js#quickEventView`），不要在卡文件里各写一套窗口/弃牌口径。设计见
-  [`p2-4-quick-event-channel.md`](p2-4-quick-event-channel.md)。
+  [`card-model.md`](card-model.md) 的 §7.3。
 - 跨战役重印（同名同文、不同号，如 `02221`↔`05269`、`02090`↔`05266`）按同一口径：先加白名单，
   再写 canonical，别名号不建文件。
 - 检查：`npm run audit:entries`（R2），基线 `audit/card-entry-compliance.json` 的 `baseline.reprintDuplicate` 只减不增。
@@ -548,7 +548,10 @@ node tools/replay-fixtures.mjs --compare artifacts/…    # 行为改动时
 #### M5：发布
 
 - 完成完整合法路线、失败路线、存档恢复、多人／AI、桌面和移动端浏览器验收。
-- 剧本、关键词和规则书三个确认组全部为 `verified` 后，才允许将战役及依赖包提升为 `playable`。
+- 正式完成的内容在剧本、关键词和规则书三个确认组全部为 `verified` 后提升为 `playable`。
+- 需要提前开放时，审计报告必须同时写 `playable: true` 与 `earlyAccess: true`；未完成项继续保持
+  `pending`，逐项列入 remaining 并在大厅标明提前体验。`earlyAccess` 不是 `verified` 的别名，
+  也不能用于隐藏 `blocked`、缺失证据或未登记的近似实现。
 - `playable` 表示本 Mod 的已声明实现范围可玩；若未逐条等价，不得标记或描述为规则等价认证。
 
 ## 5. 剧本迁移确认
@@ -630,7 +633,10 @@ node tools/replay-fixtures.mjs --compare artifacts/…    # 行为改动时
 - `confirmations.keywords`
 - `confirmations.rulebook`
 
-状态只有 `pending` 和 `verified`。校验器根据检查项计算应有状态，拒绝手工把不完整项目写成 `verified`；任何确认组未完成时，拒绝 `playable: true`。
+确认项状态只有 `pending` 和 `verified`。校验器根据检查项计算应有状态，拒绝手工把不完整项目写成
+`verified`。默认情况下任何确认组未完成都会拒绝 `playable: true`；唯一例外是报告显式声明
+`earlyAccess: true`，此时内容可以启动，但未完成项仍是 `pending`，必须保留证据缺口与 remaining，
+且界面和文档不得把它描述为已完整验收。实现门禁见 `content/migration-confirmation.js`。
 
 「有条目 / 有测试」不等于「合规」：迁移报告必须同时附 `npm run audit:entries` 的结果，声明本批新增卡的 R1/R2/R3 违规为 0；存量违规逐卡记在 `audit/card-entry-compliance.json`，只能减少不能增加。把 `implemented: true` 或 `verified` 写在直写状态、重印双实现或回合限制缺失的卡上，视为账本失真，审计工具应拒绝。
 

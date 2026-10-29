@@ -1,4 +1,4 @@
-﻿// 第 127 轮：规则书「当作幕/议程」的卡号表在 web/ui-cards.js。
+// 第 127 轮：规则书「当作幕/议程」的卡号表在 web/ui-cards.js。
 import { UI_CARDS } from './ui-cards.js'
 
 // 规则书正文只写规则本身：基础规则置顶，关键词与战役条目均不写引擎、实现或界面操作。
@@ -92,6 +92,23 @@ export const RULES = [
   entry("tcuCosmos","宇宙牌库与虚空地点","万象无终",["宇宙","Cosmos","宇宙牌库","虚空","Void","黑色王座"],["《黑色王座》使用面朝下的「宇宙」地点牌库：花费线索抽 X 张，选 1 张按「宇宙 -」指示放置入场并移动过去，其余洗回。","宇宙牌库的顺序不公开，只公开张数；虚空（[[虚空]] / Void）地点可以洗回牌库。","放置宇宙地点时，可以把原地点上的调查员与敌人一起搬过去；具体按卡面执行。"],["clues","tcuChaos","tcuCampaign"]),
   entry("tcuBraziers","火盆与地点状态","万象无终",["火盆","brazier","点燃","熄灭","地点状态"],["《聚合幻灭》使用火盆状态：每个地点的火盆要么点燃，要么熄灭。","议程的推进条件会检查火盆是否点燃；熄灭或点燃火盆也是部分卡牌（例如机关盒）的行动。","火盆状态会保留在章节记录中，直到卡牌或章节效果改变它。"],["tcuBreaches","tcuCircle","script"]),
   entry("tcuCampaignAssets","战役资产入牌组","万象无终",["战役资产","机关盒","黑书","钥匙","Puzzle Box","Black Book"],["部分战役资产（机关盒、黑书、四把钥匙）会加入调查员的战役牌组：不占 30 张牌组，也不洗入牌库，下一章开始时随牌组带入。","战役资产由获得它的调查员控制；团队之间的控制权转移按卡面处理。失去控制时，卡牌按卡面离场或交给另一名调查员。","战役资产属于调查员的战役记录，不计入普通牌组构筑；未获得的战役资产不能使用。"],["deck","tcuCampaign","permanent"]),
+  entry("tdeCampaign","《食梦者》战役与双线结构","食梦者",["食梦者","五循环","TDE","The Dream-Eaters","梦寻","梦网","双战役","八章战役","The Dream-Quest","The Web of Dreams"],["《食梦者》由两个各自四章的小战役组成。A《梦寻》依次是《梦境门外》《寻觅卡达斯》《月之暗面》《神居之所》，讲述进入梦境世界的一队调查员；B《梦网》依次是《清醒噩梦》《万千骇形》《无归之地》《编织宇宙》，讲述留在清醒世界的一队调查员。","可以只进行其中一个小战役，也可以把两者交织成八章战役。交织进行时，每位玩家为 A、B 各准备一名调查员与一套牌组；两条线各自持有混乱袋、战役记录、经验、创伤与故事资产，只有已完成的章节与当前进度是全桌共享。","八章按章对推进：第一对是《梦境门外》与《清醒噩梦》，之后依次是《寻觅卡达斯》与《万千骇形》、《月之暗面》与《无归之地》、《神居之所》与《编织宇宙》。每一对的两个章节都完成后结算一次幕间（前三次依次为幕间 I、II、III）；同一对里可以先进行 A 线章节，也可以先进行 B 线章节。","两条线的混乱袋不同。A 线基础袋含异教徒×1、石板×2、自动失败与旧印，没有骷髅与古神标记；B 线基础袋含骷髅×2、异教徒×1、古神×2、自动失败与旧印，没有石板。简单、标准、困难、专家的枚数分别是 A 线 14、14、15、16 与 B 线 17、17、18、19。","八章结束后，按 A 线终章与 B 线终章的各自结果查 16 段尾声矩阵；只有两条线都完成才进入尾声。"],["tdeDreamQuest","tdeWebOfDreams","tdeChaos","tdeRecords","tdeEpilogue"]),
+  entry("tdeDreamQuest","梦寻（The Dream-Quest）","食梦者",["梦寻","The Dream-Quest","A 线","梦境门外","寻觅卡达斯","月之暗面","神居之所"],["《梦寻》是 A 线四章战役，按《梦境门外》《寻觅卡达斯》《月之暗面》《神居之所》推进。本线的调查员、牌组、混乱袋与记录彼此独立；A 线基础袋只有异教徒×1、石板×2、自动失败与旧印。","《梦境门外》在开始时没有遭遇牌堆，幕 1 至幕 3 都写明神话阶段不从遭遇牌堆抽取卡牌；梦境布置有 14 种，纳什特与卡曼塔以谈判接受考验。","《寻觅卡达斯》在四个区域之间移动，地点以掩藏面入场，翻面后读背面的故事卡；背面故事会给出神迹。已发现的神迹数决定该章骷髅符号的负值，卡达斯的证据会减少《神居之所》Onyx Gates 上的线索。","《月之暗面》为每位调查员记录警报等级（初始 1，用毁灭标记表示但不算毁灭），警报等级 5 或更高的调查员不能进入白船；本章还包含被俘开场与蜂拥敌人。","《神居之所》把奈亚拉托提普的五种形态做成带隐私关键词的敌人，秘密加入调查员手牌；六座塔与四种低语互相对应，击败真形需要满足幕的额外条件。","A 线的记录包括卡达斯的证据、神迹、被俘与逃脱、兰道夫·卡特的状态，以及「入梦者渐弱」——它只影响 A 线混乱袋。"],["tdeCampaign","tdeChaos","tdeRecords","tdeSignsOfTheGods","tdeAlarmLevel","tdeSwarming","tdeVeiled","hidden"]),
+  entry("tdeWebOfDreams","梦网（The Web of Dreams）","食梦者",["梦网","The Web of Dreams","B 线","清醒噩梦","万千骇形","无归之地","编织宇宙"],["《梦网》是 B 线四章战役，按《清醒噩梦》《万千骇形》《无归之地》《编织宇宙》推进。B 线基础袋含骷髅×2、异教徒×1、古神×2、自动失败与旧印，没有石板。","《清醒噩梦》的故事卡建立 7 枚蛛群滋生袋（骷髅×1、石板×4、异教徒×2），地点上的伤害标记表示蛛巢；议程与诡计会要求进行蛛群滋生检定。","《万千骇形》的 183 至 188 号故事阶梯构成纵向链，随机门决定分队；无名之物不能被击败，只能按条件削弱。","《无归之地》的漆黑之海由 8 张掩藏地点组成，翻面后要洗回遭遇牌堆；剧本参考卡上的伤害就是桥梁的穿越进度，巨噬蠕虫在隧道中追逐。","《编织宇宙》用大网地点与地点上的毁灭推进，阿特拉克·纳克亚由四条带庞大关键词的腿组成，按「旋转」改变每条腿所在的地点。","B 线的记录包括 Steps of the Bridge 的刻痕、银钥匙、维吉尔与兰道夫是否被俘、桥梁是否完成。Steps of the Bridge 每满 3 个刻痕，会让《编织宇宙》开局多 1 点毁灭（最多 4 点）。"],["tdeCampaign","tdeChaos","tdeRecords","tdeInfestationBag","tdeVeiled","tdeLocationDoom","massive"]),
+  entry("tdeChaos","混乱符号与两套混乱袋","食梦者",["混乱袋","混乱标记","混乱符号","骷髅","异教徒","石板","古神","剧本提示卡","chaos bag"],["《食梦者》有两条线，因此有两套混乱袋；进行八章战役时把两套袋的内容分别记在两本战役日志的混乱袋栏，切换时按记录重建。","A 线基础袋：简单与标准 14 枚、困难 15 枚、专家 16 枚，符号只有异教徒×1、石板×2、自动失败与旧印，没有骷髅与古神。B 线基础袋：简单与标准 17 枚、困难 18 枚、专家 19 枚，符号是骷髅×2、异教徒×1、古神×2、自动失败与旧印，没有石板。","每章提示卡有简单/标准与困难/专家两面，分别写四个符号的效果。骷髅常按章节状态取值：《梦境门外》按手牌数、《寻觅卡达斯》按已发现的神迹数、《月之暗面》按警报等级、《无归之地》按参考卡上的伤害、《编织宇宙》按场上单个地点的最高毁灭、《神居之所》按当前幕与议程。","《清醒噩梦》的古神标记按蛛巢地点数取负值，异教徒可能要求进行蛛群滋生检定；《万千骇形》与《无归之地》的石板是黑猫助力，给出正修正；《编织宇宙》的石板可以移除你所在地点的 1 个毁灭。","黑猫在三次幕间中的选择会给两条线各加入符号：让黑猫跟着 A 线时两套袋各加入 1 枚古神标记（在 A 线是助力，在 B 线是普通负面影响）；让黑猫跟着 B 线时两套袋各加入 1 枚石板标记（在 B 线是助力，在 A 线是负面）。","符号只在其印刷时机结算一次；同一符号在不同章节与难度面的取值不同，以当前章节的提示卡为准。"],["chaos","tdeCampaign","tdeDreamQuest","tdeWebOfDreams"]),
+  entry("tdeRecords","战役记录与两本战役日志","食梦者",["战役记录","战役日志","记录键","Campaign Log","记录","刻痕","Steps of the Bridge","桥梁进度"],["进行八章战役时有两本战役日志（A 与 B），只进行单线时只有一本。记录分团队级与调查员级；只有实际到达的分支才会被记录。","两本日志合计 55 个记录条目，覆盖黑猫在幕间 I、II、III 的选择与它分享的知识（梦境之地、冥界、真相）、卡达斯的证据、神迹、被俘（调查员、维吉尔、兰道夫）、兰道夫·卡特在梦境与航行中的生死、银钥匙的归属、Steps of the Bridge 的刻痕、桥梁是否完成或被毁、入梦者是否渐弱，以及每条线的终局结果。","记录通常只增不减；被勾销的条目划掉而不是删除。结局、幕间与后续章节的布置会读取这些条目。","幕间可以读写另一条线的记录：例如银钥匙从 B 线转到 A 线时，在 B 线日志勾销「调查员们持有银钥匙」，并在 A 线日志记录同一件事。","Steps of the Bridge 每累计 3 个刻痕，会让《编织宇宙》在开局时额外放置 1 点毁灭，最多 4 点。"],["tdeCampaign","tdeEpilogue","tdeSignsOfTheGods"]),
+  entry("tdeEpilogue","尾声矩阵（16 段）","食梦者",["尾声","尾声矩阵","Epilogue","16 段尾声","终局"],["完成八章战役后，用两本战役日志的终局结果查尾声矩阵：A 线有 4 种结果，B 线有 4 种结果，共 16 段尾声。","A 线的 4 种结果：奈亚拉托提普的入侵已经开始、入梦者醒来、入梦者永远留在梦境之地、入梦者穿行于修道院之下。B 线的 4 种结果：桥梁完成、调查员回到现实、调查员从未逃出、调查员仍在梦境之地。","每一格对应一段尾声：有的让两线调查员在清醒世界重聚，有的让他们在梦境之地重聚，有的让一组永远留在另一界；也有两线都失败、所有人被杀或发疯的结局。","部分尾声之后还有子步骤（例如击败奈亚拉托提普的真形、从冥界找出另一组的出路）；按该段尾声的指示继续。","玩家只阅读与本次结果对应的那一格。单独进行 A 或 B 线时不进入该矩阵，按各自终章的结局直接结束。"],["tdeCampaign","tdeRecords","tdeDreamQuest","tdeWebOfDreams"]),
+  entry("tdeMyriad","多重（Myriad）","食梦者",["多重","Myriad","同名三张"],["多重是牌组构筑关键词。带有「多重」的卡牌在构筑时最多可以放入 3 张，而不是通常的 2 张。","「同名」按卡牌标题判定：标题相同的卡牌共用这 3 张额度，即使卡号或副标题不同。","多重不改变游戏内的结算。多张同名卡各自入场、各自生效；卡面若写明「若有 3 张同名卡在场」之类的合体效果，按卡面单独结算。","多重不影响等级、经验与职业限制；购入与升级仍要支付对应经验并维持牌组规模。"],["deck","tdeCampaign"]),
+  entry("tdeSwarming","蜂拥 X（Swarming X）","食梦者",["蜂拥","Swarming","蜂拥卡","头领","swarm"],["「蜂拥 X」表示一群敌人协同行动。带蜂拥 X 的敌人入场后，把其控制者牌库顶的 X 张卡面朝下放在它下面，作为蜂拥卡（不查看）。场景效果也可以加入蜂拥卡；不确定由谁放置时由队长放置。","在多数用途上，每张蜂拥卡都是该敌人的独立实例：数值与文本与头领相同。与带 2 张蜂拥卡的头领交战，等于同时与 3 名敌人交战。","敌军阶段每张蜂拥卡分别攻击；头领与全部蜂拥卡攻击完后一起横置。","每张蜂拥卡可以分别被攻击或受到伤害，但头领在还有蜂拥卡时不能被击败。蜂拥卡被击败时，多余的伤害可以分配给同一头领下的另一张蜂拥卡，或直接给头领。","蜂拥卡离场时放到其拥有者的牌库底；头领与全部蜂拥卡作为单一实体移动、交战与横置（任意一张被躲避，全部横置并解除交战）。","带胜利 X 的蜂拥敌人只有头领计算胜利点，蜂拥卡不会进入胜利区。X 的取值可能是固定数、每位调查员、警报等级或剧本参考卡上的伤害数，以卡面为准。"],["tdeCampaign","victory","damage"]),
+  entry("tdeVeiled","掩藏（Veiled）","食梦者",["掩藏","Veiled","掩藏地点","故事卡","背面故事卡","flip"],["掩藏是地点关键词。掩藏地点没有未揭示面：它们以已揭示面入场，并在入场时按线索值放置线索（包括设置期间）。","掩藏地点的背面是故事卡，而不是未揭示面。翻面后读取背面的故事文本，并结算其游戏文本。","翻面有两种方式：多数由「掩藏」提供，另一些由地点上印刷的能力提供。作为一个快速能力，位于某个掩藏地点、且该地点上没有线索的调查员可以把它翻面。","一旦地点翻面且故事文本已经读过，本场游戏剩余时间不能再翻回，除非卡面另有说明。","翻面不等于进入，不改变连接与在场单位；故事卡可能让你记录某件事（《寻觅卡达斯》）、把地点洗回遭遇牌堆（《无归之地》）或产生其他后果。","有线索的掩藏地点照常可以被调查；线索清空才是翻面的时机。"],["clues","tdeCampaign","tdeDreamQuest","tdeWebOfDreams"]),
+  entry("tdeResearched","研究完成（Researched）","食梦者",["研究完成","Researched","研究","购入限制"],["研究完成是购买限制关键词。带「研究完成」的卡牌只有在完成对应研究、并在战役日志里记下研究结果之后才能购入。","研究通常由低等级的研究型卡牌在游戏中完成。例如《梦境日记》只有在你投入《梦的本质》并且检定成功超过难度至少 3 点后，才会记录「你洞悉了梦境」；三张高等级《梦境日记》都以这条记录为购入前提。","研究完成本身没有游戏内效果：它不改变检定、行动、数值、牌组张数或牌组上限。","购入时仍要支付与等级相符的经验（最低 1 点）、遵守调查员的构筑限制，并移除一张牌以维持牌组规模。","研究结果属于获得它的调查员，跨章节保留；同一张卡的其他版本仍需满足各自前提。"],["upgrade","deck","tdeCampaign","tdeBonded"]),
+  entry("tdeBonded","绑定（Bonded）","食梦者",["绑定","Bonded","绑定卡","梦的本质","场外绑定"],["绑定是玩家卡关键词。带绑定的卡牌与另一张玩家卡相连，括号里写的是主卡的名字；绑定卡没有等级，不能作为构筑选项，是主卡把它带入游戏。","若牌组里有召唤绑定卡的主卡，每场游戏开始时把绑定卡放在场外。每种绑定卡放在场外的张数等于它初次发行时配的张数，不随主卡张数变化：例如《梦的本质》只放 1 张，即使牌组里有 3 张《梦境日记》。","主卡入场后，按卡面从场外找出绑定卡（加入手牌、放入场或附属）。场外的绑定卡不算牌组张数。","带绑定的弱点若被加入调查员的牌组、手牌、威胁区或场上，不会像其他弱点那样留在牌组里；它在每场游戏开始时与该调查员的其他绑定卡一起放在场外。","本循环还有绑定地点与绑定弱点敌人：《梦境之门》绑定《门之匣》或《脱离现实》，成对放置并互相关联；《结晶守护者》《无界野兽》这类弱点在没有对应主卡在场时放在场外。","绑定卡离开场上时按卡面处理：回到场外、洗回牌库或移出游戏。"],["deck","weakness","permanent","tdeDreamGate"]),
+  entry("tdeDreamGate","梦境之门（Dream-Gate）","食梦者",["梦境之门","Dream-Gate","门之匣","脱离现实","卢克·罗宾逊"],["《梦境之门》是卢克·罗宾逊专属的绑定地点，由《门之匣》或弱点《脱离现实》带入游戏。","梦境之门与每个其他已揭示地点互相连接；敌人和除卢克·罗宾逊以外的调查员不能进入。","调查阶段结束时，把梦境之门放在一边、位于场外。如果卢克在梦境之门，把他移动到任意一个已揭示地点；由《脱离现实》带入的那一面还要求卢克受到 2 点恐惧。","由《脱离现实》带入的那一面可以在成功调查后翻面；翻面后仍按上面第 3 条在调查阶段结束时离场。","梦境之门不占牌组张数，也不洗入牌库。"],["clues","tdeBonded","tdeCampaign"]),
+  entry("tdeInfestationBag","蛛群滋生袋与蛛巢（Infestation）","食梦者",["蛛群滋生袋","蛛巢","infested","infestation","滋生检定","感染"],["《清醒噩梦》的《蛛群滋生开始…》故事卡建立独立的蛛群滋生袋：骷髅×1、石板×4、异教徒×2，共 7 枚。这些是滋生标记，不是混乱标记。","同一张故事卡把伤害标记放到线索最多的地点（3 至 4 名调查员时是线索最多的两个地点）。本场剩余时间，地点上的伤害标记表示蔓延的蛛群；有伤害标记的地点就是蛛巢地点。","蛛群滋生检定：从滋生袋随机揭示 1 枚标记，并结算故事卡另一面对应的效果。它可能让蛛群蔓延到其他地点，或危害蛛巢地点上的调查员。","议程与部分地点会在指定时机要求进行蛛群滋生检定；《疫病爆发》这类诡计也会，并在蛛巢地点把石板当作骷髅结算。","蛛巢地点的数量决定古神标记的负值；蛛巢地点的蜘蛛敌人得到 +1 战斗值与 +1 躲避值。幕的封印行动可以把蛛巢地点的伤害换成恐惧，此后该地点不能再被滋生。"],["tdeCampaign","tdeChaos","tdeWebOfDreams"]),
+  entry("tdeAlarmLevel","警报等级（Alarm Level）","食梦者",["警报等级","Alarm Level","警報","警报","白船"],["警报等级是《月之暗面》为每位调查员单独记录的数值。设置时在每位调查员卡上放置 1 点毁灭，表示初始警报等级 1。","提高或降低警报等级，就在该调查员卡上放置或移除等量的毁灭标记。警报等级可以增减到 5 或更高。","警报等级虽然用毁灭标记表示，但它不是毁灭，也不计入议程阈值。","警报等级本身没有效果，但会被其他卡牌读取：骷髅符号按它取负值，部分敌人按它选择猎物，白船在警报等级 5 或更高时不能进入。","警报等级属于单个调查员，不因地点变化或全桌状态而重置。"],["tdeCampaign","tdeChaos","tdeDreamQuest"]),
+  entry("tdeSignsOfTheGods","神迹（Signs of the Gods）","食梦者",["神迹","Signs of the Gods","Sign of the Gods","卡达斯的证据"],["神迹是《寻觅卡达斯》的记录。掩藏地点翻面后，背面故事卡会说明你发现了一处神迹；每处神迹只能被发现一次，发现的数量记在战役日志。","已发现的神迹数量决定该章骷髅符号的负值；神迹越多，骷髅越不利。","神迹也是卡达斯的证据来源之一：章节结算时，每处已发现的神迹提供 1 点证据；证据会减少《神居之所》Onyx Gates 上的线索。","《维吉尔·格雷》在神迹被发现后提供奖励，并在有多名调查员时把控制权交给另一名调查员。","未翻面的掩藏地点不会提供神迹。"],["tdeCampaign","tdeRecords","tdeVeiled","tdeDreamQuest"]),
+  entry("tdeStoryAssets","剧情支援（Story Assets）","食梦者",["剧情支援","Story Asset","剧情资产","故事资产"],["剧情支援是一类剧本卡。它们在设置时放在一边，剧本指示时放入场，通常由队长或剧本指定的调查员控制。","剧情支援不属于任何调查员的牌组，不占牌组张数，也不能被当作普通牌组卡抽取或升级。","控制权可以按卡面在调查员之间转移：例如《维吉尔·格雷》在神迹被发现后结算奖励，并在有多名调查员时交给另一名调查员控制。","离开场上时按卡面处理：有的被移出游戏，有的放回一边等待下次指示，有的把线索或记录留给调查员。","《兰道夫·卡特》《维吉尔·格雷》《马赫什瓦兰医生》《船长》《银钥匙》《理查德·厄普顿·匹克曼》都按这条规则处理；银钥匙还会在幕间从 B 线转到 A 线。"],["tdeCampaign","tdeRecords","tdeSignsOfTheGods"]),
+  entry("tdeLocationDoom","地点上的毁灭（Location Doom）","食梦者",["地点上的毁灭","地点毁灭","Location Doom","大网毁灭","毁灭标记"],["《编织宇宙》的大网地点会累积毁灭标记：进入时检定失败、调查阶段结束时、把调查费用换成毁灭、织网者每轮结束，以及部分诡计都会放置毁灭。","地点上的毁灭是毁灭：它计入议程阈值，也可能让当前议程推进。","该章骷髅符号的负值等于场上单个地点上的最高毁灭数（困难与专家改为全部地点毁灭之和）。","石板符号可以移除你所在地点的 1 个毁灭。地点不会因为毁灭而离场，本循环也没有「毁灭达到阈值就移除地点」的规则。","地点离场时，其上的毁灭随地点一起移除，除非卡面另有说明。"],["doom","tdeCampaign","tdeChaos","tdeWebOfDreams"]),
 ]
 export const ruleById = id => RULES.find(r => r.id === id) || RULES[0]
 export const DEFAULT_RULE_ID = 'basics'
@@ -126,6 +143,13 @@ const RULE_PINYIN = {
   tcuBreaches:'liekouyuruqin', tcuChaos:'wanxiangwuzhongdehunluanfuhao',
   tcuHeretics:'yiduanzheduomianyufangzhu', tcuCosmos:'yuzhoupaikuyuxukongdidian',
   tcuBraziers:'huopenyudidianzhuangtai', tcuCampaignAssets:'zhanyizichanrupaizu',
+  tdeCampaign:'shimengzhezhanyiyushuangxianjiegou', tdeDreamQuest:'mengxun',
+  tdeWebOfDreams:'mengwang', tdeChaos:'hunluanfuhaoyuliangtaohunluandai',
+  tdeRecords:'zhanyijiluyuliangbenzhanyirizhi', tdeEpilogue:'weishengjuzhen',
+  tdeMyriad:'duochong', tdeSwarming:'fengyong', tdeVeiled:'yancang',
+  tdeResearched:'yanjiuwancheng', tdeBonded:'bangding', tdeDreamGate:'mengjingzhimen',
+  tdeInfestationBag:'zhuqunzishengdaiyuzhuqiao', tdeAlarmLevel:'jingbaodengji',
+  tdeSignsOfTheGods:'shenji', tdeStoryAssets:'juqingzhiyuan', tdeLocationDoom:'didianshangdehuimie',
 }
 export const RULE_INDEX = RULES.map(rule => ({...rule, sortKey:RULE_PINYIN[rule.id], initial:RULE_PINYIN[rule.id][0].toUpperCase()}))
   .sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0) || a.sortKey.localeCompare(b.sortKey,'en'))
@@ -170,6 +194,7 @@ function scenarioCardRuleIds(card) {
     return [...new Set(ids)]
   }
   if (/^05\d{3}[a-z]?$/.test(code)) return tcuCardRuleIds(card)
+  if (/^06\d{3}[a-z]?$/.test(code)) return tdeCardRuleIds(card)
   if (!/^02\d{3}$/.test(code)) return []
   const number = Number(code.slice(2))
   if (number >= 62 && number <= 80) return number >= 79 ? ['storyGuests', 'clubGambling'] : ['clubGambling']
@@ -216,6 +241,41 @@ function tcuCardRuleIds(card) {
   if (TCU_REFERENCE_CARDS.campaignAssets.includes(code)) ids.push('tcuCampaignAssets')
   // 章节卡与遭遇卡都受该章混乱符号表约束。
   if (['scenario', 'act', 'agenda', 'location', 'enemy', 'treachery'].includes(card?.type)) ids.push('tcuChaos')
+  return [...new Set(ids)]
+}
+// 食梦者（06 段）的卡文直达。判据与 content/campaigns/theDreamEaters/keywords.js 的 pattern 一致：
+// 卡面命中哪个 pattern 就必须连到对应条目，测试逐张比对（tests/tde-rules.test.mjs），所以两份判据不能各走各的。
+// 卡号表（章节参考卡 / 剧情支援 / 地点毁灭）放在 web/ui-cards.js 的 rulebookReferences，这里只读数据。
+const TDE_REFERENCE_CARDS = UI_CARDS.rulebookReferences
+const TDE_CARD_RULES = Object.freeze([
+  ['tdeMyriad', /Myriad|多重/i],
+  ['tdeSwarming', /Swarming|蜂拥/i],
+  ['tdeVeiled', /Veiled|掩藏/],
+  ['tdeResearched', /Researched|研究完成/i],
+  ['alert', /Alert|警戒/i],
+  ['hidden', /Hidden|隐私/],
+  ['tdeBonded', /Bonded|绑定/i],
+  ['tdeDreamGate', /Dream-Gate|梦境之门/i],
+  ['tdeInfestationBag', /infest|蛛群滋生|蛛巢/i],
+  ['tdeAlarmLevel', /alarm level|警报等级|警戒等级/i],
+  ['tdeSignsOfTheGods', /Sign of the Gods|神迹/i],
+  ['tdeStoryAssets', /Story Asset|剧情支援|故事资产/i],
+])
+function tdeTextOf(card) {
+  return [card?.text, card?.textZh, (card?.traits || []).join(' '), card?.slot].filter(Boolean).join('\n')
+}
+function tdeCardRuleIds(card) {
+  const code = String(card?.originalCode || card?.code || '')
+  const text = tdeTextOf(card)
+  const ids = ['tdeCampaign']
+  for (const [id, pattern] of TDE_CARD_RULES) if (pattern.test(text)) ids.push(id)
+  // 8 张章节参考卡分别连到所属线；剧情支援与地点毁灭按卡号登记（卡名/机制名不一定出现在卡文里）。
+  if ((TDE_REFERENCE_CARDS.tdeDreamQuestChapters || []).includes(code)) ids.push('tdeDreamQuest')
+  if ((TDE_REFERENCE_CARDS.tdeWebOfDreamsChapters || []).includes(code)) ids.push('tdeWebOfDreams')
+  if ((TDE_REFERENCE_CARDS.tdeStoryAssetCards || []).includes(code)) ids.push('tdeStoryAssets')
+  if ((TDE_REFERENCE_CARDS.tdeLocationDoomCards || []).includes(code)) ids.push('tdeLocationDoom')
+  // 章节卡与遭遇卡都受该章混乱符号表约束。
+  if (['scenario', 'act', 'agenda', 'location', 'enemy', 'treachery'].includes(card?.type)) ids.push('tdeChaos')
   return [...new Set(ids)]
 }
 export function openRule(id = DEFAULT_RULE_ID) { window.dispatchEvent(new CustomEvent('arkham-open-rule', { detail: id })) }

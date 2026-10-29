@@ -18,13 +18,13 @@
     }
   ],
   "summary": {
-    "batch": "P3-1+2+3",
-    "newTotal": 17,
-    "done": 17,
+    "batch": "P3-1+2+3+P6",
+    "newTotal": 26,
+    "done": 26,
     "pending": 0,
     "reuse": 2,
     "escape": 3,
-    "deferred": 0,
+    "deferred": 5,
     "mechanismsTotal": 9,
     "mechanismsCovered": 11,
     "mechanismsDeferred": []
@@ -131,7 +131,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "43628d68591bd8fbf2d020f4b400a40b6aeede3d7fad7bbb357898d79c56ae7f",
+          "sha256": "daf1a6d1256aade438a579e404bba1fd6ca4100dfcc0fba81688d2188bcc06a1",
           "exists": true
         },
         {
@@ -141,12 +141,12 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         },
         {
           "path": "docs/tde-migration-roadmap.md",
-          "sha256": "5ab20faf1714992113904c917c6d99d4dd93d8d0a1700e5802c3686296ceb0d9",
+          "sha256": "090ccc29103712ff72052ec208756e08fd81f409ee7e45a52349e406e7ffec39",
           "exists": true
         }
       ],
@@ -221,7 +221,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "43628d68591bd8fbf2d020f4b400a40b6aeede3d7fad7bbb357898d79c56ae7f",
+          "sha256": "daf1a6d1256aade438a579e404bba1fd6ca4100dfcc0fba81688d2188bcc06a1",
           "exists": true
         },
         {
@@ -231,7 +231,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -314,7 +314,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "43628d68591bd8fbf2d020f4b400a40b6aeede3d7fad7bbb357898d79c56ae7f",
+          "sha256": "daf1a6d1256aade438a579e404bba1fd6ca4100dfcc0fba81688d2188bcc06a1",
           "exists": true
         },
         {
@@ -324,7 +324,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -377,7 +377,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "43628d68591bd8fbf2d020f4b400a40b6aeede3d7fad7bbb357898d79c56ae7f",
+          "sha256": "daf1a6d1256aade438a579e404bba1fd6ca4100dfcc0fba81688d2188bcc06a1",
           "exists": true
         },
         {
@@ -387,7 +387,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -440,7 +440,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "43628d68591bd8fbf2d020f4b400a40b6aeede3d7fad7bbb357898d79c56ae7f",
+          "sha256": "daf1a6d1256aade438a579e404bba1fd6ca4100dfcc0fba81688d2188bcc06a1",
           "exists": true
         },
         {
@@ -450,7 +450,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -495,7 +495,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "43628d68591bd8fbf2d020f4b400a40b6aeede3d7fad7bbb357898d79c56ae7f",
+          "sha256": "daf1a6d1256aade438a579e404bba1fd6ca4100dfcc0fba81688d2188bcc06a1",
           "exists": true
         },
         {
@@ -505,7 +505,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -581,7 +581,7 @@
           "kind": "scenario-runtime",
           "name": "counters",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "241 keys"
         }
       ],
       "files": [
@@ -592,12 +592,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "16b85948c42feba3f467c708daf226174e5804ac2d732f000ec52c1f357b6b55",
+          "sha256": "9335652d4aa30b201f306dd1c0ebe57deae4dc3f01d8de45121d2cf9e313cacd",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
           "exists": true
         },
         {
@@ -607,7 +607,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -668,7 +668,7 @@
           "kind": "scenario-runtime",
           "name": "swarming",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "241 keys"
         }
       ],
       "files": [
@@ -679,12 +679,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "16b85948c42feba3f467c708daf226174e5804ac2d732f000ec52c1f357b6b55",
+          "sha256": "9335652d4aa30b201f306dd1c0ebe57deae4dc3f01d8de45121d2cf9e313cacd",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
           "exists": true
         },
         {
@@ -694,7 +694,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -762,7 +762,7 @@
           "kind": "scenario-runtime",
           "name": "swarm",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "241 keys"
         }
       ],
       "files": [
@@ -773,12 +773,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "16b85948c42feba3f467c708daf226174e5804ac2d732f000ec52c1f357b6b55",
+          "sha256": "9335652d4aa30b201f306dd1c0ebe57deae4dc3f01d8de45121d2cf9e313cacd",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
           "exists": true
         },
         {
@@ -788,7 +788,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -815,13 +815,14 @@
       ],
       "layer": "engine",
       "status": "done",
-      "api": "isVeiledLocation / veiledBlocksInvestigation / revealVeiledLocation / shuffleVeiledIntoDeck / normalizeVeiledScenario",
+      "api": "isVeiledLocation / veiledFlipBlockedReason / canFlipVeiledLocation / flipVeiledLocation / shuffleVeiledIntoDeck / normalizeVeiledScenario",
       "params": {
         "location": "location",
+        "clues": "number|null",
         "deckKey": "'encounter'|'encounterDiscard'|'exploration'"
       },
       "docs": "docs/tde-primitives.md#p310-掩藏地点",
-      "note": "「未揭示限制」「翻面出 b 面故事卡」「B3 洗回牌堆」三件事分开表达；调查动作接线属 P8。",
+      "note": "官方 rules.veiled：已揭示面入场、无线索时 [fast] 翻面、翻过一次不能再翻；「翻面出 b 面故事卡」与「B3 洗回牌堆」是两件事（P4 更正 P3 的「翻面前不可调查」口径）。",
       "checks": [
         {
           "kind": "module-export",
@@ -833,14 +834,21 @@
         {
           "kind": "module-export",
           "file": "src/engine/veiled.js",
-          "name": "veiledBlocksInvestigation",
+          "name": "veiledFlipBlockedReason",
           "ok": true,
           "detail": "exported"
         },
         {
           "kind": "module-export",
           "file": "src/engine/veiled.js",
-          "name": "revealVeiledLocation",
+          "name": "canFlipVeiledLocation",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/veiled.js",
+          "name": "flipVeiledLocation",
           "ok": true,
           "detail": "exported"
         },
@@ -862,33 +870,33 @@
           "kind": "scenario-runtime",
           "name": "veiled",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "241 keys"
         }
       ],
       "files": [
         {
           "path": "src/engine/veiled.js",
-          "sha256": "2a3fcbd631fcc0980303c3aa1acc3249b3f258e955c4fcb6bb1959720e31dab5",
+          "sha256": "d90d4995fa635fe755bc4251969211d239b1ffa47e614d4b678a8918e155ac76",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "16b85948c42feba3f467c708daf226174e5804ac2d732f000ec52c1f357b6b55",
+          "sha256": "9335652d4aa30b201f306dd1c0ebe57deae4dc3f01d8de45121d2cf9e313cacd",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
           "exists": true
         },
         {
           "path": "tests/tde-primitives-veiled.test.mjs",
-          "sha256": "d524c6dd350ee6a04fe07795e8d3a414e9ed2756de517131b7b399d41c4cdc32",
+          "sha256": "5ff286b26c58a18fc103642cc0bd5998eca9091682096ced1e81926a6ca1415f",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -897,7 +905,7 @@
           "path": "tests/tde-primitives-veiled.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 8,
+          "tests": 9,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -962,7 +970,7 @@
           "kind": "scenario-runtime",
           "name": "tokenBag",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "241 keys"
         }
       ],
       "files": [
@@ -973,12 +981,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "16b85948c42feba3f467c708daf226174e5804ac2d732f000ec52c1f357b6b55",
+          "sha256": "9335652d4aa30b201f306dd1c0ebe57deae4dc3f01d8de45121d2cf9e313cacd",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
           "exists": true
         },
         {
@@ -988,7 +996,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -1062,7 +1070,7 @@
           "kind": "scenario-runtime",
           "name": "verticalChain",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "241 keys"
         }
       ],
       "files": [
@@ -1073,12 +1081,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "16b85948c42feba3f467c708daf226174e5804ac2d732f000ec52c1f357b6b55",
+          "sha256": "9335652d4aa30b201f306dd1c0ebe57deae4dc3f01d8de45121d2cf9e313cacd",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
           "exists": true
         },
         {
@@ -1088,7 +1096,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -1162,7 +1170,7 @@
           "kind": "scenario-runtime",
           "name": "bondedLocation",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "241 keys"
         }
       ],
       "files": [
@@ -1173,12 +1181,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "16b85948c42feba3f467c708daf226174e5804ac2d732f000ec52c1f357b6b55",
+          "sha256": "9335652d4aa30b201f306dd1c0ebe57deae4dc3f01d8de45121d2cf9e313cacd",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
           "exists": true
         },
         {
@@ -1188,7 +1196,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -1264,7 +1272,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -1348,7 +1356,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -1369,20 +1377,20 @@
     {
       "id": "location.doom",
       "step": "P3.16",
-      "title": "地点毁灭",
+      "title": "地点上的毁灭",
       "mechanism": [
         "locationDoom"
       ],
       "layer": "engine",
       "status": "done",
-      "api": "locationDoomOf / addLocationDoom / shouldDestroyLocation / destroyLocation / normalizeLocationDoom",
+      "api": "locationDoomOf / addLocationDoom / removeLocationDoom / totalLocationDoom / highestLocationDoom / normalizeLocationDoom",
       "params": {
         "location": "location",
         "delta": "number",
-        "addDoom": "(state, n) => void"
+        "amount": "number"
       },
-      "docs": "docs/tde-primitives.md#p316-地点毁灭",
-      "note": "地点毁灭与全桌 doom 分开记账；是否加到议程由 addDoom 注入决定，模块不猜。",
+      "docs": "docs/tde-primitives.md#p316-地点上的毁灭",
+      "note": "地点上的毁灭是毁灭（计入议程阈值、被 B4 骷髅读取），06 段没有「毁灭地点」规则（P4 更正 P3 的阈值/移除口径）。",
       "checks": [
         {
           "kind": "module-export",
@@ -1401,14 +1409,21 @@
         {
           "kind": "module-export",
           "file": "src/engine/location-doom.js",
-          "name": "shouldDestroyLocation",
+          "name": "removeLocationDoom",
           "ok": true,
           "detail": "exported"
         },
         {
           "kind": "module-export",
           "file": "src/engine/location-doom.js",
-          "name": "destroyLocation",
+          "name": "totalLocationDoom",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/location-doom.js",
+          "name": "highestLocationDoom",
           "ok": true,
           "detail": "exported"
         },
@@ -1423,33 +1438,33 @@
           "kind": "scenario-runtime",
           "name": "locationDoom",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "241 keys"
         }
       ],
       "files": [
         {
           "path": "src/engine/location-doom.js",
-          "sha256": "cba81dface9a427561e1d68cf3ed491b9c094b83a0d578dcbcecc51cd9b20b92",
+          "sha256": "05bdebcafb589d3d6657408445c29bc847eced611f40ec4fad8d0bd8697c1ebb",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "16b85948c42feba3f467c708daf226174e5804ac2d732f000ec52c1f357b6b55",
+          "sha256": "9335652d4aa30b201f306dd1c0ebe57deae4dc3f01d8de45121d2cf9e313cacd",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
           "exists": true
         },
         {
           "path": "tests/tde-primitives-location-doom.test.mjs",
-          "sha256": "a36735cd58ff14ed43b908c229ee3eba81df9b4f944f8f05a64eb80eb215a2c6",
+          "sha256": "ca9b11504e2da98262b77aa20617f484004854e9c5a0f9c6760fc6fc2ce75325",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -1458,7 +1473,7 @@
           "path": "tests/tde-primitives-location-doom.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 8,
+          "tests": 7,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -1516,7 +1531,7 @@
           "kind": "scenario-runtime",
           "name": "markers",
           "ok": true,
-          "detail": "190 keys"
+          "detail": "241 keys"
         }
       ],
       "files": [
@@ -1527,12 +1542,12 @@
         },
         {
           "path": "src/engine/scenario-runtime-extras.js",
-          "sha256": "16b85948c42feba3f467c708daf226174e5804ac2d732f000ec52c1f357b6b55",
+          "sha256": "9335652d4aa30b201f306dd1c0ebe57deae4dc3f01d8de45121d2cf9e313cacd",
           "exists": true
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "ac6d6ff3720922e2f6dfa8293e6b5121454d79f6342ffdb0420c48ff3c02caa9",
+          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
           "exists": true
         },
         {
@@ -1542,7 +1557,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "19cdd220245a8d19c09b0e42a28f9d5f26df1cfecedcffebf4e3ca5f74e3974a",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
           "exists": true
         }
       ],
@@ -1559,9 +1574,757 @@
       ],
       "blockers": [],
       "symbolCount": 5
+    },
+    {
+      "id": "assetDefeat",
+      "step": "P6-1",
+      "title": "支援被击败的唯一判定点与 assetDefeated 窗口",
+      "mechanism": [
+        "standardRules"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "isAssetDefeated / assetHarmCapacity / checkAssetDefeated（窗口 assetDefeated）",
+      "params": {
+        "owner": "investigator",
+        "asset": "asset",
+        "damage": "number",
+        "horror": "number"
+      },
+      "docs": "docs/tde-primitives.md#p61-支援被击败的唯一判定点",
+      "note": "applyHarm 与「移动伤害」共用同一判定；窗口上下文带 damage/horror，`shuffledIntoDeck` 是「改为洗回牌库」的通用出口（托米·马尔登）。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/asset-defeat.js",
+          "name": "isAssetDefeated",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/asset-defeat.js",
+          "name": "assetHarmCapacity",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/asset-defeat.js",
+          "name": "checkAssetDefeated",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "window",
+          "name": "assetDefeated",
+          "ok": true,
+          "detail": "76 windows"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/asset-defeat.js",
+          "sha256": "32a74fdb39f9aefd043bb05385cb53ec173df75ef7fdce00714a6f999a75666b",
+          "exists": true
+        },
+        {
+          "path": "src/engine/enemies.js",
+          "sha256": "104b39058cedba4dfa075a4bedc767391ec73ee51f07f31df454648bddda20e6",
+          "exists": true
+        },
+        {
+          "path": "src/engine/windows.js",
+          "sha256": "ef8fbd64a8cee3026ee465fdfbb2401365d222ef09481af6da55fd5ae560bb6f",
+          "exists": true
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "exists": true
+        },
+        {
+          "path": "docs/tde-primitives.md",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 24,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 5
+    },
+    {
+      "id": "harm.moveBetween",
+      "step": "P6-2",
+      "title": "伤害/恐惧在调查员与支援之间移动",
+      "mechanism": [
+        "standardRules"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "harmOf / harmRoom / moveHarm（ctx.api.moveHarm / harmRoomOf）",
+      "params": {
+        "from": "{ seat, assetId? }",
+        "to": "{ seat, assetId? }",
+        "amounts": "{ damage, horror }"
+      },
+      "docs": "docs/tde-primitives.md#p62-伤害恐惧移动",
+      "note": "「移动」不是承受/治疗：不触发受到伤害窗口、不走 soaking；受目标容量限制，支援到上限后由 assetDefeat 判定。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/harm-transfer.js",
+          "name": "harmRoom",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/harm-transfer.js",
+          "name": "moveHarm",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "ctx-api",
+          "name": "moveHarm",
+          "ok": true,
+          "detail": "263 keys"
+        },
+        {
+          "kind": "ctx-api",
+          "name": "harmRoomOf",
+          "ok": true,
+          "detail": "263 keys"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/harm-transfer.js",
+          "sha256": "6b58b4156f03ae12beb94a2cb16800d68afcae7223d9b0116a80207b5d37d1f8",
+          "exists": true
+        },
+        {
+          "path": "src/engine/api-misc.js",
+          "sha256": "40380b434340af4edc5661f4b6ceb425f1ad24cdccc8cb0948db4ffc7166afbd",
+          "exists": true
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "exists": true
+        },
+        {
+          "path": "docs/tde-primitives.md",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 24,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 4
+    },
+    {
+      "id": "counter.card",
+      "step": "P6-3",
+      "title": "卡牌实例上的具名计数器（赏金）",
+      "mechanism": [
+        "standardRules"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "cardCounterOf / addCardCounter / setCardCounter / moveCardCounters / totalCardCounters",
+      "params": {
+        "card": "asset|enemy",
+        "id": "'bounty'",
+        "amount": "number",
+        "max": "number|null"
+      },
+      "docs": "docs/tde-primitives.md#p63-卡牌具名计数器",
+      "note": "状态形状 `card.markers[counterId]`；未知 id 在注册期报错。敌人身上的赏金上限 = 敌人生命值，由调用方传入。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/card-counters.js",
+          "name": "cardCounterOf",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/card-counters.js",
+          "name": "addCardCounter",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/card-counters.js",
+          "name": "moveCardCounters",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "ctx-api",
+          "name": "addCardCounter",
+          "ok": true,
+          "detail": "263 keys"
+        },
+        {
+          "kind": "ctx-api",
+          "name": "moveCardCounters",
+          "ok": true,
+          "detail": "263 keys"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/card-counters.js",
+          "sha256": "62ff1ce3d00bc267be2f9a5bb318e8787022afb6323d70cfc5a26e49f8e2e384",
+          "exists": true
+        },
+        {
+          "path": "src/engine/api-misc.js",
+          "sha256": "40380b434340af4edc5661f4b6ceb425f1ad24cdccc8cb0948db4ffc7166afbd",
+          "exists": true
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "exists": true
+        },
+        {
+          "path": "docs/tde-primitives.md",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 24,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 4
+    },
+    {
+      "id": "investigator.restrictedAction",
+      "step": "P6-4",
+      "title": "受限额外行动（法术 / 赏金）",
+      "mechanism": [
+        "standardRules"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "grantRestrictedAction / actionsAvailable / consumeAction / clearRestrictedAction / restrictedActionRule",
+      "params": {
+        "kind": "'spell'|'bounty'",
+        "perTurn": "boolean"
+      },
+      "docs": "docs/tde-primitives.md#p64-受限额外行动",
+      "note": "第四循环的法术专用行动改成同一本账（`spellOnlyActions` 字段与函数名保留）；额度是「最后 N 个行动」，普通行动不能花。",
+      "checks": [
+        {
+          "kind": "module-export",
+          "file": "src/engine/restricted-actions.js",
+          "name": "grantRestrictedAction",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/restricted-actions.js",
+          "name": "actionsAvailable",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/restricted-actions.js",
+          "name": "consumeAction",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "module-export",
+          "file": "src/engine/restricted-actions.js",
+          "name": "restrictedActionRule",
+          "ok": true,
+          "detail": "exported"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/table-decisions.js",
+          "pattern": "restrictedKindOfMove",
+          "ok": true,
+          "detail": "「哪种行动可以花受限额度」的唯一判定点（交战/攻击带赏金的敌人）"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/restricted-actions.js",
+          "sha256": "7be7d6e89382fbe2e552329e7a1c9a12f0a2556b1398ef3d9d5a28d36f6ebd2f",
+          "exists": true
+        },
+        {
+          "path": "src/engine/spell-actions.js",
+          "sha256": "1df1497d2df8ac621206fb09c8c9824d19ad3c2f1962b195ae97c97b18739eb7",
+          "exists": true
+        },
+        {
+          "path": "src/engine/turn.js",
+          "sha256": "3199bd1f3369111df3ba7822749baa7c0d0d4cfc1e13bf63bbad9aebffb84254",
+          "exists": true
+        },
+        {
+          "path": "src/engine/moves.js",
+          "sha256": "01bc1199cbed268c57610708d8b8d05f1d47cff9285a5e700fe30ff30090c461",
+          "exists": true
+        },
+        {
+          "path": "src/engine/dispatch.js",
+          "sha256": "e77bffc0c4fefbf5b1a987fc06ef8b36d84ac588e267bcbf39464c5977ebc566",
+          "exists": true
+        },
+        {
+          "path": "src/engine/table-decisions.js",
+          "sha256": "586cc3ff4b1a8cab9cd2923ea066ca6712ce5ae4a5fdbac6c54c9e409511af15",
+          "exists": true
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "exists": true
+        },
+        {
+          "path": "docs/tde-primitives.md",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 24,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 8
+    },
+    {
+      "id": "search.modify",
+      "step": "P6-5",
+      "title": "查找牌库前的能力窗口",
+      "mechanism": [
+        "standardRules"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "窗口 searchWouldResolve（context.extraCards / context.extraTargets）",
+      "params": {
+        "zone": "string",
+        "count": "number",
+        "choose": "number"
+      },
+      "docs": "docs/tde-primitives.md#p65-查找牌库窗口",
+      "note": "曼蒂·汤普森「额外查找 3 张或多结算 1 个目标」；顺带修掉 lookZoneAdapter 只看 3 张的写死上限。",
+      "checks": [
+        {
+          "kind": "window",
+          "name": "searchWouldResolve",
+          "ok": true,
+          "detail": "76 windows"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/deck-ops.js",
+          "pattern": "extraCards",
+          "ok": true,
+          "detail": "额外张数在 lookAt 适配器里生效（旧实现写死 3 张）"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/deck-ops.js",
+          "sha256": "545a46ab08dcee393948344747d64df8aa5bd787dcc1a9fbefc8af2927f50e23",
+          "exists": true
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "exists": true
+        },
+        {
+          "path": "docs/tde-primitives.md",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 24,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 3
+    },
+    {
+      "id": "search.cardInPile",
+      "step": "P6-6",
+      "title": "被查找到的牌自身的规则",
+      "mechanism": [
+        "standardRules"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "条目标 `searchedCardRule`（读点 deck-ops.js 的 searchedCardsWindow）",
+      "params": {
+        "mode": "'reaction'|'forced'",
+        "take": "boolean",
+        "discard": "boolean",
+        "cancelSearch": "boolean",
+        "drawEncounter": "boolean",
+        "discoverClue": "number"
+      },
+      "docs": "docs/tde-primitives.md#p66-被查找到的牌",
+      "note": "神秘证据（揭示抽走 + 发现线索）与惊人的发现（弃掉 + 取消查找 + 抽遭遇卡）。",
+      "checks": [
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/deck-ops.js",
+          "pattern": "searchedCardRule",
+          "ok": true,
+          "detail": "牌还在牌库里，能力源枚举看不到它，只能读条目级声明"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/ability.js",
+          "pattern": "searchedCardRule",
+          "ok": true,
+          "detail": "条目字段注册与冻结"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/deck-ops.js",
+          "sha256": "545a46ab08dcee393948344747d64df8aa5bd787dcc1a9fbefc8af2927f50e23",
+          "exists": true
+        },
+        {
+          "path": "src/engine/ability.js",
+          "sha256": "e9ccc01e532482439fad97c0536883abad4e9e416c8e60d2a90aeda2d5397d02",
+          "exists": true
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "exists": true
+        },
+        {
+          "path": "docs/tde-primitives.md",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 24,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 4
+    },
+    {
+      "id": "upkeep.replaceDraw",
+      "step": "P6-7",
+      "title": "补给阶段抽牌整段替换",
+      "mechanism": [
+        "standardRules"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "investigatorRule(code).upkeepDraw",
+      "params": {
+        "discardNonWeakness": "boolean",
+        "handSize": "number"
+      },
+      "docs": "docs/tde-primitives.md#p67-补给阶段抽牌替换",
+      "note": "派翠丝·海瑟薇「弃掉手牌中全部非弱点卡牌，抽到 5 张」；未声明该键的调查员行为不变。",
+      "checks": [
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/phases.js",
+          "pattern": "upkeepDraw",
+          "ok": true,
+          "detail": "补给阶段抽牌段的唯一读点"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/phases.js",
+          "sha256": "06927038494a6fc26c72fce8ad7047372fff911fb59462129cfd5147ec1258b1",
+          "exists": true
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "exists": true
+        },
+        {
+          "path": "docs/tde-primitives.md",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 24,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 3
+    },
+    {
+      "id": "investigator.cardRules",
+      "step": "P6-8",
+      "title": "调查员卡面的常驻规则键",
+      "mechanism": [
+        "standardRules"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "investigator.handSizeModifier / investigator.startsWith / elderSign.shuffleDiscardAfterTest",
+      "params": {
+        "handSizeModifier": "number",
+        "startsWith": "code",
+        "shuffleDiscardAfterTest": "{ keep }"
+      },
+      "docs": "docs/tde-primitives.md#p68-调查员卡面常驻规则",
+      "note": "三个读点都已在既有引擎里；本批只补 handSizeModifier 与 shuffleDiscardAfterTest 两个声明键。",
+      "checks": [
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/stats.js",
+          "pattern": "handSizeModifier",
+          "ok": true,
+          "detail": "手牌上限的唯一读点（派翠丝 -3）"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/setup.js",
+          "pattern": "startsWith",
+          "ok": true,
+          "detail": "开局自带支援（门之匣）的既有读点"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/tests.js",
+          "pattern": "shuffleDiscardAfterTest",
+          "ok": true,
+          "detail": "旧印「本次检定结束后」的读点（派翠丝旧印）"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/stats.js",
+          "sha256": "cbbf30a02f7acb0ad966117da81019734c2b2de99dc204e8fdaf7dce83ee2f11",
+          "exists": true
+        },
+        {
+          "path": "src/engine/setup.js",
+          "sha256": "735d52d00815f39815a3bb3668e9979e4a89d86a642a49689723b157fc8abd6f",
+          "exists": true
+        },
+        {
+          "path": "src/engine/tests.js",
+          "sha256": "06857bb903ea3d3af6870026fcb2a345e14b05d29b0289f51777ba5087887c8f",
+          "exists": true
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "exists": true
+        },
+        {
+          "path": "docs/tde-primitives.md",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 24,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 5
+    },
+    {
+      "id": "play.fromHandFree",
+      "step": "P6-9",
+      "title": "从手牌免费打出另一张同名卡",
+      "mechanism": [
+        "standardRules"
+      ],
+      "layer": "engine",
+      "status": "done",
+      "api": "ctx.api.playCardFromHandFree(seat, code, { discount })",
+      "params": {
+        "seat": "number",
+        "code": "string",
+        "discount": "number|null"
+      },
+      "docs": "docs/tde-primitives.md#p69-从手牌免费打出",
+      "note": "托尼的 .38「打出后免费从手牌打出另一张同名枪」；与正常支付/入场共用 doPlay。",
+      "checks": [
+        {
+          "kind": "ctx-api",
+          "name": "playCardFromHandFree",
+          "ok": true,
+          "detail": "263 keys"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/api-misc.js",
+          "pattern": "playCardFromHandFree",
+          "ok": true,
+          "detail": "免费打出走 doPlay 的 playDiscount 参数（正常入场与反应窗口）"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/api-misc.js",
+          "sha256": "40380b434340af4edc5661f4b6ceb425f1ad24cdccc8cb0948db4ffc7166afbd",
+          "exists": true
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "exists": true
+        },
+        {
+          "path": "docs/tde-primitives.md",
+          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 24,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 3
     }
   ],
-  "deferredPrimitives": [],
+  "deferredPrimitives": [
+    {
+      "id": "play.asIfAtLocation",
+      "step": "P8",
+      "title": "事件如同位于连接地点打出（卢克·罗宾逊）",
+      "mechanism": [
+        "standardRules"
+      ],
+      "reason": "需要「虚拟地点」原语：事件结算期间把 inv.location 覆盖为连接地点、并按该地点的敌人建立交战关系。引擎里 inv.location 的读点遍布 combat/actions/encounter（没有单一读点），属 P8 章节接线；P6 把 06004 标为 simplified，未实现部分写入 docs/tde-investigators.md。"
+    },
+    {
+      "id": "location.bondedDreamGate",
+      "step": "P8",
+      "title": "梦境之门地点（06015a/b）的放置/翻面/连接",
+      "mechanism": [
+        "dreamGate"
+      ],
+      "reason": "P3 已有 `location.placeBondedLocation`，但真实地点实体的构造、「与每个已揭示地点连接」、「除卢克外不能进入」与「调查阶段结束时放在一边」需要章节级的 locationRule 与阶段钩子（P8）。P6 只做 disengage 部分，06013/06014 标为 simplified。"
+    },
+    {
+      "id": "enemy.hiddenInHand",
+      "step": "P7",
+      "title": "手牌中的敌人（隐私敌人）",
+      "mechanism": [
+        "hidden"
+      ],
+      "reason": "06017「秘密加入手牌 / 从手牌攻击躲避 / 牌库耗尽时攻击」需要敌人形态的隐私投影与从手牌建立战斗目标；P4 已将「敌人形态隐私」登记为待接线。P6 的 06017 标为 simplified（按普通弱点敌人生成）。"
+    },
+    {
+      "id": "window.afterAlarmRaised",
+      "step": "P8",
+      "title": "警报等级提升后的窗口",
+      "mechanism": [
+        "alarmLevel"
+      ],
+      "reason": "A3 的警报等级已由 `counter.investigator` 承担读数；「提升后」的窗口只在 A3 章节脚本里需要（P8）。"
+    },
+    {
+      "id": "api.bonded.swap",
+      "step": "P8",
+      "title": "绑定卡换面",
+      "mechanism": [
+        "dreamGate"
+      ],
+      "reason": "06015a/b 的翻面与 06014 的「若已在场上则翻面」属地点型 Bonded（见上一条），随 P8 一起接线。"
+    }
+  ],
   "escape": [
     {
       "card": "06164",
@@ -1741,8 +2504,8 @@
   },
   "gate": {
     "newPrimitives": {
-      "expected": 17,
-      "done": 17,
+      "expected": 26,
+      "done": 26,
       "pending": 0,
       "pass": true
     },

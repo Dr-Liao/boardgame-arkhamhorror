@@ -6,22 +6,22 @@
     "effectsEntries": 0,
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
-    "descriptorEntries": 567,
-    "descriptorAbilities": 526,
+    "descriptorEntries": 582,
+    "descriptorAbilities": 541,
     "abilityKinds": 12,
-    "windows": 74,
+    "windows": 76,
     "effectPrimitives": 56,
-    "nonPlayerCards": 29,
+    "nonPlayerCards": 30,
     "behaviorLines": 23395,
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 567,
+    "descriptor": 582,
     "data": 4
   },
   "nonPlayer": {
     "byScope": {
-      "enemy": 18,
+      "enemy": 19,
       "location": 6,
       "storyAsset": 5
     },
@@ -50,13 +50,14 @@
       "05259",
       "05260",
       "05261",
+      "06012",
       "goatSpawn",
       "relentlessDarkYoung",
       "screechingByakhee",
       "wolfManDrew",
       "youngDeepOne"
     ],
-    "abilities": 14,
+    "abilities": 15,
     "modifiers": 26
   },
   "declaration": {
@@ -2952,6 +2953,81 @@
       "code": "05324",
       "channel": "descriptor",
       "descriptors": 1
+    },
+    {
+      "code": "06001",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "06002",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "06003",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "06004",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "06005",
+      "channel": "descriptor",
+      "descriptors": 0
+    },
+    {
+      "code": "06006",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "06007",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "06008",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "06009",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "06010",
+      "channel": "descriptor",
+      "descriptors": 3
+    },
+    {
+      "code": "06011",
+      "channel": "descriptor",
+      "descriptors": 2
+    },
+    {
+      "code": "06013",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "06014",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "06016",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "06017",
+      "channel": "descriptor",
+      "descriptors": 0
     },
     {
       "code": "07017",

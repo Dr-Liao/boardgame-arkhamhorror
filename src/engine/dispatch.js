@@ -13,10 +13,16 @@ import { cardPoolContext } from '../deck/card-pool.js'
 
 import { isParleyDescriptor } from './parley.js'
 // 第 5 步 P6：法术专用额外行动的算术在 spell-actions.js（纯函数，无依赖）。
+// P6（食梦者）：受限行动的算术与 kind 判定分别在 restricted-actions.js / table-decisions.js。
+import { spellOnlyActionsOf } from './spell-actions.js'
 import {
-  actionsAvailable as spellActionsAvailable, consumeAction as consumeSpellAction, spellOnlyActionsOf,
-} from './spell-actions.js'
+  actionsAvailable as restrictedActionsAvailable, consumeAction as consumeRestrictedAction,
+} from './restricted-actions.js'
 
+import { MODE_LABELS, assignSeatPart, campaignPartsManifest, defaultPartLeads, describeModePlan, laneBalance, modePlan } from '../campaign/campaign-modes.js'
+import { createPartsState, inPart, setPart } from '../campaign/campaign-parts.js'
+import { partOfScenario } from '../campaign/part-flow.js'
+import { enterLaneRuntime, leaveLaneRuntime } from './lane-runtime.js'
 import { createEffect } from './effect-state.js'
 import { nextInstanceId } from './rules-state.js'
 export function createDispatch(deps) {
@@ -30,6 +36,7 @@ export function createDispatch(deps) {
     actionCost,
     actionKind,
     isSpellAction,
+    restrictedKindOfMove,
     advanceAct,
     advanceInvestigator,
     aliveInvestigators,
@@ -51,6 +58,7 @@ export function createDispatch(deps) {
     getCurrentActionKind,
     setCurrentActionKind,
     setCurrentSpellAction,
+    setCurrentRestrictedKind,
     doAbility,
     doEntityAbility,
     doBreakDoor,
@@ -174,6 +182,8 @@ function executeCommand(state, seat, move, events) {
       return
     }
     if (!(error instanceof ScenarioEnded)) throw error
+    // 关卡结束：先把记录键与座位簿记改回 roomSeat，再进入结算/关间。
+    leaveLaneRuntime(state)
     if (error.nextIndex == null) {
       if (state.campaign.failed || !state.campaign.pendingNode) endCampaign(state, events)
       else progressCampaign(state, events, false)
@@ -206,20 +216,27 @@ function executeAction(state, seat, move, events) {
   const kind = actionKind(state, inv, move)
   setCurrentActionKind(kind)
   // 第 5 步 P6：法术专用额外行动（玛丽·朗博）——最后一个行动只能花在法术卡/法术能力上。
+  // P6（食梦者）：同一读点也覆盖托尼·摩尔根的「只能用于交战/攻击带赏金敌人」的额外行动。
   const spell = isSpellAction(state, inv, move)
+  const restricted = restrictedKindOfMove(state, inv, move)
   setCurrentSpellAction(spell)
+  setCurrentRestrictedKind(restricted)
   if (kind === 'explore') {
     if (inv.actionsLeft < cost) throw new Error('行动点不足')
     const normal = normalActionsLeft(inv)
     inv.actionsLeft -= cost
     if (normal < cost) inv.exploreOnlyActions = Math.max(0, (inv.exploreOnlyActions || 0) - (cost - normal))
   } else {
-    if (spellActionsAvailable(inv, spell) < cost) {
-      throw new Error(spellOnlyActionsOf(inv) && !spell
-        ? '行动点不足（额外行动只能用于探索或法术）'
-        : '行动点不足')
+    if (restrictedActionsAvailable(inv, restricted) < cost) {
+      throw new Error(restricted === 'bounty'
+        ? '行动点不足（额外行动只能用于交战或攻击带赏金的敌人）'
+        : inv.bountyOnlyActions && restricted !== 'bounty'
+          ? '行动点不足（额外行动只能用于交战或攻击带赏金的敌人）'
+          : spellOnlyActionsOf(inv) && restricted !== 'spell'
+            ? '行动点不足（额外行动只能用于探索或法术）'
+            : '行动点不足')
     }
-    consumeSpellAction(inv, cost, spell)
+    consumeRestrictedAction(inv, cost, restricted)
   }
   inv.exploreOnlyActions = Math.min(inv.exploreOnlyActions || 0, Math.max(0, inv.actionsLeft))
   if (cost > 0) { inv.actionsTakenThisTurn = (inv.actionsTakenThisTurn || 0) + 1; state.phaseActionCount = (state.phaseActionCount || 0) + 1 }
@@ -312,13 +329,80 @@ function executeHubMove(state, seat, move, events) {
       if (!(state.humanSeats || [0]).includes(move.leadSeat)) throw new Error('队长必须由真人玩家担任')
       campaign.leadSeat = move.leadSeat
       campaign.leadConfirmed = true
+      if (campaign.partLeads && campaign.currentPart) campaign.partLeads[campaign.currentPart] = move.leadSeat
       info(state, events, `${state.investigators[move.leadSeat].name} 被选为小队队长。`)
       break
+    case 'hubSetPartLeader': {
+      if (!campaignPartsManifest(campaignFor(state)) || !campaign.seatParts) throw new Error('当前战役没有双线队长')
+      const part = move.part
+      if (!['A', 'B'].includes(part)) throw new Error(`线必须是 A 或 B：${String(part)}`)
+      if (!Number.isInteger(move.leadSeat) || campaign.seatParts[move.leadSeat] !== part) {
+        throw new Error(`座位 ${move.leadSeat + 1} 不在 ${part} 线，不能担任该线队长`)
+      }
+      campaign.partLeads = { ...(campaign.partLeads || {}), [part]: move.leadSeat }
+      if (campaign.currentPart === part) campaign.leadSeat = move.leadSeat
+      info(state, events, `${state.investigators[move.leadSeat].name} 被选为 ${part} 线队长。`)
+      break
+    }
     case 'hubSetDifficulty': state.difficulty = move.difficulty; break
     case 'hubSelectScenario':
       if (!selectInitialHubScenario(state, move.scenarioId, events)) state.hubSelectedScenarioId = move.scenarioId
       break
     case 'hubGoSetup': state.uiState = 'scenarioSetup'; state.phase = 'scenarioSetup'; campaign.phase = 'scenarioSetup'; break
+    case 'hubSetMode': {
+      const plan = modePlan({ mode: move.mode, playerCount: (state.investigators || []).length })
+      if (!plan.ok) throw new Error(plan.reason || '该开局模式不可用')
+      const created = createPartsState({ mode: plan.mode, seatParts: plan.seatParts, currentPart: plan.currentPart })
+      campaign.mode = created.mode
+      campaign.seatParts = [...created.seatParts]
+      campaign.activeParts = [...created.activeParts]
+      campaign.currentPart = created.currentPart
+      campaign.parts = {}
+      // 双线各自一名队长（默认每条线第一个真人座位）；分选/并行都保留，便于关间切换。
+      campaign.partLeads = defaultPartLeads(campaign.seatParts, state.humanSeats || [0])
+      campaign.leadConfirmed = true
+      campaign.leadSeat = campaign.partLeads[campaign.currentPart || 'A'] ?? campaign.leadSeat
+      campaign.scenarioIndex = 0
+      // 声明了 parts 的双线 flow 从章对门起步：把 flow 直接定位到首关（a1/b1），
+      // 这样 hub 的「选择第一关」与后续 hubBeginScenario 都能读到 scenario 节点。
+      const order = campaignFor(state).scenarioOrder || []
+      const first = order[0] ?? null
+      state.hubSelectedScenarioId = first
+      if (first && campaignPartsManifest(campaignFor(state))) selectInitialHubScenario(state, first, events)
+      state.hubSeatSelected = {}
+      state.hubSeatDone = {}
+      state.hubUpgradedSeats = {}
+      info(state, events, `开局模式：${MODE_LABELS[plan.mode]?.label || plan.mode}。${describeModePlan(plan)}`)
+      break
+    }
+    case 'hubSetSeatPart': {
+      if (!['pick', 'parallel'].includes(campaign.mode)) throw new Error('只有分选/并行双线允许手动改线')
+      if (campaign.scenarioResults.length) throw new Error('已经开始游戏，不能再改线')
+      // 并行：玩家只能换自己的座位；房主只能代操作 AI 座位（不能替其他真人换线）。
+      // 分选保留旧口径：座位 1 可替全桌调整。
+      if (campaign.mode === 'parallel') {
+        const humans = state.humanSeats || [0]
+        const self = seat === move.seat
+        const hostForAi = seat === 0 && !humans.includes(move.seat)
+        if (!self && !hostForAi) throw new Error('房主只能代 AI 换线；真人请用自己的换位置按钮')
+      } else if (seat !== move.seat && seat !== 0) throw new Error('只能改自己座位的线')
+      const trial = assignSeatPart({ mode: campaign.mode, seatParts: campaign.seatParts, seat: move.seat, part: move.part })
+      if (!trial.ok) throw new Error(trial.reason)
+      campaign.seatParts = [...trial.seatParts]
+      // 换线后如果某线队长被换走，默认改回该线第一个真人座位。
+      if (campaign.partLeads) {
+        for (const part of ['A', 'B']) {
+          const seatInPart = campaign.seatParts[campaign.partLeads[part]] === part
+          if (!seatInPart) campaign.partLeads[part] = defaultPartLeads(campaign.seatParts, state.humanSeats || [0])[part]
+        }
+      }
+      const balance = laneBalance(campaign.seatParts)
+      const tail = campaign.mode === 'parallel'
+        ? `（A ${balance.A} / B ${balance.B}${balance.balanced ? '，人数相等' : '，人数还不相等，不能开始'}）`
+        : ''
+      info(state, events, `座位 ${move.seat + 1} 改到 ${move.part} 线${tail}。`)
+      break
+    }
     case 'hubSelectInvestigator': {
       const previous = campaign.investigators[seat]
       if (previous?.status === 'active' && !initialHubPreparation(state)) throw new Error('现役调查员不能更换；只有死亡或疯狂后才能挑选替补')
@@ -352,20 +436,27 @@ function executeHubMove(state, seat, move, events) {
           seat, seed: Math.floor(randomValue(state) * 4294967296), playerPool: corePlayerPool(state),
         })
       if (built.errors?.length) throw new Error(`牌组无效：${built.errors.join('；')}`)
-      const existing = campaign.investigators[seat]
-      if (existing) {
-        // Editing or rebuilding a starting deck keeps the generated basic
-        // weakness and identity while replacing investigator-specific cards.
-        const retained = existing.deck.filter(code => ALL_CARDS[code]?.subtype === 'basicweakness')
-        existing.code = inv.code
-        existing.name = inv.name
-        existing.deck = [...built.playerCards, ...built.signatureCards, ...built.signatureWeaknesses,
-          ...(retained.length ? retained : built.basicWeaknesses)].sort()
-        existing.startingDeckReady = true
-      } else {
-        const created = registerCampaignInvestigator(campaign, inv, built.deck)
-        created.startingDeckReady = true
+      // P5 批次 2：非活动线座位的 campaign record 写进该线快照（parts[part]），
+      // 活动线仍写顶层；两条线共用同一个 record 形状，靠 inPart 换数据作用域。
+      const saveDeck = () => {
+        const existing = campaign.investigators[seat]
+        if (existing) {
+          // Editing or rebuilding a starting deck keeps the generated basic
+          // weakness and identity while replacing investigator-specific cards.
+          const retained = existing.deck.filter(code => ALL_CARDS[code]?.subtype === 'basicweakness')
+          existing.code = inv.code
+          existing.name = inv.name
+          existing.deck = [...built.playerCards, ...built.signatureCards, ...built.signatureWeaknesses,
+            ...(retained.length ? retained : built.basicWeaknesses)].sort()
+          existing.startingDeckReady = true
+        } else {
+          const created = registerCampaignInvestigator(campaign, inv, built.deck)
+          created.startingDeckReady = true
+        }
       }
+      const lanePart = state.campaign.seatParts?.[seat]
+      if (lanePart && lanePart !== campaign.currentPart) inPart(state, lanePart, saveDeck)
+      else saveDeck()
       inv.autoBuilt = move.action === 'hubAutoDeck'
       if (inv.autoBuilt) info(state, events, `${inv.name}：按调查员属性与卡牌能力评分组牌，并通过尺寸、职业、等级、限额、重复张数和 0 XP 预算检查；签名卡与随机基础弱点另行加入。`)
       info(state, events, `${inv.name} 的战役牌组已保存。`)
@@ -414,8 +505,20 @@ function executeHubMove(state, seat, move, events) {
       break
     case 'hubBeginScenario': {
       if (!campaign.leadConfirmed || !(state.humanSeats || [0]).includes(campaign.leadSeat)) throw new Error('请先选择一名真人玩家担任队长')
+      // P5 批次 3：单线与分选在进入关卡前切到目标线的运行时（密集线内座位）；并行仍需双运行时
+      // 容器接线，先用明确原因挡住，避免把两条线塞进一个运行时。
+      const manifest = campaignFor(state)
+      const parts = campaignPartsManifest(manifest)
+      if (parts && campaign.mode === 'parallel') {
+        throw new Error('并行双线由大厅边界启动（mod.applyMove）；纯引擎不直接开局')
+      }
       if (!state.hubReady || state.hubSelectedScenarioId !== CAMPAIGN.scenarioOrder[campaign.scenarioIndex]) {
         throw new Error('关卡尚未解锁或队伍尚未准备')
+      }
+      if (parts && campaign.mode) {
+        const part = partOfScenario(manifest.parts, state.hubSelectedScenarioId)
+        if (part && campaign.currentPart !== part) setPart(state, part)
+        enterLaneRuntime(state)
       }
       progressCampaign(state, events, true)
       break

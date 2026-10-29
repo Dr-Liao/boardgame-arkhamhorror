@@ -7,6 +7,7 @@ import { actingSeats, decisionSeat, embeddedCardDefs, enemyEvadeValue, enemyFigh
 import { contentRegistry } from '../../content/registered.js'
 import { projectTableState, locationEntryErrors, maskHiddenLocations, publicAttachments, attachLocationCards, publicCardInstance } from './presentation-state.js'
 import { campaignStory } from '../campaign/story.js'
+import { campaignPartsManifest } from '../campaign/campaign-modes.js'
 import { traitLabels } from '../cards/trait-labels.js'
 import { grantedTraitsOf } from '../engine/location-traits.js'
 import { choiceOptionsFor, choiceSeats } from '../engine/resolution.js'
@@ -172,6 +173,27 @@ export function viewState(state, observerSeat = null, options = {}) {
   }))
   view.locationEntryErrors = locationEntryErrors(state)
   view.campaign = campaignView(state.campaign, observer)
+  // 双线战役在模式确定前没有 seatParts/parts 记录，非房主席位也必须有办法知道
+  // 「这一步要先选模式」。只对声明 parts 的战役加这两个派生字段，其它循环字节不变。
+  const campaignDef = state.campaign?.id ? contentRegistry.getCampaign(state.campaign.id) : null
+  const partsDef = campaignDef ? campaignPartsManifest(campaignDef) : null
+  if (partsDef) {
+    view.campaign.requiresMode = true
+    view.campaign.mode = state.campaign.mode ?? null
+    // 并行出发准备页要左右各显示本线的关卡名与插图：按章对把两条线的章节投影出来。
+    if (state.campaign.mode === 'parallel') {
+      const pair = Math.floor((state.campaign.scenarioIndex ?? 0) / 2) + 1
+      const lane = part => partsDef[part].chapters.find(chapter => chapter.pair === pair) || null
+      view.campaign.partScenarios = {
+        A: lane('A')?.scenarioId ?? null,
+        B: lane('B')?.scenarioId ?? null,
+      }
+      view.campaign.partScenarioNames = {
+        A: lane('A')?.name ?? '',
+        B: lane('B')?.name ?? '',
+      }
+    }
+  }
   // 记录值里的卡号→卡名只用于界面显示；规则读取的仍是 campaign.records 里的原值。
   view.campaign.recordCardNames = recordCardNames(view.campaign)
   // 补给品是公开信息（「检查你们的补给品」由全队共同核对），标签随观察投影下发，

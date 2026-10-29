@@ -139,7 +139,19 @@
     "scan:tde:check": "node tools/scan-tde-mechanisms.mjs --check",
     "scan:tde:review": "node tools/scan-tde-mechanisms.mjs --review",
     "plan:tde:primitives": "node tools/audit-tde-primitives.mjs --write",
-    "audit:tde:primitives": "node tools/audit-tde-primitives.mjs --check"
+    "audit:tde:primitives": "node tools/audit-tde-primitives.mjs --check",
+    "test:tde:rules": "node --test tests/tde-rules.test.mjs",
+    "test:tde:rules:browser": "playwright test --config playwright.tde.config.mjs tde-rules.browser.mjs",
+    "test:tde:modes:browser": "playwright test --config playwright.tde-ui.config.mjs tde-modes.browser.mjs",
+    "audit:tde:rules": "node tools/audit-tde-rules.mjs --check",
+    "audit:tde:rules:write": "node tools/audit-tde-rules.mjs --write",
+    "test:tde:pick": "node --test tests/tde-modes.test.mjs tests/tde-hub-modes.test.mjs tests/tde-mode-panel.test.mjs",
+    "test:tde:dual": "node --test tests/tde-dual-flow.test.mjs",
+    "test:tde:runtime": "node --test tests/tde-lane-adapter.test.mjs tests/tde-dual-runtime.test.mjs tests/tde-lane-runtime.test.mjs",
+    "test:tde:parallel": "node --test tests/tde-parallel.test.mjs",
+    "test:tde:investigators": "node --test tests/tde-investigators.test.mjs",
+    "audit:tde:investigators": "node tools/audit-tde-investigators.mjs --check",
+    "audit:tde:investigators:write": "node tools/audit-tde-investigators.mjs --write"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

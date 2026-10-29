@@ -8,6 +8,8 @@
 //   enemyAttack —— 敌人攻击流程（反应窗口、修正、结算）
 import { weaknessOwnerSeat } from './card-lookup.js'
 import { enemyIgnoresInvestigator } from './trait-passives.js'
+// P6（食梦者）：支援被击败的唯一判定点（含 assetDefeated 窗口）。
+import { checkAssetDefeated } from './asset-defeat.js'
 //   spawnEnemy / engageEnemy / disengageEnemy / defeatEnemy / damageEnemy —— 敌人生死与交战
 //
 // 它们被几乎所有 do* 与剧本运行时调用，拆出来后 engine.js 只剩状态机与「动作编排」。
@@ -604,23 +606,24 @@ function applyHarm(state, inv, damage, horror, events, direct, attack = null, as
       if (recipient !== inv) info(state, events, `${cardName(recipient.code)} 承受 ${amount} 点${kind === 'damage' ? '伤害' : '恐惧'}。`)
     }
   }
+  // P6（食梦者）：支援被击败的唯一判定点（asset-defeat.js）。伤害分配、伤害移动、剧本效果
+  // 都走这里，`assetDefeated` 窗口才有统一的触发位置。
+  const assetDefeatDeps = {
+    cardDef,
+    cardName,
+    leaveAsset,
+    info,
+    reactionWindow,
+    triggerReaction,
+    registeredEntry,
+    defeatedAssetRetaliation,
+    shuffleIntoDeck: (owner, code) => {
+      owner.deck = shuffle([...owner.deck, code], () => randomValue(state))
+    },
+  }
   for (const owner of state.investigators) {
     for (const asset of owner.assets.slice()) {
-      const def = cardDef(asset.code)
-      if ((def?.health > 0 && asset.damage >= def.health) || (def?.sanity > 0 && asset.horror >= def.sanity)) {
-        leaveAsset(state, owner, asset)
-        if (!asset.removedFromGame && !asset.returnedToHand) owner.discard.push(asset.code)
-        info(state, events, `${cardName(asset.code)} 被击败并弃置。`)
-        for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned && item.location === owner.location)) {
-          triggerReaction(state, inv.seat, 'defeatAtLocation', events,
-            { when: 'defeatAtLocation', kind: 'ally', seat: inv.seat, location: owner.location, assetCode: asset.code })
-          reactionWindow(state, 'defeatAtLocation',
-            { when: 'defeatAtLocation', kind: 'ally', seat: inv.seat, location: owner.location, assetCode: asset.code,
-              prompt: `「${cardName(asset.code)}」在本地点被击败后` }, events)
-        }
-        const retaliation = registeredEntry(asset.code)?.defeatedDamage
-        if (retaliation) defeatedAssetRetaliation(state, owner, retaliation, events)
-      }
+      checkAssetDefeated(state, owner, asset, events, assetDefeatDeps)
     }
   }
   const totalHorror = [...assignedHorror.values()].reduce((total, amount) => total + amount, 0)

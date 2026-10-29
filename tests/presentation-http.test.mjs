@@ -132,7 +132,7 @@ test('胆量使用玩家卡背并公开剧本指定属性', async () => {
   assert.equal(body.card.sanity, 2)
   assert.deepEqual(body.card.icons, {})
   assert.equal(body.card.images.front.kind, 'generic-back')
-  assert.equal(body.card.images.front.candidates[0].path, 'backs/back_player.webp')
+  assert.equal(body.card.images.front.candidates[0].path, 'backs/back_player.jpg')
   assert.match(body.card.textZh, /费用为0.*神智值为2.*无技能图标/)
 })
 
@@ -191,7 +191,7 @@ test('静态展示代码可加载，越界路径被拒绝，其他 Mod 与对局
   }
   const catalog = await get('/api/catalog')
   assert.equal(catalog.headers.get('cache-control'), 'no-store')
-  assert.deepEqual(catalog.body.games.map(game => game.id).sort(), ['arkhamhorror', 'gobang', 'ox'])
+  assert.deepEqual(catalog.body.games.map(game => game.id).sort(), ['arkhamhorror', 'gobang', 'ox', 'poker'])
   // 大厅只下发 Mod 资源的地址，不感知其内容
   const arkham = catalog.body.games.find(game => game.id === 'arkhamhorror')
   assert.deepEqual(arkham.web, { client: '/mods/arkhamhorror/game-ui.js', styles: '/mods/arkhamhorror/style.css', mount: '/mods/arkhamhorror' })

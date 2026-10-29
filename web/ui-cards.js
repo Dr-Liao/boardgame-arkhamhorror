@@ -91,10 +91,16 @@ export const UI_CARDS = Object.freeze({
   rulebookActAgenda: Object.freeze(['02085', '02220']),
   // 万象无终（P4）：这些卡的「身份」写在卡名而不是卡文里（序章调查员、专属设置卡、战役资产），
   // 规则书只能按卡号把它们连到 tcuPrologue / tcuCampaignAssets 条目。
+  // 食梦者（P4）：章节参考卡按线归属、剧情支援与地点毁灭按卡号登记；章节尚未开放时
+  // 这些表只服务规则书「卡文直达」，不参与任何战役流程（章节 id → 提示卡的映射属 P8）。
   rulebookReferences: Object.freeze({
     storyInvestigators: Object.freeze(['05046', '05047', '05048', '05049']),
     storySetupCards: Object.freeze(['05258', '05259', '05260', '05261']),
     campaignAssets: Object.freeze(['05150', '05203', '05207', '05228']),
+    tdeDreamQuestChapters: Object.freeze(['06039', '06119', '06206', '06286']),
+    tdeWebOfDreamsChapters: Object.freeze(['06063', '06168', '06247', '06333']),
+    tdeStoryAssetCards: Object.freeze(['06059', '06079', '06080', '06144', '06189', '06224', '06225', '06266']),
+    tdeLocationDoomCards: Object.freeze(['06333', '06341', '06342', '06343', '06345', '06351', '06354']),
   }),
   tomeInvestigators: Object.freeze(['01002']),
 })

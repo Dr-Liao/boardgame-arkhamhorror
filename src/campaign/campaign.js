@@ -4,6 +4,7 @@ import { allowsCard, filterCardCodes } from '../deck/card-pool.js'
 import { matchesDeckOptions, cardLimit, isPlayable, scoreCard, hashSeed } from '../deck/deckbuilding.js'
 import { validateDeckRules, upgradeQuote } from '../deck/deck-rules.js'
 import { registeredEntry } from '../engine/ability.js'
+import { partScopedView } from './campaign-parts.js'
 
 const playerPool = [...PLAYER_CARD_CODES, ...CORE_UPGRADE_CODES]
 const tfaPool = [...TFA_PLAYER_BUILDABLE_CODES]
@@ -372,5 +373,6 @@ export function campaignView(campaign, observerSeat) {
       }
     }
   }
-  return view
+  // 双线战役（P5 批次 1）：非活动线快照只投影公开摘要；未声明 parts 的战役原样返回。
+  return partScopedView(view)
 }

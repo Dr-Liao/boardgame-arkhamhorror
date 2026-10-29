@@ -495,3 +495,100 @@
   .ah-supply-market-summary { grid-template-columns: minmax(0, 1fr); }
   .ah-supply-market-done { width: 100%; }
 }
+
+/* P5 批次 3：开局模式面板（web/hub-mode-view.js → web/hub.js 战役总览）。 */
+.ah-office-modes { display: flex; flex-direction: column; gap: 6px; margin: 10px 0 2px; }
+.ah-office-mode-list, .ah-office-mode-seats { display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-start; }
+.ah-office-mode, .ah-office-mode-seat { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ah-office-modes .ah-mode-reason { max-width: 46ch; font-size: 12px; line-height: 1.35; opacity: .78; }
+@media (max-width: 560px) {
+  .ah-office-mode-list, .ah-office-mode-seats { flex-direction: column; align-items: stretch; }
+  .ah-office-modes .ah-mode-reason { max-width: none; }
+}
+
+/* P5.5：首屏模式门与并行分线摘要 */
+.ah-office-mode-gate { display: flex; flex-direction: column; gap: 10px; max-width: 980px; margin: 28px auto; padding: 0 24px; }
+.ah-office-mode-gate h1 { margin: 0; font-size: clamp(26px, 3.4vw, 40px); }
+.ah-mode-balance { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.ah-mode-balance .is-ok { color: #9fd8a4; }
+.ah-mode-balance .is-warn { color: #f0b46a; }
+.ah-office-mode-seat { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.ah-office-mode-seat > span { min-width: 8.5em; opacity: .85; }
+@media (max-width: 560px) {
+  .ah-office-mode-gate { margin: 16px auto; padding: 0 12px; }
+  .ah-office-mode-seat > span { min-width: 0; }
+}
+
+/* P5.5 修正：分线摘要竖排、每座位一行 */
+.ah-office-mode-seats { display: flex; flex-direction: column; gap: 6px; }
+.ah-office-mode-seats .ah-mode-balance { flex: 1 0 100%; }
+.ah-office-mode-seat { display: flex; flex-direction: row; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ah-office-mode-seat > span { min-width: 8em; }
+.ah-mode-reason { flex: 1 0 100%; }
+
+/* P5.5 W2：出发准备页并行分屏（左 A / 右 B，竖线分隔；移动端上下） */
+.ah-departure-parallel .ah-departure-split {
+  display: grid; grid-template-columns: 1fr 1fr; align-items: start;
+  margin-top: 12px; border-top: 1px solid var(--ah-line, rgba(255,255,255,.12));
+}
+.ah-departure-lane { min-width: 0; padding: 14px 18px 18px; }
+.ah-departure-lane + .ah-departure-lane { border-left: 1px solid var(--ah-line, rgba(255,255,255,.18)); }
+.ah-departure-lane-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.ah-departure-lane-head h2 { margin: 0; font-size: 22px; }
+.ah-departure-lane .ah-lane-leaders { margin: 8px 0 12px; }
+.ah-departure-lane .ah-departure-team { display: flex; flex-direction: column; gap: 10px; }
+.ah-departure-switch { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+@media (max-width: 720px) {
+  .ah-departure-parallel .ah-departure-split { grid-template-columns: 1fr; }
+  .ah-departure-lane + .ah-departure-lane { border-left: 0; border-top: 1px solid var(--ah-line, rgba(255,255,255,.18)); }
+  .ah-departure-lane { padding: 12px 10px 14px; }
+}
+
+/* P5.5 W2 修订：出发准备两栏对齐、每线关卡名/插图、通用按钮与换位置弹窗 */
+.ah-departure-common { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap;
+  padding: 0 4px 14px; border-bottom: 1px solid var(--ah-line, rgba(255,255,255,.14)); }
+.ah-departure-common-copy h2 { margin: 2px 0 4px; font-size: 26px; }
+.ah-departure-common-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.ah-departure-lane-head { display: grid; grid-template-columns: minmax(0, 1fr) 180px; gap: 14px; align-items: center; }
+.ah-departure-lane-title h2 { margin: 0; font-size: 22px; }
+.ah-departure-lane-scenario { margin: 4px 0 2px; opacity: .92; }
+.ah-departure-lane-art { width: 180px; height: 96px; overflow: hidden; border-radius: 10px; }
+.ah-departure-lane-art > * { width: 100%; height: 100%; object-fit: cover; }
+.ah-lane-team { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: stretch; }
+.ah-lane-team .ah-departure-member { height: 100%; }
+.ah-seat-swap { max-width: 560px; }
+.ah-seat-swap h2 { margin-top: 0; }
+.ah-seat-swap-list { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+.ah-seat-swap-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ah-seat-swap-row > span { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 8em; }
+@media (max-width: 720px) {
+  .ah-departure-lane-head { grid-template-columns: minmax(0, 1fr) 120px; }
+  .ah-departure-lane-art { width: 120px; height: 72px; }
+  .ah-lane-team { grid-template-columns: 1fr; }
+  .ah-departure-common-actions { width: 100%; }
+}
+
+/* P5.5 W2 修订 2：人物卡两列横排、卡内文字动作（设为队长 / 换位置） */
+.ah-departure-lane-leader-line { display: flex; align-items: baseline; gap: 8px; margin: 2px 0 10px; }
+.ah-departure-member-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+.ah-text-action { background: none; border: 0; padding: 0; margin: 0; cursor: pointer; font: inherit;
+  color: var(--ah-gold, #d8b45a); text-decoration: underline; text-underline-offset: 3px; }
+.ah-text-action:hover { color: var(--ah-gold-bright, #f3d07a); }
+.ah-text-action:disabled { opacity: .45; cursor: default; text-decoration: none; }
+.ah-member-role { color: var(--ah-gold, #d8b45a); font-size: 13px; }
+.ah-lane-team { align-items: start; }
+.ah-lane-team .ah-departure-member { display: flex; flex-direction: column; gap: 6px; }
+@media (max-width: 720px) {
+  .ah-lane-team { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* P5.5 W2 修订 2：覆盖旧的单列规则，人物卡真正两列横排 */
+.ah-departure-lane .ah-departure-team.ah-lane-team { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: stretch; }
+@media (max-width: 720px) {
+  .ah-departure-lane .ah-departure-team.ah-lane-team { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* P5.5 W2 修订 3：移动端人物卡改为单列（一排最多 2，窄屏 1 列更可读） */
+@media (max-width: 720px) {
+  .ah-departure-lane .ah-departure-team.ah-lane-team { grid-template-columns: minmax(0, 1fr); }
+}

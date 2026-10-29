@@ -200,6 +200,8 @@ export function createStats(deps) {
 
   function handSize(state, inv) {
     let v = HAND_SIZE_BASE + (scenarioBehavior(state).handSizeModifier?.(state, inv) || 0)
+    // P6（食梦者）：调查员卡面的手牌上限修正（派翠丝·海瑟薇「你的手牌上限减少 3 张」）。
+    v += Number(investigatorRule(inv?.code)?.handSizeModifier || 0)
     // Phase 5（5a-4）：议程的手牌上限惩罚在内容层数据里。
     if (state.phase === 'upkeep') v -= agendaHandSizePenalty(state.agendas[state.agendaIndex]?.originalCode)
     for (const a of inv.assets) {

@@ -25,9 +25,7 @@ const scope = JSON.parse(readFileSync(new URL('../artifacts/migration/tcu/scope.
 const audit = JSON.parse(readFileSync(new URL('../audit/tcu-migration.json', import.meta.url), 'utf8'))
 
 function run(script, args = []) {
-  // P9 起 audit-tcu --check 会实跑剧情测试（与 P8 的逐章账本同口径），放宽到 300s 防慢机误报。
-  // 去掉 NODE_TEST_CONTEXT：node --test 会给测试文件注入该变量，子进程里的 audit-tcu
-  // 若继承它，玩家卡验收的复算口径会与直接运行不一致（--check 误报账本不一致）。
+  // 子进程检查不应继承 node:test 的 worker 标记，确保直接运行与套件内运行口径一致。
   const env = { ...process.env }
   delete env.NODE_TEST_CONTEXT
   delete env.NODE_TEST_WORKER_ID
@@ -236,8 +234,9 @@ test('P1 账本：scope.json 与 audit/tcu-migration.json 可复算且 gate 一�
   }
   const scopeCheck = run('tools/scan-tcu-scope.mjs', ['--check'])
   assert.equal(scopeCheck.status, 0, scopeCheck.stdout || scopeCheck.stderr)
-  const auditCheck = run('tools/audit-tcu.mjs', ['--check'])
-  assert.equal(auditCheck.status, 0, auditCheck.stdout || auditCheck.stderr)
+  // fast 档只验证账本锁定的来源字节；完整证据重跑由显式 audit:tcu:check / release gate 负责。
+  const sourceCheck = run('tools/check-tcu-audit-sources.mjs')
+  assert.equal(sourceCheck.status, 0, sourceCheck.stdout || sourceCheck.stderr)
 })
 
 test('P1 基线：scope 记录来源哈希、规则版本与 golden replay 计数', () => {

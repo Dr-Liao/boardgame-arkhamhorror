@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "playwright + tools/playwright-tde-reporter.mjs",
+  "milestone": "P4",
+  "campaignId": "theDreamEaters",
+  "status": "passed",
+  "specs": [
+    "tests/tde-rules.browser.mjs"
+  ],
+  "screenshotBase": "repo-root",
+  "checks": {
+    "desktopBrowser": true,
+    "mobileBrowser": true
+  },
+  "tests": [
+    {
+      "title": "M4 食梦者卡牌规则链接在desktop端可达并恢复详情焦点",
+      "spec": "tests/tde-rules.browser.mjs",
+      "viewport": "desktop",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "M4 食梦者卡牌规则链接在mobile端可达并恢复详情焦点",
+      "spec": "tests/tde-rules.browser.mjs",
+      "viewport": "mobile",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "M4 食梦者规则目录、搜索与返回在desktop端可用",
+      "spec": "tests/tde-rules.browser.mjs",
+      "viewport": "desktop",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "M4 食梦者规则目录、搜索与返回在mobile端可用",
+      "spec": "tests/tde-rules.browser.mjs",
+      "viewport": "mobile",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "p4-rulebook-desktop",
+      "path": "artifacts/tde-migration/p4-rulebook-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "spec": "tests/tde-rules.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p4-rulebook-mobile",
+      "path": "artifacts/tde-migration/p4-rulebook-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "spec": "tests/tde-rules.browser.mjs",
+      "exists": true
+    }
+  ]
+}

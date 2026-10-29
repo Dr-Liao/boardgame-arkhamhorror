@@ -88,3 +88,10 @@ export function registerContentBundle(additions) {
   bundle = next
   contentRegistry = validated
 }
+
+// 浏览器验收专用：只有 playwright.tde-ui.config.mjs 的 webServer 会设置该环境变量。
+// 默认不注册、不进入玩家可见的战役列表；见 content/browser-demo/dualHub.js 的说明。
+if (typeof process !== 'undefined' && process.env?.ARKHAM_BROWSER_DEMO === 'dualHub') {
+  const { registerDualHubDemo } = await import('./browser-demo/dualHub.js')
+  registerDualHubDemo(registerContentBundle)
+}

@@ -38,7 +38,12 @@ test('N4 开局固定持久牌组，观察者只见本人无序清单，不见�
     const record = state.campaign.investigators[inv.seat]
     assert.ok(record.deck.length >= 33)
     assert.deepEqual(record.deck, [...record.deck].sort())
-    assert.deepEqual([...inv.hand, ...inv.deck].sort(), record.deck)
+    // 开局能力可以把牌移到弃牌堆、牌下、直觉牌库或场上；这些牌仍属于持久牌组。
+    const liveDeck = [
+      ...inv.hand, ...inv.deck, ...(inv.discard || []), ...(inv.beneath || []), ...(inv.hunchDeck || []),
+      ...(inv.assets || []).map(card => card.code), ...(inv.threat || []).map(card => card.code),
+    ]
+    assert.deepEqual(liveDeck.sort(), record.deck)
     assert.equal(record.id, inv.campaignId)
     assert.equal(record.xp, 0)
   }

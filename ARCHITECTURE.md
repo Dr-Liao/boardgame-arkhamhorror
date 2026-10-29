@@ -9,6 +9,11 @@
 - 规则版本：`n6.0`。
 - 存档结构版本：`7`；版本不一致时拒绝静默续算。
 - 内容契约版本：`1`。
+- 内容状态由 `content/schema.js` 定义：`catalog-only` 仅收录；`development` 不可启动；`playable`
+  可在本 Mod 声明的边界内完成流程；`verified` 额外表示迁移确认全部通过。审计报告的
+  `earlyAccess: true` 是 `playable` 的显式例外：允许尚有未完成确认或已登记近似项的内容提前开放；
+  未完成确认保持 `pending`，近似项进入 remaining，且不得宣称规则等价。门禁以
+  `content/migration-confirmation.js` 为准。
 - 《夜之狂热》状态为 `playable`，三关组成可启动战役。
 - 《敦威治遗产》状态为 `playable`，八章组成可从大厅启动的完整战役；规则仍采用本 Mod 的简化实现边界。
 - 《卡尔克萨之路》为 `playable`，沿用敦威治的卡包、章节、资源与验收目录契约；逐卡字面核对仍在迁移账本中跟踪。
@@ -75,7 +80,7 @@ games/arkhamhorror/
 - `resolution.js`：可暂停、可恢复的选择事务；待决选择只允许指定座位回答。
 - `effects.js`：声明式卡牌效果解释。
 - `chaos-bag.js`：混乱袋初始化、抽取、封印、归还与检定生命周期。
-- `ability.js`：**声明式能力层**。卡片只导出描述子（`kind` / `trigger` / `criteria` / `target` / `cost` / `limit` / `resolve`），引擎按窗口枚举、按成本校验、按上限记账；描述子不直接改状态，只通过 `ctx.api` 的窄接口结算。`kind` 共 11 种，其中五个是生命周期钩子（`played`/`commit`/`weakness`/`entersPlay`/`leavesPlay`）。条目另有 `scope`（`card`/`investigator` + 敌人/地点/幕/议程/剧情支援/威胁六种非玩家通道，Phase 3 · D1），非玩家条目由引擎按「场上实体」枚举，数值与布尔规则读 `modifiers.js` 的 `entityModifierTotal`/`entityRuleActive`。
+- `ability.js`：**声明式能力层**。卡片只导出描述子（`kind` / `trigger` / `criteria` / `target` / `cost` / `limit` / `resolve`），引擎按窗口枚举、按成本校验、按上限记账；描述子不直接改状态，只通过 `ctx.api` 的窄接口结算。`kind` 共 12 种：五个生命周期钩子（`played`/`commit`/`weakness`/`entersPlay`/`leavesPlay`）以及独立的开局钩子 `setup` 等。条目 `scope` 以 `ability.js` 的 `ABILITY_SCOPES` 为准：`card`/`investigator`，以及 `enemy`/`location`/`act`/`agenda`/`storyAsset`/`treachery` 六种非玩家通道；威胁区是卡牌所在区域，不是独立 scope。非玩家条目由引擎按「场上实体」枚举，数值与布尔规则读 `modifiers.js` 的 `entityModifierTotal`/`entityRuleActive`。
 - `windows.js`：**时机窗口注册表**。窗口 id、中文标签、`interrupt/reaction/player` 三类语义、以及"每次触发"实例键集中在这里；新增窗口必须同时补调用点与测试。
 - `matcher.js`：目标查询组合子（`all/any/none`、`ownSeat`、`atTrait`、`contextEnemy`，以及打出条件用的 `ownTurn`/`clueAtLocation`/`noEnemiesHere` 等），用于描述子的 `criteria` 与 `playCondition`，替代散落的 filter 链。
 - `targets.js`：**目标枚举（B1）**。描述子声明 `target: { kind, query, optional }` 后，`legalMoves` 按候选展开成逐目标行动，`validateMove` 用同一份枚举校验，`ctx.target` 注入实体；5 种 kind（enemy/investigator/location/asset/cardInHand），query 只能收窄默认范围。
@@ -334,44 +339,25 @@ npm run replay:fixtures:write    # 行为有意变化后重采基线
 8. 临时分析、截图、执行日志和阶段总结写入根目录 `artifacts/`，不回填到运行目录。
 9. 架构演进（重构、加卡、迁移）的决策依据是本文 §3–§8 与 [`docs/arkham-content-migration.md`](docs/arkham-content-migration.md)：本文定义稳态架构条文与演进规矩，内容迁移规范定义六步顺序与阶段判据。
 
-## 9. 演进规矩（重构期摘要）
+## 9. 演进规矩
 
-重构期间的目标形态是"五件唯一"。原重构路线文档已在 2026-10 的重构收尾后删除；现行条文见本文 §3–§8 与
-[`docs/arkham-content-migration.md`](docs/arkham-content-migration.md)，此处只保留不可协商的部分。
+稳态目标只有以下约束：
 
-| # | 唯一 | 目标 |
-| --- | --- | --- |
-| 1 | 行为入口 | 全部走 `src/cards/entries/<code>.js` 的单卡描述子（含生命周期钩子）；`card-abilities.js` 只聚合，不再新增 `EFFECTS` 条目 |
-| 2 | 读点 | 引擎只经 `ability.js` 注册表枚举行为，不读 `EFFECTS` |
-| 3 | 账本 | 一张 `audit/ability-coverage.json` 记录每张卡的通道、证据与缺口 |
-| 4 | 内容分层 | 卡=数据+描述子；关卡=声明式定义+少数钩子；战役=声明式记录 |
-| 5 | 守卫 | CI 冻结卡号集合、`EFFECTS` 键集合与描述子枚举，只减不增 |
+1. 卡牌行为进入对应的单卡条目；聚合文件只做兼容和索引。
+2. 卡牌不得直接修改运行期状态，只通过通用描述子、`ctx.api` 和已登记的效果原语结算。
+3. 引擎不得新增按卡号、关卡名或战役名的行为分支；重复机制先收敛成通用原语。
+4. 规则层不判断席位由真人还是 AI 操作；自动选择与其他托管策略由大厅注入。
+5. 所有状态变化可保存、可重放；简化、近似和 early access 必须进入审计账本。
+6. 新的条目级规则应归入少量有类型的规则组。不得新增以单张卡或角色命名的顶层布尔字段；
+   历史兼容字段只允许减少，并应逐步移入兼容适配层。
 
-硬规矩（细节与反例见路线文档 §3、§7）：
+当前数量、白名单和迁移债务不在本文手工记录。唯一事实源是
+`audit/ability-coverage.json`、`audit/card-entry-compliance.json` 及对应生成器；
+`npm run cards:audit`、`npm run audit:entries` 和 `tests/architecture-guard.test.mjs`
+负责检查指标不倒退。
 
-1. 新增卡牌行为只写单卡描述子（`entries/<code>.js`）；引擎不得按卡号、关卡名或战役名分支。需要新机制时先扩通用能力（`ability.js`/`windows.js`/`matcher.js`/`modifiers.js`/`targets.js`/`play-condition.js`/`effect-state.js`），再写卡。
-2. 内容层不 import 引擎装配点；`engine.js` 是唯一装配点，`modifiers.js` 与 `ability.js` 互不 import。
-3. 描述子在注册时规范化并冻结；运行期数据一律写 `state`，效果只经 `ctx.api` 结算；持续效果一律 `api.addEffect`（`state.effects[]`，纯 JSON）。
-4. 规则层不读"谁在操作这个座位"这类策略；可选反应的自动跳过由大厅注入。
-5. 状态变化必须能由合法动作重放，并在 JSON 存读档后一致；简化与近似实现必须显式标记，不得静默放行。
-
-演进主指标（单调下降，由守卫测试校验）：
-
-| 指标 | 当前 | 目标 |
-| --- | --- | --- |
-| `engine.js` 卡号字面量 | 166（103 个是行为分支） | 0 |
-| `EFFECTS` 行为条目 | 385 | 0 |
-| 卡牌顶层字段 | 69 | ≤10 组 |
-| 战役逃生原语卡 | 93 | 0 |
-| 描述子 `kind` | 11（含 5 个生命周期钩子） | ≤11 |
-| 非玩家卡带 `abilities` 的条目 | 20（敌人 14 / 地点 6；另有 509 条为规则/修正条目） | 逐批 + |
-| `behavior.js` 总行数 | 14,831（Phase 3 基线） | 只减不增 |
-
-这四行由 `npm run cards:audit` 从 `audit/ability-coverage.json` 重算；`tests/architecture-guard.test.mjs`
-在 `fast` tier 里守住白名单与产物同步——新增引擎卡号分支或新 `EFFECTS` 条目会让守卫失败，
-必须先评审再放行。改动指标后运行 `npm run cards:audit:write` 并随迁移一起提交 diff。
-`npm run cards:workorder` 则把 180 个码分成"标识引用 / 数据表 / 行为分支"，避免把文案标签当规则债务。
-
-内容迁移（接新战役、新卡包）还必须满足 [`docs/arkham-content-migration.md`](docs/arkham-content-migration.md) 的确认门槛；两侧口径冲突时，以本文的分层约束为准。
+新增内容的顺序、并行写入边界和发布确认以
+[`docs/arkham-content-migration.md`](docs/arkham-content-migration.md) 为准；能力字段与状态形状以
+[`docs/card-model.md`](docs/card-model.md) 为准。
 
 

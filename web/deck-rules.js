@@ -95,7 +95,12 @@ function investigatorTraits(investigator) {
 }
 
 const KNOWN_RULE_KEYS = new Set(['factions', 'faction', 'level', 'types', 'traits', 'trait', 'uses', 'tag',
-  'atleast', 'error', 'limit', 'not', 'codes', 'investigatorTraits', 'text'])
+  'atleast', 'error', 'limit', 'not', 'codes', 'investigatorTraits', 'text',
+  // P6（食梦者）：第五循环的卡表用 `faction_select` 表示「副职业可选范围」、用 `type`
+  // （单数）表示「只有事件/技能」。两者都翻成同一条允许项（factions + types），
+  // 让 `limit` 的副职业配额（10 张）继续由 validateDeckRules 的容量分配统一执行；
+  // `name` 是展示用标签，不参与匹配。`deck_size_select` / `option_select` 仍按未知键处理。
+  'faction_select', 'type', 'name'])
 // 规则对象（来自冻结的构筑规则，或临时的优惠 match 对象）上的正则/未知键检查缓存。
 const ruleInfoCache = new WeakMap()
 function ruleInfo(rule) {
@@ -136,13 +141,17 @@ export function matchesCardRule(card, rule, investigator) {
     && (card.traits || []).some(trait => lower(trait) === 'fortune')) return false
   const info = ruleInfo(rule)
   if (!info.known) return false
+  // 「牌组张数选择」这类选项不是卡牌许可：它在构筑时由 deckRules.size 表达，这里不匹配任何卡。
+  if (rule.deck_size_select) return false
   if (rule.not && typeof rule.not === 'object' && matchesCardRule(card, rule.not, investigator)) return false
   const cardValues = cardInfo(card)
   if (info.patterns) {
     if (!info.patterns.some(pattern => cardValues.texts.some(text => pattern.test(text)))) return false
   }
-  const allowed = rule.factions || rule.faction
+  const allowed = rule.factions || rule.faction || rule.faction_select
   if (allowed?.length && !allowed.some(faction => cardValues.factions.includes(faction))) return false
+  const allowedTypes = rule.types || rule.type
+  if (allowedTypes?.length && !allowedTypes.includes(card.type)) return false
   if (rule.types?.length && !rule.types.includes(card.type)) return false
   if (rule.codes?.length && !rule.codes.includes(card.code)) return false
   const requiredTraits = rule.traits || rule.trait

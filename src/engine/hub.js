@@ -8,6 +8,8 @@
 
 import { contentRegistry } from '../../content/registered.js'
 import { cardPoolContext } from '../deck/card-pool.js'
+// P5 批次 2：四模式开局（纯策略在 src/campaign/campaign-modes.js）。
+import { assignSeatPart, campaignPartsManifest, laneBalance, modeOptions } from '../campaign/campaign-modes.js'
 
 // Phase 6（6d-29）：contentRegistry 是 `let`（registerContentBundle 会重新赋值），
 // SCENARIOS 是从它派生的表（registerCampaignScenarios 会往里写）。它们必须走 import 的
@@ -236,10 +238,52 @@ function selectInitialHubScenario(state, scenarioId, events) {
   return true
 }
 
+// 声明了 parts 的战役在开局台面先选模式；未声明的战役这些函数返回 null / 空数组，
+// 既有循环的 hub 动作与文案逐字节不变。
+function modeSetupFor(state) {
+  const parts = campaignPartsManifest(campaignManifestFor(state))
+  if (!parts) return null
+  return { parts, options: modeOptions({ playerCount: (state.investigators || []).length, parts }) }
+}
+
+function modeMoves(state) {
+  const setup = modeSetupFor(state)
+  if (!setup) return []
+  return setup.options.map(option => ({
+    action: 'hubSetMode', mode: option.mode, label: option.label,
+    explanation: option.enabled ? option.detail : option.reason,
+    disabled: !option.enabled,
+  }))
+}
+
+function seatPartMoves(state) {
+  const seatParts = state.campaign.seatParts || []
+  const mode = state.campaign.mode === 'parallel' ? 'parallel' : 'pick'
+  const moves = []
+  for (let roomSeat = 0; roomSeat < seatParts.length; roomSeat += 1) {
+    for (const part of ['A', 'B']) {
+      if (seatParts[roomSeat] === part) continue
+      const trial = assignSeatPart({ mode, seatParts, seat: roomSeat, part })
+      moves.push({
+        action: 'hubSetSeatPart', seat: roomSeat, part,
+        label: `座位 ${roomSeat + 1} → ${part} 线`,
+        explanation: trial.ok ? '' : trial.reason,
+        disabled: !trial.ok,
+      })
+    }
+  }
+  return moves
+}
+
 function hubLegalMoves(state, seat = decisionSeat(state)) {
   const CAMPAIGN = campaignFor(state)
   if (state.status !== 'playing' || !actingSeats(state).includes(seat)) return []
-  const record = state.campaign.investigators[seat]
+  // P5 批次 2：非活动线座位的 campaign record 在 parts 快照里；牌组/确认准备等
+  // 动作必须按「座位所属线」取 record，不能只读顶层。
+  const seatPart = state.campaign.seatParts?.[seat]
+  const record = seatPart && seatPart !== state.campaign.currentPart
+    ? state.campaign.parts?.[seatPart]?.investigators?.[seat] || null
+    : state.campaign.investigators[seat]
   const moves = []
   const humans = state.humanSeats || [0]
   const leaderMoves = humans.includes(seat) ? humans.map(leadSeat => ({ action: 'hubSetLeader', leadSeat,
@@ -248,6 +292,20 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
     if (seat !== 0) return []
     moves.push(...HUB_DIFFICULTIES.map(difficulty => ({ action: 'hubSetDifficulty', difficulty,
       label: `难度：${difficulty}` })))
+    // 双线战役：先选模式（未选时只给四个模式 + 队长）；分选给座位改线；
+    // 分选/并行的运行时（lane adapter / 双运行时）在 P5 批次 3 才接通，这里不提供「进入准备」。
+    const partSetup = modeSetupFor(state)
+    if (partSetup && !state.campaign.mode) {
+      moves.push(...modeMoves(state), ...leaderMoves)
+      return moves
+    }
+    // 分选：座位改线与「按线选人/牌组」都开放（每条线各选一次，另一线座位在开局台面
+    // 仍可准备自己的牌组）；真正的关卡运行在 hubBeginScenario 处被批次 3 的 gate 挡住。
+    // 并行：房主只能换 AI 的座位，真人自己的座位由各自客户端换（见 hubReady 分支）。
+    if (partSetup && state.campaign.mode === 'pick') moves.push(...seatPartMoves(state))
+    if (partSetup && state.campaign.mode === 'parallel') {
+      moves.push(...seatPartMoves(state).filter(move => move.seat === seat || !humans.includes(move.seat)))
+    }
     const opening = initialHubScenarioMoves(state)
     moves.push(...(opening.length ? opening.map(({ optionId, ...move }) => move)
       : [{ action: 'hubSelectScenario', scenarioId: CAMPAIGN.scenarioOrder[0], label: '选择第一关' }]))
@@ -258,16 +316,64 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   if (state.uiState === 'scenarioResult') return seat === 0
     ? [{ action: 'hubContinue', label: '查看结算并进入关间准备' }] : []
   if (state.uiState === 'scenarioSetup' && state.hubReady) {
-    return seat === 0 ? [
+    if (seat !== 0) {
+      // 非房主：并行出发准备只开放自己座位的换线，没有开始/队长/重新准备。
+      const own = []
+      if (!state.campaign.scenarioResults.length && ['pick', 'parallel'].includes(state.campaign.mode)) {
+        own.push(...seatPartMoves(state).filter(move => move.seat === seat))
+      }
+      return own
+    }
+    const moves = [
       ...leaderMoves,
       { action: 'hubSelectScenario', scenarioId: CAMPAIGN.scenarioOrder[state.campaign.scenarioIndex], label: '选择当前关卡' },
       ...(!state.campaign.scenarioResults.length
         ? [{ action: 'hubReopenSetup', label: '重新准备调查员与牌组' }] : []),
-      ...(state.campaign.leadConfirmed && humans.includes(state.campaign.leadSeat) ? [{ action: 'hubBeginScenario', label: '开始当前关卡' }] : []),
-    ] : []
+    ]
+    // 并行：首次整备允许房主继续调整分线；人数不等时把「开始」置灰并给原因。
+    if (!state.campaign.scenarioResults.length && state.campaign.mode === 'parallel') {
+      moves.push(...seatPartMoves(state).filter(move => move.seat === 0 || !humans.includes(move.seat)))
+    }
+    // 双线各自选队长（departure 分屏里两个领队各选一次）；单线沿用原队长。
+    if (state.campaign.partLeads && state.campaign.seatParts) {
+      for (const part of ['A', 'B']) {
+        // 双线队长可以是真人也可以是 AI（单线仍要求真人）：队伍里谁领队由玩家选。
+        const laneSeats = state.campaign.seatParts
+          .reduce((out, value, seat) => (value === part ? [...out, seat] : out), [])
+        for (const leadSeat of laneSeats) {
+          moves.push({
+            action: 'hubSetPartLeader', part, leadSeat,
+            label: `${part} 线队长：${state.investigators[leadSeat].name}`,
+            explanation: state.campaign.partLeads[part] === leadSeat ? '当前队长' : '',
+          })
+        }
+      }
+    }
+    const leaderReady = state.campaign.mode === 'parallel'
+      ? ['A', 'B'].every(part => {
+        const lead = state.campaign.partLeads?.[part]
+        return Number.isInteger(lead) && state.campaign.seatParts?.[lead] === part
+      })
+      : state.campaign.leadConfirmed && humans.includes(state.campaign.leadSeat)
+    if (leaderReady) {
+      const begin = { action: 'hubBeginScenario', label: '开始当前关卡' }
+      if (state.campaign.mode === 'parallel') {
+        const balance = laneBalance(state.campaign.seatParts)
+        if (!balance.balanced) {
+          begin.disabled = true
+          begin.explanation = `两线人数必须相等（A ${balance.A} / B ${balance.B}）`
+        }
+      }
+      moves.push(begin)
+    }
+    return moves
   }
   if (state.uiState !== 'scenarioSetup' && state.uiState !== 'interlude') return []
   moves.push(...leaderMoves)
+  // 并行首次整备：每个座位可以改自己的线（房主在 hubReady 分支可改全部）。
+  if (!state.campaign.scenarioResults.length && ['pick', 'parallel'].includes(state.campaign.mode)) {
+    moves.push(...seatPartMoves(state).filter(move => move.seat === seat))
+  }
   if (!record || record.status !== 'active' || initialHubPreparation(state)) {
     moves.push(...hubInvestigatorChoices(state, seat).map(code => ({
       action: 'hubSelectInvestigator', code, label: `选择调查员：${ALL_INVESTIGATORS[code].nameZh || ALL_INVESTIGATORS[code].name}`,

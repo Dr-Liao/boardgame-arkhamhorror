@@ -14,8 +14,8 @@ import {
   swarmCanBeDefeated, swarmCardsOf, swarmCountOf, swarmHostOf,
 } from './swarm.js'
 import {
-  isVeiledLocation, normalizeVeiledScenario, revealVeiledLocation, shuffleVeiledIntoDeck,
-  veiledBlocksInvestigation,
+  canFlipVeiledLocation, flipVeiledLocation, isVeiledLocation, normalizeVeiledScenario,
+  shuffleVeiledIntoDeck, veiledFlipBlockedReason,
 } from './veiled.js'
 import {
   addTokenToBag, createTokenBag, infestedCount, isInfestedLocation, markInfested, clearInfested,
@@ -24,7 +24,8 @@ import {
 import { chainNeighbors, linkVerticalChain, moveAlongChain, orderVerticalChain } from './vertical-chain.js'
 import { bondedPartnerOf, placeBondedLocation, removeBondedLocation } from './bonded-location.js'
 import {
-  addLocationDoom, destroyLocation, locationDoomOf, locationDoomThreshold, totalLocationDoom,
+  addLocationDoom, highestLocationDoom, locationDoomOf, normalizeLocationDoom, removeLocationDoom,
+  totalLocationDoom,
 } from './location-doom.js'
 import { addMarker, markerCountOf, markerSummary, referenceMarkerCount, resetMarkerCount, setMarkerCount } from './marker-count.js'
 
@@ -59,11 +60,12 @@ export function scenarioRuntimeExtras(state) {
       hostOf: enemy => swarmHostOf(state, enemy),
       splitDamage: (host, damage, remainingHealth) => splitSwarmingDamage(host, damage, remainingHealth),
     },
-    // 掩藏地点（未揭示限制 / 翻面 / 洗回）
+    // 掩藏地点（[fast] 翻面 / 洗回；线索是翻面门槛，不是调查门槛）
     veiled: {
       isVeiled: card => isVeiledLocation(card),
-      blocksInvestigation: location => veiledBlocksInvestigation(location),
-      reveal: id => revealVeiledLocation(state, id),
+      canFlip: (location, clues = null) => canFlipVeiledLocation(location, clues),
+      flipBlockedReason: (location, clues = null) => veiledFlipBlockedReason(location, clues),
+      flip: (id, options) => flipVeiledLocation(state, id, options),
       shuffleBack: (id, deckKey = 'encounter') => shuffleVeiledIntoDeck(state, id, deckKey),
       validate: scenario => normalizeVeiledScenario(scenario),
     },
@@ -95,13 +97,14 @@ export function scenarioRuntimeExtras(state) {
       partnerOf: locationId => bondedPartnerOf(state, locationId),
       remove: locationId => removeBondedLocation(state, locationId),
     },
-    // 地点毁灭（大网堆叠）
+    // 地点上的毁灭（大网堆叠；不是「毁灭地点」）
     locationDoom: {
       get: location => locationDoomOf(location),
-      threshold: location => locationDoomThreshold(location),
       add: (location, delta = 1) => addLocationDoom(location, delta),
-      destroy: (locationId, options) => destroyLocation(state, locationId, options),
+      remove: (location, amount = 1) => removeLocationDoom(location, amount),
       total: () => totalLocationDoom(state),
+      highest: () => highestLocationDoom(state),
+      validate: locations => normalizeLocationDoom(locations),
     },
     // 剧本参考卡计数（神迹 / 参考卡 X）
     markers: {

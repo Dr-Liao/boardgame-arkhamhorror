@@ -367,3 +367,48 @@ export function createPartsState({ mode = 'pick', seatParts, activeParts, curren
     parts: {},
   }
 }
+
+// ---------------------------------------------------------------------------
+// 观察投影：非活动线快照脱敏（P5 批次 1）
+// ---------------------------------------------------------------------------
+
+/**
+ * 把 `campaign.parts` 里的非活动线快照压成公开摘要：
+ *   · 记录、经验、创伤、胜利、混乱袋属于战役日志，公开保留；
+ *   · 牌组 / 购入 / 移除 / 升级草稿 / 故事段落正文一律不投影（只给张数与段数），
+ *     避免另一条线的未到达分支与牌库顺序泄露；
+ *   · 调查员只给身份、状态与牌组张数。
+ * 未声明 parts 的战役原样返回（不写 `partsRedacted`，状态与旧投影逐字节一致）。
+ */
+export function partScopedView(view) {
+  if (!view || !view.parts || typeof view.parts !== 'object') return view
+  const parts = {}
+  for (const part of PARTS) {
+    const snapshot = view.parts[part]
+    if (!snapshot || typeof snapshot !== 'object') continue
+    const investigators = Object.values(snapshot.investigators || {}).map(record => ({
+      id: record.id ?? null,
+      seat: record.seat ?? null,
+      code: record.code ?? null,
+      name: record.name ?? null,
+      status: record.status ?? null,
+      deckSize: Array.isArray(record.deck) ? record.deck.length : 0,
+      xp: record.xp ?? 0,
+    })).sort((left, right) => (left.seat ?? 0) - (right.seat ?? 0))
+    parts[part] = {
+      records: clone(snapshot.records || {}),
+      investigators,
+      retired: clone((snapshot.retired || []).map(record => ({
+        seat: record.seat ?? null, code: record.code ?? null, name: record.name ?? null, status: record.status ?? null,
+      }))),
+      trauma: clone(snapshot.trauma || {}),
+      xp: snapshot.xp ?? 0,
+      victory: snapshot.victory ?? 0,
+      chaosBag: clone(snapshot.chaosBag || []),
+      storySectionCount: Object.keys(snapshot.storySections || {}).length,
+    }
+  }
+  view.parts = parts
+  view.partsRedacted = true
+  return view
+}

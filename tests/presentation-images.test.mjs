@@ -265,10 +265,11 @@ test('特殊打印面与关联面编号取自数据，不按卡号加 b', () => 
 test('实现状态与可用性取值与目录一致，展示层有对应中文标签', () => {
   const effects = new Set(), availabilities = new Set()
   for (const card of Object.values(ALL_CARDS)) { effects.add(card.effectStatus); availabilities.add(card.availability) }
-  // unverified：遗忘时代有实现但还没进入验收清单的遭遇牌（04147 等），仍要有中文标签。
-  assert.deepEqual([...effects].sort(), ['unimplemented', 'unverified', 'verified'])
+  // 当前目录中的卡均已至少登记实现入口；未进逐卡验收清单的仍保持 unverified。
+  assert.deepEqual([...effects].sort(), ['unverified', 'verified'])
   assert.deepEqual([...availabilities].sort(), ['catalog-only', 'strict'])
-  for (const value of effects) assert.ok(EFFECT_LABELS[value], value)
+  // unimplemented 当前没有实例，但展示层仍须保留标签，供后续导入或回退状态使用。
+  for (const value of ['unimplemented', ...effects]) assert.ok(EFFECT_LABELS[value], value)
   for (const value of availabilities) assert.ok(AVAILABILITY_LABELS[value], value)
 })
 

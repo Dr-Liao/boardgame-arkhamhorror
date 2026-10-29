@@ -1754,8 +1754,8 @@
       "path": "content/packs/tdeInvestigators/manifest.js",
       "kind": "repo",
       "exists": true,
-      "bytes": 2922,
-      "sha256": "2ba2bc9f314914f1a04fca1fab23ff0523bf54cf3b6c517612a1b234a0b0e374"
+      "bytes": 3033,
+      "sha256": "86aa6cd768ae87f031fd49ebda71246cbb5994f479e370aef826a56c6fce94ce"
     },
     {
       "path": "content/packs/tdePlayer/manifest.js",
@@ -1789,7 +1789,7 @@
     "replayBeforeIdsMatch": true,
     "replayBeforeHashesMatch": true,
     "git": {
-      "head": "6f60771a53f00ff335d4ab0df30253bf21b97376",
+      "head": "5faa702b31bae3e4fc34fbd261c5b35b606a5f19",
       "note": "提交会变，基线提交另存 artifacts/migration/tde/reports/baseline-git-head.txt；本账本不把 gitHead 纳入比对"
     }
   },

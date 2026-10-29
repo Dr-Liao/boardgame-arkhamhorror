@@ -41,7 +41,33 @@ function checkpointEvents(events) {
 /** Capture the first authoritative, interactive state after a scenario starts. */
 export function createSessionCheckpoint(session, receipt) {
   const state = receipt?.after
-  if (receipt?.move?.action !== 'hubBeginScenario' || state?.uiState !== 'inScenario' || !state.scenario?.id) return null
+  if (receipt?.move?.action !== 'hubBeginScenario') return null
+  // 并行双线：容器没有 scenario，检查点要同时覆盖两条线。
+  const lanes = state?.parallel?.lanes
+  if (lanes?.A?.scenario?.id && lanes?.B?.scenario?.id && state.uiState === 'inScenario') {
+    const visitId = `parallel:${lanes.A.scenario.id}:${lanes.B.scenario.id}:` +
+      `${lanes.A.campaign?.scenarioIndex ?? 0}:${lanes.B.campaign?.scenarioIndex ?? 0}`
+    if (session.scenarioCheckpoints?.some(item => item.visitId === visitId)) return null
+    return {
+      schemaVersion: CHECKPOINT_SCHEMA_VERSION,
+      checkpointId: `scenario:${state.campaign.id}:${visitId}`,
+      campaignId: state.campaign.id,
+      scenarioId: `${lanes.A.scenario.id}|${lanes.B.scenario.id}`,
+      scenarioName: `${lanes.A.scenario.name || lanes.A.scenario.id} / ${lanes.B.scenario.name || lanes.B.scenario.id}`,
+      flowNodeId: lanes.A.campaign?.flow?.nodeId ?? null,
+      visitNumber: (lanes.A.campaign?.scenarioIndex ?? 0) + 1,
+      visitId,
+      createdAt: new Date().toISOString(),
+      sourceRevision: state.revision,
+      snapshot: {
+        state: structuredClone(state),
+        events: checkpointEvents(session.events),
+        notes: structuredClone(session.notes || []),
+        agentPlans: structuredClone(session.agentPlans || {}),
+      },
+    }
+  }
+  if (state?.uiState !== 'inScenario' || !state.scenario?.id) return null
   const visit = visitDetails(state)
   if (!visit.nodeId || session.scenarioCheckpoints?.some(item => item.visitId === visit.visitId)) return null
   return {
@@ -65,7 +91,10 @@ export function createSessionCheckpoint(session, receipt) {
 }
 
 export function checkpointView(session, observerSeat) {
-  const isLeader = Number.isInteger(observerSeat) && observerSeat === session.state.campaign?.leadSeat
+  const campaign = session.state.campaign || {}
+  const leaderSeats = [campaign.leadSeat, campaign.partLeads?.A, campaign.partLeads?.B]
+    .filter(seat => Number.isInteger(seat))
+  const isLeader = Number.isInteger(observerSeat) && leaderSeats.includes(observerSeat)
   // 「允许回档」是开局固定的对局规则：关掉后仍保留检查点摘要，但不能创建分支存档。
   const rollbackAllowed = session.state?.allowRollback !== false
   return (session.scenarioCheckpoints || []).map(item => ({
@@ -123,7 +152,10 @@ export function forkSessionCheckpoint(session, checkpointId, { sessionId, revisi
   if (session.state?.allowRollback === false) {
     throw Object.assign(new Error('本局已关闭回档，不能从关卡检查点重新开始'), { statusCode: 403, code: 'ROLLBACK_DISABLED' })
   }
-  if (!Number.isInteger(seat) || seat !== session.state.campaign?.leadSeat) {
+  const campaign = session.state.campaign || {}
+  const leaderSeats = [campaign.leadSeat, campaign.partLeads?.A, campaign.partLeads?.B]
+    .filter(value => Number.isInteger(value))
+  if (!Number.isInteger(seat) || !leaderSeats.includes(seat)) {
     throw Object.assign(new Error('只有当前队长可以从纪要重新开始关卡'), { statusCode: 403, code: 'LEADER_REQUIRED' })
   }
   const index = (session.scenarioCheckpoints || []).findIndex(item => item.checkpointId === checkpointId)

@@ -1,6 +1,6 @@
 {
  "catalog": {
-  "resourceVersion": "344932528f269c88b6271defbdbddf4603de6390b78022b11cb31b4e8ea74cd9",
+  "resourceVersion": "e819bad1a15351de3b269a6f61dc2a3e6d283f726546530ecab713dd62050e25",
   "schemaVersion": 2,
   "total": 5930
  },
@@ -122,43 +122,43 @@
   },
   {
    "path": "games/arkhamhorror/web/images.js",
-   "sha256": "c55c4955527c69a7a6874325984f3d7d8308a4fd7f3004f1bc26573b17354631"
+   "sha256": "cf2cb72c4631a9cb4cbe896bc9668119e8aa6b0c9b406342c9e9d1caf678e868"
   },
   {
    "path": "games/arkhamhorror/web/catalog.js",
-   "sha256": "f67162f11f93beec6af8637b923a7d8b8e10da8c11793e2423da01eef956b7ee"
+   "sha256": "0e7a1c83a530a598402ab8ca90a218cef461fc156878e05f8bbf0ef5c50ecdce"
   },
   {
    "path": "games/arkhamhorror/web/game-ui.js",
-   "sha256": "a09d7b2ec80c65e5d645091338150dca77522cc7085ff4533060daa95cfcb2c9"
+   "sha256": "4fab41c3951286ef5ffafb58f7a2315ac9bab67253d32fb56cae602753b9bd99"
   },
   {
    "path": "games/arkhamhorror/web/hub.js",
-   "sha256": "37220d8fac9da909dbd22bea803d4a0fd5f4c4dd0286edaa41814498ab570de6"
+   "sha256": "3fcee4d0230ffbcb25a1d7b9c77bf891719b63d72886ef48f3c1789ef777f6b4"
   },
   {
    "path": "games/arkhamhorror/web/hub-office.css",
-   "sha256": "d5eb3359e4d859a6ef30ec119d64543728afd67e793cae177aa962be7cfdf1fa"
+   "sha256": "cd3c7dd601a74c12c3e53ce04cb3dd1eae1ae6ee0e70805254ec11cc12dc9c50"
   },
   {
    "path": "games/arkhamhorror/web/table-art.js",
-   "sha256": "ba658c38c594cfc7d2ea6e6a7e3af0e1f9646b61699a06174aaf248db9f72dcb"
+   "sha256": "3180a07ed792732471fa5a5554532320a64127d02ac522b936b2712032e54bee"
   },
   {
    "path": "games/arkhamhorror/web/table-regions.js",
-   "sha256": "c2c267564a70f68d39c4f39245a11cc2573a5432571e2156af7ae36134e4ab8f"
+   "sha256": "c564d08605d90db53ec1bbf18151a6ac49c0b49eb6997e7702874fe7438e99a2"
   },
   {
    "path": "games/arkhamhorror/web/table-components.js",
-   "sha256": "8bb9757e86eb7a517d9003171fc824b5f8410c2b2590b1621989ec99252a029d"
+   "sha256": "aa5205ccf4b1cce5449bac7b3eefde1a20663a1b8aa3c670adfea99ca6363605"
   },
   {
    "path": "games/arkhamhorror/web/table-presentation.js",
-   "sha256": "e3d5e8fc92f2e36413dee9aca48acd0d46cac1e3c96e71b00a3a717cfafc36a9"
+   "sha256": "ccae3386a88b72913850cd6ed731f1e47b0c4d99c3c4c25a24fd0d979b70b6f9"
   },
   {
    "path": "games/arkhamhorror/web/noir.css",
-   "sha256": "0ff11dba08f0bea09410fa80dd5cf19e9dfd3ddc7a743649e63835c012e81258"
+   "sha256": "ff72012b8e04d3386fcfca7acca787029b29f240cb6afe3968a4e7d188e6793e"
   },
   {
    "path": "games/arkhamhorror/web/story-book.css",
@@ -170,19 +170,19 @@
   },
   {
    "path": "games/arkhamhorror/web/card-interactions.js",
-   "sha256": "ae34b9477fd6b2e06f5e09317c6137d853a6835af359bcd8e9496fc25719fada"
+   "sha256": "4d30984d13254e83de79540cc4e53d514a89f56e6c64670b63b8dfb1917fff5e"
   },
   {
    "path": "games/arkhamhorror/web/card-interactions.css",
-   "sha256": "2bb473a9cee533f1dfd6488bab71c0b93a4edb301926ce3bbcf19751da541a6b"
+   "sha256": "89ac4214cb0e8fd0183bbd5ce641b6bd4ba83971feed32434e0856e5fc414d22"
   },
   {
    "path": "games/arkhamhorror/web/supply-picker.js",
-   "sha256": "2bb302c10ef70f0d4dfed9664b2723b26d874726019caf21dedf61b20b0e1bf1"
+   "sha256": "2b7b0ff2a0c841cd6ff9a6e7b5575ab7ee7cd24b10b70a9ca227a68c3efaecf2"
   },
   {
    "path": "games/arkhamhorror/web/table-surface.css",
-   "sha256": "e408b2d0c531276708c303add483cbb6193d415a43b890cdbd16c04c04f687df"
+   "sha256": "5a2f8ce2577bf1f9664700af351f9adb45d54a1fb5e5784c483c031835751789"
   },
   {
    "path": "games/arkhamhorror/web/map-layout.js",
@@ -297,7 +297,7 @@
   }
  },
  "phase": "N2",
- "presentationVersion": "1f7fb9448c7038f5c2dffe3b78175945d8bd1049e873582373b8ac310b42e1ad",
+ "presentationVersion": "3c47ae48946339469da4b971b07ae27a42f782ae22b71441232f7f95fd3ece81",
  "samples": [
   {
    "code": "01001",

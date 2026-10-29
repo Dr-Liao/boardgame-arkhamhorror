@@ -94,6 +94,15 @@ define('scenarioStarts', '冒险开始时', 'reaction', 64)
 define('enemyEngaged', '与敌人交战后', 'reaction', 65)
 // 「被击败时」的强制效果（黑山羊眷族的临死反噬）在敌人离场后、剧本结算/胜利区之前开窗。
 define('enemyDefeated', '敌人被击败时', 'reaction', 39)
+// P6（食梦者）：你控制的支援被击败时（伤害/恐惧达到其上限）。
+// 调用点：src/engine/asset-defeat.js 的 checkAssetDefeated（applyHarm 与「移动伤害」共用同一判定）。
+// 上下文带 asset/assetCode/damage/horror 与 `shuffledIntoDeck` 去向标记。
+define('assetDefeated', '你控制的支援被击败时', 'reaction', 39)
+// P6（食梦者）：调查员将要查找牌库/遭遇牌库之前（曼蒂·汤普森「额外查找 3 张或多结算 1 个目标」）。
+// 调用点：src/engine/deck-ops.js 的 lookAt / searchDeck。
+// 注：「被找到的那张牌自己」的规则不是窗口（牌还在牌库里，描述子枚举看不到它），
+// 走条目级声明 `searchedCardRule`，读点同在 deck-ops.js。
+define('searchWouldResolve', '查找牌库之前', 'reaction', 42)
 // 「你所在地点有调查员/盟友/敌人被击败后」（04026 彩饰骷髅）。
 define('defeatAtLocation', '本地点有卡牌被击败后', 'reaction', 40)
 // 回合结束时按敌人逐个开窗（坚韧的黑山羊幼崽「治愈 2 点伤害」）。

@@ -125,7 +125,27 @@ function upkeepPhase(state) {
       else { leaveAsset(state, inv, asset); inv.discard.push(asset.code) }
     }
     if (!scenarioBehavior(state).skipUpkeepIncome?.(state, inv)) {
-      const texts = scenarioBehavior(state).skipUpkeepDraw?.(state, inv) ? [] : drawCards(state, inv, 1, events)
+      // P6（食梦者 · 派翠丝·海瑟薇）：补给阶段的抽牌可以整段替换——
+      //   `investigatorRule(code).upkeepDraw = { discardNonWeakness: true, handSize: 5 }`
+      // 对应卡面「不抽取 1 张卡牌，改为弃掉手牌中的全部非弱点卡牌，抽到你有 5 张手牌」。
+      const upkeepDraw = investigatorRule(inv.code)?.upkeepDraw
+      let drawTexts = []
+      if (upkeepDraw && !investigatorTextBlanked(state, inv)) {
+        const keep = (inv.hand || []).filter(code => isWeaknessCode(code))
+        const discarded = (inv.hand || []).filter(code => !isWeaknessCode(code))
+        inv.hand = keep
+        if (discarded.length) {
+          inv.discard.push(...discarded)
+          info(state, events, `${inv.name} 弃掉手牌中的 ${discarded.length} 张非弱点卡牌（补给阶段替换抽牌）。`)
+        }
+        const target = Math.max(0, Number(upkeepDraw.handSize) || 0)
+        drawTexts = drawCards(state, inv, Math.max(0, target - (inv.hand || []).length), events)
+      } else if (scenarioBehavior(state).skipUpkeepDraw?.(state, inv)) {
+        drawTexts = []
+      } else {
+        drawTexts = drawCards(state, inv, 1, events)
+      }
+      const texts = drawTexts
       for (const t of texts) info(state, events, t, { kind: 'automatic', phase: 'upkeep', round: state.round, text: t, effect: 'draw', seat: inv.seat, location: inv.location })
       const supply = !investigatorTextBlanked(state, inv) ? investigatorRule(inv.code)?.upkeepResources || 1 : 1
       const darkHorseAsset = inv.assets.find(asset => assetEffect(inv, asset)?.passive?.darkHorse)

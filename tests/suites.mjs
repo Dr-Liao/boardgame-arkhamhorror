@@ -194,6 +194,16 @@ export const FAST_TESTS = Object.freeze([
   'tde-primitives-myriad.test.mjs', // 食梦者 P3 批次 3：多重构筑限制
   'tde-primitives-location-doom.test.mjs', // 食梦者 P3 批次 3：地点毁灭
   'tde-primitives-marker-count.test.mjs', // 食梦者 P3 批次 3：剧本参考卡计数
+  'tde-rules.test.mjs', // 食梦者 P4：关键词 5 项 + 规则书 17 条 + 卡文直达（388 张）
+  'tde-modes.test.mjs', // 食梦者 P5 批次 1：开局四模式的可用性/默认分线/改线校验
+  'tde-dual-flow.test.mjs', // 食梦者 P5 批次 1：16 种章对先手、partGate、双线条件与投影脱敏
+  'tde-hub-modes.test.mjs', // 食梦者 P5 批次 2：hub 四模式、座位分线、按线准备与批次 3 gate
+  'tde-lane-adapter.test.mjs', // 食梦者 P5 批次 3：roomSeat↔laneSeat 边界、待决选择/事件转换
+  'tde-dual-runtime.test.mjs', // 食梦者 P5 批次 3：双运行时容器（双版本/屏障/单文件存档）
+  'tde-lane-runtime.test.mjs', // 食梦者 P5 批次 3：关卡运行时重建（laneSeat）与大厅边界转换
+  'tde-parallel.test.mjs', // 食梦者 P5 批次 3：并行双运行时管线（container/路由/投影/存档/屏障）
+  'tde-mode-panel.test.mjs', // 食梦者 P5 批次 3：开局模式面板模型（模式/置灰原因/座位分线）
+  'tde-investigators.test.mjs', // 食梦者 P6：五位调查员 + 11 张专属卡 + 13 条记录的逐人验收
   'debug-engine.test.mjs', // 调试控制台：引擎 debug move 校验/执行/重放（7 种指令）
   'debug-console.test.mjs', // 调试控制台：服务端命令解析器 + Mod 钩子（中文指令/别名/名称匹配）
 ])

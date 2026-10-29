@@ -22,6 +22,9 @@ export function createDeckOps(deps) {
     describeLook,
     describeSearch,
     discardLocked,
+    // P6（食梦者）：被查找到的那张牌自己的规则（searchedCardRule）需要这两个读点。
+    discoverClueAt,
+    drawEncounter,
     findZoneCard,
     info,
     isThreatWeakness,
@@ -45,9 +48,12 @@ export function createDeckOps(deps) {
     weaknessProfile,
   } = deps
 
-function lookZoneAdapter(state, seat, zone, targetSeat = null) {
+function lookZoneAdapter(state, seat, zone, targetSeat = null, count = 3) {
   const inv = state.investigators[seat]
-  const readArray = array => array.slice(-3).reverse()
+  // P6（食梦者）：看牌张数不再固定 3——曼蒂·汤普森可以让一次查找多 3 张，
+  // 旧实现在适配器里写死 slice(-3)，多出来的张数会被静默丢掉。
+  const take = Math.max(1, Number(count) || 3)
+  const readArray = array => array.slice(-take).reverse()
   const adapter = (getArray, setArray) => ({
     pile: readArray(getArray()),
     detach: count => {
@@ -86,23 +92,114 @@ function lookZoneAdapter(state, seat, zone, targetSeat = null) {
 
 // 看牌：默认「看 N 张、洗回」；choose>0 时把选中的牌放进手牌（检索语义）。
 
+// P6（食梦者）查找牌库的两道读点（deck-ops 是「查找」的唯一实现）：
+//   · 窗口 searchWouldResolve：查找开始之前。曼蒂·汤普森「该调查员可以额外查找 3 张卡牌，或者
+//     该次查找多结算 1 个目标」——能力写 context.extraCards / context.extraTargets。
+//   · 条目级 searchedCardRule：本次查找的牌确定之后，「被找到的那张牌自己」的规则
+//     （神秘证据 reveal/take、惊人的发现 discard + cancelSearch）。牌还在牌库里，所以不是窗口。
+// 两者只对「正在查找牌库/遭遇牌库」的座位生效。
+function searchExplain(zone) {
+  return zone === 'encounterDeck' ? '遭遇牌库' : '牌库'
+}
+
+function searchWouldResolve(state, inv, zone, count, choose, source, events) {
+  if (!reactionWindow) return { count, choose }
+  const context = reactionWindow(state, 'searchWouldResolve', {
+    when: 'searchWouldResolve',
+    seat: inv?.seat ?? null,
+    location: inv?.location ?? null,
+    zone,
+    count,
+    choose,
+    source: source || null,
+    extraCards: 0,
+    extraTargets: 0,
+    prompt: `${inv?.name || '调查员'} 将要查找${searchExplain(zone)}`,
+  }, events) || {}
+  return {
+    count: Math.max(0, count + (Number(context.extraCards) || 0)),
+    choose: Math.max(0, choose + (Number(context.extraTargets) || 0)),
+  }
+}
+function searchedCardsWindow(state, inv, zoneAdapter, codes, events) {
+  // P6（食梦者）：查找的牌确定后，「被找到的那张牌自己」的效果由条目上的声明式规则
+  // `searchedCardRule` 表达——因为它还在牌库里，引擎的能力源枚举（手牌/场上/调查员）
+  // 看不到它，用反应描述子会永远不触发。规则形状：
+  //   { mode: 'reaction' | 'forced', label, take?, discard?, cancelSearch?, drawEncounter?, discoverClue? }
+  // 读点只有这里；未知字段直接忽略（注册期已由 ability.js 校验）。
+  let pile = [...codes]
+  let cancelled = false
+  const owner = zoneAdapter?.owner || null
+  const removeFromDeck = code => {
+    if (!owner?.deck) return
+    const index = owner.deck.lastIndexOf(code)
+    if (index >= 0) owner.deck.splice(index, 1)
+  }
+  const take = code => {
+    pile = pile.filter(item => item !== code)
+    removeFromDeck(code)
+    if (owner) owner.hand.push(code)
+    else state.encounterDeck.push(code)
+  }
+  const discard = code => {
+    pile = pile.filter(item => item !== code)
+    removeFromDeck(code)
+    if (owner) owner.discard.push(code)
+    else state.encounterDiscard.push(code)
+  }
+  for (const code of [...codes]) {
+    const rule = registeredEntry(code)?.searchedCardRule
+    if (!rule || !pile.includes(code)) continue
+    const apply = () => {
+      if (rule.take) take(code)
+      if (rule.discard) discard(code)
+      if (rule.cancelSearch) cancelled = true
+      if (rule.discoverClue && inv) discoverClueAt(state, inv, Number(rule.discoverClue) || 0, events)
+      if (rule.drawEncounter && inv) drawEncounter(state, inv, events)
+      info(state, events, `「${cardName(code)}」：${rule.label || '查找效果'}`)
+    }
+    if (rule.mode === 'forced') { apply(); continue }
+    const answer = requestChoice(state, {
+      kind: 'reaction', source: code, seat: inv?.seat ?? state.currentSeat, canSkip: true,
+      prompt: rule.prompt || `查找的牌中有「${cardName(code)}」：是否结算？`,
+      options: [{ id: 'skip', label: '不结算' }, { id: 'trigger', label: '结算' }],
+    })
+    if (answer === 'trigger') apply()
+  }
+  return { pile, cancel: cancelled }
+}
+
 function lookAt(state, seat, rawOptions, events) {
   const inv = state.investigators[seat]
   const options = rawOptions?.zone ? rawOptions : normalizeLookOptions(rawOptions)
-  const zone = lookZoneAdapter(state, seat, options.zone, options.targetSeat)
+  // P6（食梦者）：查找之前的窗口可以要求「额外查找 N 张 / 多结算 1 个目标」。
+  // 先开窗口再建适配器：额外张数必须真的从牌库顶取出，而不是被适配器截断。
+  const windowed = searchWouldResolve(state, inv, options.zone, options.count, options.choose, options.source, events)
+  const zone = lookZoneAdapter(state, seat, options.zone, options.targetSeat, Math.max(options.count, windowed.count))
   if (!zone || !zone.pile.length) {
     info(state, events, `${inv?.name || '调查员'} 查看的牌库是空的。`)
     return []
   }
-  const count = Math.min(options.count, zone.pile.length)
+  const count = Math.min(windowed.count, zone.pile.length)
   let pile = zone.pile.slice(0, count)
   const label = describeLook({ ...options, count })
   info(state, events, `👁 ${inv?.name || '调查员'}：${label}。`)
   // 先把看过的牌整体摘出来，之后的「拿走/放回」都不会和原区域里的副本打架。
   zone.detach(count)
+  // P6（食梦者）：查找的牌确定后，「被找到的那张牌自己」的规则（揭示抽走 / 弃掉 / 取消这次查找）。
+  const revealed = searchedCardsWindow(state, inv, zone, pile, events)
+  pile = revealed.pile
+  if (revealed.cancel) {
+    zone.attach(pile, 'top')
+    if (options.zone === 'encounterDeck') state.encounterDeck = shuffle(state.encounterDeck, () => randomValue(state))
+    else if (options.zone === 'explorationDeck') state.explorationDeck = shuffle(state.explorationDeck, () => randomValue(state))
+    else if (zone.owner) zone.owner.deck = shuffle(zone.owner.deck, () => randomValue(state))
+    info(state, events, `${inv?.name || '调查员'} 的这次查找被取消，牌库已洗回。`)
+    return []
+  }
 
   const taken = []
-  for (let i = 0; i < options.choose && pile.length; i++) {
+  for (let i = 0; i < windowed.choose && pile.length; i++) {
     const selectable = pile.filter(code => {
       if (!options.filter) return true
       const def = cardDef(code)
@@ -244,13 +341,23 @@ function searchDeck(state, seat, rawOptions, events) {
     if (options.shuffle) inv.deck = shuffle(inv.deck, () => randomValue(state))
     return []
   }
+  // P6（食梦者）：整库检索同样开查找窗口（「多结算 1 个目标」用 choose+1；
+  // 「取消这次查找」把牌库洗回；「揭示抽走」把那张直接加入手牌）。
+  const windowed = searchWouldResolve(state, inv, 'investigatorDeck', matches.length, options.choose, options.source, events)
+  const revealed = searchedCardsWindow(state, inv, { owner: inv }, matches.filter(code => inv.deck.includes(code)), events)
+  if (revealed.cancel) {
+    inv.deck = shuffle(inv.deck, () => randomValue(state))
+    info(state, events, `${inv.name} 的这次检索被取消，牌库已洗回。`)
+    return []
+  }
+  const searched = revealed.pile.filter(code => inv.deck.includes(code))
   const taken = []
-  for (let i = 0; i < options.choose && matches.length; i++) {
-    const selectable = matches.filter(code => inv.deck.includes(code) && !taken.includes(code))
+  for (let i = 0; i < windowed.choose && searched.length; i++) {
+    const selectable = searched.filter(code => inv.deck.includes(code) && !taken.includes(code))
     if (!selectable.length) break
     const answer = requestChoice(state, {
       kind: 'search', source: options.source || 'searchDeck', seat, canSkip: options.optional,
-      prompt: options.prompt || `${describeSearch({ ...options, choose: options.choose - i })}：选择 1 张加入手牌。`,
+      prompt: options.prompt || `${describeSearch({ ...options, choose: windowed.choose - i })}：选择 1 张加入手牌。`,
       options: [...(options.optional ? [{ id: 'skip', label: '不拿取' }] : []),
         ...selectable.map((code, index) => ({ id: String(index), cardCode: code, label: cardName(code) }))],
     })

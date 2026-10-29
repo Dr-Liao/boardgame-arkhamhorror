@@ -2,6 +2,8 @@
 // This module does not turn catalog entries into playable cards or scenarios.
 import { missingMechanics } from './mechanics.js'
 export const CONTENT_SCHEMA_VERSION = 1
+// earlyAccess 不是第五种内容状态：它只存在于迁移审计报告中，作为 playable 在确认未全部
+// verified 时的显式例外；门禁见 migration-confirmation.js。
 export const CONTENT_STATUSES = Object.freeze(['catalog-only', 'development', 'playable', 'verified'])
 export const UI_STATES = Object.freeze([
   'campaignHub', 'scenarioSetup', 'inScenario', 'scenarioResult', 'interlude', 'campaignResult',

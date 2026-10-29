@@ -19,6 +19,7 @@ import { playedEffect } from '../engine/lifecycle.js'
 import {
   CORE_INVESTIGATOR_CODES, SIMPLIFIED_PLAYER_CARD_CODES, PLAYER_CARD_CODES,
   PLAYABLE_INVESTIGATOR_CODES,
+  SELECTABLE_INVESTIGATOR_CODES,
   SIGNATURE_CARD_CODES_BY_INVESTIGATOR, BASIC_WEAKNESS_CODES, ALL_BASIC_WEAKNESS_CODES,
   TCU_PLAYER_BUILDABLE_CODES,
   canSelectInvestigator, isCardAvailable,
@@ -427,7 +428,7 @@ export function expandedPlayablePool() { return EXPANDED_PLAYER_CARD_CODES.map(e
 // 给前端「卡组构筑界面」的静态元数据（纯 JSON，经 catalog 下发）。
 export function deckBuilderData() {
   const pool = expandedPlayablePool()
-  const investigators = PLAYABLE_INVESTIGATOR_CODES.map((code) => {
+  const investigators = SELECTABLE_INVESTIGATOR_CODES.map((code) => {
     const inv = INVESTIGATORS[code]
     validateInvestigator(inv)
     signatureAndWeaknesses(inv, () => 0)

@@ -1,10 +1,9 @@
-# 卡牌模型 v1（重构路线 §10 第 2 项）
+# 卡牌模型 v1
 
-> 日期：2026-02。这是**模型规格**，不是实现说明：它定义"一张卡的行为可以写成什么"，
-> 后续迁移（Phase 1/2/5）按它写，注册表按它校验。
+> 这是**模型规格**，不是阶段报告：它定义“一张卡的行为可以写成什么”，注册表按它校验。
 > 稳态架构见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md)，内容迁移流程见
 > [`arkham-content-migration.md`](arkham-content-migration.md)，
-> Phase 2 八项原语的读点契约见 [`../ARCHITECTURE.md`](../ARCHITECTURE.md) §3.2–§3.3。
+> 开发命令见 [`card-entry-files.md`](card-entry-files.md)。
 
 ---
 
@@ -48,6 +47,11 @@
 }
 ```
 
+上面是新代码使用的核心形状。`ability.js` 的 `ENTRY_KEYS` 还列有迁移期遗留的扁平规则字段，其中部分只服务
+单张旧卡；它们是兼容读点，不是新增内容的扩展目录。新机制必须优先进入已有的
+`abilities` / `modifiers` / `playCondition` 或少量有类型的规则组，不得再增加以卡名、角色名命名的顶层布尔字段。
+遗留字段的数量与清理进度由 `audit/card-entry-compliance.json` 跟踪。
+
 使用次数元数据三件套（`uses` / `usesType` / `discardWhenEmpty`）是**条目级**字段，
 读点只有三处：`newPlayerAssetInstance`（实例初始化）、`assetEffect`（补充弹药、充能耗尽、
 界面文字）与 `executeDescriptor`（用完即弃）。旧 DSL 的同名字段仍在回落路径上，
@@ -58,9 +62,9 @@
 
 ---
 
-## 3. 十一个 `kind`
+## 3. 十二个 `kind`
 
-`kind` 决定"什么时候可用"和"谁来枚举它"。十一种是目前的全集，加第十二种必须同时改本文、
+`kind` 决定“什么时候可用”和“谁来枚举它”。十二种是目前的全集，新增种类必须同时改本文、
 `ABILITY_KINDS` 与 `tests/architecture-guard.test.mjs` 的冻结表。
 
 | kind | 时机 | 消耗行动 | 引擎读点 | payload |
@@ -76,9 +80,9 @@
 | **`weakness`** | 弱点揭示 | — | `lifecycle.weaknessProfile(code)` | `weakness`；可加 `resolve` 自定义结算 |
 | **`entersPlay`** | 支援放置入场 | — | `lifecycle.entersPlayEffect(code)` | `entersPlay`（效果 DSL） |
 | **`leavesPlay`** | 支援离开场上 | — | `lifecycle.leavesPlayEffect(code)` | `leavesPlay`（效果 DSL） |
-| **`setup`** | 开局效果（永久卡，如「原定计划」） | — | 引擎开局循环的 `descriptorOfKind(code, 'setup')` | `EFFECTS[code].setup`（效果 DSL，回退路径） |
+| **`setup`** | 开局效果（永久卡等） | — | 引擎开局循环的 `descriptorOfKind(code, 'setup')` | `resolve` |
 
-**五个生命周期钩子**替代旧的 `EFFECTS[code].event` / `.skill` / `.weakness` / `.onEnter` 与引擎内联的
+`setup` 是独立的开局钩子；**五个生命周期钩子**替代旧的 `EFFECTS[code].event` / `.skill` / `.weakness` / `.onEnter` 与引擎内联的
 离场特判。它们不带 `trigger`，也不产生牌桌按钮；读点函数在描述子缺失时回落到 `EFFECTS`，因此
 **迁移一张卡不需要改引擎**。`weakness` 描述子带 `resolve` 时接管整段揭示结算，不进入引擎的类型分支。
 
@@ -438,7 +442,7 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 - **重印只实现一次**：canonical（`01xx`）文件是唯一实现；`entries/_reprint-aliases.js` 白名单 +
   `card-identity.js` 出口 + `registerCardAbilities` 注册期克隆（`reprintOf`）让别名号复用同一行为与
   运行时可用性，R2 清零。5 对合并与米兰 auto 口径裁决见
-  [`p2-4-quick-event-channel.md`](p2-4-quick-event-channel.md)。
+  [`arkham-content-migration.md`](arkham-content-migration.md) 的 §4.6.10。
 
 ---
 
@@ -470,7 +474,7 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
    （保留旧展示方言）→ `assets.js#playReactionCard` 是唯一执行器（费用/⚡日志/`state._reaction`/
    去向旗标同一口径）。`quickEvent` 只能写在 `reaction` 描述子上并隐式 `fromHand`；
    `playAccess().reactionOnly` 用同一视图判定，快速事件不能当普通行动打出。
-   设计、重印别名与口径裁决见 [`p2-4-quick-event-channel.md`](p2-4-quick-event-channel.md)；
+   设计、重印别名与口径裁决见 [`arkham-content-migration.md`](arkham-content-migration.md) 的 §4.6.10；
 6. 测试从"断言 `EFFECTS[code]` 的形状"改成"断言行为"，参照 `tests/card-lifecycle.test.mjs` 的三段式；
    已迁移的 21 张逃生卡另有一层通道断言（`tests/phase2-primitives.test.mjs` 的最后三条）；
 7. 跑 `npm run cards:audit:write`（白名单收缩）+ `npm run test:fast`，指标下降即迁移成立的证据；

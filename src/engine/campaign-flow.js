@@ -187,7 +187,7 @@ function finishScenario(state, resolutionKey, events) {
     victory: state.victory, rounds: state.round, recordsBefore, recordsAfter: structuredClone(campaign.records),
     investigators: state.investigators.map(inv => {
       const record = campaign.investigators[inv.seat]
-      return { seat: inv.seat, id: record.id, code: record.code, status: record.status,
+      return { seat: record.roomSeat ?? inv.seat, id: record.id, code: record.code, status: record.status,
         defeated: inv.defeated, resigned: inv.resigned,
         xpAwarded: record.earnedXp - before[inv.seat].earnedXp, xp: record.xp,
         traumaBefore: before[inv.seat].trauma, traumaAfter: { ...record.trauma }, deck: [...record.deck] }

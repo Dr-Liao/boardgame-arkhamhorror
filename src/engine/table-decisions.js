@@ -4,6 +4,10 @@
 import { investigatorRule } from '../cards/card-rules.js'
 import { allowsCard, cardPoolContext } from '../deck/card-pool.js'
 import { locationEntryNotice } from './location-facts.js'
+// P6（食梦者调查员）：托尼·摩尔根的「只能用于交战/攻击带赏金敌人的额外行动」需要读赏金计数。
+import { cardCounterOf } from './card-counters.js'
+// P5 批次 3：开局先手可能从章对门（partGate）起步，需要按双线条件过滤选项。
+import { flowCondition } from '../campaign/campaign-flow.js'
 import { mulliganCandidates } from './tarot-slot.js'
 
 export function createTableDecisions(deps) {
@@ -79,6 +83,11 @@ export function createTableDecisions(deps) {
   }
 
   function hubActingSeats(state) {
+    // 并行出发准备：所有真人座位都能自己换线（房主只额外代操作 AI）。
+    if (state.uiState === 'scenarioSetup' && state.hubReady
+        && state.campaign?.mode === 'parallel' && !state.campaign.scenarioResults?.length) {
+      return [...(state.humanSeats || [0])]
+    }
     const pending = hubPendingSeats(state), humans = state.humanSeats || [0]
     const humanPending = pending.filter(seat => humans.includes(seat))
     return humanPending.length ? humanPending : pending
@@ -89,18 +98,30 @@ export function createTableDecisions(deps) {
     const manifest = campaignManifestFor(state)
     const graph = campaignGraph(manifest)
     const start = graph.nodes[graph.start]
-    if (start?.type !== 'choice') return []
-    return start.options.flatMap(option => {
-      const destination = graph.nodes[option.next]
-      return destination?.type === 'scenario'
-        ? [{ action: 'hubSelectScenario', scenarioId: destination.scenarioId, optionId: option.id,
-            label: option.label || `选择 ${destination.scenarioId}` }]
-        : []
-    })
+    // 双线战役的 flow 从章对门（partGate）起步：开局先手也走同一套 hub 选择，
+    // 不能只认 choice 节点（否则分选模式的第一关没有被选中，进度无法推进）。
+    if (start?.type !== 'choice' && start?.type !== 'partGate') return []
+    return start.options
+      .filter(option => flowCondition(option.when, state.campaign))
+      .flatMap(option => {
+        const destination = graph.nodes[option.next]
+        return destination?.type === 'scenario'
+          ? [{ action: 'hubSelectScenario', scenarioId: destination.scenarioId, optionId: option.id,
+              label: option.label || `选择 ${destination.scenarioId}` }]
+          : []
+      })
   }
 
   function hubInvestigatorChoices(state, seat) {
-    const unavailable = new Set([...Object.values(state.campaign.investigators), ...state.campaign.retired]
+    // P5 批次 2：跨线重复选人校验必须同时看两条线的记录（另一条线在 parts 快照里），
+    // 同一名调查员不能同时出现在 A/B 两线。
+    const campaign = state.campaign
+    const records = [...Object.values(campaign?.investigators || {}), ...(campaign?.retired || [])]
+    for (const snapshot of Object.values(campaign?.parts || {})) {
+      if (!snapshot || typeof snapshot !== 'object') continue
+      records.push(...Object.values(snapshot.investigators || {}), ...(snapshot.retired || []))
+    }
+    const unavailable = new Set(records
       .filter(record => record.seat !== seat || record.status !== 'active').map(record => record.code))
     // Teammates preparing at the same time reserve a pick before saving a deck.
     for (const inv of state.investigators) {
@@ -136,7 +157,7 @@ export function createTableDecisions(deps) {
       return built.errors?.length ? `自定义卡组无效：${built.errors.join('；')}` : null
     }
     return hubLegalMoves(state, seat).some(legal => Object.entries(legal)
-      .filter(([key]) => !['label', 'explanation'].includes(key)).every(([key, value]) => move[key] === value)) ? null : '当前不可执行该局外操作'
+      .filter(([key]) => !['label', 'explanation', 'disabled'].includes(key)).every(([key, value]) => move[key] === value)) ? null : '当前不可执行该局外操作'
   }
 
   function autoHubMove(state, seat, includeHuman = false) {
@@ -273,6 +294,23 @@ export function createTableDecisions(deps) {
     if (move.action === 'entityAbility' && move.actionKind) return move.actionKind
     // 失落时代的卡牌能力在 effect.kind 里声明自己属于攻击/躲避，避免被当成普通行动引发借机攻击。
     return actionEffect?.kind || actionEffect?.type || move.action
+  }
+
+  // P6（食梦者调查员）：这次行动可以花哪一种「受限额外行动」的额度。
+  //   返回 'spell'（玛丽·朗博）、'bounty'（托尼·摩尔根）或 null。
+  // 读点只有三处（validateMove / dispatch 扣费 / engine.spendAction），与法术专用行动同源；
+  // 判定口径见 restricted-actions.js，条目层只声明 `investigator.restrictedAction`。
+  function restrictedKindOfMove(state, inv, move) {
+    if (!inv || !move) return null
+    if (isSpellAction(state, inv, move)) return 'spell'
+    const rule = investigatorRule(inv.code)?.restrictedAction
+    if (!rule || rule.kind !== 'bounty') return null
+    const kind = actionKind(state, inv, move)
+    if (kind !== 'fight' && kind !== 'engage') return null
+    const enemyId = move.enemyId ?? move.targetId
+    const enemy = state.enemies.find(item => item.id === enemyId)
+    if (!enemy) return null
+    return cardCounterOf(enemy, 'bounty') > 0 ? 'bounty' : null
   }
 
   function actionPreview(state, seat, move) {
@@ -416,5 +454,5 @@ export function createTableDecisions(deps) {
     }
   }
 
-  return { decisionSeat, actingSeats, seatLocalMove, hubActingSeats, initialHubScenarioMoves, hubInvestigatorChoices, initialHubPreparation, hubStartingDeckReady, validateHubMove, autoHubMove, decisionSeed, moveCost, cardPlayBlockedReason, jakeSkipsOpportunityAttack, canUseExtraEvade, abilityOfMove, actionKind, isSpellAction, actionPreview, consumeStartingAdjustments, consumeMulliganBlock, runMulligans, useGoldPocketWatch, resolveCallOfTheUnknown }
+  return { decisionSeat, actingSeats, seatLocalMove, hubActingSeats, initialHubScenarioMoves, hubInvestigatorChoices, initialHubPreparation, hubStartingDeckReady, validateHubMove, autoHubMove, decisionSeed, moveCost, cardPlayBlockedReason, jakeSkipsOpportunityAttack, canUseExtraEvade, abilityOfMove, actionKind, isSpellAction, restrictedKindOfMove, actionPreview, consumeStartingAdjustments, consumeMulliganBlock, runMulligans, useGoldPocketWatch, resolveCallOfTheUnknown }
 }

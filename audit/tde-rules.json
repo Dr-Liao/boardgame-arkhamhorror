@@ -1,0 +1,683 @@
+{
+  "schemaVersion": 1,
+  "cycle": "tde",
+  "cycleName": "The Dream Eaters",
+  "cycleNameZh": "食梦者",
+  "campaignId": "theDreamEaters",
+  "step": 3,
+  "stepName": "关键词与规则书",
+  "milestone": "P4",
+  "generatedBy": "tools/audit-tde-rules.mjs",
+  "sources": {
+    "keywords": "content/campaigns/theDreamEaters/keywords.js",
+    "rulebook": "web/rulebook-data.js",
+    "uiCards": "web/ui-cards.js",
+    "chapters": "content/campaigns/theDreamEaters/shared.js",
+    "mechanics": "content/mechanics.js",
+    "scan": "artifacts/migration/tde/mechanism-scan.json",
+    "nodeTest": "tests/tde-rules.test.mjs",
+    "browserSpec": "tests/tde-rules.browser.mjs",
+    "browserReport": "audit/tde-browser-acceptance.json"
+  },
+  "keywords": {
+    "total": 7,
+    "verified": 7,
+    "status": "verified",
+    "items": [
+      {
+        "id": "myriad",
+        "printed": "Myriad",
+        "zh": "多重",
+        "kind": "printed",
+        "ruleId": "tdeMyriad",
+        "mechanismId": "myriad",
+        "ruleOwned": true,
+        "implemented": true,
+        "deferred": [
+          "构筑界面消费 myriadUsage 的 n/3 显示（P7）；卡牌升级与购买仍走既有构筑门禁"
+        ],
+        "sourceKind": "text",
+        "cardCodes": [
+          "06020",
+          "06021",
+          "06023",
+          "06026",
+          "06029",
+          "06034",
+          "06199",
+          "06241",
+          "06242",
+          "06243",
+          "06245",
+          "06278",
+          "06323",
+          "06328"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "problems": []
+      },
+      {
+        "id": "swarming",
+        "printed": "Swarming X",
+        "zh": "蜂拥",
+        "kind": "printed",
+        "ruleId": "tdeSwarming",
+        "mechanismId": "swarming",
+        "ruleOwned": true,
+        "implemented": true,
+        "deferred": [
+          "真实蜂拥实体在场景里的生成/攻击/交战（P8）；面板（数量、来源、溢出伤害）属 P5 交互第 3 条"
+        ],
+        "sourceKind": "text",
+        "cardCodes": [
+          "06102",
+          "06106",
+          "06107",
+          "06108",
+          "06145",
+          "06147",
+          "06148",
+          "06151",
+          "06152",
+          "06228",
+          "06273"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "problems": []
+      },
+      {
+        "id": "veiled",
+        "printed": "Veiled",
+        "zh": "掩藏",
+        "kind": "printed",
+        "ruleId": "tdeVeiled",
+        "mechanismId": "veiled",
+        "ruleOwned": true,
+        "implemented": true,
+        "deferred": [
+          "翻面动作接进调查/移动流程与故事卡阅读器（P8）；A2 的 b 面故事卡文本属 P8-T"
+        ],
+        "sourceKind": "text",
+        "cardCodes": [
+          "06127",
+          "06129",
+          "06130",
+          "06131",
+          "06132",
+          "06133",
+          "06135",
+          "06136",
+          "06137",
+          "06138",
+          "06139",
+          "06140",
+          "06141",
+          "06142",
+          "06143",
+          "06254",
+          "06257",
+          "06258",
+          "06261",
+          "06262",
+          "06263",
+          "06264",
+          "06265"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "problems": []
+      },
+      {
+        "id": "researched",
+        "printed": "Researched",
+        "zh": "研究完成",
+        "kind": "printed",
+        "ruleId": "tdeResearched",
+        "mechanismId": "researched",
+        "ruleOwned": true,
+        "implemented": true,
+        "deferred": [
+          "06236/06237/06238 的 researchRequirement 记录键在 P7 写进单卡条目（「你洞悉了梦境」）"
+        ],
+        "sourceKind": "text",
+        "cardCodes": [
+          "06236",
+          "06237",
+          "06238"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "problems": []
+      },
+      {
+        "id": "alert",
+        "printed": "Alert",
+        "zh": "警戒",
+        "kind": "printed",
+        "ruleId": "alert",
+        "mechanismId": "alert",
+        "ruleOwned": false,
+        "implemented": true,
+        "deferred": [
+          "Alert + Swarming 的反击归属（蜂拥卡是否也反击）与 Alert + Massive 的攻击顺序留给 P8 章节接线时逐卡确认"
+        ],
+        "sourceKind": "text",
+        "cardCodes": [
+          "06105",
+          "06107",
+          "06227",
+          "06308",
+          "06311"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "problems": []
+      },
+      {
+        "id": "hidden",
+        "printed": "Hidden",
+        "zh": "隐私",
+        "kind": "printed",
+        "ruleId": "hidden",
+        "mechanismId": "hidden",
+        "ruleOwned": false,
+        "implemented": true,
+        "deferred": [
+          "敌人形态的隐私卡（06306–06310）在手牌中被攻击/躲避的入口属 P8；隐私投影按座位过滤属 P5/P8",
+          "本循环 18 张全部带险境（Peril），与核心隐私条目一致，不新增组合规则"
+        ],
+        "sourceKind": "text",
+        "cardCodes": [
+          "06017",
+          "06087",
+          "06088",
+          "06089",
+          "06293",
+          "06299",
+          "06306",
+          "06307",
+          "06308",
+          "06309",
+          "06310",
+          "06314",
+          "06315",
+          "06316",
+          "06317",
+          "06319",
+          "06320",
+          "06321"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "problems": []
+      },
+      {
+        "id": "bonded",
+        "printed": "Bonded",
+        "zh": "绑定",
+        "kind": "printed",
+        "ruleId": "tdeBonded",
+        "mechanismId": "bonded",
+        "ruleOwned": true,
+        "implemented": true,
+        "deferred": [
+          "绑定弱点敌人（06025/06283）的场外实体与「无主卡在场则放回场外」的接线属 P8",
+          "06025/06283 的绑定关系只写在卡文（Bonded (Crystallizer of Dreams)），cards-data 没有 bonded 字段：P7 在单卡条目里声明",
+          "梦境之门作为地点实体入场后的移动/离开处理属 P8（放置原语已在 P3.13 交付）"
+        ],
+        "sourceKind": "text",
+        "cardCodes": [
+          "06013",
+          "06014",
+          "06015a",
+          "06015b",
+          "06018",
+          "06019",
+          "06021",
+          "06022",
+          "06024",
+          "06025",
+          "06027",
+          "06028",
+          "06030",
+          "06031",
+          "06032",
+          "06033",
+          "06112",
+          "06113",
+          "06236",
+          "06237",
+          "06238",
+          "06276",
+          "06277",
+          "06282",
+          "06283",
+          "06330",
+          "06331"
+        ],
+        "checks": {
+          "sourceInventoried": true,
+          "engineBehavior": true,
+          "nodeAcceptance": true,
+          "rulebookEntry": true,
+          "cardLinks": true
+        },
+        "status": "verified",
+        "problems": []
+      }
+    ]
+  },
+  "rulebook": {
+    "entries": 17,
+    "status": "verified",
+    "checks": {
+      "campaignOverview": true,
+      "scenarioMechanics": true,
+      "keywordEntries": true,
+      "cardLinks": true,
+      "desktopBrowser": true,
+      "mobileBrowser": true
+    },
+    "details": {
+      "campaignOverview": {
+        "entryPresent": true,
+        "listsEveryChapter": true,
+        "statesTwoParts": true,
+        "statesChaosBagSizes": true,
+        "statesPairAndInterlude": true,
+        "statesEpilogueMatrix": true,
+        "relatedRulesExist": true,
+        "rulesOnly": true
+      },
+      "scenarioMechanics": {
+        "chapters": 8,
+        "allChaptersOk": true,
+        "chapterCodesMatchShared": true,
+        "items": [
+          {
+            "id": "beyondTheGatesOfSleep",
+            "code": "06039",
+            "name": "梦境门外",
+            "part": "A",
+            "pair": 1,
+            "checks": {
+              "referenceCardExists": true,
+              "linksCampaignRule": true,
+              "linksChaosRule": true,
+              "linksPartRule": true,
+              "listedInUiCards": true
+            },
+            "status": "ok"
+          },
+          {
+            "id": "wakingNightmare",
+            "code": "06063",
+            "name": "清醒噩梦",
+            "part": "B",
+            "pair": 1,
+            "checks": {
+              "referenceCardExists": true,
+              "linksCampaignRule": true,
+              "linksChaosRule": true,
+              "linksPartRule": true,
+              "listedInUiCards": true
+            },
+            "status": "ok"
+          },
+          {
+            "id": "theSearchForKadath",
+            "code": "06119",
+            "name": "寻觅卡达斯",
+            "part": "A",
+            "pair": 2,
+            "checks": {
+              "referenceCardExists": true,
+              "linksCampaignRule": true,
+              "linksChaosRule": true,
+              "linksPartRule": true,
+              "listedInUiCards": true
+            },
+            "status": "ok"
+          },
+          {
+            "id": "aThousandShapesOfHorror",
+            "code": "06168",
+            "name": "万千骇形",
+            "part": "B",
+            "pair": 2,
+            "checks": {
+              "referenceCardExists": true,
+              "linksCampaignRule": true,
+              "linksChaosRule": true,
+              "linksPartRule": true,
+              "listedInUiCards": true
+            },
+            "status": "ok"
+          },
+          {
+            "id": "darkSideOfTheMoon",
+            "code": "06206",
+            "name": "月之暗面",
+            "part": "A",
+            "pair": 3,
+            "checks": {
+              "referenceCardExists": true,
+              "linksCampaignRule": true,
+              "linksChaosRule": true,
+              "linksPartRule": true,
+              "listedInUiCards": true
+            },
+            "status": "ok"
+          },
+          {
+            "id": "pointOfNoReturn",
+            "code": "06247",
+            "name": "无归之地",
+            "part": "B",
+            "pair": 3,
+            "checks": {
+              "referenceCardExists": true,
+              "linksCampaignRule": true,
+              "linksChaosRule": true,
+              "linksPartRule": true,
+              "listedInUiCards": true
+            },
+            "status": "ok"
+          },
+          {
+            "id": "whereTheGodsDwell",
+            "code": "06286",
+            "name": "神居之所",
+            "part": "A",
+            "pair": 4,
+            "checks": {
+              "referenceCardExists": true,
+              "linksCampaignRule": true,
+              "linksChaosRule": true,
+              "linksPartRule": true,
+              "listedInUiCards": true
+            },
+            "status": "ok"
+          },
+          {
+            "id": "weaverOfTheCosmos",
+            "code": "06333",
+            "name": "编织宇宙",
+            "part": "B",
+            "pair": 4,
+            "checks": {
+              "referenceCardExists": true,
+              "linksCampaignRule": true,
+              "linksChaosRule": true,
+              "linksPartRule": true,
+              "listedInUiCards": true
+            },
+            "status": "ok"
+          }
+        ]
+      },
+      "keywordEntries": {
+        "entries": 7,
+        "entriesPresent": true,
+        "searchable": true,
+        "status": "verified"
+      },
+      "cardLinks": {
+        "cards": 388,
+        "everyCardLinked": true,
+        "noForeignCycleLinks": true,
+        "unlinkedCards": [],
+        "foreignLinks": []
+      },
+      "browser": {
+        "reportPresent": true,
+        "generatedByRunner": true,
+        "specReported": true,
+        "statusPassed": true,
+        "desktopBrowser": true,
+        "mobileBrowser": true,
+        "screenshots": 2
+      }
+    },
+    "related": []
+  },
+  "confirmations": {
+    "keywords": {
+      "status": "verified",
+      "total": 7,
+      "verified": 7,
+      "items": [
+        {
+          "id": "myriad",
+          "zh": "多重",
+          "ruleId": "tdeMyriad",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified"
+        },
+        {
+          "id": "swarming",
+          "zh": "蜂拥",
+          "ruleId": "tdeSwarming",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified"
+        },
+        {
+          "id": "veiled",
+          "zh": "掩藏",
+          "ruleId": "tdeVeiled",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified"
+        },
+        {
+          "id": "researched",
+          "zh": "研究完成",
+          "ruleId": "tdeResearched",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified"
+        },
+        {
+          "id": "alert",
+          "zh": "警戒",
+          "ruleId": "alert",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified"
+        },
+        {
+          "id": "hidden",
+          "zh": "隐私",
+          "ruleId": "hidden",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified"
+        },
+        {
+          "id": "bonded",
+          "zh": "绑定",
+          "ruleId": "tdeBonded",
+          "checks": {
+            "sourceInventoried": true,
+            "engineBehavior": true,
+            "nodeAcceptance": true,
+            "rulebookEntry": true,
+            "cardLinks": true
+          },
+          "status": "verified"
+        }
+      ]
+    },
+    "rulebook": {
+      "status": "verified",
+      "checks": {
+        "campaignOverview": true,
+        "scenarioMechanics": true,
+        "keywordEntries": true,
+        "cardLinks": true,
+        "desktopBrowser": true,
+        "mobileBrowser": true
+      },
+      "entries": [
+        "tdeAlarmLevel",
+        "tdeBonded",
+        "tdeCampaign",
+        "tdeChaos",
+        "tdeDreamGate",
+        "tdeDreamQuest",
+        "tdeEpilogue",
+        "tdeInfestationBag",
+        "tdeLocationDoom",
+        "tdeMyriad",
+        "tdeRecords",
+        "tdeResearched",
+        "tdeSignsOfTheGods",
+        "tdeStoryAssets",
+        "tdeSwarming",
+        "tdeVeiled",
+        "tdeWebOfDreams"
+      ]
+    }
+  },
+  "files": {
+    "content/campaigns/theDreamEaters/keywords.js": "7379089204a937fff8dc34959fb6c0b606e1a2cf6b19ce8d22e87c7cd085f9a3",
+    "web/rulebook-data.js": "d900946e6108f17d3b84e178e923609a29c2a64309e9373fd905281856a27fdb",
+    "web/ui-cards.js": "2bf3221a9b864cc4ff60fe4c77a9cedf056e16973da6d05c395f73a27b9225aa",
+    "content/campaigns/theDreamEaters/shared.js": "943fade87a7824527e52cde3552b76aa15b268d0fde69d5ab84e39d9d71c2617",
+    "content/mechanics.js": "532d8ccdd3bb98d4a8ebef9f57831d3992db8d4d44fdfbe1081a9aeeed8d4a7f",
+    "tests/tde-rules.test.mjs": "5a194b13252dfc091fafac5a94496940099855326a9a080ddd17c2443879f1e5",
+    "tests/tde-rules.browser.mjs": "829de66de44749447381f3b9e17e4eba783b0b00fcb5bb691f63ab8122a08f6c",
+    "audit/tde-browser-acceptance.json": "9ec8a0220055557dc820fc43ea04d5d0b77bdcaaa63037896b5b203b0904ee38"
+  },
+  "gate": {
+    "keywordsVerified": {
+      "verified": 7,
+      "total": 7,
+      "pass": true
+    },
+    "rulebookVerified": {
+      "checks": {
+        "campaignOverview": true,
+        "scenarioMechanics": true,
+        "keywordEntries": true,
+        "cardLinks": true,
+        "desktopBrowser": true,
+        "mobileBrowser": true
+      },
+      "pending": [],
+      "pass": true
+    },
+    "keywordScanAligned": {
+      "scanMechanisms": [
+        "alert",
+        "bonded",
+        "hidden",
+        "myriad",
+        "researched",
+        "swarming",
+        "veiled"
+      ],
+      "keywordMechanisms": [
+        "alert",
+        "bonded",
+        "hidden",
+        "myriad",
+        "researched",
+        "swarming",
+        "veiled"
+      ],
+      "missing": [],
+      "extra": [],
+      "ruleIdMismatch": [],
+      "pass": true
+    },
+    "rulebookEntries": {
+      "expected": 17,
+      "present": 17,
+      "missing": [],
+      "orphan": [],
+      "unindexed": [],
+      "pass": true
+    },
+    "nodeAcceptance": {
+      "path": "tests/tde-rules.test.mjs",
+      "exists": true,
+      "ok": true,
+      "tests": 15,
+      "fail": 0,
+      "exitCode": 0,
+      "pass": true
+    },
+    "pass": true
+  }
+}

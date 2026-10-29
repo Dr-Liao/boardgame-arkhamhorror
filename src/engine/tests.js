@@ -496,6 +496,8 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   let elderClueOnSuccessBy = 0
   let elderChosenReward = false
   let elderOptionalDraw = 0
+  // P6（食梦者 · 派翠丝·海瑟薇）：本次检定结束后可把弃牌堆留 1 张、其余洗回牌库。
+  let elderShuffleDiscardAfterTest = null
   const drawn = []
   const cancelledTokens = []
   const pendingOnFail = []
@@ -736,6 +738,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         elderMayMoveAfterTestAlways = !!es.mayMoveAfterTestAlways
         elderClueOnSuccessBy = es.clueOnSuccessBy || 0
         elderChosenReward = !!es.chosenReward
+        elderShuffleDiscardAfterTest = es.shuffleDiscardAfterTest || null
         // 黛西的「如果你检定成功」要等成败判定后结算，不能在这里提前抽牌。
         elderOptionalDraw = Number(es.optionalDraw) || 0
         if (elderAutoSuccess) info(state, null, `✨ ${inv.name} 的 elder_sign 效果触发自动成功！`)
@@ -815,6 +818,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       elderOnSuccess = es.onSuccess || null
       elderOnSuccessAlways = !!es.onSuccessAlways
       elderChosenReward = !!es.chosenReward
+      elderShuffleDiscardAfterTest = es.shuffleDiscardAfterTest || null
       if (es.autoFail) autoFail = true
     } else if (/^[+-]?\d+$/.test(replacement)) delta += Number(replacement)
     else {
@@ -960,6 +964,23 @@ function performTest(state, seat, skill, difficulty, options = {}) {
         options: [{ id: 'skip', label: '留在原地' },
           ...destinations.map(id => ({ id, label: locName(state, id) }))] })
       if (answer !== 'skip') relocateInvestigator(state, seat, answer, events)
+    }
+  }
+  // P6（食梦者 · 派翠丝·海瑟薇旧印）：「本次检定结束后，你可以把弃牌堆中的 1 张卡牌留下，
+  // 其余卡牌洗回你的牌库」。检定已经结算完，这里只是把「结束后」这件事接到既有旧印读点上。
+  if (elderShuffleDiscardAfterTest) {
+    const keep = Math.max(0, Number(elderShuffleDiscardAfterTest.keep ?? 1))
+    const candidates = (inv.discard || []).slice()
+    if (candidates.length > keep) {
+      const answer = requestChoice(state, { kind: 'reaction', source: 'patriceElderSign', seat, canSkip: true,
+        prompt: `旧印：是否把弃牌堆中 ${candidates.length - keep} 张卡牌洗回牌库（保留 ${keep} 张）？`,
+        options: [{ id: 'skip', label: '不洗回' }, { id: 'trigger', label: '洗回牌库' }] })
+      if (answer === 'trigger') {
+        const shuffled = candidates.splice(0, candidates.length - keep)
+        for (const code of shuffled) removeOne(inv.discard, code)
+        inv.deck = shuffle([...inv.deck, ...shuffled], () => randomValue(state))
+        info(state, events, `🎻 ${inv.name} 把弃牌堆的 ${shuffled.length} 张卡牌洗回牌库（保留 ${keep} 张）。`)
+      }
     }
   }
   if (elderChosenReward && success) {

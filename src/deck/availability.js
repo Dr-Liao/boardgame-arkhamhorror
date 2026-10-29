@@ -15,12 +15,22 @@ export const CARCOSA_INVESTIGATOR_CODES = Object.freeze(['03001', '03002', '0300
 export const TFA_INVESTIGATOR_CODES = Object.freeze(['04001', '04002', '04003', '04004', '04005'])
 // 第四循环（万象无终）：6 位正式调查员；序章 4 位故事调查员永远不在这里（无牌组、不可构筑）。
 export const TCU_INVESTIGATOR_CODES = Object.freeze(['05001', '05002', '05003', '05004', '05005', '05006'])
+// 第五循环（食梦者）：M1（P6）5 位正式调查员 + 13 条专属记录（11 张主卡 + 2 张关联面 06015a/b）。
+export const TDE_INVESTIGATOR_CODES = Object.freeze(['06001', '06002', '06003', '06004', '06005'])
 export const PLAYABLE_INVESTIGATOR_CODES = Object.freeze([
   ...CORE_INVESTIGATOR_CODES,
   ...DUNWICH_INVESTIGATOR_CODES,
   ...CARCOSA_INVESTIGATOR_CODES,
   ...TFA_INVESTIGATOR_CODES,
   ...TCU_INVESTIGATOR_CODES,
+])
+// 可被玩家选择/构筑的调查员：在上面这批之外加第五循环（食梦者）M1 的五位。
+// 2026-10-29（P6）：**AI 自动选人池仍是 `PLAYABLE_INVESTIGATOR_CODES`**。原因：AI 选人按
+// `shuffle(池, 独立随机流)[0]` 决定，池子变长会让既有种子对局的 AI 选人漂移（重放/开局参数
+// 用例会红）。食梦者战役要到 P10 才能启动，届时把 TDE 并入 AI 池并重采基线。
+export const SELECTABLE_INVESTIGATOR_CODES = Object.freeze([
+  ...PLAYABLE_INVESTIGATOR_CODES,
+  ...TDE_INVESTIGATOR_CODES,
 ])
 
 export const CORE_PLAYER_CODES = Object.freeze([
@@ -78,6 +88,13 @@ export const SIGNATURES_BY_INVESTIGATOR = Object.freeze({
   '05004': Object.freeze(['05013', '05014', '05015']),
   '05005': Object.freeze(['05016', '05017']),
   '05006': Object.freeze(['05018', '05019']),
+  // P6（食梦者）：11 张专属主卡 + 2 张专属弱点。06015a/b「梦境之门」是绑定地点，
+  // 不在牌组里（只由门之匣/脱离现实放进场），因此不列在专属卡清单中。
+  '06001': Object.freeze(['06006', '06007']),
+  '06002': Object.freeze(['06008', '06009']),
+  '06003': Object.freeze(['06010', '06011', '06012']),
+  '06004': Object.freeze(['06013', '06014']),
+  '06005': Object.freeze(['06016', '06017']),
 })
 export const SIMPLIFIED_CARD_CODES = Object.freeze([...CORE_PLAYER_CODES, ...CORE_SIGNATURE_CODES, ...CORE_BASIC_WEAKNESS_CODES, ...CORE_STORY_CODES])
 export {
@@ -86,7 +103,7 @@ export {
   CORE_BASIC_WEAKNESS_CODES as BASIC_WEAKNESS_CODES,
 }
 
-const investigators = new Set(PLAYABLE_INVESTIGATOR_CODES)
+const investigators = new Set(SELECTABLE_INVESTIGATOR_CODES)
 const dunwichSignatures = Object.values(SIGNATURES_BY_INVESTIGATOR).slice(5, 10).flat()
 const carcosaSignatures = [...Object.values(SIGNATURES_BY_INVESTIGATOR).slice(10, 16).flat(), '03009b']
 // 第 5 步 M1 调查员批次（P6）：TCU 的 13 张专属卡。按调查员显式取，不再用 slice 位置——
@@ -94,6 +111,9 @@ const carcosaSignatures = [...Object.values(SIGNATURES_BY_INVESTIGATOR).slice(10
 const tfaSignatureGroups = Object.values(SIGNATURES_BY_INVESTIGATOR).slice(16, 21)
 const tfaSignatures = tfaSignatureGroups.flat()
 const tcuSignatures = TCU_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])])
+// 第五循环（食梦者）M1：11 张专属主卡 + 2 张专属弱点；06015a/b 是绑定地点（不计入构筑依赖）。
+const tdeSignatures = TDE_INVESTIGATOR_CODES.flatMap(code => [...(SIGNATURES_BY_INVESTIGATOR[code] || [])])
+  .concat(['06015a', '06015b'])
 const tfaPlayerCodes = [...IMPLEMENTED_PLAYER_CODES]
 export const TFA_PLAYER_BUILDABLE_CODES = Object.freeze(tfaPlayerCodes.filter(code => tfaPlayerBuildable(code)))
 export const PLAYER_CARD_CODES = Object.freeze([
@@ -106,7 +126,7 @@ export const ALL_BUILDABLE_CODES = Object.freeze([
 ])
 const cards = new Set([...SIMPLIFIED_CARD_CODES, ...CORE_UPGRADE_CODES, ...expansionPlayerCodes,
   ...dunwichSignatures, ...carcosaSignatures, ...tfaSignatures, ...tfaPlayerCodes, ...tcuSignatures,
-  ...TCU_PLAYER_CARD_CODES,
+  ...TCU_PLAYER_CARD_CODES, ...tdeSignatures,
   ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES])
 const strictAcceptedCodes = new Set([...investigators, ...cards])
 const strictScenarioCodes = new Set(Object.values(SCENARIO_CARD_IDENTITIES).flatMap(categories =>
@@ -134,6 +154,7 @@ export function getAvailability(code) {
     upgradeOnly: CORE_UPGRADE_CODES.includes(code),
     dependencyOnly: CORE_SIGNATURE_CODES.includes(code) || dunwichSignatures.includes(code)
       || carcosaSignatures.includes(code) || tfaSignatures.includes(code) || tcuSignatures.includes(code)
+      || tdeSignatures.includes(code)
       || ALL_BASIC_WEAKNESS_CODES.includes(code),
     scenarioOnly: CORE_STORY_CODES.includes(code),
     acceptanceProfile: coreCardVerified(code) ? CORE_ACCEPTANCE_PROFILE.id : null,
@@ -144,6 +165,8 @@ export function getAvailability(code) {
         ? 'M2 万象无终玩家卡已通过逐卡主要印刷效果验收（83 张可入牌组；05314/05317 为绑定副本、05041/05042 基础弱点只作依赖），P10 起进入构筑界面与 TCU 战役起始牌组池。'
       : TCU_INVESTIGATOR_CODES.includes(code) || tcuSignatures.includes(code)
         ? 'M1 万象无终六位调查员及其 13 张专属依赖已通过逐人行为与存档回放验收；P10 起玩家卡、九章剧本与大厅入口均已开放（战役 playable）。'
+      : TDE_INVESTIGATOR_CODES.includes(code) || tdeSignatures.includes(code)
+        ? 'M1 食梦者五位调查员及其 11 张专属主卡 + 2 张弱点已通过逐人行为与存档回放验收（06015a/b 为绑定地点）。玩家卡与剧本仍未开放。'
       : TFA_INVESTIGATOR_CODES.includes(code) || tfaSignatures.includes(code)
         ? 'M1 失落的时代五位调查员及其 11 张专属依赖已通过逐人行为与存档回放验收；玩家卡与剧本仍未开放。'
       : CARCOSA_INVESTIGATOR_CODES.includes(code) || carcosaSignatures.includes(code)

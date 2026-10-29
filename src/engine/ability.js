@@ -8,7 +8,7 @@
 //
 // 描述子形状（除 kind 外全部可选）：
 // {
-//   kind: 'action' | 'free' | 'reaction' | 'forced' | 'constant' | 'elderSign'
+//   kind: 'action' | 'free' | 'reaction' | 'forced' | 'constant' | 'elderSign' | 'setup'
 //       | 'played' | 'commit' | 'weakness' | 'entersPlay' | 'leavesPlay',
 //   label: '横置：获得 2 资源',        // 牌桌与 AI 看到的行动文案
 //   text:  '卡面原文',                  // 便于审计对照，不参与结算
@@ -116,6 +116,9 @@ const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'crit
   // 强制/反应描述子默认会写一行「✨ 使用「X」…」；印在敌人卡上的强制效果通常没有这行，
   // 用 silent 保持迁移前后的日志逐字一致（读点在 openAbilityWindow -> executeDescriptor）。
   'silent'])
+// 这里仍包含迁移期遗留的扁平兼容字段；它们不是新增内容的扩展目录。新机制优先进入
+// abilities/modifiers/playCondition 或有类型的通用规则组，禁止再增加以单卡/角色命名的布尔字段。
+// 存量清理由 audit/card-entry-compliance.json 与架构守卫跟踪。
 const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities', 'modifiers', 'elderSign', 'source',
   // 第 2 步 P2.9：塔罗的开局入场 / 手牌封锁 / 不能换掉（只有布尔值，无行为代码）。
   'entersPlayFromOpeningHand', 'blocksCommitWhileInHand', 'cannotMulliganAway',
@@ -159,6 +162,10 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   // 敌人卡面的特殊规则（数值/布尔）：双倍负修正、远程难度减免、只能被某张卡伤害等。
   // 原 card-rules.js 的 ENEMY_RULE_FLAGS，按 REPORT.md 第 3 批搬进卡条目。
   'enemyRule',
+  // P6（食梦者）：这张牌被「查找牌库」找到时的规则（神秘证据 / 惊人的发现）。
+  // 形状 `{ mode: 'reaction'|'forced', label, take?, discard?, cancelSearch?, drawEncounter?, discoverClue? }`；
+  // 读点是 src/engine/deck-ops.js 的 searchedCardsWindow（牌还在牌库里，描述子枚举看不到它）。
+  'searchedCardRule',
   // 敌人脚本钩子（函数，不进入关卡定义，避免 structuredClone 失败）。
   'enemyScript',
   // 隐藏卡/威胁区卡的数据型规则（第 7 批从 content/.../card-data.js 的表搬来）。
@@ -771,6 +778,8 @@ export function registerCardAbilities(entries) {
       chargesOnSymbolReveal: entry.chargesOnSymbolReveal ?? null,
       removeFromGameWhenEmpty: entry.removeFromGameWhenEmpty === true,
       enemyWeakness: entry.enemyWeakness ? Object.freeze({ ...entry.enemyWeakness }) : null,
+  // P6（食梦者）：被查找到的那张牌自己的规则（读点：deck-ops.js 的 searchedCardsWindow）。
+  searchedCardRule: entry.searchedCardRule ? Object.freeze({ ...entry.searchedCardRule }) : null,
       locationBarrier: entry.locationBarrier ? Object.freeze({
         ...entry.locationBarrier,
         test: entry.locationBarrier.test ? Object.freeze({ ...entry.locationBarrier.test }) : null,

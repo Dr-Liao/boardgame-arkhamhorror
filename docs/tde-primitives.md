@@ -1,7 +1,7 @@
-# 《食梦者》原语手册（P3 骨架 · draft）
+# 《食梦者》原语手册（P3 已落地 · P4 复核修订）
 
-> **口径**：本文件是 **P3 之前的骨架**（`draft`），只登记「哪些原语要做、证据在哪、验收怎么算」，**不含任何已完成声明**。
-> TDE 当前是 `catalog-only`：原语计划 `plan:tde:primitives` 与账本 `primitive-plan.json` / `primitive-catalog.json` **尚未生成**（P3 产物）。
+> **口径**：P3 三批原语已落地，账本 `primitive-plan.json` / `primitive-catalog.json` 由 `plan:tde:primitives` 生成、`audit:tde:primitives --check` 复算（当前 `new 17/17 done`、`deferredPrimitives` 空、`gate.pass=true`）。
+> **P4 修订（2026-10-29）**：按官方关键词与规则文本复核，更正了 2 条原语的口径——`location.veiled`（掩藏是「已揭示 + 无线索时 [fast] 翻面」，不是「翻面前不可调查」）与 `location.doom`（地点上的毁灭标记，不是「达到阈值移除地点」）。逐条证据见 [`tde-p4-report.md`](./tde-p4-report.md) §4，规则口径见 [`tde-rules.md`](./tde-rules.md) §2。
 > 事实来源：[`scope.json`](../artifacts/migration/tde/scope.json)（P1）与 [`mechanism-scan.json`](../artifacts/migration/tde/mechanism-scan.json)（P2），两者都可用 `npm run scan:tde:scope:check` / `npm run scan:tde:check` 复算。
 > 路线图：[`tde-migration-roadmap.md`](./tde-migration-roadmap.md) §5；规范：[`arkham-content-migration.md`](./arkham-content-migration.md) §4.3。
 
@@ -35,13 +35,13 @@
 | 关键词 | 原语候选 | 卡 | 备注 |
 | --- | --- | ---: | --- |
 | Swarming X | `enemy.swarmingValue` + `swarm.placeCards` | 11 敌 | X 有四种口径（固定 / `[per_investigator]` / 警报等级 / 剧本参考卡伤害数） |
-| Veiled | `location.veiled`（declare/flip） | 23 地点 | 「未揭示限制」「翻面出 b 面故事卡」「B3 洗回牌堆」是三件事 |
+| Veiled | `location.veiled`（declare/flip） | 23 地点 | 掩藏地点以已揭示面入场；「无线索时 [fast] 翻面」「翻面出 b 面故事卡」「B3 洗回牌堆」是三件事 |
 | Myriad | `deck.myriadLimit`（构筑期） | 14 卡 | 同名至多 3 张；`deckLimit` 字段已有，规则读点没有 |
 | Researched | 记录门控升级 | 3 卡 | 读 `campaign.records` 的 Research 结果 |
 
 ### 2.3 路线图 §5.2 的其余候选（P3 逐条决定进/不进）
 
-`campaign.epilogueMatrix`、`chaosBag.multiPart`、`location.placeBondedLocation`、`deck.myriadLimit`、`window.afterDeckSearch`（曼蒂）、`window.afterAlarmRaised`、`scenario.markerCount`（A2 神迹 / B3 剧本参考卡伤害数）、`location.doom`（B4 大网地点毁灭）、`attach.facedown`、`api.bonded.swap`、`location.verticalChain`、`investigator.extraRestrictedAction`、`window.replaceUpkeepDraw`（派翠丝）；复用项：`campaign.awardStoryCard`（剧情支援，P2 已归 `storyAssets`）。
+`campaign.epilogueMatrix`、`chaosBag.multiPart`、`location.placeBondedLocation`、`deck.myriadLimit`、`window.afterDeckSearch`（曼蒂）、`window.afterAlarmRaised`、`scenario.markerCount`（A2 神迹 / B3 剧本参考卡伤害数）、`location.doom`（B4 大网地点上的毁灭标记）、`attach.facedown`、`api.bonded.swap`、`location.verticalChain`、`investigator.extraRestrictedAction`、`window.replaceUpkeepDraw`（派翠丝）；复用项：`campaign.awardStoryCard`（剧情支援，P2 已归 `storyAssets`）。
 
 ### 2.4 escape 候选（§5.3，必须在账本登记理由）
 
@@ -64,7 +64,7 @@
 
 ## 4. 边界
 
-- 本文件现在**不是**账本输入：P3 建 `primitive-plan.json` 时才会把本文件写进各原语的 `files`；在此之前任何「原语已完成」的说法都不成立。
+- 本文件是账本输入：P3 建 `primitive-plan.json` 时已把本文件写进各原语的 `files`；条目状态由工具复算，不手写。
 - P0 的协议级双 lane spike（[`tde-p0-report.md`](./tde-p0-report.md) §7）只证明协议可写，**不是** adapter 级原语。
 - 原语数量与 API 以 `mechanism-scan.json` 的 `candidatePrimitives` 与 P3 计划为准；本文件的表只是入口。
 
@@ -149,9 +149,10 @@ API `createPartsState({ mode, seatParts, activeParts, currentPart })` 与 `setPa
 
 ### P3.10 掩藏地点
 
-`isVeiledLocation`（字段 / keywords / 卡文首行）/ `veiledBlocksInvestigation` / `revealVeiledLocation`（带出背面故事卡卡号）/
+官方 `rules.veiled`：掩藏地点**没有未揭示面**，以已揭示面入场并按线索值放置线索；位于该地点且**该地点上没有线索**的调查员可以作为一个 [fast] 能力把它翻面，结算背面故事卡；翻过一次后本局不能再翻。
+`isVeiledLocation`（字段 / keywords / 卡文首行）/ `veiledFlipBlockedReason`（不是掩藏地点 / 已翻面 / 地点上还有线索）/ `canFlipVeiledLocation` / `flipVeiledLocation`（返回 `{changed, storyCode, reason}`，被拒绝不抛错）/
 `shuffleVeiledIntoDeck`（翻面后洗回，未翻面拒绝）/ `normalizeVeiledScenario`（注册期校验：缺背面故事卡且未声明 `shuffleBack` → `missing`）。
-「未揭示限制」「翻面」「洗回」是三件事，分开表达；调查动作接线属 P8。
+「翻面」「翻面出 b 面故事卡」「B3 洗回牌堆」是三件事，分开表达；调查动作与故事卡阅读器接线属 P8。**P4 更正**：P3 曾把「未揭示限制」写成关键词规则（`veiledBlocksInvestigation`），与官方规则冲突，已删除。
 
 ### P3.11 蛛群滋生袋
 
@@ -196,10 +197,11 @@ API `createPartsState({ mode, seatParts, activeParts, currentPart })` 与 `setPa
 `isMyriad` / `validateMyriadLimit`（按标题跨卡号共享 3 张额度）/ `addCardRespectingMyriad`（超限拒绝并给原因）/ `myriadUsage`（UI 显示 n/3）。
 只拦 Myriad；普通同名上限属别的校验。
 
-### P3.16 地点毁灭
+### P3.16 地点上的毁灭
 
-`locationDoomOf` / `addLocationDoom`（0 下限）/ `shouldDestroyLocation`（阈值）/ `destroyLocation`（满足阈值才移除、记入 `destroyedLocations`、
-可按注入的 `addDoom` 加到议程）/ `normalizeLocationDoom`（阈值必须正整数）。与全桌 `state.doom` 分开记账。
+官方卡面（06341–06354 与 06333）：大网地点会累积**毁灭标记**；地点上的毁灭就是毁灭——计入议程阈值，也被剧本参考卡的骷髅符号读取（X 为单地点最高毁灭，困难/专家取全部地点之和）。06 段没有任何「毁灭达到阈值移除地点」的规则。
+`locationDoomOf` / `addLocationDoom`（0 下限）/ `removeLocationDoom`（卡面「移除 1 个毁灭」）/ `totalLocationDoom` / `highestLocationDoom`（B4 骷髅读点）/ `normalizeLocationDoom`（非负整数）。
+**P4 更正**：P3 曾实现 `shouldDestroyLocation`/`destroyLocation`/`locationDoomThreshold`（阈值移除地点），属对「毁灭 = doom」的误读，已删除。
 
 ### P3.17 剧本参考卡计数
 
@@ -209,3 +211,75 @@ API `createPartsState({ mode, seatParts, activeParts, currentPart })` 与 `setPa
 ### 8.6 批次 3 之后
 
 `DEFERRED_PRIMITIVES` 已清空；后续新候选（如 P4 关键词、P5 交互需要的新原语）重新登记进该数组与账本，不直接写引擎。
+
+## 9. P6 落地清单（2026-10-29）：调查员能力需要的 9 条原语
+
+> 账本：`batch: "P3-1+2+3+P6"`，`newPrimitives` 合计 **26 条**（P3 的 17 + P6 的 9），`deferredPrimitives` **5 条**。
+> 逐人验收见 [`tde-investigators.md`](./tde-investigators.md) 与 [`tde-p6-report.md`](./tde-p6-report.md)。
+
+| # | 原语 | 服务对象 | 落点 | 测试 |
+| ---: | --- | --- | --- | --- |
+| P6-1 | `assetDefeat`（+ `assetDefeated` 窗口） | 托米主能力 | [`asset-defeat.js`](../src/engine/asset-defeat.js) | [`tde-investigators.test.mjs`](../tests/tde-investigators.test.mjs) |
+| P6-2 | `harm.moveBetween` | 托米旧印 | [`harm-transfer.js`](../src/engine/harm-transfer.js) | 同上 |
+| P6-3 | `counter.card` | 托尼赏金 | [`card-counters.js`](../src/engine/card-counters.js) | 同上 |
+| P6-4 | `investigator.restrictedAction` | 托尼额外行动（+ 玛丽法术行动） | [`restricted-actions.js`](../src/engine/restricted-actions.js) | 同上 |
+| P6-5 | `search.modify`（`searchWouldResolve`） | 曼蒂主能力 | [`deck-ops.js`](../src/engine/deck-ops.js) | 同上 |
+| P6-6 | `search.cardInPile`（`searchedCardRule`） | 06008 / 06009 | `deck-ops.js` + `ability.js` | 同上 |
+| P6-7 | `upkeep.replaceDraw` | 派翠丝主能力 | [`phases.js`](../src/engine/phases.js) | 同上 |
+| P6-8 | `investigator.cardRules` | 派翠丝手牌上限 / 旧印 | [`stats.js`](../src/engine/stats.js)、[`tests.js`](../src/engine/tests.js) | 同上 |
+| P6-9 | `play.fromHandFree` | 托尼 .38 第二张 | [`api-misc.js`](../src/engine/api-misc.js) | 同上 |
+
+### P6.1 支援被击败的唯一判定点
+
+`isAssetDefeated` / `assetHarmCapacity` / `checkAssetDefeated`。此前判定内联在 `applyHarm` 末尾，
+只有「一次伤害/恐惧分配」会触发；「移动伤害到支援上」会让支援超过上限却留在场。现在两条路径共用
+同一判定：先开 `assetDefeated` 窗口（上下文 `damage`/`horror`/`asset`），反应可以把去向改成
+「洗回牌库」（`context.shuffledIntoDeck`），再离场、记录、开既有 `defeatAtLocation` 窗口、结算反伤。
+
+### P6.2 伤害/恐惧移动
+
+`harmOf` / `harmRoom` / `moveHarm`（`api.moveHarm` / `api.harmRoomOf`）。是「移动」不是承受/治疗：
+不触发受到伤害窗口、不走 soaking；受目标容量限制；支援到上限后由 P6.1 判定。
+
+### P6.3 卡牌具名计数器
+
+`cardCounterOf` / `addCardCounter` / `setCardCounter` / `moveCardCounters` / `totalCardCounters`。
+状态是 `card.markers[counterId]`；`CARD_COUNTER_IDS` 注册期校验（目前 `bounty`）；上限由调用方给
+（敌人赏金不超过其生命值）。
+
+### P6.4 受限额外行动
+
+`grantRestrictedAction` / `actionsAvailable` / `consumeAction` / `clearRestrictedAction` /
+`restrictedActionRule`。第四循环的法术专用行动改成同一本账（`spellOnlyActions` 字段与函数名保留），
+新增 `bounty` kind；「这个行动能不能花受限额度」的唯一判定是
+`table-decisions.restrictedKindOfMove`（法术特性 → `spell`；交战/攻击带赏金的敌人 → `bounty`）。
+额度口径是「最后 N 个行动」，普通行动不能花。
+
+### P6.5 查找牌库窗口 + P6.6 被找到的牌
+
+- `searchWouldResolve` 窗口（`lookAt` / `searchDeck`）：`context.extraCards` / `extraTargets`。
+  顺带修掉 `lookZoneAdapter` 写死「只看 3 张」的上限。
+- `searchedCardRule`（条目级）：`{ mode: 'reaction'|'forced', take?, discard?, cancelSearch?, drawEncounter?, discoverClue? }`。
+  被找到的牌还在牌库里，能力源枚举看不到它，所以不是窗口；读点只有 `deck-ops.js` 一处。
+
+### P6.7 补给阶段抽牌替换
+
+`investigatorRule(code).upkeepDraw = { discardNonWeakness, handSize }`。派翠丝：弃掉手牌中全部
+非弱点卡，抽到 5 张；未声明该键的调查员行为不变。
+
+### P6.8 调查员卡面常驻规则 + P6.9 从手牌免费打出
+
+- `investigator.handSizeModifier`（`stats.js` 的唯一手牌上限读点）、
+  `elderSign.shuffleDiscardAfterTest`（`tests.js` 的旧印后续结算，真正的「本次检定结束后」）、
+  `investigator.startsWith`（既有读点，门之匣开局在场）。
+- `api.playCardFromHandFree(seat, code)`：走 `doPlay` 的 `playDiscount`，与正常支付/入场/反应窗口同源。
+
+### 9.5 仍未落地（`DEFERRED_PRIMITIVES`）
+
+| 原语 | 阶段 | 原因 |
+| --- | --- | --- |
+| `play.asIfAtLocation` | P8 | 事件结算期间的所在地点覆盖 + 按该地点的敌人建立交战；`inv.location` 无单一读点 |
+| `location.bondedDreamGate` | P8 | 梦境之门（06015a/b）的地点实体、连接、进入限制、阶段结束放在一边 |
+| `enemy.hiddenInHand` | P7 | 敌人形态的隐私投影与从手牌建立战斗目标（06017） |
+| `window.afterAlarmRaised` | P8 | A3 警报等级提升后的窗口 |
+| `api.bonded.swap` | P8 | 06015a/b 的翻面（随地点型 Bonded） |

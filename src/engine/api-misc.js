@@ -10,6 +10,9 @@ import { currentRevelation, investigationFrameRef } from './resolution-scope.js'
 import { syncSpellCredit } from './spell-actions.js'
 import { setLocationShroudMod } from './location-attachments.js'
 import { loseResources as applyResourceLoss } from './resource-loss.js'
+// P6（食梦者）：伤害/恐惧移动（托米·马尔登的旧印）与卡牌具名计数器（托尼·摩根根的赏金）。
+import { harmRoom, moveHarm as moveHarmBetween } from './harm-transfer.js'
+import { addCardCounter, cardCounterOf, cardCountersOf, moveCardCounters } from './card-counters.js'
 import { ignoreLimitForRound } from './limits.js'
 
 export function createMiscApi(state, events, deps) {
@@ -48,6 +51,10 @@ export function createMiscApi(state, events, deps) {
     info,
     isWeaknessCard,
     leaveAsset,
+    // P6（食梦者）：支援被击败判定（移动伤害后立刻判定；引擎侧已绑定好依赖）。
+    checkAssetDefeated,
+    // P6（食梦者 · 托尼的 .38）：从手牌免费打出（与 dispatch 同一入口）。
+    doPlay,
     locName,
     // 2026-10-28：地点特性原语与地点帷幕临时修正（location-traits.js / locations.js）。
     locationTraits,
@@ -564,6 +571,58 @@ export function createMiscApi(state, events, deps) {
         else card.horror = Math.max(0, (card.horror || 0) - spec.horror)
       }
       return card
+    },
+    // P6（食梦者 · 托米·马尔登旧印）：在「调查员 ↔ 你控制的支援」之间移动伤害/恐惧。
+    //   from / to: { seat, assetId? }（assetId 省略即该座位的调查员本人）
+    //   返回实际移动量 { damage, horror }；目标是支援时走一次被击败判定。
+    moveHarm: (from, to, amounts = {}) => {
+      const resolveTarget = spec => {
+        if (!spec) return null
+        const seat = Number.isInteger(spec.seat) ? spec.seat : state.currentSeat
+        const owner = state.investigators[seat]
+        if (!owner) return null
+        if (!spec.assetId) return { kind: 'investigator', owner, entity: owner }
+        const asset = (owner.assets || []).find(item => item.id === spec.assetId)
+        return asset ? { kind: 'asset', owner, entity: asset } : null
+      }
+      const source = resolveTarget(from)
+      const destination = resolveTarget(to)
+      if (!source || !destination || source === destination) return { damage: 0, horror: 0 }
+      const applied = moveHarmBetween(source.entity, destination.entity, amounts, {
+        fromDef: source.kind === 'asset' ? cardDef(source.entity.code) : null,
+        toDef: destination.kind === 'asset' ? cardDef(destination.entity.code) : null,
+      })
+      if (applied.damage || applied.horror) {
+        const label = target => target.kind === 'asset' ? cardName(target.entity.code) : target.owner.name
+        info(state, events, `↔️ ${label(source)} 与 ${label(destination)} 之间移动了 ${applied.damage} 点伤害、${applied.horror} 点恐惧。`)
+        if (destination.kind === 'asset') {
+          checkAssetDefeated(state, destination.owner, destination.entity, events)
+        }
+        if (source.kind === 'investigator' && applied.damage) checkDefeated(state, source.owner.seat, events)
+      }
+      return applied
+    },
+    // 目标现在还能承接多少伤害/恐惧（条目层用来枚举可移动量）。
+    harmRoomOf: (spec = {}) => {
+      const seat = Number.isInteger(spec.seat) ? spec.seat : state.currentSeat
+      const owner = state.investigators[seat]
+      if (!owner) return { damage: 0, horror: 0 }
+      if (!spec.assetId) return harmRoom(owner)
+      const asset = (owner.assets || []).find(item => item.id === spec.assetId)
+      return asset ? harmRoom(asset, cardDef(asset.code)) : { damage: 0, horror: 0 }
+    },
+    // P6（食梦者 · 托尼·摩尔根赏金）：卡牌实例上的具名计数器。
+    cardCounterOf: (card, id) => cardCounterOf(card, id),
+    cardCountersOf: card => cardCountersOf(card),
+    addCardCounter: (card, id, amount = 1, options = {}) => addCardCounter(card, id, amount, options),
+    moveCardCounters: (from, to, id, amount = 1, options = {}) => moveCardCounters(from, to, id, amount, options),
+    // P6（食梦者 · 托尼的 .38）：从手牌免费打出另一张同名卡（0 费，仍走正常入场与反应窗口）。
+    playCardFromHandFree: (seat, code, options = {}) => {
+      const owner = state.investigators[Number.isInteger(seat) ? seat : state.currentSeat]
+      if (!owner || !(owner.hand || []).includes(code)) return false
+      const discount = options.discount ?? playCost(state, owner, cardDef(code))
+      doPlay(state, owner.seat, code, events, false, false, null, null, null, null, discount)
+      return !(owner.hand || []).includes(code)
     },
     cardFactions: code => {
       const def = cardDef(code)

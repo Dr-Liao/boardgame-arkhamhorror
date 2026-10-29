@@ -13,6 +13,8 @@ import { renderSupplyPicker, supplyPickerModel } from './supply-picker.js'
 import { captureScrollState, restoreScrollWhenMounted } from './scroll-state.js'
 import { installCardZoom } from './card-zoom.js'
 import { recordValueText, recordChangeText } from './campaign-records.js'
+import { modePanelModel } from './hub-mode-view.js'
+import { departureLanes } from './departure-lanes.js'
 // 第 4 步 P5：万象无终的待决选择面板（塔罗抽牌 / 序章选人）也走大厅这一层——
 // 这两个选择发生在进入剧本之前的准备阶段，uiState 还是 campaignHub / scenarioSetup。
 import {
@@ -103,12 +105,20 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   }
   const recordDeckReady = record => record?.status === 'active' && record.startingDeckReady !== false
     && (record.deckSize ?? record.deck?.length ?? 0) > 0
+  // 双线战役的座位记录可能只在 parts[line] 快照里（首次整备时 currentPart 为空），
+  // 出发准备/席位确认必须按「座位所属线」取记录，不能只看顶层。
+  const recordForSeat = (s, seat) => {
+    const lane = s.state.campaign.seatParts?.[seat]
+    const fromPart = lane && s.state.campaign.parts?.[lane]?.investigators?.find(record => record.seat === seat)
+    return fromPart || s.state.campaign.investigators[seat]
+  }
   const seatPrepared = (s, inv) => {
-    const record = s.state.campaign.investigators[inv.seat]
+    const record = recordForSeat(s, inv.seat)
     // Teammates expose only deckSize; their private deck must stay hidden.
     return !!s.state.hubSeatDone?.[inv.seat] && recordDeckReady(record) && !record.upgradeDraft
   }
   const canDepart = s => s.state.uiState === 'scenarioSetup' && s.state.hubReady && !s.state.pendingChoice
+    && !(legal(s, 'hubBeginScenario')[0]?.disabled)
     && s.state.campaign.leadConfirmed !== false && s.players.some(p => p.seat === s.state.campaign.leadSeat && p.role === 'human')
     && s.state.investigators.every(inv => seatPrepared(s, inv)) && legal(s, 'hubBeginScenario').length > 0
   // 幕间叙事：当前剧情节点的纪事条目（含结算过程中已经到达的段落）。
@@ -664,7 +674,12 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
 
   function action(s, move, label = move.label, className = 'bg-btn') {
     if (state.busy && move.action === 'hubDoneSeat' && state.arkhamHubPending?.sessionId === s.sessionId) label = t('hub.action.confirming')
-    return h('button', { className, disabled: locked(s), onclick: () => submitMove(move, s) }, renderRulesText(h,label,{links:false}))
+    const blocked = !!move.disabled
+    return h('button', {
+      className, disabled: locked(s) || blocked,
+      title: blocked ? (move.explanation || '') : undefined,
+      onclick: () => { if (!blocked) submitMove(move, s) },
+    }, renderRulesText(h,label,{links:false}))
   }
 
   const seatSelected = (s, seat) => !!s.state.hubSeatSelected?.[seat]
@@ -763,6 +778,44 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       tableIcon('action'), h('span', {}, h('strong', {}, message), h('small', {}, t('hub.workflow.preparingNote'))))
   }
 
+  function modePanel(s, model = modePanelModel(s.state, s.state.legalMoves || [])) {
+    if (!model.visible) return null
+    const modeButton = item => [
+      h('button', {
+        className: 'bg-btn secondary', 'aria-pressed': String(model.selected === item.mode),
+        title: item.reason || undefined, disabled: locked(s) || item.disabled,
+        onclick: () => submitMove({ action: 'hubSetMode', mode: item.mode }, s),
+      }, item.label),
+      item.reason ? h('small', { className: 'ah-mode-reason' }, item.reason) : null,
+    ]
+    const switchButtons = seat => model.seats.filter(item => item.seat === seat).map(item => [
+      h('button', {
+        className: 'bg-btn secondary', 'aria-pressed': String(item.part === model.seatParts[item.seat]),
+        title: item.reason || undefined, disabled: locked(s) || item.disabled,
+        onclick: () => submitMove({ action: 'hubSetSeatPart', seat: item.seat, part: item.part }, s),
+      }, item.part === model.seatParts[item.seat] ? item.label : t('hub.mode.switchTo', { part: item.part })),
+      item.reason ? h('small', { className: 'ah-mode-reason' }, item.reason) : null,
+    ])
+    const balance = model.laneCounts || { A: 0, B: 0 }
+    return h('section', { className: 'ah-hub-actions ah-office-modes', 'aria-label': t('hub.mode.aria') },
+      h('strong', {}, t('hub.mode.title')),
+      model.selected ? h('small', {}, t('hub.mode.current', { mode: model.selectedLabel })) : null,
+      h('div', { className: 'ah-office-mode-list' }, model.modes.map(item => h('div', { className: 'ah-office-mode' }, ...modeButton(item)))),
+      model.needsMode ? h('small', {}, t('hub.mode.chooseFirst')) : null,
+      model.hostChooses ? h('small', {}, t('hub.mode.hostChooses')) : null,
+      model.assignments.length
+        ? h('div', { className: 'ah-office-mode-seats', role: 'group', 'aria-label': t('hub.mode.seatsAria') },
+          h('small', { className: 'ah-mode-balance' }, t('hub.mode.balance', { a: balance.A, b: balance.B }),
+            model.selected === 'parallel'
+              ? h('b', { className: model.balanced ? 'is-ok' : 'is-warn' },
+                model.balanced ? t('hub.mode.balanced') : t('hub.mode.unbalanced'))
+              : null),
+          model.assignments.map(item => h('div', { className: 'ah-office-mode-seat', 'data-seat': item.seat },
+            h('span', {}, item.label), ...switchButtons(item.seat))))
+        : null,
+      model.seatHint ? h('small', {}, t('hub.mode.seatHint')) : null)
+  }
+
   function overview(s, g) {
     const cp = s.state.campaign
     const selected = g.clientData?.campaigns?.find(item => item.id === cp.id)
@@ -773,6 +826,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           h('h1', {}, selected?.name || cp.name),
           h('p', {}, t('hub.overview.tagline')),
           h('div', { className: 'ah-office-metrics' }, metric('shield', s.players.length, t('hub.metric.investigators')), metric('star', cp.victory, t('hub.metric.victory')), metric('book', cp.xp, t('hub.metric.xp'))),
+          modePanel(s),
           s.state.uiState === 'campaignHub' ? h('div', { className: 'ah-hub-actions ah-office-difficulty', 'aria-label': t('hub.overview.difficultyAria') },
             legal(s, 'hubSetDifficulty').map(move => h('button', {
               className: 'bg-btn secondary', 'aria-pressed': String(s.state.difficulty === move.difficulty),
@@ -837,20 +891,91 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       })))
   }
 
+  function departureMember(s, inv, lane) {
+    const st = s.state
+    const record = recordForSeat(s, inv.seat)
+    const selected = !!st.hubSeatSelected?.[inv.seat] || record?.status === 'active'
+    const deckReady = recordDeckReady(record) && !record.upgradeDraft
+    // 队长的「设为队长 / 队长」与 AI 的「换位置」都放在人物卡里（只有房主拿得到别座位的动作）。
+    const leaderMove = lane?.leaders?.find(move => move.leadSeat === inv.seat) || null
+    const switchMove = lane?.switches?.find(move => move.seat === inv.seat) || null
+    const isLeader = lane?.leaderSeat === inv.seat
+    const actions = [
+      isLeader
+        ? h('b', { className: 'ah-member-role' }, t('hub.departure.leader'))
+        : leaderMove
+          ? h('button', { className: 'ah-text-action', disabled: locked(s), onclick: () => { if (!state.busy) submitMove(leaderMove, s) } }, t('hub.departure.setLeader'))
+          : null,
+      switchMove
+        ? h('button', {
+          className: 'ah-text-action', disabled: locked(s) || !!switchMove.disabled,
+          title: switchMove.explanation || undefined,
+          onclick: () => { if (!switchMove.disabled) submitMove(switchMove, s) },
+        }, t('hub.departure.moveSeat'))
+        : null,
+    ].filter(Boolean)
+    return h('article', { className: 'ah-departure-member' + (seatPrepared(s, inv) ? ' is-ready' : '') + (isLeader ? ' is-leader' : ''), 'data-seat': inv.seat },
+      h('div', { className: 'ah-departure-identity' }, portrait(inv), h('div', {}, h('h3', {}, inv.name), playerBadge(s, inv.seat))),
+      h('ul', { className: 'ah-departure-checks' }, [[selected, t('hub.departure.checkInvestigator')], [deckReady, t('hub.departure.checkDeck')], [seatPrepared(s, inv), t('hub.departure.checkSeat')]].map(([done, label]) =>
+        h('li', { className: done ? 'is-done' : '' }, h('span', { 'aria-hidden': 'true' }, done ? '✓' : '○'), label))),
+      actions.length ? h('div', { className: 'ah-departure-member-actions' }, ...actions) : null,
+      !seatPrepared(s, inv) && ['scenarioSetup', 'interlude'].includes(st.uiState) ? h('button', { className: 'bg-btn secondary', onclick: () => changeTab(st.uiState === 'interlude' && record?.status === 'active' ? 'upgrades' : 'investigators') }, inv.seat === (s.mySeat ?? 0) && acting(s, inv.seat) ? t('hub.departure.continuePrep') : t('hub.departure.viewPrep')) : null)
+  }
+
+  function departureLaneColumn(s, lane, manifest) {
+    const st = s.state
+    const members = lane.seats.map(seat => st.investigators.find(inv => inv.seat === seat)).filter(Boolean)
+    const sceneId = st.campaign.partScenarios?.[lane.part] || null
+    const sceneName = manifest?.scenarios?.find(item => item.id === sceneId)?.name
+      || st.campaign.partScenarioNames?.[lane.part] || ''
+    return h('section', { className: 'ah-departure-lane', 'data-lane': lane.part, 'aria-label': t('hub.departure.laneAria', { lane: lane.name }) },
+      h('header', { className: 'ah-departure-lane-head' },
+        h('div', { className: 'ah-departure-lane-title' },
+          h('h2', {}, lane.name),
+          h('p', { className: 'ah-departure-lane-scenario' }, sceneName || t('hub.departure.laneScenarioPending')),
+          h('small', {}, t('hub.departure.laneSize', { count: lane.size }))),
+        sceneId ? h('div', { className: 'ah-departure-lane-art' }, decor('scene', '', sceneId)) : null),
+      h('div', { className: 'ah-departure-lane-leader-line' },
+        h('small', {}, t('hub.departure.laneLeader')),
+        h('strong', {}, st.investigators.find(inv => inv.seat === lane.leaderSeat)?.name || t('hub.departure.laneLeaderNone'))),
+      h('div', { className: 'ah-departure-team ah-lane-team' }, members.map(inv => departureMember(s, inv, lane))))
+  }
+
   function departure(s, g) {
     const st = s.state, ready = canDepart(s)
     const manifest = g.clientData?.campaigns?.find(item => item.id === st.campaign.id)
     const scenario = manifest?.scenarios?.find(item => item.id === st.hubSelectedScenarioId)
     const count = st.investigators.filter(inv => seatPrepared(s, inv)).length
-    const hint = preparationMessage(s)
+    const lanes = departureLanes(st, st.legalMoves || [])
+    const beginMove = lanes.parallel ? (lanes.startMove || legal(s, 'hubBeginScenario')[0]) : legal(s, 'hubBeginScenario')[0]
+    const hint = beginMove?.disabled ? beginMove.explanation : preparationMessage(s)
+    const startButton = h('button', { className: 'bg-btn ah-departure-start',
+      disabled: !ready || locked(s) || !!s.saveError || !!s.saveDetached || !!beginMove?.disabled,
+      title: beginMove?.disabled ? beginMove.explanation : undefined,
+      'aria-describedby': 'ah-departure-hint',
+      onclick: () => { if (canDepart(s) && !state.busy && !s.saveError && !s.saveDetached) submitMove(beginMove, s) } }, t('hub.workflow.primaryStartScenario'))
+    if (lanes.parallel) {
+      return h('section', { className: 'ah-hub-pane ah-office-departure ah-departure-parallel', 'aria-label': t('hub.departure.title'), 'data-parallel': 'true' },
+        h('div', { className: 'ah-departure-common' },
+          h('div', { className: 'ah-departure-common-copy' },
+            h('small', { className: 'ah-office-eyebrow' }, t('hub.departure.title')),
+            h('h2', {}, t('hub.departure.parallelTitle')),
+            h('p', {}, t('hub.departure.readiness', { difficulty: difficultyLabel(st.difficulty), ready: count, total: st.investigators.length })),
+            h('p', { id: 'ah-departure-hint', role: 'status' }, hint)),
+          h('div', { className: 'ah-departure-common-actions' },
+            h('button', { className: 'bg-btn secondary', onclick: () => changeTab('story') }, t('hub.departure.readIntro')),
+            startButton,
+            legal(s, 'hubReopenSetup').map(move => action(s, move, t('hub.departure.reopenSetup'))),
+            legal(s, 'hubGoSetup').map(move => action(s, move)))),
+        h('div', { className: 'ah-departure-split' }, departureLaneColumn(s, lanes.lanes[0], manifest), departureLaneColumn(s, lanes.lanes[1], manifest)))
+    }
     return h('section', { className: 'ah-hub-pane ah-office-departure', 'aria-label': t('hub.departure.title') },
       h('div', { className: 'ah-departure-heading' }, decor('scene', '', st.hubSelectedScenarioId), h('div', {},
         h('small', { className: 'ah-office-eyebrow' }, t('hub.departure.title')), h('h2', {}, scenario?.name || t('hub.departure.nextScenario')),
         h('p', {}, t('hub.departure.readiness', { difficulty: difficultyLabel(st.difficulty), ready: count, total: st.investigators.length })),
         h('p', { id: 'ah-departure-hint', role: 'status' }, hint),
-        h('button', {className:'bg-btn secondary',onclick:()=>changeTab('story')}, t('hub.departure.readIntro')),
-        h('button', { className: 'bg-btn ah-departure-start', disabled: !ready || locked(s) || !!s.saveError || !!s.saveDetached,
-          'aria-describedby': 'ah-departure-hint', onclick: () => { if (canDepart(s) && !state.busy && !s.saveError && !s.saveDetached) submitMove(legal(s, 'hubBeginScenario')[0], s) } }, t('hub.workflow.primaryStartScenario')),
+        h('button', { className: 'bg-btn secondary', onclick: () => changeTab('story') }, t('hub.departure.readIntro')),
+        startButton,
         legal(s, 'hubReopenSetup').map(move => action(s, move, t('hub.departure.reopenSetup'))),
         legal(s, 'hubGoSetup').map(move => action(s, move)))),
       h('section', { className: 'ah-leader-picker', 'aria-label': t('hub.departure.leaderAria') },
@@ -864,16 +989,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
             onclick: () => { if (move && !state.busy) submitMove(move, s) } },
             portrait(inv), h('span', {}, h('strong', {}, inv.name), playerBadge(s, player.seat)), h('b', {}, chosen ? t('hub.departure.leader') : t('hub.departure.setLeader')))
         })),
-      h('div', { className: 'ah-departure-team' }, st.investigators.map(inv => {
-        const record = st.campaign.investigators[inv.seat]
-        const selected = !!st.hubSeatSelected?.[inv.seat] || record?.status === 'active'
-        const deckReady = recordDeckReady(record) && !record.upgradeDraft
-        return h('article', { className: 'ah-departure-member' + (seatPrepared(s, inv) ? ' is-ready' : ''), 'data-seat': inv.seat },
-          h('div', { className: 'ah-departure-identity' }, portrait(inv), h('div', {}, h('h3', {}, inv.name), playerBadge(s, inv.seat))),
-          h('ul', { className: 'ah-departure-checks' }, [[selected, t('hub.departure.checkInvestigator')], [deckReady, t('hub.departure.checkDeck')], [seatPrepared(s, inv), t('hub.departure.checkSeat')]].map(([done, label]) =>
-            h('li', { className: done ? 'is-done' : '' }, h('span', { 'aria-hidden': 'true' }, done ? '✓' : '○'), label))),
-          !seatPrepared(s, inv) && ['scenarioSetup', 'interlude'].includes(st.uiState) ? h('button', { className: 'bg-btn secondary', onclick: () => changeTab(st.uiState === 'interlude' && record?.status === 'active' ? 'upgrades' : 'investigators') }, inv.seat === (s.mySeat ?? 0) && acting(s, inv.seat) ? t('hub.departure.continuePrep') : t('hub.departure.viewPrep')) : null)
-      })))
+      h('div', { className: 'ah-departure-team' }, st.investigators.map(inv => departureMember(s, inv))))
   }
 
   function investigators(s, g) {
@@ -1223,6 +1339,26 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
 
   function renderGame(s) {
     const g = game()
+    // 并行/双线战役：模式未定时先给「开局模式」整屏，页签与其它局外面板全部不出现。
+    const modeModel = modePanelModel(s.state, s.state.legalMoves || [])
+    if (modeModel.visible && modeModel.firstScreen && s.state.uiState === 'campaignHub') {
+      return h('div', { className: 'bg-game ah-hub ah-office ah-theme', ...presentationAttributes(s.state),
+        'data-ui-state': s.state.uiState, 'data-mode-gate': 'true' },
+        h('header', { className: 'bg-game-head' },
+          h('div', { className: 'bg-game-title' }, t('hub.game.title', { campaign: s.state.campaign.name })),
+          h('div', { className: 'bg-game-status' }, stageLabel(s.state.uiState)),
+          h('div', { className: 'bg-game-actions' },
+            h('button', { className: 'bg-btn secondary', onclick: rulebookOpen }, t('table.rulebook')),
+            h('button', { className: 'bg-btn secondary', onclick: catalogOpen }, t('table.catalog')),
+            h('button', { className: 'bg-btn secondary', onclick: () => refreshSession(s) }, t('hub.refresh')),
+            h('button', { className: 'bg-btn secondary', onclick: leave }, t('table.leave')),
+            feedbackEntry())),
+        h('section', { className: 'ah-office-mode-gate', 'aria-label': t('hub.mode.gateAria') },
+          h('small', { className: 'ah-office-eyebrow' }, t('hub.mode.eyebrow')),
+          h('h1', {}, t('hub.mode.gateTitle')),
+          h('p', {}, t('hub.mode.gateHint')),
+          modePanel(s, modeModel)))
+    }
     if (state.arkhamLastUiState !== s.state.uiState) {
       state.arkhamLastUiState = s.state.uiState
       const eliminated = s.state.campaign.investigators[s.mySeat ?? 0]?.status !== 'active'

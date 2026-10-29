@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
 import { EFFECTS } from '../src/cards/card-effects.js'
-import { CORE_INVESTIGATOR_CODES, PLAYABLE_INVESTIGATOR_CODES, CORE_PLAYER_CODES, PLAYER_CARD_CODES, CORE_UPGRADE_CODES, CORE_SIGNATURE_CODES, CORE_BASIC_WEAKNESS_CODES, SIGNATURES_BY_INVESTIGATOR, canSelectInvestigator, isCardAvailable, getAvailability } from '../src/deck/availability.js'
+import { CORE_INVESTIGATOR_CODES, PLAYABLE_INVESTIGATOR_CODES, SELECTABLE_INVESTIGATOR_CODES, CORE_PLAYER_CODES, PLAYER_CARD_CODES, CORE_UPGRADE_CODES, CORE_SIGNATURE_CODES, CORE_BASIC_WEAKNESS_CODES, SIGNATURES_BY_INVESTIGATOR, canSelectInvestigator, isCardAvailable, getAvailability } from '../src/deck/availability.js'
 import { corePlayablePool, isPlayable, buildDeck, buildDeckFromList, deckBuilderData, expandedPlayablePool, EXPANDED_PLAYER_CARD_CODES } from '../src/deck/deckbuilding.js'
 import { CARD_ABILITY_CODES } from '../src/cards/card-abilities.js'
 
@@ -120,7 +120,10 @@ test('缺少签名、效果或基础弱点依赖时明确失败，不静默省�
 
 test('界面构筑元数据与服务端清单一致', () => {
   const data = deckBuilderData()
-  assert.deepEqual(data.investigators.map(inv => inv.code), PLAYABLE_INVESTIGATOR_CODES)
+  // P6（食梦者）：构筑界面列出「可选调查员」（含第五循环 M1 的五位）；
+  // AI 自动选人池仍是 PLAYABLE_INVESTIGATOR_CODES（池子变长会让既有种子对局的 AI 选人漂移）。
+  assert.deepEqual(data.investigators.map(inv => inv.code), SELECTABLE_INVESTIGATOR_CODES)
+  assert.deepEqual(SELECTABLE_INVESTIGATOR_CODES.slice(0, PLAYABLE_INVESTIGATOR_CODES.length), PLAYABLE_INVESTIGATOR_CODES)
   // P10（M5 全量开放）：构筑界面卡池 = 默认池 + 83 张 05 可入牌组的卡；
   // 绑定卡副本 05314/05317（deckLimit=0）不在牌组里，只作为已验收目录卡存在。
   assert.deepEqual(data.cardPool.map(card => card.code), EXPANDED_PLAYER_CARD_CODES)
