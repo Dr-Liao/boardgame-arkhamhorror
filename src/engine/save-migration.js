@@ -252,23 +252,48 @@ function smokeCheck(state) {
  * @returns {{ state: object, changes: string[] }} 无需迁移时返回原对象与空列表
  * @throws {Error} 无法安全迁移时抛出，message 可直接展示给玩家
  */
+function parallelLaneEntries(state) {
+  const lanes = state?.parallel?.lanes
+  if (!lanes?.A || !lanes?.B) return []
+  return [['A', lanes.A], ['B', lanes.B]]
+}
+
+function runtimeNeedsWork(runtime, force) {
+  return !!force || needsAutoReactionFlags(runtime) || !!stateCompatibilityError(runtime, META.resourceVersion)
+}
+
+// 一条可续玩的运行时（单线对局，或并行里的一条线）。容器本身在并行时只是外壳。
+function migrateRuntime(runtime, { force, migrations, changes, label, playable }) {
+  if (typeof runtime.schemaVersion !== 'number') throw new Error(`${label}缺少结构版本，无法识别，请重新开局`)
+  if (runtime.schemaVersion > STATE_SCHEMA_VERSION) throw new Error(`${label}来自更新版本（结构 v${runtime.schemaVersion}），请升级游戏后再读取`)
+  if (!runtime.campaign?.id) throw new Error(`${label}缺少战役信息，无法修复`)
+  const local = []
+  migrateVersions(runtime, migrations, local)
+  upgradeResources(runtime, local, force || needsAutoReactionFlags(runtime))
+  fillMissingFields(runtime, local)
+  if (playable) {
+    const moves = legalMoves(runtime)
+    if (JSON.stringify(moves) !== JSON.stringify(runtime.legalMoves)) {
+      runtime.legalMoves = moves
+      local.push('重算合法行动')
+    }
+    smokeCheck(runtime)
+  }
+  for (const change of local) changes.push(label === '存档' ? change : `${label}：${change}`)
+}
+
 export function migrateState(state, { force = false, migrations = STATE_MIGRATIONS } = {}) {
   if (!state || typeof state !== 'object' || Array.isArray(state)) throw new Error('存档缺少合法的对局状态')
-  const needsReactionFlags = needsAutoReactionFlags(state)
-  if (!force && !needsReactionFlags && !stateCompatibilityError(state, META.resourceVersion)) return { state, changes: [] }
-  if (typeof state.schemaVersion !== 'number') throw new Error('存档缺少结构版本，无法识别，请重新开局')
-  if (state.schemaVersion > STATE_SCHEMA_VERSION) throw new Error(`存档来自更新版本（结构 v${state.schemaVersion}），请升级游戏后再读取`)
-  if (!state.campaign?.id) throw new Error('存档缺少战役信息，无法修复')
+  const lanes = parallelLaneEntries(state)
+  const laneNeedsWork = lanes.some(([, lane]) => runtimeNeedsWork(lane, false))
+  if (!runtimeNeedsWork(state, force) && !laneNeedsWork) return { state, changes: [] }
   const next = structuredClone(state)
   const changes = []
-  migrateVersions(next, migrations, changes)
-  upgradeResources(next, changes, force || needsReactionFlags)
-  fillMissingFields(next, changes)
-  const moves = legalMoves(next)
-  if (JSON.stringify(moves) !== JSON.stringify(next.legalMoves)) {
-    next.legalMoves = moves
-    changes.push('重算合法行动')
+  const nextLanes = parallelLaneEntries(next)
+  // 并行容器没有自己的关卡循环；冒烟只跑两条线，避免把外壳当成一局可下的牌。
+  migrateRuntime(next, { force, migrations, changes, label: '存档', playable: nextLanes.length === 0 })
+  for (const [part, lane] of parallelLaneEntries(next)) {
+    migrateRuntime(lane, { force, migrations, changes, label: `${part} 线`, playable: true })
   }
-  smokeCheck(next)
   return changes.length ? { state: next, changes } : { state, changes }
 }

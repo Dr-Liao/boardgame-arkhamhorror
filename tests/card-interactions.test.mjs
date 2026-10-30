@@ -120,3 +120,18 @@ test('卡面快速反应开关覆盖「如同手牌」通道里的卡（2026-10-
   // 别的座位揭示的直觉牌不会把开关挂到本机角色上。
   assert.equal(investigatorHoldsCard(base, { hunch: [{ seat: 1, deck: 3, revealed: '01037' }] }, '01037'), false)
 })
+
+test('卡尔克萨尖柱的调查挂在附属卡上，地点上的放大镜也能点到它', () => {
+  const st = {
+    currentSeat: 0,
+    investigators: [{ seat: 0, location: 'hall', hand: [], assets: [] }],
+    legalMoves: [
+      { action: 'encounterAction', actionKind: 'investigate', rule: 'clearSpiresOfCarcosa', locationId: 'hall', attachmentIndex: 0, label: '调查卡尔克萨尖柱' },
+    ],
+  }
+  const onAttachment = entityMoves(st, 'attachment:hall:0')
+  assert.equal(onAttachment.length, 1)
+  assert.equal(onAttachment[0].actionKind, 'investigate')
+  assert.equal(entityMoves(st, 'attachment:hall:1').length, 0)
+  assert.equal(entityMoves(st, 'location:hall').some(move => move.rule === 'clearSpiresOfCarcosa'), true)
+})

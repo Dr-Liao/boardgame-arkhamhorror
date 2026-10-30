@@ -395,7 +395,10 @@ function ahArtCode(s, code) {
 }
 
 function locationAttachments(s, loc) {
-  const cards = (loc.attachments || []).map(item => typeof item === 'string' ? { code: item } : item).filter(item => item?.code)
+  const cards = (loc.attachments || []).map((item, attachmentIndex) => {
+    const card = typeof item === 'string' ? { code: item, attachmentIndex } : { ...item, attachmentIndex }
+    return card?.code ? card : null
+  }).filter(Boolean)
   const identity = card => card.originalCode || ahCardDef(s, card.code).originalCode || card.code
   const include = (code, count = 1) => {
     const present = cards.filter(card => identity(card) === identity({ code })).length
@@ -1075,6 +1078,13 @@ function entityDefinition(s, key) {
     return asset ? { ...ahCardDef(s, asset.code), ...asset } : {}
   }
   if (kind === 'enemy') return s.state.enemies.find(e => e.id === id) || {}
+  if (kind === 'attachment') {
+    const index = Number(parts.at(-1))
+    const locationId = parts.slice(0, -1).join(':')
+    const attachment = s.state.locations.find(l => l.id === locationId)?.attachments?.[index]
+    const code = typeof attachment === 'string' ? attachment : attachment?.code
+    return { ...ahCardDef(s, code), ...(attachment && typeof attachment === 'object' ? attachment : {}), code, type: 'treachery' }
+  }
   if (kind === 'location') return s.state.locations.find(l => l.id === id) || {}
   if (kind === 'investigator') return s.state.investigators.find(inv => inv.seat === Number(id)) || {}
   if (kind === 'act') return { ...s.state.acts[s.state.actIndex], type: 'act' }
@@ -1112,11 +1122,12 @@ function renderCardActionPopover(s, humanTurn) {
     } },
     [...grouped.values()].map(group => {
       const m = group[0]
+      const actionIcons = { fight: 'sword', evade: 'leaf', move: 'action', investigate: 'clue', ability: 'star' }
       return h('button', { className: 'ah-action', disabled: state.busy || !humanTurn, title: m.label, 'aria-label': m.label, 'data-location-move': m.action === 'move' ? m.locationId : null,
         onclick: () => {
           if (group.length === 1) cardMove(m, s)
           else { state.arkhamTargetAbility = { sessionId: s.sessionId, revision: s.state.revision, assetId: m.assetId, abilityIndex: m.abilityIndex, optionIndex: m.optionIndex }; state.arkhamDirectActions = null; render() }
-        } }, tableIcon(({ fight: 'sword', evade: 'leaf', move: 'action', investigate: 'clue', ability: 'star' })[m.action] || 'book'),
+        } }, tableIcon(actionIcons[m.actionKind] || actionIcons[m.action] || 'book'),
       group.length > 1 ? t('game.popover.target') : (ahActionLabel(m.action) || renderRulesText(h,m.label,{links:false})))
     }),
     usedRows.map(text => h('button', { className: 'ah-action is-used', disabled: true, title: text, 'aria-label': text, 'data-ability-used': 'true' },
@@ -1791,8 +1802,11 @@ function renderLocationNode(s, loc, opts = {}) {
     attachments.length ? h('div', { className: 'ah-location-story-markers' }, attachments.map((asset,index) => {
       const def = ahCardDef(s, asset.code), name = cardDisplayName(asset) || cardDisplayName(def) || asset.code
       const attached = index < attachedCards.length
+      const attachmentKey = attached && Number.isInteger(asset.attachmentIndex)
+        ? `attachment:${loc.id}:${asset.attachmentIndex}` : null
       return h('button', { className: 'ah-map-story-marker' + (attached ? ' ah-map-attachment' : ''), 'data-map-info': attached ? 'attachment' : 'story',
         'data-attachment-code': attached ? asset.code : null,
+        'data-interaction': attachmentKey,
         title: attached ? t('game.map.attachedTo', { location: locName, name }) : name, 'aria-label': attached ? t('game.map.viewAttachment', { name }) : t('game.map.viewStoryCard', { name }),
         onclick: event => { event.stopPropagation(); openCardDetail(s, { ...asset, attachedTo: attached ? { type: 'location', name: locName } : undefined }) }, onkeydown: event => event.stopPropagation(),
         oncontextmenu: event => { event.preventDefault(); event.stopPropagation(); openCardDetail(s,{ ...asset, attachedTo: attached ? { type: 'location', name: locName } : undefined }) },

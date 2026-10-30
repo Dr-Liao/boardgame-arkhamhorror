@@ -386,6 +386,32 @@ test('03150 Forewarned is not offered for a non-treachery encounter card', () =>
   assert.ok(state.investigators[0].hand.includes('03150'))
 })
 
+test('放大镜可以调查没有线索的卡尔克萨尖柱，成功只移除毁灭', () => {
+  const state = fixture()
+  state.scenario = { ...state.scenario, id: 'curtainCall' }
+  asset(state, '01030')
+  const loc = state.locations.find(item => item.id === state.investigators[0].location)
+  loc.clues = 0
+  loc.doom = 2
+  loc.shroud = 4
+  loc.attachments = [{ id: 'spires', code: '03091', originalCode: '03091' }]
+  state.investigators[0].intellect = 3
+  state.investigators[0].clues = 0
+  state.chaosBag = ['0']
+  assert.equal(legalMoves(state).some(item => item.action === 'investigate'), false)
+  const spire = legalMoves(state).find(item => item.rule === 'clearSpiresOfCarcosa')
+  assert.ok(spire)
+  assert.equal(spire.actionKind, 'investigate')
+  move(state, spire)
+  settle(state)
+  const here = state.locations.find(item => item.id === state.investigators[0].location)
+  // 智力 3 + 放大镜 1 + 标记 0，对上帷幕 4。没有加值则会失败，毁灭不会减少。
+  assert.equal(here.doom, 1)
+  assert.equal(here.clues, 0)
+  assert.equal(state.investigators[0].clues, 0)
+  assert.equal(here.attachments.some(item => item.code === '03091'), true)
+})
+
 test('Lighting Box, museum and catacomb definition flags are present', () => {
   assert.equal(curtainScenario.locations.lightingBox.playCostIncrease, 2)
   assert.equal(echoesScenario.locations.groundMuseum.noIntellectBoost, true)

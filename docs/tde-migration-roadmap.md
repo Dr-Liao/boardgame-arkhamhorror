@@ -1,14 +1,9 @@
 # 《食梦者》迁移路线图（TDE，五循环）
 
-> **状态口径**：`draft` · 尚未开工。TDE 当前是 `catalog-only`：卡面数据已在 `src/cards/cards-data.js`，但**不可选人、不可构筑、不可启动**；本文是**计划文档**，不是完成报告，不含任何「已实现 / 已验收 / 规则等价」声明。
-> 起草：2026-10-27；依据 [`arkham-content-migration.md`](./arkham-content-migration.md)（迁移规范）的六步顺序与 M0–M5 产物范围，分层约束见 [`ARCHITECTURE.md`](../ARCHITECTURE.md) §3–§9；仓库基线 HEAD `e0dc5bd`、规则版本 `n6.0`。先例：TCU（四循环）已完整交付的全链路产物，本文的数字级类比均以 `audit/tcu-migration.json` 为锚点。
-> 阅读顺序：[`arkham-content-migration.md`](./arkham-content-migration.md) → 本文 → M0 之后按阶段新建的 8 篇卫星文档（`docs/tde-primitives.md`、`tde-rules.md`、`tde-interactions.md`、`tde-investigators.md`、`tde-player-cards.md`、`tde-scenarios.md`、`tde-story.md`、`tde-release.md`；骨架见 §8.3）。
-> 数据来源：`artifacts/migration/tde/recon/` 三份只读初勘（`scope/scope-draft.*`、`mechanism/mechanism-draft.*`、`baseline/{inventory.json,gaps.md,baseline.md}`），以及 2026-10-27 补充评估 `recon/fullmode/impact.md`（旧双 part / `pick` 改动量）与 `recon/story-gap/report.md`（自译缺口）。初勘数字**不是正式账本**，M0 由 `npm run scan:tde:scope --write` 重新生成 `artifacts/migration/tde/scope.json` 后才算锁定。
-> **2026-10-27 P0 核实**：上述 `artifacts/migration/tde/recon/**` 在当前工作树与 git 历史中均不存在（`git log --all -- artifacts/migration/tde` 为空），初勘数字**暂无复算来源**；P1 起由 `scan:tde:scope --write` / `scan:tde` 重新生成，本文所有「初勘」数字降级为历史口径。核实与处置见 [`tde-p0-report.md`](./tde-p0-report.md) §2.2。
-> 2026-10-27 路径重排：双 part 骨架前移到 P3，P5 通闭环但只暴露 A/B，P9.5 只做双线模式开闸；官方玩法事实与四人联机语义见 §1.4、§7.2、§7.4。
-> 2026-10-27 玩法口径定稿（取代上一条的开局口径）：开局只暴露 **四个选项** —— 单线 A、单线 B、**并行双线**（两组等分、同时各打一条线）、**分选双线**（自由选线、可不等分、每个章对独立选择先手）；**人数为奇数时禁止开并行双线**。每座位只需一套牌组，线归属落 `campaign.seatParts`；`officialFull` 的整桌切换与每人两套不再是开局选项。见 §1.4.1、§7.5。
-> 命名约定：产品代码与当前实施范围只使用四个模式值：`singleA`、`singleB`、`pick`、`parallel`。本文用「双线模式」统称 `pick` + `parallel`；`officialFull` 仅指官方规则中的「整桌切换、每人 A/B 各一套」玩法，并且**不在本轮产品范围内**。禁止再用裸 `FullMode` 同时指两套不同语义；§7.4 只保留 `officialFull` 的历史事实，不进入当前原语、工作包或开闸门禁。
-> 2026-10-27 D8 决策：并行双线采用 **D8-C**（一个房间 / 一个房主 / 一套存档；双运行时并发推理、全局串行提交；关卡屏障）。细节同时拍板：两边结算后**自动**进幕间、等待期**只见自己的结算**、**AI 席位允许两线并存且请求并发**（不轮转排队）、幕间正文**两边读全文**、存档**单文件**。见 §7.5.2。
+> **状态（2026-10-29）**：战役、玩家卡和 8 章仍是 `catalog-only`，未接入 `content/registered.js`，不可启动。调查员包已是 `development`：5 人可以选、可以构筑（AI 池未扩容）。**P7 玩家卡未开工**。发布最多 `playable` + `earlyAccess`，不宣称规则等价。逐批数字在 `tde-p0`–`tde-p6` 报告和 8 篇手册里，本文只留范围、决策、架构和未做事项。
+> 规范：[`arkham-content-migration.md`](./arkham-content-migration.md)。分层：[`ARCHITECTURE.md`](../ARCHITECTURE.md) §3–§9。手册见 §10.3。
+> 玩法只用 `singleA` / `singleB` / `pick` / `parallel`。「双线」指后两者。`officialFull`（每人两套、整桌切换）不在本轮范围（§7.4）。并行采用 **D8-C**：一个房间、一套存档、双运行时、推理可并发、提交全局串行、两边结算后自动进幕间、等待期只见自己的结算、幕间两边读全文（§1.4.1、§7.5.2）。
+> 初勘目录 `artifacts/migration/tde/recon/**` 不在仓库里。范围与机制以 P1/P2 账本为准，见 [`tde-p0-report.md`](./tde-p0-report.md) §2.2。
 
 ## 0. 一页结论
 
@@ -17,13 +12,13 @@
 | 目标 | 按六步顺序把 TDE（06 号段）迁移为可启动、可存档重放、三组确认齐备的战役；先例与门禁全部照 [`arkham-content-migration.md`](./arkham-content-migration.md) §4–§9，不另立规矩 |
 | 范围 | **388 条印刷记录 = 352 主卡 + 36 关联面**；内容包分区 `tdeCampaign` 283（249+34）/ `tdeInvestigators` 18（16+2）/ `tdePlayer` 87；印刷包 7 个（tde 112 / sfk 62 / tsh 41 / dsm 40 / pnr 54 / wgd 47 / woc 32） |
 | 章节 | **8 章** = 双战役各 4 章（A 梦寻：Beyond→Search→DarkSide→WhereGods；B 梦网：Waking→ThousandShapes→PointOfNoReturn→Weaver）；20 个遭遇组 = 8 章节组 + 12 共享组 |
-| 玩法结构 | 开局**四个选项**：`singleA`（4 章）/ `singleB`（4 章）/ `parallel`（座位等分两组、两线同时推进，仅偶数人）/ `pick`（自由选线、可不均、每个章对独立选择 A 或 B 先打）；后两者都是 4 对 A/B + 3 幕间 + 4×4 尾声，每座位**一套**牌组、`campaign.seatParts` 记房间座位归属、两条 Campaign Log、两袋混乱袋；参考实现见 `Campaign/Campaigns/TheDreamEaters.hs`（845 行） |
+| 玩法结构 | 开局**四个选项**：`singleA`（4 章）/ `singleB`（4 章）/ `parallel`（自由分线，开始前人数必须相等，仅偶数人，两线同时推进）/ `pick`（自由选线、可不均、每个章对独立选择 A 或 B 先打）；后两者都是 4 对 A/B + 3 幕间 + 4×4 尾声，每座位**一套**牌组、`campaign.seatParts` 记房间座位归属、两条 Campaign Log、两袋混乱袋；参考实现见 `Campaign/Campaigns/TheDreamEaters.hs`（845 行） |
 | 初勘缺口 | 机制条目 38（primitive 9 / keyword 7 / rulebook 6 / scenario 11 / interaction 2 / content 3），覆盖 388/388，**P2 已复算确认**（另 1 条 baseline）；新增关键词 4（Myriad 14 / Swarming 11 / Veiled 23 / Researched 3），已有待确认 3（Alert 5 / Hidden 18 / Bonded 27）；原语候选 21 新增 + 1 复用，escape 3 |
-| 里程碑 | M0 目录与来源基线 → M1 调查员（5 位）→ M2 玩家卡（87 张，4 批）→ M3 剧本（8 章）→ M4 关键词与规则书 → M5 发布（`playable` + `earlyAccess`，`equivalenceCertified: false`） |
-| 当前阻塞 | ① 中文剧情源不完整——**已决策自译补齐**（2026-10-27）：en 源 194,299 字符、净需翻译 147,718，预计约 50k 中文字符、14 批、单人约 3–5 周；② 旧实测数字只覆盖双 part 骨架 + `pick`：骨架 550–850 行、累计 1,900–3,100 行（34 文件 / 54–71 例）；`parallel` 的 D8-C 还需房间座位↔线内座位映射、容器适配器、全局提交序列、按线事件投影与单文件存档串行化，**P0 spike 复测前不得把旧数字当完整双线报价**；③ ~~06 段本地卡图仅 1/388~~ **P1 实测 en/zh 各 388/388**（本地缓存被忽略，干净检出 0 张属预期）；④ ~~TCU 三本账本漂移~~ **P0 已处置**（2026-10-27）：根因是 9 篇 TCU 文档被误删（HEAD `421be47` 删 2 篇、`676f33b` 删 7 篇），已恢复并重算，`audit:tcu` / `audit:tcu-scenarios` / `audit:tcu-primitives` / `scan:tcu:scope:check` **4/4 通过**；`audit/baseline.json` 仍为旧口径（R4 待重采，不阻塞 TDE）。文档链接 P0 收尾实测 **43 文件 / 376 本地链接全通过**；⑤ 初勘产物 `artifacts/migration/tde/recon/**` 在仓库与 git 历史中缺失，初勘数字待 P1/P2 工具重算（见 [`tde-p0-report.md`](./tde-p0-report.md)） |
+| 里程碑 | **M0 完成**（P1–P3）· **M1 部分完成**（P6：verified 3/5）· **M4 完成**（P4）· M2 / M3 / M5 未开始。发布口径仍是 `playable` + `earlyAccess`，`equivalenceCertified: false` |
+| 当前阻塞 | ① 中文剧情自译未开工（D2 已定，约 50k 中文字符 / 14 批，§8.5）；② P7 的 87 张玩家卡；③ P8 的 8 章、三幕间、16 段尾声；④ 卢克待 P8 梦境之门，派翠丝的 06017 待 P7 隐私敌人；⑤ 真实 TDE 双线开闸要等 P8 内容加上 P9.5 矩阵。已关闭：卡图 en/zh 各 388/388、TCU 四项账本、初勘目录缺失（数字改以 P1/P2 账本为准） |
 | 诚实边界 | 上述任一未完成时，TDE 只能停在 `catalog-only` / `development`；发布最多 `playable` + `earlyAccess`，逐条剩余写入 `remaining` 与 `scenarioApproximations`，**不宣称规则等价** |
 
-一句话判断：**TDE 的规模与 TCU 同级（388 vs 377 条记录），但结构难度更高——双战役、两条线各自独立的两袋混乱袋、蜂拥/掩藏两个新关键词族，以及一份明显不完整的中文剧情来源。路线图把双 part 骨架前移到 P3、把双线开闸后移到 P9.5；四人局按 `parallel` 是两组等分同时进行，按 `pick` 是自由分线并在每个章对独立选择先手；`officialFull` 的「每人两套牌组、整桌切换」明确退出本轮范围。**
+一句话判断：**规模与 TCU 同级（388 vs 377），结构更难：双战役、两套混乱袋、蜂拥/掩藏，以及一份不完整的中文剧情。P0–P6 的引擎、规则书和 5 位调查员已经落地；剩下 87 张玩家卡、8 章、自译和真实双线开闸。战役还不能启动。**
 
 ## 1. 范围与来源（M0 交付物 / 索引）
 
@@ -102,12 +97,12 @@ A1 ⇄ B1 → 幕间 I → A2 ⇄ B2 → 幕间 II → A3 ⇄ B3 → 幕间 III 
 | --- | --- | --- | --- | --- | --- |
 | 单线 A | 全部座位在 A | 只跑 A1–A4 | 只读幕间 I 的 A 侧 | 1–4 | PartialMode（单运行时） |
 | 单线 B | 全部座位在 B | 只跑 B1–B4 | 只读幕间 I 的 B 侧 | 1–4 | PartialMode（单运行时） |
-| **并行双线** | 座位**等分**到 A/B | 两线**同时**推进，A_n 与 B_n 可并行结算 | I/II/III，两边同对都完成才进（自动） | **仅 2 / 4（偶数）** | 单房间双运行时（D8-C），见 §7.5 |
+| **并行双线** | 自由选线，开始前两组人数必须相等（默认对半） | 两线**同时**推进，A_n 与 B_n 可并行结算 | I/II/III，两边同对都完成才进（自动） | **仅 2 / 4（偶数）** | 单房间双运行时（D8-C），见 §7.5 |
 | **分选双线（`pick`）** | 座位**自由选线**，可不均 | 同一时刻只跑一条线；**每个章对独立选择** A 或 B 先打，共 16 种合法排列 | I/II/III，两边同对都完成才进 | 1–4，且两线各 ≥1 | 单运行时 + 切 part（复用 §7.2.2 骨架） |
 
 - **人数校验前置到开局设置**（hub）：`playerCount` 为奇数时「并行双线」置灰并给出原因（“并行需要两组人数相等”），不能进入后续选人；`playerCount = 1` 时只保留两个单线选项。
 - **分选的双线下限**：两线都必须 ≥1 座位；当分选结果使某线为 0 人时，按单线处理并在开局确认里显式说明，不静默开局。3 人 → 2+1 是合法分选，但**不能**开并行。
-- **线归属落状态**：`campaign.seatParts[roomSeat] = 'A' | 'B'`，开局后不可改线（中途换线不在首版范围，写 `remaining`）；线内 `laneSeat` 由该数组确定性派生，见 §7.2.2。
+- **线归属落状态**：`campaign.seatParts[roomSeat] = 'A' | 'B'`。第一次整备、以及还没有结算的关间可以改线；关卡进行中不能改。线内 `laneSeat` 由该数组确定性派生，见 §7.2.2。
 - **每座位一套牌组**：本口径取代 `officialFull` 的「每人 A/B 各一套、4 人 8 套」。选人/构筑只按本线走一次；跨线重复选人校验仍保留（同一位调查员不能同时出现在两线）。
 - **`officialFull` 的处置**：`campaign-parts` 切片、`inPart`/`recordInPart`、配对屏障、三幕间、16 段尾声可被本产品双线模式复用；「整桌切换、每人两套」不进入原语清单、工作包或测试门禁，§7.4 只在未来另立第五模式时重新启用。
 - **幕间触发**：并行与分选都要求同对章节（A1/B1、A2/B2、A3/B3）两边都完成才进幕间；A4/B4 之后按两线记录查 16 段尾声。单线按各自终章直接结束。
@@ -141,59 +136,43 @@ P1 锁定范围与基线 → P2 扫描新增机制 → P3 拆分原语 + 双战�
 
 TDE 按“**骨架先行、模式后开**”重排，不再把双线模式当成 P9.5 的一次性加装：
 
-- **P3 落骨架**：`campaign-parts` 的切片/切换/`inPart` + 座位映射原语 + JSON 往返 + 旧 13 局零漂移。骨架同时服务 `singleA`/`singleB`/`pick`，D8-C 的容器适配在 P0 spike 后从 P5 接入，不做“先单战役、后补双线”的两套代码。
-- **P5 通闭环**：四个开局选项、按线选人、切 part（`pick`）、并行双运行时落位（D8-C，§7.5.2）、双日志/双袋投影、座位分线。用现有战役 + 合成两 part 夹具验证；TDE 的 A/B 内容在 P8 接入后才对玩家开放，P5 只验证机制闭环；双线始终留在 feature gate 后。
-- **P8 补内容**：8 章按 part 标注；三幕间 + 16 段尾声 + 跨线效果按双线写，单线复用同一批章节与幕间 I。
-- **P9.5 只开闸**：双线从 feature gate 打开，跑 4 人 2+2、2 人 1+1、3 人分选 2+1、16 排列、并发提交/存档/回放/浏览器验收；不再做架构返工。
-- 若 P3 骨架失败，退回纯 A/B 单线（不引入 `parts`）：保留 A/B 可玩，双线写 `remaining`；**禁止 D1-C 式合并两线**。
+- **P3 骨架已落地**：`campaign-parts` 的切片、切换、`inPart` 和座位映射同时服务 `singleA` / `singleB` / `pick`。D8-C 的容器在 P5 接上，没有另写一套「先单战役、后补双线」的代码。
+- **P5 机制已闭环**：四个开局选项、按线选人、分选切 part、并行双运行时、双日志双袋。TDE 的章节要等 P8 才对玩家开放；真实双线仍在 feature gate 后面。
+- **P8 补内容**（未做）：8 章按 part 标注；三幕间、16 段尾声和跨线效果按双线写，单线复用同一批章节和幕间 I。
+- **P9.5 只开闸**（未做）：打开 feature gate，跑 4 人 2+2、2 人 1+1、3 人分选 2+1、16 排列，以及并发提交、存档、回放和浏览器验收。
+- 骨架已经留下。若开闸失败，退回 A/B 单线并把双线写入 `remaining`。禁止把两线记录、两袋或两套牌组合并（D1-C）。
 
 M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描、原语、关键字、交互都可并行推进，不必等全部剧本迁完。
 
-| 阶段 | 名称 | 对应内容里程碑 | 主产物 / 开闸点 |
+| 阶段 | 名称 | 里程碑 | 状态 |
 | --- | --- | --- | --- |
-| **P0** | 前置清理、规范勘误与 D8-C 风险验证 | — | 文档/账本处置方案、基线重锁、最小 artifacts 白名单、规范勘误、D8-C lane adapter + 并发提交 spike 与独立估算。**2026-10-27 收尾**：前四项已完成并留证；D8-C spike 按 §13 依赖「9←8」改到 P3 骨架之后执行，P0 先交七项门禁清单 / 适配面盘点 / 估算口径，见 [`tde-p0-report.md`](./tde-p0-report.md) §7 |
-| **P1** | 范围与来源锁 | M0 | `scan:tde:scope`、`artifacts/migration/tde/scope.json`、`replay-before.json`。**2026-10-27 收尾**：`gate.pass=true`，388 = 352 + 36，三包 283/18/87，20 组 283，8 章，分片 15 片并集 388 无交集，来源锁 43 项；M0 目录骨架已建（3 包 manifest + `shared.js` + 8 章占位，全部 `catalog-only`）。见 [`tde-p1-report.md`](./tde-p1-report.md) |
-| **P2** | 机制扫描 | M0 | `scan:tde`、`mechanism-scan.json`、`_review.md`。**2026-10-27 收尾**：38 条机制（7/9/6/11/2/3）+ 1 baseline，388/388 已分类，`gate.pass=true`，来源锁 91 个文件；见 [`tde-p2-report.md`](./tde-p2-report.md) |
-| **P3** | 拆分原语 + 双战役骨架 | M0 | `plan:tde:primitives`、`primitive-plan.json`/`primitive-catalog.json`、`campaign-parts` 骨架、合成两 part 夹具。**2026-10-28 批次 1+2+3 收尾**：`new 17/17 done`、100 例原语测试、`deferredPrimitives` 空、`gate.pass=true`；replay 基线因外部提交 `6f60771 修bug` 重采后零漂移 |
-| **P4** | 关键词与规则书 | M4 | `confirmations.keywords/rulebook` 证据、规则书条目、`test:tde:rules*`。**2026-10-29 收尾**：关键词 7/7、规则书 17 条全 `verified`，388/388 卡文直达；审计账本 `audit/tde-rules.json`（`gate.pass=true`）；Node 15 例 + 浏览器 4 条；核对官方规则时更正 P3 的 `location.veiled` / `location.doom` 两条口径。见 [`tde-p4-report.md`](./tde-p4-report.md) 与 §13.7 |
-| **P5** | 新增交互 + 双战役引擎闭环 | M4 | 四种开局选项（单线 A/B、并行、分选）/ 按线选人 / 切 part（分选）/ 并行双运行时（D8-C）/ 双日志双袋投影 / 座位分线；**先暴露单线，双线留 gate**；桌面 1440 + 移动 390 截图。**2026-10-29 批次 1–3 收尾（批次 3 只到协议层）**：四模式策略、`partGate` + 16 排列、双线条件、非活动线投影脱敏、10 条交互清单定稿、hub 四模式开局与按线准备（单线可开局）、lane adapter 与 D8-C 双运行时容器（双版本/屏障/单文件存档）、分选关卡运行时重建与大厅边界（3 人 2+1 可进入 A1）；Node 41 例。**仍有缺口**：并行管线接线、viewEvents 座位转换、交互 UI 与浏览器证据，见 [`tde-p5-report.md`](./tde-p5-report.md) 与 §13.8–§13.10 |
-| **P6** | M1 调查员 | M1 | `content/packs/tdeInvestigators/manifest.js`、5 人逐人验收。**2026-10-29 收尾**：16 个单卡文件（06001–06014 / 06016 / 06017）、9 条 P6 原语、可用性/构筑接线、逐人账本 `audit/tde-investigators.json`（18 条记录、`gate.pass=true`、**verified 3/5**、pending 2 人显式简化）、Node 24 例；replay 零漂移、`test:fast` 3968/0 fail。未做：梦境之门地点（06015a/b）与卢克「事件如同位于连接地点」→ P8；06017 隐私敌人 → P7。见 [`tde-p6-report.md`](./tde-p6-report.md) 与 §13.15 |
-| **P7** | M2 玩家卡（4 片） | M2 | `src/cards/entries/<code>.js` × 87、分片/队列报告、逐卡账本 |
-| **P8** | M3 剧本 + 幕间/尾声 | M3 | `content/campaigns/theDreamEaters/scenarios/<id>/**`、三幕间、16 段尾声、逐章 12 项检查 |
-| **P8-T** | 剧情自译补齐（可与 P3–P8 并行） | M3-C | 14 批自译源 + 术语表 + 来源锁 → `story-text.js`（§8.5） |
-| **P9** | 全卡账本与逐章验收 | M3/M4 | `audit/tde-all-card-acceptance.json`、`tde-scenario-acceptance.json`、逐卡 `literalCardBehavior` |
-| **P9.5** | 双线开闸 + 多人验收 | M5 前增量 | feature gate、4 人 2+2 / 2 人 1+1 / 3 人分选 2+1 矩阵、16 排列 flow 全覆盖、两条真实全流程、浏览器与回放证据（§1.4.1/§7.5） |
-| **P10** | 发布 | M5 | 三组确认 + `gate.pass`、`audit/tde-migration.json`、`playable` + `earlyAccess` |
+| **P0** | 前置清理与 D8-C 风险验证 | — | 完成。勘误、基线、白名单、协议级 spike 7/7。见 [`tde-p0-report.md`](./tde-p0-report.md) |
+| **P1** | 范围与来源锁 | M0 | 完成。`gate.pass`，388 = 352+36，来源 43，目录骨架 `catalog-only`。见 [`tde-p1-report.md`](./tde-p1-report.md) |
+| **P2** | 机制扫描 | M0 | 完成。38 条机制 + 1 baseline，388/388。见 [`tde-p2-report.md`](./tde-p2-report.md) |
+| **P3** | 原语 + 双战役骨架 | M0 | 完成。`new 17/17`，deferred 空。见 [`tde-primitives.md`](./tde-primitives.md)、[`tde-p3-report.md`](./tde-p3-report.md) |
+| **P4** | 关键词与规则书 | M4 | 完成。7/7 关键词、17 条规则书 verified。见 [`tde-rules.md`](./tde-rules.md)、[`tde-p4-report.md`](./tde-p4-report.md) |
+| **P5** | 交互 + 双战役闭环 | M4 | 机制闭环完成。交互 1–2 演示路径 verified（源清单仍 pending），3–10 pending。真实 TDE 未开闸。见 [`tde-interactions.md`](./tde-interactions.md)、[`tde-p5-report.md`](./tde-p5-report.md) |
+| **P6** | 调查员 | M1 | verified 3/5。卢克待 P8，06017 待 P7。见 [`tde-investigators.md`](./tde-investigators.md)、[`tde-p6-report.md`](./tde-p6-report.md) |
+| **P7** | 玩家卡（4 片） | M2 | 未开工。见 [`tde-player-cards.md`](./tde-player-cards.md) |
+| **P8** | 剧本 + 幕间/尾声 | M3 | 未开工。见 [`tde-scenarios.md`](./tde-scenarios.md) |
+| **P8-T** | 剧情自译 | M3-C | 未开工。见 [`tde-story.md`](./tde-story.md)，批次在本文 §8.5 |
+| **P9** | 全卡与逐章验收 | M3/M4 | 未开工 |
+| **P9.5** | 双线开闸 | M5 前 | 未开工。演示战役可以开并行；真实 TDE 的 `dualLineGate` 仍关 |
+| **P10** | 发布 | M5 | 未开工。见 [`tde-release.md`](./tde-release.md) |
 
-> P2/P3 在 M0 范围锁定后推进，不计入 M0 的「目录与来源基线」产物范围（规范 §4.8 的 M0 产物清单只有来源锁与目录骨架）。
->
-> P3 的骨架不是一次性 spike：历史评估的 9 文件 / 550–850 行可演进为 `campaign-parts.js` 与其测试；34 文件 / 1,900–3,100 行只代表 `pick` 的累计口径。D8-C 必须先经 §7.5.2 P0 spike 独立估算。若骨架判定失败，P10 仍可按 A/B 单线发布（`earlyAccess` + `remaining` 写明双线未实现）。
+M0 的产物范围只有来源锁和目录骨架（规范 §4.8）。骨架已经留下；若双线最终开不了闸，P10 仍可只发 A/B 单线（`earlyAccess` + `remaining`）。
 
 ## 3. P1 第 0 步：范围与来源锁（M0）
 
-- **工具**：新建 `tools/scan-tde-scope.mjs`（照 `scan-tcu-scope.mjs` 改数据源：06 段正则、三包清单、`theDreamEaters/shared.js`、分片草案）。命令：`npm run scan:tde:scope` / `scan:tde:scope:check`。
-- **产物**：`artifacts/migration/tde/scope.json`（counts / modes / parts / pairs / packs / faces / encounterGroups / chapters / crossCycleGroups / gatherRefs / shards / sources / baseline / cardImages / pending / gate）、`replay-before.json`；来源 SHA-256 **43 项**（参考实现 38 + 仓内 5）。
-- **门禁**（规范 §4.1 + 初勘 §9）：记录 388 全部分区、`main=352` / `faces=36`、三包 283/18/87、20 组唯一且组卡和 = 283、4 个章对各含 A/B 两线、印刷包分布 112/62/41/40/54/47/32、分片两两无交集且并集 388、43 项来源全部存在、`replay-before` 与 golden 逐条一致、`content/registered.js` 未接入（`catalogOnly`）；**范围外卡不得进入本轮**。
-- **M0 附加动作**：登记「无主双面卡」归属（`06015a/b` → 调查员包、`06169a/b` → 战役包，账本 `unownedFaces` 门禁）；补 `Beyond the Gates of Sleep` 遭遇牌库证据（参考实现确认无 `gather Set.*`，缺口如实 `pending`）；**P1 实测**图片库存 en/zh 各 388/388（`npm run scan:tde:images` → `reports/image-inventory.json`，原「缺图 387 条」作废）；内容保持 `catalog-only`。
-- **P1 收尾（2026-10-27）**：`npm run scan:tde:scope:check` → `scope 复算一致：388 条记录（352 主卡 + 36 面），三包 283/18/87，20 个遭遇组，8 章，43 个来源`，`gate.pass=true`；M0 目录骨架 12 个文件（3 包 manifest、`shared.js`、8 章 `index.js`）全部 `catalog-only`；`test:fast` 无新增失败。详见 [`tde-p1-report.md`](./tde-p1-report.md)。
+已完成（2026-10-27），`npm run scan:tde:scope:check` 的 `gate.pass=true`。工具 `tools/scan-tde-scope.mjs`，产物 `scope.json` 与 `replay-before.json`，来源锁 43 项。门禁：388 = 352 + 36、三包 283/18/87、20 组、8 章、分片无交集、战役未接入 `registered.js`。无主双面卡 `06015a/b` 归调查员包、`06169a/b` 归战役包。梦境门外没有 `gather Set.*`，记 `pending`。卡图 en/zh 各 388/388。详见 [`tde-p1-report.md`](./tde-p1-report.md)。
 
 ## 4. P2 第 1 步：机制扫描（M0）
 
-- **工具**：新建 `tools/scan-tde-mechanisms.mjs`。**扫描引擎可整体照抄 TCU 版**（分类/分级/证据文本匹配/门禁计算），但章节表、机制表、规则来源表、watchlist、crossCheck 必须按 TDE 卡面重写。命令：`scan:tde` / `scan:tde:check` / `scan:tde:review`。
-- **初勘结论**（**P2 已复算**）：**38 条机制**，`type` 分布 keyword 7 / primitive 9 / rulebook 6 / scenario 11 / interaction 2 / content 3（与初勘完全一致）；覆盖 388/388，未分类 0；分级 mechanism 173 / content 151 / standard 64（初勘 182/156/50，差额集中在调查员专属卡，见 [`tde-p2-report.md`](./tde-p2-report.md) §3.2）；来源锁参考实现 **91 个文件**。另 1 条 baseline（`standardRules`）承接「无新增机制」的卡，不计入 38。
-- **关键词三档**（详见 §6）：新增 4 —— `Myriad`（多重，14 卡）、`Swarming X`（蜂拥，初勘 11 敌 / 英文机检 9，M0 复核）、`Veiled`（掩藏，23 地点）、`Researched`（研究完成，3 卡，`06236/06237/06238` 梦境日记）；已有待确认 3 —— `Alert`（5 敌）、`Hidden`（18 卡）、`Bonded`（27 卡）；其余标准关键词（Retaliate/Hunter/Aloof/Massive/Peril/Surge/Victory/Fast/Permanent/Uses/Doom/Parley/Prey）直接复用现有读点。
-- **战役级机制**（必须全部落条目）：四模式 `singleA`/`singleB`/`pick`/`parallel`、每座位一套牌组、房间座位到线内连续座位的映射、55 键记录的部分隔离与跨部分双写/勾销、两袋混乱袋与跨部分增删换、逐章对 gate（4 个二元先手选择）、序章 + 3 幕间、16 段结局矩阵、剧情支援入队/离场、成就（默认 out-of-scope，待确认）。`officialFull` 的第二套牌与整桌切换仅记来源事实，不进入本轮待实现机制。
-- **门禁**（规范 §4.2）：本轮范围内每张卡至少出现在一个机制条目；未分类卡为 0；`type=primitive` 条目全部进入下一步；未知机制默认**阻断**，不得用近似卡文静默过关。watchlist 需明确排除误判（如 `Patrol`/`Seal`/`Explore`/`Supply` 在 TDE 只是文本提及）。
-- **P2 收尾（2026-10-27）**：`npm run scan:tde:check` 复算一致、`gate.pass=true`——388/388 已分类、38 条机制（7/9/6/11/2/3）+ 1 baseline、20/20 遭遇组有卡、`scopeConsistent=true`、6 个 absent 词 0 命中；关键词实测 Myriad 14 / Swarming 11 敌 / Veiled 23 地点 / Researched 3 / Alert 5 / Hidden 18 / Bonded 27；逐卡复核清单 `_review.md` 已生成。详见 [`tde-p2-report.md`](./tde-p2-report.md)。
+已完成（2026-10-27），`npm run scan:tde:check` 的 `gate.pass=true`。38 条机制（keyword 7 / primitive 9 / rulebook 6 / scenario 11 / interaction 2 / content 3）加 1 条 baseline，388/388 已分类。关键词实测：Myriad 14、Swarming 11 敌、Veiled 23 地点、Researched 3、Alert 5、Hidden 18、Bonded 27。`Patrol` / `Seal` / `Explore` / `Supply` 只是文本提及，不立关键词。四模式、座位映射、55 个记录键、两袋、章对门、三幕间、16 段尾声必须落条目。`officialFull` 不进入待实现清单。成就默认不做（D4）。详见 [`tde-p2-report.md`](./tde-p2-report.md) 与 §6。
 
 ## 5. P3 第 2 步：拆分原语（M0，含双战役骨架）
 
-> **分批口径（2026-10-27）**：P3 拆成三批，避免一次性把 21+ 条原语压在一个批次里。
-> **批次 1（双战役骨架，已完成）**：`campaignPart` / `recordInPart` / `seatPartMap` / `chaosBag.multiPart` / `inPart` / `partFlowCondition` —— 落点 [`src/campaign/campaign-parts.js`](../src/campaign/campaign-parts.js)，账本 `primitive-plan.json` 的 `batch: "P3-1"`，21 例 Node 测试 + 13 局 replay 零漂移。
-> **批次 2（高风险机制原语，已完成 2026-10-27）**：`enemy.swarmingValue` / `swarm.placeCards` / `location.veiled` / `tokenBag` / `counter.investigator` / `location.verticalChain` —— 落点 `src/engine/{swarming,swarm,veiled,token-bag,counters,vertical-chain}.js`，经 `scenario-runtime-extras.js` 挂到 `scenarioRuntime`；账本 `batch: "P3-1+2"`、`new 12/12 done`、46 例 Node 测试。真实引擎接线（蜂拥实体、调查拦截、infestation test、布局）属 P8/P5。
-> **批次 3（其余候选，已完成 2026-10-28）**：`location.placeBondedLocation` / `campaign.epilogueMatrix` / `deck.myriadLimit` / `location.doom` / `scenario.markerCount` —— 落点 `src/engine/{bonded-location,myriad,location-doom,marker-count}.js` + `src/campaign/epilogue-matrix.js`；账本 `batch: "P3-1+2+3"`、`new 17/17 done`、`deferredPrimitives` 空、33 例测试。
-> **P4 复核更正（2026-10-29）**：`location.veiled` 与 `location.doom` 两条原语按官方规则更正（掩藏地点是「已揭示面入场 + 无线索时 [fast] 翻面」，地点上的毁灭**不是**「毁灭地点」）；删除 5 个错误导出、测试重写、账本重算，详见 [`tde-p4-report.md`](./tde-p4-report.md) §4 与 §13.7。
-> 每批都跑同一套 `plan:tde:primitives` / `audit:tde:primitives --check` 门禁；未落地的条目必须留在 `tools/tde-primitive-spec.mjs` 的 `DEFERRED_PRIMITIVES` 与账本里，不能悄悄消失。
+> 三批已落地（2026-10-28）：`new 17/17 done`，`deferredPrimitives` 空，`gate.pass=true`。API，以及 P4 对 `location.veiled` / `location.doom` 的更正，见 [`tde-primitives.md`](./tde-primitives.md) §6–§8。P6 另加 9 条调查员原语，见手册 §9。下面保留计划口径，实现状态以原语账本为准。
 
 ### 5.1 先做高风险 7 项（其余按章排）
 
@@ -228,12 +207,8 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 - P3 不做一次性 spike，而是交付可演进的骨架：`campaign-parts` 切片/切换/`inPart`、双袋/双记录、`seatParts` 与房间座位↔线内连续座位映射、JSON 往返、旧 13 局零漂移。每座位仍只有一套牌组。
 - 骨架必须用**合成两 part 战役**覆盖：A1→B1→A2 切换、两袋独立、跨线记录、`seatParts` 分线（2+2 与 2+1）、非连续房间座位重编号、存档恢复；不依赖 TDE 8 章内容。
 - 通过后 D1 默认“骨架保留、双线后开”；失败则只保留单线发布，并在 `remaining` 写明双线未实现。
-- 评估数字见 §7.3：骨架 9 文件 / 550–850 行 / 12–15 例；后续 P5+P8 增量合计到 34 文件 / 1,900–3,100 行。
-- **P3 批次 1 收尾（2026-10-27）**：`src/campaign/campaign-parts.js`（约 300 行，8 个导出面）+ `tools/tde-primitive-spec.mjs` + `tools/audit-tde-primitives.mjs`；
-  账本 `artifacts/migration/tde/primitive-plan.json` 的 `batch: "P3-1"`：**new 6/6 done、reuse 2、escape 3、deferred 11、gate.pass=true**（含 `replayZeroDrift` 13 局逐条一致与 `engineBoundary` 零 06 卡号/零战役名）。
-  `tests/tde-campaign-parts.test.mjs` **21 例**覆盖切 part、跨线记录/勾销、2+2 与 2+1 与非连续座位、两袋、`inPart` 还原、JSON 往返、模式校验。
-  **schema 仍为 7**：`parts` 是可选字段，`stateHash` 含 `schemaVersion`，现在升 8 会让既有 13 局指纹全变；schema 7→8 与 save-migration 推迟到 P5（TDE 真正产生存档时），与 §12 R12 一致。
-  未接线：`campaign-flow` 消费 `partFlowCondition`、`campaignView` 按 part 脱敏、hub 接 `validateModeSeats`、运行时座位重建（lane adapter）都在 P5。
+- 历史行数见 §7.3，不作报价。
+- **已落地**：`campaign-parts.js` 与 6 个数据模型原语。**schema 仍为 7**（`stateHash` 含 `schemaVersion`，现在升 8 会改掉既有回放指纹）。7→8 推迟到 TDE 真正产生存档时（R12）。P5 已接上 flow、投影、hub 和 lane adapter，见 [`tde-p5-report.md`](./tde-p5-report.md)。
 
 ## 6. P4 第 3 步：关键词与规则书（M4）
 
@@ -251,27 +226,11 @@ M0–M5 是内容阶段与产物范围（§4.8），不是执行顺序；扫描�
 - **剧情来源缺口（已决策：自译补齐，D2 / 2026-10-27）**：zh locale 没有序章/幕间/结局矩阵正文、关键词解释与附加规则文本。决定采用「自译（非官方中文）」补齐：en 源锁定 SHA-256、术语表基线、14 批翻译与审校，`storyText` 可按批次 `verified`，但审计账本必须标注自译来源，不得写成官方中文。工作量与批次见 §8.5。
 - 门禁（规范 §6/§7）：新增关键词与规则条目全部 `verified`（5 项 / 6 项检查）；规则书桌面/移动端浏览器用例通过；未确认关键词不得在卡牌文件使用。
 
-**P4 收尾（2026-10-29）**：`npm run audit:tde:rules` 复算一致、`gate.pass=true`——
-
-| 项 | 实测 |
-| --- | --- |
-| 关键词 | **7/7 verified**（5 项检查逐条通过）；`deferred` 显式列出未接线语义（敌人形态隐私、蜂拥实体、翻面动作、梦境日记记录键等） |
-| 规则书 | **17 条 verified**（6 项检查通过：战役总览、8 章机制、关键词条目、388 张卡文直达、桌面/移动浏览器） |
-| 卡文直达 | 388/388 张 06 卡连到 `tdeCampaign`，外循环链接 0；关键词判据逐张对齐 |
-| Node | `tests/tde-rules.test.mjs` **15 例 / 0 失败**（含 6 组引擎行为：多重、蜂拥、掩藏、研究完成、绑定、警报/蛛群袋/地点毁灭/神迹/结局矩阵） |
-| 浏览器 | `tests/tde-rules.browser.mjs` 4 条（1440×950 与 390×844 各 2 条），截图 `artifacts/tde-migration/p4-rulebook-{desktop,mobile}.png`；账本 `audit/tde-browser-acceptance.json` 由 runner 生成 |
-| 机制登记 | 11 个 `tde*` 能力项；6 条战役层条目**不登记**（P5/P8） |
-| **P3 口径更正** | `location.veiled`（掩藏 = 已揭示 + 无线索时 [fast] 翻面，不是「翻面前不可调查」）与 `location.doom`（地点上的毁灭 ≠ 毁灭地点）与官方规则冲突，已改实现/测试/文档并重算原语账本（`new 17/17 done`、`gate.pass=true`） |
-| 副作用 | 外部提交 `42aa746` 让原语账本 stale（`scenario-runtime` 键数 190→241），P4 重算吸收；`suites.mjs` 新增测试后按 remedy 重算 TCU 账本 |
-
-逐项证据见 [`tde-p4-report.md`](./tde-p4-report.md) 与 [`tde-rules.md`](./tde-rules.md)。
+**P4 已收尾（2026-10-29）**：关键词 7/7、规则书 17 条（D5 新立 `tdeBonded`）全部 `verified`，388/388 卡文直达。`location.veiled` 与 `location.doom` 已按官方规则改口。证据见 [`tde-rules.md`](./tde-rules.md) 与 [`tde-p4-report.md`](./tde-p4-report.md)。
 
 ## 7. P5 第 4 步：新增交互与双战役架构（D1 重排）
 
-> **批次口径（2026-10-29）**：P5 按三批推进，避免把「策略/流程/投影」与「hub UI/lane adapter/双运行时」混在一个批次。
-> **批次 1（已完成）**：四模式策略（`campaign-modes.js`）、章对门与 16 排列（`part-flow.js` + `partGate`）、双线条件、非活动线投影脱敏、10 条交互清单定稿；Node 14 例。见 [`tde-p5-report.md`](./tde-p5-report.md) §1–§7 与 §13.8。
-> **批次 2（已完成）**：hub 四模式开局与座位分线（`hubSetMode`/`hubSetSeatPart` + 置灰原因）、模式化清单读点、按线选人与按线牌组（非活动线 record 落 `parts[line]`）、跨线重复选人校验；单线可真正开局，分选/并行在 `hubBeginScenario` 由批次 3 gate 挡住；Node 5 例。见 §13.9。
-> **批次 3（机制闭环完成）**：`lane-adapter.js` / `dual-runtime.js` 协议层（15 例）+ `lane-runtime.js` 分选运行时重建与大厅边界（7 例）+ `parallel-runtime.js` 并行管线（9 例：开闸/路由/观察/存档/屏障/闭闸拒绝）+ 开局模式面板（5 例）与浏览器证据（2 条用例、4 张截图，`audit/tde-ui-browser.json`）。**开闸按战役**：只有 manifest 置 `dualLineGate: "open"` 的战役能启动并行（演示战役已开；真实 TDE 等 P8/P9.5）。见 §13.10–§13.13。
+> P5 机制闭环已完成：四模式、章对门与 16 排列、分选运行时、并行管线、开局模式面板、按线选人名册，以及桌面/移动浏览器证据。真实 TDE 的 `dualLineGate` 仍关，交互 3–10 随 P8。过程见 [`tde-p5-report.md`](./tde-p5-report.md)，现状见 [`tde-interactions.md`](./tde-interactions.md)。下面是仍有效的架构口径。
 
 ### 7.1 交互工作项清单（初判 10 条，P5 批次 1 已定稿进 [`interactions.js`](../content/campaigns/theDreamEaters/interactions.js)）
 
@@ -366,46 +325,13 @@ campaign.parts = {
 
 推荐口径：**走 D1-A 的节奏、交付 D1-B 的终点**。即“先让 A/B 单线真实可玩，但双 part 数据模型从第一天就在”，最后按 D1-B 的完整范围开闸；避免当前路线“先单战役、后补双线”的 34 文件返工。
 
-### 7.3 双 part + `pick` 的历史改动量实测（2026-10-27，非 D8-C 总报价）
+### 7.3 双 part + `pick` 的历史改动量（不作报价）
 
-> 口径：本节数字只覆盖 **双 part 骨架 + `pick`**（单运行时、切线），是采用四模式口径前留下的历史评估。`parallel` 的 D8-C 还需另计 lane adapter、房间/线内座位映射、全局提交序列、事件投影与单文件存档串行化（§7.5.2 / WP-8）。**这些数字不得出现在摘要、排期承诺或 D8-C 开闸估算中；P0 完成 WP-8 spike 后新增独立的 D8-C 估算表。**
+2026-10-27 的 `recon/fullmode/impact.md` 不在仓库里。当时只估了单运行时切线：骨架约 9 个文件 / 550–850 行，`pick` 累计约 34 个文件 / 1,900–3,100 行。这些数字不含 D8-C，不能当作并行双线的工期。实际落地见 P3/P5 报告。若双线开不了闸，A/B 单线仍可按 `playable` + `earlyAccess` + `remaining` 发布。
 
-评估产物：`artifacts/migration/tde/recon/fullmode/impact.md`（482 行，每个改动点带文件:行号）。**核心结论：可行，且不需要把 194 处 `campaign.records` 读点、75 处 `state.chaosBag` 读点改成嵌套读法**——沿用参考实现的「活动线占主字段 + 另一线快照」：活动线继续用 `state.investigators` / `campaign.records` / `campaign.investigators` / `state.chaosBag`，非活动线快照进新增的 `campaign.parts`。
+### 7.4 `officialFull`（已退出本轮）
 
-- 当时评估的状态字段只有 **3 个**：`campaign.mode`（旧枚举 partial-A / partial-B / full）、`campaign.currentPart`、`campaign.parts[]`。该枚举已被 `singleA/singleB/pick/parallel` 取代，且未包含 `seatParts`、lane adapter 与 D8-C 容器；因此下表只可用于 `pick` 的相对量级比较。未声明 `parts` 的战役仍必须保持状态字节不变，既有 13 局 / 786 步 / 799 指纹零漂移。
-
-三档累计口径（近似 ±25%，不含 8 章内容迁移）：
-
-| 口径 | 改动/新增源码文件 | 源码行数 | 新增测试 | 阶段 | 相对锚点（TCU 实测） |
-| --- | ---: | ---: | ---: | ---: | --- |
-| 最小骨架（P3 交付，保留） | 9（1 新 + 8 改） | 550–850 | 12–15 例 | P3 | ≈ TCU 14 原语的 15–20% |
-| **`pick` 最小可用（P3+P5+P8 累计）** | **34（6 新 + 28 改）** | **1,900–3,100** | **54–71 例** | P3/P5/P8 | ≈ TCU P3 的 0.5–0.7× + P5 的 0.4–0.6× |
-| 完整（联机/审计/结局矩阵/迁移/浏览器） | 42（7 新 + 35 改） | 2,300–3,500 | 68–92 例 + 2 browser spec | P3–P9.5 | — |
-
-> 三行是 `pick` 的累计口径，不是三次独立改造；不含 WP-8。D8-C 的文件、行数、测试数在 P0 spike 前记为 **TBD**，不得用“完整 42 文件 / 2,300–3,500 行”代替。
-
-- 历史评估中的 `fullmode-*` 文件名统一改为中性名称 `dual-flow.js` / `dual-story.js` / `dual-effects.js`；`hub` 不做第二轮选人/选牌组，每个房间座位只在所属线建立一条 campaign record。跨线重复调查员校验读取两线已选集合，但不要求第二套牌。
-- `pick` 门禁要点：① 未声明 `parts` 的战役状态字节不变，保留迁移前 baseline 并用 `--compare` 证明 13 局 hashes 逐条一致；② schema 7→8 只升结构版本、规则版本保持 `n6.0`，旧档迁移对非 TDE no-op；③ `campaignView` 同时按 part 与 room seat 脱敏；④ 切 part 只发生在关间边界，关内无跨线运行时切换；⑤ `state.investigators`/`campaign.investigators` 使用连续 `laneSeat`，所有大厅边界恢复 `roomSeat`。
-- 若双线开闸失败（只保留 A/B）：A/B 单线两个 4 章战役可完整交付，唯一通用引擎缺口是「按线基础袋」约 **40–90 行**（`campaign-effects` + `chaos-bag` 同区域，且双线模式也要用）；发布按 `playable + earlyAccess + remaining`，`confirmations.interactions` 增加 `pending` 的 `dualCampaign` 项。
-- 主要残余风险：切片字段漏存（用显式 `PART_SCOPED_CAMPAIGN_FIELDS` 常量 + 启动期断言）、投影泄露（先写失败用例）、16 种交错路径（全部跑轻量 gate 测试，2 条跑真实全流程）、schema 8 迁移影响全部存档（no-op 化 + 双向前后测试）、16 段结局矩阵正文依赖 §8.5 自译。
-
-### 7.4 `officialFull` 整桌双线语义（仅历史事实，已退出本轮范围）
-
-> **口径变更（2026-10-27）**：本节描述的是「整桌切换、每人 A/B 各一套、4 人 8 套」的 `officialFull`。开局四种玩法（§1.4.1）不包含它；本节仅在将来追加“整桌双线”第五选项时作为来源依据，当前并行/分选的多人语义见 §1.4.1 与 §7.5。
-
-- **不是 2+2 分桌**：4 个座位全程在同一局；每个座位在 A/B 各一名调查员，4 人 = 8 名调查员 / 8 套牌组（1–3 人同理，n 人 = 2n 名调查员）。每场场景仍是同一批玩家同时玩，只是整桌换成对应半区的调查员。
-- **整桌原子切换**：切 part 后 `state.investigators` 对 4 个座位一起替换/重建；禁止“两个人先切、两个人等”。`campaign.currentPart` 是全局唯一值。
-- **第二套牌是硬门槛**：每条线第一次进入前（先手 A1 或 B1），4 个座位都必须有该线 campaign record + 合法牌组；缺一套就阻塞开局并给出明确原因，不允许静默把该座位当替补/观战。
-- **选人不得跨线重复**：`replacementCandidates`/hub 选人必须把另一条线的 `investigators` + `retired` 一起算进 used 集合；同一调查员不能同时出现在 A/B。
-- **投影隔离**：`campaignView` 对活动线只显示自己的牌组；`parts[other]` 内他席牌组、手牌、牌库顺序全部脱敏；双线日志/袋按 tab 显示，不默认泄露另一线未到达分支。
-- **AI 座位**：每个 AI 座位也要两条线各一套；AI 上下文只读 `currentPart`，不能基于另一线未到达信息决策；第二套牌由自动构筑补齐。人类座位缺第二套牌时阻塞并提示，不静默代选。
-- **Solo 多手**：`playerCount=4` + `Solo` 仍按 4 个座位计，只是同一人操作 4 套；两线切换同样整桌替换，不因“单人”合并成一套。
-- **中途加入/离开**：`officialFull` 不允许“临时补位到另一条线”；加入流程只处理当前线座位。若座位永久离开，按 campaign replacement 规则在当前线替换；另一线保留其 record，待该线开始时再按加入/replacement 流程处理。
-- **验收矩阵**：4 人 × 2 线 × {A1 先 / B1 先} × {存 / 读} 至少覆盖：
-  - A1→B1→A2→B2→A3→B3→A4→B4；
-  - B1→A1→B2→A2→B3→A3→B4→A4；
-  - 两次幕间换线（Interlude 1 后先 B2、Interlude 2 后先 A3 等）。
-  16 排列全部跑轻量 flow/gate 单测；另选上述 2 条做真实全流程与存/读验收。
+官方「整桌切换、每人 A/B 各一套、4 人 8 套」不是开局选项。本产品的并行和分选见 §1.4.1 与 §7.5。将来若另立第五模式，再启用整桌原子切换、第二套牌门槛、跨线选人互斥和按线投影。本轮门禁不覆盖那套矩阵。
 
 ### 7.5 并行双线：三种实现形态（决策 D8：2026-10-27 定为 D8-C）
 
@@ -473,27 +399,14 @@ session.state = {
 - **AI 并存（按线并发请求）**：两线都可预留 AI 席位；模型请求可以同时在飞，`aiBackgroundSessions`、预算和取消控制器按 `(session,lane)` 隔离；模型结果无论返回顺序如何，都必须带创建时的 `laneRevision` 进入全局提交队列，过期结果丢弃并按该线最新状态重算。供应商并发上限只限制推理，不改变状态提交顺序。
 - **取舍**：比 D8-B 少一层跨机组协议、幕间天然在一起；比 D8-A 少引擎内部的 194/75 处嵌套读点改造，但仍需要完整的 Mod lane adapter 与大厅提交/保存协调。单点故障与 4 座上限（2+2）与 D8-A 相同。
 - **已定（2026-10-27，用户确认）**：① 两边结算后**自动**进入幕间；② 等待期**只可见自己的结算**；③ **AI 席位允许两线并存**，两线请求并发在飞、不轮转排队；④ 幕间正文**两边都读全文**（共同剧情，不按线裁剪）；⑤ **一套存档**（整个 session 一个文件，不按线拆文件；`scenarioCheckpoints` 内部按线分桶只服务恢复、裁剪与压缩，不减少每次权威提交的整文件原子保存）。
-- **P0 spike 与确定性并发门禁**：在承诺 D8-C 工期前，用合成双 lane 夹具完成 adapter 最小闭环，并用可控 barrier/fake agent 覆盖：A/B 从同一全局版本同时提交且都保留、同线旧版本被拒、AI 反向返回不覆盖新状态、两线同时结算只执行一次幕间、保存失败不回成功、重启恢复不重复幕间、另一线事件/演出不可见。通过后才补 D8-C 文件/行数/测试数估算。
-  **2026-10-27 P0 进展**：协议级夹具已完成并 7/7 通过（`develop/tde-dual-lane-spike.mjs` + `.check.mjs`，含两次变异校验），
-  证明「容器 + 双版本 + 屏障 + 单文件保存队列 + 按线投影」的协议可写；**真实引擎 adapter 与大厅接线仍属 WP-8**，
-  在 P3 骨架落地后用同一批门禁复跑，才允许填 D8-C 估算。见 [`tde-p0-report.md`](./tde-p0-report.md) §7。
-- **剩余实现细节（不再是产品决策项）**：按线 checkpoint 的压缩策略、并发上限配置键名、`pairSealed`/`interludeApplied` 的字段命名——在 WP-8 spike 中定。
+- **协议级 spike 已通过**（7/7，见 [`tde-p0-report.md`](./tde-p0-report.md) §7）。P5 已接上 lane adapter、分选运行时和并行管线；真实 TDE 仍不开闸。D8-C 不再单列文件/行数估算，以已落地代码为准。
+- 仍未定的实现细节：按线 checkpoint 的压缩策略、并发上限的配置键名。
 
 ## 8. P6–P8 内容阶段（M1–M3）
 
 ### 8.1 M1 调查员（P6）
 
-- 5 位调查员：构筑选项、牌组要求、主能力、旧印、专属卡与专属弱点（18 条记录逐人验收）。
-- 自动构筑与手动构筑使用同一服务端规则；每位调查员分别测初始化、能力、依赖、存档恢复与负面路径后，才进入选人列表。
-- 已知难点：Tony 的赏金/猎物（`counter.investigator`）、Luke 的门之匣 + 梦境之门（绑定地点 + 移动）、Patrice 的牌库/弃牌循环与手牌上限、Mandy 的查找改写（`window.afterDeckSearch`）、Tommy 的伤害承接与 Becky 弹药。
-- 产物：`content/packs/tdeInvestigators/manifest.js`、`tests/tde-investigators.test.mjs`；账本 `confirmations.investigators`。
-- **P6 收尾（2026-10-29）**：16 个单卡文件 + 9 条 P6 原语；逐人账本
-  [`audit/tde-investigators.json`](../audit/tde-investigators.json) `gate.pass=true`，**verified 3/5**
-  （06001/06002/06003），pending 2 人 —— 06004/06013/06014 依赖 P8 的虚拟地点与梦境之门地点、
-  06017 依赖 P7 的隐私敌人，四条简化全部带 `note`。Mandy 的查找改写落在 P6 原语
-  `search.modify` + `search.cardInPile`（不是 `window.afterDeckSearch`）；Luke 与 Patrice 的
-  其余已知难点（门之匣/弃牌循环/手牌上限）已在 P6 落地或显式登记。逐项证据见 §13.15、
-  [`tde-p6-report.md`](./tde-p6-report.md) 与 [`tde-investigators.md`](./tde-investigators.md)。
+已交付，见 [`tde-investigators.md`](./tde-investigators.md) 与 [`tde-p6-report.md`](./tde-p6-report.md)。账本 `audit/tde-investigators.json` 的 `gate.pass=true`，verified 3/5（06001 / 06002 / 06003）。卢克（06004 / 06013 / 06014 与梦境之门 06015a/b）留到 P8；派翠丝只有 06017 隐私敌人留到 P7。AI 自动选人池不扩容。调查员包是 `development`，可以选人、构筑。
 
 ### 8.2 M2 玩家卡（P7，4 片多子进程）
 
@@ -576,7 +489,7 @@ session.state = {
 | --- | --- | --- |
 | [`tde-primitives.md`](./tde-primitives.md) | P3 | 9 条 primitive + 4 条关键词原语 + 13 条 §5.2 候选 + 3 条 escape；五件套与命令 |
 | [`tde-rules.md`](./tde-rules.md) | P4 ✅ | 7 个关键词（5 项证据）+ **17 条**规则书条目（6 项证据）+ P4 两处原语口径更正 + D5 决策 |
-| [`tde-interactions.md`](./tde-interactions.md) | P5 批次 1 ✅ | 10 条交互定稿（触发/章节/机制 id/归属/blockers，全部 `pending`）+ 已交付的四模式策略、章对门与投影口径 + 批次 2/3 待办 |
+| [`tde-interactions.md`](./tde-interactions.md) | P5 | 10 条交互；第 1 条 verified（模式门与出发准备），第 2–10 条 pending |
 | [`tde-investigators.md`](./tde-investigators.md) | M1 ✅ | 5 位调查员 + 13 条专属记录 + 逐人验收状态（verified 3/5、简化 4 条带 note）+ P6 原语读点 + 命令 |
 | [`tde-player-cards.md`](./tde-player-cards.md) | M2 | 87 张 / 4 片（22·22·22·21）+ 卡片契约 + escape |
 | [`tde-scenarios.md`](./tde-scenarios.md) | M3 | 8 章结构 + 20 组 + 逐章机制锚点 + 12 项检查 |
@@ -667,276 +580,37 @@ session.state = {
 
 **开放问题清单（未标“已定”的项目在 P1–P5 决策）**：D1 双线开闸时点（**2026-10-27 重排：骨架 P3 必做，单线先暴露，双线于 P9.5 开闸；D1-A/D1-B 只决定开闸排期**）；D8 并行双线形态（**已定：D8-C 单房间双运行时 + 关卡屏障，2026-10-27，见 §7.5.2**）；D9 D8-C 细节（**已全部拍板 2026-10-27：自动进幕间 / 只见自己结算 / AI 两线并发请求 / 幕间两边读全文 / 单文件存档；见 §7.5.2**）；D2 剧情来源补齐路径（**已定：自译补齐，2026-10-27，见 §8.5**）；D3 TCU 三本漂移账本重算或冻结（文档链接已验证为 0）；D4 `achievements` 是否纳入范围（默认 out-of-scope）；D5 `Bonded` 规则条目复用 `tcuBonded` 还是新立 `tdeBonded`（**已定 2026-10-29：新立 `tdeBonded`，因为本循环多了地点绑定与绑定弱点敌人；规则条目总数 16→17**）；D6 `06015a/b`、`06169a/b` 无主双面卡归属登记；D7 `Patrol`/`Seal`/`Explore`/`Supply` 不作为 TDE 关键词的判定是否保留。
 
-## 13. 立即开工清单（P0 → P3）
+## 13. 进度索引与剩余工作
 
-| # | 任务 | 产物 / 验收 | 依赖 |
-| ---: | --- | --- | --- |
-| 1 | 规范勘误：卡图路径、基线示例数字、既有失败口径 | 迁移规范或路线图注记更新；`docs:check` 不新增断链 | — |
-| 2 | 固化文档链接基线，后续新增文档不得回归 | `node tools/check-doc-links.mjs` 保持 22 文件 / 61 本地链接全通过 | — |
-| 3 | TCU 三本账本漂移处置（`audit:tcu` / `tcu-scenarios` / `tcu-primitives`） | `--check` 通过或明确冻结口径；TDE 门禁不依赖 | — |
-| 4 | 基线重锁：`replay-fixtures --baseline artifacts/migration/tde/replay-before.json` + 当前 `test:fast` 失败集合落盘 | 基线文件 + `reports/baseline.md` | — |
-| 5 | `.gitignore` 只白名单 TDE 最小复算输入（`scope/mechanism-scan/primitive-plan/primitive-catalog`），继续忽略 worker/队列/日志/截图；同步勘误迁移规范 | 干净检出可复算账本，`git status` 不出现过程产物 | 1 |
-| 6 | 新建 `tools/scan-tde-scope.mjs` 并 `--write` | `scope.json` gate.pass=true，数字以工具实测为准（✅ 完成，见 §13.2） | 1、4、5；**不依赖**任务 2/3 |
-| 7 | 新建 `tools/scan-tde-mechanisms.mjs` 并 `--write` | `mechanism-scan.json` gate.pass=true，38 条机制复算（✅ 完成，见 §13.3） | 6 |
-| 8 | 双战役**骨架**（历史锚点 9 文件 / 550–850 行 / 12–15 例）：合成两 part 战役跑通切换/隔离、房间座位↔线内连续座位映射、JSON 往返、13 局指纹零漂移 | 决策记录 D1；`campaign-parts.js` + `primitive-plan.json` 增加 6 条原语（`campaignPart/recordInPart/seatPartMap/chaosBag.multiPart/inPart/partFlowCondition`）（✅ 批次 1 完成，见 §5.5 与 §13.4） | 7 |
-| 9 | **D8-C P0 spike**：容器 lane adapter + 全局/线内双版本 + 全局提交队列 + lane 事件过滤 + 单文件保存串行化；fake agent/barrier 制造跨线并发 | §7.5.2 七项确定性并发门禁通过；产出独立文件/行数/测试数估算，失败则 `parallel` 保持 gate 关闭 | 8 |
-| 10 | 分线座位矩阵夹具：2 人 1+1、3 人 2+1、4 人 2+2 × 四种模式；含非连续房间座位、并行禁奇、16 种逐章对先手、切 part、存/读、缺牌组阻塞 | Node 集成测试 + 失败原因断言；不得出现稀疏数组、静默待机或部分座位误映射 | 8；`parallel` 部分依赖 9 |
-| 11 | 文档集开篇：按 TCU 骨架建 8 篇卫星文档的「口径 + 待办」占位（不是完整内容） | 8 个文件 + 互链；作为原语 `files` 输入（✅ 完成，见 §10.3 表） | 1–2 |
-| 12 | 图片库存扫描与远程回退确认（原写「06 段缺图 387 条」，P1 实测为 0 缺图） | 缺图清单 + 回退策略记录（✅ 完成，见 §13.2） | — |
-| 13 | 剧情自译批 00：锁 en 源 SHA-256、建术语表（≥20 条）、校对 55 记录键与 8 章标题 | 来源锁 + 术语表 + `check:tde:terms` 草稿 | 1、4、5 |
-| 14 | 剧情自译批 01：序章 + 战役结构（约 5,244 en 字符 → ~1.8k 中文字符） | 自译源文件 + 审校记录 | 13 |
+逐批测试数字和副作用写在阶段报告里，这里不再按 13.1–13.15 分节。
 
-### 13.1 P0 收尾证据（2026-10-27）
+| 阶段 | 状态 | 证据 |
+| --- | --- | --- |
+| P0 | 完成。勘误、基线、白名单、协议级 spike 7/7 | [`tde-p0-report.md`](./tde-p0-report.md) |
+| P1 | 完成。`gate.pass`，388 = 352+36，来源 43 | [`tde-p1-report.md`](./tde-p1-report.md) |
+| P2 | 完成。38 条机制 + 1 baseline，388/388 | [`tde-p2-report.md`](./tde-p2-report.md) |
+| P3 | 完成。`new 17/17`，deferred 空 | [`tde-primitives.md`](./tde-primitives.md)、[`tde-p3-report.md`](./tde-p3-report.md) |
+| P4 | 完成。关键词 7/7、规则书 17 条 verified | [`tde-rules.md`](./tde-rules.md)、[`tde-p4-report.md`](./tde-p4-report.md) |
+| P5 | 机制闭环完成。交互 1–2 演示路径 verified（源清单仍 pending），3–10 pending。真实 TDE 未开闸 | [`tde-interactions.md`](./tde-interactions.md)、[`tde-p5-report.md`](./tde-p5-report.md) |
+| P6 | verified 3/5；卢克待 P8，06017 待 P7 | [`tde-investigators.md`](./tde-investigators.md)、[`tde-p6-report.md`](./tde-p6-report.md) |
 
-任务 1–5 已完成；逐条证据、复现命令与待办见 [`tde-p0-report.md`](./tde-p0-report.md)。要点：
+仍未开工：
 
-| §13 # | 产物 | 证据 / 实测 |
+| # | 任务 | 验收 |
 | ---: | --- | --- |
-| 1 | 规范勘误 4 处 | `docs/arkham-content-migration.md`：§1 卡图路径、§4.1 基线口径、§4.6.8 既有失败、§3 `.gitignore` 逐文件白名单写法；`docs:check` 不新增断链 |
-| 2 | 文档链接基线 | `node tools/check-doc-links.mjs` → **43 文件 / 376 链接全部可解析**（P0 前 22/61 是「9 篇 TCU 文档被删后被动变小」，不是更健康） |
-| 3 | TCU 账本处置 | 恢复 9 篇被删文档 → `--write` 重算（diff 仅 `content/registry.js` 一个哈希）→ `audit:tcu` / `audit:tcu-scenarios` / `audit:tcu-primitives` / `scan:tcu:scope:check` **4/4 通过** |
-| 4 | 基线重锁 | `artifacts/migration/tde/replay-before.json`（13 局 / 786 步 / 799 指纹，与 golden 逐条一致）+ `reports/baseline.md`、`reports/baseline-fast-final.log`（3607 tests / 0 fail）、`reports/baseline-git-head.txt`、`reports/baseline-git-status{,-pre-p0}.txt` |
-| 5 | TDE 最小白名单 | `.gitignore` 只放行 `scope / mechanism-scan / primitive-plan / primitive-catalog`；`git check-ignore` 逐条验证（4 个可跟踪、`reports/`、`workers/`、`primitive-requests/`、`recon/`、日志仍忽略） |
-| 9 | D8-C 风险验证 | **协议级已完成**：`develop/tde-dual-lane-spike*.mjs`（337 行）跑通七项确定性门禁 **7/7**，含 2 次变异校验（删校验规则对应门禁变红）；适配面盘点（`index.js` 65 键 / 40 函数 / 393 行；`lib/server.js` 2,906 行、`revision` 128 处、`busy` 66 处、`SESSION_BUSY` 14、`STALE_REVISION` 5）+ 估算口径已交付；**adapter 级 spike 与独立估算**按依赖「9←8」移到 P3 骨架之后，D8-C 文件/行/测试数仍记 **TBD** |
+| 1 | P7：87 张玩家卡，4 片；含 06017 隐私敌人 | [`tde-player-cards.md`](./tde-player-cards.md) |
+| 2 | P8：8 章、三幕间、16 段尾声、梦境之门地点 | [`tde-scenarios.md`](./tde-scenarios.md) |
+| 3 | P8-T：自译从批 00 开始 | [`tde-story.md`](./tde-story.md) |
+| 4 | P9 / P9.5：逐章与全卡账本、真实 TDE 双线矩阵 | [`tde-release.md`](./tde-release.md)、§11.2 |
+| 5 | P10：`audit/tde-migration.json`，`playable` + `earlyAccess` | 三组确认变成 verified 之前，不得写成规则等价 |
 
-> 运行目录 `artifacts/migration/tde/` 不签入（除 4 个复算输入），上表证据均可在本机复算；命令见 [`tde-p0-report.md`](./tde-p0-report.md) §9。
-
-### 13.2 P1 收尾证据（2026-10-27）
-
-任务 6（范围与来源锁）与任务 12（图片库存）已完成；逐条口径见 [`tde-p1-report.md`](./tde-p1-report.md)。
-
-| §13 # | 产物 | 证据 / 实测 |
-| ---: | --- | --- |
-| 6 | `tools/scan-tde-scope.mjs` + `scope.json` | `npm run scan:tde:scope:check` → `388 条记录（352 主卡 + 36 面），三包 283/18/87，20 个遭遇组，8 章，43 个来源`，`gate.pass=true`；新增 `scan:tde:scope` / `scan:tde:scope:check` / `scan:tde:images` 三条命令 |
-| 6 | 来源锁 | `scope.json.sources` 43 项（参考 38 + 仓内 5）逐文件 SHA-256；缺失即 `--check` 失败 |
-| 6 | M0 目录骨架 | `content/packs/tde{Campaign,Investigators,Player}/manifest.js` + `content/campaigns/theDreamEaters/shared.js` + 8 章 `scenarios/<id>/index.js` 占位；全部 `catalog-only`，`content/registered.js` 未接入（`gate.catalogOnly`） |
-| 6 | 分片草案 | M1 18 / M2 22·22·22·21 / M3 9 片（Search 拆 36+17）+ 共享组 30；索引并集 388、交集 0 |
-| 12 | 图片库存 + 回退 | `npm run scan:tde:images` → `reports/image-inventory.json`：en/zh 各 **388/388** avif；`imagesrc/backimagesrc` 覆盖 388/388；原「缺图 387 条」作废 |
-| — | 跨循环组确认（R7） | 8/8 目录可用；`Set.DarkCult ↔ shared/pentagram` 由卡池 `encounterName='Dark Cult'` 证实；`gatherRefs` 逐章登记 |
-| — | Beyond 无 gather（R8） | 已作为 `pending:beyondTheGatesOfSleepEncounterDeck` 写进账本，M3 用规则书 setup 文本销账 |
-
-### 13.3 P2 收尾证据（2026-10-27）
-
-任务 7（机制扫描）已完成；类型分布、关键词实测与分级差异见 [`tde-p2-report.md`](./tde-p2-report.md)。
-
-| 项 | 证据 / 实测 |
-| --- | --- |
-| 命令 | `npm run scan:tde` / `scan:tde:check` / `scan:tde:review`（新增）；`--check` 复算一致 |
-| 条目 | 38 条机制（keyword 7 / primitive 9 / rulebook 6 / scenario 11 / interaction 2 / content 3）+ 1 条 baseline（`standardRules`） |
-| 覆盖 | 388/388 已分类、未分类 0；每条记录都有 `mechanisms[]` + `evidence{}`；`_review.md` 按 tier 列全卡 |
-| 分级 | mechanism 173 / content 151 / standard 64（初勘 182/156/50；差额集中在 5 调查员 + 11 专属卡，P6 登记） |
-| 关键词 | Myriad 14（字段）/ Swarming 11 敌 / Veiled 23 地点 / Researched 3 / Alert 5 / Hidden 18（16 本体 + 2 引用）/ Bonded 27 |
-| 遭遇组 | 20/20 都有卡；与 P1 `scope.json` 的 388/352/36/8/20 逐项一致（`gate.scopeConsistent`） |
-| 来源锁 | 参考实现 91 个文件 SHA-256（CardDefs 55 + 剧本 8 + 战役 6 + 主流程 1 + en/zh 剧情各 9 + 卡表 3） |
-| watchlist | 6 个 absent 词 0 命中；`Patrol`/`Seal`/`Explore`/`Supply`/`swarm`/`curse` 已逐条登记「同名不同物」 |
-| test:fast | P2 收尾出现 **2 条外部失败**（`decision-http.test.mjs` 的 4 座位用例）：大厅侧 17:09 的并发改动引入「AI 按 id/名字唯一」校验，而该用例只 mock 1 个 AI 却要 3 个席位。**已修复（2026-10-27）**：按新契约对齐测试（mock 4 个不同 AI + 3 个不同 id），该文件 18/18、全量 `test:fast` **3607 tests / 0 fail**。详见 [`tde-p2-report.md`](./tde-p2-report.md) §10 |
-
-### 13.4 P3 批次 1 收尾证据（2026-10-27）
-
-双战役骨架与 6 个数据模型原语已落地；逐项口径、schema 决策与未接线清单见 [`tde-p3-report.md`](./tde-p3-report.md)，
-API 与边界见 [`tde-primitives.md`](./tde-primitives.md) §6 与 §5.5。
-
-| 项 | 证据 / 实测 |
-| --- | --- |
-| 命令 | `npm run plan:tde:primitives`（写）/ `npm run audit:tde:primitives`（`--check`）；`--check` 复算一致 |
-| 账本 | `artifacts/migration/tde/primitive-plan.json` + `primitive-catalog.json`；`batch: "P3-1"` |
-| 结果 | **new 6/6 done**（campaignPart / recordInPart / seatPartMap / chaosBag.multiPart / inPart / partFlowCondition）、reuse 2、escape 3、deferred 11，`gate.pass=true` |
-| 门禁 | `newPrimitivesHaveTests`、`docsPresent`、`reuseReadPoints 2/2`、`escapeRegistered 3/3`、`mechanismCoverage 9 条 primitive 机制：4 覆盖 + 5 显式延后`、`engineBoundary 0 卡号 / 0 战役名`、`replayZeroDrift`（13 局逐条一致） |
-| 测试 | [`tests/tde-campaign-parts.test.mjs`](../tests/tde-campaign-parts.test.mjs) **21 例**：切 part 五步、跨线记录/勾销、2+2 / 2+1 / 非连续座位映射、两袋、`inPart` 还原（含抛错路径）、JSON 往返、模式与人数校验 |
-| 实现 | [`src/campaign/campaign-parts.js`](../src/campaign/campaign-parts.js)：纯数据、不 import engine；`parts`/`seatParts`/`mode` 为可选字段 |
-| schema | **仍为 7**（不升 8）：`stateHash` 包含 `schemaVersion`，现在升会让 13 局指纹全变、违反零漂移门禁；7→8 与 save-migration 推迟到 P5（R12） |
-| 未接线 | `campaign-flow` 消费 `partFlowCondition`、`campaignView` 按 part 脱敏、hub 接 `validateModeSeats`、lane adapter 运行时重建 —— 全部属 P5（WP-3/4/5/8） |
-| test:fast | **3628 tests / 3625 pass / 3 skipped / 0 fail**（`p3-fast-final.log`，含本批 21 例）。期间修掉一处由 `tests/suites.mjs` 变更触发的 TCU 玩家卡账本 stale（见 [`tde-p3-report.md`](./tde-p3-report.md) §7） |
-
-### 13.5 P3 批次 2 收尾证据（2026-10-27）：6 条高风险机制原语
-
-逐项 API 见 [`tde-primitives.md`](./tde-primitives.md) §7，报告见 [`tde-p3-report.md`](./tde-p3-report.md) §8。
-
-| 项 | 证据 / 实测 |
-| --- | --- |
-| 原语 | `counter.investigator` / `enemy.swarmingValue` / `swarm.placeCards` / `location.veiled` / `tokenBag` / `location.verticalChain`（P3.7–P3.12） |
-| 落点 | `src/engine/{counters,swarming,swarm,veiled,token-bag,vertical-chain}.js`；转发层 `src/engine/scenario-runtime-extras.js`；`scenario-runtime.js` 只加一行 spread |
-| 账本 | `batch: "P3-1+2"`、**new 12/12 done**、deferred 5、`gate.pass=true` |
-| 测试 | 6 个文件 **46 例**：四种 X 口径、缺 `x` 抛错、蜂拥清空前不可击败/溢出伤害、Veiled 三件事分开、蛛群袋确定性 rng、纵向链越界 `null`、计数器只读不建字段 |
-| 机制覆盖 | 9 条 primitive 机制：7 覆盖（campaignPart/partRecord/seatPartMap/multiPartChaosBag/tokenBag/alarmLevel/verticalChain）+ 2 显式延后（epilogueMatrix/dreamGate） |
-| 边界 | `src/engine` 无 `06` 卡号、无循环名（`engineBoundary` 由 8 命中修到 0：转发层改名 `scenario-runtime-extras.js`，注释去循环名） |
-| 未接线 | 真实敌人实体生成、调查动作拦截、infestation test、纵向布局渲染 —— P8/P5 |
-| test:fast | **3674 tests / 3671 pass / 3 skipped / 0 fail**（`p3b2-fast.log`，含本批 46 例）；`suites.mjs` 变更再次触发 TCU 账本 stale，按同一 remedy 重算后 `audit:tcu:check` 与 `tcu-migration.test.mjs` 6/6 通过 |
-
-### 13.6 P3 批次 3 收尾证据（2026-10-28）：最后 5 条原语
-
-逐项 API 见 [`tde-primitives.md`](./tde-primitives.md) §8，报告见 [`tde-p3-report.md`](./tde-p3-report.md) §9。
-
-| 项 | 证据 / 实测 |
-| --- | --- |
-| 原语 | `location.placeBondedLocation` / `campaign.epilogueMatrix` / `deck.myriadLimit` / `location.doom` / `scenario.markerCount`（P3.13–P3.17） |
-| 落点 | `src/engine/{bonded-location,myriad,location-doom,marker-count}.js` + `src/campaign/epilogue-matrix.js`；`bondedLocation` / `locationDoom` / `markers` 挂 `scenarioRuntime` |
-| 账本 | `batch: "P3-1+2+3"`、**new 17/17 done**、deferred 0、`mechanismCoverage 9/9`、`gate.pass=true` |
-| 测试 | 5 个文件 **33 例**：Bonded 成对放置/移除、16 格矩阵完整性、Myriad 按标题 3 张、地点毁灭阈值、参考卡计数只读 |
-| replay | 外部提交 `6f60771 修bug` 使旧基线失效（786→782 步）；旧基线留档 `replay-before-2026-10-27.json`，当前 HEAD 重采后 `--compare` 逐条一致 |
-| test:fast | **3750 tests / 3747 pass / 3 skipped / 0 fail**（`p3b3-fast.log`，含本批 33 例）；外部提交删掉的 TDE/TCU 账本已按工具重算恢复，`audit:tcu:check` 与 `tcu-migration.test.mjs` 5/5 通过 |
-| 未接线 | 结局正文/分支、构筑 UI、议程联动、地点毁灭渲染 —— P5/P8/P8-T |
-
-### 13.7 P4 收尾证据（2026-10-29）：关键词与规则书
-
-逐项口径见 [`tde-rules.md`](./tde-rules.md)，过程与更正见 [`tde-p4-report.md`](./tde-p4-report.md)。
-
-| 项 | 证据 / 实测 |
-| --- | --- |
-| 命令 | `npm run test:tde:rules` / `test:tde:rules:browser` / `audit:tde:rules:write` / `audit:tde:rules`（新增 4 条） |
-| 账本 | `audit/tde-rules.json`（关键词 5 项 × 7、规则书 6 项、`gate.pass=true`）+ `audit/tde-browser-acceptance.json`（runner 生成） |
-| 关键词 | **7/7 verified**：Myriad / Swarming X / Veiled / Researched / Alert / Hidden / Bonded；每条 `deferred` 显式列出 P5/P7/P8 待接线 |
-| 规则书 | **17 条 verified**（原建议 16 条 + D5 新立 `tdeBonded`）：两条线、两套袋、55 记录键、16 段尾声、7 关键词、梦境之门、蛛群袋、警报等级、神迹、剧情支援、地点上的毁灭 |
-| 卡文直达 | 388/388 张 06 卡连到 `tdeCampaign`；外循环链接 0；判据与 `keywords.js` 的 `pattern` 逐张对齐 |
-| Node | `tests/tde-rules.test.mjs` **15 例**：关键词 5 项、388 张逐张、17 条结构、规则内容与禁用词、搜索、8 章、两袋构成、6 组引擎行为 |
-| 浏览器 | `tests/tde-rules.browser.mjs` **4 条**（1440×950 / 390×844 × 规则目录+卡牌直达），截图 2 张；`desktopBrowser`/`mobileBrowser` 只认 runner 账本 |
-| 机制登记 | 11 个 `tde*` 能力项；6 条战役层条目不登记（P5/P8），测试显式断言 |
-| **P3 口径更正** | ① `location.veiled`：改为「已揭示面入场 + 无线索时 [fast] 翻面 + 翻过一次不能再翻」（官方 `rules.veiled`）；② `location.doom`：改为「地点上的毁灭标记」（06 段无「毁灭地点」规则）。删除 5 个错误导出，测试重写，原语账本重算 `new 17/17 done`、`gate.pass=true` |
-| 副作用处置 | 外部提交 `42aa746` 让原语账本 stale（`scenario-runtime` 键数 190→241）：P4 重算吸收；`suites.mjs` 新增测试后按 P3 的 remedy 重算 TCU 账本；replay `--compare` 13 局零漂移 |
-| test:fast | **3875 tests / 3872 pass / 3 skipped / 0 fail**（`p4-fast.log`，含本批 15 例）；`docs:check` 36 文件 / 269 链接全部可解析（文件数低于 P0 基线属外部删除 TCU 文档，非 TDE 改动） |
-| 未接线 | 敌人形态隐私、蜂拥实体、翻面动作、梦境日记记录键、绑定弱点敌人、章节 `scenarioCards` 映射、剧情正文 —— P5/P7/P8/P8-T |
-
-### 13.8 P5 批次 1 收尾证据（2026-10-29）：模式策略、章对门与双线投影
-
-逐项口径见 [`tde-interactions.md`](./tde-interactions.md) 与 [`tde-p5-report.md`](./tde-p5-report.md)。
-
-| 项 | 证据 / 实测 |
-| --- | --- |
-| 模式策略 | [`campaign-modes.js`](../src/campaign/campaign-modes.js)：`modeOptions`（1–4 人 × 四模式的可用性 + 置灰原因）、`modePlan`、`defaultSeatParts`（并行等分 / 分选交替）、`assignSeatPart`（仅分选、两线各 ≥1）、`describeModePlan` |
-| 章对门 | [`part-flow.js`](../src/campaign/part-flow.js) 的 `dualPartFlow` / `singlePartFlow` / `partFlow` / `validatePartManifest`；`campaign-flow.js` 新增 `partGate` 节点（0 出口走幕间、1 出口自动、2 出口问玩家） |
-| 16 排列 | 4 个章对 × 2 种先手全部跑通：每章恰好一次、逐对屏障成立、16 条序列互不相同 |
-| 双线条件 | `flowCondition` 支持 `part/parts/mode/modeIn/activeParts`，可与 `all/any/not/completed/record/compare` 嵌套（与关系） |
-| 投影脱敏 | [`campaign-parts.js`](../src/campaign/campaign-parts.js) 的 `partScopedView`（由 `campaignView` 调用）：非活动线只给记录/经验/创伤/胜利/袋与牌组张数，`storySections`/`deck`/`purchases` 不投影；无 parts 战役逐字节不变 |
-| 交互清单 | [`interactions.js`](../content/campaigns/theDreamEaters/interactions.js) 10 条定稿（触发/章节/机制 id/hook/归属/blockers），全部 `pending`；P2 的两条 interaction 机制被覆盖 |
-| 测试 | `tests/tde-modes.test.mjs` 7 例 + `tests/tde-dual-flow.test.mjs` 7 例（含 16 排列、存档往返、隐私、清单校验），登记 FAST；命令 `test:tde:pick` / `test:tde:dual` |
-| replay | `replay-fixtures --compare` 13 局逐条一致（非 TDE 行为零变化；`partGate` 与投影只对声明 parts 的战役生效） |
-| test:fast | **3889 tests / 3886 pass / 3 skipped / 0 fail**（`p5-fast.log`，含批次 1 的 14 例；批次 2 收尾时全量为 3894/3891） |
-| 未做 | hub 四模式 UI 与按线选人（批次 2）、lane adapter 与并行双运行时 D8-C（批次 3）、浏览器桌面/移动证据、`confirmations.interactions` 的 `verified` |
-
-### 13.9 P5 批次 2 收尾证据（2026-10-29）：hub 四模式开局与按线准备
-
-逐项口径见 [`tde-p5-report.md`](./tde-p5-report.md) §8。
-
-| 项 | 证据 / 实测 |
-| --- | --- |
-| 模式化清单 | `campaignManifestFor`（engine.js）在声明 `parts` 且选定模式后返回 `partManifest(manifest, mode)`：单线只排本线章节、双线 A/B 交错；未声明 parts 原样返回（replay 零漂移） |
-| hub 动作 | `hubSetMode`（四模式，置灰项带 `disabled` + 原因）、`hubSetSeatPart`（仅分选、两线各 ≥1）、`hubGoSetup`（单线/双线均可准备） |
-| 落库 | `dispatch` 复核 `modePlan` 后写 `campaign.mode/seatParts/activeParts/currentPart/parts`，重置 `scenarioIndex` 与 `hubSelectedScenarioId` |
-| 按线准备 | 非活动线座位经 `inPart` 把 campaign record 写进 `parts[line]`；`hub.js` 按座位所属线取 record（自动构筑/确认准备） |
-| 跨线校验 | `hubInvestigatorChoices` 合并活动线 + 全部 `parts` 快照的现役/退役记录，同一调查员不能同时出现在两线 |
-| 双线 gate | `hubBeginScenario` 对 `pick`/`parallel` 抛明确原因（lane adapter 属批次 3），不静默按整桌开局 |
-| 测试 | [`tests/tde-hub-modes.test.mjs`](../tests/tde-hub-modes.test.mjs) **5 例**：奇数并行置灰、单线 A/B 真正开局、分选 2+1 改线与按线 record、并行 4 人准备 + gate；`test:tde:pick` 命令同时跑 modes + hub |
-| 回归 | `hub-concurrent` / `flow-n5` / `campaign-experience` / `campaign-http-n4` / `content-*` 共 56 例全绿；replay 13 局零漂移 |
-| test:fast | **3894 tests / 3891 pass / 3 skipped / 0 fail**（`p5b2-fast.log`，含本批 5 例）；`docs:check` 36 文件 / 278 链接全部可解析 |
-| 未做 | `web/hub.js` 的模式面板与浏览器证据（依赖 P8 注册真实战役）、lane adapter、并行双运行时、`confirmations.interactions` 的 `verified` |
-
-### 13.10 P5 批次 3 收尾证据（2026-10-29）：lane adapter 与双运行时容器（协议层）
-
-逐项口径见 [`tde-p5-report.md`](./tde-p5-report.md) §9。
-
-| 项 | 证据 / 实测 |
-| --- | --- |
-| lane adapter | [`src/campaign/lane-adapter.js`](../src/campaign/lane-adapter.js)：`toLaneCommand` / `toRoomSeatValue` / `seatsToRoom` / `seatsToLane` / `pendingChoiceToRoom` / `laneViewFor` / `assertDenseRuntime` / `tagEventLane` / `visibleToLane` / `laneSummary`；非双线战役原样透传 |
-| 双运行时容器 | [`src/campaign/dual-runtime.js`](../src/campaign/dual-runtime.js)：`createDualRuntime` / `commitLane`（全局 revision + 线内 revision；同线旧版本拒绝、全局过期重基）/ `markAwaitingPair` / `sealPairOnce`（只封一次、幂等）/ `serializeDualRuntime` / `restoreDualRuntime` / `commitBoth` |
-| 测试 | [`tests/tde-lane-adapter.test.mjs`](../tests/tde-lane-adapter.test.mjs) 7 例 + [`tests/tde-dual-runtime.test.mjs`](../tests/tde-dual-runtime.test.mjs) 8 例；命令 `test:tde:runtime` |
-| 协议门禁 | 双版本（同线旧版本拒绝 / 全局过期重基）、跨线同时提交两种顺序都保留、屏障只跑一次幕间、单文件存档往返逐字节一致、事件 lane 可见性 |
-| 未接线 | 运行时重建（`state.investigators` 密集座位 / humanSeats / leadSeat / currentSeat）、引擎边界（applyMove/validateMove/legalMoves/viewState/viewEvents）、并行管线（事件/AI/存档）、`test:tde:parallel`、交互 UI 与浏览器证据 |
-| test:fast | **3909 tests / 3906 pass / 3 skipped / 0 fail**（`p5b3-fast.log`，含本批 15 例）；`docs:check` 36 文件 / 287 链接 |
-
-
-### 13.11 P5 批次 3 收尾证据（2026-10-29）：分选关卡运行时与大厅边界
-
-逐项口径见 [`tde-p5-report.md`](./tde-p5-report.md) §10。
-
-| 项 | 证据 / 实测 |
-| --- | --- |
-| 运行时重建 | [`src/engine/lane-runtime.js`](../src/engine/lane-runtime.js)：`enterLaneRuntime` / `leaveLaneRuntime` / `laneSeatForRoom` / `roomToLaneSeat`；关卡内 campaign record 以 laneSeat 为键并带 `roomSeat`，离开清掉 |
-| hub 接线 | `hubBeginScenario` 按目标关卡所属线 `setPart` + `enterLaneRuntime`；`ScenarioEnded` 先 `leaveLaneRuntime`；`initialHubScenarioMoves` 支持 `partGate` 起点 |
-| 大厅边界 | [`index.js`](../index.js)：`legalMoves/validateMove/applyMove/decisionSeat/actingSeats/seatLocalMove/viewState/describeState/autoChoice` 全部按 `state.laneRuntime` 转换；另一条线座位给「另一条线」原因 |
-| 结算日志 | `scenarioResults[].investigators[].seat` 记 roomSeat |
-| 测试 | [`tests/tde-lane-runtime.test.mjs`](../tests/tde-lane-runtime.test.mjs) 7 例：3 人分选 2+1 → A1；密集座位/记录键；room2→lane1 行动；B 线座位无行动权；观察投影；私有事件座位；离开还原与快照键；非双线 no-op |
-| 回归 | `tde-hub-modes` 的「分选只能准备」改为「可进入 A1」；`test:fast` **3914 / 3911 / 3 skipped / 0 fail**（`p5b3b-fast.log`）；replay 13 局零漂移 |
-| 未接线 | 并行双运行时接引擎/观察/AI/存档（`parallel` 仍 gate）、`test:tde:parallel`、交互 UI 与浏览器证据（事件座位与快照键已在 §13.11 补齐） |
-
-
-### 13.12 P5 批次 3 收尾证据（2026-10-29）：并行双运行时管线与开局模式面板
-
-逐项口径见 [`tde-p5-report.md`](./tde-p5-report.md) §11。
-
-| 项 | 证据 / 实测 |
-| --- | --- |
-| 并行管线 | [`src/integration/parallel-runtime.js`](../src/integration/parallel-runtime.js)：`launchParallelLanes`（两份完整运行时、各自 part scope/混乱袋/开局事务）、`parallelApplyMove`、`parallelDecisionSeats`、`parallelView`、`serializeParallelState` / `restoreParallelState`、`markLaneFinished` / `advanceParallelPair` |
-| 大厅路由 | [`index.js`](../index.js)：`isParallelState` 时 `legalMoves/validateMove/applyMove/decisionSeat/actingSeats/seatLocalMove/viewState/describeState/autoChoice` 全部走并行路由 |
-| 开局模式面板 | [`web/hub-mode-view.js`](../web/hub-mode-view.js) + [`web/hub.js`](../web/hub.js) 战役总览：四模式按钮、置灰原因直显、分选逐座位分线；`hub.mode.*` 中英词典 |
-| 测试 | [`tests/tde-parallel.test.mjs`](../tests/tde-parallel.test.mjs) 6 例 + [`tests/tde-mode-panel.test.mjs`](../tests/tde-mode-panel.test.mjs) 4 例 |
-| 回归 | `test:fast` **3926 / 3923 / 3 skipped / 0 fail**（`p5b3d-fast.log`）；replay 13 局零漂移；`docs:check` 36 文件 / 310 链接 |
-| 仍未开闸 | `hubBeginScenario` 对 `parallel` 仍返回原因：双线大厅 UI/回滚/检查点归 P9.5；交互 1 浏览器截图等 P8 注册 parts 战役 |
-
-### 13.13 P5 批次 3 收尾证据（2026-10-29）：并行开闸机制与模式面板浏览器证据
-
-逐项口径见 [`tde-p5-report.md`](./tde-p5-report.md) §12。
-
-| 项 | 证据 / 实测 |
-| --- | --- |
-| 开闸开关 | 战役 manifest `dualLineGate`；[`index.js`](../index.js) 在 `hubBeginScenario` 上启动 `launchParallelLanes`，纯引擎仍拒绝 |
-| 章对屏障 | `parallelApplyMove` 检查 `sealed[pair]`；未封盘时本线 `hubBeginScenario` 返回「另一条线尚未结算」 |
-| 观战/状态 | `parallelPublicView`（无手牌/牌库）与 `syncParallelStatus`（两线都结束才 `ended`） |
-| 测试 | [`tests/tde-parallel.test.mjs`](../tests/tde-parallel.test.mjs) 9 例（含大厅开闸、闭闸拒绝、屏障） |
-| 面板浏览器证据 | [`tests/tde-modes.browser.mjs`](../tests/tde-modes.browser.mjs) 桌面 1440 + 移动 390；[`audit/tde-ui-browser.json`](../audit/tde-ui-browser.json) 2 条通过 / 4 张截图 / `desktopBrowser`+`mobileBrowser` true；命令 `npm run test:tde:modes:browser` |
-| 演示战役 | [`content/browser-demo/dualHub.js`](../content/browser-demo/dualHub.js)，仅 `ARKHAM_BROWSER_DEMO=dualHub` 注册 |
-| 回归 | `test:fast` **3930 / 3927 / 3 skipped / 0 fail**（`p5b4-fast.log`）；replay 13 局零漂移 |
-| 未开闸 | 真实 TDE 仍 `catalog-only`，manifest 未置 open；P8 内容 + P9.5 矩阵验收后才打开 |
-
-### 13.14 P5.5 并行交互 W1 证据（2026-10-29）：首屏模式门与自由分线
-
-完整盘点、线框与波次：[`tde-parallel-interactions.md`](./tde-parallel-interactions.md)（24 处交互点）。
-
-| 项 | 证据 / 实测 |
-| --- | --- |
-| 首屏模式门 | `web/hub.js`：`campaign.requiresMode` 投影 + `hubSetMode` 才整屏拦截；第五循环（食梦者）专属；非房主席位显示「等待房主」；其它循环照旧 |
-| 自由分线 | `assignSeatPart` 支持 parallel、`hubSetSeatPart` 允许 pick/parallel；`web/hub-mode-view.js` 输出 assignments/laneCounts/balanced |
-| 人数相等门 | `laneBalance` → `hubBeginScenario.disabled` + 原因；`parallelLaunchLanes` 拒绝不平衡；大厅边界同样拒绝 |
-| 测试 | `tde-mode-panel` 7 例 + `tde-hub-modes` 6 例（3:1 置灰、2:2 可开始、边界拒绝） |
-| 浏览器 | [`audit/tde-ui-browser.json`](../audit/tde-ui-browser.json)：**8 条通过 / 14 张截图** / 桌面+移动 true（模式门、自由分线、出发准备分屏、人物卡内一键换位置、局内单线+后台双线、非双线回归）；`npm run test:tde:modes:browser` |
-| 回归 | `test:fast` **3944 / 3941 / 3 skipped / 0 fail**（`p5b12-fast.log`）；replay 13 局零漂移 |
-| W2 出发准备分屏 | `web/departure-lanes.js` + `departure()`：A/B 两栏竖线、每线关卡名/插图（`partScenarios` 投影）、双线队长、唯一「换位置」弹窗、通用按钮重排；浏览器 2 条用例（桌面/移动） |
-| 局内不做分屏 | 按用户决定：牌桌保持单线视图，另一条线在后台由双运行时处理；浏览器烟雾用例验证 `.ah-table` 正常、无分屏容器 |
-| 联机评估 | [`tde-parallel-online-assessment.md`](./tde-parallel-online-assessment.md)：主机/其他玩家/AI/观战/存档逐项；**P0 已修**（`pendingChoice` 钩子、`commitChoiceBatch` 并行分支、观战公开投影、联机版本号剥离）；**P1 已修**（逐章对双线检查点/任一队长回档、真人自助换线 + 房主仅 AI）；仍剩 AI 上下文/事件 tableState/迁移体积 |
-| 未做 | 交互 2 专属面板；P9.5 矩阵与真实 TDE 内容 |
-
-### 13.15 P6 收尾证据（2026-10-29）：M1 调查员
-
-逐人状态与命令见 [`tde-investigators.md`](./tde-investigators.md)，过程与偏差见 [`tde-p6-report.md`](./tde-p6-report.md)。
-
-| 项 | 证据 / 实测 |
-| --- | --- |
-| 单卡文件 | `src/cards/entries/06001`–`06014`、`06016`、`06017`（16 个；06015a/b 是绑定地点，本轮无条目） |
-| 可用性 | `availability.js`：`TDE_INVESTIGATOR_CODES`、`SELECTABLE_INVESTIGATOR_CODES`、5 条 `SIGNATURES_BY_INVESTIGATOR`、strict / dependencyOnly / 原因文案；**AI 池 `PLAYABLE_INVESTIGATOR_CODES` 不扩容**（池子变长会让旧种子局 AI 选人漂移） |
-| 构筑 | 30/30/30/30/42 张、专属卡与随机基础弱点、手动构筑同一套服务端规则；曼蒂/托尼的 `faction_select`+`type`+`limit:10` 在 `web/deck-rules.js` 翻成允许项（`deck_size_select` 仍只支持 30） |
-| P6 原语 | **9 条**：`assetDefeat`、`harm.moveBetween`、`counter.card`、`investigator.restrictedAction`、`search.modify`、`search.cardInPile`、`upkeep.replaceDraw`、`investigator.cardRules`、`play.fromHandFree`；账本 `new 26/26 done`、`deferred 5`、`gate.pass=true` |
-| 逐人账本 | [`audit/tde-investigators.json`](../audit/tde-investigators.json)：18 条记录（16 主 + 2 面）、`gate.pass=true`、**verified 3/5**（06001/06002/06003）、pending 2（06004→P8、06005 仅 06017→P7）、simplified 4 条全部带 `note` |
-| 测试 | [`tests/tde-investigators.test.mjs`](../tests/tde-investigators.test.mjs) **24 例**：可用性/构筑/副职业/开局存档/P6 原语/逐人能力/简化登记；`tests/suites.mjs` + `tests/node-suite.mjs` 记为 FAST |
-| 命令 | `test:tde:investigators` / `audit:tde:investigators` / `audit:tde:investigators:write`（新增 3 条） |
-| 回归 | replay 13 局零漂移；`test:fast` **3968 tests / 3965 pass / 3 skipped / 0 fail**；`cards:check` 索引 584 张、合规 0 新增 |
-| 连带 | `availability.js` 是 TCU 玩家卡账本的证据文件 → 按 remedy 重算 `audit-tcu-player` + `audit-tcu`（87/87、6/6、377/377 通过）；`audit/ability-coverage.json` 因 16 条目 + 2 窗口重算（engineCodes/effects 仍 0） |
-| 顺带修正 | `lookZoneAdapter` 写死「只看 3 张」→ 按 `count` 取牌（曼蒂的 +3 才可见；既有无改动，replay 零漂移） |
-| 显式简化 | 06004/06013/06014（P8：虚拟地点 + 梦境之门地点）、06017（P7：隐私敌人）；三条都写进 `DEFERRED_PRIMITIVES` 或条目 `note` |
-| 未做 | 06015a/b 地点行为、卢克事件如同位于连接地点、06017 隐私敌人、TDE 并入 AI 池（P10） |
+P0 开工清单（勘误、链接基线、TCU 账本、基线重锁、gitignore、范围扫描、机制扫描、骨架、8 篇手册骨架、图片库存）已经完成。自译批 00 和批 01 还没做。
 
 ## 14. 附录
 
-### 14.1 初勘口径与差异
+### 14.1 口径锁定
 
-- 卡号口径：06 号段 = `/^06\d{3}[a-z]?$/`；主卡 = 无字母后缀；关联面 = 带字母后缀。四份参考卡表（cards_zh-cn/en/zh/cards）与 `src/cards/cards-data.js` 的 388 个卡号集合一致、7 个关键字段 0 差异。
-- 三包分类规则先用 TCU 05 段复算得 237/19/87/377，与 `artifacts/migration/tcu/scope.json` 完全一致后才用于 TDE；因此 TDE 的 283/18/87 可与 TCU 口径互证。
-- 与 TCU 的规模对照（排期锚点）：TCU = 377 记录 / 9 章 / 16 关键词 / 11 交互 / 14 新原语 / 5 browser spec / 28 例 / 30 截图 / `gate.pass=true`；TDE = 388 记录 / 8 章 / 新增关键词 4 + 复用确认 3 / 交互 ~10 / 新原语候选 21 + 1 复用 / 双线架构 1 个大课题。
-- 不确定项（M0 正式扫描锁定；**P1 已销账 4 项**）：~~`DarkCult↔pentagram`~~（卡池 `encounterName='Dark Cult'` 证实）、~~跨循环通用组库存~~（8/8 目录可用）、~~当前 `test:fast` 失败集合~~（0 fail，2 条既有红属 P6/Carcosa 账本）、~~`Beyond the Gates of Sleep` 遭遇牌库~~（确认无 `gather Set.*`，转 `pending`）；仍待定：`achievements` 范围（默认 out-of-scope）、Swarming 印刷卡数（初勘 11 vs 英文机检 9，P2 复核）。
-- 初勘口径修正（M0 以权威为准）：`mechanism-draft` 的「354 主卡 + 34 面」为初勘错误；权威值 = **352 主卡 + 36 面**。`gaps.md` 曾报告 31/37 条断链；P0 恢复 9 篇 TCU 文档后实跑 `npm run docs:check` 为 **43 文件 / 376 条本地链接全部可解析**（P0 前为 22/61，因文档被删被动偏小），断链数字降为历史记录，不再列作当前阻塞。
-- 旧双 part / `pick` 评估（2026-10-27）：`recon/fullmode/impact.md`；三档累计口径 9 / 34 / 42 文件，550–850 / 1,900–3,100 / 2,300–3,500 行；结论为「活动线占主字段 + 另一线快照」，既有 13 局回放零漂移前提成立。该评估不含 D8-C lane adapter、座位映射、事件隔离与提交/保存协调，不能作为 `parallel` 报价。
-- AB 双线事实复核（2026-10-27，参考实现代码级）：3 种玩法；A/B 四对配对，每对可先 A 或先 B，同对两章都完成才进幕间；开局 + 3 幕间 = 16 种合法排列；A4×B4 = 16 段尾声；切 part 五步（存快照/载入/带过进度/换玩家/`SetInvestigator`）；4 人 = 8 名调查员 / 8 套牌组，整桌切换、无替补待机。来源：`Campaign/Campaigns/TheDreamEaters.hs`、`Campaigns/TheDreamEaters/{Meta,ChaosBag}.hs`、`CampaignStep.hs`；前端双日志见 `CampaignLog.vue:144-234`，跨线选人校验见 `ChooseDeck.vue:284-290`。
-- 剧情自译评估（2026-10-27）：`recon/story-gap/report.md`；en `textChars` 194,299、可复用 45,221、净需译 147,718、约 44k–56k 中文字符、14 批、约 23–36 人日；15 段正文疑似节译须重译（11 条短记录键可复用）；`epilogueMatrix` 控制标记需专门处理。
-- P1 实测（2026-10-27，`scope.json` 取代初勘）：388 = 352 主卡 + 36 面；三包 283/18/87；20 组 = 8 章 253 + 12 共享 30；印刷包 112/62/41/40/54/47/32；43 个来源（参考 38 + 仓内 5）逐文件 SHA-256；`replay-before` 与 golden 13 局 / 786 步 / 799 指纹逐条一致；本地卡图 en/zh 各 388/388；初勘的「354 主卡 + 34 面」「46 个来源」「缺图 387 条」「卡图仅 1 张」全部作废。
-- P2 实测（2026-10-27，`mechanism-scan.json` 取代初勘）：38 条机制的类型分布与初勘一致（keyword 7 / primitive 9 / rulebook 6 / scenario 11 / interaction 2 / content 3）+ 1 baseline；关键词 14/11/23/3/5/18/27 全部实测（初勘「Swarming 英文机检 9」是漏了 `[per_investigator]` 与 X 写法）；分级 173/151/64 与初勘 182/156/50 的差额集中在调查员专属卡（P6 登记）；初勘的「38 条 / 类型分布」自此可作为复算基线。
+P1 的 `scope.json` 取代初勘：388 = 352 主卡 + 36 面，三包 283/18/87，20 组，来源 43，卡图 en/zh 各 388/388。P2 的 `mechanism-scan.json` 复算了 38 条机制，类型分布与初勘一致。初勘里的「354 主卡 + 34 面」「46 个来源」「缺图 387」「Swarming 英文机检 9」全部作废。`recon/**` 不在仓库，不再引用。
 
 ### 14.2 与迁移规范的对应关系
 
@@ -959,7 +633,7 @@ API 与边界见 [`tde-primitives.md`](./tde-primitives.md) §6 与 §5.5。
 
 ### 14.3 维护规则
 
-1. 本文随阶段推进更新：每个 P 阶段收尾时补「产物与证据路径」，但**不得**把计划项改写成「已完成」，除非有 `--check` 过的账本或测试证据。
+1. 阶段收尾把证据写进 `tde-pN-report.md` 和对应手册。本文只更新 §0、§2、§13 的状态，不复制测试条数。没有 `--check` 通过的账本或测试，不得写成完成。
 2. 所有数字以工具输出为准；初勘数字（本文件 §1）在 P1 被 `scope.json` 取代后，本文只保留指路，不重复数字。
 3. 决策 D1–D9 一旦拍板，在本文件与对应卫星文档同步记录「决策 + 日期 + 依据」。
 4. 卫星文档、账本、代码同一提交；先改代码再 `--write`，提交前跑对应 `--check`。

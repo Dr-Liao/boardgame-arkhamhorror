@@ -147,6 +147,12 @@ export function entityMoves(st, key) {
     // 直觉牌库本阶段揭示的那张（乔·戴蒙德）：id 是卡号。
     if (kind === 'hunch') return move.fromHunch === true && move.cardId === id
     if (kind === 'enemy') return move.enemyId === id
+    // 地点附属（卡尔克萨尖柱等）：键是 attachment:<地点 id>:<附属下标>，只挂这条附属自己的行动。
+    if (kind === 'attachment') {
+      const index = Number(parts.at(-1))
+      const locationId = parts.slice(0, -1).join(':')
+      return move.locationId === locationId && Number(move.attachmentIndex) === index
+    }
     if (kind === 'location') return move.locationId === id || (inv?.location === id && ['investigate', 'breakDoor', 'parleyLita'].includes(move.action))
     if (kind === 'investigator') return String(inv?.seat) === id && move.action === 'freeAction'
     if (kind === 'discard') return move.action === 'play' && move.fromDiscard
@@ -273,7 +279,10 @@ export function mountCardInteractions(root, session, { state, submit, select, in
   }
   const activate = event => {
     if (suppressClick) { event.preventDefault(); event.stopImmediatePropagation(); suppressClick = false; return }
-    if (event.target.closest('[data-map-info],[data-reaction-mode]')) return
+    if (event.target.closest('[data-reaction-mode]')) return
+    // 线索/毁灭徽记和剧情标记有自己的点击；带行动的地点附属（卡尔克萨尖柱）要留下来，才能弹出放大镜。
+    const marker = event.target.closest('[data-map-info]')
+    if (marker && !(marker.dataset.mapInfo === 'attachment' && marker.dataset.interaction)) return
     const el = event.target.closest('[data-interaction]')
     if (!el || !root.contains(el)) return
     if (!allowed()) {
@@ -295,7 +304,7 @@ export function mountCardInteractions(root, session, { state, submit, select, in
       event.preventDefault(); event.stopImmediatePropagation(); selectWithActions(key)
     } else if (el.dataset.inspectDefault === 'true') {
       event.preventDefault(); event.stopImmediatePropagation(); inspect(key)
-    } else if (['asset', 'enemy', 'location', 'investigator', 'discard', 'act', 'agenda', 'beneath', 'hunch'].some(type => key.startsWith(type + ':')) && moves.length) {
+    } else if (['asset', 'enemy', 'location', 'attachment', 'investigator', 'discard', 'act', 'agenda', 'beneath', 'hunch'].some(type => key.startsWith(type + ':')) && moves.length) {
       event.preventDefault(); event.stopImmediatePropagation(); selectWithActions(key)
     }
   }

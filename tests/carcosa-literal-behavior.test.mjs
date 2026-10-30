@@ -85,14 +85,20 @@ test('03091 与 03094 的地点附属行动和离开地点强制效果按卡面�
   const spires = encounterRules.encounterActions(state, inv)
     .find(move => move.rule === 'clearSpiresOfCarcosa')
   assert.ok(spires)
+  assert.equal(spires.actionKind, 'investigate')
+  // 地点没有线索时，基础放大镜不会出现；尖柱自己的调查仍然要能做，而且不发现线索。
+  assert.equal(location.clues, 0)
   encounterRules.performEncounterAction(state, inv, spires, {
-    test(_seat, skill, difficulty, resolve) {
-      assert.equal(skill, 'intellect')
-      assert.equal(difficulty, 2)
-      resolve({ success: true })
+    investigate(_seat, options) {
+      assert.equal(options.allowNoClues, true)
+      assert.equal(options.noClueDiscovery, true)
+      options.onInvestigateSuccess({ success: false })
+      assert.equal(location.doom, 1)
+      options.onInvestigateSuccess({ success: true })
     },
   })
   assert.equal(location.doom, 0)
+  assert.equal(location.clues, 0)
   assert.deepEqual(location.attachments, [])
   assert.deepEqual(state.encounterDiscard, ['03091'])
 

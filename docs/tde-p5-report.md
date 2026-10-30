@@ -1,8 +1,8 @@
-# 《食梦者》P5 收尾报告（批次 1–2）：模式策略、章对门、双线投影与 hub 开局（2026-10-29）
+# 《食梦者》P5 收尾报告：模式、章对门、hub 与双运行时（2026-10-29）
 
-> **口径**：P5（新增交互 + 双战役引擎闭环）按批次推进。本文报 **批次 1 + 批次 2**：四模式策略、16 种章对先手的流程门、双线条件、非活动线投影脱敏、10 条交互清单定稿，以及 hub 的四模式开局 / 座位分线 / 按线准备（单线可真正开局，分选与并行在关卡运行处由批次 3 gate 明确挡住）。
-> **P5 机制闭环完成**：分选运行时、并行管线、逐战役开闸（`dualLineGate`）、开局模式面板与桌面/移动浏览器证据都已落地。**仍未完成**：真实 TDE 内容注册（P8）与 P9.5 的 4 人 2+2 / 2 人 1+1 / 分选 2+1 矩阵、双线全流程；TDE 仍是 `catalog-only`。
-> 手册：[`tde-interactions.md`](./tde-interactions.md)；流程/投影落点：[`campaign-modes.js`](../src/campaign/campaign-modes.js)、[`part-flow.js`](../src/campaign/part-flow.js)；路线图 §7 / §13.8。
+> **口径**：P5 机制闭环已完成。本文按批次追加，靠前的小节会写「尚未接线」，以文末和 [`tde-interactions.md`](./tde-interactions.md) 的现状为准。
+> **仍未完成**：真实 TDE 章节（P8）、交互 3–10 的场景界面、P9.5 的多人矩阵。战役仍不可启动。交互 2 的演示点击路径已核对，源清单仍 `pending`。
+> 手册：[`tde-interactions.md`](./tde-interactions.md)；路线图 §7。
 
 ## 1. 一页结论
 
@@ -11,17 +11,17 @@
 | 模式策略 | 四模式可用性矩阵（1–4 人）、默认分线（并行等分 / 分选交替 / 单线全侧）、改线校验（仅分选、两线各 ≥1）、开局摘要 |
 | 章对门 | 新增 `partGate` 节点：两边都完成 → 幕间；只剩一边 → 自动进入；两边都未完成 → 玩家选先手；**16 种排列全部跑通** |
 | 双线条件 | `part / parts / mode / modeIn / activeParts` 可嵌进普通 `all/any/not/compare/completed/record` 条件（与关系） |
-| 投影脱敏 | `partScopedView`：非活动线只给记录/经验/创伤/胜利/袋与牌组张数，**故事正文与牌组/购入不投影**；未声明 parts 的战役逐字节不变 |
-| 交互清单 | 10 条定稿进 [`interactions.js`](../content/campaigns/theDreamEaters/interactions.js)：触发、章节、机制 id、归属、阻塞原因齐备，全部 `pending` |
+| 投影脱敏 | `partScopedView`：别人的线只给记录/经验/创伤/胜利/袋与牌组张数，**故事正文与别人的牌组/购入不投影**；观察者自己的记录保留牌组。未声明 parts 的战役逐字节不变 |
+| 交互清单 | 10 条已定稿。交互 1–2 的演示路径后来 `verified`；源清单仍全部 `pending`；3–10 仍 `pending`。以 [`tde-interactions.md`](./tde-interactions.md) 为准 |
 | hub 开局（批次 2） | `hubSetMode` / `hubSetSeatPart`：未选模式只给四模式 + 队长；奇数并行置灰给原因；单线 A/B 按模式化章节顺序真正开局；分选/并行可改线与按线准备 |
 | 按线准备（批次 2） | 非活动线座位的 record 经 `inPart` 写进 `parts[line]` 快照；跨线重复选人同时看两条线；分选/并行的关卡运行由批次 3 gate 阻塞并给原因 |
 | 测试 | P5 累计 **69 例**：`tde-modes` 7 + `tde-dual-flow` 7 + `tde-hub-modes` 5 + `tde-lane-adapter` 7 + `tde-dual-runtime` 8 + `tde-lane-runtime` 7 + `tde-parallel` 10 + `tde-mode-panel` 10 + `tde-hub-modes` 7 |
 | 运行时（批次 3） | `lane-runtime.js`：关卡内线内密集座位、记录键换 laneSeat、离开还原；index.js 大厅边界全套 room↔lane 转换（另一线座位无行动权） |
 | 并行管线 | `parallel-runtime.js`：两条完整运行时、按座位路由、本线视图 + 另一线公开摘要、单文件存档、章对屏障（6 例） |
-| 模式面板 | `web/hub-mode-view.js` + `web/hub.js`：四模式按钮、置灰原因、分选逐座位分线（4 例）；浏览器证据等 P8 |
-| 并行开闸 | `dualLineGate` 逐战役；mod 边界启动 `launchParallelLanes`、章对屏障、观战视图、状态同步（9 例） |
-| 面板浏览器证据 | `audit/tde-ui-browser.json`：桌面 1440 + 移动 390，2 条用例 / 4 张截图，均 true |
-| 未做 | 真实 TDE 开闸与双线全流程（P8/P9.5）、交互 2（按线选人/牌组 UI）、`confirmations.interactions` 其余条目 |
+| 模式面板 | `web/hub-mode-view.js` + `web/hub.js`：四模式按钮、置灰原因、并行也可改线；浏览器证据见下行 |
+| 并行开闸 | `dualLineGate` 逐战役。演示战役已开；真实 TDE 仍关 |
+| 面板浏览器证据 | `audit/tde-ui-browser.json`：桌面 1440 + 移动 390。张数以账本为准，不在这里手写 |
+| 未做 | 真实 TDE 开闸与双线全流程（P8/P9.5）、交互 3–10、`confirmations.interactions` 其余条目。交互 2 的演示点击路径已核对，源清单仍 `pending` |
 
 ## 2. 交付物
 
@@ -295,7 +295,7 @@ A_n/b_n: scenario，next 回到 gate_n
 
 - **真实 TDE 开闸**：TDE 仍是 `catalog-only`，manifest 未置 `dualLineGate: "open"`；P8 注册 8 章、P9.5 跑 4 人 2+2 / 2 人 1+1 / 3 人分选 2+1 矩阵与两条全流程后才打开。
 - **双线大厅细节**：两线同时行动时的回滚/检查点归属、AI 座位并发驱动仍按 P9.5 清单验收；本轮管线与 Node 测试已覆盖机制，未做真实内容双线全流程。
-- 交互 2（按线选人/牌组）的面板与浏览器证据未做，仍 `pending`。
+- 交互 2（按线选人/牌组）的名册与桌面/移动点击路径已补上（`audit/tde-ui-browser.json`）。源清单仍 `pending`：真实 TDE 章节未注册。
 
 ## 13. 并行交互改造 W1（2026-10-29）：模式先于一切、自由分线与人数相等门
 
@@ -334,7 +334,7 @@ A_n/b_n: scenario，next 回到 gate_n
 
 并行容器与大厅的联机钩子（自动代答/批量选择/检查点/观战/迁移）存在已知缺口，逐条评估见
 [`tde-parallel-online-assessment.md`](./tde-parallel-online-assessment.md)。
-结论：引擎不会串线；P0 四项（自动代答、批量选择、观战、**联机版本号**）与 P1 两项（并行关卡检查点/回档、换线权限）已于 2026-10-29 修复并有测试；仍剩 AI 上下文、事件 tableState、迁移/体积。
+结论：引擎不会串线。P0 四项、P1（检查点、换线、AI 本线上下文）和 P2（演出座位、`lanes` 迁移）已有测试。两线卡表不去重。见 [`tde-parallel-online-assessment.md`](./tde-parallel-online-assessment.md)。
 
 ### 13.3 出发准备分屏与双线队长（W2，已完成）
 

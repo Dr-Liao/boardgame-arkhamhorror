@@ -57,8 +57,8 @@ state bytes 2949890
 | 换线 / 队长 | 换线已开放，队长仍房主 | 真人可在自己的卡上换线；房主只代 AI，不能替其他真人换线；队长仍由房主选 |
 | 自动反应/自动通过设置 | ~~高~~ **已修** | 同主机：大厅通过 `mod.pendingChoice` 看到 lane 窗口 |
 | 批量换牌/技能确认 | ~~高~~ **已修** | 同主机：并行分支按座位找到 lane |
-| 私密事件 | 低（偏安全） | `privateSeat` 已换回房间座位，私密事件不会跨线泄漏；但事件里的 `presentation.tableState` 仍是线内座位编号，`projectTableState` 会把 B 线玩家自己的手牌也清空（**过度隐藏**，不是泄漏） |
-| 重连/读档 | 低 | 视图按房间座位路由；但 `migrateState` 只迁移容器顶层，未来 schema 升级不会迁移 `lanes` 里的两份状态 |
+| 私密事件 | ~~低（偏安全）~~ **已修** | `privateSeat` 与演出快照里的座位都换回房间座位；`projectTableState` 按房间座位保留本线手牌，另一条线的手牌仍清空 |
+| 重连/读档 | ~~低~~ **已修** | `migrateState` 会走进 `lanes` 的两份状态；版本已是当前时仍返回原对象 |
 | 观战（无座位） | ~~高~~ **已修** | `parallelPublicView` 改为 A 线公开投影 + 两线摘要 + 公开调查员列表；实测已含 `campaign/investigators`，手牌为空 |
 
 ## 5. AI 队友
@@ -67,20 +67,20 @@ state bytes 2949890
 | --- | --- |
 | AI 能否在两条线行动 | 可以：`nextAiSeat` 用 `actingSeats`（并行返回两条线的决策座位），`describeState/legalMoves/validateMove/applyMove` 都按座位路由 |
 | AI 自动反应 | 引擎对 AI 座位的自动选项在 `requestChoice` 内直接领取（`!human` 分支），不依赖大厅 `settleAutoChoices`，所以 AI 窗口不会因此卡死 |
-| AI 回合上下文 | `agentTurnKey` 用容器的 `scenario?.id / round / currentSeat`（实测 `inScenario::1:investigation:0:0`），容器没有 lane 的 scenario/round；同一 AI 座位跨回合可能复用同一段上下文（只影响提示记忆，不影响规则） |
-| AI 计划（agentPlans） | `planPrompt/plansForObserver` 用容器的 `scenario/round`，并行下两个 lane 的计划会共用同一个"场景指纹"，`needsReview` 判断可能失真 |
-| AI 行动点结束判定 | `actionsRemaining(container, seat)` 读容器里的运行时调查员（没有 `actionsLeft`），`Number.isFinite` 为假；AI 回合只按座位切换结束，不按行动点收尾（轻微） |
-| AI 检查点/回档 | 与真人相同：并行整局没有检查点 |
+| AI 回合上下文 | **已修**。`agentTurnKey` 取本座位所在线的 `scenario/round/phase`，当前座位换回房间座位 |
+| AI 计划（agentPlans） | **已修**。提交和 `needsReview` 用本线的关卡与回合；调查员身份仍按房间座位在容器上查找 |
+| AI 行动点结束判定 | **已修**。`actionsRemaining` 读本线调查员的 `actionsLeft` |
+| AI 检查点/回档 | 与真人相同：按章对记录双线检查点 |
 
 ## 6. 联机同步、读档与观战
 
 | 项 | 结论 |
 | --- | --- |
 | 在线增量同步 | 服务端按 `viewState(observerSeat)` 生成投影；并行投影只含本线，不会把另一条线推给客户端；`parallel` 摘要只含关卡/回合/座位/等待，不含手牌 |
-| 存档/快照 | 容器单文件保存；体积约 2.9 MB；`stateCompatibilityError` 只校验容器，不校验 `lanes` 内部 schema |
-| 读档迁移 | `migrateState` 只迁移顶层字段；`lanes` 内两份状态不会跟着迁移（版本升级时的隐患） |
-| 观战 | `parallelPublicView` 字段过少，当前观战 UI 不能直接用（**高**，若要支持联机观战需补投影） |
-| 回档/检查点 | 并行不产生 `scenarioCheckpoints`；`checkpointView` 为空、无法 fork（**中**） |
+| 存档/快照 | 容器单文件保存；体积约 2.9 MB。读档时分别核对两条线的结构版本 |
+| 读档迁移 | **已修**。`migrateState` 对 `lanes.A/B` 各跑一遍结构迁移、资源升级与冒烟；外壳不当作可下的一局牌 |
+| 观战 | **已修**。`parallelPublicView` 含 A 线公开投影、两线摘要和公开调查员列表，手牌为空 |
+| 回档/检查点 | **已修**。并行按章对记录双线检查点，A/B 任一队长可回档 |
 | 主机/客机 UI | 主机和其他玩家都通过自己的 `viewState` 渲染；B 线玩家看到 B 线，不会因为主机在 A 线而受影响 |
 
 ## 7. 风险矩阵与建议修复顺序
@@ -93,9 +93,9 @@ state bytes 2949890
 | **P0 ✅ 已修** | 观战空白 | `parallelPublicView` 改为 A 线公开投影 + 两条线摘要 + 公开调查员列表；观战不再只有 4 个字段。测试：`tde-parallel` 观战投影 1 例 |
 | **P1 ✅ 已修** | 并行没有关卡检查点/回档 | `createSessionCheckpoint` 并行分支（每章对一个双线 checkpoint）；`checkpointView/fork` 允许 A/B 任一队长回档 |
 | **P1 ✅ 已修** | 其他玩家不能自换线 | `hubSetSeatPart`：真人只能换自己，房主只能换 AI；`actingSeats` 在并行准备阶段包含全部真人。队长仍房主（按需求） |
-| **P1** | `agentTurnKey/agentPlanning` 用容器 scenario/round | 改为取本座位 lane 的 `scenario/round/phase`，避免 AI 上下文跨回合/跨线复用 |
-| **P2** | 事件 `presentation.tableState` 用线内座位 | 在 `parallelApplyMove` 里把事件 presentation 的座位也映射为房间座位（现在只是过度隐藏，无泄漏） |
-| **P2** | 存档迁移/体积 | `migrateState` 递归迁移 `lanes`；必要时启动时把 lane 的 `cards` 静态表去重（共享引用/再水合） |
+| **P1 ✅ 已修** | `agentTurnKey/agentPlanning` 用容器 scenario/round | 改为取本座位 lane 的 `scenario/round/phase`；`actionsRemaining` 同时改读本线 `actionsLeft`。测试：`tde-parallel` AI 回合键 1 例 |
+| **P2 ✅ 已修** | 事件 `presentation.tableState` 用线内座位 | `parallelApplyMove` 把事件 `tableState` 与 `presentation.tableState` 的座位映射为房间座位。测试：`tde-parallel` 演出快照 1 例 |
+| **P2 ✅ 迁移已修 / 体积不去重** | 存档迁移/体积 | `migrateState` 递归迁移 `lanes`（测试：`tde-parallel` 迁移 1 例）。两线的 `cards` 静态表仍各留一份：共享引用会让一条线刷新卡定义时改到另一条线。体积仍约两份运行时 |
 
 ## 8. 联机测试建议矩阵（修完后逐项跑）
 
@@ -113,5 +113,6 @@ state bytes 2949890
 
 - **不会串线**：座位→线路由、视图投影、事件座位映射和行动校验都按座位隔离；主机和其他玩家不会看到/操作对方线的牌。
 - **P0 已修（2026-10-29）**：自动代答、批量换牌、观战投影，以及**联机版本号**（容器/lane revision 不一致导致所有并行行动被判过期）已接线并有 Node 测试；`test:fast` 3944 / 3941 / 0 fail。
-- **P1 也已完成两项**：并行关卡检查点/回档、换线权限（真人自助 + 房主仅 AI）。仍剩：AI `agentTurnKey/planning` 的 lane 上下文、事件 `presentation.tableState` 座位、迁移/体积。
-- **建议**：现在可以按 §8 做"真人 × 并行"联机冒烟（重点盯回档、非房主换线、AI 长回合）；回档与自助换线这两项体验缺口修完前，不宣称并行联机完全等价单线。
+- **P1 已完成**：并行关卡检查点/回档、换线权限（真人自助 + 房主仅 AI），以及 AI `agentTurnKey/planning` 的本线上下文（含行动点）。
+- **P2 已完成迁移与演出座位**。两线卡表不去重，避免一条线的资源刷新改写另一条线。
+- **建议**：可以按 §8 做「真人 × 并行」联机冒烟。演示战役上的并行联机钩子已经补齐；真实 TDE 仍未开闸，不宣称与单线规则等价。

@@ -1,4 +1,4 @@
-// 食梦者（TDE）P5 浏览器验收：开局模式面板（交互 1）与座位分线。
+// 食梦者（TDE）P5 浏览器验收：开局模式面板（交互 1）、按线选人/牌组（交互 2）与座位分线。
 //
 // 路线图 §7 / §11.2：交互第 1–2 条要有桌面 1440 与移动 390 的真实操作路径 + 截图；
 // 面板只在声明 parts 的战役里出现，所以本 spec 用 webServer 注册的「双线演示」战役
@@ -247,3 +247,47 @@ test('M5 并行开局后局内不做分屏：两条线在后台同时运行，�
   await page.screenshot({ path: shot, fullPage: true })
   testInfo.annotations.push({ type: 'screenshot', description: shot })
 })
+
+// 交互 2：真人座位在调查员页按线点选候选人并自动构筑，牌组摘要来自本线快照。
+for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 844]]) {
+  test(`M5 并行按线选人与自动牌组在${label}端可用`, async ({ page }, testInfo) => {
+    await page.setViewportSize({ width, height })
+    await page.goto('/index.html')
+    await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
+    const setup = page.getByRole('dialog', { name: '调查准备设置' })
+    await setup.getByRole('combobox', { name: '战役', exact: true }).selectOption('dualHubDemo')
+    await setup.getByRole('combobox', { name: '席位数量' }).selectOption('4')
+    await setup.getByRole('button', { name: '开始新游戏' }).click()
+    const hub = page.locator('.ah-hub')
+    const panel = hub.getByRole('region', { name: '开局模式', exact: true })
+    const modeCommitted = page.waitForResponse(response => response.url().endsWith('/api/move') && response.request().postDataJSON()?.move?.action === 'hubSetMode')
+    await panel.getByRole('button', { name: '并行双线' }).click()
+    await modeCommitted
+    await page.addStyleTag({ content: '.bg-chat-toasts { display: none !important; }' })
+    const guide = hub.locator('.ah-workflow-guide')
+    const goSetup = page.waitForResponse(response => response.url().endsWith('/api/move') && response.request().postDataJSON()?.move?.action === 'hubGoSetup')
+    await guide.getByRole('button', { name: '选择调查员' }).click()
+    await goSetup
+    await hub.locator('nav.ah-hub-tabs').getByRole('button', { name: '调查员与席位' }).click()
+    const laneA = hub.locator('.ah-lane-roster[data-lane="A"]')
+    await expect(laneA).toBeVisible()
+    await expect(laneA.getByRole('heading', { name: 'A 线' })).toBeVisible()
+    await expect(hub.locator('.ah-lane-roster[data-lane="B"]')).toBeVisible()
+    await expect(hub.locator('.ah-lane-roster-note')).toContainText('A 线')
+    const mine = laneA.locator('.ah-office-investigator[data-seat="0"]')
+    const picked = page.waitForResponse(response => response.url().endsWith('/api/move') && response.request().postDataJSON()?.move?.action === 'hubSelectInvestigator')
+    await mine.locator('.ah-office-candidate').first().click()
+    const pickedBody = await (await picked).json()
+    expect(pickedBody.ok, pickedBody.error).toBe(true)
+    await expect(mine.getByText('调查员已选择')).toBeVisible()
+    const built = page.waitForResponse(response => response.url().endsWith('/api/move') && response.request().postDataJSON()?.move?.action === 'hubAutoDeck')
+    await mine.getByRole('button', { name: '自动构筑合法牌组' }).click()
+    const builtBody = await (await built).json()
+    expect(builtBody.ok, builtBody.error).toBe(true)
+    await expect(mine.getByText(/牌组 \d+ 张/)).toBeVisible()
+    await expect(mine.getByText('牌组尚未保存')).toHaveCount(0)
+    const shot = `${output}lane-deck-${label}.png`
+    await page.screenshot({ path: shot, fullPage: true })
+    testInfo.annotations.push({ type: 'screenshot', description: shot })
+  })
+}

@@ -373,6 +373,6 @@ export function campaignView(campaign, observerSeat) {
       }
     }
   }
-  // 双线战役（P5 批次 1）：非活动线快照只投影公开摘要；未声明 parts 的战役原样返回。
-  return partScopedView(view)
+  // 双线战役：线快照只投影公开摘要，观察者自己的牌组留在所属线里。
+  return partScopedView(view, observerSeat)
 }

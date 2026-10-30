@@ -259,6 +259,44 @@ test('观察投影：非活动线快照只给公开摘要，牌组/购入/故事
   assert.equal('parts' in plain, false)
 })
 
+test('并行准备：观察者只看得到自己那条线快照里的牌组', () => {
+  const campaign = Object.assign({
+    id: 'dualTest', records: {}, scenarioResults: [], investigators: {},
+  }, createPartsState({ mode: 'parallel', seatParts: ['A', 'A', 'B', 'B'], currentPart: null }))
+  campaign.parts = {
+    A: {
+      records: {},
+      investigators: {
+        0: { id: 'inv-0', seat: 0, code: '06001', name: '托米', status: 'active', deck: ['01001'], xp: 0, purchases: [{ code: '01002' }], startingDeckReady: true },
+        2: { id: 'inv-2', seat: 2, code: '06002', name: '曼迪', status: 'active', deck: ['01020'], xp: 0 },
+      },
+      storySections: { hidden: { title: '未到达', paragraphs: ['不应泄露'] } },
+    },
+    B: {
+      records: {},
+      investigators: {
+        1: { id: 'inv-1', seat: 1, code: '06005', name: '派翠丝', status: 'active', deck: ['01010', '01011'], xp: 1, purchases: [{ code: '01012' }] },
+      },
+      storySections: { other: { paragraphs: ['不应泄露'] } },
+    },
+  }
+  const own = campaignView(structuredClone(campaign), 0)
+  const mine = own.parts.A.investigators.find(record => record.seat === 0)
+  const teammate = own.parts.A.investigators.find(record => record.seat === 2)
+  const other = own.parts.B.investigators.find(record => record.seat === 1)
+  assert.deepEqual(mine.deck, ['01001'])
+  assert.deepEqual(mine.purchases, [{ code: '01002' }])
+  assert.equal('deck' in teammate, false, '同线队友的牌组不能投影')
+  assert.equal(teammate.deckSize, 1)
+  assert.equal('deck' in other, false, '另一条线的牌组不能投影')
+  assert.equal('purchases' in other, false)
+  assert.equal('storySections' in own.parts.A, false)
+  assert.equal(own.parts.A.storySectionCount, 1)
+  const guest = campaignView(structuredClone(campaign), 1)
+  assert.deepEqual(guest.parts.B.investigators.find(record => record.seat === 1).deck, ['01010', '01011'])
+  assert.equal('deck' in guest.parts.A.investigators.find(record => record.seat === 0), false)
+})
+
 test('交互清单定稿：10 条覆盖 P2 的两条 interaction 机制，状态全部 pending', () => {
   assert.equal(TDE_INTERACTIONS.length, 10)
   assert.equal(new Set(TDE_INTERACTION_IDS).size, 10)

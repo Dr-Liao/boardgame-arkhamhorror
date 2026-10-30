@@ -537,6 +537,8 @@ function doFreeDescriptor(state, seat, code, index, targetId, events) {
   if (!inv) return false
   for (const row of descriptorSources(state, inv)) {
     if (row.code !== code) continue
+    // 手牌行的 source 是 null。免费能力必须作用在场上的那张卡，不能借手里的同名卡结算。
+    if (!row.source) continue
     const descriptor = (row.entry?.abilities || [])[index]
     if (!descriptor || descriptor.kind !== 'free') continue
     if (descriptor.fromHand) continue

@@ -373,28 +373,50 @@ export function createPartsState({ mode = 'pick', seatParts, activeParts, curren
 // ---------------------------------------------------------------------------
 
 /**
- * 把 `campaign.parts` 里的非活动线快照压成公开摘要：
+ * 线内调查员的公开摘要。观察者自己的记录保留牌组与升级草稿，
+ * 同线队友和另一条线只给身份、状态与张数。故事正文一律不投影。
+ */
+function projectedInvestigator(record, observerSeat) {
+  const summary = {
+    id: record.id ?? null,
+    seat: record.seat ?? null,
+    code: record.code ?? null,
+    name: record.name ?? null,
+    status: record.status ?? null,
+    deckSize: Array.isArray(record.deck) ? record.deck.length : (Number(record.deckSize) || 0),
+    xp: record.xp ?? 0,
+  }
+  if (record.startingDeckReady === false) summary.startingDeckReady = false
+  const own = Number.isInteger(observerSeat) && record.seat === observerSeat
+  if (!own) return summary
+  return {
+    ...summary,
+    deck: Array.isArray(record.deck) ? [...record.deck] : [],
+    purchases: clone(record.purchases || []),
+    removedCards: clone(record.removedCards || []),
+    ...(record.upgradeDraft ? { upgradeDraft: clone(record.upgradeDraft) } : {}),
+    ...(record.upgradeAdvice ? { upgradeAdvice: clone(record.upgradeAdvice) } : {}),
+  }
+}
+
+/**
+ * 把 `campaign.parts` 里的线快照压成公开摘要：
  *   · 记录、经验、创伤、胜利、混乱袋属于战役日志，公开保留；
- *   · 牌组 / 购入 / 移除 / 升级草稿 / 故事段落正文一律不投影（只给张数与段数），
- *     避免另一条线的未到达分支与牌库顺序泄露；
- *   · 调查员只给身份、状态与牌组张数。
+ *   · 别人的牌组 / 购入 / 移除 / 升级草稿，以及全部故事正文，一律不投影
+ *     （只给张数与段数），避免另一条线的未到达分支与牌库顺序泄露；
+ *   · 观察者自己的记录保留牌组，并行准备时两条线都在 parts 里，否则自己的牌组会从客户端消失。
+ * 未传 observerSeat 时所有座位都按别人处理（旧的脱敏断言保持不变）。
  * 未声明 parts 的战役原样返回（不写 `partsRedacted`，状态与旧投影逐字节一致）。
  */
-export function partScopedView(view) {
+export function partScopedView(view, observerSeat = null) {
   if (!view || !view.parts || typeof view.parts !== 'object') return view
   const parts = {}
   for (const part of PARTS) {
     const snapshot = view.parts[part]
     if (!snapshot || typeof snapshot !== 'object') continue
-    const investigators = Object.values(snapshot.investigators || {}).map(record => ({
-      id: record.id ?? null,
-      seat: record.seat ?? null,
-      code: record.code ?? null,
-      name: record.name ?? null,
-      status: record.status ?? null,
-      deckSize: Array.isArray(record.deck) ? record.deck.length : 0,
-      xp: record.xp ?? 0,
-    })).sort((left, right) => (left.seat ?? 0) - (right.seat ?? 0))
+    const investigators = Object.values(snapshot.investigators || {})
+      .map(record => projectedInvestigator(record, observerSeat))
+      .sort((left, right) => (left.seat ?? 0) - (right.seat ?? 0))
     parts[part] = {
       records: clone(snapshot.records || {}),
       investigators,

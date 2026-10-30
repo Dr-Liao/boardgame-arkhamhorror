@@ -171,12 +171,17 @@ export const encounterRules = {
       if (!location || attachmentCode(attachment) !== '03091' || !(location.doom > 0)) {
         throw new Error('卡尔克萨尖柱能力当前不可用')
       }
-      const difficulty = (location.shroud || 0) + (location.shroudMod || 0) + (state.fogMod || 0)
-      api.test(inv.seat, 'intellect', difficulty, result => {
-        if (!result.success) return
-        location.doom = Math.max(0, (location.doom || 0) - 1)
-        discardEmptySpires(state)
-      }, 0, { type: 'scenario', action: 'investigate', label: '调查卡尔克萨尖柱', code: '03091' })
+      // 卡面是「[action]：调查」。必须走调查管线，而不能另开一场普通检定：
+      // 放大镜等「调查时 +智力」才会生效，地点没有线索也能调查，成功不发现线索、改为移除 1 毁灭。
+      api.investigate(inv.seat, {
+        allowNoClues: true,
+        noClueDiscovery: true,
+        onInvestigateSuccess: result => {
+          if (!result?.success) return
+          location.doom = Math.max(0, (location.doom || 0) - 1)
+          discardEmptySpires(state)
+        },
+      })
       return
     }
     if (move.rule === 'discardSpiritsTorment') {

@@ -46,6 +46,20 @@
       "status": "passed"
     },
     {
+      "title": "M5 并行按线选人与自动牌组在desktop端可用",
+      "spec": "tests/tde-modes.browser.mjs",
+      "viewport": "desktop",
+      "expectedStatus": "passed",
+      "status": "passed"
+    },
+    {
+      "title": "M5 并行按线选人与自动牌组在mobile端可用",
+      "spec": "tests/tde-modes.browser.mjs",
+      "viewport": "mobile",
+      "expectedStatus": "passed",
+      "status": "passed"
+    },
+    {
       "title": "M5 非双线战役不出现开局模式门，页签照常可用",
       "spec": "tests/tde-modes.browser.mjs",
       "viewport": "desktop",
@@ -85,6 +99,20 @@
     {
       "name": "departure-parallel-mobile",
       "path": "artifacts/tde-migration/departure-parallel-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "exists": true
+    },
+    {
+      "name": "lane-deck-desktop",
+      "path": "artifacts/tde-migration/lane-deck-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "exists": true
+    },
+    {
+      "name": "lane-deck-mobile",
+      "path": "artifacts/tde-migration/lane-deck-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "exists": true

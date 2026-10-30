@@ -263,6 +263,25 @@ test('P0-A 05028 良好人脉只在检定窗口内可用并横置', () => {
   assert.equal(state.investigators[0].assets.find(item => item.code === '05028').exhausted, true)
 })
 
+test('P0-A 05028 良好人脉在手牌中不会打开检定免费窗口', () => {
+  const state = fixture('01001')
+  state.investigators[0].hand.push('05028')
+  state.investigators[0].resources = 12
+  move(state, { action: 'investigate' })
+  const offersAbility = choice => (choice?.options || []).some(option =>
+    String(option.id).startsWith('free-descriptor:05028') || String(option.label).includes('每 5 资源'))
+  for (let i = 0; state.pendingChoice && i < 24; i++) {
+    const choice = state.pendingChoice
+    assert.equal(offersAbility(choice), false, `手牌中的良好人脉不应出现在窗口：${JSON.stringify(choice.options)}`)
+    const option = choice.options.find(item => item.id === 'skip')
+      || choice.options.find(item => item.id === 'done')
+      || choice.options.at(-1)
+    applyMove(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId: option.id })
+  }
+  assert.equal(state.pendingChoice, null)
+  assert.ok(state.investigators[0].hand.includes('05028'), '没打出的良好人脉应留在手牌')
+})
+
 test('P0-A 被动与槽位卡：05112 提供额外法术槽位', () => {
   const state = fixture('01001')
   const inv = state.investigators[0]

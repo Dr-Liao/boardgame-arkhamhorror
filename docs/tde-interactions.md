@@ -1,6 +1,6 @@
 # 《食梦者》交互手册（P5 批次 1：清单定稿 + 策略层）
 
-> **口径**：10 条交互已在 P5 定稿为事实表（[`interactions.js`](../content/campaigns/theDreamEaters/interactions.js)），全部 `pending`——引擎侧的开局模式、座位分线、按线准备与双线 gate 已接通（批次 1–2），但交互 UI 与桌面/移动证据要等 P8 注册真实战役后才可能有真实路径。
+> **口径**：10 条交互已在 P5 定稿为事实表（[`interactions.js`](../content/campaigns/theDreamEaters/interactions.js)）。源清单仍全部 `pending`（真实 TDE 章节未注册）。交互 1–2 的演示点击路径已在双线演示战役上核对（桌面 1440 + 移动 390，[`audit/tde-ui-browser.json`](../audit/tde-ui-browser.json)）。交互 3–10 的场景面板随 P8。
 > 事实来源：[`mechanism-scan.json`](../artifacts/migration/tde/mechanism-scan.json)（P2 登记了 2 条开局交互）+ 路线图 §7.1 的 10 条清单。
 > 路线图：[`tde-migration-roadmap.md`](./tde-migration-roadmap.md) §7.1 / §11.2；规范：[`arkham-content-migration.md`](./arkham-content-migration.md) §4.5。
 > 过程报告：[`tde-p5-report.md`](./tde-p5-report.md)。
@@ -17,7 +17,7 @@
 | # | id | 交互 | 触发 / 章节 | 机制 id | hook | 归属 | 状态 |
 | ---: | --- | --- | --- | --- | --- | --- | --- |
 | 1 | `campaignOption` | 选择玩法（单线 A / 单线 B / 并行 / 分选） | 序章（战役台面） | `ui:modeSelection` | hub | 引擎 P5-2 ✅ / UI P5-3 ✅ / 桌面 1440 + 移动 390 浏览器证据（`audit/tde-ui-browser.json`） | verified |
-| 2 | `laneSelection` | 按线选人 / 选牌组（每座位一套） | 开局准备 | `ui:laneDeckSelection` | hub | 引擎 P5-2 ✅ / UI P5-3 | pending |
+| 2 | `laneSelection` | 按线选人 / 选牌组（每座位一套） | 开局准备 | `ui:laneDeckSelection` | hub | 引擎 P5-2 ✅ / 按线名册 ✅ / 桌面 1440 + 移动 390 浏览器证据（`audit/tde-ui-browser.json`） | verified |
 | 3 | `swarmPanel` | 蜂拥卡面板（数量 / 来源 / 溢出伤害） | Swarming X 敌人 | `swarming` | table | P8 | pending |
 | 4 | `infestationBag` | 蛛群滋生袋（揭示 / 放回 / 蛛巢标记） | 清醒噩梦 | `tokenBag` | table | P8 | pending |
 | 5 | `alarmLevel` | 警报等级 0–5+ 显示与增减 | 月之暗面 | `alarmLevel` | table | P8 | pending |
@@ -29,14 +29,16 @@
 
 > 交互 1 的浏览器证据用 P5 的「双线演示」战役（`ARKHAM_BROWSER_DEMO=dualHub`）取得：面板/座位分线只在声明 parts 的战役出现，真实 TDE 要等 P8 注册章节；同一条 UI 路径不依赖具体战役。
 >
-> `pending` 不是「没设计」：每条交互的触发时机、章节、机制 id 与阻塞原因都已登记；`verified` 需要真实 UI 路径 + 桌面/移动截图 + 隐私断言，最早在 P5 批次 2（第 1–2 条）与 P8（第 3–10 条）。
+> 交互 2 的浏览器证据同样用双线演示战役：调查员页按 A/B 分组，真人座位点选候选人并自动构筑后，本线牌组摘要可见，另一条线的牌组不投影。源清单仍 `pending`。
+>
+> 第 3–10 条仍是 `pending`：设计已经登记，`verified` 还要真实界面路径、桌面/移动截图和隐私断言。
 
 ### 2.1 开局两条的硬口径（§1.4.1，本轮已落成策略层）
 
 - 人数校验前置：奇数人数时「并行双线」不可用并给「两组人数相等」的原因；1 人只有两个单线选项。
   → 实现：[`campaign-modes.js`](../src/campaign/campaign-modes.js) 的 `modeOptions` / `modePlan`（纯策略，hub 接线在批次 2）。
 - 分选要求两线各 ≥1 座位：`modePlan({ mode:'pick', seatParts:['A','A'] })` 直接给原因；改线走 `assignSeatPart`，清空任一条线会被拒绝。
-- 并行等分：默认分线由 `defaultSeatParts('parallel', n)` 决定（前 n/2 A、其余 B），不接受手工改线。
+- 并行可以自由改线，开始前两组人数必须相等；默认分线仍是 `defaultSeatParts('parallel', n)`（前 n/2 为 A）。奇数人数在模式选择处不可用。
 - 每座位只建一套牌组：策略层只产出「座位→线」计划，不产生第二套牌组；跨线重复选人校验在批次 2 接。
 
 ### 2.2 场景交互的口径来源
@@ -46,42 +48,25 @@
 - 隐藏手牌：18 张全部带险境；06306–06310 的敌人形态要在手牌里提供攻击/躲避入口。
 - 纵向堆叠：布局必须复用既有 layout 变量，不新建循环专属布局。
 
-## 3. 已交付的 P5 批次 1–2 支撑（引擎侧，不是交互 UI）
+## 3. 已落地（P5）
 
-| 项 | 落点 | 验收 |
-| --- | --- | --- |
-| 四模式可用性 / 默认分线 / 改线校验 | `src/campaign/campaign-modes.js` | [`tde-modes.test.mjs`](../tests/tde-modes.test.mjs) 7 例 |
-| 章对门（`partGate`）与单线/双线 flow | `src/campaign/part-flow.js` | [`tde-dual-flow.test.mjs`](../tests/tde-dual-flow.test.mjs) 7 例（含 16 排列） |
-| 双线条件（`part/mode/activeParts` 嵌进普通条件） | `src/campaign/campaign-flow.js` | 同上：条件矩阵 |
-| 非活动线投影脱敏 | `src/campaign/campaign-parts.js#partScopedView` | 同上：牌组/购入/故事正文不外泄 |
-| hub 四模式开局与座位分线 | `src/engine/{hub,dispatch}.js` | [`tde-hub-modes.test.mjs`](../tests/tde-hub-modes.test.mjs) 5 例 |
-| 按线选人/牌组与跨线重复校验 | `dispatch.js` 的 `inPart` 路由 + `table-decisions.js` | 同上：非活动线 record 落 `parts[line]`、跨线候选互斥 |
-| 双线运行 gate | `dispatch.js` 的 `hubBeginScenario` | 同上：分选/并行开始关卡时抛「批次 3」原因 |
-| 交互清单与阻塞原因 | `content/campaigns/theDreamEaters/interactions.js` | 10/10、`validateInteractionInventory` |
+四模式、章对门与 16 排列、按线准备、分选运行时、并行管线、开局面板和按线选人名册都已接上。交互 1–2 的桌面/移动证据在 `audit/tde-ui-browser.json`（演示战役 `ARKHAM_BROWSER_DEMO=dualHub`，不依赖真实章节）。局内牌桌不分屏。盘点见 [`tde-parallel-interactions.md`](./tde-parallel-interactions.md)，联机缺口见 [`tde-parallel-online-assessment.md`](./tde-parallel-online-assessment.md)。真实 TDE 的 `dualLineGate` 仍关。
 
-## 3.1 开局模式面板（交互 1 的 UI，P5 批次 3）
+## 4. 仍待验收
 
-- 纯模型 [`web/hub-mode-view.js`](../web/hub-mode-view.js)：四模式固定顺序、置灰原因原样透传、分选逐座位分线、先选模式提示；`tests/tde-mode-panel.test.mjs` 4 例。
-- 渲染接在 `web/hub.js` 的战役总览：`hubSetMode` / `hubSetSeatPart` 按钮，disabled 时直接显示引擎给的原因；`hub.mode.*` 词典中英各 5 键。
-- **浏览器证据仍缺**：没有注册声明 `parts` 的战役（P8），面板在浏览器里没有可点入口；因此交互 1 保持 `pending`，不写 `verified`。
-
-> 并行双线的完整交互盘点、线框与波次见 [`tde-parallel-interactions.md`](./tde-parallel-interactions.md)（24 处交互点；W1 已落，W2 关卡首页分屏未做）。
-
-## 4. 待办（P5 批次 3 / P8）
-
-| # | 事项 | 归属 | 产物 / 验收 |
-| ---: | --- | --- | --- |
-| 1 | hub 四模式与座位分线（引擎） | P5 批次 2 ✅ | `hubSetMode` / `hubSetSeatPart` + 5 例 Node（`tde-hub-modes`）；**UI 面板与浏览器截图仍缺** |
-| 2 | 按线选人 / 牌组、跨线重复校验 | P5 批次 2 ✅ | 非活动线 record 落 `parts[line]`；跨线候选互斥 |
-| 3 | lane adapter（roomSeat↔laneSeat 边界转换）与切 part | P5 批次 3 | 非连续座位可行动；线内数组连续 |
-| 4 | 交互面板（模式选择 / 确认页）与浏览器路径 | P5 批次 3 / P8 | 账本 `pending→verified`（桌面/移动各一条路径 + 截图） |
-| 5 | 8 条场景交互随章节接入 | P8 | 逐章 12 项检查 + 隐私断言 |
+| # | 事项 | 归属 |
+| ---: | --- | --- |
+| 1 | 交互 2 的源清单仍 `pending`：真实 TDE 章节未注册 | P8 注册章节之后 |
+| 2 | 交互 3–9：随章节接入的场景面板 | P8 |
+| 3 | 交互 10：梦境之门与 16 段尾声（含自译正文） | P8 / P8-T |
+| 4 | 真实 TDE 打开 `dualLineGate`，并跑 P9.5 多人矩阵 | P8 之后 |
 
 ## 5. 边界
 
-- 交互不是规则：面板只把已算好的候选呈现出来；规则判断留在引擎与描述子。
-- 并行双线的 UI 仍是「一个房间、每座位只看本线」，开闸门禁在路线图 §11.2，不随 P5 批次 1–2 放开。
-- 本轮没有浏览器证据（没有任何已注册战役声明 `parts`），因此**不能**把任何一条交互写成 `verified`；引擎侧动作（批次 2）不等于交互验收。
+- 面板只呈现引擎已经算好的候选；浏览器只提交 `legalMoves`。
+- 交互 1 的 `verified` 只覆盖模式门、分线和出发准备，不覆盖真实食梦者章节。
+- 交互 2 的 `verified` 只覆盖演示战役上的按线选人、自动构筑和本线牌组投影，不覆盖真实食梦者章节。
+- 并行开闸门禁在路线图 §11.2。演示战役打开开关，不等于 TDE 已开闸。
 
 ## 6. 相关手册与维护
 

@@ -11,10 +11,10 @@
 //   - AI 队友由模型选择调查员、构筑和升级；确定性策略只作失败兜底。
 
 import {
-  sessionPolicy, saveSummary, actionsRemaining, participantDescription,
+  sessionPolicy, saveSummary, actionsRemaining as containerActionsRemaining, participantDescription,
   createSessionCheckpoint, checkpointView, migrateSessionCheckpoints, forkSessionCheckpoint,
 } from './src/integration/hall-integration.js'
-import { agentPlanning } from './src/ai/agent-plans.js'
+import { agentPlanning, planPrompt, plansForObserver } from './src/ai/agent-plans.js'
 import { commitChoiceBatch } from './src/integration/choice-batch.js'
 import { buildDebugCommand } from './src/integration/debug-console.js'
 
@@ -45,7 +45,7 @@ import { cacheMusicAsset } from './src/integration/music-cache.js'
 import { viewState, viewEvents, staticTables } from './src/integration/observation.js'
 import { laneToRoomSeat, laneSeatForRoom } from './src/engine/lane-runtime.js'
 import {
-  isParallelState, launchParallelLanes, parallelActingSeats, parallelApplyMove, parallelAutoChoice, parallelDecisionSeat,
+  isParallelState, laneStateOf, launchParallelLanes, parallelActingSeats, parallelApplyMove, parallelAutoChoice, parallelDecisionSeat,
   parallelDescribe, parallelLegalMoves, parallelPendingChoice, parallelPublicView, parallelSeatLocalMove,
   parallelValidateMove, parallelView, syncParallelStatus,
 } from './src/integration/parallel-runtime.js'
@@ -119,8 +119,8 @@ const AGENT_HINT = [
 //
 // 规则引擎在关卡内只认线内连续座位（laneSeat）；大厅命令、观察投影与 AI 用房间座位
 // （roomSeat）。这里按 state.laneRuntime 做一次双向转换，非双线战役全部原样透传。
-// viewEvents 没有 state 参数，本轮暂不做座位转换（只影响私密事件的过滤，不会泄密；
-// 已在 docs/tde-p5-report.md 记为剩余项）。
+// viewEvents 不接收 state：私密座位在事件生成时已写成房间座位
+// （roomSeatForEvent，并行则在 parallelApplyMove 里连演出快照一起换算）。
 // ---------------------------------------------------------------------------
 const laneSeatOfRoom = (state, roomSeat) => (state?.laneRuntime ? laneSeatForRoom(state, roomSeat) : roomSeat)
 const roomSeatOfLane = (state, laneSeat) => (state?.laneRuntime ? laneToRoomSeat(state, laneSeat) : laneSeat)
@@ -177,6 +177,30 @@ const hostedSeatLocalMove = (state, seat, move) => {
   if (seatIsWaiting(state, seat)) return false
   return seatLocalMove(state, laneSeatOfRoom(state, seat), move)
 }
+// 并行时该座位的权威局面在本线，不在容器。容器没有 scenario/round/actionsLeft。
+const laneClock = (state, seat) => {
+  if (seat == null || !isParallelState(state)) return state
+  return laneStateOf(state, seat) || state
+}
+const hostedActionsRemaining = (state, seat) => {
+  const lane = laneClock(state, seat)
+  if (lane === state) return containerActionsRemaining(state, seat)
+  const laneSeat = lane.laneRuntime?.roomSeats?.indexOf(seat) ?? -1
+  if (laneSeat < 0) return undefined
+  return lane.investigators?.find(item => item.seat === laneSeat)?.actionsLeft
+}
+const hostedAgentPlanning = {
+  ...agentPlanning,
+  commit(session, seat, raw, decisionState = session.state) {
+    agentPlanning.commit(session, seat, raw, laneClock(decisionState, seat))
+  },
+  view(session, seat) {
+    return plansForObserver(session, seat, laneClock(session.state, seat))
+  },
+  prompt(session, seat) {
+    return planPrompt(session, seat, laneClock(session.state, seat))
+  },
+}
 const hostedViewState = (state, seat = null, options = {}) => {
   if (isParallelState(state)) return seat == null ? parallelPublicView(state) : parallelView(state, seat)
   const observer = seat == null || !state?.laneRuntime ? seat
@@ -204,7 +228,7 @@ export default {
   cooperative: true,
   sessionPolicy,
   saveSummary,
-  actionsRemaining,
+  actionsRemaining: hostedActionsRemaining,
   participantDescription,
   createSessionCheckpoint,
   checkpointView,
@@ -213,7 +237,7 @@ export default {
   migrateSessionCheckpoints,
   forkSessionCheckpoint,
   commitChoiceBatch,
-  agentPlanning,
+  agentPlanning: hostedAgentPlanning,
   agentActionMessage({ before, seat, move, speech = '' }) {
     if (speech.trim()) return speech.trim()
     const name = before.investigators?.find(inv => inv.seat === seat)?.name || '调查员'
@@ -226,7 +250,12 @@ export default {
   },
   agentActionSpeechFrequency: actionSpeechFrequency,
   agentReactionTriggers: reactionTriggers,
-  agentTurnKey: (state, seat) => [state.uiState, state.scenario?.id, state.round, state.phase, state.currentSeat, seat].join(':'),
+  agentTurnKey: (state, seat) => {
+    const source = laneClock(state, seat)
+    const current = source === state ? source.currentSeat
+      : (source.laneRuntime?.roomSeats?.[source.currentSeat] ?? source.currentSeat)
+    return [source.uiState, source.scenario?.id, source.round, source.phase, current, seat].join(':')
+  },
   validateAgentMove(state, seat, move) {
     return ['hubAutoDeck', 'hubAutoUpgrade'].includes(move.action) ? '模型需自主提交 hubSetDeck 的 codes 或选择 hubPurchase；自动策略只作失败兜底。' : null
   },

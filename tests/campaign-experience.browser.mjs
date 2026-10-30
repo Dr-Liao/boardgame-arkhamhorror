@@ -59,7 +59,7 @@ for(const width of [1440,390]) test(`午夜结局2与第三章导入在关间纪
   await page.screenshot({path:output+`third-chapter-intro-${width}.png`,animations:'disabled'})
   await nav.getByRole('button',{name:/结局 2.*午夜假面/}).click()
   await expect(story).toContainText('你们试著赶紧整理现在获得的信息')
-  await expect(story.locator('.ah-story-page > small')).toHaveText('本关结算 · 结局 2')
+  await expect(story.locator('.ah-story-masthead > small')).toHaveText('本关结算 · 结局 2')
   await expect(story).not.toContainText('旧的结局摘要')
   await page.screenshot({path:output+`midnight-resolution-two-${width}.png`,animations:'disabled'})
   await hub.getByRole('button',{name:'刷新',exact:true}).click()

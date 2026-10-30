@@ -267,7 +267,9 @@ export function createAbilityRules(deps) {
   function canAffordAbility(state, inv, asset, ability) {
     const cost = normalizeCostValues(ability.cost || {}, { state, inv, source: asset, descriptor: ability.descriptor || null })
     if (!cost) return false
-    if (cost.exhaust && asset?.exhausted) return false
+    // 没有来源就不能付横置费。手牌枚举进来的 source 是 null；只看 asset?.exhausted
+    // 会把「卡不在场」误判成「没横置」，免费能力就会从手里被当成可用。
+    if (cost.exhaust && (!asset || asset.exhausted)) return false
     if (cost.uses && (asset?.uses || 0) < cost.uses) return false
     if (cost.resources && inv.resources < cost.resources) return false
     if (cost.clues && (inv.clues || 0) < cost.clues) return false

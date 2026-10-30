@@ -57,6 +57,38 @@ const withoutRevision = move => {
   return rest
 }
 
+function remapIndexedSeat(roomSeats, seat) {
+  return Number.isInteger(seat) ? (roomSeats[seat] ?? seat) : seat
+}
+
+// 演出快照在线内用密集座位。投影按房间座位比对观察者，不换算会把 B 线玩家自己的手牌也清空。
+function remapTableStateSeats(tableState, roomSeats) {
+  if (!tableState || typeof tableState !== 'object') return tableState
+  const copy = { ...tableState }
+  if ('currentSeat' in copy) copy.currentSeat = remapIndexedSeat(roomSeats, copy.currentSeat)
+  if ('turnSeat' in copy) copy.turnSeat = remapIndexedSeat(roomSeats, copy.turnSeat)
+  if (Array.isArray(copy.investigators)) {
+    copy.investigators = copy.investigators.map(inv => (
+      inv && typeof inv === 'object' ? { ...inv, seat: remapIndexedSeat(roomSeats, inv.seat) } : inv
+    ))
+  }
+  if (copy.privateTest && typeof copy.privateTest === 'object') {
+    copy.privateTest = { ...copy.privateTest, seat: remapIndexedSeat(roomSeats, copy.privateTest.seat) }
+  }
+  return copy
+}
+
+function remapEventSeats(event, roomSeats) {
+  const copy = { ...event }
+  if (Number.isInteger(copy.seat)) copy.seat = remapIndexedSeat(roomSeats, copy.seat)
+  if (Number.isInteger(copy.privateSeat)) copy.privateSeat = remapIndexedSeat(roomSeats, copy.privateSeat)
+  if (copy.tableState) copy.tableState = remapTableStateSeats(copy.tableState, roomSeats)
+  if (copy.presentation?.tableState) {
+    copy.presentation = { ...copy.presentation, tableState: remapTableStateSeats(copy.presentation.tableState, roomSeats) }
+  }
+  return copy
+}
+
 /** 大厅命令：按座位路由到本线运行时。 */
 export function parallelApplyMove(state, seat, move) {
   if (!isParallelState(state)) throw new Error('不是并行双运行时状态')
@@ -76,12 +108,10 @@ export function parallelApplyMove(state, seat, move) {
   // 本线关卡结算 → 记等待；两边到同一章对才封盘（先不自动推进，幕间交给各线玩家）。
   if (laneState.uiState === 'scenarioResult') markLaneFinished(state, lane)
   syncParallelStatus(state)
-  // 事件离开引擎前把线内座位换回房间座位，并标记 lane（大厅事件流按座位过滤）。
+  // 事件离开引擎前把线内座位换回房间座位（含演出快照），并标记 lane。
   const roomSeats = laneState.laneRuntime?.roomSeats || []
   return events.map(event => {
-    const copy = { ...event }
-    if (Number.isInteger(copy.seat)) copy.seat = roomSeats[copy.seat] ?? copy.seat
-    if (Number.isInteger(copy.privateSeat)) copy.privateSeat = roomSeats[copy.privateSeat] ?? copy.privateSeat
+    const copy = remapEventSeats(event, roomSeats)
     copy.lane = laneOfSeat(state, copy.seat) || copy.lane
     return copy
   })

@@ -13,13 +13,17 @@ export function renderStoryReader(h,s,state,render,action,game,checkpointAction=
   const statusLabels={killed:t('story.reader.status.killed'),insane:t('story.reader.status.insane'),active:t('story.reader.status.active')}
   const recordLabels=game?.clientData?.campaigns?.find(c=>c.id===s.state.campaign.id)?.recordLabels || {}
   const recordCardNames=s.state.campaign?.recordCardNames || {}
+  const restart=checkpointAction(s,selected)
   return h('section',{className:'ah-hub-pane ah-story-reader','aria-label':t('story.reader.aria')},
     h('header',{},h('small',{},t('story.reader.eyebrow')),h('h2',{},t('story.reader.title'))),
     !selected?h('p',{},t('story.reader.empty')):h('div',{className:'ah-story-layout'},
       h('nav',{'aria-label':t('story.reader.chapterNav')},entries.map(entry=>h('button',{'aria-current':entry.id===selected.id?'page':null,onclick:()=>{state.arkhamStorySelected=entry.id;render()}},tableIcon(entry.kind==='result'?'star':'book'),h('span',{},h('small',{},entry.kind==='result' ? entry.resolutionTitle || labels.result : labels[entry.kind]),entry.title)))),
       h('article',{className:'ah-story-page','data-story-id':selected.id},
         h('img',{className:'ah-story-illustration ah-office-decor',src:campaignPresentation(s.state.campaign.id,selected.scenarioId || '').assets.storyDefault,alt:'','aria-hidden':'true'}),
-        h('small',{},selected.kind==='result'?t('story.reader.resultEyebrow',{title:selected.resolutionTitle || labels.result}):labels[selected.kind]),h('h1',{},selected.title),
+        h('div',{className:'ah-story-masthead'},
+          h('small',{},selected.kind==='result'?t('story.reader.resultEyebrow',{title:selected.resolutionTitle || labels.result}):labels[selected.kind]),
+          restart),
+        h('h1',{},selected.title),
         (selected.sections || [{paragraphs:selected.paragraphs}]).map(section=>h('section',{className:'ah-story-section'},
           section.title?h('h2',{},section.title):null,
           section.paragraphs.map(p=>h('p',{className:'ah-story-prose'},renderRulesText(h,p,{links:false}))))),
@@ -30,6 +34,5 @@ export function renderStoryReader(h,s,state,render,action,game,checkpointAction=
             h('span',{},`+${inv.xpAwarded || 0} XP`),h('span',{},t('story.reader.physicalTrauma',{amount:(inv.traumaAfter?.physical||0)-(inv.traumaBefore?.physical||0)})),h('span',{},t('story.reader.mentalTrauma',{amount:(inv.traumaAfter?.mental||0)-(inv.traumaBefore?.mental||0)})),
             h('b',{},statusLabels[inv.status] || inv.status)))):null,
         h('footer',{},
-          checkpointAction(s,selected),
           (s.state.legalMoves || []).filter(m=>m.action==='hubContinue').map(m=>action(s,m,t('story.reader.continue')))))))
 }

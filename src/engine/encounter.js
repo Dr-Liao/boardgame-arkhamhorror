@@ -522,6 +522,10 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
           // 2026-10-27「如同手牌」通道的合成来源只用于反应窗口的 fromHand 描述子，
           // 不把事件卡上的其它描述子当成免费能力。
           if (row.fromChannel) continue
+          // 手牌来源（source 为 null）只允许显式 fromHand 描述子；资产的免费能力不能从手里发动。
+          // 与 openAbilityWindow 同一口径。否则 05028 良好人脉这类「横置入场支援」会仅因在手牌里
+          // 就在检定前弹出免费触发窗口。
+          if (!row.source) continue
           if (!descriptorUsable(state, inv, row.source, descriptor, { windowId: timing, mode: 'free' })) continue
           if (descriptor.effect && effectError(state, inv, descriptor.effect)) continue
           options.push({

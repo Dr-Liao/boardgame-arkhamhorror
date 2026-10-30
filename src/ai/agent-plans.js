@@ -25,20 +25,21 @@ export function commitAgentPlan(session, seat, raw, decisionState = session.stat
     scenario: scenario(decisionState), round: decisionState.round, revision: session.state.revision }
 }
 
-export function plansForObserver(session, seat) {
+export function plansForObserver(session, seat, clock = session.state) {
   const plans = session.agentPlans || {}
   const team = Object.entries(plans).filter(([key, p]) => p.investigator === identity(session.state, Number(key)))
     .map(([key, p]) => ({ seat: Number(key), role: roles.has(p.role) ? p.role : 'flex' }))
   const stored = plans[seat]
   if (!stored || stored.investigator !== identity(session.state, seat)) return { team, own: null }
   const own = { ...normalizePlan(stored), revision: stored.revision }
-  own.needsReview = stored.scenario !== scenario(session.state) || stored.round !== session.state.round
+  // clock 默认是会话状态。并行时大厅传入该座位所在线的运行时，避免两条线共用容器指纹。
+  own.needsReview = stored.scenario !== scenario(clock) || stored.round !== clock.round
   if (own.needsReview) delete own.intent
   return { team, own }
 }
 
-export function planPrompt(session, seat) {
-  return '【持久协作计划】\n' + JSON.stringify(plansForObserver(session, seat))
+export function planPrompt(session, seat, clock = session.state) {
+  return '【持久协作计划】\n' + JSON.stringify(plansForObserver(session, seat, clock))
     + '\n计划只是既往建议；每步按最新局面、玩家战术备忘和合法动作重新评估。needsReview 时重写意图。队友仅共享职责，不共享私有牌组计划。'
 }
 

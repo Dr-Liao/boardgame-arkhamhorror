@@ -51,16 +51,9 @@
 | 06329 | 闪耀的偏方三八面体 | 费用替代管线的一次性特例 |
 | 06331 | 梦境寄生物 | 负技能图标 + 强制投入；若做通用「负图标」原语则移出 escape |
 
-## 3. 待办（P3）
+## 3. 落地状态
 
-| # | 事项 | 产物 / 验收 |
-| ---: | --- | --- |
-| 1 | 写 `tools/tde-primitive-spec.mjs`（计划表） | 每个原语：机制、API、落点文件、测试、文档 |
-| 2 | 参数化审计工具 | `audit-cycle-primitives.mjs --cycle tde` 或 `audit-tde-primitives.mjs`，复用 TCU 引擎 |
-| 3 | 双战役骨架 | `src/campaign/campaign-parts.js` + `roomSeat↔laneSeat`；合成两 part 夹具；13 局零漂移 |
-| 4 | D8-C adapter（协议级已在 P0 验证） | `develop/tde-dual-lane-spike*` 的七门禁在真实引擎上复跑 |
-| 5 | 五件套逐项 | 实现 / 注册校验 / Node 单测 / 本文件条目 / replay `--compare` 一致 |
-| 6 | 门禁 | `plan:tde:primitives` 与 `audit:tde:primitives` 全绿、`engine.js` 无 06 卡号、`test:fast` 无新增失败 |
+P3 三批与 §6–§9 已落地（含 P6 的 9 条调查员原语，`gate.pass=true`）。这里不再保留已完成待办。尚未接到真实卡面/章节的语义见各条说明，以及 [`tde-rules.md`](./tde-rules.md) §7：蜂拥实体、掩藏翻面动作、梦境之门地点实体、构筑界面上的多重计数。
 
 ## 4. 边界
 
@@ -164,10 +157,9 @@ API `createPartsState({ mode, seatParts, activeParts, currentPart })` 与 `setPa
 `linkVerticalChain`（写 `verticalIndex` + 既有 `connections`，幂等）/ `orderVerticalChain` / `chainNeighbors` / `moveAlongChain`（越界 `null`）/
 `normalizeVerticalChain`（层号连续、无重复）。不新建循环专属布局；渲染属 P5。
 
-### 7.7 批次 2 之后的原语（已登记，未落地）
+### 7.7 批次 2 之后
 
-`location.placeBondedLocation` / `campaign.epilogueMatrix` / `deck.myriadLimit` / `location.doom` / `scenario.markerCount`（批次 3）。
-清单与理由同时写在 `tools/tde-primitive-spec.mjs` 的 `DEFERRED_PRIMITIVES` 与账本 `deferredPrimitives`。
+这 5 条已在 §8 落地，不再挂在 `DEFERRED_PRIMITIVES`。
 
 ## 8. P3 批次 3 落地清单（2026-10-28）：最后 5 条原语
 

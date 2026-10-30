@@ -281,6 +281,9 @@ export default {
   'hub.investigators.empty': 'No investigators available with the current filters',
   'hub.investigators.editDeck': 'View and edit deck',
   'hub.investigators.goDeck': 'Go to deckbuilding',
+  'hub.investigators.laneHeading': 'Line {part}',
+  'hub.investigators.laneAria': 'Line {part}',
+  'hub.investigators.laneNote': 'This seat is on line {part} and prepares one investigator and one deck. Investigators already taken on the other line are not in this roster.',
 
   // Deck pane
   'hub.deck.manualDraft': 'Manual deckbuilding: continue editing the draft ({count} cards so far)',

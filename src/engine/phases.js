@@ -66,6 +66,16 @@ function upkeepPhase(state) {
   info(state, events, '🔧 重整阶段……', { kind: 'phase', phase: 'upkeep', round: state.round, text: '重整卡牌 · 抽牌 · 获得资源' })
   phaseBeginningWindow(state, events)
 
+  // 03232 捷径挂在地点上（playerLocationAttachments），不在支援区或威胁区。
+  // 旧重整只扫这两处，横置后下一轮仍是横置，能力只能用一次。
+  // 噩梦来袭只禁止支援重整；蟒蛇（cannotReadyRound）才禁止该调查员控制的卡牌重整。
+  for (const attachment of state.playerLocationAttachments || []) {
+    const owner = state.investigators[attachment.ownerSeat]
+    const ownerAlive = owner && !owner.defeated && !owner.resigned
+    if (ownerAlive && campaignState.cannotReadyRound(owner) === state.round) continue
+    attachment.exhausted = false
+  }
+
   for (const inv of aliveInvestigators(state)) {
     inv.actionsLeft = 3 + extraActionBonus(inv)
     inv.exploreOnlyActions = exploreOnlyActionBonus(inv)

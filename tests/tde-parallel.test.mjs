@@ -7,6 +7,8 @@ import assert from 'node:assert/strict'
 
 import { contentRegistry, registerContentBundle } from '../content/registered.js'
 import { applyMove, createGameState, decisionSeat, legalMoves, validateMove } from '../src/engine/engine.js'
+import { migrateState } from '../src/engine/save-migration.js'
+import { RULES_VERSION, STATE_SCHEMA_VERSION } from '../src/engine/rules-state.js'
 import { dualPartFlow } from '../src/campaign/part-flow.js'
 import {
   advanceParallelPair, isParallelState, launchParallelLanes, markLaneFinished, parallelActingSeats,
@@ -338,6 +340,72 @@ test('并行关卡检查点：记录两条线，任一队长可回档', () => {
   })
   assert.equal(branch.state.parallel.lanes.B.scenario.id, 'b1')
   assert.equal(branch.state.revision, 999)
+})
+
+test('并行 AI 回合键、计划指纹和行动点取本线，不取容器', () => {
+  const state = parallelGame()
+  state.parallel.lanes.A.round = 1
+  state.parallel.lanes.A.phase = 'investigation'
+  state.parallel.lanes.B.round = 4
+  state.parallel.lanes.B.phase = 'enemy'
+  state.parallel.lanes.B.investigators[0].actionsLeft = 2
+  const keyA = mod.agentTurnKey(state, 0)
+  const keyB = mod.agentTurnKey(state, 2)
+  assert.match(keyA, /a1:1:investigation/)
+  assert.match(keyB, /b1:4:enemy/)
+  assert.notEqual(keyA, keyB)
+  state.parallel.lanes.B.round = 5
+  assert.notEqual(mod.agentTurnKey(state, 2), keyB)
+  assert.equal(mod.actionsRemaining(state, 2), 2)
+  assert.equal(mod.actionsRemaining(state, 0), state.parallel.lanes.A.investigators.find(inv => inv.seat === 0)?.actionsLeft)
+  const session = { state, revision: state.revision }
+  mod.agentPlanning.commit(session, 2, { intent: '守住本线', role: 'fight' }, state)
+  assert.equal(mod.agentPlanning.view(session, 2).own.needsReview, false)
+  assert.equal(mod.agentPlanning.view(session, 2).own.intent, '守住本线')
+  state.parallel.lanes.A.round = 9
+  assert.equal(mod.agentPlanning.view(session, 2).own.needsReview, false, '另一条线的回合不能让本线计划过期')
+  state.parallel.lanes.B.round = 6
+  assert.equal(mod.agentPlanning.view(session, 2).own.needsReview, true)
+  assert.equal(mod.agentPlanning.view(session, 2).own.intent, undefined)
+})
+
+test('并行演出快照的座位是房间座位，本线手牌不会被当成别人的牌清空', () => {
+  const state = parallelGame()
+  const bRoom = parallelDecisionSeats(state).find(seat => seat === 2 || seat === 3)
+  const lane = state.parallel.lanes.B
+  const laneSeat = lane.laneRuntime.roomSeats.indexOf(bRoom)
+  // upkeep 的日志会附带演出快照；应答座位仍是本线当前座位。
+  lane.phase = 'upkeep'
+  lane.investigators[laneSeat].hand = ['01999']
+  const events = mod.applyMove(state, bRoom, { action: 'resource' })
+  const tables = events.flatMap(event => [event.tableState, event.presentation?.tableState].filter(Boolean))
+  assert.ok(tables.length > 0, 'upkeep 阶段的日志应带演出快照')
+  for (const table of tables) {
+    assert.ok(table.investigators.every(inv => inv.seat === 2 || inv.seat === 3))
+    assert.equal(table.currentSeat, bRoom)
+  }
+  const own = mod.viewEvents(events, bRoom).flatMap(event => (event.presentation?.tableState || event.tableState)?.investigators || [])
+  assert.deepEqual(own.find(inv => inv.seat === bRoom).hand, ['01999'])
+  const other = mod.viewEvents(events, 0).flatMap(event => (event.presentation?.tableState || event.tableState)?.investigators || [])
+  assert.deepEqual(other.find(inv => inv.seat === bRoom).hand, [])
+})
+
+test('并行存档迁移走进两条线；版本已当前时原样返回', () => {
+  const state = parallelGame()
+  const same = migrateState(state)
+  assert.equal(same.state, state)
+  assert.deepEqual(same.changes, [])
+  const old = structuredClone(state)
+  old.parallel.lanes.A.schemaVersion = 6
+  old.parallel.lanes.A.rulesVersion = 'n5.5'
+  old.parallel.lanes.A.investigators[0].phaseStatBonus = { skill: 'combat', amount: 1 }
+  const { state: migrated, changes } = migrateState(old)
+  assert.equal(migrated.parallel.lanes.A.schemaVersion, STATE_SCHEMA_VERSION)
+  assert.equal(migrated.parallel.lanes.A.rulesVersion, RULES_VERSION)
+  assert.equal(migrated.parallel.lanes.B.schemaVersion, STATE_SCHEMA_VERSION)
+  assert.equal(old.parallel.lanes.A.schemaVersion, 6)
+  assert.ok(changes.some(item => item.startsWith('A 线')), changes.join(' | '))
+  assert.ok(migrated.parallel.lanes.A.effects.some(effect => String(effect.id).includes('migrated-phase')))
 })
 
 test('大厅版本号：容器 revision 提交到 lane 前必须剥离（否则所有行动都会被判过期）', () => {

@@ -544,6 +544,11 @@
   .ah-departure-lane { padding: 12px 10px 14px; }
 }
 
+/* 交互 2：调查员页按线分组。本席位只建一套牌组，名册已去掉另一条线占用的人。 */
+.ah-lane-roster { margin: 4px 0 16px; }
+.ah-lane-roster > h3 { margin: 0 0 8px; font-size: 18px; }
+.ah-lane-roster-note { margin: 0 0 12px; }
+
 /* P5.5 W2 修订：出发准备两栏对齐、每线关卡名/插图、通用按钮与换位置弹窗 */
 .ah-departure-common { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap;
   padding: 0 4px 14px; border-bottom: 1px solid var(--ah-line, rgba(255,255,255,.14)); }

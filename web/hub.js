@@ -108,9 +108,16 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   // 双线战役的座位记录可能只在 parts[line] 快照里（首次整备时 currentPart 为空），
   // 出发准备/席位确认必须按「座位所属线」取记录，不能只看顶层。
   const recordForSeat = (s, seat) => {
-    const lane = s.state.campaign.seatParts?.[seat]
-    const fromPart = lane && s.state.campaign.parts?.[lane]?.investigators?.find(record => record.seat === seat)
-    return fromPart || s.state.campaign.investigators[seat]
+    const campaign = s.state.campaign
+    const lane = campaign.seatParts?.[seat]
+    const laneRecords = lane && campaign.parts?.[lane]?.investigators
+    const list = Array.isArray(laneRecords) ? laneRecords
+      : laneRecords && typeof laneRecords === 'object' ? Object.values(laneRecords) : []
+    const fromPart = list.find(record => record?.seat === seat) || null
+    const top = campaign.investigators?.[seat] || null
+    // 当前线的权威记录在顶层。并行时 currentPart 为空，两条线的记录都在 parts。
+    if (lane && lane !== (campaign.currentPart ?? null)) return fromPart || top
+    return top || fromPart
   }
   const seatPrepared = (s, inv) => {
     const record = recordForSeat(s, inv.seat)
@@ -418,7 +425,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     }
     return h('button', {
       type: 'button',
-      className: 'bg-btn secondary ah-checkpoint-fork',
+      className: 'ah-checkpoint-fork',
       disabled: state.busy || !checkpoint.canFork,
       onclick: () => {
         state.arkhamCheckpointFork = {
@@ -508,8 +515,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   }
   // A local draft survives only while its saved source stays unchanged. An
   // automatic build or a saved edit must become the next editing baseline.
-  const deckDraftKey = (s, inv) => JSON.stringify([s.sessionId, inv?.code, [...(s.state.campaign.investigators[deckSeat(s)]?.deck || [])].sort()])
-  const savedDraft = (s, inv) => (s.state.campaign.investigators[deckSeat(s)]?.deck || []).filter(code => inv?.allowedCards.includes(code))
+  const deckDraftKey = (s, inv) => JSON.stringify([s.sessionId, inv?.code, [...(recordForSeat(s, deckSeat(s))?.deck || [])].sort()])
+  const savedDraft = (s, inv) => (recordForSeat(s, deckSeat(s))?.deck || []).filter(code => inv?.allowedCards.includes(code))
   const sameCards = (a, b) => a.length === b.length && [...a].sort().join() === [...b].sort().join()
   function openDeck(s, g, { importing = false, library = false } = {}) {
     const inv = deckInvestigator(s, g)
@@ -683,9 +690,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   }
 
   const seatSelected = (s, seat) => !!s.state.hubSeatSelected?.[seat]
-    || (!!s.state.campaign.scenarioResults?.length && s.state.campaign.investigators[seat]?.status === 'active')
+    || (!!s.state.campaign.scenarioResults?.length && recordForSeat(s, seat)?.status === 'active')
   const seatTask = (s, seat) => {
-    const st = s.state, record = st.campaign.investigators[seat]
+    const st = s.state, record = recordForSeat(s, seat)
     if (st.uiState === 'interlude') {
       if (record?.status !== 'active') return t('hub.task.replaceInvestigator')
       if (record.upgradeDraft) return t('hub.task.saveUpgrades')
@@ -713,7 +720,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
   }
 
   function workflowGuide(s, activeTab) {
-    const st = s.state, mySeat = s.mySeat ?? 0, record = st.campaign.investigators[mySeat]
+    const st = s.state, mySeat = s.mySeat ?? 0, record = recordForSeat(s, mySeat)
     let steps, primary = null, message = preparationMessage(s)
     if (st.uiState === 'scenarioResult') {
       steps = [[t('hub.workflow.stepResultReview'), false], [t('hub.workflow.stepInterludeUpgrade'), false], [t('hub.workflow.stepConfirmNext'), false], [t('hub.workflow.stepStartNext'), false]]
@@ -1019,13 +1026,19 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         ;(result[pack] ||= []).push(item)
         return result
       }, {}))
-    return h('section', { className: 'ah-hub-pane ah-office-investigators' }, h('h2', {}, t('hub.tab.investigators')),
-      st.investigators.map(inv => {
-        const record = st.campaign.investigators[inv.seat]
+    const seatParts = Array.isArray(st.campaign.seatParts) ? st.campaign.seatParts : null
+    const lanesAssigned = !!seatParts?.some(part => part === 'A' || part === 'B')
+    const myLane = lanesAssigned ? seatParts[s.mySeat ?? 0] : null
+    const cards = st.investigators.map(inv => {
+        const record = recordForSeat(s, inv.seat)
         const active = acting(s, inv.seat) && !st.hubReady
         const selected = seatSelected(s, inv.seat)
         const detail = builderInvestigators.find(item => item.code === inv.code) || inv
-        return h('article', { className: 'ah-hub-seat ah-office-investigator' + (active ? ' active' : '') },
+        return h('article', {
+          className: 'ah-hub-seat ah-office-investigator' + (active ? ' active' : ''),
+          'data-lane': seatParts?.[inv.seat] || '',
+          'data-seat': String(inv.seat),
+        },
           portrait(inv), h('div', { className: 'ah-office-investigator-copy' },
           h('small', { className: 'ah-office-eyebrow' }, t('hub.investigators.eyebrow', { class: classLabel(inv.klass) || inv.klass || '', pack: packLabel(detail.pack, detail.packName), seat: inv.seat + 1 })),
           playerBadge(s, inv.seat),
@@ -1073,13 +1086,29 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
             legal(s, 'hubAutoDeck').map(move => action(s, move)),
             selected ? h('button', { className: 'bg-btn secondary', onclick: () => changeTab('deck') }, recordDeckReady(record) ? t('hub.investigators.editDeck') : t('hub.investigators.goDeck')) : null,
             legal(s, 'hubDoneSeat').map(move => action(s, move, t('hub.task.confirmReady')))) : null))
-      }))
+      })
+    const laneSections = lanesAssigned
+      ? ['A', 'B'].map(part => {
+          const members = cards.filter(card => card.dataset.lane === part)
+          if (!members.length) return null
+          return h('section', {
+            className: 'ah-lane-roster', 'data-lane': part,
+            'aria-label': t('hub.investigators.laneAria', { part }),
+          }, h('h3', {}, t('hub.investigators.laneHeading', { part })), ...members)
+        }).filter(Boolean)
+      : []
+    const loose = lanesAssigned ? cards.filter(card => card.dataset.lane !== 'A' && card.dataset.lane !== 'B') : cards
+    return h('section', { className: 'ah-hub-pane ah-office-investigators' },
+      h('h2', {}, t('hub.tab.investigators')),
+      myLane ? h('p', { className: 'ah-lane-roster-note', role: 'status' }, t('hub.investigators.laneNote', { part: myLane })) : null,
+      ...laneSections, ...loose)
   }
 
   function deck(s, g) {
-    const record = s.state.campaign.investigators[s.mySeat ?? 0]
+    const record = recordForSeat(s, s.mySeat ?? 0)
+    const deckCodes = record?.deck || []
     const canEdit = legal(s, 'hubSetDeck').length > 0
-    const saved = recordDeckReady(record)
+    const saved = recordDeckReady(record) && deckCodes.length > 0
     const inv = deckInvestigator(s, g)
     const draft = state.arkhamDeckDraftKey === deckDraftKey(s, inv) ? state.arkhamDeckDraft || [] : null
     const unsavedDraft = canEdit && draft && !sameCards(draft, savedDraft(s, inv))
@@ -1092,7 +1121,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     return h('section', { className: 'ah-hub-pane' }, h('h2', {}, t('hub.tab.deck')),
       h('div', { className: 'ah-office-deck-heading' }, portrait(s.state.investigators[s.mySeat ?? 0]), h('div', {},
         h('h3', {}, s.state.investigators[s.mySeat ?? 0].name),
-        saved ? h('p', {className:'ah-deck-save-status',role:'status'}, tableIcon('book'), t('hub.deck.savedStatus', { count: record.deck.length }), s.state.investigators[s.mySeat ?? 0].autoBuilt ? t('hub.deck.autoBuilt') : '') : null)),
+        saved ? h('p', {className:'ah-deck-save-status',role:'status'}, tableIcon('book'), t('hub.deck.savedStatus', { count: deckCodes.length }), s.state.investigators[s.mySeat ?? 0].autoBuilt ? t('hub.deck.autoBuilt') : '') : null)),
       saved && legal(s, 'hubDoneSeat').length ? h('section', { className: 'ah-deck-next-action', role: 'status' },
         h('div', {}, h('strong', {}, t('hub.deck.savedTitle')), h('small', {}, t('hub.deck.savedNote'))),
         action(s, legal(s, 'hubDoneSeat')[0], t('hub.task.confirmReady')),
@@ -1100,7 +1129,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       h('div',{className:'ah-deck-toolbar'},editButton(),importButton(),libraryButton(),legal(s, 'hubAutoDeck').map(move => action(s, move)),
         h('small',{},unsavedDraft ? t('hub.deck.hintUnsaved') : saved ? canEdit ? t('hub.deck.hintSaved') : t('hub.deck.hintView')
           : canEdit ? t('hub.deck.hintCanBuild') : t('hub.deck.hintSelectFirst'))),
-      saved ? h('div', { className: 'ah-office-deck-gallery', 'aria-label': t('hub.deck.savedPreviewAria') }, [...new Set(record.deck)].map(code => {
+      saved ? h('div', { className: 'ah-office-deck-gallery', 'aria-label': t('hub.deck.savedPreviewAria') }, [...new Set(deckCodes)].map(code => {
         const card = s.state.cards?.[code] || g.clientData?.deckBuilder?.cardPool.find(c=>c.code===code) || {}
         const klass = String(card.klass || 'neutral').toLowerCase()
         const type = ({
@@ -1108,7 +1137,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           treachery: ['doom', t('hub.cardKind.treachery')], enemy: ['sword', t('hub.cardKind.enemy')],
         })[card.type] || ['book', t('hub.cardKind.card')]
         return h('button', {className:'ah-deck-inspect',onclick:()=>inspectCard(code),'aria-label':t('hub.card.inspectName', { name: nameOf(g, code) }),'data-deck-code':code,'data-zoom-code':code,'data-zoom-name':nameOf(g,code)},
-          art(code,nameOf(g,code)),h('span',{className:'ah-deck-copy-count'},`×${record.deck.filter(c=>c===code).length}`),
+          art(code,nameOf(g,code)),h('span',{className:'ah-deck-copy-count'},`×${deckCodes.filter(c=>c===code).length}`),
           h('strong',{className:'ah-deck-card-name'},nameOf(g,code)),
           h('span',{className:'ah-deck-card-icons'},
             h('span',{title:classLabel(klass) || klass,'aria-label':classLabel(klass) || klass},tableIcon(classIcon(klass))),
@@ -1565,7 +1594,7 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const replaceDraft = codes => { if (!state.busy) edit(() => { state.arkhamDeckDraft = [...codes] }) }
     const restore = (from,to) => { const stack=state[from] || [];if(stack.length&&!state.busy){(state[to] ||= []).push([...draft]);state.arkhamDeckDraft=stack.pop();render()} }
     const baseline = savedDraft(s, inv)
-    const saved = !!s.state.campaign.investigators[deckSeat(s)]?.deck?.length
+    const saved = !!recordForSeat(s, deckSeat(s))?.deck?.length
     const dirty = !sameCards(draft, baseline)
     const remaining = size - checked.count
     const imp = state.arkhamDeckImport || (state.arkhamDeckImport = { text: '', open: false })

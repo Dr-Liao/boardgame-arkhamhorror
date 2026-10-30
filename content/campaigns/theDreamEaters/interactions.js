@@ -31,7 +31,7 @@ export const TDE_INTERACTIONS = Object.freeze([
     hook: 'hub',
     milestone: 'P5',
     status: 'pending',
-    blockers: Object.freeze(['按线选人与跨线重复选人校验（P5 批次 2）']),
+    blockers: Object.freeze(['源清单保持 pending：真实 TDE 章节未注册；演示战役按线选人点击路径见 audit/tde-ui-browser.json']),
     notes: '按 campaign.seatParts 只走一次选人/选牌组；同一调查员不能同时出现在两线；缺牌组时阻塞开局并给原因。',
   },
   {

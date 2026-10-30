@@ -1,6 +1,6 @@
 # 《食梦者》发布手册（M5 / P10 骨架 · draft）
 
-> **口径**：本文件是 **P10 之前的骨架**（`draft`）。TDE 现在是 `catalog-only`：**不可启动、不可选人、不可构筑**。
+> **口径**：本文件是 **P10 之前的骨架**（`draft`）。战役与玩家卡、8 章仍不可启动；调查员包已是 `development`，5 人可以选、可以构筑。
 > 发布口径（路线图 §0 / §11.2）：最多 `playable` + `earlyAccess=true`、`equivalenceCertified=false`；任何未完成项必须写进 `remaining` 与 `scenarioApproximations`，**不宣称规则等价**。
 > 路线图：[`tde-migration-roadmap.md`](./tde-migration-roadmap.md) §11；规范：[`arkham-content-migration.md`](./arkham-content-migration.md) §8。
 
@@ -8,10 +8,10 @@
 
 | 项 | 状态 |
 | --- | --- |
-| 内容状态 | 三个包 + 战役 + 8 章全部 `catalog-only`（`content/registered.js` 未接入） |
-| 已完成阶段 | P0（清理/勘误/基线/D8-C 协议级 spike）、P1（范围与来源锁）、P2（机制扫描），证据见 [`tde-p0-report.md`](./tde-p0-report.md)、[`tde-p1-report.md`](./tde-p1-report.md)、[`tde-p2-report.md`](./tde-p2-report.md) |
-| 未开始 | P3 原语、P4 关键词/规则书、P5 交互、P6 调查员、P7 玩家卡、P8 剧本、P8-T 自译、P9/P9.5 验收与双线开闸、P10 发布 |
-| 账本 | `audit/tde-migration.json` 尚不存在（P10 产物） |
+| 内容状态 | 战役、玩家卡包、8 章仍是 `catalog-only`，未接入 `content/registered.js`，不可启动。调查员包是 `development`（可选择、可构筑；AI 池未扩容） |
+| 已完成 | P0–P4 门禁通过；P5 双线机制闭环（真实 TDE 的 `dualLineGate` 仍关）；P6 调查员 verified 3/5，其余 2 人显式简化。证据见路线图 §2 与各 `tde-pN-report.md` |
+| 未开始 | P7 玩家卡、P8 剧本、P8-T 自译、P9 逐章/全卡账本、P9.5 真实双线矩阵、P10 发布账本 |
+| 账本 | 已有 `audit/tde-rules.json`、`audit/tde-investigators.json`；`audit/tde-migration.json` 仍是 P10 产物 |
 | 规则等价 | 不宣称；`equivalenceCertified=false` |
 
 ## 2. 发布门禁（M5）

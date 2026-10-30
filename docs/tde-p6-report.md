@@ -30,7 +30,7 @@
 | 测试 | [`tests/tde-investigators.test.mjs`](../tests/tde-investigators.test.mjs) 24 例；`tests/suites.mjs` + `tests/node-suite.mjs` 已登记 FAST |
 | 账本 | [`audit/tde-investigators.json`](../audit/tde-investigators.json)；工具 [`tools/audit-tde-investigators.mjs`](../tools/audit-tde-investigators.mjs) |
 | 原语账本 | [`artifacts/migration/tde/primitive-plan.json`](../artifacts/migration/tde/primitive-plan.json)（`batch: "P3-1+2+3+P6"`） |
-| 文档 | 本文 + [`tde-investigators.md`](./tde-investigators.md) + 路线图 §13.15 + [`tde-primitives.md`](./tde-primitives.md) §9 |
+| 文档 | 本文 + [`tde-investigators.md`](./tde-investigators.md) + 路线图 §8.1 + [`tde-primitives.md`](./tde-primitives.md) §9 |
 
 ## 3. P6 新增原语（9 条）
 

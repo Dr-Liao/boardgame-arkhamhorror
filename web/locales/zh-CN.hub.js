@@ -281,6 +281,9 @@ export default {
   'hub.investigators.empty': '当前筛选下没有可选调查员',
   'hub.investigators.editDeck': '查看与编辑卡组',
   'hub.investigators.goDeck': '前往卡组构筑',
+  'hub.investigators.laneHeading': '{part} 线',
+  'hub.investigators.laneAria': '{part} 线',
+  'hub.investigators.laneNote': '本席位在 {part} 线，只准备一位调查员和一套牌组。另一条线已经选定的人不会出现在这份名册里。',
 
   // 卡组构筑页
   'hub.deck.manualDraft': '手动构筑：继续编辑草稿，已有 {count} 张',

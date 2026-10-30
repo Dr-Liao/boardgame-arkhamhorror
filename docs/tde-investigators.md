@@ -8,7 +8,7 @@
 > 梦境之门地点接线）、**派翠丝·海瑟薇**（仅 06017 隐私敌人，依赖 P7 的敌人形态隐私）。
 > 事实来源：[`scope.json`](../artifacts/migration/tde/scope.json)（M0 归属）、[`cards-data.js`](../src/cards/cards-data.js)
 > （印刷事实）、[`audit/tde-investigators.json`](../audit/tde-investigators.json)（逐人账本）。
-> 路线图：[`tde-migration-roadmap.md`](./tde-migration-roadmap.md) §8.1 / §13.15；规范：[`arkham-content-migration.md`](./arkham-content-migration.md) §4.8 M1。
+> 路线图：[`tde-migration-roadmap.md`](./tde-migration-roadmap.md) §8.1；过程：[`tde-p6-report.md`](./tde-p6-report.md)。规范：[`arkham-content-migration.md`](./arkham-content-migration.md) §4.8 M1。
 
 ## 1. 事实：5 位正式调查员 + 13 条专属记录
 

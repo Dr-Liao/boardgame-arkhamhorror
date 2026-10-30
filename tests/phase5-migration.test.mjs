@@ -96,6 +96,28 @@ test('03232 捷径：只能在自己回合快速打出，附属后提供一次�
   assert.equal(state.investigators[0].location, 'testHallway')
 })
 
+test('03232 捷径：横置后在重整阶段复位，下一轮可以再用', () => {
+  const state = fixture()
+  state.phase = 'investigation'
+  const here = state.locations.find(location => location.id === state.investigators[0].location)
+  const hallway = { ...here, id: 'testHallway', name: '走廊', clues: 0, connections: [here.id] }
+  here.connections = [hallway.id]
+  state.locations.push(hallway)
+  play(state, '03232')
+  settle(state)
+  move(state, legalMoves(state).find(command => command.action === 'shortcutMove'))
+  const spent = attachments(state).find(item => item.code === '03232')
+  assert.equal(spent.exhausted, true)
+  state.investigators[0].location = spent.location
+  assert.equal(legalMoves(state).some(command => command.action === 'shortcutMove'), false, '横置期间不能再发动')
+  move(state, { action: 'endTurn' })
+  settle(state)
+  const ready = attachments(state).find(item => item.code === '03232')
+  assert.equal(ready.exhausted, false, '重整阶段应把地点上的捷径转正')
+  state.investigators[0].location = ready.location
+  assert.ok(legalMoves(state).some(command => command.action === 'shortcutMove'), '下一轮可以再次使用捷径')
+})
+
 test('03040 头脑发热：弱点揭示后再结算 2 张遭遇卡', () => {
   const state = fixture()
   state.investigators[0].deck = ['03040']
