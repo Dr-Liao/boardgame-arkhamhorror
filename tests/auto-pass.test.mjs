@@ -5,7 +5,7 @@
 
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createGameState, allCardDefs, applyMove } from '../src/engine/engine.js'
+import { createGameState, allCardDefs, applyMove, validateMove, refreshStateResources } from '../src/engine/engine.js'
 import { reactionSkipPlan, reactionDisabledCodes, setReactionEnabled } from '../web/reaction-preferences.js'
 import arkham from '../index.js'
 
@@ -115,6 +115,43 @@ test('真实窗口：autoPassChoice 返回的 skip 能直接被引擎提交（�
   assert.equal(arkham.validateMove(st, 0, move), null)
   applyMove(st, 0, move)
   assert.equal(st.pendingChoice, null, 'skip 已在真实窗口上结算完')
+})
+
+test('真实窗口：黄金怀表关掉快速反应后，阶段窗口按 skip 代答且不把怀表移出游戏',()=>{
+  // 02305 的窗口来自条目级 skipOrRepeatPhase 的 read point（useGoldPocketWatch），不是反应描述子：
+  // 卡面必须带快速开关（hasReactionPrompt），关掉后每个阶段边界窗口都要能被代答成 skip。
+  const st=createGameState({seed:'gold-watch-autopass',playerInvestigator:'01001'},[{seat:0,role:'human'}])
+  for(let guard=0;st.pendingChoice;guard++){
+    assert.ok(guard<60)
+    applyMove(st,st.pendingChoice.seat,{action:'choose',choiceId:st.pendingChoice.id,
+      optionId:['done','skip','self'].find(id=>st.pendingChoice.options.some(option=>option.id===id))||st.pendingChoice.options[0].id})
+  }
+  const inv=st.investigators[0]
+  inv.actionsLeft=20;inv.hand=[];inv.threat=[];inv.deck=Array(30).fill('01088');inv.resources=20
+  inv.assets=[{id:'gold-watch',code:'02305',exhausted:false}]
+  st.chaosBag=['0'];st.enemies=[];st.acts[0].objective=null
+  refreshStateResources(st)
+  assert.equal(st.cards['02305'].hasReactionPrompt,true,'卡面有闪电开关才能关掉窗口')
+  assert.equal(st.cards['02305'].hasAutoReaction,false,'移除自身不是安全 auto')
+  applyMove(st,0,{action:'endTurn'})
+  assert.equal(st.pendingChoice?.kind,'reaction')
+  assert.equal(st.pendingChoice?.source,'gold-watch')
+  // 没有偏好：照常询问。
+  assert.equal(arkham.autoChoice({state:st,seat:0,states:{}}),null)
+  // 关掉后：阶段开始/结束的每个窗口都被补 skip；skip = 保留怀表，不能把它移出游戏。
+  let settled=0
+  while(st.pendingChoice?.source==='gold-watch'&&settled<12){
+    const move=arkham.autoChoice({state:st,seat:0,states:{'02305':'skip'}})
+    assert.ok(move,'阶段窗口都应按偏好代答')
+    assert.equal(move.optionId,'skip')
+    assert.equal(move.choiceId,st.pendingChoice.id)
+    assert.equal(validateMove(st,0,move),null)
+    applyMove(st,0,move)
+    settled++
+  }
+  assert.ok(settled>=2,`调查阶段结束 + 敌人阶段开始至少两个窗口（实际 ${settled}）`)
+  assert.ok(st.investigators[0].assets.some(asset=>asset.code==='02305'),'skip = 保留怀表')
+  assert.ok(!(st.removedFromGame||[]).includes('02305'))
 })
 
 test('无目标纯收益反应默认 auto：罗兰、米兰、幸运兔脚；有成本/目标仍 ask', () => {

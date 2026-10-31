@@ -158,6 +158,15 @@ export function debugMoveError(state, seat, move) {
       }
       return null
     }
+    case 'endScenario': {
+      if (!state.scenario?.id || (state.hubFlow && state.uiState && state.uiState !== 'inScenario')) {
+        return '当前没有进行中的关卡'
+      }
+      const resolutions = state.scenario.resolutions || {}
+      if (!Object.keys(resolutions).length) return '本关没有可结算的结局'
+      if (typeof move.resolutionKey !== 'string' || !Object.hasOwn(resolutions, move.resolutionKey)) return '未知剧本结局'
+      return null
+    }
     default:
       return '未知调试指令'
   }
@@ -209,6 +218,7 @@ export function createDebugExecutor(deps) {
     locName,
     cardName,
     awardExperience,
+    finishScenario,
   } = deps
   // deps.syncClues 由 engine.js 一并注入，但执行器不直接调用：公共线索是个人线索之和的
   // 派生值，统一由 applyMove 收尾的 syncClues 收敛（见 debug.js 文件头）。
@@ -353,9 +363,21 @@ export function createDebugExecutor(deps) {
     info(state, events, `🛠️ 调试：毁灭 ${delta}（当前 ${state.doom}；手动调整，未自动结算密谋）。`)
   }
 
+  function resolutionLabel(key) {
+    if (key === 'noResolution') return '未达成结局'
+    const numbered = /^r(\d+)$/.exec(key) || /^resolution(\d+)$/.exec(key)
+    return numbered ? `结局 ${numbered[1]}` : key
+  }
+
+  function executeEndScenario(state, move, events) {
+    info(state, events, `🛠️ 调试：立即结束本关，随机结局「${resolutionLabel(move.resolutionKey)}」。`)
+    finishScenario(state, move.resolutionKey, events)
+  }
+
   function executeDebugMove(state, seat, move, events) {
     switch (move.kind) {
       case 'scenario': return executeScenario(state, move, events)
+      case 'endScenario': return executeEndScenario(state, move, events)
       case 'spawn': return executeSpawn(state, move, events)
       case 'defeat': return executeDefeat(state, move, events)
       case 'card': return executeCard(state, move, events)

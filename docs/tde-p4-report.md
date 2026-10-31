@@ -39,7 +39,7 @@
 | --- | --- | ---: | --- | --- |
 | Myriad | 多重 | 14 | `tdeMyriad` | 构筑期同名至多 3 张（按标题跨卡号共享），只拦 Myriad；界面显示属 P7 |
 | Swarming X | 蜂拥 | 11 敌 | `tdeSwarming` | 蜂拥卡=独立实例、单一实体移动/交战/横置、清空前头领不可击败、溢出伤害逐张扣、Victory 只算头领；X 四种口径 |
-| Veiled | 掩藏 | 23 地点 | `tdeVeiled` | 已揭示面入场、无线索时 [fast] 翻面、翻过一次不能再翻；B3 翻面后洗回是另一件事 |
+| Veiled | 掩藏 | 23 地点 | `tdeVeiled` | 已揭示面入场、无线索时 [fast] 翻面、翻过一次不能再翻；~~B3 翻面后洗回是另一件事~~ **P8 更正：官方规则无洗回（初勘错误）** |
 | Researched | 研究完成 | 3 | `tdeResearched` | 购入限制：战役日志记下研究结果后才能购入；复用既有 `researchRequirement` 门禁 |
 | Alert | 警戒 | 5 敌 | `alert`（复用核心） | 核心读点够用；与 Swarming/Massive 的组合留给 P8 逐卡确认 |
 | Hidden | 隐私 | 18 | `hidden`（复用核心） | 核心语义已交付；敌人形态在手牌被攻击/躲避属 P8（写入 `deferred`） |

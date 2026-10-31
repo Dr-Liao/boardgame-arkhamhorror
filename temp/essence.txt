@@ -1,0 +1,127 @@
+﻿{
+ "availability": "catalog-only",
+ "backFlavorZh": "",
+ "backNameZh": "",
+ "backText": "",
+ "backTextZh": "",
+ "bondedCount": 1,
+ "bondedTo": "Dream Diary",
+ "code": "06113",
+ "customizationChange": "",
+ "customizationChangeZh": "",
+ "customizationText": "",
+ "customizationTextZh": "",
+ "dataStatus": "validated",
+ "deckLimit": 0,
+ "doubleSided": false,
+ "effectStatus": "unverified",
+ "exceptional": false,
+ "exile": false,
+ "factionName": "Seeker",
+ "flavorZh": "",
+ "healthPerInvestigator": false,
+ "hidden": false,
+ "icons": {
+  "wild": 2
+ },
+ "illustrator": "Ethan Patrick Harris",
+ "imageStatus": "unresolved",
+ "imagesrc": "/bundles/cards/06113.png",
+ "klass": "seeker",
+ "localeStatus": "complete",
+ "myriad": false,
+ "name": "Essence of the Dream",
+ "nameZh": "梦的本质",
+ "originalCode": "06113",
+ "pack": "sfk",
+ "packName": "The Search for Kadath",
+ "permanent": false,
+ "position": 113,
+ "provenanceId": "06113",
+ "quantity": 1,
+ "subnameZh": "",
+ "text": "Bonded (Dream Diary).\nWhen Essence of the Dream would enter your discard pile or be shuffled into your deck, instead set Essence of the Dream aside, out of play (with your bonded cards).",
+ "textZh": "绑定(梦境日记)。\n在梦的本质将要进入你的弃牌堆，或被混洗入你的牌库时，不将其放入，改为将其放在一边，位于场外 (和你的绑定卡牌一起)。",
+ "traits": [
+  "Practiced",
+  "Expert"
+ ],
+ "traitsZh": [
+  "精通",
+  "专家"
+ ],
+ "type": "skill",
+ "typeName": "Skill",
+ "unique": false,
+ "url": "https://arkhamdb.com/card/06113"
+}
+{
+ "availability": "catalog-only",
+ "backFlavorZh": "",
+ "backNameZh": "",
+ "backText": "",
+ "backTextZh": "",
+ "bondedCards": [
+  {
+   "code": "06113",
+   "count": 1
+  }
+ ],
+ "code": "06112",
+ "cost": 2,
+ "customizationChange": "",
+ "customizationChangeZh": "",
+ "customizationText": "",
+ "customizationTextZh": "",
+ "dataStatus": "validated",
+ "deckLimit": 2,
+ "doubleSided": false,
+ "effectStatus": "unverified",
+ "exceptional": false,
+ "exile": false,
+ "factionName": "Seeker",
+ "flavorZh": "",
+ "healthPerInvestigator": false,
+ "hidden": false,
+ "icons": {
+  "willpower": 1
+ },
+ "illustrator": "Germán Nóbile",
+ "imageStatus": "unresolved",
+ "imagesrc": "/bundles/cards/06112.png",
+ "klass": "seeker",
+ "localeStatus": "complete",
+ "myriad": false,
+ "name": "Dream Diary",
+ "nameZh": "梦境日记",
+ "originalCode": "06112",
+ "pack": "sfk",
+ "packName": "The Search for Kadath",
+ "permanent": false,
+ "position": 112,
+ "provenanceId": "06112",
+ "quantity": 2,
+ "slot": "Hand",
+ "slots": [
+  "Hand"
+ ],
+ "subname": "Untranslated",
+ "subnameZh": "未翻译",
+ "text": "[action]: Search your bonded cards for Essence of the Dream and add it to your hand.\n[reaction] After you succeed by 3 or more during a skill test to which Essence of the Dream is committed: Record in your Campaign Log that \"you have interpreted the dreams.\"",
+ "textZh": "[action]：查找你的绑定卡牌，找出梦的本质，将其加入你的手牌。\n[reaction]你在投入了梦的本质的技能检定期间成功并超过了难度至少3点后：在剧本日志中，记录“你洞悉了梦境”。",
+ "traits": [
+  "Item",
+  "Tome",
+  "Charm"
+ ],
+ "traitsZh": [
+  "道具",
+  "书籍",
+  "守护"
+ ],
+ "type": "asset",
+ "typeName": "Asset",
+ "unique": false,
+ "url": "https://arkhamdb.com/card/06112",
+ "xp": 0
+}

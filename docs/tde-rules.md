@@ -28,19 +28,19 @@
 
 | 关键词 | 中文 | 卡数 | kind / ruleId | 引擎读点 | 本循环结论 |
 | --- | --- | ---: | --- | --- | --- |
-| Myriad | 多重 | 14 | printed / `tdeMyriad` | `src/engine/myriad.js`（`validateMyriadLimit` 等） | **新增**：构筑期同名至多 3 张（按标题跨卡号共享）；构筑界面显示属 P7 |
-| Swarming X | 蜂拥 | 11 敌 | printed / `tdeSwarming` | `src/engine/swarming.js` + `swarm.js` | **新增**：X 四种口径、蜂拥卡放置、清空前不可击败、溢出伤害；实体接线属 P8 |
+| Myriad | 多重 | 14 | printed / `tdeMyriad` | `src/engine/myriad.js`（`validateMyriadLimit` 等） | **新增**：构筑期同名至多 3 张（按标题跨卡号共享）；P7 已接构筑校验（`web/deck-rules.js` 逐卡上限 + 同名 3 张）与构筑界面 n/3 显示（`myriadUsage` → `web/hub.js`） |
+| Swarming X | 蜂拥 | 11 敌 | printed / `tdeSwarming` | `src/engine/swarming.js` + `swarm.js` | **新增**：X 四种口径、蜂拥卡放置、清空前不可击败、溢出伤害。**P8 已完成内容侧接线**（TDE 共享层自动放置/拦击败/溢出；`api.swarm`）；蜂拥卡实体化攻击/躲避面板属 P9 交互 #3 |
 | Veiled | 掩藏 | 23 地点 | printed / `tdeVeiled` | `src/engine/veiled.js` | **新增**：已揭示面入场、无线索时 [fast] 翻面、翻过一次不能再翻；**P4 更正 P3 口径** |
-| Researched | 研究完成 | 3 | printed / `tdeResearched` | `src/campaign/campaign.js`（`researchRequirement` 门禁） | **新增**：购入限制关键词，复用既有研究记录门禁；三张梦境日记的记录键属 P7 |
+| Researched | 研究完成 | 3 | printed / `tdeResearched` | `src/campaign/campaign.js`（`researchRequirement` 门禁） | **新增**：购入限制关键词，复用既有研究记录门禁；P7 已在 06236/06237/06238 条目声明 `researchRequirement: 'youHaveInterpretedTheDreams'`（记录由 06112 用 `api.recordResearch` 写入） |
 | Alert | 警戒 | 5 敌 | printed / `alert`（复用核心条目） | `src/engine/combat.js`（躲避失败反击） | **确认**：核心读点够用；Alert+Swarming 的反击归属与 Alert+Massive 顺序留给 P8 逐卡确认 |
-| Hidden | 隐私 | 18 | printed / `hidden`（复用核心条目） | `src/engine/hidden-rules.js` | **确认**：手牌=威胁区、能力只由持有者触发、不能按普通方式弃掉（TCU 已交付）；敌人形态在手牌被攻击/躲避属 P8 |
-| Bonded | 绑定 | 27 | printed / `tdeBonded`（**D5：新立条目**） | `src/engine/bonded.js` + `bonded-location.js` | **确认**：场外/在场交换、每种绑定卡只放 1 张（《梦的本质》）；地点绑定（梦境之门）与绑定弱点敌人属 P8 |
+| Hidden | 隐私 | 18 | printed / `hidden`（复用核心条目） | `src/engine/hidden-rules.js` | **确认**：手牌=威胁区、能力只由持有者触发、不能按普通方式弃掉（TCU 已交付）。**P8 已完成**敌人形态的读点：条目 `hiddenEnemyInHand` + 引擎 `canFightHidden/canEvadeHidden` 钩子 + `api.hiddenCards.*`（A4 5 形态） |
+| Bonded | 绑定 | 27 | printed / `tdeBonded`（**D5：新立条目**） | `src/engine/bonded.js` + `bonded-location.js` | **确认**：场外/在场交换、每种绑定卡只放 1 张（《梦的本质》）；P7 已用 `enemyWeakness` 条目形态实现 06025/06283 的绑定弱点敌人；地点绑定（梦境之门 06015a/b）由 P3 的 `bonded-location.js` + P6 的 `dream-gate.js` 交付（双面卡无需单卡条目） |
 
 ### 2.1 三个「已有待确认」的结论
 
 - **Alert + Swarming**：蜂拥卡是「独立实例」，但警戒反击由敌人攻击结算触发；本循环的蜂拥敌人（06102/06145/06228/06273 等）不带警戒，只有 06107 同时带 Alert 与 Swarming。P4 判定：不必新原语，P8 逐卡确认「头领攻击时蜂拥卡是否同时反击」并按卡面写行为。
-- **Hidden 敌人形态**：06306–06310 是「在手牌里可被攻击/躲避的敌人」。核心隐私语义（手牌=威胁区、只能由持有者触发、不能普通弃掉）已交付；「敌人形态在手牌中的战斗/躲避入口」与隐私投影属 P8/P5，已写进关键词 `deferred`，**不宣称已实现**。
-- **Bonded 地点与弱点敌人**：`bonded.js` 覆盖玩家卡场外实体；`bonded-location.js` 覆盖梦境之门成对放置/移除；06025/06283 的绑定关系只写在卡文里（cards-data 无 `bonded` 字段），P7 在单卡条目声明。D5 因此新立 `tdeBonded`，不复用 `tcuBonded`。
+- **Hidden 敌人形态**：06306–06310 是「在手牌里可被攻击/躲避的敌人」。核心隐私语义（手牌=威胁区、只能由持有者触发、不能普通弃掉）已交付；**P8 已交付**「敌人形态在手牌中的战斗/躲避入口」读点（`hiddenEnemyInHand` + `canFightHidden/canEvadeHidden` + `api.hiddenCards.*`），A4 实际关闭通用入口、只能经塔/议程揭示；隐私投影 P5 已交付。
+- **Bonded 地点与弱点敌人**：`bonded.js` 覆盖玩家卡场外实体；`bonded-location.js` 覆盖梦境之门成对放置/移除；06025/06283 的绑定关系只写在卡文里（cards-data 无 `bonded` 字段），P7 已用 `scope:'enemy'` + `enemyWeakness` 条目形态声明并交付。D5 因此新立 `tdeBonded`，不复用 `tcuBonded`。
 
 ### 2.2 官方规则文本来源（逐条核对，不是转述）
 
@@ -95,13 +95,14 @@
 - 388/388 张 06 卡至少连到 `tdeCampaign`；无一张连到其他循环的条目（允许的通用条目只有 `script`（幕/议程）与复用的 `alert` / `hidden`）。
 - 关键词按卡面判据连条目（与 `keywords.js` 的 `pattern` 同一份正则）；判据方向逐张检查：卡面命中判据却没有链接会失败。
 - 章节参考卡按线连 `tdeDreamQuest` / `tdeWebOfDreams`；8 张剧情支援与 7 张地点毁灭卡按卡号登记在 [`web/ui-cards.js`](../web/ui-cards.js) 的 `rulebookReferences`（浏览器端唯一卡号来源）。
-- 章节 id → 桌面提示卡的映射（`scenarioCards`）**属 P8**：战役仍 `catalog-only`，现在加映射会触发 `campaign-experience.test.mjs` 的「映射表不能混进注册表没有的章节」守卫。
+- 章节 id → 桌面提示卡的映射（`scenarioCards`）**留到 P10**：映射要求章节已进 `content/registered.js`（否则 `campaign-experience.test.mjs` 的守卫会拒绝未注册章节的映射）；P8 的 8 章仍 development 未注册。
 
 ## 5. 机制登记（`content/mechanics.js`）
 
-已登记 11 项（引擎读点已交付且有测试）：`tdeMyriad` / `tdeSwarming` / `tdeVeiled` / `tdeResearched` / `tdeBonded` / `tdeDreamGate` / `tdeInfestationBag` / `tdeAlarmLevel` / `tdeSignsOfTheGods` / `tdeStoryAssets` / `tdeLocationDoom`。
+已登记 **17 项**：
 
-未登记 6 项（战役层能力，仍 `catalog-only`，接线后才登记）：`tdeCampaign` / `tdeDreamQuest` / `tdeWebOfDreams` / `tdeChaos` / `tdeRecords` / `tdeEpilogue` —— 对应 P5 流程与 P8 章节；测试显式断言它们**不在** `supportedMechanics`，防止提前宣称。
+- P4（引擎读点已交付且有测试，11 项）：`tdeMyriad` / `tdeSwarming` / `tdeVeiled` / `tdeResearched` / `tdeBonded` / `tdeDreamGate` / `tdeInfestationBag` / `tdeAlarmLevel` / `tdeSignsOfTheGods` / `tdeStoryAssets` / `tdeLocationDoom`。
+- **P8（战役层能力随 8 章与 manifest 接线，6 项）**：`tdeCampaign` / `tdeDreamQuest` / `tdeWebOfDreams` / `tdeChaos` / `tdeRecords` / `tdeEpilogue` —— 分别由 `content/campaigns/theDreamEaters/{manifest,shared,tde-chaos,record-labels,dual-story}.js` 与 8 章 `definition/chaos/behavior` 落地。`tests/tde-rules.test.mjs` 已从「显式断言不登记」改为「P8 起必须登记」，防止回退。
 
 ## 6. 验收与已实测数字
 
@@ -119,14 +120,14 @@
 
 | 项 | 归属 |
 | --- | --- |
-| 敌人形态隐私卡在手牌中的攻击/躲避入口、隐私投影 | P8 / P5 |
-| 蜂拥实体生成、交战、攻击、清空判定接线 | P8 |
-| 掩藏翻面动作接进调查/移动流程、故事卡阅读器 | P8（正文 P8-T） |
-| 三张梦境日记的 `researchRequirement` 记录键 | P7 |
-| 构筑界面 `myriadUsage` 的 n/3 显示 | P7 |
-| 绑定弱点敌人的场外实体与「无主卡在场放回场外」 | P8 |
-| 章节 id → `UI_CARDS.scenarioCards` 映射 | P8 |
-| 战役层 6 条条目登记进 `supportedMechanics` | P5 / P8 |
+| 敌人形态隐私卡在手牌中的攻击/躲避入口、隐私投影 | **P8 已完成**：引擎 `canFightHidden`/`canEvadeHidden` 钩子 + `api.hiddenCards.*`（5 形态奈亚拉托提普）；隐私投影 P5 已交付 |
+| 蜂拥实体生成、交战、攻击、清空判定接线 | **P8 已完成数据层**：共享层放置/击败门槛/溢出伤害；蜂拥卡实体化攻击/躲避面板属 P9 交互 #3 |
+| 掩藏翻面动作接进调查/移动流程、故事卡阅读器 | **P8 已完成流程**：引擎原生 `flipVeiled` + 章节 `veiledFlipped`；故事卡正文显示属 P8-T（当前为 en 原文/卡面文本） |
+| 三张梦境日记的 `researchRequirement` 记录键 | **P7 已完成**：06236/06237/06238 声明 `youHaveInterpretedTheDreams`；06112 用 `api.recordResearch` 写入 |
+| 构筑界面 `myriadUsage` 的 n/3 显示 | **P7 已完成**：`web/deck-rules.js#myriadUsage` + `web/hub.js` cardMeta；构筑校验同源拦截同名 4 张 |
+| 绑定弱点敌人的场外实体与「无主卡在场放回场外」 | P10（P7 的 bonded 依赖路径已可用；通用场外实体读点仍缺） |
+| 章节 id → `UI_CARDS.scenarioCards` 映射 | P10：映射要求章节在注册表里（守卫「映射表不能混进注册表没有的章节」）；P8 章节仍 development 未注册 |
+| 战役层 6 条条目登记进 `supportedMechanics` | **P8 已完成**（见 §5） |
 | 规则书的完整中文（剧情段落）与术语终审 | P8-T（自译，非官方中文） |
 
 关键词未 `verified` 前不得在卡牌文件使用——本轮 7 条全部 `verified`，P6/P7 可以直接引用；`deferred` 列出的语义仍要在卡牌/章节实现时逐条兑现，不能拿「关键词已 verified」当整体已实现。

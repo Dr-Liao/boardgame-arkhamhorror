@@ -15,6 +15,7 @@ import { traitLabel } from '../cards/trait-labels.js'
 import { legacyEntry, implementation } from '../cards/card-implementation.js'
 import { PHASE5_MIGRATED_CODES } from '../cards/card-abilities.js'
 import { abilityShim, modifiersFor, registeredEntry } from '../engine/ability.js'
+import { validateMyriadLimit } from '../engine/myriad.js'
 import { playedEffect } from '../engine/lifecycle.js'
 import {
   CORE_INVESTIGATOR_CODES, SIMPLIFIED_PLAYER_CARD_CODES, PLAYER_CARD_CODES,
@@ -22,6 +23,7 @@ import {
   SELECTABLE_INVESTIGATOR_CODES,
   SIGNATURE_CARD_CODES_BY_INVESTIGATOR, BASIC_WEAKNESS_CODES, ALL_BASIC_WEAKNESS_CODES,
   TCU_PLAYER_BUILDABLE_CODES,
+  TDE_PLAYER_BUILDABLE_CODES,
   canSelectInvestigator, isCardAvailable,
 } from './availability.js'
 
@@ -31,12 +33,18 @@ const PLAYER_CODE_SET = new Set(PLAYER_CARD_CODES)
 // P10（M5 全量开放）：05 循环已验收的玩家卡进入开放玩家池（默认池 + 83 张可入牌组的 05 卡）。
 // 05314/05317 是绑定卡的场外副本（deckLimit=0，不在牌组里），只作为已验收目录卡存在，不进构筑池。
 // 默认池 PLAYER_CARD_CODES 保持原语义（核心 + 可选扩展包），00–04 循环的自动牌组产出不变；
-// 「开放玩家池」只用于 TCU 战役的起始牌组与 TCU 调查员的构筑界面。
+// 「开放玩家池」只用于已开放战役的起始牌组与调查员的构筑界面。
 const TCU_DECK_CARD_CODES = Object.freeze(TCU_PLAYER_BUILDABLE_CODES.filter(code => {
   const card = ALL_CARDS[code]
   return Boolean(card) && cardLimit(card) > 0
 }))
-export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TCU_DECK_CARD_CODES])
+// P7（M2 食梦者）：06 段 83 张可构筑玩家卡进入开放玩家池（基础弱点与绑定副本不进）。
+// 默认池 PLAYER_CARD_CODES 不变：00–04 循环的自动牌组产出保持基线。
+const TDE_DECK_CARD_CODES = Object.freeze(TDE_PLAYER_BUILDABLE_CODES.filter(code => {
+  const card = ALL_CARDS[code]
+  return Boolean(card) && cardLimit(card) > 0
+}))
+export const EXPANDED_PLAYER_CARD_CODES = Object.freeze([...PLAYER_CARD_CODES, ...TCU_DECK_CARD_CODES, ...TDE_DECK_CARD_CODES])
 const EXPANDED_PLAYER_CODE_SET = new Set(EXPANDED_PLAYER_CARD_CODES)
 // Phase 5 机械迁移的卡号：评分口径对这些卡改用能力层读点（其余卡保持旧口径）。
 const PHASE5_MIGRATED = PHASE5_MIGRATED_CODES
@@ -394,6 +402,12 @@ export function buildDeckFromList(invDef, cardCodes, options = {}) {
     spentXp += n * (card.xp ?? 0) * (card.exceptional ? 2 : 1)
   }
   errors.push(...validateDeckRules(invDef, codes, ALL_CARDS).errors)
+  // P7（食梦者 M2）：「多重」同名至多 3 张，走 P3 原语 deck.myriadLimit。
+  // 浏览器侧 validateDeckRules 的同一口径也拦，这里保证 Node 侧（存档/导入/服务端）不可绕过。
+  const myriad = validateMyriadLimit(codes, code => ALL_CARDS[code])
+  for (const violation of myriad.violations) {
+    errors.push(`「${violation.title}」超过多重同名上限：${violation.count} 张（最多 3 张）`)
+  }
   // 第 5 步 P6：直觉牌库的定额（手动构筑同样要满足）。
   const hunch = hunchRequirement(invDef)
   if (hunch) {
@@ -469,6 +483,8 @@ export function deckBuilderData() {
     subname: c.subnameZh || c.subname || '',
     permanent: !!c.permanent, ignoreDeckLimit: !!c.ignoreDeckLimit, factions: c.factions || [c.klass, c.klass2, c.klass3].filter(Boolean),
     deckLimit: cardLimit(c), unique: !!c.unique, exceptional: !!c.exceptional,
+    // P7（食梦者 M2）：多重卡在构筑界面显示「同名 n/3」（见 web/hub.js 的 cardMeta）。
+    myriad: c.myriad === true,
     doubleSided: !!c.doubleSided, subtype: c.subtype || null,
   }))
 

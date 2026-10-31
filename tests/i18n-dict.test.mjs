@@ -96,7 +96,7 @@ test('web/*.js 的静态 t(字面量) key 都能在 zh-CN 词典命中', () => {
 
 // 已完成界面本地化的文件：除下方白名单中的内容数据/协议正则外，不应再有中文字符串。
 const LOCALIZED_UI_FILES = [
-  'hub.js', 'game-ui.js', 'situation-view.js', 'tcu-ui.js', 'table-presentation.js',
+  'hub.js', 'game-ui.js', 'situation-view.js', 'scenario-setup-view.js', 'tcu-ui.js', 'table-presentation.js',
   'table-regions.js', 'table-components.js', 'table-timeline.js', 'card-filters.js',
   'supply-picker.js', 'chaos-bag-view.js', 'music-player.js', 'rulebook.js',
   'story-reader.js', 'card-zoom.js', 'table-art.js', 'campaign-records.js',

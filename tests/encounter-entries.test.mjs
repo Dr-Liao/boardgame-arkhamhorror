@@ -26,7 +26,7 @@ import { ENTRY_SCOPES, loadPlacementIndex, resolvePlacements } from '../tools/en
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
 const ENTRY_DIR = path.join(ROOT, 'src/cards/encounter-entries')
 const SHARED_MODULES = new Set(['_shared.js', '_lookup.js'])
-const TOP_LEVEL = new Set(['shared', 'nightOfTheZealot', 'theDunwichLegacy', 'thePathToCarcosa', 'theForgottenAge', 'theCircleUndone'])
+const TOP_LEVEL = new Set(['shared', 'nightOfTheZealot', 'theDunwichLegacy', 'thePathToCarcosa', 'theForgottenAge', 'theCircleUndone', 'theDreamEaters'])
 const SCOPED_DIRECTORIES = new Set(['enemies', 'treacheries', 'locations', 'acts', 'agendas', 'storyAssets', 'threats', 'all'])
 
 const relativeOf = file => path.relative(ENTRY_DIR, file).split(path.sep).join('/')
@@ -74,7 +74,7 @@ test('encounter-entries/index.js 与目录一致，NON_PLAYER_ABILITY_ENTRIES �
   assert.equal(nonPlayerEntryFor('__missing__'), null, 'nonPlayerEntryFor 对未知 code 返回 null')
 })
 
-test('目录结构：顶层只有 shared + 4 个战役，不按 scope 建大目录', async () => {
+test('目录结构：顶层只有 shared + 5 个战役，不按 scope 建大目录', async () => {
   const top = await readdir(ENTRY_DIR, { withFileTypes: true })
   for (const entry of top) {
     if (!entry.isDirectory()) continue

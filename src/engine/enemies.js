@@ -6,6 +6,7 @@
 //     反伤、击败资产）
 //   enemyHealth / enemyFightValue / enemyEvadeValue —— 敌人数值读点
 //   enemyAttack —— 敌人攻击流程（反应窗口、修正、结算）
+import { enemySpawnRuleFor } from '../cards/card-rules.js'
 import { weaknessOwnerSeat } from './card-lookup.js'
 import { enemyIgnoresInvestigator } from './trait-passives.js'
 // P6（食梦者）：支援被击败的唯一判定点（含 assetDefeated 窗口）。
@@ -98,7 +99,8 @@ function enemyHealth(state, enemy) {
 
 function enemyFightValue(state, enemy, inv) {
   let value = enemy.fight + (enemyStatMods(state).enemyFight || 0)
-  value += scenarioBehavior(state).enemyStatModifier?.(state, enemy, 'fight') || 0
+  // P8：把正在应对的调查员传给内容层钩子（按人/按手牌数的战斗值修正）。
+  value += scenarioBehavior(state).enemyStatModifier?.(state, enemy, 'fight', inv) || 0
   // D1：敌人的战斗值修正来自它自己的卡面声明，或它所在地点的卡面声明
   // （「此处的每个蛇族敌人 +1」不再需要章节 behavior）。
   value += entityModifierTotal(state, enemy, 'enemyFight')
@@ -114,7 +116,8 @@ function enemyFightValue(state, enemy, inv) {
 
 function enemyEvadeValue(state, enemy, inv) {
   let value = enemy.evade + (enemyStatMods(state).enemyEvade || 0)
-  value += scenarioBehavior(state).enemyStatModifier?.(state, enemy, 'evade') || 0
+  // P8：把正在应对的调查员传给内容层钩子（「每张手牌中的遭遇卡 +1 难度」这类按人修正）。
+  value += scenarioBehavior(state).enemyStatModifier?.(state, enemy, 'evade', inv) || 0
   value += entityModifierTotal(state, enemy, 'enemyEvade')
   // 2026-10-25 第五轮：本回合/本轮的运行期躲避值修正（卡面「最低 1」由条目给 floor:1）。
   const runtime = runtimeEnemyStat(state, enemy, 'evade')
@@ -373,6 +376,15 @@ function spawnEnemy(state, code, locationId, engagedSeat, ignoreSpawn = false, t
   processPlayerEnemyEntry(state, enemy, [], true)
   if (!state.enemies.includes(enemy)) return enemy
   scenarioBehavior(state).enemySpawned?.(state, enemy, scenarioRuntime(state, []))
+  // 「入场后：在其上放置毁灭」。战役钩子若已放过（失落时代 / 万古之环），这里不再加。
+  if (state.enemies.includes(enemy)) {
+    const ruleDoom = Number(enemySpawnRuleFor(code)?.doomOnSpawn) || 0
+    const missing = ruleDoom - (enemy.doom || 0)
+    if (missing > 0) {
+      enemy.doom = (enemy.doom || 0) + missing
+      info(state, [], `🧿 「${enemy.name}」入场：在它身上放置 ${missing} 个毁灭标记。`)
+    }
+  }
   for (const inv of aliveInvestigators(state)) {
     if (inv.location === enemy.location) triggerReaction(state, inv.seat, 'enemySpawn', [], { enemy, location: enemy.location })
   }

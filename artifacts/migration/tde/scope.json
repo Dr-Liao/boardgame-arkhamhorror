@@ -1740,29 +1740,29 @@
       "path": "src/cards/cards-data.js",
       "kind": "repo",
       "exists": true,
-      "bytes": 13549906,
-      "sha256": "87849b46d71a7e444453e371c38f455fad3d539a7d3eed2d6f176b924e9a6918"
+      "bytes": 13534459,
+      "sha256": "c035b31d35aca4757151d1fa88a2c94c285d728c830f870f89b2bcfe34efd407"
     },
     {
       "path": "content/packs/tdeCampaign/manifest.js",
       "kind": "repo",
       "exists": true,
-      "bytes": 2250,
-      "sha256": "babb882678239bc43d3813bbd5e77e8e6a240ca41eadbed07f01a0905578d5ef"
+      "bytes": 3085,
+      "sha256": "fc386c5e05dc368c7d22a0b2b3befb6855b18cb4ea69f5e073d0012af7a55c93"
     },
     {
       "path": "content/packs/tdeInvestigators/manifest.js",
       "kind": "repo",
       "exists": true,
-      "bytes": 3033,
-      "sha256": "86aa6cd768ae87f031fd49ebda71246cbb5994f479e370aef826a56c6fce94ce"
+      "bytes": 3552,
+      "sha256": "9ca1e069a014d61251e36aca950bdda85aca8a3622ee52924d0be982712f6435"
     },
     {
       "path": "content/packs/tdePlayer/manifest.js",
       "kind": "repo",
       "exists": true,
-      "bytes": 2041,
-      "sha256": "ea1dbaa3f0c1faff3e080aee78025aace75c7baaf242f6950314849638556a61"
+      "bytes": 3410,
+      "sha256": "7f777369ba33fafe106bc5fd494550c8632631fad76215eec1ffd61b7f03d6ee"
     },
     {
       "path": "content/campaigns/theDreamEaters/shared.js",
@@ -1785,11 +1785,11 @@
       "steps": 782,
       "hashes": 795
     },
-    "replayBeforeSha256": "4bb28daadddaaa93340765079b0e8a6001261d6d87738e3adb3222fe37a438df",
+    "replayBeforeSha256": "f15fd7d13471041a2f9bec3edc03c69e98721829ca888a50723e296d19d69d2b",
     "replayBeforeIdsMatch": true,
     "replayBeforeHashesMatch": true,
     "git": {
-      "head": "5faa702b31bae3e4fc34fbd261c5b35b606a5f19",
+      "head": "ac577db1b30a550c51ab9ee52f75cdcc80ede045",
       "note": "提交会变，基线提交另存 artifacts/migration/tde/reports/baseline-git-head.txt；本账本不把 gitHead 纳入比对"
     }
   },

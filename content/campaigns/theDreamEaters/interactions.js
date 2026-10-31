@@ -43,7 +43,7 @@ export const TDE_INTERACTIONS = Object.freeze([
     hook: 'table',
     milestone: 'P8',
     status: 'pending',
-    blockers: Object.freeze(['章节与卡牌接入（P8）', '面板样式与桌面/移动验收（P5/P9）']),
+    blockers: Object.freeze(['真实蜂拥敌人卡未注册；演示面板见 audit/tde-ui-browser.json']),
     notes: '引擎读点见 src/engine/swarming.js 与 swarm.js（P3 已交付）；这里只登记交互形态。',
   },
   {
@@ -55,7 +55,7 @@ export const TDE_INTERACTIONS = Object.freeze([
     hook: 'table',
     milestone: 'P8',
     status: 'pending',
-    blockers: Object.freeze(['清醒噩梦章节接入（P8）']),
+    blockers: Object.freeze(['清醒噩梦未注册；演示只展示袋内张数与已揭示标记']),
     notes: '独立 7 枚滋生袋（骷髅×1、石板×4、异教徒×2），不是混乱袋；引擎读点 src/engine/token-bag.js。',
   },
   {
@@ -67,7 +67,7 @@ export const TDE_INTERACTIONS = Object.freeze([
     hook: 'table',
     milestone: 'P8',
     status: 'pending',
-    blockers: Object.freeze(['月之暗面章节接入（P8）', '按座位计数显示（P9）']),
+    blockers: Object.freeze(['月之暗面未注册；演示只展示按座位的警报等级']),
     notes: '用毁灭标记表示但不计入议程阈值；引擎读点 src/engine/counters.js（P3 已交付）。',
   },
   {
@@ -79,7 +79,7 @@ export const TDE_INTERACTIONS = Object.freeze([
     hook: 'table',
     milestone: 'P8',
     status: 'pending',
-    blockers: Object.freeze(['隐私投影按座位过滤（P5/P8）', '敌人形态在手牌中的攻击/躲避入口（P8）']),
+    blockers: Object.freeze(['18 张隐私卡与敌人形态未注册；有合法攻击/躲避时面板才给入口']),
     notes: '核心隐私语义已交付（src/engine/hidden-rules.js）；本循环 18 张全部带险境。',
   },
   {
@@ -91,7 +91,7 @@ export const TDE_INTERACTIONS = Object.freeze([
     hook: 'table',
     milestone: 'P8',
     status: 'pending',
-    blockers: Object.freeze(['翻面动作接入调查/移动流程（P8）', '故事卡阅读器（P8-T）']),
+    blockers: Object.freeze(['背面故事正文属 P8-T；演示战役已能翻面并看到故事卡号']),
     notes: '官方 rules.veiled：地点以已揭示面入场、无线索时翻面、翻过一次不能再翻；引擎读点 src/engine/veiled.js（P4 已更正）。',
   },
   {
@@ -103,7 +103,7 @@ export const TDE_INTERACTIONS = Object.freeze([
     hook: 'table',
     milestone: 'P8',
     status: 'pending',
-    blockers: Object.freeze(['章节接入与显示（P8/P9）']),
+    blockers: Object.freeze(['寻觅卡达斯与无归之地未注册；演示只展示命名计数']),
     notes: '引擎读点 src/engine/marker-count.js（通用命名计数）；符号读数在剧本参考卡。',
   },
   {
@@ -115,7 +115,7 @@ export const TDE_INTERACTIONS = Object.freeze([
     hook: 'table',
     milestone: 'P8',
     status: 'pending',
-    blockers: Object.freeze(['章节接入（P8）', '纵向布局复用既有位置变量（P5/P9）']),
+    blockers: Object.freeze(['阶梯与大网地点未注册；演示按 verticalIndex 纵列，不新建布局']),
     notes: '引擎读点 src/engine/vertical-chain.js；不新建循环专属布局目录。',
   },
   {
@@ -127,7 +127,7 @@ export const TDE_INTERACTIONS = Object.freeze([
     hook: 'both',
     milestone: 'P8',
     status: 'pending',
-    blockers: Object.freeze(['地点实体入场（P8）', '尾声正文与分支（P8-T）']),
+    blockers: Object.freeze(['16 段正文与梦境之门地点卡未注册；演示只显示已经到达的一格']),
     notes: '结局矩阵按 A4/B4 两条记录选 1/16，不得提前泄露未到达分支；引擎读点 src/campaign/epilogue-matrix.js。',
   },
 ])

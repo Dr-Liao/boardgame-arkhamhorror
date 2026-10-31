@@ -190,7 +190,8 @@ function flushDeferredBeneath(state, events = []) {
   for (const item of pending) {
     const owner = state.investigators[item.seat]
     if (!owner) continue
-    const discardIndex = (owner.discard || []).indexOf(item.code)
+    // 同名牌可能已经在弃牌堆里（上一张没被取走的残留）。取最近打出的那张。
+    const discardIndex = (owner.discard || []).lastIndexOf(item.code)
     if (discardIndex >= 0) owner.discard.splice(discardIndex, 1)
     owner.beneath ||= []
     owner.beneath.push(item.code)

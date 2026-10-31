@@ -1,0 +1,5 @@
+﻿{"code":"10661","name":"Shattered Self","nameZh":"破碎自我","type":"investigator","textZh":"你的手牌上限减少3张。\nX为你的手牌数(最多为5)。\n[reaction]在你将卡牌投入你正在执行的技能检定后：该卡牌的技能图标数量翻倍，直到本次检定结束。(每"}
+{"code":"06035","name":"Self-Centered","nameZh":"自私自利","type":"treachery","textZh":"多人游戏专用。\n显现 - 将自私自利放置入场，放到你的威胁区域。\n你不能对其他调查员的技能检定投入卡牌，也不能用玩家卡牌的效果影响其他调查员(造成伤害或恐惧的效"}
+{"code":"06036","name":"Kleptomania","nameZh":"偷窃癖","type":"asset","textZh":"多人游戏专用。\n显现 - 将偷窃癖放置入场，放到你的游戏区域。\n[action]：控制你所在地点另一位调查员的一张[[道具]]支援或2资源。然后，将偷窃癖混洗入"}
+{"code":"06037","name":"Narcolepsy","nameZh":"嗜睡症","type":"treachery","textZh":"多人游戏专用。\n显现 - 将嗜睡症放置入场，放到你的威胁区域。\n你不能进行行动、触发能力、打出卡牌。\n[action]：“醒醒！”弃掉嗜睡症。\n强制 - 你受到"}
+{"code":"06038","name":"Your Worst Nightmare","nameZh":"最可怕的噩梦","type":"enemy","textZh":"多人游戏专用。\n猎手。\n猎物 - 仅对承受者。\n最可怕的噩梦的承受者不能对其进行攻击，不能对其造成伤害，也不能将其击败。"}

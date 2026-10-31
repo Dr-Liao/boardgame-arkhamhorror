@@ -4,19 +4,40 @@
 import { t } from './i18n.js'
 import { tableArt } from './table-art.js'
 import { tableIcon, placedCardMarkers } from './table-components.js'
-import { cardDisplayName } from './catalog.js'
+import { cardDisplayName, cardDisplayText } from './catalog.js'
 // 第 127 轮：剧本 → 剧本参考卡的卡号表搬到 web/ui-cards.js。
 import { UI_CARDS } from './ui-cards.js'
 
-// 毁灭时钟显示「场上毁灭总数」：密谋上的毁灭 + 敌人/地点/支援/威胁区上的毁灭，
-// 与当前密谋的阈值比较（Rules Reference, "Act Deck and Agenda Deck"）。
-// 议程推进时这些毁灭会全部被移除（引擎 advanceAgenda → clearDoomInPlay）。
+// 上沿是进度格，后面跟当前数量。超过印刷上限时格子铺满，数字改成 +超出。
 const agendaDoomValue = state => state.agendaDoom ?? state.doom ?? 0
-const doomClockLabel = (state, agenda) => {
-  const doom = agendaDoomValue(state)
-  const extra = Math.max(0, (state.totalDoom ?? doom) - doom)
-  const threshold = agenda?.doomThreshold ?? '?'
-  return extra ? t('table.doomClock.extra', { doom, threshold, extra }) : t('table.doomClock', { doom, threshold })
+const pageProgress = (h, kind, current, max, aria) => {
+  const value = Math.max(0, Number(current) || 0)
+  const limit = Number(max)
+  const finite = Number.isFinite(limit) && limit > 0
+  const over = finite && value > limit
+  const spoken = !finite ? String(value) : over ? `${limit}+${value - limit}` : `${value}/${limit}`
+  const label = aria(spoken)
+  const cells = finite ? limit : 0
+  const filled = finite ? Math.min(value, limit) : 0
+  return h('span', {
+    className: 'ah-page-progress is-' + kind + (over ? ' is-over' : ''),
+    'aria-label': label, title: label, 'aria-hidden': 'true',
+  }, cells ? h('span', { className: 'ah-page-pips' }, Array.from({ length: cells }, (_, i) =>
+    h('i', { className: i < filled ? 'is-filled' : '' }))) : null,
+  h('b', { className: 'ah-page-count' }, over ? `+${value - limit}` : String(value)))
+}
+// 与推进场景按钮同一口径：场景线索看本幕计数，否则只计仍在场、且满足地点限制的调查员线索。
+const clueAmounts = (state, act) => {
+  const objective = act?.objective
+  const costsClues = objective && ['clues', 'actClues'].includes(objective.type)
+  if (!costsClues) return { current: state.clues || 0, max: null }
+  const investigators = state.numInvestigators || state.investigators?.length || 1
+  const required = (objective.perInvestigator || 0) * investigators
+  const available = objective.type === 'actClues' ? (state.actClues || 0)
+    : (state.investigators || [])
+      .filter(inv => !inv.defeated && !inv.resigned && (!objective.atLocation || inv.location === objective.atLocation))
+      .reduce((sum, inv) => sum + (inv.clues || 0), 0)
+  return { current: available, max: required }
 }
 
 export function createTableRegions(h, { openDetail, openChaosBag }) {
@@ -32,13 +53,15 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
         onkeydown: event => event.stopPropagation(),
       }, tableArt(h, card.originalCode || card.code, name), h('span', {}, name))
     })) : null
-  const sceneCard = (item, type, label, attached = []) => h('div', {
-    className: 'ah-script-card' + (attached.length ? ' has-attachments' : ''), role: 'button', tabindex: 0, 'aria-label': label, title: item?.name || label, 'data-interaction': item ? `${type}:current` : null,
+  const sceneCard = (item, type, label, attached = [], interaction = null, progress = null) => h('div', {
+    className: 'ah-script-card' + (attached.length ? ' has-attachments' : ''), role: 'button', tabindex: 0,
+    'aria-label': progress ? `${label} · ${progress.getAttribute('aria-label')}` : label, title: item?.name || label, 'data-interaction': item ? (interaction || `${type}:current`) : null,
     onclick: () => item && openDetail({ ...item, type, attachments: attached }, { side: item.face || 'front' }),
     onkeydown: event => { if (['Enter', ' '].includes(event.key) && item) { event.preventDefault(); openDetail({ ...item, type, attachments: attached }, { side: item.face || 'front' }) } },
   }, item ? tableArt(h, item.originalCode || item.code, item.name, { landscape: true, face: item.face || 'front' }) : h('span', {}, t('table.script.ended')),
     item ? placedCardMarkers(h, item, { attachmentCount: attached.length }) : null,
-    item ? attachedStrip(attached, label, type) : null)
+    item ? attachedStrip(attached, label, type) : null,
+    progress)
   const referenceCard = state => {
     const code = UI_CARDS.scenarioCards[state.scenario?.id]
     if (!code) return null
@@ -77,12 +100,66 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
           h('span', {}, h('span', { className: 'ah-roster-player-name' }, player?.name || t('table.player.fallback')), h('small', {}, id))))
     }))
   }
+  // 黑星升起：左页是“a”密谋，右页是“c”密谋。道路开启后，被替换的那一页改成场景。
+  const dualStory = (state, act, attachments) => {
+    const bsr = state.blackStarsRise
+    if (!bsr?.decks?.a && !bsr?.decks?.c) return null
+    const agendaCard = id => {
+      const deck = bsr.decks[id]
+      if (!deck || deck.removed || !deck.current) return null
+      const printed = { name: deck.name, nameZh: deck.nameZh, text: deck.text, textZh: deck.textZh }
+      return {
+        code: deck.current, originalCode: deck.current, type: 'agenda', face: 'front',
+        name: cardDisplayName(printed) || deck.current,
+        text: cardDisplayText(printed),
+        doom: deck.doom || 0,
+        doomThreshold: deck.doomThreshold,
+      }
+    }
+    const page = id => {
+      if (bsr.openPath && bsr.openedDeck === id && act) {
+        return { item: act, type: 'act', label: t('table.script.act'), attached: attachments.act || [], interaction: 'act:current' }
+      }
+      return {
+        item: agendaCard(id), type: 'agenda', deckId: id, label: t('table.script.agendaDeck', { deck: id }),
+        attached: id === 'a' ? (attachments.agenda || []) : [], interaction: `agenda:${id}`,
+      }
+    }
+    const pages = [page('a'), page('c')]
+    return { pages, aria: t('table.script.booksSidesAria', { left: pages[0].label, right: pages[1].label }) }
+  }
+  const clueMark = (state, act) => {
+    if (!act) return null
+    const amounts = clueAmounts(state, act)
+    return pageProgress(h, 'clue', amounts.current, amounts.max, text => t('table.progress.clueAria', { value: text }))
+  }
+  const doomMark = (state, page) => {
+    if (!page?.item) return null
+    if (page.deckId) {
+      const deck = state.blackStarsRise?.decks?.[page.deckId]
+      if (!deck || deck.removed) return null
+      return pageProgress(h, 'doom', deck.doom || 0, deck.doomThreshold,
+        text => t('table.progress.doomDeckAria', { deck: page.deckId, value: text }))
+    }
+    const agenda = page?.item
+    if (!agenda) return null
+    return pageProgress(h, 'doom', agendaDoomValue(state), agenda.doomThreshold,
+      text => t('table.progress.doomAria', { value: text }))
+  }
   return {
     // 剧本区从左到右：剧本书（密谋/场景）→ 提示卡 → 当前场景/密谋的可执行操作。
-    script: (state, act, agenda, players = [], advanceButton = null, activity = {}, scriptActions = null, attachments = {}) => section('ah-table-script' + (scriptActions ? ' has-script-actions' : ''), t('table.region.script'),
+    script: (state, act, agenda, players = [], advanceButton = null, activity = {}, scriptActions = null, attachments = {}) => {
+      const dual = dualStory(state, act, attachments)
+      const pages = dual ? dual.pages.map(page => sceneCard(page.item, page.type, page.label, page.attached, page.interaction,
+        page.type === 'act' ? clueMark(state, act) : doomMark(state, page)))
+        : [
+          sceneCard(agenda, 'agenda', t('table.script.agenda'), attachments.agenda || [], null, doomMark(state, { item: agenda })),
+          sceneCard(act, 'act', t('table.script.act'), attachments.act || [], null, clueMark(state, act)),
+        ]
+      return section('ah-table-script' + (scriptActions ? ' has-script-actions' : ''), t('table.region.script'),
       h('div', { className: 'ah-story-group' },
-        h('div', { className: 'ah-script-cards ah-story-book', role: 'group', 'aria-label': t('table.script.booksAria') },
-          sceneCard(agenda, 'agenda', t('table.script.agenda'), attachments.agenda || []), sceneCard(act, 'act', t('table.script.act'), attachments.act || [])),
+        h('div', { className: 'ah-script-cards ah-story-book', role: 'group', 'data-story-pages': dual ? 'agendas' : 'agenda-act', 'aria-label': dual ? dual.aria : t('table.script.booksAria') },
+          ...pages),
         referenceCard(state), scriptActions),
       h('div', { className: 'ah-command-deck' },
       h('div', { className: 'ah-command-resources', role: 'group', 'aria-label': t('table.resources.aria') },
@@ -91,13 +168,9 @@ export function createTableRegions(h, { openDetail, openChaosBag }) {
         h('span', {}, t('table.encounter.deck')), h('small', {}, t('table.encounter.summary', { count: state.encounterDeckSize ?? state.encounterDeck?.length ?? 0, discard: state.encounterDiscard?.length || 0 }))),
       h('button', { className: 'ah-chaos-bag', type:'button', 'aria-label': t('table.chaos.aria'), 'aria-haspopup':'dialog', onclick:openChaosBag, title: t('table.chaos.title', { count: state.chaosBag?.length || 0 }) },
         h('img', { src: '/mods/arkhamhorror/img/ui/chaos-bag.webp', alt: '' }),
-        h('span', {}, t('table.chaos.label')), h('small', {}, t('table.chaos.count', { count: state.chaosBag?.length || 0 }))),
-      h('div', { className: 'ah-script-status' },
-        h('span', { className: 'ah-script-clues' }, h('span', { className: 'ah-command-token' }, tableIcon('clue')), t('table.script.clues', { count: state.clues || 0 })),
-        h('span', { className: 'ah-script-doom' }, h('span', { className: 'ah-command-token' }, tableIcon('doom')), doomClockLabel(state, agenda)),
-        h('div', { className: 'ah-doom-track', 'aria-label': t('table.script.doomProgress') }, Array.from({ length: Math.min(12, agenda?.doomThreshold || 6) }, (_, i) =>
-          h('i', { className: i < agendaDoomValue(state) ? 'is-filled' : '' }))))),
-      h('div', { className: 'ah-command-team' }, roster(state, players, activity), advanceButton))),
+        h('span', {}, t('table.chaos.label')), h('small', {}, t('table.chaos.count', { count: state.chaosBag?.length || 0 })))),
+      h('div', { className: 'ah-command-team' }, roster(state, players, activity), advanceButton)))
+    },
     headerPhases: state => h('nav', { className: 'ah-header-phases', 'aria-label': t('table.phase.aria') }, [
       ['mythos', 'table.phase.mythos', 'table.phase.mythos.detail', 'eye'], ['investigation', 'table.phase.investigation', 'table.phase.investigation.detail', 'clue'],
       ['enemy', 'table.phase.enemy', 'table.phase.enemy.detail', 'sword'], ['upkeep', 'table.phase.upkeep', 'table.phase.upkeep.detail', 'resource'],

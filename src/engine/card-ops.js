@@ -1,4 +1,4 @@
-﻿// card-ops.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
+// card-ops.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 卡与目标的具体操作：补充使用次数、装弹、按特性检索、选择调查员/敌人/猎物。
 // 读点：搜索类效果（api.searchDeck / lookAt）与敌人目标解析。
 export function createCardOps(deps) {
@@ -45,6 +45,9 @@ export function createCardOps(deps) {
     mostRemainingSanity: (state, inv) => -(getMaxSanity(inv) - (inv.horror || 0)),
     lowestAgility: (state, inv) => getStat(state, inv, 'agility'),
     lowestCombat: (state, inv) => getStat(state, inv, 'combat'),
+    // P8（食梦者共享组）：「猎物 - 伤害最多」「猎物 - 手牌最多」。
+    mostDamage: (state, inv) => -(inv.damage || 0),
+    mostCardsInHand: (state, inv) => -((inv.hand || []).length),
     // 「猎物 - 距离昆扬之口最近」：按地点连接数计算最短距离。
     nearestMouth: (state, inv) => {
       const mouth = (state.locations || []).find(location =>

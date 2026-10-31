@@ -43,20 +43,34 @@ function autoGrid(locations) {
   return grid
 }
 
+// 运行时网格（苍白面具的上下左右）优先于剧本静态坐标。
+// 静态表仍服务没有网格的章节；同一地点两者都有时，以入场后的 grid 为准。
+function authoredPoint(loc, provided) {
+  const grid = loc?.grid
+  if (Number.isFinite(grid?.x) && Number.isFinite(grid?.y)) return { x: grid.x, y: grid.y }
+  const point = provided[loc.id]
+  if (Number.isFinite(point?.x) && Number.isFinite(point?.y)) return { x: point.x, y: point.y }
+  return null
+}
+
 export function mapGeometry(locations, layout = null, overrides = {}) {
   if (!locations.length) return { positions: {}, edges: [], width: 1, height: 1 }
   const provided = layout?.locations || {}
-  const grid = autoGrid(locations)
-  const known = locations.filter(loc => Number.isFinite(provided[loc.id]?.x) && Number.isFinite(provided[loc.id]?.y))
-  const minX = known.length ? Math.min(...known.map(loc => provided[loc.id].x)) : 0
-  const minY = known.length ? Math.min(...known.map(loc => provided[loc.id].y)) : 0
-  const maxX = known.length ? Math.max(...known.map(loc => provided[loc.id].x)) : -1
+  const fallback = autoGrid(locations)
+  const authored = new Map(locations.flatMap(loc => {
+    const point = authoredPoint(loc, provided)
+    return point ? [[loc.id, point]] : []
+  }))
+  const known = [...authored.values()]
+  const minX = known.length ? Math.min(...known.map(point => point.x)) : 0
+  const minY = known.length ? Math.min(...known.map(point => point.y)) : 0
+  const maxX = known.length ? Math.max(...known.map(point => point.x)) : -1
   const positions = {}
   for (const loc of locations) {
-    const point = provided[loc.id]
-    const gridPoint = grid[loc.id]
-    const x = Number.isFinite(point?.x) ? point.x - minX : maxX + 1 + gridPoint.x
-    const y = Number.isFinite(point?.y) ? point.y - minY : gridPoint.y
+    const point = authored.get(loc.id)
+    const gridPoint = fallback[loc.id]
+    const x = point ? point.x - minX : maxX + 1 + gridPoint.x
+    const y = point ? point.y - minY : gridPoint.y
     positions[loc.id] = overrides[loc.id] ? { ...overrides[loc.id] } : { x: PAD + x * STEP_X, y: PAD + y * STEP_Y }
   }
   // Shifting the entire scene keeps negative coordinates and local drags in view.

@@ -35,7 +35,7 @@
 | 关键词 | 原语候选 | 卡 | 备注 |
 | --- | --- | ---: | --- |
 | Swarming X | `enemy.swarmingValue` + `swarm.placeCards` | 11 敌 | X 有四种口径（固定 / `[per_investigator]` / 警报等级 / 剧本参考卡伤害数） |
-| Veiled | `location.veiled`（declare/flip） | 23 地点 | 掩藏地点以已揭示面入场；「无线索时 [fast] 翻面」「翻面出 b 面故事卡」「B3 洗回牌堆」是三件事 |
+| Veiled | `location.veiled`（declare/flip） | 23 地点 | 掩藏地点以已揭示面入场；「无线索时 [fast] 翻面」「翻面出 b 面故事卡」是两件事。**P8 更正**：官方 en 规则与 Haskell 均无「B3 洗回牌堆」，初勘把「洗回」误记为规则；`shuffleVeiledIntoDeck` 保留为通用原语，TDE 内容不调用 |
 | Myriad | `deck.myriadLimit`（构筑期） | 14 卡 | 同名至多 3 张；`deckLimit` 字段已有，规则读点没有 |
 | Researched | 记录门控升级 | 3 卡 | 读 `campaign.records` 的 Research 结果 |
 
@@ -144,8 +144,8 @@ API `createPartsState({ mode, seatParts, activeParts, currentPart })` 与 `setPa
 
 官方 `rules.veiled`：掩藏地点**没有未揭示面**，以已揭示面入场并按线索值放置线索；位于该地点且**该地点上没有线索**的调查员可以作为一个 [fast] 能力把它翻面，结算背面故事卡；翻过一次后本局不能再翻。
 `isVeiledLocation`（字段 / keywords / 卡文首行）/ `veiledFlipBlockedReason`（不是掩藏地点 / 已翻面 / 地点上还有线索）/ `canFlipVeiledLocation` / `flipVeiledLocation`（返回 `{changed, storyCode, reason}`，被拒绝不抛错）/
-`shuffleVeiledIntoDeck`（翻面后洗回，未翻面拒绝）/ `normalizeVeiledScenario`（注册期校验：缺背面故事卡且未声明 `shuffleBack` → `missing`）。
-「翻面」「翻面出 b 面故事卡」「B3 洗回牌堆」是三件事，分开表达；调查动作与故事卡阅读器接线属 P8。**P4 更正**：P3 曾把「未揭示限制」写成关键词规则（`veiledBlocksInvestigation`），与官方规则冲突，已删除。
+`shuffleVeiledIntoDeck`（翻面后洗回，未翻面拒绝；**P8 复核：TDE 无卡使用，官方 B3 无洗回**）/ `normalizeVeiledScenario`（注册期校验：缺背面故事卡且未声明 `shuffleBack` → `missing`）。
+「翻面」「翻面出 b 面故事卡」是两件事，分开表达；调查动作与故事卡阅读器接线属 P8（已交付：引擎原生 `flipVeiled` + 章节 `veiledFlipped`）。**P4 更正**：P3 曾把「未揭示限制」写成关键词规则（`veiledBlocksInvestigation`），与官方规则冲突，已删除。**P8 更正**：初勘误记「B3 翻面后洗回牌堆」，官方 en `rules.veiled`/`rules.locations`（A2/B3 同文）与 Haskell 均无洗回；P8 已按官方口径落地。
 
 ### P3.11 蛛群滋生袋
 
@@ -266,12 +266,34 @@ API `createPartsState({ mode, seatParts, activeParts, currentPart })` 与 `setPa
   `investigator.startsWith`（既有读点，门之匣开局在场）。
 - `api.playCardFromHandFree(seat, code)`：走 `doPlay` 的 `playDiscount`，与正常支付/入场/反应窗口同源。
 
+### P7（M2 玩家卡）：不新增引擎原语
+
+P7 的 87 条玩家包记录全部落在既有读点上（描述子 / `ctx.api` / 已注册窗口 / `searchedCardRule` / `bonded` / `myriad`）。57 张卡的未还原子句按「显式简化」收尾，5 条 worker 原语请求由主进程回写 `rejected` + 建议（`artifacts/migration/tde/reports/primitive-queue.json`）；处理清单见 [`tde-p7-report.md`](./tde-p7-report.md) §5/§9。因此本账本的 `new 29/29 done` 不变，`escape` 仍为 3。
+
+### 9.4 P8 追加的内容层 API 与行为钩子（不新增 P3 原语条目）
+
+> P8 实现剧本时补齐的**通用读点**。它们不是循环专属原语，因此不新增 `new` 账本条目；
+> 但都满足「唯一入口 + 测试 + 文档」：实现在 `src/engine/{scenario-runtime,hidden-rules,enemies,card-ops,tests,moves,dispatch}.js`，
+> 行为测试在 `tests/tde-scenario-runtime-api.test.mjs`，`audit-tde-primitives` 的 engineBoundary（引擎不出现 tde 字样/06 卡号）保持通过。
+
+| 类别 | 读点 | 用途 |
+| --- | --- | --- |
+| 遭遇牌库 | `api.discardEncounterTop / discardEncounterCard / takeEncounterDiscard` | 弃遭遇牌库顶 N 张 / 按卡号弃 / 取回弃牌堆（卡条目禁止直写 `state.encounterDeck`） |
+| 线索 | `api.addCluesToLocation / removeLocationClues / addCluesToEnemy` | 地点/敌人身上的线索增减（B3 背面故事、地点效果） |
+| 隐私手牌 | `api.hiddenCards.{list,has,place,discard,removeMarker,take,transfer,activeRules}` | Hidden 遭遇卡进手牌/揭示/弃置/移交（A4 奈亚拉托提普 5 形态） |
+| 胜利区/整备 | `api.takeFromVictory` / `api.preventEnemyReady` | 从胜利区取回（B3 巨噬蠕虫）/ 下一个补给阶段不重整（06092） |
+| 行为钩子 | `canFightHidden / canEvadeHidden / veiledFlipped / canCommitCard / afterEvade / spawnLocation / spawnFailed` | 手牌敌人入口、掩藏翻面后正文/记录、投入限制、躲避替代、生成地点/失败数据分派 |
+| 隐藏规则 | `hiddenRule.maxCommitsPerRound`（按轮计数） | 06319–06321「每轮投入 ≤1 张」 |
+| 猎物/数值 | `PREY_RANK.mostDamage / mostCardsInHand`；`enemyStatModifier(..., inv)` + `per.source='encounterCardsInHand'` | 06091/06086 等共享组规则 |
+
+复用判定：以上全部是「内容层拿不到、但不做就写不了卡」的窄读点；单卡一次性逻辑仍走条目 `resolve`/`enemyScript`，没有把卡号分支搬进引擎。
+
 ### 9.5 仍未落地（`DEFERRED_PRIMITIVES`）
 
 | 原语 | 阶段 | 原因 |
 | --- | --- | --- |
 | `play.asIfAtLocation` | P8 | 事件结算期间的所在地点覆盖 + 按该地点的敌人建立交战；`inv.location` 无单一读点 |
 | `location.bondedDreamGate` | P8 | 梦境之门（06015a/b）的地点实体、连接、进入限制、阶段结束放在一边 |
-| `enemy.hiddenInHand` | P7 | 敌人形态的隐私投影与从手牌建立战斗目标（06017） |
-| `window.afterAlarmRaised` | P8 | A3 警报等级提升后的窗口 |
+| `enemy.hiddenInHand` | **P8 已完成** | A4 的 Hidden 敌人抽象为条目字段 `hiddenEnemyInHand` + `canFightHidden/canEvadeHidden` 钩子；P6 的 06017 路径保留 |
+| `window.afterAlarmRaised` | P8 评估后不实现 | 只服务 06224 一张卡；A3 章节 behavior 在警报提升调用点自行结算反应（条目 flags），该子句记 simplified；P9 若出现第二张同类再评估 |
 | `api.bonded.swap` | P8 | 06015a/b 的翻面（随地点型 Bonded） |

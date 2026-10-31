@@ -1,16 +1,28 @@
-// M0 目录占位（catalog-only）：P8 换真实模块（definition / layout / behavior）。
-//
-// 本章参考卡 06206「月之暗面」；线别 A（梦寻），章对 3。
-// 未实现任何 setup / gather / 规则行为——不要据此把章节标成可玩。
-export const scenario = Object.freeze({
-  id: 'darkSideOfTheMoon',
-  campaignId: 'theDreamEaters',
-  code: '06206',
-  name: '月之暗面',
-  nameEn: "Dark Side of the Moon",
-  part: 'A',
-  pair: 3,
-  status: 'catalog-only',
-})
+// 月之暗面（darkSideOfTheMoon）· 章节装配（照 TCU theWitchingHour/index.js 的形状）。
+// P8 章节 status='development'：引擎只把 playable/verified 的章节装进 SCENARIOS，测试直接 import 本章模块。
+import { scenario, identities } from './definition.js'
+import { layout } from './layout.js'
+import { behavior, implementedEncounterCodes } from './behavior.js'
+import { scenarioManifest } from '../../../../scenario-manifest.js'
 
-export default scenario
+export { scenario, identities, layout, behavior, implementedEncounterCodes }
+
+export const manifest = scenarioManifest(scenario, identities, {
+  campaignId: 'theDreamEaters',
+  status: 'development',
+  layout,
+  requiredPackIds: ['core', 'tdeCampaign'], // 印刷包由 tdeCampaign 的 cardRanges 06039–06354 覆盖
+  requiredEncounterGroupIds: ['darkSideOfTheMoon', 'corsairs', 'dreamersCurse', 'ancientEvils'],
+  requiredMechanicIds: ['tdeChaos', 'tdeAlarmLevel', 'tdeSwarming', 'tdeStoryAssets'],
+  setAsideLocations: scenario.setAsideLocations,
+  // 非地点「放在一边」卡：月蜥 ×1、维吉尔·格雷 ×1、船长 ×1、卡达斯 ×1。
+  setAsideAliases: ['06226', '06224', '06225', '06233'],
+  recordReads: ['wasCaptured', 'randolphWasCaptured'],
+  recordWrites: [
+    'theInvestigatorsWereCarriedToTheColdWastes', 'theInvestigatorsTraveledToTheColdWastes',
+    'randolphCarterDidNotSurviveTheVoyage', 'randolphSurvivedTheVoyage', 'evidenceOfKadath',
+  ],
+  behaviorIds: [behavior.id],
+})
+manifest.referenceCode = '06206'
+manifest.contentVersion = '1.0.0'

@@ -2,6 +2,8 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { choicePresentation, entityMoves, targetMoves, investigatorHoldsCard } from '../web/card-interactions.js'
 import { createGameState, legalMoves, validateMove, applyMove } from '../src/engine/engine.js'
+import { viewState } from '../src/integration/observation.js'
+import { laterBehavior } from '../content/campaigns/theDunwichLegacy/later-behaviors.js'
 
 test('card bindings distinguish duplicate hand positions, candidate indices, and other investigators', () => {
   const st = { investigators: [{ seat: 0, hand: ['a','a'], assets: [] },{ seat: 1, hand: [], assets: [{ id:'ally-asset',code:'b' }] }],
@@ -121,6 +123,51 @@ test('卡面快速反应开关覆盖「如同手牌」通道里的卡（2026-10-
   assert.equal(investigatorHoldsCard(base, { hunch: [{ seat: 1, deck: 3, revealed: '01037' }] }, '01037'), false)
 })
 
+test('location choices carry the option cardCode as card art and keep no table key', () => {
+  // 敦威治·迷失时空「弃掉遭遇牌库顶 3 张，选择其中一个地点」：内容层随选项下发 cardCode，
+  // 界面据此挂出候选卡面，但不设置 key（选项下标不是牌桌实体，不能拿去点桌）。
+  const st = {
+    investigators: [{ seat: 0, hand: [], assets: [] }],
+    cards: { '02326': { code: '02326', name: '无尽之桥', nameZh: '无尽之桥' } },
+    pendingChoice: { id: 'q', kind: 'location', seat: 0, options: [
+      { id: '0', label: '无尽之桥', cardCode: '02326' }] },
+    legalMoves: [{ action: 'choose', choiceId: 'q', optionId: '0' }],
+  }
+  const item = choicePresentation(st)[0]
+  assert.equal(item.code, '02326')
+  assert.deepEqual(item.cards.map(card => card.code), ['02326'])
+  assert.deepEqual(item.cards, [st.cards['02326']])
+  assert.equal(item.key, null)
+})
+
+test('location choices fall back to a unique card name and never guess on duplicates', () => {
+  const st = {
+    investigators: [{ seat: 0, hand: [], assets: [] }],
+    cards: {
+      '02325': { code: '02325', name: '菱柱瀑布', nameZh: '菱柱瀑布' },
+      '02326': { code: '02326', name: '无尽之桥', nameZh: '无尽之桥' },
+    },
+    pendingChoice: { id: 'q', kind: 'location', seat: 0, options: [
+      { id: '0', label: '无尽之桥' }, { id: '1', label: '菱柱瀑布' }] },
+    legalMoves: [{ action: 'choose', choiceId: 'q', optionId: '0' },
+      { action: 'choose', choiceId: 'q', optionId: '1' }],
+  }
+  const [bridge, cascade] = choicePresentation(st)
+  assert.equal(bridge.code, '02326')
+  assert.deepEqual(bridge.cards.map(card => card.code), ['02326'])
+  assert.equal(cascade.code, '02325')
+  assert.deepEqual(cascade.cards.map(card => card.code), ['02325'])
+  assert.equal(bridge.key, null)
+  assert.equal(cascade.key, null)
+  // 同名不同卡号的第二张卡出现后，卡名不再唯一 → 不挂卡（重名不猜）；唯一卡名不受影响。
+  st.cards['02327'] = { code: '02327', name: '菱柱瀑布', nameZh: '菱柱瀑布' }
+  assert.deepEqual(choicePresentation(st)[1].cards, [])
+  assert.equal(choicePresentation(st)[0].code, '02326')
+  // label 不是任何卡名（如「不选择」）→ 不挂卡。
+  st.pendingChoice.options[1].label = '不选择'
+  assert.deepEqual(choicePresentation(st)[1].cards, [])
+})
+
 test('卡尔克萨尖柱的调查挂在附属卡上，地点上的放大镜也能点到它', () => {
   const st = {
     currentSeat: 0,
@@ -134,4 +181,51 @@ test('卡尔克萨尖柱的调查挂在附属卡上，地点上的放大镜也�
   assert.equal(onAttachment[0].actionKind, 'investigate')
   assert.equal(entityMoves(st, 'attachment:hall:1').length, 0)
   assert.equal(entityMoves(st, 'location:hall').some(move => move.rule === 'clearSpiresOfCarcosa'), true)
+})
+
+test('迷失时空地点搜索：内容层必须随选项下发 cardCode（界面整卡展示的输入契约）', () => {
+  // 实机里 view.cards 不含 encounterDiscard 里的地点卡，界面整卡完全依赖内容层下发 cardCode。
+  // 这里直接跑 later-behaviors 的 performAction（drawLocation 打桩），守住内容层不丢 cardCode。
+  const behavior = laterBehavior('lostInTimeAndSpace')
+  const state = {
+    acts: [{ code: '02317', originalCode: '02317' }], actIndex: 0,
+    encounterDeck: ['02326', '02325', '01001'], encounterDiscard: [],
+  }
+  let options = null
+  const api = { choose: request => { options = request.options; return '0' } }
+  const drawLocation = behavior.drawLocation
+  behavior.drawLocation = () => null
+  try {
+    behavior.performAction(state, { seat: 0, name: '玩家' }, { rule: 'searchEncounterLocations' }, api)
+  } finally {
+    behavior.drawLocation = drawLocation
+  }
+  assert.ok(options?.length === 2, '两个遭遇地点应触发一次地点选择')
+  assert.deepEqual(options.map(option => option.cardCode), ['02325', '02326'], '选项必须带 cardCode 供牌桌画整卡')
+  assert.equal(options[0].label, '菱柱瀑布')
+  assert.equal(options[1].label, '无尽之桥')
+})
+
+test('迷失时空实机口径：观察投影保留选项 cardCode，视图 cards 缺遭遇地点卡面时仍挂出整卡', () => {
+  // 复现真实链路：内容层 later-behaviors 的 searchEncounterLocations 选项只带 cardCode；
+  // 观察投影的 view.cards 是 embeddedCardDefs（不扫 encounterDiscard），没有 02325/02326 卡面。
+  // 若以后删掉内容层 cardCode，这条用例会变红（浏览器用例按同一口径验收）。
+  const st = createGameState({ playerInvestigator: '01001', seed: 'review-probe' }, [{ seat: 0, name: '玩家' }])
+  st.pendingChoice = {
+    id: 'li-ts-location-search', kind: 'location', seat: 0, source: '02319',
+    prompt: '选择一个被弃掉的地点，结算其显现能力。',
+    options: [{ id: '0', label: '无尽之桥', cardCode: '02326' }, { id: '1', label: '菱柱瀑布', cardCode: '02325' }],
+  }
+  st.legalMoves = [{ action: 'choose', choiceId: 'li-ts-location-search', optionId: '0' },
+    { action: 'choose', choiceId: 'li-ts-location-search', optionId: '1' }]
+  const view = viewState(st, 0)
+  assert.deepEqual(view.pendingChoice.options.map(option => option.cardCode), ['02326', '02325'], '观察投影必须放行应答者的选项 cardCode')
+  assert.equal(view.cards?.['02326'], undefined, '投影视图本来就不含这些遭遇地点卡面')
+  assert.equal(view.cards?.['02325'], undefined)
+  const items = choicePresentation({ ...view, legalMoves: view.legalMoves })
+  assert.deepEqual(items.map(item => [item.label, item.code, item.key]), [
+    ['无尽之桥', '02326', null], ['菱柱瀑布', '02325', null]])
+  // 视图没有卡定义时用选项 label 兜底成最小卡面数据，提交动作保持不变。
+  assert.deepEqual(items[0].cards, [{ name: '无尽之桥', code: '02326' }])
+  assert.deepEqual(items.map(item => item.move.optionId), ['0', '1'])
 })

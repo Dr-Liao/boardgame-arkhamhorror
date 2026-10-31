@@ -75,6 +75,14 @@ export function createAssets(deps) {
     })
   }
 
+  // 槽位以印刷卡面为准。实例上的 slots 只在效果明确改写时生效
+  // （约束衣 slotsOverride：身体 + 双手），避免把一张单手武器的实例槽位
+  // 算成双手，界面却仍按卡面只画在一只手里，打出另一张单手武器时被要求弃牌。
+  function slotsForOccupancy(asset) {
+    if (asset?.slotsOverride && Array.isArray(asset.slots) && asset.slots.length) return asset
+    return cardDef(asset?.code)
+  }
+
   // 占用豁免原语（05009 柯尔特）：「最多 N 张满足条件的支援不占用某类槽位」。
   // 条目声明 slotExemptions:[{ slot, traitsAny?, count }]；豁免读点只在这里。
   // extraCards 传入「正在尝试打出/装备的卡」——它还没有被控制，但装备判定必须把它
@@ -101,7 +109,7 @@ export function createAssets(deps) {
     }
     const unitsIn = (item, slot) => {
       const def = defOf(item)
-      const slots = normalizedSlots(Array.isArray(item.slots) && item.slots.length ? item : def)
+      const slots = normalizedSlots(item?.slotsOverride ? item : def)
       return slots.reduce((sum, s) => sum + (s === slot ? 1 : s === `${slot}x2` ? 2 : 0), 0)
     }
     const relief = {}
@@ -118,8 +126,7 @@ export function createAssets(deps) {
   function slotUsage(inv) {
     const usage = {}
     for (const a of [...inv.assets, ...(inv.threat || [])]) {
-      const def = cardDef(a.code)
-      for (const s of normalizedSlots(Array.isArray(a.slots) && a.slots.length ? a : def)) {
+      for (const s of normalizedSlots(slotsForOccupancy(a))) {
         if (s === 'handx2') usage.hand = (usage.hand || 0) + 2
         else if (s === 'arcanex2') usage.arcane = (usage.arcane || 0) + 2
         else usage[s] = (usage[s] || 0) + 1
@@ -158,7 +165,7 @@ export function createAssets(deps) {
     const eligible = Boolean(cardCode) && specs.some(entry => matches(defOf(cardCode), entry))
     let occupancy = 0
     for (const asset of controlled) {
-      const slots = normalizedSlots(Array.isArray(asset.slots) && asset.slots.length ? asset : cardDef(asset.code))
+      const slots = normalizedSlots(slotsForOccupancy(asset))
       if (!slots.includes(slot)) continue
       if (specs.some(entry => matches(cardDef(asset.code), entry))) occupancy += 1
     }
@@ -184,8 +191,9 @@ export function createAssets(deps) {
     }
     for (const [s, n] of Object.entries(need)) {
       let cap = SLOT_CAPACITY[s] ?? 0
-      // 地点类「手槽惩罚」；额外槽由通用修正 + 受限额外槽两条原语统一叠加。
-      if (s === 'hand') cap -= inv.handSlotsPenalty || 0
+      // 「你调查该地点时少 1 个手部槽位」只在调查行动里由 handPenaltyActive 打开。
+      // 平时打出单手武器不能因为这个惩罚把空着的另一只手当成已满。
+      if (s === 'hand' && inv.handPenaltyActive) cap -= inv.handSlotsPenalty || 0
       // 通用额外槽：add:slot / slot:<slot> 修正（如 02158 魅力超凡、05283 安娜的塔罗槽）。
       cap += slotBonus(inv, s)
       // 受限额外槽的唯一读点：restrictedSlots（书位 / 武器位 / 法术位 / 非独特盟友槽）。
@@ -201,32 +209,69 @@ export function createAssets(deps) {
     return true
   }
 
+  const REPLACEMENT_SLOT_LABELS = { hand: '手部', arcane: '法术', ally: '盟友', accessory: '饰品', body: '身体', tarot: '塔罗' }
+  const baseSlot = slot => String(slot).replace(/x2$/, '')
+
+  // 腾槽候选 = 占用了「待打出卡所需槽位」的支援。
+  // 2026-10-31 修复玩家报告（打武器时弃置候选里出现盟友）：支援离场只会减少某些槽位的占用，
+  // 或减少它自己提供的豁免/额外槽位——不会凭空腾出别的槽位；因此只有占用了所需槽位的支援
+  // 才可能让 canEquip 从 false 变 true。旧实现从全部支援递归，会把数组里靠前的无关支援
+  // （例如 [盟友, 手槽支援]）先收进方案，选项里就出现盟友，玩家先点它还会被迫多弃一张。
+  function replacementCandidates(inv, card) {
+    const needed = new Set(normalizedSlots(card).map(baseSlot))
+    if (!needed.size) return []
+    return inv.assets.filter(asset => {
+      if (cardDef(asset.code)?.permanent || assetEffect(inv, asset)?.cannotDiscard) return false
+      return normalizedSlots(slotsForOccupancy(asset)).some(slot => needed.has(baseSlot(slot)))
+    })
+  }
+
+  // 只返回「弃到刚好够槽位」的最小方案：腾槽时必须停手，不能顺手多弃无关资产；
+  // 同一层（张数相同）的全部组合都保留，玩家仍可自己决定先弃哪一张。
   function assetReplacementPlans(inv, card) {
     if (canEquip(inv, card)) return [[]]
-    const assets = inv.assets.filter(asset => !cardDef(asset.code)?.permanent && !assetEffect(inv, asset)?.cannotDiscard)
-    const plans = []
-    const visit = (index, removed) => {
-      if (plans.some(plan => plan.every(id => removed.includes(id)))) return
-      if (canEquip({ ...inv, assets: inv.assets.filter(a => !removed.includes(a.id)) }, card)) {
-        plans.push(removed); return
+    const assets = replacementCandidates(inv, card)
+    for (let size = 1; size <= assets.length; size++) {
+      const plans = []
+      const removed = []
+      const visit = start => {
+        if (removed.length === size) {
+          const kept = inv.assets.filter(asset => !removed.includes(asset.id))
+          if (canEquip({ ...inv, assets: kept }, card)) plans.push([...removed])
+          return
+        }
+        for (let i = start; i <= assets.length - (size - removed.length); i++) {
+          removed.push(assets[i].id)
+          visit(i + 1)
+          removed.pop()
+        }
       }
-      for (let i = index; i < assets.length; i++) visit(i + 1, [...removed, assets[i].id])
+      visit(0)
+      if (plans.length) return plans
     }
-    visit(0, [])
-    return plans
+    return []
+  }
+
+  function replacementPrompt(card) {
+    const slots = [...new Set(normalizedSlots(card).map(baseSlot))]
+    const label = slots.map(slot => REPLACEMENT_SLOT_LABELS[slot] || slot).join('、')
+    return `为「${cardName(card.code)}」腾出${label}槽位，选择弃置占用该槽位的资产。`
   }
 
   function replaceAssets(state, inv, card, events) {
-    let plans = assetReplacementPlans(inv, card)
-    if (!plans.length) throw new Error('没有合法的槽位替换方案')
     const removed = []
-    while (!plans.some(plan => plan.length === removed.length)) {
+    // 每轮都以「已确认弃置的支援」为基准重算方案：玩家每点一张，候选就收窄到该方案剩余的部分，
+    // 不会因为上一轮混着冗余候选而被迫多弃一张。canEquip 仍由 assetReplacementPlans 内部判定。
+    for (;;) {
+      const remaining = { ...inv, assets: inv.assets.filter(asset => !removed.includes(asset.id)) }
+      if (canEquip(remaining, card)) break
+      const plans = assetReplacementPlans(remaining, card)
+      if (!plans.length) throw new Error('没有合法的槽位替换方案')
       const ids = [...new Set(plans.flat())].filter(id => !removed.includes(id))
       const id = requestChoice(state, { kind: 'assetReplacement', source: card.code, seat: inv.seat,
-        prompt: `为「${cardName(card.code)}」腾出槽位，选择弃置资产。`,
+        prompt: replacementPrompt(card),
         options: ids.map(id => ({ id, label: `弃置 ${cardName(inv.assets.find(a => a.id === id).code)}` })) })
       removed.push(id)
-      plans = plans.filter(plan => removed.every(id => plan.includes(id)))
     }
     for (const asset of inv.assets.filter(a => removed.includes(a.id))) {
       leaveAsset(state, inv, asset, events)
@@ -385,6 +430,7 @@ export function createAssets(deps) {
     // 这里再拦一次，避免内容层/通道直接调用执行器时绕过窗口。
     if (playTypeBlocked(state, inv, cardDef(copyCode || peek)?.type)) return false
     const code = inv.hand.splice(index, 1)[0]
+    const beneathBefore = (inv.beneath || []).length
     const def = cardDef(copyCode || code)
     resourceBank.spendFromPool(inv, Math.max(0, playCost(state, inv, def) - (discount || 0)))
     consumePlayThreatResources(state, inv, events)
@@ -431,7 +477,13 @@ export function createAssets(deps) {
         info(state, events, `💎 「${cardName(code)}」被加入胜利展示区。`)
       } else if (exileAfterPlay) exilePlayerCard(state, inv, code, events)
       else if (shuffleBackAfterPlay) inv.deck = shuffle([...inv.deck, code], () => randomValue(state))
-      else if (entryFlags.keepOnPlay !== true) disposePlayedEvent(inv, code)
+      else if (entryFlags.keepOnPlay !== true) {
+        // 黛安娜在描述子结束时已经把这张卡从弃牌堆之前的位置挪到底下。
+        // 快速事件是先离手、结算完才弃牌；若这里再弃一次，同一张卡会同时待在底下和弃牌堆。
+        const movedBeneath = (inv.beneath || []).length > beneathBefore
+          && (inv.beneath || []).slice(beneathBefore).includes(code)
+        if (!movedBeneath) disposePlayedEvent(inv, code)
+      }
     }
   }
 

@@ -92,7 +92,7 @@
 | P3.12 | `location.verticalChain` | verticalChain 15 | `src/engine/vertical-chain.js` | 7 |
 
 - 六个原语都通过 [`src/engine/scenario-runtime-extras.js`](../src/engine/scenario-runtime-extras.js) 挂到 `scenarioRuntime`（`counters` / `swarming` / `swarm` / `veiled` / `tokenBag` / `verticalChain`），只做纯数据转发；**scenario-runtime 只加了一行 spread**，既有战役行为不变。
-- 关键语义（全部有测试）：Swarming 的四种 X 口径（缺 `x` 抛错而不是按 0）；蜂拥卡清空前头领不可击败、溢出伤害逐张扣；Veiled 的「未揭示限制 / 翻面 / 洗回」三件事分开；蛛群袋可注入 rng 做确定性；纵向链越界返回 `null` 不夹端点；计数器只读不建字段。
+- 关键语义（全部有测试）：Swarming 的四种 X 口径（缺 `x` 抛错而不是按 0）；蜂拥卡清空前头领不可击败、溢出伤害逐张扣；Veiled 的「翻面 / 洗回」分开（**P8 更正：官方 TDE 只翻面读故事卡，无洗回**；`shuffleVeiledIntoDeck` 通用原语保留）；蛛群袋可注入 rng 做确定性；纵向链越界返回 `null` 不夹端点；计数器只读不建字段。
 - 账本：`primitive-plan.json` 的 `newPrimitives` 现在 **12/12 done**；`mechanismCoverage` 9 条 primitive 机制：7 覆盖 + 2 显式延后（epilogueMatrix、dreamGate）。
 - 事务边界：真实敌人实体生成、调查动作拦截、infestation test、布局渲染都留 P8/P5；本批只保证原语可被内容层调用且有 Node 证据。
 - 全量 `test:fast`：**3674 tests / 3671 pass / 3 skipped / 0 fail**（`p3b2-fast.log`，含本批 46 例）。`tests/suites.mjs` 新增 6 个测试文件再次触发 TCU 玩家卡账本 stale，按同一 remedy 重算（`audit-tcu-player --write` → `audit-tcu --write`），diff 只有哈希；重算后 `audit:tcu:check` 与 `tcu-migration.test.mjs` 6/6 通过。

@@ -780,7 +780,7 @@ const treacheryChecks = {
     assert.equal(state.investigators[0].location, 'b')
     assert.equal(state.locations[0].revealed, false)
     assert.equal(state.locations[0].hiddenIdentity, true)
-    assert.equal(state.locations[0].name, '未知小径')
+    assert.equal(state.locations[0].name, '未揭示地点')
   },
   '02298'() {
     const state = simpleState(2)

@@ -20,10 +20,11 @@ export const supportedMechanics = new Set([
   'tcuMemento', 'tcuWatcher', 'tcuPrologue', 'tcuBreaches', 'tcuHeretics', 'tcuCosmos',
   'tcuBraziers', 'tcuCampaignAssets', 'tcuChaos',
   // 食梦者（五循环）P4：关键词与机制条目的引擎读点已交付并有 Node 证据（P3 原语 + 复用核心语义）。
-  // 未登记的是仍停在 catalog-only 的战役层能力：tdeCampaign / tdeDreamQuest / tdeWebOfDreams /
-  // tdeChaos / tdeRecords / tdeEpilogue（P5 流程与 P8 章节接线后才登记，见 docs/tde-rules.md §5）。
+  // P8：战役层能力随 8 章与战役 manifest 接线，登记 6 条战役机制（tdeChaos 逐章符号表由
+  // 各章 chaos.js + tde-chaos.js 落地，tdeRecords/tdeEpilogue 由 record-labels/manifest/dual-story 接线）。
   'tdeMyriad', 'tdeSwarming', 'tdeVeiled', 'tdeResearched', 'tdeBonded',
   'tdeDreamGate', 'tdeInfestationBag', 'tdeAlarmLevel', 'tdeSignsOfTheGods', 'tdeStoryAssets',
   'tdeLocationDoom',
+  'tdeCampaign', 'tdeDreamQuest', 'tdeWebOfDreams', 'tdeChaos', 'tdeRecords', 'tdeEpilogue',
 ])
 export const missingMechanics = ids => (ids || []).filter(id => !supportedMechanics.has(id))

@@ -71,12 +71,73 @@ export function collectScenarioTokens(scenario = {}, manifest = {}) {
   return tokens
 }
 
-// Node 侧组装：29 个已注册关卡（content/registered.js 是唯一真值来源）。
+// Node 侧组装：已注册关卡（content/registered.js 是唯一真值来源）+ 已落地但尚未注册的
+// 开发态战役章节（P8：食梦者 8 章在 registered.js 里留到 P10 注册；归属算法必须以磁盘内容为准，
+// 否则新条目会全部 unresolved）。
 let cached = null
+async function loadDevCampaignScenarios() {
+  const { existsSync, readdirSync } = await import('node:fs')
+  const { pathToFileURL } = await import('node:url')
+  const campaignsDir = path.join(fileURLToPath(new URL('..', import.meta.url)), 'content/campaigns')
+  const scenarios = []
+  const campaigns = []
+  if (!existsSync(campaignsDir)) return { scenarios, campaigns }
+  const registeredCampaigns = new Set(contentRegistry.listCampaigns().map(campaign => campaign.id))
+  for (const entry of readdirSync(campaignsDir, { withFileTypes: true }).filter(item => item.isDirectory())) {
+    if (registeredCampaigns.has(entry.name)) continue
+    const campaignRoot = path.join(campaignsDir, entry.name)
+    const manifestFile = path.join(campaignRoot, 'manifest.js')
+    const scenariosDir = path.join(campaignRoot, 'scenarios')
+    if (!existsSync(manifestFile) || !existsSync(scenariosDir)) continue
+    let manifest = null
+    try {
+      manifest = (await import(pathToFileURL(manifestFile).href)).manifest
+    } catch {
+      continue
+    }
+    campaigns.push({
+      id: entry.name,
+      name: manifest?.name || entry.name,
+      sharedGroupIds: new Set((manifest?.sharedEncounterGroupIds || []).map(canonical)),
+    })
+    for (const directory of readdirSync(scenariosDir, { withFileTypes: true }).filter(item => item.isDirectory())) {
+      const indexFile = path.join(scenariosDir, directory.name, 'index.js')
+      if (!existsSync(indexFile)) continue
+      try {
+        const module = await import(pathToFileURL(indexFile).href)
+        if (!module?.scenario || !module?.manifest) continue
+        scenarios.push({
+          id: module.scenario.id,
+          campaignId: entry.name,
+          campaignName: manifest?.name || entry.name,
+          name: module.manifest.name || module.scenario.name || module.scenario.id,
+          tokens: collectScenarioTokens(module.scenario, module.manifest),
+          groupIds: new Set((module.manifest.requiredEncounterGroupIds || []).map(canonical)),
+        })
+      } catch {
+        // 开发态章节可能暂时不可导入：跳过（注册期由其它门禁负责）。
+      }
+    }
+  }
+  return { scenarios, campaigns }
+}
+const DEV = await loadDevCampaignScenarios()
+const DEV_SCENARIOS = DEV.scenarios
+
 export function loadPlacementIndex({ registry = contentRegistry, cards = ALL_CARDS } = {}) {
   if (cached && registry === contentRegistry && cards === ALL_CARDS) return cached
   const campaigns = new Map()
   for (const campaign of registry.listCampaigns()) campaigns.set(campaign.id, campaign)
+  for (const campaign of DEV.campaigns) if (!campaigns.has(campaign.id)) campaigns.set(campaign.id, campaign)
+  // 战役声明的「跨章共享遭遇组」（P8）：单章命中该组时仍归 `_shared/<组>/`。
+  const sharedGroups = new Map()
+  for (const campaign of campaigns.values()) {
+    if (Array.isArray(campaign.sharedEncounterGroupIds)) {
+      sharedGroups.set(campaign.id, new Set(campaign.sharedEncounterGroupIds.map(canonical)))
+    } else if (campaign.sharedGroupIds) {
+      sharedGroups.set(campaign.id, campaign.sharedGroupIds)
+    }
+  }
   const scenarios = registry.listScenarios().map(manifest => {
     const data = registry.getScenarioData(manifest.id)
     const campaign = campaigns.get(manifest.campaignId) || {}
@@ -89,7 +150,10 @@ export function loadPlacementIndex({ registry = contentRegistry, cards = ALL_CAR
       groupIds: new Set((manifest.requiredEncounterGroupIds || []).map(canonical)),
     }
   })
-  const index = { cards, scenarios, campaigns }
+  // 未注册但已落地的章节（P8 development 态）：追加进归属索引（不参与运行时）。
+  const registeredIds = new Set(scenarios.map(scenario => scenario.id))
+  for (const scenario of DEV_SCENARIOS) if (!registeredIds.has(scenario.id)) scenarios.push(scenario)
+  const index = { cards, scenarios, campaigns, sharedGroups }
   if (registry === contentRegistry && cards === ALL_CARDS) cached = index
   return index
 }
@@ -136,8 +200,14 @@ export function resolvePlacement(entry, index = loadPlacementIndex()) {
     matchedBy = 'group'
   }
   if (!hits.length) return emptyPlacement(entry, 'no-scenario')
-  const bucket = bucketOf(hits)
+  let bucket = bucketOf(hits)
   const group = card?.encounterCode || null
+  // P8：战役声明了「跨章共享遭遇组」时，即使当前只有 1 章使用该组，也归到 `_shared/<组>/`
+  //（路线图 §1.2：20 组 = 8 章节组 + 12 共享组；不能因为另一章还没接线就把共享组降级成章节专用）。
+  if (bucket === 'scenario' && group && hits[0].campaignId) {
+    const shared = index.sharedGroups?.get(hits[0].campaignId)
+    if (shared && shared.has(canonical(group))) bucket = 'campaign'
+  }
   const scenarioId = bucket === 'scenario' ? hits[0].id : null
   const campaignId = bucket === 'scenario' ? hits[0].campaignId
     : bucket === 'campaign' ? hits[0].campaignId : null

@@ -14,6 +14,8 @@ import { choiceOptionsFor, choiceSeats } from '../engine/resolution.js'
 // Phase 6（战役插件化第二批）：战役专属状态的公开投影收进内容层
 // （探索牌库 / 古代遗物 / 领队 / 复仇 / 伊格之怒 / 两个剧本的公开标记）。
 import { campaignProjection } from '../cards/campaign-view.js'
+import { scenarioInteractionsView } from './scenario-interactions.js'
+import { scenarioGuide, scenarioSetupText } from '../../content/scenario-guides.js'
 
 const PUBLIC_STATE_FIELDS = [
   'schemaVersion', 'rulesVersion', 'resourceVersion', 'rulesMode', 'revision',
@@ -43,6 +45,7 @@ const PUBLIC_INVESTIGATOR_FIELDS = [
   'baseHealth', 'baseSanity', 'health', 'sanity', 'maxHealth', 'maxSanity',
   'damage', 'horror', 'resources', 'clues', 'actionsLeft', 'exploreOnlyActions', 'discard', 'assets', 'threat',
   'location', 'engaged', 'defeated', 'resigned', 'defeatCause', 'testBonus',
+  'handSlotsPenalty', 'handPenaltyActive',
   'phaseStatBonus', 'onTheLam', 'fearExtraPaid', 'usedReactions', 'autoBuilt', 'deckName',
   'campaignId', 'tomeActionUsed',
   'role', 'lolaDiscount',
@@ -167,6 +170,10 @@ export function viewState(state, observerSeat = null, options = {}) {
   view.scriptAttachments = { act: attachments.act, agenda: attachments.agenda }
   view.enemies = view.enemies.map((enemy, index) => ({
     ...enemy,
+    // 蜂拥卡面朝下：观察投影只留 id 与来源，不给卡号。
+    ...(Array.isArray(enemy.swarmCards) ? {
+      swarmCards: enemy.swarmCards.filter(card => !card.defeated).map(card => ({ id: card.id, source: card.source || null })),
+    } : {}),
     health: enemyHealth(state, state.enemies[index]),
     effectiveFight: enemyFightValue(state, state.enemies[index]),
     effectiveEvade: enemyEvadeValue(state, state.enemies[index]),
@@ -210,6 +217,8 @@ export function viewState(state, observerSeat = null, options = {}) {
   view.totalDoom = totalDoom(state)
   // 失落的时代 / 命运之线 / 幽嘶深渊的公开状态由内容层投影（见 src/cards/campaign-view.js）。
   Object.assign(view, campaignProjection(state))
+  const scenarioInteractions = scenarioInteractionsView(state, observer)
+  if (scenarioInteractions) view.scenarioInteractions = scenarioInteractions
   view.scenarioFlagsPublic = Object.fromEntries(PUBLIC_SCENARIO_FLAGS
     .filter(key => state.scenarioFlags?.[key] != null)
     .map(key => [key, state.scenarioFlags[key]]))
@@ -223,19 +232,28 @@ export function viewState(state, observerSeat = null, options = {}) {
   view.scenario = state.scenario ? {
     ...pick(state.scenario, ['id', 'name', 'nameEn', 'intro', 'setup'], copyField),
     intro: view.campaignStory.entries.find(e => e.id === `current:${state.scenario.id}`)?.paragraphs.join('\n\n') || state.scenarioIntro?.paragraphs?.join('\n\n') || state.scenario.intro,
+    setup: scenarioSetupText(state.scenario),
+    setupNote: scenarioGuide(state.scenario.id)?.note || '',
     layout: structuredClone(contentRegistry.getScenario(state.scenario.id).layout),
   } : null
   view.setAsideCards = publicSetAsideCards(state)
   // 第 125 轮（第 8 批）：「翻面/变体」表现由条目声明（03009 → 03009b，伤害 ≥5 时）。
   const projectAsset = (asset, inv) => {
+    const visible = publicCardInstance(asset)
+    // 展示槽位跟引擎同一口径：没有 slotsOverride 时用印刷槽位，
+    // 这样卡面表缺 slots 时也不会把占着手槽的支援画进「其他资产」。
+    if (!visible.slotsOverride) {
+      const printed = ALL_CARDS[visible.code]?.slots || ALL_CARDS[asset.originalCode]?.slots
+      if (Array.isArray(printed) && printed.length) visible.slots = [...printed]
+    }
     const variant = registeredEntry(asset.code)?.observationVariant
-    if (!variant || !(inv.damage >= (variant.minDamage ?? 0))) return publicCardInstance(asset)
-    return { ...publicCardInstance(asset), code: variant.code, linkedFromCode: asset.code }
+    if (!variant || !(inv.damage >= (variant.minDamage ?? 0))) return visible
+    return { ...visible, code: variant.code, linkedFromCode: asset.code }
   }
   view.investigators = state.investigators.map(inv => ({
     ...pick(inv, PUBLIC_INVESTIGATOR_FIELDS, copyField),
     assets: inv.assets.map(asset => projectAsset(asset, inv)),
-    threat: (inv.threat || []).map(publicCardInstance),
+    threat: (inv.threat || []).map(card => projectAsset(card, inv)),
     maxSanity: getMaxSanity(inv),
     maxHealth: getMaxHealth(inv),
     effectiveStats: Object.fromEntries(['willpower', 'intellect', 'combat', 'agility'].map(skill => [skill, getStat(state, inv, skill)])),

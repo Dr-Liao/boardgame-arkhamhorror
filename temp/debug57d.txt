@@ -1,0 +1,15 @@
+﻿node : file:///G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability.js:638
+At line:1 char:129
++ ... System.Text.UTF8Encoding]::new($false); node --input-type=module -e "
++                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (file:///G:/boar.../ability.js:638:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+          throw new Error(`${origin}: 非玩家卡（scope ${scope}）不能声明 ${descriptor.kind}`
+                ^
+
+Error: 能力条目 06283: 非玩家卡（scope enemy）不能声明 weakness（只能写 constant / reaction / forced / elderSign；谈判类行动必须带 actionKind）
+    at registerCardAbilities (file:///G:/boardgame-hall-ai/games/arkhamhorror/src/engine/ability.js:638:17)
+    at file:///G:/boardgame-hall-ai/games/arkhamhorror/src/engine/engine.js:168:32
+
+Node.js v22.23.1

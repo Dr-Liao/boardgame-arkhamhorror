@@ -12,6 +12,7 @@
 import { META } from '../cards/cards-data.js'
 import {
   LEGACY_AGENDA_DOOM_PER_INVESTIGATOR, LEGACY_STRAITJACKET_CODE, LEGACY_FIGHT_OR_FLIGHT_CODE,
+  hasExplicitReactionPrompt,
 } from '../cards/card-rules.js'
 import { STATE_SCHEMA_VERSION, RULES_VERSION, stateCompatibilityError } from './rules-state.js'
 import { createGameState, refreshStateResources, unknownCardCodes, legalMoves, validateMove, applyMove, decisionSeat } from './engine.js'
@@ -50,6 +51,7 @@ function fixStraitjacketZoneAndAbility(state) {
     const jacket = jackets[0]
     Object.assign(jacket, {
       slots: ['Body', 'Hand x2'],
+      slotsOverride: true,
       cannotLeavePlay: true,
       threatEffect: {
         discardCost: { action: 2 },
@@ -202,6 +204,17 @@ function needsAutoReactionFlags(state) {
     && !Object.hasOwn(def, 'autoByDefault'))
 }
 
+// 卡面「快速反应」开关也来自条目声明。补上 explicitReactionPrompt（如 02305 黄金怀表）后，
+// 旧存档内嵌的卡面定义同样是旧值、资源版本却没变；检测到「条目声明了开关但内嵌定义仍为 false」
+// 就强制刷新一次，否则读档后窗口继续询问却仍然没有闪电开关。
+function needsExplicitReactionPromptFlags(state) {
+  const cards = state.cards
+  if (!cards || typeof cards !== 'object') return false
+  return Object.values(cards).some(def => def && typeof def === 'object'
+    && def.hasReactionPrompt !== true
+    && hasExplicitReactionPrompt(def.code || def.originalCode))
+}
+
 // 以同一战役新开局的状态为模板，只补齐缺失且模板值为空的字段（[]、{}、null、0、false）。
 function fillMissingFields(state, changes) {
   const players = (state.investigators || []).map(inv => ({ seat: inv.seat, role: state.humanSeats?.includes(inv.seat) ? 'human' : 'ai' }))
@@ -259,7 +272,8 @@ function parallelLaneEntries(state) {
 }
 
 function runtimeNeedsWork(runtime, force) {
-  return !!force || needsAutoReactionFlags(runtime) || !!stateCompatibilityError(runtime, META.resourceVersion)
+  return !!force || needsAutoReactionFlags(runtime) || needsExplicitReactionPromptFlags(runtime)
+    || !!stateCompatibilityError(runtime, META.resourceVersion)
 }
 
 // 一条可续玩的运行时（单线对局，或并行里的一条线）。容器本身在并行时只是外壳。
@@ -269,7 +283,7 @@ function migrateRuntime(runtime, { force, migrations, changes, label, playable }
   if (!runtime.campaign?.id) throw new Error(`${label}缺少战役信息，无法修复`)
   const local = []
   migrateVersions(runtime, migrations, local)
-  upgradeResources(runtime, local, force || needsAutoReactionFlags(runtime))
+  upgradeResources(runtime, local, force || needsAutoReactionFlags(runtime) || needsExplicitReactionPromptFlags(runtime))
   fillMissingFields(runtime, local)
   if (playable) {
     const moves = legalMoves(runtime)

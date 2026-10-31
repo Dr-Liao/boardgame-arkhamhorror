@@ -26,7 +26,16 @@ export function dualHubDemoBundle() {
     return {
       manifest: { ...source.manifest, id, campaignId: DEMO_CAMPAIGN_ID, behaviorIds: [id] },
       scenario: { ...source.scenario, id, behaviorId: id },
-      behavior: { ...source.behavior, id },
+      behavior: {
+        ...source.behavior,
+        id,
+        ...(part === 'A' ? {
+          afterChaosBagSetup(state, events) {
+            source.behavior.afterChaosBagSetup?.(state, events)
+            seedDemoInteractions(state)
+          },
+        } : {}),
+      },
     }
   })
   const parts = {
@@ -48,6 +57,44 @@ export function dualHubDemoBundle() {
     flow: dualPartFlow(parts),
   }
   return { campaigns: [campaign], scenarios }
+}
+
+function seedDemoInteractions(state) {
+  const here = (state.locations || []).find(location => location.id === state.investigators?.[0]?.location) || state.locations?.[0]
+  if (here) {
+    here.veiled = true
+    here.clues = 0
+    here.revealed = true
+    here.backCode = 'demo-story'
+    here.dreamGate = true
+    here.verticalIndex = 0
+  }
+  const other = (state.locations || []).find(location => location && location !== here)
+  if (other) other.verticalIndex = 1
+  state.tokenBags = { infestation: { tokens: ['skull', 'tablet', 'tablet', 'cultist', 'cultist'], revealed: [] } }
+  state.infestedLocations = []
+  state.investigatorCounters = { alarmLevel: { seats: [1], max: 5 } }
+  state.markerCounts = { reference: 3 }
+  const host = state.enemies?.[0] || {
+    id: 'demo-swarm-host', name: '蜂拥头领', code: '01116', health: 2, fight: 2, evade: 2,
+    damage: 1, horror: 1, location: here?.id || null, engaged: [], traits: [],
+  }
+  host.swarmCards = [
+    { id: 'swarm1', code: 'secret-a', source: 'swarming', defeated: false },
+    { id: 'swarm2', code: 'secret-b', source: 'swarming', defeated: false },
+  ]
+  if (!state.enemies?.includes(host)) (state.enemies ||= []).push(host)
+  const inv = state.investigators?.[0]
+  if (inv) inv.hiddenCards = ['hidden-demo']
+  state.campaign.epilogueMatrix = {
+    a: [{ id: 'a1', title: 'A' }],
+    b: [{ id: 'b1', title: 'B' }, { id: 'b2', title: 'B2' }],
+    entries: {
+      'a1|b1': { title: '已到达的结局', textKey: 'reached' },
+      'a1|b2': { title: '不应出现', textKey: 'secret-ending' },
+    },
+  }
+  state.campaign.epilogueResolved = { a: 'a1', b: 'b1' }
 }
 
 export function registerDualHubDemo(registerContentBundle) {

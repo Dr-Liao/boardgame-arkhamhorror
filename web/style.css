@@ -13,6 +13,7 @@
 @import url('./campaign-theme.css');
 @import url('./tcu-panels.css');
 @import url('./debug-console.css');
+@import url('./scenario-setup.css');
 .ah-player-avatar { display: inline-block; width: 20px; height: 20px; margin-right: 5px; border-radius: 50%; object-fit: cover; vertical-align: middle; }
 /* 诡镇奇谈 · 卡牌版 Mod 专属样式
  *
@@ -386,6 +387,11 @@ button:focus-visible, [role='button']:focus-visible, summary:focus-visible { out
 .ah-table .bg-game-status { font-size: 12px; }
 .ah-table .bg-game-actions .bg-btn { padding: 6px 10px; font-size: 11px; }
 .ah-table-viewport { min-height: 0; padding: 0; overflow: hidden; align-items: stretch; justify-content: stretch; }
+.ah-scenario-interactions { display: flex; gap: 10px; overflow: auto; padding: 8px 12px; border-bottom: 1px solid var(--ah-line, rgba(255,255,255,.14)); }
+.ah-tde-interaction { min-width: 168px; margin: 0; }
+.ah-tde-interaction h3 { margin: 0 0 4px; font-size: 14px; }
+.ah-tde-interaction p { margin: 0 0 4px; }
+.ah-tde-interaction ol { margin: 0; padding-left: 1.2em; }
 .ah-table-shell { width: 100%; min-width: 0; min-height: 0; height: 100%; display: grid; gap: var(--ah-gap); padding: var(--ah-gap); grid-template-rows: 112px minmax(0, 1fr) 168px 58px; position: relative; }
 .ah-table-shell > section, .ah-table-main > section { min-width: 0; min-height: 0; border: 1px solid var(--ah-edge); border-radius: 11px; background: rgba(15, 22, 34, .78); }
 .ah-table-script { display: flex; gap: 10px; padding: 8px; overflow: hidden; }

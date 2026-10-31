@@ -104,7 +104,7 @@ export function createDescribeState(deps) {
   lines.push('目标是合作通关：收集线索推进「场景」，同时避免「密谋」因毁灭推进、避免调查员全部倒下。')
 
   lines.push('')
-  lines.push('【场景 ' + (act ? act.stage : '?') + '】' + (act ? act.name + '：' + act.text : '（已通关）'))
+  lines.push('【场景 ' + (act ? act.stage : '?') + '】' + (act ? act.name + '：' + act.text : ((state.acts || []).length ? '（已通关）' : '（尚未入场）')))
   const objective = actObjectiveContext(state)
   if (objective) tail.push('【当前场景推进条件】' + JSON.stringify(objective))
   lines.push('【密谋 ' + (ag ? ag.stage : '?') + '】' + (ag ? ag.name + '：' + ag.text : '（已失败）') + ' 毁灭 ' + agendaDoom(state) + '/' + (ag ? ag.doomThreshold : '?')

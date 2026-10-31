@@ -4,7 +4,7 @@
   "profile": {
     "id": "original-circle-undone-all-cards-2026-10",
     "scope": "万象无终原始循环 377 条印刷记录：343 张主卡（战役 237 / 调查员 19 / 玩家 87）与 34 个关联面（05xxxa/b/c…）。",
-    "basis": "逐卡运行测试：237 张战役主卡的卡面印刷数据与 9 章 definition/behavior 逐字段对照（tests/tcu-campaign-card-acceptance.test.mjs 275 例）、87 张玩家卡 4 个分片（tests/tcu-player-m2-{1..4}.test.mjs 123 例）、19 张调查员/专属卡 M1 逐人验收（tests/tcu-investigators.test.mjs 88 例）；证据只从实跑 node --test 的 test:pass 事件归集。",
+    "basis": "逐卡运行测试：237 张战役主卡的卡面印刷数据与 9 章 definition/behavior 逐字段对照（tests/tcu-campaign-card-acceptance.test.mjs 275 例）、87 张玩家卡 4 个分片（tests/tcu-player-m2-{1..4}.test.mjs 123 例）、19 张调查员/专属卡 M1 逐人验收（tests/tcu-investigators.test.mjs 90 例）；证据只从实跑 node --test 的 test:pass 事件归集。",
     "partitionPolicy": "主卡按 content/packs/tcu*/manifest.js 的 verified 函数切成 investigator/player/campaign 三分区且唯一；34 个关联面不是独立主卡，按 linkedCardCode/linkedToCode 归到主卡或成对关联面，账本 partition 记 face，证据取主卡定义/行为链接（逐面 test）。",
     "pendingPolicy": "目录存在、卡号被源码引用、rulesPending:false 或文本非空都不构成通过；未被逐卡 test 标记「已验收」的卡保持 pending 并计入 summary.pending。",
     "notePolicy": "人工行为审计的近似实现说明登记在 content/campaigns/theCircleUndone/card-acceptance.js 的 TCU_CARD_ACCEPTANCE_NOTES；未登记默认 verified。",
@@ -31,13 +31,13 @@
     "constructible": 85,
     "deckable": 83,
     "simplified": 14,
-    "testsPassed": 528,
+    "testsPassed": 531,
     "testFiles": 6
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
-      "sha256": "2d1c4c00014ea1b668f9193b98d81ddff133beda0d7e9ea4834573d2a1582ff7"
+      "sha256": "6ffe8a9bedca68008aa947d9b32fa63dc3cc1c75a8376a94df12e5c288e61831"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
@@ -53,7 +53,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-      "sha256": "bbd4c970301832cb2056355e9b298b938d06c67a5bf5e3d086bba2d53db2aff3"
+      "sha256": "47c31a820272c8b850c18a0fc44a988ca99b1905128451b29660fbf4fe468269"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-campaign-card-acceptance.test.mjs",
@@ -74,7 +74,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -92,7 +92,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -110,7 +110,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -128,7 +128,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -146,7 +146,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -164,7 +164,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -182,7 +182,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -200,7 +200,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -218,7 +218,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -236,7 +236,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -254,7 +254,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -272,7 +272,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -290,7 +290,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -308,7 +308,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -326,7 +326,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -344,7 +344,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -362,7 +362,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -380,7 +380,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -398,7 +398,7 @@
         {
           "file": "games/arkhamhorror/tests/tcu-investigators.test.mjs",
           "profile": "original-circle-undone-investigators-2026-10",
-          "tests": 88,
+          "tests": 90,
           "scope": "M1 逐人验收（文件级证据：whole-file 实跑通过）"
         }
       ]
@@ -4990,7 +4990,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 996,
+          "line": 1010,
           "test": "TCU 05276 苦心钻研 永久卡让起始手牌多 1 张"
         }
       ]
@@ -5039,7 +5039,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 985,
+          "line": 999,
           "test": "TCU 05278 干一天活计拿一天钱 永久卡在开局多给 2 资源"
         }
       ]
@@ -5650,7 +5650,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1008,
+          "line": 1022,
           "test": "TCU 05313 圣化之镜 离场时把所有舒缓旋律收回场外集合（含其他调查员区域与场外区域）"
         }
       ]
@@ -5711,7 +5711,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1032,
+          "line": 1046,
           "test": "TCU 05316 密教辞典 离场时把所有鲜血仪式收回场外集合（含其他调查员区域与移出游戏区）"
         }
       ]
@@ -5799,12 +5799,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1060,
+          "line": 1074,
           "test": "TCU 05320 超级加倍 打出一张事件后横置自身再次打出该事件"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1079,
+          "line": 1093,
           "test": "TCU 05320 超级加倍 再次打出时支付该事件自己的费用（2 费事件结算两次）"
         }
       ]
@@ -5831,12 +5831,17 @@
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 753,
+          "line": 757,
+          "test": "TCU 05321 凋零术 先减生命再结算伤害，2 点生命的敌人会被本次攻击击败"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "line": 768,
           "test": "TCU 05321 凋零术 05033「恐怖灵感」可取消符号窗口里的凋零术效果"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 777,
+          "line": 792,
           "test": "TCU 05321 凋零术 05033「恐怖灵感」可让符号窗口里的凋零术效果再结算一次"
         }
       ]
@@ -5853,27 +5858,27 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 809,
+          "line": 823,
           "test": "TCU 05322 第六感 用意志代替智力调查并 +2 意志"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 837,
+          "line": 851,
           "test": "TCU 05322 第六感 符号后同时在 2 次连接内的已揭示地点调查（新隐藏值分支）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 867,
+          "line": 881,
           "test": "TCU 05322 第六感 符号后双地点调查可选原隐藏值分支"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 888,
+          "line": 902,
           "test": "TCU 05322 第六感 没有 2 次连接内的已揭示地点时符号窗口不提供双地点调查"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 917,
+          "line": 931,
           "test": "TCU 05322 第六感 未揭示符号标记时不做双地点调查"
         }
       ]
@@ -5890,12 +5895,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 939,
+          "line": 953,
           "test": "TCU 05323 诱敌深人 附属到地点：敌人阶段朝附属地点移动、轮末恰好弃 1 张"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 963,
+          "line": 977,
           "test": "TCU 05323 诱敌深人 多诱饵取最近：两个地点附属时猎手走向最近的一个"
         }
       ]
@@ -5912,7 +5917,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1100,
+          "line": 1114,
           "test": "TCU 05324 美满结局 负修正标记将要令技能值降到 0 时翻转为正修正"
         }
       ]

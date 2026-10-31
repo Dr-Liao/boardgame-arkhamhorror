@@ -381,16 +381,18 @@ test('P4 其余 10 条规则条目的引擎读点（警报等级 / 蛛群袋 / �
   assert.equal(epilogueFor(matrix, 'nope', 'B1'), null)
 })
 
-test('P4 机制登记与关键词表一致（未接线的战役层能力不登记）', () => {
+test('P8 机制登记与关键词表一致（战役层能力随 8 章与 manifest 接线后登记）', () => {
   const tdeMechanics = [...supportedMechanics].filter(id => id.startsWith('tde')).sort()
-  // 已登记的能力项必须是 17 条之一。
+  // 已登记的能力项必须是规则条目之一。
   for (const id of tdeMechanics) assert.ok(TDE_RULE_IDS.includes(id), `${id} 不是 TDE 规则条目`)
   // 自有规则条目 + 已实现的关键词必须出现在登记表里。
   const owned = TDE_KEYWORDS.filter(keyword => keyword.ruleOwned && keyword.implemented !== false).map(keyword => keyword.ruleId)
   assert.deepEqual(missingMechanics(owned), [])
-  // 战役层能力（P5/P8 才接线）明确不登记：条目存在，但 supportedMechanics 不含。
-  for (const id of ['tdeCampaign', 'tdeDreamQuest', 'tdeWebOfDreams', 'tdeChaos', 'tdeRecords', 'tdeEpilogue'])
-    assert.equal(supportedMechanics.has(id), false, `${id} 属 P5/P8，不能提前登记`)
+  // P8：战役层能力由 8 章 definition/behavior + manifest/interludes/dual-story 接线，P8 起登记。
+  for (const id of ['tdeCampaign', 'tdeDreamQuest', 'tdeWebOfDreams', 'tdeChaos', 'tdeRecords', 'tdeEpilogue']) {
+    assert.ok(TDE_RULE_IDS.includes(id), `${id} 必须有 TDE 规则条目`)
+    assert.equal(supportedMechanics.has(id), true, `${id} 已在 P8 接线，应登记`)
+  }
   assert.equal(supportedMechanics.has('tdeVeiled'), true)
   assert.equal(supportedMechanics.has('tdeMyriad'), true)
 })

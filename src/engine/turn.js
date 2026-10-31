@@ -15,7 +15,8 @@ import { clearSpellCredit, grantSpellCredit } from './spell-actions.js'
 import {
   clearRestrictedAction, grantRestrictedAction, restrictedActionRule,
 } from './restricted-actions.js'
-import { investigatorRule } from '../cards/card-rules.js'
+import { enemyRuleFlags, investigatorRule } from '../cards/card-rules.js'
+import { dreamGateEntryError, setDreamGatesAside } from './dream-gate.js'
 
 export function createTurn(deps) {
   const {
@@ -141,7 +142,8 @@ function runMythos(state, repeated = false) {
   }
   // 神话阶段结束强制：数据中的 mythosEndDoom。
   for (const enemy of state.enemies.slice()) {
-    const doom = enemyTextBlanked(state, enemy) ? 0 : enemyDef(enemy.code)?.mythosEndDoom || 0
+    const doom = enemyTextBlanked(state, enemy) ? 0
+      : (enemyDef(enemy.code)?.mythosEndDoom || enemyRuleFlags(enemy.code).mythosEndDoom || 0)
     if (doom > 0) {
       placeDoomOnCard(state, enemy, doom, events, { silent: true })
       info(state, events, `🌑 「${enemy.name}」上放置 ${doom} 点毁灭（当前 ${enemy.doom}）。`)
@@ -177,6 +179,7 @@ function enemyPhase(state) {
     if (aliveInvestigators(state).some((inv) => inv.location === enemy.location && (enemy.prey !== 'bearer' || inv.seat === enemy.bearerSeat))) continue
     if (scenarioBehavior(state).hunterMove?.(state, enemy, scenarioRuntime(state, events))) continue
     const target = hunterStep(state, enemy)
+    if (target && dreamGateEntryError(null, state.locations.find(location => location.id === target))) continue
     if (target && target !== enemy.location) {
       const prev = enemy.location
       relocateEnemy(state, enemy, target, events)
@@ -452,6 +455,14 @@ function beginInvestigationPhase(state, events, repeated = false) {
 function runBetweenInvestigationPhases(state, events) {
   // 第 5 步 P6：调查阶段结束——直觉牌库顶那张没打出的牌洗回直觉牌库。
   for (const inv of aliveInvestigators(state)) hunchDeck.returnCard(state, inv, events)
+  setDreamGatesAside(state, {
+    choose: (inv, ids) => requestChoice(state, {
+      kind: 'location', source: 'dream-gate', seat: inv.seat, prompt: '梦境之门被放在一边。选择一个已揭示地点。',
+      options: ids.map(id => ({ id, label: locName(state, id) })),
+    }),
+    applyHorror: (game, inv, amount) => { inv.horror = (inv.horror || 0) + amount },
+    info: text => info(state, events, text),
+  })
   if (!useGoldPocketWatch(state, 'begin', 'enemy', events)) {
     events.push(...enemyPhase(state))
     if (state.status !== 'playing') return

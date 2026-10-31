@@ -19,12 +19,12 @@
   ],
   "summary": {
     "batch": "P3-1+2+3+P6",
-    "newTotal": 26,
-    "done": 26,
+    "newTotal": 29,
+    "done": 29,
     "pending": 0,
     "reuse": 2,
     "escape": 3,
-    "deferred": 5,
+    "deferred": 1,
     "mechanismsTotal": 9,
     "mechanismsCovered": 11,
     "mechanismsDeferred": []
@@ -131,7 +131,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "daf1a6d1256aade438a579e404bba1fd6ca4100dfcc0fba81688d2188bcc06a1",
+          "sha256": "892ec365c8a077bd925fd0396c8ab7aa84278324418e8a2b96ef93a77075e548",
           "exists": true
         },
         {
@@ -141,12 +141,12 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         },
         {
           "path": "docs/tde-migration-roadmap.md",
-          "sha256": "090ccc29103712ff72052ec208756e08fd81f409ee7e45a52349e406e7ffec39",
+          "sha256": "9e20c1c7c72c3e2b6b30fbb8cfeae8d34403210e1a608728754b6b4db9cd4395",
           "exists": true
         }
       ],
@@ -221,7 +221,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "daf1a6d1256aade438a579e404bba1fd6ca4100dfcc0fba81688d2188bcc06a1",
+          "sha256": "892ec365c8a077bd925fd0396c8ab7aa84278324418e8a2b96ef93a77075e548",
           "exists": true
         },
         {
@@ -231,7 +231,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -314,7 +314,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "daf1a6d1256aade438a579e404bba1fd6ca4100dfcc0fba81688d2188bcc06a1",
+          "sha256": "892ec365c8a077bd925fd0396c8ab7aa84278324418e8a2b96ef93a77075e548",
           "exists": true
         },
         {
@@ -324,7 +324,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -377,7 +377,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "daf1a6d1256aade438a579e404bba1fd6ca4100dfcc0fba81688d2188bcc06a1",
+          "sha256": "892ec365c8a077bd925fd0396c8ab7aa84278324418e8a2b96ef93a77075e548",
           "exists": true
         },
         {
@@ -387,7 +387,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -440,7 +440,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "daf1a6d1256aade438a579e404bba1fd6ca4100dfcc0fba81688d2188bcc06a1",
+          "sha256": "892ec365c8a077bd925fd0396c8ab7aa84278324418e8a2b96ef93a77075e548",
           "exists": true
         },
         {
@@ -450,7 +450,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -495,7 +495,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "daf1a6d1256aade438a579e404bba1fd6ca4100dfcc0fba81688d2188bcc06a1",
+          "sha256": "892ec365c8a077bd925fd0396c8ab7aa84278324418e8a2b96ef93a77075e548",
           "exists": true
         },
         {
@@ -505,7 +505,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -581,7 +581,7 @@
           "kind": "scenario-runtime",
           "name": "counters",
           "ok": true,
-          "detail": "241 keys"
+          "detail": "251 keys"
         }
       ],
       "files": [
@@ -597,7 +597,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
+          "sha256": "38754ae9288f3193a489c6b0209244647c6e0c8c79199379d1e0c2dbed9c4604",
           "exists": true
         },
         {
@@ -607,7 +607,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -668,7 +668,7 @@
           "kind": "scenario-runtime",
           "name": "swarming",
           "ok": true,
-          "detail": "241 keys"
+          "detail": "251 keys"
         }
       ],
       "files": [
@@ -684,7 +684,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
+          "sha256": "38754ae9288f3193a489c6b0209244647c6e0c8c79199379d1e0c2dbed9c4604",
           "exists": true
         },
         {
@@ -694,7 +694,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -762,7 +762,7 @@
           "kind": "scenario-runtime",
           "name": "swarm",
           "ok": true,
-          "detail": "241 keys"
+          "detail": "251 keys"
         }
       ],
       "files": [
@@ -778,7 +778,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
+          "sha256": "38754ae9288f3193a489c6b0209244647c6e0c8c79199379d1e0c2dbed9c4604",
           "exists": true
         },
         {
@@ -788,7 +788,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -870,13 +870,13 @@
           "kind": "scenario-runtime",
           "name": "veiled",
           "ok": true,
-          "detail": "241 keys"
+          "detail": "251 keys"
         }
       ],
       "files": [
         {
           "path": "src/engine/veiled.js",
-          "sha256": "d90d4995fa635fe755bc4251969211d239b1ffa47e614d4b678a8918e155ac76",
+          "sha256": "c124157ac199a023b34f36d23c617de0f1bcd6c2529682be763ce6c728cfdf67",
           "exists": true
         },
         {
@@ -886,7 +886,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
+          "sha256": "38754ae9288f3193a489c6b0209244647c6e0c8c79199379d1e0c2dbed9c4604",
           "exists": true
         },
         {
@@ -896,7 +896,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -970,7 +970,7 @@
           "kind": "scenario-runtime",
           "name": "tokenBag",
           "ok": true,
-          "detail": "241 keys"
+          "detail": "251 keys"
         }
       ],
       "files": [
@@ -986,7 +986,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
+          "sha256": "38754ae9288f3193a489c6b0209244647c6e0c8c79199379d1e0c2dbed9c4604",
           "exists": true
         },
         {
@@ -996,7 +996,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -1070,7 +1070,7 @@
           "kind": "scenario-runtime",
           "name": "verticalChain",
           "ok": true,
-          "detail": "241 keys"
+          "detail": "251 keys"
         }
       ],
       "files": [
@@ -1086,7 +1086,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
+          "sha256": "38754ae9288f3193a489c6b0209244647c6e0c8c79199379d1e0c2dbed9c4604",
           "exists": true
         },
         {
@@ -1096,7 +1096,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -1170,7 +1170,7 @@
           "kind": "scenario-runtime",
           "name": "bondedLocation",
           "ok": true,
-          "detail": "241 keys"
+          "detail": "251 keys"
         }
       ],
       "files": [
@@ -1186,7 +1186,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
+          "sha256": "38754ae9288f3193a489c6b0209244647c6e0c8c79199379d1e0c2dbed9c4604",
           "exists": true
         },
         {
@@ -1196,7 +1196,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -1272,7 +1272,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -1356,7 +1356,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -1438,7 +1438,7 @@
           "kind": "scenario-runtime",
           "name": "locationDoom",
           "ok": true,
-          "detail": "241 keys"
+          "detail": "251 keys"
         }
       ],
       "files": [
@@ -1454,7 +1454,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
+          "sha256": "38754ae9288f3193a489c6b0209244647c6e0c8c79199379d1e0c2dbed9c4604",
           "exists": true
         },
         {
@@ -1464,7 +1464,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -1531,7 +1531,7 @@
           "kind": "scenario-runtime",
           "name": "markers",
           "ok": true,
-          "detail": "241 keys"
+          "detail": "251 keys"
         }
       ],
       "files": [
@@ -1547,7 +1547,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "7921435fc5a376dbed36bb9c4baeb07b6d124dd94d7b56ab383f60f8bca581fc",
+          "sha256": "38754ae9288f3193a489c6b0209244647c6e0c8c79199379d1e0c2dbed9c4604",
           "exists": true
         },
         {
@@ -1557,7 +1557,7 @@
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -1630,7 +1630,7 @@
         },
         {
           "path": "src/engine/enemies.js",
-          "sha256": "104b39058cedba4dfa075a4bedc767391ec73ee51f07f31df454648bddda20e6",
+          "sha256": "54395a26fa4da1d970256bdfa48fc9c74aa5cfb103801c1f18f5aed649ce58ac",
           "exists": true
         },
         {
@@ -1640,12 +1640,12 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -1654,7 +1654,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 24,
+          "tests": 25,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -1699,13 +1699,13 @@
           "kind": "ctx-api",
           "name": "moveHarm",
           "ok": true,
-          "detail": "263 keys"
+          "detail": "265 keys"
         },
         {
           "kind": "ctx-api",
           "name": "harmRoomOf",
           "ok": true,
-          "detail": "263 keys"
+          "detail": "265 keys"
         }
       ],
       "files": [
@@ -1716,17 +1716,17 @@
         },
         {
           "path": "src/engine/api-misc.js",
-          "sha256": "40380b434340af4edc5661f4b6ceb425f1ad24cdccc8cb0948db4ffc7166afbd",
+          "sha256": "9f728958b0034cdf45693ab6c93badd4ea6c802101c59b07f7c97c7132ea9463",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -1735,7 +1735,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 24,
+          "tests": 25,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -1788,13 +1788,13 @@
           "kind": "ctx-api",
           "name": "addCardCounter",
           "ok": true,
-          "detail": "263 keys"
+          "detail": "265 keys"
         },
         {
           "kind": "ctx-api",
           "name": "moveCardCounters",
           "ok": true,
-          "detail": "263 keys"
+          "detail": "265 keys"
         }
       ],
       "files": [
@@ -1805,17 +1805,17 @@
         },
         {
           "path": "src/engine/api-misc.js",
-          "sha256": "40380b434340af4edc5661f4b6ceb425f1ad24cdccc8cb0948db4ffc7166afbd",
+          "sha256": "9f728958b0034cdf45693ab6c93badd4ea6c802101c59b07f7c97c7132ea9463",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -1824,7 +1824,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 24,
+          "tests": 25,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -1899,17 +1899,17 @@
         },
         {
           "path": "src/engine/turn.js",
-          "sha256": "3199bd1f3369111df3ba7822749baa7c0d0d4cfc1e13bf63bbad9aebffb84254",
+          "sha256": "de87c0437250c0e9e62434297c7b08983cf7b31e071dc6c8f79fb7e717d001fe",
           "exists": true
         },
         {
           "path": "src/engine/moves.js",
-          "sha256": "01bc1199cbed268c57610708d8b8d05f1d47cff9285a5e700fe30ff30090c461",
+          "sha256": "4af1cb20a863cbe2834452efa27209d4f9e78e864f78a30d4036989a9cbcc01e",
           "exists": true
         },
         {
           "path": "src/engine/dispatch.js",
-          "sha256": "e77bffc0c4fefbf5b1a987fc06ef8b36d84ac588e267bcbf39464c5977ebc566",
+          "sha256": "00e97864c9d859c024754a1b52134d3b7789bc59dca79401d33e8fd051e3bf0c",
           "exists": true
         },
         {
@@ -1919,12 +1919,12 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -1933,7 +1933,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 24,
+          "tests": 25,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -1977,17 +1977,17 @@
       "files": [
         {
           "path": "src/engine/deck-ops.js",
-          "sha256": "545a46ab08dcee393948344747d64df8aa5bd787dcc1a9fbefc8af2927f50e23",
+          "sha256": "561faf0d46c2e6b637c30871af039df711fd16505792b22a2f8e1341110833ad",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -1996,7 +1996,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 24,
+          "tests": 25,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2044,22 +2044,22 @@
       "files": [
         {
           "path": "src/engine/deck-ops.js",
-          "sha256": "545a46ab08dcee393948344747d64df8aa5bd787dcc1a9fbefc8af2927f50e23",
+          "sha256": "561faf0d46c2e6b637c30871af039df711fd16505792b22a2f8e1341110833ad",
           "exists": true
         },
         {
           "path": "src/engine/ability.js",
-          "sha256": "e9ccc01e532482439fad97c0536883abad4e9e416c8e60d2a90aeda2d5397d02",
+          "sha256": "3c5c7cc95252fb855b81ee26846d6b6677bbad90cd81bead673944a7ed886fee",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -2068,7 +2068,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 24,
+          "tests": 25,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2105,17 +2105,17 @@
       "files": [
         {
           "path": "src/engine/phases.js",
-          "sha256": "06927038494a6fc26c72fce8ad7047372fff911fb59462129cfd5147ec1258b1",
+          "sha256": "054713120de0f972b5befdb78572d94ac11df261c2eaa798023ea2c15f1949ec",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -2124,7 +2124,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 24,
+          "tests": 25,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2181,22 +2181,22 @@
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "735d52d00815f39815a3bb3668e9979e4a89d86a642a49689723b157fc8abd6f",
+          "sha256": "7ab44d2aa20eaf001f6386d7528ebd65157aaffdb8f37352e466ed877fa80b02",
           "exists": true
         },
         {
           "path": "src/engine/tests.js",
-          "sha256": "06857bb903ea3d3af6870026fcb2a345e14b05d29b0289f51777ba5087887c8f",
+          "sha256": "1ec7f7c464bc0f502ecc5a0c3cce108739b38c7e4aa415945019dec4e03b3872",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -2205,7 +2205,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 24,
+          "tests": 25,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2236,7 +2236,7 @@
           "kind": "ctx-api",
           "name": "playCardFromHandFree",
           "ok": true,
-          "detail": "263 keys"
+          "detail": "265 keys"
         },
         {
           "kind": "source-pattern",
@@ -2249,17 +2249,17 @@
       "files": [
         {
           "path": "src/engine/api-misc.js",
-          "sha256": "40380b434340af4edc5661f4b6ceb425f1ad24cdccc8cb0948db4ffc7166afbd",
+          "sha256": "9f728958b0034cdf45693ab6c93badd4ea6c802101c59b07f7c97c7132ea9463",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2",
+          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
           "exists": true
         },
         {
           "path": "docs/tde-primitives.md",
-          "sha256": "f133d9b52fac738ecc2f432ecc8df24bf5524da77f085dbcc05f74e8346aba56",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
           "exists": true
         }
       ],
@@ -2268,7 +2268,7 @@
           "path": "tests/tde-investigators.test.mjs",
           "exists": true,
           "ok": true,
-          "tests": 24,
+          "tests": 25,
           "fail": 0,
           "exitCode": 0,
           "skipped": false
@@ -2276,36 +2276,225 @@
       ],
       "blockers": [],
       "symbolCount": 3
-    }
-  ],
-  "deferredPrimitives": [
+    },
     {
       "id": "play.asIfAtLocation",
-      "step": "P8",
-      "title": "事件如同位于连接地点打出（卢克·罗宾逊）",
+      "step": "P6-10",
+      "title": "事件如同位于连接地点打出",
       "mechanism": [
         "standardRules"
       ],
-      "reason": "需要「虚拟地点」原语：事件结算期间把 inv.location 覆盖为连接地点、并按该地点的敌人建立交战关系。引擎里 inv.location 的读点遍布 combat/actions/encounter（没有单一读点），属 P8 章节接线；P6 把 06004 标为 simplified，未实现部分写入 docs/tde-investigators.md。"
+      "layer": "engine",
+      "status": "done",
+      "api": "beginAsIf / endAsIf",
+      "params": {
+        "asIfLocation": "locationId"
+      },
+      "docs": "docs/tde-primitives.md#p610-如同位于连接地点",
+      "note": "卢克·罗宾逊每回合 1 张事件。",
+      "checks": [
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/as-if-location.js",
+          "pattern": "beginAsIf",
+          "ok": true,
+          "detail": "结算期间改写地点与交战，结束后还原"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/dispatch.js",
+          "pattern": "beginAsIf",
+          "ok": true,
+          "detail": "打出事件时包住 doPlay"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/as-if-location.js",
+          "sha256": "d529ef3a11d26300c1f8776bb5ca006b1474966cd82cad06a57aef6f9ec30ddc",
+          "exists": true
+        },
+        {
+          "path": "src/engine/moves.js",
+          "sha256": "4af1cb20a863cbe2834452efa27209d4f9e78e864f78a30d4036989a9cbcc01e",
+          "exists": true
+        },
+        {
+          "path": "src/engine/dispatch.js",
+          "sha256": "00e97864c9d859c024754a1b52134d3b7789bc59dca79401d33e8fd051e3bf0c",
+          "exists": true
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "exists": true
+        },
+        {
+          "path": "docs/tde-primitives.md",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 25,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 5
     },
     {
       "id": "location.bondedDreamGate",
-      "step": "P8",
-      "title": "梦境之门地点（06015a/b）的放置/翻面/连接",
+      "step": "P6-11",
+      "title": "梦境之门的放置、翻面与连接",
       "mechanism": [
         "dreamGate"
       ],
-      "reason": "P3 已有 `location.placeBondedLocation`，但真实地点实体的构造、「与每个已揭示地点连接」、「除卢克外不能进入」与「调查阶段结束时放在一边」需要章节级的 locationRule 与阶段钩子（P8）。P6 只做 disengage 部分，06013/06014 标为 simplified。"
+      "layer": "engine",
+      "status": "done",
+      "api": "placeDreamGate / flipOrPlaceDreamGate / setDreamGatesAside",
+      "params": {
+        "code": "06015a|06015b"
+      },
+      "docs": "docs/tde-primitives.md#p611-梦境之门",
+      "note": "06013 放置 a 面，06014 翻成或放置 b 面。除卢克外不能进入。",
+      "checks": [
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/dream-gate.js",
+          "pattern": "placeDreamGate",
+          "ok": true,
+          "detail": "放置并按面连接"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/turn.js",
+          "pattern": "setDreamGatesAside",
+          "ok": true,
+          "detail": "调查阶段结束放在一边"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/dream-gate.js",
+          "sha256": "e322141fad30520a4febb1495a6669bc004e2a6614f600cb828ddf6764af34fc",
+          "exists": true
+        },
+        {
+          "path": "src/engine/api-misc.js",
+          "sha256": "9f728958b0034cdf45693ab6c93badd4ea6c802101c59b07f7c97c7132ea9463",
+          "exists": true
+        },
+        {
+          "path": "src/engine/turn.js",
+          "sha256": "de87c0437250c0e9e62434297c7b08983cf7b31e071dc6c8f79fb7e717d001fe",
+          "exists": true
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "exists": true
+        },
+        {
+          "path": "docs/tde-primitives.md",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 25,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 5
     },
     {
       "id": "enemy.hiddenInHand",
-      "step": "P7",
-      "title": "手牌中的敌人（隐私敌人）",
+      "step": "P6-12",
+      "title": "手牌中的隐私敌人",
       "mechanism": [
         "hidden"
       ],
-      "reason": "06017「秘密加入手牌 / 从手牌攻击躲避 / 牌库耗尽时攻击」需要敌人形态的隐私投影与从手牌建立战斗目标；P4 已将「敌人形态隐私」登记为待接线。P6 的 06017 标为 simplified（按普通弱点敌人生成）。"
-    },
+      "layer": "engine",
+      "status": "done",
+      "api": "fightHidden / evadeHidden / hiddenEnemiesAttackFromHand",
+      "params": {
+        "hiddenEnemyInHand": "boolean"
+      },
+      "docs": "docs/tde-primitives.md#p612-手牌中的隐私敌人",
+      "note": "06017。成功弃掉，失败则生成并交战。",
+      "checks": [
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/hidden-enemy.js",
+          "pattern": "hiddenEnemiesAttackFromHand",
+          "ok": true,
+          "detail": "牌库耗尽时从手牌攻击"
+        },
+        {
+          "kind": "source-pattern",
+          "file": "src/engine/deck-ops.js",
+          "pattern": "hiddenEnemyInHand",
+          "ok": true,
+          "detail": "抽到时秘密进手牌"
+        }
+      ],
+      "files": [
+        {
+          "path": "src/engine/hidden-enemy.js",
+          "sha256": "6f95b36104ea75b41406bb4a46c66c582d155e21132a6b7b7270e7288aa8543b",
+          "exists": true
+        },
+        {
+          "path": "src/engine/deck-ops.js",
+          "sha256": "561faf0d46c2e6b637c30871af039df711fd16505792b22a2f8e1341110833ad",
+          "exists": true
+        },
+        {
+          "path": "src/engine/dispatch.js",
+          "sha256": "00e97864c9d859c024754a1b52134d3b7789bc59dca79401d33e8fd051e3bf0c",
+          "exists": true
+        },
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "exists": true
+        },
+        {
+          "path": "docs/tde-primitives.md",
+          "sha256": "2a92b6c47d06e99ca91d3a36c57279f247ea463d9352846cc7d039de572c0088",
+          "exists": true
+        }
+      ],
+      "tests": [
+        {
+          "path": "tests/tde-investigators.test.mjs",
+          "exists": true,
+          "ok": true,
+          "tests": 25,
+          "fail": 0,
+          "exitCode": 0,
+          "skipped": false
+        }
+      ],
+      "blockers": [],
+      "symbolCount": 5
+    }
+  ],
+  "deferredPrimitives": [
     {
       "id": "window.afterAlarmRaised",
       "step": "P8",
@@ -2313,16 +2502,7 @@
       "mechanism": [
         "alarmLevel"
       ],
-      "reason": "A3 的警报等级已由 `counter.investigator` 承担读数；「提升后」的窗口只在 A3 章节脚本里需要（P8）。"
-    },
-    {
-      "id": "api.bonded.swap",
-      "step": "P8",
-      "title": "绑定卡换面",
-      "mechanism": [
-        "dreamGate"
-      ],
-      "reason": "06015a/b 的翻面与 06014 的「若已在场上则翻面」属地点型 Bonded（见上一条），随 P8 一起接线。"
+      "reason": "A3 的警报等级已由 `counter.investigator` 承担读数。P8 评估（2026-10-31）：该窗口只服务 06224 一张卡；A3 章节 behavior 在每次警报提升调用点自行结算反应（条目 flags 提供选项数据），不新增通用窗口原语；06224 的反应子句记 simplified。P9 若出现第二张同类卡再评估。"
     }
   ],
   "escape": [
@@ -2504,8 +2684,8 @@
   },
   "gate": {
     "newPrimitives": {
-      "expected": 26,
-      "done": 26,
+      "expected": 29,
+      "done": 29,
       "pending": 0,
       "pass": true
     },

@@ -291,3 +291,67 @@ for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 84
     testInfo.annotations.push({ type: 'screenshot', description: shot })
   })
 }
+
+for (const [label, width, height] of [['desktop', 1440, 950], ['mobile', 390, 844]]) {
+  test(`M5 场景交互面板在${label}端可翻开掩藏地点`, async ({ page, request }, testInfo) => {
+    await page.setViewportSize({ width, height })
+    await page.goto('/index.html')
+    await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
+    const setup = page.getByRole('dialog', { name: '调查准备设置' })
+    await setup.getByRole('combobox', { name: '战役', exact: true }).selectOption('dualHubDemo')
+    await setup.getByRole('combobox', { name: '席位数量' }).selectOption('1')
+    const started = page.waitForResponse('**/api/start')
+    await setup.getByRole('button', { name: '开始新游戏' }).click()
+    let session = (await (await started).json()).session
+    const hub = page.locator('.ah-hub')
+    const panel = hub.getByRole('region', { name: '开局模式', exact: true })
+    const modeCommitted = page.waitForResponse(response => response.url().endsWith('/api/move') && response.request().postDataJSON()?.move?.action === 'hubSetMode')
+    await panel.getByRole('button', { name: '单线 A' }).click()
+    session = (await (await modeCommitted).json()).session
+    const post = async (move, seat) => {
+      const res = await request.post('/api/move', {
+        data: { sessionId: session.sessionId, revision: session.state.revision, seat, move: { ...move, revision: session.state.revision } },
+      })
+      const body = await res.json()
+      expect(body.ok, body.error).toBe(true)
+      session = body.session
+    }
+    await post({ action: 'hubGoSetup' }, 0)
+    await post({ action: 'hubSelectInvestigator', code: '01001' }, 0)
+    await post({ action: 'hubAutoDeck' }, 0)
+    await post({ action: 'hubDoneSeat' }, 0)
+    await page.getByRole('button', { name: '刷新', exact: true }).click()
+    const begin = page.waitForResponse(response => response.url().endsWith('/api/move') && response.request().postDataJSON()?.move?.action === 'hubBeginScenario')
+    await hub.getByRole('button', { name: '开始当前关卡' }).click()
+    await begin
+    const bar = page.getByRole('region', { name: '场景交互' })
+    await expect(bar).toBeVisible({ timeout: 30000 })
+    for (const title of ['蜂拥', '滋生袋', '警报等级', '隐藏手牌', '掩藏地点', '参考计数', '纵向堆叠', '梦境之门与结局']) {
+      await expect(bar.getByRole('heading', { name: title })).toBeVisible()
+    }
+    await expect(bar).not.toContainText('secret-ending')
+    await expect(bar).not.toContainText('secret-a')
+    await expect(bar.getByText('hidden-demo')).toBeVisible()
+    await expect(bar.getByText('已到达的结局')).toBeVisible()
+    const flip = bar.getByRole('button', { name: /翻开掩藏地点/ })
+    for (let guard = 0; guard < 20 && await flip.count() === 0; guard += 1) {
+      const skip = page.getByRole('button', { name: '跳过演出' })
+      if (await skip.count()) { await skip.first().click(); continue }
+      const cont = page.locator('.ah-cinematic').getByRole('button', { name: '继续', exact: true })
+      if (await cont.count()) { await cont.first().click(); continue }
+      const done = page.locator('[data-option-id="done"]:not([disabled])').first()
+      if (await done.count()) { await done.click(); continue }
+      await page.waitForTimeout(200)
+    }
+    await expect(flip).toBeVisible()
+    const flipped = page.waitForResponse(response => response.url().endsWith('/api/move') && response.request().postDataJSON()?.move?.action === 'flipVeiled')
+    await flip.click()
+    const flippedBody = await (await flipped).json()
+    expect(flippedBody.ok, flippedBody.error).toBe(true)
+    await expect(bar.getByText('背面 demo-story')).toBeVisible()
+    await page.addStyleTag({ content: '.bg-chat-toasts { display: none !important; }' })
+    const shot = `${output}scenario-interactions-${label}.png`
+    await page.screenshot({ path: shot, fullPage: true })
+    testInfo.annotations.push({ type: 'screenshot', description: shot })
+  })
+}

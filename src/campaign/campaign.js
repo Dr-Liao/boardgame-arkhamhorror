@@ -1,5 +1,5 @@
 import { ALL_CARDS, INVESTIGATORS } from '../cards/cards-data.js'
-import { PLAYER_CARD_CODES, CORE_UPGRADE_CODES, TFA_PLAYER_BUILDABLE_CODES, TCU_PLAYER_BUILDABLE_CODES, canSelectInvestigator, isCardAvailable } from '../deck/availability.js'
+import { PLAYER_CARD_CODES, CORE_UPGRADE_CODES, TFA_PLAYER_BUILDABLE_CODES, TCU_PLAYER_BUILDABLE_CODES, TDE_PLAYER_BUILDABLE_CODES, canSelectInvestigator, isCardAvailable } from '../deck/availability.js'
 import { allowsCard, filterCardCodes } from '../deck/card-pool.js'
 import { matchesDeckOptions, cardLimit, isPlayable, scoreCard, hashSeed } from '../deck/deckbuilding.js'
 import { validateDeckRules, upgradeQuote } from '../deck/deck-rules.js'
@@ -11,15 +11,16 @@ const tfaPool = [...TFA_PLAYER_BUILDABLE_CODES]
 const tfaPoolSet = new Set(tfaPool)
 const tcuPool = [...TCU_PLAYER_BUILDABLE_CODES]
 const tcuPoolSet = new Set(tcuPool)
-// 失落的时代 / 万象无终玩家卡只有在对应循环调查员的记录里才是合法升级目标，
-// 这样新卡池不会改变既有循环的升级候选与 AI 推荐结果。
-// 05 记录能看到「原有池 + TCU 可构筑 85 张」；01–04 记录看不到 TCU 卡（tests/tcu-player-ledger.test.mjs 实测两侧）。
-// context 是「卡牌范围」过滤语境（src/deck/card-pool.js）：null 表示不限制。
+// P7（食梦者 M2）：06 记录能看到「原有池 + 食梦者 83 张可构筑玩家卡」；01–05 记录看不到 06 卡。
+// 与 TCU/失落的时代同一口径：新卡池不改变既有循环的升级候选与 AI 推荐结果。
+const tdePool = [...TDE_PLAYER_BUILDABLE_CODES]
+const tdePoolSet = new Set(tdePool)
 const poolFor = (record, context = null) => filterCardCodes(
   record && /^04\d{3}$/.test(String(record.code || '')) ? [...playerPool, ...tfaPool]
     : record && /^05\d{3}$/.test(String(record.code || '')) ? [...playerPool, ...tcuPool]
-      : playerPool, context)
-const ordinary = code => playerPool.includes(code) || tfaPoolSet.has(code) || tcuPoolSet.has(code)
+      : record && /^06\d{3}$/.test(String(record.code || '')) ? [...playerPool, ...tdePool]
+        : playerPool, context)
+const ordinary = code => playerPool.includes(code) || tfaPoolSet.has(code) || tcuPoolSet.has(code) || tdePoolSet.has(code)
 // 第 123 轮（第 8 批）：升级前置记录、开局经验、永久资产身份、同名去重全部由条目声明：
 // `researchRequirement` / `startingXp` / `shrewdAnalysis` / `arcaneResearch` / `uniqueInDeck`。
 const entryFlagOf = code => registeredEntry(code) || null

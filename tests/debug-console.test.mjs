@@ -65,7 +65,7 @@ test('帮助：返回中文多行帮助（move 为 null），中英文别名都�
   const snapshot = JSON.stringify(state)
   const { move, message } = parse(state, '帮助')
   assert.equal(move, null)
-  for (const word of ['跳到', '生成', '消灭', '发', '经验', '资源', '线索', '帮助']) {
+  for (const word of ['跳到', '生成', '消灭', '发', '经验', '资源', '线索', '帮助', '立即结束这关']) {
     assert.ok(message.includes(word), `帮助文本缺少「${word}」`)
   }
   assert.ok(message.split('\n').length >= 8, '帮助文本应为多行')
@@ -111,6 +111,37 @@ test('跳到：未知关卡编号 / 名称歧义时报错并列出候选', () =>
     }
     return true
   })
+})
+
+test('立即结束这关：从本关结局中随机选一个并完成结算', () => {
+  const state = newGame()
+  const keys = Object.keys(state.scenario.resolutions)
+  const snapshot = JSON.stringify(state)
+  const plan = parse(state, '立即结束这关')
+  assert.equal(plan.move.action, 'debug')
+  assert.equal(plan.move.kind, 'endScenario')
+  assert.ok(keys.includes(plan.move.resolutionKey), plan.move.resolutionKey)
+  assert.match(plan.message, /随机结局/)
+  assert.equal(parse(state, '结束这关').move.resolutionKey, plan.move.resolutionKey)
+  assert.equal(parse(state, '随机结局').move.resolutionKey, plan.move.resolutionKey)
+  assert.equal(parse(state, 'end scenario').move.resolutionKey, plan.move.resolutionKey)
+  assert.equal(JSON.stringify(state), snapshot, '只解析时不得改状态，也不得推进随机序列')
+  const { events } = run(state, '立即结束这关')
+  const result = state.campaign.scenarioResults.at(-1)
+  assert.equal(result.scenarioId, 'theGathering')
+  assert.equal(result.resolution, plan.move.resolutionKey)
+  assert.ok(state.actionLog.some(entry => entry.move?.kind === 'endScenario'))
+  assert.ok(hasDebugInfo(events))
+})
+
+test('立即结束这关：局外不能结算，多余参数会被拒绝', () => {
+  const state = newGame()
+  state.hubFlow = true
+  state.uiState = 'campaignHub'
+  assert.throws(() => parse(state, '立即结束这关'), /没有进行中的关卡/)
+  state.hubFlow = false
+  state.uiState = 'inScenario'
+  assert.throws(() => parse(state, '立即结束这关 结局1'), /不需要参数/)
 })
 
 // —— 2. 生成 ——

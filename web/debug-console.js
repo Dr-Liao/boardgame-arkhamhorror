@@ -1,7 +1,7 @@
 // 诡镇奇谈 · 调试控制台浮层（契约：artifacts/debug-console/CONTRACT.md §7）
 //
-// 入口只出现在牌桌标题栏动作区：单机本机玩家可用；联机只有房主渲染（客人既不渲染入口也不渲染面板，
-// 服务端另有硬拒绝）。浏览器只负责输入与展示：指令文本、名称匹配、目标座位校验与状态修改全部在服务端
+// 入口是 ` / ~ 键（标题栏不再放按钮），局外枢纽和局内牌桌都能呼出：单机本机玩家可用；联机只有房主能打开
+// （客人按键无效果，服务端另有硬拒绝）。浏览器只负责输入与展示：指令文本、名称匹配、目标座位校验与状态修改全部在服务端
 // 完成；成功后把返回的权威 session 交回大厅，失败把 error.message 记进结果日志。
 //
 // 宿主注入 h/t/api/render/state；本文件不 import 其它模块，保证 web/ 挂载目录内自包含。
@@ -331,17 +331,29 @@ export function createDebugConsole({ h, t, api, render, state }) {
 
   function close(options = {}) {
     if (!opened) return
-    const hadFocus = root.contains(document.activeElement)
     opened = false
     clearAutoHelpTimer()
     if (options.render !== false) render()
-    if (hadFocus) {
-      queueMicrotask(() => {
-        const launcher = document.querySelector('.ah-debug-launcher')
-        if (launcher) launcher.focus({ preventScroll: true })
-      })
-    }
   }
+
+  // ` / ~（物理键 Backquote，中文键盘上常标成 · / ~）。输入框里不拦截，避免把字符吃掉。
+  function onHotkey(event) {
+    if (event.repeat || event.isComposing || event.ctrlKey || event.metaKey || event.altKey) return
+    if (event.code !== 'Backquote' && event.key !== '`' && event.key !== '~' && event.key !== '·') return
+    const target = event.target
+    const tag = target?.tagName
+    const editable = target?.isContentEditable || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT'
+    // 控制台自己的输入框里，这个键用来关闭，不把字符打进去；别的输入框照常打字。
+    if (editable && !(opened && root.contains(target))) return
+    const session = state.session
+    // 局外（战役枢纽、调查准备、幕间）和局内都可以开。只有本地单人或联机房主能用。
+    if (state.view !== 'game' || session?.modId !== 'arkhamhorror') return
+    if (!canUse(session)) return
+    event.preventDefault()
+    if (opened) close()
+    else open(session)
+  }
+  if (typeof window !== 'undefined') window.addEventListener('keydown', onHotkey)
 
   // 提交期间可能换局（重连/返回大厅）或收到更新的快照：只接受同一对局且不更旧的权威 session，
   // 避免把用户已经切走的旧结果盖回当前界面。

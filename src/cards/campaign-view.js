@@ -11,6 +11,7 @@
 //
 // 读点：`src/integration/observation.js` 里的 `Object.assign(view, campaignProjection(state))`；
 // 以及 `src/ai/ai-context.js` 的 campaignHints（战役作者给出的决策提示，只写公开信息）。
+import { ALL_CARDS } from './cards-data.js'
 import { contentRegistry } from '../../content/registered.js'
 import { extraEncounterDeckInfo } from '../engine/alt-decks.js'
 import { tarotInfo } from '../engine/tarot.js'
@@ -83,18 +84,31 @@ export function campaignProjection(state) {
   // 未翻开的牌序不投影（否则客户端能提前看到下一张密谋）。
   if (state.scenario?.id === 'blackStarsRise') {
     const flags = state.scenarioFlags || {}
-    const deckInfo = deck => deck ? {
-      size: Array.isArray(deck.cards) ? deck.cards.length : 0,
-      index: Number(deck.index || 0),
-      doom: Number(deck.doom || 0),
-      removed: deck.removed === true,
-      current: deck.cards?.[deck.index] ?? null,
-    } : null
+    // 只投影当前已翻开的那张。路线在道路开启前是隐藏信息，不能下发。
+    const deckInfo = (deck, deckId) => {
+      if (!deck) return null
+      const current = deck.removed ? null : (deck.cards?.[deck.index] ?? null)
+      const card = current ? ALL_CARDS[current] : null
+      return {
+        id: deckId,
+        size: Array.isArray(deck.cards) ? deck.cards.length : 0,
+        index: Number(deck.index || 0),
+        // 投影给牌桌的是「计入阈值的毁灭」：本套密谋上的 + 场上其他卡牌上的。
+        doom: contentRegistry.getBehavior('blackStarsRise').countedAgendaDoom(state, deck),
+        removed: deck.removed === true,
+        current,
+        name: card?.name || null,
+        nameZh: card?.nameZh || null,
+        text: card?.text || '',
+        textZh: card?.textZh || '',
+        doomThreshold: card?.doom == null ? null : Number(card.doom),
+      }
+    }
     out.blackStarsRise = {
-      route: flags.route || null,
       openPath: flags.openPath === true,
       openedDeck: flags.pathOpenedBy || null,
-      decks: { a: deckInfo(flags.agendaDecks?.a), c: deckInfo(flags.agendaDecks?.c) },
+      ...(flags.openPath && flags.route ? { route: flags.route } : {}),
+      decks: { a: deckInfo(flags.agendaDecks?.a, 'a'), c: deckInfo(flags.agendaDecks?.c, 'c') },
     }
   }
   if (state.scenario?.id === 'thePallidMask') {

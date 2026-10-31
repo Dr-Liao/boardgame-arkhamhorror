@@ -18,6 +18,9 @@ import { spellOnlyActionsOf } from './spell-actions.js'
 import { actionsAvailable } from './restricted-actions.js'
 // 2026-10-28 调试控制台（CONTRACT §3）：纯函数直接 import，不新增工厂依赖。
 import { debugMoveError, isDebugMove } from './debug.js'
+import { isVeiledLocation, veiledFlipBlockedReason } from './veiled.js'
+import { canAsIfPlay } from './as-if-location.js'
+import { dreamGateEntryError } from './dream-gate.js'
 
 export function createMoves(deps) {
   const {
@@ -270,6 +273,14 @@ export function createMoves(deps) {
     if (def.type === 'asset' && normalizedSlots(def).length && !assetReplacementPlans(inv, def).length) continue
     const kindLabel = def.type === 'asset' ? '装备' : '打出'
     moves.push({ action: 'play', cardId: code, label: `🃏 ${kindLabel}「${cardName(code)}」(${cost} 资源)` })
+    if (def.type === 'event' && registeredEntry(inv.code)?.asIfEvent === true && canAsIfPlay(inv, state)) {
+      const here = state.locations.find(location => location.id === inv.location)
+      for (const locationId of here?.connections || []) {
+        const name = state.locations.find(location => location.id === locationId)?.name || locationId
+        moves.push({ action: 'play', cardId: code, asIfLocation: locationId,
+          label: `🃏 如同位于「${name}」打出「${cardName(code)}」(${cost} 资源)` })
+      }
+    }
   }
   // 2026-10-27「如同手牌」通道统一原语（play-channels.js）：宿主附属 / 直觉牌库 / 威胁区 /
   // 银暮匕首下方 / 背包 / 弃牌堆 / 原定计划。
@@ -335,7 +346,7 @@ export function createMoves(deps) {
     && (loc.investigateWithoutClues === true
       || scenarioBehavior(state).investigateWithoutClues?.(state, inv, loc) === true)
   if (loc && (loc.clues > 0 || emptyInvestigate) && !loc.locked && !scenarioBehavior(state).investigationError?.(state, inv, loc)) {
-    const skill = loc.investigateSkill || 'intellect'
+    const skill = scenarioBehavior(state).investigateSkill?.(state, inv, loc) || loc.investigateSkill || 'intellect'
     const scenarioShroud = (scenarioBehavior(state).locationShroudModifier?.(state, loc, inv) || 0)
       + entityModifierTotal(state, loc, 'locationShroud')
     const shroud = loc.shroud + (loc.shroudMod || 0) + (state.fogMod || 0) + scenarioShroud
@@ -500,6 +511,22 @@ export function createMoves(deps) {
   }
 
   if (canAdvanceWithClues(state)) moves.push({ action: 'advanceAct', scriptCard: 'act', label: '共同支付线索推进场景' })
+  for (const location of state.locations || []) {
+    if (location.id !== inv.location || !isVeiledLocation(location)) continue
+    if (veiledFlipBlockedReason(location)) continue
+    moves.push({ action: 'flipVeiled', locationId: location.id, label: `翻开掩藏地点「${location.name || location.id}」` })
+  }
+  for (const code of inv.hand || []) {
+    if (registeredEntry(code)?.hiddenEnemyInHand !== true) continue
+    // P8：Hidden 敌人在手牌时默认可以攻击/躲避（引擎枚举），但剧本可以按塔/行动/记录限制入口
+    //（《神居之所》的奈亚拉托提普 5 形态只能经塔与议程揭示）。
+    if (scenarioBehavior(state).canFightHidden?.(state, inv, code) !== false) {
+      moves.push({ action: 'fightHidden', cardId: code, label: `攻击手牌中的「${cardName(code)}」` })
+    }
+    if (scenarioBehavior(state).canEvadeHidden?.(state, inv, code) !== false) {
+      moves.push({ action: 'evadeHidden', cardId: code, label: `躲避手牌中的「${cardName(code)}」` })
+    }
+  }
   moves.push({ action: 'endTurn', label: '⏭️ 结束回合' })
   // scriptCard 标出行动来自当前场景或密谋，牌桌据此把按钮放在剧本书旁。
   // 不依赖地点的撤退由密谋赋予（如《午夜假面》两张密谋的 [action]：撤退）。
@@ -549,8 +576,8 @@ export function createMoves(deps) {
 
   switch (move.action) {
     case 'scenarioAction': {
-      // 剧本行动的校验不能只看「规则名存在」：带 enemyId 的行动还要确认该目标在
-      // actions() 里被列出（冷漠敌人未交战时攻击行动不会列出），再统一过冷漠读点。
+      // 剧本行动的校验不能只看「规则名存在」：带 enemyId / deckId 的行动还要确认该目标在
+      // actions() 里被列出。执行时才选目标的行动（actions() 不给这些字段）留给 performAction。
       const offered = scenarioBehavior(state).actions?.(state, inv) || []
       const matches = offered.filter(m => m.rule === move.rule && !m.reason)
       if (!matches.length) return '当前不能执行此剧本行动'
@@ -562,6 +589,10 @@ export function createMoves(deps) {
         if (scenarioAttackBlocked(state, inv, targeted)) {
           return '冷漠敌人未与调查员交战，需要先主动交战（或使用忽略冷漠的攻击）'
         }
+      }
+      const deckOffers = matches.filter(m => m.deckId != null)
+      if (deckOffers.length === matches.length && !deckOffers.some(m => m.deckId === move.deckId)) {
+        return '必须选择密谋牌堆'
       }
       return null
     }
@@ -621,6 +652,12 @@ export function createMoves(deps) {
         && inv.assets.some(asset => asset.code === move.cardId)) return '每位调查员仅限 1 张'
       // 「沉稳」卡牌场上仅限 1 张（03107/03109/03111/03113/03115）。
       if (isSteadfastCard(def) && steadfastInPlay(state)) return '沉稳卡牌场上仅限 1 张'
+      if (move.asIfLocation) {
+        if (registeredEntry(inv.code)?.asIfEvent !== true || !canAsIfPlay(inv, state)) return '本回合不能再如同位于连接地点打出事件'
+        if (def.type !== 'event') return '只能这样打出事件'
+        const here = state.locations.find(location => location.id === inv.location)
+        if (!here?.connections?.includes(move.asIfLocation)) return '那个地点与你不相连'
+      }
       return effectError(state, inv, playedEffect(move.cardId))
     }
     case 'draw': return drawBlocked(state, inv) ? '「残酷拷问」：你不能进行抽取行动' : null
@@ -724,6 +761,9 @@ export function createMoves(deps) {
     }
     case 'move': {
       const loc = state.locations.find((l) => l.id === inv.location)
+      const destination = state.locations.find(item => item.id === move.locationId)
+      const gateError = dreamGateEntryError(inv, destination)
+      if (gateError) return gateError
       if (!loc || !loc.connections.includes(move.locationId)) return '不能移动到该地点'
       const scenarioMoveError = scenarioBehavior(state).moveError?.(
         state, inv, state.locations.find(l => l.id === move.locationId), move.locationId)
@@ -884,6 +924,24 @@ export function createMoves(deps) {
       const attachment = detachLoc?.attachments?.[move.attachmentIndex]
       if (!attachment || !registeredEntry(attachment.code)?.detachAction) return '这里没有可解除的附属'
       if (attachment.ownerSeat != null && attachment.ownerSeat !== inv.seat) return '这不是你的附属'
+      return null
+    }
+    case 'flipVeiled': {
+      const location = state.locations.find(item => item.id === move.locationId)
+      if (!location) return '地点不存在'
+      if (inv.location !== location.id) return '你不在这个地点'
+      return veiledFlipBlockedReason(location)
+    }
+    case 'fightHidden':
+    case 'evadeHidden': {
+      if (!inv.hand?.includes(move.cardId)) return '手牌中没有这个敌人'
+      if (registeredEntry(move.cardId)?.hiddenEnemyInHand !== true) return '这张牌不能在手牌中攻击或躲避'
+      if (move.action === 'fightHidden' && scenarioBehavior(state).canFightHidden?.(state, inv, move.cardId) === false) {
+        return '当前剧本禁止你攻击手牌中的这张敌人'
+      }
+      if (move.action === 'evadeHidden' && scenarioBehavior(state).canEvadeHidden?.(state, inv, move.cardId) === false) {
+        return '当前剧本禁止你躲避手牌中的这张敌人'
+      }
       return null
     }
     case 'endTurn': return null

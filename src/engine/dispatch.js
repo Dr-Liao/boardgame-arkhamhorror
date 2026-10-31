@@ -25,6 +25,10 @@ import { partOfScenario } from '../campaign/part-flow.js'
 import { enterLaneRuntime, leaveLaneRuntime } from './lane-runtime.js'
 import { createEffect } from './effect-state.js'
 import { nextInstanceId } from './rules-state.js'
+import { flipVeiledLocation } from './veiled.js'
+import { cardDef } from './card-lookup.js'
+import { beginAsIf, endAsIf } from './as-if-location.js'
+import { discardSpawnedEnemy, spawnHiddenEnemy, takeHiddenEnemyFromHand } from './hidden-enemy.js'
 export function createDispatch(deps) {
   const {
     ALL_CARDS,
@@ -103,6 +107,7 @@ export function createDispatch(deps) {
     hunchDeck,
     inHub,
     info,
+    performTest,
     initialHubPreparation,
     jakeSkipsOpportunityAttack,
     legalMoves,
@@ -158,10 +163,42 @@ function applyMove(state, seat, move) {
   return events
 }
 
+// 结局钩子用抛错结束本关或重开本关。调试指令和普通行动都要接住，否则事务会把结算回滚。
+function settleScenarioBoundary(state, events, error) {
+  if (error instanceof ScenarioRestarted) {
+    // 04059 结局 4：重演本场冒险。原地重新布置同一剧本，并重新发起始手牌。
+    const index = state.campaign.scenarioIndex
+    startScenario(state, index, events)
+    runMulligans(state, events)
+    info(state, events, '🔁 调查队重组队伍，再次进入遗迹深处。')
+    return
+  }
+  if (!(error instanceof ScenarioEnded)) throw error
+  // 关卡结束：先把记录键与座位簿记改回 roomSeat，再进入结算/关间。
+  leaveLaneRuntime(state)
+  if (error.nextIndex == null) {
+    if (state.campaign.failed || !state.campaign.pendingNode) endCampaign(state, events)
+    else progressCampaign(state, events, false)
+  } else if (state.hubFlow) {
+    state.campaign.pendingNextIndex = error.nextIndex
+    state.campaign.phase = 'scenarioResult'
+    state.uiState = 'scenarioResult'
+    state.phase = 'scenarioResult'
+    state.currentSeat = 0
+    state.legalMoves = legalMoves(state)
+  } else progressCampaign(state, events, true)
+}
+
 function executeCommand(state, seat, move, events) {
   // 调试 move（CONTRACT §3.1）：在局外分支之前分发，完全绕过行动点 / 借机攻击 /
   // 行动类型；校验已由 applyMove → validateMove 完成。
-  if (move.action === 'debug') return executeDebugMove(state, seat, move, events)
+  if (move.action === 'debug') {
+    try {
+      return executeDebugMove(state, seat, move, events)
+    } catch (error) {
+      return settleScenarioBoundary(state, events, error)
+    }
+  }
   if (inHub(state)) {
     executeHubMove(state, seat, move, events)
     return
@@ -173,29 +210,7 @@ function executeCommand(state, seat, move, events) {
   try {
     executeAction(state, seat, move, events)
   } catch (error) {
-    if (error instanceof ScenarioRestarted) {
-      // 04059 结局 4：重演本场冒险。原地重新布置同一剧本，并重新发起始手牌。
-      const index = state.campaign.scenarioIndex
-      startScenario(state, index, events)
-      runMulligans(state, events)
-      info(state, events, '🔁 调查队重组队伍，再次进入遗迹深处。')
-      return
-    }
-    if (!(error instanceof ScenarioEnded)) throw error
-    // 关卡结束：先把记录键与座位簿记改回 roomSeat，再进入结算/关间。
-    leaveLaneRuntime(state)
-    if (error.nextIndex == null) {
-      if (state.campaign.failed || !state.campaign.pendingNode) endCampaign(state, events)
-      else progressCampaign(state, events, false)
-    }
-    else if (state.hubFlow) {
-      state.campaign.pendingNextIndex = error.nextIndex
-      state.campaign.phase = 'scenarioResult'
-      state.uiState = 'scenarioResult'
-      state.phase = 'scenarioResult'
-      state.currentSeat = 0
-      state.legalMoves = legalMoves(state)
-    } else progressCampaign(state, events, true)
+    settleScenarioBoundary(state, events, error)
   }
 }
 
@@ -585,8 +600,13 @@ function applyMoveUnchecked(state, seat, move, events) {
         break
       }
       // 手牌 / 彩绘世界复制 / 弃牌堆顶事件等：沿用原参数传递（通道 move 的片段也走这里）。
-      doPlay(state, seat, m.cardId, events, !!m.fromDiscard, false, m.copyCode,
-        m.fromPlanAssetId, m.fromBackpackId, m.threatId)
+      if (m.asIfLocation) beginAsIf(state, inv, m.asIfLocation)
+      try {
+        doPlay(state, seat, m.cardId, events, !!m.fromDiscard, false, m.copyCode,
+          m.fromPlanAssetId, m.fromBackpackId, m.threatId)
+      } finally {
+        if (m.asIfLocation) endAsIf(state, inv)
+      }
       break
     }
     case 'draw': doDraw(state, seat, events); break
@@ -616,6 +636,35 @@ function applyMoveUnchecked(state, seat, move, events) {
     case 'payDebt': doPayDebt(state, seat, m.threatId, events); break
     case 'engage': doEngage(state, seat, m.enemyId, events); break
     case 'resign': doResign(state, seat, events); break
+    case 'fightHidden':
+    case 'evadeHidden': {
+      if (!takeHiddenEnemyFromHand(inv, m.cardId)) break
+      const card = cardDef(m.cardId) || { code: m.cardId, fight: 0, evade: 0 }
+      const enemy = spawnHiddenEnemy(state, inv, card)
+      const skill = m.action === 'evadeHidden' ? 'agility' : 'combat'
+      const difficulty = m.action === 'evadeHidden' ? (card.evade ?? 0) : (card.fight ?? 0)
+      performTest(state, seat, skill, difficulty, {
+        source: { label: m.action === 'evadeHidden' ? '躲避' : '攻击', enemyId: enemy.id, name: enemy.name, code: card.code },
+        resolve: result => {
+          if (result.success) {
+            discardSpawnedEnemy(state, inv, enemy)
+            info(state, events, `${inv.name} 成功对付了手牌中的敌人，并将其弃掉。`)
+          } else {
+            info(state, events, `手牌中的敌人生成并与 ${inv.name} 交战。`)
+          }
+        },
+      })
+      break
+    }
+    case 'flipVeiled': {
+      const flipped = flipVeiledLocation(state, m.locationId)
+      if (flipped.changed) {
+        info(state, events, `${inv.name} 翻开了掩藏地点${flipped.storyCode ? `（${flipped.storyCode}）` : ''}。`)
+        // P8（M3）：掩藏地点翻面后的章节钩子——读背面故事卡正文、B3《无归之地》的「洗回遭遇牌库」。
+        scenarioBehavior(state).veiledFlipped?.(state, inv, m.locationId, flipped, scenarioRuntime(state, events))
+      }
+      break
+    }
     case 'endTurn': doEndTurn(state, seat, events); break
     default: break
   }

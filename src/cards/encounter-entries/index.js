@@ -782,6 +782,283 @@ import e05147 from './theCircleUndone/theSecretName/05147.js'
 import e05148 from './theCircleUndone/theSecretName/05148.js'
 import e05149 from './theCircleUndone/theSecretName/05149.js'
 import e05150 from './theCircleUndone/theSecretName/05150.js'
+import e03297 from './thePathToCarcosa/blackStarsRise/03297.js'
+import e03299 from './thePathToCarcosa/blackStarsRise/03299.js'
+import e06084 from './theDreamEaters/_shared/agents_of_atlach_nacha/06084.js'
+import e06085 from './theDreamEaters/_shared/agents_of_atlach_nacha/06085.js'
+import e06086 from './theDreamEaters/_shared/agents_of_nyarlathotep/06086.js'
+import e06087 from './theDreamEaters/_shared/agents_of_nyarlathotep/06087.js'
+import e06088 from './theDreamEaters/_shared/agents_of_nyarlathotep/06088.js'
+import e06089 from './theDreamEaters/_shared/agents_of_nyarlathotep/06089.js'
+import e06104 from './theDreamEaters/_shared/corsairs/06104.js'
+import e06105 from './theDreamEaters/_shared/corsairs/06105.js'
+import e06091 from './theDreamEaters/_shared/creatures_of_the_underworld/06091.js'
+import e06092 from './theDreamEaters/_shared/creatures_of_the_underworld/06092.js'
+import e06273 from './theDreamEaters/_shared/descent_into_the_pitch/06273.js'
+import e06274 from './theDreamEaters/_shared/descent_into_the_pitch/06274.js'
+import e06093 from './theDreamEaters/_shared/dreamers_curse/06093.js'
+import e06094 from './theDreamEaters/_shared/dreamers_curse/06094.js'
+import e06095 from './theDreamEaters/_shared/dreamers_curse/06095.js'
+import e06096 from './theDreamEaters/_shared/dreamlands/06096.js'
+import e06097 from './theDreamEaters/_shared/dreamlands/06097.js'
+import e06098 from './theDreamEaters/_shared/merging_realities/06098.js'
+import e06099 from './theDreamEaters/_shared/merging_realities/06099.js'
+import e06100 from './theDreamEaters/_shared/merging_realities/06100.js'
+import e06101 from './theDreamEaters/_shared/spiders/06101.js'
+import e06102 from './theDreamEaters/_shared/spiders/06102.js'
+import e06103 from './theDreamEaters/_shared/spiders/06103.js'
+import e06271 from './theDreamEaters/_shared/terror_of_the_vale/06271.js'
+import e06272 from './theDreamEaters/_shared/terror_of_the_vale/06272.js'
+import e06090 from './theDreamEaters/_shared/whispers_of_hypnos/06090.js'
+import e06106 from './theDreamEaters/_shared/zoogs/06106.js'
+import e06107 from './theDreamEaters/_shared/zoogs/06107.js'
+import e06108 from './theDreamEaters/_shared/zoogs/06108.js'
+import e06109 from './theDreamEaters/_shared/zoogs/06109.js'
+import e06169a from './theDreamEaters/aThousandShapesOfHorror/06169a.js'
+import e06169b from './theDreamEaters/aThousandShapesOfHorror/06169b.js'
+import e06170 from './theDreamEaters/aThousandShapesOfHorror/06170.js'
+import e06171 from './theDreamEaters/aThousandShapesOfHorror/06171.js'
+import e06172 from './theDreamEaters/aThousandShapesOfHorror/06172.js'
+import e06173 from './theDreamEaters/aThousandShapesOfHorror/06173.js'
+import e06174 from './theDreamEaters/aThousandShapesOfHorror/06174.js'
+import e06175 from './theDreamEaters/aThousandShapesOfHorror/06175.js'
+import e06176 from './theDreamEaters/aThousandShapesOfHorror/06176.js'
+import e06177 from './theDreamEaters/aThousandShapesOfHorror/06177.js'
+import e06178 from './theDreamEaters/aThousandShapesOfHorror/06178.js'
+import e06179 from './theDreamEaters/aThousandShapesOfHorror/06179.js'
+import e06180 from './theDreamEaters/aThousandShapesOfHorror/06180.js'
+import e06181 from './theDreamEaters/aThousandShapesOfHorror/06181.js'
+import e06182 from './theDreamEaters/aThousandShapesOfHorror/06182.js'
+import e06183 from './theDreamEaters/aThousandShapesOfHorror/06183.js'
+import e06184 from './theDreamEaters/aThousandShapesOfHorror/06184.js'
+import e06185 from './theDreamEaters/aThousandShapesOfHorror/06185.js'
+import e06186 from './theDreamEaters/aThousandShapesOfHorror/06186.js'
+import e06187 from './theDreamEaters/aThousandShapesOfHorror/06187.js'
+import e06188 from './theDreamEaters/aThousandShapesOfHorror/06188.js'
+import e06189 from './theDreamEaters/aThousandShapesOfHorror/06189.js'
+import e06190 from './theDreamEaters/aThousandShapesOfHorror/06190.js'
+import e06191 from './theDreamEaters/aThousandShapesOfHorror/06191.js'
+import e06192 from './theDreamEaters/aThousandShapesOfHorror/06192.js'
+import e06193 from './theDreamEaters/aThousandShapesOfHorror/06193.js'
+import e06194 from './theDreamEaters/aThousandShapesOfHorror/06194.js'
+import e06040 from './theDreamEaters/beyondTheGatesOfSleep/06040.js'
+import e06041 from './theDreamEaters/beyondTheGatesOfSleep/06041.js'
+import e06042 from './theDreamEaters/beyondTheGatesOfSleep/06042.js'
+import e06043 from './theDreamEaters/beyondTheGatesOfSleep/06043.js'
+import e06044 from './theDreamEaters/beyondTheGatesOfSleep/06044.js'
+import e06045 from './theDreamEaters/beyondTheGatesOfSleep/06045.js'
+import e06046 from './theDreamEaters/beyondTheGatesOfSleep/06046.js'
+import e06047 from './theDreamEaters/beyondTheGatesOfSleep/06047.js'
+import e06048 from './theDreamEaters/beyondTheGatesOfSleep/06048.js'
+import e06049 from './theDreamEaters/beyondTheGatesOfSleep/06049.js'
+import e06050 from './theDreamEaters/beyondTheGatesOfSleep/06050.js'
+import e06051 from './theDreamEaters/beyondTheGatesOfSleep/06051.js'
+import e06052 from './theDreamEaters/beyondTheGatesOfSleep/06052.js'
+import e06053 from './theDreamEaters/_shared/beyond_the_gates_of_sleep/06053.js'
+import e06054 from './theDreamEaters/beyondTheGatesOfSleep/06054.js'
+import e06055 from './theDreamEaters/beyondTheGatesOfSleep/06055.js'
+import e06056 from './theDreamEaters/beyondTheGatesOfSleep/06056.js'
+import e06057 from './theDreamEaters/beyondTheGatesOfSleep/06057.js'
+import e06058 from './theDreamEaters/beyondTheGatesOfSleep/06058.js'
+import e06059 from './theDreamEaters/beyondTheGatesOfSleep/06059.js'
+import e06060 from './theDreamEaters/beyondTheGatesOfSleep/06060.js'
+import e06061 from './theDreamEaters/beyondTheGatesOfSleep/06061.js'
+import e06062 from './theDreamEaters/beyondTheGatesOfSleep/06062.js'
+import e06207 from './theDreamEaters/darkSideOfTheMoon/06207.js'
+import e06208 from './theDreamEaters/darkSideOfTheMoon/06208.js'
+import e06209 from './theDreamEaters/darkSideOfTheMoon/06209.js'
+import e06210 from './theDreamEaters/darkSideOfTheMoon/06210.js'
+import e06211 from './theDreamEaters/darkSideOfTheMoon/06211.js'
+import e06212 from './theDreamEaters/darkSideOfTheMoon/06212.js'
+import e06213 from './theDreamEaters/darkSideOfTheMoon/06213.js'
+import e06214 from './theDreamEaters/darkSideOfTheMoon/06214.js'
+import e06214b from './theDreamEaters/darkSideOfTheMoon/06214b.js'
+import e06215 from './theDreamEaters/darkSideOfTheMoon/06215.js'
+import e06216 from './theDreamEaters/darkSideOfTheMoon/06216.js'
+import e06217 from './theDreamEaters/darkSideOfTheMoon/06217.js'
+import e06218 from './theDreamEaters/darkSideOfTheMoon/06218.js'
+import e06219 from './theDreamEaters/darkSideOfTheMoon/06219.js'
+import e06220 from './theDreamEaters/darkSideOfTheMoon/06220.js'
+import e06221 from './theDreamEaters/darkSideOfTheMoon/06221.js'
+import e06222 from './theDreamEaters/darkSideOfTheMoon/06222.js'
+import e06223 from './theDreamEaters/darkSideOfTheMoon/06223.js'
+import e06224 from './theDreamEaters/darkSideOfTheMoon/06224.js'
+import e06225 from './theDreamEaters/darkSideOfTheMoon/06225.js'
+import e06226 from './theDreamEaters/darkSideOfTheMoon/06226.js'
+import e06227 from './theDreamEaters/darkSideOfTheMoon/06227.js'
+import e06228 from './theDreamEaters/darkSideOfTheMoon/06228.js'
+import e06229 from './theDreamEaters/darkSideOfTheMoon/06229.js'
+import e06230 from './theDreamEaters/darkSideOfTheMoon/06230.js'
+import e06231 from './theDreamEaters/darkSideOfTheMoon/06231.js'
+import e06232 from './theDreamEaters/darkSideOfTheMoon/06232.js'
+import e06233 from './theDreamEaters/darkSideOfTheMoon/06233.js'
+import e06248 from './theDreamEaters/pointOfNoReturn/06248.js'
+import e06249 from './theDreamEaters/pointOfNoReturn/06249.js'
+import e06250 from './theDreamEaters/pointOfNoReturn/06250.js'
+import e06251 from './theDreamEaters/pointOfNoReturn/06251.js'
+import e06252 from './theDreamEaters/pointOfNoReturn/06252.js'
+import e06253 from './theDreamEaters/pointOfNoReturn/06253.js'
+import e06254 from './theDreamEaters/pointOfNoReturn/06254.js'
+import e06254b from './theDreamEaters/pointOfNoReturn/06254b.js'
+import e06255 from './theDreamEaters/pointOfNoReturn/06255.js'
+import e06255b from './theDreamEaters/pointOfNoReturn/06255b.js'
+import e06256 from './theDreamEaters/pointOfNoReturn/06256.js'
+import e06256b from './theDreamEaters/pointOfNoReturn/06256b.js'
+import e06257 from './theDreamEaters/pointOfNoReturn/06257.js'
+import e06257b from './theDreamEaters/pointOfNoReturn/06257b.js'
+import e06258 from './theDreamEaters/pointOfNoReturn/06258.js'
+import e06258b from './theDreamEaters/pointOfNoReturn/06258b.js'
+import e06259 from './theDreamEaters/pointOfNoReturn/06259.js'
+import e06259b from './theDreamEaters/pointOfNoReturn/06259b.js'
+import e06260 from './theDreamEaters/pointOfNoReturn/06260.js'
+import e06260b from './theDreamEaters/pointOfNoReturn/06260b.js'
+import e06261 from './theDreamEaters/pointOfNoReturn/06261.js'
+import e06261b from './theDreamEaters/pointOfNoReturn/06261b.js'
+import e06262 from './theDreamEaters/pointOfNoReturn/06262.js'
+import e06262b from './theDreamEaters/pointOfNoReturn/06262b.js'
+import e06263 from './theDreamEaters/pointOfNoReturn/06263.js'
+import e06263b from './theDreamEaters/pointOfNoReturn/06263b.js'
+import e06264 from './theDreamEaters/pointOfNoReturn/06264.js'
+import e06264b from './theDreamEaters/pointOfNoReturn/06264b.js'
+import e06265 from './theDreamEaters/pointOfNoReturn/06265.js'
+import e06265b from './theDreamEaters/pointOfNoReturn/06265b.js'
+import e06266 from './theDreamEaters/pointOfNoReturn/06266.js'
+import e06267 from './theDreamEaters/pointOfNoReturn/06267.js'
+import e06268 from './theDreamEaters/pointOfNoReturn/06268.js'
+import e06269 from './theDreamEaters/pointOfNoReturn/06269.js'
+import e06270 from './theDreamEaters/pointOfNoReturn/06270.js'
+import e06275 from './theDreamEaters/pointOfNoReturn/06275.js'
+import e06120 from './theDreamEaters/theSearchForKadath/06120.js'
+import e06121 from './theDreamEaters/theSearchForKadath/06121.js'
+import e06122 from './theDreamEaters/theSearchForKadath/06122.js'
+import e06123 from './theDreamEaters/theSearchForKadath/06123.js'
+import e06124 from './theDreamEaters/theSearchForKadath/06124.js'
+import e06125 from './theDreamEaters/theSearchForKadath/06125.js'
+import e06126 from './theDreamEaters/theSearchForKadath/06126.js'
+import e06127 from './theDreamEaters/theSearchForKadath/06127.js'
+import e06127b from './theDreamEaters/theSearchForKadath/06127b.js'
+import e06128 from './theDreamEaters/theSearchForKadath/06128.js'
+import e06128b from './theDreamEaters/theSearchForKadath/06128b.js'
+import e06129 from './theDreamEaters/theSearchForKadath/06129.js'
+import e06129b from './theDreamEaters/theSearchForKadath/06129b.js'
+import e06130 from './theDreamEaters/theSearchForKadath/06130.js'
+import e06130b from './theDreamEaters/theSearchForKadath/06130b.js'
+import e06131 from './theDreamEaters/theSearchForKadath/06131.js'
+import e06131b from './theDreamEaters/theSearchForKadath/06131b.js'
+import e06132 from './theDreamEaters/theSearchForKadath/06132.js'
+import e06132b from './theDreamEaters/theSearchForKadath/06132b.js'
+import e06133 from './theDreamEaters/theSearchForKadath/06133.js'
+import e06133b from './theDreamEaters/theSearchForKadath/06133b.js'
+import e06134 from './theDreamEaters/theSearchForKadath/06134.js'
+import e06134b from './theDreamEaters/theSearchForKadath/06134b.js'
+import e06135 from './theDreamEaters/theSearchForKadath/06135.js'
+import e06135b from './theDreamEaters/theSearchForKadath/06135b.js'
+import e06136 from './theDreamEaters/theSearchForKadath/06136.js'
+import e06136b from './theDreamEaters/theSearchForKadath/06136b.js'
+import e06137 from './theDreamEaters/theSearchForKadath/06137.js'
+import e06137b from './theDreamEaters/theSearchForKadath/06137b.js'
+import e06138 from './theDreamEaters/theSearchForKadath/06138.js'
+import e06138b from './theDreamEaters/theSearchForKadath/06138b.js'
+import e06139 from './theDreamEaters/theSearchForKadath/06139.js'
+import e06139b from './theDreamEaters/theSearchForKadath/06139b.js'
+import e06140 from './theDreamEaters/theSearchForKadath/06140.js'
+import e06140b from './theDreamEaters/theSearchForKadath/06140b.js'
+import e06141 from './theDreamEaters/theSearchForKadath/06141.js'
+import e06141b from './theDreamEaters/theSearchForKadath/06141b.js'
+import e06142 from './theDreamEaters/theSearchForKadath/06142.js'
+import e06142b from './theDreamEaters/theSearchForKadath/06142b.js'
+import e06143 from './theDreamEaters/theSearchForKadath/06143.js'
+import e06143b from './theDreamEaters/theSearchForKadath/06143b.js'
+import e06144 from './theDreamEaters/theSearchForKadath/06144.js'
+import e06145 from './theDreamEaters/theSearchForKadath/06145.js'
+import e06146 from './theDreamEaters/theSearchForKadath/06146.js'
+import e06147 from './theDreamEaters/theSearchForKadath/06147.js'
+import e06148 from './theDreamEaters/theSearchForKadath/06148.js'
+import e06149 from './theDreamEaters/theSearchForKadath/06149.js'
+import e06150 from './theDreamEaters/theSearchForKadath/06150.js'
+import e06151 from './theDreamEaters/theSearchForKadath/06151.js'
+import e06152 from './theDreamEaters/theSearchForKadath/06152.js'
+import e06153 from './theDreamEaters/theSearchForKadath/06153.js'
+import e06154 from './theDreamEaters/theSearchForKadath/06154.js'
+import e06064 from './theDreamEaters/wakingNightmare/06064.js'
+import e06065 from './theDreamEaters/wakingNightmare/06065.js'
+import e06066 from './theDreamEaters/wakingNightmare/06066.js'
+import e06067 from './theDreamEaters/wakingNightmare/06067.js'
+import e06068 from './theDreamEaters/wakingNightmare/06068.js'
+import e06069 from './theDreamEaters/wakingNightmare/06069.js'
+import e06070 from './theDreamEaters/wakingNightmare/06070.js'
+import e06071 from './theDreamEaters/wakingNightmare/06071.js'
+import e06072 from './theDreamEaters/wakingNightmare/06072.js'
+import e06073 from './theDreamEaters/wakingNightmare/06073.js'
+import e06074 from './theDreamEaters/wakingNightmare/06074.js'
+import e06075 from './theDreamEaters/wakingNightmare/06075.js'
+import e06076 from './theDreamEaters/wakingNightmare/06076.js'
+import e06077 from './theDreamEaters/wakingNightmare/06077.js'
+import e06078 from './theDreamEaters/wakingNightmare/06078.js'
+import e06079 from './theDreamEaters/wakingNightmare/06079.js'
+import e06080 from './theDreamEaters/wakingNightmare/06080.js'
+import e06081 from './theDreamEaters/wakingNightmare/06081.js'
+import e06082 from './theDreamEaters/wakingNightmare/06082.js'
+import e06083 from './theDreamEaters/wakingNightmare/06083.js'
+import e06334 from './theDreamEaters/weaverOfTheCosmos/06334.js'
+import e06335 from './theDreamEaters/weaverOfTheCosmos/06335.js'
+import e06336 from './theDreamEaters/weaverOfTheCosmos/06336.js'
+import e06337 from './theDreamEaters/weaverOfTheCosmos/06337.js'
+import e06338 from './theDreamEaters/weaverOfTheCosmos/06338.js'
+import e06339 from './theDreamEaters/weaverOfTheCosmos/06339.js'
+import e06340 from './theDreamEaters/weaverOfTheCosmos/06340.js'
+import e06341 from './theDreamEaters/weaverOfTheCosmos/06341.js'
+import e06342 from './theDreamEaters/weaverOfTheCosmos/06342.js'
+import e06343 from './theDreamEaters/weaverOfTheCosmos/06343.js'
+import e06344 from './theDreamEaters/weaverOfTheCosmos/06344.js'
+import e06345 from './theDreamEaters/weaverOfTheCosmos/06345.js'
+import e06346 from './theDreamEaters/weaverOfTheCosmos/06346.js'
+import e06347 from './theDreamEaters/weaverOfTheCosmos/06347.js'
+import e06348 from './theDreamEaters/weaverOfTheCosmos/06348.js'
+import e06349 from './theDreamEaters/weaverOfTheCosmos/06349.js'
+import e06350 from './theDreamEaters/weaverOfTheCosmos/06350.js'
+import e06351 from './theDreamEaters/weaverOfTheCosmos/06351.js'
+import e06352 from './theDreamEaters/weaverOfTheCosmos/06352.js'
+import e06353 from './theDreamEaters/weaverOfTheCosmos/06353.js'
+import e06354 from './theDreamEaters/weaverOfTheCosmos/06354.js'
+import e06287 from './theDreamEaters/whereTheGodsDwell/06287.js'
+import e06288 from './theDreamEaters/whereTheGodsDwell/06288.js'
+import e06289 from './theDreamEaters/whereTheGodsDwell/06289.js'
+import e06290 from './theDreamEaters/whereTheGodsDwell/06290.js'
+import e06291 from './theDreamEaters/whereTheGodsDwell/06291.js'
+import e06292 from './theDreamEaters/whereTheGodsDwell/06292.js'
+import e06293 from './theDreamEaters/whereTheGodsDwell/06293.js'
+import e06294 from './theDreamEaters/whereTheGodsDwell/06294.js'
+import e06295 from './theDreamEaters/whereTheGodsDwell/06295.js'
+import e06296 from './theDreamEaters/whereTheGodsDwell/06296.js'
+import e06297 from './theDreamEaters/whereTheGodsDwell/06297.js'
+import e06298 from './theDreamEaters/whereTheGodsDwell/06298.js'
+import e06299 from './theDreamEaters/whereTheGodsDwell/06299.js'
+import e06300 from './theDreamEaters/whereTheGodsDwell/06300.js'
+import e06301 from './theDreamEaters/whereTheGodsDwell/06301.js'
+import e06302 from './theDreamEaters/whereTheGodsDwell/06302.js'
+import e06303 from './theDreamEaters/whereTheGodsDwell/06303.js'
+import e06304 from './theDreamEaters/whereTheGodsDwell/06304.js'
+import e06305 from './theDreamEaters/whereTheGodsDwell/06305.js'
+import e06306 from './theDreamEaters/whereTheGodsDwell/06306.js'
+import e06307 from './theDreamEaters/whereTheGodsDwell/06307.js'
+import e06308 from './theDreamEaters/whereTheGodsDwell/06308.js'
+import e06309 from './theDreamEaters/whereTheGodsDwell/06309.js'
+import e06310 from './theDreamEaters/whereTheGodsDwell/06310.js'
+import e06311 from './theDreamEaters/whereTheGodsDwell/06311.js'
+import e06312 from './theDreamEaters/whereTheGodsDwell/06312.js'
+import e06313 from './theDreamEaters/whereTheGodsDwell/06313.js'
+import e06314 from './theDreamEaters/whereTheGodsDwell/06314.js'
+import e06315 from './theDreamEaters/whereTheGodsDwell/06315.js'
+import e06316 from './theDreamEaters/whereTheGodsDwell/06316.js'
+import e06317 from './theDreamEaters/whereTheGodsDwell/06317.js'
+import e06318 from './theDreamEaters/whereTheGodsDwell/06318.js'
+import e06319 from './theDreamEaters/whereTheGodsDwell/06319.js'
+import e06320 from './theDreamEaters/whereTheGodsDwell/06320.js'
+import e06321 from './theDreamEaters/whereTheGodsDwell/06321.js'
+import e06322 from './theDreamEaters/whereTheGodsDwell/06322.js'
+import e01160 from './shared/ghouls/01160.js'
+import e01161 from './shared/ghouls/01161.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -1563,6 +1840,283 @@ export const NON_PLAYER_ENTRY_LIST = [
   e05148,
   e05149,
   e05150,
+  e03297,
+  e03299,
+  e06084,
+  e06085,
+  e06086,
+  e06087,
+  e06088,
+  e06089,
+  e06104,
+  e06105,
+  e06091,
+  e06092,
+  e06273,
+  e06274,
+  e06093,
+  e06094,
+  e06095,
+  e06096,
+  e06097,
+  e06098,
+  e06099,
+  e06100,
+  e06101,
+  e06102,
+  e06103,
+  e06271,
+  e06272,
+  e06090,
+  e06106,
+  e06107,
+  e06108,
+  e06109,
+  e06169a,
+  e06169b,
+  e06170,
+  e06171,
+  e06172,
+  e06173,
+  e06174,
+  e06175,
+  e06176,
+  e06177,
+  e06178,
+  e06179,
+  e06180,
+  e06181,
+  e06182,
+  e06183,
+  e06184,
+  e06185,
+  e06186,
+  e06187,
+  e06188,
+  e06189,
+  e06190,
+  e06191,
+  e06192,
+  e06193,
+  e06194,
+  e06040,
+  e06041,
+  e06042,
+  e06043,
+  e06044,
+  e06045,
+  e06046,
+  e06047,
+  e06048,
+  e06049,
+  e06050,
+  e06051,
+  e06052,
+  e06053,
+  e06054,
+  e06055,
+  e06056,
+  e06057,
+  e06058,
+  e06059,
+  e06060,
+  e06061,
+  e06062,
+  e06207,
+  e06208,
+  e06209,
+  e06210,
+  e06211,
+  e06212,
+  e06213,
+  e06214,
+  e06214b,
+  e06215,
+  e06216,
+  e06217,
+  e06218,
+  e06219,
+  e06220,
+  e06221,
+  e06222,
+  e06223,
+  e06224,
+  e06225,
+  e06226,
+  e06227,
+  e06228,
+  e06229,
+  e06230,
+  e06231,
+  e06232,
+  e06233,
+  e06248,
+  e06249,
+  e06250,
+  e06251,
+  e06252,
+  e06253,
+  e06254,
+  e06254b,
+  e06255,
+  e06255b,
+  e06256,
+  e06256b,
+  e06257,
+  e06257b,
+  e06258,
+  e06258b,
+  e06259,
+  e06259b,
+  e06260,
+  e06260b,
+  e06261,
+  e06261b,
+  e06262,
+  e06262b,
+  e06263,
+  e06263b,
+  e06264,
+  e06264b,
+  e06265,
+  e06265b,
+  e06266,
+  e06267,
+  e06268,
+  e06269,
+  e06270,
+  e06275,
+  e06120,
+  e06121,
+  e06122,
+  e06123,
+  e06124,
+  e06125,
+  e06126,
+  e06127,
+  e06127b,
+  e06128,
+  e06128b,
+  e06129,
+  e06129b,
+  e06130,
+  e06130b,
+  e06131,
+  e06131b,
+  e06132,
+  e06132b,
+  e06133,
+  e06133b,
+  e06134,
+  e06134b,
+  e06135,
+  e06135b,
+  e06136,
+  e06136b,
+  e06137,
+  e06137b,
+  e06138,
+  e06138b,
+  e06139,
+  e06139b,
+  e06140,
+  e06140b,
+  e06141,
+  e06141b,
+  e06142,
+  e06142b,
+  e06143,
+  e06143b,
+  e06144,
+  e06145,
+  e06146,
+  e06147,
+  e06148,
+  e06149,
+  e06150,
+  e06151,
+  e06152,
+  e06153,
+  e06154,
+  e06064,
+  e06065,
+  e06066,
+  e06067,
+  e06068,
+  e06069,
+  e06070,
+  e06071,
+  e06072,
+  e06073,
+  e06074,
+  e06075,
+  e06076,
+  e06077,
+  e06078,
+  e06079,
+  e06080,
+  e06081,
+  e06082,
+  e06083,
+  e06334,
+  e06335,
+  e06336,
+  e06337,
+  e06338,
+  e06339,
+  e06340,
+  e06341,
+  e06342,
+  e06343,
+  e06344,
+  e06345,
+  e06346,
+  e06347,
+  e06348,
+  e06349,
+  e06350,
+  e06351,
+  e06352,
+  e06353,
+  e06354,
+  e06287,
+  e06288,
+  e06289,
+  e06290,
+  e06291,
+  e06292,
+  e06293,
+  e06294,
+  e06295,
+  e06296,
+  e06297,
+  e06298,
+  e06299,
+  e06300,
+  e06301,
+  e06302,
+  e06303,
+  e06304,
+  e06305,
+  e06306,
+  e06307,
+  e06308,
+  e06309,
+  e06310,
+  e06311,
+  e06312,
+  e06313,
+  e06314,
+  e06315,
+  e06316,
+  e06317,
+  e06318,
+  e06319,
+  e06320,
+  e06321,
+  e06322,
+  e01160,
+  e01161,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

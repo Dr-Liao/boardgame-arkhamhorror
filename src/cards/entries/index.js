@@ -585,6 +585,93 @@ import e06013 from './06013.js'
 import e06014 from './06014.js'
 import e06016 from './06016.js'
 import e06017 from './06017.js'
+import e06111 from './06111.js'
+import e06112 from './06112.js'
+import e06116 from './06116.js'
+import e06163 from './06163.js'
+import e06200 from './06200.js'
+import e06202 from './06202.js'
+import e06235 from './06235.js'
+import e06113 from './06113.js'
+import e06114 from './06114.js'
+import e06115 from './06115.js'
+import e06117 from './06117.js'
+import e06118 from './06118.js'
+import e06155 from './06155.js'
+import e06157 from './06157.js'
+import e06158 from './06158.js'
+import e06159 from './06159.js'
+import e06160 from './06160.js'
+import e06161 from './06161.js'
+import e06162 from './06162.js'
+import e06164 from './06164.js'
+import e06165 from './06165.js'
+import e06166 from './06166.js'
+import e06167 from './06167.js'
+import e06195 from './06195.js'
+import e06196 from './06196.js'
+import e06197 from './06197.js'
+import e06198 from './06198.js'
+import e06199 from './06199.js'
+import e06280 from './06280.js'
+import e06284 from './06284.js'
+import e06276 from './06276.js'
+import e06277 from './06277.js'
+import e06201 from './06201.js'
+import e06203 from './06203.js'
+import e06204 from './06204.js'
+import e06205 from './06205.js'
+import e06026 from './06026.js'
+import e06027 from './06027.js'
+import e06234 from './06234.js'
+import e06236 from './06236.js'
+import e06237 from './06237.js'
+import e06238 from './06238.js'
+import e06239 from './06239.js'
+import e06240 from './06240.js'
+import e06241 from './06241.js'
+import e06242 from './06242.js'
+import e06243 from './06243.js'
+import e06244 from './06244.js'
+import e06245 from './06245.js'
+import e06018 from './06018.js'
+import e06019 from './06019.js'
+import e06020 from './06020.js'
+import e06021 from './06021.js'
+import e06022 from './06022.js'
+import e06023 from './06023.js'
+import e06024 from './06024.js'
+import e06025 from './06025.js'
+import e06028 from './06028.js'
+import e06029 from './06029.js'
+import e06030 from './06030.js'
+import e06031 from './06031.js'
+import e06032 from './06032.js'
+import e06033 from './06033.js'
+import e06034 from './06034.js'
+import e06035 from './06035.js'
+import e06036 from './06036.js'
+import e06037 from './06037.js'
+import e06038 from './06038.js'
+import e06110 from './06110.js'
+import e06156 from './06156.js'
+import e06246 from './06246.js'
+import e06278 from './06278.js'
+import e06279 from './06279.js'
+import e06281 from './06281.js'
+import e06282 from './06282.js'
+import e06283 from './06283.js'
+import e06285 from './06285.js'
+import e06323 from './06323.js'
+import e06324 from './06324.js'
+import e06325 from './06325.js'
+import e06326 from './06326.js'
+import e06327 from './06327.js'
+import e06328 from './06328.js'
+import e06329 from './06329.js'
+import e06330 from './06330.js'
+import e06331 from './06331.js'
+import e06332 from './06332.js'
 
 export const CARD_ENTRY_LIST = [
   e01001,
@@ -1171,6 +1258,93 @@ export const CARD_ENTRY_LIST = [
   e06014,
   e06016,
   e06017,
+  e06111,
+  e06112,
+  e06116,
+  e06163,
+  e06200,
+  e06202,
+  e06235,
+  e06113,
+  e06114,
+  e06115,
+  e06117,
+  e06118,
+  e06155,
+  e06157,
+  e06158,
+  e06159,
+  e06160,
+  e06161,
+  e06162,
+  e06164,
+  e06165,
+  e06166,
+  e06167,
+  e06195,
+  e06196,
+  e06197,
+  e06198,
+  e06199,
+  e06280,
+  e06284,
+  e06276,
+  e06277,
+  e06201,
+  e06203,
+  e06204,
+  e06205,
+  e06026,
+  e06027,
+  e06234,
+  e06236,
+  e06237,
+  e06238,
+  e06239,
+  e06240,
+  e06241,
+  e06242,
+  e06243,
+  e06244,
+  e06245,
+  e06018,
+  e06019,
+  e06020,
+  e06021,
+  e06022,
+  e06023,
+  e06024,
+  e06025,
+  e06028,
+  e06029,
+  e06030,
+  e06031,
+  e06032,
+  e06033,
+  e06034,
+  e06035,
+  e06036,
+  e06037,
+  e06038,
+  e06110,
+  e06156,
+  e06246,
+  e06278,
+  e06279,
+  e06281,
+  e06282,
+  e06283,
+  e06285,
+  e06323,
+  e06324,
+  e06325,
+  e06326,
+  e06327,
+  e06328,
+  e06329,
+  e06330,
+  e06331,
+  e06332,
 ]
 
 export const CARD_ENTRY_BY_CODE = new Map(CARD_ENTRY_LIST.map(entry => [entry.code, entry]))

@@ -1,0 +1,194 @@
+﻿TAP version 13
+# Subtest: TDE 06018 渴血之刃 入场将 3 张嗜血洗入牌库；攻击按附属数加值、+1 伤害、击败放贡品
+ok 1 - TDE 06018 渴血之刃 入场将 3 张嗜血洗入牌库；攻击按附属数加值、+1 伤害、击败放贡品
+  ---
+  duration_ms: 101.6388
+  type: 'test'
+  ...
+# Subtest: TDE 06018 渴血之刃 攻击时可将 1 张嗜血混洗回牌库换 +1 伤害
+ok 2 - TDE 06018 渴血之刃 攻击时可将 1 张嗜血混洗回牌库换 +1 伤害
+  ---
+  duration_ms: 42.7363
+  type: 'test'
+  ...
+# Subtest: TDE 06019 嗜血 有渴血之刃时消耗 2 贡品附属；没有时受 1 恐惧并洗回牌库
+ok 3 - TDE 06019 嗜血 有渴血之刃时消耗 2 贡品附属；没有时受 1 恐惧并洗回牌库
+  ---
+  duration_ms: 60.0475
+  type: 'test'
+  ...
+# Subtest: TDE 06020 庄严立誓 置于同地点另一位调查员控制之下，并可在双方卡牌间移动 1 点伤害
+not ok 4 - TDE 06020 庄严立誓 置于同地点另一位调查员控制之下，并可在双方卡牌间移动 1 点伤害
+  ---
+  duration_ms: 67.3498
+  type: 'test'
+  location: 'G:\\boardgame-hall-ai\\games\\arkhamhorror\\tests\\tde-player-m2-1.test.mjs:153:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    移动后源卡伤害清零
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///G:/boardgame-hall-ai/games/arkhamhorror/tests/tde-player-m2-1.test.mjs:171:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: TDE 06021 一瓣缟玛瑙 3 张在场时放在一边并找出皇后的挂坠放置入场
+ok 5 - TDE 06021 一瓣缟玛瑙 3 张在场时放在一边并找出皇后的挂坠放置入场
+  ---
+  duration_ms: 38.6513
+  type: 'test'
+  ...
+# Subtest: TDE 06022 皇后的挂坠 花 1 充能选择已揭示地点：发现线索 / 充能耗尽复位
+ok 6 - TDE 06022 皇后的挂坠 花 1 充能选择已揭示地点：发现线索 / 充能耗尽复位
+  ---
+  duration_ms: 38.8923
+  type: 'test'
+  ...
+# Subtest: TDE 06023 骇人真相 不能打出；查找牌库发现时弃掉自己
+ok 7 - TDE 06023 骇人真相 不能打出；查找牌库发现时弃掉自己
+  ---
+  duration_ms: 34.715
+  type: 'test'
+  ...
+# Subtest: TDE 06024 梦境结晶器 入场检索结晶器守卫；打出事件后改为附属到它上面
+not ok 8 - TDE 06024 梦境结晶器 入场检索结晶器守卫；打出事件后改为附属到它上面
+  ---
+  duration_ms: 39.0786
+  type: 'test'
+  location: 'G:\\boardgame-hall-ai\\games\\arkhamhorror\\tests\\tde-player-m2-1.test.mjs:251:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    打出的事件正面朝下附属到结晶器
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///G:/boardgame-hall-ai/games/arkhamhorror/tests/tde-player-m2-1.test.mjs:273:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: TDE 06025 结晶器守卫 无梦境结晶器时移出对局；有则横置入场并成为 bearer 猎物
+ok 9 - TDE 06025 结晶器守卫 无梦境结晶器时移出对局；有则横置入场并成为 bearer 猎物
+  ---
+  duration_ms: 57.0775
+  type: 'test'
+  ...
+# Subtest: TDE 06026 冤大头 获得 2 资源并抽 1 张；可从手牌免费再打一张
+ok 10 - TDE 06026 冤大头 获得 2 资源并抽 1 张；可从手牌免费再打一张
+  ---
+  duration_ms: 31.8463
+  type: 'test'
+  ...
+# Subtest: TDE 06027 仰望星空 遭遇牌库≥10 才能打出；把群星正确之时洗入遭遇牌库
+ok 11 - TDE 06027 仰望星空 遭遇牌库≥10 才能打出；把群星正确之时洗入遭遇牌库
+  ---
+  duration_ms: 50.059
+  type: 'test'
+  ...
+# Subtest: TDE 06028 群星正确之时 绑定关系为仰望星空；显现：选一位调查员抽 1 张、获得 1 资源并移出游戏
+ok 12 - TDE 06028 群星正确之时 绑定关系为仰望星空；显现：选一位调查员抽 1 张、获得 1 资源并移出游戏
+  ---
+  duration_ms: 28.3839
+  type: 'test'
+  ...
+# Subtest: TDE 06029 开启大门 快速附属到所在地点；团队 3 张后不能再打出
+ok 13 - TDE 06029 开启大门 快速附属到所在地点；团队 3 张后不能再打出
+  ---
+  duration_ms: 30.8747
+  type: 'test'
+  ...
+# Subtest: TDE 06030 道尔女士 入场随机放置 1 张绑定支援入场，其余 2 张进弃牌堆；离场全部放在一边
+ok 14 - TDE 06030 道尔女士 入场随机放置 1 张绑定支援入场，其余 2 张进弃牌堆；离场全部放在一边
+  ---
+  duration_ms: 30.7994
+  type: 'test'
+  ...
+# Subtest: TDE 06031 希望 横置：以基础敏捷 5 躲避与你交战的敌人
+ok 15 - TDE 06031 希望 横置：以基础敏捷 5 躲避与你交战的敌人
+  ---
+  duration_ms: 32.4878
+  type: 'test'
+  ...
+# Subtest: TDE 06032 热诚 横置：以基础战斗 5 攻击同地点的敌人
+ok 16 - TDE 06032 热诚 横置：以基础战斗 5 攻击同地点的敌人
+  ---
+  duration_ms: 34.5868
+  type: 'test'
+  ...
+# Subtest: TDE 06033 预见 横置：以基础智识 5 调查并发现线索
+ok 17 - TDE 06033 预见 横置：以基础智识 5 调查并发现线索
+  ---
+  duration_ms: 33.6966
+  type: 'test'
+  ...
+# Subtest: TDE 06034 意外的发现 X=弃牌堆同名张数：调查 +X 智识，成功发现 X 个额外线索
+ok 18 - TDE 06034 意外的发现 X=弃牌堆同名张数：调查 +X 智识，成功发现 X 个额外线索
+  ---
+  duration_ms: 33.3272
+  type: 'test'
+  ...
+# Subtest: TDE 06035 自私自利 显现进入威胁区域，花费 2 行动弃掉
+ok 19 - TDE 06035 自私自利 显现进入威胁区域，花费 2 行动弃掉
+  ---
+  duration_ms: 27.646
+  type: 'test'
+  ...
+# Subtest: TDE 06036 偷窃癖 放置入场后夺取同地点另一位调查员的资源并洗回牌库
+ok 20 - TDE 06036 偷窃癖 放置入场后夺取同地点另一位调查员的资源并洗回牌库
+  ---
+  duration_ms: 49.4183
+  type: 'test'
+  ...
+# Subtest: TDE 06037 嗜睡症 威胁区：不能打出事件/进行调查，受到伤害后弃掉
+ok 21 - TDE 06037 嗜睡症 威胁区：不能打出事件/进行调查，受到伤害后弃掉
+  ---
+  duration_ms: 25.9552
+  type: 'test'
+  ...
+# Subtest: TDE 06038 最可怕的噩梦 显现生成敌人：猎手、猎物仅对承受者
+ok 22 - TDE 06038 最可怕的噩梦 显现生成敌人：猎手、猎物仅对承受者
+  ---
+  duration_ms: 26.1574
+  type: 'test'
+  ...
+# Subtest: TDE 06110 头班守夜 神话阶段开始时的快速事件：查看遭遇牌库顶 X 张并重新排列
+ok 23 - TDE 06110 头班守夜 神话阶段开始时的快速事件：查看遭遇牌库顶 X 张并重新排列
+  ---
+  duration_ms: 32.3115
+  type: 'test'
+  ...
+# Subtest: TDE M2-1 分片 22 张条目全部注册且 code 与文件名一致
+ok 24 - TDE M2-1 分片 22 张条目全部注册且 code 与文件名一致
+  ---
+  duration_ms: 0.0958
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 22
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2166.1872

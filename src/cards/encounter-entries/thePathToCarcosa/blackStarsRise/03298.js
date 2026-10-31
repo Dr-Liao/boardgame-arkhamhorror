@@ -9,6 +9,10 @@
 export default {
   code: '03298', scope: 'location',
   locationRule: {
+    // 背面：没找到塔楼钥匙不能进入。引擎在地点揭示后不再调用 entryError。
+    entryError(state) {
+      return state.scenarioFlags?.foundTowerKey ? null : '需要先在骑士大厅找到塔楼钥匙'
+    },
     investigationError(state, inv) { return inv.hand.length ? '必须没有手牌' : null },
     actions({ inv, moves }) {
       moves.push({ action: 'scenarioAction', rule: 'discardTowerCards', label: '弃掉最多3张手牌',

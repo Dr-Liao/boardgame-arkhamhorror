@@ -1,4 +1,4 @@
-import { investigatorRule } from '../cards/card-rules.js'
+import { enemyRuleFlags, investigatorRule } from '../cards/card-rules.js'
 import { extraDeckPiles } from './alt-decks.js'
 import { markForcedRevelation } from './resolution-scope.js'
 // 遭遇牌与反应窗口（drawEncounter / reactionWindow / triggerReaction / playerWindow）
@@ -171,7 +171,8 @@ function drawEncounter(state, inv, events, options = {}) {
     // 带固定生成地点的敌人在该地点生成，否则与抽牌者交战；「任意无人地点」敌人去无人地点。
     let engage = null
     let loc = resolvingInv.location
-    if (def.spawnAnyEmpty) {
+    // 剧本敌人定义上的 spawnAnyEmpty，或卡条目 enemyRule.spawnAnyEmpty（01169 按卡号入牌库时走后者）。
+    if (def.spawnAnyEmpty || enemyRuleFlags(code).spawnAnyEmpty) {
       const empty = state.locations.filter((l) => !state.enemies.some((e) => e.location === l.id)
         && !aliveInvestigators(state).some(i => i.location === l.id))
       let picked = empty.length ? chooseAmong(state, {

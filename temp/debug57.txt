@@ -1,0 +1,5 @@
+﻿seats [ [ 0, 'study' ], [ 1, 'study' ] ]
+CHOICE commit seat 0 [["done","开始检定"],["help","求助"]]
+CHOICE commit seat 1 [["done","放弃协助"],["0","投入：自我牺牲"]]
+result { success: false, value: 0 }
+hands [ 0, 0 ] perf discard []

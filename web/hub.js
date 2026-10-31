@@ -1,5 +1,5 @@
 import { renderRulesText } from './card-text.js'
-import { registerDeckRules, validateDeckRules, cardAllowedByScope, campaignCycle, normalizeCardPoolScope, CARD_POOL_SCOPE_LABELS, CARD_POOL_RESTRICTION_ENABLED } from './deck-rules.js'
+import { registerDeckRules, validateDeckRules, myriadUsage, cardAllowedByScope, campaignCycle, normalizeCardPoolScope, CARD_POOL_SCOPE_LABELS, CARD_POOL_RESTRICTION_ENABLED } from './deck-rules.js'
 import { parseArkhamDbInput, loadArkhamDbDeck, planArkhamDbImport } from './arkhamdb-import.js'
 import { listLocalDecks, saveLocalDeck, deleteLocalDeck } from './deck-library.js'
 import { tableArt } from './table-art.js'
@@ -1571,6 +1571,9 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const draft = state.arkhamDeckDraft ||= []
     const shown = filterCards(pool, cardFilters('deck'))
     const counts = Object.fromEntries([...new Set(draft)].map(code => [code, draft.filter(item => item === code).length]))
+    // P7（食梦者 M2）：多重（Myriad）按「同名跨卡号共享 3 张」显示 n/3；
+    // 单卡张数上限仍由 validateDeckRules 的逐卡检查约束（例：三张「增强自我」各限 1）。
+    const myriadTitles = new Map(myriadUsage(draft, cardMap).map(item => [item.name, item]))
     const size = inv?.deckSize || 30
     if (inv?.rules) registerDeckRules(inv.code, inv.rules)
     const cardMap = Object.fromEntries(pool.map(card => [card.code, card]))
@@ -1659,7 +1662,12 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
             ondragstart: event => { event.dataTransfer.setData('application/x-arkham-hub-card', card.code); event.dataTransfer.effectAllowed = 'copy' },
             onclick: () => add(card.code) },
             art(card.code, card.name), counts[card.code] ? h('i', { className: 'ah-db-card-count', 'aria-hidden': 'true' }, `×${counts[card.code]}`) : null,
-            h('span', {}, card.name), h('small', {}, t('hub.builder.cardMeta', { count: counts[card.code] || 0, limit: card.deckLimit || 2, cost: card.cost ?? '—', xp: card.xp || 0 }))),
+            h('span', {}, card.name), h('small', {}, (() => {
+              const usage = card.myriad ? myriadTitles.get(card.name) : null
+              return usage
+                ? t('hub.builder.cardMetaMyriad', { count: usage.count, limit: usage.limit, cost: card.cost ?? '—', xp: card.xp || 0 })
+                : t('hub.builder.cardMeta', { count: counts[card.code] || 0, limit: card.deckLimit || 2, cost: card.cost ?? '—', xp: card.xp || 0 })
+            })())),
           h('div',{className:'ah-builder-card-tools'},h('button',{'aria-label':t('hub.builder.decrease', { name: card.name }),disabled:state.busy || !counts[card.code],onclick:()=>remove(card.code)},'−'),
             h('button',{'aria-label':t('hub.card.inspectName', { name: card.name }),onclick:()=>inspectCard(card.code)},t('hub.builder.detail')),
             h('button',{'aria-label':t('hub.builder.increase', { name: card.name }),disabled:!canAdd(card.code),onclick:()=>add(card.code)},'+'))))),

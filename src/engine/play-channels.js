@@ -616,13 +616,18 @@ export function createPlayChannels(deps) {
     const channel = (inv.assets || []).find(asset =>
       registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
     if (!channel) return out
+    const copies = new Map()
+    for (const code of inv.beneath || []) copies.set(code, (copies.get(code) || 0) + 1)
     for (const [index, code] of (inv.beneath || []).entries()) {
       const def = cardDef(code)
       if (!def || !['event', 'skill'].includes(def.type)) continue
       if (!runtimeCardAvailable(state, inv, code) || isWeaknessCode(code)) continue
+      // 同名牌可以有两张（守护结界 deck limit 2）。选项 id 若只用卡号，
+      // 技能检定的投入窗口会在打开时抛「选择选项 id 重复」。
+      const optionId = copies.get(code) > 1 ? `beneath:${index}:${code}` : `beneath:${code}`
       out.push({
         channel: 'beneath', code, index, sourceId: channel.id, def,
-        uiKey: `beneath:${code}`, optionId: `beneath:${code}`,
+        uiKey: `beneath:${code}`, optionId,
         label: `投入（底下）：${cardName(code)}`,
       })
     }
@@ -632,7 +637,10 @@ export function createPlayChannels(deps) {
   function takeCommit(state, inv, candidate) {
     const channel = (inv.assets || []).find(asset =>
       registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
-    const at = (inv.beneath || []).indexOf(candidate.code)
+    const pile = inv.beneath || []
+    const at = Number.isInteger(candidate.index) && pile[candidate.index] === candidate.code
+      ? candidate.index
+      : pile.indexOf(candidate.code)
     if (!channel || at < 0) return null
     channel.exhausted = true
     return inv.beneath.splice(at, 1)[0]

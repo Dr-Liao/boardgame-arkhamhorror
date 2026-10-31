@@ -63,8 +63,10 @@ export function createPerformTest(deps) {
     getStat,
     getThreatEffect,
     hasHiddenCard,
+    hiddenCommitLimitReached,
     hiddenDefinition,
     hiddenRule,
+    noteHiddenCommit,
     info,
     investigatorMoveDestinations,
     investigatorTextBlanked,
@@ -234,6 +236,9 @@ function performTest(state, seat, skill, difficulty, options = {}) {
   for (const owner of testOwners) {
     let count = 0
     while (true) {
+      // P8（食梦者 06319–06321 无眠之旅）：「每轮你不能投入超过 1 张卡牌到技能检定中」。
+      // 计数在真正投入后由 noteHiddenCommit 写入 `state.scenarioFlags.hiddenCommitCounts`（按轮重置）。
+      if (hiddenCommitLimitReached(state, owner)) break
       state.skillTest.value = value + skillTotal() - statReference
       // 2026-10-25 第四轮修复 commit-extra-cost-hook（05104 被困的灵魂）：
       // 「在闹鬼地点投入手牌」的额外费用由剧本钩子结算（内容自行保证每场/每次只结算一次）。
@@ -373,6 +378,7 @@ function performTest(state, seat, skill, difficulty, options = {}) {
       committed.push(code)
       committedCodes.add(code)
       commitments.push({ seat: owner.seat, code, icons })
+      noteHiddenCommit(state, owner)
       count++
       // 2026-10-25 第六轮修复 05119：卡牌进入投入区后的窗口（可追加本次检定图标）。
       {

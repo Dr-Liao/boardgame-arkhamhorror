@@ -4,7 +4,7 @@ import { groupedChaosTokens } from './chaos-bag-view.js'
 import { tableArt, retainTableArt } from './table-art.js'
 import { tableIcon } from './table-components.js'
 import { cardSymbol } from './card-text.js'
-import { cardDisplayName } from './catalog.js'
+import { cardDisplayName, cardDisplayText } from './catalog.js'
 // 第 127 轮：「书籍行动」调查员表在 web/ui-cards.js。
 import { UI_CARDS } from './ui-cards.js'
 // 第 4 步 P5：万象无终的公开剧本状态（幽灵牌堆 / 塔罗 / 裂口 / 火盆 / 看守人 / 遗留记忆）。
@@ -114,19 +114,43 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
       : st.investigators.filter(inv => !inv.defeated && !inv.resigned).reduce((sum, inv) => sum + (inv.clues || 0), 0)
     const bag = st.chaosBag || [], chaos = st.chaos || {}
     const encounter = st.encounterDeckSize ?? st.encounterDeck?.length ?? 0
+    const doomProgress = (count, limit) => h('div', { className: 'ah-situ-progress is-doom' },
+      h('span', {}, tableIcon('doom'), t('situation.doom.progress', { doom: count, threshold: limit ?? '?' })),
+      h('span', { className: 'ah-situ-progress-track', 'aria-hidden': 'true' },
+        Array.from({ length: Math.min(12, limit || 6) }, (_, i) => h('i', { className: i < count ? 'is-filled' : '' }))))
+    const actProgress = h('div', { className: 'ah-situ-progress is-clue' + (costsClues && clues >= required ? ' is-ready' : '') },
+      h('span', {}, tableIcon('clue'), costsClues ? t('situation.clue.progress', { clues, required }) : t('situation.objective.complete')),
+      costsClues ? h('span', { className: 'ah-situ-progress-track', 'aria-hidden': 'true' },
+        Array.from({ length: Math.min(12, required || 0) }, (_, i) => h('i', { className: i < clues ? 'is-filled' : '' }))) : null)
+    const bsr = st.blackStarsRise
+    const agendaFace = id => {
+      const deck = bsr?.decks?.[id]
+      if (!deck || deck.removed || !deck.current) return null
+      return {
+        code: deck.current, originalCode: deck.current, type: 'agenda', face: 'front',
+        name: cardDisplayName({ name: deck.name, nameZh: deck.nameZh }) || deck.current,
+        text: cardDisplayText({ text: deck.text, textZh: deck.textZh }),
+      }
+    }
+    const scenes = bsr?.decks ? ['a', 'c'].map(id => {
+      const deck = bsr.decks[id]
+      const label = t(id === 'a' ? 'situation.carcosa.deckA' : 'situation.carcosa.deckC')
+      if (bsr.openPath && bsr.openedDeck === id && act) return scene(act, 'act', t('card.type.act'), actProgress)
+      const card = agendaFace(id)
+      if (!card) return scene(null, 'agenda', label, h('small', {}, t('situation.carcosa.deckRemoved')))
+      return scene(card, 'agenda', label, doomProgress(deck.doom || 0, deck.doomThreshold))
+    }) : [
+      scene(agenda, 'agenda', t('card.type.agenda'), h('div', { className: 'ah-situ-progress is-doom' },
+        h('span', {}, tableIcon('doom'), extraDoom
+          ? t('situation.doom.withExtra', { doom, threshold: threshold ?? '?', extra: extraDoom })
+          : t('situation.doom.progress', { doom, threshold: threshold ?? '?' })),
+        h('span', { className: 'ah-situ-progress-track', 'aria-hidden': 'true' },
+          Array.from({ length: Math.min(12, threshold || 6) }, (_, i) => h('i', { className: i < doom ? 'is-filled' : '' }))))),
+      scene(act, 'act', t('card.type.act'), actProgress),
+    ]
     return h('section', { className: 'ah-situ-panel ah-situ-scenario', role: 'region', 'aria-label': t('situation.scenario.title') },
       h('h3', {}, tableIcon('book'), t('situation.scenario.title')),
-      h('div', { className: 'ah-situ-scenes' },
-        scene(agenda, 'agenda', t('card.type.agenda'), h('div', { className: 'ah-situ-progress is-doom' },
-          h('span', {}, tableIcon('doom'), extraDoom
-            ? t('situation.doom.withExtra', { doom, threshold: threshold ?? '?', extra: extraDoom })
-            : t('situation.doom.progress', { doom, threshold: threshold ?? '?' })),
-          h('span', { className: 'ah-situ-progress-track', 'aria-hidden': 'true' },
-            Array.from({ length: Math.min(12, threshold || 6) }, (_, i) => h('i', { className: i < doom ? 'is-filled' : '' }))))),
-        scene(act, 'act', t('card.type.act'), h('div', { className: 'ah-situ-progress is-clue' + (costsClues && clues >= required ? ' is-ready' : '') },
-          h('span', {}, tableIcon('clue'), costsClues ? t('situation.clue.progress', { clues, required }) : t('situation.objective.complete')),
-          costsClues ? h('span', { className: 'ah-situ-progress-track', 'aria-hidden': 'true' },
-            Array.from({ length: Math.min(12, required || 0) }, (_, i) => h('i', { className: i < clues ? 'is-filled' : '' }))) : null))),
+      h('div', { className: 'ah-situ-scenes' }, ...scenes),
       h('div', { className: 'ah-situ-supplies' },
         h('button', { type: 'button', className: 'ah-situ-bag', 'aria-label': t('situation.bag.openAria'), 'aria-haspopup': 'dialog', onclick: () => leave(openChaosBag) },
           h('img', { src: IMG + 'ui/chaos-bag.webp', alt: '' }),
@@ -356,8 +380,10 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
         t('situation.carcosa.doubtConvictionValue', { doubt, conviction }), 'star'])
     }
     if (bsr) {
-      rows.push([t('situation.carcosa.route'), bsr.route === 'below' ? t('situation.carcosa.routeBelow')
-        : bsr.route === 'above' ? t('situation.carcosa.routeAbove') : t('situation.carcosa.unknown'), 'action'])
+      if (bsr.route) {
+        rows.push([t('situation.carcosa.route'), bsr.route === 'below' ? t('situation.carcosa.routeBelow')
+          : bsr.route === 'above' ? t('situation.carcosa.routeAbove') : t('situation.carcosa.unknown'), 'action'])
+      }
       rows.push([t('situation.carcosa.path'),
         bsr.openPath ? t('situation.carcosa.pathOpen') : t('situation.carcosa.pathClosed'), 'book'])
       for (const [id, labelKey] of [['a', 'situation.carcosa.deckA'], ['c', 'situation.carcosa.deckC']]) {
@@ -365,7 +391,8 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
         if (!deck) continue
         if (deck.removed) rows.push([t(labelKey), t('situation.carcosa.deckRemoved'), 'doom'])
         else {
-          const name = deck.current ? (cardName({ state: st }, deck.current) || deck.current) : t('situation.carcosa.unknown')
+          const printed = deck.name || deck.nameZh ? cardDisplayName({ name: deck.name, nameZh: deck.nameZh }) : ''
+          const name = printed || (deck.current ? (cardName({ state: st }, deck.current) || deck.current) : t('situation.carcosa.unknown'))
           rows.push([t(labelKey), t('situation.carcosa.deckValue', {
             card: name, doom: deck.doom, index: Math.min(deck.index + 1, deck.size || 1), size: deck.size || 1,
           }), 'doom'])

@@ -438,6 +438,7 @@ export default {
   'hub.builder.addAria': 'Add {name} {count}/{limit}',
   'hub.builder.addTitle': 'Click or drag into the deck',
   'hub.builder.cardMeta': '{count}/{limit} · cost {cost} · level {xp}',
+  'hub.builder.cardMetaMyriad': '{count}/{limit} · Myriad title · cost {cost} · level {xp}',
   'hub.builder.decrease': 'Remove one {name}',
   'hub.builder.detail': 'Details',
   'hub.builder.increase': 'Add one {name}',

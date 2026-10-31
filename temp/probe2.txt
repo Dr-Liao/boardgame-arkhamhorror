@@ -1,0 +1,6 @@
+﻿total 5930
+ghoulPriest false undefined
+ghoulMinion false undefined
+dissonantVoices false undefined
+06111 true skill:undefined:0
+06195 true asset:undefined:0

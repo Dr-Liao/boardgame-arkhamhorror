@@ -11,6 +11,20 @@
   },
   "tests": [
     {
+      "title": "M5 场景交互面板在desktop端可翻开掩藏地点",
+      "spec": "tests/tde-modes.browser.mjs",
+      "viewport": "desktop",
+      "expectedStatus": "passed",
+      "status": "passed"
+    },
+    {
+      "title": "M5 场景交互面板在mobile端可翻开掩藏地点",
+      "spec": "tests/tde-modes.browser.mjs",
+      "viewport": "mobile",
+      "expectedStatus": "passed",
+      "status": "passed"
+    },
+    {
       "title": "M5 并行出发准备左右分屏与双线队长在desktop端可用",
       "spec": "tests/tde-modes.browser.mjs",
       "viewport": "desktop",
@@ -190,6 +204,20 @@
     {
       "name": "parallel-seats-mobile",
       "path": "artifacts/tde-migration/parallel-seats-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "exists": true
+    },
+    {
+      "name": "scenario-interactions-desktop",
+      "path": "artifacts/tde-migration/scenario-interactions-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "exists": true
+    },
+    {
+      "name": "scenario-interactions-mobile",
+      "path": "artifacts/tde-migration/scenario-interactions-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
       "exists": true

@@ -1,0 +1,188 @@
+﻿TAP version 13
+# Subtest: TDE 06196 安全护卫 其他调查员移动到连接地点时横置跟随移动
+ok 1 - TDE 06196 安全护卫 其他调查员移动到连接地点时横置跟随移动
+  ---
+  duration_ms: 97.6621
+  type: 'test'
+  ...
+# Subtest: TDE 06197 熟能生巧 快速：查牌库顶 9 张找出[[精通]]技能并投入本次检定
+not ok 2 - TDE 06197 熟能生巧 快速：查牌库顶 9 张找出[[精通]]技能并投入本次检定
+  ---
+  duration_ms: 48.3944
+  type: 'test'
+  location: 'G:\\boardgame-hall-ai\\games\\arkhamhorror\\tests\\tde-player-m2-3.test.mjs:150:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    找出的[[精通]]技能被投入本次检定
+    
+    3 !== 4
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 4
+  actual: 3
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///G:/boardgame-hall-ai/games/arkhamhorror/tests/tde-player-m2-3.test.mjs:172:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: TDE 06198 海量研究 每有一张其它手牌费用 -1；发现所在地点 2 个线索
+not ok 3 - TDE 06198 海量研究 每有一张其它手牌费用 -1；发现所在地点 2 个线索
+  ---
+  duration_ms: 226.4634
+  type: 'test'
+  location: 'G:\\boardgame-hall-ai\\games\\arkhamhorror\\tests\\tde-player-m2-3.test.mjs:183:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    10 费用 - 2 张其它手牌 = 8 资源
+    
+    8 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 8
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///G:/boardgame-hall-ai/games/arkhamhorror/tests/tde-player-m2-3.test.mjs:196:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: TDE 06199 三条A 同名多张可同时投入同一次技能检定（每张 1 个万能图标）
+ok 4 - TDE 06199 三条A 同名多张可同时投入同一次技能检定（每张 1 个万能图标）
+  ---
+  duration_ms: 43.2079
+  type: 'test'
+  ...
+# Subtest: TDE 06200 夜盗 横置调查：成功改为获得 2 资源，每超过难度 1 点 +1（最多 +3）
+ok 5 - TDE 06200 夜盗 横置调查：成功改为获得 2 资源，每超过难度 1 点 +1（最多 +3）
+  ---
+  duration_ms: 68.6325
+  type: 'test'
+  ...
+# Subtest: TDE 06201 幽灵利刃 攻击加入意志值，非精英敌人 +2 伤害
+ok 6 - TDE 06201 幽灵利刃 攻击加入意志值，非精英敌人 +2 伤害
+  ---
+  duration_ms: 76.5044
+  type: 'test'
+  ...
+# Subtest: TDE 06202 命令真言 指定一张法术卡：从牌库检索并抽取，其余洗回
+ok 7 - TDE 06202 命令真言 指定一张法术卡：从牌库检索并抽取，其余洗回
+  ---
+  duration_ms: 31.8286
+  type: 'test'
+  ...
+# Subtest: TDE 06203 月石 不能从手牌打出；弃牌前改为打出月石并取消该次弃牌
+ok 8 - TDE 06203 月石 不能从手牌打出；弃牌前改为打出月石并取消该次弃牌
+  ---
+  duration_ms: 30.2643
+  type: 'test'
+  ...
+# Subtest: TDE 06204 目力敏锐 调查检定成功超过 2 点：额外发现 1 个线索
+ok 9 - TDE 06204 目力敏锐 调查检定成功超过 2 点：额外发现 1 个线索
+  ---
+  duration_ms: 33.5482
+  type: 'test'
+  ...
+# Subtest: TDE 06205 清醒梦 选择手牌/场上一张卡，检索牌库中另一张同名卡并抽取
+ok 10 - TDE 06205 清醒梦 选择手牌/场上一张卡，检索牌库中另一张同名卡并抽取
+  ---
+  duration_ms: 26.6198
+  type: 'test'
+  ...
+# Subtest: TDE 06234 英勇救援 快速：代替另一位调查员承受非精英敌人的攻击，然后对其造成 1 点伤害
+ok 11 - TDE 06234 英勇救援 快速：代替另一位调查员承受非精英敌人的攻击，然后对其造成 1 点伤害
+  ---
+  duration_ms: 47.2455
+  type: 'test'
+  ...
+# Subtest: TDE 06235 领导力 投入到另一位调查员的检定时获得 [willpower][wild]
+ok 12 - TDE 06235 领导力 投入到另一位调查员的检定时获得 [willpower][wild]
+  ---
+  duration_ms: 78.5691
+  type: 'test'
+  ...
+# Subtest: TDE 06236 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）
+ok 13 - TDE 06236 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）
+  ---
+  duration_ms: 25.7305
+  type: 'test'
+  ...
+# Subtest: TDE 06237 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）
+ok 14 - TDE 06237 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）
+  ---
+  duration_ms: 27.3807
+  type: 'test'
+  ...
+# Subtest: TDE 06238 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）
+ok 15 - TDE 06238 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）
+  ---
+  duration_ms: 26.7786
+  type: 'test'
+  ...
+# Subtest: TDE 06239 快手 每位调查员仅限 1 张
+ok 16 - TDE 06239 快手 每位调查员仅限 1 张
+  ---
+  duration_ms: 27.6076
+  type: 'test'
+  ...
+# Subtest: TDE 06240 虎口拔牙 作为技能卡的投入图标
+ok 17 - TDE 06240 虎口拔牙 作为技能卡的投入图标
+  ---
+  duration_ms: 30.715
+  type: 'test'
+  ...
+# Subtest: TDE 06241 增强自我 横置：本次检定 +2 战斗
+ok 18 - TDE 06241 增强自我 横置：本次检定 +2 战斗
+  ---
+  duration_ms: 63.8386
+  type: 'test'
+  ...
+# Subtest: TDE 06242 增强自我 横置：本次检定 +2 敏捷
+ok 19 - TDE 06242 增强自我 横置：本次检定 +2 敏捷
+  ---
+  duration_ms: 58.3365
+  type: 'test'
+  ...
+# Subtest: TDE 06243 增强自我 横置：本次检定 +2 智识
+ok 20 - TDE 06243 增强自我 横置：本次检定 +2 智识
+  ---
+  duration_ms: 58.273
+  type: 'test'
+  ...
+# Subtest: TDE 06244 特薇拉 作为[[盟友]]支援入场（充能回收反应显式简化）
+ok 21 - TDE 06244 特薇拉 作为[[盟友]]支援入场（充能回收反应显式简化）
+  ---
+  duration_ms: 25.4688
+  type: 'test'
+  ...
+# Subtest: TDE 06245 希望微光 只能从弃牌堆打出：把弃牌堆中其余希望微光加入手牌
+ok 22 - TDE 06245 希望微光 只能从弃牌堆打出：把弃牌堆中其余希望微光加入手牌
+  ---
+  duration_ms: 27.4031
+  type: 'test'
+  ...
+# Subtest: TDE M2-3 分片 22 张条目全部注册且 code 与文件名一致
+ok 23 - TDE M2-3 分片 22 张条目全部注册且 code 与文件名一致
+  ---
+  duration_ms: 0.0877
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 21
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2355.3362

@@ -45,13 +45,20 @@ function definitionForCode(state, code) {
 
 function variantFor(state, slot, code, grid, revealed = false) {
   const base = structuredClone(definitionForCode(state, code))
+  const card = ALL_CARDS[code]
   return {
     ...base,
     id: slot,
     connections: [],
     grid: { ...grid },
     ...(revealed ? {} : {
-      name: '地下墓穴',
+      // 未揭示面每张地下墓穴印的是同一句进入费用。这句是公开的，不暴露正面是哪一张。
+      name: card?.backNameZh || '地下墓穴',
+      nameEn: card?.backName || 'Catacombs',
+      backText: card?.backText || '',
+      backTextZh: card?.backTextZh || '',
+      backFlavor: card?.backFlavor || '',
+      backFlavorZh: card?.backFlavorZh || '',
       hiddenIdentity: true,
       unrevealedActualName: base.name,
     }),

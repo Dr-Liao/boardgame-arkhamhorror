@@ -1,11 +1,12 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createGameState, allCardDefs, applyMove, embeddedCardDefs, legalMoves } from '../src/engine/engine.js'
+import { createGameState, allCardDefs, applyMove, embeddedCardDefs, legalMoves, refreshStateResources } from '../src/engine/engine.js'
 import { isAutomaticReward, EFFECTS } from '../src/cards/card-effects.js'
 import { investigatorRule } from '../src/cards/investigator-abilities.js'
 import { allDescriptors, registeredCodes, registeredEntry } from '../src/engine/ability.js'
 import { requestChoice, resolveTransaction, setAutoReactionHosted } from '../src/engine/resolution.js'
 import { reactionChoices, reactionView, reactionEnabled, setReactionEnabled, reactionPassPlan, reactionAutoPlan, setReactionState } from '../web/reaction-preferences.js'
+import { investigatorHoldsCard } from '../web/card-interactions.js'
 
 test('免费且不限次的资源反应自动领取，有成本、目标或次数限制的反应保留选择',()=>{
   // Phase 5（5b-6）：01033 的反应搬到能力层，读点改成描述子（数据形状不变）。
@@ -103,6 +104,37 @@ test('搬进描述子的反应仍能把窗口映射回卡号，开关才对它�
   setReactionEnabled(s.sessionId,0,['01073'],false)
   assert.deepEqual(reactionView(s).state.legalMoves.map(move=>move.optionId),['skip'])
   setReactionEnabled(s.sessionId,0,['01073'],true)
+  assert.equal(reactionView(s),s)
+})
+
+test('条目级阶段窗口（黄金怀表 02305）也有快速反应开关，关闭后窗口只剩跳过',()=>{
+  const defs=allCardDefs({runtimeOnly:false})
+  assert.equal(defs['02305'].hasReactionPrompt,true,'阶段开始/结束窗口必须能关掉')
+  assert.equal(defs['02305'].hasAutoReaction,false,'移除自身跳过/重复阶段不是安全 auto')
+  assert.equal(defs['02305'].autoByDefault,false)
+  const st=createGameState({seed:'gold-watch-switch',playerInvestigator:'01001'},[{seat:0,role:'human'}])
+  for(let guard=0;st.pendingChoice;guard++){
+    assert.ok(guard<40)
+    applyMove(st,st.pendingChoice.seat,{action:'choose',choiceId:st.pendingChoice.id,
+      optionId:['done','skip','self'].find(id=>st.pendingChoice.options.some(option=>option.id===id))||st.pendingChoice.options[0].id})
+  }
+  const inv=st.investigators[0]
+  inv.actionsLeft=20;inv.hand=[];inv.threat=[];inv.deck=Array(30).fill('01088')
+  inv.assets=[{id:'gold-watch',code:'02305',exhausted:false}]
+  st.enemies=[];st.acts[0].objective=null
+  // 真实视图卡表由 embeddedCardDefs 生成：场上支援必须带 hasReactionPrompt，否则卡面没有闪电开关。
+  refreshStateResources(st)
+  assert.equal(st.cards['02305'].hasReactionPrompt,true,'视图卡表要带开关')
+  applyMove(st,0,{action:'endTurn'})
+  assert.equal(st.pendingChoice?.kind,'reaction')
+  assert.equal(st.pendingChoice?.source,'gold-watch')
+  assert.equal(st.pendingChoice.canSkip,true)
+  assert.deepEqual(reactionChoices(st).map(item=>item.code),['02305'],'窗口能映射回卡号，开关才对它有作用')
+  assert.equal(investigatorHoldsCard(st.investigators[0],st,'02305'),true,'开关准入：场上的支援可开关')
+  const s={sessionId:'gold-watch-switch',state:st}
+  setReactionEnabled(s.sessionId,0,['02305'],false)
+  assert.deepEqual(reactionView(s).state.legalMoves.map(move=>move.optionId),['skip'])
+  setReactionEnabled(s.sessionId,0,['02305'],true)
   assert.equal(reactionView(s),s)
 })
 

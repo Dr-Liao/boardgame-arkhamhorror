@@ -1,0 +1,4 @@
+﻿06112 avail true
+01001 avail false
+hand push test
+state ok [ '06112', '06113' ]

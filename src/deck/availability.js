@@ -8,7 +8,14 @@ import {
   PLAYER_CARD_CODES as TCU_PLAYER_CARD_CODES,
   TCU_PLAYER_BASIC_WEAKNESS_CODES, TCU_PLAYER_BUILDABLE_CODES,
 } from '../../content/packs/tcuPlayer/manifest.js'
-export { TCU_PLAYER_BUILDABLE_CODES }
+// P7（M2 玩家卡）：食梦者 87 条记录逐卡验收后开放 strict 可用性；72 张可入牌组，
+// 11 张 deckLimit=0 的场外绑定卡/绑定弱点与 4 张基础弱点只作依赖。
+// 可构筑码表来自生成物（src/cards/tde-player-acceptance.js → manifest），这里不手写卡号清单。
+import {
+  PLAYER_CARD_CODES as TDE_PLAYER_CARD_CODES,
+  TDE_PLAYER_BASIC_WEAKNESS_CODES, TDE_PLAYER_BUILDABLE_CODES, TDE_PLAYER_DEPENDENCY_CODES,
+} from '../../content/packs/tdePlayer/manifest.js'
+export { TCU_PLAYER_BUILDABLE_CODES, TDE_PLAYER_BUILDABLE_CODES }
 export const CORE_INVESTIGATOR_CODES = Object.freeze(['01001', '01002', '01003', '01004', '01005'])
 export const DUNWICH_INVESTIGATOR_CODES = Object.freeze(['02001', '02002', '02003', '02004', '02005'])
 export const CARCOSA_INVESTIGATOR_CODES = Object.freeze(['03001', '03002', '03003', '03004', '03005', '03006'])
@@ -50,6 +57,8 @@ export const ALL_BASIC_WEAKNESS_CODES = Object.freeze([
   ...DUNWICH_BASIC_WEAKNESS_CODES,
   ...CARCOSA_BASIC_WEAKNESS_CODES,
   ...TCU_PLAYER_BASIC_WEAKNESS_CODES,
+  // P7：食梦者 4 张基础弱点（06035–06038）只作随机基础弱点依赖。
+  ...TDE_PLAYER_BASIC_WEAKNESS_CODES,
 ])
 export const CORE_STORY_CODES = Object.freeze(['01117'])
 export const CORE_UPGRADE_CODES = Object.freeze([
@@ -119,14 +128,16 @@ export const TFA_PLAYER_BUILDABLE_CODES = Object.freeze(tfaPlayerCodes.filter(co
 export const PLAYER_CARD_CODES = Object.freeze([
   ...CORE_PLAYER_CODES, ...expansionPlayerCodes,
 ])
-// 失落的时代 & 万象无终玩家卡可用于手动牌组与升级，但不进入默认自动构筑池：
+// 失落的时代 & 万象无终 & 食梦者玩家卡可用于手动牌组与升级，但不进入默认自动构筑池：
 // 新增卡池不应改变既有循环自动牌组的产出。
 export const ALL_BUILDABLE_CODES = Object.freeze([
   ...PLAYER_CARD_CODES, ...TFA_PLAYER_BUILDABLE_CODES, ...TCU_PLAYER_BUILDABLE_CODES,
+  // P7：食梦者 72 张可入牌组玩家卡（11 张场外绑定卡/绑定弱点 + 4 张基础弱点不进构筑池）。
+  ...TDE_PLAYER_BUILDABLE_CODES,
 ])
 const cards = new Set([...SIMPLIFIED_CARD_CODES, ...CORE_UPGRADE_CODES, ...expansionPlayerCodes,
   ...dunwichSignatures, ...carcosaSignatures, ...tfaSignatures, ...tfaPlayerCodes, ...tcuSignatures,
-  ...TCU_PLAYER_CARD_CODES, ...tdeSignatures,
+  ...TCU_PLAYER_CARD_CODES, ...tdeSignatures, ...TDE_PLAYER_CARD_CODES,
   ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES])
 const strictAcceptedCodes = new Set([...investigators, ...cards])
 const strictScenarioCodes = new Set(Object.values(SCENARIO_CARD_IDENTITIES).flatMap(categories =>
@@ -155,6 +166,7 @@ export function getAvailability(code) {
     dependencyOnly: CORE_SIGNATURE_CODES.includes(code) || dunwichSignatures.includes(code)
       || carcosaSignatures.includes(code) || tfaSignatures.includes(code) || tcuSignatures.includes(code)
       || tdeSignatures.includes(code)
+      || TDE_PLAYER_DEPENDENCY_CODES.includes(code)
       || ALL_BASIC_WEAKNESS_CODES.includes(code),
     scenarioOnly: CORE_STORY_CODES.includes(code),
     acceptanceProfile: coreCardVerified(code) ? CORE_ACCEPTANCE_PROFILE.id : null,
@@ -163,6 +175,8 @@ export function getAvailability(code) {
         ? 'M2 失落的时代玩家卡已全部通过逐卡主要印刷效果验收（含战役层永久卡）。'
       : TCU_PLAYER_CARD_CODES.includes(code)
         ? 'M2 万象无终玩家卡已通过逐卡主要印刷效果验收（83 张可入牌组；05314/05317 为绑定副本、05041/05042 基础弱点只作依赖），P10 起进入构筑界面与 TCU 战役起始牌组池。'
+      : TDE_PLAYER_CARD_CODES.includes(code)
+        ? 'M2 食梦者玩家卡已通过逐卡主要印刷效果验收（72 张可入牌组；11 张 deckLimit=0 场外绑定卡/绑定弱点与 06035–06038 基础弱点只作依赖）。战役仍是 catalog-only，P10 起进入构筑界面与食梦者战役起始牌组池。'
       : TCU_INVESTIGATOR_CODES.includes(code) || tcuSignatures.includes(code)
         ? 'M1 万象无终六位调查员及其 13 张专属依赖已通过逐人行为与存档回放验收；P10 起玩家卡、九章剧本与大厅入口均已开放（战役 playable）。'
       : TDE_INVESTIGATOR_CODES.includes(code) || tdeSignatures.includes(code)

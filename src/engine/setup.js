@@ -726,8 +726,15 @@ function startScenario(state, index, events) {
   info(state, events, `🎬 第 ${index + 1} 关：${sc.name}`)
   state.scenarioIntro = introduction(sc, state.campaign.records, state)
   const introText = state.scenarioIntro.paragraphs.join('\n\n')
+  // 开局没有场景牌的关（黑星升起两条密谋同时在场）用内容层声明的导入配图，
+  // 否则故事导入拍脸没有卡面。aside 是拍脸右侧那张，黑星升起用来亮出「c」密谋。
+  const illustrated = scenarioBehavior(state).introSplash?.(state) || null
+  const actCard = sc.acts?.[0]
   info(state, events, introText, { kind: 'story', title: '故事导入', scenarioId: sc.id,
-    code: sc.acts[0]?.originalCode || sc.acts[0]?.code, name: sc.acts[0]?.name || sc.name,
+    code: illustrated?.code || actCard?.originalCode || actCard?.code,
+    name: actCard?.name || sc.name,
+    ...(illustrated?.artName ? { artName: illustrated.artName } : {}),
+    ...(illustrated?.asideCode ? { asideCode: illustrated.asideCode, asideName: illustrated.asideName } : {}),
     text: introText, intro: true })
   const openingAgenda = state.agendas[state.agendaIndex]
   if (openingAgenda) info(state, events, `初始密谋：${openingAgenda.name}。`, {

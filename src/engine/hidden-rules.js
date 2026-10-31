@@ -1,4 +1,4 @@
-﻿// hidden-rules.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
+// hidden-rules.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 「隐私卡 / 文本空白 / 布尔规则」的读点：隐藏卡（hidden）、被清空的调查员/敌人文本、
 // 敌人能否攻击/被攻击/引发借机攻击，以及移动前的禁止判定。
 export function createHiddenRules(deps) {
@@ -53,6 +53,36 @@ export function createHiddenRules(deps) {
       kind: 'automatic', phase: state.phase, round: state.round, text: `你获得隐私牌「${definition.name}」`,
       code: definition.originalCode || definition.code, name: definition.name, effect: 'encounter', seat: inv.seat,
     })
+  }
+
+  // 隐私牌的「每轮最多投入 N 张」限制（食梦者 06319–06321 无眠之旅）。
+  // 数据：条目的 `hiddenRule.maxCommitsPerRound = 1`；计数按 (座位, state.round) 存在
+  // `state.scenarioFlags.hiddenCommitCounts`，跨多次检定累计，换轮自动重置（只比较 round）。
+  function hiddenCommitLimit(state, inv) {
+    const limits = activeHiddenRules(state, inv)
+      .map(item => Number(item.rule.maxCommitsPerRound))
+      .filter(value => Number.isInteger(value) && value >= 0)
+    return limits.length ? Math.min(...limits) : null
+  }
+
+  function hiddenCommitCount(state, inv) {
+    const entry = state.scenarioFlags?.hiddenCommitCounts?.[inv.seat]
+    return entry && entry.round === state.round ? Number(entry.count) || 0 : 0
+  }
+
+  function hiddenCommitLimitReached(state, inv) {
+    const limit = hiddenCommitLimit(state, inv)
+    return limit != null && hiddenCommitCount(state, inv) >= limit
+  }
+
+  function noteHiddenCommit(state, inv) {
+    if (hiddenCommitLimit(state, inv) == null) return
+    state.scenarioFlags ||= {}
+    state.scenarioFlags.hiddenCommitCounts ||= {}
+    state.scenarioFlags.hiddenCommitCounts[inv.seat] = {
+      round: state.round,
+      count: hiddenCommitCount(state, inv) + 1,
+    }
   }
 
   function activeHiddenRules(state, inv) {
@@ -150,5 +180,5 @@ export function createHiddenRules(deps) {
     return scenarioBehavior(state).enemyCanBeDefeated?.(state, enemy, source, seat) !== false
   }
 
-  return { hiddenDefinition, hiddenRule, hasHiddenCard, removeHiddenMarker, canDiscardFromHand, discardHiddenCard, placeHiddenCard, activeHiddenRules, playTypeBlocked, cannotTriggerFreeAbility, hiddenFightBlocked, movementError, currentInv, investigatorTextBlanked, enemyTextBlanked, enemyCannotAttack, enemyCannotBeAttacked, aloofPreventsAttack, enemyCanOpportunityAttack, enemyCanBeDefeated }
+  return { hiddenDefinition, hiddenRule, hasHiddenCard, removeHiddenMarker, canDiscardFromHand, discardHiddenCard, placeHiddenCard, activeHiddenRules, playTypeBlocked, cannotTriggerFreeAbility, hiddenFightBlocked, movementError, currentInv, investigatorTextBlanked, enemyTextBlanked, enemyCannotAttack, enemyCannotBeAttacked, aloofPreventsAttack, enemyCanOpportunityAttack, enemyCanBeDefeated, hiddenCommitLimitReached, noteHiddenCommit }
 }

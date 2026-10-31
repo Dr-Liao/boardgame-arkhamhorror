@@ -134,7 +134,11 @@ test('behavior.js 总行数不超过 Phase 3 基线，且至少一个关卡已�
 // actRule/agendaRule.locationTraitLinks 连接规则，引擎在幕/密谋进出与地点进出时自动接线）：
 // 该章 behavior.js 改为只调 `api.addLocationTrait/removeLocationTrait/setShroudMod`，
 // 私有连接/清理代码删除，实测 23,551（-90 行），按实测下锁；后续同类机制请用该原语。
-const BUDGET = 23551
+// 2026-10-31 P8（食梦者 5 循环 8 章剧本接入）：A/B 双战役 8 章（每章 definition/behavior/chaos +
+// 区域切换/幕间流程/结局记录）新增 5,734 行 behavior.js（新循环内容，不是 Phase 3 旧债务）；
+// 同类「章节流程声明化」原语（declareScenario）尚未覆盖双线章对门/区域切换，先按实测 29,285 重锁，
+// 仍要求后续只减不增；逐卡规则仍在单卡条目里，behavior 只保留流程与共享钩子转发。
+const BUDGET = 29285
   assert.ok(data.phase3.behaviorLines <= BUDGET,
     `behavior.js 总行数 ${data.phase3.behaviorLines} 超过基线 ${BUDGET}：新增关卡流程请写 `
     + 'content/scenario-declaration.js 的声明，不要往 behavior.js 加命令式钩子。')

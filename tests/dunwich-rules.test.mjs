@@ -1086,7 +1086,9 @@ test('D9 Spaces Between flips and shuffles paths, evacuates occupants, and hides
   assert.ok(s.locations.filter(loc => [L('02289'), L('02290')].includes(loc.id)).every(loc => ['02289', '02290', '02291', '02292'].includes(loc.originalCode)))
   for (const loc of s.locations.filter(loc => loc.hiddenIdentity)) delete loc.artCode // Compatibility with saves made before public back art was recorded.
   const visible = viewState(s, 0).locations.filter(loc => [L('02285'), L('02286'), L('02289'), L('02290')].includes(loc.id))
-  assert.ok(visible.every(loc => !loc.originalCode && !loc.code && loc.name === '未知小径'))
+  assert.ok(visible.every(loc => !loc.originalCode && !loc.code))
+  assert.deepEqual(visible.map(loc => loc.name), ['分岔路', '分岔路', '迷幻小路', '迷幻小路'])
+  assert.ok(visible.every(loc => loc.backFlavorZh && !loc.backFlavorZh.includes('屠杀') && !loc.backFlavorZh.includes('空地')))
   assert.deepEqual(visible.map(loc => loc.artCode), ['02285', '02285', '02289', '02289'])
 })
 
@@ -1840,7 +1842,7 @@ test('fix: Doom Awaits paths hide whether they are Altered until revealed', () =
   const s = chapterFixture('whereDoomAwaits')
   const paths = Object.values(s.scenario.locations).filter(loc => ['02285', '02289'].includes(loc.originalCode))
   assert.ok(paths.length >= 2)
-  assert.ok(paths.every(path => path.unrevealedActualName && ['分歧之路', '异变之路'].includes(path.name)))
+  assert.ok(paths.every(path => path.unrevealedActualName && ['分岔路', '迷幻小路'].includes(path.name)))
 })
 
 test('fix: Kidnapped pools only unique characters as Yog-Sothoth sacrifices', () => {

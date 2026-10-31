@@ -142,3 +142,37 @@ test('卡尔克萨（谢幕）桌面显示剧本提示卡，困难/专家面翻�
   await page.setViewportSize({ width: 1400, height: 950 })
   await page.screenshot({ path: output + 'carcosa-reference-card.png', animations: 'disabled' })
 })
+
+test('同一条密谋能力按牌堆分别提交', async ({ page }) => {
+  let session, submitted = null
+  await page.route('**/api/start', async route => {
+    const response = await route.fetch({ postData: JSON.stringify({ modId: 'arkhamhorror', settings: {
+      legacyAutoStart: true, playerCount: 1, playerInvestigator: '01001', seed: 'script-agenda-deck',
+    } }) })
+    const payload = await response.json(); session = payload.session
+    const deckMove = deckId => ({
+      action: 'scenarioAction', rule: 'hastenAgenda', deckId, scriptCard: 'agenda', actions: 0,
+      label: `在“${deckId}”密谋上放置1毁灭`,
+    })
+    Object.assign(session.state, { pendingChoice: null, currentSeat: 0, phase: 'investigation',
+      legalMoves: [deckMove('a'), deckMove('c')],
+      scriptActions: [deckMove('a'), deckMove('c')] })
+    await route.fulfill({ response, json: payload })
+  })
+  await page.route('**/api/session?*', route => route.fulfill({ json: { ok: true, session } }))
+  await page.route('**/api/move', async route => {
+    submitted = route.request().postDataJSON().move
+    await route.fulfill({ json: { ok: true, session } })
+  })
+  await page.goto('/index.html')
+  await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
+  await page.getByRole('button', { name: '开始新游戏' }).click()
+  await expect(page.locator('.ah-story-book')).toBeVisible()
+  const skip = page.getByRole('button', { name: '跳过演出' })
+  if (await skip.count()) await skip.click()
+  const panel = page.getByRole('group', { name: '剧本可执行操作' })
+  await expect(panel.locator('.ah-script-action')).toHaveCount(2)
+  await panel.locator('.ah-script-action[data-agenda-deck="c"]').click()
+  await expect.poll(() => submitted?.deckId).toBe('c')
+  await expect.poll(() => submitted?.rule).toBe('hastenAgenda')
+})

@@ -26,7 +26,7 @@
 @media(max-width:500px) { .ah-bag-modal{padding:16px}.ah-bag-modal header{gap:8px}.ah-bag-modal header>img{width:52px;height:52px}.ah-bag-modal h2{font-size:21px}.ah-bag-token-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.ah-bag-token img{width:56px;height:56px} }
 .ah-table.ah-calm.ah-noir .ah-table-script { display: grid; grid-template-columns: minmax(412px,500px) minmax(430px,660px); justify-content: space-between; align-items: center; gap: 24px; }
 .ah-command-deck { grid-column: 2; container-type: inline-size; width: 100%; max-width: 660px; justify-self: end; min-width: 0; display: grid; gap: 9px; }
-.ah-command-resources { display: grid; grid-template-columns: max-content minmax(108px,max-content) minmax(196px,max-content); justify-content: end; align-items: center; gap: clamp(10px,1.5vw,24px); min-width: 0; border-bottom: 1px solid #bba26c40; padding-bottom: 6px; }
+.ah-command-resources { display: grid; grid-template-columns: max-content minmax(108px,max-content); justify-content: end; align-items: center; gap: clamp(10px,1.5vw,24px); min-width: 0; border-bottom: 1px solid #bba26c40; padding-bottom: 6px; }
 .ah-encounter-deck { display: grid; grid-template-columns: 30px auto; column-gap: 7px; align-items: center; flex: none; font-size: 11px; color: #cfbd93; }
 .ah-encounter-deck img { width: 28px; height: 40px; grid-row: span 2; border: 1px solid #a69260; border-radius: 2px; box-shadow: 2px 2px #1b2820,3px 3px #a6926080,5px 5px #1b2820; }
 .ah-encounter-deck small { font-size: 9px; color: #aebaa6; }
@@ -106,7 +106,7 @@
   .ah-table.ah-calm.ah-noir .ah-story-group { gap: 14px; }
   .ah-table.ah-calm.ah-noir .ah-story-book { height: 120px; }
   .ah-header-phase { padding: 3px 5px; gap: 4px; }.ah-header-phases { gap: 2px; }
-  .ah-command-resources { grid-template-columns: max-content 100px minmax(180px,max-content); gap: 10px; }.ah-table.ah-calm.ah-noir .ah-command-deck .ah-chaos-bag { min-width: 100px; }.ah-table.ah-calm.ah-noir .ah-command-deck .ah-script-status { min-width: 180px; gap: 3px 10px; }.ah-roster-member { padding: 5px; }.ah-roster-character { gap: 4px; }
+  .ah-command-resources { grid-template-columns: max-content 100px; gap: 10px; }.ah-table.ah-calm.ah-noir .ah-command-deck .ah-chaos-bag { min-width: 100px; }.ah-roster-member { padding: 5px; }.ah-roster-character { gap: 4px; }
 }
 @media (max-width: 980px) {
   .ah-table.ah-calm.ah-noir .bg-game-head { flex-wrap: wrap; gap: 4px 10px; }
@@ -118,7 +118,7 @@
   .ah-table.ah-calm.ah-noir .ah-story-group { width: 100%; }
   .ah-table.ah-calm.ah-noir .ah-story-book { width: 100%; max-width: 388px; height: 119px; }
   .ah-command-deck { grid-column: 1 / -1; max-width: none; gap: 4px; }
-  .ah-command-resources { grid-template-columns: max-content max-content minmax(180px,max-content); justify-content: space-between; padding-bottom: 3px; }
+  .ah-command-resources { grid-template-columns: max-content max-content; justify-content: space-between; padding-bottom: 3px; }
   .ah-command-roster { justify-content: flex-start; }
   .ah-table.ah-calm.ah-noir .ah-command-deck .ah-chaos-bag { grid-template-columns: 32px auto; }
   .ah-command-deck .ah-chaos-bag img { width: 32px; height: 32px; }

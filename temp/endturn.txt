@@ -1,0 +1,33 @@
+﻿11126 穷困潦倒 treachery 
+11127 病态的好奇心 treachery 
+11534 “小心！” treachery 
+51068 暴力命令 treachery 
+51069 魔掌 treachery 
+52071 脑中幻象 treachery 
+52072 脑中幻象 treachery 
+52073 脑中幻象 treachery 
+52074 脑中幻象 treachery 
+71062 暴力命令 treachery 
+81029 狼人诅咒 treachery 
+84014 餐厅 location 
+90019 黑暗回忆 event 
+01013 黑暗回忆 event IMPL
+01513 黑暗回忆 event 
+02039 时间恐惧症 treachery IMPL
+02049 人文学大楼 location 
+04009 未知的呼唤 treachery IMPL
+04077 丛林之声 treachery 
+04081 迷失荒野 treachery 
+04133b 幽暗洞穴 location 
+05146 群星牵引 treachery 
+06036 偷窃癖 asset 
+07125 无情浪潮 agenda 
+07126 水漫街道 agenda 
+07127 深海之怒 agenda 
+07258 全蚀 treachery 
+08706 瘴气折磨 treachery 
+09003 无私成疾 treachery 
+09125 量子悖论 event 
+88042a 赌博成瘾 treachery 
+88042b 赌博成瘾 treachery 
+88042c 赌博成瘾 treachery 

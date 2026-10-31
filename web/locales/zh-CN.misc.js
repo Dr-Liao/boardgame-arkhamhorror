@@ -18,6 +18,7 @@ export default {
   'misc.deck.excluded': '{name} 属于构筑限制排除的卡牌',
   'misc.deck.size': '牌库需 {size} 张玩家卡，当前 {count} 张',
   'misc.deck.overLimit': '{name} 超过张数上限',
+  'misc.deck.myriadLimit': '{name} 超过多重同名上限（同名最多 {limit} 张）',
   'misc.deck.restriction': '{name} 不符合构筑限制或限额',
   'misc.deck.atleastInvalid': '无效的阵营数量构筑要求',
   'misc.deck.atleast': '牌组必须至少包含 {factions} 个不同阵营各 {minimum} 张牌',

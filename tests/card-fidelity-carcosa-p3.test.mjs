@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 
 import { fixture, asset, enemy, move, settle, validateMove, legalMoves } from './core-fixture.mjs'
 import { registeredEntry } from '../src/engine/ability.js'
+import { investigatorEntryError } from '../src/engine/engine.js'
 import { nonPlayerEntryFor } from '../src/cards/encounter-abilities.js'
 import { behavior as blackStarsRise } from '../content/campaigns/thePathToCarcosa/scenarios/blackStarsRise/behavior.js'
 
@@ -48,7 +49,7 @@ test('03288 北部塔楼：a 密谋毁灭多于 c 时所有技能检定 -1', () 
   assert.equal(blackStarsRise.testDifficultyModifier(state, me(state)), 0)
 })
 
-test('03291 修道院教堂：双密谋 +2 帷幕；进入需在垮塌的台阶共同支付 3×人数线索', () => {
+test('03291 修道院教堂：双密谋 +2 帷幕；未揭示时进入需在垮塌的台阶共同支付 3×人数线索', () => {
   const state = fixture('01001', 2)
   state.scenarioFlags.agendaDecks = { a: { index: 0 }, c: { index: 1 } }
   const church = { id: 'abbeyChurch', originalCode: '03291', code: '03291' }
@@ -57,12 +58,19 @@ test('03291 修道院教堂：双密谋 +2 帷幕；进入需在垮塌的台阶�
   const stairs = { id: 'brokenSteps', originalCode: '03289', code: '03289' }
   state.locations.push(stairs)
   for (const inv of state.investigators) inv.location = 'brokenSteps'
-  assert.match(blackStarsRise.investigatorEntryError(state, church), /共同支付/)
+  assert.match(investigatorEntryError(state, church.id, 0), /共同支付/)
   state.investigators[0].clues = 6
-  assert.equal(blackStarsRise.investigatorEntryError(state, church), null)
+  assert.equal(investigatorEntryError(state, church.id, 0), null)
   let paid = 0
-  blackStarsRise.beforeMove(state, state.investigators[0], church, { payClues: amount => { paid = amount } })
+  registeredEntry('03291').locationRule.beforeEnter(state, church, state.investigators[0], {
+    payClues: amount => { paid = amount },
+  })
   assert.equal(paid, 6)
+  // 揭示后未揭示面失效：从骑士大厅返回不再收费，引擎也不再调用 beforeEnter。
+  church.revealed = true
+  state.investigators[0].clues = 0
+  state.investigators[0].location = 'knightsHall'
+  assert.equal(investigatorEntryError(state, church.id, 0), null)
 })
 
 test('03124/03125：每个已揭示历史协会地点 +每人 1 线索，上限为线索值', () => {

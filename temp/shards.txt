@@ -1,0 +1,2 @@
+﻿null
+{"schemaVersion":1,"cycle":"tde","cycleName":"The Dream Eaters","cycleNameZh":"食梦者","milestone":"P7","stage":"第 5 步：批量迁移内容 · M2 玩家卡（4 子进程批量，22/22/22/21）","generatedBy":"tools/scan-tde-player-shards.mjs","protocol":"docs/arkham-content-migration.md §4.6（多子进程 + 原语队列）","docs":"docs/tde-migration-roadmap.md §8.2 / docs/tde-player-cards.md","workerBrief":"artifacts/migration/tde/workers/P7-WORKER-BRIEF

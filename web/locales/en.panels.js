@@ -3,6 +3,16 @@
 // Keys mirror zh-CN.panels.js one-to-one; a missing key falls back to the zh-CN
 // source string (never to a bare key on the main path). See docs/localization.md §6.1/§8.2.
 export default {
+  // Scenario setup (scenario-setup-view.js)
+  'setup.title': 'Scenario setup',
+  'setup.aria': 'Scenario setup',
+  'setup.closeAria': 'Close scenario setup',
+  'setup.intro': 'Introduction',
+  'setup.steps': 'Setup',
+  'setup.note': 'Notes',
+  'setup.empty': 'This scenario has no written setup steps yet.',
+  'setup.footer': 'These steps were already carried out at the start. Use this page to check how the table was laid out, which cards were set aside, and which rules to remember.',
+
   // Situation dialog (situation-view.js)
   'situation.title': 'Investigation situation',
   'situation.closeAria': 'Close situation details',

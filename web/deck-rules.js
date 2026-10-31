@@ -178,6 +178,23 @@ export function deckCardLimit(card) {
   if (/Limit 1 per investigator/i.test(card.text || '')) limit = Math.min(limit, 1)
   return Number.isSafeInteger(limit) && limit > 0 ? (card.exceptional ? Math.min(1, limit) : limit) : 0
 }
+// Myriad（多重）的同名上限：跨卡号共享 3 张额度（06020/06021/06199/06245…；
+// 06241–06243 三张「增强自我」各自 deckLimit 1，合计最多 3 张）。
+// 与 src/engine/myriad.js 的 MYRIAD_LIMIT 同一口径；浏览器侧不能 import src/，故这里单独声明常量。
+export const MYRIAD_TITLE_LIMIT = 3
+// 构筑界面「2/3」读数：按标题汇总牌组里的 Myriad 卡份数（无 Myriad 卡时返回空数组）。
+export function myriadUsage(codes, cards) {
+  const byTitle = new Map()
+  for (const code of codes || []) {
+    const card = typeof cards === 'function' ? cards(code) : cards?.[code]
+    if (!card?.myriad) continue
+    const title = card.name || card.code
+    const entry = byTitle.get(title) || { name: title, count: 0, limit: MYRIAD_TITLE_LIMIT }
+    entry.count += 1
+    byTitle.set(title, entry)
+  }
+  return [...byTitle.values()]
+}
 export function validateDeckRules(investigator, codes, cards, { partial = false } = {}) {
   const rules = deckRules(investigator)
   const errors = []
@@ -190,12 +207,28 @@ export function validateDeckRules(investigator, codes, cards, { partial = false 
   }
   const counted = ordinary.filter(card => !card.permanent && !card.ignoreDeckLimit)
   if ((!partial && counted.length !== rules.size) || counted.length > rules.size) errors.push(t('misc.deck.size', { size: rules.size, count: counted.length }))
+  // 每张卡各自的 deck_limit（例：06241–06243 三张「增强自我」各限 1 张）。
+  const countsByCode = new Map()
+  for (const card of ordinary) countsByCode.set(card.code, (countsByCode.get(card.code) || 0) + 1)
+  for (const [code, count] of countsByCode) {
+    const card = ordinary.find(item => item.code === code)
+    if (count > deckCardLimit(card)) errors.push(t('misc.deck.overLimit', { name: card.name || code, limit: deckCardLimit(card) }))
+  }
   const names = new Map()
   for (const card of ordinary) {
     const group = names.get(card.name || card.code) || []
     group.push(card); names.set(card.name || card.code, group)
   }
-  for (const [name, group] of names) if (group.length > Math.min(...group.map(deckCardLimit))) errors.push(t('misc.deck.overLimit', { name }))
+  // 同名总张数：Myriad 卡按「同名至多 3 张」跨卡号共享额度；其余卡沿用组内最严 deck_limit。
+  for (const [name, group] of names) {
+    const myriad = group.some(card => card.myriad === true)
+    const limit = myriad ? MYRIAD_TITLE_LIMIT : Math.min(...group.map(deckCardLimit))
+    if (group.length > limit) {
+      errors.push(myriad
+        ? t('misc.deck.myriadLimit', { name, limit })
+        : t('misc.deck.overLimit', { name, limit }))
+    }
+  }
   // Capacity matching prevents one card from consuming both a primary option
   // and a limited splash allowance; augmentation makes this order independent.
   const limited = ordinary.filter(card => !rules.options.some(rule => rule.limit == null && matchesCardRule(card, rule, investigator)))

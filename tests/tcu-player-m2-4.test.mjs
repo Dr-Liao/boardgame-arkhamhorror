@@ -733,10 +733,14 @@ test(`TCU 05321 ${nameOf('05321')} 攻击揭示符号标记后敌人本回合 -1
   state.chaosBag = ['skull']
   const target = enemy(state, { id: 'wither-symbol', fight: 2, evade: 2, health: 4, damageTaken: 0 })
   move(state, { action: 'ability', assetId: wither.id, abilityIndex: 0, targetId: target.id })
+  let askedWither = false
   settle(state, pending => {
-    if (pending.kind !== 'reaction') return null
-    return pending.options.find(option => option.cardCode === '05321')?.id ?? 'skip'
+    if (pending.kind === 'reaction' && pending.options.some(option => option.cardCode === '05321')) {
+      askedWither = true
+    }
+    return null
   })
+  assert.equal(askedWither, false, '符号效果直接结算，不询问是否触发反应')
   const after = state.enemies.find(item => item.id === 'wither-symbol')
   assert.ok(after, '敌人仍在场')
   assert.equal(enemyFightValue(state, after, me(state)), 1, '攻击值 -1')
@@ -748,6 +752,17 @@ test(`TCU 05321 ${nameOf('05321')} 攻击揭示符号标记后敌人本回合 -1
   assert.equal(enemyFightValue(state, restored, me(state)), 2, '回合结束后攻击值恢复')
   assert.equal(enemyEvadeValue(state, restored, me(state)), 2, '回合结束后躲避值恢复')
   assert.equal(enemyHealth(state, restored), 4, '回合结束后生命值恢复')
+})
+
+test(`TCU 05321 ${nameOf('05321')} 先减生命再结算伤害，2 点生命的敌人会被本次攻击击败`, () => {
+  const state = fixture('01001')
+  const wither = asset(state, '05321')
+  me(state).willpower = 8
+  state.chaosBag = ['skull']
+  enemy(state, { id: 'wither-two', fight: 2, evade: 2, health: 2, damageTaken: 0 })
+  move(state, { action: 'ability', assetId: wither.id, abilityIndex: 0, targetId: 'wither-two' })
+  settle(state)
+  assert.equal(state.enemies.some(item => item.id === 'wither-two'), false, '生命先降到 1，再受到 1 点伤害后被击败')
 })
 
 test(`TCU 05321 ${nameOf('05321')} 05033「恐怖灵感」可取消符号窗口里的凋零术效果`, () => {
@@ -782,20 +797,19 @@ test(`TCU 05321 ${nameOf('05321')} 05033「恐怖灵感」可让符号窗口里�
   state.chaosBag = ['skull']
   const target = enemy(state, { id: 'wither-repeat', fight: 3, evade: 3, health: 5, damageTaken: 0 })
   move(state, { action: 'ability', assetId: wither.id, abilityIndex: 0, targetId: target.id })
-  let sawWitherAfterInspiration = false
+  let askedWither = false
   settle(state, pending => {
     if (pending.kind === 'reaction') {
       const inspiration = pending.options.find(option => option.cardCode === '05033')
       if (inspiration) return inspiration.id
-      const witherOption = pending.options.find(option => option.cardCode === '05321')
-      if (witherOption) { sawWitherAfterInspiration = true; return witherOption.id }
+      if (pending.options.some(option => option.cardCode === '05321')) askedWither = true
       return 'skip'
     }
     if (pending.kind === 'effect') return 'repeat'
     return null
   })
   const after = state.enemies.find(item => item.id === 'wither-repeat')
-  assert.equal(sawWitherAfterInspiration, true, '再次结算由 05321 自己的符号反应完成')
+  assert.equal(askedWither, false, '再结算由凋零术自己直接执行，不再弹出反应')
   assert.equal(enemyHealth(state, after), 3, '生命值 -2（同一效果结算两次）')
   assert.equal(enemyFightValue(state, after, me(state)), 1, '攻击值 -2 后被下限 1 钳制')
   assert.equal(enemyEvadeValue(state, after, me(state)), 1, '躲避值 -2 后被下限 1 钳制')

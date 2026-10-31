@@ -11,6 +11,10 @@
 export default {
   code: '03296', scope: 'location',
   locationRule: {
+    // 背面：没找到向导不能进入。引擎在地点揭示后不再调用 entryError。
+    entryError(state) {
+      return state.scenarioFlags?.foundGuide ? null : '需要先在回廊找到向导'
+    },
     investigationError(state, inv) {
       return (inv.maxSanity || inv.sanity || 0) - (inv.horror || 0) > 3 ? '剩余神智必须为3点或更少' : null
     },

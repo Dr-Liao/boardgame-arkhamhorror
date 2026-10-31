@@ -1,0 +1,8 @@
+﻿01059 asset 圣玫瑰珠 ["Item","Charm"] mystic
+01060 asset 皱缩术 ["Spell"] mystic
+01061 asset 探知术 ["Spell"] mystic
+01062 asset 神秘研究 ["Talent"] mystic
+01063 asset 新晋术士 ["Ally","Sorcerer"] mystic
+01064 event 飞蛾扑火 ["Insight"] mystic
+02266 event 杀手锏 ["Trick"] rogue
+03035 asset 灵力祭祀刀 ["Item","Relic","Weapon","Melee"] mystic

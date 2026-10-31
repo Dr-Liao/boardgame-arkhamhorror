@@ -13,6 +13,7 @@
 // 这里只负责解析与友好报错。
 
 import { validateMove } from '../engine/engine.js'
+import { randomValue } from '../engine/rules-state.js'
 import { ALL_ENEMIES, cardDef, cardName, enemyDef } from '../engine/card-lookup.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { contentRegistry } from '../../content/registered.js'
@@ -23,6 +24,7 @@ const HELP_TEXT = [
   '【关卡】',
   '  跳到 <关卡>（跳关 / goto / jump / scenario）：序号 1 起、关卡 ID 或名称，例：跳到 2',
   '  重开本关（restart / 重新开始本关）：重新布置当前关卡',
+  '  立即结束这关（结束这关 / 随机结局 / end scenario）：立刻结算当前关卡，并在本关结局中随机选一个',
   '',
   '【敌人】',
   '  生成 <敌人>（刷出 / spawn / addEnemy）：在目标调查员所在地点生成并交战',
@@ -63,6 +65,7 @@ const HELP_ALIASES = new Set(['帮助', 'help', '?', '？', '指令', 'help?', '
 const COMMAND_GROUPS = [
   { aliases: ['跳到', '跳关', 'goto', 'jump', 'scenario'], kind: 'scenario' },
   { aliases: ['重开本关', '重新开始本关', 'restart'], kind: 'restart' },
+  { aliases: ['立即结束这关', '结束这关', '随机结局', 'end scenario', 'endscenario'], kind: 'endScenario' },
   { aliases: ['生成', '刷出', 'spawn', 'addenemy'], kind: 'spawn' },
   { aliases: ['消灭', '击杀', '杀死', 'kill', 'defeat'], kind: 'defeat' },
   { aliases: ['发卡', '给卡', 'give', '发'], kind: 'card' },
@@ -859,6 +862,32 @@ function buildDoomCommand(state, rest, alias) {
   }
 }
 
+function resolutionLabel(key) {
+  if (key === 'noResolution') return '未达成结局'
+  const numbered = /^r(\d+)$/.exec(key) || /^resolution(\d+)$/.exec(key)
+  return numbered ? `结局 ${numbered[1]}` : key
+}
+
+function scenarioInProgress(state) {
+  return !!state?.scenario?.id && !(state.hubFlow && state.uiState && state.uiState !== 'inScenario')
+}
+
+function buildEndScenarioCommand(state, rest) {
+  if (cleanArg(rest)) throw new Error('立即结束这关不需要参数。')
+  if (!scenarioInProgress(state)) throw new Error('当前没有进行中的关卡，无法结束本关。')
+  const keys = Object.keys(state.scenario.resolutions || {})
+  if (!keys.length) throw new Error('本关没有可结算的结局。')
+  // 只读地看一眼对局随机序列，不推进 rngState。抽中的结局写进 move，重放时不再重抽。
+  const probe = { rngState: Number.isInteger(state.rngState) ? state.rngState : 0 }
+  const resolutionKey = keys[Math.floor(randomValue(probe) * keys.length)]
+  const fullName = String(state.scenario.name || state.scenario.id)
+  const shortName = fullName.split(/[：:]/u).pop().trim() || fullName
+  return {
+    move: { action: 'debug', kind: 'endScenario', resolutionKey },
+    message: `已立即结束「${shortName}」，随机结局：${resolutionLabel(resolutionKey)}。`,
+  }
+}
+
 function buildRestartCommand(state) {
   const scenario = state?.scenario
   const scenarioId = scenario?.id
@@ -901,6 +930,9 @@ export function buildDebugCommand(session, seat, command) {
       break
     case 'restart':
       result = buildRestartCommand(state)
+      break
+    case 'endScenario':
+      result = buildEndScenarioCommand(state, matched.rest)
       break
     case 'spawn':
       result = buildSpawnCommand(state, seat, command, matched.rest)

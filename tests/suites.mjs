@@ -42,6 +42,7 @@ export const FAST_TESTS = Object.freeze([
   'encounter-entries.test.mjs', // 非玩家条目：一卡一文件 / 归属 / 索引 / 跨条目查询单独 import
   'architecture-guard.test.mjs',
   'i18n-dict.test.mjs', // 界面词典完整性：中英 key/占位符/重复 key/裸 key/残留中文
+  'scenario-guides.test.mjs', // 关卡设置：每关都有布置文本和说明，并投影到观察视图
   'phase6-guard.test.mjs', // Phase 6 门禁：引擎里无卡号 / 无战役名
   'phase6-implementation.test.mjs', // Phase 6（6e-1）实现账本：通道判定 / 摘要形状 / isPlayable 一致
   'phase6-campaign.test.mjs', // Phase 6（6e-17）战役插件化：公开投影 / agentHints / observation 守卫
@@ -204,6 +205,22 @@ export const FAST_TESTS = Object.freeze([
   'tde-parallel.test.mjs', // 食梦者 P5 批次 3：并行双运行时管线（container/路由/投影/存档/屏障）
   'tde-mode-panel.test.mjs', // 食梦者 P5 批次 3：开局模式面板模型（模式/置灰原因/座位分线）
   'tde-investigators.test.mjs', // 食梦者 P6：五位调查员 + 11 张专属卡 + 13 条记录的逐人验收
+  'tde-player-m2-1.test.mjs', // 食梦者 P7：M2-1 玩家卡 06018–06110 逐卡行为
+  'tde-player-m2-2.test.mjs', // 食梦者 P7：M2-2 玩家卡 06111–06195 逐卡行为
+  'tde-player-m2-3.test.mjs', // 食梦者 P7：M2-3 玩家卡 06196–06245 逐卡行为
+  'tde-player-m2-4.test.mjs', // 食梦者 P7：M2-4 玩家卡 06246–06332 逐卡行为
+  'tde-player-ledger.test.mjs', // 食梦者 P7：M2 玩家卡账本/availability/campaign/Myriad 接线
+  'tde-scenario-interactions.test.mjs', // 食梦者 P5：场景交互投影（蜂拥/滋生/警戒/隐私/掩藏/计数/纵向链/结局）
+  'tde-scenario-runtime-api.test.mjs', // 食梦者 P8：内容层通用 api（遭遇牌库/线索/隐私手牌/投入上限）+ 共享规则层
+  'tde-campaign-layer.test.mjs', // 食梦者 P8：55 记录键/A-B 双袋/parts+modes/16 排列 flow/三幕间/16 段尾声矩阵
+  'tde-scenario-beyondTheGatesOfSleep.test.mjs', // 食梦者 P8：A1《梦境门外》章节 + 遭遇条目
+  'tde-scenario-wakingNightmare.test.mjs', // 食梦者 P8：B1《清醒噩梦》章节 + 蛛群滋生袋
+  'tde-scenario-theSearchForKadath.test.mjs', // 食梦者 P8：A2《寻觅卡达斯》章节 + 掩藏地点
+  'tde-scenario-aThousandShapesOfHorror.test.mjs', // 食梦者 P8：B2《万千骇形》章节 + 纵向链
+  'tde-scenario-darkSideOfTheMoon.test.mjs', // 食梦者 P8：A3《月之暗面》章节 + 警报等级
+  'tde-scenario-pointOfNoReturn.test.mjs', // 食梦者 P8：B3《无归之地》章节 + 洗回
+  'tde-scenario-whereTheGodsDwell.test.mjs', // 食梦者 P8：A4《神居之所》章节 + Hidden 手牌
+  'tde-scenario-weaverOfTheCosmos.test.mjs', // 食梦者 P8：B4《编织宇宙》章节 + 大网/地点毁灭
   'debug-engine.test.mjs', // 调试控制台：引擎 debug move 校验/执行/重放（7 种指令）
   'debug-console.test.mjs', // 调试控制台：服务端命令解析器 + Mod 钩子（中文指令/别名/名称匹配）
 ])

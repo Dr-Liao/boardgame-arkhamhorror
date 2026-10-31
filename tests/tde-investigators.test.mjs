@@ -459,19 +459,67 @@ test('P6 卢克：旧印 +1 并在门之匣上放 1 充能', () => {
   assert.equal(me(state).assets.find(asset => asset.id === 'gate').uses, 4)
 })
 
-test('P6 卢克：门之匣与事件位于连接地点的能力显式登记为简化', () => {
-  assert.equal(registeredEntry('06004').simplified, true)
-  assert.equal(registeredEntry('06013').simplified, true)
-  assert.match(registeredEntry('06004').note, /虚拟地点/)
+test('P6 卢克：每回合可以把 1 张事件如同位于连接地点打出', () => {
+  const state = investigatorFixture('06004')
+  const inv = me(state)
+  const here = state.locations.find(location => location.id === inv.location)
+  const otherId = here.connections[0]
+  state.enemies.push({ id: 'there', code: '01116', name: '敌人', location: otherId, health: 2, engagedSeat: null, exhausted: false })
+  inv.hand = ['01016']
+  inv.resources = 5
+  const asIf = legalMoves(state, 0).find(item => item.action === 'play' && item.asIfLocation === otherId)
+  assert.ok(asIf, '连接地点应出现在打出选项里')
+  applyMove(state, 0, { action: 'play', cardId: asIf.cardId, asIfLocation: otherId })
+  assert.equal(me(state).location, here.id, '事件没有带走调查员时回到原地点')
+  assert.equal(state.enemies.find(enemy => enemy.id === 'there').engagedSeat, null)
+  assert.equal(legalMoves(state, 0).some(item => item.asIfLocation), false, '本回合不能再用第二次')
+})
+
+test('P6 卢克：门之匣放置梦境之门并移动过去', () => {
+  const state = investigatorFixture('06004')
+  const inv = me(state)
+  inv.assets = [{ id: 'gate', code: '06013', uses: 3, usesType: 'charges', exhausted: false }]
+  const ability = legalMoves(state, 0).find(item => item.action === 'ability' && item.assetId === 'gate')
+  assert.ok(ability)
+  applyMove(state, 0, { action: 'ability', assetId: 'gate', abilityIndex: ability.abilityIndex })
+  const gate = state.locations.find(location => location.dreamGate)
+  assert.equal(gate.code, '06015a')
+  assert.equal(me(state).location, gate.id)
+  assert.ok(gate.connections.includes(state.locations.find(location => location.id !== gate.id && location.revealed !== false).id))
 })
 
 // ---------------------------------------------------------------------------
 // 10. 简化项显式登记
 // ---------------------------------------------------------------------------
 
-test('P6 派翠丝专属弱点：手牌中的隐私敌人尚未接线，显式简化', () => {
-  assert.equal(registeredEntry('06017').simplified, true)
-  assert.match(registeredEntry('06017').note, /隐私敌人/)
+test('P6 派翠丝专属弱点：秘密进手牌，成功则弃掉，牌库耗尽时从手牌攻击', () => {
+  const state = fixture('01001')
+  const inv = me(state)
+  inv.deck = ['06017']
+  inv.discard = ['01088']
+  inv.actionsLeft = 3
+  state.chaosBag = ['0']
+  applyMove(state, 0, { action: 'draw' })
+  assert.ok(me(state).hand.includes('06017'))
+  assert.ok(me(state).hiddenCards.includes('06017'))
+  assert.equal(state.enemies.some(enemy => enemy.code === '06017'), false)
+  me(state).deck = []
+  me(state).discard = ['01088']
+  const before = me(state).damage || 0
+  applyMove(state, 0, { action: 'draw' })
+  assert.equal(me(state).damage, before + 3)
+  me(state).hand = ['06017']
+  me(state).hiddenCards = ['06017']
+  me(state).combat = 20
+  me(state).actionsLeft = 3
+  state.chaosBag = ['+1']
+  state.pendingChoice = null
+  assert.ok(legalMoves(state, 0).some(item => item.action === 'fightHidden'))
+  applyMove(state, 0, { action: 'fightHidden', cardId: '06017' })
+  settle(state)
+  assert.equal(me(state).hand.includes('06017'), false)
+  assert.ok(me(state).discard.includes('06017'))
+  assert.equal(state.enemies.some(enemy => enemy.code === '06017'), false)
 })
 
 // 只给条目层「直接调 resolve」用的窄 api（与引擎的 abilityApi 同形，不含断言）。

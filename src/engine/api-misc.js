@@ -13,6 +13,7 @@ import { loseResources as applyResourceLoss } from './resource-loss.js'
 // P6（食梦者）：伤害/恐惧移动（托米·马尔登的旧印）与卡牌具名计数器（托尼·摩根根的赏金）。
 import { harmRoom, moveHarm as moveHarmBetween } from './harm-transfer.js'
 import { addCardCounter, cardCounterOf, cardCountersOf, moveCardCounters } from './card-counters.js'
+import { flipOrPlaceDreamGate, placeDreamGate } from './dream-gate.js'
 import { ignoreLimitForRound } from './limits.js'
 
 export function createMiscApi(state, events, deps) {
@@ -347,9 +348,11 @@ export function createMiscApi(state, events, deps) {
       return true
     },
     // 05004 黛安娜：取消效果的那张卡在本次结算结束后压到她底下（reveal.js 的 flushDeferredBeneath 读点）。
-    deferCardBeneath: (seat, code) => {
+    deferCardBeneath: (seat, code, options = {}) => {
       if (!code) return false
-      state.deferredBeneath = [...(state.deferredBeneath || []), { seat, code }]
+      state.deferredBeneath = [...(state.deferredBeneath || []), {
+        seat, code, log: options.log !== false,
+      }]
       return true
     },
     // 03038 藏身地点：已在场的非精英敌人立即获得藏身地点提供的冷漠（敌人移动/入场时由引擎重算）。
@@ -1125,6 +1128,8 @@ export function createMiscApi(state, events, deps) {
     assetsCannotReady: inv => assetsCannotReady(inv),
     searchTop: (seat, options) => searchTop(state, seat, options, events),
     fight: (seat, enemyId, options = {}) => doFight(state, seat, { enemyId, ...options }, events, options.noSpend === true),
+    placeDreamGate: (code, options) => placeDreamGate(state, code, options),
+    flipOrPlaceDreamGate: options => flipOrPlaceDreamGate(state, options),
     // Phase 5（5b-8）：技能名（「戴红手套的男子」的提示与日志要用）。
     skillName: skill => SKILL_NAMES[skill] || skill,
     // Phase 5（5a-15）：按 id 取地点（弱点附着用）。

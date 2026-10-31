@@ -4,6 +4,16 @@
 // 面板标题、统计、按钮、aria-label/title、空状态与交互提示都走这里；
 // 卡牌/地点/调查员/敌人/剧情正文/战役名等内容数据不翻译，仍由服务端投影下发。
 export default {
+  // 关卡设置（scenario-setup-view.js）
+  'setup.title': '关卡设置',
+  'setup.aria': '关卡设置',
+  'setup.closeAria': '关闭关卡设置',
+  'setup.intro': '开场',
+  'setup.steps': '设置',
+  'setup.note': '说明',
+  'setup.empty': '这一关还没有单独写下的设置步骤。',
+  'setup.footer': '这些步骤在开局时已经自动完成。这里用来对照本关怎么摆、哪些牌先放在一边，以及进行中要记住的规则。',
+
   // 局势弹窗（situation-view.js）
   'situation.title': '调查局势',
   'situation.closeAria': '关闭局势详情',

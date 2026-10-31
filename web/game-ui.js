@@ -16,10 +16,11 @@ import { createChaosBagView } from './chaos-bag-view.js'
 import { chaosTokenFaceByLabel } from './chaos-token.js'
 import { createSituationView } from './situation-view.js'
 import { createDebugConsole } from './debug-console.js'
+import { createScenarioSetupView } from './scenario-setup-view.js'
 import { createRulebook } from './rulebook.js'
 import { cardRuleIds, openRule, ruleLink } from './rulebook-data.js'
 import { renderRulesText, cardSymbol } from './card-text.js'
-import { tableArt, retainTableArt } from './table-art.js'
+import { tableArt, retainTableArt, encounterBackArt } from './table-art.js'
 import { createTableRegions } from './table-regions.js'
 import { renderTableLog } from './table-timeline.js'
 import { mapGeometry, hunterRouteEdges, MAP_CARD_WIDTH, MAP_CARD_HEIGHT } from './map-layout.js'
@@ -35,6 +36,7 @@ import {
   renderHauntedChoice, renderStoryInvestigatorPicker, renderTarotPicker,
   storyInvestigatorPickerModel, tarotPickerModel,
 } from './tcu-ui.js'
+import { renderScenarioInteractions } from './tde-ui.js'
 
 let h, api, render, state, reset, leave, openFeedback
 let beginInteraction = () => () => {}
@@ -45,8 +47,9 @@ let mapResizeObserver
 let musicPlayer
 let chaosBagView
 let situationView
-// 调试控制台：单机本机可用 / 联机房主可见（契约 artifacts/debug-console/CONTRACT.md §7）。
+// 调试控制台：单机本机可用 / 联机房主可用。入口是 ` / ~ 键，标题栏不再放按钮。
 let debugConsole
+let scenarioSetupView
 
 // 挂在牌桌之外的浮层（音乐盒）拿不到 .ah-table 上的主题变量：把当前战役色板
 // 直接写到浮层根节点，样式与牌桌共用同一组 --ah-theme-* / --ah-material-*。
@@ -260,13 +263,14 @@ export function createUI(host) {
     effStat: (s, inv, skill) => ahEffStat(s, inv, skill), mySeat: s => mySeat(s),
     openDetail: (def, options) => openCardDetailDef(def, options), openCard: (s, reference) => openCardDetail(s, reference),
     cardName: (s, code) => cardDisplayName(ahCardDef(s, code)) })
-  // 宿主能力（h/t/api/render/state）注入；面板只在牌桌且 canUse 时渲染入口。
+  // 宿主能力（h/t/api/render/state）注入。调试控制台用 ` / ~ 打开，不在标题栏放按钮。
   debugConsole ||= createDebugConsole({ h, t, api, render, state })
+  scenarioSetupView ||= createScenarioSetupView(h, { render: () => render() })
   hubUi = createHubUI({ ...host, canAct, submitMove: cardMove, refreshSession: refreshCardSession,
     catalogOpen: () => arkhamCatalog.open(), rulebookOpen: () => openRule(), inspectCard: code => openCardDetailDef({...ahCardDef(state.session,code),code}, {runtime:false}) })
   return {
     onOpenSetup: game => { state.cardDetail = null; state.arkhamZoneOpen = null; state.arkhamDeckOpen = false; if (arkhamCatalog.isOpen) arkhamCatalog.close(); hubUi.onOpenSetup(game) },
-    onDeactivate: () => { musicPlayer.render(false); rulebook.render(false); chaosBagView.reset(); situationView.reset(); debugConsole.close({ render: false }); state.arkhamZoneOpen = null; tableSession = null },
+    onDeactivate: () => { musicPlayer.render(false); rulebook.render(false); chaosBagView.reset(); situationView.reset(); scenarioSetupView.reset(); debugConsole.close({ render: false }); state.arkhamZoneOpen = null; tableSession = null },
     // 大厅切换语言后调用（§8.3）：幂等、同步，只换词典与卡牌语言并重绘；
     // 不重置对局、不重新请求存档、不 location.reload()、不触发 AI 回合。
     onLocaleChange(next) {
@@ -275,7 +279,7 @@ export function createUI(host) {
       setHostLocale(locale)
       render()
     },
-    isModalOpen: () => !!(state.cardDetail || state.arkhamZoneOpen || state.arkhamDeckOpen || arkhamCatalog.isOpen || chaosBagView.opened || situationView.opened || debugConsole.opened),
+    isModalOpen: () => !!(state.cardDetail || state.arkhamZoneOpen || state.arkhamDeckOpen || arkhamCatalog.isOpen || chaosBagView.opened || situationView.opened || scenarioSetupView.opened || debugConsole.opened),
     renderSetupModal: game => hubUi.renderSetupModal(game),
     renderGame: session => {
       session = presentation.sync(session)
@@ -324,6 +328,7 @@ export function createUI(host) {
         themed(!presentation.isBlocking && state.arkhamDeckOpen && state.session ? hubUi.renderDeckModal(state.session) : null),
         themed(arkhamCatalog.isOpen ? arkhamCatalog.render() : null),
         themed(state.cardDetail ? renderCardDetailModal(state.cardDetail) : null),
+        themed(scenarioSetupView.render(state.view === 'game' ? tableSession : null)),
         themed(debugConsole.render()),
       ].filter(Boolean)
     },
@@ -792,6 +797,9 @@ function renderLocationDetail(detail) {
   const front = detail.side === 'front' && loc.revealed
   const face = cardFaceText(detail.entry?.card || detail.def, detail.entry?.linkedCard, front ? 'front' : 'back')
   const rules = front ? cardDisplayText(face) : [face.text === t('card.back.generic') ? '' : face.text, face.flavor].filter(Boolean).join('\n\n')
+  const backFace = cardFaceText(loc, null, 'back')
+  const backSentence = backFace.text && backFace.text !== t('card.back.generic') ? backFace.text : ''
+  const entryBlock = st.locationEntryErrors?.[loc.id] || ''
   const plain = text => String(text || '').replace(/<[^>]+>/g, '').replace(/\[action\]/g, t('game.ruleText.action')).replace(/\[reaction\]/g, t('game.ruleText.reaction'))
     .replace(/\[(willpower|intellect|combat|agility)\]/g, (_,key) => ahSkillLabel(key))
   const entryEffect = loc.onEnter
@@ -818,7 +826,9 @@ function renderLocationDetail(detail) {
     h('header', {}, h('small', {}, t('game.location.header')),h('h2', {},loc.name),h('span', {className:'ah-location-state'},loc.revealed ? t('game.location.revealed') : t('game.location.hidden'))),
     h('div',{className:'ah-location-detail-layout'},
       h('div',{className:'ah-location-detail-art'},
-        renderImage(h,detail.entry?.images || detail.entry?.card?.images || detail.def.images,front ? 'front' : 'back'),
+        loc.encounterBack && !front
+          ? encounterBackArt(h, cardDisplayName(loc) || loc.name, { table: false })
+          : renderImage(h,detail.entry?.images || detail.entry?.card?.images || detail.def.images,front ? 'front' : 'back'),
         h('nav',{'aria-label':t('game.location.facesAria')},[['front',t('game.location.revealed')],['back',t('game.location.hidden')]].map(([side,label]) => h('button',{
           disabled:side === 'front' && !loc.revealed,'aria-pressed':String(detail.side === side),
           onclick:()=>{detail.side=side;render()},title:side === 'front' && !loc.revealed ? t('game.location.revealHint') : t('game.location.viewFace', { face: label }),
@@ -829,7 +839,7 @@ function renderLocationDetail(detail) {
         },tableIcon(icon),h('strong',{},value),h('small',{},label)))),
         traitChips,
         front ? h('section',{className:'ah-location-entry-effect'},h('h3',{},t('game.location.enterTitle')),h('p',{},entering.length ? entering.join(t('game.list.semicolon')) : t('game.location.noEntryPenalty')))
-          : h('section',{className:'ah-location-entry-effect'},h('h3',{},t('game.location.exploreTitle')),h('p',{},loc.revealed ? t('game.location.previewBack') : t('game.location.previewBackHint'))),
+          : h('section',{className:'ah-location-entry-effect'},h('h3',{},t('game.location.exploreTitle')),h('p',{},!loc.revealed && backSentence ? renderRulesText(h, plain(backSentence)) : loc.revealed ? t('game.location.previewBack') : t('game.location.previewBackHint'))),
         h('section',{className:'ah-location-rules'},h('h3',{},front ? t('game.location.rulesEffects') : t('game.location.rulesDescription')),
           h('p',{},renderRulesText(h,plain(rules) || (front ? t('game.location.noEffects') : t('game.location.enterForMore')))),
           h('div',{},...cardRuleIds(loc).map(id=>ruleLink(h,id)),ruleLink(h,'clues',t('game.rule.clues')),ruleLink(h,'encounter',t('game.rule.encounter'))),
@@ -845,6 +855,7 @@ function renderLocationDetail(detail) {
         h('section',{className:'ah-location-connections'},h('h3',{},t('game.location.connections')),h('div',{},(loc.connections || []).map(id=>st.locations.find(item=>item.id===id)).filter(Boolean).map(other=>
           h('button',{onclick:()=>openCardDetailDef({...other,type:'location'})},'→ '+other.name)))),
         h('footer',{className:'ah-location-detail-actions'},moves.length ? moves.map(move=>h('button',{className:'ah-action',onclick:()=>{state.cardDetail=null;cardMove(move,s)}},move.label || (ahActionLabel(move.action) || t('game.action.generic'))))
+          : entryBlock ? h('button', { className: 'ah-action is-used', disabled: true, title: entryBlock }, entryBlock)
           : usedHints.length ? null : h('span',{},t('game.location.noActions')),
           // 「每场游戏一次」的行动用掉后不再出现在 legalMoves；这里保留一行置灰说明，
           // 免得玩家以为地点能力坏了（内容层在提示上打 used 标记，见 view.usedActions）。
@@ -1172,6 +1183,27 @@ function renderChoiceText(h, label) {
   return renderRulesText(h, symbolized, { links: false })
 }
 
+// 选项卡里那张卡的展示卡号：重印/别名取原卡号，与牌桌其它卡面同一口径。
+function offerArtCode(s, card) {
+  return card.originalCode || ahArtCode(s, card.code) || card.code
+}
+
+// 链接卡牌的选项：卡面 + 右上角「详情」。两个按钮必须是兄弟节点（button 不能嵌 button），
+// 点选项=提交 legalMoves，点「详情」=打开完整卡牌（与牌桌同一套卡牌详情），不提交。
+// Alt 悬停放大由 installCardZoom 统一接管（tableArt 自带 data-art-code）。
+function renderOfferDetail(h, s, card, fallbackName) {
+  const code = offerArtCode(s, card)
+  const name = cardDisplayName(card) || fallbackName || code
+  return h('button', { type: 'button', className: 'ah-offer-detail', 'data-offer-detail': code,
+    'aria-haspopup': 'dialog',
+    'aria-label': t('game.choice.inspectAria', { name }), title: t('game.choice.inspectAria', { name }),
+    onclick: event => {
+      event.stopPropagation()
+      openCardDetailDef({ ...card, code, name }, { runtime: false })
+    } },
+  tableIcon('book'), h('span', {}, t('game.choice.inspect')))
+}
+
 function renderPendingChoice(s, humanTurn) {
   const choice = s.state.pendingChoice
   if (!choice) return null
@@ -1270,15 +1302,20 @@ function renderPendingChoice(s, humanTurn) {
       const optionIcon = ({ intellect: 'book', combat: 'sword', agility: 'leaf', willpower: 'star' })[item.move.optionId]
         || (choice.kind === 'token' ? 'star' : choice.kind === 'payment' ? 'clue' : 'book')
       const label = token ? token.label : item.label
-      return h('button', { className: 'ah-choice-option ah-visual-option' + (cards.length ? ' has-art' : token ? ' ah-effect-option ah-token-option' : ' ah-effect-option'),
+      const button = h('button', { className: 'ah-choice-option ah-visual-option' + (cards.length ? ' has-art' : token ? ' ah-effect-option ah-token-option' : ' ah-effect-option'),
         'aria-label': label,
         'data-option-id': item.move.optionId, 'data-choice-offer': item.key, 'data-keep-offer': choice.kind === 'prey' || assigningHarm ? 'true' : null,
         'data-interaction': choice.kind === 'prey' ? item.key : null, disabled: state.busy || !humanTurn,
         title: label, onclick: () => cardMove(item.move, s) },
-        cards.length ? h('span', { className: 'ah-offer-cards' }, cards.map(card => tableArt(h, card.originalCode || ahArtCode(s, card.code), cardDisplayName(card)))) :
+        cards.length ? h('span', { className: 'ah-offer-cards' }, cards.map(card => tableArt(h, offerArtCode(s, card), cardDisplayName(card)))) :
           token ? h('img', { className: 'ah-choice-token', src: token.src, alt: '', draggable: false })
             : tableIcon(optionIcon),
         h('span', {}, token ? label : renderChoiceText(h,item.label)))
+      // 只有单张「卡牌候选」选项（item.cards 来自服务端 cardCode 或唯一卡名兜底）才加「详情」兄弟按钮：
+      // 多卡排列时 absolute 胶囊会压住卡面，保留原卡面 + Alt 放大即可；挂在牌桌实体上的选项也不加。
+      if (item.cards.length !== 1) return button
+      return h('div', { className: 'ah-visual-cell' }, button,
+        h('div', { className: 'ah-offer-details' }, cards.map(card => renderOfferDetail(h, s, card, item.label))))
     })) : null)
 }
 
@@ -1382,7 +1419,9 @@ function renderActAdvance(s, humanTurn) {
 function renderScriptActions(s, humanTurn) {
   const st = s.state
   if (st.status !== 'playing') return null
-  const same = (a, b) => a.action === b.action && (a.rule ?? null) === (b.rule ?? null) && (a.skill ?? null) === (b.skill ?? null)
+  // deckId 区分同一条规则下的两张密谋。漏掉时两个按钮都会提交列表里的第一堆。
+  const same = (a, b) => a.action === b.action && (a.rule ?? null) === (b.rule ?? null)
+    && (a.skill ?? null) === (b.skill ?? null) && (a.deckId ?? null) === (b.deckId ?? null)
   const legal = (st.legalMoves || []).filter(m => ['act', 'agenda'].includes(m.scriptCard) && m.action !== 'advanceAct')
   const hints = (st.scriptActions || []).filter(hint => ['act', 'agenda'].includes(hint.scriptCard))
   const items = [...hints.map(hint => ({ hint, move: hint.reason ? null : legal.find(m => same(m, hint)) })),
@@ -1392,11 +1431,12 @@ function renderScriptActions(s, humanTurn) {
   return h('div', { className: 'ah-script-actions', role: 'group', 'aria-label': t('game.script.actionsAria') },
     h('span', { className: 'ah-script-actions-title' }, tableIcon('book'), t('game.script.actionsTitle')),
     items.map(({ hint, move }) => {
-      const source = hint.scriptCard === 'act' ? t('card.type.act') : t('card.type.agenda')
+      const source = hint.deckId ? t('table.script.agendaDeck', { deck: hint.deckId })
+        : hint.scriptCard === 'act' ? t('card.type.act') : t('card.type.agenda')
       const text = String(hint.label || '').replace(/^[^\p{L}\p{N}（(]+/u, '')
       const reason = hint.reason || (!move ? t('game.script.unavailable') : !humanTurn ? t('game.script.notYourTurn') : null)
       return h('button', { className: 'ah-script-action' + (reason ? ' is-unavailable' : ''), type: 'button',
-        disabled: !!reason || state.busy, 'data-script-card': hint.scriptCard,
+        disabled: !!reason || state.busy, 'data-script-card': hint.scriptCard, 'data-agenda-deck': hint.deckId || null,
         title: t('game.script.entryTitle', { source, text }) + (reason ? t('game.script.reasonSuffix', { reason }) : ''), 'aria-label': t('game.script.entryTitle', { source, text }), onclick: () => move && cardMove(move, s) },
         h('small', {}, source), h('span', {}, text), reason ? h('em', { className: 'ah-script-action-reason' }, reason) : null)
     }))
@@ -1412,8 +1452,10 @@ function renderCardGame(s, autoPassing = false) {
   const human = st.investigators.find(inv => inv.seat === mySeat(s))
   const humanFinished = human && (st.turnsTaken || []).includes(human.seat)
   const activity = { presenting: presentation.isBlocking, processing: state.movePending?.sessionId === s.sessionId }
-  const act = st.acts[st.actIndex]
-  const agenda = st.agendas[st.agendaIndex]
+  const act = st.acts?.[st.actIndex]
+  const agenda = st.agendas?.[st.agendaIndex]
+  // 黑星升起开局没有当前场景；旧存档里那张场景牌可能还在 acts 里，道路开启前不要当成可推进的幕。
+  const actInPlay = act && !(st.blackStarsRise && !st.blackStarsRise.openPath)
 
   let statusText
   if (over) {
@@ -1436,7 +1478,7 @@ function renderCardGame(s, autoPassing = false) {
   if (!over && humanFinished && !humanTurn) statusText = t('game.status.turnEnded', { status: statusText })
   else if (!over && humanTurn && activity.processing) statusText = activity.presenting ? t('game.status.resolvingYours') : t('game.status.submittingYours')
 
-  const script = tableRegions.script(st, act, agenda, s.players, renderActAdvance(s, humanTurn), activity, renderScriptActions(s, humanTurn), {
+  const script = tableRegions.script(st, actInPlay ? act : null, agenda, s.players, actInPlay ? renderActAdvance(s, humanTurn) : null, activity, renderScriptActions(s, humanTurn), {
     act: scriptAttachmentCards(s, st.scriptAttachments?.act), agenda: scriptAttachmentCards(s, st.scriptAttachments?.agenda) })
   const map = tableRegions.map(renderLocationMap(s, humanTurn))
   const player = tableRegions.player(human ? renderPlayerDock(s, human, humanTurn) : null)
@@ -1477,24 +1519,28 @@ function renderCardGame(s, autoPassing = false) {
           'aria-expanded': String(situationView.opened), title: t('table.situation.title'), onclick: () => situationView.open(s.sessionId) }, t('table.situation')),
         h('button', { className: 'bg-btn secondary', onclick: () => arkhamCatalog.open() }, t('table.catalog')),
         h('button', { className: 'bg-btn secondary ah-header-rulebook', title: t('table.rulebook.title'), onclick: () => openRule() }, tableIcon('book'), t('table.rulebook')),
+        h('button', { className: 'bg-btn secondary', 'data-scenario-setup': 'true', 'aria-haspopup': 'dialog',
+          'aria-expanded': String(scenarioSetupView.opened), title: t('table.setup.title'),
+          onclick: () => scenarioSetupView.open(s.sessionId) }, t('table.setup')),
         h('button', { className: 'bg-btn secondary', 'aria-label': t('table.refresh'), title: t('table.refresh'), disabled: state.busy, onclick: () => refreshCardSession(s) }, '↻'),
         h('details', { className: 'ah-session-menu' }, h('summary', { 'aria-label': t('table.menu') }, '•••'),
         h('div', { className: 'ah-session-menu-items' },
         h('button', { className: 'bg-btn secondary', 'aria-pressed': String(presentation.preferences.sound), onclick: () => { presentation.toggleSound(); render() } }, presentation.preferences.sound ? t('table.sound.on') : t('table.sound.off')),
         h('button', { className: 'bg-btn secondary', 'aria-pressed': String(presentation.preferences.fast), onclick: () => { presentation.toggleFast(); render() } }, presentation.preferences.fast ? t('table.animation.fast') : t('table.animation.standard')),
         !st.hubFlow ? h('button', { className: 'bg-btn secondary', disabled: state.busy, onclick: reset }, t('table.restart')) : null,
-        h('button', { className: 'bg-btn secondary', disabled: state.busy, onclick: leave }, t('table.leave'))
+        h('button', { className: 'bg-btn secondary', disabled: state.busy, onclick: leave }, t('table.leave')),
+        debugConsole.canUse(s) ? h('p', { className: 'ah-debug-shortcut-hint' }, t('debug.shortcutHint')) : null,
         )),
-        // 调试控制台入口：单机本机显示；联机只有房主显示（客人由服务端硬拒绝）。
-        debugConsole.canUse(s) ? h('button', { className: 'bg-btn secondary ah-debug-launcher', 'data-debug-launcher': 'true',
-          'aria-haspopup': 'dialog', 'aria-expanded': String(debugConsole.opened),
-          title: t('debug.button'), 'aria-label': t('debug.button'),
-          onclick: () => debugConsole.open(s) }, '🛠️ ' + t('debug.button')) : null,
         feedbackEntry()
       )
     ),
     state.arkhamAcceptedFx?.sessionId === s.sessionId
       ? h('div', { className: 'ah-accepted-feedback', role: 'status' }, '✓ ' + state.arkhamAcceptedFx.label) : null,
+    renderScenarioInteractions(h, st.scenarioInteractions, {
+      moves: st.legalMoves || [],
+      canAct: canAct(s, decisionSeatOf(s)),
+      submit: move => cardMove(move, s),
+    }),
     h('div', { className: 'bg-game-body ah-table-viewport' }, body),
     renderCardActionPopover(s, humanTurn)
   )
@@ -1764,7 +1810,7 @@ function renderLocationNode(s, loc, opts = {}) {
   return h('div', {
     className: 'ah-loc ah-loc-map-card' + (current ? ' ah-loc-current' : '') + (adjacent ? ' ah-loc-adjacent' : '') + (choiceMove ? ' ah-choice-target' : '') + (view.selectedId === loc.id ? ' is-selected' : ''),
     style: opts.style || null,
-    title: locName + (loc.revealed ? '' : t('game.location.hiddenSuffix')) + (adjacent ? t('game.location.movableSuffix') : ''),
+    title: locName + (loc.revealed ? '' : t('game.location.hiddenSuffix')) + (adjacent ? t('game.location.movableSuffix') : '') + (st.locationEntryErrors?.[loc.id] ? ' · ' + st.locationEntryErrors[loc.id] : ''),
     role: 'button', tabindex: 0,
     'aria-label': locName, 'aria-pressed': String(view.selectedId === loc.id),
     'data-location-id': loc.id,
@@ -1781,7 +1827,9 @@ function renderLocationNode(s, loc, opts = {}) {
     onfocus: () => opts.onPreview?.(loc.id),
     onblur: () => opts.onPreview?.(null),
   },
-    tableArt(h, loc.originalCode || loc.code || loc.artCode, locName, { face: loc.revealed ? 'front' : 'back' }),
+    loc.encounterBack
+      ? encounterBackArt(h, locName)
+      : tableArt(h, loc.originalCode || loc.code || loc.artCode, locName, { face: loc.revealed ? 'front' : 'back' }),
     opts.onDragStart ? h('button', { className: 'ah-map-node-handle', type: 'button',
       'aria-label': t('game.map.moveNodeAria', { name: locName }), title: t('game.map.dragNodeTitle'),
       onpointerdown: event => { event.stopPropagation(); opts.onDragStart(event, loc.id) },
@@ -1901,6 +1949,14 @@ function handlePlayDrop(s, event, kind = 'play', slot = null) {
   cardMove(result.move, s)
 }
 
+function equippedSlotList(asset, def) {
+  // 与引擎 slotsForOccupancy 同一口径：只有 slotsOverride 才盖过印刷槽位。
+  // 投影会把印刷槽位抄到实例上，卡面表缺 slots 时仍能画进对应的手槽，而不是「其他资产」。
+  if (Array.isArray(asset?.slots) && asset.slots.length && (asset.slotsOverride || !def?.slots?.length)) return asset.slots
+  const raw = Array.isArray(def?.slots) && def.slots.length ? def.slots : (def?.slot ? [def.slot] : (asset?.slots || []))
+  return raw
+}
+
 function normalizeAhSlots(def) {
   const raw = Array.isArray(def?.slots) && def.slots.length ? def.slots : (def?.slot ? [def.slot] : [])
   return raw.map(slot => {
@@ -1936,16 +1992,21 @@ function renderEquipmentSlots(s, inv, humanTurn) {
   const capacity = { hand: 2, ally: 1, arcane: 2, accessory: 1, body: 1, tarot: 1 }
   const bonuses = ahSlotBonuses(s, inv)
   for (const slot of order) capacity[slot] += bonuses[slot] || 0
+  // 调查时少手槽只在 handPenaltyActive 时收起空槽，避免把还能装牌的右手画成可用、服务端却要求弃牌。
+  if (inv.handPenaltyActive) capacity.hand = Math.max(0, capacity.hand - (inv.handSlotsPenalty || 0))
   // 米奇·布朗：额外 2 个盟友槽只能放非独特盟友，在基础/通用加槽之后单独渲染。
   const restrictedAlly = bonuses.allyRestricted || 0
   const cells = Object.fromEntries(order.map(slot => [slot,
     Array.from({ length: capacity[slot] + (slot === 'ally' ? restrictedAlly : 0) }, () => null)]))
   const other = []
   const allies = []
-  for (const asset of inv.assets || []) {
+  for (const asset of [...(inv.assets || []), ...(inv.threat || [])]) {
     const def = ahCardDef(s, asset.code)
-    const required = normalizeAhSlots(def).flatMap(slot => slot.endsWith('x2') ? [slot.slice(0, -2), slot.slice(0, -2)] : [slot]).filter(slot => cells[slot])
-    if (!required.length) { other.push(asset); continue }
+    const required = normalizeAhSlots({ slots: equippedSlotList(asset, def) }).flatMap(slot => slot.endsWith('x2') ? [slot.slice(0, -2), slot.slice(0, -2)] : [slot]).filter(slot => cells[slot])
+    if (!required.length) {
+      if (!(inv.threat || []).includes(asset)) other.push(asset)
+      continue
+    }
     if (required.length === 1 && required[0] === 'ally') { allies.push({ asset, def }); continue }
     required.forEach((slot, index) => {
       let cell = cells[slot].findIndex(value => !value)

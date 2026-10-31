@@ -1,0 +1,13 @@
+﻿has cards? true [
+  'revision',    'seed',
+  'setup',       'rngState',
+  'instanceSeq', 'status',
+  'hubFlow',     'uiState',
+  'winnerSeat',  'currentSeat',
+  'moveCount',   'round',
+  'phase',       'outcome',
+  'resolution',  'scenario',
+  'difficulty',  'numInvestigators',
+  'humanSeats',  'actIndex'
+]
+{"acceptanceProfile":"original-core-2026-10","availability":"strict","backFlavorZh":"","backNameZh":"","backText":"","backTextZh":"","code":"01016","cost":4,"customizationChange":"","customizationChangeZh":"","customizationText":"","customizationTextZh":"","dataStatus":"validated","deckLimit":2,"doubleSided":false,"duplicatedBy":["01516"],"effectStatus":"verified","exceptional":false,"exile":false,"factionName":"Guardian","flavorZh":"","healthPerInvestigator":false,"hidden":false,"icons":{"agility":1},"illustrator":"John Pacer","imageStatus":"unresolved","imagesrc":"/bundles/cards/01016.png","klass":"guardian","localeStatus":"complete","myriad":false,"name":".45自动手枪","nameZh":".45自动手枪","originalCode":"01016","pack":"core","packName":"Core Set","permanent":false,"position":16,"provenanceId":"01016","quantity":1,"slot":"Hand","slots":["Hand"],"subnameZh":"","text":"Uses (4 ammo).\n[action] Spend 1 ammo: Fight. You get +1 [combat] for this attack. This attack deals +1 damage.","textZh":"使用(4子弹)。\n[action]花费1子弹：攻击。你本次攻击得到+1[combat]。本次攻击造成+1伤害。","traits":["Item","Weapon","Firearm"],"traitsZh":["道具","武器","枪械"],"type":"asset","typeName":"Asset","unique":false,"url":"https://arkhamdb.com/card/01016","xp":0,"nameEn":".45 Automatic","strictAccepted":true,"reactionIds":[],"abilityIds":["01016#0"],"hasReactionPrompt":false,"hasAutoReaction":false,"autoByDefault":false}

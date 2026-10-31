@@ -1,0 +1,60 @@
+﻿{
+ "availability": "catalog-only",
+ "backFlavorZh": "",
+ "backNameZh": "",
+ "backText": "",
+ "backTextZh": "",
+ "code": "09003",
+ "customizationChange": "",
+ "customizationChangeZh": "",
+ "customizationText": "",
+ "customizationTextZh": "",
+ "dataStatus": "validated",
+ "deckLimit": 1,
+ "doubleSided": false,
+ "effectStatus": "unverified",
+ "exceptional": false,
+ "exile": false,
+ "factionName": "Neutral",
+ "flavorZh": "",
+ "healthPerInvestigator": false,
+ "hidden": false,
+ "icons": {},
+ "illustrator": "Sarah Lindstrom",
+ "imageStatus": "unresolved",
+ "imagesrc": "/bundles/cards/09003.png",
+ "klass": "neutral",
+ "localeStatus": "complete",
+ "myriad": false,
+ "name": "Selfless to a Fault",
+ "nameZh": "无私成疾",
+ "originalCode": "09003",
+ "pack": "tskp",
+ "packName": "The Scarlet Keys Investigator Expansion",
+ "permanent": false,
+ "position": 3,
+ "provenanceId": "09003",
+ "quantity": 1,
+ "restrictions": {
+  "investigator": {
+   "09001": "09001"
+  }
+ },
+ "signatureFor": [
+  "09001"
+ ],
+ "subnameZh": "",
+ "subtype": "weakness",
+ "text": "Revelation - Put Selfless to a Fault into play in your threat area.\nForced - At the end of your turn, if you did not commit at least 1 card to a skill test performed by another investigator this turn: Take 1 horror and shuffle Selfless to a Fault into your deck.",
+ "textZh": "显现 - 将无私成疾放置入场，放到你的威胁区域。\n强制 - 当你的回合结束时，如果你本回合未投入卡牌到其他调查员执行的技能检定：受到1点恐惧并将无私成疾洗入你的牌库。",
+ "traits": [
+  "Flaw"
+ ],
+ "traitsZh": [
+  "缺陷"
+ ],
+ "type": "treachery",
+ "typeName": "Treachery",
+ "unique": false,
+ "url": "https://arkhamdb.com/card/09003"
+}

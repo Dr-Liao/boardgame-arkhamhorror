@@ -438,6 +438,7 @@ export default {
   'hub.builder.addAria': '加入 {name} {count}/{limit}',
   'hub.builder.addTitle': '点击或拖入牌组',
   'hub.builder.cardMeta': '{count}/{limit} · {cost} 资源 · {xp} 级',
+  'hub.builder.cardMetaMyriad': '{count}/{limit} · 多重同名 · {cost} 资源 · {xp} 级',
   'hub.builder.decrease': '减少 {name}',
   'hub.builder.detail': '详情',
   'hub.builder.increase': '增加 {name}',

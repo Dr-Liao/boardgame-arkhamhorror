@@ -1,0 +1,6 @@
+﻿missing: []
+06236 youHaveInterpretedTheDreams
+06237 youHaveInterpretedTheDreams
+06238 youHaveInterpretedTheDreams
+06241 restrictedSlots [{"slot":"arcane","traitsAny":["Ritual"],"count":1}]
+06245 playableFromDiscard true

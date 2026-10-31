@@ -47,7 +47,8 @@ export const TDE_KEYWORDS = Object.freeze([
       },
     ]),
     deferred: Object.freeze([
-      '构筑界面消费 myriadUsage 的 n/3 显示（P7）；卡牌升级与购买仍走既有构筑门禁',
+      'P7 已接线构筑界面 n/3 显示（web/deck-rules.js#myriadUsage → web/hub.js cardMeta）与构筑校验拦截；'
+        + '06199/06241–06243 的「多张同名在场」结算按卡牌行为处理（P7 逐卡实现/显式简化）',
     ]),
     note: '构筑期同名至多 3 张（按卡牌标题跨卡号共享额度）；06021/06199 的「多张同名在场」是卡面效果，不是关键词规则。',
   },
@@ -134,7 +135,8 @@ export const TDE_KEYWORDS = Object.freeze([
       { module: 'src/engine/ability.js', names: ['registeredEntry'], values: [] },
     ]),
     deferred: Object.freeze([
-      '06236/06237/06238 的 researchRequirement 记录键在 P7 写进单卡条目（「你洞悉了梦境」）',
+      'P7 已在 06236/06237/06238 条目声明 researchRequirement: youHaveInterpretedTheDreams（记录由 06112 的 api.recordResearch 写入）；'
+        + '战役层写入该记录的章节流程属 P8',
     ]),
     note: '研究完成不是游戏内能力：它限制购入时机（战役日志记录研究结果后），不改变检定/行动/数值。',
   },

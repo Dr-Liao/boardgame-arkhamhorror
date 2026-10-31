@@ -76,7 +76,8 @@ export default {
         const asset = (inv.assets || []).find(item => item.code === code)
         if (asset) api.discardAsset(inv.seat, asset)
         inv.beneath ||= []
-        api.deferCardBeneath(inv.seat, code)
+        // 日志由本反应自己写。冲刷时若再写一行「被放在底下」，同一张卡看起来像放了两次。
+        api.deferCardBeneath(inv.seat, code, { log: false })
         api.drawCards(inv.seat, 1)
         api.gainResources(inv.seat, 1)
         api.info(`${inv.name} 把「${api.cardName(code)}」压在黛安娜·史丹利底下。`)

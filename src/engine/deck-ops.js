@@ -9,11 +9,14 @@
 //   removeOne / removeCardByCode        —— 按码移除
 // 它们被卡牌效果、剧本运行时与 API 同时使用。
 
+import { hiddenEnemiesAttackFromHand } from './hidden-enemy.js'
+
 export function createDeckOps(deps) {
   const {
     EFFECTS,
     aliveInvestigators,
     applyHorror,
+    applyDamage,
     attachCardTo,
     canDiscardFromHand,
     cardDef,
@@ -461,6 +464,7 @@ function drawCards(state, inv, n, events) {
   let drawnCount = 0
   for (let i = 0; i < n; i++) {
     if (inv.deck.length === 0) {
+      hiddenEnemiesAttackFromHand(state, inv, { registeredEntry, cardDef, applyDamage, applyHorror, info, events })
       if (inv.discard.length === 0 || discardLocked(state, inv)) continue
       const rng = () => randomValue(state)
       inv.deck = shuffle(inv.discard, rng)
@@ -483,7 +487,12 @@ function drawCards(state, inv, n, events) {
       }
       texts.push(`⚠️ ${inv.name} 抽到了弱点「${cardName(code)}」：${def.textZh || def.text || ''}`)
       // Phase 5（5a-22）：「黑暗回忆」这类抽到后留在手里的弱点由条目级 weaknessStaysInHand 声明。
-      if (registeredEntry(def.code)?.weaknessStaysInHand) {
+      if (registeredEntry(def.code)?.hiddenEnemyInHand) {
+        inv.hand.push(code)
+        inv.hiddenCards ||= []
+        if (!inv.hiddenCards.includes(code)) inv.hiddenCards.push(code)
+        texts.push(`${inv.name} 秘密将一张牌加入手牌。`)
+      } else if (registeredEntry(def.code)?.weaknessStaysInHand) {
         inv.hand.push(code)
         const note = registeredEntry(def.code)?.weaknessHandNote
         texts.push(note || cardName(code) + '留在手中；可支付费用打出，否则每回合结束受到 2 恐惧。')

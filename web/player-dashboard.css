@@ -74,8 +74,11 @@
 @media(prefers-reduced-motion:reduce) { .ah-token-pool { transition: none; } }
 .ah-engage-drop { display: none; }
 /* 「压在调查员底下」与「直觉牌库」：沿用威胁栏的横向卡槽，换成各自的配色与小尺寸卡。 */
-.ah-threat-row.ah-beneath-row, .ah-threat-row.ah-hunch-row { --surface-card-w: 48px; --surface-card-h: 68px; max-width: none; flex: 0 1 auto; }
-.ah-threat-row.ah-beneath-row { border-color: #8f7fc0aa; background: #1d234052; }
+.ah-threat-row.ah-beneath-row, .ah-threat-row.ah-hunch-row { --surface-card-w: 48px; --surface-card-h: 68px; max-width: none; }
+.ah-threat-row.ah-hunch-row { flex: 0 1 auto; }
+/* 下方牌整排摊开。威胁栏默认最多露出约两张再在内部滚动，滚动条会盖住卡面下沿。 */
+.ah-threat-row.ah-beneath-row { flex: 0 0 auto; width: max-content; min-width: max-content; height: auto; overflow: visible; border-color: #8f7fc0aa; background: #1d234052; }
+.ah-threat-row.ah-beneath-row .ah-threat-cards { height: auto; overflow: visible; }
 .ah-threat-row.ah-beneath-row .ah-threat-label { color: #cfc2f0; }
 .ah-threat-row.ah-hunch-row { border-color: #7fa8c0aa; background: #16283a52; }
 .ah-threat-row.ah-hunch-row .ah-threat-label { color: #bcd9ec; }

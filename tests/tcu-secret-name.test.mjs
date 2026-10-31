@@ -7,7 +7,8 @@
 //      treacheryRule 的规则行为（直接 import 单卡文件，不依赖 implementedFor）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import '../src/engine/engine.js'
+import { investigatorEntryError } from '../src/engine/engine.js'
+import { registeredEntry } from '../src/engine/ability.js'
 import * as secretName from '../content/campaigns/theCircleUndone/scenarios/theSecretName/index.js'
 import {
   scenario as definition, NAHAB, BROWN_JENKIN, THE_BLACK_BOOK, GHOSTLY_PRESENCE,
@@ -307,19 +308,24 @@ test('setup 确定性：同种子未知地点牌库一致、不同种子不同',
   assert.notDeepEqual(setup(stateFor(2), 11).extraLocationDecks, setup(stateFor(2), 12).extraLocationDecks)
 })
 
-test('沃尔特·吉尔曼的房间：线索不够时 entryError 阻止进入，够时 beforeMove 支付团队线索', () => {
+test('沃尔特·吉尔曼的房间：未揭示时线索不够则不能进入，够时支付；揭示后锁消失', () => {
   const state = setup(stateFor(2), 17)
   const inv = state.investigators[0]
+  const room = loc(state, 'walterGilmansRoom')
   inv.clues = 0
   state.investigators[1].clues = 1
-  assert.equal(typeof secretName.behavior.investigatorEntryError(state, loc(state, 'walterGilmansRoom'), inv), 'string')
+  assert.equal(typeof investigatorEntryError(state, room.id, inv.seat), 'string')
   inv.clues = 2
   state.investigators[1].clues = 0
+  assert.equal(investigatorEntryError(state, room.id, inv.seat), null)
   let paid = null
-  secretName.behavior.beforeMove(state, inv, loc(state, 'walterGilmansRoom'),
+  registeredEntry('05132').locationRule.beforeEnter(state, room, inv,
     apiStub(state, { payClues: (n, location) => { paid = { n, location } } }))
   assert.deepEqual(paid, { n: 2, location: 'moldyHalls' })
-  assert.equal(state.scenarioFlags.walterLockPaid, true)
+  room.revealed = true
+  inv.clues = 0
+  state.investigators[1].clues = 0
+  assert.equal(investigatorEntryError(state, room.id, inv.seat), null)
 })
 
 test('印刷符号图与揭示面：破旧房门揭示后换符号；未知地点揭示后按新符号重连', () => {

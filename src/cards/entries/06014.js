@@ -6,21 +6,18 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// ⚠️ 显式简化：梦境之门地点的放置/翻面/移动属 P8（地点型 Bonded 接线）。
-// 当前实现只结算「与你交战的每个敌人解除交战」，并把其余部分写进待实现清单。
-
 export default {
   code: '06014',
-  simplified: true,
-  note: '梦境之门（06015a/b）的翻面、放置与移动到该地点尚未接线（属 P8）；当前只结算「解除所有交战」。',
   abilities: [
     {
       kind: 'weakness',
-      label: '解除所有交战（梦境之门待实现）',
+      label: '翻面或放置梦境之门，解除交战并移动过去',
       weakness: { type: 'custom' },
       resolve: ({ inv, api }) => {
         api.disengageAll(inv.seat)
-        api.info(`「脱离现实」：${inv.name} 与所有敌人解除交战。`)
+        const gate = api.flipOrPlaceDreamGate({ from: '06015a', to: '06015b', asideHorror: 2, ownerCode: inv.code, flipAfterInvestigate: '06015a' })
+        if (gate) api.moveInvestigator(inv.seat, gate.id)
+        api.info(`「脱离现实」：${inv.name} 进入梦境之门。`)
       },
     },
   ],

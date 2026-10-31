@@ -1,6 +1,7 @@
 # 《食梦者》剧情手册（M3-C / P8-T 骨架 · draft）
 
 > **口径**：本文件是 **P8-T 之前的骨架**（`draft`），只登记「中文剧情缺什么、怎么补、怎么验收」；**没有开始翻译**，也没有任何 `storyText` 被标成 `verified`。
+> **P8（2026-10-31）进度**：`story-text.js` 已建为生成物占位（`status:'pending'`、`sourceKind:'self-translated'`、`officialChinese:false`，按 8 章/prologue/3 幕间/16 尾声矩阵的键位留空）；8 章 definition 的 setup/rules/resolutions 暂用**锁定 en 原文**（`textLanguage:'en'`/`textStatus:'pending-self-translation'`）；战役 flow 节点已带 `storySection`/`storyCell`/`textKey`，P8-T 生成器可直接对齐。 P8-T 开工前还需：在 `story-text.js` 补 `epilogueMatrix`、`brokeTheLawOfUlthar`、单线结束说明的键位（P8 遗留，见 [`tde-p8-report.md`](./tde-p8-report.md) §9）。
 > 决策 D2（2026-10-27）：中文剧情采用**自译补齐**，口径是「自译，非官方中文」；审计账本必须标 `sourceKind: 'self-translated'`、`officialChinese: false`，**不得**写成官方中文来源。
 > 路线图：[`tde-migration-roadmap.md`](./tde-migration-roadmap.md) §8.5；规范：[`arkham-content-migration.md`](./arkham-content-migration.md) §5.1。
 

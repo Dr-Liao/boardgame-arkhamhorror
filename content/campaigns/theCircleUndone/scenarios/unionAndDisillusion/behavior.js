@@ -200,10 +200,13 @@ function resolveFate(state, api, fate, inv) {
       inv.assets ||= []
       inv.assets.push({ id: `story:${fate.ally}`, code: fate.ally, originalCode: fate.ally })
     }
-    // 卡面「本场冒险不占盟友槽」：引擎没有 DoNotTakeUpSlot，改用实例 slots 覆盖成不占槽的占位标签
-    // （assets.js:74-99 的 slotUsage 优先读实例 slots），避免剧情盟友挤占盟友槽。
+    // 卡面「本场冒险不占盟友槽」：引擎没有 DoNotTakeUpSlot。slotsOverride 才会让实例 slots
+    // 盖过印刷槽位（平时 slotUsage 只读卡面，避免单手武器被实例槽位算成双手）。
     const asset = inv?.assets?.find(item => original(item) === fate.ally)
-    if (asset) asset.slots = ['none']
+    if (asset) {
+      asset.slots = ['none']
+      asset.slotsOverride = true
+    }
     records[fate.alive] = true
     api?.info?.(`“${fate.name}”从雾中跌出：你控制其剧情支援，记录其还活着。`)
     return

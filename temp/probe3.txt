@@ -1,0 +1,3 @@
+﻿07025 {"traits":["Item","Weapon","Firearm","Illicit"],"xp":0,"type":"asset"}
+06195 {"traits":["Item","Weapon","Firearm"],"xp":0,"type":"asset"}
+01016 {"traits":["Item","Weapon","Firearm"],"xp":0,"type":"asset"}

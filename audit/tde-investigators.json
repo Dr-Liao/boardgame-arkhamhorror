@@ -246,8 +246,8 @@
         "name": "卢克·罗宾逊",
         "type": "investigator",
         "registered": true,
-        "simplified": true,
-        "note": "「每回合 1 张事件如同位于连接地点并与该地点的敌人交战」尚未接线（缺虚拟地点原语）；「以门之匣开始游戏」与旧印已实现。",
+        "simplified": false,
+        "note": null,
         "descriptorAbilities": 0,
         "hasElderSign": true,
         "searchedCardRule": false,
@@ -259,8 +259,8 @@
           "name": "门之匣",
           "type": "asset",
           "registered": true,
-          "simplified": true,
-          "note": "梦境之门（06015a）的放置、连接与移动尚未接线（属 P8 地点型 Bonded）；当前只结算「解除所有交战」。",
+          "simplified": false,
+          "note": null,
           "descriptorAbilities": 1,
           "hasElderSign": false,
           "searchedCardRule": false,
@@ -271,8 +271,8 @@
           "name": "脱离现实",
           "type": "treachery",
           "registered": true,
-          "simplified": true,
-          "note": "梦境之门（06015a/b）的翻面、放置与移动到该地点尚未接线（属 P8）；当前只结算「解除所有交战」。",
+          "simplified": false,
+          "note": null,
           "descriptorAbilities": 1,
           "hasElderSign": false,
           "searchedCardRule": false,
@@ -316,11 +316,7 @@
         ],
         "basicWeaknesses": 1
       },
-      "simplifications": [
-        "06004",
-        "06013",
-        "06014"
-      ],
+      "simplifications": [],
       "checks": {
         "registered": true,
         "elderSign": true,
@@ -329,7 +325,7 @@
         "deckContract": true,
         "documentedSimplification": true
       },
-      "status": "pending"
+      "status": "verified"
     },
     {
       "code": "06005",
@@ -368,8 +364,8 @@
           "name": "异次元监视者",
           "type": "enemy",
           "registered": true,
-          "simplified": true,
-          "note": "隐私敌人（在手牌中）与「从手牌攻击/躲避」「牌库耗尽时攻击」尚未接线；当前按普通专属弱点敌人生成。",
+          "simplified": false,
+          "note": null,
           "descriptorAbilities": 0,
           "hasElderSign": false,
           "searchedCardRule": false,
@@ -388,9 +384,7 @@
         ],
         "basicWeaknesses": 1
       },
-      "simplifications": [
-        "06017"
-      ],
+      "simplifications": [],
       "checks": {
         "registered": true,
         "elderSign": true,
@@ -399,7 +393,7 @@
         "deckContract": true,
         "documentedSimplification": true
       },
-      "status": "pending"
+      "status": "verified"
     }
   ],
   "records": [
@@ -528,8 +522,8 @@
       "name": "卢克·罗宾逊",
       "type": "investigator",
       "registered": true,
-      "simplified": true,
-      "note": "「每回合 1 张事件如同位于连接地点并与该地点的敌人交战」尚未接线（缺虚拟地点原语）；「以门之匣开始游戏」与旧印已实现。",
+      "simplified": false,
+      "note": null,
       "descriptorAbilities": 0,
       "hasElderSign": true,
       "searchedCardRule": false,
@@ -540,8 +534,8 @@
       "name": "门之匣",
       "type": "asset",
       "registered": true,
-      "simplified": true,
-      "note": "梦境之门（06015a）的放置、连接与移动尚未接线（属 P8 地点型 Bonded）；当前只结算「解除所有交战」。",
+      "simplified": false,
+      "note": null,
       "descriptorAbilities": 1,
       "hasElderSign": false,
       "searchedCardRule": false,
@@ -552,8 +546,8 @@
       "name": "脱离现实",
       "type": "treachery",
       "registered": true,
-      "simplified": true,
-      "note": "梦境之门（06015a/b）的翻面、放置与移动到该地点尚未接线（属 P8）；当前只结算「解除所有交战」。",
+      "simplified": false,
+      "note": null,
       "descriptorAbilities": 1,
       "hasElderSign": false,
       "searchedCardRule": false,
@@ -588,8 +582,8 @@
       "name": "异次元监视者",
       "type": "enemy",
       "registered": true,
-      "simplified": true,
-      "note": "隐私敌人（在手牌中）与「从手牌攻击/躲避」「牌库耗尽时攻击」尚未接线；当前按普通专属弱点敌人生成。",
+      "simplified": false,
+      "note": null,
       "descriptorAbilities": 0,
       "hasElderSign": false,
       "searchedCardRule": false,
@@ -620,28 +614,11 @@
       "weakness": false
     }
   ],
-  "simplified": [
-    {
-      "code": "06004",
-      "note": "「每回合 1 张事件如同位于连接地点并与该地点的敌人交战」尚未接线（缺虚拟地点原语）；「以门之匣开始游戏」与旧印已实现。"
-    },
-    {
-      "code": "06013",
-      "note": "梦境之门（06015a）的放置、连接与移动尚未接线（属 P8 地点型 Bonded）；当前只结算「解除所有交战」。"
-    },
-    {
-      "code": "06014",
-      "note": "梦境之门（06015a/b）的翻面、放置与移动到该地点尚未接线（属 P8）；当前只结算「解除所有交战」。"
-    },
-    {
-      "code": "06017",
-      "note": "隐私敌人（在手牌中）与「从手牌攻击/躲避」「牌库耗尽时攻击」尚未接线；当前按普通专属弱点敌人生成。"
-    }
-  ],
+  "simplified": [],
   "nodeAcceptance": {
     "command": "node --test tests/tde-investigators.test.mjs",
     "status": 0,
-    "tests": 24,
+    "tests": 25,
     "fail": 0,
     "ok": true
   },
@@ -663,7 +640,7 @@
         "06015a",
         "06015b"
       ],
-      "reason": "梦境之门（06015a/b）的放置/翻面/连接属 P8（见 tools/tde-primitive-spec.mjs 的 deferred）",
+      "reason": "06015a/b 无单独行为条目；放置、翻面与阶段结束在 src/engine/dream-gate.js。",
       "pass": true
     },
     "deckContracts": {
@@ -675,64 +652,35 @@
     "nodeAcceptance": {
       "command": "node --test tests/tde-investigators.test.mjs",
       "status": 0,
-      "tests": 24,
+      "tests": 25,
       "fail": 0,
       "ok": true
     },
     "simplifiedDocumented": {
-      "codes": [
-        "06004",
-        "06013",
-        "06014",
-        "06017"
-      ],
+      "codes": [],
       "pass": true
     },
     "status": {
       "verified": [
         "06001",
         "06002",
-        "06003"
-      ],
-      "pending": [
+        "06003",
         "06004",
         "06005"
       ],
-      "pendingReasons": [
-        {
-          "code": "06004",
-          "simplifications": [
-            "06004",
-            "06013",
-            "06014"
-          ],
-          "note": [
-            "「每回合 1 张事件如同位于连接地点并与该地点的敌人交战」尚未接线（缺虚拟地点原语）；「以门之匣开始游戏」与旧印已实现。",
-            "梦境之门（06015a）的放置、连接与移动尚未接线（属 P8 地点型 Bonded）；当前只结算「解除所有交战」。",
-            "梦境之门（06015a/b）的翻面、放置与移动到该地点尚未接线（属 P8）；当前只结算「解除所有交战」。"
-          ]
-        },
-        {
-          "code": "06005",
-          "simplifications": [
-            "06017"
-          ],
-          "note": [
-            "隐私敌人（在手牌中）与「从手牌攻击/躲避」「牌库耗尽时攻击」尚未接线；当前按普通专属弱点敌人生成。"
-          ]
-        }
-      ]
+      "pending": [],
+      "pendingReasons": []
     },
     "pass": true
   },
   "evidence": [
     {
       "path": "content/packs/tdeInvestigators/manifest.js",
-      "sha256": "86aa6cd768ae87f031fd49ebda71246cbb5994f479e370aef826a56c6fce94ce"
+      "sha256": "9ca1e069a014d61251e36aca950bdda85aca8a3622ee52924d0be982712f6435"
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "e3d54a7b6e85826b74e8645ac4fc15c8384ac52c8eb1dc70499226634e43952c"
+      "sha256": "5a0266fb0d27794e1682677b0c8d8d6026291746b19e3616b95be0bec2300be4"
     },
     {
       "path": "src/cards/entries",
@@ -740,11 +688,11 @@
     },
     {
       "path": "tests/tde-investigators.test.mjs",
-      "sha256": "d011e4be356b61da7eb4e3a6d0298f11d486d44d68d442754831ca807db20ed2"
+      "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65"
     },
     {
       "path": "docs/tde-investigators.md",
-      "sha256": "5202a0b0510e7bd040ad9fb75763c826f2299178c646bc42f54af0cb294f8c71"
+      "sha256": "a49c65b1ee63c2996fb33ed340db77d7c8313b7a4b228254f9f534ac88fcd8c2"
     }
   ]
 }

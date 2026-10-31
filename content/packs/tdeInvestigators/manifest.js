@@ -51,5 +51,12 @@ export const manifest = {
     deckbuilding: true,
   })),
   encounterGroupIds: [],
-  behaviorIds: INVESTIGATOR_CARD_CODES,
+  // P8：behaviorIds 必须是稳定 ASCII id（卡号不能当 id）。5 位调查员 + 11 张专属主卡的行为 id；
+  // 06015a/b 梦境之门没有单卡条目（行为在 src/engine/dream-gate.js），登记为 dreamGate。
+  behaviorIds: [
+    'tommyMuldoon', 'mandyThompson', 'tonyMorgan', 'lukeRobinson', 'patriceHathaway',
+    'becky', 'rookieMistake', 'mysticalEvidence', 'startlingDiscovery', 'bountyContract',
+    'tonysColt1911', 'tonysQuarry', 'gateBox', 'detachedFromReality', 'dreamGate', 'patricesViolin',
+    'dimensionalWatcher',
+  ],
 }

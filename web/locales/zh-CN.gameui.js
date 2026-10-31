@@ -243,6 +243,9 @@ export default {
   'game.choice.playerWindow': '使用免费能力、打出快速卡，或让过',
   'game.choice.reaction': '点选卡牌发动反应',
   'game.choice.offersAria': '卡牌效果',
+  // 选项链接卡牌：右上角「详情」按钮（看完整卡牌，不提交选择）。
+  'game.choice.inspect': '详情',
+  'game.choice.inspectAria': '查看「{name}」的完整卡牌',
   'game.test.skill': '技能',
   'game.test.generic': '技能检定',
   'game.test.named': '{skill}检定',
@@ -430,14 +433,15 @@ export default {
   'game.ruleText.action': '行动：',
   'game.ruleText.reaction': '反应：',
 
-  // 调试控制台（web/debug-console.js；入口在 game-ui.js 牌桌标题栏）
+  // 调试控制台（web/debug-console.js；牌桌上按 ` / ~ 打开，标题栏不放按钮）
   'debug.button': '调试控制台',
   'debug.title': '调试控制台',
   'debug.aria': '调试控制台',
   'debug.close': '关闭',
   'debug.closeAria': '关闭调试控制台',
-  'debug.localHint': '单机模式：本机玩家可用',
-  'debug.hostOnly': '联机模式：仅房主可用',
+  'debug.shortcutHint': '调试控制台：按 ` 或 ~',
+  'debug.localHint': '单机模式：本机玩家可用。再按 ` 或 ~ 可关闭。',
+  'debug.hostOnly': '联机模式：仅房主可用。再按 ` 或 ~ 可关闭。',
   'debug.target': '目标调查员',
   'debug.seat': '座位 {number}',
   'debug.inputLabel': '调试指令',
@@ -446,7 +450,7 @@ export default {
   'debug.busy': '执行中…',
   'debug.helpButton': '帮助',
   'debug.help': '帮助',
-  'debug.helpExamples': '跳到 <关卡> · 重开本关\n生成 <敌人> · 消灭 <敌人> · 消灭全部\n发 <卡牌> 到手上 / 牌库顶 / 牌库底 / 弃牌堆\n抽 [N] · 行动点 +N · 获得 N 资源 / 线索 · 给 N 经验\n传送到 <地点> · 治疗 N · 治疗伤害 N · 治疗恐惧 N\n受到 N 伤害 · 受到 N 恐惧 · 揭示全部 · 揭示 <地点> · 加毁灭 N\n状态 · 帮助',
+  'debug.helpExamples': '跳到 <关卡> · 重开本关 · 立即结束这关\n生成 <敌人> · 消灭 <敌人> · 消灭全部\n发 <卡牌> 到手上 / 牌库顶 / 牌库底 / 弃牌堆\n抽 [N] · 行动点 +N · 获得 N 资源 / 线索 · 给 N 经验\n传送到 <地点> · 治疗 N · 治疗伤害 N · 治疗恐惧 N\n受到 N 伤害 · 受到 N 恐惧 · 揭示全部 · 揭示 <地点> · 加毁灭 N\n状态 · 帮助',
   'debug.logTitle': '执行结果',
   'debug.empty': '还没有执行记录。',
   'debug.logOk': '成功',

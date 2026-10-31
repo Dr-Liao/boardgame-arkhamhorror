@@ -18,6 +18,7 @@ export default {
   'misc.deck.excluded': '{name} is excluded by deckbuilding restrictions',
   'misc.deck.size': 'The deck needs {size} player cards; it has {count}',
   'misc.deck.overLimit': '{name} exceeds its copy limit',
+  'misc.deck.myriadLimit': '{name} exceeds the Myriad same-title limit (up to {limit} copies)',
   'misc.deck.restriction': '{name} does not satisfy deckbuilding restrictions or limits',
   'misc.deck.atleastInvalid': 'Invalid faction-count requirement',
   'misc.deck.atleast': 'The deck must include at least {minimum} cards from each of {factions} different factions',

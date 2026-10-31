@@ -22,7 +22,7 @@
     "basicWeaknesses": 2,
     "verified": 87,
     "unverified": 0,
-    "testsPassed": 165
+    "testsPassed": 166
   },
   "testFiles": [
     {
@@ -39,7 +39,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-      "sha256": "bbd4c970301832cb2056355e9b298b938d06c67a5bf5e3d086bba2d53db2aff3"
+      "sha256": "47c31a820272c8b850c18a0fc44a988ca99b1905128451b29660fbf4fe468269"
     }
   ],
   "implementationFiles": [
@@ -49,11 +49,11 @@
     },
     {
       "file": "games/arkhamhorror/src/deck/availability.js",
-      "sha256": "e3d54a7b6e85826b74e8645ac4fc15c8384ac52c8eb1dc70499226634e43952c"
+      "sha256": "5a0266fb0d27794e1682677b0c8d8d6026291746b19e3616b95be0bec2300be4"
     },
     {
       "file": "games/arkhamhorror/src/campaign/campaign.js",
-      "sha256": "a79437a44bb9c482710099e3599485e20979bc877dbc568a52b5f7db55ca898a"
+      "sha256": "1dfb4b9275359d4cdd74ac70921a786d5b1805b32267bb462aa48cd97ebd4517"
     },
     {
       "file": "games/arkhamhorror/src/cards/entries/_shared.js",
@@ -61,7 +61,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/suites.mjs",
-      "sha256": "ff51a046b518c3d46604ed86ff755beabd7d1842baafc0c77a1b15be8f2077c0"
+      "sha256": "62c676d2e9db0fbe456131b44d2b64cb53242ca5cd8a95aeed7db62d75d8a12b"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
@@ -77,7 +77,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-      "sha256": "bbd4c970301832cb2056355e9b298b938d06c67a5bf5e3d086bba2d53db2aff3"
+      "sha256": "47c31a820272c8b850c18a0fc44a988ca99b1905128451b29660fbf4fe468269"
     }
   ],
   "entries": [
@@ -1404,7 +1404,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 996,
+          "line": 1010,
           "test": "TCU 05276 苦心钻研 永久卡让起始手牌多 1 张"
         }
       ]
@@ -1451,7 +1451,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 985,
+          "line": 999,
           "test": "TCU 05278 干一天活计拿一天钱 永久卡在开局多给 2 资源"
         }
       ]
@@ -1597,7 +1597,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1008,
+          "line": 1022,
           "test": "TCU 05313 圣化之镜 离场时把所有舒缓旋律收回场外集合（含其他调查员区域与场外区域）"
         }
       ]
@@ -1655,7 +1655,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1032,
+          "line": 1046,
           "test": "TCU 05316 密教辞典 离场时把所有鲜血仪式收回场外集合（含其他调查员区域与移出游戏区）"
         }
       ]
@@ -1739,12 +1739,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1060,
+          "line": 1074,
           "test": "TCU 05320 超级加倍 打出一张事件后横置自身再次打出该事件"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1079,
+          "line": 1093,
           "test": "TCU 05320 超级加倍 再次打出时支付该事件自己的费用（2 费事件结算两次）"
         }
       ]
@@ -1770,12 +1770,17 @@
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 753,
+          "line": 757,
+          "test": "TCU 05321 凋零术 先减生命再结算伤害，2 点生命的敌人会被本次攻击击败"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "line": 768,
           "test": "TCU 05321 凋零术 05033「恐怖灵感」可取消符号窗口里的凋零术效果"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 777,
+          "line": 792,
           "test": "TCU 05321 凋零术 05033「恐怖灵感」可让符号窗口里的凋零术效果再结算一次"
         }
       ]
@@ -1791,27 +1796,27 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 809,
+          "line": 823,
           "test": "TCU 05322 第六感 用意志代替智力调查并 +2 意志"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 837,
+          "line": 851,
           "test": "TCU 05322 第六感 符号后同时在 2 次连接内的已揭示地点调查（新隐藏值分支）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 867,
+          "line": 881,
           "test": "TCU 05322 第六感 符号后双地点调查可选原隐藏值分支"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 888,
+          "line": 902,
           "test": "TCU 05322 第六感 没有 2 次连接内的已揭示地点时符号窗口不提供双地点调查"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 917,
+          "line": 931,
           "test": "TCU 05322 第六感 未揭示符号标记时不做双地点调查"
         }
       ]
@@ -1827,12 +1832,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 939,
+          "line": 953,
           "test": "TCU 05323 诱敌深人 附属到地点：敌人阶段朝附属地点移动、轮末恰好弃 1 张"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 963,
+          "line": 977,
           "test": "TCU 05323 诱敌深人 多诱饵取最近：两个地点附属时猎手走向最近的一个"
         }
       ]
@@ -1848,7 +1853,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
-          "line": 1100,
+          "line": 1114,
           "test": "TCU 05324 美满结局 负修正标记将要令技能值降到 0 时翻转为正修正"
         }
       ]

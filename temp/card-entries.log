@@ -1,0 +1,102 @@
+﻿TAP version 13
+# Subtest: 每张卡一个文件：文件名 = 条目 code，且只 export default 一个条目
+ok 1 - 每张卡一个文件：文件名 = 条目 code，且只 export default 一个条目
+  ---
+  duration_ms: 183.2423
+  type: 'test'
+  ...
+# Subtest: entries/index.js 与目录一致，CARD_ABILITY_ENTRIES 顺序与索引一致
+ok 2 - entries/index.js 与目录一致，CARD_ABILITY_ENTRIES 顺序与索引一致
+  ---
+  duration_ms: 3.0203
+  type: 'test'
+  ...
+# Subtest: 卡牌文件不 import 引擎装配点 / 聚合入口 / 批次大文件
+ok 3 - 卡牌文件不 import 引擎装配点 / 聚合入口 / 批次大文件
+  ---
+  duration_ms: 63.516
+  type: 'test'
+  ...
+# Subtest: 不存在批次大文件：ability-migration-batches.js 已删除
+ok 4 - 不存在批次大文件：ability-migration-batches.js 已删除
+  ---
+  duration_ms: 0.1842
+  type: 'test'
+  ...
+# Subtest: card-abilities.js 只聚合，不再含条目
+ok 5 - card-abilities.js 只聚合，不再含条目
+  ---
+  duration_ms: 0.4631
+  type: 'test'
+  ...
+# Subtest: 卡型与描述子 kind 匹配：事件必须有 played，支援不得只有 played
+ok 6 - 卡型与描述子 kind 匹配：事件必须有 played，支援不得只有 played
+  ---
+  duration_ms: 0.6242
+  type: 'test'
+  ...
+# Subtest: 卡面「攻击/躲避/谈判/撤退」指示必须在描述子上声明（借机攻击豁免）
+ok 7 - 卡面「攻击/躲避/谈判/撤退」指示必须在描述子上声明（借机攻击豁免）
+  ---
+  duration_ms: 4.0947
+  type: 'test'
+  ...
+# Subtest: 带豁免类行动指示的事件卡：打出预览不出现借机攻击
+ok 8 - 带豁免类行动指示的事件卡：打出预览不出现借机攻击
+  ---
+  duration_ms: 598.0559
+  type: 'test'
+  ...
+# Subtest: 带豁免类行动指示的 [action] 能力：发动预览不出现借机攻击
+not ok 9 - 带豁免类行动指示的 [action] 能力：发动预览不出现借机攻击
+  ---
+  duration_ms: 2329.2936
+  type: 'test'
+  location: 'G:\\boardgame-hall-ai\\games\\arkhamhorror\\tests\\card-entries.test.mjs:169:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    [action] 能力借机攻击豁免失效：
+      06018（The Hungering Blade）第 1 条能力预览仍出现借机攻击
+      06031（Hope）第 1 条能力预览仍出现借机攻击
+      06032（Zeal）第 1 条能力预览仍出现借机攻击
+    + actual - expected
+    
+    + [
+    +   '06018（The Hungering Blade）第 1 条能力预览仍出现借机攻击',
+    +   '06031（Hope）第 1 条能力预览仍出现借机攻击',
+    +   '06032（Zeal）第 1 条能力预览仍出现借机攻击'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: '06018（The Hungering Blade）第 1 条能力预览仍出现借机攻击'
+    1: '06031（Hope）第 1 条能力预览仍出现借机攻击'
+    2: '06032（Zeal）第 1 条能力预览仍出现借机攻击'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///G:/boardgame-hall-ai/games/arkhamhorror/tests/card-entries.test.mjs:185:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: 卡面「快速。」必须落在条目（资产）或 played 描述子（事件）上
+ok 10 - 卡面「快速。」必须落在条目（资产）或 played 描述子（事件）上
+  ---
+  duration_ms: 1.5994
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 9
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4377.5061

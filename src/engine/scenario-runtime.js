@@ -172,11 +172,18 @@ export function createScenarioRuntime(deps) {
     tokenLabel,
     vengeancePoints,
     yigsFury,
+    // P8（M3 食梦者）：隐私手牌（Hidden 遭遇卡）读写（见下方 api.hiddenCards）。
+    placeHiddenCard,
+    discardHiddenCard,
+    hasHiddenCard,
+    removeHiddenMarker,
   } = deps
 
 function scenarioRuntime(state, events, testSource = null) {
   return {
     info: text => info(state, events, text),
+    // 内容层要全桌拍脸时走这里（密谋翻面、新密谋亮出）。普通日志仍用 info。
+    present: (text, presentation) => info(state, events, text, presentation),
     cardName: code => cardName(code),
     // 混乱标记的中文名：「旧印」「骷髅」…（条目写日志时用，不要复制标签表）。
     tokenLabel: token => tokenLabel(token),
@@ -444,6 +451,13 @@ function scenarioRuntime(state, events, testSource = null) {
     skipEnemyAttackThisRound: enemy => {
       if (!enemy) return false
       enemy.skipAttackRound = state.round
+      return true
+    },
+    // P8（食梦者 06092 笨拙的古革巨人）：横置后在下一个补给阶段期间不重整。
+    // 读点是 phases.js 的 `enemy.preventReady = { from, rounds }`（from + rounds > round 时跳过重整）。
+    preventEnemyReady: (enemy, rounds = 1) => {
+      if (!enemy) return false
+      enemy.preventReady = { from: state.round, rounds: Math.max(1, Number(rounds) || 1) }
       return true
     },
     // 05267 幽灵乌鸦：给敌人挂一个「持续到某轮」的数值增益标记（读点 encounter-rules 的 enemyStatModifier）。
@@ -1073,6 +1087,146 @@ function scenarioRuntime(state, events, testSource = null) {
       state.encounterDiscard = []
     },
     shuffleEncounterDeck: () => { state.encounterDeck = shuffle(state.encounterDeck, () => randomValue(state)) },
+    // P8（M3）：遭遇牌库的通用读写。本循环章节卡大量出现「弃遭遇牌库顶 N 张」「把某张卡
+    // 从遭遇牌库/弃牌堆取出」「牌库耗尽时洗回」；单卡条目受 R1 条目合规审计约束不得直写
+    // state.encounterDeck / state.encounterDiscard，因此统一收口到这三个 API（不新增状态字段）。
+    discardEncounterTop: (count = 1, options = {}) => {
+      state.encounterDeck ||= []
+      state.encounterDiscard ||= []
+      const total = Math.max(0, Number(count) || 0)
+      const discarded = []
+      for (let index = 0; index < total; index += 1) {
+        if (!state.encounterDeck.length && options.reshuffle !== false && state.encounterDiscard.length) {
+          state.encounterDeck = shuffle([...state.encounterDiscard], () => randomValue(state))
+          state.encounterDiscard = []
+          info(state, events, '遭遇牌库耗尽：把遭遇弃牌堆洗回遭遇牌库。')
+        }
+        if (!state.encounterDeck.length) break
+        const code = state.encounterDeck.pop()
+        state.encounterDiscard.push(code)
+        discarded.push(code)
+        if (options.log !== false) info(state, events, `弃掉遭遇牌库顶的「${cardName(code)}」。`)
+      }
+      return discarded
+    },
+    discardEncounterCard: (code, options = {}) => {
+      state.encounterDeck ||= []
+      state.encounterDiscard ||= []
+      const target = String(code)
+      let index = -1
+      for (let cursor = state.encounterDeck.length - 1; cursor >= 0; cursor -= 1) {
+        if (state.encounterDeck[cursor] === target) { index = cursor; break }
+      }
+      if (index >= 0) {
+        state.encounterDeck.splice(index, 1)
+        state.encounterDiscard.push(target)
+        return true
+      }
+      if (options.includeDiscard !== true) return false
+      const discardIndex = state.encounterDiscard.lastIndexOf(target)
+      if (discardIndex < 0) return false
+      state.encounterDiscard.splice(discardIndex, 1)
+      return true
+    },
+    takeEncounterDiscard: (code, options = {}) => {
+      state.encounterDeck ||= []
+      state.encounterDiscard ||= []
+      const target = String(code)
+      const index = state.encounterDiscard.lastIndexOf(target)
+      if (index < 0) return false
+      state.encounterDiscard.splice(index, 1)
+      if (options.toDeck === true) state.encounterDeck.push(target)
+      return true
+    },
+    // 地点线索的通用增减（调查/效果共用唯一写入口；同步组线索池）。
+    addCluesToLocation: (locationId, amount = 1) => {
+      const location = state.locations.find(item => item.id === locationId)
+      if (!location) return 0
+      location.clues = (location.clues || 0) + Math.max(0, Number(amount) || 0)
+      syncClues(state)
+      return location.clues
+    },
+    removeLocationClues: (locationId, amount = 1) => {
+      const location = state.locations.find(item => item.id === locationId)
+      if (!location) return 0
+      const removed = Math.min(Math.max(0, Number(amount) || 0), location.clues || 0)
+      location.clues = (location.clues || 0) - removed
+      syncClues(state)
+      return removed
+    },
+    // P8（M3）：直接把 N 个线索放到敌人身上（B3《无归之地》背面故事：生成敌人并「带 1×人数 个线索」）。
+    addCluesToEnemy: (enemy, amount = 1) => {
+      if (!enemy) return 0
+      enemy.clues = (Number(enemy.clues) || 0) + Math.max(0, Number(amount) || 0)
+      return enemy.clues
+    },
+    // P8（M3）：从胜利区取回一张卡（B3「从胜利区取回滑行的巨噬蠕虫并生成」）。
+    // 返回取回的卡实例；调用方负责生成/移动与胜利点重算。
+    takeFromVictory: code => {
+      state.victoryDisplay ||= []
+      const target = String(code)
+      const index = state.victoryDisplay.findIndex(card => String(card?.originalCode || card?.code || card) === target)
+      if (index < 0) return null
+      return state.victoryDisplay.splice(index, 1)[0]
+    },
+    // P8（M3 食梦者）：隐私手牌（Hidden 遭遇卡）。`whereTheGodsDwell` 的奈亚拉托提普 5 形态
+    // 抽到后秘密进手牌、塔/议程/行动再揭示；条目与章节 behavior 只能经这里读写 inv.hiddenCards
+    //（enemyEncounter 的旧条目曾直写，P8 新增内容禁止直写状态）。
+    hiddenCards: {
+      list: seat => [...((state.investigators || [])[seat]?.hiddenCards || [])],
+      has: (seat, code = null) => hasHiddenCard(state.investigators[seat], code),
+      // 秘密加入手牌（definition 取卡池数据；带 privateInfo 日志）。
+      place: (seat, code) => {
+        const inv = state.investigators[seat]
+        const definition = cardDef(code)
+        if (!inv || !definition) return false
+        placeHiddenCard(state, inv, definition, events)
+        return true
+      },
+      // 从手牌弃掉隐私牌 → 遭遇弃牌堆。
+      discard: (seat, code) => {
+        const inv = state.investigators[seat]
+        if (!inv) return false
+        return discardHiddenCard(state, inv, code, events)
+      },
+      // 只移除「隐私」标记、不弃牌（揭示后仍留在手牌/转为普通卡）。
+      removeMarker: (seat, code) => {
+        const inv = state.investigators[seat]
+        if (!inv) return false
+        removeHiddenMarker(inv, code)
+        return true
+      },
+      // 「揭示手牌中的隐藏卡」：先离开手牌（手牌 + hiddenCards 标记同时清除），
+      // 调用方再决定去向（胜利区 / 遭遇牌库 / 弃牌堆）。
+      take: (seat, code) => {
+        const inv = state.investigators[seat]
+        if (!inv) return false
+        const index = (inv.hand || []).indexOf(code)
+        if (index < 0 || !hasHiddenCard(inv, code)) return false
+        inv.hand.splice(index, 1)
+        removeHiddenMarker(inv, code)
+        return true
+      },
+      // 把一张隐藏牌交给另一位调查员（大礼堂 06299 的 [action]）：两边手牌与 hiddenCards 同步。
+      transfer: (seat, targetSeat, code) => {
+        const from = state.investigators[seat]
+        const to = state.investigators[targetSeat]
+        if (!from || !to || !Array.isArray(to.hand)) return false
+        const index = (from.hand || []).indexOf(code)
+        if (index < 0 || !hasHiddenCard(from, code)) return false
+        from.hand.splice(index, 1)
+        removeHiddenMarker(from, code)
+        to.hand.push(code)
+        to.hiddenCards ||= []
+        to.hiddenCards.push(code)
+        return true
+      },
+      // 当前生效的 hiddenRule 列表（章节 behavior 查「隐私牌禁止…」用）。
+      activeRules: seat => (state.investigators[seat]?.hiddenCards || []).map(code => ({
+        code,
+        rule: state.scenario?.treacheries?.[code]?.hiddenRule || null,
+      })).filter(item => item.rule),
+    },
     discardEnemy: enemy => discardEnemyCard(state, enemy),
     removeEnemyFromGame: enemy => {
       if (!state.enemies.includes(enemy)) return false

@@ -297,6 +297,8 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'exileForAutoSuccess',
   // Phase 5（5a-22）：抽到后留在手里的弱点（黑暗回忆）。
   'weaknessStaysInHand',
+  'hiddenEnemyInHand',
+  'asIfEvent',
   // P0：留在手牌时的提示文案（03142 黑玛瑙扣环）。
   'weaknessHandNote',
   // Phase 5（5a-24）：附属在宿主支援上时给宿主的技能加成（值得信赖）。
@@ -719,6 +721,8 @@ export function registerCardAbilities(entries) {
       rerollTokenCost: entry.rerollTokenCost ?? null,
       exileForAutoSuccess: entry.exileForAutoSuccess === true,
       weaknessStaysInHand: entry.weaknessStaysInHand === true,
+      hiddenEnemyInHand: entry.hiddenEnemyInHand === true,
+      asIfEvent: entry.asIfEvent === true,
       weaknessHandNote: entry.weaknessHandNote ? String(entry.weaknessHandNote) : null,
       attachedSkillBonus: entry.attachedSkillBonus ?? null,
       weaknessSpawnsAtFarthestLocation: entry.weaknessSpawnsAtFarthestLocation === true,

@@ -3,18 +3,16 @@
 > 阶段：P6 / M1「调查员」；日期：2026-10-29。
 > 状态：**交付 5 位调查员 + 11 张专属主卡 + 2 张关联面**；逐人账本
 > [`audit/tde-investigators.json`](../audit/tde-investigators.json) `gate.pass=true`，
-> **verified 3/5**（托米 / 曼蒂 / 托尼），**pending 2/5**（卢克 → P8、派翠丝 → 仅 06017 待 P7）。
-> 证据：`tests/tde-investigators.test.mjs` 24 例、P6 新增 9 条原语（`new 26/26 done`）、
-> replay 13 局零漂移、`test:fast` 3968 tests / 0 fail。
+> **verified 5/5**。卢克的「如同位于连接地点」和梦境之门、派翠丝 06017 的手牌隐私敌人已接线。
+> 证据：`tests/tde-investigators.test.mjs` 25 例。逐人状态以账本 `--check` 为准。
 > 术语：`verified` = 逐人检查全部通过且无简化；`pending` = 有显式简化（必须带 `note`）。
 
 ## 1. 范围与不做什么
 
 - **做**：5 位正式调查员的构筑（牌组张数、专属卡、随机基础弱点、副职业）、旧印、主能力、专属卡
   与专属弱点；一卡一文件；可用性/构筑界面接线；逐人账本与测试。
-- **不做**：06015a/b「梦境之门」的地点行为（P8 地点型 Bonded 接线）；卢克的「事件如同位于连接
-  地点」；06017 的「隐私敌人在手牌中」。这三块都在 `tools/tde-primitive-spec.mjs` 的
-  `DEFERRED_PRIMITIVES` 或条目 `note` 里显式登记，账本记 `pending`。
+- **后来补上**：卢克的「事件如同位于连接地点」、梦境之门的放置/翻面/阶段结束、06017 的手牌隐私敌人。
+  仍不做的是 A3「警报提升后」窗口（`window.afterAlarmRaised`，随章节）。
 - **不改**：`PLAYABLE_INVESTIGATOR_CODES`（AI 自动选人池）。新增 `SELECTABLE_INVESTIGATOR_CODES`
   供构筑界面/选人；理由见 §5.1。
 

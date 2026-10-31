@@ -207,6 +207,12 @@ api.addEffect({
 **不要**再为某张卡新增槽位专用字段，新卡按上表选择原语。展示侧的容量（装备面板格子）由
 `card-defs.js` 从同一批声明派生 `extraSlots`（盟友受限槽派生 `allySlotsForNonUnique`），前端不再按卡号兜底。
 
+**腾槽弃置（2026-10-31）**：打出/获得资产超出槽位时，`assetReplacementPlans(inv, card)` 只返回
+「刚好够槽位」的最小弃置方案，且候选支援必须占用候选卡所需的槽位（`replacementCandidates`）。
+支援离场只会减少某槽位的占用，或减少它自己提供的豁免/额外槽位，因此弃掉无关槽位的支援
+（例如装手部武器时弃盟友）不可能让 `canEquip` 通过；`replaceAssets` 每轮按已选弃置重算方案，
+弃到 `canEquip` 通过即停，不能顺手多弃。判定仍只有一个读点：`canEquip`。
+
 ---
 
 ## 5. 条件的唯一写法
@@ -376,6 +382,15 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
    直觉区那张、下方那张或宿主支援实体，点牌即打出；旧的按字段/id 推导保留为兼容回退。
    「能力不上桌」的约定不变：`beneath` / `attachedCards` / `attachments` 上的牌不参与 `cardAbility`
    枚举，只有通道声明能把它们变成可打出的动作。
+   **选项链接卡牌的展示（2026-10-31）**：`pendingChoice.options` 带 `cardCode` 时，`choicePresentation()`
+   把卡面挂到 item（`cards` + `code`），牌桌在选项里画整张卡并在右上角给「详情」按钮：点选项 = 提交
+   `legalMoves`，点详情 = 打开完整卡牌（与牌桌其它卡面同一套详情弹窗），不提交选择；卡面沿用 `tableArt`，
+   按住 Alt 悬停即放大。内容层没给 `cardCode` 时，界面按「完整卡名唯一精确匹配」兜底（重名/找不到不猜，
+   只影响展示、不设 `key`、不改提交动作）。注意兜底读的是 `view.cards`，它不含 `encounterDiscard` 等区域
+   的卡（迷失时空「选择一个被弃掉的地点」即如此），那类选项**必须**由内容层在 `api.choose` 里下发
+   `cardCode`（02325/02326 已按此接线）——名称兜底只覆盖旧内容/仅下发卡名的选项。回归护栏：
+   `tests/card-interactions.test.mjs`（含真实 `viewState` 投影断言）、`tests/choice-card-offers.browser.mjs`
+   （主用例按实机口径：options 带 `cardCode`、视图 cards 不含地点卡；另有名称兜底兼容用例）。
    **快速反应开关与 auto 档**：通道里的卡在牌桌小卡上也显示同一颗闪电开关（准入判定
    `investigatorHoldsCard`，覆盖手牌/场上/威胁区/直觉区/下方/背包/原定计划/宿主附属），
    开关按 `cardCode` 记忆（ask=提示，skip=本局不再询问），`reactionView` / `reactionSkipPlan` /

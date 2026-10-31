@@ -39,6 +39,7 @@ export default {
     }
     api.threat(inv.seat, code, {
       slots: ['Body', 'Hand x2'],
+      slotsOverride: true,
       cannotLeavePlay: true,
       threatEffect: { discardCost: { action: 2 }, sameLocationAction: true },
     })

@@ -1,5 +1,6 @@
 import { contentRegistry } from '../../content/registered.js'
-import { HIDDEN_LOCATION_ART, PRIVATE_DOORWAY_NAMES } from '../../content/campaigns/thePathToCarcosa/presentation.js'
+import { ALL_CARDS } from '../cards/cards-data.js'
+import { HIDDEN_LOCATION_ART, PRIVATE_DOORWAY_NAMES, hiddenPathBack } from '../../content/campaigns/thePathToCarcosa/presentation.js'
 import { traitLabels } from '../cards/trait-labels.js'
 import { grantedTraitsOf } from '../engine/location-traits.js'
 import { agendaDoom, totalDoom, enemyHealthValue } from '../engine/rules-state.js'
@@ -10,10 +11,21 @@ export function locationEntryErrors(state) {
   const investigator = state.investigators.find(item => item.seat === state.currentSeat)
   if (!state.scenario || !investigator) return {}
   const behavior = contentRegistry.getBehavior(state.scenario.id)
-  return Object.fromEntries(state.locations.flatMap(location => {
+  const errors = {}
+  for (const location of state.locations) {
     const error = behavior.investigatorEntryError?.(state, location, investigator)
-    return error ? [[location.id, error]] : []
-  }))
+    if (error) errors[location.id] = error
+  }
+  // 相邻但现在走不过去（例如未揭示地下墓穴的线索费用）也要写出来。
+  // 只挂在当前地点的连接上，远处的地点不显示这条费用。
+  const here = state.locations.find(location => location.id === investigator.location)
+  for (const id of here?.connections || []) {
+    if (errors[id]) continue
+    const destination = state.locations.find(location => location.id === id)
+    const error = behavior.moveError?.(state, investigator, destination, id)
+    if (error) errors[id] = error
+  }
+  return errors
 }
 
 // Cards attached to the current act/agenda or to locations by scenario rules
@@ -71,10 +83,47 @@ const doorwayMask = loc => {
     ...publicGrantedTraits(loc),
   }
 }
+// 隐藏地点只投影公开的未揭示面。敦威治小径用本组印面（分岔路 / 迷幻小路）和共用背面图。
+// 没有专用图案的地点保留剧本给出的公开名称，画面用默认遭遇牌背。正面身份不投影。
+function publicBackFields(loc) {
+  const known = hiddenPathBack(loc.originalCode || loc.code) || hiddenPathBack(loc.artCode)
+  const artCode = loc.artCode || known?.artCode || hiddenLocationArtCode(loc)
+  const card = artCode ? ALL_CARDS[artCode] : null
+  return {
+    ...(known ? { name: known.name, nameEn: known.nameEn } : {}),
+    ...(artCode ? { artCode } : {}),
+    ...(card?.backFlavor ? { backFlavor: card.backFlavor } : {}),
+    ...(card?.backFlavorZh ? { backFlavorZh: card.backFlavorZh } : {}),
+    ...(loc.backText ? { backText: loc.backText } : {}),
+    ...(loc.backTextZh ? { backTextZh: loc.backTextZh } : {}),
+    ...(!card?.backFlavor && loc.backFlavor ? { backFlavor: loc.backFlavor } : {}),
+    ...(!card?.backFlavorZh && loc.backFlavorZh ? { backFlavorZh: loc.backFlavorZh } : {}),
+  }
+}
+function hiddenLocationView(loc) {
+  const back = publicBackFields(loc)
+  const grid = Number.isFinite(loc.grid?.x) && Number.isFinite(loc.grid?.y)
+    ? { x: loc.grid.x, y: loc.grid.y } : null
+  return {
+    id: loc.id,
+    name: back.name || loc.name,
+    ...(back.nameEn || loc.nameEn ? { nameEn: back.nameEn || loc.nameEn } : {}),
+    ...(back.artCode ? { artCode: back.artCode } : { encounterBack: true }),
+    ...(back.backText ? { backText: back.backText } : {}),
+    ...(back.backTextZh ? { backTextZh: back.backTextZh } : {}),
+    ...(back.backFlavor ? { backFlavor: back.backFlavor } : {}),
+    ...(back.backFlavorZh ? { backFlavorZh: back.backFlavorZh } : {}),
+    revealed: false,
+    clues: 0,
+    connections: [...(loc.connections || [])],
+    doom: loc.doom || 0,
+    ...(grid ? { grid } : {}),
+    ...publicGrantedTraits(loc),
+  }
+}
 export function maskHiddenLocations(locations) {
   return locations.map(loc => doorwayMask(loc.hiddenIdentity && !loc.revealed
-    ? { id: loc.id, name: '未知小径', artCode: hiddenLocationArtCode(loc), revealed: false, clues: 0,
-        connections: [...loc.connections], doom: loc.doom || 0, ...publicGrantedTraits(loc) }
+    ? hiddenLocationView(loc)
     : structuredClone(loc)))
 }
 export function captureTableState(state, getStat, getMaxSanity) {

@@ -6,6 +6,35 @@ import { t } from './i18n.js'
 // 用 Unicode 转义保存同一个字符串，避免词典完整性测试把它误判成残留中文；比较行为不变。
 const TURN_ORDER_START_LABEL = '\u5f00\u59cb\u884c\u52a8'
 
+// 2026-10-31 通用兜底：选项没有 `cardCode` 时，用「完整卡名唯一精确匹配」从展示表挂回卡面。
+// 这是给旧内容/只下发卡名的选项的兼容路径：实机「迷失时空」地点候选由内容层直接下发 cardCode，
+// 而观察投影的 view.cards 不含 encounterDiscard 里的地点卡，所以名称兜底对那一类选项无效。
+// 界面显示整张卡、点详情看卡牌，但**不设 key**：不把选项挂成牌桌实体，提交动作也不变。
+// 只在精确同名且唯一时挂卡；重名（重印/异画）或 label 不是卡名时不猜。不做卡牌类型过滤：
+// 跨类型同名会因「不唯一」自动跳过，但唯一同名却是别的类型的极端内容仍可能显示成卡面（展示层，低风险）。
+function exactCardNames(st) {
+  let index = null
+  return label => {
+    const name = typeof label === 'string' ? label.trim() : ''
+    if (!name) return null
+    if (!index) {
+      index = new Map()
+      for (const def of Object.values(st.cards || {})) {
+        if (!def || typeof def !== 'object' || typeof def.code !== 'string') continue
+        for (const value of new Set([def.name, def.nameZh, def.nameEn])) {
+          const key = typeof value === 'string' ? value.trim() : ''
+          if (!key) continue
+          const codes = index.get(key)
+          if (codes) { if (!codes.includes(def.code)) codes.push(def.code) }
+          else index.set(key, [def.code])
+        }
+      }
+    }
+    const codes = index.get(name)
+    return codes && codes.length === 1 ? codes[0] : null
+  }
+}
+
 export function choicePresentation(st) {
   const choice = st.pendingChoice
   if (!choice) return []
@@ -15,6 +44,7 @@ export function choicePresentation(st) {
     const found = defs.filter(def => [def.name, def.nameZh, def.nameEn].includes(name))
     return found.length === 1 ? found[0] : null
   }
+  const cardByLabel = exactCardNames(st)
   return (st.legalMoves || []).filter(m => m.action === 'choose' && m.choiceId === choice.id).map(move => {
     const id = String(move.optionId)
     const option = choice.options?.find(o => String(o.id) === id)
@@ -102,6 +132,12 @@ export function choicePresentation(st) {
     if (option?.cardCode) {
       const code = option.cardCode
       return { ...item, code, cards: [{ ...(st.cards?.[code] || { name: item.label }), code }] }
+    }
+    // 通用兜底（放在所有既有绑定之后）：选项 label 就是某张卡的卡名时显示整张卡面。
+    // 只影响展示，不改变 key / 提交动作；重名或找不到卡时不猜。
+    const linkedCode = cardByLabel(item.label)
+    if (linkedCode) {
+      return { ...item, code: linkedCode, cards: [{ ...(st.cards?.[linkedCode] || { name: item.label }), code: linkedCode }] }
     }
     return item
   })
@@ -264,7 +300,13 @@ export function mountCardInteractions(root, session, { state, submit, select, in
   // Show candidates outside the player's board (e.g. another investigator's assets)
   // as face-up card offers. Never reconstruct private hands or deck order.
   for (const offer of root.querySelectorAll('[data-choice-offer]')) {
-    if (offer.dataset.keepOffer !== 'true' && entities.some(el => el.dataset.interaction === offer.dataset.choiceOffer)) offer.hidden = true
+    if (offer.dataset.keepOffer === 'true') continue
+    if (!entities.some(el => el.dataset.interaction === offer.dataset.choiceOffer)) continue
+    // 链接实体已经在牌桌上：整个选项卡片一起藏（按钮 + 卡面 + 兄弟「详情」按钮）。
+    // 只藏按钮会在 .ah-visual-cell 里留一格空位和一颗可点的详情胶囊。
+    offer.hidden = true
+    const cell = offer.closest('.ah-visual-cell')
+    if (cell) cell.hidden = true
   }
   let suppressClick = false
   const selectWithActions = key => {

@@ -19,6 +19,9 @@ nodeTest('5a 卡号级规则数据：读点与数据形状', () => {
   assert.deepEqual(blanksTraits('01008'), [])
 
   assert.equal(hasExplicitReactionPrompt('01071'), true)
+  // 02305 黄金怀表的窗口由条目级 skipOrRepeatPhase 的 read point 开出，没有反应描述子，
+  // 也必须在卡面留「快速反应」开关（否则窗口每次询问却关不掉）。
+  assert.equal(hasExplicitReactionPrompt('02305'), true)
   assert.equal(hasExplicitReactionPrompt('01001'), false)
 
   assert.equal(isPoisonThreat('04102'), true)

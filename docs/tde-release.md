@@ -1,6 +1,6 @@
 # 《食梦者》发布手册（M5 / P10 骨架 · draft）
 
-> **口径**：本文件是 **P10 之前的骨架**（`draft`）。战役与玩家卡、8 章仍不可启动；调查员包已是 `development`，5 人可以选、可以构筑。
+> **口径**：本文件是 **P10 之前的骨架**（`draft`）。8 章已由 P8 落地为 `development`（不可从大厅启动，等待 P10 注册）；玩家卡包已 `playable`（72 张可入牌组、57 张显式简化），调查员包 `development`（5 人可以选、可以构筑）。
 > 发布口径（路线图 §0 / §11.2）：最多 `playable` + `earlyAccess=true`、`equivalenceCertified=false`；任何未完成项必须写进 `remaining` 与 `scenarioApproximations`，**不宣称规则等价**。
 > 路线图：[`tde-migration-roadmap.md`](./tde-migration-roadmap.md) §11；规范：[`arkham-content-migration.md`](./arkham-content-migration.md) §8。
 
@@ -8,10 +8,10 @@
 
 | 项 | 状态 |
 | --- | --- |
-| 内容状态 | 战役、玩家卡包、8 章仍是 `catalog-only`，未接入 `content/registered.js`，不可启动。调查员包是 `development`（可选择、可构筑；AI 池未扩容） |
-| 已完成 | P0–P4 门禁通过；P5 双线机制闭环（真实 TDE 的 `dualLineGate` 仍关）；P6 调查员 verified 3/5，其余 2 人显式简化。证据见路线图 §2 与各 `tde-pN-report.md` |
-| 未开始 | P7 玩家卡、P8 剧本、P8-T 自译、P9 逐章/全卡账本、P9.5 真实双线矩阵、P10 发布账本 |
-| 账本 | 已有 `audit/tde-rules.json`、`audit/tde-investigators.json`；`audit/tde-migration.json` 仍是 P10 产物 |
+| 内容状态 | 8 章已 **`development`**（P8；`check:tde:scenario` 8/8 PASS、`check:tde:registry` PASS、launchable 0），仍**未**接入 `content/registered.js`（P10），不可从大厅启动；调查员包是 `development`（可选择、可构筑；AI 池未扩容）；玩家卡包 `playable`（87 条记录 verified，72 张可入牌组，11 张场外绑定 + 4 张基础弱点只作依赖） |
+| 已完成 | P0–P8 门禁通过（P8：8 章 development、283 条记录全落点、253/253 覆盖、三幕间 + 16 段尾声接线、12 条显式简化、11 条 rejected 原语请求）；P5 双线机制闭环（真实 TDE 的 `dualLineGate` 仍关）；P6 调查员 verified 5/5（其中 2 人显式简化）；P7 玩家卡 87/87 verified（57 张显式简化，0 blocked）。证据见路线图 §2 与各 `tde-pN-report.md` |
+| 未开始 | P8-T 自译、P9 逐章/全卡账本（`literalCardBehavior`/`browserAcceptance`）、P9.5 真实双线矩阵、P10 发布账本 |
+| 账本 | 已有 `audit/tde-rules.json`、`audit/tde-investigators.json`、`audit/tde-player-acceptance.json`、**`audit/tde-scenario-acceptance.json` + `audit/tde-scenario-source-lock.json`（P8）**；`audit/tde-migration.json` 仍是 P10 产物 |
 | 规则等价 | 不宣称；`equivalenceCertified=false` |
 
 ## 2. 发布门禁（M5）

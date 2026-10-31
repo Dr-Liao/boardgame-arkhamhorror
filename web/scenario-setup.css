@@ -1,0 +1,110 @@
+/* 关卡设置浮层。主题变量由 game-ui.js 的 renderOverlays 写到根节点。 */
+.ah-setup-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(2, 8, 6, .74);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+.ah-setup-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(720px, 100%);
+  max-height: calc(100dvh - 32px);
+  min-height: 0;
+  border: 1px solid var(--ah-theme-edge, #b09658);
+  border-radius: 8px;
+  overflow: hidden;
+  color: #e7d6af;
+  background: linear-gradient(160deg, var(--ah-theme-panel, #1b332b) 0%, var(--ah-theme-bg, #0a1712) 100%);
+  box-shadow: 0 24px 80px #000c, inset 0 0 0 4px #b0965812;
+  font-family: 'Microsoft YaHei', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+.ah-setup-panel * { box-sizing: border-box; }
+.ah-setup-panel button { font: inherit; cursor: pointer; }
+.ah-setup-panel button:focus-visible { outline: 2px solid #f2d68c; outline-offset: 2px; }
+.ah-setup-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: none;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--ah-theme-edge, #b09658) 60%, transparent);
+}
+.ah-setup-head > div { flex: 1; min-width: 0; }
+.ah-setup-kicker {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--ah-theme-muted, #a9b49e);
+}
+.ah-setup-head h2 {
+  margin: 4px 0 0;
+  font: 500 20px/1.35 Georgia, 'Noto Serif SC', SimSun, serif;
+  letter-spacing: 1px;
+  color: var(--ah-theme-accent-strong, #f0dcaa);
+}
+.ah-setup-close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 4px 10px;
+  border: 1px solid #a58c5666;
+  border-radius: 5px;
+  background: #152b23;
+  color: #e7d6af;
+}
+.ah-setup-close:hover { border-color: #ddc68d; background: #20372e; }
+.ah-setup-body {
+  overflow: auto;
+  padding: 14px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ah-setup-section h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--ah-theme-accent-strong, #f0dcaa);
+}
+.ah-setup-section p,
+.ah-setup-steps {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #efe2c8;
+}
+.ah-setup-section p + p { margin-top: 8px; }
+.ah-setup-steps { padding-left: 1.3em; }
+.ah-setup-steps li + li { margin-top: 6px; }
+.ah-setup-empty,
+.ah-setup-footer {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ah-theme-muted, #a9b49e);
+}
+.ah-debug-shortcut-hint {
+  margin: 2px 0 0;
+  padding: 6px 2px 0;
+  border-top: 1px solid #5e556e55;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #aaa3b9;
+}
+@media (max-width: 700px) {
+  .ah-setup-backdrop { padding: 8px; }
+  .ah-setup-panel { width: 100%; max-height: calc(100dvh - 16px); }
+  .ah-setup-head { padding: 12px 14px 10px; }
+  .ah-setup-head h2 { font-size: 17px; }
+  .ah-setup-body { padding: 12px 14px 14px; }
+  .ah-setup-section p, .ah-setup-steps { font-size: 13px; }
+}

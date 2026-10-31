@@ -7,6 +7,7 @@ import { campaignCardChange } from '../../../src/campaign/campaign.js'
 import { awardStoryCard } from '../../../src/campaign/campaign-effects.js'
 import { requestChoice } from '../../../src/engine/resolution.js'
 import { chapterSpecs, locationId as L } from './chapters.js'
+import { hiddenPathBack } from '../thePathToCarcosa/presentation.js'
 import { encounterCards, encounterDeck, printed } from './card-data.js'
 import { encounterRules } from './encounter-rules.js'
 import { dunwichChaosToken, dunwichChaosAfterTest } from './dunwich-chaos.js'
@@ -113,12 +114,12 @@ export function laterBehavior(id) {
         // The printed backs read "Diverging Path" / "Altered Path"; keep the
         // real path identity hidden until the location is revealed.
         for (const def of Object.values(state.scenario.locations)) {
-          const code = original(def)
-          if (['02285', '02286', '02287', '02288'].includes(code)) {
-            def.hiddenIdentity = true; def.unrevealedActualName = def.name; def.name = '分歧之路'
-          } else if (['02289', '02290', '02291', '02292'].includes(code)) {
-            def.hiddenIdentity = true; def.unrevealedActualName = def.name; def.name = '异变之路'
-          }
+          const back = hiddenPathBack(original(def))
+          if (!back) continue
+          def.hiddenIdentity = true
+          def.unrevealedActualName = def.name
+          def.name = back.name
+          def.nameEn = back.nameEn
         }
       }
       return locations
@@ -580,7 +581,9 @@ export function laterBehavior(id) {
       }
       if (id === 'whereDoomAwaits') for (const [code, deck] of [['02282', 'divergingPaths'], ['02283', 'alteredPaths']]) {
         if (inv.location === L(code) && state.scenarioFlags[`${inv.seat}:${deck}`] !== state.round)
-          add(deck, '调查：发现一条未知小径（每轮一次）', zones[deck].length ? null : '小径牌库已空')
+          add(deck, deck === 'divergingPaths'
+            ? '调查：放置一张分岔路（每轮一次）'
+            : '调查：放置一张迷幻小路（每轮一次）', zones[deck].length ? null : '小径牌库已空')
       }
       if (id === 'whereDoomAwaits' && original(state.locations.find(loc => loc.id === inv.location)) === '02287'
         && state.locations.find(loc => loc.id === inv.location)?.doom > 0) add('clearDestroyedPathDoom', '调查：移除被毁小径上的 1 个毁灭')
@@ -628,6 +631,7 @@ export function laterBehavior(id) {
             options: locations.map((code, optionIndex) => ({
               id: String(optionIndex),
               label: ALL_CARDS[code]?.nameZh || ALL_CARDS[code]?.name || code,
+              cardCode: code,
             })),
           })
           const code = locations[Number(index)]

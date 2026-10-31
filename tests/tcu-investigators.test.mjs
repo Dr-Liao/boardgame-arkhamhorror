@@ -546,6 +546,28 @@ test('P6 黛安娜：自己的卡牌取消效果后，把那张卡压在底下�
   assert.equal(me(state).resources, 6, '获得 1 资源')
 })
 
+test('P6 黛安娜：守护结界取消遭遇后只压到底下，不再同时留在弃牌堆', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.hand = ['02307']
+  inv.beneath = []
+  inv.deck = ['01088', '01088']
+  state.encounterDeck = ['dissonantVoices']
+  state.chaosBag = ['0']
+  move(state, { action: 'endTurn' })
+  settle(state, pending => {
+    const ward = pending.options.find(option => option.cardCode === '02307')
+    if (ward) return ward.id
+    const diana = pending.options.find(option => String(option.id).includes('diana'))
+    if (diana) return diana.id
+    return null
+  })
+  const after = me(state)
+  assert.deepEqual(after.beneath, ['02307'], '只放进底下一次')
+  assert.equal(after.discard.includes('02307'), false, '同一张卡不能再留在弃牌堆')
+  assert.equal(after.hand.includes('02307'), false)
+})
+
 test('P6 黛安娜：别的调查员的卡取消效果时不触发；底下已有 5 张时也不触发', () => {
   const other = investigatorFixture('05004')
   me(other).beneath = []
@@ -1826,6 +1848,31 @@ test('R7 05013 beneath 通道：投入底下技能（横置匕首、图标生效
   assert.equal(me(state).assets.find(item => item.id === 'dagger')?.exhausted, true, '额外费用：横置银暮匕首')
   assert.deepEqual(me(state).beneath, [], '卡从 beneath 移出')
   assert.ok(me(state).discard.includes('01025'), '检定后技能进弃牌堆')
+  assert.equal(state.testResult.success, true)
+})
+
+test('R7 05013 beneath 通道：两张同名牌可以同时出现在投入窗口', () => {
+  const state = investigatorFixture('05004')
+  const inv = me(state)
+  inv.hand = []
+  inv.beneath = ['01025', '01025']
+  inv.assets = [{ id: 'dagger', code: '05013', exhausted: false }]
+  state.chaosBag = ['0']
+  let ids = null
+  runTransaction(state, current => performTest(current, 0, 'combat', 1, {
+    resolve: value => { current.testResult = value },
+  }), pending => {
+    if (pending.kind === 'commit') {
+      if (!ids) ids = pending.options.filter(item => String(item.id).includes('01025')).map(item => item.id)
+      const second = pending.options.find(item => item.id === 'beneath:1:01025')
+      if (second) return second.id
+      if (pending.options.some(item => item.id === 'done')) return 'done'
+    }
+    return null
+  })
+  assert.deepEqual(ids, ['beneath:0:01025', 'beneath:1:01025'])
+  assert.deepEqual(me(state).beneath, ['01025'], '只移出被投入的那一张')
+  assert.ok(me(state).discard.includes('01025'))
   assert.equal(state.testResult.success, true)
 })
 

@@ -1,0 +1,12 @@
+﻿cardDef function
+cardName function
+leaveAsset function
+info undefined
+reactionWindow function
+triggerReaction function
+registeredEntry undefined
+defeatedAssetRetaliation function
+applyHarm function
+drawCards function
+shuffleDeck undefined
+getHandSize function

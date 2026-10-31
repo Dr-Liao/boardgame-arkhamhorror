@@ -151,7 +151,21 @@
     "test:tde:parallel": "node --test tests/tde-parallel.test.mjs",
     "test:tde:investigators": "node --test tests/tde-investigators.test.mjs",
     "audit:tde:investigators": "node tools/audit-tde-investigators.mjs --check",
-    "audit:tde:investigators:write": "node tools/audit-tde-investigators.mjs --write"
+    "audit:tde:investigators:write": "node tools/audit-tde-investigators.mjs --write",
+    "test:tde:player": "node --test tests/tde-player-m2-1.test.mjs tests/tde-player-m2-2.test.mjs tests/tde-player-m2-3.test.mjs tests/tde-player-m2-4.test.mjs tests/tde-player-ledger.test.mjs",
+    "audit:tde:player": "node tools/audit-tde-player.mjs --check",
+    "audit:tde:player:write": "node tools/audit-tde-player.mjs --write",
+    "report:tde:player": "node tools/tde-p7-reports.mjs",
+    "scan:tde:player:shards": "node tools/scan-tde-player-shards.mjs --write",
+    "scan:tde:player:shards:check": "node tools/scan-tde-player-shards.mjs --check",
+    "scan:tde:scenario:shards": "node tools/scan-tde-scenario-shards.mjs --write",
+    "scan:tde:scenario:shards:check": "node tools/scan-tde-scenario-shards.mjs",
+    "check:tde:scenario": "node tools/check-tde-scenario.mjs",
+    "check:tde:registry": "node tools/check-tde-registry.mjs",
+    "test:tde:scenarios": "node --test \"tests/tde-scenario-*.test.mjs\"",
+    "test:tde:campaign": "node --test tests/tde-campaign-layer.test.mjs tests/tde-scenario-runtime-api.test.mjs",
+    "audit:tde:scenarios": "node tools/audit-tde-scenarios.mjs --check",
+    "audit:tde:scenarios:write": "node tools/audit-tde-scenarios.mjs --write"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

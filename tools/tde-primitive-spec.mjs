@@ -558,6 +558,57 @@ export const PRIMITIVES = Object.freeze([
     docs: `${DOC}#p69-从手牌免费打出`,
     note: '托尼的 .38「打出后免费从手牌打出另一张同名枪」；与正常支付/入场共用 doPlay。',
   },
+  {
+    id: 'play.asIfAtLocation',
+    step: 'P6-10',
+    title: '事件如同位于连接地点打出',
+    mechanism: ['standardRules'],
+    layer: 'engine',
+    params: { asIfLocation: 'locationId' },
+    api: 'beginAsIf / endAsIf',
+    checks: [
+      { kind: 'source-pattern', file: `${ENGINE}/as-if-location.js`, pattern: 'beginAsIf', why: '结算期间改写地点与交战，结束后还原' },
+      { kind: 'source-pattern', file: `${ENGINE}/dispatch.js`, pattern: 'beginAsIf', why: '打出事件时包住 doPlay' },
+    ],
+    files: [`${ENGINE}/as-if-location.js`, `${ENGINE}/moves.js`, `${ENGINE}/dispatch.js`, 'tests/tde-investigators.test.mjs', DOC],
+    tests: ['tests/tde-investigators.test.mjs'],
+    docs: `${DOC}#p610-如同位于连接地点`,
+    note: '卢克·罗宾逊每回合 1 张事件。',
+  },
+  {
+    id: 'location.bondedDreamGate',
+    step: 'P6-11',
+    title: '梦境之门的放置、翻面与连接',
+    mechanism: ['dreamGate'],
+    layer: 'engine',
+    params: { code: '06015a|06015b' },
+    api: 'placeDreamGate / flipOrPlaceDreamGate / setDreamGatesAside',
+    checks: [
+      { kind: 'source-pattern', file: `${ENGINE}/dream-gate.js`, pattern: 'placeDreamGate', why: '放置并按面连接' },
+      { kind: 'source-pattern', file: `${ENGINE}/turn.js`, pattern: 'setDreamGatesAside', why: '调查阶段结束放在一边' },
+    ],
+    files: [`${ENGINE}/dream-gate.js`, `${ENGINE}/api-misc.js`, `${ENGINE}/turn.js`, 'tests/tde-investigators.test.mjs', DOC],
+    tests: ['tests/tde-investigators.test.mjs'],
+    docs: `${DOC}#p611-梦境之门`,
+    note: '06013 放置 a 面，06014 翻成或放置 b 面。除卢克外不能进入。',
+  },
+  {
+    id: 'enemy.hiddenInHand',
+    step: 'P6-12',
+    title: '手牌中的隐私敌人',
+    mechanism: ['hidden'],
+    layer: 'engine',
+    params: { hiddenEnemyInHand: 'boolean' },
+    api: 'fightHidden / evadeHidden / hiddenEnemiesAttackFromHand',
+    checks: [
+      { kind: 'source-pattern', file: `${ENGINE}/hidden-enemy.js`, pattern: 'hiddenEnemiesAttackFromHand', why: '牌库耗尽时从手牌攻击' },
+      { kind: 'source-pattern', file: `${ENGINE}/deck-ops.js`, pattern: 'hiddenEnemyInHand', why: '抽到时秘密进手牌' },
+    ],
+    files: [`${ENGINE}/hidden-enemy.js`, `${ENGINE}/deck-ops.js`, `${ENGINE}/dispatch.js`, 'tests/tde-investigators.test.mjs', DOC],
+    tests: ['tests/tde-investigators.test.mjs'],
+    docs: `${DOC}#p612-手牌中的隐私敌人`,
+    note: '06017。成功弃掉，失败则生成并交战。',
+  },
 ])
 
 // ---------------------------------------------------------------------------
@@ -565,44 +616,11 @@ export const PRIMITIVES = Object.freeze([
 // ---------------------------------------------------------------------------
 export const DEFERRED_PRIMITIVES = Object.freeze([
   {
-    id: 'play.asIfAtLocation',
-    step: 'P8',
-    title: '事件如同位于连接地点打出（卢克·罗宾逊）',
-    mechanism: ['standardRules'],
-    reason: '需要「虚拟地点」原语：事件结算期间把 inv.location 覆盖为连接地点、并按该地点的敌人建立交战关系。'
-      + '引擎里 inv.location 的读点遍布 combat/actions/encounter（没有单一读点），属 P8 章节接线；'
-      + 'P6 把 06004 标为 simplified，未实现部分写入 docs/tde-investigators.md。',
-  },
-  {
-    id: 'location.bondedDreamGate',
-    step: 'P8',
-    title: '梦境之门地点（06015a/b）的放置/翻面/连接',
-    mechanism: ['dreamGate'],
-    reason: 'P3 已有 `location.placeBondedLocation`，但真实地点实体的构造、「与每个已揭示地点连接」、'
-      + '「除卢克外不能进入」与「调查阶段结束时放在一边」需要章节级的 locationRule 与阶段钩子（P8）。'
-      + 'P6 只做 disengage 部分，06013/06014 标为 simplified。',
-  },
-  {
-    id: 'enemy.hiddenInHand',
-    step: 'P7',
-    title: '手牌中的敌人（隐私敌人）',
-    mechanism: ['hidden'],
-    reason: '06017「秘密加入手牌 / 从手牌攻击躲避 / 牌库耗尽时攻击」需要敌人形态的隐私投影与从手牌建立战斗目标；'
-      + 'P4 已将「敌人形态隐私」登记为待接线。P6 的 06017 标为 simplified（按普通弱点敌人生成）。',
-  },
-  {
     id: 'window.afterAlarmRaised',
     step: 'P8',
     title: '警报等级提升后的窗口',
     mechanism: ['alarmLevel'],
-    reason: 'A3 的警报等级已由 `counter.investigator` 承担读数；「提升后」的窗口只在 A3 章节脚本里需要（P8）。',
-  },
-  {
-    id: 'api.bonded.swap',
-    step: 'P8',
-    title: '绑定卡换面',
-    mechanism: ['dreamGate'],
-    reason: '06015a/b 的翻面与 06014 的「若已在场上则翻面」属地点型 Bonded（见上一条），随 P8 一起接线。',
+    reason: 'A3 的警报等级已由 `counter.investigator` 承担读数。P8 评估（2026-10-31）：该窗口只服务 06224 一张卡；A3 章节 behavior 在每次警报提升调用点自行结算反应（条目 flags 提供选项数据），不新增通用窗口原语；06224 的反应子句记 simplified。P9 若出现第二张同类卡再评估。',
   },
 ])
 

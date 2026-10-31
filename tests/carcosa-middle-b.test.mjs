@@ -2,9 +2,12 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { advanceAct, applyMove, createGameState, startScenario } from '../src/engine/engine.js'
+import { maskHiddenLocations } from '../src/integration/presentation-state.js'
 import { settle } from './core-fixture.mjs'
+import { mapGeometry } from '../web/map-layout.js'
 import * as phantom from '../content/campaigns/thePathToCarcosa/scenarios/aPhantomOfTruth/index.js'
 import * as mask from '../content/campaigns/thePathToCarcosa/scenarios/thePallidMask/index.js'
+import { layout as pallidLayout } from '../content/campaigns/thePathToCarcosa/scenarios/thePallidMask/layout.js'
 
 const clone = value => structuredClone(value)
 
@@ -191,6 +194,48 @@ test('The Pallid Mask creates a conserved random catacombs deck with the two exi
   assert.equal(allCodes.filter(code => code === '03257').length, 1)
   assert.ok(state.scenarioZones.catacombsDeck.slice(0, 5).includes('03256'))
   assert.ok(state.scenarioZones.catacombsDeck.slice(0, 5).includes('03257'))
+})
+
+test('The Pallid Mask lays the gate above and below, and unrevealed catacombs use the encounter back', () => {
+  const state = fixture(mask, { youEnteredTheCatacombsOnYourOwn: true })
+  mask.behavior.preScenarioSetup(state)
+  const placed = mask.behavior.setupLocations(state, [], deterministic)
+  const gate = state.locationVariants.catacomb0
+  assert.equal(gate.originalCode, '03247')
+  assert.deepEqual(gate.grid, { x: 0, y: 0 })
+  const neighbors = placed.slice(1).map(id => state.locationVariants[id])
+  assert.deepEqual(neighbors.map(loc => loc.grid).sort((a, b) => a.y - b.y), [
+    { x: 0, y: -1 },
+    { x: 0, y: 1 },
+  ])
+  const visible = maskHiddenLocations(placed.map(id => ({ ...state.locationVariants[id], id, connections: [] })))
+  const geometry = mapGeometry(visible, pallidLayout)
+  const above = visible.find(loc => loc.grid.y === -1)
+  const below = visible.find(loc => loc.grid.y === 1)
+  assert.equal(geometry.positions[above.id].x, geometry.positions.catacomb0.x)
+  assert.equal(geometry.positions[below.id].x, geometry.positions.catacomb0.x)
+  assert.ok(geometry.positions[above.id].y < geometry.positions.catacomb0.y)
+  assert.ok(geometry.positions[below.id].y > geometry.positions.catacomb0.y)
+  for (const loc of visible.filter(item => item.id !== 'catacomb0')) {
+    assert.equal(loc.name, '地下墓穴')
+    assert.equal(loc.nameEn, 'Catacombs')
+    assert.equal(loc.encounterBack, true)
+    assert.match(loc.backTextZh, /共同花费1/)
+    assert.equal(loc.artCode, undefined)
+    assert.equal(loc.originalCode, undefined)
+    assert.equal(loc.unrevealedActualName, undefined)
+  }
+  const path = maskHiddenLocations([{
+    id: 'path', hiddenIdentity: true, revealed: false, originalCode: '02285', name: '屠杀之森',
+    connections: [], grid: { x: 2, y: 3 },
+  }])[0]
+  assert.equal(path.name, '分岔路')
+  assert.equal(path.nameEn, 'Diverging Path')
+  assert.equal(path.artCode, '02285')
+  assert.equal(path.encounterBack, undefined)
+  assert.ok(path.backFlavorZh)
+  assert.equal(path.originalCode, undefined)
+  assert.deepEqual(path.grid, { x: 2, y: 3 })
 })
 
 test('The Pallid Mask candlelit tunnels tests intellect and privately reveals a catacomb face once per game', () => {

@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createGameState, applyMove, validateMove, legalMoves, decisionSeat } from '../src/engine/engine.js'
+import { createGameState, allCardDefs, applyMove, validateMove, legalMoves, decisionSeat } from '../src/engine/engine.js'
 import { migrateState } from '../src/engine/save-migration.js'
 import { STATE_SCHEMA_VERSION, RULES_VERSION, stateCompatibilityError } from '../src/engine/rules-state.js'
 import { META } from '../src/cards/cards-data.js'
@@ -46,6 +46,19 @@ test('旧卡面缺少自动反应字段时刷新内嵌卡牌定义', () => {
       || (Array.isArray(def.reactionIds) && def.reactionIds.length)))
   assert.ok(reactionCards.length > 0)
   assert.ok(reactionCards.every(def => Object.hasOwn(def, 'autoByDefault')), '刷新后有反应的卡面都带新字段')
+})
+
+test('旧卡面缺少黄金怀表的快速反应开关时刷新内嵌卡牌定义', () => {
+  // 02305 的窗口来自条目级 read point；补上 explicitReactionPrompt 后，旧存档内嵌卡表
+  // 仍是「没有开关」的旧定义且 resourceVersion 没变——读档必须自愈，否则按钮继续消失。
+  const old = restore(create())
+  const defs = allCardDefs({ runtimeOnly: false })
+  old.investigators[0].assets.push({ id: 'gold-watch', code: '02305', exhausted: false })
+  old.cards['02305'] = { ...defs['02305'], code: '02305', hasReactionPrompt: false, hasAutoReaction: false }
+  const { state, changes } = migrateState(old)
+  assert.ok(changes.includes('刷新内嵌卡牌定义'), JSON.stringify(changes))
+  assert.equal(state.cards['02305'].hasReactionPrompt, true, '刷新后卡面重新带上快速反应开关')
+  assert.equal(state.cards['02305'].hasAutoReaction, false, '移除自身不是安全 auto')
 })
 
 test('结构 v6 / 规则 n5.1 存档可逐级升级到当前规则并继续行动', () => {

@@ -1,0 +1,863 @@
+[
+ {
+  "code": "10001",
+  "nameZh": "威尔森·理查德",
+  "type": "investigator",
+  "hasEntry": false,
+  "text": "你每轮打出的第一张[[工具]]支援资源费用减少1点。\n你在[[工具]]支援的技能检定期间得到技能值+1。\n[elder_"
+ },
+ {
+  "code": "10014",
+  "nameZh": "恸哭怨魂",
+  "type": "enemy",
+  "hasEntry": false,
+  "text": "冷漠。逃逸。猎手。\n猎物 - 仅对鸣神琥珀。\n强制 - 在恸哭怨魂地点的技能检定期间，调查员揭示[bless]标记或[c"
+ },
+ {
+  "code": "10038",
+  "nameZh": "奇迹祝愿",
+  "type": "event",
+  "hasEntry": false,
+  "text": "快速。你所在地点的技能检定期间揭示了[bless]标记后打出。\n查找你的绑定卡牌，找出转瞬为神，并将其放置入场。在上面放"
+ },
+ {
+  "code": "10046",
+  "nameZh": "控制变量",
+  "type": "event",
+  "hasEntry": false,
+  "text": "快速。有调查员在你地点的技能检定期间揭示了[curse]标记后打出。\n发现你所在地点的1个线索。"
+ },
+ {
+  "code": "10075",
+  "nameZh": "福倚祸伏",
+  "type": "skill",
+  "hasEntry": false,
+  "text": "你执行的技能检定期间，在你揭示一个[curse]标记时，你可以将福倚祸伏从手牌投入到该技能检定。如果你这么做，福倚祸伏获"
+ },
+ {
+  "code": "10095",
+  "nameZh": "身受诅咒",
+  "type": "skill",
+  "hasEntry": false,
+  "text": "在你将身受诅咒投入技能检定时，在混乱袋中加入最多3个[curse]标记。本次技能检定期间，将揭示的每个[curse]标记"
+ },
+ {
+  "code": "10106",
+  "nameZh": "钥匙看管者",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "绑定(上古封印)。\n[reaction]在你地点的技能检定期间揭示[bless]标记时：对钥匙看管者造成1点恐惧并发现你"
+ },
+ {
+  "code": "10107",
+  "nameZh": "黄铜仆从",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "绑定(上古封印)。\n[reaction]在你地点的技能检定期间揭示[curse]标记时：对黄铜仆从造成1点伤害并对你所在"
+ },
+ {
+  "code": "10123",
+  "nameZh": "求生技术",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "[free]选择一张附属在你地点且归你所有的卡牌并横置求生技术：将该卡牌加入你的手牌。\n[free]在地点上的技能检定期"
+ },
+ {
+  "code": "10131",
+  "nameZh": "黎明之星",
+  "type": "event",
+  "hasEntry": false,
+  "text": "快速。你所在地点的技能检定期间揭示了混乱标记后打出。\n忽略本次检定期间揭示的每个[curse]标记的修正值。每忽略1个["
+ },
+ {
+  "code": "10134",
+  "nameZh": "暮光冠冕",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "绑定(破碎冠冕)。每位调查员仅限1张[[面具]]。\n[reaction]你在技能检定期间揭示[bless]标记或[cur"
+ },
+ {
+  "code": "11005",
+  "nameZh": "韵文之书",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "卢修斯·加洛维牌库专用。\n使用(1灵感)。每轮你第一次发现线索，补充1灵感。\n[reaction]技能检定期间揭示混乱标"
+ },
+ {
+  "code": "11009",
+  "nameZh": "晦影瞳镜",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "阿加莎·克雷恩牌库专用。\n[reaction]你技能检定成功后，如果此处没有封印标记：将本次技能检定期间揭示的一个非符号"
+ },
+ {
+  "code": "11010",
+  "nameZh": "窥看虚空",
+  "type": "treachery",
+  "hasEntry": false,
+  "text": "显现 - 将窥看虚空放置入场，位于你的威胁区域。\n每个技能检定期间，你第一次揭示混乱标记时，你必须揭示额外1个混乱标记("
+ },
+ {
+  "code": "11034",
+  "nameZh": "艺术灵感",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "每位调查员仅限1张。使用(1灵感)。\n[free]横置艺术灵感并弃掉你1张手牌：补满本卡牌上的1灵感。\n[reactio"
+ },
+ {
+  "code": "11039",
+  "nameZh": "诡异样本",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "多重。快速。\n最多3张诡异样本卡牌共占1个法术槽位。\n[reaction]在你所在地点的技能检定期间揭示[skull]、"
+ },
+ {
+  "code": "11060",
+  "nameZh": "变幻莫测",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "每位调查员仅限1张。\n封印(0)。你揭示地点或放置新的地点入场后，你可以再次结算本关键词。\n[reaction]在你与敌"
+ },
+ {
+  "code": "11069",
+  "nameZh": "卡塔琳娜·索尔加",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "[reaction]你执行的技能检定期间，在你将要揭示混乱标记时，横置卡塔琳娜·索尔加：从混乱袋中揭示标记，直到揭示了一"
+ },
+ {
+  "code": "11097",
+  "nameZh": "信心",
+  "type": "skill",
+  "hasEntry": false,
+  "text": "每次技能检定最多投入1张。\n本次技能检定期间每额外揭示1个混乱标记(即使它被取消或忽略)，信心获得[wild](最多+3"
+ },
+ {
+  "code": "11103",
+  "nameZh": "禁忌箴言",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "[[祝福]]，[[诅咒萦绕]]，[[法师]]牌库专用。\n你结算[[法术]]事件时得到技能值+1。\n[free]在[[法术"
+ },
+ {
+  "code": "11111",
+  "nameZh": "埋头苦干",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "[[罪犯]]，[[漂泊者]]，[[经营者]]牌库专用。\n[free]在[[工具]]支援上的技能检定期间，横置埋头苦干：你"
+ },
+ {
+  "code": "11687",
+  "nameZh": "约翰·雷蒙德·勒格拉斯",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "你攻击[[深潜者]]和[[星之眷族]]敌人时，技能值+1。\n[reaction]你在攻击或躲避克苏鲁期间进行技能检定时，"
+ },
+ {
+  "code": "11729",
+  "nameZh": "深渊之眼",
+  "type": "treachery",
+  "hasEntry": false,
+  "text": "显现 - 将深渊之眼放置入场，位于你的威胁区。每位调查员限1张。\n你在一次技能检定中揭示的每个[cultist]和[ta"
+ },
+ {
+  "code": "11763",
+  "nameZh": "外星石板",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "使用(4秘密)。\n[fast]在一张[[符文]]或[[拉莱耶]]卡牌上进行技能检定期间，横置外星石板并花费1个秘密：进行"
+ },
+ {
+  "code": "12013",
+  "nameZh": "伊莎贝拉·巴恩斯",
+  "type": "investigator",
+  "hasEntry": false,
+  "text": "[fast]你执行的技能检定期间，受到1点直接恐惧：将你弃牌堆中的一张符合条件的技能投入本次检定。本次检定结算后，将该卡"
+ },
+ {
+  "code": "12081",
+  "nameZh": "及时干预",
+  "type": "skill",
+  "hasEntry": false,
+  "text": "每次技能检定最多投入1张。\n你执行的技能检定期间，你可以在揭示混乱标记后从你的手牌投入[及时干预]。"
+ },
+ {
+  "code": "12082",
+  "nameZh": "苦苦支撑",
+  "type": "event",
+  "hasEntry": false,
+  "text": "快速。在你的技能检定期间揭示了非[auto_fail]标记，且本次技能检定将要失败时打出。\n改为你本次技能检定成功。如果"
+ },
+ {
+  "code": "53008",
+  "nameZh": "钻地魔虫之石",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "封印([skull]、[cultist]、[tablet]或[elder_thing])。使用(3充能)。如果钻地魔虫之"
+ },
+ {
+  "code": "60357",
+  "nameZh": "舞台中央",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "每位调查员仅限1张。使用(3名望)。如果[舞台中央]上没有名望，将其弃掉。\n[free]技能检定期间，花费1名望并横置["
+ },
+ {
+  "code": "60405",
+  "nameZh": "仪式蜡烛",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "[reaction]你执行的技能检定期间揭示了[skull]、[cultist]、[tablet]或[elder_thi"
+ },
+ {
+  "code": "60458",
+  "nameZh": "献祭人偶",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "你的剩余生命值不超过3时，[献祭人偶]不占用手部槽位。\n[reaction]技能检定期间，你揭示了非[auto_fail"
+ },
+ {
+  "code": "60582",
+  "nameZh": "及时干预",
+  "type": "skill",
+  "hasEntry": false,
+  "text": "每次技能检定最多投入1张。\n你执行的技能检定期间，你可以在揭示混乱标记后从你的手牌投入[及时干预]。"
+ },
+ {
+  "code": "71042",
+  "nameZh": "托马斯·奥尔尼",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "[fast]命名一个[[特性]]并横置托马斯·奥尔尼：弃掉遭遇牌库顶的卡牌。如果该卡牌带有所命名[[特性]]，获得2资源"
+ },
+ {
+  "code": "88045",
+  "nameZh": "时运泉源",
+  "type": "key",
+  "hasEntry": false,
+  "text": "变换 - 本轮进行的下一次技能检定期间，进行该检定的调查员额外揭示一个混乱标记，选择其中一个结算，并忽略另一个混乱标记。"
+ },
+ {
+  "code": "90020",
+  "nameZh": "血海深仇",
+  "type": "scenario",
+  "hasEntry": false,
+  "text": "简单/普通\n[skull]：-X。X为艾格尼丝·贝克控制的回忆数量。\n[cultist]：-2。重整艾尔佩斯·博丹并结算"
+ },
+ {
+  "code": "90025",
+  "nameZh": "准则",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "罗兰·班克斯牌库专用。永久。\n规章 - 你每轮不能攻击超过2次。\n[free]当你调查、躲避或谈判时，横置本准则：每有一"
+ },
+ {
+  "code": "90038",
+  "nameZh": "潮汐信物",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "温蒂·亚当斯牌库专用。永久。\n[reaction]当一个敌人将要重整或在其上放置毁灭标记时，释放其上的一个[bless]"
+ },
+ {
+  "code": "90049",
+  "nameZh": "吉姆·卡尔弗",
+  "type": "investigator",
+  "hasEntry": false,
+  "text": "[reaction]当你在技能检定中揭示1个或更多的[skull]或[curse]标记时：补满你控制的支援上的1个充能。"
+ },
+ {
+  "code": "90050",
+  "nameZh": "吉姆的小号",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "吉姆·卡尔弗牌库专用。进阶。\n[reaction]在技能检定期间揭示[skull]或[curse]标记时，横置吉姆的小号"
+ },
+ {
+  "code": "90078",
+  "nameZh": "雷克斯·墨菲",
+  "type": "investigator",
+  "hasEntry": false,
+  "text": "[reaction]当你将要将1个线索放回你的所在地点，或将要在混乱袋中加入2个[curse]标记时：改为执行另一项(依"
+ },
+ {
+  "code": "98013",
+  "nameZh": "塞拉斯·马什",
+  "type": "investigator",
+  "hasEntry": false,
+  "text": "[reaction]你执行的技能检定期间，你揭示一个混乱标记后：将本次检定中你投入的一张技能返回你的手牌。(每轮仅限一次"
+ },
+ {
+  "code": "01692",
+  "nameZh": "美满结局",
+  "type": "event",
+  "hasEntry": false,
+  "text": "快速。在技能检定期间，你揭示一个混乱标记，且该标记将要令你的技能值减少到0时打出(包括[auto_fail]标记)。\n取"
+ },
+ {
+  "code": "02012",
+  "nameZh": "吉姆的小号",
+  "type": "asset",
+  "hasEntry": true,
+  "text": "吉姆·卡尔弗牌库专用。\n[reaction]在技能检定期间揭示[skull]标记时，横置吉姆的小号：治愈你所在地点或连接"
+ },
+ {
+  "code": "02029",
+  "nameZh": "仪式蜡烛",
+  "type": "asset",
+  "hasEntry": true,
+  "text": "[reaction]你执行的技能检定期间揭示了[skull]、[cultist]、[tablet]或[elder_thi"
+ },
+ {
+  "code": "02092",
+  "nameZh": "厄运连连",
+  "type": "treachery",
+  "hasEntry": false,
+  "text": "显现 - 将厄运连连放置入场，放到你的威胁区域。\n你在技能检定期间得到-1技能值。\n强制 - 你检定成功且超过难度1点或"
+ },
+ {
+  "code": "02269",
+  "nameZh": "奥鲁斯的珠宝",
+  "type": "asset",
+  "hasEntry": true,
+  "text": "[reaction]你所在地点的技能检定期间揭示[skull]、[cultist]、[tablet]、[elder_th"
+ },
+ {
+  "code": "03035",
+  "nameZh": "灵力祭祀刀",
+  "type": "asset",
+  "hasEntry": true,
+  "text": "[free]在[[法术]]卡牌的技能检定期间，横置灵力祭祀刀：你本次检定得到+2技能值。\n[action]横置灵力祭祀刀"
+ },
+ {
+  "code": "03113",
+  "nameZh": "情绪稳定",
+  "type": "asset",
+  "hasEntry": true,
+  "text": "快速。[[沉稳]]卡牌场上仅限1张。\n非直接恐惧在分配到你的调查员卡牌之前，必须先分配给情绪稳定。\n[free]在[[法"
+ },
+ {
+  "code": "04030",
+  "nameZh": "钻地魔虫之石",
+  "type": "asset",
+  "hasEntry": true,
+  "text": "封印([skull]、[cultist]、[tablet]或[elder_thing])。\n强制 - 你在技能检定中揭示"
+ },
+ {
+  "code": "04035",
+  "nameZh": "雅沃托",
+  "type": "asset",
+  "hasEntry": true,
+  "text": "[free]横置雅沃托：在本次技能检定期间，你每项技能得到加成，加成的点数等于你弃牌堆顶上的一张卡牌的对应技能图标数(["
+ },
+ {
+  "code": "04110",
+  "nameZh": "反击法术",
+  "type": "event",
+  "hasEntry": true,
+  "text": "快速。在你所在地点的技能检定期间揭示[skull]、[cultist]、[tablet]或[elder_thing]混乱"
+ },
+ {
+  "code": "04158",
+  "nameZh": "追忆未来",
+  "type": "asset",
+  "hasEntry": true,
+  "text": "[reaction]在你正在执行的技能检定开始时，如果追忆未来处于重整状态，指定一个混乱标记：如果本次技能检定期间揭示了"
+ },
+ {
+  "code": "04198",
+  "nameZh": "逆反",
+  "type": "skill",
+  "hasEntry": true,
+  "text": "忽略本次技能检定期间所有[skull]、[cultist]、[tablet]和[elder_thing]符号的效果(包括"
+ },
+ {
+  "code": "04311",
+  "nameZh": "第七印记的封印",
+  "type": "asset",
+  "hasEntry": true,
+  "text": "封印([auto_fail])。使用(7充能)。如果第七印记的封印没有充能，或者其离场，将其从游戏中移除。\n强制 - 在"
+ },
+ {
+  "code": "04332",
+  "nameZh": "姆大陆",
+  "type": "location",
+  "hasEntry": false,
+  "text": "你位于姆大陆时，你每次技能检定期间揭示的第一个[skull]、[cultist]、[tablet]或[elder_thi"
+ },
+ {
+  "code": "04333",
+  "nameZh": "亚特兰蒂斯",
+  "type": "location",
+  "hasEntry": false,
+  "text": "强制 - 你在任何地点执行技能检定期间，在揭示[auto_fail]符号后：在亚特兰蒂斯上放置1个毁灭标记。然后，如果亚"
+ },
+ {
+  "code": "04336",
+  "nameZh": "冷原",
+  "type": "location",
+  "hasEntry": false,
+  "text": "强制 - 如果你在冷原上执行技能检定期间揭示[elder_thing]符号：受到1点恐惧。"
+ },
+ {
+  "code": "05041",
+  "nameZh": "第十三幻象",
+  "type": "treachery",
+  "hasEntry": true,
+  "text": "显现 - 将第十三幻象放置入场，放到你的威胁区域。\n你所在地点的调查员在技能检定期间，技能值等于检定难度时检定失败。\n["
+ },
+ {
+  "code": "05048",
+  "nameZh": "瓦伦蒂诺·里瓦斯",
+  "type": "investigator",
+  "hasEntry": true,
+  "text": "[free]在你执行的技能检定期间，花费2资源：本次检定难度降低1点。(每轮仅限一次。)\n[elder_sign]效果："
+ },
+ {
+  "code": "05093",
+  "nameZh": "崩毁离析",
+  "type": "treachery",
+  "hasEntry": false,
+  "text": "显现 - 将崩毁离析放置入场，放到你的威胁区域。\n每轮你执行的第一次技能检定期间，你得到每项技能值-1。\n[action"
+ },
+ {
+  "code": "05261",
+  "nameZh": "瓦伦蒂诺·里瓦斯",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "你得到+1[agility]。\n[free]在你执行的技能检定期间，花费2资源并横置瓦伦蒂诺·里瓦斯：本次检定难度降低1"
+ },
+ {
+  "code": "05324",
+  "nameZh": "美满结局",
+  "type": "event",
+  "hasEntry": true,
+  "text": "快速。在技能检定期间，你揭示一个混乱标记，且该标记将要令你的技能值减少到0时打出(包括[auto_fail]标记)。\n取"
+ },
+ {
+  "code": "06059",
+  "nameZh": "伦道夫·卡特",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "你得到+1[combat]和+1[agility]。\n[reaction]你所在地点的技能检定期间揭示[tablet]符"
+ },
+ {
+  "code": "06079",
+  "nameZh": "伦道夫·卡特",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "你得到+1[willpower]和+1[intellect]。\n[reaction]你所在地点的技能检定期间揭示[eld"
+ },
+ {
+  "code": "06112",
+  "nameZh": "梦境日记",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "[action]：查找你的绑定卡牌，找出梦的本质，将其加入你的手牌。\n[reaction]你在投入了梦的本质的技能检定期"
+ },
+ {
+  "code": "06197",
+  "nameZh": "熟能生巧",
+  "type": "event",
+  "hasEntry": false,
+  "text": "快速。在你所在地点的技能检定期间打出。\n查找你牌库顶的9张卡牌，找出一张[[精通]]技能并将其投入本次技能检定(如可能)"
+ },
+ {
+  "code": "06277",
+  "nameZh": "食愿项链",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "绑定(空虚项链)。\n[reaction]在你进行技能检定期间揭示[skull]、[cultist]、[tablet]或["
+ },
+ {
+  "code": "06285",
+  "nameZh": "黑猫",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "每当你在技能检定期间揭示[tablet]、[elder_thing]或[elder_sign]符号，你可以不使用该符号的"
+ },
+ {
+  "code": "07005",
+  "nameZh": "塞拉斯·马什",
+  "type": "investigator",
+  "hasEntry": false,
+  "text": "[reaction]你执行的技能检定期间，你揭示一个混乱标记后：将本次检定中你投入的一张技能返回你的手牌。(每轮仅限一次"
+ },
+ {
+  "code": "07036",
+  "nameZh": "挚爱",
+  "type": "skill",
+  "hasEntry": false,
+  "text": "如果本次技能检定期间揭示了[bless]标记，你可以将挚爱从游戏中移除，以此将该标记的效果换为如下：“你自动成功。(不要"
+ },
+ {
+  "code": "07096",
+  "nameZh": "死亡纪念",
+  "type": "treachery",
+  "hasEntry": false,
+  "text": "显现 - 检定[willpower](3)。如果你本次技能检定期间揭示了[cultist]标记，你自动失败。如果你检定失"
+ },
+ {
+  "code": "07097",
+  "nameZh": "崩裂意识",
+  "type": "treachery",
+  "hasEntry": false,
+  "text": "显现 - 检定[intellect](3)。如果你本次技能检定期间揭示了[tablet]标记，你自动失败。如果你检定失败"
+ },
+ {
+  "code": "07098",
+  "nameZh": "湮灭记忆",
+  "type": "treachery",
+  "hasEntry": false,
+  "text": "显现 - 检定[willpower](4)或[intellect](4)。如果你本次技能检定期间揭示了[elder_th"
+ },
+ {
+  "code": "07110",
+  "nameZh": "庄严圣约",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "永久。每套牌库仅限1张[[圣约]]。\n[reaction]任意地点的调查员执行技能检定的“揭示混乱标记”步骤(步骤3)后"
+ },
+ {
+  "code": "07113",
+  "nameZh": "亵渎圣约",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "永久。每套牌库仅限1张[[圣约]]。\n[reaction]你所在地点的一位调查员在技能检定期间揭示了一个[curse]标"
+ },
+ {
+  "code": "07115",
+  "nameZh": "无神论者",
+  "type": "skill",
+  "hasEntry": false,
+  "text": "本次技能检定期间，将每个[bless]和[curse]标记的通常修正值改为视作+1。"
+ },
+ {
+  "code": "07116",
+  "nameZh": "虚假圣约",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "永久。每套牌库仅限1张[[圣约]]。\n[reaction]在你所在地点的一位调查员在技能检定期间揭示了一个[curse]"
+ },
+ {
+  "code": "07122",
+  "nameZh": "古代圣约",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "永久。每套牌库仅限1张[[圣约]]。\n[reaction]你所在地点的一位调查员在技能检定期间结算[bless]标记时，"
+ },
+ {
+  "code": "07160",
+  "nameZh": "蝴蝶效应",
+  "type": "event",
+  "hasEntry": false,
+  "text": "快速。在你所在地点的技能检定期间揭示带有符号的混乱标记时打出(在结算其效果之前)。\n你或执行检定的调查员可以投入一张卡牌"
+ },
+ {
+  "code": "07190",
+  "nameZh": "伊西斯的祝福",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "[reaction]在你所在地点进行的单次技能检定期间，揭示第二个[bless]标记时，横置伊西斯的祝福：取消该标记，改"
+ },
+ {
+  "code": "07191",
+  "nameZh": "神秘魔法书",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "研究完成。\n[reaction]你在技能检定期间结算了1个或多个[curse]标记后：将同等数量的秘密放置在神秘魔法书上"
+ },
+ {
+  "code": "07192",
+  "nameZh": "神秘魔法书",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "研究完成。\n[reaction]你在技能检定期间结算了1个或多个[curse]标记后：将同等数量的秘密放置在神秘魔法书上"
+ },
+ {
+  "code": "07195",
+  "nameZh": "万古诅咒",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "[reaction]在你所在地点进行的单次技能检定期间，揭示第二个[curse]标记时，横置万古诅咒：取消该标记，改为视"
+ },
+ {
+  "code": "07222",
+  "nameZh": "鬼灵精怪",
+  "type": "skill",
+  "hasEntry": false,
+  "text": "如果本次技能检定期间揭示了[curse]标记，在本次检定结束时，你可以将鬼灵精怪返回你的手牌。"
+ },
+ {
+  "code": "07223",
+  "nameZh": "隐形指引",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "使用(4秘密)。\n[free]你所在地点的技能检定期间：执行检定的调查员可以查找其牌库顶3张卡牌，找出一张可以投入本次检"
+ },
+ {
+  "code": "07224",
+  "nameZh": "“幸运”分币",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "卓越。\n强制 - 你在自己指定的技能检定期间揭示[bless]或[curse]标记时：抛一枚硬币。如果是正面，将该标记视"
+ },
+ {
+  "code": "07262",
+  "nameZh": "奈芙蒂斯",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "你得到+1[willpower]。\n[reaction]技能检定期间在将要有1个或多个[bless]标记从混乱袋移除时："
+ },
+ {
+  "code": "07274",
+  "nameZh": "达贡巢穴",
+  "type": "scenario",
+  "hasEntry": false,
+  "text": "简单/普通\n[skull]：本卡牌上每有一个钥匙，-1。\n[cultist]：0。再揭示一个混乱标记。如果你本次技能检定"
+ },
+ {
+  "code": "07309",
+  "nameZh": "雅各布·莫里森",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "雅各布·莫里森在补给阶段期间不重整。\n[reaction]在你技能检定将要失败时，横置雅各布·莫里森：你本次检定得到技能"
+ },
+ {
+  "code": "08069",
+  "nameZh": "情绪稳定",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "快速。[[沉稳]]卡牌场上仅限1张。\n你在[[法术]]卡牌的技能检定期间得到+1技能值。\n非直接伤害/恐惧在分配到你的调"
+ },
+ {
+  "code": "08074",
+  "nameZh": "应急装备",
+  "type": "event",
+  "hasEntry": false,
+  "text": "使用(3耐久)。\n附属到你所在地点的一位调查员控制的[[道具]]支援上。\n[free]被附属支援的技能检定期间，花费1耐"
+ },
+ {
+  "code": "08105",
+  "nameZh": "破冰锥",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "快速。\n[free]攻击或调查时的技能检定期间，横置破冰锥：你本次检定得到技能值+1。"
+ },
+ {
+  "code": "08107",
+  "nameZh": "破冰锥",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "快速。\n[free]攻击或调查时的技能检定期间，横置破冰锥：你本次检定得到技能值+1。如果你成功，你可以弃掉破冰锥来使得"
+ },
+ {
+  "code": "08112",
+  "nameZh": "\"再来一张！\"",
+  "type": "event",
+  "hasEntry": false,
+  "text": "快速。你在技能检定期间揭示混乱标记后打出。\n额外揭示一个混乱标记，并经其“-”变为“+”。如果该标记是[skull]，你"
+ },
+ {
+  "code": "08120",
+  "nameZh": "先知先觉",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "使用(2资源)。每轮开始时重新补满资源。\n先知先觉上的资源可以被花费来支付[[幸运]]、[[法术]]或[[勇气]]卡牌。"
+ },
+ {
+  "code": "08121",
+  "nameZh": "一探究竟",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "使用(2资源)。每轮开始时重新补满资源。\n一探究竟上的资源可以被花费来支付[[守护]]、[[策略]]或[[书籍]]卡牌。"
+ },
+ {
+  "code": "08122",
+  "nameZh": "好勇斗狠",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "使用(2资源)。每轮开始时重新补满资源。\n好勇斗狠上的资源可以被花费来支付[[护甲]]、[[枪械]]或[[近战]]卡牌。"
+ },
+ {
+  "code": "08123",
+  "nameZh": "技艺精湛",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "使用(2资源)。每轮开始时重新补满资源。\n技艺精湛上的资源可以被花费来支付[[洞察]]、[[工具]]或[[技巧]]卡牌。"
+ },
+ {
+  "code": "08124",
+  "nameZh": "古物藏家",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "使用(2资源)。每轮开始时重新补满资源。\n古物藏家上的资源可以被花费来支付[[恩惠]]、[[遗物]]或[[仪式]]卡牌。"
+ },
+ {
+  "code": "08126",
+  "nameZh": "厚重皮衣",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "[reaction]在你执行的一次技能检定中你揭示一个非[auto_fail]的符号混乱标记后，对厚重皮衣造成1伤害：取"
+ },
+ {
+  "code": "08504",
+  "nameZh": "危险道路",
+  "type": "location",
+  "hasEntry": false,
+  "text": "强制 - 你在危险道路的技能检定期间揭示[frost]混乱标记后：每揭示一个[frost]标记，受到1点伤害或恐惧。\n庇"
+ },
+ {
+  "code": "08507",
+  "nameZh": "冰封荒原",
+  "type": "location",
+  "hasEntry": false,
+  "text": "在冰封荒原的每次技能检定期间，改为将揭示的第一个[frost]标记的修正值视为-3，而不是-1。\n庇护4。"
+ },
+ {
+  "code": "08591",
+  "nameZh": "艾弗里·克莱普尔",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "伙伴。使用(3补给)。\n[reaction]你所在地点的一位调查员在技能检定期间揭示了一个[frost]标记时，横置艾弗"
+ },
+ {
+  "code": "08634",
+  "nameZh": "迷宫房间",
+  "type": "location",
+  "hasEntry": false,
+  "text": "在本地点的技能检定期间，每次揭示混乱标记，如果本地点上的钥匙或者本地点一位调查员控制的钥匙与该混乱标记一致，将该混乱标记"
+ },
+ {
+  "code": "08637",
+  "nameZh": "破败街道",
+  "type": "location",
+  "hasEntry": false,
+  "text": "强制 - 当你在破败街道的技能检定期间揭示1个或更多[frost]混乱标记后：受到1点伤害。\n[reaction]你发现"
+ },
+ {
+  "code": "08640",
+  "nameZh": "古老者之庙",
+  "type": "location",
+  "hasEntry": false,
+  "text": "强制 - 当你在本地点的一次技能检定期间揭示1个或更多[frost]混乱标记后：受到1点恐惧。\n[action]如果古老"
+ },
+ {
+  "code": "08646",
+  "nameZh": "冻伤",
+  "type": "treachery",
+  "hasEntry": false,
+  "text": "显现 - 将冻伤放置入场，放到你的威胁区域。\n冻伤可被治愈，如同是你身上的1点伤害(如果它被治愈，将其弃掉)。\n强制 -"
+ },
+ {
+  "code": "08647",
+  "nameZh": "附身",
+  "type": "treachery",
+  "hasEntry": false,
+  "text": "显现 - 将附身放置入场，放到你的威胁区域。\n附身可被治愈，如同是你身上的1点恐惧(如果它被治愈，将其弃掉)。\n强制 -"
+ },
+ {
+  "code": "08655",
+  "nameZh": "水下扩张区",
+  "type": "location",
+  "hasEntry": false,
+  "text": "在水下扩张区的每次技能检定期间，将揭示的第一个[frost]标记的修正值改为视为-3，而不是-1。(每轮仅限一次。)"
+ },
+ {
+  "code": "08718",
+  "nameZh": "艾弗里·克莱普尔",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "伙伴。使用(5补给)。\n[reaction]你所在地点的一位调查员在技能检定期间揭示了一个[frost]标记时，横置艾弗"
+ },
+ {
+  "code": "08730",
+  "nameZh": "克莱普尔的皮草",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "快速。\n[reaction]你执行的技能检定期间，在你揭示一个[frost]标记时，对克莱普尔的皮草造成1点伤害：取消该"
+ },
+ {
+  "code": "09015",
+  "nameZh": "达雷尔·西蒙斯",
+  "type": "investigator",
+  "hasEntry": false,
+  "text": "你以达雷尔的柯达相机在场上开始游戏。\n[free]在你地点的技能检定期间，从你控制的支援上花费1证据：此次检定的难度降低"
+ },
+ {
+  "code": "09018",
+  "nameZh": "查理·凯恩",
+  "type": "investigator",
+  "hasEntry": false,
+  "text": "你拥有额外3个盟友槽位。\n[free]在你执行的技能检定期间，横置一个你控制的[[盟友]]支援：本次检定，你得到+1技能"
+ },
+ {
+  "code": "09032",
+  "nameZh": "鼓舞决心",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "使用(4充能)。\n[free]你所在地点或连接地点的调查员执行的技能检定期间，花费1充能：从你手牌将一张非弱点卡牌投入该"
+ },
+ {
+  "code": "09038",
+  "nameZh": "吉里什·卡达贾",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "你所在地点其他调查员受到的伤害和/或恐惧，可以分配给吉里什·卡达贾。\n[free]你所在地点的调查员执行的技能检定期间，"
+ },
+ {
+  "code": "09099",
+  "nameZh": "便携万能工具",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "定制。每位调查员仅限1张。\n[free]在你执行的技能检定期间，横置便携万能工具：你本次检定得到技能值+1。"
+ },
+ {
+  "code": "09519a",
+  "nameZh": "渡鸦之眼",
+  "type": "key",
+  "hasEntry": false,
+  "text": "变换 - 在你地点的技能检定期间，执行检定的调查员将其本次检定的基础技能值设为6。将本钥匙翻至[[动荡]]面。"
+ },
+ {
+  "code": "09620",
+  "nameZh": "冰封湖面",
+  "type": "location",
+  "hasEntry": false,
+  "text": "强制 - 本地点的调查员在自己执行的技能检定期间揭示了[skull]、[cultist]、[tablet]或[elder"
+ },
+ {
+  "code": "10663b",
+  "nameZh": "宇宙密使",
+  "type": "enemy",
+  "hasEntry": false,
+  "text": "冷漠。猎手。反击。\n猎物 - [combat]最高。\n强制 - 当你在本地点的技能检定期间揭示[elder_thing]"
+ },
+ {
+  "code": "10664b",
+  "nameZh": "宇宙密使",
+  "type": "enemy",
+  "hasEntry": false,
+  "text": "冷漠。猎手。警戒。\n猎物 - [agility]最高。\n强制 - 当你在本地点的技能检定期间揭示[cultist]标记后"
+ },
+ {
+  "code": "10665b",
+  "nameZh": "宇宙密使",
+  "type": "enemy",
+  "hasEntry": false,
+  "text": "冷漠。逃逸。猎手。\n猎物 - [willpower]最高。\n强制 - 当你在本地点的技能检定期间揭示[tablet]标记"
+ },
+ {
+  "code": "11757b",
+  "nameZh": "证明你的价值",
+  "type": "asset",
+  "hasEntry": false,
+  "text": "永久。除非本任务已完成，否则其以弱点面朝上进场。\n使用(3机会)。\n[reaction]你所在地点的一次技能检定中揭示非"
+ },
+ {
+  "code": "88045b",
+  "nameZh": "时运泉源",
+  "type": "key",
+  "hasEntry": false,
+  "text": "变换 - 本轮进行的下一次技能检定期间，进行该检定的调查员额外揭示一个混乱标记(结算这两个)。然后，如果是调查员触发此能"
+ }
+]

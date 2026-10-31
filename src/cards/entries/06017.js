@@ -8,16 +8,12 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// ⚠️ 显式简化（不是「已实现」）：手牌中的敌人（隐私敌人）、从手牌攻击/躲避、牌库耗尽时的攻击
-// 都还没有原语（P4 已登记「敌人形态隐私」待接线）。当前实现只保证弱点合法：显现时在本地点
-// 生成并与承受者交战，猎手等印刷数值由卡面数据与引擎通用规则承担。
-// 待实现清单见 docs/tde-investigators.md 与 docs/tde-migration-roadmap.md 的 P6 收尾证据。
+// 显现时秘密加入手牌（hiddenEnemyInHand）。攻击/躲避与牌库耗尽时的攻击在 hidden-enemy.js。
 
 export default {
   code: '06017',
   scope: 'enemy',
-  simplified: true,
-  note: '隐私敌人（在手牌中）与「从手牌攻击/躲避」「牌库耗尽时攻击」尚未接线；当前按普通专属弱点敌人生成。',
+  hiddenEnemyInHand: true,
   enemyWeakness: { hunter: true },
   abilities: [],
   modifiers: [],

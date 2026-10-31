@@ -9,15 +9,12 @@
 // 读点：
 //   · 「以门之匣开始游戏」走 setup.js 既有的 `investigator.startsWith`（签名的资产直接入场）。
 //   · 旧印走 api.addUses（门之匣的充能）。
-//   · ⚠️ 显式简化：「每回合 1 张事件如同位于连接地点并与该地点的敌人交战」需要「虚拟地点」
-//     原语（事件结算期间的所在地点覆盖 + 交战关系），当前引擎没有该读点；见
-//     docs/tde-investigators.md 的待实现清单。
+//   · 「每回合 1 张事件如同位于连接地点」走 as-if-location.js：结算期间改写地点与交战，结束后还原。
 
 export default {
   code: '06004',
   kind: 'investigator',
-  simplified: true,
-  note: '「每回合 1 张事件如同位于连接地点并与该地点的敌人交战」尚未接线（缺虚拟地点原语）；「以门之匣开始游戏」与旧印已实现。',
+  asIfEvent: true,
   investigator: {
     startsWith: '06013',
     elderSign: { bonus: 1 },

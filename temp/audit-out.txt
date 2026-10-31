@@ -1,0 +1,9 @@
+﻿node : 卡条目合规审计失败：
+At line:1 char:129
++ ... ew($false); node tools/audit-card-entry-compliance.mjs --check 2>&1 | ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (卡条目合规审计失败：:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  ✗ R1 directStateWrite 新增违规：03295
+规则见 docs/arkham-content-migration.md §4.6.10 与 AGENTS.md「不可协商」。

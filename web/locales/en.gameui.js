@@ -242,6 +242,9 @@ export default {
   'game.choice.playerWindow': 'Use a free ability, play a fast card, or pass',
   'game.choice.reaction': 'Choose a card to trigger a reaction',
   'game.choice.offersAria': 'Card effects',
+  // Card-linked options: top-right Inspect button (view the whole card without submitting).
+  'game.choice.inspect': 'Inspect',
+  'game.choice.inspectAria': 'View the full card for "{name}"',
   'game.test.skill': 'Skill',
   'game.test.generic': 'Skill test',
   'game.test.named': '{skill} test',
@@ -429,14 +432,15 @@ export default {
   'game.ruleText.action': 'Action: ',
   'game.ruleText.reaction': 'Reaction: ',
 
-  // Debug console (web/debug-console.js; entry rendered by game-ui.js table header)
+  // Debug console (web/debug-console.js; open with ` / ~, no header button)
   'debug.button': 'Debug console',
   'debug.title': 'Debug console',
   'debug.aria': 'Debug console',
   'debug.close': 'Close',
   'debug.closeAria': 'Close debug console',
-  'debug.localHint': 'Single-player mode: available to the local player',
-  'debug.hostOnly': 'Online mode: host only',
+  'debug.shortcutHint': 'Debug console: press ` or ~',
+  'debug.localHint': 'Single-player mode: available to the local player. Press ` or ~ again to close.',
+  'debug.hostOnly': 'Online mode: host only. Press ` or ~ again to close.',
   'debug.target': 'Target investigator',
   'debug.seat': 'Seat {number}',
   'debug.inputLabel': 'Debug command',
@@ -445,7 +449,7 @@ export default {
   'debug.busy': 'Running…',
   'debug.helpButton': 'Help',
   'debug.help': 'Help',
-  'debug.helpExamples': 'goto <scenario> · restart\nspawn <enemy> · kill <enemy> · kill all\ngive <card> to hand / deck top / deck bottom / discard\ndraw [N] · actions +N · resources N / clues N · xp N\nteleport <location> · heal N · heal damage N · heal horror N\ntake N damage · take N horror · reveal all · reveal <location> · doom +N\nstatus · help',
+  'debug.helpExamples': 'goto <scenario> · restart · end scenario\nspawn <enemy> · kill <enemy> · kill all\ngive <card> to hand / deck top / deck bottom / discard\ndraw [N] · actions +N · resources N / clues N · xp N\nteleport <location> · heal N · heal damage N · heal horror N\ntake N damage · take N horror · reveal all · reveal <location> · doom +N\nstatus · help',
   'debug.logTitle': 'Results',
   'debug.empty': 'No commands have been run yet.',
   'debug.logOk': 'Success',

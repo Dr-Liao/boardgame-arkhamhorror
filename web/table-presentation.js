@@ -388,6 +388,7 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
     const phase = [t(phaseDef[0]), phaseDef[1], t(phaseDef[2])]
     const el = node('section', story ? 'ah-cinematic is-story' + (location ? ' ah-location-reveal' : '') : 'ah-phase-scene is-' + change.phase)
     if (change.intro) el.classList.add('ah-introduction')
+    if (change.intro && change.asideCode) el.classList.add('has-aside')
     el.dataset.fxKind = change.kind; el.dataset.phase = change.phase || ''; el.dataset.title = change.title || phase[0]
     el.setAttribute('role', story ? 'dialog' : 'region'); if (story) el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', change.title || phase[0])
     let positionWorld = () => {}, resizeFrame
@@ -455,8 +456,13 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
       node('h1', '', story ? change.name || change.title : phase[0]))
     if (story && change.code && art) {
       const card = node('div', 'ah-cinematic-card' + (change.flip ? ' is-flipping' : ''))
-      card.append(art(change.code, change.name, { landscape: !location, face: change.face || 'front' })); content.append(card)
+      card.append(art(change.code, change.artName || change.name, { landscape: !location, face: change.face || 'front' })); content.append(card)
       if (!reduced()) card.animate([{ transform: `perspective(1200px) rotateY(${change.flip ? 100 : -18}deg) scale(.75)`, opacity: 0 }, { transform: 'perspective(1200px) rotateY(0) scale(1)', opacity: 1 }], { duration: prefs.fast ? 200 : 650, fill: 'both' })
+    }
+    if (story && change.asideCode && art) {
+      const aside = node('div', 'ah-cinematic-card ah-cinematic-aside')
+      aside.append(art(change.asideCode, change.asideName || change.asideCode, { landscape: true, face: 'front' }))
+      content.append(aside)
     }
     const stepArt = node('div', 'ah-cinematic-step-art')
     if (!story) content.append(stepArt)
@@ -801,8 +807,14 @@ export function createTablePresentation({ art, onChange = () => {}, themeAttribu
         // 同样先演故事、再轮到换牌面板。
         if (!last && session.state.scenario && session.state.round === 1 && session.state.revision === 0) {
           const act = session.state.acts?.[session.state.actIndex]
+          const decks = session.state.blackStarsRise?.decks
+          const leftAgenda = !act && decks?.a?.current ? decks.a : null
+          const rightAgenda = !act && decks?.c?.current ? decks.c : null
           queue.push({ change: { kind: 'story', title: t('table.change.intro'), name: act?.name || session.state.scenario.name,
-            code: act?.originalCode || act?.code, text: session.state.scenario.intro, intro: true }, before: anchors, after: nextAnchors })
+            code: act?.originalCode || act?.code || leftAgenda?.current,
+            ...(leftAgenda ? { artName: leftAgenda.nameZh || leftAgenda.name } : {}),
+            ...(rightAgenda ? { asideCode: rightAgenda.current, asideName: rightAgenda.nameZh || rightAgenda.name } : {}),
+            text: session.state.scenario.intro, intro: true }, before: anchors, after: nextAnchors })
           const agenda = session.state.agendas?.[session.state.agendaIndex]
           if (agenda) queue.push({ change: { kind: 'story', title: t('table.change.agendaReveal'), name: agenda.name,
             code: agenda.originalCode || agenda.code, text: agenda.text || t('table.change.agendaText'),

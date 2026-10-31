@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theDreamEaters",
+  "generatedBy": "tools/audit-tde-scenarios.mjs --write",
+  "reference": "G:\\boardgame-hall-ai\\参考资源\\ArkhamHorror-main",
+  "available": true,
+  "files": [
+    {
+      "path": "backend/arkham-api/library/Arkham/Campaign/Campaigns/TheDreamEaters.hs",
+      "ok": true,
+      "sha256": "a56872c51fcfbfeedc2e74c3834823b91e2ef2a72705788e58a014ab7d512b50"
+    },
+    {
+      "path": "backend/arkham-api/library/Arkham/Campaigns/TheDreamEaters/ChaosBag.hs",
+      "ok": true,
+      "sha256": "8670ea8232d850b6d2c27906c34012c88aef8ff243c7ca39bb8e21b9513b63d8"
+    },
+    {
+      "path": "backend/arkham-api/library/Arkham/Campaigns/TheDreamEaters/Key.hs",
+      "ok": true,
+      "sha256": "f12558eed4c5f069bb210ae60ab92975856793e8321f7d5a3a26f1da8618cba3"
+    },
+    {
+      "path": "backend/arkham-api/library/Arkham/Campaigns/TheDreamEaters/Meta.hs",
+      "ok": true,
+      "sha256": "64184d5bd98d20873669f3a7759c36b97fd6ef508a0e04b0472d6e5afcda737d"
+    },
+    {
+      "path": "backend/arkham-api/library/Arkham/Campaigns/TheDreamEaters/CampaignSteps.hs",
+      "ok": true,
+      "sha256": "a4758e900ecf29405f404afb368591bdd26e41cf8e16e949252ec1ee0bf4faa8"
+    },
+    {
+      "path": "backend/arkham-api/library/Arkham/Campaigns/TheDreamEaters/Helpers.hs",
+      "ok": true,
+      "sha256": "4c0b2a4cb9cfd4c193a291290588c93e0e4b734ea9a96520b7cf463c43f0055f"
+    },
+    {
+      "path": "frontend/src/locales/en/theDreamEaters/base.json",
+      "ok": true,
+      "sha256": "c39968a8b8f8d7ed92b1e275baed5274a27df94928f6ef1f63bbaf03d62c6bc3"
+    },
+    {
+      "path": "frontend/src/locales/zh/theDreamEaters/base.json",
+      "ok": true,
+      "sha256": "249234235453be2a0042e2fccd31411807b7f7dffc8e505f15583e684beb932f"
+    }
+  ],
+  "chapters": {
+    "beyondTheGatesOfSleep": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/BeyondTheGatesOfSleep.hs",
+        "ok": true,
+        "sha256": "e3e359034163e83f637b0c96fae519d9e35f17dc07ffc07528cd891dcec5866a"
+      },
+      {
+        "path": "frontend/src/locales/en/theDreamEaters/scenarios/beyondTheGatesOfSleep.json",
+        "ok": true,
+        "sha256": "dd2794c801a873929084a2eb250fb940ba2f626235d9613142bf9ea22790efcb"
+      }
+    ],
+    "wakingNightmare": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/WakingNightmare.hs",
+        "ok": true,
+        "sha256": "a3db7debb36ca1b23c3365af56338b402823f584914e3fa6ee7b76c8607a91a6"
+      },
+      {
+        "path": "frontend/src/locales/en/theDreamEaters/scenarios/wakingNightmare.json",
+        "ok": true,
+        "sha256": "12b61cd4713d32dc79b5ac9621e70f9f7cd2a41c78ad47bf400bd36e1c23790d"
+      }
+    ],
+    "theSearchForKadath": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/TheSearchForKadath.hs",
+        "ok": true,
+        "sha256": "f91dffca630a05452b12a9f878702d830601a0c6625127fdf82efe8586a19fb6"
+      },
+      {
+        "path": "frontend/src/locales/en/theDreamEaters/scenarios/theSearchForKadath.json",
+        "ok": true,
+        "sha256": "dda83004366aaf36ed80fcbac74237091896725fc2d43f7038c49682aaf12672"
+      }
+    ],
+    "aThousandShapesOfHorror": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/AThousandShapesOfHorror.hs",
+        "ok": true,
+        "sha256": "aa2147cce5358199daca1201be9db1b97891e92490bf780d9adb112c7be9ea80"
+      },
+      {
+        "path": "frontend/src/locales/en/theDreamEaters/scenarios/aThousandShapesOfHorror.json",
+        "ok": true,
+        "sha256": "6855471424e13bdc9cc857df9854130b14ce9e7722ebd4719ab50b606e4fa6d4"
+      }
+    ],
+    "darkSideOfTheMoon": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/DarkSideOfTheMoon.hs",
+        "ok": true,
+        "sha256": "2e53d040c0dcedac3d2c209ba4f2b7a3372dc4bbfcdcbb1373857d8a4457ca98"
+      },
+      {
+        "path": "frontend/src/locales/en/theDreamEaters/scenarios/darkSideOfTheMoon.json",
+        "ok": true,
+        "sha256": "569e26de85fb38f2256fa9eb9fea41718db7c9b5707ec0a83f8b6406b323b9c7"
+      }
+    ],
+    "pointOfNoReturn": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/PointOfNoReturn.hs",
+        "ok": true,
+        "sha256": "b85052544b9595df6cddedf0df72155f8d8c9a99e75b7495e6bbc27740e08501"
+      },
+      {
+        "path": "frontend/src/locales/en/theDreamEaters/scenarios/pointOfNoReturn.json",
+        "ok": true,
+        "sha256": "7975909f2fb9393499a9ea4236f9d2b9f01847ee6a183f513b374f993f0fb8ea"
+      }
+    ],
+    "whereTheGodsDwell": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/WhereTheGodsDwell.hs",
+        "ok": true,
+        "sha256": "1db6b0b9c570ea4529c002c01471415d7a3781cbb9240f5ad091dce01c63c136"
+      },
+      {
+        "path": "frontend/src/locales/en/theDreamEaters/scenarios/whereTheGodsDwell.json",
+        "ok": true,
+        "sha256": "b1243193c56f4cdc223795c4a22cd04ed970d1733d0c110887bf46ad1e448766"
+      }
+    ],
+    "weaverOfTheCosmos": [
+      {
+        "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/WeaverOfTheCosmos.hs",
+        "ok": true,
+        "sha256": "3bfe210c5272b5bd54d6b907b630259e99f7a57f1cec6e9565e92af6a45ab5ac"
+      },
+      {
+        "path": "frontend/src/locales/en/theDreamEaters/scenarios/weaverOfTheCosmos.json",
+        "ok": true,
+        "sha256": "17e58808248a87d482cd1b65cc4be365b851df5171a1b05f79f7396e58e113fd"
+      }
+    ]
+  }
+}

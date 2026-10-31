@@ -66,6 +66,21 @@ test('Core 01168 朦胧之雾不能叠加，成功夜盗也会移除并触发米
   assert.equal(s.encounterDiscard.filter(c=>c==='obscuringFog').length,2)
 })
 
+test('Core 01169 按卡号抽出时生成在无人地点并放置1点毁灭', () => {
+  const s = fixture()
+  s.locations.push({ ...s.locations[0], id: 'chapel', name: '礼拜堂' })
+  s.encounterDeck = ['01169']
+  s.encounterDiscard = []
+  play(s, '01064')
+  settle(s)
+  const spawned = s.enemies.find(enemy => enemy.code === '01169')
+  assert.ok(spawned, '祭司应入场')
+  assert.equal(spawned.location, 'chapel', '应生成在无人地点，而不是抽牌者所在地点')
+  assert.equal(spawned.engagedSeat, null)
+  assert.equal(spawned.doom, 1, '入场后应在祭司上放置1个毁灭标记')
+  assert.ok(!s.encounterDiscard.includes('01169'))
+})
+
 test('Core 01169 01170 无空地点则弃置，有敌人的地点不算空地点',()=>{
   for(const id of ['acolyte','wizardOfTheOrder']) {
     const s=fixture(); s.encounterDeck=[id]; play(s,'01064'); settle(s)

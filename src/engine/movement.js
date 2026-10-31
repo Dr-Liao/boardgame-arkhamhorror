@@ -267,11 +267,18 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
   const moveAfterCosts = () => {
   // 2026-10-25 本循环修复 05254：beforeMove 第 5 参携带位移来源 { reason: 'move' | 'effect' }，
   // 使「下一次移动行动额外花费」只对移动行动生效、效果位移不加价。
-  scenarioBehavior(state).beforeMove?.(state, inv, state.locations.find(loc => loc.id === locationId), scenarioRuntime(state, events),
+  const destination = state.locations.find(loc => loc.id === locationId)
+  scenarioBehavior(state).beforeMove?.(state, inv, destination, scenarioRuntime(state, events),
     { reason: options.reason === 'move' ? 'move' : 'effect' })
+  // beforeEnter 与 entryError 同属未揭示面：揭示后不再收费，忽略未揭示面文字的效果同样跳过。
+  const unrevealedText = destination && !destination.revealed
+    && scenarioBehavior(state).ignoreLocationRevealText?.(state, inv, destination) !== true
+  if (unrevealedText) {
+    locationRuleOf(destination)?.beforeEnter?.(state, destination, inv, scenarioRuntime(state, events))
+  }
   // 离开地点的检定由地点卡条目声明（locationRule.onLeave.test），引擎不再按地点 id 分支。
   const leaveRule = locationRuleOf(prevLoc)?.onLeave || prevLoc?.onLeave
-  const leaveDestination = state.locations.find(loc => loc.id === locationId)
+  const leaveDestination = destination
   const leaveTestApplies = leaveRule?.test && (!leaveRule.test.onlyUnrevealedDestination || !leaveDestination?.revealed)
   if (leaveTestApplies) {
     performTest(state, seat, leaveRule.test.skill, leaveRule.test.difficulty, { source: { label: '离开地点', name: prevLoc.name, code: prevLoc.originalCode || prevLoc.code }, resolve: r => {

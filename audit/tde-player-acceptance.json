@@ -1,0 +1,2153 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "id": "dream-eaters-player-cycle-2026-10",
+    "scope": "食梦者原始循环玩家包 87 条记录：72 张可入牌组卡、11 张场外绑定卡/绑定弱点（deckLimit=0，只作依赖）、4 张基础弱点（06035 自私自利、06036 偷窃癖、06037 嗜睡症、06038 最可怕的噩梦）。",
+    "basis": "原始印刷卡文、后端参考实现及所列逐卡回归测试；验收主要印刷效果和列明边界，不声称穷举所有跨循环组合。",
+    "houseRules": [
+      "沿用项目现有的自动奖励反应、协作请求及确定性选择事务",
+      "卡牌随机、搜索和选择必须通过统一存档回放路径",
+      "Myriad（多重）按标题跨卡号共享「同名至多 3 张」构筑上限（src/engine/myriad.js 与构筑校验同源）",
+      "Researched（研究完成）的 06236/06237/06238 只作升级卡：战役记录 youHaveInterpretedTheDreams 后才可购入",
+      "72 张可入牌组；11 张 deckLimit=0 的场外绑定卡/绑定弱点与 06035–06038 只作依赖，不进入构筑池",
+      "升级卡仅进入升级池；基础弱点只进入随机基础弱点池"
+    ],
+    "sources": [
+      "src/cards/cards-data.js",
+      "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham/{Asset,Event,Skill,Enemy,Treachery}/CardDefs|Cards/TheDreamEaters*",
+      "参考资源/ArkhamHorror-main/frontend/public/cards_zh-cn.json"
+    ]
+  },
+  "summary": {
+    "total": 87,
+    "constructible": 72,
+    "dependencyOnly": 15,
+    "basicWeaknesses": 4,
+    "verified": 87,
+    "unverified": 0,
+    "simplified": 57,
+    "testsPassed": 101
+  },
+  "remaining": [
+    {
+      "kind": "显式简化",
+      "code": "06019",
+      "name": "嗜血",
+      "note": "未实现：弱点揭示时附属到玩家支援的完整物理形态（引擎无 attachedAsset 弱点类型/attach-resolving-card API），改为在渴血之刃的 attachedCards 槽记录附属张数；[fast] +1 伤害由 06018 的攻击 resolve 结算。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06022",
+      "name": "皇后的挂坠",
+      "note": "未实现：充能归零的自动复位只在「花费最后 1 充能」这条路径上结算（引擎没有 uses 归零钩子）；挂坠被其他效果清空充能时不会自动放在一边。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06023",
+      "name": "骇人真相",
+      "note": "未实现：被查找到时的二选一奖励（获得 2 资源／在支援上放 1 秘密）——searchedCardRule 无 resolve 通道；已实现「查找中被发现 → 弃掉」与「不能打出」。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06024",
+      "name": "梦境结晶器",
+      "note": "未实现：附属事件「如同手牌」投入技能检定（playChannels.commitEntries 只有 beneath 通道，attachments 无投入候选）；已实现额外费用检索与事件附属（上限 5）。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06025",
+      "name": "结晶器守卫",
+      "note": "未实现：「放在一边」用 removeEnemy 移出对局代替（引擎无敌人 setAside 写入口）；其余生成/横置/猎手/bearer 猎物已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06027",
+      "name": "仰望星空",
+      "note": "未实现：遭遇牌库没有「混洗入顶部 N 张」的插入点（api.shuffleIntoEncounterDeck 只能洗入整副遭遇牌库），改为洗入遭遇牌库。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06028",
+      "name": "群星正确之时",
+      "note": "未实现：作为遭遇卡被抽出时的显现结算（drawEncounter 无玩家卡分支）与「立即进行一个行动」；已实现显现数据体（选择调查员→抽 1/获得 1→移出游戏）与绑定关系。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06029",
+      "name": "开启大门",
+      "note": "未实现：两个附属有「开启大门」的地点互相连接（移动图只读 location.connections，无卡条目可驱动的动态连接读点）；已实现快速（played 描述子 fast + 条目 fast 数据）/只能自己回合/附属到所在地点/团队上限 3（playCondition 读 playerLocationAttachments）。注：引擎的快速事件候选需要固定触发时机，本卡没有「任意玩家窗口」原语，实际按自己回合的普通事件打出。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06035",
+      "name": "自私自利",
+      "note": "未实现：不能对其他调查员的技能检定投入卡牌、不能用玩家卡效果影响其他调查员（引擎无对应读点：capability:commit 只挡自己的检定，也没有玩家卡效果指向他人的通用限制）；已实现威胁区与 [action][action] 弃置。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06036",
+      "name": "偷窃癖",
+      "note": "未实现：「当你的回合结束时受到 1 点恐惧」——引擎的回合结束强制读点只覆盖威胁区，游戏区域的资产没有读点；已实现放置入场、[action] 夺取道具/资源并洗回牌库。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06037",
+      "name": "嗜睡症",
+      "note": "未实现：强制「受到伤害或恐惧后弃掉」在伤害/恐惧分配前结算（harmDealt 窗口），若伤害全部由支援承接也会弃掉；其余限制与 [action] 弃置已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06038",
+      "name": "最可怕的噩梦",
+      "note": "未实现：承受者不能攻击/伤害/击败它（引擎的被攻击/被击败读点没有按攻击者座位的卡条目钩子；enemyCannotBeAttacked 无攻击者参数）；已实现猎手与「猎物-仅对承受者」。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06110",
+      "name": "头班守夜",
+      "note": "未实现：替换神话阶段的抽取遭遇步骤与按座位分发遭遇牌（无该时机窗口、无按座位分发遭遇牌的 API）；已实现：快速事件（近似在神话阶段开始时）查看遭遇牌库顶 X 张并重新排列，X = 调查员人数。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06111",
+      "name": "浑身是胆",
+      "note": "未实现：①该敌人在本次技能期间获得反击和警戒；②本次检定结束后抽 1 张卡牌（commit 描述子没有「测试期间」/「测试结束后」读点）。「只能投入到攻击或躲避敌人期间的检定」以 skill.requireEngagedEnemy 近似（要求投入时与敌人交战）。3 个万能图标由卡面数据通道生效。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06113",
+      "name": "梦的本质",
+      "note": "未实现：「将要进入弃牌堆或洗入牌库时改为放回场外集合（和绑定卡牌一起）」——引擎检定收尾会把投入卡统一放进弃牌堆，没有 bonded 读取点；Bonded(Dream Diary) 关系与图标由卡面数据通道生效。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06115",
+      "name": "势不可挡",
+      "note": "未实现：「检定成功后本阶段下一次技能检定难度降低 X（X=超出难度点数，至多 3）」——引擎没有下一次检定的难度账本，commit 描述子也没有可写读点；1 个万能图标由卡面数据通道生效。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06117",
+      "name": "解读秘符",
+      "note": "未实现：「你可以忽略本次调查期间你所在地点将要触发的任何效果和关键词」——引擎没有「忽略地点效果/关键词」的通用读取点；调查、把意志值加入技能值、成功额外发现 1 个线索均已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06118",
+      "name": "洁西卡·海德",
+      "note": "未实现：①入场时其上带有 2 点伤害（缺「给支援加伤害」的 ctx.api；不能直写资产字段）；②[reaction]你的回合结束后治愈她 1 点伤害（引擎没有回合结束窗口，也没有资产伤害的通用治愈读点）。你得到 +1[combat] 已由 modifiers 生效。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06155",
+      "name": "森哲夫",
+      "note": "未实现：「对你所在地点其他调查员造成的伤害和/或恐惧，可以分配给森哲夫」——引擎的盟友吸收只覆盖控制者本人的伤害/恐惧，没有跨调查员重定向读取点。被击败时的[[道具]]支援搜索（弃牌堆 / 牌库顶 9 张、搜牌库后混洗）已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06156",
+      "name": "“吃一堑……”",
+      "note": "近似实现：当前在「你抽到一张诡计」的 encounterDrawn 窗口快速打出，取消这张诡计本次的显现效果；未实现：①「结算诡计效果后、将要弃掉时」这个打出时机（引擎没有该窗口）；②把该诡计附属到本卡并只取消后续同名副本（没有「已结算诡计附属」的存储/查询原语），因此本卡不会留在场上，取消的是当前这张而不是同名副本。完整原语请求见 artifacts/migration/tde/primitive-requests/w-m2-2-06156-treachery-discard-window.json。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06157",
+      "name": "自我牺牲",
+      "note": "未实现：①「只能投入到另一位调查员执行的检定」没有 commit 档案字段（协助投入窗口本身限同地点队友）；②检定失败效果改由投入者结算（无失败效果归属重定向原语）；③「你或执行者抽 2 张」只实现执行者抽 2 张分支。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06159",
+      "name": "强梦血清",
+      "note": "未实现：「如果你手中有多张同名手牌，检查手牌上限时其只计作一张」——引擎 handSize 读点只支持静态修正，没有按手牌内容动态计算的手牌上限读取点；「抽到与手牌同名的牌后横置血清抽 1 张」已实现（cardDrawn 窗口 + 横置费）。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06160",
+      "name": "“让上帝分辨去吧……”",
+      "note": "未实现：①「本回合击败总计生命值 ≥6 点的敌人」的前置条件（引擎没有回合内的击败历史读取点，打出的时机只由 ownTurn 约束）；②「结局结算经验时额外 +1 经验」（经验值在战役层结算，没有 ctx.api 写入口）。「加入胜利区、立即结束你的回合」已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06162",
+      "name": "格雷戈里·葛利",
+      "note": "未实现「本次检定成功且至少超过该资源数量」的差额门槛（额外成功结算段只支持固定效果，读不到成功超出点数），当前实现为：检定成功即返还押注数量的资源；押注本身（0–3、受资产剩余资源与 3 上限限制）与成功返还均已接线。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06164",
+      "name": "飘渺灵体",
+      "note": "未实现：「无形」中「敌人不能与你交战或被与你交战」「你不能对敌人造成伤害」——引擎没有交战/伤害两处的禁止读取点（只有 capability:fight 能挡住主动攻击）；意志闪避、成功解除所有交战、直到本轮结束不能攻击（持续效果）已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06166",
+      "name": "蛮力",
+      "note": "未实现：仅在「基础攻击行动期间投入」才获得 [combat][combat] 与 +2 伤害的限定（conditionalIcons 没有检定行动类型条件）；额外图标未写，+2 伤害按「成功超出难度 ≥2」对所有战斗检定生效。每次技能检定最多投入 1 张已由 maxPerTest 生效。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06167",
+      "name": "多才多艺",
+      "note": "构筑层效果（牌库张数 +5、牌库构建选项 +1 张任意职阶等级 0 卡）由主进程在构筑/可用性层接线；本卡对局内无行为，卡面 permanent:true 由开局流程处理。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06195",
+      "name": ".35温彻斯特步枪",
+      "note": "未实现：「本次攻击期间揭示了 +1、0 或 [elder_sign] 混乱标记时 +2 伤害」——doFight 只支持固定伤害加值，没有按揭示标记条件加伤害的选项；使用(5子弹)、花 1 子弹攻击、本次攻击 +2[combat] 已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06196",
+      "name": "安全护卫",
+      "note": "未实现：「从你所在地点移动到连接地点」的出发地判定——move 窗口上下文只带目标地点，没有移动前所在地点（需要移动窗口补充来源地点的新原语，P10 前处理）；改为判定「目标地点与安全护卫持有者所在地点相连」。跟随移动本身已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06197",
+      "name": "熟能生巧",
+      "note": "未实现：「本次检定结束后，如果检定成功，不将该技能弃掉，改为加入手牌」——已投入的牌在检定收尾统一弃掉，commit 流程没有「按检定结果决定投入牌去向」的读点（P10 前补原语）。其余（快速窗口、查牌库顶 9 张、找出[[精通]]技能投入、其余洗回）已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06199",
+      "name": "三条A",
+      "note": "未实现：「将 3 张三条A投入同一次技能检定 → 该检定自动成功（不抽混乱标记），然后抽 3 张牌并获得 3 资源（每次检定最多一次）」——commit 档案没有「按同名投入张数触发自动成功/奖励」的读点（P10 前补原语）。已实现：同名多张可同时投入（maxPerTest: 3）与每张 1 个万能图标的投入结算。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06203",
+      "name": "月石",
+      "note": "未实现/简化：「你从手牌中弃掉月石后」没有「某张手牌被弃掉后」的窗口；改用弃牌前的 wouldDiscardFromHand 窗口，把月石从手牌打出并取消这次弃牌效果。弃 1 张时与印刷等价；弃 N（>1）张时其余弃牌也被取消。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06204",
+      "name": "目力敏锐",
+      "note": "未实现：「在基础调查行动期间投入时获得 [intellect][intellect]」——commit 档案的 conditionalIcons 没有「检定来自基础调查行动」的条件键（只有生命/手牌/资源/毁灭/控制特性等条件）；已实现：每次检定最多投入 1 张 + 成功超过难度 2 点时额外发现 1 个线索。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06235",
+      "name": "领导力",
+      "note": "未实现：「如果本次检定成功，获得 2 资源；若领导力投入到另一位调查员的检定，该调查员也获得 2 资源」——commit 档案的 onSuccess 读点没有 gainResources 字段（P10 前补原语）；投入时获得 [willpower][wild] 的图标句已由引擎 leadership 读点实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06236",
+      "name": "梦境日记",
+      "note": "未实现：「你在隐藏值至少为 4 的地点时，你的梦的本质获得[wild][wild]」——梦的本质是绑定技能卡（06113），跨卡的条件投入图标修正没有读点（commitIcons 的授予只作用于声明者自身）。已实现：研究完成记录门控（researchRequirement）与回合开始检索绑定卡的反应。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06237",
+      "name": "梦境日记",
+      "note": "未实现：「你与敌人交战时，你的梦的本质获得[wild][wild]」——梦的本质是绑定技能卡（06113），跨卡的条件投入图标修正没有读点。已实现：研究完成记录门控（researchRequirement）与回合开始检索绑定卡的反应。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06238",
+      "name": "梦境日记",
+      "note": "未实现：「你有至少 8 张手牌时，你的梦的本质获得[wild][wild]」——梦的本质是绑定技能卡（06113），跨卡的条件投入图标修正没有读点。已实现：研究完成记录门控（researchRequirement）与回合开始检索绑定卡的反应。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06239",
+      "name": "快手",
+      "note": "未实现（主效果）：「你连续执行同一种行动两次后，横置快手：再执行一次该种行动」——引擎没有行动类型历史/本次行动类型的窗口上下文，也没有「按行动类型受限的额外行动」原语。已实现：每位调查员仅限 1 张（limitPerInvestigator）。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06240",
+      "name": "虎口拔牙",
+      "note": "未实现：「投入后从牌库顶揭示直到揭示一张可投入的[rogue]技能并投入，其余洗回」——本卡投入后已离手，committedCard 窗口的能力源枚举看不到刚投入的牌，没有「投入后自我触发」的读点。已实现：作为技能卡的投入图标。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06241",
+      "name": "增强自我",
+      "note": "简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——3 张同名可同时在场且基本只占 1 个法术槽，但其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 combat 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 战斗。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06242",
+      "name": "增强自我",
+      "note": "简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 agility 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 敏捷。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06243",
+      "name": "增强自我",
+      "note": "简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 intellect 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 智识。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06244",
+      "name": "特薇拉·凯瑟琳·普莱斯",
+      "note": "未实现（主效果）：「你花费[[法术]]支援的至少 1 充能后，横置特薇拉：在该支援上放置 1 充能」——引擎没有「充能被花费后」的窗口/上下文（扣充能发生在费用支付里，不进入任何窗口）。卡牌本身作为[[盟友]]支援的入场/槽位/费用按印刷数据结算。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06245",
+      "name": "希望微光",
+      "note": "未实现/简化：「只能从弃牌堆打出」已通过 playableFromDiscard 声明（普通出牌路径仍允许从手牌打出——没有按区域拒绝手牌打出的读点）；「包括本卡牌」——正在打出的这张在结算期间不在任何区域（收尾才进弃牌堆），没有「打出的事件改为加入手牌」的读点，因此本张不进手牌，其余弃牌堆中的希望微光都会回到手牌。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06246",
+      "name": "迅速撤退",
+      "note": "未实现：①「仅在基础躲避行动期间投入时」+2 敏捷图标（conditionalIcons 无检定来源条件，现按恒真条件近似为每次投入都给）；②检定成功且超过难度≥2时自动躲避另一敌人的成功后结算（commit 档案只有 icons / conditionalIcons / onSuccess 数据键，无自定义成功后结算）。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06277",
+      "name": "食愿项链",
+      "note": "简化：卡面为 [reaction]（可选），但引擎里能在「取消判定之前」拿到 effect 数据体（cancelSymbolToken）的唯一通道是 forced 描述子 + legacyReaction，因此有充能时揭示符号标记会自动取消（不问询）。取消标记、治愈 1 伤害/1 恐惧、无充能时强制交换回空虚项链均已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06278",
+      "name": "惊喜的发现",
+      "note": "未实现：被查找到时「放入游戏区域并强制投入下一次符合条件的技能检定；该检定成功则抽 1 张」（searchedCardRule 只支持 take/discard/cancelSearch/discoverClue/drawEncounter 固定动作，无自定义结算）。现近似为查找时可选择把这张牌加入手牌。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06282",
+      "name": "受召猎犬",
+      "note": "未实现：卡面「行动外（except during an action）」的使用限制——引擎没有「是否正在结算一次行动」的通用读点，现允许在任意时点（自己回合内）横置发动。其余效果（额外费用检索脱缰野兽洗回牌库、基础值 5 的攻击/调查）已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06283",
+      "name": "脱缰野兽",
+      "note": "未实现：多张受召猎犬在场时由玩家选择哪一张被放到一边（现取第一张）；「放到一边」进入 setAside（不是 06282 的绑定集合）；无猎犬时的「不生成」用移除刚生成敌人的方式近似。主要分支（有猎犬→猎犬离场、脱缰野兽与猎犬持有者交战）已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06285",
+      "name": "黑猫",
+      "note": "未实现：卡面主效果「揭示 [tablet]/[elder_thing]/[elder_sign] 时改为使用以下效果（-1 并让黑猫受到 1 点直接伤害/恐惧；+5 并治愈黑猫全部伤害与恐惧）」——引擎没有把符号效果替换为卡面自定义值的读点（setSymbolEffect 只服务 05033 的取消/再结算候选）。已实现的数据通道：[[盟友]]槽位、2 个万能图标、特性均来自 cards-data。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06324",
+      "name": "阿比盖尔·福尔曼",
+      "note": "未实现：①「与你游戏区域的书籍支援互换」（引擎没有把附属卡移回支援区的通用 API，现只支持从支援区附属一张书籍）；②「结算附属书籍的 [action] 能力后横置她再结算一次」（引擎不把附属卡的 [action] 能力列入能力源，无法挂 reaction）。已实现：附属一张[[书籍]]支援到阿比盖尔（仅限 1 张），且附属后不再占用槽位。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06325",
+      "name": "真理之眼",
+      "note": "未实现：①仅当「本次检定是对诡计卡牌的检定」的条件；②成功后把该诡计加入胜利区并把真理之眼附属到它上面；③附属期间为「该诡计的同名卡牌」的每次检定提供 4 个万能图标（commit 档案没有检定来源条件与成功后自定义结算读点）。已实现：投入时按卡面提供 4 个万能图标。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06327",
+      "name": "短管霰弹枪",
+      "note": "失败误伤分支的最大值沿用引擎读点写死的 5（01029 的 successDamage/failByAmountToEngaged 共用实现），卡面写 6；成功伤害（1–6）与「不造成标准伤害」已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06328",
+      "name": "神识之眼",
+      "note": "以「本次检定技能值改为意志值」近似「改为检定意志」（引擎没有替换本次检定技能的 API；pendingBonus 读点只改检定值，不改变 test.skill 本身）。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06329",
+      "name": "闪耀的偏方三八面体",
+      "note": "未实现失败分支：①「检定失败则取消打出该卡牌，不支付任何费用（包括行动费用）」——beforePlayCost 窗口没有取消整次打出的引擎字段；②「直到本轮结束不能打出该卡牌及其同名卡」。成功分支已实现：横置自身 + 意志(X) 检定，成功则本次资源费用视为已支付（costReduction = cost）。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06330",
+      "name": "噩梦球",
+      "note": "简化：「3 张梦境寄生物附属到噩梦球」用手牌代表附属（引擎无法把 attachments 里的卡再移回牌库/场外）。取消 [auto_fail] 标记、洗一张梦境寄生物入牌库、离场时把副本收回场外集合均已实现。"
+    },
+    {
+      "kind": "显式简化",
+      "code": "06331",
+      "name": "梦境寄生物",
+      "note": "未实现：①「本技能的图标不加入技能值、改为减去」（引擎无负技能图标读点，现按普通 2 个万能图标计入）；②「在手牌中必须投入下一次技能检定（如可能）」的强制投入；③检定失败受到 1 伤害 + 1 恐惧（commit 档案没有失败后自定义结算读点）。P3 escape 已登记（负图标 + 强制投入）。"
+    }
+  ],
+  "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+      "sha256": "a75c2cb7002623daa1c47d421227b3fc105a7081190fb8b5dc644fdb67a76d36"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+      "sha256": "1278a6a79c8424aa4966756d4de8e497678995a5f8198c476434d96e4abc22a8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+      "sha256": "ea9ed84c650427b6a43d3535853ec075de4ab2d56086efec411de6824b8be623"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+      "sha256": "9da39c968f3542ada76b43172a4f60d0f4a2e0578e353812231548b1c10ef5bc"
+    }
+  ],
+  "implementationFiles": [
+    {
+      "file": "games/arkhamhorror/content/packs/tdePlayer/manifest.js",
+      "sha256": "7f777369ba33fafe106bc5fd494550c8632631fad76215eec1ffd61b7f03d6ee"
+    },
+    {
+      "file": "games/arkhamhorror/src/deck/availability.js",
+      "sha256": "5a0266fb0d27794e1682677b0c8d8d6026291746b19e3616b95be0bec2300be4"
+    },
+    {
+      "file": "games/arkhamhorror/src/deck/deckbuilding.js",
+      "sha256": "9c0075ea1849ea9bdd9152d3218ffa61818c64ba377993654925311dc0a0538c"
+    },
+    {
+      "file": "games/arkhamhorror/web/deck-rules.js",
+      "sha256": "f368a67121bfab924464167f4bececc8a69b7197e5247b05b90d1855f7f39928"
+    },
+    {
+      "file": "games/arkhamhorror/src/campaign/campaign.js",
+      "sha256": "1dfb4b9275359d4cdd74ac70921a786d5b1805b32267bb462aa48cd97ebd4517"
+    },
+    {
+      "file": "games/arkhamhorror/src/cards/entries/_shared.js",
+      "sha256": "6c1edd1e491c6450acb3c50db029315638cbec77d8c82d0513082161ca406665"
+    },
+    {
+      "file": "games/arkhamhorror/src/engine/myriad.js",
+      "sha256": "67ec1fcb5e22ee48bb71374bc2407d8d8c07cc1500890dd53688a88b94796278"
+    },
+    {
+      "file": "games/arkhamhorror/tests/suites.mjs",
+      "sha256": "62c676d2e9db0fbe456131b44d2b64cb53242ca5cd8a95aeed7db62d75d8a12b"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+      "sha256": "a75c2cb7002623daa1c47d421227b3fc105a7081190fb8b5dc644fdb67a76d36"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+      "sha256": "1278a6a79c8424aa4966756d4de8e497678995a5f8198c476434d96e4abc22a8"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+      "sha256": "ea9ed84c650427b6a43d3535853ec075de4ab2d56086efec411de6824b8be623"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+      "sha256": "9da39c968f3542ada76b43172a4f60d0f4a2e0578e353812231548b1c10ef5bc"
+    }
+  ],
+  "entries": [
+    {
+      "code": "06018",
+      "name": "渴血之刃",
+      "type": "asset",
+      "class": "guardian",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 82,
+          "test": "TDE 06018 渴血之刃 入场将 3 张嗜血洗入牌库；攻击按附属数加值、+1 伤害、击败放贡品"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 112,
+          "test": "TDE 06018 渴血之刃 攻击时可将 1 张嗜血混洗回牌库换 +1 伤害"
+        }
+      ]
+    },
+    {
+      "code": "06019",
+      "name": "嗜血",
+      "type": "treachery",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：弱点揭示时附属到玩家支援的完整物理形态（引擎无 attachedAsset 弱点类型/attach-resolving-card API），改为在渴血之刃的 attachedCards 槽记录附属张数；[fast] +1 伤害由 06018 的攻击 resolve 结算。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 129,
+          "test": "TDE 06019 嗜血 有渴血之刃时消耗 2 贡品附属；没有时受 1 恐惧并洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "06020",
+      "name": "庄严立誓",
+      "type": "asset",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 153,
+          "test": "TDE 06020 庄严立誓 置于同地点另一位调查员控制之下，并可在双方卡牌间移动 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "06021",
+      "name": "一瓣缟玛瑙",
+      "type": "asset",
+      "class": "seeker",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 192,
+          "test": "TDE 06021 一瓣缟玛瑙 3 张在场时放在一边并找出皇后的挂坠放置入场"
+        }
+      ]
+    },
+    {
+      "code": "06022",
+      "name": "皇后的挂坠",
+      "type": "asset",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：充能归零的自动复位只在「花费最后 1 充能」这条路径上结算（引擎没有 uses 归零钩子）；挂坠被其他效果清空充能时不会自动放在一边。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 205,
+          "test": "TDE 06022 皇后的挂坠 花 1 充能选择已揭示地点：发现线索 / 充能耗尽复位"
+        }
+      ]
+    },
+    {
+      "code": "06023",
+      "name": "骇人真相",
+      "type": "event",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：被查找到时的二选一奖励（获得 2 资源／在支援上放 1 秘密）——searchedCardRule 无 resolve 通道；已实现「查找中被发现 → 弃掉」与「不能打出」。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 238,
+          "test": "TDE 06023 骇人真相 不能打出；查找牌库发现时弃掉自己"
+        }
+      ]
+    },
+    {
+      "code": "06024",
+      "name": "梦境结晶器",
+      "type": "asset",
+      "class": "rogue",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：附属事件「如同手牌」投入技能检定（playChannels.commitEntries 只有 beneath 通道，attachments 无投入候选）；已实现额外费用检索与事件附属（上限 5）。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 259,
+          "test": "TDE 06024 梦境结晶器 入场检索结晶器守卫；打出事件后改为附属到它上面"
+        }
+      ]
+    },
+    {
+      "code": "06025",
+      "name": "结晶器守卫",
+      "type": "enemy",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「放在一边」用 removeEnemy 移出对局代替（引擎无敌人 setAside 写入口）；其余生成/横置/猎手/bearer 猎物已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 286,
+          "test": "TDE 06025 结晶器守卫 无梦境结晶器时移出对局；有则横置入场并成为 bearer 猎物"
+        }
+      ]
+    },
+    {
+      "code": "06026",
+      "name": "冤大头",
+      "type": "event",
+      "class": "rogue",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 308,
+          "test": "TDE 06026 冤大头 获得 2 资源并抽 1 张；可从手牌免费再打一张"
+        }
+      ]
+    },
+    {
+      "code": "06027",
+      "name": "仰望星空",
+      "type": "event",
+      "class": "mystic",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：遭遇牌库没有「混洗入顶部 N 张」的插入点（api.shuffleIntoEncounterDeck 只能洗入整副遭遇牌库），改为洗入遭遇牌库。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 325,
+          "test": "TDE 06027 仰望星空 遭遇牌库≥10 才能打出；把群星正确之时洗入遭遇牌库"
+        }
+      ]
+    },
+    {
+      "code": "06028",
+      "name": "群星正确之时",
+      "type": "event",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：作为遭遇卡被抽出时的显现结算（drawEncounter 无玩家卡分支）与「立即进行一个行动」；已实现显现数据体（选择调查员→抽 1/获得 1→移出游戏）与绑定关系。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 341,
+          "test": "TDE 06028 群星正确之时 绑定关系为仰望星空；显现：选一位调查员抽 1 张、获得 1 资源并移出游戏"
+        }
+      ]
+    },
+    {
+      "code": "06029",
+      "name": "开启大门",
+      "type": "event",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：两个附属有「开启大门」的地点互相连接（移动图只读 location.connections，无卡条目可驱动的动态连接读点）；已实现快速（played 描述子 fast + 条目 fast 数据）/只能自己回合/附属到所在地点/团队上限 3（playCondition 读 playerLocationAttachments）。注：引擎的快速事件候选需要固定触发时机，本卡没有「任意玩家窗口」原语，实际按自己回合的普通事件打出。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 364,
+          "test": "TDE 06029 开启大门 快速附属到所在地点；团队 3 张后不能再打出"
+        }
+      ]
+    },
+    {
+      "code": "06030",
+      "name": "道尔女士",
+      "type": "asset",
+      "class": "survivor",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 390,
+          "test": "TDE 06030 道尔女士 入场随机放置 1 张绑定支援入场，其余 2 张进弃牌堆；离场全部放在一边"
+        }
+      ]
+    },
+    {
+      "code": "06031",
+      "name": "希望",
+      "type": "asset",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 439,
+          "test": "TDE 06031 希望 横置：以基础敏捷 5 躲避与你交战的敌人"
+        }
+      ]
+    },
+    {
+      "code": "06032",
+      "name": "热诚",
+      "type": "asset",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 451,
+          "test": "TDE 06032 热诚 横置：以基础战斗 5 攻击同地点的敌人"
+        }
+      ]
+    },
+    {
+      "code": "06033",
+      "name": "预见",
+      "type": "asset",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 462,
+          "test": "TDE 06033 预见 横置：以基础智识 5 调查并发现线索"
+        }
+      ]
+    },
+    {
+      "code": "06034",
+      "name": "意外的发现",
+      "type": "event",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 478,
+          "test": "TDE 06034 意外的发现 X=弃牌堆同名张数：调查 +X 智识，成功发现 X 个额外线索"
+        }
+      ]
+    },
+    {
+      "code": "06035",
+      "name": "自私自利",
+      "type": "treachery",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": true,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：不能对其他调查员的技能检定投入卡牌、不能用玩家卡效果影响其他调查员（引擎无对应读点：capability:commit 只挡自己的检定，也没有玩家卡效果指向他人的通用限制）；已实现威胁区与 [action][action] 弃置。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 499,
+          "test": "TDE 06035 自私自利 显现进入威胁区域，花费 2 行动弃掉"
+        }
+      ]
+    },
+    {
+      "code": "06036",
+      "name": "偷窃癖",
+      "type": "asset",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": true,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「当你的回合结束时受到 1 点恐惧」——引擎的回合结束强制读点只覆盖威胁区，游戏区域的资产没有读点；已实现放置入场、[action] 夺取道具/资源并洗回牌库。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 513,
+          "test": "TDE 06036 偷窃癖 放置入场后夺取同地点另一位调查员的资源并洗回牌库"
+        }
+      ]
+    },
+    {
+      "code": "06037",
+      "name": "嗜睡症",
+      "type": "treachery",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": true,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：强制「受到伤害或恐惧后弃掉」在伤害/恐惧分配前结算（harmDealt 窗口），若伤害全部由支援承接也会弃掉；其余限制与 [action] 弃置已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 531,
+          "test": "TDE 06037 嗜睡症 威胁区：不能打出事件/进行调查，受到伤害后弃掉"
+        }
+      ]
+    },
+    {
+      "code": "06038",
+      "name": "最可怕的噩梦",
+      "type": "enemy",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": true,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：承受者不能攻击/伤害/击败它（引擎的被攻击/被击败读点没有按攻击者座位的卡条目钩子；enemyCannotBeAttacked 无攻击者参数）；已实现猎手与「猎物-仅对承受者」。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 547,
+          "test": "TDE 06038 最可怕的噩梦 显现生成敌人：猎手、猎物仅对承受者"
+        }
+      ]
+    },
+    {
+      "code": "06110",
+      "name": "头班守夜",
+      "type": "event",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：替换神话阶段的抽取遭遇步骤与按座位分发遭遇牌（无该时机窗口、无按座位分发遭遇牌的 API）；已实现：快速事件（近似在神话阶段开始时）查看遭遇牌库顶 X 张并重新排列，X = 调查员人数。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
+          "line": 564,
+          "test": "TDE 06110 头班守夜 神话阶段开始时的快速事件：查看遭遇牌库顶 X 张并重新排列"
+        }
+      ]
+    },
+    {
+      "code": "06111",
+      "name": "浑身是胆",
+      "type": "skill",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：①该敌人在本次技能期间获得反击和警戒；②本次检定结束后抽 1 张卡牌（commit 描述子没有「测试期间」/「测试结束后」读点）。「只能投入到攻击或躲避敌人期间的检定」以 skill.requireEngagedEnemy 近似（要求投入时与敌人交战）。3 个万能图标由卡面数据通道生效。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 93,
+          "test": "TDE 06111 浑身是胆 3 万能图标；与敌人交战时才能投入，投入后检定值 +3"
+        }
+      ]
+    },
+    {
+      "code": "06112",
+      "name": "梦境日记",
+      "type": "asset",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 138,
+          "test": "TDE 06112 梦境日记 [action]从绑定集合取回梦的本质；投入它的检定成功 3 点后记录梦境"
+        }
+      ]
+    },
+    {
+      "code": "06113",
+      "name": "梦的本质",
+      "type": "skill",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「将要进入弃牌堆或洗入牌库时改为放回场外集合（和绑定卡牌一起）」——引擎检定收尾会把投入卡统一放进弃牌堆，没有 bonded 读取点；Bonded(Dream Diary) 关系与图标由卡面数据通道生效。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 208,
+          "test": "TDE 06113 梦的本质 2 个万能图标 + Bonded(梦境日记)；投入检定真实加 2 点"
+        }
+      ]
+    },
+    {
+      "code": "06114",
+      "name": "跟踪",
+      "type": "event",
+      "class": "rogue",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 224,
+          "test": "TDE 06114 跟踪 调查：所选敌人每 1 点伤害 +1 智识；成功额外发现 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "06115",
+      "name": "势不可挡",
+      "type": "skill",
+      "class": "rogue",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「检定成功后本阶段下一次技能检定难度降低 X（X=超出难度点数，至多 3）」——引擎没有下一次检定的难度账本，commit 描述子也没有可写读点；1 个万能图标由卡面数据通道生效。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 252,
+          "test": "TDE 06115 势不可挡 1 个万能图标；投入后检定值 +1（下一次检定降难为显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06116",
+      "name": "预言卷轴",
+      "type": "asset",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 171,
+          "test": "TDE 06116 预言卷轴 使用(4秘密)；花 1 秘密让目标调查员抽 3 弃 1"
+        }
+      ]
+    },
+    {
+      "code": "06117",
+      "name": "解读秘符",
+      "type": "event",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「你可以忽略本次调查期间你所在地点将要触发的任何效果和关键词」——引擎没有「忽略地点效果/关键词」的通用读取点；调查、把意志值加入技能值、成功额外发现 1 个线索均已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 268,
+          "test": "TDE 06117 解读秘符 调查：加入意志值，成功额外发现 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "06118",
+      "name": "洁西卡·海德",
+      "type": "asset",
+      "class": "survivor",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：①入场时其上带有 2 点伤害（缺「给支援加伤害」的 ctx.api；不能直写资产字段）；②[reaction]你的回合结束后治愈她 1 点伤害（引擎没有回合结束窗口，也没有资产伤害的通用治愈读点）。你得到 +1[combat] 已由 modifiers 生效。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 288,
+          "test": "TDE 06118 洁西卡·海德 你得到 +1[combat]（入场伤害/回合结束自愈为显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06155",
+      "name": "森哲夫",
+      "type": "asset",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「对你所在地点其他调查员造成的伤害和/或恐惧，可以分配给森哲夫」——引擎的盟友吸收只覆盖控制者本人的伤害/恐惧，没有跨调查员重定向读取点。被击败时的[[道具]]支援搜索（弃牌堆 / 牌库顶 9 张、搜牌库后混洗）已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 303,
+          "test": "TDE 06155 森哲夫 被击败时：目标调查员从弃牌堆找一张[[道具]]支援加入手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 330,
+          "test": "TDE 06155 森哲夫 被击败时也能从牌库顶 9 张找[[道具]]支援并混洗牌库"
+        }
+      ]
+    },
+    {
+      "code": "06156",
+      "name": "“吃一堑……”",
+      "type": "event",
+      "class": "guardian",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "近似实现：当前在「你抽到一张诡计」的 encounterDrawn 窗口快速打出，取消这张诡计本次的显现效果；未实现：①「结算诡计效果后、将要弃掉时」这个打出时机（引擎没有该窗口）；②把该诡计附属到本卡并只取消后续同名副本（没有「已结算诡计附属」的存储/查询原语），因此本卡不会留在场上，取消的是当前这张而不是同名副本。完整原语请求见 artifacts/migration/tde/primitive-requests/w-m2-2-06156-treachery-discard-window.json。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 621,
+          "test": "TDE 06156 “吃一堑……” 快速：在遭遇抽牌窗口打出，取消该诡计的显现效果（近似卡面）"
+        }
+      ]
+    },
+    {
+      "code": "06157",
+      "name": "自我牺牲",
+      "type": "skill",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：①「只能投入到另一位调查员执行的检定」没有 commit 档案字段（协助投入窗口本身限同地点队友）；②检定失败效果改由投入者结算（无失败效果归属重定向原语）；③「你或执行者抽 2 张」只实现执行者抽 2 张分支。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 357,
+          "test": "TDE 06157 自我牺牲 协助队友检定：检定失败时执行者抽 2 张（失败效果重定向为显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06158",
+      "name": "异界手稿",
+      "type": "asset",
+      "class": "seeker",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 387,
+          "test": "TDE 06158 异界手稿 花 1 秘密横置：查找遭遇牌库顶 9 张，弃掉场上一张同名非[[精英]]卡并洗回"
+        }
+      ]
+    },
+    {
+      "code": "06159",
+      "name": "强梦血清",
+      "type": "asset",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「如果你手中有多张同名手牌，检查手牌上限时其只计作一张」——引擎 handSize 读点只支持静态修正，没有按手牌内容动态计算的手牌上限读取点；「抽到与手牌同名的牌后横置血清抽 1 张」已实现（cardDrawn 窗口 + 横置费）。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 413,
+          "test": "TDE 06159 强梦血清 抽到与手牌同名的牌后横置血清抽 1 张"
+        }
+      ]
+    },
+    {
+      "code": "06160",
+      "name": "“让上帝分辨去吧……”",
+      "type": "event",
+      "class": "rogue",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：①「本回合击败总计生命值 ≥6 点的敌人」的前置条件（引擎没有回合内的击败历史读取点，打出的时机只由 ownTurn 约束）；②「结局结算经验时额外 +1 经验」（经验值在战役层结算，没有 ctx.api 写入口）。「加入胜利区、立即结束你的回合」已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 440,
+          "test": "TDE 06160 “让上帝分辨去吧……” 只能在你的回合打出；加入胜利区并立即结束回合"
+        }
+      ]
+    },
+    {
+      "code": "06161",
+      "name": "快速装填",
+      "type": "event",
+      "class": "rogue",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 463,
+          "test": "TDE 06161 快速装填 快速：把[[枪械]]支援的子弹补到使用(X)值"
+        }
+      ]
+    },
+    {
+      "code": "06162",
+      "name": "格雷戈里·葛利",
+      "type": "asset",
+      "class": "rogue",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现「本次检定成功且至少超过该资源数量」的差额门槛（额外成功结算段只支持固定效果，读不到成功超出点数），当前实现为：检定成功即返还押注数量的资源；押注本身（0–3、受资产剩余资源与 3 上限限制）与成功返还均已接线。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 490,
+          "test": "TDE 06162 格雷戈里·葛利 使用(9资源)；检定开始时押注，成功后返还等量资源"
+        }
+      ]
+    },
+    {
+      "code": "06163",
+      "name": "治愈真言",
+      "type": "asset",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 187,
+          "test": "TDE 06163 治愈真言 使用(3充能)；花 1 充能治愈同地点调查员 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "06164",
+      "name": "飘渺灵体",
+      "type": "event",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「无形」中「敌人不能与你交战或被与你交战」「你不能对敌人造成伤害」——引擎没有交战/伤害两处的禁止读取点（只有 capability:fight 能挡住主动攻击）；意志闪避、成功解除所有交战、直到本轮结束不能攻击（持续效果）已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 517,
+          "test": "TDE 06164 飘渺灵体 意志躲避：成功后解除所有交战，本轮不能攻击"
+        }
+      ]
+    },
+    {
+      "code": "06165",
+      "name": "搜刮补给",
+      "type": "event",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 539,
+          "test": "TDE 06165 搜刮补给 从弃牌堆选择一张等级 0 卡牌加入手牌"
+        }
+      ]
+    },
+    {
+      "code": "06166",
+      "name": "蛮力",
+      "type": "skill",
+      "class": "survivor",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：仅在「基础攻击行动期间投入」才获得 [combat][combat] 与 +2 伤害的限定（conditionalIcons 没有检定行动类型条件）；额外图标未写，+2 伤害按「成功超出难度 ≥2」对所有战斗检定生效。每次技能检定最多投入 1 张已由 maxPerTest 生效。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 561,
+          "test": "TDE 06166 蛮力 每次检定最多投入 1 张；成功超出难度 ≥2 时本次攻击 +2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "06167",
+      "name": "多才多艺",
+      "type": "asset",
+      "class": "neutral",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "构筑层效果（牌库张数 +5、牌库构建选项 +1 张任意职阶等级 0 卡）由主进程在构筑/可用性层接线；本卡对局内无行为，卡面 permanent:true 由开局流程处理。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 583,
+          "test": "TDE 06167 多才多艺 永久卡：+5 牌库张数与构筑选项属构筑层（数据通道）"
+        }
+      ]
+    },
+    {
+      "code": "06195",
+      "name": ".35温彻斯特步枪",
+      "type": "asset",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「本次攻击期间揭示了 +1、0 或 [elder_sign] 混乱标记时 +2 伤害」——doFight 只支持固定伤害加值，没有按揭示标记条件加伤害的选项；使用(5子弹)、花 1 子弹攻击、本次攻击 +2[combat] 已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
+          "line": 601,
+          "test": "TDE 06195 .35温彻斯特步枪 使用(5子弹)；花 1 子弹攻击、本次攻击 +2[combat]"
+        }
+      ]
+    },
+    {
+      "code": "06196",
+      "name": "安全护卫",
+      "type": "asset",
+      "class": "guardian",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「从你所在地点移动到连接地点」的出发地判定——move 窗口上下文只带目标地点，没有移动前所在地点（需要移动窗口补充来源地点的新原语，P10 前处理）；改为判定「目标地点与安全护卫持有者所在地点相连」。跟随移动本身已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 122,
+          "test": "TDE 06196 安全护卫 其他调查员移动到连接地点时横置跟随移动"
+        }
+      ]
+    },
+    {
+      "code": "06197",
+      "name": "熟能生巧",
+      "type": "event",
+      "class": "seeker",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「本次检定结束后，如果检定成功，不将该技能弃掉，改为加入手牌」——已投入的牌在检定收尾统一弃掉，commit 流程没有「按检定结果决定投入牌去向」的读点（P10 前补原语）。其余（快速窗口、查牌库顶 9 张、找出[[精通]]技能投入、其余洗回）已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 150,
+          "test": "TDE 06197 熟能生巧 快速：查牌库顶 9 张找出[[精通]]技能并投入本次检定"
+        }
+      ]
+    },
+    {
+      "code": "06198",
+      "name": "海量研究",
+      "type": "event",
+      "class": "seeker",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 183,
+          "test": "TDE 06198 海量研究 每有一张其它手牌费用 -1；发现所在地点 2 个线索"
+        }
+      ]
+    },
+    {
+      "code": "06199",
+      "name": "三条A",
+      "type": "skill",
+      "class": "rogue",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「将 3 张三条A投入同一次技能检定 → 该检定自动成功（不抽混乱标记），然后抽 3 张牌并获得 3 资源（每次检定最多一次）」——commit 档案没有「按同名投入张数触发自动成功/奖励」的读点（P10 前补原语）。已实现：同名多张可同时投入（maxPerTest: 3）与每张 1 个万能图标的投入结算。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 212,
+          "test": "TDE 06199 三条A 同名多张可同时投入同一次技能检定（每张 1 个万能图标）"
+        }
+      ]
+    },
+    {
+      "code": "06200",
+      "name": "夜盗",
+      "type": "asset",
+      "class": "rogue",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 239,
+          "test": "TDE 06200 夜盗 横置调查：成功改为获得 2 资源，每超过难度 1 点 +1（最多 +3）"
+        }
+      ]
+    },
+    {
+      "code": "06201",
+      "name": "幽灵利刃",
+      "type": "event",
+      "class": "mystic",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 272,
+          "test": "TDE 06201 幽灵利刃 攻击加入意志值，非精英敌人 +2 伤害"
+        }
+      ]
+    },
+    {
+      "code": "06202",
+      "name": "命令真言",
+      "type": "event",
+      "class": "mystic",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 310,
+          "test": "TDE 06202 命令真言 指定一张法术卡：从牌库检索并抽取，其余洗回"
+        }
+      ]
+    },
+    {
+      "code": "06203",
+      "name": "月石",
+      "type": "asset",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现/简化：「你从手牌中弃掉月石后」没有「某张手牌被弃掉后」的窗口；改用弃牌前的 wouldDiscardFromHand 窗口，把月石从手牌打出并取消这次弃牌效果。弃 1 张时与印刷等价；弃 N（>1）张时其余弃牌也被取消。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 331,
+          "test": "TDE 06203 月石 不能从手牌打出；弃牌前改为打出月石并取消该次弃牌"
+        }
+      ]
+    },
+    {
+      "code": "06204",
+      "name": "目力敏锐",
+      "type": "skill",
+      "class": "survivor",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「在基础调查行动期间投入时获得 [intellect][intellect]」——commit 档案的 conditionalIcons 没有「检定来自基础调查行动」的条件键（只有生命/手牌/资源/毁灭/控制特性等条件）；已实现：每次检定最多投入 1 张 + 成功超过难度 2 点时额外发现 1 个线索。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 355,
+          "test": "TDE 06204 目力敏锐 调查检定成功超过 2 点：额外发现 1 个线索"
+        }
+      ]
+    },
+    {
+      "code": "06205",
+      "name": "清醒梦",
+      "type": "event",
+      "class": "neutral",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 380,
+          "test": "TDE 06205 清醒梦 选择手牌/场上一张卡，检索牌库中另一张同名卡并抽取"
+        }
+      ]
+    },
+    {
+      "code": "06234",
+      "name": "英勇救援",
+      "type": "event",
+      "class": "guardian",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 401,
+          "test": "TDE 06234 英勇救援 快速：代替另一位调查员承受非精英敌人的攻击，然后对其造成 1 点伤害"
+        }
+      ]
+    },
+    {
+      "code": "06235",
+      "name": "领导力",
+      "type": "skill",
+      "class": "guardian",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「如果本次检定成功，获得 2 资源；若领导力投入到另一位调查员的检定，该调查员也获得 2 资源」——commit 档案的 onSuccess 读点没有 gainResources 字段（P10 前补原语）；投入时获得 [willpower][wild] 的图标句已由引擎 leadership 读点实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 431,
+          "test": "TDE 06235 领导力 投入到另一位调查员的检定时获得 [willpower][wild]"
+        }
+      ]
+    },
+    {
+      "code": "06236",
+      "name": "梦境日记",
+      "type": "asset",
+      "class": "seeker",
+      "level": 3,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「你在隐藏值至少为 4 的地点时，你的梦的本质获得[wild][wild]」——梦的本质是绑定技能卡（06113），跨卡的条件投入图标修正没有读点（commitIcons 的授予只作用于声明者自身）。已实现：研究完成记录门控（researchRequirement）与回合开始检索绑定卡的反应。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 455,
+          "test": "TDE 06236 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）"
+        }
+      ]
+    },
+    {
+      "code": "06237",
+      "name": "梦境日记",
+      "type": "asset",
+      "class": "seeker",
+      "level": 3,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「你与敌人交战时，你的梦的本质获得[wild][wild]」——梦的本质是绑定技能卡（06113），跨卡的条件投入图标修正没有读点。已实现：研究完成记录门控（researchRequirement）与回合开始检索绑定卡的反应。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 455,
+          "test": "TDE 06237 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）"
+        }
+      ]
+    },
+    {
+      "code": "06238",
+      "name": "梦境日记",
+      "type": "asset",
+      "class": "seeker",
+      "level": 3,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「你有至少 8 张手牌时，你的梦的本质获得[wild][wild]」——梦的本质是绑定技能卡（06113），跨卡的条件投入图标修正没有读点。已实现：研究完成记录门控（researchRequirement）与回合开始检索绑定卡的反应。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 455,
+          "test": "TDE 06238 梦境日记 回合开始检索绑定卡「梦的本质」入手（研究完成门控）"
+        }
+      ]
+    },
+    {
+      "code": "06239",
+      "name": "快手",
+      "type": "asset",
+      "class": "rogue",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现（主效果）：「你连续执行同一种行动两次后，横置快手：再执行一次该种行动」——引擎没有行动类型历史/本次行动类型的窗口上下文，也没有「按行动类型受限的额外行动」原语。已实现：每位调查员仅限 1 张（limitPerInvestigator）。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 485,
+          "test": "TDE 06239 快手 每位调查员仅限 1 张"
+        }
+      ]
+    },
+    {
+      "code": "06240",
+      "name": "虎口拔牙",
+      "type": "skill",
+      "class": "rogue",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：「投入后从牌库顶揭示直到揭示一张可投入的[rogue]技能并投入，其余洗回」——本卡投入后已离手，committedCard 窗口的能力源枚举看不到刚投入的牌，没有「投入后自我触发」的读点。已实现：作为技能卡的投入图标。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 500,
+          "test": "TDE 06240 虎口拔牙 作为技能卡的投入图标"
+        }
+      ]
+    },
+    {
+      "code": "06241",
+      "name": "增强自我",
+      "type": "asset",
+      "class": "mystic",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——3 张同名可同时在场且基本只占 1 个法术槽，但其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 combat 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 战斗。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 512,
+          "test": "TDE 06241 增强自我 横置：本次检定 +2 战斗"
+        }
+      ]
+    },
+    {
+      "code": "06242",
+      "name": "增强自我",
+      "type": "asset",
+      "class": "mystic",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 agility 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 敏捷。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 512,
+          "test": "TDE 06242 增强自我 横置：本次检定 +2 敏捷"
+        }
+      ]
+    },
+    {
+      "code": "06243",
+      "name": "增强自我",
+      "type": "asset",
+      "class": "mystic",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "简化/未实现：(1)「最多 3 张增强自我共占 1 个法术槽位」用 restrictedSlots（arcane + [[仪式]]受限额外槽，count 1）近似——其它[[仪式]]支援也会吃到这份受限容量；(2)「每当有卡牌效果要求你用 willpower 代替 intellect 时可忽略」——引擎没有忽略属性替代的读点；(3) 每套牌库仅限 1 张（同名）由构筑层处理。已实现：[free] 横置：本次检定 +2 智识。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 512,
+          "test": "TDE 06243 增强自我 横置：本次检定 +2 智识"
+        }
+      ]
+    },
+    {
+      "code": "06244",
+      "name": "特薇拉·凯瑟琳·普莱斯",
+      "type": "asset",
+      "class": "mystic",
+      "level": 3,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现（主效果）：「你花费[[法术]]支援的至少 1 充能后，横置特薇拉：在该支援上放置 1 充能」——引擎没有「充能被花费后」的窗口/上下文（扣充能发生在费用支付里，不进入任何窗口）。卡牌本身作为[[盟友]]支援的入场/槽位/费用按印刷数据结算。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 552,
+          "test": "TDE 06244 特薇拉 作为[[盟友]]支援入场（充能回收反应显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06245",
+      "name": "希望微光",
+      "type": "event",
+      "class": "survivor",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现/简化：「只能从弃牌堆打出」已通过 playableFromDiscard 声明（普通出牌路径仍允许从手牌打出——没有按区域拒绝手牌打出的读点）；「包括本卡牌」——正在打出的这张在结算期间不在任何区域（收尾才进弃牌堆），没有「打出的事件改为加入手牌」的读点，因此本张不进手牌，其余弃牌堆中的希望微光都会回到手牌。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "line": 570,
+          "test": "TDE 06245 希望微光 只能从弃牌堆打出：把弃牌堆中其余希望微光加入手牌"
+        }
+      ]
+    },
+    {
+      "code": "06246",
+      "name": "迅速撤退",
+      "type": "skill",
+      "class": "survivor",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：①「仅在基础躲避行动期间投入时」+2 敏捷图标（conditionalIcons 无检定来源条件，现按恒真条件近似为每次投入都给）；②检定成功且超过难度≥2时自动躲避另一敌人的成功后结算（commit 档案只有 icons / conditionalIcons / onSuccess 数据键，无自定义成功后结算）。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 103,
+          "test": "TDE 06246 迅速撤退 投入档案：+2 敏捷条件图标与「每次检定最多投入1张」"
+        }
+      ]
+    },
+    {
+      "code": "06276",
+      "name": "空虚项链",
+      "type": "asset",
+      "class": "guardian",
+      "level": 4,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 122,
+          "test": "TDE 06276 空虚项链 击败敌人后放置 1 充能"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 138,
+          "test": "TDE 06276 空虚项链 至少3充能时与食愿项链交换并转移全部充能"
+        }
+      ]
+    },
+    {
+      "code": "06277",
+      "name": "食愿项链",
+      "type": "asset",
+      "class": "guardian",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": true,
+      "note": "简化：卡面为 [reaction]（可选），但引擎里能在「取消判定之前」拿到 effect 数据体（cancelSymbolToken）的唯一通道是 forced 描述子 + legacyReaction，因此有充能时揭示符号标记会自动取消（不问询）。取消标记、治愈 1 伤害/1 恐惧、无充能时强制交换回空虚项链均已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 156,
+          "test": "TDE 06277 食愿项链 花费1充能取消符号标记并治愈1伤害1恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 172,
+          "test": "TDE 06277 食愿项链 充能耗尽后强制交换回空虚项链"
+        }
+      ]
+    },
+    {
+      "code": "06278",
+      "name": "惊喜的发现",
+      "type": "skill",
+      "class": "seeker",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：被查找到时「放入游戏区域并强制投入下一次符合条件的技能检定；该检定成功则抽 1 张」（searchedCardRule 只支持 take/discard/cancelSearch/discoverClue/drawEncounter 固定动作，无自定义结算）。现近似为查找时可选择把这张牌加入手牌。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 198,
+          "test": "TDE 06278 惊喜的发现 查找牌库翻到时可选择加入手牌（简化口径）"
+        }
+      ]
+    },
+    {
+      "code": "06279",
+      "name": "智慧古书",
+      "type": "asset",
+      "class": "seeker",
+      "level": 3,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 225,
+          "test": "TDE 06279 智慧古书 横置搜索牌库顶3张并可花1秘密让该调查员费用-2立即打出"
+        }
+      ]
+    },
+    {
+      "code": "06280",
+      "name": "绞喉索",
+      "type": "asset",
+      "class": "rogue",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 254,
+          "test": "TDE 06280 绞喉索 只能攻击剩余生命值为1的敌人，攻击+2战斗"
+        }
+      ]
+    },
+    {
+      "code": "06281",
+      "name": "黛利拉·欧鲁尔克",
+      "type": "asset",
+      "class": "rogue",
+      "level": 3,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 279,
+          "test": "TDE 06281 黛利拉·欧鲁尔克 花X资源（X=躲避值）造成1伤害，已横置敌人则2伤害"
+        }
+      ]
+    },
+    {
+      "code": "06282",
+      "name": "受召猎犬",
+      "type": "asset",
+      "class": "mystic",
+      "level": 1,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：卡面「行动外（except during an action）」的使用限制——引擎没有「是否正在结算一次行动」的通用读点，现允许在任意时点（自己回合内）横置发动。其余效果（额外费用检索脱缰野兽洗回牌库、基础值 5 的攻击/调查）已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 308,
+          "test": "TDE 06282 受召猎犬 打出时把脱缰野兽洗入牌库，横置以基础值5攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 327,
+          "test": "TDE 06282 受召猎犬 横置以基础智识值5调查"
+        }
+      ]
+    },
+    {
+      "code": "06283",
+      "name": "脱缰野兽",
+      "type": "enemy",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：多张受召猎犬在场时由玩家选择哪一张被放到一边（现取第一张）；「放到一边」进入 setAside（不是 06282 的绑定集合）；无猎犬时的「不生成」用移除刚生成敌人的方式近似。主要分支（有猎犬→猎犬离场、脱缰野兽与猎犬持有者交战）已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 346,
+          "test": "TDE 06283 脱缰野兽 显现：有受召猎犬则猎犬离场且野兽与持有者交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 363,
+          "test": "TDE 06283 脱缰野兽 显现：场上没有受召猎犬时放在一边、不生成"
+        }
+      ]
+    },
+    {
+      "code": "06284",
+      "name": "背水一战",
+      "type": "event",
+      "class": "survivor",
+      "level": 3,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 377,
+          "test": "TDE 06284 背水一战 资源与手牌补至5并从游戏中移除"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 390,
+          "test": "TDE 06284 背水一战 资源与手牌都不少于5时不能打出"
+        }
+      ]
+    },
+    {
+      "code": "06285",
+      "name": "黑猫",
+      "type": "asset",
+      "class": "neutral",
+      "level": 5,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：卡面主效果「揭示 [tablet]/[elder_thing]/[elder_sign] 时改为使用以下效果（-1 并让黑猫受到 1 点直接伤害/恐惧；+5 并治愈黑猫全部伤害与恐惧）」——引擎没有把符号效果替换为卡面自定义值的读点（setSymbolEffect 只服务 05033 的取消/再结算候选）。已实现的数据通道：[[盟友]]槽位、2 个万能图标、特性均来自 cards-data。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 402,
+          "test": "TDE 06285 黑猫 数据通道：盟友槽位/2个万能图标，符号替换主效果显式简化"
+        }
+      ]
+    },
+    {
+      "code": "06323",
+      "name": "摒绝杂念",
+      "type": "asset",
+      "class": "guardian",
+      "level": 5,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 422,
+          "test": "TDE 06323 摒绝杂念 弃掉手中一张同名卡，治愈本拷贝全部伤害与恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 437,
+          "test": "TDE 06323 摒绝杂念 手中没有同名卡时能力不可用"
+        }
+      ]
+    },
+    {
+      "code": "06324",
+      "name": "阿比盖尔·福尔曼",
+      "type": "asset",
+      "class": "seeker",
+      "level": 4,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：①「与你游戏区域的书籍支援互换」（引擎没有把附属卡移回支援区的通用 API，现只支持从支援区附属一张书籍）；②「结算附属书籍的 [action] 能力后横置她再结算一次」（引擎不把附属卡的 [action] 能力列入能力源，无法挂 reaction）。已实现：附属一张[[书籍]]支援到阿比盖尔（仅限 1 张），且附属后不再占用槽位。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 450,
+          "test": "TDE 06324 阿比盖尔·福尔曼 附属一张书籍支援后不占手部槽位"
+        }
+      ]
+    },
+    {
+      "code": "06325",
+      "name": "真理之眼",
+      "type": "skill",
+      "class": "seeker",
+      "level": 5,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：①仅当「本次检定是对诡计卡牌的检定」的条件；②成功后把该诡计加入胜利区并把真理之眼附属到它上面；③附属期间为「该诡计的同名卡牌」的每次检定提供 4 个万能图标（commit 档案没有检定来源条件与成功后自定义结算读点）。已实现：投入时按卡面提供 4 个万能图标。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 470,
+          "test": "TDE 06325 真理之眼 投入时提供 4 个万能图标（主效果显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06326",
+      "name": "乔伊“老鼠”弗吉尔",
+      "type": "asset",
+      "class": "rogue",
+      "level": 3,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 485,
+          "test": "TDE 06326 乔伊“老鼠”弗吉尔 花1资源打出手中道具支援"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 499,
+          "test": "TDE 06326 乔伊“老鼠”弗吉尔 弃掉场上一个道具支援获得2资源"
+        }
+      ]
+    },
+    {
+      "code": "06327",
+      "name": "短管霰弹枪",
+      "type": "asset",
+      "class": "rogue",
+      "level": 5,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "失败误伤分支的最大值沿用引擎读点写死的 5（01029 的 successDamage/failByAmountToEngaged 共用实现），卡面写 6；成功伤害（1–6）与「不造成标准伤害」已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 518,
+          "test": "TDE 06327 短管霰弹枪 按成功差值造成伤害（不造成标准伤害）"
+        }
+      ]
+    },
+    {
+      "code": "06328",
+      "name": "神识之眼",
+      "type": "asset",
+      "class": "mystic",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "以「本次检定技能值改为意志值」近似「改为检定意志」（引擎没有替换本次检定技能的 API；pendingBonus 读点只改检定值，不改变 test.skill 本身）。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 535,
+          "test": "TDE 06328 神识之眼 检定开始花1秘密把本次检定改为按意志值结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 556,
+          "test": "TDE 06328 神识之眼 弃掉手中一张同名卡放置2秘密"
+        }
+      ]
+    },
+    {
+      "code": "06329",
+      "name": "闪耀的偏方三八面体",
+      "type": "asset",
+      "class": "mystic",
+      "level": 4,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现失败分支：①「检定失败则取消打出该卡牌，不支付任何费用（包括行动费用）」——beforePlayCost 窗口没有取消整次打出的引擎字段；②「直到本轮结束不能打出该卡牌及其同名卡」。成功分支已实现：横置自身 + 意志(X) 检定，成功则本次资源费用视为已支付（costReduction = cost）。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 573,
+          "test": "TDE 06329 闪耀的偏方三八面体 意志(X)检定成功则法术费用视为已支付"
+        }
+      ]
+    },
+    {
+      "code": "06330",
+      "name": "噩梦球",
+      "type": "asset",
+      "class": "survivor",
+      "level": 3,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": true,
+      "note": "简化：「3 张梦境寄生物附属到噩梦球」用手牌代表附属（引擎无法把 attachments 里的卡再移回牌库/场外）。取消 [auto_fail] 标记、洗一张梦境寄生物入牌库、离场时把副本收回场外集合均已实现。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 592,
+          "test": "TDE 06330 噩梦球 入场取出3张梦境寄生物，揭示自动失败时取消标记并洗回1张"
+        }
+      ]
+    },
+    {
+      "code": "06331",
+      "name": "梦境寄生物",
+      "type": "skill",
+      "class": "neutral",
+      "level": 0,
+      "basicWeakness": false,
+      "deckbuilding": false,
+      "status": "verified",
+      "simplified": true,
+      "note": "未实现：①「本技能的图标不加入技能值、改为减去」（引擎无负技能图标读点，现按普通 2 个万能图标计入）；②「在手牌中必须投入下一次技能检定（如可能）」的强制投入；③检定失败受到 1 伤害 + 1 恐惧（commit 档案没有失败后自定义结算读点）。P3 escape 已登记（负图标 + 强制投入）。",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 610,
+          "test": "TDE 06331 梦境寄生物 投入档案（负图标/强制投入显式简化）"
+        }
+      ]
+    },
+    {
+      "code": "06332",
+      "name": "拾荒",
+      "type": "asset",
+      "class": "survivor",
+      "level": 2,
+      "basicWeakness": false,
+      "deckbuilding": true,
+      "status": "verified",
+      "simplified": false,
+      "note": null,
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 637,
+          "test": "TDE 06332 拾荒 成功调查超过难度2点后横置，从弃牌堆取回道具"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
+          "line": 668,
+          "test": "TDE 06332 拾荒 成功差值只有1点时不能触发"
+        }
+      ]
+    }
+  ]
+}

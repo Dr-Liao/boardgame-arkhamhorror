@@ -1,0 +1,1281 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theDreamEaters",
+  "milestone": "M3",
+  "generatedFrom": "original-campaign-only",
+  "status": "development",
+  "productionGate": "development",
+  "summary": {
+    "chapters": 8,
+    "verified": 0,
+    "development": 8,
+    "pending": 0,
+    "totalEncounterCards": 191,
+    "totalChapterRecords": 253,
+    "coveredChapterRecords": 253,
+    "pendingEncounterCards": 0,
+    "gaps": 12,
+    "testCases": 201,
+    "storyText": "pending",
+    "literalCardBehavior": false
+  },
+  "items": [
+    {
+      "id": "beyondTheGatesOfSleep",
+      "code": "06039",
+      "name": "梦境门外",
+      "part": "A",
+      "pair": 1,
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": false,
+        "saveReplay": true,
+        "browserAcceptance": false
+      },
+      "intentionallyPending": [
+        "literalCardBehavior",
+        "storyText",
+        "browserAcceptance"
+      ],
+      "notes": {
+        "testCoveredCodes": "4/20",
+        "uncoveredCodes": [
+          "06086",
+          "06106",
+          "06107",
+          "06108",
+          "01167",
+          "01168",
+          "06062",
+          "06087",
+          "06088",
+          "06089",
+          "06093",
+          "06094",
+          "06095",
+          "06096",
+          "06097",
+          "06109"
+        ],
+        "storyText": {
+          "status": "pending",
+          "sourceKind": "self-translated",
+          "officialChinese": false
+        },
+        "browser": {
+          "pass": false,
+          "desktop": false,
+          "mobile": false
+        },
+        "veiled": {
+          "total": 0,
+          "withStory": 0,
+          "shuffleBack": 0,
+          "missing": []
+        }
+      },
+      "inventory": {
+        "locations": 12,
+        "veiledLocations": 0,
+        "acts": 4,
+        "agendas": 1,
+        "enemies": 8,
+        "treacheries": 12,
+        "storyAssets": 1,
+        "storyFaces": 0,
+        "encounterCards": 0,
+        "setAsideCards": 41,
+        "resolutions": [
+          "noResolution",
+          "resolution1",
+          "resolution2"
+        ],
+        "encounterCodes": 20,
+        "chapterRecords": 26,
+        "chapterRecordsCovered": 26
+      },
+      "coverage": {
+        "scopeGroup": "beyondTheGatesOfSleep",
+        "encounterCode": "beyond_the_gates_of_sleep",
+        "records": 26,
+        "covered": 26,
+        "uncovered": [],
+        "pendingEncounterCodes": []
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [],
+      "approximations": [
+        "14 种梦境的选择与效果按 BeyondTheGatesOfSleep.hs:2150-2236 实现；梦境正文属 P8-T（本章只放效果声明，intro 用 dreamSelection 原文）。「从牌库找 X 卡并打出（支付费用）」近似为「进手牌 + 支付印刷费用」（引擎无搜索牌库并打出的原语）。",
+        "「漂泊者之梦：把牌组里 1 张基础弱点换成随机基础弱点」：引擎没有收藏检索接口，先记录并提示（P8 简化）。",
+        "幕 1–3「神话阶段不要从遭遇牌库抽卡」按「本章开局没有遭遇牌库」自然满足（behavior.modifyDeck 把牌库清空、全部卡放到 encounterAside）；引擎仍会执行 mythos 抽牌调用，但牌库为空时无牌可抽。",
+        "「火焰洞穴」未揭示面限制（发现七十级台阶全部线索后才能进入）走 locationRule.entryError（引擎直读）。",
+        "「辛劳的古革巨人不能进入魔幻小路」走条目 flags + behavior.hunterMove / enemyMoved 拦截（引擎没有敌人入场限制读点）。",
+        "「远古祖格鼠生成在任一魔幻森林（优先未揭示）」走条目 flags + behavior.spawnLocation（引擎没有「任意某名地点」生成器）。",
+        "「魔幻森林·祖格鼠村落：祖格鼠蜂拥敌人生成后额外加 1 张蜂拥卡」走条目 flags + behavior.enemySpawned。",
+        "「魔幻森林·迷失森林：本轮不离开则议程 +1 毁灭」用 scenarioFlags.lostWoodsPending + roundEnded/locationLeft 结算。",
+        "故事面 06057b/06058b 不建条目（Lead 口径）：谈判/击败分支用 api.cardFlip 展示正文，故事卡「加入胜利区」以 scenarioFlags.trialOf* 记录近似（0 胜利点，不影响经验）。"
+      ],
+      "testFile": "tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
+      "testCases": {
+        "passed": 26,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/BeyondTheGatesOfSleep.hs",
+          "ok": true,
+          "sha256": "e3e359034163e83f637b0c96fae519d9e35f17dc07ffc07528cd891dcec5866a",
+          "actual": "e3e359034163e83f637b0c96fae519d9e35f17dc07ffc07528cd891dcec5866a"
+        },
+        {
+          "path": "frontend/src/locales/en/theDreamEaters/scenarios/beyondTheGatesOfSleep.json",
+          "ok": true,
+          "sha256": "dd2794c801a873929084a2eb250fb940ba2f626235d9613142bf9ea22790efcb",
+          "actual": "dd2794c801a873929084a2eb250fb940ba2f626235d9613142bf9ea22790efcb"
+        }
+      ],
+      "commonSources": [],
+      "fileHashes": {
+        "index.js": "739bd4c05ed28aea611b4e0148fdc017ac505562a2d5e69884d5b3a858a7c1e6",
+        "definition.js": "3af9e6b70ba5934a5547c4d90f3f321d65f9dfadf056af7e31ad09286f86fec5",
+        "layout.js": "a9560b26ba26ef3e726b5f0e223acbe66fd0536d818a6956c67962d454cc83f0",
+        "behavior.js": "0a2c3ced30c5b20e552464ffd7dd6aed821bbc85be4fefe7f60a698929e6b96f",
+        "chaos.js": "f5e55237f1379e000ee932f609f67b4e57f9ab0a506f59c8d6e592ec0380870b"
+      },
+      "remaining": [
+        "beyondTheGatesOfSleep（近似实现）：14 种梦境的选择与效果按 BeyondTheGatesOfSleep.hs:2150-2236 实现；梦境正文属 P8-T（本章只放效果声明，intro 用 dreamSelection 原文）。「从牌库找 X 卡并打出（支付费用）」近似为「进手牌 + 支付印刷费用」（引擎无搜索牌库并打出的原语）。",
+        "beyondTheGatesOfSleep（近似实现）：「漂泊者之梦：把牌组里 1 张基础弱点换成随机基础弱点」：引擎没有收藏检索接口，先记录并提示（P8 简化）。",
+        "beyondTheGatesOfSleep（近似实现）：幕 1–3「神话阶段不要从遭遇牌库抽卡」按「本章开局没有遭遇牌库」自然满足（behavior.modifyDeck 把牌库清空、全部卡放到 encounterAside）；引擎仍会执行 mythos 抽牌调用，但牌库为空时无牌可抽。",
+        "beyondTheGatesOfSleep（近似实现）：「火焰洞穴」未揭示面限制（发现七十级台阶全部线索后才能进入）走 locationRule.entryError（引擎直读）。",
+        "beyondTheGatesOfSleep（近似实现）：「辛劳的古革巨人不能进入魔幻小路」走条目 flags + behavior.hunterMove / enemyMoved 拦截（引擎没有敌人入场限制读点）。",
+        "beyondTheGatesOfSleep（近似实现）：「远古祖格鼠生成在任一魔幻森林（优先未揭示）」走条目 flags + behavior.spawnLocation（引擎没有「任意某名地点」生成器）。",
+        "beyondTheGatesOfSleep（近似实现）：「魔幻森林·祖格鼠村落：祖格鼠蜂拥敌人生成后额外加 1 张蜂拥卡」走条目 flags + behavior.enemySpawned。",
+        "beyondTheGatesOfSleep（近似实现）：「魔幻森林·迷失森林：本轮不离开则议程 +1 毁灭」用 scenarioFlags.lostWoodsPending + roundEnded/locationLeft 结算。",
+        "beyondTheGatesOfSleep（近似实现）：故事面 06057b/06058b 不建条目（Lead 口径）：谈判/击败分支用 api.cardFlip 展示正文，故事卡「加入胜利区」以 scenarioFlags.trialOf* 记录近似（0 胜利点，不影响经验）。",
+        "beyondTheGatesOfSleep：剧情正文待 P8-T 自译（storyText pending）",
+        "beyondTheGatesOfSleep：逐卡等价核对属 P9（literalCardBehavior=false）",
+        "beyondTheGatesOfSleep：浏览器验收属 P9（browserAcceptance=false）"
+      ]
+    },
+    {
+      "id": "wakingNightmare",
+      "code": "06063",
+      "name": "清醒噩梦",
+      "part": "B",
+      "pair": 1,
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": false,
+        "saveReplay": true,
+        "browserAcceptance": false
+      },
+      "intentionallyPending": [
+        "literalCardBehavior",
+        "storyText",
+        "browserAcceptance"
+      ],
+      "notes": {
+        "testCoveredCodes": "3/16",
+        "uncoveredCodes": [
+          "06084",
+          "06101",
+          "06102",
+          "01163",
+          "01164",
+          "01165",
+          "01174",
+          "06085",
+          "06090",
+          "06098",
+          "06099",
+          "06100",
+          "06103"
+        ],
+        "storyText": {
+          "status": "pending",
+          "sourceKind": "self-translated",
+          "officialChinese": false
+        },
+        "browser": {
+          "pass": false,
+          "desktop": false,
+          "mobile": false
+        },
+        "veiled": {
+          "total": 0,
+          "withStory": 0,
+          "shuffleBack": 0,
+          "missing": []
+        }
+      },
+      "inventory": {
+        "locations": 8,
+        "veiledLocations": 0,
+        "acts": 3,
+        "agendas": 3,
+        "enemies": 5,
+        "treacheries": 11,
+        "storyAssets": 2,
+        "storyFaces": 1,
+        "encounterCards": 20,
+        "setAsideCards": 21,
+        "resolutions": [
+          "noResolution",
+          "noResolutionDefeated",
+          "resolution1",
+          "resolution2",
+          "resolution3",
+          "resolution4",
+          "resolution5"
+        ],
+        "encounterCodes": 16,
+        "chapterRecords": 21,
+        "chapterRecordsCovered": 21
+      },
+      "coverage": {
+        "scopeGroup": "wakingNightmare",
+        "encounterCode": "waking_nightmare",
+        "records": 21,
+        "covered": 21,
+        "uncovered": [],
+        "pendingEncounterCodes": []
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [
+        "「寄生地点上的伤害标记」与「封印后替换为恐惧标记」的可见面板属 P5/P9；本层只维护 tokenBag 的寄生状态与 scenarioFlags.sealedRifts。"
+      ],
+      "approximations": [
+        "06071 急救病房「每投入 1 张牌难度 +1」：引擎的检定难度在检定开始时固定，没有「投入后难度重算」读点；behavior 在 beforeCommitCard 里递增 state.skillTest.difficulty（揭示符号标记的检定会在符号窗口回读该值），无符号标记的检定可能仍按初始难度结算。",
+        "06072 实验疗法病房的反应改为「调查行动开始前询问」（引擎没有调查内的可选反应读点），本次调查结束由 behavior.afterInvestigate 清除。",
+        "06073 档案室「一次一个进行 4 次调查」按连续结算近似（引擎没有 4 次调查之间的行动窗口）。",
+        "06078 的「地点上的伤害标记」用 P3 原语 tokenBag 的 infestedLocations 承载（不在地点实例上放 damage 标记）；「伤害标记→恐惧标记」的封印在 06069 的前排能力里用清除寄生 + scenarioFlags.sealedRifts 近似。",
+        "06080 的 [fast] 自动躲避与滋生标记取消是条目 flags + 本文件接线（storyAsset scope 不能声明 free 能力）。",
+        "06081「不能攻击/不能被攻击/不能被伤害/不能被击败」是条目 flags + 本文件接到引擎的 enemyCannotAttack / enemyCannotBeAttacked / enemyDamageAllowed / enemyCanBeDefeated / investigationError 读点。",
+        "06082「在寄生地点受到伤害时取消 1 点」在 enemyDamaged 钩子里用 api.healEnemy(enemy, 1) 撤回 1 点伤害。"
+      ],
+      "testFile": "tests/tde-scenario-wakingNightmare.test.mjs",
+      "testCases": {
+        "passed": 27,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/WakingNightmare.hs",
+          "ok": true,
+          "sha256": "a3db7debb36ca1b23c3365af56338b402823f584914e3fa6ee7b76c8607a91a6",
+          "actual": "a3db7debb36ca1b23c3365af56338b402823f584914e3fa6ee7b76c8607a91a6"
+        },
+        {
+          "path": "frontend/src/locales/en/theDreamEaters/scenarios/wakingNightmare.json",
+          "ok": true,
+          "sha256": "12b61cd4713d32dc79b5ac9621e70f9f7cd2a41c78ad47bf400bd36e1c23790d",
+          "actual": "12b61cd4713d32dc79b5ac9621e70f9f7cd2a41c78ad47bf400bd36e1c23790d"
+        }
+      ],
+      "commonSources": [],
+      "fileHashes": {
+        "index.js": "e73f76b70c23c46fcd60cac0555431870b9bfbf91cc076853a93e14349e56608",
+        "definition.js": "90f4a79808c5bc444f104e178eaaa8a310abb7364a662b9a358e376b9ee8ba22",
+        "layout.js": "30e798cf5994a14383577c8f68981d62757c85d224de233c99b0df8bf6a2a13f",
+        "behavior.js": "e8bcc4716bb61167a5ecf47f53f5693481ba47af3033181869bfe1ac33edfb0e",
+        "chaos.js": "95bb3688b9477206e4b42abf56693e9ac3ae9e81873e0890d5d700ce98e7bd1d"
+      },
+      "remaining": [
+        "wakingNightmare：「寄生地点上的伤害标记」与「封印后替换为恐惧标记」的可见面板属 P5/P9；本层只维护 tokenBag 的寄生状态与 scenarioFlags.sealedRifts。",
+        "wakingNightmare（近似实现）：06071 急救病房「每投入 1 张牌难度 +1」：引擎的检定难度在检定开始时固定，没有「投入后难度重算」读点；behavior 在 beforeCommitCard 里递增 state.skillTest.difficulty（揭示符号标记的检定会在符号窗口回读该值），无符号标记的检定可能仍按初始难度结算。",
+        "wakingNightmare（近似实现）：06072 实验疗法病房的反应改为「调查行动开始前询问」（引擎没有调查内的可选反应读点），本次调查结束由 behavior.afterInvestigate 清除。",
+        "wakingNightmare（近似实现）：06073 档案室「一次一个进行 4 次调查」按连续结算近似（引擎没有 4 次调查之间的行动窗口）。",
+        "wakingNightmare（近似实现）：06078 的「地点上的伤害标记」用 P3 原语 tokenBag 的 infestedLocations 承载（不在地点实例上放 damage 标记）；「伤害标记→恐惧标记」的封印在 06069 的前排能力里用清除寄生 + scenarioFlags.sealedRifts 近似。",
+        "wakingNightmare（近似实现）：06080 的 [fast] 自动躲避与滋生标记取消是条目 flags + 本文件接线（storyAsset scope 不能声明 free 能力）。",
+        "wakingNightmare（近似实现）：06081「不能攻击/不能被攻击/不能被伤害/不能被击败」是条目 flags + 本文件接到引擎的 enemyCannotAttack / enemyCannotBeAttacked / enemyDamageAllowed / enemyCanBeDefeated / investigationError 读点。",
+        "wakingNightmare（近似实现）：06082「在寄生地点受到伤害时取消 1 点」在 enemyDamaged 钩子里用 api.healEnemy(enemy, 1) 撤回 1 点伤害。",
+        "wakingNightmare：剧情正文待 P8-T 自译（storyText pending）",
+        "wakingNightmare：逐卡等价核对属 P9（literalCardBehavior=false）",
+        "wakingNightmare：浏览器验收属 P9（browserAcceptance=false）"
+      ]
+    },
+    {
+      "id": "theSearchForKadath",
+      "code": "06119",
+      "name": "寻觅卡达斯",
+      "part": "A",
+      "pair": 2,
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": false,
+        "saveReplay": true,
+        "browserAcceptance": false
+      },
+      "intentionallyPending": [
+        "literalCardBehavior",
+        "storyText",
+        "browserAcceptance"
+      ],
+      "notes": {
+        "testCoveredCodes": "4/23",
+        "uncoveredCodes": [
+          "06086",
+          "06105",
+          "06106",
+          "06107",
+          "06108",
+          "06146",
+          "06148",
+          "06149",
+          "06150",
+          "06151",
+          "06152",
+          "06087",
+          "06088",
+          "06089",
+          "06090",
+          "06096",
+          "06097",
+          "06104",
+          "06109"
+        ],
+        "storyText": {
+          "status": "pending",
+          "sourceKind": "self-translated",
+          "officialChinese": false
+        },
+        "browser": {
+          "pass": false,
+          "desktop": false,
+          "mobile": false
+        },
+        "veiled": {
+          "total": 15,
+          "withStory": 15,
+          "shuffleBack": 0,
+          "missing": []
+        }
+      },
+      "inventory": {
+        "locations": 17,
+        "veiledLocations": 15,
+        "acts": 5,
+        "agendas": 2,
+        "enemies": 13,
+        "treacheries": 10,
+        "storyAssets": 1,
+        "storyFaces": 17,
+        "encounterCards": 26,
+        "setAsideCards": 26,
+        "resolutions": [
+          "noResolution",
+          "resolution1",
+          "resolution2"
+        ],
+        "encounterCodes": 23,
+        "chapterRecords": 53,
+        "chapterRecordsCovered": 53
+      },
+      "coverage": {
+        "scopeGroup": "theSearchForKadath",
+        "encounterCode": "the_search_for_kadath",
+        "records": 53,
+        "covered": 53,
+        "uncovered": [],
+        "pendingEncounterCodes": []
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [
+        "掩藏地点的翻面行动是引擎原生的 flipVeiled（moves.js 枚举 + dispatch.js 结算）；本章行为只通过 veiledFlipped 结算背面故事卡。",
+        "剧本参考卡（06119）没有单卡条目（reference card，无行为读点）；神迹计数走 api.markers 的通用命名计数。"
+      ],
+      "approximations": [
+        "斯凯河的「意志(2)或敏捷(2)」：引擎 locationRule.onLeave.test 只支持单一技能，改为 behavior.beforeMove 先询问技能、behavior.locationLeaveTest 再返回该技能（不再静默固定为意志）。",
+        "塞拉尼安的「进入/离开的额外费用」：无手牌时放行并记日志（卡面要求支付，但引擎没有「额外费用的合法性闸门」读点）。",
+        "黑暗夜魇在区域设置时的「保留标记与附属」：保留伤害/毁灭标记快照并在重新入场时恢复；地点/敌人附属在离场时由引擎清理，不保留。",
+        "维吉尔·格雷「离场时移出游戏」：通过 behavior.assetLeftPlay 设置 asset.removedFromGame 并写入 removedFromGame（与引擎 leaveAsset 的 removedFromGame 读点一致）。",
+        "哈祖斯-克列格的「背面故事卡把无以达愿之庙放置入场」按 api.place + takeFromSetAside 结算；地点入场不触发一次 onEnter（卡面没有「进入」强制，可接受）。",
+        "「凶星」把地图未见之城加入胜利牌区：由条目设置 pendingVictoryLocation 标志，behavior 在故事结算后写入 victoryDisplay 并移出游戏。",
+        "艾雷克-瓦达的费用减免没有内容层读点（playCost 只读玩家卡能力层），记录为 simplified（见 worker 报告）。"
+      ],
+      "testFile": "tests/tde-scenario-theSearchForKadath.test.mjs",
+      "testCases": {
+        "passed": 30,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/TheSearchForKadath.hs",
+          "ok": true,
+          "sha256": "f91dffca630a05452b12a9f878702d830601a0c6625127fdf82efe8586a19fb6",
+          "actual": "f91dffca630a05452b12a9f878702d830601a0c6625127fdf82efe8586a19fb6"
+        },
+        {
+          "path": "frontend/src/locales/en/theDreamEaters/scenarios/theSearchForKadath.json",
+          "ok": true,
+          "sha256": "dda83004366aaf36ed80fcbac74237091896725fc2d43f7038c49682aaf12672",
+          "actual": "dda83004366aaf36ed80fcbac74237091896725fc2d43f7038c49682aaf12672"
+        }
+      ],
+      "commonSources": [],
+      "fileHashes": {
+        "index.js": "a72ed331f732275a0aeadc1d2598d959cf81de3120fc221ce7305ef4d6f1946e",
+        "definition.js": "9e5caebe68a1ffd2947b71d8e05c0f66249c2ef083878ee233be6245b95c0b37",
+        "layout.js": "2d5eb515fb4c2d41e57c24aee4bc9ff00bc2cae0bd8f1aa6842db0f36f55e10c",
+        "behavior.js": "5d3e3270570a0c774caa3c705e6a64f412f5cd94f46ead0337ae43aaa812c317",
+        "chaos.js": "b92dc032ed459298f393ebc3092505bb60c17e50e87239810ab914c1426ffefa"
+      },
+      "remaining": [
+        "theSearchForKadath：掩藏地点的翻面行动是引擎原生的 flipVeiled（moves.js 枚举 + dispatch.js 结算）；本章行为只通过 veiledFlipped 结算背面故事卡。",
+        "theSearchForKadath：剧本参考卡（06119）没有单卡条目（reference card，无行为读点）；神迹计数走 api.markers 的通用命名计数。",
+        "theSearchForKadath（近似实现）：斯凯河的「意志(2)或敏捷(2)」：引擎 locationRule.onLeave.test 只支持单一技能，改为 behavior.beforeMove 先询问技能、behavior.locationLeaveTest 再返回该技能（不再静默固定为意志）。",
+        "theSearchForKadath（近似实现）：塞拉尼安的「进入/离开的额外费用」：无手牌时放行并记日志（卡面要求支付，但引擎没有「额外费用的合法性闸门」读点）。",
+        "theSearchForKadath（近似实现）：黑暗夜魇在区域设置时的「保留标记与附属」：保留伤害/毁灭标记快照并在重新入场时恢复；地点/敌人附属在离场时由引擎清理，不保留。",
+        "theSearchForKadath（近似实现）：维吉尔·格雷「离场时移出游戏」：通过 behavior.assetLeftPlay 设置 asset.removedFromGame 并写入 removedFromGame（与引擎 leaveAsset 的 removedFromGame 读点一致）。",
+        "theSearchForKadath（近似实现）：哈祖斯-克列格的「背面故事卡把无以达愿之庙放置入场」按 api.place + takeFromSetAside 结算；地点入场不触发一次 onEnter（卡面没有「进入」强制，可接受）。",
+        "theSearchForKadath（近似实现）：「凶星」把地图未见之城加入胜利牌区：由条目设置 pendingVictoryLocation 标志，behavior 在故事结算后写入 victoryDisplay 并移出游戏。",
+        "theSearchForKadath（近似实现）：艾雷克-瓦达的费用减免没有内容层读点（playCost 只读玩家卡能力层），记录为 simplified（见 worker 报告）。",
+        "theSearchForKadath：剧情正文待 P8-T 自译（storyText pending）",
+        "theSearchForKadath：逐卡等价核对属 P9（literalCardBehavior=false）",
+        "theSearchForKadath：浏览器验收属 P9（browserAcceptance=false）"
+      ]
+    },
+    {
+      "id": "aThousandShapesOfHorror",
+      "code": "06168",
+      "name": "万千骇形",
+      "part": "B",
+      "pair": 2,
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": false,
+        "saveReplay": true,
+        "browserAcceptance": false
+      },
+      "intentionallyPending": [
+        "literalCardBehavior",
+        "storyText",
+        "browserAcceptance"
+      ],
+      "notes": {
+        "testCoveredCodes": "1/18",
+        "uncoveredCodes": [
+          "01159",
+          "01160",
+          "01161",
+          "06091",
+          "06092",
+          "06169b",
+          "01162",
+          "01167",
+          "01168",
+          "01174",
+          "06098",
+          "06099",
+          "06100",
+          "06191",
+          "06192",
+          "06193",
+          "06194"
+        ],
+        "storyText": {
+          "status": "pending",
+          "sourceKind": "self-translated",
+          "officialChinese": false
+        },
+        "browser": {
+          "pass": false,
+          "desktop": false,
+          "mobile": false
+        },
+        "veiled": {
+          "total": 0,
+          "withStory": 0,
+          "shuffleBack": 0,
+          "missing": []
+        }
+      },
+      "inventory": {
+        "locations": 15,
+        "veiledLocations": 0,
+        "acts": 2,
+        "agendas": 3,
+        "enemies": 6,
+        "treacheries": 12,
+        "storyAssets": 1,
+        "storyFaces": 0,
+        "encounterCards": 34,
+        "setAsideCards": 14,
+        "resolutions": [
+          "noResolution",
+          "resolution1",
+          "resolution2",
+          "resolution3",
+          "resolution4"
+        ],
+        "encounterCodes": 18,
+        "chapterRecords": 28,
+        "chapterRecordsCovered": 28
+      },
+      "coverage": {
+        "scopeGroup": "aThousandShapesOfHorror",
+        "encounterCode": "a_thousand_shapes_of_horror",
+        "records": 28,
+        "covered": 28,
+        "uncovered": [],
+        "pendingEncounterCodes": []
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [
+        "06193 的「另一张卡进入你的威胁区域后弃 1 张手牌」没有引擎读点（记 simplified）。",
+        "06168 剧本参考卡的混乱符号「再揭示一个标记」（cultist）没有剧本级额外揭示原语（chaos.js 记 simplified）。"
+      ],
+      "approximations": [
+        "神秘阶梯的「洗混位置使无法辨认」用 verticalIndex/connections 重排表达（地点卡号不变，不重建地点实体）；Endless Descent 的重排流程在 behavior.resolveEndlessDescent。",
+        "议程 06171 的「不可名状之物失去冷漠/获得庞大」用章节内容层直接落实例字段（引擎无 mass 字段的 api），在每回合开始与议程揭示后幂等执行。",
+        "06224 银钥匙的「取消 1 点恐惧」走 harmDealt 窗口；「在你将要受到恐惧时」与参考实现的取消时机等价。",
+        "06194 阁楼的秘密「放在密谋牌库旁」用 scenarioFlags.agendaAside 纯数据表达（TDE 共享层无 agendaAside 区）。"
+      ],
+      "testFile": "tests/tde-scenario-aThousandShapesOfHorror.test.mjs",
+      "testCases": {
+        "passed": 13,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/AThousandShapesOfHorror.hs",
+          "ok": true,
+          "sha256": "aa2147cce5358199daca1201be9db1b97891e92490bf780d9adb112c7be9ea80",
+          "actual": "aa2147cce5358199daca1201be9db1b97891e92490bf780d9adb112c7be9ea80"
+        },
+        {
+          "path": "frontend/src/locales/en/theDreamEaters/scenarios/aThousandShapesOfHorror.json",
+          "ok": true,
+          "sha256": "6855471424e13bdc9cc857df9854130b14ce9e7722ebd4719ab50b606e4fa6d4",
+          "actual": "6855471424e13bdc9cc857df9854130b14ce9e7722ebd4719ab50b606e4fa6d4"
+        }
+      ],
+      "commonSources": [],
+      "fileHashes": {
+        "index.js": "786bb59da8758764e8d489427beb7baae65fca64163d848a04e25851440fc567",
+        "definition.js": "a6436191721eb4bc0ab822fd4e2fb0667e41a74cd804892eeabe6c9ba477c78c",
+        "layout.js": "bf23f43c06560f6e8b621d7ac2112125c04602ac670ab58b019669f00683f2a6",
+        "behavior.js": "ec109a9068a6af44160245c8d77d5ed808987772c4ac3eb58b46e08114ee06e8",
+        "chaos.js": "35f51969e971aa8c79365d99ed868da0d1cc782d8b66a87a29bcb04ac87274f2"
+      },
+      "remaining": [
+        "aThousandShapesOfHorror：06193 的「另一张卡进入你的威胁区域后弃 1 张手牌」没有引擎读点（记 simplified）。",
+        "aThousandShapesOfHorror：06168 剧本参考卡的混乱符号「再揭示一个标记」（cultist）没有剧本级额外揭示原语（chaos.js 记 simplified）。",
+        "aThousandShapesOfHorror（近似实现）：神秘阶梯的「洗混位置使无法辨认」用 verticalIndex/connections 重排表达（地点卡号不变，不重建地点实体）；Endless Descent 的重排流程在 behavior.resolveEndlessDescent。",
+        "aThousandShapesOfHorror（近似实现）：议程 06171 的「不可名状之物失去冷漠/获得庞大」用章节内容层直接落实例字段（引擎无 mass 字段的 api），在每回合开始与议程揭示后幂等执行。",
+        "aThousandShapesOfHorror（近似实现）：06224 银钥匙的「取消 1 点恐惧」走 harmDealt 窗口；「在你将要受到恐惧时」与参考实现的取消时机等价。",
+        "aThousandShapesOfHorror（近似实现）：06194 阁楼的秘密「放在密谋牌库旁」用 scenarioFlags.agendaAside 纯数据表达（TDE 共享层无 agendaAside 区）。",
+        "aThousandShapesOfHorror：剧情正文待 P8-T 自译（storyText pending）",
+        "aThousandShapesOfHorror：逐卡等价核对属 P9（literalCardBehavior=false）",
+        "aThousandShapesOfHorror：浏览器验收属 P9（browserAcceptance=false）"
+      ]
+    },
+    {
+      "id": "darkSideOfTheMoon",
+      "code": "06206",
+      "name": "月之暗面",
+      "part": "A",
+      "pair": 3,
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": false,
+        "saveReplay": true,
+        "browserAcceptance": false
+      },
+      "intentionallyPending": [
+        "literalCardBehavior",
+        "storyText",
+        "browserAcceptance"
+      ],
+      "notes": {
+        "testCoveredCodes": "3/14",
+        "uncoveredCodes": [
+          "06105",
+          "06226",
+          "06227",
+          "06229",
+          "01166",
+          "06093",
+          "06094",
+          "06095",
+          "06104",
+          "06231",
+          "06233"
+        ],
+        "storyText": {
+          "status": "pending",
+          "sourceKind": "self-translated",
+          "officialChinese": false
+        },
+        "browser": {
+          "pass": false,
+          "desktop": false,
+          "mobile": false
+        },
+        "veiled": {
+          "total": 0,
+          "withStory": 0,
+          "shuffleBack": 0,
+          "missing": []
+        }
+      },
+      "inventory": {
+        "locations": 10,
+        "veiledLocations": 0,
+        "acts": 4,
+        "agendas": 3,
+        "enemies": 5,
+        "treacheries": 9,
+        "storyAssets": 2,
+        "storyFaces": 0,
+        "encounterCards": 28,
+        "setAsideCards": 10,
+        "resolutions": [
+          "noResolution",
+          "resolution1"
+        ],
+        "encounterCodes": 14,
+        "chapterRecords": 29,
+        "chapterRecordsCovered": 29
+      },
+      "coverage": {
+        "scopeGroup": "darkSideOfTheMoon",
+        "encounterCode": "dark_side_of_the_moon",
+        "records": 29,
+        "covered": 29,
+        "uncovered": [],
+        "pendingEncounterCodes": []
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [
+        "06214b「下船」的翻面结算由 behavior 的 offTheGalley 流程完成（按翻面瞬间线索数二选一）。"
+      ],
+      "approximations": [
+        "被俘调查员的判定读战役记录 wasCaptured 的调查员 id 列表（campaign.records.wasCaptured），按 id/code/座位号匹配；记录 schema 由战役层（w-p8-g）定义。",
+        "月蜥的「只能进入[[洞穴]]地点」没有引擎读点：behavior.hunterMove 在洞穴子图上寻路，效果移动（api.moveEnemy）不拦截（条目 note 已记 simplified）。",
+        "月之拜亚基「忽略警报 ≤2 的调查员」用 behavior.hunterMove 过滤目标 + behavior.canEngageEnemy 拒绝交战实现。",
+        "06224 维吉尔·格雷的「警报等级提高后」反应等待 window.afterAlarmRaised 原语（primitive-requests/w-p8-c-alarm-level-window.json）。"
+      ],
+      "testFile": "tests/tde-scenario-darkSideOfTheMoon.test.mjs",
+      "testCases": {
+        "passed": 15,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/DarkSideOfTheMoon.hs",
+          "ok": true,
+          "sha256": "2e53d040c0dcedac3d2c209ba4f2b7a3372dc4bbfcdcbb1373857d8a4457ca98",
+          "actual": "2e53d040c0dcedac3d2c209ba4f2b7a3372dc4bbfcdcbb1373857d8a4457ca98"
+        },
+        {
+          "path": "frontend/src/locales/en/theDreamEaters/scenarios/darkSideOfTheMoon.json",
+          "ok": true,
+          "sha256": "569e26de85fb38f2256fa9eb9fea41718db7c9b5707ec0a83f8b6406b323b9c7",
+          "actual": "569e26de85fb38f2256fa9eb9fea41718db7c9b5707ec0a83f8b6406b323b9c7"
+        }
+      ],
+      "commonSources": [],
+      "fileHashes": {
+        "index.js": "1bd9a7486a62a8ff5dc16e0870902e7951a36bc78c266f6530eb1963f0e0c7f1",
+        "definition.js": "d4674f103f8888478986cdfdbc7fe1a1ea1a8de8b995ac28e90813f0146f240b",
+        "layout.js": "e9452534c06387308e1eb2bd47a1b812b4a7fa27585fbc9a31d4f78ad431ed5d",
+        "behavior.js": "6bd151b9ac8373f89bf882ea604ce041eee7c5fb09c3118a998066b7ae743bb9",
+        "chaos.js": "a44c0c17413873d17ffbd73bb4b57bb695e72f4e2725db6d9ed5ca71876c51ac"
+      },
+      "remaining": [
+        "darkSideOfTheMoon：06214b「下船」的翻面结算由 behavior 的 offTheGalley 流程完成（按翻面瞬间线索数二选一）。",
+        "darkSideOfTheMoon（近似实现）：被俘调查员的判定读战役记录 wasCaptured 的调查员 id 列表（campaign.records.wasCaptured），按 id/code/座位号匹配；记录 schema 由战役层（w-p8-g）定义。",
+        "darkSideOfTheMoon（近似实现）：月蜥的「只能进入[[洞穴]]地点」没有引擎读点：behavior.hunterMove 在洞穴子图上寻路，效果移动（api.moveEnemy）不拦截（条目 note 已记 simplified）。",
+        "darkSideOfTheMoon（近似实现）：月之拜亚基「忽略警报 ≤2 的调查员」用 behavior.hunterMove 过滤目标 + behavior.canEngageEnemy 拒绝交战实现。",
+        "darkSideOfTheMoon（近似实现）：06224 维吉尔·格雷的「警报等级提高后」反应等待 window.afterAlarmRaised 原语（primitive-requests/w-p8-c-alarm-level-window.json）。",
+        "darkSideOfTheMoon：剧情正文待 P8-T 自译（storyText pending）",
+        "darkSideOfTheMoon：逐卡等价核对属 P9（literalCardBehavior=false）",
+        "darkSideOfTheMoon：浏览器验收属 P9（browserAcceptance=false）"
+      ]
+    },
+    {
+      "id": "pointOfNoReturn",
+      "code": "06247",
+      "name": "无归之地",
+      "part": "B",
+      "pair": 3,
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": false,
+        "saveReplay": true,
+        "browserAcceptance": false
+      },
+      "intentionallyPending": [
+        "literalCardBehavior",
+        "storyText",
+        "browserAcceptance"
+      ],
+      "notes": {
+        "testCoveredCodes": "5/23",
+        "uncoveredCodes": [
+          "01160",
+          "01161",
+          "06091",
+          "06092",
+          "01172",
+          "06084",
+          "06271",
+          "06273",
+          "01162",
+          "01163",
+          "01164",
+          "01165",
+          "01166",
+          "06090",
+          "01173",
+          "06085",
+          "06272",
+          "06274"
+        ],
+        "storyText": {
+          "status": "pending",
+          "sourceKind": "self-translated",
+          "officialChinese": false
+        },
+        "browser": {
+          "pass": false,
+          "desktop": false,
+          "mobile": false
+        },
+        "veiled": {
+          "total": 8,
+          "withStory": 8,
+          "shuffleBack": 0,
+          "missing": []
+        }
+      },
+      "inventory": {
+        "locations": 13,
+        "veiledLocations": 8,
+        "acts": 3,
+        "agendas": 2,
+        "enemies": 9,
+        "treacheries": 14,
+        "storyAssets": 1,
+        "storyFaces": 12,
+        "encounterCards": 30,
+        "setAsideCards": 28,
+        "resolutions": [
+          "noResolution",
+          "resolution1",
+          "resolution2"
+        ],
+        "encounterCodes": 23,
+        "chapterRecords": 37,
+        "chapterRecordsCovered": 37
+      },
+      "coverage": {
+        "scopeGroup": "pointOfNoReturn",
+        "encounterCode": "point_of_no_return",
+        "records": 37,
+        "covered": 37,
+        "uncovered": [],
+        "pendingEncounterCodes": []
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [
+        "「查看遭遇牌库顶并任意顺序放回」没有 peek/排序原语：探查山谷按「弃掉至多一半」近似。",
+        "「把敌人正面朝下附属到理查德·皮克曼」没有附属敌人到支援的状态形状：用 scenarioFlags 计数 + removeEnemyFromGame 近似。",
+        "「打乱各张漆黑之海的位置」没有地点位置/标签概念：只做线索平均分配与重置可翻面。"
+      ],
+      "approximations": [
+        "8 张掩藏地点翻面后是否洗回遭遇牌堆：en locale rules 与参考实现都没有「洗回」规则（翻面只读背面故事）；behavior.veiledFlipped 支持 `location.shuffleBack === true` 时调用 api.veiled.shuffleBack，但 definition 不声明 shuffleBack，等 Lead 最终裁决（任务书曾要求洗回）。",
+        "「桥梁进度」Steps of the Bridge 存 campaign.records.stepsOfTheBridge（number）；剧本参考卡伤害存 api.markers 的 reference 计数。",
+        "「怪物围困」翻回正面：在 agendaWouldAdvance 里结算效果、清空在场毁灭（api.clearDoom）并取消推进；Distortion ≥5 时改为结束于 R2。",
+        "食尸鬼平原的「[[古革巨人]]敌人不能进入」通过 behavior.enemyMoved 在移动后改道（引擎没有敌人进入禁止读点）；生成时用 spawnLocation 改到古革巨人之城。",
+        "古革哨兵「重整后」的强制：引擎无 ready 窗口，用条目 enemyScript.onRoundEnd 记状态 + onEnemyPhaseStart 对比（见条目 06267）。",
+        "卡达斯（False Awakening）放在密谋牌库旁的 1 点毁灭用 api.addDoom 计入在场毁灭（离场/清空口径有偏差）。"
+      ],
+      "testFile": "tests/tde-scenario-pointOfNoReturn.test.mjs",
+      "testCases": {
+        "passed": 37,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/PointOfNoReturn.hs",
+          "ok": true,
+          "sha256": "b85052544b9595df6cddedf0df72155f8d8c9a99e75b7495e6bbc27740e08501",
+          "actual": "b85052544b9595df6cddedf0df72155f8d8c9a99e75b7495e6bbc27740e08501"
+        },
+        {
+          "path": "frontend/src/locales/en/theDreamEaters/scenarios/pointOfNoReturn.json",
+          "ok": true,
+          "sha256": "7975909f2fb9393499a9ea4236f9d2b9f01847ee6a183f513b374f993f0fb8ea",
+          "actual": "7975909f2fb9393499a9ea4236f9d2b9f01847ee6a183f513b374f993f0fb8ea"
+        }
+      ],
+      "commonSources": [],
+      "fileHashes": {
+        "index.js": "822239c0a3a1e4e34d60b63687fc82dcc5254becd2927a7074fe67c913e5f7da",
+        "definition.js": "ff9230064ecdbdae90346a13a3ae34db7462d707650f68bdac96d21be875f531",
+        "layout.js": "a986d7c61ad256e569c0a2ab8a390b86660c526d5bc2bb49acff633fd9b72154",
+        "behavior.js": "652aca628d216dd8fefe52808681ee822d9fcfb6cdbec5ad71c125e6fb4b5b31",
+        "chaos.js": "ae14cd3771ceffab9c4513836af3bdf67ab8e9015a698df510d67635b6006497"
+      },
+      "remaining": [
+        "pointOfNoReturn：「查看遭遇牌库顶并任意顺序放回」没有 peek/排序原语：探查山谷按「弃掉至多一半」近似。",
+        "pointOfNoReturn：「把敌人正面朝下附属到理查德·皮克曼」没有附属敌人到支援的状态形状：用 scenarioFlags 计数 + removeEnemyFromGame 近似。",
+        "pointOfNoReturn：「打乱各张漆黑之海的位置」没有地点位置/标签概念：只做线索平均分配与重置可翻面。",
+        "pointOfNoReturn（近似实现）：8 张掩藏地点翻面后是否洗回遭遇牌堆：en locale rules 与参考实现都没有「洗回」规则（翻面只读背面故事）；behavior.veiledFlipped 支持 `location.shuffleBack === true` 时调用 api.veiled.shuffleBack，但 definition 不声明 shuffleBack，等 Lead 最终裁决（任务书曾要求洗回）。",
+        "pointOfNoReturn（近似实现）：「桥梁进度」Steps of the Bridge 存 campaign.records.stepsOfTheBridge（number）；剧本参考卡伤害存 api.markers 的 reference 计数。",
+        "pointOfNoReturn（近似实现）：「怪物围困」翻回正面：在 agendaWouldAdvance 里结算效果、清空在场毁灭（api.clearDoom）并取消推进；Distortion ≥5 时改为结束于 R2。",
+        "pointOfNoReturn（近似实现）：食尸鬼平原的「[[古革巨人]]敌人不能进入」通过 behavior.enemyMoved 在移动后改道（引擎没有敌人进入禁止读点）；生成时用 spawnLocation 改到古革巨人之城。",
+        "pointOfNoReturn（近似实现）：古革哨兵「重整后」的强制：引擎无 ready 窗口，用条目 enemyScript.onRoundEnd 记状态 + onEnemyPhaseStart 对比（见条目 06267）。",
+        "pointOfNoReturn（近似实现）：卡达斯（False Awakening）放在密谋牌库旁的 1 点毁灭用 api.addDoom 计入在场毁灭（离场/清空口径有偏差）。",
+        "pointOfNoReturn：剧情正文待 P8-T 自译（storyText pending）",
+        "pointOfNoReturn：逐卡等价核对属 P9（literalCardBehavior=false）",
+        "pointOfNoReturn：浏览器验收属 P9（browserAcceptance=false）"
+      ]
+    },
+    {
+      "id": "whereTheGodsDwell",
+      "code": "06286",
+      "name": "神居之所",
+      "part": "A",
+      "pair": 4,
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": false,
+        "saveReplay": true,
+        "browserAcceptance": false
+      },
+      "intentionallyPending": [
+        "literalCardBehavior",
+        "storyText",
+        "browserAcceptance"
+      ],
+      "notes": {
+        "testCoveredCodes": "2/28",
+        "uncoveredCodes": [
+          "01169",
+          "01170",
+          "06312",
+          "06306",
+          "06307",
+          "06308",
+          "06309",
+          "06310",
+          "06086",
+          "01171",
+          "06087",
+          "06088",
+          "06089",
+          "06090",
+          "06093",
+          "06094",
+          "06095",
+          "06319",
+          "06320",
+          "06321",
+          "06322",
+          "06314",
+          "06315",
+          "06316",
+          "06317",
+          "06318"
+        ],
+        "storyText": {
+          "status": "pending",
+          "sourceKind": "self-translated",
+          "officialChinese": false
+        },
+        "browser": {
+          "pass": false,
+          "desktop": false,
+          "mobile": false
+        },
+        "veiled": {
+          "total": 0,
+          "withStory": 0,
+          "shuffleBack": 0,
+          "missing": []
+        }
+      },
+      "inventory": {
+        "locations": 11,
+        "veiledLocations": 0,
+        "acts": 5,
+        "agendas": 3,
+        "enemies": 11,
+        "treacheries": 17,
+        "storyAssets": 0,
+        "storyFaces": 0,
+        "encounterCards": 27,
+        "setAsideCards": 19,
+        "resolutions": [
+          "noResolution",
+          "resolution1",
+          "resolution2",
+          "resolution3",
+          "resolution4",
+          "resolution5"
+        ],
+        "encounterCodes": 28,
+        "chapterRecords": 37,
+        "chapterRecordsCovered": 37
+      },
+      "coverage": {
+        "scopeGroup": "whereTheGodsDwell",
+        "encounterCode": "where_the_gods_dwell",
+        "records": 37,
+        "covered": 37,
+        "uncovered": [],
+        "pendingEncounterCodes": []
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [
+        "06306–06310「这张卡牌在你手牌中且未揭示时，如果你提到它，则你发疯」是桌面口头约定，没有可机械化读点。",
+        "Hidden 敌人（奈亚拉托提普 5 形态）的通用「手牌中攻击/躲避」入口被 canFightHidden/canEvadeHidden 关闭：参考实现只允许通过塔/幕/行动揭示并结算，不存在通用攻击。",
+        "真形合成后的关键词由 definition 的 Enemy 数据读取（Hunter/Alert/Massive/Retaliate）；「获得全部关键词」不含非关键词能力（如反击/警戒之外的关键词未被印刷在 5 形态上）。"
+      ],
+      "approximations": [
+        "「失去所有线索」用 api.spendClues 近似（引擎没有「失去线索」原语），可能触发「花费线索」类反应；涉及 06292 背面、06293 背面两处。",
+        "手牌中的奈亚拉托提普复制品「攻击你」按印刷伤害/恐惧直接结算（没有敌人实例，攻击修正/敌人攻击反应窗口缺失）；涉及议程背面、万千化身、塔行动失败三处。",
+        "6 座被遗忘的高塔的方向（北/东/南/西）记在 scenarioFlags.towerCompass，用于「混沌低语 × 塔」匹配；静态 UI 布局给 6 个固定槽位，运行时不做真正的地图重排（引擎 layout 为静态数据）。",
+        "「击败不可描述的高阶祭司」的幕 2 [action] 用 api.damageEnemy 打满生命表达「直接击败」（会触发受伤类窗口）。",
+        "结局 1/2 之后的去向选择（醒来/留在幻梦境/进入地下世界）在本次冒险内直接写战役记录与 scenarioFlags，战役流程节点由战役层（P8-7）承接；冒险结果键仍记为 resolution1/resolution2。",
+        "「伦道夫·卡特（专家入梦者）从牌组移除」直接改 inv.deck 与 campaign.investigators[].deck（战役内持续）。",
+        "「查看遭遇牌库顶 3 张并抽取其中的隐私卡」用 api.discardEncounterTop + 取回弃牌堆隐私卡近似，「查看」不显示给玩家单独的排序窗口。",
+        "冷原（06295）的「无人地点生成替换」只在 engine 未指定生成地点（fallbackLoc 为空）且场上没有无人地点时生效；引擎没有「本次生成目标是无人地点」的显式参数。"
+      ],
+      "testFile": "tests/tde-scenario-whereTheGodsDwell.test.mjs",
+      "testCases": {
+        "passed": 20,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/WhereTheGodsDwell.hs",
+          "ok": true,
+          "sha256": "1db6b0b9c570ea4529c002c01471415d7a3781cbb9240f5ad091dce01c63c136",
+          "actual": "1db6b0b9c570ea4529c002c01471415d7a3781cbb9240f5ad091dce01c63c136"
+        },
+        {
+          "path": "frontend/src/locales/en/theDreamEaters/scenarios/whereTheGodsDwell.json",
+          "ok": true,
+          "sha256": "b1243193c56f4cdc223795c4a22cd04ed970d1733d0c110887bf46ad1e448766",
+          "actual": "b1243193c56f4cdc223795c4a22cd04ed970d1733d0c110887bf46ad1e448766"
+        }
+      ],
+      "commonSources": [],
+      "fileHashes": {
+        "index.js": "22be6f45e384a68bbb553e5ac6884d27232ade5f9ee90764be61997b517e4881",
+        "definition.js": "ef09e906f9305d6e95f41da4c3cc8b943cc24e145e08ed54e9b9742a95ec0d0c",
+        "layout.js": "0c33a62b55bfa60df80b4974bb79470cff8bad89e2be07b480846aa28718ac54",
+        "behavior.js": "e76799ef94a4a386e4ee09f9d306af8911b5ba1e216f37f0ab45de96c894cb63",
+        "chaos.js": "b7ff1754c1d3df25ac1c79c32780767ab7789d22e705b921904288241f40097c"
+      },
+      "remaining": [
+        "whereTheGodsDwell：06306–06310「这张卡牌在你手牌中且未揭示时，如果你提到它，则你发疯」是桌面口头约定，没有可机械化读点。",
+        "whereTheGodsDwell：Hidden 敌人（奈亚拉托提普 5 形态）的通用「手牌中攻击/躲避」入口被 canFightHidden/canEvadeHidden 关闭：参考实现只允许通过塔/幕/行动揭示并结算，不存在通用攻击。",
+        "whereTheGodsDwell：真形合成后的关键词由 definition 的 Enemy 数据读取（Hunter/Alert/Massive/Retaliate）；「获得全部关键词」不含非关键词能力（如反击/警戒之外的关键词未被印刷在 5 形态上）。",
+        "whereTheGodsDwell（近似实现）：「失去所有线索」用 api.spendClues 近似（引擎没有「失去线索」原语），可能触发「花费线索」类反应；涉及 06292 背面、06293 背面两处。",
+        "whereTheGodsDwell（近似实现）：手牌中的奈亚拉托提普复制品「攻击你」按印刷伤害/恐惧直接结算（没有敌人实例，攻击修正/敌人攻击反应窗口缺失）；涉及议程背面、万千化身、塔行动失败三处。",
+        "whereTheGodsDwell（近似实现）：6 座被遗忘的高塔的方向（北/东/南/西）记在 scenarioFlags.towerCompass，用于「混沌低语 × 塔」匹配；静态 UI 布局给 6 个固定槽位，运行时不做真正的地图重排（引擎 layout 为静态数据）。",
+        "whereTheGodsDwell（近似实现）：「击败不可描述的高阶祭司」的幕 2 [action] 用 api.damageEnemy 打满生命表达「直接击败」（会触发受伤类窗口）。",
+        "whereTheGodsDwell（近似实现）：结局 1/2 之后的去向选择（醒来/留在幻梦境/进入地下世界）在本次冒险内直接写战役记录与 scenarioFlags，战役流程节点由战役层（P8-7）承接；冒险结果键仍记为 resolution1/resolution2。",
+        "whereTheGodsDwell（近似实现）：「伦道夫·卡特（专家入梦者）从牌组移除」直接改 inv.deck 与 campaign.investigators[].deck（战役内持续）。",
+        "whereTheGodsDwell（近似实现）：「查看遭遇牌库顶 3 张并抽取其中的隐私卡」用 api.discardEncounterTop + 取回弃牌堆隐私卡近似，「查看」不显示给玩家单独的排序窗口。",
+        "whereTheGodsDwell（近似实现）：冷原（06295）的「无人地点生成替换」只在 engine 未指定生成地点（fallbackLoc 为空）且场上没有无人地点时生效；引擎没有「本次生成目标是无人地点」的显式参数。",
+        "whereTheGodsDwell：剧情正文待 P8-T 自译（storyText pending）",
+        "whereTheGodsDwell：逐卡等价核对属 P9（literalCardBehavior=false）",
+        "whereTheGodsDwell：浏览器验收属 P9（browserAcceptance=false）"
+      ]
+    },
+    {
+      "id": "weaverOfTheCosmos",
+      "code": "06333",
+      "name": "编织宇宙",
+      "part": "B",
+      "pair": 4,
+      "status": "development",
+      "checks": {
+        "sourceLocked": true,
+        "identityRegistered": true,
+        "setupAndZones": true,
+        "actsAndAgendas": true,
+        "locationsAndConnections": true,
+        "encounterBehaviors": true,
+        "literalCardBehavior": false,
+        "chaosEffects": true,
+        "resolutionsAndRecords": true,
+        "storyText": false,
+        "saveReplay": true,
+        "browserAcceptance": false
+      },
+      "intentionallyPending": [
+        "literalCardBehavior",
+        "storyText",
+        "browserAcceptance"
+      ],
+      "notes": {
+        "testCoveredCodes": "9/17",
+        "uncoveredCodes": [
+          "06101",
+          "06348",
+          "06349",
+          "06350",
+          "01166",
+          "01167",
+          "01168",
+          "06352"
+        ],
+        "storyText": {
+          "status": "pending",
+          "sourceKind": "self-translated",
+          "officialChinese": false
+        },
+        "browser": {
+          "pass": false,
+          "desktop": false,
+          "mobile": false
+        },
+        "veiled": {
+          "total": 0,
+          "withStory": 0,
+          "shuffleBack": 0,
+          "missing": []
+        }
+      },
+      "inventory": {
+        "locations": 11,
+        "veiledLocations": 0,
+        "acts": 3,
+        "agendas": 3,
+        "enemies": 9,
+        "treacheries": 8,
+        "storyAssets": 0,
+        "storyFaces": 0,
+        "encounterCards": 26,
+        "setAsideCards": 14,
+        "resolutions": [
+          "noResolution",
+          "resolution1",
+          "resolution2",
+          "resolution3",
+          "resolution4",
+          "resolution5"
+        ],
+        "encounterCodes": 17,
+        "chapterRecords": 22,
+        "chapterRecordsCovered": 22
+      },
+      "coverage": {
+        "scopeGroup": "weaverOfTheCosmos",
+        "encounterCode": "weaver_of_the_cosmos",
+        "records": 22,
+        "covered": 22,
+        "uncovered": [],
+        "pendingEncounterCodes": []
+      },
+      "pendingEncounterCodes": [],
+      "gaps": [],
+      "approximations": [
+        "阿特拉克·纳克亚的中心牌面（Global 位置）没有实体：幕 1 背面把四条腿放到 11/5/9/7，幕 2 推进时直接在毁灭最多的地点生成 06346（翻面）。",
+        "「旋转阿特拉克·纳克亚」= 沿 8 段巨网环（RING 顺序）把四条腿（幕 2）或 06346（幕 3）各移动 1 个地点；中心牌的 45° 视觉旋转以 scenarioFlags.atlachRotation 记录。",
+        "15 张印刷巨网在 definition 落地为 11 个实例（4 个初始 + 7 个展开）；4 张未用副本不建实例，抽取顺序按固定表（见 definition 注释）。",
+        "「Steps of the Bridge」记录数的开局毁灭在 afterDeckSetup 直接写在地点实例上（引擎没有 setup 阶段的 doom API 参数）。",
+        "遭遇组 Ancient Evils / Chilling Cold 是跨循环共享组（TDE 包内重印），遭遇定义取 cards-data 中对应 encounterCode 的记录。",
+        "[[cultist]] 的「再揭示一个标记」由引擎的额外标记语义承担；本章 chaos.afterTest 只结算「失败且所在地点有[[古神]]敌人 → 其攻击」。"
+      ],
+      "testFile": "tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+      "testCases": {
+        "passed": 33,
+        "failed": 0
+      },
+      "sources": [
+        {
+          "path": "backend/arkham-api/library/Arkham/Scenario/Scenarios/TheDreamEaters/WeaverOfTheCosmos.hs",
+          "ok": true,
+          "sha256": "3bfe210c5272b5bd54d6b907b630259e99f7a57f1cec6e9565e92af6a45ab5ac",
+          "actual": "3bfe210c5272b5bd54d6b907b630259e99f7a57f1cec6e9565e92af6a45ab5ac"
+        },
+        {
+          "path": "frontend/src/locales/en/theDreamEaters/scenarios/weaverOfTheCosmos.json",
+          "ok": true,
+          "sha256": "17e58808248a87d482cd1b65cc4be365b851df5171a1b05f79f7396e58e113fd",
+          "actual": "17e58808248a87d482cd1b65cc4be365b851df5171a1b05f79f7396e58e113fd"
+        }
+      ],
+      "commonSources": [],
+      "fileHashes": {
+        "index.js": "446dff6e18022fe1d5062b8ae9b697c00d9a16d89fd92ef6ac070e9f8787766e",
+        "definition.js": "0fea9922112fbe1a1a2705ead33de23b117a1a0666ec4f53501cd7aeb3efe630",
+        "layout.js": "861b6a3f6200f5f48a20470dad36a32980bdeaa2b0b2df714dfa3ae213a6ca9c",
+        "behavior.js": "9610bb0c130fa9db223c1b4fb102ce3f71bfffc9cac942ef19353c3c5b229958",
+        "chaos.js": "fc2da52fc08e9bb8fdb48d27e5efe5669898daa02b9afdef85cecfc6fde301ce"
+      },
+      "remaining": [
+        "weaverOfTheCosmos（近似实现）：阿特拉克·纳克亚的中心牌面（Global 位置）没有实体：幕 1 背面把四条腿放到 11/5/9/7，幕 2 推进时直接在毁灭最多的地点生成 06346（翻面）。",
+        "weaverOfTheCosmos（近似实现）：「旋转阿特拉克·纳克亚」= 沿 8 段巨网环（RING 顺序）把四条腿（幕 2）或 06346（幕 3）各移动 1 个地点；中心牌的 45° 视觉旋转以 scenarioFlags.atlachRotation 记录。",
+        "weaverOfTheCosmos（近似实现）：15 张印刷巨网在 definition 落地为 11 个实例（4 个初始 + 7 个展开）；4 张未用副本不建实例，抽取顺序按固定表（见 definition 注释）。",
+        "weaverOfTheCosmos（近似实现）：「Steps of the Bridge」记录数的开局毁灭在 afterDeckSetup 直接写在地点实例上（引擎没有 setup 阶段的 doom API 参数）。",
+        "weaverOfTheCosmos（近似实现）：遭遇组 Ancient Evils / Chilling Cold 是跨循环共享组（TDE 包内重印），遭遇定义取 cards-data 中对应 encounterCode 的记录。",
+        "weaverOfTheCosmos（近似实现）：[[cultist]] 的「再揭示一个标记」由引擎的额外标记语义承担；本章 chaos.afterTest 只结算「失败且所在地点有[[古神]]敌人 → 其攻击」。",
+        "weaverOfTheCosmos：剧情正文待 P8-T 自译（storyText pending）",
+        "weaverOfTheCosmos：逐卡等价核对属 P9（literalCardBehavior=false）",
+        "weaverOfTheCosmos：浏览器验收属 P9（browserAcceptance=false）"
+      ]
+    }
+  ],
+  "remaining": [
+    "beyondTheGatesOfSleep（近似实现）：14 种梦境的选择与效果按 BeyondTheGatesOfSleep.hs:2150-2236 实现；梦境正文属 P8-T（本章只放效果声明，intro 用 dreamSelection 原文）。「从牌库找 X 卡并打出（支付费用）」近似为「进手牌 + 支付印刷费用」（引擎无搜索牌库并打出的原语）。",
+    "beyondTheGatesOfSleep（近似实现）：「漂泊者之梦：把牌组里 1 张基础弱点换成随机基础弱点」：引擎没有收藏检索接口，先记录并提示（P8 简化）。",
+    "beyondTheGatesOfSleep（近似实现）：幕 1–3「神话阶段不要从遭遇牌库抽卡」按「本章开局没有遭遇牌库」自然满足（behavior.modifyDeck 把牌库清空、全部卡放到 encounterAside）；引擎仍会执行 mythos 抽牌调用，但牌库为空时无牌可抽。",
+    "beyondTheGatesOfSleep（近似实现）：「火焰洞穴」未揭示面限制（发现七十级台阶全部线索后才能进入）走 locationRule.entryError（引擎直读）。",
+    "beyondTheGatesOfSleep（近似实现）：「辛劳的古革巨人不能进入魔幻小路」走条目 flags + behavior.hunterMove / enemyMoved 拦截（引擎没有敌人入场限制读点）。",
+    "beyondTheGatesOfSleep（近似实现）：「远古祖格鼠生成在任一魔幻森林（优先未揭示）」走条目 flags + behavior.spawnLocation（引擎没有「任意某名地点」生成器）。",
+    "beyondTheGatesOfSleep（近似实现）：「魔幻森林·祖格鼠村落：祖格鼠蜂拥敌人生成后额外加 1 张蜂拥卡」走条目 flags + behavior.enemySpawned。",
+    "beyondTheGatesOfSleep（近似实现）：「魔幻森林·迷失森林：本轮不离开则议程 +1 毁灭」用 scenarioFlags.lostWoodsPending + roundEnded/locationLeft 结算。",
+    "beyondTheGatesOfSleep（近似实现）：故事面 06057b/06058b 不建条目（Lead 口径）：谈判/击败分支用 api.cardFlip 展示正文，故事卡「加入胜利区」以 scenarioFlags.trialOf* 记录近似（0 胜利点，不影响经验）。",
+    "beyondTheGatesOfSleep：剧情正文待 P8-T 自译（storyText pending）",
+    "beyondTheGatesOfSleep：逐卡等价核对属 P9（literalCardBehavior=false）",
+    "beyondTheGatesOfSleep：浏览器验收属 P9（browserAcceptance=false）",
+    "wakingNightmare：「寄生地点上的伤害标记」与「封印后替换为恐惧标记」的可见面板属 P5/P9；本层只维护 tokenBag 的寄生状态与 scenarioFlags.sealedRifts。",
+    "wakingNightmare（近似实现）：06071 急救病房「每投入 1 张牌难度 +1」：引擎的检定难度在检定开始时固定，没有「投入后难度重算」读点；behavior 在 beforeCommitCard 里递增 state.skillTest.difficulty（揭示符号标记的检定会在符号窗口回读该值），无符号标记的检定可能仍按初始难度结算。",
+    "wakingNightmare（近似实现）：06072 实验疗法病房的反应改为「调查行动开始前询问」（引擎没有调查内的可选反应读点），本次调查结束由 behavior.afterInvestigate 清除。",
+    "wakingNightmare（近似实现）：06073 档案室「一次一个进行 4 次调查」按连续结算近似（引擎没有 4 次调查之间的行动窗口）。",
+    "wakingNightmare（近似实现）：06078 的「地点上的伤害标记」用 P3 原语 tokenBag 的 infestedLocations 承载（不在地点实例上放 damage 标记）；「伤害标记→恐惧标记」的封印在 06069 的前排能力里用清除寄生 + scenarioFlags.sealedRifts 近似。",
+    "wakingNightmare（近似实现）：06080 的 [fast] 自动躲避与滋生标记取消是条目 flags + 本文件接线（storyAsset scope 不能声明 free 能力）。",
+    "wakingNightmare（近似实现）：06081「不能攻击/不能被攻击/不能被伤害/不能被击败」是条目 flags + 本文件接到引擎的 enemyCannotAttack / enemyCannotBeAttacked / enemyDamageAllowed / enemyCanBeDefeated / investigationError 读点。",
+    "wakingNightmare（近似实现）：06082「在寄生地点受到伤害时取消 1 点」在 enemyDamaged 钩子里用 api.healEnemy(enemy, 1) 撤回 1 点伤害。",
+    "wakingNightmare：剧情正文待 P8-T 自译（storyText pending）",
+    "wakingNightmare：逐卡等价核对属 P9（literalCardBehavior=false）",
+    "wakingNightmare：浏览器验收属 P9（browserAcceptance=false）",
+    "theSearchForKadath：掩藏地点的翻面行动是引擎原生的 flipVeiled（moves.js 枚举 + dispatch.js 结算）；本章行为只通过 veiledFlipped 结算背面故事卡。",
+    "theSearchForKadath：剧本参考卡（06119）没有单卡条目（reference card，无行为读点）；神迹计数走 api.markers 的通用命名计数。",
+    "theSearchForKadath（近似实现）：斯凯河的「意志(2)或敏捷(2)」：引擎 locationRule.onLeave.test 只支持单一技能，改为 behavior.beforeMove 先询问技能、behavior.locationLeaveTest 再返回该技能（不再静默固定为意志）。",
+    "theSearchForKadath（近似实现）：塞拉尼安的「进入/离开的额外费用」：无手牌时放行并记日志（卡面要求支付，但引擎没有「额外费用的合法性闸门」读点）。",
+    "theSearchForKadath（近似实现）：黑暗夜魇在区域设置时的「保留标记与附属」：保留伤害/毁灭标记快照并在重新入场时恢复；地点/敌人附属在离场时由引擎清理，不保留。",
+    "theSearchForKadath（近似实现）：维吉尔·格雷「离场时移出游戏」：通过 behavior.assetLeftPlay 设置 asset.removedFromGame 并写入 removedFromGame（与引擎 leaveAsset 的 removedFromGame 读点一致）。",
+    "theSearchForKadath（近似实现）：哈祖斯-克列格的「背面故事卡把无以达愿之庙放置入场」按 api.place + takeFromSetAside 结算；地点入场不触发一次 onEnter（卡面没有「进入」强制，可接受）。",
+    "theSearchForKadath（近似实现）：「凶星」把地图未见之城加入胜利牌区：由条目设置 pendingVictoryLocation 标志，behavior 在故事结算后写入 victoryDisplay 并移出游戏。",
+    "theSearchForKadath（近似实现）：艾雷克-瓦达的费用减免没有内容层读点（playCost 只读玩家卡能力层），记录为 simplified（见 worker 报告）。",
+    "theSearchForKadath：剧情正文待 P8-T 自译（storyText pending）",
+    "theSearchForKadath：逐卡等价核对属 P9（literalCardBehavior=false）",
+    "theSearchForKadath：浏览器验收属 P9（browserAcceptance=false）",
+    "aThousandShapesOfHorror：06193 的「另一张卡进入你的威胁区域后弃 1 张手牌」没有引擎读点（记 simplified）。",
+    "aThousandShapesOfHorror：06168 剧本参考卡的混乱符号「再揭示一个标记」（cultist）没有剧本级额外揭示原语（chaos.js 记 simplified）。",
+    "aThousandShapesOfHorror（近似实现）：神秘阶梯的「洗混位置使无法辨认」用 verticalIndex/connections 重排表达（地点卡号不变，不重建地点实体）；Endless Descent 的重排流程在 behavior.resolveEndlessDescent。",
+    "aThousandShapesOfHorror（近似实现）：议程 06171 的「不可名状之物失去冷漠/获得庞大」用章节内容层直接落实例字段（引擎无 mass 字段的 api），在每回合开始与议程揭示后幂等执行。",
+    "aThousandShapesOfHorror（近似实现）：06224 银钥匙的「取消 1 点恐惧」走 harmDealt 窗口；「在你将要受到恐惧时」与参考实现的取消时机等价。",
+    "aThousandShapesOfHorror（近似实现）：06194 阁楼的秘密「放在密谋牌库旁」用 scenarioFlags.agendaAside 纯数据表达（TDE 共享层无 agendaAside 区）。",
+    "aThousandShapesOfHorror：剧情正文待 P8-T 自译（storyText pending）",
+    "aThousandShapesOfHorror：逐卡等价核对属 P9（literalCardBehavior=false）",
+    "aThousandShapesOfHorror：浏览器验收属 P9（browserAcceptance=false）",
+    "darkSideOfTheMoon：06214b「下船」的翻面结算由 behavior 的 offTheGalley 流程完成（按翻面瞬间线索数二选一）。",
+    "darkSideOfTheMoon（近似实现）：被俘调查员的判定读战役记录 wasCaptured 的调查员 id 列表（campaign.records.wasCaptured），按 id/code/座位号匹配；记录 schema 由战役层（w-p8-g）定义。",
+    "darkSideOfTheMoon（近似实现）：月蜥的「只能进入[[洞穴]]地点」没有引擎读点：behavior.hunterMove 在洞穴子图上寻路，效果移动（api.moveEnemy）不拦截（条目 note 已记 simplified）。",
+    "darkSideOfTheMoon（近似实现）：月之拜亚基「忽略警报 ≤2 的调查员」用 behavior.hunterMove 过滤目标 + behavior.canEngageEnemy 拒绝交战实现。",
+    "darkSideOfTheMoon（近似实现）：06224 维吉尔·格雷的「警报等级提高后」反应等待 window.afterAlarmRaised 原语（primitive-requests/w-p8-c-alarm-level-window.json）。",
+    "darkSideOfTheMoon：剧情正文待 P8-T 自译（storyText pending）",
+    "darkSideOfTheMoon：逐卡等价核对属 P9（literalCardBehavior=false）",
+    "darkSideOfTheMoon：浏览器验收属 P9（browserAcceptance=false）",
+    "pointOfNoReturn：「查看遭遇牌库顶并任意顺序放回」没有 peek/排序原语：探查山谷按「弃掉至多一半」近似。",
+    "pointOfNoReturn：「把敌人正面朝下附属到理查德·皮克曼」没有附属敌人到支援的状态形状：用 scenarioFlags 计数 + removeEnemyFromGame 近似。",
+    "pointOfNoReturn：「打乱各张漆黑之海的位置」没有地点位置/标签概念：只做线索平均分配与重置可翻面。",
+    "pointOfNoReturn（近似实现）：8 张掩藏地点翻面后是否洗回遭遇牌堆：en locale rules 与参考实现都没有「洗回」规则（翻面只读背面故事）；behavior.veiledFlipped 支持 `location.shuffleBack === true` 时调用 api.veiled.shuffleBack，但 definition 不声明 shuffleBack，等 Lead 最终裁决（任务书曾要求洗回）。",
+    "pointOfNoReturn（近似实现）：「桥梁进度」Steps of the Bridge 存 campaign.records.stepsOfTheBridge（number）；剧本参考卡伤害存 api.markers 的 reference 计数。",
+    "pointOfNoReturn（近似实现）：「怪物围困」翻回正面：在 agendaWouldAdvance 里结算效果、清空在场毁灭（api.clearDoom）并取消推进；Distortion ≥5 时改为结束于 R2。",
+    "pointOfNoReturn（近似实现）：食尸鬼平原的「[[古革巨人]]敌人不能进入」通过 behavior.enemyMoved 在移动后改道（引擎没有敌人进入禁止读点）；生成时用 spawnLocation 改到古革巨人之城。",
+    "pointOfNoReturn（近似实现）：古革哨兵「重整后」的强制：引擎无 ready 窗口，用条目 enemyScript.onRoundEnd 记状态 + onEnemyPhaseStart 对比（见条目 06267）。",
+    "pointOfNoReturn（近似实现）：卡达斯（False Awakening）放在密谋牌库旁的 1 点毁灭用 api.addDoom 计入在场毁灭（离场/清空口径有偏差）。",
+    "pointOfNoReturn：剧情正文待 P8-T 自译（storyText pending）",
+    "pointOfNoReturn：逐卡等价核对属 P9（literalCardBehavior=false）",
+    "pointOfNoReturn：浏览器验收属 P9（browserAcceptance=false）",
+    "whereTheGodsDwell：06306–06310「这张卡牌在你手牌中且未揭示时，如果你提到它，则你发疯」是桌面口头约定，没有可机械化读点。",
+    "whereTheGodsDwell：Hidden 敌人（奈亚拉托提普 5 形态）的通用「手牌中攻击/躲避」入口被 canFightHidden/canEvadeHidden 关闭：参考实现只允许通过塔/幕/行动揭示并结算，不存在通用攻击。",
+    "whereTheGodsDwell：真形合成后的关键词由 definition 的 Enemy 数据读取（Hunter/Alert/Massive/Retaliate）；「获得全部关键词」不含非关键词能力（如反击/警戒之外的关键词未被印刷在 5 形态上）。",
+    "whereTheGodsDwell（近似实现）：「失去所有线索」用 api.spendClues 近似（引擎没有「失去线索」原语），可能触发「花费线索」类反应；涉及 06292 背面、06293 背面两处。",
+    "whereTheGodsDwell（近似实现）：手牌中的奈亚拉托提普复制品「攻击你」按印刷伤害/恐惧直接结算（没有敌人实例，攻击修正/敌人攻击反应窗口缺失）；涉及议程背面、万千化身、塔行动失败三处。",
+    "whereTheGodsDwell（近似实现）：6 座被遗忘的高塔的方向（北/东/南/西）记在 scenarioFlags.towerCompass，用于「混沌低语 × 塔」匹配；静态 UI 布局给 6 个固定槽位，运行时不做真正的地图重排（引擎 layout 为静态数据）。",
+    "whereTheGodsDwell（近似实现）：「击败不可描述的高阶祭司」的幕 2 [action] 用 api.damageEnemy 打满生命表达「直接击败」（会触发受伤类窗口）。",
+    "whereTheGodsDwell（近似实现）：结局 1/2 之后的去向选择（醒来/留在幻梦境/进入地下世界）在本次冒险内直接写战役记录与 scenarioFlags，战役流程节点由战役层（P8-7）承接；冒险结果键仍记为 resolution1/resolution2。",
+    "whereTheGodsDwell（近似实现）：「伦道夫·卡特（专家入梦者）从牌组移除」直接改 inv.deck 与 campaign.investigators[].deck（战役内持续）。",
+    "whereTheGodsDwell（近似实现）：「查看遭遇牌库顶 3 张并抽取其中的隐私卡」用 api.discardEncounterTop + 取回弃牌堆隐私卡近似，「查看」不显示给玩家单独的排序窗口。",
+    "whereTheGodsDwell（近似实现）：冷原（06295）的「无人地点生成替换」只在 engine 未指定生成地点（fallbackLoc 为空）且场上没有无人地点时生效；引擎没有「本次生成目标是无人地点」的显式参数。",
+    "whereTheGodsDwell：剧情正文待 P8-T 自译（storyText pending）",
+    "whereTheGodsDwell：逐卡等价核对属 P9（literalCardBehavior=false）",
+    "whereTheGodsDwell：浏览器验收属 P9（browserAcceptance=false）",
+    "weaverOfTheCosmos（近似实现）：阿特拉克·纳克亚的中心牌面（Global 位置）没有实体：幕 1 背面把四条腿放到 11/5/9/7，幕 2 推进时直接在毁灭最多的地点生成 06346（翻面）。",
+    "weaverOfTheCosmos（近似实现）：「旋转阿特拉克·纳克亚」= 沿 8 段巨网环（RING 顺序）把四条腿（幕 2）或 06346（幕 3）各移动 1 个地点；中心牌的 45° 视觉旋转以 scenarioFlags.atlachRotation 记录。",
+    "weaverOfTheCosmos（近似实现）：15 张印刷巨网在 definition 落地为 11 个实例（4 个初始 + 7 个展开）；4 张未用副本不建实例，抽取顺序按固定表（见 definition 注释）。",
+    "weaverOfTheCosmos（近似实现）：「Steps of the Bridge」记录数的开局毁灭在 afterDeckSetup 直接写在地点实例上（引擎没有 setup 阶段的 doom API 参数）。",
+    "weaverOfTheCosmos（近似实现）：遭遇组 Ancient Evils / Chilling Cold 是跨循环共享组（TDE 包内重印），遭遇定义取 cards-data 中对应 encounterCode 的记录。",
+    "weaverOfTheCosmos（近似实现）：[[cultist]] 的「再揭示一个标记」由引擎的额外标记语义承担；本章 chaos.afterTest 只结算「失败且所在地点有[[古神]]敌人 → 其攻击」。",
+    "weaverOfTheCosmos：剧情正文待 P8-T 自译（storyText pending）",
+    "weaverOfTheCosmos：逐卡等价核对属 P9（literalCardBehavior=false）",
+    "weaverOfTheCosmos：浏览器验收属 P9（browserAcceptance=false）",
+    "P8-T：中文剧情自译未开工（story-text.js status=pending）"
+  ]
+}

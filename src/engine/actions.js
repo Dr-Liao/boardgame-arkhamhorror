@@ -6,6 +6,7 @@
 // 并**先剥掉注释**再匹配——否则注释里的「Phase 5」「C1」之类会被当成标识符混进来。
 
 import { beginInvestigationFrame, endInvestigationFrame, investigationFrameRef } from './resolution-scope.js'
+import { placeDreamGate } from './dream-gate.js'
 import { grantSpellCredit } from './spell-actions.js'
 export function createActions(deps) {
   const {
@@ -433,7 +434,7 @@ function doInvestigate(state, seat, opts, events, noSpend) {
   // 卡面可以改写「这次调查用哪项技能」：礼寻术（02028 / 02233）的
   // 「不使用智力，改为使用意志」通过能力效果的 `skill` 传进来，这里优先于地点的
   // 调查技能声明（地点 investigateSkill 用于「用敏捷调查」这类地点规则）。
-  const skill = opts.skill || loc.investigateSkill || 'intellect'
+  const skill = opts.skill || scenarioBehavior(state).investigateSkill?.(state, inv, loc) || loc.investigateSkill || 'intellect'
   const temporaryShroud = campaignState.turnShroudModifier(loc, state)
     + (loc.turnShroudMod?.round === state.round && loc.turnShroudMod.turnSeat === state.currentSeat
       ? loc.turnShroudMod.amount : 0)
@@ -488,6 +489,12 @@ function doInvestigate(state, seat, opts, events, noSpend) {
         + (opts.successByClueEvery ? Math.floor(successBy / opts.successByClueEvery) : 0)) * (r.rewardMultiplier || 1)
       info(state, events, `${inv.name} 调查成功（${SKILL_NAMES[skill]} ${r.value} vs ${difficulty}）。`)
       triggerReaction(state, seat, 'investigateSuccess', events, { location: loc.id, successBy: r.value - difficulty })
+      if (loc.flipAfterInvestigate) {
+        const next = placeDreamGate(state, loc.flipAfterInvestigate, {
+          connectToRevealed: true, ownerCode: loc.dreamGateOwner,
+        })
+        if (inv.location === loc.id) inv.location = next.id
+      }
       // 「改为不发现线索」的调查（02282/02283/02287）先走完调查成功窗口，再交给卡面回调。
       if (opts.onInvestigateSuccess) opts.onInvestigateSuccess(r, { state, inv, loc })
       // 2026-10-25 第七轮修复 05158：可在检定中把调查重定向到连接地点（改用该地点的隐藏值）。

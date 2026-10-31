@@ -34,7 +34,7 @@
         "ruleOwned": true,
         "implemented": true,
         "deferred": [
-          "构筑界面消费 myriadUsage 的 n/3 显示（P7）；卡牌升级与购买仍走既有构筑门禁"
+          "P7 已接线构筑界面 n/3 显示（web/deck-rules.js#myriadUsage → web/hub.js cardMeta）与构筑校验拦截；06199/06241–06243 的「多张同名在场」结算按卡牌行为处理（P7 逐卡实现/显式简化）"
         ],
         "sourceKind": "text",
         "cardCodes": [
@@ -157,7 +157,7 @@
         "ruleOwned": true,
         "implemented": true,
         "deferred": [
-          "06236/06237/06238 的 researchRequirement 记录键在 P7 写进单卡条目（「你洞悉了梦境」）"
+          "P7 已在 06236/06237/06238 条目声明 researchRequirement: youHaveInterpretedTheDreams（记录由 06112 的 api.recordResearch 写入）；战役层写入该记录的章节流程属 P8"
         ],
         "sourceKind": "text",
         "cardCodes": [
@@ -610,12 +610,12 @@
     }
   },
   "files": {
-    "content/campaigns/theDreamEaters/keywords.js": "7379089204a937fff8dc34959fb6c0b606e1a2cf6b19ce8d22e87c7cd085f9a3",
-    "web/rulebook-data.js": "d900946e6108f17d3b84e178e923609a29c2a64309e9373fd905281856a27fdb",
+    "content/campaigns/theDreamEaters/keywords.js": "02a5eb650ec632f8092122e02c9a584a0fa1283a487c96e81db5e1481f95e2fc",
+    "web/rulebook-data.js": "c5ec41789af2bb02718088036dceec4cfd9b1ebf12b1a48a8278cf69a435c095",
     "web/ui-cards.js": "2bf3221a9b864cc4ff60fe4c77a9cedf056e16973da6d05c395f73a27b9225aa",
     "content/campaigns/theDreamEaters/shared.js": "943fade87a7824527e52cde3552b76aa15b268d0fde69d5ab84e39d9d71c2617",
-    "content/mechanics.js": "532d8ccdd3bb98d4a8ebef9f57831d3992db8d4d44fdfbe1081a9aeeed8d4a7f",
-    "tests/tde-rules.test.mjs": "5a194b13252dfc091fafac5a94496940099855326a9a080ddd17c2443879f1e5",
+    "content/mechanics.js": "93f876642c60c3ae2865b2af82625b56bb2e04f7ec92131d63cb5860bb20f0bb",
+    "tests/tde-rules.test.mjs": "518e0dce0b629b9f99e3c3498d72b48e8eb5bee82957bec7b96c3b2a6b06f6eb",
     "tests/tde-rules.browser.mjs": "829de66de44749447381f3b9e17e4eba783b0b00fcb5bb691f63ab8122a08f6c",
     "audit/tde-browser-acceptance.json": "9ec8a0220055557dc820fc43ea04d5d0b77bdcaaa63037896b5b203b0904ee38"
   },

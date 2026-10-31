@@ -569,10 +569,11 @@ export function investigatorEntryError(state, locationId, seat = state.currentSe
   const inv = state.investigators[seat]
   if (inv?.steamImmobileRound === state.round) return '本轮受到蒸汽之爪影响，不能移动'
   if (inv && state.enemies.some(enemy => enemyRuleFlags(enemy.code).blocksMovementWhileEngaged && enemy.engagedSeat === seat && !enemyTextBlanked(state, enemy))) return '与攫取恐怖交战时不能移动'
-  // 地点条目声明的进入限制（「门锁住了，你不能移动进入」）：读点是 locationRule.entryError。
-  // 「爵士」马利根这类「忽略未揭示面文字」的效果同样忽略门禁（剧本钩子统一判定）。
+  // 地点条目的 entryError / beforeEnter 是未揭示面文字。地点一旦揭示，这面失效，
+  // 引擎不再调用；不能靠每张卡自己记得判断 revealed。
+  // 「爵士」马利根这类「忽略未揭示面文字」同样跳过这面（剧本钩子另判）。
   const ignoresRevealText = scenarioBehavior(state).ignoreLocationRevealText?.(state, inv, location) === true
-  const contentError = ignoresRevealText ? null
+  const contentError = location.revealed || ignoresRevealText ? null
     : registeredEntry(location.originalCode || location.code)?.locationRule?.entryError?.(state, location, inv)
   if (contentError) return contentError
   return scenarioBehavior(state).investigatorEntryError?.(state, location, inv) || null
@@ -1703,6 +1704,7 @@ function debugApi() {
     cardName,
     syncClues,
     awardExperience,
+    finishScenario,
   })
   return debugImpl
 }
@@ -1725,6 +1727,8 @@ export function performTest(state, seat, skill, difficulty, options = {}) {
   hasHiddenCard,
   hiddenDefinition,
   hiddenRule,
+  hiddenCommitLimitReached,
+  noteHiddenCommit,
   isChargeAsset,
   minhCommitWildBonus,
   pendingTestResult,
@@ -1829,6 +1833,13 @@ function scenarioRuntime(state, events, testSource = null) {
   suppliesFor,
   vengeancePoints,
   yigsFury,
+  // P8（M3 食梦者）：隐私手牌（Hidden 遭遇卡）的读写入口。之前只有引擎内部/旧条目直写
+  // `inv.hiddenCards`，内容层（whereTheGodsDwell 的 5 形态奈亚拉托提普）无法经 api 结算；
+  // 这里把 hidden-rules 的四个函数注入 scenarioRuntime，内容层统一走 `api.hiddenCards.*`。
+  placeHiddenCard,
+  discardHiddenCard,
+  hasHiddenCard,
+  removeHiddenMarker,
 })
   return scenarioRuntimeImpl(state, events, testSource)
 }
@@ -2029,6 +2040,7 @@ function dispatchApi() {
   doEvade,
   doExplore,
   doFight,
+  performTest,
   doFreeAction,
   doHiddenAction,
   doInterruptRitual,
@@ -2334,6 +2346,7 @@ function deckOpsApi() {
     EFFECTS,
     aliveInvestigators,
     applyHorror,
+    applyDamage,
     attachCardTo,
     canDiscardFromHand,
     cardDef,
@@ -2843,6 +2856,9 @@ export function cannotTriggerFreeAbility(...args) { return createHiddenRulesApi(
 export function hiddenFightBlocked(...args) { return createHiddenRulesApi().hiddenFightBlocked(...args) } export function movementError(...args) { return createHiddenRulesApi().movementError(...args) } export function currentInv(...args) { return createHiddenRulesApi().currentInv(...args) }
 export function investigatorTextBlanked(...args) { return createHiddenRulesApi().investigatorTextBlanked(...args) } export function enemyTextBlanked(...args) { return createHiddenRulesApi().enemyTextBlanked(...args) } export function enemyCannotAttack(...args) { return createHiddenRulesApi().enemyCannotAttack(...args) }
 export function enemyCannotBeAttacked(...args) { return createHiddenRulesApi().enemyCannotBeAttacked(...args) } export function aloofPreventsAttack(...args) { return createHiddenRulesApi().aloofPreventsAttack(...args) } export function enemyCanOpportunityAttack(...args) { return createHiddenRulesApi().enemyCanOpportunityAttack(...args) } export function enemyCanBeDefeated(...args) { return createHiddenRulesApi().enemyCanBeDefeated(...args) }
+// P8：隐私牌「每轮最多投入 N 张」读点与计数（食梦者 06319–06321）。
+export function hiddenCommitLimitReached(...args) { return createHiddenRulesApi().hiddenCommitLimitReached(...args) }
+export function noteHiddenCommit(...args) { return createHiddenRulesApi().noteHiddenCommit(...args) }
 
 
 // ---------------------------------------------------------------------------

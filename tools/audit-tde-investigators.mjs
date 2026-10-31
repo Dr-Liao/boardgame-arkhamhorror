@@ -54,8 +54,8 @@ function entryFacts(code) {
 function runNodeTests() {
   const run = spawnSync(process.execPath, ['--test', abs(TEST_FILE)], { cwd: ROOT, encoding: 'utf8', timeout: 180000 })
   const output = `${run.stdout || ''}\n${run.stderr || ''}`
-  const tests = Number((output.match(/^ℹ tests (\d+)$/m) || [])[1] || 0)
-  const fail = Number((output.match(/^ℹ fail (\d+)$/m) || [])[1] || 0)
+  const tests = Number((output.match(/^(?:ℹ|#) tests (\d+)$/m) || [])[1] || 0)
+  const fail = Number((output.match(/^(?:ℹ|#) fail (\d+)$/m) || [])[1] || 0)
   return { command: `node --test ${TEST_FILE}`, status: run.status, tests, fail, ok: run.status === 0 && fail === 0 && tests > 0 }
 }
 
@@ -120,7 +120,7 @@ const gate = {
   sixteenMainRecords: { expected: 16, registered: mainRecords.filter(item => item.registered).length,
     pass: mainRecords.length === 16 && mainRecords.every(item => item.registered) },
   facesPending: { expected: 2, registered: faceRecords.filter(item => item.registered).length,
-    codes: FACES, reason: '梦境之门（06015a/b）的放置/翻面/连接属 P8（见 tools/tde-primitive-spec.mjs 的 deferred）',
+    codes: FACES, reason: '06015a/b 无单独行为条目；放置、翻面与阶段结束在 src/engine/dream-gate.js。',
     pass: faceRecords.length === 2 },
   deckContracts: { pass: investigators.every(item => item.deck.ok) },
   elderSigns: { pass: investigators.every(item => item.own.hasElderSign) },

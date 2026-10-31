@@ -10,7 +10,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
-import { fixture, move, settle } from './core-fixture.mjs'
+import { answer, fixture, move, settle } from './core-fixture.mjs'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { slotUsage, canEquip, assetReplacementPlans, legalMoves } from '../src/engine/engine.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -78,6 +78,23 @@ test('05009 柯尔特：在场时第二张[[工具]]同样豁免手槽', () => {
   assert.equal(slotUsage(after).hand, 2, '两张工具都不占手槽')
 })
 
+test('01016 .45自动手枪只占一只手时，打出大砍刀不需要弃牌腾槽', () => {
+  const { state, inv } = fixtureWith([PISTOL])
+  inv.assets[0].uses = 3
+  inv.assets[0].slots = ['Hand', 'Hand']
+  inv.handSlotsPenalty = 1
+  inv.hand = [MACHETE_HAND]
+  assert.equal(slotUsage(inv).hand, 1, '实例上多写的手槽和未开启的调查惩罚都不占第二只手')
+  assert.equal(canEquip(inv, ALL_CARDS[MACHETE_HAND]), true)
+  assert.deepEqual(assetReplacementPlans(inv, ALL_CARDS[MACHETE_HAND]), [[]], '右手空着，不弃置.45自动手枪')
+  move(state, { action: 'play', cardId: MACHETE_HAND })
+  settle(state)
+  const after = me(state)
+  assert.ok(after.assets.some(asset => asset.code === PISTOL), '.45自动手枪仍在场')
+  assert.ok(after.assets.some(asset => asset.code === MACHETE_HAND), '大砍刀进入场上')
+  assert.deepEqual(after.discard, [])
+})
+
 test('05009 柯尔特：豁免只作用于[[工具]]；非工具与第三张工具仍受手槽限制', () => {
   const { state, inv } = joeWithColt()
   assert.equal(canEquip(inv, ALL_CARDS[MACHETE]), false, '非[[工具]]手部支援不能吃豁免（双手已被柯尔特占满）')
@@ -141,6 +158,62 @@ test('fix 02147 子弹袋：非武器候选的合法出牌不再触发腾槽弃�
   const after = state.investigators[0]
   assert.ok(after.assets.some(asset => asset.code === FLASHLIGHT), '手电筒进入场上')
   assert.deepEqual(after.discard, [], '没有弃置资产')
+})
+
+// ---------------------------------------------------------------------------
+// 2026-10-31 玩家报告：打出武器、需要弃资产腾手部槽位时，弃置候选里出现盟友等
+// 非手槽资产；先点盟友还会被再要求弃一张手槽支援（多弃一张）。
+// 根因：旧 assetReplacementPlans 从全部支援做 DFS，会把数组里靠前的无关支援先收进
+// 方案（[盟友, 一号手槽]），choice 的候选是全部方案并集，于是盟友进了候选。
+// 修复：候选只保留占用「待打出卡所需槽位」的支援，且只返回最小弃置方案；
+// replaceAssets 每轮按已选资产重算，弃到够槽位就停。读点仍是同一个 canEquip。
+// ---------------------------------------------------------------------------
+const ALLY_MILAN = '01033' // 米兰·克里斯托弗博士：Ally（占盟友槽，不占手槽）
+
+test('腾槽候选只包含占用所需槽位的支援：打手部武器不会出现盟友', () => {
+  const { state, inv } = fixtureWith([ALLY_MILAN, MAGNIFYING_GLASS, FLASHLIGHT])
+  inv.hand = [MACHETE_HAND]
+  assert.equal(canEquip(inv, ALL_CARDS[MACHETE_HAND]), false, '两个手槽已被放大镜/手电筒占满')
+  const plans = assetReplacementPlans(inv, ALL_CARDS[MACHETE_HAND])
+  assert.deepEqual(
+    plans.map(plan => plan.map(id => inv.assets.find(asset => asset.id === id).code)).flat().sort(),
+    [MAGNIFYING_GLASS, FLASHLIGHT].sort(),
+    '候选只有两张手槽支援')
+  assert.ok(plans.every(plan => plan.length === 1), '最小方案 = 弃掉 1 张就够')
+
+  move(state, { action: 'play', cardId: MACHETE_HAND })
+  assert.equal(state.pendingChoice.kind, 'assetReplacement')
+  const offered = state.pendingChoice.options
+    .map(option => inv.assets.find(asset => asset.id === option.id).code).sort()
+  assert.deepEqual(offered, [MAGNIFYING_GLASS, FLASHLIGHT].sort(), 'choice 里不能出现盟友')
+  assert.match(state.pendingChoice.prompt, /手部槽位/, '提示写明腾的是手部槽位')
+
+  answer(state, inv.assets.find(asset => asset.code === MAGNIFYING_GLASS).id)
+  const after = me(state)
+  assert.deepEqual(after.assets.map(asset => asset.code), [ALLY_MILAN, FLASHLIGHT, MACHETE_HAND],
+    '盟友与另一张手槽支援都留在场')
+  assert.deepEqual(after.discard, [MAGNIFYING_GLASS], '只弃 1 张手槽支援腾槽')
+})
+
+test('双手武器腾槽：每次只问一张，弃到刚好够用，第二次选择不出现盟友', () => {
+  const { state, inv } = fixtureWith([ALLY_MILAN, KNIFE, FLASHLIGHT])
+  inv.hand = ['01029'] // 霰弹枪：Hand x2，必须同时空出两个手槽
+  const plans = assetReplacementPlans(inv, ALL_CARDS['01029'])
+  assert.equal(plans.length, 1, '两张单手支援都在手槽，方案只有一种')
+  assert.equal(plans[0].length, 2, '双手武器必须弃掉两张手槽支援')
+
+  move(state, { action: 'play', cardId: '01029' })
+  assert.equal(state.pendingChoice.kind, 'assetReplacement')
+  assert.deepEqual(state.pendingChoice.options.map(option => option.id).sort(), ['s1', 's2'],
+    '第一次选择只列两张手槽支援')
+  answer(state, 's1')
+  assert.equal(state.pendingChoice?.kind, 'assetReplacement', '还差一个手槽，继续问')
+  assert.deepEqual(state.pendingChoice.options.map(option => option.id), ['s2'],
+    '第二次选择收窄到剩余必需的那张')
+  answer(state, 's2')
+  const after = me(state)
+  assert.deepEqual(after.assets.map(asset => asset.code), [ALLY_MILAN, '01029'], '盟友仍在场，两张手槽支援已弃')
+  assert.deepEqual(after.discard.slice().sort(), [KNIFE, FLASHLIGHT].sort())
 })
 
 // ---------------------------------------------------------------------------

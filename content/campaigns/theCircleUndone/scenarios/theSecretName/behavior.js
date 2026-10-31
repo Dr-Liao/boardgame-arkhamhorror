@@ -18,8 +18,6 @@ import {
 
 const WITCH_HOUSE = 'Witch House'
 const codeOf = card => original(card) || (typeof card === 'string' ? card : null)
-const MOLDY_HALLS_ID = 'moldyHalls'
-const WALTER_GILMANS_ROOM_ID = 'walterGilmansRoom'
 const isWeakness = code => ['weakness', 'basicweakness'].includes(ALL_CARDS[code]?.subtype)
 
 function takeFromSetAside(state, code) {
@@ -185,7 +183,6 @@ export const behavior = {
       nahabDefeated: false,
       blackBookSeat: null,
       mustInvestigateSeat: null,
-      walterLockPaid: false,
     })
     return placed
   },
@@ -536,30 +533,6 @@ export const behavior = {
   locationEntered(state, inv) {
     if (!inv || state.phase !== 'investigation' || state.currentSeat !== inv.seat) return
     inv.tcuMovedThisTurn = true
-  },
-
-  // ---- 移动：沃尔特·吉尔曼房间的团队线索入场费（锁定） ----
-  beforeMove(state, inv, destLocation, api) {
-    if (destLocation?.id !== WALTER_GILMANS_ROOM_ID) return
-    if (inv.location !== MOLDY_HALLS_ID) return
-    const cost = state.numInvestigators
-    const payers = activeInvestigators(state).filter(entry => entry.location === MOLDY_HALLS_ID)
-    const available = payers.reduce((sum, entry) => sum + (entry.clues || 0), 0)
-    if (available < cost) return
-    api.payClues?.(cost, MOLDY_HALLS_ID)
-    state.scenarioFlags ||= {}
-    state.scenarioFlags.walterLockPaid = true
-    api.info?.(`🔒 调查员们共同花费 ${cost} 个线索打开沃尔特·吉尔曼房间的锁。`)
-  },
-
-  investigatorEntryError(state, location, inv) {
-    if (location?.id !== WALTER_GILMANS_ROOM_ID) return undefined
-    if (inv.location !== MOLDY_HALLS_ID) return undefined
-    const cost = state.numInvestigators
-    const available = activeInvestigators(state).filter(entry => entry.location === MOLDY_HALLS_ID)
-      .reduce((sum, entry) => sum + (entry.clues || 0), 0)
-    if (available < cost) return `「沃尔特·吉尔曼的房间」锁着：发霉的走道上的调查员需共同花费 ${cost} 个线索。`
-    return undefined
   },
 
   // ---- 调查阶段结束：古怪图形的强制（参考 PhaseEnds #after #investigation，即敌人阶段开始）----
