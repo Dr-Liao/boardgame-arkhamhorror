@@ -1,10 +1,12 @@
+import { TDE_STORY_KEYS } from './story-text.js'
+
 // 食梦者（The Dream-Eaters）· 三段幕间的节点图、选择与效果数据（P8 战役层）。
 //
 // 事实源（锁定）：
 //   · 叙事正文：`参考资源/ArkhamHorror-main/frontend/src/locales/en/theDreamEaters/base.json`
-//     的 `flavorText` 段（冻结哈希见 P8-T 来源锁）——本文件原样保存**英文原文**（去 HTML、
+//     的 `flavorText` 段（冻结哈希见 P8-T 来源锁）——本文件保存锁定英文原文（去 HTML、
 //     保留 `_斜体_` / `*强调*` / `{tablet}` 等卡面记号），统一标 `pendingTranslation: true`；
-//     **不自译、不写中文摘要**，中文由 P8-T 的 `story-text.js` 生成器补齐；
+//     中文由 P8-T 已交付的 `story-text.js` 提供（`TDE_INTERLUDE_TEXT` 在文件末尾本地化）；
 //   · 结构与数值：`Campaigns/TheDreamEaters.hs` C:404-735（P8-CAMPAIGN-FACTS §5 的节点图）。
 //
 // 三个幕间：
@@ -32,9 +34,9 @@ const FLAVOR = 'theDreamEaters.flavorText'
 const LABEL = 'theDreamEaters.label'
 
 // ---------------------------------------------------------------------------
-// 叙事正文（英文原文；由锁定 locale 生成，P8-T 翻译前保持 pendingTranslation）
+// 叙事正文（英文原文；由锁定 locale 生成；P8-T 后由 story-text 中文覆盖，英文仅作回退）
 // ---------------------------------------------------------------------------
-export const TDE_INTERLUDE_TEXT = Object.freeze({
+const TDE_INTERLUDE_TEXT_EN = Object.freeze({
   "theBlackCat": {
     "group": "interlude1",
     "title": "Interlude I: The Black Cat",
@@ -262,7 +264,7 @@ export const TDE_INTERLUDE_TEXT = Object.freeze({
 })
 
 // 幕间选项标签（base.json 的 `label` 段，21 条）
-export const TDE_INTERLUDE_LABELS = Object.freeze({
+const TDE_INTERLUDE_LABELS_EN = Object.freeze({
   "theDreamQuest": {
     "text": "The Dream-Quest",
     "key": "theDreamEaters.label.theDreamQuest",
@@ -370,11 +372,40 @@ export const TDE_INTERLUDE_LABELS = Object.freeze({
   }
 })
 
-export const TDE_INTERLUDE_TITLES = Object.freeze({
+// ---------------------------------------------------------------------------
+// P8-T：正文/标签改由 story-text.js（自译生成物）提供。
+// 未翻译键保留英文原文并留 pendingTranslation: true（P8-T 后不应再出现）。
+// ---------------------------------------------------------------------------
+const localizeStoryEntries = entries => Object.freeze(Object.fromEntries(Object.entries(entries).map(([id, entry]) => {
+  const zh = TDE_STORY_KEYS[entry.key]
+  // 正文键是 {title, body}；label 键是字符串。
+  const body = typeof zh === 'string' ? zh : zh?.body
+  if (!body) return [id, entry]
+  return [id, Object.freeze({
+    ...entry,
+    title: (typeof zh === 'object' && zh.title) || entry.title,
+    text: String(body).replace(/\n\n/g, '\n'),
+    pendingTranslation: false,
+  })]
+})))
+
+export const TDE_INTERLUDE_TEXT = localizeStoryEntries(TDE_INTERLUDE_TEXT_EN)
+export const TDE_INTERLUDE_LABELS = localizeStoryEntries(TDE_INTERLUDE_LABELS_EN)
+
+const TDE_INTERLUDE_TITLES_EN = Object.freeze({
   1: 'Interlude I: The Black Cat',
   2: 'Interlude II: The Oneironauts',
   3: 'Interlude III: The Great Ones',
 })
+
+// P8-T：幕间标题取 story-text 中各组首段标题（幕间 I/II/III：…）。
+const INTERLUDE_TITLE_KEYS = Object.freeze([
+  'theDreamEaters.flavorText.theBlackCat',
+  'theDreamEaters.flavorText.theOneironauts1',
+  'theDreamEaters.flavorText.theGreatOnes1',
+])
+export const TDE_INTERLUDE_TITLES = Object.freeze(Object.fromEntries(INTERLUDE_TITLE_KEYS.map(
+  (key, index) => [index + 1, TDE_STORY_KEYS[key]?.title || TDE_INTERLUDE_TITLES_EN[index + 1]])))
 
 /** 取一段幕间正文；未知键返回 null（注册期由 validateInterludes 拦下）。 */
 export function interludeText(textKey) {
@@ -645,18 +676,26 @@ const INTERLUDE_TWO_DUAL = [
     ],
   },
   // searchingForTheTruth：hasAHunch(A) && randolphEludedCapture(A) → 双线记录 + 直接跳过（C:541-549）。
+  // P9.5 修复：原条件误写成「读本节点将要写入的 theBlackCatIsSearchingForTheTruth」（自指、恒假）；
+  // 参考实现是 A 线「黑猫有预感」且「伦道夫未遭俘虏」两条记录同时为真。
   {
     id: 'interlude2.searching',
     type: 'branch',
     options: [
       {
         id: 'searching',
-        when: { record: 'theBlackCatIsSearchingForTheTruth', equals: true },
+        when: allOf(
+          hasRecord('A', 'theBlackCatHasAHunch'),
+          hasRecord('A', 'randolphEludedCapture'),
+        ),
         next: 'interlude2.searchingStory',
       },
       {
         id: 'continue',
-        when: { not: { record: 'theBlackCatIsSearchingForTheTruth', equals: true } },
+        when: { not: allOf(
+          hasRecord('A', 'theBlackCatHasAHunch'),
+          hasRecord('A', 'randolphEludedCapture'),
+        ) },
         next: 'interlude2.3',
       },
     ],
@@ -1031,23 +1070,23 @@ function interludeNumberOf(nodeId) {
 
 function instantiateNode(template, { originalNext, title, number = null }) {
   const node = structuredClone(template)
-  // 文本：节点引用 flavorText 键，实例化时补英文原文 + 标题 + 未译标记。
+  // 文本：节点引用 flavorText 键，实例化时补 story-text 的中文正文 + 标题；
+  // 只有缺译文时才标 pendingTranslation（P8-T 后不应出现）。
   if (node.textKey) {
     const source = TDE_INTERLUDE_TEXT[node.textKey]
     node.text = source?.text || ''
     node.title = title
     node.textSource = `${FLAVOR}.${node.textKey}`
-    node.pendingTranslation = true
+    node.pendingTranslation = !source?.text
   }
-  // P8-T 的 story-text.js 按 `interludes.interlude<n>` 段落保存正文；节点只带位置键，
-  // 文本为空时 UI 退回节点自带的英文原文。
+  // story-text.js 按 `interludes.interlude<n>` 段落保存正文；节点只带位置键。
   if (number) node.storySection = `interludes.interlude${number}`
   if (node.greens) {
     node.greens = node.greens.map(green => ({
       ...structuredClone(green),
       text: TDE_INTERLUDE_TEXT[green.textKey]?.text || '',
       textSource: `${FLAVOR}.${green.textKey}`,
-      pendingTranslation: true,
+      pendingTranslation: !TDE_INTERLUDE_TEXT[green.textKey]?.text,
     }))
   }
   if (node.next === null || node.next === undefined) node.next = originalNext
@@ -1057,7 +1096,7 @@ function instantiateNode(template, { originalNext, title, number = null }) {
       if (copy.labelKey) {
         copy.label = TDE_INTERLUDE_LABELS[copy.labelKey]?.text || copy.labelKey
         copy.labelSource = `${LABEL}.${copy.labelKey}`
-        copy.pendingTranslation = true
+        copy.pendingTranslation = !TDE_INTERLUDE_LABELS[copy.labelKey]?.text
       }
       if (copy.next === null || copy.next === undefined) copy.next = originalNext
       return copy

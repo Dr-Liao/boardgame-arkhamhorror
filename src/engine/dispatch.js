@@ -20,7 +20,7 @@ import {
 } from './restricted-actions.js'
 
 import { MODE_LABELS, assignSeatPart, campaignPartsManifest, defaultPartLeads, describeModePlan, laneBalance, modePlan } from '../campaign/campaign-modes.js'
-import { createPartsState, inPart, setPart } from '../campaign/campaign-parts.js'
+import { createPartsState, inPart, moveSeatRecordToPart, setPart } from '../campaign/campaign-parts.js'
 import { partOfScenario } from '../campaign/part-flow.js'
 import { enterLaneRuntime, leaveLaneRuntime } from './lane-runtime.js'
 import { createEffect } from './effect-state.js'
@@ -96,6 +96,11 @@ export function createDispatch(deps) {
     enemiesEngagedWith,
     enemyAttack,
     enemyCanOpportunityAttack,
+    // 2026-11-01：演出快照里的敌人派生数值（有效生命/战斗/躲避）要与实时观察同口径，
+    // 否则演出播放期间牌桌按快照重绘会退回印刷值（01175 等卡面修正看不到）。
+    enemyEvadeValue,
+    enemyFightValue,
+    enemyHealth,
     // 2026-10-28 调试控制台（CONTRACT §3）：由 engine.js 注入的调试执行器。
     executeDebugMove,
     finishUpgradeDraft,
@@ -159,7 +164,7 @@ function applyMove(state, seat, move) {
   // 避免「公共线索 0 / 个人线索 1」导致共同支付与幕推进读错。
   if (!inHub(state) && state.uiState === 'inScenario') syncClues(state)
   state.legalMoves = legalMoves(state)
-  if (!inHub(state)) events.push({ type: 'presentation', kind: 'checkpoint', tableState: captureTableState(state, getStat, getMaxSanity) })
+  if (!inHub(state)) events.push({ type: 'presentation', kind: 'checkpoint', tableState: captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }) })
   return events
 }
 
@@ -175,7 +180,10 @@ function settleScenarioBoundary(state, events, error) {
   }
   if (!(error instanceof ScenarioEnded)) throw error
   // 关卡结束：先把记录键与座位簿记改回 roomSeat，再进入结算/关间。
-  leaveLaneRuntime(state)
+  // P9.5：并行 lane 的结算/关间全程留在**线内密集座位**（不离开 laneRuntime）——
+  // 并行每条线的关间只有本线座位，若恢复成容器全座会出现「另一线座位无 campaign record、
+  // 却仍被算作 pending」的死锁。
+  if (!state.parallelLane) leaveLaneRuntime(state)
   if (error.nextIndex == null) {
     if (state.campaign.failed || !state.campaign.pendingNode) endCampaign(state, events)
     else progressCampaign(state, events, false)
@@ -403,7 +411,10 @@ function executeHubMove(state, seat, move, events) {
       } else if (seat !== move.seat && seat !== 0) throw new Error('只能改自己座位的线')
       const trial = assignSeatPart({ mode: campaign.mode, seatParts: campaign.seatParts, seat: move.seat, part: move.part })
       if (!trial.ok) throw new Error(trial.reason)
+      const previousPart = campaign.seatParts?.[move.seat] ?? null
       campaign.seatParts = [...trial.seatParts]
+      // P9.5：先保存牌组、后改线时把该座位的战役记录搬到新线，避免「新线没有合法牌组」。
+      if (previousPart) moveSeatRecordToPart(campaign, move.seat, previousPart, move.part)
       // 换线后如果某线队长被换走，默认改回该线第一个真人座位。
       if (campaign.partLeads) {
         for (const part of ['A', 'B']) {
@@ -519,7 +530,9 @@ function executeHubMove(state, seat, move, events) {
       info(state, events, '首关尚未开始，已重新开放调查员、牌组与席位准备。')
       break
     case 'hubBeginScenario': {
-      if (!campaign.leadConfirmed || !(state.humanSeats || [0]).includes(campaign.leadSeat)) throw new Error('请先选择一名真人玩家担任队长')
+      // P9.5：并行 lane 内部运行时由 mod 边界选定队长（线队长可以是 AI），不再要求真人。
+      const humanLead = state.laneRuntime ? true : (state.humanSeats || [0]).includes(campaign.leadSeat)
+      if (!campaign.leadConfirmed || !humanLead) throw new Error('请先选择一名真人玩家担任队长')
       // P5 批次 3：单线与分选在进入关卡前切到目标线的运行时（密集线内座位）；并行仍需双运行时
       // 容器接线，先用明确原因挡住，避免把两条线塞进一个运行时。
       const manifest = campaignFor(state)

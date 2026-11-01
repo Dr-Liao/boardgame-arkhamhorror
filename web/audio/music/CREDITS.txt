@@ -176,3 +176,12 @@ https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400039
 https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500045
 https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1900006
 https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700039
+
+The Dream-Eaters / 食梦者 — added 2026-11-02
+"Dreamlike", "Air Prelude", "Unnatural Situation", "Floating Cities", "Frozen Star", "Dreams Become Real", "Spider Eyes", "Soporific"
+Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
+Official licensing: https://incompetech.com/music/royalty-free/licenses/
+Original MP3 files re-encoded to 128 kbps MP3 at 44.1 kHz with ffmpeg (libmp3lame); no cuts or mixing.
+Official track pages and original/encoded file hashes are recorded in sources.json.

@@ -2,14 +2,14 @@
 //
 // 参考实现：Scenario/Scenarios/TheDreamEaters/DarkSideOfTheMoon.hs +
 // Act/Agenda/Enemy/Location/Treachery/CardDefs|Cards/TheDreamEaters/DarkSideOfTheMoon/*.hs。
-// 卡面印刷数据只从 `../../card-data.js` 取；剧情/设置/结局正文只从 `./text-en.js` 取锁定英文原文
-// （P8-T 自译前不写中文摘要；scenario 上标 textLanguage:'en' + textStatus:'pending-self-translation'）。
+// 卡面印刷数据只从 `../../card-data.js` 取；剧情/设置/结局正文由 `./texts.js` 从 P8-T 自译生成物
+// `../../story-text.js` 投影（scenario 上标 textLanguage:'zh-CN' + textStatus:'translated (self-translated)'）。
 import { bindScenarioIdentities } from '../../../../identities.js'
 import {
   encounterCards, encounterDefinitions, encounterDeck, location, stages, storyCards, identitiesFor,
 } from '../../card-data.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { INTRO, RESOLUTIONS, RULES, SETUP, SPECIAL_RULES, TOKENS } from './text-en.js'
+import { INTRO, RESOLUTIONS, RULES, SETUP, SPECIAL_RULES, TOKENS } from './texts.js'
 
 // ---------------------------------------------------------------------------
 // 卡号常量
@@ -98,8 +98,8 @@ export const scenario = {
   nameEn: 'Dark Side of the Moon',
   part: 'A',
   pair: 3,
-  textLanguage: 'en',
-  textStatus: 'pending-self-translation',
+  textLanguage: 'zh-CN',
+  textStatus: 'translated (self-translated)',
   intro: INTRO.intro?.body || '',
   intros: INTRO,
   setup: Object.values(SETUP),

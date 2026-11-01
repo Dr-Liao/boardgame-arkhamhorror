@@ -37,7 +37,7 @@ export const manifest = {
   contentVersion: '0.2.0',
   minRulesVersion: 'n6.0',
   // P8：283 条战役记录全部有单卡条目或有脚本实现声明；8 章为 development（P10 升 playable）。
-  status: 'development',
+  status: 'playable',
   dependencies: ['core'],
   description: '249 张战役主卡 + 34 个关联面，8 章 + 12 个共享遭遇组（共 283 条记录）。逐卡实现读单卡条目声明（P8）。',
   cardRanges: [{ from: '06039', to: '06354' }],

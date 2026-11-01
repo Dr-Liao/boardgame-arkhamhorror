@@ -49,10 +49,10 @@ import {
 import { CHAOS_BAGS, SYMBOL_DEFAULTS } from '../../content/campaigns/nightOfTheZealot/shared.js'
 import { contentRegistry } from '../../content/registered.js'
 import { buildDeck, buildDeckFromList, playablePool, expandedPlayablePool, hashSeed, shuffle } from '../deck/deckbuilding.js'
-import { PLAYABLE_INVESTIGATOR_CODES, canSelectInvestigator, isCardAvailable, getAvailability } from '../deck/availability.js'
+import { PLAYABLE_INVESTIGATOR_CODES, SELECTABLE_INVESTIGATOR_CODES, canSelectInvestigator, isCardAvailable, getAvailability } from '../deck/availability.js'
 import { EFFECTS, isAutomaticReward } from '../cards/card-effects.js'
 import {
-  agendaHandSizePenalty, blanksTraits, enemyWeaknessExtra, hasExplicitReactionPrompt,
+  agendaHandSizePenalty, blanksTraits, enemyWeaknessExtra, entryNeedsReactionPrompt,
   isPoisonThreat, isTextBlankEnemy, poisonThreatCode,
   RELIC_OF_AGES_CODE,
   RANDOM_BASIC_WEAKNESS_CODE,
@@ -139,7 +139,11 @@ import { applyCampaignEffect, applyResolutionResults } from '../campaign/campaig
 import { initializeChaosBag, beginChaosTest, drawChaosToken, returnChaosToken, endChaosTest, releaseChaosTokens, sealChaosToken } from './chaos-bag.js'
 import { registerCampaignInvestigator, updateCampaignStatus, replacementCandidates, awardExperience, campaignCardChange, settleExiledCards, availablePurchases, replacementOptions, purchaseCard, upgradeRecord, stagePurchase, finishUpgradeDraft, recommendUpgrade, campaignEnding, refreshArcaneResearch } from '../campaign/campaign.js'
 
+// P10（M5 发布）：两套调查员池职责分开——
+//   PLAYABLE_INVESTIGATORS：AI 自动选人 + 默认候选顺序（保持既有种子对局/13 局 replay 不漂移）；
+//   SELECTABLE_INVESTIGATORS：真人在大厅/关间可选的全部调查员（含第五循环食梦者 5 人）。
 const PLAYABLE_INVESTIGATORS = PLAYABLE_INVESTIGATOR_CODES
+const SELECTABLE_INVESTIGATORS = SELECTABLE_INVESTIGATOR_CODES
 
 // 修正管线（modifiers.js）通过注入读取能力层注册表，避免两个模块互相 import。
 setModifierRegistry(registeredEntry)
@@ -284,7 +288,7 @@ function info(state, events, text, presentation = null, { public: isPublic = fal
     ? { kind: 'automatic', phase: state.phase, round: state.round, text } : null)
   const privateSeat = presentation == null && state.skillTest && !state.skillTest.helpRequested && !isPublic
     ? roomSeatForEvent(state, state.skillTest.seat) : null
-  const event = { type: 'info', text, ...(privateSeat == null ? {} : { privateSeat }), ...(cue ? { presentation: { ...cue, tableState: captureTableState(state, getStat, getMaxSanity) } } : {}) }
+  const event = { type: 'info', text, ...(privateSeat == null ? {} : { privateSeat }), ...(cue ? { presentation: { ...cue, tableState: captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }) } } : {}) }
   if (events) events.push(event)
   if (state._resolution) state._resolution.events.push(event)
   return text
@@ -1113,6 +1117,9 @@ const commonDeps = {
   enemyDef,
   enemyEvadeValue,
   enemyFightValue,
+  // 2026-11-01：演出快照（captureTableState）也要带有效生命值，与 viewState 的 health 同口径；
+  // 原先只有 combat/harm-threat 的依赖对象里有它，dispatch 的 checkpoint 快照取不到。
+  enemyHealth,
   enemyRuleFlags,
   enemyTextBlanked,
   engageEnemy,
@@ -1962,6 +1969,7 @@ function setupApi() {
   DERIVED_STATE_KEYS,
   META,
   PLAYABLE_INVESTIGATORS,
+  SELECTABLE_INVESTIGATORS,
   RULES_VERSION,
   SCENARIOS,
   STATE_SCHEMA_VERSION,
@@ -2482,6 +2490,7 @@ function createTableDecisionsApi() {
     ALL_INVESTIGATORS,
     HUB_SEAT_ACTIONS,
     PLAYABLE_INVESTIGATORS,
+    SELECTABLE_INVESTIGATORS,
     actionCost,
     assetPassiveData,
     buildDeckFromList,
@@ -2821,7 +2830,7 @@ function createCardDefsApi() {
     cardIdentityFields,
     contentRegistry,
     getAvailability,
-    hasExplicitReactionPrompt,
+    entryNeedsReactionPrompt,
     isAutomaticReward,
     isCardAvailable,
     nextInstanceId,

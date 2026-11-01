@@ -75,6 +75,17 @@ export function reactionDisabledCodes(session, seat) {
     .filter(([, state]) => state === 'skip').map(([code]) => code).slice(0, 256)
 }
 
+// 「⚡ 快速打出」候选的 option id → 卡号。收尾玩家窗口（playerWindow 'investigation.afterAction'）
+// 给手牌快速事件的选项只带 `fast-card:<卡号>`（手牌）或 `fast-card:hunch:<卡号>`（直觉牌库揭示那张），
+// 而 `fast-card:hunch:<卡号>` 只有通道候选才额外带 cardCode（见 encounter.js#playerWindow 的选项负载：
+// 手牌保持旧形状，避免改变既有待决选择）。卡面闪电开关按卡号记忆，必须能从这里反查，
+// 否则「本局不再询问」存了 skip 却过滤不掉选项、也不会整窗自动让过。id 格式与
+// web/card-interactions.js 的挂桌规则一致。
+const fastCardOptionCode = id => {
+  const match = /^fast-card:(?:hunch:)?(\d{5})$/.exec(String(id || ''))
+  return match ? match[1] : null
+}
+
 export function reactionChoices(st) {
   const choice = st.pendingChoice
   if (!choice?.canSkip || !['reaction', 'playerWindow', 'boost'].includes(choice.kind)) return []
@@ -86,7 +97,8 @@ export function reactionChoices(st) {
     || [inv.code, ...assets.map(asset => asset.code)].find(code => code === source || st.cards?.[code]?.reactionIds?.includes(source))
   return (st.legalMoves || []).filter(move => move.action === 'choose' && move.choiceId === choice.id && move.optionId !== 'skip').map(move => {
     const option = choice.options?.find(option => option.id === move.optionId)
-    const code = option?.cardCode || (choice.kind === 'reaction' && /^\d+$/.test(move.optionId) ? inv.hand?.[Number(move.optionId)] : null)
+    const code = option?.cardCode || fastCardOptionCode(move.optionId)
+      || (choice.kind === 'reaction' && /^\d+$/.test(move.optionId) ? inv.hand?.[Number(move.optionId)] : null)
       || assets.find(asset => move.optionId === asset.id || move.optionId.startsWith(asset.id + ':'))?.code || sourceCard
     return { move, code }
   })

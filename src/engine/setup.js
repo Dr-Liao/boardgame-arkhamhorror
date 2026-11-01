@@ -34,6 +34,7 @@ export function createSetup(deps) {
     META,
     returnAllBonded,
     PLAYABLE_INVESTIGATORS,
+    SELECTABLE_INVESTIGATORS,
     RULES_VERSION,
     SCENARIOS,
     SKILL_NAMES,
@@ -374,7 +375,7 @@ function refreshStateResources(state) {
   state.resourceVersion = META.resourceVersion
   state.cards = inHub(state) ? allCardDefs({ runtimeOnly: true, campaignId })
     : embeddedCardDefs(state, campaignId)
-  state.investigatorDefs = Object.fromEntries(PLAYABLE_INVESTIGATORS.map(code => [code, ALL_INVESTIGATORS[code]]))
+  state.investigatorDefs = Object.fromEntries(SELECTABLE_INVESTIGATORS.map(code => [code, ALL_INVESTIGATORS[code]]))
   state.classNames = CLASS_NAMES
   state.classColors = CLASS_COLOR
   state.skillNames = SKILL_NAMES
@@ -527,7 +528,7 @@ function createGameState(settings, players) {
     resourceVersion: META.resourceVersion,
     rulesMode,
     cards: allCardDefs({ runtimeOnly: true, campaignId: CAMPAIGN.id }),
-    investigatorDefs: Object.fromEntries(PLAYABLE_INVESTIGATORS.map(code => [code, ALL_INVESTIGATORS[code]])),
+    investigatorDefs: Object.fromEntries(SELECTABLE_INVESTIGATORS.map(code => [code, ALL_INVESTIGATORS[code]])),
     classNames: CLASS_NAMES,
     classColors: CLASS_COLOR,
     skillNames: SKILL_NAMES,
@@ -801,7 +802,11 @@ function setupScenarioDecks(state, events) {
 }
 
 function setupChaosBag(state, events) {
-  const bags = campaignManifestFor(state).chaosBags || CHAOS_BAGS
+  const manifest = campaignManifestFor(state)
+  // P9.5：双线战役的两套基础袋由 `manifest.partChaosBags` 提供；
+  // 当前活动线存在时按 part 取袋（单线/分选切 part/并行 lane 都走这里），缺省退回 chaosBags。
+  const part = state.campaign?.currentPart ?? null
+  const bags = (part && manifest.partChaosBags?.[part]) || manifest.chaosBags || CHAOS_BAGS
   initializeChaosBag(state, bags[state.difficulty] || bags.standard)
   const extra = state.scenario.chaosBagExtra || []
   if (extra.length) {

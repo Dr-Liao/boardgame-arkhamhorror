@@ -11,25 +11,26 @@ const traitsOf = card => (ALL_CARDS[original(card)]?.traits || card?.traits || [
   .map(trait => String(trait).toLowerCase())
 const isStaffEnemy = card => traitsOf(card).includes('staff')
 
-// 卡面（cards-data 06063）的符号表原文：tokenMeanings 放在 scenario 对象上（引擎读 state.scenario.tokenMeanings）。
+// 中文逐字取自 cards-data 06063 的 textZh/backTextZh（P8-T：token 文本不入剧情生成物，唯一允许的中文来源）；
+// tokenMeanings 放在 scenario 对象上（引擎读 state.scenario.tokenMeanings）。
 export const WAKING_NIGHTMARE_TOKEN_MEANINGS = Object.freeze({
   standard: {
-    skull: { text: '-1 (-3 instead if you are engaged with a _Staff_ enemy).', delta: 0 },
+    skull: { text: '-1(如果你与[[职工]]敌人交战，改为-3)。', delta: 0 },
     cultist: {
-      text: 'Reveal another chaos token. If you fail and it is agenda 2 or 3, make an infestation test.',
+      text: '再揭示一个混乱标记。如果你检定失败并且是密谋2或3，进行一次蛛群滋生检定。',
       delta: 0,
       drawAnother: true,
     },
-    elderthing: { text: '-X. X is the number of infested locations.', delta: 0 },
+    elderthing: { text: '-X。X为蛛巢地点数量。', delta: 0 },
   },
   hard: {
-    skull: { text: '-2 (-4 instead if you are engaged with a _Staff_ enemy).', delta: 0 },
+    skull: { text: '-2(如果你与[[职工]]敌人交战，改为-4)。', delta: 0 },
     cultist: {
-      text: 'Reveal another chaos token. If it is agenda 2 or 3, make an infestation test.',
+      text: '再揭示一个混乱标记。如果是密谋2或3，进行一次蛛群滋生检定。',
       delta: 0,
       drawAnother: true,
     },
-    elderthing: { text: '-X. X is 1 higher than the number of infested locations.', delta: 0 },
+    elderthing: { text: '-X。X为蛛巢地点数量+1。', delta: 0 },
   },
 })
 

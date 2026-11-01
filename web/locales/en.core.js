@@ -148,7 +148,6 @@ export default {
   'tde.hidden.title': 'Hidden cards',
   'tde.hidden.own': 'You have {count} ({codes})',
   'tde.hidden.other': 'Seat {seat} has {count}',
-  'tde.hidden.noEnemy': 'No enemy form in hand can be fought or evaded',
   'tde.veiled.title': 'Veiled locations',
   'tde.veiled.story': 'Back {code}',
   'tde.veiled.flipped': 'Already flipped',

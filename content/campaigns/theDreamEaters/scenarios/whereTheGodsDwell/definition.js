@@ -3,7 +3,8 @@
 // 参考实现：Scenario/Scenarios/TheDreamEaters/WhereTheGodsDwell.hs + CardDefs/Cards
 // TheDreamEaters/WhereTheGodsDwell（Act/Agenda/Enemy/Location/Treachery）。
 // 卡面数据（名字/卡文/数值/特性/关键词）一律从 `../../card-data.js` 取，本文件只写「关卡怎么用这些卡」。
-// 剧情文本：`./texts.js` 是锁定 en locale 的逐字原文（去 HTML）+ pending 标记；中文自译属 P8-T。
+// 剧情文本：P8-T 已自译，`./texts.js` 从生成物 `../../story-text.js` 投影中文
+// （scenario 上标 textLanguage:'zh-CN' + textStatus:'translated (self-translated)'）。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { bindScenarioIdentities } from '../../../../identities.js'
 import { hiddenRuleFor } from '../../../../../src/cards/card-rules.js'
@@ -122,27 +123,28 @@ for (const treachery of Object.values(definitions.treacheries)) {
 }
 
 // ---- 混乱标记含义（印刷数值；动态 X 由 behavior.resolveChaosToken 计算，这里的 delta 只作静态展示兜底） ----
+// 展示文本中文逐字取自 cards-data 06286 的 textZh/backTextZh（P8-T：token 不进剧情生成物）。
 const tokenMeanings = {
   standard: {
-    skull: { text: '-X. X is the number of the current act.', delta: 0 },
-    cultist: { text: 'Reveal another token. If you fail, place 1 doom on the current agenda.', delta: 0 },
+    skull: { text: '-X。X为当前场景编号。', delta: 0 },
+    cultist: { text: '再揭示一个标记。如果你检定失败，在当前密谋上放置1个毁灭标记。', delta: 0 },
     tablet: {
-      text: '-4. If you fail, choose and reveal a copy of Nyarlathotep in your hand. It attacks you and is shuffled into the encounter deck.',
+      text: '-4。如果你检定失败，选择并揭示你手中的一张奈亚拉托提普。其攻击你，将其混洗入遭遇牌库。',
       delta: -4,
     },
-    elder_thing: { text: "0. The black cat reminds you that it's all a dream.", delta: 0 },
+    elder_thing: { text: '0。黑猫提醒你这一切都是一场梦。', delta: 0 },
   },
   hard: {
-    skull: { text: '-X. X is the number of the current act plus the number of the current agenda.', delta: 0 },
+    skull: { text: '-X。X为当前场景编号加上当前密谋编号。', delta: 0 },
     cultist: {
-      text: 'Reveal another token. If you fail, place 1 doom on the current agenda. This effect may cause the current agenda to advance.',
+      text: '再揭示一个标记。如果你检定失败，在当前密谋上放置1个毁灭标记。本效果能导致当前密谋推进。',
       delta: 0,
     },
     tablet: {
-      text: '-6. If you fail, choose and reveal a copy of Nyarlathotep in your hand. It attacks you and is shuffled into the encounter deck.',
+      text: '-6。如果你检定失败，选择并揭示你手中的一张奈亚拉托提普。其攻击你，将其混洗入遭遇牌库。',
       delta: -6,
     },
-    elder_thing: { text: "-1. The black cat reminds you that it's all a dream.", delta: -1 },
+    elder_thing: { text: '-1。黑猫提醒你这一切都是一场梦。', delta: -1 },
   },
 }
 
@@ -175,7 +177,7 @@ export const scenario = {
   storyAssets: storyCards([]),
   encounterDeck: encounterDeck(deckCards),
   tokenMeanings,
-  // 冒险幕间「Grand Design」的 5 段英文原文（cards-data 无独立卡；大礼堂背面/剧情流程用）。
+  // 冒险幕间「Grand Design」的 5 段中文正文（P8-T 自译，cards-data 无独立卡；大礼堂背面/剧情流程用）。
   grandDesign: [
     EN_TEXTS.grandDesign1,
     EN_TEXTS.grandDesign2,

@@ -310,9 +310,10 @@ const lastInfo = api => api.calls.filter(entry => entry.name === 'present' || en
 // ---------------------------------------------------------------------------
 // 1. manifest / 身份 / 结构
 // ---------------------------------------------------------------------------
-test('06247 章节清单：development、参考卡、地点/幕/议程/结局数量', () => {
+test('06247 章节清单：playable、参考卡、地点/幕/议程/结局数量', () => {
   assert.equal(chapter.manifest.id, 'pointOfNoReturn')
-  assert.equal(chapter.manifest.status, 'development')
+  // P10：真实战役/章节已注册为 playable。
+  assert.equal(chapter.manifest.status, 'playable')
   assert.equal(chapter.manifest.campaignId, 'theDreamEaters')
   assert.equal(chapter.manifest.referenceCode, '06247')
   assert.equal(chapter.scenario.originalCode, '06247')
@@ -322,6 +323,9 @@ test('06247 章节清单：development、参考卡、地点/幕/议程/结局数
   assert.deepEqual(chapter.manifest.resolutionIds, ['noResolution', 'resolution1', 'resolution2'])
   assert.equal(chapter.manifest.startLocationId, 'vaultsOfZin')
   assert.equal(chapter.behavior.id, 'pointOfNoReturn')
+  // P8-T：剧情正文切到 story-text 中文（自译）。
+  assert.equal(chapter.scenario.textLanguage, 'zh-CN')
+  assert.equal(chapter.scenario.textStatus, 'translated (self-translated)')
 })
 
 test('身份登记：地点/幕/议程/敌人/诡计/剧情支援都有原卡身份且 mapped', () => {
@@ -371,7 +375,7 @@ test('preScenarioSetup：按 Randolph 记录选 act1 版本并朗读对应 intro
   behavior.preScenarioSetup(died, [], diedApi)
   assert.equal(died.scenarioFlags.actOneVariant, 'v1')
   assert.equal(died.acts[0].originalCode, '06250')
-  assert.match(lastInfo(diedApi), /Intro 1/)
+  assert.match(lastInfo(diedApi), /开场 1：/, '应朗读开场 1 的中文正文')
 
   const survived = stateFor()
   survived.campaign.records.randolphDidNotSurviveTheDescent = false
@@ -379,7 +383,7 @@ test('preScenarioSetup：按 Randolph 记录选 act1 版本并朗读对应 intro
   behavior.preScenarioSetup(survived, [], survivedApi)
   assert.equal(survived.scenarioFlags.actOneVariant, 'v2')
   assert.equal(survived.acts[0].originalCode, '06251')
-  assert.match(lastInfo(survivedApi), /Intro 2/)
+  assert.match(lastInfo(survivedApi), /开场 2：/, '应朗读开场 2 的中文正文')
   assert.ok(INTRO_VARIANTS.intro2.paragraphs.length >= 3)
 })
 

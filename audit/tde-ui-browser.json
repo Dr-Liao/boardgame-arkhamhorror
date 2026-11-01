@@ -25,28 +25,28 @@
       "status": "passed"
     },
     {
-      "title": "M5 并行出发准备左右分屏与双线队长在desktop端可用",
+      "title": "M5 并行出发准备左右分屏、插图置顶与固定卡尺寸在desktop端可用",
       "spec": "tests/tde-modes.browser.mjs",
       "viewport": "desktop",
       "expectedStatus": "passed",
       "status": "passed"
     },
     {
-      "title": "M5 并行出发准备左右分屏与双线队长在mobile端可用",
+      "title": "M5 并行出发准备左右分屏、插图置顶与固定卡尺寸在mobile端可用",
       "spec": "tests/tde-modes.browser.mjs",
       "viewport": "mobile",
       "expectedStatus": "passed",
       "status": "passed"
     },
     {
-      "title": "M5 并行双线自由分线与人数相等门在desktop端可用",
+      "title": "M5 并行双线选完模式后从出发准备分屏一键换线在desktop端可用",
       "spec": "tests/tde-modes.browser.mjs",
       "viewport": "desktop",
       "expectedStatus": "passed",
       "status": "passed"
     },
     {
-      "title": "M5 并行双线自由分线与人数相等门在mobile端可用",
+      "title": "M5 并行双线选完模式后从出发准备分屏一键换线在mobile端可用",
       "spec": "tests/tde-modes.browser.mjs",
       "viewport": "mobile",
       "expectedStatus": "passed",
@@ -81,14 +81,14 @@
       "status": "passed"
     },
     {
-      "title": "M5 食梦者开局模式面板与座位分线在desktop端可用",
+      "title": "M5 食梦者开局模式门与四模式在desktop端可用",
       "spec": "tests/tde-modes.browser.mjs",
       "viewport": "desktop",
       "expectedStatus": "passed",
       "status": "passed"
     },
     {
-      "title": "M5 食梦者开局模式面板与座位分线在mobile端可用",
+      "title": "M5 食梦者开局模式门与四模式在mobile端可用",
       "spec": "tests/tde-modes.browser.mjs",
       "viewport": "mobile",
       "expectedStatus": "passed",
@@ -146,24 +146,10 @@
       "exists": true
     },
     {
-      "name": "modes-desktop-seats",
-      "path": "artifacts/tde-migration/modes-desktop-seats.png",
-      "base": "repo-root",
-      "viewport": "desktop",
-      "exists": true
-    },
-    {
       "name": "modes-desktop",
       "path": "artifacts/tde-migration/modes-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
-      "exists": true
-    },
-    {
-      "name": "modes-mobile-seats",
-      "path": "artifacts/tde-migration/modes-mobile-seats.png",
-      "base": "repo-root",
-      "viewport": "mobile",
       "exists": true
     },
     {
@@ -174,38 +160,24 @@
       "exists": true
     },
     {
+      "name": "modes-picked-desktop",
+      "path": "artifacts/tde-migration/modes-picked-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "exists": true
+    },
+    {
+      "name": "modes-picked-mobile",
+      "path": "artifacts/tde-migration/modes-picked-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "exists": true
+    },
+    {
       "name": "parallel-in-game-desktop",
       "path": "artifacts/tde-migration/parallel-in-game-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
-      "exists": true
-    },
-    {
-      "name": "parallel-seats-desktop-unbalanced",
-      "path": "artifacts/tde-migration/parallel-seats-desktop-unbalanced.png",
-      "base": "repo-root",
-      "viewport": "desktop",
-      "exists": true
-    },
-    {
-      "name": "parallel-seats-desktop",
-      "path": "artifacts/tde-migration/parallel-seats-desktop.png",
-      "base": "repo-root",
-      "viewport": "desktop",
-      "exists": true
-    },
-    {
-      "name": "parallel-seats-mobile-unbalanced",
-      "path": "artifacts/tde-migration/parallel-seats-mobile-unbalanced.png",
-      "base": "repo-root",
-      "viewport": "mobile",
-      "exists": true
-    },
-    {
-      "name": "parallel-seats-mobile",
-      "path": "artifacts/tde-migration/parallel-seats-mobile.png",
-      "base": "repo-root",
-      "viewport": "mobile",
       "exists": true
     },
     {

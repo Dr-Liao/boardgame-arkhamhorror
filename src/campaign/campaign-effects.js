@@ -1,6 +1,7 @@
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { poisonWeaknessCode } from '../cards/card-rules.js'
 import { awardExperience, campaignCardChange, updateCampaignStatus } from './campaign.js'
+import { inPart, partRecord, recordInPart } from './campaign-parts.js'
 import { changeChaosBag } from '../engine/chaos-bag.js'
 import { requestChoice } from '../engine/resolution.js'
 import { randomValue } from '../engine/rules-state.js'
@@ -667,7 +668,58 @@ function applyTwistOfFate(state, effect, log) {
   return total
 }
 
+// P9.5：带 `part` 的战役效果（TDE 幕间跨线读写）——按目标线的数据作用域结算，
+// 不换 currentPart、不碰运行时座位；`inPart` 负责把 records/investigators/chaosBag 等
+// 临时换成目标线快照并在结束后写回。
+function applyPartScopedEffect(state, effect, part, log) {
+  const campaign = state.campaign
+  if (effect.type === 'record') {
+    const declared = campaign?.recordSchema?.[effect.key]
+    const actual = Array.isArray(effect.value) ? 'string[]' : typeof effect.value
+    if (declared && declared !== actual) throw new Error(`战役记录 ${effect.key} 类型应为 ${declared}`)
+    recordInPart(campaign, part, effect.key, effect.value)
+    return
+  }
+  if (effect.type === 'increment') {
+    if (!Number.isFinite(effect.amount)) throw new Error('战役记录增量必须是有限数值')
+    recordInPart(campaign, part, effect.key, Number(partRecord(campaign, part, effect.key) || 0) + effect.amount)
+    return
+  }
+  if (effect.type === 'chaos') {
+    inPart(state, part, () => changeChaosBag(state, effect.token, effect.amount, { permanent: true }))
+    if (log) log(`🎲 ${part} 线混乱袋：${effect.amount > 0 ? '+' : ''}${effect.amount} ${effect.token}。`)
+    return
+  }
+  if (effect.type === 'chaosByDifficulty') {
+    const token = (effect.tokenByDifficulty || {})[state.difficulty || 'standard']
+    if (!token) return
+    inPart(state, part, () => changeChaosBag(state, token, 1, { permanent: true }))
+    if (log) log(`🎲 ${part} 线混乱袋按难度加入 ${token}。`)
+    return
+  }
+  if (effect.type === 'addCampaignCardToDeck') {
+    if (typeof effect.code !== 'string' || !effect.code) throw new Error('战役资产入牌组需要卡号')
+    inPart(state, part, () => campaignCardChange(campaign, effect.seat ?? 0, effect.code, 'add', effect.reason || '剧情奖励'))
+    return
+  }
+  if (effect.type === 'removeCampaignCard') {
+    if (typeof effect.code !== 'string' || !effect.code) throw new Error('移除战役卡需要卡号')
+    inPart(state, part, () => {
+      const entry = Object.entries(campaign.investigators || {})
+        .find(([, record]) => Array.isArray(record?.deck) && record.deck.includes(effect.code))
+      if (!entry) return
+      campaignCardChange(campaign, entry[1].seat ?? Number(entry[0]), effect.code, 'remove', effect.reason || 'campaign')
+    })
+    return
+  }
+  throw new Error(`带 part 的战役效果暂不支持：${effect.type}`)
+}
+
 export function applyCampaignEffect(state, effect, log) {
+  if (['A', 'B'].includes(effect?.part)) {
+    applyPartScopedEffect(state, effect, effect.part, log)
+    return
+  }
   if (effect.type === 'chaos') changeChaosBag(state, effect.token, effect.amount, { permanent: true })
   else if (effect.type === 'log') log(effect.text)
   else if (effect.type === 'storyCard') awardStoryCard(state, effect.code, state.campaign.flow.nodeId)
@@ -810,6 +862,8 @@ export function applyCampaignEffect(state, effect, log) {
 export const RESULT_EFFECT_KEYS = Object.freeze([
   'when', 'text', 'record', 'recordUnion', 'recordRemove', 'trauma', 'xp', 'targets',
   'investigatorStatus', 'failed', 'storyCard', 'chaos', 'flag',
+  // P9.5：TDE 月之暗面的结局声明（P8 遗留字段，参考实现 recordCount = incrementRecordCount）。
+  'campaignWeakness', 'recordCount',
 ])
 
 const RESULT_EFFECT_KEY_SET = new Set(RESULT_EFFECT_KEYS)
@@ -925,6 +979,18 @@ export function applyResolutionResults(state, effects, { log = () => {}, runtime
     if (effect.flag) {
       campaign.ruleFlags ||= {}
       campaign.ruleFlags[effect.flag.key] = effect.flag.value ?? true
+    }
+    // P9.5：TDE 结局的跨关记分与战役弱点（参考实现 `incrementRecordCount` /
+    // `addCampaignWeakness`）。`campaignWeakness` 复用 applyCampaignEffect 的既有分支。
+    if (effect.campaignWeakness) {
+      applyCampaignEffect(state, { type: 'campaignWeakness', ...effect.campaignWeakness }, log)
+    }
+    if (effect.recordCount) {
+      const { key, delta } = effect.recordCount
+      if (!key || !Number.isSafeInteger(delta)) throw new Error('战役结果计数必须含整数 delta')
+      const declared = campaign.recordSchema?.[key]
+      if (declared && declared !== 'number') throw new Error(`战役记录 ${key} 不是数值`)
+      writeResultRecord(state, key, Number(campaign.records[key] || 0) + delta, log)
     }
   }
   return applied

@@ -288,8 +288,9 @@ export const CAMPAIGN_CYCLES = Object.freeze({
   theDunwichLegacy: 2,
   thePathToCarcosa: 3,
   theForgottenAge: 4,
-  // 第 5 步（P6）：调查员已可选。战役本身仍是 catalog-only，登记循环只影响渐进式卡池的判定。
   theCircleUndone: 5,
+  // P10（M5 发布）：食梦者 06 段是第六循环，已注册进生产组合根并在大厅可启动。
+  theDreamEaters: 6,
 })
 export function normalizeCardPoolScope(scope) {
   return CARD_POOL_SCOPES.includes(scope) ? scope : 'all'

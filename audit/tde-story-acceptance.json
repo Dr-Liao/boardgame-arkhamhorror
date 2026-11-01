@@ -1,0 +1,457 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theDreamEaters",
+  "stage": "P8-T",
+  "milestone": "M3-C",
+  "generatedBy": "tools/import-tde-story.mjs",
+  "sourceKind": "self-translated",
+  "officialChinese": false,
+  "status": "translated",
+  "glossaryVersion": "tde-terms-v1",
+  "generatedSha256": "c478b11f255c0adb23141ccf279252d9b0a23b5aeeeb978963647d55652bbb77",
+  "enSourceHashes": {
+    "base.json": "c39968a8b8f8d7ed92b1e275baed5274a27df94928f6ef1f63bbaf03d62c6bc3",
+    "scenarios/beyondTheGatesOfSleep.json": "dd2794c801a873929084a2eb250fb940ba2f626235d9613142bf9ea22790efcb",
+    "scenarios/wakingNightmare.json": "12b61cd4713d32dc79b5ac9621e70f9f7cd2a41c78ad47bf400bd36e1c23790d",
+    "scenarios/theSearchForKadath.json": "dda83004366aaf36ed80fcbac74237091896725fc2d43f7038c49682aaf12672",
+    "scenarios/aThousandShapesOfHorror.json": "6855471424e13bdc9cc857df9854130b14ce9e7722ebd4719ab50b606e4fa6d4",
+    "scenarios/darkSideOfTheMoon.json": "569e26de85fb38f2256fa9eb9fea41718db7c9b5707ec0a83f8b6406b323b9c7",
+    "scenarios/pointOfNoReturn.json": "7975909f2fb9393499a9ea4236f9d2b9f01847ee6a183f513b374f993f0fb8ea",
+    "scenarios/whereTheGodsDwell.json": "b1243193c56f4cdc223795c4a22cd04ed970d1733d0c110887bf46ad1e448766",
+    "scenarios/weaverOfTheCosmos.json": "17e58808248a87d482cd1b65cc4be365b851df5171a1b05f79f7396e58e113fd"
+  },
+  "zhSourceHashes": {
+    "batch-01.json": "03bd0bf09f37f557bd026ec8915aec23686aa39cb58a2968465528641baf43ef",
+    "batch-02.json": "3876042904be594c06f9d3b4419c472a169b84a33bd65b12014bc2596dcbcde5",
+    "batch-03.json": "0b10633aeb21aa02bf7f60b4f34efc9e0ad343ed10e299eebd08a86024608478",
+    "batch-04.json": "940bb2fabf44708d48089bba395f2f469bf4aa55af557c78b39748d0a061eb93",
+    "batch-05.json": "ffd4422d88b5407e7574e54c27fa94178fa8f4e87671df3936aaa4c50edfeb8e",
+    "batch-14.json": "93b844631377a415a2dce519a5df4bf5d251432bc8c80991f445eab967e3fbda",
+    "batch-06.json": "5ae4fa35d574e0e5742c9b2a0bba22af45af478e41f625af9c21f73168920c32",
+    "batch-07.json": "ce9ae457d0591c1298151af67fa98ed5a90420a91a93c6b9c35a73c3f984821d",
+    "batch-08.json": "048f544abe58ae7702dc199d9a14c63330dc3abfd5496c193428978573c51ac4",
+    "batch-09.json": "1291abf16605c3878f57b9a97f2be77c68ddebc5b557be21f226ca997e1b8626",
+    "batch-10.json": "dc1a70130a1fa9314156047c4f59222456eb3a07f25b61813cd4cb94192e26bc",
+    "batch-11.json": "48fe3da3cb72f742d6866bdc1d88de4a53fdaaccb595a06903cabd784747ed01",
+    "batch-12.json": "e8ddfd9b3d20fef7faf8038b36fa69b270697c7c3256ce23714f571208a09682",
+    "batch-13.json": "e83d050512fee04bbfbaf1747c5f94a87b06863bcf6bd7f8434e2ad199b478cf"
+  },
+  "batches": [
+    {
+      "id": "01",
+      "title": "序章与战役结构",
+      "translator": "w-p8t-base1",
+      "keys": 10,
+      "enChars": 5383,
+      "zhChars": 1804,
+      "status": "translated"
+    },
+    {
+      "id": "02",
+      "title": "幕间 I：黑猫",
+      "translator": "w-p8t-base1",
+      "keys": 23,
+      "enChars": 11657,
+      "zhChars": 3863,
+      "status": "translated"
+    },
+    {
+      "id": "03",
+      "title": "幕间 II：入梦者",
+      "translator": "w-p8t-base2",
+      "keys": 28,
+      "enChars": 10197,
+      "zhChars": 3373,
+      "status": "translated"
+    },
+    {
+      "id": "04",
+      "title": "幕间 III：伟大的存在",
+      "translator": "w-p8t-base2",
+      "keys": 24,
+      "enChars": 10216,
+      "zhChars": 3422,
+      "status": "translated"
+    },
+    {
+      "id": "05",
+      "title": "16 段尾声矩阵",
+      "translator": "w-p8t-base3",
+      "keys": 36,
+      "enChars": 9540,
+      "zhChars": 3299,
+      "status": "translated"
+    },
+    {
+      "id": "14",
+      "title": "关键词/附加规则/界面杂项与终审",
+      "translator": "w-p8t-base3",
+      "keys": 9,
+      "enChars": 3483,
+      "zhChars": 1167,
+      "status": "translated"
+    },
+    {
+      "id": "06",
+      "title": "章节：梦境门外（A1）",
+      "translator": "w-p8t-beyondTheGatesOfSleep",
+      "keys": 69,
+      "enChars": 21578,
+      "zhChars": 6765,
+      "status": "translated"
+    },
+    {
+      "id": "07",
+      "title": "章节：清醒噩梦（B1）",
+      "translator": "w-p8t-wakingNightmare",
+      "keys": 37,
+      "enChars": 17823,
+      "zhChars": 5628,
+      "status": "translated"
+    },
+    {
+      "id": "08",
+      "title": "章节：寻觅卡达斯（A2）",
+      "translator": "w-p8t-theSearchForKadath",
+      "keys": 91,
+      "enChars": 22392,
+      "zhChars": 7247,
+      "status": "translated"
+    },
+    {
+      "id": "09",
+      "title": "章节：万千骇形（B2）",
+      "translator": "w-p8t-aThousandShapesOfHorror",
+      "keys": 28,
+      "enChars": 13344,
+      "zhChars": 4369,
+      "status": "translated"
+    },
+    {
+      "id": "10",
+      "title": "章节：月之暗面（A3）",
+      "translator": "w-p8t-darkSideOfTheMoon",
+      "keys": 29,
+      "enChars": 14945,
+      "zhChars": 4983,
+      "status": "translated"
+    },
+    {
+      "id": "11",
+      "title": "章节：无归之地（B3）",
+      "translator": "w-p8t-pointOfNoReturn",
+      "keys": 37,
+      "enChars": 12254,
+      "zhChars": 4000,
+      "status": "translated"
+    },
+    {
+      "id": "12",
+      "title": "章节：神居之所（A4）",
+      "translator": "w-p8t-whereTheGodsDwell",
+      "keys": 49,
+      "enChars": 16967,
+      "zhChars": 5774,
+      "status": "translated"
+    },
+    {
+      "id": "13",
+      "title": "章节：编织宇宙（B4）",
+      "translator": "w-p8t-weaverOfTheCosmos",
+      "keys": 40,
+      "enChars": 16094,
+      "zhChars": 5467,
+      "status": "translated"
+    }
+  ],
+  "coverage": {
+    "totalKeys": 510,
+    "translatedKeys": 510,
+    "batches": 14,
+    "excludedKeys": 65,
+    "excluded": [
+      {
+        "key": "scenarios/beyondTheGatesOfSleep.json#specialRules[0].title",
+        "reason": "locale 引用（由目标键派生）"
+      },
+      {
+        "key": "scenarios/beyondTheGatesOfSleep.json#specialRules[0].body",
+        "reason": "locale 引用（由目标键派生）"
+      },
+      {
+        "key": "scenarios/beyondTheGatesOfSleep.json#tokens.easyStandard.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/beyondTheGatesOfSleep.json#tokens.easyStandard.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/beyondTheGatesOfSleep.json#tokens.easyStandard.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/beyondTheGatesOfSleep.json#tokens.hardExpert.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/beyondTheGatesOfSleep.json#tokens.hardExpert.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/beyondTheGatesOfSleep.json#tokens.hardExpert.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/wakingNightmare.json#tokens.easyStandard.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/wakingNightmare.json#tokens.easyStandard.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/wakingNightmare.json#tokens.easyStandard.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/wakingNightmare.json#tokens.hardExpert.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/wakingNightmare.json#tokens.hardExpert.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/wakingNightmare.json#tokens.hardExpert.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/wakingNightmare.json#tooltips.waitingRoom.resign",
+        "reason": "地点/卡面 tooltip 属行为层数据（章节 flags/behavior 已有中文），不进入剧情正文"
+      },
+      {
+        "key": "scenarios/theSearchForKadath.json#tokens.easyStandard.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/theSearchForKadath.json#tokens.easyStandard.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/theSearchForKadath.json#tokens.easyStandard.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/theSearchForKadath.json#tokens.easyStandard.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/theSearchForKadath.json#tokens.hardExpert.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/theSearchForKadath.json#tokens.hardExpert.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/theSearchForKadath.json#tokens.hardExpert.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/theSearchForKadath.json#tokens.hardExpert.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/aThousandShapesOfHorror.json#tokens.easyStandard.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/aThousandShapesOfHorror.json#tokens.easyStandard.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/aThousandShapesOfHorror.json#tokens.easyStandard.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/aThousandShapesOfHorror.json#tokens.easyStandard.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/aThousandShapesOfHorror.json#tokens.hardExpert.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/aThousandShapesOfHorror.json#tokens.hardExpert.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/aThousandShapesOfHorror.json#tokens.hardExpert.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/aThousandShapesOfHorror.json#tokens.hardExpert.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/aThousandShapesOfHorror.json#tooltips.frontPorchEntryway.revealUpstairs",
+        "reason": "地点/卡面 tooltip 属行为层数据（章节 flags/behavior 已有中文），不进入剧情正文"
+      },
+      {
+        "key": "scenarios/aThousandShapesOfHorror.json#tooltips.frontPorchEntryway.placeUnmarkedTomb",
+        "reason": "地点/卡面 tooltip 属行为层数据（章节 flags/behavior 已有中文），不进入剧情正文"
+      },
+      {
+        "key": "scenarios/darkSideOfTheMoon.json#tokens.easyStandard.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/darkSideOfTheMoon.json#tokens.easyStandard.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/darkSideOfTheMoon.json#tokens.easyStandard.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/darkSideOfTheMoon.json#tokens.easyStandard.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/darkSideOfTheMoon.json#tokens.hardExpert.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/darkSideOfTheMoon.json#tokens.hardExpert.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/darkSideOfTheMoon.json#tokens.hardExpert.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/darkSideOfTheMoon.json#tokens.hardExpert.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/pointOfNoReturn.json#tokens.easyStandard.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/pointOfNoReturn.json#tokens.easyStandard.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/pointOfNoReturn.json#tokens.easyStandard.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/pointOfNoReturn.json#tokens.easyStandard.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/pointOfNoReturn.json#tokens.hardExpert.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/pointOfNoReturn.json#tokens.hardExpert.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/pointOfNoReturn.json#tokens.hardExpert.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/pointOfNoReturn.json#tokens.hardExpert.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/whereTheGodsDwell.json#tokens.easyStandard.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/whereTheGodsDwell.json#tokens.easyStandard.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/whereTheGodsDwell.json#tokens.easyStandard.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/whereTheGodsDwell.json#tokens.easyStandard.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/whereTheGodsDwell.json#tokens.hardExpert.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/whereTheGodsDwell.json#tokens.hardExpert.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/whereTheGodsDwell.json#tokens.hardExpert.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/whereTheGodsDwell.json#tokens.hardExpert.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/weaverOfTheCosmos.json#tokens.easyStandard.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/weaverOfTheCosmos.json#tokens.easyStandard.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/weaverOfTheCosmos.json#tokens.easyStandard.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/weaverOfTheCosmos.json#tokens.easyStandard.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/weaverOfTheCosmos.json#tokens.hardExpert.skull",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/weaverOfTheCosmos.json#tokens.hardExpert.cultist",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/weaverOfTheCosmos.json#tokens.hardExpert.tablet",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      },
+      {
+        "key": "scenarios/weaverOfTheCosmos.json#tokens.hardExpert.elderThing",
+        "reason": "混乱标记效果已由各章 chaos.js 的 tokenMeanings 中文化（引擎只读那份），不重复翻译"
+      }
+    ]
+  },
+  "inventory": {
+    "chapters": 8,
+    "epilogueCells": 16,
+    "interludes": 3,
+    "recordLabels": 55,
+    "localizations": 14
+  },
+  "chars": {
+    "en": 185873,
+    "zh": 61161
+  },
+  "checks": {
+    "batchesComplete": true,
+    "coverage": true,
+    "markupClean": true,
+    "provenance": true,
+    "generated": true
+  },
+  "gate": {
+    "pass": true
+  },
+  "remaining": []
+}

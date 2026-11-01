@@ -398,6 +398,13 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
    **快速事件（played+fast 或 fromHand 反应）只有开/关两档，没有「自动触发」**：按
    `card-defs.js` 的 `hasAutoReactionFor` 口径，auto 会替玩家从手牌付费打出，风险不同，所以
    手牌、直觉区与其它通道的快速事件同一处理；非事件反应（场上支援/调查员能力）的 auto 档不变。
+   **所有快速事件都要有开关**（2026-10-31）：开关口径收敛在 `card-rules.js#entryNeedsReactionPrompt`
+   ——`explicitReactionPrompt`（条目级 read point 窗口，如 02305/01071）以及所有 `played + fast`
+   描述子。没有固定触发时机的「快速。只能在你回合期间打出」事件（01050 逃避隐藏等 27 张）只会在
+   收尾玩家窗口（`investigation.afterAction` 的 `fastHandPlays`）以「⚡ 快速打出」候选出现，
+   选项 id 是 `fast-card:<卡号>` / `fast-card:hunch:<卡号>`；`reactionChoices` 从 id 反查卡号，
+   关闭开关就过滤掉该候选、唯一候选时整窗自动让过。存档迁移用同一口径检测内嵌卡面缺
+   `hasReactionPrompt` 的旧存档并强制刷新（`save-migration.js#needsReactionPromptFlags`）。
 3. **新增通道或新增窗口都只改一处**：新增通道 = 在 `play-channels.js` 的 `entriesOf` /
    `CHANNEL_ORDER` / `WINDOW_CHANNEL_ORDER` 加一条并补 `entryError`/`takeToHand`/`actionTake` 的
    switch 分支；新增窗口 = 遍历 `entries()` / `windowEntries()`。窗口、validate、dispatch、UI 不需要

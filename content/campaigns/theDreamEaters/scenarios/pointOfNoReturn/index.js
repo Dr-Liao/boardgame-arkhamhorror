@@ -9,7 +9,7 @@ export { scenario, identities, layout, behavior, implementedEncounterCodes }
 // 区域账本按印张数量登记（scenarioZoneReport 与卡池 quantity 对账）。
 export const manifest = scenarioManifest(scenario, identities, {
   campaignId: 'theDreamEaters',
-  status: 'development',
+  status: 'playable',
   layout,
   // tdeCampaign 的 cardRanges 06039–06354 覆盖本章全部 TDE 卡；core 提供 Ghouls/Striking Fear/
   // Ancient Evils/Nightgaunts 四个核心组。

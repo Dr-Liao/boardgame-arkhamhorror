@@ -1,0 +1,296 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theDreamEaters",
+  "stage": "P9.5",
+  "generatedBy": "tools/audit-tde-parallel.mjs --write",
+  "status": "passed",
+  "launch": {
+    "campaignId": "theDreamEaters",
+    "dualLineGate": "open",
+    "modes": [
+      "singleA",
+      "singleB",
+      "pick",
+      "parallel"
+    ],
+    "flows": [
+      "singleA",
+      "singleB",
+      "pick",
+      "parallel"
+    ],
+    "contentStatus": "playable",
+    "registeredInProduction": true
+  },
+  "summary": {
+    "gates": 10,
+    "gatesCovered": 10,
+    "tests": 47,
+    "testFiles": 4,
+    "browserTests": 6,
+    "browserScreenshots": 13,
+    "desktopBrowser": true,
+    "mobileBrowser": true
+  },
+  "gates": [
+    {
+      "id": "G1",
+      "title": "双线字段只对 TDE 写入；容器只对 parallel 写入；旧 13 局 baseline 不变",
+      "count": 2,
+      "pass": true,
+      "tests": [
+        "P9.5 G1 TDE 选定模式才写 campaign 双线字段；parallel 才写 state.parallel；13 局基线留档",
+        "P9.5 G1 非 TDE 战役建局前后零新增双线字段"
+      ]
+    },
+    {
+      "id": "G2",
+      "title": "4 人 2+2 / 2 人 1+1 / 3 人并行置灰 / pick 2+1 / 缺牌组阻塞",
+      "count": 8,
+      "pass": true,
+      "tests": [
+        "P9.5 G2 2 人 1+1 并行真实开局",
+        "P9.5 G2 3 人并行入口置灰并给「两组人数相等」原因",
+        "P9.5 G2 4 人 2+2 并行真实开局：A1/B1 同时在场且两线各自可行动",
+        "P9.5 G2 pick 3 人 2+1 可开局；waiting 座位不能行动也拿不到本线私密视图",
+        "P9.5 G2 先存牌组、后改线仍可开局（record/牌组随座位搬线）",
+        "P9.5 G2 分选两线不均/某线 0 人显式拒绝；并行 3:1 开始置灰并给人数原因",
+        "P9.5 G2 并行开局第一处待决选择：B1 介绍 1 与 A1 梦境选择在真人视图里都有按钮",
+        "P9.5 G2 缺牌组时开局返回明确阻塞原因，不静默待机"
+      ]
+    },
+    {
+      "id": "G3",
+      "title": "16 种先手排列 + 两条真实全流程 + 两次幕间换线",
+      "count": 3,
+      "pass": true,
+      "tests": [
+        "P9.5 G3 16 种逐章对先手排列都经过幕间 I/II/III 并按对屏障到达 end",
+        "P9.5 G3 A-first / B-first 两条全流程：8 章 setup、3 幕间与幕间后换线都成立",
+        "P9.5 G3 真实引擎 pick 3 人 2+1 全流程：8 章 + 3 幕间 + 银钥匙跨线 + 尾声到 end"
+      ]
+    },
+    {
+      "id": "G4",
+      "title": "双线 records/bag/XP/trauma/victory/story 互不串线；跨线只走 recordInPart/inPart",
+      "count": 11,
+      "pass": true,
+      "tests": [
+        "P9.5 G4 双线 records/XP/trauma/victory/storySections/bag 互不串线",
+        "P9.5 G4 双线混乱袋按 manifest.partChaosBags 初始化且内容不同",
+        "P9.5 G4 幕间 III：奈亚拉托提普/阿特拉克·纳克亚分支的黑猫与 chaos 只改目标线",
+        "P9.5 G4 幕间 III：弱化 chaosByDifficulty 只加 A 袋、双线 searching 记录被划掉",
+        "P9.5 G4 幕间 III：银钥匙 06189 从 B 线牌库移除并加入 A 线牌库，记录跨线划掉",
+        "P9.5 G4 幕间 II：requestedAid / warnedTheOthers 三条 exclusive 分支的黑猫与 chaos 只改目标线",
+        "P9.5 G4 幕间 II：sharedKnowledge 的 independent 分支两条线各自结算",
+        "P9.5 G4 幕间 II：被俘绿字按 A 线 wasCaptured 集合择一，searching 绿字双线写记录",
+        "P9.5 G4 幕间 I：选择记录随活动线切换仍写 A 线（currentPart=B 时走 parts 快照）",
+        "P9.5 G4 幕间 I：黑猫四选一写 A 线记录并按条件命中对应绿字（含双线 chaos）",
+        "P9.5 G4 跨线写入只走 recordInPart/inPart/mutateBothBags（A 写 B；B 写 A）"
+      ]
+    },
+    {
+      "id": "G5",
+      "title": "campaignView/viewEvents 按 part/lane+roomSeat 脱敏；AI 不读非本线信息",
+      "count": 5,
+      "pass": true,
+      "tests": [
+        "P9.5 G5 campaignView 按 part 与观察者脱敏；非 TDE 投影零变化",
+        "P9.5 G5 viewEvents 按 roomSeat 脱敏私密事件与演出快照手牌",
+        "P9.5 G5 viewEvents 按观察者所属线过滤（lane 推断）且无 seat 事件也带 lane",
+        "P9.5 G5 viewState 按 lane+roomSeat 脱敏：A 座位看不到 B 线手牌/未公开剧情",
+        "P9.5 G5 观战视图只有公开摘要：无手牌/牌库/待决选择/合法动作"
+      ]
+    },
+    {
+      "id": "G6",
+      "title": "schema 迁移对非 TDE no-op；TDE 旧档往返一致；旧 baseline 只 compare",
+      "count": 2,
+      "pass": true,
+      "tests": [
+        "P9.5 G6 并行容器 save→restore 往返一致，两线继续可行动",
+        "P9.5 G6 非 TDE save-migration 原样返回；TDE 并行当前版本原样返回、旧线可迁移"
+      ]
+    },
+    {
+      "id": "G7",
+      "title": "roomSeat↔laneSeat 覆盖 currentSeat/pendingChoice/humanSeats/leadSeat/records/事件/checkpoint",
+      "count": 3,
+      "pass": true,
+      "tests": [
+        "P9.5 G7 投影座位换回 roomSeat：investigators/currentSeat/pendingChoice/humanSeats/leadSeat",
+        "P9.5 G7 标准 2+2（A,A,B,B）映射：座位/待决选择/记录/事件/checkpoint",
+        "P9.5 G7 非连续房间座位（A,B,A,B）+ pick 2+1 映射正确、线内数组连续、人数只按本线"
+      ]
+    },
+    {
+      "id": "G8",
+      "title": "顶层 revision 每次提交递增、lane revision 独立；跨线重基、同线 stale 拒绝",
+      "count": 3,
+      "pass": true,
+      "tests": [
+        "P9.5 G8 同线过期拒绝且无半成品；跨线全局过期可安全重基",
+        "P9.5 G8 容器协议 commitLane/commitBoth：全局与线内双版本、重基、stale",
+        "P9.5 G8 顶层 revision 每次成功提交递增；目标 lane 独立递增；投影携带双版本"
+      ]
+    },
+    {
+      "id": "G9",
+      "title": "状态替换/事件 seq/屏障/checkpoint/保存全局串行；单文件存档同内容同字节",
+      "count": 3,
+      "pass": true,
+      "tests": [
+        "P9.5 G9 两线交错提交不丢更新，revision 单调，状态替换/checkpoint 全局串行",
+        "P9.5 G9 单文件存档串行化：同内容同字节、坏档明确失败、双运行时协议一致",
+        "P9.5 G9 批量确认按座位原子提交并按全局事件 seq 串行；失败不留半成品"
+      ]
+    },
+    {
+      "id": "G10",
+      "title": "同 pairId 的封盘+幕间+interludeApplied 只结算一次；重放/读档幂等",
+      "count": 4,
+      "pass": true,
+      "tests": [
+        "P9.5 G10 容器协议：两线同 pairId 只封盘/幕间一次，重放与读档幂等",
+        "P9.5 G10 封盘后两线自动进幕间 I（2–3 节点）并开下一章；重放/读档幂等",
+        "P9.5 G10 并行 4 人 2+2 四个章对全流程：双封盘、幕间单次、终局各自 campaignResult",
+        "P9.5 G10 章对屏障：未封盘时两线都不能开下一章"
+      ]
+    }
+  ],
+  "browser": {
+    "spec": "tests/tde-dual-real.browser.mjs",
+    "checks": {
+      "specPresent": true,
+      "reportPresent": true,
+      "passed": true,
+      "desktop": true,
+      "mobile": true,
+      "tests": 6,
+      "screenshots": 13
+    },
+    "tests": [
+      {
+        "name": "P9.5 分选 3 人 2+1 座位分线与非活动线等待（desktop）",
+        "viewport": "desktop",
+        "status": "passed"
+      },
+      {
+        "name": "P9.5 分选 3 人 2+1 座位分线与非活动线等待（mobile）",
+        "viewport": "mobile",
+        "status": "passed"
+      },
+      {
+        "name": "P9.5 并行局内只显示本线、按座位切换另一线仍隔离（desktop）",
+        "viewport": "desktop",
+        "status": "passed"
+      },
+      {
+        "name": "P9.5 并行局内只显示本线、按座位切换另一线仍隔离（mobile）",
+        "viewport": "mobile",
+        "status": "passed"
+      },
+      {
+        "name": "P9.5 真实食梦者大厅四模式面板与并行出发准备分屏（desktop）",
+        "viewport": "desktop",
+        "status": "passed"
+      },
+      {
+        "name": "P9.5 真实食梦者大厅四模式面板与并行出发准备分屏（mobile）",
+        "viewport": "mobile",
+        "status": "passed"
+      }
+    ],
+    "screenshots": [
+      {
+        "name": "p9.5-real-departure-parallel-desktop",
+        "path": "artifacts/tde-migration/p9.5-real-departure-parallel-desktop.png",
+        "viewport": "desktop",
+        "exists": true
+      },
+      {
+        "name": "p9.5-real-departure-parallel-mobile-lanes",
+        "path": "artifacts/tde-migration/p9.5-real-departure-parallel-mobile-lanes.png",
+        "viewport": "mobile",
+        "exists": true
+      },
+      {
+        "name": "p9.5-real-departure-parallel-mobile",
+        "path": "artifacts/tde-migration/p9.5-real-departure-parallel-mobile.png",
+        "viewport": "mobile",
+        "exists": true
+      },
+      {
+        "name": "p9.5-real-mode-gate-desktop",
+        "path": "artifacts/tde-migration/p9.5-real-mode-gate-desktop.png",
+        "viewport": "desktop",
+        "exists": true
+      },
+      {
+        "name": "p9.5-real-mode-gate-mobile",
+        "path": "artifacts/tde-migration/p9.5-real-mode-gate-mobile.png",
+        "viewport": "mobile",
+        "exists": true
+      },
+      {
+        "name": "p9.5-real-parallel-line-a-desktop",
+        "path": "artifacts/tde-migration/p9.5-real-parallel-line-a-desktop.png",
+        "viewport": "desktop",
+        "exists": true
+      },
+      {
+        "name": "p9.5-real-parallel-line-a-mobile",
+        "path": "artifacts/tde-migration/p9.5-real-parallel-line-a-mobile.png",
+        "viewport": "mobile",
+        "exists": true
+      },
+      {
+        "name": "p9.5-real-parallel-line-b-desktop",
+        "path": "artifacts/tde-migration/p9.5-real-parallel-line-b-desktop.png",
+        "viewport": "desktop",
+        "exists": true
+      },
+      {
+        "name": "p9.5-real-parallel-line-b-mobile",
+        "path": "artifacts/tde-migration/p9.5-real-parallel-line-b-mobile.png",
+        "viewport": "mobile",
+        "exists": true
+      },
+      {
+        "name": "p9.5-real-pick-seat-parts-desktop",
+        "path": "artifacts/tde-migration/p9.5-real-pick-seat-parts-desktop.png",
+        "viewport": "desktop",
+        "exists": true
+      },
+      {
+        "name": "p9.5-real-pick-seat-parts-mobile",
+        "path": "artifacts/tde-migration/p9.5-real-pick-seat-parts-mobile.png",
+        "viewport": "mobile",
+        "exists": true
+      },
+      {
+        "name": "p9.5-real-pick-waiting-desktop",
+        "path": "artifacts/tde-migration/p9.5-real-pick-waiting-desktop.png",
+        "viewport": "desktop",
+        "exists": true
+      },
+      {
+        "name": "p9.5-real-pick-waiting-mobile",
+        "path": "artifacts/tde-migration/p9.5-real-pick-waiting-mobile.png",
+        "viewport": "mobile",
+        "exists": true
+      }
+    ]
+  },
+  "files": {
+    "games/arkhamhorror/tests/tde-p95-flow.test.mjs": "30ae03f999126f6a6d17aed4016726dabc4385cf70086cab2dd0706fe53e90c7",
+    "games/arkhamhorror/tests/tde-p95-interludes.test.mjs": "a1d17f9c150433c134da5efb85e4874ce553f49aa95335f431b874e096275cb9",
+    "games/arkhamhorror/tests/tde-p95-matrix.test.mjs": "759806a5f38cb2ac6d42fb6077d245eea2fd44fcc2d27f95d5b259a247b140c2",
+    "games/arkhamhorror/tests/tde-p95-parallel-full.test.mjs": "f32c1fcfd9cd09439c14e2240fff9d27ca4d08ee0009169cadb5000242957564"
+  },
+  "remaining": [
+    "并行共享幕间 II/III 与 16 段尾声矩阵只在 pick flow 接线（两线同步进同一幕间界面的协调层未做）",
+    "真实联机双真人房间未验收（浏览器证据是单会话双观察座位）",
+    "87 条显式简化与 equivalenceCertified=false 的口径见 audit/tde-migration.json"
+  ]
+}

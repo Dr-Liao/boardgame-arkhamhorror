@@ -275,9 +275,9 @@ export const behavior = {
     flags.remembered ||= []
     flags.introResolved = true
     if (api.campaignRecord?.('theBlackCatIsAtYourSide')) {
-      api.info?.('🐈 黑猫在你身边：按 Intro 2 的剧情处理（P8-T 前只记录状态）。')
+      api.info?.('🐈 黑猫在你身边：按〈开场 2〉的剧情处理（正文见 story-text.js，P8-T 已自译；这里只记录状态）。')
     } else {
-      api.info?.('🐈 黑猫不在你身边：按 Intro 3 的剧情处理（P8-T 前只记录状态）。')
+      api.info?.('🐈 黑猫不在你身边：按〈开场 3〉的剧情处理（正文见 story-text.js，P8-T 已自译；这里只记录状态）。')
     }
   },
 
@@ -294,7 +294,7 @@ export const behavior = {
       SILVER_KEY,
     ]
     flags.pendingSetupReveals = ['burialGround'] // 调查员从已揭示的坟地开始
-    helper.info?.('🏚️ 万千骇形：坟地、前廊（入口背面）、楼上的走廊与上下楼门道入场；其余地点放在一边。')
+    helper.info?.(state, events, '🏚️ 万千骇形：坟地、前廊（入口背面）、楼上的走廊与上下楼门道入场；其余地点放在一边。')
     return placed
   },
 

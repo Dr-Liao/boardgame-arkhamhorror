@@ -6,7 +6,7 @@
   "note": "逐人验收账本：verified 由代码读点 + 节点用例共同决定；显式简化（simplified）一律 pending，且必须带 note。",
   "pack": {
     "id": "tdeInvestigators",
-    "status": "development",
+    "status": "playable",
     "cards": 16,
     "faceCodes": [
       "06015a",
@@ -676,11 +676,11 @@
   "evidence": [
     {
       "path": "content/packs/tdeInvestigators/manifest.js",
-      "sha256": "9ca1e069a014d61251e36aca950bdda85aca8a3622ee52924d0be982712f6435"
+      "sha256": "a4bbe66ef7f3c7480c5a55dc70946f18f6516887e06fec8076efa9bb2480d97b"
     },
     {
       "path": "src/deck/availability.js",
-      "sha256": "5a0266fb0d27794e1682677b0c8d8d6026291746b19e3616b95be0bec2300be4"
+      "sha256": "70bb3d261ed4e613555b07223d7d8eb25eac6b29bcfc9168bf15d58845c049fb"
     },
     {
       "path": "src/cards/entries",
@@ -688,11 +688,11 @@
     },
     {
       "path": "tests/tde-investigators.test.mjs",
-      "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65"
+      "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf"
     },
     {
       "path": "docs/tde-investigators.md",
-      "sha256": "a49c65b1ee63c2996fb33ed340db77d7c8313b7a4b228254f9f534ac88fcd8c2"
+      "sha256": "95eb4f5abcf8e15d0a839436379aa1c8e5b7e7ac8b2e0a0b728b3d5043517acb"
     }
   ]
 }

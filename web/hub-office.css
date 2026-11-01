@@ -528,12 +528,12 @@
 
 /* P5.5 W2：出发准备页并行分屏（左 A / 右 B，竖线分隔；移动端上下） */
 .ah-departure-parallel .ah-departure-split {
-  display: grid; grid-template-columns: 1fr 1fr; align-items: start;
+  display: grid; grid-template-columns: 1fr 1fr; align-items: stretch;
   margin-top: 12px; border-top: 1px solid var(--ah-line, rgba(255,255,255,.12));
 }
 .ah-departure-lane { min-width: 0; padding: 14px 18px 18px; }
 .ah-departure-lane + .ah-departure-lane { border-left: 1px solid var(--ah-line, rgba(255,255,255,.18)); }
-.ah-departure-lane-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.ah-departure-lane-head { display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
 .ah-departure-lane-head h2 { margin: 0; font-size: 22px; }
 .ah-departure-lane .ah-lane-leaders { margin: 8px 0 12px; }
 .ah-departure-lane .ah-departure-team { display: flex; flex-direction: column; gap: 10px; }
@@ -554,44 +554,58 @@
   padding: 0 4px 14px; border-bottom: 1px solid var(--ah-line, rgba(255,255,255,.14)); }
 .ah-departure-common-copy h2 { margin: 2px 0 4px; font-size: 26px; }
 .ah-departure-common-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.ah-departure-lane-head { display: grid; grid-template-columns: minmax(0, 1fr) 180px; gap: 14px; align-items: center; }
+/* 本线插图：整栏最上方、铺满栏宽、固定 16:9 裁切。两栏等宽，所以两条线的图天然同尺寸。
+   上下左右都做渐变虚化：容器遮罩负责上下羽化，子图遮罩负责左右羽化（两层遮罩相乘），
+   再用两层 backdrop-blur（越靠边越强）把四边/四角真正糊开，过渡到背景不留硬边。 */
+.ah-departure-lane-art { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 12px;
+  margin: 2px 0 14px; background: rgba(255,255,255,.04);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 88%, transparent 100%); }
+.ah-departure-lane-art > * { display: block; width: 100%; height: 100%; object-fit: cover;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%); }
+.ah-departure-lane-art.is-empty { border: 1px dashed var(--ah-line, rgba(255,255,255,.18)); }
+.ah-departure-lane-art::before,
+.ah-departure-lane-art::after { content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; }
+.ah-departure-lane-art::before {
+  -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
+  -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, transparent 46%, #000 100%);
+  mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, transparent 46%, #000 100%); }
+.ah-departure-lane-art::after {
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, transparent 68%, #000 100%);
+  mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, transparent 68%, #000 100%); }
 .ah-departure-lane-title h2 { margin: 0; font-size: 22px; }
 .ah-departure-lane-scenario { margin: 4px 0 2px; opacity: .92; }
-.ah-departure-lane-art { width: 180px; height: 96px; overflow: hidden; border-radius: 10px; }
-.ah-departure-lane-art > * { width: 100%; height: 100%; object-fit: cover; }
+/* 人物卡固定尺寸：两线/同一排等宽等高，底部操作行对齐（窄屏改自适应高度）。 */
 .ah-lane-team { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: stretch; }
-.ah-lane-team .ah-departure-member { height: 100%; }
+.ah-lane-team .ah-departure-member { height: 330px; }
+.ah-departure-member-footer { display: flex; flex-direction: column; gap: 8px; align-items: stretch; margin-top: auto; }
 .ah-seat-swap { max-width: 560px; }
 .ah-seat-swap h2 { margin-top: 0; }
 .ah-seat-swap-list { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
 .ah-seat-swap-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .ah-seat-swap-row > span { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 8em; }
+@media (max-width: 900px) {
+  .ah-lane-team .ah-departure-member { height: auto; }
+}
 @media (max-width: 720px) {
-  .ah-departure-lane-head { grid-template-columns: minmax(0, 1fr) 120px; }
-  .ah-departure-lane-art { width: 120px; height: 72px; }
   .ah-lane-team { grid-template-columns: 1fr; }
   .ah-departure-common-actions { width: 100%; }
 }
 
 /* P5.5 W2 修订 2：人物卡两列横排、卡内文字动作（设为队长 / 换位置） */
 .ah-departure-lane-leader-line { display: flex; align-items: baseline; gap: 8px; margin: 2px 0 10px; }
-.ah-departure-member-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+.ah-departure-member-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 0; }
 .ah-text-action { background: none; border: 0; padding: 0; margin: 0; cursor: pointer; font: inherit;
   color: var(--ah-gold, #d8b45a); text-decoration: underline; text-underline-offset: 3px; }
 .ah-text-action:hover { color: var(--ah-gold-bright, #f3d07a); }
 .ah-text-action:disabled { opacity: .45; cursor: default; text-decoration: none; }
 .ah-member-role { color: var(--ah-gold, #d8b45a); font-size: 13px; }
-.ah-lane-team { align-items: start; }
 .ah-lane-team .ah-departure-member { display: flex; flex-direction: column; gap: 6px; }
-@media (max-width: 720px) {
-  .ah-lane-team { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
 
 /* P5.5 W2 修订 2：覆盖旧的单列规则，人物卡真正两列横排 */
 .ah-departure-lane .ah-departure-team.ah-lane-team { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: stretch; }
-@media (max-width: 720px) {
-  .ah-departure-lane .ah-departure-team.ah-lane-team { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
 
 /* P5.5 W2 修订 3：移动端人物卡改为单列（一排最多 2，窄屏 1 列更可读） */
 @media (max-width: 720px) {

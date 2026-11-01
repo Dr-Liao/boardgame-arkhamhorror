@@ -65,6 +65,22 @@ test('常显属性与正负修正、独立托盘、费用悬浮与动态交战�
     const actual=await page.locator(`.ah-vital-${kind} .ah-vital-track`).evaluate(el=>el.firstElementChild.getBoundingClientRect().width/el.getBoundingClientRect().width)
     expect(actual).toBeCloseTo(ratio,2)
   }
+  // 卡城幽影：调查员不会因恐惧被击败，恐惧可以超过理智上限；剩余理智如实显示为负数，
+  // 进度条回到 0（见 web/vitals.js 与卡城幽影的特殊规则）。
+  await f.update(s=>{s.state.investigators[0].horror=7})
+  await expect(page.locator('.ah-vital-sanity')).toHaveClass(/is-overflow/)
+  await expect(page.locator('.ah-vital-sanity')).toHaveAttribute('aria-label','理智 -2 / 5')
+  expect(await page.locator('.ah-vital-sanity .ah-vital-track').evaluate(el=>el.firstElementChild.getBoundingClientRect().width)).toBe(0)
+  await page.getByRole('button',{name:'局势',exact:true}).click()
+  const situation=page.getByRole('dialog',{name:'调查局势'})
+  await expect(situation).toBeVisible()
+  const sanityMeter=situation.locator('.ah-situ-meter.is-sanity')
+  await expect(sanityMeter).toHaveClass(/is-overflow/)
+  await expect(sanityMeter.locator('strong')).toHaveText('-2/5')
+  await expect(situation.locator('.ah-situ-meter.is-health')).not.toHaveClass(/is-overflow/)
+  await page.getByRole('button',{name:'关闭局势详情'}).click()
+  await expect(situation).toHaveCount(0)
+  await f.update(s=>{s.state.investigators[0].horror=4})
   await page.setViewportSize({width:1440,height:1000})
   await page.locator('.ah-dock-vitals').screenshot({path:output+'vitals-corrected.png'})
   await expect(page.locator('.ah-action-count')).toHaveText('0')

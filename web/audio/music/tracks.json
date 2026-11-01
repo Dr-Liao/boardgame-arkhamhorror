@@ -378,5 +378,45 @@
     "id": "thunderDreams",
     "title": "Thunder Dreams",
     "file": "common/thunder-dreams.mp3"
+  },
+  {
+    "id": "tdeDreamlike",
+    "title": "Dreamlike",
+    "file": "common/dreamlike.mp3"
+  },
+  {
+    "id": "tdeAirPrelude",
+    "title": "Air Prelude",
+    "file": "common/air-prelude.mp3"
+  },
+  {
+    "id": "tdeUnnaturalSituation",
+    "title": "Unnatural Situation",
+    "file": "common/unnatural-situation.mp3"
+  },
+  {
+    "id": "tdeFloatingCities",
+    "title": "Floating Cities",
+    "file": "common/floating-cities.mp3"
+  },
+  {
+    "id": "tdeFrozenStar",
+    "title": "Frozen Star",
+    "file": "common/frozen-star.mp3"
+  },
+  {
+    "id": "tdeDreamsBecomeReal",
+    "title": "Dreams Become Real",
+    "file": "common/dreams-become-real.mp3"
+  },
+  {
+    "id": "tdeSpiderEyes",
+    "title": "Spider Eyes",
+    "file": "common/spider-eyes.mp3"
+  },
+  {
+    "id": "tdeSoporific",
+    "title": "Soporific",
+    "file": "common/soporific.mp3"
   }
 ]

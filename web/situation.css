@@ -149,6 +149,9 @@
 .ah-situ-meter.is-sanity .is-filled { background: linear-gradient(#b6d6e3,#3f6f8f); }
 .ah-situ-meter strong { text-align: right; font: bold 12px sans-serif; font-variant-numeric: tabular-nums; color: #eadfc0; }
 .ah-situ-meter.is-low strong { color: #ff9f8a; }
+/* 剩余理智为负：卡城幽影不会因恐惧被击败（见 web/vitals.js）。 */
+.ah-situ-meter.is-overflow .ah-icon { color: #e2836c; }
+.ah-situ-meter.is-overflow strong { color: #ff8d72; }
 .ah-situ-tokens { display: flex; flex-wrap: wrap; gap: 10px; }
 .ah-situ-token { display: grid; justify-items: center; gap: 3px; min-width: 46px; }
 .ah-situ-token-face { display: flex; align-items: center; justify-content: center; gap: 3px; width: 46px; height: 46px; background: url('./img/ui/brass-token.webp') center / contain no-repeat; filter: drop-shadow(0 3px 4px #0008); color: #efe0b6; }

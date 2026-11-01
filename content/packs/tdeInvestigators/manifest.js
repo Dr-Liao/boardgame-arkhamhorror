@@ -30,13 +30,30 @@ export const UNOWNED_FACE_OVERRIDES = Object.freeze({
   '06169b': { pack: 'tdeCampaign', owner: null, reason: '同上，06169a 的背面' },
 })
 
+// P9：全卡验收账本用的调查员 profile 与 verified 读点（16 条主记录；06015a/b 由
+// UNOWNED_FACE_OVERRIDES 归包、行为在 src/engine/dream-gate.js，由文件级证据覆盖）。
+export const TDE_INVESTIGATOR_ACCEPTANCE_PROFILE = Object.freeze({
+  id: 'dream-eaters-investigators-2026-10',
+  scope: '食梦者调查员包 18 条印刷记录：5 位正式调查员 + 11 张专属主卡 + 2 张关联面（06015a/b 梦境之门）。',
+  basis: 'M1（P6）逐人验收 + P8 梦境之门接线：tests/tde-investigators.test.mjs 25 例覆盖每人能力/旧印/专属卡/构筑/存档；'
+    + '06015a/b 无单卡条目，放置/翻面/阶段结束在 src/engine/dream-gate.js。',
+  sources: [
+    'src/cards/cards-data.js',
+    'src/deck/availability.js',
+    'src/cards/entries/06001–06017.js',
+    'src/engine/dream-gate.js',
+    'tests/tde-investigators.test.mjs',
+  ],
+})
+export const tdeInvestigatorCardVerified = code => INVESTIGATOR_CARD_CODES.includes(code)
+
 export const manifest = {
   schemaVersion: CONTENT_SCHEMA_VERSION,
   id: 'tdeInvestigators',
   name: '食梦者 · 调查员',
   contentVersion: '0.2.0',
   minRulesVersion: 'n6.0',
-  status: 'development',
+  status: 'playable',
   dependencies: ['core'],
   description: 'M1（P6）产物：5 位正式调查员 + 11 张专属主卡 + 2 张关联面；逐人能力、旧印与构筑已验收；06015a/b 是绑定地点（由门之匣/脱离现实放进场，不进牌组）。',
   cardRanges: [{ from: '06001', to: '06017' }],

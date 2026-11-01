@@ -2,14 +2,15 @@
 //
 // 参考实现：Scenario/Scenarios/TheDreamEaters/AThousandShapesOfHorror.hs +
 // Location/Act/Agenda/Enemy/Treachery/CardDefs|Cards/TheDreamEaters/AThousandShapesOfHorror/*.hs。
-// 卡面印刷数据只从 `../../card-data.js` 取（唯一事实源）；剧情/设置/结局正文只从 `./text-en.js`
-// 取锁定英文原文（P8-T 自译前不写中文摘要；scenario 上标 textLanguage:'en' + textStatus:'pending-self-translation'）。
+// 卡面印刷数据只从 `../../card-data.js` 取（唯一事实源）；剧情/设置/结局/记忆标签从 `./texts.js`
+// 取 story-text.js 的中文自译（P8-T），混乱标记文本取自 cards-data 06168 的中文卡面。
+// scenario 上标 textLanguage:'zh-CN' + textStatus:'translated (self-translated)'。
 import { bindScenarioIdentities } from '../../../../identities.js'
 import {
   encounterCards, encounterDefinitions, encounterDeck, location, stages, storyCards, identitiesFor,
 } from '../../card-data.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { INTRO, RESOLUTIONS, SETUP, TOKENS } from './text-en.js'
+import { INTRO, RESOLUTIONS, SETUP, TOKENS } from './texts.js'
 
 // ---------------------------------------------------------------------------
 // 卡号常量（本文件与单卡条目共用；条目文件里不 import 本文件）
@@ -112,9 +113,9 @@ export const scenario = {
   nameEn: 'A Thousand Shapes of Horror',
   part: 'B',
   pair: 2,
-  // 文本口径：P8 只落锁定英文原文，P8-T 自译。
-  textLanguage: 'en',
-  textStatus: 'pending-self-translation',
+  // 文本口径：P8-T 已自译，正文来自 story-text.js（生成物），token 文本来自 cards-data 06168。
+  textLanguage: 'zh-CN',
+  textStatus: 'translated (self-translated)',
   intro: INTRO.intro1?.body || '',
   intros: INTRO,
   setup: [SETUP.gatherSets, SETUP.putLocations, SETUP.beginAtBurialGround, SETUP.setCardsAside, SETUP.buildEncounterDeck]

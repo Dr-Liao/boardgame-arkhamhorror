@@ -785,6 +785,8 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       tableIcon('action'), h('span', {}, h('strong', {}, message), h('small', {}, t('hub.workflow.preparingNote'))))
   }
 
+  // 开局模式只在首屏模式门渲染（模式选定后不再提供改线/换线面板：分线在出发准备页
+  // 每张人物卡的「换位置」里完成，见 departureLaneColumn）。
   function modePanel(s, model = modePanelModel(s.state, s.state.legalMoves || [])) {
     if (!model.visible) return null
     const modeButton = item => [
@@ -795,32 +797,11 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
       }, item.label),
       item.reason ? h('small', { className: 'ah-mode-reason' }, item.reason) : null,
     ]
-    const switchButtons = seat => model.seats.filter(item => item.seat === seat).map(item => [
-      h('button', {
-        className: 'bg-btn secondary', 'aria-pressed': String(item.part === model.seatParts[item.seat]),
-        title: item.reason || undefined, disabled: locked(s) || item.disabled,
-        onclick: () => submitMove({ action: 'hubSetSeatPart', seat: item.seat, part: item.part }, s),
-      }, item.part === model.seatParts[item.seat] ? item.label : t('hub.mode.switchTo', { part: item.part })),
-      item.reason ? h('small', { className: 'ah-mode-reason' }, item.reason) : null,
-    ])
-    const balance = model.laneCounts || { A: 0, B: 0 }
     return h('section', { className: 'ah-hub-actions ah-office-modes', 'aria-label': t('hub.mode.aria') },
       h('strong', {}, t('hub.mode.title')),
-      model.selected ? h('small', {}, t('hub.mode.current', { mode: model.selectedLabel })) : null,
       h('div', { className: 'ah-office-mode-list' }, model.modes.map(item => h('div', { className: 'ah-office-mode' }, ...modeButton(item)))),
       model.needsMode ? h('small', {}, t('hub.mode.chooseFirst')) : null,
-      model.hostChooses ? h('small', {}, t('hub.mode.hostChooses')) : null,
-      model.assignments.length
-        ? h('div', { className: 'ah-office-mode-seats', role: 'group', 'aria-label': t('hub.mode.seatsAria') },
-          h('small', { className: 'ah-mode-balance' }, t('hub.mode.balance', { a: balance.A, b: balance.B }),
-            model.selected === 'parallel'
-              ? h('b', { className: model.balanced ? 'is-ok' : 'is-warn' },
-                model.balanced ? t('hub.mode.balanced') : t('hub.mode.unbalanced'))
-              : null),
-          model.assignments.map(item => h('div', { className: 'ah-office-mode-seat', 'data-seat': item.seat },
-            h('span', {}, item.label), ...switchButtons(item.seat))))
-        : null,
-      model.seatHint ? h('small', {}, t('hub.mode.seatHint')) : null)
+      model.hostChooses ? h('small', {}, t('hub.mode.hostChooses')) : null)
   }
 
   function overview(s, g) {
@@ -833,7 +814,6 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
           h('h1', {}, selected?.name || cp.name),
           h('p', {}, t('hub.overview.tagline')),
           h('div', { className: 'ah-office-metrics' }, metric('shield', s.players.length, t('hub.metric.investigators')), metric('star', cp.victory, t('hub.metric.victory')), metric('book', cp.xp, t('hub.metric.xp'))),
-          modePanel(s),
           s.state.uiState === 'campaignHub' ? h('div', { className: 'ah-hub-actions ah-office-difficulty', 'aria-label': t('hub.overview.difficultyAria') },
             legal(s, 'hubSetDifficulty').map(move => h('button', {
               className: 'bg-btn secondary', 'aria-pressed': String(s.state.difficulty === move.difficulty),
@@ -921,12 +901,17 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
         }, t('hub.departure.moveSeat'))
         : null,
     ].filter(Boolean)
+    // 底部操作（队长/换位置 + 查看准备）收进 footer 并顶到卡片底部：四张卡固定高度后，
+    // 无论有没有「查看准备」按钮，操作行都落在同一水平线上。
+    const prepButton = !seatPrepared(s, inv) && ['scenarioSetup', 'interlude'].includes(st.uiState)
+      ? h('button', { className: 'bg-btn secondary', onclick: () => changeTab(st.uiState === 'interlude' && record?.status === 'active' ? 'upgrades' : 'investigators') }, inv.seat === (s.mySeat ?? 0) && acting(s, inv.seat) ? t('hub.departure.continuePrep') : t('hub.departure.viewPrep'))
+      : null
+    const footer = [actions.length ? h('div', { className: 'ah-departure-member-actions' }, ...actions) : null, prepButton].filter(Boolean)
     return h('article', { className: 'ah-departure-member' + (seatPrepared(s, inv) ? ' is-ready' : '') + (isLeader ? ' is-leader' : ''), 'data-seat': inv.seat },
       h('div', { className: 'ah-departure-identity' }, portrait(inv), h('div', {}, h('h3', {}, inv.name), playerBadge(s, inv.seat))),
       h('ul', { className: 'ah-departure-checks' }, [[selected, t('hub.departure.checkInvestigator')], [deckReady, t('hub.departure.checkDeck')], [seatPrepared(s, inv), t('hub.departure.checkSeat')]].map(([done, label]) =>
         h('li', { className: done ? 'is-done' : '' }, h('span', { 'aria-hidden': 'true' }, done ? '✓' : '○'), label))),
-      actions.length ? h('div', { className: 'ah-departure-member-actions' }, ...actions) : null,
-      !seatPrepared(s, inv) && ['scenarioSetup', 'interlude'].includes(st.uiState) ? h('button', { className: 'bg-btn secondary', onclick: () => changeTab(st.uiState === 'interlude' && record?.status === 'active' ? 'upgrades' : 'investigators') }, inv.seat === (s.mySeat ?? 0) && acting(s, inv.seat) ? t('hub.departure.continuePrep') : t('hub.departure.viewPrep')) : null)
+      footer.length ? h('div', { className: 'ah-departure-member-footer' }, ...footer) : null)
   }
 
   function departureLaneColumn(s, lane, manifest) {
@@ -936,12 +921,14 @@ export function createHubUI({ h, api, render, state, startGame, loadSavedSession
     const sceneName = manifest?.scenarios?.find(item => item.id === sceneId)?.name
       || st.campaign.partScenarioNames?.[lane.part] || ''
     return h('section', { className: 'ah-departure-lane', 'data-lane': lane.part, 'aria-label': t('hub.departure.laneAria', { lane: lane.name }) },
+      // 本线插图放在整栏最上方并铺满栏宽（固定 16:9 裁切）；两栏等宽，因此两张图天然同尺寸。
+      h('div', { className: 'ah-departure-lane-art' + (sceneId ? '' : ' is-empty'), 'aria-hidden': 'true' },
+        sceneId ? decor('scene', '', sceneId) : null),
       h('header', { className: 'ah-departure-lane-head' },
         h('div', { className: 'ah-departure-lane-title' },
           h('h2', {}, lane.name),
           h('p', { className: 'ah-departure-lane-scenario' }, sceneName || t('hub.departure.laneScenarioPending')),
-          h('small', {}, t('hub.departure.laneSize', { count: lane.size }))),
-        sceneId ? h('div', { className: 'ah-departure-lane-art' }, decor('scene', '', sceneId)) : null),
+          h('small', {}, t('hub.departure.laneSize', { count: lane.size })))),
       h('div', { className: 'ah-departure-lane-leader-line' },
         h('small', {}, t('hub.departure.laneLeader')),
         h('strong', {}, st.investigators.find(inv => inv.seat === lane.leaderSeat)?.name || t('hub.departure.laneLeaderNone'))),

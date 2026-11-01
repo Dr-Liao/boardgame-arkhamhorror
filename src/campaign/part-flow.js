@@ -170,7 +170,10 @@ export function partManifest(manifest, mode) {
   const scenarioIds = mode === 'singleA' ? pairs.map(entry => entry.A.scenarioId)
     : mode === 'singleB' ? pairs.map(entry => entry.B.scenarioId)
       : interleaved
-  return { ...manifest, flow: partFlow(manifest.parts, { mode }), scenarioIds }
+  // P9.5：manifest.flows[mode]（P8 已备好的完整 flow，含幕间子图/尾声矩阵）优先；
+  // 缺省退回通用 partFlow（旧夹具/演示战役与未声明 flows 的战役行为不变）。
+  const flow = manifest.flows?.[mode] || partFlow(manifest.parts, { mode })
+  return { ...manifest, flow, scenarioIds }
 }
 
 /** 某个关卡属于哪条线（未声明 parts / 未知关卡返回 null）。 */

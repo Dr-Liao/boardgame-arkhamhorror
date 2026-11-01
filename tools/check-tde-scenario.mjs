@@ -67,7 +67,8 @@ if (manifest.id !== chapterId) fail(`manifest.id=${manifest.id} 与目录 ${chap
 if (scenario.id !== chapterId) fail(`scenario.id=${scenario.id} 与目录不一致`)
 if (behavior.id !== chapterId) fail(`behavior.id=${behavior.id} 与目录不一致`)
 if (!CONTENT_STATUSES.includes(manifest.status)) fail(`manifest.status=${manifest.status} 不在 ${CONTENT_STATUSES.join('/')}`)
-if (manifest.status !== 'development') warn(`manifest.status=${manifest.status}（P8 目标 development）`)
+// P10：真实章节从 development 升为 playable（P8 目标 development 已完成，发布态允许 playable/verified）。
+if (!['playable', 'verified'].includes(manifest.status)) warn(`manifest.status=${manifest.status}（P10 发布态应为 playable/verified）`)
 if (manifest.catalogReferenceOnly) fail('manifest.catalogReferenceOnly 仍存在：章节还是占位')
 if (manifest.campaignId !== CAMPAIGN) fail(`campaignId=${manifest.campaignId}`)
 for (const group of manifest.requiredEncounterGroupIds || []) {

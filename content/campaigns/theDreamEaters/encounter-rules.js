@@ -22,8 +22,14 @@ import {
   resolveDeclarativeTreacheryTest, threatActionByRule, threatActionFor, treacheryRuleFor,
   treacheryTestFor,
 } from '../../../src/cards/card-rules.js'
-import { isWeaknessCode } from '../../../src/engine/card-lookup.js'
-import { swarmCardsOf, swarmCountOf } from '../../../src/engine/swarm.js'
+// P10：弱点判定改用本地纯函数，避免内容层在模块初始化期 import `engine/card-lookup.js`
+// 造成「round registered.js → campaign → engine → card-lookup → registered.js」循环；
+// 口径与 engine/card-lookup.js 的 isWeaknessCode 一致（ALL_CARDS 的 subtype）。
+const isWeaknessCode = code => {
+  const card = ALL_CARDS[code]
+  return !!(card && (card.subtype === 'weakness' || card.subtype === 'basicweakness'))
+}
+import { placeSwarmCards, swarmCardsOf, swarmCountOf } from '../../../src/engine/swarm.js'
 import { swarmingCount, swarmingXFromState } from '../../../src/engine/swarming.js'
 
 export const original = card => card?.originalCode || card?.code || card
@@ -248,6 +254,12 @@ export function swarmingCountOf(state, spec, { seat = null } = {}) {
 /**
  * 敌人入场时放置蜂拥卡（按 X 从遭遇牌库顶抽卡）。
  * 单卡条目不需要自己调用：共享 `enemySpawned` 会做。
+ *
+ * P9：剧本 `setupEnemies` 在 `setupDecks` 之前执行（引擎顺序 locations→enemies→decks），
+ * 此时遭遇牌库还没建立。章节若在布置期生成 Swarming 敌人，先置
+ * `state.scenarioFlags.deferSwarmPlacement = true`，这里只把数量挂在 `enemy.pendingSwarmCount`，
+ * 等 `afterDeckSetup`（牌库已洗好）由章节调用 `settleDeferredSwarmCards` 补放。
+ * 运行时（非布置期）不受影响。
  */
 export function placeSwarmCardsFor(state, enemy, api) {
   if (!enemy || swarmCountOf(enemy) > 0) return []
@@ -256,11 +268,31 @@ export function placeSwarmCardsFor(state, enemy, api) {
   if (!spec) return []
   const count = swarmingCountOf(state, spec, { seat: enemy.engagedSeat })
   if (!count) return []
+  if (state.scenarioFlags?.deferSwarmPlacement === true) {
+    enemy.pendingSwarmCount = (Number(enemy.pendingSwarmCount) || 0) + count
+    return []
+  }
   const placed = api.swarm?.place?.(enemy, count, { source: 'swarming' }) || []
   if (placed.length) {
     api.info?.(`🐝 「${enemy.name}」蜂拥 ${placed.length} 张卡（Swarming ${count}）。`)
   }
   return placed
+}
+
+/** 布置期挂起的蜂拥卡补放（`afterDeckSetup` 调用，helper 为引擎传入的 {info,randomValue,shuffle}；返回补放张数）。 */
+export function settleDeferredSwarmCards(state, helper = {}) {
+  let total = 0
+  for (const enemy of state.enemies || []) {
+    const count = Number(enemy.pendingSwarmCount) || 0
+    if (!count) continue
+    delete enemy.pendingSwarmCount
+    const placed = placeSwarmCards(state, enemy, count, { source: 'swarming' })
+    if (placed.length) {
+      total += placed.length
+      helper.info?.(state, null, `🐝 「${enemy.name}」蜂拥 ${placed.length} 张卡（Swarming ${count}）。`)
+    }
+  }
+  return total
 }
 
 /** 蜂拥头领不能被击败的原因（没有蜂拥卡返回 null）。 */

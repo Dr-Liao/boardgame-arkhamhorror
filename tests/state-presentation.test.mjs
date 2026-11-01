@@ -1,11 +1,12 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createGameState, enemyAttack, performTest, getStat, getMaxSanity, describeState } from '../src/engine/engine.js'
+import { createGameState, enemyAttack, performTest, getStat, getMaxSanity, enemyHealth, enemyFightValue, enemyEvadeValue, describeState } from '../src/engine/engine.js'
 import { markLimitUsed, registeredEntry } from '../src/engine/ability.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { viewState, viewEvents } from '../src/integration/observation.js'
 import { aiDecisionContext } from '../src/ai/ai-context.js'
 import { captureTableState, locationEntryErrors } from '../src/integration/presentation-state.js'
+import { fixture, enemy as makeEnemy, move } from './core-fixture.mjs'
 import { timelineEntries, timelineCardIndex, timelineCardParts } from '../web/table-timeline.js'
 import { objectiveText } from '../web/card-text.js'
 import { cardAttachmentReferences } from '../web/table-components.js'
@@ -294,5 +295,57 @@ test('个人检定结算里的公开演出（如敌人攻击）不按 privateSea
     assert.equal(attackCues(seat).length, 1, `观察者 ${seat} 应看到攻击演出`)
     assert.equal(attackCues(seat)[0].privateSeat, undefined, '演出事件不能带 privateSeat')
   }
+})
+
+test('演出快照里的敌人派生数值与实时观察同口径（卡面修正不退回印刷值）', () => {
+  // 客户端在演出播放期间用 tableState 重绘牌桌（table-presentation.js applyStep）；
+  // 快照若只带印刷值，01175「交战且剩余神智 ≤4：+1 战斗/+1 躲避」这类卡面修正
+  // 会在演出期间掉回 3/3，演完才跳回 4/4。快照必须和 viewState 同口径。
+  const s = createGameState({ playerInvestigator: '01001', seed: 'presentation-enemy-modifiers' }, [{ seat: 0 }])
+  const inv = s.investigators[0]
+  inv.horror = inv.maxSanity - 4
+  const byakhee = {
+    id: 'byakhee-1', code: 'screechingByakhee', originalCode: '01175', name: '尖叫的拜亚基',
+    location: inv.location, engagedSeat: 0, health: 4, damageTaken: 2, fight: 3, evade: 3,
+    damage: 1, horror: 2, traits: ['Monster', 'Byakhee'], exhausted: false, victory: 1,
+  }
+  s.enemies.push(byakhee)
+  inv.engaged.push(byakhee.id)
+  const readouts = { enemyHealth, enemyFightValue, enemyEvadeValue }
+  const live = viewState(s, 0).enemies.find(item => item.id === byakhee.id)
+  const snapshot = () => captureTableState(s, getStat, getMaxSanity, readouts).enemies.find(item => item.id === byakhee.id)
+  assert.equal(live.effectiveFight, 4, '剩余神智 4：实时观察应有 +1 战斗')
+  assert.equal(snapshot().effectiveFight, live.effectiveFight)
+  assert.equal(snapshot().effectiveEvade, live.effectiveEvade)
+  assert.equal(snapshot().health, live.health, '生命值修正同样按引擎读点结算')
+  assert.equal(snapshot().fight, 3, '印刷值仍然保留给卡面/差分显示')
+  // 未注入读点的旧调用方保持原行为（不带派生字段，客户端退回印刷值）。
+  const legacy = captureTableState(s, getStat, getMaxSanity).enemies.find(item => item.id === byakhee.id)
+  assert.equal(legacy.effectiveFight, undefined)
+  assert.equal(legacy.effectiveEvade, undefined)
+  // 剩余神智 5：不应加成，快照与实时观察都是印刷值。
+  inv.horror = inv.maxSanity - 5
+  const resting = viewState(s, 0).enemies.find(item => item.id === byakhee.id)
+  assert.equal(resting.effectiveFight, 3)
+  assert.equal(snapshot().effectiveFight, resting.effectiveFight)
+  assert.equal(snapshot().effectiveEvade, resting.effectiveEvade)
+})
+
+test('行动结束的检查点快照带上敌人有效战斗/躲避', () => {
+  const s = fixture()
+  const inv = s.investigators[0]
+  inv.horror = inv.maxSanity - 4
+  const byakhee = makeEnemy(s, {
+    code: 'screechingByakhee', originalCode: '01175', name: '尖叫的拜亚基',
+    fight: 3, evade: 3, health: 4, damageTaken: 0, damage: 1, horror: 2,
+    traits: ['Monster', 'Byakhee'], victory: 1,
+  })
+  const events = move(s, { action: 'resource' })
+  const checkpoint = events.find(event => event.type === 'presentation' && event.kind === 'checkpoint')
+  assert.ok(checkpoint, '每条行动都应带检查点演出快照')
+  const captured = checkpoint.tableState.enemies.find(item => item.id === byakhee.id)
+  assert.equal(captured.effectiveFight, 4)
+  assert.equal(captured.effectiveEvade, 4)
+  assert.equal(captured.health, 4)
 })
 

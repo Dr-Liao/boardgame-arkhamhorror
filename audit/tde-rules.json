@@ -109,7 +109,7 @@
         "ruleOwned": true,
         "implemented": true,
         "deferred": [
-          "翻面动作接进调查/移动流程与故事卡阅读器（P8）；A2 的 b 面故事卡文本属 P8-T"
+          "翻面动作接进调查/移动流程与故事卡阅读器（P8）；A2 的 b 面故事卡正文已由 P8-T 自译（story-text）"
         ],
         "sourceKind": "text",
         "cardCodes": [
@@ -474,7 +474,7 @@
         "statusPassed": true,
         "desktopBrowser": true,
         "mobileBrowser": true,
-        "screenshots": 2
+        "screenshots": 75
       }
     },
     "related": []
@@ -610,14 +610,14 @@
     }
   },
   "files": {
-    "content/campaigns/theDreamEaters/keywords.js": "02a5eb650ec632f8092122e02c9a584a0fa1283a487c96e81db5e1481f95e2fc",
-    "web/rulebook-data.js": "c5ec41789af2bb02718088036dceec4cfd9b1ebf12b1a48a8278cf69a435c095",
-    "web/ui-cards.js": "2bf3221a9b864cc4ff60fe4c77a9cedf056e16973da6d05c395f73a27b9225aa",
+    "content/campaigns/theDreamEaters/keywords.js": "e9bb682f7cca09069d0a14faafa8d8a09a31d8f7c782d3479e43da0b5c6d0d20",
+    "web/rulebook-data.js": "ecc64c4be61caa195eee3df35860bcb2e637e02c7ce7a0cccc78554ffe64576a",
+    "web/ui-cards.js": "3298504d51aaa19edab8f2042353b3522d4eb7b07874f4b46570ed0be327c05e",
     "content/campaigns/theDreamEaters/shared.js": "943fade87a7824527e52cde3552b76aa15b268d0fde69d5ab84e39d9d71c2617",
     "content/mechanics.js": "93f876642c60c3ae2865b2af82625b56bb2e04f7ec92131d63cb5860bb20f0bb",
     "tests/tde-rules.test.mjs": "518e0dce0b629b9f99e3c3498d72b48e8eb5bee82957bec7b96c3b2a6b06f6eb",
     "tests/tde-rules.browser.mjs": "829de66de44749447381f3b9e17e4eba783b0b00fcb5bb691f63ab8122a08f6c",
-    "audit/tde-browser-acceptance.json": "9ec8a0220055557dc820fc43ea04d5d0b77bdcaaa63037896b5b203b0904ee38"
+    "audit/tde-browser-acceptance.json": "81b0a3b5e1a9465b699aa73f8a67b655e38e2123c47ba2478cdd306039a7fe87"
   },
   "gate": {
     "keywordsVerified": {

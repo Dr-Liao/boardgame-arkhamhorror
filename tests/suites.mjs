@@ -22,6 +22,7 @@ export const FAST_TESTS = Object.freeze([
   'card-identity.test.mjs',
   'reprint-aliases.test.mjs', // P2-4：重印别名（015xx → 01xx）+ 快速事件统一通道候选视图
   'state-presentation.test.mjs',
+  'vitals-display.test.mjs', // 生命/理智仪表：卡城幽影剩余理智允许为负（web/vitals.js）
   'view-privacy.test.mjs', // 观察投影隐私边界（阶段 A 拆分护栏：手牌/牌组/选项/私人检定）
   'hall-static.test.mjs', // 大厅静态资源（P7 前就存在但漏登记，P7 合并时补入并实测全绿）
   'view-shared-state.test.mjs', // 观察投影共享状态（同上）
@@ -66,6 +67,7 @@ export const FAST_TESTS = Object.freeze([
   'ai-enemy-visibility.test.mjs', // AI 敌人观察：卡面规则文本 / 冷漠 / 胜利复仇 / 特性 / 所在地点
   'ai-location-visibility.test.mjs', // AI 地点资料：卡面原文 + 与 entry 提示去重 + 未揭示不泄露
   'ai-prompt-order.test.mjs', // AI 观察顺序：局势 → 决策资料 → 决策块（推进条件/敌人/行动）必须收尾
+  'ai-guidance.test.mjs', // AI 决策点：投入弃牌代价 / 图标差距 / 行动点成本 / 借机攻击标注
   'ai-story.test.mjs',
   'ai-dialogue.test.mjs',
   'card-interactions.test.mjs',
@@ -221,6 +223,15 @@ export const FAST_TESTS = Object.freeze([
   'tde-scenario-pointOfNoReturn.test.mjs', // 食梦者 P8：B3《无归之地》章节 + 洗回
   'tde-scenario-whereTheGodsDwell.test.mjs', // 食梦者 P8：A4《神居之所》章节 + Hidden 手牌
   'tde-scenario-weaverOfTheCosmos.test.mjs', // 食梦者 P8：B4《编织宇宙》章节 + 大网/地点毁灭
+  'tde-story.test.mjs', // 食梦者 P8-T：自译批次覆盖 + story-text 生成物 + 8 章/幕间/尾声中文接线 + 账本
+  'tde-journal-story.test.mjs', // 食梦者：调查纪事/故事导入投影（战役序章 + 8 章开场分支 + 14 条梦境 + 历史不重写）
+  'tde-campaign-card-acceptance.test.mjs', // 食梦者 P9：283 条战役记录逐卡验收（TDE <code> 已验收/待实现）
+  'tde-all-card-ledger.test.mjs', // 食梦者 P9：388 条全卡账本门禁（分区守恒/证据/sha256/note 注册表）
+  'tde-p95-flow.test.mjs', // 食梦者 P9.5：16 排列 + A-first/B-first 真实全流程（walkCampaign 等价驱动）
+  'tde-p95-interludes.test.mjs', // 食梦者 P9.5：3 个幕间跨线读写/绿字/双线袋不串线（真实数据 + 效果解释器）
+  'tde-p95-matrix.test.mjs', // 食梦者 P9.5：双线开闸 10 条门禁（真实 TDE 世界 + mod 边界）
+  'tde-p95-parallel-full.test.mjs', // 食梦者 P9.5：并行 4 人 2+2 四个章对全流程（双封盘/幕间单次/终局）
+  'tde-migration.test.mjs', // 食梦者 P10：发布账本门禁（audit/tde-migration.json 的 gate/确认/earlyAccess/remaining）
   'debug-engine.test.mjs', // 调试控制台：引擎 debug move 校验/执行/重放（7 种指令）
   'debug-console.test.mjs', // 调试控制台：服务端命令解析器 + Mod 钩子（中文指令/别名/名称匹配）
 ])

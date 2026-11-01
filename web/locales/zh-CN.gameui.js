@@ -29,6 +29,9 @@ export default {
   'game.host.investigator': '调查员',
   'game.runtime.title': '当前卡牌状态',
   'game.runtime.exhausted': '状态：已横置',
+  // 地点附属卡横置（地图标记 / 地点档案 / 附属卡标题）
+  'game.attachment.exhausted': '已横置',
+  'game.attachment.exhaustedSuffix': ' · 已横置',
   'game.runtime.attachedTo': '附着于：{host}',
   'game.runtime.usage': '能力使用情况',
   'game.runtime.used': '已使用',

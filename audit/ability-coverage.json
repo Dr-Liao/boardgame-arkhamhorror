@@ -12,7 +12,7 @@
     "windows": 76,
     "effectPrimitives": 56,
     "nonPlayerCards": 42,
-    "behaviorLines": 29285,
+    "behaviorLines": 29296,
     "declaredScenarios": 3
   },
   "channels": {
@@ -127,7 +127,7 @@
       "content/campaigns/thePathToCarcosa/scenarios/thePallidMask/behavior.js",
       "content/campaigns/thePathToCarcosa/scenarios/theUnspeakableOath/behavior.js"
     ],
-    "behaviorLines": 29285,
+    "behaviorLines": 29296,
     "declaredScenarios": 3
   },
   "cards": [

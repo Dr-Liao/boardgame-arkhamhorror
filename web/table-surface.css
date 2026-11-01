@@ -77,6 +77,10 @@
 .ah-table.ah-calm.ah-noir .ah-map-attachment { border-color: #bd8eae; box-shadow: inset 0 0 5px #b76a9866; }
 .ah-table.ah-calm.ah-noir .ah-location-story-markers { position: absolute; top: -56px; left: 0; display: flex; gap: 4px; max-width: 150px; overflow-x: auto; scrollbar-width: thin; }
 .ah-table.ah-calm.ah-noir .ah-map-node .ah-map-story-marker > .ah-table-art { position: relative; inset: auto; width: 100%; height: 100%; border: 0; }
+/* 地点附属卡横置：卡图横放 + 虚线框 + 角标，与支援/敌人的横置视觉一致。 */
+.ah-table.ah-calm.ah-noir .ah-map-attachment.is-exhausted { border-style: dashed; }
+.ah-table.ah-calm.ah-noir .ah-map-attachment.is-exhausted > .ah-table-art { transform: rotate(90deg) scale(.72); }
+.ah-table.ah-calm.ah-noir .ah-map-attachment .ah-map-marker-exhausted { position: absolute; right: 1px; bottom: 0; z-index: 3; font-size: 11px; line-height: 1; color: #f7d698; text-shadow: 0 1px 3px #000, 0 0 2px #000; pointer-events: none; }
 .ah-map-investigator:hover, .ah-map-story-marker:hover, .ah-loc-badge:hover { filter: brightness(1.3); }
 .ah-map-investigator:focus-visible, .ah-map-story-marker:focus-visible, .ah-loc-badge:focus-visible, .ah-engagement-zone [role='button']:focus-visible { outline: 2px solid #f7d698; outline-offset: 2px; }
 .ah-table.ah-calm.ah-noir .ah-map-viewport:focus-visible { outline: 1px solid #c6af7655; outline-offset: -2px; }

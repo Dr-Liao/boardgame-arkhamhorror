@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// 食梦者（The Dream Eaters）P8 逐章验收账本：8 章 × 12 项检查，全部由代码与实跑证据计算。
+// 食梦者（The Dream Eaters）P9 逐章验收账本：8 章 × 12 项检查，全部由代码与实跑证据计算。
 //
 //   node tools/audit-tde-scenarios.mjs --write   写 audit/tde-scenario-acceptance.json（+ 来源锁）
 //   node tools/audit-tde-scenarios.mjs --check   逐字节复算，漂移即失败
@@ -10,10 +10,12 @@
 //     遭遇卡「是否已实现」读 src/cards/card-rules.js 的 implementedFor（单卡条目的 implemented 声明）；
 //   · sourceLocked：8 章剧本 + 战役参考实现 + en locale 的 SHA-256 与 audit/tde-scenario-source-lock.json 比对；
 //   · 覆盖：本章遭遇组（scope.json）的每条记录必须有落点（definition 集合 / 单卡条目 / 背面故事卡的正面 / 参考卡）；
-//   · literalCardBehavior：P8 口径**保持 false**（逐卡等价核对属 P9）；pendingEncounterCodes 单独列出；
-//   · storyText：P8-T 未完成，一律 false 并记 pending 原因；story-text.js 变成 translated 后自动切换；
+//   · literalCardBehavior：P9 起由 audit/tde-all-card-acceptance.json（tools/audit-tde-all-cards.mjs 生成）
+//     逐章复算——本章记录全部被逐卡验收账本覆盖（status=verified）才算 true；显式简化在账本 notes 单列，
+//     不冒充规则等价（发布口径 equivalenceCertified=false 不变）；
+//   · storyText：P8-T 后读 story-text.js 的 translated 状态；
 //   · saveReplay：spawnSync 实跑该章测试，并要求用例名里出现「存档/回放/重放/往返」且通过；
-//   · browserAcceptance：只读 runner 产物 audit/tde-browser-acceptance.json（P9 补）。
+//   · browserAcceptance：只读 runner 产物 audit/tde-browser-acceptance.json（P9 由 6 个 browser spec 生成）。
 import { spawnSync } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { createHash } from 'node:crypto'
@@ -188,6 +190,30 @@ function browserAcceptanceFor(chapterId) {
   return { pass: desktop && mobile, desktop, mobile }
 }
 
+// ---------------------------------------------------------------- 逐卡证据（P9）
+// literalCardBehavior 只由 tools/audit-tde-all-cards.mjs 生成的账本复算：不读源码字符串、不手写布尔。
+const ALL_CARD = new URL('../audit/tde-all-card-acceptance.json', import.meta.url)
+const allCardLedger = readJson(ALL_CARD, null)
+const allCardEntries = Array.isArray(allCardLedger?.entries) ? allCardLedger.entries : []
+const allCardVerified = new Set(allCardEntries
+  .filter(entry => entry.status === 'verified').map(entry => entry.code))
+const allCardSimplified = new Set(allCardEntries
+  .filter(entry => entry.noteStatus === 'simplified').map(entry => entry.code))
+const allCardScopeOk = Boolean(allCardLedger)
+  && allCardLedger.summary?.total === 388
+  && allCardLedger.summary?.pending === 0
+  && allCardEntries.length === 388
+function literalCardBehaviorFor(coverage) {
+  const codes = coverage.codes || []
+  const missing = codes.filter(code => !allCardVerified.has(code))
+  return {
+    pass: allCardScopeOk && codes.length > 0 && missing.length === 0,
+    codes: codes.length,
+    missing,
+    simplified: codes.filter(code => allCardSimplified.has(code)),
+  }
+}
+
 // ---------------------------------------------------------------- 逐章记录覆盖
 const cardsByCode = new Map(scan.cards.map(card => [card.code, card]))
 const scanGroups = new Map(scan.encounterGroups.map(group => [group.id, group]))
@@ -229,6 +255,7 @@ function coverageFor(chapterId, scenario, manifest) {
     covered: covered.length,
     uncovered,
     pendingEncounterCodes,
+    codes: records.map(record => record.code),
   }
 }
 
@@ -288,6 +315,7 @@ for (const chapter of chapters) {
   const sources = chapterLock.map(lockCheck)
   const commonSources = (sourceLock?.files || []).map(lockCheck)
   const browser = browserAcceptanceFor(chapter.id)
+  const allCards = literalCardBehaviorFor(coverage)
   const checks = {
     sourceLocked: existsSync(REFERENCE) && sources.length > 0 && sources.every(entry => entry.ok === true)
       && commonSources.every(entry => entry.ok === true),
@@ -310,8 +338,8 @@ for (const chapter of chapters) {
       && Object.values(module.scenario.enemies).every(card => !card.rulesPending)
       && Object.values(module.scenario.treacheries).every(card => !card.rulesPending)
       && pendingEncounterCodes.length === 0,
-    // P8 口径：逐卡等价核对属 P9，保持 false（路线图 §8.3）。
-    literalCardBehavior: false,
+    // P9：逐卡等价核对由 tools/audit-tde-all-cards.mjs 的 388 条逐卡账本复算（见 literalCardBehaviorFor）。
+    literalCardBehavior: allCards.pass,
     chaosEffects: typeof module.behavior.resolveChaosToken === 'function'
       || typeof module.behavior.afterTest === 'function'
       || module.scenario.tokenMeanings != null,
@@ -325,16 +353,21 @@ for (const chapter of chapters) {
   const structuralKeys = ['identityRegistered', 'setupAndZones', 'actsAndAgendas', 'locationsAndConnections',
     'encounterBehaviors', 'chaosEffects', 'resolutionsAndRecords', 'saveReplay']
   const structuralOk = structuralKeys.every(key => checks[key] === true) && coverage.uncovered.length === 0
-  const status = structuralOk ? 'development' : 'pending'
+  const status = structuralOk ? (checks.browserAcceptance ? 'verified' : 'development') : 'pending'
   const remaining = []
   for (const key of structuralKeys) if (!checks[key]) remaining.push(`${chapter.id}：检查项 ${key} 未通过`)
   for (const code of coverage.uncovered) remaining.push(`${chapter.id}：遭遇记录 ${code} 尚未落地`)
   for (const gap of gaps) remaining.push(`${chapter.id}：${gap}`)
   for (const approximation of approximations) remaining.push(`${chapter.id}（近似实现）：${approximation}`)
   if (!checks.sourceLocked) remaining.push(`${chapter.id}：参考实现来源锁未通过（缺参考资源或哈希漂移）`)
-  if (!checks.storyText) remaining.push(`${chapter.id}：剧情正文待 P8-T 自译（storyText pending）`)
-  if (!checks.literalCardBehavior) remaining.push(`${chapter.id}：逐卡等价核对属 P9（literalCardBehavior=false）`)
-  if (!checks.browserAcceptance) remaining.push(`${chapter.id}：浏览器验收属 P9（browserAcceptance=false）`)
+  if (!checks.storyText) remaining.push(`${chapter.id}：剧情正文待自译（storyText pending）`)
+  if (!checks.literalCardBehavior) {
+    const missing = allCards.missing.length ? `未在逐卡账本 verified：${allCards.missing.join(', ')}` : '逐卡账本缺失或不完整'
+    remaining.push(`${chapter.id}：逐卡核对未完成（${missing}）`)
+  }
+  if (!checks.browserAcceptance) {
+    remaining.push(`${chapter.id}：浏览器验收缺 ${browser.desktop ? '移动' : browser.mobile ? '桌面' : '桌面/移动'} 用例或截图`)
+  }
   items.push({
     id: chapter.id,
     code: chapter.code,
@@ -343,12 +376,22 @@ for (const chapter of chapters) {
     pair: chapter.pair,
     status,
     checks,
-    intentionallyPending: ['literalCardBehavior', 'storyText', 'browserAcceptance'],
+    // 只有确实未通过的检查项才算「有意 pending」，不手写布尔。
+    intentionallyPending: ['literalCardBehavior', 'browserAcceptance', ...(storyTextPending ? ['storyText'] : [])]
+      .filter(key => checks[key] === false),
     notes: {
       testCoveredCodes: `${coveredCodes.length}/${encounterCodes.length}`,
       uncoveredCodes: encounterCodes.filter(code => !coveredCodes.includes(code)),
       storyText: { status: TDE_STORY_TEXT.meta.status, sourceKind: TDE_STORY_TEXT.meta.sourceKind, officialChinese: TDE_STORY_TEXT.meta.officialChinese },
       browser,
+      literalCardBehavior: {
+        records: allCards.codes,
+        missing: allCards.missing,
+        simplified: allCards.simplified,
+        // 显式简化逐条进账本 notes（noteStatus=simplified）；literalCardBehavior=true 只表示逐卡核对完成，
+        // 不表示规则等价（发布口径 equivalenceCertified=false 不变）。
+        ledger: 'audit/tde-all-card-acceptance.json',
+      },
       veiled: veiledReport,
     },
     inventory: {
@@ -384,18 +427,21 @@ for (const chapter of chapters) {
 const remaining = []
 for (const item of items) remaining.push(...(item.remaining || []))
 if (!existsSync(REFERENCE)) remaining.push('缺少参考实现目录，sourceLocked 无法核对')
-if (!browserReport) remaining.push('P9：浏览器证据待补（audit/tde-browser-acceptance.json）')
+if (!allCardLedger) remaining.push('P9：逐卡账本缺失（audit/tde-all-card-acceptance.json；先跑 tools/audit-tde-all-cards.mjs --write）')
+if (!browserReport) remaining.push('P9：浏览器证据缺失（audit/tde-browser-acceptance.json；先跑 6 个 tde browser spec）')
 if (storyTextPending) remaining.push('P8-T：中文剧情自译未开工（story-text.js status=pending）')
 
 const totalRecords = items.reduce((sum, item) => sum + (item.coverage?.records || 0), 0)
 const report = {
   schemaVersion: 1,
   campaignId: 'theDreamEaters',
-  milestone: 'M3',
+  milestone: 'M5',
+  stage: 'P10',
   generatedFrom: 'original-campaign-only',
-  status: items.every(item => item.status !== 'pending') ? 'development' : 'pending',
-  // P8 交付口径：章节 development；playable/verified 由 P9/P10 升。
-  productionGate: 'development',
+  status: items.every(item => item.status === 'verified') ? 'verified'
+    : items.every(item => item.status !== 'pending') ? 'development' : 'pending',
+  // P10 口径：8 章 12/12 检查齐（含逐卡/浏览器）→ 逐章 verified；发布门禁由 P10 发布账本裁定。
+  productionGate: 'playable',
   summary: {
     chapters: items.length,
     verified: items.filter(item => item.status === 'verified').length,
@@ -406,26 +452,44 @@ const report = {
     coveredChapterRecords: items.reduce((sum, item) => sum + (item.coverage?.covered || 0), 0),
     pendingEncounterCards: items.reduce((sum, item) => sum + (item.pendingEncounterCodes?.length || 0), 0),
     gaps: items.reduce((sum, item) => sum + (item.gaps?.length || 0), 0),
+    approximations: items.reduce((sum, item) => sum + (item.approximations?.length || 0), 0),
     testCases: items.reduce((sum, item) => sum + (item.testCases?.passed || 0), 0),
     storyText: TDE_STORY_TEXT.meta.status,
-    literalCardBehavior: false,
+    literalCardBehavior: items.every(item => item.checks.literalCardBehavior),
+    browserAcceptance: items.every(item => item.checks.browserAcceptance),
+    allCardLedger: allCardLedger ? {
+      total: allCardLedger.summary.total,
+      verified: allCardLedger.summary.verified,
+      pending: allCardLedger.summary.pending,
+      simplified: allCardLedger.summary.simplified,
+      testsPassed: allCardLedger.summary.testsPassed,
+    } : null,
+    browserEvidence: browserReport ? {
+      specs: browserReport.specs || [],
+      scenarios: (browserReport.scenarios || []).length,
+      desktopBrowser: Boolean(browserReport.checks?.desktopBrowser),
+      mobileBrowser: Boolean(browserReport.checks?.mobileBrowser),
+    } : null,
   },
   items,
   remaining,
 }
 
 const serialized = `${JSON.stringify(report, null, 2)}\n`
+const headline = `逐卡 ${report.summary.literalCardBehavior ? 'true' : 'false'}`
+  + ` / 浏览器 ${report.summary.browserAcceptance ? 'true' : 'false'}`
+  + ` / 简化 ${report.summary.allCardLedger?.simplified ?? '—'} 卡`
 if (MODE === 'write') {
   await writeFile(LEDGER, serialized)
   await writeFile(LOCK, `${JSON.stringify(computeSourceLock(), null, 2)}\n`)
-  console.log(`P8 scenario ledger written: ${report.summary.development}/${report.summary.chapters} 章 development；`
+  console.log(`P10 scenario ledger written: ${report.summary.verified}/${report.summary.chapters} 章 verified；`
     + `${report.summary.pendingEncounterCards} 张遭遇卡待实现；${report.summary.gaps} 条显式简化；`
-    + `记录覆盖 ${report.summary.coveredChapterRecords}/${report.summary.totalChapterRecords}；${report.remaining.length} 条 remaining`)
+    + `记录覆盖 ${report.summary.coveredChapterRecords}/${report.summary.totalChapterRecords}；${headline}；${report.remaining.length} 条 remaining`)
 } else if (MODE === 'check') {
   const current = readFileSync(LEDGER, 'utf8')
   if (current !== serialized) throw new Error('食梦者逐章验收账本已漂移：重新 --write 并审阅 diff')
-  console.log(`P8 scenario ledger OK: ${report.summary.development}/${report.summary.chapters} 章 development；`
-    + `记录覆盖 ${report.summary.coveredChapterRecords}/${report.summary.totalChapterRecords}；${report.remaining.length} 条 remaining`)
+  console.log(`P10 scenario ledger OK: ${report.summary.verified}/${report.summary.chapters} 章 verified；`
+    + `记录覆盖 ${report.summary.coveredChapterRecords}/${report.summary.totalChapterRecords}；${headline}；${report.remaining.length} 条 remaining`)
 } else {
   console.log(serialized)
 }

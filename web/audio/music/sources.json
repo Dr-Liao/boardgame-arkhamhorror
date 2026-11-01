@@ -1489,9 +1489,137 @@
       "legacyFiles": [
         "campaigns/theCircleUndone/shadowlands-6-the-pit.mp3"
       ]
+    },
+    {
+      "title": "Dreamlike",
+      "filename": "Dreamlike.mp3",
+      "length": "00:01:39",
+      "isrc": "USUAN1100410",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100410",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Dreamlike.mp3",
+      "localFile": "common/dreamlike.mp3",
+      "retrieved": "2026-11-02",
+      "bytes": 4054065,
+      "sha256": "e2a05a282f662bb3b0725854e4fbb5f52fe7a27bd9c310b165aa24c6348f4d0e",
+      "encoded": {
+        "bytes": 1788498,
+        "sha256": "a5b5c35f2be5de63b67b54b96136566d17dfe266a1ed8b2ff4f9cef82d7ff385"
+      }
+    },
+    {
+      "title": "Air Prelude",
+      "filename": "Air Prelude.mp3",
+      "length": "00:05:41",
+      "isrc": "USUAN1100337",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100337",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Air%20Prelude.mp3",
+      "localFile": "common/air-prelude.mp3",
+      "retrieved": "2026-11-02",
+      "bytes": 6922435,
+      "sha256": "e62da99f2d05622d950a65b2582dc2314d230da1e8024f15c7fc45a0af842f2b",
+      "encoded": {
+        "bytes": 5668984,
+        "sha256": "6bd65ca7facc76d8a743975482c4e085f07bae1f6f03e95d803d3059c478ab44"
+      }
+    },
+    {
+      "title": "Unnatural Situation",
+      "filename": "Unnatural Situation.mp3",
+      "length": "00:02:38",
+      "isrc": "USUAN1100464",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100464",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Unnatural%20Situation.mp3",
+      "localFile": "common/unnatural-situation.mp3",
+      "retrieved": "2026-11-02",
+      "bytes": 6439458,
+      "sha256": "47206bd1ab72715771ac7abd21719ce48eb5d0fadcfbe47475f734322c550705",
+      "encoded": {
+        "bytes": 2675204,
+        "sha256": "f9e604733cf01e4045f4d88084e1c17be00dbd79d5ff6c29a0eeb6716063e2c2"
+      }
+    },
+    {
+      "title": "Floating Cities",
+      "filename": "Floating Cities.mp3",
+      "length": "00:03:04",
+      "isrc": "USUAN1600018",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600018",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Floating%20Cities.mp3",
+      "localFile": "common/floating-cities.mp3",
+      "retrieved": "2026-11-02",
+      "bytes": 5892113,
+      "sha256": "e7365652410d1fbc8a14d87537855d625c1a5fa8b7de8c626f47c13256ef2ddd",
+      "encoded": {
+        "bytes": 2946282,
+        "sha256": "6f4c8d4c00455886db6e1d1b252cfb474a6bcb85ee6e617d64aca50d0a91cdbb"
+      }
+    },
+    {
+      "title": "Frozen Star",
+      "filename": "Frozen Star.mp3",
+      "length": "00:03:41",
+      "isrc": "USUAN1100356",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100356",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Frozen%20Star.mp3",
+      "localFile": "common/frozen-star.mp3",
+      "retrieved": "2026-11-02",
+      "bytes": 8977291,
+      "sha256": "28c7532b808086046f02164807cbcad659db614686f2a49a78d87516fa4d3236",
+      "encoded": {
+        "bytes": 3684509,
+        "sha256": "0d0d5f55b7cd9e6bf445b632f1d6c97d4dc2361803fcb9bdcac0aa01b9aa8327"
+      }
+    },
+    {
+      "title": "Dreams Become Real",
+      "filename": "Dreams Become Real.mp3",
+      "length": "00:06:50",
+      "isrc": "USUAN1500027",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500027",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Dreams%20Become%20Real.mp3",
+      "localFile": "common/dreams-become-real.mp3",
+      "retrieved": "2026-11-02",
+      "bytes": 13124519,
+      "sha256": "a8ea5df5f969ed8d898af7fe07eb4712233f03e9d83f7ebcc88d1c851f3171b0",
+      "encoded": {
+        "bytes": 6562497,
+        "sha256": "6f98f53fdb9624357320e72d179971bcc8cdc6de78e2997b1a1f909465758038"
+      }
+    },
+    {
+      "title": "Spider Eyes",
+      "filename": "Spider Eyes.mp3",
+      "length": "00:03:35",
+      "isrc": "USUAN1100526",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100526",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Spider%20Eyes.mp3",
+      "localFile": "common/spider-eyes.mp3",
+      "retrieved": "2026-11-02",
+      "bytes": 8752787,
+      "sha256": "c69b918fd348727b3a211192b9edea05ba76bdbfc60fa4b918557bf92998c2e5",
+      "encoded": {
+        "bytes": 3705094,
+        "sha256": "db37e7470a08da785f57ecc22a46ea350d4205520b2d424968c4b62a57b8f8f4"
+      }
+    },
+    {
+      "title": "Soporific",
+      "filename": "Soporific.mp3",
+      "length": "00:04:50",
+      "isrc": "USUAN1100582",
+      "page": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100582",
+      "download": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Soporific.mp3",
+      "localFile": "common/soporific.mp3",
+      "retrieved": "2026-11-02",
+      "bytes": 11702269,
+      "sha256": "2e1a387e5733c8aecbe2616c9d991dfafd9bba6bdf29d87d40ae5ffa4504e738",
+      "encoded": {
+        "bytes": 4881924,
+        "sha256": "a8fa1a751a0f932f051e5f815e25ec672ab3bd477cabf8c59cf4be7dc9902d65"
+      }
     }
   ],
-  "updated": "2026-10-24",
+  "updated": "2026-11-02",
   "encoding": {
     "codec": "mp3",
     "encoder": "ffmpeg libmp3lame",

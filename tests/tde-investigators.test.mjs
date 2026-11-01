@@ -103,7 +103,8 @@ test('P6 五位正式调查员可选，专属记录只作依赖', () => {
 })
 
 test('P6 调查员包清单：16 条主记录全部声明规则已实现', () => {
-  assert.equal(investigatorPack.status, 'development')
+  // P10：真实战役/章节/包已注册为 playable。
+  assert.equal(investigatorPack.status, 'playable')
   assert.equal(investigatorPack.cards.length, 16)
   for (const card of investigatorPack.cards) {
     assert.equal(card.rulesImplemented, true, card.code)

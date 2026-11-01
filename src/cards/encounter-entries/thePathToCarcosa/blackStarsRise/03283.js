@@ -10,10 +10,14 @@ export default {
   locationRule: {
     actions({ state, moves }) {
       const decks = state.scenarioFlags.agendaDecks || {}
-      const agendaDoom = Object.values(decks).some(deck => deck.doom > 0)
+      const alive = Object.values(decks).filter(deck => deck && !deck.removed)
+      const agendaDoom = alive.some(deck => deck.doom > 0)
+      // 「从一个密谋牌库移动到另外一个」需要两套都在场；道路开启后只剩一套，能力不可用。
+      const reason = alive.length < 2 ? '道路已开启，只剩一套密谋，无法在两套之间移动毁灭'
+        : agendaDoom ? null : '“a”“c”两张密谋上都没有毁灭'
       moves.push({ action: 'scenarioAction', rule: 'shiftAgendaDoom', actions: 2,
         label: '花费2行动，将1个毁灭移到另一密谋并放置2个线索',
-        reason: agendaDoom ? null : '“a”“c”两张密谋上都没有毁灭' })
+        reason })
     },
   },
 }

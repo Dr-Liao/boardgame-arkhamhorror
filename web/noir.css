@@ -224,6 +224,9 @@
 .ah-location-dossier button { font: inherit; color: #dfca98; background: #1b372b; border: 1px solid #b49b6050; border-radius: 3px; padding: 7px 10px; cursor: pointer; }
 .ah-location-dossier button:disabled { opacity: .4; cursor: default; }.ah-location-dossier button[aria-pressed='true'] { background: #455039; border-color: #d5b777; color: #ffe4a9; }
 .ah-location-dossier button:focus-visible { outline: 2px solid #e2c786; outline-offset: 2px; }
+/* 地点档案里的附属卡：横置的卡用虚线框 + 「已横置」标签，和地图标记保持一致。 */
+.ah-location-dossier .ah-location-attachments button.is-exhausted { border-style: dashed; opacity: .8; }
+.ah-location-dossier .ah-location-attachments .ah-attachment-state { margin-left: 6px; padding: 1px 5px; border-radius: 999px; font-size: 10px; color: #ffe4a9; background: #6b5a2e66; border: 1px solid #b49b6080; }
 .ah-location-detail-info { display: grid; gap: 16px; }.ah-location-detail-info h3 { font-size: 12px; letter-spacing: 2px; color: #c9b681; margin: 0 0 8px; }.ah-location-detail-info p { white-space: pre-wrap; margin: 0; font-size: 13px; line-height: 1.8; }
 .ah-location-counters { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; }
 .ah-location-counters > div { display: grid; justify-items: center; grid-template-columns: 1fr 1fr; padding: 10px 7px; border: 1px solid #b79c5640; background: #081b1680; border-radius: 4px; gap: 6px; }.ah-location-counters small { grid-column: span 2; font-size: 10px; color: #aebca4; }.ah-location-counters .ah-icon { width: 20px; height: 20px; justify-self: end; }.ah-location-counters strong { justify-self: start; font-size: 19px; }

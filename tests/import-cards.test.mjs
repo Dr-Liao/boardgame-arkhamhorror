@@ -7,7 +7,7 @@ import { CARD_TYPES, ROOT, buildImport, mergeCatalog, renderArtifacts, localeFie
 import { ALL_CARDS, CARDS_BY_TYPE, META } from '../src/cards/cards-data.js'
 import { getCatalogCard, queryCatalog } from '../src/cards/card-catalog.js'
 import { createGameState, allCardDefs, legalMoves, validateMove, applyMove } from '../src/engine/engine.js'
-import { PLAYABLE_INVESTIGATOR_CODES } from '../src/deck/availability.js'
+import { PLAYABLE_INVESTIGATOR_CODES, SELECTABLE_INVESTIGATOR_CODES } from '../src/deck/availability.js'
 
 const row = (code, extra = {}) => ({ code, name: 'Card', type_code: 'asset', pack_code: 'test', faction_code: 'neutral', ...extra })
 
@@ -134,9 +134,12 @@ test('Core、敦威治、卡尔克萨与失落调查员和 1–4 人开局正常
       assert.equal(state.rulesMode, 'simplified')
       // 只嵌入本局可用的运行时定义，远小于全部 5 930 张目录卡。
       assert.ok(Object.keys(state.cards).length <= 420)
-      assert.equal(Object.keys(state.investigatorDefs).length, PLAYABLE_INVESTIGATOR_CODES.length)
-      // 27 = 核心 5 + 敦威治 5 + 卡尔克萨 6 + 失落 5 + 万象无终 6（P6 起 TCU 调查员可选）。
-      assert.equal(Object.keys(state.investigatorDefs).length, 27)
+      // P10：真人可选池改用 SELECTABLE（含食梦者 5 人）；AI 自动选人池仍是 PLAYABLE，
+      // 池子变长会让既有 13 局 golden replay 与种子用例的 AI 选人漂移。
+      assert.equal(Object.keys(state.investigatorDefs).length, SELECTABLE_INVESTIGATOR_CODES.length)
+      assert.equal(PLAYABLE_INVESTIGATOR_CODES.length, 27, 'AI 自动选人池保持 27')
+      // 27 = 核心 5 + 敦威治 5 + 卡尔克萨 6 + 失落 5 + 万象无终 6；P10 起 + 食梦者 5 = 32（真人可选池；AI 自动池仍 27）。
+      assert.equal(Object.keys(state.investigatorDefs).length, 32)
       assert.equal(state.cards['09001'], undefined)
       assert.ok(!JSON.stringify(state).includes('canonicalSource'))
       for (const inv of state.investigators) {

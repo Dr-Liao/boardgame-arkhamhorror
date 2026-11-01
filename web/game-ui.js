@@ -15,6 +15,7 @@ import { createMusicPlayer } from './music-player.js'
 import { createChaosBagView } from './chaos-bag-view.js'
 import { chaosTokenFaceByLabel } from './chaos-token.js'
 import { createSituationView } from './situation-view.js'
+import { vitalDisplay } from './vitals.js'
 import { createDebugConsole } from './debug-console.js'
 import { createScenarioSetupView } from './scenario-setup-view.js'
 import { createRulebook } from './rulebook.js'
@@ -851,7 +852,13 @@ function renderLocationDetail(detail) {
             people.map(inv=>h('button',{className:'is-investigator',onclick:()=>openCardDetailDef({...st.investigatorDefs[inv.code],...inv,type:'investigator'})},tableArt(h,inv.code,inv.name),h('span',{},inv.name))),
             enemies.map(enemy=>h('button',{className:'is-enemy',onclick:()=>openCardDetail(s,enemy)},tableArt(h,enemy.originalCode || enemy.code,enemy.name),h('span',{},enemy.name)))) : h('p',{},t('game.location.noOccupants'))),
         attachments.length ? h('section',{className:'ah-location-attachments'+(detail.focusInfo === 'attached' ? ' is-focused' : '')},h('h3',{},t('game.location.attachments')),
-          attachments.map(card=>h('button',{onclick:()=>openCardDetail(s,{...card,attachedTo:{type:'location',name:loc.name}})},cardDisplayName(card) || card.code))) : null,
+          attachments.map(card=>h('button',{
+            className: card.exhausted ? 'is-exhausted' : null,
+            'data-exhausted': card.exhausted ? 'true' : null,
+            title: card.exhausted ? t('game.attachment.exhausted') : null,
+            onclick:()=>openCardDetail(s,{...card,attachedTo:{type:'location',name:loc.name}})},
+            cardDisplayName(card) || card.code,
+            card.exhausted ? h('span',{className:'ah-attachment-state'},t('game.attachment.exhausted')) : null))) : null,
         h('section',{className:'ah-location-connections'},h('h3',{},t('game.location.connections')),h('div',{},(loc.connections || []).map(id=>st.locations.find(item=>item.id===id)).filter(Boolean).map(other=>
           h('button',{onclick:()=>openCardDetailDef({...other,type:'location'})},'→ '+other.name)))),
         h('footer',{className:'ah-location-detail-actions'},moves.length ? moves.map(move=>h('button',{className:'ah-action',onclick:()=>{state.cardDetail=null;cardMove(move,s)}},move.label || (ahActionLabel(move.action) || t('game.action.generic'))))
@@ -1010,7 +1017,8 @@ async function cardMove(move, displayedSession, options = {}) {
   } catch (e) {
     if (sameSession()) {
       const fresh = e.session
-      if (fresh?.sessionId === session.sessionId && fresh.state &&
+      // 这条提交之后用户点过「强制同步」：权威状态已由同步恢复，晚到的失败不能让界面回退。
+      if (!e.superseded && fresh?.sessionId === session.sessionId && fresh.state &&
           (!Number.isSafeInteger(st.revision) || fresh.state.revision >= st.revision)) {
         state.session = fresh
       }
@@ -1020,7 +1028,7 @@ async function cardMove(move, displayedSession, options = {}) {
       const autoRace = options.auto && (['STALE_REVISION', 'SESSION_BUSY'].includes(e.code)
         || /\u5bf9\u5c40\u7248\u672c\u5df2\u53d8\u5316|\u6b63\u5728\u5904\u7406|\u7a0d\u540e\u91cd\u8bd5|\u7248\u672c\u53f7/.test(String(e.message)))
       if (autoRace) console.warn('[autoPass] auto-skip submit fell behind server state: ' + String(e.message))
-      else state.error = String(e.message)
+      else if (!e.superseded) state.error = String(e.message)
       state.arkhamSelection = null
       if (state.arkhamMapView) state.arkhamMapView.selectedId = null
       clearCardDrag()
@@ -1611,10 +1619,12 @@ function renderPlayerDock(s, inv, humanTurn) {
         // 头像与三态齿轮同排居中：早先绝对定位在名字行右上角，和齿轮上下错开半个按钮高。
         h('span', { className: 'ah-dock-portrait', 'aria-hidden': 'true' }, tableArt(h, inv.code, inv.name))),
       h('div', { className: 'ah-dock-vitals' }, [['health',t('game.vital.health'),inv.maxHealth,inv.damage],['sanity',t('game.vital.sanity'),inv.maxSanity,inv.horror]].map(([kind,label,max,loss])=>{
-        const current=Math.max(0,max-(loss || 0)), fill=max>0 ? Math.min(100,current/max*100) : 0
-        return h('div',{className:'ah-vital ah-vital-'+kind,'aria-label':t('game.vital.aria', { label, current, max })},
-          tableIcon(kind),h('span',{className:'ah-vital-label'},label),h('span',{className:'ah-vital-value'},h('strong',{},current),h('small',{},'/ '+max)),
-          h('span',{className:'ah-vital-track','aria-hidden':'true'},h('i',{style:{width:fill+'%'}})))
+        // 理智允许负数：卡城幽影的调查员不会因恐惧被击败，恐惧超过理智上限是合法状态，
+        // 剩余理智（maxSanity - horror）为负时要如实显示（见 web/vitals.js）。
+        const shown=vitalDisplay(max, (Number(max)||0)-(Number(loss)||0), { allowNegative: kind==='sanity' })
+        return h('div',{className:'ah-vital ah-vital-'+kind+(shown.overflow?' is-overflow':''),'aria-label':t('game.vital.aria', { label, current: shown.current, max: shown.total })},
+          tableIcon(kind),h('span',{className:'ah-vital-label'},label),h('span',{className:'ah-vital-value'},h('strong',{},shown.current),h('small',{},'/ '+shown.total)),
+          h('span',{className:'ah-vital-track','aria-hidden':'true'},h('i',{style:{width:shown.fill+'%'}})))
       })),
       h('div', {className:'ah-dock-skills','aria-label':t('game.dock.skillsAria')}, ['willpower','intellect','combat','agility'].map(skill=>{
         const base=inv[skill] || 0, value=ahEffStat(s,inv,skill), delta=value-base
@@ -1850,15 +1860,23 @@ function renderLocationNode(s, loc, opts = {}) {
     attachments.length ? h('div', { className: 'ah-location-story-markers' }, attachments.map((asset,index) => {
       const def = ahCardDef(s, asset.code), name = cardDisplayName(asset) || cardDisplayName(def) || asset.code
       const attached = index < attachedCards.length
+      // 玩家卡附属到地点后也会横置（例如 03232 捷径、03148 埋伏）；横置是公开状态，
+      // 地图上必须和支援/敌人一样看得出来，否则其他调查员不知道这张附属卡本轮还能不能用。
+      const exhausted = attached && !!asset.exhausted
+      const exhaustedSuffix = exhausted ? t('game.attachment.exhaustedSuffix') : ''
       const attachmentKey = attached && Number.isInteger(asset.attachmentIndex)
         ? `attachment:${loc.id}:${asset.attachmentIndex}` : null
-      return h('button', { className: 'ah-map-story-marker' + (attached ? ' ah-map-attachment' : ''), 'data-map-info': attached ? 'attachment' : 'story',
+      return h('button', { className: 'ah-map-story-marker' + (attached ? ' ah-map-attachment' : '') + (exhausted ? ' is-exhausted' : ''), 'data-map-info': attached ? 'attachment' : 'story',
         'data-attachment-code': attached ? asset.code : null,
+        'data-exhausted': exhausted ? 'true' : null,
         'data-interaction': attachmentKey,
-        title: attached ? t('game.map.attachedTo', { location: locName, name }) : name, 'aria-label': attached ? t('game.map.viewAttachment', { name }) : t('game.map.viewStoryCard', { name }),
+        title: (attached ? t('game.map.attachedTo', { location: locName, name }) : name) + exhaustedSuffix,
+        'aria-label': (attached ? t('game.map.viewAttachment', { name }) : t('game.map.viewStoryCard', { name })) + exhaustedSuffix,
         onclick: event => { event.stopPropagation(); openCardDetail(s, { ...asset, attachedTo: attached ? { type: 'location', name: locName } : undefined }) }, onkeydown: event => event.stopPropagation(),
         oncontextmenu: event => { event.preventDefault(); event.stopPropagation(); openCardDetail(s,{ ...asset, attachedTo: attached ? { type: 'location', name: locName } : undefined }) },
-      }, tableArt(h, asset.originalCode || def.originalCode || asset.code, name), placedCardMarkers(h, asset))
+      }, tableArt(h, asset.originalCode || def.originalCode || asset.code, name),
+      exhausted ? h('span', { className: 'ah-map-marker-exhausted', 'aria-hidden': 'true' }, '✗') : null,
+      placedCardMarkers(h, asset))
     })) : null
   )
 }

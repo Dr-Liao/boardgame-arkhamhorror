@@ -29,6 +29,8 @@ export function createDescribeState(deps) {
     cardName,
     assetEffect,
     CLASS_NAMES,
+    // 技能名（投入窗口写人话用）：同样由 engine.js 的 commonDeps 提供，不额外装配。
+    SKILL_NAMES,
     investigatorParticipation,
     investigatorAssigned,
     decisionSeat,
@@ -61,6 +63,37 @@ export function createDescribeState(deps) {
       damage: sum.damage + (enemy.damage || 0),
       horror: sum.horror + (enemy.horror || 0),
     }), { damage: 0, horror: 0 })
+  }
+
+  // 技能检定投入窗口的决策点提示。规则只说「投入的牌结算后进弃牌堆」，但 AI 在投入
+  // 待决时看不到这件事：它会把武器、关键事件当图标投出去。这里把「当前总值/难度/还差
+  // 几个图标」和投入取舍直接放在可执行行动之前。只在应答座位包含观察者时出现——
+  // 求助（helpRequested）后每个队友各有自己的投入选择，别人的窗口不向观察者输出。
+  function describeCommitWindow(state, observerSeat) {
+    const choice = state.pendingChoice
+    if (choice?.kind !== 'commit' || !state.skillTest) return []
+    const answerSeats = choice.seats || [choice.seat]
+    if (!answerSeats.includes(observerSeat)) return []
+    const test = state.skillTest
+    const performerName = state.investigators[test.seat]?.name || '队友'
+    // skill 可能是字符串（单技能）、数组（多技能合成）或空数组（资源技能检定，技能名未知）。
+    const skillNames = (Array.isArray(test.skill) ? test.skill : [test.skill]).filter(Boolean)
+    const skillLabel = skillNames.length
+      ? skillNames.map(name => SKILL_NAMES[name] || name).join('、')
+      : '资源'
+    const value = Number(test.value)
+    const difficulty = Number(test.difficulty)
+    const gap = Number.isFinite(value) && Number.isFinite(difficulty) ? Math.max(0, difficulty - value) : null
+    const assist = observerSeat === test.seat ? '' : `协助「${performerName}」的`
+    const progress = gap == null
+      ? '当前总值与难度暂不可用，先按手牌能提供的技能图标判断。当前总值未计混乱标记修正。'
+      : `当前总值 ${value}，难度 ${difficulty}，${gap > 0 ? `还差 ${gap} 个图标` : '已达标'}。当前总值未计混乱标记修正。`
+    return [
+      `【技能检定投入】你正在${assist}${skillLabel}检定：${progress}`,
+      '- 投入的卡牌在检定结算后进入弃牌堆，不会回到手牌：武器、支援、盟友等资产和关键事件投出去就没了。',
+      '- 还差图标时：优先投入纯技能卡；不要投入你还需要打出的资产或关键事件；差距大于手牌能提供的图标时不要白投，保留手牌。',
+      '- 已达标时：除非某张牌的投入效果能带来额外收益（额外线索、抽牌、加伤害等），否则不要再投入任何牌。',
+    ]
   }
 
   // 敌人卡面的规则文本。桌面上的敌人是明牌，卡面文字属于公开信息；不给的话 AI 读不到
@@ -223,9 +256,17 @@ export function createDescribeState(deps) {
     tail.push('')
     tail.push(`【借机攻击】你正与「${names}」交战：每次非攻击行动结算前，会先被每个未横置的敌人各攻击一次（合计 ${totals.damage} 伤害／${totals.horror} 恐惧）。`)
     tail.push('会引发：抽牌、获得资源、移动、调查、打出卡牌、使用普通资产能力等花费行动点的行动。不会引发：攻击、躲避、谈判、撤退、结束回合、免费行动，以及卡面写明「不引发借机攻击」的效果。行动列表中标 ⚠ 的选项都会先受到上述攻击。')
+    // 「装备」在引擎里同样算「打出卡牌」，同样先挨借机攻击；模型常把它当成安全动作。
+    tail.push('装备/打出资产与事件也属于「打出卡牌」，同样会在结算前先受到借机攻击。')
     const remainingHealth = getMaxHealth(me) - (me.damage || 0)
     const remainingSanity = getMaxSanity(me) - (me.horror || 0)
-    if (totals.damage >= remainingHealth || totals.horror >= remainingSanity) {
+    // 恐惧是否足以致死由剧本钩子裁决：某些剧本声明调查员不会因恐惧被击败
+    // （investigatorCanBeDefeated 对 'horror' 返回 false），此时恐惧可以超过理智上限
+    // （剩余理智为负），借机攻击的恐惧不构成致命威胁；伤害判定不变。
+    const damageLethal = totals.damage >= remainingHealth
+    const horrorLethal = totals.horror >= remainingSanity
+      && scenarioBehavior(state).investigatorCanBeDefeated?.(state, me, 'horror') !== false
+    if (damageLethal || horrorLethal) {
       tail.push(`按基础值计算，这次借机攻击足以击败你（剩余生命 ${remainingHealth}／理智 ${remainingSanity}）。除非能取消或转移这次攻击，否则不要执行标 ⚠ 的行动。`)
     }
   } else if (me && !me.defeated && !me.resigned
@@ -235,10 +276,17 @@ export function createDescribeState(deps) {
   }
 
   if (state.pendingChoice && (state.pendingChoice.seat === observerSeat || !state.skillTest || state.skillTest.helpRequested || state.skillTest.seat === observerSeat)) tail.push(`待决选择：${state.pendingChoice.prompt}；回答座位 ${state.pendingChoice.seat}。`)
+  // 投入窗口紧贴决策点：待决选择之后、【可执行行动】之前（顺序由 ai-guidance 测试锁定）。
+  const commitWindow = describeCommitWindow(state, observerSeat)
+  if (commitWindow.length) tail.push('', ...commitWindow)
   const legal = observerSeat === decisionSeat(state) ? legalMoves(state) : []
   if (legal.length) {
     tail.push('')
-    tail.push('【可执行行动】（从下列选择一项，用其 JSON 表示）')
+    // 当前剩余行动点直接写在段首：模型不必回到【回合进度】里反查，也不会把「结束回合」
+    // 当成没有代价的收尾。待决选择窗口不是自己的行动回合，不展示。
+    const actionsLeftNote = !state.pendingChoice && Number.isFinite(me?.actionsLeft)
+      ? `本回合剩余 ${me.actionsLeft} 个行动点；` : ''
+    tail.push(`【可执行行动】（${actionsLeftNote}从下列选择一项，用其 JSON 表示；⚠ = 结算前会先被借机攻击，✅ = 该行动不引发借机攻击，[N行动] = 消耗行动点）`)
     legal.forEach((m, i) => {
       // 风险直接贴在行动旁，避免 AI 只在末尾 actionCosts 里自己推算。
       // actionPreview 只读，且与 dispatch 共用 actionKind/actionCost 的判定。
@@ -247,7 +295,15 @@ export function createDescribeState(deps) {
       const risk = attacks.length
         ? `  ⚠借机 ${attacks.reduce((n, a) => n + (a.damage || 0), 0)}/${attacks.reduce((n, a) => n + (a.horror || 0), 0)}`
         : ''
-      tail.push(`${i + 1}. ${m.label}${risk}  →  ${JSON.stringify(stripLabel(m))}`)
+      // 行动点成本与「不引发借机攻击」的安全标记也贴在行动旁：与敌人交战时，模型要先比较
+      // 「花几点行动、会不会挨打」再决定行动顺序。安全标记刻意不写「借机」二字——攻击行
+      // 不引发借机攻击，既有测试按「攻击行不含借机」断言。
+      const cost = preview?.actions > 0 ? ` [${preview.actions}行动]` : ''
+      const safe = opportunityAttackersNow.length && preview?.actions > 0 && m.action !== 'endTurn' && !attacks.length
+        ? ' ✅安全' : ''
+      // 结束回合会吞掉剩余行动点：明写浪费几个，免得 AI 在还能行动时提前收手。
+      const wasted = m.action === 'endTurn' && me?.actionsLeft > 0 ? ` [结束会浪费 ${me.actionsLeft} 个行动点]` : ''
+      tail.push(`${i + 1}. ${m.label}${risk}${cost}${safe}${wasted}  →  ${JSON.stringify(stripLabel(m))}`)
     })
   }
 

@@ -1,5 +1,5 @@
 // 把转码后的背景音乐上传到 Cloudflare R2（S3 兼容接口），对象键与 src/integration/music-cache.js 的镜像布局一致：
-//   node tools/upload-music.mjs <bucket> [--dry-run]
+//   node tools/upload-music.mjs <bucket> [--dry-run] [--retrieved=YYYY-MM-DD]
 // 凭证只从环境变量读取：R2_ACCOUNT_ID、R2_ACCESS_KEY_ID、R2_SECRET_ACCESS_KEY。
 // 上传前按 sources.json 的 encoded 校验每个本地文件。
 
@@ -9,7 +9,9 @@ import { MIRROR_PREFIX } from '../src/integration/music-cache.js'
 
 const bucket = process.argv[2]
 const dryRun = process.argv.includes('--dry-run')
+const retrieved = process.argv.find(arg => arg.startsWith('--retrieved='))?.slice('--retrieved='.length)
 if (!bucket || bucket.startsWith('--')) throw new Error('用法：node tools/upload-music.mjs <bucket> [--dry-run]')
+if (retrieved && !/^\d{4}-\d{2}-\d{2}$/.test(retrieved)) throw new Error('无效的 --retrieved 日期')
 const { R2_ACCOUNT_ID: account, R2_ACCESS_KEY_ID: accessKey, R2_SECRET_ACCESS_KEY: secretKey } = process.env
 if (!dryRun && !(account && accessKey && secretKey)) throw new Error('缺少环境变量 R2_ACCOUNT_ID / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY')
 
@@ -41,7 +43,7 @@ async function put(key, body, payloadHash) {
 
 const root = new URL('../web/audio/music/', import.meta.url)
 const manifest = JSON.parse(readFileSync(new URL('sources.json', root), 'utf8'))
-for (const track of manifest.tracks) {
+for (const track of manifest.tracks.filter(track => !retrieved || track.retrieved === retrieved)) {
   const data = readFileSync(new URL(track.localFile, root))
   if (data.length !== track.encoded?.bytes || sha256(data) !== track.encoded.sha256) {
     throw new Error('本地文件与 sources.json 的 encoded 不一致：' + track.localFile)

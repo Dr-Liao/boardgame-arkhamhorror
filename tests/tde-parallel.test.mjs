@@ -21,10 +21,10 @@ import mod from '../index.js'
 import { settle } from './core-fixture.mjs'
 import * as gathering from '../content/campaigns/nightOfTheZealot/scenarios/theGathering/index.js'
 
-const CHAPTER_IDS = ['a1', 'b1', 'a2', 'b2']
+const CHAPTER_IDS = ['parA1', 'parB1', 'parA2', 'parB2']
 const PARTS = Object.freeze({
-  A: Object.freeze({ name: '梦寻', chapters: [{ scenarioId: 'a1' }, { scenarioId: 'a2' }] }),
-  B: Object.freeze({ name: '梦网', chapters: [{ scenarioId: 'b1' }, { scenarioId: 'b2' }] }),
+  A: Object.freeze({ name: '梦寻', chapters: [{ scenarioId: 'parA1' }, { scenarioId: 'parA2' }] }),
+  B: Object.freeze({ name: '梦网', chapters: [{ scenarioId: 'parB1' }, { scenarioId: 'parB2' }] }),
 })
 
 function registerCampaign(id = 'parallelTest', { gate = 'open', chapters = CHAPTER_IDS, parts = PARTS } = {}) {
@@ -88,8 +88,8 @@ test('启动双运行时：两条线各自进入 a1 / b1，座位映射独立且
   const state = parallelGame()
   assert.equal(isParallelState(state), true)
   const { A, B } = state.parallel.lanes
-  assert.equal(A.scenario.id, 'a1')
-  assert.equal(B.scenario.id, 'b1')
+  assert.equal(A.scenario.id, 'parA1')
+  assert.equal(B.scenario.id, 'parB1')
   assert.deepEqual(A.laneRuntime.roomSeats, [0, 1])
   assert.deepEqual(B.laneRuntime.roomSeats, [2, 3])
   assert.deepEqual(A.investigators.map(inv => inv.seat), [0, 1])
@@ -130,26 +130,26 @@ test('观察投影：本线视图带 parallel.lane 与另一线公开摘要；AI
   const state = parallelGame()
   const viewA = mod.viewState(state, 0)
   assert.equal(viewA.parallel.lane, 'A')
-  assert.equal(viewA.parallel.other.scenarioId, 'b1')
+  assert.equal(viewA.parallel.other.scenarioId, 'parB1')
   assert.deepEqual(viewA.parallel.other.seats, [2, 3])
-  assert.ok(JSON.stringify(viewA).includes('a1'))
+  assert.ok(JSON.stringify(viewA).includes('parA1'))
   const viewB = mod.viewState(state, 3)
   assert.equal(viewB.parallel.lane, 'B')
-  assert.equal(viewB.parallel.scenarioId, 'b1')
+  assert.equal(viewB.parallel.scenarioId, 'parB1')
   // 另一线的手牌不在摘要里。
   assert.equal('investigators' in viewA.parallel.other, false)
   // 另一线的座位不拿到 A 线视图。
   const text = mod.describeState(state, 2)
   assert.ok(typeof text === 'string')
-  assert.ok(!text.includes('a1'), 'B 线 AI 描述不能出现 A 线关卡')
+  assert.ok(!text.includes('parA1'), 'B 线 AI 描述不能出现 A 线关卡')
 })
 
 test('单文件存档：容器往返后两条线继续可用', () => {
   const state = parallelGame()
   const saved = serializeParallelState(state)
   const restored = restoreParallelState(saved)
-  assert.equal(restored.parallel.lanes.A.scenario.id, 'a1')
-  assert.equal(restored.parallel.lanes.B.scenario.id, 'b1')
+  assert.equal(restored.parallel.lanes.A.scenario.id, 'parA1')
+  assert.equal(restored.parallel.lanes.B.scenario.id, 'parB1')
   assert.deepEqual(JSON.parse(serializeParallelState(restored)), JSON.parse(saved))
   // 恢复后仍能按座位下发命令。
   const resource = restored.parallel.lanes.A.investigators[0].resources
@@ -194,9 +194,9 @@ test('大厅开闸：hubBeginScenario 在 mod 边界启动双运行时，纯引�
   const viewA = mod.viewState(state, 0)
   const viewB = mod.viewState(state, 3)
   assert.equal(viewA.parallel.lane, 'A')
-  assert.equal(viewA.scenario.id, 'a1')
+  assert.equal(viewA.scenario.id, 'parA1')
   assert.equal(viewB.parallel.lane, 'B')
-  assert.equal(viewB.scenario.id, 'b1')
+  assert.equal(viewB.scenario.id, 'parB1')
   // 观战视图只给公开摘要。
   const publicView = mod.viewState(state, null)
   assert.equal(publicView.parallel.public, true)
@@ -260,6 +260,26 @@ test('大厅代答钩子：并行线待决选择映射成房间座位，容器�
   const bChoice = mod.pendingChoice(state)
   assert.equal(bChoice.seat, 2)
   assert.equal(bChoice.lane, 'B')
+})
+
+test('并行开局第一处待决选择：两条线都补算 legalMoves，真人视图有选项不会被空窗口卡死', () => {
+  // P10 用户复现：launchParallelLanes 走 resolveTransaction(initial) 后没有补算派生缓存
+  // （事务重建会丢掉 legalMoves），第一处选择若正好问本线真人（没有 AI 先提交动作刷新缓存），
+  // 观察投影对决策座位直接复制缓存（legalMoves=[]），客户端只画提示、没有按钮 → 关卡开不了也答不了。
+  const state = parallelLaunched()
+  for (const [lane, roomSeat] of [['A', 0], ['B', 2]]) {
+    const laneState = state.parallel.lanes[lane]
+    const pending = laneState.pendingChoice
+    assert.ok(pending, `${lane} 线开局应有待决选择`)
+    assert.ok(Array.isArray(laneState.legalMoves), `${lane} 线开局必须补算 legalMoves 缓存`)
+    assert.ok(laneState.legalMoves.length > 0)
+    assert.ok(laneState.legalMoves.every(move => move.action === 'choose' && move.choiceId === pending.id))
+    const view = mod.viewState(state, roomSeat)
+    assert.equal(view.parallel.lane, lane)
+    assert.equal(view.pendingChoice.id, pending.id)
+    assert.deepEqual(view.legalMoves.map(move => move.optionId), pending.options.map(option => option.id),
+      `${lane} 线真人视图必须列出全部可点选项`)
+  }
 })
 
 test('批量换牌：并行线在 lane 克隆上原子提交，容器版本 +1 且事件换回房间座位', () => {
@@ -328,9 +348,9 @@ test('并行关卡检查点：记录两条线，任一队长可回档', () => {
   const checkpoint = createSessionCheckpoint(session, { move: { action: 'hubBeginScenario' }, after: state })
   assert.ok(checkpoint)
   assert.match(checkpoint.scenarioName, / \/ /)
-  assert.equal(checkpoint.scenarioId, 'a1|b1')
-  assert.equal(checkpoint.snapshot.state.parallel.lanes.A.scenario.id, 'a1')
-  assert.equal(checkpoint.snapshot.state.parallel.lanes.B.scenario.id, 'b1')
+  assert.equal(checkpoint.scenarioId, 'parA1|parB1')
+  assert.equal(checkpoint.snapshot.state.parallel.lanes.A.scenario.id, 'parA1')
+  assert.equal(checkpoint.snapshot.state.parallel.lanes.B.scenario.id, 'parB1')
   session.scenarioCheckpoints = [checkpoint]
   assert.equal(checkpointView(session, state.campaign.partLeads.A)[0].canFork, true)
   assert.equal(checkpointView(session, state.campaign.partLeads.B)[0].canFork, true)
@@ -338,7 +358,7 @@ test('并行关卡检查点：记录两条线，任一队长可回档', () => {
   const branch = forkSessionCheckpoint(session, checkpoint.checkpointId, {
     sessionId: 'parallel-fork', revision: 999, seat: state.campaign.partLeads.B,
   })
-  assert.equal(branch.state.parallel.lanes.B.scenario.id, 'b1')
+  assert.equal(branch.state.parallel.lanes.B.scenario.id, 'parB1')
   assert.equal(branch.state.revision, 999)
 })
 
@@ -351,8 +371,8 @@ test('并行 AI 回合键、计划指纹和行动点取本线，不取容器', (
   state.parallel.lanes.B.investigators[0].actionsLeft = 2
   const keyA = mod.agentTurnKey(state, 0)
   const keyB = mod.agentTurnKey(state, 2)
-  assert.match(keyA, /a1:1:investigation/)
-  assert.match(keyB, /b1:4:enemy/)
+  assert.match(keyA, /parA1:1:investigation/)
+  assert.match(keyB, /parB1:4:enemy/)
   assert.notEqual(keyA, keyB)
   state.parallel.lanes.B.round = 5
   assert.notEqual(mod.agentTurnKey(state, 2), keyB)
@@ -406,6 +426,33 @@ test('并行存档迁移走进两条线；版本已当前时原样返回', () =>
   assert.equal(old.parallel.lanes.A.schemaVersion, 6)
   assert.ok(changes.some(item => item.startsWith('A 线')), changes.join(' | '))
   assert.ok(migrated.parallel.lanes.A.effects.some(effect => String(effect.id).includes('migrated-phase')))
+})
+
+test('旧并行存档：待决选择缺少 legalMoves 缓存时读档重算，真人选项不再为空', () => {
+  // P10 用户存档（bg-1-mvy4j5xb）的原样形状：两条线都停在开局第一处待决选择，
+  // 其中 B 线的 `legalMoves` 缓存整个缺失（launchParallelLanes 当时没补算）→ 视图没有按钮。
+  const state = parallelLaunched()
+  const broken = structuredClone(state)
+  for (const lane of ['A', 'B']) delete broken.parallel.lanes[lane].legalMoves
+  assert.deepEqual(mod.viewState(broken, 0).legalMoves, [], '缺缓存时真人视图复现为空')
+  assert.deepEqual(mod.viewState(broken, 2).legalMoves, [], '缺缓存时 B 线真人视图复现为空')
+  const { state: migrated, changes } = migrateState(broken)
+  assert.ok(changes.some(item => item.includes('重算合法行动')), changes.join(' | '))
+  for (const [lane, roomSeat] of [['A', 0], ['B', 2]]) {
+    const laneState = migrated.parallel.lanes[lane]
+    const pending = laneState.pendingChoice
+    assert.ok(pending, `${lane} 线应仍是待决选择状态`)
+    assert.equal(laneState.revision, state.parallel.lanes[lane].revision, '只重算派生缓存，不改版本')
+    const view = mod.viewState(migrated, roomSeat)
+    assert.equal(view.pendingChoice.id, pending.id)
+    assert.deepEqual(view.legalMoves.map(move => move.optionId), pending.options.map(option => option.id),
+      `${lane} 线读档后真人视图必须有可点选项`)
+  }
+  // 修复后能继续回答：B 线不再软锁。
+  const choice = migrated.parallel.lanes.B.pendingChoice
+  const optionId = choice.options.find(option => option.id === 'done')?.id ?? choice.options[0].id
+  mod.applyMove(migrated, 2, { action: 'choose', choiceId: choice.id, optionId })
+  assert.notEqual(migrated.parallel.lanes.B.pendingChoice?.id, choice.id, '回答后应出现下一个窗口/选择')
 })
 
 test('大厅版本号：容器 revision 提交到 lane 前必须剥离（否则所有行动都会被判过期）', () => {

@@ -32,6 +32,9 @@
 .ah-vital { display: grid; grid-template-columns: 15px auto 1fr; align-items: center; gap: 4px; padding: 5px 7px; border: 1px solid #ad78634d; border-radius: 4px; background: #46261b40; color: #edb09a; }
 .ah-vital-sanity { color: #accfdb; border-color: #739caa50; background: #24455240; }
 .ah-vital .ah-icon { width: 14px; height: 14px; }.ah-vital-label { font-size: 10px; }.ah-vital-value { display: flex; align-items: baseline; gap: 3px; justify-self: end; white-space: nowrap; }.ah-vital-value strong { font-size: 19px; line-height: 1; }.ah-vital-value small { font-size: 11px; opacity: .8; }
+/* 剩余理智为负：卡城幽影的调查员不会因恐惧被击败，恐惧可以超过理智上限（见 web/vitals.js）。 */
+.ah-vital.is-overflow { border-color: #d4806a8c; background: #5c1f1640; }
+.ah-vital.is-overflow .ah-vital-value strong { color: #ff8d72; }
 .ah-vital-track { grid-column: 1 / -1; height: 3px; background: #050e0b90; border-radius: 2px; overflow: hidden; }.ah-vital-track i { display: block; width: var(--vital-fill); height: 100%; background: currentColor; }
 .ah-table.ah-calm.ah-noir .ah-action-points { display: flex; align-items: center; gap: 7px; margin-top: 7px; padding: 5px 7px; border: 1px solid #b7974f80; border-radius: 4px; background: linear-gradient(110deg,#5e4b244d,#17251b); color: #f0cf78; }
 .ah-action-count { font: bold 23px/1 Georgia,serif; }.ah-table.ah-calm.ah-noir .ah-action-points > small { margin: 0; font-size: 11px; color: #e2c58d; }

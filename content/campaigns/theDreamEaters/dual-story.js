@@ -1,3 +1,7 @@
+import { storyEntryText, storyTitle } from './story-access.js'
+import { TDE_STORY_TEXT } from './story-text.js'
+const TDE_EPILOGUE_ZH = TDE_STORY_TEXT.epilogue
+
 // 食梦者（The Dream-Eaters）· 双线尾声：16 段结局矩阵、特殊结局子步骤与 flow 接线（P8）。
 //
 // 事实源：参考实现 `Campaigns/TheDreamEaters.hs` C:736-832 与锁定英文包
@@ -13,8 +17,8 @@
 //
 // 与 `src/campaign/epilogue-matrix.js` 的契约：矩阵形状 `{ a:[{id,title}], b:[{id,title}],
 // entries:{ 'aId|bId': { title, textKey } } }`；本文件只存英文 `textKey` 与结构，
-// **不写中文摘要**（P8-T 统一翻译；`pendingTranslation` 标记未译状态）。
-// 剧情正文的落点是后续 P8-T 的 `story-text.js`（键名与本文件一致）。
+// **不写中文摘要**；P8-T 已交付自译中文（`story-text.js`，`pendingTranslation` 只标未译键）。
+// 剧情正文的落点是 P8-T 已生成的 `story-text.js`（键名与本文件一致）。
 import { epilogueFor, normalizeEpilogueMatrix } from '../../../src/campaign/epilogue-matrix.js'
 
 const FLAVOR = 'theDreamEaters.flavorText'
@@ -109,7 +113,7 @@ function buildEntries() {
 
 /**
  * 16 段尾声矩阵（形状符合 `src/campaign/epilogue-matrix.js`）。
- * `textKey` 指向锁定英文包里的结局正文；中文由 P8-T 的 story-text 生成器补齐。
+ * `textKey` 指向 story-text 生成物里的结局正文（P8-T 自译中文；生成器见 tools/import-tde-story.mjs）。
  */
 export const TDE_EPILOGUE_MATRIX = Object.freeze({
   a: TDE_EPILOGUE_A_AXIS,
@@ -283,5 +287,33 @@ export function attachEpilogue(flow) {
     pendingTranslation: true,
     next: 'end',
   }
-  return { start: flow.start, nodes }
+
+  // P8-T：把矩阵/16 段/Part 5/13/17 的正文与标题接到 story-text 中文（生成物）。
+  const localizedNodes = {}
+  for (const [id, node] of Object.entries(nodes)) {
+    if (!node) { localizedNodes[id] = node; continue }
+    const next = { ...node }
+    // 只有尾声节点（attachEpilogue 新建的）按 locale 键取正文；幕间节点的 textKey 是幕间局部键，
+    // 由 interludes.js 自己本地化，不能被这里覆盖。
+    const isEpilogueNode = id.startsWith('epilogue') || node.storySection === 'epilogue'
+    if (isEpilogueNode && next.textKey) {
+      const title = storyTitle(next.textKey, next.title)
+      if (title) next.title = title
+      next.storyTitle = title
+      next.text = storyEntryText(next.textKey)
+    } else if (isEpilogueNode && next.type === 'story') {
+      next.title = '尾声'
+    }
+    if (Array.isArray(next.options)) {
+      next.options = next.options.map(option => {
+        const match = /^epilogueStory(\d+)$/.exec(option.next || '')
+        if (!match) return option
+        const zh = TDE_EPILOGUE_ZH.cells?.[Number(match[1]) - 1]
+        return zh ? { ...option, label: zh.title } : option
+      })
+    }
+    delete next.pendingTranslation
+    localizedNodes[id] = next
+  }
+  return { start: flow.start, nodes: localizedNodes }
 }

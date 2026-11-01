@@ -217,13 +217,19 @@ function setup(state) {
 // ---------------------------------------------------------------------------
 // 1. manifest / 身份 / 结构
 // ---------------------------------------------------------------------------
-test('06039 章节清单：development、12 地点、4 幕、1 议程、结局与参考卡', () => {
+test('06039 章节清单：playable、12 地点、4 幕、1 议程、结局与参考卡', () => {
   assert.equal(chapter.manifest.id, 'beyondTheGatesOfSleep')
-  assert.equal(chapter.manifest.status, 'development')
+  // P10：真实战役/章节已注册为 playable。
+  assert.equal(chapter.manifest.status, 'playable')
   assert.equal(chapter.manifest.contentVersion, '1.0.0')
   assert.equal(chapter.manifest.campaignId, 'theDreamEaters')
   assert.equal(chapter.manifest.referenceCode, '06039')
   assert.equal(chapter.scenario.originalCode, '06039')
+  // P8-T：正文来自 story-text.js 的中文自译。
+  assert.equal(chapter.scenario.textLanguage, 'zh-CN')
+  assert.equal(chapter.scenario.textStatus, 'translated (self-translated)')
+  assert.match(chapter.scenario.intro, /剧本 I–A：梦境门外/)
+  assert.match(chapter.scenario.setup, /从以下遭遇组中收集所有卡牌/)
   assert.equal(chapter.manifest.locations.length, 12, '5 台阶/小路 + 7 魔幻森林')
   assert.deepEqual(chapter.manifest.acts.map(act => act.id), ['act1', 'act2', 'act3', 'act4'])
   assert.deepEqual(chapter.manifest.agendas.map(agenda => agenda.id), ['agenda1'])

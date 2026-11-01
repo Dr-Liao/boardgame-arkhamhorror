@@ -350,6 +350,27 @@ test('AI borrow-attack hint marks lethal hits and leaves no-AoO cards unmarked',
   assert.ok(safe&&!safe.includes('⚠借机'),'写明不引发借机攻击的卡不应带风险标记')
 })
 
+test('AI borrow-attack lethality warning asks the scenario whether horror can defeat you (Dim Carcosa)',()=>{
+  // 卡城幽影（Dim Carcosa）规则：调查员不会因恐惧被击败，恐惧可以超过理智上限
+  // （剩余理智甚至为负）。借机攻击的致死提示必须读同一个剧本钩子，否则 AI 会被
+  // 错误警告「这次借机攻击足以击败你」而放弃安全行动。
+  const s=fixture();s.currentSeat=0
+  const inv=s.investigators[0]
+  inv.engaged=['e1'];inv.damage=0;inv.horror=inv.maxSanity-1
+  s.enemies=[{id:'e1',name:'食尸鬼',location:inv.location,engagedSeat:0,damage:1,horror:2,health:3}]
+  // 普通剧本：恐惧（2）达到剩余理智（1）→ 仍视为致命。
+  let text=arkham.describeState(s,0)
+  assert.match(text,/足以击败你/)
+  // 同一份数据换成卡城幽影：仅恐惧达到致死线，剧本禁止恐惧致败 → 不再警告。
+  s.scenario={...s.scenario,id:'dimCarcosa'}
+  text=arkham.describeState(s,0)
+  assert.doesNotMatch(text,/足以击败你/)
+  // 伤害达到剩余生命在卡城幽影里仍然致命（豁免只针对恐惧）。
+  inv.horror=0;inv.damage=inv.maxHealth-1
+  text=arkham.describeState(s,0)
+  assert.match(text,/足以击败你（剩余生命 1／理智 5）/)
+})
+
 test('AI sees threat-area charges and the scenario-end requirement (Angered Spirits)',()=>{
   const s=fixture()
   s.investigators[0].assets.push({id:'spell',code:'01060',uses:2,usesType:'charges',exhausted:false})

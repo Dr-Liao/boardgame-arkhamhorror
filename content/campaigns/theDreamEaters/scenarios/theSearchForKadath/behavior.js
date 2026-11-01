@@ -18,7 +18,7 @@ import {
   actRuleFor, agendaRuleFor, assetRuleFor, enemyRuleFor, locationRuleFor, treacheryRuleFor,
 } from '../../../../../src/cards/card-rules.js'
 import { swarmCountOf } from '../../../../../src/engine/swarm.js'
-import { encounterRules, activeInvestigators, here, original } from '../../encounter-rules.js'
+import { encounterRules, activeInvestigators, here, original, settleDeferredSwarmCards } from '../../encounter-rules.js'
 import { hardSide, searchForKadathChaosToken, signsOfTheGods } from './chaos.js'
 import { BEINGS_OF_IB, CATS_OF_ULTHAR, CORSAIR_OF_LENG, CRAWLING_MIST, HORDE_OF_NIGHT, NIGHTRIDERS, PACK_OF_VOONITHS, PRIEST_OF_A_THOUSAND_MASKS, REGION_BY_ID, SET_ASIDE_ALIASES, SET_ASIDE_LOCATION_IDS, START_LOCATION_IDS, STALKING_MANTICORE, TENEBROUS_NIGHTGAUNT, VIRGIL_GRAY, ZOOG_SET, scenario, RAW_CODES as RAW } from './definition.js'
 
@@ -113,7 +113,7 @@ function resolveStoryCard(state, inv, location, storyCode, api) {
 }
 
 // ---------------------------------------------------------------------------
-// 区域设置（4 个区域共用流程；文本来自 definition.regionSetup 的英文原文）
+// 区域设置（4 个区域共用流程；文本来自 definition.regionSetup 的中文自译，见 story-text.js）
 // ---------------------------------------------------------------------------
 function takeEncounterCard(state, api, code) {
   // 从遭遇牌库取走（不触发抽牌）：deck → discard 再从 discard 取出（不新增状态字段）。
@@ -386,10 +386,18 @@ export const behavior = {
   setupEnemies(state, events, helper = {}) {
     const spawn = helper.spawnEnemy
     if (typeof spawn !== 'function') return
-    // 1 张「一群乌尼斯」在斯凯河；3–4 人局再加 1 张在狄拉斯-利恩（卡面 setup）。
-    spawn(state, PACK_OF_VOONITHS, 'skaiRiver')
-    if ((state.numInvestigators || 1) >= 3) spawn(state, PACK_OF_VOONITHS, 'dylathLeen')
+    // P9：本钩子早于 setupDecks（遭遇牌库未建），Swarming 敌人先挂起蜂拥卡，afterDeckSetup 补放。
+    const flags = (state.scenarioFlags ||= {})
+    flags.deferSwarmPlacement = true
+    try {
+      // 1 张「一群乌尼斯」在斯凯河；3–4 人局再加 1 张在狄拉斯-利恩（卡面 setup）。
+      spawn(state, PACK_OF_VOONITHS, 'skaiRiver')
+      if ((state.numInvestigators || 1) >= 3) spawn(state, PACK_OF_VOONITHS, 'dylathLeen')
+    } finally {
+      flags.deferSwarmPlacement = false
+    }
   },
+  afterDeckSetup(state, events, helper = {}) { settleDeferredSwarmCards(state, helper) },
 
   // ---- 混乱标记 ----
   resolveChaosToken(state, inv, token, api) {
@@ -765,7 +773,7 @@ function payExtraHandCost(state, inv, location, api) {
   return true
 }
 
-// 保持模块可读：未直接使用但供后续 P8-T 使用的卡号常量集中引用，避免 lint 误报。
+// 保持模块可读：未直接使用但供后续章节扩展使用的卡号常量集中引用，避免 lint 误报。
 void CATS_OF_ULTHAR
 void CORSAIR_OF_LENG
 void ZOOG_SET

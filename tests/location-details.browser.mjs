@@ -172,6 +172,55 @@ test('地图小卡显示实际标记，数量更新与清除同步且保留点�
   await expect(enemy.locator('[data-card-marker="attached"]')).toHaveAttribute('aria-label','附属卡 3')
 })
 
+test('地点上的玩家附属卡横置时在地图与档案里显示横置状态',async({page})=>{
+  const errors=[];page.on('pageerror',e=>errors.push(e.message))
+  const f=await fixture(page)
+  await f.update(s=>{
+    // 伪造观察投影时补上卡名，和真实投影一致（否则档案列表会退回显示卡号）。
+    Object.assign(s.state.cards, {
+      '03148': { code:'03148', name:'Ambush', nameZh:'埋伏', type:'event' },
+      '03038': { code:'03038', name:'Hiding Spot', nameZh:'藏身地点', type:'event' },
+    })
+    // 观察投影里，玩家卡地点附属（03148 埋伏、03038 藏身地点）与剧本附属一样挂在 loc.attachments 上，
+    // 横置状态由 publicAttachments 原样公开。
+    s.state.locations.find(l=>l.id==='hallway').attachments=[
+      {code:'03148',originalCode:'03148',exhausted:true},
+      {code:'03038',originalCode:'03038',exhausted:false},
+    ]
+  })
+  const map=page.locator('.ah-map-node[data-location-id="hallway"]')
+  const markers=map.locator('.ah-map-attachment')
+  await expect(markers).toHaveCount(2)
+  const tapped=markers.filter({has:page.locator('[data-art-code="03148"]')})
+  await expect(tapped).toHaveClass(/is-exhausted/)
+  await expect(tapped).toHaveAttribute('data-exhausted','true')
+  await expect(tapped).toHaveAttribute('title',/已横置/)
+  await expect(tapped).toHaveAttribute('aria-label',/已横置/)
+  const ready=markers.filter({has:page.locator('[data-art-code="03038"]')})
+  await expect(ready).not.toHaveClass(/is-exhausted/)
+  await expect(ready).not.toHaveAttribute('data-exhausted','true')
+  await page.mouse.move(1200,400)
+  await page.screenshot({path:output+'location-attachment-exhausted-map.png',animations:'disabled'})
+  // 地点档案的附属卡列表同样要标出来，否则只看档案的人看不出哪张已经用过。
+  await map.locator('[data-map-info="attached"]').click()
+  const modal=page.locator('.ah-location-detail')
+  await expect(modal.locator('.ah-location-attachments button')).toHaveCount(2)
+  await expect(modal.locator('.ah-location-attachments button.is-exhausted')).toHaveCount(1)
+  await expect(modal.locator('.ah-location-attachments button.is-exhausted')).toContainText('已横置')
+  await page.mouse.move(1200,400)
+  await page.screenshot({path:output+'location-attachment-exhausted-dossier.png',animations:'disabled'})
+  // 移动端弹窗不能因为多了「已横置」标签而横向溢出。
+  await page.setViewportSize({width:390,height:844})
+  expect(await modal.evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true)
+  await page.screenshot({path:output+'location-attachment-exhausted-mobile.png',animations:'disabled'})
+  await page.setViewportSize({width:1400,height:950})
+  // 卡牌详情（原本已有）也必须继续显示「状态：已横置」。
+  await modal.locator('.ah-location-attachments button.is-exhausted').click()
+  await expect(page.locator('.ah-carddetail-modal')).toContainText('状态：已横置')
+  await page.getByRole('button',{name:'关闭卡牌详情'}).click()
+  expect(errors).toEqual([])
+})
+
 test('队友进入地点仅显示地图提示并自动消失，不打开全屏弹窗',async({page})=>{
   const f=await fixture(page)
   f.session.players.push({seat:1,role:'ai',name:'队友'})

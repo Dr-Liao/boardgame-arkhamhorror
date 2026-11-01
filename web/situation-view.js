@@ -3,6 +3,7 @@
 import { groupedChaosTokens } from './chaos-bag-view.js'
 import { tableArt, retainTableArt } from './table-art.js'
 import { tableIcon } from './table-components.js'
+import { vitalDisplay } from './vitals.js'
 import { cardSymbol } from './card-text.js'
 import { cardDisplayName, cardDisplayText } from './catalog.js'
 // 第 127 轮：「书籍行动」调查员表在 web/ui-cards.js。
@@ -39,13 +40,18 @@ export function createSituationView(h, { render, effStat, openDetail, openCard, 
   const token = (kind, icon, label, value) => h('div', { className: 'ah-situ-token is-' + kind, title: `${label} ${value}` },
     h('span', { className: 'ah-situ-token-face' }, tableIcon(icon), h('strong', {}, String(value))), h('small', {}, label))
 
+  // 剩余理智允许为负：卡城幽影的调查员不会因恐惧被击败（见 web/vitals.js）。
+  // 生命仍钳制在 0——伤害达到生命上限即被击败，负值没有规则意义。
   const meter = (kind, icon, label, current, max) => {
-    const total = Math.max(0, Number(max) || 0), left = Math.max(0, Math.min(total, Number(current) || 0))
-    return h('div', { className: 'ah-situ-meter is-' + kind + (left <= Math.ceil(total / 3) ? ' is-low' : ''), title: `${label} ${left}/${total}` },
+    const vital = vitalDisplay(max, current, { allowNegative: kind === 'sanity' })
+    const filled = Math.max(0, Math.min(vital.total, vital.current))
+    return h('div', { className: 'ah-situ-meter is-' + kind
+      + (vital.current <= Math.ceil(vital.total / 3) ? ' is-low' : '') + (vital.overflow ? ' is-overflow' : ''),
+      title: `${label} ${vital.current}/${vital.total}` },
       h('span', { className: 'ah-situ-meter-label' }, tableIcon(icon), label),
       h('span', { className: 'ah-situ-meter-track', 'aria-hidden': 'true' },
-        Array.from({ length: Math.min(total, 15) }, (_, i) => h('i', { className: i < left ? 'is-filled' : '' }))),
-      h('strong', {}, `${left}/${total}`))
+        Array.from({ length: Math.min(vital.total, 15) }, (_, i) => h('i', { className: i < filled ? 'is-filled' : '' }))),
+      h('strong', {}, `${vital.current}/${vital.total}`))
   }
 
   const pips = (filled, total, icon, label) => h('span', { className: 'ah-situ-pips', role: 'img', 'aria-label': label },

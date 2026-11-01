@@ -1,6 +1,7 @@
 # Campaign music layout
 
 - `common/`: licensed tracks that may be reused by any campaign.
+- The Dream-Eaters additions also live in `common/`; chapter playlists reference shared track IDs and do not duplicate files.
 - `campaigns/<campaignId>/`: tracks originally collected for that campaign; their CC BY licence also permits reuse in other chapters.
 - Chapter moods and ordered playlists live in `web/scenario-music.js`; the track catalogue and fallback playlists live in `web/music-player.js`; state selection lives in `web/campaign-presentation.js`.
 - See [SCENARIO-PLAYLISTS.md](SCENARIO-PLAYLISTS.md) for chapter playlists (two or three distinct tracks per chapter).

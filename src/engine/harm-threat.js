@@ -24,6 +24,8 @@ export function createHarmThreat(deps) {
     disengageEnemy,
     doInvestigate,
     drawCards,
+    enemyEvadeValue,
+    enemyFightValue,
     enemyHealth,
     finishScenario,
     getMaxHealth,
@@ -386,7 +388,7 @@ export function createHarmThreat(deps) {
     ;(state._resolution?.events || events).push({ type: 'presentation', kind: 'blast', fx: effect.fx || 'blast', seat, location: locId,
       name: locName(state, locId), damage: effect.amount || 3, enemyIds: enemies.map(enemy => enemy.id),
       seats: effect.investigators ? aliveInvestigators(state).filter(item => item.location === locId).map(item => item.seat) : [],
-      tableState: captureTableState(state, getStat, getMaxSanity) })
+      tableState: captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }) })
     for (const enemy of enemies.slice()) {
       if (!damageEnemy(state, enemy, effect.amount || 3, seat, events)) continue
       info(state, events, `💥 「${enemy.name}」受到 ${effect.amount || 3} 点伤害（${enemy.damageTaken}/${enemy.health}）。`)

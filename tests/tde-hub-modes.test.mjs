@@ -16,10 +16,10 @@ import * as gathering from '../content/campaigns/nightOfTheZealot/scenarios/theG
 import mod from '../index.js'
 import { isParallelState } from '../src/integration/parallel-runtime.js'
 
-const CHAPTER_IDS = ['a1', 'b1', 'a2', 'b2']
+const CHAPTER_IDS = ['hubA1', 'hubB1', 'hubA2', 'hubB2']
 const PARTS = Object.freeze({
-  A: Object.freeze({ name: '梦寻', chapters: [{ scenarioId: 'a1' }, { scenarioId: 'a2' }] }),
-  B: Object.freeze({ name: '梦网', chapters: [{ scenarioId: 'b1' }, { scenarioId: 'b2' }] }),
+  A: Object.freeze({ name: '梦寻', chapters: [{ scenarioId: 'hubA1' }, { scenarioId: 'hubA2' }] }),
+  B: Object.freeze({ name: '梦网', chapters: [{ scenarioId: 'hubB1' }, { scenarioId: 'hubB2' }] }),
 })
 
 function registerDualHubCampaign() {
@@ -89,7 +89,7 @@ test('P5-2 单线 A：模式化章节顺序，选人/牌组后可以真正开始
   assert.deepEqual([...state.campaign.seatParts], ['A', 'A'])
   assert.deepEqual([...state.campaign.activeParts], ['A'])
   assert.equal(state.campaign.currentPart, 'A')
-  assert.equal(state.hubSelectedScenarioId, 'a1', '单线只跑本线的章，首章是 a1')
+  assert.equal(state.hubSelectedScenarioId, 'hubA1', '单线只跑本线的章，首章是 a1')
 
   play(state, cleanMove(movesOf(state, 'hubGoSetup')[0]))
   assert.equal(state.uiState, 'scenarioSetup')
@@ -106,13 +106,13 @@ test('P5-2 单线 A：模式化章节顺序，选人/牌组后可以真正开始
   }
   assert.equal(state.hubReady, true)
   play(state, cleanMove(movesOf(state, 'hubBeginScenario')[0]))
-  assert.equal(state.scenario.id, 'a1')
+  assert.equal(state.scenario.id, 'hubA1')
 })
 
 test('P5-2 单线 B：章节顺序是 B 线（b1 → b2），不混入 A 章', () => {
   const state = hub(1, 'dual-single-b')
   play(state, cleanMove(movesOf(state, 'hubSetMode').find(move => move.mode === 'singleB')))
-  assert.equal(state.hubSelectedScenarioId, 'b1')
+  assert.equal(state.hubSelectedScenarioId, 'hubB1')
   assert.equal(state.campaign.scenarioCount ?? state.campaign.scenarioCount, state.campaign.scenarioCount)
   assert.equal(state.campaign.currentPart, 'B')
   assert.deepEqual([...state.campaign.seatParts], ['B'])
@@ -154,7 +154,7 @@ test('P5-2 分选：改线受两条线下限约束，按线准备把 record 写�
   // 准备完成后可以进入 A1（P5 批次 3：分选已接 lane 运行时）；B 线记录仍在快照里。
   assert.equal(state.hubReady, true)
   play(state, cleanMove(movesOf(state, 'hubBeginScenario')[0]))
-  assert.equal(state.scenario.id, 'a1')
+  assert.equal(state.scenario.id, 'hubA1')
   assert.equal(state.laneRuntime.part, 'A')
   assert.deepEqual(state.investigators.map(inv => inv.seat), [0])
   assert.equal(state.campaign.investigators[1], undefined)
@@ -179,16 +179,16 @@ test('P5-2 并行：4 人准备完成后，大厅边界启动双运行时（纯�
   assert.equal(state.hubReady, true)
   // 出发准备分屏：两条线各自的关卡 id/名字来自投影（启动前，容器仍是并行 hub）。
   const ready = mod.viewState(state, 0).campaign
-  assert.equal(ready.partScenarios.A, 'a1')
-  assert.equal(ready.partScenarios.B, 'b1')
-  assert.deepEqual(ready.partScenarioNames, { A: 'a1', B: 'b1' })
+  assert.equal(ready.partScenarios.A, 'hubA1')
+  assert.equal(ready.partScenarios.B, 'hubB1')
+  assert.deepEqual(ready.partScenarioNames, { A: 'hubA1', B: 'hubB1' })
   // 纯引擎调用不直接启动双运行时（引擎层没有容器）；大厅边界（mod）负责开闸。
   assert.throws(() => play(state, cleanMove(movesOf(state, 'hubBeginScenario')[0])), /大厅边界|并行/)
   const events = mod.applyMove(state, 0, cleanMove(movesOf(state, 'hubBeginScenario')[0]))
   assert.ok(events.length >= 1)
   assert.equal(isParallelState(state), true)
-  assert.equal(state.parallel.lanes.A.scenario.id, 'a1')
-  assert.equal(state.parallel.lanes.B.scenario.id, 'b1')
+  assert.equal(state.parallel.lanes.A.scenario.id, 'hubA1')
+  assert.equal(state.parallel.lanes.B.scenario.id, 'hubB1')
   assert.equal(state.uiState, 'inScenario')
   assert.equal(mod.viewState(state, 0).parallel.lane, 'A')
   assert.equal(mod.viewState(state, 3).parallel.lane, 'B')

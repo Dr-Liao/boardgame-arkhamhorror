@@ -244,10 +244,11 @@ function addLocation(state, id) {
 // ---------------------------------------------------------------------------
 // 第 1 层：章节钩子
 // ---------------------------------------------------------------------------
-test('manifest/身份：id、development、包与遭遇组、17 地点 / 5 幕 / 2 议程 / 3 结局', () => {
+test('manifest/身份：id、playable、包与遭遇组、17 地点 / 5 幕 / 2 议程 / 3 结局', () => {
   assert.equal(chapter.manifest.id, 'theSearchForKadath')
   assert.equal(chapter.manifest.campaignId, 'theDreamEaters')
-  assert.equal(chapter.manifest.status, 'development')
+  // P10：真实战役/章节已注册为 playable。
+  assert.equal(chapter.manifest.status, 'playable')
   assert.equal(chapter.manifest.referenceCode, '06119')
   assert.deepEqual(chapter.manifest.requiredPackIds, ['core', 'tdeCampaign']) // 印刷包由 tdeCampaign cardRanges 覆盖
   assert.ok(chapter.manifest.requiredEncounterGroupIds.includes('theSearchForKadath'))
@@ -257,8 +258,12 @@ test('manifest/身份：id、development、包与遭遇组、17 地点 / 5 幕 /
   assert.equal(chapter.manifest.agendas.length, 2)
   assert.deepEqual(chapter.manifest.resolutionIds, ['noResolution', 'resolution1', 'resolution2'])
   assert.equal(chapter.scenario.startLocation, 'ulthar')
-  assert.equal(chapter.scenario.textLanguage, 'en')
-  assert.equal(chapter.scenario.textStatus, 'pending-self-translation')
+  assert.equal(chapter.scenario.textLanguage, 'zh-CN')
+  assert.equal(chapter.scenario.textStatus, 'translated (self-translated)')
+  // P8-T：章节正文来自 story-text.js 的中文自译（不再是 en 原文）。
+  assert.match(chapter.scenario.intro, /开场 1/)
+  assert.doesNotMatch(chapter.scenario.intro, /_Intro 1:_/)
+  assert.equal(chapter.scenario.specialRules[0].title, '寻觅卡达斯中的地点')
 })
 
 test('掩藏地点与背面故事卡：15 张 Veiled 全部带故事卡，storyFaces 覆盖 17 张', () => {

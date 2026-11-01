@@ -31,6 +31,18 @@ test('每个已配置关卡都有两到三首独立 BGM，所有音乐均参与�
   assert.ok([...uses.keys()].every(id => !forgottenTracks.has(id)), '三循环歌单应使用独立曲库')
 })
 
+test('食梦者八关各三首，旧曲复用不超过 40%，新增音频只存通用曲库', () => {
+  const chapters = Object.values(SCENARIO_MUSIC.theDreamEaters)
+  assert.equal(chapters.length, 8)
+  const assigned = chapters.flatMap(chapter => chapter.tracks)
+  assert.ok(chapters.every(chapter => chapter.tracks.length === 3 && new Set(chapter.tracks).size === 3))
+  const newTracks = new Set(MUSIC_TRACKS.filter(track => track.id.startsWith('tde')).map(track => track.id))
+  assert.equal(newTracks.size, 8)
+  assert.ok(assigned.filter(id => !newTracks.has(id)).length / assigned.length <= .4)
+  assert.ok([...newTracks].every(id => MUSIC_TRACKS.find(track => track.id === id)?.file.startsWith('common/')))
+  assert.ok([...newTracks].every(id => assigned.filter(track => track === id).length === 2))
+})
+
 test('关间准备跟随下一关，桌面继续使用正在进行的关卡，未知关卡安全回退', () => {
   const state = { campaign: { id: 'theDunwichLegacy' }, scenario: { id: 'theMiskatonicMuseum' }, hubSelectedScenarioId: 'theEssexCountyExpress' }
   assert.equal(campaignPlaylistId({ ...state, uiState: 'scenarioSetup' }), 'theDunwichLegacy/theEssexCountyExpress')

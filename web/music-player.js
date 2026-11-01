@@ -79,6 +79,14 @@ export const MUSIC_TRACKS = [
   { id: 'interloper', title: 'Interloper', mood: '危机渐强，步步紧逼', file: 'common/interloper.mp3', isrc: 'USUAN1100401' },
   { id: 'truthInTheStones', title: 'Truth in the Stones', mood: '石刻中留下的古老真相', file: 'common/truth-in-the-stones.mp3', isrc: 'USUAN1700059' },
   { id: 'thunderDreams', title: 'Thunder Dreams', mood: '破碎纪元前的最后宁静', file: 'common/thunder-dreams.mp3', isrc: 'USUAN1200063' },
+  { id: 'tdeDreamlike', title: 'Dreamlike', mood: '梦境门扉后的不安旋律', file: 'common/dreamlike.mp3', isrc: 'USUAN1100410' },
+  { id: 'tdeAirPrelude', title: 'Air Prelude', mood: '云端远行与神秘国度', file: 'common/air-prelude.mp3', isrc: 'USUAN1100337' },
+  { id: 'tdeUnnaturalSituation', title: 'Unnatural Situation', mood: '现实逐渐扭曲的阴影', file: 'common/unnatural-situation.mp3', isrc: 'USUAN1100464' },
+  { id: 'tdeFloatingCities', title: 'Floating Cities', mood: '漂浮城邦与月下旅途', file: 'common/floating-cities.mp3', isrc: 'USUAN1600018' },
+  { id: 'tdeFrozenStar', title: 'Frozen Star', mood: '冷原星空下的缟玛瑙城', file: 'common/frozen-star.mp3', isrc: 'USUAN1100356' },
+  { id: 'tdeDreamsBecomeReal', title: 'Dreams Become Real', mood: '梦与现实交错的宁静', file: 'common/dreams-become-real.mp3', isrc: 'USUAN1500027' },
+  { id: 'tdeSpiderEyes', title: 'Spider Eyes', mood: '蛛丝深处的持续悬疑', file: 'common/spider-eyes.mp3', isrc: 'USUAN1100526' },
+  { id: 'tdeSoporific', title: 'Soporific', mood: '沉睡与迷失之间的低语', file: 'common/soporific.mp3', isrc: 'USUAN1100582' },
 ]
 export const MUSIC_PLAYLISTS = Object.freeze({
   common: Object.freeze(MUSIC_TRACKS.filter(track => track.file.startsWith('common/')).map(track => track.id)),
@@ -87,6 +95,8 @@ export const MUSIC_PLAYLISTS = Object.freeze({
   theDunwichLegacy: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theDunwichLegacy).flatMap(chapter => chapter.tracks))]),
   theForgottenAge: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theForgottenAge).flatMap(chapter => chapter.tracks))]),
   theCircleUndone: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theCircleUndone).flatMap(chapter => chapter.tracks))]),
+  // P10：食梦者（五循环）营地/关间播放整条循环的曲目并集；章节内再按 scenarioPlaylistId 细分。
+  theDreamEaters: Object.freeze([...new Set(Object.values(SCENARIO_MUSIC.theDreamEaters).flatMap(chapter => chapter.tracks))]),
   ...SCENARIO_PLAYLISTS,
 })
 export function musicTracksForPlaylist(id) {

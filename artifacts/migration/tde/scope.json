@@ -1740,22 +1740,22 @@
       "path": "src/cards/cards-data.js",
       "kind": "repo",
       "exists": true,
-      "bytes": 13534459,
-      "sha256": "c035b31d35aca4757151d1fa88a2c94c285d728c830f870f89b2bcfe34efd407"
+      "bytes": 13532239,
+      "sha256": "ae21e386d4b714a78ca67f33f85bf79134db915369ac2342aa7611325504d643"
     },
     {
       "path": "content/packs/tdeCampaign/manifest.js",
       "kind": "repo",
       "exists": true,
-      "bytes": 3085,
-      "sha256": "fc386c5e05dc368c7d22a0b2b3befb6855b18cb4ea69f5e073d0012af7a55c93"
+      "bytes": 3082,
+      "sha256": "98e24c4773eb70c44f88b9b6a7d7fb4a904321622ac2990a01d17d51606d35ba"
     },
     {
       "path": "content/packs/tdeInvestigators/manifest.js",
       "kind": "repo",
       "exists": true,
-      "bytes": 3552,
-      "sha256": "9ca1e069a014d61251e36aca950bdda85aca8a3622ee52924d0be982712f6435"
+      "bytes": 4545,
+      "sha256": "a4bbe66ef7f3c7480c5a55dc70946f18f6516887e06fec8076efa9bb2480d97b"
     },
     {
       "path": "content/packs/tdePlayer/manifest.js",
@@ -1789,7 +1789,7 @@
     "replayBeforeIdsMatch": true,
     "replayBeforeHashesMatch": true,
     "git": {
-      "head": "ac577db1b30a550c51ab9ee52f75cdcc80ede045",
+      "head": "d3a8dede700cb96cdcb1142d52fa5dae52888045",
       "note": "提交会变，基线提交另存 artifacts/migration/tde/reports/baseline-git-head.txt；本账本不把 gitHead 纳入比对"
     }
   },
@@ -1907,8 +1907,10 @@
       "assigned": 4,
       "pass": true
     },
-    "catalogOnly": {
-      "registered": false,
+    "registration": {
+      "registered": true,
+      "launchable": 8,
+      "chapters": 8,
       "pass": true
     },
     "pass": true

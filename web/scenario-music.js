@@ -49,6 +49,17 @@ export const SCENARIO_MUSIC = Object.freeze({
     blackStarsRise: chapter('黑星升起', '风暴修道院、黑星预兆、异界门扉', ['shadowlandsAntechamber', 'shadowlandsFourBreath', 'lightlessDawn']),
     dimCarcosa: chapter('卡城幽影', '哈利湖、失落之城、黄衣终幕', ['ossuarySixAir', 'ossuarySevenResolve', 'shadowlandsSevenCodex']),
   }),
+  // 食梦者：24 个位置中 16 个使用 8 首新曲，8 个复用旧曲（33.3%）；音频统一放在 common/。
+  theDreamEaters: Object.freeze({
+    beyondTheGatesOfSleep: chapter('梦境门外', '七十级台阶、幻梦森林、初次入梦', ['tdeDreamsBecomeReal', 'tdeDreamlike', 'magicForest']),
+    wakingNightmare: chapter('清醒噩梦', '圣玛丽医院、蛛群滋生、现实交融', ['tdeUnnaturalSituation', 'tdeSpiderEyes', 'controlledChaos']),
+    theSearchForKadath: chapter('寻觅卡达斯', '幻梦境远行、乌撒与狄拉斯-利恩、黑夜将至', ['tdeAirPrelude', 'tdeFloatingCities', 'ancientRite']),
+    aThousandShapesOfHorror: chapter('万千骇形', '无名之屋、无尽阶梯、地下世界', ['tdeDreamlike', 'tdeSoporific', 'enterTheMaze']),
+    darkSideOfTheMoon: chapter('月之暗面', '月兽之城、警报等级、月核深处', ['tdeFloatingCities', 'tdeSoporific', 'orion300xb']),
+    pointOfNoReturn: chapter('无归之地', '辛之墓穴、食尸鬼平原、地下世界围困', ['tdeUnnaturalSituation', 'tdeSpiderEyes', 'interloper']),
+    whereTheGodsDwell: chapter('神居之所', '冷原冰封荒土、缟玛瑙城堡、食梦者终局', ['tdeAirPrelude', 'tdeFrozenStar', 'thunderDreams']),
+    weaverOfTheCosmos: chapter('编织宇宙', '巨网竖列、蛛后阿特拉克·纳克亚、现实交织', ['tdeDreamsBecomeReal', 'tdeFrozenStar', 'darkestChild']),
+  }),
 })
 
 export const scenarioPlaylistId = (campaignId, scenarioId) =>

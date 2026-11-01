@@ -2,7 +2,7 @@ import nodeTest from 'node:test'
 import assert from 'node:assert/strict'
 import {
   actPlacesLocationForEmptySpawn, agendaHandSizePenalty, blanksTraits, counterTreacheryCode,
-  enemyRuleFlags, enemyWeaknessExtra, hasExplicitReactionPrompt, investigateExtraActionsFor,
+  enemyRuleFlags, enemyWeaknessExtra, entryNeedsReactionPrompt, hasExplicitReactionPrompt, investigateExtraActionsFor,
   isPoisonThreat, isTextBlankEnemy, locationCounterTreacheries, pallidMaskCode, poisonThreatCode,
   relocateDestinationCode, relicDiscountLocation, traitLabel, traitLabels, weaknessUpgradeCode,
 } from '../src/cards/card-rules.js'
@@ -23,6 +23,14 @@ nodeTest('5a 卡号级规则数据：读点与数据形状', () => {
   // 也必须在卡面留「快速反应」开关（否则窗口每次询问却关不掉）。
   assert.equal(hasExplicitReactionPrompt('02305'), true)
   assert.equal(hasExplicitReactionPrompt('01001'), false)
+
+  // 卡面开关的统一口径：显式声明之外，所有快速事件（played + fast）都算——有固定触发时机的
+  // 进反应窗口，没有触发时机的（01050 逃避隐藏）进收尾玩家窗口的「⚡ 快速打出」候选。
+  assert.equal(entryNeedsReactionPrompt('02305'), true)
+  assert.equal(entryNeedsReactionPrompt('01050'), true)
+  assert.equal(entryNeedsReactionPrompt('01036'), true)
+  assert.equal(entryNeedsReactionPrompt('01001'), false)
+  assert.equal(entryNeedsReactionPrompt('01033'), false)
 
   assert.equal(isPoisonThreat('04102'), true)
   assert.equal(poisonThreatCode(), '04102')

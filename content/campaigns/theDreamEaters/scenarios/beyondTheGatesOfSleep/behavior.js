@@ -29,7 +29,7 @@ const recordsFor = state => {
 const leadSeat = state => Number(state.campaign?.leadSeat ?? 0)
 const isWoodsCode = code => WOOD_CODES.includes(code)
 
-// 梦境标签（UI 提示；梦境正文属 P8-T，不写进本章）。
+// 梦境标签（UI 提示；梦境正文在 P8-T 的 story-text `chapters.beyondTheGatesOfSleep.sections.dreams`）。
 const DREAM_LABELS = Object.freeze({
   guardian: '守卫者之梦：从牌库找 1 张[守卫者]卡并打出（支付其费用）',
   seeker: '探求者之梦：从牌库找 1 张[探求者]卡并打出（支付其费用）',
@@ -181,8 +181,9 @@ function resolveChaosAfterTest(state, inv, result, api) {
 }
 
 export const scenarioApproximations = Object.freeze([
-  '14 种梦境的选择与效果按 BeyondTheGatesOfSleep.hs:2150-2236 实现；梦境正文属 P8-T（本章只放效果声明，'
-    + 'intro 用 dreamSelection 原文）。「从牌库找 X 卡并打出（支付费用）」近似为「进手牌 + 支付印刷费用」（引擎无搜索牌库并打出的原语）。',
+  '14 种梦境的选择与效果按 BeyondTheGatesOfSleep.hs:2150-2236 实现；梦境正文已由 P8-T 自译并放在 '
+    + 'story-text.js 的 sections.dreams，本章只放效果声明（intro 用 sections.dreamSelection）。'
+    + '「从牌库找 X 卡并打出（支付费用）」近似为「进手牌 + 支付印刷费用」（引擎无搜索牌库并打出的原语）。',
   '「漂泊者之梦：把牌组里 1 张基础弱点换成随机基础弱点」：引擎没有收藏检索接口，先记录并提示（P8 简化）。',
   '幕 1–3「神话阶段不要从遭遇牌库抽卡」按「本章开局没有遭遇牌库」自然满足（behavior.modifyDeck 把牌库清空、'
     + '全部卡放到 encounterAside）；引擎仍会执行 mythos 抽牌调用，但牌库为空时无牌可抽。',
@@ -278,7 +279,7 @@ export const behavior = {
     flags.dreams = flags.dreams || []
     flags.lostWoodsPending = []
     flags.returningGug = false
-    helper.info?.('🌌 梦境门外：七十级台阶与火焰洞穴入场；其余地点、守门祭司、古革巨人与遭遇卡放在一边。')
+    helper.info?.(state, events, '🌌 梦境门外：七十级台阶与火焰洞穴入场；其余地点、守门祭司、古革巨人与遭遇卡放在一边。')
     return ['seventySteps', 'cavernOfFlame']
   },
 

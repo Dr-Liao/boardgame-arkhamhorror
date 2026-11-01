@@ -1,13 +1,15 @@
-// 梦境门外（Beyond the Gates of Sleep · 06039）· 剧本数据（纯 JSON，不含函数）。
+// 梦境门外（Beyond the Gates of Sleep · 06039）· 剧本数据（scenario 对象只含数据，不含函数）。
 //
 // 参考：Scenario/Scenarios/TheDreamEaters/BeyondTheGatesOfSleep.hs + Act/Agenda/Enemy/Location/
 // Story/Treachery/Cards/TheDreamEaters/BeyondTheGatesOfSleep/*。
-// 文本来源：参考资源 frontend/src/locales/en/theDreamEaters/scenarios/beyondTheGatesOfSleep.json
-// （逐字照抄英文原文、去掉 HTML 标签；textLanguage/textStatus 标 pending-self-translation）。
+// 文本来源（P8-T）：中文自译生成物 `content/campaigns/theDreamEaters/story-text.js` 的
+// `chapterStory('beyondTheGatesOfSleep').sections`（en locale 顶层键一一对应）；本文件不写死剧情正文。
+// textLanguage/textStatus 标 `zh-CN` + `translated (self-translated)`。
 import { bindScenarioIdentities } from '../../../../identities.js'
 import {
   location, stages, encounterCards, encounterDefinitions, storyCards, linkSymbolLocations, identitiesFor,
 } from '../../card-data.js'
+import { chapterStory, flattenStory, flattenResolution } from '../../story-access.js'
 import { BEYOND_THE_GATES_TOKEN_MEANINGS } from './chaos.js'
 
 // 本章收齐的 6 个遭遇组（卡面 setup 逐句）。
@@ -64,51 +66,29 @@ export const SET_ASIDE_ALIASES = Object.freeze([
   RANDOLPH_CARTER, ...SET_ASIDE_ENEMY_CODES, ...ENCOUNTER_PILE,
 ])
 
-// —— 英文原文（去 HTML；逐字照抄 en locale）——
+// —— 剧情正文（P8-T 自译；生成物 story-text.js → 本章 sections）——
+const story = chapterStory('beyondTheGatesOfSleep')
+const sections = story.sections
+const text = value => flattenStory(value)
+const blocks = (...parts) => parts.map(text).filter(Boolean).join('\n\n')
+
 export const SCENARIO_TEXT = Object.freeze({
-  textLanguage: 'en',
-  textStatus: 'pending-self-translation',
-  intro:
-    'Scenario I–A: Beyond the Gates of Sleep\n\n'
-    + 'In player order, each investigator chooses and reads aloud one of the dream entries below that applies to that investigator. “Neutral” dreams may be chosen by any investigator. Each investigator must choose a different dream, if able. Then, proceed to _Setup_.',
-  setup:
-    'Gather all cards from the following encounter sets: *Beyond the Gates of Sleep*, *Agents of Nyarlathotep*, *Zoogs*, *Dreamer’s Curse*, *Dreamlands*, and *Chilling Cold*.\n\n'
-    + 'Put the Seventy Steps *(Of Lighter Slumber)* and The Cavern of Flame into play. Each investigator begins at the Seventy Steps *(Of Lighter Slumber)*.\n\n'
-    + 'Set the following cards aside, out of play: Randolph Carter *(Expert Dreamer)*, the Laboring Gug enemy, the two double-sided enemy cards *(Nasht and Kaman-Thah)*, and each of the remaining locations.\n\n'
-    + '*Note: Nasht and Kaman-Thah are double-sided and have story cards on their other side. For the best experience, do not look at the other side unless an effect instructs you to do so.*\n\n'
-    + 'This scenario does not begin with an encounter deck in play. Set all of the remaining encounter cards aside, in a single pile. They will be shuffled together at a later time to form the encounter deck. (See “Steps of Slumber,” below.)',
-  stepsOfSlumber:
-    'Steps of Slumber\n\n'
-    + 'At the start of this scenario, there is no encounter deck. This means that the investigators cannot use abilities that interact with the encounter deck in any way. (*For example, effects such as those that search the encounter deck, draw cards from the encounter deck, or look at cards in the encounter deck all fail.*)\n\n'
-    + 'Additionally, act 1a has the text: “Do not draw cards from the encounter deck during the mythos phase.”\n\n'
-    + 'At a certain point in the scenario, the investigators will be instructed to form the encounter deck, and this text will no longer be active. From that point onward, the investigators can interact with the encounter deck as normal.',
-  resolutions: Object.freeze({
-    noResolution: 'No resolution\n_If no resolution was reached because each investigator was defeated:_\nYou are nudged into consciousness by an old, scarred cat. “Hey. You all right, human?”\n\n'
-      + 'I’m dreaming, you remember, and suddenly the talking cat doesn’t seem quite as weird. Exhausted, you manage to rise to your feet, brushing off the dirt caked on your clothing. “You’re lucky you weren’t harmed before we arrived,” a human voice calls out to you. It belongs to a blond-haired man in a brown traveling coat, who leans against a nearby tree. “These woods are not forgiving to the faint of heart.” The scarred cat walks to the man’s side, and the man leans over to pet its back.\n\n'
-      + 'You ask the man where you are and how he came to this place, but he cuts you off. “I will explain in due time. For now, we must follow the path to the town of Ulthar. It is a safe place, relatively speaking. There you may recover from your ordeals.” He turns to the cat and utters a word in an odd language—a password of sorts, you suspect—but the cat simply wanders off toward a hedge, where you see several other cats banded together. “Do it yerself,” it replies.\n\n'
-      + '“Don’t mind the cats,” the man says to you quietly as the cats depart. “They are useful allies, but also independent creatures with no need for you or me. When we reach Ulthar, you may get the chance to meet others of their kind. But first things first.” Together, you leave the eaves of the enchanted forest behind.\n\n'
-      + 'In your Campaign Log, record *the investigators were saved by Randolph Carter*.\n'
-      + 'Any one investigator may choose to add Randolph Carter *(Expert Dreamer)* (The Dream-Eaters card #59) to their deck. This card does not count toward that investigator’s deck size.\n'
-      + 'Each investigator earns experience equal to the Victory X value of each card in the victory display.',
-    resolution1: 'Resolution 1\n'
-      + 'The creatures chitter among themselves, and after a moment, a dozen of them retreat in the direction of the great tree beyond the beaten path. They return shortly afterward carrying a variety of grouse, quail, and pheasants in their mouths. You’re almost certain now that you are going crazy. And yet, the spectacle continues. The creatures timidly drop their “tribute” of birds in front of the cats and quietly depart. “My apologies on behalf of the Zoogs,” the man says as he approaches. “They are curious creatures, and not usually so...agitated. It is good that we showed up when we did.” The leader of the cats jumps on a tree stump and adds, “Yes, yes. Them vile Zoogs have done their part, now let’s do ours and leave this forsaken place. What say yeh?”\n\n'
-      + 'You cannot contain your excitement. Zoogs, talking cats— everything you have read about is real. You begin to ask the man more about this world, but he cuts you off. “I will explain in due time. For now, we must follow the path to the town of Ulthar. It is a safe place, relatively speaking. There you may recover from your travels.” He turns to the old, scarred cat and utters a word in an odd language—a password of sorts, you suspect—and the cat replies with a quick nod. The rest of the cats, tribute in mouth, take a protective circular formation around you, and together you escape from the eaves of the enchanted forest.\n\n'
-      + 'In your Campaign Log, record *the cats collected their tribute from the Zoogs*.\n'
-      + 'Any one investigator may choose to add Randolph Carter *(Expert Dreamer)* (The Dream-Eaters card #59) to their deck. This card does not count toward that investigator’s deck size.\n'
-      + 'Each investigator earns experience equal to the Victory X value of each card in the victory display.',
-    resolution2: 'Resolution 2\n'
-      + 'You hold a hand up to the new visitors, believing that you can defuse this situation on your own. Had you known these rodent-like creatures were intelligent all along, you might have tried to communicate with them much earlier. You inform them that you are just travelers in this faraway land and that you simply wish to pass through peacefully. The creatures chitter among themselves for a moment: “They are kind!” “They are not with the black cat after all!” “Summon the Council of Sages!” After a short while, several more of them appear, each with withering grey fur and a frail, thin body. The eldest one peeks behind you and states that they will aid you if you get the cats to leave.\n\n'
-      + 'Somehow, you contain your disbelief and politely ask the cats to come back another time. “All right,” the scarred cat replies, “but you ain’t seen the last of us.” The cats retreat to the edge of the woods, though their human companion stays behind with you. Once the cats are out of earshot, one of the elders offers you a gourd of what appears to be fermented tree sap, which you accept graciously.\n\n'
-      + '“It is the wine of the moon-tree,” the man behind you explains quietly, stepping forward. “The Zoogs do not give such gifts lightly. They are curious creatures, but not without wisdom. Now that you may speak freely with their elders, try asking them a question. They know more of the dealings of this land than you might think.”\n\n'
-      + 'You describe the author Virgil Gray and ask the Zoogs if they have seen a man fitting that description pass through these woods. You add that he would have walked this path many times. A hush falls over the Zoogs, and some of them immediately depart into the deep foliage. “We have met this human,” one of the elders replies with a flutter just louder than a whisper. “He often comes this way. He is kind but foolish. Take the road to Ulthar. You may meet him.” Then it adds with a low growl: “...but beware the cat that follows him. All cats are liars, but the black cat especially.” You thank the ancient Zoog for its wisdom and depart, led by the blond man and his feline escort. The cats eye you suspiciously after your discussion with the Zoogs. The man breaks the tension. “If you are heading to Ulthar to find this friend of yours, allow me to guide you there. It is a safe place, relatively speaking. There you may recover from your travels.”\n\n'
-      + 'Zoogs. Talking cats. This can’t all be a figment of your imagination. Somehow, you can see a layer of truth beneath all of this absurdity. For better or for worse, the Zoog council has confirmed the reality of your situation: the Dreamlands are real, and Virgil Gray is here.\n\n'
-      + 'In your Campaign Log, record *the investigators parleyed with the Zoogs*.\n'
-      + 'Any one investigator may choose to add Randolph Carter *(Expert Dreamer)* (The Dream-Eaters card #59) to their deck. This card does not count toward that investigator’s deck size.\n'
-      + 'Each investigator earns experience equal to the Victory X value of each card in the victory display.',
-  }),
+  textLanguage: 'zh-CN',
+  textStatus: 'translated (self-translated)',
+  // en `intro` = 章节标题 + 梦境选择说明（story-text: sections.dreamSelection 的 title + body）。
+  intro: blocks(sections.dreamSelection.title, sections.dreamSelection.body),
+  // en `setup` = 5 段 setup 步骤（story-text: sections.setup.gatherSets…setEncounterCardsAside）。
+  setup: blocks(...Object.values(sections.setup)),
+  // en `stepsOfSlumber` = 标题 + 规则正文（story-text: sections.rules.stepsOfSlumber）。
+  stepsOfSlumber: blocks(sections.rules.stepsOfSlumber.title, sections.rules.stepsOfSlumber.body),
+  // en `resolutions` = 「标题 + 正文」字符串（story-text: sections.resolutions.<key>）。
+  resolutions: Object.freeze(Object.fromEntries(
+    Object.entries(sections.resolutions).map(([key, value]) => [key, flattenResolution(value)]),
+  )),
 })
 
-// 12 种梦境（效应数据；梦境正文属 P8-T 剧情正文，本章只放可结算的效果声明）。
+// 14 种梦境（只放可结算的效应声明；梦境正文与选项标签见 story-text.js 的
+// `sections.dreams.<key>` 与 `sections.label.options.<key>`，P8-T 已自译）。
 // 依据 BeyondTheGatesOfSleep.hs:2150-2236（classDreams / traitsDreams / dreamEffect）。
 export const DREAMS = Object.freeze([
   { key: 'guardian', klass: 'guardian', effect: { kind: 'searchPlay', trait: 'guardian' } },

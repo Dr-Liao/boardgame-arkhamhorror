@@ -286,7 +286,8 @@ test('manifest：身份/状态/包依赖/模式/两袋/记录 schema 齐备', ()
   assert.equal(manifest.id, 'theDreamEaters')
   assert.equal(manifest.name, '食梦者')
   assert.equal(manifest.nameEn, 'The Dream Eaters')
-  assert.equal(manifest.status, 'development')
+  // P10：真实战役/章节已注册为 playable。
+  assert.equal(manifest.status, 'playable')
   assert.deepEqual([...manifest.requiredPackIds], ['core', 'tdeCampaign', 'tdeInvestigators', 'tdePlayer'])
   assert.deepEqual([...manifest.modes], ['singleA', 'singleB', 'pick', 'parallel'])
   assert.equal(manifest.interludeHandlerId, 'tdeInterlude')
@@ -421,7 +422,10 @@ test('epilogue flow 接线：16 个 option、5/13 特殊节点、Part 17 终点'
     const node = graph.nodes[`epilogueStory${number}`]
     assert.ok(node, `缺少 epilogueStory${number}`)
     assert.equal(node.textKey, epilogueTextKey(number))
-    assert.equal(node.pendingTranslation, true)
+    // P8-T：正文/标题已由 story-text 中文接线，不再 pendingTranslation。
+    assert.equal(node.pendingTranslation, undefined)
+    assert.match(node.title, /^尾声\s*\d+$/)
+    assert.ok(String(node.text).length > 40, `尾声 ${number} 正文为空`)
   }
   assert.equal(graph.nodes.epilogueStory5.next, 'epilogueKillCampaignA')
   assert.equal(graph.nodes.epilogueStory13.next, 'epilogueDriveCampaignAInsane')
@@ -443,29 +447,32 @@ test('epilogue flow 接线：16 个 option、5/13 特殊节点、Part 17 终点'
 // ⑤ 三幕间：正文/标签/节点图/接线
 // ---------------------------------------------------------------------------
 
-test('幕间正文：32 段英文原文全部就位、pendingTranslation 标记、locale 键正确', () => {
+test('幕间正文：32 段自译中文全部就位、标注自译、locale 键正确', () => {
   assert.equal(Object.keys(TDE_INTERLUDE_TEXT).length, 32)
   for (const [name, entry] of Object.entries(TDE_INTERLUDE_TEXT)) {
     assert.equal(typeof entry.text, 'string')
     assert.ok(entry.text.length > 40, `${name} 正文过短`)
     assert.equal(entry.key, `theDreamEaters.flavorText.${name}`)
-    assert.equal(entry.pendingTranslation, true)
+    // P8-T：正文来自 story-text（自译中文），不再是 pendingTranslation 英文原文。
+    assert.equal(entry.pendingTranslation, false)
     assert.ok(['interlude1', 'interlude2', 'interlude3'].includes(entry.group))
-    assert.ok(entry.title.startsWith('Interlude'), `${name} 的标题应来自英文包 title`)
+    assert.match(entry.title, /^幕间\s*(I|II|III)：/, `${name} 的标题应为「幕间 I/II/III：…」`)
+    assert.match(entry.text, /[\u4e00-\u9fff]/, `${name} 应为中文正文`)
   }
-  assert.equal(TDE_INTERLUDE_TITLES[1], 'Interlude I: The Black Cat')
-  assert.equal(TDE_INTERLUDE_TITLES[2], 'Interlude II: The Oneironauts')
-  assert.equal(TDE_INTERLUDE_TITLES[3], 'Interlude III: The Great Ones')
+  assert.equal(TDE_INTERLUDE_TITLES[1], '幕间 I：黑猫')
+  assert.equal(TDE_INTERLUDE_TITLES[2], '幕间 II：入梦者')
+  assert.equal(TDE_INTERLUDE_TITLES[3], '幕间 III：伟大的存在')
   assert.equal(Object.keys(TDE_INTERLUDE_LABELS).length, 21)
   for (const label of Object.values(TDE_INTERLUDE_LABELS)) {
-    assert.ok(label.text.length > 5)
-    assert.equal(label.pendingTranslation, true)
+    assert.ok(label.text.length > 1)
+    assert.equal(label.pendingTranslation, false)
     assert.match(label.key, /^theDreamEaters\.label\./)
+    assert.match(label.text, /[\u4e00-\u9fff]/, `label ${label.key} 应为中文`)
   }
-  // 不写中文摘要：正文保留英文原文与卡面记号
-  assert.match(TDE_INTERLUDE_TEXT.theBlackCat1.text, /Ulthar/)
-  assert.match(TDE_INTERLUDE_TEXT.youDidNotAskForIt.text, /black cat/)
-  assert.match(TDE_INTERLUDE_TEXT.theGreatOnes2Nyarlathotep.text, /\{elderThing\}/, '卡面记号保留')
+  // 自译正文（不是英文原文）：用中文地名/关键词核对；混乱标记记号保留。
+  assert.match(TDE_INTERLUDE_TEXT.theBlackCat1.text, /乌撒|幻梦境/)
+  assert.match(TDE_INTERLUDE_TEXT.youDidNotAskForIt.text, /黑猫/)
+  assert.match(TDE_INTERLUDE_TEXT.theGreatOnes2Nyarlathotep.text, /\[elder_thing\]/, '混乱标记记号保留')
 })
 
 test('幕间自检：节点图引用完整、选项/标签齐全、effects 只用已注册 type', () => {
@@ -505,8 +512,8 @@ test('幕间选择：I.2 四选一写 A 线、II.1 三选一写 B 线、III.1 �
   assert.deepEqual(one.options.map(option => option.id), ['newsOfYourPlight', 'knowledgeOfDreamlands', 'warnTheOthers', 'dontTrust'])
   assert.equal(one.options[0].effects[0].key, 'theBlackCatDeliveredNewsOfYourPlight')
   assert.equal(one.options[0].effects[0].part, 'A')
-  assert.ok(one.options[0].label.includes('companions'), '选项标签应来自英文 label 段')
-  assert.equal(one.pendingTranslation, true)
+  assert.match(one.options[0].label, /同伴/, '选项标签应来自 story-text 中文 label 段')
+  assert.equal(one.pendingTranslation, false)
   const two = byId.get('interlude2.1')
   assert.equal(two.options.length, 4, '含 hasAHunch 单选项与三选一（由 when 过滤）')
   const three = byId.get('interlude3.1')
@@ -535,7 +542,7 @@ test('attachInterludes：不修改入参、pick 为完整三幕间、幂等', ()
   const graph = validateCampaignGraph({ scenarioIds: manifest.scenarioIds, flow: attached })
   for (const entryId of ['interlude1', 'interlude2', 'interlude3']) {
     assert.equal(graph.nodes[entryId].type, 'interlude')
-    assert.equal(graph.nodes[entryId].pendingTranslation, true)
+    assert.equal(graph.nodes[entryId].pendingTranslation, false)
   }
   assert.equal(graph.nodes.interlude1.textKey, 'theBlackCat')
   assert.equal(graph.nodes['interlude1.1'].textKey, 'theBlackCat1')
@@ -674,18 +681,21 @@ test('幕间节点 effects 重放幂等：同一 visit 走两次不重复结算�
     nodes: { [target.id]: { ...target, next: 'end' }, end: { type: 'end' } },
   }
   const campaignManifest = { scenarioIds: [], flow }
-  const campaign = { records: {}, scenarioResults: [] }
+  const campaign = { records: {}, parts: {}, scenarioResults: [] }
   const applied = []
   const walk = () => walkCampaign(campaign, campaignManifest, () => 'none', effect => applied.push(effect))
   walk()
-  const afterFirst = { records: clone(campaign.records), applied: applied.length }
-  assert.equal(afterFirst.records.theBlackCatIsAtYourSide, true)
+  const afterFirst = { records: clone(campaign.records), parts: clone(campaign.parts), applied: applied.length }
+  // P9.5：幕间效果带 part 时按目标线写（这里 A 线是非活动线 → parts.A.records），不串到当前线。
+  assert.equal(afterFirst.records.theBlackCatIsAtYourSide, undefined)
+  assert.equal(campaign.parts.A.records.theBlackCatIsAtYourSide, true)
   assert.equal(applied.filter(effect => effect.type === 'chaos').length, 2, '2 枚 chaos 走 applyEffect')
   assert.equal(applied.filter(effect => effect.type === 'log').length, 1, '正文走 log')
   // 同一 visit 再走（引擎按 visits.effectsApplied 去重）：不重复写记录/重复加 token
   campaign.flow.nodeId = target.id
   walk()
   assert.deepEqual(campaign.records, afterFirst.records)
+  assert.deepEqual(campaign.parts, afterFirst.parts)
   assert.equal(applied.length, afterFirst.applied)
   // 记录型效果本身也是「同值重写幂等」：连写两次结果一致
   const records = {}
@@ -701,8 +711,11 @@ test('幕间节点 effects 重放幂等：同一 visit 走两次不重复结算�
 // ---------------------------------------------------------------------------
 
 test('flow 条件：全部落在 campaign-flow 支持的字段内，且章对 gate 按 completed 过滤', () => {
+  // P9.5：幕间数据新增 hasRecord（跨线记录条件）与 capturedInvestigators（按线的被俘统计），
+  // 两者都在 campaign-flow.flowCondition 里有执行分支（见 P9.5 引擎改造）。
   const supportedKeys = new Set(['all', 'any', 'not', 'compare', 'completed', 'resolution',
-    'record', 'equals', 'atLeast', 'includes', 'part', 'parts', 'mode', 'modeIn', 'activeParts'])
+    'record', 'equals', 'atLeast', 'includes', 'part', 'parts', 'mode', 'modeIn', 'activeParts',
+    'hasRecord', 'capturedInvestigators'])
   const inspect = condition => {
     if (!condition || typeof condition !== 'object') return
     for (const key of Object.keys(condition)) {

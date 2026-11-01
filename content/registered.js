@@ -56,12 +56,27 @@ import * as theCityOfArchives from './campaigns/theForgottenAge/scenarios/theCit
 import * as theDepthsOfYoth from './campaigns/theForgottenAge/scenarios/theDepthsOfYoth/index.js'
 import * as shatteredAeons from './campaigns/theForgottenAge/scenarios/shatteredAeons/index.js'
 import * as turnBackTime from './campaigns/theForgottenAge/scenarios/turnBackTime/index.js'
+// P10（M5 发布）：第五循环《食梦者》三包 + 战役 + 8 章注册进生产组合根。
+// 内容本身仍是 earlyAccess 口径（87 条显式简化、equivalenceCertified=false），但已可在大厅启动。
+import { manifest as tdeCampaignPack } from './packs/tdeCampaign/manifest.js'
+import { manifest as tdeInvestigators } from './packs/tdeInvestigators/manifest.js'
+import { manifest as tdePlayer } from './packs/tdePlayer/manifest.js'
+import { manifest as theDreamEaters } from './campaigns/theDreamEaters/manifest.js'
+import * as tdeBeyondTheGatesOfSleep from './campaigns/theDreamEaters/scenarios/beyondTheGatesOfSleep/index.js'
+import * as tdeWakingNightmare from './campaigns/theDreamEaters/scenarios/wakingNightmare/index.js'
+import * as tdeTheSearchForKadath from './campaigns/theDreamEaters/scenarios/theSearchForKadath/index.js'
+import * as tdeAThousandShapesOfHorror from './campaigns/theDreamEaters/scenarios/aThousandShapesOfHorror/index.js'
+import * as tdeDarkSideOfTheMoon from './campaigns/theDreamEaters/scenarios/darkSideOfTheMoon/index.js'
+import * as tdePointOfNoReturn from './campaigns/theDreamEaters/scenarios/pointOfNoReturn/index.js'
+import * as tdeWhereTheGodsDwell from './campaigns/theDreamEaters/scenarios/whereTheGodsDwell/index.js'
+import * as tdeWeaverOfTheCosmos from './campaigns/theDreamEaters/scenarios/weaverOfTheCosmos/index.js'
 
 let bundle = {
   packs: [...packs, ...expansionBundles.map(entry => entry.manifest), dunwichCampaignPack, dunwichInvestigators,
     carcosaCampaignPack, carcosaInvestigators, tfaCampaignPack, tfaInvestigators, tfaPlayer,
-    tcuCampaignPack, tcuInvestigators, tcuPlayer],
-  campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa, theForgottenAge, theCircleUndone],
+    tcuCampaignPack, tcuInvestigators, tcuPlayer, tdeCampaignPack, tdeInvestigators, tdePlayer],
+  campaigns: [nightOfTheZealot, theDunwichLegacy, thePathToCarcosa, theForgottenAge, theCircleUndone,
+    theDreamEaters],
   scenarios: [gathering, masks, devourer, extracurricularActivity, theHouseAlwaysWins, theMiskatonicMuseum,
     theEssexCountyExpress, bloodOnTheAltar, undimensionedAndUnseen, whereDoomAwaits, lostInTimeAndSpace,
     curtainCall, theLastKing, echoesOfThePast, theUnspeakableOath, aPhantomOfTruth, thePallidMask,
@@ -70,7 +85,9 @@ let bundle = {
     heartOfTheEldersPart2, theCityOfArchives, theDepthsOfYoth, shatteredAeons, turnBackTime,
     tcuDisappearanceAtTheTwilightEstate, tcuTheWitchingHour, tcuAtDeathsDoorstep, tcuTheSecretName,
     tcuTheWagesOfSin, tcuForTheGreaterGood, tcuUnionAndDisillusion, tcuInTheClutchesOfChaos,
-    tcuBeforeTheBlackThrone],
+    tcuBeforeTheBlackThrone,
+    tdeBeyondTheGatesOfSleep, tdeWakingNightmare, tdeTheSearchForKadath, tdeAThousandShapesOfHorror,
+    tdeDarkSideOfTheMoon, tdePointOfNoReturn, tdeWhereTheGodsDwell, tdeWeaverOfTheCosmos],
 }
 export let contentRegistry = createContentRegistry(bundle)
 

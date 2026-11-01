@@ -399,8 +399,10 @@ export function createActAgenda(deps) {
   function addDoom(state, amount, events) {
     // 2026-10-25 第四轮修复 05285：放置前的替换钩子（如「改为在多个地点放裂口」）。
     // 返回 true 表示内容已替换本次放置：不写 state.doom、不触发 doomPlaced、不检查议程。
+    // 2026-10-31 黑星升起：附带来源 context——卡牌效果（api.addDoom）若卡面明示
+    // 「本效果能导致密谋推进」，剧本可以放完立即检查；与神话阶段的放置区分开。
     if (amount > 0 && scenarioBehavior(state).doomPlacementReplacement?.(
-      state, amount, scenarioRuntime(state, events)) === true) {
+      state, amount, scenarioRuntime(state, events), { source: 'effect' }) === true) {
       return
     }
     state.doom += amount

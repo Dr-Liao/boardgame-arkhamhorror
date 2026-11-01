@@ -56,3 +56,20 @@
 | 时间倒流 | 回到过去、封印遗物 | Truth in the Stones → It is Lost → Lost Frontier |
 
 十关共 27 个歌曲位置，17 首新曲目全部参与分配；与前三循环的曲目交集为零。本轮仅下载、转码并保存本地文件，尚未上传 CDN。原始官方 MP3 保存在项目 `artifacts/tfa-music-originals/`；网页使用 128 kbps 本地副本。来源、官方曲目页、下载地址与双份哈希见 `sources.json`。
+
+## 食梦者
+
+八关每关 3 首，共 24 个歌曲位置。8 首新曲各使用两次，占 16 个位置；其余 8 个位置引用原有通用曲目，旧曲复用率为 **33.3%**。音频只在 `common/` 存一份，关卡通过曲目 ID 引用。
+
+| 关卡 | 播放顺序 |
+| --- | --- |
+| 梦境门外 | Dreams Become Real → Dreamlike → Magic Forest |
+| 清醒噩梦 | Unnatural Situation → Spider Eyes → Controlled Chaos |
+| 寻觅卡达斯 | Air Prelude → Floating Cities → Ancient Rite |
+| 万千骇形 | Dreamlike → Soporific → Enter the Maze |
+| 月之暗面 | Floating Cities → Soporific → Orion 300XB |
+| 无归之地 | Unnatural Situation → Spider Eyes → Interloper |
+| 神居之所 | Air Prelude → Frozen Star → Thunder Dreams |
+| 编织宇宙 | Dreams Become Real → Frozen Star → Darkest Child |
+
+新增曲目来自 Kevin MacLeod 的 Incompetech 官方站，依 CC BY 4.0 署名。官方原始 MP3 保存在大厅仓库 `artifacts/tde-music-originals/`；网页文件为 44.1 kHz、128 kbps MP3，原始及转码后的大小与 SHA-256 见 `sources.json`。2026-11-02 已将八首新曲上传至 R2 `boardgame/arkhamhorror/music/common/`，公开 CDN 的八个对象均返回 HTTP 200、`audio/mpeg` 与匹配的文件大小。

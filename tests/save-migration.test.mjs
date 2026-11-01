@@ -61,6 +61,20 @@ test('旧卡面缺少黄金怀表的快速反应开关时刷新内嵌卡牌定�
   assert.equal(state.cards['02305'].hasAutoReaction, false, '移除自身不是安全 auto')
 })
 
+test('旧卡面缺少快速事件（01050）的快速反应开关时刷新内嵌卡牌定义', () => {
+  // 「快速。只能在你回合期间打出」的事件没有反应描述子，只在收尾玩家窗口以「⚡ 快速打出」候选
+  // 出现；条目层补上 played+fast 开关口径后，旧存档内嵌卡表同样必须自愈。
+  const old = restore(create())
+  const defs = allCardDefs({ runtimeOnly: false })
+  old.investigators[0].hand = ['01050']
+  old.investigators[0].deck = (old.investigators[0].deck || []).filter(code => code !== '01050')
+  old.cards['01050'] = { ...defs['01050'], code: '01050', hasReactionPrompt: false }
+  const { state, changes } = migrateState(old)
+  assert.ok(changes.includes('刷新内嵌卡牌定义'), JSON.stringify(changes))
+  assert.equal(state.cards['01050'].hasReactionPrompt, true, '刷新后手牌上的快速事件带闪电开关')
+  assert.equal(state.cards['01050'].hasAutoReaction, false)
+})
+
 test('结构 v6 / 规则 n5.1 存档可逐级升级到当前规则并继续行动', () => {
   const old = restore(create())
   // 旧存档是结构 v6 + 旧规则版本；只改 rulesVersion 会造出"当前结构 + 旧规则"这种不存在的版本对。

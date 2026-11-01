@@ -25,7 +25,7 @@ export function createCardDefs(deps) {
     cardIdentityFields,
     expandedPlayablePool,
     getAvailability,
-    hasExplicitReactionPrompt,
+    entryNeedsReactionPrompt,
     isAutomaticReward,
     isCardAvailable,
     nextInstanceId,
@@ -96,6 +96,11 @@ export function createCardDefs(deps) {
   // 「卡面是否需要快速反应开关」的统一口径：旧 DSL（EFFECTS）与迁移后的条目/描述子一起看。
   // 只有会让玩家做选择的窗口才需要开关（reaction / playerWindow / boost 三类）；
   // 自动领取的资源奖励不打扰玩家。两个出卡分支（目录卡 / 规则卡）共用同一份判定。
+  // 2026-10-31：快速事件（played + fast）无论有没有固定触发时机都要开关：
+  //   · 有 trigger 的进反应窗口；· 没有 trigger 的（01050 逃避隐藏这类「快速。只能在你回合期间打出」）
+  //     会进收尾玩家窗口的「⚡ 快速打出」候选（encounter.js#fastHandPlays）。只看 trigger 会让这类卡
+  //     在手牌上没有闪电开关，玩家无法把它设成「本局不再询问」。判定收敛到 card-rules.js 的
+  //     entryNeedsReactionPrompt，存档迁移也用同一口径。
   function hasReactionPromptFor(code, eff = null, descriptorEntry = registeredEntry(code)) {
     const reactions = [...(eff?.reactions || []), ...(investigatorRule(code)?.reactions || [])]
     const descriptorAbilities = descriptorEntry?.abilities || []
@@ -107,13 +112,11 @@ export function createCardDefs(deps) {
     const freeAbilityPrompt = !!(eff?.abilities?.some(ability => ability.cost?.action === false)
       || descriptorAbilities.some(descriptor => descriptor.kind === 'free' || descriptor.cost?.action === false))
     return !!(eff?.reaction || reactions.some(r => !isAutomaticReward(r))
-      || investigatorRule(code)?.chaosTokenRedraw || freeTriggerPrompt || freeAbilityPrompt || hasExplicitReactionPrompt(code)
+      || investigatorRule(code)?.chaosTokenRedraw || freeTriggerPrompt || freeAbilityPrompt || entryNeedsReactionPrompt(code)
       // Phase 5（5b-6）：迁移来的反应描述子按同一口径判断——自动奖励（无费用/无目标/无上限）不算询问。
-      // Phase 6（6e-8）：快速反应事件搬成 `played` + `fast` + `trigger`，同样算「有反应提示」。
       || descriptorAbilities.some(descriptor =>
-        (descriptor.kind === 'played' && descriptor.fast && descriptor.trigger.length > 0)
-        || (descriptor.kind === 'reaction'
-          && !(descriptor.legacyReaction && isAutomaticReward({ effect: descriptor.effect, cost: descriptor.cost, limit: descriptor.limit, id: descriptor.id })))))
+        descriptor.kind === 'reaction'
+          && !(descriptor.legacyReaction && isAutomaticReward({ effect: descriptor.effect, cost: descriptor.cost, limit: descriptor.limit, id: descriptor.id }))))
   }
 
   function allCardDefs({ runtimeOnly = false, campaignId = null, playerCodes = null } = {}) {

@@ -1,3 +1,0 @@
-﻿profile {"anySkill":true,"onFail":{"draw":2}}
-entry abilities [{"kind":"commit","skill":{"anySkill":true,"onFail":{"draw":2}}}]
-result success false perf hand [] helper discard [ '06157' ] perf discard []

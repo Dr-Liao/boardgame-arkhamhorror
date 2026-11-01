@@ -1,0 +1,108 @@
+{
+  "campaignId": "theDreamEaters",
+  "created": "2026-11-02",
+  "source": "Original AI-generated artwork using OpenAI image_gen; not official game art.",
+  "palette": "midnight blue, smoky violet, aged silver, restrained copper-gold",
+  "assets": [
+    {
+      "id": "hub",
+      "title": "食梦者·双线梦境",
+      "file": "hub/dreamlands.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 472990,
+      "sha256": "d69da1e1d731cae92e7272b2111a9057f79bd50c5e27b4d9ec7742612a38d1ae",
+      "original": "artifacts/tde-media/originals/hub.png"
+    },
+    {
+      "id": "beyondTheGatesOfSleep",
+      "title": "梦境门外",
+      "file": "scenarios/beyondTheGatesOfSleep/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 416110,
+      "sha256": "572c2ad7362d6e386a000cc3dbd463ae2bc9759b5e8be3066fc09f78569ed79d",
+      "original": "artifacts/tde-media/originals/beyondTheGatesOfSleep.png"
+    },
+    {
+      "id": "wakingNightmare",
+      "title": "清醒噩梦",
+      "file": "scenarios/wakingNightmare/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 429876,
+      "sha256": "42d2d07b122a2582962714cb3d6c48b8c548b4f390d1b4ea1ab147aaf084a031",
+      "original": "artifacts/tde-media/originals/wakingNightmare.png"
+    },
+    {
+      "id": "theSearchForKadath",
+      "title": "寻觅卡达斯",
+      "file": "scenarios/theSearchForKadath/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 571960,
+      "sha256": "9e0af9158ceb021169383dac292a716ad09b302db6b1591a25b9b6db27d854c6",
+      "original": "artifacts/tde-media/originals/theSearchForKadath.png"
+    },
+    {
+      "id": "aThousandShapesOfHorror",
+      "title": "万千骇形",
+      "file": "scenarios/aThousandShapesOfHorror/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 469142,
+      "sha256": "5476f85495975c37abf3b60b21acf859bec276f31dd6503d851f6e81ebcfae5a",
+      "original": "artifacts/tde-media/originals/aThousandShapesOfHorror.png"
+    },
+    {
+      "id": "darkSideOfTheMoon",
+      "title": "月之暗面",
+      "file": "scenarios/darkSideOfTheMoon/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 511660,
+      "sha256": "7df4177cfda89b4723be6f12a84b7e228cf3c9cc4d84f15df1a58e22a6f28f09",
+      "original": "artifacts/tde-media/originals/darkSideOfTheMoon.png"
+    },
+    {
+      "id": "pointOfNoReturn",
+      "title": "无归之地",
+      "file": "scenarios/pointOfNoReturn/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 473158,
+      "sha256": "c5cbaa070dd60a7f5c0f9e5a68a7829b06e2fcad0ba3dc0f8b85dedbeab849b5",
+      "original": "artifacts/tde-media/originals/pointOfNoReturn.png"
+    },
+    {
+      "id": "whereTheGodsDwell",
+      "title": "神居之所",
+      "file": "scenarios/whereTheGodsDwell/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 430324,
+      "sha256": "4454be4aa71ea6ee9c076f7720893879d35f8d167f371b8cf48dcc1377a73065",
+      "original": "artifacts/tde-media/originals/whereTheGodsDwell.png"
+    },
+    {
+      "id": "weaverOfTheCosmos",
+      "title": "编织宇宙",
+      "file": "scenarios/weaverOfTheCosmos/scene.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 551914,
+      "sha256": "cab3810c599d59caea3b2a80237ab4b2e032097472fc39b51cbd44312d70afe8",
+      "original": "artifacts/tde-media/originals/weaverOfTheCosmos.png"
+    },
+    {
+      "id": "table",
+      "title": "食梦者·双线调查桌",
+      "file": "table/investigation-desk.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 547644,
+      "sha256": "3527904154028f300dc224cdd38c2758b8c5f6fc475eb8540f5dadeb5e7a6b95",
+      "original": "artifacts/tde-media/originals/table.png"
+    }
+  ]
+}

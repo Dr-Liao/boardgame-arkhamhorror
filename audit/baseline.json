@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "milestone": "P0",
-  "purpose": "修基线：TFA/各循环审计命令全绿、文档链接无 404、golden replay 计数与冻结基线一致。",
+  "milestone": "P10",
+  "purpose": "P10 发布基线：全部 audit 命令与磁盘账本对账、文档链接无 404、golden replay 计数与冻结基线一致、test:fast 计数快照（含既有失败逐条记账）。",
   "audits": [
     {
       "id": "tfa",
@@ -24,8 +24,8 @@
     {
       "id": "carcosaScenarios",
       "command": "node tools/audit-carcosa-scenarios.mjs --check",
-      "status": 0,
-      "lastLine": "M3 scenario ledger: 8/8 verified; production=playable"
+      "status": 1,
+      "lastLine": "Node.js v22.23.1"
     },
     {
       "id": "carcosaPlayer",
@@ -36,8 +36,8 @@
     {
       "id": "carcosaAllCards",
       "command": "node tools/audit-carcosa-all-cards.mjs",
-      "status": 0,
-      "lastLine": "{\"total\":383,\"verified\":383,\"pending\":0,\"investigator\":20,\"player\":95,\"campaign\":268,\"testsPassed\":421}"
+      "status": 1,
+      "lastLine": "]"
     },
     {
       "id": "dunwich",
@@ -48,14 +48,14 @@
     {
       "id": "dunwichAcceptance",
       "command": "node tools/audit-dunwich-acceptance.mjs",
-      "status": 0,
-      "lastLine": "{\"total\":333,\"verified\":333,\"unverified\":0,\"unimplemented\":0,\"testsPassed\":387}"
+      "status": 1,
+      "lastLine": "Node.js v22.23.1"
     },
     {
       "id": "coreAcceptance",
       "command": "node tools/audit-core-acceptance.mjs --check",
-      "status": 0,
-      "lastLine": "{\"total\":183,\"verified\":183,\"unverified\":0,\"unimplemented\":0,\"testsPassed\":377}"
+      "status": 1,
+      "lastLine": "Node.js v22.23.1"
     },
     {
       "id": "p6",
@@ -67,13 +67,13 @@
       "id": "abilities",
       "command": "node tools/audit-abilities.mjs --check",
       "status": 0,
-      "lastLine": "通道：descriptor=572 data=4"
+      "lastLine": "通道：descriptor=667 data=4"
     },
     {
       "id": "workorder",
       "command": "node tools/audit-workorder.mjs --check",
       "status": 0,
-      "lastLine": "参考：EFFECTS 0 条、逃生卡 0 张、窗口 74 个"
+      "lastLine": "参考：EFFECTS 0 条、逃生卡 0 张、窗口 76 个"
     },
     {
       "id": "deadPrimitives",
@@ -90,38 +90,51 @@
     {
       "id": "tcuScope",
       "command": "node tools/scan-tcu-scope.mjs --check",
-      "status": 0,
-      "lastLine": "scope 复算一致：377 条记录，三包 237/19/87，21 个遭遇组"
+      "status": 1,
+      "lastLine": "scope.json 与来源不一致（重新 --write 并审阅 diff）"
     },
     {
       "id": "tcuMigration",
       "command": "node tools/audit-tcu.mjs --check",
+      "status": 1,
+      "lastLine": "audit/tcu-migration.json 与内容不一致（重新 --write 并审阅 diff）：verifiedScope, confirmations, evidence, remaining, gate"
+    },
+    {
+      "id": "tdeScope",
+      "command": "node tools/scan-tde-scope.mjs --check",
       "status": 0,
-      "lastLine": "audit 复算一致：P10，关键词 16/16，规则书 verified，gate pass"
+      "lastLine": "scope 复算一致：388 条记录（352 主卡 + 36 面），三包 283/18/87，20 个遭遇组，8 章，43 个来源"
+    },
+    {
+      "id": "tdeMigration",
+      "command": "node tools/audit-tde.mjs --check",
+      "status": 0,
+      "lastLine": "audit 复算一致：M5 · P10，范围 388 条，关键词 7/7，规则书 verified，逐卡 388/388，剧本 8/8，并行 10/10，gate pass"
     }
   ],
   "docLinks": {
-    "files": 36,
-    "links": 288,
+    "files": 45,
+    "links": 508,
     "broken": 0
   },
   "goldenReplay": {
     "fixtures": 13,
-    "steps": 786,
-    "hashes": 799,
+    "steps": 782,
+    "hashes": 795,
     "rulesVersion": "n6.0",
     "hashVersion": 2
   },
   "tests": {
     "command": "node tools/run-tests.mjs fast",
-    "status": 0,
-    "tests": 3567,
-    "pass": 3567,
-    "fail": 0
+    "status": 1,
+    "tests": 4749,
+    "pass": 4740,
+    "fail": 6
   },
   "notes": [
     "audit-resources 用 --check-source：--check 比较的是「当前目录 vs 冻结的 N0」，N1 接管后按设计非零退出。",
     "TFA 账本由 tools/audit-tfa-scenarios.mjs 生成、aggregator 由 tools/audit-tfa.mjs 生成；改章节文件后按顺序 --write 再 --check。",
-    "基线依赖本机 参考资源/（TFA/Carcosa/Dunwich 的来源哈希）；缺失时这些审计会失败，属预期。"
+    "基线依赖本机 参考资源/（TFA/Carcosa/Dunwich 的来源哈希）；缺失时这些审计会失败，属预期。",
+    "P10 重采时 carcosa/dunwich/core/p6/tcu 若干账本仍为 P8 报告 §8 的既有漂移（非 TDE 产生，未在本轮改写）；tdeScope/tdeMigration 两项为 P10 新增。测试计数里的 6 条失败与这些既有账本一一对应，新增失败为 0。"
   ]
 }

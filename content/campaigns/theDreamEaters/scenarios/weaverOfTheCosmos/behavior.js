@@ -152,8 +152,8 @@ function finishFinale(state, api) {
   const key = foundAWayOut ? 'resolution3' : trapped ? 'resolution4' : 'resolution5'
   flagsOf(state).finaleResolution = key
   const text = scenario.interludeTexts?.theSpiderQueen4
-  api.present?.(text?.body || '[pending-self-translation] The Spider Queen 4', {
-    kind: 'story', title: text?.title || 'Scenario Interlude: The Spider Queen',
+  api.present?.(text?.body || '', {
+    kind: 'story', title: text?.title || '幕间：蜘蛛女王',
   })
   api.finish?.(key)
 }
@@ -167,8 +167,8 @@ function applySpiderQueen(state, api) {
   if (survived && !knowsTheTruth) index = 3
   else if (survived) index = 2
   const text = texts[`theSpiderQueen${index}`] || texts.theSpiderQueen1
-  api.present?.(text?.body || `[pending-self-translation] The Spider Queen ${index}`, {
-    kind: 'story', title: text?.title || 'Scenario Interlude: The Spider Queen',
+  api.present?.(text?.body || '', {
+    kind: 'story', title: text?.title || '幕间：蜘蛛女王',
   })
   if (survived && !knowsTheTruth) {
     api.setCampaignRecord?.('theInvestigatorsAreTrappedInAtlachNachasRealm', true)
@@ -178,7 +178,7 @@ function applySpiderQueen(state, api) {
     api.addChaosToken?.(token, 1)
     api.info?.(`🕸️ 记录「调查员被困在阿特拉克·纳克亚的领域」；混乱袋加入 ${token} 标记。`)
   }
-  if (!survived) api.info?.('🕸️ 伦道夫没能活过下降：直接进入 The Spider Queen 4。')
+  if (!survived) api.info?.('🕸️ 伦道夫没能活过下降：直接进入〈蜘蛛女王 4〉。')
 }
 
 // 各混乱袋档位的「负面标记数值」（旋转 X 用；[skull] 按本章 chaos.js 的场地毁灭口径）。
@@ -332,7 +332,7 @@ export const behavior = {
     zones.locationSeq = 0
     flags.startWeb = WEB[0]
     flags.bottomWeb = WEB[3]
-    helper.info?.('🕸️ 4 张巨网纵向排开：调查员从最上方的巨网开始。')
+    helper.info?.(state, events, '🕸️ 4 张巨网纵向排开：调查员从最上方的巨网开始。')
     return [...WEB]
   },
 
@@ -348,7 +348,7 @@ export const behavior = {
       const bottom = locById(state, WEB[3])
       if (bottom) {
         bottom.doom = (Number(bottom.doom) || 0) + count
-        helper.info?.(`🕸️ 「Steps of the Bridge」${tally} 个计数：在最下方巨网放 ${count} 个毁灭标记。`)
+        helper.info?.(state, events, `🕸️ 「Steps of the Bridge」${tally} 个计数：在最下方巨网放 ${count} 个毁灭标记。`)
       }
     }
     flagsOf(state).setupDoom = { tally, count }

@@ -5,12 +5,17 @@ import { CARCOSA_STORY_ROLES } from '../../content/campaigns/thePathToCarcosa/st
 import { TFA_STORY_TEXT } from '../../content/campaigns/theForgottenAge/story-text.js'
 import { TFA_STORY_ROLES } from '../../content/campaigns/theForgottenAge/story-roles.js'
 import { TCU_STORY_TEXT } from '../../content/campaigns/theCircleUndone/story-text.js'
+import { TDE_STORY_TEXT } from '../../content/campaigns/theDreamEaters/story-text.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { campaignEnding } from './campaign.js'
 
 const CARCOSA_IDS = new Set(Object.keys(CARCOSA_STORY_TEXT.introductions))
 const TFA_IDS = new Set(Object.keys(TFA_STORY_TEXT.introductions))
 const TCU_IDS = new Set(Object.keys(TCU_STORY_TEXT.introductions))
+const TDE_IDS = new Set(Object.keys(TDE_STORY_TEXT.chapters))
+const TDE_FIRST_SCENARIOS = new Set(['beyondTheGatesOfSleep', 'wakingNightmare'])
+// 2-A《寻觅卡达斯》「if Luke Robinson is in this group」按调查员卡号判断（06004）。
+const TDE_LUKE_ROBINSON = '06004'
 
 // 第 123 轮（第 8 批）：剧情角色 → 卡号由战役内容声明（story-roles.js），本文件不再写死卡号。
 const carcosaCode = role => CARCOSA_STORY_ROLES[role] || null
@@ -284,6 +289,126 @@ function tcuIntroduction(sc, records = {}, context = null) {
   return [{ title: sc.name, paragraphs }]
 }
 
+// 食梦者（The Dream Eaters，五循环）：导入 = 战役序章（只叠在本局第一关）+ 该章 Setup 前
+// 按战役日志到达的开场段。正文来自 P8-T 生成物 `story-text.js`（自译，非官方中文）；
+// 分支条件取自锁定 en locale 的「查看战役日志」段落：
+//   · A3/B3/A4 只读记录（被俘 / 伦道夫是否幸存下降 / 如何抵达冰封荒土）；
+//   · A2/B2 读记录（黑猫是否在侧、卢克·罗宾逊是否在队、祖格鼠结果）；
+//   · A2 开场 5 的「空手离开 / 强行闯入」与 B1 的「医生去留」是本局场内的玩家选择，
+//     由章节 behavior 结算，导入只投影到选择段为止（选中后的正文仍由局内朗读）。
+// 未到达的分支一律不投影，避免剧透后续记录。
+const tdeNarration = (id, key) => TDE_STORY_TEXT.chapters[id]?.narration?.find(entry => entry.key === key) || null
+const tdeSection = (id, key) => TDE_STORY_TEXT.chapters[id]?.sections?.[key] || null
+const tdeHasRecord = (records, key) => Boolean(records?.[key])
+const tdeRecordList = (records, key) => Array.isArray(records?.[key]) ? records[key] : []
+
+// 本局第一关 = 第一次进入的 A1/B1；战役序章只叠在它上面（敦威治/卡尔克萨同一口径）。
+function tdeIsFirstScenario(sc, context) {
+  if (!TDE_FIRST_SCENARIOS.has(sc.id)) return false
+  if (context?.firstScenario === true) return true
+  const campaign = context?.campaign
+  if (!campaign) return false
+  return (campaign.scenarioResults || []).length === 0
+}
+
+// 3-A 的开场 1 结尾还要判断「是否有调查员没被俘」才能读到开场 2。
+function tdeInvestigatorCount(context) {
+  if (Array.isArray(context?.investigators)) return context.investigators.length
+  return Object.keys(context?.campaign?.investigators || {}).length
+}
+
+// A1 的 14 条梦境：正文 + 效果。导入文本要求「每名调查员选择下列梦境条目之一并朗读」，
+// 条目必须随导入一起出现，否则只剩一句没有下文的说明。
+function tdeDreamSection() {
+  const dreams = tdeSection('beyondTheGatesOfSleep', 'dreams')
+  if (!dreams) return null
+  const paragraphs = []
+  for (const dream of Object.values(dreams)) {
+    if (dream?.body) paragraphs.push(dream.body)
+    if (dream?.effect) paragraphs.push(`效果：${dream.effect}`)
+  }
+  return paragraphs.length ? { title: '梦境条目（每名调查员选择其一并朗读）', paragraphs } : null
+}
+
+function tdeIntroduction(sc, records = {}, context = null) {
+  if (!TDE_IDS.has(sc.id)) return null
+  const sections = []
+  const add = (title, paragraphs) => {
+    if (paragraphs?.length) sections.push({ title, paragraphs: [...paragraphs] })
+  }
+  const addIntro = key => {
+    const entry = tdeNarration(sc.id, key)
+    if (entry?.paragraphs?.length) add(null, entry.paragraphs)
+  }
+  if (tdeIsFirstScenario(sc, context)) {
+    add(TDE_STORY_TEXT.prologue.opening.title, TDE_STORY_TEXT.prologue.opening.paragraphs)
+    add(TDE_STORY_TEXT.prologue.prologue.title, TDE_STORY_TEXT.prologue.prologue.paragraphs)
+  }
+  if (sc.id === 'beyondTheGatesOfSleep') {
+    const selection = tdeSection(sc.id, 'dreamSelection')
+    add(selection?.title || sc.name, [selection?.body].filter(Boolean))
+    const dreams = tdeDreamSection()
+    if (dreams) sections.push(dreams)
+  } else if (sc.id === 'wakingNightmare') {
+    addIntro('flavorText.intro1')
+    if (tdeHasRecord(records, 'drMaheswaranJoinedTheInvestigation')) addIntro('flavorText.intro2')
+    else if (tdeHasRecord(records, 'drMaheswaranStayedWithHerPatients')) addIntro('flavorText.intro3')
+  } else if (sc.id === 'theSearchForKadath') {
+    const saved = tdeHasRecord(records, 'theInvestigatorsWereSavedByRandolphCarder')
+    const parleyed = tdeHasRecord(records, 'theInvestigatorsParleyedWithTheZoogs')
+    const tribute = tdeHasRecord(records, 'theCatsCollectedTheirTributeFromTheZoogs')
+    const cat = tdeHasRecord(records, 'theBlackCatIsAtYourSide')
+    const luke = campaignHasInvestigator(context, TDE_LUKE_ROBINSON)
+    addIntro('flavorText.intro1')
+    if (cat && luke) {
+      addIntro('flavorText.intro2')
+      addIntro('flavorText.intro3')
+    } else if (cat) {
+      addIntro('flavorText.intro2')
+      addIntro('flavorText.intro4')
+    } else {
+      addIntro(luke ? 'flavorText.intro3' : 'flavorText.intro4')
+    }
+    if (tribute && !parleyed && !saved) {
+      // 猫群收到贡品 → 友好进入神庙：开场 6 → 开场 9 → 开场 11（无场内选择）。
+      addIntro('flavorText.intro6')
+      addIntro('flavorText.intro9')
+      addIntro('flavorText.intro11')
+    } else if (parleyed || saved) {
+      // 本仓库 behavior 对「谈判 / 被伦道夫救下」走「直接进神庙」的近似（不朗读官方敌对版
+      // 开场 5 的二选一），因此投影实际到达的开场 9 及其后的开场 10/11，避免纪事出现
+      // 局内没有发生过的「空手离开 / 强行闯入」选择。
+      addIntro('flavorText.intro9')
+      addIntro(parleyed ? 'flavorText.intro10' : 'flavorText.intro11')
+    } else {
+      // 三种记录都缺失（单章试玩）：官方开场 5 要求当场选择「空手离开 / 强行闯入」，
+      // choice 由 behavior 结算。
+      addIntro('flavorText.intro5')
+    }
+  } else if (sc.id === 'aThousandShapesOfHorror') {
+    addIntro('intro1')
+    addIntro(tdeHasRecord(records, 'theBlackCatIsAtYourSide') ? 'intro2' : 'intro3')
+    addIntro('intro4')
+  } else if (sc.id === 'darkSideOfTheMoon') {
+    const captured = tdeRecordList(records, 'wasCaptured')
+    if (!captured.length) addIntro('intro2')
+    else {
+      addIntro('intro1')
+      // 开场 1 结尾的「至少 1 人未被俘 → 开场 2」需要人数；没有名单时只读开场 1。
+      const count = tdeInvestigatorCount(context)
+      if (count > 0 && captured.length < count) addIntro('intro2')
+    }
+  } else if (sc.id === 'pointOfNoReturn') {
+    addIntro(tdeHasRecord(records, 'randolphDidNotSurviveTheDescent') ? 'intro1' : 'intro2')
+  } else if (sc.id === 'whereTheGodsDwell') {
+    addIntro(tdeHasRecord(records, 'theInvestigatorsWereCarriedToTheColdWastes') ? 'intro1' : 'intro2')
+  } else if (sc.id === 'weaverOfTheCosmos') {
+    addIntro('intro')
+  }
+  if (!sections.length) return null
+  return sections
+}
+
 // 幕间二的正文开头按「是否有调查员带银暮秘社特性」二选一（参考实现 thePriceOfProgress1/2）。
 function tcuHasSilverTwilight(campaign) {
   const records = Object.values(campaign?.investigators || {})
@@ -383,10 +508,12 @@ export function introduction(sc, records = {}, context = null) {
   const carcosa = carcosaIntroduction(sc, records, context)
   const tfa = tfaIntroduction(sc, records, context)
   const tcu = tcuIntroduction(sc, records, context)
+  const tde = tdeIntroduction(sc, records, context)
   if (dunwich) sections.push(...dunwich)
   else if (carcosa) sections.push(...carcosa)
   else if (tfa) sections.push(...tfa)
   else if (tcu) sections.push(...tcu)
+  else if (tde) sections.push(...tde)
   else {
     const narrative = sc.id === 'theMidnightMasks'
       ? [...STORY_TEXT.theMidnightMasks[records.litaForcedOthers ? 'others' : 'survivors'], ...STORY_TEXT.theMidnightMasks.common]
@@ -430,6 +557,11 @@ function savedIntroduction(snapshot, sc, records, context = null) {
     if (prose.length <= String(sc.intro || '').trim().length + 20) return introduction(sc, records, context)
   }
   if (TCU_IDS.has(sc.id)) {
+    const prose = Array.isArray(snapshot.paragraphs) ? snapshot.paragraphs.join('').trim() : ''
+    if (prose.length <= String(sc.intro || '').trim().length + 20) return introduction(sc, records, context)
+  }
+  // 旧存档（本修复前）的食梦者导入只有 definition 摘要/操作说明，按同一口径升级成完整正文。
+  if (TDE_IDS.has(sc.id)) {
     const prose = Array.isArray(snapshot.paragraphs) ? snapshot.paragraphs.join('').trim() : ''
     if (prose.length <= String(sc.intro || '').trim().length + 20) return introduction(sc, records, context)
   }
@@ -506,14 +638,18 @@ export function resolutionStory(sc, key, snapshot = null, context = null) {
 export function campaignStory(state, registry, observerSeat = null) {
   const campaign = state.campaign, entries = [], history = campaign.flow?.history || []
   const campaignManifest = registry.getCampaign(campaign.id)
-  for (const result of campaign.scenarioResults || []) {
+  for (const [resultIndex, result] of (campaign.scenarioResults || []).entries()) {
     const sc = registry.getScenarioData(result.scenarioId)
     if (!sc) continue
     const id = result.visitId || `${result.scenarioId}:${result.scenarioIndex}`
     const order = history.findIndex(v => `${v.nodeId}:${v.visit}` === result.visitId)
     const base = order < 0 ? (result.scenarioIndex || 0)*3 : order*3
     entries.push({ _order:base, id: id + ':intro', kind: 'intro', scenarioId: sc.id, visitId: id,
-      ...savedIntroduction(result.introStory, sc, result.recordsBefore, { investigators: result.investigators }) })
+      ...savedIntroduction(result.introStory, sc, result.recordsBefore, {
+        investigators: result.investigators,
+        // 食梦者的战役序章只属于本局第一关：历史条目按结算顺序判断，不重写已保存正文。
+        firstScenario: resultIndex === 0,
+      }) })
     const story = resolutionStory(sc, result.storyResolution || result.resolution, result.story, {
       records: result.recordsBefore,
       recordsAfter: result.recordsAfter,

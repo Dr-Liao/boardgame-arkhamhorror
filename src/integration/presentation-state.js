@@ -126,10 +126,18 @@ export function maskHiddenLocations(locations) {
     ? hiddenLocationView(loc)
     : structuredClone(loc)))
 }
-export function captureTableState(state, getStat, getMaxSanity) {
+// enemyReadouts（可选）：{ enemyHealth, enemyFightValue, enemyEvadeValue } 三个引擎读点。
+// 演出快照会被客户端当成「当场状态」重绘牌桌（table-presentation.js 的 applyStep），
+// 所以敌人的派生数值必须与实时观察（viewState）同口径：印刷生命 + 常驻/声明式修正、
+// 有效战斗/躲避（例如 01175 交战且剩余神智 ≤4 时 +1 战斗 +1 躲避）。
+// 不传时退回印刷值（旧调用方/单测不需要引擎读点的场景保持原行为）。
+export function captureTableState(state, getStat, getMaxSanity, enemyReadouts = {}) {
   const attachments = publicAttachments(state)
   // 敌人生命值要走剧本钩子（失落时代 P2：04124/04132/04140 等常驻 +生命）。
   const behavior = state.scenario ? contentRegistry.getBehavior(state.scenario.id) : null
+  const healthOf = typeof enemyReadouts.enemyHealth === 'function' ? enemyReadouts.enemyHealth : null
+  const fightOf = typeof enemyReadouts.enemyFightValue === 'function' ? enemyReadouts.enemyFightValue : null
+  const evadeOf = typeof enemyReadouts.enemyEvadeValue === 'function' ? enemyReadouts.enemyEvadeValue : null
   // 演出快照会被客户端当作「当场状态」重绘地点地图与地点档案，所以帷幕值要和 viewState
   // 用同一口径（印刷 + shroudMod 临时修正 + 迷雾 + 剧本修正），特性也同样补中文对照；
   // 快照没有观察者，剧本修正钩子按无此次调查员调用。未揭示/隐藏身份地点的 traits 仍被
@@ -153,7 +161,14 @@ export function captureTableState(state, getStat, getMaxSanity) {
   }
   return {
     ...pick(state, FIELDS), locations: attachLocationCards(structuredClone(state.locations || []), attachments.locations).map(doorwayMask).map(projectLocation),
-    scriptAttachments: { act: attachments.act, agenda: attachments.agenda }, enemies: state.enemies.map(enemy => ({ ...structuredClone(enemy), health: enemyHealthValue(state, enemy, behavior) })), encounterDeckSize: state.encounterDeck.length,
+    scriptAttachments: { act: attachments.act, agenda: attachments.agenda }, enemies: state.enemies.map(enemy => ({
+      ...structuredClone(enemy),
+      health: healthOf ? healthOf(state, enemy) : enemyHealthValue(state, enemy, behavior),
+      // 与 viewState 的 effectiveFight/effectiveEvade 同名字段：客户端 enemyFightDisplay /
+      // effectiveEvade 读点优先用它，演出重绘因此不会退回印刷值。
+      ...(fightOf ? { effectiveFight: fightOf(state, enemy) } : {}),
+      ...(evadeOf ? { effectiveEvade: evadeOf(state, enemy) } : {}),
+    })), encounterDeckSize: state.encounterDeck.length,
     locationEntryErrors: locationEntryErrors(state),
     privateTest: state.skillTest && !state.skillTest.helpRequested ? { seat: state.skillTest.seat, publicLog: [...(state.skillTest.publicLog || [])] } : null,
     agendaDoom: agendaDoom(state),

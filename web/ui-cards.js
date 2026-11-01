@@ -69,6 +69,16 @@ export const UI_CARDS = Object.freeze({
     unionAndDisillusion: '05238',
     inTheClutchesOfChaos: '05284',
     beforeTheBlackThrone: '05325',
+    // 食梦者（五循环，P10 注册时补）：id / 卡号与 content/campaigns/theDreamEaters/shared.js 的 chapters 一致；
+    // 这是各章桌面上那张剧本参考卡（简单/普通看正面，困难/专家看背面）。
+    beyondTheGatesOfSleep: '06039',
+    wakingNightmare: '06063',
+    theSearchForKadath: '06119',
+    aThousandShapesOfHorror: '06168',
+    darkSideOfTheMoon: '06206',
+    pointOfNoReturn: '06247',
+    whereTheGodsDwell: '06286',
+    weaverOfTheCosmos: '06333',
   }),
   story: Object.freeze({
     smiteTheWicked: '02007',

@@ -85,7 +85,13 @@ function seedDemoInteractions(state) {
   ]
   if (!state.enemies?.includes(host)) (state.enemies ||= []).push(host)
   const inv = state.investigators?.[0]
-  if (inv) inv.hiddenCards = ['hidden-demo']
+  if (inv) {
+    // 隐藏手牌面板只在存在攻击/躲避入口时渲染（web/tde-ui.js）。演示状态必须放一张真实的
+    // 「手牌中的敌人形态」（06017 异次元监视者，引擎 hiddenEnemyInHand），否则 P5 的面板
+    // 验收拿不到 hidden 分区；假卡号（原来的 'hidden-demo'）没有 legalMove，已不再展示。
+    inv.hand = [...new Set([...(inv.hand || []), '06017'])]
+    inv.hiddenCards = ['06017']
+  }
   state.campaign.epilogueMatrix = {
     a: [{ id: 'a1', title: 'A' }],
     b: [{ id: 'b1', title: 'B' }, { id: 'b2', title: 'B2' }],

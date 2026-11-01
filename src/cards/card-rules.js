@@ -173,6 +173,19 @@ export function hasExplicitReactionPrompt(code) {
   return entryOf(code)?.explicitReactionPrompt === true
 }
 
+// 「卡面必须有快速反应开关」的统一口径（与 engine/card-defs.js#hasReactionPromptFor 的描述子部分一致）：
+//   · explicitReactionPrompt：窗口由条目级 read point 开出来、没有反应描述子（02305 黄金怀表 / 01071 诡秘石像…）；
+//   · 快速事件（played + fast）：无论有没有固定触发时机，都会在窗口里询问——有 trigger 的进反应窗口，
+//     没有 trigger 的（01050 逃避隐藏这类「快速。只能在你回合期间打出」）进收尾玩家窗口的「⚡ 快速打出」候选。
+// 存档迁移用它判断旧存档内嵌卡面是否需要补 hasReactionPrompt：资源版本没变时读档也要自愈，
+// 否则窗口照常询问、手牌上却没有能关掉它的闪电开关。
+export function entryNeedsReactionPrompt(code) {
+  const entry = entryOf(code)
+  if (!entry) return false
+  return entry.explicitReactionPrompt === true
+    || (entry.abilities || []).some(ability => ability.kind === 'played' && ability.fast === true)
+}
+
 // 造成「中毒」的威胁卡（04102）。
 export function isPoisonThreat(code) {
   return entryOf(code)?.poisonThreat === true

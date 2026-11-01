@@ -292,7 +292,7 @@ function doFight(state, seat, opts, events, noSpend) {
         assetId: opts.assetId, ...attackFx, enemyIds: affectedEnemyIds, name: enemy.name, location: enemy.location, damage: dmg, success: true,
         defeated: enemy.damageTaken + dmg >= enemyHealth(state, enemy)
           && enemyCanBeDefeated(state, enemy, opts.assetId || null, seat),
-        tableState: captureTableState(state, getStat, getMaxSanity) })
+        tableState: captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }) })
       // 「特制弹药」：附属的枪械攻击怪物时 +1 伤害。
       // Phase 5（5a-29）：「特制弹药」这类附属给宿主的攻击加成由条目字段 monsterAttackDamageBonus 声明。
       const monsterBonus = (inv.assets.find(item => item.id === opts.assetId)?.attachments || [])
@@ -417,7 +417,7 @@ function doFight(state, seat, opts, events, noSpend) {
     } else {
       ;(state._resolution?.events || events).push({ type: 'presentation', kind: 'attack', direction: 'outgoing', seat, enemyId: enemy.id,
         assetId: opts.assetId, ...attackFx, enemyIds: affectedEnemyIds, name: enemy.name, location: enemy.location, damage: 0, success: false,
-        tableState: captureTableState(state, getStat, getMaxSanity) })
+        tableState: captureTableState(state, getStat, getMaxSanity, { enemyHealth, enemyFightValue, enemyEvadeValue }) })
       info(state, events, `⚔️ ${inv.name} 攻击失败（${SKILL_NAMES[skill]} ${r.value} vs ${difficulty}，标记 ${tokenLabel(r.token)}）。`)
       const attackFail = reactionWindow(state, 'attackFail', { when: 'attackFail', seat, location: inv.location, enemy,
         failedBy: Math.max(0, difficulty - r.value),

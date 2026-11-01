@@ -131,7 +131,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "892ec365c8a077bd925fd0396c8ab7aa84278324418e8a2b96ef93a77075e548",
+          "sha256": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b",
           "exists": true
         },
         {
@@ -146,7 +146,7 @@
         },
         {
           "path": "docs/tde-migration-roadmap.md",
-          "sha256": "9e20c1c7c72c3e2b6b30fbb8cfeae8d34403210e1a608728754b6b4db9cd4395",
+          "sha256": "1052735141b74c1153948794ad028dbd0dce50cd454a218e8195650f0794ee6e",
           "exists": true
         }
       ],
@@ -221,7 +221,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "892ec365c8a077bd925fd0396c8ab7aa84278324418e8a2b96ef93a77075e548",
+          "sha256": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b",
           "exists": true
         },
         {
@@ -314,7 +314,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "892ec365c8a077bd925fd0396c8ab7aa84278324418e8a2b96ef93a77075e548",
+          "sha256": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b",
           "exists": true
         },
         {
@@ -377,7 +377,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "892ec365c8a077bd925fd0396c8ab7aa84278324418e8a2b96ef93a77075e548",
+          "sha256": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b",
           "exists": true
         },
         {
@@ -440,7 +440,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "892ec365c8a077bd925fd0396c8ab7aa84278324418e8a2b96ef93a77075e548",
+          "sha256": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b",
           "exists": true
         },
         {
@@ -495,7 +495,7 @@
       "files": [
         {
           "path": "src/campaign/campaign-parts.js",
-          "sha256": "892ec365c8a077bd925fd0396c8ab7aa84278324418e8a2b96ef93a77075e548",
+          "sha256": "fd0fef97abf32c20ee518a36def3abc32b1aea2ccbe58e8bc755147618b34d2b",
           "exists": true
         },
         {
@@ -1640,7 +1640,7 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf",
           "exists": true
         },
         {
@@ -1721,7 +1721,7 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf",
           "exists": true
         },
         {
@@ -1810,7 +1810,7 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf",
           "exists": true
         },
         {
@@ -1899,7 +1899,7 @@
         },
         {
           "path": "src/engine/turn.js",
-          "sha256": "de87c0437250c0e9e62434297c7b08983cf7b31e071dc6c8f79fb7e717d001fe",
+          "sha256": "13a7ae480a382aa824ab36922a4188a938d981d21986a4bb5297a445ae7ff79a",
           "exists": true
         },
         {
@@ -1909,17 +1909,17 @@
         },
         {
           "path": "src/engine/dispatch.js",
-          "sha256": "00e97864c9d859c024754a1b52134d3b7789bc59dca79401d33e8fd051e3bf0c",
+          "sha256": "3b991edc0d3ec79a692db8691cbbbb049f1b674d28588df22d772f4c770dcd64",
           "exists": true
         },
         {
           "path": "src/engine/table-decisions.js",
-          "sha256": "586cc3ff4b1a8cab9cd2923ea066ca6712ce5ae4a5fdbac6c54c9e409511af15",
+          "sha256": "d53d323f9ded62b2116928f781852a1c8c518461251b84c4b7a653f5fc19f51f",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf",
           "exists": true
         },
         {
@@ -1982,7 +1982,7 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf",
           "exists": true
         },
         {
@@ -2054,7 +2054,7 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf",
           "exists": true
         },
         {
@@ -2110,7 +2110,7 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf",
           "exists": true
         },
         {
@@ -2181,7 +2181,7 @@
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "7ab44d2aa20eaf001f6386d7528ebd65157aaffdb8f37352e466ed877fa80b02",
+          "sha256": "cc239b5e015fff01eca07ac1851c46f7ddad7d42c04a1f980c8233a35646b8ce",
           "exists": true
         },
         {
@@ -2191,7 +2191,7 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf",
           "exists": true
         },
         {
@@ -2254,7 +2254,7 @@
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf",
           "exists": true
         },
         {
@@ -2321,12 +2321,12 @@
         },
         {
           "path": "src/engine/dispatch.js",
-          "sha256": "00e97864c9d859c024754a1b52134d3b7789bc59dca79401d33e8fd051e3bf0c",
+          "sha256": "3b991edc0d3ec79a692db8691cbbbb049f1b674d28588df22d772f4c770dcd64",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf",
           "exists": true
         },
         {
@@ -2393,12 +2393,12 @@
         },
         {
           "path": "src/engine/turn.js",
-          "sha256": "de87c0437250c0e9e62434297c7b08983cf7b31e071dc6c8f79fb7e717d001fe",
+          "sha256": "13a7ae480a382aa824ab36922a4188a938d981d21986a4bb5297a445ae7ff79a",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf",
           "exists": true
         },
         {
@@ -2465,12 +2465,12 @@
         },
         {
           "path": "src/engine/dispatch.js",
-          "sha256": "00e97864c9d859c024754a1b52134d3b7789bc59dca79401d33e8fd051e3bf0c",
+          "sha256": "3b991edc0d3ec79a692db8691cbbbb049f1b674d28588df22d772f4c770dcd64",
           "exists": true
         },
         {
           "path": "tests/tde-investigators.test.mjs",
-          "sha256": "50e97cca718637685fe565aeac40113a3a6c4f361b746576136015fadab49b65",
+          "sha256": "460a8887e39b2b790656f3e7ce44f4767a12eab820a9c9f5fcdfdda24ac7c4cf",
           "exists": true
         },
         {

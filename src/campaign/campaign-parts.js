@@ -400,6 +400,30 @@ function projectedInvestigator(record, observerSeat) {
 }
 
 /**
+ * P9.5：换线时把已保存的战役调查员记录从旧线搬到新线。
+ * 场景：出发准备里先「保存牌组」再改线；记录原本落在旧线快照/顶层，若不搬会让新线开局报
+ * 「座位 N 还没有合法牌组」。只搬 campaign record（运行时 state.investigators 不动）。
+ */
+export function moveSeatRecordToPart(campaign, seat, fromPart, toPart) {
+  if (!campaign || !PARTS.includes(fromPart) || !PARTS.includes(toPart) || fromPart === toPart) return false
+  const current = campaign.currentPart ?? null
+  const record = (current === fromPart ? campaign.investigators?.[seat] : null)
+    ?? campaign.parts?.[fromPart]?.investigators?.[seat]
+    ?? (current == null ? campaign.investigators?.[seat] : null)
+  if (!record) return false
+  if (current === fromPart) delete campaign.investigators[seat]
+  const fromSnapshot = campaign.parts?.[fromPart]
+  if (fromSnapshot?.investigators) delete fromSnapshot.investigators[seat]
+  if (current === toPart) {
+    campaign.investigators ||= {}
+    campaign.investigators[seat] = record
+  } else {
+    ensurePartSnapshot(campaign, toPart).investigators[seat] = record
+  }
+  return true
+}
+
+/**
  * 把 `campaign.parts` 里的线快照压成公开摘要：
  *   · 记录、经验、创伤、胜利、混乱袋属于战役日志，公开保留；
  *   · 别人的牌组 / 购入 / 移除 / 升级草稿，以及全部故事正文，一律不投影

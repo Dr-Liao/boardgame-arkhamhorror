@@ -330,7 +330,7 @@ export const behavior = {
     if (flags.drMaheswaranJoined !== true && !zones.setAside.includes(DR_MAHESWARAN)) {
       zones.setAside.push(DR_MAHESWARAN)
     }
-    helper.info?.('🏥 清醒噩梦：候诊室、急救病房、实验疗法病房、档案室入场；其余地点与指定卡牌放在一边。')
+    helper.info?.(state, events, '🏥 清醒噩梦：候诊室、急救病房、实验疗法病房、档案室入场；其余地点与指定卡牌放在一边。')
     return ['waitingRoom', 'emergencyRoom', 'experimentalTherapiesWard', 'recordsOffice']
   },
 

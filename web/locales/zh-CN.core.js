@@ -148,7 +148,6 @@ export default {
   'tde.hidden.title': '隐藏手牌',
   'tde.hidden.own': '你有 {count} 张（{codes}）',
   'tde.hidden.other': '座位 {seat} 有 {count} 张',
-  'tde.hidden.noEnemy': '手牌里没有可攻击或躲避的敌人形态',
   'tde.veiled.title': '掩藏地点',
   'tde.veiled.story': '背面 {code}',
   'tde.veiled.flipped': '已经翻面',

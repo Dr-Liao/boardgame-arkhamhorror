@@ -3,8 +3,9 @@
 // 规则事实源：
 //   · 参考实现 `参考资源/ArkhamHorror-main/backend/.../Scenario/Scenarios/TheDreamEaters/PointOfNoReturn.hs`
 //     与 `{Act,Agenda,Enemy,Location,Story,Treachery,Asset}/Cards/TheDreamEaters/PointOfNoReturn/*.hs`；
-//   · 英文 locale `frontend/src/locales/en/theDreamEaters/scenarios/pointOfNoReturn.json`（锁定哈希；
-//     intro/setup/resolutions 逐字照抄，去 HTML，textLanguage='en' + pending 自译）。
+//   · 英文 locale `frontend/src/locales/en/theDreamEaters/scenarios/pointOfNoReturn.json`（锁定哈希）；
+//     剧情正文来自 P8-T 自译生成物 `../../story-text.js`（story-source → tools/import-tde-story.mjs 生成），
+//     本章只投影键名（textLanguage='zh-CN' + textStatus='translated (self-translated)'）。
 //
 // 本文件只做「本章怎么用这些卡」：印刷数值/卡文全部来自 `../card-data.js`（cards-data 唯一事实源）。
 // 逐卡规则键放这里（行为层读；单卡条目 flags 携带同一份键，索引重建后优先读条目）。
@@ -14,6 +15,7 @@ import {
   storyFace, veiledStoryFaces, identitiesFor, linkSymbolLocations,
 } from '../../card-data.js'
 import { bindScenarioIdentities } from '../../../../identities.js'
+import { chapterStory, flattenStory, storyParagraphs } from '../../story-access.js'
 
 // ---- 卡号常量（章节行为/测试共用；行为层不写卡号分支，只按数据表分派） ----
 export const CODES = Object.freeze({
@@ -268,76 +270,48 @@ export const STORY_RULES = Object.freeze({
   '06265b': { storyRule: 'centerOfTheSea', clueThresholdPerInvestigator: 3, spendClues: true, advanceAct: true },
 })
 
-// ---- 英文原文（锁定 locale；P8 只允许照抄，不翻译） ----
-// 每段都是 en locale 的逐字正文（仅去 HTML 标签）。
+// ---- 剧情正文（P8-T 已自译；生成物 ../../story-text.js，键名与 en locale 顶层键一致） ----
+// 只投影结构，不二次翻译：intro/intro1/intro2 按空行拆段；setup 按既有 8 步分组；
+// specialRules/resolutions 保持原有「{title, body} 数组 / 段落数组」形状。
+const story = chapterStory('pointOfNoReturn')
+const section = key => story.sections[key]
+const paragraphTexts = value => storyParagraphs(flattenStory(value?.body ?? value))
+
+const introVariant = key => {
+  const entry = section(key)
+  return Object.freeze({ title: entry.title, paragraphs: paragraphTexts(entry) })
+}
+
 export const INTRO_VARIANTS = Object.freeze({
-  intro: {
-    title: 'Scenario III–B: Point of No Return',
-    paragraphs: [
-      'Check Campaign Log.',
-      'If Randolph did not survive the descent, proceed to Intro 1.',
-      'If Randolph survived the descent, skip to Intro 2.',
-    ],
-  },
-  intro1: {
-    title: 'Scenario III–B: Point of No Return',
-    paragraphs: [
-      'Intro 1: You have finally reached the Dreamlands, but it is not as you expected. This cyclopean cavern is far from the wondrous lands and fabulous cities described in Virgil Gray’s writings. Perhaps the author never ventured this far underground, never found the horrors that lurk beneath the surface of the Dreamlands. You suspect he wouldn’t have left out tales of such a spine-chilling nature. As you venture into the dark and barren realm, you are filled with hollow despair—an emptiness that gnaws at your heart and mirrors the bleak landscape all around you. You came here to help your friends, and now your only guide through this realm is gone. What if this was all a horrible mistake?',
-      'You shake these dark thoughts from your mind and focus on the path that lies ahead of you. It’s too late to dwell on what you could have done differently. This is your way forward now. Even if you cannot help your friends, even if you are too late to help Randolph, you have another mission now. Clearly this region of the Dreamlands has something to do with the creatures invading your reality. The answers must lie here. Besides, it’s not like you have much choice anymore.',
-      'You walk to the edge of a jagged cliff overlooking the cavernous realm below. This realm is staggeringly vast. In the distance, along the cliffs, you see a walled city, of all things. Among its many towers, a black spire rises so high it must pierce the surface of the Dreamlands. To the south is a stretch of plains that looks over the vale below, and you can see shapes moving throughout the grey, phosphorescent light. You hope the beings who inhabit this realm are ones you might be able to reason with. You have your doubts...but at least now you have a plan. Whether or not it is a good plan remains to be seen.',
-      'Proceed to Setup.',
-    ],
-  },
-  intro2: {
-    title: 'Scenario III–B: Point of No Return',
-    paragraphs: [
-      'Intro 2: You have finally reached the Dreamlands, but it is not as you expected. This cyclopean Underworld is far from the wondrous lands and fabulous cities described in Virgil Gray’s writings. Perhaps the author never ventured this far underground, never found the horrors that lurk beneath the surface of the Dreamlands. You suspect he would not have left out tales of such a spine-chilling nature. As you venture into the dark, barren realm, you raise your concerns with Randolph. “It is true that we are farther from your companions than we intended, he affirms. “However, if I may offer another sentiment—perhaps this is a blessing in disguise. Clearly the Underworld has something to do with the creatures invading our reality. I suggest we investigate further while we have the chance. We can return to the surface of the Dreamlands once we have discovered the truth.”',
-      'You ask Randolph if he has any leads, and he steps to the edge of a jagged cliff overlooking the cavernous realm below. “I have been here before,” he says quietly, getting his bearings. “Those walls in the distance belong to the City of Gugs. To the south is a stretch of plains that looks over the vale below. That plain is where the ghouls live. Perhaps there we can learn more.” You raise your doubts aloud, wondering if such creatures are even capable of peaceful conversation. “They are more intelligent than you think, and could be quite helpful if we convince them to aid us. In fact, there is one I count among my friends, an artist by the name of Richard Pickman. If we are fortunate enough to find him, that might be our best chance.” You still have your doubts...but at least now you have a plan. Whether or not it is a good plan remains to be seen.',
-      'Proceed to Setup.',
-    ],
-  },
+  intro: introVariant('intro'),
+  intro1: introVariant('intro1'),
+  intro2: introVariant('intro2'),
 })
 
-export const SPECIAL_RULES = Object.freeze([
-  {
-    title: 'Locations in Point of No Return',
-    body: 'Each of the locations in this scenario have no unrevealed side, and therefore they enter play with their revealed side faceup. Instead of an unrevealed side, these locations have story cards on their reverse sides. Whenever a location in this scenario enters play (including during setup), place clues on that location equal to its clue value, as normal.\nLocations can be flipped over in one of two ways. Most are flipped over by the veiled keyword, as described below. Some locations are instead flipped over by an ability printed on that location.\nOnce a location has been flipped over and its story text has been read, it cannot be flipped over again for the remainder of the game unless otherwise noted.',
-  },
-  {
-    title: 'Veiled',
-    body: 'Many of the locations in this scenario have the veiled keyword. This keyword represents that a location contains unknown lore or assistance that must be sought out by the investigators before it can be of use to them.\nAs a {fast} ability, an investigator at a veiled location with no clues on it may flip that location over, resolving the text on its other side.',
-  },
-])
+export const SPECIAL_RULES = Object.freeze(
+  section('specialRules').map(rule => Object.freeze({ title: rule.title, body: rule.body })),
+)
 
-const RESOLUTION_2_PARAGRAPHS = [
-  'Resolution 2: You brace yourself as another wave of distorted reality crashes into you. This feeling, whatever it is, is growing stronger as time marches on. Someone or something is causing it, but how? Just as you are pondering its meaning, you realize something curious: you aren’t the only one affected. Far from it, in fact; the entirety of the Underworld seems to be changing with each wave of warped energy that flows through the realm. Walls shift, the floor skews, and the dim, phosphorescent light scintillates with a cosmic, otherworldly glow. The ground rumbles as another wave of force rushes through the foundations of the dream world. The rocky surface upon which you stand gives way. You flail in the air, attempting to grab hold of something, anything that you can use to pull yourself up. Your hands wrap around a painted plank of wood. You have no time to question its appearance—survival comes first.',
-  'When you pull yourself up, you realize you are curled up on a park bench, surrounded by a thick fog and the grim, gambrel rooftops of Arkham. There is no ground in front of you. Just an open, endless pit into fathomless depths. The Underworld, perhaps? But how is that possible? Virgil’s cat watches you casually from a tree branch that hangs over the park bench. “It won’t stop,” the black cat tells you. “Not until there is nothing left of your world.” You wonder what you could possibly do in the face of such horror. The cat gazes down into the pit below. “It’s waiting for you.”',
-  'Another rumble. In the distance, you watch with horror as an entire building is sucked into the ground. You think you spot a pedestrian in the distance, but it is no human. If this goes on any longer, your companions won’t have a world to awaken to. You steel yourself, look down into the empty pit, and gulp. “Down you go,” the cat says.',
-  'You fall. The roar of the wind is deafening as it whips by your head. You can’t possibly survive a fall like this, you think. But instead of splattering against a hard, rocky ground, you are caught by a glowing, sinewy web. Panicking, you scramble to a nearby platform made of solid rock. Your refuge is one of many, each suspended in the air and connected by thick webbing. Beyond that is a vast, cosmic space, an infinite darkness that stretches as far as the eye can see.',
-]
+const resolutionParagraphs = key => Object.freeze(paragraphTexts(section('resolutions')[key]))
 
 export const RESOLUTION_TEXT = Object.freeze({
-  noResolution: [
-    'No Resolution: If no resolution was reached (each investigator was defeated): Skip to Resolution 2.',
-  ],
-  resolution1: [
-    'Resolution 1: The black, tarry liquid rises around you, consuming you, and you fear that you’ve made a grave mistake. The pressure of the dense liquid surrounds your body, crushing you from all sides. But then you emerge on the other side. You fall for a brief, silent moment before being caught by a glowing, sinewy web. Panicking, you scramble to a nearby platform made of solid rock. Your refuge is one of many, each suspended in the air and connected by thick webbing. Beyond that is a vast, cosmic space, an infinite darkness that stretches as far as the eye can see.',
-    'For each damage on the scenario reference card, record 1 tally mark next to “Steps of the Bridge” in your Campaign Log.',
-    'Each investigator earns experience equal to the Victory X value of each card in the victory display.',
-    'If you are playing The Web of Dreams as a four-part campaign, proceed to Scenario 4–B: Weaver of the Cosmos.',
-    'If you are playing The Dream-Quest and The Web of Dreams as an interconnected eight-part campaign and you have not yet played Scenario 3–A: Dark Side of the Moon, proceed to that scenario.',
-    'If you are playing The Dream-Quest and The Web of Dreams as an interconnected eight-part campaign and you have already played Scenario 3–A: Dark Side of the Moon, proceed instead to Interlude III: The Great Ones.',
-  ],
-  resolution2: [
-    ...RESOLUTION_2_PARAGRAPHS,
-    'The lead investigator has earned the False Awakening weakness (The Dream-Eaters #275) (does not count toward deck size). Add this card to the lead investigator’s deck.',
-    'For each damage on the scenario reference card, record 1 tally mark next to “Steps of the Bridge” in your Campaign Log.',
-    'Each investigator earns experience equal to the Victory X value of each card in the victory display.',
-    'If you are playing The Web of Dreams as a four-part campaign, proceed to Scenario 4–B: Weaver of the Cosmos.',
-    'If you are playing The Dream-Quest and The Web of Dreams as an interconnected eight-part campaign and you have not yet played Scenario 3–A: Dark Side of the Moon, proceed to that scenario.',
-    'If you are playing The Dream-Quest and The Web of Dreams as an interconnected eight-part campaign and you have already played Scenario 3–A: Dark Side of the Moon, proceed instead to Interlude III: The Great Ones.',
-  ],
+  noResolution: resolutionParagraphs('noResolution'),
+  resolution1: resolutionParagraphs('resolution1'),
+  resolution2: resolutionParagraphs('resolution2'),
 })
+
+const setupText = key => flattenStory(section('setup')[key])
+const setupSteps = [
+  setupText('gatherSets'),
+  setupText('setEncounterSetsAside'),
+  [setupText('putLocations'), setupText('beginAtVaultsOfZin'), setupText('setOtherLocationsAside')].join(''),
+  setupText('setEnchantedWoodsAside'),
+  setupText('setCardsAside'),
+  [setupText('checkAct'), setupText('useActV1'), setupText('useActV2')].join(''),
+  [setupText('checkSteps'), setupText('noSteps'), setupText('oneToFourSteps'), setupText('fiveOrMoreSteps')].join(''),
+  setupText('buildEncounterDeck'),
+]
+export const SETUP_TEXT = Object.freeze(setupSteps)
 
 export const scenario = {
   id: 'pointOfNoReturn',
@@ -346,20 +320,11 @@ export const scenario = {
   nameEn: 'Point of No Return',
   part: 'B',
   pair: 3,
-  // P8-T 边界：英文是锁定原文，中文自译未开始。
-  textLanguage: 'en',
-  textStatus: 'pending-self-translation',
+  // P8-T：正文来自 ../../story-text.js 生成物（自译，非官方中文）。
+  textLanguage: 'zh-CN',
+  textStatus: 'translated (self-translated)',
   intro: INTRO_VARIANTS.intro.paragraphs.join('\n'),
-  setup: [
-    'Gather all cards from the following encounter sets: Point of No Return, Creatures of the Underworld, Whispers of Hypnos, Ancient Evils, Ghouls, and Striking Fear.',
-    'Set each of the following encounter sets aside, out of play: Descent into the Pitch, Terror of the Vale, Agents of Atlach-Nacha, and Nightgaunts.',
-    'Put the following locations into play: Vaults of Zin, City of Gugs, Tower of Koth, and Plain of the Ghouls. Each investigator begins play at the Vaults of Zin. Set each other location aside, out of play.',
-    'Search the collection for Enchanted Woods (Stone Trapdoor) (The Dream-Eaters #53) and set it aside, out of play.',
-    'Set the Gug Sentinel enemy, the Richard Upton Pickman story asset, and the False Awakening weakness aside, out of play.',
-    'Check Campaign Log. Depending on the following circumstances, a different version of act 1 should be used in this scenario. Remove the other version of act 1 from the game. If Randolph did not survive the descent, use Act 1a—“Entering the Underworld (v. I).” If Randolph survived the descent, use Act 1a—“Entering the Underworld (v. II).”',
-    'A wave of pain and nausea washes over you. Check the number of tally marks recorded next to “Steps of the Bridge” in the Campaign Log. If there are no tally marks recorded, nothing happens. If there are 1–4 tally marks, place 1 damage on the scenario reference card. This represents the distortion within the Dreamlands. If there are 5 or more tally marks, place 2 damage on the scenario reference card. This represents the distortion within the Dreamlands.',
-    'Shuffle the remainder of the encounter cards to build the encounter deck.',
-  ].join('\n'),
+  setup: SETUP_TEXT.join('\n'),
   startLocation: START_LOCATION,
   locations,
   setAsideLocations: [...SET_ASIDE_LOCATIONS],
@@ -376,30 +341,31 @@ export const scenario = {
   encounterDeck: [...ENCOUNTER_DECK_CODES],
   // 混乱标记数值/后果（引擎按 `tokenMeanings[state.difficulty]` 读；四难度各一份）。
   // skull 的 X = 参考卡上的伤害数，动态值由 behavior.resolveChaosToken 结算（这里只放展示文本）。
+  // 展示文本中文逐字取自 cards-data 06247 的 textZh/backTextZh（P8-T：token 不进剧情生成物）。
   tokenMeanings: {
     easy: {
-      skull: { text: '-X. X is the amount of damage on this card.', delta: 0 },
-      cultist: { text: 'Reveal another token. If you fail, after this skill test ends, draw the top card of the encounter deck.', delta: 0, drawAnother: true },
-      tablet: { text: '+1. If this token is revealed during an investigation and you succeed, draw 1 card.', delta: 1 },
-      elderthing: { text: '-3. If you fail by 2 or more, choose a ready enemy at your location or a connecting location. That enemy moves to your location, engages you, and makes an immediate attack.', delta: -3 },
+      skull: { text: '-X。X为本卡牌上的伤害数量。', delta: 0 },
+      cultist: { text: '再揭示一个标记。如果你检定失败，本次技能检定结束后，抽取遭遇牌库顶的卡牌。', delta: 0, drawAnother: true },
+      tablet: { text: '+1。黑猫带你走出了死亡之火。如果调查期间揭示本标记且你检定成功，抽取1张卡牌。', delta: 1 },
+      elderthing: { text: '-3。如果你检定失败且低于难度至少2点，选择你所在地点或连接地点的一个重整状态的敌人。该敌人移动到你的地点，与你交战并立即进行一次攻击。', delta: -3 },
     },
     standard: {
-      skull: { text: '-X. X is the amount of damage on this card.', delta: 0 },
-      cultist: { text: 'Reveal another token. If you fail, after this skill test ends, draw the top card of the encounter deck.', delta: 0, drawAnother: true },
-      tablet: { text: '+1. If this token is revealed during an investigation and you succeed, draw 1 card.', delta: 1 },
-      elderthing: { text: '-3. If you fail by 2 or more, choose a ready enemy at your location or a connecting location. That enemy moves to your location, engages you, and makes an immediate attack.', delta: -3 },
+      skull: { text: '-X。X为本卡牌上的伤害数量。', delta: 0 },
+      cultist: { text: '再揭示一个标记。如果你检定失败，本次技能检定结束后，抽取遭遇牌库顶的卡牌。', delta: 0, drawAnother: true },
+      tablet: { text: '+1。黑猫带你走出了死亡之火。如果调查期间揭示本标记且你检定成功，抽取1张卡牌。', delta: 1 },
+      elderthing: { text: '-3。如果你检定失败且低于难度至少2点，选择你所在地点或连接地点的一个重整状态的敌人。该敌人移动到你的地点，与你交战并立即进行一次攻击。', delta: -3 },
     },
     hard: {
-      skull: { text: '-X. X is 1 more than the amount of damage on this card.', delta: 0 },
-      cultist: { text: 'Reveal another token. If you fail, after this skill test ends, draw the top card of the encounter deck.', delta: 0, drawAnother: true },
-      tablet: { text: '0. If this token is revealed during an investigation and you succeed, draw 1 card.', delta: 0 },
-      elderthing: { text: '-4. If you fail by 2 or more, choose a ready enemy at your location or a connecting location. That enemy moves to your location, engages you, and makes an immediate attack.', delta: -4 },
+      skull: { text: '-X。X为本卡牌上的伤害数量+1。', delta: 0 },
+      cultist: { text: '再揭示一个标记。如果你检定失败，本次技能检定结束后，抽取遭遇牌库顶的卡牌。', delta: 0, drawAnother: true },
+      tablet: { text: '0。黑猫带你走出了死亡之火。如果调查期间揭示本标记且你检定成功，抽取1张卡牌。', delta: 0 },
+      elderthing: { text: '-4。如果你检定失败且低于难度至少2点，选择你所在地点或连接地点的一个重整状态的敌人。该敌人移动到你的地点，与你交战并立即进行一次攻击。', delta: -4 },
     },
     expert: {
-      skull: { text: '-X. X is 1 more than the amount of damage on this card.', delta: 0 },
-      cultist: { text: 'Reveal another token. If you fail, after this skill test ends, draw the top card of the encounter deck.', delta: 0, drawAnother: true },
-      tablet: { text: '0. If this token is revealed during an investigation and you succeed, draw 1 card.', delta: 0 },
-      elderthing: { text: '-4. If you fail by 2 or more, choose a ready enemy at your location or a connecting location. That enemy moves to your location, engages you, and makes an immediate attack.', delta: -4 },
+      skull: { text: '-X。X为本卡牌上的伤害数量+1。', delta: 0 },
+      cultist: { text: '再揭示一个标记。如果你检定失败，本次技能检定结束后，抽取遭遇牌库顶的卡牌。', delta: 0, drawAnother: true },
+      tablet: { text: '0。黑猫带你走出了死亡之火。如果调查期间揭示本标记且你检定成功，抽取1张卡牌。', delta: 0 },
+      elderthing: { text: '-4。如果你检定失败且低于难度至少2点，选择你所在地点或连接地点的一个重整状态的敌人。该敌人移动到你的地点，与你交战并立即进行一次攻击。', delta: -4 },
     },
   },
 }

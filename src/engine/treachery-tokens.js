@@ -92,6 +92,12 @@ export function createTreacheryTokens(deps) {
     }
     if (t.hidden) {
       placeHiddenCard(state, inv, t, events)
+      // 隐私牌进入手牌即视为在威胁区、其持续能力立刻生效（rulebook「隐私」条目）：
+      // 03340–03342「恶灵附身」在恐惧 > 理智×2 时是「抽到即退场并阵亡」。
+      // 这里必须当场做一次击败检查——神话阶段的遭遇抽牌发生在回合结束者的 endTurn
+      // 事务里，dispatch 的行动末 checkDefeated 只看该回合结束者，漏掉其它抽牌者后
+      // 斩杀会延后到抽牌者自己的下一次行动才结算。
+      checkDefeated(state, inv.seat, events)
       return true
     }
     // 「无视卡牌效果」通用开关（失落时代 P2，04048「忽略每个林中暗箭」）。

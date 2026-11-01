@@ -268,7 +268,7 @@ export const behavior = {
       CAVERNS_BENEATH_THE_MOON_LIGHT_SIDE, LIGHT_SIDE_OF_THE_MOON, THE_WHITE_SHIP,
     ]
     flags.pendingSetupReveals = ['cityOfTheMoonBeasts', 'templeOfTheMoonLizard', 'moonForest', 'theDarkCrater']
-    helper.info?.('🌑 月之暗面：月兽之城、月蜥神庙、月之森林、漆黑深坑入场；其余地点放在一边。')
+    helper.info?.(state, events, '🌑 月之暗面：月兽之城、月蜥神庙、月之森林、漆黑深坑入场；其余地点放在一边。')
     return placed
   },
 
@@ -290,7 +290,7 @@ export const behavior = {
           const inv = state.investigators[seat]
           if (inv) inv.location = galleyDefinition.id
         }
-        helper.info?.(`⛵ 月兽帆船入场；每位被俘调查员使其上多 2 个线索（共 ${2 * captured.length} 个）。`)
+        helper.info?.(state, events, `⛵ 月兽帆船入场；每位被俘调查员使其上多 2 个线索（共 ${2 * captured.length} 个）。`)
       }
     }
     const moonForest = locationByCode(state, MOON_FOREST)
@@ -303,7 +303,7 @@ export const behavior = {
     const seats = state.investigatorCounters[ALARM]?.seats || []
     for (const inv of state.investigators || []) seats[inv.seat] = 1
     state.investigatorCounters[ALARM] = { seats, max: 5 }
-    helper.info?.('🔔 每位调查员的初始警报等级为 1。')
+    helper.info?.(state, events, '🔔 每位调查员的初始警报等级为 1。')
   },
 
   startLocation(state) {
@@ -610,7 +610,7 @@ export const behavior = {
     if (key === 'resolution1') {
       records[TRAVELED_RECORD] = true
       records[RANDOLPH_SURVIVED_RECORD] = true
-      records[EVIDENCE_RECORD] = (Number(records[EVIDENCE_RECORD]) || 0) + 3
+      // P9.5：证据 +3 只由声明式 recordCount（incrementRecordCount）结算，避免结算两次。
       return {
         award: true,
         effects: [

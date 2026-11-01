@@ -4,6 +4,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
 import { createMusicLibrary, defaultMusicConfig } from '../src/integration/music-library.js'
+import { SCENARIO_MUSIC } from '../web/scenario-music.js'
 import { createMusicLayout } from '../tools/music-layout.mjs'
 import { preserveModFiles } from '../../../lib/install.js'
 import { zipDirectory, extractZip } from '../../../lib/zip.js'
@@ -77,6 +78,11 @@ test('随包目录经过 ZIP 解压仍保留，更新保留用户配置和歌曲
   const read = createMusicLibrary({ root: path.join(unpacked, 'web/audio/music') })
   assert.equal(read(chapter).tracks[0].id, 'ritual')
   assert.equal(read(chapter).tracks[1].title, '用户')
-  assert.equal(Object.keys(defaultMusicConfig().playlists).filter(id => id.includes('/')).length, 38)
+  // P10：随包默认 playlist 数 = 已注册战役的章节总数（前四循环 38 + 食梦者 8 = 46）。
+  // 用真实配置算，避免以后新增循环时再手改这个数字。
+  const registeredScenarioPlaylists = Object.values(SCENARIO_MUSIC)
+    .reduce((sum, chapters) => sum + Object.keys(chapters).length, 0)
+  assert.equal(registeredScenarioPlaylists, 46)
+  assert.equal(Object.keys(defaultMusicConfig().playlists).filter(id => id.includes('/')).length, registeredScenarioPlaylists)
 })
 

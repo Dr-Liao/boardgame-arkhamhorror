@@ -115,8 +115,14 @@ export function fieldDoom(state) {
 
 export function countedAgendaDoom(state, deck) {
   const onAgenda = Number(deck?.doom) || 0
-  if (!deck || deck.removed || state?.scenarioFlags?.openPath) return onAgenda
+  if (!deck || deck.removed) return onAgenda
   return onAgenda + fieldDoom(state)
+}
+
+// 仍在场上的密谋牌堆。道路开启后只剩一套：它继续按普通议程规则吃毁灭、检查阈值。
+function aliveDeckIds(state) {
+  const decks = state.scenarioFlags?.agendaDecks || {}
+  return ['a', 'c'].filter(id => decks[id] && !decks[id].removed)
 }
 
 function keepsOwnDoom(card) {
@@ -142,48 +148,50 @@ function clearFieldDoom(state) {
 }
 
 function agendaIsReady(state, deck, deckId) {
-  if (!deck || deck.removed || state.scenarioFlags?.openPath) return false
+  if (!deck || deck.removed) return false
   const definition = definitionsFor(state.scenarioFlags.route, deckId)[deck.index]
   const threshold = definition?.doomThreshold
   return Number.isFinite(threshold) && countedAgendaDoom(state, deck) >= threshold
 }
 
-// 推进会改场上毁灭，放置毁灭的钩子可能再进来。用调用深度挡住重入。
+// 推进会改场上毁灭，卡牌/推进效果可能再触发检查。用调用深度挡住重入。
 let agendaCheckDepth = 0
-
-function resolveReadyAgendas(state, api, preferId = null) {
-  if (agendaCheckDepth > 0) return
-  if (state.scenarioFlags?.openPath) return
-  const decks = state.scenarioFlags?.agendaDecks
-  if (!decks || !state.scenarioFlags?.route) return
+// 05018 神秘乐曲：本阶段密谋不能因达到毁灭阈值而推进（与引擎 checkAgenda 同一读点）。
+const agendaAdvanceLocked = state => !!state.agendaDoomLock
+  && state.agendaDoomLock.round === state.round && state.agendaDoomLock.phase === state.phase
+const canCheckThresholds = state => agendaCheckDepth === 0
+  && !!state.scenarioFlags?.route && aliveDeckIds(state).length > 0 && !agendaAdvanceLocked(state)
+// 卡牌明示「本效果能导致（当前）密谋推进」时的即时检查：只检查被放置毁灭的那一套。
+function checkDeckThreshold(state, deckId, api) {
+  if (!canCheckThresholds(state)) return
   agendaCheckDepth += 1
   try {
-    let guard = 0
-    while (guard++ < 4) {
-      const ready = ['a', 'c'].filter(id => agendaIsReady(state, decks[id], id))
-      if (!ready.length) return
-      const ordered = preferId && ready.includes(preferId)
-        ? [preferId, ...ready.filter(id => id !== preferId)]
-        : ready
-      let deckId = ordered.length === 1 ? ordered[0] : null
-      if (!deckId) {
-        const answer = typeof api?.choose === 'function' ? api.choose({
-          kind: 'agenda',
-          source: 'blackStarsRise-threshold',
-          seat: state.currentSeat ?? state.campaign?.leadSeat ?? 0,
-          prompt: '两套密谋都达到了毁灭阈值。场上其他卡牌的毁灭同时计入两套。选择先推进哪一套。推进后那些卡牌上的毁灭会移除，另一套密谋上的毁灭保留。',
-          options: ordered.map(id => ({ id, label: `“${id}”密谋（${countedAgendaDoom(state, decks[id])}）` })),
-        }) : ordered[0]
-        deckId = ready.includes(answer) ? answer : ordered[0]
-      }
-      preferId = null
-      advanceAgendaDeck(state, deckId, api)
-      if (state.scenarioFlags?.openPath) return
-      if (state.status && state.status !== 'playing') return
+    if (agendaIsReady(state, state.scenarioFlags.agendaDecks[deckId], deckId)) advanceAgendaDeck(state, deckId, api)
+  } finally { agendaCheckDepth -= 1 }
+}
+// 神话阶段「检查毁灭阈值」步骤（官方 Dual Agendas 第 4 条）：两套都满足时只选一套先推进；结算后重检另一套，仍满足才推进。
+function checkDualThresholds(state, api) {
+  if (!canCheckThresholds(state)) return
+  const decks = state.scenarioFlags.agendaDecks
+  agendaCheckDepth += 1
+  try {
+    const ready = ['a', 'c'].filter(id => agendaIsReady(state, decks[id], id))
+    if (!ready.length) return
+    let first = ready[0]
+    if (ready.length > 1) {
+      const answer = typeof api?.choose === 'function' ? api.choose({
+        kind: 'agenda', source: 'blackStarsRise-threshold',
+        seat: state.currentSeat ?? state.campaign?.leadSeat ?? 0,
+        prompt: '两套密谋都达到了毁灭阈值。先选择一套推进；结算后如果另一套仍满足阈值，会继续推进另一套。',
+        options: ready.map(id => ({ id, label: `“${id}”密谋（${countedAgendaDoom(state, decks[id])}）` })),
+      }) : ready[0]
+      first = ready.includes(answer) ? answer : ready[0]
     }
-  } finally {
-    agendaCheckDepth -= 1
-  }
+    advanceAgendaDeck(state, first, api)
+    if ((state.status && state.status !== 'playing') || ready.length < 2) return
+    const other = ready.find(id => id !== first)
+    if (agendaIsReady(state, decks[other], other)) advanceAgendaDeck(state, other, api)
+  } finally { agendaCheckDepth -= 1 }
 }
 
 // 正确路线的场景牌开局只放在一边。道路开启时才把它放进当前幕，避免剧本书提前亮出通路。
@@ -245,15 +253,12 @@ export function advanceAgendaDeck(state, deckId, api) {
   if (!deck || deck.removed) return null
   if (deck.index >= 3) throw new Error(`未知黑星升起密谋牌堆：${deckId}`)
   const code = deck.cards[deck.index]
-  // 两条密谋牌堆都不走引擎的 advanceAgenda，推进时在这里补拍脸：
-  // 先翻当前密谋背面，结算完再亮出下一张密谋或替换上来的场景。
+  // 两条牌堆都不走引擎 advanceAgenda：推进时在这里补拍脸（先翻背面，结算完再亮下一张/场景）。
   presentAgendaFlip(api, code)
   let ended = false
   if (deck.index === 0) {
     const opposing = decks[deckId === 'a' ? 'c' : 'a']
-    // 03275/03278 背面：检查「另一条密谋」当前是否仍是 1a/1c。
-    //  - 对立密谋上的毁灭 ≤2 记确信，≥3 记疑惑；
-    //  - 若对立密谋已不是 1a/1c（index ≠ 0），本次不记任何疑惑/确信。
+    // 03275/03278 背面：对立密谋仍是 1a/1c 时，其上毁灭 ≤2 记确信、≥3 记疑惑；否则不记。
     // 卡面没有「每轮一次」限制，旧实现的 bsrMarkRound 守卫会吞掉合法记录，已移除。
     if (opposing.index === 0) addCampaignMark(state, opposing.doom >= 3 ? 'doubt' : 'conviction')
     const additions = deckId === 'a' ? ['03300', '03300'] : ['03301', '03301']
@@ -262,14 +267,11 @@ export function advanceAgendaDeck(state, deckId, api) {
     deck.index = 1
     deck.doom = 0
   } else if (deck.index === 1) {
-    // 卡背两种版本：
-    //  b：把本密谋牌堆移出游戏，用放在一边的场景 3a/3c 替换并推进到该场景。
-    //  a：把另一张场景 3a/3c 移出游戏，推进到 agendas 3a/3c，目标在另一密谋牌堆。
+    // 卡背两种版本：b 把本牌堆移出、用放在一边的场景 3a/3c 替换；a 移除另一张场景并推进到 3a/3c。
     const route = state.scenarioFlags.route
     const routeAct = stageCards[route].act
     const otherAct = stageCards[route === 'below' ? 'above' : 'below'].act
-    // 放在一边的卡由引擎的 scenarioZones.setAside 承载（旧实现误写 scenarioFlags.setAside，
-    // 那份数组从不存在，导致 removeSetAside 永远删不到东西）。
+    // 放在一边的卡由 scenarioZones.setAside 承载（旧实现误写 scenarioFlags.setAside，永不命中）。
     const setAside = state.scenarioZones?.setAside || (state.scenarioZones.setAside = [])
     const removeSetAside = target => {
       const index = setAside.indexOf(target)
@@ -324,14 +326,14 @@ export function advanceAgendaDeck(state, deckId, api) {
   return code
 }
 
-export function placeAgendaDoom(state, deckId, amount, api) {
+export function placeAgendaDoom(state, deckId, amount, api, options = {}) {
   if (!Number.isSafeInteger(amount) || amount < 0) throw new Error('毁灭标记数量无效')
   syncMainAgenda(state)
-  // 道路开启后两张密谋牌堆都已被替换，毁灭不再落在这两条牌堆上
-  // （否则 03301/03284 等效果仍可把已移出的 3a/3c 推成 R3）。
-  if (state.scenarioFlags?.openPath) return 0
   const deck = state.scenarioFlags.agendaDecks?.[deckId]
   if (!deck) throw new Error(`未知黑星升起密谋牌堆：${deckId}`)
+  // 已移出游戏的密谋牌堆不再接收毁灭；道路开启后毁灭落到剩余的那一套
+  // （双密谋特规只在两套都在场时生效，只剩一套后按普通议程规则继续推进）。
+  if (deck.removed) return 0
   deck.doom += amount
   if (deckId === 'a') state.doom = deck.doom
   if (deckId === 'a') {
@@ -350,8 +352,8 @@ export function placeAgendaDoom(state, deckId, amount, api) {
       }
     }
   }
-  // 刚放上的毁灭，加上场上其他卡牌的毁灭，两套密谋各自和自己的阈值比。
-  resolveReadyAgendas(state, api, deckId)
+  // 放置毁灭本身不推进：只有神话检查步骤或卡面明示可推进（options.check）时才检查。
+  if (options.check) checkDeckThreshold(state, deckId, api)
 }
 
 export const behavior = {
@@ -391,11 +393,12 @@ export const behavior = {
       const threshold = card?.doom ?? '?'
       const doom = countedAgendaDoom(state, deck)
       const field = fieldDoom(state)
-      const extra = field > 0 && !state.scenarioFlags.openPath ? `（含场上 ${field}）` : ''
+      const extra = field > 0 ? `（含场上 ${field}）` : ''
       return `“${deckId}”密谋「${card?.nameZh || deck.cards?.[deck.index] || '?'}」毁灭 ${doom}/${threshold}${extra}`
     }
     const lines = [`【双密谋】${['a', 'c'].map(summary).filter(Boolean).join('；')}。往当前密谋放毁灭时选择其中一套。敌人、地点和其他卡牌上的毁灭同时计入两套密谋。`]
     if (!state.scenarioFlags.openPath) lines.push('场景牌仍放在一边。道路开启前不能按场景目标结束本关。')
+    else lines.push('道路已开启：被替换的密谋牌堆已移出游戏，剩余那套密谋仍会按毁灭阈值推进（推进到底即结局3）。')
     return lines
   },
   // 场景卡：每名调查员从收藏里随机获得 1 张「疯狂/契约/异教徒/侦探」基础弱点。
@@ -419,24 +422,27 @@ export const behavior = {
     state.scenarioFlags ||= {}
     state.scenarioFlags.temporaryChaosToken = extra
   },
-  // 「在当前议程上放置毁灭」：本关有 a/c 两套密谋，由玩家选择其中一套
-  // （参考实现同样用 PlaceDoomOnAgenda 询问）。返回 true = 本次放置已由本关接管。
-  doomPlacementReplacement(state, amount, api) {
+  // 「在当前议程上放置毁灭」：a/c 由玩家选（参考实现同样用 PlaceDoomOnAgenda 询问）。
+  // context.source：神话步骤 1 的放置不立即检查（紧接的 mythosDoomChecked 统一比较两套）；
+  // api.addDoom 的卡牌效果（01166/03090）卡面明示可推进，放完立即检查被放置的那一套。
+  doomPlacementReplacement(state, amount, api, context = {}) {
     if (!(amount > 0)) return false
-    if (state.scenarioFlags?.openPath) return true
-    const decks = Object.values(state.scenarioFlags?.agendaDecks || {}).filter(deck => deck && !deck.removed)
-    if (!decks.length) return false
-    if (decks.length === 1) {
-      placeAgendaDoom(state, decks[0].id, amount, api)
-      return true
+    const alive = aliveDeckIds(state)
+    // 两套都已移出（正常不会发生）：不落入任何牌堆。
+    if (!alive.length) return !!state.scenarioFlags?.openPath
+    let deckId = alive[0]
+    if (alive.length > 1) {
+      const decks = state.scenarioFlags.agendaDecks
+      const answer = api.choose({
+        kind: 'agenda', source: 'blackStarsRise-doom',
+        seat: state.currentSeat ?? state.campaign?.leadSeat ?? 0,
+        prompt: '在当前议程上放置毁灭：选择 a 或 c 密谋。',
+        options: alive.map(id => ({ id, label: `“${id}” 密谋（毁灭 ${countedAgendaDoom(state, decks[id])}）` })),
+      })
+      deckId = answer === 'c' ? 'c' : 'a'
     }
-    const answer = api.choose({
-      kind: 'agenda', source: 'blackStarsRise-doom',
-      seat: state.currentSeat ?? state.campaign?.leadSeat ?? 0,
-      prompt: '在当前议程上放置毁灭：选择 a 或 c 密谋。',
-      options: decks.map(deck => ({ id: deck.id, label: `“${deck.id}” 密谋（毁灭 ${countedAgendaDoom(state, deck)}）` })),
-    })
-    placeAgendaDoom(state, answer === 'c' ? 'c' : 'a', amount, api)
+    placeAgendaDoom(state, deckId, amount, api)
+    if (context.source !== 'mythos') checkDeckThreshold(state, deckId, api)
     return true
   },
   resolveChaosToken(state, inv, token, api) {
@@ -522,7 +528,7 @@ export const behavior = {
       && codeOf(candidate) === '03301' && candidate.location === inv.location)
     if (!enemy) throw new Error('裂缝探求者不在此处')
     api.horror(inv.seat, 2)
-    for (const deckId of ['a', 'c']) placeAgendaDoom(state, deckId, 1, api)
+    for (const deckId of aliveDeckIds(state)) placeAgendaDoom(state, deckId, 1, api)
     if (state.enemies.includes(enemy)) api.discardEnemy(enemy)
   },
   enemyAttackResolved(state, enemy, inv, api) {
@@ -539,7 +545,7 @@ export const behavior = {
       ],
     })
     if (choice === 'doom') {
-      for (const deckId of ['a', 'c']) placeAgendaDoom(state, deckId, 1, api)
+      for (const deckId of aliveDeckIds(state)) placeAgendaDoom(state, deckId, 1, api)
     } else {
       api.damage(inv.seat, 1)
       api.horror(inv.seat, 1)
@@ -553,19 +559,15 @@ export const behavior = {
     const location = state.locations.find(item => item.id === inv.location)
     const code = codeOf(location)
     const decks = state.scenarioFlags.agendaDecks || {}
-    // 地点能力已经就位，只差"密谋上有毁灭""本地点线索已取空""手牌还有"这类能改变的条件。
-    // 第 90 轮：03296/03298 的行动在地点条目声明。
-    // 第 106 轮：03283/03292/03293 的行动在地点条目声明。
+    // 地点能力由地点条目声明（03283/03296/03298 等），这里只补条件会变的团队/舞台行动。
     locationRuleFor(code)?.actions?.({ state, inv, location, moves })
     const teamClues = active(state).reduce((sum, investigator) => sum + (investigator.clues || 0), 0)
-    // 道路开启后两条密谋牌堆都已被替换，卡面上的 [fast] 不复存在：
-    // 不再提供「花线索放毁灭」，否则会变成只拿奖励、不付代价的行动。
-    if (!state.scenarioFlags.openPath) {
+    // 道路开启后还剩下的那套密谋仍在场，它卡面上的 [fast] 团队能力仍然有效；
+    // 已移出的牌堆不再提供（damage/horror 等副效果也随之消失）。
+    {
       const usedThisRound = state.scenarioFlags.hastenRound || {}
-      for (const deckId of ['a', 'c']) {
+      for (const deckId of aliveDeckIds(state)) {
         const deck = decks[deckId]
-        if (!deck || deck.removed) continue
-        // 卡面 [fast] 只印在 03275/03276a/b/03278/03279a/b 上；其它阶段的卡没有这条能力。
         if (!HASTEN_AGENDA_CODES.has(deck.cards?.[deck.index])) continue
         const used = usedThisRound[deckId] === state.round
         moves.push({
@@ -583,8 +585,7 @@ export const behavior = {
         })
       }
     }
-    if (!state.scenarioFlags.openPath
-      && state.scenarioFlags.ashleighDoomAbility && !state.scenarioFlags.ashleighDoomUsed) {
+    if (state.scenarioFlags.ashleighDoomAbility && !state.scenarioFlags.ashleighDoomUsed) {
       // 每张有毁灭的密谋各给一条，并带上 deckId。合成一条不带牌堆的行动时，
       // 两堆都有毁灭会在执行阶段才失败。
       const doomed = ['a', 'c'].filter(deckId => {
@@ -612,7 +613,9 @@ export const behavior = {
     if (locationRuleFor(code)?.performAction?.(state, inv, move, api)) return
     if (move.rule === 'shiftAgendaDoom') {
       const decks = state.scenarioFlags.agendaDecks
-      const sources = Object.values(decks).filter(deck => deck.doom > 0)
+      const alive = aliveDeckIds(state)
+      if (alive.length < 2) throw new Error('只剩一套密谋，无法在两套之间移动毁灭')
+      const sources = alive.map(id => decks[id]).filter(deck => deck.doom > 0)
       if (code !== '03283' || !sources.length) throw new Error('晋升之门能力当前不可用')
       const sourceId = sources.length === 1 ? sources[0].id : api.choose({
         kind: 'story', source: code, seat: inv.seat, prompt: '选择移出1个毁灭的密谋牌堆。',
@@ -627,7 +630,8 @@ export const behavior = {
     } else if (move.rule === 'choeurGothiqueHeal') {
       // 第 114 轮：密谋牌堆与治愈类型由地点条目的 locationRule.choeurGothique 声明。
       const rule = locationRuleFor(code)?.choeurGothique
-      if (!rule || state.scenarioFlags.choeurGothiqueUsed) {
+      if (!rule || state.scenarioFlags.choeurGothiqueUsed
+        || state.scenarioFlags.agendaDecks?.[rule.deck]?.removed) {
         throw new Error('哥特式唱诗台能力当前不可用')
       }
       state.scenarioFlags.choeurGothiqueUsed = true
@@ -635,7 +639,6 @@ export const behavior = {
       if (rule.heal === 'damage') api.healDamage(inv.seat, 2)
       else api.healHorror(inv.seat, 2)
     } else if (move.rule === 'hastenAgenda') {
-      if (state.scenarioFlags.openPath) throw new Error('密谋牌堆已被替换，卡面能力不可用')
       const deck = state.scenarioFlags.agendaDecks?.[move.deckId]
       if (!deck || deck.removed) throw new Error('该密谋牌堆已不在场上')
       if (!HASTEN_AGENDA_CODES.has(deck.cards?.[deck.index])) throw new Error('当前密谋卡没有这条能力')
@@ -643,11 +646,11 @@ export const behavior = {
       if (used[move.deckId] === state.round) throw new Error('这张密谋卡本轮的团队能力已使用')
       api.payClues(state.numInvestigators)
       used[move.deckId] = state.round
-      placeAgendaDoom(state, move.deckId, 1, api)
+      // 卡面明示「本效果能导致本密谋推进」：放完立即检查这张密谋的阈值。
+      placeAgendaDoom(state, move.deckId, 1, api, { check: true })
       if (move.deckId === 'a') for (const target of active(state)) target.resources += 2
       else for (const target of active(state)) api.drawCards(target.seat, 1)
     } else if (move.rule === 'ashleighDoom') {
-      if (state.scenarioFlags.openPath) throw new Error('密谋牌堆已被替换，卡面能力不可用')
       const decks = state.scenarioFlags.agendaDecks
       const candidates = Object.values(decks).filter(deck => deck && !deck.removed && deck.doom > 0)
       if (!candidates.length || state.scenarioFlags.ashleighDoomUsed) throw new Error('阿什莉的能力当前不可用')
@@ -738,20 +741,22 @@ export const behavior = {
     if (result.success && result.source?.label === '调查' && codeOf(here) === '03284'
       && result.value - result.difficulty <= 1) {
       const decks = state.scenarioFlags.agendaDecks
-      if (decks) {
-        const target = decks.a.doom > decks.c.doom ? 'a' : decks.c.doom > decks.a.doom ? 'c'
-          : api.choose({
-            kind: 'agenda', source: '03284', seat: inv.seat,
-            prompt: '环山大道：两张密谋的毁灭数相等，选择在其中一张上放置 1 个毁灭。',
-            options: [{ id: 'a', label: 'a 密谋' }, { id: 'c', label: 'c 密谋' }],
-          })
+      const alive = aliveDeckIds(state)
+      if (decks && alive.length) {
+        const top = alive.reduce((best, id) => decks[id].doom > decks[best].doom ? id : best, alive[0])
+        const tied = alive.filter(id => decks[id].doom === decks[top].doom)
+        const target = tied.length === 1 ? top : api.choose({
+          kind: 'agenda', source: '03284', seat: inv.seat,
+          prompt: '环山大道：毁灭标记最多的密谋出现并列，选择在其中一张上放置 1 个毁灭。',
+          options: tied.map(id => ({ id, label: `${id} 密谋` })),
+        })
         placeAgendaDoom(state, target, 1, api)
       }
     }
     const hard = ['hard', 'expert'].includes(state.difficulty)
     const tokens = result.drawn || []
     if (tokens.includes('tablet') && (!result.success || (hard && result.value - result.difficulty < 1))) {
-      for (const id of ['a', 'c']) placeAgendaDoom(state, id, 1, api)
+      for (const id of aliveDeckIds(state)) placeAgendaDoom(state, id, 1, api)
     }
     if (!result.success && tokens.includes('elderthing')) {
       for (const pile of [state.encounterDeck, state.encounterDiscard]) {
@@ -773,17 +778,12 @@ export const behavior = {
     if (!location || (location.clues || 0) > 0) return
     if (alive.every(inv => inv.location === route.pathLocation)) api.finish(route.resolution)
   },
-  // 场上出现毁灭时立刻重算两套阈值（引擎的 checkAgenda 只认主密谋）。
-  doomPlaced(state, payload, api) {
-    if (payload?.agenda || !(payload?.amount > 0)) return
-    resolveReadyAgendas(state, api)
-  },
+  // 神话阶段「检查毁灭阈值」步骤：两套分别比较（场上毁灭同时计入两套），按官方 Dual Agendas 第 4 条结算。
   mythosDoomChecked(state, api) {
-    resolveReadyAgendas(state, api)
+    checkDualThresholds(state, api)
   },
   roundEnded(state, api) {
     encounterRules.roundEnded?.(state, api)
-    resolveReadyAgendas(state, api)
   },
   // 双密谋的阈值由本关结算。挡住引擎对主密谋的自动推进，避免它先清掉场上毁灭。
   // 道路开启后同样挡住：场景卡替换密谋牌堆之后，毁灭不再把 3a/3c 推进成结局 3。

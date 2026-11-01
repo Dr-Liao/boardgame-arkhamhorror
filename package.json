@@ -165,7 +165,22 @@
     "test:tde:scenarios": "node --test \"tests/tde-scenario-*.test.mjs\"",
     "test:tde:campaign": "node --test tests/tde-campaign-layer.test.mjs tests/tde-scenario-runtime-api.test.mjs",
     "audit:tde:scenarios": "node tools/audit-tde-scenarios.mjs --check",
-    "audit:tde:scenarios:write": "node tools/audit-tde-scenarios.mjs --write"
+    "audit:tde:scenarios:write": "node tools/audit-tde-scenarios.mjs --write",
+    "import:tde-story:extract": "node tools/import-tde-story.mjs --extract",
+    "import:tde-story": "node tools/import-tde-story.mjs --write",
+    "import:tde-story:check": "node tools/import-tde-story.mjs --check",
+    "check:tde:terms": "node tools/check-tde-terms.mjs",
+    "test:tde:story": "node --test tests/tde-story.test.mjs",
+    "test:tde:cards": "node --test tests/tde-campaign-card-acceptance.test.mjs tests/tde-all-card-ledger.test.mjs",
+    "audit:tde:all-cards": "node tools/audit-tde-all-cards.mjs --check",
+    "audit:tde:all-cards:write": "node tools/audit-tde-all-cards.mjs --write",
+    "test:tde:browser": "playwright test --config playwright.tde.config.mjs tde-rules.browser.mjs tde-interactions.browser.mjs tde-scenarios.browser.mjs tde-dual.browser.mjs tde-dual-real.browser.mjs tde-release.browser.mjs tde-media.browser.mjs",
+    "test:tde:p95": "node --test tests/tde-p95-flow.test.mjs tests/tde-p95-interludes.test.mjs tests/tde-p95-matrix.test.mjs tests/tde-p95-parallel-full.test.mjs",
+    "audit:tde:parallel": "node tools/audit-tde-parallel.mjs --check",
+    "audit:tde:parallel:write": "node tools/audit-tde-parallel.mjs --write",
+    "audit:tde": "node tools/audit-tde.mjs --write",
+    "audit:tde:check": "node tools/audit-tde.mjs --check",
+    "test:tde": "node --test tests/tde-suite.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

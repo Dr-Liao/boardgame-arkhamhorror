@@ -7,6 +7,7 @@ import { allDescriptors, registeredCodes, registeredEntry } from '../src/engine/
 import { requestChoice, resolveTransaction, setAutoReactionHosted } from '../src/engine/resolution.js'
 import { reactionChoices, reactionView, reactionEnabled, setReactionEnabled, reactionPassPlan, reactionAutoPlan, setReactionState } from '../web/reaction-preferences.js'
 import { investigatorHoldsCard } from '../web/card-interactions.js'
+import { fixture, move } from './core-fixture.mjs'
 
 test('免费且不限次的资源反应自动领取，有成本、目标或次数限制的反应保留选择',()=>{
   // Phase 5（5b-6）：01033 的反应搬到能力层，读点改成描述子（数据形状不变）。
@@ -352,5 +353,59 @@ test('「如同手牌」通道快速事件：关闭=整窗跳过，auto 档不�
   setReactionState(session.sessionId,0,'01022','auto')
   assert.equal(reactionAutoPlan(session,0,true),null)
   setReactionState(session.sessionId,0,'01022',null)
+})
+
+test('「快速。只能在你回合期间打出」的事件也有开关：01050 收尾窗口按卡号过滤/整窗让过',()=>{
+  // 这类快速事件没有固定触发时机，只会作为收尾玩家窗口（investigation.afterAction）的
+  // 「⚡ 快速打出」候选出现；卡面同样要有闪电开关，关闭后候选从窗口消失（唯一候选时整窗自动让过）。
+  // 判定收敛在 card-rules.js#entryNeedsReactionPrompt：凡快速事件（played + fast）都要有开关。
+  const defs=allCardDefs({runtimeOnly:true})
+  assert.equal(defs['01050'].hasReactionPrompt,true,'逃避隐藏要有快速反应开关')
+  assert.equal(defs['01050'].hasAutoReaction,false,'快速事件不自动替玩家打出')
+  const missing=[]
+  for(const code of registeredCodes()){
+    const entry=registeredEntry(code),def=defs[code]
+    if(!entry||!def) continue
+    if((entry.abilities||[]).some(descriptor=>descriptor.kind==='played'&&descriptor.fast===true)
+      &&def.hasReactionPrompt!==true) missing.push(code)
+  }
+  assert.deepEqual(missing,[],'凡快速事件描述子都要生成卡面开关')
+
+  // 真实收尾窗口：手牌 01050、行动点已用完。
+  const st=fixture('01001')
+  st.investigators[0].hand=['01050']
+  st.investigators[0].actionsLeft=0
+  move(st,{action:'endTurn'})
+  assert.equal(st.pendingChoice?.kind,'playerWindow')
+  assert.ok(st.pendingChoice.options.some(option=>option.id==='fast-card:01050'),JSON.stringify(st.pendingChoice.options))
+  const session={sessionId:'closing-window-fast',state:st}
+  assert.deepEqual(reactionChoices(st).map(item=>item.code),['01050'],'手牌快速打出候选能映射回卡号')
+  assert.equal(reactionChoices(st)[0]?.move?.optionId,'fast-card:01050')
+  // 关：候选从窗口消失，只剩「让过」→ 已是唯一可选项，整窗自动让过。
+  setReactionState(session.sessionId,0,'01050','skip')
+  assert.deepEqual(reactionView(session).state.legalMoves.map(move=>move.optionId),['skip'])
+  assert.equal(reactionAutoPlan(session,0,true)?.move?.optionId,'skip')
+  // 开（ask）：保持询问。
+  setReactionState(session.sessionId,0,'01050','ask')
+  assert.equal(reactionAutoPlan(session,0,true),null)
+  setReactionState(session.sessionId,0,'01050',null)
+})
+
+test('通道里的快速事件收尾候选（fast-card:hunch:<卡号>）同样能按卡号过滤',()=>{
+  const st={
+    revision:5,
+    cards:{'01050':{code:'01050',hasReactionPrompt:true,hasAutoReaction:false,autoByDefault:false}},
+    investigators:[{seat:0,code:'05002',hand:[],assets:[],threat:[]}],
+    hunch:[{seat:0,deck:[],revealed:'01050'}],
+    pendingChoice:{id:'closing',kind:'playerWindow',seat:0,canSkip:true,source:'investigation.afterAction',
+      options:[{id:'skip',label:'让过'},{id:'fast-card:hunch:01050',label:'⚡ 快速打出「逃避隐藏」（直觉牌库）'}]},
+    legalMoves:[{action:'choose',choiceId:'closing',optionId:'skip'},
+      {action:'choose',choiceId:'closing',optionId:'fast-card:hunch:01050'}],
+  }
+  const session={sessionId:'closing-window-hunch',state:st}
+  assert.deepEqual(reactionChoices(st).map(item=>item.code),['01050'])
+  setReactionState(session.sessionId,0,'01050','skip')
+  assert.deepEqual(reactionView(session).state.legalMoves.map(move=>move.optionId),['skip'])
+  setReactionState(session.sessionId,0,'01050',null)
 })
 

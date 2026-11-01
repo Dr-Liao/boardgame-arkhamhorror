@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "theDreamEaters",
+  "generatedBy": "P9 全卡验收人工评审（artifacts/migration/tde/p9-recon/all-card-blueprint.md §3.4）；每条 gap 原文从各章 behavior.scenarioGaps 复制。",
+  "policy": "behavior.scenarioGaps 的 12 条显式简化逐条落卡：能落到单卡的记单卡 note（per-card-simplified）；表示层/面板/实现说明类记到章节参考卡或机制核心卡（note-*）；已由 noEntry 口径覆盖的记 covered-by-noEntry。所有 codes 必须出现在 content/campaigns/theDreamEaters/card-acceptance.js 的 simplified 注册表，且 TDE_SCENARIO_GAP_CARDS 与其一致。",
+  "totalGaps": 12,
+  "uniqueCodes": [
+    "06063",
+    "06119",
+    "06168",
+    "06193",
+    "06214b",
+    "06247",
+    "06286",
+    "06306"
+  ],
+  "gaps": [
+    {
+      "id": "wakingNightmare#1",
+      "chapterId": "wakingNightmare",
+      "index": 0,
+      "gap": "「寄生地点上的伤害标记」与「封印后替换为恐惧标记」的可见面板属 P5/P9；本层只维护 tokenBag 的寄生状态与 scenarioFlags.sealedRifts。",
+      "disposition": "note-ui-only",
+      "codes": [
+        "06063"
+      ],
+      "note": "面板/表示层缺口（非单卡规则缺口）：寄生地点上的伤害标记与「封印后替换为恐惧标记」的可见面板属 P5/P9；本章内容层只维护 tokenBag 的寄生状态（infestedLocations）与 scenarioFlags.sealedRifts。锚到章节参考卡 06063 作章节级理由。"
+    },
+    {
+      "id": "theSearchForKadath#1",
+      "chapterId": "theSearchForKadath",
+      "index": 0,
+      "gap": "掩藏地点的翻面行动是引擎原生的 flipVeiled（moves.js 枚举 + dispatch.js 结算）；本章行为只通过 veiledFlipped 结算背面故事卡。",
+      "disposition": "note-implementation",
+      "codes": [
+        "06119"
+      ],
+      "note": "实现说明（非缺口）：掩藏地点的翻面行动是引擎原生的 flipVeiled（moves.js 枚举 + dispatch.js 结算）；本章 behavior 只通过 veiledFlipped 结算背面故事卡，没有逐卡翻面条目。锚到章节参考卡 06119。"
+    },
+    {
+      "id": "theSearchForKadath#2",
+      "chapterId": "theSearchForKadath",
+      "index": 1,
+      "gap": "剧本参考卡（06119）没有单卡条目（reference card，无行为读点）；神迹计数走 api.markers 的通用命名计数。",
+      "disposition": "covered-by-noEntry",
+      "codes": [
+        "06119"
+      ],
+      "note": "已由 noEntry 口径覆盖：剧本参考卡 06119 没有单卡条目（reference card，无行为读点），实现 = 本章 definition/behavior 的 manifest.referenceCode；「神迹」计数走 api.markers 的通用命名计数。"
+    },
+    {
+      "id": "aThousandShapesOfHorror#1",
+      "chapterId": "aThousandShapesOfHorror",
+      "index": 0,
+      "gap": "06193 的「另一张卡进入你的威胁区域后弃 1 张手牌」没有引擎读点（记 simplified）。",
+      "disposition": "per-card-simplified",
+      "codes": [
+        "06193"
+      ],
+      "note": "单卡简化：「强制 - 另一张卡进入你的威胁区域后，选择并弃掉 1 张手牌」没有「卡进入威胁区」的引擎读点；其余子句（显现进威胁区、[action] 意志（3）弃掉本卡）已实现。落在 06193 单卡条目 note（simplified）。"
+    },
+    {
+      "id": "aThousandShapesOfHorror#2",
+      "chapterId": "aThousandShapesOfHorror",
+      "index": 1,
+      "gap": "06168 剧本参考卡的混乱符号「再揭示一个标记」（cultist）没有剧本级额外揭示原语（chaos.js 记 simplified）。",
+      "disposition": "per-card-simplified",
+      "codes": [
+        "06168"
+      ],
+      "note": "剧本/单卡简化：剧本参考卡 06168 的混乱符号「[cultist]：再揭示一个标记」没有剧本级「额外揭示一个混乱标记」原语；chaos.js 按简单/普通与困难/专家两档固定数值近似。"
+    },
+    {
+      "id": "darkSideOfTheMoon#1",
+      "chapterId": "darkSideOfTheMoon",
+      "index": 0,
+      "gap": "06214b「下船」的翻面结算由 behavior 的 offTheGalley 流程完成（按翻面瞬间线索数二选一）。",
+      "disposition": "note-implementation",
+      "codes": [
+        "06214b"
+      ],
+      "note": "实现说明：06214b「下船」的翻面结算由本章 behavior 的 offTheGalley 流程完成（按翻面瞬间线索数二选一）；本卡由 06214 月兽帆船翻面时读出，无独立翻面行动条目。"
+    },
+    {
+      "id": "pointOfNoReturn#1",
+      "chapterId": "pointOfNoReturn",
+      "index": 0,
+      "gap": "「查看遭遇牌库顶并任意顺序放回」没有 peek/排序原语：探查山谷按「弃掉至多一半」近似。",
+      "disposition": "note-approximation",
+      "codes": [
+        "06247"
+      ],
+      "note": "近似：「查看遭遇牌库顶并任意顺序放回」没有 peek/排序原语；探查山谷按「弃掉至多一半遭遇牌库顶」近似，已同载 behavior.scenarioApproximations。章节级理由锚到剧本参考卡 06247。"
+    },
+    {
+      "id": "pointOfNoReturn#2",
+      "chapterId": "pointOfNoReturn",
+      "index": 1,
+      "gap": "「把敌人正面朝下附属到理查德·皮克曼」没有附属敌人到支援的状态形状：用 scenarioFlags 计数 + removeEnemyFromGame 近似。",
+      "disposition": "note-approximation",
+      "codes": [
+        "06247"
+      ],
+      "note": "近似：「把敌人正面朝下附属到理查德·皮克曼」没有附属敌人到支援的状态形状；用 scenarioFlags 计数 + removeEnemyFromGame 近似（06266 条目 note 已登记）。章节级理由锚到剧本参考卡 06247。"
+    },
+    {
+      "id": "pointOfNoReturn#3",
+      "chapterId": "pointOfNoReturn",
+      "index": 2,
+      "gap": "「打乱各张漆黑之海的位置」没有地点位置/标签概念：只做线索平均分配与重置可翻面。",
+      "disposition": "note-approximation",
+      "codes": [
+        "06247"
+      ],
+      "note": "近似：「打乱各张漆黑之海的位置」没有地点位置/标签概念；只做线索平均分配与重置可翻面，位置打乱用固定实例顺序表达。章节级理由锚到剧本参考卡 06247。"
+    },
+    {
+      "id": "whereTheGodsDwell#1",
+      "chapterId": "whereTheGodsDwell",
+      "index": 0,
+      "gap": "06306–06310「这张卡牌在你手牌中且未揭示时，如果你提到它，则你发疯」是桌面口头约定，没有可机械化读点。",
+      "disposition": "note-ui-only",
+      "codes": [
+        "06306"
+      ],
+      "note": "表示层/桌面约定：06306–06310「这张卡牌在你手牌中且未揭示时，如果你提到它，则你发疯」是桌面口头约定，没有可机械化读点。锚到 5 形态中首个 06306。"
+    },
+    {
+      "id": "whereTheGodsDwell#2",
+      "chapterId": "whereTheGodsDwell",
+      "index": 1,
+      "gap": "Hidden 敌人（奈亚拉托提普 5 形态）的通用「手牌中攻击/躲避」入口被 canFightHidden/canEvadeHidden 关闭：参考实现只允许通过塔/幕/行动揭示并结算，不存在通用攻击。",
+      "disposition": "note-design",
+      "codes": [
+        "06306"
+      ],
+      "note": "设计差异：Hidden 敌人（奈亚拉托提普 5 形态）的通用「手牌中攻击/躲避」入口被 canFightHidden/canEvadeHidden 关闭；参考实现只允许通过塔/幕/行动揭示并结算，不存在通用攻击。锚到 06306。"
+    },
+    {
+      "id": "whereTheGodsDwell#3",
+      "chapterId": "whereTheGodsDwell",
+      "index": 2,
+      "gap": "真形合成后的关键词由 definition 的 Enemy 数据读取（Hunter/Alert/Massive/Retaliate）；「获得全部关键词」不含非关键词能力（如反击/警戒之外的关键词未被印刷在 5 形态上）。",
+      "disposition": "note-approximation",
+      "codes": [
+        "06286"
+      ],
+      "note": "近似：真形合成后的关键词由 definition 的 Enemy 数据读取（Hunter/Alert/Massive/Retaliate）；「获得全部关键词」不含非关键词能力。章节级理由锚到剧本参考卡 06286。"
+    }
+  ]
+}

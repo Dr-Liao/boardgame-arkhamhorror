@@ -17,6 +17,7 @@ export function createTableDecisions(deps) {
     EFFECTS,
     HUB_SEAT_ACTIONS,
     PLAYABLE_INVESTIGATORS,
+    SELECTABLE_INVESTIGATORS,
     actionCost,
     advanceAct,
     aliveInvestigators,
@@ -128,7 +129,9 @@ export function createTableDecisions(deps) {
       if (inv.seat !== seat && state.hubSeatSelected?.[inv.seat]) unavailable.add(inv.code)
     }
     const context = cardPoolContext(state)
-    return PLAYABLE_INVESTIGATORS.filter(code => !unavailable.has(code) && allowsCard(code, context))
+    // P10：真人候选含 SELECTABLE（第五循环食梦者 5 人在大厅可选）；AI 自动选人仍走
+    // PLAYABLE_INVESTIGATORS（pickAiInvestigator 的默认池），避免既有种子对局选人漂移。
+    return SELECTABLE_INVESTIGATORS.filter(code => !unavailable.has(code) && allowsCard(code, context))
   }
 
   function initialHubPreparation(state) {

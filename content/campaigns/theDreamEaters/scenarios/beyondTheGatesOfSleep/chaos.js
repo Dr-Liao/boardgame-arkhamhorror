@@ -12,20 +12,21 @@ const traitsOf = card => (ALL_CARDS[original(card)]?.traits || card?.traits || [
 
 export const WOODS_ORIGINAL_CODES = Object.freeze(['06050', '06051', '06052', '06053', '06054', '06055', '06056'])
 
+// 中文逐字取自 cards-data 06039 的 textZh/backTextZh（P8-T：token 文本不入剧情生成物，唯一允许的中文来源）。
 export const BEYOND_THE_GATES_TOKEN_MEANINGS = Object.freeze({
   standard: {
-    skull: { text: '-X. X is half the number of cards in your hand (rounded up).', delta: 0 },
-    cultist: { text: '-X. X is the number of revealed Enchanted Woods locations.', delta: 0 },
+    skull: { text: '-X。X为你手牌数的一半(向上取整)。', delta: 0 },
+    cultist: { text: '-X。X为已揭示的魔幻森林地点数。', delta: 0 },
     tablet: {
-      text: '-2. If you fail and this is an attack or evasion attempt against a swarming enemy, add 1 swarm card to it.',
+      text: '-2。如果你检定失败并且本次检定为攻击或尝试躲避蜂拥敌人，其增加1张蜂拥卡牌。',
       delta: -2,
     },
   },
   hard: {
-    skull: { text: '-X. X is the number of cards in your hand.', delta: 0 },
-    cultist: { text: '-X. X is the number of revealed _Woods_ locations.', delta: 0 },
+    skull: { text: '-X。X为你的手牌数。', delta: 0 },
+    cultist: { text: '-X。X为已揭示的[[树林]]地点数。', delta: 0 },
     tablet: {
-      text: '-2. If this is an attack or evasion attempt against a swarming enemy, add 1 swarm card to it.',
+      text: '-2。如果本次检定为攻击或尝试躲避蜂拥敌人，其增加1张蜂拥卡牌。',
       delta: -2,
     },
   },

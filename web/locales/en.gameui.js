@@ -28,6 +28,9 @@ export default {
   'game.host.investigator': 'Investigator',
   'game.runtime.title': 'Current card state',
   'game.runtime.exhausted': 'Status: exhausted',
+  // Exhausted location attachments (map marker / location dossier / attachment title)
+  'game.attachment.exhausted': 'Exhausted',
+  'game.attachment.exhaustedSuffix': ' · exhausted',
   'game.runtime.attachedTo': 'Attached to: {host}',
   'game.runtime.usage': 'Ability usage',
   'game.runtime.used': 'used',

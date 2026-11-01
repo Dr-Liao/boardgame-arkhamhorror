@@ -1,22 +1,107 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 3,
   "generatedBy": "playwright + tools/playwright-tde-reporter.mjs",
-  "milestone": "P4",
+  "spec": "tests/tde-dual-real.browser.mjs",
+  "specs": [
+    "tests/tde-dual-real.browser.mjs",
+    "tests/tde-dual.browser.mjs",
+    "tests/tde-interactions.browser.mjs",
+    "tests/tde-media.browser.mjs",
+    "tests/tde-release.browser.mjs",
+    "tests/tde-rules.browser.mjs",
+    "tests/tde-scenarios.browser.mjs"
+  ],
+  "milestone": "P10",
   "campaignId": "theDreamEaters",
   "status": "passed",
-  "specs": [
-    "tests/tde-rules.browser.mjs"
-  ],
   "screenshotBase": "repo-root",
   "checks": {
     "desktopBrowser": true,
-    "mobileBrowser": true
+    "mobileBrowser": true,
+    "release": {
+      "desktop": true,
+      "mobile": true
+    },
+    "media": {
+      "desktop": true,
+      "mobile": true
+    }
   },
+  "release": {
+    "desktop": true,
+    "mobile": true,
+    "screenshots": [
+      "artifacts/tde-migration/p10-release-cases-desktop.png",
+      "artifacts/tde-migration/p10-release-cases-mobile.png",
+      "artifacts/tde-migration/p10-release-departure-desktop.png",
+      "artifacts/tde-migration/p10-release-departure-mobile.png",
+      "artifacts/tde-migration/p10-release-lobby-desktop.png",
+      "artifacts/tde-migration/p10-release-lobby-mobile.png",
+      "artifacts/tde-migration/p10-release-mode-gate-desktop.png",
+      "artifacts/tde-migration/p10-release-mode-gate-mobile.png",
+      "artifacts/tde-migration/p10-release-packs-desktop.png",
+      "artifacts/tde-migration/p10-release-packs-mobile.png",
+      "artifacts/tde-migration/p10-release-rulebook-desktop.png",
+      "artifacts/tde-migration/p10-release-rulebook-mobile.png",
+      "artifacts/tde-migration/p10-release-table-desktop.png",
+      "artifacts/tde-migration/p10-release-table-mobile.png"
+    ]
+  },
+  "media": {
+    "desktop": true,
+    "mobile": true,
+    "resources": 464
+  },
+  "scenarios": [
+    {
+      "scenario": "aThousandShapesOfHorror",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "beyondTheGatesOfSleep",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "darkSideOfTheMoon",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "pointOfNoReturn",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "theSearchForKadath",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "wakingNightmare",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "weaverOfTheCosmos",
+      "desktop": true,
+      "mobile": true
+    },
+    {
+      "scenario": "whereTheGodsDwell",
+      "desktop": true,
+      "mobile": true
+    }
+  ],
   "tests": [
     {
       "title": "M4 食梦者卡牌规则链接在desktop端可达并恢复详情焦点",
       "spec": "tests/tde-rules.browser.mjs",
+      "file": "tests/tde-rules.browser.mjs",
       "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
       "expectedStatus": "passed",
       "status": "passed",
       "retry": 0
@@ -24,7 +109,10 @@
     {
       "title": "M4 食梦者卡牌规则链接在mobile端可达并恢复详情焦点",
       "spec": "tests/tde-rules.browser.mjs",
+      "file": "tests/tde-rules.browser.mjs",
       "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
       "expectedStatus": "passed",
       "status": "passed",
       "retry": 0
@@ -32,7 +120,10 @@
     {
       "title": "M4 食梦者规则目录、搜索与返回在desktop端可用",
       "spec": "tests/tde-rules.browser.mjs",
+      "file": "tests/tde-rules.browser.mjs",
       "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
       "expectedStatus": "passed",
       "status": "passed",
       "retry": 0
@@ -40,7 +131,560 @@
     {
       "title": "M4 食梦者规则目录、搜索与返回在mobile端可用",
       "spec": "tests/tde-rules.browser.mjs",
+      "file": "tests/tde-rules.browser.mjs",
       "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P10 发布门禁：真实大厅可见并启动《食梦者》单线 A（desktop 1440×950）",
+      "spec": "tests/tde-release.browser.mjs",
+      "file": "tests/tde-release.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P10 发布门禁：真实大厅可见并启动《食梦者》单线 A（mobile 390×844）",
+      "spec": "tests/tde-release.browser.mjs",
+      "file": "tests/tde-release.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 万千骇形 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "aThousandShapesOfHorror",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 万千骇形 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "aThousandShapesOfHorror",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 10 dreamGateEpilogue（梦境之门与结局）在desktop端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "whereTheGodsDwell",
+      "interaction": "dreamGateEpilogue",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 10 dreamGateEpilogue（梦境之门与结局）在mobile端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "whereTheGodsDwell",
+      "interaction": "dreamGateEpilogue",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 3 swarmPanel（蜂拥）在desktop端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "theSearchForKadath",
+      "interaction": "swarmPanel",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 3 swarmPanel（蜂拥）在mobile端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "theSearchForKadath",
+      "interaction": "swarmPanel",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 4 infestationBag（蛛群滋生袋）在desktop端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "wakingNightmare",
+      "interaction": "infestationBag",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 4 infestationBag（蛛群滋生袋）在mobile端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "wakingNightmare",
+      "interaction": "infestationBag",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 5 alarmLevel（警报等级）在desktop端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "darkSideOfTheMoon",
+      "interaction": "alarmLevel",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 5 alarmLevel（警报等级）在mobile端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "darkSideOfTheMoon",
+      "interaction": "alarmLevel",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 6 hiddenHand（隐藏手牌）在desktop端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "whereTheGodsDwell",
+      "interaction": "hiddenHand",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 6 hiddenHand（隐藏手牌）在mobile端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "whereTheGodsDwell",
+      "interaction": "hiddenHand",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 7 veiledFlip（掩藏地点翻面）在desktop端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "pointOfNoReturn",
+      "interaction": "veiledFlip",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 7 veiledFlip（掩藏地点翻面）在mobile端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "pointOfNoReturn",
+      "interaction": "veiledFlip",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 8 markerProgress（参考计数）在desktop端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "pointOfNoReturn",
+      "interaction": "markerProgress",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 8 markerProgress（参考计数）在mobile端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "pointOfNoReturn",
+      "interaction": "markerProgress",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 9 verticalStack（纵向堆叠）在desktop端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "aThousandShapesOfHorror",
+      "interaction": "verticalStack",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 交互 9 verticalStack（纵向堆叠）在mobile端真实章节面板可读、可操作、可截图",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "file": "tests/tde-interactions.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "aThousandShapesOfHorror",
+      "interaction": "verticalStack",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 双线四模式入口、奇数禁并行与分选座位分线在desktop端可用",
+      "spec": "tests/tde-dual.browser.mjs",
+      "file": "tests/tde-dual.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": "campaignOption",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 双线四模式入口、奇数禁并行与分选座位分线在mobile端可用",
+      "spec": "tests/tde-dual.browser.mjs",
+      "file": "tests/tde-dual.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": "campaignOption",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 寻觅卡达斯 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "theSearchForKadath",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 寻觅卡达斯 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "theSearchForKadath",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 并行双线人数相等门与自由改线在desktop端可用",
+      "spec": "tests/tde-dual.browser.mjs",
+      "file": "tests/tde-dual.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": "campaignOption",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 并行双线人数相等门与自由改线在mobile端可用",
+      "spec": "tests/tde-dual.browser.mjs",
+      "file": "tests/tde-dual.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": "campaignOption",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 并行开局后局内只显示本线、不分屏且他线不可见（desktop）",
+      "spec": "tests/tde-dual.browser.mjs",
+      "file": "tests/tde-dual.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 并行开局后局内只显示本线、不分屏且他线不可见（mobile）",
+      "spec": "tests/tde-dual.browser.mjs",
+      "file": "tests/tde-dual.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 按线选人与自动牌组在desktop端可用",
+      "spec": "tests/tde-dual.browser.mjs",
+      "file": "tests/tde-dual.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": "laneSelection",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 按线选人与自动牌组在mobile端可用",
+      "spec": "tests/tde-dual.browser.mjs",
+      "file": "tests/tde-dual.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": "laneSelection",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 无归之地 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "pointOfNoReturn",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 无归之地 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "pointOfNoReturn",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 月之暗面 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "darkSideOfTheMoon",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 月之暗面 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "darkSideOfTheMoon",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 梦境门外 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 梦境门外 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 清醒噩梦 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "wakingNightmare",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 清醒噩梦 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "wakingNightmare",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 真实 HTTP 素材：388 张卡图 en/zh 抽样 + 战役插画与 BGM 在desktop端可获取（desktop 1440×950）",
+      "spec": "tests/tde-media.browser.mjs",
+      "file": "tests/tde-media.browser.mjs",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 真实 HTTP 素材：388 张卡图 en/zh 抽样 + 战役插画与 BGM 在mobile端可获取（mobile 390×844）",
+      "spec": "tests/tde-media.browser.mjs",
+      "file": "tests/tde-media.browser.mjs",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 神居之所 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "whereTheGodsDwell",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 神居之所 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "whereTheGodsDwell",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 编织宇宙 实机路径在desktop端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "weaverOfTheCosmos",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9 编织宇宙 实机路径在mobile端可进入、可读、可截图",
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "file": "tests/tde-scenarios.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "weaverOfTheCosmos",
+      "interaction": null,
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9.5 分选 3 人 2+1 座位分线与非活动线等待（desktop）",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "file": "tests/tde-dual-real.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9.5 分选 3 人 2+1 座位分线与非活动线等待（mobile）",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "file": "tests/tde-dual-real.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9.5 并行局内只显示本线、按座位切换另一线仍隔离（desktop）",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "file": "tests/tde-dual-real.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9.5 并行局内只显示本线、按座位切换另一线仍隔离（mobile）",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "file": "tests/tde-dual-real.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9.5 真实食梦者大厅四模式面板与并行出发准备分屏（desktop）",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "file": "tests/tde-dual-real.browser.mjs",
+      "viewport": "desktop",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "expectedStatus": "passed",
+      "status": "passed",
+      "retry": 0
+    },
+    {
+      "title": "P9.5 真实食梦者大厅四模式面板与并行出发准备分屏（mobile）",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "file": "tests/tde-dual-real.browser.mjs",
+      "viewport": "mobile",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
       "expectedStatus": "passed",
       "status": "passed",
       "retry": 0
@@ -48,10 +692,152 @@
   ],
   "screenshots": [
     {
+      "name": "p10-release-cases-desktop",
+      "path": "artifacts/tde-migration/p10-release-cases-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p10-release-cases-mobile",
+      "path": "artifacts/tde-migration/p10-release-cases-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p10-release-departure-desktop",
+      "path": "artifacts/tde-migration/p10-release-departure-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p10-release-departure-mobile",
+      "path": "artifacts/tde-migration/p10-release-departure-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p10-release-lobby-desktop",
+      "path": "artifacts/tde-migration/p10-release-lobby-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p10-release-lobby-mobile",
+      "path": "artifacts/tde-migration/p10-release-lobby-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p10-release-mode-gate-desktop",
+      "path": "artifacts/tde-migration/p10-release-mode-gate-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p10-release-mode-gate-mobile",
+      "path": "artifacts/tde-migration/p10-release-mode-gate-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p10-release-packs-desktop",
+      "path": "artifacts/tde-migration/p10-release-packs-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p10-release-packs-mobile",
+      "path": "artifacts/tde-migration/p10-release-packs-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p10-release-rulebook-desktop",
+      "path": "artifacts/tde-migration/p10-release-rulebook-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p10-release-rulebook-mobile",
+      "path": "artifacts/tde-migration/p10-release-rulebook-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p10-release-table-desktop",
+      "path": "artifacts/tde-migration/p10-release-table-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p10-release-table-mobile",
+      "path": "artifacts/tde-migration/p10-release-table-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-release.browser.mjs",
+      "exists": true
+    },
+    {
       "name": "p4-rulebook-desktop",
       "path": "artifacts/tde-migration/p4-rulebook-desktop.png",
       "base": "repo-root",
       "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
       "spec": "tests/tde-rules.browser.mjs",
       "exists": true
     },
@@ -60,7 +846,599 @@
       "path": "artifacts/tde-migration/p4-rulebook-mobile.png",
       "base": "repo-root",
       "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
       "spec": "tests/tde-rules.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-dual-in-game-desktop",
+      "path": "artifacts/tde-migration/p9-dual-in-game-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-dual.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-dual-in-game-mobile",
+      "path": "artifacts/tde-migration/p9-dual-in-game-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-dual.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-dual-lane-deck-desktop",
+      "path": "artifacts/tde-migration/p9-dual-lane-deck-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": "laneSelection",
+      "spec": "tests/tde-dual.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-dual-lane-deck-mobile",
+      "path": "artifacts/tde-migration/p9-dual-lane-deck-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": "laneSelection",
+      "spec": "tests/tde-dual.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-dual-mode-gate-desktop",
+      "path": "artifacts/tde-migration/p9-dual-mode-gate-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": "campaignOption",
+      "spec": "tests/tde-dual.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-dual-mode-gate-mobile",
+      "path": "artifacts/tde-migration/p9-dual-mode-gate-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": "campaignOption",
+      "spec": "tests/tde-dual.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-dual-parallel-balanced-desktop",
+      "path": "artifacts/tde-migration/p9-dual-parallel-balanced-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": "campaignOption",
+      "spec": "tests/tde-dual.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-dual-parallel-balanced-mobile",
+      "path": "artifacts/tde-migration/p9-dual-parallel-balanced-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": "campaignOption",
+      "spec": "tests/tde-dual.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-dual-parallel-unbalanced-desktop",
+      "path": "artifacts/tde-migration/p9-dual-parallel-unbalanced-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": "campaignOption",
+      "spec": "tests/tde-dual.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-dual-parallel-unbalanced-mobile",
+      "path": "artifacts/tde-migration/p9-dual-parallel-unbalanced-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": "campaignOption",
+      "spec": "tests/tde-dual.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-dual-seat-parts-desktop",
+      "path": "artifacts/tde-migration/p9-dual-seat-parts-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": "campaignOption",
+      "spec": "tests/tde-dual.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-dual-seat-parts-mobile",
+      "path": "artifacts/tde-migration/p9-dual-seat-parts-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": "campaignOption",
+      "spec": "tests/tde-dual.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-alarmLevel-desktop",
+      "path": "artifacts/tde-migration/p9-interaction-alarmLevel-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "darkSideOfTheMoon",
+      "interaction": "alarmLevel",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-alarmLevel-mobile",
+      "path": "artifacts/tde-migration/p9-interaction-alarmLevel-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "darkSideOfTheMoon",
+      "interaction": "alarmLevel",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-dreamGateEpilogue-desktop",
+      "path": "artifacts/tde-migration/p9-interaction-dreamGateEpilogue-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "whereTheGodsDwell",
+      "interaction": "dreamGateEpilogue",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-dreamGateEpilogue-mobile",
+      "path": "artifacts/tde-migration/p9-interaction-dreamGateEpilogue-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "whereTheGodsDwell",
+      "interaction": "dreamGateEpilogue",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-hiddenHand-desktop",
+      "path": "artifacts/tde-migration/p9-interaction-hiddenHand-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "whereTheGodsDwell",
+      "interaction": "hiddenHand",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-hiddenHand-mobile",
+      "path": "artifacts/tde-migration/p9-interaction-hiddenHand-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "whereTheGodsDwell",
+      "interaction": "hiddenHand",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-infestationBag-desktop",
+      "path": "artifacts/tde-migration/p9-interaction-infestationBag-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "wakingNightmare",
+      "interaction": "infestationBag",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-infestationBag-mobile",
+      "path": "artifacts/tde-migration/p9-interaction-infestationBag-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "wakingNightmare",
+      "interaction": "infestationBag",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-markerProgress-desktop",
+      "path": "artifacts/tde-migration/p9-interaction-markerProgress-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "pointOfNoReturn",
+      "interaction": "markerProgress",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-markerProgress-mobile",
+      "path": "artifacts/tde-migration/p9-interaction-markerProgress-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "pointOfNoReturn",
+      "interaction": "markerProgress",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-swarmPanel-desktop",
+      "path": "artifacts/tde-migration/p9-interaction-swarmPanel-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "theSearchForKadath",
+      "interaction": "swarmPanel",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-swarmPanel-mobile",
+      "path": "artifacts/tde-migration/p9-interaction-swarmPanel-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "theSearchForKadath",
+      "interaction": "swarmPanel",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-veiledFlip-desktop",
+      "path": "artifacts/tde-migration/p9-interaction-veiledFlip-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "pointOfNoReturn",
+      "interaction": "veiledFlip",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-veiledFlip-mobile",
+      "path": "artifacts/tde-migration/p9-interaction-veiledFlip-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "pointOfNoReturn",
+      "interaction": "veiledFlip",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-verticalStack-desktop",
+      "path": "artifacts/tde-migration/p9-interaction-verticalStack-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "aThousandShapesOfHorror",
+      "interaction": "verticalStack",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-interaction-verticalStack-mobile",
+      "path": "artifacts/tde-migration/p9-interaction-verticalStack-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "aThousandShapesOfHorror",
+      "interaction": "verticalStack",
+      "spec": "tests/tde-interactions.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-media-desktop",
+      "path": "artifacts/tde-migration/p9-media-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-media.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-media-mobile",
+      "path": "artifacts/tde-migration/p9-media-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": null,
+      "interaction": null,
+      "spec": "tests/tde-media.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-aThousandShapesOfHorror-desktop",
+      "path": "artifacts/tde-migration/p9-scenario-aThousandShapesOfHorror-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "aThousandShapesOfHorror",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-aThousandShapesOfHorror-mobile",
+      "path": "artifacts/tde-migration/p9-scenario-aThousandShapesOfHorror-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "aThousandShapesOfHorror",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-beyondTheGatesOfSleep-desktop",
+      "path": "artifacts/tde-migration/p9-scenario-beyondTheGatesOfSleep-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-beyondTheGatesOfSleep-mobile",
+      "path": "artifacts/tde-migration/p9-scenario-beyondTheGatesOfSleep-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-darkSideOfTheMoon-desktop",
+      "path": "artifacts/tde-migration/p9-scenario-darkSideOfTheMoon-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "darkSideOfTheMoon",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-darkSideOfTheMoon-mobile",
+      "path": "artifacts/tde-migration/p9-scenario-darkSideOfTheMoon-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "darkSideOfTheMoon",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-pointOfNoReturn-desktop",
+      "path": "artifacts/tde-migration/p9-scenario-pointOfNoReturn-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "pointOfNoReturn",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-pointOfNoReturn-mobile",
+      "path": "artifacts/tde-migration/p9-scenario-pointOfNoReturn-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "pointOfNoReturn",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-theSearchForKadath-desktop",
+      "path": "artifacts/tde-migration/p9-scenario-theSearchForKadath-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "theSearchForKadath",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-theSearchForKadath-mobile",
+      "path": "artifacts/tde-migration/p9-scenario-theSearchForKadath-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "theSearchForKadath",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-wakingNightmare-desktop",
+      "path": "artifacts/tde-migration/p9-scenario-wakingNightmare-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "wakingNightmare",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-wakingNightmare-mobile",
+      "path": "artifacts/tde-migration/p9-scenario-wakingNightmare-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "wakingNightmare",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-weaverOfTheCosmos-desktop",
+      "path": "artifacts/tde-migration/p9-scenario-weaverOfTheCosmos-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "weaverOfTheCosmos",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-weaverOfTheCosmos-mobile",
+      "path": "artifacts/tde-migration/p9-scenario-weaverOfTheCosmos-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "weaverOfTheCosmos",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-whereTheGodsDwell-desktop",
+      "path": "artifacts/tde-migration/p9-scenario-whereTheGodsDwell-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "whereTheGodsDwell",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9-scenario-whereTheGodsDwell-mobile",
+      "path": "artifacts/tde-migration/p9-scenario-whereTheGodsDwell-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "whereTheGodsDwell",
+      "interaction": null,
+      "spec": "tests/tde-scenarios.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9.5-real-departure-parallel-desktop",
+      "path": "artifacts/tde-migration/p9.5-real-departure-parallel-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9.5-real-departure-parallel-mobile-lanes",
+      "path": "artifacts/tde-migration/p9.5-real-departure-parallel-mobile-lanes.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9.5-real-departure-parallel-mobile",
+      "path": "artifacts/tde-migration/p9.5-real-departure-parallel-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9.5-real-mode-gate-desktop",
+      "path": "artifacts/tde-migration/p9.5-real-mode-gate-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9.5-real-mode-gate-mobile",
+      "path": "artifacts/tde-migration/p9.5-real-mode-gate-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9.5-real-parallel-line-a-desktop",
+      "path": "artifacts/tde-migration/p9.5-real-parallel-line-a-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9.5-real-parallel-line-a-mobile",
+      "path": "artifacts/tde-migration/p9.5-real-parallel-line-a-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9.5-real-parallel-line-b-desktop",
+      "path": "artifacts/tde-migration/p9.5-real-parallel-line-b-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9.5-real-parallel-line-b-mobile",
+      "path": "artifacts/tde-migration/p9.5-real-parallel-line-b-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9.5-real-pick-seat-parts-desktop",
+      "path": "artifacts/tde-migration/p9.5-real-pick-seat-parts-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9.5-real-pick-seat-parts-mobile",
+      "path": "artifacts/tde-migration/p9.5-real-pick-seat-parts-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9.5-real-pick-waiting-desktop",
+      "path": "artifacts/tde-migration/p9.5-real-pick-waiting-desktop.png",
+      "base": "repo-root",
+      "viewport": "desktop",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "spec": "tests/tde-dual-real.browser.mjs",
+      "exists": true
+    },
+    {
+      "name": "p9.5-real-pick-waiting-mobile",
+      "path": "artifacts/tde-migration/p9.5-real-pick-waiting-mobile.png",
+      "base": "repo-root",
+      "viewport": "mobile",
+      "scenario": "beyondTheGatesOfSleep",
+      "interaction": "dualLineReal",
+      "spec": "tests/tde-dual-real.browser.mjs",
       "exists": true
     }
   ]

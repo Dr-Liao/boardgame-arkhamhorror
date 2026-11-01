@@ -19,10 +19,10 @@ import mod from '../index.js'
 import { settle } from './core-fixture.mjs'
 import * as gathering from '../content/campaigns/nightOfTheZealot/scenarios/theGathering/index.js'
 
-const CHAPTER_IDS = ['a1', 'b1', 'a2', 'b2']
+const CHAPTER_IDS = ['lrA1', 'lrB1', 'lrA2', 'lrB2']
 const PARTS = Object.freeze({
-  A: Object.freeze({ name: '梦寻', chapters: [{ scenarioId: 'a1' }, { scenarioId: 'a2' }] }),
-  B: Object.freeze({ name: '梦网', chapters: [{ scenarioId: 'b1' }, { scenarioId: 'b2' }] }),
+  A: Object.freeze({ name: '梦寻', chapters: [{ scenarioId: 'lrA1' }, { scenarioId: 'lrA2' }] }),
+  B: Object.freeze({ name: '梦网', chapters: [{ scenarioId: 'lrB1' }, { scenarioId: 'lrB2' }] }),
 })
 
 function registerCampaign() {
@@ -73,7 +73,7 @@ function pickGameInScenario() {
 
 test('进入分选 A 线：运行时只有本线座位且密集，记录键改成 laneSeat 并保留 roomSeat', () => {
   const state = pickGameInScenario()
-  assert.equal(state.scenario.id, 'a1')
+  assert.equal(state.scenario.id, 'lrA1')
   assert.equal(state.laneRuntime.part, 'A')
   assert.deepEqual(state.laneRuntime.roomSeats, [0, 2])
   assert.deepEqual(state.investigators.map(inv => inv.seat), [0, 1], '线内座位必须密集')
@@ -168,7 +168,7 @@ test('事件座位：私有事件带 roomSeat，另一线/公开投影按房间�
 test('离开运行时：结算快照里的 recordsBefore/After 键改回 roomSeat', () => {
   const state = pickGameInScenario()
   state.campaign.scenarioResults = [{
-    scenarioId: 'a1',
+    scenarioId: 'lrA1',
     investigators: [{ seat: 2, id: 'inv-b' }],
     recordsBefore: { 0: { seat: 0, roomSeat: 0, xp: 0 }, 1: { seat: 1, roomSeat: 2, xp: 0 } },
     recordsAfter: { 0: { seat: 0, roomSeat: 0, xp: 2 }, 1: { seat: 1, roomSeat: 2, xp: 2 } },

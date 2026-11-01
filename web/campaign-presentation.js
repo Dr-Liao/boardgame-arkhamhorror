@@ -12,6 +12,7 @@ const FORGOTTEN_AGE = `${ROOT}/img/campaigns/theForgottenAge`
 const DUNWICH = `${ROOT}/img/campaigns/theDunwichLegacy`
 const NOTZ = `${ROOT}/img/campaigns/nightOfTheZealot`
 const CIRCLE = `${ROOT}/img/campaigns/theCircleUndone`
+const DREAM_EATERS = `${ROOT}/img/campaigns/theDreamEaters`
 
 const COMMON = Object.freeze({
   id: 'common',
@@ -132,6 +133,27 @@ const CAMPAIGNS = Object.freeze({
       'theGathering', 'theMidnightMasks', 'theDevourerBelow',
     ].map(id => [id, Object.freeze({ assets: Object.freeze({
       storyDefault: `${NOTZ}/scenarios/${id}/scene.webp`,
+    }) })]))),
+  }),
+  // 食梦者：梦境蓝紫 + 双线梦网的金铜点缀。
+  theDreamEaters: Object.freeze({
+    id: 'theDreamEaters',
+    palette: Object.freeze({
+      background: '#0d1522', panel: '#141f30', header: '#070d16',
+      accent: '#8fb7d9', accentStrong: '#cfe2f4', muted: '#9aa9bd', edge: '#8fb7d966',
+    }),
+    assets: Object.freeze({
+      hubHero: `${DREAM_EATERS}/hub/dreamlands.webp`,
+      tableOverlay: `${DREAM_EATERS}/table/investigation-desk.webp`,
+      storyDefault: `${DREAM_EATERS}/hub/dreamlands.webp`,
+    }),
+    musicPlaylist: 'theDreamEaters',
+    scenarios: Object.freeze(Object.fromEntries([
+      'beyondTheGatesOfSleep', 'wakingNightmare', 'theSearchForKadath',
+      'aThousandShapesOfHorror', 'darkSideOfTheMoon', 'pointOfNoReturn',
+      'whereTheGodsDwell', 'weaverOfTheCosmos',
+    ].map(id => [id, Object.freeze({ assets: Object.freeze({
+      storyDefault: `${DREAM_EATERS}/scenarios/${id}/scene.webp`,
     }) })]))),
   }),
 })

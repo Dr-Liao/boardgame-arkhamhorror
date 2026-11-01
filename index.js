@@ -45,7 +45,7 @@ import { cacheMusicAsset } from './src/integration/music-cache.js'
 import { viewState, viewEvents, staticTables } from './src/integration/observation.js'
 import { laneToRoomSeat, laneSeatForRoom } from './src/engine/lane-runtime.js'
 import {
-  isParallelState, laneStateOf, launchParallelLanes, parallelActingSeats, parallelApplyMove, parallelAutoChoice, parallelDecisionSeat,
+  isParallelState, laneOfSeat, laneStateOf, launchParallelLanes, parallelActingSeats, parallelApplyMove, parallelAutoChoice, parallelDecisionSeat,
   parallelDescribe, parallelLegalMoves, parallelPendingChoice, parallelPublicView, parallelSeatLocalMove,
   parallelValidateMove, parallelView, syncParallelStatus,
 } from './src/integration/parallel-runtime.js'
@@ -97,6 +97,8 @@ const MOVE_FORMAT = [
   '- 多步选择需逐次提交合法回答，再使用列表中的确认或跳过选项；不要自行构造多选数组、索引或支付数量。',
   '- 带 targetId 的行动：当一项能力需要指定目标敌人时，【可执行行动】会为每个可选敌人各列一条，照抄其 JSON 即可（targetId 是敌人 id）。',
   '- 任何目标、支付、伤害恐惧分配、搜索或剧情回答都以当前合法列表为准；不要依据卡文自行添加选项或跳过必要选择。',
+  '- 投入手牌就是弃牌：被投入的卡在检定结算后进入弃牌堆，不会回到手牌。只投纯技能卡或确定用不上的牌；不要投还要打出的武器、支援、盟友或关键事件。',
+  '- 每回合基础 3 个行动点（资产/效果可能额外增加，以决策资料 actionsLeft 与行动列表为准）：只要还有行动点且存在有意义的行动，就不要提交 endTurn；提前结束会浪费剩余行动（可执行行动列表会标注每个行动的成本与结束回合浪费的行动点）。',
 ].join('\n')
 
 const AGENT_HINT = [
@@ -110,8 +112,11 @@ const AGENT_HINT = [
   '没有待决选择时，从合法列表选一个普通行动作为 move；行动成本与可支付性以列表为准，免费行动不消耗行动点。',
   '技能检定会从混乱袋抽取标记；已接入协议的投入手牌、付费增益与可选反应通过待决窗口显式选择。未迁移的其他效果仍以简化模式和合法列表为准。',
   '注意槽位、资产使用次数与借机攻击；敌人的反击、猎手、猎物和庞大等关键词会影响行动结果。威胁区域中的弱点可能持续妨碍调查员；处理方法和成本以合法行动为准。威胁区域与对应能力文案会同时给出弱点上的充能/标记数量与目标值：达标后不要再重复投入（那只会白耗支援），未达标时才继续补。',
-  '【交战与借机攻击】被敌人交战时，先看局面里的「借机攻击」提示和行动列表的 ⚠ 标记：抽牌、获得资源、移动、调查、打出卡牌、普通资产能力都会在效果结算前先被每个未横置的交战敌人攻击一次。除非这一手能立刻解除威胁（例如装上武器后马上攻击）或你已确认承受得起，否则先用攻击、躲避、谈判或撤退，或改用免费/「不引发借机攻击」的效果；不要被缠住时习惯性抽牌、攒资源或来回移动。',
+  '【交战纪律】与未横置敌人交战时，行动列表里带 ⚠ 的选项会在效果结算前先被攻击。默认顺序：攻击 > 躲避 > 谈判/撤退 > 结束回合；免费行动、卡面写明「不引发借机攻击」的效果、以及结束回合都是安全的。不要为了抽牌、拿资源、调查、装武器、往返移动而吃借机攻击。只有两种情况值得冒险：这一手结算后能立刻让交战敌人被击败、横置或脱离交战（只是装备武器不算，装备本身也会先吃一次借机攻击），或你确认剩余生命/理智承受得起且没有更安全且同样有效的选择；如果剩余行动都会先吃借机攻击且你承受不起，直接结束回合也是合理的。',
+  '【技能检定投入】投入的卡牌在检定结算后进入弃牌堆（不是回手牌）：武器、支援、盟友等资产和关键事件投出去就没了。先看当前总值与难度：已经达标就不投（除非该牌投入效果有额外收益，例如额外线索、抽牌、加伤害）；还差图标时只投纯技能卡或确定用不上的牌，不要拿还要打出的资产凑图标；差距大于可投图标时不要白投。',
+  '【行动点】每回合基础 3 个行动点（有些资产/效果会给额外行动，以决策资料 actionsLeft 为准），应尽量用于推进场景目标或解决威胁；只要还有行动点、场上还有有意义的行动，就不要选「结束回合」——提前结束只会浪费剩余行动。有行动点却结束回合、被交战却反复做别的动作，是最常见的失分点。',
   '请结合当前局势与队友状态做最优决策：缺线索就调查、被敌人纠缠就攻击或躲避、受伤/受惊就治疗或撤退、资源足够就打出强力卡牌；能推进「场景」目标时优先推进，同时盯住「密谋」的毁灭进度避免灭团。',
+  '【输出前自检】提交前快速核对三点：① 若正与敌人交战，这个行动会不会先被借机攻击，是否值得？② 若此刻要投入手牌，这张牌之后还要用吗，投了会进弃牌堆吗？③ 是不是还有行动点，却准备结束回合？',
 ].join('\n')
 
 // ---------------------------------------------------------------------------
@@ -206,6 +211,15 @@ const hostedViewState = (state, seat = null, options = {}) => {
   const observer = seat == null || !state?.laneRuntime ? seat
     : (seatIsWaiting(state, seat) ? null : laneSeatOfRoom(state, seat))
   return viewState(state, observer, options)
+}
+// P9.5 门禁 5：并行事件按观察者所属线过滤。事件在 append 前已带 lane（无 seat 的公共事件也有）；
+// 大厅可显式传 `{ lane }`，或传 `{ state, seat }` 让 mod 从房间座位推导所属线。
+const hostedViewEvents = (events, seat = null, options = {}) => {
+  const state = options?.state || null
+  const lane = options?.lane
+    ?? (state && isParallelState(state) && seat != null ? laneOfSeat(state, seat) : null)
+  const list = lane ? (events || []).filter(event => !event?.lane || event.lane === lane) : events
+  return viewEvents(list, seat, options)
 }
 const describeStateFor = (state, observer) => {
   const parts = describeParts(state, observer)
@@ -460,7 +474,7 @@ export default {
   saveCompatibilityFromState: true,
   migrateState,
   viewState: hostedViewState,
-  viewEvents,
+  viewEvents: hostedViewEvents,
   // P3.2 A1′：viewState 不修改入参 state（含嵌套对象），因此大厅可以每 revision 只把权威 state
   // structuredClone 一次，作为隔离副本交给各席位视图共用；不声明该能力时大厅保持逐席位拷贝。
   viewStateSharesState: true,

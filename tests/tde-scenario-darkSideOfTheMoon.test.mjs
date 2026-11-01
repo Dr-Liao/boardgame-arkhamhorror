@@ -8,6 +8,8 @@ import '../src/engine/engine.js'
 import * as chapter from '../content/campaigns/theDreamEaters/scenarios/darkSideOfTheMoon/index.js'
 import { behavior } from '../content/campaigns/theDreamEaters/scenarios/darkSideOfTheMoon/behavior.js'
 import { scenario as definition } from '../content/campaigns/theDreamEaters/scenarios/darkSideOfTheMoon/definition.js'
+import { applyResolutionResults } from '../src/campaign/campaign-effects.js'
+import { manifest as tdeCampaignManifest } from '../content/campaigns/theDreamEaters/manifest.js'
 import closeWatch from '../src/cards/encounter-entries/theDreamEaters/darkSideOfTheMoon/06230.js'
 import lunarPatrol from '../src/cards/encounter-entries/theDreamEaters/darkSideOfTheMoon/06232.js'
 import catsFromSaturn from '../src/cards/encounter-entries/theDreamEaters/darkSideOfTheMoon/06228.js'
@@ -166,7 +168,8 @@ function placeScenarioLocations(state, ids = ['cityOfTheMoonBeasts', 'templeOfTh
 
 test('月之暗面：manifest 身份 / 遭遇组 / 参考卡 / 结局', () => {
   assert.equal(chapter.manifest.id, 'darkSideOfTheMoon')
-  assert.equal(chapter.manifest.status, 'development')
+  // P10：真实战役/章节已注册为 playable。
+  assert.equal(chapter.manifest.status, 'playable')
   assert.equal(chapter.manifest.referenceCode, '06206')
   assert.deepEqual(chapter.manifest.requiredPackIds, ['core', 'tdeCampaign']) // 印刷包由 tdeCampaign cardRanges 覆盖
   assert.deepEqual(chapter.manifest.requiredEncounterGroupIds, ['darkSideOfTheMoon', 'corsairs', 'dreamersCurse', 'ancientEvils'])
@@ -174,6 +177,11 @@ test('月之暗面：manifest 身份 / 遭遇组 / 参考卡 / 结局', () => {
   assert.deepEqual(chapter.scenario.acts.map(item => item.originalCode), ['06210', '06211', '06212', '06213'])
   assert.deepEqual(chapter.scenario.agendas.map(item => item.originalCode), ['06207', '06208', '06209'])
   assert.equal(Object.keys(chapter.scenario.locations).length, 10)
+  // P8-T：剧情正文切到 story-text 中文（自译），intro/结局保留既有结构。
+  assert.equal(chapter.scenario.textLanguage, 'zh-CN')
+  assert.equal(chapter.scenario.textStatus, 'translated (self-translated)')
+  assert.deepEqual(Object.keys(chapter.scenario.intros), ['intro', 'intro1', 'intro2'])
+  assert.match(chapter.scenario.intro, /查看战役日志/)
 })
 
 test('月之暗面：setup 区域（4 张入场、10 张放在一边、卡达斯在密谋牌库旁）', () => {
@@ -341,8 +349,14 @@ test('月之暗面：结局记录（resolution1：证据 +3、旅程记录；noR
   const result = behavior.resolution(state, 'resolution1', [], api)
   assert.equal(result.award, true)
   assert.equal(state.campaign.records.theInvestigatorsTraveledToTheColdWastes, true)
-  assert.equal(state.campaign.records.evidenceOfKadath, 3)
+  // P9.5：证据 +3 由声明式 recordCount（incrementRecordCount）在结局结算时执行；
+  // behavior.resolution 不再手工改记录，避免和效果解释器重复 +3。
   assert.ok(result.effects.some(effect => effect.recordCount?.key === 'evidenceOfKadath'))
+  assert.equal(state.campaign.records.evidenceOfKadath, undefined)
+  // 手搓 state 没有战役 manifest 的记录 schema；结局解释器按 manifest 校验记录类型，这里补上。
+  state.campaign.recordSchema = tdeCampaignManifest.recordSchema
+  applyResolutionResults(state, result.effects)
+  assert.equal(state.campaign.records.evidenceOfKadath, 3)
   const lost = createState()
   behavior.resolution(lost, 'noResolution', [], createApi(lost))
   assert.equal(lost.campaign.records.theInvestigatorsWereCarriedToTheColdWastes, true)

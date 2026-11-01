@@ -84,7 +84,7 @@ function afterDeckSetup(state, events, helper = {}) {
     castle.unrevealedActualName = ALL_CARDS[ONYX_CASTLE]?.nameZh || 'The Great Hall'
     castle.hiddenIdentity = false
   }
-  helper.info?.(`📍 神居之所：5 个地点入场，6 座被遗忘的高塔与 13 张遭遇卡放在一边。`)
+  helper.info?.(state, events, `📍 神居之所：5 个地点入场，6 座被遗忘的高塔与 13 张遭遇卡放在一边。`)
 }
 
 // ---------------------------------------------------------------------------

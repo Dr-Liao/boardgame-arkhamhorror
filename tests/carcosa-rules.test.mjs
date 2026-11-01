@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { contentRegistry, registerContentBundle } from '../content/registered.js'
-import { createGameState, applyMove, validateMove, legalMoves, performTest, reactionWindow } from '../src/engine/engine.js'
+import { createGameState, applyMove, validateMove, legalMoves, performTest, reactionWindow, applyHorror, applyDamage } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { viewState, viewEvents } from '../src/integration/observation.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
@@ -340,6 +340,56 @@ test('M4 Possession exception auto-fails tests; payment, harm and death clauses 
   applyMove(doomed, 0, { action: 'draw' })
   assert.equal(doomed.investigators[0].defeatCause, 'killed')
   assert.equal(doomed.campaign.investigators[0].status, 'killed')
+})
+
+test('M4 恶灵附身：神话阶段抽进手牌时立即结算斩杀，不延后到抽牌者的下一次行动', () => {
+  // 规则：隐私牌在手牌中即持续生效（rulebook「隐私」条目），03340–03342 的
+  // 「恐惧 > 理智×2 → 立即退场并阵亡」必须在牌进入手牌的那一刻结算。
+  // 神话阶段的遭遇抽牌发生在「回合结束者」的 endTurn 事务里，dispatch 的行动末
+  // checkDefeated 只检查该回合结束者；若隐私牌进手时不检查，就会延后到抽牌者
+  // 自己的下一个行动才死（实测：神话阶段抽到没事，自己回合动一下马上死）。
+  const state = fixture('dim', 2)
+  state.phase = 'investigation'
+  state.currentSeat = 0
+  state.turnsTaken = [1] // 1 号位已行动过；0 号位结束回合后直接进入轮末 + 神话阶段
+  const doomed = state.investigators[1]
+  doomed.horror = doomed.maxSanity * 2 + 1
+  // 遭遇牌从牌库尾抽出：0 号位先抽到一张隐私牌，1 号位再抽到「恶灵附身（折磨）」。
+  state.encounterDeck = ['03341', '03084a']
+  applyMove(state, 0, { action: 'endTurn' })
+  settle(state)
+  const after = state.investigators[1]
+  assert.equal(after.horror, after.maxSanity * 2 + 1)
+  assert.equal(after.defeated, true, '抽到恶灵附身的那一刻就应退场')
+  assert.equal(after.defeatCause, 'killed')
+  assert.equal(state.campaign.investigators[1].status, 'killed')
+})
+
+test('M4 卡城幽影：恐惧可以超过理智上限而不会因此被击败，伤害与普通剧本的恐惧仍会致败', () => {
+  // 真实规则：卡城幽影（Dim Carcosa）里调查员不会因恐惧被击败——恐惧可以超过
+  // 理智上限，剩余理智（maxSanity - horror）可以为负；只有隐私牌「恶灵附身」
+  // 在恐惧 > 理智×2 时才击杀。引擎的 checkDefeated 已读该剧本钩子，这里锁住行为。
+  const dim = fixture('dim')
+  const dimInv = dim.investigators[0]
+  applyHorror(dim, dimInv, dimInv.maxSanity + 1, [])
+  assert.equal(dimInv.defeated, false)
+  assert.ok(dimInv.horror > dimInv.maxSanity)
+
+  // 对照组：普通剧本没有该钩子，同样恐惧量会因恐惧被击败。
+  // 用两名调查员，避免最后一人被击败时直接触发剧本结局（ScenarioEnded）——
+  // 本用例只验证击败判定本身，不验证结局流程。
+  const oath = fixture('oath', 2)
+  const oathInv = oath.investigators[0]
+  applyHorror(oath, oathInv, dimInv.maxSanity + 1, [])
+  assert.equal(oathInv.defeated, true)
+  assert.equal(oathInv.defeatCause, 'horror')
+
+  // 卡城幽影只豁免恐惧：伤害达到生命上限仍然会被击败。
+  const damage = fixture('dim', 2)
+  const damageInv = damage.investigators[0]
+  applyDamage(damage, damageInv, damageInv.maxHealth, [])
+  assert.equal(damageInv.defeated, true)
+  assert.equal(damageInv.defeatCause, 'damage')
 })
 
 test('C5 Dazed stacks per copy only on the first matching action and survives save/replay', () => {

@@ -311,8 +311,9 @@ const finish = (state, key) => { state.finishedWith = key }
 // ---------------------------------------------------------------------------
 // 1. manifest / 身份 / 结构
 // ---------------------------------------------------------------------------
-test('06333 章节清单：development、原卡、地点/幕/议程/结局数量', () => {
-  assert.equal(chapter.manifest.status, 'development')
+test('06333 章节清单：playable、原卡、地点/幕/议程/结局数量', () => {
+  // P10：真实战役/章节已注册为 playable。
+  assert.equal(chapter.manifest.status, 'playable')
   assert.equal(chapter.manifest.campaignId, 'theDreamEaters')
   assert.equal(chapter.manifest.contentVersion, '1.0.0')
   assert.equal(chapter.manifest.referenceCode, '06333', '剧本参考卡以 referenceCode 记录落点')
@@ -326,6 +327,11 @@ test('06333 章节清单：development、原卡、地点/幕/议程/结局数量
   assert.deepEqual([...chapter.manifest.requiredEncounterGroupIds].sort(),
     ['agentsOfAtlachNacha', 'ancientEvils', 'chillingCold', 'spiders', 'weaverOfTheCosmos'])
   assert.deepEqual(chapter.manifest.requiredPackIds, ['core', 'tdeCampaign']) // 印刷包由 tdeCampaign cardRanges 覆盖
+  // P8-T：剧情正文切到 story-text 中文（自译）；幕间 4 段从生成物投影。
+  assert.equal(chapter.scenario.textLanguage, 'zh-CN')
+  assert.equal(chapter.scenario.textStatus, 'translated (self-translated)')
+  assert.deepEqual(Object.keys(chapter.scenario.interludeTexts),
+    ['theSpiderQueen1', 'theSpiderQueen2', 'theSpiderQueen3', 'theSpiderQueen4'])
 })
 
 test('身份登记：地点/幕/议程/敌人/诡计都有原卡身份且 mapped', () => {

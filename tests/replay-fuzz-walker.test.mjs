@@ -17,6 +17,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createGameState, applyMove, unknownCardCodes } from '../src/engine/engine.js'
+import { contentRegistry } from '../content/registered.js'
 import { captureReplayLog, replayLog, stateHash, stableStringify } from '../src/engine/replay.js'
 import { createRandomPolicy, nextMove } from '../tools/replay-games.mjs'
 
@@ -47,7 +48,11 @@ test(`${TARGET_STEPS} 步随机走子器：不变量、JSON 幂等与关键步�
       if (!Number.isInteger(inv.resources) || inv.resources < 0) record(`${where}：座位 ${inv.seat} 资源为负（${inv.resources}）`)
       if (!inv.defeated && !inv.resigned) {
         if (inv.damage > inv.maxHealth) record(`${where}：座位 ${inv.seat} 未败北但伤害 ${inv.damage} > 上限 ${inv.maxHealth}`)
-        if (inv.horror > inv.maxSanity) record(`${where}：座位 ${inv.seat} 未败北但恐惧 ${inv.horror} > 上限 ${inv.maxSanity}`)
+        // 卡城幽影（Dim Carcosa）的特殊规则：调查员不会因恐惧被击败，恐惧可以超过理智上限。
+        // 不变量必须问剧本钩子，否则会把合法的「剩余理智为负」误报成损坏。
+        const horrorCanDefeat = !state.scenario
+          || contentRegistry.getBehavior(state.scenario.id)?.investigatorCanBeDefeated?.(state, inv, 'horror') !== false
+        if (horrorCanDefeat && inv.horror > inv.maxSanity) record(`${where}：座位 ${inv.seat} 未败北但恐惧 ${inv.horror} > 上限 ${inv.maxSanity}`)
       }
       // 已败北/撤退的调查员不再参与地点移动；地点被移除后留在原 id 不是规则违规。
       if (!inv.defeated && !inv.resigned && inv.location

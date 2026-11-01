@@ -12,7 +12,7 @@ export { scenario, identities, layout, behavior, implementedEncounterCodes }
 
 export const manifest = scenarioManifest(scenario, identities, {
   campaignId: 'theDreamEaters',
-  status: 'development',
+  status: 'playable',
   layout,
   requiredPackIds: ['core', 'tdeCampaign'], // 印刷包由 tdeCampaign 的 cardRanges 06039–06354 覆盖
   requiredEncounterGroupIds: [

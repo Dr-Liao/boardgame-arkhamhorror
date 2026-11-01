@@ -12,7 +12,7 @@
 import { META } from '../cards/cards-data.js'
 import {
   LEGACY_AGENDA_DOOM_PER_INVESTIGATOR, LEGACY_STRAITJACKET_CODE, LEGACY_FIGHT_OR_FLIGHT_CODE,
-  hasExplicitReactionPrompt,
+  entryNeedsReactionPrompt,
 } from '../cards/card-rules.js'
 import { STATE_SCHEMA_VERSION, RULES_VERSION, stateCompatibilityError } from './rules-state.js'
 import { createGameState, refreshStateResources, unknownCardCodes, legalMoves, validateMove, applyMove, decisionSeat } from './engine.js'
@@ -204,15 +204,26 @@ function needsAutoReactionFlags(state) {
     && !Object.hasOwn(def, 'autoByDefault'))
 }
 
-// 卡面「快速反应」开关也来自条目声明。补上 explicitReactionPrompt（如 02305 黄金怀表）后，
-// 旧存档内嵌的卡面定义同样是旧值、资源版本却没变；检测到「条目声明了开关但内嵌定义仍为 false」
-// 就强制刷新一次，否则读档后窗口继续询问却仍然没有闪电开关。
-function needsExplicitReactionPromptFlags(state) {
+// 卡面「快速反应」开关也来自条目声明。口径在 card-rules.js#entryNeedsReactionPrompt：
+// explicitReactionPrompt（如 02305 黄金怀表），以及所有快速事件（played + fast，含 01050 逃避隐藏
+// 这类没有触发时机、只在收尾玩家窗口以「⚡ 快速打出」出现的卡）。条目补上口径后，旧存档内嵌的卡面
+// 定义同样是旧值、资源版本却没变；检测到「条目声明了开关但内嵌定义仍为 false」就强制刷新一次，
+// 否则读档后手牌上没有闪电开关，玩家关不掉本局提示。
+function needsReactionPromptFlags(state) {
   const cards = state.cards
   if (!cards || typeof cards !== 'object') return false
   return Object.values(cards).some(def => def && typeof def === 'object'
     && def.hasReactionPrompt !== true
-    && hasExplicitReactionPrompt(def.code || def.originalCode))
+    && entryNeedsReactionPrompt(def.code || def.originalCode))
+}
+
+// 待决选择存在、但派生缓存 `legalMoves` 整个缺失：客户端按缓存渲染选项（observation.js#viewState
+// 对决策座位直接复制 `state.legalMoves`），缓存缺失会让窗口只剩提示、没有按钮，整局卡死。
+// 已知来源：P10 之前的并行开局在 launchParallelLanes 里直接跑 resolveTransaction（事务重建会丢掉
+// 派生缓存），若第一处待决选择正好问本线真人（没有 AI 先提交动作刷新缓存），B 线从开局第一秒就卡住。
+// 建局/正常行动路径都会补算这个缓存；这里只在旧存档缺字段时重算一次（migrateRuntime 的 playable 分支）。
+function needsCachedLegalMoves(runtime) {
+  return !!runtime?.pendingChoice && !Array.isArray(runtime.legalMoves)
 }
 
 // 以同一战役新开局的状态为模板，只补齐缺失且模板值为空的字段（[]、{}、null、0、false）。
@@ -272,7 +283,8 @@ function parallelLaneEntries(state) {
 }
 
 function runtimeNeedsWork(runtime, force) {
-  return !!force || needsAutoReactionFlags(runtime) || needsExplicitReactionPromptFlags(runtime)
+  return !!force || needsAutoReactionFlags(runtime) || needsReactionPromptFlags(runtime)
+    || needsCachedLegalMoves(runtime)
     || !!stateCompatibilityError(runtime, META.resourceVersion)
 }
 
@@ -283,7 +295,7 @@ function migrateRuntime(runtime, { force, migrations, changes, label, playable }
   if (!runtime.campaign?.id) throw new Error(`${label}缺少战役信息，无法修复`)
   const local = []
   migrateVersions(runtime, migrations, local)
-  upgradeResources(runtime, local, force || needsAutoReactionFlags(runtime) || needsExplicitReactionPromptFlags(runtime))
+  upgradeResources(runtime, local, force || needsAutoReactionFlags(runtime) || needsReactionPromptFlags(runtime))
   fillMissingFields(runtime, local)
   if (playable) {
     const moves = legalMoves(runtime)

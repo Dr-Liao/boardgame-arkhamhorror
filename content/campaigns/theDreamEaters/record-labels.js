@@ -3,7 +3,7 @@
 // 事实源：参考实现 `Campaigns/TheDreamEaters/Key.hs` 的 55 个构造子，与锁定英文包
 // `参考资源/.../locales/en/theDreamEaters/base.json` 的 `key` 段逐键对齐（55 条全）。
 // 中文名直接取 `参考资源/.../locales/zh/theDreamEaters/base.json` 的 `key` 段（55 条全已译，
-// 缺项时向内容层返回英文 id；本文件不为缺项自造剧情译名——P8-T 统一走译校流程）。
+// 缺项时向内容层返回英文 id；本文件不为缺项自造剧情译名——P8-T 自译统一走 story-terms/story-source）。
 // locale 键路径固定为 `theDreamEaters.key.<id>`（`en/campaignLog.json` 与 `zh/campaignLog.json`
 // 都不含 TDE 键，记录标签只能走这个命名空间）。
 //

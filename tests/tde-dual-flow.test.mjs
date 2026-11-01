@@ -297,7 +297,7 @@ test('并行准备：观察者只看得到自己那条线快照里的牌组', ()
   assert.equal('deck' in guest.parts.A.investigators.find(record => record.seat === 0), false)
 })
 
-test('交互清单定稿：10 条覆盖 P2 的两条 interaction 机制，状态全部 pending', () => {
+test('交互清单定稿：10 条覆盖 P2 的两条 interaction 机制，P9 全部 verified 且有浏览器证据', () => {
   assert.equal(TDE_INTERACTIONS.length, 10)
   assert.equal(new Set(TDE_INTERACTION_IDS).size, 10)
   assert.deepEqual([...TDE_INTERACTION_IDS], [
@@ -307,8 +307,19 @@ test('交互清单定稿：10 条覆盖 P2 的两条 interaction 机制，状态
   const validation = validateInteractionInventory()
   assert.equal(validation.ok, true, validation.problems.join(' | '))
   for (const entry of TDE_INTERACTIONS) {
-    assert.equal(entry.status, 'pending', 'P5 批次 1 不宣称交互已验收')
-    assert.ok(entry.blockers.length > 0, `${entry.id} 必须写清未完成原因`)
+    assert.equal(entry.status, 'verified', `${entry.id} 在 P9 已验收`)
+    assert.equal(entry.blockers.length, 0, `${entry.id} 已 verified，blockers 必须清空`)
+    // verified 必须能复算：证据账本 + spec + 桌面/移动用例 + 桌面/移动截图。
+    assert.ok(entry.evidence?.ledger && entry.evidence?.spec, `${entry.id} 缺少证据账本/spec`)
+    assert.ok(entry.evidence.tests.length >= 2 && entry.evidence.screenshots.length >= 2, `${entry.id} 证据不足`)
+    for (const shot of entry.evidence.screenshots) assert.match(shot, /^artifacts\/tde-migration\/.+\.png$/)
+  }
+  // 交互 1–2 是 hub 级证据（P5 演示战役）；3–10 是真实章节的 P9 证据。
+  assert.equal(tdeInteraction('campaignOption').evidence.ledger, 'audit/tde-ui-browser.json')
+  for (const id of ['swarmPanel', 'infestationBag', 'alarmLevel', 'hiddenHand', 'veiledFlip',
+    'markerProgress', 'verticalStack', 'dreamGateEpilogue']) {
+    assert.equal(tdeInteraction(id).evidence.ledger, 'audit/tde-browser-acceptance.json', `${id} 必须用 P9 浏览器账本`)
+    assert.equal(tdeInteraction(id).milestone, 'P9')
   }
   assert.equal(tdeInteraction('campaignOption').hook, 'hub')
   assert.equal(tdeInteraction('swarmPanel').mechanismIds[0], 'swarming')

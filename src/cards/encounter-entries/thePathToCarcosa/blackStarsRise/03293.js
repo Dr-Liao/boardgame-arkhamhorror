@@ -11,9 +11,11 @@ export default {
     choeurGothique: { deck: 'c', heal: 'horror' },
     actions({ state, moves }) {
       const used = Boolean(state.scenarioFlags.choeurGothiqueUsed)
+      const removed = Boolean(state.scenarioFlags?.agendaDecks?.c?.removed)
       moves.push({ action: 'scenarioAction', rule: 'choeurGothiqueHeal',
         label: '在“c”密谋放置1毁灭，治愈2点恐惧',
-        reason: used ? '本场游戏已使用（团队每场游戏仅限一次）' : null, used: used || undefined })
+        reason: removed ? '“c”密谋牌堆已移出游戏' : used ? '本场游戏已使用（团队每场游戏仅限一次）' : null,
+        used: used || undefined })
     },
   },
 }

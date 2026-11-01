@@ -31,18 +31,22 @@ export function renderScenarioInteractions(h, model, { moves = [], submit, canAc
   }
   if (model.hidden) {
     const mine = (model.hidden.seats || []).find(item => Array.isArray(item.codes))
-    const enemyMoves = (moves || []).filter(move => ['fight', 'evade'].includes(move.action)
+    // 手牌中敌人形态的攻击/躲避由引擎枚举为 fightHidden/evadeHidden（moves.js），
+    // 演示战役的旧 seed 用的是 fight/evade；两种都认，避免真实章节里入口画不出来。
+    const enemyMoves = (moves || []).filter(move => ['fight', 'evade', 'fightHidden', 'evadeHidden'].includes(move.action)
       && mine?.codes?.includes(move.cardId || move.enemyId))
-    blocks.push(section(h, 'hidden', t('tde.hidden.title'),
-      (model.hidden.seats || []).map(item => h('p', {},
-        Array.isArray(item.codes)
-          ? t('tde.hidden.own', { count: item.count, codes: item.codes.join(t('tde.list')) })
-          : t('tde.hidden.other', { seat: item.seat + 1, count: item.count }))),
-      enemyMoves.length
-        ? h('div', { className: 'ah-tde-actions' }, enemyMoves.map(move => h('button', {
+    // 只有存在可攻击/躲避入口时才渲染本区块：隐私牌本身已在手牌区可见，弃牌入口也在普通行动按钮里，
+    // 没有操作入口时（如只有纯隐私弱点）不再用「隐藏手牌」+兜底提示占牌桌空间。
+    if (enemyMoves.length) {
+      blocks.push(section(h, 'hidden', t('tde.hidden.title'),
+        (model.hidden.seats || []).map(item => h('p', {},
+          Array.isArray(item.codes)
+            ? t('tde.hidden.own', { count: item.count, codes: item.codes.join(t('tde.list')) })
+            : t('tde.hidden.other', { seat: item.seat + 1, count: item.count }))),
+        h('div', { className: 'ah-tde-actions' }, enemyMoves.map(move => h('button', {
           type: 'button', className: 'bg-btn secondary', disabled: !canAct, onclick: () => submit?.(move),
-        }, move.label)))
-        : h('p', {}, t('tde.hidden.noEnemy'))))
+        }, move.label)))))
+    }
   }
   if (model.veiled) {
     blocks.push(section(h, 'veiled', t('tde.veiled.title'),

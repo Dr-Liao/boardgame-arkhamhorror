@@ -461,7 +461,9 @@ const behavior = {
     zones.removed.push(removedAct)
     flags.storyResolved = {}
     flags.pnrFlipped = {}
-    if (typeof helper?.shuffle === 'function') helper.shuffle(state.encounterDeck)
+    // 遭遇牌库在 setupDecks 才建立（本钩子早于它），这里没有可洗的牌堆；
+    // 牌库顺序由 setup.js 的 shuffle(deck, rng) 统一决定。P9 修掉单参 helper.shuffle 调用。
+    void helper
     return [...INITIAL_LOCATIONS]
   },
 

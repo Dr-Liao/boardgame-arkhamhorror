@@ -350,6 +350,14 @@ const recordsWithRemoteImage = [...mainCodes, ...faceCodes]
 const registeredSource = existsSync(`${MOD_ROOT}content/registered.js`)
   ? readFileSync(`${MOD_ROOT}content/registered.js`, 'utf8') : ''
 const runtimeRegistered = /(?:theDreamEaters|tdeCampaign|tdeInvestigators|tdePlayer)/.test(registeredSource)
+// P10（M5 发布）：真实 TDE 注册后要求 8 章全部 launchable；P1–P9.5 的「不应注册」口径作废。
+const { contentRegistry: runtimeContentRegistry } = runtimeRegistered
+  ? await import('../content/registered.js')
+  : { contentRegistry: null }
+const runtimeLaunchable = runtimeContentRegistry
+  ? runtimeContentRegistry.listScenarios('theDreamEaters')
+    .filter(entry => ['playable', 'verified'].includes(entry.status)).length
+  : 0
 const pairs = Array.from({ length: PAIR_COUNT }, (_, index) => {
   const pair = index + 1
   const inPair = chapterLedger.filter(chapter => chapter.pair === pair)
@@ -472,9 +480,11 @@ const gate = {
     pass: Object.keys(UNOWNED_FACE_OVERRIDES).every(code => Boolean(facePackOf(code)))
       && faces.filter(face => face.source === 'override' && face.agreesWithEncounterCode === false).length === 0,
   },
-  catalogOnly: {
+  registration: {
     registered: runtimeRegistered,
-    pass: !runtimeRegistered,
+    launchable: runtimeLaunchable,
+    chapters: chapters.length,
+    pass: runtimeRegistered && runtimeLaunchable === chapters.length,
   },
 }
 

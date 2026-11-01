@@ -12,7 +12,7 @@ export const REFERENCE_CODE = scenario.originalCode
 export const manifest = scenarioManifest(scenario, identities, {
   campaignId: 'theDreamEaters',
   // P8 阶段：章节可在开发态单独加载/自检，但战役启动仍要求对应模式全部章节确认。
-  status: 'development',
+  status: 'playable',
   layout,
   requiredPackIds: ['core', 'tdeCampaign'], // 印刷包由 tdeCampaign 的 cardRanges 06039–06354 覆盖
   requiredEncounterGroupIds: [

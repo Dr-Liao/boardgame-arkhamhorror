@@ -32,9 +32,11 @@ export const PLAYABLE_INVESTIGATOR_CODES = Object.freeze([
   ...TCU_INVESTIGATOR_CODES,
 ])
 // 可被玩家选择/构筑的调查员：在上面这批之外加第五循环（食梦者）M1 的五位。
-// 2026-10-29（P6）：**AI 自动选人池仍是 `PLAYABLE_INVESTIGATOR_CODES`**。原因：AI 选人按
-// `shuffle(池, 独立随机流)[0]` 决定，池子变长会让既有种子对局的 AI 选人漂移（重放/开局参数
-// 用例会红）。食梦者战役要到 P10 才能启动，届时把 TDE 并入 AI 池并重采基线。
+// P10（2026-11-01）决策：**AI 自动选人池仍保持 `PLAYABLE_INVESTIGATOR_CODES`，不并入 TDE**。
+// 原因：AI 选人按 `shuffle(池, 独立随机流)[0]` 决定，池子变长会让既有 13 局 golden replay 与
+// 种子用例的 AI 选人漂移；P10 的发布门禁要求旧 baseline 只 compare/re-baseline 一次，不为
+// 新循环做无收益的 AI 漂移。真人仍可从 SELECTABLE 选食梦者调查员；AI 席位在食梦者战役里
+// 从已开放池选人（cardPoolScope=all 允许核心卡组），不影响战役可启动。
 export const SELECTABLE_INVESTIGATOR_CODES = Object.freeze([
   ...PLAYABLE_INVESTIGATOR_CODES,
   ...TDE_INVESTIGATOR_CODES,
@@ -135,9 +137,19 @@ export const ALL_BUILDABLE_CODES = Object.freeze([
   // P7：食梦者 72 张可入牌组玩家卡（11 张场外绑定卡/绑定弱点 + 4 张基础弱点不进构筑池）。
   ...TDE_PLAYER_BUILDABLE_CODES,
 ])
+// P10（M5 发布）：食梦者战役包 playable 后，283 条战役记录（249 主卡 + 34 关联面）从
+// catalog-only 升为 strict——与 P9 全卡账本「P10 升 playable 后全部 strict」的验收口径一致。
+// 只按包状态启用，不硬编码卡号清单；包回退 development 时自动恢复 catalog-only。
+import {
+  CAMPAIGN_CARD_CODES as TDE_CAMPAIGN_CARD_CODES,
+  CAMPAIGN_FACE_CODES as TDE_CAMPAIGN_FACE_CODES,
+  manifest as tdeCampaignPack,
+} from '../../content/packs/tdeCampaign/manifest.js'
+const TDE_CAMPAIGN_ACCEPTED = ['playable', 'verified'].includes(tdeCampaignPack.status)
+  ? [...TDE_CAMPAIGN_CARD_CODES, ...TDE_CAMPAIGN_FACE_CODES] : []
 const cards = new Set([...SIMPLIFIED_CARD_CODES, ...CORE_UPGRADE_CODES, ...expansionPlayerCodes,
   ...dunwichSignatures, ...carcosaSignatures, ...tfaSignatures, ...tfaPlayerCodes, ...tcuSignatures,
-  ...TCU_PLAYER_CARD_CODES, ...tdeSignatures, ...TDE_PLAYER_CARD_CODES,
+  ...TCU_PLAYER_CARD_CODES, ...tdeSignatures, ...TDE_PLAYER_CARD_CODES, ...TDE_CAMPAIGN_ACCEPTED,
   ...DUNWICH_BASIC_WEAKNESS_CODES, ...CARCOSA_BASIC_WEAKNESS_CODES])
 const strictAcceptedCodes = new Set([...investigators, ...cards])
 const strictScenarioCodes = new Set(Object.values(SCENARIO_CARD_IDENTITIES).flatMap(categories =>
@@ -176,11 +188,11 @@ export function getAvailability(code) {
       : TCU_PLAYER_CARD_CODES.includes(code)
         ? 'M2 万象无终玩家卡已通过逐卡主要印刷效果验收（83 张可入牌组；05314/05317 为绑定副本、05041/05042 基础弱点只作依赖），P10 起进入构筑界面与 TCU 战役起始牌组池。'
       : TDE_PLAYER_CARD_CODES.includes(code)
-        ? 'M2 食梦者玩家卡已通过逐卡主要印刷效果验收（72 张可入牌组；11 张 deckLimit=0 场外绑定卡/绑定弱点与 06035–06038 基础弱点只作依赖）。战役仍是 catalog-only，P10 起进入构筑界面与食梦者战役起始牌组池。'
+        ? 'M2 食梦者玩家卡已通过逐卡主要印刷效果验收（72 张可入牌组；11 张 deckLimit=0 场外绑定卡/绑定弱点与 06035–06038 基础弱点只作依赖）。P10 起食梦者战役已在大厅开放（playable + earlyAccess），玩家卡进入构筑界面与食梦者战役起始牌组池。'
       : TCU_INVESTIGATOR_CODES.includes(code) || tcuSignatures.includes(code)
         ? 'M1 万象无终六位调查员及其 13 张专属依赖已通过逐人行为与存档回放验收；P10 起玩家卡、九章剧本与大厅入口均已开放（战役 playable）。'
       : TDE_INVESTIGATOR_CODES.includes(code) || tdeSignatures.includes(code)
-        ? 'M1 食梦者五位调查员及其 11 张专属主卡 + 2 张弱点已通过逐人行为与存档回放验收（06015a/b 为绑定地点）。玩家卡与剧本仍未开放。'
+        ? 'M1 食梦者五位调查员及其 11 张专属主卡 + 2 张弱点已通过逐人行为与存档回放验收（06015a/b 为绑定地点）。P10 起玩家卡、八章剧本与大厅入口均已开放（战役 playable）。'
       : TFA_INVESTIGATOR_CODES.includes(code) || tfaSignatures.includes(code)
         ? 'M1 失落的时代五位调查员及其 11 张专属依赖已通过逐人行为与存档回放验收；玩家卡与剧本仍未开放。'
       : CARCOSA_INVESTIGATOR_CODES.includes(code) || carcosaSignatures.includes(code)

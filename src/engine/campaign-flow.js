@@ -48,7 +48,8 @@ function progressCampaign(state, events, launch = false, leaveRest = false) {
   const manifest = campaignManifestFor(state)
   const graph = campaignGraph(manifest)
   if (!campaign.chaosBag) {
-    const bags = manifest.chaosBags || CHAOS_BAGS
+    const part = campaign.currentPart ?? null
+    const bags = (part && manifest.partChaosBags?.[part]) || manifest.chaosBags || CHAOS_BAGS
     initializeChaosBag(state, bags[state.difficulty] || bags.standard)
   }
   if (campaign.pendingNode) {
@@ -57,10 +58,12 @@ function progressCampaign(state, events, launch = false, leaveRest = false) {
   } else if (leaveRest && ['interlude', 'checkpoint'].includes(graph.nodes[campaign.flow?.nodeId]?.type)) {
     enterCampaignNode(campaign, manifest, graph.nodes[campaign.flow.nodeId].next)
   }
+  // P9.5：`interludeFlow: 'continuous'` 的战役在关间准备结束后一次读完整个幕间子图。
   const node = walkCampaign(campaign, manifest, (id, node, options) => requestChoice(state, {
     kind: 'campaignBranch', source: id, seat: campaign.leadSeat, prompt: node.prompt || node.text || '选择战役路线',
     options: options.map(option => ({ id: option.id, label: option.label })),
-  }), effect => applyCampaignEffect(state, effect, text => info(state, events, text)))
+  }), effect => applyCampaignEffect(state, effect, text => info(state, events, text)),
+  { continuousInterlude: leaveRest && manifest.interludeFlow === 'continuous' })
   campaign.flowStage = node.type
   if (node.type === 'end') {
     campaign.flowOutcome = node.outcome

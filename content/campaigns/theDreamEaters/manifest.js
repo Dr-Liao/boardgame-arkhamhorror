@@ -80,7 +80,11 @@ export const manifest = {
   nameEn: 'The Dream Eaters',
   contentVersion: TDE_CONTENT_VERSION,
   minRulesVersion: TDE_MIN_RULES_VERSION,
-  status: 'development',
+  status: 'playable',
+  // P9.5（2026-11-01）：真实双线开闸。mod 边界（index.js 的 dualLineGateOpen）只在 manifest
+  // 显式 `dualLineGate: 'open'` 时允许并行启动；P9.5 的 2+2 / 1+1 / 2+1 矩阵、16 排列、
+  // 并发提交、存档回放与浏览器验收通过后打开。P10 注册后即可从大厅走真实并行。
+  dualLineGate: 'open',
   requiredPackIds: ['core', 'tdeCampaign', 'tdeInvestigators', 'tdePlayer'],
   scenarioIds: [...TDE_SCENARIO_IDS],
   unlock,
@@ -102,9 +106,12 @@ export const manifest = {
   resolutionIds: ['victory', 'defeat'],
   endings: TDE_ENDINGS,
   // 双线尾声：16 段矩阵 + 特殊子步骤数据（正文键 `theDreamEaters.flavorText.epilogue<n>`，
-  // 中文由 P8-T 生成器补齐；本层不写中文摘要）。
+  // 中文由 P8-T 生成物 story-text.js 提供；本层不写中文摘要）。
   epilogueMatrix: TDE_EPILOGUE_MATRIX,
   singleLineEpilogue: TDE_SINGLE_LINE_EPILOGUE,
+  // P9.5：幕间是「多节点子图」（I 黑猫/II 入梦者/III 伟大的存在，合计 41 节点）。
+  // 引擎在关间准备结束后一次读完整个子图（不再每节点开一次休息窗），入口仍停在第一个节点。
+  interludeFlow: 'continuous',
   // 四种模式的完整 flow（数据备好；引擎接线见文件头 ⚠️）。
   flows: TDE_FLOWS,
   // 默认 flow：双线（pick/parallel）。`modes` 未选定前 hub 不会启动战役。

@@ -277,8 +277,9 @@ function setup(state, seed = 1) {
 // ---------------------------------------------------------------------------
 // 1. manifest / 身份 / 结构
 // ---------------------------------------------------------------------------
-test('06286 章节清单：development、原卡、地点/幕/议程/结局数量与依赖', () => {
-  assert.equal(chapter.manifest.status, 'development')
+test('06286 章节清单：playable、原卡、地点/幕/议程/结局数量与依赖', () => {
+  // P10：真实战役/章节已注册为 playable。
+  assert.equal(chapter.manifest.status, 'playable')
   assert.equal(chapter.manifest.campaignId, 'theDreamEaters')
   assert.equal(chapter.manifest.id, 'whereTheGodsDwell')
   assert.equal(chapter.manifest.referenceCode, '06286')
@@ -293,6 +294,9 @@ test('06286 章节清单：development、原卡、地点/幕/议程/结局数量
   assert.deepEqual(chapter.manifest.requiredEncounterGroupIds,
     ['whereTheGodsDwell', 'agentsOfNyarlathotep', 'dreamersCurse', 'whispersOfHypnos', 'darkCult'])
   assert.equal(chapter.manifest.catalogReferenceOnly, undefined)
+  // P8-T：剧情正文切到 story-text 中文（自译）。
+  assert.equal(chapter.scenario.textLanguage, 'zh-CN')
+  assert.equal(chapter.scenario.textStatus, 'translated (self-translated)')
 })
 
 test('身份登记：11 地点 / 5 幕 / 3 议程 / 敌人 / 诡计都有原卡身份且 mapped', () => {

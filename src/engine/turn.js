@@ -106,8 +106,10 @@ function runMythos(state, repeated = false) {
   } else {
     // 2026-10-25 第四轮修复 05285：神话阶段的「在当前密谋放置 1 点毁灭」也走统一替换钩子
     // （behavior.doomPlacementReplacement 可把这次放置替换成别的效果；05285 改为放裂口）。
+    // 2026-10-31 黑星升起：把来源（神话阶段步骤 1）传给剧本——黑星升起要等本阶段的
+    // 「检查毁灭阈值」步骤统一比较两套密谋，而卡牌效果放置毁灭时才允许即时检查。
     const replacedByBehavior = scenarioBehavior(state).doomPlacementReplacement?.(
-      state, 1, scenarioRuntime(state, events)) === true
+      state, 1, scenarioRuntime(state, events), { source: 'mythos' }) === true
     if (replacedByBehavior) {
       info(state, events, `🌑 神话阶段（第 ${state.round} 回合）：「在当前密谋放置 1 点毁灭」被剧本效果替换。`,
         { kind: 'phase', phase: 'mythos', round: state.round, text: '密谋毁灭被替换', effect: 'doom', delta: 0 })

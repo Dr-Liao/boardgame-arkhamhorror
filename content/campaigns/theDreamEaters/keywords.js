@@ -108,7 +108,7 @@ export const TDE_KEYWORDS = Object.freeze([
       },
     ]),
     deferred: Object.freeze([
-      '翻面动作接进调查/移动流程与故事卡阅读器（P8）；A2 的 b 面故事卡文本属 P8-T',
+      '翻面动作接进调查/移动流程与故事卡阅读器（P8）；A2 的 b 面故事卡正文已由 P8-T 自译（story-text）',
     ]),
     note: 'P4 更正：掩藏地点以已揭示面入场，「无线索时 [fast] 翻面」才是关键词规则；P3 曾误写成「翻面前不可调查」，见 docs/tde-p4-report.md §4。',
   },

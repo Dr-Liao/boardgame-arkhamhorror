@@ -37,6 +37,9 @@ const AUDITS = [
   // P1（万象无终 M0）：范围账本 + 迁移账本，与三循环审计同一条门禁。
   { id: 'tcuScope', script: 'tools/scan-tcu-scope.mjs', args: ['--check'] },
   { id: 'tcuMigration', script: 'tools/audit-tcu.mjs', args: ['--check'] },
+  // P10（食梦者 M5）：范围账本 + 发布账本，与既有循环同一条门禁。
+  { id: 'tdeScope', script: 'tools/scan-tde-scope.mjs', args: ['--check'] },
+  { id: 'tdeMigration', script: 'tools/audit-tde.mjs', args: ['--check'] },
 ]
 
 const run = (command, args, { timeout = 600_000 } = {}) => {
@@ -91,8 +94,10 @@ const tests = {
 
 const report = {
   schemaVersion: 1,
-  milestone: 'P0',
-  purpose: '修基线：TFA/各循环审计命令全绿、文档链接无 404、golden replay 计数与冻结基线一致。',
+  // P10（2026-11-01）：M5 发布前最后一次重采。基线记录「当前检出」的审计/链接/回放/测试事实，
+  // 不把历史跨循环账本的既有失败洗白；详见 notes 与 docs/tde-p10-report.md §5。
+  milestone: 'P10',
+  purpose: 'P10 发布基线：全部 audit 命令与磁盘账本对账、文档链接无 404、golden replay 计数与冻结基线一致、test:fast 计数快照（含既有失败逐条记账）。',
   audits,
   docLinks,
   goldenReplay,
@@ -101,6 +106,7 @@ const report = {
     'audit-resources 用 --check-source：--check 比较的是「当前目录 vs 冻结的 N0」，N1 接管后按设计非零退出。',
     'TFA 账本由 tools/audit-tfa-scenarios.mjs 生成、aggregator 由 tools/audit-tfa.mjs 生成；改章节文件后按顺序 --write 再 --check。',
     '基线依赖本机 参考资源/（TFA/Carcosa/Dunwich 的来源哈希）；缺失时这些审计会失败，属预期。',
+    'P10 重采时 carcosa/dunwich/core/p6/tcu 若干账本仍为 P8 报告 §8 的既有漂移（非 TDE 产生，未在本轮改写）；tdeScope/tdeMigration 两项为 P10 新增。测试计数里的 6 条失败与这些既有账本一一对应，新增失败为 0。',
   ],
 }
 

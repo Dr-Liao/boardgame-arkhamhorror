@@ -6,10 +6,10 @@ import { commitProfile } from '../engine/lifecycle.js'
 import { playablePool, matchesDeckOptions } from '../deck/deckbuilding.js'
 import { deckRules } from '../deck/deck-rules.js'
 import { upgradeRecord } from '../campaign/campaign.js'
-import { legalMoves, actionPreview, combatOdds, getStat, actingSeats, actObjectiveContext, investigatorEntryError, locationAbilityStatus, locationInvestigateStatus, abilityUsage } from '../engine/engine.js'
+import { legalMoves, actionPreview, combatOdds, commitIcons, getStat, actingSeats, actObjectiveContext, investigatorEntryError, locationAbilityStatus, locationInvestigateStatus, abilityUsage } from '../engine/engine.js'
 import { locationEntryNotice } from '../engine/location-facts.js'
 import { investigatorAssigned, investigatorParticipation } from './ai-participation.js'
-import { CLASS_NAMES } from '../engine/presentation-constants.js'
+import { CLASS_NAMES, SKILL_NAMES } from '../engine/presentation-constants.js'
 import { storyDecisionContext } from './ai-story.js'
 import { campaignAgentHints } from '../cards/campaign-view.js'
 
@@ -23,6 +23,10 @@ const card = code => {
     icons: c.icons, slots: c.slots || c.slot, traits: c.traits, health: c.health, sanity: c.sanity,
     printedText: c.textZh || c.text, implemented: implementationSummary(code) }
 }
+
+// 技能检定投入窗口：卡牌类型 → 中文名，用来写清「投掉就进弃牌堆」的代价。
+const CARD_TYPE_NAMES = { asset: '资产', event: '事件', skill: '技能', treachery: '诡计' }
+const cardTypeName = type => CARD_TYPE_NAMES[type] || '卡牌'
 
 // 地点卡面原文。桌面上的地点是明牌，卡面文字属于公开信息；entry/ability/investigate 只覆盖
 // 本实现声明过的读点，卡面上还有「位于此地的调查员不能获得资源」「[action]：撤退」这类没进
@@ -193,6 +197,7 @@ export function aiDecisionContext(state, seat) {
     }
     data.remainingDeck = counts(inv.deck)
     data.discard = counts(inv.discard)
+    data.actionsLeft = inv.actionsLeft
     data.assets = inv.assets.map(a => ({ ...a }))
     // 上限记账：只给有「每回合/每场游戏…」能力的支援补一行，AI 才知道某个能力
     // 已经从 legalMoves 里消失了（而不是以为自己漏看了卡面）。
@@ -220,14 +225,43 @@ export function aiDecisionContext(state, seat) {
     const test = state.skillTest
     if (test && (test.seat === seat || test.helpRequested)) {
       data.test = { ...test, marginBeforeToken: Number.isFinite(test.value) ? test.value - test.difficulty : null }
-      data.commitOptions = state.pendingChoice?.kind === 'commit' && state.pendingChoice.seat === seat
+      const commitWindow = state.pendingChoice?.kind === 'commit' && state.pendingChoice.seat === seat
+      // 图标差距的口径：value 或 difficulty 有一个不是数字就不给数字，避免模型把 null 当 0 用。
+      const measurable = Number.isFinite(test.value) && Number.isFinite(test.difficulty)
+      const gapBefore = measurable ? Math.max(0, test.difficulty - test.value) : null
+      data.commitOptions = commitWindow
         ? moves.filter(m => /^\d+$/.test(m.optionId)).map(m => {
           const code = inv.hand[Number(m.optionId)], c = ALL_CARDS[code]
-          const icons = (c?.icons?.[test.skill] || 0) + (c?.icons?.wild || 0)
-          return { optionId: m.optionId, code, icons, valueAfter: Number.isFinite(test.value) ? test.value + icons : null,
+          // 图标数走引擎同一读点：多技能合成检定（阵法等）按每个技能求和、万能图标只算一次，
+          // 还会叠加条件图标与授予的技能图标。手写 c.icons[skill] 只会取到 wild，高估差距。
+          const icons = commitIcons(state, inv, code, test.skill)
+          const cardType = c?.type
+          // 纯技能卡投掉不心疼；资产/事件/其它牌投掉就进弃牌堆、无法再打出，必须把代价写进资料。
+          const warning = cardType === 'skill' ? undefined : `${cardTypeName(cardType)}投入后进入弃牌堆，无法再打出`
+          return { optionId: m.optionId, code, name: c?.nameZh || c?.name || code, cardType,
+            icons, valueAfter: Number.isFinite(test.value) ? test.value + icons : null,
+            gapBefore, gapAfter: measurable ? Math.max(0, test.difficulty - (test.value + icons)) : null,
+            prefer: cardType === 'skill', ...(warning ? { warning } : {}),
             // Phase 5：投入档案的唯一读点（描述子优先、旧 DSL 回落）。
             effect: commitProfile(code) }
         }) : []
+      if (commitWindow) {
+        // 多技能合成检定：skill 可能是数组；资源技能检定是空数组。和 describe.js 用同一套人话口径。
+        const skillList = Array.isArray(test.skill) ? test.skill : (test.skill ? [test.skill] : [])
+        const skillName = skillList.length ? skillList.map(name => SKILL_NAMES[name] || name).join('、') : '资源'
+        const suggestion = gapBefore == null
+          ? '优先投入纯技能卡；不要投入还需要的资产或关键事件；投入的牌会进入弃牌堆。'
+          : gapBefore <= 0
+            ? '当前总值已达标：不要再投入纯图标牌；只有投入效果能带来额外收益（额外线索/抽牌/加伤害等）的牌才值得投。'
+            : `还差 ${gapBefore} 个图标才能达标：优先投入纯技能卡（prefer:true）；不要投入还需要的资产（武器/支援/盟友）或关键事件；差距大于手牌可提供的图标时保留手牌。`
+        data.commitAdvice = { skill: test.skill, skillName,
+          value: test.value, difficulty: test.difficulty, gap: gapBefore,
+          assisting: test.seat !== seat,
+          tokenNote: '当前总值未计混乱标记修正',
+          discardNote: '投入的卡牌在检定结算后进入弃牌堆，不会回到手牌',
+          suggestion,
+          preferOptionIds: data.commitOptions.filter(o => o.prefer).map(o => o.optionId) }
+      }
     }
     // AI 专用：攻击/躲避行动附带单标记成功率预估（src/engine/combat-odds.js）。
     // 这个字段只出现在决策资料里——viewState / legalMoves / 牌桌都不会带它，
@@ -242,4 +276,5 @@ export function aiDecisionContext(state, seat) {
   data.cards = [...known].sort().map(card)
   return '\n【决策资料】\n' + JSON.stringify(data) + '\nprintedText 是原卡参考；implemented 和当前合法选项才是本实现的效果依据。地点条目里 entry / ability / investigate 是本实现已声明的效果，available 为 false 时 reason 说明当前为什么不能触发；reason 为 null 表示没有额外门槛。地点条目的 text 是该地点卡面原文（已经剔除与 entry / rules 重复的句子），卡面写明的进入限制、撤退、谈判与强制规则都在里面，判断「值不值得来」时先看它。available 只反映地点本身的门槛（揭示、位置、次数、费用、目标），不代表现在轮到你或有行动点；能否提交仍以合法行动列表为准。不要猜测未提供的隐藏信息。'
     + 'actionCosts 里行动若带 odds，是本次攻击/躲避的单标记成功率预估（不是结算结果）：value 是你这次检定的总值，target 是敌人的战斗/躲避值，need 是需要混乱标记至少提供的修正，chance 是 0~1 的成功率，tokens 是当前袋中标记数；攻击还带 damage（命中伤害）与 hits（还需命中几次才能击败它），onFail 是失败时对方的反击/警戒，note 说明哪些成分没算进预估（例如旧印效果未知）。有 odds 时优先按 chance 与 hits 取舍，不要自己从混乱袋心算；没有 odds 的行动仍按卡面与规则判断。'
+    + 'commitAdvice/commitOptions 是本次技能检定投入建议：value 是当前总值（未计混乱标记修正）、difficulty 是难度、gap 是还差几个图标；prefer:true 的是纯技能卡，优先投；cardType 为 asset/event 的牌投入后进入弃牌堆，投出后无法再打出，除非必要不要投。'
 }

@@ -19,10 +19,10 @@ export default {
       if (state.scenarioFlags?.foundTowerKey || (location?.clues || 0) > 0) return null
       return 'agility'
     },
-    investigateResult(state, _inv, location, result) {
+    investigateResult(state, _inv, location, result, api) {
       if (!result?.success || state.scenarioFlags?.foundTowerKey || (location?.clues || 0) > 0) return
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.foundTowerKey = true
+      // 卡条目只读状态，写入统一走 ctx.api（R1 合规）。
+      api.setScenarioFlag('foundTowerKey', true)
       return false
     },
   },

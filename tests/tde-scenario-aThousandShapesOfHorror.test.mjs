@@ -196,8 +196,14 @@ const act = index => createState().acts[index]
 test('万千骇形：manifest 身份 / 遭遇组 / 参考卡', () => {
   assert.equal(chapter.manifest.id, 'aThousandShapesOfHorror')
   assert.equal(chapter.manifest.campaignId, 'theDreamEaters')
-  assert.equal(chapter.manifest.status, 'development')
+  // P10：真实战役/章节已注册为 playable。
+  assert.equal(chapter.manifest.status, 'playable')
   assert.equal(chapter.manifest.referenceCode, '06168')
+  // P8-T：正文来自 story-text.js 的中文自译（不再是 text-en.js 英文原文）。
+  assert.equal(chapter.scenario.textLanguage, 'zh-CN')
+  assert.equal(chapter.scenario.textStatus, 'translated (self-translated)')
+  assert.match(chapter.scenario.intro, /开场 1：/)
+  assert.doesNotMatch(chapter.scenario.intro, /Intro 1:/)
   assert.deepEqual(chapter.manifest.requiredPackIds, ['core', 'tdeCampaign']) // 印刷包由 tdeCampaign cardRanges 覆盖
   for (const group of ['aThousandShapesOfHorror', 'creaturesOfTheUnderworld', 'mergingRealities', 'rats']) {
     assert.ok(chapter.manifest.requiredEncounterGroupIds.includes(group), `缺少遭遇组 ${group}`)

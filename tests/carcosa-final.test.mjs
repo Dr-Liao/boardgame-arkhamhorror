@@ -117,14 +117,21 @@ test('placing doom that advances either agenda shows a flip splash and the new c
   }
   draft.doom = 4
   const cues = []
-  const api = { present: (_text, cue) => cues.push(cue), shuffleEncounterDeck() {} }
+  const api = { present: (_text, cue) => cues.push(cue), shuffleEncounterDeck() {}, info() {}, spawn() {} }
+  // 放置毁灭本身不推进：只有神话阶段的「检查毁灭阈值」步骤才翻面。
   placeAgendaDoom(draft, 'c', 1, api)
+  assert.deepEqual(cues, [])
+  assert.equal(draft.scenarioFlags.agendaDecks.c.doom, 5)
+  assert.equal(draft.scenarioFlags.agendaDecks.c.index, 0)
+  blackStars.behavior.mythosDoomChecked(draft, api)
   assert.deepEqual(cues.map(cue => [cue.title, cue.code, cue.face || 'front', cue.flip || false]), [
     ['密谋推进', '03278', 'back', true],
     ['新的密谋', '03279a', 'front', false],
   ])
   cues.length = 0
   placeAgendaDoom(draft, 'a', 1, api)
+  assert.deepEqual(cues, [])
+  blackStars.behavior.mythosDoomChecked(draft, api)
   assert.deepEqual(cues.map(cue => [cue.title, cue.code]), [
     ['密谋推进', '03275'],
     ['新的密谋', '03276b'],
@@ -224,7 +231,9 @@ test('Black Stars Rise resolves all seven printed location actions and their acc
   setLocation('knightsHall', '03295')
   assert.equal(blackStars.behavior.investigateWithoutClues(draft, inv, draft.locations[0]), true)
   assert.equal(blackStars.behavior.investigateSkill(draft, inv, draft.locations[0]), 'agility')
-  assert.equal(blackStars.behavior.investigateResult(draft, inv, draft.locations[0], { success: true }), false)
+  assert.equal(blackStars.behavior.investigateResult(draft, inv, draft.locations[0], { success: true }, {
+    setScenarioFlag: (key, value = true) => { draft.scenarioFlags[key] = value },
+  }), false)
   assert.equal(draft.scenarioFlags.foundTowerKey, true)
   draft.locations[0].clues = 1
   draft.scenarioFlags.foundTowerKey = false
@@ -443,7 +452,9 @@ test('Black Stars Rise keeps the act set aside and shows both agenda dooms', () 
   const previousDocument = globalThis.document
   globalThis.document = { createElementNS: () => svg() }
   try {
-    const regions = createTableRegions((tag, props, ...children) => ({ tag, props: props || {}, children }), { openDetail() {}, openChaosBag() {} })
+    const regions = createTableRegions((tag, props, ...children) => ({
+      tag, props: props || {}, children, getAttribute: name => (props || {})[name],
+    }), { openDetail() {}, openChaosBag() {} })
     const tree = regions.script({
       status: 'playing', difficulty: 'standard', investigators: [], chaosBag: [], clues: 0,
       scenario: { id: 'blackStarsRise', name: '卡尔克萨之路 · 黑星升起' },
@@ -457,9 +468,10 @@ test('Black Stars Rise keeps the act set aside and shows both agenda dooms', () 
       ;(node.children || []).forEach(walk)
     }
     walk(tree)
-    const text = flat.flatMap(node => (node.children || []).filter(child => typeof child === 'string')).join('\n')
-    assert.match(text, /“a” 毁灭 6\/5/)
-    assert.match(text, /“c” 毁灭 1\/5/)
+    // 双密谋页的毁灭数渲染在进度格与可访问名称里（超过阈值显示 5+1）。
+    const labels = flat.map(node => node.props?.['aria-label']).filter(Boolean).join('\n')
+    assert.match(labels, /“a”密谋毁灭 5\+1/)
+    assert.match(labels, /“c”密谋毁灭 1\/5/)
     const art = flat.map(node => node.props?.['data-art-code']).filter(Boolean)
     assert.ok(art.includes('03275'))
     assert.ok(art.includes('03278'))
@@ -497,7 +509,9 @@ test('Black Stars Rise counts doom on cards in play toward both agendas', () => 
     shuffleEncounterDeck() {}, info() {}, spawn() {}, finish() {},
     choose() { throw new Error('只有一套达到阈值，不应询问') },
   }
-  blackStars.behavior.doomPlaced(draft, { target: draft.investigators[0].assets[0], amount: 1, agenda: false }, api)
+  // 场上毁灭进入场地本身不推进；等到神话阶段的「检查毁灭阈值」步骤才比较两套。
+  assert.equal(draft.scenarioFlags.agendaDecks.a.index, 0)
+  blackStars.behavior.mythosDoomChecked(draft, api)
   assert.equal(draft.scenarioFlags.agendaDecks.a.index, 1)
   assert.equal(draft.scenarioFlags.agendaDecks.a.doom, 0)
   assert.equal(draft.doom, 0)
@@ -530,7 +544,7 @@ test('Black Stars Rise lets the lead choose which agenda advances when field doo
       return 'c'
     },
   }
-  blackStars.behavior.doomPlaced(draft, { target: draft.enemies[0], amount: 5, agenda: false }, api)
+  blackStars.behavior.mythosDoomChecked(draft, api)
   assert.equal(asked, true)
   assert.equal(draft.scenarioFlags.agendaDecks.c.index, 1)
   assert.equal(draft.scenarioFlags.agendaDecks.c.doom, 0)
@@ -538,6 +552,303 @@ test('Black Stars Rise lets the lead choose which agenda advances when field doo
   assert.equal(draft.scenarioFlags.agendaDecks.a.doom, 0)
   assert.equal(draft.enemies[0].doom, 0)
   assert.equal(draft.campaign.records.conviction, 1)
+})
+
+test('Black Stars Rise advances only at the mythos doom threshold check, not when doom is placed', () => {
+  const draft = state()
+  draft.scenario = clone(blackStars.scenario)
+  draft.scenarioFlags = {
+    route: 'below',
+    agendaDecks: {
+      a: { id: 'a', index: 0, doom: 4, cards: ['03275', '03276b', '03277'] },
+      c: { id: 'c', index: 0, doom: 0, cards: ['03278', '03279a', '03280'] },
+    },
+  }
+  draft.doom = 4
+  const api = {
+    shuffleEncounterDeck() {}, info() {}, spawn() {}, finish() {}, present() {}, damage() {}, horror() {},
+  }
+  placeAgendaDoom(draft, 'a', 1, api)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.doom, 5)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.index, 0)
+  blackStars.behavior.mythosDoomChecked(draft, api)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.index, 1)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.doom, 0)
+})
+
+test('Black Stars Rise advances both agendas in the chosen order when both remain at threshold', () => {
+  const draft = state()
+  draft.scenario = clone(blackStars.scenario)
+  draft.scenarioFlags = {
+    route: 'below',
+    agendaDecks: {
+      a: { id: 'a', index: 0, doom: 5, cards: ['03275', '03276b', '03277'] },
+      c: { id: 'c', index: 0, doom: 5, cards: ['03278', '03279a', '03280'] },
+    },
+  }
+  draft.doom = 5
+  let asked = false
+  const api = {
+    shuffleEncounterDeck() {}, info() {}, spawn() {}, finish() {}, present() {},
+    choose(spec) {
+      asked = true
+      assert.deepEqual(spec.options.map(option => option.id), ['a', 'c'])
+      return 'a'
+    },
+  }
+  blackStars.behavior.mythosDoomChecked(draft, api)
+  assert.equal(asked, true)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.index, 1)
+  assert.equal(draft.scenarioFlags.agendaDecks.c.index, 1)
+  // a 先推进时「c」仍是 1c 且有 5 点毁灭 → 记疑惑；c 后推进时「a」已不是 1a → 不再记。
+  assert.equal(draft.campaign.records.doubt, 1)
+  assert.equal(draft.campaign.records.conviction, 0)
+})
+
+test('Black Stars Rise [fast] hasten ability can cause its own agenda to advance immediately', () => {
+  const draft = state()
+  draft.scenario = clone(blackStars.scenario)
+  draft.locationVariants = {}
+  draft.scenarioZones = { setAside: [] }
+  draft.round = 1
+  draft.numInvestigators = 2
+  blackStars.behavior.setupLocations(draft, [], { random: () => 0 })
+  const inv = draft.investigators[0]
+  inv.location = 'porteDeLAvancee'
+  draft.locations = [{ id: 'porteDeLAvancee', originalCode: '03283', revealed: true, clues: 0 }]
+  draft.scenarioFlags.agendaDecks.a.doom = 4
+  draft.doom = 4
+  blackStars.behavior.performAction(draft, inv, { action: 'scenarioAction', rule: 'hastenAgenda', deckId: 'a' }, {
+    payClues() {}, drawCards() {}, present() {}, info() {}, shuffleEncounterDeck() {},
+  })
+  assert.equal(draft.scenarioFlags.agendaDecks.a.doom, 0)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.index, 1)
+})
+
+test('Black Stars Rise defers the mythos-step doom placement check to the check step', () => {
+  const draft = state()
+  draft.status = 'playing'
+  draft.scenarioFlags = {
+    route: 'below',
+    agendaDecks: {
+      a: { id: 'a', index: 0, doom: 4, cards: ['03275', '03276b', '03277'] },
+      c: { id: 'c', index: 0, doom: 0, cards: ['03278', '03279a', '03280'] },
+    },
+  }
+  draft.doom = 4
+  const api = {
+    shuffleEncounterDeck() {}, info() {}, spawn() {}, finish() {}, present() {},
+    choose: () => 'a',
+  }
+  // 神话阶段步骤 1 的放置（context.source === 'mythos'）不即时推进。
+  assert.equal(blackStars.behavior.doomPlacementReplacement(draft, 1, api, { source: 'mythos' }), true)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.doom, 5)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.index, 0)
+  blackStars.behavior.mythosDoomChecked(draft, api)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.index, 1)
+})
+
+test('Black Stars Rise card effects that can cause an advance check immediately', () => {
+  const draft = state()
+  draft.status = 'playing'
+  draft.scenarioFlags = {
+    route: 'below',
+    agendaDecks: {
+      a: { id: 'a', index: 0, doom: 4, cards: ['03275', '03276b', '03277'] },
+      c: { id: 'c', index: 0, doom: 0, cards: ['03278', '03279a', '03280'] },
+    },
+  }
+  draft.doom = 4
+  const api = {
+    shuffleEncounterDeck() {}, info() {}, spawn() {}, finish() {}, present() {},
+    choose: () => 'a',
+  }
+  // 01166/03090 这类卡面明示「本效果能导致密谋推进」的 api.addDoom 放置：放完立即检查。
+  assert.equal(blackStars.behavior.doomPlacementReplacement(draft, 1, api, { source: 'effect' }), true)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.index, 1)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.doom, 0)
+})
+
+test('Black Stars Rise does not advance while 05018 locks the doom threshold this phase', () => {
+  const draft = state()
+  draft.scenario = clone(blackStars.scenario)
+  draft.status = 'playing'
+  draft.round = 3
+  draft.phase = 'mythos'
+  draft.agendaDoomLock = { round: 3, phase: 'mythos' }
+  draft.scenarioFlags = {
+    route: 'below',
+    agendaDecks: {
+      a: { id: 'a', index: 0, doom: 5, cards: ['03275', '03276b', '03277'] },
+      c: { id: 'c', index: 0, doom: 0, cards: ['03278', '03279a', '03280'] },
+    },
+  }
+  draft.doom = 5
+  const api = { shuffleEncounterDeck() {}, info() {}, spawn() {}, finish() {}, present() {}, choose: () => 'a' }
+  blackStars.behavior.mythosDoomChecked(draft, api)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.index, 0)
+  delete draft.agendaDoomLock
+  blackStars.behavior.mythosDoomChecked(draft, api)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.index, 1)
+})
+
+// 打开正确道路后的状态：路线 below 时 a 牌堆的 2b 把 a 移出游戏，剩 c 一套密谋在场。
+function openedPathState() {
+  const draft = state()
+  draft.scenario = clone(blackStars.scenario)
+  draft.locationVariants = {}
+  draft.scenarioZones = { setAside: [] }
+  draft.numInvestigators = 1
+  draft.round = 2
+  blackStars.behavior.setupLocations(draft, [], { random: () => 0 })
+  const api = { present() {}, info() {}, spawn() {}, shuffleEncounterDeck() {} }
+  advanceAgendaDeck(draft, 'a', api)
+  advanceAgendaDeck(draft, 'a', api)
+  assert.equal(draft.scenarioFlags.openPath, true)
+  return draft
+}
+
+test('Black Stars Rise keeps the remaining agenda ticking after the path opens', () => {
+  const draft = openedPathState()
+  const c = draft.scenarioFlags.agendaDecks.c
+  c.doom = 4
+  const api = {
+    present() {}, info() {}, spawn() {}, shuffleEncounterDeck() {}, damage() {}, horror() {},
+    choose() { throw new Error('只剩一套密谋时不应询问放哪套') },
+  }
+  // 神话步骤 1 的「在当前密谋放毁灭」自动落到剩余的那一套，且不在放置时推进。
+  assert.equal(blackStars.behavior.doomPlacementReplacement(draft, 1, api, { source: 'mythos' }), true)
+  assert.equal(c.doom, 5)
+  assert.equal(c.index, 0)
+  blackStars.behavior.mythosDoomChecked(draft, api)
+  assert.equal(c.index, 1)
+  assert.equal(c.doom, 0)
+})
+
+test('Black Stars Rise remaining agenda can still reach ending 3 after the path opens', () => {
+  const draft = openedPathState()
+  const c = draft.scenarioFlags.agendaDecks.c
+  c.index = 2
+  c.doom = 7
+  const finished = []
+  const api = {
+    present() {}, info() {}, spawn() {}, shuffleEncounterDeck() {}, choose() { throw new Error('不应询问') },
+    finish: key => finished.push(key),
+  }
+  blackStars.behavior.doomPlacementReplacement(draft, 1, api, { source: 'mythos' })
+  blackStars.behavior.mythosDoomChecked(draft, api)
+  assert.equal(c.doom, 8)
+  assert.deepEqual(finished, ['r3'])
+})
+
+test('Black Stars Rise keeps remaining agenda actions after the path opens', () => {
+  const draft = openedPathState()
+  draft.numInvestigators = 1
+  const inv = draft.investigators[0]
+  inv.location = 'porteDeLAvancee'
+  draft.locations = [{ id: 'porteDeLAvancee', originalCode: '03283', revealed: true, clues: 0 }]
+  const moves = blackStars.behavior.actions(draft, inv)
+  // a 已移出游戏，c 仍在 1c（印着 [fast] 团队能力），行动应继续提供。
+  assert.ok(moves.some(move => move.rule === 'hastenAgenda' && move.deckId === 'c'))
+  const shift = moves.find(move => move.rule === 'shiftAgendaDoom')
+  assert.ok(shift)
+  assert.match(shift.reason, /只剩一套密谋/)
+})
+
+test('Black Stars Rise Ashleigh removal still works after the path opens', () => {
+  const draft = openedPathState()
+  draft.scenarioFlags.ashleighDoomAbility = true
+  draft.scenarioFlags.agendaDecks.c.doom = 2
+  const inv = draft.investigators[0]
+  inv.location = 'porteDeLAvancee'
+  draft.locations = [{ id: 'porteDeLAvancee', originalCode: '03283', revealed: true, clues: 0 }]
+  const offered = blackStars.behavior.actions(draft, inv).filter(move => move.rule === 'ashleighDoom')
+  assert.deepEqual(offered.map(move => move.deckId), ['c'])
+  blackStars.behavior.performAction(draft, inv, offered[0], {})
+  assert.equal(draft.scenarioFlags.agendaDecks.c.doom, 1)
+})
+
+test('Black Stars Rise 03301 only dooms the remaining agenda after the path opens', () => {
+  const draft = openedPathState()
+  const c = draft.scenarioFlags.agendaDecks.c
+  const inv = draft.investigators[0]
+  inv.location = 'porteDeLAvancee'
+  inv.threat = []
+  draft.enemies = [{ id: 'rift', code: '03301', originalCode: '03301', location: 'porteDeLAvancee' }]
+  const move = blackStars.behavior.encounterActions(draft, inv).find(m => m.rule === 'parleyRiftSeeker')
+  blackStars.behavior.performEncounterAction(draft, inv, move, { horror() {}, discardEnemy() {} })
+  // 场上只剩一套密谋：每个密谋各放 1 ⇒ 只在剩余那套上放 1。
+  assert.equal(c.doom, 1)
+  assert.equal(draft.scenarioFlags.agendaDecks.a.doom, 0)
+})
+
+test('Black Stars Rise counts field doom for the remaining agenda after the path opens', () => {
+  const draft = openedPathState()
+  draft.scenarioFlags.agendaDecks.c.doom = 2
+  draft.enemies = [{ id: 'byakhee', doom: 1 }]
+  assert.equal(blackStars.behavior.countedAgendaDoom(draft, draft.scenarioFlags.agendaDecks.c), 3)
+  assert.match(blackStars.behavior.describe(draft).join('\n'), /含场上 1/)
+  assert.match(blackStars.behavior.describe(draft).join('\n'), /道路已开启/)
+  const view = campaignProjection(draft).blackStarsRise
+  assert.equal(view.route, 'below')
+  assert.equal(view.decks.c.doom, 3)
+  assert.equal(view.decks.c.doomThreshold, 5)
+  assert.equal(view.decks.c.removed, false)
+  assert.equal(view.decks.a.removed, true)
+})
+
+test('Black Stars Rise still advances the remaining agenda in the same check when the path opens', () => {
+  const draft = state()
+  draft.scenario = clone(blackStars.scenario)
+  draft.locationVariants = {}
+  draft.scenarioZones = { setAside: ['03281', '03282'] }
+  draft.numInvestigators = 1
+  blackStars.behavior.setupLocations(draft, [], { random: () => 0 })
+  const decks = draft.scenarioFlags.agendaDecks
+  decks.a.index = 1
+  decks.a.doom = 6
+  decks.c.doom = 5
+  draft.doom = 6
+  const api = {
+    present() {}, info() {}, spawn() {}, shuffleEncounterDeck() {}, choose: () => 'a',
+  }
+  // a 先结算 2b（移出自己、换成 act 3a），c 仍是 1c 且 5/5 → 同一检查步骤里继续推进 c。
+  blackStars.behavior.mythosDoomChecked(draft, api)
+  assert.equal(draft.scenarioFlags.openPath, true)
+  assert.equal(draft.scenarioFlags.pathOpenedBy, 'a')
+  assert.equal(decks.a.removed, true)
+  assert.equal(decks.c.index, 1)
+  assert.equal(draft.acts[0].originalCode, '03281')
+})
+
+test('Black Stars Rise remaining agenda resolves its 2a/2c back after the path opens', () => {
+  const draft = openedPathState()
+  const c = draft.scenarioFlags.agendaDecks.c
+  c.index = 1
+  c.doom = 6
+  const spawned = []
+  const api = {
+    present() {}, info() {}, shuffleEncounterDeck() {},
+    spawn: (code, location) => spawned.push([code, location]),
+    choose() { throw new Error('只有一套密谋，不应询问') },
+  }
+  blackStars.behavior.mythosDoomChecked(draft, api)
+  // 2c 的「世界交织」背面：移除另一张场景、生成毕宿五的野兽与阿什莉，然后推进到 3c。
+  assert.equal(c.index, 2)
+  assert.equal(c.doom, 0)
+  assert.ok(spawned.some(([code]) => code === '03088'))
+  assert.ok(spawned.some(([code]) => code === '03069b'))
+})
+
+test('Black Stars Rise choeur gothique heal is unavailable once its bound deck is removed', () => {
+  const draft = openedPathState()
+  const inv = draft.investigators[0]
+  inv.location = 'choeurGothique'
+  draft.locations = [{ id: 'choeurGothique', originalCode: '03292', revealed: true, clues: 0 }]
+  const heal = blackStars.behavior.actions(draft, inv).find(move => move.rule === 'choeurGothiqueHeal')
+  assert.ok(heal)
+  assert.match(heal.reason, /移出/)
+  assert.throws(() => blackStars.behavior.performAction(draft, inv, heal, {}), /当前不可用/)
 })
 
 test('Black Stars Rise Ashleigh doom names the agenda deck when either pile has doom', () => {

@@ -280,9 +280,11 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   if (state.status !== 'playing' || !actingSeats(state).includes(seat)) return []
   // P5 批次 2：非活动线座位的 campaign record 在 parts 快照里；牌组/确认准备等
   // 动作必须按「座位所属线」取 record，不能只读顶层。
-  const seatPart = state.campaign.seatParts?.[seat]
+  // P9.5：并行 lane 关间运行时的 seat 是线内密集座位，seatParts 仍是房间座位下标——先换算。
+  const roomSeat = state.laneRuntime?.roomSeats?.[seat] ?? seat
+  const seatPart = state.campaign.seatParts?.[roomSeat]
   const record = seatPart && seatPart !== state.campaign.currentPart
-    ? state.campaign.parts?.[seatPart]?.investigators?.[seat] || null
+    ? state.campaign.parts?.[seatPart]?.investigators?.[roomSeat] || null
     : state.campaign.investigators[seat]
   const moves = []
   const humans = state.humanSeats || [0]
@@ -335,12 +337,15 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
       moves.push(...seatPartMoves(state).filter(move => move.seat === 0 || !humans.includes(move.seat)))
     }
     // 双线各自选队长（departure 分屏里两个领队各选一次）；单线沿用原队长。
-    if (state.campaign.partLeads && state.campaign.seatParts) {
+    // P9.5：并行 lane 的关间运行时只有本线密集座位（state.laneRuntime），队长在出发准备已锁定，
+    // 且 campaign.seatParts 仍是房间座位下标——这里不再生成「改队长」候选，避免越界读座位。
+    if (!state.laneRuntime && state.campaign.partLeads && state.campaign.seatParts) {
       for (const part of ['A', 'B']) {
         // 双线队长可以是真人也可以是 AI（单线仍要求真人）：队伍里谁领队由玩家选。
         const laneSeats = state.campaign.seatParts
           .reduce((out, value, seat) => (value === part ? [...out, seat] : out), [])
         for (const leadSeat of laneSeats) {
+          if (!state.investigators[leadSeat]) continue
           moves.push({
             action: 'hubSetPartLeader', part, leadSeat,
             label: `${part} 线队长：${state.investigators[leadSeat].name}`,
@@ -349,7 +354,8 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
         }
       }
     }
-    const leaderReady = state.campaign.mode === 'parallel'
+    // P9.5：并行 lane 内部运行时由 mod 边界保证队长（线队长可以是 AI），这里不再按单线要求真人。
+    const leaderReady = state.laneRuntime ? true : state.campaign.mode === 'parallel'
       ? ['A', 'B'].every(part => {
         const lead = state.campaign.partLeads?.[part]
         return Number.isInteger(lead) && state.campaign.seatParts?.[lead] === part
