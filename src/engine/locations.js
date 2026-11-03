@@ -5,7 +5,7 @@
 // 以及线索的发现/归还/同步。地点相关的反应窗口（locationRevealed 等）通过
 // triggerReaction 触发，所以本模块依赖它。
 import { registeredEntry } from './ability.js'
-import { applyRevealFloodPolicy } from './flood.js'
+import { applyRevealFloodPolicy, floodLevel, setFloodLevel } from './flood.js'
 import { syncDynamicLocationSymbols } from './location-symbols.js'
 import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
 
@@ -149,6 +149,13 @@ function placeLocation(state, id, events, seat = null) {
     || state.investigators.some(inv => inv.location === id))
   const loc = { ...def, id, revealed, clues: revealed ? clues : 0, maxClues: clues }
   state.locations.push(loc)
+  // P7（《暗潮之下》07320–07327）：「以部分/完全淹没入场（即使未揭示）」是地点条目声明的
+  // locationRule.entersPlayFlooded；入场即设水位，并在变化时派发 floodChanged 窗口。
+  const entersPlayFlooded = registeredEntry(loc.originalCode || loc.code)?.locationRule?.entersPlayFlooded
+  if (entersPlayFlooded != null) {
+    setFloodLevel(state, id, entersPlayFlooded, { ignoreRestrictions: true,
+      onChange: context => reactionWindow(state, 'floodChanged', { when: 'floodChanged', ...context }, events, { allowNested: true }) })
+  }
   // 「地点入场后」的强制效果独立于探索与移动；卡牌效果直接放置地点时也须触发。
   scenarioBehavior(state).locationPlaced?.(state, loc, scenarioRuntime(state, events), seat)
   // 04306 有利位置等需要「最近一次有地点入场」的时点（即使入场时未揭示）。
@@ -325,8 +332,17 @@ function notifyCluesRemoved(state, loc, amount, events) {
 
 // 「只能通过调查发现线索」这类限制的查询点（02213 学校）：限制属于**目标地点**，
 // 不是调查员所在地点——例如「发现任意地点的 1 个线索」这类远程发现（02224）。
+// 地点条目声明「淹没时不能发现线索」（07250 沉没档案库：部分/完全淹没都算「淹没」）：
+// 只限制发现，不阻止线索本身存在或调查行动以外的目标枚举。
+function locationClueDiscoveryBlocked(state, loc) {
+  const rule = registeredEntry(loc?.originalCode || loc?.code)?.locationRule
+  if (!rule?.cannotDiscoverWhileFlooded) return false
+  return floodLevel(state, loc.id) >= 1
+}
+
 function canDiscoverClueAt(state, inv, loc) {
   if (!loc || loc.clues <= 0) return false
+  if (locationClueDiscoveryBlocked(state, loc)) return false
   if (state.scenarioFlags?.deepDark && (state.scenarioFlags.deepDarkClaims?.[`${state.round}:${inv.seat}:${loc.id}`] || 0) >= 1) return false
   if (scenarioBehavior(state).canDiscoverClues?.(state, inv, loc) === false) return false
   // 交战中的「不能发现线索」敌人（影子特工）跟着调查员走，与目标地点无关。
@@ -342,6 +358,13 @@ function discoverClueAt(state, inv, amount, events, opts = {}) {
   const targetId = opts.locationId ?? inv.location
   let loc = state.locations.find((l) => l.id === targetId)
   if (scenarioBehavior(state).canDiscoverClues?.(state, inv, loc) === false) return false
+  // 地点条目级限制（07247 只能靠调查发现 / 07250 淹没时不能发现）。
+  // 只限制发现端，不改变调查行动本身能否获得线索。
+  if (loc) {
+    const locationRule = registeredEntry(loc.originalCode || loc.code)?.locationRule
+    if (locationRule?.cluesOnlyByInvestigation && opts.investigation !== true) return false
+    if (locationClueDiscoveryBlocked(state, loc)) return false
+  }
   // Revelation can put the hunter into play after an event was paid for.
   // Recheck at resolution, including discoveries that bypass investigation.
   const clueBlocker = engagedWithClueBlocker(state, inv)

@@ -23,6 +23,13 @@ export const entryRules = {
     }
   },
   resolution: resolveChapter,
+  // 全员撤退：引擎先给当前幕一次「目标已达成」的结算机会，再走默认 noResolution。
+  // 条目在 `actRule.allResigned` 声明（数据驱动分派，内容层不写卡号分支）。
+  allResigned(state, api) {
+    const act = state.acts?.[state.actIndex]
+    const rule = registeredEntry(act?.originalCode || act?.code)?.actRule
+    return rule?.allResigned?.(state, act, api)
+  },
   cardAddedToHand(state,inv,code) {
     if(state.scenario.id!=='aLightInTheFog'||!['07179','07180','07181'].includes(code))return
     state.scenarioFlags.relicsAddedToHand ||= []
@@ -37,5 +44,12 @@ export const entryRules = {
     const rule = registeredEntry(agenda.originalCode || agenda.code)?.agendaRule
     if (typeof rule?.onReveal !== 'function') throw new Error(`Innsmouth agenda is not implemented: ${agenda.originalCode || agenda.code}`)
     return rule.onReveal(state, agenda, api)
+  },
+  // 议程正面「进行期间的持续/静默强制」：条目在 `agendaRule.phaseBegan` 声明，内容层只做
+  // 数据驱动分派（读点：turn.js#phaseBeginningWindow），不在内容层写卡号分支。
+  phaseBegan(state, phase, api) {
+    const agenda = state.agendas?.[state.agendaIndex]
+    const rule = registeredEntry(agenda?.originalCode || agenda?.code)?.agendaRule
+    rule?.phaseBegan?.(state, agenda, phase, api)
   },
 }

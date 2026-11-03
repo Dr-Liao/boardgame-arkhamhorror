@@ -679,6 +679,18 @@ export function registerCardAbilities(entries) {
     }
     if (entry.enemyRule?.revelationSpawnOptions != null && typeof entry.enemyRule.revelationSpawnOptions !== 'function') throw new TypeError('Invalid revelation spawn options reader')
     if (entry.locationRule?.cannotPlaceBarriers != null && typeof entry.locationRule.cannotPlaceBarriers !== 'boolean') throw new TypeError('Invalid barrier placement rule')
+    // P7（印斯茅斯《暗潮之下》07320–07327）：「地点入场即部分/完全淹没」与线索发现限制。
+    // 读点：locations.js#placeLocation（entersPlayFlooded）、locations.js#canDiscoverClueAt / discoverClueAt。
+    if (entry.locationRule?.entersPlayFlooded != null
+      && (!Number.isInteger(entry.locationRule.entersPlayFlooded) || entry.locationRule.entersPlayFlooded < 1 || entry.locationRule.entersPlayFlooded > 2)) {
+      throw new TypeError('Invalid enters-play flood level')
+    }
+    if (entry.locationRule?.cluesOnlyByInvestigation != null && typeof entry.locationRule.cluesOnlyByInvestigation !== 'boolean') {
+      throw new TypeError('Invalid clue discovery restriction')
+    }
+    if (entry.locationRule?.cannotDiscoverWhileFlooded != null && typeof entry.locationRule.cannotDiscoverWhileFlooded !== 'boolean') {
+      throw new TypeError('Invalid flooded clue discovery restriction')
+    }
     if (entry.locationRule?.connectsToTrait != null && (typeof entry.locationRule.connectsToTrait !== 'string' || !entry.locationRule.connectsToTrait.trim())) throw new TypeError('Invalid location trait connection')
     if (entry.locationRule?.floodBounds != null) {
       const bounds = entry.locationRule.floodBounds

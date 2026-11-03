@@ -2,7 +2,9 @@ import { hasTrait } from '../../_shared.js'
 import { keysAt } from '../../_shared.js'
 
 export default {
-  code: '07322', scope: 'location',
+  code: '07322', scope: 'location', implemented: true,
+  // 背面：伊哈·恩斯雷地点以部分淹没入场（即使未揭示）。读点 locations.js#placeLocation。
+  locationRule: { entersPlayFlooded: 1 },
   abilities: [{
     kind: 'action', actionKind: 'activate', label: '将紫色钥匙放在宝库：自动躲避并移入一名非精英敌人',
     limit: { scope: 'perGame', owner: 'instance' },

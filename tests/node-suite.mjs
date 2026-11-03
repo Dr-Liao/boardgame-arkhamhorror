@@ -321,5 +321,8 @@ import './tic-physical-faces.test.mjs'
 import './tic-effect-provenance.test.mjs'
 import './tic-slumbering-bosses.test.mjs'
 import './tic-maelstrom-bosses.test.mjs'
+import './tic-maelstrom-agendas.test.mjs'
+import './tic-scenarios-a1.test.mjs'
+import './tic-scenarios-light-in-the-fog.test.mjs'
 
 import './tic-scenario-reference-moving.test.mjs'

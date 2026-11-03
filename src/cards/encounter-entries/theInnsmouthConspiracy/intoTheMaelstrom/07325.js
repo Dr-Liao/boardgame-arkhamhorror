@@ -1,7 +1,9 @@
 import { evadeTraitAndDrainLocation, hasTrait } from '../../_shared.js'
 
 export default {
-  code: '07325', scope: 'location',
+  code: '07325', scope: 'location', implemented: true,
+  // 背面：伊哈·恩斯雷圣堂以完全淹没入场（即使未揭示）。读点 locations.js#placeLocation。
+  locationRule: { entersPlayFlooded: 2 },
   modifiers: [{ target: 'enemyFight', amount: 2,
     condition: { when: ({ source, entity }) => source.revealed && entity.location === source.id && hasTrait(entity, 'Deep One') },
   }],

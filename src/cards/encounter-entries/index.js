@@ -1230,6 +1230,23 @@ import e07330a from './theInnsmouthConspiracy/intoTheMaelstrom/07330a.js'
 import e07330b from './theInnsmouthConspiracy/intoTheMaelstrom/07330b.js'
 import e07331a from './theInnsmouthConspiracy/intoTheMaelstrom/07331a.js'
 import e07331b from './theInnsmouthConspiracy/intoTheMaelstrom/07331b.js'
+import e07313 from './theInnsmouthConspiracy/intoTheMaelstrom/07313.js'
+import e07314 from './theInnsmouthConspiracy/intoTheMaelstrom/07314.js'
+import e07105 from './theInnsmouthConspiracy/_shared/the_locals/07105.js'
+import e07236 from './theInnsmouthConspiracy/aLightInTheFog/07236.js'
+import e07237 from './theInnsmouthConspiracy/aLightInTheFog/07237.js'
+import e07238 from './theInnsmouthConspiracy/aLightInTheFog/07238.js'
+import e07239 from './theInnsmouthConspiracy/aLightInTheFog/07239.js'
+import e07247 from './theInnsmouthConspiracy/aLightInTheFog/07247.js'
+import e07249 from './theInnsmouthConspiracy/aLightInTheFog/07249.js'
+import e07250 from './theInnsmouthConspiracy/aLightInTheFog/07250.js'
+import e07178 from './theInnsmouthConspiracy/devilReef/07178.js'
+import e07320 from './theInnsmouthConspiracy/intoTheMaelstrom/07320.js'
+import e07321 from './theInnsmouthConspiracy/intoTheMaelstrom/07321.js'
+import e07293 from './theInnsmouthConspiracy/theLairOfDagon/07293.js'
+import e07297 from './theInnsmouthConspiracy/theLairOfDagon/07297.js'
+import e07062a from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07062a.js'
+import e07234 from './theInnsmouthConspiracy/aLightInTheFog/07234.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -2459,6 +2476,23 @@ export const NON_PLAYER_ENTRY_LIST = [
   e07330b,
   e07331a,
   e07331b,
+  e07313,
+  e07314,
+  e07105,
+  e07236,
+  e07237,
+  e07238,
+  e07239,
+  e07247,
+  e07249,
+  e07250,
+  e07178,
+  e07320,
+  e07321,
+  e07293,
+  e07297,
+  e07062a,
+  e07234,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)
