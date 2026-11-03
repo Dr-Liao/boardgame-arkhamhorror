@@ -20,6 +20,7 @@ import { afterHandDiscard } from './hand-discard-window.js'
 import { harmRoom, moveHarm as moveHarmBetween } from './harm-transfer.js'
 import { addCardCounter, cardCounterOf, cardCountersOf, moveCardCounters } from './card-counters.js'
 import { flipOrPlaceDreamGate, placeDreamGate } from './dream-gate.js'
+import { enemyPlayerEffectBlocked } from './effect-provenance.js'
 import { ignoreLimitForRound } from './limits.js'
 import { capabilityBlocked } from './modifiers.js'
 import { resolveEmptyUses, afterUsesSpent } from './uses.js'
@@ -115,6 +116,10 @@ export function createMiscApi(state, events, deps) {
     scenarioBehavior,
     extendHealHorror,
   } = deps
+
+  // 沉睡敌人（enemyRule.slumbering）对**玩家卡效果**的写入口守卫：来源未知（敌人阶段/剧本
+  // 自动结算）照常，只有明确来自玩家卡的效果才拒绝。
+  const slumberDeps = { entryOf: registeredEntry, isBlanked: deps.enemyTextBlanked }
 
   const doFight = (...args) => doFightRaw(...args)
 
@@ -470,14 +475,17 @@ export function createMiscApi(state, events, deps) {
       const target = typeof enemy === 'string' ? state.enemies.find(item => item.id === enemy) : enemy
       if (target) target.damageTaken = Math.max(0, (target.damageTaken || 0) - amount)
     },
-    moveEnemy: (enemy, locationId) => relocateEnemy(state, enemy, locationId, events),
-    engage: (enemy, seat) => engageEnemy(state, enemy, seat, events),
+    moveEnemy: (enemy, locationId) => enemyPlayerEffectBlocked(state, enemy, slumberDeps)
+      ? false : relocateEnemy(state, enemy, locationId, events),
+    engage: (enemy, seat) => enemyPlayerEffectBlocked(state, enemy, slumberDeps)
+      ? false : engageEnemy(state, enemy, seat, events),
     canMoveTo: (seat, id) => canMoveTo(state, seat, id),
     canDamageEnemy: (enemy, seat, source = null) => canDamageEnemy(state, typeof enemy === 'string' ? state.enemies.find(e => e.id === enemy) : enemy, seat, source),
     canDefeatEnemy: (enemy, seat, source = null) => enemyCanBeDefeated(state, typeof enemy === 'string' ? state.enemies.find(e => e.id === enemy) : enemy, source, seat),
     canAutoEvade: (enemy, seat) => canAutoEvade(state, typeof enemy === 'string' ? state.enemies.find(item => item.id === enemy) : enemy, seat),
-    autoEvade: enemy => autoEvadeEnemy(state, enemy, events),
-    autoEvadeEnemy: enemy => autoEvadeEnemy(state, typeof enemy === 'string'
+    autoEvade: enemy => enemyPlayerEffectBlocked(state, enemy, slumberDeps)
+      ? false : autoEvadeEnemy(state, enemy, events),
+    autoEvadeEnemy: enemy => enemyPlayerEffectBlocked(state, enemy, slumberDeps) ? false : autoEvadeEnemy(state, typeof enemy === 'string'
       ? state.enemies.find(item => item.id === enemy) : enemy, events),
     transferAssetControl: (asset, targetSeat) => {
       const owner = state.investigators.find(inv => inv.assets.includes(asset))

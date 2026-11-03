@@ -33,6 +33,7 @@ import { swarmCardsOf, swarmGroup, returnSwarmCard } from './swarm.js'
 import { afterThreatEntered } from './threat-entry.js'
 import { ignoreLocationTrigger } from './location-effect-scope.js'
 import { wrapInvestigatorEffects } from './effect-recipient.js'
+import { enemyPlayerEffectBlocked } from './effect-provenance.js'
 import { attackHiddenEnemyFromHand } from './hidden-enemy.js'
 
 export function createScenarioRuntime(deps) {
@@ -197,6 +198,10 @@ export function createScenarioRuntime(deps) {
     hasHiddenCard,
     removeHiddenMarker,
   } = deps
+
+  // 沉睡敌人（enemyRule.slumbering）的读点依赖：按当前印刷面查条目；文本被抹除即失效。
+  // 这里的守卫只拒绝**明确来自玩家卡**的效果，敌人阶段/剧本自动结算（无来源帧）照常。
+  const slumberDeps = { entryOf: registeredEntry, isBlanked: deps.enemyTextBlanked }
 
 function scenarioRuntime(state, events, testSource = null) {
   const peekLocation = (seat, id) => {
@@ -472,6 +477,8 @@ function scenarioRuntime(state, events, testSource = null) {
     defeatEnemy: (target, options = {}) => {
       const enemy = typeof target === 'string' ? state.enemies.find(item => item.id === target) : target
       if (!enemy || !state.enemies.includes(enemy) || !enemyCanBeDefeated(state, enemy, options.source, options.seat)) return false
+      // 沉睡：玩家卡效果不能击败它（剧本/遭遇来源照常，例如翻面后的结算）。
+      if (enemyPlayerEffectBlocked(state, enemy, slumberDeps)) return false
       if (options.seat != null) enemy.defeatedBy = options.seat
       return defeatEnemy(state, enemy, events,options)
     },
@@ -501,7 +508,8 @@ function scenarioRuntime(state, events, testSource = null) {
     directHorror: (seat, n) => applyHorror(state, state.investigators[seat], n, events, true),
     assetsFirstDamage: (seat, n) => applyHarm(state, state.investigators[seat], n, 0, events, false, null, true),
     moveInvestigator: (seat, destination, options) => relocateInvestigator(state, seat, destination, events,null,options),
-    moveEnemy: (enemy, destination, options) => relocateEnemy(state, enemy, destination, events, options),
+    moveEnemy: (enemy, destination, options) => enemyPlayerEffectBlocked(state, enemy, slumberDeps)
+      ? false : relocateEnemy(state, enemy, destination, events, options),
     moveEnemyToward: (enemy,destination,options) => moveEnemyToward(state,enemy,destination,events,options),
     resolveHunterMove: (enemy,options) => resolveHunterMove(state,enemy,events,options),
     resolveHunterMoves: options => resolveHunterMoves(state,events,options),
@@ -886,6 +894,7 @@ function scenarioRuntime(state, events, testSource = null) {
     // 05267/05087：敌人的横置/重整（敌人阶段与「如同敌军阶段」的结算共用读点）。
     readyEnemy: enemy => {
       if (!enemy) return false
+      if (enemyPlayerEffectBlocked(state, enemy, slumberDeps)) return false
       const group=swarmGroup(state,enemy), exhausted=group.filter(member=>member.exhausted)
       for (const member of group) member.exhausted=false
       for (const member of exhausted) {
@@ -897,6 +906,7 @@ function scenarioRuntime(state, events, testSource = null) {
     },
     exhaustEnemy: enemy => {
       if (!enemy) return false
+      if (enemyPlayerEffectBlocked(state, enemy, slumberDeps)) return false
       for (const member of swarmGroup(state, enemy)) member.exhausted = true
       return true
     },
@@ -1255,7 +1265,8 @@ function scenarioRuntime(state, events, testSource = null) {
       engageEnemy(state,enemy,seat,events)
       return enemy.engagedSeat===seat
     },
-    evadeEnemy: (enemy,options) => autoEvadeEnemy(state, enemy, events,options),
+    evadeEnemy: (enemy,options) => enemyPlayerEffectBlocked(state, enemy, slumberDeps)
+      ? false : autoEvadeEnemy(state, enemy, events, options),
     revealToken: (seat = state.currentSeat) => {
       beginChaosTest(state)
       const token = drawChaosToken(state)
@@ -1308,8 +1319,9 @@ function scenarioRuntime(state, events, testSource = null) {
     flipLocation: (id, seat) => flipScenarioLocation(state, id, seat, events),
     // 第 2 步 P2.12：异端者多面与放逐（面的代码/属性来自关卡数据与卡面定义）。
     flipAsset: (asset,nextCode) => applyPhysicalFace(state,asset,nextCode,{definitionFor:code=>cardDef(code)}),
-    flipEnemy: (enemy, nextCode) => flipEnemyFace(state, enemy, nextCode, { defOf: code => enemyDef(code), newCardInstance, info, events, reactionWindow,
-      afterApplied:entity=>{if(!entity.exhausted)autoEngageAt(state,entity.location,events)} }),
+    flipEnemy: (enemy, nextCode) => enemyPlayerEffectBlocked(state, enemy, slumberDeps) ? null
+      : flipEnemyFace(state, enemy, nextCode, { defOf: code => enemyDef(code), newCardInstance, info, events, reactionWindow,
+        afterApplied:entity=>{if(!entity.exhausted)autoEngageAt(state,entity.location,events)} }),
     enemyFace: enemy => enemyFace(enemy),
     addStoryToVictory: (code, options = {}) => {
       state.victoryDisplay ||= []

@@ -170,6 +170,17 @@ export function enemyEffectAllowed(state, enemy, operation, deps = {}, originOve
 }
 
 /**
+ * 「玩家卡效果对被沉睡目标动手」的守卫读点。和 `enemyEffectAllowed` 的分工：
+ *   · enemyEffectAllowed —— 动作/伤害这类**必须 fail-closed** 的入口（来源未知可能正是基础行动）；
+ *   · 本函数 —— 引擎内部的写入口（横置/重整/位移/翻面/躲避/击败），来源未知代表敌人阶段或
+ *     剧本自动结算，必须放行；只有**明确来自玩家卡**的效果才拒绝。
+ */
+export function enemyPlayerEffectBlocked(state, enemy, deps = {}) {
+  if (!enemyIsSlumbering(state, enemy, deps)) return false
+  return currentEffectSource(state)?.kind === 'playerCard'
+}
+
+/**
  * 动态修正行也要看**那一行自己的来源**，不能用当前帧顶替；旧式记录只有 sourceCode 时
  * 只按卡号分类，分类不出来就 fail-closed（沉睡目标宁可不加成）。
  */

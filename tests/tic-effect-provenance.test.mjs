@@ -213,6 +213,48 @@ test('沉睡敌人：被移动进调查员地点也不会自动交战，也不�
   assert.equal(ghoul.engagedSeat, 0, '普通敌人移动到位后自动交战')
 })
 
+test('沉睡敌人：玩家卡效果不能横置/位移/交战/躲避/击败，遭遇来源与敌人阶段照常', () => {
+  const state = chapterFixture('theLairOfDagon')
+  const boss = enemy(state, { code: '07292a', health: 99, fight: 6, evade: 6, engagedSeat: null })
+  const elsewhere = state.locations.find(location => location.id !== boss.location).id
+  const runtime = scenarioRuntime(state, [])
+  const blocked = []
+  executeDescriptor(state, {
+    inv: state.investigators[0], source: null, events: [],
+    descriptor: { code: '01016', label: '玩家卡对沉睡目标动手', resolve: ({ api }) => {
+      blocked.push(api.exhaust(boss), api.moveEnemy(boss, elsewhere), api.engage(boss, 0),
+        api.autoEvade(boss), api.scenario.evadeEnemy(boss),
+        api.scenario.defeatEnemy(boss), api.scenario.exhaustEnemy(boss))
+    } },
+  })
+  assert.deepEqual(blocked, [false, false, false, false, false, false, false])
+  assert.equal(boss.exhausted === true, false, '没有被横置')
+  assert.equal(boss.location, state.investigators[0].location, '没有被位移')
+  assert.equal(boss.engagedSeat, null, '没有被交战')
+  assert.equal(state.enemies.includes(boss), true, '没有被击败')
+  // 遭遇/剧本来源（例如圣堂地点的印刷自动躲避/横置）照常执行。
+  withEffectSource(state, { kind: 'encounterCard', code: '07324', sourceId: 'sanctum' }, () => {
+    assert.equal(runtime.exhaustEnemy(boss), true)
+    assert.equal(boss.exhausted, true)
+    assert.equal(runtime.evadeEnemy(boss), true)
+  })
+  // 敌人阶段/剧本自动结算没有来源帧：重整必须照常（沉睡达贡印着「处于重整状态」的前提）。
+  boss.exhausted = true
+  assert.equal(runtime.readyEnemy(boss), true)
+  assert.equal(boss.exhausted, false)
+  // 对照：普通敌人被玩家卡横置/位移都成功。
+  const ghoul = enemy(state, { code: '01101', health: 99, engagedSeat: null })
+  executeDescriptor(state, {
+    inv: state.investigators[0], source: null, events: [],
+    descriptor: { code: '01016', label: '玩家卡对普通敌人动手', resolve: ({ api }) => {
+      assert.equal(api.exhaust(ghoul), true)
+      assert.ok(api.moveEnemy(ghoul, elsewhere), '普通敌人可以被效果移动')
+    } },
+  })
+  assert.equal(ghoul.exhausted, true)
+  assert.equal(ghoul.location, elsewhere)
+})
+
 test('sleeping rule 只在条目上声明为布尔值；声明错误在注册期直接拒绝', () => {
   assert.throws(() => registerCardAbilities([{ code: '99092', scope: 'enemy', enemyRule: { slumbering: 'yes' }, abilities: [] }]),
     /slumbering/)

@@ -48,10 +48,10 @@ P7 尚未完成。生产注册继续关闭，八章使用开发态定义接受�
 - 权威口径：`asset/event/skill/investigator` **以及无人控制的 `story` 剧情资产**都是玩家卡来源；`enemy/location/act/agenda/treachery/scenario` 是遭遇来源；未知类型返回 null，不按 actor 座位猜。
 - 接线：`runExecuteDescriptor` 在整段 resolve（含内部再开的窗口）压帧；`canDamageEnemy` 与 `legalMoves`/`validateMove` 的攻击、躲避、额外躲避、交战都先问 `enemyEffectAllowed`。
 - 沉睡：条目声明 `enemyRule.slumbering: true`（注册期只接受布尔值）。沉睡敌人免疫玩家卡效果与调查员行动，剧本/遭遇来源（例如圣堂地点的印刷效果）照常，来源未知时 fail-closed；判定读**当前印刷面**，换面或文本被抹除后立即失效。
-- 证据：`tests/tic-effect-provenance.test.mjs`（12 例）逐条验证分类、嵌套帧还原、真实描述子结算的来源、章节钩子的剧本来源帧（含 `Object.freeze` 的 behavior）、沉睡伤害双向、攻击/躲避/交战的合法行动与提交校验、沉睡敌人不被自动交战也不能攻击、抹除文本恢复、注册期校验、存档无来源字段。全量快测 5895 项 0 失败、既有 replay 13 局 797 步一致（行为零变化）。
+- 证据：`tests/tic-effect-provenance.test.mjs`（13 例）逐条验证分类、嵌套帧还原、真实描述子结算的来源、章节钩子的剧本来源帧（含 `Object.freeze` 的 behavior）、沉睡伤害双向、攻击/躲避/交战的合法行动与提交校验、沉睡敌人不被自动交战也不能攻击、玩家卡效果不能横置/位移/交战/躲避/击败而遭遇来源与敌人阶段重整照常、抹除文本恢复、注册期校验、存档无来源字段。全量快测 5896 项 0 失败、既有 replay 13 局 797 步一致（行为零变化）。
 - 章节钩子来源帧：`scenarioBehavior(state)` 现在返回按 state 缓存的「剧本来源」包装（冻结友好，不用 Proxy），钩子内部写入算剧本来源，钩子里再结算某张卡仍压自己的帧。
-- 沉睡的「不能攻击 / 不能与调查员交战」已接线：`enemyAttack` 与 `engagesAutomatically` 都先问 `enemyEffectAllowed`（`initiateAttack` / `autoEngage` 对沉睡目标无条件拒绝），换到清醒面或文本抹除后立即恢复。
-- 尚未接线（写 boss 卡前必须补齐）：其余敌人写入口（横置/重整/位移/翻面/钥匙转移）对玩家卡效果的免疫守卫、`typed target` 过滤、持久修正行读点（`enemyModifierAllowed` 已备好但尚无读点）。
+- 沉睡的「不能攻击 / 不能与调查员交战 / 免疫玩家卡效果」已接线：`enemyAttack`、`engagesAutomatically`、`canDamageEnemy`、`legalMoves`/`validateMove`（攻击/躲避/额外躲避/交战）先问 `enemyEffectAllowed`（fail-closed）；`exhaust`/`ready`/`moveEnemy`/`engage`/`autoEvade`/`defeatEnemy`/`flipEnemy` 等写入口用 `enemyPlayerEffectBlocked`——只有来源明确是玩家卡才拒绝，敌人阶段与剧本自动结算（无来源帧）照常，圣堂之类的遭遇来源也照常。
+- 尚未接线（写 boss 卡前最后一小步）：`typed target` 过滤与持久修正行读点（`enemyModifierAllowed` 已备好但尚无读点）。
 
 
 ### 尚未落盘的 86 张单卡（按 shards.json 与磁盘实测，2026-11-03 20:30）
