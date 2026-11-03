@@ -429,7 +429,7 @@ function enterExistingEnemy(state,enemy,{engageSeat=null}={},events=[]) {
   // window; the enemy still spawns at the original location.
   reactionWindow(state, 'enemySpawn', { when: 'enemySpawn', seat: engagedSeat ?? leadDecisionSeat(state),
     location: enemy.location, enemy }, events)
-  if (state.enemies.includes(enemy) && !enemy.exhausted && !enemy.aloof && !enemy.massive && engagedSeat != null && state.investigators[engagedSeat]?.location === enemy.location) engageEnemy(state, enemy, engagedSeat,events)
+  if (state.enemies.includes(enemy) && !enemy.exhausted && (!enemy.aloof || scenarioBehavior(state).enemyLosesAloof?.(state, enemy) === true) && !enemy.massive && engagedSeat != null && state.investigators[engagedSeat]?.location === enemy.location) engageEnemy(state, enemy, engagedSeat,events)
   return enemy
 }
 

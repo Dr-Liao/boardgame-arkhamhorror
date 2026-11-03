@@ -177,6 +177,8 @@ export function createHiddenRules(deps) {
   function aloofPreventsAttack(state, inv, enemy, options = {}) {
     if (!enemy || options.ignoreAloof === true) return false
     if (enemyTextBlanked(state, enemy) || !enemy.aloof) return false
+    // P7：《深陷其中》议程「每个[[嫌犯]]敌人失去冷漠」——内容层按卡面条目声明读点（数据驱动）。
+    if (scenarioBehavior(state).enemyLosesAloof?.(state, enemy) === true) return false
     if (enemy.engagedSeat != null) return false
     if (enemy.massive && enemy.location === inv?.location) return false
     return true

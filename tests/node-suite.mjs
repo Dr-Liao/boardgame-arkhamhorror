@@ -325,5 +325,6 @@ import './tic-maelstrom-agendas.test.mjs'
 import './tic-maelstrom-act.test.mjs'
 import './tic-scenarios-a1.test.mjs'
 import './tic-scenarios-light-in-the-fog.test.mjs'
+import './tic-in-too-deep-agendas.test.mjs'
 
 import './tic-scenario-reference-moving.test.mjs'

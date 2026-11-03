@@ -675,6 +675,8 @@ function engagesAutomatically(state, enemy, options={}) {
   // 沉睡（enemyRule.slumbering）的敌人印着「不能与调查员交战」：连自动交战也不发生，
   // 不论当前效果来源；换到清醒面后这条立刻失效（读当前印刷面）。
   if (!enemyEffectAllowed(state, enemy, 'autoEngage', { entryOf: registeredEntry, isBlanked: enemyTextBlanked })) return false
+  // P7：「失去冷漠」的内容读点（《深陷其中》议程对 [[嫌犯]] 敌人）；不影响敌人自身印刷值。
+  if (scenarioBehavior(state).enemyLosesAloof?.(state, enemy) === true) return false
   return !enemy.hostId && !enemy.exhausted && enemy.engagedSeat == null && (!enemy.massive || enemyTextBlanked(state, enemy)) && (!enemy.aloof || enemyTextBlanked(state, enemy) || options.ignoreAloofFor===enemy.id)
 }
 

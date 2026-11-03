@@ -9,6 +9,7 @@
 
 import { hasTrait } from '../../engine/matcher.js'
 import { canClaimKey, canGiveKeys } from '../../engine/scenario-keys.js'
+import { floodLevel } from '../../engine/flood.js'
 import { ALL_CARDS } from '../cards-data.js'
 import { traitLabel } from '../trait-labels.js'
 
@@ -874,6 +875,41 @@ export function awakenedAncientOneEntry({ code, name, broodCode, broodName }) {
         if (target) api.autoEvadeEnemy(target)
       },
     }],
+  }
+}
+
+// ---------------------------------------------------------------------------
+// P7 第三章《深陷其中》四张议程共用模板（07124 路障重重 / 07125 无情浪潮 /
+// 07126 水漫街道 / 07127 深海之怒）：
+//   「每个[[嫌犯]]敌人失去冷漠，并且不能与之谈判。
+//    强制 - 在你回合结束时，如果你位于完全淹没的地点：<各卡效果>。」
+// 四张的差异只在回合末效果参数与背面 onReveal，因此共用工厂；条目只声明差异。
+//
+// 引擎读点：
+//   · enemyLosesAloof ← hidden-rules.aloofPreventsAttack / engine.engagesAutomatically /
+//     enemies.spawnEnemy 的自动交战判定（数据驱动分派在 content entry-rules.js）；
+//   · parleyBlocked ← moves.js#parleyMoves / validateMove 先问 scenarioBehavior.parleyBlocked；
+//   · 回合末强制走既有 turnEnded 窗口（forced 实体能力），floodLevel 读 flood.js。
+// ---------------------------------------------------------------------------
+export function floodedStreetAgendaRule({ onReveal }) {
+  return {
+    enemyLosesAloof: (state, enemy) => hasTrait(enemy, 'Suspect'),
+    parleyBlocked: (state, inv, entity) => hasTrait(entity, 'Suspect'),
+    ...(typeof onReveal === 'function' ? { onReveal } : {}),
+  }
+}
+
+export function floodedStreetTurnEndAbility({ damage = 0, horror = 0, discard = 0 } = {}) {
+  return {
+    kind: 'forced', trigger: 'turnEnded',
+    limit: { scope: 'perWindow', owner: 'instance' },
+    label: '回合结束时如果你位于完全淹没的地点，结算该议程的强制效果',
+    criteria: ({ state, inv, context }) => context.seat === inv.seat && floodLevel(state, inv.location) === 2,
+    resolve: ({ inv, api }) => {
+      if (damage) api.damage(inv.seat, damage)
+      if (horror) api.horror(inv.seat, horror)
+      if (discard) api.discardRandomFromHand(inv.seat, discard)
+    },
   }
 }
 

@@ -56,4 +56,22 @@ export const entryRules = {
     const rule = registeredEntry(agenda?.originalCode || agenda?.code)?.agendaRule
     rule?.phaseBegan?.(state, agenda, phase, api)
   },
+  // P7：《深陷其中》议程「每个[[嫌犯]]敌人失去冷漠 / 不能与之谈判」。引擎在 aloof 判定与
+  // parley 合法性处先问这两个读点；条目在当前幕/议程的 `enemyLosesAloof`/`parleyBlocked` 声明。
+  enemyLosesAloof(state, enemy) {
+    return stageRules(state).some(rule => rule.enemyLosesAloof?.(state, enemy) === true)
+  },
+  parleyBlocked(state, inv, entity, entityType) {
+    return stageRules(state).some(rule => rule.parleyBlocked?.(state, inv, entity, entityType) === true)
+  },
+}
+
+// 当前在场的幕/议程条目规则（数据驱动分派；内容层不写卡号分支）。
+function stageRules(state) {
+  const agenda = state.agendas?.[state.agendaIndex]
+  const act = state.acts?.[state.actIndex]
+  return [
+    agenda ? registeredEntry(agenda.originalCode || agenda.code)?.agendaRule : null,
+    act ? registeredEntry(act.originalCode || act.code)?.actRule : null,
+  ].filter(Boolean)
 }

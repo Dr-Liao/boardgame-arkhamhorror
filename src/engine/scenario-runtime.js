@@ -645,6 +645,18 @@ function scenarioRuntime(state, events, testSource = null) {
       return peekLocation(seat, id)
     },
     resign: seat => doResign(state, seat, events),
+    // P7：《深陷其中》07127 背面「每位没有撤退的调查员被击败并承受1点肉体创伤」。
+    // 只做退场清理与标记；场景结束由调用方按印刷决定（resolveChapter 的 noResolution 重定向）。
+    addTrauma: (seat, kind, amount = 1) => addTrauma(state, seat, kind, amount, events),
+    defeatInvestigator: (seat, options = {}) => {
+      const inv = state.investigators[seat]
+      if (!inv || inv.defeated || inv.resigned) return false
+      inv.defeated = true
+      inv.defeatCause = options.cause || 'killed'
+      eliminateInvestigator(state, inv, events)
+      info(state, events, `💀 ${inv.name} 被击败。`)
+      return true
+    },
     advanceAct: () => advanceAct(state, events),
     advanceAgenda: () => advanceAgenda(state, events),
     // P7：跳过当前密谋背面、直接推进到指定议程次序（07236b/07237b）。
