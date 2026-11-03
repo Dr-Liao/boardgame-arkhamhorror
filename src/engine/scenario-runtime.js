@@ -49,6 +49,7 @@ export function createScenarioRuntime(deps) {
     addYigsFury,
     advanceAct,
     advanceAgenda,
+    advanceAgendaTo,
     aliveInvestigators,
     aloofPreventsAttack,
     applyDamage,
@@ -645,6 +646,8 @@ function scenarioRuntime(state, events, testSource = null) {
     resign: seat => doResign(state, seat, events),
     advanceAct: () => advanceAct(state, events),
     advanceAgenda: () => advanceAgenda(state, events),
+    // P7：跳过当前密谋背面、直接推进到指定议程次序（07236b/07237b）。
+    advanceAgendaTo: index => advanceAgendaTo(state, events, index),
     revertAgenda: () => requestCurrentAgendaRevert(state),
     // 2026-10-25 第四轮修复 05044（agenda-in-place-flip）：只翻当前议程的展示面并播报该面正文，
     // 不推进 agendaIndex、不清 state.doom、不触发议程推进阈值/离场钩子。

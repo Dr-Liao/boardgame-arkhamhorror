@@ -250,6 +250,35 @@ export function createActAgenda(deps) {
     }
   }
 
+  // P7（《暗潮之下》07236b/07237b）：「直接推进议程到 Xa（不结算当前密谋背面）」。
+  // 与 advanceAgenda 的差异：不调用 runAgendaReveal（不结算当前背面剧情/效果）、
+  // 不清场上的毁灭（印刷没有这一步，毁灭留到之后正常推进时清除）；其余离场清理与新议程
+  // 入场展示与 advanceAgenda 一致。targetIndex 必须大于当前且小于议程数。
+  function advanceAgendaTo(state, events, targetIndex) {
+    if (state.status !== 'playing') return false
+    if (!Number.isInteger(targetIndex)) throw new TypeError('advanceAgendaTo 需要整数议程次序')
+    const from = state.agendaIndex
+    if (targetIndex <= from || targetIndex >= state.agendas.length) return false
+    const cur = state.agendas[from]
+    if (!cur) return false
+    scenarioBehavior(state).agendaLeftPlay?.(state, cur, scenarioRuntime(state, events))
+    for (const attachment of cur.attachments || []) {
+      if (attachment.ownerSeat == null) continue
+      releaseChaosTokens(state, attachment.id)
+      state.investigators[attachment.ownerSeat]?.discard.push(attachment.code)
+    }
+    if (cur.attachments?.some(attachment => attachment.ownerSeat != null)) {
+      cur.attachments = cur.attachments.filter(attachment => attachment.ownerSeat == null)
+    }
+    state.agendaIndex = targetIndex
+    locationTraits?.sync(state)
+    const next = state.agendas[targetIndex]
+    info(state, events, `🌑 密谋直接推进：${next.stage}「${next.name}」—— ${next.text}`,
+      { kind: 'story', title: '新的密谋', code: next.originalCode || next.code, name: next.name, text: next.text })
+    if (state.status === 'playing') autoEngageAll(state, events)
+    return true
+  }
+
   function advanceAgenda(state, events, reason = 'objective') {
     if (state.status !== 'playing') return
     if (reason === 'doom' && scenarioBehavior(state).agendaWouldAdvance?.(state, scenarioRuntime(state, events))) return
@@ -451,5 +480,5 @@ export function createActAgenda(deps) {
     checkAgenda(state, events)
   }
 
-  return { advanceAct, discardUntilEnemy, canAdvanceWithClues, actObjectiveContext, payAndAdvanceAct, checkAct, locationRevealCue, spawnStoryAsset, advanceAgenda, discardUntilEnemyFromEncounter, investigateTest, discardUntilEnemyTrait, checkAgenda, checkAgendaForcedEnemyDefeated, placeDoomOnCard, addDoom }
+  return { advanceAct, discardUntilEnemy, canAdvanceWithClues, actObjectiveContext, payAndAdvanceAct, checkAct, locationRevealCue, spawnStoryAsset, advanceAgenda, advanceAgendaTo, discardUntilEnemyFromEncounter, investigateTest, discardUntilEnemyTrait, checkAgenda, checkAgendaForcedEnemyDefeated, placeDoomOnCard, addDoom }
 }

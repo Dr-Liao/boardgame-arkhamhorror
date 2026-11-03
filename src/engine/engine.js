@@ -1897,6 +1897,7 @@ export function scenarioRuntime(state, events, testSource = null) {
   addToExplorationDeck,
   addYigsFury,
   advanceAgenda,
+  advanceAgendaTo,
   buildExplorationDeck,
   campaignCardChange,
   doInvestigate,
@@ -2935,6 +2936,8 @@ function createActAgendaApi() {
 export function advanceAct(...args) { return createActAgendaApi().advanceAct(...args) } export function discardUntilEnemy(...args) { return createActAgendaApi().discardUntilEnemy(...args) } export function canAdvanceWithClues(...args) { return createActAgendaApi().canAdvanceWithClues(...args) }
 export function actObjectiveContext(...args) { return createActAgendaApi().actObjectiveContext(...args) } export function payAndAdvanceAct(...args) { return createActAgendaApi().payAndAdvanceAct(...args) } export function checkAct(...args) { return createActAgendaApi().checkAct(...args) }
 export function locationRevealCue(...args) { return createActAgendaApi().locationRevealCue(...args) } export function spawnStoryAsset(...args) { return createActAgendaApi().spawnStoryAsset(...args) } export function advanceAgenda(...args) { return createActAgendaApi().advanceAgenda(...args) }
+// P7：跳过当前密谋背面、直接推进到指定议程次序（07236b/07237b 的印刷用语）。
+export function advanceAgendaTo(...args) { return createActAgendaApi().advanceAgendaTo(...args) }
 export function discardUntilEnemyFromEncounter(...args) { return createActAgendaApi().discardUntilEnemyFromEncounter(...args) } export function investigateTest(...args) { return createActAgendaApi().investigateTest(...args) }
 export function discardUntilEnemyTrait(...args) { return createActAgendaApi().discardUntilEnemyTrait(...args) } export function checkAgenda(...args) { return createActAgendaApi().checkAgenda(...args) } export function checkAgendaForcedEnemyDefeated(...args) { return createActAgendaApi().checkAgendaForcedEnemyDefeated(...args) }
 export function placeDoomOnCard(...args) { return createActAgendaApi().placeDoomOnCard(...args) } export function addDoom(...args) { return createActAgendaApi().addDoom(...args) }

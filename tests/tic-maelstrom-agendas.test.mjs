@@ -90,3 +90,20 @@ test('07313/07314 条目注册：议程规则带 onReveal，07314 另有 phaseBe
   assert.equal(registeredEntry('07313').implemented, true)
   assert.equal(registeredEntry('07314').implemented, true)
 })
+
+test('advanceAgendaTo：跳过当前密谋背面、保留场上毁灭、直接换到目标议程正面', () => {
+  const s = chapterFixture('intoTheMaelstrom', 1)
+  s.enemies = []
+  s.agendaIndex = 0
+  s.doom = 3
+  let jumped = false
+  transaction(s, draft => { jumped = scenarioRuntime(draft, []).advanceAgendaTo(1) })
+  assert.equal(jumped, true)
+  assert.equal(s.agendaIndex, 1, '议程指针直接到目标')
+  assert.equal(s.agendas[s.agendaIndex].originalCode, '07313')
+  assert.equal(Number(s.doom) || 0, 3, '跳过背面不清场上的毁灭')
+  // 正常推进仍按既有语义清毁灭并推进。
+  transaction(s, draft => scenarioRuntime(draft, []).advanceAgenda())
+  assert.equal(s.agendaIndex, 2)
+  assert.equal(Number(s.doom) || 0, 0, '正常推进照旧清毁灭')
+})

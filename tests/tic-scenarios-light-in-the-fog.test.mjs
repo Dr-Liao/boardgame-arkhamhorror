@@ -4,9 +4,8 @@
 //   · 地点：07239 门房淹没上限与放钥匙撤退、07247 祭坛帷幕/红钥匙/只能靠调查发现、
 //     07249 月之室揭示涨水与撤退记录、07250 档案库揭示全淹没/放黑钥匙/淹没时不能发现。
 //
-// 07236b/07237b 的「直接推进到下一密谋正面（不结算背面）」缺少引擎原语 advanceAgendaTo，
-// 本轮按卡片内的 guarded fallback 断言「不误结算 1b/2b、议程保持不动」；接线后把这两个断言
-// 改成 agendaIndex 前进即可（primitive request: p7-a2-skip-agenda-advance）。
+// 07236b/07237b 的「直接推进到下一密谋正面（不结算背面）」由 P7 新读点
+// api.scenario.advanceAgendaTo(index) 实现（act-agenda.js：不 runAgendaReveal、不清场上的毁灭）。
 
 import test from 'node:test'
 import assert from 'node:assert/strict'
@@ -179,8 +178,8 @@ test('07236 灯塔：线索目标推进后生成横置马什/蓝钥匙、洗入�
   assert.ok(basement, '灯塔地下室入场')
   assert.equal(basement.revealed, false, '入场时不揭示')
   assert.deepEqual(createMechanicsApi(s).map.position(basement.id), { x: 2, y: -1, isolated: false }, '放在灯塔梯井正下方')
-  // 缺口 P1（本轮不落 advanceAgendaTo）：降级为不误结算 1b，议程保持不动。
-  assert.equal(s.agendaIndex, 0, '未接线时保持议程不动（不会错误结算 1b）')
+  // P7：advanceAgendaTo 读点已接线 → 直接推进到 2a（不结算 1b）。
+  assert.equal(s.agendas[s.agendaIndex].originalCode, '07233', '直接推进到议程 2a')
 })
 
 test('07237 寻找前路：进入灯塔地下室即推进；2b 放深层/底层与9张潮水通道、马什进胜利区', () => {
@@ -208,7 +207,7 @@ test('07237 寻找前路：进入灯塔地下室即推进；2b 放深层/底层�
   assert.equal(s.scenarioZones.setAside.includes('07260'), false, '惨遭俘虏洗入遭遇牌库')
   assert.equal(s.encounterDeck.filter(code => code === '07260').length, 2)
   assert.equal(s.victoryDisplay.some(card => String(card.originalCode || card.code) === '07253'), true, '马什加入胜利区')
-  assert.equal(s.agendaIndex, 0, '缺口 P1：未接线时保持议程不动（不会错误结算 2b）')
+  assert.equal(s.agendas[s.agendaIndex].originalCode, '07234', '直接推进到议程 3a（不结算 2b）')
 })
 
 test('07238 深海信徒：调查阶段结束时全淹没者受伤/下移；全员撤退推进并按月之室记录选 R1/R2', () => {

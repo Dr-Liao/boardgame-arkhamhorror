@@ -15,8 +15,8 @@
 //     自动连到灯塔梯井与沉没岩洞；同行连接由章节 map.configure({adjacency:'row'}) 全局负责。
 //   · api.addEnemyToVictory(07253)（scenarioRuntime 顶层的 banishEnemyToVictory 剧情入口，forceVictory）。
 //   · api.takeFromSetAside('07260') ×N + api.shuffleIntoEncounterDeck → 遭遇牌库。
-//   · 「直接推进到 3a（不结算 2b）」需要引擎原语 api.scenario.advanceAgendaTo（本批未落，
-//     见 primitive-requests/p7-a2-skip-agenda-advance.json）：未接线时只登记信息、不调用 advanceAgenda。
+//   · 「直接推进到 3a（不结算 2b）」走 P7 新读点 api.scenario.advanceAgendaTo(index)
+//     （act-agenda.js：不调用 runAgendaReveal、不清场上的毁灭）。
 import { originalOf } from '../../_shared.js'
 
 const MARSH = '07253'
@@ -62,20 +62,13 @@ function placeBelow(state, api, code, anchor, fallbackPosition) {
   return locationByCode(state, code)
 }
 
-// 缺口 P1：没有「跳过当前密谋背面、直接推进到下一张密谋正面」的原语。
-// 兼容两种 api 面：onReveal 收到 scenarioRuntime（原语在顶层），描述子 resolve 收到 abilityApi
-//（原语在 api.scenario 下）。
+// P7 读点：api.scenario.advanceAgendaTo(index) —— 跳过当前密谋背面、直接推进到目标议程正面
+//（act-agenda.js 实现；不调用 runAgendaReveal、不清场上的毁灭）。两种 api 面都探测。
 function advanceAgendaDirectly(state, api, code) {
   const index = (state.agendas || []).findIndex(agenda => String(originalOf(agenda)) === code)
   if (index < 0) return false
   const runtime = api.scenario || api
-  if (typeof runtime.advanceAgendaTo === 'function') {
-    runtime.advanceAgendaTo(index)
-    return true
-  }
-  api.info?.(`⚠️ 「直接推进到议程 ${code} 正面（不结算当前密谋背面）」需要引擎原语 api.scenario.advanceAgendaTo；`
-    + '已登记 primitive-requests，本次保持议程不动。')
-  return false
+  return runtime.advanceAgendaTo(index) === true
 }
 
 function spreadTidalTunnels(state, api, anchor) {

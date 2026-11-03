@@ -70,25 +70,25 @@ P7 尚未完成。生产注册继续关闭，八章使用开发态定义接受�
 | `locationRule.cannotDiscoverWhileFlooded` | `locations.js#canDiscoverClueAt` / `discoverClueAt` | 部分/完全淹没都按「淹没」拦发现。 |
 | `actRule.allResigned` | `entry-rules.js`（数据驱动分派）+ `engine.js#doResign` 既有钩子 | 最后一名调查员撤退时先结算「目标已达成」的幕，避免被默认 noResolution 抢先。 |
 | `agendaRule.phaseBegan` | `entry-rules.js`（数据驱动分派）+ `turn.js#phaseBeginningWindow` | 议程正面「进行期间的静默强制」（07314 的沉睡古神翻面）。 |
+| `api.scenario.advanceAgendaTo(index)` | `act-agenda.js`（不进 `runAgendaReveal`、不清场上毁灭） | 07236b/07237b 的「直接推进到下一密谋正面、不结算当前背面」；测试断言 agendaIndex 前进且毁灭保留。 |
 
 ### 可复算证据
 
-- 新增 4 个测试文件、共 45 例全过：`tests/tic-maelstrom-bosses.test.mjs`（19）、`tic-maelstrom-agendas.test.mjs`（5）、`tic-scenarios-a1.test.mjs`（12）、`tic-scenarios-light-in-the-fog.test.mjs`（9）。
+- 新增 4 个测试文件、共 46 例全过：`tests/tic-maelstrom-bosses.test.mjs`（19）、`tic-maelstrom-agendas.test.mjs`（6）、`tic-scenarios-a1.test.mjs`（12）、`tic-scenarios-light-in-the-fog.test.mjs`（9）。
 - `node tools/replay-fixtures.mjs --compare tests/fixtures/replay/tic-p7-baseline.json`：13 局 / 797 步逐条一致，行为零变化。
 - `node tools/build-encounter-index.mjs --check`：1244 个条目与目录一致；`tests/encounter-entries.test.mjs` 7 例通过；`audit-card-entry-compliance --check` 无基线外新增违规。
 - `audit/ability-coverage.json` 重建：非玩家卡 167→180（覆盖度口径只统计带描述子能力/修正的条目）、descriptor 能力 942→960、窗口 112→113；engineCodes/effectsEntries/escapeCards 仍为 0。
-- 全量快测：**5944 项 / 5940 通过 / 1 失败 / 3 跳过**；唯一失败是下面「TDE 账本环境漂移」这一既有项，TIC 相关零新增失败。
+- 全量快测：**5945 项 / 5941 通过 / 1 失败 / 3 跳过**；唯一失败是下面「TDE 账本环境漂移」这一既有项，TIC 相关零新增失败。
 - `docs:check`：38 个文件、119 条本地链接全部可解析。
 
 ### 本批已知缺口（已登记 primitive-requests）
 
-1. **07236b/07237b「直接推进到下一密谋正面、不结算当前背面」**：缺 `api.scenario.advanceAgendaTo(index)`；两卡用 guarded fallback，本轮断言「不误结算 1b/2b、议程保持不动」，接线后无需改卡。
-2. **07105「生成 - 线索最多的地点」**：生成读点无 mostClues；当前按默认出现在抽牌者处（谈判等其余规则已实现）。
-3. **07178 载具**：`vehicles.move` 不同步剧情资产实例 `asset.location`；载具进/出交互原语缺失（本条用 range:'anywhere' + mechanics 读取绕过位置门）。
-4. **07293 伤害主语**：`enemyDamaged` 窗口要求 `seat != null`（无主来源伤害不加诅咒）；同一次行动内对同一敌人的两次独立伤害受既有窗口去重粒度限制。
-5. **07297 手牌分支**：用 `inv.hand.length > 0` 近似「可弃手牌」，隐私牌边界待收紧。
-6. **07234 Falcon Point 加入胜利区**：无 addLocationToVictory api；本章地点均无 Victory，分支不可达，按移出游戏处理。
-7. **07315（Back into the Depths）背面 setup**：需要「幕背面布置」原语（移除其它地点 + 按人数图示放圣堂/普通地点 + 按记录生成达贡双面 + 生成海德拉），本轮未落。
+1. **07105「生成 - 线索最多的地点」**：生成读点无 mostClues；当前按默认出现在抽牌者处（谈判等其余规则已实现）。
+2. **07178 载具**：`vehicles.move` 不同步剧情资产实例 `asset.location`；载具进/出交互原语缺失（本条用 range:'anywhere' + mechanics 读取绕过位置门）。
+3. **07293 伤害主语**：`enemyDamaged` 窗口要求 `seat != null`（无主来源伤害不加诅咒）；同一次行动内对同一敌人的两次独立伤害受既有窗口去重粒度限制。
+4. **07297 手牌分支**：用 `inv.hand.length > 0` 近似「可弃手牌」，隐私牌边界待收紧。
+5. **07234 Falcon Point 加入胜利区**：无 addLocationToVictory api；本章地点均无 Victory，分支不可达，按移出游戏处理。
+6. **07315（Back into the Depths）背面 setup**：需要「幕背面布置」原语（移除其它地点 + 按人数图示放圣堂/普通地点 + 按记录生成达贡双面 + 生成海德拉），本轮未落。
 
 ### 仍未完成（更新）
 
