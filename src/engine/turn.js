@@ -540,6 +540,10 @@ function beginInvestigationPhase(state, events, repeated = false) {
 }
 
 function runBetweenInvestigationPhases(state, events) {
+  // P7：调查阶段结束的条目级窗口（印斯茅斯终章沉睡达贡/海德拉的「调查阶段结束时」强制）。
+  // 只在阶段真正结束时开一次，位于敌人阶段之前；没有监听者时 reactionWindow 无状态写入。
+  reactionWindow(state, 'investigationPhaseEnds', { when: 'investigationPhaseEnds', phase: 'investigation', round: state.round }, events)
+  if (state.status !== 'playing') return
   // 第 5 步 P6：调查阶段结束——直觉牌库顶那张没打出的牌洗回直觉牌库。
   for (const inv of aliveInvestigators(state)) hunchDeck.returnCard(state, inv, events)
   setDreamGatesAside(state, {

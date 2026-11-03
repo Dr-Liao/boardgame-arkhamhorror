@@ -177,6 +177,11 @@ setModifierHooks({
   activeEffects: state => effectModifiers(state),
   // 弱点数据走生命周期读点（描述子优先），威胁区的被动修正因此也能读到。
   weaknessProfile: code => weaknessProfile(code),
+  // P7（沉睡 boss 免疫）：实体持久修正行的来源过滤。沉睡敌人（enemyRule.slumbering）不接受
+  // 玩家卡来源的修正行；自己/地点/幕/议程/敌人光环等遭遇来源照常。来源分类只认卡面 type，
+  // 分类不出来时 fail-closed（沉睡目标宁可不加成）。
+  modifierRowAllowed: (state, entity, row) => enemyModifierAllowed(state, entity, row,
+    { entryOf: registeredEntry, cardDef }),
 })
 // 能力层内容注册（src/cards/card-abilities.js）：描述子、修正、旧印效果。
 // 注册是幂等的"谁先加载谁注册"：审计工具（tools/audit-abilities.mjs）在单进程测试里
@@ -393,7 +398,7 @@ import { createTurn } from './turn.js'
 import { createReveal } from './reveal.js'
 import { createDeckOps } from './deck-ops.js'
 import { createHub } from './hub.js'
-import { enemyEffectAllowed, scopedScenarioBehavior } from './effect-provenance.js'
+import { enemyEffectAllowed, enemyModifierAllowed, scopedScenarioBehavior } from './effect-provenance.js'
 
 // Phase 6（6d-1）：卡牌 / 敌人定义查找搬进 card-lookup.js；这里既 import 自用，也转出给外部调用方，
 // 外部模块的 import 路径保持不变。

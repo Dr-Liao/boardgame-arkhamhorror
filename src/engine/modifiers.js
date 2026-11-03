@@ -243,6 +243,10 @@ let hooks = {
   entityBlanked: () => false,
   activeEffects: () => [],
   weaknessProfile: code => null,
+  // P7（沉睡 boss 免疫）：实体持久修正行的来源过滤。实体的修正行（自己/所在地点/幕/议程/
+  // 敌人光环）默认全部生效；沉睡敌人的免疫读点由引擎注入 effect-provenance.enemyModifierAllowed，
+  // 玩家卡来源的修正行会被拒绝、遭遇/剧本来源照常。默认放行，保持其它调用点行为不变。
+  modifierRowAllowed: () => true,
 }
 
 export function setModifierHooks(next) {
@@ -488,6 +492,8 @@ export function entityModifierTotal(state, entity, target) {
   const blanked = hooks.entityBlanked(state, entity)
   let total = 0
   for (const row of entityModifierRows(state, entity)) {
+    // P7：持久修正行也看「这一行自己的来源」——沉睡敌人不接受玩家卡来源的修正行。
+    if (!hooks.modifierRowAllowed(state, entity, row)) continue
     // 场景行（幕/议程）只提供全局修正，避免把某张幕的「此处」写成全局。
     if (row.host === 'scene' && !['enemyFight', 'enemyEvade', 'enemyHealth'].includes(target)) continue
     for (const modifier of row.list) {
@@ -509,6 +515,7 @@ export function entityRuleActive(state, entity, target) {
   if (!entity) return false
   if (hooks.entityBlanked(state, entity)) return false
   for (const row of entityModifierRows(state, entity)) {
+    if (!hooks.modifierRowAllowed(state, entity, row)) continue
     if (row.host === 'scene') continue
     for (const modifier of row.list) {
       if (modifier.target !== target) continue

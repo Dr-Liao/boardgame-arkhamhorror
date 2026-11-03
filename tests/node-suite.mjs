@@ -320,5 +320,6 @@ import './tic-agenda-revert.test.mjs'
 import './tic-physical-faces.test.mjs'
 import './tic-effect-provenance.test.mjs'
 import './tic-slumbering-bosses.test.mjs'
+import './tic-maelstrom-bosses.test.mjs'
 
 import './tic-scenario-reference-moving.test.mjs'

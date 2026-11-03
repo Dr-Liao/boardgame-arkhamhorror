@@ -1226,6 +1226,10 @@ import e07059 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07059.js'
 import e07074 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07074.js'
 import e07078 from './theInnsmouthConspiracy/theVanishingOfElinaHarper/07078.js'
 import e07292a from './theInnsmouthConspiracy/theLairOfDagon/07292a.js'
+import e07330a from './theInnsmouthConspiracy/intoTheMaelstrom/07330a.js'
+import e07330b from './theInnsmouthConspiracy/intoTheMaelstrom/07330b.js'
+import e07331a from './theInnsmouthConspiracy/intoTheMaelstrom/07331a.js'
+import e07331b from './theInnsmouthConspiracy/intoTheMaelstrom/07331b.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -2451,6 +2455,10 @@ export const NON_PLAYER_ENTRY_LIST = [
   e07074,
   e07078,
   e07292a,
+  e07330a,
+  e07330b,
+  e07331a,
+  e07331b,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

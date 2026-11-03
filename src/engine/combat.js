@@ -407,6 +407,11 @@ function doFight(state, seat, opts, events, noSpend) {
         // 2026-10-25 修复：把「伤害来源」传给 enemyDamaged（此前普通战斗路径不传，
         // 导致 05180「除法术/遗物以外的伤害」这类按来源分支的规则失效）。
         scenarioBehavior(state).enemyDamaged?.(state, enemy, scenarioRuntime(state, events), seat, opts.assetId || opts.sourceCode || null)
+        // P7：攻击伤害路径不经过 damageEnemy，条目级「敌人受到伤害后」窗口要在这里补一次，
+        // 否则触发条件写成 trigger:'enemyDamaged' 的条目在普通战斗里永远不结算。
+        reactionWindow(state, 'enemyDamaged', { when: 'enemyDamaged', enemy, seat,
+          source: opts.assetId || opts.sourceCode || null, damage: dmg, amount: dmg,
+          location: enemy.location }, events, { allowNested: true })
         enemy.defeatedBy = seat
       }
       // 「晕眩重击」：攻击成功时自动躲避被攻击敌人。
@@ -611,6 +616,9 @@ function doEvade(state, seat, opts, events, noSpend) {
       }
       reactionWindow(state, 'evadeSuccess', {
         when: 'evadeSuccess', seat, location: inv.location, enemy, successBy: r.value - evadeBase,
+        // P7：同回合内对同一敌人多次躲避是两个独立事件；窗口实例标识让条目级强制不被
+        // openAbilityWindow 的「同一窗口实例只结算一次」去重键吞掉。
+        windowInstance: `evade:${state.skillTest?.publicLog?.length ?? 0}:${enemy.id}`,
         prompt: `「${enemy.name}」被躲避后`,
       }, events)
       if (opts.damageOnSuccess && state.enemies.includes(enemy)) {

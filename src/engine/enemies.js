@@ -635,6 +635,10 @@ function damageEnemy(state, enemy, amount, seat, events, source = null) {
   if (source != null) enemy.lastDamageSource = source
   enemy.defeatedBy = seat
   scenarioBehavior(state).enemyDamaged?.(state, enemy, scenarioRuntime(state, events), seat, source)
+  // P7：条目级「敌人受到伤害后」窗口（此前只有章节 behavior 钩子，条目声明 trigger:'enemyDamaged'
+  // 是死声明）。上下文带上真实来源与伤害量；没有监听者时不写任何状态。
+  reactionWindow(state, 'enemyDamaged', { when: 'enemyDamaged', enemy, seat, source,
+    damage: total, amount: total, location: enemy.location }, events, { allowNested: true })
   if (enemyHealth(state, enemy) != null && enemy.damageTaken >= enemyHealth(state, enemy)
     && enemyCanBeDefeated(state, enemy, source, seat)) defeatEnemy(state, enemy, events,{seat,source})
   return true
@@ -650,7 +654,9 @@ function autoEvadeEnemy(state, enemy, events, options={}) {
   info(state, events, `💨 「${enemy.name}」被横置并脱离交战。`)
   if (registeredEntry(enemy.code)?.abilities?.some(descriptor => descriptor.trigger?.includes('evadeSuccess'))) {
     reactionWindow(state, 'evadeSuccess', { when: 'evadeSuccess', seat: enemy.bearerSeat ?? state.currentSeat,
-      enemy, location: enemy.location }, events, { allowNested: true })
+      enemy, location: enemy.location,
+      // P7：同一回合内同一敌人被躲避多次是多个事件，窗口实例标识避免去重键合并。
+      windowInstance: `autoEvade:${state.log?.length ?? 0}:${enemy.id}` }, events, { allowNested: true })
   }
   return true
 }
