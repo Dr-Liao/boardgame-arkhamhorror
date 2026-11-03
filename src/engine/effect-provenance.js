@@ -95,9 +95,53 @@ export function effectSourceIsPlayer(state) {
   return currentEffectSource(state)?.kind === 'playerCard'
 }
 
+// ---------------------------------------------------------------- 章节钩子
+
+const behaviorProxies = new WeakMap()
+
+/**
+ * 章节钩子（behavior.js / 开发态 chapters）自己就是一个「剧本来源」帧：
+ * 玩家卡里调到的剧本钩子，其内部再写状态时来源是剧本而不是外层那张玩家卡；
+ * 钩子里再结算某张卡时，内层描述子会照常压自己的帧。
+ * 行为对象常常是 `Object.freeze` 的（Proxy 的 get 陷阱对不可配置属性会直接抛错），
+ * 因此这里做一次**冻结友好的浅包装**：按 state + 原始 behavior 缓存，热路径只查一次 WeakMap。
+ */
+export function scopedScenarioBehavior(state, behavior) {
+  if (!behavior || typeof behavior !== 'object') return behavior
+  const cached = behaviorProxies.get(state)
+  if (cached && cached.raw === behavior) return cached.scoped
+  const scoped = Object.create(Object.getPrototypeOf(behavior) || Object.prototype)
+  for (const key of Reflect.ownKeys(behavior)) {
+    const descriptor = Object.getOwnPropertyDescriptor(behavior, key)
+    if (!descriptor) continue
+    const value = behavior[key]
+    if (descriptor.get || descriptor.set) {
+      // 访问器属性：读一次快照，避免每次访问都重新求值。
+      Object.defineProperty(scoped, key, { value, enumerable: descriptor.enumerable !== false,
+        writable: true, configurable: true })
+      continue
+    }
+    Object.defineProperty(scoped, key, {
+      value: typeof value === 'function'
+        ? function scopedHook(...args) {
+          return withEffectSource(state, { kind: 'scenarioRule', code: state?.scenario?.id ?? null },
+            () => value.apply(behavior, args))
+        }
+        : value,
+      enumerable: descriptor.enumerable !== false,
+      writable: true,
+      configurable: true,
+    })
+  }
+  behaviorProxies.set(state, { raw: behavior, scoped })
+  return scoped
+}
+
 // ---------------------------------------------------------------- 沉睡敌人
 
-const SLUMBERING_OPS = new Set(['initiateAttack', 'engage', 'fightAction', 'evadeAction'])
+// 沉睡的印刷语义：不能攻击、不能与调查员交战、免疫调查员行动与玩家卡效果。
+// 这些操作连遭遇/剧本来源也不放行（"不能攻击"是无条件的）。
+const SLUMBERING_OPS = new Set(['initiateAttack', 'autoEngage', 'engage', 'fightAction', 'evadeAction'])
 
 /**
  * 沉睡判定读**当前印刷面**的条目（`enemyRule.slumbering`），不写 per-enemy 标记：

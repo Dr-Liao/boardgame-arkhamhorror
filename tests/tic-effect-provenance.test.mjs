@@ -12,11 +12,12 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { fixture, enemy, legalMoves, validateMove } from './core-fixture.mjs'
+import { chapterFixture } from './tic-chapter-fixture.mjs'
 import { executeDescriptor, scenarioRuntime } from '../src/engine/engine.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import {
   cardEffectSource, currentEffectSource, effectSourceKindOfType, enemyEffectAllowed, enemyIsSlumbering,
-  normalizeEffectSource, withEffectSource,
+  normalizeEffectSource, scopedScenarioBehavior, withEffectSource,
 } from '../src/engine/effect-provenance.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 
@@ -166,7 +167,53 @@ test('沉睡敌人：攻击/躲避/交战既不出现在合法行动里，提交
   assert.equal(validateMove(state, 0, { action: 'fight', enemyId: ghoul.id }), null)
 })
 
-test('沉睡规则只在条目上声明为布尔值；声明错误在注册期直接拒绝', () => {
+test('章节钩子来源帧：冻结的 behavior 也能包装，钩子内来源是剧本而不是外层卡', () => {
+  const state = fixture('01001')
+  state.scenario = { ...(state.scenario || {}), id: 'theLairOfDagon' }
+  const seen = []
+  const behavior = Object.freeze({
+    probe: state => seen.push(currentEffectSource(state)),
+    label: 'theLairOfDagon',
+  })
+  const scoped = scopedScenarioBehavior(state, behavior)
+  assert.equal(scoped.label, 'theLairOfDagon')
+  assert.equal(scopedScenarioBehavior(state, behavior), scoped, '同一 state+behavior 复用包装')
+  // 从玩家卡描述子内部调到剧本钩子：钩子自己的帧覆盖外层卡。
+  executeDescriptor(state, {
+    inv: state.investigators[0], source: null, events: [],
+    descriptor: { code: '01016', label: '外层玩家卡', resolve: () => {
+      assert.equal(currentEffectSource(state).kind, 'playerCard')
+      scoped.probe(state)
+      assert.equal(currentEffectSource(state).kind, 'playerCard', '钩子返回后恢复外层卡来源')
+    } },
+  })
+  assert.deepEqual(seen.map(source => source.kind), ['scenarioRule'])
+  assert.equal(seen[0].code, 'theLairOfDagon')
+  assert.equal(currentEffectSource(state), null)
+})
+
+test('沉睡敌人：被移动进调查员地点也不会自动交战，也不会攻击调查员', () => {
+  const state = chapterFixture('theLairOfDagon')
+  const inv = state.investigators[0]
+  const elsewhere = state.locations.find(location => location.id !== inv.location).id
+  const boss = enemy(state, { code: '07292a', health: 99, fight: 6, evade: 6, engagedSeat: null })
+  boss.location = elsewhere
+  // 真正走 relocateEnemy → autoEngageAt 的路径：沉睡的达贡不自动交战。
+  scenarioRuntime(state, []).moveEnemy(boss, inv.location)
+  assert.equal(boss.location, inv.location)
+  assert.equal(boss.engagedSeat, null, '沉睡的达贡不自动交战')
+  inv.damage = 0
+  inv.horror = 0
+  assert.equal(scenarioRuntime(state, []).attack(boss, inv), false, '沉睡的达贡不能攻击')
+  assert.deepEqual([inv.damage, inv.horror], [0, 0])
+  // 清醒的对照：同样的移动会交战（攻击结算会开窗口，伤害由既有敌人攻击专项覆盖）。
+  const ghoul = enemy(state, { code: '01101', health: 99, engagedSeat: null })
+  ghoul.location = elsewhere
+  scenarioRuntime(state, []).moveEnemy(ghoul, inv.location)
+  assert.equal(ghoul.engagedSeat, 0, '普通敌人移动到位后自动交战')
+})
+
+test('sleeping rule 只在条目上声明为布尔值；声明错误在注册期直接拒绝', () => {
   assert.throws(() => registerCardAbilities([{ code: '99092', scope: 'enemy', enemyRule: { slumbering: 'yes' }, abilities: [] }]),
     /slumbering/)
 })

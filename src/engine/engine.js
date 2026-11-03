@@ -196,7 +196,10 @@ const campaignManifestFor = state => {
     ? { ...selected, flow: partFlow(manifest.parts, { mode }) } : selected
 }
 const campaignFor = state => ({ ...campaignManifestFor(state), scenarioOrder: campaignManifestFor(state).scenarioIds })
-const scenarioBehavior = state => state.scenario ? contentRegistry.getBehavior(state.scenario.id) || {} : {}
+// 章节钩子各自是一个「剧本来源」帧（见 effect-provenance）：钩子里的写入来自剧本，不是外层那张卡。
+const scenarioBehavior = state => state.scenario
+  ? scopedScenarioBehavior(state, contentRegistry.getBehavior(state.scenario.id) || {})
+  : {}
 function canMoveTo(state, seat, id, options={}) {
   const inv = state.investigators[seat], location = state.locations.find(loc => loc.id === id)
   return Boolean(inv && !inv.defeated && !inv.resigned && inv.steamImmobileRound !== state.round
@@ -390,6 +393,7 @@ import { createTurn } from './turn.js'
 import { createReveal } from './reveal.js'
 import { createDeckOps } from './deck-ops.js'
 import { createHub } from './hub.js'
+import { enemyEffectAllowed, scopedScenarioBehavior } from './effect-provenance.js'
 
 // Phase 6（6d-1）：卡牌 / 敌人定义查找搬进 card-lookup.js；这里既 import 自用，也转出给外部调用方，
 // 外部模块的 import 路径保持不变。
@@ -663,6 +667,9 @@ function interrogateCultist(state, enemy, events) {
 }
 
 function engagesAutomatically(state, enemy, options={}) {
+  // 沉睡（enemyRule.slumbering）的敌人印着「不能与调查员交战」：连自动交战也不发生，
+  // 不论当前效果来源；换到清醒面后这条立刻失效（读当前印刷面）。
+  if (!enemyEffectAllowed(state, enemy, 'autoEngage', { entryOf: registeredEntry, isBlanked: enemyTextBlanked })) return false
   return !enemy.hostId && !enemy.exhausted && enemy.engagedSeat == null && (!enemy.massive || enemyTextBlanked(state, enemy)) && (!enemy.aloof || enemyTextBlanked(state, enemy) || options.ignoreAloofFor===enemy.id)
 }
 

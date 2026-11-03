@@ -184,6 +184,12 @@ function enemyAttack(state, enemy, inv, events, label, options = {}) {
     attack.cancelled = true
     return false
   }
+  // 沉睡（enemyRule.slumbering）的敌人印着「不能攻击」：连效果造成的攻击也不放行。
+  if (!enemyEffectAllowed(state, enemy, 'initiateAttack', { entryOf: registeredEntry, isBlanked: enemyTextBlanked, cardDef })) {
+    info(state, events, `⛔ 「${enemy.name}」正在沉睡，不能攻击。`)
+    attack.cancelled = true
+    return false
+  }
   const context = reactionWindow(state, 'enemyAttack',
     { when: 'enemyAttack', seat: inv.seat, location: inv.location, enemy, attackKind: attack.kind,
       prompt: `「${enemy.name}」攻击 ${inv.name}` }, events)
