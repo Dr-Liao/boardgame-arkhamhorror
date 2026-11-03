@@ -1898,6 +1898,8 @@ export function scenarioRuntime(state, events, testSource = null) {
   addYigsFury,
   advanceAgenda,
   advanceAgendaTo,
+  // P7（《暗潮之下》幕背面布置）：把「Victory X 且无线索」的地点加入胜利区。
+  awardLocationVictory,
   buildExplorationDeck,
   campaignCardChange,
   doInvestigate,

@@ -297,6 +297,9 @@ function removeLocation(state, id, events, options = {}) {
       autoEngageAt(state, destination.id, events)
     }
     const [loc] = state.locations.splice(i, 1)
+    // 网格坐标随地点一起清掉（读点：grid-map 的 placeGridLocation 用 grid 判占用；
+    // 存档校验也会 locationAt 每个 grid 键，残留会直接判「无效地点」）。
+    if (state.scenarioFlags?.mechanics?.grid) delete state.scenarioFlags.mechanics.grid[loc.id]
     for (const attachment of loc.attachments || []) {
       const code = typeof attachment === 'string' ? attachment : attachment?.code
       if (code && ALL_TREACHERIES[code]) state.encounterDiscard.push(code)

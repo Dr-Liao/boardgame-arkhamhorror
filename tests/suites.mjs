@@ -51,6 +51,7 @@ export const FAST_TESTS = Object.freeze([
   'tic-slumbering-bosses.test.mjs',
   'tic-maelstrom-bosses.test.mjs',
   'tic-maelstrom-agendas.test.mjs',
+  'tic-maelstrom-act.test.mjs',
   'tic-scenarios-a1.test.mjs',
   'tic-scenarios-light-in-the-fog.test.mjs',
   'tic-player-primitives.test.mjs', 'tic-player-guardian-seeker.test.mjs', 'tic-player-rogue-mystic.test.mjs', 'tic-player-survivor-neutral.test.mjs',

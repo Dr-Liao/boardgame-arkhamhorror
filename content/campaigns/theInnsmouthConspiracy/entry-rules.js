@@ -4,6 +4,7 @@ import { scenarioIntroduction, suppressIntroPresentation } from './introduction.
 import { resolveChapter } from './resolutions.js'
 import { resolveFlashback } from './flashbacks.js'
 import { registeredEntry } from '../../../src/engine/ability.js'
+import { chapterActBackSetup } from './late-setup.js'
 
 // Stage readers dispatch to the physical card entry; no card text lives here.
 export const entryRules = {
@@ -37,6 +38,9 @@ export const entryRules = {
   },
   actReveal(state, act, api) {
     const rule = registeredEntry(act.originalCode || act.code)?.actRule
+    // P7：幕背面需要「章节级布置」时，条目只声明 `actRule.chapterSetup`（数据键），
+    // 内容层从 chapter-data 的 setup[键] 读取布置数据；不在内容层写卡号分支。
+    if (typeof rule?.chapterSetup === 'string') return chapterActBackSetup(state, act, api, rule.chapterSetup, rule)
     if (typeof rule?.onReveal !== 'function') throw new Error(`Innsmouth act is not implemented: ${act.originalCode || act.code}`)
     return rule.onReveal(state, act, api)
   },

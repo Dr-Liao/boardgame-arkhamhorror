@@ -50,6 +50,7 @@ export function createScenarioRuntime(deps) {
     advanceAct,
     advanceAgenda,
     advanceAgendaTo,
+    awardLocationVictory,
     aliveInvestigators,
     aloofPreventsAttack,
     applyDamage,
@@ -648,6 +649,11 @@ function scenarioRuntime(state, events, testSource = null) {
     advanceAgenda: () => advanceAgenda(state, events),
     // P7：跳过当前密谋背面、直接推进到指定议程次序（07236b/07237b）。
     advanceAgendaTo: index => advanceAgendaTo(state, events, index),
+    // P7：《暗潮之下》幕背面布置把「Victory X 且无线索」的地点加入胜利区。
+    awardLocationVictory: id => {
+      const location = state.locations.find(item => item.id === id)
+      return location ? awardLocationVictory(state, location, events) : false
+    },
     revertAgenda: () => requestCurrentAgendaRevert(state),
     // 2026-10-25 第四轮修复 05044（agenda-in-place-flip）：只翻当前议程的展示面并播报该面正文，
     // 不推进 agendaIndex、不清 state.doom、不触发议程推进阈值/离场钩子。
