@@ -24,6 +24,7 @@ import { isVeiledLocation, veiledFlipBlockedReason } from './veiled.js'
 import { canAsIfPlay } from './as-if-location.js'
 import { dreamGateEntryError } from './dream-gate.js'
 import { investigatorConnections } from './location-connections.js'
+import { enemyEffectAllowed } from './effect-provenance.js'
 
 export function createMoves(deps) {
   const {
@@ -116,6 +117,10 @@ export function createMoves(deps) {
     unique,
     validateHubMove,
   } = deps
+
+  // 沉睡敌人（enemyRule.slumbering）的免疫读点依赖：只在 createMoves 内部可见，
+  // 按当前印刷面查条目，文本被抹除即失效（换面/抹除后立刻不再按沉睡结算）。
+  const slumberDeps = { entryOf: registeredEntry, isBlanked: enemyTextBlanked }
 
   // 剧本卡行动归属：关卡数据里的 scenario.scriptCards 声明「这个行动印在当前哪张
   // 幕/密谋卡上」（'act' / 'agenda'）。牌桌据此把按钮放到剧本书对应卡片旁、让该卡发光，
@@ -374,12 +379,15 @@ export function createMoves(deps) {
   for (const enemy of state.enemies.filter(enemy => enemy.location === inv.location)) {
     if ((!enemyRuleFlags(enemy.code).damageOnlyFrom || enemyTextBlanked(state, enemy)) && !hiddenFightBlocked(state, inv, enemy)
       && !enemyCannotBeAttacked(state, enemy, inv.seat) && !aloofPreventsAttack(state, inv, enemy)
+      && enemyEffectAllowed(state, enemy, 'fightAction', slumberDeps)
       && scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) !== false)
       moves.push({ action: 'fight', enemyId: enemy.id, label: `⚔️ 攻击「${enemy.name}」（战斗 vs ${enemyFightValue(state, enemy, inv)}${enemy.retaliate ? '，反击' : ''}）` })
-    if (scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) !== false)
+    if (enemyEffectAllowed(state, enemy, 'evadeAction', slumberDeps)
+      && scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) !== false)
       moves.push({ action: 'evade', enemyId: enemy.id, label: `💨 躲避「${enemy.name}」（敏捷 vs ${enemyEvadeValue(state, enemy, inv)}）` })
     // 芬恩·爱德华兹：每回合 1 次不消耗行动的额外躲避。
     if (canUseExtraEvade(state, inv) && (enemy.engagedSeat === seat || (enemy.massive && enemy.location === inv.location))
+      && enemyEffectAllowed(state, enemy, 'evadeAction', slumberDeps)
       && scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) !== false)
       moves.push({ action: 'extraEvade', enemyId: enemy.id,
         label: `💨 额外躲避「${enemy.name}」（本回合一次，不消耗行动）` })
@@ -389,6 +397,7 @@ export function createMoves(deps) {
     // 2026-10-25 本循环修复 can-engage-enemy-hook：剧本可以声明「该敌人不能被交战」
     // （对应参考实现 CannotBeEngaged，如《恶罪报应》非幽灵地点的异端者）。
     if (!enemy.massive && enemy.engagedSeat !== seat && !capabilityBlocked(state, inv, 'engage') && !enemyIgnoresInvestigator(state, inv, enemy)
+      && enemyEffectAllowed(state, enemy, 'engage', slumberDeps)
       && scenarioBehavior(state).canEngageEnemy?.(state, inv, enemy) !== false) {
       moves.push({ action: 'engage', enemyId: enemy.id, label: `与「${enemy.name}」交战` })
     }
@@ -830,6 +839,7 @@ export function createMoves(deps) {
       if (capabilityBlocked(state, inv, 'fight')) return '当前效果禁止你攻击'
       const enemy = state.enemies.find((e) => e.id === move.enemyId)
       if (!enemy) return '未找到该敌人'
+      if (!enemyEffectAllowed(state, enemy, 'fightAction', slumberDeps)) return '沉睡的目标免疫调查员行动'
       if (enemyRuleFlags(enemy.code).damageOnlyFrom && !enemyTextBlanked(state, enemy)) return '子嗣只能使用深奥的咒文攻击'
       if (hiddenFightBlocked(state, inv, enemy)) return '隐私牌禁止你攻击该敌人'
       if (scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) === false) return '当前剧本禁止你攻击该敌人'
@@ -842,6 +852,7 @@ export function createMoves(deps) {
       if (capabilityBlocked(state, inv, 'evade')) return '当前效果禁止你躲避'
       const enemy = state.enemies.find((e) => e.id === move.enemyId)
       if (!enemy) return '未找到该敌人'
+      if (!enemyEffectAllowed(state, enemy, 'evadeAction', slumberDeps)) return '沉睡的目标免疫调查员行动'
       if (scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) === false) return '该敌人不能被躲避'
       const canEvade = enemy.engagedSeat === seat || (enemy.massive && enemy.location === inv.location)
       if (!canEvade) return '该敌人未与你交战'
@@ -851,6 +862,7 @@ export function createMoves(deps) {
       if (!canUseExtraEvade(state, inv)) return '本回合的额外躲避行动已经用过'
       const enemy = state.enemies.find((e) => e.id === move.enemyId)
       if (!enemy) return '未找到该敌人'
+      if (!enemyEffectAllowed(state, enemy, 'evadeAction', slumberDeps)) return '沉睡的目标免疫调查员行动'
       if (scenarioBehavior(state).canEvadeEnemy?.(state, inv, enemy) === false) return '该敌人不能被躲避'
       const canEvade = enemy.engagedSeat === seat || (enemy.massive && enemy.location === inv.location)
       if (!canEvade) return '该敌人未与你交战'
@@ -927,6 +939,7 @@ export function createMoves(deps) {
       if (capabilityBlocked(state, inv, 'engage')) return '当前效果禁止你与敌人交战'
       const enemy = state.enemies.find((e) => e.id === move.enemyId)
       if (!enemy) return '未找到该敌人'
+      if (!enemyEffectAllowed(state, enemy, 'engage', slumberDeps)) return '沉睡的目标免疫调查员行动'
       if (enemy.location !== inv.location) return '该敌人不在你所在的地点'
       if (enemy.massive) return '庞大敌人已与所在地点所有调查员交战'
       if (enemy.engagedSeat === seat) return '你已经与该敌人交战'

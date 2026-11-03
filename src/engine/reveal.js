@@ -10,6 +10,7 @@ import { payTokenCost } from './token-cost.js'
 // 最后一个是能力层的核心读点之一：§4 里大量「读点在 executeDescriptor」的条目指的就是它。
 
 import { ignoreLocationTrigger } from './location-effect-scope.js'
+import { cardEffectSource, withEffectSource } from './effect-provenance.js'
 
 export function createReveal(deps) {
   const {
@@ -332,17 +333,22 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
   if (sourceAsset) state._resolvingAssetId = sourceAsset.id
   state._resolvingCardCode = descriptor.code
   state._resolvingSeat = inv.seat
+  // 效果来源 provenance：整个 resolve（含它内部再开窗口/再调卡）都在这张卡的来源帧里结算，
+  // 嵌套调用自然压栈；来源分类不出来时为 null（沉睡敌人的读点会 fail-closed）。
+  const effectOrigin = cardEffectSource(state, source, descriptor, inv, { cardDef })
   try {
-    descriptor.resolve?.(ctx)
-    // 描述子也可以只声明旧式 effect（例如「花 1 子弹攻击」），由效果解释器结算。
-    // Phase 5：legalMoves 已经让玩家/AI 选好 targetId，effect 数据体必须像旧式能力那样
-    // 收到同一份目标（doAbility 的 applyAbilityTarget），否则解释器会再问一次目标。
-    if (!descriptor.resolve && descriptor.effect) {
-      let effectData = { ...descriptor.effect, assetId: source?.id ?? descriptor.code }
-      if (ctx.targetId != null) effectData = applyAbilityTarget(effectData, ctx.targetId)
-      if (context?.optionIndex != null) effectData = { ...effectData, optionIndex: context.optionIndex }
-      resolveEffect(state, inv.seat, effectData, makeRuntime(state, events))
-    }
+    withEffectSource(state, effectOrigin, () => {
+      descriptor.resolve?.(ctx)
+      // 描述子也可以只声明旧式 effect（例如「花 1 子弹攻击」），由效果解释器结算。
+      // Phase 5：legalMoves 已经让玩家/AI 选好 targetId，effect 数据体必须像旧式能力那样
+      // 收到同一份目标（doAbility 的 applyAbilityTarget），否则解释器会再问一次目标。
+      if (!descriptor.resolve && descriptor.effect) {
+        let effectData = { ...descriptor.effect, assetId: source?.id ?? descriptor.code }
+        if (ctx.targetId != null) effectData = applyAbilityTarget(effectData, ctx.targetId)
+        if (context?.optionIndex != null) effectData = { ...effectData, optionIndex: context.optionIndex }
+        resolveEffect(state, inv.seat, effectData, makeRuntime(state, events))
+      }
+    })
     cancelledByDescriptor = !cancelledBefore && context?.cancelled === true && !cancelNoteFrameNoted()
   } finally {
     // 2026-10-25 第五轮修复 05004：旧路径直接写 context.cancelled 时补记「卡牌取消效果」事实。

@@ -36,10 +36,21 @@ P7 尚未完成。生产注册继续关闭，八章使用开发态定义接受�
 
 ### 仍未完成（按交接优先级）
 
-1. 沉睡与效果来源：权威嵌套 provenance、玩家全效果免疫、typed target 过滤、持久修正来源；提案在 `artifacts/migration/tic/p7/workers/late-effect-provenance-proposal.mjs`，尚未落地。
+1. 沉睡与效果来源：**第一片已落地**（见下节）；剩余：地点/密谋钩子来源、typed target 过滤、持久修正来源读点、boss 卡本身。
 2. 并行幕（Flashback XIV、多活动幕、各自进 Victory2、继续/结局选择）与载具原子乘客批移动、真实驾驶正反面、Road 移除、步行额外行动费用。
-3. 剩余牌：`enemyDamaged` 通用接线、07086 动态 Aloof、07106 调查员 DeepOne 持续 trait、捕获/押送，以及换面后 artCode/卡面图、敌人附件离场清理。
+3. 剩余牌：`enemyDamaged` 通用窗口派发、07086 动态 Aloof、07106 调查员 DeepOne 持续 trait、捕获/押送，以及换面后 artCode/卡面图、敌人附件离场清理。
 4. 八章指南与逐章验收：boss 实际入场、暗置身份、私有堆守恒、完整故事分支、布局；逐章 Node/replay/桌面 1440/移动 390。
+
+### 2026-11-03 21:00 效果来源 provenance（交接第 3 条第一片）
+
+新增 [src/engine/effect-provenance.js](../../src/engine/effect-provenance.js)：进程内帧（WeakMap，**不写 state**，不改变存档与重放指纹）记录「现在这条效果来自哪张卡、属于玩家卡还是遭遇/剧本来源」。
+
+- 权威口径：`asset/event/skill/investigator` **以及无人控制的 `story` 剧情资产**都是玩家卡来源；`enemy/location/act/agenda/treachery/scenario` 是遭遇来源；未知类型返回 null，不按 actor 座位猜。
+- 接线：`runExecuteDescriptor` 在整段 resolve（含内部再开的窗口）压帧；`canDamageEnemy` 与 `legalMoves`/`validateMove` 的攻击、躲避、额外躲避、交战都先问 `enemyEffectAllowed`。
+- 沉睡：条目声明 `enemyRule.slumbering: true`（注册期只接受布尔值）。沉睡敌人免疫玩家卡效果与调查员行动，剧本/遭遇来源（例如圣堂地点的印刷效果）照常，来源未知时 fail-closed；判定读**当前印刷面**，换面或文本被抹除后立即失效。
+- 证据：`tests/tic-effect-provenance.test.mjs`（10 例）逐条验证分类、嵌套帧还原、真实描述子结算的来源、沉睡伤害双向、攻击/躲避/交战的合法行动与提交校验、抹除文本恢复、注册期校验、存档无来源字段。全量快测 5893 项 0 失败、既有 replay 13 局 797 步一致（行为零变化）。
+- 尚未接线（写 boss 卡前必须补齐）：地点/密谋钩子（`scenarioBehavior`）的来源帧、`typed target` 过滤、持久修正行（`enemyModifierAllowed` 已备好但尚无读点）、其余敌人写入口（横置/位移/翻面/钥匙）的免疫守卫。
+
 
 ### 尚未落盘的 86 张单卡（按 shards.json 与磁盘实测，2026-11-03 20:30）
 

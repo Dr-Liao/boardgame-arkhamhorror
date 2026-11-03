@@ -668,6 +668,8 @@ export function registerCardAbilities(entries) {
     if (entry.actRule?.objective != null && !['function', 'object'].includes(typeof entry.actRule.objective)) throw new TypeError('Invalid printed act objective')
     if (entry.locationRule?.objective != null && typeof entry.locationRule.objective !== 'function') throw new TypeError('Invalid printed location objective')
     if(entry.enemyRule?.ignoreHunterBarriers!=null && typeof entry.enemyRule.ignoreHunterBarriers!=='boolean')throw new TypeError('Invalid Hunter barrier rule')
+    // 沉睡：读点是 effect-provenance 的 enemyEffectAllowed（伤害/交战/攻击/躲避一律先问它）。
+    if(entry.enemyRule?.slumbering!=null && typeof entry.enemyRule.slumbering!=='boolean')throw new TypeError('Invalid slumbering rule')
     if (entry.enemyRule?.revelationSpawn != null) {
       const rule = entry.enemyRule.revelationSpawn
       assertKnownKeys(rule, new Set(['locationOriginalCodes', 'farthestOfCodes', 'cluesPerInvestigator']), 'enemyRule.revelationSpawn')

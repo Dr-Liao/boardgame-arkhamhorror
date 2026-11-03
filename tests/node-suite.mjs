@@ -318,5 +318,6 @@ import './tic-discard-costs.test.mjs'
 import './tic-effect-barriers.test.mjs'
 import './tic-agenda-revert.test.mjs'
 import './tic-physical-faces.test.mjs'
+import './tic-effect-provenance.test.mjs'
 
 import './tic-scenario-reference-moving.test.mjs'

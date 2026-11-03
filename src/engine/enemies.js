@@ -5,6 +5,7 @@ import { wouldAddToVictory } from './victory-destination.js'
 import { replacePlayerZoneCards } from './player-zones.js'
 import { eventWindowContext } from './event-window.js'
 import { keysOnExit } from './scenario-keys.js'
+import { enemyEffectAllowed } from './effect-provenance.js'
 // 敌人与伤害（applyHarm / 攻击 / 生成 / 击败 / 交战）从 engine.js 拆出的模块
 // （Phase 6 · 6d-22）。
 //
@@ -602,6 +603,9 @@ function defeatEnemy(state, enemy, events, options={}) {
 
 function canDamageEnemy(state, enemy, seat = null, source = null) {
   if (!enemy || enemy.global || !state.enemies.includes(enemy)) return false
+  // 沉睡（enemyRule.slumbering）的敌人免疫玩家卡效果与调查员行动；剧本/遭遇来源照常，
+  // 来源未知时 fail-closed。读点与「能不能打/交战」共用同一套判定。
+  if (!enemyEffectAllowed(state, enemy, 'damage', { entryOf: registeredEntry, isBlanked: enemyTextBlanked, cardDef })) return false
   if (seat != null && (capabilityBlocked(state, state.investigators[seat], 'dealEnemyDamage')
     || (registeredEntry(enemy?.originalCode || enemy?.code)?.enemyRule?.bearerCannotFightDamageDefeat
       && enemy.bearerSeat === seat && !enemyTextBlanked(state, enemy)))) return false
