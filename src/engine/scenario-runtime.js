@@ -646,6 +646,31 @@ function scenarioRuntime(state, events, testSource = null) {
       return peekLocation(seat, id)
     },
     resign: seat => doResign(state, seat, events),
+    // P7 魔鬼礁 07168：一次让多位调查员撤退（渔船上的每位乘客）。
+    // 末位撤退可能触发「全员撤退/剧本结束」（ScenarioEnded）：先完成所有状态变更与清理，
+    // 最后再抛出，调用方（事务/驱动）与单张 api.scenario.resign 一致地处理。
+    resignMany: seats => {
+      let pendingEnd = null
+      for (const seat of seats) {
+        try { doResign(state, seat, events) } catch (error) {
+          if (error?.constructor?.name === 'ScenarioEnded') pendingEnd = error
+          else throw error
+        }
+      }
+      if (pendingEnd) throw pendingEnd
+    },
+    // P7 魔鬼礁 07168「将渔船从游戏中移除」：移除剧情资产实例（现有只有 spawnStoryAsset，没有反向入口）。
+    removeStoryAsset: codeOrId => {
+      const assets = state.storyAssets || []
+      const asset = assets.find(item => item.id === codeOrId
+        || String(item.originalCode || item.code) === String(codeOrId))
+      if (!asset) return false
+      const index = assets.indexOf(asset)
+      if (index >= 0) assets.splice(index, 1)
+      scenarioBehavior(state).storyAssetLeftPlay?.(state, asset, scenarioRuntime(state, events))
+      info(state, events, `📜 剧情资产「${cardName(asset.originalCode || asset.code)}」被移出游戏。`)
+      return asset
+    },
     // P7：《深陷其中》07127 背面「每位没有撤退的调查员被击败并承受1点肉体创伤」。
     // 只做退场清理与标记；场景结束由调用方按印刷决定（resolveChapter 的 noResolution 重定向）。
     addTrauma: (seat, kind, amount = 1) => addTrauma(state, seat, kind, amount, events),

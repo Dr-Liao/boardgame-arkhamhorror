@@ -328,5 +328,6 @@ import './tic-scenarios-light-in-the-fog.test.mjs'
 import './tic-in-too-deep-agendas.test.mjs'
 import './tic-maelstrom-treacheries.test.mjs'
 import './tic-light-in-the-fog-agendas.test.mjs'
+import './tic-devil-reef-07168.test.mjs'
 
 import './tic-scenario-reference-moving.test.mjs'
