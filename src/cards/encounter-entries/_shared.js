@@ -913,3 +913,92 @@ export function floodedStreetTurnEndAbility({ damage = 0, horror = 0, discard = 
   }
 }
 
+// ---------------------------------------------------------------------------
+// P7 第六章《雾中之光》两张卡共用的「奥赛罗思·马什 + 蓝钥匙 + 尽腥尽力 + 灯塔地下室」布置
+//（07236b 幕背面与 07232b 议程背面是同一句印刷块的两种触发路径）：
+//   · 从 setAside 生成马什到灯塔看门人小屋（07236b 横置；07232b 与队长交战）；
+//   · 把放在一边的蓝色钥匙放到马什上；把每张放在一边的「尽腥尽力」洗入遭遇牌库；
+//   · 把灯塔地下室（07244）放到灯塔梯井（07240）正下方（主线坐标 (2,-1)）。
+// 条目只声明差异（是否横置、是否直接推进议程/场景）。
+// ---------------------------------------------------------------------------
+export function bringMarshAndLighthouseBasement(state, api, {
+  exhausted = false, engagedSeat = null, marshCode = '07253', cottageCode = '07243',
+  stairwellCode = '07240', basementCode = '07244', saltCode = '07259',
+} = {}) {
+  const locationByCode = code => state.locations.find(location => originalOf(location) === code) || null
+  const cottage = locationByCode(cottageCode)
+  // 07236b 在灯塔看门人小屋横置生成；07232b 印刷是「与调查员队长交战」（生成在队长所在地点）。
+  const engagedLocation = engagedSeat != null && state.investigators?.[engagedSeat]
+    ? state.investigators[engagedSeat].location : null
+  const spawnLocationId = engagedLocation || cottage?.id || null
+  let marsh = state.enemies.find(enemy => !enemy.defeated && !enemy.removedFromGame
+    && originalOf(enemy) === marshCode)
+  if (!marsh && spawnLocationId && api.takeFromSetAside(marshCode)) {
+    marsh = engagedSeat == null
+      ? api.spawn(marshCode, spawnLocationId, { exhausted })
+      : api.spawnEngaged(marshCode, spawnLocationId, engagedSeat)
+  } else if (!spawnLocationId) {
+    api.info?.('⚠️ 灯塔看门人小屋不在场，奥赛罗思·马什仍放在一边。')
+  }
+  if (marsh) api.mechanics.keys.transfer('blue', 'setAside', `enemy:${marsh.id}`, { reveal: true })
+  const worthHisSalt = []
+  while (api.takeFromSetAside(saltCode)) worthHisSalt.push(saltCode)
+  if (worthHisSalt.length) api.shuffleIntoEncounterDeck(worthHisSalt, { shuffle: false })
+  let basement = locationByCode(basementCode)
+  if (!basement) {
+    const definition = Object.values(state.scenario.locations || {})
+      .find(item => originalOf(item) === basementCode)
+    if (definition) {
+      const stairwell = locationByCode(stairwellCode)
+      let position = { x: 2, y: -1 }
+      const at = stairwell ? api.mechanics.map.position(stairwell.id) : null
+      if (at && Number.isFinite(at.x) && Number.isFinite(at.y)) position = { x: at.x, y: at.y - 1 }
+      api.mechanics.map.place(definition.id, position.x, position.y)
+      basement = locationByCode(basementCode)
+    }
+  }
+  return { marsh, basement }
+}
+
+// P7 第六章《雾中之光》07234b / 07235b 共用的 floodBottommost 口径
+//（参考实现 Helpers.hs#floodBottommost）：可提升淹没等级的地点不足 count 张时返回 0；
+// 否则从最底行开始逐行提升：整行放得下就整行提升，放不下时由领队在该行中选满剩余名额。
+// 返回实际提升张数（== 0 表示「不能这么做」，由条目走失败/结局分支）。
+export function floodBottommostLocations(state, api, count, source) {
+  const candidates = state.locations.filter(location => api.mechanics.water.canChange(location.id, 1))
+  if (candidates.length < count) return 0
+  const rowOf = location => {
+    const position = api.mechanics.map.position(location.id)
+    return position && Number.isFinite(position.y) ? position.y : Number.POSITIVE_INFINITY
+  }
+  let remaining = count
+  const rows = [...new Set(candidates.map(rowOf))].sort((left, right) => left - right)
+  for (const rowNumber of rows) {
+    if (remaining <= 0) break
+    const row = candidates.filter(location => rowOf(location) === rowNumber)
+    if (row.length <= remaining) {
+      for (const location of row) api.mechanics.water.change(location.id, 1)
+      remaining -= row.length
+      continue
+    }
+    const chosen = new Set()
+    while (remaining > 0 && chosen.size < row.length) {
+      const unchosen = row.filter(location => !chosen.has(location.id))
+      if (!unchosen.length) break
+      const seat = api.decideSeat()
+      const id = api.choice({
+        kind: 'location', source,
+        seat,
+        prompt: '选择本行中要提升淹没等级的地点（可提升名额少于本行地点数）。',
+        options: unchosen.map(location => ({ id: location.id, label: location.name || location.id })),
+      })
+      const target = unchosen.find(location => location.id === id) || unchosen[0]
+      chosen.add(target.id)
+      api.mechanics.water.change(target.id, 1)
+      remaining -= 1
+    }
+  }
+  return count - remaining
+}
+
+

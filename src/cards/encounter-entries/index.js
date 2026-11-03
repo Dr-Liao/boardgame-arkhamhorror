@@ -1252,6 +1252,9 @@ import e07124 from './theInnsmouthConspiracy/inTooDeep/07124.js'
 import e07125 from './theInnsmouthConspiracy/inTooDeep/07125.js'
 import e07126 from './theInnsmouthConspiracy/inTooDeep/07126.js'
 import e07127 from './theInnsmouthConspiracy/inTooDeep/07127.js'
+import e07337 from './theInnsmouthConspiracy/intoTheMaelstrom/07337.js'
+import e07232 from './theInnsmouthConspiracy/aLightInTheFog/07232.js'
+import e07235 from './theInnsmouthConspiracy/aLightInTheFog/07235.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -2503,6 +2506,9 @@ export const NON_PLAYER_ENTRY_LIST = [
   e07125,
   e07126,
   e07127,
+  e07337,
+  e07232,
+  e07235,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

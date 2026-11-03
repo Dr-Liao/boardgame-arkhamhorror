@@ -13,48 +13,16 @@
 //     parleyMovesFor → doEntityAbility → executeDescriptor → payAbilityCost 的 groupClues 费用
 //     （07128 团队线索能力同链路），scope 为幕实体、range:'anywhere' 才能被枚举。
 //     后续转正方案见 artifacts/.../primitive-requests/p7-a2-act-clue-objective-data.json。
-//   · api.takeFromSetAside('07253') + api.spawn(code, loc, { exhausted: true })（enemies.js spawnEnemy 支持 exhausted）。
-//   · api.mechanics.keys.transfer('blue','setAside',`enemy:<id>`,{reveal:true})。
-//   · api.shuffleIntoEncounterDeck 把放在一边的 07259 洗回遭遇牌库。
-//   · api.mechanics.map.position/place 把灯塔地下室（07244，未揭示面名为 Lighthouse Basement）
-//     放在灯塔梯井（07240）正下方，即同一列 row-1。
-//   · 「直接推进到 2a（不结算 1b）」走 P7 新读点 api.scenario.advanceAgendaTo(index)
-//     （act-agenda.js：不调用 runAgendaReveal、不清场上的毁灭，只做离场清理 + 换到目标议程正面）。
-import { originalOf } from '../../_shared.js'
+//   · 「马什 + 蓝钥匙 + 尽腥尽力 + 灯塔地下室」与 07232b 是同一句印刷块，共用
+//     _shared.js#bringMarshAndLighthouseBasement；本卡只声明「横置生成」。
+//   · 「直接推进到 2a（不结算 1b）」走 api.scenario.advanceAgendaTo(index)（act-agenda.js：
+//     不调用 runAgendaReveal、不清场上的毁灭）。
 
-const MARSH = '07253'
-const COTTAGE = '07243'
-const STAIRWELL = '07240'
-const BASEMENT = '07244'
-const WORTH_HIS_SALT = '07259'
+import { bringMarshAndLighthouseBasement, originalOf } from '../../_shared.js'
+
 const NEXT_AGENDA = '07233' // agenda 2a：不变如海
 
-function locationByCode(state, code) {
-  return state.locations.find(location => String(originalOf(location)) === code) || null
-}
-
-function definitionByCode(state, code) {
-  return Object.values(state.scenario.locations || {})
-    .find(definition => String(definition.originalCode || definition.code) === code) || null
-}
-
-// 把放在一边的地点放到 anchor 正下方（同一列、下一行）；没有 anchor 时用主线图示坐标。
-function placeBelow(state, api, code, anchor, fallbackPosition) {
-  const existing = locationByCode(state, code)
-  if (existing) return existing
-  const definition = definitionByCode(state, code)
-  if (!definition) return null
-  let position = fallbackPosition
-  if (anchor) {
-    const at = api.mechanics.map.position(anchor.id)
-    if (at && Number.isFinite(at.x) && Number.isFinite(at.y)) position = { x: at.x, y: at.y - 1 }
-  }
-  api.mechanics.map.place(definition.id, position.x, position.y)
-  return locationByCode(state, code)
-}
-
-// P7 读点：api.scenario.advanceAgendaTo(index) —— 跳过当前密谋背面、直接推进到目标议程正面
-//（不是结算背面；act-agenda.js 实现，读点不调用 runAgendaReveal、不清场上的毁灭）。
+// P7 读点：api.scenario.advanceAgendaTo(index) —— 跳过当前密谋背面、直接推进到目标议程正面。
 // onReveal 收到 scenarioRuntime（原语在顶层），描述子 resolve 收到 abilityApi（原语在 api.scenario 下），
 // 因此两种 api 面都探测。
 function advanceAgendaDirectly(state, api, code) {
@@ -68,19 +36,7 @@ export default {
   code: '07236', scope: 'act', implemented: true,
   actRule: {
     onReveal(state, act, api) {
-      const cottage = locationByCode(state, COTTAGE)
-      if (cottage) {
-        api.takeFromSetAside(MARSH)
-        const marsh = api.spawn(MARSH, cottage.id, { exhausted: true })
-        if (marsh) api.mechanics.keys.transfer('blue', 'setAside', `enemy:${marsh.id}`, { reveal: true })
-      } else {
-        api.info?.('⚠️ 灯塔看门人小屋不在场，奥赛罗思·马什仍放在一边。')
-      }
-      const worthHisSalt = []
-      while (api.takeFromSetAside(WORTH_HIS_SALT)) worthHisSalt.push(WORTH_HIS_SALT)
-      if (worthHisSalt.length) api.shuffleIntoEncounterDeck(worthHisSalt, { shuffle: false })
-      const stairwell = locationByCode(state, STAIRWELL)
-      placeBelow(state, api, BASEMENT, stairwell, { x: 2, y: -1 })
+      bringMarshAndLighthouseBasement(state, api, { exhausted: true })
       advanceAgendaDirectly(state, api, NEXT_AGENDA)
     },
   },

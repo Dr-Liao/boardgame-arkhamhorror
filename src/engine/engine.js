@@ -1900,6 +1900,8 @@ export function scenarioRuntime(state, events, testSource = null) {
   addYigsFury,
   advanceAgenda,
   advanceAgendaTo,
+  // P7：跳过当前幕背面直接推进（07232b「直接推进到场景2a，不结算1b」）。
+  advanceActDirectly,
   // P7（《暗潮之下》幕背面布置）：把「Victory X 且无线索」的地点加入胜利区。
   awardLocationVictory,
   buildExplorationDeck,
@@ -2938,6 +2940,8 @@ function createActAgendaApi() {
 }
 // createActAgendaApi() 的导出包装：每行 3 个（保持 function 声明，commonDeps 等可在模块初始化时提前引用）。
 export function advanceAct(...args) { return createActAgendaApi().advanceAct(...args) } export function discardUntilEnemy(...args) { return createActAgendaApi().discardUntilEnemy(...args) } export function canAdvanceWithClues(...args) { return createActAgendaApi().canAdvanceWithClues(...args) }
+// P7：跳过当前幕背面、直接把场景推进到下一张（07232b「直接推进到场景2a，不结算1b」）。
+export function advanceActDirectly(...args) { return createActAgendaApi().advanceActDirectly(...args) }
 export function actObjectiveContext(...args) { return createActAgendaApi().actObjectiveContext(...args) } export function payAndAdvanceAct(...args) { return createActAgendaApi().payAndAdvanceAct(...args) } export function checkAct(...args) { return createActAgendaApi().checkAct(...args) }
 export function locationRevealCue(...args) { return createActAgendaApi().locationRevealCue(...args) } export function spawnStoryAsset(...args) { return createActAgendaApi().spawnStoryAsset(...args) } export function advanceAgenda(...args) { return createActAgendaApi().advanceAgenda(...args) }
 // P7：跳过当前密谋背面、直接推进到指定议程次序（07236b/07237b 的印刷用语）。

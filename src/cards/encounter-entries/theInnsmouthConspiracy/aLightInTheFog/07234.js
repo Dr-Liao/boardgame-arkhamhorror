@@ -18,11 +18,10 @@
 //   · 移动占位者：api.moveInvestigator / api.moveEnemy；移除：api.removeLocationFromGame(id,
 //     { discardPlayerAttachments:true })（location-swap.js 的剧情入口，地点附属/屏障随 removeLocation 清理）。
 //   · 提升淹没：api.mechanics.water.canChange/change（flood.js 阈值与 floodBounds 一致），
-//     最底下 = api.mechanics.map.position().y 最小者，同一行多于所需时由队伍领队 api.choice 选。
-//   · 缺口 P4：引擎没有「把地点加入胜利区」的 api（只有 addStoryToVictory/addEnemyToVictory）；
-//     本章所有[[猎鹰岬]]地点均无 Victory，该分支不可达，按「移出游戏」处理并保留注释登记，
-//     请求见 primitive-requests/p7-a2-location-victory-display.json。
-import { hasTrait, originalOf } from '../../_shared.js'
+//     最底下 = api.mechanics.map.position().y 最小者，同一行多于所需时由队伍领队 api.choice 选；
+//     与 07235b 共用 _shared.js#floodBottommostLocations（参考实现 Helpers.hs#floodBottommost）。
+//   · 猎鹰岬地点若有 Victory X 且无线索：api.awardLocationVictory（scenario-runtime 已暴露）。
+import { floodBottommostLocations, hasTrait, originalOf } from '../../_shared.js'
 
 const MARSH = '07253'
 const UPPER_DEPTHS = '07244'
@@ -70,43 +69,7 @@ function bringMarshTo(state, api, destination) {
 }
 
 // 找到「最底下」的可提升淹没等级的地点并提升 4 次：按行从最底层往上，每行最多提升完一行
-// 才进入下一行（与参考实现 floodBottommost 的 go row 一致，不能反复挑同一行最底点）；
-// 同一行多于所需时由队伍领队选择具体地点。
-function floodBottommost(state, api, count) {
-  let remaining = count
-  const rowOf = location => {
-    const position = api.mechanics.map.position(location.id)
-    return position && Number.isFinite(position.y) ? position.y : Number.POSITIVE_INFINITY
-  }
-  const candidates = state.locations.filter(location => api.mechanics.water.canChange(location.id, 1))
-  const rows = [...new Set(candidates.map(rowOf))].sort((left, right) => left - right)
-  const used = new Set()
-  for (const rowNumber of rows) {
-    if (remaining <= 0) break
-    const row = candidates.filter(location => rowOf(location) === rowNumber)
-    if (row.length <= remaining) {
-      for (const location of row) { api.mechanics.water.change(location.id, 1); used.add(location.id) }
-      remaining -= row.length
-      continue
-    }
-    let picked = 0
-    for (; picked < remaining; picked += 1) {
-      const unchosen = row.filter(location => !used.has(location.id))
-      if (!unchosen.length) break
-      const seat = api.decideSeat()
-      const chosenId = api.choice({
-        kind: 'location', source: '07234', seat,
-        prompt: '选择本行中要提升淹没等级的地点（可提升名额少于本行地点数）。',
-        options: unchosen.map(location => ({ id: location.id, label: location.name || location.id })),
-      })
-      const target = unchosen.find(location => location.id === chosenId) || unchosen[0]
-      used.add(target.id)
-      api.mechanics.water.change(target.id, 1)
-    }
-    remaining -= picked
-  }
-  return count - remaining
-}
+// 才进入下一行；同一行多于所需时由队伍领队选择具体地点。口径与 07235b 共用（_shared.js）。
 
 export default {
   code: '07234', scope: 'agenda', implemented: true,
@@ -129,14 +92,10 @@ export default {
       }
       for (const location of falconPoint) {
         const victoryPoints = Number(location.victory) || 0
-        if (victoryPoints > 0 && (location.clues || 0) === 0) {
-          // 缺口 P4：无「地点加入胜利区」原语；本章不可达（Falcon Point 地点均无 Victory）。
-          api.info?.(`📌 「${location.name}」有 ${victoryPoints} 点胜利且无线索，`
-            + '但引擎缺少「地点加入胜利区」原语，按移出游戏处理（已登记 primitive-requests）。')
-        }
+        if (victoryPoints > 0 && (location.clues || 0) === 0) api.awardLocationVictory(location.id)
         api.removeLocationFromGame(location.id, { discardPlayerAttachments: true })
       }
-      const flooded = floodBottommost(state, api, 4)
+      const flooded = floodBottommostLocations(state, api, 4, '07234')
       api.info?.(`🌊 「浪潮汹涌」：提升最底下 ${flooded} 个地点的淹没等级。`)
     },
   },

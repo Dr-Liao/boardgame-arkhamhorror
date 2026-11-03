@@ -87,6 +87,29 @@ export function createActAgenda(deps) {
     if (state.status === 'playing') autoEngageAll(state, events)
   }
 
+  // P7（《雾中之光》07232b）：「将场景直接推进到场景2a（不结算场景1b）」。
+  // 与 advanceAct 的差异：不调用 runActReveal（不结算当前幕背面），其余离场清理、
+  // 特性连线同步与新幕入场展示保持一致。
+  function advanceActDirectly(state, events) {
+    if (state.status !== 'playing') return false
+    const cur = state.acts[state.actIndex]
+    if (!cur) return false
+    scenarioBehavior(state).actLeftPlay?.(state, cur, scenarioRuntime(state, events))
+    const advanceIndex = scenarioBehavior(state).actIndexAfterAdvance?.(state, cur, scenarioRuntime(state, events))
+    if (Number.isInteger(advanceIndex)) state.actIndex = advanceIndex
+    else state.actIndex++
+    locationTraits?.sync(state)
+    const next = state.acts[state.actIndex]
+    if (!next) {
+      checkOutcome(state, events)
+      return true
+    }
+    info(state, events, `📜 场景直接推进：${next.stage}「${next.name}」—— ${next.text}`,
+      { kind: 'story', title: '新的场景', code: next.originalCode || next.code, name: next.name, text: next.text })
+    if (state.status === 'playing') autoEngageAll(state, events)
+    return true
+  }
+
   function discardUntilEnemy(state, events) {
     const discarded = []
     while (state.encounterDeck.length) {
@@ -291,6 +314,9 @@ export function createActAgenda(deps) {
       info(state, events, `翻开密谋「${cur.name}」的背面。`, { kind: 'story', title: '密谋推进',
         code: cur.originalCode || cur.code, face: 'back', name: cur.name, text: advanceText, flip: true })
       // 议程推进：移除场上每张卡上的所有毁灭（Rules Reference，见 clearDoomInPlay）。
+      // P7 07232：「在本密谋推进时，将上面所有的毁灭标记移动到下一个密谋」——
+      // 条目在 agendaRule.doomToNextAgenda 声明，推进后把本次议程上的毁灭放回新议程。
+      const movedDoom = Number(state.doom) || 0
       clearDoomInPlay(state, cur)
       scenarioBehavior(state).doomCleared?.(state, scenarioRuntime(state, events))
       const advanceDecision=withAgendaAdvanceFrame(state,cur,()=>{if(cur.reveal)runAgendaReveal(state,cur,events)})
@@ -312,6 +338,10 @@ export function createActAgenda(deps) {
       if (!next) {
         checkOutcome(state, events)
         return
+      }
+      if (movedDoom > 0 && registeredEntry(cur.originalCode || cur.code)?.agendaRule?.doomToNextAgenda === true) {
+        state.doom = movedDoom
+        info(state, events, `🌑 「${cur.name}」上的 ${movedDoom} 个毁灭移动到「${next.name}」。`)
       }
       info(state, events, `🌑 密谋推进：${next.stage}「${next.name}」—— ${next.text}`,
         { kind: 'story', title: '新的密谋', code: next.originalCode || next.code, name: next.name, text: next.text })
@@ -480,5 +510,5 @@ export function createActAgenda(deps) {
     checkAgenda(state, events)
   }
 
-  return { advanceAct, discardUntilEnemy, canAdvanceWithClues, actObjectiveContext, payAndAdvanceAct, checkAct, locationRevealCue, spawnStoryAsset, advanceAgenda, advanceAgendaTo, discardUntilEnemyFromEncounter, investigateTest, discardUntilEnemyTrait, checkAgenda, checkAgendaForcedEnemyDefeated, placeDoomOnCard, addDoom }
+  return { advanceAct, advanceActDirectly, discardUntilEnemy, canAdvanceWithClues, actObjectiveContext, payAndAdvanceAct, checkAct, locationRevealCue, spawnStoryAsset, advanceAgenda, advanceAgendaTo, discardUntilEnemyFromEncounter, investigateTest, discardUntilEnemyTrait, checkAgenda, checkAgendaForcedEnemyDefeated, placeDoomOnCard, addDoom }
 }

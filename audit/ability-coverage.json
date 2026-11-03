@@ -11,7 +11,7 @@
     "abilityKinds": 12,
     "windows": 113,
     "effectPrimitives": 56,
-    "nonPlayerCards": 184,
+    "nonPlayerCards": 185,
     "behaviorLines": 29028,
     "declaredScenarios": 3
   },
@@ -27,7 +27,7 @@
       "treachery": 6,
       "act": 4,
       "scenario": 8,
-      "agenda": 7
+      "agenda": 8
     },
     "codes": [
       "03093",
@@ -161,6 +161,7 @@
       "07207b",
       "07215",
       "07231",
+      "07235",
       "07236",
       "07238",
       "07239",
@@ -216,7 +217,7 @@
       "youngDeepOne"
     ],
     "abilities": 195,
-    "modifiers": 67
+    "modifiers": 68
   },
   "declaration": {
     "abilityScopes": [

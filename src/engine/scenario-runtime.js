@@ -48,6 +48,7 @@ export function createScenarioRuntime(deps) {
     addTrauma,
     addYigsFury,
     advanceAct,
+    advanceActDirectly,
     advanceAgenda,
     advanceAgendaTo,
     awardLocationVictory,
@@ -658,6 +659,8 @@ function scenarioRuntime(state, events, testSource = null) {
       return true
     },
     advanceAct: () => advanceAct(state, events),
+    // P7：跳过当前幕背面、直接把场景推进到下一张（07232b）。
+    advanceActDirectly: () => advanceActDirectly(state, events),
     advanceAgenda: () => advanceAgenda(state, events),
     // P7：跳过当前密谋背面、直接推进到指定议程次序（07236b/07237b）。
     advanceAgendaTo: index => advanceAgendaTo(state, events, index),
